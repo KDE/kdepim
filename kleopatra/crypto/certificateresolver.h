@@ -44,61 +44,68 @@
 
 class KConfig;
 
-namespace GpgME {
-    class Key;
+namespace GpgME
+{
+class Key;
 }
 
-namespace Kleo {
-namespace Crypto {
+namespace Kleo
+{
+namespace Crypto
+{
 
-    class SigningPreferences {
-    public:
-        virtual ~SigningPreferences() {}
-        virtual GpgME::Key preferredCertificate( GpgME::Protocol protocol ) = 0;
-        virtual void setPreferredCertificate( GpgME::Protocol protocol, const GpgME::Key& certificate ) = 0;
-        
-    };
-    
-    class RecipientPreferences {
-    public:
-        virtual ~RecipientPreferences() {}
-        virtual GpgME::Key preferredCertificate( const KMime::Types::Mailbox& recipient, GpgME::Protocol protocol ) = 0;
-        virtual void setPreferredCertificate( const KMime::Types::Mailbox& recipient, GpgME::Protocol protocol, const GpgME::Key& certificate ) = 0;
-    };
-    
-    class KConfigBasedRecipientPreferences : public RecipientPreferences {
-    public:
-        explicit KConfigBasedRecipientPreferences( KSharedConfigPtr config );
-        ~KConfigBasedRecipientPreferences();
-        GpgME::Key preferredCertificate( const KMime::Types::Mailbox& recipient, GpgME::Protocol protocol );
-        void setPreferredCertificate( const KMime::Types::Mailbox& recipient, GpgME::Protocol protocol, const GpgME::Key& certificate );
-    private:
-        Q_DISABLE_COPY( KConfigBasedRecipientPreferences )
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-    };
-   
-    class KConfigBasedSigningPreferences : public SigningPreferences {
-    public:
-        explicit KConfigBasedSigningPreferences( KSharedConfigPtr config );
-        ~KConfigBasedSigningPreferences();
-        GpgME::Key preferredCertificate( GpgME::Protocol protocol );
-        void setPreferredCertificate(  GpgME::Protocol protocol, const GpgME::Key& certificate );
-    private:
-        Q_DISABLE_COPY( KConfigBasedSigningPreferences )
-        class Private;
-        kdtools::pimpl_ptr<Private> d;    
-    };
-    
-    class CertificateResolver {
-    public:
-        static std::vector< std::vector<GpgME::Key> > resolveRecipients( const std::vector<KMime::Types::Mailbox> & recipients, GpgME::Protocol proto );
-        static std::vector<GpgME::Key> resolveRecipient( const KMime::Types::Mailbox & recipient, GpgME::Protocol proto );
+class SigningPreferences
+{
+public:
+    virtual ~SigningPreferences() {}
+    virtual GpgME::Key preferredCertificate(GpgME::Protocol protocol) = 0;
+    virtual void setPreferredCertificate(GpgME::Protocol protocol, const GpgME::Key &certificate) = 0;
 
-        
-        static std::vector< std::vector<GpgME::Key> > resolveSigners( const std::vector<KMime::Types::Mailbox> & signers, GpgME::Protocol proto );
-        static std::vector<GpgME::Key> resolveSigner( const KMime::Types::Mailbox & signer, GpgME::Protocol proto );
-    };
+};
+
+class RecipientPreferences
+{
+public:
+    virtual ~RecipientPreferences() {}
+    virtual GpgME::Key preferredCertificate(const KMime::Types::Mailbox &recipient, GpgME::Protocol protocol) = 0;
+    virtual void setPreferredCertificate(const KMime::Types::Mailbox &recipient, GpgME::Protocol protocol, const GpgME::Key &certificate) = 0;
+};
+
+class KConfigBasedRecipientPreferences : public RecipientPreferences
+{
+public:
+    explicit KConfigBasedRecipientPreferences(KSharedConfigPtr config);
+    ~KConfigBasedRecipientPreferences();
+    GpgME::Key preferredCertificate(const KMime::Types::Mailbox &recipient, GpgME::Protocol protocol);
+    void setPreferredCertificate(const KMime::Types::Mailbox &recipient, GpgME::Protocol protocol, const GpgME::Key &certificate);
+private:
+    Q_DISABLE_COPY(KConfigBasedRecipientPreferences)
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+};
+
+class KConfigBasedSigningPreferences : public SigningPreferences
+{
+public:
+    explicit KConfigBasedSigningPreferences(KSharedConfigPtr config);
+    ~KConfigBasedSigningPreferences();
+    GpgME::Key preferredCertificate(GpgME::Protocol protocol);
+    void setPreferredCertificate(GpgME::Protocol protocol, const GpgME::Key &certificate);
+private:
+    Q_DISABLE_COPY(KConfigBasedSigningPreferences)
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+};
+
+class CertificateResolver
+{
+public:
+    static std::vector< std::vector<GpgME::Key> > resolveRecipients(const std::vector<KMime::Types::Mailbox> &recipients, GpgME::Protocol proto);
+    static std::vector<GpgME::Key> resolveRecipient(const KMime::Types::Mailbox &recipient, GpgME::Protocol proto);
+
+    static std::vector< std::vector<GpgME::Key> > resolveSigners(const std::vector<KMime::Types::Mailbox> &signers, GpgME::Protocol proto);
+    static std::vector<GpgME::Key> resolveSigner(const KMime::Types::Mailbox &signer, GpgME::Protocol proto);
+};
 
 }
 }

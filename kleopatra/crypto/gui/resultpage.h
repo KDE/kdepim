@@ -38,41 +38,44 @@
 
 #include <utils/pimpl_ptr.h>
 
-
 #include <boost/shared_ptr.hpp>
 
-namespace Kleo {
-namespace Crypto {
+namespace Kleo
+{
+namespace Crypto
+{
 
 class TaskCollection;
 
-namespace Gui {
+namespace Gui
+{
 
-class ResultPage : public WizardPage {
+class ResultPage : public WizardPage
+{
     Q_OBJECT
 
 public:
-    explicit ResultPage( QWidget* parent = 0, Qt::WindowFlags flags = 0 );
+    explicit ResultPage(QWidget *parent = 0, Qt::WindowFlags flags = 0);
     ~ResultPage();
 
-    void setTaskCollection( const boost::shared_ptr<TaskCollection> & coll );
+    void setTaskCollection(const boost::shared_ptr<TaskCollection> &coll);
 
     /* reimp */ bool isComplete() const;
 
     bool keepOpenWhenDone() const;
-    void setKeepOpenWhenDone( bool keep );
+    void setKeepOpenWhenDone(bool keep);
 
 Q_SIGNALS:
-    void linkActivated( const QString & link );
+    void linkActivated(const QString &link);
 
 private:
     class Private;
     kdtools::pimpl_ptr<Private> d;
-    Q_PRIVATE_SLOT( d, void progress( QString, int, int ) )
-    Q_PRIVATE_SLOT( d, void result( boost::shared_ptr<const Kleo::Crypto::Task::Result> ) )
-    Q_PRIVATE_SLOT( d, void started( boost::shared_ptr<Kleo::Crypto::Task> ) )
-    Q_PRIVATE_SLOT( d, void keepOpenWhenDone( bool ) )
-    Q_PRIVATE_SLOT( d, void allDone() )
+    Q_PRIVATE_SLOT(d, void progress(QString, int, int))
+    Q_PRIVATE_SLOT(d, void result(boost::shared_ptr<const Kleo::Crypto::Task::Result>))
+    Q_PRIVATE_SLOT(d, void started(boost::shared_ptr<Kleo::Crypto::Task>))
+    Q_PRIVATE_SLOT(d, void keepOpenWhenDone(bool))
+    Q_PRIVATE_SLOT(d, void allDone())
 };
 
 }

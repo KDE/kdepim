@@ -50,101 +50,114 @@ using namespace Kleo;
 using namespace GpgME;
 using namespace boost;
 
-QGpgMESignJob::QGpgMESignJob( Context * context )
-  : mixin_type( context ),
-    mOutputIsBase64Encoded( false )
+QGpgMESignJob::QGpgMESignJob(Context *context)
+    : mixin_type(context),
+      mOutputIsBase64Encoded(false)
 {
-  lateInitialization();
+    lateInitialization();
 }
 
 QGpgMESignJob::~QGpgMESignJob() {}
 
-void QGpgMESignJob::setOutputIsBase64Encoded( bool on ) {
-  mOutputIsBase64Encoded = on;
+void QGpgMESignJob::setOutputIsBase64Encoded(bool on)
+{
+    mOutputIsBase64Encoded = on;
 }
 
-static QGpgMESignJob::result_type sign( Context * ctx, QThread * thread,
-                                        const std::vector<Key> & signers,
-                                        const weak_ptr<QIODevice> & plainText_,
-                                        const weak_ptr<QIODevice> & signature_,
-                                        SignatureMode mode,
-                                        bool outputIsBsse64Encoded ) {
+static QGpgMESignJob::result_type sign(Context *ctx, QThread *thread,
+                                       const std::vector<Key> &signers,
+                                       const weak_ptr<QIODevice> &plainText_,
+                                       const weak_ptr<QIODevice> &signature_,
+                                       SignatureMode mode,
+                                       bool outputIsBsse64Encoded)
+{
 
-  const shared_ptr<QIODevice> plainText = plainText_.lock();
-  const shared_ptr<QIODevice> signature = signature_.lock();
+    const shared_ptr<QIODevice> plainText = plainText_.lock();
+    const shared_ptr<QIODevice> signature = signature_.lock();
 
-  const _detail::ToThreadMover ptMover( plainText, thread );
-  const _detail::ToThreadMover sgMover( signature, thread );
+    const _detail::ToThreadMover ptMover(plainText, thread);
+    const _detail::ToThreadMover sgMover(signature, thread);
 
-  QGpgME::QIODeviceDataProvider in( plainText );
-  const Data indata( &in );
+    QGpgME::QIODeviceDataProvider in(plainText);
+    const Data indata(&in);
 
-  ctx->clearSigningKeys();
-  Q_FOREACH( const Key & signer, signers )
-    if ( !signer.isNull() )
-      if ( const Error err = ctx->addSigningKey( signer ) )
-        return make_tuple( SigningResult( err ), QByteArray(), QString(), Error() );
+    ctx->clearSigningKeys();
+    Q_FOREACH (const Key &signer, signers)
+        if (!signer.isNull())
+            if (const Error err = ctx->addSigningKey(signer)) {
+                return make_tuple(SigningResult(err), QByteArray(), QString(), Error());
+            }
 
-  if ( !signature ) {
-    QGpgME::QByteArrayDataProvider out;
-    Data outdata( &out );
+    if (!signature) {
+        QGpgME::QByteArrayDataProvider out;
+        Data outdata(&out);
 
-    if ( outputIsBsse64Encoded )
-      outdata.setEncoding( Data::Base64Encoding );
+        if (outputIsBsse64Encoded) {
+            outdata.setEncoding(Data::Base64Encoding);
+        }
 
-    const SigningResult res = ctx->sign( indata, outdata, mode );
-    Error ae;
-    const QString log = _detail::audit_log_as_html( ctx, ae );
-    return make_tuple( res, out.data(), log, ae );
-  } else {
-    QGpgME::QIODeviceDataProvider out( signature );
-    Data outdata( &out );
+        const SigningResult res = ctx->sign(indata, outdata, mode);
+        Error ae;
+        const QString log = _detail::audit_log_as_html(ctx, ae);
+        return make_tuple(res, out.data(), log, ae);
+    } else {
+        QGpgME::QIODeviceDataProvider out(signature);
+        Data outdata(&out);
 
-    if ( outputIsBsse64Encoded )
-      outdata.setEncoding( Data::Base64Encoding );
+        if (outputIsBsse64Encoded) {
+            outdata.setEncoding(Data::Base64Encoding);
+        }
 
-    const SigningResult res = ctx->sign( indata, outdata, mode );
-    Error ae;
-    const QString log = _detail::audit_log_as_html( ctx, ae );
-    return make_tuple( res, QByteArray(), log, ae );
-  }
+        const SigningResult res = ctx->sign(indata, outdata, mode);
+        Error ae;
+        const QString log = _detail::audit_log_as_html(ctx, ae);
+        return make_tuple(res, QByteArray(), log, ae);
+    }
 
 }
 
-static QGpgMESignJob::result_type sign_qba( Context * ctx,
-                                            const std::vector<Key> & signers,
-                                            const QByteArray & plainText,
-                                            SignatureMode mode,
-                                            bool outputIsBsse64Encoded ) {
-  const shared_ptr<QBuffer> buffer( new QBuffer );
-  buffer->setData( plainText );
-  if ( !buffer->open( QIODevice::ReadOnly ) )
-    assert( !"This should never happen: QBuffer::open() failed" );
-  return sign( ctx, 0, signers, buffer, shared_ptr<QIODevice>(), mode, outputIsBsse64Encoded );
+static QGpgMESignJob::result_type sign_qba(Context *ctx,
+        const std::vector<Key> &signers,
+        const QByteArray &plainText,
+        SignatureMode mode,
+        bool outputIsBsse64Encoded)
+{
+    const shared_ptr<QBuffer> buffer(new QBuffer);
+    buffer->setData(plainText);
+    if (!buffer->open(QIODevice::ReadOnly)) {
+        assert(!"This should never happen: QBuffer::open() failed");
+    }
+    return sign(ctx, 0, signers, buffer, shared_ptr<QIODevice>(), mode, outputIsBsse64Encoded);
 }
 
-Error QGpgMESignJob::start( const std::vector<Key> & signers, const QByteArray & plainText, SignatureMode mode ) {
-  run( boost::bind( &sign_qba, _1, signers, plainText, mode, mOutputIsBase64Encoded ) );
-  return Error();
+Error QGpgMESignJob::start(const std::vector<Key> &signers, const QByteArray &plainText, SignatureMode mode)
+{
+    run(boost::bind(&sign_qba, _1, signers, plainText, mode, mOutputIsBase64Encoded));
+    return Error();
 }
 
-void QGpgMESignJob::start( const std::vector<Key> & signers, const shared_ptr<QIODevice> & plainText, const shared_ptr<QIODevice> & signature, SignatureMode mode ) {
-  run( boost::bind( &sign, _1, _2, signers, _3, _4, mode, mOutputIsBase64Encoded ), plainText, signature );
+void QGpgMESignJob::start(const std::vector<Key> &signers, const shared_ptr<QIODevice> &plainText, const shared_ptr<QIODevice> &signature, SignatureMode mode)
+{
+    run(boost::bind(&sign, _1, _2, signers, _3, _4, mode, mOutputIsBase64Encoded), plainText, signature);
 }
 
-SigningResult QGpgMESignJob::exec( const std::vector<Key> & signers, const QByteArray & plainText, SignatureMode mode, QByteArray & signature ) {
-  const result_type r = sign_qba( context(), signers, plainText, mode, mOutputIsBase64Encoded );
-  signature = get<1>( r );
-  resultHook( r );
-  return mResult;
+SigningResult QGpgMESignJob::exec(const std::vector<Key> &signers, const QByteArray &plainText, SignatureMode mode, QByteArray &signature)
+{
+    const result_type r = sign_qba(context(), signers, plainText, mode, mOutputIsBase64Encoded);
+    signature = get<1>(r);
+    resultHook(r);
+    return mResult;
 }
 
-void QGpgMESignJob::resultHook( const result_type & tuple ) {
-  mResult = get<0>( tuple );
+void QGpgMESignJob::resultHook(const result_type &tuple)
+{
+    mResult = get<0>(tuple);
 }
 
-void QGpgMESignJob::showErrorDialog( QWidget * parent, const QString & caption ) const {
-  if ( mResult.error() && !mResult.error().isCanceled() )
-      MessageBox::error( parent, mResult, this, caption );
+void QGpgMESignJob::showErrorDialog(QWidget *parent, const QString &caption) const
+{
+    if (mResult.error() && !mResult.error().isCanceled()) {
+        MessageBox::error(parent, mResult, this, caption);
+    }
 }
 

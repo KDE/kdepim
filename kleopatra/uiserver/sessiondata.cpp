@@ -49,17 +49,18 @@ static QMutex mutex;
 
 SessionData::SessionData()
     : mementos(),
-      ref( 0 ),
-      ripe( false )
+      ref(0),
+      ripe(false)
 {
 
 }
 
 // static
-shared_ptr<SessionDataHandler> SessionDataHandler::instance() {
+shared_ptr<SessionDataHandler> SessionDataHandler::instance()
+{
     mutex.lock();
     static SessionDataHandler handler;
-    return shared_ptr<SessionDataHandler>( &handler, boost::bind( &QMutex::unlock, &mutex ) );
+    return shared_ptr<SessionDataHandler>(&handler, boost::bind(&QMutex::unlock, &mutex));
 }
 
 SessionDataHandler::SessionDataHandler()
@@ -67,63 +68,70 @@ SessionDataHandler::SessionDataHandler()
       data(),
       timer()
 {
-    timer.setInterval( GARBAGE_COLLECTION_INTERVAL );
-    timer.setSingleShot( false );
+    timer.setInterval(GARBAGE_COLLECTION_INTERVAL);
+    timer.setSingleShot(false);
 }
-      
 
-void SessionDataHandler::enterSession( unsigned int id ) {
+void SessionDataHandler::enterSession(unsigned int id)
+{
     qDebug() << id;
-    const shared_ptr<SessionData> sd = sessionDataInternal( id );
-    assert( sd );
+    const shared_ptr<SessionData> sd = sessionDataInternal(id);
+    assert(sd);
     ++sd->ref;
     sd->ripe = false;
 }
 
-void SessionDataHandler::exitSession( unsigned int id ) {
+void SessionDataHandler::exitSession(unsigned int id)
+{
     qDebug() << id;
-    const shared_ptr<SessionData> sd = sessionDataInternal( id );
-    assert( sd );
-    if ( --sd->ref <= 0 ) {
+    const shared_ptr<SessionData> sd = sessionDataInternal(id);
+    assert(sd);
+    if (--sd->ref <= 0) {
         sd->ref = 0;
         sd->ripe = false;
-        if ( !timer.isActive() )
-            QMetaObject::invokeMethod( &timer, "start", Qt::QueuedConnection );
+        if (!timer.isActive()) {
+            QMetaObject::invokeMethod(&timer, "start", Qt::QueuedConnection);
+        }
     }
 }
 
-shared_ptr<SessionData> SessionDataHandler::sessionDataInternal( unsigned int id ) const {
+shared_ptr<SessionData> SessionDataHandler::sessionDataInternal(unsigned int id) const
+{
     std::map< unsigned int, shared_ptr<SessionData> >::iterator
-        it = data.lower_bound( id );
-    if ( it == data.end() || it->first != id ) {
-        const shared_ptr<SessionData> sd( new SessionData );
-        it = data.insert( it, std::make_pair( id, sd ) );
+    it = data.lower_bound(id);
+    if (it == data.end() || it->first != id) {
+        const shared_ptr<SessionData> sd(new SessionData);
+        it = data.insert(it, std::make_pair(id, sd));
     }
     return it->second;
 }
 
-shared_ptr<SessionData> SessionDataHandler::sessionData( unsigned int id ) const {
-    return sessionDataInternal( id );
+shared_ptr<SessionData> SessionDataHandler::sessionData(unsigned int id) const
+{
+    return sessionDataInternal(id);
 }
 
-void SessionDataHandler::clear() {
+void SessionDataHandler::clear()
+{
     data.clear();
 }
 
-void SessionDataHandler::slotCollectGarbage() {
-    const QMutexLocker locker( &mutex );
+void SessionDataHandler::slotCollectGarbage()
+{
+    const QMutexLocker locker(&mutex);
     unsigned int alive = 0;
     std::map< unsigned int, shared_ptr<SessionData> >::iterator it = data.begin(), end = data.end();
-    while ( it != end )
-        if ( it->second->ripe ) {
-            data.erase( it++ );
-        } else if ( !it->second->ref ) {
+    while (it != end)
+        if (it->second->ripe) {
+            data.erase(it++);
+        } else if (!it->second->ref) {
             it->second->ripe = true;
             ++it;
         } else {
             ++alive;
             ++it;
         }
-    if ( alive == data.size() )
-        QMetaObject::invokeMethod( &timer, "stop", Qt::QueuedConnection );
+    if (alive == data.size()) {
+        QMetaObject::invokeMethod(&timer, "stop", Qt::QueuedConnection);
+    }
 }

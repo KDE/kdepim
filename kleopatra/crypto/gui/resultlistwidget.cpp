@@ -61,65 +61,67 @@ using namespace Kleo::Crypto;
 using namespace Kleo::Crypto::Gui;
 using namespace boost;
 
-class ResultListWidget::Private {
-    ResultListWidget* const q;
+class ResultListWidget::Private
+{
+    ResultListWidget *const q;
 public:
-    explicit Private( ResultListWidget* qq );
+    explicit Private(ResultListWidget *qq);
 
-    void result( const shared_ptr<const Task::Result> & result );
-    void started( const shared_ptr<Task> & task );
-    void detailsToggled( bool );
+    void result(const shared_ptr<const Task::Result> &result);
+    void started(const shared_ptr<Task> &task);
+    void detailsToggled(bool);
     void allTasksDone();
 
-    void addResultWidget( ResultItemWidget* widget );
+    void addResultWidget(ResultItemWidget *widget);
     void setupSingle();
     void setupMulti();
     void resizeIfStandalone();
-    
+
     std::vector< shared_ptr<TaskCollection> > m_collections;
     bool m_standaloneMode;
     int m_lastErrorItemIndex;
-    ScrollArea * m_scrollArea;
-    QPushButton * m_closeButton;
-    QVBoxLayout * m_layout;
-    QLabel * m_progressLabel;
+    ScrollArea *m_scrollArea;
+    QPushButton *m_closeButton;
+    QVBoxLayout *m_layout;
+    QLabel *m_progressLabel;
 };
 
-ResultListWidget::Private::Private( ResultListWidget* qq ) 
-    : q( qq ),
-    m_collections(),
-    m_standaloneMode( false ),
-    m_lastErrorItemIndex( 0 ),
-    m_scrollArea( 0 ),
-    m_closeButton( 0 ),
-    m_layout( 0 ),
-    m_progressLabel( 0 )
+ResultListWidget::Private::Private(ResultListWidget *qq)
+    : q(qq),
+      m_collections(),
+      m_standaloneMode(false),
+      m_lastErrorItemIndex(0),
+      m_scrollArea(0),
+      m_closeButton(0),
+      m_layout(0),
+      m_progressLabel(0)
 {
-    m_layout = new QVBoxLayout( q );
-    m_layout->setMargin( 0 );
-    m_layout->setSpacing( 0 );
+    m_layout = new QVBoxLayout(q);
+    m_layout->setMargin(0);
+    m_layout->setSpacing(0);
     m_progressLabel = new QLabel;
-    m_progressLabel->setWordWrap( true );
-    m_layout->addWidget( m_progressLabel );
-    m_progressLabel->setVisible( false );
-    
+    m_progressLabel->setWordWrap(true);
+    m_layout->addWidget(m_progressLabel);
+    m_progressLabel->setVisible(false);
+
     m_closeButton = new QPushButton;
-    KGuiItem::assign(m_closeButton, KStandardGuiItem::close() );
+    KGuiItem::assign(m_closeButton, KStandardGuiItem::close());
     q->connect(m_closeButton, &QPushButton::clicked, q, &ResultListWidget::close);
-    m_layout->addWidget( m_closeButton );
-    m_closeButton->setVisible( false );
+    m_layout->addWidget(m_closeButton);
+    m_closeButton->setVisible(false);
 }
 
-ResultListWidget::ResultListWidget( QWidget* parent, Qt::WindowFlags f ) : QWidget( parent, f ), d( new Private( this ) )
+ResultListWidget::ResultListWidget(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f), d(new Private(this))
 {
 }
 
 ResultListWidget::~ResultListWidget()
 {
-    if ( !d->m_standaloneMode )
+    if (!d->m_standaloneMode) {
         return;
+    }
     EMailOperationsPreferences prefs;
-    prefs.setDecryptVerifyPopupGeometry( geometry() );
+    prefs.setDecryptVerifyPopupGeometry(geometry());
     prefs.save();
 }
 
@@ -130,108 +132,117 @@ void ResultListWidget::Private::setupSingle()
 
 void ResultListWidget::Private::resizeIfStandalone()
 {
-    if ( m_standaloneMode )
-        q->resize( q->size().expandedTo( q->sizeHint() ) );
+    if (m_standaloneMode) {
+        q->resize(q->size().expandedTo(q->sizeHint()));
+    }
 }
 
 void ResultListWidget::Private::setupMulti()
 {
-    if ( m_scrollArea )
-        return; // already been here...
+    if (m_scrollArea) {
+        return;    // already been here...
+    }
 
     m_scrollArea = new ScrollArea;
-    m_scrollArea->setFocusPolicy( Qt::NoFocus );
-    assert( qobject_cast<QBoxLayout*>( m_scrollArea->widget()->layout() ) );
-    static_cast<QBoxLayout*>( m_scrollArea->widget()->layout() )->setMargin( 0 );
-    static_cast<QBoxLayout*>( m_scrollArea->widget()->layout() )->setSpacing( 2 );
-    static_cast<QBoxLayout*>( m_scrollArea->widget()->layout() )->addStretch();
-    m_layout->insertWidget( 0, m_scrollArea );
+    m_scrollArea->setFocusPolicy(Qt::NoFocus);
+    assert(qobject_cast<QBoxLayout *>(m_scrollArea->widget()->layout()));
+    static_cast<QBoxLayout *>(m_scrollArea->widget()->layout())->setMargin(0);
+    static_cast<QBoxLayout *>(m_scrollArea->widget()->layout())->setSpacing(2);
+    static_cast<QBoxLayout *>(m_scrollArea->widget()->layout())->addStretch();
+    m_layout->insertWidget(0, m_scrollArea);
 }
 
-void ResultListWidget::Private::addResultWidget( ResultItemWidget* widget )
+void ResultListWidget::Private::addResultWidget(ResultItemWidget *widget)
 {
-    assert( widget );
-    assert( kdtools::any( m_collections, !boost::bind( &TaskCollection::isEmpty, _1 ) ) );
-    
-    assert( m_scrollArea );
-    assert( m_scrollArea->widget() );
-    assert( qobject_cast<QBoxLayout*>( m_scrollArea->widget()->layout() ) );
-    QBoxLayout & blay = *static_cast<QBoxLayout*>( m_scrollArea->widget()->layout() );
-    blay.insertWidget( widget->hasErrorResult() ? m_lastErrorItemIndex++ : ( blay.count() - 1 ), widget );
+    assert(widget);
+    assert(kdtools::any(m_collections, !boost::bind(&TaskCollection::isEmpty, _1)));
+
+    assert(m_scrollArea);
+    assert(m_scrollArea->widget());
+    assert(qobject_cast<QBoxLayout *>(m_scrollArea->widget()->layout()));
+    QBoxLayout &blay = *static_cast<QBoxLayout *>(m_scrollArea->widget()->layout());
+    blay.insertWidget(widget->hasErrorResult() ? m_lastErrorItemIndex++ : (blay.count() - 1), widget);
 
     widget->show();
     resizeIfStandalone();
 }
 
-void ResultListWidget::Private::allTasksDone() {
-    if ( !q->isComplete() )
+void ResultListWidget::Private::allTasksDone()
+{
+    if (!q->isComplete()) {
         return;
-    m_progressLabel->setVisible( false );
+    }
+    m_progressLabel->setVisible(false);
     resizeIfStandalone();
     emit q->completeChanged();
 }
 
-void ResultListWidget::Private::result( const shared_ptr<const Task::Result> & result )
+void ResultListWidget::Private::result(const shared_ptr<const Task::Result> &result)
 {
-    assert( result );
-    assert( kdtools::any( m_collections, !boost::bind( &TaskCollection::isEmpty, _1 ) ) );
-    ResultItemWidget* wid = new ResultItemWidget( result );
-    q->connect( wid, SIGNAL(detailsToggled(bool)), q, SLOT(detailsToggled(bool)) );
+    assert(result);
+    assert(kdtools::any(m_collections, !boost::bind(&TaskCollection::isEmpty, _1)));
+    ResultItemWidget *wid = new ResultItemWidget(result);
+    q->connect(wid, SIGNAL(detailsToggled(bool)), q, SLOT(detailsToggled(bool)));
     q->connect(wid, &ResultItemWidget::linkActivated, q, &ResultListWidget::linkActivated);
     q->connect(wid, &ResultItemWidget::closeButtonClicked, q, &ResultListWidget::close);
-    addResultWidget( wid );
+    addResultWidget(wid);
 }
 
 bool ResultListWidget::isComplete() const
 {
-    return kdtools::all( d->m_collections, mem_fn( &TaskCollection::allTasksCompleted ) );
+    return kdtools::all(d->m_collections, mem_fn(&TaskCollection::allTasksCompleted));
 }
 
-unsigned int ResultListWidget::totalNumberOfTasks() const {
-    return kdtools::accumulate_transform( d->m_collections, mem_fn( &TaskCollection::size ), 0U );
+unsigned int ResultListWidget::totalNumberOfTasks() const
+{
+    return kdtools::accumulate_transform(d->m_collections, mem_fn(&TaskCollection::size), 0U);
 }
 
-unsigned int ResultListWidget::numberOfCompletedTasks() const {
-    return kdtools::accumulate_transform( d->m_collections, mem_fn( &TaskCollection::numberOfCompletedTasks ), 0U );
+unsigned int ResultListWidget::numberOfCompletedTasks() const
+{
+    return kdtools::accumulate_transform(d->m_collections, mem_fn(&TaskCollection::numberOfCompletedTasks), 0U);
 }
 
-void ResultListWidget::setTaskCollection( const shared_ptr<TaskCollection> & coll )
+void ResultListWidget::setTaskCollection(const shared_ptr<TaskCollection> &coll)
 {
     //clear(); ### PENDING(marc) implement
-    addTaskCollection( coll );
+    addTaskCollection(coll);
 }
 
-void ResultListWidget::addTaskCollection( const shared_ptr<TaskCollection> & coll )
+void ResultListWidget::addTaskCollection(const shared_ptr<TaskCollection> &coll)
 {
-    assert( coll ); assert( !coll->isEmpty() );
-    d->m_collections.push_back( coll );
-    connect( coll.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)),
-             this, SLOT(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)) );
-    connect( coll.get(), SIGNAL(started(boost::shared_ptr<Kleo::Crypto::Task>)),
-             this, SLOT(started(boost::shared_ptr<Kleo::Crypto::Task>)) );
-    connect( coll.get(), SIGNAL(done()), this, SLOT(allTasksDone()) );
+    assert(coll); assert(!coll->isEmpty());
+    d->m_collections.push_back(coll);
+    connect(coll.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)),
+            this, SLOT(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)));
+    connect(coll.get(), SIGNAL(started(boost::shared_ptr<Kleo::Crypto::Task>)),
+            this, SLOT(started(boost::shared_ptr<Kleo::Crypto::Task>)));
+    connect(coll.get(), SIGNAL(done()), this, SLOT(allTasksDone()));
     d->setupMulti();
-    setStandaloneMode( d->m_standaloneMode );
+    setStandaloneMode(d->m_standaloneMode);
 }
 
-void ResultListWidget::Private::detailsToggled( bool ) {
-    resizeIfStandalone();
-}
-
-void ResultListWidget::Private::started( const shared_ptr<Task> & task )
+void ResultListWidget::Private::detailsToggled(bool)
 {
-    assert( task );
-    assert( m_progressLabel );
-    m_progressLabel->setText( i18nc( "number, operation description", "Operation %1: %2", q->numberOfCompletedTasks() + 1, task->label() ) );
     resizeIfStandalone();
 }
 
-void ResultListWidget::setStandaloneMode( bool standalone ) {
+void ResultListWidget::Private::started(const shared_ptr<Task> &task)
+{
+    assert(task);
+    assert(m_progressLabel);
+    m_progressLabel->setText(i18nc("number, operation description", "Operation %1: %2", q->numberOfCompletedTasks() + 1, task->label()));
+    resizeIfStandalone();
+}
+
+void ResultListWidget::setStandaloneMode(bool standalone)
+{
     d->m_standaloneMode = standalone;
-    if ( totalNumberOfTasks() == 0 )
+    if (totalNumberOfTasks() == 0) {
         return;
-    d->m_closeButton->setVisible( standalone );
-    d->m_progressLabel->setVisible( standalone );
+    }
+    d->m_closeButton->setVisible(standalone);
+    d->m_progressLabel->setVisible(standalone);
 }
 
 #include "moc_resultlistwidget.cpp"

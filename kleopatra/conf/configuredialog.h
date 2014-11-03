@@ -38,13 +38,13 @@
 
 class ConfigureDialog : public KCMultiDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit ConfigureDialog( QWidget * parent=0 );
-  ~ConfigureDialog();
+    explicit ConfigureDialog(QWidget *parent = 0);
+    ~ConfigureDialog();
 
 protected:
-  void hideEvent( QHideEvent * );
+    void hideEvent(QHideEvent *);
 
 };
 

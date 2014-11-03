@@ -39,32 +39,37 @@
 
 #include <QObject>
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class VerifyChecksumsCommand : public QObject, public AssuanCommandMixin<VerifyChecksumsCommand> {
-        Q_OBJECT
-    public:
-        VerifyChecksumsCommand();
-        ~VerifyChecksumsCommand();
+class VerifyChecksumsCommand : public QObject, public AssuanCommandMixin<VerifyChecksumsCommand>
+{
+    Q_OBJECT
+public:
+    VerifyChecksumsCommand();
+    ~VerifyChecksumsCommand();
 
-        static const char * staticName() { return "CHECKSUM_VERIFY_FILES"; }
+    static const char *staticName()
+    {
+        return "CHECKSUM_VERIFY_FILES";
+    }
 
-    private:
-        int doStart();
-        void doCanceled();
+private:
+    int doStart();
+    void doCanceled();
 
 #ifdef Q_MOC_RUN
-    private Q_SLOTS:
-        void done();
-        void done( int, QString );
+private Q_SLOTS:
+    void done();
+    void done(int, QString);
 #endif
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        //Q_PRIVATE_SLOT( this, void done() )
-        //Q_PRIVATE_SLOT( this, void done(int,QString) )
-    };
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    //Q_PRIVATE_SLOT( this, void done() )
+    //Q_PRIVATE_SLOT( this, void done(int,QString) )
+};
 
 }
 

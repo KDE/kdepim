@@ -30,32 +30,33 @@
     your version.
 */
 
-
 #ifndef __KLEOPATRA_RELOADKEYSCOMMAND_H__
 #define __KLEOPATRA_RELOADKEYSCOMMAND_H__
 
 #include <commands/command.h>
 
-namespace  Kleo {
+namespace  Kleo
+{
 
-    class ReloadKeysCommand : public Command {
-        Q_OBJECT
-    public:
-        explicit ReloadKeysCommand( KeyListController* parent );
-        ReloadKeysCommand( QAbstractItemView * view, KeyListController* parent );
-        ~ReloadKeysCommand();        
+class ReloadKeysCommand : public Command
+{
+    Q_OBJECT
+public:
+    explicit ReloadKeysCommand(KeyListController *parent);
+    ReloadKeysCommand(QAbstractItemView *view, KeyListController *parent);
+    ~ReloadKeysCommand();
 
-    private:
-        void doStart();
-        void doCancel();
+private:
+    void doStart();
+    void doCancel();
 
-    private:
-        class Private;
-        inline Private * d_func();
-        inline const Private * d_func() const;
+private:
+    class Private;
+    inline Private *d_func();
+    inline const Private *d_func() const;
 
-        Q_PRIVATE_SLOT( d_func(), void keyListingDone( GpgME::KeyListResult ) )
-    };
+    Q_PRIVATE_SLOT(d_func(), void keyListingDone(GpgME::KeyListResult))
+};
 }
 
 #endif // __KLEOPATRA_RELOADKEYSCOMMAND_H__

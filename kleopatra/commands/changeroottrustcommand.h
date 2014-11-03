@@ -37,90 +37,104 @@
 
 #include <gpgme++/key.h>
 
-namespace Kleo {
-namespace Commands {
+namespace Kleo
+{
+namespace Commands
+{
 
-    class ChangeRootTrustCommand : public Command {
-        Q_OBJECT
-    public:
-        explicit ChangeRootTrustCommand( KeyListController * parent );
-        explicit ChangeRootTrustCommand( QAbstractItemView * view, KeyListController * parent );
-        explicit ChangeRootTrustCommand( const GpgME::Key & key, KeyListController * parent );
-        explicit ChangeRootTrustCommand( const GpgME::Key & key, QAbstractItemView * view, KeyListController * parent );
-        ~ChangeRootTrustCommand();
+class ChangeRootTrustCommand : public Command
+{
+    Q_OBJECT
+public:
+    explicit ChangeRootTrustCommand(KeyListController *parent);
+    explicit ChangeRootTrustCommand(QAbstractItemView *view, KeyListController *parent);
+    explicit ChangeRootTrustCommand(const GpgME::Key &key, KeyListController *parent);
+    explicit ChangeRootTrustCommand(const GpgME::Key &key, QAbstractItemView *view, KeyListController *parent);
+    ~ChangeRootTrustCommand();
 
-        void setTrust( GpgME::Key::OwnerTrust trust );
-        GpgME::Key::OwnerTrust trust() const;
+    void setTrust(GpgME::Key::OwnerTrust trust);
+    GpgME::Key::OwnerTrust trust() const;
 
-        void setTrustListFile( const QString & file );
-        QString trustListFile() const;
+    void setTrustListFile(const QString &file);
+    QString trustListFile() const;
 
-        /* reimp */ static Restrictions restrictions() { return OnlyOneKey|MustBeCMS|MustBeRoot; }
+    /* reimp */ static Restrictions restrictions()
+    {
+        return OnlyOneKey | MustBeCMS | MustBeRoot;
+    }
 
-    private:
-        /* reimp */ void doStart();
-        /* reimp */ void doCancel();
+private:
+    /* reimp */ void doStart();
+    /* reimp */ void doCancel();
 
-    private:
-        class Private;
-        inline Private * d_func();
-        inline const Private * d_func() const;
-        Q_PRIVATE_SLOT( d_func(), void slotOperationFinished() )
-    };
+private:
+    class Private;
+    inline Private *d_func();
+    inline const Private *d_func() const;
+    Q_PRIVATE_SLOT(d_func(), void slotOperationFinished())
+};
 
-    class TrustRootCommand : public ChangeRootTrustCommand {
-    public:
-        explicit TrustRootCommand( KeyListController * parent )
-            : ChangeRootTrustCommand( parent )
-        {
-            setTrust( GpgME::Key::Ultimate );
-        }
-        explicit TrustRootCommand( QAbstractItemView * view, KeyListController * parent )
-            : ChangeRootTrustCommand( view, parent )
-        {
-            setTrust( GpgME::Key::Ultimate );
-        }
-        explicit TrustRootCommand( const GpgME::Key & key, KeyListController * parent )
-            : ChangeRootTrustCommand( key, parent )
-        {
-            setTrust( GpgME::Key::Ultimate );
-        }
-        explicit TrustRootCommand( const GpgME::Key & key, QAbstractItemView * view, KeyListController * parent )
-            : ChangeRootTrustCommand( key, view, parent )
-        {
-            setTrust( GpgME::Key::Ultimate );
-        }
+class TrustRootCommand : public ChangeRootTrustCommand
+{
+public:
+    explicit TrustRootCommand(KeyListController *parent)
+        : ChangeRootTrustCommand(parent)
+    {
+        setTrust(GpgME::Key::Ultimate);
+    }
+    explicit TrustRootCommand(QAbstractItemView *view, KeyListController *parent)
+        : ChangeRootTrustCommand(view, parent)
+    {
+        setTrust(GpgME::Key::Ultimate);
+    }
+    explicit TrustRootCommand(const GpgME::Key &key, KeyListController *parent)
+        : ChangeRootTrustCommand(key, parent)
+    {
+        setTrust(GpgME::Key::Ultimate);
+    }
+    explicit TrustRootCommand(const GpgME::Key &key, QAbstractItemView *view, KeyListController *parent)
+        : ChangeRootTrustCommand(key, view, parent)
+    {
+        setTrust(GpgME::Key::Ultimate);
+    }
 
-        /* reimp */ static Restrictions restrictions() { return ChangeRootTrustCommand::restrictions()|MustBeUntrustedRoot; }
+    /* reimp */ static Restrictions restrictions()
+    {
+        return ChangeRootTrustCommand::restrictions() | MustBeUntrustedRoot;
+    }
 
-    };
+};
 
-    class DistrustRootCommand : public ChangeRootTrustCommand {
-    public:
-        explicit DistrustRootCommand( KeyListController * parent )
-            : ChangeRootTrustCommand( parent )
-        {
-            setTrust( GpgME::Key::Never );
-        }
-        explicit DistrustRootCommand( QAbstractItemView * view, KeyListController * parent )
-            : ChangeRootTrustCommand( view, parent )
-        {
-            setTrust( GpgME::Key::Never );
-        }
-        explicit DistrustRootCommand( const GpgME::Key & key, KeyListController * parent )
-            : ChangeRootTrustCommand( key, parent )
-        {
-            setTrust( GpgME::Key::Never );
-        }
-        explicit DistrustRootCommand( const GpgME::Key & key, QAbstractItemView * view, KeyListController * parent )
-            : ChangeRootTrustCommand( key, view, parent )
-        {
-            setTrust( GpgME::Key::Never );
-        }
+class DistrustRootCommand : public ChangeRootTrustCommand
+{
+public:
+    explicit DistrustRootCommand(KeyListController *parent)
+        : ChangeRootTrustCommand(parent)
+    {
+        setTrust(GpgME::Key::Never);
+    }
+    explicit DistrustRootCommand(QAbstractItemView *view, KeyListController *parent)
+        : ChangeRootTrustCommand(view, parent)
+    {
+        setTrust(GpgME::Key::Never);
+    }
+    explicit DistrustRootCommand(const GpgME::Key &key, KeyListController *parent)
+        : ChangeRootTrustCommand(key, parent)
+    {
+        setTrust(GpgME::Key::Never);
+    }
+    explicit DistrustRootCommand(const GpgME::Key &key, QAbstractItemView *view, KeyListController *parent)
+        : ChangeRootTrustCommand(key, view, parent)
+    {
+        setTrust(GpgME::Key::Never);
+    }
 
-        /* reimp */ static Restrictions restrictions() { return ChangeRootTrustCommand::restrictions()|MustBeTrustedRoot; }
+    /* reimp */ static Restrictions restrictions()
+    {
+        return ChangeRootTrustCommand::restrictions() | MustBeTrustedRoot;
+    }
 
-    };
+};
 
 }
 }

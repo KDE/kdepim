@@ -46,35 +46,37 @@ using namespace Kleo;
 using namespace GpgME;
 using namespace boost;
 
-QGpgMEAddUserIDJob::QGpgMEAddUserIDJob( Context * context )
-  : mixin_type( context )
+QGpgMEAddUserIDJob::QGpgMEAddUserIDJob(Context *context)
+    : mixin_type(context)
 {
-  lateInitialization();
+    lateInitialization();
 }
 
 QGpgMEAddUserIDJob::~QGpgMEAddUserIDJob() {}
 
-static QGpgMEAddUserIDJob::result_type add_user_id( Context * ctx, const Key & key, const QString & name, const QString & email, const QString & comment ) {
+static QGpgMEAddUserIDJob::result_type add_user_id(Context *ctx, const Key &key, const QString &name, const QString &email, const QString &comment)
+{
 
-  std::auto_ptr<GpgAddUserIDEditInteractor> gau( new GpgAddUserIDEditInteractor );
+    std::auto_ptr<GpgAddUserIDEditInteractor> gau(new GpgAddUserIDEditInteractor);
 
-  gau->setNameUtf8(       name.toUtf8().constData() );
-  gau->setEmailUtf8(     email.toUtf8().constData() );
-  gau->setCommentUtf8( comment.toUtf8().constData() );
+    gau->setNameUtf8(name.toUtf8().constData());
+    gau->setEmailUtf8(email.toUtf8().constData());
+    gau->setCommentUtf8(comment.toUtf8().constData());
 
-  std::auto_ptr<EditInteractor> ei( gau );
+    std::auto_ptr<EditInteractor> ei(gau);
 
-  QGpgME::QByteArrayDataProvider dp;
-  Data data( &dp );
-  assert( !data.isNull() );
-  const Error err = ctx->edit( key, ei, data );
-  Error ae;
-  const QString log = _detail::audit_log_as_html( ctx, ae );
-  return make_tuple( err, log, ae );
+    QGpgME::QByteArrayDataProvider dp;
+    Data data(&dp);
+    assert(!data.isNull());
+    const Error err = ctx->edit(key, ei, data);
+    Error ae;
+    const QString log = _detail::audit_log_as_html(ctx, ae);
+    return make_tuple(err, log, ae);
 }
 
-Error QGpgMEAddUserIDJob::start( const Key & key, const QString & name, const QString & email, const QString & comment ) {
-  run( bind( &add_user_id, _1, key, name, email, comment ) );
-  return Error();
+Error QGpgMEAddUserIDJob::start(const Key &key, const QString &name, const QString &email, const QString &comment)
+{
+    run(bind(&add_user_id, _1, key, name, email, comment));
+    return Error();
 }
 

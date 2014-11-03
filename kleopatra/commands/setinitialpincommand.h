@@ -35,32 +35,38 @@
 
 #include <commands/command.h>
 
-namespace Kleo {
-namespace Commands {
+namespace Kleo
+{
+namespace Commands
+{
 
-    class SetInitialPinCommand : public Command {
-        Q_OBJECT
-    public:
-        SetInitialPinCommand();
-        ~SetInitialPinCommand();
+class SetInitialPinCommand : public Command
+{
+    Q_OBJECT
+public:
+    SetInitialPinCommand();
+    ~SetInitialPinCommand();
 
-        /* reimp */ static Restrictions restrictions() { return AnyCardHasNullPin; }
+    /* reimp */ static Restrictions restrictions()
+    {
+        return AnyCardHasNullPin;
+    }
 
-        QDialog * dialog() const;
+    QDialog *dialog() const;
 
-    private:
-        /* reimp */ void doStart();
-        /* reimp */ void doCancel();
+private:
+    /* reimp */ void doStart();
+    /* reimp */ void doCancel();
 
-    private:
-        class Private;
-        inline Private * d_func();
-        inline const Private * d_func() const;
-        Q_PRIVATE_SLOT( d_func(), void slotDialogRejected() )
-        Q_PRIVATE_SLOT( d_func(), void slotDialogAccepted() )
-        Q_PRIVATE_SLOT( d_func(), void slotNksPinRequested() )
-        Q_PRIVATE_SLOT( d_func(), void slotSigGPinRequested() )
-    };
+private:
+    class Private;
+    inline Private *d_func();
+    inline const Private *d_func() const;
+    Q_PRIVATE_SLOT(d_func(), void slotDialogRejected())
+    Q_PRIVATE_SLOT(d_func(), void slotDialogAccepted())
+    Q_PRIVATE_SLOT(d_func(), void slotNksPinRequested())
+    Q_PRIVATE_SLOT(d_func(), void slotSigGPinRequested())
+};
 
 }
 }

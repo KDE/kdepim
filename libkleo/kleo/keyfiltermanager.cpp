@@ -59,94 +59,102 @@ using namespace Kleo;
 using namespace boost;
 using namespace GpgME;
 
-namespace {
+namespace
+{
 
-    class Model : public QAbstractListModel {
-        KeyFilterManager::Private * m_keyFilterManagerPrivate;
-    public:
-        explicit Model( KeyFilterManager::Private * p )
-            : QAbstractListModel( 0 ), m_keyFilterManagerPrivate( p ) {}
+class Model : public QAbstractListModel
+{
+    KeyFilterManager::Private *m_keyFilterManagerPrivate;
+public:
+    explicit Model(KeyFilterManager::Private *p)
+        : QAbstractListModel(0), m_keyFilterManagerPrivate(p) {}
 
-        /* reimp */ int rowCount( const QModelIndex & ) const;
-        /* reimp */ QVariant data( const QModelIndex & idx, int role ) const;
-        /* upgrade to public */ using QAbstractListModel::reset;
-    };
+    /* reimp */ int rowCount(const QModelIndex &) const;
+    /* reimp */ QVariant data(const QModelIndex &idx, int role) const;
+    /* upgrade to public */ using QAbstractListModel::reset;
+};
 
-    class AllCertificatesKeyFilter : public KeyFilterImplBase {
-    public:
-        AllCertificatesKeyFilter()
-            : KeyFilterImplBase()
-        {
-            mSpecificity = UINT_MAX; // overly high for ordering
-            mName = i18n("All Certificates");
-            mId = QLatin1String("all-certificates");
-            mMatchContexts = Filtering;
-        }
-    };
+class AllCertificatesKeyFilter : public KeyFilterImplBase
+{
+public:
+    AllCertificatesKeyFilter()
+        : KeyFilterImplBase()
+    {
+        mSpecificity = UINT_MAX; // overly high for ordering
+        mName = i18n("All Certificates");
+        mId = QLatin1String("all-certificates");
+        mMatchContexts = Filtering;
+    }
+};
 
-    class MyCertificatesKeyFilter : public KeyFilterImplBase {
-    public:
-        MyCertificatesKeyFilter()
-            : KeyFilterImplBase()
-        {
-            mHasSecret = Set;
-            mSpecificity = UINT_MAX-1; // overly high for ordering
+class MyCertificatesKeyFilter : public KeyFilterImplBase
+{
+public:
+    MyCertificatesKeyFilter()
+        : KeyFilterImplBase()
+    {
+        mHasSecret = Set;
+        mSpecificity = UINT_MAX - 1; // overly high for ordering
 
-            mName = i18n("My Certificates");
-            mId = QLatin1String("my-certificates");
-            mMatchContexts = AnyMatchContext;
-            mBold = true;
-        }
-    };
+        mName = i18n("My Certificates");
+        mId = QLatin1String("my-certificates");
+        mMatchContexts = AnyMatchContext;
+        mBold = true;
+    }
+};
 
-    class TrustedCertificatesKeyFilter : public KeyFilterImplBase {
-    public:
-        TrustedCertificatesKeyFilter()
-            : KeyFilterImplBase()
-        {
-            mRevoked = NotSet;
-            mValidity = IsAtLeast;
-            mValidityReferenceLevel = UserID::Marginal; // Full?
-            mSpecificity = UINT_MAX-2; // overly high for ordering
+class TrustedCertificatesKeyFilter : public KeyFilterImplBase
+{
+public:
+    TrustedCertificatesKeyFilter()
+        : KeyFilterImplBase()
+    {
+        mRevoked = NotSet;
+        mValidity = IsAtLeast;
+        mValidityReferenceLevel = UserID::Marginal; // Full?
+        mSpecificity = UINT_MAX - 2; // overly high for ordering
 
-            mName = i18n("Trusted Certificates");
-            mId = QLatin1String("trusted-certificates");
-            mMatchContexts = Filtering;
-        }
-    };
+        mName = i18n("Trusted Certificates");
+        mId = QLatin1String("trusted-certificates");
+        mMatchContexts = Filtering;
+    }
+};
 
-    class OtherCertificatesKeyFilter : public KeyFilterImplBase {
-    public:
-        OtherCertificatesKeyFilter()
-            : KeyFilterImplBase()
-        {
-            mHasSecret = NotSet;
-            mValidity = IsAtMost;
-            mValidityReferenceLevel = UserID::Never;
-            mSpecificity = UINT_MAX-3; // overly high for ordering
+class OtherCertificatesKeyFilter : public KeyFilterImplBase
+{
+public:
+    OtherCertificatesKeyFilter()
+        : KeyFilterImplBase()
+    {
+        mHasSecret = NotSet;
+        mValidity = IsAtMost;
+        mValidityReferenceLevel = UserID::Never;
+        mSpecificity = UINT_MAX - 3; // overly high for ordering
 
-            mName = i18n("Other Certificates");
-            mId = QLatin1String("other-certificates");
-            mMatchContexts = Filtering;
-        }
-    };
+        mName = i18n("Other Certificates");
+        mId = QLatin1String("other-certificates");
+        mMatchContexts = Filtering;
+    }
+};
 }
 
-static std::vector< shared_ptr<KeyFilter> > defaultFilters() {
+static std::vector< shared_ptr<KeyFilter> > defaultFilters()
+{
     std::vector<shared_ptr<KeyFilter> > result;
-    result.reserve( 3 );
-    result.push_back( shared_ptr<KeyFilter>( new MyCertificatesKeyFilter ) );
-    result.push_back( shared_ptr<KeyFilter>( new TrustedCertificatesKeyFilter ) );
-    result.push_back( shared_ptr<KeyFilter>( new OtherCertificatesKeyFilter ) );
-    result.push_back( shared_ptr<KeyFilter>( new AllCertificatesKeyFilter ) );
+    result.reserve(3);
+    result.push_back(shared_ptr<KeyFilter>(new MyCertificatesKeyFilter));
+    result.push_back(shared_ptr<KeyFilter>(new TrustedCertificatesKeyFilter));
+    result.push_back(shared_ptr<KeyFilter>(new OtherCertificatesKeyFilter));
+    result.push_back(shared_ptr<KeyFilter>(new AllCertificatesKeyFilter));
     return result;
 }
 
-
-class KeyFilterManager::Private {
+class KeyFilterManager::Private
+{
 public:
-    Private() : filters(), model( this ) {}
-    void clear() {
+    Private() : filters(), model(this) {}
+    void clear()
+    {
         filters.clear();
         model.reset();
     }
@@ -155,177 +163,208 @@ public:
     Model model;
 };
 
+KeyFilterManager *KeyFilterManager::mSelf = 0;
 
-KeyFilterManager * KeyFilterManager::mSelf = 0;
-
-KeyFilterManager::KeyFilterManager( QObject * parent )
-    : QObject( parent ), d( new Private )
+KeyFilterManager::KeyFilterManager(QObject *parent)
+    : QObject(parent), d(new Private)
 {
-  mSelf = this;
-  // ### DF: doesn't a KStaticDeleter work more reliably?
-  if ( QCoreApplication * app = QCoreApplication::instance() )
-    connect( app, SIGNAL(aboutToQuit()), SLOT(deleteLater()) );
-  reload();
+    mSelf = this;
+    // ### DF: doesn't a KStaticDeleter work more reliably?
+    if (QCoreApplication *app = QCoreApplication::instance()) {
+        connect(app, SIGNAL(aboutToQuit()), SLOT(deleteLater()));
+    }
+    reload();
 }
 
-KeyFilterManager::~KeyFilterManager() {
-  mSelf = 0;
-  if ( d )
-    d->clear();
-  delete d; d = 0;
+KeyFilterManager::~KeyFilterManager()
+{
+    mSelf = 0;
+    if (d) {
+        d->clear();
+    }
+    delete d; d = 0;
 }
 
-KeyFilterManager * KeyFilterManager::instance() {
-  if ( !mSelf )
-    mSelf = new KeyFilterManager();
-  return mSelf;
+KeyFilterManager *KeyFilterManager::instance()
+{
+    if (!mSelf) {
+        mSelf = new KeyFilterManager();
+    }
+    return mSelf;
 }
 
-const shared_ptr<KeyFilter> & KeyFilterManager::filterMatching( const Key & key, KeyFilter::MatchContexts contexts ) const {
+const shared_ptr<KeyFilter> &KeyFilterManager::filterMatching(const Key &key, KeyFilter::MatchContexts contexts) const
+{
     const std::vector< shared_ptr<KeyFilter> >::const_iterator it
-        = std::find_if( d->filters.begin(), d->filters.end(),
-                        bind( &KeyFilter::matches, _1, cref( key ), contexts ) );
-    if ( it != d->filters.end() )
+        = std::find_if(d->filters.begin(), d->filters.end(),
+                       bind(&KeyFilter::matches, _1, cref(key), contexts));
+    if (it != d->filters.end()) {
         return *it;
+    }
     static const shared_ptr<KeyFilter> null;
     return null;
 }
 
-std::vector< shared_ptr<KeyFilter> > KeyFilterManager::filtersMatching( const Key & key, KeyFilter::MatchContexts contexts ) const {
+std::vector< shared_ptr<KeyFilter> > KeyFilterManager::filtersMatching(const Key &key, KeyFilter::MatchContexts contexts) const
+{
     std::vector< shared_ptr<KeyFilter> > result;
-    result.reserve( d->filters.size() );
-    std::remove_copy_if( d->filters.begin(), d->filters.end(),
-                         std::back_inserter( result ),
-                         !bind( &KeyFilter::matches, _1, cref( key ), contexts ) );
+    result.reserve(d->filters.size());
+    std::remove_copy_if(d->filters.begin(), d->filters.end(),
+                        std::back_inserter(result),
+                        !bind(&KeyFilter::matches, _1, cref(key), contexts));
     return result;
 }
 
-namespace {
-    struct ByDecreasingSpecificity : std::binary_function<shared_ptr<KeyFilter>,shared_ptr<KeyFilter>,bool> {
-        bool operator()( const shared_ptr<KeyFilter> & lhs, const shared_ptr<KeyFilter> & rhs ) const {
-            return lhs->specificity() > rhs->specificity();
+namespace
+{
+struct ByDecreasingSpecificity : std::binary_function<shared_ptr<KeyFilter>, shared_ptr<KeyFilter>, bool> {
+    bool operator()(const shared_ptr<KeyFilter> &lhs, const shared_ptr<KeyFilter> &rhs) const
+    {
+        return lhs->specificity() > rhs->specificity();
+    }
+};
+}
+
+void KeyFilterManager::reload()
+{
+    d->clear();
+
+    d->filters = defaultFilters();
+
+    if (KConfig *config = CryptoBackendFactory::instance()->configObject()) {
+        const QStringList groups = config->groupList().filter(QRegExp(QLatin1String("^Key Filter #\\d+$")));
+        for (QStringList::const_iterator it = groups.begin() ; it != groups.end() ; ++it) {
+            const KConfigGroup cfg(config, *it);
+            d->filters.push_back(shared_ptr<KeyFilter>(new KConfigBasedKeyFilter(cfg)));
         }
-    };
+    }
+    std::stable_sort(d->filters.begin(), d->filters.end(), ByDecreasingSpecificity());
+    qDebug() << "final filter count is" << d->filters.size();
 }
 
-void KeyFilterManager::reload() {
-  d->clear();
-
-  d->filters = defaultFilters();
-
-  if ( KConfig * config = CryptoBackendFactory::instance()->configObject() ) {
-      const QStringList groups = config->groupList().filter( QRegExp( QLatin1String("^Key Filter #\\d+$") ) );
-      for ( QStringList::const_iterator it = groups.begin() ; it != groups.end() ; ++it ) {
-          const KConfigGroup cfg( config, *it );
-          d->filters.push_back( shared_ptr<KeyFilter>( new KConfigBasedKeyFilter( cfg ) ) );
-      }
-  }
-  std::stable_sort( d->filters.begin(), d->filters.end(), ByDecreasingSpecificity() );
-  qDebug() << "final filter count is" << d->filters.size();
-}
-
-QAbstractItemModel * KeyFilterManager::model() const {
+QAbstractItemModel *KeyFilterManager::model() const
+{
     return &d->model;
 }
 
-const shared_ptr<KeyFilter> & KeyFilterManager::keyFilterByID( const QString & id ) const {
+const shared_ptr<KeyFilter> &KeyFilterManager::keyFilterByID(const QString &id) const
+{
     const std::vector< shared_ptr<KeyFilter> >::const_iterator it
-        = std::find_if( d->filters.begin(), d->filters.end(),
-                        bind( &KeyFilter::id, _1 ) == id );
-    if ( it != d->filters.end() )
+        = std::find_if(d->filters.begin(), d->filters.end(),
+                       bind(&KeyFilter::id, _1) == id);
+    if (it != d->filters.end()) {
         return *it;
+    }
     static const shared_ptr<KeyFilter> null;
     return null;
 }
 
-const shared_ptr<KeyFilter> & KeyFilterManager::fromModelIndex( const QModelIndex & idx ) const {
-    if ( !idx.isValid() || idx.model() != &d->model || idx.row() < 0 ||
-         static_cast<unsigned>(idx.row()) >= d->filters.size() ) {
+const shared_ptr<KeyFilter> &KeyFilterManager::fromModelIndex(const QModelIndex &idx) const
+{
+    if (!idx.isValid() || idx.model() != &d->model || idx.row() < 0 ||
+            static_cast<unsigned>(idx.row()) >= d->filters.size()) {
         static const shared_ptr<KeyFilter> null;
         return null;
     }
     return d->filters[idx.row()];
 }
 
-QModelIndex KeyFilterManager::toModelIndex( const shared_ptr<KeyFilter> & kf ) const {
-    if ( !kf )
+QModelIndex KeyFilterManager::toModelIndex(const shared_ptr<KeyFilter> &kf) const
+{
+    if (!kf) {
         return QModelIndex();
-    const std::pair<
-      std::vector<shared_ptr<KeyFilter> >::const_iterator,
-      std::vector<shared_ptr<KeyFilter> >::const_iterator
-    > pair = std::equal_range( d->filters.begin(), d->filters.end(), kf, ByDecreasingSpecificity() );
+    }
+    const std::pair <
+    std::vector<shared_ptr<KeyFilter> >::const_iterator,
+        std::vector<shared_ptr<KeyFilter> >::const_iterator
+        > pair = std::equal_range(d->filters.begin(), d->filters.end(), kf, ByDecreasingSpecificity());
     const std::vector<shared_ptr<KeyFilter> >::const_iterator it
-        = std::find( pair.first, pair.second, kf );
-    if ( it != pair.second )
-        return d->model.index( it - d->filters.begin() );
-    else
+        = std::find(pair.first, pair.second, kf);
+    if (it != pair.second) {
+        return d->model.index(it - d->filters.begin());
+    } else {
         return QModelIndex();
-}
-
-int Model::rowCount( const QModelIndex & ) const {
-    return m_keyFilterManagerPrivate->filters.size();
-}
-
-QVariant Model::data( const QModelIndex & idx, int role ) const {
-    if ( ( role != Qt::DisplayRole && role != Qt::EditRole &&
-         role != Qt::ToolTipRole && role != Qt::DecorationRole ) ||
-         !idx.isValid() || idx.model() != this ||
-         idx.row() < 0 || static_cast<unsigned>(idx.row()) >  m_keyFilterManagerPrivate->filters.size() )
-        return QVariant();
-    if ( role == Qt::DecorationRole )
-        return m_keyFilterManagerPrivate->filters[idx.row()]->icon();
-    else
-        return m_keyFilterManagerPrivate->filters[idx.row()]->name();
-}
-
-namespace {
-    template <typename C, typename P1, typename P2>
-    typename C::const_iterator find_if_and( const C & c, P1 p1, P2 p2 ) {
-        return std::find_if( boost::make_filter_iterator( p1, boost::begin( c ), boost::end( c ) ),
-                             boost::make_filter_iterator( p1, boost::end( c ), boost::end( c ) ),
-                             p2 ).base();
     }
 }
 
-QFont KeyFilterManager::font( const Key & key, const QFont & baseFont ) const {
-    return kdtools::accumulate_transform_if( d->filters, mem_fn( &KeyFilter::fontDesription ),
-                                             bind( &KeyFilter::matches, _1, key, KeyFilter::Appearance ),
-                                             KeyFilter::FontDescription(),
-                                             bind( &KeyFilter::FontDescription::resolve, _1, _2 ) ).font( baseFont );
+int Model::rowCount(const QModelIndex &) const
+{
+    return m_keyFilterManagerPrivate->filters.size();
 }
 
-static QColor get_color( const std::vector< shared_ptr<KeyFilter> > & filters, const Key & key, QColor (KeyFilter::*fun)() const ) {
+QVariant Model::data(const QModelIndex &idx, int role) const
+{
+    if ((role != Qt::DisplayRole && role != Qt::EditRole &&
+            role != Qt::ToolTipRole && role != Qt::DecorationRole) ||
+            !idx.isValid() || idx.model() != this ||
+            idx.row() < 0 || static_cast<unsigned>(idx.row()) >  m_keyFilterManagerPrivate->filters.size()) {
+        return QVariant();
+    }
+    if (role == Qt::DecorationRole) {
+        return m_keyFilterManagerPrivate->filters[idx.row()]->icon();
+    } else {
+        return m_keyFilterManagerPrivate->filters[idx.row()]->name();
+    }
+}
+
+namespace
+{
+template <typename C, typename P1, typename P2>
+typename C::const_iterator find_if_and(const C &c, P1 p1, P2 p2)
+{
+    return std::find_if(boost::make_filter_iterator(p1, boost::begin(c), boost::end(c)),
+                        boost::make_filter_iterator(p1, boost::end(c), boost::end(c)),
+                        p2).base();
+}
+}
+
+QFont KeyFilterManager::font(const Key &key, const QFont &baseFont) const
+{
+    return kdtools::accumulate_transform_if(d->filters, mem_fn(&KeyFilter::fontDesription),
+                                            bind(&KeyFilter::matches, _1, key, KeyFilter::Appearance),
+                                            KeyFilter::FontDescription(),
+                                            bind(&KeyFilter::FontDescription::resolve, _1, _2)).font(baseFont);
+}
+
+static QColor get_color(const std::vector< shared_ptr<KeyFilter> > &filters, const Key &key, QColor(KeyFilter::*fun)() const)
+{
     const std::vector< shared_ptr<KeyFilter> >::const_iterator it
-        = find_if_and( filters,
-                       bind( &KeyFilter::matches, _1, key, KeyFilter::Appearance ),
-                       bind( &QColor::isValid, bind( fun, _1 ) ) );
-    if ( it == filters.end() )
+        = find_if_and(filters,
+                      bind(&KeyFilter::matches, _1, key, KeyFilter::Appearance),
+                      bind(&QColor::isValid, bind(fun, _1)));
+    if (it == filters.end()) {
         return QColor();
-    else
+    } else {
         return (it->get()->*fun)();
+    }
 }
 
-static QString get_string( const std::vector< shared_ptr<KeyFilter> > & filters, const Key & key, QString (KeyFilter::*fun)() const ) {
+static QString get_string(const std::vector< shared_ptr<KeyFilter> > &filters, const Key &key, QString(KeyFilter::*fun)() const)
+{
     const std::vector< shared_ptr<KeyFilter> >::const_iterator it
-        = find_if_and( filters,
-                       bind( &KeyFilter::matches, _1, key, KeyFilter::Appearance ),
-                       !bind( &QString::isEmpty, bind( fun, _1 ) ) );
-    if ( it == filters.end() )
+        = find_if_and(filters,
+                      bind(&KeyFilter::matches, _1, key, KeyFilter::Appearance),
+                      !bind(&QString::isEmpty, bind(fun, _1)));
+    if (it == filters.end()) {
         return QString();
-    else
+    } else {
         return (*it)->icon();
+    }
 }
 
-QColor KeyFilterManager::bgColor( const Key & key ) const {
-    return get_color( d->filters, key, &KeyFilter::bgColor );
+QColor KeyFilterManager::bgColor(const Key &key) const
+{
+    return get_color(d->filters, key, &KeyFilter::bgColor);
 }
 
-QColor KeyFilterManager::fgColor( const Key & key ) const {
-    return get_color( d->filters, key, &KeyFilter::fgColor );
+QColor KeyFilterManager::fgColor(const Key &key) const
+{
+    return get_color(d->filters, key, &KeyFilter::fgColor);
 }
 
-QIcon KeyFilterManager::icon( const Key & key ) const {
-    const QString icon = get_string( d->filters, key, &KeyFilter::icon );
-    return icon.isEmpty() ? QIcon() : QIcon::fromTheme( icon ) ;
+QIcon KeyFilterManager::icon(const Key &key) const
+{
+    const QString icon = get_string(d->filters, key, &KeyFilter::icon);
+    return icon.isEmpty() ? QIcon() : QIcon::fromTheme(icon) ;
 }
 

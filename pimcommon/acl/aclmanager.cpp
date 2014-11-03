@@ -133,7 +133,7 @@ public:
         QMap<QByteArray, KIMAP::Acl::Rights> result;
 
         typedef QPair<QByteArray, KIMAP::Acl::Rights> RightPair;
-        foreach(const RightPair & right, mRights) {
+        foreach (const RightPair &right, mRights) {
             result.insert(right.first, right.second);
         }
 
@@ -464,7 +464,7 @@ void AclManager::save()
             Akonadi::ContactGroupExpandJob *expandJob =
                 new Akonadi::ContactGroupExpandJob(searchJob->contactGroups().first(), this);
             if (expandJob->exec()) {
-                foreach(const KABC::Addressee & contact, expandJob->contacts()) {
+                foreach (const KABC::Addressee &contact, expandJob->contacts()) {
                     const QByteArray rawEmail =
                         KPIMUtils::extractEmailAddress(contact.preferredEmail().toUtf8());
                     if (!rawEmail.isEmpty()) {

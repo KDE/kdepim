@@ -90,13 +90,13 @@ QNetworkReply *WebDavJob::propfind(const QUrl &path, const WebDavJob::PropNames 
     query = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>";
     query += "<D:propfind xmlns:D=\"DAV:\" >";
     query += "<D:prop>";
-    foreach(const QString & ns, props.keys()) {
-        foreach(const QString & key, props[ns])
-        if (ns == QLatin1String("DAV:")) {
-            query += "<D:" + key.toLatin1() + "/>";
-        } else {
-            query += "<" + key.toLatin1() + " xmlns=\"" + ns.toLatin1() + "\"/>";
-        }
+    foreach (const QString &ns, props.keys()) {
+        foreach (const QString &key, props[ns])
+            if (ns == QLatin1String("DAV:")) {
+                query += "<D:" + key.toLatin1() + "/>";
+            } else {
+                query += "<" + key.toLatin1() + " xmlns=\"" + ns.toLatin1() + "\"/>";
+            }
     }
     query += "</D:prop>";
     query += "</D:propfind>";
@@ -127,7 +127,7 @@ QNetworkReply *WebDavJob::proppatch(const QUrl &path, const WebDavJob::PropValue
     query = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>";
     query += "<D:proppatch xmlns:D=\"DAV:\" >";
     query += "<D:prop>";
-    foreach(const QString & ns, props.keys()) {
+    foreach (const QString &ns, props.keys()) {
         QMap < QString , QVariant >::const_iterator i;
 
         for (i = props[ns].constBegin(); i != props[ns].constEnd(); ++i) {

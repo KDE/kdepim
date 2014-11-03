@@ -39,29 +39,32 @@
 
 #include <utils/types.h>
 
-namespace Kleo {
-namespace Commands {
+namespace Kleo
+{
+namespace Commands
+{
 
-    class DecryptVerifyClipboardCommand : public Command {
-        Q_OBJECT
-    public:
-        explicit DecryptVerifyClipboardCommand( QAbstractItemView * view, KeyListController * parent );
-        explicit DecryptVerifyClipboardCommand( KeyListController * parent );
-        ~DecryptVerifyClipboardCommand();
+class DecryptVerifyClipboardCommand : public Command
+{
+    Q_OBJECT
+public:
+    explicit DecryptVerifyClipboardCommand(QAbstractItemView *view, KeyListController *parent);
+    explicit DecryptVerifyClipboardCommand(KeyListController *parent);
+    ~DecryptVerifyClipboardCommand();
 
-        static bool canDecryptVerifyCurrentClipboard();
+    static bool canDecryptVerifyCurrentClipboard();
 
-    private:
-        /* reimp */ void doStart();
-        /* reimp */ void doCancel();
+private:
+    /* reimp */ void doStart();
+    /* reimp */ void doCancel();
 
-    private:
-        class Private;
-        inline Private * d_func();
-        inline const Private * d_func() const;
-        Q_PRIVATE_SLOT( d_func(), void slotControllerDone() )
-        Q_PRIVATE_SLOT( d_func(), void slotControllerError(int,QString) )
-    };
+private:
+    class Private;
+    inline Private *d_func();
+    inline const Private *d_func() const;
+    Q_PRIVATE_SLOT(d_func(), void slotControllerDone())
+    Q_PRIVATE_SLOT(d_func(), void slotControllerError(int, QString))
+};
 
 }
 }

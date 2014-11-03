@@ -39,34 +39,37 @@
 
 class QStringList;
 
-namespace Kleo {
-namespace Commands {
+namespace Kleo
+{
+namespace Commands
+{
 
-    class DecryptVerifyFilesCommand : public Command {
-        Q_OBJECT
-    public:
-        explicit DecryptVerifyFilesCommand( QAbstractItemView * view, KeyListController * parent );
-        explicit DecryptVerifyFilesCommand( KeyListController * parent );
-        explicit DecryptVerifyFilesCommand( const QStringList & files, QAbstractItemView * view, KeyListController * parent );
-        explicit DecryptVerifyFilesCommand( const QStringList & files, KeyListController * parent );
-        ~DecryptVerifyFilesCommand();
+class DecryptVerifyFilesCommand : public Command
+{
+    Q_OBJECT
+public:
+    explicit DecryptVerifyFilesCommand(QAbstractItemView *view, KeyListController *parent);
+    explicit DecryptVerifyFilesCommand(KeyListController *parent);
+    explicit DecryptVerifyFilesCommand(const QStringList &files, QAbstractItemView *view, KeyListController *parent);
+    explicit DecryptVerifyFilesCommand(const QStringList &files, KeyListController *parent);
+    ~DecryptVerifyFilesCommand();
 
-        void setFiles( const QStringList & files );
+    void setFiles(const QStringList &files);
 
-        void setOperation( DecryptVerifyOperation operation );
-        DecryptVerifyOperation operation() const;
+    void setOperation(DecryptVerifyOperation operation);
+    DecryptVerifyOperation operation() const;
 
-    private:
-        /* reimp */ void doStart();
-        /* reimp */ void doCancel();
+private:
+    /* reimp */ void doStart();
+    /* reimp */ void doCancel();
 
-    private:
-        class Private;
-        inline Private * d_func();
-        inline const Private * d_func() const;
-        Q_PRIVATE_SLOT( d_func(), void slotControllerDone() )
-        Q_PRIVATE_SLOT( d_func(), void slotControllerError(int,QString) )
-    };
+private:
+    class Private;
+    inline Private *d_func();
+    inline const Private *d_func() const;
+    Q_PRIVATE_SLOT(d_func(), void slotControllerDone())
+    Q_PRIVATE_SLOT(d_func(), void slotControllerError(int, QString))
+};
 
 }
 }

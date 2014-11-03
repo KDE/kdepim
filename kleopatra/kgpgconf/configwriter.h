@@ -31,7 +31,7 @@
 */
 
 #ifndef KGPGCONF_CONFIGWRITER_H
-#define KGPGCONF_CONFIGWRITER_H 
+#define KGPGCONF_CONFIGWRITER_H
 
 class QIODevice;
 
@@ -40,14 +40,14 @@ class Config;
 class ConfigWriter
 {
 public:
-    explicit ConfigWriter( QIODevice* device );
+    explicit ConfigWriter(QIODevice *device);
     ~ConfigWriter();
 
-    bool writeConfig( Config* config ) const;
+    bool writeConfig(Config *config) const;
 
 private:
     class Private;
-    Private* const d;
+    Private *const d;
 };
 
 #endif // KGPGCONF_CONFIGWRITER_H

@@ -42,33 +42,35 @@
 class QByteArray;
 class QIODevice;
 
-namespace GpgME {
-  class Error;
-  class Key;
-  class EncryptionResult;
+namespace GpgME
+{
+class Error;
+class Key;
+class EncryptionResult;
 }
 
+namespace Kleo
+{
 
-namespace Kleo {
+/**
+   @short An abstract base class for asynchronous encrypters
 
-  /**
-     @short An abstract base class for asynchronous encrypters
+   To use a EncryptJob, first obtain an instance from the
+   CryptoBackend implementation, connect the progress() and result()
+   signals to suitable slots and then start the encryption with a
+   call to start(). This call might fail, in which case the
+   EncryptJob instance will have scheduled it's own destruction with
+   a call to QObject::deleteLater().
 
-     To use a EncryptJob, first obtain an instance from the
-     CryptoBackend implementation, connect the progress() and result()
-     signals to suitable slots and then start the encryption with a
-     call to start(). This call might fail, in which case the
-     EncryptJob instance will have scheduled it's own destruction with
-     a call to QObject::deleteLater().
-
-     After result() is emitted, the EncryptJob will schedule it's own
-     destruction by calling QObject::deleteLater().
-  */
-  class KLEO_EXPORT EncryptJob : public Job {
+   After result() is emitted, the EncryptJob will schedule it's own
+   destruction by calling QObject::deleteLater().
+*/
+class KLEO_EXPORT EncryptJob : public Job
+{
     Q_OBJECT
-  protected:
-    explicit EncryptJob( QObject * parent );
-  public:
+protected:
+    explicit EncryptJob(QObject *parent);
+public:
     ~EncryptJob();
 
     /**
@@ -81,8 +83,8 @@ namespace Kleo {
        not be performed, but full validity assumed for all keys
        without further checks.
     */
-    virtual KLEO_DEPRECATED_EXPORT GpgME::Error start( const std::vector<GpgME::Key> & recipients,
-                                const QByteArray & plainText, bool alwaysTrust=false ) = 0;
+    virtual KLEO_DEPRECATED_EXPORT GpgME::Error start(const std::vector<GpgME::Key> &recipients,
+            const QByteArray &plainText, bool alwaysTrust = false) = 0;
 
     /*!
       \overload
@@ -93,24 +95,24 @@ namespace Kleo {
 
       \throws GpgME::Exception if starting fails
     */
-    virtual void start( const std::vector<GpgME::Key> & recipients,
-                        const boost::shared_ptr<QIODevice> & plainText,
-                        const boost::shared_ptr<QIODevice> & cipherText=boost::shared_ptr<QIODevice>(),
-                        bool alwaysTrust=false ) = 0;
+    virtual void start(const std::vector<GpgME::Key> &recipients,
+                       const boost::shared_ptr<QIODevice> &plainText,
+                       const boost::shared_ptr<QIODevice> &cipherText = boost::shared_ptr<QIODevice>(),
+                       bool alwaysTrust = false) = 0;
 
-    virtual GpgME::EncryptionResult exec( const std::vector<GpgME::Key> & recipients,
-                                          const QByteArray & plainText,
-                                          bool alwaysTrust, QByteArray & cipherText ) = 0;
+    virtual GpgME::EncryptionResult exec(const std::vector<GpgME::Key> &recipients,
+                                         const QByteArray &plainText,
+                                         bool alwaysTrust, QByteArray &cipherText) = 0;
 
     /*!
       This is a hack to request BASE64 output (instead of whatever
       comes out normally).
     */
-    virtual void setOutputIsBase64Encoded( bool ) = 0;
+    virtual void setOutputIsBase64Encoded(bool) = 0;
 
-  Q_SIGNALS:
-    void result( const GpgME::EncryptionResult & result, const QByteArray & cipherText, const QString & auditLogAsHtml=QString(), const GpgME::Error & auditLogError=GpgME::Error() );
-  };
+Q_SIGNALS:
+    void result(const GpgME::EncryptionResult &result, const QByteArray &cipherText, const QString &auditLogAsHtml = QString(), const GpgME::Error &auditLogError = GpgME::Error());
+};
 
 }
 

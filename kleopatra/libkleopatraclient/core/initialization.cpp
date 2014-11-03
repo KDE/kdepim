@@ -28,14 +28,16 @@
 
 using namespace KleopatraClientCopy;
 
-Initialization::Initialization() {
+Initialization::Initialization()
+{
 #ifndef HAVE_ASSUAN2
-    assuan_set_assuan_err_source( GPG_ERR_SOURCE_DEFAULT );
+    assuan_set_assuan_err_source(GPG_ERR_SOURCE_DEFAULT);
 #else
-    assuan_set_gpg_err_source( GPG_ERR_SOURCE_DEFAULT );
+    assuan_set_gpg_err_source(GPG_ERR_SOURCE_DEFAULT);
 #endif
 }
 
-Initialization::~Initialization() {
+Initialization::~Initialization()
+{
 
 }

@@ -24,14 +24,12 @@ class ArchiveMailDialogTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit ArchiveMailDialogTest(QObject *parent=0);
+    explicit ArchiveMailDialogTest(QObject *parent = 0);
     ~ArchiveMailDialogTest();
 
 private Q_SLOTS:
     void shouldHaveDefaultValue();
 };
-
-
 
 #endif // ARCHIVEMAILDIALOGTEST_H
 

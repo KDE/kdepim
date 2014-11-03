@@ -40,32 +40,34 @@
 class QByteArray;
 class QIODevice;
 
-namespace GpgME {
-    class Error;
-    class VerificationResult;
+namespace GpgME
+{
+class Error;
+class VerificationResult;
 }
 
+namespace Kleo
+{
 
-namespace Kleo {
+/**
+   @short An abstract base class for asynchronous verification of detached signatures
 
-  /**
-     @short An abstract base class for asynchronous verification of detached signatures
+   To use a VerifyDetachedJob, first obtain an instance from the
+   CryptoBackend implementation, connect the progress() and result()
+   signals to suitable slots and then start the verification with a
+   call to start(). This call might fail, in which case the
+   VerifyDetachedJob instance will have scheduled it's own
+   destruction with a call to QObject::deleteLater().
 
-     To use a VerifyDetachedJob, first obtain an instance from the
-     CryptoBackend implementation, connect the progress() and result()
-     signals to suitable slots and then start the verification with a
-     call to start(). This call might fail, in which case the
-     VerifyDetachedJob instance will have scheduled it's own
-     destruction with a call to QObject::deleteLater().
-
-     After result() is emitted, the VerifyDetachedJob will schedule
-     it's own destruction by calling QObject::deleteLater().
-  */
-  class VerifyDetachedJob : public Job {
+   After result() is emitted, the VerifyDetachedJob will schedule
+   it's own destruction by calling QObject::deleteLater().
+*/
+class VerifyDetachedJob : public Job
+{
     Q_OBJECT
-  protected:
-    explicit VerifyDetachedJob( QObject * parent );
-  public:
+protected:
+    explicit VerifyDetachedJob(QObject *parent);
+public:
     ~VerifyDetachedJob();
 
     /**
@@ -73,22 +75,22 @@ namespace Kleo {
        signature data, while \a signedData contains the data over
        which the signature was made.
     */
-    virtual KLEO_DEPRECATED_EXPORT GpgME::Error start( const QByteArray & signature,
-                                               const QByteArray & signedData ) = 0;
+    virtual KLEO_DEPRECATED_EXPORT GpgME::Error start(const QByteArray &signature,
+            const QByteArray &signedData) = 0;
 
     /*!
       \overload
 
       \throws GpgME::Exception if starting fails.
     */
-    virtual void start( const boost::shared_ptr<QIODevice> & signature, const boost::shared_ptr<QIODevice> & signedData ) = 0;
+    virtual void start(const boost::shared_ptr<QIODevice> &signature, const boost::shared_ptr<QIODevice> &signedData) = 0;
 
-    virtual GpgME::VerificationResult exec( const QByteArray & signature,
-                                            const QByteArray & signedData ) = 0;
+    virtual GpgME::VerificationResult exec(const QByteArray &signature,
+                                           const QByteArray &signedData) = 0;
 
-  Q_SIGNALS:
-    void result( const GpgME::VerificationResult & result, const QString & auditLogAsHtml=QString(), const GpgME::Error & auditLogError=GpgME::Error() );
-  };
+Q_SIGNALS:
+    void result(const GpgME::VerificationResult &result, const QString &auditLogAsHtml = QString(), const GpgME::Error &auditLogError = GpgME::Error());
+};
 
 }
 

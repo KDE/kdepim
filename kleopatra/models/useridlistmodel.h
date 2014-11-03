@@ -40,57 +40,59 @@
 
 #include <gpgme++/key.h> // since Signature is nested in UserID...
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class UserIDListModel : public QAbstractItemModel {
-        Q_OBJECT
-    public:
-        explicit UserIDListModel( QObject * parent=0 );
-        ~UserIDListModel();
+class UserIDListModel : public QAbstractItemModel
+{
+    Q_OBJECT
+public:
+    explicit UserIDListModel(QObject *parent = 0);
+    ~UserIDListModel();
 
-        GpgME::Key key() const;
+    GpgME::Key key() const;
 
-        enum Columns {
-            PrettyName,
-            PrettyEMail,
-            ValidFrom,
-            ValidUntil,
-            Status,
-            ID,
+    enum Columns {
+        PrettyName,
+        PrettyEMail,
+        ValidFrom,
+        ValidUntil,
+        Status,
+        ID,
 
-            NumColumns,
-            Icon = PrettyName // which column shall the icon be displayed in?
-        };
-
-        GpgME::UserID userID( const QModelIndex & idx, bool strict=false ) const;
-        std::vector<GpgME::UserID> userIDs( const QList<QModelIndex> & indexes, bool strict=false ) const;
-
-        GpgME::UserID::Signature signature( const QModelIndex & idx ) const;
-        std::vector<GpgME::UserID::Signature> signatures( const QList<QModelIndex> & indexes ) const;
-
-        using QAbstractItemModel::index;
-        QModelIndex index( const GpgME::UserID & userID, int col=0 ) const;
-        QModelIndex index( const GpgME::UserID::Signature & signature, int col=0 ) const;
-        QList<QModelIndex> indexes( const std::vector<GpgME::UserID> & userIDs, int col=0 ) const;
-        QList<QModelIndex> indexes( const std::vector<GpgME::UserID::Signature> & signatures, int col=0 ) const;
-
-    public Q_SLOTS:
-        void setKey( const GpgME::Key & key );
-        void clear();
-
-    public:
-        /* reimp */ int columnCount( const QModelIndex & pidx=QModelIndex() ) const;
-        /* reimp */ int rowCount( const QModelIndex & pidx=QModelIndex() ) const;
-        /* reimp */ QVariant headerData( int section, Qt::Orientation o, int role=Qt::DisplayRole ) const;
-        /* reimp */ QVariant data( const QModelIndex & index, int role=Qt::DisplayRole ) const;
-
-        /* reimp */ QModelIndex index( int row, int col, const QModelIndex & parent=QModelIndex() ) const;
-        /* reimp */ QModelIndex parent( const QModelIndex & index ) const;
-
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
+        NumColumns,
+        Icon = PrettyName // which column shall the icon be displayed in?
     };
+
+    GpgME::UserID userID(const QModelIndex &idx, bool strict = false) const;
+    std::vector<GpgME::UserID> userIDs(const QList<QModelIndex> &indexes, bool strict = false) const;
+
+    GpgME::UserID::Signature signature(const QModelIndex &idx) const;
+    std::vector<GpgME::UserID::Signature> signatures(const QList<QModelIndex> &indexes) const;
+
+    using QAbstractItemModel::index;
+    QModelIndex index(const GpgME::UserID &userID, int col = 0) const;
+    QModelIndex index(const GpgME::UserID::Signature &signature, int col = 0) const;
+    QList<QModelIndex> indexes(const std::vector<GpgME::UserID> &userIDs, int col = 0) const;
+    QList<QModelIndex> indexes(const std::vector<GpgME::UserID::Signature> &signatures, int col = 0) const;
+
+public Q_SLOTS:
+    void setKey(const GpgME::Key &key);
+    void clear();
+
+public:
+    /* reimp */ int columnCount(const QModelIndex &pidx = QModelIndex()) const;
+    /* reimp */ int rowCount(const QModelIndex &pidx = QModelIndex()) const;
+    /* reimp */ QVariant headerData(int section, Qt::Orientation o, int role = Qt::DisplayRole) const;
+    /* reimp */ QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+
+    /* reimp */ QModelIndex index(int row, int col, const QModelIndex &parent = QModelIndex()) const;
+    /* reimp */ QModelIndex parent(const QModelIndex &index) const;
+
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+};
 
 }
 

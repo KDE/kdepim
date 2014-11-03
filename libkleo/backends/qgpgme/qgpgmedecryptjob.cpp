@@ -48,73 +48,80 @@ using namespace Kleo;
 using namespace GpgME;
 using namespace boost;
 
-QGpgMEDecryptJob::QGpgMEDecryptJob( Context * context )
-  : mixin_type( context )
+QGpgMEDecryptJob::QGpgMEDecryptJob(Context *context)
+    : mixin_type(context)
 {
-  lateInitialization();
+    lateInitialization();
 }
 
 QGpgMEDecryptJob::~QGpgMEDecryptJob() {}
 
-static QGpgMEDecryptJob::result_type decrypt( Context * ctx, QThread * thread, const weak_ptr<QIODevice> & cipherText_, const weak_ptr<QIODevice> & plainText_ ) {
+static QGpgMEDecryptJob::result_type decrypt(Context *ctx, QThread *thread, const weak_ptr<QIODevice> &cipherText_, const weak_ptr<QIODevice> &plainText_)
+{
 
-  const shared_ptr<QIODevice> cipherText = cipherText_.lock();
-  const shared_ptr<QIODevice> plainText = plainText_.lock();
+    const shared_ptr<QIODevice> cipherText = cipherText_.lock();
+    const shared_ptr<QIODevice> plainText = plainText_.lock();
 
-  const _detail::ToThreadMover ctMover( cipherText, thread );
-  const _detail::ToThreadMover ptMover( plainText,  thread );
+    const _detail::ToThreadMover ctMover(cipherText, thread);
+    const _detail::ToThreadMover ptMover(plainText,  thread);
 
-  QGpgME::QIODeviceDataProvider in( cipherText );
-  const Data indata( &in );
+    QGpgME::QIODeviceDataProvider in(cipherText);
+    const Data indata(&in);
 
-  if ( !plainText ) {
-    QGpgME::QByteArrayDataProvider out;
-    Data outdata( &out );
+    if (!plainText) {
+        QGpgME::QByteArrayDataProvider out;
+        Data outdata(&out);
 
-    const DecryptionResult res = ctx->decrypt( indata, outdata );
-    Error ae;
-    const QString log = _detail::audit_log_as_html( ctx, ae );
-    return make_tuple( res, out.data(), log, ae );
-  } else {
-    QGpgME::QIODeviceDataProvider out( plainText );
-    Data outdata( &out );
+        const DecryptionResult res = ctx->decrypt(indata, outdata);
+        Error ae;
+        const QString log = _detail::audit_log_as_html(ctx, ae);
+        return make_tuple(res, out.data(), log, ae);
+    } else {
+        QGpgME::QIODeviceDataProvider out(plainText);
+        Data outdata(&out);
 
-    const DecryptionResult res = ctx->decrypt( indata, outdata );
-    Error ae;
-    const QString log = _detail::audit_log_as_html( ctx, ae );
-    return make_tuple( res, QByteArray(), log, ae );
-  }
+        const DecryptionResult res = ctx->decrypt(indata, outdata);
+        Error ae;
+        const QString log = _detail::audit_log_as_html(ctx, ae);
+        return make_tuple(res, QByteArray(), log, ae);
+    }
 
 }
 
-static QGpgMEDecryptJob::result_type decrypt_qba( Context * ctx, const QByteArray & cipherText ) {
-  const shared_ptr<QBuffer> buffer( new QBuffer );
-  buffer->setData( cipherText );
-  if ( !buffer->open( QIODevice::ReadOnly ) )
-    assert( !"This should never happen: QBuffer::open() failed" );
-  return decrypt( ctx, 0, buffer, shared_ptr<QIODevice>() );
+static QGpgMEDecryptJob::result_type decrypt_qba(Context *ctx, const QByteArray &cipherText)
+{
+    const shared_ptr<QBuffer> buffer(new QBuffer);
+    buffer->setData(cipherText);
+    if (!buffer->open(QIODevice::ReadOnly)) {
+        assert(!"This should never happen: QBuffer::open() failed");
+    }
+    return decrypt(ctx, 0, buffer, shared_ptr<QIODevice>());
 }
 
-Error QGpgMEDecryptJob::start( const QByteArray & cipherText ) {
-  run( bind( &decrypt_qba, _1, cipherText ) );
-  return Error();
+Error QGpgMEDecryptJob::start(const QByteArray &cipherText)
+{
+    run(bind(&decrypt_qba, _1, cipherText));
+    return Error();
 }
 
-void QGpgMEDecryptJob::start( const shared_ptr<QIODevice> & cipherText, const shared_ptr<QIODevice> & plainText ) {
-    run( bind( &decrypt, _1, _2, _3, _4 ), cipherText, plainText );
+void QGpgMEDecryptJob::start(const shared_ptr<QIODevice> &cipherText, const shared_ptr<QIODevice> &plainText)
+{
+    run(bind(&decrypt, _1, _2, _3, _4), cipherText, plainText);
 }
 
-GpgME::DecryptionResult Kleo::QGpgMEDecryptJob::exec( const QByteArray & cipherText,
-                                                      QByteArray & plainText ) {
-  const result_type r = decrypt_qba( context(), cipherText );
-  plainText = get<1>( r );
-  resultHook( r );
-  return mResult;
+GpgME::DecryptionResult Kleo::QGpgMEDecryptJob::exec(const QByteArray &cipherText,
+        QByteArray &plainText)
+{
+    const result_type r = decrypt_qba(context(), cipherText);
+    plainText = get<1>(r);
+    resultHook(r);
+    return mResult;
 }
 
 //PENDING(marc) implement showErrorDialog()
 
-void QGpgMEDecryptJob::resultHook( const result_type & tuple ) {
-  mResult = get<0>( tuple );
+void QGpgMEDecryptJob::resultHook(const result_type &tuple)
+{
+    mResult = get<0>(tuple);
 }
 

@@ -33,43 +33,45 @@
 #ifndef __KLEOPATRA_NEWCERTIFICATEWIZARD_NEWCERTIFICATEWIZARD_H__
 #define __KLEOPATRA_NEWCERTIFICATEWIZARD_NEWCERTIFICATEWIZARD_H__
 
-
 #include <QWizard>
 
 #include <utils/pimpl_ptr.h>
 
 #include <gpgme++/global.h>
 
-namespace Kleo {
+namespace Kleo
+{
 
-    namespace NewCertificateUi {
-        class WizardPage;
-    }
+namespace NewCertificateUi
+{
+class WizardPage;
+}
 
-    class NewCertificateWizard : public QWizard {
-        Q_OBJECT
-    public:
-        explicit NewCertificateWizard( QWidget * parent=0 );
-        ~NewCertificateWizard();
+class NewCertificateWizard : public QWizard
+{
+    Q_OBJECT
+public:
+    explicit NewCertificateWizard(QWidget *parent = 0);
+    ~NewCertificateWizard();
 
-        void setProtocol( GpgME::Protocol protocol );
-        GpgME::Protocol protocol() const;
+    void setProtocol(GpgME::Protocol protocol);
+    GpgME::Protocol protocol() const;
 
-        enum Pages {
-            ChooseProtocolPageId,
-            EnterDetailsPageId,
-            OverviewPageId,
-            KeyCreationPageId,
-            ResultPageId,
+    enum Pages {
+        ChooseProtocolPageId,
+        EnterDetailsPageId,
+        OverviewPageId,
+        KeyCreationPageId,
+        ResultPageId,
 
-            NumPages
-        };
-
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        friend class ::Kleo::NewCertificateUi::WizardPage;
+        NumPages
     };
+
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    friend class ::Kleo::NewCertificateUi::WizardPage;
+};
 
 }
 

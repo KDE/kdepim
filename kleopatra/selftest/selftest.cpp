@@ -40,17 +40,23 @@ using namespace Kleo::_detail;
 
 SelfTest::~SelfTest() {}
 
-bool SelfTest::canFixAutomatically() const { return false; }
-bool SelfTest::fix() { return false; }
+bool SelfTest::canFixAutomatically() const
+{
+    return false;
+}
+bool SelfTest::fix()
+{
+    return false;
+}
 
-SelfTestImplementation::SelfTestImplementation( const QString & title )
+SelfTestImplementation::SelfTestImplementation(const QString &title)
     : SelfTest(),
-      m_name( title ),
+      m_name(title),
       m_error(),
       m_explaination(),
       m_proposedFix(),
-      m_skipped( false ),
-      m_passed( false )
+      m_skipped(false),
+      m_passed(false)
 {
 
 }

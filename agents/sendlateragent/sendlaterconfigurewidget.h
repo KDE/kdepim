@@ -19,13 +19,13 @@
 #define SENDLATERCONFIGUREWIDGET_H
 #include "ui_sendlaterconfigurewidget.h"
 
-
 #include <AkonadiCore/Item>
 
 #include <QTreeWidgetItem>
 #include <KConfigGroup>
 
-namespace SendLater {
+namespace SendLater
+{
 class SendLaterInfo;
 }
 
@@ -42,12 +42,11 @@ private:
     SendLater::SendLaterInfo *mInfo;
 };
 
-
 class SendLaterWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SendLaterWidget( QWidget *parent = 0 );
+    explicit SendLaterWidget(QWidget *parent = 0);
     ~SendLaterWidget();
 
     enum SendLaterColumn {

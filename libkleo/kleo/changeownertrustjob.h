@@ -35,40 +35,41 @@
 
 #include "job.h"
 
-
 #include <gpgme++/key.h>
 
-namespace Kleo {
+namespace Kleo
+{
 
-  /**
-     @short An abstract base class to change owner trust asynchronously
+/**
+   @short An abstract base class to change owner trust asynchronously
 
-     To use a ChangeOwnerTrustJob, first obtain an instance from the
-     CryptoBackend implementation, connect the progress() and result()
-     signals to suitable slots and then start the job with a call
-     to start(). This call might fail, in which case the ChangeOwnerTrustJob
-     instance will have scheduled it's own destruction with a call to
-     QObject::deleteLater().
+   To use a ChangeOwnerTrustJob, first obtain an instance from the
+   CryptoBackend implementation, connect the progress() and result()
+   signals to suitable slots and then start the job with a call
+   to start(). This call might fail, in which case the ChangeOwnerTrustJob
+   instance will have scheduled it's own destruction with a call to
+   QObject::deleteLater().
 
-     After result() is emitted, the ChangeOwnerTrustJob will schedule it's own
-     destruction by calling QObject::deleteLater().
-  */
-  class KLEO_EXPORT ChangeOwnerTrustJob : public Job {
+   After result() is emitted, the ChangeOwnerTrustJob will schedule it's own
+   destruction by calling QObject::deleteLater().
+*/
+class KLEO_EXPORT ChangeOwnerTrustJob : public Job
+{
     Q_OBJECT
-  protected:
-    explicit ChangeOwnerTrustJob( QObject * parent );
-  public:
+protected:
+    explicit ChangeOwnerTrustJob(QObject *parent);
+public:
     ~ChangeOwnerTrustJob();
 
     /**
        Starts the change-owner trust operation. \a key is the key to change
        the owner trust of . \a trust is the new trust level.
     */
-    virtual GpgME::Error start( const GpgME::Key & key, GpgME::Key::OwnerTrust trust ) = 0;
+    virtual GpgME::Error start(const GpgME::Key &key, GpgME::Key::OwnerTrust trust) = 0;
 
-  Q_SIGNALS:
-    void result( const GpgME::Error & result, const QString & auditLogAsHtml=QString(), const GpgME::Error & auditLogError=GpgME::Error() );
-  };
+Q_SIGNALS:
+    void result(const GpgME::Error &result, const QString &auditLogAsHtml = QString(), const GpgME::Error &auditLogError = GpgME::Error());
+};
 
 }
 

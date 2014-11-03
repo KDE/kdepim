@@ -44,38 +44,42 @@ using namespace Kleo;
 using namespace GpgME;
 using namespace boost;
 
-QGpgMEImportJob::QGpgMEImportJob( Context * context )
-  : mixin_type( context )
+QGpgMEImportJob::QGpgMEImportJob(Context *context)
+    : mixin_type(context)
 {
-  lateInitialization();
+    lateInitialization();
 }
 
 QGpgMEImportJob::~QGpgMEImportJob() {}
 
-static QGpgMEImportJob::result_type import_qba( Context * ctx, const QByteArray & certData ) {
-  QGpgME::QByteArrayDataProvider dp( certData );
-  Data data( &dp );
+static QGpgMEImportJob::result_type import_qba(Context *ctx, const QByteArray &certData)
+{
+    QGpgME::QByteArrayDataProvider dp(certData);
+    Data data(&dp);
 
-  const ImportResult res = ctx->importKeys( data );
-  Error ae;
-  const QString log = _detail::audit_log_as_html( ctx, ae );
-  return make_tuple( res, log, ae );
+    const ImportResult res = ctx->importKeys(data);
+    Error ae;
+    const QString log = _detail::audit_log_as_html(ctx, ae);
+    return make_tuple(res, log, ae);
 }
 
-Error QGpgMEImportJob::start( const QByteArray & certData ) {
-  run( bind( &import_qba, _1, certData ) );
-  return Error();
+Error QGpgMEImportJob::start(const QByteArray &certData)
+{
+    run(bind(&import_qba, _1, certData));
+    return Error();
 }
 
-GpgME::ImportResult Kleo::QGpgMEImportJob::exec( const QByteArray & keyData ) {
-  const result_type r = import_qba( context(), keyData );
-  resultHook( r );
-  return mResult;
+GpgME::ImportResult Kleo::QGpgMEImportJob::exec(const QByteArray &keyData)
+{
+    const result_type r = import_qba(context(), keyData);
+    resultHook(r);
+    return mResult;
 }
 
 // PENDING(marc) implement showErrorDialog()
 
-void Kleo::QGpgMEImportJob::resultHook( const result_type & tuple ) {
-  mResult = get<0>( tuple );
+void Kleo::QGpgMEImportJob::resultHook(const result_type &tuple)
+{
+    mResult = get<0>(tuple);
 }
 

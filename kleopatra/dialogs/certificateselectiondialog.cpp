@@ -50,7 +50,6 @@
 #include <KConfigGroup>
 #include <KSharedConfig>
 
-
 #include <QLabel>
 #include <QPushButton>
 #include <QDialogButtonBox>
@@ -69,46 +68,52 @@ using namespace Kleo::Commands;
 using namespace boost;
 using namespace GpgME;
 
-class CertificateSelectionDialog::Private {
+class CertificateSelectionDialog::Private
+{
     friend class ::Kleo::Dialogs::CertificateSelectionDialog;
-    CertificateSelectionDialog * const q;
+    CertificateSelectionDialog *const q;
 public:
-    explicit Private( CertificateSelectionDialog * qq );
-
+    explicit Private(CertificateSelectionDialog *qq);
 
 private:
-    void reload() {
-        Command * const cmd = new ReloadKeysCommand( 0 );
-        cmd->setParentWidget( q );
+    void reload()
+    {
+        Command *const cmd = new ReloadKeysCommand(0);
+        cmd->setParentWidget(q);
         cmd->start();
     }
-    void create() {
-        NewCertificateCommand * cmd = new NewCertificateCommand( 0 );
-        cmd->setParentWidget( q );
-        if ( ( options & AnyFormat ) != AnyFormat )
-            cmd->setProtocol( (options & OpenPGPFormat) ? OpenPGP : CMS );
+    void create()
+    {
+        NewCertificateCommand *cmd = new NewCertificateCommand(0);
+        cmd->setParentWidget(q);
+        if ((options & AnyFormat) != AnyFormat) {
+            cmd->setProtocol((options & OpenPGPFormat) ? OpenPGP : CMS);
+        }
         cmd->start();
     }
-    void lookup() {
-        Command * const cmd = new LookupCertificatesCommand( 0 );
-        cmd->setParentWidget( q );
+    void lookup()
+    {
+        Command *const cmd = new LookupCertificatesCommand(0);
+        cmd->setParentWidget(q);
         cmd->start();
     }
     void slotKeysMayHaveChanged();
-    void slotCurrentViewChanged( QAbstractItemView * newView );
+    void slotCurrentViewChanged(QAbstractItemView *newView);
     void slotSelectionChanged();
-    void slotDoubleClicked( const QModelIndex & idx );
+    void slotDoubleClicked(const QModelIndex &idx);
 
 private:
-    bool acceptable( const std::vector<Key> & keys ) {
+    bool acceptable(const std::vector<Key> &keys)
+    {
         return !keys.empty();
     }
-    void filterAllowedKeys( std::vector<Key> & keys );
-    void updateLabelText() {
-        ui.label.setText( !customLabelText.isEmpty() ? customLabelText :
-                          (options & MultiSelection)
-                          ? i18n( "Please select one or more of the following certificates:" )
-                          : i18n( "Please select one of the following certificates:" ) );
+    void filterAllowedKeys(std::vector<Key> &keys);
+    void updateLabelText()
+    {
+        ui.label.setText(!customLabelText.isEmpty() ? customLabelText :
+                         (options & MultiSelection)
+                         ? i18n("Please select one or more of the following certificates:")
+                         : i18n("Please select one of the following certificates:"));
     }
 
 private:
@@ -123,234 +128,260 @@ private:
         QDialogButtonBox buttonBox;
         QVBoxLayout vlay;
 
-        explicit UI( CertificateSelectionDialog * q )
-            : label( q ),
-              searchBar( q ),
-              tabWidget( q ),
-              buttonBox( q ),
-              vlay( q )
+        explicit UI(CertificateSelectionDialog *q)
+            : label(q),
+              searchBar(q),
+              tabWidget(q),
+              buttonBox(q),
+              vlay(q)
         {
-            KDAB_SET_OBJECT_NAME( label );
-            KDAB_SET_OBJECT_NAME( searchBar );
-            KDAB_SET_OBJECT_NAME( tabWidget );
-            KDAB_SET_OBJECT_NAME( buttonBox );
-            KDAB_SET_OBJECT_NAME( vlay );
+            KDAB_SET_OBJECT_NAME(label);
+            KDAB_SET_OBJECT_NAME(searchBar);
+            KDAB_SET_OBJECT_NAME(tabWidget);
+            KDAB_SET_OBJECT_NAME(buttonBox);
+            KDAB_SET_OBJECT_NAME(vlay);
 
-            vlay.addWidget( &label );
-            vlay.addWidget( &searchBar );
-            vlay.addWidget( &tabWidget, 1 );
-            vlay.addWidget( &buttonBox );
+            vlay.addWidget(&label);
+            vlay.addWidget(&searchBar);
+            vlay.addWidget(&tabWidget, 1);
+            vlay.addWidget(&buttonBox);
 
-            QPushButton * const ok = buttonBox.addButton( QDialogButtonBox::Ok );
-            ok->setEnabled( false );
-            QPushButton * const cancel = buttonBox.addButton( QDialogButtonBox::Close );
-            Q_UNUSED( cancel );
-            QPushButton * const reload = buttonBox.addButton( i18n("Reload"),    QDialogButtonBox::ActionRole );
-            QPushButton * const lookup = buttonBox.addButton( i18n("Lookup..."), QDialogButtonBox::ActionRole );
-            QPushButton * const create = buttonBox.addButton( i18n("New..."),    QDialogButtonBox::ActionRole );
+            QPushButton *const ok = buttonBox.addButton(QDialogButtonBox::Ok);
+            ok->setEnabled(false);
+            QPushButton *const cancel = buttonBox.addButton(QDialogButtonBox::Close);
+            Q_UNUSED(cancel);
+            QPushButton *const reload = buttonBox.addButton(i18n("Reload"),    QDialogButtonBox::ActionRole);
+            QPushButton *const lookup = buttonBox.addButton(i18n("Lookup..."), QDialogButtonBox::ActionRole);
+            QPushButton *const create = buttonBox.addButton(i18n("New..."),    QDialogButtonBox::ActionRole);
 
-            lookup->setToolTip( i18nc("@info:tooltip","Lookup certificates on server") );
-            reload->setToolTip( i18nc("@info:tooltip","Refresh certificate list") );
-            create->setToolTip( i18nc("@info:tooltip","Create a new certificate") );
+            lookup->setToolTip(i18nc("@info:tooltip", "Lookup certificates on server"));
+            reload->setToolTip(i18nc("@info:tooltip", "Refresh certificate list"));
+            create->setToolTip(i18nc("@info:tooltip", "Create a new certificate"));
 
             connect(&buttonBox, &QDialogButtonBox::accepted, q, &CertificateSelectionDialog::accept);
             connect(&buttonBox, &QDialogButtonBox::rejected, q, &CertificateSelectionDialog::reject);
-            connect( reload,     SIGNAL(clicked()),  q, SLOT(reload()) );
-            connect( lookup,     SIGNAL(clicked()),  q, SLOT(lookup()) );
-            connect( create,     SIGNAL(clicked()),  q, SLOT(create()) );
-            connect( KeyCache::instance().get(), SIGNAL(keysMayHaveChanged()),
-                     q, SLOT(slotKeysMayHaveChanged()) );
+            connect(reload,     SIGNAL(clicked()),  q, SLOT(reload()));
+            connect(lookup,     SIGNAL(clicked()),  q, SLOT(lookup()));
+            connect(create,     SIGNAL(clicked()),  q, SLOT(create()));
+            connect(KeyCache::instance().get(), SIGNAL(keysMayHaveChanged()),
+                    q, SLOT(slotKeysMayHaveChanged()));
         }
     } ui;
 };
 
-
-CertificateSelectionDialog::Private::Private( CertificateSelectionDialog * qq )
-    : q( qq ),
-      ui( q )
+CertificateSelectionDialog::Private::Private(CertificateSelectionDialog *qq)
+    : q(qq),
+      ui(q)
 {
-    ui.tabWidget.setFlatModel( AbstractKeyListModel::createFlatKeyListModel() );
-    ui.tabWidget.setHierarchicalModel( AbstractKeyListModel::createHierarchicalKeyListModel() );
-    ui.tabWidget.connectSearchBar( &ui.searchBar );
+    ui.tabWidget.setFlatModel(AbstractKeyListModel::createFlatKeyListModel());
+    ui.tabWidget.setHierarchicalModel(AbstractKeyListModel::createHierarchicalKeyListModel());
+    ui.tabWidget.connectSearchBar(&ui.searchBar);
 
-    connect( &ui.tabWidget, SIGNAL(currentViewChanged(QAbstractItemView*)),
-             q, SLOT(slotCurrentViewChanged(QAbstractItemView*)) );
+    connect(&ui.tabWidget, SIGNAL(currentViewChanged(QAbstractItemView*)),
+            q, SLOT(slotCurrentViewChanged(QAbstractItemView*)));
 
     updateLabelText();
-    q->setWindowTitle( i18n( "Certificate Selection" ) );
+    q->setWindowTitle(i18n("Certificate Selection"));
 }
 
-CertificateSelectionDialog::CertificateSelectionDialog( QWidget * parent, Qt::WindowFlags f )
-    : QDialog( parent, f ), d( new Private( this ) )
+CertificateSelectionDialog::CertificateSelectionDialog(QWidget *parent, Qt::WindowFlags f)
+    : QDialog(parent, f), d(new Private(this))
 {
-    const KSharedConfig::Ptr config = KSharedConfig::openConfig( QLatin1String("kleopatracertificateselectiondialogrc") );
-    d->ui.tabWidget.loadViews( config.data() );
-    const KConfigGroup geometry( config, "Geometry" );
-    resize( geometry.readEntry( "size", size() ) );
+    const KSharedConfig::Ptr config = KSharedConfig::openConfig(QLatin1String("kleopatracertificateselectiondialogrc"));
+    d->ui.tabWidget.loadViews(config.data());
+    const KConfigGroup geometry(config, "Geometry");
+    resize(geometry.readEntry("size", size()));
     d->slotKeysMayHaveChanged();
 }
 
 CertificateSelectionDialog::~CertificateSelectionDialog() {}
 
-void CertificateSelectionDialog::setCustomLabelText( const QString & txt ) {
-    if ( txt == d->customLabelText )
+void CertificateSelectionDialog::setCustomLabelText(const QString &txt)
+{
+    if (txt == d->customLabelText) {
         return;
+    }
     d->customLabelText = txt;
     d->updateLabelText();
 }
 
-QString CertificateSelectionDialog::customLabelText() const {
+QString CertificateSelectionDialog::customLabelText() const
+{
     return d->customLabelText;
 }
 
-void CertificateSelectionDialog::setOptions( Options options ) {
-    if ( d->options == options )
+void CertificateSelectionDialog::setOptions(Options options)
+{
+    if (d->options == options) {
         return;
+    }
     d->options = options;
 
-    d->ui.tabWidget.setMultiSelection( options & MultiSelection );
+    d->ui.tabWidget.setMultiSelection(options & MultiSelection);
 
     d->slotKeysMayHaveChanged();
 }
 
-CertificateSelectionDialog::Options CertificateSelectionDialog::options() const {
+CertificateSelectionDialog::Options CertificateSelectionDialog::options() const
+{
     return d->options;
 }
 
-void CertificateSelectionDialog::setStringFilter( const QString & filter ) {
-    d->ui.tabWidget.setStringFilter( filter );
+void CertificateSelectionDialog::setStringFilter(const QString &filter)
+{
+    d->ui.tabWidget.setStringFilter(filter);
 }
 
-void CertificateSelectionDialog::setKeyFilter( const shared_ptr<KeyFilter> & filter ) {
-    d->ui.tabWidget.setKeyFilter( filter );
+void CertificateSelectionDialog::setKeyFilter(const shared_ptr<KeyFilter> &filter)
+{
+    d->ui.tabWidget.setKeyFilter(filter);
 }
 
-void CertificateSelectionDialog::selectCertificates( const std::vector<Key> & keys ) {
-    const QAbstractItemView * const view = d->ui.tabWidget.currentView();
-    if ( !view )
+void CertificateSelectionDialog::selectCertificates(const std::vector<Key> &keys)
+{
+    const QAbstractItemView *const view = d->ui.tabWidget.currentView();
+    if (!view) {
         return;
-    const KeyListModelInterface * const model = dynamic_cast<KeyListModelInterface*>( view->model() );
-    assert( model );
-    QItemSelectionModel * const sm = view->selectionModel();
-    assert( sm );
+    }
+    const KeyListModelInterface *const model = dynamic_cast<KeyListModelInterface *>(view->model());
+    assert(model);
+    QItemSelectionModel *const sm = view->selectionModel();
+    assert(sm);
 
-    Q_FOREACH( const QModelIndex & idx, model->indexes( keys ) )
-        if ( idx.isValid() )
-            sm->select( idx, QItemSelectionModel::Select | QItemSelectionModel::Rows );
+    Q_FOREACH (const QModelIndex &idx, model->indexes(keys))
+        if (idx.isValid()) {
+            sm->select(idx, QItemSelectionModel::Select | QItemSelectionModel::Rows);
+        }
 }
 
-void CertificateSelectionDialog::selectCertificate( const Key & key ) {
-    selectCertificates( std::vector<Key>( 1, key ) );
+void CertificateSelectionDialog::selectCertificate(const Key &key)
+{
+    selectCertificates(std::vector<Key>(1, key));
 }
 
-std::vector<Key> CertificateSelectionDialog::selectedCertificates() const {
-    const QAbstractItemView * const view = d->ui.tabWidget.currentView();
-    if ( !view )
+std::vector<Key> CertificateSelectionDialog::selectedCertificates() const
+{
+    const QAbstractItemView *const view = d->ui.tabWidget.currentView();
+    if (!view) {
         return std::vector<Key>();
-    const KeyListModelInterface * const model = dynamic_cast<KeyListModelInterface*>( view->model() );
-    assert( model );
-    const QItemSelectionModel * const sm = view->selectionModel();
-    assert( sm );
-    return model->keys( sm->selectedRows() );
+    }
+    const KeyListModelInterface *const model = dynamic_cast<KeyListModelInterface *>(view->model());
+    assert(model);
+    const QItemSelectionModel *const sm = view->selectionModel();
+    assert(sm);
+    return model->keys(sm->selectedRows());
 }
 
-Key CertificateSelectionDialog::selectedCertificate() const {
+Key CertificateSelectionDialog::selectedCertificate() const
+{
     const std::vector<Key> keys = selectedCertificates();
     return keys.empty() ? Key() : keys.front() ;
 }
 
-void CertificateSelectionDialog::hideEvent( QHideEvent * e ) {
-    KSharedConfig::Ptr config = KSharedConfig::openConfig( QLatin1String("kleopatracertificateselectiondialogrc") );
-    d->ui.tabWidget.saveViews( config.data() );
-    KConfigGroup geometry( config, "Geometry" );
-    geometry.writeEntry( "size", size() );
-    QDialog::hideEvent( e );
+void CertificateSelectionDialog::hideEvent(QHideEvent *e)
+{
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(QLatin1String("kleopatracertificateselectiondialogrc"));
+    d->ui.tabWidget.saveViews(config.data());
+    KConfigGroup geometry(config, "Geometry");
+    geometry.writeEntry("size", size());
+    QDialog::hideEvent(e);
 }
 
-void CertificateSelectionDialog::Private::slotKeysMayHaveChanged() {
-    q->setEnabled( true );
+void CertificateSelectionDialog::Private::slotKeysMayHaveChanged()
+{
+    q->setEnabled(true);
     std::vector<Key> keys = (options & SecretKeys) ? KeyCache::instance()->secretKeys() : KeyCache::instance()->keys() ;
-    filterAllowedKeys( keys );
+    filterAllowedKeys(keys);
     const std::vector<Key> selected = q->selectedCertificates();
-    if ( AbstractKeyListModel * const model = ui.tabWidget.flatModel() )
-        model->setKeys( keys );
-    if ( AbstractKeyListModel * const model = ui.tabWidget.hierarchicalModel() )
-        model->setKeys( keys );
-    q->selectCertificates( selected );
+    if (AbstractKeyListModel *const model = ui.tabWidget.flatModel()) {
+        model->setKeys(keys);
+    }
+    if (AbstractKeyListModel *const model = ui.tabWidget.hierarchicalModel()) {
+        model->setKeys(keys);
+    }
+    q->selectCertificates(selected);
 }
 
-void CertificateSelectionDialog::Private::filterAllowedKeys( std::vector<Key> & keys ) {
+void CertificateSelectionDialog::Private::filterAllowedKeys(std::vector<Key> &keys)
+{
     std::vector<Key>::iterator end = keys.end();
 
-    switch ( options & AnyFormat ) {
+    switch (options & AnyFormat) {
     case OpenPGPFormat:
-        end = std::remove_if( keys.begin(), end, boost::bind( &Key::protocol, _1 ) != GpgME::OpenPGP );
+        end = std::remove_if(keys.begin(), end, boost::bind(&Key::protocol, _1) != GpgME::OpenPGP);
         break;
     case CMSFormat:
-        end = std::remove_if( keys.begin(), end, boost::bind( &Key::protocol, _1 ) != GpgME::CMS );
+        end = std::remove_if(keys.begin(), end, boost::bind(&Key::protocol, _1) != GpgME::CMS);
         break;
     default:
     case AnyFormat:
         ;
     }
 
-    switch ( options & AnyCertificate ) {
+    switch (options & AnyCertificate) {
     case SignOnly:
-        end = std::remove_if( keys.begin(), end, !boost::bind( &Key::canReallySign, _1 ) );
+        end = std::remove_if(keys.begin(), end, !boost::bind(&Key::canReallySign, _1));
         break;
     case EncryptOnly:
-        end = std::remove_if( keys.begin(), end, !boost::bind( &Key::canEncrypt, _1 ) );
+        end = std::remove_if(keys.begin(), end, !boost::bind(&Key::canEncrypt, _1));
         break;
     default:
     case AnyCertificate:
         ;
     }
 
-    if ( options & SecretKeys )
-        end = std::remove_if( keys.begin(), end, !boost::bind( &Key::hasSecret, _1 ) );
+    if (options & SecretKeys) {
+        end = std::remove_if(keys.begin(), end, !boost::bind(&Key::hasSecret, _1));
+    }
 
-    keys.erase( end, keys.end() );
+    keys.erase(end, keys.end());
 }
 
-void CertificateSelectionDialog::Private::slotCurrentViewChanged( QAbstractItemView * newView ) {
-    if ( lastView ) {
-        disconnect( lastView, SIGNAL(doubleClicked(QModelIndex)),
-                    q, SLOT(slotDoubleClicked(QModelIndex)) );
-        assert( lastView->selectionModel() );
-        disconnect( lastView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-                    q, SLOT(slotSelectionChanged()) );
+void CertificateSelectionDialog::Private::slotCurrentViewChanged(QAbstractItemView *newView)
+{
+    if (lastView) {
+        disconnect(lastView, SIGNAL(doubleClicked(QModelIndex)),
+                   q, SLOT(slotDoubleClicked(QModelIndex)));
+        assert(lastView->selectionModel());
+        disconnect(lastView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+                   q, SLOT(slotSelectionChanged()));
     }
     lastView = newView;
-    if ( newView ) {
-        connect( newView, SIGNAL(doubleClicked(QModelIndex)),
-                 q, SLOT(slotDoubleClicked(QModelIndex)) );
-        assert( newView->selectionModel() );
-        connect( newView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-                 q, SLOT(slotSelectionChanged()) );
+    if (newView) {
+        connect(newView, SIGNAL(doubleClicked(QModelIndex)),
+                q, SLOT(slotDoubleClicked(QModelIndex)));
+        assert(newView->selectionModel());
+        connect(newView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+                q, SLOT(slotSelectionChanged()));
     }
     slotSelectionChanged();
 }
 
-void CertificateSelectionDialog::Private::slotSelectionChanged() {
-    if ( QPushButton * const pb = ui.buttonBox.button( QDialogButtonBox::Ok ) )
-        pb->setEnabled( acceptable( q->selectedCertificates() ) );
+void CertificateSelectionDialog::Private::slotSelectionChanged()
+{
+    if (QPushButton *const pb = ui.buttonBox.button(QDialogButtonBox::Ok)) {
+        pb->setEnabled(acceptable(q->selectedCertificates()));
+    }
 }
 
-void CertificateSelectionDialog::Private::slotDoubleClicked( const QModelIndex & idx ) {
-    QAbstractItemView * const view = ui.tabWidget.currentView();
-    assert( view );
-    const KeyListModelInterface * const model = dynamic_cast<KeyListModelInterface*>( view->model() );
-    assert( model );
-    Q_UNUSED( model );
-    QItemSelectionModel * const sm = view->selectionModel();
-    assert( sm );
-    sm->select( idx, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
-    QMetaObject::invokeMethod( q, "accept", Qt::QueuedConnection );
+void CertificateSelectionDialog::Private::slotDoubleClicked(const QModelIndex &idx)
+{
+    QAbstractItemView *const view = ui.tabWidget.currentView();
+    assert(view);
+    const KeyListModelInterface *const model = dynamic_cast<KeyListModelInterface *>(view->model());
+    assert(model);
+    Q_UNUSED(model);
+    QItemSelectionModel *const sm = view->selectionModel();
+    assert(sm);
+    sm->select(idx, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+    QMetaObject::invokeMethod(q, "accept", Qt::QueuedConnection);
 }
 
-void CertificateSelectionDialog::accept() {
-    if ( d->acceptable( selectedCertificates() ) )
+void CertificateSelectionDialog::accept()
+{
+    if (d->acceptable(selectedCertificates())) {
         QDialog::accept();
+    }
 }
 
 #include "moc_certificateselectiondialog.cpp"

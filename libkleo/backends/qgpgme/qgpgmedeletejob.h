@@ -37,31 +37,33 @@
 
 #include "threadedjobmixin.h"
 
-namespace GpgME {
-  class Key;
+namespace GpgME
+{
+class Key;
 }
 
-namespace Kleo {
+namespace Kleo
+{
 
-  class QGpgMEDeleteJob
+class QGpgMEDeleteJob
 #ifdef Q_MOC_RUN
     : public DeleteJob
 #else
     : public _detail::ThreadedJobMixin<DeleteJob>
 #endif
-  {
+{
     Q_OBJECT
 #ifdef Q_MOC_RUN
-  public Q_SLOTS:
+public Q_SLOTS:
     void slotFinished();
 #endif
-  public:
-    explicit QGpgMEDeleteJob( GpgME::Context * context );
+public:
+    explicit QGpgMEDeleteJob(GpgME::Context *context);
     ~QGpgMEDeleteJob();
 
     /*! \reimp from DeleteJob */
-    GpgME::Error start( const GpgME::Key & key, bool allowSecretKeyDeletion );
-  };
+    GpgME::Error start(const GpgME::Key &key, bool allowSecretKeyDeletion);
+};
 
 }
 

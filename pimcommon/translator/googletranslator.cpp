@@ -170,18 +170,18 @@ void GoogleTranslator::slotTranslateFinished(QNetworkReply *reply)
 
     // we are going recursively through the nested json-array
     // level0 contains the data of the outer array, level1 of the next one and so on
-    Q_FOREACH(const QVariant & level0, json) {
+    Q_FOREACH (const QVariant &level0, json) {
         const QVariantList listLevel0 = level0.toList();
         if (listLevel0.isEmpty()) {
             continue;
         }
-        Q_FOREACH(const QVariant & level1, listLevel0) {
+        Q_FOREACH (const QVariant &level1, listLevel0) {
             if (level1.toList().size() <= 2 || level1.toList().at(2).toList().isEmpty()) {
                 continue;
             }
             const int indexLevel1 = listLevel0.indexOf(level1);
             const QVariantList listLevel1 = level1.toList().at(2).toList();
-            foreach(const QVariant & level2, listLevel1) {
+            foreach (const QVariant &level2, listLevel1) {
                 const QVariantList listLevel2 = level2.toList();
 
                 // The JSON we get from Google has not always the same structure.

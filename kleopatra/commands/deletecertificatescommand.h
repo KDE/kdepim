@@ -35,29 +35,34 @@
 
 #include "command.h"
 
-namespace Kleo {
-    class DeleteCertificatesCommand : public Command {
-        Q_OBJECT
-    public:
-        explicit DeleteCertificatesCommand( QAbstractItemView * view, KeyListController * parent );
-        explicit DeleteCertificatesCommand( KeyListController * parent );
-        ~DeleteCertificatesCommand();
+namespace Kleo
+{
+class DeleteCertificatesCommand : public Command
+{
+    Q_OBJECT
+public:
+    explicit DeleteCertificatesCommand(QAbstractItemView *view, KeyListController *parent);
+    explicit DeleteCertificatesCommand(KeyListController *parent);
+    ~DeleteCertificatesCommand();
 
-        /* reimp */ static Restrictions restrictions() { return NeedSelection; }
+    /* reimp */ static Restrictions restrictions()
+    {
+        return NeedSelection;
+    }
 
-    private:
-        /* reimp */ void doStart();
-        /* reimp */ void doCancel();
+private:
+    /* reimp */ void doStart();
+    /* reimp */ void doCancel();
 
-    private:
-        class Private;
-        inline Private * d_func();
-        inline const Private * d_func() const;
-        Q_PRIVATE_SLOT( d_func(), void slotDialogAccepted() )
-        Q_PRIVATE_SLOT( d_func(), void slotDialogRejected() )
-        Q_PRIVATE_SLOT( d_func(), void pgpDeleteResult( GpgME::Error ) )
-        Q_PRIVATE_SLOT( d_func(), void cmsDeleteResult( GpgME::Error ) )
-    };
+private:
+    class Private;
+    inline Private *d_func();
+    inline const Private *d_func() const;
+    Q_PRIVATE_SLOT(d_func(), void slotDialogAccepted())
+    Q_PRIVATE_SLOT(d_func(), void slotDialogRejected())
+    Q_PRIVATE_SLOT(d_func(), void pgpDeleteResult(GpgME::Error))
+    Q_PRIVATE_SLOT(d_func(), void cmsDeleteResult(GpgME::Error))
+};
 }
 
 #endif // __KLEOPATRA_COMMANDS_DELETECERTIFICATESCOMMAND_H__

@@ -35,26 +35,29 @@
 
 #include <commands/gnupgprocesscommand.h>
 
-namespace Kleo {
-namespace Commands {
+namespace Kleo
+{
+namespace Commands
+{
 
-    class ClearCrlCacheCommand : public GnuPGProcessCommand {
-        Q_OBJECT
-    public:
-        explicit ClearCrlCacheCommand( QAbstractItemView * view, KeyListController * parent );
-        explicit ClearCrlCacheCommand( KeyListController * parent );
-        ~ClearCrlCacheCommand();
+class ClearCrlCacheCommand : public GnuPGProcessCommand
+{
+    Q_OBJECT
+public:
+    explicit ClearCrlCacheCommand(QAbstractItemView *view, KeyListController *parent);
+    explicit ClearCrlCacheCommand(KeyListController *parent);
+    ~ClearCrlCacheCommand();
 
-    private:
-        /* reimp */ QStringList arguments() const;
+private:
+    /* reimp */ QStringList arguments() const;
 
-        /* reimp */ QString errorCaption() const;
-        /* reimp */ QString successCaption() const;
+    /* reimp */ QString errorCaption() const;
+    /* reimp */ QString successCaption() const;
 
-        /* reimp */ QString crashExitMessage( const QStringList & ) const;
-        /* reimp */ QString errorExitMessage( const QStringList & ) const;
-        /* reimp */ QString successMessage( const QStringList & ) const;
-    };
+    /* reimp */ QString crashExitMessage(const QStringList &) const;
+    /* reimp */ QString errorExitMessage(const QStringList &) const;
+    /* reimp */ QString successMessage(const QStringList &) const;
+};
 
 }
 }

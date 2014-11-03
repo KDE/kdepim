@@ -58,101 +58,123 @@ static const int PROCESS_TERMINATE_TIMEOUT = 5000; // milliseconds
 using namespace Kleo;
 using namespace Kleo::Commands;
 
-namespace {
+namespace
+{
 
-    class OutputDialog : public QDialog {
-        Q_OBJECT
-    public:
-        explicit OutputDialog( QWidget * parent=0 )
-            : QDialog( parent ),
-              vlay( this ),
-              logTextWidget( this ),
-              buttonBox( QDialogButtonBox::Cancel|QDialogButtonBox::Close, Qt::Horizontal, this )
-        {
-            KDAB_SET_OBJECT_NAME( vlay );
-            KDAB_SET_OBJECT_NAME( logTextWidget );
-            KDAB_SET_OBJECT_NAME( buttonBox );
+class OutputDialog : public QDialog
+{
+    Q_OBJECT
+public:
+    explicit OutputDialog(QWidget *parent = 0)
+        : QDialog(parent),
+          vlay(this),
+          logTextWidget(this),
+          buttonBox(QDialogButtonBox::Cancel | QDialogButtonBox::Close, Qt::Horizontal, this)
+    {
+        KDAB_SET_OBJECT_NAME(vlay);
+        KDAB_SET_OBJECT_NAME(logTextWidget);
+        KDAB_SET_OBJECT_NAME(buttonBox);
 
-            logTextWidget.setMinimumVisibleLines( 20 );
-            logTextWidget.setMinimumVisibleColumns( 80 );
+        logTextWidget.setMinimumVisibleLines(20);
+        logTextWidget.setMinimumVisibleColumns(80);
 
-            vlay.addWidget( &logTextWidget, 1 );
-            vlay.addWidget( &buttonBox );
+        vlay.addWidget(&logTextWidget, 1);
+        vlay.addWidget(&buttonBox);
 
-            connect( closeButton(), SIGNAL(clicked()), this, SLOT(close()) );
-            connect( cancelButton(), SIGNAL(clicked()), this, SLOT(slotCancelClicked()) );
-        }
+        connect(closeButton(), SIGNAL(clicked()), this, SLOT(close()));
+        connect(cancelButton(), SIGNAL(clicked()), this, SLOT(slotCancelClicked()));
+    }
 
-    Q_SIGNALS:
-        void cancelRequested();
+Q_SIGNALS:
+    void cancelRequested();
 
-    public Q_SLOTS:
-        void message( const QString & s ) {
-            logTextWidget.message( s );
-        }
-        void setComplete( bool complete ) {
-            cancelButton()->setVisible( !complete );
-        }
+public Q_SLOTS:
+    void message(const QString &s)
+    {
+        logTextWidget.message(s);
+    }
+    void setComplete(bool complete)
+    {
+        cancelButton()->setVisible(!complete);
+    }
 
-    private Q_SLOTS:
-        void slotCancelClicked() {
-            cancelButton()->hide();
-            emit cancelRequested();
-        }
+private Q_SLOTS:
+    void slotCancelClicked()
+    {
+        cancelButton()->hide();
+        emit cancelRequested();
+    }
 
-    private:
-        QAbstractButton * closeButton() const { return buttonBox.button( QDialogButtonBox::Close ); }
-        QAbstractButton * cancelButton() const { return buttonBox.button( QDialogButtonBox::Cancel ); }
+private:
+    QAbstractButton *closeButton() const
+    {
+        return buttonBox.button(QDialogButtonBox::Close);
+    }
+    QAbstractButton *cancelButton() const
+    {
+        return buttonBox.button(QDialogButtonBox::Cancel);
+    }
 
-    private:
-        QVBoxLayout vlay;
-        KDLogTextWidget logTextWidget;
-        QDialogButtonBox buttonBox;
-    };
+private:
+    QVBoxLayout vlay;
+    KDLogTextWidget logTextWidget;
+    QDialogButtonBox buttonBox;
+};
 
 }
 
-class GnuPGProcessCommand::Private : Command::Private {
+class GnuPGProcessCommand::Private : Command::Private
+{
     friend class ::Kleo::Commands::GnuPGProcessCommand;
-    GnuPGProcessCommand * q_func() const { return static_cast<GnuPGProcessCommand*>( q ); }
+    GnuPGProcessCommand *q_func() const
+    {
+        return static_cast<GnuPGProcessCommand *>(q);
+    }
 public:
-    explicit Private( GnuPGProcessCommand * qq, KeyListController * c );
+    explicit Private(GnuPGProcessCommand *qq, KeyListController *c);
     ~Private();
 
 private:
     void init();
-    void ensureDialogCreated() {
-        if ( !showsOutputWindow )
+    void ensureDialogCreated()
+    {
+        if (!showsOutputWindow) {
             return;
-        if ( !dialog ) {
+        }
+        if (!dialog) {
             dialog = new OutputDialog;
-            dialog->setAttribute( Qt::WA_DeleteOnClose );
-            applyWindowID( dialog );
-            connect( dialog, SIGNAL(cancelRequested()), q, SLOT(cancel()) );
-            dialog->setWindowTitle( i18n("Subprocess Diagnostics") );
+            dialog->setAttribute(Qt::WA_DeleteOnClose);
+            applyWindowID(dialog);
+            connect(dialog, SIGNAL(cancelRequested()), q, SLOT(cancel()));
+            dialog->setWindowTitle(i18n("Subprocess Diagnostics"));
         }
     }
-    void ensureDialogVisible() {
-        if ( !showsOutputWindow )
+    void ensureDialogVisible()
+    {
+        if (!showsOutputWindow) {
             return;
+        }
         ensureDialogCreated();
-        if ( dialog->isVisible() )
+        if (dialog->isVisible()) {
             dialog->raise();
-        else
+        } else {
             dialog->show();
+        }
 #ifdef Q_OS_WIN
-        KWindowSystem::forceActiveWindow( dialog->winId() );
+        KWindowSystem::forceActiveWindow(dialog->winId());
 #endif
     }
-    void message( const QString & msg ) {
-        if ( dialog )
-            dialog->message( msg );
-        else
+    void message(const QString &msg)
+    {
+        if (dialog) {
+            dialog->message(msg);
+        } else {
             qDebug() << msg;
+        }
     }
 
 private:
-    void slotProcessFinished( int, QProcess::ExitStatus );
+    void slotProcessFinished(int, QProcess::ExitStatus);
     void slotProcessReadyReadStandardError();
 
 private:
@@ -165,69 +187,80 @@ private:
     bool canceled;
 };
 
-GnuPGProcessCommand::Private * GnuPGProcessCommand::d_func() { return static_cast<Private*>( d.get() ); }
-const GnuPGProcessCommand::Private * GnuPGProcessCommand::d_func() const { return static_cast<const Private*>( d.get() ); }
+GnuPGProcessCommand::Private *GnuPGProcessCommand::d_func()
+{
+    return static_cast<Private *>(d.get());
+}
+const GnuPGProcessCommand::Private *GnuPGProcessCommand::d_func() const
+{
+    return static_cast<const Private *>(d.get());
+}
 
 #define d d_func()
 #define q q_func()
 
-GnuPGProcessCommand::Private::Private( GnuPGProcessCommand * qq, KeyListController * c )
-    : Command::Private( qq, c ),
+GnuPGProcessCommand::Private::Private(GnuPGProcessCommand *qq, KeyListController *c)
+    : Command::Private(qq, c),
       process(),
       dialog(),
       errorBuffer(),
-      ignoresSuccessOrFailure( false ),
-      showsOutputWindow( false ),
-      canceled( false )
+      ignoresSuccessOrFailure(false),
+      showsOutputWindow(false),
+      canceled(false)
 {
-    process.setOutputChannelMode( KProcess::OnlyStderrChannel );
-    process.setReadChannel( KProcess::StandardError );
+    process.setOutputChannelMode(KProcess::OnlyStderrChannel);
+    process.setReadChannel(KProcess::StandardError);
 }
 
 GnuPGProcessCommand::Private::~Private() {}
 
-GnuPGProcessCommand::GnuPGProcessCommand( KeyListController * c )
-    : Command( new Private( this, c ) )
+GnuPGProcessCommand::GnuPGProcessCommand(KeyListController *c)
+    : Command(new Private(this, c))
 {
     d->init();
 }
 
-GnuPGProcessCommand::GnuPGProcessCommand( QAbstractItemView * v, KeyListController * c )
-    : Command( v, new Private( this, c ) )
+GnuPGProcessCommand::GnuPGProcessCommand(QAbstractItemView *v, KeyListController *c)
+    : Command(v, new Private(this, c))
 {
     d->init();
 }
 
-GnuPGProcessCommand::GnuPGProcessCommand( const GpgME::Key & key )
-    : Command( key, new Private( this, 0 ) )
+GnuPGProcessCommand::GnuPGProcessCommand(const GpgME::Key &key)
+    : Command(key, new Private(this, 0))
 {
     d->init();
 }
 
-void GnuPGProcessCommand::Private::init() {
-    connect( &process, SIGNAL(finished(int,QProcess::ExitStatus)),
-             q, SLOT(slotProcessFinished(int,QProcess::ExitStatus)) );
-    connect( &process, SIGNAL(readyReadStandardError()),
-             q, SLOT(slotProcessReadyReadStandardError()) );
+void GnuPGProcessCommand::Private::init()
+{
+    connect(&process, SIGNAL(finished(int,QProcess::ExitStatus)),
+            q, SLOT(slotProcessFinished(int,QProcess::ExitStatus)));
+    connect(&process, SIGNAL(readyReadStandardError()),
+            q, SLOT(slotProcessReadyReadStandardError()));
 }
 
 GnuPGProcessCommand::~GnuPGProcessCommand() {}
 
-QDialog * GnuPGProcessCommand::dialog() const {
+QDialog *GnuPGProcessCommand::dialog() const
+{
     return d->dialog;
 }
 
-bool GnuPGProcessCommand::preStartHook( QWidget * ) const {
+bool GnuPGProcessCommand::preStartHook(QWidget *) const
+{
     return true;
 }
 
-void GnuPGProcessCommand::postSuccessHook( QWidget * ) {
+void GnuPGProcessCommand::postSuccessHook(QWidget *)
+{
 
 }
 
-void GnuPGProcessCommand::doStart() {
+void GnuPGProcessCommand::doStart()
+{
 
-    if ( !preStartHook( d->parentWidgetOrView() ) ) {
+    if (!preStartHook(d->parentWidgetOrView())) {
         d->finished();
         return;
     }
@@ -238,87 +271,99 @@ void GnuPGProcessCommand::doStart() {
 
     d->process.start();
 
-    if ( !d->process.waitForStarted() ) {
-        d->error( i18n( "Unable to start process %1. "
-                        "Please check your installation.", d->arguments[0] ),
-                  errorCaption() );
+    if (!d->process.waitForStarted()) {
+        d->error(i18n("Unable to start process %1. "
+                      "Please check your installation.", d->arguments[0]),
+                 errorCaption());
         d->finished();
     } else {
         d->ensureDialogVisible();
-        d->message( i18n("Starting %1...", d->arguments.join(QLatin1String(" ")) ) );
+        d->message(i18n("Starting %1...", d->arguments.join(QLatin1String(" "))));
     }
 }
 
-void GnuPGProcessCommand::doCancel() {
+void GnuPGProcessCommand::doCancel()
+{
     d->canceled = true;
-    if ( d->process.state() != QProcess::NotRunning ) {
+    if (d->process.state() != QProcess::NotRunning) {
         d->process.terminate();
-        QTimer::singleShot( PROCESS_TERMINATE_TIMEOUT, &d->process, SLOT(kill()) );
+        QTimer::singleShot(PROCESS_TERMINATE_TIMEOUT, &d->process, SLOT(kill()));
     }
 }
 
-void GnuPGProcessCommand::Private::slotProcessFinished( int code, QProcess::ExitStatus status ) {
-    if ( !canceled )
-        if ( status == QProcess::CrashExit ) {
-            error( q->crashExitMessage( arguments ), q->errorCaption() );
-        } else if ( ignoresSuccessOrFailure ) {
-            if ( dialog ) {
-                message( i18n("Process finished") );
+void GnuPGProcessCommand::Private::slotProcessFinished(int code, QProcess::ExitStatus status)
+{
+    if (!canceled)
+        if (status == QProcess::CrashExit) {
+            error(q->crashExitMessage(arguments), q->errorCaption());
+        } else if (ignoresSuccessOrFailure) {
+            if (dialog) {
+                message(i18n("Process finished"));
             } else {
                 ;
             }
-        } else if ( code ) {
-            error( q->errorExitMessage( arguments ), q->errorCaption() );
+        } else if (code) {
+            error(q->errorExitMessage(arguments), q->errorCaption());
         } else {
-            q->postSuccessHook( parentWidgetOrView() );
-            const QString successMessage = q->successMessage( arguments );
-            if ( dialog ) {
-                message( successMessage );
+            q->postSuccessHook(parentWidgetOrView());
+            const QString successMessage = q->successMessage(arguments);
+            if (dialog) {
+                message(successMessage);
             } else {
-                information( successMessage, q->successCaption() );
+                information(successMessage, q->successCaption());
             }
         }
-    if ( dialog )
-        dialog->setComplete( true );
+    if (dialog) {
+        dialog->setComplete(true);
+    }
     finished();
 }
 
-void GnuPGProcessCommand::Private::slotProcessReadyReadStandardError() {
-    while ( process.canReadLine() ) {
+void GnuPGProcessCommand::Private::slotProcessReadyReadStandardError()
+{
+    while (process.canReadLine()) {
         QByteArray ba = process.readLine();
         errorBuffer += ba;
-        while ( ba.endsWith('\n') || ba.endsWith('\r') )
+        while (ba.endsWith('\n') || ba.endsWith('\r')) {
             ba.chop(1);
-        message( QString::fromLocal8Bit( ba.constData(), ba.size() ) );
+        }
+        message(QString::fromLocal8Bit(ba.constData(), ba.size()));
     }
 }
 
-QString GnuPGProcessCommand::errorString() const {
-    return QString::fromLocal8Bit( d->errorBuffer );
+QString GnuPGProcessCommand::errorString() const
+{
+    return QString::fromLocal8Bit(d->errorBuffer);
 }
 
-void GnuPGProcessCommand::setIgnoresSuccessOrFailure( bool ignores ) {
+void GnuPGProcessCommand::setIgnoresSuccessOrFailure(bool ignores)
+{
     d->ignoresSuccessOrFailure = ignores;
 }
 
-bool GnuPGProcessCommand::ignoresSuccessOrFailure() const {
+bool GnuPGProcessCommand::ignoresSuccessOrFailure() const
+{
     return d->ignoresSuccessOrFailure;
 }
 
-void GnuPGProcessCommand::setShowsOutputWindow( bool show ) {
-    if ( show == d->showsOutputWindow )
+void GnuPGProcessCommand::setShowsOutputWindow(bool show)
+{
+    if (show == d->showsOutputWindow) {
         return;
+    }
     d->showsOutputWindow = show;
-    if ( show ) {
+    if (show) {
         d->ensureDialogCreated();
     } else {
-        if ( d->dialog )
+        if (d->dialog) {
             d->dialog->deleteLater();
+        }
         d->dialog = 0;
     }
 }
 
-bool GnuPGProcessCommand::showsOutputWindow() const {
+bool GnuPGProcessCommand::showsOutputWindow() const
+{
     return d->showsOutputWindow;
 }
 

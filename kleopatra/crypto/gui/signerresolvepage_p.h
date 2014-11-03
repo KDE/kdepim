@@ -42,55 +42,60 @@ class QLabel;
 #include <vector>
 #include <map>
 
-namespace Kleo {
-namespace Crypto {
-namespace Gui {
+namespace Kleo
+{
+namespace Crypto
+{
+namespace Gui
+{
 
+class AbstractSigningProtocolSelectionWidget : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit AbstractSigningProtocolSelectionWidget(QWidget *parent = 0, Qt::WindowFlags flags = 0);
+    virtual void setProtocolChecked(GpgME::Protocol protocol, bool checked) = 0;
+    virtual bool isProtocolChecked(GpgME::Protocol protocol) const = 0;
+    virtual std::vector<GpgME::Protocol> checkedProtocols() const = 0;
+    virtual void setCertificate(GpgME::Protocol protocol, const GpgME::Key &key) = 0;
 
-    class AbstractSigningProtocolSelectionWidget : public QWidget {
-        Q_OBJECT
-    public:
-        explicit AbstractSigningProtocolSelectionWidget( QWidget* parent=0, Qt::WindowFlags flags=0 );
-        virtual void setProtocolChecked( GpgME::Protocol protocol, bool checked ) = 0;
-        virtual bool isProtocolChecked( GpgME::Protocol protocol ) const = 0;
-        virtual std::vector<GpgME::Protocol> checkedProtocols() const = 0;
-        virtual void setCertificate( GpgME::Protocol protocol, const GpgME::Key& key ) = 0;
+Q_SIGNALS:
+    void userSelectionChanged();
+};
 
-    Q_SIGNALS:
-        void userSelectionChanged();
-    };
+class SigningProtocolSelectionWidget : public AbstractSigningProtocolSelectionWidget
+{
+    Q_OBJECT
+public:
+    explicit SigningProtocolSelectionWidget(QWidget *parent = 0, Qt::WindowFlags flags = 0);
+    void setProtocolChecked(GpgME::Protocol protocol, bool checked);
+    bool isProtocolChecked(GpgME::Protocol protocol) const;
+    std::vector<GpgME::Protocol> checkedProtocols() const;
+    void setCertificate(GpgME::Protocol protocol, const GpgME::Key &key);
 
-    class SigningProtocolSelectionWidget : public AbstractSigningProtocolSelectionWidget {
-        Q_OBJECT
-    public:
-        explicit SigningProtocolSelectionWidget( QWidget* parent=0, Qt::WindowFlags flags=0 );
-        void setProtocolChecked( GpgME::Protocol protocol, bool checked );
-        bool isProtocolChecked( GpgME::Protocol protocol ) const;
-        std::vector<GpgME::Protocol> checkedProtocols() const;
-        void setCertificate( GpgME::Protocol protocol, const GpgME::Key& key );
+    void setExclusive(bool exclusive);
+    bool isExclusive() const;
 
-        void setExclusive( bool exclusive );
-        bool isExclusive() const;
+private:
+    QCheckBox *button(GpgME::Protocol p) const;
+    std::map<GpgME::Protocol, QCheckBox *> m_buttons;
+    QButtonGroup *m_buttonGroup;
+};
 
-    private:
-        QCheckBox * button( GpgME::Protocol p ) const;
-        std::map<GpgME::Protocol,QCheckBox*> m_buttons;
-        QButtonGroup* m_buttonGroup;
-    };
+class ReadOnlyProtocolSelectionWidget : public AbstractSigningProtocolSelectionWidget
+{
+    Q_OBJECT
+public:
+    explicit ReadOnlyProtocolSelectionWidget(QWidget *parent = 0, Qt::WindowFlags flags = 0);
+    void setProtocolChecked(GpgME::Protocol protocol, bool checked);
+    bool isProtocolChecked(GpgME::Protocol protocol) const;
+    std::vector<GpgME::Protocol> checkedProtocols() const;
+    void setCertificate(GpgME::Protocol protocol, const GpgME::Key &key);
 
-    class ReadOnlyProtocolSelectionWidget : public AbstractSigningProtocolSelectionWidget {
-        Q_OBJECT
-    public:
-        explicit ReadOnlyProtocolSelectionWidget( QWidget* parent=0, Qt::WindowFlags flags=0 );
-        void setProtocolChecked( GpgME::Protocol protocol, bool checked );
-        bool isProtocolChecked( GpgME::Protocol protocol ) const;
-        std::vector<GpgME::Protocol> checkedProtocols() const;
-        void setCertificate( GpgME::Protocol protocol, const GpgME::Key& key );
-
-    private:
-        QLabel * label( GpgME::Protocol p ) const;
-        std::map<GpgME::Protocol,QLabel*> m_labels;
-    };
+private:
+    QLabel *label(GpgME::Protocol p) const;
+    std::map<GpgME::Protocol, QLabel *> m_labels;
+};
 
 }
 }

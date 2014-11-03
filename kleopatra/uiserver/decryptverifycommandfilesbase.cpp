@@ -68,29 +68,36 @@ using namespace Kleo::Formatting;
 using namespace GpgME;
 using namespace boost;
 
-class DecryptVerifyCommandFilesBase::Private : public QObject {
+class DecryptVerifyCommandFilesBase::Private : public QObject
+{
     Q_OBJECT
     friend class ::Kleo::DecryptVerifyCommandFilesBase;
-    DecryptVerifyCommandFilesBase * const q;
+    DecryptVerifyCommandFilesBase *const q;
 public:
-    explicit Private( DecryptVerifyCommandFilesBase * qq )
+    explicit Private(DecryptVerifyCommandFilesBase *qq)
         : QObject(),
-          q( qq ),
+          q(qq),
           controller()
     {
     }
 
-    ~Private() {
+    ~Private()
+    {
     }
 
     void checkForErrors() const;
 
-
 public Q_SLOTS:
-    void slotProgress( const QString & what, int current, int total );
-    void verificationResult( const GpgME::VerificationResult & );
-    void slotDone() { q->done(); }
-    void slotError( int err, const QString & details ) { q->done( err, details ); }
+    void slotProgress(const QString &what, int current, int total);
+    void verificationResult(const GpgME::VerificationResult &);
+    void slotDone()
+    {
+        q->done();
+    }
+    void slotError(int err, const QString &details)
+    {
+        q->done(err, details);
+    }
 
 public:
 
@@ -98,104 +105,108 @@ private:
     shared_ptr<DecryptVerifyFilesController> controller;
 };
 
-
 DecryptVerifyCommandFilesBase::DecryptVerifyCommandFilesBase()
-    : AssuanCommandMixin<DecryptVerifyCommandFilesBase>(), d( new Private( this ) )
+    : AssuanCommandMixin<DecryptVerifyCommandFilesBase>(), d(new Private(this))
 {
 
 }
 
-
 DecryptVerifyCommandFilesBase::~DecryptVerifyCommandFilesBase() {}
 
-int DecryptVerifyCommandFilesBase::doStart() {
+int DecryptVerifyCommandFilesBase::doStart()
+{
 
     d->checkForErrors();
 
-    d->controller.reset( new DecryptVerifyFilesController( shared_from_this() ) );
+    d->controller.reset(new DecryptVerifyFilesController(shared_from_this()));
 
-    d->controller->setOperation( operation() );
-    d->controller->setFiles( fileNames() );
+    d->controller->setOperation(operation());
+    d->controller->setFiles(fileNames());
 
-    QObject::connect( d->controller.get(), SIGNAL(done()),
-                      d.get(), SLOT(slotDone()), Qt::QueuedConnection );
-    QObject::connect( d->controller.get(), SIGNAL(error(int,QString)),
-                      d.get(), SLOT(slotError(int,QString)), Qt::QueuedConnection );
-    QObject::connect( d->controller.get(), SIGNAL(verificationResult(GpgME::VerificationResult)),
-                      d.get(), SLOT(verificationResult(GpgME::VerificationResult)), Qt::QueuedConnection );
+    QObject::connect(d->controller.get(), SIGNAL(done()),
+                     d.get(), SLOT(slotDone()), Qt::QueuedConnection);
+    QObject::connect(d->controller.get(), SIGNAL(error(int,QString)),
+                     d.get(), SLOT(slotError(int,QString)), Qt::QueuedConnection);
+    QObject::connect(d->controller.get(), SIGNAL(verificationResult(GpgME::VerificationResult)),
+                     d.get(), SLOT(verificationResult(GpgME::VerificationResult)), Qt::QueuedConnection);
 
     d->controller->start();
 
     return 0;
 }
 
-namespace {
+namespace
+{
 
-    struct is_file : std::unary_function<QString,bool> {
-        bool operator()( const QString & file ) const {
-            return QFileInfo( file ).isFile();
-        }
-    };
+struct is_file : std::unary_function<QString, bool> {
+    bool operator()(const QString &file) const
+    {
+        return QFileInfo(file).isFile();
+    }
+};
 
 }
 
 void DecryptVerifyCommandFilesBase::Private::checkForErrors() const
 {
-    if ( !q->senders().empty() )
-        throw Kleo::Exception( q->makeError( GPG_ERR_CONFLICT ),
-                               i18n("Cannot use SENDER") );
+    if (!q->senders().empty())
+        throw Kleo::Exception(q->makeError(GPG_ERR_CONFLICT),
+                              i18n("Cannot use SENDER"));
 
-    if ( !q->recipients().empty() )
-        throw Kleo::Exception( q->makeError( GPG_ERR_CONFLICT ),
-                               i18n("Cannot use RECIPIENT") );
+    if (!q->recipients().empty())
+        throw Kleo::Exception(q->makeError(GPG_ERR_CONFLICT),
+                              i18n("Cannot use RECIPIENT"));
 
     const unsigned int numInputs = q->inputs().size();
     const unsigned int numMessages = q->messages().size();
     const unsigned int numOutputs  = q->outputs().size();
 
-    if ( numInputs )
-          throw Kleo::Exception( q->makeError( GPG_ERR_CONFLICT ), i18n("INPUT present") );
-      if ( numMessages )
-          throw Kleo::Exception( q->makeError( GPG_ERR_CONFLICT ), i18n("MESSAGE present") );
-      if ( numOutputs )
-          throw Kleo::Exception( q->makeError( GPG_ERR_CONFLICT ), i18n("OUTPUT present") );
-      const QStringList fileNames = q->fileNames();
-      if ( fileNames.empty() )
-          throw Exception( makeError( GPG_ERR_ASS_NO_INPUT ),
-                           i18n( "At least one FILE must be present" ) );
-      if ( !kdtools::all( fileNames, is_file() ) )
-          throw Exception( makeError( GPG_ERR_INV_ARG ),
-                           i18n( "DECRYPT/VERIFY_FILES cannot use directories as input" ) );
+    if (numInputs) {
+        throw Kleo::Exception(q->makeError(GPG_ERR_CONFLICT), i18n("INPUT present"));
+    }
+    if (numMessages) {
+        throw Kleo::Exception(q->makeError(GPG_ERR_CONFLICT), i18n("MESSAGE present"));
+    }
+    if (numOutputs) {
+        throw Kleo::Exception(q->makeError(GPG_ERR_CONFLICT), i18n("OUTPUT present"));
+    }
+    const QStringList fileNames = q->fileNames();
+    if (fileNames.empty())
+        throw Exception(makeError(GPG_ERR_ASS_NO_INPUT),
+                        i18n("At least one FILE must be present"));
+    if (!kdtools::all(fileNames, is_file()))
+        throw Exception(makeError(GPG_ERR_INV_ARG),
+                        i18n("DECRYPT/VERIFY_FILES cannot use directories as input"));
 
 }
 
-void DecryptVerifyCommandFilesBase::doCanceled() {
-    if ( d->controller )
-        d->controller->cancel();
-}
-
-
-void DecryptVerifyCommandFilesBase::Private::slotProgress( const QString& what, int current, int total )
+void DecryptVerifyCommandFilesBase::doCanceled()
 {
-    Q_UNUSED( what );
-    Q_UNUSED( current );
-    Q_UNUSED( total );
+    if (d->controller) {
+        d->controller->cancel();
+    }
+}
+
+void DecryptVerifyCommandFilesBase::Private::slotProgress(const QString &what, int current, int total)
+{
+    Q_UNUSED(what);
+    Q_UNUSED(current);
+    Q_UNUSED(total);
     // ### FIXME report progress, via sendStatus()
 }
 
-
-void DecryptVerifyCommandFilesBase::Private::verificationResult( const VerificationResult & vResult )
+void DecryptVerifyCommandFilesBase::Private::verificationResult(const VerificationResult &vResult)
 {
     try {
         const std::vector<Signature> sigs = vResult.signatures();
-        const std::vector<Key> signers = KeyCache::instance()->findSigners( vResult );
-        Q_FOREACH ( const Signature & sig, sigs ) {
-            const QString s = signatureToString( sig, DecryptVerifyResult::keyForSignature( sig, signers ) );
-            const char * color = summaryToString( sig.summary() );
-            q->sendStatusEncoded( "SIGSTATUS",
-                                  color + ( ' ' + hexencode( s.toUtf8().constData() ) ) );
+        const std::vector<Key> signers = KeyCache::instance()->findSigners(vResult);
+        Q_FOREACH (const Signature &sig, sigs) {
+            const QString s = signatureToString(sig, DecryptVerifyResult::keyForSignature(sig, signers));
+            const char *color = summaryToString(sig.summary());
+            q->sendStatusEncoded("SIGSTATUS",
+                                 color + (' ' + hexencode(s.toUtf8().constData())));
         }
-    } catch ( ... ) {}
+    } catch (...) {}
 }
 
 #include "decryptverifycommandfilesbase.moc"

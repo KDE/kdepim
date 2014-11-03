@@ -30,7 +30,6 @@
     your version.
 */
 
-
 #include <config-kleopatra.h>
 
 #include "aboutdata.h"
@@ -45,30 +44,29 @@
 #include <QCommandLineParser>
 #include <QApplication>
 
-int main( int argc, char** argv )
+int main(int argc, char **argv)
 {
-  Kdelibs4ConfigMigrator migrate(QLatin1String("kwatchgnupg"));
-  migrate.setConfigFiles(QStringList() << QLatin1String("kwatchgnupgrc"));
-  migrate.setUiFiles(QStringList() << QLatin1String("kwatchgnupgui.rc"));
-  migrate.migrate();
+    Kdelibs4ConfigMigrator migrate(QLatin1String("kwatchgnupg"));
+    migrate.setConfigFiles(QStringList() << QLatin1String("kwatchgnupgrc"));
+    migrate.setUiFiles(QStringList() << QLatin1String("kwatchgnupgui.rc"));
+    migrate.migrate();
 
-  KLocalizedString::setApplicationDomain("kwatchgnupg");   
-  AboutData aboutData;
+    KLocalizedString::setApplicationDomain("kwatchgnupg");
+    AboutData aboutData;
 
-  QApplication app(argc, argv);
+    QApplication app(argc, argv);
 
-  KAboutData::setApplicationData(aboutData);
-  QCommandLineParser parser;
-  parser.addVersionOption();
-  parser.addHelpOption();
-  aboutData.setupCommandLine(&parser);
-  parser.process(app);
-  aboutData.processCommandLine(&parser);
+    KAboutData::setApplicationData(aboutData);
+    QCommandLineParser parser;
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
+    KDBusService service(KDBusService::Unique);
 
-  KDBusService service(KDBusService::Unique);
-
-  KWatchGnuPGMainWindow* mMainWin = new KWatchGnuPGMainWindow();
-  mMainWin->show();
-  return app.exec();
+    KWatchGnuPGMainWindow *mMainWin = new KWatchGnuPGMainWindow();
+    mMainWin->show();
+    return app.exec();
 }

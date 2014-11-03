@@ -37,30 +37,31 @@
 
 class QStringList;
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class ImportCertificateFromFileCommand : public ImportCertificatesCommand {
-        Q_OBJECT
-    public:
-        explicit ImportCertificateFromFileCommand( KeyListController * parent );
-        explicit ImportCertificateFromFileCommand( QAbstractItemView * view, KeyListController * parent );
-        explicit ImportCertificateFromFileCommand( const QStringList & files, KeyListController * parent );
-        explicit ImportCertificateFromFileCommand( const QStringList & files, QAbstractItemView * view, KeyListController * parent );
-        ~ImportCertificateFromFileCommand();
-    
-        void setFiles( const QStringList & files );
-        QStringList files() const;
+class ImportCertificateFromFileCommand : public ImportCertificatesCommand
+{
+    Q_OBJECT
+public:
+    explicit ImportCertificateFromFileCommand(KeyListController *parent);
+    explicit ImportCertificateFromFileCommand(QAbstractItemView *view, KeyListController *parent);
+    explicit ImportCertificateFromFileCommand(const QStringList &files, KeyListController *parent);
+    explicit ImportCertificateFromFileCommand(const QStringList &files, QAbstractItemView *view, KeyListController *parent);
+    ~ImportCertificateFromFileCommand();
 
-    private:
-        /* reimp */ void doStart();
+    void setFiles(const QStringList &files);
+    QStringList files() const;
 
-    private:
-        class Private;
-        inline Private * d_func();
-        inline const Private * d_func() const;
-    };
+private:
+    /* reimp */ void doStart();
+
+private:
+    class Private;
+    inline Private *d_func();
+    inline const Private *d_func() const;
+};
 }
 
 #endif // __KLEOPATRA_IMPORTCERTIFICATEFROMFILECOMMAND_H__
-
 

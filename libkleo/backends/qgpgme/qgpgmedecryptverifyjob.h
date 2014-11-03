@@ -40,40 +40,41 @@
 #include <gpgme++/decryptionresult.h>
 #include <gpgme++/verificationresult.h>
 
-namespace Kleo {
+namespace Kleo
+{
 
-  class QGpgMEDecryptVerifyJob
+class QGpgMEDecryptVerifyJob
 #ifdef Q_MOC_RUN
     : public DecryptVerifyJob
 #else
     : public _detail::ThreadedJobMixin<DecryptVerifyJob, boost::tuple<GpgME::DecryptionResult, GpgME::VerificationResult, QByteArray, QString, GpgME::Error> >
 #endif
-  {
+{
     Q_OBJECT
 #ifdef Q_MOC_RUN
-  private Q_SLOTS:
+private Q_SLOTS:
     void slotFinished();
 #endif
-  public:
-    explicit QGpgMEDecryptVerifyJob( GpgME::Context * context );
+public:
+    explicit QGpgMEDecryptVerifyJob(GpgME::Context *context);
     ~QGpgMEDecryptVerifyJob();
 
     /*! \reimp from DecryptVerifyJob */
-    GpgME::Error start( const QByteArray & cipherText );
+    GpgME::Error start(const QByteArray &cipherText);
 
     /*! \reimp from DecryptVerifyJob */
-    void start( const boost::shared_ptr<QIODevice> & cipherText, const boost::shared_ptr<QIODevice> & plainText );
+    void start(const boost::shared_ptr<QIODevice> &cipherText, const boost::shared_ptr<QIODevice> &plainText);
 
     /*! \reimp from DecryptVerifyJob */
-    std::pair<GpgME::DecryptionResult,GpgME::VerificationResult>
-    exec( const QByteArray & cipherText, QByteArray & plainText );
+    std::pair<GpgME::DecryptionResult, GpgME::VerificationResult>
+    exec(const QByteArray &cipherText, QByteArray &plainText);
 
     /*! \reimp from ThreadedJobMixin */
-    void resultHook( const result_type & r );
+    void resultHook(const result_type &r);
 
-  private:
-    std::pair<GpgME::DecryptionResult,GpgME::VerificationResult> mResult;
-  };
+private:
+    std::pair<GpgME::DecryptionResult, GpgME::VerificationResult> mResult;
+};
 
 }
 #endif // __KLEO_QGPGMEDECRYPTVERIFYJOB_H__

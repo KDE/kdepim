@@ -37,38 +37,42 @@
 
 #include <QtCore/QByteArray>
 
-namespace GpgME {
-  class Error;
+namespace GpgME
+{
+class Error;
 }
 
-namespace boost {
-    template <typename T> class shared_ptr;
+namespace boost
+{
+template <typename T> class shared_ptr;
 }
 
 class QStringList;
 class QIODevice;
 class QByteArray;
 
-namespace Kleo {
+namespace Kleo
+{
 
-  /**
-     @short An abstract base class for asynchronous downloaders
+/**
+   @short An abstract base class for asynchronous downloaders
 
-     To use a DownloadJob, first obtain an instance from the
-     CryptoBackend implementation, connect the progress() and result()
-     signals to suitable slots and then start the download with a call
-     to start(). This call might fail, in which case the DownloadJob
-     instance will have scheduled it's own destruction with a call to
-     QObject::deleteLater().
+   To use a DownloadJob, first obtain an instance from the
+   CryptoBackend implementation, connect the progress() and result()
+   signals to suitable slots and then start the download with a call
+   to start(). This call might fail, in which case the DownloadJob
+   instance will have scheduled it's own destruction with a call to
+   QObject::deleteLater().
 
-     After result() is emitted, the DownloadJob will schedule it's own
-     destruction by calling QObject::deleteLater().
-  */
-  class KLEO_EXPORT DownloadJob : public Job {
+   After result() is emitted, the DownloadJob will schedule it's own
+   destruction by calling QObject::deleteLater().
+*/
+class KLEO_EXPORT DownloadJob : public Job
+{
     Q_OBJECT
-  protected:
-    explicit DownloadJob( QObject * parent );
-  public:
+protected:
+    explicit DownloadJob(QObject *parent);
+public:
     ~DownloadJob();
 
     /**
@@ -80,8 +84,8 @@ namespace Kleo {
        Output is written to \a keyData, if given. Otherwise, it is
        passed as the second argument of result().
     */
-    virtual GpgME::Error start( const QByteArray & fingerprint,
-                                const boost::shared_ptr<QIODevice> & keyData ) = 0;
+    virtual GpgME::Error start(const QByteArray &fingerprint,
+                               const boost::shared_ptr<QIODevice> &keyData) = 0;
 
     /**
        Starts the download operation. \a fingerprints is a list of
@@ -90,11 +94,11 @@ namespace Kleo {
        only empty strings or anything other than fingerprints, the
        result is undefined.
     */
-    virtual KLEO_DEPRECATED_EXPORT GpgME::Error start( const QStringList & fingerprints ) = 0;
+    virtual KLEO_DEPRECATED_EXPORT GpgME::Error start(const QStringList &fingerprints) = 0;
 
-  Q_SIGNALS:
-    void result( const GpgME::Error & result, const QByteArray & keyData, const QString & auditLogAsHtml=QString(), const GpgME::Error & auditLogError=GpgME::Error() );
-  };
+Q_SIGNALS:
+    void result(const GpgME::Error &result, const QByteArray &keyData, const QString &auditLogAsHtml = QString(), const GpgME::Error &auditLogError = GpgME::Error());
+};
 
 }
 

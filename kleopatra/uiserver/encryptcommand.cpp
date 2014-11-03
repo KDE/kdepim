@@ -50,14 +50,15 @@ using namespace Kleo;
 using namespace Kleo::Crypto;
 using namespace boost;
 
-class EncryptCommand::Private : public QObject {
+class EncryptCommand::Private : public QObject
+{
     Q_OBJECT
 private:
     friend class ::Kleo::EncryptCommand;
-    EncryptCommand * const q;
+    EncryptCommand *const q;
 public:
-    explicit Private( EncryptCommand * qq )
-        : q( qq ),
+    explicit Private(EncryptCommand *qq)
+        : q(qq),
           controller()
     {
 
@@ -68,7 +69,7 @@ private:
 
 private Q_SLOTS:
     void slotDone();
-    void slotError( int, const QString & );
+    void slotError(int, const QString &);
     void slotRecipientsResolved();
 
 private:
@@ -76,146 +77,156 @@ private:
 };
 
 EncryptCommand::EncryptCommand()
-    : AssuanCommandMixin<EncryptCommand>(), d( new Private( this ) )
+    : AssuanCommandMixin<EncryptCommand>(), d(new Private(this))
 {
 
 }
 
 EncryptCommand::~EncryptCommand() {}
 
-void EncryptCommand::Private::checkForErrors() const {
+void EncryptCommand::Private::checkForErrors() const
+{
 
-    if ( q->numFiles() )
-        throw Exception( makeError( GPG_ERR_CONFLICT ),
-                         i18n( "ENCRYPT is an email mode command, connection seems to be in filmanager mode" ) );
+    if (q->numFiles())
+        throw Exception(makeError(GPG_ERR_CONFLICT),
+                        i18n("ENCRYPT is an email mode command, connection seems to be in filmanager mode"));
 
-    if ( !q->senders().empty() && !q->informativeSenders() )
-        throw Exception( makeError( GPG_ERR_CONFLICT ),
-                         i18n( "SENDER may not be given prior to ENCRYPT, except with --info" ) );
+    if (!q->senders().empty() && !q->informativeSenders())
+        throw Exception(makeError(GPG_ERR_CONFLICT),
+                        i18n("SENDER may not be given prior to ENCRYPT, except with --info"));
 
-    if ( q->inputs().empty() )
-        throw Exception( makeError( GPG_ERR_ASS_NO_INPUT ),
-                         i18n( "At least one INPUT must be present" ) );
+    if (q->inputs().empty())
+        throw Exception(makeError(GPG_ERR_ASS_NO_INPUT),
+                        i18n("At least one INPUT must be present"));
 
-    if ( q->outputs().empty() )
-        throw Exception( makeError( GPG_ERR_ASS_NO_OUTPUT ),
-                         i18n( "At least one OUTPUT must be present" ) );
+    if (q->outputs().empty())
+        throw Exception(makeError(GPG_ERR_ASS_NO_OUTPUT),
+                        i18n("At least one OUTPUT must be present"));
 
-    if ( q->outputs().size() != q->inputs().size() )
-        throw Exception( makeError( GPG_ERR_CONFLICT ),
-                         i18n( "INPUT/OUTPUT count mismatch" ) );
+    if (q->outputs().size() != q->inputs().size())
+        throw Exception(makeError(GPG_ERR_CONFLICT),
+                        i18n("INPUT/OUTPUT count mismatch"));
 
-    if ( !q->messages().empty() )
-        throw Exception( makeError( GPG_ERR_INV_VALUE ),
-                         i18n( "MESSAGE command is not allowed before ENCRYPT" ) );
+    if (!q->messages().empty())
+        throw Exception(makeError(GPG_ERR_INV_VALUE),
+                        i18n("MESSAGE command is not allowed before ENCRYPT"));
 
-    const shared_ptr<NewSignEncryptEMailController> m = q->mementoContent< shared_ptr<NewSignEncryptEMailController> >( NewSignEncryptEMailController::mementoName() );
-    kleo_assert( m );
+    const shared_ptr<NewSignEncryptEMailController> m = q->mementoContent< shared_ptr<NewSignEncryptEMailController> >(NewSignEncryptEMailController::mementoName());
+    kleo_assert(m);
 
-    if ( m && m->isEncrypting() ) {
+    if (m && m->isEncrypting()) {
 
-        if ( m->protocol() != q->checkProtocol( EMail ) )
-            throw Exception( makeError( GPG_ERR_CONFLICT ),
-                             i18n( "Protocol given conflicts with protocol determined by PREP_ENCRYPT" ) );
+        if (m->protocol() != q->checkProtocol(EMail))
+            throw Exception(makeError(GPG_ERR_CONFLICT),
+                            i18n("Protocol given conflicts with protocol determined by PREP_ENCRYPT"));
 
-        if ( !q->recipients().empty() )
-            throw Exception( makeError( GPG_ERR_CONFLICT ),
-                             i18n( "New recipients added after PREP_ENCRYPT command" ) );
-        if ( !q->senders().empty() )
-            throw Exception( makeError( GPG_ERR_CONFLICT ),
-                             i18n( "New senders added after PREP_ENCRYPT command" ) );
+        if (!q->recipients().empty())
+            throw Exception(makeError(GPG_ERR_CONFLICT),
+                            i18n("New recipients added after PREP_ENCRYPT command"));
+        if (!q->senders().empty())
+            throw Exception(makeError(GPG_ERR_CONFLICT),
+                            i18n("New senders added after PREP_ENCRYPT command"));
 
     } else {
 
-        if ( q->recipients().empty() || q->informativeRecipients() )
-            throw Exception( makeError( GPG_ERR_MISSING_VALUE ),
-                             i18n( "No recipients given, or only with --info" ) );
+        if (q->recipients().empty() || q->informativeRecipients())
+            throw Exception(makeError(GPG_ERR_MISSING_VALUE),
+                            i18n("No recipients given, or only with --info"));
 
     }
 
 }
 
-static void connectController( const QObject * controller, const QObject * d ) {
+static void connectController(const QObject *controller, const QObject *d)
+{
 
-    QObject::connect( controller, SIGNAL(certificatesResolved()), d, SLOT(slotRecipientsResolved()) );
-    QObject::connect( controller, SIGNAL(done()), d, SLOT(slotDone()) );
-    QObject::connect( controller, SIGNAL(error(int,QString)), d, SLOT(slotError(int,QString)) );
+    QObject::connect(controller, SIGNAL(certificatesResolved()), d, SLOT(slotRecipientsResolved()));
+    QObject::connect(controller, SIGNAL(done()), d, SLOT(slotDone()));
+    QObject::connect(controller, SIGNAL(error(int,QString)), d, SLOT(slotError(int,QString)));
 
 }
 
-int EncryptCommand::doStart() {
+int EncryptCommand::doStart()
+{
 
     d->checkForErrors();
 
-    const shared_ptr<NewSignEncryptEMailController> seec = mementoContent< shared_ptr<NewSignEncryptEMailController> >( NewSignEncryptEMailController::mementoName() );
+    const shared_ptr<NewSignEncryptEMailController> seec = mementoContent< shared_ptr<NewSignEncryptEMailController> >(NewSignEncryptEMailController::mementoName());
 
-    if ( seec && seec->isEncrypting() ) {
+    if (seec && seec->isEncrypting()) {
         // reuse the controller from a previous PREP_ENCRYPT, if available:
         d->controller = seec;
-        connectController( seec.get(), d.get() );
-        removeMemento( NewSignEncryptEMailController::mementoName() );
-        d->controller->setExecutionContext( shared_from_this() );
-        if ( seec->areCertificatesResolved() )
-            QTimer::singleShot( 0, d.get(), SLOT(slotRecipientsResolved()) );
-        else
-            kleo_assert( seec->isResolvingInProgress() );
+        connectController(seec.get(), d.get());
+        removeMemento(NewSignEncryptEMailController::mementoName());
+        d->controller->setExecutionContext(shared_from_this());
+        if (seec->areCertificatesResolved()) {
+            QTimer::singleShot(0, d.get(), SLOT(slotRecipientsResolved()));
+        } else {
+            kleo_assert(seec->isResolvingInProgress());
+        }
     } else {
         // use a new controller
-        d->controller.reset( new NewSignEncryptEMailController( shared_from_this() ) );
+        d->controller.reset(new NewSignEncryptEMailController(shared_from_this()));
 
         const QString session = sessionTitle();
-        if ( !session.isEmpty() )
-            d->controller->setSubject( session );
+        if (!session.isEmpty()) {
+            d->controller->setSubject(session);
+        }
 
-        d->controller->setEncrypting( true );
-        d->controller->setSigning( false );
-        d->controller->setProtocol( checkProtocol( EMail ) );
-        connectController( d->controller.get(), d.get() );
-        d->controller->startResolveCertificates( recipients(), senders() );
+        d->controller->setEncrypting(true);
+        d->controller->setSigning(false);
+        d->controller->setProtocol(checkProtocol(EMail));
+        connectController(d->controller.get(), d.get());
+        d->controller->startResolveCertificates(recipients(), senders());
     }
-
 
     return 0;
 }
 
-void EncryptCommand::Private::slotRecipientsResolved() {
+void EncryptCommand::Private::slotRecipientsResolved()
+{
     //hold local shared_ptr to member as q->done() deletes *this
-    const shared_ptr<NewSignEncryptEMailController> cont( controller );
+    const shared_ptr<NewSignEncryptEMailController> cont(controller);
 
     try {
         const QString sessionTitle = q->sessionTitle();
-        if ( !sessionTitle.isEmpty() )
-            Q_FOREACH ( const shared_ptr<Input> & i, q->inputs() )
-                i->setLabel( sessionTitle );
+        if (!sessionTitle.isEmpty())
+            Q_FOREACH (const shared_ptr<Input> &i, q->inputs()) {
+                i->setLabel(sessionTitle);
+            }
 
-        cont->startEncryption( q->inputs(), q->outputs() );
+        cont->startEncryption(q->inputs(), q->outputs());
 
         return;
 
-    } catch ( const Exception & e ) {
-        q->done( e.error(), e.message() );
-    } catch ( const std::exception & e ) {
-        q->done( makeError( GPG_ERR_UNEXPECTED ),
-                 i18n("Caught unexpected exception in EncryptCommand::Private::slotRecipientsResolved: %1",
-                      QString::fromLocal8Bit( e.what() ) ) );
-    } catch ( ... ) {
-        q->done( makeError( GPG_ERR_UNEXPECTED ),
-                 i18n("Caught unknown exception in EncryptCommand::Private::slotRecipientsResolved") );
+    } catch (const Exception &e) {
+        q->done(e.error(), e.message());
+    } catch (const std::exception &e) {
+        q->done(makeError(GPG_ERR_UNEXPECTED),
+                i18n("Caught unexpected exception in EncryptCommand::Private::slotRecipientsResolved: %1",
+                     QString::fromLocal8Bit(e.what())));
+    } catch (...) {
+        q->done(makeError(GPG_ERR_UNEXPECTED),
+                i18n("Caught unknown exception in EncryptCommand::Private::slotRecipientsResolved"));
     }
     cont->cancel();
 }
 
-void EncryptCommand::Private::slotDone() {
+void EncryptCommand::Private::slotDone()
+{
     q->done();
 }
 
-void EncryptCommand::Private::slotError( int err, const QString & details ) {
-    q->done( err, details );
+void EncryptCommand::Private::slotError(int err, const QString &details)
+{
+    q->done(err, details);
 }
 
-void EncryptCommand::doCanceled() {
-    if ( d->controller )
+void EncryptCommand::doCanceled()
+{
+    if (d->controller) {
         d->controller->cancel();
+    }
 }
 
 #include "encryptcommand.moc"

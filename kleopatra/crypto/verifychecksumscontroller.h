@@ -46,28 +46,31 @@
 
 #include <vector>
 
-namespace Kleo {
-namespace Crypto {
+namespace Kleo
+{
+namespace Crypto
+{
 
-    class VerifyChecksumsController : public Controller {
-        Q_OBJECT
-    public:
-        explicit VerifyChecksumsController( QObject * parent=0 );
-        explicit VerifyChecksumsController( const boost::shared_ptr<const ExecutionContext> & ctx, QObject * parent=0 );
-        ~VerifyChecksumsController();
+class VerifyChecksumsController : public Controller
+{
+    Q_OBJECT
+public:
+    explicit VerifyChecksumsController(QObject *parent = 0);
+    explicit VerifyChecksumsController(const boost::shared_ptr<const ExecutionContext> &ctx, QObject *parent = 0);
+    ~VerifyChecksumsController();
 
-        void setFiles( const QStringList & files );
+    void setFiles(const QStringList &files);
 
-        void start();
+    void start();
 
-    public Q_SLOTS:
-        void cancel();
+public Q_SLOTS:
+    void cancel();
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void slotOperationFinished() )
-    };
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void slotOperationFinished())
+};
 
 }
 }

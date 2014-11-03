@@ -35,31 +35,31 @@
 
 #include "command.h"
 
+namespace Kleo
+{
 
-namespace Kleo {
+class ImportCertificatesCommand : public Command
+{
+    Q_OBJECT
+public:
+    explicit ImportCertificatesCommand(KeyListController *parent);
+    explicit ImportCertificatesCommand(QAbstractItemView *view, KeyListController *parent);
+    ~ImportCertificatesCommand();
 
-    class ImportCertificatesCommand : public Command {
-        Q_OBJECT
-    public:
-        explicit ImportCertificatesCommand( KeyListController * parent );
-        explicit ImportCertificatesCommand( QAbstractItemView * view, KeyListController * parent );
-        ~ImportCertificatesCommand();
-    
-    protected:
-        /* reimp */ void doCancel();
+protected:
+    /* reimp */ void doCancel();
 
-    protected:
-        class Private;
-        inline Private * d_func();
-        inline const Private * d_func() const;
-        Q_PRIVATE_SLOT( d_func(), void importResult( GpgME::ImportResult ) )
+protected:
+    class Private;
+    inline Private *d_func();
+    inline const Private *d_func() const;
+    Q_PRIVATE_SLOT(d_func(), void importResult(GpgME::ImportResult))
 
-    protected:
-        explicit ImportCertificatesCommand( Private * pp );
-        explicit ImportCertificatesCommand( QAbstractItemView * view, Private * pp );
-    };
+protected:
+    explicit ImportCertificatesCommand(Private *pp);
+    explicit ImportCertificatesCommand(QAbstractItemView *view, Private *pp);
+};
 }
 
 #endif // __KLEOPATRA_IMPORTCERTIFICATESCOMMAND_H__
-
 

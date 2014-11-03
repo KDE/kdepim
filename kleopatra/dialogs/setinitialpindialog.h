@@ -37,38 +37,42 @@
 
 #include <utils/pimpl_ptr.h>
 
-namespace GpgME {
-    class Error;
+namespace GpgME
+{
+class Error;
 }
 
-namespace Kleo {
-namespace Dialogs {
+namespace Kleo
+{
+namespace Dialogs
+{
 
-    class SetInitialPinDialog : public QDialog {
-        Q_OBJECT
-    public:
-        explicit SetInitialPinDialog( QWidget * parent=0, Qt::WindowFlags f=0 );
-        ~SetInitialPinDialog();
+class SetInitialPinDialog : public QDialog
+{
+    Q_OBJECT
+public:
+    explicit SetInitialPinDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    ~SetInitialPinDialog();
 
-        void setNksPinPresent( bool );
-        void setSigGPinPresent( bool );
+    void setNksPinPresent(bool);
+    void setSigGPinPresent(bool);
 
-        bool isComplete() const;
+    bool isComplete() const;
 
-    public Q_SLOTS:
-        void setNksPinSettingResult( const GpgME::Error & error );
-        void setSigGPinSettingResult( const GpgME::Error & error );
+public Q_SLOTS:
+    void setNksPinSettingResult(const GpgME::Error &error);
+    void setSigGPinSettingResult(const GpgME::Error &error);
 
-    Q_SIGNALS:
-        void nksPinRequested();
-        void sigGPinRequested();
+Q_SIGNALS:
+    void nksPinRequested();
+    void sigGPinRequested();
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void slotNksButtonClicked() )
-        Q_PRIVATE_SLOT( d, void slotSigGButtonClicked() )
-    };
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void slotNksButtonClicked())
+    Q_PRIVATE_SLOT(d, void slotSigGButtonClicked())
+};
 
 }
 }

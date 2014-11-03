@@ -50,100 +50,112 @@ using namespace Kleo;
 using namespace GpgME;
 using namespace boost;
 
-QGpgMEEncryptJob::QGpgMEEncryptJob( Context * context )
-  : mixin_type( context ),
-    mOutputIsBase64Encoded( false )
+QGpgMEEncryptJob::QGpgMEEncryptJob(Context *context)
+    : mixin_type(context),
+      mOutputIsBase64Encoded(false)
 {
-  lateInitialization();
+    lateInitialization();
 }
 
 QGpgMEEncryptJob::~QGpgMEEncryptJob() {}
 
-void QGpgMEEncryptJob::setOutputIsBase64Encoded( bool on ) {
-  mOutputIsBase64Encoded = on;
+void QGpgMEEncryptJob::setOutputIsBase64Encoded(bool on)
+{
+    mOutputIsBase64Encoded = on;
 }
 
-static QGpgMEEncryptJob::result_type encrypt( Context * ctx, QThread * thread,
-                                              const std::vector<Key> & recipients,
-                                              const weak_ptr<QIODevice> & plainText_,
-                                              const weak_ptr<QIODevice> & cipherText_,
-                                              bool alwaysTrust,
-                                              bool outputIsBsse64Encoded ) {
+static QGpgMEEncryptJob::result_type encrypt(Context *ctx, QThread *thread,
+        const std::vector<Key> &recipients,
+        const weak_ptr<QIODevice> &plainText_,
+        const weak_ptr<QIODevice> &cipherText_,
+        bool alwaysTrust,
+        bool outputIsBsse64Encoded)
+{
 
-  const shared_ptr<QIODevice> plainText = plainText_.lock();
-  const shared_ptr<QIODevice> cipherText = cipherText_.lock();
+    const shared_ptr<QIODevice> plainText = plainText_.lock();
+    const shared_ptr<QIODevice> cipherText = cipherText_.lock();
 
-  const _detail::ToThreadMover ctMover( cipherText, thread );
-  const _detail::ToThreadMover ptMover( plainText,  thread );
+    const _detail::ToThreadMover ctMover(cipherText, thread);
+    const _detail::ToThreadMover ptMover(plainText,  thread);
 
-  QGpgME::QIODeviceDataProvider in( plainText );
-  const Data indata( &in );
+    QGpgME::QIODeviceDataProvider in(plainText);
+    const Data indata(&in);
 
-  const Context::EncryptionFlags eflags =
-    alwaysTrust ? Context::AlwaysTrust : Context::None ;
+    const Context::EncryptionFlags eflags =
+        alwaysTrust ? Context::AlwaysTrust : Context::None ;
 
-  if ( !cipherText ) {
-    QGpgME::QByteArrayDataProvider out;
-    Data outdata( &out );
+    if (!cipherText) {
+        QGpgME::QByteArrayDataProvider out;
+        Data outdata(&out);
 
-    if ( outputIsBsse64Encoded )
-      outdata.setEncoding( Data::Base64Encoding );
+        if (outputIsBsse64Encoded) {
+            outdata.setEncoding(Data::Base64Encoding);
+        }
 
-    const EncryptionResult res = ctx->encrypt( recipients, indata, outdata, eflags );
-    Error ae;
-    const QString log = _detail::audit_log_as_html( ctx, ae );
-    return make_tuple( res, out.data(), log, ae );
-  } else {
-    QGpgME::QIODeviceDataProvider out( cipherText );
-    Data outdata( &out );
+        const EncryptionResult res = ctx->encrypt(recipients, indata, outdata, eflags);
+        Error ae;
+        const QString log = _detail::audit_log_as_html(ctx, ae);
+        return make_tuple(res, out.data(), log, ae);
+    } else {
+        QGpgME::QIODeviceDataProvider out(cipherText);
+        Data outdata(&out);
 
-    if ( outputIsBsse64Encoded )
-      outdata.setEncoding( Data::Base64Encoding );
+        if (outputIsBsse64Encoded) {
+            outdata.setEncoding(Data::Base64Encoding);
+        }
 
-    const EncryptionResult res = ctx->encrypt( recipients, indata, outdata, eflags );
-    Error ae;
-    const QString log = _detail::audit_log_as_html( ctx, ae );
-    return make_tuple( res, QByteArray(), log, ae );
-  }
+        const EncryptionResult res = ctx->encrypt(recipients, indata, outdata, eflags);
+        Error ae;
+        const QString log = _detail::audit_log_as_html(ctx, ae);
+        return make_tuple(res, QByteArray(), log, ae);
+    }
 
 }
 
-static QGpgMEEncryptJob::result_type encrypt_qba( Context * ctx, const std::vector<Key> & recipients, const QByteArray & plainText, bool alwaysTrust, bool outputIsBsse64Encoded ) {
-  const shared_ptr<QBuffer> buffer( new QBuffer );
-  buffer->setData( plainText );
-  if ( !buffer->open( QIODevice::ReadOnly ) )
-    assert( !"This should never happen: QBuffer::open() failed" );
-  return encrypt( ctx, 0, recipients, buffer, shared_ptr<QIODevice>(), alwaysTrust, outputIsBsse64Encoded );
+static QGpgMEEncryptJob::result_type encrypt_qba(Context *ctx, const std::vector<Key> &recipients, const QByteArray &plainText, bool alwaysTrust, bool outputIsBsse64Encoded)
+{
+    const shared_ptr<QBuffer> buffer(new QBuffer);
+    buffer->setData(plainText);
+    if (!buffer->open(QIODevice::ReadOnly)) {
+        assert(!"This should never happen: QBuffer::open() failed");
+    }
+    return encrypt(ctx, 0, recipients, buffer, shared_ptr<QIODevice>(), alwaysTrust, outputIsBsse64Encoded);
 }
 
-Error QGpgMEEncryptJob::start( const std::vector<Key> & recipients, const QByteArray & plainText, bool alwaysTrust ) {
-  run( boost::bind( &encrypt_qba, _1, recipients, plainText, alwaysTrust, mOutputIsBase64Encoded ) );
-  return Error();
+Error QGpgMEEncryptJob::start(const std::vector<Key> &recipients, const QByteArray &plainText, bool alwaysTrust)
+{
+    run(boost::bind(&encrypt_qba, _1, recipients, plainText, alwaysTrust, mOutputIsBase64Encoded));
+    return Error();
 }
 
-void QGpgMEEncryptJob::start( const std::vector<Key> & recipients, const shared_ptr<QIODevice> & plainText, const shared_ptr<QIODevice> & cipherText, bool alwaysTrust ) {
-  run( boost::bind( &encrypt,
-             _1, _2,
-             recipients,
-             _3, _4,
-             alwaysTrust,
-             mOutputIsBase64Encoded ),
-       plainText, cipherText );
+void QGpgMEEncryptJob::start(const std::vector<Key> &recipients, const shared_ptr<QIODevice> &plainText, const shared_ptr<QIODevice> &cipherText, bool alwaysTrust)
+{
+    run(boost::bind(&encrypt,
+                    _1, _2,
+                    recipients,
+                    _3, _4,
+                    alwaysTrust,
+                    mOutputIsBase64Encoded),
+        plainText, cipherText);
 }
 
-EncryptionResult QGpgMEEncryptJob::exec( const std::vector<Key> & recipients, const QByteArray & plainText, bool alwaysTrust, QByteArray & cipherText ) {
-  const result_type r = encrypt_qba( context(), recipients, plainText, alwaysTrust, mOutputIsBase64Encoded );
-  cipherText = get<1>( r );
-  resultHook( r );
-  return mResult;
+EncryptionResult QGpgMEEncryptJob::exec(const std::vector<Key> &recipients, const QByteArray &plainText, bool alwaysTrust, QByteArray &cipherText)
+{
+    const result_type r = encrypt_qba(context(), recipients, plainText, alwaysTrust, mOutputIsBase64Encoded);
+    cipherText = get<1>(r);
+    resultHook(r);
+    return mResult;
 }
 
-void QGpgMEEncryptJob::resultHook( const result_type & tuple ) {
-  mResult = get<0>( tuple );
+void QGpgMEEncryptJob::resultHook(const result_type &tuple)
+{
+    mResult = get<0>(tuple);
 }
 
-void QGpgMEEncryptJob::showErrorDialog( QWidget * parent, const QString & caption ) const {
-  if ( mResult.error() && !mResult.error().isCanceled() )
-      MessageBox::error( parent, mResult, this, caption );
+void QGpgMEEncryptJob::showErrorDialog(QWidget *parent, const QString &caption) const
+{
+    if (mResult.error() && !mResult.error().isCanceled()) {
+        MessageBox::error(parent, mResult, this, caption);
+    }
 }
 

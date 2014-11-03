@@ -40,17 +40,17 @@
 
 // based on qtest_kde.h
 #define QTEST_KLEOMAIN(TestObject, flags) \
-int main(int argc, char *argv[]) \
-{ \
-    setenv("GNUPGHOME", KLEO_TEST_GNUPGHOME, 1 ); \
-    setenv("LC_ALL", "C", 1); \
-    setenv("KDEHOME", QFile::encodeName( QDir::homePath() + QLatin1String("/.kde-unit-test") ), 1); \
-    KAboutData aboutData( QLatin1String("qttest"), i18n("qttest"), QLatin1String("version") );  \
-    KDEMainFlags mainFlags = flags;                         \
-    QApplication app( argc, argv, (mainFlags & GUI) != 0 ); \
-    app.setApplicationName( QLatin1String("qttest") ); \
-    TestObject tc; \
-    return QTest::qExec( &tc, argc, argv ); \
-}
+    int main(int argc, char *argv[]) \
+    { \
+        setenv("GNUPGHOME", KLEO_TEST_GNUPGHOME, 1 ); \
+        setenv("LC_ALL", "C", 1); \
+        setenv("KDEHOME", QFile::encodeName( QDir::homePath() + QLatin1String("/.kde-unit-test") ), 1); \
+        KAboutData aboutData( QLatin1String("qttest"), i18n("qttest"), QLatin1String("version") );  \
+        KDEMainFlags mainFlags = flags;                         \
+        QApplication app( argc, argv, (mainFlags & GUI) != 0 ); \
+        app.setApplicationName( QLatin1String("qttest") ); \
+        TestObject tc; \
+        return QTest::qExec( &tc, argc, argv ); \
+    }
 
 #endif

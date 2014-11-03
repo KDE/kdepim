@@ -38,17 +38,18 @@
 
 class KWatchGnuPGMainWindow;
 
-class KWatchGnuPGTray : public KSystemTrayIcon {
-  Q_OBJECT
+class KWatchGnuPGTray : public KSystemTrayIcon
+{
+    Q_OBJECT
 public:
-  explicit KWatchGnuPGTray( KWatchGnuPGMainWindow* mainwin );
-  virtual ~KWatchGnuPGTray();
+    explicit KWatchGnuPGTray(KWatchGnuPGMainWindow *mainwin);
+    virtual ~KWatchGnuPGTray();
 
 public slots:
-  void setAttention( bool att );
+    void setAttention(bool att);
 private:
-  QIcon mNormalPix;
-  QIcon mAttentionPix;
+    QIcon mNormalPix;
+    QIcon mAttentionPix;
 };
 
 #endif /* TRAY_H */

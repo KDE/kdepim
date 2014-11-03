@@ -43,41 +43,43 @@
 
 class QString;
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class AssuanCommandFactory;
+class AssuanCommandFactory;
 
-    class UiServer : public QObject {
-        Q_OBJECT
-    public:
-        explicit UiServer( const QString & socket, QObject * parent=0 );
-        ~UiServer();
+class UiServer : public QObject
+{
+    Q_OBJECT
+public:
+    explicit UiServer(const QString &socket, QObject *parent = 0);
+    ~UiServer();
 
-        static void setLogStream( FILE * file );
+    static void setLogStream(FILE *file);
 
-        bool registerCommandFactory( const boost::shared_ptr<AssuanCommandFactory> & cmdFactory );
+    bool registerCommandFactory(const boost::shared_ptr<AssuanCommandFactory> &cmdFactory);
 
-        bool waitForStopped( unsigned int ms=0xFFFFFFFF );
+    bool waitForStopped(unsigned int ms = 0xFFFFFFFF);
 
-        bool isStopped() const;
-        bool isStopping() const;
+    bool isStopped() const;
+    bool isStopping() const;
 
-        QString socketName() const;
+    QString socketName() const;
 
-    public Q_SLOTS:
-        void start();
-        void stop();
-        void enableCryptoCommands( bool enable=true );
+public Q_SLOTS:
+    void start();
+    void stop();
+    void enableCryptoCommands(bool enable = true);
 
-    Q_SIGNALS:
-        void stopped();
-        void startKeyManagerRequested();
-        void startConfigDialogRequested();
+Q_SIGNALS:
+    void stopped();
+    void startKeyManagerRequested();
+    void startConfigDialogRequested();
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-    };
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+};
 
 }
 

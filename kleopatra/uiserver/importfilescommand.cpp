@@ -50,27 +50,30 @@
 using namespace Kleo;
 using namespace boost;
 
-class ImportFilesCommand::Private {
+class ImportFilesCommand::Private
+{
     friend class ::Kleo::ImportFilesCommand;
-    ImportFilesCommand * const q;
+    ImportFilesCommand *const q;
 public:
-    Private( ImportFilesCommand * qq ) :
-        q( qq ),
-        command( 0 )
+    Private(ImportFilesCommand *qq) :
+        q(qq),
+        command(0)
     {
-        KDAB_SET_OBJECT_NAME( command );
-        command.setAutoDelete( false );
+        KDAB_SET_OBJECT_NAME(command);
+        command.setAutoDelete(false);
 
-        connect( &command, SIGNAL(finished()), q, SLOT(slotCommandFinished()) );
-        connect( &command, SIGNAL(canceled()), q, SLOT(slotCommandCanceled()) );
+        connect(&command, SIGNAL(finished()), q, SLOT(slotCommandFinished()));
+        connect(&command, SIGNAL(canceled()), q, SLOT(slotCommandCanceled()));
     }
 
 private:
-    void slotCommandFinished() {
+    void slotCommandFinished()
+    {
         q->done();
     }
-    void slotCommandCanceled() {
-        q->done( makeError( GPG_ERR_CANCELED ) );
+    void slotCommandCanceled()
+    {
+        q->done(makeError(GPG_ERR_CANCELED));
     }
 
 private:
@@ -78,20 +81,22 @@ private:
 };
 
 ImportFilesCommand::ImportFilesCommand()
-    : QObject(), AssuanCommandMixin<ImportFilesCommand>(), d( new Private( this ) ) {}
+    : QObject(), AssuanCommandMixin<ImportFilesCommand>(), d(new Private(this)) {}
 
 ImportFilesCommand::~ImportFilesCommand() {}
 
-int ImportFilesCommand::doStart() {
+int ImportFilesCommand::doStart()
+{
 
-    d->command.setParentWId( parentWId() );
-    d->command.setFiles( fileNames() );
+    d->command.setParentWId(parentWId());
+    d->command.setFiles(fileNames());
     d->command.start();
 
     return 0;
 }
 
-void ImportFilesCommand::doCanceled() {
+void ImportFilesCommand::doCanceled()
+{
     d->command.cancel();
 }
 

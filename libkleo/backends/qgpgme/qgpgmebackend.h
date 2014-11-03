@@ -30,50 +30,57 @@
     your version.
 */
 
-
 #ifndef __KLEO_QGPGMEBACKEND_H__
 #define __KLEO_QGPGMEBACKEND_H__
 
 #include "kleo/cryptobackend.h"
 
-namespace Kleo {
-  class CryptoConfig;
+namespace Kleo
+{
+class CryptoConfig;
 }
 class QString;
 
-namespace Kleo {
+namespace Kleo
+{
 
-  class QGpgMEBackend : public Kleo::CryptoBackend {
-  public:
+class QGpgMEBackend : public Kleo::CryptoBackend
+{
+public:
     QGpgMEBackend();
     ~QGpgMEBackend();
 
     QString name() const;
     QString displayName() const;
 
-    CryptoConfig * config() const;
+    CryptoConfig *config() const;
 
-    Protocol * openpgp() const;
-    Protocol * smime() const;
-    Protocol * protocol( const char * name ) const;
+    Protocol *openpgp() const;
+    Protocol *smime() const;
+    Protocol *protocol(const char *name) const;
 
-    bool checkForOpenPGP( QString * reason=0 ) const;
-    bool checkForSMIME( QString * reason=0 ) const;
-    bool checkForProtocol( const char * name, QString * reason ) const;
+    bool checkForOpenPGP(QString *reason = 0) const;
+    bool checkForSMIME(QString *reason = 0) const;
+    bool checkForProtocol(const char *name, QString *reason) const;
 
-    bool supportsOpenPGP() const { return true; }
-    bool supportsSMIME() const { return true; }
-    bool supportsProtocol( const char * name ) const;
+    bool supportsOpenPGP() const
+    {
+        return true;
+    }
+    bool supportsSMIME() const
+    {
+        return true;
+    }
+    bool supportsProtocol(const char *name) const;
 
-    const char * enumerateProtocols( int i ) const;
+    const char *enumerateProtocols(int i) const;
 
-  private:
-    mutable Kleo::CryptoConfig * mCryptoConfig;
-    mutable Protocol * mOpenPGPProtocol;
-    mutable Protocol * mSMIMEProtocol;
-  };
+private:
+    mutable Kleo::CryptoConfig *mCryptoConfig;
+    mutable Protocol *mOpenPGPProtocol;
+    mutable Protocol *mSMIMEProtocol;
+};
 
 }
-
 
 #endif // __KLEO_QGPGMEBACKEND_H__

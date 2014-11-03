@@ -49,42 +49,41 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow( QWidget* parent = 0, Qt::WindowFlags flags = 0 );
+    explicit MainWindow(QWidget *parent = 0, Qt::WindowFlags flags = 0);
     ~MainWindow();
 
 private:
     enum Column {
-        NameColumn=0,
-        ReadOnlyColumn=1
+        NameColumn = 0,
+        ReadOnlyColumn = 1
     };
 
     enum Role {
-        IsOptionRole=Qt::UserRole
+        IsOptionRole = Qt::UserRole
     };
 
     void readConfiguration();
 
 private Q_SLOTS:
     void treeWidgetItemSelectionChanged();
-    void treeWidgetItemChanged( QTreeWidgetItem* item, int column );
-    void readOnlyStateChanged( int state );
+    void treeWidgetItemChanged(QTreeWidgetItem *item, int column);
+    void readOnlyStateChanged(int state);
     void optionValueChanged();
-    void useDefaultToggled( bool useDefault ); 
+    void useDefaultToggled(bool useDefault);
     void saveAs();
     void delayedInit();
 
 private:
-    void saveToFile( const QString& filename );
+    void saveToFile(const QString &filename);
 
 private:
     Ui::MainWidget m_ui;
-    Config* m_config;
-    QHash<QTreeWidgetItem*, ConfigEntry*> m_itemToEntry;
-    QHash<ConfigEntry*, QTreeWidgetItem*> m_entryToItem;
-    QHash<ConfigEntry*, ConfigComponent*> m_componentForEntry;
-    ConfigEntry* m_selectedEntry;
+    Config *m_config;
+    QHash<QTreeWidgetItem *, ConfigEntry *> m_itemToEntry;
+    QHash<ConfigEntry *, QTreeWidgetItem *> m_entryToItem;
+    QHash<ConfigEntry *, ConfigComponent *> m_componentForEntry;
+    ConfigEntry *m_selectedEntry;
 };
-
 
 #endif // KGPGCONF_MAINWINDOW_H
 

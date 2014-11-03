@@ -39,40 +39,41 @@
 
 #include <gpgme++/decryptionresult.h>
 
-namespace Kleo {
+namespace Kleo
+{
 
-  class QGpgMEDecryptJob
+class QGpgMEDecryptJob
 #ifdef Q_MOC_RUN
     : public DecryptJob
 #else
     : public _detail::ThreadedJobMixin<DecryptJob, boost::tuple<GpgME::DecryptionResult, QByteArray, QString, GpgME::Error> >
 #endif
-  {
+{
     Q_OBJECT
 #ifdef Q_MOC_RUN
-  private Q_SLOTS:
+private Q_SLOTS:
     void slotFinished();
 #endif
-  public:
-    explicit QGpgMEDecryptJob( GpgME::Context * context );
+public:
+    explicit QGpgMEDecryptJob(GpgME::Context *context);
     ~QGpgMEDecryptJob();
 
     /*! \reimp from DecryptJob */
-    GpgME::Error start( const QByteArray & cipherText );
+    GpgME::Error start(const QByteArray &cipherText);
 
     /*! \reimp from DecryptJob */
-    void start( const boost::shared_ptr<QIODevice> & cipherText, const boost::shared_ptr<QIODevice> & plainText );
+    void start(const boost::shared_ptr<QIODevice> &cipherText, const boost::shared_ptr<QIODevice> &plainText);
 
     /*! \reimp from DecryptJob */
-    GpgME::DecryptionResult exec( const QByteArray & cipherText,
-                                  QByteArray & plainText );
+    GpgME::DecryptionResult exec(const QByteArray &cipherText,
+                                 QByteArray &plainText);
 
     /*! \reimp from ThreadedJobMixin */
-    void resultHook( const result_type & r );
+    void resultHook(const result_type &r);
 
-  private:
+private:
     GpgME::DecryptionResult mResult;
-  };
+};
 
 }
 #endif // __KLEO_QGPGMEDECRYPTJOB_H__

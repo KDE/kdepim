@@ -36,26 +36,31 @@
 #include "assuancommand.h"
 #include <QObject>
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class ImportFilesCommand : public QObject, public AssuanCommandMixin<ImportFilesCommand> {
-        Q_OBJECT
-    public:
-        ImportFilesCommand();
-        ~ImportFilesCommand();
+class ImportFilesCommand : public QObject, public AssuanCommandMixin<ImportFilesCommand>
+{
+    Q_OBJECT
+public:
+    ImportFilesCommand();
+    ~ImportFilesCommand();
 
-        static const char * staticName() { return "IMPORT_FILES"; }
+    static const char *staticName()
+    {
+        return "IMPORT_FILES";
+    }
 
-    private:
-        int doStart();
-        void doCanceled();
+private:
+    int doStart();
+    void doCanceled();
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void slotCommandFinished() )
-        Q_PRIVATE_SLOT( d, void slotCommandCanceled() )
-    };
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void slotCommandFinished())
+    Q_PRIVATE_SLOT(d, void slotCommandCanceled())
+};
 
 }
 

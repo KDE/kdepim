@@ -37,13 +37,16 @@
 
 using namespace Kleo;
 
-KPIM::ProgressItem * ProgressManager::createForJob( Job * job, const QString & label ) {
-    if ( !job )
+KPIM::ProgressItem *ProgressManager::createForJob(Job *job, const QString &label)
+{
+    if (!job) {
         return 0;
+    }
 
-    KPIM::ProgressItem * const item = KPIM::ProgressManager::createProgressItem( label );
-    if ( item )
-        new Mapper( item, job );
+    KPIM::ProgressItem *const item = KPIM::ProgressManager::createProgressItem(label);
+    if (item) {
+        new Mapper(item, job);
+    }
     return item;
 }
 

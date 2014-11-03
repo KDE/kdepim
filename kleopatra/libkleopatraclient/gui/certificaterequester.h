@@ -26,55 +26,58 @@
 
 #include <QWidget>
 
-namespace KleopatraClientCopy {
-namespace Gui {
+namespace KleopatraClientCopy
+{
+namespace Gui
+{
 
-    class KLEOPATRACLIENTGUI_EXPORT CertificateRequester : public QWidget {
-        Q_OBJECT
-        Q_PROPERTY( bool multipleCertificatesAllowed READ multipleCertificatesAllowed WRITE setMultipleCertificatesAllowed )
-        Q_PROPERTY( bool onlySigningCertificatesAllowed READ onlySigningCertificatesAllowed WRITE setOnlySigningCertificatesAllowed )
-        Q_PROPERTY( bool onlyEncryptionCertificatesAllowed READ onlyEncryptionCertificatesAllowed WRITE setOnlyEncryptionCertificatesAllowed )
-        Q_PROPERTY( bool onlyOpenPGPCertificatesAllowed READ onlyOpenPGPCertificatesAllowed WRITE setOnlyOpenPGPCertificatesAllowed )
-        Q_PROPERTY( bool onlyX509CertificatesAllowed READ onlyX509CertificatesAllowed WRITE setOnlyX509CertificatesAllowed )
-        Q_PROPERTY( bool onlySecretKeysAllowed READ onlySecretKeysAllowed WRITE setOnlySecretKeysAllowed )
-        Q_PROPERTY( QStringList selectedCertificates READ selectedCertificates WRITE setSelectedCertificates )
-    public:
-        explicit CertificateRequester( QWidget * parent=0, Qt::WindowFlags f=0 );
-        ~CertificateRequester();
+class KLEOPATRACLIENTGUI_EXPORT CertificateRequester : public QWidget
+{
+    Q_OBJECT
+    Q_PROPERTY(bool multipleCertificatesAllowed READ multipleCertificatesAllowed WRITE setMultipleCertificatesAllowed)
+    Q_PROPERTY(bool onlySigningCertificatesAllowed READ onlySigningCertificatesAllowed WRITE setOnlySigningCertificatesAllowed)
+    Q_PROPERTY(bool onlyEncryptionCertificatesAllowed READ onlyEncryptionCertificatesAllowed WRITE setOnlyEncryptionCertificatesAllowed)
+    Q_PROPERTY(bool onlyOpenPGPCertificatesAllowed READ onlyOpenPGPCertificatesAllowed WRITE setOnlyOpenPGPCertificatesAllowed)
+    Q_PROPERTY(bool onlyX509CertificatesAllowed READ onlyX509CertificatesAllowed WRITE setOnlyX509CertificatesAllowed)
+    Q_PROPERTY(bool onlySecretKeysAllowed READ onlySecretKeysAllowed WRITE setOnlySecretKeysAllowed)
+    Q_PROPERTY(QStringList selectedCertificates READ selectedCertificates WRITE setSelectedCertificates)
+public:
+    explicit CertificateRequester(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    ~CertificateRequester();
 
-        void setMultipleCertificatesAllowed( bool allow );
-        bool multipleCertificatesAllowed() const;
+    void setMultipleCertificatesAllowed(bool allow);
+    bool multipleCertificatesAllowed() const;
 
-        void setOnlySigningCertificatesAllowed( bool allow );
-        bool onlySigningCertificatesAllowed() const;
+    void setOnlySigningCertificatesAllowed(bool allow);
+    bool onlySigningCertificatesAllowed() const;
 
-        void setOnlyEncryptionCertificatesAllowed( bool allow );
-        bool onlyEncryptionCertificatesAllowed() const;
+    void setOnlyEncryptionCertificatesAllowed(bool allow);
+    bool onlyEncryptionCertificatesAllowed() const;
 
-        void setOnlyOpenPGPCertificatesAllowed( bool allow );
-        bool onlyOpenPGPCertificatesAllowed() const;
+    void setOnlyOpenPGPCertificatesAllowed(bool allow);
+    bool onlyOpenPGPCertificatesAllowed() const;
 
-        void setOnlyX509CertificatesAllowed( bool allow );
-        bool onlyX509CertificatesAllowed() const;
+    void setOnlyX509CertificatesAllowed(bool allow);
+    bool onlyX509CertificatesAllowed() const;
 
-        void setOnlySecretKeysAllowed( bool allow );
-        bool onlySecretKeysAllowed() const;
+    void setOnlySecretKeysAllowed(bool allow);
+    bool onlySecretKeysAllowed() const;
 
-        void setSelectedCertificates( const QStringList & certs );
-        QStringList selectedCertificates() const;
+    void setSelectedCertificates(const QStringList &certs);
+    QStringList selectedCertificates() const;
 
-        void setSelectedCertificate( const QString & cert );
-        QString selectedCertificate() const;
+    void setSelectedCertificate(const QString &cert);
+    QString selectedCertificate() const;
 
-    Q_SIGNALS:
-        void selectedCertificatesChanged( const QStringList & certs );
+Q_SIGNALS:
+    void selectedCertificatesChanged(const QStringList &certs);
 
-    private:
-        class Private;
-        Private * d;
-        Q_PRIVATE_SLOT( d, void slotButtonClicked() )
-        Q_PRIVATE_SLOT( d, void slotCommandFinished() )
-    };
+private:
+    class Private;
+    Private *d;
+    Q_PRIVATE_SLOT(d, void slotButtonClicked())
+    Q_PRIVATE_SLOT(d, void slotCommandFinished())
+};
 
 }
 }

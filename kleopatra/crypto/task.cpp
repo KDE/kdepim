@@ -56,30 +56,51 @@ using namespace Kleo::Crypto;
 using namespace boost;
 using namespace GpgME;
 
-namespace {
+namespace
+{
 
-    class ErrorResult : public Task::Result {
-    public:
-        ErrorResult( int code, const QString & details )
-            : Task::Result(), m_code( code ), m_details( details ) {}
+class ErrorResult : public Task::Result
+{
+public:
+    ErrorResult(int code, const QString &details)
+        : Task::Result(), m_code(code), m_details(details) {}
 
-        /* reimp */ QString overview() const { return makeOverview( m_details ); }
-        /* reimp */ QString details() const { return QString(); }
-        /* reimp */ int errorCode() const { return m_code; }
-        /* reimp */ QString errorString() const { return m_details; }
-        /* reimp */ VisualCode code() const { return NeutralError; }
-        /* reimp */ AuditLog auditLog() const { return AuditLog(); }
-    private:
-        int m_code;
-        QString m_details;
-    };
+    /* reimp */ QString overview() const
+    {
+        return makeOverview(m_details);
+    }
+    /* reimp */ QString details() const
+    {
+        return QString();
+    }
+    /* reimp */ int errorCode() const
+    {
+        return m_code;
+    }
+    /* reimp */ QString errorString() const
+    {
+        return m_details;
+    }
+    /* reimp */ VisualCode code() const
+    {
+        return NeutralError;
+    }
+    /* reimp */ AuditLog auditLog() const
+    {
+        return AuditLog();
+    }
+private:
+    int m_code;
+    QString m_details;
+};
 }
 
-class Task::Private {
+class Task::Private
+{
     friend class ::Kleo::Crypto::Task;
-    Task * const q;
+    Task *const q;
 public:
-    explicit Private( Task * qq );
+    explicit Private(Task *qq);
 
 private:
     QString m_progressLabel;
@@ -88,25 +109,26 @@ private:
     int m_id;
 };
 
-namespace {
-    static int nextTaskId = 0;
+namespace
+{
+static int nextTaskId = 0;
 }
 
-Task::Private::Private( Task * qq )
-    : q( qq ), m_progressLabel(), m_processedPercent( 0.0 ), m_asciiArmor( false ), m_id( nextTaskId++ )
+Task::Private::Private(Task *qq)
+    : q(qq), m_progressLabel(), m_processedPercent(0.0), m_asciiArmor(false), m_id(nextTaskId++)
 {
 
 }
 
-Task::Task( QObject * p )
-    : QObject( p ), d( new Private( this ) )
+Task::Task(QObject *p)
+    : QObject(p), d(new Private(this))
 {
 
 }
 
 Task::~Task() {}
 
-void Task::setAsciiArmor( bool armor )
+void Task::setAsciiArmor(bool armor)
 {
     d->m_asciiArmor = armor;
 }
@@ -116,9 +138,10 @@ bool Task::asciiArmor() const
     return d->m_asciiArmor;
 }
 
-shared_ptr<Task> Task::makeErrorTask( int code, const QString & details, const QString & label ) {
-    const shared_ptr<SimpleTask> t( new SimpleTask( label ) );
-    t->setResult( t->makeErrorResult( code, details ) );
+shared_ptr<Task> Task::makeErrorTask(int code, const QString &details, const QString &label)
+{
+    const shared_ptr<SimpleTask> t(new SimpleTask(label));
+    t->setResult(t->makeErrorResult(code, details));
     return t;
 }
 
@@ -129,7 +152,7 @@ int Task::id() const
 
 unsigned long long Task::processedSize() const
 {
-    return qRound( d->m_processedPercent * totalSize() );
+    return qRound(d->m_processedPercent * totalSize());
 }
 
 unsigned long long Task::totalSize() const
@@ -137,7 +160,8 @@ unsigned long long Task::totalSize() const
     return inputSize();
 }
 
-QString Task::tag() const {
+QString Task::tag() const
+{
     return QString();
 }
 
@@ -146,60 +170,64 @@ QString Task::progressLabel() const
     return d->m_progressLabel;
 }
 
-void Task::setProgress( const QString & label, int processed, int total )
+void Task::setProgress(const QString &label, int processed, int total)
 {
-    const double percent = total > 0 ? static_cast<double>( processed ) / total : 0.0;
+    const double percent = total > 0 ? static_cast<double>(processed) / total : 0.0;
     d->m_processedPercent = percent;
     d->m_progressLabel = label;
-    emit progress( label, processedSize(), totalSize() );
+    emit progress(label, processedSize(), totalSize());
 }
 
-void Task::start() {
+void Task::start()
+{
     try {
         doStart();
-    } catch ( const Kleo::Exception & e ) {
-        QMetaObject::invokeMethod( this, "emitError", Qt::QueuedConnection, Q_ARG( int, e.error().encodedError() ), Q_ARG( QString, e.message() ) );
-    } catch ( const GpgME::Exception & e ) {
-        QMetaObject::invokeMethod( this, "emitError", Qt::QueuedConnection, Q_ARG( int, e.error().encodedError() ), Q_ARG( QString, QString::fromLocal8Bit( e.what() ) ) );
-    } catch ( const std::exception & e ) {
-        QMetaObject::invokeMethod( this, "emitError", Qt::QueuedConnection, Q_ARG( int, makeGnuPGError( GPG_ERR_UNEXPECTED ) ), Q_ARG( QString, QString::fromLocal8Bit( e.what() ) ) );
-    } catch ( ... ) {
-        QMetaObject::invokeMethod( this, "emitError", Qt::QueuedConnection, Q_ARG( int, makeGnuPGError( GPG_ERR_UNEXPECTED ) ), Q_ARG( QString, i18n( "Unknown exception in Task::start()") ) );
+    } catch (const Kleo::Exception &e) {
+        QMetaObject::invokeMethod(this, "emitError", Qt::QueuedConnection, Q_ARG(int, e.error().encodedError()), Q_ARG(QString, e.message()));
+    } catch (const GpgME::Exception &e) {
+        QMetaObject::invokeMethod(this, "emitError", Qt::QueuedConnection, Q_ARG(int, e.error().encodedError()), Q_ARG(QString, QString::fromLocal8Bit(e.what())));
+    } catch (const std::exception &e) {
+        QMetaObject::invokeMethod(this, "emitError", Qt::QueuedConnection, Q_ARG(int, makeGnuPGError(GPG_ERR_UNEXPECTED)), Q_ARG(QString, QString::fromLocal8Bit(e.what())));
+    } catch (...) {
+        QMetaObject::invokeMethod(this, "emitError", Qt::QueuedConnection, Q_ARG(int, makeGnuPGError(GPG_ERR_UNEXPECTED)), Q_ARG(QString, i18n("Unknown exception in Task::start()")));
     }
     emit started();
 }
 
-void Task::emitError( int errCode, const QString& details ) {
-    emitResult( makeErrorResult( errCode, details ) );
+void Task::emitError(int errCode, const QString &details)
+{
+    emitResult(makeErrorResult(errCode, details));
 }
 
-void Task::emitResult( const shared_ptr<const Task::Result> & r )
+void Task::emitResult(const shared_ptr<const Task::Result> &r)
 {
     d->m_processedPercent = 1.0;
-    emit progress( progressLabel(), processedSize(), totalSize() );
-    emit result( r );
+    emit progress(progressLabel(), processedSize(), totalSize());
+    emit result(r);
 }
 
-shared_ptr<Task::Result> Task::makeErrorResult( int errCode, const QString& details )
+shared_ptr<Task::Result> Task::makeErrorResult(int errCode, const QString &details)
 {
-    return shared_ptr<Task::Result>( new ErrorResult( errCode, details ) );
+    return shared_ptr<Task::Result>(new ErrorResult(errCode, details));
 }
 
-
-static QString makeNonce() {
+static QString makeNonce()
+{
     // ### make better
-    return QString::number( qrand(), 16 );
+    return QString::number(qrand(), 16);
 }
 
-class Task::Result::Private {
+class Task::Result::Private
+{
 public:
     Private() {}
 };
 
-Task::Result::Result() : m_nonce( makeNonce() ), d( new Private() ) {}
+Task::Result::Result() : m_nonce(makeNonce()), d(new Private()) {}
 Task::Result::~Result() {}
 
-QString Task::Result::formatKeyLink( const char * fpr, const QString & content ) const {
+QString Task::Result::formatKeyLink(const char *fpr, const QString &content) const
+{
     return QLatin1String("<a href=\"key:") + m_nonce + QLatin1Char(':') + QLatin1String(fpr) + QLatin1String("\">") + content + QLatin1String("</a>");
 }
 
@@ -208,34 +236,37 @@ bool Task::Result::hasError() const
     return errorCode() != 0;
 }
 
-static QString image( const char* img ) {
+static QString image(const char *img)
+{
     // ### escape?
-    return KIconLoader::global()->iconPath( QLatin1String(img), KIconLoader::Small );
+    return KIconLoader::global()->iconPath(QLatin1String(img), KIconLoader::Small);
 }
 
-QString Task::Result::makeOverview( const QString& msg )
+QString Task::Result::makeOverview(const QString &msg)
 {
     return QLatin1String("<b>") + msg + QLatin1String("</b>");
 }
 
-QString Task::Result::iconPath( VisualCode code )
+QString Task::Result::iconPath(VisualCode code)
 {
-    switch ( code ) {
-        case Danger:
-            return image( "dialog-error" );
-        case AllGood:
-            return image( "dialog-ok" );
-        case Warning:
-            return image( "dialog-warning" );
-        case NeutralError:
-        case NeutralSuccess:
-        default:
-            return QString();
+    switch (code) {
+    case Danger:
+        return image("dialog-error");
+    case AllGood:
+        return image("dialog-ok");
+    case Warning:
+        return image("dialog-warning");
+    case NeutralError:
+    case NeutralSuccess:
+    default:
+        return QString();
 
     }
 }
 
-QString Task::Result::icon() const { return iconPath( code() ); }
-
+QString Task::Result::icon() const
+{
+    return iconPath(code());
+}
 
 #include "moc_task_p.cpp"

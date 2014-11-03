@@ -38,7 +38,6 @@
 
 #include <ui/messagebox.h>
 
-
 #include <KLocalizedString>
 #include <QPushButton>
 #include <KStandardGuiItem>
@@ -56,107 +55,115 @@ using namespace Kleo::Crypto;
 using namespace Kleo::Crypto::Gui;
 using namespace boost;
 
-namespace {
-    //### TODO move outta here, make colors configurable
-    static QColor colorForVisualCode( Task::Result::VisualCode code ) {
-        switch ( code ) {
-            case Task::Result::AllGood:
-                return QColor(0x3E, 0xAC, 0x31); //green
-            case Task::Result::NeutralError:
-            case Task::Result::Warning:
-                return QColor(0xE1, 0xB6, 0x13); //yellow
-            case Task::Result::Danger:
-                return QColor(0xD4, 0x23, 0x23); //red
-            case Task::Result::NeutralSuccess:
-            default:
-                return Qt::blue;
-        }
+namespace
+{
+//### TODO move outta here, make colors configurable
+static QColor colorForVisualCode(Task::Result::VisualCode code)
+{
+    switch (code) {
+    case Task::Result::AllGood:
+        return QColor(0x3E, 0xAC, 0x31); //green
+    case Task::Result::NeutralError:
+    case Task::Result::Warning:
+        return QColor(0xE1, 0xB6, 0x13); //yellow
+    case Task::Result::Danger:
+        return QColor(0xD4, 0x23, 0x23); //red
+    case Task::Result::NeutralSuccess:
+    default:
+        return Qt::blue;
     }
 }
+}
 
-class ResultItemWidget::Private {
-    ResultItemWidget* const q;
+class ResultItemWidget::Private
+{
+    ResultItemWidget *const q;
 public:
-    explicit Private( const shared_ptr<const Task::Result> result, ResultItemWidget* qq ) : q( qq ), m_result( result ), m_detailsLabel( 0 ), m_showDetailsLabel( 0 ), m_closeButton( 0 ) { assert( m_result ); }
+    explicit Private(const shared_ptr<const Task::Result> result, ResultItemWidget *qq) : q(qq), m_result(result), m_detailsLabel(0), m_showDetailsLabel(0), m_closeButton(0)
+    {
+        assert(m_result);
+    }
 
-    void slotLinkActivated( const QString & );
+    void slotLinkActivated(const QString &);
     void updateShowDetailsLabel();
 
     const shared_ptr<const Task::Result> m_result;
-    QLabel * m_detailsLabel;
-    QLabel * m_showDetailsLabel;
-    QPushButton * m_closeButton;
+    QLabel *m_detailsLabel;
+    QLabel *m_showDetailsLabel;
+    QPushButton *m_closeButton;
 };
 
-static QUrl auditlog_url_template() {
-    QUrl url(QLatin1String("kleoresultitem://showauditlog") );
+static QUrl auditlog_url_template()
+{
+    QUrl url(QLatin1String("kleoresultitem://showauditlog"));
     return url;
 }
 
 void ResultItemWidget::Private::updateShowDetailsLabel()
 {
-    if ( !m_showDetailsLabel || !m_detailsLabel )
+    if (!m_showDetailsLabel || !m_detailsLabel) {
         return;
+    }
 
     const bool detailsVisible = m_detailsLabel->isVisible();
-    const QString auditLogLink = m_result->auditLog().formatLink( auditlog_url_template() );
-    m_showDetailsLabel->setText( QString::fromLatin1( "<a href=\"kleoresultitem://toggledetails/\">%1</a><br/>%2" ).arg( detailsVisible ? i18n( "Hide Details" ) : i18n( "Show Details" ), auditLogLink ) );
-    m_showDetailsLabel->setAccessibleDescription( detailsVisible ? i18n( "Hide Details" ) : i18n( "Show Details" ) );
+    const QString auditLogLink = m_result->auditLog().formatLink(auditlog_url_template());
+    m_showDetailsLabel->setText(QString::fromLatin1("<a href=\"kleoresultitem://toggledetails/\">%1</a><br/>%2").arg(detailsVisible ? i18n("Hide Details") : i18n("Show Details"), auditLogLink));
+    m_showDetailsLabel->setAccessibleDescription(detailsVisible ? i18n("Hide Details") : i18n("Show Details"));
 }
 
-ResultItemWidget::ResultItemWidget( const shared_ptr<const Task::Result> & result, QWidget * parent, Qt::WindowFlags flags ) : QWidget( parent, flags ), d( new Private( result, this ) )
+ResultItemWidget::ResultItemWidget(const shared_ptr<const Task::Result> &result, QWidget *parent, Qt::WindowFlags flags) : QWidget(parent, flags), d(new Private(result, this))
 {
-    const QColor color = colorForVisualCode( d->m_result->code() );
-    setStyleSheet( QString::fromLatin1( "* { background-color: %1; margin: 0px; } QFrame#resultFrame{ border-color: %2; border-style: solid; border-radius: 3px; border-width: 2px } QLabel { padding: 5px; border-radius: 3px }" ).arg( color.lighter( 150 ).name(), color.name() ) );
-    QVBoxLayout* topLayout = new QVBoxLayout( this );
-    topLayout->setMargin( 0 );
-    topLayout->setSpacing( 0 );
-    QFrame* frame = new QFrame;
-    frame->setObjectName( QLatin1String("resultFrame") );
-    topLayout->addWidget( frame );
-    QVBoxLayout* layout = new QVBoxLayout( frame );
-    layout->setMargin( 0 );
-    layout->setSpacing( 0 );
-    QWidget* hbox = new QWidget;
-    QHBoxLayout* hlay = new QHBoxLayout( hbox );
-    hlay->setMargin( 0 );
-    hlay->setSpacing( 0 );
-    QLabel* overview = new QLabel;
-    overview->setWordWrap( true );
-    overview->setTextFormat( Qt::RichText );
-    overview->setText( d->m_result->overview() );
-    overview->setFocusPolicy ( Qt::StrongFocus );
-    connect( overview, SIGNAL(linkActivated(QString)), this, SLOT(slotLinkActivated(QString)) );
+    const QColor color = colorForVisualCode(d->m_result->code());
+    setStyleSheet(QString::fromLatin1("* { background-color: %1; margin: 0px; } QFrame#resultFrame{ border-color: %2; border-style: solid; border-radius: 3px; border-width: 2px } QLabel { padding: 5px; border-radius: 3px }").arg(color.lighter(150).name(), color.name()));
+    QVBoxLayout *topLayout = new QVBoxLayout(this);
+    topLayout->setMargin(0);
+    topLayout->setSpacing(0);
+    QFrame *frame = new QFrame;
+    frame->setObjectName(QLatin1String("resultFrame"));
+    topLayout->addWidget(frame);
+    QVBoxLayout *layout = new QVBoxLayout(frame);
+    layout->setMargin(0);
+    layout->setSpacing(0);
+    QWidget *hbox = new QWidget;
+    QHBoxLayout *hlay = new QHBoxLayout(hbox);
+    hlay->setMargin(0);
+    hlay->setSpacing(0);
+    QLabel *overview = new QLabel;
+    overview->setWordWrap(true);
+    overview->setTextFormat(Qt::RichText);
+    overview->setText(d->m_result->overview());
+    overview->setFocusPolicy(Qt::StrongFocus);
+    connect(overview, SIGNAL(linkActivated(QString)), this, SLOT(slotLinkActivated(QString)));
 
-    hlay->addWidget( overview, 1, Qt::AlignTop );
-    layout->addWidget( hbox );
+    hlay->addWidget(overview, 1, Qt::AlignTop);
+    layout->addWidget(hbox);
 
     const QString details = d->m_result->details();
 
     d->m_showDetailsLabel = new QLabel;
-    connect( d->m_showDetailsLabel, SIGNAL(linkActivated(QString)), this, SLOT(slotLinkActivated(QString)) );
-    hlay->addWidget( d->m_showDetailsLabel );
-    d->m_showDetailsLabel->setVisible( !details.isEmpty() );
-    d->m_showDetailsLabel->setFocusPolicy ( Qt::StrongFocus );
-    d->m_showDetailsLabel->setTextInteractionFlags( Qt::TextBrowserInteraction );
+    connect(d->m_showDetailsLabel, SIGNAL(linkActivated(QString)), this, SLOT(slotLinkActivated(QString)));
+    hlay->addWidget(d->m_showDetailsLabel);
+    d->m_showDetailsLabel->setVisible(!details.isEmpty());
+    d->m_showDetailsLabel->setFocusPolicy(Qt::StrongFocus);
+    d->m_showDetailsLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
 
     d->m_detailsLabel = new QLabel;
-    d->m_detailsLabel->setWordWrap( true );
-    d->m_detailsLabel->setTextFormat( Qt::RichText );
-    d->m_detailsLabel->setText( details );
-    d->m_detailsLabel->setFocusPolicy ( Qt::StrongFocus );
-    d->m_detailsLabel->setTextInteractionFlags( Qt::TextBrowserInteraction );
-    connect( d->m_detailsLabel, SIGNAL(linkActivated(QString)), this, SLOT(slotLinkActivated(QString)) );
-    layout->addWidget( d->m_detailsLabel );
+    d->m_detailsLabel->setWordWrap(true);
+    d->m_detailsLabel->setTextFormat(Qt::RichText);
+    d->m_detailsLabel->setText(details);
+    d->m_detailsLabel->setFocusPolicy(Qt::StrongFocus);
+    d->m_detailsLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
+    connect(d->m_detailsLabel, SIGNAL(linkActivated(QString)), this, SLOT(slotLinkActivated(QString)));
+    layout->addWidget(d->m_detailsLabel);
 
-    d->m_detailsLabel->setVisible( false );
+    d->m_detailsLabel->setVisible(false);
 
     d->m_closeButton = new QPushButton;
-    KGuiItem::assign(d->m_closeButton, KStandardGuiItem::close() );
-    d->m_closeButton->setFixedSize( d->m_closeButton->sizeHint() );
-    connect( d->m_closeButton, SIGNAL(clicked()), this, SIGNAL(closeButtonClicked()) );
-    layout->addWidget( d->m_closeButton, 0, Qt::AlignRight );
-    d->m_closeButton->setVisible( false );
+    KGuiItem::assign(d->m_closeButton, KStandardGuiItem::close());
+    d->m_closeButton->setFixedSize(d->m_closeButton->sizeHint());
+    connect(d->m_closeButton, SIGNAL(clicked()), this, SIGNAL(closeButtonClicked()));
+    layout->addWidget(d->m_closeButton, 0, Qt::AlignRight);
+    d->m_closeButton->setVisible(false);
 
     d->updateShowDetailsLabel();
 }
@@ -165,9 +172,9 @@ ResultItemWidget::~ResultItemWidget()
 {
 }
 
-void ResultItemWidget::showCloseButton( bool show )
+void ResultItemWidget::showCloseButton(bool show)
 {
-    d->m_closeButton->setVisible( show );
+    d->m_closeButton->setVisible(show);
 }
 
 bool ResultItemWidget::detailsVisible() const
@@ -180,42 +187,45 @@ bool ResultItemWidget::hasErrorResult() const
     return d->m_result->hasError();
 }
 
-void ResultItemWidget::Private::slotLinkActivated( const QString & link )
+void ResultItemWidget::Private::slotLinkActivated(const QString &link)
 {
-    assert( m_result );
-    if ( link.startsWith( QLatin1String( "key:" ) ) ) {
-        const QStringList split = link.split( QLatin1Char(':') );
-        if ( split.size() == 3 || m_result->nonce() != split.value( 1 ) )
-            emit q->linkActivated( QLatin1String("key://") + split.value( 2 ) );
-        else
+    assert(m_result);
+    if (link.startsWith(QLatin1String("key:"))) {
+        const QStringList split = link.split(QLatin1Char(':'));
+        if (split.size() == 3 || m_result->nonce() != split.value(1)) {
+            emit q->linkActivated(QLatin1String("key://") + split.value(2));
+        } else {
             qWarning() << "key link invalid, or nonce not matching! link=" << link << " nonce" << m_result->nonce();
+        }
         return;
     }
 
-    const QUrl url( link );
-    if ( url.host() == QLatin1String("toggledetails") ) {
-        q->showDetails( !q->detailsVisible() );
+    const QUrl url(link);
+    if (url.host() == QLatin1String("toggledetails")) {
+        q->showDetails(!q->detailsVisible());
         return;
     }
 
-    if ( url.host() == QLatin1String("showauditlog") ) {
+    if (url.host() == QLatin1String("showauditlog")) {
         q->showAuditLog();
         return;
     }
     qWarning() << "Unexpected link scheme: " << link;
 }
 
-void ResultItemWidget::showAuditLog() {
-    MessageBox::auditLog( parentWidget(), d->m_result->auditLog().text() );
+void ResultItemWidget::showAuditLog()
+{
+    MessageBox::auditLog(parentWidget(), d->m_result->auditLog().text());
 }
 
-void ResultItemWidget::showDetails( bool show )
+void ResultItemWidget::showDetails(bool show)
 {
-    if ( show == d->m_detailsLabel->isVisible() )
+    if (show == d->m_detailsLabel->isVisible()) {
         return;
-    d->m_detailsLabel->setVisible( show );
+    }
+    d->m_detailsLabel->setVisible(show);
     d->updateShowDetailsLabel();
-    emit detailsToggled( show );
+    emit detailsToggled(show);
 }
 
 #include "moc_resultitemwidget.cpp"

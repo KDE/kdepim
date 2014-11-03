@@ -55,72 +55,79 @@ class QTimer;
 class QRegExp;
 class QPoint;
 
-namespace Kleo {
-  class KeyListView;
-  class KeyListViewItem;
+namespace Kleo
+{
+class KeyListView;
+class KeyListViewItem;
 }
 
-namespace GpgME {
-  class KeyListResult;
+namespace GpgME
+{
+class KeyListResult;
 }
 
-namespace Kleo {
+namespace Kleo
+{
 
-  class KLEO_EXPORT KeySelectionDialog : public QDialog {
+class KLEO_EXPORT KeySelectionDialog : public QDialog
+{
     Q_OBJECT
-  public:
+public:
 
     enum KeyUsage {
-      PublicKeys = 1,
-      SecretKeys = 2,
-      EncryptionKeys = 4,
-      SigningKeys = 8,
-      ValidKeys = 16,
-      TrustedKeys = 32,
-      CertificationKeys = 64,
-      AuthenticationKeys = 128,
-      OpenPGPKeys = 256,
-      SMIMEKeys = 512,
-      AllKeys = PublicKeys | SecretKeys | OpenPGPKeys | SMIMEKeys,
-      ValidEncryptionKeys = AllKeys | EncryptionKeys | ValidKeys,
-      ValidTrustedEncryptionKeys = AllKeys | EncryptionKeys | ValidKeys | TrustedKeys
+        PublicKeys = 1,
+        SecretKeys = 2,
+        EncryptionKeys = 4,
+        SigningKeys = 8,
+        ValidKeys = 16,
+        TrustedKeys = 32,
+        CertificationKeys = 64,
+        AuthenticationKeys = 128,
+        OpenPGPKeys = 256,
+        SMIMEKeys = 512,
+        AllKeys = PublicKeys | SecretKeys | OpenPGPKeys | SMIMEKeys,
+        ValidEncryptionKeys = AllKeys | EncryptionKeys | ValidKeys,
+        ValidTrustedEncryptionKeys = AllKeys | EncryptionKeys | ValidKeys | TrustedKeys
     };
 
-    KeySelectionDialog( const QString & title,
-                        const QString & text,
-                        const std::vector<GpgME::Key> & selectedKeys=std::vector<GpgME::Key>(),
-                        unsigned int keyUsage=AllKeys,
-                        bool extendedSelection=false,
-                        bool rememberChoice=false,
-                        QWidget * parent=0,
-                        bool modal=true );
-    KeySelectionDialog( const QString & title,
-                        const QString & text,
-                        const QString & initialPattern,
-                        const std::vector<GpgME::Key> & selectedKeys,
-                        unsigned int keyUsage=AllKeys,
-                        bool extendedSelection=false,
-                        bool rememberChoice=false,
-                        QWidget * parent=0,
-                        bool modal=true );
-    KeySelectionDialog( const QString & title,
-                        const QString & text,
-                        const QString & initialPattern,
-                        unsigned int keyUsage=AllKeys,
-                        bool extendedSelection=false,
-                        bool rememberChoice=false,
-                        QWidget * parent=0,
-                        bool modal=true );
+    KeySelectionDialog(const QString &title,
+                       const QString &text,
+                       const std::vector<GpgME::Key> &selectedKeys = std::vector<GpgME::Key>(),
+                       unsigned int keyUsage = AllKeys,
+                       bool extendedSelection = false,
+                       bool rememberChoice = false,
+                       QWidget *parent = 0,
+                       bool modal = true);
+    KeySelectionDialog(const QString &title,
+                       const QString &text,
+                       const QString &initialPattern,
+                       const std::vector<GpgME::Key> &selectedKeys,
+                       unsigned int keyUsage = AllKeys,
+                       bool extendedSelection = false,
+                       bool rememberChoice = false,
+                       QWidget *parent = 0,
+                       bool modal = true);
+    KeySelectionDialog(const QString &title,
+                       const QString &text,
+                       const QString &initialPattern,
+                       unsigned int keyUsage = AllKeys,
+                       bool extendedSelection = false,
+                       bool rememberChoice = false,
+                       QWidget *parent = 0,
+                       bool modal = true);
     ~KeySelectionDialog();
 
     /** Returns the key ID of the selected key in single selection mode.
         Otherwise it returns a null key. */
-    const GpgME::Key & selectedKey() const;
+    const GpgME::Key &selectedKey() const;
 
     QString fingerprint() const;
 
     /** Returns a list of selected key IDs. */
-    const std::vector<GpgME::Key> & selectedKeys() const { return mSelectedKeys; }
+    const std::vector<GpgME::Key> &selectedKeys() const
+    {
+        return mSelectedKeys;
+    }
 
     /// Return all the selected fingerprints
     QStringList fingerprints() const;
@@ -133,59 +140,66 @@ namespace Kleo {
     bool rememberSelection() const;
 
     // Could be used by derived classes to insert their own widget
-    QVBoxLayout* topLayout() const { return mTopLayout; }
-
-  private Q_SLOTS:
-    void slotRereadKeys();
-    void slotStartCertificateManager( const QString &query = QString() );
-    void slotStartSearchForExternalCertificates() {
-      slotStartCertificateManager( mInitialQuery );
+    QVBoxLayout *topLayout() const
+    {
+        return mTopLayout;
     }
-    void slotKeyListResult( const GpgME::KeyListResult & );
+
+private Q_SLOTS:
+    void slotRereadKeys();
+    void slotStartCertificateManager(const QString &query = QString());
+    void slotStartSearchForExternalCertificates()
+    {
+        slotStartCertificateManager(mInitialQuery);
+    }
+    void slotKeyListResult(const GpgME::KeyListResult &);
     void slotSelectionChanged();
-    void slotCheckSelection() { slotCheckSelection( 0 ); }
-    void slotCheckSelection( Kleo::KeyListViewItem * );
-    void slotRMB( Kleo::KeyListViewItem *, const QPoint & );
+    void slotCheckSelection()
+    {
+        slotCheckSelection(0);
+    }
+    void slotCheckSelection(Kleo::KeyListViewItem *);
+    void slotRMB(Kleo::KeyListViewItem *, const QPoint &);
     void slotRecheckKey();
     void slotTryOk();
     void slotOk();
     void slotCancel();
-    void slotSearch( const QString & text );
+    void slotSearch(const QString &text);
     void slotSearch();
     void slotFilter();
 
-  private:
-    void filterByKeyID( const QString & keyID );
-    void filterByKeyIDOrUID( const QString & keyID );
-    void filterByUID( const QString & uid );
+private:
+    void filterByKeyID(const QString &keyID);
+    void filterByKeyIDOrUID(const QString &keyID);
+    void filterByUID(const QString &uid);
     void showAllItems();
-    bool anyChildMatches( const Kleo::KeyListViewItem * item, QRegExp & rx ) const;
+    bool anyChildMatches(const Kleo::KeyListViewItem *item, QRegExp &rx) const;
 
     void connectSignals();
     void disconnectSignals();
 
-    void startKeyListJobForBackend( const Kleo::CryptoBackend::Protocol *, const std::vector<GpgME::Key> &, bool );
+    void startKeyListJobForBackend(const Kleo::CryptoBackend::Protocol *, const std::vector<GpgME::Key> &, bool);
     void startValidatingKeyListing();
 
-    void init( bool, bool, const QString &, const QString & );
+    void init(bool, bool, const QString &, const QString &);
 
-  private:
-    QVBoxLayout* mTopLayout;
-    Kleo::KeyListView * mKeyListView;
-    const Kleo::CryptoBackend::Protocol * mOpenPGPBackend;
-    const Kleo::CryptoBackend::Protocol * mSMIMEBackend;
-    QCheckBox * mRememberCB;
+private:
+    QVBoxLayout *mTopLayout;
+    Kleo::KeyListView *mKeyListView;
+    const Kleo::CryptoBackend::Protocol *mOpenPGPBackend;
+    const Kleo::CryptoBackend::Protocol *mSMIMEBackend;
+    QCheckBox *mRememberCB;
     std::vector<GpgME::Key> mSelectedKeys, mKeysToCheck;
     unsigned int mKeyUsage;
-    QTimer * mCheckSelectionTimer;
-    QTimer * mStartSearchTimer;
+    QTimer *mCheckSelectionTimer;
+    QTimer *mStartSearchTimer;
     // cross-eventloop temporaries:
     QString mSearchText;
     const QString mInitialQuery;
-    Kleo::KeyListViewItem * mCurrentContextMenuItem;
+    Kleo::KeyListViewItem *mCurrentContextMenuItem;
     int mTruncated, mListJobCount, mSavedOffsetY;
     QPushButton *mOkButton;
-  };
+};
 
 }
 

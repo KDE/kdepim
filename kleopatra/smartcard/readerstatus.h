@@ -40,81 +40,83 @@
 
 #include <vector>
 
-namespace Kleo {
-namespace SmartCard {
+namespace Kleo
+{
+namespace SmartCard
+{
 
-    class ReaderStatus : public QObject {
-        Q_OBJECT
-    public:
-        explicit ReaderStatus( QObject * parent=0 );
-        ~ReaderStatus();
+class ReaderStatus : public QObject
+{
+    Q_OBJECT
+public:
+    explicit ReaderStatus(QObject *parent = 0);
+    ~ReaderStatus();
 
-        static const ReaderStatus * instance();
-        static ReaderStatus * mutableInstance();
+    static const ReaderStatus *instance();
+    static ReaderStatus *mutableInstance();
 
-        void startSimpleTransaction( const QByteArray & cmd, QObject * receiver, const char * slot );
+    void startSimpleTransaction(const QByteArray &cmd, QObject *receiver, const char *slot);
 
-        enum AppType {
-            UnknownApplication,
-            OpenPGPApplication,
-            NksApplication,
-            P15Application,
-            DinSigApplication,
-            GeldkarteApplication,
+    enum AppType {
+        UnknownApplication,
+        OpenPGPApplication,
+        NksApplication,
+        P15Application,
+        DinSigApplication,
+        GeldkarteApplication,
 
-            NumAppTypes
-        };
-
-        enum PinState {
-            UnknownPinState,
-            NullPin,
-            PinBlocked,
-            NoPin,
-            PinOk,
-
-            NumPinStates
-        };
-
-        enum Status {
-            NoCard,
-            CardPresent,
-            CardActive,
-            CardUsable,
-
-            _NumScdStates,
-
-            CardCanLearnKeys = _NumScdStates,
-            CardHasNullPin,
-
-            CardError,
-
-            NumStates
-        };
-
-        Status cardStatus( unsigned int slot ) const;
-        bool anyCardHasNullPin() const;
-        bool anyCardCanLearnKeys() const;
-
-        std::vector<PinState> pinStates( unsigned int slot ) const;
-
-    public Q_SLOTS:
-        void updateStatus();
-        void startMonitoring();
-
-    Q_SIGNALS:
-        void anyCardHasNullPinChanged( bool );
-        void anyCardCanLearnKeysChanged( bool );
-        void cardStatusChanged( unsigned int slot, Kleo::SmartCard::ReaderStatus::Status status );
-
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
+        NumAppTypes
     };
 
+    enum PinState {
+        UnknownPinState,
+        NullPin,
+        PinBlocked,
+        NoPin,
+        PinOk,
+
+        NumPinStates
+    };
+
+    enum Status {
+        NoCard,
+        CardPresent,
+        CardActive,
+        CardUsable,
+
+        _NumScdStates,
+
+        CardCanLearnKeys = _NumScdStates,
+        CardHasNullPin,
+
+        CardError,
+
+        NumStates
+    };
+
+    Status cardStatus(unsigned int slot) const;
+    bool anyCardHasNullPin() const;
+    bool anyCardCanLearnKeys() const;
+
+    std::vector<PinState> pinStates(unsigned int slot) const;
+
+public Q_SLOTS:
+    void updateStatus();
+    void startMonitoring();
+
+Q_SIGNALS:
+    void anyCardHasNullPinChanged(bool);
+    void anyCardCanLearnKeysChanged(bool);
+    void cardStatusChanged(unsigned int slot, Kleo::SmartCard::ReaderStatus::Status status);
+
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+};
 
 } // namespace SmartCard
 } // namespace Kleo
 
-Q_DECLARE_METATYPE( Kleo::SmartCard::ReaderStatus::Status )
+Q_DECLARE_METATYPE(Kleo::SmartCard::ReaderStatus::Status)
 
 #endif /* __KLEOPATRA__SMARTCARD__READERSTATUS_H___ */

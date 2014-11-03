@@ -30,7 +30,6 @@
     your version.
 */
 
-
 #include <config-kleopatra.h>
 
 #include "wizardpage.h"
@@ -39,13 +38,14 @@
 
 using namespace Kleo::Crypto::Gui;
 
-class WizardPage::Private {
+class WizardPage::Private
+{
     friend class ::WizardPage;
-    WizardPage * const q;
+    WizardPage *const q;
 public:
-    explicit Private( WizardPage * qq );
+    explicit Private(WizardPage *qq);
     ~Private();
-    
+
 private:
     bool commitPage;
     bool autoAdvance;
@@ -55,20 +55,18 @@ private:
     KGuiItem customNextButton;
 };
 
-
-WizardPage::Private::Private( WizardPage * qq )
-    : q( qq ), commitPage( false ), autoAdvance( false )
+WizardPage::Private::Private(WizardPage *qq)
+    : q(qq), commitPage(false), autoAdvance(false)
 {
-    
+
 }
 
 WizardPage::Private::~Private() {}
 
-
-WizardPage::WizardPage( QWidget * parent, Qt::WindowFlags f )
-  : QWidget( parent, f ), d( new Private( this ) )
+WizardPage::WizardPage(QWidget *parent, Qt::WindowFlags f)
+    : QWidget(parent, f), d(new Private(this))
 {
-    
+
 }
 
 bool WizardPage::isCommitPage() const
@@ -76,7 +74,7 @@ bool WizardPage::isCommitPage() const
     return d->commitPage;
 }
 
-void WizardPage::setCommitPage( bool commitPage )
+void WizardPage::setCommitPage(bool commitPage)
 {
     d->commitPage = commitPage;
 }
@@ -86,10 +84,11 @@ bool WizardPage::autoAdvance() const
     return d->autoAdvance;
 }
 
-void WizardPage::setAutoAdvance( bool enabled )
+void WizardPage::setAutoAdvance(bool enabled)
 {
-    if ( d->autoAdvance == enabled )
+    if (d->autoAdvance == enabled) {
         return;
+    }
     d->autoAdvance = enabled;
     emit autoAdvanceChanged();
 }
@@ -99,10 +98,11 @@ QString WizardPage::title() const
     return d->title;
 }
 
-void WizardPage::setTitle( const QString& title )
+void WizardPage::setTitle(const QString &title)
 {
-    if ( d->title == title )
+    if (d->title == title) {
         return;
+    }
     d->title = title;
     emit titleChanged();
 }
@@ -112,10 +112,11 @@ QString WizardPage::subTitle() const
     return d->subTitle;
 }
 
-void WizardPage::setSubTitle( const QString& subTitle )
+void WizardPage::setSubTitle(const QString &subTitle)
 {
-    if ( d->subTitle == subTitle )
+    if (d->subTitle == subTitle) {
         return;
+    }
     d->subTitle = subTitle;
     emit subTitleChanged();
 }
@@ -125,10 +126,11 @@ QString WizardPage::explanation() const
     return d->explanation;
 }
 
-void WizardPage::setExplanation( const QString& explanation )
+void WizardPage::setExplanation(const QString &explanation)
 {
-    if ( d->explanation == explanation )
+    if (d->explanation == explanation) {
         return;
+    }
     d->explanation = explanation;
     emit explanationChanged();
 }
@@ -137,7 +139,7 @@ KGuiItem WizardPage::customNextButton() const
 {
     return d->customNextButton;
 }
-void WizardPage::setCustomNextButton( const KGuiItem& item )
+void WizardPage::setCustomNextButton(const KGuiItem &item)
 {
     d->customNextButton = item;
 }
@@ -145,4 +147,4 @@ void WizardPage::setCustomNextButton( const KGuiItem& item )
 WizardPage::~WizardPage() {}
 
 void WizardPage::onNext() {}
-        
+

@@ -39,47 +39,49 @@
 
 #include <utils/pimpl_ptr.h>
 
-namespace Kleo {
+namespace Kleo
+{
 
-class SystemTrayIcon : public QSystemTrayIcon {
+class SystemTrayIcon : public QSystemTrayIcon
+{
     Q_OBJECT
 public:
-    explicit SystemTrayIcon( QObject * parent=0 );
-    explicit SystemTrayIcon( const QIcon & icon, QObject * parent=0 );
+    explicit SystemTrayIcon(QObject *parent = 0);
+    explicit SystemTrayIcon(const QIcon &icon, QObject *parent = 0);
     ~SystemTrayIcon();
 
-    void setMainWindow( QWidget * w );
-    QWidget * mainWindow() const;
+    void setMainWindow(QWidget *w);
+    QWidget *mainWindow() const;
 
-    void setAttentionWindow( QWidget * w );
-    QWidget * attentionWindow() const;
+    void setAttentionWindow(QWidget *w);
+    QWidget *attentionWindow() const;
 
     QIcon attentionIcon() const;
     QIcon normalIcon() const;
     bool attentionWanted() const;
 
 public Q_SLOTS:
-    void setAttentionIcon( const QIcon & icon );
-    void setNormalIcon( const QIcon & icon );
-    void setAttentionWanted( bool );
+    void setAttentionIcon(const QIcon &icon);
+    void setNormalIcon(const QIcon &icon);
+    void setAttentionWanted(bool);
 
 protected Q_SLOTS:
     virtual void slotEnableDisableActions() = 0;
 
 private:
-    virtual void doMainWindowSet( QWidget * );
-    virtual void doMainWindowClosed( QWidget * );
-    virtual void doAttentionWindowClosed( QWidget * );
+    virtual void doMainWindowSet(QWidget *);
+    virtual void doMainWindowClosed(QWidget *);
+    virtual void doAttentionWindowClosed(QWidget *);
     virtual void doActivated() = 0;
 
 private:
-    /* reimp */ bool eventFilter( QObject *, QEvent * );
+    /* reimp */ bool eventFilter(QObject *, QEvent *);
 
 private:
     class Private;
     kdtools::pimpl_ptr<Private> d;
-    Q_PRIVATE_SLOT( d, void slotAttentionAnimationTimerTimout() )
-    Q_PRIVATE_SLOT( d, void slotActivated( QSystemTrayIcon::ActivationReason ) )
+    Q_PRIVATE_SLOT(d, void slotAttentionAnimationTimerTimout())
+    Q_PRIVATE_SLOT(d, void slotActivated(QSystemTrayIcon::ActivationReason))
 };
 
 } // namespace Kleo

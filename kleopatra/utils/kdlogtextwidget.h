@@ -31,34 +31,35 @@ class QString;
 class QStringList;
 class QColor;
 
-class KDLogTextWidget : public QAbstractScrollArea {
+class KDLogTextWidget : public QAbstractScrollArea
+{
     Q_OBJECT
-    Q_PROPERTY( uint historySize READ historySize WRITE setHistorySize )
-    Q_PROPERTY( QString text READ text )
-    Q_PROPERTY( QStringList lines READ lines WRITE setLines )
-    Q_PROPERTY( uint minimumVisibleLines READ minimumVisibleLines WRITE setMinimumVisibleLines )
-    Q_PROPERTY( uint minimumVisibleColumns READ minimumVisibleColumns WRITE setMinimumVisibleColumns )
-    Q_PROPERTY( bool alternatingRowColors READ alternatingRowColors WRITE setAlternatingRowColors )
-    Q_CLASSINFO( "description", "High-speed text display widget" )
+    Q_PROPERTY(uint historySize READ historySize WRITE setHistorySize)
+    Q_PROPERTY(QString text READ text)
+    Q_PROPERTY(QStringList lines READ lines WRITE setLines)
+    Q_PROPERTY(uint minimumVisibleLines READ minimumVisibleLines WRITE setMinimumVisibleLines)
+    Q_PROPERTY(uint minimumVisibleColumns READ minimumVisibleColumns WRITE setMinimumVisibleColumns)
+    Q_PROPERTY(bool alternatingRowColors READ alternatingRowColors WRITE setAlternatingRowColors)
+    Q_CLASSINFO("description", "High-speed text display widget")
 public:
-    explicit KDLogTextWidget( QWidget * parent=0 );
+    explicit KDLogTextWidget(QWidget *parent = 0);
     ~KDLogTextWidget();
 
-    void setHistorySize( unsigned int size );
+    void setHistorySize(unsigned int size);
     unsigned int historySize() const;
 
     QString text() const;
 
-    void setLines( const QStringList & list );
+    void setLines(const QStringList &list);
     QStringList lines() const;
 
-    void setMinimumVisibleLines( unsigned int num );
+    void setMinimumVisibleLines(unsigned int num);
     unsigned int minimumVisibleLines() const;
 
-    void setMinimumVisibleColumns( unsigned int num );
+    void setMinimumVisibleColumns(unsigned int num);
     unsigned int minimumVisibleColumns() const;
 
-    void setAlternatingRowColors( bool on );
+    void setAlternatingRowColors(bool on);
     bool alternatingRowColors() const;
 
     /*! \reimp */ QSize minimumSizeHint() const;
@@ -66,14 +67,14 @@ public:
 
 public Q_SLOTS:
     void clear();
-    void message( const QString & msg, const QColor & color );
-    void message( const QString & msg );
+    void message(const QString &msg, const QColor &color);
+    void message(const QString &msg);
 
 protected:
-    /*! \reimp */ void paintEvent( QPaintEvent * );
-    /*! \reimp */ void timerEvent( QTimerEvent * );
-    /*! \reimp */ void resizeEvent( QResizeEvent * );
-    /*! \reimp */ void changeEvent( QEvent * );
+    /*! \reimp */ void paintEvent(QPaintEvent *);
+    /*! \reimp */ void timerEvent(QTimerEvent *);
+    /*! \reimp */ void resizeEvent(QResizeEvent *);
+    /*! \reimp */ void changeEvent(QEvent *);
 
 private:
     class Private;

@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "sendlaterconfiguredialogtest.h"
 #include "../sendlaterconfiguredialog.h"
 #include "../sendlaterconfigurewidget.h"
@@ -23,7 +22,6 @@
 #include <QTreeWidget>
 
 #include <qtest.h>
-
 
 SendLaterConfigureDialogTest::SendLaterConfigureDialogTest(QObject *parent)
     : QObject(parent)

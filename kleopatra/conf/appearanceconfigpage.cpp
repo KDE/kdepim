@@ -43,44 +43,43 @@
 using namespace Kleo;
 using namespace Kleo::Config;
 
-AppearanceConfigurationPage::AppearanceConfigurationPage( QWidget *parent, const QVariantList &args )
-    : KCModule( parent, args )
+AppearanceConfigurationPage::AppearanceConfigurationPage(QWidget *parent, const QVariantList &args)
+    : KCModule(parent, args)
 {
-  QVBoxLayout* lay = new QVBoxLayout( this );
-  mWidget = new AppearanceConfigWidget( this );
-  lay->addWidget( mWidget );
-  connect( mWidget, SIGNAL(changed()), this, SLOT(changed()) );
+    QVBoxLayout *lay = new QVBoxLayout(this);
+    mWidget = new AppearanceConfigWidget(this);
+    lay->addWidget(mWidget);
+    connect(mWidget, SIGNAL(changed()), this, SLOT(changed()));
 
 #ifndef HAVE_UNBROKEN_KCMULTIDIALOG
-  load();
+    load();
 #endif
 }
 
-
 void AppearanceConfigurationPage::load()
 {
-  mWidget->load();
+    mWidget->load();
 }
 
 void AppearanceConfigurationPage::save()
 {
-  mWidget->save();
+    mWidget->save();
 
 }
 
 void AppearanceConfigurationPage::defaults()
 {
-  mWidget->defaults();
+    mWidget->defaults();
 }
 
 extern "C"
 {
-  Q_DECL_EXPORT KCModule *create_kleopatra_config_appear( QWidget *parent=0, const QVariantList &args=QVariantList() )
-  {
-    AppearanceConfigurationPage *page =
-      new AppearanceConfigurationPage( parent, args );
-    page->setObjectName( QLatin1String("kleopatra_config_appear") );
-    return page;
-  }
+    Q_DECL_EXPORT KCModule *create_kleopatra_config_appear(QWidget *parent = 0, const QVariantList &args = QVariantList())
+    {
+        AppearanceConfigurationPage *page =
+            new AppearanceConfigurationPage(parent, args);
+        page->setObjectName(QLatin1String("kleopatra_config_appear"));
+        return page;
+    }
 }
 

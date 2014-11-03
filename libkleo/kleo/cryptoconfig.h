@@ -43,14 +43,16 @@
 
 /* Start reading this file from the bottom up :) */
 
-namespace Kleo {
+namespace Kleo
+{
 
-  /**
-   * Description of a single option
-   */
-  class CryptoConfigEntry {
+/**
+ * Description of a single option
+ */
+class CryptoConfigEntry
+{
 
-  public:
+public:
 #endif /* __cplusplus */
     /**
        @li basic        This option should always be offered to the user.
@@ -59,7 +61,8 @@ namespace Kleo {
        */
     enum Level { Level_Basic = 0,
                  Level_Advanced = 1,
-                 Level_Expert = 2 };
+                 Level_Expert = 2
+               };
 
     /**
        Type of the argument
@@ -88,7 +91,7 @@ namespace Kleo {
                    ArgType_DirPath = 7,
 
                    NumArgType
-    };
+                 };
 
 #ifdef __cplusplus
     virtual ~CryptoConfigEntry() {}
@@ -203,65 +206,66 @@ namespace Kleo {
      * Define whether the option is set or not (only allowed for ArgType_None)
      * #### TODO: and for options with optional args
      */
-    virtual void setBoolValue( bool ) = 0;
+    virtual void setBoolValue(bool) = 0;
 
     /**
      * Set string value (allowed for all argtypes)
      */
-    virtual void setStringValue( const QString& ) = 0;
+    virtual void setStringValue(const QString &) = 0;
 
     /**
      * Set a new signed int value
      */
-    virtual void setIntValue( int ) = 0;
+    virtual void setIntValue(int) = 0;
 
     /**
      * Set a new unsigned int value
      */
-    virtual void setUIntValue( unsigned int ) = 0;
+    virtual void setUIntValue(unsigned int) = 0;
 
     /**
      * Set value as a URL (only meaningful for Path (if local) and URL argtypes)
      */
-    virtual void setURLValue( const KUrl& ) = 0;
+    virtual void setURLValue(const KUrl &) = 0;
 
     /**
      * Set the number of times the option is set (only valid for ArgType_None, if isList())
      */
-    virtual void setNumberOfTimesSet( unsigned int ) = 0;
+    virtual void setNumberOfTimesSet(unsigned int) = 0;
 
     /**
      * Set a new string-list value (only allowed for String, Path and URL argtypes, if isList())
      */
-    virtual void setStringValueList( const QStringList& ) = 0;
+    virtual void setStringValueList(const QStringList &) = 0;
 
     /**
      * Set a new list of signed int values
      */
-    virtual void setIntValueList( const std::vector<int>& ) = 0;
+    virtual void setIntValueList(const std::vector<int> &) = 0;
 
     /**
      * Set a new list of unsigned int values
      */
-    virtual void setUIntValueList( const std::vector<unsigned int>& ) = 0;
+    virtual void setUIntValueList(const std::vector<unsigned int> &) = 0;
 
     /**
      * Set value as a URL list (only meaningful for Path (if all URLs are local) and URL argtypes, if isList())
      */
-    virtual void setURLValueList( const KUrl::List& ) = 0;
+    virtual void setURLValueList(const KUrl::List &) = 0;
 
     /**
      * @return true if the value was changed
      */
     virtual bool isDirty() const = 0;
-  };
+};
 
-  /**
-   * Group containing a set of config options
-   */
-  class CryptoConfigGroup {
+/**
+ * Group containing a set of config options
+ */
+class CryptoConfigGroup
+{
 
-  public:
+public:
     virtual ~CryptoConfigGroup() {}
 
     /**
@@ -301,15 +305,16 @@ namespace Kleo {
      * The object is owned by CryptoConfigGroup, don't delete it.
      * Groups cannot be nested, so all entries returned here are pure entries, no groups.
      */
-    virtual CryptoConfigEntry* entry( const QString& name ) const = 0;
-  };
+    virtual CryptoConfigEntry *entry(const QString &name) const = 0;
+};
 
-  /**
-   * Crypto config for one component (e.g. gpg-agent, dirmngr etc.)
-   */
-  class CryptoConfigComponent {
+/**
+ * Crypto config for one component (e.g. gpg-agent, dirmngr etc.)
+ */
+class CryptoConfigComponent
+{
 
-  public:
+public:
     virtual ~CryptoConfigComponent() {}
 
     /**
@@ -339,16 +344,17 @@ namespace Kleo {
      * @return the configuration object for a given group
      * The object is owned by CryptoConfigComponent, don't delete it.
      */
-    virtual CryptoConfigGroup* group( const QString& name ) const = 0;
+    virtual CryptoConfigGroup *group(const QString &name) const = 0;
 
-  };
+};
 
-  /**
-   * Main interface to crypto configuration.
-   */
-  class CryptoConfig {
+/**
+ * Main interface to crypto configuration.
+ */
+class CryptoConfig
+{
 
-  public:
+public:
     virtual ~CryptoConfig() {}
 
     /**
@@ -362,7 +368,7 @@ namespace Kleo {
      * @return the configuration object for a given component
      * The object is owned by CryptoConfig, don't delete it.
      */
-    virtual CryptoConfigComponent* component( const QString& name ) const = 0;
+    virtual CryptoConfigComponent *component(const QString &name) const = 0;
 
     /**
      * Convenience method to get hold of a single configuration entry when
@@ -372,10 +378,11 @@ namespace Kleo {
      * @return the configuration object for a single configuration entry, 0 if not found.
      * The object is owned by CryptoConfig, don't delete it.
      */
-    CryptoConfigEntry* entry( const QString& componentName, const QString& groupName, const QString& entryName ) const {
-      const Kleo::CryptoConfigComponent* comp = component( componentName );
-      const Kleo::CryptoConfigGroup* group = comp ? comp->group( groupName ) : 0;
-      return group ? group->entry( entryName ) : 0;
+    CryptoConfigEntry *entry(const QString &componentName, const QString &groupName, const QString &entryName) const
+    {
+        const Kleo::CryptoConfigComponent *comp = component(componentName);
+        const Kleo::CryptoConfigGroup *group = comp ? comp->group(groupName) : 0;
+        return group ? group->entry(entryName) : 0;
     }
 
     /**
@@ -385,7 +392,7 @@ namespace Kleo {
      * far as this is possible.  Otherwise, they will take effect at the next
      * start of the respective backend programs.
      */
-    virtual void sync( bool runtime ) = 0;
+    virtual void sync(bool runtime) = 0;
 
     /**
      * Tells the CryptoConfig to discard any cached information, including
@@ -395,7 +402,7 @@ namespace Kleo {
      * DON'T call this if you're holding pointers to components, groups or entries.
      */
     virtual void clear() = 0;
-  };
+};
 
 }
 #endif /* __cplusplus */

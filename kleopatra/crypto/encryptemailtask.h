@@ -43,42 +43,47 @@
 
 #include <vector>
 
-namespace GpgME {
-    class Key;
+namespace GpgME
+{
+class Key;
 }
 
-namespace Kleo {
-    class Input;
-    class Output;
+namespace Kleo
+{
+class Input;
+class Output;
 }
 
-namespace Kleo {
-namespace Crypto {
+namespace Kleo
+{
+namespace Crypto
+{
 
-    class EncryptEMailTask : public Task {
-        Q_OBJECT
-    public:
-        explicit EncryptEMailTask( QObject * parent=0 );
-        ~EncryptEMailTask();
+class EncryptEMailTask : public Task
+{
+    Q_OBJECT
+public:
+    explicit EncryptEMailTask(QObject *parent = 0);
+    ~EncryptEMailTask();
 
-        void setInput( const boost::shared_ptr<Input> & input );
-        void setOutput( const boost::shared_ptr<Output> & output );
-        void setRecipients( const std::vector<GpgME::Key> & recipients );
+    void setInput(const boost::shared_ptr<Input> &input);
+    void setOutput(const boost::shared_ptr<Output> &output);
+    void setRecipients(const std::vector<GpgME::Key> &recipients);
 
-        GpgME::Protocol protocol() const;
+    GpgME::Protocol protocol() const;
 
-        /* reimp */ void cancel();
-        /* reimp */ QString label() const;
+    /* reimp */ void cancel();
+    /* reimp */ QString label() const;
 
-    private:
-        /* reimp */ void doStart();
-        /* reimp */ unsigned long long inputSize() const;
+private:
+    /* reimp */ void doStart();
+    /* reimp */ unsigned long long inputSize() const;
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void slotResult( const GpgME::EncryptionResult & ) )
-    };
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void slotResult(const GpgME::EncryptionResult &))
+};
 
 }
 }

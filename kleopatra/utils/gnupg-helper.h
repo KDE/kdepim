@@ -36,20 +36,21 @@
 class QString;
 class QStringList;
 
-namespace Kleo {
+namespace Kleo
+{
 
-    QString gnupgHomeDirectory();
+QString gnupgHomeDirectory();
 
-    QString gpgConfPath();
-    QString gpgSmPath();
-    QString gpgPath();
+QString gpgConfPath();
+QString gpgSmPath();
+QString gpgPath();
 
-    QString gpgConfListDir( const char * which );
-    QString gpg4winInstallPath();
+QString gpgConfListDir(const char *which);
+QString gpg4winInstallPath();
 
-    QStringList gnupgFileBlacklist();
+QStringList gnupgFileBlacklist();
 
-    int makeGnuPGError( int code );
+int makeGnuPGError(int code);
 }
 
 #endif // __KLEOPATRA_GNUPGHELPER_H__

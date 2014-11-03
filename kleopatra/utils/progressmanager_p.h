@@ -41,42 +41,48 @@
 
 #include <QPointer>
 
-namespace {
+namespace
+{
 
-    class Mapper : QObject {
-        Q_OBJECT
-    public:
-        Mapper( KPIM::ProgressItem * item, Kleo::Job * job )
-            : QObject( item ), m_item( item ), m_job( job )
-        {
+class Mapper : QObject
+{
+    Q_OBJECT
+public:
+    Mapper(KPIM::ProgressItem *item, Kleo::Job *job)
+        : QObject(item), m_item(item), m_job(job)
+    {
 
-            connect( item, SIGNAL(progressItemCanceled(KPIM::ProgressItem*)),
-                     job,  SLOT(slotCancel()) );
+        connect(item, SIGNAL(progressItemCanceled(KPIM::ProgressItem *)),
+                job,  SLOT(slotCancel()));
 
-            connect( job,  SIGNAL(done()),
-                     this, SLOT(slotDone()) );
-            connect( job,  SIGNAL(progress(QString,int,int)),
-                     this, SLOT(slotProgress(QString,int,int)) );
+        connect(job,  SIGNAL(done()),
+                this, SLOT(slotDone()));
+        connect(job,  SIGNAL(progress(QString, int, int)),
+                this, SLOT(slotProgress(QString, int, int)));
+    }
+
+private Q_SLOTS:
+    void slotDone()
+    {
+        if (m_item) {
+            m_item->setComplete();
         }
+        m_item = 0;
+    }
 
-    private Q_SLOTS:
-        void slotDone() {
-            if ( m_item )
-                m_item->setComplete();
-            m_item = 0;
+    void slotProgress(const QString &what, int current, int total)
+    {
+        if (!m_item) {
+            return;
         }
+        m_item->setStatus(what);
+        m_item->setProgress(total ? current / total : 0);
+    }
 
-        void slotProgress( const QString & what, int current, int total ) {
-            if ( !m_item )
-                return;
-            m_item->setStatus( what );
-            m_item->setProgress( total ? current/total : 0 );
-        }
-
-    private:
-        QPointer<KPIM::ProgressItem> m_item;
-        QPointer<Kleo::Job> m_job;
-    };
+private:
+    QPointer<KPIM::ProgressItem> m_item;
+    QPointer<Kleo::Job> m_job;
+};
 
 }
 

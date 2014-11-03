@@ -36,33 +36,35 @@
 #include "kleo_export.h"
 #include <kprocess.h>
 
-namespace Kleo {
+namespace Kleo
+{
 
-  /**
-   * @short a base class for GPG and GPGSM processes.
-   *
-   * This K3Process subclass implements the status-fd handling common
-   * to GPG and GPGSM.
-   *
-   * @author Marc Mutz <mutz@kde.org>
-   */
-  class KLEO_EXPORT GnuPGProcessBase : public KProcess {
+/**
+ * @short a base class for GPG and GPGSM processes.
+ *
+ * This K3Process subclass implements the status-fd handling common
+ * to GPG and GPGSM.
+ *
+ * @author Marc Mutz <mutz@kde.org>
+ */
+class KLEO_EXPORT GnuPGProcessBase : public KProcess
+{
     Q_OBJECT
-  public:
-    explicit GnuPGProcessBase( QObject * parent=0 );
+public:
+    explicit GnuPGProcessBase(QObject *parent = 0);
     ~GnuPGProcessBase();
 
-    void setUseStatusFD( bool use );
+    void setUseStatusFD(bool use);
 
     /*! reimplementation */
     //bool start( RunMode runmode, Communication comm );
 
     //bool closeStatus();
 
-  signals:
-    void status( Kleo::GnuPGProcessBase * proc, const QString & type, const QStringList & args );
+signals:
+    void status(Kleo::GnuPGProcessBase *proc, const QString &type, const QStringList &args);
 
-  protected:
+protected:
     /*! reimplementation */
     //int setupCommunication( Communication comm );
     /*! reimplementation */
@@ -72,17 +74,16 @@ namespace Kleo {
 
     //int childStatus( int fd );
 
-
-  private slots:
+private slots:
     //void slotChildStatus( int fd );
 
-  private:
+private:
     //void parseStatusOutput();
 
-  private:
+private:
     class Private;
-    Private * d;
-  };
+    Private *d;
+};
 
 }
 

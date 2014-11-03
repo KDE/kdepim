@@ -41,226 +41,237 @@
 
 #include <boost/shared_ptr.hpp>
 
-
-namespace KMime {
-namespace Types {
-    class Mailbox;
+namespace KMime
+{
+namespace Types
+{
+class Mailbox;
 }
 }
-namespace GpgME {
-    class DecryptionResult;
-    class VerificationResult;
-    class Key;
-    class Signature;
+namespace GpgME
+{
+class DecryptionResult;
+class VerificationResult;
+class Key;
+class Signature;
 }
 
-namespace Kleo {
-    class Input;
-    class Output;
-    class AuditLog;
+namespace Kleo
+{
+class Input;
+class Output;
+class AuditLog;
 }
 
-namespace Kleo {
-namespace Crypto {
+namespace Kleo
+{
+namespace Crypto
+{
 
-    class DecryptVerifyResult;
+class DecryptVerifyResult;
 
-    class AbstractDecryptVerifyTask : public Task {
-        Q_OBJECT
-    public:
-        explicit AbstractDecryptVerifyTask( QObject* parent = 0 );
-        virtual ~AbstractDecryptVerifyTask();
-        virtual void autodetectProtocolFromInput() = 0;
+class AbstractDecryptVerifyTask : public Task
+{
+    Q_OBJECT
+public:
+    explicit AbstractDecryptVerifyTask(QObject *parent = 0);
+    virtual ~AbstractDecryptVerifyTask();
+    virtual void autodetectProtocolFromInput() = 0;
 
-        KMime::Types::Mailbox informativeSender() const;
-        void setInformativeSender( const KMime::Types::Mailbox & senders );
+    KMime::Types::Mailbox informativeSender() const;
+    void setInformativeSender(const KMime::Types::Mailbox &senders);
 
-    Q_SIGNALS:
-        void decryptVerifyResult( const boost::shared_ptr<const Kleo::Crypto::DecryptVerifyResult> & );
+Q_SIGNALS:
+    void decryptVerifyResult(const boost::shared_ptr<const Kleo::Crypto::DecryptVerifyResult> &);
 
-    protected:
-        boost::shared_ptr<DecryptVerifyResult> fromDecryptResult( const GpgME::DecryptionResult & dr, const QByteArray & plaintext, const AuditLog & auditLog );
-        boost::shared_ptr<DecryptVerifyResult> fromDecryptResult( const GpgME::Error & err, const QString& details, const AuditLog & auditLog  );
-        boost::shared_ptr<DecryptVerifyResult> fromDecryptVerifyResult( const GpgME::DecryptionResult & dr, const GpgME::VerificationResult & vr, const QByteArray & plaintext, const AuditLog & auditLog );
-        boost::shared_ptr<DecryptVerifyResult> fromDecryptVerifyResult( const GpgME::Error & err, const QString & what, const AuditLog & auditLog  );
-        boost::shared_ptr<DecryptVerifyResult> fromVerifyOpaqueResult( const GpgME::VerificationResult & vr, const QByteArray & plaintext, const AuditLog & auditLog  );
-        boost::shared_ptr<DecryptVerifyResult> fromVerifyOpaqueResult( const GpgME::Error & err, const QString & details, const AuditLog & auditLog  );
-        boost::shared_ptr<DecryptVerifyResult> fromVerifyDetachedResult( const GpgME::VerificationResult & vr, const AuditLog & auditLog  );
-        boost::shared_ptr<DecryptVerifyResult> fromVerifyDetachedResult( const GpgME::Error & err, const QString & details, const AuditLog & auditLog  );
+protected:
+    boost::shared_ptr<DecryptVerifyResult> fromDecryptResult(const GpgME::DecryptionResult &dr, const QByteArray &plaintext, const AuditLog &auditLog);
+    boost::shared_ptr<DecryptVerifyResult> fromDecryptResult(const GpgME::Error &err, const QString &details, const AuditLog &auditLog);
+    boost::shared_ptr<DecryptVerifyResult> fromDecryptVerifyResult(const GpgME::DecryptionResult &dr, const GpgME::VerificationResult &vr, const QByteArray &plaintext, const AuditLog &auditLog);
+    boost::shared_ptr<DecryptVerifyResult> fromDecryptVerifyResult(const GpgME::Error &err, const QString &what, const AuditLog &auditLog);
+    boost::shared_ptr<DecryptVerifyResult> fromVerifyOpaqueResult(const GpgME::VerificationResult &vr, const QByteArray &plaintext, const AuditLog &auditLog);
+    boost::shared_ptr<DecryptVerifyResult> fromVerifyOpaqueResult(const GpgME::Error &err, const QString &details, const AuditLog &auditLog);
+    boost::shared_ptr<DecryptVerifyResult> fromVerifyDetachedResult(const GpgME::VerificationResult &vr, const AuditLog &auditLog);
+    boost::shared_ptr<DecryptVerifyResult> fromVerifyDetachedResult(const GpgME::Error &err, const QString &details, const AuditLog &auditLog);
 
-        virtual QString inputLabel() const = 0;
-        virtual QString outputLabel() const = 0;
-
-    private:
-         class Private;
-         kdtools::pimpl_ptr<Private> d;
-    };
-
-    class DecryptTask : public AbstractDecryptVerifyTask {
-        Q_OBJECT
-    public:
-        explicit DecryptTask( QObject* parent = 0 );
-        ~DecryptTask();
-
-        void setInput( const boost::shared_ptr<Input> & input );
-        void setOutput( const boost::shared_ptr<Output> & output );
-
-        void setProtocol( GpgME::Protocol prot );
-        void autodetectProtocolFromInput();
-
-        /* reimp */ QString label() const;
-
-        /* reimp */ GpgME::Protocol protocol() const;
-
-    public Q_SLOTS:
-         /* reimp */ void cancel();
-
-    private:
-        /* reimp */ void doStart();
-        /* reimp */ QString inputLabel() const;
-        /* reimp */ QString outputLabel() const;
-        /* reimp */ unsigned long long inputSize() const;
-
-    private:
-         class Private;
-         kdtools::pimpl_ptr<Private> d;
-         Q_PRIVATE_SLOT( d, void slotResult( GpgME::DecryptionResult, QByteArray ) )
-    };
-
-    class VerifyDetachedTask : public AbstractDecryptVerifyTask {
-        Q_OBJECT
-    public:
-        explicit VerifyDetachedTask( QObject* parent = 0 );
-        ~VerifyDetachedTask();
-
-        void setInput( const boost::shared_ptr<Input> & input );
-        void setSignedData( const boost::shared_ptr<Input> & signedData );
-
-        void setProtocol( GpgME::Protocol prot );
-        void autodetectProtocolFromInput();
-
-        /* reimp */ QString label() const;
-
-        /* reimp */ GpgME::Protocol protocol() const;
-
-    public Q_SLOTS:
-         /* reimp */ void cancel();
-
-    private:
-        /* reimp */ void doStart();
-        /* reimp */ QString inputLabel() const;
-        /* reimp */ QString outputLabel() const;
-        /* reimp */ unsigned long long inputSize() const;
-
-    private:
-         class Private;
-         kdtools::pimpl_ptr<Private> d;
-         Q_PRIVATE_SLOT( d, void slotResult( GpgME::VerificationResult ) )
-    };
-
-    class VerifyOpaqueTask : public AbstractDecryptVerifyTask {
-        Q_OBJECT
-    public:
-        explicit VerifyOpaqueTask( QObject* parent = 0 );
-        ~VerifyOpaqueTask();
-
-        void setInput( const boost::shared_ptr<Input> & input );
-        void setOutput( const boost::shared_ptr<Output> & output );
-
-        void setProtocol( GpgME::Protocol prot );
-        void autodetectProtocolFromInput();
-
-        /* reimp */ QString label() const;
-
-        /* reimp */ GpgME::Protocol protocol() const;
-
-    public Q_SLOTS:
-         /* reimp */ void cancel();
-
-    private:
-        /* reimp */ void doStart();
-        /* reimp */ QString inputLabel() const;
-        /* reimp */ QString outputLabel() const;
-        /* reimp */ unsigned long long inputSize() const;
-
-    private:
-         class Private;
-         kdtools::pimpl_ptr<Private> d;
-         Q_PRIVATE_SLOT( d, void slotResult( GpgME::VerificationResult, QByteArray ) )
-    };
-
-    class DecryptVerifyTask : public AbstractDecryptVerifyTask {
-        Q_OBJECT
-    public:
-        explicit DecryptVerifyTask( QObject* parent = 0 );
-        ~DecryptVerifyTask();
-
-        void setInput( const boost::shared_ptr<Input> & input );
-        void setSignedData( const boost::shared_ptr<Input> & signedData );
-        void setOutput( const boost::shared_ptr<Output> & output );
-
-        void setProtocol( GpgME::Protocol prot );
-        void autodetectProtocolFromInput();
-
-        /* reimp */ QString label() const;
-
-        /* reimp */ GpgME::Protocol protocol() const;
-
-    public Q_SLOTS:
-         /* reimp */ void cancel();
-
-    private:
-        /* reimp */ void doStart();
-        /* reimp */ QString inputLabel() const;
-        /* reimp */ QString outputLabel() const;
-        /* reimp */ unsigned long long inputSize() const;
-
-    private:
-         class Private;
-         kdtools::pimpl_ptr<Private> d;
-         Q_PRIVATE_SLOT( d, void slotResult( GpgME::DecryptionResult, GpgME::VerificationResult, QByteArray ) )
-    };
-
-    class DecryptVerifyResult : public Task::Result {
-        friend class ::Kleo::Crypto::AbstractDecryptVerifyTask;
-    public:
-        class SenderInfo;
-
-        /* reimp */ QString overview() const;
-        /* reimp */ QString details() const;
-        /* reimp */ bool hasError() const;
-        /* reimp */ int errorCode() const;
-        /* reimp */ QString errorString() const;
-        /* reimp */ VisualCode code() const;
-        /* reimp */ AuditLog auditLog() const;
-
-        GpgME::VerificationResult verificationResult() const;
-
-        static const GpgME::Key & keyForSignature( const GpgME::Signature & sig, const std::vector<GpgME::Key> & keys );
+    virtual QString inputLabel() const = 0;
+    virtual QString outputLabel() const = 0;
 
 private:
-        static QString keyToString( const GpgME::Key & key );
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+};
 
-    private:
-        DecryptVerifyResult();
-        DecryptVerifyResult( const DecryptVerifyResult& );
-        DecryptVerifyResult& operator=( const DecryptVerifyResult& other );
+class DecryptTask : public AbstractDecryptVerifyTask
+{
+    Q_OBJECT
+public:
+    explicit DecryptTask(QObject *parent = 0);
+    ~DecryptTask();
 
-        DecryptVerifyResult( DecryptVerifyOperation op,
-                  const GpgME::VerificationResult& vr,
-                  const GpgME::DecryptionResult& dr,
-                  const QByteArray& stuff,
-                  int errCode,
-                  const QString & errString,
-                  const QString & inputLabel,
-                  const QString & outputLabel,
-                  const AuditLog & auditLog,
-                  const KMime::Types::Mailbox & informativeSender );
+    void setInput(const boost::shared_ptr<Input> &input);
+    void setOutput(const boost::shared_ptr<Output> &output);
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-    };
+    void setProtocol(GpgME::Protocol prot);
+    void autodetectProtocolFromInput();
+
+    /* reimp */ QString label() const;
+
+    /* reimp */ GpgME::Protocol protocol() const;
+
+public Q_SLOTS:
+    /* reimp */ void cancel();
+
+private:
+    /* reimp */ void doStart();
+    /* reimp */ QString inputLabel() const;
+    /* reimp */ QString outputLabel() const;
+    /* reimp */ unsigned long long inputSize() const;
+
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void slotResult(GpgME::DecryptionResult, QByteArray))
+};
+
+class VerifyDetachedTask : public AbstractDecryptVerifyTask
+{
+    Q_OBJECT
+public:
+    explicit VerifyDetachedTask(QObject *parent = 0);
+    ~VerifyDetachedTask();
+
+    void setInput(const boost::shared_ptr<Input> &input);
+    void setSignedData(const boost::shared_ptr<Input> &signedData);
+
+    void setProtocol(GpgME::Protocol prot);
+    void autodetectProtocolFromInput();
+
+    /* reimp */ QString label() const;
+
+    /* reimp */ GpgME::Protocol protocol() const;
+
+public Q_SLOTS:
+    /* reimp */ void cancel();
+
+private:
+    /* reimp */ void doStart();
+    /* reimp */ QString inputLabel() const;
+    /* reimp */ QString outputLabel() const;
+    /* reimp */ unsigned long long inputSize() const;
+
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void slotResult(GpgME::VerificationResult))
+};
+
+class VerifyOpaqueTask : public AbstractDecryptVerifyTask
+{
+    Q_OBJECT
+public:
+    explicit VerifyOpaqueTask(QObject *parent = 0);
+    ~VerifyOpaqueTask();
+
+    void setInput(const boost::shared_ptr<Input> &input);
+    void setOutput(const boost::shared_ptr<Output> &output);
+
+    void setProtocol(GpgME::Protocol prot);
+    void autodetectProtocolFromInput();
+
+    /* reimp */ QString label() const;
+
+    /* reimp */ GpgME::Protocol protocol() const;
+
+public Q_SLOTS:
+    /* reimp */ void cancel();
+
+private:
+    /* reimp */ void doStart();
+    /* reimp */ QString inputLabel() const;
+    /* reimp */ QString outputLabel() const;
+    /* reimp */ unsigned long long inputSize() const;
+
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void slotResult(GpgME::VerificationResult, QByteArray))
+};
+
+class DecryptVerifyTask : public AbstractDecryptVerifyTask
+{
+    Q_OBJECT
+public:
+    explicit DecryptVerifyTask(QObject *parent = 0);
+    ~DecryptVerifyTask();
+
+    void setInput(const boost::shared_ptr<Input> &input);
+    void setSignedData(const boost::shared_ptr<Input> &signedData);
+    void setOutput(const boost::shared_ptr<Output> &output);
+
+    void setProtocol(GpgME::Protocol prot);
+    void autodetectProtocolFromInput();
+
+    /* reimp */ QString label() const;
+
+    /* reimp */ GpgME::Protocol protocol() const;
+
+public Q_SLOTS:
+    /* reimp */ void cancel();
+
+private:
+    /* reimp */ void doStart();
+    /* reimp */ QString inputLabel() const;
+    /* reimp */ QString outputLabel() const;
+    /* reimp */ unsigned long long inputSize() const;
+
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void slotResult(GpgME::DecryptionResult, GpgME::VerificationResult, QByteArray))
+};
+
+class DecryptVerifyResult : public Task::Result
+{
+    friend class ::Kleo::Crypto::AbstractDecryptVerifyTask;
+public:
+    class SenderInfo;
+
+    /* reimp */ QString overview() const;
+    /* reimp */ QString details() const;
+    /* reimp */ bool hasError() const;
+    /* reimp */ int errorCode() const;
+    /* reimp */ QString errorString() const;
+    /* reimp */ VisualCode code() const;
+    /* reimp */ AuditLog auditLog() const;
+
+    GpgME::VerificationResult verificationResult() const;
+
+    static const GpgME::Key &keyForSignature(const GpgME::Signature &sig, const std::vector<GpgME::Key> &keys);
+
+private:
+    static QString keyToString(const GpgME::Key &key);
+
+private:
+    DecryptVerifyResult();
+    DecryptVerifyResult(const DecryptVerifyResult &);
+    DecryptVerifyResult &operator=(const DecryptVerifyResult &other);
+
+    DecryptVerifyResult(DecryptVerifyOperation op,
+                        const GpgME::VerificationResult &vr,
+                        const GpgME::DecryptionResult &dr,
+                        const QByteArray &stuff,
+                        int errCode,
+                        const QString &errString,
+                        const QString &inputLabel,
+                        const QString &outputLabel,
+                        const AuditLog &auditLog,
+                        const KMime::Types::Mailbox &informativeSender);
+
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+};
 }
 }
 

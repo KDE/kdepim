@@ -40,44 +40,46 @@
 class QString;
 class QStringList;
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class FileSystemWatcher : public QObject {
-        Q_OBJECT
-    public:
-        explicit FileSystemWatcher( QObject* parent = 0 );
-        explicit FileSystemWatcher( const QStringList& paths, QObject* parent = 0 );
-        ~FileSystemWatcher();
+class FileSystemWatcher : public QObject
+{
+    Q_OBJECT
+public:
+    explicit FileSystemWatcher(QObject *parent = 0);
+    explicit FileSystemWatcher(const QStringList &paths, QObject *parent = 0);
+    ~FileSystemWatcher();
 
-        void setDelay( int ms );
-        int delay() const;
+    void setDelay(int ms);
+    int delay() const;
 
-        void setEnabled( bool enable );
-        bool isEnabled() const;
+    void setEnabled(bool enable);
+    bool isEnabled() const;
 
-        void addPaths( const QStringList& paths );
-        void addPath( const QString& path );
+    void addPaths(const QStringList &paths);
+    void addPath(const QString &path);
 
-        void blacklistFiles( const QStringList & patterns );
-        void whitelistFiles( const QStringList & patterns );
+    void blacklistFiles(const QStringList &patterns);
+    void whitelistFiles(const QStringList &patterns);
 
-        QStringList directories() const;
-        QStringList files() const;
-        void removePaths( const QStringList& path );
-        void removePath( const QString& path );
+    QStringList directories() const;
+    QStringList files() const;
+    void removePaths(const QStringList &path);
+    void removePath(const QString &path);
 
-    Q_SIGNALS:
-        void directoryChanged( const QString& path );
-        void fileChanged( const QString& path );
-        void triggered();
+Q_SIGNALS:
+    void directoryChanged(const QString &path);
+    void fileChanged(const QString &path);
+    void triggered();
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void onFileChanged( QString ) )
-        Q_PRIVATE_SLOT( d, void onDirectoryChanged( QString ) )
-        Q_PRIVATE_SLOT( d, void onTimeout() )
-    };
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void onFileChanged(QString))
+    Q_PRIVATE_SLOT(d, void onDirectoryChanged(QString))
+    Q_PRIVATE_SLOT(d, void onTimeout())
+};
 }
 
 #endif // __KLEOPATRA_UTILS_FILESYSTEMWATCHER_H__

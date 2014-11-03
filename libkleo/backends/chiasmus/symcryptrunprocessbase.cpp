@@ -39,62 +39,68 @@
 
 #include <cstring>
 
-Kleo::SymCryptRunProcessBase::SymCryptRunProcessBase( const QString & class_, const QString & program,
-                                                      const QString & keyFile, const QString & options,
-                                                      Operation mode,
-                                                      QObject * parent )
-  : KProcess( parent ),
-    mOperation( mode ), mOptions( options )
+Kleo::SymCryptRunProcessBase::SymCryptRunProcessBase(const QString &class_, const QString &program,
+        const QString &keyFile, const QString &options,
+        Operation mode,
+        QObject *parent)
+    : KProcess(parent),
+      mOperation(mode), mOptions(options)
 {
-  *this << QLatin1String("symcryptrun")
-        << QLatin1String("--class") << class_
-        << QLatin1String("--program" )<< program
-        << QLatin1String("--keyfile") << keyFile
-        << ( mode == Encrypt ? QLatin1String("--encrypt") : QLatin1String("--decrypt") );
+    *this << QLatin1String("symcryptrun")
+          << QLatin1String("--class") << class_
+          << QLatin1String("--program") << program
+          << QLatin1String("--keyfile") << keyFile
+          << (mode == Encrypt ? QLatin1String("--encrypt") : QLatin1String("--decrypt"));
 }
 
 Kleo::SymCryptRunProcessBase::~SymCryptRunProcessBase() {}
 
-bool Kleo::SymCryptRunProcessBase::launch( const QByteArray & input, bool block ) {
-  connect(this, &SymCryptRunProcessBase::readyReadStandardOutput, this, &SymCryptRunProcessBase::slotReadyReadStandardOutput);
-  connect(this, &SymCryptRunProcessBase::readyReadStandardError, this, &SymCryptRunProcessBase::slotReadyReadStandardError);
-  if ( block ) {
-    QTemporaryFile tempfile;
-    if ( tempfile.open() )
-      tempfile.write( input );
-    else
-      return false;
-    tempfile.flush();
-    *this << QLatin1String("--input") << tempfile.fileName();
-    addOptions();
-    if(KProcess::execute() == -2)
-        return false;
-  } else {
-    addOptions();
-    KProcess::start();
-    const bool ok = waitForStarted();
-    if ( !ok )
-      return ok;
-    mInput = input;
-    write( mInput );
-    closeWriteChannel();
-  }
-  return true;
+bool Kleo::SymCryptRunProcessBase::launch(const QByteArray &input, bool block)
+{
+    connect(this, &SymCryptRunProcessBase::readyReadStandardOutput, this, &SymCryptRunProcessBase::slotReadyReadStandardOutput);
+    connect(this, &SymCryptRunProcessBase::readyReadStandardError, this, &SymCryptRunProcessBase::slotReadyReadStandardError);
+    if (block) {
+        QTemporaryFile tempfile;
+        if (tempfile.open()) {
+            tempfile.write(input);
+        } else {
+            return false;
+        }
+        tempfile.flush();
+        *this << QLatin1String("--input") << tempfile.fileName();
+        addOptions();
+        if (KProcess::execute() == -2) {
+            return false;
+        }
+    } else {
+        addOptions();
+        KProcess::start();
+        const bool ok = waitForStarted();
+        if (!ok) {
+            return ok;
+        }
+        mInput = input;
+        write(mInput);
+        closeWriteChannel();
+    }
+    return true;
 }
 
-void Kleo::SymCryptRunProcessBase::addOptions() {
-  if ( !mOptions.isEmpty() )
-  {
-      const QStringList args = KShell::splitArgs( mOptions );
-      *this <<QLatin1String("--") << args;
-  }
+void Kleo::SymCryptRunProcessBase::addOptions()
+{
+    if (!mOptions.isEmpty()) {
+        const QStringList args = KShell::splitArgs(mOptions);
+        *this << QLatin1String("--") << args;
+    }
 }
 
-void Kleo::SymCryptRunProcessBase::slotReadyReadStandardOutput() {
-  mOutput += readAllStandardOutput();
+void Kleo::SymCryptRunProcessBase::slotReadyReadStandardOutput()
+{
+    mOutput += readAllStandardOutput();
 }
 
-void Kleo::SymCryptRunProcessBase::slotReadyReadStandardError() {
-  mStderr += QLatin1String(readAllStandardError());
+void Kleo::SymCryptRunProcessBase::slotReadyReadStandardError()
+{
+    mStderr += QLatin1String(readAllStandardError());
 }
 

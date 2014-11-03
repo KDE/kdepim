@@ -39,47 +39,48 @@
 using namespace boost;
 using namespace Kleo;
 
-class IODeviceLogger::Private {
-    IODeviceLogger* const q;
+class IODeviceLogger::Private
+{
+    IODeviceLogger *const q;
 public:
-    
-    static bool write( const shared_ptr<QIODevice>& dev, const char* data, qint64 max );
-    
-    explicit Private( const shared_ptr<QIODevice>& io_, IODeviceLogger* qq ) : q( qq ), io( io_ ), writeLog(), readLog()
+
+    static bool write(const shared_ptr<QIODevice> &dev, const char *data, qint64 max);
+
+    explicit Private(const shared_ptr<QIODevice> &io_, IODeviceLogger *qq) : q(qq), io(io_), writeLog(), readLog()
     {
-        assert( io );
-        connect( io.get(), SIGNAL(aboutToClose()), q, SIGNAL(aboutToClose()) );
-        connect( io.get(), SIGNAL(bytesWritten(qint64)), q, SIGNAL(bytesWritten(qint64)) );
-        connect( io.get(), SIGNAL(readyRead()), q, SIGNAL(readyRead()) );
-        q->setOpenMode( io->openMode() );
+        assert(io);
+        connect(io.get(), SIGNAL(aboutToClose()), q, SIGNAL(aboutToClose()));
+        connect(io.get(), SIGNAL(bytesWritten(qint64)), q, SIGNAL(bytesWritten(qint64)));
+        connect(io.get(), SIGNAL(readyRead()), q, SIGNAL(readyRead()));
+        q->setOpenMode(io->openMode());
     }
-    
+
     ~Private()
     {
     }
-    
+
     const shared_ptr<QIODevice> io;
     shared_ptr<QIODevice> writeLog;
     shared_ptr<QIODevice> readLog;
 };
 
-bool IODeviceLogger::Private::write( const shared_ptr<QIODevice>& dev, const char* data, qint64 max )
+bool IODeviceLogger::Private::write(const shared_ptr<QIODevice> &dev, const char *data, qint64 max)
 {
-    assert( dev );
-    assert( data );
-    assert( max >= 0 );
+    assert(dev);
+    assert(data);
+    assert(max >= 0);
     qint64 toWrite = max;
-    while ( toWrite > 0 )
-    {
-        const qint64 written = dev->write( data, toWrite );
-        if ( written < 0 )
+    while (toWrite > 0) {
+        const qint64 written = dev->write(data, toWrite);
+        if (written < 0) {
             return false;
+        }
         toWrite -= written;
     }
     return true;
 }
 
-IODeviceLogger::IODeviceLogger( const shared_ptr<QIODevice>& iod, QObject* parent ) : QIODevice( parent ), d( new Private( iod, this ) )
+IODeviceLogger::IODeviceLogger(const shared_ptr<QIODevice> &iod, QObject *parent) : QIODevice(parent), d(new Private(iod, this))
 {
 }
 
@@ -87,12 +88,12 @@ IODeviceLogger::~IODeviceLogger()
 {
 }
 
-void IODeviceLogger::setWriteLogDevice( const shared_ptr<QIODevice>& dev )
+void IODeviceLogger::setWriteLogDevice(const shared_ptr<QIODevice> &dev)
 {
     d->writeLog = dev;
 }
 
-void IODeviceLogger::setReadLogDevice( const shared_ptr<QIODevice>& dev )
+void IODeviceLogger::setReadLogDevice(const shared_ptr<QIODevice> &dev)
 {
     d->readLog = dev;
 }
@@ -127,10 +128,10 @@ bool IODeviceLogger::isSequential() const
     return d->io->isSequential();
 }
 
-bool IODeviceLogger::open( OpenMode mode )
+bool IODeviceLogger::open(OpenMode mode)
 {
-    QIODevice::open( mode );
-    return d->io->open( mode );
+    QIODevice::open(mode);
+    return d->io->open(mode);
 }
 
 qint64 IODeviceLogger::pos() const
@@ -143,9 +144,9 @@ bool IODeviceLogger::reset()
     return d->io->reset();
 }
 
-bool IODeviceLogger::seek( qint64 pos )
+bool IODeviceLogger::seek(qint64 pos)
 {
-    return d->io->seek( pos );
+    return d->io->seek(pos);
 }
 
 qint64 IODeviceLogger::size() const
@@ -153,39 +154,40 @@ qint64 IODeviceLogger::size() const
     return d->io->size();
 }
 
-bool IODeviceLogger::waitForBytesWritten( int msecs )
+bool IODeviceLogger::waitForBytesWritten(int msecs)
 {
-    return d->io->waitForBytesWritten( msecs );
+    return d->io->waitForBytesWritten(msecs);
 }
 
-bool IODeviceLogger::waitForReadyRead( int msecs )
+bool IODeviceLogger::waitForReadyRead(int msecs)
 {
-    return d->io->waitForReadyRead( msecs );
+    return d->io->waitForReadyRead(msecs);
 }
 
-qint64 IODeviceLogger::readData( char* data, qint64 maxSize )
+qint64 IODeviceLogger::readData(char *data, qint64 maxSize)
 {
-    const qint64 num = d->io->read( data, maxSize );
-    if ( num > 0 && d->readLog )
-        Private::write( d->readLog, data, num );
+    const qint64 num = d->io->read(data, maxSize);
+    if (num > 0 && d->readLog) {
+        Private::write(d->readLog, data, num);
+    }
     return num;
 }
 
-qint64 IODeviceLogger::writeData( const char* data, qint64 maxSize )
+qint64 IODeviceLogger::writeData(const char *data, qint64 maxSize)
 {
-    const qint64 num = d->io->write( data, maxSize );
-    if ( num > 0 && d->writeLog )
-        Private::write( d->writeLog, data, num );
+    const qint64 num = d->io->write(data, maxSize);
+    if (num > 0 && d->writeLog) {
+        Private::write(d->writeLog, data, num);
+    }
     return num;
 }
 
-qint64 IODeviceLogger::readLineData( char* data, qint64 maxSize )
+qint64 IODeviceLogger::readLineData(char *data, qint64 maxSize)
 {
-    const qint64 num = d->io->readLine( data, maxSize );
-    if ( num > 0 && d->readLog )
-        Private::write( d->readLog, data, num );
+    const qint64 num = d->io->readLine(data, maxSize);
+    if (num > 0 && d->readLog) {
+        Private::write(d->readLog, data, num);
+    }
     return num;
 }
-
-
 

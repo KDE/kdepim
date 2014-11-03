@@ -30,7 +30,7 @@ SENDLATER_EXPORT bool compareSendLaterInfo(SendLater::SendLaterInfo *left, SendL
 
 SENDLATER_EXPORT KSharedConfig::Ptr defaultConfig();
 
-SENDLATER_EXPORT void writeSendLaterInfo(KSharedConfig::Ptr config, SendLater::SendLaterInfo *info, bool forceReload=true);
+SENDLATER_EXPORT void writeSendLaterInfo(KSharedConfig::Ptr config, SendLater::SendLaterInfo *info, bool forceReload = true);
 
 SENDLATER_EXPORT bool sentLaterAgentWasRegistered();
 

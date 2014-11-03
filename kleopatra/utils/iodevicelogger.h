@@ -39,40 +39,42 @@
 
 #include <boost/shared_ptr.hpp>
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class IODeviceLogger : public QIODevice {
-        Q_OBJECT
-    public:
-        explicit IODeviceLogger( const boost::shared_ptr<QIODevice>& iod, QObject* parent = 0 );
-        ~IODeviceLogger();
-        
-        void setWriteLogDevice( const boost::shared_ptr<QIODevice>& dev );
-        void setReadLogDevice( const boost::shared_ptr<QIODevice>& dev );
-        
-        /* reimp */ bool atEnd() const;
-        /* reimp */ qint64 bytesAvailable() const;
-        /* reimp */ qint64 bytesToWrite() const;
-        /* reimp */ bool canReadLine() const;
-        /* reimp */ void close();
-        /* reimp */ bool isSequential() const;
-        /* reimp */ bool open( OpenMode mode );
-        /* reimp */ qint64 pos() const;
-        /* reimp */ bool reset();
-        /* reimp */ bool seek( qint64 pos );
-        /* reimp */ qint64 size() const;
-        /* reimp */ bool waitForBytesWritten( int msecs );
-        /* reimp */ bool waitForReadyRead( int msecs );
-        
-    protected:
-        qint64 readData( char* data, qint64 maxSize );
-        qint64 writeData( const char* data, qint64 maxSize );
-        /* reimp */ qint64 readLineData( char* data, qint64 maxSize );
-        
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-    };
+class IODeviceLogger : public QIODevice
+{
+    Q_OBJECT
+public:
+    explicit IODeviceLogger(const boost::shared_ptr<QIODevice> &iod, QObject *parent = 0);
+    ~IODeviceLogger();
+
+    void setWriteLogDevice(const boost::shared_ptr<QIODevice> &dev);
+    void setReadLogDevice(const boost::shared_ptr<QIODevice> &dev);
+
+    /* reimp */ bool atEnd() const;
+    /* reimp */ qint64 bytesAvailable() const;
+    /* reimp */ qint64 bytesToWrite() const;
+    /* reimp */ bool canReadLine() const;
+    /* reimp */ void close();
+    /* reimp */ bool isSequential() const;
+    /* reimp */ bool open(OpenMode mode);
+    /* reimp */ qint64 pos() const;
+    /* reimp */ bool reset();
+    /* reimp */ bool seek(qint64 pos);
+    /* reimp */ qint64 size() const;
+    /* reimp */ bool waitForBytesWritten(int msecs);
+    /* reimp */ bool waitForReadyRead(int msecs);
+
+protected:
+    qint64 readData(char *data, qint64 maxSize);
+    qint64 writeData(const char *data, qint64 maxSize);
+    /* reimp */ qint64 readLineData(char *data, qint64 maxSize);
+
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+};
 }
 
 #endif // __KLEOPATRA_IODEVICELOGGER_H__

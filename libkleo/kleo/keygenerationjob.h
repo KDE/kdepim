@@ -37,32 +37,34 @@
 
 #include <QtCore/QByteArray>
 
-namespace GpgME {
-  class Error;
-  class KeyGenerationResult;
+namespace GpgME
+{
+class Error;
+class KeyGenerationResult;
 }
 
+namespace Kleo
+{
 
-namespace Kleo {
+/**
+   @short An abstract base class for asynchronous key generation
 
-  /**
-     @short An abstract base class for asynchronous key generation
+   To use a KeyGenerationJob, first obtain an instance from the
+   CryptoBackend implementation, connect the progress() and result()
+   signals to suitable slots and then start the key generation with
+   a call to start(). This call might fail, in which case the
+   KeyGenerationJob instance will have scheduled it's own
+   destruction with a call to QObject::deleteLater().
 
-     To use a KeyGenerationJob, first obtain an instance from the
-     CryptoBackend implementation, connect the progress() and result()
-     signals to suitable slots and then start the key generation with
-     a call to start(). This call might fail, in which case the
-     KeyGenerationJob instance will have scheduled it's own
-     destruction with a call to QObject::deleteLater().
-
-     After result() is emitted, the KeyGenerationJob will schedule it's own
-     destruction by calling QObject::deleteLater().
-  */
-  class KeyGenerationJob : public Job {
+   After result() is emitted, the KeyGenerationJob will schedule it's own
+   destruction by calling QObject::deleteLater().
+*/
+class KeyGenerationJob : public Job
+{
     Q_OBJECT
-  protected:
-    explicit KeyGenerationJob( QObject * parent );
-  public:
+protected:
+    explicit KeyGenerationJob(QObject *parent);
+public:
     ~KeyGenerationJob();
 
     /**
@@ -70,11 +72,11 @@ namespace Kleo {
        backend-specific string containing the parameters of the key to
        create (length, capabilities, etc).
     */
-    virtual GpgME::Error start( const QString & parameters ) = 0;
+    virtual GpgME::Error start(const QString &parameters) = 0;
 
-  Q_SIGNALS:
-    void result( const GpgME::KeyGenerationResult & result, const QByteArray & pubKeyData, const QString & auditLogAsHtml=QString(), const GpgME::Error & auditLogError=GpgME::Error() );
-  };
+Q_SIGNALS:
+    void result(const GpgME::KeyGenerationResult &result, const QByteArray &pubKeyData, const QString &auditLogAsHtml = QString(), const GpgME::Error &auditLogError = GpgME::Error());
+};
 
 }
 

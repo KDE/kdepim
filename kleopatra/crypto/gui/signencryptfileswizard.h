@@ -34,29 +34,33 @@
 #define __KLEOPATRA_CRYPTO_GUI_SIGNENCRYPTFILESWIZARD_H__
 
 #include <crypto/gui/signencryptwizard.h>
-    
+
 #include <utils/pimpl_ptr.h>
-    
-namespace Kleo {
-namespace Crypto {
-namespace Gui {
 
-    class SignEncryptFilesWizard : public SignEncryptWizard {
-        Q_OBJECT
-    public:
-        explicit SignEncryptFilesWizard( QWidget * parent=0, Qt::WindowFlags f=0 );
-        ~SignEncryptFilesWizard();
+namespace Kleo
+{
+namespace Crypto
+{
+namespace Gui
+{
 
-        /*reimp*/ void onNext( int currentId );
+class SignEncryptFilesWizard : public SignEncryptWizard
+{
+    Q_OBJECT
+public:
+    explicit SignEncryptFilesWizard(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    ~SignEncryptFilesWizard();
 
-    Q_SIGNALS:
-        void operationPrepared();
+    /*reimp*/ void onNext(int currentId);
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void operationSelected() )
-    };
+Q_SIGNALS:
+    void operationPrepared();
+
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void operationSelected())
+};
 
 }
 }

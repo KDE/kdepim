@@ -46,13 +46,14 @@ using namespace Kleo;
 using namespace Kleo::Crypto;
 using namespace boost;
 
-class VerifyChecksumsCommand::Private {
+class VerifyChecksumsCommand::Private
+{
 private:
     friend class ::Kleo::VerifyChecksumsCommand;
-    VerifyChecksumsCommand * const q;
+    VerifyChecksumsCommand *const q;
 public:
-    explicit Private( VerifyChecksumsCommand * qq )
-        : q( qq ),
+    explicit Private(VerifyChecksumsCommand *qq)
+        : q(qq),
           controller()
     {
 
@@ -66,42 +67,46 @@ private:
 };
 
 VerifyChecksumsCommand::VerifyChecksumsCommand()
-    : AssuanCommandMixin<VerifyChecksumsCommand>(), d( new Private( this ) )
+    : AssuanCommandMixin<VerifyChecksumsCommand>(), d(new Private(this))
 {
 
 }
 
 VerifyChecksumsCommand::~VerifyChecksumsCommand() {}
 
-void VerifyChecksumsCommand::Private::checkForErrors() const {
+void VerifyChecksumsCommand::Private::checkForErrors() const
+{
 
-    if ( !q->numFiles() )
-        throw Exception( makeError( GPG_ERR_ASS_NO_INPUT ),
-                         i18n("At least one FILE must be present") );
+    if (!q->numFiles())
+        throw Exception(makeError(GPG_ERR_ASS_NO_INPUT),
+                        i18n("At least one FILE must be present"));
 
 }
 
-int VerifyChecksumsCommand::doStart() {
+int VerifyChecksumsCommand::doStart()
+{
 
     d->checkForErrors();
 
-    d->controller.reset( new VerifyChecksumsController( shared_from_this() ) );
+    d->controller.reset(new VerifyChecksumsController(shared_from_this()));
 
-    d->controller->setFiles( fileNames() );
+    d->controller->setFiles(fileNames());
 
-    QObject::connect( d->controller.get(), SIGNAL(done()),
-                      this, SLOT(done()), Qt::QueuedConnection );
-    QObject::connect( d->controller.get(), SIGNAL(error(int,QString)),
-                      this, SLOT(done(int,QString)), Qt::QueuedConnection );
+    QObject::connect(d->controller.get(), SIGNAL(done()),
+                     this, SLOT(done()), Qt::QueuedConnection);
+    QObject::connect(d->controller.get(), SIGNAL(error(int,QString)),
+                     this, SLOT(done(int,QString)), Qt::QueuedConnection);
 
     d->controller->start();
 
     return 0;
 }
 
-void VerifyChecksumsCommand::doCanceled() {
-    if ( d->controller )
+void VerifyChecksumsCommand::doCanceled()
+{
+    if (d->controller) {
         d->controller->cancel();
+    }
 }
 
 #endif // QT_NO_DIRMODEL

@@ -37,57 +37,83 @@
 
 #include <utils/pimpl_ptr.h>
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class SignEncryptFilesCommand : public Kleo::AssuanCommandMixin<SignEncryptFilesCommand> {
-    public:
-        SignEncryptFilesCommand();
-        virtual ~SignEncryptFilesCommand();
+class SignEncryptFilesCommand : public Kleo::AssuanCommandMixin<SignEncryptFilesCommand>
+{
+public:
+    SignEncryptFilesCommand();
+    virtual ~SignEncryptFilesCommand();
 
-    protected:
-        enum Operation {
-            SignDisallowed = 0,
-            SignAllowed = 1,
-            SignForced  = 2,
+protected:
+    enum Operation {
+        SignDisallowed = 0,
+        SignAllowed = 1,
+        SignForced  = 2,
 
-            SignMask = SignAllowed|SignForced,
+        SignMask = SignAllowed | SignForced,
 
-            EncryptDisallowed = 0,
-            EncryptAllowed = 4,
-            EncryptForced = 8,
+        EncryptDisallowed = 0,
+        EncryptAllowed = 4,
+        EncryptForced = 8,
 
-            EncryptMask = EncryptAllowed|EncryptForced
-        };
-
-    private:
-        virtual unsigned int operation() const { return SignAllowed|EncryptAllowed ; }
-    private:
-        int doStart();
-        void doCanceled();
-    public:
-        static const char * staticName() { return "SIGN_ENCRYPT_FILES"; }
-
-        class Private;
-    private:
-        kdtools::pimpl_ptr<Private> d;
+        EncryptMask = EncryptAllowed | EncryptForced
     };
 
-    class EncryptSignFilesCommand : public Kleo::AssuanCommandMixin<EncryptSignFilesCommand,SignEncryptFilesCommand> {
-    public:
-        static const char * staticName() { return "ENCRYPT_SIGN_FILES"; }
-    };
+private:
+    virtual unsigned int operation() const
+    {
+        return SignAllowed | EncryptAllowed ;
+    }
+private:
+    int doStart();
+    void doCanceled();
+public:
+    static const char *staticName()
+    {
+        return "SIGN_ENCRYPT_FILES";
+    }
 
-    class EncryptFilesCommand : public Kleo::AssuanCommandMixin<EncryptFilesCommand,SignEncryptFilesCommand> {
-    public:
-        static const char * staticName() { return "ENCRYPT_FILES"; }
-        /* reimp */ unsigned int operation() const { return SignAllowed|EncryptForced; }
-    };
+    class Private;
+private:
+    kdtools::pimpl_ptr<Private> d;
+};
 
-    class SignFilesCommand : public Kleo::AssuanCommandMixin<SignFilesCommand,SignEncryptFilesCommand> {
-    public:
-        static const char * staticName() { return "SIGN_FILES"; }
-        /* reimp */ unsigned int operation() const { return SignForced|EncryptAllowed; }
-    };
+class EncryptSignFilesCommand : public Kleo::AssuanCommandMixin<EncryptSignFilesCommand, SignEncryptFilesCommand>
+{
+public:
+    static const char *staticName()
+    {
+        return "ENCRYPT_SIGN_FILES";
+    }
+};
+
+class EncryptFilesCommand : public Kleo::AssuanCommandMixin<EncryptFilesCommand, SignEncryptFilesCommand>
+{
+public:
+    static const char *staticName()
+    {
+        return "ENCRYPT_FILES";
+    }
+    /* reimp */ unsigned int operation() const
+    {
+        return SignAllowed | EncryptForced;
+    }
+};
+
+class SignFilesCommand : public Kleo::AssuanCommandMixin<SignFilesCommand, SignEncryptFilesCommand>
+{
+public:
+    static const char *staticName()
+    {
+        return "SIGN_FILES";
+    }
+    /* reimp */ unsigned int operation() const
+    {
+        return SignForced | EncryptAllowed;
+    }
+};
 
 }
 

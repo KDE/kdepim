@@ -30,7 +30,6 @@
     your version.
 */
 
-
 #ifndef __KLEO_OBTAINKEYSJOB_H__
 #define __KLEO_OBTAINKEYSJOB_H__
 
@@ -40,33 +39,35 @@
 
 #include <gpgme++/context.h>
 
-namespace Kleo {
+namespace Kleo
+{
 
-  /**
-     @short SpecialJob for listing Chiasmus key files.
+/**
+   @short SpecialJob for listing Chiasmus key files.
 
-     In the Chiasmus system, keys are mapped 1:1 to
-     files. Furthermore, we have to definition of the format of those
-     keys, so we cannot display more than the filename anyway. Due to
-     all of these limitations, we don't use KeyListJob here, but roll
-     our own interface.
+   In the Chiasmus system, keys are mapped 1:1 to
+   files. Furthermore, we have to definition of the format of those
+   keys, so we cannot display more than the filename anyway. Due to
+   all of these limitations, we don't use KeyListJob here, but roll
+   our own interface.
 
-     The name of the function is x-obtain-keys. It takes no parameters.
+   The name of the function is x-obtain-keys. It takes no parameters.
 
-     To use, create an ObtainKeysJob instance like this:
-     <code>
-     Kleo::SpecialJob * job =
-        protocol->specialJob("x-obtain-keys", QMap<QString,QVariant>());
-     </code>
+   To use, create an ObtainKeysJob instance like this:
+   <code>
+   Kleo::SpecialJob * job =
+      protocol->specialJob("x-obtain-keys", QMap<QString,QVariant>());
+   </code>
 
-     The resulting QVariant will contain a QStringList containing the
-     absolute filenames of the keys found in the configured key files.
-  */
-  class ObtainKeysJob : public Kleo::SpecialJob {
+   The resulting QVariant will contain a QStringList containing the
+   absolute filenames of the keys found in the configured key files.
+*/
+class ObtainKeysJob : public Kleo::SpecialJob
+{
     Q_OBJECT
-    Q_PROPERTY( QStringList result READ result )
-  public:
-    explicit ObtainKeysJob( QObject * parent=0 );
+    Q_PROPERTY(QStringList result READ result)
+public:
+    explicit ObtainKeysJob(QObject *parent = 0);
     ~ObtainKeysJob();
 
     /*!\reimp SpecialJob */
@@ -75,27 +76,29 @@ namespace Kleo {
     GpgME::Error exec();
 
     /*!\reimp Kleo::Job */
-    void showErrorDialog( QWidget *, const QString & ) const;
+    void showErrorDialog(QWidget *, const QString &) const;
 
     //using SpecialJob::result;
-    QStringList result() const { return mResult; }
+    QStringList result() const
+    {
+        return mResult;
+    }
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void slotCancel();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void slotPerform();
-    void slotPerform( bool async );
+    void slotPerform(bool async);
 
-  private:
+private:
     GpgME::Error mError;
     QStringList mKeyPaths;
     unsigned int mIndex;
     QStringList mResult;
     bool mCanceled;
-  };
+};
 
 }
-
 
 #endif // __KLEO_OBTAINKEYSJOB_H__

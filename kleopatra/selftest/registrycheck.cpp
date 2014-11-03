@@ -52,69 +52,79 @@ using namespace boost;
 static QString gnupg_path = QLatin1String("HKEY_LOCAL_MACHINE\\Software\\GNU\\GnuPG");
 static QString gnupg_key = QLatin1String("gpgProgram");
 
-namespace {
+namespace
+{
 
-    class RegistryCheck : public SelfTestImplementation {
-    public:
-        explicit RegistryCheck()
-            : SelfTestImplementation( i18nc("@title", "Windows Registry") )
-        {
-            runTest();
+class RegistryCheck : public SelfTestImplementation
+{
+public:
+    explicit RegistryCheck()
+        : SelfTestImplementation(i18nc("@title", "Windows Registry"))
+    {
+        runTest();
+    }
+
+    void runTest()
+    {
+
+        m_passed = !QSettings(gnupg_path, QSettings::NativeFormat).contains(gnupg_key);
+
+        if (m_passed) {
+            return;
         }
 
-        void runTest() {
+        m_error = i18n("Obsolete registry entries found");
 
-            m_passed = !QSettings( gnupg_path, QSettings::NativeFormat ).contains( gnupg_key );
+        m_explaination
+            = xi18nc("@info",
+                     "<para>Kleopatra detected an obsolete registry key (<resource>%1\\%2</resource>), "
+                     "added by either a previous <application>Gpg4win</application> version or "
+                     "applications such as <application>WinPT</application> or <application>EnigMail</application>.</para>"
+                     "<para>Keeping the entry might lead to an old GnuPG backend being used.</para>",
+                     gnupg_path, gnupg_key);
+        m_proposedFix = xi18nc("@info",
+                               "<para>Delete registry key <resource>%1\\%2</resource>.</para>",
+                               gnupg_path, gnupg_key);
 
-            if ( m_passed )
-                return;
+    }
 
-            m_error = i18n("Obsolete registry entries found");
+    /* reimp */ bool canFixAutomatically() const
+    {
+        return true;
+    }
 
-            m_explaination
-                = xi18nc( "@info",
-                         "<para>Kleopatra detected an obsolete registry key (<resource>%1\\%2</resource>), "
-                         "added by either a previous <application>Gpg4win</application> version or "
-                         "applications such as <application>WinPT</application> or <application>EnigMail</application>.</para>"
-                         "<para>Keeping the entry might lead to an old GnuPG backend being used.</para>",
-                         gnupg_path, gnupg_key );
-            m_proposedFix = xi18nc( "@info",
-                                   "<para>Delete registry key <resource>%1\\%2</resource>.</para>",
-                                   gnupg_path, gnupg_key );
+    /* reimp */ bool fix()
+    {
 
-        }
-
-        /* reimp */ bool canFixAutomatically() const { return true; }
-
-        /* reimp */ bool fix() {
-
-            QSettings settings( gnupg_path, QSettings::NativeFormat );
-            if ( !settings.contains( gnupg_key ) )
-                return true;
-
-            settings.remove( gnupg_key );
-            settings.sync();
-
-            if ( settings.status() != QSettings::NoError ) {
-                KMessageBox::error(
-                    0,
-                    xi18nc("@info",
-                          "Could not delete the registry key <resource>%1\\%2</resource>",
-                          gnupg_path, gnupg_key ),
-                    i18nc("@title", "Error Deleting Registry Key") );
-                return false;
-            }
-
-            m_passed = true;
-            m_error.clear();
-            m_explaination.clear();
-            m_proposedFix.clear();
+        QSettings settings(gnupg_path, QSettings::NativeFormat);
+        if (!settings.contains(gnupg_key)) {
             return true;
         }
 
-    };
+        settings.remove(gnupg_key);
+        settings.sync();
+
+        if (settings.status() != QSettings::NoError) {
+            KMessageBox::error(
+                0,
+                xi18nc("@info",
+                       "Could not delete the registry key <resource>%1\\%2</resource>",
+                       gnupg_path, gnupg_key),
+                i18nc("@title", "Error Deleting Registry Key"));
+            return false;
+        }
+
+        m_passed = true;
+        m_error.clear();
+        m_explaination.clear();
+        m_proposedFix.clear();
+        return true;
+    }
+
+};
 }
 
-shared_ptr<SelfTest> Kleo::makeGpgProgramRegistryCheckSelfTest() {
-    return shared_ptr<SelfTest>( new RegistryCheck );
+shared_ptr<SelfTest> Kleo::makeGpgProgramRegistryCheckSelfTest()
+{
+    return shared_ptr<SelfTest>(new RegistryCheck);
 }

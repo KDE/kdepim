@@ -39,30 +39,32 @@
 #ifndef QT_NO_PROGRESSDIALOG
 
 #include <QtCore/QString>
-namespace Kleo {
+namespace Kleo
+{
 
-  class Job;
+class Job;
 
-  /**
-     @short A progress dialog for Kleo::Jobs
-  */
-  class KLEO_EXPORT ProgressDialog : public QProgressDialog {
+/**
+   @short A progress dialog for Kleo::Jobs
+*/
+class KLEO_EXPORT ProgressDialog : public QProgressDialog
+{
     Q_OBJECT
-  public:
-    ProgressDialog( Job * job, const QString & baseText,
-                    QWidget * creator=0, Qt::WindowFlags f=0  );
+public:
+    ProgressDialog(Job *job, const QString &baseText,
+                   QWidget *creator = 0, Qt::WindowFlags f = 0);
     ~ProgressDialog();
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /*! reimplementation */
-    void setMinimumDuration( int ms );
+    void setMinimumDuration(int ms);
 
-  private Q_SLOTS:
-    void slotProgress( const QString & what, int current, int total );
+private Q_SLOTS:
+    void slotProgress(const QString &what, int current, int total);
     void slotDone();
-  private:
+private:
     QString mBaseText;
-  };
+};
 
 }
 

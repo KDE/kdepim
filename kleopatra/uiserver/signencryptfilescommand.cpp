@@ -44,14 +44,15 @@ using namespace Kleo;
 using namespace Kleo::Crypto;
 using namespace boost;
 
-class SignEncryptFilesCommand::Private : public QObject {
+class SignEncryptFilesCommand::Private : public QObject
+{
     Q_OBJECT
 private:
     friend class ::Kleo::SignEncryptFilesCommand;
-    SignEncryptFilesCommand * const q;
+    SignEncryptFilesCommand *const q;
 public:
-    explicit Private( SignEncryptFilesCommand * qq )
-        : q( qq ),
+    explicit Private(SignEncryptFilesCommand *qq)
+        : q(qq),
           controller()
     {
 
@@ -62,90 +63,96 @@ private:
 
 private Q_SLOTS:
     void slotDone();
-    void slotError( int, const QString & );
+    void slotError(int, const QString &);
 
 private:
     shared_ptr<SignEncryptFilesController> controller;
 };
 
 SignEncryptFilesCommand::SignEncryptFilesCommand()
-    : AssuanCommandMixin<SignEncryptFilesCommand>(), d( new Private( this ) )
+    : AssuanCommandMixin<SignEncryptFilesCommand>(), d(new Private(this))
 {
 
 }
 
 SignEncryptFilesCommand::~SignEncryptFilesCommand() {}
 
-void SignEncryptFilesCommand::Private::checkForErrors() const {
+void SignEncryptFilesCommand::Private::checkForErrors() const
+{
 
-    if ( !q->numFiles() )
-        throw Exception( makeError( GPG_ERR_ASS_NO_INPUT ),
-                         i18n("At least one FILE must be present") );
+    if (!q->numFiles())
+        throw Exception(makeError(GPG_ERR_ASS_NO_INPUT),
+                        i18n("At least one FILE must be present"));
 
+    if (!q->senders().empty())
+        throw Exception(makeError(GPG_ERR_CONFLICT),
+                        i18n("%1 is a filemanager mode command, "
+                             "connection seems to be in email mode (%2 present)",
+                             QString::fromLatin1(q->name()), QLatin1String("SENDER")));
+    if (!q->recipients().empty())
+        throw Exception(makeError(GPG_ERR_CONFLICT),
+                        i18n("%1 is a filemanager mode command, "
+                             "connection seems to be in email mode (%2 present)",
+                             QString::fromLatin1(q->name()), QLatin1String("RECIPIENT")));
 
-    if ( !q->senders().empty() )
-        throw Exception( makeError( GPG_ERR_CONFLICT ),
-                         i18n( "%1 is a filemanager mode command, "
-                               "connection seems to be in email mode (%2 present)",
-                               QString::fromLatin1( q->name() ), QLatin1String("SENDER") ) );
-    if ( !q->recipients().empty() )
-        throw Exception( makeError( GPG_ERR_CONFLICT ),
-                         i18n( "%1 is a filemanager mode command, "
-                               "connection seems to be in email mode (%2 present)",
-                               QString::fromLatin1( q->name() ), QLatin1String("RECIPIENT") ) );
-
-    if ( !q->inputs().empty() )
-        throw Exception( makeError( GPG_ERR_CONFLICT ),
-                         i18n( "%1 is a filemanager mode command, "
-                               "connection seems to be in email mode (%2 present)",
-                               QString::fromLatin1( q->name() ), QLatin1String("INPUT") ) );
-    if ( !q->outputs().empty() )
-        throw Exception( makeError( GPG_ERR_CONFLICT ),
-                         i18n( "%1 is a filemanager mode command, "
-                               "connection seems to be in email mode (%2 present)",
-                               QString::fromLatin1( q->name() ), QLatin1String("OUTPUT") ) );
-    if ( !q->messages().empty() )
-        throw Exception( makeError( GPG_ERR_CONFLICT ),
-                         i18n( "%1 is a filemanager mode command, "
-                               "connection seems to be in email mode (%2 present)",
-                               QString::fromLatin1( q->name() ), QLatin1String("MESSAGE") ) );
+    if (!q->inputs().empty())
+        throw Exception(makeError(GPG_ERR_CONFLICT),
+                        i18n("%1 is a filemanager mode command, "
+                             "connection seems to be in email mode (%2 present)",
+                             QString::fromLatin1(q->name()), QLatin1String("INPUT")));
+    if (!q->outputs().empty())
+        throw Exception(makeError(GPG_ERR_CONFLICT),
+                        i18n("%1 is a filemanager mode command, "
+                             "connection seems to be in email mode (%2 present)",
+                             QString::fromLatin1(q->name()), QLatin1String("OUTPUT")));
+    if (!q->messages().empty())
+        throw Exception(makeError(GPG_ERR_CONFLICT),
+                        i18n("%1 is a filemanager mode command, "
+                             "connection seems to be in email mode (%2 present)",
+                             QString::fromLatin1(q->name()), QLatin1String("MESSAGE")));
 }
 
-int SignEncryptFilesCommand::doStart() {
+int SignEncryptFilesCommand::doStart()
+{
 
     d->checkForErrors();
 
-    d->controller.reset( new SignEncryptFilesController( shared_from_this() ) );
+    d->controller.reset(new SignEncryptFilesController(shared_from_this()));
 
-    d->controller->setProtocol( checkProtocol( FileManager ) );
+    d->controller->setProtocol(checkProtocol(FileManager));
 
     unsigned int op = operation();
-    if ( hasOption( "archive" ) )
+    if (hasOption("archive")) {
         op |= SignEncryptFilesController::ArchiveForced;
-    else
+    } else {
         op |= SignEncryptFilesController::ArchiveAllowed;
-    d->controller->setOperationMode( op );
-    d->controller->setFiles( fileNames() );
+    }
+    d->controller->setOperationMode(op);
+    d->controller->setFiles(fileNames());
 
-    QObject::connect( d->controller.get(), SIGNAL(done()), d.get(), SLOT(slotDone()), Qt::QueuedConnection );
-    QObject::connect( d->controller.get(), SIGNAL(error(int,QString)), d.get(), SLOT(slotError(int,QString)), Qt::QueuedConnection );
+    QObject::connect(d->controller.get(), SIGNAL(done()), d.get(), SLOT(slotDone()), Qt::QueuedConnection);
+    QObject::connect(d->controller.get(), SIGNAL(error(int,QString)), d.get(), SLOT(slotError(int,QString)), Qt::QueuedConnection);
 
     d->controller->start();
 
     return 0;
 }
 
-void SignEncryptFilesCommand::Private::slotDone() {
+void SignEncryptFilesCommand::Private::slotDone()
+{
     q->done();
 }
 
-void SignEncryptFilesCommand::Private::slotError( int err, const QString & details ) {
-    q->done( err, details );
+void SignEncryptFilesCommand::Private::slotError(int err, const QString &details)
+{
+    q->done(err, details);
 }
 
-void SignEncryptFilesCommand::doCanceled() {
-    if ( d->controller )
+void SignEncryptFilesCommand::doCanceled()
+{
+    if (d->controller) {
         d->controller->cancel();
+    }
 }
 
 #include "signencryptfilescommand.moc"

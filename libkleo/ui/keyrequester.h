@@ -29,7 +29,6 @@
     you do not wish to do so, delete this exception statement from
     your version.
 
-
     Based on kpgpui.h
     Copyright (C) 2001,2002 the KPGP authors
     See file libkdenetwork/AUTHORS.kpgp for details
@@ -57,10 +56,10 @@
 
 #include <vector>
 
-
-namespace GpgME {
-  class Key;
-  class KeyListResult;
+namespace GpgME
+{
+class Key;
+class KeyListResult;
 }
 
 class QStringList;
@@ -68,79 +67,86 @@ class QString;
 class QPushButton;
 class QLabel;
 
-namespace Kleo {
+namespace Kleo
+{
 
-  /// Base class for SigningKeyRequester and EncryptionKeyRequester
-  class KLEO_EXPORT KeyRequester : public QWidget {
+/// Base class for SigningKeyRequester and EncryptionKeyRequester
+class KLEO_EXPORT KeyRequester : public QWidget
+{
     Q_OBJECT
-  public:
-    explicit KeyRequester( unsigned int allowedKeys, bool multipleKeys=false,
-                           QWidget * parent=0 );
+public:
+    explicit KeyRequester(unsigned int allowedKeys, bool multipleKeys = false,
+                          QWidget *parent = 0);
     // Constructor for Qt Designer
-    explicit KeyRequester( QWidget * parent=0 );
+    explicit KeyRequester(QWidget *parent = 0);
     ~KeyRequester();
 
-    const GpgME::Key & key() const;
+    const GpgME::Key &key() const;
     /** Preferred method to set a key for
         non-multi-KeyRequesters. Doesn't start a backend
         KeyListJob.
     */
-    void setKey( const GpgME::Key & key );
+    void setKey(const GpgME::Key &key);
 
-    const std::vector<GpgME::Key> & keys() const;
+    const std::vector<GpgME::Key> &keys() const;
     /** Preferred method to set a key for multi-KeyRequesters. Doesn't
         start a backend KeyListJob.
     */
-    void setKeys( const std::vector<GpgME::Key> & keys );
+    void setKeys(const std::vector<GpgME::Key> &keys);
 
     QString fingerprint() const;
     /** Set the key by fingerprint. Starts a background KeyListJob to
         retrive the complete GpgME::Key object
     */
-    void setFingerprint( const QString & fingerprint );
+    void setFingerprint(const QString &fingerprint);
 
     QStringList fingerprints() const;
     /** Set the keys by fingerprint. Starts a background KeyListJob to
         retrive the complete GpgME::Key objects
     */
-    void setFingerprints( const QStringList & fingerprints );
+    void setFingerprints(const QStringList &fingerprints);
 
+    QPushButton *eraseButton();
+    QPushButton *dialogButton();
 
-    QPushButton * eraseButton();
-    QPushButton * dialogButton();
-
-    void setDialogCaption( const QString & caption );
-    void setDialogMessage( const QString & message );
+    void setDialogCaption(const QString &caption);
+    void setDialogMessage(const QString &message);
 
     bool isMultipleKeysEnabled() const;
-    void setMultipleKeysEnabled( bool enable );
+    void setMultipleKeysEnabled(bool enable);
 
     unsigned int allowedKeys() const;
-    void setAllowedKeys( unsigned int allowed );
+    void setAllowedKeys(unsigned int allowed);
 
-    void setInitialQuery( const QString & s ) { mInitialQuery = s; }
-    const QString & initialQuery() const { return mInitialQuery; }
+    void setInitialQuery(const QString &s)
+    {
+        mInitialQuery = s;
+    }
+    const QString &initialQuery() const
+    {
+        return mInitialQuery;
+    }
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void changed();
 
-  private:
+private:
     void init();
-    void startKeyListJob( const QStringList & fingerprints );
+    void startKeyListJob(const QStringList &fingerprints);
     void updateKeys();
 
-  private Q_SLOTS:
-    void slotNextKey( const GpgME::Key & key );
-    void slotKeyListResult( const GpgME::KeyListResult & result );
+private Q_SLOTS:
+    void slotNextKey(const GpgME::Key &key);
+    void slotKeyListResult(const GpgME::KeyListResult &result);
     void slotDialogButtonClicked();
     void slotEraseButtonClicked();
 
-  private:
-    const CryptoBackend::Protocol * mOpenPGPBackend;
-    const CryptoBackend::Protocol * mSMIMEBackend;
-    QLabel * mLabel;
-    QPushButton * mEraseButton;
-    QPushButton * mDialogButton;
+private:
+    const CryptoBackend::Protocol *mOpenPGPBackend;
+    const CryptoBackend::Protocol *mSMIMEBackend;
+    QLabel *mLabel;
+    QPushButton *mEraseButton;
+    QPushButton *mDialogButton;
     QString mDialogCaption, mDialogMessage, mInitialQuery;
     bool mMulti;
     unsigned int mKeyUsage;
@@ -148,47 +154,47 @@ namespace Kleo {
     std::vector<GpgME::Key> mKeys;
     std::vector<GpgME::Key> mTmpKeys;
 
-  private:
+private:
     class Private;
     Private *const d;
-  protected:
-    virtual void virtual_hook( int, void* );
-  };
+protected:
+    virtual void virtual_hook(int, void *);
+};
 
-
-  class KLEO_EXPORT EncryptionKeyRequester : public KeyRequester {
+class KLEO_EXPORT EncryptionKeyRequester : public KeyRequester
+{
     Q_OBJECT
-  public:
-    enum { OpenPGP = 1, SMIME = 2, AllProtocols = OpenPGP|SMIME };
+public:
+    enum { OpenPGP = 1, SMIME = 2, AllProtocols = OpenPGP | SMIME };
 
     /**
      * Preferred constructor
      */
-    explicit EncryptionKeyRequester( bool multipleKeys=false,
-                                     unsigned int proto=AllProtocols,
-                                     QWidget * parent=0,
-                                     bool onlyTrusted=true,
-                                     bool onlyValid=true );
+    explicit EncryptionKeyRequester(bool multipleKeys = false,
+                                    unsigned int proto = AllProtocols,
+                                    QWidget *parent = 0,
+                                    bool onlyTrusted = true,
+                                    bool onlyValid = true);
     /**
      * Constructor for Qt designer
      */
-    explicit EncryptionKeyRequester( QWidget * parent );
+    explicit EncryptionKeyRequester(QWidget *parent);
     ~EncryptionKeyRequester();
 
-    void setAllowedKeys( unsigned int proto, bool onlyTrusted=true, bool onlyValid=true );
+    void setAllowedKeys(unsigned int proto, bool onlyTrusted = true, bool onlyValid = true);
 
-  private:
+private:
     class Private;
     Private *const d;
-  protected:
-    virtual void virtual_hook( int, void* );
-  };
+protected:
+    virtual void virtual_hook(int, void *);
+};
 
-
-  class KLEO_EXPORT SigningKeyRequester : public KeyRequester {
+class KLEO_EXPORT SigningKeyRequester : public KeyRequester
+{
     Q_OBJECT
-  public:
-    enum { OpenPGP = 1, SMIME = 2, AllProtocols = OpenPGP|SMIME };
+public:
+    enum { OpenPGP = 1, SMIME = 2, AllProtocols = OpenPGP | SMIME };
 
     /**
      * Preferred constructor
@@ -198,14 +204,14 @@ namespace Kleo {
      * @param onlyTrusted only show trusted keys
      * @param onlyValid only show valid keys
      */
-    explicit SigningKeyRequester( bool multipleKeys=false,
-                                  unsigned int proto=AllProtocols,
-                                  QWidget * parent=0,
-                                  bool onlyTrusted=true, bool onlyValid=true );
+    explicit SigningKeyRequester(bool multipleKeys = false,
+                                 unsigned int proto = AllProtocols,
+                                 QWidget *parent = 0,
+                                 bool onlyTrusted = true, bool onlyValid = true);
     /**
      * Constructor for Qt designer
      */
-    explicit SigningKeyRequester( QWidget * parent );
+    explicit SigningKeyRequester(QWidget *parent);
     ~SigningKeyRequester();
 
     /*
@@ -214,14 +220,14 @@ namespace Kleo {
      * @param onlyTrusted only show trusted keys
      * @param onlyValid only show valid keys
      */
-    void setAllowedKeys( unsigned int proto, bool onlyTrusted=true, bool onlyValid=true );
+    void setAllowedKeys(unsigned int proto, bool onlyTrusted = true, bool onlyValid = true);
 
-  private:
+private:
     class Private;
     Private *const d;
-  protected:
-    virtual void virtual_hook( int, void* );
-  };
+protected:
+    virtual void virtual_hook(int, void *);
+};
 
 }
 

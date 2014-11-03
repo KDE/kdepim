@@ -35,24 +35,29 @@
 
 class QString;
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class SelfTest {
-    public:
-        virtual ~SelfTest();
+class SelfTest
+{
+public:
+    virtual ~SelfTest();
 
-        virtual QString name() const = 0;
-        virtual QString shortError() const = 0;
-        virtual QString longError() const = 0;
-        virtual QString proposedFix() const = 0;
+    virtual QString name() const = 0;
+    virtual QString shortError() const = 0;
+    virtual QString longError() const = 0;
+    virtual QString proposedFix() const = 0;
 
-        virtual bool passed() const = 0;
-        virtual bool skipped() const = 0;
-        virtual bool canFixAutomatically() const;
-        virtual bool fix();
+    virtual bool passed() const = 0;
+    virtual bool skipped() const = 0;
+    virtual bool canFixAutomatically() const;
+    virtual bool fix();
 
-        bool failed() const { return !skipped() && !passed() ; }
-    };
+    bool failed() const
+    {
+        return !skipped() && !passed() ;
+    }
+};
 
 }
 

@@ -24,21 +24,23 @@
 
 #include <libkleopatraclient/core/command.h>
 
-namespace KleopatraClientCopy {
+namespace KleopatraClientCopy
+{
 
-    class KLEOPATRACLIENTCORE_EXPORT SignEncryptFilesCommand : public Command {
-        Q_OBJECT
-    public:
-        explicit SignEncryptFilesCommand( QObject * parent=0 );
-        ~SignEncryptFilesCommand();
+class KLEOPATRACLIENTCORE_EXPORT SignEncryptFilesCommand : public Command
+{
+    Q_OBJECT
+public:
+    explicit SignEncryptFilesCommand(QObject *parent = 0);
+    ~SignEncryptFilesCommand();
 
-        // Inputs
+    // Inputs
 
-        using Command::setFilePaths;
-        using Command::filePaths;
+    using Command::setFilePaths;
+    using Command::filePaths;
 
-        // No Outputs
-    };
+    // No Outputs
+};
 
 }
 

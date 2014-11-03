@@ -46,97 +46,103 @@ class QModelIndex;
 template <typename T> class QList;
 class QAbstractItemView;
 
-namespace GpgME {
-    class Key;
+namespace GpgME
+{
+class Key;
 }
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class KeyListController;
-    class AbstractKeyListSortFilterProxyModel;
+class KeyListController;
+class AbstractKeyListSortFilterProxyModel;
 
-    class Command : public QObject, public ExecutionContext {
-        Q_OBJECT
-    public:
-        explicit Command( KeyListController * parent );
-        explicit Command( QAbstractItemView * view, KeyListController * parent );
-        explicit Command( const GpgME::Key & key );
-        explicit Command( const std::vector<GpgME::Key> & keys );
-        ~Command();
+class Command : public QObject, public ExecutionContext
+{
+    Q_OBJECT
+public:
+    explicit Command(KeyListController *parent);
+    explicit Command(QAbstractItemView *view, KeyListController *parent);
+    explicit Command(const GpgME::Key &key);
+    explicit Command(const std::vector<GpgME::Key> &keys);
+    ~Command();
 
-        enum Restriction {
-            NoRestriction      = 0,
-            NeedSelection      = 1,
-            OnlyOneKey         = 2,
-            NeedSecretKey      = 4,
-            MustNotBeSecretKey = 8,
-            MustBeOpenPGP      = 16,
-            MustBeCMS          = 32,
+    enum Restriction {
+        NoRestriction      = 0,
+        NeedSelection      = 1,
+        OnlyOneKey         = 2,
+        NeedSecretKey      = 4,
+        MustNotBeSecretKey = 8,
+        MustBeOpenPGP      = 16,
+        MustBeCMS          = 32,
 
-            // esoteric:
-            MayOnlyBeSecretKeyIfOwnerTrustIsNotYetUltimate = 64, // for set-owner-trust
+        // esoteric:
+        MayOnlyBeSecretKeyIfOwnerTrustIsNotYetUltimate = 64, // for set-owner-trust
 
-            AnyCardHasNullPin   = 128,
-            AnyCardCanLearnKeys = 256,
+        AnyCardHasNullPin   = 128,
+        AnyCardCanLearnKeys = 256,
 
-            MustBeRoot          = 512,
-            MustBeTrustedRoot   = 1024|MustBeRoot,
-            MustBeUntrustedRoot = 2048|MustBeRoot,
+        MustBeRoot          = 512,
+        MustBeTrustedRoot   = 1024 | MustBeRoot,
+        MustBeUntrustedRoot = 2048 | MustBeRoot,
 
-            _AllRestrictions_Helper,
-            AllRestrictions = 2*(_AllRestrictions_Helper-1) - 1
-        };
-
-        Q_DECLARE_FLAGS( Restrictions, Restriction )
-
-        static Restrictions restrictions() { return NoRestriction; }
-
-        void setParentWidget( QWidget* widget );
-        void setParentWId( WId wid );
-        void setView( QAbstractItemView * view );
-        void setIndex( const QModelIndex & idx );
-        void setIndexes( const QList<QModelIndex> & idx );
-        void setKey( const GpgME::Key & key );
-        void setKeys( const std::vector<GpgME::Key> & keys );
-
-        void setAutoDelete( bool on );
-        bool autoDelete() const;
-
-        void setWarnWhenRunningAtShutdown( bool warn );
-        bool warnWhenRunningAtShutdown() const;
-
-    public Q_SLOTS:
-        void start();
-        void cancel();
-
-    Q_SIGNALS:
-        void info( const QString & message, int timeout = 0 );
-        void progress( const QString & message, int current, int total );
-        void finished();
-        void canceled();
-
-    private:
-        virtual void doStart() = 0;
-        virtual void doCancel() = 0;
-
-    private:
-        /* reimp */ void applyWindowID( QWidget * wid ) const;
-
-    protected:
-        void addTemporaryView( const QString & title, AbstractKeyListSortFilterProxyModel * proxy=0, const QString & tabToolTip=QString() );
-
-    protected:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-    protected:
-        explicit Command( Private * pp );
-        explicit Command( QAbstractItemView * view, Private * pp );
-        explicit Command( const std::vector<GpgME::Key> & keys, Private * pp );
-        explicit Command( const GpgME::Key & key, Private * pp );
+        _AllRestrictions_Helper,
+        AllRestrictions = 2 * (_AllRestrictions_Helper - 1) - 1
     };
 
+    Q_DECLARE_FLAGS(Restrictions, Restriction)
+
+    static Restrictions restrictions()
+    {
+        return NoRestriction;
+    }
+
+    void setParentWidget(QWidget *widget);
+    void setParentWId(WId wid);
+    void setView(QAbstractItemView *view);
+    void setIndex(const QModelIndex &idx);
+    void setIndexes(const QList<QModelIndex> &idx);
+    void setKey(const GpgME::Key &key);
+    void setKeys(const std::vector<GpgME::Key> &keys);
+
+    void setAutoDelete(bool on);
+    bool autoDelete() const;
+
+    void setWarnWhenRunningAtShutdown(bool warn);
+    bool warnWhenRunningAtShutdown() const;
+
+public Q_SLOTS:
+    void start();
+    void cancel();
+
+Q_SIGNALS:
+    void info(const QString &message, int timeout = 0);
+    void progress(const QString &message, int current, int total);
+    void finished();
+    void canceled();
+
+private:
+    virtual void doStart() = 0;
+    virtual void doCancel() = 0;
+
+private:
+    /* reimp */ void applyWindowID(QWidget *wid) const;
+
+protected:
+    void addTemporaryView(const QString &title, AbstractKeyListSortFilterProxyModel *proxy = 0, const QString &tabToolTip = QString());
+
+protected:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+protected:
+    explicit Command(Private *pp);
+    explicit Command(QAbstractItemView *view, Private *pp);
+    explicit Command(const std::vector<GpgME::Key> &keys, Private *pp);
+    explicit Command(const GpgME::Key &key, Private *pp);
+};
+
 }
 
-Q_DECLARE_OPERATORS_FOR_FLAGS( Kleo::Command::Restrictions )
+Q_DECLARE_OPERATORS_FOR_FLAGS(Kleo::Command::Restrictions)
 
 #endif /* __KLEOPATRA_COMMANDS_COMMAND_H__ */

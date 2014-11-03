@@ -54,11 +54,15 @@ using namespace Kleo::Commands;
 using namespace Kleo::Crypto;
 using namespace boost;
 
-class ChecksumCreateFilesCommand::Private : public Command::Private {
+class ChecksumCreateFilesCommand::Private : public Command::Private
+{
     friend class ::Kleo::Commands::ChecksumCreateFilesCommand;
-    ChecksumCreateFilesCommand * q_func() const { return static_cast<ChecksumCreateFilesCommand*>( q ); }
+    ChecksumCreateFilesCommand *q_func() const
+    {
+        return static_cast<ChecksumCreateFilesCommand *>(q);
+    }
 public:
-    explicit Private( ChecksumCreateFilesCommand * qq, KeyListController * c );
+    explicit Private(ChecksumCreateFilesCommand *qq, KeyListController *c);
     ~Private();
 
     QStringList selectFiles() const;
@@ -66,10 +70,12 @@ public:
     void init();
 
 private:
-    void slotControllerDone() {
+    void slotControllerDone()
+    {
         finished();
     }
-    void slotControllerError( int, const QString & ) {
+    void slotControllerError(int, const QString &)
+    {
         finished();
     }
 
@@ -79,91 +85,108 @@ private:
     CreateChecksumsController controller;
 };
 
-
-ChecksumCreateFilesCommand::Private * ChecksumCreateFilesCommand::d_func() { return static_cast<Private*>( d.get() ); }
-const ChecksumCreateFilesCommand::Private * ChecksumCreateFilesCommand::d_func() const { return static_cast<const Private*>( d.get() ); }
+ChecksumCreateFilesCommand::Private *ChecksumCreateFilesCommand::d_func()
+{
+    return static_cast<Private *>(d.get());
+}
+const ChecksumCreateFilesCommand::Private *ChecksumCreateFilesCommand::d_func() const
+{
+    return static_cast<const Private *>(d.get());
+}
 
 #define d d_func()
 #define q q_func()
 
-ChecksumCreateFilesCommand::Private::Private( ChecksumCreateFilesCommand * qq, KeyListController * c )
-    : Command::Private( qq, c ),
+ChecksumCreateFilesCommand::Private::Private(ChecksumCreateFilesCommand *qq, KeyListController *c)
+    : Command::Private(qq, c),
       files(),
-      shared_qq( qq, kdtools::nodelete() ),
+      shared_qq(qq, kdtools::nodelete()),
       controller()
 {
-    controller.setAllowAddition( true );
+    controller.setAllowAddition(true);
 }
 
-ChecksumCreateFilesCommand::Private::~Private() { qDebug(); }
+ChecksumCreateFilesCommand::Private::~Private()
+{
+    qDebug();
+}
 
-ChecksumCreateFilesCommand::ChecksumCreateFilesCommand( KeyListController * c )
-    : Command( new Private( this, c ) )
+ChecksumCreateFilesCommand::ChecksumCreateFilesCommand(KeyListController *c)
+    : Command(new Private(this, c))
 {
     d->init();
 }
 
-ChecksumCreateFilesCommand::ChecksumCreateFilesCommand( QAbstractItemView * v, KeyListController * c )
-    : Command( v, new Private( this, c ) )
+ChecksumCreateFilesCommand::ChecksumCreateFilesCommand(QAbstractItemView *v, KeyListController *c)
+    : Command(v, new Private(this, c))
 {
     d->init();
 }
 
-ChecksumCreateFilesCommand::ChecksumCreateFilesCommand( const QStringList & files, KeyListController * c )
-    : Command( new Private( this, c ) )
-{
-    d->init();
-    d->files = files;
-}
-
-ChecksumCreateFilesCommand::ChecksumCreateFilesCommand( const QStringList & files, QAbstractItemView * v, KeyListController * c )
-    : Command( v, new Private( this, c ) )
+ChecksumCreateFilesCommand::ChecksumCreateFilesCommand(const QStringList &files, KeyListController *c)
+    : Command(new Private(this, c))
 {
     d->init();
     d->files = files;
 }
 
-void ChecksumCreateFilesCommand::Private::init() {
-    controller.setExecutionContext( shared_qq );
-    connect( &controller, SIGNAL(done()), q, SLOT(slotControllerDone()) );
-    connect( &controller, SIGNAL(error(int,QString)), q, SLOT(slotControllerError(int,QString)) );
-}
-
-ChecksumCreateFilesCommand::~ChecksumCreateFilesCommand() { qDebug(); }
-
-void ChecksumCreateFilesCommand::setFiles( const QStringList & files ) {
+ChecksumCreateFilesCommand::ChecksumCreateFilesCommand(const QStringList &files, QAbstractItemView *v, KeyListController *c)
+    : Command(v, new Private(this, c))
+{
+    d->init();
     d->files = files;
 }
 
-void ChecksumCreateFilesCommand::doStart() {
+void ChecksumCreateFilesCommand::Private::init()
+{
+    controller.setExecutionContext(shared_qq);
+    connect(&controller, SIGNAL(done()), q, SLOT(slotControllerDone()));
+    connect(&controller, SIGNAL(error(int,QString)), q, SLOT(slotControllerError(int,QString)));
+}
+
+ChecksumCreateFilesCommand::~ChecksumCreateFilesCommand()
+{
+    qDebug();
+}
+
+void ChecksumCreateFilesCommand::setFiles(const QStringList &files)
+{
+    d->files = files;
+}
+
+void ChecksumCreateFilesCommand::doStart()
+{
 
     try {
 
-        if ( d->files.empty() )
+        if (d->files.empty()) {
             d->files = d->selectFiles();
-        if ( d->files.empty() ) {
+        }
+        if (d->files.empty()) {
             d->finished();
             return;
         }
 
-        d->controller.setFiles( d->files );
+        d->controller.setFiles(d->files);
         d->controller.start();
 
-    } catch ( const std::exception & e ) {
-        d->information( i18n("An error occurred: %1",
-                             QString::fromLocal8Bit( e.what() ) ),
-                        i18n("Create Checksum Files Error") );
+    } catch (const std::exception &e) {
+        d->information(i18n("An error occurred: %1",
+                            QString::fromLocal8Bit(e.what())),
+                       i18n("Create Checksum Files Error"));
         d->finished();
     }
 }
 
-void ChecksumCreateFilesCommand::doCancel() {
+void ChecksumCreateFilesCommand::doCancel()
+{
     qDebug();
     d->controller.cancel();
 }
 
-QStringList ChecksumCreateFilesCommand::Private::selectFiles() const {
-    return FileDialog::getOpenFileNames( parentWidgetOrView(), i18n( "Select One or More Files to Create Checksums For" ), QLatin1String("chk") );
+QStringList ChecksumCreateFilesCommand::Private::selectFiles() const
+{
+    return FileDialog::getOpenFileNames(parentWidgetOrView(), i18n("Select One or More Files to Create Checksums For"), QLatin1String("chk"));
 }
 
 #undef d

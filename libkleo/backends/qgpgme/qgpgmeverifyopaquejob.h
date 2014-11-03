@@ -39,39 +39,40 @@
 
 #include <gpgme++/verificationresult.h>
 
-namespace Kleo {
+namespace Kleo
+{
 
-  class QGpgMEVerifyOpaqueJob
+class QGpgMEVerifyOpaqueJob
 #ifdef Q_MOC_RUN
     : public VerifyOpaqueJob
 #else
     : public _detail::ThreadedJobMixin<VerifyOpaqueJob, boost::tuple<GpgME::VerificationResult, QByteArray, QString, GpgME::Error> >
 #endif
-  {
+{
     Q_OBJECT
 #ifdef Q_MOC_RUN
-  public Q_SLOTS:
+public Q_SLOTS:
     void slotFinished();
 #endif
-  public:
-    explicit QGpgMEVerifyOpaqueJob( GpgME::Context * context );
+public:
+    explicit QGpgMEVerifyOpaqueJob(GpgME::Context *context);
     ~QGpgMEVerifyOpaqueJob();
 
     /*! \reimp from VerifyOpaqueJob */
-    GpgME::Error start( const QByteArray & signedData );
+    GpgME::Error start(const QByteArray &signedData);
 
     /*! \reimp from VerifyOpaqueJob */
-    void start( const boost::shared_ptr<QIODevice> & signedData, const boost::shared_ptr<QIODevice> & plainText );
+    void start(const boost::shared_ptr<QIODevice> &signedData, const boost::shared_ptr<QIODevice> &plainText);
 
     /*! \reimp form VerifyOpaqueJob */
-    GpgME::VerificationResult exec( const QByteArray & signedData, QByteArray & plainData );
+    GpgME::VerificationResult exec(const QByteArray &signedData, QByteArray &plainData);
 
     /*! \reimp from ThreadedJobMixin */
-    void resultHook( const result_type & r );
+    void resultHook(const result_type &r);
 
-  private:
+private:
     GpgME::VerificationResult mResult;
-  };
+};
 
 }
 

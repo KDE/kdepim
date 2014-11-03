@@ -37,22 +37,27 @@
 
 #include <utils/pimpl_ptr.h>
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class EncryptCommand : public Kleo::AssuanCommandMixin<EncryptCommand> {
-    public:
-        EncryptCommand();
-        virtual ~EncryptCommand();
-    private:
-        int doStart();
-        void doCanceled();
-    public:
-        static const char * staticName() { return "ENCRYPT"; }
+class EncryptCommand : public Kleo::AssuanCommandMixin<EncryptCommand>
+{
+public:
+    EncryptCommand();
+    virtual ~EncryptCommand();
+private:
+    int doStart();
+    void doCanceled();
+public:
+    static const char *staticName()
+    {
+        return "ENCRYPT";
+    }
 
-        class Private;
-    private:
-        kdtools::pimpl_ptr<Private> d;
-    };
+    class Private;
+private:
+    kdtools::pimpl_ptr<Private> d;
+};
 
 }
 

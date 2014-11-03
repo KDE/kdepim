@@ -39,40 +39,42 @@
 
 #include <QDir>
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class KLEO_EXPORT FileNameRequester : public QWidget {
-        Q_OBJECT
-        Q_PROPERTY( QString fileName READ fileName WRITE setFileName )
-        Q_PROPERTY( bool existingOnly READ existingOnly WRITE setExistingOnly )
-    public:
-        explicit FileNameRequester( QWidget * parent=0 );
-        explicit FileNameRequester( QDir::Filters filter, QWidget * parent=0 );
-        ~FileNameRequester();
+class KLEO_EXPORT FileNameRequester : public QWidget
+{
+    Q_OBJECT
+    Q_PROPERTY(QString fileName READ fileName WRITE setFileName)
+    Q_PROPERTY(bool existingOnly READ existingOnly WRITE setExistingOnly)
+public:
+    explicit FileNameRequester(QWidget *parent = 0);
+    explicit FileNameRequester(QDir::Filters filter, QWidget *parent = 0);
+    ~FileNameRequester();
 
-        void setFileName( const QString & name );
-        QString fileName() const;
+    void setFileName(const QString &name);
+    QString fileName() const;
 
-        void setExistingOnly( bool on );
-        bool existingOnly() const;
+    void setExistingOnly(bool on);
+    bool existingOnly() const;
 
-        void setFilter( QDir::Filters f );
-        QDir::Filters filter() const;
+    void setFilter(QDir::Filters f);
+    QDir::Filters filter() const;
 
-        void setNameFilter( const QString & nameFilter );
-        QString nameFilter() const;
+    void setNameFilter(const QString &nameFilter);
+    QString nameFilter() const;
 
-    Q_SIGNALS:
-        void fileNameChanged( const QString & filename );
+Q_SIGNALS:
+    void fileNameChanged(const QString &filename);
 
-    private:
-        virtual QString requestFileName();
+private:
+    virtual QString requestFileName();
 
-    private:
-        class Private;
-        Private * d;
-        Q_PRIVATE_SLOT( d, void slotButtonClicked() )
-    };
+private:
+    class Private;
+    Private *d;
+    Q_PRIVATE_SLOT(d, void slotButtonClicked())
+};
 
 }
 

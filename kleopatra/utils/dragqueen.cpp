@@ -30,11 +30,9 @@
     your version.
 */
 
-
 #include <config-kleopatra.h>
 
 #include "dragqueen.h"
-
 
 #include <QDrag>
 #include <QMouseEvent>
@@ -48,154 +46,177 @@
 
 using namespace Kleo;
 
-namespace {
-    class MimeDataProxy : public QMimeData {
-        Q_OBJECT
-    public:
-        explicit MimeDataProxy( QMimeData * source )
-            : QMimeData(), m_source( source )
-        {
+namespace
+{
+class MimeDataProxy : public QMimeData
+{
+    Q_OBJECT
+public:
+    explicit MimeDataProxy(QMimeData *source)
+        : QMimeData(), m_source(source)
+    {
 
+    }
+
+    /* reimp */ QStringList formats() const
+    {
+        if (m_source) {
+            return m_source->formats();
+        } else {
+            return QStringList();
         }
+    }
 
-        /* reimp */ QStringList formats() const {
-            if ( m_source )
-                return m_source->formats();
-            else
-                return QStringList();
+    /* reimp */ bool hasFormat(const QString &format) const
+    {
+        return m_source && m_source->hasFormat(format);
+    }
+
+protected:
+    /* reimp */ QVariant retrieveData(const QString &format, QVariant::Type type) const
+    {
+        if (!m_source) {
+            return QVariant();
         }
+        // Doesn't work, is protected:
+        // return m_source->retrieveData( format, type );
 
-        /* reimp */ bool hasFormat( const QString & format ) const {
-            return m_source && m_source->hasFormat( format );
-        }
-
-    protected:
-        /* reimp */ QVariant retrieveData( const QString & format, QVariant::Type type ) const {
-            if ( !m_source )
-                return QVariant();
-            // Doesn't work, is protected:
-            // return m_source->retrieveData( format, type );
-
-            switch ( type ) {
-            case QVariant::String:
-                if ( format == QLatin1String( "text/plain" ) )
-                    return m_source->text();
-                if ( format == QLatin1String( "text/html" ) )
-                    return m_source->html();
-                break;
-            case QVariant::Color:
-                if ( format == QLatin1String( "application/x-color" ) )
-                    return m_source->colorData();
-                break;
-            case QVariant::Image:
-                if ( format == QLatin1String( "application/x-qt-image" ) )
-                    return m_source->imageData();
-                break;
-            case QVariant::List:
-            case QVariant::Url:
-                if ( format == QLatin1String( "text/uri-list" ) ) {
-                    const QList<QUrl> urls = m_source->urls();
-                    if ( urls.size() == 1 )
-                        return urls.front();
-                    QList<QVariant> result;
-                    std::copy( urls.begin(), urls.end(),
-                               std::back_inserter( result ) );
-                    return result;
-                }
-                break;
-            default:
-                break;
+        switch (type) {
+        case QVariant::String:
+            if (format == QLatin1String("text/plain")) {
+                return m_source->text();
             }
-
-            QVariant v = m_source->data( format );
-            v.convert( type );
-            return v;
+            if (format == QLatin1String("text/html")) {
+                return m_source->html();
+            }
+            break;
+        case QVariant::Color:
+            if (format == QLatin1String("application/x-color")) {
+                return m_source->colorData();
+            }
+            break;
+        case QVariant::Image:
+            if (format == QLatin1String("application/x-qt-image")) {
+                return m_source->imageData();
+            }
+            break;
+        case QVariant::List:
+        case QVariant::Url:
+            if (format == QLatin1String("text/uri-list")) {
+                const QList<QUrl> urls = m_source->urls();
+                if (urls.size() == 1) {
+                    return urls.front();
+                }
+                QList<QVariant> result;
+                std::copy(urls.begin(), urls.end(),
+                          std::back_inserter(result));
+                return result;
+            }
+            break;
+        default:
+            break;
         }
-    private:
-        QPointer<QMimeData> m_source;
-    };
+
+        QVariant v = m_source->data(format);
+        v.convert(type);
+        return v;
+    }
+private:
+    QPointer<QMimeData> m_source;
+};
 }
 
-
-DragQueen::DragQueen( QWidget * p, Qt::WindowFlags f )
-    : QLabel( p, f ),
+DragQueen::DragQueen(QWidget *p, Qt::WindowFlags f)
+    : QLabel(p, f),
       m_data(),
       m_dragStartPosition()
 {
 
 }
 
-DragQueen::DragQueen( const QString & t, QWidget * p, Qt::WindowFlags f )
-    : QLabel( t, p, f ),
+DragQueen::DragQueen(const QString &t, QWidget *p, Qt::WindowFlags f)
+    : QLabel(t, p, f),
       m_data(),
       m_dragStartPosition()
 {
 
 }
 
-DragQueen::~DragQueen() {
+DragQueen::~DragQueen()
+{
     delete m_data;
 }
 
-void DragQueen::setUrl( const QString & url ) {
-    QMimeData * data = new QMimeData;
+void DragQueen::setUrl(const QString &url)
+{
+    QMimeData *data = new QMimeData;
     QList<QUrl> urls;
-    urls.push_back( QUrl( url ) );
-    data->setUrls( urls );
-    setMimeData( data );
+    urls.push_back(QUrl(url));
+    data->setUrls(urls);
+    setMimeData(data);
 }
 
-QString DragQueen::url() const {
-    if ( !m_data || !m_data->hasUrls() )
+QString DragQueen::url() const
+{
+    if (!m_data || !m_data->hasUrls()) {
         return QString();
+    }
     const QList<QUrl> urls = m_data->urls();
-    if ( urls.empty() )
+    if (urls.empty()) {
         return QString();
+    }
     return urls.front().toString();
 }
 
-void DragQueen::setMimeData( QMimeData * data ) {
-    if ( data == m_data )
+void DragQueen::setMimeData(QMimeData *data)
+{
+    if (data == m_data) {
         return;
+    }
     delete m_data;
     m_data = data;
 }
 
-QMimeData * DragQueen::mimeData() const {
+QMimeData *DragQueen::mimeData() const
+{
     return m_data;
 }
 
-void DragQueen::mousePressEvent( QMouseEvent * e ) {
+void DragQueen::mousePressEvent(QMouseEvent *e)
+{
 #ifndef QT_NO_DRAGANDDROP
-    if ( m_data && e->button() == Qt::LeftButton )
+    if (m_data && e->button() == Qt::LeftButton) {
         m_dragStartPosition = e->pos();
+    }
 #endif
-    QLabel::mousePressEvent( e );
+    QLabel::mousePressEvent(e);
 }
 
-static QPoint calculate_hot_spot( const QPoint & mouse, const QSize & pix, const QLabel * label ) {
+static QPoint calculate_hot_spot(const QPoint &mouse, const QSize &pix, const QLabel *label)
+{
     const Qt::Alignment align = label->alignment();
     const int margin = label->margin();
-    const QRect cr = label->contentsRect().adjusted( margin, margin, -margin, -margin );
-    const QRect rect = QStyle::alignedRect( QApplication::layoutDirection(), align, pix, cr );
+    const QRect cr = label->contentsRect().adjusted(margin, margin, -margin, -margin);
+    const QRect rect = QStyle::alignedRect(QApplication::layoutDirection(), align, pix, cr);
     return mouse - rect.topLeft();
 }
 
-void DragQueen::mouseMoveEvent( QMouseEvent * e ) {
+void DragQueen::mouseMoveEvent(QMouseEvent *e)
+{
 #ifndef QT_NO_DRAGANDDROP
-    if ( m_data &&
-         (e->buttons() & Qt::LeftButton) &&
-         ( m_dragStartPosition - e->pos() ).manhattanLength() > QApplication::startDragDistance() ) {
-        QDrag * drag = new QDrag( this );
-        if ( const QPixmap * const pix = pixmap() ) {
-            drag->setPixmap( *pix );
-            drag->setHotSpot( calculate_hot_spot( e->pos(), pix->size(), this ) );
+    if (m_data &&
+            (e->buttons() & Qt::LeftButton) &&
+            (m_dragStartPosition - e->pos()).manhattanLength() > QApplication::startDragDistance()) {
+        QDrag *drag = new QDrag(this);
+        if (const QPixmap *const pix = pixmap()) {
+            drag->setPixmap(*pix);
+            drag->setHotSpot(calculate_hot_spot(e->pos(), pix->size(), this));
         }
-        drag->setMimeData( new MimeDataProxy( m_data ) );
+        drag->setMimeData(new MimeDataProxy(m_data));
         drag->exec();
     } else {
 #endif
-        QLabel::mouseMoveEvent( e );
+        QLabel::mouseMoveEvent(e);
 #ifndef QT_NO_DRAGANDDROP
     }
 #endif

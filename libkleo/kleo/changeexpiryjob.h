@@ -35,33 +35,36 @@
 
 #include "job.h"
 
-namespace GpgME {
-    class Error;
-    class Key;
+namespace GpgME
+{
+class Error;
+class Key;
 }
 
 class QDateTime;
 
-namespace Kleo {
+namespace Kleo
+{
 
-  /**
-     @short An abstract base class to change expiry asynchronously
+/**
+   @short An abstract base class to change expiry asynchronously
 
-     To use a ChangeExpiryJob, first obtain an instance from the
-     CryptoBackend implementation, connect the progress() and result()
-     signals to suitable slots and then start the job with a call
-     to start(). This call might fail, in which case the ChangeExpiryJob
-     instance will have scheduled it's own destruction with a call to
-     QObject::deleteLater().
+   To use a ChangeExpiryJob, first obtain an instance from the
+   CryptoBackend implementation, connect the progress() and result()
+   signals to suitable slots and then start the job with a call
+   to start(). This call might fail, in which case the ChangeExpiryJob
+   instance will have scheduled it's own destruction with a call to
+   QObject::deleteLater().
 
-     After result() is emitted, the ChangeExpiryJob will schedule it's own
-     destruction by calling QObject::deleteLater().
-  */
-  class KLEO_EXPORT ChangeExpiryJob : public Job {
+   After result() is emitted, the ChangeExpiryJob will schedule it's own
+   destruction by calling QObject::deleteLater().
+*/
+class KLEO_EXPORT ChangeExpiryJob : public Job
+{
     Q_OBJECT
-  protected:
-    explicit ChangeExpiryJob( QObject * parent );
-  public:
+protected:
+    explicit ChangeExpiryJob(QObject *parent);
+public:
     ~ChangeExpiryJob();
 
     /**
@@ -69,11 +72,11 @@ namespace Kleo {
        the expiry of. \a expiry is the new expiry time. If \a expiry
        is not valid, \a key is set to never expire.
     */
-    virtual GpgME::Error start( const GpgME::Key & key, const QDateTime & expiry ) = 0;
+    virtual GpgME::Error start(const GpgME::Key &key, const QDateTime &expiry) = 0;
 
-  Q_SIGNALS:
-    void result( const GpgME::Error & result, const QString & auditLogAsHtml=QString(), const GpgME::Error & auditLogError=GpgME::Error() );
-  };
+Q_SIGNALS:
+    void result(const GpgME::Error &result, const QString &auditLogAsHtml = QString(), const GpgME::Error &auditLogError = GpgME::Error());
+};
 
 }
 

@@ -37,20 +37,29 @@
 
 #include <utils/pimpl_ptr.h>
 
-namespace Kleo {
-    class VerifyCommand : public AssuanCommandMixin<VerifyCommand,DecryptVerifyCommandEMailBase> {
-    public:
-        //VerifyCommand();
-        //~VerifyCommand();
+namespace Kleo
+{
+class VerifyCommand : public AssuanCommandMixin<VerifyCommand, DecryptVerifyCommandEMailBase>
+{
+public:
+    //VerifyCommand();
+    //~VerifyCommand();
 
-    private:
-        /* reimp */ DecryptVerifyOperation operation() const {
-            return Verify;
-        }
-        /* reimp */ Mode mode() const { return EMail; }
-    public:
-        static const char * staticName() { return "VERIFY"; }
-    };
+private:
+    /* reimp */ DecryptVerifyOperation operation() const
+    {
+        return Verify;
+    }
+    /* reimp */ Mode mode() const
+    {
+        return EMail;
+    }
+public:
+    static const char *staticName()
+    {
+        return "VERIFY";
+    }
+};
 
 }
 

@@ -34,7 +34,6 @@
 
 #include "utils/types.h"
 
-
 #include <QWidget>
 #include <QVector>
 
@@ -48,67 +47,73 @@
 using namespace Kleo;
 using namespace boost;
 
-class ExecutionContextUser::Private {
+class ExecutionContextUser::Private
+{
     friend class ::Kleo::ExecutionContextUser;
-    ExecutionContextUser * const q;
+    ExecutionContextUser *const q;
 public:
-    explicit Private( const shared_ptr<const ExecutionContext> & ctx, ExecutionContextUser * qq )
-        : q( qq ),
-          executionContext( ctx ),
+    explicit Private(const shared_ptr<const ExecutionContext> &ctx, ExecutionContextUser *qq)
+        : q(qq),
+          executionContext(ctx),
           idApplied()
     {
 
     }
 
 private:
-    void applyWindowID( QWidget * w );
+    void applyWindowID(QWidget *w);
 
 private:
     weak_ptr<const ExecutionContext> executionContext;
-    QVector<QWidget*> idApplied;
+    QVector<QWidget *> idApplied;
 };
 
-void ExecutionContextUser::applyWindowID( QWidget * wid ) {
-    if ( d->idApplied.contains( wid ) )
+void ExecutionContextUser::applyWindowID(QWidget *wid)
+{
+    if (d->idApplied.contains(wid)) {
         return;
-    if ( const shared_ptr<const ExecutionContext> ctx = d->executionContext.lock() ) {
-        ctx->applyWindowID( wid );
-        d->idApplied.append( wid );
+    }
+    if (const shared_ptr<const ExecutionContext> ctx = d->executionContext.lock()) {
+        ctx->applyWindowID(wid);
+        d->idApplied.append(wid);
     }
 }
 
 ExecutionContextUser::ExecutionContextUser()
-    : d( new Private( shared_ptr<const ExecutionContext>(), this ) )
+    : d(new Private(shared_ptr<const ExecutionContext>(), this))
 {
 
 }
 
-ExecutionContextUser::ExecutionContextUser( const shared_ptr<const ExecutionContext> & ctx )
-    : d( new Private( ctx, this ) )
+ExecutionContextUser::ExecutionContextUser(const shared_ptr<const ExecutionContext> &ctx)
+    : d(new Private(ctx, this))
 {
 
 }
 
 ExecutionContextUser::~ExecutionContextUser() {}
 
-
-void ExecutionContextUser::setExecutionContext( const shared_ptr<const ExecutionContext> & ctx ) {
+void ExecutionContextUser::setExecutionContext(const shared_ptr<const ExecutionContext> &ctx)
+{
     d->executionContext = ctx;
     d->idApplied.clear();
 }
 
-shared_ptr<const ExecutionContext> ExecutionContextUser::executionContext() const {
+shared_ptr<const ExecutionContext> ExecutionContextUser::executionContext() const
+{
     return d->executionContext.lock();
 }
 
-void ExecutionContextUser::bringToForeground( QWidget * wid ) {
-    applyWindowID( wid );
-    if ( wid->isVisible() )
+void ExecutionContextUser::bringToForeground(QWidget *wid)
+{
+    applyWindowID(wid);
+    if (wid->isVisible()) {
         wid->raise();
-    else
+    } else {
         wid->show();
+    }
 #ifdef Q_OS_WIN
-    SetForegroundWindow( wid->winId() );
+    SetForegroundWindow(wid->winId());
 #endif
 }
 

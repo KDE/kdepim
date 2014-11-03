@@ -52,40 +52,40 @@ using namespace GpgME;
 using namespace Kleo;
 using namespace boost;
 
-class SubkeyListModel::Private {
+class SubkeyListModel::Private
+{
     friend class ::Kleo::SubkeyListModel;
-    SubkeyListModel * const q;
+    SubkeyListModel *const q;
 public:
-    explicit Private( SubkeyListModel * qq )
-        : q( qq ), key() {}
+    explicit Private(SubkeyListModel *qq)
+        : q(qq), key() {}
 
 private:
     Key key;
 };
 
-
-
-SubkeyListModel::SubkeyListModel( QObject * p )
-    : QAbstractTableModel( p ), d( new Private( this ) )
+SubkeyListModel::SubkeyListModel(QObject *p)
+    : QAbstractTableModel(p), d(new Private(this))
 {
 
 }
 
 SubkeyListModel::~SubkeyListModel() {}
 
-
-Key SubkeyListModel::key() const {
+Key SubkeyListModel::key() const
+{
     return d->key;
 }
 
 // slot
-void SubkeyListModel::setKey( const Key & key ) {
+void SubkeyListModel::setKey(const Key &key)
+{
 
     const Key oldKey = d->key;
 
     d->key = key;
 
-    if ( qstricmp( key.primaryFingerprint(), oldKey.primaryFingerprint() ) != 0 ) {
+    if (qstricmp(key.primaryFingerprint(), oldKey.primaryFingerprint()) != 0) {
         // different key -> reset
         reset();
         return;
@@ -93,103 +93,118 @@ void SubkeyListModel::setKey( const Key & key ) {
 
     // ### diff them, and signal more fine-grained than this:
 
-    if ( key.numSubkeys() > 0 && oldKey.numSubkeys() == key.numSubkeys() ) {
-        emit dataChanged( index( 0, 0 ), index( key.numSubkeys() - 1, NumColumns - 1 ) );
+    if (key.numSubkeys() > 0 && oldKey.numSubkeys() == key.numSubkeys()) {
+        emit dataChanged(index(0, 0), index(key.numSubkeys() - 1, NumColumns - 1));
     } else {
         emit layoutAboutToBeChanged();
         emit layoutChanged();
     }
 }
 
-Subkey SubkeyListModel::subkey( const QModelIndex & idx ) const {
-    if ( idx.isValid() )
-        return d->key.subkey( idx.row() );
-    else
+Subkey SubkeyListModel::subkey(const QModelIndex &idx) const
+{
+    if (idx.isValid()) {
+        return d->key.subkey(idx.row());
+    } else {
         return Subkey();
+    }
 }
 
-std::vector<Subkey> SubkeyListModel::subkeys( const QList<QModelIndex> & indexes ) const {
+std::vector<Subkey> SubkeyListModel::subkeys(const QList<QModelIndex> &indexes) const
+{
     std::vector<Subkey> result;
-    result.reserve( indexes.size() );
-    std::transform( indexes.begin(), indexes.end(),
-                    std::back_inserter( result ),
-                    boost::bind( &SubkeyListModel::subkey, this, _1 ) );
+    result.reserve(indexes.size());
+    std::transform(indexes.begin(), indexes.end(),
+                   std::back_inserter(result),
+                   boost::bind(&SubkeyListModel::subkey, this, _1));
     return result;
 }
 
-QModelIndex SubkeyListModel::index( const Subkey & subkey, int col ) const {
+QModelIndex SubkeyListModel::index(const Subkey &subkey, int col) const
+{
     // O(N), but not sorted, so no better way...
-    for ( unsigned int row = 0, end = d->key.numSubkeys() ; row != end ; ++row )
-        if ( qstricmp( subkey.keyID(), d->key.subkey( row ).keyID() ) == 0 )
-            return index( row, col );
+    for (unsigned int row = 0, end = d->key.numSubkeys() ; row != end ; ++row)
+        if (qstricmp(subkey.keyID(), d->key.subkey(row).keyID()) == 0) {
+            return index(row, col);
+        }
     return QModelIndex();
 }
 
-QList<QModelIndex> SubkeyListModel::indexes( const std::vector<Subkey> & subkeys ) const {
+QList<QModelIndex> SubkeyListModel::indexes(const std::vector<Subkey> &subkeys) const
+{
     QList<QModelIndex> result;
     // O(N*M), but who cares...?
-    std::transform( subkeys.begin(), subkeys.end(),
-                    std::back_inserter( result ),
-                    // if some compilers are complaining about ambigious overloads, use this line instead:
-                    //bind( static_cast<QModelIndex(SubKeyListModel::*)(const Subkey&,int)const>( &SubkeyListModel::index ), this, _1, 0 ) );
-                    boost::bind( &SubkeyListModel::index, this, _1, 0 ) );
+    std::transform(subkeys.begin(), subkeys.end(),
+                   std::back_inserter(result),
+                   // if some compilers are complaining about ambigious overloads, use this line instead:
+                   //bind( static_cast<QModelIndex(SubKeyListModel::*)(const Subkey&,int)const>( &SubkeyListModel::index ), this, _1, 0 ) );
+                   boost::bind(&SubkeyListModel::index, this, _1, 0));
     return result;
 }
 
-void SubkeyListModel::clear() {
+void SubkeyListModel::clear()
+{
     d->key = Key::null;
     reset();
 }
 
-int SubkeyListModel::columnCount( const QModelIndex & ) const {
+int SubkeyListModel::columnCount(const QModelIndex &) const
+{
     return NumColumns;
 }
 
-int SubkeyListModel::rowCount( const QModelIndex & pidx ) const {
+int SubkeyListModel::rowCount(const QModelIndex &pidx) const
+{
     return pidx.isValid() ? 0 : d->key.numSubkeys() ;
 }
 
-QVariant SubkeyListModel::headerData( int section, Qt::Orientation o, int role ) const {
-    if ( o == Qt::Horizontal )
-        if ( role == Qt::DisplayRole || role == Qt::EditRole || role == Qt::ToolTipRole )
-            switch ( section ) {
-            case ID:         return i18n( "ID" );
-            case Type:       return i18n( "Type" );
-            case ValidFrom:  return i18n( "Valid From" );
-            case ValidUntil: return i18n( "Valid Until" );
-            case Status:     return i18n( "Status" );
-            case Bits:       return i18n( "Strength" );
+QVariant SubkeyListModel::headerData(int section, Qt::Orientation o, int role) const
+{
+    if (o == Qt::Horizontal)
+        if (role == Qt::DisplayRole || role == Qt::EditRole || role == Qt::ToolTipRole)
+            switch (section) {
+            case ID:         return i18n("ID");
+            case Type:       return i18n("Type");
+            case ValidFrom:  return i18n("Valid From");
+            case ValidUntil: return i18n("Valid Until");
+            case Status:     return i18n("Status");
+            case Bits:       return i18n("Strength");
             case NumColumns:       ;
             }
     return QVariant();
 }
 
-QVariant SubkeyListModel::data( const QModelIndex & idx, int role ) const {
+QVariant SubkeyListModel::data(const QModelIndex &idx, int role) const
+{
 
-    if ( role != Qt::DisplayRole && role != Qt::EditRole && role != Qt::ToolTipRole )
+    if (role != Qt::DisplayRole && role != Qt::EditRole && role != Qt::ToolTipRole) {
         return QVariant();
+    }
 
-    const Subkey subkey = this->subkey( idx );
-    if ( subkey.isNull() )
+    const Subkey subkey = this->subkey(idx);
+    if (subkey.isNull()) {
         return QVariant();
+    }
 
-    switch ( idx.column() ) {
+    switch (idx.column()) {
     case ID:
-        return QString::fromLatin1( subkey.keyID() );
+        return QString::fromLatin1(subkey.keyID());
     case Type:
-        return Formatting::type( subkey );
+        return Formatting::type(subkey);
     case ValidFrom:
-        if ( role == Qt::EditRole )
-            return Formatting::creationDate( subkey );
-        else
-            return Formatting::creationDateString( subkey );
+        if (role == Qt::EditRole) {
+            return Formatting::creationDate(subkey);
+        } else {
+            return Formatting::creationDateString(subkey);
+        }
     case ValidUntil:
-        if ( role == Qt::EditRole )
-            return Formatting::expirationDate( subkey );
-        else
-            return Formatting::expirationDateString( subkey );
+        if (role == Qt::EditRole) {
+            return Formatting::expirationDate(subkey);
+        } else {
+            return Formatting::expirationDateString(subkey);
+        }
     case Status:
-        return Formatting::validityShort( subkey );
+        return Formatting::validityShort(subkey);
     case Bits:
         return subkey.length();
     }

@@ -38,79 +38,79 @@
 #include <KGuiItem>
 #include <QVBoxLayout>
 
-Kleo::CryptoConfigDialog::CryptoConfigDialog( Kleo::CryptoConfig* config, QWidget *parent )
-  : QDialog( parent)
+Kleo::CryptoConfigDialog::CryptoConfigDialog(Kleo::CryptoConfig *config, QWidget *parent)
+    : QDialog(parent)
 {
-  setWindowTitle( i18n( "Configure GnuPG Backend" ) );
-  mButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::RestoreDefaults|QDialogButtonBox::Apply);
-  QVBoxLayout *mainLayout = new QVBoxLayout;
-  setLayout(mainLayout);
-  QPushButton *okButton = mButtonBox->button(QDialogButtonBox::Ok);
-  okButton->setDefault(true);
-  okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-  QPushButton *user1Button = new QPushButton;
-  mButtonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
-  connect(mButtonBox, &QDialogButtonBox::accepted, this, &CryptoConfigDialog::accept);
-  connect(mButtonBox, &QDialogButtonBox::rejected, this, &CryptoConfigDialog::reject);
-  okButton->setDefault(true);
-  setModal( true );
-  KGuiItem::assign(user1Button, KGuiItem(i18n("&Reset")));
+    setWindowTitle(i18n("Configure GnuPG Backend"));
+    mButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::RestoreDefaults | QDialogButtonBox::Apply);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    QPushButton *okButton = mButtonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    QPushButton *user1Button = new QPushButton;
+    mButtonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
+    connect(mButtonBox, &QDialogButtonBox::accepted, this, &CryptoConfigDialog::accept);
+    connect(mButtonBox, &QDialogButtonBox::rejected, this, &CryptoConfigDialog::reject);
+    okButton->setDefault(true);
+    setModal(true);
+    KGuiItem::assign(user1Button, KGuiItem(i18n("&Reset")));
 //add style :  Qt::WStyle_Customize | Qt::WStyle_DialogBorder | Qt::WStyle_Maximize | Qt::WStyle_Title | Qt::WStyle_SysMenu
 
-  mMainWidget = new CryptoConfigModule( config, this );
-  mainLayout->addWidget(mMainWidget);
-  mainLayout->addWidget(mButtonBox);
+    mMainWidget = new CryptoConfigModule(config, this);
+    mainLayout->addWidget(mMainWidget);
+    mainLayout->addWidget(mButtonBox);
 
-  connect(mMainWidget, &CryptoConfigModule::changed, this, &CryptoConfigDialog::slotChanged);
-  mButtonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
-  if ( mMainWidget->hasError() ) {
-      mButtonBox->button(QDialogButtonBox::RestoreDefaults)->setVisible(false);
-      user1Button->setVisible(false);
-      mButtonBox->button(QDialogButtonBox::Apply)->setVisible(false);
-      okButton->setVisible(false);
-  }
+    connect(mMainWidget, &CryptoConfigModule::changed, this, &CryptoConfigDialog::slotChanged);
+    mButtonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
+    if (mMainWidget->hasError()) {
+        mButtonBox->button(QDialogButtonBox::RestoreDefaults)->setVisible(false);
+        user1Button->setVisible(false);
+        mButtonBox->button(QDialogButtonBox::Apply)->setVisible(false);
+        okButton->setVisible(false);
+    }
 
-  // Automatically assign accelerators
-  KAcceleratorManager::manage( this );
-  connect(user1Button, &QPushButton::clicked, this, &CryptoConfigDialog::slotUser1);
-  connect(mButtonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &CryptoConfigDialog::slotCancel);
-  connect(okButton, &QPushButton::clicked, this, &CryptoConfigDialog::slotOk);
-  connect(mButtonBox->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, this, &CryptoConfigDialog::slotDefault);
-  connect(mButtonBox->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, &CryptoConfigDialog::slotApply);
+    // Automatically assign accelerators
+    KAcceleratorManager::manage(this);
+    connect(user1Button, &QPushButton::clicked, this, &CryptoConfigDialog::slotUser1);
+    connect(mButtonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &CryptoConfigDialog::slotCancel);
+    connect(okButton, &QPushButton::clicked, this, &CryptoConfigDialog::slotOk);
+    connect(mButtonBox->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, this, &CryptoConfigDialog::slotDefault);
+    connect(mButtonBox->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, &CryptoConfigDialog::slotApply);
 }
 
 void Kleo::CryptoConfigDialog::slotOk()
 {
-  slotApply();
-  accept();
+    slotApply();
+    accept();
 }
 
 void Kleo::CryptoConfigDialog::slotCancel()
 {
-  mMainWidget->cancel();
-  reject();
+    mMainWidget->cancel();
+    reject();
 }
 
 void Kleo::CryptoConfigDialog::slotDefault()
 {
-  mMainWidget->defaults();
-  slotChanged();
+    mMainWidget->defaults();
+    slotChanged();
 }
 
 void Kleo::CryptoConfigDialog::slotApply()
 {
-  mMainWidget->save();
-  mButtonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
+    mMainWidget->save();
+    mButtonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
 }
 
 void Kleo::CryptoConfigDialog::slotUser1() // reset
 {
-  mMainWidget->reset();
-  mButtonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
+    mMainWidget->reset();
+    mButtonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
 }
 
 void Kleo::CryptoConfigDialog::slotChanged()
 {
-  mButtonBox->button(QDialogButtonBox::Apply)->setEnabled(true);
+    mButtonBox->button(QDialogButtonBox::Apply)->setEnabled(true);
 }
 

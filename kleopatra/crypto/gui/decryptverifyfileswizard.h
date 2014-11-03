@@ -39,44 +39,48 @@
 
 #include <boost/shared_ptr.hpp>
 
-namespace Kleo {
-namespace Crypto {
-    class Task;
-    class TaskCollection;
-namespace Gui {
+namespace Kleo
+{
+namespace Crypto
+{
+class Task;
+class TaskCollection;
+namespace Gui
+{
 
-    class DecryptVerifyOperationWidget;
+class DecryptVerifyOperationWidget;
 
-    class DecryptVerifyFilesWizard : public Wizard {
-        Q_OBJECT
-    public:
-        enum Page {
-            OperationsPage=0,
-            ResultPage
-        };
-
-        explicit DecryptVerifyFilesWizard( QWidget * parent=0, Qt::WindowFlags f=0 );
-        ~DecryptVerifyFilesWizard();
-
-        void setOutputDirectory( const QString & dir );
-        QString outputDirectory() const;
-        bool useOutputDirectory() const;
-
-        void setTaskCollection( const boost::shared_ptr<TaskCollection> & coll );
-
-        DecryptVerifyOperationWidget * operationWidget( unsigned int idx );
-
-    Q_SIGNALS:
-        void operationPrepared();
-        void linkActivated( const QString & link );
-
-    private:
-        /* reimpl */ void onNext( int id );
-
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
+class DecryptVerifyFilesWizard : public Wizard
+{
+    Q_OBJECT
+public:
+    enum Page {
+        OperationsPage = 0,
+        ResultPage
     };
+
+    explicit DecryptVerifyFilesWizard(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    ~DecryptVerifyFilesWizard();
+
+    void setOutputDirectory(const QString &dir);
+    QString outputDirectory() const;
+    bool useOutputDirectory() const;
+
+    void setTaskCollection(const boost::shared_ptr<TaskCollection> &coll);
+
+    DecryptVerifyOperationWidget *operationWidget(unsigned int idx);
+
+Q_SIGNALS:
+    void operationPrepared();
+    void linkActivated(const QString &link);
+
+private:
+    /* reimpl */ void onNext(int id);
+
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+};
 
 }
 }

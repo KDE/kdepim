@@ -24,7 +24,6 @@ RedirectDialogTest::RedirectDialogTest(QObject *parent)
 {
 }
 
-
 RedirectDialogTest::~RedirectDialogTest()
 {
 

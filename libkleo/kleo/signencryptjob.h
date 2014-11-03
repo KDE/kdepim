@@ -45,34 +45,36 @@
 class QByteArray;
 class QIODevice;
 
-namespace GpgME {
-  class Error;
-  class Key;
-  class SigningResult;
-  class EncryptionResult;
+namespace GpgME
+{
+class Error;
+class Key;
+class SigningResult;
+class EncryptionResult;
 }
 
+namespace Kleo
+{
 
-namespace Kleo {
+/**
+   @short An abstract base class for asynchronous combined signing and encrypting
 
-  /**
-     @short An abstract base class for asynchronous combined signing and encrypting
+   To use a SignEncryptJob, first obtain an instance from the
+   CryptoBackend implementation, connect the progress() and result()
+   signals to suitable slots and then start the operation with a
+   call to start(). This call might fail, in which case the
+   SignEncryptJob instance will have scheduled it's own destruction
+   with a call to QObject::deleteLater().
 
-     To use a SignEncryptJob, first obtain an instance from the
-     CryptoBackend implementation, connect the progress() and result()
-     signals to suitable slots and then start the operation with a
-     call to start(). This call might fail, in which case the
-     SignEncryptJob instance will have scheduled it's own destruction
-     with a call to QObject::deleteLater().
-
-     After result() is emitted, the SignEncryptJob will schedule it's
-     own destruction by calling QObject::deleteLater().
-  */
-  class SignEncryptJob : public Job {
+   After result() is emitted, the SignEncryptJob will schedule it's
+   own destruction by calling QObject::deleteLater().
+*/
+class SignEncryptJob : public Job
+{
     Q_OBJECT
-  protected:
-    explicit SignEncryptJob( QObject * parent );
-  public:
+protected:
+    explicit SignEncryptJob(QObject *parent);
+public:
     ~SignEncryptJob();
 
     /**
@@ -85,10 +87,10 @@ namespace Kleo {
        \em recipient keys will not be performed, but full validity
        assumed for all \em recipient keys without further checks.
     */
-    virtual KLEO_DEPRECATED_EXPORT GpgME::Error start( const std::vector<GpgME::Key> & signers,
-                                               const std::vector<GpgME::Key> & recipients,
-                                               const QByteArray & plainText,
-                                               bool alwaysTrust=false ) = 0;
+    virtual KLEO_DEPRECATED_EXPORT GpgME::Error start(const std::vector<GpgME::Key> &signers,
+            const std::vector<GpgME::Key> &recipients,
+            const QByteArray &plainText,
+            bool alwaysTrust = false) = 0;
 
     /*!
       \overload
@@ -99,30 +101,30 @@ namespace Kleo {
 
       \throws GpgME::Exception if starting fails
     */
-    virtual void start( const std::vector<GpgME::Key> & signers,
-                        const std::vector<GpgME::Key> & recipients,
-                        const boost::shared_ptr<QIODevice> & plainText,
-                        const boost::shared_ptr<QIODevice> & cipherText=boost::shared_ptr<QIODevice>(),
-                        bool alwaysTrust=false ) = 0;
+    virtual void start(const std::vector<GpgME::Key> &signers,
+                       const std::vector<GpgME::Key> &recipients,
+                       const boost::shared_ptr<QIODevice> &plainText,
+                       const boost::shared_ptr<QIODevice> &cipherText = boost::shared_ptr<QIODevice>(),
+                       bool alwaysTrust = false) = 0;
 
-    virtual std::pair<GpgME::SigningResult,GpgME::EncryptionResult>
-      exec( const std::vector<GpgME::Key> & signers,
-            const std::vector<GpgME::Key> & recipients,
-            const QByteArray & plainText,
-            bool alwaysTrust, QByteArray & cipherText ) = 0;
+    virtual std::pair<GpgME::SigningResult, GpgME::EncryptionResult>
+    exec(const std::vector<GpgME::Key> &signers,
+         const std::vector<GpgME::Key> &recipients,
+         const QByteArray &plainText,
+         bool alwaysTrust, QByteArray &cipherText) = 0;
 
     /*!
       This is a hack to request BASE64 output (instead of whatever
       comes out normally).
     */
-    virtual void setOutputIsBase64Encoded( bool ) = 0;
+    virtual void setOutputIsBase64Encoded(bool) = 0;
 
-  Q_SIGNALS:
-    void result( const GpgME::SigningResult & signingresult,
-                 const GpgME::EncryptionResult & encryptionresult,
-                 const QByteArray & cipherText, const QString & auditLogAsHtml=QString(),
-                 const GpgME::Error & auditLogError=GpgME::Error() );
-  };
+Q_SIGNALS:
+    void result(const GpgME::SigningResult &signingresult,
+                const GpgME::EncryptionResult &encryptionresult,
+                const QByteArray &cipherText, const QString &auditLogAsHtml = QString(),
+                const GpgME::Error &auditLogError = GpgME::Error());
+};
 
 }
 

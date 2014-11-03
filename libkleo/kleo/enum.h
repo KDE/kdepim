@@ -38,30 +38,31 @@
 class QString;
 class QStringList;
 
-namespace Kleo {
+namespace Kleo
+{
 
-  enum CryptoMessageFormat {
+enum CryptoMessageFormat {
     InlineOpenPGPFormat = 1,
     OpenPGPMIMEFormat = 2,
     SMIMEFormat = 4,
     SMIMEOpaqueFormat = 8,
-    AnyOpenPGP = InlineOpenPGPFormat|OpenPGPMIMEFormat,
-    AnySMIME = SMIMEOpaqueFormat|SMIMEFormat,
-    AutoFormat = AnyOpenPGP|AnySMIME
-  };
+    AnyOpenPGP = InlineOpenPGPFormat | OpenPGPMIMEFormat,
+    AnySMIME = SMIMEOpaqueFormat | SMIMEFormat,
+    AutoFormat = AnyOpenPGP | AnySMIME
+};
 
-  KLEO_EXPORT QString cryptoMessageFormatToLabel( CryptoMessageFormat f );
+KLEO_EXPORT QString cryptoMessageFormatToLabel(CryptoMessageFormat f);
 
-  KLEO_EXPORT const char * cryptoMessageFormatToString( CryptoMessageFormat f );
-  KLEO_EXPORT QStringList cryptoMessageFormatsToStringList( unsigned int f );
-  KLEO_EXPORT CryptoMessageFormat stringToCryptoMessageFormat( const QString & s );
-  KLEO_EXPORT unsigned int stringListToCryptoMessageFormats( const QStringList & sl );
+KLEO_EXPORT const char *cryptoMessageFormatToString(CryptoMessageFormat f);
+KLEO_EXPORT QStringList cryptoMessageFormatsToStringList(unsigned int f);
+KLEO_EXPORT CryptoMessageFormat stringToCryptoMessageFormat(const QString &s);
+KLEO_EXPORT unsigned int stringListToCryptoMessageFormats(const QStringList &sl);
 
-  enum Action {
+enum Action {
     Conflict, DoIt, DontDoIt, Ask, AskOpportunistic, Impossible
-  };
+};
 
-  enum EncryptionPreference {
+enum EncryptionPreference {
     UnknownPreference = 0,
     NeverEncrypt = 1,
     AlwaysEncrypt = 2,
@@ -69,13 +70,13 @@ namespace Kleo {
     AlwaysAskForEncryption = 4,
     AskWheneverPossible = 5,
     MaxEncryptionPreference = AskWheneverPossible
-  };
+};
 
-  KLEO_EXPORT QString encryptionPreferenceToLabel( EncryptionPreference pref );
-  KLEO_EXPORT const char* encryptionPreferenceToString( EncryptionPreference pref );
-  KLEO_EXPORT EncryptionPreference stringToEncryptionPreference( const QString& str );
+KLEO_EXPORT QString encryptionPreferenceToLabel(EncryptionPreference pref);
+KLEO_EXPORT const char *encryptionPreferenceToString(EncryptionPreference pref);
+KLEO_EXPORT EncryptionPreference stringToEncryptionPreference(const QString &str);
 
-  enum SigningPreference {
+enum SigningPreference {
     UnknownSigningPreference = 0,
     NeverSign = 1,
     AlwaysSign = 2,
@@ -83,11 +84,11 @@ namespace Kleo {
     AlwaysAskForSigning = 4,
     AskSigningWheneverPossible = 5,
     MaxSigningPreference = AskSigningWheneverPossible
-  };
+};
 
-  KLEO_EXPORT QString signingPreferenceToLabel( SigningPreference pref );
-  KLEO_EXPORT const char* signingPreferenceToString( SigningPreference pref );
-  KLEO_EXPORT SigningPreference stringToSigningPreference( const QString& str );
+KLEO_EXPORT QString signingPreferenceToLabel(SigningPreference pref);
+KLEO_EXPORT const char *signingPreferenceToString(SigningPreference pref);
+KLEO_EXPORT SigningPreference stringToSigningPreference(const QString &str);
 }
 
 #endif // __KLEO_CRYPTOBACKEND_H__

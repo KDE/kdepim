@@ -34,10 +34,10 @@
 
 #include <QApplication>
 
-int main( int argc, char** argv )
+int main(int argc, char **argv)
 {
-    QApplication app( argc, argv );
-    MainWindow* wid = new MainWindow;
-    wid->setVisible( true );
+    QApplication app(argc, argv);
+    MainWindow *wid = new MainWindow;
+    wid->setVisible(true);
     return app.exec();
 }

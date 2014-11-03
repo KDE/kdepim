@@ -44,62 +44,71 @@
 
 #include <assert.h>
 
-Kleo::MultiDeleteJob::MultiDeleteJob( const CryptoBackend::Protocol * protocol )
-  : Job( 0 ),
-    mProtocol( protocol ),
-    mJob( 0 )
+Kleo::MultiDeleteJob::MultiDeleteJob(const CryptoBackend::Protocol *protocol)
+    : Job(0),
+      mProtocol(protocol),
+      mJob(0)
 {
-  assert( protocol );
+    assert(protocol);
 }
 
-Kleo::MultiDeleteJob::~MultiDeleteJob() {
+Kleo::MultiDeleteJob::~MultiDeleteJob()
+{
 
 }
 
-GpgME::Error Kleo::MultiDeleteJob::start( const std::vector<GpgME::Key> & keys, bool allowSecretKeyDeletion ) {
-  mKeys = keys;
-  mAllowSecretKeyDeletion = allowSecretKeyDeletion;
-  mIt = mKeys.begin();
+GpgME::Error Kleo::MultiDeleteJob::start(const std::vector<GpgME::Key> &keys, bool allowSecretKeyDeletion)
+{
+    mKeys = keys;
+    mAllowSecretKeyDeletion = allowSecretKeyDeletion;
+    mIt = mKeys.begin();
 
-  const GpgME::Error err = startAJob();
+    const GpgME::Error err = startAJob();
 
-  if ( err )
-    deleteLater();
-  return err;
+    if (err) {
+        deleteLater();
+    }
+    return err;
 }
 
-void Kleo::MultiDeleteJob::slotCancel() {
-  if ( mJob ) mJob->slotCancel();
-  mIt = mKeys.end();
+void Kleo::MultiDeleteJob::slotCancel()
+{
+    if (mJob) {
+        mJob->slotCancel();
+    }
+    mIt = mKeys.end();
 }
 
-void Kleo::MultiDeleteJob::slotResult( const GpgME::Error & err ) {
-  mJob = 0;
-  GpgME::Error error = err;
-  if ( error || // error in last op
-       mIt == mKeys.end() || // (shouldn't happen)
-       ++mIt == mKeys.end() || // was the last key
-       (error = startAJob()) ) { // error starting the job for the new key
-    emit done();
-    emit result( error, error && mIt != mKeys.end() ? *mIt : GpgME::Key::null );
-    deleteLater();
-    return;
-  }
+void Kleo::MultiDeleteJob::slotResult(const GpgME::Error &err)
+{
+    mJob = 0;
+    GpgME::Error error = err;
+    if (error ||  // error in last op
+            mIt == mKeys.end() || // (shouldn't happen)
+            ++mIt == mKeys.end() || // was the last key
+            (error = startAJob())) {  // error starting the job for the new key
+        emit done();
+        emit result(error, error && mIt != mKeys.end() ? *mIt : GpgME::Key::null);
+        deleteLater();
+        return;
+    }
 
-  const int current = mIt - mKeys.begin();
-  const int total = mKeys.size();
-  emit progress( i18nc("progress info: \"%1 of %2\"","%1/%2", current, total ), current, total );
+    const int current = mIt - mKeys.begin();
+    const int total = mKeys.size();
+    emit progress(i18nc("progress info: \"%1 of %2\"", "%1/%2", current, total), current, total);
 }
 
-GpgME::Error Kleo::MultiDeleteJob::startAJob() {
-  if ( mIt == mKeys.end() )
-    return GpgME::Error(0);
-  mJob = mProtocol->deleteJob();
-  assert( mJob ); // FIXME: we need a way to generate errors ourselves,
-                  // but I don't like the dependency on gpg-error :/
+GpgME::Error Kleo::MultiDeleteJob::startAJob()
+{
+    if (mIt == mKeys.end()) {
+        return GpgME::Error(0);
+    }
+    mJob = mProtocol->deleteJob();
+    assert(mJob);   // FIXME: we need a way to generate errors ourselves,
+    // but I don't like the dependency on gpg-error :/
 
-  connect( mJob, SIGNAL(result(GpgME::Error)), SLOT(slotResult(GpgME::Error)) );
+    connect(mJob, SIGNAL(result(GpgME::Error)), SLOT(slotResult(GpgME::Error)));
 
-  return mJob->start( *mIt, mAllowSecretKeyDeletion );
+    return mJob->start(*mIt, mAllowSecretKeyDeletion);
 }
 

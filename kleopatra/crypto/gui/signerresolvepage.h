@@ -44,102 +44,106 @@
 
 #include <vector>
 
-namespace GpgME {
-    class Key;
+namespace GpgME
+{
+class Key;
 }
 
-namespace Kleo {
-namespace Crypto {
+namespace Kleo
+{
+namespace Crypto
+{
 
-    class SigningPreferences;
+class SigningPreferences;
 
-namespace Gui {
-    class SignerResolvePage : public WizardPage {
-        Q_OBJECT
-    public:
-        explicit SignerResolvePage( QWidget * parent=0, Qt::WindowFlags f=0 );
-        ~SignerResolvePage();
+namespace Gui
+{
+class SignerResolvePage : public WizardPage
+{
+    Q_OBJECT
+public:
+    explicit SignerResolvePage(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    ~SignerResolvePage();
 
-        void setSignersAndCandidates( const std::vector<KMime::Types::Mailbox> & signers,
-                                      const std::vector< std::vector<GpgME::Key> > & keys );
+    void setSignersAndCandidates(const std::vector<KMime::Types::Mailbox> &signers,
+                                 const std::vector< std::vector<GpgME::Key> > &keys);
 
-        std::vector<GpgME::Key> resolvedSigners() const;
-        std::vector<GpgME::Key> signingCertificates( GpgME::Protocol protocol = GpgME::UnknownProtocol ) const;
+    std::vector<GpgME::Key> resolvedSigners() const;
+    std::vector<GpgME::Key> signingCertificates(GpgME::Protocol protocol = GpgME::UnknownProtocol) const;
 
+    /*reimpl*/ bool isComplete() const;
 
-        /*reimpl*/ bool isComplete() const;
+    bool encryptionSelected() const;
+    void setEncryptionSelected(bool selected);
 
-        bool encryptionSelected() const;
-        void setEncryptionSelected( bool selected );
+    bool signingSelected() const;
+    void setSigningSelected(bool selected);
 
-        bool signingSelected() const;
-        void setSigningSelected( bool selected );
+    bool isEncryptionUserMutable() const;
+    void setEncryptionUserMutable(bool ismutable);
 
-        bool isEncryptionUserMutable() const;
-        void setEncryptionUserMutable( bool ismutable );
+    bool isSigningUserMutable() const;
+    void setSigningUserMutable(bool ismutable);
 
-        bool isSigningUserMutable() const;
-        void setSigningUserMutable( bool ismutable );
+    bool isAsciiArmorEnabled() const;
+    void setAsciiArmorEnabled(bool enabled);
 
-        bool isAsciiArmorEnabled() const;
-        void setAsciiArmorEnabled( bool enabled );
+    bool removeUnencryptedFile() const;
+    void setRemoveUnencryptedFile(bool remove);
 
-        bool removeUnencryptedFile() const;
-        void setRemoveUnencryptedFile( bool remove );
+    void setPresetProtocol(GpgME::Protocol protocol);
+    void setPresetProtocols(const std::vector<GpgME::Protocol> &protocols);
 
-        void setPresetProtocol( GpgME::Protocol protocol );
-        void setPresetProtocols( const std::vector<GpgME::Protocol>& protocols );
+    std::vector<GpgME::Protocol> selectedProtocols() const;
 
-        std::vector<GpgME::Protocol> selectedProtocols() const;
+    std::vector<GpgME::Protocol> selectedProtocolsWithoutSigningCertificate() const;
 
-        std::vector<GpgME::Protocol> selectedProtocolsWithoutSigningCertificate() const;
+    void setMultipleProtocolsAllowed(bool allowed);
+    bool multipleProtocolsAllowed() const;
 
-        void setMultipleProtocolsAllowed( bool allowed );
-        bool multipleProtocolsAllowed() const;
+    void setProtocolSelectionUserMutable(bool ismutable);
+    bool protocolSelectionUserMutable() const;
 
-        void setProtocolSelectionUserMutable( bool ismutable );
-        bool protocolSelectionUserMutable() const;
-
-        enum Operation {
-            SignAndEncrypt=0,
-            SignOnly,
-            EncryptOnly
-        };
-
-        Operation operation() const;
-
-        class Validator
-        {
-        public:
-            virtual ~Validator() {}
-            virtual bool isComplete() const = 0;
-            virtual QString explanation() const = 0;
-            /**
-             * returns a custom window title, or a null string if no custom
-             * title is required.
-             * (use this if the title needs dynamic adaption
-             * depending on the user's selection)
-             */
-            virtual QString customWindowTitle() const = 0;
-        };
-
-        void setValidator( const boost::shared_ptr<Validator>& );
-        boost::shared_ptr<Validator> validator() const;
-
-        void setSigningPreferences( const boost::shared_ptr<SigningPreferences>& prefs );
-        boost::shared_ptr<SigningPreferences> signingPreferences() const;
-
-    private:
-        /*reimpl*/ void onNext();
-
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-
-        Q_PRIVATE_SLOT( d, void operationButtonClicked( int ) )
-        Q_PRIVATE_SLOT( d, void selectCertificates() )
-        Q_PRIVATE_SLOT( d, void updateUi() )
+    enum Operation {
+        SignAndEncrypt = 0,
+        SignOnly,
+        EncryptOnly
     };
+
+    Operation operation() const;
+
+    class Validator
+    {
+    public:
+        virtual ~Validator() {}
+        virtual bool isComplete() const = 0;
+        virtual QString explanation() const = 0;
+        /**
+         * returns a custom window title, or a null string if no custom
+         * title is required.
+         * (use this if the title needs dynamic adaption
+         * depending on the user's selection)
+         */
+        virtual QString customWindowTitle() const = 0;
+    };
+
+    void setValidator(const boost::shared_ptr<Validator> &);
+    boost::shared_ptr<Validator> validator() const;
+
+    void setSigningPreferences(const boost::shared_ptr<SigningPreferences> &prefs);
+    boost::shared_ptr<SigningPreferences> signingPreferences() const;
+
+private:
+    /*reimpl*/ void onNext();
+
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+
+    Q_PRIVATE_SLOT(d, void operationButtonClicked(int))
+    Q_PRIVATE_SLOT(d, void selectCertificates())
+    Q_PRIVATE_SLOT(d, void updateUi())
+};
 }
 }
 }

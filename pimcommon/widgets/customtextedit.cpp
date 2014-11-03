@@ -93,7 +93,7 @@ void CustomTextEdit::insertLanguageMenu(QMenu *contextMenu)
     }
     QAction *spellCheckAction = 0;
 
-    foreach(QAction * action, contextMenu->actions()) {
+    foreach (QAction *action, contextMenu->actions()) {
         if (action->text() == i18n_kdelibs4("Auto Spell Check")) {
             spellCheckAction = action;
             break;

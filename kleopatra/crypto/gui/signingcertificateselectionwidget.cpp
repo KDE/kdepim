@@ -52,99 +52,101 @@
 using namespace Kleo;
 using namespace Kleo::Crypto::Gui;
 
-class SigningCertificateSelectionWidget::Private {
+class SigningCertificateSelectionWidget::Private
+{
     friend class ::SigningCertificateSelectionWidget;
-    SigningCertificateSelectionWidget * const q;
+    SigningCertificateSelectionWidget *const q;
 public:
-    explicit Private( SigningCertificateSelectionWidget * qq );
+    explicit Private(SigningCertificateSelectionWidget *qq);
     ~Private();
-    static std::vector<GpgME::Key> candidates( GpgME::Protocol prot );
-    static void addCandidates( GpgME::Protocol prot, QComboBox* combo );
+    static std::vector<GpgME::Key> candidates(GpgME::Protocol prot);
+    static void addCandidates(GpgME::Protocol prot, QComboBox *combo);
 
 private:
     Ui::SigningCertificateSelectionWidget ui;
 };
 
-
-static GpgME::Key current_cert( const QComboBox & cb ) {
-    const QByteArray fpr = cb.itemData( cb.currentIndex() ).toByteArray();
-    return KeyCache::instance()->findByFingerprint( fpr.constData() );
-}
-
-static void select_cert( QComboBox & cb, const GpgME::Key & key ) {
-    const QByteArray fpr = key.primaryFingerprint();
-    if ( !fpr.isEmpty() )
-        cb.setCurrentIndex( cb.findData( fpr ) );
-}
-
-static void add_cert( QComboBox & cb, const GpgME::Key & key ) {
-    cb.addItem( Formatting::formatForComboBox( key ),
-                QVariant( QByteArray( key.primaryFingerprint() ) ) );
-
-}
-
-SigningCertificateSelectionWidget::Private::Private( SigningCertificateSelectionWidget * qq )
-    : q( qq ), ui()
+static GpgME::Key current_cert(const QComboBox &cb)
 {
-    ui.setupUi( q );
-    addCandidates( GpgME::CMS, ui.cmsCombo );
-    addCandidates( GpgME::OpenPGP, ui.pgpCombo );
-    ui.rememberCO->setChecked( true );
+    const QByteArray fpr = cb.itemData(cb.currentIndex()).toByteArray();
+    return KeyCache::instance()->findByFingerprint(fpr.constData());
+}
+
+static void select_cert(QComboBox &cb, const GpgME::Key &key)
+{
+    const QByteArray fpr = key.primaryFingerprint();
+    if (!fpr.isEmpty()) {
+        cb.setCurrentIndex(cb.findData(fpr));
+    }
+}
+
+static void add_cert(QComboBox &cb, const GpgME::Key &key)
+{
+    cb.addItem(Formatting::formatForComboBox(key),
+               QVariant(QByteArray(key.primaryFingerprint())));
+
+}
+
+SigningCertificateSelectionWidget::Private::Private(SigningCertificateSelectionWidget *qq)
+    : q(qq), ui()
+{
+    ui.setupUi(q);
+    addCandidates(GpgME::CMS, ui.cmsCombo);
+    addCandidates(GpgME::OpenPGP, ui.pgpCombo);
+    ui.rememberCO->setChecked(true);
 }
 
 SigningCertificateSelectionWidget::Private::~Private() {}
 
-
-
-SigningCertificateSelectionWidget::SigningCertificateSelectionWidget( QWidget * parent, Qt::WindowFlags f )
-    : QWidget( parent, f ), d( new Private( this ) )
+SigningCertificateSelectionWidget::SigningCertificateSelectionWidget(QWidget *parent, Qt::WindowFlags f)
+    : QWidget(parent, f), d(new Private(this))
 {
 
 }
 
 SigningCertificateSelectionWidget::~SigningCertificateSelectionWidget() {}
 
-
-void SigningCertificateSelectionWidget::setSelectedCertificates( const QMap<GpgME::Protocol, GpgME::Key>& certificates )
+void SigningCertificateSelectionWidget::setSelectedCertificates(const QMap<GpgME::Protocol, GpgME::Key> &certificates)
 {
-    setSelectedCertificates( certificates[GpgME::OpenPGP], certificates[GpgME::CMS] );
+    setSelectedCertificates(certificates[GpgME::OpenPGP], certificates[GpgME::CMS]);
 }
 
-void SigningCertificateSelectionWidget::setSelectedCertificates( const GpgME::Key & pgp, const GpgME::Key & cms ) {
-    select_cert( *d->ui.pgpCombo, pgp );
-    select_cert( *d->ui.cmsCombo, cms );
+void SigningCertificateSelectionWidget::setSelectedCertificates(const GpgME::Key &pgp, const GpgME::Key &cms)
+{
+    select_cert(*d->ui.pgpCombo, pgp);
+    select_cert(*d->ui.cmsCombo, cms);
 }
 
-std::vector<GpgME::Key> SigningCertificateSelectionWidget::Private::candidates( GpgME::Protocol prot )
+std::vector<GpgME::Key> SigningCertificateSelectionWidget::Private::candidates(GpgME::Protocol prot)
 {
-    assert( prot != GpgME::UnknownProtocol );
+    assert(prot != GpgME::UnknownProtocol);
     std::vector<GpgME::Key> keys = KeyCache::instance()->keys();
     std::vector<GpgME::Key>::iterator end = keys.end();
 
-    end = std::remove_if( keys.begin(), end, boost::bind( &GpgME::Key::protocol, _1 ) != prot );
-    end = std::remove_if( keys.begin(), end, !boost::bind( &GpgME::Key::hasSecret, _1 ) );
-    assert( kdtools::all( keys.begin(), end, boost::bind( &GpgME::Key::hasSecret, _1 ) ) );
-    end = std::remove_if( keys.begin(), end, !boost::bind( &GpgME::Key::canReallySign, _1 ) );
-    end = std::remove_if( keys.begin(), end, boost::bind( &GpgME::Key::isExpired, _1 ) );
-    end = std::remove_if( keys.begin(), end, boost::bind( &GpgME::Key::isRevoked, _1 ) );
-    keys.erase( end, keys.end() );
+    end = std::remove_if(keys.begin(), end, boost::bind(&GpgME::Key::protocol, _1) != prot);
+    end = std::remove_if(keys.begin(), end, !boost::bind(&GpgME::Key::hasSecret, _1));
+    assert(kdtools::all(keys.begin(), end, boost::bind(&GpgME::Key::hasSecret, _1)));
+    end = std::remove_if(keys.begin(), end, !boost::bind(&GpgME::Key::canReallySign, _1));
+    end = std::remove_if(keys.begin(), end, boost::bind(&GpgME::Key::isExpired, _1));
+    end = std::remove_if(keys.begin(), end, boost::bind(&GpgME::Key::isRevoked, _1));
+    keys.erase(end, keys.end());
     return keys;
 }
 
-void SigningCertificateSelectionWidget::Private::addCandidates( GpgME::Protocol prot, QComboBox* combo )
+void SigningCertificateSelectionWidget::Private::addCandidates(GpgME::Protocol prot, QComboBox *combo)
 {
-    const std::vector<GpgME::Key> keys = candidates( prot );
-    Q_FOREACH( const GpgME::Key& i, keys )
-        add_cert( *combo, i );
+    const std::vector<GpgME::Key> keys = candidates(prot);
+    Q_FOREACH (const GpgME::Key &i, keys) {
+        add_cert(*combo, i);
+    }
 }
-
 
 QMap<GpgME::Protocol, GpgME::Key> SigningCertificateSelectionWidget::selectedCertificates() const
 {
     QMap<GpgME::Protocol, GpgME::Key> res;
 
-    res.insert( GpgME::OpenPGP, current_cert( *d->ui.pgpCombo ) );
-    res.insert( GpgME::CMS,     current_cert( *d->ui.cmsCombo ) );
+    res.insert(GpgME::OpenPGP, current_cert(*d->ui.pgpCombo));
+    res.insert(GpgME::CMS,     current_cert(*d->ui.cmsCombo));
 
     return res;
 }
@@ -154,18 +156,18 @@ bool SigningCertificateSelectionWidget::rememberAsDefault() const
     return d->ui.rememberCO->isChecked();
 }
 
-void SigningCertificateSelectionWidget::setAllowedProtocols( const QVector<GpgME::Protocol>& allowedProtocols )
+void SigningCertificateSelectionWidget::setAllowedProtocols(const QVector<GpgME::Protocol> &allowedProtocols)
 {
-    setAllowedProtocols( allowedProtocols.contains( GpgME::OpenPGP ),
-                         allowedProtocols.contains( GpgME::CMS ) );
+    setAllowedProtocols(allowedProtocols.contains(GpgME::OpenPGP),
+                        allowedProtocols.contains(GpgME::CMS));
 }
 
-void SigningCertificateSelectionWidget::setAllowedProtocols( bool pgp, bool cms )
+void SigningCertificateSelectionWidget::setAllowedProtocols(bool pgp, bool cms)
 {
-    d->ui.pgpLabel->setVisible( pgp );
-    d->ui.pgpCombo->setVisible( pgp );
+    d->ui.pgpLabel->setVisible(pgp);
+    d->ui.pgpCombo->setVisible(pgp);
 
-    d->ui.cmsLabel->setVisible( cms );
-    d->ui.cmsCombo->setVisible( cms );
+    d->ui.cmsLabel->setVisible(cms);
+    d->ui.cmsCombo->setVisible(cms);
 }
 

@@ -43,55 +43,56 @@
 
 #include <utility>
 
-namespace Kleo {
+namespace Kleo
+{
 
-  class QGpgMESignEncryptJob
+class QGpgMESignEncryptJob
 #ifdef Q_MOC_RUN
     : public SignEncryptJob
 #else
     : public _detail::ThreadedJobMixin<SignEncryptJob, boost::tuple<GpgME::SigningResult, GpgME::EncryptionResult, QByteArray, QString, GpgME::Error> >
 #endif
-  {
+{
     Q_OBJECT
 #ifdef Q_MOC_RUN
-  public Q_SLOTS:
+public Q_SLOTS:
     void slotFinished();
 #endif
-  public:
-    explicit QGpgMESignEncryptJob( GpgME::Context * context );
+public:
+    explicit QGpgMESignEncryptJob(GpgME::Context *context);
     ~QGpgMESignEncryptJob();
 
     /*! \reimp from SignEncryptJob */
-    GpgME::Error start( const std::vector<GpgME::Key> & signers,
-                        const std::vector<GpgME::Key> & recipients,
-                        const QByteArray & plainText, bool alwaysTrust );
+    GpgME::Error start(const std::vector<GpgME::Key> &signers,
+                       const std::vector<GpgME::Key> &recipients,
+                       const QByteArray &plainText, bool alwaysTrust);
 
     /*! \reimp from SignEncryptJob */
-    void start( const std::vector<GpgME::Key> & signers,
-                const std::vector<GpgME::Key> & recipients,
-                const boost::shared_ptr<QIODevice> & plainText,
-                const boost::shared_ptr<QIODevice> & cipherText,
-                bool alwaysTrust );
+    void start(const std::vector<GpgME::Key> &signers,
+               const std::vector<GpgME::Key> &recipients,
+               const boost::shared_ptr<QIODevice> &plainText,
+               const boost::shared_ptr<QIODevice> &cipherText,
+               bool alwaysTrust);
 
-    std::pair<GpgME::SigningResult,GpgME::EncryptionResult>
-      exec( const std::vector<GpgME::Key> & signers,
-            const std::vector<GpgME::Key> & recipients,
-            const QByteArray & plainText, bool alwaysTrust,
-            QByteArray & cipherText );
+    std::pair<GpgME::SigningResult, GpgME::EncryptionResult>
+    exec(const std::vector<GpgME::Key> &signers,
+         const std::vector<GpgME::Key> &recipients,
+         const QByteArray &plainText, bool alwaysTrust,
+         QByteArray &cipherText);
 
     /*! \reimp from Job */
-    void showErrorDialog( QWidget * parent, const QString & caption ) const;
+    void showErrorDialog(QWidget *parent, const QString &caption) const;
 
     /*! \reimp from SignEncryptJob */
-    void setOutputIsBase64Encoded( bool on );
+    void setOutputIsBase64Encoded(bool on);
 
     /*! \reimp from ThreadedJobMixin */
-    void resultHook( const result_type & r );
+    void resultHook(const result_type &r);
 
-  private:
+private:
     bool mOutputIsBase64Encoded;
-    std::pair<GpgME::SigningResult,GpgME::EncryptionResult> mResult;
-  };
+    std::pair<GpgME::SigningResult, GpgME::EncryptionResult> mResult;
+};
 
 }
 

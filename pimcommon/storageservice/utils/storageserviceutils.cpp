@@ -32,7 +32,7 @@ QString PimCommon::StorageServiceUtils::generateNonce(qint32 length)
 
 bool PimCommon::StorageServiceUtils::hasCapabilities(PimCommon::StorageServiceAbstract::Capabilities capabilities, const QList<PimCommon::StorageServiceAbstract::Capability> &lstNeedCapabily)
 {
-    Q_FOREACH(PimCommon::StorageServiceAbstract::Capability cap, lstNeedCapabily) {
+    Q_FOREACH (PimCommon::StorageServiceAbstract::Capability cap, lstNeedCapabily) {
         if (capabilities & cap) {
             return true;
         }
@@ -42,7 +42,7 @@ bool PimCommon::StorageServiceUtils::hasCapabilities(PimCommon::StorageServiceAb
 
 bool PimCommon::StorageServiceUtils::hasExactCapabilities(PimCommon::StorageServiceAbstract::Capabilities capabilities, const QList<PimCommon::StorageServiceAbstract::Capability> &lstNeedCapabily)
 {
-    Q_FOREACH(PimCommon::StorageServiceAbstract::Capability cap, lstNeedCapabily) {
+    Q_FOREACH (PimCommon::StorageServiceAbstract::Capability cap, lstNeedCapabily) {
         if (!(capabilities & cap)) {
             return false;
         }

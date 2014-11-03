@@ -540,7 +540,7 @@ QString BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, 
 
     if (info.contains(QLatin1String("entries"))) {
         const QVariantList entries = info.value(QLatin1String("entries")).toList();
-        Q_FOREACH(const QVariant & v, entries) {
+        Q_FOREACH (const QVariant &v, entries) {
             QVariantMap mapEntries = v.toMap();
             if (mapEntries.contains(QLatin1String("type"))) {
                 const QString type = mapEntries.value(QLatin1String("type")).toString();

@@ -36,27 +36,32 @@
 #include "assuancommand.h"
 #include <QObject>
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class SelectCertificateCommand : public QObject, public AssuanCommandMixin<SelectCertificateCommand> {
-        Q_OBJECT
-    public:
-        SelectCertificateCommand();
-        ~SelectCertificateCommand();
+class SelectCertificateCommand : public QObject, public AssuanCommandMixin<SelectCertificateCommand>
+{
+    Q_OBJECT
+public:
+    SelectCertificateCommand();
+    ~SelectCertificateCommand();
 
-        static const char * staticName() { return "SELECT_CERTIFICATE"; }
+    static const char *staticName()
+    {
+        return "SELECT_CERTIFICATE";
+    }
 
-    private:
-        int doStart();
-        void doCanceled();
+private:
+    int doStart();
+    void doCanceled();
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void slotSelectedCertificates(int,QByteArray) )
-        Q_PRIVATE_SLOT( d, void slotDialogAccepted() )
-        Q_PRIVATE_SLOT( d, void slotDialogRejected() )
-    };
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void slotSelectedCertificates(int, QByteArray))
+    Q_PRIVATE_SLOT(d, void slotDialogAccepted())
+    Q_PRIVATE_SLOT(d, void slotDialogRejected())
+};
 
 }
 

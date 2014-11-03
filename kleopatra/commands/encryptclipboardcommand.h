@@ -39,30 +39,33 @@
 
 #include <utils/types.h>
 
-namespace Kleo {
-namespace Commands {
+namespace Kleo
+{
+namespace Commands
+{
 
-    class EncryptClipboardCommand : public Command {
-        Q_OBJECT
-    public:
-        explicit EncryptClipboardCommand( QAbstractItemView * view, KeyListController * parent );
-        explicit EncryptClipboardCommand( KeyListController * parent );
-        ~EncryptClipboardCommand();
+class EncryptClipboardCommand : public Command
+{
+    Q_OBJECT
+public:
+    explicit EncryptClipboardCommand(QAbstractItemView *view, KeyListController *parent);
+    explicit EncryptClipboardCommand(KeyListController *parent);
+    ~EncryptClipboardCommand();
 
-        static bool canEncryptCurrentClipboard();
+    static bool canEncryptCurrentClipboard();
 
-    private:
-        /* reimp */ void doStart();
-        /* reimp */ void doCancel();
+private:
+    /* reimp */ void doStart();
+    /* reimp */ void doCancel();
 
-    private:
-        class Private;
-        inline Private * d_func();
-        inline const Private * d_func() const;
-        Q_PRIVATE_SLOT( d_func(), void slotRecipientsResolved() )
-        Q_PRIVATE_SLOT( d_func(), void slotControllerDone() )
-        Q_PRIVATE_SLOT( d_func(), void slotControllerError(int,QString) )
-    };
+private:
+    class Private;
+    inline Private *d_func();
+    inline const Private *d_func() const;
+    Q_PRIVATE_SLOT(d_func(), void slotRecipientsResolved())
+    Q_PRIVATE_SLOT(d_func(), void slotControllerDone())
+    Q_PRIVATE_SLOT(d_func(), void slotControllerError(int, QString))
+};
 
 }
 }

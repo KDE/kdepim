@@ -53,62 +53,64 @@
 # define addMyModule( x ) addModule( QLatin1String(#x) )
 #endif // KLEO_STATIC_KCMODULES
 
-KCM_IMPORT_PLUGIN( kleopatra_config_dirserv )
+KCM_IMPORT_PLUGIN(kleopatra_config_dirserv)
 #ifndef KDEPIM_MOBILE_UI
-KCM_IMPORT_PLUGIN( kleopatra_config_appear )
+KCM_IMPORT_PLUGIN(kleopatra_config_appear)
 #endif
 #ifdef HAVE_KLEOPATRACLIENT_LIBRARY
 # ifndef KDEPIM_MOBILE_UI
-KCM_IMPORT_PLUGIN( kleopatra_config_cryptooperations )
+KCM_IMPORT_PLUGIN(kleopatra_config_cryptooperations)
 # endif
-KCM_IMPORT_PLUGIN( kleopatra_config_smimevalidation )
+KCM_IMPORT_PLUGIN(kleopatra_config_smimevalidation)
 #endif
-KCM_IMPORT_PLUGIN( kleopatra_config_gnupgsystem )
+KCM_IMPORT_PLUGIN(kleopatra_config_gnupgsystem)
 
-ConfigureDialog::ConfigureDialog( QWidget * parent )
-  : KCMultiDialog( parent )
+ConfigureDialog::ConfigureDialog(QWidget *parent)
+    : KCMultiDialog(parent)
 {
-  setFaceType( KPageDialog::List );
-  setWindowTitle( i18n( "Configure" ) );
+    setFaceType(KPageDialog::List);
+    setWindowTitle(i18n("Configure"));
 #ifdef Q_OS_UNIX
-  KWindowSystem::setIcons( winId(), qApp->windowIcon().pixmap( IconSize( KIconLoader::Desktop ), IconSize( KIconLoader::Desktop ) ),
-                  qApp->windowIcon().pixmap( IconSize( KIconLoader::Small ), IconSize( KIconLoader::Small ) ) );
+    KWindowSystem::setIcons(winId(), qApp->windowIcon().pixmap(IconSize(KIconLoader::Desktop), IconSize(KIconLoader::Desktop)),
+                            qApp->windowIcon().pixmap(IconSize(KIconLoader::Small), IconSize(KIconLoader::Small)));
 #endif
-  //QT5 showButton( User1, true );
+    //QT5 showButton( User1, true );
 
-  addMyModule( kleopatra_config_dirserv );
+    addMyModule(kleopatra_config_dirserv);
 #ifndef KDEPIM_MOBILE_UI
-  addMyModule( kleopatra_config_appear );
+    addMyModule(kleopatra_config_appear);
 #endif
 #ifdef HAVE_KLEOPATRACLIENT_LIBRARY
 # ifndef KDEPIM_MOBILE_UI
-  addMyModule( kleopatra_config_cryptooperations );
+    addMyModule(kleopatra_config_cryptooperations);
 # endif
-  addMyModule( kleopatra_config_smimevalidation );
+    addMyModule(kleopatra_config_smimevalidation);
 #endif
-  addMyModule( kleopatra_config_gnupgsystem );
+    addMyModule(kleopatra_config_gnupgsystem);
 
-  // We store the minimum size of the dialog on hide, because otherwise
-  // the KCMultiDialog starts with the size of the first kcm, not
-  // the largest one. This way at least after the first showing of
-  // the largest kcm the size is kept.
-  const KConfigGroup geometry( KSharedConfig::openConfig(), "Geometry" );
-  const int width = geometry.readEntry( "ConfigureDialogWidth", 0);
-  const int height = geometry.readEntry( "ConfigureDialogHeight", 0 );
-  if ( width != 0 && height != 0 ) {
-     setMinimumSize( width, height );
-  }
+    // We store the minimum size of the dialog on hide, because otherwise
+    // the KCMultiDialog starts with the size of the first kcm, not
+    // the largest one. This way at least after the first showing of
+    // the largest kcm the size is kept.
+    const KConfigGroup geometry(KSharedConfig::openConfig(), "Geometry");
+    const int width = geometry.readEntry("ConfigureDialogWidth", 0);
+    const int height = geometry.readEntry("ConfigureDialogHeight", 0);
+    if (width != 0 && height != 0) {
+        setMinimumSize(width, height);
+    }
 }
 
-void ConfigureDialog::hideEvent( QHideEvent * e ) {
-  const QSize minSize = minimumSizeHint();
-  KConfigGroup geometry( KSharedConfig::openConfig(), "Geometry" );
-  geometry.writeEntry( "ConfigureDialogWidth", minSize.width() );
-  geometry.writeEntry( "ConfigureDialogHeight",minSize.height() );
-  KCMultiDialog::hideEvent( e );
+void ConfigureDialog::hideEvent(QHideEvent *e)
+{
+    const QSize minSize = minimumSizeHint();
+    KConfigGroup geometry(KSharedConfig::openConfig(), "Geometry");
+    geometry.writeEntry("ConfigureDialogWidth", minSize.width());
+    geometry.writeEntry("ConfigureDialogHeight", minSize.height());
+    KCMultiDialog::hideEvent(e);
 }
 
-ConfigureDialog::~ConfigureDialog() {
+ConfigureDialog::~ConfigureDialog()
+{
 }
 
 #undef addMyModule

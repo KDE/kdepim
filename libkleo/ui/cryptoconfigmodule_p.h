@@ -49,282 +49,309 @@ class QLabel;
 class QCheckBox;
 class QComboBox;
 
-namespace Kleo {
-    class FileNameRequester;
+namespace Kleo
+{
+class FileNameRequester;
 }
 
-namespace Kleo {
+namespace Kleo
+{
 
-  class CryptoConfig;
-  class CryptoConfigComponent;
-  class CryptoConfigGroup;
-  class CryptoConfigEntry;
-  class CryptoConfigComponentGUI;
-  class CryptoConfigGroupGUI;
-  class CryptoConfigEntryGUI;
+class CryptoConfig;
+class CryptoConfigComponent;
+class CryptoConfigGroup;
+class CryptoConfigEntry;
+class CryptoConfigComponentGUI;
+class CryptoConfigGroupGUI;
+class CryptoConfigEntryGUI;
 
-  /**
-   * A widget corresponding to a component in the crypto config
-   */
-  class CryptoConfigComponentGUI : public QWidget {
+/**
+ * A widget corresponding to a component in the crypto config
+ */
+class CryptoConfigComponentGUI : public QWidget
+{
     Q_OBJECT
 
-  public:
-    CryptoConfigComponentGUI( CryptoConfigModule* module, Kleo::CryptoConfigComponent* component,
-                              QWidget* parent=0 );
+public:
+    CryptoConfigComponentGUI(CryptoConfigModule *module, Kleo::CryptoConfigComponent *component,
+                             QWidget *parent = 0);
 
     bool save();
     void load();
     void defaults();
 
-  private:
-    Kleo::CryptoConfigComponent* mComponent;
+private:
+    Kleo::CryptoConfigComponent *mComponent;
     QList<CryptoConfigGroupGUI *> mGroupGUIs;
-  };
+};
 
-  /**
-   * A class managing widgets corresponding to a group in the crypto config
-   */
-  class CryptoConfigGroupGUI : public QObject {
+/**
+ * A class managing widgets corresponding to a group in the crypto config
+ */
+class CryptoConfigGroupGUI : public QObject
+{
     Q_OBJECT
 
-  public:
-    CryptoConfigGroupGUI( CryptoConfigModule* module, Kleo::CryptoConfigGroup* group,
-                          QGridLayout * layout, QWidget* parent=0 );
+public:
+    CryptoConfigGroupGUI(CryptoConfigModule *module, Kleo::CryptoConfigGroup *group,
+                         QGridLayout *layout, QWidget *parent = 0);
 
     bool save();
     void load();
     void defaults();
 
-  private:
-    Kleo::CryptoConfigGroup* mGroup;
+private:
+    Kleo::CryptoConfigGroup *mGroup;
     QList<CryptoConfigEntryGUI *> mEntryGUIs;
-  };
+};
 
-  /**
-   * Factory for CryptoConfigEntryGUI instances
-   * Not a real factory, but can become one later.
-   */
-  class CryptoConfigEntryGUIFactory {
-  public:
-    static CryptoConfigEntryGUI* createEntryGUI(
-      CryptoConfigModule* module,
-      Kleo::CryptoConfigEntry* entry, const QString& entryName,
-      QGridLayout * layout, QWidget* widget );
-  };
+/**
+ * Factory for CryptoConfigEntryGUI instances
+ * Not a real factory, but can become one later.
+ */
+class CryptoConfigEntryGUIFactory
+{
+public:
+    static CryptoConfigEntryGUI *createEntryGUI(
+        CryptoConfigModule *module,
+        Kleo::CryptoConfigEntry *entry, const QString &entryName,
+        QGridLayout *layout, QWidget *widget);
+};
 
-  /**
-   * Base class for the widget managers tied to an entry in the crypto config
-   */
-  class CryptoConfigEntryGUI : public QObject {
+/**
+ * Base class for the widget managers tied to an entry in the crypto config
+ */
+class CryptoConfigEntryGUI : public QObject
+{
     Q_OBJECT
-  public:
-    CryptoConfigEntryGUI( CryptoConfigModule* module,
-                          Kleo::CryptoConfigEntry* entry,
-                          const QString& entryName );
+public:
+    CryptoConfigEntryGUI(CryptoConfigModule *module,
+                         Kleo::CryptoConfigEntry *entry,
+                         const QString &entryName);
 
-    void load() { doLoad(); mChanged = false; }
-    void save() { Q_ASSERT( mChanged ); doSave(); mChanged = false; }
+    void load()
+    {
+        doLoad();
+        mChanged = false;
+    }
+    void save()
+    {
+        Q_ASSERT(mChanged);
+        doSave();
+        mChanged = false;
+    }
     void resetToDefault();
 
     QString description() const;
-    bool isChanged() const { return mChanged; }
-
-  Q_SIGNALS:
-    void changed();
-
-  protected Q_SLOTS:
-    void slotChanged() {
-      mChanged = true;
-      emit changed();
+    bool isChanged() const
+    {
+        return mChanged;
     }
 
-  protected:
+Q_SIGNALS:
+    void changed();
+
+protected Q_SLOTS:
+    void slotChanged()
+    {
+        mChanged = true;
+        emit changed();
+    }
+
+protected:
     virtual void doSave() = 0;
     virtual void doLoad() = 0;
 
-    Kleo::CryptoConfigEntry* mEntry;
+    Kleo::CryptoConfigEntry *mEntry;
     QString mName;
     bool mChanged;
-  };
+};
 
-  /**
-   * A widget manager for a string entry in the crypto config
-   */
-  class CryptoConfigEntryLineEdit : public CryptoConfigEntryGUI {
+/**
+ * A widget manager for a string entry in the crypto config
+ */
+class CryptoConfigEntryLineEdit : public CryptoConfigEntryGUI
+{
     Q_OBJECT
 
-  public:
-    CryptoConfigEntryLineEdit( CryptoConfigModule* module,
-                               Kleo::CryptoConfigEntry* entry,
-                               const QString& entryName,
-                               QGridLayout * layout,
-                               QWidget* parent=0 );
+public:
+    CryptoConfigEntryLineEdit(CryptoConfigModule *module,
+                              Kleo::CryptoConfigEntry *entry,
+                              const QString &entryName,
+                              QGridLayout *layout,
+                              QWidget *parent = 0);
 
     /* reimp */ void doSave();
     /* reimp */ void doLoad();
-  private:
-    KLineEdit* mLineEdit;
-  };
+private:
+    KLineEdit *mLineEdit;
+};
 
-  /**
-   * A widget manager for a debug-level entry in the crypto config
-   */
-  class CryptoConfigEntryDebugLevel : public CryptoConfigEntryGUI {
-      Q_OBJECT
-  public:
-      CryptoConfigEntryDebugLevel( CryptoConfigModule * module, Kleo::CryptoConfigEntry * entry,
-                                   const QString & entryName, QGridLayout * layout, QWidget * parent=0 );
-
-      /* reimp */ void doSave();
-      /* reimp */ void doLoad();
-  private:
-      QComboBox * mComboBox;
-  };
-
-
-  /**
-   * A widget manager for a path entry in the crypto config
-   */
-  class CryptoConfigEntryPath : public CryptoConfigEntryGUI {
+/**
+ * A widget manager for a debug-level entry in the crypto config
+ */
+class CryptoConfigEntryDebugLevel : public CryptoConfigEntryGUI
+{
     Q_OBJECT
-
-  public:
-    CryptoConfigEntryPath( CryptoConfigModule* module,
-                           Kleo::CryptoConfigEntry* entry,
-                           const QString& entryName,
-                           QGridLayout * layout,
-                           QWidget* parent=0 );
+public:
+    CryptoConfigEntryDebugLevel(CryptoConfigModule *module, Kleo::CryptoConfigEntry *entry,
+                                const QString &entryName, QGridLayout *layout, QWidget *parent = 0);
 
     /* reimp */ void doSave();
     /* reimp */ void doLoad();
-  private:
-    KUrlRequester* mUrlRequester;
-    Kleo::FileNameRequester * mFileNameRequester;
-  };
+private:
+    QComboBox *mComboBox;
+};
 
-  /**
-   * A widget manager for a directory path entry in the crypto config
-   */
-  class CryptoConfigEntryDirPath : public CryptoConfigEntryGUI {
+/**
+ * A widget manager for a path entry in the crypto config
+ */
+class CryptoConfigEntryPath : public CryptoConfigEntryGUI
+{
     Q_OBJECT
 
-  public:
-    CryptoConfigEntryDirPath( CryptoConfigModule* module,
-                              Kleo::CryptoConfigEntry* entry,
-                              const QString& entryName,
-                              QGridLayout * layout,
-                              QWidget* parent=0 );
+public:
+    CryptoConfigEntryPath(CryptoConfigModule *module,
+                          Kleo::CryptoConfigEntry *entry,
+                          const QString &entryName,
+                          QGridLayout *layout,
+                          QWidget *parent = 0);
 
     /* reimp */ void doSave();
     /* reimp */ void doLoad();
-  private:
-    KUrlRequester* mUrlRequester;
-    Kleo::FileNameRequester * mFileNameRequester;
-  };
+private:
+    KUrlRequester *mUrlRequester;
+    Kleo::FileNameRequester *mFileNameRequester;
+};
 
-  /**
-   * A widget manager for an URL entry in the crypto config
-   */
-  class CryptoConfigEntryURL : public CryptoConfigEntryGUI {
+/**
+ * A widget manager for a directory path entry in the crypto config
+ */
+class CryptoConfigEntryDirPath : public CryptoConfigEntryGUI
+{
     Q_OBJECT
 
-  public:
-    CryptoConfigEntryURL( CryptoConfigModule* module,
-                          Kleo::CryptoConfigEntry* entry,
-                          const QString& entryName,
-                          QGridLayout * layout,
-                          QWidget* parent=0 );
+public:
+    CryptoConfigEntryDirPath(CryptoConfigModule *module,
+                             Kleo::CryptoConfigEntry *entry,
+                             const QString &entryName,
+                             QGridLayout *layout,
+                             QWidget *parent = 0);
+
+    /* reimp */ void doSave();
+    /* reimp */ void doLoad();
+private:
+    KUrlRequester *mUrlRequester;
+    Kleo::FileNameRequester *mFileNameRequester;
+};
+
+/**
+ * A widget manager for an URL entry in the crypto config
+ */
+class CryptoConfigEntryURL : public CryptoConfigEntryGUI
+{
+    Q_OBJECT
+
+public:
+    CryptoConfigEntryURL(CryptoConfigModule *module,
+                         Kleo::CryptoConfigEntry *entry,
+                         const QString &entryName,
+                         QGridLayout *layout,
+                         QWidget *parent = 0);
 
     /* reimp */ void doSave();
     /* reimp */ void doLoad();
 
-  private:
-        QLineEdit * mLineEdit;
-    KUrlRequester * mUrlRequester;
-  };
+private:
+    QLineEdit *mLineEdit;
+    KUrlRequester *mUrlRequester;
+};
 
-  /**
-   * A widget manager for an int/uint entry in the crypto config
-   */
-  class CryptoConfigEntrySpinBox : public CryptoConfigEntryGUI {
+/**
+ * A widget manager for an int/uint entry in the crypto config
+ */
+class CryptoConfigEntrySpinBox : public CryptoConfigEntryGUI
+{
     Q_OBJECT
 
-  public:
-    CryptoConfigEntrySpinBox( CryptoConfigModule* module,
-                              Kleo::CryptoConfigEntry* entry,
-                              const QString& entryName,
-                              QGridLayout * layout,
-                              QWidget* parent=0 );
+public:
+    CryptoConfigEntrySpinBox(CryptoConfigModule *module,
+                             Kleo::CryptoConfigEntry *entry,
+                             const QString &entryName,
+                             QGridLayout *layout,
+                             QWidget *parent = 0);
     /* reimp */ void doSave();
     /* reimp */ void doLoad();
-  private:
+private:
     enum { Int, UInt, ListOfNone } mKind;
-    QSpinBox* mNumInput;
-  };
+    QSpinBox *mNumInput;
+};
 
-  /**
-   * A widget manager for a bool entry in the crypto config
-   */
-  class CryptoConfigEntryCheckBox : public CryptoConfigEntryGUI {
+/**
+ * A widget manager for a bool entry in the crypto config
+ */
+class CryptoConfigEntryCheckBox : public CryptoConfigEntryGUI
+{
     Q_OBJECT
 
-  public:
-    CryptoConfigEntryCheckBox( CryptoConfigModule* module,
-                               Kleo::CryptoConfigEntry* entry,
-                               const QString& entryName,
-                               QGridLayout * layout,
-                               QWidget* parent=0 );
+public:
+    CryptoConfigEntryCheckBox(CryptoConfigModule *module,
+                              Kleo::CryptoConfigEntry *entry,
+                              const QString &entryName,
+                              QGridLayout *layout,
+                              QWidget *parent = 0);
     /* reimp */ void doSave();
     /* reimp */ void doLoad();
-  private:
-    QCheckBox* mCheckBox;
-  };
+private:
+    QCheckBox *mCheckBox;
+};
 
-  /**
-   * A widget manager for an LDAP list entry in the crypto config
-   */
-  class CryptoConfigEntryLDAPURL : public CryptoConfigEntryGUI {
+/**
+ * A widget manager for an LDAP list entry in the crypto config
+ */
+class CryptoConfigEntryLDAPURL : public CryptoConfigEntryGUI
+{
     Q_OBJECT
 
-  public:
-    CryptoConfigEntryLDAPURL( CryptoConfigModule* module,
-                              Kleo::CryptoConfigEntry* entry,
-                              const QString& entryName,
-                              QGridLayout * layout,
-                              QWidget* parent=0 );
+public:
+    CryptoConfigEntryLDAPURL(CryptoConfigModule *module,
+                             Kleo::CryptoConfigEntry *entry,
+                             const QString &entryName,
+                             QGridLayout *layout,
+                             QWidget *parent = 0);
     /* reimp */ void doSave();
     /* reimp */ void doLoad();
-  private Q_SLOTS:
+private Q_SLOTS:
     void slotOpenDialog();
-  private:
-    void setURLList( const KUrl::List& urlList );
-    QLabel* mLabel;
-    QPushButton* mPushButton;
+private:
+    void setURLList(const KUrl::List &urlList);
+    QLabel *mLabel;
+    QPushButton *mPushButton;
     KUrl::List mURLList;
-  };
+};
 
-  /**
-   * A widget manager for a (OpenPGP) keyserver entry in the crypto config
-   */
-  class CryptoConfigEntryKeyserver : public CryptoConfigEntryGUI {
+/**
+ * A widget manager for a (OpenPGP) keyserver entry in the crypto config
+ */
+class CryptoConfigEntryKeyserver : public CryptoConfigEntryGUI
+{
     Q_OBJECT
 
-  public:
-    CryptoConfigEntryKeyserver( CryptoConfigModule* module,
-                                Kleo::CryptoConfigEntry* entry,
-                                const QString& entryName,
-                                QGridLayout * layout,
-                                QWidget* parent=0 );
+public:
+    CryptoConfigEntryKeyserver(CryptoConfigModule *module,
+                               Kleo::CryptoConfigEntry *entry,
+                               const QString &entryName,
+                               QGridLayout *layout,
+                               QWidget *parent = 0);
     /* reimp */ void doSave();
     /* reimp */ void doLoad();
-  private Q_SLOTS:
+private Q_SLOTS:
     void slotOpenDialog();
-  private:
-    QLabel* mLabel;
-    QPushButton* mPushButton;
+private:
+    QLabel *mLabel;
+    QPushButton *mPushButton;
     ParsedKeyserver mParsedKeyserver;
-  };
+};
 }
 
 #endif // CRYPTOCONFIGMODULE_P_H

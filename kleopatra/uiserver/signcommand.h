@@ -37,23 +37,28 @@
 
 #include <utils/pimpl_ptr.h>
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class SignCommand : public Kleo::AssuanCommandMixin<SignCommand> {
-    public:
-        SignCommand();
-        ~SignCommand();
+class SignCommand : public Kleo::AssuanCommandMixin<SignCommand>
+{
+public:
+    SignCommand();
+    ~SignCommand();
 
-    private:
-        /* reimp */ int doStart();
-        /* reimp */ void doCanceled();
-    public:
-        static const char * staticName() { return "SIGN"; }
+private:
+    /* reimp */ int doStart();
+    /* reimp */ void doCanceled();
+public:
+    static const char *staticName()
+    {
+        return "SIGN";
+    }
 
-        class Private;
-    private:
-        kdtools::pimpl_ptr<Private> d;
-    };
+    class Private;
+private:
+    kdtools::pimpl_ptr<Private> d;
+};
 
 }
 

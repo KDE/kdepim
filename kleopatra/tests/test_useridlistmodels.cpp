@@ -34,8 +34,6 @@
 
 #include <models/useridlistmodel.h>
 
-
-
 #include <KAboutData>
 
 #include <QTreeView>
@@ -64,32 +62,36 @@
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 
-class KeyResolveJob : QObject {
+class KeyResolveJob : QObject
+{
     Q_OBJECT
 public:
-    explicit KeyResolveJob( GpgME::Protocol proto=GpgME::OpenPGP, QObject * p=0 )
-        : QObject( p ),
-          m_ctx( GpgME::Context::createForProtocol( proto ) ),
-          m_done( false ),
-          m_loop( 0 )
+    explicit KeyResolveJob(GpgME::Protocol proto = GpgME::OpenPGP, QObject *p = 0)
+        : QObject(p),
+          m_ctx(GpgME::Context::createForProtocol(proto)),
+          m_done(false),
+          m_loop(0)
     {
-        assert( m_ctx.get() );
-        connect( QGpgME::EventLoopInteractor::instance(), SIGNAL(nextKeyEventSignal(GpgME::Context*,GpgME::Key)),
-                 this, SLOT(slotNextKey(GpgME::Context*,GpgME::Key)) );
-        connect( QGpgME::EventLoopInteractor::instance(), SIGNAL(operationDoneEventSignal(GpgME::Context*,GpgME::Error)),
-                 this, SLOT(slotDone(GpgME::Context*,GpgME::Error)) );
+        assert(m_ctx.get());
+        connect(QGpgME::EventLoopInteractor::instance(), SIGNAL(nextKeyEventSignal(GpgME::Context*,GpgME::Key)),
+                this, SLOT(slotNextKey(GpgME::Context*,GpgME::Key)));
+        connect(QGpgME::EventLoopInteractor::instance(), SIGNAL(operationDoneEventSignal(GpgME::Context*,GpgME::Error)),
+                this, SLOT(slotDone(GpgME::Context*,GpgME::Error)));
 
-        m_ctx->setManagedByEventLoopInteractor( true );
-    }
-    
-    GpgME::Error start( const char * pattern, bool secretOnly=false ) {
-        m_ctx->addKeyListMode( GpgME::Signatures|GpgME::SignatureNotations );
-        return m_ctx->startKeyListing( pattern, secretOnly );
+        m_ctx->setManagedByEventLoopInteractor(true);
     }
 
-    GpgME::Error waitForDone() {
-        if ( m_done )
+    GpgME::Error start(const char *pattern, bool secretOnly = false)
+    {
+        m_ctx->addKeyListMode(GpgME::Signatures | GpgME::SignatureNotations);
+        return m_ctx->startKeyListing(pattern, secretOnly);
+    }
+
+    GpgME::Error waitForDone()
+    {
+        if (m_done) {
             return m_error;
+        }
         QEventLoop loop;
         m_loop = &loop;
         loop.exec();
@@ -97,23 +99,29 @@ public:
         return m_error;
     }
 
-    std::vector<GpgME::Key> keys() const {
+    std::vector<GpgME::Key> keys() const
+    {
         return m_keys;
     }
 
 private Q_SLOTS:
-    void slotNextKey( GpgME::Context * ctx, const GpgME::Key & key ) {
-        if ( ctx != m_ctx.get() )
+    void slotNextKey(GpgME::Context *ctx, const GpgME::Key &key)
+    {
+        if (ctx != m_ctx.get()) {
             return;
-        m_keys.push_back( key );
+        }
+        m_keys.push_back(key);
     }
-    void slotDone( GpgME::Context * ctx, const GpgME::Error & err ) {
-        if ( ctx != m_ctx.get() )
+    void slotDone(GpgME::Context *ctx, const GpgME::Error &err)
+    {
+        if (ctx != m_ctx.get()) {
             return;
+        }
         m_error = err;
         m_done = true;
-        if ( m_loop )
+        if (m_loop) {
             m_loop->quit();
+        }
     }
 
 private:
@@ -121,45 +129,50 @@ private:
     GpgME::Error m_error;
     bool m_done;
     std::vector<GpgME::Key> m_keys;
-    QEventLoop * m_loop;
+    QEventLoop *m_loop;
 };
 
 using namespace GpgME;
 using namespace Kleo;
 
-static void start( const QString & str, Protocol proto ) {
+static void start(const QString &str, Protocol proto)
+{
     const QByteArray arg = str.toUtf8();
 
-    KeyResolveJob job( proto );
+    KeyResolveJob job(proto);
 
-    if ( const GpgME::Error err = job.start( arg ) )
-        throw std::runtime_error( std::string( "startKeyListing: " ) + gpg_strerror( err.encodedError() ) );
+    if (const GpgME::Error err = job.start(arg)) {
+        throw std::runtime_error(std::string("startKeyListing: ") + gpg_strerror(err.encodedError()));
+    }
 
-    if ( const GpgME::Error err = job.waitForDone() )
-        throw std::runtime_error( std::string( "nextKey: " ) + gpg_strerror( err.encodedError() ) );
+    if (const GpgME::Error err = job.waitForDone()) {
+        throw std::runtime_error(std::string("nextKey: ") + gpg_strerror(err.encodedError()));
+    }
 
     const Key key = job.keys().front();
 
-    if ( key.isNull() )
-        throw std::runtime_error( std::string( "key is null" ) );
+    if (key.isNull()) {
+        throw std::runtime_error(std::string("key is null"));
+    }
 
-    QTreeView * const tv = new QTreeView;
-    tv->setWindowTitle( QString::fromLatin1( "UserIDListModel Test - %1" ).arg( str ) );
+    QTreeView *const tv = new QTreeView;
+    tv->setWindowTitle(QString::fromLatin1("UserIDListModel Test - %1").arg(str));
 
-    UserIDListModel * const model = new UserIDListModel( tv );
+    UserIDListModel *const model = new UserIDListModel(tv);
 #ifdef KLEO_MODEL_TEST
-    new ModelTest( model );
+    new ModelTest(model);
 #endif
-    model->setKey( key );
+    model->setKey(key);
 
-    tv->setModel( model );
+    tv->setModel(model);
 
     tv->show();
 }
 
-int main( int argc, char * argv[] ) {
+int main(int argc, char *argv[])
+{
 
-    KAboutData aboutData( QLatin1String("test_useridlistmodels"), i18n("UserIDListModel Test"), QLatin1String("0.1") );
+    KAboutData aboutData(QLatin1String("test_useridlistmodels"), i18n("UserIDListModel Test"), QLatin1String("0.1"));
     QApplication app(argc, argv);
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
@@ -172,21 +185,23 @@ int main( int argc, char * argv[] ) {
     parser.process(app);
     aboutData.processCommandLine(&parser);
 
-
-    if ( parser.values( QLatin1String("p") ).empty() && parser.values( QLatin1String("x") ).empty() )
+    if (parser.values(QLatin1String("p")).empty() && parser.values(QLatin1String("x")).empty()) {
         return 1;
+    }
 
     try {
 
-        Q_FOREACH( const QString & arg, parser.values( QLatin1String("p") ) )
-            start( arg, OpenPGP );
+        Q_FOREACH (const QString &arg, parser.values(QLatin1String("p"))) {
+            start(arg, OpenPGP);
+        }
 
-        Q_FOREACH( const QString & arg, parser.values( QLatin1String("x") ) )
-            start( arg, CMS );
+        Q_FOREACH (const QString &arg, parser.values(QLatin1String("x"))) {
+            start(arg, CMS);
+        }
 
         return app.exec();
 
-    } catch ( const std::exception & e ) {
+    } catch (const std::exception &e) {
         std::cerr << "Caught exception: " << e.what() << std::endl;
         return 1;
     }

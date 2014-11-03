@@ -50,74 +50,74 @@ public:
     ~Config();
 
     QStringList componentList() const;
-    ConfigComponent* component( const QString& name ) const;
-    void addComponent( ConfigComponent* component );
+    ConfigComponent *component(const QString &name) const;
+    void addComponent(ConfigComponent *component);
 
 private:
-    Config( const Config& );
-    Config& operator=( const Config& );
+    Config(const Config &);
+    Config &operator=(const Config &);
 
 private:
-    QHash<QString,ConfigComponent*> m_components;
+    QHash<QString, ConfigComponent *> m_components;
 };
 
 class ConfigComponent
 {
 public:
-    explicit ConfigComponent( const QString& name );
+    explicit ConfigComponent(const QString &name);
     ~ConfigComponent();
 
     QString name() const;
-    void setName( const QString& name );
+    void setName(const QString &name);
 
-    void setDescription( const QString& description );
+    void setDescription(const QString &description);
     QString description() const;
 
     QStringList groupList() const;
-    ConfigGroup* group( const QString& name ) const;
+    ConfigGroup *group(const QString &name) const;
 
-    void addGroup( ConfigGroup* group );
-    ConfigEntry* entry( const QString& name ) const;
+    void addGroup(ConfigGroup *group);
+    ConfigEntry *entry(const QString &name) const;
 
 private:
     ConfigComponent();
-    ConfigComponent( const ConfigComponent& );
-    ConfigComponent& operator=( const ConfigComponent& );
+    ConfigComponent(const ConfigComponent &);
+    ConfigComponent &operator=(const ConfigComponent &);
 
 private:
     QString m_name;
     QString m_description;
-    QHash<QString, ConfigGroup*> m_groups;
-    mutable QHash<QString, ConfigEntry*> m_entries;
+    QHash<QString, ConfigGroup *> m_groups;
+    mutable QHash<QString, ConfigEntry *> m_entries;
 };
 
 class ConfigGroup
 {
 public:
-    explicit ConfigGroup( const QString& name );
+    explicit ConfigGroup(const QString &name);
     ~ConfigGroup();
 
     QString name() const;
-    void setName( const QString& name );
+    void setName(const QString &name);
 
     QString description() const;
-    void setDescription( const QString& description );
+    void setDescription(const QString &description);
 
     bool isEmpty() const;
 
     QStringList entryList() const;
-    ConfigEntry* entry( const QString& name ) const;
-    void addEntry( ConfigEntry* entry );
+    ConfigEntry *entry(const QString &name) const;
+    void addEntry(ConfigEntry *entry);
 
 private:
     ConfigGroup();
-    ConfigGroup( const ConfigGroup& );
-    ConfigGroup& operator=( const ConfigGroup& );
+    ConfigGroup(const ConfigGroup &);
+    ConfigGroup &operator=(const ConfigGroup &);
 
 private:
     QString m_name;
     QString m_description;
-    QHash<QString, ConfigEntry*> m_entries;
+    QHash<QString, ConfigEntry *> m_entries;
 };
 
 class ConfigEntry
@@ -125,13 +125,13 @@ class ConfigEntry
 public:
 
     enum Mutability {
-        UnspecifiedMutability=0,
+        UnspecifiedMutability = 0,
         NoChange,
         Change
     };
 
     enum ArgType {
-        None=0,
+        None = 0,
         String,
         Int,
         UInt,
@@ -142,31 +142,31 @@ public:
     };
 
     enum ListType {
-        NoList=0,
+        NoList = 0,
         List
     };
 
-    explicit ConfigEntry( const QString& name );
+    explicit ConfigEntry(const QString &name);
 
     QString name() const;
-    void setName( const QString& name );
+    void setName(const QString &name);
 
     QString description() const;
-    void setDescription( const QString& description );
+    void setDescription(const QString &description);
 
-    void setMutability( Mutability mutability );
+    void setMutability(Mutability mutability);
     Mutability mutability() const;
 
     bool isDirty() const;
     void unsetDirty();
 
-    void setUseBuiltInDefault( bool useDefault );
+    void setUseBuiltInDefault(bool useDefault);
     bool useBuiltInDefault() const;
 
-    void setValueFromRawString( const QString& str );
-    void setValueFromUiString( const QString& str );
+    void setValueFromRawString(const QString &str);
+    void setValueFromUiString(const QString &str);
 
-    void setArgType( ArgType type, ListType listType );
+    void setArgType(ArgType type, ListType listType);
     ArgType argType() const;
 
     /** Human-readable (i.e. translated) description of the entry's type */
@@ -185,40 +185,40 @@ public:
 
     QString outputString() const;
 
-    void setBoolValue( bool );
-    void setStringValue( const QString& );
-    void setIntValue( int );
-    void setUIntValue( unsigned int );
-    void setURLValue( const QUrl& );
-    void setNumberOfTimesSet( unsigned int );
-    void setStringValueList( const QStringList& );
-    void setIntValueList( const QList<int>& );
-    void setUIntValueList( const QList<unsigned int>& );
-    void setURLValueList( const QList<QUrl>& );
+    void setBoolValue(bool);
+    void setStringValue(const QString &);
+    void setIntValue(int);
+    void setUIntValue(unsigned int);
+    void setURLValue(const QUrl &);
+    void setNumberOfTimesSet(unsigned int);
+    void setStringValueList(const QStringList &);
+    void setIntValueList(const QList<int> &);
+    void setUIntValueList(const QList<unsigned int> &);
+    void setURLValueList(const QList<QUrl> &);
 
 private:
     bool isStringType() const;
     bool isList() const;
 
     enum EscapeMode {
-        NoEscape=0,
-        Escape=1,
-        Quote=2,
-        EscapeAndQuote=3
+        NoEscape = 0,
+        Escape = 1,
+        Quote = 2,
+        EscapeAndQuote = 3
     };
 
-    QString toString( EscapeMode mode ) const;
+    QString toString(EscapeMode mode) const;
 
     ConfigEntry();
-    ConfigEntry( const ConfigEntry& );
-    ConfigEntry& operator=( const ConfigEntry& );
-    
+    ConfigEntry(const ConfigEntry &);
+    ConfigEntry &operator=(const ConfigEntry &);
+
     enum UnescapeMode {
-        DoNotUnescape=0,
-        Unescape=1
+        DoNotUnescape = 0,
+        Unescape = 1
     };
 
-    QVariant stringToValue( const QString& str, UnescapeMode mode ) const;
+    QVariant stringToValue(const QString &str, UnescapeMode mode) const;
 
 private:
     bool m_dirty;

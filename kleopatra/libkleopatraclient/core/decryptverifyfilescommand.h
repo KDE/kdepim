@@ -24,21 +24,23 @@
 
 #include <libkleopatraclient/core/command.h>
 
-namespace KleopatraClientCopy {
+namespace KleopatraClientCopy
+{
 
-    class KLEOPATRACLIENTCORE_EXPORT DecryptVerifyFilesCommand : public Command {
-        Q_OBJECT
-    public:
-        explicit DecryptVerifyFilesCommand( QObject * parent=0 );
-        ~DecryptVerifyFilesCommand();
+class KLEOPATRACLIENTCORE_EXPORT DecryptVerifyFilesCommand : public Command
+{
+    Q_OBJECT
+public:
+    explicit DecryptVerifyFilesCommand(QObject *parent = 0);
+    ~DecryptVerifyFilesCommand();
 
-        // Inputs
+    // Inputs
 
-        using Command::setFilePaths;
-        using Command::filePaths;
+    using Command::setFilePaths;
+    using Command::filePaths;
 
-        // No Outputs
-    };
+    // No Outputs
+};
 
 }
 

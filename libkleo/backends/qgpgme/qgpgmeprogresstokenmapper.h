@@ -30,21 +30,20 @@
     your version.
 */
 
-
 #ifndef __KLEO_QGPGMEPROGRESSTOKENMAPPER_H__
 #define __KLEO_QGPGMEPROGRESSTOKENMAPPER_H__
 
-
 class QString;
 
-namespace Kleo {
+namespace Kleo
+{
 
-  namespace QGpgMEProgressTokenMapper {
-    QString map( const char * token, int subtoken );
-    QString map( const QString & token, int subtoken );
-  }
-
+namespace QGpgMEProgressTokenMapper
+{
+QString map(const char *token, int subtoken);
+QString map(const QString &token, int subtoken);
 }
 
+}
 
 #endif // __KLEO_QGPGMEPROGRESSTOKENMAPPER_H__

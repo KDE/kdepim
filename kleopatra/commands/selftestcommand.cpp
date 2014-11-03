@@ -66,7 +66,7 @@ using namespace Kleo::Commands;
 using namespace Kleo::Dialogs;
 using namespace boost;
 
-static const char * const components[] = {
+static const char *const components[] = {
     0, // gpgconf
     "gpg",
     "gpg-agent",
@@ -74,85 +74,97 @@ static const char * const components[] = {
     "gpgsm",
     "dirmngr",
 };
-static const unsigned int numComponents = sizeof components / sizeof *components;
+static const unsigned int numComponents = sizeof components / sizeof * components;
 
-class SelfTestCommand::Private : Command::Private {
+class SelfTestCommand::Private : Command::Private
+{
     friend class ::Kleo::Commands::SelfTestCommand;
-    SelfTestCommand * q_func() const { return static_cast<SelfTestCommand*>( q ); }
+    SelfTestCommand *q_func() const
+    {
+        return static_cast<SelfTestCommand *>(q);
+    }
 public:
-    explicit Private( SelfTestCommand * qq, KeyListController * c );
+    explicit Private(SelfTestCommand *qq, KeyListController *c);
     ~Private();
 
 private:
     void init();
 
-    void ensureDialogCreated() {
-        if ( dialog )
+    void ensureDialogCreated()
+    {
+        if (dialog) {
             return;
+        }
         dialog = new SelfTestDialog;
-        applyWindowID( dialog );
-        dialog->setAttribute( Qt::WA_DeleteOnClose );
+        applyWindowID(dialog);
+        dialog->setAttribute(Qt::WA_DeleteOnClose);
 
-        connect( dialog, SIGNAL(updateRequested()),
-                 q_func(), SLOT(slotUpdateRequested()) );
-        connect( dialog, SIGNAL(accepted()),
-                 q_func(), SLOT(slotDialogAccepted()) );
-        connect( dialog, SIGNAL(rejected()),
-                 q_func(), SLOT(slotDialogRejected()) );
+        connect(dialog, SIGNAL(updateRequested()),
+                q_func(), SLOT(slotUpdateRequested()));
+        connect(dialog, SIGNAL(accepted()),
+                q_func(), SLOT(slotDialogAccepted()));
+        connect(dialog, SIGNAL(rejected()),
+                q_func(), SLOT(slotDialogRejected()));
 
-        dialog->setRunAtStartUp( runAtStartUp() );
-        dialog->setAutomaticMode( automatic );
+        dialog->setRunAtStartUp(runAtStartUp());
+        dialog->setAutomaticMode(automatic);
     }
 
-    void ensureDialogShown() {
+    void ensureDialogShown()
+    {
         ensureDialogCreated();
-        if ( dialog->isVisible() )
+        if (dialog->isVisible()) {
             dialog->raise();
-        else
+        } else {
             dialog->show();
+        }
 #ifndef QT_NO_SPLASHSCREEN
-        if ( splash )
-            splash->finish( dialog );
+        if (splash) {
+            splash->finish(dialog);
+        }
 #endif // QT_NO_SPLASHSCREEN
     }
 
-    bool runAtStartUp() const {
-        const KConfigGroup config( KSharedConfig::openConfig(), "Self-Test" );
-        return config.readEntry( "run-at-startup", true );
+    bool runAtStartUp() const
+    {
+        const KConfigGroup config(KSharedConfig::openConfig(), "Self-Test");
+        return config.readEntry("run-at-startup", true);
     }
 
-    void setRunAtStartUp( bool on ) {
-        KConfigGroup config( KSharedConfig::openConfig(), "Self-Test" );
-        config.writeEntry( "run-at-startup", on );
+    void setRunAtStartUp(bool on)
+    {
+        KConfigGroup config(KSharedConfig::openConfig(), "Self-Test");
+        config.writeEntry("run-at-startup", on);
     }
 
-    void runTests() {
+    void runTests()
+    {
         std::vector< shared_ptr<Kleo::SelfTest> > tests;
 
 #if defined(Q_OS_WIN)
         //emit q->info( i18n("Checking Windows Registry...") );
-        tests.push_back( makeGpgProgramRegistryCheckSelfTest() );
+        tests.push_back(makeGpgProgramRegistryCheckSelfTest());
 #endif
         //emit q->info( i18n("Checking gpg installation...") );
-        tests.push_back( makeGpgEngineCheckSelfTest() );
+        tests.push_back(makeGpgEngineCheckSelfTest());
         //emit q->info( i18n("Checking gpgsm installation...") );
-        tests.push_back( makeGpgSmEngineCheckSelfTest() );
+        tests.push_back(makeGpgSmEngineCheckSelfTest());
         //emit q->info( i18n("Checking gpgconf installation...") );
-        tests.push_back( makeGpgConfEngineCheckSelfTest() );
-        for ( unsigned int i = 0 ; i < numComponents ; ++i ) {
+        tests.push_back(makeGpgConfEngineCheckSelfTest());
+        for (unsigned int i = 0 ; i < numComponents ; ++i) {
             //emit q->info( i18n("Checking %1 configuration...", components[i]) );
-            tests.push_back( makeGpgConfCheckConfigurationSelfTest( components[i] ) );
+            tests.push_back(makeGpgConfCheckConfigurationSelfTest(components[i]));
         }
 #if defined( HAVE_KLEOPATRACLIENT_LIBRARY )
         //emit q->info( i18n("Checking Ui Server connectivity...") );
-        tests.push_back( makeUiServerConnectivitySelfTest() );
+        tests.push_back(makeUiServerConnectivitySelfTest());
 #endif
 #ifndef Q_OS_WIN
-        tests.push_back( makeGpgAgentConnectivitySelfTest() );
+        tests.push_back(makeGpgAgentConnectivitySelfTest());
 #endif
-        tests.push_back( makeLibKleopatraRcSelfTest() );
+        tests.push_back(makeLibKleopatraRcSelfTest());
 
-        if ( !dialog && kdtools::none_of( tests, mem_fn( &Kleo::SelfTest::failed ) ) ) {
+        if (!dialog && kdtools::none_of(tests, mem_fn(&Kleo::SelfTest::failed))) {
             finished();
             return;
         }
@@ -160,25 +172,28 @@ private:
         ensureDialogCreated();
 
         dialog->clear();
-        dialog->addSelfTests( tests );
+        dialog->addSelfTests(tests);
 
         ensureDialogShown();
     }
 
 private:
-    void slotDialogAccepted() {
-        setRunAtStartUp( dialog->runAtStartUp() );
+    void slotDialogAccepted()
+    {
+        setRunAtStartUp(dialog->runAtStartUp());
         finished();
     }
-    void slotDialogRejected() {
-        if ( automatic ) {
+    void slotDialogRejected()
+    {
+        if (automatic) {
             canceled = true;
             Command::Private::canceled();
         } else {
             slotDialogAccepted();
         }
     }
-    void slotUpdateRequested() {
+    void slotUpdateRequested()
+    {
         runTests();
     }
 
@@ -191,68 +206,81 @@ private:
     bool automatic;
 };
 
-SelfTestCommand::Private * SelfTestCommand::d_func() { return static_cast<Private*>( d.get() ); }
-const SelfTestCommand::Private * SelfTestCommand::d_func() const { return static_cast<const Private*>( d.get() ); }
+SelfTestCommand::Private *SelfTestCommand::d_func()
+{
+    return static_cast<Private *>(d.get());
+}
+const SelfTestCommand::Private *SelfTestCommand::d_func() const
+{
+    return static_cast<const Private *>(d.get());
+}
 
 #define d d_func()
 #define q q_func()
 
-SelfTestCommand::Private::Private( SelfTestCommand * qq, KeyListController * c )
-    : Command::Private( qq, c ),
+SelfTestCommand::Private::Private(SelfTestCommand *qq, KeyListController *c)
+    : Command::Private(qq, c),
 #ifndef QT_NO_SPLASHSCREEN
       splash(),
 #endif // QT_NO_SPLASHSCREEN
       dialog(),
-      canceled( false ),
-      automatic( false )
+      canceled(false),
+      automatic(false)
 {
 
 }
 
-SelfTestCommand::Private::~Private() {
-
-}
-
-SelfTestCommand::SelfTestCommand( KeyListController * c )
-    : Command( new Private( this, c ) )
+SelfTestCommand::Private::~Private()
 {
-    d->init();
+
 }
 
-SelfTestCommand::SelfTestCommand( QAbstractItemView * v, KeyListController * c )
-    : Command( v, new Private( this, c ) )
+SelfTestCommand::SelfTestCommand(KeyListController *c)
+    : Command(new Private(this, c))
 {
     d->init();
 }
 
-void SelfTestCommand::Private::init() {
+SelfTestCommand::SelfTestCommand(QAbstractItemView *v, KeyListController *c)
+    : Command(v, new Private(this, c))
+{
+    d->init();
+}
+
+void SelfTestCommand::Private::init()
+{
 
 }
 
 SelfTestCommand::~SelfTestCommand() {}
 
-void SelfTestCommand::setAutomaticMode( bool on ) {
+void SelfTestCommand::setAutomaticMode(bool on)
+{
     d->automatic = on;
-    if ( d->dialog )
-        d->dialog->setAutomaticMode( on );
+    if (d->dialog) {
+        d->dialog->setAutomaticMode(on);
+    }
 }
 
-void SelfTestCommand::setSplashScreen( QSplashScreen * splash ) {
+void SelfTestCommand::setSplashScreen(QSplashScreen *splash)
+{
 #ifndef QT_NO_SPLASHSCREEN
     d->splash = splash;
 #else
-    Q_UNUSED( splash );
+    Q_UNUSED(splash);
 #endif // QT_NO_SPLASHSCREEN
 }
 
-bool SelfTestCommand::isCanceled() const {
+bool SelfTestCommand::isCanceled() const
+{
     return d->canceled;
 }
 
-void SelfTestCommand::doStart() {
+void SelfTestCommand::doStart()
+{
 
-    if ( d->automatic ) {
-        if ( !d->runAtStartUp() ) {
+    if (d->automatic) {
+        if (!d->runAtStartUp()) {
             d->finished();
             return;
         }
@@ -264,10 +292,12 @@ void SelfTestCommand::doStart() {
 
 }
 
-void SelfTestCommand::doCancel() {
+void SelfTestCommand::doCancel()
+{
     d->canceled = true;
-    if ( d->dialog )
+    if (d->dialog) {
         d->dialog->close();
+    }
     d->dialog = 0;
 }
 

@@ -35,45 +35,52 @@
 
 #include <commands/command.h>
 
-namespace GpgME {
-    class UserID;
+namespace GpgME
+{
+class UserID;
 }
 
-namespace Kleo {
-namespace Commands {
+namespace Kleo
+{
+namespace Commands
+{
 
-    class CertifyCertificateCommand : public Command {
-        Q_OBJECT
-    public:
-        explicit CertifyCertificateCommand( QAbstractItemView * view, KeyListController * parent );
-        explicit CertifyCertificateCommand( KeyListController * parent );
-        explicit CertifyCertificateCommand( const GpgME::Key & key );
-        explicit CertifyCertificateCommand( const GpgME::UserID & uid );
-        explicit CertifyCertificateCommand( const std::vector<GpgME::UserID> & uids );
-        ~CertifyCertificateCommand();
+class CertifyCertificateCommand : public Command
+{
+    Q_OBJECT
+public:
+    explicit CertifyCertificateCommand(QAbstractItemView *view, KeyListController *parent);
+    explicit CertifyCertificateCommand(KeyListController *parent);
+    explicit CertifyCertificateCommand(const GpgME::Key &key);
+    explicit CertifyCertificateCommand(const GpgME::UserID &uid);
+    explicit CertifyCertificateCommand(const std::vector<GpgME::UserID> &uids);
+    ~CertifyCertificateCommand();
 
-        /* reimp */ static Restrictions restrictions() { return OnlyOneKey|MustBeOpenPGP; }
+    /* reimp */ static Restrictions restrictions()
+    {
+        return OnlyOneKey | MustBeOpenPGP;
+    }
 
-        void setCertificationExportable( bool on );
-        void setCertificationRevocable( bool on );
+    void setCertificationExportable(bool on);
+    void setCertificationRevocable(bool on);
 
-        void setCertifyingKey( const GpgME::Key & key );
+    void setCertifyingKey(const GpgME::Key &key);
 
-        void setUserID( const GpgME::UserID & uid );
-        void setUserIDs( const std::vector<GpgME::UserID> & uids );
+    void setUserID(const GpgME::UserID &uid);
+    void setUserIDs(const std::vector<GpgME::UserID> &uids);
 
-    private:
-        /* reimp */ void doStart();
-        /* reimp */ void doCancel();
+private:
+    /* reimp */ void doStart();
+    /* reimp */ void doCancel();
 
-    private:
-        class Private;
-        inline Private * d_func();
-        inline const Private * d_func() const;
-        Q_PRIVATE_SLOT( d_func(), void slotResult(GpgME::Error) )
-        Q_PRIVATE_SLOT( d_func(), void slotDialogRejected() )
-        Q_PRIVATE_SLOT( d_func(), void slotCertificationPrepared() )
-    };
+private:
+    class Private;
+    inline Private *d_func();
+    inline const Private *d_func() const;
+    Q_PRIVATE_SLOT(d_func(), void slotResult(GpgME::Error))
+    Q_PRIVATE_SLOT(d_func(), void slotDialogRejected())
+    Q_PRIVATE_SLOT(d_func(), void slotCertificationPrepared())
+};
 
 }
 }

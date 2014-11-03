@@ -44,35 +44,39 @@ using namespace Kleo;
 using namespace GpgME;
 using namespace boost;
 
-QGpgMEImportFromKeyserverJob::QGpgMEImportFromKeyserverJob( Context * context )
-  : mixin_type( context )
+QGpgMEImportFromKeyserverJob::QGpgMEImportFromKeyserverJob(Context *context)
+    : mixin_type(context)
 {
-  lateInitialization();
+    lateInitialization();
 }
 
 QGpgMEImportFromKeyserverJob::~QGpgMEImportFromKeyserverJob() {}
 
-static QGpgMEImportFromKeyserverJob::result_type importfromkeyserver( Context * ctx, const std::vector<Key> & keys ) {
-  const ImportResult res = ctx->importKeys( keys );
-  Error ae;
-  const QString log = _detail::audit_log_as_html( ctx, ae );
-  return make_tuple( res, log, ae );
+static QGpgMEImportFromKeyserverJob::result_type importfromkeyserver(Context *ctx, const std::vector<Key> &keys)
+{
+    const ImportResult res = ctx->importKeys(keys);
+    Error ae;
+    const QString log = _detail::audit_log_as_html(ctx, ae);
+    return make_tuple(res, log, ae);
 }
 
-Error QGpgMEImportFromKeyserverJob::start( const std::vector<Key> & keys ) {
-  run( boost::bind( &importfromkeyserver, _1, keys ) );
-  return Error();
+Error QGpgMEImportFromKeyserverJob::start(const std::vector<Key> &keys)
+{
+    run(boost::bind(&importfromkeyserver, _1, keys));
+    return Error();
 }
 
-GpgME::ImportResult Kleo::QGpgMEImportFromKeyserverJob::exec( const std::vector<Key> & keys ) {
-  const result_type r = importfromkeyserver( context(), keys );
-  resultHook( r );
-  return mResult;
+GpgME::ImportResult Kleo::QGpgMEImportFromKeyserverJob::exec(const std::vector<Key> &keys)
+{
+    const result_type r = importfromkeyserver(context(), keys);
+    resultHook(r);
+    return mResult;
 }
 
 // PENDING(marc) implement showErrorDialog()
 
-void Kleo::QGpgMEImportFromKeyserverJob::resultHook( const result_type & tuple ) {
-  mResult = get<0>( tuple );
+void Kleo::QGpgMEImportFromKeyserverJob::resultHook(const result_type &tuple)
+{
+    mResult = get<0>(tuple);
 }
 

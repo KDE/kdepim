@@ -42,81 +42,90 @@
 #include <vector>
 #include <utility>
 
-namespace KMime {
-namespace Types {
-    class Mailbox;
+namespace KMime
+{
+namespace Types
+{
+class Mailbox;
 }
 }
 
-namespace GpgME {
+namespace GpgME
+{
 }
 
-namespace boost {
-    template <typename T> class shared_ptr;
+namespace boost
+{
+template <typename T> class shared_ptr;
 }
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class Input;
-    class Output;
+class Input;
+class Output;
 
-namespace Crypto {
+namespace Crypto
+{
 
+class NewSignEncryptEMailController : public Controller
+{
+    Q_OBJECT
+public:
+    explicit NewSignEncryptEMailController(QObject *parent = 0);
+    explicit NewSignEncryptEMailController(const boost::shared_ptr<ExecutionContext> &xc, QObject *parent = 0);
+    ~NewSignEncryptEMailController();
 
-    class NewSignEncryptEMailController : public Controller {
-        Q_OBJECT
-    public:
-        explicit NewSignEncryptEMailController( QObject * parent=0 );
-        explicit NewSignEncryptEMailController( const boost::shared_ptr<ExecutionContext> & xc, QObject * parent=0 );
-        ~NewSignEncryptEMailController();
+    static const char *mementoName()
+    {
+        return "NewSignEncryptEMailController";
+    }
 
-        static const char * mementoName() { return "NewSignEncryptEMailController"; }
+    // 1st stage inputs
 
-        // 1st stage inputs
+    void setSubject(const QString &subject);
+    void setProtocol(GpgME::Protocol proto);
+    const char *protocolAsString() const;
+    GpgME::Protocol protocol() const;
 
-        void setSubject( const QString & subject );
-        void setProtocol( GpgME::Protocol proto );
-        const char * protocolAsString() const;
-        GpgME::Protocol protocol() const;
+    void setSigning(bool sign);
+    bool isSigning() const;
 
-        void setSigning( bool sign );
-        bool isSigning() const;
+    void setEncrypting(bool encrypt);
+    bool isEncrypting() const;
 
-        void setEncrypting( bool encrypt );
-        bool isEncrypting() const;
+    void startResolveCertificates(const std::vector<KMime::Types::Mailbox> &recipients, const std::vector<KMime::Types::Mailbox> &senders);
 
-        void startResolveCertificates( const std::vector<KMime::Types::Mailbox> & recipients, const std::vector<KMime::Types::Mailbox> & senders );
+    bool isResolvingInProgress() const;
+    bool areCertificatesResolved() const;
 
-        bool isResolvingInProgress() const;
-        bool areCertificatesResolved() const;
+    // 2nd stage inputs
 
-        // 2nd stage inputs
+    void setDetachedSignature(bool detached);
 
-        void setDetachedSignature( bool detached );
+    void startSigning(const std::vector< boost::shared_ptr<Kleo::Input> > &inputs,
+                      const std::vector< boost::shared_ptr<Kleo::Output> > &outputs);
 
-        void startSigning( const std::vector< boost::shared_ptr<Kleo::Input> > & inputs,
-                           const std::vector< boost::shared_ptr<Kleo::Output> > & outputs );
+    void startEncryption(const std::vector< boost::shared_ptr<Kleo::Input> > &inputs,
+                         const std::vector< boost::shared_ptr<Kleo::Output> > &outputs);
 
-        void startEncryption( const std::vector< boost::shared_ptr<Kleo::Input> > & inputs,
-                              const std::vector< boost::shared_ptr<Kleo::Output> > & outputs );
+public Q_SLOTS:
+    void cancel();
 
-    public Q_SLOTS:
-        void cancel();
+Q_SIGNALS:
+    void certificatesResolved();
+    void reportMicAlg(const QString &micAlg);
 
-    Q_SIGNALS:
-        void certificatesResolved();
-        void reportMicAlg( const QString & micAlg );
+private:
 
-    private:
+    /* reimp */ void doTaskDone(const Task *task, const boost::shared_ptr<const Kleo::Crypto::Task::Result> &);
 
-        /* reimp */ void doTaskDone( const Task * task, const boost::shared_ptr<const Kleo::Crypto::Task::Result> & );
-
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void slotDialogAccepted() )
-        Q_PRIVATE_SLOT( d, void slotDialogRejected() )
-        Q_PRIVATE_SLOT( d, void schedule() )
-    };
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void slotDialogAccepted())
+    Q_PRIVATE_SLOT(d, void slotDialogRejected())
+    Q_PRIVATE_SLOT(d, void schedule())
+};
 
 } // Crypto
 } // Kleo

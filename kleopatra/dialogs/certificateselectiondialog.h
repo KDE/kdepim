@@ -39,82 +39,86 @@
 
 #include <vector>
 
-namespace GpgME {
-    class Key;
+namespace GpgME
+{
+class Key;
 }
 
-namespace boost {
-    template <typename T> class shared_ptr;
+namespace boost
+{
+template <typename T> class shared_ptr;
 }
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class KeyFilter;
+class KeyFilter;
 
-namespace Dialogs {
+namespace Dialogs
+{
 
-    class CertificateSelectionDialog : public QDialog {
-        Q_OBJECT
-        Q_FLAGS( Options )
-    public:
-        enum Option {
-            SingleSelection = 0x00,
-            MultiSelection  = 0x01,
+class CertificateSelectionDialog : public QDialog
+{
+    Q_OBJECT
+    Q_FLAGS(Options)
+public:
+    enum Option {
+        SingleSelection = 0x00,
+        MultiSelection  = 0x01,
 
-            SignOnly        = 0x02,
-            EncryptOnly     = 0x04,
-            AnyCertificate  = 0x06,
+        SignOnly        = 0x02,
+        EncryptOnly     = 0x04,
+        AnyCertificate  = 0x06,
 
-            OpenPGPFormat   = 0x08,
-            CMSFormat       = 0x10,
-            AnyFormat       = 0x18,
+        OpenPGPFormat   = 0x08,
+        CMSFormat       = 0x10,
+        AnyFormat       = 0x18,
 
-            Certificates    = 0x00,
-            SecretKeys      = 0x20,
+        Certificates    = 0x00,
+        SecretKeys      = 0x20,
 
-            OptionMask
-        };
-        Q_DECLARE_FLAGS( Options, Option )
-
-        explicit CertificateSelectionDialog( QWidget * parent=0, Qt::WindowFlags f=0 );
-        ~CertificateSelectionDialog();
-
-        void setCustomLabelText( const QString & text );
-        QString customLabelText() const;
-
-        void setOptions( Options options );
-        Options options() const;
-
-        void selectCertificates( const std::vector<GpgME::Key> & certs );
-        void selectCertificate( const GpgME::Key & key );
-
-
-        std::vector<GpgME::Key> selectedCertificates() const;
-        GpgME::Key selectedCertificate() const;
-
-    public Q_SLOTS:
-        void setStringFilter( const QString & text );
-        void setKeyFilter( const boost::shared_ptr<Kleo::KeyFilter> & filter );
-        /* reimp */ void accept();
-
-    protected:
-        void hideEvent( QHideEvent * );
-
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void reload() )
-        Q_PRIVATE_SLOT( d, void create() )
-        Q_PRIVATE_SLOT( d, void lookup() )
-        Q_PRIVATE_SLOT( d, void slotKeysMayHaveChanged() )
-        Q_PRIVATE_SLOT( d, void slotSelectionChanged() )
-        Q_PRIVATE_SLOT( d, void slotDoubleClicked( QModelIndex ) )
-        Q_PRIVATE_SLOT( d, void slotCurrentViewChanged( QAbstractItemView * ) )
+        OptionMask
     };
+    Q_DECLARE_FLAGS(Options, Option)
+
+    explicit CertificateSelectionDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    ~CertificateSelectionDialog();
+
+    void setCustomLabelText(const QString &text);
+    QString customLabelText() const;
+
+    void setOptions(Options options);
+    Options options() const;
+
+    void selectCertificates(const std::vector<GpgME::Key> &certs);
+    void selectCertificate(const GpgME::Key &key);
+
+    std::vector<GpgME::Key> selectedCertificates() const;
+    GpgME::Key selectedCertificate() const;
+
+public Q_SLOTS:
+    void setStringFilter(const QString &text);
+    void setKeyFilter(const boost::shared_ptr<Kleo::KeyFilter> &filter);
+    /* reimp */ void accept();
+
+protected:
+    void hideEvent(QHideEvent *);
+
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void reload())
+    Q_PRIVATE_SLOT(d, void create())
+    Q_PRIVATE_SLOT(d, void lookup())
+    Q_PRIVATE_SLOT(d, void slotKeysMayHaveChanged())
+    Q_PRIVATE_SLOT(d, void slotSelectionChanged())
+    Q_PRIVATE_SLOT(d, void slotDoubleClicked(QModelIndex))
+    Q_PRIVATE_SLOT(d, void slotCurrentViewChanged(QAbstractItemView *))
+};
 
 }
 }
 
-Q_DECLARE_OPERATORS_FOR_FLAGS( Kleo::Dialogs::CertificateSelectionDialog::Options )
+Q_DECLARE_OPERATORS_FOR_FLAGS(Kleo::Dialogs::CertificateSelectionDialog::Options)
 
 #endif /* __KLEOPATRA_DIALOGS_CERTIFICATESELECTIONDIALOG_H__ */

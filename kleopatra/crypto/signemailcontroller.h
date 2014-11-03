@@ -41,71 +41,77 @@
 
 #include <vector>
 
-namespace KMime {
-namespace Types {
-    class Mailbox;
+namespace KMime
+{
+namespace Types
+{
+class Mailbox;
 }
 }
 
-namespace boost {
-    template <typename T> class shared_ptr;
+namespace boost
+{
+template <typename T> class shared_ptr;
 }
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class Input;
-    class Output;
+class Input;
+class Output;
 
-namespace Crypto {
+namespace Crypto
+{
 
-    class SignEMailController : public Controller {
-        Q_OBJECT
-    public:
-        enum Mode {
-            GpgOLMode,
-            ClipboardMode,
+class SignEMailController : public Controller
+{
+    Q_OBJECT
+public:
+    enum Mode {
+        GpgOLMode,
+        ClipboardMode,
 
-            NumModes
-        };
-
-        explicit SignEMailController( Mode mode, QObject * parent=0 );
-        explicit SignEMailController( const boost::shared_ptr<ExecutionContext> & xc, Mode mode, QObject * parent=0 );
-        ~SignEMailController();
-
-        Mode mode() const;
-
-        void setProtocol( GpgME::Protocol proto );
-        GpgME::Protocol protocol() const;
-        //const char * protocolAsString() const;
-
-        void startResolveSigners();
-        void startResolveSigners( const std::vector<KMime::Types::Mailbox> & signers );
-
-        void setDetachedSignature( bool detached );
-
-        void setInputAndOutput( const boost::shared_ptr<Kleo::Input>  & input,
-                                const boost::shared_ptr<Kleo::Output> & output );
-        void setInputsAndOutputs( const std::vector< boost::shared_ptr<Kleo::Input> >  & inputs,
-                                  const std::vector< boost::shared_ptr<Kleo::Output> > & outputs );
-
-        void start();
-
-    public Q_SLOTS:
-        void cancel();
-
-    Q_SIGNALS:
-        void signersResolved();
-        void reportMicAlg( const QString & micalg );
-
-    private:
-        /* reimp */ void doTaskDone( const Task * task, const boost::shared_ptr<const Task::Result> & result );
-
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void slotWizardSignersResolved() )
-        Q_PRIVATE_SLOT( d, void slotWizardCanceled() )
-        Q_PRIVATE_SLOT( d, void schedule() )
+        NumModes
     };
+
+    explicit SignEMailController(Mode mode, QObject *parent = 0);
+    explicit SignEMailController(const boost::shared_ptr<ExecutionContext> &xc, Mode mode, QObject *parent = 0);
+    ~SignEMailController();
+
+    Mode mode() const;
+
+    void setProtocol(GpgME::Protocol proto);
+    GpgME::Protocol protocol() const;
+    //const char * protocolAsString() const;
+
+    void startResolveSigners();
+    void startResolveSigners(const std::vector<KMime::Types::Mailbox> &signers);
+
+    void setDetachedSignature(bool detached);
+
+    void setInputAndOutput(const boost::shared_ptr<Kleo::Input>   &input,
+                           const boost::shared_ptr<Kleo::Output> &output);
+    void setInputsAndOutputs(const std::vector< boost::shared_ptr<Kleo::Input> >   &inputs,
+                             const std::vector< boost::shared_ptr<Kleo::Output> > &outputs);
+
+    void start();
+
+public Q_SLOTS:
+    void cancel();
+
+Q_SIGNALS:
+    void signersResolved();
+    void reportMicAlg(const QString &micalg);
+
+private:
+    /* reimp */ void doTaskDone(const Task *task, const boost::shared_ptr<const Task::Result> &result);
+
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void slotWizardSignersResolved())
+    Q_PRIVATE_SLOT(d, void slotWizardCanceled())
+    Q_PRIVATE_SLOT(d, void schedule())
+};
 
 } // Crypto
 } // Kleo

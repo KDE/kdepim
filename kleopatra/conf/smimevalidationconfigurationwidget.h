@@ -37,30 +37,33 @@
 
 #include <utils/pimpl_ptr.h>
 
-namespace Kleo {
-namespace Config {
+namespace Kleo
+{
+namespace Config
+{
 
-    class SMimeValidationConfigurationWidget : public QWidget {
-        Q_OBJECT
-    public:
-        explicit SMimeValidationConfigurationWidget( QWidget * parent=0, Qt::WindowFlags f=0 );
-        ~SMimeValidationConfigurationWidget();
+class SMimeValidationConfigurationWidget : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit SMimeValidationConfigurationWidget(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    ~SMimeValidationConfigurationWidget();
 
-    public Q_SLOTS:
-        void load();
-        void save() const;
-        void defaults();
+public Q_SLOTS:
+    void load();
+    void save() const;
+    void defaults();
 
-    Q_SIGNALS:
-        void changed();
+Q_SIGNALS:
+    void changed();
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void enableDisableActions() )
-    };
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void enableDisableActions())
+};
 
-}    
+}
 }
 
 #endif /* __KLEOPATRA_CONF_SMIMEVALIDATIONCONFIGURATIONWIDGET_H__ */

@@ -56,11 +56,15 @@ using namespace Kleo::Commands;
 using namespace Kleo::Dialogs;
 using namespace GpgME;
 
-class AddUserIDCommand::Private : public Command::Private {
+class AddUserIDCommand::Private : public Command::Private
+{
     friend class ::Kleo::Commands::AddUserIDCommand;
-    AddUserIDCommand * q_func() const { return static_cast<AddUserIDCommand*>( q ); }
+    AddUserIDCommand *q_func() const
+    {
+        return static_cast<AddUserIDCommand *>(q);
+    }
 public:
-    explicit Private( AddUserIDCommand * qq, KeyListController * c );
+    explicit Private(AddUserIDCommand *qq, KeyListController *c);
     ~Private();
 
     void init();
@@ -68,12 +72,12 @@ public:
 private:
     void slotDialogAccepted();
     void slotDialogRejected();
-    void slotResult( const Error & err );
+    void slotResult(const Error &err);
 
 private:
     void ensureDialogCreated();
     void createJob();
-    void showErrorDialog( const Error & error );
+    void showErrorDialog(const Error &error);
     void showSuccessDialog();
 
 private:
@@ -82,15 +86,20 @@ private:
     QPointer<AddUserIDJob> job;
 };
 
-
-AddUserIDCommand::Private * AddUserIDCommand::d_func() { return static_cast<Private*>( d.get() ); }
-const AddUserIDCommand::Private * AddUserIDCommand::d_func() const { return static_cast<const Private*>( d.get() ); }
+AddUserIDCommand::Private *AddUserIDCommand::d_func()
+{
+    return static_cast<Private *>(d.get());
+}
+const AddUserIDCommand::Private *AddUserIDCommand::d_func() const
+{
+    return static_cast<const Private *>(d.get());
+}
 
 #define d d_func()
 #define q q_func()
 
-AddUserIDCommand::Private::Private( AddUserIDCommand * qq, KeyListController * c )
-    : Command::Private( qq, c ),
+AddUserIDCommand::Private::Private(AddUserIDCommand *qq, KeyListController *c)
+    : Command::Private(qq, c),
       key(),
       dialog(),
       job()
@@ -98,38 +107,46 @@ AddUserIDCommand::Private::Private( AddUserIDCommand * qq, KeyListController * c
 
 }
 
-AddUserIDCommand::Private::~Private() { qDebug(); }
+AddUserIDCommand::Private::~Private()
+{
+    qDebug();
+}
 
-AddUserIDCommand::AddUserIDCommand( KeyListController * c )
-    : Command( new Private( this, c ) )
+AddUserIDCommand::AddUserIDCommand(KeyListController *c)
+    : Command(new Private(this, c))
 {
     d->init();
 }
 
-AddUserIDCommand::AddUserIDCommand( QAbstractItemView * v, KeyListController * c )
-    : Command( v, new Private( this, c ) )
+AddUserIDCommand::AddUserIDCommand(QAbstractItemView *v, KeyListController *c)
+    : Command(v, new Private(this, c))
 {
     d->init();
 }
 
-AddUserIDCommand::AddUserIDCommand( const GpgME::Key & key )
-    : Command( key, new Private( this, 0 ) )
+AddUserIDCommand::AddUserIDCommand(const GpgME::Key &key)
+    : Command(key, new Private(this, 0))
 {
     d->init();
 }
 
-void AddUserIDCommand::Private::init() {
+void AddUserIDCommand::Private::init()
+{
 
 }
 
-AddUserIDCommand::~AddUserIDCommand() { qDebug(); }
+AddUserIDCommand::~AddUserIDCommand()
+{
+    qDebug();
+}
 
-void AddUserIDCommand::doStart() {
+void AddUserIDCommand::doStart()
+{
 
     const std::vector<Key> keys = d->keys();
-    if ( keys.size() != 1 ||
-         keys.front().protocol() != GpgME::OpenPGP ||
-         !keys.front().hasSecret() ) {
+    if (keys.size() != 1 ||
+            keys.front().protocol() != GpgME::OpenPGP ||
+            !keys.front().hasSecret()) {
         d->finished();
         return;
     }
@@ -137,93 +154,107 @@ void AddUserIDCommand::doStart() {
     d->key = keys.front();
 
     d->ensureDialogCreated();
-    assert( d->dialog );
+    assert(d->dialog);
 
     const UserID uid = d->key.userID(0);
 
-    d->dialog->setName( QString::fromUtf8( uid.name() ) );
-    d->dialog->setEmail( Formatting::prettyEMail( uid.email(), uid.id() ) );
-    d->dialog->setComment( QString::fromUtf8( uid.comment() ) );
+    d->dialog->setName(QString::fromUtf8(uid.name()));
+    d->dialog->setEmail(Formatting::prettyEMail(uid.email(), uid.id()));
+    d->dialog->setComment(QString::fromUtf8(uid.comment()));
 
     d->dialog->show();
 }
 
-void AddUserIDCommand::Private::slotDialogAccepted() {
-    assert( dialog );
+void AddUserIDCommand::Private::slotDialogAccepted()
+{
+    assert(dialog);
 
     createJob();
-    if ( !job )
+    if (!job) {
         finished();
+    }
 
-    else if ( const Error err = job->start( key, dialog->name(), dialog->email(), dialog->comment() ) ) {
-        showErrorDialog( err );
+    else if (const Error err = job->start(key, dialog->name(), dialog->email(), dialog->comment())) {
+        showErrorDialog(err);
         finished();
     }
 }
 
-void AddUserIDCommand::Private::slotDialogRejected() {
+void AddUserIDCommand::Private::slotDialogRejected()
+{
     emit q->canceled();
     finished();
 }
 
-void AddUserIDCommand::Private::slotResult( const Error & err ) {
-    if ( err.isCanceled() )
+void AddUserIDCommand::Private::slotResult(const Error &err)
+{
+    if (err.isCanceled())
         ;
-    else if ( err )
-        showErrorDialog( err );
-    else
+    else if (err) {
+        showErrorDialog(err);
+    } else {
         showSuccessDialog();
+    }
     finished();
 }
 
-void AddUserIDCommand::doCancel() {
+void AddUserIDCommand::doCancel()
+{
     qDebug();
-    if ( d->job )
+    if (d->job) {
         d->job->slotCancel();
+    }
 }
 
-void AddUserIDCommand::Private::ensureDialogCreated() {
-    if ( dialog )
+void AddUserIDCommand::Private::ensureDialogCreated()
+{
+    if (dialog) {
         return;
+    }
 
     dialog = new AddUserIDDialog;
-    applyWindowID( dialog );
-    dialog->setAttribute( Qt::WA_DeleteOnClose );
+    applyWindowID(dialog);
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
 
-    connect( dialog, SIGNAL(accepted()), q, SLOT(slotDialogAccepted()) );
-    connect( dialog, SIGNAL(rejected()), q, SLOT(slotDialogRejected()) );
+    connect(dialog, SIGNAL(accepted()), q, SLOT(slotDialogAccepted()));
+    connect(dialog, SIGNAL(rejected()), q, SLOT(slotDialogRejected()));
 }
 
-void AddUserIDCommand::Private::createJob() {
-    assert( !job );
+void AddUserIDCommand::Private::createJob()
+{
+    assert(!job);
 
-    const CryptoBackend::Protocol * const backend = CryptoBackendFactory::instance()->protocol( key.protocol() );
-    if ( !backend )
+    const CryptoBackend::Protocol *const backend = CryptoBackendFactory::instance()->protocol(key.protocol());
+    if (!backend) {
         return;
+    }
 
-    AddUserIDJob * const j = backend->addUserIDJob();
-    if ( !j )
+    AddUserIDJob *const j = backend->addUserIDJob();
+    if (!j) {
         return;
+    }
 
-    connect( j, SIGNAL(progress(QString,int,int)),
-             q, SIGNAL(progress(QString,int,int)) );
-    connect( j, SIGNAL(result(GpgME::Error)),
-             q, SLOT(slotResult(GpgME::Error)) );
+    connect(j, SIGNAL(progress(QString,int,int)),
+            q, SIGNAL(progress(QString,int,int)));
+    connect(j, SIGNAL(result(GpgME::Error)),
+            q, SLOT(slotResult(GpgME::Error)));
 
     job = j;
 }
 
-void AddUserIDCommand::Private::showErrorDialog( const Error & err ) {
-    error( xi18nc("@info",
+void AddUserIDCommand::Private::showErrorDialog(const Error &err)
+{
+    error(xi18nc("@info",
                  "<para>An error occurred while trying to add the user-id: "
                  "<message>%1</message></para>",
-                 QString::fromLocal8Bit( err.asString() ) ),
-           i18nc("@title:window", "Add User-ID Error") );
+                 QString::fromLocal8Bit(err.asString())),
+          i18nc("@title:window", "Add User-ID Error"));
 }
 
-void AddUserIDCommand::Private::showSuccessDialog() {
-    information( i18nc("@info", "User-ID successfully added."),
-                 i18nc("@title:window", "Add User-ID Succeeded") );
+void AddUserIDCommand::Private::showSuccessDialog()
+{
+    information(i18nc("@info", "User-ID successfully added."),
+                i18nc("@title:window", "Add User-ID Succeeded"));
 }
 
 #undef d

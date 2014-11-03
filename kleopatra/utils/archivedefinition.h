@@ -43,71 +43,96 @@
 
 class QDir;
 
-namespace boost {
-    template <typename T> class shared_ptr;
+namespace boost
+{
+template <typename T> class shared_ptr;
 }
 
-namespace Kleo {
-    class Input;
-    class Output;
+namespace Kleo
+{
+class Input;
+class Output;
 }
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class ArchiveDefinition {
-    protected:
-        ArchiveDefinition( const QString & id, const QString & label );
-    public:
-        virtual ~ArchiveDefinition();
+class ArchiveDefinition
+{
+protected:
+    ArchiveDefinition(const QString &id, const QString &label);
+public:
+    virtual ~ArchiveDefinition();
 
-        enum ArgumentPassingMethod {
-            CommandLine,
-            NewlineSeparatedInputFile,
-            NullSeparatedInputFile,
+    enum ArgumentPassingMethod {
+        CommandLine,
+        NewlineSeparatedInputFile,
+        NullSeparatedInputFile,
 
-            NumArgumentPassingMethods
-        };
-
-        QString id() const { return m_id; }
-        QString label() const { return m_label; }
-
-        const QStringList & extensions( GpgME::Protocol p ) const { checkProtocol(p); return m_extensions[p]; }
-
-        boost::shared_ptr<Input> createInputFromPackCommand( GpgME::Protocol p, const QStringList & files ) const;
-        ArgumentPassingMethod packCommandArgumentPassingMethod( GpgME::Protocol p ) const { checkProtocol(p); return m_packCommandMethod[p]; }
-
-        boost::shared_ptr<Output> createOutputFromUnpackCommand( GpgME::Protocol p, const QString & file, const QDir & wd ) const;
-        // unpack-command must use CommandLine ArgumentPassingMethod
-
-        static QString installPath();
-        static void setInstallPath( const QString & ip );
-
-        static std::vector< boost::shared_ptr<ArchiveDefinition> > getArchiveDefinitions();
-        static std::vector< boost::shared_ptr<ArchiveDefinition> > getArchiveDefinitions( QStringList & errors );
-
-    protected:
-        void setPackCommandArgumentPassingMethod( GpgME::Protocol p, ArgumentPassingMethod method ) { checkProtocol(p); m_packCommandMethod[p] = method; }
-        void setExtensions( GpgME::Protocol p, const QStringList & extensions ) { checkProtocol(p); m_extensions[p] = extensions; }
-
-        void checkProtocol( GpgME::Protocol p ) const;
-
-    private:
-        virtual QString doGetPackCommand( GpgME::Protocol p ) const = 0;
-        virtual QString doGetUnpackCommand( GpgME::Protocol p ) const = 0;
-        virtual QStringList doGetPackArguments( GpgME::Protocol p, const QStringList & files ) const = 0;
-        virtual QStringList doGetUnpackArguments( GpgME::Protocol p, const QString & file ) const = 0;
-    private:
-        const QString m_id;
-        const QString m_label;
-        /*const*/ QStringList m_extensions[2];
-        ArgumentPassingMethod m_packCommandMethod[2];
-        // m_unpackCommandMethod[2] <- must always be CommandLine
+        NumArgumentPassingMethods
     };
-        
+
+    QString id() const
+    {
+        return m_id;
+    }
+    QString label() const
+    {
+        return m_label;
+    }
+
+    const QStringList &extensions(GpgME::Protocol p) const
+    {
+        checkProtocol(p);
+        return m_extensions[p];
+    }
+
+    boost::shared_ptr<Input> createInputFromPackCommand(GpgME::Protocol p, const QStringList &files) const;
+    ArgumentPassingMethod packCommandArgumentPassingMethod(GpgME::Protocol p) const
+    {
+        checkProtocol(p);
+        return m_packCommandMethod[p];
+    }
+
+    boost::shared_ptr<Output> createOutputFromUnpackCommand(GpgME::Protocol p, const QString &file, const QDir &wd) const;
+    // unpack-command must use CommandLine ArgumentPassingMethod
+
+    static QString installPath();
+    static void setInstallPath(const QString &ip);
+
+    static std::vector< boost::shared_ptr<ArchiveDefinition> > getArchiveDefinitions();
+    static std::vector< boost::shared_ptr<ArchiveDefinition> > getArchiveDefinitions(QStringList &errors);
+
+protected:
+    void setPackCommandArgumentPassingMethod(GpgME::Protocol p, ArgumentPassingMethod method)
+    {
+        checkProtocol(p);
+        m_packCommandMethod[p] = method;
+    }
+    void setExtensions(GpgME::Protocol p, const QStringList &extensions)
+    {
+        checkProtocol(p);
+        m_extensions[p] = extensions;
+    }
+
+    void checkProtocol(GpgME::Protocol p) const;
+
+private:
+    virtual QString doGetPackCommand(GpgME::Protocol p) const = 0;
+    virtual QString doGetUnpackCommand(GpgME::Protocol p) const = 0;
+    virtual QStringList doGetPackArguments(GpgME::Protocol p, const QStringList &files) const = 0;
+    virtual QStringList doGetUnpackArguments(GpgME::Protocol p, const QString &file) const = 0;
+private:
+    const QString m_id;
+    const QString m_label;
+    /*const*/ QStringList m_extensions[2];
+    ArgumentPassingMethod m_packCommandMethod[2];
+    // m_unpackCommandMethod[2] <- must always be CommandLine
+};
+
 }
 
-Q_DECLARE_METATYPE( boost::shared_ptr<Kleo::ArchiveDefinition> )
-
+Q_DECLARE_METATYPE(boost::shared_ptr<Kleo::ArchiveDefinition>)
 
 #endif /* __KLEOPATRA_UTILS_ARCHIVEDEFINITION_H__ */
 

@@ -39,88 +39,90 @@ class QString;
 class QStringList;
 class QDate;
 
-namespace GpgME {
-    class Import;
+namespace GpgME
+{
+class Import;
 }
 
-namespace Kleo {
-namespace Formatting {
+namespace Kleo
+{
+namespace Formatting
+{
 
-    QString prettyNameAndEMail( int proto, const char * id, const char * name, const char * email, const char * comment );
-    QString prettyNameAndEMail( int proto, const QString & id, const QString & name, const QString & email, const QString & comment );
-    QString prettyNameAndEMail( const GpgME::Key & key );
-    QString prettyNameAndEMail( const GpgME::UserID & key );
+QString prettyNameAndEMail(int proto, const char *id, const char *name, const char *email, const char *comment);
+QString prettyNameAndEMail(int proto, const QString &id, const QString &name, const QString &email, const QString &comment);
+QString prettyNameAndEMail(const GpgME::Key &key);
+QString prettyNameAndEMail(const GpgME::UserID &key);
 
-    QString prettyUserID( const GpgME::UserID & uid );
-    QString prettyKeyID( const char * id );
+QString prettyUserID(const GpgME::UserID &uid);
+QString prettyKeyID(const char *id);
 
-    QString prettyName( int proto, const char * id, const char * name, const char * comment );
-    QString prettyName( const GpgME::Key & key );
-    QString prettyName( const GpgME::UserID & uid );
-    QString prettyName( const GpgME::UserID::Signature & sig );
+QString prettyName(int proto, const char *id, const char *name, const char *comment);
+QString prettyName(const GpgME::Key &key);
+QString prettyName(const GpgME::UserID &uid);
+QString prettyName(const GpgME::UserID::Signature &sig);
 
-    QString prettyEMail( const char * email, const char * id );
-    QString prettyEMail( const GpgME::Key & key );
-    QString prettyEMail( const GpgME::UserID & uid );
-    QString prettyEMail( const GpgME::UserID::Signature & sig );
+QString prettyEMail(const char *email, const char *id);
+QString prettyEMail(const GpgME::Key &key);
+QString prettyEMail(const GpgME::UserID &uid);
+QString prettyEMail(const GpgME::UserID::Signature &sig);
 
-    enum ToolTipOption {
-        KeyID            = 0x001,
-        Validity         = 0x002,
-        StorageLocation  = 0x004,
-        SerialNumber     = 0x008,
-        Issuer           = 0x010,
-        Subject          = 0x020,
-        ExpiryDates      = 0x040,
-        CertificateType  = 0x080,
-        CertificateUsage = 0x100,
-        Fingerprint      = 0x200,
-        UserIDs          = 0x400,
-        OwnerTrust       = 0x800,
+enum ToolTipOption {
+    KeyID            = 0x001,
+    Validity         = 0x002,
+    StorageLocation  = 0x004,
+    SerialNumber     = 0x008,
+    Issuer           = 0x010,
+    Subject          = 0x020,
+    ExpiryDates      = 0x040,
+    CertificateType  = 0x080,
+    CertificateUsage = 0x100,
+    Fingerprint      = 0x200,
+    UserIDs          = 0x400,
+    OwnerTrust       = 0x800,
 
-        AllOptions = 0xfff
-    };
+    AllOptions = 0xfff
+};
 
-    QString toolTip( const GpgME::Key & key, int opts );
+QString toolTip(const GpgME::Key &key, int opts);
 
-    QString expirationDateString( const GpgME::Key & key );
-    QString expirationDateString( const GpgME::Subkey & subkey );
-    QString expirationDateString( const GpgME::UserID::Signature & sig );
-    QDate expirationDate( const GpgME::Key & key );
-    QDate expirationDate( const GpgME::Subkey & subkey );
-    QDate expirationDate( const GpgME::UserID::Signature & sig );
+QString expirationDateString(const GpgME::Key &key);
+QString expirationDateString(const GpgME::Subkey &subkey);
+QString expirationDateString(const GpgME::UserID::Signature &sig);
+QDate expirationDate(const GpgME::Key &key);
+QDate expirationDate(const GpgME::Subkey &subkey);
+QDate expirationDate(const GpgME::UserID::Signature &sig);
 
-    QString creationDateString( const GpgME::Key & key );
-    QString creationDateString( const GpgME::Subkey & subkey );
-    QString creationDateString( const GpgME::UserID::Signature & sig );
-    QDate creationDate( const GpgME::Key & key );
-    QDate creationDate( const GpgME::Subkey & subkey );
-    QDate creationDate( const GpgME::UserID::Signature & sig );
+QString creationDateString(const GpgME::Key &key);
+QString creationDateString(const GpgME::Subkey &subkey);
+QString creationDateString(const GpgME::UserID::Signature &sig);
+QDate creationDate(const GpgME::Key &key);
+QDate creationDate(const GpgME::Subkey &subkey);
+QDate creationDate(const GpgME::UserID::Signature &sig);
 
-    QString displayName( GpgME::Protocol prot );
-    QString type( const GpgME::Key & key );
-    QString type( const GpgME::Subkey & subkey );
+QString displayName(GpgME::Protocol prot);
+QString type(const GpgME::Key &key);
+QString type(const GpgME::Subkey &subkey);
 
+QString ownerTrustShort(const GpgME::Key &key);
+QString ownerTrustShort(GpgME::Key::OwnerTrust trust);
 
-    QString ownerTrustShort( const GpgME::Key & key );
-    QString ownerTrustShort( GpgME::Key::OwnerTrust trust );
+QString validityShort(const GpgME::Subkey &subkey);
+QString validityShort(const GpgME::UserID &uid);
+QString validityShort(const GpgME::UserID::Signature &sig);
 
-    QString validityShort( const GpgME::Subkey & subkey );
-    QString validityShort( const GpgME::UserID & uid );
-    QString validityShort( const GpgME::UserID::Signature & sig );
+QString formatForComboBox(const GpgME::Key &key);
 
-    QString formatForComboBox( const GpgME::Key & key );
+QString formatKeyLink(const GpgME::Key &key);
 
-    QString formatKeyLink( const GpgME::Key & key );
+QString signatureToString(const GpgME::Signature &sig, const GpgME::Key &key);
 
-    QString signatureToString( const GpgME::Signature & sig, const GpgME::Key & key );
+const char *summaryToString(const GpgME::Signature::Summary summary);
 
-    const char * summaryToString( const GpgME::Signature::Summary summary );
+QString importMetaData(const GpgME::Import &import);
+QString importMetaData(const GpgME::Import &import, const QStringList &sources);
 
-    QString importMetaData( const GpgME::Import & import );
-    QString importMetaData( const GpgME::Import & import, const QStringList & sources );
-
-    QString formatOverview( const GpgME::Key & key );
+QString formatOverview(const GpgME::Key &key);
 }
 }
 

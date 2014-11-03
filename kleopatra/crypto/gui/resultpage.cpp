@@ -55,94 +55,96 @@ using namespace Kleo::Crypto;
 using namespace Kleo::Crypto::Gui;
 using namespace boost;
 
-class ResultPage::Private {
-    ResultPage* const q;
+class ResultPage::Private
+{
+    ResultPage *const q;
 public:
-    explicit Private( ResultPage* qq );
+    explicit Private(ResultPage *qq);
 
-    void progress( const QString & msg, int progress, int total );
-    void result( const shared_ptr<const Task::Result> & result );
-    void started( const shared_ptr<Task> & result );
+    void progress(const QString &msg, int progress, int total);
+    void result(const shared_ptr<const Task::Result> &result);
+    void started(const shared_ptr<Task> &result);
     void allDone();
-    void keepOpenWhenDone( bool keep );
-    QLabel * labelForTag( const QString & tag );
+    void keepOpenWhenDone(bool keep);
+    QLabel *labelForTag(const QString &tag);
 
     shared_ptr<TaskCollection> m_tasks;
-    QProgressBar* m_progressBar;
-    QHash<QString, QLabel*> m_progressLabelByTag;
-    QVBoxLayout* m_progressLabelLayout;
+    QProgressBar *m_progressBar;
+    QHash<QString, QLabel *> m_progressLabelByTag;
+    QVBoxLayout *m_progressLabelLayout;
     int m_lastErrorItemIndex;
-    ResultListWidget* m_resultList;
-    QCheckBox* m_keepOpenCB;
+    ResultListWidget *m_resultList;
+    QCheckBox *m_keepOpenCB;
 };
 
-ResultPage::Private::Private( ResultPage* qq ) : q( qq ), m_lastErrorItemIndex( 0 )
+ResultPage::Private::Private(ResultPage *qq) : q(qq), m_lastErrorItemIndex(0)
 {
-    QBoxLayout* const layout = new QVBoxLayout( q );
-    QWidget* const labels = new QWidget;
-    m_progressLabelLayout = new QVBoxLayout( labels );
-    layout->addWidget( labels );
+    QBoxLayout *const layout = new QVBoxLayout(q);
+    QWidget *const labels = new QWidget;
+    m_progressLabelLayout = new QVBoxLayout(labels);
+    layout->addWidget(labels);
     m_progressBar = new QProgressBar;
-    layout->addWidget( m_progressBar );
+    layout->addWidget(m_progressBar);
     m_resultList = new ResultListWidget;
     connect(m_resultList, &ResultListWidget::linkActivated, q, &ResultPage::linkActivated);
-    layout->addWidget( m_resultList );
+    layout->addWidget(m_resultList);
     m_keepOpenCB = new QCheckBox;
-    m_keepOpenCB->setText( i18n( "Keep open after operation completed" ) );
-    m_keepOpenCB->setChecked(true );
-    connect( m_keepOpenCB, SIGNAL(toggled(bool)), q, SLOT(keepOpenWhenDone(bool)) );
-    layout->addWidget( m_keepOpenCB );
+    m_keepOpenCB->setText(i18n("Keep open after operation completed"));
+    m_keepOpenCB->setChecked(true);
+    connect(m_keepOpenCB, SIGNAL(toggled(bool)), q, SLOT(keepOpenWhenDone(bool)));
+    layout->addWidget(m_keepOpenCB);
 }
 
-void ResultPage::Private::progress( const QString &msg, int progress, int total )
+void ResultPage::Private::progress(const QString &msg, int progress, int total)
 {
-    Q_UNUSED( msg );
-    assert( progress >= 0 );
-    assert( total >= 0 );
-    m_progressBar->setRange( 0, total );
-    m_progressBar->setValue( progress );
+    Q_UNUSED(msg);
+    assert(progress >= 0);
+    assert(total >= 0);
+    m_progressBar->setRange(0, total);
+    m_progressBar->setValue(progress);
 }
 
-void ResultPage::Private::keepOpenWhenDone( bool )
+void ResultPage::Private::keepOpenWhenDone(bool)
 {
 }
 
 void ResultPage::Private::allDone()
 {
-    assert( m_tasks );
-    q->setAutoAdvance( !m_keepOpenCB->isChecked() && !m_tasks->errorOccurred() );
-    m_progressBar->setRange( 0, 100 );
-    m_progressBar->setValue( 100 );
+    assert(m_tasks);
+    q->setAutoAdvance(!m_keepOpenCB->isChecked() && !m_tasks->errorOccurred());
+    m_progressBar->setRange(0, 100);
+    m_progressBar->setValue(100);
     m_tasks.reset();
-    Q_FOREACH ( const QString &i, m_progressLabelByTag.keys() ) { //krazy:exclude=foreach
-        if ( !i.isEmpty() ) {
-            m_progressLabelByTag.value( i )->setText( i18n( "%1: All operations completed.", i ) );
+    Q_FOREACH (const QString &i, m_progressLabelByTag.keys()) {   //krazy:exclude=foreach
+        if (!i.isEmpty()) {
+            m_progressLabelByTag.value(i)->setText(i18n("%1: All operations completed.", i));
         } else {
-            m_progressLabelByTag.value( i )->setText( i18n( "All operations completed." ) );
+            m_progressLabelByTag.value(i)->setText(i18n("All operations completed."));
         }
     }
     emit q->completeChanged();
 }
 
-void ResultPage::Private::result( const shared_ptr<const Task::Result> & )
+void ResultPage::Private::result(const shared_ptr<const Task::Result> &)
 {
 }
 
-void ResultPage::Private::started( const shared_ptr<Task> & task )
+void ResultPage::Private::started(const shared_ptr<Task> &task)
 {
-    assert( task );
+    assert(task);
     const QString tag = task->tag();
-    QLabel * const label = labelForTag( tag );
-    assert( label );
-    if ( tag.isEmpty() )
-        label->setText( i18nc( "number, operation description", "Operation %1: %2", m_tasks->numberOfCompletedTasks() + 1, task->label() ) );
-    else
-        label->setText( i18nc( "tag( \"OpenPGP\" or \"CMS\"),  operation description", "%1: %2", tag, task->label() ) );
+    QLabel *const label = labelForTag(tag);
+    assert(label);
+    if (tag.isEmpty()) {
+        label->setText(i18nc("number, operation description", "Operation %1: %2", m_tasks->numberOfCompletedTasks() + 1, task->label()));
+    } else {
+        label->setText(i18nc("tag( \"OpenPGP\" or \"CMS\"),  operation description", "%1: %2", tag, task->label()));
+    }
 }
 
-ResultPage::ResultPage( QWidget* parent, Qt::WindowFlags flags ) : WizardPage( parent, flags ), d( new Private( this ) )
+ResultPage::ResultPage(QWidget *parent, Qt::WindowFlags flags) : WizardPage(parent, flags), d(new Private(this))
 {
-    setTitle( i18n( "<b>Results</b>" ) );
+    setTitle(i18n("<b>Results</b>"));
 }
 
 ResultPage::~ResultPage()
@@ -154,43 +156,46 @@ bool ResultPage::keepOpenWhenDone() const
     return d->m_keepOpenCB->isChecked();
 }
 
-void ResultPage::setKeepOpenWhenDone( bool keep )
+void ResultPage::setKeepOpenWhenDone(bool keep)
 {
-    d->m_keepOpenCB->setChecked( keep );
+    d->m_keepOpenCB->setChecked(keep);
 }
 
-void ResultPage::setTaskCollection( const shared_ptr<TaskCollection> & coll )
+void ResultPage::setTaskCollection(const shared_ptr<TaskCollection> &coll)
 {
-    assert( !d->m_tasks );
-    if ( d->m_tasks == coll )
+    assert(!d->m_tasks);
+    if (d->m_tasks == coll) {
         return;
+    }
     d->m_tasks = coll;
-    assert( d->m_tasks );
-    d->m_resultList->setTaskCollection( coll );
-    connect( d->m_tasks.get(), SIGNAL(progress(QString,int,int)),
-             this, SLOT(progress(QString,int,int)) );
-    connect( d->m_tasks.get(), SIGNAL(done()),
-             this, SLOT(allDone()) );
-    connect( d->m_tasks.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)),
-             this, SLOT(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)) );
-    connect( d->m_tasks.get(), SIGNAL(started(boost::shared_ptr<Kleo::Crypto::Task>)),
-             this, SLOT(started(boost::shared_ptr<Kleo::Crypto::Task>)) );
+    assert(d->m_tasks);
+    d->m_resultList->setTaskCollection(coll);
+    connect(d->m_tasks.get(), SIGNAL(progress(QString,int,int)),
+            this, SLOT(progress(QString,int,int)));
+    connect(d->m_tasks.get(), SIGNAL(done()),
+            this, SLOT(allDone()));
+    connect(d->m_tasks.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)),
+            this, SLOT(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)));
+    connect(d->m_tasks.get(), SIGNAL(started(boost::shared_ptr<Kleo::Crypto::Task>)),
+            this, SLOT(started(boost::shared_ptr<Kleo::Crypto::Task>)));
 
-    Q_FOREACH ( const shared_ptr<Task> & i, d->m_tasks->tasks() ) { // create labels for all tags in collection
-        assert( i && d->labelForTag( i->tag() ) );
-        Q_UNUSED( i );
+    Q_FOREACH (const shared_ptr<Task> &i, d->m_tasks->tasks()) {    // create labels for all tags in collection
+        assert(i && d->labelForTag(i->tag()));
+        Q_UNUSED(i);
     }
     emit completeChanged();
 }
 
-QLabel* ResultPage::Private::labelForTag( const QString & tag ) {
-    if ( QLabel * const label = m_progressLabelByTag.value( tag ) )
+QLabel *ResultPage::Private::labelForTag(const QString &tag)
+{
+    if (QLabel *const label = m_progressLabelByTag.value(tag)) {
         return label;
-    QLabel* label = new QLabel;
-    label->setTextFormat( Qt::RichText );
-    label->setWordWrap( true );
-    m_progressLabelLayout->addWidget( label );
-    m_progressLabelByTag.insert( tag, label );
+    }
+    QLabel *label = new QLabel;
+    label->setTextFormat(Qt::RichText);
+    label->setWordWrap(true);
+    m_progressLabelLayout->addWidget(label);
+    m_progressLabelByTag.insert(tag, label);
     return label;
 }
 
@@ -198,6 +203,5 @@ bool ResultPage::isComplete() const
 {
     return d->m_tasks ? d->m_tasks->allTasksCompleted() : true;
 }
-
 
 #include "moc_resultpage.cpp"

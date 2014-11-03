@@ -32,7 +32,6 @@
 #include "libkleo/ui/keyselectiondialog.h"
 #include <gpgme++/key.h>
 
-
 #include <KAboutData>
 #include <kiconloader.h>
 #include <QDebug>
@@ -42,32 +41,34 @@
 #include <KLocalizedString>
 #include <QCommandLineParser>
 
-int main( int argc, char ** argv ) {
-  KAboutData aboutData( QLatin1String("test_keyselectiondialog"), i18n("KeySelectionDialog Test"), QLatin1String("0.1") );
-  QApplication app(argc, argv);
-  QCommandLineParser parser;
-  KAboutData::setApplicationData(aboutData);
-  parser.addVersionOption();
-  parser.addHelpOption();
-  aboutData.setupCommandLine(&parser);
-  parser.process(app);
-  aboutData.processCommandLine(&parser);
+int main(int argc, char **argv)
+{
+    KAboutData aboutData(QLatin1String("test_keyselectiondialog"), i18n("KeySelectionDialog Test"), QLatin1String("0.1"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-  KIconLoader::global()->addAppDir( "libkleopatra" );
-  KIconLoader::global()->addAppDir( "kdepim" );
+    KIconLoader::global()->addAppDir("libkleopatra");
+    KIconLoader::global()->addAppDir("kdepim");
 
-  Kleo::KeySelectionDialog dlg( "Kleo::KeySelectionDialog Test",
-                                "Please select a key:",
-                                std::vector<GpgME::Key>(),
-                                Kleo::KeySelectionDialog::AllKeys, true, true );
+    Kleo::KeySelectionDialog dlg("Kleo::KeySelectionDialog Test",
+                                 "Please select a key:",
+                                 std::vector<GpgME::Key>(),
+                                 Kleo::KeySelectionDialog::AllKeys, true, true);
 
-  if ( dlg.exec() == QDialog::Accepted ) {
-    qDebug() <<"accepted; selected key:" << (dlg.selectedKey().userID(0).id() ? dlg.selectedKey().userID(0).id() :"<null>") <<"\nselected _keys_:";
-    for ( std::vector<GpgME::Key>::const_iterator it = dlg.selectedKeys().begin() ; it != dlg.selectedKeys().end() ; ++it )
-      qDebug() << (it->userID(0).id() ? it->userID(0).id() :"<null>");
-  } else {
-    qDebug() <<"rejected";
-  }
+    if (dlg.exec() == QDialog::Accepted) {
+        qDebug() << "accepted; selected key:" << (dlg.selectedKey().userID(0).id() ? dlg.selectedKey().userID(0).id() : "<null>") << "\nselected _keys_:";
+        for (std::vector<GpgME::Key>::const_iterator it = dlg.selectedKeys().begin() ; it != dlg.selectedKeys().end() ; ++it) {
+            qDebug() << (it->userID(0).id() ? it->userID(0).id() : "<null>");
+        }
+    } else {
+        qDebug() << "rejected";
+    }
 
-  return 0;
+    return 0;
 }

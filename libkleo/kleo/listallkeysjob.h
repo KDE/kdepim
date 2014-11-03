@@ -39,57 +39,59 @@
 
 #include <vector>
 
-namespace GpgME {
-  class Error;
-  class KeyListResult;
+namespace GpgME
+{
+class Error;
+class KeyListResult;
 }
 
+namespace Kleo
+{
 
-namespace Kleo {
+/**
+   @short An abstract base class for asynchronously listing all keys
 
-  /**
-     @short An abstract base class for asynchronously listing all keys
+   To use a ListAllKeysJob, first obtain an instance from the
+   CryptoBackend implementation, connect the progress()
+   and result() signals to suitable slots and then start the key
+   listing with a call to start(). This call might fail, in which
+   case the ListAllKeysJob instance will have schedules it's own
+   destruction with a call to QObject::deleteLater().
 
-     To use a ListAllKeysJob, first obtain an instance from the
-     CryptoBackend implementation, connect the progress()
-     and result() signals to suitable slots and then start the key
-     listing with a call to start(). This call might fail, in which
-     case the ListAllKeysJob instance will have schedules it's own
-     destruction with a call to QObject::deleteLater().
+   After result() is emitted, the ListAllKeysJob will schedule it's
+   own destruction by calling QObject::deleteLater().
 
-     After result() is emitted, the ListAllKeysJob will schedule it's
-     own destruction by calling QObject::deleteLater().
-
-     This is potentially much faster than a KeyListJob with empty
-     pattern.
-  */
-  class ListAllKeysJob : public Job {
+   This is potentially much faster than a KeyListJob with empty
+   pattern.
+*/
+class ListAllKeysJob : public Job
+{
     Q_OBJECT
-  protected:
-    explicit ListAllKeysJob( QObject * parent );
+protected:
+    explicit ListAllKeysJob(QObject *parent);
 
-  public:
+public:
     ~ListAllKeysJob();
 
-     /**
-       Starts the listallkeys operation.  In general, all keys are
-       returned (however, the backend is free to truncate the result
-       and should do so; when this happens, it will be reported by the
-       result object).
+    /**
+      Starts the listallkeys operation.  In general, all keys are
+      returned (however, the backend is free to truncate the result
+      and should do so; when this happens, it will be reported by the
+      result object).
 
-       If \a mergeKeys is true, secret keys are merged into public
-       keys.
+      If \a mergeKeys is true, secret keys are merged into public
+      keys.
     */
-    virtual GpgME::Error start( bool mergeKeys=false ) = 0;
+    virtual GpgME::Error start(bool mergeKeys = false) = 0;
 
     /**
        Synchronous version of start().
     */
-    virtual GpgME::KeyListResult exec( std::vector<GpgME::Key> & pub, std::vector<GpgME::Key> & sec, bool mergeKeys=false ) = 0;
+    virtual GpgME::KeyListResult exec(std::vector<GpgME::Key> &pub, std::vector<GpgME::Key> &sec, bool mergeKeys = false) = 0;
 
-  Q_SIGNALS:
-    void result( const GpgME::KeyListResult & result, const std::vector<GpgME::Key> & pub=std::vector<GpgME::Key>(), const std::vector<GpgME::Key> & sec=std::vector<GpgME::Key>(), const QString & auditLogAsHtml=QString(), const GpgME::Error & auditLogError=GpgME::Error() );
-  };
+Q_SIGNALS:
+    void result(const GpgME::KeyListResult &result, const std::vector<GpgME::Key> &pub = std::vector<GpgME::Key>(), const std::vector<GpgME::Key> &sec = std::vector<GpgME::Key>(), const QString &auditLogAsHtml = QString(), const GpgME::Error &auditLogError = GpgME::Error());
+};
 
 }
 

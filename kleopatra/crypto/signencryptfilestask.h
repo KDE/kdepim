@@ -43,58 +43,64 @@
 
 class QString;
 
-namespace GpgME {
-    class Key;
+namespace GpgME
+{
+class Key;
 }
 
-namespace Kleo {
-    class OverwritePolicy;
-    class Input;
+namespace Kleo
+{
+class OverwritePolicy;
+class Input;
 }
 
-namespace boost {
-    template <typename T> class shared_ptr;
+namespace boost
+{
+template <typename T> class shared_ptr;
 }
 
-namespace Kleo {
-namespace Crypto {
+namespace Kleo
+{
+namespace Crypto
+{
 
-    class SignEncryptFilesTask : public Task {
-        Q_OBJECT
-    public:
-        explicit SignEncryptFilesTask( QObject * parent=0 );
-        ~SignEncryptFilesTask();
+class SignEncryptFilesTask : public Task
+{
+    Q_OBJECT
+public:
+    explicit SignEncryptFilesTask(QObject *parent = 0);
+    ~SignEncryptFilesTask();
 
-        void setInputFileName( const QString & fileName );
-        void setInputFileNames( const QStringList & fileNames );
-        void setInput( const boost::shared_ptr<Input> & input );
-        void setOutputFileName( const QString & fileName );
-        void setSigners( const std::vector<GpgME::Key> & singners );
-        void setRecipients( const std::vector<GpgME::Key> & recipients );
+    void setInputFileName(const QString &fileName);
+    void setInputFileNames(const QStringList &fileNames);
+    void setInput(const boost::shared_ptr<Input> &input);
+    void setOutputFileName(const QString &fileName);
+    void setSigners(const std::vector<GpgME::Key> &singners);
+    void setRecipients(const std::vector<GpgME::Key> &recipients);
 
-        void setSign( bool sign );
-        void setEncrypt( bool encrypt );
-        void setRemoveInputFileOnSuccess( bool );
-        void setDetachedSignature( bool detached );
+    void setSign(bool sign);
+    void setEncrypt(bool encrypt);
+    void setRemoveInputFileOnSuccess(bool);
+    void setDetachedSignature(bool detached);
 
-        void setOverwritePolicy( const boost::shared_ptr<OverwritePolicy> & policy );
-        GpgME::Protocol protocol() const;
+    void setOverwritePolicy(const boost::shared_ptr<OverwritePolicy> &policy);
+    GpgME::Protocol protocol() const;
 
-        /* reimp */ void cancel();
-        /* reimp */ QString label() const;
-        /* reimp */ QString tag() const;
+    /* reimp */ void cancel();
+    /* reimp */ QString label() const;
+    /* reimp */ QString tag() const;
 
-    private:
-        /* reimp */ void doStart();
-        /* reimp */ unsigned long long inputSize() const;
+private:
+    /* reimp */ void doStart();
+    /* reimp */ unsigned long long inputSize() const;
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void slotResult( const GpgME::SigningResult & ) )
-        Q_PRIVATE_SLOT( d, void slotResult( const GpgME::SigningResult &, const GpgME::EncryptionResult & ) )
-        Q_PRIVATE_SLOT( d, void slotResult( const GpgME::EncryptionResult & ) )
-    };
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void slotResult(const GpgME::SigningResult &))
+    Q_PRIVATE_SLOT(d, void slotResult(const GpgME::SigningResult &, const GpgME::EncryptionResult &))
+    Q_PRIVATE_SLOT(d, void slotResult(const GpgME::EncryptionResult &))
+};
 
 }
 }

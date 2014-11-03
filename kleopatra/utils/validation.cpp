@@ -50,103 +50,117 @@ static const QString email_rx = QLatin1String("[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?
 static const QString name_rx = QLatin1String("[^0-9<>][^<>@]{4,}");
 static const QString comment_rx = QLatin1String("[^()]*");
 
-namespace {
+namespace
+{
 
-    class EMailValidator : public QValidator {
-        QRegExp rx;
-    public:
-        explicit EMailValidator( QObject * parent=0 ) : QValidator( parent ), rx( QRegExp( email_rx ) ) {}
+class EMailValidator : public QValidator
+{
+    QRegExp rx;
+public:
+    explicit EMailValidator(QObject *parent = 0) : QValidator(parent), rx(QRegExp(email_rx)) {}
 
-        /* reimp */ void fixup( QString & ) const {}
+    /* reimp */ void fixup(QString &) const {}
 
-        /* reimp */ State validate( QString & str, int & pos ) const {
-            const int atIdx = str.lastIndexOf( QLatin1Char('@') );
-            if ( atIdx < 0 || str.endsWith( QLatin1Char('@') ) )
-                return regexValidate( str, pos );
-
-            // toAce/fromAce doesn't like intermediate domain names,
-            // so we fix them up with something innocuous to help it
-            // along, and which we strip again afterwards
-
-            QString domain = str.mid( atIdx + 1 ).toLower();
-            const int dotIndex = domain.lastIndexOf( QLatin1Char('.') );
-            const bool needsOrgAdded = domain.endsWith( QLatin1Char('.') );
-            // during typing, the domain might end with '-', which is okay
-            // yeah, foo.s also disrupts fromAce, during typing this is okay
-            const bool needsDotOrgAdded = !needsOrgAdded && ( dotIndex < 0 || dotIndex == domain.size() - 2 || domain.endsWith( QLatin1Char('-') ) );
-            if ( needsOrgAdded )
-                domain += QLatin1String("org");
-            if ( needsDotOrgAdded )
-                domain += QLatin1String("tmp.org");
-            const QByteArray domainEncoded = QUrl::toAce( domain );
-            const QString domainRestored = QUrl::fromAce( domainEncoded );
-            QString encoded = str.left( atIdx ) + QLatin1Char('@') + QString::fromLatin1( domainEncoded );
-            if ( needsDotOrgAdded ) {
-                assert( encoded.endsWith( QLatin1String( "tmp.org" ) ) );
-                encoded.chop( 7 );
-            }
-            if ( needsOrgAdded ) {
-                assert( encoded.endsWith( QLatin1String( ".org" ) ) );
-                encoded.chop( 3 ); // '.' was part of domain before
-            }
-            qDebug() << "\n str           :" << str
-                     << "\n domain        :" << domain
-                     << "\n domainEncoded :" << domainEncoded
-                     << "\n domainRestored:" << domainRestored
-                     << "\n encoded       :" << encoded ;
-            if ( domain != domainRestored )
-                return Invalid;
-
-            // there's no difference between 'encoded' and 'str' at
-            // least up to and including 'atIdx', and we need the
-            // position for the fixed Intermediate state in
-            // regexValidate (e.g. adding a . after marc in
-            // marc@kdab.com, intending to eventually arrive at
-            // marc.mutz@kdab.com)
-            int adjustedPos = pos <= atIdx ? pos : encoded.size() ;
-            return regexValidate( encoded, adjustedPos );
+    /* reimp */ State validate(QString &str, int &pos) const
+    {
+        const int atIdx = str.lastIndexOf(QLatin1Char('@'));
+        if (atIdx < 0 || str.endsWith(QLatin1Char('@'))) {
+            return regexValidate(str, pos);
         }
 
-    private:
-        State regexValidate( QString & input, int & pos ) const {
-            // fixed version of QRegExpValidator::validate():
-            if (rx.exactMatch(input)) {
-                return Acceptable;
+        // toAce/fromAce doesn't like intermediate domain names,
+        // so we fix them up with something innocuous to help it
+        // along, and which we strip again afterwards
+
+        QString domain = str.mid(atIdx + 1).toLower();
+        const int dotIndex = domain.lastIndexOf(QLatin1Char('.'));
+        const bool needsOrgAdded = domain.endsWith(QLatin1Char('.'));
+        // during typing, the domain might end with '-', which is okay
+        // yeah, foo.s also disrupts fromAce, during typing this is okay
+        const bool needsDotOrgAdded = !needsOrgAdded && (dotIndex < 0 || dotIndex == domain.size() - 2 || domain.endsWith(QLatin1Char('-')));
+        if (needsOrgAdded) {
+            domain += QLatin1String("org");
+        }
+        if (needsDotOrgAdded) {
+            domain += QLatin1String("tmp.org");
+        }
+        const QByteArray domainEncoded = QUrl::toAce(domain);
+        const QString domainRestored = QUrl::fromAce(domainEncoded);
+        QString encoded = str.left(atIdx) + QLatin1Char('@') + QString::fromLatin1(domainEncoded);
+        if (needsDotOrgAdded) {
+            assert(encoded.endsWith(QLatin1String("tmp.org")));
+            encoded.chop(7);
+        }
+        if (needsOrgAdded) {
+            assert(encoded.endsWith(QLatin1String(".org")));
+            encoded.chop(3);   // '.' was part of domain before
+        }
+        qDebug() << "\n str           :" << str
+                 << "\n domain        :" << domain
+                 << "\n domainEncoded :" << domainEncoded
+                 << "\n domainRestored:" << domainRestored
+                 << "\n encoded       :" << encoded ;
+        if (domain != domainRestored) {
+            return Invalid;
+        }
+
+        // there's no difference between 'encoded' and 'str' at
+        // least up to and including 'atIdx', and we need the
+        // position for the fixed Intermediate state in
+        // regexValidate (e.g. adding a . after marc in
+        // marc@kdab.com, intending to eventually arrive at
+        // marc.mutz@kdab.com)
+        int adjustedPos = pos <= atIdx ? pos : encoded.size() ;
+        return regexValidate(encoded, adjustedPos);
+    }
+
+private:
+    State regexValidate(QString &input, int &pos) const
+    {
+        // fixed version of QRegExpValidator::validate():
+        if (rx.exactMatch(input)) {
+            return Acceptable;
+        } else {
+            if (const_cast<QRegExp &>(rx).matchedLength() >= /*input.size()*/pos) {
+                return Intermediate;
             } else {
-                if (const_cast<QRegExp &>(rx).matchedLength() >= /*input.size()*/pos) {
-                    return Intermediate;
-                } else {
-                    pos = input.size();
-                    return Invalid;
-                }
+                pos = input.size();
+                return Invalid;
             }
         }
+    }
 
-    };
+};
 
 }
 
-QValidator * Validation::email( QObject * parent ) {
-    return new EMailValidator( parent );
+QValidator *Validation::email(QObject *parent)
+{
+    return new EMailValidator(parent);
 }
 
-QValidator * Validation::email( const QRegExp & addRX, QObject * parent ) {
-    return new MultiValidator( email(), new QRegExpValidator( addRX, 0 ), parent );
+QValidator *Validation::email(const QRegExp &addRX, QObject *parent)
+{
+    return new MultiValidator(email(), new QRegExpValidator(addRX, 0), parent);
 }
 
-QValidator * Validation::pgpName( QObject * parent ) {
-    return new QRegExpValidator( QRegExp( name_rx ), parent );
+QValidator *Validation::pgpName(QObject *parent)
+{
+    return new QRegExpValidator(QRegExp(name_rx), parent);
 }
 
-QValidator * Validation::pgpName( const QRegExp & addRX, QObject * parent ) {
-    return new MultiValidator( pgpName(), new QRegExpValidator( addRX, 0 ), parent );
+QValidator *Validation::pgpName(const QRegExp &addRX, QObject *parent)
+{
+    return new MultiValidator(pgpName(), new QRegExpValidator(addRX, 0), parent);
 }
 
-QValidator * Validation::pgpComment( QObject * parent ) {
-    return new QRegExpValidator( QRegExp( comment_rx ), parent );
+QValidator *Validation::pgpComment(QObject *parent)
+{
+    return new QRegExpValidator(QRegExp(comment_rx), parent);
 }
 
-QValidator * Validation::pgpComment( const QRegExp & addRX, QObject * parent ) {
-    return new MultiValidator( pgpComment(), new QRegExpValidator( addRX, 0 ), parent );
+QValidator *Validation::pgpComment(const QRegExp &addRX, QObject *parent)
+{
+    return new MultiValidator(pgpComment(), new QRegExpValidator(addRX, 0), parent);
 }
 

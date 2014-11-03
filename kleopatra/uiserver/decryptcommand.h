@@ -35,23 +35,30 @@
 
 #include <uiserver/decryptverifycommandemailbase.h>
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class DecryptCommand : public AssuanCommandMixin<DecryptCommand,DecryptVerifyCommandEMailBase> {
-    public:
-        //DecryptCommand();
-        //~DecryptCommand();
+class DecryptCommand : public AssuanCommandMixin<DecryptCommand, DecryptVerifyCommandEMailBase>
+{
+public:
+    //DecryptCommand();
+    //~DecryptCommand();
 
-    private:
-        /* reimp */ DecryptVerifyOperation operation() const {
-            if ( hasOption( "no-verify" ) )
-                return Decrypt;
-            else
-                return DecryptVerify;
+private:
+    /* reimp */ DecryptVerifyOperation operation() const
+    {
+        if (hasOption("no-verify")) {
+            return Decrypt;
+        } else {
+            return DecryptVerify;
         }
-    public:
-        static const char * staticName() { return "DECRYPT"; }
-    };
+    }
+public:
+    static const char *staticName()
+    {
+        return "DECRYPT";
+    }
+};
 
 }
 

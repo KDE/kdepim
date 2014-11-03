@@ -35,44 +35,47 @@
 
 #include "abstractimportjob.h"
 
-namespace GpgME {
-  class Key;
-  class Error;
-  class ImportResult;
+namespace GpgME
+{
+class Key;
+class Error;
+class ImportResult;
 }
 
 #include <vector>
 
-namespace Kleo {
+namespace Kleo
+{
 
-  /**
-     @short An abstract base class for asynchronous keyserver-importers
+/**
+   @short An abstract base class for asynchronous keyserver-importers
 
-     To use a ImportJob, first obtain an instance from the
-     CryptoBackend implementation, connect the progress() and result()
-     signals to suitable slots and then start the import with a call
-     to start(). This call might fail, in which case the ImportJob
-     instance will have scheduled it's own destruction with a call to
-     QObject::deleteLater().
+   To use a ImportJob, first obtain an instance from the
+   CryptoBackend implementation, connect the progress() and result()
+   signals to suitable slots and then start the import with a call
+   to start(). This call might fail, in which case the ImportJob
+   instance will have scheduled it's own destruction with a call to
+   QObject::deleteLater().
 
-     After result() is emitted, the ImportJob will schedule it's own
-     destruction by calling QObject::deleteLater().
-  */
-  class ImportFromKeyserverJob : public AbstractImportJob {
+   After result() is emitted, the ImportJob will schedule it's own
+   destruction by calling QObject::deleteLater().
+*/
+class ImportFromKeyserverJob : public AbstractImportJob
+{
     Q_OBJECT
-  protected:
-    explicit ImportFromKeyserverJob( QObject * parent );
-  public:
+protected:
+    explicit ImportFromKeyserverJob(QObject *parent);
+public:
     ~ImportFromKeyserverJob();
 
     /**
        Starts the importing operation. \a keyData contains the data to
        import from.
     */
-    virtual GpgME::Error start( const std::vector<GpgME::Key> & keys ) = 0;
+    virtual GpgME::Error start(const std::vector<GpgME::Key> &keys) = 0;
 
-    virtual GpgME::ImportResult exec( const std::vector<GpgME::Key> & keys ) = 0;
-  };
+    virtual GpgME::ImportResult exec(const std::vector<GpgME::Key> &keys) = 0;
+};
 
 }
 

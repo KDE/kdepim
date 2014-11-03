@@ -36,7 +36,6 @@
 
 #ifndef QT_NO_SYSTEMTRAYICON
 
-
 #include <QDebug>
 #include <QTimer>
 #include <QPointer>
@@ -49,40 +48,46 @@ using namespace Kleo;
 
 static const int ATTENTION_ANIMATION_FRAMES_PER_SEC = 1;
 
-class SystemTrayIcon::Private {
+class SystemTrayIcon::Private
+{
     friend class ::SystemTrayIcon;
-    SystemTrayIcon * const q;
+    SystemTrayIcon *const q;
 public:
-    explicit Private( SystemTrayIcon * qq );
+    explicit Private(SystemTrayIcon *qq);
     ~Private();
 
 private:
-    bool attentionWanted() const {
+    bool attentionWanted() const
+    {
         return attentionAnimationTimer.isActive();
     }
 
-    void setAttentionWantedImpl( bool on ) {
-        if ( on ) {
+    void setAttentionWantedImpl(bool on)
+    {
+        if (on) {
             attentionAnimationTimer.start();
         } else {
             attentionAnimationTimer.stop();
             attentionIconShown = false;
-            q->setIcon( normalIcon );
+            q->setIcon(normalIcon);
         }
     }
 
-    void slotActivated( ActivationReason reason ) {
-        if ( reason == QSystemTrayIcon::Trigger )
+    void slotActivated(ActivationReason reason)
+    {
+        if (reason == QSystemTrayIcon::Trigger) {
             q->doActivated();
+        }
     }
 
-    void slotAttentionAnimationTimerTimout() {
-        if ( attentionIconShown ) {
+    void slotAttentionAnimationTimerTimout()
+    {
+        if (attentionIconShown) {
             attentionIconShown = false;
-            q->setIcon( normalIcon );
+            q->setIcon(normalIcon);
         } else {
             attentionIconShown = true;
-            q->setIcon( attentionIcon );
+            q->setIcon(attentionIcon);
         }
     }
 
@@ -97,127 +102,147 @@ private:
     QPointer<QWidget> attentionWindow;
 };
 
-SystemTrayIcon::Private::Private( SystemTrayIcon * qq )
-    : q( qq ),
-      attentionIconShown( false ),
+SystemTrayIcon::Private::Private(SystemTrayIcon *qq)
+    : q(qq),
+      attentionIconShown(false),
       attentionAnimationTimer(),
       mainWindow(),
       attentionWindow()
 {
-    KDAB_SET_OBJECT_NAME( attentionAnimationTimer );
+    KDAB_SET_OBJECT_NAME(attentionAnimationTimer);
 
-    attentionAnimationTimer.setSingleShot( false );
-    attentionAnimationTimer.setInterval( 1000 * ATTENTION_ANIMATION_FRAMES_PER_SEC / 2 );
+    attentionAnimationTimer.setSingleShot(false);
+    attentionAnimationTimer.setInterval(1000 * ATTENTION_ANIMATION_FRAMES_PER_SEC / 2);
 
-    connect( q, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), q, SLOT(slotActivated(QSystemTrayIcon::ActivationReason)) );
-    connect( &attentionAnimationTimer, SIGNAL(timeout()), q, SLOT(slotAttentionAnimationTimerTimout()) );
+    connect(q, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), q, SLOT(slotActivated(QSystemTrayIcon::ActivationReason)));
+    connect(&attentionAnimationTimer, SIGNAL(timeout()), q, SLOT(slotAttentionAnimationTimerTimout()));
 }
 
 SystemTrayIcon::Private::~Private() {}
 
-SystemTrayIcon::SystemTrayIcon( QObject * p )
-    : QSystemTrayIcon( p ), d( new Private( this ) )
+SystemTrayIcon::SystemTrayIcon(QObject *p)
+    : QSystemTrayIcon(p), d(new Private(this))
 {
 
 }
 
-SystemTrayIcon::SystemTrayIcon( const QIcon & icon, QObject * p )
-    : QSystemTrayIcon( icon, p ), d( new Private( this ) )
+SystemTrayIcon::SystemTrayIcon(const QIcon &icon, QObject *p)
+    : QSystemTrayIcon(icon, p), d(new Private(this))
 {
     d->normalIcon = d->attentionIcon = icon;
 }
 
 SystemTrayIcon::~SystemTrayIcon() {}
 
-void SystemTrayIcon::setMainWindow( QWidget * mw ) {
-    if ( d->mainWindow )
+void SystemTrayIcon::setMainWindow(QWidget *mw)
+{
+    if (d->mainWindow) {
         return;
+    }
     d->mainWindow = mw;
-    if ( mw )
-        mw->installEventFilter( this );
-    doMainWindowSet( mw );
+    if (mw) {
+        mw->installEventFilter(this);
+    }
+    doMainWindowSet(mw);
     slotEnableDisableActions();
 }
 
-QWidget * SystemTrayIcon::mainWindow() const {
+QWidget *SystemTrayIcon::mainWindow() const
+{
     return d->mainWindow;
 }
 
-void SystemTrayIcon::setAttentionWindow( QWidget * mw ) {
-    if ( d->attentionWindow )
+void SystemTrayIcon::setAttentionWindow(QWidget *mw)
+{
+    if (d->attentionWindow) {
         return;
+    }
     d->attentionWindow = mw;
-    if ( mw )
-        mw->installEventFilter( this );
+    if (mw) {
+        mw->installEventFilter(this);
+    }
     slotEnableDisableActions();
 }
 
-QWidget * SystemTrayIcon::attentionWindow() const {
+QWidget *SystemTrayIcon::attentionWindow() const
+{
     return d->attentionWindow;
 }
 
-bool SystemTrayIcon::eventFilter( QObject * o, QEvent * e ) {
-    if ( o == d->mainWindow )
-        switch ( e->type() ) {
+bool SystemTrayIcon::eventFilter(QObject *o, QEvent *e)
+{
+    if (o == d->mainWindow)
+        switch (e->type()) {
         case QEvent::Close:
-            doMainWindowClosed( static_cast<QWidget*>( o ) );
-            // fall through:
+            doMainWindowClosed(static_cast<QWidget *>(o));
+        // fall through:
         case QEvent::Show:
         case QEvent::DeferredDelete:
-            QMetaObject::invokeMethod( this, "slotEnableDisableActions", Qt::QueuedConnection );
+            QMetaObject::invokeMethod(this, "slotEnableDisableActions", Qt::QueuedConnection);
         default: ;
         }
-    else if ( o == d->attentionWindow )
-        switch ( e->type() ) {
+    else if (o == d->attentionWindow)
+        switch (e->type()) {
         case QEvent::Close:
-            doAttentionWindowClosed( static_cast<QWidget*>( o ) );
-            // fall through:
+            doAttentionWindowClosed(static_cast<QWidget *>(o));
+        // fall through:
         case QEvent::Show:
         case QEvent::DeferredDelete:
-            QMetaObject::invokeMethod( this, "slotEnableDisableActions", Qt::QueuedConnection );
+            QMetaObject::invokeMethod(this, "slotEnableDisableActions", Qt::QueuedConnection);
         default: ;
         }
     return false;
 }
 
-void SystemTrayIcon::setAttentionWanted( bool on ) {
-    if ( d->attentionWanted() == on )
+void SystemTrayIcon::setAttentionWanted(bool on)
+{
+    if (d->attentionWanted() == on) {
         return;
+    }
     qDebug() << d->attentionWanted() << "->" << on;
-    d->setAttentionWantedImpl( on );
+    d->setAttentionWantedImpl(on);
 }
 
-bool SystemTrayIcon::attentionWanted() const {
+bool SystemTrayIcon::attentionWanted() const
+{
     return d->attentionWanted();
 }
 
-void SystemTrayIcon::setNormalIcon( const QIcon & icon ) {
-    if ( d->normalIcon.cacheKey() == icon.cacheKey() )
+void SystemTrayIcon::setNormalIcon(const QIcon &icon)
+{
+    if (d->normalIcon.cacheKey() == icon.cacheKey()) {
         return;
+    }
     d->normalIcon = icon;
-    if ( !d->attentionWanted() || !d->attentionIconShown )
-        setIcon( icon );
+    if (!d->attentionWanted() || !d->attentionIconShown) {
+        setIcon(icon);
+    }
 }
 
-QIcon SystemTrayIcon::normalIcon() const {
+QIcon SystemTrayIcon::normalIcon() const
+{
     return d->normalIcon;
 }
 
-void SystemTrayIcon::setAttentionIcon( const QIcon & icon ) {
-    if ( d->attentionIcon.cacheKey() == icon.cacheKey() )
+void SystemTrayIcon::setAttentionIcon(const QIcon &icon)
+{
+    if (d->attentionIcon.cacheKey() == icon.cacheKey()) {
         return;
+    }
     d->attentionIcon = icon;
-    if ( d->attentionWanted() && d->attentionIconShown )
-        setIcon( icon );
+    if (d->attentionWanted() && d->attentionIconShown) {
+        setIcon(icon);
+    }
 }
 
-QIcon SystemTrayIcon::attentionIcon() const {
+QIcon SystemTrayIcon::attentionIcon() const
+{
     return d->attentionIcon;
 }
 
-void SystemTrayIcon::doMainWindowSet( QWidget * ) {}
-void SystemTrayIcon::doMainWindowClosed( QWidget * ) {}
-void SystemTrayIcon::doAttentionWindowClosed( QWidget * ) {}
+void SystemTrayIcon::doMainWindowSet(QWidget *) {}
+void SystemTrayIcon::doMainWindowClosed(QWidget *) {}
+void SystemTrayIcon::doAttentionWindowClosed(QWidget *) {}
 
 #include "moc_systemtrayicon.cpp"
 

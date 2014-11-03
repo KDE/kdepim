@@ -35,32 +35,38 @@
 
 #include <commands/gnupgprocesscommand.h>
 
-namespace Kleo {
-namespace Commands {
+namespace Kleo
+{
+namespace Commands
+{
 
-    class ExportOpenPGPCertsToServerCommand : public GnuPGProcessCommand {
-        Q_OBJECT
-    public:
-        explicit ExportOpenPGPCertsToServerCommand( QAbstractItemView * view, KeyListController * parent );
-        explicit ExportOpenPGPCertsToServerCommand( KeyListController * parent );
-        explicit ExportOpenPGPCertsToServerCommand( const GpgME::Key & key );
+class ExportOpenPGPCertsToServerCommand : public GnuPGProcessCommand
+{
+    Q_OBJECT
+public:
+    explicit ExportOpenPGPCertsToServerCommand(QAbstractItemView *view, KeyListController *parent);
+    explicit ExportOpenPGPCertsToServerCommand(KeyListController *parent);
+    explicit ExportOpenPGPCertsToServerCommand(const GpgME::Key &key);
 
-        ~ExportOpenPGPCertsToServerCommand();
+    ~ExportOpenPGPCertsToServerCommand();
 
-        static Restrictions restrictions() { return MustBeOpenPGP; }
+    static Restrictions restrictions()
+    {
+        return MustBeOpenPGP;
+    }
 
-    private:
-        /* reimp */ bool preStartHook( QWidget * ) const;
+private:
+    /* reimp */ bool preStartHook(QWidget *) const;
 
-        /* reimp */ QStringList arguments() const;
+    /* reimp */ QStringList arguments() const;
 
-        /* reimp */ QString errorCaption() const;
-        /* reimp */ QString successCaption() const;
+    /* reimp */ QString errorCaption() const;
+    /* reimp */ QString successCaption() const;
 
-        /* reimp */ QString crashExitMessage( const QStringList & ) const;
-        /* reimp */ QString errorExitMessage( const QStringList & ) const;
-        /* reimp */ QString successMessage( const QStringList & ) const;
-    };
+    /* reimp */ QString crashExitMessage(const QStringList &) const;
+    /* reimp */ QString errorExitMessage(const QStringList &) const;
+    /* reimp */ QString successMessage(const QStringList &) const;
+};
 
 }
 }

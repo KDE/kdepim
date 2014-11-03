@@ -65,43 +65,50 @@
    }
    \endcode
 */
-class __KDAB__CheckerImplBase {
+class __KDAB__CheckerImplBase
+{
 public:
     virtual ~__KDAB__CheckerImplBase() {}
     virtual void checkInvariants() const = 0;
 };
 
 template <typename T_Class>
-class __KDAB__CheckerImpl : public __KDAB__CheckerImplBase {
-    KDAB_DISABLE_COPY( __KDAB__CheckerImpl );
-    const T_Class * const p;
+class __KDAB__CheckerImpl : public __KDAB__CheckerImplBase
+{
+    KDAB_DISABLE_COPY(__KDAB__CheckerImpl);
+    const T_Class *const p;
 public:
-    __KDAB__CheckerImpl( const T_Class * t )
-        : __KDAB__CheckerImplBase(), p( t ) {}
-    void checkInvariants() const {
+    __KDAB__CheckerImpl(const T_Class *t)
+        : __KDAB__CheckerImplBase(), p(t) {}
+    void checkInvariants() const
+    {
         try {
             p->__KDAB_Checker__checkInvariants__();
-        } catch( ... ) {
+        } catch (...) {
             std::abort();
         }
     }
 };
 
 template <bool check_in_ctor, bool check_in_dtor>
-class __KDAB__Checker {
-    KDAB_DISABLE_COPY( __KDAB__Checker );
-    const __KDAB__CheckerImplBase * const checker;
+class __KDAB__Checker
+{
+    KDAB_DISABLE_COPY(__KDAB__Checker);
+    const __KDAB__CheckerImplBase *const checker;
 public:
     template <typename T_Class>
-    __KDAB__Checker( const T_Class * t )
-        : checker( new __KDAB__CheckerImpl<T_Class>( t ) )
+    __KDAB__Checker(const T_Class *t)
+        : checker(new __KDAB__CheckerImpl<T_Class>(t))
     {
-        if ( check_in_ctor )
+        if (check_in_ctor) {
             checker->checkInvariants();
+        }
     }
-    ~__KDAB__Checker() {
-        if ( check_in_dtor )
+    ~__KDAB__Checker()
+    {
+        if (check_in_dtor) {
             checker->checkInvariants();
+        }
         delete checker;
     }
 };

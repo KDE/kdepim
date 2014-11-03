@@ -34,26 +34,29 @@
 #define KLEOPATRA_CONFIG_CRYPTOOPERATIONSCONFIGPAGE_H
 
 #include <kcmodule.h>
-namespace Kleo {
-namespace Config {
+namespace Kleo
+{
+namespace Config
+{
 
-    class CryptoOperationsConfigWidget;
+class CryptoOperationsConfigWidget;
 
-    /**
-     * "Crypto Operations" configuration page for kleopatra's configuration dialog
-     */
-    class CryptoOperationsConfigurationPage : public KCModule {
-        Q_OBJECT
-    public:
-        explicit CryptoOperationsConfigurationPage( QWidget *parent=0, const QVariantList &args=QVariantList() );
+/**
+ * "Crypto Operations" configuration page for kleopatra's configuration dialog
+ */
+class CryptoOperationsConfigurationPage : public KCModule
+{
+    Q_OBJECT
+public:
+    explicit CryptoOperationsConfigurationPage(QWidget *parent = 0, const QVariantList &args = QVariantList());
 
-        /* reimp */ void load();
-        /* reimp */ void save();
-        /* reimp */ void defaults();
+    /* reimp */ void load();
+    /* reimp */ void save();
+    /* reimp */ void defaults();
 
-    private:
-        CryptoOperationsConfigWidget* mWidget;
-    };
+private:
+    CryptoOperationsConfigWidget *mWidget;
+};
 
 }
 }

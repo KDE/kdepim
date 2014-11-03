@@ -50,72 +50,83 @@
 
 #include <cassert>
 
-Kleo::ObtainKeysJob::ObtainKeysJob( QObject * p )
-  : SpecialJob( p ),
-    mIndex( 0 ),
-    mCanceled( false )
+Kleo::ObtainKeysJob::ObtainKeysJob(QObject *p)
+    : SpecialJob(p),
+      mIndex(0),
+      mCanceled(false)
 {
-  assert( ChiasmusBackend::instance() );
-  assert( ChiasmusBackend::instance()->config() );
-  const CryptoConfigEntry * keypaths =
-    ChiasmusBackend::instance()->config()->entry( QLatin1String("Chiasmus"), QLatin1String("General"), QLatin1String("keydir") );
-  assert( keypaths );
-  mKeyPaths = QStringList( keypaths->urlValue().path() );
+    assert(ChiasmusBackend::instance());
+    assert(ChiasmusBackend::instance()->config());
+    const CryptoConfigEntry *keypaths =
+        ChiasmusBackend::instance()->config()->entry(QLatin1String("Chiasmus"), QLatin1String("General"), QLatin1String("keydir"));
+    assert(keypaths);
+    mKeyPaths = QStringList(keypaths->urlValue().path());
 }
 
 Kleo::ObtainKeysJob::~ObtainKeysJob() {}
 
-GpgME::Error Kleo::ObtainKeysJob::start() {
-  QTimer::singleShot( 0, this, SLOT(slotPerform()) );
-  return mError = GpgME::Error();
+GpgME::Error Kleo::ObtainKeysJob::start()
+{
+    QTimer::singleShot(0, this, SLOT(slotPerform()));
+    return mError = GpgME::Error();
 }
 
-GpgME::Error Kleo::ObtainKeysJob::exec() {
-  slotPerform( false );
-  return mError;
+GpgME::Error Kleo::ObtainKeysJob::exec()
+{
+    slotPerform(false);
+    return mError;
 }
 
-void Kleo::ObtainKeysJob::slotCancel() {
-  mCanceled = true;
+void Kleo::ObtainKeysJob::slotCancel()
+{
+    mCanceled = true;
 }
 
-void Kleo::ObtainKeysJob::slotPerform() {
-  slotPerform( true );
+void Kleo::ObtainKeysJob::slotPerform()
+{
+    slotPerform(true);
 }
 
-void Kleo::ObtainKeysJob::slotPerform( bool async ) {
-  if ( mCanceled && !mError )
-    mError = GpgME::Error::fromCode( GPG_ERR_CANCELED );
-  if ( int(mIndex) >= mKeyPaths.size() || mError ) {
-    emit done();
-    emit SpecialJob::result( mError, QVariant( mResult ) );
-    return;
-  }
+void Kleo::ObtainKeysJob::slotPerform(bool async)
+{
+    if (mCanceled && !mError) {
+        mError = GpgME::Error::fromCode(GPG_ERR_CANCELED);
+    }
+    if (int(mIndex) >= mKeyPaths.size() || mError) {
+        emit done();
+        emit SpecialJob::result(mError, QVariant(mResult));
+        return;
+    }
 
-  emit progress( i18n( "Scanning directory %1...", mKeyPaths[mIndex] ),
-                 mIndex, mKeyPaths.size() );
+    emit progress(i18n("Scanning directory %1...", mKeyPaths[mIndex]),
+                  mIndex, mKeyPaths.size());
 
-  const QDir dir( KShell::tildeExpand( mKeyPaths[mIndex] ) );
+    const QDir dir(KShell::tildeExpand(mKeyPaths[mIndex]));
 
-  const QFileInfoList xisFiles = dir.entryInfoList( QStringList()<< QLatin1String("*.xis;*.XIS" ), QDir::Files );
-  for ( QFileInfoList::const_iterator it = xisFiles.begin(), end = xisFiles.end() ; it != end ; ++it )
-    if ( (*it).isReadable() )
-      mResult.push_back( (*it).absoluteFilePath() );
+    const QFileInfoList xisFiles = dir.entryInfoList(QStringList() << QLatin1String("*.xis;*.XIS"), QDir::Files);
+    for (QFileInfoList::const_iterator it = xisFiles.begin(), end = xisFiles.end() ; it != end ; ++it)
+        if ((*it).isReadable()) {
+            mResult.push_back((*it).absoluteFilePath());
+        }
 
-  ++mIndex;
+    ++mIndex;
 
-  if ( async )
-    QTimer::singleShot( 0, this, SLOT(slotPerform()) );
-  else
-    slotPerform( false );
+    if (async) {
+        QTimer::singleShot(0, this, SLOT(slotPerform()));
+    } else {
+        slotPerform(false);
+    }
 }
 
-void Kleo::ObtainKeysJob::showErrorDialog( QWidget * parent, const QString & caption ) const {
-  if ( !mError )
-    return;
-  if ( mError.isCanceled() )
-    return;
-  const QString msg = QString::fromLocal8Bit( mError.asString() );
-  KMessageBox::error( parent, msg, caption );
+void Kleo::ObtainKeysJob::showErrorDialog(QWidget *parent, const QString &caption) const
+{
+    if (!mError) {
+        return;
+    }
+    if (mError.isCanceled()) {
+        return;
+    }
+    const QString msg = QString::fromLocal8Bit(mError.asString());
+    KMessageBox::error(parent, msg, caption);
 }
 

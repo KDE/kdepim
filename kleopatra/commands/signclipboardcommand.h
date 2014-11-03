@@ -41,30 +41,33 @@
 
 #include <gpgme++/global.h>
 
-namespace Kleo {
-namespace Commands {
+namespace Kleo
+{
+namespace Commands
+{
 
-    class SignClipboardCommand : public Command {
-        Q_OBJECT
-    public:
-        explicit SignClipboardCommand( GpgME::Protocol protocol, QAbstractItemView * view, KeyListController * parent );
-        explicit SignClipboardCommand( GpgME::Protocol protocol, KeyListController * parent );
-        ~SignClipboardCommand();
+class SignClipboardCommand : public Command
+{
+    Q_OBJECT
+public:
+    explicit SignClipboardCommand(GpgME::Protocol protocol, QAbstractItemView *view, KeyListController *parent);
+    explicit SignClipboardCommand(GpgME::Protocol protocol, KeyListController *parent);
+    ~SignClipboardCommand();
 
-        static bool canSignCurrentClipboard();
+    static bool canSignCurrentClipboard();
 
-    private:
-        /* reimp */ void doStart();
-        /* reimp */ void doCancel();
+private:
+    /* reimp */ void doStart();
+    /* reimp */ void doCancel();
 
-    private:
-        class Private;
-        inline Private * d_func();
-        inline const Private * d_func() const;
-        Q_PRIVATE_SLOT( d_func(), void slotSignersResolved() )
-        Q_PRIVATE_SLOT( d_func(), void slotControllerDone() )
-        Q_PRIVATE_SLOT( d_func(), void slotControllerError(int,QString) )
-    };
+private:
+    class Private;
+    inline Private *d_func();
+    inline const Private *d_func() const;
+    Q_PRIVATE_SLOT(d_func(), void slotSignersResolved())
+    Q_PRIVATE_SLOT(d_func(), void slotControllerDone())
+    Q_PRIVATE_SLOT(d_func(), void slotControllerError(int, QString))
+};
 
 }
 }

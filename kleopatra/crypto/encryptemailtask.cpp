@@ -59,49 +59,54 @@ using namespace Kleo::Crypto;
 using namespace boost;
 using namespace GpgME;
 
-namespace {
+namespace
+{
 
-    class EncryptEMailResult : public Task::Result {
-        const EncryptionResult m_result;
-        const AuditLog m_auditLog;
-    public:
-        EncryptEMailResult( const EncryptionResult & r, const AuditLog & auditLog )
-            : Task::Result(), m_result( r ), m_auditLog( auditLog ) {}
+class EncryptEMailResult : public Task::Result
+{
+    const EncryptionResult m_result;
+    const AuditLog m_auditLog;
+public:
+    EncryptEMailResult(const EncryptionResult &r, const AuditLog &auditLog)
+        : Task::Result(), m_result(r), m_auditLog(auditLog) {}
 
-        /* reimp */ QString overview() const;
-        /* reimp */ QString details() const;
-        /* reimp */ int errorCode() const;
-        /* reimp */ QString errorString() const;
-        /* reimp */ VisualCode code() const;
-        /* reimp */ AuditLog auditLog() const;
-    };
+    /* reimp */ QString overview() const;
+    /* reimp */ QString details() const;
+    /* reimp */ int errorCode() const;
+    /* reimp */ QString errorString() const;
+    /* reimp */ VisualCode code() const;
+    /* reimp */ AuditLog auditLog() const;
+};
 
-    QString makeResultString( const EncryptionResult& res )
-    {
-        const Error err = res.error();
+QString makeResultString(const EncryptionResult &res)
+{
+    const Error err = res.error();
 
-        if ( err.isCanceled() )
-            return i18n( "Encryption canceled." );
-
-        if ( err )
-            return i18n( "Encryption failed: %1", QString::fromLocal8Bit( err.asString() ).toHtmlEscaped() );
-
-        return i18n( "Encryption succeeded." );
+    if (err.isCanceled()) {
+        return i18n("Encryption canceled.");
     }
+
+    if (err) {
+        return i18n("Encryption failed: %1", QString::fromLocal8Bit(err.asString()).toHtmlEscaped());
+    }
+
+    return i18n("Encryption succeeded.");
+}
 
 }
 
-class EncryptEMailTask::Private {
+class EncryptEMailTask::Private
+{
     friend class ::Kleo::Crypto::EncryptEMailTask;
-    EncryptEMailTask * const q;
+    EncryptEMailTask *const q;
 public:
-    explicit Private( EncryptEMailTask * qq );
+    explicit Private(EncryptEMailTask *qq);
 
 private:
-    std::auto_ptr<Kleo::EncryptJob> createJob( GpgME::Protocol proto );
+    std::auto_ptr<Kleo::EncryptJob> createJob(GpgME::Protocol proto);
 
 private:
-    void slotResult( const EncryptionResult & );
+    void slotResult(const EncryptionResult &);
 
 private:
     shared_ptr<Input> input;
@@ -111,43 +116,47 @@ private:
     QPointer<Kleo::EncryptJob> job;
 };
 
-EncryptEMailTask::Private::Private( EncryptEMailTask * qq )
-    : q( qq ),
+EncryptEMailTask::Private::Private(EncryptEMailTask *qq)
+    : q(qq),
       input(),
       output(),
-      job( 0 )
+      job(0)
 {
 
 }
 
-EncryptEMailTask::EncryptEMailTask( QObject * p )
-    : Task( p ), d( new Private( this ) )
+EncryptEMailTask::EncryptEMailTask(QObject *p)
+    : Task(p), d(new Private(this))
 {
 
 }
 
 EncryptEMailTask::~EncryptEMailTask() {}
 
-void EncryptEMailTask::setInput( const shared_ptr<Input> & input ) {
-    kleo_assert( !d->job );
-    kleo_assert( input );
+void EncryptEMailTask::setInput(const shared_ptr<Input> &input)
+{
+    kleo_assert(!d->job);
+    kleo_assert(input);
     d->input = input;
 }
 
-void EncryptEMailTask::setOutput( const shared_ptr<Output> & output ) {
-    kleo_assert( !d->job );
-    kleo_assert( output );
+void EncryptEMailTask::setOutput(const shared_ptr<Output> &output)
+{
+    kleo_assert(!d->job);
+    kleo_assert(output);
     d->output = output;
 }
 
-void EncryptEMailTask::setRecipients( const std::vector<Key> & recipients ) {
-    kleo_assert( !d->job );
-    kleo_assert( !recipients.empty() );
+void EncryptEMailTask::setRecipients(const std::vector<Key> &recipients)
+{
+    kleo_assert(!d->job);
+    kleo_assert(!recipients.empty());
     d->recipients = recipients;
 }
 
-Protocol EncryptEMailTask::protocol() const {
-    kleo_assert( !d->recipients.empty() );
+Protocol EncryptEMailTask::protocol() const
+{
+    kleo_assert(!d->recipients.empty());
     return d->recipients.front().protocol();
 }
 
@@ -156,84 +165,95 @@ QString EncryptEMailTask::label() const
     return d->input ? d->input->label() : QString();
 }
 
-unsigned long long EncryptEMailTask::inputSize() const {
+unsigned long long EncryptEMailTask::inputSize() const
+{
     return d->input ? d->input->size() : 0;
 }
 
-void EncryptEMailTask::doStart() {
-    kleo_assert( !d->job );
-    kleo_assert( d->input );
-    kleo_assert( d->output );
-    kleo_assert( !d->recipients.empty() );
+void EncryptEMailTask::doStart()
+{
+    kleo_assert(!d->job);
+    kleo_assert(d->input);
+    kleo_assert(d->output);
+    kleo_assert(!d->recipients.empty());
 
-    std::auto_ptr<Kleo::EncryptJob> job = d->createJob( protocol() );
-    kleo_assert( job.get() );
+    std::auto_ptr<Kleo::EncryptJob> job = d->createJob(protocol());
+    kleo_assert(job.get());
 
-    job->start( d->recipients,
-                d->input->ioDevice(), d->output->ioDevice(),
-                /*alwaysTrust=*/true );
+    job->start(d->recipients,
+               d->input->ioDevice(), d->output->ioDevice(),
+               /*alwaysTrust=*/true);
 
     d->job = job.release();
 }
 
-void EncryptEMailTask::cancel() {
-    if ( d->job )
+void EncryptEMailTask::cancel()
+{
+    if (d->job) {
         d->job->slotCancel();
+    }
 }
 
-std::auto_ptr<Kleo::EncryptJob> EncryptEMailTask::Private::createJob( GpgME::Protocol proto ) {
-    const CryptoBackend::Protocol * const backend = CryptoBackendFactory::instance()->protocol( proto );
-    kleo_assert( backend );
-    bool shouldArmor = ( proto == OpenPGP || q->asciiArmor() ) && !output->binaryOpt();
-    std::auto_ptr<Kleo::EncryptJob> encryptJob( backend->encryptJob( shouldArmor, /*textmode=*/false ) );
-    kleo_assert( encryptJob.get() );
-    if ( proto == CMS && !q->asciiArmor() && !output->binaryOpt() )
-        encryptJob->setOutputIsBase64Encoded( true );
-    connect( encryptJob.get(), SIGNAL(progress(QString,int,int)),
-             q, SLOT(setProgress(QString,int,int)) );
-    connect( encryptJob.get(), SIGNAL(result(GpgME::EncryptionResult,QByteArray)),
-             q, SLOT(slotResult(GpgME::EncryptionResult)) );
+std::auto_ptr<Kleo::EncryptJob> EncryptEMailTask::Private::createJob(GpgME::Protocol proto)
+{
+    const CryptoBackend::Protocol *const backend = CryptoBackendFactory::instance()->protocol(proto);
+    kleo_assert(backend);
+    bool shouldArmor = (proto == OpenPGP || q->asciiArmor()) && !output->binaryOpt();
+    std::auto_ptr<Kleo::EncryptJob> encryptJob(backend->encryptJob(shouldArmor, /*textmode=*/false));
+    kleo_assert(encryptJob.get());
+    if (proto == CMS && !q->asciiArmor() && !output->binaryOpt()) {
+        encryptJob->setOutputIsBase64Encoded(true);
+    }
+    connect(encryptJob.get(), SIGNAL(progress(QString,int,int)),
+            q, SLOT(setProgress(QString,int,int)));
+    connect(encryptJob.get(), SIGNAL(result(GpgME::EncryptionResult,QByteArray)),
+            q, SLOT(slotResult(GpgME::EncryptionResult)));
     return encryptJob;
 }
 
-void EncryptEMailTask::Private::slotResult( const EncryptionResult & result ) {
-    const Job * const job = qobject_cast<const Job*>( q->sender() );
-    if ( result.error().code() ) {
+void EncryptEMailTask::Private::slotResult(const EncryptionResult &result)
+{
+    const Job *const job = qobject_cast<const Job *>(q->sender());
+    if (result.error().code()) {
         output->cancel();
     } else {
         output->finalize();
     }
-    q->emitResult( shared_ptr<Result>( new EncryptEMailResult( result, AuditLog::fromJob( job ) ) ) );
+    q->emitResult(shared_ptr<Result>(new EncryptEMailResult(result, AuditLog::fromJob(job))));
 }
 
-QString EncryptEMailResult::overview() const {
-    return makeOverview( makeResultString( m_result ) );
+QString EncryptEMailResult::overview() const
+{
+    return makeOverview(makeResultString(m_result));
 }
 
-QString EncryptEMailResult::details() const {
+QString EncryptEMailResult::details() const
+{
     return QString();
 }
 
-int EncryptEMailResult::errorCode() const {
+int EncryptEMailResult::errorCode() const
+{
     return m_result.error().encodedError();
 }
 
-QString EncryptEMailResult::errorString() const {
-    return hasError() ? makeResultString( m_result ) : QString();
+QString EncryptEMailResult::errorString() const
+{
+    return hasError() ? makeResultString(m_result) : QString();
 }
 
-AuditLog EncryptEMailResult::auditLog() const {
+AuditLog EncryptEMailResult::auditLog() const
+{
     return m_auditLog;
 }
 
 Task::Result::VisualCode EncryptEMailResult::code() const
 {
-    if ( m_result.error().isCanceled() )
+    if (m_result.error().isCanceled()) {
         return Warning;
+    }
     return m_result.error().code() ? NeutralError : NeutralSuccess;
 }
 
-
 #include "moc_encryptemailtask.cpp"
-
 

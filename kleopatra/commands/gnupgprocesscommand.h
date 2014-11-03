@@ -38,52 +38,55 @@
 class QStringList;
 class QString;
 
-namespace Kleo {
-namespace Commands {
+namespace Kleo
+{
+namespace Commands
+{
 
-    class GnuPGProcessCommand : public Command {
-        Q_OBJECT
-    protected:
-        explicit GnuPGProcessCommand( QAbstractItemView * view, KeyListController * parent );
-        explicit GnuPGProcessCommand( KeyListController * parent );
-        explicit GnuPGProcessCommand( const GpgME::Key & key );
-        ~GnuPGProcessCommand();
+class GnuPGProcessCommand : public Command
+{
+    Q_OBJECT
+protected:
+    explicit GnuPGProcessCommand(QAbstractItemView *view, KeyListController *parent);
+    explicit GnuPGProcessCommand(KeyListController *parent);
+    explicit GnuPGProcessCommand(const GpgME::Key &key);
+    ~GnuPGProcessCommand();
 
-    public:
-        QDialog * dialog() const;
+public:
+    QDialog *dialog() const;
 
-    private:
-        virtual bool preStartHook( QWidget * parentWidget ) const;
+private:
+    virtual bool preStartHook(QWidget *parentWidget) const;
 
-        virtual QStringList arguments() const = 0;
+    virtual QStringList arguments() const = 0;
 
-        virtual QString errorCaption() const = 0;
-        virtual QString successCaption() const = 0;
+    virtual QString errorCaption() const = 0;
+    virtual QString successCaption() const = 0;
 
-        virtual QString crashExitMessage( const QStringList & args ) const = 0;
-        virtual QString errorExitMessage( const QStringList & args ) const = 0;
-        virtual QString successMessage( const QStringList & args ) const = 0;
+    virtual QString crashExitMessage(const QStringList &args) const = 0;
+    virtual QString errorExitMessage(const QStringList &args) const = 0;
+    virtual QString successMessage(const QStringList &args) const = 0;
 
-        virtual void postSuccessHook( QWidget * parentWidget );
+    virtual void postSuccessHook(QWidget *parentWidget);
 
-    protected:
-        QString errorString() const;
-        void setIgnoresSuccessOrFailure( bool ignore );
-        bool ignoresSuccessOrFailure() const;
-        void setShowsOutputWindow( bool show );
-        bool showsOutputWindow() const;
+protected:
+    QString errorString() const;
+    void setIgnoresSuccessOrFailure(bool ignore);
+    bool ignoresSuccessOrFailure() const;
+    void setShowsOutputWindow(bool show);
+    bool showsOutputWindow() const;
 
-    private:
-        /* reimp */ void doStart();
-        /* reimp */ void doCancel();
+private:
+    /* reimp */ void doStart();
+    /* reimp */ void doCancel();
 
-    private:
-        class Private;
-        inline Private * d_func();
-        inline const Private * d_func() const;
-        Q_PRIVATE_SLOT( d_func(), void slotProcessFinished( int, QProcess::ExitStatus ) )
-        Q_PRIVATE_SLOT( d_func(), void slotProcessReadyReadStandardError() )
-    };
+private:
+    class Private;
+    inline Private *d_func();
+    inline const Private *d_func() const;
+    Q_PRIVATE_SLOT(d_func(), void slotProcessFinished(int, QProcess::ExitStatus))
+    Q_PRIVATE_SLOT(d_func(), void slotProcessReadyReadStandardError())
+};
 
 }
 }

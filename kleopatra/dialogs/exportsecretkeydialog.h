@@ -37,40 +37,43 @@
 
 #include <utils/pimpl_ptr.h>
 
-
-namespace GpgME {
-    class Key;
+namespace GpgME
+{
+class Key;
 }
 
-namespace Kleo {
-namespace Dialogs {
+namespace Kleo
+{
+namespace Dialogs
+{
 
-    class ExportSecretKeyDialog : public QDialog {
-        Q_OBJECT
-    public:
-        explicit ExportSecretKeyDialog( QWidget * parent=0, Qt::WindowFlags f=0 );
-        ~ExportSecretKeyDialog();
+class ExportSecretKeyDialog : public QDialog
+{
+    Q_OBJECT
+public:
+    explicit ExportSecretKeyDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    ~ExportSecretKeyDialog();
 
-        void setKey( const GpgME::Key & key );
-        GpgME::Key key() const;
+    void setKey(const GpgME::Key &key);
+    GpgME::Key key() const;
 
-        void setFileName( const QString & fileName );
-        QString fileName() const;
+    void setFileName(const QString &fileName);
+    QString fileName() const;
 
-        void setCharset( const QByteArray & charset );
-        QByteArray charset() const;
+    void setCharset(const QByteArray &charset);
+    QByteArray charset() const;
 
-        void setUseArmor( bool armor );
-        bool useArmor() const;
+    void setUseArmor(bool armor);
+    bool useArmor() const;
 
-    protected Q_SLOTS:
-        /* reimp */ void accept();
+protected Q_SLOTS:
+    /* reimp */ void accept();
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void updateFileName() )
-    };
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void updateFileName())
+};
 
 }
 }

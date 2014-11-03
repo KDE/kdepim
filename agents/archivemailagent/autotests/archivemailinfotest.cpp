@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "archivemailinfotest.h"
 #include "../archivemailinfo.h"
 #include <AkonadiCore/Collection>
@@ -82,6 +81,5 @@ void ArchiveMailInfoTest::shouldCopyArchiveInfo()
     ArchiveMailInfo copyInfo(info);
     QCOMPARE(info, copyInfo);
 }
-
 
 QTEST_MAIN(ArchiveMailInfoTest)

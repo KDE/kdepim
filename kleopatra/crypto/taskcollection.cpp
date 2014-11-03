@@ -48,13 +48,14 @@ using namespace Kleo;
 using namespace Kleo::Crypto;
 using namespace boost;
 
-class TaskCollection::Private {
-    TaskCollection* const q;
+class TaskCollection::Private
+{
+    TaskCollection *const q;
 public:
-    explicit Private( TaskCollection* qq );
+    explicit Private(TaskCollection *qq);
 
-    void taskProgress( const QString &, int, int );
-    void taskResult( const shared_ptr<const Task::Result> & );
+    void taskProgress(const QString &, int, int);
+    void taskResult(const shared_ptr<const Task::Result> &);
     void taskStarted();
     void calculateAndEmitProgress();
 
@@ -66,7 +67,7 @@ public:
     bool m_errorOccurred;
 };
 
-TaskCollection::Private::Private( TaskCollection* qq ) : q( qq ), m_totalSize( 0 ), m_processedSize( 0 ), m_nCompleted( 0 ), m_errorOccurred( false )
+TaskCollection::Private::Private(TaskCollection *qq) : q(qq), m_totalSize(0), m_processedSize(0), m_nCompleted(0), m_errorOccurred(false)
 {
 }
 
@@ -75,40 +76,42 @@ int TaskCollection::numberOfCompletedTasks() const
     return d->m_nCompleted;
 }
 
-size_t TaskCollection::size() const {
+size_t TaskCollection::size() const
+{
     return d->m_tasks.size();
 }
 
 bool TaskCollection::allTasksCompleted() const
 {
-    assert( d->m_nCompleted <= d->m_tasks.size() );
+    assert(d->m_nCompleted <= d->m_tasks.size());
     return d->m_nCompleted == d->m_tasks.size();
 }
 
-void TaskCollection::Private::taskProgress( const QString & msg, int, int )
+void TaskCollection::Private::taskProgress(const QString &msg, int, int)
 {
     m_lastProgressMessage = msg;
     calculateAndEmitProgress();
 }
 
-void TaskCollection::Private::taskResult( const shared_ptr<const Task::Result> & result )
+void TaskCollection::Private::taskResult(const shared_ptr<const Task::Result> &result)
 {
-    assert( result );
+    assert(result);
     ++m_nCompleted;
     m_errorOccurred = m_errorOccurred || result->hasError();
     m_lastProgressMessage.clear();
     calculateAndEmitProgress();
-    emit q->result( result );
-    if ( q->allTasksCompleted() )
+    emit q->result(result);
+    if (q->allTasksCompleted()) {
         emit q->done();
+    }
 }
 
 void TaskCollection::Private::taskStarted()
 {
-    const Task * const task = qobject_cast<Task*>( q->sender() );
-    assert( task );
-    assert( m_tasks.find( task->id() ) != m_tasks.end() );
-    emit q->started( m_tasks[task->id()] );
+    const Task *const task = qobject_cast<Task *>(q->sender());
+    assert(task);
+    assert(m_tasks.find(task->id()) != m_tasks.end());
+    emit q->started(m_tasks[task->id()]);
     calculateAndEmitProgress(); // start Knight-Rider-Mode right away (gpgsm doesn't report _any_ progress).
 }
 
@@ -120,29 +123,34 @@ void TaskCollection::Private::calculateAndEmitProgress()
     int processed = 0;
     uint knownSize = m_tasks.size();
 
-    for ( ConstIterator it = m_tasks.begin(), end = m_tasks.end(); it != end; ++it ) {
-        const shared_ptr<Task> & i = it->second;
-        assert( i );
-        if ( i->totalSize() == 0 )
+    for (ConstIterator it = m_tasks.begin(), end = m_tasks.end(); it != end; ++it) {
+        const shared_ptr<Task> &i = it->second;
+        assert(i);
+        if (i->totalSize() == 0) {
             --knownSize;
+        }
         processed += i->processedSize();
         total += i->totalSize();
     }
-    // use the average of the known sizes to estimate the unknown ones: 
-    if ( knownSize > 0 )
-        total += static_cast<int>( std::ceil( ( m_tasks.size() - knownSize ) * ( static_cast<double>( total ) / knownSize ) ) );
-    if ( m_totalSize == total && m_processedSize == processed )
+    // use the average of the known sizes to estimate the unknown ones:
+    if (knownSize > 0) {
+        total += static_cast<int>(std::ceil((m_tasks.size() - knownSize) * (static_cast<double>(total) / knownSize)));
+    }
+    if (m_totalSize == total && m_processedSize == processed) {
         return;
+    }
     m_totalSize = total;
     m_processedSize = processed;
-    if ( processed )
-        emit q->progress( m_lastProgressMessage, processed, total );
-    else
+    if (processed) {
+        emit q->progress(m_lastProgressMessage, processed, total);
+    } else
         // use knight-rider mode until we have some progress
-        emit q->progress( m_lastProgressMessage, processed, 0 );
+    {
+        emit q->progress(m_lastProgressMessage, processed, 0);
+    }
 }
 
-TaskCollection::TaskCollection( QObject * parent ) : QObject( parent ), d( new Private( this ) )
+TaskCollection::TaskCollection(QObject *parent) : QObject(parent), d(new Private(this))
 {
 }
 
@@ -160,9 +168,9 @@ bool TaskCollection::errorOccurred() const
     return d->m_errorOccurred;
 }
 
-shared_ptr<Task> TaskCollection::taskById( int id ) const
+shared_ptr<Task> TaskCollection::taskById(int id) const
 {
-    const std::map<int, shared_ptr<Task> >::const_iterator it = d->m_tasks.find( id );
+    const std::map<int, shared_ptr<Task> >::const_iterator it = d->m_tasks.find(id);
     return it != d->m_tasks.end() ? it->second : shared_ptr<Task>();
 }
 
@@ -170,23 +178,24 @@ std::vector<shared_ptr<Task> > TaskCollection::tasks() const
 {
     typedef std::map<int, shared_ptr<Task> >::const_iterator ConstIterator;
     std::vector<shared_ptr<Task> > res;
-    res.reserve( d->m_tasks.size() );
-    for ( ConstIterator it = d->m_tasks.begin(), end = d->m_tasks.end(); it != end; ++it )
-        res.push_back( it->second );
+    res.reserve(d->m_tasks.size());
+    for (ConstIterator it = d->m_tasks.begin(), end = d->m_tasks.end(); it != end; ++it) {
+        res.push_back(it->second);
+    }
     return res;
 }
 
-void TaskCollection::setTasks( const std::vector<shared_ptr<Task> > & tasks )
+void TaskCollection::setTasks(const std::vector<shared_ptr<Task> > &tasks)
 {
-    Q_FOREACH( const shared_ptr<Task> & i, tasks ) {
-        assert( i );
+    Q_FOREACH (const shared_ptr<Task> &i, tasks) {
+        assert(i);
         d->m_tasks[i->id()] = i;
-        connect( i.get(), SIGNAL(progress(QString,int,int)),
-                 this, SLOT(taskProgress(QString,int,int)) );
-        connect( i.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)), 
-                 this, SLOT(taskResult(boost::shared_ptr<const Kleo::Crypto::Task::Result>)) );
-        connect( i.get(), SIGNAL(started()),
-                 this, SLOT(taskStarted()) );
+        connect(i.get(), SIGNAL(progress(QString,int,int)),
+                this, SLOT(taskProgress(QString,int,int)));
+        connect(i.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)),
+                this, SLOT(taskResult(boost::shared_ptr<const Kleo::Crypto::Task::Result>)));
+        connect(i.get(), SIGNAL(started()),
+                this, SLOT(taskStarted()));
     }
 }
 

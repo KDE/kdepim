@@ -33,64 +33,67 @@
 #ifndef __KLEOPATRA_CRYPTO_GUI_WIZARD_H__
 #define __KLEOPATRA_CRYPTO_GUI_WIZARD_H__
 
-
 #include <utils/pimpl_ptr.h>
 
 #include <vector>
 
 #include <QDialog>
 
-namespace Kleo {
-namespace Crypto {
-namespace Gui {
+namespace Kleo
+{
+namespace Crypto
+{
+namespace Gui
+{
 
-    class WizardPage;
+class WizardPage;
 
-    class Wizard : public QDialog {
-        Q_OBJECT
-    public:
-        explicit Wizard( QWidget * parent=0, Qt::WindowFlags f=0 );
-        ~Wizard();
-        
-        enum Page {
-            InvalidPage=-1
-        };
+class Wizard : public QDialog
+{
+    Q_OBJECT
+public:
+    explicit Wizard(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    ~Wizard();
 
-        void setPage( int id, WizardPage* page );
-
-        const WizardPage* page( int id ) const;
-        WizardPage* page( int id );
-
-        void setPageOrder( const std::vector<int>& pages );
-        void setPageVisible( int id, bool visible );
-
-        void setCurrentPage( int id );
-        
-        int currentPage() const;
-
-        const WizardPage* currentPageWidget() const;
-        WizardPage* currentPageWidget();
-
-        bool canGoToPreviousPage() const;
-        bool canGoToNextPage() const;
-
-    public Q_SLOTS:
-        void next();
-        void back();
-
-    Q_SIGNALS:
-       void canceled();
-
-    protected:
-        virtual void onNext( int currentId );
-        virtual void onBack( int currentId );
-
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void updateButtonStates() )
-        Q_PRIVATE_SLOT( d, void updateHeader() )
+    enum Page {
+        InvalidPage = -1
     };
+
+    void setPage(int id, WizardPage *page);
+
+    const WizardPage *page(int id) const;
+    WizardPage *page(int id);
+
+    void setPageOrder(const std::vector<int> &pages);
+    void setPageVisible(int id, bool visible);
+
+    void setCurrentPage(int id);
+
+    int currentPage() const;
+
+    const WizardPage *currentPageWidget() const;
+    WizardPage *currentPageWidget();
+
+    bool canGoToPreviousPage() const;
+    bool canGoToNextPage() const;
+
+public Q_SLOTS:
+    void next();
+    void back();
+
+Q_SIGNALS:
+    void canceled();
+
+protected:
+    virtual void onNext(int currentId);
+    virtual void onBack(int currentId);
+
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void updateButtonStates())
+    Q_PRIVATE_SLOT(d, void updateHeader())
+};
 
 }
 }

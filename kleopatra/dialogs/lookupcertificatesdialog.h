@@ -39,45 +39,49 @@
 
 #include <vector>
 
-namespace GpgME {
-    class Key;
+namespace GpgME
+{
+class Key;
 }
 
-namespace Kleo {
-namespace Dialogs {
+namespace Kleo
+{
+namespace Dialogs
+{
 
-    class LookupCertificatesDialog : public QDialog {
-        Q_OBJECT
-    public:
-        explicit LookupCertificatesDialog( QWidget * parent=0, Qt::WindowFlags f=0 );
-        ~LookupCertificatesDialog();
+class LookupCertificatesDialog : public QDialog
+{
+    Q_OBJECT
+public:
+    explicit LookupCertificatesDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    ~LookupCertificatesDialog();
 
-        void setCertificates( const std::vector<GpgME::Key> & certs );
-        std::vector<GpgME::Key> selectedCertificates() const;
+    void setCertificates(const std::vector<GpgME::Key> &certs);
+    std::vector<GpgME::Key> selectedCertificates() const;
 
-        void setPassive( bool passive );
-        bool isPassive() const;
-        void setSearchText( const QString &text );
-        QString searchText() const;
+    void setPassive(bool passive);
+    bool isPassive() const;
+    void setSearchText(const QString &text);
+    QString searchText() const;
 
-    Q_SIGNALS:
-        void searchTextChanged( const QString & text );
-        void saveAsRequested( const std::vector<GpgME::Key> & certs );
-        void importRequested( const std::vector<GpgME::Key> & certs );
-        void detailsRequested( const GpgME::Key & certs );
+Q_SIGNALS:
+    void searchTextChanged(const QString &text);
+    void saveAsRequested(const std::vector<GpgME::Key> &certs);
+    void importRequested(const std::vector<GpgME::Key> &certs);
+    void detailsRequested(const GpgME::Key &certs);
 
-    public Q_SLOTS:
-        /* reimp */ void accept();
+public Q_SLOTS:
+    /* reimp */ void accept();
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void slotSearchTextChanged() )
-        Q_PRIVATE_SLOT( d, void slotSearchClicked() )
-        Q_PRIVATE_SLOT( d, void slotSelectionChanged() )
-        Q_PRIVATE_SLOT( d, void slotDetailsClicked() )
-        Q_PRIVATE_SLOT( d, void slotSaveAsClicked() )
-    };
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void slotSearchTextChanged())
+    Q_PRIVATE_SLOT(d, void slotSearchClicked())
+    Q_PRIVATE_SLOT(d, void slotSelectionChanged())
+    Q_PRIVATE_SLOT(d, void slotDetailsClicked())
+    Q_PRIVATE_SLOT(d, void slotSaveAsClicked())
+};
 
 }
 }

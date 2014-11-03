@@ -327,7 +327,7 @@ void StorageServiceManager::readConfig()
     KConfigGroup grp(&conf, QLatin1String("General"));
 
     const QStringList services = grp.readEntry("Services", QStringList());
-    Q_FOREACH(const QString & service, services) {
+    Q_FOREACH (const QString &service, services) {
         PimCommon::StorageServiceAbstract *storageService = 0;
         if (service == serviceName(DropBox)) {
             if (!mListService.contains(serviceName(DropBox))) {

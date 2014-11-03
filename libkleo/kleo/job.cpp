@@ -30,7 +30,6 @@
     your version.
 */
 
-
 #include "job.h"
 
 #include "keylistjob.h"
@@ -63,38 +62,44 @@
 
 #include <gpg-error.h>
 
-Kleo::Job::Job( QObject * parent )
-  : QObject( parent )
+Kleo::Job::Job(QObject *parent)
+    : QObject(parent)
 {
-    if ( QCoreApplication * app = QCoreApplication::instance() )
-        connect( app, SIGNAL(aboutToQuit()), SLOT(slotCancel()) );
+    if (QCoreApplication *app = QCoreApplication::instance()) {
+        connect(app, SIGNAL(aboutToQuit()), SLOT(slotCancel()));
+    }
 }
 
-Kleo::Job::~Job() {
+Kleo::Job::~Job()
+{
 
 }
 
-void Kleo::Job::showErrorDialog( QWidget *, const QString & ) const {
-  qDebug() <<"Kleo::Job::showErrorDialog() should be reimplemented in Kleo::Job subclasses!";
+void Kleo::Job::showErrorDialog(QWidget *, const QString &) const
+{
+    qDebug() << "Kleo::Job::showErrorDialog() should be reimplemented in Kleo::Job subclasses!";
 }
 
-QString Kleo::Job::auditLogAsHtml() const {
+QString Kleo::Job::auditLogAsHtml() const
+{
     qDebug() << "Kleo::Job::auditLogAsHtml() should be reimplemented in Kleo::Job subclasses!" << endl;
     return QString();
 }
 
-GpgME::Error Kleo::Job::auditLogError() const {
+GpgME::Error Kleo::Job::auditLogError() const
+{
     qDebug() << "Kleo::Job::auditLogError() should be reimplemented in Kleo::Job subclasses!" << endl;
-    return GpgME::Error::fromCode( GPG_ERR_NOT_IMPLEMENTED );
+    return GpgME::Error::fromCode(GPG_ERR_NOT_IMPLEMENTED);
 }
 
-bool Kleo::Job::isAuditLogSupported() const {
+bool Kleo::Job::isAuditLogSupported() const
+{
     return auditLogError().code() != GPG_ERR_NOT_IMPLEMENTED ;
 }
 
 #define make_job_subclass_ext(x,y)                \
-  Kleo::x::x( QObject * parent ) : y( parent ) {} \
-  Kleo::x::~x() {}
+    Kleo::x::x( QObject * parent ) : y( parent ) {} \
+    Kleo::x::~x() {}
 
 #define make_job_subclass(x) make_job_subclass_ext(x,Job)
 
@@ -110,8 +115,8 @@ make_job_subclass(VerifyDetachedJob)
 make_job_subclass(VerifyOpaqueJob)
 make_job_subclass(KeyGenerationJob)
 make_job_subclass(AbstractImportJob)
-make_job_subclass_ext(ImportJob,AbstractImportJob)
-make_job_subclass_ext(ImportFromKeyserverJob,AbstractImportJob)
+make_job_subclass_ext(ImportJob, AbstractImportJob)
+make_job_subclass_ext(ImportFromKeyserverJob, AbstractImportJob)
 make_job_subclass(ExportJob)
 make_job_subclass(ChangeExpiryJob)
 make_job_subclass(ChangeOwnerTrustJob)

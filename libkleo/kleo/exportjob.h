@@ -37,32 +37,35 @@
 
 #include <QtCore/QByteArray>
 
-namespace GpgME {
-  class Error;
+namespace GpgME
+{
+class Error;
 }
 
 class QStringList;
 
-namespace Kleo {
+namespace Kleo
+{
 
-  /**
-     @short An abstract base class for asynchronous exporters
+/**
+   @short An abstract base class for asynchronous exporters
 
-     To use a ExportJob, first obtain an instance from the
-     CryptoBackend implementation, connect the progress() and result()
-     signals to suitable slots and then start the export with a call
-     to start(). This call might fail, in which case the ExportJob
-     instance will have scheduled it's own destruction with a call to
-     QObject::deleteLater().
+   To use a ExportJob, first obtain an instance from the
+   CryptoBackend implementation, connect the progress() and result()
+   signals to suitable slots and then start the export with a call
+   to start(). This call might fail, in which case the ExportJob
+   instance will have scheduled it's own destruction with a call to
+   QObject::deleteLater().
 
-     After result() is emitted, the ExportJob will schedule it's own
-     destruction by calling QObject::deleteLater().
-  */
-  class ExportJob : public Job {
+   After result() is emitted, the ExportJob will schedule it's own
+   destruction by calling QObject::deleteLater().
+*/
+class ExportJob : public Job
+{
     Q_OBJECT
-  protected:
-    explicit ExportJob( QObject * parent );
-  public:
+protected:
+    explicit ExportJob(QObject *parent);
+public:
     ~ExportJob();
 
     /**
@@ -71,11 +74,11 @@ namespace Kleo {
        ignored. If \a patterns is empty or contains only empty
        strings, all available keys are exported.
     */
-    virtual GpgME::Error start( const QStringList & patterns ) = 0;
+    virtual GpgME::Error start(const QStringList &patterns) = 0;
 
-  Q_SIGNALS:
-    void result( const GpgME::Error & result, const QByteArray & keyData, const QString & auditLogAsHtml=QString(), const GpgME::Error & auditLogError=GpgME::Error() );
-  };
+Q_SIGNALS:
+    void result(const GpgME::Error &result, const QByteArray &keyData, const QString &auditLogAsHtml = QString(), const GpgME::Error &auditLogError = GpgME::Error());
+};
 
 }
 

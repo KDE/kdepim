@@ -34,26 +34,30 @@
 #define __KLEOPATRA_CRYPTO_GUI_SIGNEMAILWIZARD_H__
 
 #include <crypto/gui/signencryptwizard.h>
-    
+
 #include <utils/pimpl_ptr.h>
-    
-namespace Kleo {
-namespace Crypto {
-namespace Gui {
 
-    class SignEMailWizard : public SignEncryptWizard {
-        Q_OBJECT
-    public:
-        explicit SignEMailWizard( QWidget * parent=0, Qt::WindowFlags f=0 );
-        ~SignEMailWizard();
+namespace Kleo
+{
+namespace Crypto
+{
+namespace Gui
+{
 
-        bool quickMode() const;
-        void setQuickMode( bool quick );
+class SignEMailWizard : public SignEncryptWizard
+{
+    Q_OBJECT
+public:
+    explicit SignEMailWizard(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    ~SignEMailWizard();
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-    };
+    bool quickMode() const;
+    void setQuickMode(bool quick);
+
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+};
 
 }
 }

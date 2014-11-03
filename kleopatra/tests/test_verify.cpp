@@ -43,153 +43,152 @@
 
 #include <QtCore/QObject>
 
-Q_DECLARE_METATYPE( GpgME::VerificationResult )
+Q_DECLARE_METATYPE(GpgME::VerificationResult)
 
 class VerifyTest : public QObject
 {
-  Q_OBJECT
-  private:
+    Q_OBJECT
+private:
 
     // Data shared with all tests
     QByteArray mSignature;
     QByteArray mSignedData;
-    const Kleo::CryptoBackend::Protocol * mBackend;
+    const Kleo::CryptoBackend::Protocol *mBackend;
     QEventLoop mEventLoop;
 
     // Data for testParallelVerifyAndKeyListJobs()
-    QList<Kleo::VerifyDetachedJob*> mParallelVerifyJobs;
-    QList<Kleo::KeyListJob*> mParallelKeyListJobs;
+    QList<Kleo::VerifyDetachedJob *> mParallelVerifyJobs;
+    QList<Kleo::KeyListJob *> mParallelKeyListJobs;
 
     // Data for testMixedParallelJobs()
-    QList<Kleo::Job*> mRunningJobs;
+    QList<Kleo::Job *> mRunningJobs;
     int mJobsStarted;
 
-  public slots:
+public slots:
     void slotParallelKeyListJobFinished()
     {
-      mParallelKeyListJobs.removeAll( static_cast<Kleo::KeyListJob*>( sender() ) );
+        mParallelKeyListJobs.removeAll(static_cast<Kleo::KeyListJob *>(sender()));
 
-      // When all jobs are done, quit the event loop
-      if ( mParallelVerifyJobs.isEmpty() && mParallelKeyListJobs.isEmpty() )
-        mEventLoop.quit();
+        // When all jobs are done, quit the event loop
+        if (mParallelVerifyJobs.isEmpty() && mParallelKeyListJobs.isEmpty()) {
+            mEventLoop.quit();
+        }
     }
-        
-    void slotParallelVerifyJobFinished( GpgME::VerificationResult result )
-    {
-      // Verify the result of the job is correct
-      QVERIFY( mParallelVerifyJobs.contains( static_cast<Kleo::VerifyDetachedJob*>( sender() ) ) );
-      QCOMPARE( result.signature( 0 ).validity(), GpgME::Signature::Full );
-      mParallelVerifyJobs.removeAll( static_cast<Kleo::VerifyDetachedJob*>( sender() ) );
 
-      // Start a key list job
-      Kleo::KeyListJob *job = mBackend->keyListJob();
-      mParallelKeyListJobs.append( job );
-      connect( job, SIGNAL(done()),
-               this, SLOT(slotParallelKeyListJobFinished()) );
-      QVERIFY( !job->start( QStringList() ) );
+    void slotParallelVerifyJobFinished(GpgME::VerificationResult result)
+    {
+        // Verify the result of the job is correct
+        QVERIFY(mParallelVerifyJobs.contains(static_cast<Kleo::VerifyDetachedJob *>(sender())));
+        QCOMPARE(result.signature(0).validity(), GpgME::Signature::Full);
+        mParallelVerifyJobs.removeAll(static_cast<Kleo::VerifyDetachedJob *>(sender()));
+
+        // Start a key list job
+        Kleo::KeyListJob *job = mBackend->keyListJob();
+        mParallelKeyListJobs.append(job);
+        connect(job, SIGNAL(done()),
+                this, SLOT(slotParallelKeyListJobFinished()));
+        QVERIFY(!job->start(QStringList()));
     }
 
     void someJobDone()
     {
-      // Don't bother checking any results here
-      mRunningJobs.removeAll( static_cast<Kleo::Job*>( sender() ) );
+        // Don't bother checking any results here
+        mRunningJobs.removeAll(static_cast<Kleo::Job *>(sender()));
     }
 
     void startAnotherJob()
     {
-      static int counter = 0;
-      counter++;
+        static int counter = 0;
+        counter++;
 
-      // Randomly kill a running job
-      if ( counter % 10 == 0 && !mRunningJobs.isEmpty() ) {
-        mRunningJobs.at( counter % mRunningJobs.size() )->slotCancel();
-      }
+        // Randomly kill a running job
+        if (counter % 10 == 0 && !mRunningJobs.isEmpty()) {
+            mRunningJobs.at(counter % mRunningJobs.size())->slotCancel();
+        }
 
-      // Randomly either start a keylist or a verify job
-      Kleo::Job *job;
-      if ( counter % 2 == 0 ) {
-        Kleo::VerifyDetachedJob *vdj = mBackend->verifyDetachedJob();
-        QVERIFY( !vdj->start( mSignature, mSignedData ) );
-        job = vdj;
-      }
-      else {
-        Kleo::KeyListJob *klj = mBackend->keyListJob();
-        QVERIFY( !klj->start( QStringList() ) );
-        job = klj;
-      }
-      mRunningJobs.append( job );
-      connect( job, SIGNAL(done()), this, SLOT(someJobDone()) );
+        // Randomly either start a keylist or a verify job
+        Kleo::Job *job;
+        if (counter % 2 == 0) {
+            Kleo::VerifyDetachedJob *vdj = mBackend->verifyDetachedJob();
+            QVERIFY(!vdj->start(mSignature, mSignedData));
+            job = vdj;
+        } else {
+            Kleo::KeyListJob *klj = mBackend->keyListJob();
+            QVERIFY(!klj->start(QStringList()));
+            job = klj;
+        }
+        mRunningJobs.append(job);
+        connect(job, SIGNAL(done()), this, SLOT(someJobDone()));
 
-      // Quit after 2500 jobs, that should be enough
-      mJobsStarted++;
-      if ( mJobsStarted >= 2500 ) {
-        QTimer::singleShot( 1000, &mEventLoop, SLOT(quit()) );
-      }
-      else {
-        QTimer::singleShot( 0, this, SLOT(startAnotherJob()) );
-      }
+        // Quit after 2500 jobs, that should be enough
+        mJobsStarted++;
+        if (mJobsStarted >= 2500) {
+            QTimer::singleShot(1000, &mEventLoop, SLOT(quit()));
+        } else {
+            QTimer::singleShot(0, this, SLOT(startAnotherJob()));
+        }
     }
 
-  private slots:
+private slots:
     void initTestCase()
     {
-      qRegisterMetaType<GpgME::VerificationResult>();
+        qRegisterMetaType<GpgME::VerificationResult>();
 
-      const QString sigFileName = QLatin1String(KLEO_TEST_DATADIR) + QLatin1String("/test.data.sig");
-      const QString dataFileName = QLatin1String(KLEO_TEST_DATADIR) + QLatin1String("/test.data");
+        const QString sigFileName = QLatin1String(KLEO_TEST_DATADIR) + QLatin1String("/test.data.sig");
+        const QString dataFileName = QLatin1String(KLEO_TEST_DATADIR) + QLatin1String("/test.data");
 
-      QFile sigFile( sigFileName );
-      QVERIFY( sigFile.open(QFile::ReadOnly ) );
-      QFile dataFile( dataFileName );
-      QVERIFY( dataFile.open(QFile::ReadOnly ) );
+        QFile sigFile(sigFileName);
+        QVERIFY(sigFile.open(QFile::ReadOnly));
+        QFile dataFile(dataFileName);
+        QVERIFY(dataFile.open(QFile::ReadOnly));
 
-      mSignature = sigFile.readAll();
-      mSignedData = dataFile.readAll();
+        mSignature = sigFile.readAll();
+        mSignedData = dataFile.readAll();
 
-      mBackend = Kleo::CryptoBackendFactory::instance()->protocol( "openpgp" );
+        mBackend = Kleo::CryptoBackendFactory::instance()->protocol("openpgp");
     }
 
     void testVerify()
     {
-      Kleo::VerifyDetachedJob *job = mBackend->verifyDetachedJob();
-      QSignalSpy spy( job, SIGNAL(result(GpgME::VerificationResult)) );
-      QVERIFY( spy.isValid() );
-      GpgME::Error err = job->start( mSignature, mSignedData );
-      QVERIFY( !err );
-      QTest::qWait( 1000 ); // ### we need to enter the event loop, can be done nicer though
+        Kleo::VerifyDetachedJob *job = mBackend->verifyDetachedJob();
+        QSignalSpy spy(job, SIGNAL(result(GpgME::VerificationResult)));
+        QVERIFY(spy.isValid());
+        GpgME::Error err = job->start(mSignature, mSignedData);
+        QVERIFY(!err);
+        QTest::qWait(1000);   // ### we need to enter the event loop, can be done nicer though
 
-      QCOMPARE( spy.count(), 1 );
-      GpgME::VerificationResult result = spy.takeFirst().at(0).value<GpgME::VerificationResult>();
-      QCOMPARE( result.numSignatures(), 1U );
+        QCOMPARE(spy.count(), 1);
+        GpgME::VerificationResult result = spy.takeFirst().at(0).value<GpgME::VerificationResult>();
+        QCOMPARE(result.numSignatures(), 1U);
 
-      GpgME::Signature sig = result.signature( 0 );
-      QCOMPARE( sig.summary() & GpgME::Signature::KeyMissing, 0 );
-      QCOMPARE( (quint64) sig.creationTime(), Q_UINT64_C( 1189650248 ) );
-      QCOMPARE( sig.validity(), GpgME::Signature::Full );
+        GpgME::Signature sig = result.signature(0);
+        QCOMPARE(sig.summary() & GpgME::Signature::KeyMissing, 0);
+        QCOMPARE((quint64) sig.creationTime(), Q_UINT64_C(1189650248));
+        QCOMPARE(sig.validity(), GpgME::Signature::Full);
     }
 
     void testParallelVerifyAndKeyListJobs()
     {
-      // ### Increasing 10 to 500 makes the verify jobs fail!
-      for ( int i = 0; i < 10; ++i ) {
-        Kleo::VerifyDetachedJob *job = mBackend->verifyDetachedJob();
-        mParallelVerifyJobs.append( job );
-        QVERIFY( !job->start( mSignature, mSignedData ) );
-        connect( job, SIGNAL(result(GpgME::VerificationResult)),
-                 this, SLOT(slotParallelVerifyJobFinished(GpgME::VerificationResult)) );
-      }
+        // ### Increasing 10 to 500 makes the verify jobs fail!
+        for (int i = 0; i < 10; ++i) {
+            Kleo::VerifyDetachedJob *job = mBackend->verifyDetachedJob();
+            mParallelVerifyJobs.append(job);
+            QVERIFY(!job->start(mSignature, mSignedData));
+            connect(job, SIGNAL(result(GpgME::VerificationResult)),
+                    this, SLOT(slotParallelVerifyJobFinished(GpgME::VerificationResult)));
+        }
 
-      mEventLoop.exec();
+        mEventLoop.exec();
     }
 
     void testMixedParallelJobs()
     {
-      mJobsStarted = 0;
-      QTimer::singleShot( 0, this, SLOT(startAnotherJob()) );
-      mEventLoop.exec();
+        mJobsStarted = 0;
+        QTimer::singleShot(0, this, SLOT(startAnotherJob()));
+        mEventLoop.exec();
     }
 };
 
-QTEST_KLEOMAIN( VerifyTest, NoGUI )
+QTEST_KLEOMAIN(VerifyTest, NoGUI)
 
 #include "test_verify.moc"

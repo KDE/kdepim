@@ -37,42 +37,45 @@
 #include "gpgme++/context.h"
 #include <QProcess>
 
-namespace Kleo {
-  class GnuPGProcessBase;
+namespace Kleo
+{
+class GnuPGProcessBase;
 }
 
-namespace GpgME {
-  class Data;
+namespace GpgME
+{
+class Data;
 }
 
+namespace Kleo
+{
 
-namespace Kleo {
-
-  class QGpgMESecretKeyExportJob : public ExportJob {
+class QGpgMESecretKeyExportJob : public ExportJob
+{
     Q_OBJECT
-  public:
-    QGpgMESecretKeyExportJob( bool armour, const QString& charset );
+public:
+    QGpgMESecretKeyExportJob(bool armour, const QString &charset);
     ~QGpgMESecretKeyExportJob();
 
     /*! \reimp from ExportJob */
-    GpgME::Error start( const QStringList & patterns );
+    GpgME::Error start(const QStringList &patterns);
 
-  private slots:
+private slots:
     /*! \reimp from Job */
     void slotCancel();
 
-    void slotStatus( Kleo::GnuPGProcessBase *, const QString &, const QStringList & );
+    void slotStatus(Kleo::GnuPGProcessBase *, const QString &, const QStringList &);
     void slotStdout();
     void slotStderr();
     void slotProcessExited(int exitCode, QProcess::ExitStatus exitStatus);
 
-  private:
-    GnuPGProcessBase * mProcess;
+private:
+    GnuPGProcessBase *mProcess;
     QByteArray mKeyData;
     GpgME::Error mError;
     bool mArmour;
     QString mCharset;
-  };
+};
 
 }
 

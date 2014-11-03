@@ -54,9 +54,10 @@ class QGpgMENewCryptoConfigComponent;
 class QGpgMENewCryptoConfigGroup;
 class QGpgMENewCryptoConfigEntry;
 
-class QGpgMENewCryptoConfigEntry : public Kleo::CryptoConfigEntry {
+class QGpgMENewCryptoConfigEntry : public Kleo::CryptoConfigEntry
+{
 public:
-    QGpgMENewCryptoConfigEntry( const boost::shared_ptr<QGpgMENewCryptoConfigGroup> & group, const GpgME::Configuration::Option & option );
+    QGpgMENewCryptoConfigEntry(const boost::shared_ptr<QGpgMENewCryptoConfigGroup> &group, const GpgME::Configuration::Option &option);
     ~QGpgMENewCryptoConfigEntry();
 
     /* reimp */ QString name() const;
@@ -80,44 +81,48 @@ public:
     /* reimp */ std::vector<unsigned int> uintValueList() const;
     /* reimp */ KUrl::List urlValueList() const;
     /* reimp */ void resetToDefault();
-    /* reimp */ void setBoolValue( bool );
-    /* reimp */ void setStringValue( const QString& );
-    /* reimp */ void setIntValue( int );
-    /* reimp */ void setUIntValue( unsigned int );
-    /* reimp */ void setURLValue( const KUrl& );
-    /* reimp */ void setNumberOfTimesSet( unsigned int );
-    /* reimp */ void setStringValueList( const QStringList& );
-    /* reimp */ void setIntValueList( const std::vector<int>& );
-    /* reimp */ void setUIntValueList( const std::vector<unsigned int>& );
-    /* reimp */ void setURLValueList( const KUrl::List& );
+    /* reimp */ void setBoolValue(bool);
+    /* reimp */ void setStringValue(const QString &);
+    /* reimp */ void setIntValue(int);
+    /* reimp */ void setUIntValue(unsigned int);
+    /* reimp */ void setURLValue(const KUrl &);
+    /* reimp */ void setNumberOfTimesSet(unsigned int);
+    /* reimp */ void setStringValueList(const QStringList &);
+    /* reimp */ void setIntValueList(const std::vector<int> &);
+    /* reimp */ void setUIntValueList(const std::vector<unsigned int> &);
+    /* reimp */ void setURLValueList(const KUrl::List &);
     /* reimp */ bool isDirty() const;
 
 #if 0
-    void setDirty( bool b );
+    void setDirty(bool b);
     QString outputString() const;
 
 protected:
     bool isStringType() const;
-    QVariant stringToValue( const QString& value, bool unescape ) const;
-    QString toString( bool escape ) const;
+    QVariant stringToValue(const QString &value, bool unescape) const;
+    QString toString(bool escape) const;
 #endif
 private:
     boost::weak_ptr<QGpgMENewCryptoConfigGroup> m_group;
     GpgME::Configuration::Option m_option;
 };
 
-class QGpgMENewCryptoConfigGroup : public Kleo::CryptoConfigGroup {
+class QGpgMENewCryptoConfigGroup : public Kleo::CryptoConfigGroup
+{
 public:
-    QGpgMENewCryptoConfigGroup( const boost::shared_ptr<QGpgMENewCryptoConfigComponent> & parent, const GpgME::Configuration::Option & option );
+    QGpgMENewCryptoConfigGroup(const boost::shared_ptr<QGpgMENewCryptoConfigComponent> &parent, const GpgME::Configuration::Option &option);
     ~QGpgMENewCryptoConfigGroup();
 
     /* reimp */ QString name() const;
-    /* reimp */ QString iconName() const { return QString(); }
+    /* reimp */ QString iconName() const
+    {
+        return QString();
+    }
     /* reimp */ QString description() const;
     /* reimp */ QString path() const;
     /* reimp */ Kleo::CryptoConfigEntry::Level level() const;
     /* reimp */ QStringList entryList() const;
-    /* reimp */ QGpgMENewCryptoConfigEntry * entry( const QString & name ) const;
+    /* reimp */ QGpgMENewCryptoConfigEntry *entry(const QString &name) const;
 
 private:
     friend class QGpgMENewCryptoConfigComponent; // it adds the entries
@@ -128,20 +133,24 @@ private:
 };
 
 /// For docu, see kleo/cryptoconfig.h
-class QGpgMENewCryptoConfigComponent : public Kleo::CryptoConfigComponent, public boost::enable_shared_from_this<QGpgMENewCryptoConfigComponent> {
+class QGpgMENewCryptoConfigComponent : public Kleo::CryptoConfigComponent, public boost::enable_shared_from_this<QGpgMENewCryptoConfigComponent>
+{
 public:
     QGpgMENewCryptoConfigComponent();
     ~QGpgMENewCryptoConfigComponent();
 
-    void setComponent( const GpgME::Configuration::Component & component );
+    void setComponent(const GpgME::Configuration::Component &component);
 
     /* reimp */ QString name() const;
-    /* reimp */ QString iconName() const { return name(); }
+    /* reimp */ QString iconName() const
+    {
+        return name();
+    }
     /* reimp */ QString description() const;
     /* reimp */ QStringList groupList() const;
-    /* reimp */ QGpgMENewCryptoConfigGroup * group( const QString & name ) const;
+    /* reimp */ QGpgMENewCryptoConfigGroup *group(const QString &name) const;
 
-    /* reimp */ void sync( bool runtime );
+    /* reimp */ void sync(bool runtime);
 
 private:
     GpgME::Configuration::Component m_component;
@@ -152,7 +161,8 @@ private:
  * CryptoConfig implementation around the gpgconf command-line tool
  * For method docu, see kleo/cryptoconfig.h
  */
-class KLEO_EXPORT QGpgMENewCryptoConfig : public Kleo::CryptoConfig {
+class KLEO_EXPORT QGpgMENewCryptoConfig : public Kleo::CryptoConfig
+{
 public:
     /**
      * Constructor
@@ -162,14 +172,14 @@ public:
 
     /* reimp */ QStringList componentList() const;
 
-    /* reimp */ QGpgMENewCryptoConfigComponent* component( const QString & name ) const;
+    /* reimp */ QGpgMENewCryptoConfigComponent *component(const QString &name) const;
 
     /* reimp */ void clear();
-    /* reimp */ void sync( bool runtime );
+    /* reimp */ void sync(bool runtime);
 
 private:
     /// @param showErrors if true, a messagebox will be shown if e.g. gpgconf wasn't found
-    void reloadConfiguration( bool showErrors );
+    void reloadConfiguration(bool showErrors);
 
 private:
     QHash< QString, boost::shared_ptr<QGpgMENewCryptoConfigComponent> > m_componentsByName;

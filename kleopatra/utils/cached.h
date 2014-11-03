@@ -35,29 +35,44 @@
 
 #include <boost/call_traits.hpp>
 
-namespace Kleo {
+namespace Kleo
+{
 
-    template <typename T>
-    class cached {
-        T m_value;
-        bool m_dirty;
-    public:
-        cached() : m_value(), m_dirty( true ) {}
-        /* implicit */ cached( typename boost::call_traits<T>::param_type value ) : m_value( value ), m_dirty( false ) {}
+template <typename T>
+class cached
+{
+    T m_value;
+    bool m_dirty;
+public:
+    cached() : m_value(), m_dirty(true) {}
+    /* implicit */ cached(typename boost::call_traits<T>::param_type value) : m_value(value), m_dirty(false) {}
 
-        operator typename boost::call_traits<T>::param_type () const { return m_value; }
+    operator typename boost::call_traits<T>::param_type() const
+    {
+        return m_value;
+    }
 
-        cached & operator=( typename boost::call_traits<T>::param_type value ) {
-            m_value = value;
-            m_dirty = false;
-            return *this;
-        }
+    cached &operator=(typename boost::call_traits<T>::param_type value)
+    {
+        m_value = value;
+        m_dirty = false;
+        return *this;
+    }
 
-        bool dirty() const { return m_dirty; }
-        typename boost::call_traits<T>::param_type value() const { return m_value; }
+    bool dirty() const
+    {
+        return m_dirty;
+    }
+    typename boost::call_traits<T>::param_type value() const
+    {
+        return m_value;
+    }
 
-        void set_dirty() { m_dirty = true; }
-    };
+    void set_dirty()
+    {
+        m_dirty = true;
+    }
+};
 
 }
 

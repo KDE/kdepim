@@ -37,7 +37,6 @@
 
 #include <gpgme++/global.h>
 
-
 #include <QWizard>
 
 #include <vector>
@@ -45,76 +44,85 @@
 class QStringList;
 template <typename T> class QList;
 
-namespace boost {
-    template <typename T> class shared_ptr;
+namespace boost
+{
+template <typename T> class shared_ptr;
 }
 
-namespace GpgME {
-    class Key;
+namespace GpgME
+{
+class Key;
 }
 
-namespace Kleo {
-    class ArchiveDefinition;
+namespace Kleo
+{
+class ArchiveDefinition;
 }
 
-namespace Kleo {
-namespace Crypto {
-    class TaskCollection;
+namespace Kleo
+{
+namespace Crypto
+{
+class TaskCollection;
 }
 }
 
-namespace Kleo {
-namespace Crypto {
-namespace Gui {
+namespace Kleo
+{
+namespace Crypto
+{
+namespace Gui
+{
 
-    class NewSignEncryptFilesWizard : public QWizard {
-        Q_OBJECT
-    public:
-        explicit NewSignEncryptFilesWizard( QWidget * parent=0, Qt::WindowFlags f=0 );
-        ~NewSignEncryptFilesWizard();
+class NewSignEncryptFilesWizard : public QWizard
+{
+    Q_OBJECT
+public:
+    explicit NewSignEncryptFilesWizard(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    ~NewSignEncryptFilesWizard();
 
-        // Inputs
+    // Inputs
 
-        void setPresetProtocol( GpgME::Protocol proto );
+    void setPresetProtocol(GpgME::Protocol proto);
 
-        void setCreateArchivePreset( bool preset );
-        void setCreateArchiveUserMutable( bool mut );
+    void setCreateArchivePreset(bool preset);
+    void setCreateArchiveUserMutable(bool mut);
 
-        void setArchiveDefinitionId( const QString & id );
+    void setArchiveDefinitionId(const QString &id);
 
-        void setSigningPreset( bool preset );
-        void setSigningUserMutable( bool mut );
+    void setSigningPreset(bool preset);
+    void setSigningUserMutable(bool mut);
 
-        void setEncryptionPreset( bool preset );
-        void setEncryptionUserMutable( bool mut );
+    void setEncryptionPreset(bool preset);
+    void setEncryptionUserMutable(bool mut);
 
-        void setFiles( const QStringList & files );
+    void setFiles(const QStringList &files);
 
-        // Outputs
+    // Outputs
 
-        bool isCreateArchiveSelected() const;
-        boost::shared_ptr<ArchiveDefinition> selectedArchiveDefinition() const;
-        QString archiveFileName( GpgME::Protocol proto ) const;
+    bool isCreateArchiveSelected() const;
+    boost::shared_ptr<ArchiveDefinition> selectedArchiveDefinition() const;
+    QString archiveFileName(GpgME::Protocol proto) const;
 
-        bool isSigningSelected() const;
-        bool isEncryptionSelected() const;
+    bool isSigningSelected() const;
+    bool isEncryptionSelected() const;
 
-        bool isAsciiArmorEnabled() const;
-        bool isRemoveUnencryptedFilesEnabled() const;
+    bool isAsciiArmorEnabled() const;
+    bool isRemoveUnencryptedFilesEnabled() const;
 
-        const std::vector<GpgME::Key> & resolvedRecipients() const;
-        std::vector<GpgME::Key> resolvedSigners() const;
+    const std::vector<GpgME::Key> &resolvedRecipients() const;
+    std::vector<GpgME::Key> resolvedSigners() const;
 
-        void setTaskCollection( const boost::shared_ptr<TaskCollection> & coll );
+    void setTaskCollection(const boost::shared_ptr<TaskCollection> &coll);
 
-    Q_SIGNALS:
-        void operationPrepared();
+Q_SIGNALS:
+    void operationPrepared();
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void slotCurrentIdChanged(int) )
-    };
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void slotCurrentIdChanged(int))
+};
 
 }
 }

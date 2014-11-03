@@ -44,13 +44,14 @@ using namespace Kleo;
 using namespace Kleo::Crypto;
 using namespace boost;
 
-class CreateChecksumsCommand::Private {
+class CreateChecksumsCommand::Private
+{
 private:
     friend class ::Kleo::CreateChecksumsCommand;
-    CreateChecksumsCommand * const q;
+    CreateChecksumsCommand *const q;
 public:
-    explicit Private( CreateChecksumsCommand * qq )
-        : q( qq ),
+    explicit Private(CreateChecksumsCommand *qq)
+        : q(qq),
           controller()
     {
 
@@ -64,43 +65,47 @@ private:
 };
 
 CreateChecksumsCommand::CreateChecksumsCommand()
-    : AssuanCommandMixin<CreateChecksumsCommand>(), d( new Private( this ) )
+    : AssuanCommandMixin<CreateChecksumsCommand>(), d(new Private(this))
 {
 
 }
 
 CreateChecksumsCommand::~CreateChecksumsCommand() {}
 
-void CreateChecksumsCommand::Private::checkForErrors() const {
+void CreateChecksumsCommand::Private::checkForErrors() const
+{
 
-    if ( !q->numFiles() )
-        throw Exception( makeError( GPG_ERR_ASS_NO_INPUT ),
-                         i18n("At least one FILE must be present") );
+    if (!q->numFiles())
+        throw Exception(makeError(GPG_ERR_ASS_NO_INPUT),
+                        i18n("At least one FILE must be present"));
 
 }
 
-int CreateChecksumsCommand::doStart() {
+int CreateChecksumsCommand::doStart()
+{
 
     d->checkForErrors();
 
-    d->controller.reset( new CreateChecksumsController( shared_from_this() ) );
+    d->controller.reset(new CreateChecksumsController(shared_from_this()));
 
-    d->controller->setAllowAddition( hasOption( "allow-addition" ) );
+    d->controller->setAllowAddition(hasOption("allow-addition"));
 
-    d->controller->setFiles( fileNames() );
+    d->controller->setFiles(fileNames());
 
-    connect( d->controller.get(), SIGNAL(done()),
-             this, SLOT(done()), Qt::QueuedConnection );
-    connect( d->controller.get(), SIGNAL(error(int,QString)),
-             this, SLOT(done(int,QString)), Qt::QueuedConnection );
+    connect(d->controller.get(), SIGNAL(done()),
+            this, SLOT(done()), Qt::QueuedConnection);
+    connect(d->controller.get(), SIGNAL(error(int,QString)),
+            this, SLOT(done(int,QString)), Qt::QueuedConnection);
 
     d->controller->start();
 
     return 0;
 }
 
-void CreateChecksumsCommand::doCanceled() {
-    if ( d->controller )
+void CreateChecksumsCommand::doCanceled()
+{
+    if (d->controller) {
         d->controller->cancel();
+    }
 }
 

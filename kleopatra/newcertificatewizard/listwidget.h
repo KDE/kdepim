@@ -41,41 +41,44 @@ class QRegExp;
 class QString;
 class QStringList;
 
-namespace Kleo {
-namespace NewCertificateUi {
+namespace Kleo
+{
+namespace NewCertificateUi
+{
 
-    class ListWidget : public QWidget {
-        Q_OBJECT
-        Q_PROPERTY( QStringList items READ items WRITE setItems USER true NOTIFY itemsChanged )
-        Q_PROPERTY( QRegExp regExpFilter READ regExpFilter WRITE setRegExpFilter )
-        Q_PROPERTY( QString defaultValue READ defaultValue WRITE setDefaultValue )
-    public:
-        explicit ListWidget( QWidget * parent=0 );
-        ~ListWidget();
+class ListWidget : public QWidget
+{
+    Q_OBJECT
+    Q_PROPERTY(QStringList items READ items WRITE setItems USER true NOTIFY itemsChanged)
+    Q_PROPERTY(QRegExp regExpFilter READ regExpFilter WRITE setRegExpFilter)
+    Q_PROPERTY(QString defaultValue READ defaultValue WRITE setDefaultValue)
+public:
+    explicit ListWidget(QWidget *parent = 0);
+    ~ListWidget();
 
-        void setDefaultValue( const QString & defaultValue );
-        QString defaultValue() const;
+    void setDefaultValue(const QString &defaultValue);
+    QString defaultValue() const;
 
-        void setRegExpFilter( const QRegExp & rx );
-        QRegExp regExpFilter() const;
+    void setRegExpFilter(const QRegExp &rx);
+    QRegExp regExpFilter() const;
 
-        QStringList items() const;
+    QStringList items() const;
 
-    public Q_SLOTS:
-        void setItems( const QStringList & items );
+public Q_SLOTS:
+    void setItems(const QStringList &items);
 
-    Q_SIGNALS:
-        void itemsChanged();
+Q_SIGNALS:
+    void itemsChanged();
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void slotAdd() )
-        Q_PRIVATE_SLOT( d, void slotRemove() )
-        Q_PRIVATE_SLOT( d, void slotUp() )
-        Q_PRIVATE_SLOT( d, void slotDown() )
-        Q_PRIVATE_SLOT( d, void slotSelectionChanged() )
-    };
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void slotAdd())
+    Q_PRIVATE_SLOT(d, void slotRemove())
+    Q_PRIVATE_SLOT(d, void slotUp())
+    Q_PRIVATE_SLOT(d, void slotDown())
+    Q_PRIVATE_SLOT(d, void slotSelectionChanged())
+};
 
 }
 }

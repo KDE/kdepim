@@ -46,29 +46,31 @@ using namespace Kleo;
 using namespace GpgME;
 using namespace boost;
 
-QGpgMEExportJob::QGpgMEExportJob( Context * context )
-  : mixin_type( context )
+QGpgMEExportJob::QGpgMEExportJob(Context *context)
+    : mixin_type(context)
 {
-  lateInitialization();
+    lateInitialization();
 }
 
 QGpgMEExportJob::~QGpgMEExportJob() {}
 
-static QGpgMEExportJob::result_type export_qba( Context * ctx, const QStringList & patterns ) {
+static QGpgMEExportJob::result_type export_qba(Context *ctx, const QStringList &patterns)
+{
 
-  const _detail::PatternConverter pc( patterns );
+    const _detail::PatternConverter pc(patterns);
 
-  QGpgME::QByteArrayDataProvider dp;
-  Data data( &dp );
+    QGpgME::QByteArrayDataProvider dp;
+    Data data(&dp);
 
-  const Error err = ctx->exportPublicKeys( pc.patterns(), data );
-  Error ae;
-  const QString log = _detail::audit_log_as_html( ctx, ae );
-  return make_tuple( err, dp.data(), log, ae );
+    const Error err = ctx->exportPublicKeys(pc.patterns(), data);
+    Error ae;
+    const QString log = _detail::audit_log_as_html(ctx, ae);
+    return make_tuple(err, dp.data(), log, ae);
 }
 
-Error QGpgMEExportJob::start( const QStringList & patterns ) {
-  run( bind( &export_qba, _1, patterns ) );
-  return Error();
+Error QGpgMEExportJob::start(const QStringList &patterns)
+{
+    run(bind(&export_qba, _1, patterns));
+    return Error();
 }
 

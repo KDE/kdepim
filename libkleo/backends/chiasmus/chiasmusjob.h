@@ -30,36 +30,35 @@
     your version.
 */
 
-
 #ifndef __KLEO_CHIASMUSJOB_H__
 #define __KLEO_CHIASMUSJOB_H__
 
 #include "kleo/specialjob.h"
 
-
 #include <gpgme++/context.h>
 
+namespace Kleo
+{
 
-namespace Kleo {
+class SymCryptRunProcessBase;
 
-  class SymCryptRunProcessBase;
-
-  /**
-     @short SpecialJob for Chiasmus operations
-  */
-  class ChiasmusJob : public Kleo::SpecialJob {
+/**
+   @short SpecialJob for Chiasmus operations
+*/
+class ChiasmusJob : public Kleo::SpecialJob
+{
     Q_OBJECT
-    Q_ENUMS( Mode )
-    Q_PROPERTY( Mode mode READ mode )
-    Q_PROPERTY( QString key READ key WRITE setKey )
-    Q_PROPERTY( QString options READ options WRITE setOptions )
-    Q_PROPERTY( QByteArray input READ input WRITE setInput )
-    Q_PROPERTY( QByteArray result READ result )
-  public:
+    Q_ENUMS(Mode)
+    Q_PROPERTY(Mode mode READ mode)
+    Q_PROPERTY(QString key READ key WRITE setKey)
+    Q_PROPERTY(QString options READ options WRITE setOptions)
+    Q_PROPERTY(QByteArray input READ input WRITE setInput)
+    Q_PROPERTY(QByteArray result READ result)
+public:
     enum Mode {
-      Encrypt, Decrypt
+        Encrypt, Decrypt
     };
-    explicit ChiasmusJob( Mode op );
+    explicit ChiasmusJob(Mode op);
     ~ChiasmusJob();
 
     /*!\reimp SpecialJob */
@@ -68,36 +67,60 @@ namespace Kleo {
     GpgME::Error exec();
 
     /*!\reimp Kleo::Job */
-    void showErrorDialog( QWidget *, const QString & ) const;
+    void showErrorDialog(QWidget *, const QString &) const;
 
-    Mode mode() const { return mMode; }
+    Mode mode() const
+    {
+        return mMode;
+    }
 
-    QString key() const { return mKey; }
-    void setKey( const QString & key ) { mKey = key; }
+    QString key() const
+    {
+        return mKey;
+    }
+    void setKey(const QString &key)
+    {
+        mKey = key;
+    }
 
-    QString options() const { return mOptions; }
-    void setOptions( const QString & options ) { mOptions = options; }
+    QString options() const
+    {
+        return mOptions;
+    }
+    void setOptions(const QString &options)
+    {
+        mOptions = options;
+    }
 
-    QByteArray input() const { return mInput; }
-    void setInput( const QByteArray & input ) { mInput = input; }
+    QByteArray input() const
+    {
+        return mInput;
+    }
+    void setInput(const QByteArray &input)
+    {
+        mInput = input;
+    }
 
     //using SpecialJob::result;
-    QByteArray result() const { return mOutput; }
+    QByteArray result() const
+    {
+        return mOutput;
+    }
 
-  public slots:
+public slots:
     void slotCancel();
 
-  private slots:
+private slots:
     GpgME::Error finished();
     void slotTimeout();
 
-  private:
+private:
     bool checkPreconditions() const;
     GpgME::Error setup();
     void showChiasmusOutput();
 
-  private:
-    SymCryptRunProcessBase * mSymCryptRun;
+private:
+    SymCryptRunProcessBase *mSymCryptRun;
     QString mKey;
     QString mOptions;
     QByteArray mInput, mOutput;
@@ -106,9 +129,8 @@ namespace Kleo {
     bool mCanceled;
     bool mTimeout;
     const Mode mMode;
-  };
+};
 
 }
-
 
 #endif // __KLEO_CHIASMUSJOB_H__

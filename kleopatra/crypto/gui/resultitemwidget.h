@@ -43,38 +43,42 @@
 
 class QString;
 
-namespace Kleo {
-namespace Crypto {
+namespace Kleo
+{
+namespace Crypto
+{
 
 class Task;
 
-namespace Gui {
+namespace Gui
+{
 
-    class ResultItemWidget : public QWidget {
-        Q_OBJECT
-    public:
-        explicit ResultItemWidget( const boost::shared_ptr<const Task::Result> &result, QWidget * parent=0, Qt::WindowFlags flags=0 );
-        ~ResultItemWidget();
+class ResultItemWidget : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit ResultItemWidget(const boost::shared_ptr<const Task::Result> &result, QWidget *parent = 0, Qt::WindowFlags flags = 0);
+    ~ResultItemWidget();
 
-        bool detailsVisible() const;
-        bool hasErrorResult() const;
+    bool detailsVisible() const;
+    bool hasErrorResult() const;
 
-        void showCloseButton( bool show );
+    void showCloseButton(bool show);
 
-    public Q_SLOTS:
-        void showDetails( bool show = true );
-        void showAuditLog();
+public Q_SLOTS:
+    void showDetails(bool show = true);
+    void showAuditLog();
 
-    Q_SIGNALS:
-        void linkActivated( const QString & link );
-        void closeButtonClicked();
-        void detailsToggled( bool );
+Q_SIGNALS:
+    void linkActivated(const QString &link);
+    void closeButtonClicked();
+    void detailsToggled(bool);
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void slotLinkActivated( QString ) )
-    };
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void slotLinkActivated(QString))
+};
 }
 }
 }

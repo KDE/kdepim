@@ -50,43 +50,49 @@ using namespace KMime::Types;
 using namespace GpgME;
 using namespace boost;
 
-namespace KMime {
-namespace Types {
-static bool operator==( const AddrSpec & lhs, const AddrSpec & rhs ) {
+namespace KMime
+{
+namespace Types
+{
+static bool operator==(const AddrSpec &lhs, const AddrSpec &rhs)
+{
     return lhs.localPart == rhs.localPart
-        && lhs.domain == rhs.domain ;
+           && lhs.domain == rhs.domain ;
 }
 
-static bool operator==( const Mailbox & lhs, const Mailbox & rhs ) {
+static bool operator==(const Mailbox &lhs, const Mailbox &rhs)
+{
     return lhs.name() == rhs.name()
-        && lhs.addrSpec() == rhs.addrSpec() ;
+           && lhs.addrSpec() == rhs.addrSpec() ;
 }
 
-static bool determine_ambiguous( const Mailbox & mb, const std::vector<Key> & keys ) {
-    Q_UNUSED( mb );
+static bool determine_ambiguous(const Mailbox &mb, const std::vector<Key> &keys)
+{
+    Q_UNUSED(mb);
     // ### really do check when we don't only show matching keys
     return keys.size() != 1 ;
 }
 } // namespace Types
 } // namespace KMime
 
-class Sender::Private {
+class Sender::Private
+{
     friend class ::Kleo::Crypto::Sender;
 public:
-    explicit Private( const Mailbox & mb )
-        : mailbox( mb )
+    explicit Private(const Mailbox &mb)
+        : mailbox(mb)
     {
         // ### also fill up to a certain number of keys with those
         // ### that don't match, for the case where there's a low
         // ### total number of keys
-        const std::vector<Key> signers = KeyCache::instance()->findSigningKeysByMailbox( mb );
-        const std::vector<Key> encrypt = KeyCache::instance()->findEncryptionKeysByMailbox( mb );
-        kdtools::separate_if( signers,
-                              std::back_inserter( pgpSigners ), std::back_inserter( cmsSigners ),
-                              boost::bind( &Key::protocol, _1 ) == OpenPGP );
-        kdtools::separate_if( encrypt,
-                              std::back_inserter( pgpEncryptToSelfKeys ), std::back_inserter( cmsEncryptToSelfKeys ),
-                              boost::bind( &Key::protocol, _1 ) == OpenPGP );
+        const std::vector<Key> signers = KeyCache::instance()->findSigningKeysByMailbox(mb);
+        const std::vector<Key> encrypt = KeyCache::instance()->findEncryptionKeysByMailbox(mb);
+        kdtools::separate_if(signers,
+                             std::back_inserter(pgpSigners), std::back_inserter(cmsSigners),
+                             boost::bind(&Key::protocol, _1) == OpenPGP);
+        kdtools::separate_if(encrypt,
+                             std::back_inserter(pgpEncryptToSelfKeys), std::back_inserter(cmsEncryptToSelfKeys),
+                             boost::bind(&Key::protocol, _1) == OpenPGP);
     }
 
 private:
@@ -97,121 +103,146 @@ private:
     UserID pgpEncryptionUid;
 };
 
-Sender::Sender( const Mailbox & mb )
-    : d( new Private( mb ) )
+Sender::Sender(const Mailbox &mb)
+    : d(new Private(mb))
 {
 
 }
 
-void Sender::detach() {
-    if ( d && !d.unique() )
-        d.reset( new Private( *d ) );
+void Sender::detach()
+{
+    if (d && !d.unique()) {
+        d.reset(new Private(*d));
+    }
 }
 
-bool Sender::deepEquals( const Sender & other ) const {
+bool Sender::deepEquals(const Sender &other) const
+{
     static const _detail::ByFingerprint<std::equal_to> compare = {};
     return mailbox() == other.mailbox()
-        && compare( d->signingKey[CMS],     other.d->signingKey[CMS]     )
-        && compare( d->signingKey[OpenPGP], other.d->signingKey[OpenPGP] )
-        && compare( d->cmsEncryptionKey, other.d->cmsEncryptionKey )
-        && compare( d->pgpEncryptionUid.parent(), other.d->pgpEncryptionUid.parent() )
-        && strcmp( d->pgpEncryptionUid.id(), other.d->pgpEncryptionUid.id() ) == 0
-        && kdtools::equal( d->pgpSigners, other.d->pgpSigners, compare )
-        && kdtools::equal( d->cmsSigners, other.d->cmsSigners, compare )
-        && kdtools::equal( d->pgpEncryptToSelfKeys, other.d->pgpEncryptToSelfKeys, compare )
-        && kdtools::equal( d->cmsEncryptToSelfKeys, other.d->cmsEncryptToSelfKeys, compare )
-        ;
+           && compare(d->signingKey[CMS],     other.d->signingKey[CMS])
+           && compare(d->signingKey[OpenPGP], other.d->signingKey[OpenPGP])
+           && compare(d->cmsEncryptionKey, other.d->cmsEncryptionKey)
+           && compare(d->pgpEncryptionUid.parent(), other.d->pgpEncryptionUid.parent())
+           && strcmp(d->pgpEncryptionUid.id(), other.d->pgpEncryptionUid.id()) == 0
+           && kdtools::equal(d->pgpSigners, other.d->pgpSigners, compare)
+           && kdtools::equal(d->cmsSigners, other.d->cmsSigners, compare)
+           && kdtools::equal(d->pgpEncryptToSelfKeys, other.d->pgpEncryptToSelfKeys, compare)
+           && kdtools::equal(d->cmsEncryptToSelfKeys, other.d->cmsEncryptToSelfKeys, compare)
+           ;
 }
 
-bool Sender::isSigningAmbiguous( GpgME::Protocol proto ) const {
-    if ( d->signingAmbiguous[proto].dirty() )
-        d->signingAmbiguous[proto] = determine_ambiguous( d->mailbox, signingCertificateCandidates( proto ) );
+bool Sender::isSigningAmbiguous(GpgME::Protocol proto) const
+{
+    if (d->signingAmbiguous[proto].dirty()) {
+        d->signingAmbiguous[proto] = determine_ambiguous(d->mailbox, signingCertificateCandidates(proto));
+    }
     return d->signingAmbiguous[proto];
 }
 
-bool Sender::isEncryptionAmbiguous( GpgME::Protocol proto ) const {
-    if ( d->encryptionAmbiguous[proto].dirty() )
-        d->encryptionAmbiguous[proto] = determine_ambiguous( d->mailbox, encryptToSelfCertificateCandidates( proto ) );
+bool Sender::isEncryptionAmbiguous(GpgME::Protocol proto) const
+{
+    if (d->encryptionAmbiguous[proto].dirty()) {
+        d->encryptionAmbiguous[proto] = determine_ambiguous(d->mailbox, encryptToSelfCertificateCandidates(proto));
+    }
     return d->encryptionAmbiguous[proto];
 }
 
-const Mailbox & Sender::mailbox() const {
+const Mailbox &Sender::mailbox() const
+{
     return d->mailbox;
 }
 
-const std::vector<Key> & Sender::signingCertificateCandidates( GpgME::Protocol proto ) const {
-    if ( proto == OpenPGP )
+const std::vector<Key> &Sender::signingCertificateCandidates(GpgME::Protocol proto) const
+{
+    if (proto == OpenPGP) {
         return d->pgpSigners;
-    if ( proto == CMS )
+    }
+    if (proto == CMS) {
         return d->cmsSigners;
-    kleo_assert_fail( proto == OpenPGP || proto == CMS );
+    }
+    kleo_assert_fail(proto == OpenPGP || proto == CMS);
 #if 0
     return
         proto == OpenPGP ? d->pgpSigners :
         proto == CMS     ? d->cmsSigners :
         // even though gcc warns about this line, it's completely ok, promise:
-        kleo_assert_fail( proto == OpenPGP || proto == CMS ) ;
+        kleo_assert_fail(proto == OpenPGP || proto == CMS) ;
 #endif
 }
 
-const std::vector<Key> & Sender::encryptToSelfCertificateCandidates( GpgME::Protocol proto ) const {
-    if ( proto == OpenPGP )
+const std::vector<Key> &Sender::encryptToSelfCertificateCandidates(GpgME::Protocol proto) const
+{
+    if (proto == OpenPGP) {
         return d->pgpEncryptToSelfKeys;
-    if ( proto == CMS )
+    }
+    if (proto == CMS) {
         return d->cmsEncryptToSelfKeys;
-    kleo_assert_fail( proto == OpenPGP || proto == CMS );
+    }
+    kleo_assert_fail(proto == OpenPGP || proto == CMS);
 #if 0
     return
         proto == OpenPGP ? d->pgpEncryptToSelfKeys :
         proto == CMS     ? d->cmsEncryptToSelfKeys :
         // even though gcc warns about this line, it's completely ok, promise:
-        kleo_assert_fail( proto == OpenPGP || proto == CMS ) ;
+        kleo_assert_fail(proto == OpenPGP || proto == CMS) ;
 #endif
 }
 
-void Sender::setResolvedSigningKey( const Key & key ) {
-    if ( key.isNull() )
+void Sender::setResolvedSigningKey(const Key &key)
+{
+    if (key.isNull()) {
         return;
+    }
     const Protocol proto = key.protocol();
-    kleo_assert( proto == OpenPGP || proto == CMS );
+    kleo_assert(proto == OpenPGP || proto == CMS);
     detach();
     d->signingKey[proto] = key;
     d->signingAmbiguous[proto] = false;
 }
 
-Key Sender::resolvedSigningKey( GpgME::Protocol proto ) const {
-    kleo_assert( proto == OpenPGP || proto == CMS );
+Key Sender::resolvedSigningKey(GpgME::Protocol proto) const
+{
+    kleo_assert(proto == OpenPGP || proto == CMS);
     return d->signingKey[proto];
 }
 
-void Sender::setResolvedEncryptionKey( const Key & key ) {
-    if ( key.isNull() )
+void Sender::setResolvedEncryptionKey(const Key &key)
+{
+    if (key.isNull()) {
         return;
+    }
     const Protocol proto = key.protocol();
-    kleo_assert( proto == OpenPGP || proto == CMS );
+    kleo_assert(proto == OpenPGP || proto == CMS);
     detach();
-    if ( proto == OpenPGP )
-        d->pgpEncryptionUid = key.userID( 0 );
-    else
+    if (proto == OpenPGP) {
+        d->pgpEncryptionUid = key.userID(0);
+    } else {
         d->cmsEncryptionKey = key;
+    }
     d->encryptionAmbiguous[proto] = false;
 }
 
-Key Sender::resolvedEncryptionKey( GpgME::Protocol proto ) const {
-    kleo_assert( proto == OpenPGP || proto == CMS );
-    if ( proto == OpenPGP )
+Key Sender::resolvedEncryptionKey(GpgME::Protocol proto) const
+{
+    kleo_assert(proto == OpenPGP || proto == CMS);
+    if (proto == OpenPGP) {
         return d->pgpEncryptionUid.parent();
-    else
+    } else {
         return d->cmsEncryptionKey;
+    }
 }
 
-void Sender::setResolvedOpenPGPEncryptionUserID( const UserID & uid ) {
-    if ( uid.isNull() )
+void Sender::setResolvedOpenPGPEncryptionUserID(const UserID &uid)
+{
+    if (uid.isNull()) {
         return;
+    }
     detach();
     d->pgpEncryptionUid = uid;
 }
 
-UserID Sender::resolvedOpenPGPEncryptionUserID() const {
+UserID Sender::resolvedOpenPGPEncryptionUserID() const
+{
     return d->pgpEncryptionUid;
 }

@@ -23,11 +23,11 @@
 
 using namespace KleopatraClientCopy;
 
-SignEncryptFilesCommand::SignEncryptFilesCommand( QObject * p )
-    : Command( p )
+SignEncryptFilesCommand::SignEncryptFilesCommand(QObject *p)
+    : Command(p)
 {
-    setCommand( "SIGN_ENCRYPT_FILES" );
-    setOption( "nohup" );
+    setCommand("SIGN_ENCRYPT_FILES");
+    setOption("nohup");
 }
 
 SignEncryptFilesCommand::~SignEncryptFilesCommand() {}

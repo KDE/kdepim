@@ -38,28 +38,49 @@
 #include <QString>
 #include <QTimer>
 
-namespace Kleo {
-namespace Crypto {
+namespace Kleo
+{
+namespace Crypto
+{
 
-    class SimpleTask : public Task {
-        Q_OBJECT
-    public:
-        explicit SimpleTask( const QString & label ) : m_result(), m_label( label ) {}
-        
-        void setResult( const boost::shared_ptr<const Task::Result> & res ) { m_result = res; }
-        /*reimp*/ GpgME::Protocol protocol() const { return GpgME::UnknownProtocol; }
-        /*reimp*/ QString label() const { return m_label; }
-        /*reimp*/ void cancel() {}
-    private:
-        /*reimp*/ void doStart() { QTimer::singleShot( 0, this, SLOT(slotEmitResult()) ); }
-        /*reimp*/ unsigned long long inputSize() const { return 0; }
+class SimpleTask : public Task
+{
+    Q_OBJECT
+public:
+    explicit SimpleTask(const QString &label) : m_result(), m_label(label) {}
 
-    private Q_SLOTS:
-        void slotEmitResult() { emitResult( m_result ); }
-    private:
-        boost::shared_ptr<const Task::Result> m_result;
-        QString m_label;
-    };    
+    void setResult(const boost::shared_ptr<const Task::Result> &res)
+    {
+        m_result = res;
+    }
+    /*reimp*/ GpgME::Protocol protocol() const
+    {
+        return GpgME::UnknownProtocol;
+    }
+    /*reimp*/ QString label() const
+    {
+        return m_label;
+    }
+    /*reimp*/ void cancel() {}
+private:
+    /*reimp*/ void doStart()
+    {
+        QTimer::singleShot(0, this, SLOT(slotEmitResult()));
+    }
+    /*reimp*/ unsigned long long inputSize() const
+    {
+        return 0;
+    }
+
+private Q_SLOTS:
+    void slotEmitResult()
+    {
+        emitResult(m_result);
+    }
+private:
+    boost::shared_ptr<const Task::Result> m_result;
+    QString m_label;
+};
 }
 }
 #endif // __KLEOPATRA_CRYPTO_TASK_P_H__

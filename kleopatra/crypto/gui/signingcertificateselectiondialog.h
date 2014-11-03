@@ -40,27 +40,31 @@
 
 template <typename K, typename U> class QMap;
 
-namespace Kleo {
-namespace Crypto {
-namespace Gui {
+namespace Kleo
+{
+namespace Crypto
+{
+namespace Gui
+{
 
-    class SigningCertificateSelectionWidget;
+class SigningCertificateSelectionWidget;
 
-    class SigningCertificateSelectionDialog : public QDialog {
-        Q_OBJECT
-    public:
-        explicit SigningCertificateSelectionDialog( QWidget * parent=0, Qt::WindowFlags f=0 );
-        ~SigningCertificateSelectionDialog();
+class SigningCertificateSelectionDialog : public QDialog
+{
+    Q_OBJECT
+public:
+    explicit SigningCertificateSelectionDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    ~SigningCertificateSelectionDialog();
 
-        void setAllowedProtocols( const QVector<GpgME::Protocol>& allowedProtocols );
-        void setSelectedCertificates( const QMap<GpgME::Protocol, GpgME::Key>& certificates );
-        QMap<GpgME::Protocol, GpgME::Key> selectedCertificates() const;
+    void setAllowedProtocols(const QVector<GpgME::Protocol> &allowedProtocols);
+    void setSelectedCertificates(const QMap<GpgME::Protocol, GpgME::Key> &certificates);
+    QMap<GpgME::Protocol, GpgME::Key> selectedCertificates() const;
 
-        bool rememberAsDefault() const;
+    bool rememberAsDefault() const;
 
-    private:
-        SigningCertificateSelectionWidget * widget;
-    };
+private:
+    SigningCertificateSelectionWidget *widget;
+};
 
 }
 }

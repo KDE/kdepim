@@ -35,7 +35,7 @@
 #include "gnupgprocessbase.h"
 #include "qgpgmeprogresstokenmapper.h"
 
-#include <QDebug> 
+#include <QDebug>
 #include "gpgme_backend_debug.h"
 
 #include <gpgme++/context.h>
@@ -48,146 +48,157 @@
 #include <string.h>
 #include <assert.h>
 
-Kleo::QGpgMESecretKeyExportJob::QGpgMESecretKeyExportJob( bool armour, const QString& charset )
-  : ExportJob( 0 ),
-    mProcess( 0 ),
-    mError( 0 ),
-    mArmour( armour ),
-    mCharset( charset )
+Kleo::QGpgMESecretKeyExportJob::QGpgMESecretKeyExportJob(bool armour, const QString &charset)
+    : ExportJob(0),
+      mProcess(0),
+      mError(0),
+      mArmour(armour),
+      mCharset(charset)
 {
 
 }
 
-Kleo::QGpgMESecretKeyExportJob::~QGpgMESecretKeyExportJob() {
+Kleo::QGpgMESecretKeyExportJob::~QGpgMESecretKeyExportJob()
+{
 
 }
 
-GpgME::Error Kleo::QGpgMESecretKeyExportJob::start( const QStringList & patterns ) {
-  assert( mKeyData.isEmpty() );
+GpgME::Error Kleo::QGpgMESecretKeyExportJob::start(const QStringList &patterns)
+{
+    assert(mKeyData.isEmpty());
 
-  if ( patterns.size() != 1 || patterns.front().isEmpty() ) {
-    deleteLater();
-    return mError = GpgME::Error::fromCode( GPG_ERR_INV_VALUE, GPG_ERR_SOURCE_GPGSM );
-  }
+    if (patterns.size() != 1 || patterns.front().isEmpty()) {
+        deleteLater();
+        return mError = GpgME::Error::fromCode(GPG_ERR_INV_VALUE, GPG_ERR_SOURCE_GPGSM);
+    }
 
-  // create and start gpgsm process:
-  mProcess = new GnuPGProcessBase( this );
-  mProcess->setObjectName( QLatin1String("gpgsm --export-secret-key-p12") );
+    // create and start gpgsm process:
+    mProcess = new GnuPGProcessBase(this);
+    mProcess->setObjectName(QLatin1String("gpgsm --export-secret-key-p12"));
 
-  // FIXME: obtain the path to gpgsm from gpgme, so we use the same instance.
-  *mProcess << QLatin1String("gpgsm") << QLatin1String("--export-secret-key-p12");
-  if ( mArmour )
-    *mProcess << QLatin1String("--armor");
-  if ( !mCharset.isEmpty() )
-    *mProcess << QLatin1String("--p12-charset") << mCharset;
-  *mProcess << QLatin1String(patterns.front().toUtf8());
+    // FIXME: obtain the path to gpgsm from gpgme, so we use the same instance.
+    *mProcess << QLatin1String("gpgsm") << QLatin1String("--export-secret-key-p12");
+    if (mArmour) {
+        *mProcess << QLatin1String("--armor");
+    }
+    if (!mCharset.isEmpty()) {
+        *mProcess << QLatin1String("--p12-charset") << mCharset;
+    }
+    *mProcess << QLatin1String(patterns.front().toUtf8());
 
-  mProcess->setUseStatusFD( true );
+    mProcess->setUseStatusFD(true);
 
-  connect( mProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
-           SLOT(slotProcessExited(int,QProcess::ExitStatus)) );
-  connect( mProcess, SIGNAL(readyReadStandardOutput()),
-           SLOT(slotStdout()) );
-  connect( mProcess, SIGNAL(readyReadStandardError()),
-           SLOT(slotStderr()) );
+    connect(mProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
+            SLOT(slotProcessExited(int,QProcess::ExitStatus)));
+    connect(mProcess, SIGNAL(readyReadStandardOutput()),
+            SLOT(slotStdout()));
+    connect(mProcess, SIGNAL(readyReadStandardError()),
+            SLOT(slotStderr()));
 
-  connect( mProcess, SIGNAL(status(Kleo::GnuPGProcessBase*,QString,QStringList)),
-           SLOT(slotStatus(Kleo::GnuPGProcessBase*,QString,QStringList)) );
+    connect(mProcess, SIGNAL(status(Kleo::GnuPGProcessBase*,QString,QStringList)),
+            SLOT(slotStatus(Kleo::GnuPGProcessBase*,QString,QStringList)));
 
-  mProcess->setOutputChannelMode( KProcess::SeparateChannels );
-  mProcess->start();
-  if ( !mProcess->waitForStarted() ) {
-    mError = GpgME::Error::fromCode( GPG_ERR_ENOENT, GPG_ERR_SOURCE_GPGSM ); // what else?
-    deleteLater();
-    return mError;
-  } else
-    return GpgME::Error();
+    mProcess->setOutputChannelMode(KProcess::SeparateChannels);
+    mProcess->start();
+    if (!mProcess->waitForStarted()) {
+        mError = GpgME::Error::fromCode(GPG_ERR_ENOENT, GPG_ERR_SOURCE_GPGSM);   // what else?
+        deleteLater();
+        return mError;
+    } else {
+        return GpgME::Error();
+    }
 }
 
-void Kleo::QGpgMESecretKeyExportJob::slotCancel() {
-  if ( mProcess )
-    mProcess->kill();
-  mProcess = 0;
-  mError = GpgME::Error::fromCode( GPG_ERR_CANCELED, GPG_ERR_SOURCE_GPGSM );
+void Kleo::QGpgMESecretKeyExportJob::slotCancel()
+{
+    if (mProcess) {
+        mProcess->kill();
+    }
+    mProcess = 0;
+    mError = GpgME::Error::fromCode(GPG_ERR_CANCELED, GPG_ERR_SOURCE_GPGSM);
 }
 
-void Kleo::QGpgMESecretKeyExportJob::slotStatus( GnuPGProcessBase * proc, const QString & type, const QStringList & args ) {
-  if ( proc != mProcess )
-    return;
-  QStringList::const_iterator it = args.begin();
-  bool ok = false;
-
-  if ( type == QLatin1String("ERROR") ) {
-
-
-    if ( args.size() < 2 ) {
-      qCDebug(GPGPME_BACKEND_LOG) <<"Kleo::QGpgMESecretKeyExportJob::slotStatus() not recognising ERROR with < 2 args!";
-      return;
-    }
-    const int source = (*++it).toInt( &ok );
-    if ( !ok ) {
-      qCDebug(GPGPME_BACKEND_LOG) <<"Kleo::QGpgMESecretKeyExportJob::slotStatus() expected number for first ERROR arg, got something else";
-      return;
-    }
-    ok = false;
-    const int code = (*++it).toInt( &ok );
-    if ( !ok ) {
-      qCDebug(GPGPME_BACKEND_LOG) <<"expected number for second ERROR arg, got something else";
-      return;
-    }
-    mError = GpgME::Error::fromCode( code, source );
-
-
-  } else if ( type == QLatin1String("PROGRESS") ) {
-
-
-    if ( args.size() < 4 ) {
-      qCDebug(GPGPME_BACKEND_LOG) <<"not recognising PROGRESS with < 4 args!";
-      return;
-    }
-    const QString what = *++it;
-    ok = false;
-    const int typ = (*++it).toInt( &ok );
-    if ( !ok ) {
-        qCDebug(GPGPME_BACKEND_LOG) << "expected number for \"type\", got something else";
+void Kleo::QGpgMESecretKeyExportJob::slotStatus(GnuPGProcessBase *proc, const QString &type, const QStringList &args)
+{
+    if (proc != mProcess) {
         return;
     }
-    ok = false;
-    const int cur = (*++it).toInt( &ok );
-    if ( !ok ) {
-      qCDebug(GPGPME_BACKEND_LOG) <<"expected number for \"cur\", got something else";
-      return;
+    QStringList::const_iterator it = args.begin();
+    bool ok = false;
+
+    if (type == QLatin1String("ERROR")) {
+
+        if (args.size() < 2) {
+            qCDebug(GPGPME_BACKEND_LOG) << "Kleo::QGpgMESecretKeyExportJob::slotStatus() not recognising ERROR with < 2 args!";
+            return;
+        }
+        const int source = (*++it).toInt(&ok);
+        if (!ok) {
+            qCDebug(GPGPME_BACKEND_LOG) << "Kleo::QGpgMESecretKeyExportJob::slotStatus() expected number for first ERROR arg, got something else";
+            return;
+        }
+        ok = false;
+        const int code = (*++it).toInt(&ok);
+        if (!ok) {
+            qCDebug(GPGPME_BACKEND_LOG) << "expected number for second ERROR arg, got something else";
+            return;
+        }
+        mError = GpgME::Error::fromCode(code, source);
+
+    } else if (type == QLatin1String("PROGRESS")) {
+
+        if (args.size() < 4) {
+            qCDebug(GPGPME_BACKEND_LOG) << "not recognising PROGRESS with < 4 args!";
+            return;
+        }
+        const QString what = *++it;
+        ok = false;
+        const int typ = (*++it).toInt(&ok);
+        if (!ok) {
+            qCDebug(GPGPME_BACKEND_LOG) << "expected number for \"type\", got something else";
+            return;
+        }
+        ok = false;
+        const int cur = (*++it).toInt(&ok);
+        if (!ok) {
+            qCDebug(GPGPME_BACKEND_LOG) << "expected number for \"cur\", got something else";
+            return;
+        }
+        ok = false;
+        const int total = (*++it).toInt(&ok);
+        if (!ok) {
+            qCDebug(GPGPME_BACKEND_LOG) << "expected number for \"total\", got something else";
+            return;
+        }
+        emit progress(QGpgMEProgressTokenMapper::map(what, typ), cur, total);
+
     }
-    ok = false;
-    const int total = (*++it).toInt( &ok );
-    if ( !ok ) {
-      qCDebug(GPGPME_BACKEND_LOG) <<"expected number for \"total\", got something else";
-      return;
+}
+
+void Kleo::QGpgMESecretKeyExportJob::slotStdout()
+{
+    QString line = QString::fromLocal8Bit(mProcess->readLine());
+    if (!line.isEmpty()) {
+        return;
     }
-    emit progress( QGpgMEProgressTokenMapper::map( what, typ ), cur, total );
-
-  }
+    const unsigned int oldlen = mKeyData.size();
+    mKeyData.resize(oldlen + line.length());
+    memcpy(mKeyData.data() + oldlen, line.toLatin1(), line.length());
 }
 
-void Kleo::QGpgMESecretKeyExportJob::slotStdout() {
-  QString line = QString::fromLocal8Bit( mProcess->readLine() );
-  if ( !line.isEmpty() )
-    return;
-  const unsigned int oldlen = mKeyData.size();
-  mKeyData.resize( oldlen + line.length() );
-  memcpy( mKeyData.data() + oldlen, line.toLatin1(), line.length() );
+void Kleo::QGpgMESecretKeyExportJob::slotStderr()
+{
+    // implement? or not?
 }
 
-void Kleo::QGpgMESecretKeyExportJob::slotStderr() {
-  // implement? or not?
-}
-
-void Kleo::QGpgMESecretKeyExportJob::slotProcessExited(int exitCode, QProcess::ExitStatus exitStatus) {
-  emit done();
-  if ( !mError &&
-       ( exitStatus != QProcess::NormalExit || exitCode != 0 ) )
-      mError = GpgME::Error::fromCode( GPG_ERR_GENERAL, GPG_ERR_SOURCE_GPGSM );
-  emit result( mError, mKeyData );
-  deleteLater();
+void Kleo::QGpgMESecretKeyExportJob::slotProcessExited(int exitCode, QProcess::ExitStatus exitStatus)
+{
+    emit done();
+    if (!mError &&
+            (exitStatus != QProcess::NormalExit || exitCode != 0)) {
+        mError = GpgME::Error::fromCode(GPG_ERR_GENERAL, GPG_ERR_SOURCE_GPGSM);
+    }
+    emit result(mError, mKeyData);
+    deleteLater();
 }
 

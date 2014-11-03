@@ -39,33 +39,54 @@
 
 #include <QString>
 
-namespace Kleo {
-namespace _detail {
+namespace Kleo
+{
+namespace _detail
+{
 
-    class SelfTestImplementation : public SelfTest {
-    public:
-        explicit SelfTestImplementation( const QString & name );
-        ~SelfTestImplementation();
+class SelfTestImplementation : public SelfTest
+{
+public:
+    explicit SelfTestImplementation(const QString &name);
+    ~SelfTestImplementation();
 
-        /* reimp */ QString name() const { return m_name; }
-        /* reimp */ QString shortError() const { return m_error; }
-        /* reimp */ QString longError() const { return m_explaination; }
-        /* reimp */ QString proposedFix() const { return m_proposedFix; }
+    /* reimp */ QString name() const
+    {
+        return m_name;
+    }
+    /* reimp */ QString shortError() const
+    {
+        return m_error;
+    }
+    /* reimp */ QString longError() const
+    {
+        return m_explaination;
+    }
+    /* reimp */ QString proposedFix() const
+    {
+        return m_proposedFix;
+    }
 
-        /* reimp */ bool skipped() const { return m_skipped; }
-        /* reimp */ bool passed() const { return m_passed; }
+    /* reimp */ bool skipped() const
+    {
+        return m_skipped;
+    }
+    /* reimp */ bool passed() const
+    {
+        return m_passed;
+    }
 
-    protected:
-        bool ensureEngineVersion( GpgME::Engine, int major, int minor, int patch );
+protected:
+    bool ensureEngineVersion(GpgME::Engine, int major, int minor, int patch);
 
-    protected:
-        const QString m_name;
-        QString m_error;
-        QString m_explaination;
-        QString m_proposedFix;
-        bool m_skipped : 1;
-        bool m_passed : 1;
-    };
+protected:
+    const QString m_name;
+    QString m_error;
+    QString m_explaination;
+    QString m_proposedFix;
+    bool m_skipped : 1;
+    bool m_passed : 1;
+};
 
 }
 }

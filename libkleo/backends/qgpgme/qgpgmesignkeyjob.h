@@ -39,50 +39,51 @@
 
 #include <gpgme++/key.h>
 
-namespace Kleo {
+namespace Kleo
+{
 
-  class QGpgMESignKeyJob
+class QGpgMESignKeyJob
 #ifdef Q_MOC_RUN
     : public SignKeyJob
 #else
     : public _detail::ThreadedJobMixin<SignKeyJob>
 #endif
-  {
+{
     Q_OBJECT
 #ifdef Q_MOC_RUN
-  public Q_SLOTS:
+public Q_SLOTS:
     void slotFinished();
 #endif
-  public:
-    explicit QGpgMESignKeyJob( GpgME::Context * context );
+public:
+    explicit QGpgMESignKeyJob(GpgME::Context *context);
     ~QGpgMESignKeyJob();
 
     /*! \reimp from SignKeyJob */
-    GpgME::Error start( const GpgME::Key & key );
+    GpgME::Error start(const GpgME::Key &key);
 
     /*! \reimp from SignKeyJob */
-    void setUserIDsToSign( const std::vector<unsigned int> & idsToSign );
+    void setUserIDsToSign(const std::vector<unsigned int> &idsToSign);
 
     /*! \reimp from SignKeyJob */
-    void setCheckLevel( unsigned int checkLevel );
+    void setCheckLevel(unsigned int checkLevel);
 
     /*! \reimp from SignKeyJob */
-    void setExportable( bool exportable );
+    void setExportable(bool exportable);
 
     /*! \reimp from SignKeyJob */
-    void setSigningKey( const GpgME::Key & key );
+    void setSigningKey(const GpgME::Key &key);
 
     /*! \reimp from SignKeyJob */
-    void setNonRevocable( bool nonRevocable );
+    void setNonRevocable(bool nonRevocable);
 
-  private:
-      std::vector<unsigned int> m_userIDsToSign;
-      GpgME::Key m_signingKey;
-      unsigned int m_checkLevel;
-      bool m_exportable;
-      bool m_nonRevocable;
-      bool m_started;
-  };
+private:
+    std::vector<unsigned int> m_userIDsToSign;
+    GpgME::Key m_signingKey;
+    unsigned int m_checkLevel;
+    bool m_exportable;
+    bool m_nonRevocable;
+    bool m_started;
+};
 }
 
 #endif // __KLEO_QGPGMESIGNKEYJOB_H__

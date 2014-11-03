@@ -37,27 +37,28 @@
 
 #include "threadedjobmixin.h"
 
-namespace Kleo {
+namespace Kleo
+{
 
-  class QGpgMEExportJob
+class QGpgMEExportJob
 #ifdef Q_MOC_RUN
     : public ExportJob
 #else
     : public _detail::ThreadedJobMixin<ExportJob, boost::tuple<GpgME::Error, QByteArray, QString, GpgME::Error> >
 #endif
-  {
+{
     Q_OBJECT
 #ifdef Q_MOC_RUN
-  public Q_SLOTS:
+public Q_SLOTS:
     void slotFinished();
 #endif
-  public:
-    explicit QGpgMEExportJob( GpgME::Context * context );
+public:
+    explicit QGpgMEExportJob(GpgME::Context *context);
     ~QGpgMEExportJob();
 
     /*! \reimp from ExportJob */
-    GpgME::Error start( const QStringList & patterns );
-  };
+    GpgME::Error start(const QStringList &patterns);
+};
 
 }
 

@@ -35,40 +35,43 @@
 
 #include "job.h"
 
-namespace GpgME {
-  class Error;
+namespace GpgME
+{
+class Error;
 }
 
-namespace Kleo {
+namespace Kleo
+{
 
-  /**
-     @short An abstract base class for protocol-specific jobs
+/**
+   @short An abstract base class for protocol-specific jobs
 
-     To use a SpecialJob, first obtain an instance from the
-     CryptoBackend implementation, connect progress() and result()
-     signals to suitable slots and then start the job with a call to
-     start(). This call might fail, in which case the SpecialJob
-     instance will have schedules its own destruction with a call to
-     QObject::deleteLater().
+   To use a SpecialJob, first obtain an instance from the
+   CryptoBackend implementation, connect progress() and result()
+   signals to suitable slots and then start the job with a call to
+   start(). This call might fail, in which case the SpecialJob
+   instance will have schedules its own destruction with a call to
+   QObject::deleteLater().
 
-     After result() is emitted, the SpecialJob will schedule its own
-     destruction by calling QObject::deleteLater().
+   After result() is emitted, the SpecialJob will schedule its own
+   destruction by calling QObject::deleteLater().
 
-     Parameters are set using the Qt property system. More general, or
-     constructor parameters are given in the call to
-     Kleo::CryptoBackend::Protocol::specialJob().
+   Parameters are set using the Qt property system. More general, or
+   constructor parameters are given in the call to
+   Kleo::CryptoBackend::Protocol::specialJob().
 
-     The result is made available through the result signal, and
-     through the read-only result property, the latter of which needs
-     to be defined in each SpecialJob subclass.
-  */
-  class SpecialJob : public Job {
+   The result is made available through the result signal, and
+   through the read-only result property, the latter of which needs
+   to be defined in each SpecialJob subclass.
+*/
+class SpecialJob : public Job
+{
     Q_OBJECT
-  protected:
-    explicit SpecialJob( QObject * parent );
+protected:
+    explicit SpecialJob(QObject *parent);
 
-  public:
-   ~SpecialJob();
+public:
+    ~SpecialJob();
 
     /**
        Starts the special operation.
@@ -77,9 +80,9 @@ namespace Kleo {
 
     virtual GpgME::Error exec() = 0;
 
-  Q_SIGNALS:
-    void result( const GpgME::Error & result, const QVariant & data );
-  };
+Q_SIGNALS:
+    void result(const GpgME::Error &result, const QVariant &data);
+};
 
 }
 

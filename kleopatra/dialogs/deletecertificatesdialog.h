@@ -39,31 +39,35 @@
 
 #include <vector>
 
-namespace GpgME {
-    class Key;
+namespace GpgME
+{
+class Key;
 }
 
-namespace Kleo {
-namespace Dialogs {
+namespace Kleo
+{
+namespace Dialogs
+{
 
-    class DeleteCertificatesDialog : public QDialog {
-        Q_OBJECT
-    public:
-        explicit DeleteCertificatesDialog( QWidget * parent=0, Qt::WindowFlags f=0 );
-        ~DeleteCertificatesDialog();
+class DeleteCertificatesDialog : public QDialog
+{
+    Q_OBJECT
+public:
+    explicit DeleteCertificatesDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    ~DeleteCertificatesDialog();
 
-        void setSelectedKeys( const std::vector<GpgME::Key> & keys );
-        void setUnselectedKeys( const std::vector<GpgME::Key> & keys );
+    void setSelectedKeys(const std::vector<GpgME::Key> &keys);
+    void setUnselectedKeys(const std::vector<GpgME::Key> &keys);
 
-        std::vector<GpgME::Key> keys() const;
+    std::vector<GpgME::Key> keys() const;
 
-        /* reimp */ void accept();
+    /* reimp */ void accept();
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void slotWhatsThisRequested() )
-    };
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void slotWhatsThisRequested())
+};
 
 }
 }

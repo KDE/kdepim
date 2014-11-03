@@ -108,113 +108,133 @@ using namespace Kleo::Commands;
 using namespace boost;
 using namespace GpgME;
 
-namespace {
+namespace
+{
 
-    static const K4AboutData * aboutGpg4WinData() {
-        static const AboutGpg4WinData data;
-        return &data;
-    }
+static const K4AboutData *aboutGpg4WinData()
+{
+    static const AboutGpg4WinData data;
+    return &data;
+}
 
 }
 
-class MainWindow::KeyTreeViewItem : public DeclarativeWidgetBase<KeyTreeView,MainWindow,&MainWindow::registerKeyTreeView> {
+class MainWindow::KeyTreeViewItem : public DeclarativeWidgetBase<KeyTreeView, MainWindow, &MainWindow::registerKeyTreeView>
+{
     Q_OBJECT
 public:
-    explicit KeyTreeViewItem( QGraphicsItem * parent=0 )
-        : DeclarativeWidgetBase<KeyTreeView,MainWindow,&MainWindow::registerKeyTreeView>( parent ) {}
+    explicit KeyTreeViewItem(QGraphicsItem *parent = 0)
+        : DeclarativeWidgetBase<KeyTreeView, MainWindow, &MainWindow::registerKeyTreeView>(parent) {}
     ~KeyTreeViewItem() {}
 };
 
-class MainWindow::SearchBarItem : public DeclarativeWidgetBase<SearchBar,MainWindow,&MainWindow::registerSearchBar> {
+class MainWindow::SearchBarItem : public DeclarativeWidgetBase<SearchBar, MainWindow, &MainWindow::registerSearchBar>
+{
     Q_OBJECT
 public:
-    explicit SearchBarItem( QGraphicsItem * parent=0 )
-        : DeclarativeWidgetBase<SearchBar,MainWindow,&MainWindow::registerSearchBar>( parent ) {}
+    explicit SearchBarItem(QGraphicsItem *parent = 0)
+        : DeclarativeWidgetBase<SearchBar, MainWindow, &MainWindow::registerSearchBar>(parent) {}
     ~SearchBarItem() {}
 };
 
-static KGuiItem KStandardGuiItem_quit() {
+static KGuiItem KStandardGuiItem_quit()
+{
     static const QString app = KComponentData::mainComponent().aboutData()->programName();
     KGuiItem item = KStandardGuiItem::quit();
-    item.setText( i18nc( "Quit [ApplicationName]", "&Quit %1", app ) );
+    item.setText(i18nc("Quit [ApplicationName]", "&Quit %1", app));
     return item;
 }
 
-static KGuiItem KStandardGuiItem_close() {
+static KGuiItem KStandardGuiItem_close()
+{
     KGuiItem item = KStandardGuiItem::close();
-    item.setText( i18n("Only &Close Window" ) );
+    item.setText(i18n("Only &Close Window"));
     return item;
 }
 
-class MainWindow::Private {
+class MainWindow::Private
+{
     friend class ::MainWindow;
-    MainWindow * const q;
+    MainWindow *const q;
 
 public:
-    explicit Private( MainWindow * qq );
+    explicit Private(MainWindow *qq);
     ~Private();
 
-    void start( Command * c ) {
-        c->setParentWidget( q );
+    void start(Command *c)
+    {
+        c->setParentWidget(q);
         c->start();
     }
 
     template <typename T>
-    void createAndStart() {
-        this->start( new T( this->currentView(), &this->controller ) );
+    void createAndStart()
+    {
+        this->start(new T(this->currentView(), &this->controller));
     }
     template <typename T>
-    void createAndStart( QAbstractItemView * view ) {
-        start( new T( view, &this->controller ) );
+    void createAndStart(QAbstractItemView *view)
+    {
+        start(new T(view, &this->controller));
     }
     template <typename T>
-    void createAndStart( const QStringList & a ) {
-        start( new T( a, this->currentView(), &this->controller ) );
+    void createAndStart(const QStringList &a)
+    {
+        start(new T(a, this->currentView(), &this->controller));
     }
     template <typename T>
-    void createAndStart( const QStringList & a, QAbstractItemView * view ) {
-        start( new T( a, view, &this->controller ) );
+    void createAndStart(const QStringList &a, QAbstractItemView *view)
+    {
+        start(new T(a, view, &this->controller));
     }
 
-    void closeAndQuit() {
+    void closeAndQuit()
+    {
         qApp->quit();
     }
 
-    void selfTest() {
+    void selfTest()
+    {
         createAndStart<SelfTestCommand>();
     }
     void configureBackend();
     void showHandbook();
 
-    void gnupgLogViewer() {
-        if( !QProcess::startDetached( QLatin1String( "kwatchgnupg" ) ) )
-            KMessageBox::error( q, i18n( "Could not start the GnuPG Log Viewer (kwatchgnupg). "
-                                         "Please check your installation." ),
-                                i18n( "Error Starting KWatchGnuPG" ) );
+    void gnupgLogViewer()
+    {
+        if (!QProcess::startDetached(QLatin1String("kwatchgnupg")))
+            KMessageBox::error(q, i18n("Could not start the GnuPG Log Viewer (kwatchgnupg). "
+                                       "Please check your installation."),
+                               i18n("Error Starting KWatchGnuPG"));
     }
 
-    void gnupgAdministrativeConsole() {
-        if( !QProcess::startDetached( QLatin1String( "kgpgconf" ) ) )
-            KMessageBox::error( q, i18n( "Could not start the GnuPG Administrative Console (kgpgconf). "
-                                         "Please check your installation." ),
-                                i18n( "Error Starting KGpgConf" ) );
+    void gnupgAdministrativeConsole()
+    {
+        if (!QProcess::startDetached(QLatin1String("kgpgconf")))
+            KMessageBox::error(q, i18n("Could not start the GnuPG Administrative Console (kgpgconf). "
+                                       "Please check your installation."),
+                               i18n("Error Starting KGpgConf"));
     }
 
     void slotConfigCommitted();
-    void slotSearchBarTextChanged( const QString & );
+    void slotSearchBarTextChanged(const QString &);
 
-    void aboutGpg4Win() {
-        ( new KAboutApplicationDialog( aboutGpg4WinData(), KAboutApplicationDialog::HideKdeVersion|KAboutApplicationDialog::HideTranslators, q ) )->show();
+    void aboutGpg4Win()
+    {
+        (new KAboutApplicationDialog(aboutGpg4WinData(), KAboutApplicationDialog::HideKdeVersion | KAboutApplicationDialog::HideTranslators, q))->show();
     }
 
 private:
     void setupActions();
-    void tryToConnectSearchBarToKeyTreeView() {
-        if ( searchBar && keyTreeView )
-            keyTreeView->connectSearchBar( searchBar );
+    void tryToConnectSearchBarToKeyTreeView()
+    {
+        if (searchBar && keyTreeView) {
+            keyTreeView->connectSearchBar(searchBar);
+        }
     }
 
-    QAbstractItemView * currentView() const {
+    QAbstractItemView *currentView() const
+    {
         return controller.currentView();
     }
 
@@ -225,164 +245,185 @@ private:
     bool firstShow : 1;
 };
 
-MainWindow::Private::Private( MainWindow * qq )
-    : q( qq ),
+MainWindow::Private::Private(MainWindow *qq)
+    : q(qq),
       searchBar(),
       keyTreeView(),
-      controller( q ),
-      firstShow( true )
+      controller(q),
+      firstShow(true)
 {
-    KDAB_SET_OBJECT_NAME( controller );
-    
-    AbstractKeyListModel * flatModel = AbstractKeyListModel::createFlatKeyListModel( q );
-    AbstractKeyListModel * hierarchicalModel = AbstractKeyListModel::createHierarchicalKeyListModel( q );
+    KDAB_SET_OBJECT_NAME(controller);
 
-    KDAB_SET_OBJECT_NAME( flatModel );
-    KDAB_SET_OBJECT_NAME( hierarchicalModel );
+    AbstractKeyListModel *flatModel = AbstractKeyListModel::createFlatKeyListModel(q);
+    AbstractKeyListModel *hierarchicalModel = AbstractKeyListModel::createHierarchicalKeyListModel(q);
 
+    KDAB_SET_OBJECT_NAME(flatModel);
+    KDAB_SET_OBJECT_NAME(hierarchicalModel);
 
-    controller.setFlatModel( flatModel );
-    controller.setHierarchicalModel( hierarchicalModel );
-    controller.setParentWidget( q );
+    controller.setFlatModel(flatModel);
+    controller.setHierarchicalModel(hierarchicalModel);
+    controller.setParentWidget(q);
 
 }
 
 MainWindow::Private::~Private() {}
 
-MainWindow::MainWindow( QWidget * parent )
-    : KDeclarativeFullScreenView( QLatin1String("kleopatra-mobile"), parent ), d( new Private( this ) )
+MainWindow::MainWindow(QWidget *parent)
+    : KDeclarativeFullScreenView(QLatin1String("kleopatra-mobile"), parent), d(new Private(this))
 {
 }
 
 MainWindow::~MainWindow() {}
 
+void MainWindow::Private::setupActions()
+{
 
-void MainWindow::Private::setupActions() {
-
-    KActionCollection * const coll = q->actionCollection();
+    KActionCollection *const coll = q->actionCollection();
 
     const action_data action_data[] = {
         // Settings menu
-        { "settings_self_test", i18n("Perform Self-Test"), QString(),
-          0, q, SLOT(selfTest()), QString(), false, true },
+        {
+            "settings_self_test", i18n("Perform Self-Test"), QString(),
+            0, q, SLOT(selfTest()), QString(), false, true
+        },
     };
 
-    make_actions_from_data( action_data, coll );
+    make_actions_from_data(action_data, coll);
 
-    KStandardAction::close( q, SLOT(close()), coll );
-    KStandardAction::quit( q, SLOT(closeAndQuit()), coll );
-    KStandardAction::preferences( qApp, SLOT(openOrRaiseConfigDialog()), coll );
+    KStandardAction::close(q, SLOT(close()), coll);
+    KStandardAction::quit(q, SLOT(closeAndQuit()), coll);
+    KStandardAction::preferences(qApp, SLOT(openOrRaiseConfigDialog()), coll);
 
-    controller.createActions( coll );
+    controller.createActions(coll);
 }
 
-void MainWindow::doDelayedInit() {
-    qmlRegisterType<KeyTreeViewItem>( "org.kde.kleopatra", 2, 1, "KeyTreeView" );
-    qmlRegisterType<SearchBarItem>  ( "org.kde.kleopatra", 2, 1, "SearchBar"   );
+void MainWindow::doDelayedInit()
+{
+    qmlRegisterType<KeyTreeViewItem>("org.kde.kleopatra", 2, 1, "KeyTreeView");
+    qmlRegisterType<SearchBarItem> ("org.kde.kleopatra", 2, 1, "SearchBar");
     d->setupActions();
-    engine()->rootContext()->setContextProperty( QLatin1String( "application" ), QVariant::fromValue( static_cast<QObject*>( this ) ) );
+    engine()->rootContext()->setContextProperty(QLatin1String("application"), QVariant::fromValue(static_cast<QObject *>(this)));
 }
 
-void MainWindow::registerKeyTreeView( KeyTreeView * view ) {
-    if ( !view )
+void MainWindow::registerKeyTreeView(KeyTreeView *view)
+{
+    if (!view) {
         return;
-    view->setFlatModel( d->controller.flatModel() );
-    view->setHierarchicalModel( d->controller.hierarchicalModel() );
-    QTreeView * const v = view->view();
-    v->setItemsExpandable( false );
-    v->header()->setResizeMode( QHeaderView::Stretch );
+    }
+    view->setFlatModel(d->controller.flatModel());
+    view->setHierarchicalModel(d->controller.hierarchicalModel());
+    QTreeView *const v = view->view();
+    v->setItemsExpandable(false);
+    v->header()->setResizeMode(QHeaderView::Stretch);
     v->header()->hide();
-    d->controller.addView( v );
-    d->controller.setCurrentView( v );
+    d->controller.addView(v);
+    d->controller.setCurrentView(v);
     d->keyTreeView = view;
     d->tryToConnectSearchBarToKeyTreeView();
 
-    connect( v->model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
-             SIGNAL(certificatesAvailabilityChanged()) );
-    connect( v->model(), SIGNAL(rowsRemoved(QModelIndex,int,int)),
-             SIGNAL(certificatesAvailabilityChanged()) );
-    connect( v->model(), SIGNAL(modelReset()),
-             SIGNAL(certificatesAvailabilityChanged()) );
+    connect(v->model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
+            SIGNAL(certificatesAvailabilityChanged()));
+    connect(v->model(), SIGNAL(rowsRemoved(QModelIndex,int,int)),
+            SIGNAL(certificatesAvailabilityChanged()));
+    connect(v->model(), SIGNAL(modelReset()),
+            SIGNAL(certificatesAvailabilityChanged()));
 
     emit certificatesAvailabilityChanged();
 }
 
-void MainWindow::registerSearchBar( SearchBar * bar ) {
-    if ( !bar )
+void MainWindow::registerSearchBar(SearchBar *bar)
+{
+    if (!bar) {
         return;
+    }
     d->searchBar = bar;
-    bar->setFixedHeight( 0 );
-    connect( bar,  SIGNAL(stringFilterChanged(QString)),
-             this, SLOT(slotSearchBarTextChanged(QString)) );
+    bar->setFixedHeight(0);
+    connect(bar,  SIGNAL(stringFilterChanged(QString)),
+            this, SLOT(slotSearchBarTextChanged(QString)));
     d->tryToConnectSearchBarToKeyTreeView();
 }
 
-void MainWindow::Private::slotConfigCommitted() {
+void MainWindow::Private::slotConfigCommitted()
+{
     controller.updateConfig();
 }
 
-void MainWindow::closeEvent( QCloseEvent * e ) {
+void MainWindow::closeEvent(QCloseEvent *e)
+{
 
     d->closeAndQuit();
 
     // KMainWindow::closeEvent() insists on quitting the application,
     // so do not let it touch the event...
     qDebug();
-    if ( d->controller.hasRunningCommands() ) {
-        if ( d->controller.shutdownWarningRequired() ) {
-            const int ret = KMessageBox::warningContinueCancel( this, i18n("There are still some background operations ongoing. "
-                                                                           "These will be terminated when closing the window. "
-                                                                           "Proceed?"),
-                                                                i18n("Ongoing Background Tasks") );
-            if ( ret != KMessageBox::Continue ) {
+    if (d->controller.hasRunningCommands()) {
+        if (d->controller.shutdownWarningRequired()) {
+            const int ret = KMessageBox::warningContinueCancel(this, i18n("There are still some background operations ongoing. "
+                            "These will be terminated when closing the window. "
+                            "Proceed?"),
+                            i18n("Ongoing Background Tasks"));
+            if (ret != KMessageBox::Continue) {
                 e->ignore();
                 return;
             }
         }
         d->controller.cancelCommands();
-        if ( d->controller.hasRunningCommands() ) {
+        if (d->controller.hasRunningCommands()) {
             // wait for them to be finished:
-            setEnabled( false );
+            setEnabled(false);
             QEventLoop ev;
-            QTimer::singleShot( 100, &ev, SLOT(quit()) );
-            connect( &d->controller, SIGNAL(commandsExecuting(bool)), &ev, SLOT(quit()) );
+            QTimer::singleShot(100, &ev, SLOT(quit()));
+            connect(&d->controller, SIGNAL(commandsExecuting(bool)), &ev, SLOT(quit()));
             ev.exec();
-            kWarning( d->controller.hasRunningCommands() )
-                << "controller still has commands running, this may crash now...";
-            setEnabled( true );
+            kWarning(d->controller.hasRunningCommands())
+                    << "controller still has commands running, this may crash now...";
+            setEnabled(true);
         }
     }
     e->accept();
 }
 
-void MainWindow::keyPressEvent( QKeyEvent * e ) {
+void MainWindow::keyPressEvent(QKeyEvent *e)
+{
     static bool isSendingEvent = false;
 
-    if ( !isSendingEvent && d->searchBar && !e->text().isEmpty() ) {
-        const struct guard { guard() { isSendingEvent = true; } ~guard() { isSendingEvent = false; } } guard;
-        QCoreApplication::sendEvent( d->searchBar->lineEdit(), e );
+    if (!isSendingEvent && d->searchBar && !e->text().isEmpty()) {
+        const struct guard {
+            guard()
+            {
+                isSendingEvent = true;
+            } ~guard()
+            {
+                isSendingEvent = false;
+            }
+        } guard;
+        QCoreApplication::sendEvent(d->searchBar->lineEdit(), e);
     } else {
-        KDeclarativeFullScreenView::keyPressEvent( e );
+        KDeclarativeFullScreenView::keyPressEvent(e);
     }
 }
 
-void MainWindow::importCertificatesFromFile( const QStringList & files ) {
-    if ( !files.empty() )
-        d->createAndStart<ImportCertificateFromFileCommand>( files );
+void MainWindow::importCertificatesFromFile(const QStringList &files)
+{
+    if (!files.empty()) {
+        d->createAndStart<ImportCertificateFromFileCommand>(files);
+    }
 }
 
-void MainWindow::Private::slotSearchBarTextChanged( const QString & text ) {
-    if ( text.isEmpty() && searchBar && searchBar->isVisible() ) {
-        searchBar->setFixedHeight( 0 );
+void MainWindow::Private::slotSearchBarTextChanged(const QString &text)
+{
+    if (text.isEmpty() && searchBar && searchBar->isVisible()) {
+        searchBar->setFixedHeight(0);
         searchBar->hide();
-    } else if ( !text.isEmpty() && searchBar && !searchBar->isVisible() ) {
-        searchBar->setFixedHeight( searchBar->minimumSizeHint().height() );
+    } else if (!text.isEmpty() && searchBar && !searchBar->isVisible()) {
+        searchBar->setFixedHeight(searchBar->minimumSizeHint().height());
         searchBar->show();
         searchBar->setFocus();
     }
 }
 
-bool MainWindow::certificatesAvailable() const {
+bool MainWindow::certificatesAvailable() const
+{
     return (d->keyTreeView && d->keyTreeView->view()->model()->rowCount());
 }
 

@@ -62,39 +62,45 @@ using namespace Kleo;
 using namespace Kleo::Commands;
 using namespace GpgME;
 
-class ChangeRootTrustCommand::Private : public QThread, public Command::Private {
+class ChangeRootTrustCommand::Private : public QThread, public Command::Private
+{
     Q_OBJECT
 private:
     friend class ::Kleo::Commands::ChangeRootTrustCommand;
-    ChangeRootTrustCommand * q_func() const { return static_cast<ChangeRootTrustCommand*>( q ); }
+    ChangeRootTrustCommand *q_func() const
+    {
+        return static_cast<ChangeRootTrustCommand *>(q);
+    }
 public:
-    explicit Private( ChangeRootTrustCommand * qq, KeyListController * c )
-        : QThread(), Command::Private( qq, c ),
+    explicit Private(ChangeRootTrustCommand *qq, KeyListController *c)
+        : QThread(), Command::Private(qq, c),
           mutex(),
-          trust( Key::Ultimate ),
-          trustListFile( QDir( gnupgHomeDirectory() ).absoluteFilePath( QLatin1String("trustlist.txt") ) ),
-          canceled( false )
+          trust(Key::Ultimate),
+          trustListFile(QDir(gnupgHomeDirectory()).absoluteFilePath(QLatin1String("trustlist.txt"))),
+          canceled(false)
     {
 
     }
 
 private:
-    void init() {
-        q->setWarnWhenRunningAtShutdown( false );
-        connect( this, SIGNAL(finished()), q_func(), SLOT(slotOperationFinished()) );
+    void init()
+    {
+        q->setWarnWhenRunningAtShutdown(false);
+        connect(this, SIGNAL(finished()), q_func(), SLOT(slotOperationFinished()));
     }
 
     /* reimp */ void run();
 
 private:
-    void slotOperationFinished() {
-        KeyCache::mutableInstance()->enableFileSystemWatcher( true );
-        if ( error.isEmpty() )
-            KeyCache::mutableInstance()->reload( GpgME::CMS );
-        else
-            Command::Private::error( i18n("Failed to update the trust database:\n"
-                                          "%1", error ),
-                                     i18n("Root Trust Update Failed") );
+    void slotOperationFinished()
+    {
+        KeyCache::mutableInstance()->enableFileSystemWatcher(true);
+        if (error.isEmpty()) {
+            KeyCache::mutableInstance()->reload(GpgME::CMS);
+        } else
+            Command::Private::error(i18n("Failed to update the trust database:\n"
+                                         "%1", error),
+                                    i18n("Root Trust Update Failed"));
         Command::Private::finished();
     }
 
@@ -107,105 +113,119 @@ private:
     volatile bool canceled;
 };
 
-ChangeRootTrustCommand::Private * ChangeRootTrustCommand::d_func() { return static_cast<Private*>( d.get() ); }
-const ChangeRootTrustCommand::Private * ChangeRootTrustCommand::d_func() const { return static_cast<const Private*>( d.get() ); }
+ChangeRootTrustCommand::Private *ChangeRootTrustCommand::d_func()
+{
+    return static_cast<Private *>(d.get());
+}
+const ChangeRootTrustCommand::Private *ChangeRootTrustCommand::d_func() const
+{
+    return static_cast<const Private *>(d.get());
+}
 
 #define q q_func()
 #define d d_func()
 
-ChangeRootTrustCommand::ChangeRootTrustCommand( KeyListController * p )
-    : Command( new Private( this, p ) )
+ChangeRootTrustCommand::ChangeRootTrustCommand(KeyListController *p)
+    : Command(new Private(this, p))
 {
     d->init();
 }
 
-ChangeRootTrustCommand::ChangeRootTrustCommand( QAbstractItemView * v, KeyListController * p )
-    : Command( v, new Private( this, p ) )
+ChangeRootTrustCommand::ChangeRootTrustCommand(QAbstractItemView *v, KeyListController *p)
+    : Command(v, new Private(this, p))
 {
     d->init();
 }
 
-ChangeRootTrustCommand::ChangeRootTrustCommand( const Key & key, KeyListController * p )
-    : Command( new Private( this, p ) )
+ChangeRootTrustCommand::ChangeRootTrustCommand(const Key &key, KeyListController *p)
+    : Command(new Private(this, p))
 {
-    assert( !key.isNull() );
+    assert(!key.isNull());
     d->init();
-    setKey( key );
+    setKey(key);
 }
 
-ChangeRootTrustCommand::ChangeRootTrustCommand( const Key & key, QAbstractItemView * v, KeyListController * p )
-    : Command( v, new Private( this, p ) )
+ChangeRootTrustCommand::ChangeRootTrustCommand(const Key &key, QAbstractItemView *v, KeyListController *p)
+    : Command(v, new Private(this, p))
 {
-    assert( !key.isNull() );
+    assert(!key.isNull());
     d->init();
-    setKey( key );
+    setKey(key);
 }
 
 ChangeRootTrustCommand::~ChangeRootTrustCommand() {}
 
-void ChangeRootTrustCommand::setTrust( Key::OwnerTrust trust ) {
-    assert( !d->isRunning() );
-    const QMutexLocker locker( &d->mutex );
+void ChangeRootTrustCommand::setTrust(Key::OwnerTrust trust)
+{
+    assert(!d->isRunning());
+    const QMutexLocker locker(&d->mutex);
     d->trust = trust;
 }
 
-Key::OwnerTrust ChangeRootTrustCommand::trust() const {
-    const QMutexLocker locker( &d->mutex );
+Key::OwnerTrust ChangeRootTrustCommand::trust() const
+{
+    const QMutexLocker locker(&d->mutex);
     return d->trust;
 }
 
-void ChangeRootTrustCommand::setTrustListFile( const QString & trustListFile ) {
-    assert( !d->isRunning() );
-    const QMutexLocker locker( &d->mutex );
+void ChangeRootTrustCommand::setTrustListFile(const QString &trustListFile)
+{
+    assert(!d->isRunning());
+    const QMutexLocker locker(&d->mutex);
     d->trustListFile = trustListFile;
 }
 
-QString ChangeRootTrustCommand::trustListFile() const {
-    const QMutexLocker locker( &d->mutex );
+QString ChangeRootTrustCommand::trustListFile() const
+{
+    const QMutexLocker locker(&d->mutex);
     return d->trustListFile;
 }
 
-void ChangeRootTrustCommand::doStart() {
+void ChangeRootTrustCommand::doStart()
+{
     const std::vector<Key> keys = d->keys();
     Key key;
-    if ( keys.size() == 1 )
+    if (keys.size() == 1) {
         key = keys.front();
-    else
+    } else {
         qWarning() << "can only work with one certificate at a time";
+    }
 
-    if ( key.isNull() ) {
+    if (key.isNull()) {
         d->Command::Private::finished();
         return;
     }
 
     d->gpgConfPath = gpgConfPath();
-    KeyCache::mutableInstance()->enableFileSystemWatcher( false );
+    KeyCache::mutableInstance()->enableFileSystemWatcher(false);
     d->start();
 }
 
-
-void ChangeRootTrustCommand::doCancel() {
-    const QMutexLocker locker( &d->mutex );
+void ChangeRootTrustCommand::doCancel()
+{
+    const QMutexLocker locker(&d->mutex);
     d->canceled = true;
 }
 
-static QString change_trust_file( const QString & trustListFile, const QString & key, Key::OwnerTrust trust );
-static QString run_gpgconf_reload_gpg_agent( const QString & gpgConfPath );
+static QString change_trust_file(const QString &trustListFile, const QString &key, Key::OwnerTrust trust);
+static QString run_gpgconf_reload_gpg_agent(const QString &gpgConfPath);
 
-void ChangeRootTrustCommand::Private::run() {
+void ChangeRootTrustCommand::Private::run()
+{
 
-    QMutexLocker locker( &mutex );
+    QMutexLocker locker(&mutex);
 
-    const QString key = QString::fromLatin1( keys().front().primaryFingerprint() );
+    const QString key = QString::fromLatin1(keys().front().primaryFingerprint());
     const Key::OwnerTrust trust = this->trust;
     const QString trustListFile = this->trustListFile;
     const QString gpgConfPath   = this->gpgConfPath;
 
     locker.unlock();
 
-    QString err = change_trust_file( trustListFile, key, trust );
-    if ( err.isEmpty() )
-        err = run_gpgconf_reload_gpg_agent( gpgConfPath );
+    QString err = change_trust_file(trustListFile, key, trust);
+    if (err.isEmpty()) {
+        err = run_gpgconf_reload_gpg_agent(gpgConfPath);
+    }
 
     locker.relock();
 
@@ -213,134 +233,144 @@ void ChangeRootTrustCommand::Private::run() {
 
 }
 
-static QString add_colons( const QString & fpr ) {
+static QString add_colons(const QString &fpr)
+{
     QString result;
-    result.reserve( fpr.size() / 2 * 3 + 1 );
+    result.reserve(fpr.size() / 2 * 3 + 1);
     bool needColon = false;
-    Q_FOREACH( QChar ch, fpr ) {
+    Q_FOREACH (QChar ch, fpr) {
         result += ch;
-        if ( needColon )
+        if (needColon) {
             result += QLatin1Char(':') ;
+        }
         needColon = !needColon;
     }
-    if ( result.endsWith( QLatin1Char(':') ) )
+    if (result.endsWith(QLatin1Char(':'))) {
         result.chop(1);
+    }
     return result;
 }
 
-namespace {
+namespace
+{
 
-    // fix stupid default-finalize behaviour...
-    class KFixedSaveFile : public QSaveFile {
-    public:
-        explicit KFixedSaveFile( const QString & fileName )
-            : QSaveFile( fileName ) {}
-        ~KFixedSaveFile() {
-            cancelWriting();
-        }
+// fix stupid default-finalize behaviour...
+class KFixedSaveFile : public QSaveFile
+{
+public:
+    explicit KFixedSaveFile(const QString &fileName)
+        : QSaveFile(fileName) {}
+    ~KFixedSaveFile()
+    {
+        cancelWriting();
+    }
 
-    };
+};
 
 }
 
 // static
-QString change_trust_file( const QString & trustListFile, const QString & key, Key::OwnerTrust trust )
+QString change_trust_file(const QString &trustListFile, const QString &key, Key::OwnerTrust trust)
 {
     QList<QByteArray> trustListFileContents;
 
     {
-        QFile in( trustListFile );
-        if ( in.exists() ) // non-existence is not fatal...
-            if ( in.open( QIODevice::ReadOnly ) )
-                trustListFileContents = in.readAll().split( '\n' );
-            else // ...but failure to open an existing file _is_
-                return i18n( "Cannot open existing file \"%1\" for reading: %2",
-                             trustListFile, in.errorString() );
+        QFile in(trustListFile);
+        if (in.exists())   // non-existence is not fatal...
+            if (in.open(QIODevice::ReadOnly)) {
+                trustListFileContents = in.readAll().split('\n');
+            } else // ...but failure to open an existing file _is_
+                return i18n("Cannot open existing file \"%1\" for reading: %2",
+                            trustListFile, in.errorString());
         // close, so KSaveFile doesn't clobber the original
     }
 
-
-    KFixedSaveFile out( trustListFile );
-    if ( !out.open(QIODevice::WriteOnly) )
+    KFixedSaveFile out(trustListFile);
+    if (!out.open(QIODevice::WriteOnly))
         return i18n("Cannot open file \"%1\" for reading and writing: %2",
-                    out.fileName() /*sic!*/, out.errorString() );
+                    out.fileName() /*sic!*/, out.errorString());
 
-    if ( !out.setPermissions( QFile::ReadOwner|QFile::WriteOwner ) )
+    if (!out.setPermissions(QFile::ReadOwner | QFile::WriteOwner))
         return i18n("Cannot set restrictive permissions on file %1: %2",
-                    out.fileName() /*sic!*/, out.errorString() );
+                    out.fileName() /*sic!*/, out.errorString());
 
-    const QString keyColon = add_colons( key );
+    const QString keyColon = add_colons(key);
 
-    qDebug() << qPrintable( key ) << " -> " << qPrintable( keyColon );
+    qDebug() << qPrintable(key) << " -> " << qPrintable(keyColon);
 
     //               ( 1)    (                         2                           )    (  3  )( 4)
-    QRegExp rx( QLatin1String("\\s*(!?)\\s*([a-fA-F0-9]{40}|(?:[a-fA-F0-9]{2}:){19}[a-fA-F0-9]{2})\\s*([SsPp*])(.*)") );
+    QRegExp rx(QLatin1String("\\s*(!?)\\s*([a-fA-F0-9]{40}|(?:[a-fA-F0-9]{2}:){19}[a-fA-F0-9]{2})\\s*([SsPp*])(.*)"));
     bool found = false;
 
-    Q_FOREACH( const QByteArray & rawLine, trustListFileContents ) {
+    Q_FOREACH (const QByteArray &rawLine, trustListFileContents) {
 
-        const QString line = QString::fromLatin1( rawLine.data(), rawLine.size() );
-        if ( !rx.exactMatch( line ) ) {
+        const QString line = QString::fromLatin1(rawLine.data(), rawLine.size());
+        if (!rx.exactMatch(line)) {
             qDebug() << "line \"" << rawLine.data() << "\" does not match";
-            out.write( rawLine + '\n' );
+            out.write(rawLine + '\n');
             continue;
         }
         const QString cap2 = rx.cap(2);
-        if ( cap2 != key && cap2 != keyColon ) {
-            qDebug() << qPrintable( key ) << " != "
-                     << qPrintable( cap2 ) << " != "
-                     << qPrintable( keyColon );
-            out.write( rawLine + '\n' );
+        if (cap2 != key && cap2 != keyColon) {
+            qDebug() << qPrintable(key) << " != "
+                     << qPrintable(cap2) << " != "
+                     << qPrintable(keyColon);
+            out.write(rawLine + '\n');
             continue;
         }
         found = true;
         const bool disabled = rx.cap(1) == QLatin1String("!");
         const QByteArray flags = rx.cap(3).toLatin1();
         const QByteArray rests = rx.cap(4).toLatin1();
-        if ( trust == Key::Ultimate )
-            if ( !disabled ) // unchanged
-                out.write( rawLine + '\n' );
-            else
-                out.write( keyColon.toLatin1() + ' ' + flags + rests + '\n' );
-        else if ( trust == Key::Never )
-            if ( disabled ) // unchanged
-                out.write( rawLine + '\n' );
-            else
-                out.write( '!' + keyColon.toLatin1() + ' ' + flags + rests + '\n' );
+        if (trust == Key::Ultimate)
+            if (!disabled) { // unchanged
+                out.write(rawLine + '\n');
+            } else {
+                out.write(keyColon.toLatin1() + ' ' + flags + rests + '\n');
+            }
+        else if (trust == Key::Never)
+            if (disabled) { // unchanged
+                out.write(rawLine + '\n');
+            } else {
+                out.write('!' + keyColon.toLatin1() + ' ' + flags + rests + '\n');
+            }
         // else: trust == Key::Unknown
         // -> don't write - ie.erase
     }
 
-    if ( !found ) // add
-        if ( trust == Key::Ultimate )
-            out.write( keyColon.toLatin1() + ' ' + 'S' + '\n' );
-        else if ( trust == Key::Never )
-            out.write( '!' + keyColon.toLatin1() + ' ' + 'S' + '\n' );
+    if (!found)   // add
+        if (trust == Key::Ultimate) {
+            out.write(keyColon.toLatin1() + ' ' + 'S' + '\n');
+        } else if (trust == Key::Never) {
+            out.write('!' + keyColon.toLatin1() + ' ' + 'S' + '\n');
+        }
 
-    if ( !out.commit() )
-        return i18n( "Failed to move file %1 to its final destination, %2: %3",
-                     out.fileName(), trustListFile, out.errorString() );
+    if (!out.commit())
+        return i18n("Failed to move file %1 to its final destination, %2: %3",
+                    out.fileName(), trustListFile, out.errorString());
 
     return QString();
 
 }
 
 // static
-QString run_gpgconf_reload_gpg_agent( const QString & gpgConfPath )
+QString run_gpgconf_reload_gpg_agent(const QString &gpgConfPath)
 {
-    if ( gpgConfPath.isEmpty() )
+    if (gpgConfPath.isEmpty()) {
         return i18n("Could not find gpgconf executable");
+    }
 
     QProcess p;
-    p.start( gpgConfPath, QStringList() << QLatin1String("--reload") << QLatin1String("gpg-agent") );
-    qDebug() <<  "starting " << qPrintable( gpgConfPath )
+    p.start(gpgConfPath, QStringList() << QLatin1String("--reload") << QLatin1String("gpg-agent"));
+    qDebug() <<  "starting " << qPrintable(gpgConfPath)
              << " --reload gpg-agent";
-    p.waitForFinished( -1 );
+    p.waitForFinished(-1);
     qDebug() << "done";
-    if ( p.error() == QProcess::UnknownError )
+    if (p.error() == QProcess::UnknownError) {
         return QString();
-    else
-        return i18n("\"gpgconf --reload gpg-agent\" failed: %1", p.errorString() );
+    } else {
+        return i18n("\"gpgconf --reload gpg-agent\" failed: %1", p.errorString());
+    }
 }
 
 #undef q_func

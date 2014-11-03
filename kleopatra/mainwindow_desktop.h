@@ -37,41 +37,41 @@
 
 #include <utils/pimpl_ptr.h>
 
-class MainWindow : public KXmlGuiWindow {
+class MainWindow : public KXmlGuiWindow
+{
     Q_OBJECT
 public:
-    explicit MainWindow( QWidget * parent=0, Qt::WindowFlags f=KDE_DEFAULT_WINDOWFLAGS );
+    explicit MainWindow(QWidget *parent = 0, Qt::WindowFlags f = KDE_DEFAULT_WINDOWFLAGS);
     ~MainWindow();
 
 public Q_SLOTS:
-    void importCertificatesFromFile( const QStringList & files );
+    void importCertificatesFromFile(const QStringList &files);
 
 protected:
     QByteArray savedGeometry;
 
-    void closeEvent( QCloseEvent * e );
-    void showEvent( QShowEvent * e );
-    void hideEvent( QHideEvent * e );
-    void dragEnterEvent( QDragEnterEvent * );
-    void dropEvent( QDropEvent * );
-    void readProperties( const KConfigGroup & cg );
-    void saveProperties( KConfigGroup & cg );
+    void closeEvent(QCloseEvent *e);
+    void showEvent(QShowEvent *e);
+    void hideEvent(QHideEvent *e);
+    void dragEnterEvent(QDragEnterEvent *);
+    void dropEvent(QDropEvent *);
+    void readProperties(const KConfigGroup &cg);
+    void saveProperties(KConfigGroup &cg);
 
 private:
     class Private;
     kdtools::pimpl_ptr<Private> d;
-    Q_PRIVATE_SLOT( d, void closeAndQuit() )
-    Q_PRIVATE_SLOT( d, void selfTest() )
-    Q_PRIVATE_SLOT( d, void configureBackend() )
-    Q_PRIVATE_SLOT( d, void configureToolbars() )
-    Q_PRIVATE_SLOT( d, void editKeybindings() )
-    Q_PRIVATE_SLOT( d, void gnupgLogViewer() )
-    Q_PRIVATE_SLOT( d, void gnupgAdministrativeConsole() )
-    Q_PRIVATE_SLOT( d, void slotConfigCommitted() )
-    Q_PRIVATE_SLOT( d, void slotContextMenuRequested(QAbstractItemView*,QPoint) )
-    Q_PRIVATE_SLOT( d, void aboutGpg4Win() )
-    Q_PRIVATE_SLOT( d, void slotFocusQuickSearch() )
+    Q_PRIVATE_SLOT(d, void closeAndQuit())
+    Q_PRIVATE_SLOT(d, void selfTest())
+    Q_PRIVATE_SLOT(d, void configureBackend())
+    Q_PRIVATE_SLOT(d, void configureToolbars())
+    Q_PRIVATE_SLOT(d, void editKeybindings())
+    Q_PRIVATE_SLOT(d, void gnupgLogViewer())
+    Q_PRIVATE_SLOT(d, void gnupgAdministrativeConsole())
+    Q_PRIVATE_SLOT(d, void slotConfigCommitted())
+    Q_PRIVATE_SLOT(d, void slotContextMenuRequested(QAbstractItemView *, QPoint))
+    Q_PRIVATE_SLOT(d, void aboutGpg4Win())
+    Q_PRIVATE_SLOT(d, void slotFocusQuickSearch())
 };
-
 
 #endif /* __KLEOPATRA_MAINWINDOW_DESKTOP_H__ */

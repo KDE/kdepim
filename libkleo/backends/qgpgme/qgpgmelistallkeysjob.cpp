@@ -42,7 +42,6 @@
 #include <kmessagebox.h>
 #include <KLocalizedString>
 
-
 #include <algorithm>
 
 #include <cstdlib>
@@ -53,106 +52,120 @@ using namespace Kleo;
 using namespace GpgME;
 using namespace boost;
 
-QGpgMEListAllKeysJob::QGpgMEListAllKeysJob( Context * context )
-  : mixin_type( context ),
-    mResult()
+QGpgMEListAllKeysJob::QGpgMEListAllKeysJob(Context *context)
+    : mixin_type(context),
+      mResult()
 {
-  lateInitialization();
+    lateInitialization();
 }
 
 QGpgMEListAllKeysJob::~QGpgMEListAllKeysJob() {}
 
-static KeyListResult do_list_keys( Context * ctx, std::vector<Key> & keys, bool secretOnly ) {
+static KeyListResult do_list_keys(Context *ctx, std::vector<Key> &keys, bool secretOnly)
+{
 
-  const char ** pat = 0;
-  if ( const Error err = ctx->startKeyListing( pat, secretOnly ) )
-    return KeyListResult( 0, err );
-
-  Error err;
-  do
-    keys.push_back( ctx->nextKey( err ) );
-  while ( !err );
-
-  keys.pop_back();
-
-  const KeyListResult result = ctx->endKeyListing();
-  ctx->cancelPendingOperation();
-  return result;
-}
-
-namespace {
-
-    template <typename ForwardIterator, typename BinaryPredicate>
-    ForwardIterator unique_by_merge( ForwardIterator first, ForwardIterator last, BinaryPredicate pred ) {
-        first = std::adjacent_find( first, last, pred );
-        if ( first == last )
-            return last;
-
-        ForwardIterator dest = first;
-        dest->mergeWith( *++first );
-        while ( ++first != last )
-            if ( pred( *dest, *first ) )
-                dest->mergeWith( *first );
-            else
-                *++dest = *first;
-        return ++dest;
+    const char **pat = 0;
+    if (const Error err = ctx->startKeyListing(pat, secretOnly)) {
+        return KeyListResult(0, err);
     }
 
+    Error err;
+    do {
+        keys.push_back(ctx->nextKey(err));
+    } while (!err);
+
+    keys.pop_back();
+
+    const KeyListResult result = ctx->endKeyListing();
+    ctx->cancelPendingOperation();
+    return result;
 }
 
-static void merge_keys( std::vector<Key> & merged, std::vector<Key> & pub, std::vector<Key> & sec ) {
-    merged.reserve( pub.size() + sec.size() );
+namespace
+{
 
-    std::merge( pub.begin(), pub.end(),
-                sec.begin(), sec.end(),
-                std::back_inserter( merged ),
-                _detail::ByFingerprint<std::less>() );
+template <typename ForwardIterator, typename BinaryPredicate>
+ForwardIterator unique_by_merge(ForwardIterator first, ForwardIterator last, BinaryPredicate pred)
+{
+    first = std::adjacent_find(first, last, pred);
+    if (first == last) {
+        return last;
+    }
 
-    merged.erase( unique_by_merge( merged.begin(), merged.end(), _detail::ByFingerprint<std::equal_to>() ),
-                  merged.end() );
+    ForwardIterator dest = first;
+    dest->mergeWith(*++first);
+    while (++first != last)
+        if (pred(*dest, *first)) {
+            dest->mergeWith(*first);
+        } else {
+            *++dest = *first;
+        }
+    return ++dest;
 }
 
-static QGpgMEListAllKeysJob::result_type list_keys( Context * ctx, bool mergeKeys ) {
-  std::vector<Key> pub, sec, merged;
-  KeyListResult r;
-
-  r.mergeWith( do_list_keys( ctx, pub, false ) );
-  std::sort( pub.begin(), pub.end(), _detail::ByFingerprint<std::less>() );
-
-  r.mergeWith( do_list_keys( ctx, sec, true ) );
-  std::sort( sec.begin(), sec.end(), _detail::ByFingerprint<std::less>() );
-
-  if ( mergeKeys )
-      merge_keys( merged, pub, sec );
-  else
-      merged.swap( pub );
-  return boost::make_tuple( r, merged, sec, QString(), Error() );
 }
 
-Error QGpgMEListAllKeysJob::start( bool mergeKeys ) {
-  run( boost::bind( &list_keys, _1, mergeKeys ) );
-  return Error();
+static void merge_keys(std::vector<Key> &merged, std::vector<Key> &pub, std::vector<Key> &sec)
+{
+    merged.reserve(pub.size() + sec.size());
+
+    std::merge(pub.begin(), pub.end(),
+               sec.begin(), sec.end(),
+               std::back_inserter(merged),
+               _detail::ByFingerprint<std::less>());
+
+    merged.erase(unique_by_merge(merged.begin(), merged.end(), _detail::ByFingerprint<std::equal_to>()),
+                 merged.end());
 }
 
-KeyListResult QGpgMEListAllKeysJob::exec( std::vector<Key> & pub, std::vector<Key> & sec, bool mergeKeys ) {
-  const result_type r = list_keys( context(), mergeKeys );
-  resultHook( r );
-  pub = get<1>( r );
-  sec = get<2>( r );
-  return get<0>( r );
+static QGpgMEListAllKeysJob::result_type list_keys(Context *ctx, bool mergeKeys)
+{
+    std::vector<Key> pub, sec, merged;
+    KeyListResult r;
+
+    r.mergeWith(do_list_keys(ctx, pub, false));
+    std::sort(pub.begin(), pub.end(), _detail::ByFingerprint<std::less>());
+
+    r.mergeWith(do_list_keys(ctx, sec, true));
+    std::sort(sec.begin(), sec.end(), _detail::ByFingerprint<std::less>());
+
+    if (mergeKeys) {
+        merge_keys(merged, pub, sec);
+    } else {
+        merged.swap(pub);
+    }
+    return boost::make_tuple(r, merged, sec, QString(), Error());
 }
 
-void QGpgMEListAllKeysJob::resultHook( const result_type & tuple ) {
-  mResult = get<0>( tuple );
+Error QGpgMEListAllKeysJob::start(bool mergeKeys)
+{
+    run(boost::bind(&list_keys, _1, mergeKeys));
+    return Error();
 }
 
-void QGpgMEListAllKeysJob::showErrorDialog( QWidget * parent, const QString & caption ) const {
-  if ( !mResult.error() || mResult.error().isCanceled() )
-    return;
-  const QString msg = i18n( "<qt><p>An error occurred while fetching "
-                            "the keys from the backend:</p>"
-                            "<p><b>%1</b></p></qt>" ,
-      QString::fromLocal8Bit( mResult.error().asString() ) );
-  KMessageBox::error( parent, msg, caption );
+KeyListResult QGpgMEListAllKeysJob::exec(std::vector<Key> &pub, std::vector<Key> &sec, bool mergeKeys)
+{
+    const result_type r = list_keys(context(), mergeKeys);
+    resultHook(r);
+    pub = get<1>(r);
+    sec = get<2>(r);
+    return get<0>(r);
+}
+
+void QGpgMEListAllKeysJob::resultHook(const result_type &tuple)
+{
+    mResult = get<0>(tuple);
+}
+
+void QGpgMEListAllKeysJob::showErrorDialog(QWidget *parent, const QString &caption) const
+{
+    if (!mResult.error() || mResult.error().isCanceled()) {
+        return;
+    }
+    const QString msg = i18n("<qt><p>An error occurred while fetching "
+                             "the keys from the backend:</p>"
+                             "<p><b>%1</b></p></qt>" ,
+                             QString::fromLocal8Bit(mResult.error().asString()));
+    KMessageBox::error(parent, msg, caption);
 }
 

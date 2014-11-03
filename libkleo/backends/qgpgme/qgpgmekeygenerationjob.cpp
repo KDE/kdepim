@@ -43,27 +43,29 @@ using namespace Kleo;
 using namespace GpgME;
 using namespace boost;
 
-QGpgMEKeyGenerationJob::QGpgMEKeyGenerationJob( Context * context )
-  : mixin_type( context )
+QGpgMEKeyGenerationJob::QGpgMEKeyGenerationJob(Context *context)
+    : mixin_type(context)
 {
-  lateInitialization();
+    lateInitialization();
 }
 
 QGpgMEKeyGenerationJob::~QGpgMEKeyGenerationJob() {}
 
-static QGpgMEKeyGenerationJob::result_type generate_key( Context * ctx, const QString & parameters ) {
-  QGpgME::QByteArrayDataProvider dp;
-  Data data = ctx->protocol() == CMS ? Data( &dp ) : Data( Data::null ) ;
-  assert( data.isNull() == ( ctx->protocol() != CMS ) );
+static QGpgMEKeyGenerationJob::result_type generate_key(Context *ctx, const QString &parameters)
+{
+    QGpgME::QByteArrayDataProvider dp;
+    Data data = ctx->protocol() == CMS ? Data(&dp) : Data(Data::null) ;
+    assert(data.isNull() == (ctx->protocol() != CMS));
 
-  const KeyGenerationResult res = ctx->generateKey( parameters.toUtf8().constData(), data );
-  Error ae;
-  const QString log = _detail::audit_log_as_html( ctx, ae );
-  return make_tuple( res, dp.data(), log, ae );
+    const KeyGenerationResult res = ctx->generateKey(parameters.toUtf8().constData(), data);
+    Error ae;
+    const QString log = _detail::audit_log_as_html(ctx, ae);
+    return make_tuple(res, dp.data(), log, ae);
 }
 
-Error QGpgMEKeyGenerationJob::start( const QString & parameters ) {
-  run( bind( &generate_key, _1, parameters ) );
-  return Error();
+Error QGpgMEKeyGenerationJob::start(const QString &parameters)
+{
+    run(bind(&generate_key, _1, parameters));
+    return Error();
 }
 

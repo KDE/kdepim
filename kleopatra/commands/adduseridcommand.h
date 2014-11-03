@@ -35,40 +35,46 @@
 
 #include <commands/command.h>
 
-namespace Kleo {
-namespace Commands {
+namespace Kleo
+{
+namespace Commands
+{
 
-    class AddUserIDCommand : public Command {
-        Q_OBJECT
-    public:
-        explicit AddUserIDCommand( QAbstractItemView * view, KeyListController * parent );
-        explicit AddUserIDCommand( KeyListController * parent );
-        explicit AddUserIDCommand( const GpgME::Key & key );
-        ~AddUserIDCommand();
+class AddUserIDCommand : public Command
+{
+    Q_OBJECT
+public:
+    explicit AddUserIDCommand(QAbstractItemView *view, KeyListController *parent);
+    explicit AddUserIDCommand(KeyListController *parent);
+    explicit AddUserIDCommand(const GpgME::Key &key);
+    ~AddUserIDCommand();
 
-        /* reimp */ static Restrictions restrictions() { return OnlyOneKey|MustBeOpenPGP|NeedSecretKey; }
+    /* reimp */ static Restrictions restrictions()
+    {
+        return OnlyOneKey | MustBeOpenPGP | NeedSecretKey;
+    }
 
-        void setName( const QString & name );
-        const QString & name() const;
+    void setName(const QString &name);
+    const QString &name() const;
 
-        void setEmail( const QString & email );
-        const QString & email() const;
+    void setEmail(const QString &email);
+    const QString &email() const;
 
-        void setComment( const QString & comment );
-        const QString & comment() const;
+    void setComment(const QString &comment);
+    const QString &comment() const;
 
-    private:
-        /* reimp */ void doStart();
-        /* reimp */ void doCancel();
+private:
+    /* reimp */ void doStart();
+    /* reimp */ void doCancel();
 
-    private:
-        class Private;
-        inline Private * d_func();
-        inline const Private * d_func() const;
-        Q_PRIVATE_SLOT( d_func(), void slotResult(GpgME::Error) )
-        Q_PRIVATE_SLOT( d_func(), void slotDialogAccepted() )
-        Q_PRIVATE_SLOT( d_func(), void slotDialogRejected() )
-    };
+private:
+    class Private;
+    inline Private *d_func();
+    inline const Private *d_func() const;
+    Q_PRIVATE_SLOT(d_func(), void slotResult(GpgME::Error))
+    Q_PRIVATE_SLOT(d_func(), void slotDialogAccepted())
+    Q_PRIVATE_SLOT(d_func(), void slotDialogRejected())
+};
 
 }
 }

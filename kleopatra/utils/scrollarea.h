@@ -35,18 +35,20 @@
 
 #include <QScrollArea>
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class ScrollArea : public QScrollArea {
-        Q_OBJECT
-    
-    public:
-        explicit ScrollArea( QWidget * p=0 );
-        ~ScrollArea();
+class ScrollArea : public QScrollArea
+{
+    Q_OBJECT
 
-        /* reimp */ QSize minimumSizeHint() const;
-        /* reimp */ QSize sizeHint() const;
-    };
+public:
+    explicit ScrollArea(QWidget *p = 0);
+    ~ScrollArea();
+
+    /* reimp */ QSize minimumSizeHint() const;
+    /* reimp */ QSize sizeHint() const;
+};
 
 }
 

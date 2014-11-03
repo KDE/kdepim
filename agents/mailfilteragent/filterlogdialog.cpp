@@ -84,7 +84,7 @@ FilterLogDialog::FilterLogDialog(QWidget *parent)
 
     mTextEdit = new PimCommon::PlainTextEditorWidget(page);
     pageVBoxLayout->addWidget(mTextEdit);
-    
+
     mTextEdit->setReadOnly(true);
     mTextEdit->editor()->setWordWrapMode(QTextOption::NoWrap);
     const QStringList logEntries = FilterLog::instance()->logEntries();

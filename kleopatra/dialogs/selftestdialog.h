@@ -39,44 +39,48 @@
 
 #include <vector>
 
-namespace boost {
-    template <typename T> class shared_ptr;
+namespace boost
+{
+template <typename T> class shared_ptr;
 }
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class SelfTest;
+class SelfTest;
 
-namespace Dialogs {
+namespace Dialogs
+{
 
-    class SelfTestDialog : public QDialog {
-        Q_OBJECT
-        Q_PROPERTY( bool runAtStartUp READ runAtStartUp WRITE setRunAtStartUp )
-    public:
-        explicit SelfTestDialog( QWidget * parent=0, Qt::WindowFlags f=0 );
-        explicit SelfTestDialog( const std::vector< boost::shared_ptr<SelfTest> > & tests, QWidget * parent=0, Qt::WindowFlags f=0 );
-        ~SelfTestDialog();
+class SelfTestDialog : public QDialog
+{
+    Q_OBJECT
+    Q_PROPERTY(bool runAtStartUp READ runAtStartUp WRITE setRunAtStartUp)
+public:
+    explicit SelfTestDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    explicit SelfTestDialog(const std::vector< boost::shared_ptr<SelfTest> > &tests, QWidget *parent = 0, Qt::WindowFlags f = 0);
+    ~SelfTestDialog();
 
-        void setAutomaticMode( bool automatic );
+    void setAutomaticMode(bool automatic);
 
-        void addSelfTest( const boost::shared_ptr<SelfTest> & test );
-        void addSelfTests( const std::vector< boost::shared_ptr<SelfTest> > & tests );
+    void addSelfTest(const boost::shared_ptr<SelfTest> &test);
+    void addSelfTests(const std::vector< boost::shared_ptr<SelfTest> > &tests);
 
-        void setRunAtStartUp( bool run );
-        bool runAtStartUp() const;
+    void setRunAtStartUp(bool run);
+    bool runAtStartUp() const;
 
-    public Q_SLOTS:
-        void clear();
+public Q_SLOTS:
+    void clear();
 
-    Q_SIGNALS:
-        void updateRequested();
+Q_SIGNALS:
+    void updateRequested();
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void slotSelectionChanged() )
-        Q_PRIVATE_SLOT( d, void slotDoItClicked() )
-    };
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void slotSelectionChanged())
+    Q_PRIVATE_SLOT(d, void slotDoItClicked())
+};
 
 }
 }

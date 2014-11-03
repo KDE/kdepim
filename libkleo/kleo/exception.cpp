@@ -30,7 +30,6 @@
     your version.
 */
 
-
 #include "exception.h"
 
 Kleo::Exception::~Exception() throw() {}

@@ -40,32 +40,37 @@
 
 template <typename K, typename U> class QMap;
 
-namespace GpgME {
-    class Key;
+namespace GpgME
+{
+class Key;
 }
 
-namespace Kleo {
-namespace Crypto {
-namespace Gui {
+namespace Kleo
+{
+namespace Crypto
+{
+namespace Gui
+{
 
-    class SigningCertificateSelectionWidget : public QWidget {
-        Q_OBJECT
-    public:
-        explicit SigningCertificateSelectionWidget( QWidget * parent=0, Qt::WindowFlags f=0 );
-        ~SigningCertificateSelectionWidget();
+class SigningCertificateSelectionWidget : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit SigningCertificateSelectionWidget(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    ~SigningCertificateSelectionWidget();
 
-        void setAllowedProtocols( const QVector<GpgME::Protocol>& allowedProtocols );
-        void setAllowedProtocols( bool pgp, bool cms );
-        void setSelectedCertificates( const QMap<GpgME::Protocol, GpgME::Key>& certificates );
-        void setSelectedCertificates( const GpgME::Key & pgp, const GpgME::Key & cms );
-        QMap<GpgME::Protocol, GpgME::Key> selectedCertificates() const;
+    void setAllowedProtocols(const QVector<GpgME::Protocol> &allowedProtocols);
+    void setAllowedProtocols(bool pgp, bool cms);
+    void setSelectedCertificates(const QMap<GpgME::Protocol, GpgME::Key> &certificates);
+    void setSelectedCertificates(const GpgME::Key &pgp, const GpgME::Key &cms);
+    QMap<GpgME::Protocol, GpgME::Key> selectedCertificates() const;
 
-        bool rememberAsDefault() const;
+    bool rememberAsDefault() const;
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-    };
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+};
 
 }
 }

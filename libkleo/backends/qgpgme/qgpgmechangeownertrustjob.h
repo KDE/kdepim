@@ -37,27 +37,28 @@
 
 #include "threadedjobmixin.h"
 
-namespace Kleo {
+namespace Kleo
+{
 
-  class QGpgMEChangeOwnerTrustJob
+class QGpgMEChangeOwnerTrustJob
 #ifdef Q_MOC_RUN
     : public ChangeOwnerTrustJob
 #else
     : public _detail::ThreadedJobMixin<ChangeOwnerTrustJob>
 #endif
-  {
+{
     Q_OBJECT
 #ifdef Q_MOC_RUN
-  private Q_SLOTS:
+private Q_SLOTS:
     void slotFinished();
 #endif
-  public:
-    explicit QGpgMEChangeOwnerTrustJob( GpgME::Context * context );
+public:
+    explicit QGpgMEChangeOwnerTrustJob(GpgME::Context *context);
     ~QGpgMEChangeOwnerTrustJob();
 
     /*! \reimp from ChangeOwnerTrustJob */
-    GpgME::Error start( const GpgME::Key & key, GpgME::Key::OwnerTrust trust );
-  };
+    GpgME::Error start(const GpgME::Key &key, GpgME::Key::OwnerTrust trust);
+};
 }
 
 #endif // __KLEO_QGPGMECHANGEOWNERTRUSTJOB_H__

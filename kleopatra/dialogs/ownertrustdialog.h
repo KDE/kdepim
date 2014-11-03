@@ -39,32 +39,35 @@
 
 #include <gpgme++/key.h>
 
-namespace Kleo {
-namespace Dialogs {
+namespace Kleo
+{
+namespace Dialogs
+{
 
-    class OwnerTrustDialog : public QDialog {
-        Q_OBJECT
-    public:
-        explicit OwnerTrustDialog( QWidget * parent=0, Qt::WindowFlags f=0 );
-        ~OwnerTrustDialog();
+class OwnerTrustDialog : public QDialog
+{
+    Q_OBJECT
+public:
+    explicit OwnerTrustDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    ~OwnerTrustDialog();
 
-        void setFormattedCertificateName( const QString & formatted );
-        QString formattedCertificateName() const;
+    void setFormattedCertificateName(const QString &formatted);
+    QString formattedCertificateName() const;
 
-        void setHasSecretKey( bool secret );
-        bool hasSecretKey() const;
+    void setHasSecretKey(bool secret);
+    bool hasSecretKey() const;
 
-        void setAdvancedMode( bool advanced );
-        bool isAdvancedMode() const;
+    void setAdvancedMode(bool advanced);
+    bool isAdvancedMode() const;
 
-        void setOwnerTrust( GpgME::Key::OwnerTrust );
-        GpgME::Key::OwnerTrust ownerTrust() const;
+    void setOwnerTrust(GpgME::Key::OwnerTrust);
+    GpgME::Key::OwnerTrust ownerTrust() const;
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void slotTrustLevelChanged() )
-    };
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void slotTrustLevelChanged())
+};
 
 }
 }

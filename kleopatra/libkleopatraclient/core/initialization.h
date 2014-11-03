@@ -24,13 +24,15 @@
 
 #include "kleopatraclientcore_export.h"
 
-namespace KleopatraClientCopy {
+namespace KleopatraClientCopy
+{
 
-    class KLEOPATRACLIENTCORE_EXPORT Initialization {
-    public:
-        Initialization();
-        ~Initialization();
-    };
+class KLEOPATRACLIENTCORE_EXPORT Initialization
+{
+public:
+    Initialization();
+    ~Initialization();
+};
 
 }
 

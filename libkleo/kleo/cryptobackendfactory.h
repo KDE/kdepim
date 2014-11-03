@@ -46,34 +46,37 @@
 class QString;
 class KConfig;
 
-namespace Kleo {
+namespace Kleo
+{
 
-  struct lt_i_str {
-    bool operator()( const char * one, const char * two ) const {
-      return qstricmp( one, two ) < 0;
+struct lt_i_str {
+    bool operator()(const char *one, const char *two) const
+    {
+        return qstricmp(one, two) < 0;
     }
-  };
+};
 
-  class KLEO_EXPORT CryptoBackendFactory : public QObject {
+class KLEO_EXPORT CryptoBackendFactory : public QObject
+{
     Q_OBJECT
-  protected:
+protected:
     CryptoBackendFactory();
     ~CryptoBackendFactory();
-  public:
-    static CryptoBackendFactory * instance();
+public:
+    static CryptoBackendFactory *instance();
 
-    const CryptoBackend::Protocol * smime() const;
-    const CryptoBackend::Protocol * openpgp() const;
-    const CryptoBackend::Protocol * protocol( const char * name ) const;
-    const CryptoBackend::Protocol * protocol( GpgME::Protocol proto ) const;
+    const CryptoBackend::Protocol *smime() const;
+    const CryptoBackend::Protocol *openpgp() const;
+    const CryptoBackend::Protocol *protocol(const char *name) const;
+    const CryptoBackend::Protocol *protocol(GpgME::Protocol proto) const;
 
-    CryptoConfig * config() const;
+    CryptoConfig *config() const;
 
-    const CryptoBackend * backend( unsigned int idx ) const;
+    const CryptoBackend *backend(unsigned int idx) const;
 
     bool hasBackends() const;
 
-    KConfig* configObject() const;
+    KConfig *configObject() const;
 
     // The preferred backend for smime (can be 0) - currently unused
     //const CryptoBackend* smimeBackend() const;
@@ -82,33 +85,32 @@ namespace Kleo {
 
     // For BackendConfigWidget to save the configuration
     // 0 means no backend selected.
-    void setSMIMEBackend( const CryptoBackend* backend );
-    void setOpenPGPBackend( const CryptoBackend* backend );
-    void setProtocolBackend( const char * name, const CryptoBackend * backend );
+    void setSMIMEBackend(const CryptoBackend *backend);
+    void setOpenPGPBackend(const CryptoBackend *backend);
+    void setProtocolBackend(const char *name, const CryptoBackend *backend);
 
-    void scanForBackends( QStringList * reasons=0 );
+    void scanForBackends(QStringList *reasons = 0);
 
-    const char * enumerateProtocols( int i ) const;
+    const char *enumerateProtocols(int i) const;
 
-    bool knowsAboutProtocol( const char * name ) const;
+    bool knowsAboutProtocol(const char *name) const;
 
-  protected:
-    std::vector<CryptoBackend*> mBackendList;
-    mutable KConfig* mConfigObject;
-    typedef std::map<const char *, const CryptoBackend*, lt_i_str> BackendMap;
+protected:
+    std::vector<CryptoBackend *> mBackendList;
+    mutable KConfig *mConfigObject;
+    typedef std::map<const char *, const CryptoBackend *, lt_i_str> BackendMap;
     BackendMap mBackends;
     typedef std::vector<const char *> ProtocolSet;
     ProtocolSet mAvailableProtocols;
 
-  private:
-    const CryptoBackend * backendByName( const QString& name ) const;
+private:
+    const CryptoBackend *backendByName(const QString &name) const;
     void readConfig();
-    CryptoBackendFactory( const CryptoBackendFactory & );
-    void operator=( const CryptoBackendFactory & );
+    CryptoBackendFactory(const CryptoBackendFactory &);
+    void operator=(const CryptoBackendFactory &);
 
-    static CryptoBackendFactory * mSelf;
-  };
-
+    static CryptoBackendFactory *mSelf;
+};
 
 }
 

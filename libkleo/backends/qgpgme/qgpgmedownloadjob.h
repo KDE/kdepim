@@ -37,30 +37,31 @@
 
 #include "threadedjobmixin.h"
 
-namespace Kleo {
+namespace Kleo
+{
 
-  class QGpgMEDownloadJob
+class QGpgMEDownloadJob
 #ifdef Q_MOC_RUN
     : public DownloadJob
 #else
     : public _detail::ThreadedJobMixin<DownloadJob, boost::tuple<GpgME::Error, QByteArray, QString, GpgME::Error> >
 #endif
-  {
+{
     Q_OBJECT
 #ifdef Q_MOC_RUN
-  public Q_SLOTS:
+public Q_SLOTS:
     void slotFinished();
 #endif
-  public:
-    explicit QGpgMEDownloadJob( GpgME::Context * context );
+public:
+    explicit QGpgMEDownloadJob(GpgME::Context *context);
     ~QGpgMEDownloadJob();
 
     /*! \reimp from DownloadJob */
-    GpgME::Error start( const QStringList & fingerprints );
+    GpgME::Error start(const QStringList &fingerprints);
 
     /*! \reimp from DownloadJob */
-    GpgME::Error start( const QByteArray & fingerprint, const boost::shared_ptr<QIODevice> & keyData );
-  };
+    GpgME::Error start(const QByteArray &fingerprint, const boost::shared_ptr<QIODevice> &keyData);
+};
 
 }
 

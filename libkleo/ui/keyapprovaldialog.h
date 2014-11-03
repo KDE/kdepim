@@ -46,29 +46,31 @@
 
 #include <vector>
 
-namespace GpgME {
-  class Key;
+namespace GpgME
+{
+class Key;
 }
 
+namespace Kleo
+{
 
-namespace Kleo {
-
-  class KLEO_EXPORT KeyApprovalDialog : public QDialog {
+class KLEO_EXPORT KeyApprovalDialog : public QDialog
+{
     Q_OBJECT
-  public:
+public:
     struct Item {
-      Item() : pref( UnknownPreference ) {}
-      Item( const QString & a, const std::vector<GpgME::Key> & k,
-            EncryptionPreference p=UnknownPreference )
-        : address( a ), keys( k ), pref( p ) {}
-      QString address;
-      std::vector<GpgME::Key> keys;
-      EncryptionPreference pref;
+        Item() : pref(UnknownPreference) {}
+        Item(const QString &a, const std::vector<GpgME::Key> &k,
+             EncryptionPreference p = UnknownPreference)
+            : address(a), keys(k), pref(p) {}
+        QString address;
+        std::vector<GpgME::Key> keys;
+        EncryptionPreference pref;
     };
 
-    KeyApprovalDialog( const std::vector<Item> & recipients,
-                       const std::vector<GpgME::Key> & sender,
-                       QWidget * parent=0 );
+    KeyApprovalDialog(const std::vector<Item> &recipients,
+                      const std::vector<GpgME::Key> &sender,
+                      QWidget *parent = 0);
     ~KeyApprovalDialog();
 
     std::vector<Item> items() const;
@@ -76,13 +78,13 @@ namespace Kleo {
 
     bool preferencesChanged() const;
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void slotPrefsChanged();
 
-  private:
+private:
     class Private;
     Private *const d;
-  };
+};
 
 } // namespace Kleo
 

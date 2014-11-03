@@ -43,7 +43,8 @@ class KCmdLineOptions;
 class MainWindow;
 class SysTrayIcon;
 
-class KleopatraApplication : public KUniqueApplication {
+class KleopatraApplication : public KUniqueApplication
+{
     Q_OBJECT
 public:
     KleopatraApplication();
@@ -51,20 +52,23 @@ public:
 
     static KCmdLineOptions commandLineOptions();
 
-    static KleopatraApplication * instance() { return qobject_cast<KleopatraApplication*>( qApp ); }
+    static KleopatraApplication *instance()
+    {
+        return qobject_cast<KleopatraApplication *>(qApp);
+    }
 
     /* reimp */ int newInstance();
 
-    void setMainWindow( MainWindow * mw );
+    void setMainWindow(MainWindow *mw);
 
-    const MainWindow * mainWindow() const;
-    MainWindow * mainWindow();
+    const MainWindow *mainWindow() const;
+    MainWindow *mainWindow();
 
-    const SysTrayIcon * sysTrayIcon() const;
-    SysTrayIcon * sysTrayIcon();
+    const SysTrayIcon *sysTrayIcon() const;
+    SysTrayIcon *sysTrayIcon();
 
-    void setIgnoreNewInstance( bool on );
-    void setFirstNewInstance( bool on );
+    void setIgnoreNewInstance(bool on);
+    void setFirstNewInstance(bool on);
     bool ignoreNewInstance() const;
     void toggleMainWindowVisibility();
     void restoreMainWindow();
@@ -74,14 +78,14 @@ public Q_SLOTS:
     void openOrRaiseConfigDialog();
 #ifndef QT_NO_SYSTEMTRAYICON
     void startMonitoringSmartCard();
-    void importCertificatesFromFile( const QStringList & files, GpgME::Protocol proto );
+    void importCertificatesFromFile(const QStringList &files, GpgME::Protocol proto);
 #endif
-    void encryptFiles( const QStringList & files, GpgME::Protocol proto );
-    void signFiles( const QStringList & files, GpgME::Protocol proto );
-    void signEncryptFiles( const QStringList & files, GpgME::Protocol proto );
-    void decryptFiles( const QStringList & files, GpgME::Protocol proto );
-    void verifyFiles( const QStringList & files, GpgME::Protocol proto );
-    void decryptVerifyFiles( const QStringList & files, GpgME::Protocol proto );
+    void encryptFiles(const QStringList &files, GpgME::Protocol proto);
+    void signFiles(const QStringList &files, GpgME::Protocol proto);
+    void signEncryptFiles(const QStringList &files, GpgME::Protocol proto);
+    void decryptFiles(const QStringList &files, GpgME::Protocol proto);
+    void verifyFiles(const QStringList &files, GpgME::Protocol proto);
+    void decryptVerifyFiles(const QStringList &files, GpgME::Protocol proto);
 
 private:
     class Private;

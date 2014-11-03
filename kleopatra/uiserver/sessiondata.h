@@ -43,45 +43,48 @@
 
 #include <map>
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class SessionDataHandler;
+class SessionDataHandler;
 
-    class SessionData {
-    public:
+class SessionData
+{
+public:
 
-        std::map< QByteArray, boost::shared_ptr<AssuanCommand::Memento> > mementos;
+    std::map< QByteArray, boost::shared_ptr<AssuanCommand::Memento> > mementos;
 
-    private:
-        friend class ::Kleo::SessionDataHandler;
-        SessionData();
-        int ref;
-        bool ripe;
-    };
+private:
+    friend class ::Kleo::SessionDataHandler;
+    SessionData();
+    int ref;
+    bool ripe;
+};
 
-    class SessionDataHandler : public QObject {
-    public:
+class SessionDataHandler : public QObject
+{
+public:
 
-        static boost::shared_ptr<SessionDataHandler> instance();
+    static boost::shared_ptr<SessionDataHandler> instance();
 
-        void enterSession( unsigned int id );
-        void exitSession( unsigned int id );
+    void enterSession(unsigned int id);
+    void exitSession(unsigned int id);
 
-        boost::shared_ptr<SessionData> sessionData( unsigned int ) const;
+    boost::shared_ptr<SessionData> sessionData(unsigned int) const;
 
-        void clear();
+    void clear();
 
-    private Q_SLOTS:
-        void slotCollectGarbage();
+private Q_SLOTS:
+    void slotCollectGarbage();
 
-    private:
-        mutable std::map< unsigned int, boost::shared_ptr<SessionData> > data;
-        QTimer timer;
+private:
+    mutable std::map< unsigned int, boost::shared_ptr<SessionData> > data;
+    QTimer timer;
 
-    private:
-        boost::shared_ptr<SessionData> sessionDataInternal( unsigned int ) const;
-        SessionDataHandler();
-    };
+private:
+    boost::shared_ptr<SessionData> sessionDataInternal(unsigned int) const;
+    SessionDataHandler();
+};
 
 }
 

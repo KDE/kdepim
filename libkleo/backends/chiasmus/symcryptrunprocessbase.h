@@ -37,37 +37,45 @@
 
 class QString;
 
-namespace Kleo {
+namespace Kleo
+{
 
-class SymCryptRunProcessBase : public KProcess {
-  Q_OBJECT
+class SymCryptRunProcessBase : public KProcess
+{
+    Q_OBJECT
 public:
-  enum Operation {
-    Encrypt, Decrypt
-  };
-  SymCryptRunProcessBase( const QString & class_, const QString & program,
-                          const QString & keyFile, const QString& options,
-                          Operation op,
-                          QObject * parent=0 );
-  virtual ~SymCryptRunProcessBase();
+    enum Operation {
+        Encrypt, Decrypt
+    };
+    SymCryptRunProcessBase(const QString &class_, const QString &program,
+                           const QString &keyFile, const QString &options,
+                           Operation op,
+                           QObject *parent = 0);
+    virtual ~SymCryptRunProcessBase();
 
-  bool launch( const QByteArray & input, bool block = true );
+    bool launch(const QByteArray &input, bool block = true);
 
-  const QByteArray & output() const { return mOutput; }
-  const QString & stdErr() const { return mStderr; }
+    const QByteArray &output() const
+    {
+        return mOutput;
+    }
+    const QString &stdErr() const
+    {
+        return mStderr;
+    }
 
 private slots:
-  void slotReadyReadStandardError();
-  void slotReadyReadStandardOutput();
+    void slotReadyReadStandardError();
+    void slotReadyReadStandardOutput();
 
 private:
-  void addOptions();
+    void addOptions();
 
-  QByteArray mInput;
-  QByteArray mOutput;
-  QString mStderr;
-  const Operation mOperation;
-  QString mOptions;
+    QByteArray mInput;
+    QByteArray mOutput;
+    QString mStderr;
+    const Operation mOperation;
+    QString mOptions;
 };
 
 }

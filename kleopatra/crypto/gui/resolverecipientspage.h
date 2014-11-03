@@ -43,83 +43,90 @@
 
 #include <vector>
 
-namespace GpgME {
-    class Key;
+namespace GpgME
+{
+class Key;
 }
 
-namespace KMime {
-namespace Types {
-    class Mailbox;
+namespace KMime
+{
+namespace Types
+{
+class Mailbox;
 }
 }
 
-namespace Kleo {
-namespace Crypto {
+namespace Kleo
+{
+namespace Crypto
+{
 
-    class RecipientPreferences;
+class RecipientPreferences;
 
-namespace Gui {
+namespace Gui
+{
 
-    class ResolveRecipientsPage : public WizardPage {
-        Q_OBJECT
-    public:
-        explicit ResolveRecipientsPage( QWidget * parent=0 );
-        ~ResolveRecipientsPage();
+class ResolveRecipientsPage : public WizardPage
+{
+    Q_OBJECT
+public:
+    explicit ResolveRecipientsPage(QWidget *parent = 0);
+    ~ResolveRecipientsPage();
 
-        bool isComplete() const;
+    bool isComplete() const;
 
-        /**
-         * The protocol selected by the user (which is chosen by
-         * the user in case none was preset)
-         */
-        GpgME::Protocol selectedProtocol() const;
+    /**
+     * The protocol selected by the user (which is chosen by
+     * the user in case none was preset)
+     */
+    GpgME::Protocol selectedProtocol() const;
 
-        /**
-         * the protocol set before the dialog is shown. Defaults to
-         * GpgME::UnknownProtocol */
-        GpgME::Protocol presetProtocol() const;
-        void setPresetProtocol( GpgME::Protocol protocol );
+    /**
+     * the protocol set before the dialog is shown. Defaults to
+     * GpgME::UnknownProtocol */
+    GpgME::Protocol presetProtocol() const;
+    void setPresetProtocol(GpgME::Protocol protocol);
 
-        bool multipleProtocolsAllowed() const;
-        void setMultipleProtocolsAllowed( bool allowed );
+    bool multipleProtocolsAllowed() const;
+    void setMultipleProtocolsAllowed(bool allowed);
 
-        bool symmetricEncryptionSelected() const;
-        void setSymmetricEncryptionSelected( bool enabled );
+    bool symmetricEncryptionSelected() const;
+    void setSymmetricEncryptionSelected(bool enabled);
 
-        bool symmetricEncryptionSelectable() const;
-        void setSymmetricEncryptionSelectable( bool selectable );
+    bool symmetricEncryptionSelectable() const;
+    void setSymmetricEncryptionSelectable(bool selectable);
 
-        /** if true, the user is allowed to remove/add recipients via the UI.
-         * Defaults to @p false.
-         */
-        bool recipientsUserMutable() const;
-        void setRecipientsUserMutable( bool isMutable );
+    /** if true, the user is allowed to remove/add recipients via the UI.
+     * Defaults to @p false.
+     */
+    bool recipientsUserMutable() const;
+    void setRecipientsUserMutable(bool isMutable);
 
-        void setAdditionalRecipientsInfo( const std::vector<GpgME::Key> & recipients );
+    void setAdditionalRecipientsInfo(const std::vector<GpgME::Key> &recipients);
 
-        void setRecipients( const std::vector<KMime::Types::Mailbox> & recipients, const std::vector<KMime::Types::Mailbox> & encryptToSelfRecipients );
-        std::vector<GpgME::Key> resolvedCertificates() const;
+    void setRecipients(const std::vector<KMime::Types::Mailbox> &recipients, const std::vector<KMime::Types::Mailbox> &encryptToSelfRecipients);
+    std::vector<GpgME::Key> resolvedCertificates() const;
 
-        boost::shared_ptr<RecipientPreferences> recipientPreferences() const;
-        void setRecipientPreferences( const boost::shared_ptr<RecipientPreferences>& prefs );
+    boost::shared_ptr<RecipientPreferences> recipientPreferences() const;
+    void setRecipientPreferences(const boost::shared_ptr<RecipientPreferences> &prefs);
 
-    Q_SIGNALS:
-        void selectedProtocolChanged();
+Q_SIGNALS:
+    void selectedProtocolChanged();
 
-    private:
-        /*reimpl*/ void onNext();
+private:
+    /*reimpl*/ void onNext();
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void selectionChanged() )
-        Q_PRIVATE_SLOT( d, void protocolSelected( int ) )
-        Q_PRIVATE_SLOT( d, void addRecipient() )
-        Q_PRIVATE_SLOT( d, void removeSelectedEntries() )
-        Q_PRIVATE_SLOT( d, void completeChangedInternal() )
-        class ListWidget;
-        class ItemWidget;
-    };
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void selectionChanged())
+    Q_PRIVATE_SLOT(d, void protocolSelected(int))
+    Q_PRIVATE_SLOT(d, void addRecipient())
+    Q_PRIVATE_SLOT(d, void removeSelectedEntries())
+    Q_PRIVATE_SLOT(d, void completeChangedInternal())
+    class ListWidget;
+    class ItemWidget;
+};
 
 }
 }

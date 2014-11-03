@@ -40,48 +40,58 @@
 #include <QIcon>
 #include <QKeySequence>
 
-QAction * Kleo::createAction( const action_data & ad, QObject * parent ) {
+QAction *Kleo::createAction(const action_data &ad, QObject *parent)
+{
 
-    QAction * const a = ad.toggle ? new KToggleAction( parent ) : new QAction( parent ) ;
-    a->setObjectName( QLatin1String(ad.name) );
-    a->setText( ad.text );
-    if ( !ad.tooltip.isEmpty() )
-        a->setToolTip( ad.tooltip );
-    if ( ad.icon )
-        a->setIcon( QIcon::fromTheme( QLatin1String(ad.icon) ) );
-    if ( ad.receiver && ad.slot ) {
-        if ( ad.toggle )
-            QObject::connect( a, SIGNAL(toggled(bool)), ad.receiver, ad.slot );
-        else
-            QObject::connect( a, SIGNAL(triggered()), ad.receiver, ad.slot );
+    QAction *const a = ad.toggle ? new KToggleAction(parent) : new QAction(parent) ;
+    a->setObjectName(QLatin1String(ad.name));
+    a->setText(ad.text);
+    if (!ad.tooltip.isEmpty()) {
+        a->setToolTip(ad.tooltip);
     }
-    a->setEnabled( ad.enabled );
+    if (ad.icon) {
+        a->setIcon(QIcon::fromTheme(QLatin1String(ad.icon)));
+    }
+    if (ad.receiver && ad.slot) {
+        if (ad.toggle) {
+            QObject::connect(a, SIGNAL(toggled(bool)), ad.receiver, ad.slot);
+        } else {
+            QObject::connect(a, SIGNAL(triggered()), ad.receiver, ad.slot);
+        }
+    }
+    a->setEnabled(ad.enabled);
     return a;
 }
 
-
-QAction * Kleo::make_action_from_data( const action_data & ad, QObject * parent ) {
-    QAction * const a = createAction(ad,parent);
-    if ( !ad.shortcut.isEmpty() )
-        a->setShortcut( QKeySequence( ad.shortcut ) );
+QAction *Kleo::make_action_from_data(const action_data &ad, QObject *parent)
+{
+    QAction *const a = createAction(ad, parent);
+    if (!ad.shortcut.isEmpty()) {
+        a->setShortcut(QKeySequence(ad.shortcut));
+    }
     return a;
 }
 
-QAction * Kleo::make_action_from_data_with_collection( const action_data & ad, KActionCollection * coll ) {
+QAction *Kleo::make_action_from_data_with_collection(const action_data &ad, KActionCollection *coll)
+{
 
-    QAction * const a = createAction(ad,coll);
-    if ( !ad.shortcut.isEmpty() )
-        coll->setDefaultShortcut(a, QKeySequence( ad.shortcut ) );
+    QAction *const a = createAction(ad, coll);
+    if (!ad.shortcut.isEmpty()) {
+        coll->setDefaultShortcut(a, QKeySequence(ad.shortcut));
+    }
     return a;
 }
 
-
-void Kleo::make_actions_from_data( const action_data * ads, unsigned int size, QObject * parent ) {
-    for ( unsigned int i = 0 ; i < size ; ++i )
-        make_action_from_data( ads[i], parent );
+void Kleo::make_actions_from_data(const action_data *ads, unsigned int size, QObject *parent)
+{
+    for (unsigned int i = 0 ; i < size ; ++i) {
+        make_action_from_data(ads[i], parent);
+    }
 }
 
-void Kleo::make_actions_from_data( const action_data * ads, unsigned int size, KActionCollection * coll ) {
-    for ( unsigned int i = 0 ; i < size ; ++i )
-        coll->addAction( QLatin1String(ads[i].name), make_action_from_data_with_collection( ads[i], coll ) );
+void Kleo::make_actions_from_data(const action_data *ads, unsigned int size, KActionCollection *coll)
+{
+    for (unsigned int i = 0 ; i < size ; ++i) {
+        coll->addAction(QLatin1String(ads[i].name), make_action_from_data_with_collection(ads[i], coll));
+    }
 }

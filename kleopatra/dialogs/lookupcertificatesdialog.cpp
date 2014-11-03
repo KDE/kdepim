@@ -62,122 +62,139 @@ using namespace boost;
 
 static const int minimalSearchTextLength = 2; // ### TODO: make that KIOSK-able
 
-class LookupCertificatesDialog::Private {
+class LookupCertificatesDialog::Private
+{
     friend class ::Kleo::Dialogs::LookupCertificatesDialog;
-    LookupCertificatesDialog * const q;
+    LookupCertificatesDialog *const q;
 public:
-    explicit Private( LookupCertificatesDialog * qq );
+    explicit Private(LookupCertificatesDialog *qq);
     ~Private();
 
 private:
-    void slotSelectionChanged() {
+    void slotSelectionChanged()
+    {
         enableDisableWidgets();
     }
-    void slotSearchTextChanged() {
+    void slotSearchTextChanged()
+    {
         enableDisableWidgets();
     }
-    void slotSearchClicked() {
-        emit q->searchTextChanged( ui.findED->text() );
+    void slotSearchClicked()
+    {
+        emit q->searchTextChanged(ui.findED->text());
     }
-    void slotDetailsClicked() {
-        assert( q->selectedCertificates().size() == 1 );
-        emit q->detailsRequested( q->selectedCertificates().front() );
+    void slotDetailsClicked()
+    {
+        assert(q->selectedCertificates().size() == 1);
+        emit q->detailsRequested(q->selectedCertificates().front());
     }
-    void slotSaveAsClicked() {
-        emit q->saveAsRequested( q->selectedCertificates() );
+    void slotSaveAsClicked()
+    {
+        emit q->saveAsRequested(q->selectedCertificates());
     }
 
     void readConfig();
     void writeConfig();
     void enableDisableWidgets();
 
-    QString searchText() const { return ui.findED->text().trimmed(); }
-    QModelIndexList selectedIndexes() const {
-        if ( const QItemSelectionModel * const sm = ui.resultTV->selectionModel() )
-            return sm->selectedRows();
-        else
-            return QModelIndexList();
+    QString searchText() const
+    {
+        return ui.findED->text().trimmed();
     }
-    unsigned int numSelectedCertificates() const {
+    QModelIndexList selectedIndexes() const
+    {
+        if (const QItemSelectionModel *const sm = ui.resultTV->selectionModel()) {
+            return sm->selectedRows();
+        } else {
+            return QModelIndexList();
+        }
+    }
+    unsigned int numSelectedCertificates() const
+    {
         return selectedIndexes().size();
     }
 private:
-    AbstractKeyListModel * model;
+    AbstractKeyListModel *model;
     KeyListSortFilterProxyModel proxy;
     bool passive;
 
     struct Ui : Ui_LookupCertificatesDialog {
 
-        explicit Ui( LookupCertificatesDialog * q )
+        explicit Ui(LookupCertificatesDialog *q)
             : Ui_LookupCertificatesDialog()
         {
-            setupUi( q );
+            setupUi(q);
 
             saveAsPB->hide(); // ### not yet implemented in LookupCertificatesCommand
 
-            findED->setClearButtonEnabled( true );
+            findED->setClearButtonEnabled(true);
 
-            importPB()->setText( i18n("Import") );
-            importPB()->setEnabled( false );
+            importPB()->setText(i18n("Import"));
+            importPB()->setEnabled(false);
 
-            HeaderView * hv = new HeaderView( Qt::Horizontal );
-            KDAB_SET_OBJECT_NAME( hv );
-            resultTV->setHeader( hv );
+            HeaderView *hv = new HeaderView(Qt::Horizontal);
+            KDAB_SET_OBJECT_NAME(hv);
+            resultTV->setHeader(hv);
 
-            connect( resultTV,   SIGNAL(doubleClicked(QModelIndex)),
-                     importPB(), SLOT(animateClick()) );
+            connect(resultTV,   SIGNAL(doubleClicked(QModelIndex)),
+                    importPB(), SLOT(animateClick()));
 
             findED->setFocus();
         }
 
-        QPushButton * importPB() const { return buttonBox->button( QDialogButtonBox::Save ); }
-        QPushButton * closePB()  const { return buttonBox->button( QDialogButtonBox::Close ); }
+        QPushButton *importPB() const
+        {
+            return buttonBox->button(QDialogButtonBox::Save);
+        }
+        QPushButton *closePB()  const
+        {
+            return buttonBox->button(QDialogButtonBox::Close);
+        }
     } ui;
 };
 
-LookupCertificatesDialog::Private::Private( LookupCertificatesDialog * qq )
-    : q( qq ),
-      model( AbstractKeyListModel::createFlatKeyListModel() ),
+LookupCertificatesDialog::Private::Private(LookupCertificatesDialog *qq)
+    : q(qq),
+      model(AbstractKeyListModel::createFlatKeyListModel()),
       proxy(),
-      passive( false ),
-      ui( q )
+      passive(false),
+      ui(q)
 {
-    KDAB_SET_OBJECT_NAME( model );
-    KDAB_SET_OBJECT_NAME( proxy );
+    KDAB_SET_OBJECT_NAME(model);
+    KDAB_SET_OBJECT_NAME(proxy);
 
-    proxy.setSourceModel( model );
-    ui.resultTV->setModel( &proxy );
+    proxy.setSourceModel(model);
+    ui.resultTV->setModel(&proxy);
 
-    connect( ui.resultTV->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-             q, SLOT(slotSelectionChanged()) );
+    connect(ui.resultTV->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            q, SLOT(slotSelectionChanged()));
 }
 
 LookupCertificatesDialog::Private::~Private() {}
 
-
 void LookupCertificatesDialog::Private::readConfig()
 {
-    KConfigGroup dialog( KSharedConfig::openConfig(), "LookupCertificatesDialog" );
-    const QSize size = dialog.readEntry( "Size", QSize(600, 400) );
-    if ( size.isValid() ) {
-        q->resize( size );
+    KConfigGroup dialog(KSharedConfig::openConfig(), "LookupCertificatesDialog");
+    const QSize size = dialog.readEntry("Size", QSize(600, 400));
+    if (size.isValid()) {
+        q->resize(size);
     }
-    const QByteArray headerState = dialog.readEntry( "header", QByteArray());
-    if (!headerState.isEmpty())
+    const QByteArray headerState = dialog.readEntry("header", QByteArray());
+    if (!headerState.isEmpty()) {
         ui.resultTV->header()->restoreState(headerState);
+    }
 }
 
 void LookupCertificatesDialog::Private::writeConfig()
 {
-    KConfigGroup dialog( KSharedConfig::openConfig(), "LookupCertificatesDialog" );
-    dialog.writeEntry( "header", ui.resultTV->header()->saveState());
-    dialog.writeEntry( "Size", q->size() );
+    KConfigGroup dialog(KSharedConfig::openConfig(), "LookupCertificatesDialog");
+    dialog.writeEntry("header", ui.resultTV->header()->saveState());
+    dialog.writeEntry("Size", q->size());
     dialog.sync();
 }
 
-
-LookupCertificatesDialog::LookupCertificatesDialog( QWidget * p, Qt::WindowFlags f )
-    : QDialog( p, f ), d( new Private( this ) )
+LookupCertificatesDialog::LookupCertificatesDialog(QWidget *p, Qt::WindowFlags f)
+    : QDialog(p, f), d(new Private(this))
 {
     d->ui.findPB->setEnabled(false);
     d->readConfig();
@@ -188,30 +205,35 @@ LookupCertificatesDialog::~LookupCertificatesDialog()
     d->writeConfig();
 }
 
-void LookupCertificatesDialog::setCertificates( const std::vector<Key> & certs ) {
-    d->model->setKeys( certs );
-    d->ui.resultTV->header()->resizeSections( QHeaderView::ResizeToContents );
+void LookupCertificatesDialog::setCertificates(const std::vector<Key> &certs)
+{
+    d->model->setKeys(certs);
+    d->ui.resultTV->header()->resizeSections(QHeaderView::ResizeToContents);
     d->ui.resultTV->setFocus();
 }
 
-std::vector<Key> LookupCertificatesDialog::selectedCertificates() const {
-    return d->proxy.keys( d->selectedIndexes() );
+std::vector<Key> LookupCertificatesDialog::selectedCertificates() const
+{
+    return d->proxy.keys(d->selectedIndexes());
 }
 
-void LookupCertificatesDialog::setPassive( bool on ) {
-    if ( d->passive == on )
+void LookupCertificatesDialog::setPassive(bool on)
+{
+    if (d->passive == on) {
         return;
+    }
     d->passive = on;
     d->enableDisableWidgets();
 }
 
-bool LookupCertificatesDialog::isPassive() const {
+bool LookupCertificatesDialog::isPassive() const
+{
     return d->passive;
 }
 
-void LookupCertificatesDialog::setSearchText( const QString &text )
+void LookupCertificatesDialog::setSearchText(const QString &text)
 {
-    d->ui.findED->setText( text );
+    d->ui.findED->setText(text);
 }
 
 QString LookupCertificatesDialog::searchText() const
@@ -219,29 +241,33 @@ QString LookupCertificatesDialog::searchText() const
     return d->ui.findED->text();
 }
 
-void LookupCertificatesDialog::accept() {
-    assert( !d->selectedIndexes().empty() );
-    emit importRequested( selectedCertificates() );
+void LookupCertificatesDialog::accept()
+{
+    assert(!d->selectedIndexes().empty());
+    emit importRequested(selectedCertificates());
     QDialog::accept();
 }
 
-void LookupCertificatesDialog::Private::enableDisableWidgets() {
+void LookupCertificatesDialog::Private::enableDisableWidgets()
+{
     // enable/disable everything except 'close', based on passive:
-    Q_FOREACH( QObject * const o, q->children() )
-        if ( QWidget * const w = qobject_cast<QWidget*>( o ) )
-            w->setDisabled( passive && w != ui.closePB() && w != ui.buttonBox );
+    Q_FOREACH (QObject *const o, q->children())
+        if (QWidget *const w = qobject_cast<QWidget *>(o)) {
+            w->setDisabled(passive && w != ui.closePB() && w != ui.buttonBox);
+        }
 
-    if ( passive )
+    if (passive) {
         return;
+    }
 
-    ui.findPB->setEnabled( searchText().length() > minimalSearchTextLength );
+    ui.findPB->setEnabled(searchText().length() > minimalSearchTextLength);
 
     const unsigned int n = numSelectedCertificates();
 
-    ui.detailsPB->setEnabled(  n == 1 );
-    ui.saveAsPB->setEnabled(   n == 1 );
-    ui.importPB()->setEnabled( n != 0 );
-    ui.importPB()->setDefault( false ); // otherwise Import becomes default button if enabled and return triggers both a search and accept()
+    ui.detailsPB->setEnabled(n == 1);
+    ui.saveAsPB->setEnabled(n == 1);
+    ui.importPB()->setEnabled(n != 0);
+    ui.importPB()->setDefault(false);   // otherwise Import becomes default button if enabled and return triggers both a search and accept()
 }
 
 #include "moc_lookupcertificatesdialog.cpp"

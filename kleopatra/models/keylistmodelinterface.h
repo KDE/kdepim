@@ -35,50 +35,53 @@
 
 #include <vector>
 
-namespace GpgME {
-    class Key;
+namespace GpgME
+{
+class Key;
 }
 
 class QModelIndex;
 template <typename T> class QList;
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class KeyListModelInterface {
-    public:
-        virtual ~KeyListModelInterface() {}
+class KeyListModelInterface
+{
+public:
+    virtual ~KeyListModelInterface() {}
 
-        static const int FingerprintRole = 0xF1;
+    static const int FingerprintRole = 0xF1;
 
-        enum Columns {
-            PrettyName,
+    enum Columns {
+        PrettyName,
 #ifndef KDEPIM_MOBILE_UI
-            PrettyEMail,
-            ValidFrom,
-            ValidUntil,
-            TechnicalDetails,
-            /* OpenPGP only, really */
-            ShortKeyID,
+        PrettyEMail,
+        ValidFrom,
+        ValidUntil,
+        TechnicalDetails,
+        /* OpenPGP only, really */
+        ShortKeyID,
 #if 0
-            Fingerprint,
-            LongKeyID,
-            /* X509 only, really */
-            Issuer,
-            Subject,
-            SerialNumber,
+        Fingerprint,
+        LongKeyID,
+        /* X509 only, really */
+        Issuer,
+        Subject,
+        SerialNumber,
 #endif
 #endif
 
-            NumColumns,
-            Icon = PrettyName // which column shall the icon be displayed in?
-        };
-
-        virtual GpgME::Key key( const QModelIndex & idx ) const = 0;
-        virtual std::vector<GpgME::Key> keys( const QList<QModelIndex> & idxs ) const = 0;
-
-        virtual QModelIndex index( const GpgME::Key & key ) const = 0;
-        virtual QList<QModelIndex> indexes( const std::vector<GpgME::Key> & keys ) const = 0;
+        NumColumns,
+        Icon = PrettyName // which column shall the icon be displayed in?
     };
+
+    virtual GpgME::Key key(const QModelIndex &idx) const = 0;
+    virtual std::vector<GpgME::Key> keys(const QList<QModelIndex> &idxs) const = 0;
+
+    virtual QModelIndex index(const GpgME::Key &key) const = 0;
+    virtual QList<QModelIndex> indexes(const std::vector<GpgME::Key> &keys) const = 0;
+};
 
 }
 

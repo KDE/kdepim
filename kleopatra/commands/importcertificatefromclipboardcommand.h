@@ -37,30 +37,30 @@
 
 #ifndef QT_NO_CLIPBOARD
 
+namespace Kleo
+{
 
-namespace Kleo {
+class ImportCertificateFromClipboardCommand : public ImportCertificatesCommand
+{
+    Q_OBJECT
+public:
+    explicit ImportCertificateFromClipboardCommand(KeyListController *parent);
+    explicit ImportCertificateFromClipboardCommand(QAbstractItemView *view, KeyListController *parent);
+    ~ImportCertificateFromClipboardCommand();
 
-    class ImportCertificateFromClipboardCommand : public ImportCertificatesCommand {
-        Q_OBJECT
-    public:
-        explicit ImportCertificateFromClipboardCommand( KeyListController * parent );
-        explicit ImportCertificateFromClipboardCommand( QAbstractItemView * view, KeyListController * parent );
-        ~ImportCertificateFromClipboardCommand();
+    static bool canImportCurrentClipboard();
 
-        static bool canImportCurrentClipboard();
+private:
+    /* reimp */ void doStart();
 
-    private:
-        /* reimp */ void doStart();
-
-    private:
-        class Private;
-        inline Private * d_func();
-        inline const Private * d_func() const;
-    };
+private:
+    class Private;
+    inline Private *d_func();
+    inline const Private *d_func() const;
+};
 }
 
 #endif // QT_NO_CLIPBOARD
 
 #endif // __KLEOPATRA_IMPORTCERTIFICATEFROMCLIPBOARDCOMMAND_H__
-
 

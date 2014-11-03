@@ -40,7 +40,6 @@
 
 #include <QDebug>
 
-
 #include <QDir>
 #include <QFile>
 #include <QString>
@@ -56,78 +55,90 @@
 QString Kleo::gnupgHomeDirectory()
 {
 #ifdef Q_OS_WIN
-    return QFile::decodeName( default_homedir() );
+    return QFile::decodeName(default_homedir());
 #else
-    const QByteArray gnupgHome = qgetenv( "GNUPGHOME" );
-    if ( !gnupgHome.isEmpty() )
-        return QFile::decodeName( gnupgHome );
-    else
+    const QByteArray gnupgHome = qgetenv("GNUPGHOME");
+    if (!gnupgHome.isEmpty()) {
+        return QFile::decodeName(gnupgHome);
+    } else {
         return QDir::homePath() + QLatin1String("/.gnupg");
+    }
 #endif
 }
 
-int Kleo::makeGnuPGError( int code ) {
-    return gpg_error( static_cast<gpg_err_code_t>( code ) );
+int Kleo::makeGnuPGError(int code)
+{
+    return gpg_error(static_cast<gpg_err_code_t>(code));
 }
 
-static QString findGpgExe( GpgME::Engine engine, const QString & exe ) {
-    const GpgME::EngineInfo info = GpgME::engineInfo( engine );
-    return info.fileName() ? QFile::decodeName( info.fileName() ) : QStandardPaths::findExecutable( exe ) ;
+static QString findGpgExe(GpgME::Engine engine, const QString &exe)
+{
+    const GpgME::EngineInfo info = GpgME::engineInfo(engine);
+    return info.fileName() ? QFile::decodeName(info.fileName()) : QStandardPaths::findExecutable(exe) ;
 }
 
-QString Kleo::gpgConfPath() {
-    return findGpgExe( GpgME::GpgConfEngine, QLatin1String("gpgconf") );
+QString Kleo::gpgConfPath()
+{
+    return findGpgExe(GpgME::GpgConfEngine, QLatin1String("gpgconf"));
 }
 
-QString Kleo::gpgSmPath() {
-    return findGpgExe( GpgME::GpgSMEngine, QLatin1String("gpgsm") );
+QString Kleo::gpgSmPath()
+{
+    return findGpgExe(GpgME::GpgSMEngine, QLatin1String("gpgsm"));
 }
 
-QString Kleo::gpgPath() {
-    return findGpgExe( GpgME::GpgEngine, QLatin1String("gpg") );
+QString Kleo::gpgPath()
+{
+    return findGpgExe(GpgME::GpgEngine, QLatin1String("gpg"));
 }
 
-QStringList Kleo::gnupgFileBlacklist() {
+QStringList Kleo::gnupgFileBlacklist()
+{
     return QStringList()
-        << QLatin1String("dirmngr-cache.d")
-        << QLatin1String("S.uiserver")
-        << QLatin1String("S.gpg-agent")
-        << QLatin1String("random_seed")
-        << QLatin1String("*~")
-        << QLatin1String("*.bak")
-        << QLatin1String("*.lock")
-        << QLatin1String("*.tmp")
-        << QLatin1String("reader_*.status")
-        ;
+           << QLatin1String("dirmngr-cache.d")
+           << QLatin1String("S.uiserver")
+           << QLatin1String("S.gpg-agent")
+           << QLatin1String("random_seed")
+           << QLatin1String("*~")
+           << QLatin1String("*.bak")
+           << QLatin1String("*.lock")
+           << QLatin1String("*.tmp")
+           << QLatin1String("reader_*.status")
+           ;
 }
 
-QString Kleo::gpg4winInstallPath() {
-    return gpgConfListDir( "bindir" );
+QString Kleo::gpg4winInstallPath()
+{
+    return gpgConfListDir("bindir");
 }
 
-QString Kleo::gpgConfListDir( const char * which ) {
-    if ( !which || !*which )
+QString Kleo::gpgConfListDir(const char *which)
+{
+    if (!which || !*which) {
         return QString();
+    }
     const QString gpgConfPath = Kleo::gpgConfPath();
-    if ( gpgConfPath.isEmpty() )
+    if (gpgConfPath.isEmpty()) {
         return QString();
+    }
     QProcess gpgConf;
-    qDebug() << "gpgConfListDir: starting " << qPrintable( gpgConfPath ) << " --list-dirs";
-    gpgConf.start( gpgConfPath, QStringList() << QLatin1String( "--list-dirs" ) );
-    if ( !gpgConf.waitForFinished() ) {
-        qDebug() << "gpgConfListDir(): failed to execute gpgconf: " << qPrintable( gpgConf.errorString() );
+    qDebug() << "gpgConfListDir: starting " << qPrintable(gpgConfPath) << " --list-dirs";
+    gpgConf.start(gpgConfPath, QStringList() << QLatin1String("--list-dirs"));
+    if (!gpgConf.waitForFinished()) {
+        qDebug() << "gpgConfListDir(): failed to execute gpgconf: " << qPrintable(gpgConf.errorString());
         qDebug() << "output was:" << endl << gpgConf.readAllStandardError().constData();
         return QString();
     }
-    const QList<QByteArray> lines = gpgConf.readAllStandardOutput().split( '\n' );
-    Q_FOREACH( const QByteArray & line, lines )
-        if ( line.startsWith( which ) && line[qstrlen(which)] == ':' ) {
+    const QList<QByteArray> lines = gpgConf.readAllStandardOutput().split('\n');
+    Q_FOREACH (const QByteArray &line, lines)
+        if (line.startsWith(which) && line[qstrlen(which)] == ':') {
             const int begin = qstrlen(which) + 1;
             int end = line.size();
-            while ( end && ( line[end-1] == '\n' || line[end-1] == '\r' ) )
+            while (end && (line[end - 1] == '\n' || line[end - 1] == '\r')) {
                 --end;
-            const QString result = QDir::fromNativeSeparators( QFile::decodeName( hexdecode( line.mid( begin, end - begin ) ) ) );
-            qDebug() << "gpgConfListDir: found " << qPrintable( result )
+            }
+            const QString result = QDir::fromNativeSeparators(QFile::decodeName(hexdecode(line.mid(begin, end - begin))));
+            qDebug() << "gpgConfListDir: found " << qPrintable(result)
                      << " for '" << which << "'entry";
             return result;
         }

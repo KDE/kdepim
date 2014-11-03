@@ -44,45 +44,47 @@
 
 class QWidget;
 
-namespace Kleo {
+namespace Kleo
+{
 
-  /**
-     @short An abstract base class for asynchronous crypto operations
+/**
+   @short An abstract base class for asynchronous crypto operations
 
-     During the operation, you might receive progress updates through
-     the progress() signal as they arrive, but an implementation is
-     free to not send progress information. You should show a busy
-     progressbar until the first progress() signal is received.
+   During the operation, you might receive progress updates through
+   the progress() signal as they arrive, but an implementation is
+   free to not send progress information. You should show a busy
+   progressbar until the first progress() signal is received.
 
-     The done() signal is emitted _before_ the result() signals of
-     subclasses and should be used to hide and/or reset progress bars,
-     not to learn of the end of the operation. Use the result()
-     signals for that.
+   The done() signal is emitted _before_ the result() signals of
+   subclasses and should be used to hide and/or reset progress bars,
+   not to learn of the end of the operation. Use the result()
+   signals for that.
 
-     To cancel the operation, simply call slotCancel(). The result()
-     signal of subclasses will still be emitted, though, and will
-     carry the information that the operation was canceled.
-  */
-  class KLEO_EXPORT Job : public QObject {
+   To cancel the operation, simply call slotCancel(). The result()
+   signal of subclasses will still be emitted, though, and will
+   carry the information that the operation was canceled.
+*/
+class KLEO_EXPORT Job : public QObject
+{
     Q_OBJECT
-  protected:
-    explicit Job( QObject * parent );
-  public:
+protected:
+    explicit Job(QObject *parent);
+public:
     ~Job();
 
-    virtual void showErrorDialog( QWidget * parent=0, const QString & caption=QString() ) const;
+    virtual void showErrorDialog(QWidget *parent = 0, const QString &caption = QString()) const;
 
     virtual QString auditLogAsHtml() const;
     virtual GpgME::Error auditLogError() const;
     bool isAuditLogSupported() const;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     virtual void slotCancel() = 0;
 
-  Q_SIGNALS:
-    void progress( const QString & what, int current, int total );
+Q_SIGNALS:
+    void progress(const QString &what, int current, int total);
     void done();
-  };
+};
 
 }
 

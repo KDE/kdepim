@@ -59,21 +59,27 @@ using namespace Kleo::Commands;
 using namespace Kleo::Crypto;
 using namespace boost;
 
-class SignClipboardCommand::Private : public Command::Private {
+class SignClipboardCommand::Private : public Command::Private
+{
     friend class ::Kleo::Commands::SignClipboardCommand;
-    SignClipboardCommand * q_func() const { return static_cast<SignClipboardCommand*>( q ); }
+    SignClipboardCommand *q_func() const
+    {
+        return static_cast<SignClipboardCommand *>(q);
+    }
 public:
-    explicit Private( SignClipboardCommand * qq, KeyListController * c );
+    explicit Private(SignClipboardCommand *qq, KeyListController *c);
     ~Private();
 
     void init();
 
 private:
     void slotSignersResolved();
-    void slotControllerDone() {
+    void slotControllerDone()
+    {
         finished();
     }
-    void slotControllerError( int, const QString & ) {
+    void slotControllerError(int, const QString &)
+    {
         finished();
     }
 
@@ -83,89 +89,106 @@ private:
     SignEMailController controller;
 };
 
-
-SignClipboardCommand::Private * SignClipboardCommand::d_func() { return static_cast<Private*>( d.get() ); }
-const SignClipboardCommand::Private * SignClipboardCommand::d_func() const { return static_cast<const Private*>( d.get() ); }
+SignClipboardCommand::Private *SignClipboardCommand::d_func()
+{
+    return static_cast<Private *>(d.get());
+}
+const SignClipboardCommand::Private *SignClipboardCommand::d_func() const
+{
+    return static_cast<const Private *>(d.get());
+}
 
 #define d d_func()
 #define q q_func()
 
-SignClipboardCommand::Private::Private( SignClipboardCommand * qq, KeyListController * c )
-    : Command::Private( qq, c ),
-      shared_qq( qq, kdtools::nodelete() ),
+SignClipboardCommand::Private::Private(SignClipboardCommand *qq, KeyListController *c)
+    : Command::Private(qq, c),
+      shared_qq(qq, kdtools::nodelete()),
       input(),
-      controller( SignEMailController::ClipboardMode )
+      controller(SignEMailController::ClipboardMode)
 {
 
 }
 
-SignClipboardCommand::Private::~Private() { qDebug(); }
-
-SignClipboardCommand::SignClipboardCommand( GpgME::Protocol protocol, KeyListController * c )
-    : Command( new Private( this, c ) )
+SignClipboardCommand::Private::~Private()
 {
-    d->init();
-    d->controller.setProtocol( protocol );
+    qDebug();
 }
 
-SignClipboardCommand::SignClipboardCommand( GpgME::Protocol protocol, QAbstractItemView * v, KeyListController * c )
-    : Command( v, new Private( this, c ) )
+SignClipboardCommand::SignClipboardCommand(GpgME::Protocol protocol, KeyListController *c)
+    : Command(new Private(this, c))
 {
     d->init();
-    d->controller.setProtocol( protocol );
+    d->controller.setProtocol(protocol);
 }
 
-void SignClipboardCommand::Private::init() {
-    controller.setExecutionContext( shared_qq );
-    controller.setDetachedSignature( false );
-    connect( &controller, SIGNAL(done()), q, SLOT(slotControllerDone()) );
-    connect( &controller, SIGNAL(error(int,QString)), q, SLOT(slotControllerError(int,QString)) );
+SignClipboardCommand::SignClipboardCommand(GpgME::Protocol protocol, QAbstractItemView *v, KeyListController *c)
+    : Command(v, new Private(this, c))
+{
+    d->init();
+    d->controller.setProtocol(protocol);
 }
 
-SignClipboardCommand::~SignClipboardCommand() { qDebug(); }
+void SignClipboardCommand::Private::init()
+{
+    controller.setExecutionContext(shared_qq);
+    controller.setDetachedSignature(false);
+    connect(&controller, SIGNAL(done()), q, SLOT(slotControllerDone()));
+    connect(&controller, SIGNAL(error(int,QString)), q, SLOT(slotControllerError(int,QString)));
+}
+
+SignClipboardCommand::~SignClipboardCommand()
+{
+    qDebug();
+}
 
 // static
-bool SignClipboardCommand::canSignCurrentClipboard() {
-    if ( const QClipboard * clip = QApplication::clipboard() )
-        if ( const QMimeData * mime = clip->mimeData() )
+bool SignClipboardCommand::canSignCurrentClipboard()
+{
+    if (const QClipboard *clip = QApplication::clipboard())
+        if (const QMimeData *mime = clip->mimeData()) {
             return mime->hasText();
+        }
     return false;
 }
 
-void SignClipboardCommand::doStart() {
+void SignClipboardCommand::doStart()
+{
 
     try {
 
         // snapshot clipboard content here, in case it's being changed...
         d->input = Input::createFromClipboard();
 
-        connect( &d->controller, SIGNAL(signersResolved()),
-                 this, SLOT(slotSignersResolved()) );
+        connect(&d->controller, SIGNAL(signersResolved()),
+                this, SLOT(slotSignersResolved()));
 
         d->controller.startResolveSigners();
 
-    } catch ( const std::exception & e ) {
-        d->information( i18n("An error occurred: %1",
-                             QString::fromLocal8Bit( e.what() ) ),
-                        i18n("Sign Clipboard Error") );
+    } catch (const std::exception &e) {
+        d->information(i18n("An error occurred: %1",
+                            QString::fromLocal8Bit(e.what())),
+                       i18n("Sign Clipboard Error"));
         d->finished();
     }
 }
 
-void SignClipboardCommand::Private::slotSignersResolved() {
+void SignClipboardCommand::Private::slotSignersResolved()
+{
     try {
-        controller.setInputAndOutput( input, Output::createFromClipboard() );
+        controller.setInputAndOutput(input, Output::createFromClipboard());
         input.reset(); // no longer needed, so don't keep a reference
         controller.start();
-    } catch ( const std::exception & e ) {
-        information( i18n("An error occurred: %1",
-                          QString::fromLocal8Bit( e.what() ) ),
-                     i18n("Sign Clipboard Error") );
+    } catch (const std::exception &e) {
+        information(i18n("An error occurred: %1",
+                         QString::fromLocal8Bit(e.what())),
+                    i18n("Sign Clipboard Error"));
         finished();
     }
 }
 
-void SignClipboardCommand::doCancel() {
+void SignClipboardCommand::doCancel()
+{
     qDebug();
     d->controller.cancel();
 }

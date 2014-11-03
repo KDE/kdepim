@@ -37,31 +37,34 @@
 
 class QStringList;
 
-namespace Kleo {
-namespace Commands {
+namespace Kleo
+{
+namespace Commands
+{
 
-    class ImportCrlCommand : public Command {
-        Q_OBJECT
-    public:
-        explicit ImportCrlCommand( QAbstractItemView * view, KeyListController * parent );
-        explicit ImportCrlCommand( KeyListController * parent );
-        explicit ImportCrlCommand( const QStringList & files, QAbstractItemView * view, KeyListController * parent );
-        explicit ImportCrlCommand( const QStringList & files, KeyListController * parent );
-        ~ImportCrlCommand();
+class ImportCrlCommand : public Command
+{
+    Q_OBJECT
+public:
+    explicit ImportCrlCommand(QAbstractItemView *view, KeyListController *parent);
+    explicit ImportCrlCommand(KeyListController *parent);
+    explicit ImportCrlCommand(const QStringList &files, QAbstractItemView *view, KeyListController *parent);
+    explicit ImportCrlCommand(const QStringList &files, KeyListController *parent);
+    ~ImportCrlCommand();
 
-        void setFiles( const QStringList & files );
+    void setFiles(const QStringList &files);
 
-    private:
-        /* reimp */ void doStart();
-        /* reimp */ void doCancel();
+private:
+    /* reimp */ void doStart();
+    /* reimp */ void doCancel();
 
-    private:
-        class Private;
-        inline Private * d_func();
-        inline const Private * d_func() const;
-        Q_PRIVATE_SLOT( d_func(), void slotProcessFinished( int, QProcess::ExitStatus ) )
-        Q_PRIVATE_SLOT( d_func(), void slotProcessReadyReadStandardError() )
-    };
+private:
+    class Private;
+    inline Private *d_func();
+    inline const Private *d_func() const;
+    Q_PRIVATE_SLOT(d_func(), void slotProcessFinished(int, QProcess::ExitStatus))
+    Q_PRIVATE_SLOT(d_func(), void slotProcessReadyReadStandardError())
+};
 
 }
 }

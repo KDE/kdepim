@@ -40,40 +40,42 @@
 class QByteArray;
 class QIODevice;
 
-namespace GpgME {
-  class Error;
-  class DecryptionResult;
-  class VerificationResult;
+namespace GpgME
+{
+class Error;
+class DecryptionResult;
+class VerificationResult;
 }
 
+namespace Kleo
+{
 
-namespace Kleo {
+/**
+   @short An abstract base class for asynchronous combined decrypters and verifiers
 
-  /**
-     @short An abstract base class for asynchronous combined decrypters and verifiers
+   To use a DecryptVerifyJob, first obtain an instance from the
+   CryptoBackend implementation, connect the progress() and result()
+   signals to suitable slots and then start the operation with a
+   call to start(). This call might fail, in which case the
+   DecryptVerifyJob instance will have scheduled it's own destruction with
+   a call to QObject::deleteLater().
 
-     To use a DecryptVerifyJob, first obtain an instance from the
-     CryptoBackend implementation, connect the progress() and result()
-     signals to suitable slots and then start the operation with a
-     call to start(). This call might fail, in which case the
-     DecryptVerifyJob instance will have scheduled it's own destruction with
-     a call to QObject::deleteLater().
-
-     After result() is emitted, the DecryptVerifyJob will schedule it's own
-     destruction by calling QObject::deleteLater().
-  */
-  class KLEO_EXPORT DecryptVerifyJob : public Job {
+   After result() is emitted, the DecryptVerifyJob will schedule it's own
+   destruction by calling QObject::deleteLater().
+*/
+class KLEO_EXPORT DecryptVerifyJob : public Job
+{
     Q_OBJECT
-  protected:
-    explicit DecryptVerifyJob( QObject * parent );
-  public:
+protected:
+    explicit DecryptVerifyJob(QObject *parent);
+public:
     ~DecryptVerifyJob();
 
     /**
        Starts the combined decryption and verification operation.
        \a cipherText is the data to decrypt and later verify.
     */
-    virtual KLEO_DEPRECATED_EXPORT GpgME::Error start( const QByteArray & cipherText ) = 0;
+    virtual KLEO_DEPRECATED_EXPORT GpgME::Error start(const QByteArray &cipherText) = 0;
 
     /*!
       \overload
@@ -84,18 +86,18 @@ namespace Kleo {
 
       \throws GpgME::Exception if starting fails
     */
-    virtual void start( const boost::shared_ptr<QIODevice> & cipherText, const boost::shared_ptr<QIODevice> & plainText=boost::shared_ptr<QIODevice>() ) = 0;
+    virtual void start(const boost::shared_ptr<QIODevice> &cipherText, const boost::shared_ptr<QIODevice> &plainText = boost::shared_ptr<QIODevice>()) = 0;
 
     /** Synchronous equivalent of start() */
-    virtual std::pair<GpgME::DecryptionResult,GpgME::VerificationResult>
-    exec( const QByteArray & cipherText, QByteArray & plainText ) = 0;
+    virtual std::pair<GpgME::DecryptionResult, GpgME::VerificationResult>
+    exec(const QByteArray &cipherText, QByteArray &plainText) = 0;
 
-  Q_SIGNALS:
-    void result( const GpgME::DecryptionResult & decryptionresult,
-                 const GpgME::VerificationResult & verificationresult,
-                 const QByteArray & plainText, const QString & auditLogAsHtml=QString(),
-                 const GpgME::Error & auditLogError=GpgME::Error() );
-  };
+Q_SIGNALS:
+    void result(const GpgME::DecryptionResult &decryptionresult,
+                const GpgME::VerificationResult &verificationresult,
+                const QByteArray &plainText, const QString &auditLogAsHtml = QString(),
+                const GpgME::Error &auditLogError = GpgME::Error());
+};
 
 }
 

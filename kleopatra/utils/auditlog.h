@@ -39,31 +39,40 @@
 
 class QUrl;
 
-namespace Kleo {
-    class Job;
+namespace Kleo
+{
+class Job;
 }
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class AuditLog {
-    public:
-        AuditLog() : m_text(), m_error() {}
-        explicit AuditLog( const GpgME::Error & error )
-            : m_text(), m_error( error ) {}
-        AuditLog( const QString & text, const GpgME::Error & error )
-            : m_text( text ), m_error( error ) {}
+class AuditLog
+{
+public:
+    AuditLog() : m_text(), m_error() {}
+    explicit AuditLog(const GpgME::Error &error)
+        : m_text(), m_error(error) {}
+    AuditLog(const QString &text, const GpgME::Error &error)
+        : m_text(text), m_error(error) {}
 
-        static AuditLog fromJob( const Job * );
+    static AuditLog fromJob(const Job *);
 
-        GpgME::Error error() const { return m_error; }
-        QString text() const { return m_text; }
+    GpgME::Error error() const
+    {
+        return m_error;
+    }
+    QString text() const
+    {
+        return m_text;
+    }
 
-        QString formatLink( const QUrl & urlTemplate ) const;
+    QString formatLink(const QUrl &urlTemplate) const;
 
-    private:
-        QString m_text;
-        GpgME::Error m_error;
-    };
+private:
+    QString m_text;
+    GpgME::Error m_error;
+};
 
 }
 

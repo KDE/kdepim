@@ -33,23 +33,26 @@
 #define KLEOPATRA_SMIMEVALIDATIONCONFIGURATIONPAGE_H
 
 #include <kcmodule.h>
-namespace Kleo {
-namespace Config {
- 
-    class SMimeValidationConfigurationWidget;
+namespace Kleo
+{
+namespace Config
+{
 
-    class SMimeValidationConfigurationPage : public KCModule {
-        Q_OBJECT
-    public:
-        explicit SMimeValidationConfigurationPage( QWidget *parent=0, const QVariantList &args=QVariantList() );
+class SMimeValidationConfigurationWidget;
 
-        /* reimp */ void load();
-        /* reimp */ void save();
-        /* reimp */ void defaults();
+class SMimeValidationConfigurationPage : public KCModule
+{
+    Q_OBJECT
+public:
+    explicit SMimeValidationConfigurationPage(QWidget *parent = 0, const QVariantList &args = QVariantList());
 
-    private:
-        SMimeValidationConfigurationWidget * mWidget;
-    };
+    /* reimp */ void load();
+    /* reimp */ void save();
+    /* reimp */ void defaults();
+
+private:
+    SMimeValidationConfigurationWidget *mWidget;
+};
 
 }
 }

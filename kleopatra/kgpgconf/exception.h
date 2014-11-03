@@ -35,24 +35,31 @@
 
 #include <QString>
 
-class KGpgConfException {
+class KGpgConfException
+{
 public:
-    explicit KGpgConfException( const QString& msg=QString() ) : m_message( msg ) {} 
-        virtual ~KGpgConfException() throw();
+    explicit KGpgConfException(const QString &msg = QString()) : m_message(msg) {}
+    virtual ~KGpgConfException() throw();
 
-        QString message() const { return m_message; }
+    QString message() const
+    {
+        return m_message;
+    }
 
-    private:
-        const QString m_message;
+private:
+    const QString m_message;
 };
 
 class GpgConfRunException : public KGpgConfException
 {
 public:
-GpgConfRunException( int errorCode, const QString& msg ) : KGpgConfException( msg ), m_errorCode( errorCode ) {}
+    GpgConfRunException(int errorCode, const QString &msg) : KGpgConfException(msg), m_errorCode(errorCode) {}
     ~GpgConfRunException() throw();
 
-    int errorCode() const { return m_errorCode; }
+    int errorCode() const
+    {
+        return m_errorCode;
+    }
 
 private:
     int m_errorCode;
@@ -61,7 +68,7 @@ private:
 class MalformedGpgConfOutputException : public KGpgConfException
 {
 public:
-    explicit MalformedGpgConfOutputException( const QString& msg ) : KGpgConfException( msg ) {}
+    explicit MalformedGpgConfOutputException(const QString &msg) : KGpgConfException(msg) {}
     ~MalformedGpgConfOutputException() throw();
 
 };

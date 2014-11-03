@@ -35,24 +35,26 @@
 
 #include "job.h"
 
-namespace GpgME {
-  class Error;
-  class ImportResult;
+namespace GpgME
+{
+class Error;
+class ImportResult;
 }
 
+namespace Kleo
+{
 
-namespace Kleo {
-
-  class AbstractImportJob : public Job {
+class AbstractImportJob : public Job
+{
     Q_OBJECT
-  protected:
-    explicit AbstractImportJob( QObject * parent );
-  public:
+protected:
+    explicit AbstractImportJob(QObject *parent);
+public:
     ~AbstractImportJob();
 
-  Q_SIGNALS:
-    void result( const GpgME::ImportResult & result, const QString & auditLogAsHtml=QString(), const GpgME::Error & auditLogError=GpgME::Error() );
-  };
+Q_SIGNALS:
+    void result(const GpgME::ImportResult &result, const QString &auditLogAsHtml = QString(), const GpgME::Error &auditLogError = GpgME::Error());
+};
 
 }
 

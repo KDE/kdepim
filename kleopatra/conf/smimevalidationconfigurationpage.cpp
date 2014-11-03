@@ -38,46 +38,45 @@
 #include <QVBoxLayout>
 #include <kmessagebox.h>
 
-
 using namespace Kleo::Config;
 
-SMimeValidationConfigurationPage::SMimeValidationConfigurationPage( QWidget *parent, const QVariantList &args )
-    : KCModule( parent, args )
+SMimeValidationConfigurationPage::SMimeValidationConfigurationPage(QWidget *parent, const QVariantList &args)
+    : KCModule(parent, args)
 {
-  QVBoxLayout * lay = new QVBoxLayout( this );
-  lay->setMargin( 0 );
+    QVBoxLayout *lay = new QVBoxLayout(this);
+    lay->setMargin(0);
 
-  mWidget = new SMimeValidationConfigurationWidget( this );
-  lay->addWidget( mWidget );
+    mWidget = new SMimeValidationConfigurationWidget(this);
+    lay->addWidget(mWidget);
 
-  connect( mWidget, SIGNAL(changed()), this, SLOT(changed()) );
+    connect(mWidget, SIGNAL(changed()), this, SLOT(changed()));
 
 #ifndef HAVE_UNBROKEN_KCMULTIDIALOG
-  load();
+    load();
 #endif
 }
 
-
 void SMimeValidationConfigurationPage::load()
 {
-  mWidget->load();
+    mWidget->load();
 }
 
 void SMimeValidationConfigurationPage::save()
 {
-  mWidget->save();
+    mWidget->save();
 
 }
 
 void SMimeValidationConfigurationPage::defaults()
 {
-  mWidget->defaults();
+    mWidget->defaults();
 }
 
-extern "C" Q_DECL_EXPORT KCModule *create_kleopatra_config_smimevalidation( QWidget * parent, const QVariantList & args ) {
-    SMimeValidationConfigurationPage * page =
-        new SMimeValidationConfigurationPage( parent, args );
-    page->setObjectName( QLatin1String("kleopatra_config_smimevalidation") );
+extern "C" Q_DECL_EXPORT KCModule *create_kleopatra_config_smimevalidation(QWidget *parent, const QVariantList &args)
+{
+    SMimeValidationConfigurationPage *page =
+        new SMimeValidationConfigurationPage(parent, args);
+    page->setObjectName(QLatin1String("kleopatra_config_smimevalidation"));
     return page;
 }
 

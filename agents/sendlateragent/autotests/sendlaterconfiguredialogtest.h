@@ -18,21 +18,17 @@
 #ifndef SENDLATERCONFIGUREDIALOGTEST_H
 #define SENDLATERCONFIGUREDIALOGTEST_H
 
-
 #include <QObject>
-
 
 class SendLaterConfigureDialogTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit SendLaterConfigureDialogTest(QObject *parent=0);
+    explicit SendLaterConfigureDialogTest(QObject *parent = 0);
     ~SendLaterConfigureDialogTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
 };
-
-
 
 #endif // SENDLATERCONFIGUREDIALOGTEST_H
 

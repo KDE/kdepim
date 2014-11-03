@@ -40,39 +40,41 @@
 class QByteArray;
 class QIODevice;
 
-namespace GpgME {
-  class Error;
-  class DecryptionResult;
+namespace GpgME
+{
+class Error;
+class DecryptionResult;
 }
 
+namespace Kleo
+{
 
-namespace Kleo {
+/**
+   @short An abstract base class for asynchronous decrypters
 
-  /**
-     @short An abstract base class for asynchronous decrypters
+   To use a DecryptJob, first obtain an instance from the
+   CryptoBackend implementation, connect the progress() and result()
+   signals to suitable slots and then start the decryption with a
+   call to start(). This call might fail, in which case the
+   DecryptJob instance will have scheduled it's own destruction with
+   a call to QObject::deleteLater().
 
-     To use a DecryptJob, first obtain an instance from the
-     CryptoBackend implementation, connect the progress() and result()
-     signals to suitable slots and then start the decryption with a
-     call to start(). This call might fail, in which case the
-     DecryptJob instance will have scheduled it's own destruction with
-     a call to QObject::deleteLater().
-
-     After result() is emitted, the DecryptJob will schedule it's own
-     destruction by calling QObject::deleteLater().
-  */
-  class KLEO_EXPORT DecryptJob : public Job {
+   After result() is emitted, the DecryptJob will schedule it's own
+   destruction by calling QObject::deleteLater().
+*/
+class KLEO_EXPORT DecryptJob : public Job
+{
     Q_OBJECT
-  protected:
-    explicit DecryptJob( QObject * parent );
-  public:
+protected:
+    explicit DecryptJob(QObject *parent);
+public:
     ~DecryptJob();
 
     /**
        Starts the decryption operation. \a cipherText is the data to
        decrypt.
     */
-    virtual KLEO_DEPRECATED_EXPORT GpgME::Error start( const QByteArray & cipherText ) = 0;
+    virtual KLEO_DEPRECATED_EXPORT GpgME::Error start(const QByteArray &cipherText) = 0;
 
     /*!
       \overload
@@ -83,14 +85,14 @@ namespace Kleo {
 
       \throws GpgME::Exception if starting fails
     */
-    virtual void start( const boost::shared_ptr<QIODevice> & cipherText, const boost::shared_ptr<QIODevice> & plainText=boost::shared_ptr<QIODevice>() ) = 0;
+    virtual void start(const boost::shared_ptr<QIODevice> &cipherText, const boost::shared_ptr<QIODevice> &plainText = boost::shared_ptr<QIODevice>()) = 0;
 
-    virtual GpgME::DecryptionResult exec( const QByteArray & cipherText,
-                                          QByteArray & plainText ) = 0;
+    virtual GpgME::DecryptionResult exec(const QByteArray &cipherText,
+                                         QByteArray &plainText) = 0;
 
-  Q_SIGNALS:
-    void result( const GpgME::DecryptionResult & result, const QByteArray & plainText, const QString & auditLogAsHtml=QString(), const GpgME::Error & auditLogError=GpgME::Error() );
-  };
+Q_SIGNALS:
+    void result(const GpgME::DecryptionResult &result, const QByteArray &plainText, const QString &auditLogAsHtml = QString(), const GpgME::Error &auditLogError = GpgME::Error());
+};
 
 }
 

@@ -42,8 +42,9 @@
 
 #include <vector>
 
-namespace GpgME {
-  class Key;
+namespace GpgME
+{
+class Key;
 }
 
 class QAbstractItemModel;
@@ -52,38 +53,40 @@ class QFont;
 class QColor;
 class QIcon;
 
-namespace Kleo {
+namespace Kleo
+{
 
-  class KLEO_EXPORT KeyFilterManager : public QObject {
+class KLEO_EXPORT KeyFilterManager : public QObject
+{
     Q_OBJECT
-  protected:
-    explicit KeyFilterManager( QObject * parent=0 );
+protected:
+    explicit KeyFilterManager(QObject *parent = 0);
     ~KeyFilterManager();
 
-  public:
-    static KeyFilterManager * instance();
+public:
+    static KeyFilterManager *instance();
 
-    const boost::shared_ptr<KeyFilter> & filterMatching( const GpgME::Key & key, KeyFilter::MatchContexts contexts ) const;
-    std::vector< boost::shared_ptr<KeyFilter> > filtersMatching( const GpgME::Key & key, KeyFilter::MatchContexts contexts ) const;
+    const boost::shared_ptr<KeyFilter> &filterMatching(const GpgME::Key &key, KeyFilter::MatchContexts contexts) const;
+    std::vector< boost::shared_ptr<KeyFilter> > filtersMatching(const GpgME::Key &key, KeyFilter::MatchContexts contexts) const;
 
-    QAbstractItemModel * model() const;
+    QAbstractItemModel *model() const;
 
-    const boost::shared_ptr<KeyFilter> & keyFilterByID( const QString & id ) const;
-    const boost::shared_ptr<KeyFilter> & fromModelIndex( const QModelIndex & mi ) const;
-    QModelIndex toModelIndex( const boost::shared_ptr<KeyFilter> & kf ) const;
+    const boost::shared_ptr<KeyFilter> &keyFilterByID(const QString &id) const;
+    const boost::shared_ptr<KeyFilter> &fromModelIndex(const QModelIndex &mi) const;
+    QModelIndex toModelIndex(const boost::shared_ptr<KeyFilter> &kf) const;
 
     void reload();
 
-    QFont font( const GpgME::Key & key, const QFont & baseFont ) const;
-    QColor bgColor( const GpgME::Key & key ) const;
-    QColor fgColor( const GpgME::Key & key ) const;
-    QIcon icon( const GpgME::Key & key ) const;
+    QFont font(const GpgME::Key &key, const QFont &baseFont) const;
+    QColor bgColor(const GpgME::Key &key) const;
+    QColor fgColor(const GpgME::Key &key) const;
+    QIcon icon(const GpgME::Key &key) const;
 
     class Private;
-  private:
-    Private * d;
-    static KeyFilterManager * mSelf;
-  };
+private:
+    Private *d;
+    static KeyFilterManager *mSelf;
+};
 
 }
 

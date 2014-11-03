@@ -47,51 +47,56 @@ using namespace Kleo;
 using namespace GpgME;
 using namespace boost;
 
-QGpgMEDownloadJob::QGpgMEDownloadJob( Context * context )
-  : mixin_type( context )
+QGpgMEDownloadJob::QGpgMEDownloadJob(Context *context)
+    : mixin_type(context)
 {
-  lateInitialization();
+    lateInitialization();
 }
 
 QGpgMEDownloadJob::~QGpgMEDownloadJob() {}
 
-static QGpgMEDownloadJob::result_type download_qsl( Context * ctx, const QStringList & pats ) {
-  QGpgME::QByteArrayDataProvider dp;
-  Data data( &dp );
+static QGpgMEDownloadJob::result_type download_qsl(Context *ctx, const QStringList &pats)
+{
+    QGpgME::QByteArrayDataProvider dp;
+    Data data(&dp);
 
-  const _detail::PatternConverter pc( pats );
+    const _detail::PatternConverter pc(pats);
 
-  const Error err= ctx->exportPublicKeys( pc.patterns(), data );
-  Error ae;
-  const QString log = _detail::audit_log_as_html( ctx, ae );
-  return make_tuple( err, dp.data(), log, ae );
+    const Error err = ctx->exportPublicKeys(pc.patterns(), data);
+    Error ae;
+    const QString log = _detail::audit_log_as_html(ctx, ae);
+    return make_tuple(err, dp.data(), log, ae);
 }
 
-static QGpgMEDownloadJob::result_type download( Context * ctx, QThread * thread, const QByteArray & fpr, const weak_ptr<QIODevice> & keyData_ ) {
-  const shared_ptr<QIODevice> keyData = keyData_.lock();
-  if ( !keyData )
-    return download_qsl( ctx, QStringList( QString::fromUtf8( fpr ) ) );
+static QGpgMEDownloadJob::result_type download(Context *ctx, QThread *thread, const QByteArray &fpr, const weak_ptr<QIODevice> &keyData_)
+{
+    const shared_ptr<QIODevice> keyData = keyData_.lock();
+    if (!keyData) {
+        return download_qsl(ctx, QStringList(QString::fromUtf8(fpr)));
+    }
 
-  const _detail::ToThreadMover kdMover( keyData, thread );
+    const _detail::ToThreadMover kdMover(keyData, thread);
 
-  QGpgME::QIODeviceDataProvider dp( keyData );
-  Data data( &dp );
+    QGpgME::QIODeviceDataProvider dp(keyData);
+    Data data(&dp);
 
-  const _detail::PatternConverter pc( fpr );
+    const _detail::PatternConverter pc(fpr);
 
-  const Error err = ctx->exportPublicKeys( pc.patterns(), data );
-  Error ae;
-  const QString log = _detail::audit_log_as_html( ctx, ae );
-  return make_tuple( err, QByteArray(), log, ae );
+    const Error err = ctx->exportPublicKeys(pc.patterns(), data);
+    Error ae;
+    const QString log = _detail::audit_log_as_html(ctx, ae);
+    return make_tuple(err, QByteArray(), log, ae);
 }
 
-Error QGpgMEDownloadJob::start( const QStringList & pats ) {
-  run( bind( &download_qsl, _1, pats ) );
-  return Error();
+Error QGpgMEDownloadJob::start(const QStringList &pats)
+{
+    run(bind(&download_qsl, _1, pats));
+    return Error();
 }
 
-Error QGpgMEDownloadJob::start( const QByteArray & fpr, const boost::shared_ptr<QIODevice> & keyData ) {
-  run( bind( &download, _1, _2, fpr, _3 ), keyData );
-  return Error();
+Error QGpgMEDownloadJob::start(const QByteArray &fpr, const boost::shared_ptr<QIODevice> &keyData)
+{
+    run(bind(&download, _1, _2, fpr, _3), keyData);
+    return Error();
 }
 

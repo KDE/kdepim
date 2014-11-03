@@ -37,13 +37,14 @@ class QString;
 class QStringList;
 class QDir;
 
-namespace Kleo {
+namespace Kleo
+{
 
-    QString heuristicBaseDirectory( const QStringList & files );
-    QStringList makeRelativeTo( const QDir & dir, const QStringList & files );
-    QStringList makeRelativeTo( const QString & dir, const QStringList & files );
+QString heuristicBaseDirectory(const QStringList &files);
+QStringList makeRelativeTo(const QDir &dir, const QStringList &files);
+QStringList makeRelativeTo(const QString &dir, const QStringList &files);
 
-    void recursivelyRemovePath( const QString & path );
+void recursivelyRemovePath(const QString &path);
 }
 
 #endif /* __KLEOPATRA_UTILS_PATH_HELPER_H__ */

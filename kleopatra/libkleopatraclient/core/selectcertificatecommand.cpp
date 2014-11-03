@@ -23,105 +23,123 @@
 
 using namespace KleopatraClientCopy;
 
-SelectCertificateCommand::SelectCertificateCommand( QObject * p )
-    : Command( p )
+SelectCertificateCommand::SelectCertificateCommand(QObject *p)
+    : Command(p)
 {
-    setCommand( "SELECT_CERTIFICATE" );
+    setCommand("SELECT_CERTIFICATE");
 }
 
 SelectCertificateCommand::~SelectCertificateCommand() {}
 
-void SelectCertificateCommand::setMultipleCertificatesAllowed( bool allow ) {
-    if ( allow )
-        setOption( "multi", true );
-    else
-        unsetOption( "multi" );
+void SelectCertificateCommand::setMultipleCertificatesAllowed(bool allow)
+{
+    if (allow) {
+        setOption("multi", true);
+    } else {
+        unsetOption("multi");
+    }
 }
 
-bool SelectCertificateCommand::multipleCertificatesAllowed() const {
-    return isOptionSet( "multi" );
+bool SelectCertificateCommand::multipleCertificatesAllowed() const
+{
+    return isOptionSet("multi");
 }
 
-
-void SelectCertificateCommand::setOnlySigningCertificatesAllowed( bool allow ) {
-    if ( allow )
-        setOption( "sign-only", true );
-    else
-        unsetOption( "sign-only" );
+void SelectCertificateCommand::setOnlySigningCertificatesAllowed(bool allow)
+{
+    if (allow) {
+        setOption("sign-only", true);
+    } else {
+        unsetOption("sign-only");
+    }
 }
 
-bool SelectCertificateCommand::onlySigningCertificatesAllowed() const {
-    return isOptionSet( "sign-only" );
+bool SelectCertificateCommand::onlySigningCertificatesAllowed() const
+{
+    return isOptionSet("sign-only");
 }
 
-
-void SelectCertificateCommand::setOnlyEncryptionCertificatesAllowed( bool allow ) {
-    if ( allow )
-        setOption( "encrypt-only", true );
-    else
-        unsetOption( "encrypt-only" );
+void SelectCertificateCommand::setOnlyEncryptionCertificatesAllowed(bool allow)
+{
+    if (allow) {
+        setOption("encrypt-only", true);
+    } else {
+        unsetOption("encrypt-only");
+    }
 }
 
-bool SelectCertificateCommand::onlyEncryptionCertificatesAllowed() const {
-    return isOptionSet( "encrypt-only" );
+bool SelectCertificateCommand::onlyEncryptionCertificatesAllowed() const
+{
+    return isOptionSet("encrypt-only");
 }
 
-
-void SelectCertificateCommand::setOnlyOpenPGPCertificatesAllowed( bool allow ) {
-    if ( allow )
-        setOption( "openpgp-only", true );
-    else
-        unsetOption( "openpgp-only" );
+void SelectCertificateCommand::setOnlyOpenPGPCertificatesAllowed(bool allow)
+{
+    if (allow) {
+        setOption("openpgp-only", true);
+    } else {
+        unsetOption("openpgp-only");
+    }
 }
 
-bool SelectCertificateCommand::onlyOpenPGPCertificatesAllowed() const {
-    return isOptionSet( "openpgp-only" );
+bool SelectCertificateCommand::onlyOpenPGPCertificatesAllowed() const
+{
+    return isOptionSet("openpgp-only");
 }
 
-
-void SelectCertificateCommand::setOnlyX509CertificatesAllowed( bool allow ) {
-    if ( allow )
-        setOption( "x509-only", true );
-    else
-        unsetOption( "x509-only" );
+void SelectCertificateCommand::setOnlyX509CertificatesAllowed(bool allow)
+{
+    if (allow) {
+        setOption("x509-only", true);
+    } else {
+        unsetOption("x509-only");
+    }
 }
 
-bool SelectCertificateCommand::onlyX509CertificatesAllowed() const {
-    return isOptionSet( "x509-only" );
+bool SelectCertificateCommand::onlyX509CertificatesAllowed() const
+{
+    return isOptionSet("x509-only");
 }
 
-
-void SelectCertificateCommand::setOnlySecretKeysAllowed( bool allow ) {
-    if ( allow )
-        setOption( "secret-only", true );
-    else
-        unsetOption( "secret-only" );
+void SelectCertificateCommand::setOnlySecretKeysAllowed(bool allow)
+{
+    if (allow) {
+        setOption("secret-only", true);
+    } else {
+        unsetOption("secret-only");
+    }
 }
 
-bool SelectCertificateCommand::onlySecretKeysAllowed() const {
-    return isOptionSet( "secret-only" );
+bool SelectCertificateCommand::onlySecretKeysAllowed() const
+{
+    return isOptionSet("secret-only");
 }
 
-void SelectCertificateCommand::setSelectedCertificates( const QStringList & certs ) {
+void SelectCertificateCommand::setSelectedCertificates(const QStringList &certs)
+{
     QByteArray data;
-    Q_FOREACH( const QString & s, certs )
-        if ( s.isEmpty() )
-            qWarning( "SelectCertificateCommand::setSelectedCertificates: empty certificate!" );
-        else
+    Q_FOREACH (const QString &s, certs)
+        if (s.isEmpty()) {
+            qWarning("SelectCertificateCommand::setSelectedCertificates: empty certificate!");
+        } else {
             data += s.toUtf8() += '\n';
-    setInquireData( "SELECTED_CERTIFICATES", data );
+        }
+    setInquireData("SELECTED_CERTIFICATES", data);
 }
 
-QStringList SelectCertificateCommand::selectedCertificates() const {
+QStringList SelectCertificateCommand::selectedCertificates() const
+{
     const QByteArray data = receivedData();
-    return QString::fromLatin1( data.data(), data.size() ).split( QLatin1Char( '\n' ), QString::SkipEmptyParts );
+    return QString::fromLatin1(data.data(), data.size()).split(QLatin1Char('\n'), QString::SkipEmptyParts);
 }
 
-void SelectCertificateCommand::setSelectedCertificate( const QString & cert ) {
-    setSelectedCertificates( QStringList( cert ) );
+void SelectCertificateCommand::setSelectedCertificate(const QString &cert)
+{
+    setSelectedCertificates(QStringList(cert));
 }
 
-QString SelectCertificateCommand::selectedCertificate() const {
+QString SelectCertificateCommand::selectedCertificate() const
+{
     const QStringList sl = selectedCertificates();
     return sl.empty() ? QString() : sl.front() ;
 }

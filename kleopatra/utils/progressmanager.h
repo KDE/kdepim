@@ -33,20 +33,24 @@
 #ifndef __KLEOPATRA_UTILS_PROGRESSMANAGER_H_
 #define __KLEOPATRA_UTILS_PROGRESSMANAGER_H_
 
-namespace KPIM {
-    class ProgressItem;
+namespace KPIM
+{
+class ProgressItem;
 }
 
-namespace Kleo {
-    class Job;
+namespace Kleo
+{
+class Job;
 }
 
 class QString;
 
-namespace Kleo {
-namespace ProgressManager {
+namespace Kleo
+{
+namespace ProgressManager
+{
 
-    KPIM::ProgressItem * createForJob( Kleo::Job * job, const QString & label );
+KPIM::ProgressItem *createForJob(Kleo::Job *job, const QString &label);
 
 } // namespace ProgressManager
 } // namespace Kleo

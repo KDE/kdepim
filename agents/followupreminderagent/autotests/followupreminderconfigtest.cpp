@@ -42,7 +42,7 @@ void FollowUpReminderConfigTest::init()
 void FollowUpReminderConfigTest::cleanup()
 {
     const QStringList filterGroups = mConfig->groupList();
-    foreach(const QString & group, filterGroups) {
+    foreach (const QString &group, filterGroups) {
         mConfig->deleteGroup(group);
     }
     mConfig->sync();

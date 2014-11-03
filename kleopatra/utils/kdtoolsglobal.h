@@ -32,11 +32,11 @@
 #else
 # define KDAB_IMPLEMENT_SAFE_BOOL_OPERATOR( func )                      \
     private: struct __safe_bool_dummy__ { void nonnull(); };            \
-        typedef void ( __safe_bool_dummy__::*unspecified_bool_type )(); \
+    typedef void ( __safe_bool_dummy__::*unspecified_bool_type )(); \
     public:                                                             \
-        operator unspecified_bool_type() const {                        \
-            return ( func ) ? &__safe_bool_dummy__::nonnull : 0 ;       \
-        }
+    operator unspecified_bool_type() const {                        \
+        return ( func ) ? &__safe_bool_dummy__::nonnull : 0 ;       \
+    }
 #endif
 
 #define KDTOOLS_MAKE_RELATION_OPERATORS( Class, linkage )             \
@@ -54,12 +54,14 @@
     }
 
 template <typename T>
-inline T & __kdtools__dereference_for_methodcall( T & o ) {
+inline T &__kdtools__dereference_for_methodcall(T &o)
+{
     return o;
 }
 
 template <typename T>
-inline T & __kdtools__dereference_for_methodcall( T * o ) {
+inline T &__kdtools__dereference_for_methodcall(T *o)
+{
     return *o;
 }
 

@@ -42,30 +42,33 @@
 
 using namespace Kleo;
 
-AuditLog AuditLog::fromJob( const Job * job ) {
-    if ( job )
-        return AuditLog( job->auditLogAsHtml(), job->auditLogError() );
-    else
+AuditLog AuditLog::fromJob(const Job *job)
+{
+    if (job) {
+        return AuditLog(job->auditLogAsHtml(), job->auditLogError());
+    } else {
         return AuditLog();
+    }
 }
 
-QString AuditLog::formatLink( const QUrl & urlTemplate ) const {
+QString AuditLog::formatLink(const QUrl &urlTemplate) const
+{
     // more or less the same as
     // kmail/objecttreeparser.cpp:makeShowAuditLogLink(), so any bug
     // fixed here eqally applies there:
-    if ( const unsigned int code = m_error.code() ) {
-        if ( code == GPG_ERR_NOT_IMPLEMENTED ) {
+    if (const unsigned int code = m_error.code()) {
+        if (code == GPG_ERR_NOT_IMPLEMENTED) {
             qDebug() << "not showing link (not implemented)";
             return QString();
-        } else if ( code == GPG_ERR_NO_DATA ) {
+        } else if (code == GPG_ERR_NO_DATA) {
             qDebug() << "not showing link (not available)";
             return i18n("No Audit Log available");
         } else {
-            return i18n("Error Retrieving Audit Log: %1", QString::fromLocal8Bit( m_error.asString() ) );
+            return i18n("Error Retrieving Audit Log: %1", QString::fromLocal8Bit(m_error.asString()));
         }
     }
 
-    if ( !m_text.isEmpty() ) {
+    if (!m_text.isEmpty()) {
         QUrl url = urlTemplate;
         QUrlQuery urlQuery(url);
         urlQuery.addQueryItem(QLatin1String("log"), m_text);

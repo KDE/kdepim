@@ -41,40 +41,43 @@
 
 class QStringList;
 
-namespace Kleo {
-namespace Commands {
+namespace Kleo
+{
+namespace Commands
+{
 
-    class SignEncryptFilesCommand : public Command {
-        Q_OBJECT
-    public:
-        explicit SignEncryptFilesCommand( QAbstractItemView * view, KeyListController * parent );
-        explicit SignEncryptFilesCommand( KeyListController * parent );
-        explicit SignEncryptFilesCommand( const QStringList & files, QAbstractItemView * view, KeyListController * parent );
-        explicit SignEncryptFilesCommand( const QStringList & files, KeyListController * parent );
-        ~SignEncryptFilesCommand();
+class SignEncryptFilesCommand : public Command
+{
+    Q_OBJECT
+public:
+    explicit SignEncryptFilesCommand(QAbstractItemView *view, KeyListController *parent);
+    explicit SignEncryptFilesCommand(KeyListController *parent);
+    explicit SignEncryptFilesCommand(const QStringList &files, QAbstractItemView *view, KeyListController *parent);
+    explicit SignEncryptFilesCommand(const QStringList &files, KeyListController *parent);
+    ~SignEncryptFilesCommand();
 
-        void setFiles( const QStringList & files );
+    void setFiles(const QStringList &files);
 
-        void setSigningPolicy( Policy policy );
-        Policy signingPolicy() const;
+    void setSigningPolicy(Policy policy);
+    Policy signingPolicy() const;
 
-        void setEncryptionPolicy( Policy force );
-        Policy encryptionPolicy() const;
+    void setEncryptionPolicy(Policy force);
+    Policy encryptionPolicy() const;
 
-        void setProtocol( GpgME::Protocol protocol );
-        GpgME::Protocol protocol() const;
+    void setProtocol(GpgME::Protocol protocol);
+    GpgME::Protocol protocol() const;
 
-    private:
-        /* reimp */ void doStart();
-        /* reimp */ void doCancel();
+private:
+    /* reimp */ void doStart();
+    /* reimp */ void doCancel();
 
-    private:
-        class Private;
-        inline Private * d_func();
-        inline const Private * d_func() const;
-        Q_PRIVATE_SLOT( d_func(), void slotControllerDone() )
-        Q_PRIVATE_SLOT( d_func(), void slotControllerError(int,QString) )
-    };
+private:
+    class Private;
+    inline Private *d_func();
+    inline const Private *d_func() const;
+    Q_PRIVATE_SLOT(d_func(), void slotControllerDone())
+    Q_PRIVATE_SLOT(d_func(), void slotControllerError(int, QString))
+};
 
 }
 }

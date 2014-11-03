@@ -35,12 +35,14 @@
 
 #include <k4aboutdata.h>
 
-class AboutData : public K4AboutData {
+class AboutData : public K4AboutData
+{
 public:
-  AboutData();
+    AboutData();
 };
 
-class AboutGpg4WinData : public K4AboutData {
+class AboutGpg4WinData : public K4AboutData
+{
 public:
     AboutGpg4WinData();
 };

@@ -31,72 +31,74 @@ class QString;
 class QByteArray;
 class QVariant;
 
-namespace KleopatraClientCopy {
+namespace KleopatraClientCopy
+{
 
-    class KLEOPATRACLIENTCORE_EXPORT Command : public QObject {
-        Q_OBJECT
-    public:
-        explicit Command( QObject * parent=0 );
-        ~Command();
+class KLEOPATRACLIENTCORE_EXPORT Command : public QObject
+{
+    Q_OBJECT
+public:
+    explicit Command(QObject *parent = 0);
+    ~Command();
 
-        void setParentWId( WId wid );
-        WId parentWId() const;
+    void setParentWId(WId wid);
+    WId parentWId() const;
 
-        void setServerLocation( const QString & location );
-        QString serverLocation() const;
+    void setServerLocation(const QString &location);
+    QString serverLocation() const;
 
-        bool waitForFinished();
-        bool waitForFinished( unsigned long ms );
+    bool waitForFinished();
+    bool waitForFinished(unsigned long ms);
 
-        bool error() const;
-        bool wasCanceled() const;
-        QString errorString() const;
+    bool error() const;
+    bool wasCanceled() const;
+    QString errorString() const;
 
-        qint64 serverPid() const;
+    qint64 serverPid() const;
 
-    public Q_SLOTS:
-        void start();
-        void cancel();
+public Q_SLOTS:
+    void start();
+    void cancel();
 
-    Q_SIGNALS:
-        void started();
-        void finished();
+Q_SIGNALS:
+    void started();
+    void finished();
 
-    protected:
-        void setOptionValue( const char * name, const QVariant & value, bool critical=true );
-        void setOption( const char * name, bool critical=true );
-        void unsetOption( const char * name );
+protected:
+    void setOptionValue(const char *name, const QVariant &value, bool critical = true);
+    void setOption(const char *name, bool critical = true);
+    void unsetOption(const char *name);
 
-        QVariant optionValue( const char * name ) const;
-        bool isOptionSet( const char * name ) const;
-        bool isOptionCritical( const char * name ) const;
+    QVariant optionValue(const char *name) const;
+    bool isOptionSet(const char *name) const;
+    bool isOptionCritical(const char *name) const;
 
-        void setFilePaths( const QStringList & filePaths );
-        QStringList filePaths() const;
+    void setFilePaths(const QStringList &filePaths);
+    QStringList filePaths() const;
 
-        void setRecipients( const QStringList & recipients, bool informative );
-        QStringList recipients() const;
-        bool areRecipientsInformative() const;
+    void setRecipients(const QStringList &recipients, bool informative);
+    QStringList recipients() const;
+    bool areRecipientsInformative() const;
 
-        void setSenders( const QStringList & senders, bool informative );
-        QStringList senders() const;
-        bool areSendersInformative() const;
+    void setSenders(const QStringList &senders, bool informative);
+    QStringList senders() const;
+    bool areSendersInformative() const;
 
-        void setInquireData( const char * what, const QByteArray & data );
-        void unsetInquireData( const char * what );
-        QByteArray inquireData( const char * what ) const;
-        bool isInquireDataSet( const char * what ) const;
+    void setInquireData(const char *what, const QByteArray &data);
+    void unsetInquireData(const char *what);
+    QByteArray inquireData(const char *what) const;
+    bool isInquireDataSet(const char *what) const;
 
-        QByteArray receivedData() const;
+    QByteArray receivedData() const;
 
-        void setCommand( const char * command );
-        QByteArray command() const;
+    void setCommand(const char *command);
+    QByteArray command() const;
 
-    protected:
-        class Private;
-        Private * d;
-        Command( Private * p, QObject * parent );
-    };
+protected:
+    class Private;
+    Private *d;
+    Command(Private *p, QObject *parent);
+};
 
 }
 

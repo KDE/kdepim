@@ -39,30 +39,32 @@
 #include <KLocalizedString>
 #include <kiconloader.h>
 
-
-KWatchGnuPGTray::KWatchGnuPGTray( KWatchGnuPGMainWindow* mainwin )
-  : KSystemTrayIcon( mainwin )
+KWatchGnuPGTray::KWatchGnuPGTray(KWatchGnuPGMainWindow *mainwin)
+    : KSystemTrayIcon(mainwin)
 {
-  qDebug() <<"KWatchGnuPGTray::KWatchGnuPGTray";
+    qDebug() << "KWatchGnuPGTray::KWatchGnuPGTray";
 
-  setObjectName( QLatin1String("KWatchGnuPG Tray Window") );
-  KIconLoader::global()->addAppDir( QLatin1String("kwatchgnupg") );
-  KIconLoader::global()->addAppDir( QLatin1String("kdepim") );
+    setObjectName(QLatin1String("KWatchGnuPG Tray Window"));
+    KIconLoader::global()->addAppDir(QLatin1String("kwatchgnupg"));
+    KIconLoader::global()->addAppDir(QLatin1String("kdepim"));
 
-  mNormalPix = loadIcon(QLatin1String("kwatchgnupg"));
-  mAttentionPix = loadIcon(QLatin1String("kwatchgnupg2"));
+    mNormalPix = loadIcon(QLatin1String("kwatchgnupg"));
+    mAttentionPix = loadIcon(QLatin1String("kwatchgnupg2"));
 
-  setIcon( mNormalPix );
-  this->setToolTip( i18n("KWatchGnuPG Log Viewer") );
+    setIcon(mNormalPix);
+    this->setToolTip(i18n("KWatchGnuPG Log Viewer"));
 }
 
 KWatchGnuPGTray::~KWatchGnuPGTray()
 {
 }
 
-void KWatchGnuPGTray::setAttention( bool att )
+void KWatchGnuPGTray::setAttention(bool att)
 {
-  if( att ) setIcon( mAttentionPix );
-  else setIcon( mNormalPix );
+    if (att) {
+        setIcon(mAttentionPix);
+    } else {
+        setIcon(mNormalPix);
+    }
 }
 

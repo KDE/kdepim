@@ -36,33 +36,36 @@
 #include "keycache.h"
 #include <utils/pimpl_ptr.h>
 
-namespace GpgME {
-    class KeyListResult;
+namespace GpgME
+{
+class KeyListResult;
 }
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class KeyCache::RefreshKeysJob : public QObject {
-        Q_OBJECT
-    public:
+class KeyCache::RefreshKeysJob : public QObject
+{
+    Q_OBJECT
+public:
 
-        explicit RefreshKeysJob( KeyCache* cache, QObject* parent = 0 );
-        ~RefreshKeysJob();
+    explicit RefreshKeysJob(KeyCache *cache, QObject *parent = 0);
+    ~RefreshKeysJob();
 
-        void start();
-        void cancel();
+    void start();
+    void cancel();
 
-   Q_SIGNALS:
-        void done( const GpgME::KeyListResult & );
-        void canceled();
+Q_SIGNALS:
+    void done(const GpgME::KeyListResult &);
+    void canceled();
 
-    private:
-        class Private;
-        friend class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void listAllKeysJobDone(GpgME::KeyListResult, std::vector<GpgME::Key>) )
-        Q_PRIVATE_SLOT( d, void doStart() )
-    };
+private:
+    class Private;
+    friend class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void listAllKeysJobDone(GpgME::KeyListResult, std::vector<GpgME::Key>))
+    Q_PRIVATE_SLOT(d, void doStart())
+};
 }
 
 #endif // __KLEOPATRA_KEYCACHE_P_H__

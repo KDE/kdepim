@@ -29,7 +29,6 @@
     your version.
 */
 
-
 #include "libkleo/kleo/cryptobackendfactory.h"
 #include "libkleo/kleo/signjob.h"
 #include "libkleo/kleo/keylistjob.h"
@@ -42,71 +41,69 @@
 #include <assert.h>
 #include <KAboutData>
 
-
-
 #include <memory>
 #include <QApplication>
 #include <KLocalizedString>
 #include <QCommandLineParser>
 
-static const char * protocol = 0;
+static const char *protocol = 0;
 
 static void testSign()
 {
-  const Kleo::CryptoBackend::Protocol * proto = !strcmp( protocol, "openpgp" ) ? Kleo::CryptoBackendFactory::instance()->openpgp() : Kleo::CryptoBackendFactory::instance()->smime() ;
-  assert( proto );
+    const Kleo::CryptoBackend::Protocol *proto = !strcmp(protocol, "openpgp") ? Kleo::CryptoBackendFactory::instance()->openpgp() : Kleo::CryptoBackendFactory::instance()->smime() ;
+    assert(proto);
 
-  qDebug() <<"Using protocol" << proto->name();
+    qDebug() << "Using protocol" << proto->name();
 
+    std::vector<GpgME::Key> signingKeys;
 
-  std::vector<GpgME::Key> signingKeys;
+    std::auto_ptr<Kleo::KeyListJob> listJob(proto->keyListJob(false, false, true));     // use validating keylisting
+    if (listJob.get()) {
+        // ##### Adjust this to your own identity
+        listJob->exec(QStringList("kloecker@kde.org"), true /*secret*/, signingKeys);
+        assert(!signingKeys.empty());
+    } else {
+        assert(0);   // job failed
+    }
 
-  std::auto_ptr<Kleo::KeyListJob> listJob( proto->keyListJob( false, false, true ) ); // use validating keylisting
-  if ( listJob.get() ) {
-      // ##### Adjust this to your own identity
-      listJob->exec( QStringList( "kloecker@kde.org" ), true /*secret*/, signingKeys );
-      assert( !signingKeys.empty() );
-  } else {
-      assert( 0 ); // job failed
-  }
+    Kleo::SignJob *job = proto->signJob(true, true);
 
-  Kleo::SignJob* job = proto->signJob( true, true );
+    QByteArray plainText = "Hallo Leute\n"; // like gpgme's t-sign.c
+    qDebug() << "plainText=" << plainText;
 
-  QByteArray plainText = "Hallo Leute\n"; // like gpgme's t-sign.c
-  qDebug() <<"plainText=" << plainText;
+    qDebug() << " signing with" << signingKeys[0].primaryFingerprint();
 
-  qDebug() <<" signing with" << signingKeys[0].primaryFingerprint();
-
-  QByteArray signature;
-  const GpgME::SigningResult res =
-    job->exec( signingKeys, plainText, GpgME::Clearsigned, signature );
-  if ( res.error().isCanceled() ) {
-    qDebug() <<"signing was canceled by user";
-    return;
-  }
-  if ( res.error() ) {
-    qDebug() <<"signing failed:" << res.error().asString();
-    return;
-  }
-  qDebug() <<"signing resulted in signature="
-            << signature;
+    QByteArray signature;
+    const GpgME::SigningResult res =
+        job->exec(signingKeys, plainText, GpgME::Clearsigned, signature);
+    if (res.error().isCanceled()) {
+        qDebug() << "signing was canceled by user";
+        return;
+    }
+    if (res.error()) {
+        qDebug() << "signing failed:" << res.error().asString();
+        return;
+    }
+    qDebug() << "signing resulted in signature="
+             << signature;
 }
 
-int main( int argc, char** argv ) {
-  protocol = "openpgp";
-  if ( argc == 2 ) {
-    protocol = argv[1];
-    argc = 1; // hide from KDE
-  }
-  KAboutData aboutData( QLatin1String("test_jobs"), i18n("Signing Job Test"), QLatin1String("0.1") );
-  QApplication app(argc, argv);
-  QCommandLineParser parser;
-  KAboutData::setApplicationData(aboutData);
-  parser.addVersionOption();
-  parser.addHelpOption();
-  aboutData.setupCommandLine(&parser);
-  parser.process(app);
-  aboutData.processCommandLine(&parser);
+int main(int argc, char **argv)
+{
+    protocol = "openpgp";
+    if (argc == 2) {
+        protocol = argv[1];
+        argc = 1; // hide from KDE
+    }
+    KAboutData aboutData(QLatin1String("test_jobs"), i18n("Signing Job Test"), QLatin1String("0.1"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-  testSign();
+    testSign();
 }

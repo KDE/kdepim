@@ -44,42 +44,44 @@
 class QByteArray;
 class QIODevice;
 
-namespace GpgME {
-  class Error;
-  class Key;
-  class SigningResult;
+namespace GpgME
+{
+class Error;
+class Key;
+class SigningResult;
 }
 
+namespace Kleo
+{
 
-namespace Kleo {
+/**
+   @short An abstract base class for asynchronous signing
 
-  /**
-     @short An abstract base class for asynchronous signing
+   To use a SignJob, first obtain an instance from the CryptoBackend
+   implementation, connect the progress() and result() signals to
+   suitable slots and then start the signing with a call to
+   start(). This call might fail, in which case the SignJob instance
+   will have scheduled it's own destruction with a call to
+   QObject::deleteLater().
 
-     To use a SignJob, first obtain an instance from the CryptoBackend
-     implementation, connect the progress() and result() signals to
-     suitable slots and then start the signing with a call to
-     start(). This call might fail, in which case the SignJob instance
-     will have scheduled it's own destruction with a call to
-     QObject::deleteLater().
-
-     After result() is emitted, the SignJob will schedule it's own
-     destruction by calling QObject::deleteLater().
-  */
-  class KLEO_EXPORT SignJob : public Job {
+   After result() is emitted, the SignJob will schedule it's own
+   destruction by calling QObject::deleteLater().
+*/
+class KLEO_EXPORT SignJob : public Job
+{
     Q_OBJECT
-  protected:
-    explicit SignJob( QObject * parent );
-  public:
+protected:
+    explicit SignJob(QObject *parent);
+public:
     ~SignJob();
 
     /**
        Starts the signing operation. \a signers is the list of keys to
        sign \a plainText with. Empty (null) keys are ignored.
     */
-    virtual KLEO_DEPRECATED_EXPORT GpgME::Error start( const std::vector<GpgME::Key> & signers,
-                                               const QByteArray & plainText,
-                                               GpgME::SignatureMode mode ) = 0;
+    virtual KLEO_DEPRECATED_EXPORT GpgME::Error start(const std::vector<GpgME::Key> &signers,
+            const QByteArray &plainText,
+            GpgME::SignatureMode mode) = 0;
 
     /*!
       \overload
@@ -90,25 +92,25 @@ namespace Kleo {
 
       \throws GpgME::Exception if starting fails
     */
-    virtual void start( const std::vector<GpgME::Key> & signers,
-                        const boost::shared_ptr<QIODevice> & plainText,
-                        const boost::shared_ptr<QIODevice> & signature,
-                        GpgME::SignatureMode mode ) = 0;
+    virtual void start(const std::vector<GpgME::Key> &signers,
+                       const boost::shared_ptr<QIODevice> &plainText,
+                       const boost::shared_ptr<QIODevice> &signature,
+                       GpgME::SignatureMode mode) = 0;
 
-    virtual GpgME::SigningResult exec( const std::vector<GpgME::Key> & signers,
-                                       const QByteArray & plainText,
-                                       GpgME::SignatureMode mode,
-                                       QByteArray & signature ) = 0;
+    virtual GpgME::SigningResult exec(const std::vector<GpgME::Key> &signers,
+                                      const QByteArray &plainText,
+                                      GpgME::SignatureMode mode,
+                                      QByteArray &signature) = 0;
 
     /*!
       This is a hack to request BASE64 output (instead of whatever
       comes out normally).
     */
-    virtual void setOutputIsBase64Encoded( bool ) = 0;
+    virtual void setOutputIsBase64Encoded(bool) = 0;
 
-  Q_SIGNALS:
-    void result( const GpgME::SigningResult & result, const QByteArray & signature, const QString & auditLogAsHtml=QString(), const GpgME::Error & auditLogError=GpgME::Error() );
-  };
+Q_SIGNALS:
+    void result(const GpgME::SigningResult &result, const QByteArray &signature, const QString &auditLogAsHtml = QString(), const GpgME::Error &auditLogError = GpgME::Error());
+};
 
 }
 

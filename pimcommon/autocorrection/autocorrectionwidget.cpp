@@ -380,7 +380,7 @@ void AutoCorrectionWidget::removeAutocorrectEntry()
     if (listItems.isEmpty()) {
         return;
     }
-    Q_FOREACH(QTreeWidgetItem * item, listItems) {
+    Q_FOREACH (QTreeWidgetItem *item, listItems) {
         QTreeWidgetItem *below = ui->treeWidget->itemBelow(item);
 
         QString findStr;
@@ -478,7 +478,7 @@ void AutoCorrectionWidget::removeAbbreviationEntry()
     if (listItem.isEmpty()) {
         return;
     }
-    Q_FOREACH(QListWidgetItem * item, listItem) {
+    Q_FOREACH (QListWidgetItem *item, listItem) {
         m_upperCaseExceptions.remove(item->text());
         delete item;
     }
@@ -508,7 +508,7 @@ void AutoCorrectionWidget::removeTwoUpperLetterEntry()
     if (listItem.isEmpty()) {
         return;
     }
-    Q_FOREACH(QListWidgetItem * item, listItem) {
+    Q_FOREACH (QListWidgetItem *item, listItem) {
         m_twoUpperLetterExceptions.remove(item->text());
         delete item;
     }

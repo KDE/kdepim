@@ -61,8 +61,9 @@
 # include <uiserver/createchecksumscommand.h>
 # include <uiserver/verifychecksumscommand.h>
 #else
-namespace Kleo {
-    class UiServer;
+namespace Kleo
+{
+class UiServer;
 }
 #endif
 
@@ -97,41 +98,46 @@ using namespace boost;
 
 static const int SPLASHSCREEN_TIMEOUT = 5000; // 5s
 
-namespace {
-    template <typename T>
-    boost::shared_ptr<T> make_shared_ptr( T * t ) {
-        return t ? boost::shared_ptr<T>( t ) : boost::shared_ptr<T>() ;
-    }
+namespace
+{
+template <typename T>
+boost::shared_ptr<T> make_shared_ptr(T *t)
+{
+    return t ? boost::shared_ptr<T>(t) : boost::shared_ptr<T>() ;
+}
 }
 
-static QPixmap UserIcon_nocached( const char * name ) {
+static QPixmap UserIcon_nocached(const char *name)
+{
     // KIconLoader insists on caching all pixmaps. Since the splash
     // screen is a particularly large 'icon' and used only once,
     // caching is unneccesary and just hurts startup performance.
-    KIconLoader * const il = KIconLoader::global();
-    assert( il );
-    const QString iconPath = il->iconPath( QLatin1String( name ), KIconLoader::User );
-    return iconPath.isEmpty() ? il->unknown() : QPixmap( iconPath ) ;
+    KIconLoader *const il = KIconLoader::global();
+    assert(il);
+    const QString iconPath = il->iconPath(QLatin1String(name), KIconLoader::User);
+    return iconPath.isEmpty() ? il->unknown() : QPixmap(iconPath) ;
 }
 
 #ifndef QT_NO_SPLASHSCREEN
-class SplashScreen : public QSplashScreen {
+class SplashScreen : public QSplashScreen
+{
     QBasicTimer m_timer;
 public:
     SplashScreen()
-        : QSplashScreen( UserIcon_nocached( "kleopatra_splashscreen" ), Qt::WindowStaysOnTopHint ),
+        : QSplashScreen(UserIcon_nocached("kleopatra_splashscreen"), Qt::WindowStaysOnTopHint),
           m_timer()
     {
-        m_timer.start( SPLASHSCREEN_TIMEOUT, this );
+        m_timer.start(SPLASHSCREEN_TIMEOUT, this);
     }
 
 protected:
-    void timerEvent( QTimerEvent * ev ) {
-        if ( ev->timerId() == m_timer.timerId() ) {
+    void timerEvent(QTimerEvent *ev)
+    {
+        if (ev->timerId() == m_timer.timerId()) {
             m_timer.stop();
             hide();
         } else {
-            QSplashScreen::timerEvent( ev );
+            QSplashScreen::timerEvent(ev);
         }
     }
 
@@ -140,59 +146,61 @@ protected:
 class SplashScreen {};
 #endif // QT_NO_SPLASHSCREEN
 
-static bool selfCheck( SplashScreen & splash ) {
+static bool selfCheck(SplashScreen &splash)
+{
 #ifndef QT_NO_SPLASHSCREEN
-    splash.showMessage( i18n("Performing Self-Check...") );
+    splash.showMessage(i18n("Performing Self-Check..."));
 #endif
-    Kleo::Commands::SelfTestCommand cmd( 0 );
-    cmd.setAutoDelete( false );
-    cmd.setAutomaticMode( true );
+    Kleo::Commands::SelfTestCommand cmd(0);
+    cmd.setAutoDelete(false);
+    cmd.setAutomaticMode(true);
 #ifndef QT_NO_SPLASHSCREEN
-    cmd.setSplashScreen( &splash );
+    cmd.setSplashScreen(&splash);
 #endif
     QEventLoop loop;
     QObject::connect(&cmd, &Kleo::Commands::SelfTestCommand::finished, &loop, &QEventLoop::quit);
 #ifndef QT_NO_SPLASHSCREEN
-    QObject::connect( &cmd, SIGNAL(info(QString)), &splash, SLOT(showMessage(QString)) );
+    QObject::connect(&cmd, SIGNAL(info(QString)), &splash, SLOT(showMessage(QString)));
 #endif
-    QTimer::singleShot( 0, &cmd, SLOT(start()) ); // start() may emit finished()...
+    QTimer::singleShot(0, &cmd, SLOT(start()));   // start() may emit finished()...
     loop.exec();
-    if ( cmd.isCanceled() ) {
+    if (cmd.isCanceled()) {
 #ifndef QT_NO_SPLASHSCREEN
-        splash.showMessage( i18nc("did not pass", "Self-Check Failed") );
+        splash.showMessage(i18nc("did not pass", "Self-Check Failed"));
 #endif
         return false;
     } else {
 #ifndef QT_NO_SPLASHSCREEN
-        splash.showMessage( i18n("Self-Check Passed") );
+        splash.showMessage(i18n("Self-Check Passed"));
 #endif
         return true;
     }
 }
 
-static void fillKeyCache( SplashScreen * splash, Kleo::UiServer * server ) {
+static void fillKeyCache(SplashScreen *splash, Kleo::UiServer *server)
+{
 
-  QEventLoop loop;
-  Kleo::ReloadKeysCommand * cmd = new Kleo::ReloadKeysCommand( 0 );
-  QObject::connect(cmd, &Kleo::Commands::SelfTestCommand::finished, &loop, &QEventLoop::quit);
+    QEventLoop loop;
+    Kleo::ReloadKeysCommand *cmd = new Kleo::ReloadKeysCommand(0);
+    QObject::connect(cmd, &Kleo::Commands::SelfTestCommand::finished, &loop, &QEventLoop::quit);
 #ifdef HAVE_USABLE_ASSUAN
-  QObject::connect( cmd, SIGNAL(finished()), server, SLOT(enableCryptoCommands()) );
+    QObject::connect(cmd, SIGNAL(finished()), server, SLOT(enableCryptoCommands()));
 #else
-  Q_UNUSED( server );
+    Q_UNUSED(server);
 #endif
 #ifndef QT_NO_SPLASHSCREEN
-  splash->showMessage( i18n("Loading certificate cache...") );
+    splash->showMessage(i18n("Loading certificate cache..."));
 #else
-  Q_UNUSED( splash );
+    Q_UNUSED(splash);
 #endif
-  cmd->start();
-  loop.exec();
+    cmd->start();
+    loop.exec();
 #ifndef QT_NO_SPLASHSCREEN
-  splash->showMessage( i18n("Certificate cache loaded.") );
+    splash->showMessage(i18n("Certificate cache loaded."));
 #endif
 }
 
-int main( int argc, char** argv )
+int main(int argc, char **argv)
 {
     KLocalizedString::setApplicationDomain("kleopatra");
 
@@ -201,146 +209,147 @@ int main( int argc, char** argv )
 
     const GpgME::Error gpgmeInitError = GpgME::initializeLibrary(0);
 
-  {
-      const unsigned int threads = QThreadPool::globalInstance()->maxThreadCount();
-      QThreadPool::globalInstance()->setMaxThreadCount( qMax( 2U, threads ) );
-  }
+    {
+        const unsigned int threads = QThreadPool::globalInstance()->maxThreadCount();
+        QThreadPool::globalInstance()->setMaxThreadCount(qMax(2U, threads));
+    }
 
-  AboutData aboutData;
+    AboutData aboutData;
 
-
-  KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::init(argc, argv, &aboutData);
 
 #ifdef KDEPIM_MOBILE_UI
-  KDeclarativeApplicationBase::preApplicationSetup( KleopatraApplication::commandLineOptions() );
+    KDeclarativeApplicationBase::preApplicationSetup(KleopatraApplication::commandLineOptions());
 #else
-  KCmdLineArgs::addCmdLineOptions( KleopatraApplication::commandLineOptions() );
+    KCmdLineArgs::addCmdLineOptions(KleopatraApplication::commandLineOptions());
 #endif
 
-  qDebug() << "Statup timing:" << timer.elapsed() << "ms elapsed: Command line args created";
+    qDebug() << "Statup timing:" << timer.elapsed() << "ms elapsed: Command line args created";
 
-  KleopatraApplication app;
+    KleopatraApplication app;
 #ifdef KDEPIM_MOBILE_UI
-  KDeclarativeApplicationBase::postApplicationSetup();
+    KDeclarativeApplicationBase::postApplicationSetup();
 #endif
 
-  qDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: Application created";
+    qDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: Application created";
 
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-  if ( gpgmeInitError ) {
-      KMessageBox::sorry( 0, xi18nc("@info",
-                                   "<para>The version of the <application>GpgME</application> library you are running against "
-                                   "is older than the one that the <application>GpgME++</application> library was built against.</para>"
-                                   "<para><application>Kleopatra</application> will not function in this setting.</para>"
-                                   "<para>Please ask your administrator for help in resolving this issue.</para>"),
-                          i18nc("@title", "GpgME Too Old") );
-      return EXIT_FAILURE;
-  }
+    if (gpgmeInitError) {
+        KMessageBox::sorry(0, xi18nc("@info",
+                                     "<para>The version of the <application>GpgME</application> library you are running against "
+                                     "is older than the one that the <application>GpgME++</application> library was built against.</para>"
+                                     "<para><application>Kleopatra</application> will not function in this setting.</para>"
+                                     "<para>Please ask your administrator for help in resolving this issue.</para>"),
+                           i18nc("@title", "GpgME Too Old"));
+        return EXIT_FAILURE;
+    }
 
-  SplashScreen splash;
+    SplashScreen splash;
 
-  const QString installPath = Kleo::gpg4winInstallPath();
-  Kleo::ChecksumDefinition::setInstallPath( installPath );
-  Kleo::ArchiveDefinition::setInstallPath( installPath );
+    const QString installPath = Kleo::gpg4winInstallPath();
+    Kleo::ChecksumDefinition::setInstallPath(installPath);
+    Kleo::ArchiveDefinition::setInstallPath(installPath);
 
-  int rc;
+    int rc;
 #ifdef HAVE_USABLE_ASSUAN
-  try {
-      Kleo::UiServer server( args->getOption("uiserver-socket") );
+    try {
+        Kleo::UiServer server(args->getOption("uiserver-socket"));
 
-      qDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: UiServer created";
+        qDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: UiServer created";
 
-      QObject::connect(&server, &Kleo::UiServer::startKeyManagerRequested, &app, &KleopatraApplication::openOrRaiseMainWindow);
+        QObject::connect(&server, &Kleo::UiServer::startKeyManagerRequested, &app, &KleopatraApplication::openOrRaiseMainWindow);
 
-      QObject::connect(&server, &Kleo::UiServer::startConfigDialogRequested, &app, &KleopatraApplication::openOrRaiseConfigDialog);
+        QObject::connect(&server, &Kleo::UiServer::startConfigDialogRequested, &app, &KleopatraApplication::openOrRaiseConfigDialog);
 
 #define REGISTER( Command ) server.registerCommandFactory( boost::shared_ptr<Kleo::AssuanCommandFactory>( new Kleo::GenericAssuanCommandFactory<Kleo::Command> ) )
-      REGISTER( CreateChecksumsCommand );
-      REGISTER( DecryptCommand );
-      REGISTER( DecryptFilesCommand );
-      REGISTER( DecryptVerifyFilesCommand );
-      REGISTER( EchoCommand );
-      REGISTER( EncryptCommand );
-      REGISTER( EncryptFilesCommand );
-      REGISTER( EncryptSignFilesCommand );
-      REGISTER( ImportFilesCommand );
-      REGISTER( PrepEncryptCommand );
-      REGISTER( PrepSignCommand );
-      REGISTER( SelectCertificateCommand );
-      REGISTER( SignCommand );
-      REGISTER( SignEncryptFilesCommand );
-      REGISTER( SignFilesCommand );
+        REGISTER(CreateChecksumsCommand);
+        REGISTER(DecryptCommand);
+        REGISTER(DecryptFilesCommand);
+        REGISTER(DecryptVerifyFilesCommand);
+        REGISTER(EchoCommand);
+        REGISTER(EncryptCommand);
+        REGISTER(EncryptFilesCommand);
+        REGISTER(EncryptSignFilesCommand);
+        REGISTER(ImportFilesCommand);
+        REGISTER(PrepEncryptCommand);
+        REGISTER(PrepSignCommand);
+        REGISTER(SelectCertificateCommand);
+        REGISTER(SignCommand);
+        REGISTER(SignEncryptFilesCommand);
+        REGISTER(SignFilesCommand);
 #ifndef QT_NO_DIRMODEL
-      REGISTER( VerifyChecksumsCommand );
+        REGISTER(VerifyChecksumsCommand);
 #endif // QT_NO_DIRMODEL
-      REGISTER( VerifyCommand );
-      REGISTER( VerifyFilesCommand );
+        REGISTER(VerifyCommand);
+        REGISTER(VerifyFilesCommand);
 #undef REGISTER
 
-      server.start();
-      qDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: UiServer started";
+        server.start();
+        qDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: UiServer started";
 #endif
 
-      const bool daemon = args->isSet("daemon");
-      if ( !daemon && app.isSessionRestored() ) {
-          app.restoreMainWindow();
-      }
+        const bool daemon = args->isSet("daemon");
+        if (!daemon && app.isSessionRestored()) {
+            app.restoreMainWindow();
+        }
 
 #ifndef QT_NO_SPLASHSCREEN
-      // Don't show splash screen if daemon or session restore
-      if ( !( daemon || app.isSessionRestored() ) )
-          splash.show();
+        // Don't show splash screen if daemon or session restore
+        if (!(daemon || app.isSessionRestored())) {
+            splash.show();
+        }
 #endif
-      if ( !selfCheck( splash ) )
-          return 1;
-      qDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: SelfCheck completed";
+        if (!selfCheck(splash)) {
+            return 1;
+        }
+        qDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: SelfCheck completed";
 
 #ifdef HAVE_USABLE_ASSUAN
-      fillKeyCache( &splash, &server );
+        fillKeyCache(&splash, &server);
 #else
-      fillKeyCache( &splash, 0 );
+        fillKeyCache(&splash, 0);
 #endif
-      qDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: KeyCache loaded";
+        qDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: KeyCache loaded";
 
 #ifndef QT_NO_SYSTEMTRAYICON
-      app.startMonitoringSmartCard();
+        app.startMonitoringSmartCard();
 #endif
 
-      app.setIgnoreNewInstance( false );
+        app.setIgnoreNewInstance(false);
 
-      if ( !daemon ) {
-          app.newInstance();
-          app.setFirstNewInstance( false );
-          qDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: new instance created";
+        if (!daemon) {
+            app.newInstance();
+            app.setFirstNewInstance(false);
+            qDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: new instance created";
 #ifndef QT_NO_SPLASHSCREEN
-          splash.finish( app.mainWindow() );
+            splash.finish(app.mainWindow());
 #endif // QT_NO_SPLASHSCREEN
-      }
+        }
 
-      rc = app.exec();
+        rc = app.exec();
 
 #ifdef HAVE_USABLE_ASSUAN
-      app.setIgnoreNewInstance( true );
-      QObject::disconnect(&server, &Kleo::UiServer::startKeyManagerRequested, &app, &KleopatraApplication::openOrRaiseMainWindow);
-      QObject::disconnect(&server, &Kleo::UiServer::startConfigDialogRequested, &app, &KleopatraApplication::openOrRaiseConfigDialog);
+        app.setIgnoreNewInstance(true);
+        QObject::disconnect(&server, &Kleo::UiServer::startKeyManagerRequested, &app, &KleopatraApplication::openOrRaiseMainWindow);
+        QObject::disconnect(&server, &Kleo::UiServer::startConfigDialogRequested, &app, &KleopatraApplication::openOrRaiseConfigDialog);
 
-      server.stop();
-      server.waitForStopped();
-  } catch ( const std::exception & e ) {
-      QMessageBox::information( 0, i18n("GPG UI Server Error"),
-                                i18n("<qt>The Kleopatra GPG UI Server Module could not be initialized.<br/>"
-                                     "The error given was: <b>%1</b><br/>"
-                                     "You can use Kleopatra as a certificate manager, but cryptographic plugins that "
-                                     "rely on a GPG UI Server being present might not work correctly, or at all.</qt>",
-                                     QString::fromUtf8( e.what() ).toHtmlEscaped() ));
+        server.stop();
+        server.waitForStopped();
+    } catch (const std::exception &e) {
+        QMessageBox::information(0, i18n("GPG UI Server Error"),
+                                 i18n("<qt>The Kleopatra GPG UI Server Module could not be initialized.<br/>"
+                                      "The error given was: <b>%1</b><br/>"
+                                      "You can use Kleopatra as a certificate manager, but cryptographic plugins that "
+                                      "rely on a GPG UI Server being present might not work correctly, or at all.</qt>",
+                                      QString::fromUtf8(e.what()).toHtmlEscaped()));
 #ifndef QT_NO_SYSTEMTRAYICON
-      app.startMonitoringSmartCard();
+        app.startMonitoringSmartCard();
 #endif
-      app.setIgnoreNewInstance( false );
-      rc = app.exec();
-      app.setIgnoreNewInstance( true );
-  }
+        app.setIgnoreNewInstance(false);
+        rc = app.exec();
+        app.setIgnoreNewInstance(true);
+    }
 #endif
 
     return rc;

@@ -34,45 +34,49 @@
 using namespace KleopatraClientCopy;
 using namespace KleopatraClientCopy::Gui;
 
-class CertificateRequester::Private {
+class CertificateRequester::Private
+{
     friend class ::KleopatraClientCopy::Gui::CertificateRequester;
-    CertificateRequester * const q;
+    CertificateRequester *const q;
 public:
-    explicit Private( CertificateRequester * qq )
-        : q( qq ),
+    explicit Private(CertificateRequester *qq)
+        : q(qq),
           selectedCertificates(),
           command(),
-          multipleCertificatesAllowed( false ),
-          onlySigningCertificatesAllowed( false ),
-          onlyEncryptionCertificatesAllowed( false ),
-          onlyOpenPGPCertificatesAllowed( false ),
-          onlyX509CertificatesAllowed( false ),
-          onlySecretKeysAllowed( false ),
-          ui( q )
+          multipleCertificatesAllowed(false),
+          onlySigningCertificatesAllowed(false),
+          onlyEncryptionCertificatesAllowed(false),
+          onlyOpenPGPCertificatesAllowed(false),
+          onlyX509CertificatesAllowed(false),
+          onlySecretKeysAllowed(false),
+          ui(q)
     {
 
     }
 
 private:
-    void updateLineEdit() {
-        ui.lineEdit.setText( selectedCertificates.join( QLatin1String( " " ) ) );
+    void updateLineEdit()
+    {
+        ui.lineEdit.setText(selectedCertificates.join(QLatin1String(" ")));
     }
-    void createCommand() {
-        std::auto_ptr<SelectCertificateCommand> cmd( new SelectCertificateCommand );
+    void createCommand()
+    {
+        std::auto_ptr<SelectCertificateCommand> cmd(new SelectCertificateCommand);
 
-        cmd->setMultipleCertificatesAllowed( multipleCertificatesAllowed );
-        cmd->setOnlySigningCertificatesAllowed( onlySigningCertificatesAllowed );
-        cmd->setOnlyEncryptionCertificatesAllowed( onlyEncryptionCertificatesAllowed );
-        cmd->setOnlyOpenPGPCertificatesAllowed( onlyOpenPGPCertificatesAllowed );
-        cmd->setOnlyX509CertificatesAllowed( onlyX509CertificatesAllowed );
-        cmd->setOnlySecretKeysAllowed( onlySecretKeysAllowed );
+        cmd->setMultipleCertificatesAllowed(multipleCertificatesAllowed);
+        cmd->setOnlySigningCertificatesAllowed(onlySigningCertificatesAllowed);
+        cmd->setOnlyEncryptionCertificatesAllowed(onlyEncryptionCertificatesAllowed);
+        cmd->setOnlyOpenPGPCertificatesAllowed(onlyOpenPGPCertificatesAllowed);
+        cmd->setOnlyX509CertificatesAllowed(onlyX509CertificatesAllowed);
+        cmd->setOnlySecretKeysAllowed(onlySecretKeysAllowed);
 
-        cmd->setSelectedCertificates( selectedCertificates );
+        cmd->setSelectedCertificates(selectedCertificates);
 
-        if ( const QWidget * const window = q->window() )
-            cmd->setParentWId( window->effectiveWinId() );
+        if (const QWidget *const window = q->window()) {
+            cmd->setParentWId(window->effectiveWinId());
+        }
 
-        connect( cmd.get(), SIGNAL(finished()), q, SLOT(slotCommandFinished()) );
+        connect(cmd.get(), SIGNAL(finished()), q, SLOT(slotCommandFinished()));
 
         command = cmd.release();
     }
@@ -97,145 +101,164 @@ private:
         QPushButton button;
         QHBoxLayout hlay;
 
-        explicit Ui( CertificateRequester * qq )
-            : lineEdit( qq ),
-              button( tr("Change..."), qq ),
-              hlay( qq )
+        explicit Ui(CertificateRequester *qq)
+            : lineEdit(qq),
+              button(tr("Change..."), qq),
+              hlay(qq)
         {
-            lineEdit.setObjectName( QLatin1String( "lineEdit" ) );
-            button.setObjectName( QLatin1String( "button" ) );
-            hlay.setObjectName( QLatin1String( "hlay" ) );
+            lineEdit.setObjectName(QLatin1String("lineEdit"));
+            button.setObjectName(QLatin1String("button"));
+            hlay.setObjectName(QLatin1String("hlay"));
 
-            hlay.addWidget( &lineEdit, 1 );
-            hlay.addWidget( &button );
+            hlay.addWidget(&lineEdit, 1);
+            hlay.addWidget(&button);
 
-            lineEdit.setReadOnly( true );
+            lineEdit.setReadOnly(true);
 
-            connect( &button, SIGNAL(clicked()),
-                     qq, SLOT(slotButtonClicked()) );
+            connect(&button, SIGNAL(clicked()),
+                    qq, SLOT(slotButtonClicked()));
         }
 
     } ui;
 };
 
-CertificateRequester::CertificateRequester( QWidget * p, Qt::WindowFlags f )
-    : QWidget( p, f ), d( new Private( this ) )
+CertificateRequester::CertificateRequester(QWidget *p, Qt::WindowFlags f)
+    : QWidget(p, f), d(new Private(this))
 {
 
 }
 
-CertificateRequester::~CertificateRequester() {
+CertificateRequester::~CertificateRequester()
+{
     delete d; d = 0;
 }
 
-
-
-void CertificateRequester::setMultipleCertificatesAllowed( bool allow ) {
-    if ( allow == d->multipleCertificatesAllowed )
+void CertificateRequester::setMultipleCertificatesAllowed(bool allow)
+{
+    if (allow == d->multipleCertificatesAllowed) {
         return;
+    }
     d->multipleCertificatesAllowed = allow;
 }
 
-bool CertificateRequester::multipleCertificatesAllowed() const {
+bool CertificateRequester::multipleCertificatesAllowed() const
+{
     return d->multipleCertificatesAllowed;
 }
 
-
-void CertificateRequester::setOnlySigningCertificatesAllowed( bool allow ) {
-    if ( allow == d->onlySigningCertificatesAllowed )
+void CertificateRequester::setOnlySigningCertificatesAllowed(bool allow)
+{
+    if (allow == d->onlySigningCertificatesAllowed) {
         return;
+    }
     d->onlySigningCertificatesAllowed = allow;
 }
 
-bool CertificateRequester::onlySigningCertificatesAllowed() const {
+bool CertificateRequester::onlySigningCertificatesAllowed() const
+{
     return d->onlySigningCertificatesAllowed;
 }
 
-
-void CertificateRequester::setOnlyEncryptionCertificatesAllowed( bool allow ) {
-    if ( allow == d->onlyEncryptionCertificatesAllowed )
+void CertificateRequester::setOnlyEncryptionCertificatesAllowed(bool allow)
+{
+    if (allow == d->onlyEncryptionCertificatesAllowed) {
         return;
+    }
     d->onlyEncryptionCertificatesAllowed = allow;
 }
 
-bool CertificateRequester::onlyEncryptionCertificatesAllowed() const {
+bool CertificateRequester::onlyEncryptionCertificatesAllowed() const
+{
     return d->onlyEncryptionCertificatesAllowed;
 }
 
-
-void CertificateRequester::setOnlyOpenPGPCertificatesAllowed( bool allow ) {
-    if ( allow == d->onlyOpenPGPCertificatesAllowed )
+void CertificateRequester::setOnlyOpenPGPCertificatesAllowed(bool allow)
+{
+    if (allow == d->onlyOpenPGPCertificatesAllowed) {
         return;
+    }
     d->onlyOpenPGPCertificatesAllowed = allow;
 }
 
-bool CertificateRequester::onlyOpenPGPCertificatesAllowed() const {
+bool CertificateRequester::onlyOpenPGPCertificatesAllowed() const
+{
     return d->onlyOpenPGPCertificatesAllowed;
 }
 
-
-void CertificateRequester::setOnlyX509CertificatesAllowed( bool allow ) {
-    if ( allow == d->onlyX509CertificatesAllowed )
+void CertificateRequester::setOnlyX509CertificatesAllowed(bool allow)
+{
+    if (allow == d->onlyX509CertificatesAllowed) {
         return;
+    }
     d->onlyX509CertificatesAllowed = allow;
 }
 
-bool CertificateRequester::onlyX509CertificatesAllowed() const {
+bool CertificateRequester::onlyX509CertificatesAllowed() const
+{
     return d->onlyX509CertificatesAllowed;
 }
 
-
-void CertificateRequester::setOnlySecretKeysAllowed( bool allow ) {
-    if ( allow == d->onlySecretKeysAllowed )
+void CertificateRequester::setOnlySecretKeysAllowed(bool allow)
+{
+    if (allow == d->onlySecretKeysAllowed) {
         return;
+    }
     d->onlySecretKeysAllowed = allow;
 }
 
-bool CertificateRequester::onlySecretKeysAllowed() const {
+bool CertificateRequester::onlySecretKeysAllowed() const
+{
     return d->onlySecretKeysAllowed;
 }
 
-
-void CertificateRequester::setSelectedCertificates( const QStringList & certs ) {
-    if ( certs == d->selectedCertificates )
+void CertificateRequester::setSelectedCertificates(const QStringList &certs)
+{
+    if (certs == d->selectedCertificates) {
         return;
+    }
     d->selectedCertificates = certs;
     d->updateLineEdit();
-    /*emit*/ selectedCertificatesChanged( certs );
+    /*emit*/ selectedCertificatesChanged(certs);
 }
 
-QStringList CertificateRequester::selectedCertificates() const {
+QStringList CertificateRequester::selectedCertificates() const
+{
     return d->selectedCertificates;
 }
 
-
-void CertificateRequester::setSelectedCertificate( const QString & cert ) {
-    setSelectedCertificates( QStringList( cert ) );
+void CertificateRequester::setSelectedCertificate(const QString &cert)
+{
+    setSelectedCertificates(QStringList(cert));
 }
 
-QString CertificateRequester::selectedCertificate() const {
+QString CertificateRequester::selectedCertificate() const
+{
     return d->selectedCertificates.empty() ? QString() : d->selectedCertificates.front() ;
 }
 
-void CertificateRequester::Private::slotButtonClicked() {
-    if ( command )
+void CertificateRequester::Private::slotButtonClicked()
+{
+    if (command) {
         return;
+    }
     createCommand();
     command->start();
-    ui.button.setEnabled( false );
+    ui.button.setEnabled(false);
 }
 
-void CertificateRequester::Private::slotCommandFinished() {
-    if ( command->wasCanceled() )
+void CertificateRequester::Private::slotCommandFinished()
+{
+    if (command->wasCanceled())
         /* do nothing */;
-    else if ( command->error() )
-        QMessageBox::information( q,
-                                  tr("Kleopatra Error"),
-                                  tr("There was an error while connecting to Kleopatra: %1" )
-                                  .arg( command->errorString() ) );
-    else
-        q->setSelectedCertificates( command->selectedCertificates() );
-    ui.button.setEnabled( true );
+    else if (command->error())
+        QMessageBox::information(q,
+                                 tr("Kleopatra Error"),
+                                 tr("There was an error while connecting to Kleopatra: %1")
+                                 .arg(command->errorString()));
+    else {
+        q->setSelectedCertificates(command->selectedCertificates());
+    }
+    ui.button.setEnabled(true);
     delete command;
 }
 

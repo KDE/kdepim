@@ -36,34 +36,43 @@
 #include <QValidator>
 #include <QList>
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class MultiValidator : public QValidator {
-        Q_OBJECT
-    public:
-        explicit MultiValidator( QObject * parent=0 )
-            : QValidator( parent ) {}
-        explicit MultiValidator( QValidator * validator1, QValidator * validator2=0, QObject * parent=0 )
-            : QValidator( parent ) { addValidator( validator1 ); addValidator( validator2 ); }
-        explicit MultiValidator( const QList<QValidator*> & validators, QObject * parent=0 )
-            : QValidator( parent ) { addValidators( validators ); }
-        ~MultiValidator();
+class MultiValidator : public QValidator
+{
+    Q_OBJECT
+public:
+    explicit MultiValidator(QObject *parent = 0)
+        : QValidator(parent) {}
+    explicit MultiValidator(QValidator *validator1, QValidator *validator2 = 0, QObject *parent = 0)
+        : QValidator(parent)
+    {
+        addValidator(validator1);
+        addValidator(validator2);
+    }
+    explicit MultiValidator(const QList<QValidator *> &validators, QObject *parent = 0)
+        : QValidator(parent)
+    {
+        addValidators(validators);
+    }
+    ~MultiValidator();
 
-        void addValidator( QValidator * validator );
-        void addValidators( const QList<QValidator*> & validators );
+    void addValidator(QValidator *validator);
+    void addValidators(const QList<QValidator *> &validators);
 
-        void removeValidator( QValidator * validator );
-        void removeValidators( const QList<QValidator*> & validators );
+    void removeValidator(QValidator *validator);
+    void removeValidators(const QList<QValidator *> &validators);
 
-        /* reimp */ void fixup( QString & str ) const;
-        /* reimp */ State validate( QString & str, int & pos ) const;
+    /* reimp */ void fixup(QString &str) const;
+    /* reimp */ State validate(QString &str, int &pos) const;
 
-    private Q_SLOTS:
-        void _kdmv_slotDestroyed( QObject * );
+private Q_SLOTS:
+    void _kdmv_slotDestroyed(QObject *);
 
-    private:
-        QList<QValidator*> m_validators;
-    };
+private:
+    QList<QValidator *> m_validators;
+};
 
 }
 

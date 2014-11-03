@@ -51,7 +51,8 @@
 #include <memory>
 #include <QStandardPaths>
 
-namespace {
+namespace
+{
 
 struct GpgConfResult {
     QByteArray stdOut;
@@ -68,12 +69,11 @@ static const int GPGCONF_FLAG_NOARG_DESC = 64; // option with optional arg; spec
 static const int GPGCONF_FLAG_NO_CHANGE = 128; // readonly
 // Change size of mFlags bitfield if adding new values here
 
-
 // gpgconf arg type number -> CryptoConfigEntry arg type enum mapping
-static ConfigEntry::ArgType knownArgType( int argType, bool& ok ) {
+static ConfigEntry::ArgType knownArgType(int argType, bool &ok)
+{
     ok = true;
-    switch( argType )
-    {
+    switch (argType) {
     case 0: // none
         return ConfigEntry::None;
     case 1: // string
@@ -97,16 +97,16 @@ static ConfigEntry::ArgType knownArgType( int argType, bool& ok ) {
 class ConfigReader::Private
 {
 public:
-    GpgConfResult runGpgConf( const QStringList& args ) const;
-    GpgConfResult runGpgConf( const QString& arg ) const;
+    GpgConfResult runGpgConf(const QStringList &args) const;
+    GpgConfResult runGpgConf(const QString &arg) const;
 
-    QMap<QString,QString> readComponentInfo() const;
-    void readEntriesForComponent( ConfigComponent* component ) const;
-    ConfigEntry* createEntryFromParsedLine( const QStringList& lst ) const;
-    void readConfConf( Config* cfg ) const;
+    QMap<QString, QString> readComponentInfo() const;
+    void readEntriesForComponent(ConfigComponent *component) const;
+    ConfigEntry *createEntryFromParsedLine(const QStringList &lst) const;
+    void readConfConf(Config *cfg) const;
 };
 
-ConfigReader::ConfigReader() : d( new Private )
+ConfigReader::ConfigReader() : d(new Private)
 {
 }
 
@@ -115,92 +115,94 @@ ConfigReader::~ConfigReader()
     delete d;
 }
 
-
-Config* ConfigReader::readConfig() const
+Config *ConfigReader::readConfig() const
 {
-    std::auto_ptr<Config> cfg( new Config );
-    const QMap<QString,QString> componentInfo = d->readComponentInfo();
+    std::auto_ptr<Config> cfg(new Config);
+    const QMap<QString, QString> componentInfo = d->readComponentInfo();
 
-    Q_FOREACH ( const QString& i, componentInfo )
-    {
-        std::auto_ptr<ConfigComponent> component( new ConfigComponent( i ) );
-        component->setDescription( componentInfo[i] );
-        d->readEntriesForComponent( component.get() );
-        cfg->addComponent( component.release() );
+    Q_FOREACH (const QString &i, componentInfo) {
+        std::auto_ptr<ConfigComponent> component(new ConfigComponent(i));
+        component->setDescription(componentInfo[i]);
+        d->readEntriesForComponent(component.get());
+        cfg->addComponent(component.release());
     }
-    d->readConfConf( cfg.get() );
+    d->readConfConf(cfg.get());
     return cfg.release();
 }
 
-ConfigEntry* ConfigReader::Private::createEntryFromParsedLine( const QStringList& parsedLine ) const
+ConfigEntry *ConfigReader::Private::createEntryFromParsedLine(const QStringList &parsedLine) const
 {
     // Format: NAME:FLAGS:LEVEL:DESCRIPTION:TYPE:ALT-TYPE:ARGNAME:DEFAULT:ARGDEF:VALUE
-    assert( parsedLine.count() >= 10 ); // called checked for it already
+    assert(parsedLine.count() >= 10);   // called checked for it already
     QStringList::const_iterator it = parsedLine.begin();
     const QString name = *it++;
-    std::auto_ptr<ConfigEntry> entry( new ConfigEntry( name ) );
+    std::auto_ptr<ConfigEntry> entry(new ConfigEntry(name));
     const int flags = (*it++).toInt();
     const int level = (*it++).toInt();
-    Q_UNUSED( level );
-    entry->setDescription( *it++ );
+    Q_UNUSED(level);
+    entry->setDescription(*it++);
     bool ok;
     // we keep the real (int) arg type, since it influences the parsing (e.g. for ldap urls)
     uint realArgType = (*it++).toInt();
-    ConfigEntry::ArgType argType = ::knownArgType( realArgType, ok );
-    if ( !ok && !(*it).isEmpty() ) {
-    // use ALT-TYPE
+    ConfigEntry::ArgType argType = ::knownArgType(realArgType, ok);
+    if (!ok && !(*it).isEmpty()) {
+        // use ALT-TYPE
         realArgType = (*it).toInt();
-        argType = ::knownArgType( realArgType, ok );
+        argType = ::knownArgType(realArgType, ok);
     }
-    entry->setArgType( argType, flags & GPGCONF_FLAG_LIST ? ConfigEntry::List : ConfigEntry::NoList );
-    if ( !ok )
-        qWarning() << "Unsupported datatype:" << parsedLine[4] <<" :" << *it <<" for" << parsedLine[0];
+    entry->setArgType(argType, flags & GPGCONF_FLAG_LIST ? ConfigEntry::List : ConfigEntry::NoList);
+    if (!ok) {
+        qWarning() << "Unsupported datatype:" << parsedLine[4] << " :" << *it << " for" << parsedLine[0];
+    }
     entry->unsetDirty();
     return entry.release();
 }
 
-void ConfigReader::Private::readEntriesForComponent( ConfigComponent* component ) const
+void ConfigReader::Private::readEntriesForComponent(ConfigComponent *component) const
 {
-    assert( component );
+    assert(component);
     QStringList args;
     args << QLatin1String("--list-options") << component->name();
-    GpgConfResult res = runGpgConf( args );
+    GpgConfResult res = runGpgConf(args);
 
     std::auto_ptr<ConfigGroup> currentGroup;
 
-    QBuffer buf( &res.stdOut );
-    buf.open( QIODevice::ReadOnly );
-    while( buf.canReadLine() ) {
-        QString line = QString::fromUtf8( buf.readLine() );
-        if ( line.endsWith( QLatin1Char('\n') ) )
-            line.chop( 1 );
-        if ( line.endsWith( QLatin1Char('\r') ) )
-            line.chop( 1 );
+    QBuffer buf(&res.stdOut);
+    buf.open(QIODevice::ReadOnly);
+    while (buf.canReadLine()) {
+        QString line = QString::fromUtf8(buf.readLine());
+        if (line.endsWith(QLatin1Char('\n'))) {
+            line.chop(1);
+        }
+        if (line.endsWith(QLatin1Char('\r'))) {
+            line.chop(1);
+        }
         //qDebug() <<"GOT LINE:" << line;
         // Format: NAME:FLAGS:LEVEL:DESCRIPTION:TYPE:ALT-TYPE:ARGNAME:DEFAULT:ARGDEF:VALUE
-        const QStringList lst = line.split( QLatin1Char(':') );
-        if ( lst.count() >= 10 ) {
+        const QStringList lst = line.split(QLatin1Char(':'));
+        if (lst.count() >= 10) {
             const int flags = lst[1].toInt();
             const int level = lst[2].toInt();
-            if ( level > 2 ) // invisible or internal -> skip it;
+            if (level > 2) { // invisible or internal -> skip it;
                 continue;
-            if ( flags & GPGCONF_FLAG_GROUP ) {
-                if ( currentGroup.get() && !currentGroup->isEmpty() ) // only add non-empty groups
-                    component->addGroup( currentGroup.release() );
-                else {
+            }
+            if (flags & GPGCONF_FLAG_GROUP) {
+                if (currentGroup.get() && !currentGroup->isEmpty()) { // only add non-empty groups
+                    component->addGroup(currentGroup.release());
+                } else {
                     currentGroup.reset();
                 }
-            //else
-            //  qDebug() <<"Discarding empty group" << mCurrentGroupName;
-                currentGroup.reset( new ConfigGroup( lst[0] ) );
-                currentGroup->setDescription( lst[3] );
+                //else
+                //  qDebug() <<"Discarding empty group" << mCurrentGroupName;
+                currentGroup.reset(new ConfigGroup(lst[0]));
+                currentGroup->setDescription(lst[3]);
                 //currentGroup->setLevel( level );
             } else {
                 // normal entry
-                if ( !currentGroup.get() ) {  // first toplevel entry -> create toplevel group
-                    currentGroup.reset( new ConfigGroup( QLatin1String("<nogroup>") ) );
+                if (!currentGroup.get()) {    // first toplevel entry -> create toplevel group
+                    currentGroup.reset(new ConfigGroup(QLatin1String("<nogroup>")));
                 }
-                currentGroup->addEntry( createEntryFromParsedLine( lst ) );
+                currentGroup->addEntry(createEntryFromParsedLine(lst));
             }
         } else {
             // This happens on lines like
@@ -209,117 +211,120 @@ void ConfigReader::Private::readEntriesForComponent( ConfigComponent* component 
             //qWarning() <<"Parse error on gpgconf --list-options output:" << line;
         }
     }
-    if ( currentGroup.get() && !currentGroup->isEmpty() )
-        component->addGroup( currentGroup.release() );
+    if (currentGroup.get() && !currentGroup->isEmpty()) {
+        component->addGroup(currentGroup.release());
+    }
 }
 
-void ConfigReader::Private::readConfConf( Config* cfg ) const
+void ConfigReader::Private::readConfConf(Config *cfg) const
 {
-    GpgConfResult res = runGpgConf( QLatin1String("--list-config") );
-    QBuffer buf( &(res.stdOut) );
-    buf.open( QIODevice::ReadOnly | QIODevice::Text );
-    while ( buf.canReadLine() )
-    {
+    GpgConfResult res = runGpgConf(QLatin1String("--list-config"));
+    QBuffer buf(&(res.stdOut));
+    buf.open(QIODevice::ReadOnly | QIODevice::Text);
+    while (buf.canReadLine()) {
         QString line = QLatin1String(buf.readLine());
-        if ( line.endsWith( QLatin1Char('\n') ) )
-            line.chop( 1 );
-        if ( line.endsWith( QLatin1Char('\r') ) )
-            line.chop( 1 );
-        const QStringList lst = line.split( QLatin1Char(':') );
-        if ( lst.isEmpty() || lst[0] != QLatin1String("r") ) // only parse 'r'-type value entries
+        if (line.endsWith(QLatin1Char('\n'))) {
+            line.chop(1);
+        }
+        if (line.endsWith(QLatin1Char('\r'))) {
+            line.chop(1);
+        }
+        const QStringList lst = line.split(QLatin1Char(':'));
+        if (lst.isEmpty() || lst[0] != QLatin1String("r")) { // only parse 'r'-type value entries
             continue;
+        }
 
-        if ( lst.count() < 8 )
-        {
-            throw MalformedGpgConfOutputException( i18n( "Parse error on gpgconf --list-config output: %1", line ) );
+        if (lst.count() < 8) {
+            throw MalformedGpgConfOutputException(i18n("Parse error on gpgconf --list-config output: %1", line));
         }
-        ConfigComponent* const component = cfg->component( lst[3] );
-        if ( !component )
-        {
-            throw MalformedGpgConfOutputException( i18n( "gpgconf --list-config: Unknown component: %1", lst[3] ) );
+        ConfigComponent *const component = cfg->component(lst[3]);
+        if (!component) {
+            throw MalformedGpgConfOutputException(i18n("gpgconf --list-config: Unknown component: %1", lst[3]));
         }
-        ConfigEntry* const entry = component->entry( lst[4] );
-        if ( !entry )
-        {
-            throw MalformedGpgConfOutputException( i18n( "gpgconf --list-config: Unknown entry: %1:%2", lst[3], lst[4] ) );
+        ConfigEntry *const entry = component->entry(lst[4]);
+        if (!entry) {
+            throw MalformedGpgConfOutputException(i18n("gpgconf --list-config: Unknown entry: %1:%2", lst[3], lst[4]));
         }
         const QString flag = lst[5];
         const QString value = lst[6];
-        if ( !value.isEmpty() && !value.startsWith( QLatin1Char('\"') ) )
-        {
-            throw MalformedGpgConfOutputException( i18n( "gpgconf --list-config: Invalid entry: value must start with '\"': %1", lst[6] ) );
+        if (!value.isEmpty() && !value.startsWith(QLatin1Char('\"'))) {
+            throw MalformedGpgConfOutputException(i18n("gpgconf --list-config: Invalid entry: value must start with '\"': %1", lst[6]));
         }
-        if ( !lst[6].isEmpty() )
-            entry->setValueFromRawString( lst[6].mid( 1 ) );
+        if (!lst[6].isEmpty()) {
+            entry->setValueFromRawString(lst[6].mid(1));
+        }
 
-        if ( flag == QLatin1String( "no-change" ) )
-            entry->setMutability( ConfigEntry::NoChange );
-        else if ( flag == QLatin1String( "change" ) )
-            entry->setMutability( ConfigEntry::Change );
-        else if ( flag == QLatin1String( "default" ) )
-            entry->setUseBuiltInDefault( true );
+        if (flag == QLatin1String("no-change")) {
+            entry->setMutability(ConfigEntry::NoChange);
+        } else if (flag == QLatin1String("change")) {
+            entry->setMutability(ConfigEntry::Change);
+        } else if (flag == QLatin1String("default")) {
+            entry->setUseBuiltInDefault(true);
+        }
     }
     buf.close();
 }
 
 QMap<QString, QString> ConfigReader::Private::readComponentInfo() const
 {
-    GpgConfResult res = runGpgConf( QLatin1String("--list-components") );
-    QBuffer buf( &(res.stdOut) );
-    buf.open( QIODevice::ReadOnly );
+    GpgConfResult res = runGpgConf(QLatin1String("--list-components"));
+    QBuffer buf(&(res.stdOut));
+    buf.open(QIODevice::ReadOnly);
     QMap<QString, QString> components;
-    while( buf.canReadLine() ) {
-        QString line = QString::fromUtf8( buf.readLine() );
-        if ( line.endsWith( QLatin1Char('\n') ) )
-            line.chop( 1 );
-        if ( line.endsWith( QLatin1Char('\r') ) )
-            line.chop( 1 );
+    while (buf.canReadLine()) {
+        QString line = QString::fromUtf8(buf.readLine());
+        if (line.endsWith(QLatin1Char('\n'))) {
+            line.chop(1);
+        }
+        if (line.endsWith(QLatin1Char('\r'))) {
+            line.chop(1);
+        }
         //qDebug() <<"GOT LINE:" << line;
         // Format: NAME:DESCRIPTION
-        const QStringList lst = line.split( QLatin1Char(':') );
-        if ( lst.count() >= 2 ) {
+        const QStringList lst = line.split(QLatin1Char(':'));
+        if (lst.count() >= 2) {
             components[lst[0]] = lst[1];
         } else {
-            throw MalformedGpgConfOutputException( i18n( "Parse error on gpgconf --list-components. output: %1", line ) );
+            throw MalformedGpgConfOutputException(i18n("Parse error on gpgconf --list-components. output: %1", line));
         }
     }
     return components;
 }
 
-GpgConfResult ConfigReader::Private::runGpgConf( const QString& arg ) const
+GpgConfResult ConfigReader::Private::runGpgConf(const QString &arg) const
 {
-    return runGpgConf( QStringList( arg ) );
+    return runGpgConf(QStringList(arg));
 }
 
-static QString gpgConfPath() {
-    const GpgME::EngineInfo ei = GpgME::engineInfo( GpgME::GpgConfEngine );
-    return ei.fileName() ? QFile::decodeName( ei.fileName() ) : QStandardPaths::findExecutable( QLatin1String("gpgconf") ) ;
+static QString gpgConfPath()
+{
+    const GpgME::EngineInfo ei = GpgME::engineInfo(GpgME::GpgConfEngine);
+    return ei.fileName() ? QFile::decodeName(ei.fileName()) : QStandardPaths::findExecutable(QLatin1String("gpgconf")) ;
 }
 
-GpgConfResult ConfigReader::Private::runGpgConf( const QStringList& args ) const
+GpgConfResult ConfigReader::Private::runGpgConf(const QStringList &args) const
 {
     QProcess process;
-    process.start( gpgConfPath(), args );
+    process.start(gpgConfPath(), args);
 
     process.waitForStarted();
     process.waitForFinished();
 
-    if ( process.exitStatus() != QProcess::NormalExit ) {
-        switch ( process.error() )
-        {
+    if (process.exitStatus() != QProcess::NormalExit) {
+        switch (process.error()) {
         case QProcess::FailedToStart:
-            throw GpgConfRunException( -2, i18n( "gpgconf not found or cannot be started" ) );
+            throw GpgConfRunException(-2, i18n("gpgconf not found or cannot be started"));
         case QProcess::Crashed:
-            throw GpgConfRunException( -1, i18n( "gpgconf terminated unexpectedly" ) );
+            throw GpgConfRunException(-1, i18n("gpgconf terminated unexpectedly"));
         case QProcess::Timedout:
-            throw GpgConfRunException( -3, i18n( "timeout while executing gpgconf" ) );
+            throw GpgConfRunException(-3, i18n("timeout while executing gpgconf"));
         case QProcess::WriteError:
-            throw GpgConfRunException( -4, i18n( "error while writing to gpgconf" ) );
+            throw GpgConfRunException(-4, i18n("error while writing to gpgconf"));
         case QProcess::ReadError:
-            throw GpgConfRunException( -5, i18n( "error while reading from gpgconf" ) );
+            throw GpgConfRunException(-5, i18n("error while reading from gpgconf"));
         case QProcess::UnknownError:
         default:
-            throw GpgConfRunException( -6, i18n( "Unknown error while executing gpgconf" ) );
+            throw GpgConfRunException(-6, i18n("Unknown error while executing gpgconf"));
         }
     }
 

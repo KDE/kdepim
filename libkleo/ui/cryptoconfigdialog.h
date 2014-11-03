@@ -35,34 +35,35 @@
 #include "kleo_export.h"
 #include <QDialog>
 class QDialogButtonBox;
-namespace Kleo {
+namespace Kleo
+{
 
-  class CryptoConfig;
-  class CryptoConfigModule;
+class CryptoConfig;
+class CryptoConfigModule;
 
-  /**
-   * Simple QDialog wrapper around CryptoConfigModule
-   */
-  class KLEO_EXPORT CryptoConfigDialog : public QDialog
-  {
+/**
+ * Simple QDialog wrapper around CryptoConfigModule
+ */
+class KLEO_EXPORT CryptoConfigDialog : public QDialog
+{
     Q_OBJECT
-  public:
-    explicit CryptoConfigDialog( Kleo::CryptoConfig* config, QWidget *parent = 0 );
+public:
+    explicit CryptoConfigDialog(Kleo::CryptoConfig *config, QWidget *parent = 0);
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     void slotOk();
     void slotCancel();
     void slotDefault();
     void slotApply();
     void slotUser1(); // reset
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void slotChanged();
 
-  private:
-    CryptoConfigModule* mMainWidget;
+private:
+    CryptoConfigModule *mMainWidget;
     QDialogButtonBox *mButtonBox;
-  };
+};
 
 }
 

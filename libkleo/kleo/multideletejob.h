@@ -41,33 +41,37 @@
 
 #include <vector>
 
-namespace GpgME {
-  class Error;
-  class Key;
+namespace GpgME
+{
+class Error;
+class Key;
 }
 
-namespace Kleo {
-  class DeleteJob;
+namespace Kleo
+{
+class DeleteJob;
 }
 
-namespace Kleo {
+namespace Kleo
+{
 
-  /**
-     @short A convenience class bundling together multiple DeleteJobs.
+/**
+   @short A convenience class bundling together multiple DeleteJobs.
 
-     To use a MultiDeleteJob, pass it a CryptoBackend implementation,
-     connect the progress() and result() signals to suitable slots and
-     then start the delete with a call to start(). This call might
-     fail, in which case the MultiDeleteJob instance will have scheduled
-     it's own destruction with a call to QObject::deleteLater().
+   To use a MultiDeleteJob, pass it a CryptoBackend implementation,
+   connect the progress() and result() signals to suitable slots and
+   then start the delete with a call to start(). This call might
+   fail, in which case the MultiDeleteJob instance will have scheduled
+   it's own destruction with a call to QObject::deleteLater().
 
-     After result() is emitted, the MultiDeleteJob will schedule it's own
-     destruction by calling QObject::deleteLater().
-  */
-  class KLEO_EXPORT MultiDeleteJob : public Job {
+   After result() is emitted, the MultiDeleteJob will schedule it's own
+   destruction by calling QObject::deleteLater().
+*/
+class KLEO_EXPORT MultiDeleteJob : public Job
+{
     Q_OBJECT
-  public:
-    explicit MultiDeleteJob( const CryptoBackend::Protocol * protocol );
+public:
+    explicit MultiDeleteJob(const CryptoBackend::Protocol *protocol);
     ~MultiDeleteJob();
 
     /**
@@ -75,27 +79,27 @@ namespace Kleo {
        delete, \a allowSecretKeyDeletion specifies if a key may also
        be deleted if the secret key part is available, too.
     */
-    GpgME::Error start( const std::vector<GpgME::Key> & keys, bool allowSecretKeyDeletion=false );
+    GpgME::Error start(const std::vector<GpgME::Key> &keys, bool allowSecretKeyDeletion = false);
 
     /*! \reimp from Job */
     void slotCancel();
 
-  Q_SIGNALS:
-    void result( const GpgME::Error & result, const GpgME::Key & errorKey );
+Q_SIGNALS:
+    void result(const GpgME::Error &result, const GpgME::Key &errorKey);
 
-  private Q_SLOTS:
-    void slotResult( const GpgME::Error & );
+private Q_SLOTS:
+    void slotResult(const GpgME::Error &);
 
-  private:
+private:
     GpgME::Error startAJob();
 
-  private:
-    const CryptoBackend::Protocol * mProtocol;
+private:
+    const CryptoBackend::Protocol *mProtocol;
     QPointer<DeleteJob> mJob;
     std::vector<GpgME::Key> mKeys;
     std::vector<GpgME::Key>::const_iterator mIt;
     bool mAllowSecretKeyDeletion;
-  };
+};
 
 }
 

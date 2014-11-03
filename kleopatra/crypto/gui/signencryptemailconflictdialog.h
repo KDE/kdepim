@@ -41,68 +41,76 @@
 
 #include <vector>
 
-namespace boost {
-    template <typename T> class shared_ptr;
+namespace boost
+{
+template <typename T> class shared_ptr;
 }
 
-namespace GpgME {
-    class Key;
+namespace GpgME
+{
+class Key;
 }
 
-namespace Kleo {
-namespace Crypto {
-    class Sender;
-    class Recipient;
+namespace Kleo
+{
+namespace Crypto
+{
+class Sender;
+class Recipient;
 }
 }
 
-namespace Kleo {
-namespace Crypto {
-namespace Gui {
+namespace Kleo
+{
+namespace Crypto
+{
+namespace Gui
+{
 
-    class SignEncryptEMailConflictDialog : public QDialog {
-        Q_OBJECT
-    public:
-        explicit SignEncryptEMailConflictDialog( QWidget * parent=0, Qt::WindowFlags f=0 );
-        ~SignEncryptEMailConflictDialog();
+class SignEncryptEMailConflictDialog : public QDialog
+{
+    Q_OBJECT
+public:
+    explicit SignEncryptEMailConflictDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    ~SignEncryptEMailConflictDialog();
 
-        // Inputs
+    // Inputs
 
-        void setPresetProtocol( GpgME::Protocol proto );
-        void setSubject( const QString & subject );
+    void setPresetProtocol(GpgME::Protocol proto);
+    void setSubject(const QString &subject);
 
-        void setSenders( const std::vector<Sender> & senders );
-        void setRecipients( const std::vector<Recipient> & recipients );
+    void setSenders(const std::vector<Sender> &senders);
+    void setRecipients(const std::vector<Recipient> &recipients);
 
-        void setSign( bool on );
-        void setEncrypt( bool on );
+    void setSign(bool on);
+    void setEncrypt(bool on);
 
-        void setQuickMode( bool on );
+    void setQuickMode(bool on);
 
-        // To wrap up inputs:
-        void pickProtocol();
-        void setConflict( bool conflict );
+    // To wrap up inputs:
+    void pickProtocol();
+    void setConflict(bool conflict);
 
-        // Intermediate
+    // Intermediate
 
-        bool isComplete() const;
+    bool isComplete() const;
 
-        // Outputs
+    // Outputs
 
-        GpgME::Protocol selectedProtocol() const;
-        std::vector<GpgME::Key> resolvedSigningKeys() const;
-        std::vector<GpgME::Key> resolvedEncryptionKeys() const;
+    GpgME::Protocol selectedProtocol() const;
+    std::vector<GpgME::Key> resolvedSigningKeys() const;
+    std::vector<GpgME::Key> resolvedEncryptionKeys() const;
 
-        bool isQuickMode() const;
+    bool isQuickMode() const;
 
-    private:
-        Q_PRIVATE_SLOT( d, void slotCompleteChanged() )
-        Q_PRIVATE_SLOT( d, void slotShowAllRecipientsToggled(bool) )
-        Q_PRIVATE_SLOT( d, void slotProtocolChanged() )
-        Q_PRIVATE_SLOT( d, void slotCertificateSelectionDialogRequested() )
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-    };
+private:
+    Q_PRIVATE_SLOT(d, void slotCompleteChanged())
+    Q_PRIVATE_SLOT(d, void slotShowAllRecipientsToggled(bool))
+    Q_PRIVATE_SLOT(d, void slotProtocolChanged())
+    Q_PRIVATE_SLOT(d, void slotCertificateSelectionDialogRequested())
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+};
 
 }
 }

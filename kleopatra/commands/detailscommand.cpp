@@ -46,36 +46,45 @@ using namespace Kleo::Commands;
 using namespace Kleo::Dialogs;
 using namespace GpgME;
 
-class DetailsCommand::Private : public Command::Private {
+class DetailsCommand::Private : public Command::Private
+{
     friend class ::Kleo::Commands::DetailsCommand;
-    DetailsCommand * q_func() const { return static_cast<DetailsCommand*>( q ); }
+    DetailsCommand *q_func() const
+    {
+        return static_cast<DetailsCommand *>(q);
+    }
 public:
-    explicit Private( DetailsCommand * qq, KeyListController * c );
+    explicit Private(DetailsCommand *qq, KeyListController *c);
     ~Private();
 
 private:
-    void ensureDialogCreated() {
-        if ( dialog )
+    void ensureDialogCreated()
+    {
+        if (dialog) {
             return;
+        }
 
-        CertificateDetailsDialog * dlg = new CertificateDetailsDialog;
-        applyWindowID( dlg );
-        dlg->setAttribute( Qt::WA_DeleteOnClose );
-        connect( dlg, SIGNAL(rejected()), q_func(), SLOT(slotDialogClosed()) );
+        CertificateDetailsDialog *dlg = new CertificateDetailsDialog;
+        applyWindowID(dlg);
+        dlg->setAttribute(Qt::WA_DeleteOnClose);
+        connect(dlg, SIGNAL(rejected()), q_func(), SLOT(slotDialogClosed()));
 
         dialog = dlg;
     }
 
-    void ensureDialogVisible() {
+    void ensureDialogVisible()
+    {
         ensureDialogCreated();
-        if ( dialog->isVisible() )
+        if (dialog->isVisible()) {
             dialog->raise();
-        else
+        } else {
             dialog->show();
+        }
     }
 
-    void init() {
-        q->setWarnWhenRunningAtShutdown( false );
+    void init()
+    {
+        q->setWarnWhenRunningAtShutdown(false);
     }
 
 private:
@@ -85,14 +94,20 @@ private:
     QPointer<CertificateDetailsDialog> dialog;
 };
 
-DetailsCommand::Private * DetailsCommand::d_func() { return static_cast<Private*>( d.get() ); }
-const DetailsCommand::Private * DetailsCommand::d_func() const { return static_cast<const Private*>( d.get() ); }
+DetailsCommand::Private *DetailsCommand::d_func()
+{
+    return static_cast<Private *>(d.get());
+}
+const DetailsCommand::Private *DetailsCommand::d_func() const
+{
+    return static_cast<const Private *>(d.get());
+}
 
 #define q q_func()
 #define d d_func()
 
-DetailsCommand::Private::Private( DetailsCommand * qq, KeyListController * c )
-    : Command::Private( qq, c ),
+DetailsCommand::Private::Private(DetailsCommand *qq, KeyListController *c)
+    : Command::Private(qq, c),
       dialog()
 {
 
@@ -100,66 +115,69 @@ DetailsCommand::Private::Private( DetailsCommand * qq, KeyListController * c )
 
 DetailsCommand::Private::~Private() {}
 
-DetailsCommand::DetailsCommand( KeyListController * p )
-    : Command( new Private( this, p ) )
+DetailsCommand::DetailsCommand(KeyListController *p)
+    : Command(new Private(this, p))
 {
     d->init();
 }
 
-DetailsCommand::DetailsCommand( QAbstractItemView * v, KeyListController * p )
-    : Command( v, new Private( this, p ) )
+DetailsCommand::DetailsCommand(QAbstractItemView *v, KeyListController *p)
+    : Command(v, new Private(this, p))
 {
     d->init();
 }
 
-DetailsCommand::DetailsCommand( const Key & key, KeyListController * p )
-    : Command( new Private( this, p ) )
+DetailsCommand::DetailsCommand(const Key &key, KeyListController *p)
+    : Command(new Private(this, p))
 {
-    assert( !key.isNull() );
+    assert(!key.isNull());
     d->init();
-    setKey( key );
+    setKey(key);
 }
 
-DetailsCommand::DetailsCommand( const Key & key, QAbstractItemView * v, KeyListController * p )
-    : Command( v, new Private( this, p ) )
+DetailsCommand::DetailsCommand(const Key &key, QAbstractItemView *v, KeyListController *p)
+    : Command(v, new Private(this, p))
 {
-    assert( !key.isNull() );
+    assert(!key.isNull());
     d->init();
-    setKey( key );
+    setKey(key);
 }
 
 DetailsCommand::~DetailsCommand() {}
 
-void DetailsCommand::doStart() {
+void DetailsCommand::doStart()
+{
     const std::vector<Key> keys = d->keys();
     Key key;
-    if ( keys.size() == 1 )
+    if (keys.size() == 1) {
         key = keys.front();
-    else
+    } else {
         qWarning() << "can only work with one certificate at a time";
+    }
 
-    if ( key.isNull() ) {
+    if (key.isNull()) {
         d->finished();
         return;
     }
 
     d->ensureDialogCreated();
 
-    d->dialog->setKey( key );
+    d->dialog->setKey(key);
 
     d->ensureDialogVisible();
 }
 
-
-void DetailsCommand::doCancel() {
-    if ( d->dialog )
+void DetailsCommand::doCancel()
+{
+    if (d->dialog) {
         d->dialog->close();
+    }
 }
 
-void DetailsCommand::Private::slotDialogClosed() {
+void DetailsCommand::Private::slotDialogClosed()
+{
     finished();
 }
-
 
 #undef q_func
 #undef d_func

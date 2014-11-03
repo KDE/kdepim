@@ -39,52 +39,58 @@
 
 #include <vector>
 
-namespace Kleo {
-    class ArchiveDefinition;
+namespace Kleo
+{
+class ArchiveDefinition;
 }
 
-namespace boost {
-    template <typename T>
-    class shared_ptr;
+namespace boost
+{
+template <typename T>
+class shared_ptr;
 }
 
-namespace Kleo {
-namespace Crypto {
-namespace Gui {
+namespace Kleo
+{
+namespace Crypto
+{
+namespace Gui
+{
 
-    class DecryptVerifyOperationWidget : public QWidget {
-        Q_OBJECT
-        Q_ENUMS( Mode )
-        Q_PROPERTY( Mode mode READ mode WRITE setMode )
-        Q_PROPERTY( QString inputFileName READ inputFileName WRITE setInputFileName )
-        Q_PROPERTY( QString signedDataFileName READ signedDataFileName WRITE setSignedDataFileName )
-    public:
-        explicit DecryptVerifyOperationWidget( QWidget * parent=0 );
-        ~DecryptVerifyOperationWidget();
+class DecryptVerifyOperationWidget : public QWidget
+{
+    Q_OBJECT
+    Q_ENUMS(Mode)
+    Q_PROPERTY(Mode mode READ mode WRITE setMode)
+    Q_PROPERTY(QString inputFileName READ inputFileName WRITE setInputFileName)
+    Q_PROPERTY(QString signedDataFileName READ signedDataFileName WRITE setSignedDataFileName)
+public:
+    explicit DecryptVerifyOperationWidget(QWidget *parent = 0);
+    ~DecryptVerifyOperationWidget();
 
-        enum Mode {
-            VerifyDetachedWithSignature,
-            VerifyDetachedWithSignedData,
-            DecryptVerifyOpaque
-        };
-        void setMode( Mode mode, const boost::shared_ptr<ArchiveDefinition> & ad );
-        void setMode( Mode mode );
-        Mode mode() const;
-
-        void setInputFileName( const QString & name );
-        QString inputFileName() const;
-
-        void setSignedDataFileName( const QString & name );
-        QString signedDataFileName() const;
-
-        void setArchiveDefinitions( const std::vector< boost::shared_ptr<ArchiveDefinition> > & ads );
-        boost::shared_ptr<ArchiveDefinition> selectedArchiveDefinition() const;
-
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void enableDisableWidgets() )
+    enum Mode {
+        VerifyDetachedWithSignature,
+        VerifyDetachedWithSignedData,
+        DecryptVerifyOpaque
     };
+    void setMode(Mode mode, const boost::shared_ptr<ArchiveDefinition> &ad);
+    void setMode(Mode mode);
+    Mode mode() const;
+
+    void setInputFileName(const QString &name);
+    QString inputFileName() const;
+
+    void setSignedDataFileName(const QString &name);
+    QString signedDataFileName() const;
+
+    void setArchiveDefinitions(const std::vector< boost::shared_ptr<ArchiveDefinition> > &ads);
+    boost::shared_ptr<ArchiveDefinition> selectedArchiveDefinition() const;
+
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void enableDisableWidgets())
+};
 
 }
 }

@@ -47,121 +47,144 @@
 
 using namespace Kleo::NewCertificateUi;
 
-namespace {
+namespace
+{
 
-    class ItemDelegate : public QItemDelegate {
-        Q_OBJECT
-    public:
-        explicit ItemDelegate( QObject * p=0 )
-            : QItemDelegate( p ), m_rx() {}
-        explicit ItemDelegate( const QRegExp & rx, QObject * p=0 )
-            : QItemDelegate( p ), m_rx( rx ) {}
+class ItemDelegate : public QItemDelegate
+{
+    Q_OBJECT
+public:
+    explicit ItemDelegate(QObject *p = 0)
+        : QItemDelegate(p), m_rx() {}
+    explicit ItemDelegate(const QRegExp &rx, QObject *p = 0)
+        : QItemDelegate(p), m_rx(rx) {}
 
-        void setRegExpFilter( const QRegExp & rx ) {
-            m_rx = rx;
-        }
-        const QRegExp & regExpFilter() const { return m_rx; }
+    void setRegExpFilter(const QRegExp &rx)
+    {
+        m_rx = rx;
+    }
+    const QRegExp &regExpFilter() const
+    {
+        return m_rx;
+    }
 
-        /* reimp */ QWidget * createEditor( QWidget * p, const QStyleOptionViewItem & o, const QModelIndex & i ) const {
-            QWidget * w = QItemDelegate::createEditor( p, o, i );
-            if ( !m_rx.isEmpty() )
-                if ( QLineEdit * const le = qobject_cast<QLineEdit*>( w ) )
-                    le->setValidator( new QRegExpValidator( m_rx, le ) );
-            return w;
-        }
-    private:
-        QRegExp m_rx;
-    };
+    /* reimp */ QWidget *createEditor(QWidget *p, const QStyleOptionViewItem &o, const QModelIndex &i) const
+    {
+        QWidget *w = QItemDelegate::createEditor(p, o, i);
+        if (!m_rx.isEmpty())
+            if (QLineEdit *const le = qobject_cast<QLineEdit *>(w)) {
+                le->setValidator(new QRegExpValidator(m_rx, le));
+            }
+        return w;
+    }
+private:
+    QRegExp m_rx;
+};
 }
 
-class ListWidget::Private {
+class ListWidget::Private
+{
     friend class ::Kleo::NewCertificateUi::ListWidget;
-    ListWidget * const q;
+    ListWidget *const q;
 public:
-    explicit Private( ListWidget * qq )
-        : q( qq ),
+    explicit Private(ListWidget *qq)
+        : q(qq),
           stringListModel(),
-          ui( q )
+          ui(q)
     {
-        ui.listView->setModel( &stringListModel );
-        ui.listView->setItemDelegate( &delegate );
-        connect( ui.listView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-                 q, SLOT(slotSelectionChanged()) );
-        connect( &stringListModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-                 q, SIGNAL(itemsChanged()) );
-        connect( &stringListModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
-                 q, SIGNAL(itemsChanged()) );
-        connect( &stringListModel, SIGNAL(rowsRemoved(QModelIndex,int,int)),
-                 q, SIGNAL(itemsChanged()) );
+        ui.listView->setModel(&stringListModel);
+        ui.listView->setItemDelegate(&delegate);
+        connect(ui.listView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+                q, SLOT(slotSelectionChanged()));
+        connect(&stringListModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+                q, SIGNAL(itemsChanged()));
+        connect(&stringListModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
+                q, SIGNAL(itemsChanged()));
+        connect(&stringListModel, SIGNAL(rowsRemoved(QModelIndex,int,int)),
+                q, SIGNAL(itemsChanged()));
     }
 
 private:
-    void slotAdd() {
+    void slotAdd()
+    {
         const int idx = stringListModel.rowCount();
-        if ( stringListModel.insertRows( idx, 1 ) ) {
-            stringListModel.setData( stringListModel.index( idx ), defaultValue );
-            editRow( idx );
+        if (stringListModel.insertRows(idx, 1)) {
+            stringListModel.setData(stringListModel.index(idx), defaultValue);
+            editRow(idx);
         }
     }
 
-    void slotRemove() {
+    void slotRemove()
+    {
         const int idx = selectedRow();
-        stringListModel.removeRows( idx, 1 );
-        selectRow( idx );
+        stringListModel.removeRows(idx, 1);
+        selectRow(idx);
     }
 
-    void slotUp() {
+    void slotUp()
+    {
         const int idx = selectedRow();
-        swapRows( idx - 1, idx );
-        selectRow( idx - 1 );
+        swapRows(idx - 1, idx);
+        selectRow(idx - 1);
     }
 
-    void slotDown() {
+    void slotDown()
+    {
         const int idx = selectedRow();
-        swapRows( idx, idx + 1 );
-        selectRow( idx + 1 );
+        swapRows(idx, idx + 1);
+        selectRow(idx + 1);
     }
 
-    void slotSelectionChanged() {
+    void slotSelectionChanged()
+    {
         enableDisableActions();
     }
 
 private:
-    void editRow( int idx ) {
-        const QModelIndex mi = stringListModel.index( idx );
-        if ( !mi.isValid() )
+    void editRow(int idx)
+    {
+        const QModelIndex mi = stringListModel.index(idx);
+        if (!mi.isValid()) {
             return;
-        ui.listView->setCurrentIndex( mi );
-        ui.listView->edit( mi );
+        }
+        ui.listView->setCurrentIndex(mi);
+        ui.listView->edit(mi);
     }
 
-    QModelIndexList selectedIndexes() const {
+    QModelIndexList selectedIndexes() const
+    {
         return ui.listView->selectionModel()->selectedRows();
     }
-    int selectedRow() const {
+    int selectedRow() const
+    {
         const QModelIndexList mil = selectedIndexes();
         return mil.empty() ? -1 : mil.front().row() ;
     }
-    void selectRow( int idx ) {
-        const QModelIndex mi = stringListModel.index( idx );
-        if ( mi.isValid() )
-            ui.listView->selectionModel()->select( mi, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+    void selectRow(int idx)
+    {
+        const QModelIndex mi = stringListModel.index(idx);
+        if (mi.isValid()) {
+            ui.listView->selectionModel()->select(mi, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+        }
     }
-    void swapRows( int r1, int r2 ) {
-        if ( r1 < 0 || r2 < 0 || r1 >= stringListModel.rowCount() || r2 >= stringListModel.rowCount() )
+    void swapRows(int r1, int r2)
+    {
+        if (r1 < 0 || r2 < 0 || r1 >= stringListModel.rowCount() || r2 >= stringListModel.rowCount()) {
             return;
-        const QModelIndex m1 = stringListModel.index( r1 );
-        const QModelIndex m2 = stringListModel.index( r2 );
+        }
+        const QModelIndex m1 = stringListModel.index(r1);
+        const QModelIndex m2 = stringListModel.index(r2);
         const QVariant data1 = m1.data();
         const QVariant data2 = m2.data();
-        stringListModel.setData( m1, data2 );
-        stringListModel.setData( m2, data1 );
+        stringListModel.setData(m1, data2);
+        stringListModel.setData(m2, data1);
     }
-    void enableDisableActions() {
+    void enableDisableActions()
+    {
         const QModelIndexList mil = selectedIndexes();
-        ui.removeTB->setEnabled( !mil.empty() );
-        ui.upTB->setEnabled( mil.size() == 1 && mil.front().row() > 0 );
-        ui.downTB->setEnabled( mil.size() == 1 && mil.back().row() < stringListModel.rowCount() - 1 );
+        ui.removeTB->setEnabled(!mil.empty());
+        ui.upTB->setEnabled(mil.size() == 1 && mil.front().row() > 0);
+        ui.downTB->setEnabled(mil.size() == 1 && mil.back().row() < stringListModel.rowCount() - 1);
     }
 
 private:
@@ -169,49 +192,55 @@ private:
     ItemDelegate delegate;
     QString defaultValue;
     struct UI : Ui_ListWidget {
-        explicit UI( ListWidget * q )
+        explicit UI(ListWidget *q)
             : Ui_ListWidget()
         {
-            setupUi( q );
+            setupUi(q);
 
-            addTB->setIcon( QIcon::fromTheme( QLatin1String("list-add") ) );
-            removeTB->setIcon( QIcon::fromTheme( QLatin1String("list-remove") ) );
-            upTB->setIcon( QIcon::fromTheme( QLatin1String("go-up") ) );
-            downTB->setIcon( QIcon::fromTheme( QLatin1String("go-down") ) );
+            addTB->setIcon(QIcon::fromTheme(QLatin1String("list-add")));
+            removeTB->setIcon(QIcon::fromTheme(QLatin1String("list-remove")));
+            upTB->setIcon(QIcon::fromTheme(QLatin1String("go-up")));
+            downTB->setIcon(QIcon::fromTheme(QLatin1String("go-down")));
         }
     } ui;
 
 };
 
-ListWidget::ListWidget( QWidget * p )
-    : QWidget( p ), d( new Private( this ) )
+ListWidget::ListWidget(QWidget *p)
+    : QWidget(p), d(new Private(this))
 {
 
 }
 
 ListWidget::~ListWidget() {}
 
-QStringList ListWidget::items() const {
+QStringList ListWidget::items() const
+{
     return d->stringListModel.stringList();
 }
 
-void ListWidget::setItems( const QStringList & items ) {
-    d->stringListModel.setStringList( items );
+void ListWidget::setItems(const QStringList &items)
+{
+    d->stringListModel.setStringList(items);
 }
 
-QRegExp ListWidget::regExpFilter() const {
+QRegExp ListWidget::regExpFilter() const
+{
     return d->delegate.regExpFilter();
 }
 
-void ListWidget::setRegExpFilter( const QRegExp & rx ) {
-    d->delegate.setRegExpFilter( rx );
+void ListWidget::setRegExpFilter(const QRegExp &rx)
+{
+    d->delegate.setRegExpFilter(rx);
 }
 
-QString ListWidget::defaultValue() const {
+QString ListWidget::defaultValue() const
+{
     return d->defaultValue;
 }
 
-void ListWidget::setDefaultValue( const QString & df ) {
+void ListWidget::setDefaultValue(const QString &df)
+{
     d->defaultValue = df;
 }
 

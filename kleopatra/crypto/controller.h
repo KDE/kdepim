@@ -42,46 +42,48 @@
 
 #include <boost/shared_ptr.hpp>
 
+namespace Kleo
+{
+namespace Crypto
+{
 
-namespace Kleo {
-namespace Crypto {
+class Controller : public QObject, protected ExecutionContextUser
+{
+    Q_OBJECT
+public:
+    explicit Controller(QObject *parent = 0);
+    explicit Controller(const boost::shared_ptr<const ExecutionContext> &cmd, QObject *parent = 0);
+    ~Controller();
 
-    class Controller : public QObject, protected ExecutionContextUser {
-        Q_OBJECT
-    public:
-        explicit Controller( QObject * parent=0 );
-        explicit Controller( const boost::shared_ptr<const ExecutionContext> & cmd, QObject * parent=0 );
-        ~Controller();
+    using ExecutionContextUser::setExecutionContext;
 
-        using ExecutionContextUser::setExecutionContext;
+Q_SIGNALS:
+    void progress(int current, int total, const QString &what);
 
-    Q_SIGNALS:
-        void progress( int current, int total, const QString & what );
+protected:
+    void emitDoneOrError();
+    void setLastError(int err, const QString &details);
+    void connectTask(const boost::shared_ptr<Task> &task);
 
-    protected:
-        void emitDoneOrError();
-        void setLastError( int err, const QString & details );
-        void connectTask( const boost::shared_ptr<Task> & task );
+    virtual void doTaskDone(const Task *task, const boost::shared_ptr<const Task::Result> &result);
 
-        virtual void doTaskDone( const Task* task, const boost::shared_ptr<const Task::Result> & result );
+protected Q_SLOTS:
+    void taskDone(const boost::shared_ptr<const Kleo::Crypto::Task::Result> &);
 
-    protected Q_SLOTS:
-        void taskDone( const boost::shared_ptr<const Kleo::Crypto::Task::Result> & );
-
-    Q_SIGNALS:
+Q_SIGNALS:
 
 #ifndef Q_MOC_RUN
 # ifndef DOXYGEN_SHOULD_SKIP_THIS
-    private: // don't tell moc or doxygen, but those signals are in fact private
+private: // don't tell moc or doxygen, but those signals are in fact private
 # endif
 #endif
-        void error( int err, const QString & details );
-        void done();
+    void error(int err, const QString &details);
+    void done();
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-    };
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+};
 
 }
 }

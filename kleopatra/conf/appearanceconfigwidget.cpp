@@ -36,7 +36,6 @@
 #include "appearanceconfigwidget.h"
 #include "ui_appearanceconfigwidget.h"
 
-
 #include "tooltippreferences.h"
 
 #include "libkleo/kleo/cryptobackendfactory.h"
@@ -92,132 +91,158 @@ enum {
     EndDummy
 };
 
-static QFont tryToFindFontFor( const QListWidgetItem * item ) {
-    if ( item )
-        if ( const QListWidget * const lw = item->listWidget() )
+static QFont tryToFindFontFor(const QListWidgetItem *item)
+{
+    if (item)
+        if (const QListWidget *const lw = item->listWidget()) {
             return lw->font();
-    return QApplication::font( "QListWidget" );
-}   
+        }
+    return QApplication::font("QListWidget");
+}
 
-static bool is( const QListWidgetItem * item, bool (QFont::*func)() const ) {
-    if ( !item )
+static bool is(const QListWidgetItem *item, bool (QFont::*func)() const)
+{
+    if (!item) {
         return false;
-    const QVariant v = item->data( Qt::FontRole );
-    if ( !v.isValid() || v.type() != QVariant::Font )
+    }
+    const QVariant v = item->data(Qt::FontRole);
+    if (!v.isValid() || v.type() != QVariant::Font) {
         return false;
+    }
     return (v.value<QFont>().*func)();
 }
 
-static bool is_italic( const QListWidgetItem * item ) {
-    return is( item, &QFont::italic );
+static bool is_italic(const QListWidgetItem *item)
+{
+    return is(item, &QFont::italic);
 }
-static bool is_bold( const QListWidgetItem * item ) {
-    return is( item, &QFont::bold );
+static bool is_bold(const QListWidgetItem *item)
+{
+    return is(item, &QFont::bold);
 }
-static bool is_strikeout( const QListWidgetItem * item ) {
-    return is( item, &QFont::strikeOut );
+static bool is_strikeout(const QListWidgetItem *item)
+{
+    return is(item, &QFont::strikeOut);
 }
 
-
-static void set( QListWidgetItem * item, bool on, void (QFont::*func)(bool) ) {
-    if ( !item )
+static void set(QListWidgetItem *item, bool on, void (QFont::*func)(bool))
+{
+    if (!item) {
         return;
-    const QVariant v = item->data( Qt::FontRole );
-    QFont font = v.isValid() && v.type() == QVariant::Font ? v.value<QFont>() : tryToFindFontFor( item ) ;
-    (font.*func)( on );
-    item->setData( Qt::FontRole, font );
+    }
+    const QVariant v = item->data(Qt::FontRole);
+    QFont font = v.isValid() && v.type() == QVariant::Font ? v.value<QFont>() : tryToFindFontFor(item) ;
+    (font.*func)(on);
+    item->setData(Qt::FontRole, font);
 }
 
-static void set_italic( QListWidgetItem * item, bool on ) {
-    set( item, on, &QFont::setItalic );
+static void set_italic(QListWidgetItem *item, bool on)
+{
+    set(item, on, &QFont::setItalic);
 }
-static void set_bold( QListWidgetItem * item, bool on ) {
-    set( item, on, &QFont::setBold );
+static void set_bold(QListWidgetItem *item, bool on)
+{
+    set(item, on, &QFont::setBold);
 }
-static void set_strikeout( QListWidgetItem * item, bool on ) {
-    set( item, on, &QFont::setStrikeOut );
+static void set_strikeout(QListWidgetItem *item, bool on)
+{
+    set(item, on, &QFont::setStrikeOut);
 }
 
-
-static void apply_config( const KConfigGroup & group, QListWidgetItem * item ) {
-    if ( !item )
+static void apply_config(const KConfigGroup &group, QListWidgetItem *item)
+{
+    if (!item) {
         return;
+    }
 
-    const QString name = group.readEntry( "Name" );
-    item->setText( name.isEmpty() ? i18nc("Key filter without user-assigned name", "<unnamed>") : name );
-    item->setData( HasNameRole, !name.isEmpty() );
-    item->setData( MayChangeNameRole, !group.isEntryImmutable( "Name" ) );
+    const QString name = group.readEntry("Name");
+    item->setText(name.isEmpty() ? i18nc("Key filter without user-assigned name", "<unnamed>") : name);
+    item->setData(HasNameRole, !name.isEmpty());
+    item->setData(MayChangeNameRole, !group.isEntryImmutable("Name"));
 
-    const QColor fg = group.readEntry( "foreground-color", QColor() );
-    item->setData( Qt::ForegroundRole, fg.isValid() ? QBrush( fg ) : QVariant() );
-    item->setData( MayChangeForegroundRole, !group.isEntryImmutable( "foreground-color" ) );
+    const QColor fg = group.readEntry("foreground-color", QColor());
+    item->setData(Qt::ForegroundRole, fg.isValid() ? QBrush(fg) : QVariant());
+    item->setData(MayChangeForegroundRole, !group.isEntryImmutable("foreground-color"));
 
-    const QColor bg = group.readEntry( "background-color", QColor() );
-    item->setData( Qt::BackgroundRole, bg.isValid() ? QBrush( bg ) : QVariant() );
-    item->setData( MayChangeBackgroundRole, !group.isEntryImmutable( "background-color" ) );
+    const QColor bg = group.readEntry("background-color", QColor());
+    item->setData(Qt::BackgroundRole, bg.isValid() ? QBrush(bg) : QVariant());
+    item->setData(MayChangeBackgroundRole, !group.isEntryImmutable("background-color"));
 
-    const QFont defaultFont = tryToFindFontFor( item );
-    if ( group.hasKey( "font" ) ) {
-        const QFont font = group.readEntry( "font", defaultFont );
-        item->setData( Qt::FontRole, font != defaultFont ? font : QVariant() );
-        item->setData( HasFontRole,  font != defaultFont );
+    const QFont defaultFont = tryToFindFontFor(item);
+    if (group.hasKey("font")) {
+        const QFont font = group.readEntry("font", defaultFont);
+        item->setData(Qt::FontRole, font != defaultFont ? font : QVariant());
+        item->setData(HasFontRole,  font != defaultFont);
     } else {
         QFont font = defaultFont;
-        font.setStrikeOut( group.readEntry( "font-strikeout", false ) );
-        font.setItalic( group.readEntry( "font-italic", false ) );
-        font.setBold( group.readEntry( "font-bold", false ) );
-        item->setData( Qt::FontRole, font );
-        item->setData( HasFontRole, false );
+        font.setStrikeOut(group.readEntry("font-strikeout", false));
+        font.setItalic(group.readEntry("font-italic", false));
+        font.setBold(group.readEntry("font-bold", false));
+        item->setData(Qt::FontRole, font);
+        item->setData(HasFontRole, false);
     }
-    item->setData( MayChangeFontRole, !group.isEntryImmutable( "font" ) );
-    item->setData( MayChangeItalicRole, !group.isEntryImmutable( "font-italic" ) );
-    item->setData( MayChangeBoldRole, !group.isEntryImmutable( "font-bold" ) );
-    item->setData( MayChangeStrikeOutRole, !group.isEntryImmutable( "font-strikeout" ) );
+    item->setData(MayChangeFontRole, !group.isEntryImmutable("font"));
+    item->setData(MayChangeItalicRole, !group.isEntryImmutable("font-italic"));
+    item->setData(MayChangeBoldRole, !group.isEntryImmutable("font-bold"));
+    item->setData(MayChangeStrikeOutRole, !group.isEntryImmutable("font-strikeout"));
 
-    const QString iconName = group.readEntry( "icon" );
-    item->setData( Qt::DecorationRole, iconName.isEmpty() ? QVariant() : QIcon::fromTheme( iconName ) );
-    item->setData( IconNameRole, iconName.isEmpty() ? QVariant() : iconName );
-    item->setData( MayChangeIconRole, !group.isEntryImmutable( "icon" ) );
+    const QString iconName = group.readEntry("icon");
+    item->setData(Qt::DecorationRole, iconName.isEmpty() ? QVariant() : QIcon::fromTheme(iconName));
+    item->setData(IconNameRole, iconName.isEmpty() ? QVariant() : iconName);
+    item->setData(MayChangeIconRole, !group.isEntryImmutable("icon"));
 }
 
-static void erase_if_allowed( QListWidgetItem * item, int role, int allowRole ) {
-    if ( item && item->data( allowRole ).toBool() )
-        item->setData( role, QVariant() );
+static void erase_if_allowed(QListWidgetItem *item, int role, int allowRole)
+{
+    if (item && item->data(allowRole).toBool()) {
+        item->setData(role, QVariant());
+    }
 }
 
 #if 0
-static void erase_if_allowed( QListWidgetItem * item, const int role[], size_t numRoles, int allowRole ) {
-    if ( item && item->data( allowRole ).toBool() )
-        for ( unsigned int i = 0 ; i < numRoles ; ++i )
-            item->setData( role[i], QVariant() );
+static void erase_if_allowed(QListWidgetItem *item, const int role[], size_t numRoles, int allowRole)
+{
+    if (item && item->data(allowRole).toBool())
+        for (unsigned int i = 0 ; i < numRoles ; ++i) {
+            item->setData(role[i], QVariant());
+        }
 }
 
-static void erase_if_allowed( QListWidgetItem * item, int role, const int allowRole[], size_t numAllowRoles ) {
-    if ( !item )
+static void erase_if_allowed(QListWidgetItem *item, int role, const int allowRole[], size_t numAllowRoles)
+{
+    if (!item) {
         return;
-    for ( unsigned int i = 0 ; i < numAllowRoles ; ++i )
-        if ( !item->data( allowRole[i] ).toBool() )
+    }
+    for (unsigned int i = 0 ; i < numAllowRoles ; ++i)
+        if (!item->data(allowRole[i]).toBool()) {
             return;
-    item->setData( role, QVariant() );
+        }
+    item->setData(role, QVariant());
 }
 #endif
 
-static void erase_if_allowed( QListWidgetItem * item, const int role[], size_t numRoles, const int allowRole[], size_t numAllowRoles ) {
-    if ( !item )
+static void erase_if_allowed(QListWidgetItem *item, const int role[], size_t numRoles, const int allowRole[], size_t numAllowRoles)
+{
+    if (!item) {
         return;
-    for ( unsigned int i = 0 ; i < numAllowRoles ; ++i )
-        if ( !item->data( allowRole[i] ).toBool() )
+    }
+    for (unsigned int i = 0 ; i < numAllowRoles ; ++i)
+        if (!item->data(allowRole[i]).toBool()) {
             return;
-    for ( unsigned int i = 0 ; i < numRoles ; ++i )
-        item->setData( role[i], QVariant() );
+        }
+    for (unsigned int i = 0 ; i < numRoles ; ++i) {
+        item->setData(role[i], QVariant());
+    }
 }
 
-static void set_default_appearance( QListWidgetItem * item ) {
-    if ( !item )
+static void set_default_appearance(QListWidgetItem *item)
+{
+    if (!item) {
         return;
-    erase_if_allowed( item, Qt::ForegroundRole, MayChangeForegroundRole );
-    erase_if_allowed( item, Qt::BackgroundRole, MayChangeBackgroundRole );
-    erase_if_allowed( item, Qt::DecorationRole, MayChangeIconRole );
+    }
+    erase_if_allowed(item, Qt::ForegroundRole, MayChangeForegroundRole);
+    erase_if_allowed(item, Qt::BackgroundRole, MayChangeBackgroundRole);
+    erase_if_allowed(item, Qt::DecorationRole, MayChangeIconRole);
     static const int fontRoles[] = { Qt::FontRole, HasFontRole };
     static const int fontAllowRoles[] = {
         MayChangeFontRole,
@@ -225,119 +250,126 @@ static void set_default_appearance( QListWidgetItem * item ) {
         MayChangeBoldRole,
         MayChangeStrikeOutRole,
     };
-    erase_if_allowed( item, fontRoles, size( fontRoles ), fontAllowRoles, size( fontAllowRoles ) );
+    erase_if_allowed(item, fontRoles, size(fontRoles), fontAllowRoles, size(fontAllowRoles));
 }
 
-static void writeOrDelete( KConfigGroup & group, const char * key, const QVariant & value ) {
-    if ( value.isValid() )
-        group.writeEntry( key, value );
-    else
-        group.deleteEntry( key );
+static void writeOrDelete(KConfigGroup &group, const char *key, const QVariant &value)
+{
+    if (value.isValid()) {
+        group.writeEntry(key, value);
+    } else {
+        group.deleteEntry(key);
+    }
 }
 
-static QVariant brush2color( const QVariant & v ) {
-    if ( v.isValid() ) {
-        if ( v.type() == QVariant::Color )
+static QVariant brush2color(const QVariant &v)
+{
+    if (v.isValid()) {
+        if (v.type() == QVariant::Color) {
             return v;
-        else if ( v.type() == QVariant::Brush )
+        } else if (v.type() == QVariant::Brush) {
             return v.value<QBrush>().color();
+        }
     }
     return QVariant();
 }
 
-static void save_to_config( const QListWidgetItem * item, KConfigGroup & group ) {
-    if ( !item )
+static void save_to_config(const QListWidgetItem *item, KConfigGroup &group)
+{
+    if (!item) {
         return;
-    writeOrDelete( group, "Name", item->data( HasNameRole ).toBool() ? item->text() : QVariant() );
-    writeOrDelete( group, "foreground-color", brush2color( item->data( Qt::ForegroundRole ) ) );
-    writeOrDelete( group, "background-color", brush2color( item->data( Qt::BackgroundRole ) ) );
-    writeOrDelete( group, "icon", item->data( IconNameRole ) );
+    }
+    writeOrDelete(group, "Name", item->data(HasNameRole).toBool() ? item->text() : QVariant());
+    writeOrDelete(group, "foreground-color", brush2color(item->data(Qt::ForegroundRole)));
+    writeOrDelete(group, "background-color", brush2color(item->data(Qt::BackgroundRole)));
+    writeOrDelete(group, "icon", item->data(IconNameRole));
 
-    group.deleteEntry( "font" );
-    group.deleteEntry( "font-strikeout" );
-    group.deleteEntry( "font-italic" );
-    group.deleteEntry( "font-bold" );
+    group.deleteEntry("font");
+    group.deleteEntry("font-strikeout");
+    group.deleteEntry("font-italic");
+    group.deleteEntry("font-bold");
 
-    if ( item->data( HasFontRole ).toBool() ) {
-        writeOrDelete( group, "font", item->data( Qt::FontRole ) );
+    if (item->data(HasFontRole).toBool()) {
+        writeOrDelete(group, "font", item->data(Qt::FontRole));
         return;
     }
 
-    if ( is_strikeout( item ) )
-        group.writeEntry( "font-strikeout", true );
-    if ( is_italic( item ) )
-        group.writeEntry( "font-italic", true );
-    if ( is_bold( item ) )
-        group.writeEntry( "font-bold", true );
+    if (is_strikeout(item)) {
+        group.writeEntry("font-strikeout", true);
+    }
+    if (is_italic(item)) {
+        group.writeEntry("font-italic", true);
+    }
+    if (is_bold(item)) {
+        group.writeEntry("font-bold", true);
+    }
 }
 
-static void kiosk_enable( QWidget * w, const QListWidgetItem * item, int allowRole ) {
-    if ( !w )
+static void kiosk_enable(QWidget *w, const QListWidgetItem *item, int allowRole)
+{
+    if (!w) {
         return;
-    if ( item && !item->data( allowRole ).toBool() ) {
-        w->setEnabled( false );
-        w->setToolTip( i18n( "This parameter has been locked down by the system administrator." ) );
+    }
+    if (item && !item->data(allowRole).toBool()) {
+        w->setEnabled(false);
+        w->setToolTip(i18n("This parameter has been locked down by the system administrator."));
     } else {
-        w->setEnabled( item );
-        w->setToolTip( QString() );
+        w->setEnabled(item);
+        w->setToolTip(QString());
     }
 }
 
-
-
-
-
-
-
-class AppearanceConfigWidget::Private : public Ui_AppearanceConfigWidget {
+class AppearanceConfigWidget::Private : public Ui_AppearanceConfigWidget
+{
     friend class ::Kleo::Config::AppearanceConfigWidget;
-    AppearanceConfigWidget * const q;
+    AppearanceConfigWidget *const q;
 public:
-    explicit Private( AppearanceConfigWidget * qq )
+    explicit Private(AppearanceConfigWidget *qq)
         : Ui_AppearanceConfigWidget(),
-          q( qq ),
-          dnOrderWidget( 0 )
+          q(qq),
+          dnOrderWidget(0)
     {
-        setupUi( q );
+        setupUi(q);
 
-        if ( QLayout * const l = q->layout() )
-            l->setMargin( 0 );
+        if (QLayout *const l = q->layout()) {
+            l->setMargin(0);
+        }
 
-        QWidget * w = new QWidget;
-        dnOrderWidget = Kleo::DNAttributeMapper::instance()->configWidget( w );
-        dnOrderWidget->setObjectName( QLatin1String( "dnOrderWidget" ) );
-        ( new QVBoxLayout( w ) )->addWidget( dnOrderWidget );
+        QWidget *w = new QWidget;
+        dnOrderWidget = Kleo::DNAttributeMapper::instance()->configWidget(w);
+        dnOrderWidget->setObjectName(QLatin1String("dnOrderWidget"));
+        (new QVBoxLayout(w))->addWidget(dnOrderWidget);
 
-        tabWidget->addTab( w, i18n("DN-Attribute Order") );
+        tabWidget->addTab(w, i18n("DN-Attribute Order"));
 
-        connect( dnOrderWidget, SIGNAL(changed()), q, SIGNAL(changed()) );
+        connect(dnOrderWidget, SIGNAL(changed()), q, SIGNAL(changed()));
 
-        connect( iconButton, SIGNAL(clicked()), q, SLOT(slotIconClicked()) );
+        connect(iconButton, SIGNAL(clicked()), q, SLOT(slotIconClicked()));
 #ifndef QT_NO_COLORDIALOG
-        connect( foregroundButton, SIGNAL(clicked()), q, SLOT(slotForegroundClicked()) );
-        connect( backgroundButton, SIGNAL(clicked()), q, SLOT(slotBackgroundClicked()) );
+        connect(foregroundButton, SIGNAL(clicked()), q, SLOT(slotForegroundClicked()));
+        connect(backgroundButton, SIGNAL(clicked()), q, SLOT(slotBackgroundClicked()));
 #else
         foregroundButton->hide();
         backgroundButton->hide();
 #endif
 #ifndef QT_NO_FONTDIALOG
-        connect( fontButton, SIGNAL(clicked()), q, SLOT(slotFontClicked()) );
+        connect(fontButton, SIGNAL(clicked()), q, SLOT(slotFontClicked()));
 #else
         fontButton->hide();
 #endif
-        connect( categoriesLV, SIGNAL(itemSelectionChanged()), q, SLOT(slotSelectionChanged()) );
-        connect( defaultLookPB, SIGNAL(clicked()), q, SLOT(slotDefaultClicked()) );
-        connect( italicCB, SIGNAL(toggled(bool)), q, SLOT(slotItalicToggled(bool)) );
-        connect( boldCB, SIGNAL(toggled(bool)), q, SLOT(slotBoldToggled(bool)) );
-        connect( strikeoutCB, SIGNAL(toggled(bool)), q, SLOT(slotStrikeOutToggled(bool)) );
-        connect( tooltipValidityCheckBox, SIGNAL(toggled(bool)), q, SLOT(slotTooltipValidityChanged(bool)) );
-        connect( tooltipOwnerCheckBox, SIGNAL(toggled(bool)), q, SLOT(slotTooltipOwnerChanged(bool)) );
-        connect( tooltipDetailsCheckBox, SIGNAL(toggled(bool)), q, SLOT(slotTooltipDetailsChanged(bool)) );
+        connect(categoriesLV, SIGNAL(itemSelectionChanged()), q, SLOT(slotSelectionChanged()));
+        connect(defaultLookPB, SIGNAL(clicked()), q, SLOT(slotDefaultClicked()));
+        connect(italicCB, SIGNAL(toggled(bool)), q, SLOT(slotItalicToggled(bool)));
+        connect(boldCB, SIGNAL(toggled(bool)), q, SLOT(slotBoldToggled(bool)));
+        connect(strikeoutCB, SIGNAL(toggled(bool)), q, SLOT(slotStrikeOutToggled(bool)));
+        connect(tooltipValidityCheckBox, SIGNAL(toggled(bool)), q, SLOT(slotTooltipValidityChanged(bool)));
+        connect(tooltipOwnerCheckBox, SIGNAL(toggled(bool)), q, SLOT(slotTooltipOwnerChanged(bool)));
+        connect(tooltipDetailsCheckBox, SIGNAL(toggled(bool)), q, SLOT(slotTooltipDetailsChanged(bool)));
     }
 
 private:
-    void enableDisableActions( QListWidgetItem * item );
-    QListWidgetItem * selectedItem() const;
+    void enableDisableActions(QListWidgetItem *item);
+    QListWidgetItem *selectedItem() const;
 
 private:
     void slotIconClicked();
@@ -358,237 +390,263 @@ private:
     void slotTooltipDetailsChanged(bool);
 
 private:
-    Kleo::DNAttributeOrderConfigWidget * dnOrderWidget;
+    Kleo::DNAttributeOrderConfigWidget *dnOrderWidget;
 };
 
-AppearanceConfigWidget::AppearanceConfigWidget( QWidget * p, Qt::WindowFlags f )
-    : QWidget( p, f ), d( new Private( this ) )
+AppearanceConfigWidget::AppearanceConfigWidget(QWidget *p, Qt::WindowFlags f)
+    : QWidget(p, f), d(new Private(this))
 {
 //    load();
 }
 
-
 AppearanceConfigWidget::~AppearanceConfigWidget() {}
 
-void AppearanceConfigWidget::Private::slotSelectionChanged() {
-    enableDisableActions( selectedItem() );
+void AppearanceConfigWidget::Private::slotSelectionChanged()
+{
+    enableDisableActions(selectedItem());
 }
 
-QListWidgetItem * AppearanceConfigWidget::Private::selectedItem() const {
-    const QList<QListWidgetItem*> items = categoriesLV->selectedItems();
+QListWidgetItem *AppearanceConfigWidget::Private::selectedItem() const
+{
+    const QList<QListWidgetItem *> items = categoriesLV->selectedItems();
     return items.empty() ? 0 : items.front() ;
 }
 
-void AppearanceConfigWidget::Private::enableDisableActions( QListWidgetItem * item ) {
-    kiosk_enable( iconButton, item, MayChangeIconRole );
+void AppearanceConfigWidget::Private::enableDisableActions(QListWidgetItem *item)
+{
+    kiosk_enable(iconButton, item, MayChangeIconRole);
 #ifndef QT_NO_COLORDIALOG
-    kiosk_enable( foregroundButton, item, MayChangeForegroundRole );
-    kiosk_enable( backgroundButton, item, MayChangeBackgroundRole );
+    kiosk_enable(foregroundButton, item, MayChangeForegroundRole);
+    kiosk_enable(backgroundButton, item, MayChangeBackgroundRole);
 #endif
 #ifndef QT_NO_FONTDIALOG
-    kiosk_enable( fontButton, item, MayChangeFontRole );
+    kiosk_enable(fontButton, item, MayChangeFontRole);
 #endif
-    kiosk_enable( italicCB, item, MayChangeItalicRole );
-    kiosk_enable( boldCB, item, MayChangeBoldRole );
-    kiosk_enable( strikeoutCB, item, MayChangeStrikeOutRole );
+    kiosk_enable(italicCB, item, MayChangeItalicRole);
+    kiosk_enable(boldCB, item, MayChangeBoldRole);
+    kiosk_enable(strikeoutCB, item, MayChangeStrikeOutRole);
 
-    defaultLookPB->setEnabled( item );
+    defaultLookPB->setEnabled(item);
 
-    italicCB->setChecked( is_italic( item ) );
-    boldCB->setChecked( is_bold( item ) );
-    strikeoutCB->setChecked( is_strikeout( item ) );
+    italicCB->setChecked(is_italic(item));
+    boldCB->setChecked(is_bold(item));
+    strikeoutCB->setChecked(is_strikeout(item));
 }
 
-void AppearanceConfigWidget::Private::slotDefaultClicked() {
+void AppearanceConfigWidget::Private::slotDefaultClicked()
+{
 
-    QListWidgetItem * const item = selectedItem();
-    if ( !item )
+    QListWidgetItem *const item = selectedItem();
+    if (!item) {
         return;
+    }
 
-    set_default_appearance( item );
-    enableDisableActions( item );
+    set_default_appearance(item);
+    enableDisableActions(item);
 
     emit q->changed();
 }
 
-void AppearanceConfigWidget::defaults() {
+void AppearanceConfigWidget::defaults()
+{
 
     // This simply means "default look for every category"
-    for ( int i = 0, end = d->categoriesLV->count() ; i != end ; ++i )
-        set_default_appearance( d->categoriesLV->item( i ) );
-    d->tooltipValidityCheckBox->setChecked( true );
-    d->tooltipOwnerCheckBox->setChecked( false );
-    d->tooltipDetailsCheckBox->setChecked( false );
+    for (int i = 0, end = d->categoriesLV->count() ; i != end ; ++i) {
+        set_default_appearance(d->categoriesLV->item(i));
+    }
+    d->tooltipValidityCheckBox->setChecked(true);
+    d->tooltipOwnerCheckBox->setChecked(false);
+    d->tooltipDetailsCheckBox->setChecked(false);
 
     d->dnOrderWidget->defaults();
 
     emit changed();
 }
 
-void AppearanceConfigWidget::load() {
+void AppearanceConfigWidget::load()
+{
 
     d->dnOrderWidget->load();
 
     d->categoriesLV->clear();
-    KConfig * const config = CryptoBackendFactory::instance()->configObject();
-    if ( !config )
+    KConfig *const config = CryptoBackendFactory::instance()->configObject();
+    if (!config) {
         return;
-    const QStringList groups = config->groupList().filter( QRegExp( QLatin1String("^Key Filter #\\d+$") ) );
-    Q_FOREACH( const QString & group, groups ) {
+    }
+    const QStringList groups = config->groupList().filter(QRegExp(QLatin1String("^Key Filter #\\d+$")));
+    Q_FOREACH (const QString &group, groups) {
         //QListWidgetItem * item = new QListWidgetItem( d->categoriesLV );
-        apply_config( KConfigGroup( config, group ), new QListWidgetItem( d->categoriesLV ) );
+        apply_config(KConfigGroup(config, group), new QListWidgetItem(d->categoriesLV));
     }
 
     const TooltipPreferences prefs;
-    d->tooltipValidityCheckBox->setChecked( prefs.showValidity() );
-    d->tooltipOwnerCheckBox->setChecked( prefs.showOwnerInformation() );
-    d->tooltipDetailsCheckBox->setChecked( prefs.showCertificateDetails() );
+    d->tooltipValidityCheckBox->setChecked(prefs.showValidity());
+    d->tooltipOwnerCheckBox->setChecked(prefs.showOwnerInformation());
+    d->tooltipDetailsCheckBox->setChecked(prefs.showCertificateDetails());
 }
 
-void AppearanceConfigWidget::save() {
+void AppearanceConfigWidget::save()
+{
 
     d->dnOrderWidget->save();
 
     TooltipPreferences prefs;
-    prefs.setShowValidity( d->tooltipValidityCheckBox->isChecked() );
-    prefs.setShowOwnerInformation( d->tooltipOwnerCheckBox->isChecked() );
-    prefs.setShowCertificateDetails( d->tooltipDetailsCheckBox->isChecked() );
+    prefs.setShowValidity(d->tooltipValidityCheckBox->isChecked());
+    prefs.setShowOwnerInformation(d->tooltipOwnerCheckBox->isChecked());
+    prefs.setShowCertificateDetails(d->tooltipDetailsCheckBox->isChecked());
     prefs.save();
 
-    KConfig * const config = CryptoBackendFactory::instance()->configObject();
-    if ( !config )
+    KConfig *const config = CryptoBackendFactory::instance()->configObject();
+    if (!config) {
         return;
+    }
     // We know (assume) that the groups in the config object haven't changed,
     // so we just iterate over them and over the listviewitems, and map one-to-one.
-    const QStringList groups = config->groupList().filter( QRegExp( QLatin1String("^Key Filter #\\d+$") ) );
+    const QStringList groups = config->groupList().filter(QRegExp(QLatin1String("^Key Filter #\\d+$")));
 #if 0
-    if ( groups.isEmpty() ) {
+    if (groups.isEmpty()) {
         // If we created the default categories ourselves just now, then we need to make up their list
-        Q3ListViewItemIterator lvit( categoriesLV );
-        for ( ; lvit.current() ; ++lvit )
-            groups << lvit.current()->text( 0 );
+        Q3ListViewItemIterator lvit(categoriesLV);
+        for (; lvit.current() ; ++lvit) {
+            groups << lvit.current()->text(0);
+        }
     }
 #endif
-    for ( int i = 0, end = std::min( groups.size(), d->categoriesLV->count() ) ; i != end ; ++i ) {
-        const QListWidgetItem * const item = d->categoriesLV->item( i );
-        assert( item );
-        KConfigGroup group( config, groups[i] );
-        save_to_config( item, group );
+    for (int i = 0, end = std::min(groups.size(), d->categoriesLV->count()) ; i != end ; ++i) {
+        const QListWidgetItem *const item = d->categoriesLV->item(i);
+        assert(item);
+        KConfigGroup group(config, groups[i]);
+        save_to_config(item, group);
     }
 
     config->sync();
     KeyFilterManager::instance()->reload();
 }
 
-void AppearanceConfigWidget::Private::slotIconClicked() {
-    QListWidgetItem * const item = selectedItem();
-    if ( !item )
+void AppearanceConfigWidget::Private::slotIconClicked()
+{
+    QListWidgetItem *const item = selectedItem();
+    if (!item) {
         return;
+    }
 
     const QString iconName = KIconDialog::getIcon( /* repeating default arguments begin */
-                                                  KIconLoader::Desktop, KIconLoader::Application, false, 0, false,
-                                                  /* repeating default arguments end */
-                                                  q );
-    if ( iconName.isEmpty() )
+                                 KIconLoader::Desktop, KIconLoader::Application, false, 0, false,
+                                 /* repeating default arguments end */
+                                 q);
+    if (iconName.isEmpty()) {
         return;
+    }
 
-    item->setIcon( QIcon::fromTheme( iconName ) );
-    item->setData( IconNameRole, iconName );
+    item->setIcon(QIcon::fromTheme(iconName));
+    item->setData(IconNameRole, iconName);
     emit q->changed();
 }
 
 #ifndef QT_NO_COLORDIALOG
-void AppearanceConfigWidget::Private::slotForegroundClicked() {
-    QListWidgetItem * const item = selectedItem();
-    if ( !item )
+void AppearanceConfigWidget::Private::slotForegroundClicked()
+{
+    QListWidgetItem *const item = selectedItem();
+    if (!item) {
         return;
+    }
 
-    const QVariant v = brush2color( item->data( Qt::ForegroundRole ) );
+    const QVariant v = brush2color(item->data(Qt::ForegroundRole));
 
-    const QColor initial = v.isValid() ? v.value<QColor>() : categoriesLV->palette().color( QPalette::Normal, QPalette::Text );
-    const QColor c = QColorDialog::getColor( initial, q );
+    const QColor initial = v.isValid() ? v.value<QColor>() : categoriesLV->palette().color(QPalette::Normal, QPalette::Text);
+    const QColor c = QColorDialog::getColor(initial, q);
 
-    if ( c.isValid() ) {
-        item->setData( Qt::ForegroundRole, QBrush( c ) );
+    if (c.isValid()) {
+        item->setData(Qt::ForegroundRole, QBrush(c));
         emit q->changed();
     }
 }
 
-void AppearanceConfigWidget::Private::slotBackgroundClicked() {
-    QListWidgetItem * const item = selectedItem();
-    if ( !item )
+void AppearanceConfigWidget::Private::slotBackgroundClicked()
+{
+    QListWidgetItem *const item = selectedItem();
+    if (!item) {
         return;
+    }
 
-    const QVariant v = brush2color( item->data( Qt::BackgroundRole ) );
+    const QVariant v = brush2color(item->data(Qt::BackgroundRole));
 
-    const QColor initial = v.isValid() ? v.value<QColor>() : categoriesLV->palette().color( QPalette::Normal, QPalette::Base );
-    const QColor c = QColorDialog::getColor( initial, q );
+    const QColor initial = v.isValid() ? v.value<QColor>() : categoriesLV->palette().color(QPalette::Normal, QPalette::Base);
+    const QColor c = QColorDialog::getColor(initial, q);
 
-    if ( c.isValid() ) {
-        item->setData( Qt::BackgroundRole, QBrush( c ) );
+    if (c.isValid()) {
+        item->setData(Qt::BackgroundRole, QBrush(c));
         emit q->changed();
     }
 }
 #endif // QT_NO_COLORDIALOG
 
 #ifndef QT_NO_FONTDIALOG
-void AppearanceConfigWidget::Private::slotFontClicked() {
-    QListWidgetItem * const item = selectedItem();
-    if ( !item )
+void AppearanceConfigWidget::Private::slotFontClicked()
+{
+    QListWidgetItem *const item = selectedItem();
+    if (!item) {
         return;
+    }
 
-    const QVariant v = item->data( Qt::FontRole );
+    const QVariant v = item->data(Qt::FontRole);
 
     bool ok = false;
-    const QFont defaultFont = tryToFindFontFor( item );
+    const QFont defaultFont = tryToFindFontFor(item);
     const QFont initial = v.isValid() && v.type() == QVariant::Font ? v.value<QFont>() : defaultFont ;
-    QFont f = QFontDialog::getFont( &ok, initial, q );
-    if ( !ok )
+    QFont f = QFontDialog::getFont(&ok, initial, q);
+    if (!ok) {
         return;
+    }
 
     // disallow circumventing KIOSK:
-    if ( !item->data( MayChangeItalicRole ).toBool() )
-        f.setItalic( initial.italic() );
-    if ( !item->data( MayChangeBoldRole ).toBool() )
-        f.setBold( initial.bold() );
-    if ( !item->data( MayChangeStrikeOutRole ).toBool() )
-        f.setStrikeOut( initial.strikeOut() );
+    if (!item->data(MayChangeItalicRole).toBool()) {
+        f.setItalic(initial.italic());
+    }
+    if (!item->data(MayChangeBoldRole).toBool()) {
+        f.setBold(initial.bold());
+    }
+    if (!item->data(MayChangeStrikeOutRole).toBool()) {
+        f.setStrikeOut(initial.strikeOut());
+    }
 
-    item->setData( Qt::FontRole, f != defaultFont ? f : QVariant() );
-    item->setData( HasFontRole, true );
+    item->setData(Qt::FontRole, f != defaultFont ? f : QVariant());
+    item->setData(HasFontRole, true);
     emit q->changed();
 }
 #endif // QT_NO_FONTDIALOG
 
-void AppearanceConfigWidget::Private::slotItalicToggled( bool on ) {
-    set_italic( selectedItem(), on );
+void AppearanceConfigWidget::Private::slotItalicToggled(bool on)
+{
+    set_italic(selectedItem(), on);
     emit q->changed();
 }
 
-void AppearanceConfigWidget::Private::slotBoldToggled( bool on ) {
-    set_bold( selectedItem(), on );
+void AppearanceConfigWidget::Private::slotBoldToggled(bool on)
+{
+    set_bold(selectedItem(), on);
     emit q->changed();
 }
 
-void AppearanceConfigWidget::Private::slotStrikeOutToggled( bool on ) {
-    set_strikeout( selectedItem(), on );
+void AppearanceConfigWidget::Private::slotStrikeOutToggled(bool on)
+{
+    set_strikeout(selectedItem(), on);
     emit q->changed();
 }
 
-void AppearanceConfigWidget::Private::slotTooltipValidityChanged( bool )
+void AppearanceConfigWidget::Private::slotTooltipValidityChanged(bool)
 {
     emit q->changed();
 }
 
-void AppearanceConfigWidget::Private::slotTooltipOwnerChanged( bool )
+void AppearanceConfigWidget::Private::slotTooltipOwnerChanged(bool)
 {
     emit q->changed();
 }
 
-void AppearanceConfigWidget::Private::slotTooltipDetailsChanged( bool )
+void AppearanceConfigWidget::Private::slotTooltipDetailsChanged(bool)
 {
     emit q->changed();
 }
-
 
 #include "moc_appearanceconfigwidget.cpp"

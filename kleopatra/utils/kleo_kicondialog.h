@@ -22,8 +22,10 @@
 
 class KIconLoader;
 
-namespace Kleo {
-namespace KioAvoidance {
+namespace Kleo
+{
+namespace KioAvoidance
+{
 
 /**
  * Icon canvas for KIconDialog.
@@ -38,7 +40,7 @@ public:
      *
      * @param parent The parent widget.
      */
-    explicit KIconCanvas(QWidget *parent=0L);
+    explicit KIconCanvas(QWidget *parent = 0L);
 
     /**
      * Destroys the icon canvas.
@@ -48,7 +50,7 @@ public:
     /**
      * Load icons into the canvas.
      */
-    void loadFiles(const QStringList& files);
+    void loadFiles(const QStringList &files);
 
     /**
      * Returns the current icon.
@@ -65,7 +67,7 @@ Q_SIGNALS:
     /**
      * Emitted when the current icon has changed.
      */
-    void nameChanged(const QString&);
+    void nameChanged(const QString &);
 
     /**
      * This signal is emitted when the loading of the icons
@@ -90,14 +92,13 @@ Q_SIGNALS:
 
 private:
     class KIconCanvasPrivate;
-    KIconCanvasPrivate* const d;
+    KIconCanvasPrivate *const d;
 
     Q_DISABLE_COPY(KIconCanvas)
 
     Q_PRIVATE_SLOT(d, void _k_slotLoadFiles())
     Q_PRIVATE_SLOT(d, void _k_slotCurrentChanged(QListWidgetItem *item))
 };
-
 
 /**
  * Dialog for interactive selection of icons. Use the function
@@ -115,7 +116,7 @@ public:
      *
      * @param parent The parent widget.
      */
-    explicit KIconDialog(QWidget *parent=0L);
+    explicit KIconDialog(QWidget *parent = 0L);
 
     /**
      * Constructs an icon selection dialog using a specific iconloader.
@@ -123,7 +124,7 @@ public:
      * @param loader The icon loader to use.
      * @param parent The parent widget.
      */
-    explicit KIconDialog(KIconLoader *loader, QWidget *parent=0);
+    explicit KIconDialog(KIconLoader *loader, QWidget *parent = 0);
 
     /**
      * Destructs the dialog.
@@ -144,7 +145,7 @@ public:
     /**
      * sets a custom icon directory
      */
-    void setCustomLocation( const QString& location );
+    void setCustomLocation(const QString &location);
 
     /**
      * Sets the size of the icons to be shown / selected.
@@ -166,11 +167,11 @@ public:
      * dir itself.
      */
 
-    void setup( KIconLoader::Group group,
-                KIconLoader::Context context = KIconLoader::Application,
-                bool strictIconSize = false, int iconSize = 0,
-                bool user = false, bool lockUser = false,
-                bool lockCustomDir = false );
+    void setup(KIconLoader::Group group,
+               KIconLoader::Context context = KIconLoader::Application,
+               bool strictIconSize = false, int iconSize = 0,
+               bool user = false, bool lockUser = false,
+               bool lockCustomDir = false);
 
     /**
      * exec()utes this modal dialog and returns the name of the selected icon,
@@ -204,21 +205,21 @@ public:
      * @param caption The caption to use for the dialog.
      * @return The name of the icon, suitable for loading with KIconLoader.
      */
-    static QString getIcon(KIconLoader::Group group=KIconLoader::Desktop,
-                           KIconLoader::Context context=KIconLoader::Application,
-                           bool strictIconSize=false, int iconSize = 0,
-                           bool user=false, QWidget *parent=0,
-                           const QString &caption=QString());
+    static QString getIcon(KIconLoader::Group group = KIconLoader::Desktop,
+                           KIconLoader::Context context = KIconLoader::Application,
+                           bool strictIconSize = false, int iconSize = 0,
+                           bool user = false, QWidget *parent = 0,
+                           const QString &caption = QString());
 
 Q_SIGNALS:
-    void newIconName(const QString&);
+    void newIconName(const QString &);
 
 protected Q_SLOTS:
     void slotOk();
 
 private:
     class KIconDialogPrivate;
-    KIconDialogPrivate* const d;
+    KIconDialogPrivate *const d;
 
     Q_DISABLE_COPY(KIconDialog)
 
@@ -234,7 +235,6 @@ private:
     Q_PRIVATE_SLOT(d, void _k_slotSystemIconClicked())
 };
 
-
 /**
  * A pushbutton for choosing an icon. Pressing on the button will open a
  * KIconDialog for the user to select an icon. The current icon will be
@@ -246,9 +246,9 @@ private:
 class KIconButton: public QPushButton
 {
     Q_OBJECT
-    Q_PROPERTY( QString icon READ icon WRITE setIcon RESET resetIcon )
-    Q_PROPERTY( int iconSize READ iconSize WRITE setIconSize)
-    Q_PROPERTY( bool strictIconSize READ strictIconSize WRITE setStrictIconSize )
+    Q_PROPERTY(QString icon READ icon WRITE setIcon RESET resetIcon)
+    Q_PROPERTY(int iconSize READ iconSize WRITE setIconSize)
+    Q_PROPERTY(bool strictIconSize READ strictIconSize WRITE setStrictIconSize)
 
 public:
     /**
@@ -256,7 +256,7 @@ public:
      *
      * @param parent The parent widget.
      */
-    explicit KIconButton(QWidget *parent=0L);
+    explicit KIconButton(QWidget *parent = 0L);
 
     /**
      * Constructs a KIconButton using a specific KIconLoader.
@@ -285,14 +285,14 @@ public:
      * Sets the icon group and context. Use KIconLoader::NoGroup if you want to
      * allow icons for any group in the given context.
      */
-    void setIconType(KIconLoader::Group group, KIconLoader::Context context, bool user=false);
+    void setIconType(KIconLoader::Group group, KIconLoader::Context context, bool user = false);
 
     /**
      * Sets the button's initial icon.
      */
-    void setIcon(const QString& icon);
+    void setIcon(const QString &icon);
 
-    void setIcon(const QIcon& icon);
+    void setIcon(const QIcon &icon);
 
     /**
      * Resets the icon (reverts to an empty button).
@@ -309,7 +309,7 @@ public:
      * @see KIconLoader::StdSizes
      * @see iconSize
      */
-    void setIconSize( int size );
+    void setIconSize(int size);
 
     /**
      * Returns the iconsize set via setIconSize() or 0, if the default
@@ -325,12 +325,12 @@ Q_SIGNALS:
 
 private:
     class KIconButtonPrivate;
-    KIconButtonPrivate* const d;
+    KIconButtonPrivate *const d;
 
     Q_DISABLE_COPY(KIconButton)
 
     Q_PRIVATE_SLOT(d, void _k_slotChangeIcon())
-    Q_PRIVATE_SLOT(d, void _k_newIconName(const QString&))
+    Q_PRIVATE_SLOT(d, void _k_newIconName(const QString &))
 };
 
 }

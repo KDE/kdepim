@@ -41,23 +41,25 @@ using namespace Kleo;
 using namespace GpgME;
 using namespace boost;
 
-QGpgMEDeleteJob::QGpgMEDeleteJob( Context * context )
-  : mixin_type( context )
+QGpgMEDeleteJob::QGpgMEDeleteJob(Context *context)
+    : mixin_type(context)
 {
-  lateInitialization();
+    lateInitialization();
 }
 
 QGpgMEDeleteJob::~QGpgMEDeleteJob() {}
 
-static QGpgMEDeleteJob::result_type delete_key( Context * ctx, const Key & key, bool allowSecretKeyDeletion ) {
-  const Error err = ctx->deleteKey( key, allowSecretKeyDeletion );
-  Error ae;
-  const QString log = _detail::audit_log_as_html( ctx, ae );
-  return make_tuple( err, log, ae );
+static QGpgMEDeleteJob::result_type delete_key(Context *ctx, const Key &key, bool allowSecretKeyDeletion)
+{
+    const Error err = ctx->deleteKey(key, allowSecretKeyDeletion);
+    Error ae;
+    const QString log = _detail::audit_log_as_html(ctx, ae);
+    return make_tuple(err, log, ae);
 }
 
-Error QGpgMEDeleteJob::start( const Key & key, bool allowSecretKeyDeletion ) {
-  run( bind( &delete_key, _1, key, allowSecretKeyDeletion ) );
-  return Error();
+Error QGpgMEDeleteJob::start(const Key &key, bool allowSecretKeyDeletion)
+{
+    run(bind(&delete_key, _1, key, allowSecretKeyDeletion));
+    return Error();
 }
 

@@ -479,7 +479,7 @@ QString YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWi
     if (info.contains(QLatin1String("folders"))) {
         const QVariantMap mapFolder = info.value(QLatin1String("folders")).toMap();
         const QVariantList folders = mapFolder.value(QLatin1String("folder")).toList();
-        Q_FOREACH(const QVariant & v, folders) {
+        Q_FOREACH (const QVariant &v, folders) {
             const QVariantMap map = v.toMap();
             //qDebug()<<" folder map"<<map;
             if (map.contains(QLatin1String("name"))) {
@@ -499,7 +499,7 @@ QString YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWi
         }
         const QVariantMap mapFiles = info.value(QLatin1String("files")).toMap();
         const QVariantList files = mapFiles.value(QLatin1String("file")).toList();
-        Q_FOREACH(const QVariant & v, files) {
+        Q_FOREACH (const QVariant &v, files) {
             const QVariantMap map = v.toMap();
             //qDebug()<<" file map !"<<map;
             if (map.contains(QLatin1String("name"))) {

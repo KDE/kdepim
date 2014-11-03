@@ -37,9 +37,7 @@
 
 #include <utils/formatting.h>
 
-
 #include <KAboutData>
-
 
 #include <QTreeView>
 #include <QLineEdit>
@@ -63,41 +61,45 @@
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 
-class Relay : public QObject {
+class Relay : public QObject
+{
     Q_OBJECT
 public:
-    explicit Relay( QObject * p=0 ) : QObject( p ) {}
+    explicit Relay(QObject *p = 0) : QObject(p) {}
 
 public Q_SLOTS:
-    void slotNextKeyEvent( GpgME::Context *, const GpgME::Key & key ) {
-        qDebug( "next key" );
-        mKeys.push_back( key );
+    void slotNextKeyEvent(GpgME::Context *, const GpgME::Key &key)
+    {
+        qDebug("next key");
+        mKeys.push_back(key);
         // push out keys in chunks of 1..16 keys
-        if ( mKeys.size() > qrand() % 16U ) {
-            emit nextKeys( mKeys );
+        if (mKeys.size() > qrand() % 16U) {
+            emit nextKeys(mKeys);
             mKeys.clear();
         }
     }
 
-    void slotOperationDoneEvent( GpgME::Context* , const GpgME::Error& error ) {
-        qDebug( "listing done error: %d", error.encodedError() );
+    void slotOperationDoneEvent(GpgME::Context *, const GpgME::Error &error)
+    {
+        qDebug("listing done error: %d", error.encodedError());
     }
- 
+
 Q_SIGNALS:
-    void nextKeys( const std::vector<GpgME::Key> & keys );
+    void nextKeys(const std::vector<GpgME::Key> &keys);
 
 private:
     std::vector<GpgME::Key> mKeys;
 };
 
-int main( int argc, char * argv[] ) {
+int main(int argc, char *argv[])
+{
 
-    if ( const GpgME::Error initError = GpgME::initializeLibrary(0) ) {
-        qDebug() << "Error initializing gpgme:" << QString::fromLocal8Bit( initError.asString() ) ;
+    if (const GpgME::Error initError = GpgME::initializeLibrary(0)) {
+        qDebug() << "Error initializing gpgme:" << QString::fromLocal8Bit(initError.asString()) ;
         return 1;
     }
 
-    KAboutData aboutData( "test_flatkeylistmodel", 0, i18n("FlatKeyListModel Test"), "0.2" );
+    KAboutData aboutData("test_flatkeylistmodel", 0, i18n("FlatKeyListModel Test"), "0.2");
     QApplication app(argc, argv);
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
@@ -112,97 +114,94 @@ int main( int argc, char * argv[] ) {
     parser.process(app);
     aboutData.processCommandLine(&parser);
 
+    const bool showFlat = parser.isSet(QLatin1String("flat")) || !parser.isSet(QLatin1String("hierarchical"));
+    const bool showHier = parser.isSet(QLatin1String("hierarchical")) || !parser.isSet(QLatin1String("flat"));
+    const bool disablesmime = parser.isSet(QLatin1String("disable-smime"));
+    const bool secretOnly = parser.isSet(QLatin1String("secret"));
 
-
-    const bool showFlat = parser.isSet( QLatin1String("flat") ) || !parser.isSet( QLatin1String("hierarchical") );
-    const bool showHier = parser.isSet( QLatin1String("hierarchical") ) || !parser.isSet( QLatin1String("flat") );
-    const bool disablesmime = parser.isSet( QLatin1String("disable-smime") );
-    const bool secretOnly = parser.isSet( QLatin1String("secret") );
-
-    qsrand( QDateTime::currentDateTime().toTime_t() );
+    qsrand(QDateTime::currentDateTime().toTime_t());
 
     QWidget flatWidget, hierarchicalWidget;
-    QVBoxLayout flatLay( &flatWidget ), hierarchicalLay( &hierarchicalWidget );
-    QLineEdit flatLE( &flatWidget ), hierarchicalLE( &hierarchicalWidget );
-    QTreeView flat( &flatWidget ), hierarchical( &hierarchicalWidget );
+    QVBoxLayout flatLay(&flatWidget), hierarchicalLay(&hierarchicalWidget);
+    QLineEdit flatLE(&flatWidget), hierarchicalLE(&hierarchicalWidget);
+    QTreeView flat(&flatWidget), hierarchical(&hierarchicalWidget);
 
-    flat.setSortingEnabled( true );
-    flat.sortByColumn( Kleo::AbstractKeyListModel::Fingerprint, Qt::AscendingOrder );
-    hierarchical.setSortingEnabled( true );
-    hierarchical.sortByColumn( Kleo::AbstractKeyListModel::Fingerprint, Qt::AscendingOrder );
+    flat.setSortingEnabled(true);
+    flat.sortByColumn(Kleo::AbstractKeyListModel::Fingerprint, Qt::AscendingOrder);
+    hierarchical.setSortingEnabled(true);
+    hierarchical.sortByColumn(Kleo::AbstractKeyListModel::Fingerprint, Qt::AscendingOrder);
 
-    flatLay.addWidget( &flatLE );
-    flatLay.addWidget( &flat );
+    flatLay.addWidget(&flatLE);
+    flatLay.addWidget(&flat);
 
-    hierarchicalLay.addWidget( &hierarchicalLE );
-    hierarchicalLay.addWidget( &hierarchical );
+    hierarchicalLay.addWidget(&hierarchicalLE);
+    hierarchicalLay.addWidget(&hierarchical);
 
-    flatWidget.setWindowTitle( QLatin1String( "Flat Key Listing" ) );
-    hierarchicalWidget.setWindowTitle( QLatin1String( "Hierarchical Key Listing" ) );
+    flatWidget.setWindowTitle(QLatin1String("Flat Key Listing"));
+    hierarchicalWidget.setWindowTitle(QLatin1String("Hierarchical Key Listing"));
 
     Kleo::KeyListSortFilterProxyModel flatProxy, hierarchicalProxy;
 
-    QObject::connect( &flatLE, SIGNAL(textChanged(QString)), &flatProxy, SLOT(setFilterFixedString(QString)) );
-    QObject::connect( &hierarchicalLE, SIGNAL(textChanged(QString)), &hierarchicalProxy, SLOT(setFilterFixedString(QString)) );
+    QObject::connect(&flatLE, SIGNAL(textChanged(QString)), &flatProxy, SLOT(setFilterFixedString(QString)));
+    QObject::connect(&hierarchicalLE, SIGNAL(textChanged(QString)), &hierarchicalProxy, SLOT(setFilterFixedString(QString)));
 
     Relay relay;
-    QObject::connect( QGpgME::EventLoopInteractor::instance(), SIGNAL(nextKeyEventSignal(GpgME::Context*,GpgME::Key)),
-                      &relay, SLOT(slotNextKeyEvent(GpgME::Context*,GpgME::Key)) );
-    QObject::connect( QGpgME::EventLoopInteractor::instance(), SIGNAL(operationDoneEventSignal(GpgME::Context*,GpgME::Error)),
-                      &relay, SLOT(slotOperationDoneEvent(GpgME::Context*,GpgME::Error)) );
+    QObject::connect(QGpgME::EventLoopInteractor::instance(), SIGNAL(nextKeyEventSignal(GpgME::Context*,GpgME::Key)),
+                     &relay, SLOT(slotNextKeyEvent(GpgME::Context*,GpgME::Key)));
+    QObject::connect(QGpgME::EventLoopInteractor::instance(), SIGNAL(operationDoneEventSignal(GpgME::Context*,GpgME::Error)),
+                     &relay, SLOT(slotOperationDoneEvent(GpgME::Context*,GpgME::Error)));
 
-
-    if ( showFlat )
-        if ( Kleo::AbstractKeyListModel * const model = Kleo::AbstractKeyListModel::createFlatKeyListModel( &flat ) ) {
-            QObject::connect( &relay, SIGNAL(nextKeys(std::vector<GpgME::Key>)), model, SLOT(addKeys(std::vector<GpgME::Key>)) );
-            model->setToolTipOptions( Kleo::Formatting::AllOptions );
-            flatProxy.setSourceModel( model );
-            flat.setModel( &flatProxy );
+    if (showFlat)
+        if (Kleo::AbstractKeyListModel *const model = Kleo::AbstractKeyListModel::createFlatKeyListModel(&flat)) {
+            QObject::connect(&relay, SIGNAL(nextKeys(std::vector<GpgME::Key>)), model, SLOT(addKeys(std::vector<GpgME::Key>)));
+            model->setToolTipOptions(Kleo::Formatting::AllOptions);
+            flatProxy.setSourceModel(model);
+            flat.setModel(&flatProxy);
 
             flatWidget.show();
         }
 
-    if ( showHier )
-        if ( Kleo::AbstractKeyListModel * const model = Kleo::AbstractKeyListModel::createHierarchicalKeyListModel( &hierarchical ) ) {
-            QObject::connect( &relay, SIGNAL(nextKeys(std::vector<GpgME::Key>)), model, SLOT(addKeys(std::vector<GpgME::Key>)) );
-            model->setToolTipOptions( Kleo::Formatting::AllOptions );
-            hierarchicalProxy.setSourceModel( model );
-            hierarchical.setModel( &hierarchicalProxy );
+    if (showHier)
+        if (Kleo::AbstractKeyListModel *const model = Kleo::AbstractKeyListModel::createHierarchicalKeyListModel(&hierarchical)) {
+            QObject::connect(&relay, SIGNAL(nextKeys(std::vector<GpgME::Key>)), model, SLOT(addKeys(std::vector<GpgME::Key>)));
+            model->setToolTipOptions(Kleo::Formatting::AllOptions);
+            hierarchicalProxy.setSourceModel(model);
+            hierarchical.setModel(&hierarchicalProxy);
 
             hierarchicalWidget.show();
         }
 
-    const char * pattern[] = { 0 };
+    const char *pattern[] = { 0 };
 
-    const std::auto_ptr<GpgME::Context> pgp( GpgME::Context::createForProtocol( GpgME::OpenPGP ) );
-    pgp->setManagedByEventLoopInteractor( true );
-    pgp->setKeyListMode( GpgME::Local );
+    const std::auto_ptr<GpgME::Context> pgp(GpgME::Context::createForProtocol(GpgME::OpenPGP));
+    pgp->setManagedByEventLoopInteractor(true);
+    pgp->setKeyListMode(GpgME::Local);
 
-    if ( const GpgME::Error e = pgp->startKeyListing( pattern, secretOnly ) )
+    if (const GpgME::Error e = pgp->startKeyListing(pattern, secretOnly)) {
         qDebug() << "pgp->startKeyListing() ->" << e.asString();
-
-
-    if ( !disablesmime ) {
-        const std::auto_ptr<GpgME::Context> cms( GpgME::Context::createForProtocol( GpgME::CMS ) );
-        cms->setManagedByEventLoopInteractor( true );
-        cms->setKeyListMode( GpgME::Local );
-
-        if ( const GpgME::Error e = cms->startKeyListing( pattern, secretOnly ) )
-            qDebug() << "cms" << e.asString();
-
-
-       QEventLoop loop;
-       QTimer::singleShot( 2000, &loop, SLOT(quit()) );
-       loop.exec();
-
-       const std::auto_ptr<GpgME::Context> cms2( GpgME::Context::createForProtocol( GpgME::CMS ) );
-       cms2->setManagedByEventLoopInteractor( true );
-       cms2->setKeyListMode( GpgME::Local );
-
-       if ( const GpgME::Error e = cms2->startKeyListing( pattern, secretOnly ) )
-          qDebug() << "cms2" << e.asString();
     }
 
+    if (!disablesmime) {
+        const std::auto_ptr<GpgME::Context> cms(GpgME::Context::createForProtocol(GpgME::CMS));
+        cms->setManagedByEventLoopInteractor(true);
+        cms->setKeyListMode(GpgME::Local);
+
+        if (const GpgME::Error e = cms->startKeyListing(pattern, secretOnly)) {
+            qDebug() << "cms" << e.asString();
+        }
+
+        QEventLoop loop;
+        QTimer::singleShot(2000, &loop, SLOT(quit()));
+        loop.exec();
+
+        const std::auto_ptr<GpgME::Context> cms2(GpgME::Context::createForProtocol(GpgME::CMS));
+        cms2->setManagedByEventLoopInteractor(true);
+        cms2->setKeyListMode(GpgME::Local);
+
+        if (const GpgME::Error e = cms2->startKeyListing(pattern, secretOnly)) {
+            qDebug() << "cms2" << e.asString();
+        }
+    }
 
     return app.exec();
 }

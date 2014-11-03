@@ -38,43 +38,46 @@
 
 #include <utils/pimpl_ptr.h>
 
-namespace Kleo {
-namespace Config {
+namespace Kleo
+{
+namespace Config
+{
 
-    class AppearanceConfigWidget : public QWidget {
-        Q_OBJECT
-    public:
-        explicit AppearanceConfigWidget( QWidget * parent=0, Qt::WindowFlags f=0 );
-        ~AppearanceConfigWidget();
+class AppearanceConfigWidget : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit AppearanceConfigWidget(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    ~AppearanceConfigWidget();
 
-    public Q_SLOTS:
-        void load();
-        void save();
-        void defaults();
+public Q_SLOTS:
+    void load();
+    void save();
+    void defaults();
 
-    Q_SIGNALS:
-        void changed();
+Q_SIGNALS:
+    void changed();
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void slotIconClicked() )
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void slotIconClicked())
 #ifndef QT_NO_COLORDIALOG
-        Q_PRIVATE_SLOT( d, void slotForegroundClicked() )
-        Q_PRIVATE_SLOT( d, void slotBackgroundClicked() )
+    Q_PRIVATE_SLOT(d, void slotForegroundClicked())
+    Q_PRIVATE_SLOT(d, void slotBackgroundClicked())
 #endif
 #ifndef QT_NO_FONTDIALOG
-        Q_PRIVATE_SLOT( d, void slotFontClicked() )
+    Q_PRIVATE_SLOT(d, void slotFontClicked())
 #endif
-        Q_PRIVATE_SLOT( d, void slotSelectionChanged() )
-        Q_PRIVATE_SLOT( d, void slotDefaultClicked() )
-        Q_PRIVATE_SLOT( d, void slotItalicToggled(bool) )
-        Q_PRIVATE_SLOT( d, void slotBoldToggled(bool) )
-        Q_PRIVATE_SLOT( d, void slotStrikeOutToggled(bool) )
-        Q_PRIVATE_SLOT( d, void slotTooltipValidityChanged(bool) )
-        Q_PRIVATE_SLOT( d, void slotTooltipDetailsChanged(bool) )
-        Q_PRIVATE_SLOT( d, void slotTooltipOwnerChanged(bool) )
-    };
+    Q_PRIVATE_SLOT(d, void slotSelectionChanged())
+    Q_PRIVATE_SLOT(d, void slotDefaultClicked())
+    Q_PRIVATE_SLOT(d, void slotItalicToggled(bool))
+    Q_PRIVATE_SLOT(d, void slotBoldToggled(bool))
+    Q_PRIVATE_SLOT(d, void slotStrikeOutToggled(bool))
+    Q_PRIVATE_SLOT(d, void slotTooltipValidityChanged(bool))
+    Q_PRIVATE_SLOT(d, void slotTooltipDetailsChanged(bool))
+    Q_PRIVATE_SLOT(d, void slotTooltipOwnerChanged(bool))
+};
 
 }
 }

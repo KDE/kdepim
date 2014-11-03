@@ -37,16 +37,18 @@ class QValidator;
 class QRegExp;
 class QObject;
 
-namespace Kleo {
-namespace Validation {
+namespace Kleo
+{
+namespace Validation
+{
 
-    QValidator * email( QObject * parent=0 );
-    QValidator * pgpName( QObject * parent=0 );
-    QValidator * pgpComment( QObject * parent=0 );
+QValidator *email(QObject *parent = 0);
+QValidator *pgpName(QObject *parent = 0);
+QValidator *pgpComment(QObject *parent = 0);
 
-    QValidator * email( const QRegExp & additionalRegExp, QObject * parent=0 );
-    QValidator * pgpName( const QRegExp & additionalRegExp, QObject * parent=0 );
-    QValidator * pgpComment( const QRegExp & additionalRegExp, QObject * parent=0 );
+QValidator *email(const QRegExp &additionalRegExp, QObject *parent = 0);
+QValidator *pgpName(const QRegExp &additionalRegExp, QObject *parent = 0);
+QValidator *pgpComment(const QRegExp &additionalRegExp, QObject *parent = 0);
 
 }
 }

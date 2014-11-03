@@ -44,118 +44,127 @@
 #include <string>
 #include <vector>
 
-namespace GpgME {
-    class Key;
-    class DecryptionResult;
-    class VerificationResult;
-    class KeyListResult;
-    class Subkey;
+namespace GpgME
+{
+class Key;
+class DecryptionResult;
+class VerificationResult;
+class KeyListResult;
+class Subkey;
 }
 
-namespace KMime {
-namespace Types {
-    class Mailbox;
+namespace KMime
+{
+namespace Types
+{
+class Mailbox;
 }
 }
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class FileSystemWatcher;
+class FileSystemWatcher;
 
-    class KeyCache : public QObject {
-        Q_OBJECT
-    protected:
-        explicit KeyCache();
-    public:
-        static boost::shared_ptr<const KeyCache> instance();
-        static boost::shared_ptr<KeyCache> mutableInstance();
+class KeyCache : public QObject
+{
+    Q_OBJECT
+protected:
+    explicit KeyCache();
+public:
+    static boost::shared_ptr<const KeyCache> instance();
+    static boost::shared_ptr<KeyCache> mutableInstance();
 
-        ~KeyCache();
+    ~KeyCache();
 
-        void insert( const GpgME::Key & key );
-        void insert( const std::vector<GpgME::Key> & keys );
+    void insert(const GpgME::Key &key);
+    void insert(const std::vector<GpgME::Key> &keys);
 
-        void refresh( const std::vector<GpgME::Key> & keys );
+    void refresh(const std::vector<GpgME::Key> &keys);
 
-        void remove( const GpgME::Key & key );
-        void remove( const std::vector<GpgME::Key> & keys );
+    void remove(const GpgME::Key &key);
+    void remove(const std::vector<GpgME::Key> &keys);
 
-        void addFileSystemWatcher( const boost::shared_ptr<FileSystemWatcher>& watcher );
+    void addFileSystemWatcher(const boost::shared_ptr<FileSystemWatcher> &watcher);
 
-        void enableFileSystemWatcher( bool enable );
+    void enableFileSystemWatcher(bool enable);
 
-        const std::vector<GpgME::Key> & keys() const;
-        std::vector<GpgME::Key> secretKeys() const;
+    const std::vector<GpgME::Key> &keys() const;
+    std::vector<GpgME::Key> secretKeys() const;
 
-        const GpgME::Key & findByFingerprint( const char * fpr ) const;
-        const GpgME::Key & findByFingerprint( const std::string & fpr ) const {
-            return findByFingerprint( fpr.c_str() );
-        }
+    const GpgME::Key &findByFingerprint(const char *fpr) const;
+    const GpgME::Key &findByFingerprint(const std::string &fpr) const
+    {
+        return findByFingerprint(fpr.c_str());
+    }
 
-        std::vector<GpgME::Key> findByFingerprint( const std::vector<std::string> & fprs ) const;
+    std::vector<GpgME::Key> findByFingerprint(const std::vector<std::string> &fprs) const;
 
-        std::vector<GpgME::Key> findByEMailAddress( const char * email ) const;
-        std::vector<GpgME::Key> findByEMailAddress( const std::string & email ) const;
+    std::vector<GpgME::Key> findByEMailAddress(const char *email) const;
+    std::vector<GpgME::Key> findByEMailAddress(const std::string &email) const;
 
-        const GpgME::Key & findByShortKeyID( const char * id ) const;
-        const GpgME::Key & findByShortKeyID( const std::string & id ) const {
-            return findByShortKeyID( id.c_str() );
-        }
+    const GpgME::Key &findByShortKeyID(const char *id) const;
+    const GpgME::Key &findByShortKeyID(const std::string &id) const
+    {
+        return findByShortKeyID(id.c_str());
+    }
 
-        const GpgME::Key & findByKeyIDOrFingerprint( const char * id ) const;
-        const GpgME::Key & findByKeyIDOrFingerprint( const std::string & id ) const {
-            return findByKeyIDOrFingerprint( id.c_str() );
-        }
-        std::vector<GpgME::Key> findByKeyIDOrFingerprint( const std::vector<std::string> & ids ) const;
+    const GpgME::Key &findByKeyIDOrFingerprint(const char *id) const;
+    const GpgME::Key &findByKeyIDOrFingerprint(const std::string &id) const
+    {
+        return findByKeyIDOrFingerprint(id.c_str());
+    }
+    std::vector<GpgME::Key> findByKeyIDOrFingerprint(const std::vector<std::string> &ids) const;
 
-        std::vector<GpgME::Subkey> findSubkeysByKeyID( const std::vector<std::string> & ids ) const;
+    std::vector<GpgME::Subkey> findSubkeysByKeyID(const std::vector<std::string> &ids) const;
 
-        std::vector<GpgME::Key> findRecipients( const GpgME::DecryptionResult & result ) const;
-        std::vector<GpgME::Key> findSigners( const GpgME::VerificationResult & result ) const;
+    std::vector<GpgME::Key> findRecipients(const GpgME::DecryptionResult &result) const;
+    std::vector<GpgME::Key> findSigners(const GpgME::VerificationResult &result) const;
 
-        std::vector<GpgME::Key> findSigningKeysByMailbox( const KMime::Types::Mailbox & mb ) const;
-        std::vector<GpgME::Key> findEncryptionKeysByMailbox( const KMime::Types::Mailbox & mb ) const;
+    std::vector<GpgME::Key> findSigningKeysByMailbox(const KMime::Types::Mailbox &mb) const;
+    std::vector<GpgME::Key> findEncryptionKeysByMailbox(const KMime::Types::Mailbox &mb) const;
 
-        enum Option {
-            NoOption = 0,
-            RecursiveSearch = 1,
-            IncludeSubject = 2
-        };
-        Q_DECLARE_FLAGS( Options, Option )
-
-        std::vector<GpgME::Key> findSubjects( const GpgME::Key & key, Options option=RecursiveSearch ) const;
-        std::vector<GpgME::Key> findSubjects( const std::vector<GpgME::Key> & keys, Options options=RecursiveSearch ) const;
-        std::vector<GpgME::Key> findSubjects( std::vector<GpgME::Key>::const_iterator first, std::vector<GpgME::Key>::const_iterator last, Options options=RecursiveSearch ) const;
-
-        std::vector<GpgME::Key> findIssuers( const GpgME::Key & key, Options options=RecursiveSearch ) const;
-        std::vector<GpgME::Key> findIssuers( const std::vector<GpgME::Key> & keys, Options options=RecursiveSearch ) const;
-        std::vector<GpgME::Key> findIssuers( std::vector<GpgME::Key>::const_iterator first, std::vector<GpgME::Key>::const_iterator last, Options options=RecursiveSearch ) const;
-
-    public Q_SLOTS:
-        void clear();
-        void startKeyListing( GpgME::Protocol proto=GpgME::UnknownProtocol ) {
-            reload( proto );
-        }
-        void reload( GpgME::Protocol proto=GpgME::UnknownProtocol );
-        void cancelKeyListing();
-
-    Q_SIGNALS:
-        //void changed( const GpgME::Key & key );
-        void aboutToRemove( const GpgME::Key & key );
-        void added( const GpgME::Key & key );
-        void keyListingDone( const GpgME::KeyListResult & result );
-        void keysMayHaveChanged();
-
-    private:
-        class RefreshKeysJob;
-
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void refreshJobDone( GpgME::KeyListResult ) )
+    enum Option {
+        NoOption = 0,
+        RecursiveSearch = 1,
+        IncludeSubject = 2
     };
+    Q_DECLARE_FLAGS(Options, Option)
+
+    std::vector<GpgME::Key> findSubjects(const GpgME::Key &key, Options option = RecursiveSearch) const;
+    std::vector<GpgME::Key> findSubjects(const std::vector<GpgME::Key> &keys, Options options = RecursiveSearch) const;
+    std::vector<GpgME::Key> findSubjects(std::vector<GpgME::Key>::const_iterator first, std::vector<GpgME::Key>::const_iterator last, Options options = RecursiveSearch) const;
+
+    std::vector<GpgME::Key> findIssuers(const GpgME::Key &key, Options options = RecursiveSearch) const;
+    std::vector<GpgME::Key> findIssuers(const std::vector<GpgME::Key> &keys, Options options = RecursiveSearch) const;
+    std::vector<GpgME::Key> findIssuers(std::vector<GpgME::Key>::const_iterator first, std::vector<GpgME::Key>::const_iterator last, Options options = RecursiveSearch) const;
+
+public Q_SLOTS:
+    void clear();
+    void startKeyListing(GpgME::Protocol proto = GpgME::UnknownProtocol)
+    {
+        reload(proto);
+    }
+    void reload(GpgME::Protocol proto = GpgME::UnknownProtocol);
+    void cancelKeyListing();
+
+Q_SIGNALS:
+    //void changed( const GpgME::Key & key );
+    void aboutToRemove(const GpgME::Key &key);
+    void added(const GpgME::Key &key);
+    void keyListingDone(const GpgME::KeyListResult &result);
+    void keysMayHaveChanged();
+
+private:
+    class RefreshKeysJob;
+
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void refreshJobDone(GpgME::KeyListResult))
+};
 
 }
 
-Q_DECLARE_OPERATORS_FOR_FLAGS( Kleo::KeyCache::Options )
+Q_DECLARE_OPERATORS_FOR_FLAGS(Kleo::KeyCache::Options)
 
 #endif /* __KLEOPATRA_MODELS_KEYCACHE_H__ */

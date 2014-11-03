@@ -30,7 +30,6 @@
     your version.
 */
 
-
 #include "chiasmuslibrary.h"
 
 #include "chiasmusbackend.h"
@@ -41,7 +40,6 @@
 #include <QDebug>
 #include <KLocalizedString>
 
-
 #include <QByteArray>
 
 #include <vector>
@@ -51,71 +49,85 @@
 #include <cstdlib>
 #include <cstring>
 
-Kleo::ChiasmusLibrary * Kleo::ChiasmusLibrary::self = 0;
+Kleo::ChiasmusLibrary *Kleo::ChiasmusLibrary::self = 0;
 
-Kleo::ChiasmusLibrary::ChiasmusLibrary() : mXiaLibrary( 0 ) {
-  self = this;
+Kleo::ChiasmusLibrary::ChiasmusLibrary() : mXiaLibrary(0)
+{
+    self = this;
 }
 
-Kleo::ChiasmusLibrary::~ChiasmusLibrary() {
-  //delete mXiaLibrary; // hmm, how to get rid of it, then?
+Kleo::ChiasmusLibrary::~ChiasmusLibrary()
+{
+    //delete mXiaLibrary; // hmm, how to get rid of it, then?
 }
 
-Kleo::ChiasmusLibrary::main_func Kleo::ChiasmusLibrary::chiasmus( QString * reason ) const {
-  assert( ChiasmusBackend::instance() );
-  assert( ChiasmusBackend::instance()->config() );
-  const CryptoConfigEntry * lib = ChiasmusBackend::instance()->config()->entry( QLatin1String("Chiasmus"), QLatin1String("General"), QLatin1String("lib") );
-  assert( lib );
-  const QString libfile = lib->urlValue().path();
-  if ( !mXiaLibrary )
-    mXiaLibrary = new KLibrary( libfile );
-  if ( mXiaLibrary->fileName().isEmpty() || !mXiaLibrary->isLoaded() ) {
-    if ( reason )
-      *reason = i18n( "Failed to load %1: %2",
-                      libfile, mXiaLibrary->errorString() );
-    qDebug() <<"ChiasmusLibrary: loading \"" << libfile
-                  << "\" failed:" << mXiaLibrary->errorString();
-    delete mXiaLibrary;
-    mXiaLibrary = 0;
-    return 0;
-  }
-  KLibrary::void_function_ptr symbol = mXiaLibrary->resolveFunction( "Chiasmus" );
-  if ( !symbol ) {
-    if ( reason )
-      *reason = i18n( "Failed to load %1: %2",
-                      libfile, i18n( "Library does not contain the symbol \"Chiasmus\"." ) );
-    qDebug() <<"ChiasmusLibrary: loading \"" << libfile
-                  << "\" failed: " << "Library does not contain the symbol \"Chiasmus\".";
-    delete mXiaLibrary;
-    mXiaLibrary = 0;
-    return 0;
-  }
+Kleo::ChiasmusLibrary::main_func Kleo::ChiasmusLibrary::chiasmus(QString *reason) const
+{
+    assert(ChiasmusBackend::instance());
+    assert(ChiasmusBackend::instance()->config());
+    const CryptoConfigEntry *lib = ChiasmusBackend::instance()->config()->entry(QLatin1String("Chiasmus"), QLatin1String("General"), QLatin1String("lib"));
+    assert(lib);
+    const QString libfile = lib->urlValue().path();
+    if (!mXiaLibrary) {
+        mXiaLibrary = new KLibrary(libfile);
+    }
+    if (mXiaLibrary->fileName().isEmpty() || !mXiaLibrary->isLoaded()) {
+        if (reason)
+            *reason = i18n("Failed to load %1: %2",
+                           libfile, mXiaLibrary->errorString());
+        qDebug() << "ChiasmusLibrary: loading \"" << libfile
+                 << "\" failed:" << mXiaLibrary->errorString();
+        delete mXiaLibrary;
+        mXiaLibrary = 0;
+        return 0;
+    }
+    KLibrary::void_function_ptr symbol = mXiaLibrary->resolveFunction("Chiasmus");
+    if (!symbol) {
+        if (reason)
+            *reason = i18n("Failed to load %1: %2",
+                           libfile, i18n("Library does not contain the symbol \"Chiasmus\"."));
+        qDebug() << "ChiasmusLibrary: loading \"" << libfile
+                 << "\" failed: " << "Library does not contain the symbol \"Chiasmus\".";
+        delete mXiaLibrary;
+        mXiaLibrary = 0;
+        return 0;
+    }
 
-  assert( symbol );
-  return ( main_func )symbol;
+    assert(symbol);
+    return (main_func)symbol;
 }
 
-namespace {
-  class ArgvProvider {
-    char ** mArgv;
+namespace
+{
+class ArgvProvider
+{
+    char **mArgv;
     int mArgc;
-  public:
-    ArgvProvider( const QVector<QByteArray> & args ) {
-      mArgv = new char * [args.size()];
-      for ( int i = 0 ; i < args.size() ; ++i )
-        mArgv[i] = strdup( args[i].data() );
+public:
+    ArgvProvider(const QVector<QByteArray> &args)
+    {
+        mArgv = new char *[args.size()];
+        for (int i = 0 ; i < args.size() ; ++i) {
+            mArgv[i] = strdup(args[i].data());
+        }
     }
-    ~ArgvProvider() {
-      std::for_each( mArgv, mArgv + mArgc, std::free );
-      delete[] mArgv;
+    ~ArgvProvider()
+    {
+        std::for_each(mArgv, mArgv + mArgc, std::free);
+        delete[] mArgv;
     }
-    char ** argv() const { return mArgv; }
-  };
+    char **argv() const
+    {
+        return mArgv;
+    }
+};
 }
 
-int Kleo::ChiasmusLibrary::perform( const QVector<QByteArray> & args ) const {
-  if ( main_func func = chiasmus() )
-    return func( args.size(), ArgvProvider( args ).argv() );
-  else
-    return -1;
+int Kleo::ChiasmusLibrary::perform(const QVector<QByteArray> &args) const
+{
+    if (main_func func = chiasmus()) {
+        return func(args.size(), ArgvProvider(args).argv());
+    } else {
+        return -1;
+    }
 }

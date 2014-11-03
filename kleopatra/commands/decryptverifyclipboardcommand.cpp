@@ -58,20 +58,26 @@ using namespace Kleo::Commands;
 using namespace Kleo::Crypto;
 using namespace boost;
 
-class DecryptVerifyClipboardCommand::Private : public Command::Private {
+class DecryptVerifyClipboardCommand::Private : public Command::Private
+{
     friend class ::Kleo::Commands::DecryptVerifyClipboardCommand;
-    DecryptVerifyClipboardCommand * q_func() const { return static_cast<DecryptVerifyClipboardCommand*>( q ); }
+    DecryptVerifyClipboardCommand *q_func() const
+    {
+        return static_cast<DecryptVerifyClipboardCommand *>(q);
+    }
 public:
-    explicit Private( DecryptVerifyClipboardCommand * qq, KeyListController * c );
+    explicit Private(DecryptVerifyClipboardCommand *qq, KeyListController *c);
     ~Private();
 
     void init();
 
 private:
-    void slotControllerDone() {
+    void slotControllerDone()
+    {
         finished();
     }
-    void slotControllerError( int, const QString & ) {
+    void slotControllerError(int, const QString &)
+    {
         finished();
     }
 
@@ -81,54 +87,68 @@ private:
     DecryptVerifyEMailController controller;
 };
 
-
-DecryptVerifyClipboardCommand::Private * DecryptVerifyClipboardCommand::d_func() { return static_cast<Private*>( d.get() ); }
-const DecryptVerifyClipboardCommand::Private * DecryptVerifyClipboardCommand::d_func() const { return static_cast<const Private*>( d.get() ); }
+DecryptVerifyClipboardCommand::Private *DecryptVerifyClipboardCommand::d_func()
+{
+    return static_cast<Private *>(d.get());
+}
+const DecryptVerifyClipboardCommand::Private *DecryptVerifyClipboardCommand::d_func() const
+{
+    return static_cast<const Private *>(d.get());
+}
 
 #define d d_func()
 #define q q_func()
 
-DecryptVerifyClipboardCommand::Private::Private( DecryptVerifyClipboardCommand * qq, KeyListController * c )
-    : Command::Private( qq, c ),
-      shared_qq( qq, kdtools::nodelete() ),
+DecryptVerifyClipboardCommand::Private::Private(DecryptVerifyClipboardCommand *qq, KeyListController *c)
+    : Command::Private(qq, c),
+      shared_qq(qq, kdtools::nodelete()),
       input(),
       controller()
 {
 
 }
 
-DecryptVerifyClipboardCommand::Private::~Private() { qDebug(); }
+DecryptVerifyClipboardCommand::Private::~Private()
+{
+    qDebug();
+}
 
-DecryptVerifyClipboardCommand::DecryptVerifyClipboardCommand( KeyListController * c )
-    : Command( new Private( this, c ) )
+DecryptVerifyClipboardCommand::DecryptVerifyClipboardCommand(KeyListController *c)
+    : Command(new Private(this, c))
 {
     d->init();
 }
 
-DecryptVerifyClipboardCommand::DecryptVerifyClipboardCommand( QAbstractItemView * v, KeyListController * c )
-    : Command( v, new Private( this, c ) )
+DecryptVerifyClipboardCommand::DecryptVerifyClipboardCommand(QAbstractItemView *v, KeyListController *c)
+    : Command(v, new Private(this, c))
 {
     d->init();
 }
 
-void DecryptVerifyClipboardCommand::Private::init() {
-    controller.setExecutionContext( shared_qq );
-    connect( &controller, SIGNAL(done()), q, SLOT(slotControllerDone()) );
-    connect( &controller, SIGNAL(error(int,QString)), q, SLOT(slotControllerError(int,QString)) );
+void DecryptVerifyClipboardCommand::Private::init()
+{
+    controller.setExecutionContext(shared_qq);
+    connect(&controller, SIGNAL(done()), q, SLOT(slotControllerDone()));
+    connect(&controller, SIGNAL(error(int,QString)), q, SLOT(slotControllerError(int,QString)));
 }
 
-DecryptVerifyClipboardCommand::~DecryptVerifyClipboardCommand() { qDebug(); }
+DecryptVerifyClipboardCommand::~DecryptVerifyClipboardCommand()
+{
+    qDebug();
+}
 
 // static
-bool DecryptVerifyClipboardCommand::canDecryptVerifyCurrentClipboard() {
+bool DecryptVerifyClipboardCommand::canDecryptVerifyCurrentClipboard()
+{
     try {
         return Input::createFromClipboard()->classification()
-            & (Class::CipherText|Class::ClearsignedMessage|Class::OpaqueSignature) ;
-    } catch ( ... ) {}
+               & (Class::CipherText | Class::ClearsignedMessage | Class::OpaqueSignature) ;
+    } catch (...) {}
     return false;
 }
 
-void DecryptVerifyClipboardCommand::doStart() {
+void DecryptVerifyClipboardCommand::doStart()
+{
 
     try {
 
@@ -136,34 +156,35 @@ void DecryptVerifyClipboardCommand::doStart() {
 
         const unsigned int classification = input->classification();
 
-        if ( classification & (Class::ClearsignedMessage|Class::OpaqueSignature) ) {
-            d->controller.setOperation( Verify );
-            d->controller.setVerificationMode( Opaque );
-        } else if ( classification & Class::CipherText ) {
-            d->controller.setOperation( DecryptVerify );
+        if (classification & (Class::ClearsignedMessage | Class::OpaqueSignature)) {
+            d->controller.setOperation(Verify);
+            d->controller.setVerificationMode(Opaque);
+        } else if (classification & Class::CipherText) {
+            d->controller.setOperation(DecryptVerify);
         } else {
-            d->information( i18n("The clipboard does not appear to "
-                                 "contain a signature or encrypted text."),
-                            i18n("Decrypt/Verify Clipboard Error") );
+            d->information(i18n("The clipboard does not appear to "
+                                "contain a signature or encrypted text."),
+                           i18n("Decrypt/Verify Clipboard Error"));
             d->finished();
             return;
         }
 
-        d->controller.setProtocol( findProtocol( classification ) );
-        d->controller.setInput( input );
-        d->controller.setOutput( Output::createFromClipboard() );
+        d->controller.setProtocol(findProtocol(classification));
+        d->controller.setInput(input);
+        d->controller.setOutput(Output::createFromClipboard());
 
         d->controller.start();
 
-    } catch ( const std::exception & e ) {
-        d->information( i18n("An error occurred: %1",
-                             QString::fromLocal8Bit( e.what() ) ),
-                        i18n("Decrypt/Verify Clipboard Error") );
+    } catch (const std::exception &e) {
+        d->information(i18n("An error occurred: %1",
+                            QString::fromLocal8Bit(e.what())),
+                       i18n("Decrypt/Verify Clipboard Error"));
         d->finished();
     }
 }
 
-void DecryptVerifyClipboardCommand::doCancel() {
+void DecryptVerifyClipboardCommand::doCancel()
+{
     qDebug();
     d->controller.cancel();
 }

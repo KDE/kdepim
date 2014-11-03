@@ -44,33 +44,35 @@ class QByteArray;
 class QFile;
 class QDir;
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class Input {
-    public:
-        virtual ~Input();
+class Input
+{
+public:
+    virtual ~Input();
 
-        virtual QString label() const = 0;
-        virtual void setLabel( const QString & label ) = 0;
-        virtual boost::shared_ptr<QIODevice> ioDevice() const = 0;
-        virtual unsigned int classification() const = 0;
-        virtual unsigned long long size() const = 0;
-        virtual QString errorString() const = 0;
-        void finalize(); // equivalent to ioDevice()->close();
+    virtual QString label() const = 0;
+    virtual void setLabel(const QString &label) = 0;
+    virtual boost::shared_ptr<QIODevice> ioDevice() const = 0;
+    virtual unsigned int classification() const = 0;
+    virtual unsigned long long size() const = 0;
+    virtual QString errorString() const = 0;
+    void finalize(); // equivalent to ioDevice()->close();
 
-        static boost::shared_ptr<Input> createFromPipeDevice( assuan_fd_t fd, const QString & label );
-        static boost::shared_ptr<Input> createFromFile( const QString & filename, bool dummy=false );
-        static boost::shared_ptr<Input> createFromFile( const boost::shared_ptr<QFile> & file );
-        static boost::shared_ptr<Input> createFromProcessStdOut( const QString & command );
-        static boost::shared_ptr<Input> createFromProcessStdOut( const QString & command, const QStringList & args );
-        static boost::shared_ptr<Input> createFromProcessStdOut( const QString & command, const QStringList & args, const QDir & workingDirectory );
-        static boost::shared_ptr<Input> createFromProcessStdOut( const QString & command, const QByteArray & stdin_ );
-        static boost::shared_ptr<Input> createFromProcessStdOut( const QString & command, const QStringList & args, const QByteArray & stdin_ );
-        static boost::shared_ptr<Input> createFromProcessStdOut( const QString & command, const QStringList & args, const QDir & workingDirectory, const QByteArray & stdin_ );
+    static boost::shared_ptr<Input> createFromPipeDevice(assuan_fd_t fd, const QString &label);
+    static boost::shared_ptr<Input> createFromFile(const QString &filename, bool dummy = false);
+    static boost::shared_ptr<Input> createFromFile(const boost::shared_ptr<QFile> &file);
+    static boost::shared_ptr<Input> createFromProcessStdOut(const QString &command);
+    static boost::shared_ptr<Input> createFromProcessStdOut(const QString &command, const QStringList &args);
+    static boost::shared_ptr<Input> createFromProcessStdOut(const QString &command, const QStringList &args, const QDir &workingDirectory);
+    static boost::shared_ptr<Input> createFromProcessStdOut(const QString &command, const QByteArray &stdin_);
+    static boost::shared_ptr<Input> createFromProcessStdOut(const QString &command, const QStringList &args, const QByteArray &stdin_);
+    static boost::shared_ptr<Input> createFromProcessStdOut(const QString &command, const QStringList &args, const QDir &workingDirectory, const QByteArray &stdin_);
 #ifndef QT_NO_CLIPBOARD
-        static boost::shared_ptr<Input> createFromClipboard();
+    static boost::shared_ptr<Input> createFromClipboard();
 #endif
-    };
+};
 }
 
 #endif /* __KLEOPATRA_UTILS_INPUT_H__ */

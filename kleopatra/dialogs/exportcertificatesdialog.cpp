@@ -49,77 +49,74 @@
 using namespace Kleo;
 using namespace Kleo::Dialogs;
 
-class ExportCertificatesDialog::Private {
+class ExportCertificatesDialog::Private
+{
     friend class ::Kleo::Dialogs::ExportCertificatesDialog;
-    ExportCertificatesDialog * const q;
+    ExportCertificatesDialog *const q;
 public:
-    explicit Private( ExportCertificatesDialog * qq );
+    explicit Private(ExportCertificatesDialog *qq);
     ~Private();
     void fileNamesChanged();
 
 private:
-    FileNameRequester* pgpRequester;
-    FileNameRequester* cmsRequester;
+    FileNameRequester *pgpRequester;
+    FileNameRequester *cmsRequester;
     QPushButton *mOkButton;
 };
 
-
-ExportCertificatesDialog::Private::Private( ExportCertificatesDialog * qq )
-  : q( qq )
+ExportCertificatesDialog::Private::Private(ExportCertificatesDialog *qq)
+    : q(qq)
 {
     QVBoxLayout *mainLayout = new QVBoxLayout;
     q->setLayout(mainLayout);
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     mOkButton = buttonBox->button(QDialogButtonBox::Ok);
     mOkButton->setDefault(true);
     mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(buttonBox, &QDialogButtonBox::accepted, q, &ExportCertificatesDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, q, &ExportCertificatesDialog::reject);
 
-    KGuiItem::assign(mOkButton, KGuiItem( i18n( "Export" ) ) );
-    QWidget* const main = new QWidget;
+    KGuiItem::assign(mOkButton, KGuiItem(i18n("Export")));
+    QWidget *const main = new QWidget;
     mainLayout->addWidget(main);
     mainLayout->addWidget(buttonBox);
 
     QFormLayout *layout = new QFormLayout;
     main->setLayout(layout);
 
-    QLabel* const pgpLabel = new QLabel;
-    pgpLabel->setText( i18n(" OpenPGP export file:" ) );
+    QLabel *const pgpLabel = new QLabel;
+    pgpLabel->setText(i18n(" OpenPGP export file:"));
     pgpRequester = new FileNameRequester;
-    connect( pgpRequester, SIGNAL(fileNameChanged(QString)), q, SLOT(fileNamesChanged()) );
+    connect(pgpRequester, SIGNAL(fileNameChanged(QString)), q, SLOT(fileNamesChanged()));
     layout->addRow(pgpLabel, pgpRequester);
 
-    QLabel* const cmsLabel = new QLabel;
-    cmsLabel->setText( i18n( "S/MIME export file:" ) );
+    QLabel *const cmsLabel = new QLabel;
+    cmsLabel->setText(i18n("S/MIME export file:"));
     cmsRequester = new FileNameRequester;
     layout->addRow(cmsLabel, cmsRequester);
 
-    connect( cmsRequester, SIGNAL(fileNameChanged(QString)), q, SLOT(fileNamesChanged()) );
+    connect(cmsRequester, SIGNAL(fileNameChanged(QString)), q, SLOT(fileNamesChanged()));
     fileNamesChanged();
 }
 
 ExportCertificatesDialog::Private::~Private() {}
 
-
-
-ExportCertificatesDialog::ExportCertificatesDialog( QWidget * parent, Qt::WindowFlags f )
-  : QDialog( parent, f ), d( new Private( this ) )
+ExportCertificatesDialog::ExportCertificatesDialog(QWidget *parent, Qt::WindowFlags f)
+    : QDialog(parent, f), d(new Private(this))
 {
-    
+
 }
 
 void ExportCertificatesDialog::Private::fileNamesChanged()
 {
-    mOkButton->setEnabled( !pgpRequester->fileName().isEmpty() && !cmsRequester->fileName().isEmpty() );
+    mOkButton->setEnabled(!pgpRequester->fileName().isEmpty() && !cmsRequester->fileName().isEmpty());
 }
 
 ExportCertificatesDialog::~ExportCertificatesDialog() {}
 
-
-void ExportCertificatesDialog::setOpenPgpExportFileName( const QString & fileName )
+void ExportCertificatesDialog::setOpenPgpExportFileName(const QString &fileName)
 {
-    d->pgpRequester->setFileName( fileName );
+    d->pgpRequester->setFileName(fileName);
 }
 
 QString ExportCertificatesDialog::openPgpExportFileName() const
@@ -127,9 +124,9 @@ QString ExportCertificatesDialog::openPgpExportFileName() const
     return d->pgpRequester->fileName();
 }
 
-void ExportCertificatesDialog::setCmsExportFileName( const QString & fileName )
+void ExportCertificatesDialog::setCmsExportFileName(const QString &fileName)
 {
-    d->cmsRequester->setFileName( fileName );
+    d->cmsRequester->setFileName(fileName);
 }
 
 QString ExportCertificatesDialog::cmsExportFileName() const

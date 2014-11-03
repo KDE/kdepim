@@ -45,50 +45,54 @@
 
 #include <vector>
 
+namespace KMime
+{
+namespace Types
+{
+class Mailbox;
+}
+}
+namespace GpgME
+{
+class VerificationResult;
+}
 
-namespace KMime {
-namespace Types {
-    class Mailbox;
-}
-}
-namespace GpgME {
-    class VerificationResult;
-}
-
-namespace Kleo {
+namespace Kleo
+{
 
 class Input;
 class Output;
 
-namespace Crypto {
+namespace Crypto
+{
 
-
-class DecryptVerifyEMailController : public Controller {
+class DecryptVerifyEMailController : public Controller
+{
     Q_OBJECT
 public:
-    explicit DecryptVerifyEMailController( QObject * parent=0 );
-    explicit DecryptVerifyEMailController( const boost::shared_ptr<const ExecutionContext> & cmd, QObject * parent=0 );
+    explicit DecryptVerifyEMailController(QObject *parent = 0);
+    explicit DecryptVerifyEMailController(const boost::shared_ptr<const ExecutionContext> &cmd, QObject *parent = 0);
 
     ~DecryptVerifyEMailController();
 
-    void setInput( const boost::shared_ptr<Input> & input );
-    void setInputs( const std::vector<boost::shared_ptr<Input> > & inputs );
+    void setInput(const boost::shared_ptr<Input> &input);
+    void setInputs(const std::vector<boost::shared_ptr<Input> > &inputs);
 
-    void setSignedData( const boost::shared_ptr<Input> & data );
-    void setSignedData( const std::vector<boost::shared_ptr<Input> > & data );
+    void setSignedData(const boost::shared_ptr<Input> &data);
+    void setSignedData(const std::vector<boost::shared_ptr<Input> > &data);
 
-    void setOutput( const boost::shared_ptr<Output> & output );
-    void setOutputs( const std::vector<boost::shared_ptr<Output> > & outputs );
+    void setOutput(const boost::shared_ptr<Output> &output);
+    void setOutputs(const std::vector<boost::shared_ptr<Output> > &outputs);
 
-    void setInformativeSenders( const std::vector<KMime::Types::Mailbox> & senders );
+    void setInformativeSenders(const std::vector<KMime::Types::Mailbox> &senders);
 
-    void setWizardShown( bool shown );
+    void setWizardShown(bool shown);
 
-    void setOperation( DecryptVerifyOperation operation );
-    void setVerificationMode( VerificationMode vm );
-    void setProtocol( GpgME::Protocol protocol );
+    void setOperation(DecryptVerifyOperation operation);
+    void setVerificationMode(VerificationMode vm);
+    void setProtocol(GpgME::Protocol protocol);
 
-    void setSessionId( unsigned int id );
+    void setSessionId(unsigned int id);
 
     void start();
 
@@ -96,20 +100,20 @@ public Q_SLOTS:
     void cancel();
 
 Q_SIGNALS:
-    void verificationResult( const GpgME::VerificationResult & );
+    void verificationResult(const GpgME::VerificationResult &);
 
 private:
-    /* reimp */ void doTaskDone( const Task* task, const boost::shared_ptr<const Task::Result> & result );
+    /* reimp */ void doTaskDone(const Task *task, const boost::shared_ptr<const Task::Result> &result);
 
     class Private;
     kdtools::pimpl_ptr<Private> d;
-    Q_PRIVATE_SLOT( d, void slotWizardCanceled() )
-    Q_PRIVATE_SLOT( d, void schedule() )
+    Q_PRIVATE_SLOT(d, void slotWizardCanceled())
+    Q_PRIVATE_SLOT(d, void schedule())
 };
 
 } //namespace Crypto
 } //namespace Kleo
 
-Q_DECLARE_METATYPE( GpgME::VerificationResult )
+Q_DECLARE_METATYPE(GpgME::VerificationResult)
 
 #endif // __KLEOPATRA_CTYPTO_DECRYPTVERIFYEMAILCONTROLLER_H__

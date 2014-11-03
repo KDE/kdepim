@@ -37,7 +37,6 @@
 #include <gpgme++/keylistresult.h>
 #include <gpgme++/key.h>
 
-
 #include <KAboutData>
 
 #include <QDebug>
@@ -51,17 +50,20 @@
 #include <KLocalizedString>
 #include <QCommandLineParser>
 
-namespace {
-  class TestColumnStrategy : public Kleo::KeyListView::ColumnStrategy {
-  public:
+namespace
+{
+class TestColumnStrategy : public Kleo::KeyListView::ColumnStrategy
+{
+public:
     ~TestColumnStrategy() {}
-    QString title( int col ) const;
-    QString toolTip( const GpgME::Key & key, int col ) const;
-    QString text( const GpgME::Key & key, int col ) const;
-  };
+    QString title(int col) const;
+    QString toolTip(const GpgME::Key &key, int col) const;
+    QString text(const GpgME::Key &key, int col) const;
+};
 
-  QString TestColumnStrategy::title( int col ) const {
-    switch ( col ) {
+QString TestColumnStrategy::title(int col) const
+{
+    switch (col) {
     case 0: return "Subject";
     case 1: return "EMail";
     case 2: return "Issuer";
@@ -70,83 +72,90 @@ namespace {
     case 5: return "Validity";
     default: return QString();
     }
-  }
-
-  QString TestColumnStrategy::toolTip( const GpgME::Key & key, int ) const {
-    return "Fingerprint: " + QString::fromUtf8( key.primaryFingerprint() );
-  }
-
-  QString TestColumnStrategy::text( const GpgME::Key & key, int col ) const {
-    if ( key.isNull() )
-      return "<null>";
-    switch ( col ) {
-    case 0: return QString::fromUtf8( key.userID(0).id() );
-    case 1: return QString::fromUtf8( key.userID(0).email() );
-    case 2: return QString::fromUtf8( key.issuerName() );
-    case 3: return key.issuerSerial();
-    case 4: return key.protocolAsString();
-    case 5: return QChar( key.userID(0).validityAsString() );
-    default: return QString();
-    }
-  }
 }
 
-CertListView::CertListView( QWidget * parent, Qt::WindowFlags f )
-  : Kleo::KeyListView( new TestColumnStrategy(), 0, parent, f )
+QString TestColumnStrategy::toolTip(const GpgME::Key &key, int) const
 {
-  setHierarchical( true );
-  setRootIsDecorated( true );
+    return "Fingerprint: " + QString::fromUtf8(key.primaryFingerprint());
+}
+
+QString TestColumnStrategy::text(const GpgME::Key &key, int col) const
+{
+    if (key.isNull()) {
+        return "<null>";
+    }
+    switch (col) {
+    case 0: return QString::fromUtf8(key.userID(0).id());
+    case 1: return QString::fromUtf8(key.userID(0).email());
+    case 2: return QString::fromUtf8(key.issuerName());
+    case 3: return key.issuerSerial();
+    case 4: return key.protocolAsString();
+    case 5: return QChar(key.userID(0).validityAsString());
+    default: return QString();
+    }
+}
+}
+
+CertListView::CertListView(QWidget *parent, Qt::WindowFlags f)
+    : Kleo::KeyListView(new TestColumnStrategy(), 0, parent, f)
+{
+    setHierarchical(true);
+    setRootIsDecorated(true);
 }
 
 CertListView::~CertListView() {}
 
-void CertListView::slotResult( const GpgME::KeyListResult & result ) {
-  qDebug() <<"CertListView::slotResult()";
-  if ( result.isNull() )
-    QMessageBox::information( this, "Key Listing Result", "KeyListResult is null!" );
-  else if ( result.error() )
-    QMessageBox::critical( this, "Key Listing Result",
-                           QString("KeyListResult Error: %1").arg( result.error().asString() ) );
-  else if ( result.isTruncated() )
-    QMessageBox::information( this, "Key Listing Result", "KeyListResult is truncated!" );
-  else
-    QMessageBox::information( this, "Key Listing Result", "Key listing successful" );
+void CertListView::slotResult(const GpgME::KeyListResult &result)
+{
+    qDebug() << "CertListView::slotResult()";
+    if (result.isNull()) {
+        QMessageBox::information(this, "Key Listing Result", "KeyListResult is null!");
+    } else if (result.error())
+        QMessageBox::critical(this, "Key Listing Result",
+                              QString("KeyListResult Error: %1").arg(result.error().asString()));
+    else if (result.isTruncated()) {
+        QMessageBox::information(this, "Key Listing Result", "KeyListResult is truncated!");
+    } else {
+        QMessageBox::information(this, "Key Listing Result", "Key listing successful");
+    }
 }
 
-void CertListView::slotStart() {
-  qDebug() <<"CertListView::slotStart()";
-  Kleo::KeyListJob * job = Kleo::CryptoBackendFactory::instance()->smime()->keyListJob( false );
-  assert( job );
-  QObject::connect( job, SIGNAL(nextKey(GpgME::Key)),
-                    this, SLOT(slotAddKey(GpgME::Key)) );
-  QObject::connect( job, SIGNAL(result(GpgME::KeyListResult)),
-                    this, SLOT(slotResult(GpgME::KeyListResult)) );
+void CertListView::slotStart()
+{
+    qDebug() << "CertListView::slotStart()";
+    Kleo::KeyListJob *job = Kleo::CryptoBackendFactory::instance()->smime()->keyListJob(false);
+    assert(job);
+    QObject::connect(job, SIGNAL(nextKey(GpgME::Key)),
+                     this, SLOT(slotAddKey(GpgME::Key)));
+    QObject::connect(job, SIGNAL(result(GpgME::KeyListResult)),
+                     this, SLOT(slotResult(GpgME::KeyListResult)));
 #if 0
-  QStringList l;
-  l << "Marc";
-  job->start( l, false );
+    QStringList l;
+    l << "Marc";
+    job->start(l, false);
 #else
-  job->start( QStringList(), false );
+    job->start(QStringList(), false);
 #endif
 }
 
-int main( int argc, char** argv ) {
+int main(int argc, char **argv)
+{
 
-  KAboutData aboutData( QLatin1String("test_keylister"), i18n("KeyLister Test"), QLatin1String("0.1") );
-  QApplication app(argc, argv);
-  QCommandLineParser parser;
-  KAboutData::setApplicationData(aboutData);
-  parser.addVersionOption();
-  parser.addHelpOption();
-  aboutData.setupCommandLine(&parser);
-  parser.process(app);
-  aboutData.processCommandLine(&parser);
+    KAboutData aboutData(QLatin1String("test_keylister"), i18n("KeyLister Test"), QLatin1String("0.1"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-  CertListView * clv = new CertListView;
-  clv->show();
+    CertListView *clv = new CertListView;
+    clv->show();
 
-  QTimer::singleShot( 5000, clv, SLOT(slotStart()) );
+    QTimer::singleShot(5000, clv, SLOT(slotStart()));
 
-  return app.exec();
+    return app.exec();
 }
 

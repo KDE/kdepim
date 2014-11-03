@@ -34,20 +34,22 @@
 
 #include "libkleo/ui/keylistview.h"
 
-namespace GpgME {
-  class Key;
-  class KeyListResult;
+namespace GpgME
+{
+class Key;
+class KeyListResult;
 }
 
-class CertListView : public Kleo::KeyListView {
-  Q_OBJECT
+class CertListView : public Kleo::KeyListView
+{
+    Q_OBJECT
 public:
-    explicit CertListView( QWidget * parent=0, Qt::WindowFlags f=0 );
+    explicit CertListView(QWidget *parent = 0, Qt::WindowFlags f = 0);
     ~CertListView();
 
 public slots:
-  void slotResult( const GpgME::KeyListResult & result );
-  void slotStart();
+    void slotResult(const GpgME::KeyListResult &result);
+    void slotStart();
 };
 
 #endif // __KLEO_TEST_KEYLISTER_H__

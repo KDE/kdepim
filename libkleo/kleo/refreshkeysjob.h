@@ -37,52 +37,55 @@
 
 #include <vector>
 
-namespace GpgME {
-  class Error;
-  class Key;
+namespace GpgME
+{
+class Error;
+class Key;
 }
 
 class QStringList;
 
-namespace Kleo {
+namespace Kleo
+{
 
-  /**
-     @short An abstract base class for asynchronous key refreshers.
+/**
+   @short An abstract base class for asynchronous key refreshers.
 
-     To use a RefreshKeysJob, first obtain an instance from the
-     CryptoBackend implementation, connect the progress() and result()
-     signals to suitable slots and then start the key refresh with a
-     call to start(). This call might fail, in which case the
-     RefreshKeysJob instance will have scheduled its own destruction
-     with a call to QObject::deleteLater().
+   To use a RefreshKeysJob, first obtain an instance from the
+   CryptoBackend implementation, connect the progress() and result()
+   signals to suitable slots and then start the key refresh with a
+   call to start(). This call might fail, in which case the
+   RefreshKeysJob instance will have scheduled its own destruction
+   with a call to QObject::deleteLater().
 
-     After result() is emitted, the KeyListJob will schedule it's own
-     destruction by calling QObject::deleteLater().
-  */
-  class RefreshKeysJob : public Job {
+   After result() is emitted, the KeyListJob will schedule it's own
+   destruction by calling QObject::deleteLater().
+*/
+class RefreshKeysJob : public Job
+{
     Q_OBJECT
-  protected:
-    explicit RefreshKeysJob( QObject * parent );
-  public:
-   ~RefreshKeysJob();
+protected:
+    explicit RefreshKeysJob(QObject *parent);
+public:
+    ~RefreshKeysJob();
 
-     /**
-       Starts the keylist operation. \a pattern is a list of patterns
-       used to restrict the list of keys returned. Empty patterns are
-       ignored. If \a pattern is empty or contains only empty strings,
-       all keys are returned (however, the backend is free to truncate
-       the result and should do so; when this happens, it will be
-       reported by the reult object).
+    /**
+      Starts the keylist operation. \a pattern is a list of patterns
+      used to restrict the list of keys returned. Empty patterns are
+      ignored. If \a pattern is empty or contains only empty strings,
+      all keys are returned (however, the backend is free to truncate
+      the result and should do so; when this happens, it will be
+      reported by the reult object).
 
-       If \a secretOnly is true, only keys for which the secret key is
-       also available are returned. Use this if you need to select a
-       key for signing.
+      If \a secretOnly is true, only keys for which the secret key is
+      also available are returned. Use this if you need to select a
+      key for signing.
     */
-    virtual GpgME::Error start( const QStringList & patterns ) = 0;
+    virtual GpgME::Error start(const QStringList &patterns) = 0;
 
-  Q_SIGNALS:
-    void result( const GpgME::Error & error );
-  };
+Q_SIGNALS:
+    void result(const GpgME::Error &error);
+};
 
 }
 

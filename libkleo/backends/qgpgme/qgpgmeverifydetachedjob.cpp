@@ -38,7 +38,6 @@
 #include <gpgme++/verificationresult.h>
 #include <gpgme++/data.h>
 
-
 #include <cassert>
 
 #include <boost/weak_ptr.hpp>
@@ -47,68 +46,74 @@ using namespace Kleo;
 using namespace GpgME;
 using namespace boost;
 
-QGpgMEVerifyDetachedJob::QGpgMEVerifyDetachedJob( Context * context )
-  : mixin_type( context )
+QGpgMEVerifyDetachedJob::QGpgMEVerifyDetachedJob(Context *context)
+    : mixin_type(context)
 {
-  lateInitialization();
+    lateInitialization();
 }
 
 QGpgMEVerifyDetachedJob::~QGpgMEVerifyDetachedJob() {}
 
-static QGpgMEVerifyDetachedJob::result_type verify_detached( Context * ctx, QThread * thread, const weak_ptr<QIODevice> & signature_, const weak_ptr<QIODevice> & signedData_ ) {
-  const shared_ptr<QIODevice> signature = signature_.lock();
-  const shared_ptr<QIODevice> signedData = signedData_.lock();
+static QGpgMEVerifyDetachedJob::result_type verify_detached(Context *ctx, QThread *thread, const weak_ptr<QIODevice> &signature_, const weak_ptr<QIODevice> &signedData_)
+{
+    const shared_ptr<QIODevice> signature = signature_.lock();
+    const shared_ptr<QIODevice> signedData = signedData_.lock();
 
-  const _detail::ToThreadMover sgMover( signature,  thread );
-  const _detail::ToThreadMover sdMover( signedData, thread );
+    const _detail::ToThreadMover sgMover(signature,  thread);
+    const _detail::ToThreadMover sdMover(signedData, thread);
 
-  QGpgME::QIODeviceDataProvider sigDP( signature );
-  Data sig( &sigDP );
+    QGpgME::QIODeviceDataProvider sigDP(signature);
+    Data sig(&sigDP);
 
-  QGpgME::QIODeviceDataProvider dataDP( signedData );
-  Data data( &dataDP );
+    QGpgME::QIODeviceDataProvider dataDP(signedData);
+    Data data(&dataDP);
 
-  const VerificationResult res = ctx->verifyDetachedSignature( sig, data );
-  Error ae;
-  const QString log = _detail::audit_log_as_html( ctx, ae );
+    const VerificationResult res = ctx->verifyDetachedSignature(sig, data);
+    Error ae;
+    const QString log = _detail::audit_log_as_html(ctx, ae);
 
-  return make_tuple( res, log, ae );
+    return make_tuple(res, log, ae);
 }
 
-static QGpgMEVerifyDetachedJob::result_type verify_detached_qba( Context * ctx, const QByteArray & signature, const QByteArray & signedData ) {
-  QGpgME::QByteArrayDataProvider sigDP( signature );
-  Data sig( &sigDP );
+static QGpgMEVerifyDetachedJob::result_type verify_detached_qba(Context *ctx, const QByteArray &signature, const QByteArray &signedData)
+{
+    QGpgME::QByteArrayDataProvider sigDP(signature);
+    Data sig(&sigDP);
 
-  QGpgME::QByteArrayDataProvider dataDP( signedData );
-  Data data( &dataDP );
+    QGpgME::QByteArrayDataProvider dataDP(signedData);
+    Data data(&dataDP);
 
-  const VerificationResult res = ctx->verifyDetachedSignature( sig, data );
-  Error ae;
-  const QString log = _detail::audit_log_as_html( ctx, ae );
+    const VerificationResult res = ctx->verifyDetachedSignature(sig, data);
+    Error ae;
+    const QString log = _detail::audit_log_as_html(ctx, ae);
 
-  return make_tuple( res, log, ae );
+    return make_tuple(res, log, ae);
 
 }
 
-Error QGpgMEVerifyDetachedJob::start( const QByteArray & signature, const QByteArray & signedData ) {
-  run( bind( &verify_detached_qba, _1, signature, signedData ) );
-  return Error();
+Error QGpgMEVerifyDetachedJob::start(const QByteArray &signature, const QByteArray &signedData)
+{
+    run(bind(&verify_detached_qba, _1, signature, signedData));
+    return Error();
 }
 
-void QGpgMEVerifyDetachedJob::start( const shared_ptr<QIODevice> & signature, const shared_ptr<QIODevice> & signedData ) {
-  run( bind( &verify_detached, _1, _2, _3, _4 ), signature, signedData );
+void QGpgMEVerifyDetachedJob::start(const shared_ptr<QIODevice> &signature, const shared_ptr<QIODevice> &signedData)
+{
+    run(bind(&verify_detached, _1, _2, _3, _4), signature, signedData);
 }
 
-GpgME::VerificationResult Kleo::QGpgMEVerifyDetachedJob::exec( const QByteArray & signature,
-                                                               const QByteArray & signedData ) {
-  const result_type r = verify_detached_qba( context(), signature, signedData );
-  resultHook( r );
-  return mResult;
+GpgME::VerificationResult Kleo::QGpgMEVerifyDetachedJob::exec(const QByteArray &signature,
+        const QByteArray &signedData)
+{
+    const result_type r = verify_detached_qba(context(), signature, signedData);
+    resultHook(r);
+    return mResult;
 }
 
 //PENDING(marc) implement showErrorDialog()
 
-void Kleo::QGpgMEVerifyDetachedJob::resultHook( const result_type & tuple ) {
-  mResult = get<0>( tuple );
+void Kleo::QGpgMEVerifyDetachedJob::resultHook(const result_type &tuple)
+{
+    mResult = get<0>(tuple);
 }
 

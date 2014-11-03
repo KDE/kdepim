@@ -39,26 +39,29 @@
 
 class QString;
 
-namespace Kleo {
-namespace Dialogs {
+namespace Kleo
+{
+namespace Dialogs
+{
 
-    class ExportCertificatesDialog : public QDialog {
-        Q_OBJECT
-    public:
-        explicit ExportCertificatesDialog( QWidget * parent=0, Qt::WindowFlags f=0 );
-        ~ExportCertificatesDialog();
+class ExportCertificatesDialog : public QDialog
+{
+    Q_OBJECT
+public:
+    explicit ExportCertificatesDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    ~ExportCertificatesDialog();
 
-        void setOpenPgpExportFileName( const QString & fileName );
-        QString openPgpExportFileName() const;
+    void setOpenPgpExportFileName(const QString &fileName);
+    QString openPgpExportFileName() const;
 
-        void setCmsExportFileName( const QString & fileName );
-        QString cmsExportFileName() const;
+    void setCmsExportFileName(const QString &fileName);
+    QString cmsExportFileName() const;
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void fileNamesChanged() )
-    };
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void fileNamesChanged())
+};
 }
 }
 

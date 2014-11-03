@@ -49,44 +49,50 @@ using namespace Kleo::Commands;
 using namespace Kleo::Dialogs;
 using namespace GpgME;
 
-ExportSecretKeyCommand::ExportSecretKeyCommand( KeyListController * c )
-    : GnuPGProcessCommand( c )
+ExportSecretKeyCommand::ExportSecretKeyCommand(KeyListController *c)
+    : GnuPGProcessCommand(c)
 {
 }
 
-ExportSecretKeyCommand::ExportSecretKeyCommand( QAbstractItemView * v, KeyListController * c )
-    : GnuPGProcessCommand( v, c )
+ExportSecretKeyCommand::ExportSecretKeyCommand(QAbstractItemView *v, KeyListController *c)
+    : GnuPGProcessCommand(v, c)
 {
 }
 
-ExportSecretKeyCommand::ExportSecretKeyCommand( const Key & key )
-    : GnuPGProcessCommand( key )
+ExportSecretKeyCommand::ExportSecretKeyCommand(const Key &key)
+    : GnuPGProcessCommand(key)
 {
 }
 
 ExportSecretKeyCommand::~ExportSecretKeyCommand() {}
 
-void ExportSecretKeyCommand::setFileName( const QString & fileName ) {
+void ExportSecretKeyCommand::setFileName(const QString &fileName)
+{
     m_filename = fileName;
 }
 
-void ExportSecretKeyCommand::setPassphraseCharset( const QByteArray & charset ) {
+void ExportSecretKeyCommand::setPassphraseCharset(const QByteArray &charset)
+{
     m_charset = charset;
 }
 
-void ExportSecretKeyCommand::setUseArmor( bool armor ) {
+void ExportSecretKeyCommand::setUseArmor(bool armor)
+{
     m_armor = armor;
 }
 
-bool ExportSecretKeyCommand::preStartHook( QWidget * parent ) const {
-    if ( !m_filename.isEmpty() )
+bool ExportSecretKeyCommand::preStartHook(QWidget *parent) const
+{
+    if (!m_filename.isEmpty()) {
         return true;
+    }
 
-    ExportSecretKeyDialog dlg( parent );
-    dlg.setKey( d->key() );
-    if ( !dlg.exec() )
+    ExportSecretKeyDialog dlg(parent);
+    dlg.setKey(d->key());
+    if (!dlg.exec()) {
         return false;
-    
+    }
+
     m_filename = dlg.fileName();
     m_armor = dlg.useArmor();
     m_charset = dlg.charset();
@@ -94,56 +100,66 @@ bool ExportSecretKeyCommand::preStartHook( QWidget * parent ) const {
     return true;
 }
 
-QStringList ExportSecretKeyCommand::arguments() const {
+QStringList ExportSecretKeyCommand::arguments() const
+{
     const Key key = d->key();
     QStringList result;
 
-    if ( key.protocol() == OpenPGP )
+    if (key.protocol() == OpenPGP) {
         result << gpgPath() << QLatin1String("--batch");
-    else
+    } else {
         result << gpgSmPath();
+    }
 
     result << QLatin1String("--output") << m_filename;
 
-    if ( m_armor )
+    if (m_armor) {
         result << QLatin1String("--armor");
+    }
 
-    if ( key.protocol() == CMS && !m_charset.isEmpty() )
+    if (key.protocol() == CMS && !m_charset.isEmpty()) {
         result << QLatin1String("--p12-charset") << QLatin1String(m_charset);
+    }
 
-    if ( key.protocol() == OpenPGP )
+    if (key.protocol() == OpenPGP) {
         result << QLatin1String("--export-secret-key");
-    else
+    } else {
         result << QLatin1String("--export-secret-key-p12");
+    }
 
     result << QLatin1String(key.primaryFingerprint());
 
     return result;
 }
 
-QString ExportSecretKeyCommand::errorCaption() const {
-    return i18nc( "@title:window", "Secret Key Export Error" );
+QString ExportSecretKeyCommand::errorCaption() const
+{
+    return i18nc("@title:window", "Secret Key Export Error");
 }
 
-QString ExportSecretKeyCommand::successCaption() const {
-    return i18nc( "@title:window", "Secret Key Export Finished" );
+QString ExportSecretKeyCommand::successCaption() const
+{
+    return i18nc("@title:window", "Secret Key Export Finished");
 }
 
-QString ExportSecretKeyCommand::crashExitMessage( const QStringList & args ) const {
+QString ExportSecretKeyCommand::crashExitMessage(const QStringList &args) const
+{
     return xi18nc("@info",
-                 "<para>The GPG or GpgSM process that tried to export the secret key "
-                 "ended prematurely because of an unexpected error.</para>"
-                 "<para>Please check the output of <icode>%1</icode> for details.</para>", args.join( QLatin1String(" ") ) ) ;
+                  "<para>The GPG or GpgSM process that tried to export the secret key "
+                  "ended prematurely because of an unexpected error.</para>"
+                  "<para>Please check the output of <icode>%1</icode> for details.</para>", args.join(QLatin1String(" "))) ;
 }
 
-QString ExportSecretKeyCommand::errorExitMessage( const QStringList & args ) const {
+QString ExportSecretKeyCommand::errorExitMessage(const QStringList &args) const
+{
     return xi18nc("@info",
-                 "<para>An error occurred while trying to export the secret key.</para> "
-                 "<para>The output from <command>%1</command> was: <message>%2</message></para>",
-                 args[0], errorString() );
+                  "<para>An error occurred while trying to export the secret key.</para> "
+                  "<para>The output from <command>%1</command> was: <message>%2</message></para>",
+                  args[0], errorString());
 }
 
-QString ExportSecretKeyCommand::successMessage( const QStringList & ) const {
-    return i18nc( "@info", "Secret key successfully exported." );
+QString ExportSecretKeyCommand::successMessage(const QStringList &) const
+{
+    return i18nc("@info", "Secret key successfully exported.");
 }
 

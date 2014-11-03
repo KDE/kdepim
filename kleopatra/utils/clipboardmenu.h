@@ -22,7 +22,8 @@
 class KActionMenu;
 class QAction;
 class MainWindow;
-namespace Kleo {
+namespace Kleo
+{
 class Command;
 }
 class ClipboardMenu : public QObject
@@ -32,7 +33,7 @@ public:
     explicit ClipboardMenu(QObject *parent = 0);
     ~ClipboardMenu();
 
-    void setMainWindow(MainWindow* window);
+    void setMainWindow(MainWindow *window);
 
     KActionMenu *clipboardMenu() const;
 

@@ -30,7 +30,6 @@
     your version.
 */
 
-
 #include <config-kleopatra.h>
 
 #include "scrollarea.h"
@@ -40,23 +39,25 @@
 
 using namespace Kleo;
 
+namespace
+{
 
-namespace {
-
-    static QSize getMinimumSizeHint( const QWidget * w ) {
-        return w ? w->minimumSizeHint() : QSize( 0, 0 );
-    }
-
-    static QSize getSizeHint( const QWidget * w ) {
-        return w ? w->sizeHint() : QSize( 0, 0 );
-    }
+static QSize getMinimumSizeHint(const QWidget *w)
+{
+    return w ? w->minimumSizeHint() : QSize(0, 0);
 }
 
-ScrollArea::ScrollArea( QWidget * parent ) : QScrollArea( parent )
+static QSize getSizeHint(const QWidget *w)
 {
-    setWidget( new QWidget );
-    new QVBoxLayout( widget() );
-    setWidgetResizable( true );
+    return w ? w->sizeHint() : QSize(0, 0);
+}
+}
+
+ScrollArea::ScrollArea(QWidget *parent) : QScrollArea(parent)
+{
+    setWidget(new QWidget);
+    new QVBoxLayout(widget());
+    setWidgetResizable(true);
 }
 
 ScrollArea::~ScrollArea()
@@ -65,14 +66,14 @@ ScrollArea::~ScrollArea()
 
 QSize ScrollArea::minimumSizeHint() const
 {
-    return QSize( getMinimumSizeHint( widget() ).width() + getSizeHint( verticalScrollBar() ).width() + 2*frameWidth(), 0 )
-        .expandedTo( QScrollArea::minimumSizeHint() );
+    return QSize(getMinimumSizeHint(widget()).width() + getSizeHint(verticalScrollBar()).width() + 2 * frameWidth(), 0)
+           .expandedTo(QScrollArea::minimumSizeHint());
 }
 
 QSize ScrollArea::sizeHint() const
 {
-    const QSize widgetSizeHint = getSizeHint( widget() );
+    const QSize widgetSizeHint = getSizeHint(widget());
     const int fw = frameWidth();
-    return QScrollArea::sizeHint().expandedTo( widgetSizeHint + QSize( 2*fw, 2*fw ) + QSize( getSizeHint( verticalScrollBar() ).width(), 0 ) );
+    return QScrollArea::sizeHint().expandedTo(widgetSizeHint + QSize(2 * fw, 2 * fw) + QSize(getSizeHint(verticalScrollBar()).width(), 0));
 }
 

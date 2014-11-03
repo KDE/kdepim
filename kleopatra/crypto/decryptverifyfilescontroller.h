@@ -43,25 +43,27 @@
 
 #include <vector>
 
-
-namespace GpgME {
-    class VerificationResult;
+namespace GpgME
+{
+class VerificationResult;
 }
 
-namespace Kleo {
-namespace Crypto {
+namespace Kleo
+{
+namespace Crypto
+{
 
-
-class DecryptVerifyFilesController : public Controller {
+class DecryptVerifyFilesController : public Controller
+{
     Q_OBJECT
 public:
-    explicit DecryptVerifyFilesController( QObject* parent = 0 );
-    explicit DecryptVerifyFilesController( const boost::shared_ptr<const ExecutionContext> & ctx, QObject * parent = 0 );
+    explicit DecryptVerifyFilesController(QObject *parent = 0);
+    explicit DecryptVerifyFilesController(const boost::shared_ptr<const ExecutionContext> &ctx, QObject *parent = 0);
 
     ~DecryptVerifyFilesController();
 
-    void setFiles( const QStringList & files );
-    void setOperation( DecryptVerifyOperation op );
+    void setFiles(const QStringList &files);
+    void setOperation(DecryptVerifyOperation op);
     DecryptVerifyOperation operation() const;
     void start();
 
@@ -69,22 +71,22 @@ public Q_SLOTS:
     void cancel();
 
 Q_SIGNALS:
-    void verificationResult( const GpgME::VerificationResult & );
+    void verificationResult(const GpgME::VerificationResult &);
 
 private:
-    /* reimp */ void doTaskDone( const Task * task, const boost::shared_ptr<const Task::Result> & );
+    /* reimp */ void doTaskDone(const Task *task, const boost::shared_ptr<const Task::Result> &);
 
 private:
     class Private;
     kdtools::pimpl_ptr<Private> d;
-    Q_PRIVATE_SLOT( d, void slotWizardOperationPrepared() )
-    Q_PRIVATE_SLOT( d, void slotWizardCanceled() )
-    Q_PRIVATE_SLOT( d, void schedule() )
+    Q_PRIVATE_SLOT(d, void slotWizardOperationPrepared())
+    Q_PRIVATE_SLOT(d, void slotWizardCanceled())
+    Q_PRIVATE_SLOT(d, void schedule())
 };
 
 }
 }
 
-Q_DECLARE_METATYPE( GpgME::VerificationResult )
+Q_DECLARE_METATYPE(GpgME::VerificationResult)
 
 #endif // __KLEOPATRA_CRYPTO_DECRYPTVERIFYFILESCONTROLLER_H__

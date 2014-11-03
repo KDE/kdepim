@@ -48,72 +48,79 @@ using namespace Kleo;
 using namespace GpgME;
 using namespace boost;
 
-QGpgMEVerifyOpaqueJob::QGpgMEVerifyOpaqueJob( Context * context )
-  : mixin_type( context )
+QGpgMEVerifyOpaqueJob::QGpgMEVerifyOpaqueJob(Context *context)
+    : mixin_type(context)
 {
-  lateInitialization();
+    lateInitialization();
 }
 
 QGpgMEVerifyOpaqueJob::~QGpgMEVerifyOpaqueJob() {}
 
-static QGpgMEVerifyOpaqueJob::result_type verify_opaque( Context * ctx, QThread * thread, const weak_ptr<QIODevice> & signedData_, const weak_ptr<QIODevice> & plainText_ ) {
+static QGpgMEVerifyOpaqueJob::result_type verify_opaque(Context *ctx, QThread *thread, const weak_ptr<QIODevice> &signedData_, const weak_ptr<QIODevice> &plainText_)
+{
 
-  const shared_ptr<QIODevice> plainText = plainText_.lock();
-  const shared_ptr<QIODevice> signedData = signedData_.lock();
+    const shared_ptr<QIODevice> plainText = plainText_.lock();
+    const shared_ptr<QIODevice> signedData = signedData_.lock();
 
-  const _detail::ToThreadMover ptMover( plainText,  thread );
-  const _detail::ToThreadMover sdMover( signedData, thread );
+    const _detail::ToThreadMover ptMover(plainText,  thread);
+    const _detail::ToThreadMover sdMover(signedData, thread);
 
-  QGpgME::QIODeviceDataProvider in( signedData );
-  const Data indata( &in );
+    QGpgME::QIODeviceDataProvider in(signedData);
+    const Data indata(&in);
 
-  if ( !plainText ) {
-    QGpgME::QByteArrayDataProvider out;
-    Data outdata( &out );
+    if (!plainText) {
+        QGpgME::QByteArrayDataProvider out;
+        Data outdata(&out);
 
-    const VerificationResult res = ctx->verifyOpaqueSignature( indata, outdata );
-    Error ae;
-    const QString log = _detail::audit_log_as_html( ctx, ae );
-    return make_tuple( res, out.data(), log, ae );
-  } else {
-    QGpgME::QIODeviceDataProvider out( plainText );
-    Data outdata( &out );
+        const VerificationResult res = ctx->verifyOpaqueSignature(indata, outdata);
+        Error ae;
+        const QString log = _detail::audit_log_as_html(ctx, ae);
+        return make_tuple(res, out.data(), log, ae);
+    } else {
+        QGpgME::QIODeviceDataProvider out(plainText);
+        Data outdata(&out);
 
-    const VerificationResult res = ctx->verifyOpaqueSignature( indata, outdata );
-    Error ae;
-    const QString log = _detail::audit_log_as_html( ctx, ae );
-    return make_tuple( res, QByteArray(), log, ae );
-  }
+        const VerificationResult res = ctx->verifyOpaqueSignature(indata, outdata);
+        Error ae;
+        const QString log = _detail::audit_log_as_html(ctx, ae);
+        return make_tuple(res, QByteArray(), log, ae);
+    }
 
 }
 
-static QGpgMEVerifyOpaqueJob::result_type verify_opaque_qba( Context * ctx, const QByteArray & signedData ) {
-  const shared_ptr<QBuffer> buffer( new QBuffer );
-  buffer->setData( signedData );
-  if ( !buffer->open( QIODevice::ReadOnly ) )
-    assert( !"This should never happen: QBuffer::open() failed" );
-  return verify_opaque( ctx, 0, buffer, shared_ptr<QIODevice>() );
+static QGpgMEVerifyOpaqueJob::result_type verify_opaque_qba(Context *ctx, const QByteArray &signedData)
+{
+    const shared_ptr<QBuffer> buffer(new QBuffer);
+    buffer->setData(signedData);
+    if (!buffer->open(QIODevice::ReadOnly)) {
+        assert(!"This should never happen: QBuffer::open() failed");
+    }
+    return verify_opaque(ctx, 0, buffer, shared_ptr<QIODevice>());
 }
 
-Error QGpgMEVerifyOpaqueJob::start( const QByteArray & signedData ) {
-  run( bind( &verify_opaque_qba, _1, signedData ) );
-  return Error();
+Error QGpgMEVerifyOpaqueJob::start(const QByteArray &signedData)
+{
+    run(bind(&verify_opaque_qba, _1, signedData));
+    return Error();
 }
 
-void QGpgMEVerifyOpaqueJob::start( const shared_ptr<QIODevice> & signedData, const shared_ptr<QIODevice> & plainText ) {
-  run( bind( &verify_opaque, _1, _2, _3, _4 ), signedData, plainText );
+void QGpgMEVerifyOpaqueJob::start(const shared_ptr<QIODevice> &signedData, const shared_ptr<QIODevice> &plainText)
+{
+    run(bind(&verify_opaque, _1, _2, _3, _4), signedData, plainText);
 }
 
-GpgME::VerificationResult Kleo::QGpgMEVerifyOpaqueJob::exec( const QByteArray & signedData, QByteArray & plainText ) {
-  const result_type r = verify_opaque_qba( context(), signedData );
-  plainText = get<1>( r );
-  resultHook( r );
-  return mResult;
+GpgME::VerificationResult Kleo::QGpgMEVerifyOpaqueJob::exec(const QByteArray &signedData, QByteArray &plainText)
+{
+    const result_type r = verify_opaque_qba(context(), signedData);
+    plainText = get<1>(r);
+    resultHook(r);
+    return mResult;
 }
 
 //PENDING(marc) implement showErrorDialog()
 
-void Kleo::QGpgMEVerifyOpaqueJob::resultHook( const result_type & tuple ) {
-  mResult = get<0>( tuple );
+void Kleo::QGpgMEVerifyOpaqueJob::resultHook(const result_type &tuple)
+{
+    mResult = get<0>(tuple);
 }
 

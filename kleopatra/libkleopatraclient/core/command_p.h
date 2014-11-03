@@ -34,16 +34,17 @@
 #include <map>
 #include <string>
 
-class KleopatraClientCopy::Command::Private : public QThread {
+class KleopatraClientCopy::Command::Private : public QThread
+{
     Q_OBJECT
 private:
     friend class ::KleopatraClientCopy::Command;
-    Command * const q;
+    Command *const q;
 public:
-    explicit Private( Command * qq )
+    explicit Private(Command *qq)
         : QThread(),
-          q( qq ),
-          mutex( QMutex::Recursive ),
+          q(qq),
+          mutex(QMutex::Recursive),
           inputs(),
           outputs()
     {
@@ -65,18 +66,18 @@ private:
         bool isCritical : 1;
     };
     struct Inputs {
-        Inputs() : parentWId( 0 ), areRecipientsInformative( false ), areSendersInformative( false ) {}
-        std::map<std::string,Option> options;
+        Inputs() : parentWId(0), areRecipientsInformative(false), areSendersInformative(false) {}
+        std::map<std::string, Option> options;
         QStringList filePaths;
         QStringList recipients, senders;
-        std::map<std::string,QByteArray> inquireData;
+        std::map<std::string, QByteArray> inquireData;
         WId parentWId;
         QByteArray command;
         bool areRecipientsInformative : 1;
         bool areSendersInformative    : 1;
     } inputs;
     struct Outputs {
-        Outputs() : canceled( false ), serverPid( 0 ) {}
+        Outputs() : canceled(false), serverPid(0) {}
         QString errorString;
         bool canceled : 1;
         QByteArray data;

@@ -34,18 +34,18 @@
 
 #include "controller.h"
 
-
 using namespace Kleo;
 using namespace Kleo::Crypto;
 using namespace boost;
 
-class Controller::Private {
+class Controller::Private
+{
     friend class ::Kleo::Crypto::Controller;
-    Controller * const q;
+    Controller *const q;
 public:
-    explicit Private( Controller * qq )
-        : q( qq ),
-          lastError( 0 ),
+    explicit Private(Controller *qq)
+        : q(qq),
+          lastError(0),
           lastErrorString()
     {
 
@@ -56,47 +56,52 @@ private:
     QString lastErrorString;
 };
 
-Controller::Controller( QObject * parent )
-    : QObject( parent ), ExecutionContextUser(), d( new Private( this ) )
+Controller::Controller(QObject *parent)
+    : QObject(parent), ExecutionContextUser(), d(new Private(this))
 {
-    
+
 }
 
-Controller::Controller( const shared_ptr<const ExecutionContext> & ctx, QObject* parent )
-    : QObject( parent ), ExecutionContextUser( ctx ), d( new Private( this ) )
+Controller::Controller(const shared_ptr<const ExecutionContext> &ctx, QObject *parent)
+    : QObject(parent), ExecutionContextUser(ctx), d(new Private(this))
 {
-    
+
 }
 
 Controller::~Controller() {}
 
-void Controller::taskDone( const boost::shared_ptr<const Task::Result> & result ) {
-    if ( result->hasError() ) {
+void Controller::taskDone(const boost::shared_ptr<const Task::Result> &result)
+{
+    if (result->hasError()) {
         d->lastError = result->errorCode();
         d->lastErrorString = result->errorString();
     }
-    const Task * task = qobject_cast<const Task*>( sender() );
-    assert( task );
-    doTaskDone( task, result );
+    const Task *task = qobject_cast<const Task *>(sender());
+    assert(task);
+    doTaskDone(task, result);
 }
 
-void Controller::doTaskDone( const Task *, const shared_ptr<const Task::Result> & ) {}
+void Controller::doTaskDone(const Task *, const shared_ptr<const Task::Result> &) {}
 
-void Controller::connectTask( const shared_ptr<Task> & task ) {
-    assert( task );
-    connect( task.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)),
-             this, SLOT(taskDone(boost::shared_ptr<const Kleo::Crypto::Task::Result>)) );
+void Controller::connectTask(const shared_ptr<Task> &task)
+{
+    assert(task);
+    connect(task.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)),
+            this, SLOT(taskDone(boost::shared_ptr<const Kleo::Crypto::Task::Result>)));
 }
 
-void Controller::setLastError( int err, const QString & msg ) {
+void Controller::setLastError(int err, const QString &msg)
+{
     d->lastError = err;
     d->lastErrorString = msg;
 }
 
-void Controller::emitDoneOrError() {
-    if ( d->lastError != 0 )
-        emit error( d->lastError, d->lastErrorString );
-    else
+void Controller::emitDoneOrError()
+{
+    if (d->lastError != 0) {
+        emit error(d->lastError, d->lastErrorString);
+    } else {
         emit done();
+    }
 }
 

@@ -38,45 +38,60 @@
 #include <QString>
 #include <QByteArray>
 
-namespace Kleo {
-namespace Commands {
+namespace Kleo
+{
+namespace Commands
+{
 
-    class ExportSecretKeyCommand : public GnuPGProcessCommand {
-        Q_OBJECT
-    public:
-        explicit ExportSecretKeyCommand( QAbstractItemView * view, KeyListController * parent );
-        explicit ExportSecretKeyCommand( KeyListController * parent );
-        explicit ExportSecretKeyCommand( const GpgME::Key & key );
-        ~ExportSecretKeyCommand();
+class ExportSecretKeyCommand : public GnuPGProcessCommand
+{
+    Q_OBJECT
+public:
+    explicit ExportSecretKeyCommand(QAbstractItemView *view, KeyListController *parent);
+    explicit ExportSecretKeyCommand(KeyListController *parent);
+    explicit ExportSecretKeyCommand(const GpgME::Key &key);
+    ~ExportSecretKeyCommand();
 
-        void setFileName( const QString & fileName );
-        QString fileName() const { return m_filename; }
+    void setFileName(const QString &fileName);
+    QString fileName() const
+    {
+        return m_filename;
+    }
 
-        void setPassphraseCharset( const QByteArray & charset );
-        QByteArray passphraseCharset() const { return m_charset; }
+    void setPassphraseCharset(const QByteArray &charset);
+    QByteArray passphraseCharset() const
+    {
+        return m_charset;
+    }
 
-        void setUseArmor( bool armor );
-        bool useArmor() const { return m_armor; }
+    void setUseArmor(bool armor);
+    bool useArmor() const
+    {
+        return m_armor;
+    }
 
-        /* reimp */ static Restrictions restrictions() { return OnlyOneKey|NeedSecretKey; }
+    /* reimp */ static Restrictions restrictions()
+    {
+        return OnlyOneKey | NeedSecretKey;
+    }
 
-    private:
-        /* reimp */ bool preStartHook( QWidget * ) const;
+private:
+    /* reimp */ bool preStartHook(QWidget *) const;
 
-        /* reimp */ QStringList arguments() const;
+    /* reimp */ QStringList arguments() const;
 
-        /* reimp */ QString errorCaption() const;
-        /* reimp */ QString successCaption() const;
+    /* reimp */ QString errorCaption() const;
+    /* reimp */ QString successCaption() const;
 
-        /* reimp */ QString crashExitMessage( const QStringList & ) const;
-        /* reimp */ QString errorExitMessage( const QStringList & ) const;
-        /* reimp */ QString successMessage( const QStringList & ) const;
+    /* reimp */ QString crashExitMessage(const QStringList &) const;
+    /* reimp */ QString errorExitMessage(const QStringList &) const;
+    /* reimp */ QString successMessage(const QStringList &) const;
 
-    private:
-        mutable QString m_filename;
-        mutable QByteArray m_charset;
-        mutable bool m_armor;
-    };
+private:
+    mutable QString m_filename;
+    mutable QByteArray m_charset;
+    mutable bool m_armor;
+};
 
 }
 }

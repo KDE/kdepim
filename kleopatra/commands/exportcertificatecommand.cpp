@@ -63,68 +63,78 @@ using namespace Kleo::Dialogs;
 using namespace GpgME;
 using namespace boost;
 
-class ExportCertificateCommand::Private : public Command::Private {
+class ExportCertificateCommand::Private : public Command::Private
+{
     friend class ::ExportCertificateCommand;
-    ExportCertificateCommand * q_func() const { return static_cast<ExportCertificateCommand*>(q); }
+    ExportCertificateCommand *q_func() const
+    {
+        return static_cast<ExportCertificateCommand *>(q);
+    }
 public:
-    explicit Private( ExportCertificateCommand * qq, KeyListController * c );
+    explicit Private(ExportCertificateCommand *qq, KeyListController *c);
     ~Private();
-    void startExportJob( GpgME::Protocol protocol, const std::vector<Key>& keys );
+    void startExportJob(GpgME::Protocol protocol, const std::vector<Key> &keys);
     void cancelJobs();
-    void exportResult( const GpgME::Error&, const QByteArray& );
-    void showError( const GpgME::Error& error );
+    void exportResult(const GpgME::Error &, const QByteArray &);
+    void showError(const GpgME::Error &error);
 
-    bool requestFileNames( Protocol prot );
+    bool requestFileNames(Protocol prot);
     void finishedIfLastJob();
 
 private:
     QMap<GpgME::Protocol, QString> fileNames;
     uint jobsPending;
-    QMap<QObject*, QString> outFileForSender;
+    QMap<QObject *, QString> outFileForSender;
     QPointer<ExportJob> cmsJob;
     QPointer<ExportJob> pgpJob;
 };
 
-ExportCertificateCommand::Private * ExportCertificateCommand::d_func() { return static_cast<Private*>(d.get()); }
-const ExportCertificateCommand::Private * ExportCertificateCommand::d_func() const { return static_cast<const Private*>(d.get()); }
+ExportCertificateCommand::Private *ExportCertificateCommand::d_func()
+{
+    return static_cast<Private *>(d.get());
+}
+const ExportCertificateCommand::Private *ExportCertificateCommand::d_func() const
+{
+    return static_cast<const Private *>(d.get());
+}
 
 #define d d_func()
 #define q q_func()
 
-ExportCertificateCommand::Private::Private( ExportCertificateCommand * qq, KeyListController * c )
-    : Command::Private( qq, c ),
-      jobsPending( 0 )
+ExportCertificateCommand::Private::Private(ExportCertificateCommand *qq, KeyListController *c)
+    : Command::Private(qq, c),
+      jobsPending(0)
 {
-    
+
 }
 
 ExportCertificateCommand::Private::~Private() {}
 
-
-ExportCertificateCommand::ExportCertificateCommand( KeyListController * p )
-    : Command( new Private( this, p ) )
+ExportCertificateCommand::ExportCertificateCommand(KeyListController *p)
+    : Command(new Private(this, p))
 {
-    
+
 }
 
-ExportCertificateCommand::ExportCertificateCommand( QAbstractItemView * v, KeyListController * p )
-    : Command( v, new Private( this, p ) )
+ExportCertificateCommand::ExportCertificateCommand(QAbstractItemView *v, KeyListController *p)
+    : Command(v, new Private(this, p))
 {
-    
+
 }
 
-ExportCertificateCommand::ExportCertificateCommand( const Key & key )
-    : Command( key, new Private( this, 0 ) )
+ExportCertificateCommand::ExportCertificateCommand(const Key &key)
+    : Command(key, new Private(this, 0))
 {
 
 }
 
 ExportCertificateCommand::~ExportCertificateCommand() {}
 
-void ExportCertificateCommand::setOpenPGPFileName( const QString & fileName )
+void ExportCertificateCommand::setOpenPGPFileName(const QString &fileName)
 {
-    if ( !d->jobsPending )
+    if (!d->jobsPending) {
         d->fileNames[OpenPGP] = fileName;
+    }
 }
 
 QString ExportCertificateCommand::openPGPFileName() const
@@ -132,10 +142,11 @@ QString ExportCertificateCommand::openPGPFileName() const
     return d->fileNames[OpenPGP];
 }
 
-void ExportCertificateCommand::setX509FileName( const QString & fileName )
+void ExportCertificateCommand::setX509FileName(const QString &fileName)
 {
-    if ( !d->jobsPending )
+    if (!d->jobsPending) {
         d->fileNames[CMS] = fileName;
+    }
 }
 
 QString ExportCertificateCommand::x509FileName() const
@@ -146,121 +157,123 @@ QString ExportCertificateCommand::x509FileName() const
 void ExportCertificateCommand::doStart()
 {
     std::vector<Key> keys = d->keys();
-    if ( keys.empty() )
+    if (keys.empty()) {
         return;
+    }
 
-    const std::vector<Key>::iterator firstCms = std::partition( keys.begin(), keys.end(), boost::bind( &GpgME::Key::protocol, _1 ) != CMS );
+    const std::vector<Key>::iterator firstCms = std::partition(keys.begin(), keys.end(), boost::bind(&GpgME::Key::protocol, _1) != CMS);
 
-    std::vector<Key> openpgp, cms; 
-    std::copy( keys.begin(), firstCms, std::back_inserter( openpgp ) ); 
-    std::copy( firstCms, keys.end(), std::back_inserter( cms ) ); 
-    assert( !openpgp.empty() || !cms.empty() );
+    std::vector<Key> openpgp, cms;
+    std::copy(keys.begin(), firstCms, std::back_inserter(openpgp));
+    std::copy(firstCms, keys.end(), std::back_inserter(cms));
+    assert(!openpgp.empty() || !cms.empty());
     const bool haveBoth = !cms.empty() && !openpgp.empty();
-    const GpgME::Protocol prot = haveBoth ? UnknownProtocol : ( !cms.empty() ? CMS : OpenPGP );
-    if ( !d->requestFileNames( prot ) ) {
+    const GpgME::Protocol prot = haveBoth ? UnknownProtocol : (!cms.empty() ? CMS : OpenPGP);
+    if (!d->requestFileNames(prot)) {
         emit canceled();
         d->finished();
     } else {
-        if ( !openpgp.empty() )
-            d->startExportJob( GpgME::OpenPGP, openpgp );
-        if ( !cms.empty() )
-            d->startExportJob( GpgME::CMS, cms );
+        if (!openpgp.empty()) {
+            d->startExportJob(GpgME::OpenPGP, openpgp);
+        }
+        if (!cms.empty()) {
+            d->startExportJob(GpgME::CMS, cms);
+        }
     }
 }
-    
-bool ExportCertificateCommand::Private::requestFileNames( GpgME::Protocol protocol )
+
+bool ExportCertificateCommand::Private::requestFileNames(GpgME::Protocol protocol)
 {
-    if ( protocol == UnknownProtocol )
-    {
-        if ( !fileNames[OpenPGP].isEmpty() && !fileNames[CMS].isEmpty() )
+    if (protocol == UnknownProtocol) {
+        if (!fileNames[OpenPGP].isEmpty() && !fileNames[CMS].isEmpty()) {
             return true;
-        const QPointer<ExportCertificatesDialog> dlg( new ExportCertificatesDialog );
-        applyWindowID( dlg );
-        dlg->setOpenPgpExportFileName( fileNames[OpenPGP] );
-        dlg->setCmsExportFileName( fileNames[CMS] );
+        }
+        const QPointer<ExportCertificatesDialog> dlg(new ExportCertificatesDialog);
+        applyWindowID(dlg);
+        dlg->setOpenPgpExportFileName(fileNames[OpenPGP]);
+        dlg->setCmsExportFileName(fileNames[CMS]);
         const bool accepted = dlg->exec() == QDialog::Accepted && dlg ;
-        if ( accepted )
-        {
+        if (accepted) {
             fileNames[OpenPGP] = dlg->openPgpExportFileName();
             fileNames[CMS] = dlg->cmsExportFileName();
-        }
-        else
-        {
+        } else {
             fileNames.clear();
         }
         delete dlg;
         return accepted;
     }
 
-    if ( !fileNames[protocol].isEmpty() )
+    if (!fileNames[protocol].isEmpty()) {
         return true;
+    }
 
     QString proposedFileName;
-    if ( keys().size() == 1 )
+    if (keys().size() == 1)
         proposedFileName
-            = QString::fromLatin1( keys().front().primaryFingerprint() )
-            + QLatin1Char( '.' )
-            + QString::fromLatin1( outputFileExtension( protocol == OpenPGP
-                                                        ? Class::OpenPGP|Class::Ascii|Class::Certificate
-                                                        : Class::CMS|Class::Ascii|Class::Certificate ) )
-            ;
+            = QString::fromLatin1(keys().front().primaryFingerprint())
+              + QLatin1Char('.')
+              + QString::fromLatin1(outputFileExtension(protocol == OpenPGP
+                                    ? Class::OpenPGP | Class::Ascii | Class::Certificate
+                                    : Class::CMS | Class::Ascii | Class::Certificate))
+              ;
 
-    const QString fname = FileDialog::getSaveFileNameEx( parentWidgetOrView(),
-                                                         i18n( "Export Certificates" ), 
-                                                         QLatin1String("imp"),
-                                                         proposedFileName,
-                                                         protocol == GpgME::OpenPGP
-                                                         ? i18n( "OpenPGP Certificates" ) + QLatin1String(" (*.asc *.gpg *.pgp)")
-                                                         : i18n( "S/MIME Certificates" )  + QLatin1String(" (*.pem *.der)" ));
+    const QString fname = FileDialog::getSaveFileNameEx(parentWidgetOrView(),
+                          i18n("Export Certificates"),
+                          QLatin1String("imp"),
+                          proposedFileName,
+                          protocol == GpgME::OpenPGP
+                          ? i18n("OpenPGP Certificates") + QLatin1String(" (*.asc *.gpg *.pgp)")
+                          : i18n("S/MIME Certificates")  + QLatin1String(" (*.pem *.der)"));
     fileNames[protocol] = fname;
     return !fname.isEmpty();
 }
 
-void ExportCertificateCommand::Private::startExportJob( GpgME::Protocol protocol, const std::vector<Key>& keys )
+void ExportCertificateCommand::Private::startExportJob(GpgME::Protocol protocol, const std::vector<Key> &keys)
 {
-    assert( protocol != GpgME::UnknownProtocol );
+    assert(protocol != GpgME::UnknownProtocol);
 
-    const CryptoBackend::Protocol* const backend = CryptoBackendFactory::instance()->protocol( protocol );
-    assert( backend );
+    const CryptoBackend::Protocol *const backend = CryptoBackendFactory::instance()->protocol(protocol);
+    assert(backend);
     const QString fileName = fileNames[protocol];
     const bool binary = protocol == GpgME::OpenPGP
-        ? fileName.endsWith( QLatin1String( ".gpg" ), Qt::CaseInsensitive ) || fileName.endsWith( QLatin1String( ".pgp" ), Qt::CaseInsensitive )
-        : fileName.endsWith( QLatin1String( ".der" ), Qt::CaseInsensitive ) ;
-    std::auto_ptr<ExportJob> job( backend->publicKeyExportJob( !binary ) );
-    assert( job.get() );
+                        ? fileName.endsWith(QLatin1String(".gpg"), Qt::CaseInsensitive) || fileName.endsWith(QLatin1String(".pgp"), Qt::CaseInsensitive)
+                        : fileName.endsWith(QLatin1String(".der"), Qt::CaseInsensitive) ;
+    std::auto_ptr<ExportJob> job(backend->publicKeyExportJob(!binary));
+    assert(job.get());
 
-    connect( job.get(), SIGNAL(result(GpgME::Error,QByteArray)),
-             q, SLOT(exportResult(GpgME::Error,QByteArray)) );
+    connect(job.get(), SIGNAL(result(GpgME::Error,QByteArray)),
+            q, SLOT(exportResult(GpgME::Error,QByteArray)));
 
-    connect( job.get(), SIGNAL(progress(QString,int,int)),
-             q, SIGNAL(progress(QString,int,int)) );
+    connect(job.get(), SIGNAL(progress(QString,int,int)),
+            q, SIGNAL(progress(QString,int,int)));
 
     QStringList fingerprints;
-    Q_FOREACH ( const Key& i, keys )
+    Q_FOREACH (const Key &i, keys) {
         fingerprints << QLatin1String(i.primaryFingerprint());
+    }
 
-    const GpgME::Error err = job->start( fingerprints );
-    if ( err ) {
-        showError( err );
+    const GpgME::Error err = job->start(fingerprints);
+    if (err) {
+        showError(err);
         finished();
         return;
     }
-    emit q->info( i18n( "Exporting certificates..." ) );
+    emit q->info(i18n("Exporting certificates..."));
     ++jobsPending;
-    const QPointer<ExportJob> exportJob( job.release() );
+    const QPointer<ExportJob> exportJob(job.release());
 
     outFileForSender[exportJob.data()] = fileName;
-    ( protocol == CMS ? cmsJob : pgpJob ) = exportJob;
+    (protocol == CMS ? cmsJob : pgpJob) = exportJob;
 }
 
-void ExportCertificateCommand::Private::showError( const GpgME::Error& err )
+void ExportCertificateCommand::Private::showError(const GpgME::Error &err)
 {
-    assert( err );
+    assert(err);
     const QString msg = i18n("<qt><p>An error occurred while trying to export "
                              "the certificate:</p>"
                              "<p><b>%1</b></p></qt>",
-                             QString::fromLocal8Bit( err.asString() ) );
-    error( msg, i18n("Certificate Export Failed") );
+                             QString::fromLocal8Bit(err.asString()));
+    error(msg, i18n("Certificate Export Failed"));
 }
 
 void ExportCertificateCommand::doCancel()
@@ -270,59 +283,64 @@ void ExportCertificateCommand::doCancel()
 
 void ExportCertificateCommand::Private::finishedIfLastJob()
 {
-    if ( jobsPending <= 0 )
+    if (jobsPending <= 0) {
         finished();
+    }
 }
 
-static bool write_complete( QIODevice & iod, const QByteArray & data ) {
+static bool write_complete(QIODevice &iod, const QByteArray &data)
+{
     qint64 total = 0;
     qint64 toWrite = data.size();
-    while ( total < toWrite ) {
-        const qint64 written = iod.write( data.data() + total, toWrite );
-        if ( written < 0 )
+    while (total < toWrite) {
+        const qint64 written = iod.write(data.data() + total, toWrite);
+        if (written < 0) {
             return false;
+        }
         total += written;
         toWrite -= written;
     }
     return true;
 }
 
-void ExportCertificateCommand::Private::exportResult( const GpgME::Error& err, const QByteArray& data )
+void ExportCertificateCommand::Private::exportResult(const GpgME::Error &err, const QByteArray &data)
 {
-    assert( jobsPending > 0 );
+    assert(jobsPending > 0);
     --jobsPending;
 
-    assert( outFileForSender.contains( q->sender() ) );
+    assert(outFileForSender.contains(q->sender()));
     const QString outFile = outFileForSender[q->sender()];
 
-    if ( err ) {
-        showError( err );
+    if (err) {
+        showError(err);
         finishedIfLastJob();
         return;
     }
-    QSaveFile savefile( outFile );
+    QSaveFile savefile(outFile);
     //TODO: use KIO
-    const QString writeErrorMsg = i18n( "Could not write to file %1.",  outFile );
-    const QString errorCaption = i18n( "Certificate Export Failed" );
-    if ( !savefile.open(QIODevice::WriteOnly) )
-    {
-        error( writeErrorMsg, errorCaption );
+    const QString writeErrorMsg = i18n("Could not write to file %1.",  outFile);
+    const QString errorCaption = i18n("Certificate Export Failed");
+    if (!savefile.open(QIODevice::WriteOnly)) {
+        error(writeErrorMsg, errorCaption);
         finishedIfLastJob();
         return;
     }
 
-    if ( !write_complete( savefile, data ) ||
-         !savefile.commit() )
-        error( writeErrorMsg, errorCaption );
+    if (!write_complete(savefile, data) ||
+            !savefile.commit()) {
+        error(writeErrorMsg, errorCaption);
+    }
     finishedIfLastJob();
 }
 
 void ExportCertificateCommand::Private::cancelJobs()
 {
-    if ( cmsJob )
+    if (cmsJob) {
         cmsJob->slotCancel();
-    if ( pgpJob )
+    }
+    if (pgpJob) {
         pgpJob->slotCancel();
+    }
 }
 
 #undef d

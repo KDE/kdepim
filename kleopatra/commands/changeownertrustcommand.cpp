@@ -49,7 +49,6 @@
 #include <KLocalizedString>
 #include <qdebug.h>
 
-
 #include <cassert>
 
 using namespace Kleo;
@@ -57,11 +56,15 @@ using namespace Kleo::Commands;
 using namespace Kleo::Dialogs;
 using namespace GpgME;
 
-class ChangeOwnerTrustCommand::Private : public Command::Private {
+class ChangeOwnerTrustCommand::Private : public Command::Private
+{
     friend class ::Kleo::Commands::ChangeOwnerTrustCommand;
-    ChangeOwnerTrustCommand * q_func() const { return static_cast<ChangeOwnerTrustCommand*>( q ); }
+    ChangeOwnerTrustCommand *q_func() const
+    {
+        return static_cast<ChangeOwnerTrustCommand *>(q);
+    }
 public:
-    explicit Private( ChangeOwnerTrustCommand * qq, KeyListController * c );
+    explicit Private(ChangeOwnerTrustCommand *qq, KeyListController *c);
     ~Private();
 
     void init();
@@ -69,12 +72,12 @@ public:
 private:
     void slotDialogAccepted();
     void slotDialogRejected();
-    void slotResult( const Error & err );
+    void slotResult(const Error &err);
 
 private:
     void ensureDialogCreated();
     void createJob();
-    void showErrorDialog( const Error & error );
+    void showErrorDialog(const Error &error);
     void showSuccessDialog();
 
 private:
@@ -82,150 +85,176 @@ private:
     QPointer<ChangeOwnerTrustJob> job;
 };
 
-
-ChangeOwnerTrustCommand::Private * ChangeOwnerTrustCommand::d_func() { return static_cast<Private*>( d.get() ); }
-const ChangeOwnerTrustCommand::Private * ChangeOwnerTrustCommand::d_func() const { return static_cast<const Private*>( d.get() ); }
+ChangeOwnerTrustCommand::Private *ChangeOwnerTrustCommand::d_func()
+{
+    return static_cast<Private *>(d.get());
+}
+const ChangeOwnerTrustCommand::Private *ChangeOwnerTrustCommand::d_func() const
+{
+    return static_cast<const Private *>(d.get());
+}
 
 #define d d_func()
 #define q q_func()
 
-ChangeOwnerTrustCommand::Private::Private( ChangeOwnerTrustCommand * qq, KeyListController * c )
-    : Command::Private( qq, c ),
+ChangeOwnerTrustCommand::Private::Private(ChangeOwnerTrustCommand *qq, KeyListController *c)
+    : Command::Private(qq, c),
       dialog(),
       job()
 {
 
 }
 
-ChangeOwnerTrustCommand::Private::~Private() { qDebug(); }
+ChangeOwnerTrustCommand::Private::~Private()
+{
+    qDebug();
+}
 
-ChangeOwnerTrustCommand::ChangeOwnerTrustCommand( KeyListController * c )
-    : Command( new Private( this, c ) )
+ChangeOwnerTrustCommand::ChangeOwnerTrustCommand(KeyListController *c)
+    : Command(new Private(this, c))
 {
     d->init();
 }
 
-ChangeOwnerTrustCommand::ChangeOwnerTrustCommand( QAbstractItemView * v, KeyListController * c )
-    : Command( v, new Private( this, c ) )
+ChangeOwnerTrustCommand::ChangeOwnerTrustCommand(QAbstractItemView *v, KeyListController *c)
+    : Command(v, new Private(this, c))
 {
     d->init();
 }
 
-ChangeOwnerTrustCommand::ChangeOwnerTrustCommand( const Key & key )
-    : Command( key, new Private( this, 0 ) )
+ChangeOwnerTrustCommand::ChangeOwnerTrustCommand(const Key &key)
+    : Command(key, new Private(this, 0))
 {
     d->init();
 }
 
-void ChangeOwnerTrustCommand::Private::init() {
+void ChangeOwnerTrustCommand::Private::init()
+{
 
 }
 
-ChangeOwnerTrustCommand::~ChangeOwnerTrustCommand() { qDebug(); }
+ChangeOwnerTrustCommand::~ChangeOwnerTrustCommand()
+{
+    qDebug();
+}
 
-void ChangeOwnerTrustCommand::doStart() {
+void ChangeOwnerTrustCommand::doStart()
+{
 
-    if ( d->keys().size() != 1 ) {
+    if (d->keys().size() != 1) {
         d->finished();
         return;
     }
 
     const Key key = d->key();
-    if ( key.protocol() != GpgME::OpenPGP || ( key.hasSecret() && key.ownerTrust() == Key::Ultimate ) ) {
+    if (key.protocol() != GpgME::OpenPGP || (key.hasSecret() && key.ownerTrust() == Key::Ultimate)) {
         d->finished();
         return;
     }
 
     d->ensureDialogCreated();
-    assert( d->dialog );
+    assert(d->dialog);
 
-    d->dialog->setHasSecretKey( key.hasSecret() );
-    d->dialog->setFormattedCertificateName( Formatting::formatForComboBox( key ) );
-    d->dialog->setOwnerTrust( key.ownerTrust() );
+    d->dialog->setHasSecretKey(key.hasSecret());
+    d->dialog->setFormattedCertificateName(Formatting::formatForComboBox(key));
+    d->dialog->setOwnerTrust(key.ownerTrust());
 
     d->dialog->show();
-    
+
 }
 
-void ChangeOwnerTrustCommand::Private::slotDialogAccepted() {
-    assert( dialog );
+void ChangeOwnerTrustCommand::Private::slotDialogAccepted()
+{
+    assert(dialog);
 
     const Key::OwnerTrust trust = dialog->ownerTrust();
 
     qDebug() << "trust " << trust;
 
     createJob();
-    assert( job );
+    assert(job);
 
-    if ( const Error err = job->start( key(), trust ) ) {
-        showErrorDialog( err );
+    if (const Error err = job->start(key(), trust)) {
+        showErrorDialog(err);
         finished();
     }
 }
 
-void ChangeOwnerTrustCommand::Private::slotDialogRejected() {
+void ChangeOwnerTrustCommand::Private::slotDialogRejected()
+{
     emit q->canceled();
     finished();
 }
 
-void ChangeOwnerTrustCommand::Private::slotResult( const Error & err ) {
-    if ( err.isCanceled() )
+void ChangeOwnerTrustCommand::Private::slotResult(const Error &err)
+{
+    if (err.isCanceled())
         ;
-    else if ( err )
-        showErrorDialog( err );
-    else
+    else if (err) {
+        showErrorDialog(err);
+    } else {
         showSuccessDialog();
+    }
     finished();
 }
 
-void ChangeOwnerTrustCommand::doCancel() {
+void ChangeOwnerTrustCommand::doCancel()
+{
     qDebug();
-    if ( d->job )
+    if (d->job) {
         d->job->slotCancel();
+    }
 }
 
-void ChangeOwnerTrustCommand::Private::ensureDialogCreated() {
-    if ( dialog )
+void ChangeOwnerTrustCommand::Private::ensureDialogCreated()
+{
+    if (dialog) {
         return;
+    }
 
     dialog = new OwnerTrustDialog;
-    applyWindowID( dialog );
-    dialog->setAttribute( Qt::WA_DeleteOnClose );
+    applyWindowID(dialog);
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
 
-    connect( dialog, SIGNAL(accepted()), q, SLOT(slotDialogAccepted()) );
-    connect( dialog, SIGNAL(rejected()), q, SLOT(slotDialogRejected()) );
+    connect(dialog, SIGNAL(accepted()), q, SLOT(slotDialogAccepted()));
+    connect(dialog, SIGNAL(rejected()), q, SLOT(slotDialogRejected()));
 }
 
-void ChangeOwnerTrustCommand::Private::createJob() {
-    assert( !job );
+void ChangeOwnerTrustCommand::Private::createJob()
+{
+    assert(!job);
 
-    const CryptoBackend::Protocol * const backend = CryptoBackendFactory::instance()->protocol( key().protocol() );
-    if ( !backend )
+    const CryptoBackend::Protocol *const backend = CryptoBackendFactory::instance()->protocol(key().protocol());
+    if (!backend) {
         return;
+    }
 
-    ChangeOwnerTrustJob * const j = backend->changeOwnerTrustJob();
-    if ( !j )
+    ChangeOwnerTrustJob *const j = backend->changeOwnerTrustJob();
+    if (!j) {
         return;
+    }
 
-    connect( j, SIGNAL(progress(QString,int,int)),
-             q, SIGNAL(progress(QString,int,int)) );
-    connect( j, SIGNAL(result(GpgME::Error)),
-             q, SLOT(slotResult(GpgME::Error)) );
+    connect(j, SIGNAL(progress(QString,int,int)),
+            q, SIGNAL(progress(QString,int,int)));
+    connect(j, SIGNAL(result(GpgME::Error)),
+            q, SLOT(slotResult(GpgME::Error)));
 
     job = j;
 }
 
-void ChangeOwnerTrustCommand::Private::showErrorDialog( const Error & err ) {
-    error( i18n("<p>An error occurred while trying to change "
-                "the owner trust for <b>%1</b>:</p><p>%2</p>",
-                Formatting::formatForComboBox( key() ),
-                QString::fromLocal8Bit( err.asString() ) ),
-           i18n("Owner Trust Change Error") );
+void ChangeOwnerTrustCommand::Private::showErrorDialog(const Error &err)
+{
+    error(i18n("<p>An error occurred while trying to change "
+               "the owner trust for <b>%1</b>:</p><p>%2</p>",
+               Formatting::formatForComboBox(key()),
+               QString::fromLocal8Bit(err.asString())),
+          i18n("Owner Trust Change Error"));
 }
 
-void ChangeOwnerTrustCommand::Private::showSuccessDialog() {
-    information( i18n("Owner trust changed successfully."),
-                 i18n("Owner Trust Change Succeeded") );
+void ChangeOwnerTrustCommand::Private::showSuccessDialog()
+{
+    information(i18n("Owner trust changed successfully."),
+                i18n("Owner Trust Change Succeeded"));
 }
 
 #undef d

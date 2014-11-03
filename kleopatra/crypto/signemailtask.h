@@ -43,47 +43,52 @@
 
 #include <vector>
 
-namespace GpgME {
-    class Key;
+namespace GpgME
+{
+class Key;
 }
 
-namespace Kleo {
-    class Input;
-    class Output;
+namespace Kleo
+{
+class Input;
+class Output;
 }
 
-namespace Kleo {
-namespace Crypto {
+namespace Kleo
+{
+namespace Crypto
+{
 
-    class SignEMailTask : public Task {
-        Q_OBJECT
-    public:
-        explicit SignEMailTask( QObject * parent=0 );
-        ~SignEMailTask();
+class SignEMailTask : public Task
+{
+    Q_OBJECT
+public:
+    explicit SignEMailTask(QObject *parent = 0);
+    ~SignEMailTask();
 
-        void setInput( const boost::shared_ptr<Input> & input );
-        void setOutput( const boost::shared_ptr<Output> & output );
-        void setSigners( const std::vector<GpgME::Key> & recipients );
+    void setInput(const boost::shared_ptr<Input> &input);
+    void setOutput(const boost::shared_ptr<Output> &output);
+    void setSigners(const std::vector<GpgME::Key> &recipients);
 
-        void setDetachedSignature( bool detached );
-        void setClearsign( bool clear );
+    void setDetachedSignature(bool detached);
+    void setClearsign(bool clear);
 
-        GpgME::Protocol protocol() const;
+    GpgME::Protocol protocol() const;
 
-        /* reimp */ void cancel();
-        /* reimp */ QString label() const;
+    /* reimp */ void cancel();
+    /* reimp */ QString label() const;
 
-        QString micAlg() const;
+    QString micAlg() const;
 
-    private:
-        /* reimp */ void doStart();
-        /* reimp */ unsigned long long inputSize() const;
+private:
+    /* reimp */ void doStart();
+    /* reimp */ unsigned long long inputSize() const;
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void slotResult( const GpgME::SigningResult & ) )
-    };
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void slotResult(const GpgME::SigningResult &))
+};
 
 }
 }

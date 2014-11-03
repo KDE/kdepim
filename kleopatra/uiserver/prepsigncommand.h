@@ -37,22 +37,27 @@
 
 #include <utils/pimpl_ptr.h>
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class PrepSignCommand : public Kleo::AssuanCommandMixin<PrepSignCommand> {
-    public:
-        PrepSignCommand();
-        virtual ~PrepSignCommand();
-    private:
-        int doStart();
-        void doCanceled();
-    public:
-        static const char * staticName() { return "PREP_SIGN"; }
+class PrepSignCommand : public Kleo::AssuanCommandMixin<PrepSignCommand>
+{
+public:
+    PrepSignCommand();
+    virtual ~PrepSignCommand();
+private:
+    int doStart();
+    void doCanceled();
+public:
+    static const char *staticName()
+    {
+        return "PREP_SIGN";
+    }
 
-        class Private;
-    private:
-        kdtools::pimpl_ptr<Private> d;
-    };
+    class Private;
+private:
+    kdtools::pimpl_ptr<Private> d;
+};
 
 }
 

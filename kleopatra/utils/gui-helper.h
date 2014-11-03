@@ -35,21 +35,23 @@
 
 #include <QAbstractButton>
 
-namespace Kleo {
-    static inline void really_check( QAbstractButton & b, bool on ) {
-        const bool excl = b.autoExclusive();
-        b.setAutoExclusive( false );
-        b.setChecked( on );
-        b.setAutoExclusive( excl );
-    }
+namespace Kleo
+{
+static inline void really_check(QAbstractButton &b, bool on)
+{
+    const bool excl = b.autoExclusive();
+    b.setAutoExclusive(false);
+    b.setChecked(on);
+    b.setAutoExclusive(excl);
+}
 
-    static inline bool xconnect( const QObject * a, const char * signal,
-                                 const QObject * b, const char * slot )
-    {
-        return
-            QObject::connect( a, signal, b, slot ) &&
-            QObject::connect( b, signal, a, slot ) ;
-    }
+static inline bool xconnect(const QObject *a, const char *signal,
+                            const QObject *b, const char *slot)
+{
+    return
+        QObject::connect(a, signal, b, slot) &&
+        QObject::connect(b, signal, a, slot) ;
+}
 }
 
 #endif /* __KLEOPATRA_UTILS_GUI_HELPER_H__ */

@@ -36,28 +36,30 @@
 #include <qtextedit.h>
 #include <QString>
 #include <QProcess>
-namespace Kleo {
-  class GnuPGProcessBase;
+namespace Kleo
+{
+class GnuPGProcessBase;
 }
 class QStringList;
 
-class GnuPGViewer : public QTextEdit {
-  Q_OBJECT
+class GnuPGViewer : public QTextEdit
+{
+    Q_OBJECT
 public:
-  GnuPGViewer( QWidget * parent=0 );
-  ~GnuPGViewer();
+    GnuPGViewer(QWidget *parent = 0);
+    ~GnuPGViewer();
 
-  void setProcess( Kleo::GnuPGProcessBase * process );
+    void setProcess(Kleo::GnuPGProcessBase *process);
 
 private slots:
-  void slotStdout( );
-  void slotStderr();
-  void slotStatus( Kleo::GnuPGProcessBase *, const QString &, const QStringList & );
-  void slotProcessExited( int, QProcess::ExitStatus );
+    void slotStdout();
+    void slotStderr();
+    void slotStatus(Kleo::GnuPGProcessBase *, const QString &, const QStringList &);
+    void slotProcessExited(int, QProcess::ExitStatus);
 
 private:
-  Kleo::GnuPGProcessBase * mProcess;
-  QString mLastStdout, mLastStderr, mLastStatus;
+    Kleo::GnuPGProcessBase *mProcess;
+    QString mLastStdout, mLastStderr, mLastStatus;
 };
 
 #endif // __KLEO_TESTS_GNUPGVIEWER_H__

@@ -39,58 +39,61 @@
 
 #include <vector>
 
-namespace GpgME {
-  class Error;
-  class KeyListResult;
+namespace GpgME
+{
+class Error;
+class KeyListResult;
 }
 
 class QStringList;
 
-namespace Kleo {
+namespace Kleo
+{
 
-  /**
-     @short An abstract base class for asynchronous key listers
+/**
+   @short An abstract base class for asynchronous key listers
 
-     To use a KeyListJob, first obtain an instance from the
-     CryptoBackend implementation, connect the nextKey(), progress()
-     and result() signals to suitable slots and then start the key
-     listing with a call to start(). This call might fail, in which
-     case the KeylistJob instance will have schedules it's own
-     destruction with a call to QObject::deleteLater().
+   To use a KeyListJob, first obtain an instance from the
+   CryptoBackend implementation, connect the nextKey(), progress()
+   and result() signals to suitable slots and then start the key
+   listing with a call to start(). This call might fail, in which
+   case the KeylistJob instance will have schedules it's own
+   destruction with a call to QObject::deleteLater().
 
-     During keylisting, you will receive new key objects through the
-     nextKey() signal as they arrive. After result() is emitted, the
-     KeyListJob will schedule it's own destruction by calling
-     QObject::deleteLater().
-  */
-  class KeyListJob : public Job {
+   During keylisting, you will receive new key objects through the
+   nextKey() signal as they arrive. After result() is emitted, the
+   KeyListJob will schedule it's own destruction by calling
+   QObject::deleteLater().
+*/
+class KeyListJob : public Job
+{
     Q_OBJECT
-  protected:
-    explicit KeyListJob( QObject * parent );
+protected:
+    explicit KeyListJob(QObject *parent);
 
-  public:
-   ~KeyListJob();
+public:
+    ~KeyListJob();
 
-     /**
-       Starts the keylist operation. \a pattern is a list of patterns
-       used to restrict the list of keys returned. Empty patterns are
-       ignored. If \a pattern is empty or contains only empty strings,
-       all keys are returned (however, the backend is free to truncate
-       the result and should do so; when this happens, it will be
-       reported by the reult object).
+    /**
+      Starts the keylist operation. \a pattern is a list of patterns
+      used to restrict the list of keys returned. Empty patterns are
+      ignored. If \a pattern is empty or contains only empty strings,
+      all keys are returned (however, the backend is free to truncate
+      the result and should do so; when this happens, it will be
+      reported by the reult object).
 
-       If \a secretOnly is true, only keys for which the secret key is
-       also available are returned. Use this if you need to select a
-       key for signing.
+      If \a secretOnly is true, only keys for which the secret key is
+      also available are returned. Use this if you need to select a
+      key for signing.
     */
-    virtual GpgME::Error start( const QStringList & patterns, bool secretOnly=false ) = 0;
+    virtual GpgME::Error start(const QStringList &patterns, bool secretOnly = false) = 0;
 
-    virtual GpgME::KeyListResult exec( const QStringList & patterns, bool secretOnly, std::vector<GpgME::Key> & keys ) = 0;
+    virtual GpgME::KeyListResult exec(const QStringList &patterns, bool secretOnly, std::vector<GpgME::Key> &keys) = 0;
 
-  Q_SIGNALS:
-    void nextKey( const GpgME::Key & key );
-    void result( const GpgME::KeyListResult & result, const std::vector<GpgME::Key> & keys=std::vector<GpgME::Key>(), const QString & auditLogAsHtml=QString(), const GpgME::Error & auditLogError=GpgME::Error() );
-  };
+Q_SIGNALS:
+    void nextKey(const GpgME::Key &key);
+    void result(const GpgME::KeyListResult &result, const std::vector<GpgME::Key> &keys = std::vector<GpgME::Key>(), const QString &auditLogAsHtml = QString(), const GpgME::Error &auditLogError = GpgME::Error());
+};
 
 }
 

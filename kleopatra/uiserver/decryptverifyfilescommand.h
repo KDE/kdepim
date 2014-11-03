@@ -35,18 +35,26 @@
 
 #include <uiserver/decryptverifycommandfilesbase.h>
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class DecryptVerifyFilesCommand : public AssuanCommandMixin<DecryptVerifyFilesCommand,DecryptVerifyCommandFilesBase> {
-    public:
-        //DecryptVerifyFilesCommand();
-        //~DecryptVerifyFilesCommand();
+class DecryptVerifyFilesCommand : public AssuanCommandMixin<DecryptVerifyFilesCommand, DecryptVerifyCommandFilesBase>
+{
+public:
+    //DecryptVerifyFilesCommand();
+    //~DecryptVerifyFilesCommand();
 
-    private:
-        DecryptVerifyOperation operation() const { return DecryptVerify; }
-    public:
-        static const char * staticName() { return "DECRYPT_VERIFY_FILES"; }
-    };
+private:
+    DecryptVerifyOperation operation() const
+    {
+        return DecryptVerify;
+    }
+public:
+    static const char *staticName()
+    {
+        return "DECRYPT_VERIFY_FILES";
+    }
+};
 
 }
 

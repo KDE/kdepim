@@ -45,53 +45,56 @@ class QStringList;
 class QDir;
 class QWidget;
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class OverwritePolicy {
-    public:
-        enum Policy {
-            Allow,
-            Deny,
-            Ask
-        };
-
-        explicit OverwritePolicy( QWidget * parent, Policy initialPolicy=Ask );
-        ~OverwritePolicy();
-
-        Policy policy() const;
-        void setPolicy( Policy );
-
-        QWidget * parentWidget() const;
-
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
+class OverwritePolicy
+{
+public:
+    enum Policy {
+        Allow,
+        Deny,
+        Ask
     };
 
-    class Output {
-    public:
-        virtual ~Output();
+    explicit OverwritePolicy(QWidget *parent, Policy initialPolicy = Ask);
+    ~OverwritePolicy();
 
-        virtual void setLabel( const QString & label ) = 0;
-        virtual QString label() const = 0;
-        virtual boost::shared_ptr<QIODevice> ioDevice() const = 0;
-        virtual QString errorString() const = 0;
-        virtual bool isFinalized() const = 0;
-        virtual void finalize() = 0;
-        virtual void cancel() = 0;
-        virtual bool binaryOpt() const = 0;
-        virtual void setBinaryOpt( bool value ) = 0;
+    Policy policy() const;
+    void setPolicy(Policy);
 
-        static boost::shared_ptr<Output> createFromFile( const QString & fileName, const boost::shared_ptr<OverwritePolicy> & );
-        static boost::shared_ptr<Output> createFromFile( const QString & fileName, bool forceOverwrite );
-        static boost::shared_ptr<Output> createFromPipeDevice( assuan_fd_t fd, const QString & label );
-        static boost::shared_ptr<Output> createFromProcessStdIn( const QString & command );
-        static boost::shared_ptr<Output> createFromProcessStdIn( const QString & command, const QStringList & args );
-        static boost::shared_ptr<Output> createFromProcessStdIn( const QString & command, const QStringList & args, const QDir & workingDirectory );
+    QWidget *parentWidget() const;
+
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+};
+
+class Output
+{
+public:
+    virtual ~Output();
+
+    virtual void setLabel(const QString &label) = 0;
+    virtual QString label() const = 0;
+    virtual boost::shared_ptr<QIODevice> ioDevice() const = 0;
+    virtual QString errorString() const = 0;
+    virtual bool isFinalized() const = 0;
+    virtual void finalize() = 0;
+    virtual void cancel() = 0;
+    virtual bool binaryOpt() const = 0;
+    virtual void setBinaryOpt(bool value) = 0;
+
+    static boost::shared_ptr<Output> createFromFile(const QString &fileName, const boost::shared_ptr<OverwritePolicy> &);
+    static boost::shared_ptr<Output> createFromFile(const QString &fileName, bool forceOverwrite);
+    static boost::shared_ptr<Output> createFromPipeDevice(assuan_fd_t fd, const QString &label);
+    static boost::shared_ptr<Output> createFromProcessStdIn(const QString &command);
+    static boost::shared_ptr<Output> createFromProcessStdIn(const QString &command, const QStringList &args);
+    static boost::shared_ptr<Output> createFromProcessStdIn(const QString &command, const QStringList &args, const QDir &workingDirectory);
 #ifndef QT_NO_CLIPBOARD
-        static boost::shared_ptr<Output> createFromClipboard();
+    static boost::shared_ptr<Output> createFromClipboard();
 #endif
-    };
+};
 }
 
 #endif /* __KLEOPATRA_UTILS_OUTPUT_H__ */

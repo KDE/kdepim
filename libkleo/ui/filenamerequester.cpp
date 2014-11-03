@@ -43,11 +43,12 @@
 
 using namespace Kleo;
 
-class FileNameRequester::Private {
+class FileNameRequester::Private
+{
     friend class ::Kleo::FileNameRequester;
-    FileNameRequester * const q;
+    FileNameRequester *const q;
 public:
-    explicit Private( FileNameRequester * qq );
+    explicit Private(FileNameRequester *qq);
     ~Private();
 
 private:
@@ -69,88 +70,95 @@ private:
     bool existingOnly;
 };
 
-FileNameRequester::Private::Private( FileNameRequester * qq )
-    : q( qq ),
+FileNameRequester::Private::Private(FileNameRequester *qq)
+    : q(qq),
 #ifndef QT_NO_DIRMODEL
       dirmodel(),
-      completer( &dirmodel ),
+      completer(&dirmodel),
 #else
       filter(),
 #endif
-      lineedit( q ),
-      button( q ),
-      hlay( q ),
+      lineedit(q),
+      button(q),
+      hlay(q),
       nameFilter(),
-      existingOnly( true )
+      existingOnly(true)
 {
 #ifndef QT_NO_DIRMODEL
-    dirmodel.setObjectName( QLatin1String("dirmodel") );
-    completer.setObjectName( QLatin1String("completer") );
+    dirmodel.setObjectName(QLatin1String("dirmodel"));
+    completer.setObjectName(QLatin1String("completer"));
 #endif
-    lineedit.setObjectName( QLatin1String("lineedit") );
-    button.setObjectName( QLatin1String("button") );
-    hlay.setObjectName( QLatin1String("hlay") );
+    lineedit.setObjectName(QLatin1String("lineedit"));
+    button.setObjectName(QLatin1String("button"));
+    hlay.setObjectName(QLatin1String("hlay"));
 
-    button.setIcon( QIcon::fromTheme(QLatin1String("document-open")) );
+    button.setIcon(QIcon::fromTheme(QLatin1String("document-open")));
 #ifndef QT_NO_DIRMODEL
-    lineedit.setCompleter( &completer );
+    lineedit.setCompleter(&completer);
 #endif
     lineedit.setClearButtonShown(true);
-    hlay.setMargin( 0 );
-    hlay.addWidget( &lineedit );
-    hlay.addWidget( &button );
+    hlay.setMargin(0);
+    hlay.addWidget(&lineedit);
+    hlay.addWidget(&button);
 
-    connect( &button, SIGNAL(clicked()), q, SLOT(slotButtonClicked()) );
+    connect(&button, SIGNAL(clicked()), q, SLOT(slotButtonClicked()));
     connect(&lineedit, &KLineEdit::textChanged, q, &FileNameRequester::fileNameChanged);
 }
 
 FileNameRequester::Private::~Private() {}
 
-FileNameRequester::FileNameRequester( QWidget * p )
-    : QWidget( p ), d( new Private( this ) )
+FileNameRequester::FileNameRequester(QWidget *p)
+    : QWidget(p), d(new Private(this))
 {
 
 }
 
-FileNameRequester::FileNameRequester( QDir::Filters f, QWidget * p )
-    : QWidget( p ), d( new Private( this ) )
+FileNameRequester::FileNameRequester(QDir::Filters f, QWidget *p)
+    : QWidget(p), d(new Private(this))
 {
 #ifndef QT_NO_DIRMODEL
-    d->dirmodel.setFilter( f );
+    d->dirmodel.setFilter(f);
 #else
     d->filter = f;
 #endif
 }
 
-FileNameRequester::~FileNameRequester() {
+FileNameRequester::~FileNameRequester()
+{
     delete d;
 }
 
-void FileNameRequester::setFileName( const QString & file ) {
-    d->lineedit.setText( file );
+void FileNameRequester::setFileName(const QString &file)
+{
+    d->lineedit.setText(file);
 }
 
-QString FileNameRequester::fileName() const {
+QString FileNameRequester::fileName() const
+{
     return d->lineedit.text();
 }
 
-void FileNameRequester::setExistingOnly( bool on ) {
+void FileNameRequester::setExistingOnly(bool on)
+{
     d->existingOnly = on;
 }
 
-bool FileNameRequester::existingOnly() const {
+bool FileNameRequester::existingOnly() const
+{
     return d->existingOnly;
 }
 
-void FileNameRequester::setFilter( QDir::Filters f ) {
+void FileNameRequester::setFilter(QDir::Filters f)
+{
 #ifndef QT_NO_DIRMODEL
-    d->dirmodel.setFilter( f );
+    d->dirmodel.setFilter(f);
 #else
     d->filter = f;
 #endif
 }
 
-QDir::Filters FileNameRequester::filter() const {
+QDir::Filters FileNameRequester::filter() const
+{
 #ifndef QT_NO_DIRMODEL
     return d->dirmodel.filter();
 #else
@@ -158,32 +166,38 @@ QDir::Filters FileNameRequester::filter() const {
 #endif
 }
 
-void FileNameRequester::setNameFilter( const QString & nameFilter ) {
+void FileNameRequester::setNameFilter(const QString &nameFilter)
+{
     d->nameFilter = nameFilter;
 }
 
-QString FileNameRequester::nameFilter() const {
+QString FileNameRequester::nameFilter() const
+{
     return d->nameFilter;
 }
 
-void FileNameRequester::Private::slotButtonClicked() {
+void FileNameRequester::Private::slotButtonClicked()
+{
     const QString fileName = q->requestFileName();
-    if ( !fileName.isEmpty() )
-        q->setFileName( fileName );
+    if (!fileName.isEmpty()) {
+        q->setFileName(fileName);
+    }
 }
 
-QString FileNameRequester::requestFileName() {
+QString FileNameRequester::requestFileName()
+{
 #ifndef QT_NO_FILEDIALOG
     const QDir::Filters filters = filter();
-    if ( (filters & QDir::Dirs) && !(filters & QDir::Files) )
-        return QFileDialog::getExistingDirectory( this );
-    else if ( d->existingOnly )
-        return QFileDialog::getOpenFileName( this, QString(), QString(), d->nameFilter );
-    else
-        return QFileDialog::getSaveFileName( this, QString(), QString(), d->nameFilter );
+    if ((filters & QDir::Dirs) && !(filters & QDir::Files)) {
+        return QFileDialog::getExistingDirectory(this);
+    } else if (d->existingOnly) {
+        return QFileDialog::getOpenFileName(this, QString(), QString(), d->nameFilter);
+    } else {
+        return QFileDialog::getSaveFileName(this, QString(), QString(), d->nameFilter);
+    }
 #else
     return QString();
 #endif
 }
-      
+
 #include "moc_filenamerequester.cpp"

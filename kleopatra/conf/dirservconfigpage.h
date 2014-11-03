@@ -41,10 +41,11 @@ class QCheckBox;
 class QLabel;
 class QTimeEdit;
 class QSpinBox;
-namespace Kleo {
-  class CryptoConfig;
-  class CryptoConfigEntry;
-  class DirectoryServicesWidget;
+namespace Kleo
+{
+class CryptoConfig;
+class CryptoConfigEntry;
+class DirectoryServicesWidget;
 }
 
 /**
@@ -52,36 +53,37 @@ namespace Kleo {
  * The user can configure LDAP servers in this page, to be used for listing/fetching
  * remote certificates in kleopatra.
  */
-class DirectoryServicesConfigurationPage : public KCModule {
-  Q_OBJECT
+class DirectoryServicesConfigurationPage : public KCModule
+{
+    Q_OBJECT
 public:
-  explicit DirectoryServicesConfigurationPage( QWidget *parent=0, const QVariantList &args=QVariantList() );
+    explicit DirectoryServicesConfigurationPage(QWidget *parent = 0, const QVariantList &args = QVariantList());
 
-  /* reimp */ void load();
-  /* reimp */ void save();
-  /* reimp */ void defaults();
+    /* reimp */ void load();
+    /* reimp */ void save();
+    /* reimp */ void defaults();
 
 private:
-  Kleo::CryptoConfigEntry* configEntry( const char* componentName,
-                                        const char* groupName,
-                                        const char* entryName,
-                                        Kleo::CryptoConfigEntry::ArgType argType,
-                                        bool isList,
-                                        bool showError=true );
+    Kleo::CryptoConfigEntry *configEntry(const char *componentName,
+                                         const char *groupName,
+                                         const char *entryName,
+                                         Kleo::CryptoConfigEntry::ArgType argType,
+                                         bool isList,
+                                         bool showError = true);
 
-  Kleo::DirectoryServicesWidget* mWidget;
-  QTimeEdit* mTimeout;
-  QSpinBox* mMaxItems;
-  QLabel* mMaxItemsLabel;
-  QCheckBox* mAddNewServersCB;
+    Kleo::DirectoryServicesWidget *mWidget;
+    QTimeEdit *mTimeout;
+    QSpinBox *mMaxItems;
+    QLabel *mMaxItemsLabel;
+    QCheckBox *mAddNewServersCB;
 
-  Kleo::CryptoConfigEntry* mX509ServicesEntry;
-  Kleo::CryptoConfigEntry* mOpenPGPServiceEntry;
-  Kleo::CryptoConfigEntry* mTimeoutConfigEntry;
-  Kleo::CryptoConfigEntry* mMaxItemsConfigEntry;
-  Kleo::CryptoConfigEntry* mAddNewServersConfigEntry;
+    Kleo::CryptoConfigEntry *mX509ServicesEntry;
+    Kleo::CryptoConfigEntry *mOpenPGPServiceEntry;
+    Kleo::CryptoConfigEntry *mTimeoutConfigEntry;
+    Kleo::CryptoConfigEntry *mMaxItemsConfigEntry;
+    Kleo::CryptoConfigEntry *mAddNewServersConfigEntry;
 
-  Kleo::CryptoConfig* mConfig;
+    Kleo::CryptoConfig *mConfig;
 };
 
 #endif

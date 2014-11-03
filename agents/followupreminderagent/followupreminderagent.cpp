@@ -49,15 +49,14 @@ FollowUpReminderAgent::FollowUpReminderAgent(const QString &id)
     mManager = new FollowUpReminderManager(this);
     setNeedsNetwork(true);
 
-    changeRecorder()->setMimeTypeMonitored( KMime::Message::mimeType() );
-    changeRecorder()->itemFetchScope().setCacheOnly( true );
-    changeRecorder()->itemFetchScope().setFetchModificationTime( false );
-    changeRecorder()->fetchCollection( true );
-    changeRecorder()->setChangeRecordingEnabled( false );
-    changeRecorder()->ignoreSession( Akonadi::Session::defaultSession() );
-    changeRecorder()->collectionFetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
+    changeRecorder()->setMimeTypeMonitored(KMime::Message::mimeType());
+    changeRecorder()->itemFetchScope().setCacheOnly(true);
+    changeRecorder()->itemFetchScope().setFetchModificationTime(false);
+    changeRecorder()->fetchCollection(true);
+    changeRecorder()->setChangeRecordingEnabled(false);
+    changeRecorder()->ignoreSession(Akonadi::Session::defaultSession());
+    changeRecorder()->collectionFetchScope().setAncestorRetrieval(Akonadi::CollectionFetchScope::All);
     changeRecorder()->setCollectionMonitored(Akonadi::Collection::root(), true);
-
 
     if (FollowUpReminderAgentSettings::enabled()) {
         mManager->load();

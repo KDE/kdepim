@@ -45,32 +45,34 @@ using namespace Kleo;
 using namespace GpgME;
 using namespace boost;
 
-QGpgMEChangePasswdJob::QGpgMEChangePasswdJob( Context * context )
-  : mixin_type( context )
+QGpgMEChangePasswdJob::QGpgMEChangePasswdJob(Context *context)
+    : mixin_type(context)
 {
-  lateInitialization();
+    lateInitialization();
 }
 
 QGpgMEChangePasswdJob::~QGpgMEChangePasswdJob() {}
 
-static QGpgMEChangePasswdJob::result_type change_passwd( Context * ctx, const Key & key ) {
+static QGpgMEChangePasswdJob::result_type change_passwd(Context *ctx, const Key &key)
+{
 #if 0 // in case we want to fall back to edit interactor for gpg...
-  std::auto_ptr<EditInteractor> ei( new GpgChangePasswdEditInteractor );
+    std::auto_ptr<EditInteractor> ei(new GpgChangePasswdEditInteractor);
 
-  QGpgME::QByteArrayDataProvider dp;
-  Data data( &dp );
-  assert( !data.isNull() );
-  const Error err = ctx->edit( key, ei, data );
+    QGpgME::QByteArrayDataProvider dp;
+    Data data(&dp);
+    assert(!data.isNull());
+    const Error err = ctx->edit(key, ei, data);
 #else
-  const Error err = ctx->passwd( key );
+    const Error err = ctx->passwd(key);
 #endif
-  Error ae;
-  const QString log = _detail::audit_log_as_html( ctx, ae );
-  return make_tuple( err, log, ae );
+    Error ae;
+    const QString log = _detail::audit_log_as_html(ctx, ae);
+    return make_tuple(err, log, ae);
 }
 
-Error QGpgMEChangePasswdJob::start( const Key & key ) {
-  run( bind( &change_passwd, _1, key ) );
-  return Error();
+Error QGpgMEChangePasswdJob::start(const Key &key)
+{
+    run(bind(&change_passwd, _1, key));
+    return Error();
 }
 

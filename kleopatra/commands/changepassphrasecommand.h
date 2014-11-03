@@ -35,29 +35,35 @@
 
 #include <commands/command.h>
 
-namespace Kleo {
-namespace Commands {
+namespace Kleo
+{
+namespace Commands
+{
 
-    class ChangePassphraseCommand : public Command {
-        Q_OBJECT
-    public:
-        explicit ChangePassphraseCommand( QAbstractItemView * view, KeyListController * parent );
-        explicit ChangePassphraseCommand( KeyListController * parent );
-        explicit ChangePassphraseCommand( const GpgME::Key & key );
-        ~ChangePassphraseCommand();
+class ChangePassphraseCommand : public Command
+{
+    Q_OBJECT
+public:
+    explicit ChangePassphraseCommand(QAbstractItemView *view, KeyListController *parent);
+    explicit ChangePassphraseCommand(KeyListController *parent);
+    explicit ChangePassphraseCommand(const GpgME::Key &key);
+    ~ChangePassphraseCommand();
 
-        /* reimp */ static Restrictions restrictions() { return OnlyOneKey|NeedSecretKey; }
+    /* reimp */ static Restrictions restrictions()
+    {
+        return OnlyOneKey | NeedSecretKey;
+    }
 
-    private:
-        /* reimp */ void doStart();
-        /* reimp */ void doCancel();
+private:
+    /* reimp */ void doStart();
+    /* reimp */ void doCancel();
 
-    private:
-        class Private;
-        inline Private * d_func();
-        inline const Private * d_func() const;
-        Q_PRIVATE_SLOT( d_func(), void slotResult(GpgME::Error) )
-    };
+private:
+    class Private;
+    inline Private *d_func();
+    inline const Private *d_func() const;
+    Q_PRIVATE_SLOT(d_func(), void slotResult(GpgME::Error))
+};
 
 }
 }

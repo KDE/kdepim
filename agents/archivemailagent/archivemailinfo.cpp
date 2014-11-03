@@ -262,15 +262,15 @@ void ArchiveMailInfo::setEnabled(bool b)
     mIsEnabled = b;
 }
 
-bool ArchiveMailInfo::operator==( const ArchiveMailInfo& other ) const
+bool ArchiveMailInfo::operator==(const ArchiveMailInfo &other) const
 {
     return saveCollectionId() == other.saveCollectionId() &&
-            saveSubCollection() == other.saveSubCollection() &&
-            url() == other.url() &&
-            archiveType() == other.archiveType() &&
-            archiveUnit() == other.archiveUnit() &&
-            archiveAge() == other.archiveAge() &&
-            lastDateSaved() == other.lastDateSaved() &&
-            maximumArchiveCount() == other.maximumArchiveCount() &&
-            isEnabled() == other.isEnabled();
+           saveSubCollection() == other.saveSubCollection() &&
+           url() == other.url() &&
+           archiveType() == other.archiveType() &&
+           archiveUnit() == other.archiveUnit() &&
+           archiveAge() == other.archiveAge() &&
+           lastDateSaved() == other.lastDateSaved() &&
+           maximumArchiveCount() == other.maximumArchiveCount() &&
+           isEnabled() == other.isEnabled();
 }

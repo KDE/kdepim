@@ -37,35 +37,38 @@
 
 #include <QWidget>
 
-namespace Kleo {
-  class DNAttributeMapper;
+namespace Kleo
+{
+class DNAttributeMapper;
 }
 
 class QTreeWidgetItem;
 
-namespace Kleo {
+namespace Kleo
+{
 
-  class KLEO_EXPORT DNAttributeOrderConfigWidget : public QWidget {
+class KLEO_EXPORT DNAttributeOrderConfigWidget : public QWidget
+{
     Q_OBJECT
-  public:
+public:
     /*! Use Kleo::DNAttributeMapper::instance()->configWidget( parent, name ) instead. */
-    explicit DNAttributeOrderConfigWidget( DNAttributeMapper * mapper, QWidget * parent=0, Qt::WindowFlags f=0 );
+    explicit DNAttributeOrderConfigWidget(DNAttributeMapper *mapper, QWidget *parent = 0, Qt::WindowFlags f = 0);
     ~DNAttributeOrderConfigWidget();
 
     void load();
     void save() const;
     void defaults();
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void changed();
 
     //
     // only boring stuff below...
     //
 
-  private Q_SLOTS:
-    void slotAvailableSelectionChanged( QTreeWidgetItem * );
-    void slotCurrentOrderSelectionChanged( QTreeWidgetItem * );
+private Q_SLOTS:
+    void slotAvailableSelectionChanged(QTreeWidgetItem *);
+    void slotCurrentOrderSelectionChanged(QTreeWidgetItem *);
     void slotDoubleUpButtonClicked();
     void slotUpButtonClicked();
     void slotDownButtonClicked();
@@ -73,16 +76,16 @@ namespace Kleo {
     void slotLeftButtonClicked();
     void slotRightButtonClicked();
 
-  private:
+private:
     void takePlaceHolderItem();
-    void enableDisableButtons( QTreeWidgetItem * );
+    void enableDisableButtons(QTreeWidgetItem *);
 
-  private:
+private:
     class Private;
     Private *const d;
-  protected:
-    virtual void virtual_hook( int, void* );
-  };
+protected:
+    virtual void virtual_hook(int, void *);
+};
 
 }
 

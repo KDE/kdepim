@@ -44,58 +44,61 @@
 
 #include <vector>
 
-namespace Kleo {
-namespace Crypto {
+namespace Kleo
+{
+namespace Crypto
+{
 
-    class SignEncryptFilesController : public Controller {
-        Q_OBJECT
-    public:
-        explicit SignEncryptFilesController( QObject * parent=0 );
-        explicit SignEncryptFilesController( const boost::shared_ptr<const ExecutionContext> & ctx, QObject * parent=0 );
-        ~SignEncryptFilesController();
+class SignEncryptFilesController : public Controller
+{
+    Q_OBJECT
+public:
+    explicit SignEncryptFilesController(QObject *parent = 0);
+    explicit SignEncryptFilesController(const boost::shared_ptr<const ExecutionContext> &ctx, QObject *parent = 0);
+    ~SignEncryptFilesController();
 
-        void setProtocol( GpgME::Protocol proto );
-        GpgME::Protocol protocol() const;
-        //const char * protocolAsString() const;
+    void setProtocol(GpgME::Protocol proto);
+    GpgME::Protocol protocol() const;
+    //const char * protocolAsString() const;
 
-        enum Operation {
-            SignDisallowed = 0,
-            SignAllowed = 1,
-            SignForced  = 2,
+    enum Operation {
+        SignDisallowed = 0,
+        SignAllowed = 1,
+        SignForced  = 2,
 
-            SignMask = SignAllowed|SignForced,
+        SignMask = SignAllowed | SignForced,
 
-            EncryptDisallowed = 0,
-            EncryptAllowed = 4,
-            EncryptForced = 8,
+        EncryptDisallowed = 0,
+        EncryptAllowed = 4,
+        EncryptForced = 8,
 
-            EncryptMask = EncryptAllowed|EncryptForced,
+        EncryptMask = EncryptAllowed | EncryptForced,
 
-            ArchiveDisallowed = 0,
-            ArchiveAllowed = 16,
-            ArchiveForced = 32,
+        ArchiveDisallowed = 0,
+        ArchiveAllowed = 16,
+        ArchiveForced = 32,
 
-            ArchiveMask = ArchiveAllowed|ArchiveForced
-        };
-        void setOperationMode( unsigned int mode );
-        unsigned int operationMode() const;
-
-        void setFiles( const QStringList & files );
-
-        void start();
-
-    public Q_SLOTS:
-        void cancel();
-
-    private:
-        /* reimp */ void doTaskDone( const Task * task, const boost::shared_ptr<const Task::Result> & );
-
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void slotWizardOperationPrepared() )
-        Q_PRIVATE_SLOT( d, void slotWizardCanceled() )
-        Q_PRIVATE_SLOT( d, void schedule() )
+        ArchiveMask = ArchiveAllowed | ArchiveForced
     };
+    void setOperationMode(unsigned int mode);
+    unsigned int operationMode() const;
+
+    void setFiles(const QStringList &files);
+
+    void start();
+
+public Q_SLOTS:
+    void cancel();
+
+private:
+    /* reimp */ void doTaskDone(const Task *task, const boost::shared_ptr<const Task::Result> &);
+
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void slotWizardOperationPrepared())
+    Q_PRIVATE_SLOT(d, void slotWizardCanceled())
+    Q_PRIVATE_SLOT(d, void schedule())
+};
 
 }
 }

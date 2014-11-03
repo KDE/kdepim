@@ -37,27 +37,28 @@
 
 #include "threadedjobmixin.h"
 
-namespace Kleo {
+namespace Kleo
+{
 
-  class QGpgMEChangePasswdJob
+class QGpgMEChangePasswdJob
 #ifdef Q_MOC_RUN
     : public ChangePasswdJob
 #else
     : public _detail::ThreadedJobMixin<ChangePasswdJob>
 #endif
-  {
+{
     Q_OBJECT
 #ifdef Q_MOC_RUN
-  private Q_SLOTS:
+private Q_SLOTS:
     void slotFinished();
 #endif
-  public:
-    explicit QGpgMEChangePasswdJob( GpgME::Context * context );
+public:
+    explicit QGpgMEChangePasswdJob(GpgME::Context *context);
     ~QGpgMEChangePasswdJob();
 
     /*! \reimp from ChangePasswdJob */
-    GpgME::Error start( const GpgME::Key & key );
-  };
+    GpgME::Error start(const GpgME::Key &key);
+};
 
 }
 

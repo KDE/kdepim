@@ -43,36 +43,40 @@
 
 #include <set>
 
-namespace GpgME {
-  class Error;
-  class Key;
+namespace GpgME
+{
+class Error;
+class Key;
 }
 
-namespace Kleo {
-  class KeyListJob;
+namespace Kleo
+{
+class KeyListJob;
 }
 
-namespace Kleo {
+namespace Kleo
+{
 
-  /**
-     @short A convenience job that additionally fetches all available issuers.
+/**
+   @short A convenience job that additionally fetches all available issuers.
 
-     To use a HierarchicalKeyListJob, pass it a CryptoBackend
-     implementation, connect the progress() and result() signals to
-     suitable slots and then start the keylisting with a call to
-     start(). This call might fail, in which case the
-     HierarchicalKeyListJob instance will have scheduled it's own
-     destruction with a call to QObject::deleteLater().
+   To use a HierarchicalKeyListJob, pass it a CryptoBackend
+   implementation, connect the progress() and result() signals to
+   suitable slots and then start the keylisting with a call to
+   start(). This call might fail, in which case the
+   HierarchicalKeyListJob instance will have scheduled it's own
+   destruction with a call to QObject::deleteLater().
 
-     After result() is emitted, the HierarchicalKeyListJob will
-     schedule its own destruction by calling QObject::deleteLater().
-  */
-  class KLEO_EXPORT HierarchicalKeyListJob : public KeyListJob {
+   After result() is emitted, the HierarchicalKeyListJob will
+   schedule its own destruction by calling QObject::deleteLater().
+*/
+class KLEO_EXPORT HierarchicalKeyListJob : public KeyListJob
+{
     Q_OBJECT
-  public:
-    explicit HierarchicalKeyListJob( const CryptoBackend::Protocol * protocol,
-                                     bool remote=false, bool includeSigs=false,
-                                     bool validating=false );
+public:
+    explicit HierarchicalKeyListJob(const CryptoBackend::Protocol *protocol,
+                                    bool remote = false, bool includeSigs = false,
+                                    bool validating = false);
     ~HierarchicalKeyListJob();
 
     /**
@@ -84,22 +88,22 @@ namespace Kleo {
        The \a secretOnly parameter is ignored by
        HierarchicalKeyListJob and must be set to false.
     */
-    GpgME::Error start( const QStringList & patterns, bool secretOnly=false );
+    GpgME::Error start(const QStringList &patterns, bool secretOnly = false);
 
-    GpgME::KeyListResult exec( const QStringList & patterns, bool secretOnly,
-                               std::vector<GpgME::Key> & keys );
+    GpgME::KeyListResult exec(const QStringList &patterns, bool secretOnly,
+                              std::vector<GpgME::Key> &keys);
 
-  private Q_SLOTS:
-    void slotResult( const GpgME::KeyListResult & );
-    void slotNextKey( const GpgME::Key & key );
+private Q_SLOTS:
+    void slotResult(const GpgME::KeyListResult &);
+    void slotNextKey(const GpgME::Key &key);
     /*! \reimp from Job */
     void slotCancel();
 
-  private:
+private:
     GpgME::Error startAJob();
 
-  private:
-    const CryptoBackend::Protocol * const mProtocol;
+private:
+    const CryptoBackend::Protocol *const mProtocol;
     const bool mRemote;
     const bool mIncludeSigs;
     const bool mValidating;
@@ -109,7 +113,7 @@ namespace Kleo {
     std::set<QString> mNextSet; // keys to schedule for the next iteraton
     GpgME::KeyListResult mIntermediateResult;
     QPointer<KeyListJob> mJob;
-  };
+};
 
 }
 

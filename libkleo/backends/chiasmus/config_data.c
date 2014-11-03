@@ -44,7 +44,7 @@
 
 #ifdef PATH
 # undef PATH
-#endif 
+#endif
 #ifdef HAVE_C99_INITIALIZERS
 # define PATH .path =
 #else
@@ -54,39 +54,39 @@
 #define I18N_NOOP(x) (x)
 
 const struct kleo_chiasmus_config_data kleo_chiasmus_config_entries[] = {
-  {
-    "path", I18N_NOOP( "Path to Chiasmus executable" ),
-    Level_Basic, ArgType_Path,
-    { PATH "/usr/local/bin/chiasmus" }, /* in the absence of C99, we assume path is first in the union here */
-    0, 0, 1
-  },
-  {
-    "keydir", I18N_NOOP( "Key directory" ),
-    Level_Basic, ArgType_DirPath,
-    { PATH "~/.chiasmus/keys" },
-    0, 0, 1 /* FIXME: should be a list */
-  },
+    {
+        "path", I18N_NOOP("Path to Chiasmus executable"),
+        Level_Basic, ArgType_Path,
+        { PATH "/usr/local/bin/chiasmus" }, /* in the absence of C99, we assume path is first in the union here */
+        0, 0, 1
+    },
+    {
+        "keydir", I18N_NOOP("Key directory"),
+        Level_Basic, ArgType_DirPath,
+        { PATH "~/.chiasmus/keys" },
+        0, 0, 1 /* FIXME: should be a list */
+    },
 #ifdef HAVE_C99_INITIALIZERS
-  {
-    "show-output", I18N_NOOP( "Show output from chiasmus operations" ),
-    Level_Expert, ArgType_None,
-    { .boolean = { .value = 0, .numTimesSet = 0 } },
-    0, 0, 1
-  },
-  {
-    "symcryptrun-class", I18N_NOOP( "SymCryptRun class to use" ),
-    Level_Expert, ArgType_String,
-    { .string = "confucius" },
-    0, 0, 1
-  },
-  {
-    "timeout", I18N_NOOP( "Timeout in seconds for Chiasmus operations" ),
-    Level_Advanced, ArgType_UInt,
-    { .unsigned_integer = 60 },
-    0, 0, 1
-  },
+    {
+        "show-output", I18N_NOOP("Show output from chiasmus operations"),
+        Level_Expert, ArgType_None,
+        { .boolean = { .value = 0, .numTimesSet = 0 } },
+        0, 0, 1
+    },
+    {
+        "symcryptrun-class", I18N_NOOP("SymCryptRun class to use"),
+        Level_Expert, ArgType_String,
+        { .string = "confucius" },
+        0, 0, 1
+    },
+    {
+        "timeout", I18N_NOOP("Timeout in seconds for Chiasmus operations"),
+        Level_Advanced, ArgType_UInt,
+        { .unsigned_integer = 60 },
+        0, 0, 1
+    },
 #endif /* HAVE_C99_INITIALIZERS */
 };
 const unsigned int kleo_chiasmus_config_entries_dim
-  = sizeof kleo_chiasmus_config_entries / sizeof *kleo_chiasmus_config_entries ;
+    = sizeof kleo_chiasmus_config_entries / sizeof * kleo_chiasmus_config_entries ;
 

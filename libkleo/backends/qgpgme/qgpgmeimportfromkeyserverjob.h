@@ -39,36 +39,37 @@
 
 #include <gpgme++/importresult.h>
 
-namespace Kleo {
+namespace Kleo
+{
 
-  class QGpgMEImportFromKeyserverJob
+class QGpgMEImportFromKeyserverJob
 #ifdef Q_MOC_RUN
     : public ImportFromKeyserverJob
 #else
     : public _detail::ThreadedJobMixin<ImportFromKeyserverJob, boost::tuple<GpgME::ImportResult, QString, GpgME::Error> >
 #endif
-  {
+{
     Q_OBJECT
 #ifdef Q_MOC_RUN
-  public Q_SLOTS:
+public Q_SLOTS:
     void slotFinished();
 #endif
-  public:
-    explicit QGpgMEImportFromKeyserverJob( GpgME::Context * context );
+public:
+    explicit QGpgMEImportFromKeyserverJob(GpgME::Context *context);
     ~QGpgMEImportFromKeyserverJob();
 
     /*! \reimp from ImportFromKeyserverJob */
-    GpgME::Error start( const std::vector<GpgME::Key> & keys );
+    GpgME::Error start(const std::vector<GpgME::Key> &keys);
 
     /*! \reimp from ImportFromKeyserverJob */
-    GpgME::ImportResult exec( const std::vector<GpgME::Key> & keys );
+    GpgME::ImportResult exec(const std::vector<GpgME::Key> &keys);
 
     /*! \reimp from ThreadedJobMixin */
-    void resultHook( const result_type & r );
+    void resultHook(const result_type &r);
 
-  private:
+private:
     GpgME::ImportResult mResult;
-  };
+};
 
 }
 

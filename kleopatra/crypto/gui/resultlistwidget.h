@@ -43,41 +43,45 @@
 
 class QString;
 
-namespace Kleo {
-namespace Crypto {
+namespace Kleo
+{
+namespace Crypto
+{
 
 class TaskCollection;
 
-namespace Gui {
+namespace Gui
+{
 
-    class ResultListWidget : public QWidget {
-        Q_OBJECT
-    public:
-        explicit ResultListWidget( QWidget * parent=0, Qt::WindowFlags flags=0 );
-        ~ResultListWidget();
+class ResultListWidget : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit ResultListWidget(QWidget *parent = 0, Qt::WindowFlags flags = 0);
+    ~ResultListWidget();
 
-        void setTaskCollection( const boost::shared_ptr<TaskCollection> & coll );
-        void addTaskCollection( const boost::shared_ptr<TaskCollection> & coll );
+    void setTaskCollection(const boost::shared_ptr<TaskCollection> &coll);
+    void addTaskCollection(const boost::shared_ptr<TaskCollection> &coll);
 
-        void setStandaloneMode( bool standalone );
+    void setStandaloneMode(bool standalone);
 
-        bool isComplete() const;
+    bool isComplete() const;
 
-        unsigned int totalNumberOfTasks() const;
-        unsigned int numberOfCompletedTasks() const;
+    unsigned int totalNumberOfTasks() const;
+    unsigned int numberOfCompletedTasks() const;
 
-    Q_SIGNALS:
-        void linkActivated( const QString & link );
-        void completeChanged();
+Q_SIGNALS:
+    void linkActivated(const QString &link);
+    void completeChanged();
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void result( boost::shared_ptr<const Kleo::Crypto::Task::Result> ) )
-        Q_PRIVATE_SLOT( d, void started( boost::shared_ptr<Kleo::Crypto::Task> ) )
-        Q_PRIVATE_SLOT( d, void detailsToggled(bool) )
-        Q_PRIVATE_SLOT( d, void allTasksDone() )
-    };
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void result(boost::shared_ptr<const Kleo::Crypto::Task::Result>))
+    Q_PRIVATE_SLOT(d, void started(boost::shared_ptr<Kleo::Crypto::Task>))
+    Q_PRIVATE_SLOT(d, void detailsToggled(bool))
+    Q_PRIVATE_SLOT(d, void allTasksDone())
+};
 }
 }
 }

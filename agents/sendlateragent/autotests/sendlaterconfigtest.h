@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef SENDLATERCONFIGTEST_H
 #define SENDLATERCONFIGTEST_H
 
@@ -27,7 +26,7 @@ class SendLaterConfigTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit SendLaterConfigTest(QObject *parent=0);
+    explicit SendLaterConfigTest(QObject *parent = 0);
     ~SendLaterConfigTest();
 
 private Q_SLOTS:
@@ -41,8 +40,6 @@ private:
     KSharedConfig::Ptr mConfig;
     QRegExp mSendlaterRegExpFilter;
 };
-
-
 
 #endif // SENDLATERCONFIGTEST_H
 

@@ -41,18 +41,19 @@
 class MainWindow;
 class QDialog;
 
-class SysTrayIcon : public Kleo::SystemTrayIcon {
+class SysTrayIcon : public Kleo::SystemTrayIcon
+{
     Q_OBJECT
 public:
-    explicit SysTrayIcon( QObject * parent=0 );
+    explicit SysTrayIcon(QObject *parent = 0);
     ~SysTrayIcon();
 
-    MainWindow * mainWindow() const;
-    QDialog * attentionWindow() const;
+    MainWindow *mainWindow() const;
+    QDialog *attentionWindow() const;
 
 public Q_SLOTS:
-    void setAnyCardHasNullPin( bool );
-    void setAnyCardCanLearnKeys( bool );
+    void setAnyCardHasNullPin(bool);
+    void setAnyCardCanLearnKeys(bool);
 
 private:
     /* reimp */ void doActivated();
@@ -61,9 +62,9 @@ private:
 private:
     class Private;
     kdtools::pimpl_ptr<Private> d;
-    Q_PRIVATE_SLOT( d, void slotAbout() )
-    Q_PRIVATE_SLOT( d, void slotSetInitialPin() )
-    Q_PRIVATE_SLOT( d, void slotLearnCertificates() )
+    Q_PRIVATE_SLOT(d, void slotAbout())
+    Q_PRIVATE_SLOT(d, void slotSetInitialPin())
+    Q_PRIVATE_SLOT(d, void slotLearnCertificates())
 };
 
 #endif // QT_NO_SYSTEMTRAYICON

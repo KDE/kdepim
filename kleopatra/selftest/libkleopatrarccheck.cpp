@@ -42,7 +42,6 @@
 
 #include <KLocalizedString>
 
-
 #include <boost/shared_ptr.hpp>
 
 #include <cassert>
@@ -51,37 +50,42 @@ using namespace Kleo;
 using namespace Kleo::_detail;
 using namespace boost;
 
-namespace {
+namespace
+{
 
-    class LibKleopatraRcCheck : public SelfTestImplementation {
-    public:
-        explicit LibKleopatraRcCheck()
-            : SelfTestImplementation( i18nc("@title", "Config File 'libkleopatrarc'") )
-        {
-            runTest();
+class LibKleopatraRcCheck : public SelfTestImplementation
+{
+public:
+    explicit LibKleopatraRcCheck()
+        : SelfTestImplementation(i18nc("@title", "Config File 'libkleopatrarc'"))
+    {
+        runTest();
+    }
+
+    void runTest()
+    {
+
+        QStringList errors;
+        ArchiveDefinition::getArchiveDefinitions(errors);
+        ChecksumDefinition::getChecksumDefinitions(errors);
+
+        m_passed = errors.empty();
+        if (m_passed) {
+            return;
         }
+        m_error = i18n("Errors found");
 
-        void runTest() {
+        m_explaination
+            = xi18nc("@info",
+                     "<para>Kleopatra detected the following errors in the libkleopatrarc configuration:</para>"
+                     "%1", QLatin1String("<ol><li>") + errors.join(QLatin1String("</li><li>")) + QLatin1String("</li></ol>"));
+    }
 
-            QStringList errors;
-            ArchiveDefinition::getArchiveDefinitions( errors );
-            ChecksumDefinition::getChecksumDefinitions( errors );
-
-            m_passed = errors.empty();
-            if ( m_passed )
-                return;
-            m_error = i18n("Errors found");
-
-            m_explaination
-                = xi18nc( "@info",
-                         "<para>Kleopatra detected the following errors in the libkleopatrarc configuration:</para>"
-                         "%1", QLatin1String("<ol><li>") + errors.join( QLatin1String("</li><li>") ) + QLatin1String("</li></ol>") );
-        }
-
-        ///* reimp */ bool canFixAutomatically() const { return false; }
-    };
+    ///* reimp */ bool canFixAutomatically() const { return false; }
+};
 }
 
-shared_ptr<SelfTest> Kleo::makeLibKleopatraRcSelfTest() {
-    return shared_ptr<SelfTest>( new LibKleopatraRcCheck );
+shared_ptr<SelfTest> Kleo::makeLibKleopatraRcSelfTest()
+{
+    return shared_ptr<SelfTest>(new LibKleopatraRcCheck);
 }

@@ -24,43 +24,45 @@
 
 #include <libkleopatraclient/core/command.h>
 
-namespace KleopatraClientCopy {
+namespace KleopatraClientCopy
+{
 
-    class KLEOPATRACLIENTCORE_EXPORT SelectCertificateCommand : public Command {
-        Q_OBJECT
-    public:
-        explicit SelectCertificateCommand( QObject * parent=0 );
-        ~SelectCertificateCommand();
+class KLEOPATRACLIENTCORE_EXPORT SelectCertificateCommand : public Command
+{
+    Q_OBJECT
+public:
+    explicit SelectCertificateCommand(QObject *parent = 0);
+    ~SelectCertificateCommand();
 
-        // Inputs
+    // Inputs
 
-        void setMultipleCertificatesAllowed( bool allow );
-        bool multipleCertificatesAllowed() const;
+    void setMultipleCertificatesAllowed(bool allow);
+    bool multipleCertificatesAllowed() const;
 
-        void setOnlySigningCertificatesAllowed( bool allow );
-        bool onlySigningCertificatesAllowed() const;
+    void setOnlySigningCertificatesAllowed(bool allow);
+    bool onlySigningCertificatesAllowed() const;
 
-        void setOnlyEncryptionCertificatesAllowed( bool allow );
-        bool onlyEncryptionCertificatesAllowed() const;
+    void setOnlyEncryptionCertificatesAllowed(bool allow);
+    bool onlyEncryptionCertificatesAllowed() const;
 
-        void setOnlyOpenPGPCertificatesAllowed( bool allow );
-        bool onlyOpenPGPCertificatesAllowed() const;
+    void setOnlyOpenPGPCertificatesAllowed(bool allow);
+    bool onlyOpenPGPCertificatesAllowed() const;
 
-        void setOnlyX509CertificatesAllowed( bool allow );
-        bool onlyX509CertificatesAllowed() const;
+    void setOnlyX509CertificatesAllowed(bool allow);
+    bool onlyX509CertificatesAllowed() const;
 
-        void setOnlySecretKeysAllowed( bool allow );
-        bool onlySecretKeysAllowed() const;
+    void setOnlySecretKeysAllowed(bool allow);
+    bool onlySecretKeysAllowed() const;
 
-        // Input/Outputs
+    // Input/Outputs
 
-        void setSelectedCertificates( const QStringList & certs );
-        QStringList selectedCertificates() const;
+    void setSelectedCertificates(const QStringList &certs);
+    QStringList selectedCertificates() const;
 
-        void setSelectedCertificate( const QString & cert );
-        QString selectedCertificate() const;
+    void setSelectedCertificate(const QString &cert);
+    QString selectedCertificate() const;
 
-    };
+};
 
 }
 

@@ -49,47 +49,51 @@
 #include <algorithm>
 #include <vector>
 
-namespace {
-    template <typename Ex>
-    void throw_( const QString & message ) {
-        throw Ex( message.toUtf8().constData() );
-    }
+namespace
+{
+template <typename Ex>
+void throw_(const QString &message)
+{
+    throw Ex(message.toUtf8().constData());
+}
 }
 
-namespace Kleo {
+namespace Kleo
+{
 
-        class UiServer::Private : public QTcpServer {
-            Q_OBJECT
-            friend class ::Kleo::UiServer;
-            UiServer * const q;
-        public:
-            explicit Private( UiServer * qq );
-            static bool isStaleAssuanSocket( const QString& socketName );
+class UiServer::Private : public QTcpServer
+{
+    Q_OBJECT
+    friend class ::Kleo::UiServer;
+    UiServer *const q;
+public:
+    explicit Private(UiServer *qq);
+    static bool isStaleAssuanSocket(const QString &socketName);
 
-        private:
-            void makeListeningSocket();
-            // platform-specific creation impl for makeListeningSocket():
-            void doMakeListeningSocket( const QByteArray & encodedFileName );
-            QString makeFileName( const QString & hint=QString() ) const;
-            void ensureDirectoryExists( const QString& path ) const;
-            static QString systemErrorString();
+private:
+    void makeListeningSocket();
+    // platform-specific creation impl for makeListeningSocket():
+    void doMakeListeningSocket(const QByteArray &encodedFileName);
+    QString makeFileName(const QString &hint = QString()) const;
+    void ensureDirectoryExists(const QString &path) const;
+    static QString systemErrorString();
 
-        protected:
-            /* reimp */ void incomingConnection( int fd );
+protected:
+    /* reimp */ void incomingConnection(int fd);
 
-        private Q_SLOTS:
-            void slotConnectionClosed( Kleo::AssuanServerConnection * conn );
+private Q_SLOTS:
+    void slotConnectionClosed(Kleo::AssuanServerConnection *conn);
 
-        private:
-            QFile file;
-            std::vector< boost::shared_ptr<AssuanCommandFactory> > factories;
-            std::vector< boost::shared_ptr<AssuanServerConnection> > connections;
-            QString suggestedSocketName;
-            QString actualSocketName;
-            assuan_sock_nonce_t nonce;
-            const WSAStarter _wsastarter;
-            bool cryptoCommandsEnabled;
-        };
+private:
+    QFile file;
+    std::vector< boost::shared_ptr<AssuanCommandFactory> > factories;
+    std::vector< boost::shared_ptr<AssuanServerConnection> > connections;
+    QString suggestedSocketName;
+    QString actualSocketName;
+    assuan_sock_nonce_t nonce;
+    const WSAStarter _wsastarter;
+    bool cryptoCommandsEnabled;
+};
 
 }
 

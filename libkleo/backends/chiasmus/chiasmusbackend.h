@@ -30,56 +30,71 @@
     your version.
 */
 
-
 #ifndef __KLEO_CHIASMUSBACKEND_H__
 #define __KLEO_CHIASMUSBACKEND_H__
 
 #include "kleo/cryptobackend.h"
 
-
-namespace Kleo {
-  class CryptoConfig;
+namespace Kleo
+{
+class CryptoConfig;
 }
 class QString;
 
-namespace Kleo {
+namespace Kleo
+{
 
-  class ChiasmusBackend : public Kleo::CryptoBackend {
-  public:
+class ChiasmusBackend : public Kleo::CryptoBackend
+{
+public:
     ChiasmusBackend();
     ~ChiasmusBackend();
 
-    static const ChiasmusBackend * instance() { return self; }
+    static const ChiasmusBackend *instance()
+    {
+        return self;
+    }
 
     QString name() const;
     QString displayName() const;
 
-    Kleo::CryptoConfig * config() const;
+    Kleo::CryptoConfig *config() const;
 
-    Kleo::CryptoBackend::Protocol * openpgp() const { return 0; }
-    Kleo::CryptoBackend::Protocol * smime() const { return 0; }
-    Kleo::CryptoBackend::Protocol * protocol( const char * name ) const;
+    Kleo::CryptoBackend::Protocol *openpgp() const
+    {
+        return 0;
+    }
+    Kleo::CryptoBackend::Protocol *smime() const
+    {
+        return 0;
+    }
+    Kleo::CryptoBackend::Protocol *protocol(const char *name) const;
 
-    bool checkForOpenPGP( QString * reason=0 ) const;
-    bool checkForSMIME( QString * reason=0 ) const;
-    bool checkForChiasmus( QString * reason=0 ) const;
-    bool checkForProtocol( const char * name, QString * reason=0 ) const;
+    bool checkForOpenPGP(QString *reason = 0) const;
+    bool checkForSMIME(QString *reason = 0) const;
+    bool checkForChiasmus(QString *reason = 0) const;
+    bool checkForProtocol(const char *name, QString *reason = 0) const;
 
-    bool supportsOpenPGP() const { return false; }
-    bool supportsSMIME() const { return false; }
-    bool supportsProtocol( const char * name ) const;
+    bool supportsOpenPGP() const
+    {
+        return false;
+    }
+    bool supportsSMIME() const
+    {
+        return false;
+    }
+    bool supportsProtocol(const char *name) const;
 
-    const char * enumerateProtocols( int i ) const;
+    const char *enumerateProtocols(int i) const;
 
-  private:
+private:
     class CryptoConfig;
     class Protocol;
-    mutable CryptoConfig * mCryptoConfig;
-    mutable Protocol * mProtocol;
-    static ChiasmusBackend * self;
-  };
+    mutable CryptoConfig *mCryptoConfig;
+    mutable Protocol *mProtocol;
+    static ChiasmusBackend *self;
+};
 
 }
-
 
 #endif // __KLEO_CHIASMUSBACKEND_H__

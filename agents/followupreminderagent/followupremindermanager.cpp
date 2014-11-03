@@ -89,18 +89,23 @@ void FollowUpReminderManager::checkFollowUp(const Akonadi::Item &item, const Ako
 
     //If we move to trash directly => exclude it.
     Akonadi::SpecialMailCollections::Type type = Akonadi::SpecialMailCollections::self()->specialCollectionType(col);
-    if (type == Akonadi::SpecialMailCollections::Trash)
+    if (type == Akonadi::SpecialMailCollections::Trash) {
         return;
+    }
 
     //Exclude outbox too
-    if (type == Akonadi::SpecialMailCollections::Outbox)
+    if (type == Akonadi::SpecialMailCollections::Outbox) {
         return;
-    if (type == Akonadi::SpecialMailCollections::Drafts)
+    }
+    if (type == Akonadi::SpecialMailCollections::Drafts) {
         return;
-    if (type == Akonadi::SpecialMailCollections::Templates)
+    }
+    if (type == Akonadi::SpecialMailCollections::Templates) {
         return;
-    if (type == Akonadi::SpecialMailCollections::SentMail)
+    }
+    if (type == Akonadi::SpecialMailCollections::SentMail) {
         return;
+    }
 
     FollowUpReminderJob *job = new FollowUpReminderJob(this);
     connect(job, &FollowUpReminderJob::finished, this, &FollowUpReminderManager::slotCheckFollowUpFinished);
@@ -110,7 +115,7 @@ void FollowUpReminderManager::checkFollowUp(const Akonadi::Item &item, const Ako
 
 void FollowUpReminderManager::slotCheckFollowUpFinished(const QString &messageId, Akonadi::Item::Id id)
 {
-    Q_FOREACH(FollowUpReminderInfo * info, mFollowUpReminderInfoList) {
+    Q_FOREACH (FollowUpReminderInfo *info, mFollowUpReminderInfoList) {
         if (info->messageId() == messageId) {
             info->setAnswerMessageItemId(id);
             info->setAnswerWasReceived(true);
@@ -156,7 +161,7 @@ QString FollowUpReminderManager::printDebugInfo()
     if (mFollowUpReminderInfoList.isEmpty()) {
         infoStr = QLatin1String("No mail");
     } else {
-        Q_FOREACH(FollowUpReminder::FollowUpReminderInfo * info, mFollowUpReminderInfoList) {
+        Q_FOREACH (FollowUpReminder::FollowUpReminderInfo *info, mFollowUpReminderInfoList) {
             if (!infoStr.isEmpty()) {
                 infoStr += QLatin1Char('\n');
             }

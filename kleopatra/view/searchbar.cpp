@@ -48,71 +48,76 @@
 using namespace Kleo;
 using namespace boost;
 
-class SearchBar::Private {
+class SearchBar::Private
+{
     friend class ::Kleo::SearchBar;
-    SearchBar * const q;
+    SearchBar *const q;
 public:
-    explicit Private( SearchBar * qq );
+    explicit Private(SearchBar *qq);
     ~Private();
 
 private:
-    void slotKeyFilterChanged( int idx ) {
-        emit q->keyFilterChanged( keyFilter( idx ) );
+    void slotKeyFilterChanged(int idx)
+    {
+        emit q->keyFilterChanged(keyFilter(idx));
     }
 
-    shared_ptr<KeyFilter> keyFilter( int idx ) const {
-        const QModelIndex mi = KeyFilterManager::instance()->model()->index( idx, 0 );
-        return KeyFilterManager::instance()->fromModelIndex( mi );
+    shared_ptr<KeyFilter> keyFilter(int idx) const
+    {
+        const QModelIndex mi = KeyFilterManager::instance()->model()->index(idx, 0);
+        return KeyFilterManager::instance()->fromModelIndex(mi);
     }
 
-    shared_ptr<KeyFilter> currentKeyFilter() const {
-        return keyFilter( combo->currentIndex() );
+    shared_ptr<KeyFilter> currentKeyFilter() const
+    {
+        return keyFilter(combo->currentIndex());
     }
 
-    QString currentKeyFilterID() const {
-        if ( const shared_ptr<KeyFilter> f = currentKeyFilter() )
+    QString currentKeyFilterID() const
+    {
+        if (const shared_ptr<KeyFilter> f = currentKeyFilter()) {
             return f->id();
-        else
+        } else {
             return QString();
+        }
     }
 
 private:
-    KLineEdit * lineEdit;
-    QComboBox * combo;
+    KLineEdit *lineEdit;
+    QComboBox *combo;
 };
 
-SearchBar::Private::Private( SearchBar * qq )
-  : q( qq )
+SearchBar::Private::Private(SearchBar *qq)
+    : q(qq)
 {
-    QHBoxLayout * layout = new QHBoxLayout( q );
-    layout->setMargin( 0 );
-    lineEdit = new KLineEdit( q );
-    lineEdit->setClearButtonShown( true );
+    QHBoxLayout *layout = new QHBoxLayout(q);
+    layout->setMargin(0);
+    lineEdit = new KLineEdit(q);
+    lineEdit->setClearButtonShown(true);
     lineEdit->setPlaceholderText(i18n("Search..."));
-    layout->addWidget( lineEdit, /*stretch=*/1 );
-    combo = new QComboBox( q );
-    layout->addWidget( combo );
+    layout->addWidget(lineEdit, /*stretch=*/1);
+    combo = new QComboBox(q);
+    layout->addWidget(combo);
 
-    combo->setModel( KeyFilterManager::instance()->model() );
+    combo->setModel(KeyFilterManager::instance()->model());
 
-    KDAB_SET_OBJECT_NAME( layout );
-    KDAB_SET_OBJECT_NAME( lineEdit );
-    KDAB_SET_OBJECT_NAME( combo );
+    KDAB_SET_OBJECT_NAME(layout);
+    KDAB_SET_OBJECT_NAME(lineEdit);
+    KDAB_SET_OBJECT_NAME(combo);
 
     connect(lineEdit, &KLineEdit::textChanged, q, &SearchBar::stringFilterChanged);
-    connect( combo, SIGNAL(currentIndexChanged(int)), q, SLOT(slotKeyFilterChanged(int)) );
+    connect(combo, SIGNAL(currentIndexChanged(int)), q, SLOT(slotKeyFilterChanged(int)));
 }
 
 SearchBar::Private::~Private() {}
 
-SearchBar::SearchBar( QWidget * parent, Qt::WindowFlags f )
-    : QWidget( parent, f ), d( new Private( this ) )
+SearchBar::SearchBar(QWidget *parent, Qt::WindowFlags f)
+    : QWidget(parent, f), d(new Private(this))
 {
-    
+
 }
 
 SearchBar::~SearchBar() {}
-
 
 void SearchBar::updateClickMessage(const QString &shortcutStr)
 {
@@ -120,30 +125,36 @@ void SearchBar::updateClickMessage(const QString &shortcutStr)
 }
 
 // slot
-void SearchBar::setStringFilter( const QString & filter ) {
-    d->lineEdit->setText( filter );
+void SearchBar::setStringFilter(const QString &filter)
+{
+    d->lineEdit->setText(filter);
 }
 
 // slot
-void SearchBar::setKeyFilter( const shared_ptr<KeyFilter> & kf ) {
-    const QModelIndex idx = KeyFilterManager::instance()->toModelIndex( kf );
-    if ( idx.isValid() )
-        d->combo->setCurrentIndex( idx.row() );
-    else
-        d->combo->setCurrentIndex( 0 );
+void SearchBar::setKeyFilter(const shared_ptr<KeyFilter> &kf)
+{
+    const QModelIndex idx = KeyFilterManager::instance()->toModelIndex(kf);
+    if (idx.isValid()) {
+        d->combo->setCurrentIndex(idx.row());
+    } else {
+        d->combo->setCurrentIndex(0);
+    }
 }
 
 // slot
-void SearchBar::setChangeStringFilterEnabled( bool on ) {
-    d->lineEdit->setEnabled( on );
+void SearchBar::setChangeStringFilterEnabled(bool on)
+{
+    d->lineEdit->setEnabled(on);
 }
 
 // slot
-void SearchBar::setChangeKeyFilterEnabled( bool on ) {
-    d->combo->setEnabled( on );
+void SearchBar::setChangeKeyFilterEnabled(bool on)
+{
+    d->combo->setEnabled(on);
 }
 
-KLineEdit * SearchBar::lineEdit() const {
+KLineEdit *SearchBar::lineEdit() const
+{
     return d->lineEdit;
 }
 

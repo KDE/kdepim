@@ -48,52 +48,65 @@ using namespace boost::lambda;
 
 MultiValidator::~MultiValidator() {}
 
-void MultiValidator::addValidator( QValidator * vali ) {
-    if ( !vali )
+void MultiValidator::addValidator(QValidator *vali)
+{
+    if (!vali) {
         return;
-    if ( !vali->parent() )
-        vali->setParent( this );
-    connect( vali, SIGNAL(destroyed(QObject*)), this, SLOT(_kdmv_slotDestroyed(QObject*)) );
-    m_validators.push_back( vali );
+    }
+    if (!vali->parent()) {
+        vali->setParent(this);
+    }
+    connect(vali, SIGNAL(destroyed(QObject*)), this, SLOT(_kdmv_slotDestroyed(QObject*)));
+    m_validators.push_back(vali);
 }
 
-void MultiValidator::addValidators( const QList<QValidator*> & valis ) {
-    kdtools::for_each( valis, bind( &MultiValidator::addValidator, this, _1 ) );
+void MultiValidator::addValidators(const QList<QValidator *> &valis)
+{
+    kdtools::for_each(valis, bind(&MultiValidator::addValidator, this, _1));
 }
 
-void MultiValidator::removeValidator( QValidator * vali ) {
-    if ( !vali )
+void MultiValidator::removeValidator(QValidator *vali)
+{
+    if (!vali) {
         return;
-    _kdmv_slotDestroyed( vali );
-    if ( vali->parent() == this )
+    }
+    _kdmv_slotDestroyed(vali);
+    if (vali->parent() == this) {
         delete vali;
-    else
-        disconnect( vali, SIGNAL(destroyed(QObject*)), this, SLOT(_kdmv_slotDestroyed(QObject*)) );
+    } else {
+        disconnect(vali, SIGNAL(destroyed(QObject*)), this, SLOT(_kdmv_slotDestroyed(QObject*)));
+    }
 }
 
-void MultiValidator::removeValidators( const QList<QValidator*> & valis ) {
-    kdtools::for_each( valis, bind( &MultiValidator::removeValidator, this, _1 ) );
+void MultiValidator::removeValidators(const QList<QValidator *> &valis)
+{
+    kdtools::for_each(valis, bind(&MultiValidator::removeValidator, this, _1));
 }
 
-void MultiValidator::fixup( QString & str ) const {
-    kdtools::for_each( m_validators, bind( &QValidator::fixup, _1, ref( str ) ) );
+void MultiValidator::fixup(QString &str) const
+{
+    kdtools::for_each(m_validators, bind(&QValidator::fixup, _1, ref(str)));
 }
 
-QValidator::State MultiValidator::validate( QString & str, int & pos ) const {
+QValidator::State MultiValidator::validate(QString &str, int &pos) const
+{
     std::vector<State> states;
-    states.reserve( m_validators.size() );
-    std::transform( m_validators.begin(), m_validators.end(),
-                    std::back_inserter( states ),
-                    bind( &QValidator::validate, _1, ref( str ), ref( pos ) ) );
-    if ( kdtools::any( states, _1 == Invalid ) )
+    states.reserve(m_validators.size());
+    std::transform(m_validators.begin(), m_validators.end(),
+                   std::back_inserter(states),
+                   bind(&QValidator::validate, _1, ref(str), ref(pos)));
+    if (kdtools::any(states, _1 == Invalid)) {
         return Invalid;
-    if ( kdtools::all( states, _1 == Acceptable ) )
+    }
+    if (kdtools::all(states, _1 == Acceptable)) {
         return Acceptable;
+    }
     return Intermediate;
 }
 
-void MultiValidator::_kdmv_slotDestroyed( QObject * o ) {
-    m_validators.erase( std::remove( m_validators.begin(), m_validators.end(), o ),
-                        m_validators.end() );
+void MultiValidator::_kdmv_slotDestroyed(QObject *o)
+{
+    m_validators.erase(std::remove(m_validators.begin(), m_validators.end(), o),
+                       m_validators.end());
 }
 

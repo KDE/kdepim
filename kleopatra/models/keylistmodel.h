@@ -40,66 +40,70 @@
 
 #include <vector>
 
-namespace GpgME {
-    class Key;
+namespace GpgME
+{
+class Key;
 }
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class AbstractKeyListModel : public QAbstractItemModel, public KeyListModelInterface {
-        Q_OBJECT
-    public:
-        explicit AbstractKeyListModel( QObject * parent=0 );
-        ~AbstractKeyListModel();
+class AbstractKeyListModel : public QAbstractItemModel, public KeyListModelInterface
+{
+    Q_OBJECT
+public:
+    explicit AbstractKeyListModel(QObject *parent = 0);
+    ~AbstractKeyListModel();
 
-        static AbstractKeyListModel * createFlatKeyListModel( QObject * parent=0 );
-        static AbstractKeyListModel * createHierarchicalKeyListModel( QObject * parent=0 );
+    static AbstractKeyListModel *createFlatKeyListModel(QObject *parent = 0);
+    static AbstractKeyListModel *createHierarchicalKeyListModel(QObject *parent = 0);
 
-        /* reimp */ GpgME::Key key( const QModelIndex & idx ) const;
-        /* reimp */ std::vector<GpgME::Key> keys( const QList<QModelIndex> & indexes ) const;
+    /* reimp */ GpgME::Key key(const QModelIndex &idx) const;
+    /* reimp */ std::vector<GpgME::Key> keys(const QList<QModelIndex> &indexes) const;
 
-        using QAbstractItemModel::index;
-        /* reimp */ QModelIndex index( const GpgME::Key & key ) const {
-            return index( key, 0 );
-        }
-        QModelIndex index( const GpgME::Key & key, int col ) const;
-        /* reimp */ QList<QModelIndex> indexes( const std::vector<GpgME::Key> & keys ) const;
+    using QAbstractItemModel::index;
+    /* reimp */ QModelIndex index(const GpgME::Key &key) const
+    {
+        return index(key, 0);
+    }
+    QModelIndex index(const GpgME::Key &key, int col) const;
+    /* reimp */ QList<QModelIndex> indexes(const std::vector<GpgME::Key> &keys) const;
 
-    Q_SIGNALS:
-        void rowAboutToBeMoved( const QModelIndex & old_parent, int old_row );
-        void rowMoved( const QModelIndex & new_parent, int new_row );
+Q_SIGNALS:
+    void rowAboutToBeMoved(const QModelIndex &old_parent, int old_row);
+    void rowMoved(const QModelIndex &new_parent, int new_row);
 
-    public Q_SLOTS:
-        void setKeys( const std::vector<GpgME::Key> & keys );
-        QModelIndex addKey( const GpgME::Key & key );
-        QList<QModelIndex> addKeys( const std::vector<GpgME::Key> & keys );
-        void removeKey( const GpgME::Key & key );
-        void clear();
+public Q_SLOTS:
+    void setKeys(const std::vector<GpgME::Key> &keys);
+    QModelIndex addKey(const GpgME::Key &key);
+    QList<QModelIndex> addKeys(const std::vector<GpgME::Key> &keys);
+    void removeKey(const GpgME::Key &key);
+    void clear();
 
-    public:
-        /* reimp */ int columnCount( const QModelIndex & pidx ) const;
-        /* reimp */ QVariant headerData( int section, Qt::Orientation o, int role=Qt::DisplayRole ) const;
-        /* reimp */ QVariant data( const QModelIndex & index, int role=Qt::DisplayRole ) const;
+public:
+    /* reimp */ int columnCount(const QModelIndex &pidx) const;
+    /* reimp */ QVariant headerData(int section, Qt::Orientation o, int role = Qt::DisplayRole) const;
+    /* reimp */ QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
-        /**
-         * defines which information is displayed in tooltips 
-         * see Kleo::Formatting::ToolTipOption
-         */
-        int toolTipOptions() const;
+    /**
+     * defines which information is displayed in tooltips
+     * see Kleo::Formatting::ToolTipOption
+     */
+    int toolTipOptions() const;
 
-        void setToolTipOptions( int opts );
+    void setToolTipOptions(int opts);
 
-    private:
-        virtual GpgME::Key doMapToKey( const QModelIndex & index ) const = 0;
-        virtual QModelIndex doMapFromKey( const GpgME::Key & key, int column ) const = 0;
-        virtual QList<QModelIndex> doAddKeys( const std::vector<GpgME::Key> & keys ) = 0;
-        virtual void doRemoveKey( const GpgME::Key & key ) = 0;
-        virtual void doClear() = 0;
+private:
+    virtual GpgME::Key doMapToKey(const QModelIndex &index) const = 0;
+    virtual QModelIndex doMapFromKey(const GpgME::Key &key, int column) const = 0;
+    virtual QList<QModelIndex> doAddKeys(const std::vector<GpgME::Key> &keys) = 0;
+    virtual void doRemoveKey(const GpgME::Key &key) = 0;
+    virtual void doClear() = 0;
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-    };
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+};
 
 }
 

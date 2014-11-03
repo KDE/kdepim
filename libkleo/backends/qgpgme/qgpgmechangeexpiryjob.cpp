@@ -49,35 +49,37 @@ using namespace Kleo;
 using namespace GpgME;
 using namespace boost;
 
-QGpgMEChangeExpiryJob::QGpgMEChangeExpiryJob( Context * context )
-  : mixin_type( context )
+QGpgMEChangeExpiryJob::QGpgMEChangeExpiryJob(Context *context)
+    : mixin_type(context)
 {
-  lateInitialization();
+    lateInitialization();
 }
 
 QGpgMEChangeExpiryJob::~QGpgMEChangeExpiryJob() {}
 
-static QGpgMEChangeExpiryJob::result_type change_expiry( Context * ctx, const Key & key, const QDateTime & expiry ) {
-  std::auto_ptr<EditInteractor>
-      ei( expiry.isValid()
+static QGpgMEChangeExpiryJob::result_type change_expiry(Context *ctx, const Key &key, const QDateTime &expiry)
+{
+    std::auto_ptr<EditInteractor>
+    ei(expiry.isValid()
 #ifndef QT_NO_STL
-          ? new GpgSetExpiryTimeEditInteractor( expiry.date().toString( Qt::ISODate ).toStdString() )
+       ? new GpgSetExpiryTimeEditInteractor(expiry.date().toString(Qt::ISODate).toStdString())
 #else
-          ? new GpgSetExpiryTimeEditInteractor( std::string( expiry.date().toString( Qt::ISODate ).toLatin1().constData() ) )
+       ? new GpgSetExpiryTimeEditInteractor(std::string(expiry.date().toString(Qt::ISODate).toLatin1().constData()))
 #endif
-          : new GpgSetExpiryTimeEditInteractor() );
+       : new GpgSetExpiryTimeEditInteractor());
 
-  QGpgME::QByteArrayDataProvider dp;
-  Data data( &dp );
-  assert( !data.isNull() );
-  const Error err = ctx->edit( key, ei, data );
-  Error ae;
-  const QString log = _detail::audit_log_as_html( ctx, ae );
-  return make_tuple( err, log, ae );
+    QGpgME::QByteArrayDataProvider dp;
+    Data data(&dp);
+    assert(!data.isNull());
+    const Error err = ctx->edit(key, ei, data);
+    Error ae;
+    const QString log = _detail::audit_log_as_html(ctx, ae);
+    return make_tuple(err, log, ae);
 }
 
-Error QGpgMEChangeExpiryJob::start( const Key & key, const QDateTime & expiry ) {
-  run( bind( &change_expiry, _1, key, expiry ) );
-  return Error();
+Error QGpgMEChangeExpiryJob::start(const Key &key, const QDateTime &expiry)
+{
+    run(bind(&change_expiry, _1, key, expiry));
+    return Error();
 }
 

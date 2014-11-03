@@ -81,7 +81,7 @@ QString CreateResource::createResource(const QString &resources, const QString &
     // check if unique instance already exists
     qDebug() << type.capabilities();
     if (type.capabilities().contains(QLatin1String("Unique"))) {
-        Q_FOREACH(const AgentInstance & instance, AgentManager::self()->instances()) {
+        Q_FOREACH (const AgentInstance &instance, AgentManager::self()->instances()) {
             qDebug() << instance.type().identifier() << (instance.type() == type);
             if (instance.type() == type) {
                 Q_EMIT createResourceInfo(i18n("Resource '%1' is already set up.", type.name()));

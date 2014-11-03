@@ -52,73 +52,77 @@
 using namespace boost;
 using namespace Kleo;
 
-class Log::Private {
-    Log* const q;
+class Log::Private
+{
+    Log *const q;
 public:
-    explicit Private( Log* qq ) : q( qq ), m_ioLoggingEnabled( false ), m_logFile( 0 ) {}
+    explicit Private(Log *qq) : q(qq), m_ioLoggingEnabled(false), m_logFile(0) {}
     ~Private();
     bool m_ioLoggingEnabled;
     QString m_outputDirectory;
-    FILE* m_logFile;
+    FILE *m_logFile;
 };
 
 Log::Private::~Private()
 {
-    if ( m_logFile )
-        fclose( m_logFile );
+    if (m_logFile) {
+        fclose(m_logFile);
+    }
 }
 
-void Log::messageHandler( QtMsgType type, const char* msg )
+void Log::messageHandler(QtMsgType type, const char *msg)
 {
-    Q_UNUSED( type )
-    FILE* const file = Log::instance()->logFile();
-    if ( !file ) {
-        fprintf( stderr, "Log::messageHandler[!file]: %s", msg );
+    Q_UNUSED(type)
+    FILE *const file = Log::instance()->logFile();
+    if (!file) {
+        fprintf(stderr, "Log::messageHandler[!file]: %s", msg);
         return;
     }
-    
-    qint64 toWrite = strlen( msg );
-    while ( toWrite > 0 )
-    {
-        const qint64 written = fprintf( file, "%s", msg );
-        if ( written == -1 )
+
+    qint64 toWrite = strlen(msg);
+    while (toWrite > 0) {
+        const qint64 written = fprintf(file, "%s", msg);
+        if (written == -1) {
             return;
+        }
         toWrite -= written;
     }
     //append newline:
-    while ( fprintf( file, "\n" ) == 0 ) ;
-    fflush( file );
+    while (fprintf(file, "\n") == 0) ;
+    fflush(file);
 }
 
-shared_ptr<const Log> Log::instance() {
+shared_ptr<const Log> Log::instance()
+{
     return mutableInstance();
 }
 
-shared_ptr<Log> Log::mutableInstance() {
+shared_ptr<Log> Log::mutableInstance()
+{
     static weak_ptr<Log> self;
     try {
-        return shared_ptr<Log>( self );
-    } catch ( const bad_weak_ptr & ) {
-        const shared_ptr<Log> s( new Log );
+        return shared_ptr<Log>(self);
+    } catch (const bad_weak_ptr &) {
+        const shared_ptr<Log> s(new Log);
         self = s;
         return s;
     }
 }
 
-Log::Log() : d( new Private( this ) )
-{    
+Log::Log() : d(new Private(this))
+{
 }
 
 Log::~Log()
 {
 }
 
-FILE* Log::logFile() const
+FILE *Log::logFile() const
 {
     return d->m_logFile;
 }
 
-void Log::setIOLoggingEnabled( bool enabled )
+void Log::setIOLoggingEnabled(bool enabled)
 {
     d->m_ioLoggingEnabled = enabled;
 }
@@ -133,37 +137,41 @@ QString Log::outputDirectory() const
     return d->m_outputDirectory;
 }
 
-void Log::setOutputDirectory( const QString& path )
+void Log::setOutputDirectory(const QString &path)
 {
-    if ( d->m_outputDirectory == path )
+    if (d->m_outputDirectory == path) {
         return;
+    }
     d->m_outputDirectory = path;
-    assert( !d->m_logFile );
+    assert(!d->m_logFile);
     const QString lfn = path + QLatin1String("/kleo-log");
-    d->m_logFile = fopen( QDir::toNativeSeparators( lfn ).toLocal8Bit().constData(), "a" );
-    assert( d->m_logFile );
+    d->m_logFile = fopen(QDir::toNativeSeparators(lfn).toLocal8Bit().constData(), "a");
+    assert(d->m_logFile);
 }
 
-shared_ptr<QIODevice> Log::createIOLogger( const shared_ptr<QIODevice>& io, const QString& prefix, OpenMode mode ) const
+shared_ptr<QIODevice> Log::createIOLogger(const shared_ptr<QIODevice> &io, const QString &prefix, OpenMode mode) const
 {
-    if ( !d->m_ioLoggingEnabled )
+    if (!d->m_ioLoggingEnabled) {
         return io;
-    
-    shared_ptr<IODeviceLogger> logger( new IODeviceLogger( io ) );
+    }
 
-    const QString timestamp = QDateTime::currentDateTime().toString( QLatin1String("yyMMdd-hhmmss") );
-    
-    const QString fn = d->m_outputDirectory + QLatin1Char('/') + prefix + QLatin1Char('-') + timestamp + QLatin1Char('-') + KRandom::randomString( 4 );
-    shared_ptr<QFile> file( new QFile( fn ) );
+    shared_ptr<IODeviceLogger> logger(new IODeviceLogger(io));
 
-    if ( !file->open( QIODevice::WriteOnly ) )
-        throw Exception( gpg_error( GPG_ERR_EIO ), i18n( "Log Error: Could not open log file \"%1\" for writing.", fn ) );
- 
-    if ( mode & Read )    
-        logger->setReadLogDevice( file );
-    else // Write
-        logger->setWriteLogDevice( file );
-    
+    const QString timestamp = QDateTime::currentDateTime().toString(QLatin1String("yyMMdd-hhmmss"));
+
+    const QString fn = d->m_outputDirectory + QLatin1Char('/') + prefix + QLatin1Char('-') + timestamp + QLatin1Char('-') + KRandom::randomString(4);
+    shared_ptr<QFile> file(new QFile(fn));
+
+    if (!file->open(QIODevice::WriteOnly)) {
+        throw Exception(gpg_error(GPG_ERR_EIO), i18n("Log Error: Could not open log file \"%1\" for writing.", fn));
+    }
+
+    if (mode & Read) {
+        logger->setReadLogDevice(file);
+    } else { // Write
+        logger->setWriteLogDevice(file);
+    }
+
     return logger;
 }
 

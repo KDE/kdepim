@@ -27,15 +27,16 @@
 
 class QObject;
 
-class KDSignalBlocker {
-    Q_DISABLE_COPY( KDSignalBlocker )
+class KDSignalBlocker
+{
+    Q_DISABLE_COPY(KDSignalBlocker)
 public:
-    explicit KDSignalBlocker( QObject * o );
-    explicit KDSignalBlocker( QObject & o );
+    explicit KDSignalBlocker(QObject *o);
+    explicit KDSignalBlocker(QObject &o);
     ~KDSignalBlocker();
 private:
     const bool blocked;
-    QObject * const object;
+    QObject *const object;
 };
 
 #endif /* __KDTOOLS__CORE__KDSIGNALBLOCKER_H__ */

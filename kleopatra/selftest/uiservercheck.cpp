@@ -53,53 +53,57 @@ using namespace Kleo;
 using namespace Kleo::_detail;
 using namespace boost;
 
-namespace {
+namespace
+{
 
-    class UiServerCheck : public SelfTestImplementation {
-    public:
-        explicit UiServerCheck()
-            : SelfTestImplementation( i18nc("@title", "UiServer Connectivity") )
+class UiServerCheck : public SelfTestImplementation
+{
+public:
+    explicit UiServerCheck()
+        : SelfTestImplementation(i18nc("@title", "UiServer Connectivity"))
+    {
+        runTest();
+    }
+
+    void runTest()
+    {
+
+        KleopatraClientCopy::Command command;
+
         {
-            runTest();
+            QEventLoop loop;
+            loop.connect(&command, SIGNAL(finished()), SLOT(quit()));
+            QMetaObject::invokeMethod(&command, "start", Qt::QueuedConnection);
+            loop.exec();
         }
 
-        void runTest() {
-
-            KleopatraClientCopy::Command command;
-
-            {
-                QEventLoop loop;
-                loop.connect( &command, SIGNAL(finished()), SLOT(quit()) );
-                QMetaObject::invokeMethod( &command, "start", Qt::QueuedConnection );
-                loop.exec();
-            }
-
-            if ( command.error() ) {
-                m_passed = false;
-                m_error = i18n("not reachable");
-                m_explaination = xi18nc("@info",
-                                       "Could not connect to UiServer: <message>%1</message>",
-                                       command.errorString().toHtmlEscaped() );
-                m_proposedFix = xi18nc("@info",
-                                      "<para>Check that your firewall is not set to block local connections "
-                                      "(allow connections to <resource>localhost</resource> or <resource>127.0.0.1</resource>).</para>");
-            } else if ( command.serverPid() != mygetpid() ) {
-                m_passed = false;
-                m_error = i18n("multiple instances");
-                m_explaination = xi18nc("@info",
-                                       "It seems another <application>Kleopatra</application> is running (with process-id %1)",
-                                       command.serverPid() );
-                m_proposedFix = xi18nc("@info",
-                                      "Quit any other running instances of <application>Kleopatra</application>.");
-            } else {
-                m_passed = true;
-            }
-
+        if (command.error()) {
+            m_passed = false;
+            m_error = i18n("not reachable");
+            m_explaination = xi18nc("@info",
+                                    "Could not connect to UiServer: <message>%1</message>",
+                                    command.errorString().toHtmlEscaped());
+            m_proposedFix = xi18nc("@info",
+                                   "<para>Check that your firewall is not set to block local connections "
+                                   "(allow connections to <resource>localhost</resource> or <resource>127.0.0.1</resource>).</para>");
+        } else if (command.serverPid() != mygetpid()) {
+            m_passed = false;
+            m_error = i18n("multiple instances");
+            m_explaination = xi18nc("@info",
+                                    "It seems another <application>Kleopatra</application> is running (with process-id %1)",
+                                    command.serverPid());
+            m_proposedFix = xi18nc("@info",
+                                   "Quit any other running instances of <application>Kleopatra</application>.");
+        } else {
+            m_passed = true;
         }
 
-    };
+    }
+
+};
 }
 
-shared_ptr<SelfTest> Kleo::makeUiServerConnectivitySelfTest() {
-    return shared_ptr<SelfTest>( new UiServerCheck );
+shared_ptr<SelfTest> Kleo::makeUiServerConnectivitySelfTest()
+{
+    return shared_ptr<SelfTest>(new UiServerCheck);
 }

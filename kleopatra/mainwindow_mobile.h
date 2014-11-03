@@ -37,42 +37,44 @@
 
 #include <utils/pimpl_ptr.h>
 
-namespace Kleo {
-    class KeyTreeView;
-    class SearchBar;
+namespace Kleo
+{
+class KeyTreeView;
+class SearchBar;
 }
 
 class QStringList;
 
-class MainWindow : public KDeclarativeFullScreenView {
+class MainWindow : public KDeclarativeFullScreenView
+{
     Q_OBJECT
-    Q_PROPERTY( bool certificatesAvailable READ certificatesAvailable NOTIFY certificatesAvailabilityChanged )
+    Q_PROPERTY(bool certificatesAvailable READ certificatesAvailable NOTIFY certificatesAvailabilityChanged)
 public:
-    explicit MainWindow( QWidget * parent=0 );
+    explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
     bool certificatesAvailable() const;
 
 public Q_SLOTS:
-    void importCertificatesFromFile( const QStringList & files );
+    void importCertificatesFromFile(const QStringList &files);
 
 Q_SIGNALS:
     void certificatesAvailabilityChanged();
 
 protected:
     /* reimp */ void doDelayedInit();
-    /* reimp */ void closeEvent( QCloseEvent * );
-    /* reimp */ void keyPressEvent( QKeyEvent * );
+    /* reimp */ void closeEvent(QCloseEvent *);
+    /* reimp */ void keyPressEvent(QKeyEvent *);
 
 private:
-    void registerKeyTreeView( Kleo::KeyTreeView * view );
-    void registerSearchBar( Kleo::SearchBar * bar );
+    void registerKeyTreeView(Kleo::KeyTreeView *view);
+    void registerSearchBar(Kleo::SearchBar *bar);
 
 private:
-    Q_PRIVATE_SLOT( d, void closeAndQuit() )
-    Q_PRIVATE_SLOT( d, void selfTest() )
-    Q_PRIVATE_SLOT( d, void slotSearchBarTextChanged(QString) )
-    Q_PRIVATE_SLOT( d, void slotConfigCommitted() )
+    Q_PRIVATE_SLOT(d, void closeAndQuit())
+    Q_PRIVATE_SLOT(d, void selfTest())
+    Q_PRIVATE_SLOT(d, void slotSearchBarTextChanged(QString))
+    Q_PRIVATE_SLOT(d, void slotConfigCommitted())
     class Private;
     kdtools::pimpl_ptr<Private> d;
 };

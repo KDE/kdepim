@@ -37,27 +37,30 @@
 
 #include <utils/pimpl_ptr.h>
 
-namespace Kleo {
-namespace Config {
+namespace Kleo
+{
+namespace Config
+{
 
-    class CryptoOperationsConfigWidget : public QWidget {
-        Q_OBJECT
-    public:
-        explicit CryptoOperationsConfigWidget( QWidget * parent=0, Qt::WindowFlags f=0 );
-        ~CryptoOperationsConfigWidget();
+class CryptoOperationsConfigWidget : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit CryptoOperationsConfigWidget(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    ~CryptoOperationsConfigWidget();
 
-    public Q_SLOTS:
-        void load();
-        void save();
-        void defaults();
+public Q_SLOTS:
+    void load();
+    void save();
+    void defaults();
 
-    Q_SIGNALS:
-        void changed();
+Q_SIGNALS:
+    void changed();
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-    };
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+};
 
 }
 }

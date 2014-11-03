@@ -33,8 +33,6 @@
 #ifndef KGPGCONF_CONFIGREADER_H
 #define KGPGCONF_CONFIGREADER_H
 
-
-
 class Config;
 
 class ConfigReader
@@ -43,17 +41,15 @@ public:
     ConfigReader();
     ~ConfigReader();
 
-    Config* readConfig() const;
-
+    Config *readConfig() const;
 
 private:
-    ConfigReader(const ConfigReader&);
-    ConfigReader& operator=( const ConfigReader&);
+    ConfigReader(const ConfigReader &);
+    ConfigReader &operator=(const ConfigReader &);
 
     class Private;
-    Private* const d;
+    Private *const d;
 };
-
 
 #endif //KGPGCONF_CONFIGREADER_H
 

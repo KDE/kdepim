@@ -40,40 +40,41 @@
 #include <gpgme++/keylistresult.h>
 #include <gpgme++/key.h>
 
-namespace Kleo {
+namespace Kleo
+{
 
-  class QGpgMEKeyListJob
+class QGpgMEKeyListJob
 #ifdef Q_MOC_RUN
     : public KeyListJob
 #else
     : public _detail::ThreadedJobMixin<KeyListJob, boost::tuple<GpgME::KeyListResult, std::vector<GpgME::Key>, QString, GpgME::Error> >
 #endif
-  {
+{
     Q_OBJECT
 #ifdef Q_MOC_RUN
-  public Q_SLOTS:
+public Q_SLOTS:
     void slotFinished();
 #endif
-  public:
-    explicit QGpgMEKeyListJob( GpgME::Context * context );
+public:
+    explicit QGpgMEKeyListJob(GpgME::Context *context);
     ~QGpgMEKeyListJob();
 
     /*! \reimp from KeyListJob */
-    GpgME::Error start( const QStringList & patterns, bool secretOnly );
+    GpgME::Error start(const QStringList &patterns, bool secretOnly);
 
     /*! \reimp from KeyListJob */
-    GpgME::KeyListResult exec( const QStringList & patterns, bool secretOnly, std::vector<GpgME::Key> & keys );
+    GpgME::KeyListResult exec(const QStringList &patterns, bool secretOnly, std::vector<GpgME::Key> &keys);
 
     /*! \reimp from Job */
-    void showErrorDialog( QWidget * parent, const QString & caption ) const;
+    void showErrorDialog(QWidget *parent, const QString &caption) const;
 
     /*! \reimp from ThreadedJobMixin */
-    void resultHook( const result_type & result );
+    void resultHook(const result_type &result);
 
-  private:
+private:
     GpgME::KeyListResult mResult;
     bool mSecretOnly;
-  };
+};
 
 }
 

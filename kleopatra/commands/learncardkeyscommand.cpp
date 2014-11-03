@@ -48,49 +48,57 @@ using namespace Kleo;
 using namespace Kleo::Commands;
 using namespace GpgME;
 
-LearnCardKeysCommand::LearnCardKeysCommand( GpgME::Protocol proto )
-    : GnuPGProcessCommand( 0 ), m_protocol( proto )
+LearnCardKeysCommand::LearnCardKeysCommand(GpgME::Protocol proto)
+    : GnuPGProcessCommand(0), m_protocol(proto)
 {
-    setIgnoresSuccessOrFailure( true );
-    setShowsOutputWindow( true );
-    connect( this, SIGNAL(finished()),
-             SmartCard::ReaderStatus::mutableInstance(), SLOT(updateStatus()) );
+    setIgnoresSuccessOrFailure(true);
+    setShowsOutputWindow(true);
+    connect(this, SIGNAL(finished()),
+            SmartCard::ReaderStatus::mutableInstance(), SLOT(updateStatus()));
 }
 
 LearnCardKeysCommand::~LearnCardKeysCommand() {}
 
-Protocol LearnCardKeysCommand::protocol() const {
+Protocol LearnCardKeysCommand::protocol() const
+{
     return m_protocol;
 }
 
-QStringList LearnCardKeysCommand::arguments() const {
-    if ( protocol() == OpenPGP )
+QStringList LearnCardKeysCommand::arguments() const
+{
+    if (protocol() == OpenPGP) {
         return QStringList() << gpgPath() << QLatin1String("--batch") << QLatin1String("--card-status") << QLatin1String("-v");
-    else
+    } else {
         return QStringList() << gpgSmPath() << QLatin1String("--learn-card") << QLatin1String("-v");
+    }
 }
 
-QString LearnCardKeysCommand::errorCaption() const {
-    return i18n( "Error Learning SmartCard" );
+QString LearnCardKeysCommand::errorCaption() const
+{
+    return i18n("Error Learning SmartCard");
 }
 
-QString LearnCardKeysCommand::successCaption() const {
-    return i18n( "Finished Learning SmartCard" );
+QString LearnCardKeysCommand::successCaption() const
+{
+    return i18n("Finished Learning SmartCard");
 }
 
-QString LearnCardKeysCommand::crashExitMessage( const QStringList & args ) const {
+QString LearnCardKeysCommand::crashExitMessage(const QStringList &args) const
+{
     return xi18nc("@info",
-                 "<para>The GPG or GpgSM process that tried to learn the smart card "
-                 "ended prematurely because of an unexpected error.</para>"
-                 "<para>Please check the output of <icode>%1</icode> for details.</para>", args.join( QLatin1String(" ") ) ) ;
+                  "<para>The GPG or GpgSM process that tried to learn the smart card "
+                  "ended prematurely because of an unexpected error.</para>"
+                  "<para>Please check the output of <icode>%1</icode> for details.</para>", args.join(QLatin1String(" "))) ;
 }
 
-QString LearnCardKeysCommand::errorExitMessage( const QStringList & ) const {
+QString LearnCardKeysCommand::errorExitMessage(const QStringList &) const
+{
     // unused, since we setIgnoresSuccessOrFailure(true)
     return QString();
 }
 
-QString LearnCardKeysCommand::successMessage( const QStringList & ) const {
+QString LearnCardKeysCommand::successMessage(const QStringList &) const
+{
     // unused, since we setIgnoresSuccessOrFailure(true)
     return QString();
 }

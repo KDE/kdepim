@@ -54,11 +54,15 @@ using namespace Kleo::Commands;
 using namespace Kleo::Crypto;
 using namespace boost;
 
-class DecryptVerifyFilesCommand::Private : public Command::Private {
+class DecryptVerifyFilesCommand::Private : public Command::Private
+{
     friend class ::Kleo::Commands::DecryptVerifyFilesCommand;
-    DecryptVerifyFilesCommand * q_func() const { return static_cast<DecryptVerifyFilesCommand*>( q ); }
+    DecryptVerifyFilesCommand *q_func() const
+    {
+        return static_cast<DecryptVerifyFilesCommand *>(q);
+    }
 public:
-    explicit Private( DecryptVerifyFilesCommand * qq, KeyListController * c );
+    explicit Private(DecryptVerifyFilesCommand *qq, KeyListController *c);
     ~Private();
 
     QStringList selectFiles() const;
@@ -66,10 +70,12 @@ public:
     void init();
 
 private:
-    void slotControllerDone() {
+    void slotControllerDone()
+    {
         finished();
     }
-    void slotControllerError( int, const QString & ) {
+    void slotControllerError(int, const QString &)
+    {
         finished();
     }
 
@@ -79,99 +85,118 @@ private:
     DecryptVerifyFilesController controller;
 };
 
-
-DecryptVerifyFilesCommand::Private * DecryptVerifyFilesCommand::d_func() { return static_cast<Private*>( d.get() ); }
-const DecryptVerifyFilesCommand::Private * DecryptVerifyFilesCommand::d_func() const { return static_cast<const Private*>( d.get() ); }
+DecryptVerifyFilesCommand::Private *DecryptVerifyFilesCommand::d_func()
+{
+    return static_cast<Private *>(d.get());
+}
+const DecryptVerifyFilesCommand::Private *DecryptVerifyFilesCommand::d_func() const
+{
+    return static_cast<const Private *>(d.get());
+}
 
 #define d d_func()
 #define q q_func()
 
-DecryptVerifyFilesCommand::Private::Private( DecryptVerifyFilesCommand * qq, KeyListController * c )
-    : Command::Private( qq, c ),
+DecryptVerifyFilesCommand::Private::Private(DecryptVerifyFilesCommand *qq, KeyListController *c)
+    : Command::Private(qq, c),
       files(),
-      shared_qq( qq, kdtools::nodelete() ),
+      shared_qq(qq, kdtools::nodelete()),
       controller()
 {
 }
 
-DecryptVerifyFilesCommand::Private::~Private() { qDebug(); }
+DecryptVerifyFilesCommand::Private::~Private()
+{
+    qDebug();
+}
 
-DecryptVerifyFilesCommand::DecryptVerifyFilesCommand( KeyListController * c )
-    : Command( new Private( this, c ) )
+DecryptVerifyFilesCommand::DecryptVerifyFilesCommand(KeyListController *c)
+    : Command(new Private(this, c))
 {
     d->init();
 }
 
-DecryptVerifyFilesCommand::DecryptVerifyFilesCommand( QAbstractItemView * v, KeyListController * c )
-    : Command( v, new Private( this, c ) )
+DecryptVerifyFilesCommand::DecryptVerifyFilesCommand(QAbstractItemView *v, KeyListController *c)
+    : Command(v, new Private(this, c))
 {
     d->init();
 }
 
-DecryptVerifyFilesCommand::DecryptVerifyFilesCommand( const QStringList & files, KeyListController * c )
-    : Command( new Private( this, c ) )
-{
-    d->init();
-    d->files = files;
-}
-
-DecryptVerifyFilesCommand::DecryptVerifyFilesCommand( const QStringList & files, QAbstractItemView * v, KeyListController * c )
-    : Command( v, new Private( this, c ) )
+DecryptVerifyFilesCommand::DecryptVerifyFilesCommand(const QStringList &files, KeyListController *c)
+    : Command(new Private(this, c))
 {
     d->init();
     d->files = files;
 }
 
-void DecryptVerifyFilesCommand::Private::init() {
-    controller.setExecutionContext( shared_qq );
-    connect( &controller, SIGNAL(done()), q, SLOT(slotControllerDone()) );
-    connect( &controller, SIGNAL(error(int,QString)), q, SLOT(slotControllerError(int,QString)) );
-}
-
-DecryptVerifyFilesCommand::~DecryptVerifyFilesCommand() { qDebug(); }
-
-void DecryptVerifyFilesCommand::setFiles( const QStringList & files ) {
+DecryptVerifyFilesCommand::DecryptVerifyFilesCommand(const QStringList &files, QAbstractItemView *v, KeyListController *c)
+    : Command(v, new Private(this, c))
+{
+    d->init();
     d->files = files;
 }
 
-void DecryptVerifyFilesCommand::setOperation( DecryptVerifyOperation op ) {
+void DecryptVerifyFilesCommand::Private::init()
+{
+    controller.setExecutionContext(shared_qq);
+    connect(&controller, SIGNAL(done()), q, SLOT(slotControllerDone()));
+    connect(&controller, SIGNAL(error(int,QString)), q, SLOT(slotControllerError(int,QString)));
+}
+
+DecryptVerifyFilesCommand::~DecryptVerifyFilesCommand()
+{
+    qDebug();
+}
+
+void DecryptVerifyFilesCommand::setFiles(const QStringList &files)
+{
+    d->files = files;
+}
+
+void DecryptVerifyFilesCommand::setOperation(DecryptVerifyOperation op)
+{
     try {
-        d->controller.setOperation( op );
-    } catch ( ... ) {}
+        d->controller.setOperation(op);
+    } catch (...) {}
 }
 
-DecryptVerifyOperation DecryptVerifyFilesCommand::operation() const {
+DecryptVerifyOperation DecryptVerifyFilesCommand::operation() const
+{
     return d->controller.operation();
 }
 
-void DecryptVerifyFilesCommand::doStart() {
+void DecryptVerifyFilesCommand::doStart()
+{
 
     try {
 
-        if ( d->files.empty() )
+        if (d->files.empty()) {
             d->files = d->selectFiles();
-        if ( d->files.empty() ) {
+        }
+        if (d->files.empty()) {
             d->finished();
             return;
         }
-        d->controller.setFiles( d->files );
+        d->controller.setFiles(d->files);
         d->controller.start();
 
-    } catch ( const std::exception & e ) {
-        d->information( i18n("An error occurred: %1",
-                             QString::fromLocal8Bit( e.what() ) ),
-                        i18n("Decrypt/Verify Files Error") );
+    } catch (const std::exception &e) {
+        d->information(i18n("An error occurred: %1",
+                            QString::fromLocal8Bit(e.what())),
+                       i18n("Decrypt/Verify Files Error"));
         d->finished();
     }
 }
 
-void DecryptVerifyFilesCommand::doCancel() {
+void DecryptVerifyFilesCommand::doCancel()
+{
     qDebug();
     d->controller.cancel();
 }
 
-QStringList DecryptVerifyFilesCommand::Private::selectFiles() const {
-    return FileDialog::getOpenFileNames( parentWidgetOrView(), i18n( "Select One or More Files to Decrypt and/or Verify" ), QLatin1String("enc") );
+QStringList DecryptVerifyFilesCommand::Private::selectFiles() const
+{
+    return FileDialog::getOpenFileNames(parentWidgetOrView(), i18n("Select One or More Files to Decrypt and/or Verify"), QLatin1String("enc"));
 }
 
 #undef d

@@ -26,7 +26,8 @@
 
 //#include "checker.h"
 
-class KDPipeIODevice : public QIODevice {
+class KDPipeIODevice : public QIODevice
+{
     Q_OBJECT
     //KDAB_MAKE_CHECKABLE( KDPipeIODevice )
 public:
@@ -34,19 +35,19 @@ public:
         NoDebug,
         Debug
     };
-    
+
     static DebugLevel debugLevel();
-    static void setDebugLevel( DebugLevel level );
-    
-    explicit KDPipeIODevice( QObject * parent=0 );
-    explicit KDPipeIODevice( int fd, OpenMode=ReadOnly, QObject * parent=0 );
-    explicit KDPipeIODevice( Qt::HANDLE handle, OpenMode=ReadOnly, QObject * parent=0 );
+    static void setDebugLevel(DebugLevel level);
+
+    explicit KDPipeIODevice(QObject *parent = 0);
+    explicit KDPipeIODevice(int fd, OpenMode = ReadOnly, QObject *parent = 0);
+    explicit KDPipeIODevice(Qt::HANDLE handle, OpenMode = ReadOnly, QObject *parent = 0);
     ~KDPipeIODevice();
 
-    static std::pair<KDPipeIODevice*, KDPipeIODevice*> makePairOfConnectedPipes();
+    static std::pair<KDPipeIODevice *, KDPipeIODevice *> makePairOfConnectedPipes();
 
-    bool open( int fd, OpenMode mode=ReadOnly );
-    bool open( Qt::HANDLE handle, OpenMode mode=ReadOnly );
+    bool open(int fd, OpenMode mode = ReadOnly);
+    bool open(Qt::HANDLE handle, OpenMode mode = ReadOnly);
 
     Qt::HANDLE handle() const;
     int descriptor() const;
@@ -61,19 +62,19 @@ public:
     /* reimp */ bool isSequential() const;
     /* reimp */ bool atEnd() const;
 
-    /* reimp */ bool waitForBytesWritten( int msecs );
-    /* reimp */ bool waitForReadyRead( int msecs );
+    /* reimp */ bool waitForBytesWritten(int msecs);
+    /* reimp */ bool waitForReadyRead(int msecs);
 
 protected:
-    /* reimp */ qint64 readData( char * data, qint64 maxSize );
-    /* reimp */ qint64 writeData( const char * data, qint64 maxSize );
+    /* reimp */ qint64 readData(char *data, qint64 maxSize);
+    /* reimp */ qint64 writeData(const char *data, qint64 maxSize);
 
 private:
     using QIODevice::open;
 
 private:
     class Private;
-    Private * d;
+    Private *d;
 };
 
 #endif /* __KDTOOLSCORE_KDPIPEIODEVICE_H__ */

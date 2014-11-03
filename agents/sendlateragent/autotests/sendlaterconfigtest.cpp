@@ -20,7 +20,6 @@
 #include "../sendlaterutil.h"
 #include <qtest.h>
 
-
 SendLaterConfigTest::SendLaterConfigTest(QObject *parent)
     : QObject(parent)
 {
@@ -35,15 +34,15 @@ SendLaterConfigTest::~SendLaterConfigTest()
 void SendLaterConfigTest::init()
 {
     mConfig = KSharedConfig::openConfig(QLatin1String("test-sendlateragent.rc"));
-    mSendlaterRegExpFilter = QRegExp( QLatin1String("SendLaterItem \\d+") );
+    mSendlaterRegExpFilter = QRegExp(QLatin1String("SendLaterItem \\d+"));
     cleanup();
 }
 
 void SendLaterConfigTest::cleanup()
 {
     const QStringList filterGroups = mConfig->groupList();
-    foreach ( const QString &group, filterGroups ) {
-        mConfig->deleteGroup( group );
+    foreach (const QString &group, filterGroups) {
+        mConfig->deleteGroup(group);
     }
     mConfig->sync();
     mConfig->reparseConfiguration();
@@ -71,13 +70,12 @@ void SendLaterConfigTest::shouldAddAnItem()
     info.setRecurrence(true);
     info.setRecurrenceEachValue(5);
     info.setRecurrenceUnit(SendLater::SendLaterInfo::Years);
-    const QDate date(2014,1,1);
+    const QDate date(2014, 1, 1);
     info.setDateTime(QDateTime(date));
     info.setLastDateTimeSend(QDateTime(date));
 
-
     SendLater::SendLaterUtil::writeSendLaterInfo(mConfig, &info, false);
-    const QStringList itemList = mConfig->groupList().filter( mSendlaterRegExpFilter );
+    const QStringList itemList = mConfig->groupList().filter(mSendlaterRegExpFilter);
 
     QCOMPARE(itemList.isEmpty(), false);
     QCOMPARE(itemList.count(), 1);
@@ -87,10 +85,9 @@ void SendLaterConfigTest::shouldNotAddInvalidItem()
 {
     SendLater::SendLaterInfo info;
     SendLater::SendLaterUtil::writeSendLaterInfo(mConfig, &info, false);
-    const QStringList itemList = mConfig->groupList().filter( mSendlaterRegExpFilter );
+    const QStringList itemList = mConfig->groupList().filter(mSendlaterRegExpFilter);
 
     QCOMPARE(itemList.isEmpty(), true);
 }
-
 
 QTEST_MAIN(SendLaterConfigTest)

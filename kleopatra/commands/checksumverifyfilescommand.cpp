@@ -54,11 +54,15 @@ using namespace Kleo::Commands;
 using namespace Kleo::Crypto;
 using namespace boost;
 
-class ChecksumVerifyFilesCommand::Private : public Command::Private {
+class ChecksumVerifyFilesCommand::Private : public Command::Private
+{
     friend class ::Kleo::Commands::ChecksumVerifyFilesCommand;
-    ChecksumVerifyFilesCommand * q_func() const { return static_cast<ChecksumVerifyFilesCommand*>( q ); }
+    ChecksumVerifyFilesCommand *q_func() const
+    {
+        return static_cast<ChecksumVerifyFilesCommand *>(q);
+    }
 public:
-    explicit Private( ChecksumVerifyFilesCommand * qq, KeyListController * c );
+    explicit Private(ChecksumVerifyFilesCommand *qq, KeyListController *c);
     ~Private();
 
     QStringList selectFiles() const;
@@ -66,10 +70,12 @@ public:
     void init();
 
 private:
-    void slotControllerDone() {
+    void slotControllerDone()
+    {
         finished();
     }
-    void slotControllerError( int, const QString & ) {
+    void slotControllerError(int, const QString &)
+    {
         finished();
     }
 
@@ -79,91 +85,108 @@ private:
     VerifyChecksumsController controller;
 };
 
-
-ChecksumVerifyFilesCommand::Private * ChecksumVerifyFilesCommand::d_func() { return static_cast<Private*>( d.get() ); }
-const ChecksumVerifyFilesCommand::Private * ChecksumVerifyFilesCommand::d_func() const { return static_cast<const Private*>( d.get() ); }
+ChecksumVerifyFilesCommand::Private *ChecksumVerifyFilesCommand::d_func()
+{
+    return static_cast<Private *>(d.get());
+}
+const ChecksumVerifyFilesCommand::Private *ChecksumVerifyFilesCommand::d_func() const
+{
+    return static_cast<const Private *>(d.get());
+}
 
 #define d d_func()
 #define q q_func()
 
-ChecksumVerifyFilesCommand::Private::Private( ChecksumVerifyFilesCommand * qq, KeyListController * c )
-    : Command::Private( qq, c ),
+ChecksumVerifyFilesCommand::Private::Private(ChecksumVerifyFilesCommand *qq, KeyListController *c)
+    : Command::Private(qq, c),
       files(),
-      shared_qq( qq, kdtools::nodelete() ),
+      shared_qq(qq, kdtools::nodelete()),
       controller()
 {
 
 }
 
-ChecksumVerifyFilesCommand::Private::~Private() { qDebug(); }
+ChecksumVerifyFilesCommand::Private::~Private()
+{
+    qDebug();
+}
 
-ChecksumVerifyFilesCommand::ChecksumVerifyFilesCommand( KeyListController * c )
-    : Command( new Private( this, c ) )
+ChecksumVerifyFilesCommand::ChecksumVerifyFilesCommand(KeyListController *c)
+    : Command(new Private(this, c))
 {
     d->init();
 }
 
-ChecksumVerifyFilesCommand::ChecksumVerifyFilesCommand( QAbstractItemView * v, KeyListController * c )
-    : Command( v, new Private( this, c ) )
+ChecksumVerifyFilesCommand::ChecksumVerifyFilesCommand(QAbstractItemView *v, KeyListController *c)
+    : Command(v, new Private(this, c))
 {
     d->init();
 }
 
-ChecksumVerifyFilesCommand::ChecksumVerifyFilesCommand( const QStringList & files, KeyListController * c )
-    : Command( new Private( this, c ) )
-{
-    d->init();
-    d->files = files;
-}
-
-ChecksumVerifyFilesCommand::ChecksumVerifyFilesCommand( const QStringList & files, QAbstractItemView * v, KeyListController * c )
-    : Command( v, new Private( this, c ) )
+ChecksumVerifyFilesCommand::ChecksumVerifyFilesCommand(const QStringList &files, KeyListController *c)
+    : Command(new Private(this, c))
 {
     d->init();
     d->files = files;
 }
 
-void ChecksumVerifyFilesCommand::Private::init() {
-    controller.setExecutionContext( shared_qq );
-    connect( &controller, SIGNAL(done()), q, SLOT(slotControllerDone()) );
-    connect( &controller, SIGNAL(error(int,QString)), q, SLOT(slotControllerError(int,QString)) );
-}
-
-ChecksumVerifyFilesCommand::~ChecksumVerifyFilesCommand() { qDebug(); }
-
-void ChecksumVerifyFilesCommand::setFiles( const QStringList & files ) {
+ChecksumVerifyFilesCommand::ChecksumVerifyFilesCommand(const QStringList &files, QAbstractItemView *v, KeyListController *c)
+    : Command(v, new Private(this, c))
+{
+    d->init();
     d->files = files;
 }
 
-void ChecksumVerifyFilesCommand::doStart() {
+void ChecksumVerifyFilesCommand::Private::init()
+{
+    controller.setExecutionContext(shared_qq);
+    connect(&controller, SIGNAL(done()), q, SLOT(slotControllerDone()));
+    connect(&controller, SIGNAL(error(int,QString)), q, SLOT(slotControllerError(int,QString)));
+}
+
+ChecksumVerifyFilesCommand::~ChecksumVerifyFilesCommand()
+{
+    qDebug();
+}
+
+void ChecksumVerifyFilesCommand::setFiles(const QStringList &files)
+{
+    d->files = files;
+}
+
+void ChecksumVerifyFilesCommand::doStart()
+{
 
     try {
 
-        if ( d->files.empty() )
+        if (d->files.empty()) {
             d->files = d->selectFiles();
-        if ( d->files.empty() ) {
+        }
+        if (d->files.empty()) {
             d->finished();
             return;
         }
 
-        d->controller.setFiles( d->files );
+        d->controller.setFiles(d->files);
         d->controller.start();
 
-    } catch ( const std::exception & e ) {
-        d->information( i18n("An error occurred: %1",
-                             QString::fromLocal8Bit( e.what() ) ),
-                        i18n("Verify Checksum Files Error") );
+    } catch (const std::exception &e) {
+        d->information(i18n("An error occurred: %1",
+                            QString::fromLocal8Bit(e.what())),
+                       i18n("Verify Checksum Files Error"));
         d->finished();
     }
 }
 
-void ChecksumVerifyFilesCommand::doCancel() {
+void ChecksumVerifyFilesCommand::doCancel()
+{
     qDebug();
     d->controller.cancel();
 }
 
-QStringList ChecksumVerifyFilesCommand::Private::selectFiles() const {
-    return FileDialog::getOpenFileNames( parentWidgetOrView(), i18n( "Select One or More Checksum Files" ), QLatin1String("chk") );
+QStringList ChecksumVerifyFilesCommand::Private::selectFiles() const
+{
+    return FileDialog::getOpenFileNames(parentWidgetOrView(), i18n("Select One or More Checksum Files"), QLatin1String("chk"));
 }
 
 #undef d

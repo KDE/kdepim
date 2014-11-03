@@ -61,18 +61,22 @@ using namespace Kleo::Commands;
 using namespace Kleo::Dialogs;
 using namespace GpgME;
 
-class CertifyCertificateCommand::Private : public Command::Private {
+class CertifyCertificateCommand::Private : public Command::Private
+{
     friend class ::Kleo::Commands::CertifyCertificateCommand;
-    CertifyCertificateCommand * q_func() const { return static_cast<CertifyCertificateCommand*>( q ); }
+    CertifyCertificateCommand *q_func() const
+    {
+        return static_cast<CertifyCertificateCommand *>(q);
+    }
 public:
-    explicit Private( CertifyCertificateCommand * qq, KeyListController * c );
+    explicit Private(CertifyCertificateCommand *qq, KeyListController *c);
     ~Private();
 
     void init();
 
 private:
     void slotDialogRejected();
-    void slotResult( const Error & err );
+    void slotResult(const Error &err);
     void slotCertificationPrepared();
 
 private:
@@ -85,15 +89,20 @@ private:
     QPointer<SignKeyJob> job;
 };
 
-
-CertifyCertificateCommand::Private * CertifyCertificateCommand::d_func() { return static_cast<Private*>( d.get() ); }
-const CertifyCertificateCommand::Private * CertifyCertificateCommand::d_func() const { return static_cast<const Private*>( d.get() ); }
+CertifyCertificateCommand::Private *CertifyCertificateCommand::d_func()
+{
+    return static_cast<Private *>(d.get());
+}
+const CertifyCertificateCommand::Private *CertifyCertificateCommand::d_func() const
+{
+    return static_cast<const Private *>(d.get());
+}
 
 #define d d_func()
 #define q q_func()
 
-CertifyCertificateCommand::Private::Private( CertifyCertificateCommand * qq, KeyListController * c )
-    : Command::Private( qq, c ),
+CertifyCertificateCommand::Private::Private(CertifyCertificateCommand *qq, KeyListController *c)
+    : Command::Private(qq, c),
       uids(),
       dialog(),
       job()
@@ -101,179 +110,203 @@ CertifyCertificateCommand::Private::Private( CertifyCertificateCommand * qq, Key
 
 }
 
-CertifyCertificateCommand::Private::~Private() { qDebug(); }
+CertifyCertificateCommand::Private::~Private()
+{
+    qDebug();
+}
 
-CertifyCertificateCommand::CertifyCertificateCommand( KeyListController * c )
-    : Command( new Private( this, c ) )
+CertifyCertificateCommand::CertifyCertificateCommand(KeyListController *c)
+    : Command(new Private(this, c))
 {
     d->init();
 }
 
-CertifyCertificateCommand::CertifyCertificateCommand( QAbstractItemView * v, KeyListController * c )
-    : Command( v, new Private( this, c ) )
+CertifyCertificateCommand::CertifyCertificateCommand(QAbstractItemView *v, KeyListController *c)
+    : Command(v, new Private(this, c))
 {
     d->init();
 }
 
-CertifyCertificateCommand::CertifyCertificateCommand( const Key & key )
-    : Command( key, new Private( this, 0 ) )
+CertifyCertificateCommand::CertifyCertificateCommand(const Key &key)
+    : Command(key, new Private(this, 0))
 {
     d->init();
 }
 
-CertifyCertificateCommand::CertifyCertificateCommand( const UserID & uid )
-    : Command( uid.parent(), new Private( this, 0 ) )
+CertifyCertificateCommand::CertifyCertificateCommand(const UserID &uid)
+    : Command(uid.parent(), new Private(this, 0))
 {
-    std::vector<UserID>( 1, uid ).swap( d->uids );
+    std::vector<UserID>(1, uid).swap(d->uids);
     d->init();
 }
 
-CertifyCertificateCommand::CertifyCertificateCommand( const std::vector<UserID> & uids )
-    : Command( uids.empty() ? Key() : uids.front().parent(), new Private( this, 0 ) )
+CertifyCertificateCommand::CertifyCertificateCommand(const std::vector<UserID> &uids)
+    : Command(uids.empty() ? Key() : uids.front().parent(), new Private(this, 0))
 {
     d->uids = uids;
     d->init();
 }
 
-void CertifyCertificateCommand::Private::init() {
+void CertifyCertificateCommand::Private::init()
+{
 
 }
 
-CertifyCertificateCommand::~CertifyCertificateCommand() { qDebug(); }
-
-void CertifyCertificateCommand::setCertificationExportable( bool on ) {
-    Q_UNUSED( on );
+CertifyCertificateCommand::~CertifyCertificateCommand()
+{
+    qDebug();
 }
 
-void CertifyCertificateCommand::setCertificationRevocable( bool on ) {
-    Q_UNUSED( on );
+void CertifyCertificateCommand::setCertificationExportable(bool on)
+{
+    Q_UNUSED(on);
 }
 
-void CertifyCertificateCommand::setCertifyingKey( const Key & signer ) {
-    Q_UNUSED( signer );
+void CertifyCertificateCommand::setCertificationRevocable(bool on)
+{
+    Q_UNUSED(on);
 }
 
-void CertifyCertificateCommand::setUserIDs( const std::vector<UserID> & uids ) {
+void CertifyCertificateCommand::setCertifyingKey(const Key &signer)
+{
+    Q_UNUSED(signer);
+}
+
+void CertifyCertificateCommand::setUserIDs(const std::vector<UserID> &uids)
+{
     d->uids = uids;
-    if ( !uids.empty() && d->key().isNull() )
-        setKey( uids.front().parent() );
+    if (!uids.empty() && d->key().isNull()) {
+        setKey(uids.front().parent());
+    }
 }
 
-void CertifyCertificateCommand::setUserID( const UserID & uid ) {
-    setUserIDs( std::vector<UserID>( 1, uid ) );
+void CertifyCertificateCommand::setUserID(const UserID &uid)
+{
+    setUserIDs(std::vector<UserID>(1, uid));
 }
 
-void CertifyCertificateCommand::doStart() {
+void CertifyCertificateCommand::doStart()
+{
 
     const std::vector<Key> keys = d->keys();
-    if ( keys.size() != 1 ||
-         keys.front().protocol() != GpgME::OpenPGP ) {
+    if (keys.size() != 1 ||
+            keys.front().protocol() != GpgME::OpenPGP) {
         d->finished();
         return;
     }
 
     std::vector<Key> secKeys = KeyCache::instance()->secretKeys();
-    std::vector<Key>::iterator it = std::remove_if( secKeys.begin(), secKeys.end(), !boost::bind( &Key::canCertify, _1 ) );
-    it = std::remove_if( it, secKeys.end(), boost::bind( &Key::protocol, _1 ) != OpenPGP );
-    secKeys.erase( it, secKeys.end() );
+    std::vector<Key>::iterator it = std::remove_if(secKeys.begin(), secKeys.end(), !boost::bind(&Key::canCertify, _1));
+    it = std::remove_if(it, secKeys.end(), boost::bind(&Key::protocol, _1) != OpenPGP);
+    secKeys.erase(it, secKeys.end());
 
-    if ( secKeys.empty() ) {
-        d->error( xi18nc( "@info", "To certify other certificates, you first need to create an OpenPGP certificate for yourself. Choose <interface>File->New Certificate...</interface> to create one." ),
-                  i18n( "Certification Not Possible" ) );
+    if (secKeys.empty()) {
+        d->error(xi18nc("@info", "To certify other certificates, you first need to create an OpenPGP certificate for yourself. Choose <interface>File->New Certificate...</interface> to create one."),
+                 i18n("Certification Not Possible"));
         d->finished();
         return;
     }
-    const Key & key = keys.front();
+    const Key &key = keys.front();
 
-    Q_FOREACH( const UserID & uid, d->uids )
-        if ( qstricmp( uid.parent().primaryFingerprint(), key.primaryFingerprint() ) != 0 ) {
+    Q_FOREACH (const UserID &uid, d->uids)
+        if (qstricmp(uid.parent().primaryFingerprint(), key.primaryFingerprint()) != 0) {
             qWarning() << "User-ID <-> Key mismatch!";
             d->finished();
             return;
         }
 
     d->ensureDialogCreated();
-    assert( d->dialog );
-    d->dialog->setCertificateToCertify( d->key() );
-    d->dialog->setSelectedUserIDs( d->uids );
-    d->dialog->setCertificatesWithSecretKeys( secKeys );
+    assert(d->dialog);
+    d->dialog->setCertificateToCertify(d->key());
+    d->dialog->setSelectedUserIDs(d->uids);
+    d->dialog->setCertificatesWithSecretKeys(secKeys);
     d->dialog->show();
 }
 
-void CertifyCertificateCommand::Private::slotDialogRejected() {
+void CertifyCertificateCommand::Private::slotDialogRejected()
+{
     emit q->canceled();
     finished();
 }
 
-void CertifyCertificateCommand::Private::slotResult( const Error & err ) {
-    if ( !err && !err.isCanceled() && dialog && dialog->exportableCertificationSelected() && dialog->sendToServer() ) {
-        ExportOpenPGPCertsToServerCommand * const cmd = new ExportOpenPGPCertsToServerCommand( key() );
+void CertifyCertificateCommand::Private::slotResult(const Error &err)
+{
+    if (!err && !err.isCanceled() && dialog && dialog->exportableCertificationSelected() && dialog->sendToServer()) {
+        ExportOpenPGPCertsToServerCommand *const cmd = new ExportOpenPGPCertsToServerCommand(key());
         cmd->start();
     }
 
     finished();
 }
 
-void CertifyCertificateCommand::Private::slotCertificationPrepared() {
-    assert( dialog );
+void CertifyCertificateCommand::Private::slotCertificationPrepared()
+{
+    assert(dialog);
 
     createJob();
-    assert( job );
-    job->setExportable( dialog->exportableCertificationSelected() );
-    job->setNonRevocable( dialog->nonRevocableCertificationSelected() );
-    job->setUserIDsToSign( dialog->selectedUserIDs() );
-    job->setSigningKey( dialog->selectedSecretKey() );
-    job->setCheckLevel( dialog->selectedCheckLevel() );
+    assert(job);
+    job->setExportable(dialog->exportableCertificationSelected());
+    job->setNonRevocable(dialog->nonRevocableCertificationSelected());
+    job->setUserIDsToSign(dialog->selectedUserIDs());
+    job->setSigningKey(dialog->selectedSecretKey());
+    job->setCheckLevel(dialog->selectedCheckLevel());
 
-    dialog->connectJob( job );
+    dialog->connectJob(job);
 
-    if ( const Error err = job->start( key() ) ) {
-        dialog->setError( err );
+    if (const Error err = job->start(key())) {
+        dialog->setError(err);
         finished();
     }
 }
 
-void CertifyCertificateCommand::doCancel() {
+void CertifyCertificateCommand::doCancel()
+{
     qDebug();
-    if ( d->job )
+    if (d->job) {
         d->job->slotCancel();
+    }
 }
 
-void CertifyCertificateCommand::Private::ensureDialogCreated() {
-    if ( dialog )
+void CertifyCertificateCommand::Private::ensureDialogCreated()
+{
+    if (dialog) {
         return;
+    }
 
     dialog = new CertifyCertificateDialog;
-    applyWindowID( dialog );
-    dialog->setAttribute( Qt::WA_DeleteOnClose );
+    applyWindowID(dialog);
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
 
-    connect( dialog, SIGNAL(rejected()), q, SLOT(slotDialogRejected()) );
-    connect( dialog, SIGNAL(certificationPrepared()), q, SLOT(slotCertificationPrepared()) );
+    connect(dialog, SIGNAL(rejected()), q, SLOT(slotDialogRejected()));
+    connect(dialog, SIGNAL(certificationPrepared()), q, SLOT(slotCertificationPrepared()));
 }
 
-void CertifyCertificateCommand::Private::createJob() {
-    if ( dialog )
-        disconnect( dialog, SIGNAL(certificationPrepared()), q, SLOT(slotCertificationPrepared()) );
+void CertifyCertificateCommand::Private::createJob()
+{
+    if (dialog) {
+        disconnect(dialog, SIGNAL(certificationPrepared()), q, SLOT(slotCertificationPrepared()));
+    }
 
-    assert( !job );
+    assert(!job);
 
-    assert( key().protocol() == OpenPGP );
-    const CryptoBackend::Protocol * const backend = CryptoBackendFactory::instance()->protocol( key().protocol() );
-    if ( !backend )
+    assert(key().protocol() == OpenPGP);
+    const CryptoBackend::Protocol *const backend = CryptoBackendFactory::instance()->protocol(key().protocol());
+    if (!backend) {
         return;
+    }
 
-    SignKeyJob * const j = backend->signKeyJob();
-    if ( !j )
+    SignKeyJob *const j = backend->signKeyJob();
+    if (!j) {
         return;
+    }
 
-    connect( j, SIGNAL(progress(QString,int,int)),
-             q, SIGNAL(progress(QString,int,int)) );
-    connect( j, SIGNAL(result(GpgME::Error)),
-             q, SLOT(slotResult(GpgME::Error)) );
+    connect(j, SIGNAL(progress(QString,int,int)),
+            q, SIGNAL(progress(QString,int,int)));
+    connect(j, SIGNAL(result(GpgME::Error)),
+            q, SLOT(slotResult(GpgME::Error)));
 
     job = j;
 }
-
 
 #undef d
 #undef q

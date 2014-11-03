@@ -20,4 +20,3 @@
 #include "kleo_ui_debug.h"
 Q_LOGGING_CATEGORY(KLEO_UI_LOG, "log_kleo_ui")
 
-

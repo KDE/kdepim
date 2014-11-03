@@ -37,43 +37,46 @@
 
 #include <QtCore/QString>
 
-namespace GpgME {
-    class Error;
-    class Key;
+namespace GpgME
+{
+class Error;
+class Key;
 }
 
-namespace Kleo {
+namespace Kleo
+{
 
-  /**
-     @short An abstract base class to asynchronously add UIDs to OpenPGP keys
+/**
+   @short An abstract base class to asynchronously add UIDs to OpenPGP keys
 
-     To use a AddUserIDJob, first obtain an instance from the
-     CryptoBackend implementation, connect the progress() and result()
-     signals to suitable slots and then start the job with a call
-     to start(). This call might fail, in which case the AddUserIDJob
-     instance will have scheduled it's own destruction with a call to
-     QObject::deleteLater().
+   To use a AddUserIDJob, first obtain an instance from the
+   CryptoBackend implementation, connect the progress() and result()
+   signals to suitable slots and then start the job with a call
+   to start(). This call might fail, in which case the AddUserIDJob
+   instance will have scheduled it's own destruction with a call to
+   QObject::deleteLater().
 
-     After result() is emitted, the AddUserIDJob will schedule it's own
-     destruction by calling QObject::deleteLater().
-  */
-  class KLEO_EXPORT AddUserIDJob : public Job {
+   After result() is emitted, the AddUserIDJob will schedule it's own
+   destruction by calling QObject::deleteLater().
+*/
+class KLEO_EXPORT AddUserIDJob : public Job
+{
     Q_OBJECT
-  protected:
-    explicit AddUserIDJob( QObject * parent );
-  public:
+protected:
+    explicit AddUserIDJob(QObject *parent);
+public:
     ~AddUserIDJob();
 
     /**
        Starts the operation. \a key is the key to add the UID to. \a
        name, \a email and \a comment are the components of the user id.
     */
-    virtual GpgME::Error start( const GpgME::Key & key, const QString & name,
-                                const QString & email, const QString & comment=QString() ) = 0;
+    virtual GpgME::Error start(const GpgME::Key &key, const QString &name,
+                               const QString &email, const QString &comment = QString()) = 0;
 
-  Q_SIGNALS:
-    void result( const GpgME::Error & result, const QString & auditLogAsHtml=QString(), const GpgME::Error & auditLogError=GpgME::Error() );
-  };
+Q_SIGNALS:
+    void result(const GpgME::Error &result, const QString &auditLogAsHtml = QString(), const GpgME::Error &auditLogError = GpgME::Error());
+};
 
 }
 

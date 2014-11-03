@@ -37,27 +37,28 @@
 
 #include "threadedjobmixin.h"
 
-namespace Kleo {
+namespace Kleo
+{
 
-  class QGpgMEChangeExpiryJob
+class QGpgMEChangeExpiryJob
 #ifdef Q_MOC_RUN
     : public ChangeExpiryJob
 #else
     : public _detail::ThreadedJobMixin<ChangeExpiryJob>
 #endif
-  {
+{
     Q_OBJECT
 #ifdef Q_MOC_RUN
-  private Q_SLOTS:
+private Q_SLOTS:
     void slotFinished();
 #endif
-  public:
-    explicit QGpgMEChangeExpiryJob( GpgME::Context * context );
+public:
+    explicit QGpgMEChangeExpiryJob(GpgME::Context *context);
     ~QGpgMEChangeExpiryJob();
 
     /*! \reimp from ChangeExpiryJob */
-    GpgME::Error start( const GpgME::Key & key, const QDateTime & expiry );
-  };
+    GpgME::Error start(const GpgME::Key &key, const QDateTime &expiry);
+};
 
 }
 

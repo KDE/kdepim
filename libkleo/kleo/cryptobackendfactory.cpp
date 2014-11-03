@@ -55,55 +55,57 @@
 
 #include <cassert>
 
-Kleo::CryptoBackendFactory * Kleo::CryptoBackendFactory::mSelf = 0;
+Kleo::CryptoBackendFactory *Kleo::CryptoBackendFactory::mSelf = 0;
 
 static const char *const availableProtocols[] = {
 #ifndef KDEPIM_ONLY_KLEO
-  "Chiasmus",
+    "Chiasmus",
 #endif
-  "OpenPGP", "SMIME",
+    "OpenPGP", "SMIME",
 };
-static const unsigned int numAvailableProtocols = sizeof availableProtocols / sizeof *availableProtocols;
+static const unsigned int numAvailableProtocols = sizeof availableProtocols / sizeof * availableProtocols;
 
 Kleo::CryptoBackendFactory::CryptoBackendFactory()
-  : QObject( qApp ),
-    mConfigObject( 0 ),
-    mAvailableProtocols( availableProtocols, availableProtocols + numAvailableProtocols )
+    : QObject(qApp),
+      mConfigObject(0),
+      mAvailableProtocols(availableProtocols, availableProtocols + numAvailableProtocols)
 {
-  setObjectName(QLatin1String("CryptoBackendFactory::instance()"));
-   mBackendList.push_back( new QGpgMEBackend() );
+    setObjectName(QLatin1String("CryptoBackendFactory::instance()"));
+    mBackendList.push_back(new QGpgMEBackend());
 #if 0 // disabled for kde-3.3
-  mBackendList.push_back( new PGP2Backend() );
-  mBackendList.push_back( new PGP5Backend() );
-  mBackendList.push_back( new PGP6Backend() );
-  mBackendList.push_back( new GPG1Backend() );
+    mBackendList.push_back(new PGP2Backend());
+    mBackendList.push_back(new PGP5Backend());
+    mBackendList.push_back(new PGP6Backend());
+    mBackendList.push_back(new GPG1Backend());
 #endif
 #ifndef KDEPIM_ONLY_KLEO
-  mBackendList.push_back( new ChiasmusBackend() );
+    mBackendList.push_back(new ChiasmusBackend());
 #endif
-  scanForBackends();
-  readConfig();
+    scanForBackends();
+    readConfig();
 
-  mSelf = this; // last!
+    mSelf = this; // last!
 }
 
-Kleo::CryptoBackendFactory::~CryptoBackendFactory() {
-  mSelf = 0; // first!
+Kleo::CryptoBackendFactory::~CryptoBackendFactory()
+{
+    mSelf = 0; // first!
 
-  for ( std::vector<CryptoBackend*>::iterator it = mBackendList.begin() ; it != mBackendList.end() ; ++it ) {
-    delete *it;
-    *it = 0;
-  }
-  delete mConfigObject;
-  mConfigObject = 0;
+    for (std::vector<CryptoBackend *>::iterator it = mBackendList.begin() ; it != mBackendList.end() ; ++it) {
+        delete *it;
+        *it = 0;
+    }
+    delete mConfigObject;
+    mConfigObject = 0;
 }
 
-Kleo::CryptoBackendFactory * Kleo::CryptoBackendFactory::instance() {
-  if ( !mSelf )
-    mSelf = new CryptoBackendFactory();
-  return mSelf;
+Kleo::CryptoBackendFactory *Kleo::CryptoBackendFactory::instance()
+{
+    if (!mSelf) {
+        mSelf = new CryptoBackendFactory();
+    }
+    return mSelf;
 }
-
 
 // const Kleo::CryptoBackend* Kleo::CryptoBackendFactory::smimeBackend() const {
 //   return mSMIMEBackend;
@@ -113,174 +115,209 @@ Kleo::CryptoBackendFactory * Kleo::CryptoBackendFactory::instance() {
 //   return mOpenPGPBackend;
 // }
 
-const Kleo::CryptoBackend::Protocol * Kleo::CryptoBackendFactory::smime() const {
-  const BackendMap::const_iterator it = mBackends.find( "SMIME" );
-  if ( it == mBackends.end() )
-    return 0;
-  if ( !it->second )
-    return 0;
-  return it->second->smime();
-}
-
-const Kleo::CryptoBackend::Protocol * Kleo::CryptoBackendFactory::openpgp() const {
-  const BackendMap::const_iterator it = mBackends.find( "OpenPGP" );
-  if ( it == mBackends.end() )
-    return 0;
-  if ( !it->second )
-    return 0;
-  return it->second->openpgp();
-}
-
-const Kleo::CryptoBackend::Protocol * Kleo::CryptoBackendFactory::protocol( const char * name ) const {
-  const BackendMap::const_iterator it = mBackends.find( name );
-  if ( it == mBackends.end() )
-    return 0;
-  if ( !it->second )
-    return 0;
-  return it->second->protocol( name );
-}
-
-const Kleo::CryptoBackend::Protocol * Kleo::CryptoBackendFactory::protocol( GpgME::Protocol proto ) const {
-    if ( proto == GpgME::OpenPGP )
-        return openpgp();
-    else if ( proto == GpgME::CMS )
-        return smime();
-    else
+const Kleo::CryptoBackend::Protocol *Kleo::CryptoBackendFactory::smime() const
+{
+    const BackendMap::const_iterator it = mBackends.find("SMIME");
+    if (it == mBackends.end()) {
         return 0;
-}
-
-Kleo::CryptoConfig * Kleo::CryptoBackendFactory::config() const {
-  // ## should we use mSMIMEBackend? mOpenPGPBackend? backend(0) i.e. always qgpgme?
-  return backend( 0 ) ? backend( 0 )->config() : 0;
-}
-
-bool Kleo::CryptoBackendFactory::hasBackends() const {
-  return !mBackendList.empty();
-}
-
-void Kleo::CryptoBackendFactory::scanForBackends( QStringList * reasons ) {
-  for ( std::vector<CryptoBackend*>::const_iterator it = mBackendList.begin() ; it != mBackendList.end() ; ++it ) {
-    assert( *it );
-    for ( int i = 0 ;; ++i ) {
-      const char * protocol = (*it)->enumerateProtocols( i );
-      if ( !protocol )
-        break;
-      QString reason;
-      if ( (*it)->supportsProtocol( protocol ) && !(*it)->checkForProtocol( protocol, &reason ) ) {
-        if ( reasons ) {
-          reasons->push_back( i18n("While scanning for %1 support in backend %2:",
-                                   QLatin1String(protocol), (*it)->displayName() ) );
-          reasons->push_back( QLatin1String("  ") + reason );
-        }
-      }
     }
-  }
+    if (!it->second) {
+        return 0;
+    }
+    return it->second->smime();
 }
 
-const Kleo::CryptoBackend * Kleo::CryptoBackendFactory::backend( unsigned int idx ) const {
-  return ( idx < mBackendList.size() ) ? mBackendList[idx] : 0 ;
+const Kleo::CryptoBackend::Protocol *Kleo::CryptoBackendFactory::openpgp() const
+{
+    const BackendMap::const_iterator it = mBackends.find("OpenPGP");
+    if (it == mBackends.end()) {
+        return 0;
+    }
+    if (!it->second) {
+        return 0;
+    }
+    return it->second->openpgp();
 }
 
-const Kleo::CryptoBackend * Kleo::CryptoBackendFactory::backendByName( const QString& name ) const {
-  for ( std::vector<CryptoBackend*>::const_iterator it = mBackendList.begin() ; it != mBackendList.end() ; ++it ) {
-    if ( (*it)->name() == name )
-      return *it;
-  }
-  return 0;
+const Kleo::CryptoBackend::Protocol *Kleo::CryptoBackendFactory::protocol(const char *name) const
+{
+    const BackendMap::const_iterator it = mBackends.find(name);
+    if (it == mBackends.end()) {
+        return 0;
+    }
+    if (!it->second) {
+        return 0;
+    }
+    return it->second->protocol(name);
 }
 
-KConfig* Kleo::CryptoBackendFactory::configObject() const {
-  if ( !mConfigObject )
-    // this is unsafe. We're a lib, used by concurrent apps.
-    mConfigObject = new KConfig( QLatin1String("libkleopatrarc") );
-  return mConfigObject;
+const Kleo::CryptoBackend::Protocol *Kleo::CryptoBackendFactory::protocol(GpgME::Protocol proto) const
+{
+    if (proto == GpgME::OpenPGP) {
+        return openpgp();
+    } else if (proto == GpgME::CMS) {
+        return smime();
+    } else {
+        return 0;
+    }
 }
 
-void Kleo::CryptoBackendFactory::setSMIMEBackend( const CryptoBackend* backend ) {
-  setProtocolBackend( "SMIME", backend );
+Kleo::CryptoConfig *Kleo::CryptoBackendFactory::config() const
+{
+    // ## should we use mSMIMEBackend? mOpenPGPBackend? backend(0) i.e. always qgpgme?
+    return backend(0) ? backend(0)->config() : 0;
 }
 
-void Kleo::CryptoBackendFactory::setOpenPGPBackend( const CryptoBackend* backend ) {
-  setProtocolBackend( "OpenPGP", backend );
+bool Kleo::CryptoBackendFactory::hasBackends() const
+{
+    return !mBackendList.empty();
 }
 
-void Kleo::CryptoBackendFactory::setProtocolBackend( const char * protocol, const CryptoBackend * backend ) {
-  const QString name = backend ? backend->name() : QString() ;
-  KConfigGroup group( configObject(), "Backends" );
-  group.writeEntry( protocol, name );
-  configObject()->sync();
-  mBackends[protocol] = backend;
+void Kleo::CryptoBackendFactory::scanForBackends(QStringList *reasons)
+{
+    for (std::vector<CryptoBackend *>::const_iterator it = mBackendList.begin() ; it != mBackendList.end() ; ++it) {
+        assert(*it);
+        for (int i = 0 ;; ++i) {
+            const char *protocol = (*it)->enumerateProtocols(i);
+            if (!protocol) {
+                break;
+            }
+            QString reason;
+            if ((*it)->supportsProtocol(protocol) && !(*it)->checkForProtocol(protocol, &reason)) {
+                if (reasons) {
+                    reasons->push_back(i18n("While scanning for %1 support in backend %2:",
+                                            QLatin1String(protocol), (*it)->displayName()));
+                    reasons->push_back(QLatin1String("  ") + reason);
+                }
+            }
+        }
+    }
 }
 
-static const char * defaultBackend( const char * proto ) {
-  static const struct {
-    const char * proto;
-    const char * backend;
-  } defaults[] = {
-    { "OpenPGP", "gpgme" },
-    { "SMIME", "gpgme" },
-#ifndef KDEPIM_ONLY_KLEO
-    { "Chiasmus", "chiasmus" },
-#endif
-  };
-  for ( unsigned int i = 0 ; i < sizeof defaults / sizeof *defaults ; ++i )
-    if ( qstricmp( proto, defaults[i].proto ) == 0 )
-      return defaults[i].backend;
-  return 0;
+const Kleo::CryptoBackend *Kleo::CryptoBackendFactory::backend(unsigned int idx) const
+{
+    return (idx < mBackendList.size()) ? mBackendList[idx] : 0 ;
 }
 
-void Kleo::CryptoBackendFactory::readConfig() {
-  mBackends.clear();
-  const KConfigGroup group( configObject(), "Backends" );
-  for ( ProtocolSet::const_iterator it = mAvailableProtocols.begin(), end = mAvailableProtocols.end() ; it != end ; ++it ) {
-    const QString backend = group.readEntry( *it );
-    mBackends[*it] = backendByName( backend.isEmpty() ? QString::fromLatin1( defaultBackend( *it ) ) : backend );
-  }
-}
-
-const char * Kleo::CryptoBackendFactory::enumerateProtocols( int i ) const {
-  if ( i < 0 || static_cast<unsigned int>( i ) >= mAvailableProtocols.size() )
+const Kleo::CryptoBackend *Kleo::CryptoBackendFactory::backendByName(const QString &name) const
+{
+    for (std::vector<CryptoBackend *>::const_iterator it = mBackendList.begin() ; it != mBackendList.end() ; ++it) {
+        if ((*it)->name() == name) {
+            return *it;
+        }
+    }
     return 0;
-  return mAvailableProtocols[i];
 }
 
-namespace {
-  class CaseInsensitiveString {
-    const char * m;
-  public:
-    CaseInsensitiveString( const char * s ) : m( s ) {}
+KConfig *Kleo::CryptoBackendFactory::configObject() const
+{
+    if (!mConfigObject)
+        // this is unsafe. We're a lib, used by concurrent apps.
+    {
+        mConfigObject = new KConfig(QLatin1String("libkleopatrarc"));
+    }
+    return mConfigObject;
+}
+
+void Kleo::CryptoBackendFactory::setSMIMEBackend(const CryptoBackend *backend)
+{
+    setProtocolBackend("SMIME", backend);
+}
+
+void Kleo::CryptoBackendFactory::setOpenPGPBackend(const CryptoBackend *backend)
+{
+    setProtocolBackend("OpenPGP", backend);
+}
+
+void Kleo::CryptoBackendFactory::setProtocolBackend(const char *protocol, const CryptoBackend *backend)
+{
+    const QString name = backend ? backend->name() : QString() ;
+    KConfigGroup group(configObject(), "Backends");
+    group.writeEntry(protocol, name);
+    configObject()->sync();
+    mBackends[protocol] = backend;
+}
+
+static const char *defaultBackend(const char *proto)
+{
+    static const struct {
+        const char *proto;
+        const char *backend;
+    } defaults[] = {
+        { "OpenPGP", "gpgme" },
+        { "SMIME", "gpgme" },
+#ifndef KDEPIM_ONLY_KLEO
+        { "Chiasmus", "chiasmus" },
+#endif
+    };
+    for (unsigned int i = 0 ; i < sizeof defaults / sizeof * defaults ; ++i)
+        if (qstricmp(proto, defaults[i].proto) == 0) {
+            return defaults[i].backend;
+        }
+    return 0;
+}
+
+void Kleo::CryptoBackendFactory::readConfig()
+{
+    mBackends.clear();
+    const KConfigGroup group(configObject(), "Backends");
+    for (ProtocolSet::const_iterator it = mAvailableProtocols.begin(), end = mAvailableProtocols.end() ; it != end ; ++it) {
+        const QString backend = group.readEntry(*it);
+        mBackends[*it] = backendByName(backend.isEmpty() ? QString::fromLatin1(defaultBackend(*it)) : backend);
+    }
+}
+
+const char *Kleo::CryptoBackendFactory::enumerateProtocols(int i) const
+{
+    if (i < 0 || static_cast<unsigned int>(i) >= mAvailableProtocols.size()) {
+        return 0;
+    }
+    return mAvailableProtocols[i];
+}
+
+namespace
+{
+class CaseInsensitiveString
+{
+    const char *m;
+public:
+    CaseInsensitiveString(const char *s) : m(s) {}
 #define make_operator( op ) \
     bool operator op( const CaseInsensitiveString & other ) const { \
-      return qstricmp( m, other.m ) op 0; \
+        return qstricmp( m, other.m ) op 0; \
     } \
     bool operator op( const char * other ) const { \
-      return qstricmp( m, other ) op 0; \
+        return qstricmp( m, other ) op 0; \
     }
-    make_operator( == )
-    make_operator( != )
-    make_operator( < )
-    make_operator( > )
-    make_operator( <= )
-    make_operator( >= )
+    make_operator( ==)
+    make_operator( !=)
+    make_operator( <)
+    make_operator( >)
+    make_operator( <=)
+    make_operator( >=)
 #undef make_operator
-    operator const char *() const { return m; }
-  };
+    operator const char *() const
+    {
+        return m;
+    }
+};
 #define make_ext_operator( op, inv_op ) \
-  inline bool operator op( const char * lhs, const CaseInsensitiveString & rhs ) { \
-    return rhs.operator inv_op( lhs ); \
-  }
-  make_ext_operator( ==, == )
-  make_ext_operator( !=, != )
-  make_ext_operator( <, > )
-  make_ext_operator( >, < )
-  make_ext_operator( <=, >= )
-  make_ext_operator( >=, <= )
+    inline bool operator op( const char * lhs, const CaseInsensitiveString & rhs ) { \
+        return rhs.operator inv_op( lhs ); \
+    }
+make_ext_operator( ==, ==)
+make_ext_operator( !=, !=)
+make_ext_operator(<, >)
+make_ext_operator( >, <)
+make_ext_operator( <=, >=)
+make_ext_operator( >=, <=)
 #undef make_ext_operator
 
 }
 
-bool Kleo::CryptoBackendFactory::knowsAboutProtocol( const char * name ) const {
-  return std::find( mAvailableProtocols.begin(), mAvailableProtocols.end(),
-                    CaseInsensitiveString( name ) ) != mAvailableProtocols.end();
+bool Kleo::CryptoBackendFactory::knowsAboutProtocol(const char *name) const
+{
+    return std::find(mAvailableProtocols.begin(), mAvailableProtocols.end(),
+                     CaseInsensitiveString(name)) != mAvailableProtocols.end();
 }
 

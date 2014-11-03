@@ -38,63 +38,65 @@
 class QString;
 class QStringList;
 
-namespace Kleo {
+namespace Kleo
+{
 
-    namespace Class {
-        enum {
-            NoClass = 0,
+namespace Class
+{
+enum {
+    NoClass = 0,
 
-            // protocol:
-            CMS          = 0x01,
-            OpenPGP      = 0x02,
+    // protocol:
+    CMS          = 0x01,
+    OpenPGP      = 0x02,
 
-            AnyProtocol  = OpenPGP|CMS,
-            ProtocolMask = AnyProtocol,
+    AnyProtocol  = OpenPGP | CMS,
+    ProtocolMask = AnyProtocol,
 
-            // format:
-            Binary     = 0x04,
-            Ascii      = 0x08,
+    // format:
+    Binary     = 0x04,
+    Ascii      = 0x08,
 
-            AnyFormat  = Binary|Ascii,
-            FormatMask = AnyFormat,
-        
-            // type:
-            DetachedSignature  = 0x010,
-            OpaqueSignature    = 0x020,
-            ClearsignedMessage = 0x040,
+    AnyFormat  = Binary | Ascii,
+    FormatMask = AnyFormat,
 
-            AnySignature       = DetachedSignature|OpaqueSignature|ClearsignedMessage,
+    // type:
+    DetachedSignature  = 0x010,
+    OpaqueSignature    = 0x020,
+    ClearsignedMessage = 0x040,
 
-            CipherText         = 0x080,
+    AnySignature       = DetachedSignature | OpaqueSignature | ClearsignedMessage,
 
-            AnyMessageType     = AnySignature|CipherText,
+    CipherText         = 0x080,
 
-            Importable         = 0x100,
-            Certificate        = 0x200|Importable,
-            ExportedPSM        = 0x400|Importable,
+    AnyMessageType     = AnySignature | CipherText,
 
-            AnyCertStoreType   = Certificate|ExportedPSM,
+    Importable         = 0x100,
+    Certificate        = 0x200 | Importable,
+    ExportedPSM        = 0x400 | Importable,
 
-            CertificateRequest = 0x800,
+    AnyCertStoreType   = Certificate | ExportedPSM,
 
-            CertificateRevocationList = 0x1000,
+    CertificateRequest = 0x800,
 
-            AnyType            = AnyMessageType|AnyCertStoreType|CertificateRequest|CertificateRevocationList,
-            TypeMask           = AnyType
-        };
-    }
+    CertificateRevocationList = 0x1000,
 
-    unsigned int classify( const QString & filename );
-    unsigned int classify( const QStringList & fileNames );
-    unsigned int classifyContent( const QByteArray & data );
+    AnyType            = AnyMessageType | AnyCertStoreType | CertificateRequest | CertificateRevocationList,
+    TypeMask           = AnyType
+};
+}
 
-    QString findSignedData( const QString & signatureFileName );
-    QStringList findSignatures( const QString & signedDataFileName );
-    QString outputFileName( const QString & input );
+unsigned int classify(const QString &filename);
+unsigned int classify(const QStringList &fileNames);
+unsigned int classifyContent(const QByteArray &data);
 
-    const char * outputFileExtension( unsigned int classification );
+QString findSignedData(const QString &signatureFileName);
+QStringList findSignatures(const QString &signedDataFileName);
+QString outputFileName(const QString &input);
 
-    QString printableClassification( unsigned int classification );
+const char *outputFileExtension(unsigned int classification);
+
+QString printableClassification(unsigned int classification);
 
 #define make_convenience( What, Mask )                                  \
     inline bool is##What( const QString & filename ) {                  \
@@ -110,31 +112,34 @@ namespace Kleo {
         return classifcation & Class::What ;                            \
     }
 
-    make_convenience( CMS,     ProtocolMask )
-    make_convenience( OpenPGP, ProtocolMask )
+make_convenience(CMS,     ProtocolMask)
+make_convenience(OpenPGP, ProtocolMask)
 
-    make_convenience( Binary, FormatMask )
-    make_convenience( Ascii,  FormatMask )
+make_convenience(Binary, FormatMask)
+make_convenience(Ascii,  FormatMask)
 
-    make_convenience( DetachedSignature, TypeMask )
-    make_convenience( OpaqueSignature,   TypeMask )
-    make_convenience( CipherText,        TypeMask )
-    make_convenience( AnyMessageType,    TypeMask )
-    make_convenience( CertificateRevocationList, TypeMask )
-    make_convenience( AnyCertStoreType,  TypeMask )
+make_convenience(DetachedSignature, TypeMask)
+make_convenience(OpaqueSignature,   TypeMask)
+make_convenience(CipherText,        TypeMask)
+make_convenience(AnyMessageType,    TypeMask)
+make_convenience(CertificateRevocationList, TypeMask)
+make_convenience(AnyCertStoreType,  TypeMask)
 #undef make_convenience
 
-    inline GpgME::Protocol findProtocol( const unsigned int classifcation ) {
-        if ( isOpenPGP( classifcation ) )
-            return GpgME::OpenPGP;
-        else if ( isCMS( classifcation ) )
-            return GpgME::CMS;
-        else
-            return GpgME::UnknownProtocol;
+inline GpgME::Protocol findProtocol(const unsigned int classifcation)
+{
+    if (isOpenPGP(classifcation)) {
+        return GpgME::OpenPGP;
+    } else if (isCMS(classifcation)) {
+        return GpgME::CMS;
+    } else {
+        return GpgME::UnknownProtocol;
     }
-    inline GpgME::Protocol findProtocol( const QString & filename ) {
-        return findProtocol( classify( filename ) );
-    }
+}
+inline GpgME::Protocol findProtocol(const QString &filename)
+{
+    return findProtocol(classify(filename));
+}
 
 }
 

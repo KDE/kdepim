@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef ARCHIVEMAILINFOTEST_H
 #define ARCHIVEMAILINFOTEST_H
 
@@ -25,7 +24,7 @@ class ArchiveMailInfoTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit ArchiveMailInfoTest(QObject *parent=0);
+    explicit ArchiveMailInfoTest(QObject *parent = 0);
     ~ArchiveMailInfoTest();
 
 private Q_SLOTS:
@@ -33,8 +32,6 @@ private Q_SLOTS:
     void shouldCopyArchiveInfo();
     void shouldRestoreFromSettings();
 };
-
-
 
 #endif // ARCHIVEMAILINFOTEST_H
 

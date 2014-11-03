@@ -58,11 +58,15 @@ using namespace Kleo::Commands;
 using namespace Kleo::Dialogs;
 using namespace GpgME;
 
-class ChangeExpiryCommand::Private : public Command::Private {
+class ChangeExpiryCommand::Private : public Command::Private
+{
     friend class ::Kleo::Commands::ChangeExpiryCommand;
-    ChangeExpiryCommand * q_func() const { return static_cast<ChangeExpiryCommand*>( q ); }
+    ChangeExpiryCommand *q_func() const
+    {
+        return static_cast<ChangeExpiryCommand *>(q);
+    }
 public:
-    explicit Private( ChangeExpiryCommand * qq, KeyListController * c );
+    explicit Private(ChangeExpiryCommand *qq, KeyListController *c);
     ~Private();
 
     void init();
@@ -70,12 +74,12 @@ public:
 private:
     void slotDialogAccepted();
     void slotDialogRejected();
-    void slotResult( const Error & err );
+    void slotResult(const Error &err);
 
 private:
     void ensureDialogCreated();
     void createJob();
-    void showErrorDialog( const Error & error );
+    void showErrorDialog(const Error &error);
     void showSuccessDialog();
 
 private:
@@ -84,15 +88,20 @@ private:
     QPointer<ChangeExpiryJob> job;
 };
 
-
-ChangeExpiryCommand::Private * ChangeExpiryCommand::d_func() { return static_cast<Private*>( d.get() ); }
-const ChangeExpiryCommand::Private * ChangeExpiryCommand::d_func() const { return static_cast<const Private*>( d.get() ); }
+ChangeExpiryCommand::Private *ChangeExpiryCommand::d_func()
+{
+    return static_cast<Private *>(d.get());
+}
+const ChangeExpiryCommand::Private *ChangeExpiryCommand::d_func() const
+{
+    return static_cast<const Private *>(d.get());
+}
 
 #define d d_func()
 #define q q_func()
 
-ChangeExpiryCommand::Private::Private( ChangeExpiryCommand * qq, KeyListController * c )
-    : Command::Private( qq, c ),
+ChangeExpiryCommand::Private::Private(ChangeExpiryCommand *qq, KeyListController *c)
+    : Command::Private(qq, c),
       key(),
       dialog(),
       job()
@@ -100,39 +109,47 @@ ChangeExpiryCommand::Private::Private( ChangeExpiryCommand * qq, KeyListControll
 
 }
 
-ChangeExpiryCommand::Private::~Private() { qDebug(); }
+ChangeExpiryCommand::Private::~Private()
+{
+    qDebug();
+}
 
-ChangeExpiryCommand::ChangeExpiryCommand( KeyListController * c )
-    : Command( new Private( this, c ) )
+ChangeExpiryCommand::ChangeExpiryCommand(KeyListController *c)
+    : Command(new Private(this, c))
 {
     d->init();
 }
 
-ChangeExpiryCommand::ChangeExpiryCommand( QAbstractItemView * v, KeyListController * c )
-    : Command( v, new Private( this, c ) )
+ChangeExpiryCommand::ChangeExpiryCommand(QAbstractItemView *v, KeyListController *c)
+    : Command(v, new Private(this, c))
 {
     d->init();
 }
 
-ChangeExpiryCommand::ChangeExpiryCommand( const GpgME::Key & key )
-    : Command( key, new Private( this, 0 ) )
+ChangeExpiryCommand::ChangeExpiryCommand(const GpgME::Key &key)
+    : Command(key, new Private(this, 0))
 {
     d->init();
 }
 
-void ChangeExpiryCommand::Private::init() {
+void ChangeExpiryCommand::Private::init()
+{
 
 }
 
-ChangeExpiryCommand::~ChangeExpiryCommand() { qDebug(); }
+ChangeExpiryCommand::~ChangeExpiryCommand()
+{
+    qDebug();
+}
 
-void ChangeExpiryCommand::doStart() {
+void ChangeExpiryCommand::doStart()
+{
 
     const std::vector<Key> keys = d->keys();
-    if ( keys.size() != 1 ||
-         keys.front().protocol() != GpgME::OpenPGP ||
-         !keys.front().hasSecret() ||
-         keys.front().subkey(0).isNull() ) {
+    if (keys.size() != 1 ||
+            keys.front().protocol() != GpgME::OpenPGP ||
+            !keys.front().hasSecret() ||
+            keys.front().subkey(0).isNull()) {
         d->finished();
         return;
     }
@@ -140,94 +157,107 @@ void ChangeExpiryCommand::doStart() {
     d->key = keys.front();
 
     d->ensureDialogCreated();
-    assert( d->dialog );
+    assert(d->dialog);
     const Subkey subkey = d->key.subkey(0);
-    d->dialog->setDateOfExpiry( subkey.neverExpires() ? QDate() : QDateTime::fromTime_t( d->key.subkey(0).expirationTime() ).date() );
+    d->dialog->setDateOfExpiry(subkey.neverExpires() ? QDate() : QDateTime::fromTime_t(d->key.subkey(0).expirationTime()).date());
     d->dialog->show();
-    
+
 }
 
-void ChangeExpiryCommand::Private::slotDialogAccepted() {
-    assert( dialog );
+void ChangeExpiryCommand::Private::slotDialogAccepted()
+{
+    assert(dialog);
 
-    static const QTime END_OF_DAY( 23, 59, 59 ); // not used, so as good as any
+    static const QTime END_OF_DAY(23, 59, 59);   // not used, so as good as any
 
-    const QDateTime expiry( dialog->dateOfExpiry(), END_OF_DAY );
+    const QDateTime expiry(dialog->dateOfExpiry(), END_OF_DAY);
 
     qDebug() << "expiry" << expiry;
 
     createJob();
-    assert( job );
+    assert(job);
 
-    if ( const Error err = job->start( key, expiry ) ) {
-        showErrorDialog( err );
+    if (const Error err = job->start(key, expiry)) {
+        showErrorDialog(err);
         finished();
     }
 }
 
-void ChangeExpiryCommand::Private::slotDialogRejected() {
+void ChangeExpiryCommand::Private::slotDialogRejected()
+{
     emit q->canceled();
     finished();
 }
 
-void ChangeExpiryCommand::Private::slotResult( const Error & err ) {
-    if ( err.isCanceled() )
+void ChangeExpiryCommand::Private::slotResult(const Error &err)
+{
+    if (err.isCanceled())
         ;
-    else if ( err )
-        showErrorDialog( err );
-    else
+    else if (err) {
+        showErrorDialog(err);
+    } else {
         showSuccessDialog();
+    }
     finished();
 }
 
-void ChangeExpiryCommand::doCancel() {
+void ChangeExpiryCommand::doCancel()
+{
     qDebug();
-    if ( d->job )
+    if (d->job) {
         d->job->slotCancel();
+    }
 }
 
-void ChangeExpiryCommand::Private::ensureDialogCreated() {
-    if ( dialog )
+void ChangeExpiryCommand::Private::ensureDialogCreated()
+{
+    if (dialog) {
         return;
+    }
 
     dialog = new ExpiryDialog;
-    applyWindowID( dialog );
-    dialog->setAttribute( Qt::WA_DeleteOnClose );
+    applyWindowID(dialog);
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
 
-    connect( dialog, SIGNAL(accepted()), q, SLOT(slotDialogAccepted()) );
-    connect( dialog, SIGNAL(rejected()), q, SLOT(slotDialogRejected()) );
+    connect(dialog, SIGNAL(accepted()), q, SLOT(slotDialogAccepted()));
+    connect(dialog, SIGNAL(rejected()), q, SLOT(slotDialogRejected()));
 }
 
-void ChangeExpiryCommand::Private::createJob() {
-    assert( !job );
+void ChangeExpiryCommand::Private::createJob()
+{
+    assert(!job);
 
-    const CryptoBackend::Protocol * const backend = CryptoBackendFactory::instance()->protocol( key.protocol() );
-    if ( !backend )
+    const CryptoBackend::Protocol *const backend = CryptoBackendFactory::instance()->protocol(key.protocol());
+    if (!backend) {
         return;
+    }
 
-    ChangeExpiryJob * const j = backend->changeExpiryJob();
-    if ( !j )
+    ChangeExpiryJob *const j = backend->changeExpiryJob();
+    if (!j) {
         return;
+    }
 
-    connect( j, SIGNAL(progress(QString,int,int)),
-             q, SIGNAL(progress(QString,int,int)) );
-    connect( j, SIGNAL(result(GpgME::Error)),
-             q, SLOT(slotResult(GpgME::Error)) );
+    connect(j, SIGNAL(progress(QString,int,int)),
+            q, SIGNAL(progress(QString,int,int)));
+    connect(j, SIGNAL(result(GpgME::Error)),
+            q, SLOT(slotResult(GpgME::Error)));
 
     job = j;
 }
 
-void ChangeExpiryCommand::Private::showErrorDialog( const Error & err ) {
-    error( i18n("<p>An error occurred while trying to change "
-                "the expiry date for <b>%1</b>:</p><p>%2</p>",
-                Formatting::formatForComboBox( key ),
-                QString::fromLocal8Bit( err.asString() ) ),
-           i18n("Expiry Date Change Error") );
+void ChangeExpiryCommand::Private::showErrorDialog(const Error &err)
+{
+    error(i18n("<p>An error occurred while trying to change "
+               "the expiry date for <b>%1</b>:</p><p>%2</p>",
+               Formatting::formatForComboBox(key),
+               QString::fromLocal8Bit(err.asString())),
+          i18n("Expiry Date Change Error"));
 }
 
-void ChangeExpiryCommand::Private::showSuccessDialog() {
-    information( i18n("Expiry date changed successfully."),
-                 i18n("Expiry Date Change Succeeded") );
+void ChangeExpiryCommand::Private::showSuccessDialog()
+{
+    information(i18n("Expiry date changed successfully."),
+                i18n("Expiry Date Change Succeeded"));
 }
 
 #undef d

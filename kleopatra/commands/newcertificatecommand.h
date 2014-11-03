@@ -37,30 +37,33 @@
 
 #include <gpgme++/global.h>
 
-namespace Kleo {
-namespace Commands {
+namespace Kleo
+{
+namespace Commands
+{
 
-    class NewCertificateCommand : public Command {
-        Q_OBJECT
-    public:
-        explicit NewCertificateCommand( QAbstractItemView * view, KeyListController * parent );
-        explicit NewCertificateCommand( KeyListController * parent );
-        ~NewCertificateCommand();
+class NewCertificateCommand : public Command
+{
+    Q_OBJECT
+public:
+    explicit NewCertificateCommand(QAbstractItemView *view, KeyListController *parent);
+    explicit NewCertificateCommand(KeyListController *parent);
+    ~NewCertificateCommand();
 
-        void setProtocol( GpgME::Protocol proto );
-        GpgME::Protocol protocol() const;
+    void setProtocol(GpgME::Protocol proto);
+    GpgME::Protocol protocol() const;
 
-    private:
-        /* reimp */ void doStart();
-        /* reimp */ void doCancel();
+private:
+    /* reimp */ void doStart();
+    /* reimp */ void doCancel();
 
-    private:
-        class Private;
-        inline Private * d_func();
-        inline const Private * d_func() const;
-        Q_PRIVATE_SLOT( d_func(), void slotDialogRejected() )
-        Q_PRIVATE_SLOT( d_func(), void slotDialogAccepted() )
-    };
+private:
+    class Private;
+    inline Private *d_func();
+    inline const Private *d_func() const;
+    Q_PRIVATE_SLOT(d_func(), void slotDialogRejected())
+    Q_PRIVATE_SLOT(d_func(), void slotDialogAccepted())
+};
 
 }
 }

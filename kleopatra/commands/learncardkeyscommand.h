@@ -37,32 +37,38 @@
 
 #include <gpgme++/global.h>
 
-namespace Kleo {
-namespace Commands {
+namespace Kleo
+{
+namespace Commands
+{
 
-    class LearnCardKeysCommand : public GnuPGProcessCommand {
-        Q_OBJECT
-    public:
-        explicit LearnCardKeysCommand( GpgME::Protocol proto );
-        ~LearnCardKeysCommand();
+class LearnCardKeysCommand : public GnuPGProcessCommand
+{
+    Q_OBJECT
+public:
+    explicit LearnCardKeysCommand(GpgME::Protocol proto);
+    ~LearnCardKeysCommand();
 
-        GpgME::Protocol protocol() const;
+    GpgME::Protocol protocol() const;
 
-        /* reimp */ static Restrictions restrictions() { return AnyCardCanLearnKeys; }
+    /* reimp */ static Restrictions restrictions()
+    {
+        return AnyCardCanLearnKeys;
+    }
 
-    private:
-        /* reimp */ QStringList arguments() const;
+private:
+    /* reimp */ QStringList arguments() const;
 
-        /* reimp */ QString errorCaption() const;
-        /* reimp */ QString successCaption() const;
+    /* reimp */ QString errorCaption() const;
+    /* reimp */ QString successCaption() const;
 
-        /* reimp */ QString crashExitMessage( const QStringList & ) const;
-        /* reimp */ QString errorExitMessage( const QStringList & ) const;
-        /* reimp */ QString successMessage( const QStringList & ) const;
+    /* reimp */ QString crashExitMessage(const QStringList &) const;
+    /* reimp */ QString errorExitMessage(const QStringList &) const;
+    /* reimp */ QString successMessage(const QStringList &) const;
 
-    private:
-        GpgME::Protocol m_protocol;
-    };
+private:
+    GpgME::Protocol m_protocol;
+};
 
 }
 }

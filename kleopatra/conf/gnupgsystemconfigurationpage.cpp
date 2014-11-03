@@ -42,61 +42,64 @@
 
 using namespace Kleo::Config;
 
-GnuPGSystemConfigurationPage::GnuPGSystemConfigurationPage( QWidget *parent, const QVariantList &args )
-    : KCModule( parent, args )
+GnuPGSystemConfigurationPage::GnuPGSystemConfigurationPage(QWidget *parent, const QVariantList &args)
+    : KCModule(parent, args)
 {
-  QVBoxLayout * lay = new QVBoxLayout( this );
-  lay->setMargin( 0 );
+    QVBoxLayout *lay = new QVBoxLayout(this);
+    lay->setMargin(0);
 
-  CryptoConfig * const config = CryptoBackendFactory::instance()->config();
+    CryptoConfig *const config = CryptoBackendFactory::instance()->config();
 
-  mWidget = new CryptoConfigModule( config,
+    mWidget = new CryptoConfigModule(config,
 #ifdef KDEPIM_MOBILE_UI
-                                    CryptoConfigModule::LinearizedLayout,
+                                     CryptoConfigModule::LinearizedLayout,
 #else
-                                    CryptoConfigModule::TabbedLayout,
+                                     CryptoConfigModule::TabbedLayout,
 #endif
-                                    this );
-  lay->addWidget( mWidget );
+                                     this);
+    lay->addWidget(mWidget);
 
-  connect( mWidget, SIGNAL(changed()), this, SLOT(changed()) );
+    connect(mWidget, SIGNAL(changed()), this, SLOT(changed()));
 
 #ifndef HAVE_UNBROKEN_KCMULTIDIALOG
-  load();
+    load();
 #endif
 }
 
-GnuPGSystemConfigurationPage::~GnuPGSystemConfigurationPage() {
+GnuPGSystemConfigurationPage::~GnuPGSystemConfigurationPage()
+{
     // ### correct here?
-    if ( CryptoConfig * const config = CryptoBackendFactory::instance()->config() )
+    if (CryptoConfig *const config = CryptoBackendFactory::instance()->config()) {
         config->clear();
+    }
 }
 
 void GnuPGSystemConfigurationPage::load()
 {
-  mWidget->reset();
+    mWidget->reset();
 }
 
 void GnuPGSystemConfigurationPage::save()
 {
-  mWidget->save();
+    mWidget->save();
 #if 0
-  // Tell other apps (e.g. kmail) that the gpgconf data might have changed
-  QDBusMessage message =
-      QDBusMessage::createSignal(QString(), "org.kde.kleo.CryptoConfig", "changed");
-  QDBusConnection::sessionBus().send(message);
+    // Tell other apps (e.g. kmail) that the gpgconf data might have changed
+    QDBusMessage message =
+        QDBusMessage::createSignal(QString(), "org.kde.kleo.CryptoConfig", "changed");
+    QDBusConnection::sessionBus().send(message);
 #endif
 }
 
 void GnuPGSystemConfigurationPage::defaults()
 {
-  mWidget->defaults();
+    mWidget->defaults();
 }
 
-extern "C" Q_DECL_EXPORT KCModule *create_kleopatra_config_gnupgsystem( QWidget * parent, const QVariantList & args ) {
-    GnuPGSystemConfigurationPage * page =
-        new GnuPGSystemConfigurationPage( parent, args );
-    page->setObjectName( QLatin1String("kleopatra_config_gnupgsystem") );
+extern "C" Q_DECL_EXPORT KCModule *create_kleopatra_config_gnupgsystem(QWidget *parent, const QVariantList &args)
+{
+    GnuPGSystemConfigurationPage *page =
+        new GnuPGSystemConfigurationPage(parent, args);
+    page->setObjectName(QLatin1String("kleopatra_config_gnupgsystem"));
     return page;
 }
 

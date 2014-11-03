@@ -41,41 +41,42 @@ class KWatchGnuPGConfig;
 class KProcess;
 class KDLogTextWidget;
 
-class KWatchGnuPGMainWindow : public KXmlGuiWindow {
-  Q_OBJECT
+class KWatchGnuPGMainWindow : public KXmlGuiWindow
+{
+    Q_OBJECT
 public:
-  explicit KWatchGnuPGMainWindow( QWidget* parent = 0 );
-  ~KWatchGnuPGMainWindow();
+    explicit KWatchGnuPGMainWindow(QWidget *parent = 0);
+    ~KWatchGnuPGMainWindow();
 
 private Q_SLOTS:
-  void slotWatcherExited(int, QProcess::ExitStatus);
-  void slotReadStdout();
+    void slotWatcherExited(int, QProcess::ExitStatus);
+    void slotReadStdout();
 
-  void slotSaveAs();
-  void slotQuit();
-  void slotClear();
+    void slotSaveAs();
+    void slotQuit();
+    void slotClear();
 
-  void slotConfigure();
-  void slotConfigureToolbars();
-  void configureShortcuts();
-  void slotReadConfig();
+    void slotConfigure();
+    void slotConfigureToolbars();
+    void configureShortcuts();
+    void slotReadConfig();
 
 public Q_SLOTS:
-  /* reimp */ void show();
+    /* reimp */ void show();
 
 protected:
-  /* reimp */ bool queryClose();
+    /* reimp */ bool queryClose();
 
 private:
-  void createActions();
-  void startWatcher();
-  void setGnuPGConfig();
+    void createActions();
+    void startWatcher();
+    void setGnuPGConfig();
 
-  KProcess* mWatcher;
+    KProcess *mWatcher;
 
-  KDLogTextWidget* mCentralWidget;
-  KWatchGnuPGTray* mSysTray;
-  KWatchGnuPGConfig* mConfig;
+    KDLogTextWidget *mCentralWidget;
+    KWatchGnuPGTray *mSysTray;
+    KWatchGnuPGConfig *mConfig;
 };
 
 #endif /* KWATCHGNUPGMAINWIN_H */

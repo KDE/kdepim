@@ -41,11 +41,15 @@ using namespace Kleo;
 using namespace Kleo::Commands;
 using namespace GpgME;
 
-class NewCertificateCommand::Private : public Command::Private {
+class NewCertificateCommand::Private : public Command::Private
+{
     friend class ::Kleo::Commands::NewCertificateCommand;
-    NewCertificateCommand * q_func() const { return static_cast<NewCertificateCommand*>( q ); }
+    NewCertificateCommand *q_func() const
+    {
+        return static_cast<NewCertificateCommand *>(q);
+    }
 public:
-    explicit Private( NewCertificateCommand * qq, KeyListController * c );
+    explicit Private(NewCertificateCommand *qq, KeyListController *c);
     ~Private();
 
     void init();
@@ -62,16 +66,21 @@ private:
     QPointer<NewCertificateWizard> dialog;
 };
 
-
-NewCertificateCommand::Private * NewCertificateCommand::d_func() { return static_cast<Private*>( d.get() ); }
-const NewCertificateCommand::Private * NewCertificateCommand::d_func() const { return static_cast<const Private*>( d.get() ); }
+NewCertificateCommand::Private *NewCertificateCommand::d_func()
+{
+    return static_cast<Private *>(d.get());
+}
+const NewCertificateCommand::Private *NewCertificateCommand::d_func() const
+{
+    return static_cast<const Private *>(d.get());
+}
 
 #define d d_func()
 #define q q_func()
 
-NewCertificateCommand::Private::Private( NewCertificateCommand * qq, KeyListController * c )
-    : Command::Private( qq, c ),
-      protocol( UnknownProtocol ),
+NewCertificateCommand::Private::Private(NewCertificateCommand *qq, KeyListController *c)
+    : Command::Private(qq, c),
+      protocol(UnknownProtocol),
       dialog()
 {
 
@@ -79,72 +88,85 @@ NewCertificateCommand::Private::Private( NewCertificateCommand * qq, KeyListCont
 
 NewCertificateCommand::Private::~Private() {}
 
-NewCertificateCommand::NewCertificateCommand( KeyListController * c )
-    : Command( new Private( this, c ) )
+NewCertificateCommand::NewCertificateCommand(KeyListController *c)
+    : Command(new Private(this, c))
 {
     d->init();
 }
 
-NewCertificateCommand::NewCertificateCommand( QAbstractItemView * v, KeyListController * c )
-    : Command( v, new Private( this, c ) )
+NewCertificateCommand::NewCertificateCommand(QAbstractItemView *v, KeyListController *c)
+    : Command(v, new Private(this, c))
 {
     d->init();
 }
 
-void NewCertificateCommand::Private::init() {
+void NewCertificateCommand::Private::init()
+{
 
 }
 
 NewCertificateCommand::~NewCertificateCommand() {}
 
-void NewCertificateCommand::setProtocol( Protocol proto ) {
+void NewCertificateCommand::setProtocol(Protocol proto)
+{
     d->protocol = proto;
-    if ( d->dialog )
-        d->dialog->setProtocol( proto );
+    if (d->dialog) {
+        d->dialog->setProtocol(proto);
+    }
 }
 
-Protocol NewCertificateCommand::protocol() const {
-    if ( d->dialog )
+Protocol NewCertificateCommand::protocol() const
+{
+    if (d->dialog) {
         return d->dialog->protocol();
-    else
+    } else {
         return d->protocol;
+    }
 }
 
-void NewCertificateCommand::doStart() {
+void NewCertificateCommand::doStart()
+{
 
     d->ensureDialogCreated();
-    assert( d->dialog );
+    assert(d->dialog);
 
-    if ( d->protocol != UnknownProtocol )
-        d->dialog->setProtocol( d->protocol );
+    if (d->protocol != UnknownProtocol) {
+        d->dialog->setProtocol(d->protocol);
+    }
 
     d->dialog->show();
 }
 
-void NewCertificateCommand::Private::slotDialogRejected() {
+void NewCertificateCommand::Private::slotDialogRejected()
+{
     emit q->canceled();
     finished();
 }
 
-void NewCertificateCommand::Private::slotDialogAccepted() {
+void NewCertificateCommand::Private::slotDialogAccepted()
+{
     finished();
 }
 
-void NewCertificateCommand::doCancel() {
-    if ( d->dialog )
+void NewCertificateCommand::doCancel()
+{
+    if (d->dialog) {
         d->dialog->close();
+    }
 }
 
-void NewCertificateCommand::Private::ensureDialogCreated() {
-    if ( dialog )
+void NewCertificateCommand::Private::ensureDialogCreated()
+{
+    if (dialog) {
         return;
+    }
 
     dialog = new NewCertificateWizard;
-    applyWindowID( dialog );
-    dialog->setAttribute( Qt::WA_DeleteOnClose );
+    applyWindowID(dialog);
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
 
-    connect( dialog, SIGNAL(rejected()), q, SLOT(slotDialogRejected()) );
-    connect( dialog, SIGNAL(accepted()), q, SLOT(slotDialogAccepted()) );
+    connect(dialog, SIGNAL(rejected()), q, SLOT(slotDialogRejected()));
+    connect(dialog, SIGNAL(accepted()), q, SLOT(slotDialogAccepted()));
 }
 
 #undef d

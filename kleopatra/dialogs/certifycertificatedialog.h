@@ -33,7 +33,6 @@
 #ifndef __KLEOPATRA_DIALOGS_CERTIFYCERTIFICATEDIALOG_H__
 #define __KLEOPATRA_DIALOGS_CERTIFYCERTIFICATEDIALOG_H__
 
-
 #include <QWizard>
 
 #include <kleo/signkeyjob.h>
@@ -42,50 +41,54 @@
 
 #include <utils/pimpl_ptr.h>
 
-namespace GpgME {
-    class Error;
+namespace GpgME
+{
+class Error;
 }
 
-namespace Kleo {
-    class SignKeyJob;
+namespace Kleo
+{
+class SignKeyJob;
 
-namespace Dialogs {
+namespace Dialogs
+{
 
-    class CertifyCertificateDialog : public QWizard {
-        Q_OBJECT
-    public:
-        explicit CertifyCertificateDialog( QWidget * parent=0, Qt::WindowFlags f=0 );
-        ~CertifyCertificateDialog();
+class CertifyCertificateDialog : public QWizard
+{
+    Q_OBJECT
+public:
+    explicit CertifyCertificateDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    ~CertifyCertificateDialog();
 
-        bool exportableCertificationSelected() const;
+    bool exportableCertificationSelected() const;
 
-        bool trustCertificationSelected() const;
+    bool trustCertificationSelected() const;
 
-        bool nonRevocableCertificationSelected() const;
+    bool nonRevocableCertificationSelected() const;
 
-        void setSelectedUserIDs( const std::vector<GpgME::UserID> & uids );
-        std::vector<unsigned int> selectedUserIDs() const;
+    void setSelectedUserIDs(const std::vector<GpgME::UserID> &uids);
+    std::vector<unsigned int> selectedUserIDs() const;
 
-        void setCertificatesWithSecretKeys( const std::vector<GpgME::Key> & keys );
-        GpgME::Key selectedSecretKey() const;
+    void setCertificatesWithSecretKeys(const std::vector<GpgME::Key> &keys);
+    GpgME::Key selectedSecretKey() const;
 
-        bool sendToServer() const;
+    bool sendToServer() const;
 
-        unsigned int selectedCheckLevel() const;
+    unsigned int selectedCheckLevel() const;
 
-        void setCertificateToCertify( const GpgME::Key & key );
+    void setCertificateToCertify(const GpgME::Key &key);
 
-        void connectJob( Kleo::SignKeyJob * job );
-        void setError( const GpgME::Error & error );
+    void connectJob(Kleo::SignKeyJob *job);
+    void setError(const GpgME::Error &error);
 
-    Q_SIGNALS:
-        void certificationPrepared();
+Q_SIGNALS:
+    void certificationPrepared();
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void certificationResult(GpgME::Error) )
-    };
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void certificationResult(GpgME::Error))
+};
 
 }
 }

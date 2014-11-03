@@ -24,7 +24,7 @@ class RedirectDialogTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit RedirectDialogTest(QObject *parent=0);
+    explicit RedirectDialogTest(QObject *parent = 0);
     ~RedirectDialogTest();
 
 private Q_SLOTS:

@@ -60,48 +60,53 @@ using namespace Kleo::Crypto;
 using namespace boost;
 using namespace GpgME;
 
-namespace {
+namespace
+{
 
-    class SignEMailResult : public Task::Result {
-        const SigningResult m_result;
-        const AuditLog m_auditLog;
-    public:
-        explicit SignEMailResult( const SigningResult & r, const AuditLog & auditLog )
-            : Task::Result(), m_result( r ), m_auditLog( auditLog ) {}
+class SignEMailResult : public Task::Result
+{
+    const SigningResult m_result;
+    const AuditLog m_auditLog;
+public:
+    explicit SignEMailResult(const SigningResult &r, const AuditLog &auditLog)
+        : Task::Result(), m_result(r), m_auditLog(auditLog) {}
 
-        /* reimp */ QString overview() const;
-        /* reimp */ QString details() const;
-        /* reimp */ int errorCode() const;
-        /* reimp */ QString errorString() const;
-        /* reimp */ VisualCode code() const;
-        /* reimp */ AuditLog auditLog() const;
-    };
+    /* reimp */ QString overview() const;
+    /* reimp */ QString details() const;
+    /* reimp */ int errorCode() const;
+    /* reimp */ QString errorString() const;
+    /* reimp */ VisualCode code() const;
+    /* reimp */ AuditLog auditLog() const;
+};
 
-    QString makeResultString( const SigningResult& res )
-    {
-        const Error err = res.error();
+QString makeResultString(const SigningResult &res)
+{
+    const Error err = res.error();
 
-        if ( err.isCanceled() )
-            return i18n( "Signing canceled." );
-
-        if ( err )
-            return i18n( "Signing failed: %1", QString::fromLocal8Bit( err.asString() ).toHtmlEscaped() );
-
-        return i18n( "Signing succeeded." );
+    if (err.isCanceled()) {
+        return i18n("Signing canceled.");
     }
+
+    if (err) {
+        return i18n("Signing failed: %1", QString::fromLocal8Bit(err.asString()).toHtmlEscaped());
+    }
+
+    return i18n("Signing succeeded.");
+}
 }
 
-class SignEMailTask::Private {
+class SignEMailTask::Private
+{
     friend class ::Kleo::Crypto::SignEMailTask;
-    SignEMailTask * const q;
+    SignEMailTask *const q;
 public:
-    explicit Private( SignEMailTask * qq );
+    explicit Private(SignEMailTask *qq);
 
 private:
-    std::auto_ptr<Kleo::SignJob> createJob( GpgME::Protocol proto );
+    std::auto_ptr<Kleo::SignJob> createJob(GpgME::Protocol proto);
 
 private:
-    void slotResult( const SigningResult & );
+    void slotResult(const SigningResult &);
 
 private:
     shared_ptr<Input> input;
@@ -115,60 +120,66 @@ private:
     QPointer<Kleo::SignJob> job;
 };
 
-SignEMailTask::Private::Private( SignEMailTask * qq )
-    : q( qq ),
+SignEMailTask::Private::Private(SignEMailTask *qq)
+    : q(qq),
       input(),
       output(),
       signers(),
-      detached( false ),
-      clearsign( false ),
+      detached(false),
+      clearsign(false),
       micAlg(),
-      job( 0 )
+      job(0)
 {
 
 }
 
-SignEMailTask::SignEMailTask( QObject * p )
-    : Task( p ), d( new Private( this ) )
+SignEMailTask::SignEMailTask(QObject *p)
+    : Task(p), d(new Private(this))
 {
 
 }
 
 SignEMailTask::~SignEMailTask() {}
 
-void SignEMailTask::setInput( const shared_ptr<Input> & input ) {
-    kleo_assert( !d->job );
-    kleo_assert( input );
+void SignEMailTask::setInput(const shared_ptr<Input> &input)
+{
+    kleo_assert(!d->job);
+    kleo_assert(input);
     d->input = input;
 }
 
-void SignEMailTask::setOutput( const shared_ptr<Output> & output ) {
-    kleo_assert( !d->job );
-    kleo_assert( output );
+void SignEMailTask::setOutput(const shared_ptr<Output> &output)
+{
+    kleo_assert(!d->job);
+    kleo_assert(output);
     d->output = output;
 }
 
-void SignEMailTask::setSigners( const std::vector<Key> & signers ) {
-    kleo_assert( !d->job );
-    kleo_assert( !signers.empty() );
-    kleo_assert( kdtools::none_of( signers, mem_fn( &Key::isNull ) ) );
+void SignEMailTask::setSigners(const std::vector<Key> &signers)
+{
+    kleo_assert(!d->job);
+    kleo_assert(!signers.empty());
+    kleo_assert(kdtools::none_of(signers, mem_fn(&Key::isNull)));
     d->signers = signers;
 }
 
-void SignEMailTask::setDetachedSignature( bool detached ) {
-    kleo_assert( !d->job );
+void SignEMailTask::setDetachedSignature(bool detached)
+{
+    kleo_assert(!d->job);
     d->detached = detached;
     d->clearsign = false;
 }
 
-void SignEMailTask::setClearsign( bool clear ) {
-    kleo_assert( !d->job );
+void SignEMailTask::setClearsign(bool clear)
+{
+    kleo_assert(!d->job);
     d->clearsign = clear;
     d->detached = false;
 }
 
-Protocol SignEMailTask::protocol() const {
-    kleo_assert( !d->signers.empty() );
+Protocol SignEMailTask::protocol() const
+{
+    kleo_assert(!d->signers.empty());
     return d->signers.front().protocol();
 }
 
@@ -182,105 +193,120 @@ unsigned long long SignEMailTask::inputSize() const
     return d->input ? d->input->size() : 0;
 }
 
-void SignEMailTask::doStart() {
-    kleo_assert( !d->job );
-    kleo_assert( d->input );
-    kleo_assert( d->output );
-    kleo_assert( !d->signers.empty() );
+void SignEMailTask::doStart()
+{
+    kleo_assert(!d->job);
+    kleo_assert(d->input);
+    kleo_assert(d->output);
+    kleo_assert(!d->signers.empty());
 
     d->micAlg.clear();
 
-    std::auto_ptr<Kleo::SignJob> job = d->createJob( protocol() );
-    kleo_assert( job.get() );
+    std::auto_ptr<Kleo::SignJob> job = d->createJob(protocol());
+    kleo_assert(job.get());
 
-    job->start( d->signers,
-                d->input->ioDevice(), d->output->ioDevice(),
-                d->clearsign ? GpgME::Clearsigned : d->detached ? GpgME::Detached : GpgME::NormalSignatureMode );
+    job->start(d->signers,
+               d->input->ioDevice(), d->output->ioDevice(),
+               d->clearsign ? GpgME::Clearsigned : d->detached ? GpgME::Detached : GpgME::NormalSignatureMode);
 
     d->job = job.release();
 }
 
-void SignEMailTask::cancel() {
-    if ( d->job )
+void SignEMailTask::cancel()
+{
+    if (d->job) {
         d->job->slotCancel();
+    }
 }
 
-std::auto_ptr<Kleo::SignJob> SignEMailTask::Private::createJob( GpgME::Protocol proto ) {
-    const CryptoBackend::Protocol * const backend = CryptoBackendFactory::instance()->protocol( proto );
-    kleo_assert( backend );
-    bool shouldArmor = ( proto == OpenPGP || q->asciiArmor() ) && !output->binaryOpt();
-    std::auto_ptr<Kleo::SignJob> signJob( backend->signJob( /*armor=*/ shouldArmor, /*textmode=*/false ) );
-    kleo_assert( signJob.get() );
-    if ( proto == CMS && !q->asciiArmor() && !output->binaryOpt() )
-        signJob->setOutputIsBase64Encoded( true );
-    connect( signJob.get(), SIGNAL(progress(QString,int,int)),
-             q, SLOT(setProgress(QString,int,int)) );
-    connect( signJob.get(), SIGNAL(result(GpgME::SigningResult,QByteArray)),
-             q, SLOT(slotResult(GpgME::SigningResult)) );
+std::auto_ptr<Kleo::SignJob> SignEMailTask::Private::createJob(GpgME::Protocol proto)
+{
+    const CryptoBackend::Protocol *const backend = CryptoBackendFactory::instance()->protocol(proto);
+    kleo_assert(backend);
+    bool shouldArmor = (proto == OpenPGP || q->asciiArmor()) && !output->binaryOpt();
+    std::auto_ptr<Kleo::SignJob> signJob(backend->signJob(/*armor=*/ shouldArmor, /*textmode=*/false));
+    kleo_assert(signJob.get());
+    if (proto == CMS && !q->asciiArmor() && !output->binaryOpt()) {
+        signJob->setOutputIsBase64Encoded(true);
+    }
+    connect(signJob.get(), SIGNAL(progress(QString,int,int)),
+            q, SLOT(setProgress(QString,int,int)));
+    connect(signJob.get(), SIGNAL(result(GpgME::SigningResult,QByteArray)),
+            q, SLOT(slotResult(GpgME::SigningResult)));
     return signJob;
 }
 
-static QString collect_micalgs( const GpgME::SigningResult & result, GpgME::Protocol proto ) {
+static QString collect_micalgs(const GpgME::SigningResult &result, GpgME::Protocol proto)
+{
     const std::vector<GpgME::CreatedSignature> css = result.createdSignatures();
     QStringList micalgs;
 #ifndef DASHBOT_HAS_STABLE_COMPILER
-    Q_FOREACH( const GpgME::CreatedSignature & sig, css )
-        micalgs.push_back( QString::fromLatin1( sig.hashAlgorithmAsString() ).toLower() );
+    Q_FOREACH (const GpgME::CreatedSignature &sig, css) {
+        micalgs.push_back(QString::fromLatin1(sig.hashAlgorithmAsString()).toLower());
+    }
 #else
-    std::transform( css.begin(), css.end(),
-                    std::back_inserter( micalgs ),
-                    boost::bind( &QString::toLower, boost::bind( &QString::fromLatin1, boost::bind( &GpgME::CreatedSignature::hashAlgorithmAsString, _1 ), -1 ) ) );
+    std::transform(css.begin(), css.end(),
+                   std::back_inserter(micalgs),
+                   boost::bind(&QString::toLower, boost::bind(&QString::fromLatin1, boost::bind(&GpgME::CreatedSignature::hashAlgorithmAsString, _1), -1)));
 #endif
-    if ( proto == GpgME::OpenPGP )
-        for ( QStringList::iterator it = micalgs.begin(), end = micalgs.end() ; it != end ; ++it )
-            it->prepend( QLatin1String("pgp-") );
+    if (proto == GpgME::OpenPGP)
+        for (QStringList::iterator it = micalgs.begin(), end = micalgs.end() ; it != end ; ++it) {
+            it->prepend(QLatin1String("pgp-"));
+        }
     micalgs.sort();
-    micalgs.erase( std::unique( micalgs.begin(), micalgs.end() ), micalgs.end() );
-    return micalgs.join( QLatin1String(",") );
+    micalgs.erase(std::unique(micalgs.begin(), micalgs.end()), micalgs.end());
+    return micalgs.join(QLatin1String(","));
 }
 
-void SignEMailTask::Private::slotResult( const SigningResult & result ) {
-    const Job * const job = qobject_cast<const Job*>( q->sender() );
-    if ( result.error().code() ) {
+void SignEMailTask::Private::slotResult(const SigningResult &result)
+{
+    const Job *const job = qobject_cast<const Job *>(q->sender());
+    if (result.error().code()) {
         output->cancel();
     } else {
         output->finalize();
-        micAlg = collect_micalgs( result, q->protocol() );
+        micAlg = collect_micalgs(result, q->protocol());
     }
-    q->emitResult( shared_ptr<Result>( new SignEMailResult( result, AuditLog::fromJob( job ) ) ) );
+    q->emitResult(shared_ptr<Result>(new SignEMailResult(result, AuditLog::fromJob(job))));
 }
 
-QString SignEMailTask::micAlg() const {
+QString SignEMailTask::micAlg() const
+{
     return d->micAlg;
 }
 
-
-QString SignEMailResult::overview() const {
-    return makeOverview( makeResultString( m_result ) );
+QString SignEMailResult::overview() const
+{
+    return makeOverview(makeResultString(m_result));
 }
 
-QString SignEMailResult::details() const {
+QString SignEMailResult::details() const
+{
     return QString();
 }
 
-int SignEMailResult::errorCode() const {
+int SignEMailResult::errorCode() const
+{
     return m_result.error().encodedError();
 }
 
-QString SignEMailResult::errorString() const {
-    return hasError() ? makeResultString( m_result ) : QString();
+QString SignEMailResult::errorString() const
+{
+    return hasError() ? makeResultString(m_result) : QString();
 }
 
-Task::Result::VisualCode SignEMailResult::code() const {
-    if ( m_result.error().isCanceled() )
+Task::Result::VisualCode SignEMailResult::code() const
+{
+    if (m_result.error().isCanceled()) {
         return Warning;
+    }
     return m_result.error().code() ? NeutralError : NeutralSuccess;
 }
 
-AuditLog SignEMailResult::auditLog() const {
+AuditLog SignEMailResult::auditLog() const
+{
     return m_auditLog;
 }
 
 #include "moc_signemailtask.cpp"
-
 

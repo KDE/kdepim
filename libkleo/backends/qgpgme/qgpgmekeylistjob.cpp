@@ -52,106 +52,118 @@ using namespace Kleo;
 using namespace GpgME;
 using namespace boost;
 
-QGpgMEKeyListJob::QGpgMEKeyListJob( Context * context )
-  : mixin_type( context ),
-    mResult(), mSecretOnly( false )
+QGpgMEKeyListJob::QGpgMEKeyListJob(Context *context)
+    : mixin_type(context),
+      mResult(), mSecretOnly(false)
 {
-  lateInitialization();
+    lateInitialization();
 }
 
 QGpgMEKeyListJob::~QGpgMEKeyListJob() {}
 
-static KeyListResult do_list_keys( Context * ctx, const QStringList & pats, std::vector<Key> & keys, bool secretOnly ) {
+static KeyListResult do_list_keys(Context *ctx, const QStringList &pats, std::vector<Key> &keys, bool secretOnly)
+{
 
-  const _detail::PatternConverter pc( pats );
+    const _detail::PatternConverter pc(pats);
 
-  if ( const Error err = ctx->startKeyListing( pc.patterns(), secretOnly ) )
-    return KeyListResult( 0, err );
-
-  Error err;
-  do
-    keys.push_back( ctx->nextKey( err ) );
-  while ( !err );
-
-  keys.pop_back();
-
-  const KeyListResult result = ctx->endKeyListing();
-  ctx->cancelPendingOperation();
-  return result;
-}
-
-static QGpgMEKeyListJob::result_type list_keys( Context * ctx, QStringList pats, bool secretOnly ) {
-  if ( pats.size() < 2 ) {
-    std::vector<Key> keys;
-    const KeyListResult r = do_list_keys( ctx, pats, keys, secretOnly );
-    return boost::make_tuple( r, keys, QString(), Error() );
-  }
-
-  // The communication channel between gpgme and gpgsm is limited in
-  // the number of patterns that can be transported, but they won't
-  // say to how much, so we need to find out ourselves if we get a
-  // LINE_TOO_LONG error back...
-
-  // We could of course just feed them single patterns, and that would
-  // probably be easier, but the performance penalty would currently
-  // be noticeable.
-
-  unsigned int chunkSize = pats.size();
-retry:
-  std::vector<Key> keys;
-  keys.reserve( pats.size() );
-  KeyListResult result;
-  do {
-    const KeyListResult this_result = do_list_keys( ctx, pats.mid( 0, chunkSize ), keys, secretOnly );
-    if ( this_result.error().code() == GPG_ERR_LINE_TOO_LONG ) {
-      // got LINE_TOO_LONG, try a smaller chunksize:
-      chunkSize /= 2;
-      if ( chunkSize < 1 )
-        // chunks smaller than one can't be -> return the error.
-        return boost::make_tuple( this_result, keys, QString(), Error() );
-      else
-        goto retry;
-    } else if ( this_result.error().code() == GPG_ERR_EOF ) {
-        // early end of keylisting (can happen when ~/.gnupg doesn't
-        // exist). Fakeing an empty result:
-        return boost::make_tuple( KeyListResult(), std::vector<Key>(), QString(), Error() );
+    if (const Error err = ctx->startKeyListing(pc.patterns(), secretOnly)) {
+        return KeyListResult(0, err);
     }
-    // ok, that seemed to work...
-    result.mergeWith( this_result );
-    if ( result.error().code() )
-      break;
-    pats = pats.mid( chunkSize );
-  } while ( !pats.empty() );
-  return boost::make_tuple( result, keys, QString(), Error() );
+
+    Error err;
+    do {
+        keys.push_back(ctx->nextKey(err));
+    } while (!err);
+
+    keys.pop_back();
+
+    const KeyListResult result = ctx->endKeyListing();
+    ctx->cancelPendingOperation();
+    return result;
 }
 
-Error QGpgMEKeyListJob::start( const QStringList & patterns, bool secretOnly ) {
-  mSecretOnly = secretOnly;
-  run( boost::bind( &list_keys, _1, patterns, secretOnly ) );
-  return Error();
+static QGpgMEKeyListJob::result_type list_keys(Context *ctx, QStringList pats, bool secretOnly)
+{
+    if (pats.size() < 2) {
+        std::vector<Key> keys;
+        const KeyListResult r = do_list_keys(ctx, pats, keys, secretOnly);
+        return boost::make_tuple(r, keys, QString(), Error());
+    }
+
+    // The communication channel between gpgme and gpgsm is limited in
+    // the number of patterns that can be transported, but they won't
+    // say to how much, so we need to find out ourselves if we get a
+    // LINE_TOO_LONG error back...
+
+    // We could of course just feed them single patterns, and that would
+    // probably be easier, but the performance penalty would currently
+    // be noticeable.
+
+    unsigned int chunkSize = pats.size();
+retry:
+    std::vector<Key> keys;
+    keys.reserve(pats.size());
+    KeyListResult result;
+    do {
+        const KeyListResult this_result = do_list_keys(ctx, pats.mid(0, chunkSize), keys, secretOnly);
+        if (this_result.error().code() == GPG_ERR_LINE_TOO_LONG) {
+            // got LINE_TOO_LONG, try a smaller chunksize:
+            chunkSize /= 2;
+            if (chunkSize < 1)
+                // chunks smaller than one can't be -> return the error.
+            {
+                return boost::make_tuple(this_result, keys, QString(), Error());
+            } else {
+                goto retry;
+            }
+        } else if (this_result.error().code() == GPG_ERR_EOF) {
+            // early end of keylisting (can happen when ~/.gnupg doesn't
+            // exist). Fakeing an empty result:
+            return boost::make_tuple(KeyListResult(), std::vector<Key>(), QString(), Error());
+        }
+        // ok, that seemed to work...
+        result.mergeWith(this_result);
+        if (result.error().code()) {
+            break;
+        }
+        pats = pats.mid(chunkSize);
+    } while (!pats.empty());
+    return boost::make_tuple(result, keys, QString(), Error());
 }
 
-KeyListResult QGpgMEKeyListJob::exec( const QStringList & patterns, bool secretOnly, std::vector<Key> & keys ) {
-  mSecretOnly = secretOnly;
-  const result_type r = list_keys( context(), patterns, secretOnly );
-  resultHook( r );
-  keys = get<1>( r );
-  return get<0>( r );
+Error QGpgMEKeyListJob::start(const QStringList &patterns, bool secretOnly)
+{
+    mSecretOnly = secretOnly;
+    run(boost::bind(&list_keys, _1, patterns, secretOnly));
+    return Error();
 }
 
-void QGpgMEKeyListJob::resultHook( const result_type & tuple ) {
-  mResult = get<0>( tuple );
-  Q_FOREACH( const Key & key, get<1>( tuple ) )
-    emit nextKey( key );
+KeyListResult QGpgMEKeyListJob::exec(const QStringList &patterns, bool secretOnly, std::vector<Key> &keys)
+{
+    mSecretOnly = secretOnly;
+    const result_type r = list_keys(context(), patterns, secretOnly);
+    resultHook(r);
+    keys = get<1>(r);
+    return get<0>(r);
 }
 
-void QGpgMEKeyListJob::showErrorDialog( QWidget * parent, const QString & caption ) const {
-  if ( !mResult.error() || mResult.error().isCanceled() )
-    return;
-  const QString msg = i18n( "<qt><p>An error occurred while fetching "
-                            "the keys from the backend:</p>"
-                            "<p><b>%1</b></p></qt>" ,
-      QString::fromLocal8Bit( mResult.error().asString() ) );
-  KMessageBox::error( parent, msg, caption );
+void QGpgMEKeyListJob::resultHook(const result_type &tuple)
+{
+    mResult = get<0>(tuple);
+    Q_FOREACH (const Key &key, get<1>(tuple)) {
+        emit nextKey(key);
+    }
+}
+
+void QGpgMEKeyListJob::showErrorDialog(QWidget *parent, const QString &caption) const
+{
+    if (!mResult.error() || mResult.error().isCanceled()) {
+        return;
+    }
+    const QString msg = i18n("<qt><p>An error occurred while fetching "
+                             "the keys from the backend:</p>"
+                             "<p><b>%1</b></p></qt>" ,
+                             QString::fromLocal8Bit(mResult.error().asString()));
+    KMessageBox::error(parent, msg, caption);
 }
 

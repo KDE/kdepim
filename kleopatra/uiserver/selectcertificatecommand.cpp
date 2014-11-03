@@ -63,12 +63,13 @@ using namespace boost;
 
 static const char option_prefix[] = "prefix";
 
-class SelectCertificateCommand::Private {
+class SelectCertificateCommand::Private
+{
     friend class ::Kleo::SelectCertificateCommand;
-    SelectCertificateCommand * const q;
+    SelectCertificateCommand *const q;
 public:
-    Private( SelectCertificateCommand * qq ) :
-        q( qq ),
+    Private(SelectCertificateCommand *qq) :
+        q(qq),
         dialog()
     {
 
@@ -77,25 +78,29 @@ public:
 private:
     void slotDialogAccepted();
     void slotDialogRejected();
-    void slotSelectedCertificates( int, const QByteArray & );
+    void slotSelectedCertificates(int, const QByteArray &);
 
 private:
-    void ensureDialogCreated() {
-        if ( dialog )
+    void ensureDialogCreated()
+    {
+        if (dialog) {
             return;
+        }
         dialog = new CertificateSelectionDialog;
-        q->applyWindowID( dialog );
-        dialog->setAttribute( Qt::WA_DeleteOnClose );
+        q->applyWindowID(dialog);
+        dialog->setAttribute(Qt::WA_DeleteOnClose);
         //dialog->setWindowTitle( i18nc( "@title", "Certificate Selection" ) );
-        connect( dialog, SIGNAL(accepted()), q, SLOT(slotDialogAccepted()) );
-        connect( dialog, SIGNAL(rejected()), q, SLOT(slotDialogRejected()) );
+        connect(dialog, SIGNAL(accepted()), q, SLOT(slotDialogAccepted()));
+        connect(dialog, SIGNAL(rejected()), q, SLOT(slotDialogRejected()));
     }
-    void ensureDialogShown() {
+    void ensureDialogShown()
+    {
         ensureDialogCreated();
-        if ( dialog->isVisible() )
+        if (dialog->isVisible()) {
             dialog->raise();
-        else
+        } else {
             dialog->show();
+        }
     }
 
 private:
@@ -103,12 +108,12 @@ private:
 };
 
 SelectCertificateCommand::SelectCertificateCommand()
-    : QObject(), AssuanCommandMixin<SelectCertificateCommand>(), d( new Private( this ) ) {}
+    : QObject(), AssuanCommandMixin<SelectCertificateCommand>(), d(new Private(this)) {}
 
 SelectCertificateCommand::~SelectCertificateCommand() {}
 
 static const struct {
-    const char * name;
+    const char *name;
     CertificateSelectionDialog::Option option;
 } option_table[] = {
     { "multi",        CertificateSelectionDialog::MultiSelection },
@@ -119,69 +124,80 @@ static const struct {
     { "secret-only",  CertificateSelectionDialog::SecretKeys     },
 };
 
-int SelectCertificateCommand::doStart() {
+int SelectCertificateCommand::doStart()
+{
 
     d->ensureDialogCreated();
 
     CertificateSelectionDialog::Options opts;
-    for ( unsigned int i = 0 ; i < sizeof option_table / sizeof *option_table ; ++i )
-        if ( hasOption( option_table[i].name ) )
-             opts |= option_table[i].option;
+    for (unsigned int i = 0 ; i < sizeof option_table / sizeof * option_table ; ++i)
+        if (hasOption(option_table[i].name)) {
+            opts |= option_table[i].option;
+        }
 
-    d->dialog->setOptions( opts );
+    d->dialog->setOptions(opts);
 
-    if ( const int err = inquire( "SELECTED_CERTIFICATES",
-                                  this, SLOT(slotSelectedCertificates(int,QByteArray)) ) )
+    if (const int err = inquire("SELECTED_CERTIFICATES",
+                                this, SLOT(slotSelectedCertificates(int,QByteArray)))) {
         return err;
+    }
 
     d->ensureDialogShown();
 
     return 0;
 }
 
-void SelectCertificateCommand::Private::slotSelectedCertificates( int err, const QByteArray & data ) {
+void SelectCertificateCommand::Private::slotSelectedCertificates(int err, const QByteArray &data)
+{
     qDebug() << err << ", " << data.constData();
-    if ( err )
+    if (err) {
         return;
-    const std::vector<std::string> fprs = kdtools::transform< std::vector<std::string> >( data.split( '\n' ), mem_fn( &QByteArray::constData ) );
-    const std::vector<Key> keys = KeyCache::instance()->findByKeyIDOrFingerprint( fprs );
-    Q_FOREACH( const Key & key, keys )
+    }
+    const std::vector<std::string> fprs = kdtools::transform< std::vector<std::string> >(data.split('\n'), mem_fn(&QByteArray::constData));
+    const std::vector<Key> keys = KeyCache::instance()->findByKeyIDOrFingerprint(fprs);
+    Q_FOREACH (const Key &key, keys) {
         qDebug() << "found key " << key.userID(0).id();
-    if ( dialog )
-        dialog->selectCertificates( keys );
-    else
+    }
+    if (dialog) {
+        dialog->selectCertificates(keys);
+    } else {
         qWarning() << "dialog == NULL in slotSelectedCertificates";
-}
-
-void SelectCertificateCommand::doCanceled() {
-    if ( d->dialog )
-        d->dialog->close();
-}
-
-void SelectCertificateCommand::Private::slotDialogAccepted() {
-    try {
-        QByteArray data;
-        Q_FOREACH( const Key & key, dialog->selectedCertificates() ) {
-            data += key.primaryFingerprint();
-            data += '\n';
-        }
-        q->sendData( data );
-        q->done();
-    } catch ( const Exception & e ) {
-        q->done( e.error(), e.message() );
-    } catch ( const std::exception & e ) {
-        q->done( makeError( GPG_ERR_UNEXPECTED ),
-                 i18n("Caught unexpected exception in SelectCertificateCommand::Private::slotDialogAccepted: %1",
-                      QString::fromLocal8Bit( e.what() ) ) );
-    } catch ( ... ) {
-        q->done( makeError( GPG_ERR_UNEXPECTED ),
-                 i18n("Caught unknown exception in SelectCertificateCommand::Private::slotDialogAccepted") );
     }
 }
 
-void SelectCertificateCommand::Private::slotDialogRejected() {
+void SelectCertificateCommand::doCanceled()
+{
+    if (d->dialog) {
+        d->dialog->close();
+    }
+}
+
+void SelectCertificateCommand::Private::slotDialogAccepted()
+{
+    try {
+        QByteArray data;
+        Q_FOREACH (const Key &key, dialog->selectedCertificates()) {
+            data += key.primaryFingerprint();
+            data += '\n';
+        }
+        q->sendData(data);
+        q->done();
+    } catch (const Exception &e) {
+        q->done(e.error(), e.message());
+    } catch (const std::exception &e) {
+        q->done(makeError(GPG_ERR_UNEXPECTED),
+                i18n("Caught unexpected exception in SelectCertificateCommand::Private::slotDialogAccepted: %1",
+                     QString::fromLocal8Bit(e.what())));
+    } catch (...) {
+        q->done(makeError(GPG_ERR_UNEXPECTED),
+                i18n("Caught unknown exception in SelectCertificateCommand::Private::slotDialogAccepted"));
+    }
+}
+
+void SelectCertificateCommand::Private::slotDialogRejected()
+{
     dialog = 0;
-    q->done( makeError( GPG_ERR_CANCELED ) );
+    q->done(makeError(GPG_ERR_CANCELED));
 }
 
 #include "moc_selectcertificatecommand.cpp"

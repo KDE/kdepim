@@ -35,10 +35,10 @@
 
 #include <KAboutData>
 
-class AboutData : public KAboutData 
+class AboutData : public KAboutData
 {
 public:
-  AboutData();
+    AboutData();
 };
 
 #endif // ABOUTDATA_H

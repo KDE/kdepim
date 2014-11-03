@@ -80,309 +80,358 @@ using namespace Kleo::Dialogs;
 using namespace GpgME;
 using namespace boost;
 
-Q_DECLARE_METATYPE( GpgME::Key )
-Q_DECLARE_METATYPE( GpgME::UserID )
+Q_DECLARE_METATYPE(GpgME::Key)
+Q_DECLARE_METATYPE(GpgME::UserID)
 
-namespace {
+namespace
+{
 
-    // A QComboBox with an initial text (as known from web browsers)
-    //
-    // only works with read-only QComboBoxen, doesn't affect sizeHint
-    // as it should...
-    //
-    class ComboBox : public QComboBox {
-        Q_OBJECT
-        Q_PROPERTY( QString initialText READ initialText WRITE setInitialText )
-        Q_PROPERTY( QIcon initialIcon READ initialIcon WRITE setInitialIcon )
-    public:
-        explicit ComboBox( QWidget * parent=0 )
-            : QComboBox( parent ),
-              m_initialText(),
-              m_initialIcon()
-        {
+// A QComboBox with an initial text (as known from web browsers)
+//
+// only works with read-only QComboBoxen, doesn't affect sizeHint
+// as it should...
+//
+class ComboBox : public QComboBox
+{
+    Q_OBJECT
+    Q_PROPERTY(QString initialText READ initialText WRITE setInitialText)
+    Q_PROPERTY(QIcon initialIcon READ initialIcon WRITE setInitialIcon)
+public:
+    explicit ComboBox(QWidget *parent = 0)
+        : QComboBox(parent),
+          m_initialText(),
+          m_initialIcon()
+    {
 
-        }
-
-        explicit ComboBox( const QString & initialText, QWidget * parent=0 )
-            : QComboBox( parent ),
-              m_initialText( initialText ),
-              m_initialIcon()
-        {
-
-        }
-
-        explicit ComboBox( const QIcon & initialIcon, const QString & initialText, QWidget * parent=0 )
-            : QComboBox( parent ),
-              m_initialText( initialText ),
-              m_initialIcon( initialIcon )
-        {
-
-        }
-
-        QString initialText() const { return m_initialText; }
-        QIcon initialIcon() const { return m_initialIcon; }
-
-    public Q_SLOTS:
-        void setInitialText( const QString & txt ) {
-            if ( txt == m_initialText )
-                return;
-            m_initialText = txt;
-            if ( currentIndex() == -1 )
-                update();
-        }
-        void setInitialIcon( const QIcon & icon ) {
-            if ( icon.cacheKey() == m_initialIcon.cacheKey() )
-                return;
-            m_initialIcon = icon;
-            if ( currentIndex() == -1 )
-                update();
-        }
-
-    protected:
-        void paintEvent( QPaintEvent * ) {
-            QStylePainter p( this );
-            p.setPen( palette().color( QPalette::Text ) );
-            QStyleOptionComboBox opt;
-            initStyleOption( &opt );
-            p.drawComplexControl( QStyle::CC_ComboBox, opt );
-
-            if ( currentIndex() == -1 ) {
-                opt.currentText = m_initialText;
-                opt.currentIcon = m_initialIcon;
-            }
-            p.drawControl( QStyle::CE_ComboBoxLabel, opt );
-        }
-
-    private:
-        QString m_initialText;
-        QIcon m_initialIcon;
-    };
-
-    static QString make_initial_text( const std::vector<Key> & keys ) {
-        if ( keys.empty() )
-            return i18n("(no matching certificates found)");
-        else
-            return i18n("Please select a certificate");
     }
 
-    class KeysComboBox : public ComboBox {
-        Q_OBJECT
-    public:
-        explicit KeysComboBox( QWidget * parent=0 )
-            : ComboBox( parent ) {}
-        explicit KeysComboBox( const QString & initialText, QWidget * parent=0 )
-            : ComboBox( initialText, parent ) {}
-        explicit KeysComboBox( const std::vector<Key> & keys, QWidget * parent=0 )
-            : ComboBox( make_initial_text( keys ), parent ) { setKeys( keys ); }
+    explicit ComboBox(const QString &initialText, QWidget *parent = 0)
+        : QComboBox(parent),
+          m_initialText(initialText),
+          m_initialIcon()
+    {
 
-        void setKeys( const std::vector<Key> & keys ) {
-            clear();
-            Q_FOREACH( const Key & key, keys )
-                addItem( Formatting::formatForComboBox( key ), qVariantFromValue( key ) );
+    }
+
+    explicit ComboBox(const QIcon &initialIcon, const QString &initialText, QWidget *parent = 0)
+        : QComboBox(parent),
+          m_initialText(initialText),
+          m_initialIcon(initialIcon)
+    {
+
+    }
+
+    QString initialText() const
+    {
+        return m_initialText;
+    }
+    QIcon initialIcon() const
+    {
+        return m_initialIcon;
+    }
+
+public Q_SLOTS:
+    void setInitialText(const QString &txt)
+    {
+        if (txt == m_initialText) {
+            return;
         }
-
-        std::vector<Key> keys() const {
-            std::vector<Key> result;
-            result.reserve( count() );
-            for ( int i = 0, end = count() ; i != end ; ++i )
-                result.push_back( qvariant_cast<Key>( itemData(i) ) );
-            return result;;
+        m_initialText = txt;
+        if (currentIndex() == -1) {
+            update();
         }
-
-        int findOrAdd( const Key & key ) {
-            for ( int i = 0, end = count() ; i != end ; ++i )
-                if ( _detail::ByFingerprint<std::equal_to>()( key, qvariant_cast<Key>( itemData(i) ) ) )
-                    return i;
-            insertItem( 0, Formatting::formatForComboBox( key ), qVariantFromValue( key ) );
-            return 0;
+    }
+    void setInitialIcon(const QIcon &icon)
+    {
+        if (icon.cacheKey() == m_initialIcon.cacheKey()) {
+            return;
         }
-
-        void addAndSelectCertificate( const Key & key ) {
-            setCurrentIndex( findOrAdd( key ) );
+        m_initialIcon = icon;
+        if (currentIndex() == -1) {
+            update();
         }
+    }
 
-        Key currentKey() const {
-            return qvariant_cast<Key>( itemData( currentIndex() ) );
+protected:
+    void paintEvent(QPaintEvent *)
+    {
+        QStylePainter p(this);
+        p.setPen(palette().color(QPalette::Text));
+        QStyleOptionComboBox opt;
+        initStyleOption(&opt);
+        p.drawComplexControl(QStyle::CC_ComboBox, opt);
+
+        if (currentIndex() == -1) {
+            opt.currentText = m_initialText;
+            opt.currentIcon = m_initialIcon;
         }
+        p.drawControl(QStyle::CE_ComboBoxLabel, opt);
+    }
 
-    };
-        
-    class Line {
-    public:
-        static const unsigned int NumColumns = 4;
+private:
+    QString m_initialText;
+    QIcon m_initialIcon;
+};
 
-        Line( const QString & toFrom, const QString & mailbox, const std::vector<Key> & pgp, bool pgpAmbig, const std::vector<Key> & cms, bool cmsAmbig, QWidget * q, QGridLayout & glay )
-            : pgpAmbiguous( pgpAmbig ),
-              cmsAmbiguous( cmsAmbig ),
-              toFromLB( new QLabel( toFrom, q ) ),
-              mailboxLB( new QLabel( mailbox, q ) ),
-              sbox( new QStackedWidget( q ) ),
-              pgpCB( new KeysComboBox( pgp, sbox ) ),
-              cmsCB( new KeysComboBox( cms, sbox ) ),
-              noProtocolCB( new KeysComboBox( i18n("(please choose between OpenPGP and S/MIME first)"), sbox ) ),
-              toolTB( new QToolButton( q ) )
-        {
-            KDAB_SET_OBJECT_NAME( toFromLB );
-            KDAB_SET_OBJECT_NAME( mailboxLB );
-            KDAB_SET_OBJECT_NAME( noProtocolCB );
-            KDAB_SET_OBJECT_NAME( pgpCB );
-            KDAB_SET_OBJECT_NAME( cmsCB );
-            KDAB_SET_OBJECT_NAME( sbox );
-            KDAB_SET_OBJECT_NAME( toolTB );
+static QString make_initial_text(const std::vector<Key> &keys)
+{
+    if (keys.empty()) {
+        return i18n("(no matching certificates found)");
+    } else {
+        return i18n("Please select a certificate");
+    }
+}
 
-            QFont bold;
-            bold.setBold( true );
-            toFromLB->setFont( bold );
+class KeysComboBox : public ComboBox
+{
+    Q_OBJECT
+public:
+    explicit KeysComboBox(QWidget *parent = 0)
+        : ComboBox(parent) {}
+    explicit KeysComboBox(const QString &initialText, QWidget *parent = 0)
+        : ComboBox(initialText, parent) {}
+    explicit KeysComboBox(const std::vector<Key> &keys, QWidget *parent = 0)
+        : ComboBox(make_initial_text(keys), parent)
+    {
+        setKeys(keys);
+    }
 
-            mailboxLB->setTextFormat( Qt::PlainText );
-            toolTB->setText( i18n("...") );
-
-            pgpCB->setEnabled( !pgp.empty() );
-            cmsCB->setEnabled( !cms.empty() );
-            noProtocolCB->setEnabled( false );
-
-            pgpCB->setKeys( pgp );
-            if ( pgpAmbiguous )
-                pgpCB->setCurrentIndex( -1 );
-
-            cmsCB->setKeys( cms );
-            if ( cmsAmbiguous )
-                cmsCB->setCurrentIndex( -1 );
-
-            sbox->addWidget( pgpCB );
-            sbox->addWidget( cmsCB );
-            sbox->addWidget( noProtocolCB );
-            sbox->setCurrentWidget( noProtocolCB );
-
-            const int row = glay.rowCount();
-            unsigned int col = 0;
-            glay.addWidget( toFromLB,  row, col++ );
-            glay.addWidget( mailboxLB, row, col++ );
-            glay.addWidget( sbox,      row, col++ );
-            glay.addWidget( toolTB,    row, col++ );
-            assert( col == NumColumns );
-
-            q->connect( pgpCB, SIGNAL(currentIndexChanged(int)), SLOT(slotCompleteChanged()) );
-            q->connect( cmsCB, SIGNAL(currentIndexChanged(int)), SLOT(slotCompleteChanged()) );
-            q->connect( toolTB, SIGNAL(clicked()), SLOT(slotCertificateSelectionDialogRequested()) );
+    void setKeys(const std::vector<Key> &keys)
+    {
+        clear();
+        Q_FOREACH (const Key &key, keys) {
+            addItem(Formatting::formatForComboBox(key), qVariantFromValue(key));
         }
+    }
 
-        KeysComboBox * comboBox( Protocol proto ) const {
-            if ( proto == OpenPGP )
-                return pgpCB;
-            if ( proto == CMS )
-                return cmsCB;
-            return 0;
+    std::vector<Key> keys() const
+    {
+        std::vector<Key> result;
+        result.reserve(count());
+        for (int i = 0, end = count() ; i != end ; ++i) {
+            result.push_back(qvariant_cast<Key>(itemData(i)));
         }
+        return result;;
+    }
 
-        QString mailboxText() const {
-            return mailboxLB->text();
-        }
-
-        void addAndSelectCertificate( const Key & key ) const {
-            if ( KeysComboBox * const cb = comboBox( key.protocol() ) ) {
-                cb->addAndSelectCertificate( key );
-                cb->setEnabled( true );
+    int findOrAdd(const Key &key)
+    {
+        for (int i = 0, end = count() ; i != end ; ++i)
+            if (_detail::ByFingerprint<std::equal_to>()(key, qvariant_cast<Key>(itemData(i)))) {
+                return i;
             }
+        insertItem(0, Formatting::formatForComboBox(key), qVariantFromValue(key));
+        return 0;
+    }
+
+    void addAndSelectCertificate(const Key &key)
+    {
+        setCurrentIndex(findOrAdd(key));
+    }
+
+    Key currentKey() const
+    {
+        return qvariant_cast<Key>(itemData(currentIndex()));
+    }
+
+};
+
+class Line
+{
+public:
+    static const unsigned int NumColumns = 4;
+
+    Line(const QString &toFrom, const QString &mailbox, const std::vector<Key> &pgp, bool pgpAmbig, const std::vector<Key> &cms, bool cmsAmbig, QWidget *q, QGridLayout &glay)
+        : pgpAmbiguous(pgpAmbig),
+          cmsAmbiguous(cmsAmbig),
+          toFromLB(new QLabel(toFrom, q)),
+          mailboxLB(new QLabel(mailbox, q)),
+          sbox(new QStackedWidget(q)),
+          pgpCB(new KeysComboBox(pgp, sbox)),
+          cmsCB(new KeysComboBox(cms, sbox)),
+          noProtocolCB(new KeysComboBox(i18n("(please choose between OpenPGP and S/MIME first)"), sbox)),
+          toolTB(new QToolButton(q))
+    {
+        KDAB_SET_OBJECT_NAME(toFromLB);
+        KDAB_SET_OBJECT_NAME(mailboxLB);
+        KDAB_SET_OBJECT_NAME(noProtocolCB);
+        KDAB_SET_OBJECT_NAME(pgpCB);
+        KDAB_SET_OBJECT_NAME(cmsCB);
+        KDAB_SET_OBJECT_NAME(sbox);
+        KDAB_SET_OBJECT_NAME(toolTB);
+
+        QFont bold;
+        bold.setBold(true);
+        toFromLB->setFont(bold);
+
+        mailboxLB->setTextFormat(Qt::PlainText);
+        toolTB->setText(i18n("..."));
+
+        pgpCB->setEnabled(!pgp.empty());
+        cmsCB->setEnabled(!cms.empty());
+        noProtocolCB->setEnabled(false);
+
+        pgpCB->setKeys(pgp);
+        if (pgpAmbiguous) {
+            pgpCB->setCurrentIndex(-1);
         }
 
-        void showHide( Protocol proto, bool & first, bool showAll, bool op ) const {
-            if ( op && ( showAll || wasInitiallyAmbiguous( proto ) ) ) {
-
-                toFromLB->setVisible( first );
-                first = false;
-
-                QFont font = mailboxLB->font();
-                font.setBold( wasInitiallyAmbiguous( proto ) );
-                mailboxLB->setFont( font );
-
-                sbox->setCurrentIndex( proto );
-
-                mailboxLB->show();
-                sbox->show();
-                toolTB->show();
-            } else {
-                toFromLB->hide();
-                mailboxLB->hide();
-                sbox->hide();
-                toolTB->hide();
-            }
-            
+        cmsCB->setKeys(cms);
+        if (cmsAmbiguous) {
+            cmsCB->setCurrentIndex(-1);
         }
 
-        bool wasInitiallyAmbiguous( Protocol proto ) const {
-            return proto == OpenPGP && pgpAmbiguous
-                || proto == CMS     && cmsAmbiguous ;
+        sbox->addWidget(pgpCB);
+        sbox->addWidget(cmsCB);
+        sbox->addWidget(noProtocolCB);
+        sbox->setCurrentWidget(noProtocolCB);
+
+        const int row = glay.rowCount();
+        unsigned int col = 0;
+        glay.addWidget(toFromLB,  row, col++);
+        glay.addWidget(mailboxLB, row, col++);
+        glay.addWidget(sbox,      row, col++);
+        glay.addWidget(toolTB,    row, col++);
+        assert(col == NumColumns);
+
+        q->connect(pgpCB, SIGNAL(currentIndexChanged(int)), SLOT(slotCompleteChanged()));
+        q->connect(cmsCB, SIGNAL(currentIndexChanged(int)), SLOT(slotCompleteChanged()));
+        q->connect(toolTB, SIGNAL(clicked()), SLOT(slotCertificateSelectionDialogRequested()));
+    }
+
+    KeysComboBox *comboBox(Protocol proto) const
+    {
+        if (proto == OpenPGP) {
+            return pgpCB;
+        }
+        if (proto == CMS) {
+            return cmsCB;
+        }
+        return 0;
+    }
+
+    QString mailboxText() const
+    {
+        return mailboxLB->text();
+    }
+
+    void addAndSelectCertificate(const Key &key) const
+    {
+        if (KeysComboBox *const cb = comboBox(key.protocol())) {
+            cb->addAndSelectCertificate(key);
+            cb->setEnabled(true);
+        }
+    }
+
+    void showHide(Protocol proto, bool &first, bool showAll, bool op) const
+    {
+        if (op && (showAll || wasInitiallyAmbiguous(proto))) {
+
+            toFromLB->setVisible(first);
+            first = false;
+
+            QFont font = mailboxLB->font();
+            font.setBold(wasInitiallyAmbiguous(proto));
+            mailboxLB->setFont(font);
+
+            sbox->setCurrentIndex(proto);
+
+            mailboxLB->show();
+            sbox->show();
+            toolTB->show();
+        } else {
+            toFromLB->hide();
+            mailboxLB->hide();
+            sbox->hide();
+            toolTB->hide();
         }
 
-        bool isStillAmbiguous( Protocol proto ) const {
-            kleo_assert( proto == OpenPGP || proto == CMS );
-            const KeysComboBox * const cb = comboBox( proto );
-            return cb->currentIndex() == -1 ;
-        }
+    }
 
-        Key key( Protocol proto ) const {
-            kleo_assert( proto == OpenPGP || proto == CMS );
-            const KeysComboBox * const cb = comboBox( proto );
-            return cb->currentKey();
-        }
+    bool wasInitiallyAmbiguous(Protocol proto) const
+    {
+        return proto == OpenPGP && pgpAmbiguous
+               || proto == CMS     && cmsAmbiguous ;
+    }
 
-        const QToolButton * toolButton() const { return toolTB; }
+    bool isStillAmbiguous(Protocol proto) const
+    {
+        kleo_assert(proto == OpenPGP || proto == CMS);
+        const KeysComboBox *const cb = comboBox(proto);
+        return cb->currentIndex() == -1 ;
+    }
 
-        void kill() {
-            delete toFromLB;
-            delete mailboxLB;
-            delete sbox;
-            delete toolTB;
-        }
+    Key key(Protocol proto) const
+    {
+        kleo_assert(proto == OpenPGP || proto == CMS);
+        const KeysComboBox *const cb = comboBox(proto);
+        return cb->currentKey();
+    }
 
-    private:
-        bool pgpAmbiguous : 1;
-        bool cmsAmbiguous : 1;
+    const QToolButton *toolButton() const
+    {
+        return toolTB;
+    }
 
-        QLabel * toFromLB;
-        QLabel * mailboxLB;
-        QStackedWidget * sbox;
-        KeysComboBox * pgpCB;
-        KeysComboBox * cmsCB;
-        KeysComboBox * noProtocolCB;
-        QToolButton * toolTB;
+    void kill()
+    {
+        delete toFromLB;
+        delete mailboxLB;
+        delete sbox;
+        delete toolTB;
+    }
 
-    };
+private:
+    bool pgpAmbiguous : 1;
+    bool cmsAmbiguous : 1;
+
+    QLabel *toFromLB;
+    QLabel *mailboxLB;
+    QStackedWidget *sbox;
+    KeysComboBox *pgpCB;
+    KeysComboBox *cmsCB;
+    KeysComboBox *noProtocolCB;
+    QToolButton *toolTB;
+
+};
 
 }
 
 static CertificateSelectionDialog *
-create_certificate_selection_dialog( QWidget * parent, Protocol proto ) {
-    CertificateSelectionDialog * const dlg = new CertificateSelectionDialog( parent );    
-    dlg->setOptions( proto == OpenPGP ? CertificateSelectionDialog::OpenPGPFormat :
-                     proto == CMS     ? CertificateSelectionDialog::CMSFormat : CertificateSelectionDialog::AnyFormat );
+create_certificate_selection_dialog(QWidget *parent, Protocol proto)
+{
+    CertificateSelectionDialog *const dlg = new CertificateSelectionDialog(parent);
+    dlg->setOptions(proto == OpenPGP ? CertificateSelectionDialog::OpenPGPFormat :
+                    proto == CMS     ? CertificateSelectionDialog::CMSFormat : CertificateSelectionDialog::AnyFormat);
     return dlg;
 }
 
 static CertificateSelectionDialog *
-create_encryption_certificate_selection_dialog( QWidget * parent, Protocol proto, const QString & mailbox ) {
-    CertificateSelectionDialog * const dlg = create_certificate_selection_dialog( parent, proto );
-    dlg->setCustomLabelText( i18n("Please select an encryption certificate for recipient \"%1\"", mailbox ) );
-    dlg->setOptions( CertificateSelectionDialog::SingleSelection |
-                     CertificateSelectionDialog::EncryptOnly |
-                     dlg->options() );
+create_encryption_certificate_selection_dialog(QWidget *parent, Protocol proto, const QString &mailbox)
+{
+    CertificateSelectionDialog *const dlg = create_certificate_selection_dialog(parent, proto);
+    dlg->setCustomLabelText(i18n("Please select an encryption certificate for recipient \"%1\"", mailbox));
+    dlg->setOptions(CertificateSelectionDialog::SingleSelection |
+                    CertificateSelectionDialog::EncryptOnly |
+                    dlg->options());
     return dlg;
 }
 
 static CertificateSelectionDialog *
-create_signing_certificate_selection_dialog( QWidget * parent, Protocol proto, const QString & mailbox ) {
-    CertificateSelectionDialog * const dlg = create_certificate_selection_dialog( parent, proto );
-    dlg->setCustomLabelText( i18n("Please select a signing certificate for sender \"%1\"", mailbox ) );
-    dlg->setOptions( CertificateSelectionDialog::SingleSelection |
-                     CertificateSelectionDialog::SignOnly |
-                     CertificateSelectionDialog::SecretKeys |
-                     dlg->options() );
+create_signing_certificate_selection_dialog(QWidget *parent, Protocol proto, const QString &mailbox)
+{
+    CertificateSelectionDialog *const dlg = create_certificate_selection_dialog(parent, proto);
+    dlg->setCustomLabelText(i18n("Please select a signing certificate for sender \"%1\"", mailbox));
+    dlg->setOptions(CertificateSelectionDialog::SingleSelection |
+                    CertificateSelectionDialog::SignOnly |
+                    CertificateSelectionDialog::SecretKeys |
+                    dlg->options());
     return dlg;
 }
 
-static QString make_top_label_conflict_text( bool sign, bool enc ) {
-    return 
+static QString make_top_label_conflict_text(bool sign, bool enc)
+{
+    return
         sign && enc ? i18n("Kleopatra cannot unambiguously determine matching certificates "
                            "for all recipients/senders of the message.\n"
                            "Please select the correct certificates for each recipient:") :
@@ -391,40 +440,44 @@ static QString make_top_label_conflict_text( bool sign, bool enc ) {
                            "Please select the correct certificates for the sender:") :
         enc         ? i18n("Kleopatra cannot unambiguously determine matching certificates "
                            "for all recipients of the message.\n"
-                           "Please select the correct certificates for each recipient:" ) :
-        /* else */    (kleo_assert_fail( sign || enc ),QString()) ;
+                           "Please select the correct certificates for each recipient:") :
+        /* else */ (kleo_assert_fail(sign || enc), QString()) ;
 }
 
-static QString make_top_label_quickmode_text( bool sign, bool enc ) {
+static QString make_top_label_quickmode_text(bool sign, bool enc)
+{
     return
         enc    ? i18n("Please verify that correct certificates have been selected for each recipient:") :
         sign   ? i18n("Please verify that the correct certificate has been selected for the sender:") :
-        /*else*/ (kleo_assert_fail( sign || enc ),QString()) ;
+        /*else*/ (kleo_assert_fail(sign || enc), QString()) ;
 }
 
-class SignEncryptEMailConflictDialog::Private {
+class SignEncryptEMailConflictDialog::Private
+{
     friend class ::Kleo::Crypto::Gui::SignEncryptEMailConflictDialog;
-    SignEncryptEMailConflictDialog * const q;
+    SignEncryptEMailConflictDialog *const q;
 public:
-    explicit Private( SignEncryptEMailConflictDialog * qq )
-        : q( qq ),
+    explicit Private(SignEncryptEMailConflictDialog *qq)
+        : q(qq),
           senders(),
           recipients(),
-          sign( true ),
-          encrypt( true ),
-          presetProtocol( UnknownProtocol ),
-          ui( q )
+          sign(true),
+          encrypt(true),
+          presetProtocol(UnknownProtocol),
+          ui(q)
     {
 
     }
 
 private:
-    void updateTopLabelText() {
-        ui.conflictTopLB.setText( make_top_label_conflict_text( sign, encrypt ) );
-        ui.quickModeTopLB.setText( make_top_label_quickmode_text( sign, encrypt ) );
+    void updateTopLabelText()
+    {
+        ui.conflictTopLB.setText(make_top_label_conflict_text(sign, encrypt));
+        ui.quickModeTopLB.setText(make_top_label_quickmode_text(sign, encrypt));
     }
 
-    void showHideWidgets() {
+    void showHideWidgets()
+    {
         const Protocol proto = q->selectedProtocol();
         const bool quickMode = q->isQuickMode();
 
@@ -432,115 +485,134 @@ private:
 
         const bool needShowAllRecipientsCB =
             quickMode             ? false :
-            needProtocolSelection ? needShowAllRecipients( OpenPGP ) || needShowAllRecipients( CMS ) :
-            /* else */              needShowAllRecipients( proto )
+            needProtocolSelection ? needShowAllRecipients(OpenPGP) || needShowAllRecipients(CMS) :
+            /* else */              needShowAllRecipients(proto)
             ;
 
-        ui.showAllRecipientsCB.setVisible( needShowAllRecipientsCB );
+        ui.showAllRecipientsCB.setVisible(needShowAllRecipientsCB);
 
-        ui.pgpRB.setVisible( needProtocolSelection );
-        ui.cmsRB.setVisible( needProtocolSelection );
+        ui.pgpRB.setVisible(needProtocolSelection);
+        ui.cmsRB.setVisible(needProtocolSelection);
 
         const bool showAll = !needShowAllRecipientsCB || ui.showAllRecipientsCB.isChecked();
 
         bool first;
         first = true;
-        Q_FOREACH( const Line & line, ui.signers )
-            line.showHide( proto, first, showAll, sign );
-        ui.selectSigningCertificatesGB.setVisible( sign && ( showAll || !first ) );
+        Q_FOREACH (const Line &line, ui.signers) {
+            line.showHide(proto, first, showAll, sign);
+        }
+        ui.selectSigningCertificatesGB.setVisible(sign && (showAll || !first));
 
         first = true;
-        Q_FOREACH( const Line & line, ui.recipients )
-            line.showHide( proto, first, showAll, encrypt );
-        ui.selectEncryptionCertificatesGB.setVisible( encrypt && ( showAll || !first ) );
+        Q_FOREACH (const Line &line, ui.recipients) {
+            line.showHide(proto, first, showAll, encrypt);
+        }
+        ui.selectEncryptionCertificatesGB.setVisible(encrypt && (showAll || !first));
     }
 
-    bool needShowAllRecipients( Protocol proto ) const {
-        if ( sign )
-            if ( const unsigned int num = kdtools::count_if( ui.signers, boost::bind( &Line::wasInitiallyAmbiguous, _1, proto ) ) )
-                if ( num != ui.signers.size() )
+    bool needShowAllRecipients(Protocol proto) const
+    {
+        if (sign)
+            if (const unsigned int num = kdtools::count_if(ui.signers, boost::bind(&Line::wasInitiallyAmbiguous, _1, proto)))
+                if (num != ui.signers.size()) {
                     return true;
-        if ( encrypt )
-            if ( const unsigned int num = kdtools::count_if( ui.recipients, boost::bind( &Line::wasInitiallyAmbiguous, _1, proto ) ) )
-                if ( num != ui.recipients.size() )
+                }
+        if (encrypt)
+            if (const unsigned int num = kdtools::count_if(ui.recipients, boost::bind(&Line::wasInitiallyAmbiguous, _1, proto)))
+                if (num != ui.recipients.size()) {
                     return true;
+                }
         return false;
     }
 
-    void createSendersAndRecipients() {
+    void createSendersAndRecipients()
+    {
         ui.clearSendersAndRecipients();
 
         ui.addSelectSigningCertificatesGB();
-        Q_FOREACH( const Sender & s, senders )
-            addSigner( s );
+        Q_FOREACH (const Sender &s, senders) {
+            addSigner(s);
+        }
 
         ui.addSelectEncryptionCertificatesGB();
-        Q_FOREACH( const Sender & s, senders )
-            addRecipient( s );
-        Q_FOREACH( const Recipient & r, recipients )
-            addRecipient( r );
+        Q_FOREACH (const Sender &s, senders) {
+            addRecipient(s);
+        }
+        Q_FOREACH (const Recipient &r, recipients) {
+            addRecipient(r);
+        }
     }
 
-    void addSigner( const Sender & s ) {
-        ui.addSigner( s.mailbox().prettyAddress(),
-                      s.signingCertificateCandidates( OpenPGP ),
-                      s.isSigningAmbiguous( OpenPGP ),
-                      s.signingCertificateCandidates( CMS ),
-                      s.isSigningAmbiguous( CMS ),
-                      q );
+    void addSigner(const Sender &s)
+    {
+        ui.addSigner(s.mailbox().prettyAddress(),
+                     s.signingCertificateCandidates(OpenPGP),
+                     s.isSigningAmbiguous(OpenPGP),
+                     s.signingCertificateCandidates(CMS),
+                     s.isSigningAmbiguous(CMS),
+                     q);
     }
 
-    void addRecipient( const Sender & s ) {
-        ui.addRecipient( s.mailbox().prettyAddress(),
-                         s.encryptToSelfCertificateCandidates( OpenPGP ),
-                         s.isEncryptionAmbiguous( OpenPGP ),
-                         s.encryptToSelfCertificateCandidates( CMS ),
-                         s.isEncryptionAmbiguous( CMS ),
-                         q );
+    void addRecipient(const Sender &s)
+    {
+        ui.addRecipient(s.mailbox().prettyAddress(),
+                        s.encryptToSelfCertificateCandidates(OpenPGP),
+                        s.isEncryptionAmbiguous(OpenPGP),
+                        s.encryptToSelfCertificateCandidates(CMS),
+                        s.isEncryptionAmbiguous(CMS),
+                        q);
     }
 
-    void addRecipient( const Recipient & r ) {
-        ui.addRecipient( r.mailbox().prettyAddress(),
-                         r.encryptionCertificateCandidates( OpenPGP ),
-                         r.isEncryptionAmbiguous( OpenPGP ),
-                         r.encryptionCertificateCandidates( CMS ),
-                         r.isEncryptionAmbiguous( CMS ),
-                         q );
+    void addRecipient(const Recipient &r)
+    {
+        ui.addRecipient(r.mailbox().prettyAddress(),
+                        r.encryptionCertificateCandidates(OpenPGP),
+                        r.isEncryptionAmbiguous(OpenPGP),
+                        r.encryptionCertificateCandidates(CMS),
+                        r.isEncryptionAmbiguous(CMS),
+                        q);
     }
 
-    bool isComplete( Protocol proto ) const;
+    bool isComplete(Protocol proto) const;
 
 private:
-    void enableDisableOkButton() {
-        ui.setOkButtonEnabled( q->isComplete() );
+    void enableDisableOkButton()
+    {
+        ui.setOkButtonEnabled(q->isComplete());
     }
-    void slotCompleteChanged() {
+    void slotCompleteChanged()
+    {
         enableDisableOkButton();
     }
-    void slotShowAllRecipientsToggled( bool ) {
+    void slotShowAllRecipientsToggled(bool)
+    {
         showHideWidgets();
     }
-    void slotProtocolChanged() {
+    void slotProtocolChanged()
+    {
         showHideWidgets();
         enableDisableOkButton();
     }
-    void slotCertificateSelectionDialogRequested() {
-        const QObject * const s = q->sender();
+    void slotCertificateSelectionDialogRequested()
+    {
+        const QObject *const s = q->sender();
         const Protocol proto = q->selectedProtocol();
         QPointer<CertificateSelectionDialog> dlg;
-        Q_FOREACH( const Line & l, ui.signers )
-            if ( s == l.toolButton() ) {
-                dlg = create_signing_certificate_selection_dialog( q, proto, l.mailboxText() );
-                if ( dlg->exec() )
-                    l.addAndSelectCertificate( dlg->selectedCertificate() );
+        Q_FOREACH (const Line &l, ui.signers)
+            if (s == l.toolButton()) {
+                dlg = create_signing_certificate_selection_dialog(q, proto, l.mailboxText());
+                if (dlg->exec()) {
+                    l.addAndSelectCertificate(dlg->selectedCertificate());
+                }
                 // ### switch to key.protocol(), in case proto == UnknownProtocol
                 break;
             }
-        Q_FOREACH( const Line & l, ui.recipients )
-            if ( s == l.toolButton() ) {
-                dlg = create_encryption_certificate_selection_dialog( q, proto, l.mailboxText() );
-                if ( dlg->exec() )
-                    l.addAndSelectCertificate( dlg->selectedCertificate() );
+        Q_FOREACH (const Line &l, ui.recipients)
+            if (s == l.toolButton()) {
+                dlg = create_encryption_certificate_selection_dialog(q, proto, l.mailboxText());
+                if (dlg->exec()) {
+                    l.addAndSelectCertificate(dlg->selectedCertificate());
+                }
                 // ### switch to key.protocol(), in case proto == UnknownProtocol
                 break;
             }
@@ -569,244 +641,275 @@ private:
         QGridLayout  glay;
         std::vector<Line> signers, recipients;
 
-        void setOkButtonEnabled( bool enable ) {
-            return buttonBox.button( QDialogButtonBox::Ok )->setEnabled( enable );
+        void setOkButtonEnabled(bool enable)
+        {
+            return buttonBox.button(QDialogButtonBox::Ok)->setEnabled(enable);
         }
 
-        explicit Ui( SignEncryptEMailConflictDialog * q )
-            : conflictTopLB( make_top_label_conflict_text( true, true ), q ),
-              quickModeTopLB( make_top_label_quickmode_text( true, true ), q ),
-              showAllRecipientsCB( i18n("Show all recipients"), q ),
-              pgpRB( i18n("OpenPGP"), q ),
-              cmsRB( i18n("S/MIME"), q ),
-              selectSigningCertificatesGB( i18n("Select Signing Certificate"), q ),
-              selectEncryptionCertificatesGB( i18n("Select Encryption Certificate"), q ),
-              quickModeCB( i18n("Only show this dialog in case of conflicts (experimental)"), q ),
-              buttonBox( QDialogButtonBox::Ok|QDialogButtonBox::Cancel, Qt::Horizontal, q ),
-              vlay( q ),
+        explicit Ui(SignEncryptEMailConflictDialog *q)
+            : conflictTopLB(make_top_label_conflict_text(true, true), q),
+              quickModeTopLB(make_top_label_quickmode_text(true, true), q),
+              showAllRecipientsCB(i18n("Show all recipients"), q),
+              pgpRB(i18n("OpenPGP"), q),
+              cmsRB(i18n("S/MIME"), q),
+              selectSigningCertificatesGB(i18n("Select Signing Certificate"), q),
+              selectEncryptionCertificatesGB(i18n("Select Encryption Certificate"), q),
+              quickModeCB(i18n("Only show this dialog in case of conflicts (experimental)"), q),
+              buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, q),
+              vlay(q),
               hlay(),
               glay(),
               signers(),
               recipients()
         {
-            KDAB_SET_OBJECT_NAME( conflictTopLB );
-            KDAB_SET_OBJECT_NAME( quickModeTopLB );
-            KDAB_SET_OBJECT_NAME( showAllRecipientsCB );
-            KDAB_SET_OBJECT_NAME( pgpRB );
-            KDAB_SET_OBJECT_NAME( cmsRB );
-            KDAB_SET_OBJECT_NAME( selectSigningCertificatesGB );
-            KDAB_SET_OBJECT_NAME( selectEncryptionCertificatesGB );
-            KDAB_SET_OBJECT_NAME( quickModeCB );
-            KDAB_SET_OBJECT_NAME( buttonBox );
-            KDAB_SET_OBJECT_NAME( hlay );
-            KDAB_SET_OBJECT_NAME( glay );
-            KDAB_SET_OBJECT_NAME( vlay );
+            KDAB_SET_OBJECT_NAME(conflictTopLB);
+            KDAB_SET_OBJECT_NAME(quickModeTopLB);
+            KDAB_SET_OBJECT_NAME(showAllRecipientsCB);
+            KDAB_SET_OBJECT_NAME(pgpRB);
+            KDAB_SET_OBJECT_NAME(cmsRB);
+            KDAB_SET_OBJECT_NAME(selectSigningCertificatesGB);
+            KDAB_SET_OBJECT_NAME(selectEncryptionCertificatesGB);
+            KDAB_SET_OBJECT_NAME(quickModeCB);
+            KDAB_SET_OBJECT_NAME(buttonBox);
+            KDAB_SET_OBJECT_NAME(hlay);
+            KDAB_SET_OBJECT_NAME(glay);
+            KDAB_SET_OBJECT_NAME(vlay);
 
-            q->setWindowTitle( i18n("Select Certificates For Message") );
+            q->setWindowTitle(i18n("Select Certificates For Message"));
 
             conflictTopLB.hide();
 
-            selectSigningCertificatesGB.setFlat( true );
-            selectEncryptionCertificatesGB.setFlat( true );
-            selectSigningCertificatesGB.setAlignment( Qt::AlignCenter );
-            selectEncryptionCertificatesGB.setAlignment( Qt::AlignCenter );
+            selectSigningCertificatesGB.setFlat(true);
+            selectEncryptionCertificatesGB.setFlat(true);
+            selectSigningCertificatesGB.setAlignment(Qt::AlignCenter);
+            selectEncryptionCertificatesGB.setAlignment(Qt::AlignCenter);
 
-            glay.setColumnStretch( 2, 1 );
-            glay.setColumnStretch( 3, 1 );
+            glay.setColumnStretch(2, 1);
+            glay.setColumnStretch(3, 1);
 
-            vlay.setSizeConstraint( QLayout::SetMinimumSize );
+            vlay.setSizeConstraint(QLayout::SetMinimumSize);
 
-            vlay.addWidget( &conflictTopLB );
-            vlay.addWidget( &quickModeTopLB );
+            vlay.addWidget(&conflictTopLB);
+            vlay.addWidget(&quickModeTopLB);
 
-            hlay.addWidget( &showAllRecipientsCB );
-            hlay.addStretch( 1 );
-            hlay.addWidget( &pgpRB );
-            hlay.addWidget( &cmsRB );
-            vlay.addLayout( &hlay );
+            hlay.addWidget(&showAllRecipientsCB);
+            hlay.addStretch(1);
+            hlay.addWidget(&pgpRB);
+            hlay.addWidget(&cmsRB);
+            vlay.addLayout(&hlay);
 
             addSelectSigningCertificatesGB();
             addSelectEncryptionCertificatesGB();
-            vlay.addLayout( &glay );
+            vlay.addLayout(&glay);
 
-            vlay.addStretch( 1 );
+            vlay.addStretch(1);
 
-            vlay.addWidget( &quickModeCB, 0, Qt::AlignCenter );
-            vlay.addWidget( &buttonBox );
+            vlay.addWidget(&quickModeCB, 0, Qt::AlignCenter);
+            vlay.addWidget(&buttonBox);
 
             connect(&buttonBox, &QDialogButtonBox::accepted, q, &SignEncryptEMailConflictDialog::accept);
             connect(&buttonBox, &QDialogButtonBox::rejected, q, &SignEncryptEMailConflictDialog::reject);
 
-            connect( &showAllRecipientsCB, SIGNAL(toggled(bool)), q, SLOT(slotShowAllRecipientsToggled(bool)) );
-            connect( &pgpRB, SIGNAL(toggled(bool)),
-                     q, SLOT(slotProtocolChanged()) );
-            connect( &cmsRB, SIGNAL(toggled(bool)),
-                     q, SLOT(slotProtocolChanged()) );
+            connect(&showAllRecipientsCB, SIGNAL(toggled(bool)), q, SLOT(slotShowAllRecipientsToggled(bool)));
+            connect(&pgpRB, SIGNAL(toggled(bool)),
+                    q, SLOT(slotProtocolChanged()));
+            connect(&cmsRB, SIGNAL(toggled(bool)),
+                    q, SLOT(slotProtocolChanged()));
         }
 
-        void clearSendersAndRecipients() {
+        void clearSendersAndRecipients()
+        {
             std::vector<Line> sig, enc;
-            sig.swap( signers );
-            enc.swap( recipients );
-            kdtools::for_each( sig, mem_fn( &Line::kill ) );
-            kdtools::for_each( enc, mem_fn( &Line::kill ) );
-            glay.removeWidget( &selectSigningCertificatesGB );
-            glay.removeWidget( &selectEncryptionCertificatesGB );
+            sig.swap(signers);
+            enc.swap(recipients);
+            kdtools::for_each(sig, mem_fn(&Line::kill));
+            kdtools::for_each(enc, mem_fn(&Line::kill));
+            glay.removeWidget(&selectSigningCertificatesGB);
+            glay.removeWidget(&selectEncryptionCertificatesGB);
         }
 
-        void addSelectSigningCertificatesGB() {
-            glay.addWidget( &selectSigningCertificatesGB,    glay.rowCount(), 0, 1, Line::NumColumns );
-        }
-        void addSelectEncryptionCertificatesGB() {
-            glay.addWidget( &selectEncryptionCertificatesGB, glay.rowCount(), 0, 1, Line::NumColumns );
-        }
-
-        void addSigner( const QString & mailbox,
-                        const std::vector<Key> & pgp, bool pgpAmbiguous,
-                        const std::vector<Key> & cms, bool cmsAmbiguous, QWidget * q )
+        void addSelectSigningCertificatesGB()
         {
-            Line line( i18n("From:"), mailbox, pgp, pgpAmbiguous, cms, cmsAmbiguous, q, glay );
-            signers.push_back( line );
+            glay.addWidget(&selectSigningCertificatesGB,    glay.rowCount(), 0, 1, Line::NumColumns);
+        }
+        void addSelectEncryptionCertificatesGB()
+        {
+            glay.addWidget(&selectEncryptionCertificatesGB, glay.rowCount(), 0, 1, Line::NumColumns);
         }
 
-        void addRecipient( const QString & mailbox,
-                           const std::vector<Key> & pgp, bool pgpAmbiguous,
-                           const std::vector<Key> & cms, bool cmsAmbiguous, QWidget * q )
+        void addSigner(const QString &mailbox,
+                       const std::vector<Key> &pgp, bool pgpAmbiguous,
+                       const std::vector<Key> &cms, bool cmsAmbiguous, QWidget *q)
         {
-            Line line( i18n("To:"), mailbox, pgp, pgpAmbiguous, cms, cmsAmbiguous, q, glay );
-            recipients.push_back( line );
+            Line line(i18n("From:"), mailbox, pgp, pgpAmbiguous, cms, cmsAmbiguous, q, glay);
+            signers.push_back(line);
+        }
+
+        void addRecipient(const QString &mailbox,
+                          const std::vector<Key> &pgp, bool pgpAmbiguous,
+                          const std::vector<Key> &cms, bool cmsAmbiguous, QWidget *q)
+        {
+            Line line(i18n("To:"), mailbox, pgp, pgpAmbiguous, cms, cmsAmbiguous, q, glay);
+            recipients.push_back(line);
         }
 
     } ui;
 };
 
-SignEncryptEMailConflictDialog::SignEncryptEMailConflictDialog( QWidget * parent, Qt::WindowFlags f )
-    : QDialog( parent, f ), d( new Private( this ) )
+SignEncryptEMailConflictDialog::SignEncryptEMailConflictDialog(QWidget *parent, Qt::WindowFlags f)
+    : QDialog(parent, f), d(new Private(this))
 {
 
 }
 
 SignEncryptEMailConflictDialog::~SignEncryptEMailConflictDialog() {}
 
-void SignEncryptEMailConflictDialog::setPresetProtocol( Protocol p ) {
-    if ( p == d->presetProtocol )
+void SignEncryptEMailConflictDialog::setPresetProtocol(Protocol p)
+{
+    if (p == d->presetProtocol) {
         return;
-    const KDSignalBlocker pgpBlocker( d->ui.pgpRB );
-    const KDSignalBlocker cmsBlocker( d->ui.cmsRB );
-    really_check( d->ui.pgpRB, p == OpenPGP );
-    really_check( d->ui.cmsRB, p == CMS );
+    }
+    const KDSignalBlocker pgpBlocker(d->ui.pgpRB);
+    const KDSignalBlocker cmsBlocker(d->ui.cmsRB);
+    really_check(d->ui.pgpRB, p == OpenPGP);
+    really_check(d->ui.cmsRB, p == CMS);
     d->presetProtocol = p;
     d->showHideWidgets();
     d->enableDisableOkButton();
 }
 
-Protocol SignEncryptEMailConflictDialog::selectedProtocol() const {
-    if ( d->presetProtocol != UnknownProtocol )
+Protocol SignEncryptEMailConflictDialog::selectedProtocol() const
+{
+    if (d->presetProtocol != UnknownProtocol) {
         return d->presetProtocol;
-    if ( d->ui.pgpRB.isChecked() )
+    }
+    if (d->ui.pgpRB.isChecked()) {
         return OpenPGP;
-    if ( d->ui.cmsRB.isChecked() )
+    }
+    if (d->ui.cmsRB.isChecked()) {
         return CMS;
+    }
     return UnknownProtocol;
 }
 
-void SignEncryptEMailConflictDialog::setSubject( const QString & subject ) {
-    setWindowTitle( i18n("Select Certificates For Message \"%1\"", subject ) );
+void SignEncryptEMailConflictDialog::setSubject(const QString &subject)
+{
+    setWindowTitle(i18n("Select Certificates For Message \"%1\"", subject));
 }
 
-void SignEncryptEMailConflictDialog::setSign( bool sign ) {
-    if ( sign == d->sign )
+void SignEncryptEMailConflictDialog::setSign(bool sign)
+{
+    if (sign == d->sign) {
         return;
+    }
     d->sign = sign;
     d->updateTopLabelText();
     d->showHideWidgets();
     d->enableDisableOkButton();
 }
 
-void SignEncryptEMailConflictDialog::setEncrypt( bool encrypt ) {
-    if ( encrypt == d->encrypt )
+void SignEncryptEMailConflictDialog::setEncrypt(bool encrypt)
+{
+    if (encrypt == d->encrypt) {
         return;
+    }
     d->encrypt = encrypt;
     d->updateTopLabelText();
     d->showHideWidgets();
     d->enableDisableOkButton();
 }
 
-void SignEncryptEMailConflictDialog::setSenders( const std::vector<Sender> & senders ) {
-    if ( senders == d->senders )
+void SignEncryptEMailConflictDialog::setSenders(const std::vector<Sender> &senders)
+{
+    if (senders == d->senders) {
         return;
+    }
     d->senders = senders;
     d->createSendersAndRecipients();
     d->showHideWidgets();
     d->enableDisableOkButton();
 }
 
-void SignEncryptEMailConflictDialog::setRecipients( const std::vector<Recipient> & recipients ) {
-    if ( d->recipients == recipients )
+void SignEncryptEMailConflictDialog::setRecipients(const std::vector<Recipient> &recipients)
+{
+    if (d->recipients == recipients) {
         return;
+    }
     d->recipients = recipients;
     d->createSendersAndRecipients();
     d->showHideWidgets();
     d->enableDisableOkButton();
 }
 
-void SignEncryptEMailConflictDialog::pickProtocol() {
+void SignEncryptEMailConflictDialog::pickProtocol()
+{
 
-    if ( selectedProtocol() != UnknownProtocol )
-        return; // already picked
+    if (selectedProtocol() != UnknownProtocol) {
+        return;    // already picked
+    }
 
-    const bool pgp = d->isComplete( OpenPGP );
-    const bool cms = d->isComplete( CMS );
+    const bool pgp = d->isComplete(OpenPGP);
+    const bool cms = d->isComplete(CMS);
 
-    if ( pgp && !cms )
-        d->ui.pgpRB.setChecked( true );
-    else if ( cms && !pgp )
-        d->ui.cmsRB.setChecked( true );
+    if (pgp && !cms) {
+        d->ui.pgpRB.setChecked(true);
+    } else if (cms && !pgp) {
+        d->ui.cmsRB.setChecked(true);
+    }
 }
 
-bool SignEncryptEMailConflictDialog::isComplete() const {
+bool SignEncryptEMailConflictDialog::isComplete() const
+{
     const Protocol proto = selectedProtocol();
-    return proto != UnknownProtocol && d->isComplete( proto ) ;
+    return proto != UnknownProtocol && d->isComplete(proto) ;
 }
 
-bool SignEncryptEMailConflictDialog::Private::isComplete( Protocol proto ) const {
-    return ( !sign    || kdtools::none_of( ui.signers,    boost::bind( &Line::isStillAmbiguous, _1, proto ) ) )
-        && ( !encrypt || kdtools::none_of( ui.recipients, boost::bind( &Line::isStillAmbiguous, _1, proto ) ) )
-        ;
+bool SignEncryptEMailConflictDialog::Private::isComplete(Protocol proto) const
+{
+    return (!sign    || kdtools::none_of(ui.signers,    boost::bind(&Line::isStillAmbiguous, _1, proto)))
+           && (!encrypt || kdtools::none_of(ui.recipients, boost::bind(&Line::isStillAmbiguous, _1, proto)))
+           ;
 }
 
-static std::vector<Key> get_keys( const std::vector<Line> & lines, Protocol proto ) {
-    if ( proto == UnknownProtocol )
+static std::vector<Key> get_keys(const std::vector<Line> &lines, Protocol proto)
+{
+    if (proto == UnknownProtocol) {
         return std::vector<Key>();
-    assert( proto == OpenPGP || proto == CMS );
+    }
+    assert(proto == OpenPGP || proto == CMS);
 
     std::vector<Key> keys;
-    keys.reserve( lines.size() );
-    kdtools::transform( lines, std::back_inserter( keys ),
-                        boost::bind( &Line::key, _1, proto ) ); 
-    kleo_assert( kdtools::none_of( keys, mem_fn( &Key::isNull ) ) );
+    keys.reserve(lines.size());
+    kdtools::transform(lines, std::back_inserter(keys),
+                       boost::bind(&Line::key, _1, proto));
+    kleo_assert(kdtools::none_of(keys, mem_fn(&Key::isNull)));
     return keys;
 }
 
-std::vector<Key> SignEncryptEMailConflictDialog::resolvedSigningKeys() const {
-    return d->sign    ? get_keys( d->ui.signers,    selectedProtocol() ) : std::vector<Key>() ;
+std::vector<Key> SignEncryptEMailConflictDialog::resolvedSigningKeys() const
+{
+    return d->sign    ? get_keys(d->ui.signers,    selectedProtocol()) : std::vector<Key>() ;
 }
 
-std::vector<Key> SignEncryptEMailConflictDialog::resolvedEncryptionKeys() const {
-    return d->encrypt ? get_keys( d->ui.recipients, selectedProtocol() ) : std::vector<Key>() ;
+std::vector<Key> SignEncryptEMailConflictDialog::resolvedEncryptionKeys() const
+{
+    return d->encrypt ? get_keys(d->ui.recipients, selectedProtocol()) : std::vector<Key>() ;
 }
 
-void SignEncryptEMailConflictDialog::setQuickMode( bool on ) {
-    d->ui.quickModeCB.setChecked( on );
+void SignEncryptEMailConflictDialog::setQuickMode(bool on)
+{
+    d->ui.quickModeCB.setChecked(on);
 }
 
-bool SignEncryptEMailConflictDialog::isQuickMode() const {
+bool SignEncryptEMailConflictDialog::isQuickMode() const
+{
     return d->ui.quickModeCB.isChecked();
 }
 
-void SignEncryptEMailConflictDialog::setConflict( bool conflict ) {
-    d->ui.conflictTopLB.setVisible( conflict );
-    d->ui.quickModeTopLB.setVisible( !conflict );
+void SignEncryptEMailConflictDialog::setConflict(bool conflict)
+{
+    d->ui.conflictTopLB.setVisible(conflict);
+    d->ui.quickModeTopLB.setVisible(!conflict);
 }
 
 #include "moc_signencryptemailconflictdialog.cpp"

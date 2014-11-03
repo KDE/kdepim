@@ -46,30 +46,32 @@ using namespace Kleo;
 using namespace GpgME;
 using namespace boost;
 
-QGpgMEChangeOwnerTrustJob::QGpgMEChangeOwnerTrustJob( Context * context )
-  : mixin_type( context )
+QGpgMEChangeOwnerTrustJob::QGpgMEChangeOwnerTrustJob(Context *context)
+    : mixin_type(context)
 {
-  lateInitialization();
+    lateInitialization();
 }
 
 QGpgMEChangeOwnerTrustJob::~QGpgMEChangeOwnerTrustJob() {}
 
-static QGpgMEChangeOwnerTrustJob::result_type change_ownertrust( Context * ctx, const Key & key, Key::OwnerTrust trust ) {
-  std::auto_ptr<EditInteractor>
-      ei( new GpgSetOwnerTrustEditInteractor( trust ) );
+static QGpgMEChangeOwnerTrustJob::result_type change_ownertrust(Context *ctx, const Key &key, Key::OwnerTrust trust)
+{
+    std::auto_ptr<EditInteractor>
+    ei(new GpgSetOwnerTrustEditInteractor(trust));
 
-  QGpgME::QByteArrayDataProvider dp;
-  Data data( &dp );
-  assert( !data.isNull() );
+    QGpgME::QByteArrayDataProvider dp;
+    Data data(&dp);
+    assert(!data.isNull());
 
-  const Error err = ctx->edit( key, ei, data );
-  Error ae;
-  const QString log = _detail::audit_log_as_html( ctx, ae );
-  return make_tuple( err, log, ae );
+    const Error err = ctx->edit(key, ei, data);
+    Error ae;
+    const QString log = _detail::audit_log_as_html(ctx, ae);
+    return make_tuple(err, log, ae);
 }
 
-Error QGpgMEChangeOwnerTrustJob::start( const Key & key, Key::OwnerTrust trust ) {
-  run( bind( &change_ownertrust, _1, key, trust ) );
-  return Error();
+Error QGpgMEChangeOwnerTrustJob::start(const Key &key, Key::OwnerTrust trust)
+{
+    run(bind(&change_ownertrust, _1, key, trust));
+    return Error();
 }
 

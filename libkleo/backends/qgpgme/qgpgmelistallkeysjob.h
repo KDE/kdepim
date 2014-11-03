@@ -40,39 +40,40 @@
 #include <gpgme++/keylistresult.h>
 #include <gpgme++/key.h>
 
-namespace Kleo {
+namespace Kleo
+{
 
-  class QGpgMEListAllKeysJob
+class QGpgMEListAllKeysJob
 #ifdef Q_MOC_RUN
     : public ListAllKeysJob
 #else
     : public _detail::ThreadedJobMixin<ListAllKeysJob, boost::tuple<GpgME::KeyListResult, std::vector<GpgME::Key>, std::vector<GpgME::Key>, QString, GpgME::Error> >
 #endif
-  {
+{
     Q_OBJECT
 #ifdef Q_MOC_RUN
-  public Q_SLOTS:
+public Q_SLOTS:
     void slotFinished();
 #endif
-  public:
-    explicit QGpgMEListAllKeysJob( GpgME::Context * context );
+public:
+    explicit QGpgMEListAllKeysJob(GpgME::Context *context);
     ~QGpgMEListAllKeysJob();
 
     /*! \reimp from ListAllKeysJob */
-    GpgME::Error start( bool mergeKeys );
+    GpgME::Error start(bool mergeKeys);
 
     /*! \reimp from ListAllKeysJob */
-    GpgME::KeyListResult exec( std::vector<GpgME::Key> & pub, std::vector<GpgME::Key> & sec, bool mergeKeys );
+    GpgME::KeyListResult exec(std::vector<GpgME::Key> &pub, std::vector<GpgME::Key> &sec, bool mergeKeys);
 
     /*! \reimp from Job */
-    void showErrorDialog( QWidget * parent, const QString & caption ) const;
+    void showErrorDialog(QWidget *parent, const QString &caption) const;
 
     /*! \reimp from ThreadedJobMixin */
-    void resultHook( const result_type & result );
+    void resultHook(const result_type &result);
 
-  private:
+private:
     GpgME::KeyListResult mResult;
-  };
+};
 
 }
 

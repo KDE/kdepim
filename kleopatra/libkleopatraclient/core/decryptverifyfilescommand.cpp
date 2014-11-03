@@ -23,11 +23,11 @@
 
 using namespace KleopatraClientCopy;
 
-DecryptVerifyFilesCommand::DecryptVerifyFilesCommand( QObject * p )
-    : Command( p )
+DecryptVerifyFilesCommand::DecryptVerifyFilesCommand(QObject *p)
+    : Command(p)
 {
-    setCommand( "DECRYPT_VERIFY_FILES" );
-    setOption( "nohup" );
+    setCommand("DECRYPT_VERIFY_FILES");
+    setOption("nohup");
 }
 
 DecryptVerifyFilesCommand::~DecryptVerifyFilesCommand() {}

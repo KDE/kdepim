@@ -22,7 +22,8 @@
 
 #include "filteractionwithstringlist.h"
 
-namespace PimCommon {
+namespace PimCommon
+{
 class MinimumComboBox;
 }
 

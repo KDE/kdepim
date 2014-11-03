@@ -35,33 +35,36 @@
 
 #include <commands/importcertificatescommand.h>
 
-namespace Kleo {
-namespace Commands {
+namespace Kleo
+{
+namespace Commands
+{
 
-    class LookupCertificatesCommand : public ImportCertificatesCommand {
-        Q_OBJECT
-    public:
-        explicit LookupCertificatesCommand( QAbstractItemView * view, KeyListController * parent );
-        explicit LookupCertificatesCommand( KeyListController * parent );
-        explicit LookupCertificatesCommand( const QString & fingerPrint, KeyListController * parent );
-        ~LookupCertificatesCommand();
+class LookupCertificatesCommand : public ImportCertificatesCommand
+{
+    Q_OBJECT
+public:
+    explicit LookupCertificatesCommand(QAbstractItemView *view, KeyListController *parent);
+    explicit LookupCertificatesCommand(KeyListController *parent);
+    explicit LookupCertificatesCommand(const QString &fingerPrint, KeyListController *parent);
+    ~LookupCertificatesCommand();
 
-    private:
-        /* reimp */ void doStart();
-        /* reimp */ void doCancel();
+private:
+    /* reimp */ void doStart();
+    /* reimp */ void doCancel();
 
-    private:
-        class Private;
-        inline Private * d_func();
-        inline const Private * d_func() const;
-        Q_PRIVATE_SLOT( d_func(), void slotSearchTextChanged(QString) )
-        Q_PRIVATE_SLOT( d_func(), void slotNextKey(GpgME::Key) )
-        Q_PRIVATE_SLOT( d_func(), void slotKeyListResult(GpgME::KeyListResult) )
-        Q_PRIVATE_SLOT( d_func(), void slotImportRequested(std::vector<GpgME::Key>) )
-        Q_PRIVATE_SLOT( d_func(), void slotDetailsRequested(GpgME::Key) )
-        Q_PRIVATE_SLOT( d_func(), void slotSaveAsRequested(std::vector<GpgME::Key>) )
-        Q_PRIVATE_SLOT( d_func(), void slotDialogRejected() )
-    };
+private:
+    class Private;
+    inline Private *d_func();
+    inline const Private *d_func() const;
+    Q_PRIVATE_SLOT(d_func(), void slotSearchTextChanged(QString))
+    Q_PRIVATE_SLOT(d_func(), void slotNextKey(GpgME::Key))
+    Q_PRIVATE_SLOT(d_func(), void slotKeyListResult(GpgME::KeyListResult))
+    Q_PRIVATE_SLOT(d_func(), void slotImportRequested(std::vector<GpgME::Key>))
+    Q_PRIVATE_SLOT(d_func(), void slotDetailsRequested(GpgME::Key))
+    Q_PRIVATE_SLOT(d_func(), void slotSaveAsRequested(std::vector<GpgME::Key>))
+    Q_PRIVATE_SLOT(d_func(), void slotDialogRejected())
+};
 
 }
 }

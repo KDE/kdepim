@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "archivemaildialogtest.h"
 #include "../archivemaildialog.h"
 #include <qtest_kde.h>
@@ -44,6 +43,5 @@ void ArchiveMailDialogTest::shouldHaveDefaultValue()
     QCOMPARE(treeWidget->topLevelItemCount(), 0);
 
 }
-
 
 QTEST_KDEMAIN(ArchiveMailDialogTest, GUI)

@@ -39,34 +39,36 @@ class QCheckBox;
 class QComboBox;
 class KPluralHandlingSpinBox;
 class QDialogButtonBox;
-namespace Kleo {
-    class FileNameRequester;
+namespace Kleo
+{
+class FileNameRequester;
 }
 
-class KWatchGnuPGConfig : public QDialog {
-  Q_OBJECT
+class KWatchGnuPGConfig : public QDialog
+{
+    Q_OBJECT
 public:
-  explicit KWatchGnuPGConfig( QWidget * parent=0 );
-  ~KWatchGnuPGConfig();
+    explicit KWatchGnuPGConfig(QWidget *parent = 0);
+    ~KWatchGnuPGConfig();
 
-  void loadConfig();
-  void saveConfig();
+    void loadConfig();
+    void saveConfig();
 
 Q_SIGNALS:
-  void reconfigure();
+    void reconfigure();
 
 private Q_SLOTS:
-  void slotChanged();
-  void slotSave();
-  void slotSetHistorySizeUnlimited();
+    void slotChanged();
+    void slotSave();
+    void slotSetHistorySizeUnlimited();
 
 private:
-  Kleo::FileNameRequester* mExeED;
-  Kleo::FileNameRequester* mSocketED;
-  QComboBox* mLogLevelCB;
-  KPluralHandlingSpinBox* mLoglenSB;
-  QCheckBox* mWordWrapCB;
-  QDialogButtonBox *mButtonBox;
+    Kleo::FileNameRequester *mExeED;
+    Kleo::FileNameRequester *mSocketED;
+    QComboBox *mLogLevelCB;
+    KPluralHandlingSpinBox *mLoglenSB;
+    QCheckBox *mWordWrapCB;
+    QDialogButtonBox *mButtonBox;
 };
 
 #endif /* KWATCHGNUPGCONFIG_H */

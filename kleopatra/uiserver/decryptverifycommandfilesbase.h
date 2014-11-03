@@ -38,41 +38,46 @@
 #include <utils/pimpl_ptr.h>
 #include <utils/types.h>
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class DecryptVerifyCommandFilesBase : public AssuanCommandMixin<DecryptVerifyCommandFilesBase> {
-    public:
-        enum Flags {
-            DecryptOff = 0x0,
-            DecryptOn = 0x1,
-            DecryptImplied = 0x2,
+class DecryptVerifyCommandFilesBase : public AssuanCommandMixin<DecryptVerifyCommandFilesBase>
+{
+public:
+    enum Flags {
+        DecryptOff = 0x0,
+        DecryptOn = 0x1,
+        DecryptImplied = 0x2,
 
-            DecryptMask = 0x3,
+        DecryptMask = 0x3,
 
-            VerifyOff = 0x00,
-            //VerifyOn  = 0x10, // non-sensical
-            VerifyImplied = 0x20,
+        VerifyOff = 0x00,
+        //VerifyOn  = 0x10, // non-sensical
+        VerifyImplied = 0x20,
 
-            VerifyMask = 0x30
-        };
-
-        explicit DecryptVerifyCommandFilesBase();
-        ~DecryptVerifyCommandFilesBase();
-
-    private:
-        virtual DecryptVerifyOperation operation() const = 0;
-
-    private:
-        int doStart();
-        void doCanceled();
-    public:
-        // ### FIXME fix this
-        static const char * staticName() { return ""; }
-
-        class Private;
-    private:
-        kdtools::pimpl_ptr<Private> d;
+        VerifyMask = 0x30
     };
+
+    explicit DecryptVerifyCommandFilesBase();
+    ~DecryptVerifyCommandFilesBase();
+
+private:
+    virtual DecryptVerifyOperation operation() const = 0;
+
+private:
+    int doStart();
+    void doCanceled();
+public:
+    // ### FIXME fix this
+    static const char *staticName()
+    {
+        return "";
+    }
+
+    class Private;
+private:
+    kdtools::pimpl_ptr<Private> d;
+};
 }
 
 #endif // __KLEOPATRA_UISERVER_DECRYPTCOMMAND_H__

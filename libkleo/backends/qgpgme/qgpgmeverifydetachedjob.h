@@ -39,40 +39,41 @@
 
 #include <gpgme++/verificationresult.h>
 
-namespace Kleo {
+namespace Kleo
+{
 
-  class QGpgMEVerifyDetachedJob
+class QGpgMEVerifyDetachedJob
 #ifdef Q_MOC_RUN
     : public VerifyDetachedJob
 #else
     : public _detail::ThreadedJobMixin<VerifyDetachedJob, boost::tuple<GpgME::VerificationResult, QString, GpgME::Error> >
 #endif
-  {
+{
     Q_OBJECT
 #ifdef Q_MOC_RUN
-  public Q_SLOTS:
+public Q_SLOTS:
     void slotFinished();
 #endif
-  public:
-    explicit QGpgMEVerifyDetachedJob( GpgME::Context * context );
+public:
+    explicit QGpgMEVerifyDetachedJob(GpgME::Context *context);
     ~QGpgMEVerifyDetachedJob();
 
     /*! \reimp from VerifyDetachedJob */
-    GpgME::Error start( const QByteArray & signature, const QByteArray & signedData );
+    GpgME::Error start(const QByteArray &signature, const QByteArray &signedData);
 
     /*! \reimp from VerifyDetachedJob */
-    void start( const boost::shared_ptr<QIODevice> & signature, const boost::shared_ptr<QIODevice> & signedData );
+    void start(const boost::shared_ptr<QIODevice> &signature, const boost::shared_ptr<QIODevice> &signedData);
 
     /*! \reimp from VerifyDetachedJob */
-    GpgME::VerificationResult exec( const QByteArray & signature,
-                                    const QByteArray & signedData );
+    GpgME::VerificationResult exec(const QByteArray &signature,
+                                   const QByteArray &signedData);
 
     /*! \reimp from ThreadedJobMixin */
-    void resultHook( const result_type & r );
+    void resultHook(const result_type &r);
 
-  private:
+private:
     GpgME::VerificationResult mResult;
-  };
+};
 
 }
 

@@ -20,4 +20,3 @@
 #include "gpgme_backend_debug.h"
 Q_LOGGING_CATEGORY(GPGPME_BACKEND_LOG, "log_gpgme_backend")
 
-

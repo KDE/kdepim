@@ -36,7 +36,7 @@ FollowUpReminderShowMessageJob::~FollowUpReminderShowMessageJob()
 void FollowUpReminderShowMessageJob::start()
 {
     if (mId < 0) {
-        qDebug()<<" value < 0";
+        qDebug() << " value < 0";
         deleteLater();
         return;
     }

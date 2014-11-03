@@ -52,165 +52,192 @@
 
 using namespace GpgME;
 
-Kleo::ChiasmusJob::ChiasmusJob( Mode mode )
-  : Kleo::SpecialJob( 0 ),
-    mSymCryptRun( 0 ),
-    mError( 0 ),
-    mCanceled( false ),
-    mTimeout( false ),
-    mMode( mode )
+Kleo::ChiasmusJob::ChiasmusJob(Mode mode)
+    : Kleo::SpecialJob(0),
+      mSymCryptRun(0),
+      mError(0),
+      mCanceled(false),
+      mTimeout(false),
+      mMode(mode)
 {
 
 }
 
 Kleo::ChiasmusJob::~ChiasmusJob() {}
 
-GpgME::Error Kleo::ChiasmusJob::setup() {
-  if ( !checkPreconditions() )
-    return mError = Error::fromCode( GPG_ERR_INV_VALUE );
-
-  const Kleo::CryptoConfigEntry * class_
-    = ChiasmusBackend::instance()->config()->entry( QLatin1String("Chiasmus"), QLatin1String("General"), QLatin1String("symcryptrun-class") );
-  const Kleo::CryptoConfigEntry * chiasmus
-    = ChiasmusBackend::instance()->config()->entry( QLatin1String("Chiasmus"), QLatin1String("General"), QLatin1String("path") );
-  const Kleo::CryptoConfigEntry * timeoutEntry
-    = ChiasmusBackend::instance()->config()->entry( QLatin1String("Chiasmus"), QLatin1String("General"), QLatin1String("timeout") );
-  if ( !class_ || !chiasmus || !timeoutEntry )
-    return mError = Error::fromCode( GPG_ERR_INTERNAL );
-
-  mSymCryptRun = new SymCryptRunProcessBase( class_->stringValue(),
-                                             KShell::tildeExpand( chiasmus->urlValue().path() ),
-                                             mKey, mOptions,
-                                             mMode == Encrypt
-                                             ? SymCryptRunProcessBase::Encrypt
-                                             : SymCryptRunProcessBase::Decrypt,
-                                             this );
-  mSymCryptRun->setObjectName( QLatin1String("symcryptrun") );
-  QTimer::singleShot( timeoutEntry->uintValue() * 1000, this,
-                      SLOT(slotTimeout()) );
-  return GpgME::Error();
-}
-
-namespace {
-  struct LaterDeleter {
-    QObject * _this;
-    LaterDeleter( QObject * o ) : _this( o ) {}
-    ~LaterDeleter() { if ( _this ) _this->deleteLater(); }
-    void disable() { _this = 0; }
-  };
-}
-
-GpgME::Error Kleo::ChiasmusJob::start() {
-
-  LaterDeleter d( this );
-
-  if ( const GpgME::Error err = setup() )
-    return mError = err;
-
-  connect( mSymCryptRun, SIGNAL(finished(int,QProcess::ExitStatus)),
-           this, SLOT(finished()) );
-
-  if ( !mSymCryptRun->launch( mInput ) )
-    return mError = Error::fromCode( GPG_ERR_ENOENT ); // what else?
-
-  d.disable();
-  return mError = GpgME::Error();
-}
-
-GpgME::Error Kleo::ChiasmusJob::finished() {
-  if ( !mSymCryptRun )
-    mError = Error::fromCode( GPG_ERR_INTERNAL );
-  else if ( mCanceled )
-    mError = Error::fromCode( GPG_ERR_CANCELED );
-  else if ( mTimeout )
-    mError = Error::fromCode( GPG_ERR_TIMEOUT );
-  else if ( mSymCryptRun->exitStatus() != QProcess::NormalExit )
-    mError = Error::fromCode( GPG_ERR_GENERAL );
-  else
-    switch ( mSymCryptRun->exitCode() ) {
-    case 0: // success
-      mOutput = mSymCryptRun->output();
-      mError = GpgME::Error();
-      break;
-    default:
-    case 1: // Some error occurred
-      mStderr = mSymCryptRun->stdErr();
-      mError = Error::fromCode( GPG_ERR_GENERAL );
-      break;
-    case 2: // No valid passphrase was provided
-      mError = Error::fromCode( GPG_ERR_INV_PASSPHRASE );
-      break;
-    case 3: // Canceled
-      mError = Error::fromCode( GPG_ERR_CANCELED );
-      break;
+GpgME::Error Kleo::ChiasmusJob::setup()
+{
+    if (!checkPreconditions()) {
+        return mError = Error::fromCode(GPG_ERR_INV_VALUE);
     }
 
-  const Kleo::CryptoConfigEntry * showOutput
-    = ChiasmusBackend::instance()->config()->entry( QLatin1String("Chiasmus"), QLatin1String("General"), QLatin1String("show-output") );
-  if ( showOutput && showOutput->boolValue() ) {
-    showChiasmusOutput();
-  }
+    const Kleo::CryptoConfigEntry *class_
+        = ChiasmusBackend::instance()->config()->entry(QLatin1String("Chiasmus"), QLatin1String("General"), QLatin1String("symcryptrun-class"));
+    const Kleo::CryptoConfigEntry *chiasmus
+        = ChiasmusBackend::instance()->config()->entry(QLatin1String("Chiasmus"), QLatin1String("General"), QLatin1String("path"));
+    const Kleo::CryptoConfigEntry *timeoutEntry
+        = ChiasmusBackend::instance()->config()->entry(QLatin1String("Chiasmus"), QLatin1String("General"), QLatin1String("timeout"));
+    if (!class_ || !chiasmus || !timeoutEntry) {
+        return mError = Error::fromCode(GPG_ERR_INTERNAL);
+    }
 
-  emit done();
-  emit SpecialJob::result( mError, QVariant( mOutput ) );
-  return mError;
+    mSymCryptRun = new SymCryptRunProcessBase(class_->stringValue(),
+            KShell::tildeExpand(chiasmus->urlValue().path()),
+            mKey, mOptions,
+            mMode == Encrypt
+            ? SymCryptRunProcessBase::Encrypt
+            : SymCryptRunProcessBase::Decrypt,
+            this);
+    mSymCryptRun->setObjectName(QLatin1String("symcryptrun"));
+    QTimer::singleShot(timeoutEntry->uintValue() * 1000, this,
+                       SLOT(slotTimeout()));
+    return GpgME::Error();
 }
 
-void Kleo::ChiasmusJob::showChiasmusOutput() {
-  qDebug() ;
-  if ( mStderr.isEmpty() )
-    return;
-  KMessageBox::information( 0 /*how to get a parent widget?*/,
-                            mStderr,
-                            i18n( "Output from chiasmus" ) );
+namespace
+{
+struct LaterDeleter {
+    QObject *_this;
+    LaterDeleter(QObject *o) : _this(o) {}
+    ~LaterDeleter()
+    {
+        if (_this) {
+            _this->deleteLater();
+        }
+    }
+    void disable()
+    {
+        _this = 0;
+    }
+};
 }
 
-GpgME::Error Kleo::ChiasmusJob::exec() {
-  if ( const GpgME::Error err = setup() )
-    return mError = err;
+GpgME::Error Kleo::ChiasmusJob::start()
+{
 
-  if ( !mSymCryptRun->launch( mInput, true ) ) {
+    LaterDeleter d(this);
+
+    if (const GpgME::Error err = setup()) {
+        return mError = err;
+    }
+
+    connect(mSymCryptRun, SIGNAL(finished(int,QProcess::ExitStatus)),
+            this, SLOT(finished()));
+
+    if (!mSymCryptRun->launch(mInput)) {
+        return mError = Error::fromCode(GPG_ERR_ENOENT);    // what else?
+    }
+
+    d.disable();
+    return mError = GpgME::Error();
+}
+
+GpgME::Error Kleo::ChiasmusJob::finished()
+{
+    if (!mSymCryptRun) {
+        mError = Error::fromCode(GPG_ERR_INTERNAL);
+    } else if (mCanceled) {
+        mError = Error::fromCode(GPG_ERR_CANCELED);
+    } else if (mTimeout) {
+        mError = Error::fromCode(GPG_ERR_TIMEOUT);
+    } else if (mSymCryptRun->exitStatus() != QProcess::NormalExit) {
+        mError = Error::fromCode(GPG_ERR_GENERAL);
+    } else
+        switch (mSymCryptRun->exitCode()) {
+        case 0: // success
+            mOutput = mSymCryptRun->output();
+            mError = GpgME::Error();
+            break;
+        default:
+        case 1: // Some error occurred
+            mStderr = mSymCryptRun->stdErr();
+            mError = Error::fromCode(GPG_ERR_GENERAL);
+            break;
+        case 2: // No valid passphrase was provided
+            mError = Error::fromCode(GPG_ERR_INV_PASSPHRASE);
+            break;
+        case 3: // Canceled
+            mError = Error::fromCode(GPG_ERR_CANCELED);
+            break;
+        }
+
+    const Kleo::CryptoConfigEntry *showOutput
+        = ChiasmusBackend::instance()->config()->entry(QLatin1String("Chiasmus"), QLatin1String("General"), QLatin1String("show-output"));
+    if (showOutput && showOutput->boolValue()) {
+        showChiasmusOutput();
+    }
+
+    emit done();
+    emit SpecialJob::result(mError, QVariant(mOutput));
+    return mError;
+}
+
+void Kleo::ChiasmusJob::showChiasmusOutput()
+{
+    qDebug() ;
+    if (mStderr.isEmpty()) {
+        return;
+    }
+    KMessageBox::information(0 /*how to get a parent widget?*/,
+                             mStderr,
+                             i18n("Output from chiasmus"));
+}
+
+GpgME::Error Kleo::ChiasmusJob::exec()
+{
+    if (const GpgME::Error err = setup()) {
+        return mError = err;
+    }
+
+    if (!mSymCryptRun->launch(mInput, true)) {
+        delete mSymCryptRun; mSymCryptRun = 0;
+        return mError = Error::fromCode(GPG_ERR_ENOENT);   // what else?
+    }
+
+    const GpgME::Error err = finished();
     delete mSymCryptRun; mSymCryptRun = 0;
-    return mError = Error::fromCode( GPG_ERR_ENOENT ); // what else?
-  }
-
-  const GpgME::Error err = finished();
-  delete mSymCryptRun; mSymCryptRun = 0;
-  return err;
+    return err;
 }
 
-bool Kleo::ChiasmusJob::checkPreconditions() const {
-  return !mKey.isEmpty();
+bool Kleo::ChiasmusJob::checkPreconditions() const
+{
+    return !mKey.isEmpty();
 }
 
-void Kleo::ChiasmusJob::slotCancel() {
-  if ( mSymCryptRun )
+void Kleo::ChiasmusJob::slotCancel()
+{
+    if (mSymCryptRun) {
+        mSymCryptRun->kill();
+    }
+    mCanceled = true;
+}
+
+void Kleo::ChiasmusJob::slotTimeout()
+{
+    if (!mSymCryptRun) {
+        return;
+    }
     mSymCryptRun->kill();
-  mCanceled = true;
+    mTimeout = true;
 }
 
-void Kleo::ChiasmusJob::slotTimeout() {
-  if ( !mSymCryptRun )
-    return;
-  mSymCryptRun->kill();
-  mTimeout = true;
-}
-
-
-void Kleo::ChiasmusJob::showErrorDialog( QWidget * parent, const QString & caption ) const {
-  if ( !mError )
-    return;
-  if ( mError.isCanceled() )
-    return;
-  const QString reason = QString::fromLocal8Bit( mError.asString() );
-  const QString msg = ( mMode == Encrypt
-                        ? i18n( "Encryption failed: %1", reason )
-                        : i18n( "Decryption failed: %1", reason ) );
-  if ( !mStderr.isEmpty() ) {
-    const QString details = i18n( "The following was received on stderr:\n%1", mStderr );
-    KMessageBox::detailedError( parent, msg, details, caption );
-  } else {
-    KMessageBox::error( parent, msg, caption );
-  }
+void Kleo::ChiasmusJob::showErrorDialog(QWidget *parent, const QString &caption) const
+{
+    if (!mError) {
+        return;
+    }
+    if (mError.isCanceled()) {
+        return;
+    }
+    const QString reason = QString::fromLocal8Bit(mError.asString());
+    const QString msg = (mMode == Encrypt
+                         ? i18n("Encryption failed: %1", reason)
+                         : i18n("Decryption failed: %1", reason));
+    if (!mStderr.isEmpty()) {
+        const QString details = i18n("The following was received on stderr:\n%1", mStderr);
+        KMessageBox::detailedError(parent, msg, details, caption);
+    } else {
+        KMessageBox::error(parent, msg, caption);
+    }
 }
 

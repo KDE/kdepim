@@ -53,57 +53,70 @@
 using namespace Kleo;
 using namespace boost;
 
-static QString commonPrefix( const QString & s1, const QString & s2 ) {
-    return QString( s1.data(), std::mismatch( s1.data(), s1.data() + std::min( s1.size(), s2.size() ), s2.data() ).first - s1.data() );
+static QString commonPrefix(const QString &s1, const QString &s2)
+{
+    return QString(s1.data(), std::mismatch(s1.data(), s1.data() + std::min(s1.size(), s2.size()), s2.data()).first - s1.data());
 }
 
-static QString longestCommonPrefix( const QStringList & sl ) {
-    if ( sl.empty() )
+static QString longestCommonPrefix(const QStringList &sl)
+{
+    if (sl.empty()) {
         return QString();
+    }
     QString result = sl.front();
-    Q_FOREACH( const QString & s, sl )
-        result = commonPrefix( s, result );
+    Q_FOREACH (const QString &s, sl) {
+        result = commonPrefix(s, result);
+    }
     return result;
 }
 
-QString Kleo::heuristicBaseDirectory( const QStringList & fileNames ) {
+QString Kleo::heuristicBaseDirectory(const QStringList &fileNames)
+{
     QStringList dirs;
-    Q_FOREACH( const QString & fileName, fileNames )
-        dirs.push_back( QFileInfo( fileName ).path() + QLatin1Char( '/' ) );
+    Q_FOREACH (const QString &fileName, fileNames) {
+        dirs.push_back(QFileInfo(fileName).path() + QLatin1Char('/'));
+    }
     qDebug() << "dirs" << dirs;
-    const QString candidate = longestCommonPrefix( dirs );
-    const int idx = candidate.lastIndexOf( QLatin1Char( '/' ) );
-    return candidate.left( idx );
+    const QString candidate = longestCommonPrefix(dirs);
+    const int idx = candidate.lastIndexOf(QLatin1Char('/'));
+    return candidate.left(idx);
 }
 
-QStringList Kleo::makeRelativeTo( const QString & base, const QStringList & fileNames ) {
+QStringList Kleo::makeRelativeTo(const QString &base, const QStringList &fileNames)
+{
 
-    if ( base.isEmpty() )
+    if (base.isEmpty()) {
         return fileNames;
-    else
-        return makeRelativeTo( QDir( base ), fileNames );
+    } else {
+        return makeRelativeTo(QDir(base), fileNames);
+    }
 
 }
 
-QStringList Kleo::makeRelativeTo( const QDir & baseDir, const QStringList & fileNames ) {
+QStringList Kleo::makeRelativeTo(const QDir &baseDir, const QStringList &fileNames)
+{
     return kdtools::transform<QStringList>
-        ( fileNames,
-          boost::bind( &QDir::relativeFilePath, &baseDir, _1 ) );
+           (fileNames,
+            boost::bind(&QDir::relativeFilePath, &baseDir, _1));
 }
 
-void Kleo::recursivelyRemovePath( const QString & path ) {
-    const QFileInfo fi( path );
-    if ( fi.isDir() ) {
-        QDir dir( path );
-        Q_FOREACH( const QString & fname, dir.entryList( QDir::AllEntries|QDir::NoDotAndDotDot ) )
-            recursivelyRemovePath( dir.filePath( fname ) );
+void Kleo::recursivelyRemovePath(const QString &path)
+{
+    const QFileInfo fi(path);
+    if (fi.isDir()) {
+        QDir dir(path);
+        Q_FOREACH (const QString &fname, dir.entryList(QDir::AllEntries | QDir::NoDotAndDotDot)) {
+            recursivelyRemovePath(dir.filePath(fname));
+        }
         const QString dirName = fi.fileName();
         dir.cdUp();
-        if ( !dir.rmdir( dirName ) )
-            throw Exception( GPG_ERR_EPERM, i18n("Cannot remove directory %1", path ) );
+        if (!dir.rmdir(dirName)) {
+            throw Exception(GPG_ERR_EPERM, i18n("Cannot remove directory %1", path));
+        }
     } else {
-        QFile file( path );
-        if ( !file.remove() )
-            throw Exception( GPG_ERR_EPERM, i18n("Cannot remove file %1: %2", path, file.errorString() ) );
+        QFile file(path);
+        if (!file.remove()) {
+            throw Exception(GPG_ERR_EPERM, i18n("Cannot remove file %1: %2", path, file.errorString()));
+        }
     }
 }

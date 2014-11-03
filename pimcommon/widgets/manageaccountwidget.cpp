@@ -82,13 +82,13 @@ void ManageAccountWidget::slotAddAccount()
     Akonadi::AgentTypeDialog dlg(this);
 
     Akonadi::AgentFilterProxyModel *filter = dlg.agentFilterProxyModel();
-    Q_FOREACH(const QString & filterStr, mMimeTypeFilter) {
+    Q_FOREACH (const QString &filterStr, mMimeTypeFilter) {
         filter->addMimeTypeFilter(filterStr);
     }
-    Q_FOREACH(const QString & capa, mCapabilityFilter) {
+    Q_FOREACH (const QString &capa, mCapabilityFilter) {
         filter->addCapabilityFilter(capa);
     }
-    Q_FOREACH(const QString & capa, mExcludeCapabilities) {
+    Q_FOREACH (const QString &capa, mExcludeCapabilities) {
         filter->excludeCapabilities(capa);
     }
     if (dlg.exec()) {
@@ -126,7 +126,7 @@ QStringList ManageAccountWidget::capabilityFilter() const
 void ManageAccountWidget::setCapabilityFilter(const QStringList &capabilityFilter)
 {
     mCapabilityFilter = capabilityFilter;
-    Q_FOREACH(const QString & capability, mCapabilityFilter) {
+    Q_FOREACH (const QString &capability, mCapabilityFilter) {
         mWidget->mAccountList->agentFilterProxyModel()->addCapabilityFilter(capability);
     }
 }
@@ -139,7 +139,7 @@ QStringList ManageAccountWidget::mimeTypeFilter() const
 void ManageAccountWidget::setMimeTypeFilter(const QStringList &mimeTypeFilter)
 {
     mMimeTypeFilter = mimeTypeFilter;
-    Q_FOREACH(const QString & mimeType, mMimeTypeFilter) {
+    Q_FOREACH (const QString &mimeType, mMimeTypeFilter) {
         mWidget->mAccountList->agentFilterProxyModel()->addMimeTypeFilter(mimeType);
     }
 }

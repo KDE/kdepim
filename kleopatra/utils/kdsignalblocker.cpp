@@ -35,16 +35,15 @@
   QObject::signalsBlocked() are nothrow, which they normally are.
 */
 
-
 /*!
   Constructor. Blocks signals on \a o.
 
   \post o->signalsBlocked() == true
 */
-KDSignalBlocker::KDSignalBlocker( QObject * o )
-    : blocked( o->signalsBlocked() ), object( o )
+KDSignalBlocker::KDSignalBlocker(QObject *o)
+    : blocked(o->signalsBlocked()), object(o)
 {
-    o->blockSignals( true );
+    o->blockSignals(true);
 }
 
 /*!
@@ -52,10 +51,10 @@ KDSignalBlocker::KDSignalBlocker( QObject * o )
 
   \post o.signalsBlocked() == true
 */
-KDSignalBlocker::KDSignalBlocker( QObject & o )
-    : blocked( o.signalsBlocked() ), object( &o )
+KDSignalBlocker::KDSignalBlocker(QObject &o)
+    : blocked(o.signalsBlocked()), object(&o)
 {
-    o.blockSignals( true );
+    o.blockSignals(true);
 }
 
 /*!
@@ -63,6 +62,7 @@ KDSignalBlocker::KDSignalBlocker( QObject & o )
 
   \post o->signalsBlocked() is the same as just before this instance has been constructed.
 */
-KDSignalBlocker::~KDSignalBlocker() {
-    object->blockSignals( blocked );
+KDSignalBlocker::~KDSignalBlocker()
+{
+    object->blockSignals(blocked);
 }

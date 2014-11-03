@@ -39,35 +39,38 @@ class QObject;
 class QAction;
 class KActionCollection;
 
-namespace Kleo {
+namespace Kleo
+{
 
-    struct action_data {
-        const char * name;
-        QString text;
-        QString tooltip;
-        const char * icon;
-        const QObject * receiver;
-        const char * slot;
-        QString shortcut;
-        bool toggle;
-        bool enabled;
-    };
+struct action_data {
+    const char *name;
+    QString text;
+    QString tooltip;
+    const char *icon;
+    const QObject *receiver;
+    const char *slot;
+    QString shortcut;
+    bool toggle;
+    bool enabled;
+};
 
-    void make_actions_from_data( const action_data * data, unsigned int numData, KActionCollection * collection );
-    void make_actions_from_data( const action_data * data, unsigned int numData, QObject * parent );
+void make_actions_from_data(const action_data *data, unsigned int numData, KActionCollection *collection);
+void make_actions_from_data(const action_data *data, unsigned int numData, QObject *parent);
 
-    template <unsigned int N>
-    inline void make_actions_from_data( const action_data (&data)[N], KActionCollection * collection ) {
-        make_actions_from_data( data, N, collection );
-    }
-    template <unsigned int N>
-    inline void make_actions_from_data( const action_data (&data)[N], QObject * parent ) {
-        make_actions_from_data( data, N, parent );
-    }
+template <unsigned int N>
+inline void make_actions_from_data(const action_data(&data)[N], KActionCollection *collection)
+{
+    make_actions_from_data(data, N, collection);
+}
+template <unsigned int N>
+inline void make_actions_from_data(const action_data(&data)[N], QObject *parent)
+{
+    make_actions_from_data(data, N, parent);
+}
 
-    QAction * make_action_from_data( const action_data & data, QObject * parent );
-    QAction * make_action_from_data_with_collection( const action_data & ad, KActionCollection * coll );
-    QAction * createAction( const action_data & ad, QObject * parent );
+QAction *make_action_from_data(const action_data &data, QObject *parent);
+QAction *make_action_from_data_with_collection(const action_data &ad, KActionCollection *coll);
+QAction *createAction(const action_data &ad, QObject *parent);
 }
 
 #endif /* __KLEOPATRA_UTILS_ACTIONDATA_H__ */

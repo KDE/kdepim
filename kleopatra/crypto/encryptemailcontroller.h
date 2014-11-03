@@ -41,72 +41,80 @@
 
 #include <vector>
 
-namespace KMime {
-namespace Types {
-    class Mailbox;
+namespace KMime
+{
+namespace Types
+{
+class Mailbox;
 }
 }
 
-namespace boost {
-    template <typename T> class shared_ptr;
+namespace boost
+{
+template <typename T> class shared_ptr;
 }
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class Input;
-    class Output;
+class Input;
+class Output;
 
-namespace Crypto {
+namespace Crypto
+{
 
+class EncryptEMailController : public Controller
+{
+    Q_OBJECT
+public:
+    enum Mode {
+        GpgOLMode,
+        ClipboardMode,
 
-    class EncryptEMailController : public Controller {
-        Q_OBJECT
-    public:
-        enum Mode {
-            GpgOLMode,
-            ClipboardMode,
-
-            NumModes
-        };
-
-        explicit EncryptEMailController( Mode mode, QObject * parent=0 );
-        explicit EncryptEMailController( const boost::shared_ptr<ExecutionContext> & xc, Mode mode, QObject * parent=0 );
-        ~EncryptEMailController();
-
-        Mode mode() const;
-
-        static const char * mementoName() { return "EncryptEMailController"; }
-
-        void setProtocol( GpgME::Protocol proto );
-        const char * protocolAsString() const;
-        GpgME::Protocol protocol() const;
-
-        void startResolveRecipients();
-        void startResolveRecipients( const std::vector<KMime::Types::Mailbox> & recipients, const std::vector<KMime::Types::Mailbox> & senders );
-
-        void setInputAndOutput( const boost::shared_ptr<Kleo::Input>  & input,
-                                const boost::shared_ptr<Kleo::Output> & output );
-        void setInputsAndOutputs( const std::vector< boost::shared_ptr<Kleo::Input> >  & inputs,
-                                  const std::vector< boost::shared_ptr<Kleo::Output> > & outputs );
-
-        void start();
-
-    public Q_SLOTS:
-        void cancel();
-
-    Q_SIGNALS:
-        void recipientsResolved();
-
-    private:
-
-        /* reimp */ void doTaskDone( const Task * task, const boost::shared_ptr<const Kleo::Crypto::Task::Result> & );
-
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void slotWizardRecipientsResolved() )
-        Q_PRIVATE_SLOT( d, void slotWizardCanceled() )
-        Q_PRIVATE_SLOT( d, void schedule() )
+        NumModes
     };
+
+    explicit EncryptEMailController(Mode mode, QObject *parent = 0);
+    explicit EncryptEMailController(const boost::shared_ptr<ExecutionContext> &xc, Mode mode, QObject *parent = 0);
+    ~EncryptEMailController();
+
+    Mode mode() const;
+
+    static const char *mementoName()
+    {
+        return "EncryptEMailController";
+    }
+
+    void setProtocol(GpgME::Protocol proto);
+    const char *protocolAsString() const;
+    GpgME::Protocol protocol() const;
+
+    void startResolveRecipients();
+    void startResolveRecipients(const std::vector<KMime::Types::Mailbox> &recipients, const std::vector<KMime::Types::Mailbox> &senders);
+
+    void setInputAndOutput(const boost::shared_ptr<Kleo::Input>   &input,
+                           const boost::shared_ptr<Kleo::Output> &output);
+    void setInputsAndOutputs(const std::vector< boost::shared_ptr<Kleo::Input> >   &inputs,
+                             const std::vector< boost::shared_ptr<Kleo::Output> > &outputs);
+
+    void start();
+
+public Q_SLOTS:
+    void cancel();
+
+Q_SIGNALS:
+    void recipientsResolved();
+
+private:
+
+    /* reimp */ void doTaskDone(const Task *task, const boost::shared_ptr<const Kleo::Crypto::Task::Result> &);
+
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void slotWizardRecipientsResolved())
+    Q_PRIVATE_SLOT(d, void slotWizardCanceled())
+    Q_PRIVATE_SLOT(d, void schedule())
+};
 
 } // Crypto
 } // Kleo

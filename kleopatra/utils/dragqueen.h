@@ -38,33 +38,33 @@
 #include <QPoint>
 #include <QMimeData>
 
+namespace Kleo
+{
 
+class DragQueen : public QLabel
+{
+    Q_OBJECT
+    Q_PROPERTY(QString url READ url WRITE setUrl)
+public:
+    explicit DragQueen(QWidget *p = 0, Qt::WindowFlags f = 0);
+    explicit DragQueen(const QString &text, QWidget *p = 0, Qt::WindowFlags f = 0);
+    ~DragQueen();
 
-namespace Kleo {
+    void setUrl(const QString &url);
+    QString url() const;
 
-    class DragQueen : public QLabel {
-        Q_OBJECT
-        Q_PROPERTY( QString url READ url WRITE setUrl )
-    public:
-        explicit DragQueen( QWidget * p=0, Qt::WindowFlags f=0 );
-        explicit DragQueen( const QString & text, QWidget * p=0, Qt::WindowFlags f=0 );
-        ~DragQueen();
+    void setMimeData(QMimeData *md);
+    QMimeData *mimeData() const;
 
-        void setUrl( const QString & url );
-        QString url() const;
+protected:
+    /* reimp */ void mousePressEvent(QMouseEvent *);
+    /* reimp */ void mouseMoveEvent(QMouseEvent *);
 
-        void setMimeData( QMimeData * md );
-        QMimeData * mimeData() const;
-
-    protected:
-        /* reimp */ void mousePressEvent( QMouseEvent * );
-        /* reimp */ void mouseMoveEvent( QMouseEvent * );
-
-    private:
-        QPointer<QMimeData> m_data;
-        QPoint m_dragStartPosition;
-        QString m_dataFormat;
-    };
+private:
+    QPointer<QMimeData> m_data;
+    QPoint m_dragStartPosition;
+    QString m_dataFormat;
+};
 
 }
 

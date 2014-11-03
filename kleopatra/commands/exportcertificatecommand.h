@@ -35,33 +35,38 @@
 
 #include "command.h"
 
-namespace Kleo {
-    class ExportCertificateCommand : public Command {
-        Q_OBJECT
-    public:
-        explicit ExportCertificateCommand( QAbstractItemView * view, KeyListController * parent );
-        explicit ExportCertificateCommand( KeyListController * parent );
-        explicit ExportCertificateCommand( const GpgME::Key & key );
-        ~ExportCertificateCommand();
+namespace Kleo
+{
+class ExportCertificateCommand : public Command
+{
+    Q_OBJECT
+public:
+    explicit ExportCertificateCommand(QAbstractItemView *view, KeyListController *parent);
+    explicit ExportCertificateCommand(KeyListController *parent);
+    explicit ExportCertificateCommand(const GpgME::Key &key);
+    ~ExportCertificateCommand();
 
-        /* reimp */ static Restrictions restrictions() { return NeedSelection; }
+    /* reimp */ static Restrictions restrictions()
+    {
+        return NeedSelection;
+    }
 
-        void setOpenPGPFileName( const QString & fileName );
-        QString openPGPFileName() const;
+    void setOpenPGPFileName(const QString &fileName);
+    QString openPGPFileName() const;
 
-        void setX509FileName( const QString & fileName );
-        QString x509FileName() const;
+    void setX509FileName(const QString &fileName);
+    QString x509FileName() const;
 
-    private:
-        /* reimp */ void doStart();
-        /* reimp */ void doCancel();
+private:
+    /* reimp */ void doStart();
+    /* reimp */ void doCancel();
 
-    private:
-        class Private;
-        inline Private * d_func();
-        inline const Private * d_func() const;
-        Q_PRIVATE_SLOT( d_func(), void exportResult( GpgME::Error, QByteArray ) )
-    };
+private:
+    class Private;
+    inline Private *d_func();
+    inline const Private *d_func() const;
+    Q_PRIVATE_SLOT(d_func(), void exportResult(GpgME::Error, QByteArray))
+};
 }
 
 #endif // __KLEOPATRA_EXPORTCERTIFICATECOMMAND_H__

@@ -64,82 +64,85 @@ using namespace boost;
 using namespace GpgME;
 using namespace KMime::Types;
 
-class SignEncryptWizard::Private {
+class SignEncryptWizard::Private
+{
     friend class ::Kleo::Crypto::Gui::SignEncryptWizard;
-    SignEncryptWizard * q;
+    SignEncryptWizard *q;
 public:
-    explicit Private( SignEncryptWizard * qq );
+    explicit Private(SignEncryptWizard *qq);
     ~Private();
 
-    void setCommitPage( Page page );
+    void setCommitPage(Page page);
 
-    Gui::ResolveRecipientsPage * recipientResolvePage; // clashes with enum of same name
-    SignerResolvePage * signerResolvePage;
-    Gui::ObjectsPage * objectsPage; // clashes with enum of same name
-    Gui::ResultPage * resultPage;  // clashes with enum of same name
+    Gui::ResolveRecipientsPage *recipientResolvePage;  // clashes with enum of same name
+    SignerResolvePage *signerResolvePage;
+    Gui::ObjectsPage *objectsPage;  // clashes with enum of same name
+    Gui::ResultPage *resultPage;   // clashes with enum of same name
 };
 
-
-SignEncryptWizard::Private::Private( SignEncryptWizard * qq )
-    : q( qq ),
-      recipientResolvePage( new Gui::ResolveRecipientsPage ),
-      signerResolvePage( new SignerResolvePage ),
-      objectsPage( new Gui::ObjectsPage ),
-      resultPage( new Gui::ResultPage )
+SignEncryptWizard::Private::Private(SignEncryptWizard *qq)
+    : q(qq),
+      recipientResolvePage(new Gui::ResolveRecipientsPage),
+      signerResolvePage(new SignerResolvePage),
+      objectsPage(new Gui::ObjectsPage),
+      resultPage(new Gui::ResultPage)
 {
     connect(resultPage, &Gui::ResultPage::linkActivated, q, &SignEncryptWizard::linkActivated);
-    q->setPage( SignEncryptWizard::ResolveSignerPage, signerResolvePage );
-    q->setPage( SignEncryptWizard::ObjectsPage, objectsPage );
-    q->setPage( SignEncryptWizard::ResolveRecipientsPage, recipientResolvePage );
-    q->setPage( SignEncryptWizard::ResultPage, resultPage );
+    q->setPage(SignEncryptWizard::ResolveSignerPage, signerResolvePage);
+    q->setPage(SignEncryptWizard::ObjectsPage, objectsPage);
+    q->setPage(SignEncryptWizard::ResolveRecipientsPage, recipientResolvePage);
+    q->setPage(SignEncryptWizard::ResultPage, resultPage);
     //TODO: move the RecipientPreferences creation out of here, don't create a new instance for each wizard
-    recipientResolvePage->setRecipientPreferences( shared_ptr<RecipientPreferences>( new KConfigBasedRecipientPreferences( KSharedConfig::openConfig() ) ) );
-    signerResolvePage->setSigningPreferences( shared_ptr<SigningPreferences>( new KConfigBasedSigningPreferences( KSharedConfig::openConfig() ) ) );
-    q->resize( QSize( 640, 480 ).expandedTo( q->sizeHint() ) );
+    recipientResolvePage->setRecipientPreferences(shared_ptr<RecipientPreferences>(new KConfigBasedRecipientPreferences(KSharedConfig::openConfig())));
+    signerResolvePage->setSigningPreferences(shared_ptr<SigningPreferences>(new KConfigBasedSigningPreferences(KSharedConfig::openConfig())));
+    q->resize(QSize(640, 480).expandedTo(q->sizeHint()));
 }
 
-void SignEncryptWizard::onNext( int currentId )
+void SignEncryptWizard::onNext(int currentId)
 {
-    if ( currentId == ResolveRecipientsPage )
-        QTimer::singleShot( 0, this, SIGNAL(recipientsResolved()) );
-    if ( currentId == ResolveSignerPage ) {
-        //FIXME: Sign&Encrypt is only supported by OpenPGP. Remove this when we support this for CMS, too
-        if ( encryptionSelected() && signingSelected() )
-            setPresetProtocol( OpenPGP );
-        QTimer::singleShot( 0, this, SIGNAL(signersResolved()) );
+    if (currentId == ResolveRecipientsPage) {
+        QTimer::singleShot(0, this, SIGNAL(recipientsResolved()));
     }
-    if ( currentId == ObjectsPage )
-        QTimer::singleShot( 0, this, SIGNAL(objectsResolved()) );
+    if (currentId == ResolveSignerPage) {
+        //FIXME: Sign&Encrypt is only supported by OpenPGP. Remove this when we support this for CMS, too
+        if (encryptionSelected() && signingSelected()) {
+            setPresetProtocol(OpenPGP);
+        }
+        QTimer::singleShot(0, this, SIGNAL(signersResolved()));
+    }
+    if (currentId == ObjectsPage) {
+        QTimer::singleShot(0, this, SIGNAL(objectsResolved()));
+    }
 }
 
 SignEncryptWizard::Private::~Private() {}
 
-SignEncryptWizard::SignEncryptWizard( QWidget * p, Qt::WindowFlags f )
-    : Wizard( p, f ), d( new Private( this ) )
+SignEncryptWizard::SignEncryptWizard(QWidget *p, Qt::WindowFlags f)
+    : Wizard(p, f), d(new Private(this))
 {
 }
-
 
 SignEncryptWizard::~SignEncryptWizard() {}
 
-void SignEncryptWizard::setCommitPage( Page page )
+void SignEncryptWizard::setCommitPage(Page page)
 {
-    d->setCommitPage( page );
+    d->setCommitPage(page);
 }
 
-void SignEncryptWizard::Private::setCommitPage( Page page )
+void SignEncryptWizard::Private::setCommitPage(Page page)
 {
-    q->page( ResolveSignerPage )->setCommitPage( false );
-    q->page( ResolveRecipientsPage )->setCommitPage( false );
-    q->page( ObjectsPage )->setCommitPage( false );
-    q->page( ResultPage )->setCommitPage( false );
-    q->page( page )->setCommitPage( true );
+    q->page(ResolveSignerPage)->setCommitPage(false);
+    q->page(ResolveRecipientsPage)->setCommitPage(false);
+    q->page(ObjectsPage)->setCommitPage(false);
+    q->page(ResultPage)->setCommitPage(false);
+    q->page(page)->setCommitPage(true);
 }
 
-void SignEncryptWizard::setPresetProtocol( Protocol proto ) {
-    d->signerResolvePage->setPresetProtocol( proto );
-    d->signerResolvePage->setProtocolSelectionUserMutable( proto == UnknownProtocol );
-    d->recipientResolvePage->setPresetProtocol( proto );
+void SignEncryptWizard::setPresetProtocol(Protocol proto)
+{
+    d->signerResolvePage->setPresetProtocol(proto);
+    d->signerResolvePage->setProtocolSelectionUserMutable(proto == UnknownProtocol);
+    d->recipientResolvePage->setPresetProtocol(proto);
 }
 
 GpgME::Protocol SignEncryptWizard::selectedProtocol() const
@@ -152,14 +155,14 @@ GpgME::Protocol SignEncryptWizard::presetProtocol() const
     return d->recipientResolvePage->presetProtocol();
 }
 
-void SignEncryptWizard::setEncryptionSelected( bool selected )
+void SignEncryptWizard::setEncryptionSelected(bool selected)
 {
-    d->signerResolvePage->setEncryptionSelected( selected );
+    d->signerResolvePage->setEncryptionSelected(selected);
 }
 
-void SignEncryptWizard::setSigningSelected( bool selected )
+void SignEncryptWizard::setSigningSelected(bool selected)
 {
-    d->signerResolvePage->setSigningSelected( selected );
+    d->signerResolvePage->setSigningSelected(selected);
 }
 
 bool SignEncryptWizard::isSigningUserMutable() const
@@ -167,9 +170,9 @@ bool SignEncryptWizard::isSigningUserMutable() const
     return d->signerResolvePage->isSigningUserMutable();
 }
 
-void SignEncryptWizard::setSigningUserMutable( bool isMutable )
+void SignEncryptWizard::setSigningUserMutable(bool isMutable)
 {
-    d->signerResolvePage->setSigningUserMutable( isMutable );
+    d->signerResolvePage->setSigningUserMutable(isMutable);
 }
 
 bool SignEncryptWizard::isEncryptionUserMutable() const
@@ -177,63 +180,70 @@ bool SignEncryptWizard::isEncryptionUserMutable() const
     return d->signerResolvePage->isEncryptionUserMutable();
 }
 
-
 bool SignEncryptWizard::isMultipleProtocolsAllowed() const
 {
     return d->recipientResolvePage->multipleProtocolsAllowed();
 }
 
-void SignEncryptWizard::setMultipleProtocolsAllowed( bool allowed )
+void SignEncryptWizard::setMultipleProtocolsAllowed(bool allowed)
 {
-    d->signerResolvePage->setMultipleProtocolsAllowed( allowed );
-    d->recipientResolvePage->setMultipleProtocolsAllowed( allowed );
+    d->signerResolvePage->setMultipleProtocolsAllowed(allowed);
+    d->recipientResolvePage->setMultipleProtocolsAllowed(allowed);
 }
 
-void SignEncryptWizard::setEncryptionUserMutable( bool isMutable )
+void SignEncryptWizard::setEncryptionUserMutable(bool isMutable)
 {
-    d->signerResolvePage->setEncryptionUserMutable( isMutable );
+    d->signerResolvePage->setEncryptionUserMutable(isMutable);
 }
 
-void SignEncryptWizard::setFiles( const QStringList & files ) {
-    d->objectsPage->setFiles( files );
+void SignEncryptWizard::setFiles(const QStringList &files)
+{
+    d->objectsPage->setFiles(files);
 }
 
-QFileInfoList SignEncryptWizard::resolvedFiles() const {
+QFileInfoList SignEncryptWizard::resolvedFiles() const
+{
     const QStringList files = d->objectsPage->files();
     QFileInfoList fileInfos;
-    Q_FOREACH( const QString& i, files )
-        fileInfos.push_back( QFileInfo( i ) );
+    Q_FOREACH (const QString &i, files) {
+        fileInfos.push_back(QFileInfo(i));
+    }
     return fileInfos;
 }
 
-bool SignEncryptWizard::signingSelected() const {
+bool SignEncryptWizard::signingSelected() const
+{
     return d->signerResolvePage->signingSelected();
 }
 
-bool SignEncryptWizard::encryptionSelected() const {
+bool SignEncryptWizard::encryptionSelected() const
+{
     return d->signerResolvePage->encryptionSelected();
 }
 
-void SignEncryptWizard::setRecipients( const std::vector<Mailbox> & recipients, const std::vector<Mailbox> & encryptToSelfRecipients ) {
-    d->recipientResolvePage->setRecipients( recipients, encryptToSelfRecipients );
-}
-
-void SignEncryptWizard::setSignersAndCandidates( const std::vector<Mailbox> & signers, const std::vector< std::vector<Key> > & keys ) {
-    d->signerResolvePage->setSignersAndCandidates( signers, keys );
-}
-
-
-void SignEncryptWizard::setTaskCollection( const shared_ptr<TaskCollection> & coll )
+void SignEncryptWizard::setRecipients(const std::vector<Mailbox> &recipients, const std::vector<Mailbox> &encryptToSelfRecipients)
 {
-    kleo_assert( coll );
-    d->resultPage->setTaskCollection( coll );
+    d->recipientResolvePage->setRecipients(recipients, encryptToSelfRecipients);
 }
 
-std::vector<Key> SignEncryptWizard::resolvedCertificates() const {
+void SignEncryptWizard::setSignersAndCandidates(const std::vector<Mailbox> &signers, const std::vector< std::vector<Key> > &keys)
+{
+    d->signerResolvePage->setSignersAndCandidates(signers, keys);
+}
+
+void SignEncryptWizard::setTaskCollection(const shared_ptr<TaskCollection> &coll)
+{
+    kleo_assert(coll);
+    d->resultPage->setTaskCollection(coll);
+}
+
+std::vector<Key> SignEncryptWizard::resolvedCertificates() const
+{
     return d->recipientResolvePage->resolvedCertificates();
 }
 
-std::vector<Key> SignEncryptWizard::resolvedSigners() const {
+std::vector<Key> SignEncryptWizard::resolvedSigners() const
+{
     return d->signerResolvePage->resolvedSigners();
 }
 
@@ -242,19 +252,19 @@ bool SignEncryptWizard::isAsciiArmorEnabled() const
     return d->signerResolvePage->isAsciiArmorEnabled();
 }
 
-void SignEncryptWizard::setAsciiArmorEnabled( bool enabled )
+void SignEncryptWizard::setAsciiArmorEnabled(bool enabled)
 {
-    d->signerResolvePage->setAsciiArmorEnabled( enabled );
+    d->signerResolvePage->setAsciiArmorEnabled(enabled);
 }
 
 bool SignEncryptWizard::removeUnencryptedFile() const
 {
-   return d->signerResolvePage->removeUnencryptedFile();
+    return d->signerResolvePage->removeUnencryptedFile();
 }
 
-void SignEncryptWizard::setRemoveUnencryptedFile( bool remove )
+void SignEncryptWizard::setRemoveUnencryptedFile(bool remove)
 {
-    d->signerResolvePage->setRemoveUnencryptedFile( remove );
+    d->signerResolvePage->setRemoveUnencryptedFile(remove);
 }
 
 bool SignEncryptWizard::recipientsUserMutable() const
@@ -262,37 +272,37 @@ bool SignEncryptWizard::recipientsUserMutable() const
     return d->recipientResolvePage->recipientsUserMutable();
 }
 
-void SignEncryptWizard::setRecipientsUserMutable( bool isMutable )
+void SignEncryptWizard::setRecipientsUserMutable(bool isMutable)
 {
-    d->recipientResolvePage->setRecipientsUserMutable( isMutable );
+    d->recipientResolvePage->setRecipientsUserMutable(isMutable);
 }
 
-void SignEncryptWizard::setSignerResolvePageValidator( const boost::shared_ptr<SignerResolvePage::Validator>& validator )
+void SignEncryptWizard::setSignerResolvePageValidator(const boost::shared_ptr<SignerResolvePage::Validator> &validator)
 {
-    d->signerResolvePage->setValidator( validator );
+    d->signerResolvePage->setValidator(validator);
 }
 
-Gui::SignerResolvePage* SignEncryptWizard::signerResolvePage()
-{
-    return d->signerResolvePage;
-}
-
-const Gui::SignerResolvePage* SignEncryptWizard::signerResolvePage() const
+Gui::SignerResolvePage *SignEncryptWizard::signerResolvePage()
 {
     return d->signerResolvePage;
 }
 
-Gui::ResolveRecipientsPage* SignEncryptWizard::resolveRecipientsPage()
+const Gui::SignerResolvePage *SignEncryptWizard::signerResolvePage() const
+{
+    return d->signerResolvePage;
+}
+
+Gui::ResolveRecipientsPage *SignEncryptWizard::resolveRecipientsPage()
 {
     return d->recipientResolvePage;
 }
 
-Gui::ObjectsPage* SignEncryptWizard::objectsPage()
+Gui::ObjectsPage *SignEncryptWizard::objectsPage()
 {
     return d->objectsPage;
 }
 
-Gui::ResultPage* SignEncryptWizard::resultPage()
+Gui::ResultPage *SignEncryptWizard::resultPage()
 {
     return d->resultPage;
 }
@@ -302,8 +312,8 @@ bool SignEncryptWizard::keepResultPageOpenWhenDone() const
     return d->resultPage->keepOpenWhenDone();
 }
 
-void SignEncryptWizard::setKeepResultPageOpenWhenDone( bool keep )
+void SignEncryptWizard::setKeepResultPageOpenWhenDone(bool keep)
 {
-    d->resultPage->setKeepOpenWhenDone( keep );
+    d->resultPage->setKeepOpenWhenDone(keep);
 }
 

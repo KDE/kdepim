@@ -47,14 +47,14 @@
 using namespace Kleo;
 using namespace Kleo::Crypto::Gui;
 
-SigningCertificateSelectionDialog::SigningCertificateSelectionDialog( QWidget * parent, Qt::WindowFlags f )
-    : QDialog( parent, f ),
-      widget( new SigningCertificateSelectionWidget( this ) )
+SigningCertificateSelectionDialog::SigningCertificateSelectionDialog(QWidget *parent, Qt::WindowFlags f)
+    : QDialog(parent, f),
+      widget(new SigningCertificateSelectionWidget(this))
 {
-    setWindowTitle( i18n( "Select Signing Certificates" ) );
+    setWindowTitle(i18n("Select Signing Certificates"));
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
@@ -66,10 +66,9 @@ SigningCertificateSelectionDialog::SigningCertificateSelectionDialog( QWidget * 
 
 SigningCertificateSelectionDialog::~SigningCertificateSelectionDialog() {}
 
-
-void SigningCertificateSelectionDialog::setSelectedCertificates( const QMap<GpgME::Protocol, GpgME::Key>& certificates )
+void SigningCertificateSelectionDialog::setSelectedCertificates(const QMap<GpgME::Protocol, GpgME::Key> &certificates)
 {
-    widget->setSelectedCertificates( certificates );
+    widget->setSelectedCertificates(certificates);
 }
 
 QMap<GpgME::Protocol, GpgME::Key> SigningCertificateSelectionDialog::selectedCertificates() const
@@ -82,8 +81,8 @@ bool SigningCertificateSelectionDialog::rememberAsDefault() const
     return widget->rememberAsDefault();
 }
 
-void SigningCertificateSelectionDialog::setAllowedProtocols( const QVector<GpgME::Protocol>& allowedProtocols )
+void SigningCertificateSelectionDialog::setAllowedProtocols(const QVector<GpgME::Protocol> &allowedProtocols)
 {
-    widget->setAllowedProtocols( allowedProtocols );
+    widget->setAllowedProtocols(allowedProtocols);
 }
 

@@ -44,30 +44,31 @@
 #include <string>
 #include <vector>
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class AssuanCommandFactory;
+class AssuanCommandFactory;
 
-    class AssuanServerConnection : public QObject {
-        Q_OBJECT
-    public:
-        AssuanServerConnection( assuan_fd_t fd, const std::vector< boost::shared_ptr<AssuanCommandFactory> > & factories, QObject * parent=0 );
-        ~AssuanServerConnection();
+class AssuanServerConnection : public QObject
+{
+    Q_OBJECT
+public:
+    AssuanServerConnection(assuan_fd_t fd, const std::vector< boost::shared_ptr<AssuanCommandFactory> > &factories, QObject *parent = 0);
+    ~AssuanServerConnection();
 
-    public Q_SLOTS:
-        void enableCryptoCommands( bool enable=true );
+public Q_SLOTS:
+    void enableCryptoCommands(bool enable = true);
 
-    Q_SIGNALS:
-        void closed( Kleo::AssuanServerConnection * which );
-        void startKeyManagerRequested();
-        void startConfigDialogRequested();
+Q_SIGNALS:
+    void closed(Kleo::AssuanServerConnection *which);
+    void startKeyManagerRequested();
+    void startConfigDialogRequested();
 
-    public:
-        class Private;
-    private:
-        kdtools::pimpl_ptr<Private> d;
-    };
-
+public:
+    class Private;
+private:
+    kdtools::pimpl_ptr<Private> d;
+};
 
 }
 

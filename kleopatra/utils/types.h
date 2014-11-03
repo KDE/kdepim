@@ -37,53 +37,57 @@
 
 class QWidget;
 
-namespace boost {
-    template <typename T> class shared_ptr;
+namespace boost
+{
+template <typename T> class shared_ptr;
 }
 
-namespace Kleo {
-    enum DecryptVerifyOperation {
-        Decrypt,
-        Verify,
-        DecryptVerify/*,
+namespace Kleo
+{
+enum DecryptVerifyOperation {
+    Decrypt,
+    Verify,
+    DecryptVerify/*,
         VerifyOpaque,
         VerifyDetached*/
-    };
-    
-    enum VerificationMode {
-        Opaque,
-        Detached
-    };
+};
 
-    enum Policy {
-        NoPolicy,
-        Allow,
-        Force,
-        Deny
-    };
+enum VerificationMode {
+    Opaque,
+    Detached
+};
 
-    class ExecutionContext {
-    public:
-        virtual ~ExecutionContext() {}
-        virtual void applyWindowID( QWidget * widget ) const = 0;
-    };
+enum Policy {
+    NoPolicy,
+    Allow,
+    Force,
+    Deny
+};
 
-    class ExecutionContextUser {
-    public:
-        ExecutionContextUser();
-        explicit ExecutionContextUser( const boost::shared_ptr<const ExecutionContext> & ec );
-        virtual ~ExecutionContextUser();
+class ExecutionContext
+{
+public:
+    virtual ~ExecutionContext() {}
+    virtual void applyWindowID(QWidget *widget) const = 0;
+};
 
-        void setExecutionContext( const boost::shared_ptr<const ExecutionContext> & ec );
-        boost::shared_ptr<const ExecutionContext> executionContext() const;
+class ExecutionContextUser
+{
+public:
+    ExecutionContextUser();
+    explicit ExecutionContextUser(const boost::shared_ptr<const ExecutionContext> &ec);
+    virtual ~ExecutionContextUser();
 
-    protected:
-        void bringToForeground( QWidget * wid );
-        void applyWindowID( QWidget * wid );
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-    };
+    void setExecutionContext(const boost::shared_ptr<const ExecutionContext> &ec);
+    boost::shared_ptr<const ExecutionContext> executionContext() const;
+
+protected:
+    void bringToForeground(QWidget *wid);
+    void applyWindowID(QWidget *wid);
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+};
 
 }
 

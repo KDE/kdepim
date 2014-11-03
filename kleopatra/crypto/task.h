@@ -42,112 +42,118 @@
 
 #include <boost/shared_ptr.hpp>
 
-
-namespace Kleo {
-    class AuditLog;
+namespace Kleo
+{
+class AuditLog;
 }
 
-namespace Kleo {
-namespace Crypto {
+namespace Kleo
+{
+namespace Crypto
+{
 
-    class Task : public QObject {
-        Q_OBJECT
-    public:
-        explicit Task( QObject * parent=0 );
-        ~Task();
+class Task : public QObject
+{
+    Q_OBJECT
+public:
+    explicit Task(QObject *parent = 0);
+    ~Task();
 
-        class Result;
+    class Result;
 
-        void setAsciiArmor( bool armor );
-        bool asciiArmor() const;
+    void setAsciiArmor(bool armor);
+    bool asciiArmor() const;
 
-        virtual GpgME::Protocol protocol() const = 0;
+    virtual GpgME::Protocol protocol() const = 0;
 
-        void start();
+    void start();
 
-        virtual QString label() const = 0;
+    virtual QString label() const = 0;
 
-        virtual QString tag() const;
+    virtual QString tag() const;
 
-        QString progressLabel() const;
-        unsigned long long processedSize() const;
-        unsigned long long totalSize() const;
+    QString progressLabel() const;
+    unsigned long long processedSize() const;
+    unsigned long long totalSize() const;
 
-        int id() const;
+    int id() const;
 
+    static boost::shared_ptr<Task> makeErrorTask(int code, const QString &details, const QString &label);
 
-        static boost::shared_ptr<Task> makeErrorTask( int code, const QString & details, const QString & label );
+public Q_SLOTS:
+    virtual void cancel() = 0;
 
-    public Q_SLOTS:
-        virtual void cancel() = 0;
-
-    Q_SIGNALS:
+Q_SIGNALS:
 
 #ifndef Q_MOC_RUN
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 private: // don't tell moc, but those signals are in fact private
 #endif
 #endif
-        void progress( const QString & what, int processed, int total );
-        void result( const boost::shared_ptr<const Kleo::Crypto::Task::Result> & );
-        void started();
+    void progress(const QString &what, int processed, int total);
+    void result(const boost::shared_ptr<const Kleo::Crypto::Task::Result> &);
+    void started();
 
-    protected:
-        boost::shared_ptr<Result> makeErrorResult( int errCode, const QString& details );
+protected:
+    boost::shared_ptr<Result> makeErrorResult(int errCode, const QString &details);
 
-        void emitResult( const boost::shared_ptr<const Task::Result> & result );
+    void emitResult(const boost::shared_ptr<const Task::Result> &result);
 
-    protected Q_SLOTS:
-        void setProgress( const QString & msg, int processed, int total );
+protected Q_SLOTS:
+    void setProgress(const QString &msg, int processed, int total);
 
-    private Q_SLOTS:
-        void emitError( int errCode, const QString& details );
-        
-    private:
-        virtual void doStart() = 0;
-        virtual unsigned long long inputSize() const = 0;
+private Q_SLOTS:
+    void emitError(int errCode, const QString &details);
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
+private:
+    virtual void doStart() = 0;
+    virtual unsigned long long inputSize() const = 0;
+
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+};
+
+class Task::Result
+{
+    const QString m_nonce;
+public:
+    Result();
+    virtual ~Result();
+
+    const QString &nonce() const
+    {
+        return m_nonce;
+    }
+
+    bool hasError() const;
+
+    enum VisualCode {
+        AllGood,
+        Warning,
+        Danger,
+        NeutralSuccess,
+        NeutralError
     };
 
-    class Task::Result {
-        const QString m_nonce;
-    public:
-        Result();
-        virtual ~Result();
+    virtual QString icon() const;
+    virtual QString overview() const = 0;
+    virtual QString details() const = 0;
+    virtual int errorCode() const = 0;
+    virtual QString errorString() const = 0;
+    virtual VisualCode code() const = 0;
+    virtual AuditLog auditLog() const = 0;
 
-        const QString & nonce() const { return m_nonce; }
+protected:
+    static QString iconPath(VisualCode code);
+    QString formatKeyLink(const char *fingerprint, const QString &content) const;
+    static QString makeOverview(const QString &msg);
 
-        bool hasError() const;
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+};
 
-        enum VisualCode {
-            AllGood,
-            Warning,
-            Danger,
-            NeutralSuccess,
-            NeutralError
-        };
-
-        virtual QString icon() const;
-        virtual QString overview() const = 0;
-        virtual QString details() const = 0;
-        virtual int errorCode() const = 0;
-        virtual QString errorString() const = 0;
-        virtual VisualCode code() const = 0;
-        virtual AuditLog auditLog() const = 0;
-
-    protected:
-        static QString iconPath( VisualCode code );
-        QString formatKeyLink( const char * fingerprint, const QString & content ) const;
-        static QString makeOverview( const QString& msg );
-
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-    };
-        
 }
 }
 

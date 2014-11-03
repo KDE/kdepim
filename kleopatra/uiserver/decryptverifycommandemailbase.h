@@ -38,39 +38,54 @@
 #include <utils/pimpl_ptr.h>
 #include <utils/types.h>
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class DecryptVerifyCommandEMailBase : public AssuanCommandMixin<DecryptVerifyCommandEMailBase> {
-    public:
-        explicit DecryptVerifyCommandEMailBase();
-        ~DecryptVerifyCommandEMailBase();
+class DecryptVerifyCommandEMailBase : public AssuanCommandMixin<DecryptVerifyCommandEMailBase>
+{
+public:
+    explicit DecryptVerifyCommandEMailBase();
+    ~DecryptVerifyCommandEMailBase();
 
-    private:
-        virtual DecryptVerifyOperation operation() const = 0;
-        virtual Mode mode() const { return EMail; }
+private:
+    virtual DecryptVerifyOperation operation() const = 0;
+    virtual Mode mode() const
+    {
+        return EMail;
+    }
 
-    private:
-        int doStart();
-        void doCanceled();
-    public:
-        static const char * staticName() { return ""; }
+private:
+    int doStart();
+    void doCanceled();
+public:
+    static const char *staticName()
+    {
+        return "";
+    }
 
-        class Private;
-    private:
-        kdtools::pimpl_ptr<Private> d;
-    };
-    
-    class DecryptVerifyCommand : public AssuanCommandMixin<DecryptVerifyCommand,DecryptVerifyCommandEMailBase> {
-    public:
-        //DecryptVerifyFilesCommand();
-        //~DecryptVerifyFilesCommand();
+    class Private;
+private:
+    kdtools::pimpl_ptr<Private> d;
+};
 
-    private:
-        DecryptVerifyOperation operation() const { return DecryptVerify; }
+class DecryptVerifyCommand : public AssuanCommandMixin<DecryptVerifyCommand, DecryptVerifyCommandEMailBase>
+{
+public:
+    //DecryptVerifyFilesCommand();
+    //~DecryptVerifyFilesCommand();
 
-    public:
-        static const char * staticName() { return "DECRYPT_VERIFY"; }
-    };
+private:
+    DecryptVerifyOperation operation() const
+    {
+        return DecryptVerify;
+    }
+
+public:
+    static const char *staticName()
+    {
+        return "DECRYPT_VERIFY";
+    }
+};
 }
 
 #endif // __KLEOPATRA_UISERVER_DECRYPTCOMMAND_H__

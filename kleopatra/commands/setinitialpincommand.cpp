@@ -49,68 +49,82 @@ using namespace Kleo::Dialogs;
 using namespace Kleo::SmartCard;
 using namespace GpgME;
 
-class SetInitialPinCommand::Private : public Command::Private {
+class SetInitialPinCommand::Private : public Command::Private
+{
     friend class ::Kleo::Commands::SetInitialPinCommand;
-    SetInitialPinCommand * q_func() const { return static_cast<SetInitialPinCommand*>( q ); }
+    SetInitialPinCommand *q_func() const
+    {
+        return static_cast<SetInitialPinCommand *>(q);
+    }
 public:
-    explicit Private( SetInitialPinCommand * qq );
+    explicit Private(SetInitialPinCommand *qq);
     ~Private();
 
 private:
-    void init() {
+    void init()
+    {
 
     }
 
-    void ensureDialogCreated() const {
-        if ( dialog )
+    void ensureDialogCreated() const
+    {
+        if (dialog) {
             return;
+        }
 
-        SetInitialPinDialog * dlg = new SetInitialPinDialog;
-        applyWindowID( dlg );
-        dlg->setAttribute( Qt::WA_DeleteOnClose );
-        dlg->setWindowTitle( i18nc("@title","Set Initial Pin") );
+        SetInitialPinDialog *dlg = new SetInitialPinDialog;
+        applyWindowID(dlg);
+        dlg->setAttribute(Qt::WA_DeleteOnClose);
+        dlg->setWindowTitle(i18nc("@title", "Set Initial Pin"));
 
-        const std::vector<ReaderStatus::PinState> pinStates = ReaderStatus::instance()->pinStates( 0 );
+        const std::vector<ReaderStatus::PinState> pinStates = ReaderStatus::instance()->pinStates(0);
 
-        dlg->setNksPinPresent(  pinStates.size() >= 1 && pinStates[0] != ReaderStatus::NullPin );
-        dlg->setSigGPinPresent( pinStates.size() >= 3 && pinStates[2] != ReaderStatus::NullPin );
+        dlg->setNksPinPresent(pinStates.size() >= 1 && pinStates[0] != ReaderStatus::NullPin);
+        dlg->setSigGPinPresent(pinStates.size() >= 3 && pinStates[2] != ReaderStatus::NullPin);
 
-        connect( dlg, SIGNAL(nksPinRequested()), q_func(), SLOT(slotNksPinRequested()) );
-        connect( dlg, SIGNAL(sigGPinRequested()), q_func(), SLOT(slotSigGPinRequested()) );
-        connect( dlg, SIGNAL(rejected()), q_func(), SLOT(slotDialogRejected()) );
-        connect( dlg, SIGNAL(accepted()), q_func(), SLOT(slotDialogAccepted()) );
+        connect(dlg, SIGNAL(nksPinRequested()), q_func(), SLOT(slotNksPinRequested()));
+        connect(dlg, SIGNAL(sigGPinRequested()), q_func(), SLOT(slotSigGPinRequested()));
+        connect(dlg, SIGNAL(rejected()), q_func(), SLOT(slotDialogRejected()));
+        connect(dlg, SIGNAL(accepted()), q_func(), SLOT(slotDialogAccepted()));
 
         dialog = dlg;
     }
 
-    void ensureDialogVisible() {
+    void ensureDialogVisible()
+    {
         ensureDialogCreated();
-        if ( dialog->isVisible() )
+        if (dialog->isVisible()) {
             dialog->raise();
-        else
+        } else {
             dialog->show();
+        }
     }
 
 private:
-    void slotNksPinRequested() {
+    void slotNksPinRequested()
+    {
         ReaderStatus::mutableInstance()
-            ->startSimpleTransaction( "SCD PASSWD --nullpin PW1.CH",
-                                      dialog, "setNksPinSettingResult" );
+        ->startSimpleTransaction("SCD PASSWD --nullpin PW1.CH",
+                                 dialog, "setNksPinSettingResult");
     }
 
-    void slotSigGPinRequested() {
+    void slotSigGPinRequested()
+    {
         ReaderStatus::mutableInstance()
-            ->startSimpleTransaction( "SCD PASSWD --nullpin PW1.CH.SIG",
-                                      dialog, "setSigGPinSettingResult" );
+        ->startSimpleTransaction("SCD PASSWD --nullpin PW1.CH.SIG",
+                                 dialog, "setSigGPinSettingResult");
     }
 
-    void slotDialogRejected() {
-        if ( dialog->isComplete() )
+    void slotDialogRejected()
+    {
+        if (dialog->isComplete()) {
             slotDialogAccepted();
-        else
+        } else {
             canceled();
+        }
     }
-    void slotDialogAccepted() {
+    void slotDialogAccepted()
+    {
         ReaderStatus::mutableInstance()->updateStatus();
         finished();
     }
@@ -119,14 +133,20 @@ private:
     mutable QPointer<SetInitialPinDialog> dialog;
 };
 
-SetInitialPinCommand::Private * SetInitialPinCommand::d_func() { return static_cast<Private*>( d.get() ); }
-const SetInitialPinCommand::Private * SetInitialPinCommand::d_func() const { return static_cast<const Private*>( d.get() ); }
+SetInitialPinCommand::Private *SetInitialPinCommand::d_func()
+{
+    return static_cast<Private *>(d.get());
+}
+const SetInitialPinCommand::Private *SetInitialPinCommand::d_func() const
+{
+    return static_cast<const Private *>(d.get());
+}
 
 #define q q_func()
 #define d d_func()
 
-SetInitialPinCommand::Private::Private( SetInitialPinCommand * qq )
-    : Command::Private( qq, 0 ),
+SetInitialPinCommand::Private::Private(SetInitialPinCommand *qq)
+    : Command::Private(qq, 0),
       dialog()
 {
 
@@ -135,26 +155,29 @@ SetInitialPinCommand::Private::Private( SetInitialPinCommand * qq )
 SetInitialPinCommand::Private::~Private() {}
 
 SetInitialPinCommand::SetInitialPinCommand()
-    : Command( new Private( this ) )
+    : Command(new Private(this))
 {
     d->init();
 }
 
 SetInitialPinCommand::~SetInitialPinCommand() {}
 
-QDialog * SetInitialPinCommand::dialog() const {
+QDialog *SetInitialPinCommand::dialog() const
+{
     d->ensureDialogCreated();
     return d->dialog;
 }
 
-void SetInitialPinCommand::doStart() {
+void SetInitialPinCommand::doStart()
+{
     d->ensureDialogVisible();
 }
 
-
-void SetInitialPinCommand::doCancel() {
-    if ( d->dialog )
+void SetInitialPinCommand::doCancel()
+{
+    if (d->dialog) {
         d->dialog->close();
+    }
 }
 
 #undef q_func

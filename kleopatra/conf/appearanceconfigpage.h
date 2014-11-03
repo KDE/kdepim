@@ -34,26 +34,29 @@
 #define KLEOPATRA_CONFIG_APPEARANCECONFIGPAGE_H
 
 #include <kcmodule.h>
-namespace Kleo {
-namespace Config {
+namespace Kleo
+{
+namespace Config
+{
 
-    class AppearanceConfigWidget;
+class AppearanceConfigWidget;
 
-    /**
-     * "Appearance" configuration page for kleopatra's configuration dialog
-     */
-    class AppearanceConfigurationPage : public KCModule {
-        Q_OBJECT
-    public:
-        explicit AppearanceConfigurationPage( QWidget *parent=0, const QVariantList &args=QVariantList() );
+/**
+ * "Appearance" configuration page for kleopatra's configuration dialog
+ */
+class AppearanceConfigurationPage : public KCModule
+{
+    Q_OBJECT
+public:
+    explicit AppearanceConfigurationPage(QWidget *parent = 0, const QVariantList &args = QVariantList());
 
-        /* reimp */ void load();
-        /* reimp */ void save();
-        /* reimp */ void defaults();
+    /* reimp */ void load();
+    /* reimp */ void save();
+    /* reimp */ void defaults();
 
-    private:
-        AppearanceConfigWidget* mWidget;
-    };
+private:
+    AppearanceConfigWidget *mWidget;
+};
 
 }
 }

@@ -37,33 +37,36 @@
 
 class QSplashScreen;
 
-namespace Kleo {
-namespace Commands {
+namespace Kleo
+{
+namespace Commands
+{
 
-    class SelfTestCommand : public Command {
-        Q_OBJECT
-    public:
-        explicit SelfTestCommand( QAbstractItemView * view, KeyListController * parent );
-        explicit SelfTestCommand( KeyListController * parent );
-        ~SelfTestCommand();
+class SelfTestCommand : public Command
+{
+    Q_OBJECT
+public:
+    explicit SelfTestCommand(QAbstractItemView *view, KeyListController *parent);
+    explicit SelfTestCommand(KeyListController *parent);
+    ~SelfTestCommand();
 
-        void setAutomaticMode( bool automatic );
-        void setSplashScreen( QSplashScreen * splash );
+    void setAutomaticMode(bool automatic);
+    void setSplashScreen(QSplashScreen *splash);
 
-        bool isCanceled() const;
+    bool isCanceled() const;
 
-    private:
-        /* reimp */ void doStart();
-        /* reimp */ void doCancel();
+private:
+    /* reimp */ void doStart();
+    /* reimp */ void doCancel();
 
-    private:
-        class Private;
-        inline Private * d_func();
-        inline const Private * d_func() const;
-        Q_PRIVATE_SLOT( d_func(), void slotUpdateRequested() )
-        Q_PRIVATE_SLOT( d_func(), void slotDialogAccepted() )
-        Q_PRIVATE_SLOT( d_func(), void slotDialogRejected() )
-    };
+private:
+    class Private;
+    inline Private *d_func();
+    inline const Private *d_func() const;
+    Q_PRIVATE_SLOT(d_func(), void slotUpdateRequested())
+    Q_PRIVATE_SLOT(d_func(), void slotDialogAccepted())
+    Q_PRIVATE_SLOT(d_func(), void slotDialogRejected())
+};
 
 }
 }

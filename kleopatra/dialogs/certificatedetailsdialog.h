@@ -37,47 +37,50 @@
 
 #include <utils/pimpl_ptr.h>
 
-
-namespace GpgME {
-    class Key;
+namespace GpgME
+{
+class Key;
 }
 
-namespace Kleo {
-namespace Dialogs {
+namespace Kleo
+{
+namespace Dialogs
+{
 
-    class CertificateDetailsDialog : public KDialog {
-        Q_OBJECT
-    public:
-        explicit CertificateDetailsDialog( QWidget * parent=0, Qt::WindowFlags f=0 );
-        ~CertificateDetailsDialog();
+class CertificateDetailsDialog : public KDialog
+{
+    Q_OBJECT
+public:
+    explicit CertificateDetailsDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    ~CertificateDetailsDialog();
 
-        void setKey( const GpgME::Key & key );
-        GpgME::Key key() const;
+    void setKey(const GpgME::Key &key);
+    GpgME::Key key() const;
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void slotChangePassphraseClicked() )
-        Q_PRIVATE_SLOT( d, void slotChangePassphraseCommandFinished() )
-        Q_PRIVATE_SLOT( d, void slotChangeTrustLevelClicked() )
-        Q_PRIVATE_SLOT( d, void slotChangeOwnerTrustCommandFinished() )
-        Q_PRIVATE_SLOT( d, void slotChangeExpiryDateClicked() )
-        Q_PRIVATE_SLOT( d, void slotChangeExpiryDateCommandFinished() )
-        Q_PRIVATE_SLOT( d, void slotRevokeCertificateClicked() )
-        Q_PRIVATE_SLOT( d, void slotAddUserIDClicked() )
-        Q_PRIVATE_SLOT( d, void slotAddUserIDCommandFinished() )
-        Q_PRIVATE_SLOT( d, void slotRevokeUserIDClicked() )
-        Q_PRIVATE_SLOT( d, void slotCertifyUserIDClicked() )
-        Q_PRIVATE_SLOT( d, void slotSignCertificateCommandFinished() )
-        Q_PRIVATE_SLOT( d, void slotRevokeCertificationClicked() )
-        Q_PRIVATE_SLOT( d, void slotShowCertificationsClicked() )
-        Q_PRIVATE_SLOT( d, void slotSignatureListingNextKey(GpgME::Key) )
-        Q_PRIVATE_SLOT( d, void slotSignatureListingDone(GpgME::KeyListResult) )
-        Q_PRIVATE_SLOT( d, void slotCertificationSelectionChanged() )
-        Q_PRIVATE_SLOT( d, void slotKeysMayHaveChanged() )
-        Q_PRIVATE_SLOT( d, void slotDumpCertificate() )
-        Q_PRIVATE_SLOT( d, void slotDumpCertificateCommandFinished() )
-    };
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void slotChangePassphraseClicked())
+    Q_PRIVATE_SLOT(d, void slotChangePassphraseCommandFinished())
+    Q_PRIVATE_SLOT(d, void slotChangeTrustLevelClicked())
+    Q_PRIVATE_SLOT(d, void slotChangeOwnerTrustCommandFinished())
+    Q_PRIVATE_SLOT(d, void slotChangeExpiryDateClicked())
+    Q_PRIVATE_SLOT(d, void slotChangeExpiryDateCommandFinished())
+    Q_PRIVATE_SLOT(d, void slotRevokeCertificateClicked())
+    Q_PRIVATE_SLOT(d, void slotAddUserIDClicked())
+    Q_PRIVATE_SLOT(d, void slotAddUserIDCommandFinished())
+    Q_PRIVATE_SLOT(d, void slotRevokeUserIDClicked())
+    Q_PRIVATE_SLOT(d, void slotCertifyUserIDClicked())
+    Q_PRIVATE_SLOT(d, void slotSignCertificateCommandFinished())
+    Q_PRIVATE_SLOT(d, void slotRevokeCertificationClicked())
+    Q_PRIVATE_SLOT(d, void slotShowCertificationsClicked())
+    Q_PRIVATE_SLOT(d, void slotSignatureListingNextKey(GpgME::Key))
+    Q_PRIVATE_SLOT(d, void slotSignatureListingDone(GpgME::KeyListResult))
+    Q_PRIVATE_SLOT(d, void slotCertificationSelectionChanged())
+    Q_PRIVATE_SLOT(d, void slotKeysMayHaveChanged())
+    Q_PRIVATE_SLOT(d, void slotDumpCertificate())
+    Q_PRIVATE_SLOT(d, void slotDumpCertificateCommandFinished())
+};
 
 }
 }

@@ -33,26 +33,30 @@
 #define KLEOPATRA_GNUPGSYSTEMCONFIGURATIONPAGE_H
 
 #include <kcmodule.h>
-namespace Kleo {
-    class CryptoConfigModule;
+namespace Kleo
+{
+class CryptoConfigModule;
 }
 
-namespace Kleo {
-namespace Config {
- 
-    class GnuPGSystemConfigurationPage : public KCModule {
-        Q_OBJECT
-    public:
-        explicit GnuPGSystemConfigurationPage( QWidget *parent=0, const QVariantList &args=QVariantList() );
-        ~GnuPGSystemConfigurationPage();
+namespace Kleo
+{
+namespace Config
+{
 
-        /* reimp */ void load();
-        /* reimp */ void save();
-        /* reimp */ void defaults();
+class GnuPGSystemConfigurationPage : public KCModule
+{
+    Q_OBJECT
+public:
+    explicit GnuPGSystemConfigurationPage(QWidget *parent = 0, const QVariantList &args = QVariantList());
+    ~GnuPGSystemConfigurationPage();
 
-    private:
-        Kleo::CryptoConfigModule * mWidget;
-    };
+    /* reimp */ void load();
+    /* reimp */ void save();
+    /* reimp */ void defaults();
+
+private:
+    Kleo::CryptoConfigModule *mWidget;
+};
 
 }
 }

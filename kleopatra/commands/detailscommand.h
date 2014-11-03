@@ -35,34 +35,41 @@
 
 #include <commands/command.h>
 
-namespace GpgME {
-    class Key;
+namespace GpgME
+{
+class Key;
 }
 
-namespace Kleo {
-namespace Commands {
+namespace Kleo
+{
+namespace Commands
+{
 
-    class DetailsCommand : public Command {
-        Q_OBJECT
-    public:
-        explicit DetailsCommand( KeyListController * parent );
-        explicit DetailsCommand( QAbstractItemView * view, KeyListController * parent );
-        explicit DetailsCommand( const GpgME::Key & key, KeyListController * parent );
-        explicit DetailsCommand( const GpgME::Key & key, QAbstractItemView * view, KeyListController * parent );
-        ~DetailsCommand();
+class DetailsCommand : public Command
+{
+    Q_OBJECT
+public:
+    explicit DetailsCommand(KeyListController *parent);
+    explicit DetailsCommand(QAbstractItemView *view, KeyListController *parent);
+    explicit DetailsCommand(const GpgME::Key &key, KeyListController *parent);
+    explicit DetailsCommand(const GpgME::Key &key, QAbstractItemView *view, KeyListController *parent);
+    ~DetailsCommand();
 
-        /* reimp */ static Restrictions restrictions() { return OnlyOneKey; }
+    /* reimp */ static Restrictions restrictions()
+    {
+        return OnlyOneKey;
+    }
 
-    private:
-        /* reimp */ void doStart();
-        /* reimp */ void doCancel();
+private:
+    /* reimp */ void doStart();
+    /* reimp */ void doCancel();
 
-    private:
-        class Private;
-        inline Private * d_func();
-        inline const Private * d_func() const;
-        Q_PRIVATE_SLOT( d_func(), void slotDialogClosed() )
-    };
+private:
+    class Private;
+    inline Private *d_func();
+    inline const Private *d_func() const;
+    Q_PRIVATE_SLOT(d_func(), void slotDialogClosed())
+};
 
 }
 }

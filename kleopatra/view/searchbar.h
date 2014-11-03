@@ -41,39 +41,41 @@
 
 class KLineEdit;
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class KeyFilter;
+class KeyFilter;
 
-    class SearchBar : public QWidget {
-        Q_OBJECT
-    public:
-        explicit SearchBar( QWidget * parent=0, Qt::WindowFlags f=0 );
-        ~SearchBar();
+class SearchBar : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit SearchBar(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    ~SearchBar();
 
-        QString stringFilter() const;
-        const boost::shared_ptr<KeyFilter> & keyFilter() const;
+    QString stringFilter() const;
+    const boost::shared_ptr<KeyFilter> &keyFilter() const;
 
-        KLineEdit * lineEdit() const;
+    KLineEdit *lineEdit() const;
 
-        void updateClickMessage(const QString &shortcutStr);
+    void updateClickMessage(const QString &shortcutStr);
 
-    public Q_SLOTS:
-        void setStringFilter( const QString & text );
-        void setKeyFilter( const boost::shared_ptr<Kleo::KeyFilter> & filter );
+public Q_SLOTS:
+    void setStringFilter(const QString &text);
+    void setKeyFilter(const boost::shared_ptr<Kleo::KeyFilter> &filter);
 
-        void setChangeStringFilterEnabled( bool enable );
-        void setChangeKeyFilterEnabled( bool enable );
+    void setChangeStringFilterEnabled(bool enable);
+    void setChangeKeyFilterEnabled(bool enable);
 
-    Q_SIGNALS:
-        void stringFilterChanged( const QString & text );
-        void keyFilterChanged( const boost::shared_ptr<Kleo::KeyFilter> & filter );
+Q_SIGNALS:
+    void stringFilterChanged(const QString &text);
+    void keyFilterChanged(const boost::shared_ptr<Kleo::KeyFilter> &filter);
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void slotKeyFilterChanged(int) )
-    };
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    Q_PRIVATE_SLOT(d, void slotKeyFilterChanged(int))
+};
 
 }
 

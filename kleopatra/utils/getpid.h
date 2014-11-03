@@ -42,16 +42,17 @@
 # include <unistd.h>
 #endif
 
+namespace Kleo
+{
 
-namespace Kleo {
-
-    static inline qint64 mygetpid() {
+static inline qint64 mygetpid()
+{
 #ifdef Q_OS_WIN32
-        return (qint64)_getpid();
+    return (qint64)_getpid();
 #else
-        return (qint64)getpid();
+    return (qint64)getpid();
 #endif
-    }
+}
 
 }
 

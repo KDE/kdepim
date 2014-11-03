@@ -45,75 +45,83 @@ using namespace Kleo;
 using namespace GpgME;
 using namespace boost;
 
-QGpgMESignKeyJob::QGpgMESignKeyJob( Context * context )
-  : mixin_type( context ),
-    m_userIDsToSign(),
-    m_signingKey(),
-    m_checkLevel( 0 ),
-    m_exportable( false ),
-    m_nonRevocable( false ),
-    m_started( false )
+QGpgMESignKeyJob::QGpgMESignKeyJob(Context *context)
+    : mixin_type(context),
+      m_userIDsToSign(),
+      m_signingKey(),
+      m_checkLevel(0),
+      m_exportable(false),
+      m_nonRevocable(false),
+      m_started(false)
 {
-  lateInitialization();
+    lateInitialization();
 }
-
 
 QGpgMESignKeyJob::~QGpgMESignKeyJob() {}
 
-static QGpgMESignKeyJob::result_type sign_key( Context * ctx, const Key & key, const std::vector<unsigned int> & uids, unsigned int checkLevel, const Key & signer, unsigned int opts ) {
-  QGpgME::QByteArrayDataProvider dp;
-  Data data( &dp );
+static QGpgMESignKeyJob::result_type sign_key(Context *ctx, const Key &key, const std::vector<unsigned int> &uids, unsigned int checkLevel, const Key &signer, unsigned int opts)
+{
+    QGpgME::QByteArrayDataProvider dp;
+    Data data(&dp);
 
-  std::auto_ptr<GpgSignKeyEditInteractor> skei( new GpgSignKeyEditInteractor );
-  skei->setUserIDsToSign( uids );
-  skei->setCheckLevel( checkLevel );
-  skei->setSigningOptions( opts );
+    std::auto_ptr<GpgSignKeyEditInteractor> skei(new GpgSignKeyEditInteractor);
+    skei->setUserIDsToSign(uids);
+    skei->setCheckLevel(checkLevel);
+    skei->setSigningOptions(opts);
 
-  std::auto_ptr<EditInteractor> ei( skei );
+    std::auto_ptr<EditInteractor> ei(skei);
 
-  if ( !signer.isNull() )
-      if ( const Error err = ctx->addSigningKey( signer ) )
-          return make_tuple( err, QString(), Error() );
-  const Error err = ctx->edit( key, ei, data );
-  Error ae;
-  const QString log = _detail::audit_log_as_html( ctx, ae );
-  return make_tuple( err, log, ae );
+    if (!signer.isNull())
+        if (const Error err = ctx->addSigningKey(signer)) {
+            return make_tuple(err, QString(), Error());
+        }
+    const Error err = ctx->edit(key, ei, data);
+    Error ae;
+    const QString log = _detail::audit_log_as_html(ctx, ae);
+    return make_tuple(err, log, ae);
 }
 
-Error QGpgMESignKeyJob::start( const Key & key ) {
-  unsigned int opts = 0;
-  if ( m_nonRevocable )
-      opts |= GpgSignKeyEditInteractor::NonRevocable;
-  if ( m_exportable )
-      opts |= GpgSignKeyEditInteractor::Exportable;
-  run( boost::bind( &sign_key, _1, key, m_userIDsToSign, m_checkLevel, m_signingKey, opts ) );
-  m_started = true;
-  return Error();
+Error QGpgMESignKeyJob::start(const Key &key)
+{
+    unsigned int opts = 0;
+    if (m_nonRevocable) {
+        opts |= GpgSignKeyEditInteractor::NonRevocable;
+    }
+    if (m_exportable) {
+        opts |= GpgSignKeyEditInteractor::Exportable;
+    }
+    run(boost::bind(&sign_key, _1, key, m_userIDsToSign, m_checkLevel, m_signingKey, opts));
+    m_started = true;
+    return Error();
 }
 
-void QGpgMESignKeyJob::setUserIDsToSign( const std::vector<unsigned int> & idsToSign ) {
-    assert( !m_started );
+void QGpgMESignKeyJob::setUserIDsToSign(const std::vector<unsigned int> &idsToSign)
+{
+    assert(!m_started);
     m_userIDsToSign = idsToSign;
 }
 
-void QGpgMESignKeyJob::setCheckLevel( unsigned int checkLevel ) {
-    assert( !m_started );
+void QGpgMESignKeyJob::setCheckLevel(unsigned int checkLevel)
+{
+    assert(!m_started);
     m_checkLevel = checkLevel;
 }
 
-void QGpgMESignKeyJob::setExportable( bool exportable ) {
-    assert( !m_started );
+void QGpgMESignKeyJob::setExportable(bool exportable)
+{
+    assert(!m_started);
     m_exportable = exportable;
 }
 
-void QGpgMESignKeyJob::setSigningKey( const Key & key ) {
-    assert( !m_started );
+void QGpgMESignKeyJob::setSigningKey(const Key &key)
+{
+    assert(!m_started);
     m_signingKey = key;
 }
 
-void QGpgMESignKeyJob::setNonRevocable( bool nonRevocable ) {
-    assert( !m_started );
+void QGpgMESignKeyJob::setNonRevocable(bool nonRevocable)
+{
+    assert(!m_started);
     m_nonRevocable = nonRevocable;
 }
-
 

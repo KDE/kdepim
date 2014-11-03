@@ -42,67 +42,94 @@
 
 class QProcess;
 
-namespace boost {
-    template <typename T> class shared_ptr;
+namespace boost
+{
+template <typename T> class shared_ptr;
 }
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class KLEO_EXPORT ChecksumDefinition {
-    protected:
-        ChecksumDefinition( const QString & id, const QString & label, const QString & outputFileName, const QStringList & extensions );
-    public:
-        virtual ~ChecksumDefinition();
+class KLEO_EXPORT ChecksumDefinition
+{
+protected:
+    ChecksumDefinition(const QString &id, const QString &label, const QString &outputFileName, const QStringList &extensions);
+public:
+    virtual ~ChecksumDefinition();
 
-        enum ArgumentPassingMethod {
-            CommandLine,
-            NewlineSeparatedInputFile,
-            NullSeparatedInputFile,
+    enum ArgumentPassingMethod {
+        CommandLine,
+        NewlineSeparatedInputFile,
+        NullSeparatedInputFile,
 
-            NumArgumentPassingMethods
-        };
-
-        QString id() const { return m_id; }
-        QString label() const { return m_label; }
-
-        const QStringList & patterns() const { return m_patterns; }
-        QString outputFileName() const { return m_outputFileName; }
-
-        QString createCommand() const;
-        ArgumentPassingMethod createCommandArgumentPassingMethod() const { return m_createMethod; }
-
-        QString verifyCommand() const;
-        ArgumentPassingMethod verifyCommandArgumentPassingMethod() const { return m_verifyMethod; }
-
-        bool startCreateCommand( QProcess * process, const QStringList & files ) const;
-        bool startVerifyCommand( QProcess * process, const QStringList & files ) const;
-
-        static QString installPath();
-        static void setInstallPath( const QString & ip );
-
-        static std::vector< boost::shared_ptr<ChecksumDefinition> > getChecksumDefinitions();
-        static std::vector< boost::shared_ptr<ChecksumDefinition> > getChecksumDefinitions( QStringList & errors );
-
-        static boost::shared_ptr<ChecksumDefinition> getDefaultChecksumDefinition( const std::vector< boost::shared_ptr<ChecksumDefinition> > & available );
-        static void setDefaultChecksumDefinition( const boost::shared_ptr<ChecksumDefinition> & checksumDefinition );
-
-    protected:
-        void setCreateCommandArgumentPassingMethod( ArgumentPassingMethod method ) { m_createMethod = method; }
-        void setVerifyCommandArgumentPassingMethod( ArgumentPassingMethod method ) { m_verifyMethod = method; }
-
-    private:
-        virtual QString doGetCreateCommand() const = 0;
-        virtual QString doGetVerifyCommand() const = 0;
-        virtual QStringList doGetCreateArguments( const QStringList & files ) const = 0;
-        virtual QStringList doGetVerifyArguments( const QStringList & files ) const = 0;
-    private:
-        const QString m_id;
-        const QString m_label;
-        const QString m_outputFileName;
-        const QStringList m_patterns;
-        ArgumentPassingMethod m_createMethod, m_verifyMethod;
+        NumArgumentPassingMethods
     };
-        
+
+    QString id() const
+    {
+        return m_id;
+    }
+    QString label() const
+    {
+        return m_label;
+    }
+
+    const QStringList &patterns() const
+    {
+        return m_patterns;
+    }
+    QString outputFileName() const
+    {
+        return m_outputFileName;
+    }
+
+    QString createCommand() const;
+    ArgumentPassingMethod createCommandArgumentPassingMethod() const
+    {
+        return m_createMethod;
+    }
+
+    QString verifyCommand() const;
+    ArgumentPassingMethod verifyCommandArgumentPassingMethod() const
+    {
+        return m_verifyMethod;
+    }
+
+    bool startCreateCommand(QProcess *process, const QStringList &files) const;
+    bool startVerifyCommand(QProcess *process, const QStringList &files) const;
+
+    static QString installPath();
+    static void setInstallPath(const QString &ip);
+
+    static std::vector< boost::shared_ptr<ChecksumDefinition> > getChecksumDefinitions();
+    static std::vector< boost::shared_ptr<ChecksumDefinition> > getChecksumDefinitions(QStringList &errors);
+
+    static boost::shared_ptr<ChecksumDefinition> getDefaultChecksumDefinition(const std::vector< boost::shared_ptr<ChecksumDefinition> > &available);
+    static void setDefaultChecksumDefinition(const boost::shared_ptr<ChecksumDefinition> &checksumDefinition);
+
+protected:
+    void setCreateCommandArgumentPassingMethod(ArgumentPassingMethod method)
+    {
+        m_createMethod = method;
+    }
+    void setVerifyCommandArgumentPassingMethod(ArgumentPassingMethod method)
+    {
+        m_verifyMethod = method;
+    }
+
+private:
+    virtual QString doGetCreateCommand() const = 0;
+    virtual QString doGetVerifyCommand() const = 0;
+    virtual QStringList doGetCreateArguments(const QStringList &files) const = 0;
+    virtual QStringList doGetVerifyArguments(const QStringList &files) const = 0;
+private:
+    const QString m_id;
+    const QString m_label;
+    const QString m_outputFileName;
+    const QStringList m_patterns;
+    ArgumentPassingMethod m_createMethod, m_verifyMethod;
+};
+
 }
 
 #endif /* __KLEO_CHECKSUMDEFINITION_H__ */

@@ -43,29 +43,30 @@ class KProcess;
 class QTimer;
 class QCloseEvent;
 
-class CRLView : public QDialog {
-  Q_OBJECT
+class CRLView : public QDialog
+{
+    Q_OBJECT
 public:
-  explicit CRLView( QWidget* parent = 0 );
-  ~CRLView();
+    explicit CRLView(QWidget *parent = 0);
+    ~CRLView();
 public slots:
-  void slotUpdateView();
+    void slotUpdateView();
 
 protected slots:
-  void slotReadStdout();
-  void slotProcessExited(int, QProcess::ExitStatus);
-  void slotAppendBuffer();
+    void slotReadStdout();
+    void slotProcessExited(int, QProcess::ExitStatus);
+    void slotAppendBuffer();
 
 protected:
-  void closeEvent( QCloseEvent * );
-  void processExited();
-private:  
-  QTextEdit*   _textView;
-  QPushButton* _updateButton;
-  QPushButton* _closeButton;
-  KProcess*    _process;
-  QTimer*      _timer;
-  QString      _buffer;
+    void closeEvent(QCloseEvent *);
+    void processExited();
+private:
+    QTextEdit   *_textView;
+    QPushButton *_updateButton;
+    QPushButton *_closeButton;
+    KProcess    *_process;
+    QTimer      *_timer;
+    QString      _buffer;
 };
 
 #endif // CRLVIEW_H

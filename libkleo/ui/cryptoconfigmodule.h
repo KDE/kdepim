@@ -36,30 +36,31 @@
 #include <kpagedialog.h>
 #include <QtCore/QList>
 
-namespace Kleo {
+namespace Kleo
+{
 
-  class CryptoConfig;
-  class CryptoConfigComponentGUI;
+class CryptoConfig;
+class CryptoConfigComponentGUI;
 
-  struct ParsedKeyserver {
-      QString url;
-      QVector< QPair<QString,QString> > options;
-  };
+struct ParsedKeyserver {
+    QString url;
+    QVector< QPair<QString, QString> > options;
+};
 
-  KLEO_EXPORT ParsedKeyserver parseKeyserver( const QString & str );
-  KLEO_EXPORT QString assembleKeyserver( const ParsedKeyserver & keyserver );
+KLEO_EXPORT ParsedKeyserver parseKeyserver(const QString &str);
+KLEO_EXPORT QString assembleKeyserver(const ParsedKeyserver &keyserver);
 
-
-  /**
-   * Crypto Config Module widget, dynamically generated from CryptoConfig
-   * It's a simple QWidget so that it can be embedded into a dialog or into a KCModule.
-   */
-  class KLEO_EXPORT CryptoConfigModule : public KPageWidget {
+/**
+ * Crypto Config Module widget, dynamically generated from CryptoConfig
+ * It's a simple QWidget so that it can be embedded into a dialog or into a KCModule.
+ */
+class KLEO_EXPORT CryptoConfigModule : public KPageWidget
+{
     Q_OBJECT
-  public:
+public:
     enum Layout { TabbedLayout, IconListLayout, LinearizedLayout };
-    explicit CryptoConfigModule( Kleo::CryptoConfig* config, QWidget * parent=0 );
-    explicit CryptoConfigModule( Kleo::CryptoConfig* config, Layout layout, QWidget * parent=0 );
+    explicit CryptoConfigModule(Kleo::CryptoConfig *config, QWidget *parent = 0);
+    explicit CryptoConfigModule(Kleo::CryptoConfig *config, Layout layout, QWidget *parent = 0);
 
     bool hasError() const;
 
@@ -68,16 +69,16 @@ namespace Kleo {
     void defaults();
     void cancel();
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void changed();
 
-  private:
-    void init( Layout layout );
+private:
+    void init(Layout layout);
 
-  private:
-    Kleo::CryptoConfig* mConfig;
+private:
+    Kleo::CryptoConfig *mConfig;
     QList<CryptoConfigComponentGUI *> mComponentGUIs;
-  };
+};
 
 }
 

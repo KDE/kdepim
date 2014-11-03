@@ -38,32 +38,37 @@
 
 #include <utils/pimpl_ptr.h>
 
-namespace Kleo {
+namespace Kleo
+{
 
-    class CreateChecksumsCommand : public QObject, public AssuanCommandMixin<CreateChecksumsCommand> {
-        Q_OBJECT
-    public:
-        CreateChecksumsCommand();
-        ~CreateChecksumsCommand();
+class CreateChecksumsCommand : public QObject, public AssuanCommandMixin<CreateChecksumsCommand>
+{
+    Q_OBJECT
+public:
+    CreateChecksumsCommand();
+    ~CreateChecksumsCommand();
 
-        static const char * staticName() { return "CHECKSUM_CREATE_FILES"; }
+    static const char *staticName()
+    {
+        return "CHECKSUM_CREATE_FILES";
+    }
 
-    private:
-        int doStart();
-        void doCanceled();
+private:
+    int doStart();
+    void doCanceled();
 
 #ifdef Q_MOC_RUN
-    private Q_SLOTS:
-        void done();
-        void done( int, QString );
+private Q_SLOTS:
+    void done();
+    void done(int, QString);
 #endif
 
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        //Q_PRIVATE_SLOT( th, void done() )
-        //Q_PRIVATE_SLOT( this, void done(int,QString) )
-    };
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
+    //Q_PRIVATE_SLOT( th, void done() )
+    //Q_PRIVATE_SLOT( this, void done(int,QString) )
+};
 
 }
 

@@ -35,28 +35,31 @@
 
 #include <commands/gnupgprocesscommand.h>
 
-namespace Kleo {
-namespace Commands {
+namespace Kleo
+{
+namespace Commands
+{
 
-    class RefreshX509CertsCommand : public GnuPGProcessCommand {
-        Q_OBJECT
-    public:
-        explicit RefreshX509CertsCommand( QAbstractItemView * view, KeyListController * parent );
-        explicit RefreshX509CertsCommand( KeyListController * parent );
-        ~RefreshX509CertsCommand();
+class RefreshX509CertsCommand : public GnuPGProcessCommand
+{
+    Q_OBJECT
+public:
+    explicit RefreshX509CertsCommand(QAbstractItemView *view, KeyListController *parent);
+    explicit RefreshX509CertsCommand(KeyListController *parent);
+    ~RefreshX509CertsCommand();
 
-    private:
-        /* reimp */ bool preStartHook( QWidget * ) const;
+private:
+    /* reimp */ bool preStartHook(QWidget *) const;
 
-        /* reimp */ QStringList arguments() const;
+    /* reimp */ QStringList arguments() const;
 
-        /* reimp */ QString errorCaption() const;
-        /* reimp */ QString successCaption() const;
+    /* reimp */ QString errorCaption() const;
+    /* reimp */ QString successCaption() const;
 
-        /* reimp */ QString crashExitMessage( const QStringList & ) const;
-        /* reimp */ QString errorExitMessage( const QStringList & ) const;
-        /* reimp */ QString successMessage( const QStringList & ) const;
-    };
+    /* reimp */ QString crashExitMessage(const QStringList &) const;
+    /* reimp */ QString errorExitMessage(const QStringList &) const;
+    /* reimp */ QString successMessage(const QStringList &) const;
+};
 
 }
 }

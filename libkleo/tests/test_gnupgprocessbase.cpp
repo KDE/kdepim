@@ -34,7 +34,6 @@
 
 #include "libkleo/backends/qgpgme/gnupgprocessbase.h"
 
-
 #include <KAboutData>
 
 #include <kmessagebox.h>
@@ -45,104 +44,120 @@
 #include <KLocalizedString>
 #include <QCommandLineParser>
 
-GnuPGViewer::GnuPGViewer( QWidget * parent )
-  : QTextEdit( parent ), mProcess( 0 )
+GnuPGViewer::GnuPGViewer(QWidget *parent)
+    : QTextEdit(parent), mProcess(0)
 {
-  setAcceptRichText(false);
-  document()->setMaximumBlockCount( 10000 );
+    setAcceptRichText(false);
+    document()->setMaximumBlockCount(10000);
 }
 
-GnuPGViewer::~GnuPGViewer() {
-  if ( mProcess )
-    mProcess->kill();
+GnuPGViewer::~GnuPGViewer()
+{
+    if (mProcess) {
+        mProcess->kill();
+    }
 }
 
-void GnuPGViewer::setProcess( Kleo::GnuPGProcessBase * process ) {
-  if ( !process )
-    return;
-  mProcess = process;
-  connect( mProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
-           SLOT(slotProcessExited(int,QProcess::ExitStatus)) );
-  connect( mProcess, SIGNAL(readyReadStandardOutput()),
-           SLOT(slotStdout()) );
-  connect( mProcess, SIGNAL(readyReadStandardError()),
-           SLOT(slotStderr()) );
-  connect( mProcess, SIGNAL(status(Kleo::GnuPGProcessBase*,QString,QStringList)),
-           SLOT(slotStatus(Kleo::GnuPGProcessBase*,QString,QStringList)) );
+void GnuPGViewer::setProcess(Kleo::GnuPGProcessBase *process)
+{
+    if (!process) {
+        return;
+    }
+    mProcess = process;
+    connect(mProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
+            SLOT(slotProcessExited(int,QProcess::ExitStatus)));
+    connect(mProcess, SIGNAL(readyReadStandardOutput()),
+            SLOT(slotStdout()));
+    connect(mProcess, SIGNAL(readyReadStandardError()),
+            SLOT(slotStderr()));
+    connect(mProcess, SIGNAL(status(Kleo::GnuPGProcessBase*,QString,QStringList)),
+            SLOT(slotStatus(Kleo::GnuPGProcessBase*,QString,QStringList)));
 }
 
-static QStringList split( const QString & newLine, QString & old ) {
-  // when done right, this would need to use QTextCodec...
-  const QString str = old + newLine;
-  QStringList l = str.split( '\n' );
-  if ( l.empty() )
+static QStringList split(const QString &newLine, QString &old)
+{
+    // when done right, this would need to use QTextCodec...
+    const QString str = old + newLine;
+    QStringList l = str.split('\n');
+    if (l.empty()) {
+        return l;
+    }
+    if (str.endsWith('\n')) {
+        old.clear();
+    } else {
+        old = l.back();
+        l.pop_back();
+    }
     return l;
-  if ( str.endsWith( '\n' ) ) {
-    old.clear();
-  } else {
-    old = l.back();
-    l.pop_back();
-  }
-  return l;
 }
 
-static QString escape( QString str ) {
-  return str.replace( '&', "&amp" ).replace( '<', "&lt;" ).replace( '>', "&gt;" );
+static QString escape(QString str)
+{
+    return str.replace('&', "&amp").replace('<', "&lt;").replace('>', "&gt;");
 }
 
-void GnuPGViewer::slotStdout() {
-  QString line = mProcess-> readAllStandardOutput ();
-  const QStringList l = split( line, mLastStdout );
-  for ( QStringList::const_iterator it = l.begin() ; it != l.end() ; ++it )
-    append( "stdout: " + escape( *it ) );
+void GnuPGViewer::slotStdout()
+{
+    QString line = mProcess-> readAllStandardOutput();
+    const QStringList l = split(line, mLastStdout);
+    for (QStringList::const_iterator it = l.begin() ; it != l.end() ; ++it) {
+        append("stdout: " + escape(*it));
+    }
 }
 
-void GnuPGViewer::slotStderr() {
-  QString line = mProcess->readAllStandardError ();
-  const QStringList l = split( line, mLastStderr );
-  for ( QStringList::const_iterator it = l.begin() ; it != l.end() ; ++it )
-    append( "<b>stderr: " + escape( *it ) + "</b>" );
+void GnuPGViewer::slotStderr()
+{
+    QString line = mProcess->readAllStandardError();
+    const QStringList l = split(line, mLastStderr);
+    for (QStringList::const_iterator it = l.begin() ; it != l.end() ; ++it) {
+        append("<b>stderr: " + escape(*it) + "</b>");
+    }
 }
-void GnuPGViewer::slotStatus( Kleo::GnuPGProcessBase *, const QString & type, const QStringList & args ) {
-  append( "<b><font color=\"red\">status: " + escape( type + ' ' + args.join( " " ) ) + "</font></b>" );
+void GnuPGViewer::slotStatus(Kleo::GnuPGProcessBase *, const QString &type, const QStringList &args)
+{
+    append("<b><font color=\"red\">status: " + escape(type + ' ' + args.join(" ")) + "</font></b>");
 }
-void GnuPGViewer::slotProcessExited(int exitCode, QProcess::ExitStatus exitStatus) {
-  if ( exitStatus==QProcess::NormalExit )
-    append( QString( "<b>Process exit: return code %1</b>" ).arg ( exitCode ) );
-  else
-    append( "<b>Process exit: killed</b>" );
+void GnuPGViewer::slotProcessExited(int exitCode, QProcess::ExitStatus exitStatus)
+{
+    if (exitStatus == QProcess::NormalExit) {
+        append(QString("<b>Process exit: return code %1</b>").arg(exitCode));
+    } else {
+        append("<b>Process exit: killed</b>");
+    }
 }
 
-int main( int argc, char** argv ) {
-  if ( argc < 3 ) {
-    qDebug() <<"Need at least two arguments";
-    return 1;
-  }
-  KAboutData aboutData( QLatin1String("test_gnupgprocessbase"), i18n("GnuPGProcessBase Test"), QLatin1String("0.1") );
-  QApplication app(argc, argv);
-  QCommandLineParser parser;
-  KAboutData::setApplicationData(aboutData);
-  parser.addVersionOption();
-  parser.addHelpOption();
-  aboutData.setupCommandLine(&parser);
-  parser.process(app);
-  aboutData.processCommandLine(&parser);
+int main(int argc, char **argv)
+{
+    if (argc < 3) {
+        qDebug() << "Need at least two arguments";
+        return 1;
+    }
+    KAboutData aboutData(QLatin1String("test_gnupgprocessbase"), i18n("GnuPGProcessBase Test"), QLatin1String("0.1"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-  Kleo::GnuPGProcessBase gpg;
-  for ( int i = 1 ; i < argc ; ++i )
-    gpg << argv[i];
+    Kleo::GnuPGProcessBase gpg;
+    for (int i = 1 ; i < argc ; ++i) {
+        gpg << argv[i];
+    }
 
-  gpg.setUseStatusFD( true );
+    gpg.setUseStatusFD(true);
 
-  GnuPGViewer * gv = new GnuPGViewer();
-  gv->setProcess( &gpg );
+    GnuPGViewer *gv = new GnuPGViewer();
+    gv->setProcess(&gpg);
 
-  gv->show();
+    gv->show();
 
-  gpg.setOutputChannelMode(KProcess::SeparateChannels);
-  gpg.start();
+    gpg.setOutputChannelMode(KProcess::SeparateChannels);
+    gpg.start();
 
-  return app.exec();
+    return app.exec();
 }
 
 #include "moc_gnupgviewer.cpp"

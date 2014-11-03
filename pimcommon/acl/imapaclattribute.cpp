@@ -64,7 +64,7 @@ QByteArray ImapAclAttribute::serialized() const
     QByteArray result = "";
 
     bool added = false;
-    foreach(const QByteArray & id, mRights.keys()) {   //krazy:exclude=foreach
+    foreach (const QByteArray &id, mRights.keys()) {   //krazy:exclude=foreach
         result += id;
         result += ' ';
         result += KIMAP::Acl::rightsToString(mRights[id]);
@@ -79,7 +79,7 @@ QByteArray ImapAclAttribute::serialized() const
     result += " %% ";
 
     added = false;
-    foreach(const QByteArray & id, mOldRights.keys()) {   //krazy:exclude=foreach
+    foreach (const QByteArray &id, mOldRights.keys()) {   //krazy:exclude=foreach
         result += id;
         result += ' ';
         result += KIMAP::Acl::rightsToString(mOldRights[id]);
@@ -96,7 +96,7 @@ QByteArray ImapAclAttribute::serialized() const
 
 static void fillRightsMap(const QList<QByteArray> &rights, QMap <QByteArray, KIMAP::Acl::Rights> &map)
 {
-    foreach(const QByteArray & right, rights) {
+    foreach (const QByteArray &right, rights) {
         const QByteArray trimmed = right.trimmed();
         const int wsIndex = trimmed.indexOf(' ');
         const QByteArray id = trimmed.mid(0, wsIndex).trimmed();

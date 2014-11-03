@@ -40,55 +40,55 @@
 #include <gpgme++/signingresult.h>
 #include <gpgme++/key.h>
 
+namespace Kleo
+{
 
-namespace Kleo {
-
-  class QGpgMESignJob
+class QGpgMESignJob
 #ifdef Q_MOC_RUN
     : public SignJob
 #else
     : public _detail::ThreadedJobMixin<SignJob, boost::tuple<GpgME::SigningResult, QByteArray, QString, GpgME::Error> >
 #endif
-  {
+{
     Q_OBJECT
 #ifdef Q_MOC_RUN
-  public Q_SLOTS:
+public Q_SLOTS:
     void slotFinished();
 #endif
-  public:
-    explicit QGpgMESignJob( GpgME::Context * context );
+public:
+    explicit QGpgMESignJob(GpgME::Context *context);
     ~QGpgMESignJob();
 
     /*! \reimp from SignJob */
-    GpgME::Error start( const std::vector<GpgME::Key> & signers,
-                        const QByteArray & plainText,
-                        GpgME::SignatureMode mode );
+    GpgME::Error start(const std::vector<GpgME::Key> &signers,
+                       const QByteArray &plainText,
+                       GpgME::SignatureMode mode);
 
     /*! \reimp from SignJob */
-    void start( const std::vector<GpgME::Key> & signers,
-                const boost::shared_ptr<QIODevice> & plainText,
-                const boost::shared_ptr<QIODevice> & signature,
-                GpgME::SignatureMode mode );
+    void start(const std::vector<GpgME::Key> &signers,
+               const boost::shared_ptr<QIODevice> &plainText,
+               const boost::shared_ptr<QIODevice> &signature,
+               GpgME::SignatureMode mode);
 
     /*! \reimp from SignJob */
-    GpgME::SigningResult exec( const std::vector<GpgME::Key> & signers,
-                               const QByteArray & plainText,
-                               GpgME::SignatureMode mode,
-                               QByteArray & signature );
+    GpgME::SigningResult exec(const std::vector<GpgME::Key> &signers,
+                              const QByteArray &plainText,
+                              GpgME::SignatureMode mode,
+                              QByteArray &signature);
 
     /*! \reimp from Job */
-    void showErrorDialog( QWidget * parent, const QString & caption ) const;
+    void showErrorDialog(QWidget *parent, const QString &caption) const;
 
     /*! \reimp from SignJob */
-    void setOutputIsBase64Encoded( bool on );
+    void setOutputIsBase64Encoded(bool on);
 
     /*! \reimp from ThreadedJobMixin */
-    void resultHook( const result_type & r );
+    void resultHook(const result_type &r);
 
-  private:
+private:
     GpgME::SigningResult mResult;
     bool mOutputIsBase64Encoded;
-  };
+};
 
 }
 

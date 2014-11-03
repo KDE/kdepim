@@ -38,33 +38,36 @@
 class QString;
 class KTextEdit;
 
-namespace Kleo {
-namespace Private {
+namespace Kleo
+{
+namespace Private
+{
 
-    class AuditLogViewer : public KDialog {
-        Q_OBJECT
-    public:
-        explicit AuditLogViewer( const QString & log, QWidget * parent=0, Qt::WindowFlags f=0 );
+class AuditLogViewer : public KDialog
+{
+    Q_OBJECT
+public:
+    explicit AuditLogViewer(const QString &log, QWidget *parent = 0, Qt::WindowFlags f = 0);
 
-        ~AuditLogViewer();
+    ~AuditLogViewer();
 
-        void setAuditLog( const QString & log );
+    void setAuditLog(const QString &log);
 
-    private Q_SLOTS:
+private Q_SLOTS:
 #ifndef QT_NO_FILEDIALOG
-        void slotUser1();
+    void slotUser1();
 #endif
 #ifndef QT_NO_CLIPBOARD
-        void slotUser2();
+    void slotUser2();
 #endif
 
-    private:
-        void writeConfig();
-        void readConfig();
+private:
+    void writeConfig();
+    void readConfig();
 
-        QString m_log;
-        KTextEdit * m_textEdit;
-    };
+    QString m_log;
+    KTextEdit *m_textEdit;
+};
 
 }
 }

@@ -40,7 +40,6 @@
 
 #include <gpgme++/key.h>
 
-
 #include <KMessageBox>
 #include <KLocalizedString>
 
@@ -70,150 +69,167 @@ static const char *charsets[] = {
     "euc-jp",
     "big5",
 };
-static const unsigned int numCharsets = sizeof charsets / sizeof *charsets;
+static const unsigned int numCharsets = sizeof charsets / sizeof * charsets;
 
-class ExportSecretKeyDialog::Private {
+class ExportSecretKeyDialog::Private
+{
     friend class ::Kleo::Dialogs::ExportSecretKeyDialog;
-    ExportSecretKeyDialog * const q;
+    ExportSecretKeyDialog *const q;
 public:
-    explicit Private( ExportSecretKeyDialog * qq )
-        : q( qq ),
-          ui( q )
+    explicit Private(ExportSecretKeyDialog *qq)
+        : q(qq),
+          ui(q)
     {
 
     }
 
 private:
-    void updateWidgets() {
+    void updateWidgets()
+    {
         const bool x509 = key.protocol() == CMS;
-        ui.charsetCB->setVisible( x509 );
-        ui.charsetLB->setVisible( x509 );
+        ui.charsetCB->setVisible(x509);
+        ui.charsetLB->setVisible(x509);
     }
 
-    void updateFileName() {
+    void updateFileName()
+    {
         const bool x509 = key.protocol() == CMS;
         const bool armor = q->useArmor();
 
-        static const char * extensions[] = {
+        static const char *extensions[] = {
             ".gpg", ".asc", ".p12", ".pem"
         };
-        const unsigned int idx = 2*x509+armor;
-        const char * const extension = extensions[idx];
+        const unsigned int idx = 2 * x509 + armor;
+        const char *const extension = extensions[idx];
 
         const QString nf = i18n("Secret Key Files") + QString::fromLatin1("(*%1 *%2 *%3 *%4 *.pgp)")
-            .arg( QLatin1String(extensions[idx]), QLatin1String(extensions[(idx+1)%4]), QLatin1String(extensions[(idx+2)%4]), QLatin1String(extensions[(idx+3)%4]) );
-        ui.outputFileFR->setNameFilter( nf );
+                           .arg(QLatin1String(extensions[idx]), QLatin1String(extensions[(idx + 1) % 4]), QLatin1String(extensions[(idx + 2) % 4]), QLatin1String(extensions[(idx + 3) % 4]));
+        ui.outputFileFR->setNameFilter(nf);
 
         QString fn = q->fileName();
-        if ( fn.isEmpty() )
+        if (fn.isEmpty()) {
             return;
+        }
 
         bool found = false;
-        for ( unsigned int i = 0 ; i < sizeof extensions / sizeof *extensions ; ++i )
-            if ( fn.endsWith( QLatin1String(extensions[i]), Qt::CaseInsensitive ) ) {
-                fn.chop( 4 );
+        for (unsigned int i = 0 ; i < sizeof extensions / sizeof * extensions ; ++i)
+            if (fn.endsWith(QLatin1String(extensions[i]), Qt::CaseInsensitive)) {
+                fn.chop(4);
                 found = true;
                 break;
             }
-        if ( found )
-            q->setFileName( fn + QLatin1String(extension) );
+        if (found) {
+            q->setFileName(fn + QLatin1String(extension));
+        }
     }
 
-    void updateLabel() {
-        ui.descriptionLB->setText( i18nc("@info",
-                                         "Please select export options for %1:",
-                                         Formatting::formatForComboBox( key ) ) );
+    void updateLabel()
+    {
+        ui.descriptionLB->setText(i18nc("@info",
+                                        "Please select export options for %1:",
+                                        Formatting::formatForComboBox(key)));
     }
 private:
     Key key;
 
     struct UI : public Ui_ExportSecretKeyDialog {
-        explicit UI( Dialogs::ExportSecretKeyDialog * qq )
+        explicit UI(Dialogs::ExportSecretKeyDialog *qq)
             : Ui_ExportSecretKeyDialog()
         {
-            setupUi( qq );
+            setupUi(qq);
 
-            outputFileFR->setExistingOnly( false );
-            outputFileFR->setFilter( QDir::Files );
-            outputFileFR->setNameFilter( i18n("Secret Key Files (*.pem *.p12 *.gpg *.asc *.pgp)") );
+            outputFileFR->setExistingOnly(false);
+            outputFileFR->setFilter(QDir::Files);
+            outputFileFR->setNameFilter(i18n("Secret Key Files (*.pem *.p12 *.gpg *.asc *.pgp)"));
 
-            for ( unsigned int i = 0 ; i < numCharsets ; ++i )
-                charsetCB->addItem( QString::fromLatin1( charsets[i] ) );
-            charsetCB->setCurrentIndex( 0 );
-                           
+            for (unsigned int i = 0 ; i < numCharsets ; ++i) {
+                charsetCB->addItem(QString::fromLatin1(charsets[i]));
+            }
+            charsetCB->setCurrentIndex(0);
+
         }
     } ui;
 };
 
-ExportSecretKeyDialog::ExportSecretKeyDialog( QWidget * p, Qt::WindowFlags f )
-    : QDialog( p, f ), d( new Private( this ) )
+ExportSecretKeyDialog::ExportSecretKeyDialog(QWidget *p, Qt::WindowFlags f)
+    : QDialog(p, f), d(new Private(this))
 {
 
 }
 
 ExportSecretKeyDialog::~ExportSecretKeyDialog() {}
 
-
-void ExportSecretKeyDialog::setKey( const Key & key ) {
-    if ( qstricmp( key.primaryFingerprint(), d->key.primaryFingerprint() ) == 0 )
+void ExportSecretKeyDialog::setKey(const Key &key)
+{
+    if (qstricmp(key.primaryFingerprint(), d->key.primaryFingerprint()) == 0) {
         return;
+    }
     d->key = key;
     d->updateWidgets();
     d->updateLabel();
     d->updateFileName();
 }
 
-Key ExportSecretKeyDialog::key() const {
+Key ExportSecretKeyDialog::key() const
+{
     return d->key;
 }
 
-void ExportSecretKeyDialog::setFileName( const QString & fileName ) {
-    d->ui.outputFileFR->setFileName( fileName );
+void ExportSecretKeyDialog::setFileName(const QString &fileName)
+{
+    d->ui.outputFileFR->setFileName(fileName);
 }
 
-QString ExportSecretKeyDialog::fileName() const {
+QString ExportSecretKeyDialog::fileName() const
+{
     return d->ui.outputFileFR->fileName();
 }
 
-void ExportSecretKeyDialog::setCharset( const QByteArray & charset ) {
-    for ( unsigned int i = 0 ; i < sizeof charsets / sizeof *charsets ; ++i )
-        if ( charset == charsets[i] ) {
-            d->ui.charsetCB->setCurrentIndex( i );
+void ExportSecretKeyDialog::setCharset(const QByteArray &charset)
+{
+    for (unsigned int i = 0 ; i < sizeof charsets / sizeof * charsets ; ++i)
+        if (charset == charsets[i]) {
+            d->ui.charsetCB->setCurrentIndex(i);
             return;
         }
 }
 
-QByteArray ExportSecretKeyDialog::charset() const {
-    if ( d->ui.charsetCB->isVisible() )
+QByteArray ExportSecretKeyDialog::charset() const
+{
+    if (d->ui.charsetCB->isVisible()) {
         return d->ui.charsetCB->currentText().toLatin1();
-    else
+    } else {
         return QByteArray();
+    }
 }
 
-void ExportSecretKeyDialog::setUseArmor( bool on ) {
-    d->ui.armorCB->setChecked( on );
+void ExportSecretKeyDialog::setUseArmor(bool on)
+{
+    d->ui.armorCB->setChecked(on);
 }
 
-bool ExportSecretKeyDialog::useArmor() const {
+bool ExportSecretKeyDialog::useArmor() const
+{
     return d->ui.armorCB->isChecked();
 }
 
-void ExportSecretKeyDialog::accept() {
+void ExportSecretKeyDialog::accept()
+{
     d->updateFileName();
     const QString fn = fileName();
-    if ( fn.isEmpty() ) {
-        KMessageBox::information( this, i18nc("@info",
-                                              "You have to enter an output filename." ),
-                                  i18nc("@title", "Incomplete data") );
+    if (fn.isEmpty()) {
+        KMessageBox::information(this, i18nc("@info",
+                                             "You have to enter an output filename."),
+                                 i18nc("@title", "Incomplete data"));
         d->ui.outputFileFR->setFocus();
         return;
     }
 
     const QByteArray cs = charset();
-    if ( d->key.protocol() == CMS && cs.isEmpty() ) {
-        KMessageBox::information( this, i18nc("@info",
-                                              "You have to choose a passphrase character set." ),
-                                  i18nc("@title", "Incomplete data") );
+    if (d->key.protocol() == CMS && cs.isEmpty()) {
+        KMessageBox::information(this, i18nc("@info",
+                                             "You have to choose a passphrase character set."),
+                                 i18nc("@title", "Incomplete data"));
         d->ui.charsetCB->setFocus();
         return;
     }

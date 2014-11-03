@@ -31,28 +31,28 @@
 
 #include "libkleo/ui/kdhorizontalline.h"
 
-
 #include <QApplication>
 #include <QGridLayout>
 #include <QLabel>
 #include <QLineEdit>
-int main( int argc, char * argv[] ) {
+int main(int argc, char *argv[])
+{
 
-    QApplication app( argc, argv );
+    QApplication app(argc, argv);
 
     QWidget w;
-    QGridLayout glay( &w );
+    QGridLayout glay(&w);
 
-    KDHorizontalLine hl1( "Foo", &w );
-    glay.addWidget( &hl1, 0, 0, 1, 2 );
+    KDHorizontalLine hl1("Foo", &w);
+    glay.addWidget(&hl1, 0, 0, 1, 2);
 
-    QLabel lb1( "Foo 1:", &w );
-    glay.addWidget( &lb1, 1, 0 );
-    QLineEdit le1( &w );
-    glay.addWidget( &le1, 1, 1 );
+    QLabel lb1("Foo 1:", &w);
+    glay.addWidget(&lb1, 1, 0);
+    QLineEdit le1(&w);
+    glay.addWidget(&le1, 1, 1);
 
-    glay.setColumnStretch( 1, 1 );
-    glay.setRowStretch( 2, 1 );
+    glay.setColumnStretch(1, 1);
+    glay.setRowStretch(2, 1);
 
     w.show();
 
