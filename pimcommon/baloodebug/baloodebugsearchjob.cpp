@@ -18,6 +18,7 @@
 #include "baloodebugsearchjob.h"
 #include <KStandardDirs>
 #include <QProcess>
+#include <QDebug>
 
 using namespace PimCommon;
 BalooDebugSearchJob::BalooDebugSearchJob(QObject *parent)
@@ -46,6 +47,7 @@ void BalooDebugSearchJob::start()
         arguments << mAkonadiId;
         arguments << mPath;
         //TODO add more arguments
+        qDebug()<<" mProcess->arguments"<<arguments;
         mProcess->start(delvePath, arguments);
     }
 }
@@ -75,7 +77,7 @@ void BalooDebugSearchJob::setArguments(const QStringList &args)
 }
 
 
-void BalooDebugSearchJob::searchPath(const QString &path)
+void BalooDebugSearchJob::setSearchPath(const QString &path)
 {
     mPath = path;
 }
