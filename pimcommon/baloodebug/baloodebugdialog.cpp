@@ -27,6 +27,7 @@ using namespace PimCommon;
 BalooDebugDialog::BalooDebugDialog(QWidget *parent)
     : KDialog(parent)
 {
+    setButtons(Close);
     mBalooDebugWidget = new BalooDebugWidget(this);
     mBalooDebugWidget->setObjectName(QLatin1String("baloodebugwidget"));
     setMainWidget(mBalooDebugWidget);
@@ -54,7 +55,7 @@ void BalooDebugDialog::writeConfig()
 }
 
 
-void BalooDebugDialog::setAkonadiId(const QString &akonadiId)
+void BalooDebugDialog::setAkonadiId(Akonadi::Item::Id akonadiId)
 {
     mBalooDebugWidget->setAkonadiId(akonadiId);
 }

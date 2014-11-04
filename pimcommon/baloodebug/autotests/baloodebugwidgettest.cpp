@@ -57,26 +57,26 @@ void BalooDebugWidgetTest::shouldFillLineEditWhenWeWantToSearchItem()
 {
     PimCommon::BalooDebugWidget widget;
     KLineEdit *lineEdit = qFindChild<KLineEdit *>(&widget, QLatin1String("lineedit"));
-    const QString akonadiItem = QLatin1String("Foo");
-    widget.setAkonadiId(akonadiItem);
+    const int value = 42;
+    const QString akonadiItem = QString::number(value);
+    widget.setAkonadiId(value);
     QCOMPARE(lineEdit->text(), akonadiItem);
 }
 
 void BalooDebugWidgetTest::shouldEnabledPushButtonWhenLineEditIsNotEmpty()
 {
     PimCommon::BalooDebugWidget widget;
-    QString akonadiItem = QLatin1String("Foo");
-    widget.setAkonadiId(akonadiItem);
+    const int value = 42;
+    widget.setAkonadiId(value);
     QPushButton *button = qFindChild<QPushButton *>(&widget, QLatin1String("searchbutton"));
     QVERIFY(button->isEnabled());
 
-    akonadiItem = QLatin1String("");
-    widget.setAkonadiId(akonadiItem);
+    KLineEdit *lineEdit = qFindChild<KLineEdit *>(&widget, QLatin1String("lineedit"));
+    lineEdit->setText(QLatin1String(""));
     QVERIFY(!button->isEnabled());
 
     //trimmed string
-    akonadiItem = QLatin1String(" ");
-    widget.setAkonadiId(akonadiItem);
+    lineEdit->setText(QLatin1String(" "));
     QVERIFY(!button->isEnabled());
 
 }

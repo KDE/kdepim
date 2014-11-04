@@ -74,9 +74,9 @@ void BalooDebugWidget::slotSearchLineTextChanged(const QString &text)
     mSearchButton->setEnabled(!text.trimmed().isEmpty());
 }
 
-void BalooDebugWidget::setAkonadiId(const QString &akonadiId)
+void BalooDebugWidget::setAkonadiId(Akonadi::Item::Id akonadiId)
 {
-    mLineEdit->setText(akonadiId);
+    mLineEdit->setText(QString::number(akonadiId));
 }
 
 void BalooDebugWidget::setSearchType(BalooDebugSearchPathComboBox::SearchType type)

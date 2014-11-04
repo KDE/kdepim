@@ -21,6 +21,7 @@
 #include <KDialog>
 #include "pimcommon_export.h"
 #include "baloodebugsearchpathcombobox.h"
+#include <Akonadi/Item>
 
 namespace PimCommon {
 class BalooDebugWidget;
@@ -31,7 +32,7 @@ public:
     explicit BalooDebugDialog(QWidget *parent=0);
     ~BalooDebugDialog();
 
-    void setAkonadiId(const QString &akonadiId);
+    void setAkonadiId(Akonadi::Item::Id akonadiId);
     void setSearchType(BalooDebugSearchPathComboBox::SearchType type);
 private:
     void readConfig();
