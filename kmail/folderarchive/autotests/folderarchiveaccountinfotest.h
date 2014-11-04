@@ -15,31 +15,26 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef BALOODEBUGDIALOG_H
-#define BALOODEBUGDIALOG_H
+#ifndef FOLDERARCHIVEACCOUNTINFOTEST_H
+#define FOLDERARCHIVEACCOUNTINFOTEST_H
 
-#include <KDialog>
-#include "pimcommon_export.h"
-#include "baloodebugsearchpathcombobox.h"
+#include <QObject>
 
-namespace PimCommon
-{
-class BalooDebugWidget;
-class PIMCOMMON_EXPORT BalooDebugDialog : public KDialog
+
+class FolderArchiveAccountInfoTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit BalooDebugDialog(QWidget *parent = 0);
-    ~BalooDebugDialog();
+    explicit FolderArchiveAccountInfoTest(QObject *parent = 0);
+    ~FolderArchiveAccountInfoTest();
 
-    void setAkonadiId(const QString &akonadiId);
-    void setSearchType(BalooDebugSearchPathComboBox::SearchType type);
-private:
-    void readConfig();
-    void writeConfig();
-    BalooDebugWidget *mBalooDebugWidget;
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
+    void shouldBeValid();
+    void shouldRestoreFromSettings();
 };
-}
 
-#endif // BALOODEBUGDIALOG_H
+
+
+#endif // FOLDERARCHIVEACCOUNTINFOTEST_H
 

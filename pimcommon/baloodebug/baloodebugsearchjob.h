@@ -34,7 +34,7 @@ public:
 
     void setAkonadiId(const QString &id);
     void setArguments(const QStringList &args);
-    void searchPath(const QString &path);
+    void setSearchPath(const QString &path);
 
 Q_SIGNALS:
     void error(const QString &errorString);

@@ -27,11 +27,9 @@ using namespace PimCommon;
 BalooDebugDialog::BalooDebugDialog(QWidget *parent)
     : KDialog(parent)
 {
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    setLayout(mainLayout);
     mBalooDebugWidget = new BalooDebugWidget(this);
     mBalooDebugWidget->setObjectName(QLatin1String("baloodebugwidget"));
-    mainLayout->addWidget(mBalooDebugWidget);
+    setMainWidget(mBalooDebugWidget);
     readConfig();
 }
 
@@ -58,5 +56,10 @@ void BalooDebugDialog::writeConfig()
 void BalooDebugDialog::setAkonadiId(const QString &akonadiId)
 {
     mBalooDebugWidget->setAkonadiId(akonadiId);
+}
+
+void BalooDebugDialog::setSearchType(BalooDebugSearchPathComboBox::SearchType type)
+{
+    mBalooDebugWidget->setSearchType(type);
 }
 

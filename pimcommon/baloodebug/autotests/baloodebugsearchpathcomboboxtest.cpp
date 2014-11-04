@@ -42,4 +42,25 @@ void BalooDebugSearchPathComboBoxTest::shouldReturnPath()
     QVERIFY(!combox.searchPath().isEmpty());
 }
 
+void BalooDebugSearchPathComboBoxTest::shouldReturnCorrectSearchPath()
+{
+    PimCommon::BalooDebugSearchPathComboBox combox;
+    QString path = combox.pathFromEnum(PimCommon::BalooDebugSearchPathComboBox::Contacts);
+    QCOMPARE(combox.searchPath(), path);
+}
+
+void BalooDebugSearchPathComboBoxTest::shouldSelectCorrectType()
+{
+    PimCommon::BalooDebugSearchPathComboBox combox;
+    QString path = combox.pathFromEnum(PimCommon::BalooDebugSearchPathComboBox::ContactCompleter);
+    combox.setSearchType(PimCommon::BalooDebugSearchPathComboBox::ContactCompleter);
+    QCOMPARE(combox.searchPath(), path);
+    path = combox.pathFromEnum(PimCommon::BalooDebugSearchPathComboBox::Emails);
+    combox.setSearchType(PimCommon::BalooDebugSearchPathComboBox::Emails);
+    QCOMPARE(combox.searchPath(), path);
+
+}
+
+
+
 QTEST_KDEMAIN(BalooDebugSearchPathComboBoxTest, GUI)

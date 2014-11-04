@@ -15,31 +15,25 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef BALOODEBUGDIALOG_H
-#define BALOODEBUGDIALOG_H
+#include "pimcommon/baloodebug/baloodebugdialog.h"
 
-#include <KDialog>
-#include "pimcommon_export.h"
-#include "baloodebugsearchpathcombobox.h"
+#include <kdebug.h>
+#include <kapplication.h>
+#include <KCmdLineArgs>
+#include <KLocalizedString>
 
-namespace PimCommon
+int main (int argc, char **argv)
 {
-class BalooDebugWidget;
-class PIMCOMMON_EXPORT BalooDebugDialog : public KDialog
-{
-    Q_OBJECT
-public:
-    explicit BalooDebugDialog(QWidget *parent = 0);
-    ~BalooDebugDialog();
+    KCmdLineArgs::init(argc, argv, "baloodebugdialog_gui", 0, ki18n("baloodebugdialog_Gui"),
+                       "1.0", ki18n("Test for baloodebugdialog"));
 
-    void setAkonadiId(const QString &akonadiId);
-    void setSearchType(BalooDebugSearchPathComboBox::SearchType type);
-private:
-    void readConfig();
-    void writeConfig();
-    BalooDebugWidget *mBalooDebugWidget;
-};
+    KApplication app;
+
+    PimCommon::BalooDebugDialog *dlg = new PimCommon::BalooDebugDialog();
+    dlg->resize(800, 600);
+    dlg->show();
+    app.exec();
+    delete dlg;
+    return 0;
 }
-
-#endif // BALOODEBUGDIALOG_H
 

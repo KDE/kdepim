@@ -79,4 +79,16 @@ void BalooDebugWidgetTest::shouldEnabledPushButtonWhenLineEditIsNotEmpty()
 
 }
 
+void BalooDebugWidgetTest::shouldChangeSearchType()
+{
+    PimCommon::BalooDebugWidget widget;
+    PimCommon::BalooDebugSearchPathComboBox::SearchType type = PimCommon::BalooDebugSearchPathComboBox::Emails;
+    widget.setSearchType(type);
+    PimCommon::BalooDebugSearchPathComboBox *searchCombo = qFindChild<PimCommon::BalooDebugSearchPathComboBox *>(&widget, QLatin1String("searchpathcombo"));
+    const QString path = searchCombo->pathFromEnum(type);
+    QCOMPARE(searchCombo->searchPath(), path);
+
+
+}
+
 QTEST_MAIN(BalooDebugWidgetTest)

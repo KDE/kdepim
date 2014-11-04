@@ -29,6 +29,8 @@ public:
 private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldReturnPath();
+    void shouldReturnCorrectSearchPath();
+    void shouldSelectCorrectType();
 };
 
 #endif // BALOODEBUGSEARCHPATHCOMBOBOXTEST_H
