@@ -33,10 +33,10 @@ public:
     ~RichTextEditFindBar();
 
 protected:
-    virtual bool viewIsReadOnly() const;
-    virtual bool documentIsEmpty() const;
-    virtual bool searchInDocument(const QString &text, QTextDocument::FindFlags searchOptions);
-    virtual void autoSearchMoveCursor();
+    bool viewIsReadOnly() const Q_DECL_OVERRIDE;
+    bool documentIsEmpty() const Q_DECL_OVERRIDE;
+    bool searchInDocument(const QString &text, QTextDocument::FindFlags searchOptions) Q_DECL_OVERRIDE;
+    void autoSearchMoveCursor() Q_DECL_OVERRIDE;
 
 public slots:
     virtual void slotSearchText(bool backward = false, bool isAutoSearch = true);

@@ -35,8 +35,8 @@ public:
     ~SieveTemplateListWidget();
 
     QList<PimCommon::defaultTemplate> defaultTemplates();
-    bool addNewTemplate(QString &templateName, QString &templateScript);
-    bool modifyTemplate(QString &templateName, QString &templateScript, bool defaultTemplate);
+    bool addNewTemplate(QString &templateName, QString &templateScript) Q_DECL_OVERRIDE;
+    bool modifyTemplate(QString &templateName, QString &templateScript, bool defaultTemplate) Q_DECL_OVERRIDE;
 
 private:
     PimCommon::TemplateManager *mTemplateManager;

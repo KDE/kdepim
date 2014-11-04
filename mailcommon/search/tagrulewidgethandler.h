@@ -35,35 +35,35 @@ public:
 
     QWidget *createFunctionWidget(int number,
                                   QStackedWidget *functionStack,
-                                  const QObject *receiver , bool isBalooSearch) const;
+                                  const QObject *receiver , bool isBalooSearch) const Q_DECL_OVERRIDE;
 
     QWidget *createValueWidget(int number,
                                QStackedWidget *valueStack,
-                               const QObject *receiver) const;
+                               const QObject *receiver) const Q_DECL_OVERRIDE;
 
     SearchRule::Function function(const QByteArray &field,
-                                  const QStackedWidget *functionStack) const;
+                                  const QStackedWidget *functionStack) const Q_DECL_OVERRIDE;
 
     QString value(const QByteArray &field,
                   const QStackedWidget *functionStack,
-                  const QStackedWidget *valueStack) const;
+                  const QStackedWidget *valueStack) const Q_DECL_OVERRIDE;
 
     QString prettyValue(const QByteArray &field,
                         const QStackedWidget *functionStack,
-                        const QStackedWidget *valueStack) const;
+                        const QStackedWidget *valueStack) const Q_DECL_OVERRIDE;
 
-    bool handlesField(const QByteArray &field) const;
+    bool handlesField(const QByteArray &field) const Q_DECL_OVERRIDE;
 
     void reset(QStackedWidget *functionStack,
-               QStackedWidget *valueStack) const;
+               QStackedWidget *valueStack) const Q_DECL_OVERRIDE;
 
     bool setRule(QStackedWidget *functionStack,
                  QStackedWidget *valueStack,
-                 const SearchRule::Ptr rule , bool isBalooSearch) const;
+                 const SearchRule::Ptr rule , bool isBalooSearch) const Q_DECL_OVERRIDE;
 
     bool update(const QByteArray &field,
                 QStackedWidget *functionStack,
-                QStackedWidget *valueStack) const;
+                QStackedWidget *valueStack) const Q_DECL_OVERRIDE;
 };
 
 }

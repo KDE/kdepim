@@ -31,7 +31,7 @@ public:
     explicit XMLPrintingSyntaxHighLighter(QTextDocument *doc);
     ~XMLPrintingSyntaxHighLighter();
 
-    void highlightBlock(const QString &text);
+    void highlightBlock(const QString &text) Q_DECL_OVERRIDE;
 private:
     void init();
 

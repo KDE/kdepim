@@ -59,10 +59,10 @@ private Q_SLOTS:
 protected:
     QString wordUnderCursor() const;
     void initCompleter();
-    void keyPressEvent(QKeyEvent *e);
-    void resizeEvent(QResizeEvent *event);
-    void addExtraMenuEntry(QMenu *menu, const QPoint &pos);
-    bool event(QEvent *ev);
+    void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
+    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+    void addExtraMenuEntry(QMenu *menu, const QPoint &pos) Q_DECL_OVERRIDE;
+    bool event(QEvent *ev) Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     void openHelp(const QString &variableName, const QString &url);
