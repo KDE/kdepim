@@ -17,17 +17,20 @@
 
 #include "pimcommon/baloodebug/baloodebugdialog.h"
 
-#include <kdebug.h>
-#include <kapplication.h>
-#include <KCmdLineArgs>
+
+
 #include <KLocalizedString>
+#include <QApplication>
+#include <KAboutData>
+#include <QCommandLineParser>
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "baloodebugdialog_gui", 0, ki18n("baloodebugdialog_Gui"),
-                       "1.0", ki18n("Test for baloodebugdialog"));
-
-    KApplication app;
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    parser.addVersionOption();
+    parser.addHelpOption();
+    parser.process(app);
 
     PimCommon::BalooDebugDialog *dlg = new PimCommon::BalooDebugDialog();
     dlg->resize(800, 600);

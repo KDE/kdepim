@@ -1,14 +1,11 @@
-include_directories(${CMAKE_SOURCE_DIR}/pimcommon/
-)
-
 
 set(baloodebug_dialog_gui_SRCS baloodebug_dialog_gui.cpp)
-kde4_add_executable(baloodebug_dialog_gui TEST ${baloodebug_dialog_gui_SRCS})
+add_executable(baloodebug_dialog_gui ${baloodebug_dialog_gui_SRCS})
+ecm_mark_as_test(baloodebug_dialog_gui)
 target_link_libraries(baloodebug_dialog_gui
-  ${QT_QTCORE_LIBRARY}
-  ${QT_QTGUI_LIBRARY}
-  ${KDE4_KDECORE_LIBS}
-  ${KDE4_KDEUI_LIBS}
+  Qt5::Core
+  Qt5::Gui
+  KF5::KDELibs4Support
   pimcommon
 )
 

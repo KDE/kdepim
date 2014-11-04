@@ -17,7 +17,7 @@
 
 #include "baloodebugsearchpathcomboboxtest.h"
 #include "../baloodebugsearchpathcombobox.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 BalooDebugSearchPathComboBoxTest::BalooDebugSearchPathComboBoxTest(QObject *parent)
     : QObject(parent)
@@ -63,4 +63,4 @@ void BalooDebugSearchPathComboBoxTest::shouldSelectCorrectType()
 
 
 
-QTEST_KDEMAIN(BalooDebugSearchPathComboBoxTest, GUI)
+QTEST_MAIN(BalooDebugSearchPathComboBoxTest)
