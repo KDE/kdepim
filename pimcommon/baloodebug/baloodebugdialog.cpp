@@ -40,7 +40,7 @@ BalooDebugDialog::~BalooDebugDialog()
 
 void BalooDebugDialog::readConfig()
 {
-    KConfigGroup group(KGlobal::config(), "BalooDebugDialog");
+    KConfigGroup group(KSharedConfig::openConfig(), "BalooDebugDialog");
     const QSize sizeDialog = group.readEntry("Size", QSize(800, 600));
     if (sizeDialog.isValid()) {
         resize(sizeDialog);
@@ -49,7 +49,7 @@ void BalooDebugDialog::readConfig()
 
 void BalooDebugDialog::writeConfig()
 {
-    KConfigGroup group(KGlobal::config(), "BalooDebugDialog");
+    KConfigGroup group(KSharedConfig::openConfig(), "BalooDebugDialog");
     group.writeEntry("Size", size());
 }
 
