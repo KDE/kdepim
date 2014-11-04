@@ -1201,7 +1201,7 @@ static QString invitationSummary( Incidence *incidence, bool noHtmlMode )
 
 static QString invitationLocation( Incidence *incidence, bool noHtmlMode )
 {
-  QString locationStr = i18n( "Location unspecified" );
+  QString locationStr;
   if ( !incidence->location().isEmpty() ) {
     if ( !QStyleSheet::mightBeRichText( incidence->location() ) ) {
       locationStr = QStyleSheet::escape( incidence->location() );
