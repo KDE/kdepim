@@ -86,6 +86,7 @@ void BalooDebugWidget::slotSearch()
     job->setSearchPath(mSearchPathComboBox->searchPath());
     connect(job, SIGNAL(result(QString)), this, SLOT(slotResult(QString)));
     connect(job, SIGNAL(error(QString)), this, SLOT(slotError(QString)));
+    job->start();
 }
 
 void BalooDebugWidget::slotResult(const QString &result)
