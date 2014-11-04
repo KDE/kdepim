@@ -1619,38 +1619,26 @@ static QString invitationDetailsEvent( Event* event, bool noHtmlMode )
       invitationSummary( event, noHtmlMode ) );
 
   // Details table
-  html += "<table>\n<tr class=\"firstrow\">";
+  html += "<table>\n<tr class=\"firstrow\">\n";
 
-  html += "<td class=\"leftColumn\">\n";
+  html += "<tr><td class=\"leftColumn\">" + i18n( "When:" ) + "</td>\n";
 
-  html += i18n( "When:" );
+  html += "<td>" + IncidenceFormatter::formatEventStartEnd ( event ) + "</td></tr>\n";
 
   const QString location = invitationLocation( event, noHtmlMode );
 
   if ( !location.isEmpty() ) {
-    html += "<br>" + i18n( "Where:" );
+    html += "<tr><td class=\"leftColumn\">" + i18n( "Where:" ) + "</td>\n";
+    html += "<td>" + location + "</td></tr>\n";
   }
 
   if ( event->doesRecur() ) {
-    html += "<br>" + i18n ( "Recurrence:" );
+    html += "<tr><td class=\"leftColumn\">" + i18n ( "Recurrence:" ) + "</td>\n";
+    html += "<td>" + IncidenceFormatter::recurrenceString( event ) + "</td></tr>\n";
   }
 
-  html += "</td>\n<td>\n";
-
-  html += IncidenceFormatter::formatEventStartEnd ( event );
   // Invitation Duration Row
  //  html += htmlRow( i18n( "Duration:" ), IncidenceFormatter::durationString( event ) );
-
-  if ( !location.isEmpty() ) {
-    html += "<br>" + location;
-  }
-
-  // Invitation Recurrence Row
-  if ( event->doesRecur() ) {
-    html += "<br>" + IncidenceFormatter::recurrenceString( event );
-  }
-
-  html += "</td></tr>";
 
   html += invitationDetailsIncidence( event, noHtmlMode );
   html += htmlInvitationDetailsEnd();
@@ -1684,25 +1672,10 @@ static QString invitationDetailsEvent( Event *event, Event *oldevent, ScheduleMe
                    invitationSummary( oldevent, noHtmlMode ) ) );
 
   // Details table
-  html += "<table>\n<tr class=\"firstrow\">";
-
   html += "<td class=\"leftColumn\">\n";
-
-  html += i18n( "When:" );
 
   const QString location = htmlCompare( invitationLocation( event, noHtmlMode ),
                    invitationLocation( oldevent, noHtmlMode ) );
-
-
-  if ( !location.isEmpty() ) {
-    html += "<br>" + i18n( "Where:" );
-  }
-
-  if ( event->doesRecur() || oldevent->doesRecur() ) {
-    html += "<br>" + i18n ( "Recurrence:" );
-  }
-
-  html += "</td>\n<td>\n";
 
   QDateTime newDateToUse = event->dtStart();
   QDateTime oldDateToUse = oldevent->dtStart();
@@ -1717,11 +1690,25 @@ static QString invitationDetailsEvent( Event *event, Event *oldevent, ScheduleMe
     newDateToUse = QDateTime( event->recurrence()->exDates()[exDatesCount-1], QTime( -1, -1 ) );
     oldDateToUse = newDateToUse;
   }
-  html += htmlCompare ( IncidenceFormatter::formatEventStartEnd ( event, newDateToUse ),
-                        IncidenceFormatter::formatEventStartEnd ( oldevent, oldDateToUse ) );
+  const QString whenStr = htmlCompare ( IncidenceFormatter::formatEventStartEnd ( event, newDateToUse ),
+                          IncidenceFormatter::formatEventStartEnd ( oldevent, oldDateToUse ) );
+
+  html += "<table>\n<tr class=\"firstrow\">";
+
+  html += "<tr><td class=\"leftColumn\">" + i18n( "When:" ) + "</td>\n";
+  html += "<td>" + whenStr + "</td></tr>\n";
 
   if ( !location.isEmpty() ) {
-    html += "<br>" + location;
+    html += "<tr><td class=\"leftColumn\">" + i18n( "Where:" ) + "</td>\n";
+    html += "<td>" + location + "</td></tr>\n";
+  }
+
+  if ( event->doesRecur() || oldevent->doesRecur() ) {
+    QString recurStr, oldrecurStr;
+    recurStr = IncidenceFormatter::recurrenceString( event );
+    oldrecurStr = IncidenceFormatter::recurrenceString( oldevent );
+    html += "<tr><td class=\"leftColumn\">" + i18n ( "Recurrence:" ) + "</td>\n";
+    html += "<td>" + htmlCompare(recurStr, oldrecurStr ) + "</td></tr>\n";
   }
 
   /*
@@ -1729,14 +1716,6 @@ static QString invitationDetailsEvent( Event *event, Event *oldevent, ScheduleMe
                    IncidenceFormatter::durationString( event ),
                    IncidenceFormatter::durationString( oldevent ) );
   */
-
-  QString recurStr, oldrecurStr;
-  if ( event->doesRecur() || oldevent->doesRecur() ) {
-    recurStr = IncidenceFormatter::recurrenceString( event );
-    oldrecurStr = IncidenceFormatter::recurrenceString( oldevent );
-    html += "<br>" + htmlCompare(recurStr, oldrecurStr );
-  }
-  html += "</td></tr>";
 
   html += invitationDetailsIncidence( event, noHtmlMode );
   html += htmlInvitationDetailsEnd();
