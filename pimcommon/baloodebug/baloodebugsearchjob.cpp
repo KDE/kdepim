@@ -55,6 +55,7 @@ void BalooDebugSearchJob::slotReadStandard()
 {
     const QByteArray stdStrg = mProcess->readAllStandardOutput();
     Q_EMIT result(QString::fromUtf8(stdStrg));
+    mProcess->close();
     mProcess->deleteLater();
     mProcess = 0;
     deleteLater();
@@ -64,6 +65,7 @@ void BalooDebugSearchJob::slotReadError()
 {
     const QByteArray errorStrg = mProcess->readAllStandardOutput();
     Q_EMIT error(QString::fromUtf8(errorStrg));
+    mProcess->close();
     mProcess->deleteLater();
     mProcess = 0;
     deleteLater();
