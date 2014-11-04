@@ -43,6 +43,8 @@ void BalooDebugWidgetTest::shouldHaveDefaultValue()
     KLineEdit *lineEdit = qFindChild<KLineEdit *>(&widget, QLatin1String("lineedit"));
     QVERIFY(lineEdit);
     QVERIFY(lineEdit->text().isEmpty());
+    QVERIFY(lineEdit->trapReturnKey());
+    QVERIFY(lineEdit->isClearButtonShown());
     PimCommon::PlainTextEditorWidget *editorWidget = qFindChild<PimCommon::PlainTextEditorWidget *>(&widget, QLatin1String("plaintexteditor"));
     QVERIFY(editorWidget->isReadOnly());
     QVERIFY(editorWidget);
