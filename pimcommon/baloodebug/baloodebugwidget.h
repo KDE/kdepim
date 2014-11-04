@@ -21,6 +21,7 @@
 #include <QWidget>
 #include "pimcommon_export.h"
 #include "baloodebugsearchpathcombobox.h"
+#include <AkonadiCore/Item>
 class KLineEdit;
 class QPushButton;
 namespace PimCommon
@@ -33,7 +34,7 @@ public:
     explicit BalooDebugWidget(QWidget *parent = 0);
     ~BalooDebugWidget();
 
-    void setAkonadiId(const QString &akonadiId);
+    void setAkonadiId(Akonadi::Item::Id akonadiId);
     void setSearchType(BalooDebugSearchPathComboBox::SearchType type);
 
 private Q_SLOTS:

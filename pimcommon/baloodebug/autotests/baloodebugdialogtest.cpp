@@ -53,8 +53,9 @@ void BalooDebugDialogTest::shouldFillLineEditWhenWeWantToSearchItem()
     QVERIFY(debugWidget);
     KLineEdit *lineEdit = qFindChild<KLineEdit *>(debugWidget, QLatin1String("lineedit"));
     QVERIFY(lineEdit);
-    const QString akonadiItem = QLatin1String("Foo");
-    dlg.setAkonadiId(akonadiItem);
+    const int value = 42;
+    const QString akonadiItem = QString::number(value);
+    dlg.setAkonadiId(value);
     QCOMPARE(lineEdit->text(), akonadiItem);
 }
 

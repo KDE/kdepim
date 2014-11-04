@@ -89,7 +89,7 @@ QString NoteShared::NoteUtils::createToolTip(const Akonadi::Item &item)
     if (!noteMessage) {
         return QString();
     }
-    const QString description = QString::fromUtf8(noteMessage->mainBodyPart()->decodedContent());
+    const QString description = QString::fromLatin1(noteMessage->mainBodyPart()->decodedContent());
     const KMime::Headers::Subject *const subject = noteMessage->subject(false);
 
     const QString realName = subject ? subject->asUnicodeString() : QString();
@@ -129,7 +129,6 @@ QString NoteShared::NoteUtils::createToolTip(const Akonadi::Item &item)
             if (!content.trimmed().isEmpty()) {
                 tip += htmlCodeForStandardRow.arg(bckColorName).arg(txtColorName).arg(isRichText ? content : content.replace(QLatin1Char('\n'), QLatin1String("<br>")));
             }
-
             tip += QString::fromLatin1(
                        "</table" \
                        "</td>" \
