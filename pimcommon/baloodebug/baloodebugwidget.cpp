@@ -39,6 +39,8 @@ BalooDebugWidget::BalooDebugWidget(QWidget *parent)
     QLabel *lab = new QLabel(QLatin1String("Item identifier:"));
     hbox->addWidget(lab);
     mLineEdit = new KLineEdit;
+    mLineEdit->setTrapReturnKey(true);
+    mLineEdit->setClearButtonShown(true);
     mLineEdit->setObjectName(QLatin1String("lineedit"));
     connect(mLineEdit, SIGNAL(textChanged(QString)), this, SLOT(slotSearchLineTextChanged(QString)));
     hbox->addWidget(mLineEdit);
@@ -57,6 +59,9 @@ BalooDebugWidget::BalooDebugWidget(QWidget *parent)
     mPlainTextEditor->setReadOnly(true);
     mainLayout->addWidget(mPlainTextEditor);
     mPlainTextEditor->setObjectName(QLatin1String("plaintexteditor"));
+
+    connect(mLineEdit, SIGNAL(returnPressed()), this, SLOT(slotSearch()));
+
 }
 
 BalooDebugWidget::~BalooDebugWidget()
