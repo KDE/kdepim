@@ -35,6 +35,7 @@ class Incidence;
 class IncidenceBase;
 class ScheduleMessage;
 class Attendee;
+class Event;
 
 class LIBKCAL_EXPORT InvitationFormatterHelper
 {
@@ -114,6 +115,18 @@ class LIBKCAL_EXPORT IncidenceFormatter
     static QString dateTimeToString( const QDateTime &date,
                                      bool dateOnly = false,
                                      bool shortfmt = true );
+
+    /**
+     Returns a formated <start> - <end> string that includes
+     dates and times as necessary.
+     The alternative start time is necessary to handle
+     recurrances.
+
+     @param event The event to use.
+     @param altStartDt an optional alternative start time to use.
+    **/
+    static QString formatEventStartEnd ( Event * event, const QDateTime &altStartDt = QDateTime() );
+
     /**
       Returns a Calendar Resource label name for the specified Incidence.
       @param calendar is a pointer to the Calendar.

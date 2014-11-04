@@ -594,24 +594,7 @@ static QString displayViewFormatEventForList( Calendar *calendar, Event *event, 
   QString tmpStr;
 
   tmpStr += invitationSummary( event, noHtmlMode );
-  tmpStr += ": ";
-
-  if ( event->doesFloat() ) {
-    tmpStr += IncidenceFormatter::dateToString( event->dtStart(), true );
-    if ( event->hasEndDate() ) {
-      tmpStr += " - " + IncidenceFormatter::dateToString( event->dtEnd(), true );
-    }
-  } else {
-    if ( event->hasEndDate() && event->dtStart().daysTo( event->dtEnd().date() ) > 0 ) {
-      tmpStr += IncidenceFormatter::dateTimeToString( event->dtStart(), true );
-      tmpStr += " - " + IncidenceFormatter::dateTimeToString( event->dtEnd(), true );
-    } else if ( event->hasEndDate() ) {
-      tmpStr += IncidenceFormatter::timeToString( event->dtStart(), true );
-      tmpStr += " - " + IncidenceFormatter::timeToString( event->dtEnd(), true );
-    } else {
-      tmpStr += IncidenceFormatter::timeToString( event->dtStart(), true );
-    }
-  }
+  tmpStr += ": " + IncidenceFormatter::formatEventStartEnd( event );
 
   QString calStr = IncidenceFormatter::resourceString( calendar, event );
 
@@ -1578,19 +1561,47 @@ static QString invitationDetailsIncidence( Incidence *incidence, bool noHtmlMode
   }
 
   if ( !comments.isEmpty() ) {
-    html += "<tr>\n<td class=\"leftColumn\">" + i18n( "Comments:" ) + "</td>\n<td>\n";
+    html += "<tr>\n<td class=\"leftColumn\">" ;
     if ( comments.count() > 1 ) {
-      html += "<ul>\n";
+      html += i18n( "Comments:" ) + "</td>\n<td>\n<ul>\n";
       for ( uint i=0; i < comments.count(); ++i ) {
         html += "<li>" + comments[i] + "</li>\n";
       }
       html += "</ul>\n";
     } else {
+      html += i18n( "Comment:" ) + "</td>\n<td>\n";
       html += comments[0];
     }
     html += "\n</td>\n</tr>";
   }
   return html;
+}
+
+QString IncidenceFormatter::formatEventStartEnd( Event* event, const QDateTime &altStartDt)
+{
+  QString tmpStr;
+  QDateTime startDt = altStartDt.isValid() ? altStartDt : event->dtStart();
+
+  // <startDate[time]> [- <[endDate][Time]>]
+  // The startDate is always printed.
+  // If the event does float the time is omited.
+  //
+  // If it has an end dateTime:
+  // on the same day -> Only add end time.
+  // if it floats also emit the time.
+  tmpStr += IncidenceFormatter::dateTimeToString( startDt, event->doesFloat() );
+
+  if ( event->hasEndDate() ) {
+    if ( startDt.date() == event->dtEnd().date() ) {
+      // same day
+      if ( !event->doesFloat() ) {
+        tmpStr += " - " + IncidenceFormatter::timeToString( event->dtEnd(), true );
+      }
+    } else {
+      tmpStr += " - " + IncidenceFormatter::dateTimeToString( event->dtEnd(), event->doesFloat() );
+    }
+  }
+  return tmpStr;
 }
 
 static QString invitationDetailsEvent( Event* event, bool noHtmlMode )
@@ -1626,32 +1637,7 @@ static QString invitationDetailsEvent( Event* event, bool noHtmlMode )
 
   html += "</td>\n<td>\n";
 
-  // If a 1 day event
-  if ( event->dtStart().date() == event->dtEnd().date() ) {
-    if ( !event->doesFloat() ) {
-      html += IncidenceFormatter::dateTimeToString( event->dtStart(), true ) +
-                       " - " +
-                       IncidenceFormatter::timeToString( event->dtEnd(), true );
-    } else {
-      html += IncidenceFormatter::dateToString( event->dtStart(), false );
-    }
-  } else {
-    if ( !event->doesFloat() ) {
-      html += IncidenceFormatter::dateTimeToString( event->dtStart(), true );
-    } else {
-      html += IncidenceFormatter::dateToString( event->dtStart(), false );
-    }
-    if ( event->hasEndDate() ) {
-      if ( !event->doesFloat() ) {
-        html += " - " + IncidenceFormatter::dateTimeToString( event->dtEnd(), true );
-      } else {
-        html += " - " + IncidenceFormatter::dateToString( event->dtEnd(), false );
-      }
-    } else {
-      html += " - " + i18n( "no end date specified" );
-    }
-  }
-
+  html += IncidenceFormatter::formatEventStartEnd ( event );
   // Invitation Duration Row
  //  html += htmlRow( i18n( "Duration:" ), IncidenceFormatter::durationString( event ) );
 
@@ -1718,61 +1704,21 @@ static QString invitationDetailsEvent( Event *event, Event *oldevent, ScheduleMe
 
   html += "</td>\n<td>\n";
 
-  // If a 1 day event
-  if ( event->dtStart().date() == event->dtEnd().date() ) {
-    QDateTime newDateToUse = event->dtStart();
-    QDateTime oldDateToUse = oldevent->dtStart();
-    const int exDatesCount = event->recurrence()->exDates().count();
-    if ( event->doesRecur() && oldevent->doesRecur() &&
-         exDatesCount == oldevent->recurrence()->exDates().count() + 1 &&
-         event->dtStart() == oldevent->dtStart() && event->dtEnd() == oldevent->dtEnd() )
-    {
-      // kolab/issue4735 - When you delete an occurrence of a recurring event, the date
-      // of the occurrence should be used. This is a bit of an hack because we don't support
-      // recurrence-id yet
-      newDateToUse = QDateTime( event->recurrence()->exDates()[exDatesCount-1], QTime( -1, -1 ) );
-      oldDateToUse = newDateToUse;
-    }
-
-    html += htmlCompare(IncidenceFormatter::dateTimeToString( newDateToUse, false ),
-                      IncidenceFormatter::dateTimeToString( oldDateToUse, false ) );
-    QString spanStr , oldspanStr;
-    if ( !event->doesFloat() ) {
-      spanStr = " - " + IncidenceFormatter::timeToString( event->dtEnd(), true );
-    }
-    if ( !oldevent->doesFloat() ) {
-      oldspanStr = " - " + IncidenceFormatter::timeToString( oldevent->dtEnd(), true );
-    }
-    html += htmlCompare( spanStr, oldspanStr );
-  } else {
-    if ( !event->doesFloat() || !oldevent->doesFloat() ) {
-      html += htmlCompare(IncidenceFormatter::dateTimeToString( event->dtStart(), false ),
-                        IncidenceFormatter::dateTimeToString( oldevent->dtStart(), false ) );
-    } else {
-      html += htmlCompare(IncidenceFormatter::dateToString( event->dtStart(), false ),
-                        IncidenceFormatter::dateToString( oldevent->dtStart(), false ) );
-    }
-
-    if ( event->hasEndDate() ) {
-      if ( !event->doesFloat() || !oldevent->doesFloat() ) {
-        html += " - " + htmlCompare(IncidenceFormatter::dateTimeToString( event->dtEnd(), false ),
-                                  IncidenceFormatter::dateTimeToString( oldevent->dtEnd(), false ) );
-      } else {
-        html += " - " + htmlCompare(IncidenceFormatter::dateToString( event->dtEnd(), false ),
-                                  IncidenceFormatter::dateToString( oldevent->dtEnd(), false ) );
-      }
-    } else {
-      QString endStr = i18n( "no end date specified" );
-      QString oldendStr;
-      if ( !oldevent->hasEndDate() ) {
-        oldendStr = i18n( "no end date specified" );
-      } else {
-        oldendStr = IncidenceFormatter::dateTimeToString( oldevent->dtEnd(),
-                                                          oldevent->doesFloat(), false );
-      }
-      html += " - " + htmlCompare( endStr, oldendStr );
-    }
+  QDateTime newDateToUse = event->dtStart();
+  QDateTime oldDateToUse = oldevent->dtStart();
+  const int exDatesCount = event->recurrence()->exDates().count();
+  if ( event->doesRecur() && oldevent->doesRecur() &&
+       exDatesCount == oldevent->recurrence()->exDates().count() + 1 &&
+       event->dtStart() == oldevent->dtStart() && event->dtEnd() == oldevent->dtEnd() )
+  {
+    // kolab/issue4735 - When you delete an occurrence of a recurring event, the date
+    // of the occurrence should be used. This is a bit of an hack because we don't support
+    // recurrence-id yet
+    newDateToUse = QDateTime( event->recurrence()->exDates()[exDatesCount-1], QTime( -1, -1 ) );
+    oldDateToUse = newDateToUse;
   }
+  html += htmlCompare ( IncidenceFormatter::formatEventStartEnd ( event, newDateToUse ),
+                        IncidenceFormatter::formatEventStartEnd ( oldevent, oldDateToUse ) );
 
   if ( !location.isEmpty() ) {
     html += "<br>" + location;
