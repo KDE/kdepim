@@ -169,7 +169,7 @@ void SearchRuleWidget::initWidget(SearchPatternEdit::SearchModeType modeType)
     mRuleField->setToolTip(i18n("Choose or type your own criteria"));
     edit->setClearButtonEnabled(true);
     mRuleField->setLineEdit(edit);
-    mRuleField->setTrapReturnKey(true);
+    //mRuleField->setTrapReturnKey(true);
 
     mRuleField->addItems(mFilterFieldList);
     KCompletion *comp = mRuleField->completionObject();
