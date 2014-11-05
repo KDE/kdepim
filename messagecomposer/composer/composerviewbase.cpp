@@ -834,7 +834,6 @@ void MessageComposer::ComposerViewBase::queueMessage( KMime::Message::Ptr messag
         message->setHeader( new KMime::Headers::Generic( customHeader.key(), message.get(), customHeader.value(),"utf-8") );
     }
     message->assemble();
-    qDebug()<<" message "<<message->messageID(false)->asUnicodeString();
     connect( qjob, SIGNAL(result(KJob*)), this, SLOT(slotQueueResult(KJob*)) );
     m_pendingQueueJobs++;
     qjob->start();
