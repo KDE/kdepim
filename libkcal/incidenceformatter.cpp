@@ -3136,9 +3136,9 @@ QString IncidenceFormatter::formatGroupwareLinks(InvitationFormatterHelper *help
     {
       if ( inc && inc->revision() > 0 && ( existingIncidence || !helper->calendar() ) ) {
         if ( inc->type() == "Todo" ) {
-          html += helper->makeBtnLink( "reply", i18n( "Record in my task list" ), "dialog_ok_apply" );
+          html += helper->makeBtnLink( "reply", i18n( "Record in my task list" ), "dialog_ok" );
         } else {
-          html += helper->makeBtnLink( "reply", i18n( "Record in my calendar" ), "dialog_ok_apply" );
+          html += helper->makeBtnLink( "reply", i18n( "Record in my calendar" ), "dialog_ok" );
         }
       }
 
@@ -3152,9 +3152,9 @@ QString IncidenceFormatter::formatGroupwareLinks(InvitationFormatterHelper *help
       // Remove invitation
       if ( inc ) {
         if ( inc->type() == "Todo" ) {
-          html += helper->makeBtnLink( "cancel", i18n( "Remove invitation from my task list" ), "dialog_ok_apply" );
+          html += helper->makeBtnLink( "cancel", i18n( "Remove invitation from my task list" ), "dialog_ok" );
         } else {
-          html += helper->makeBtnLink( "cancel", i18n( "Remove invitation from my calendar" ), "dialog_ok_apply" );
+          html += helper->makeBtnLink( "cancel", i18n( "Remove invitation from my calendar" ), "dialog_ok" );
         }
       }
       break;
@@ -3200,9 +3200,9 @@ QString IncidenceFormatter::formatGroupwareLinks(InvitationFormatterHelper *help
           // newer than we have recorded, so an update
           html += "<tr><td>";
           if ( inc->type() == "Todo" ) {
-            html += helper->makeBtnLink( "reply", i18n( "Record update in my task list" ), "dialog_ok_apply" );
+            html += helper->makeBtnLink( "reply", i18n( "Record update in my task list" ), "dialog_ok" );
           } else {
-            html += helper->makeBtnLink( "reply", i18n( "Record update in my calendar" ), "dialog_ok_apply" );
+            html += helper->makeBtnLink( "reply", i18n( "Record update in my calendar" ), "dialog_ok" );
           }
           html += "</td></tr>";
         } else {
@@ -3222,9 +3222,9 @@ QString IncidenceFormatter::formatGroupwareLinks(InvitationFormatterHelper *help
         if ( inc ) {
           html += "<tr><td>";
           if ( inc->type() == "Todo" ) {
-            html += helper->makeBtnLink( "reply", i18n( "Record response in my task list" ), "dialog_ok_apply" );
+            html += helper->makeBtnLink( "reply", i18n( "Record response in my task list" ), "dialog_ok" );
           } else {
-            html += helper->makeBtnLink( "reply", i18n( "Record response in my calendar" ), "dialog_ok_apply" );
+            html += helper->makeBtnLink( "reply", i18n( "Record response in my calendar" ), "dialog_ok" );
           }
           html += "</td></tr>";
         }
