@@ -1506,65 +1506,31 @@ static QString invitationPerson( const QString &email, const QString &name, cons
   return personString;
 }
 
-static QString invitationDetailsIncidence( Incidence *incidence, bool noHtmlMode )
+static QString invitationCommentsIncidence( Incidence *incidence, bool noHtmlMode )
 {
-  // if description and comment -> use both
-  // if description, but no comment -> use the desc as the comment (and no desc)
-  // if comment, but no description -> use the comment and no description
-
   QString html;
-  QString descr;
   QStringList comments;
 
-  if ( incidence->comments().isEmpty() ) {
-    if ( !incidence->description().isEmpty() ) {
-      // use description as comments
-      if ( !QStyleSheet::mightBeRichText( incidence->description() ) ) {
-        comments << string2HTML( incidence->description() );
-      } else {
-        comments << incidence->description();
-        if ( noHtmlMode ) {
-          comments[0] = cleanHtml( comments[0] );
-        }
-      }
-    }
-    //else desc and comments are empty
-  } else {
-    // non-empty comments
-    QStringList cl = incidence->comments();
-    uint i = 0;
-    for( QStringList::Iterator it=cl.begin(); it!=cl.end(); ++it ) {
-      if ( !QStyleSheet::mightBeRichText( *it ) ) {
-        comments.append( string2HTML( *it ) );
-      } else {
-        if ( noHtmlMode ) {
-          comments.append( cleanHtml( *it ) );
-        } else {
-          comments.append( *it );
-        }
-      }
-      i++;
-    }
-    if ( !incidence->description().isEmpty() ) {
-      // use description too
-      if ( !QStyleSheet::mightBeRichText( incidence->description() ) ) {
-        descr = string2HTML( incidence->description() );
-      } else {
-        descr = incidence->description();
-        if ( noHtmlMode ) {
-          descr = cleanHtml( descr );
-        }
-      }
-    }
+  if ( !incidence || incidence->comments().isEmpty() ) {
+    return QString::null;
   }
 
-  if( !descr.isEmpty() ) {
-    html += "<tr>\n<td class=\"leftColumn\">" + i18n( "Description:" ) + "</td>\n";
-    html += "<td>" + descr + "</td>\n</tr>\n";
+  // non-empty comments
+  QStringList cl = incidence->comments();
+  for( QStringList::Iterator it=cl.begin(); it!=cl.end(); ++it ) {
+    if ( !QStyleSheet::mightBeRichText( *it ) ) {
+      comments.append( string2HTML( *it ) );
+    } else {
+      if ( noHtmlMode ) {
+        comments.append( cleanHtml( *it ) );
+      } else {
+        comments.append( *it );
+      }
+    }
   }
 
   if ( !comments.isEmpty() ) {
-    html += "<tr>\n<td class=\"leftColumn\">" ;
+    html += "<table><tr>\n<td class=\"leftColumn\">" ;
     if ( comments.count() > 1 ) {
       html += i18n( "Comments:" ) + "</td>\n<td>\n<ul>\n";
       for ( uint i=0; i < comments.count(); ++i ) {
@@ -1575,7 +1541,31 @@ static QString invitationDetailsIncidence( Incidence *incidence, bool noHtmlMode
       html += i18n( "Comment:" ) + "</td>\n<td>\n";
       html += comments[0];
     }
-    html += "\n</td>\n</tr>";
+    html += "\n</td>\n</tr></table>";
+  }
+  return html;
+}
+
+static QString invitationDescriptionIncidence( Incidence *incidence, bool noHtmlMode )
+{
+  QString html;
+  QString descr;
+
+  if ( !incidence->description().isEmpty() ) {
+    // use description as comments
+    if ( !QStyleSheet::mightBeRichText( incidence->description() ) ) {
+      descr = string2HTML( incidence->description() );
+    } else {
+      descr = incidence->description();
+      if ( noHtmlMode ) {
+        descr = cleanHtml( descr );
+      }
+    }
+  }
+
+  if( !descr.isEmpty() ) {
+    html += "<tr>\n<td class=\"leftColumn\">" + i18n( "Description:" ) + "</td>\n";
+    html += "<td>" + descr + "</td>\n</tr>\n";
   }
   return html;
 }
@@ -1643,7 +1633,7 @@ static QString invitationDetailsEvent( Event* event, bool noHtmlMode )
   // Invitation Duration Row
  //  html += htmlRow( i18n( "Duration:" ), IncidenceFormatter::durationString( event ) );
 
-  html += invitationDetailsIncidence( event, noHtmlMode );
+  html += invitationDescriptionIncidence( event, noHtmlMode );
   html += htmlInvitationDetailsEnd();
 
   return html;
@@ -1720,7 +1710,7 @@ static QString invitationDetailsEvent( Event *event, Event *oldevent, ScheduleMe
                    IncidenceFormatter::durationString( oldevent ) );
   */
 
-  html += invitationDetailsIncidence( event, noHtmlMode );
+  html += invitationDescriptionIncidence( event, noHtmlMode );
   html += htmlInvitationDetailsEnd();
 
   return html;
@@ -1773,7 +1763,7 @@ static QString invitationDetailsTodo( Todo *todo, bool noHtmlMode )
   }
 
   html += htmlInvitationDetailsTableEnd();
-  html += invitationDetailsIncidence( todo, noHtmlMode );
+  html += invitationDescriptionIncidence( todo, noHtmlMode );
   html += htmlInvitationDetailsEnd();
 
   return html;
@@ -1868,7 +1858,7 @@ static QString invitationDetailsTodo( Todo *todo, Todo *oldtodo, ScheduleMessage
   html += htmlRow( i18n( "Recurrence:" ), recurStr, oldrecurStr );
 
   html += htmlInvitationDetailsTableEnd();
-  html += invitationDetailsIncidence( todo, noHtmlMode );
+  html += invitationDescriptionIncidence( todo, noHtmlMode );
   html += htmlInvitationDetailsEnd();
 
   return html;
@@ -1887,7 +1877,7 @@ static QString invitationDetailsJournal( Journal *journal, bool noHtmlMode )
   html += htmlRow( i18n( "Date:" ), IncidenceFormatter::dateToString( journal->dtStart(), false ) );
 
   html += htmlInvitationDetailsTableEnd();
-  html += invitationDetailsIncidence( journal, noHtmlMode );
+  html += invitationDescriptionIncidence( journal, noHtmlMode );
   html += htmlInvitationDetailsEnd();
 
   return html;
@@ -1911,7 +1901,7 @@ static QString invitationDetailsJournal( Journal *journal, Journal *oldjournal, 
                    IncidenceFormatter::dateToString( oldjournal->dtStart(), false ) );
 
   html += htmlInvitationDetailsTableEnd();
-  html += invitationDetailsIncidence( journal, noHtmlMode );
+  html += invitationDescriptionIncidence( journal, noHtmlMode );
   html += htmlInvitationDetailsEnd();
 
   return html;
@@ -3034,6 +3024,8 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
                                msg,
                                rsvpRec,
                                a);
+
+  html += invitationCommentsIncidence( inc, noHtmlMode );
 
   html += "\n<hr>\n";
 
