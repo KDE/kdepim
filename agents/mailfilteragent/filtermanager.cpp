@@ -34,7 +34,9 @@
 #include <kdebug.h>
 #include <kglobal.h>
 #include <klocale.h>
-#include <kmessagebox.h>
+#include <KNotification>
+#include <KIcon>
+#include <KIconLoader>
 #include <kmime/kmime_message.h>
 #include <mailcommon/filter/filterimporterexporter.h>
 #include <mailcommon/filter/filterlog.h>
@@ -62,6 +64,7 @@ public:
           mTotalProgressCount( 0 ),
           mCurrentProgressCount( 0 )
     {
+        pixmapNotification = KIcon( QLatin1String("view-filter") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
     }
 
     void itemsFetchJobForFilterDone( KJob *job );
@@ -70,6 +73,7 @@ public:
     void modifyJobResult( KJob* );
     void deleteJobResult( KJob* );
     void slotItemsFetchedForFilter( const Akonadi::Item::List &items );
+    void showNotification(const QString &errorMsg, const QString &jobErrorString);
 
     bool isMatching( const Akonadi::Item &item, const MailCommon::MailFilter *filter );
     bool beginFiltering( const Akonadi::Item &item ) const;
@@ -83,6 +87,7 @@ public:
     QList<MailCommon::MailFilter *> mFilters;
     QMap<QString, SearchRule::RequiredPart> mRequiredParts;
     SearchRule::RequiredPart mRequiredPartsBasedOnAll;
+    QPixmap pixmapNotification;
     bool mInboundFiltersExist;
     int mTotalProgressCount;
     int mCurrentProgressCount;
@@ -206,7 +211,7 @@ void FilterManager::Private::moveJobResult( KJob *job )
             kError() << "Error while moving items. " << job->error() << job->errorString();
         }
         //Laurent: not real info and when we have 200 errors it's very long to click all the time on ok.
-        //KMessageBox::error(qApp->activeWindow(), job->errorString(), i18n("Error applying mail filter move"));
+        showNotification(i18n("Error applying mail filter move"), job->errorString());
     }
 }
 
@@ -214,7 +219,7 @@ void FilterManager::Private::deleteJobResult( KJob *job )
 {
     if ( job->error() ) {
         kError() << "Error while delete items. " << job->error() << job->errorString();
-        KMessageBox::error(qApp->activeWindow(), job->errorString(), i18n("Error applying mail filter delete"));
+        showNotification(i18n("Error applying mail filter delete"), job->errorString());
     }
 }
 
@@ -222,8 +227,18 @@ void FilterManager::Private::modifyJobResult( KJob *job )
 {
     if ( job->error() ) {
         kError() << "Error while modifying items. " << job->error() << job->errorString();
-        KMessageBox::error(qApp->activeWindow(), job->errorString(), i18n("Error applying mail filter modifications"));
+        showNotification(i18n("Error applying mail filter modifications"), job->errorString());
     }
+}
+
+void FilterManager::Private::showNotification(const QString &errorMsg, const QString &jobErrorString)
+{
+    const QPixmap pixmap = KIcon( QLatin1String("view-filter") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+    KNotification *notify = new KNotification( QLatin1String("mailfilterjoberror") );
+    notify->setComponentData( KComponentData("akonadi_mailfilter_agent") );
+    notify->setPixmap( pixmap );
+    notify->setText( errorMsg + QLatin1Char('\n') + jobErrorString );
+    notify->sendEvent();
 }
 
 bool FilterManager::Private::isMatching( const Akonadi::Item &item, const MailCommon::MailFilter *filter )
