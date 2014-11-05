@@ -711,7 +711,8 @@ void MainWidget::setupActions( KActionCollection *collection )
 
   if (!qgetenv("KDEPIM_BALOO_DEBUG").isEmpty()) {
       action = collection->addAction( QLatin1String("debug_baloo") );
-      action->setText( i18n( "Debug baloo...") );
+      //Don't translate it. It's just for debug
+      action->setText( QLatin1String( "Debug baloo...") );
       connect( action, SIGNAL(triggered(bool)), this, SLOT(slotDebugBaloo()));
   }
 }
