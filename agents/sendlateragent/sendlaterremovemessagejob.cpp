@@ -23,11 +23,15 @@ SendLaterRemoveMessageJob::SendLaterRemoveMessageJob(const QList<Akonadi::Item::
       mListItems(listItem),
       mIndex(0)
 {
-    deleteItem();
 }
 
 SendLaterRemoveMessageJob::~SendLaterRemoveMessageJob()
 {
+}
+
+void SendLaterRemoveMessageJob::start()
+{
+    deleteItem();
 }
 
 void SendLaterRemoveMessageJob::deleteItem()

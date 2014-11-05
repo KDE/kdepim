@@ -30,6 +30,8 @@ public:
     explicit SendLaterRemoveMessageJob(const QList<Akonadi::Item::Id> &listItem, QObject *parent = 0);
     ~SendLaterRemoveMessageJob();
 
+    void start();
+
 private Q_SLOTS:
     void slotItemDeleteDone(KJob* job);
 
