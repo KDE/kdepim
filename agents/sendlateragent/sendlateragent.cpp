@@ -138,7 +138,8 @@ void SendLaterAgent::showConfigureDialog(qlonglong windowId)
         QList<Akonadi::Item::Id> listMessage = dialog->messagesToRemove();
         if (!listMessage.isEmpty()) {
             //Will delete in specific job when done.
-            new SendLaterRemoveMessageJob(listMessage, this);
+            SendLaterRemoveMessageJob *sendlaterremovejob = new SendLaterRemoveMessageJob(listMessage, this);
+            sendlaterremovejob->start();
         }
     }
     delete dialog;
