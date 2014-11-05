@@ -22,7 +22,7 @@
 #include "archivemailagentsettings.h"
 
 #include <mailcommon/kernel/mailkernel.h>
-#include <AkonadiCore/dbusconnectionpool.h>
+#include <kdbusconnectionpool.h>
 #include <Monitor>
 #include <Session>
 #include <CollectionFetchScope>
@@ -53,8 +53,8 @@ ArchiveMailAgent::ArchiveMailAgent(const QString &id)
     collectionMonitor->setMimeTypeMonitored(KMime::Message::mimeType());
 
     new ArchiveMailAgentAdaptor(this);
-    Akonadi::DBusConnectionPool::threadConnection().registerObject(QLatin1String("/ArchiveMailAgent"), this, QDBusConnection::ExportAdaptors);
-    Akonadi::DBusConnectionPool::threadConnection().registerService(QLatin1String("org.freedesktop.Akonadi.ArchiveMailAgent"));
+    KDBusConnectionPool::threadConnection().registerObject(QLatin1String("/ArchiveMailAgent"), this, QDBusConnection::ExportAdaptors);
+    KDBusConnectionPool::threadConnection().registerService(QLatin1String("org.freedesktop.Akonadi.ArchiveMailAgent"));
     connect(collectionMonitor, &Akonadi::Monitor::collectionRemoved, this, &ArchiveMailAgent::mailCollectionRemoved);
 
     if (enabledAgent()) {

@@ -27,7 +27,7 @@
 #include <Akonadi/KMime/SpecialMailCollections>
 #include <AgentInstance>
 #include <AgentManager>
-#include <dbusconnectionpool.h>
+#include <kdbusconnectionpool.h>
 #include <changerecorder.h>
 #include <itemfetchscope.h>
 #include <AkonadiCore/session.h>
@@ -52,8 +52,8 @@ SendLaterAgent::SendLaterAgent(const QString &id)
     mManager = new SendLaterManager(this);
     connect(mManager, &SendLaterManager::needUpdateConfigDialogBox, this, &SendLaterAgent::needUpdateConfigDialogBox);
     new SendLaterAgentAdaptor(this);
-    Akonadi::DBusConnectionPool::threadConnection().registerObject(QLatin1String("/SendLaterAgent"), this, QDBusConnection::ExportAdaptors);
-    Akonadi::DBusConnectionPool::threadConnection().registerService(QLatin1String("org.freedesktop.Akonadi.SendLaterAgent"));
+    KDBusConnectionPool::threadConnection().registerObject(QLatin1String("/SendLaterAgent"), this, QDBusConnection::ExportAdaptors);
+    KDBusConnectionPool::threadConnection().registerService(QLatin1String("org.freedesktop.Akonadi.SendLaterAgent"));
 
     changeRecorder()->setMimeTypeMonitored(KMime::Message::mimeType());
     changeRecorder()->itemFetchScope().setCacheOnly(true);

@@ -33,7 +33,7 @@
 #include "korgacadaptor.h"
 
 #include <calendarsupport/utils.h>
-
+#include "kdbusconnectionpool.h"
 #include <AkonadiCore/ChangeRecorder>
 #include <AkonadiCore/Collection>
 #include <AkonadiCore/DBusConnectionPool>
@@ -64,7 +64,7 @@ KOAlarmClient::KOAlarmClient(QObject *parent)
     : QObject(parent), mDocker(0), mDialog(0)
 {
     new KOrgacAdaptor(this);
-    Akonadi::DBusConnectionPool::threadConnection().registerObject(QLatin1String("/ac"), this);
+    KDBusConnectionPool::threadConnection().registerObject(QLatin1String("/ac"), this);
     qDebug();
 
 #if !defined(KORGAC_AKONADI_AGENT)
