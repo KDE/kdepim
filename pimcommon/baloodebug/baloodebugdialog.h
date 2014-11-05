@@ -18,7 +18,7 @@
 #ifndef BALOODEBUGDIALOG_H
 #define BALOODEBUGDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 #include "pimcommon_export.h"
 #include "baloodebugsearchpathcombobox.h"
 #include <AkonadiCore/Item>
@@ -26,7 +26,7 @@
 namespace PimCommon
 {
 class BalooDebugWidget;
-class PIMCOMMON_EXPORT BalooDebugDialog : public KDialog
+class PIMCOMMON_EXPORT BalooDebugDialog : public QDialog
 {
     Q_OBJECT
 public:

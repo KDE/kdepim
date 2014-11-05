@@ -20,17 +20,24 @@
 
 #include <QVBoxLayout>
 #include <KSharedConfig>
-#include <KGlobal>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 using namespace PimCommon;
 
 BalooDebugDialog::BalooDebugDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setButtons(Close);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     mBalooDebugWidget = new BalooDebugWidget(this);
     mBalooDebugWidget->setObjectName(QLatin1String("baloodebugwidget"));
-    setMainWidget(mBalooDebugWidget);
+    mainLayout->addWidget(mBalooDebugWidget);
+    mainLayout->addWidget(buttonBox);
     readConfig();
 }
 

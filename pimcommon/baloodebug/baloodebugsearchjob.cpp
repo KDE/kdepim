@@ -16,9 +16,10 @@
 */
 
 #include "baloodebugsearchjob.h"
-#include <KStandardDirs>
+
 #include <QProcess>
 #include <QDebug>
+#include <QStandardPaths>
 
 using namespace PimCommon;
 BalooDebugSearchJob::BalooDebugSearchJob(QObject *parent)
@@ -34,7 +35,7 @@ BalooDebugSearchJob::~BalooDebugSearchJob()
 
 void BalooDebugSearchJob::start()
 {
-    const QString delvePath = KStandardDirs::findExe(QLatin1String("delve"));
+    const QString delvePath = QStandardPaths::findExecutable(QLatin1String("delve"));
     if (delvePath.isEmpty()) {
         Q_EMIT error(QLatin1String("\"delve\" not installed on computer."));
         deleteLater();

@@ -16,8 +16,7 @@
 */
 
 #include "baloodebugsearchpathcombobox.h"
-#include <KGlobal>
-#include <KStandardDirs>
+#include <QStandardPaths>
 
 #include <QDebug>
 
@@ -54,7 +53,7 @@ void BalooDebugSearchPathComboBox::initialize()
 
 QString BalooDebugSearchPathComboBox::pathFromEnum(SearchType type) const
 {
-    const QString xdgpath = KGlobal::dirs()->localxdgdatadir();
+    const QString xdgpath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/');
     switch(type) {
     case Contacts:
         return QString(xdgpath + QLatin1String("baloo/contacts/"));
