@@ -492,11 +492,11 @@ bool FilterManager::process(const QList< MailFilter* >& mailFilters, const Akona
     ItemContext context( item, needsFullPayload );
     QList<MailCommon::MailFilter*>::const_iterator end( mailFilters.constEnd() );
 
+    const bool applyOnOutbound = ((set & Outbound) || (set & BeforeOutbound));
     for ( QList<MailCommon::MailFilter*>::const_iterator it = mailFilters.constBegin();
           !stopIt && it != end ; ++it ) {
         if ( ( *it )->isEnabled() ) {
 
-            const bool applyOnOutbound = ((set & Outbound) || (set & BeforeOutbound));
             const bool inboundOk = ((set & Inbound) && (*it)->applyOnInbound());
             const bool outboundOk = ((set & Outbound) && (*it)->applyOnOutbound());
             const bool beforeOutboundOk = ((set & BeforeOutbound) && (*it)->applyBeforeOutbound());
