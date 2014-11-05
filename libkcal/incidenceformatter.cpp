@@ -594,7 +594,7 @@ static QString displayViewFormatEventForList( Calendar *calendar, Event *event, 
   QString tmpStr;
 
   tmpStr += invitationSummary( event, noHtmlMode );
-  tmpStr += ": " + IncidenceFormatter::formatEventStartEnd( event );
+  tmpStr += ": " + IncidenceFormatter::formatStartEnd( event->dtStart(), event->dtEnd(), event->doesFloat() );
 
   QString calStr = IncidenceFormatter::resourceString( calendar, event );
 
@@ -1231,25 +1231,23 @@ static QString eventEndTimeStr( Event *event )
   return tmp;
 }
 
-static QString htmlInvitationDetailsBegin()
+static QString htmlInvitationDetailsBegin(const QString &iconName, const QString &caption)
 {
   QString dir = ( QApplication::reverseLayout() ? "rtl" : "ltr" );
-  return QString( "<div dir=\"%1\">\n" ).arg( dir );
+
+  QString html = QString( "<div dir=\"%1\">\n" ).arg( dir );
+
+  // Start with a caption and an identifing icon on the side
+  html += QString( "<h2 class=\"summary\"><img src=\"%1\"/>%2</h2>\n").arg(
+      KGlobal::iconLoader()->iconPath( iconName, KIcon::Desktop )).arg(
+      caption );
+
+  return html;
 }
 
 static QString htmlInvitationDetailsEnd()
 {
   return "</div>\n";
-}
-
-static QString htmlInvitationDetailsTableBegin()
-{
-  return "<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\n";
-}
-
-static QString htmlInvitationDetailsTableEnd()
-{
-  return "</table>\n";
 }
 
 static QString diffColor()
@@ -1291,7 +1289,7 @@ static QString htmlCompare( const QString &value, const QString &oldvalue )
 static QString htmlRow( const QString &title, const QString &value )
 {
   if ( !value.isEmpty() ) {
-    return "<tr><td>" + title + "</td><td>" + value + "</td></tr>\n";
+    return "<tr><td class=\"leftColumn\">" + title + "</td>\n<td>" + value + "</td></tr>\n";
   } else {
     return QString::null;
   }
@@ -1304,18 +1302,7 @@ static QString htmlRow( const QString &title, const QString &value, const QStrin
     return QString::null;
   }
 
-  // if 'value' is new or unchanged, then print normally
-  if ( oldvalue.isEmpty() || value == oldvalue ) {
-    return htmlRow( title, value );
-  }
-
-  // if 'value' has changed, then make a special print
-  QString color = diffColor();
-  QString newtitle = "<font color=\"" + color + "\">" + title + "</font>";
-  QString newvalue = "<font color=\"" + color + "\">" + value + "</font>" +
-                     "&nbsp;" +
-                     "(<strike>" + oldvalue + "</strike>)";
-  return htmlRow( newtitle, newvalue );
+  return htmlRow( title, htmlCompare ( value, oldvalue ) );
 }
 
 static Attendee *findDelegatedFromMyAttendee( Incidence *incidence )
@@ -1570,10 +1557,9 @@ static QString invitationDescriptionIncidence( Incidence *incidence, bool noHtml
   return html;
 }
 
-QString IncidenceFormatter::formatEventStartEnd( Event* event, const QDateTime &altStartDt)
+QString IncidenceFormatter::formatStartEnd( const QDateTime &start, const QDateTime &end, bool floats )
 {
   QString tmpStr;
-  QDateTime startDt = altStartDt.isValid() ? altStartDt : event->dtStart();
 
   // <startDate[time]> [- <[endDate][Time]>]
   // The startDate is always printed.
@@ -1582,16 +1568,16 @@ QString IncidenceFormatter::formatEventStartEnd( Event* event, const QDateTime &
   // If it has an end dateTime:
   // on the same day -> Only add end time.
   // if it floats also emit the time.
-  tmpStr += IncidenceFormatter::dateTimeToString( startDt, event->doesFloat() );
+  tmpStr += IncidenceFormatter::dateTimeToString( start, floats );
 
-  if ( event->hasEndDate() ) {
-    if ( startDt.date() == event->dtEnd().date() ) {
+  if ( end.isValid() ) {
+    if ( start.date() == end.date() ) {
       // same day
-      if ( !event->doesFloat() ) {
-        tmpStr += " - " + IncidenceFormatter::timeToString( event->dtEnd(), true );
+      if ( !floats ) {
+        tmpStr += " - " + IncidenceFormatter::timeToString( end, true );
       }
     } else {
-      tmpStr += " - " + IncidenceFormatter::dateTimeToString( event->dtEnd(), event->doesFloat() );
+      tmpStr += " - " + IncidenceFormatter::dateTimeToString( end, floats );
     }
   }
   return tmpStr;
@@ -1604,34 +1590,20 @@ static QString invitationDetailsEvent( Event* event, bool noHtmlMode )
     return QString::null;
   }
 
-  QString html = htmlInvitationDetailsBegin();
+  QString html = htmlInvitationDetailsBegin( "view_pim_calendar",
+                                             invitationSummary( event, noHtmlMode ) );
 
-  // Start with the summary as heading and a calendar icon on the left side
-  html += QString( "<h2 class=\"summary\"><img src=\"%1\"/>%2</h2>\n").arg(
-      KGlobal::iconLoader()->iconPath( "view_pim_calendar", KIcon::Desktop )).arg(
-      invitationSummary( event, noHtmlMode ) );
-
-  // Details table
-  html += "<table>\n<tr class=\"firstrow\">\n";
-
-  html += "<tr><td class=\"leftColumn\">" + i18n( "When:" ) + "</td>\n";
-
-  html += "<td>" + IncidenceFormatter::formatEventStartEnd ( event ) + "</td></tr>\n";
+  html += htmlRow( i18n( "When:" ), IncidenceFormatter::formatStartEnd ( event->dtStart(), event->dtEnd(), event->doesFloat() ) );
 
   const QString location = invitationLocation( event, noHtmlMode );
 
   if ( !location.isEmpty() ) {
-    html += "<tr><td class=\"leftColumn\">" + i18n( "Where:" ) + "</td>\n";
-    html += "<td>" + location + "</td></tr>\n";
+    html += htmlRow( i18n( "Where:" ), location );
   }
 
   if ( event->doesRecur() ) {
-    html += "<tr><td class=\"leftColumn\">" + i18n ( "Recurrence:" ) + "</td>\n";
-    html += "<td>" + IncidenceFormatter::recurrenceString( event ) + "</td></tr>\n";
+    html += htmlRow( i18n( "Recurrence:" ), IncidenceFormatter::recurrenceString( event ) );
   }
-
-  // Invitation Duration Row
- //  html += htmlRow( i18n( "Duration:" ), IncidenceFormatter::durationString( event ) );
 
   html += invitationDescriptionIncidence( event, noHtmlMode );
   html += htmlInvitationDetailsEnd();
@@ -1656,16 +1628,9 @@ static QString invitationDetailsEvent( Event *event, Event *oldevent, ScheduleMe
                             QString::null, noteColor() );
   }
 
-  html += htmlInvitationDetailsBegin();
-
-  // Start with the summary as heading and a calendar icon on the left side
-  html += QString( "<h2 class=\"summary\"><img src=\"%1\"/>%2</h2>\n").arg(
-      KGlobal::iconLoader()->iconPath( "view_pim_calendar", KIcon::Desktop )).arg(
-      htmlCompare( invitationSummary( event, noHtmlMode ),
-                   invitationSummary( oldevent, noHtmlMode ) ) );
-
-  // Details table
-  html += "<td class=\"leftColumn\">\n";
+  html += htmlInvitationDetailsBegin( "view_pim_calendar",
+            htmlCompare( invitationSummary( event, noHtmlMode ),
+                         invitationSummary( oldevent, noHtmlMode ) ) );
 
   const QString location = htmlCompare( invitationLocation( event, noHtmlMode ),
                    invitationLocation( oldevent, noHtmlMode ) );
@@ -1683,32 +1648,21 @@ static QString invitationDetailsEvent( Event *event, Event *oldevent, ScheduleMe
     newDateToUse = QDateTime( event->recurrence()->exDates()[exDatesCount-1], QTime( -1, -1 ) );
     oldDateToUse = newDateToUse;
   }
-  const QString whenStr = htmlCompare ( IncidenceFormatter::formatEventStartEnd ( event, newDateToUse ),
-                          IncidenceFormatter::formatEventStartEnd ( oldevent, oldDateToUse ) );
 
-  html += "<table>\n<tr class=\"firstrow\">";
-
-  html += "<tr><td class=\"leftColumn\">" + i18n( "When:" ) + "</td>\n";
-  html += "<td>" + whenStr + "</td></tr>\n";
+  html += htmlRow( i18n( "When:" ),
+      IncidenceFormatter::formatStartEnd ( newDateToUse, event->dtEnd(), event->doesFloat() ),
+      IncidenceFormatter::formatStartEnd ( oldDateToUse, event->dtEnd(), event->doesFloat() ) );
 
   if ( !location.isEmpty() ) {
-    html += "<tr><td class=\"leftColumn\">" + i18n( "Where:" ) + "</td>\n";
-    html += "<td>" + location + "</td></tr>\n";
+    html += htmlRow( i18n( "Where:" ), location );
   }
 
   if ( event->doesRecur() || oldevent->doesRecur() ) {
     QString recurStr, oldrecurStr;
     recurStr = IncidenceFormatter::recurrenceString( event );
     oldrecurStr = IncidenceFormatter::recurrenceString( oldevent );
-    html += "<tr><td class=\"leftColumn\">" + i18n ( "Recurrence:" ) + "</td>\n";
-    html += "<td>" + htmlCompare(recurStr, oldrecurStr ) + "</td></tr>\n";
+    html += htmlRow( i18n( "Recurrence:" ), recurStr, oldrecurStr );
   }
-
-  /*
-  html += htmlRow( i18n( "Duration:" ),
-                   IncidenceFormatter::durationString( event ),
-                   IncidenceFormatter::durationString( oldevent ) );
-  */
 
   html += invitationDescriptionIncidence( event, noHtmlMode );
   html += htmlInvitationDetailsEnd();
@@ -1723,34 +1677,24 @@ static QString invitationDetailsTodo( Todo *todo, bool noHtmlMode )
     return QString::null;
   }
 
-  QString html = htmlInvitationDetailsBegin();
-  html += htmlInvitationDetailsTableBegin();
+  QString html = htmlInvitationDetailsBegin( "view_pim_tasks",
+                                             invitationSummary( todo, noHtmlMode ) );
 
-  // Invitation summary & location rows
-  html += htmlRow( i18n( "What:" ), invitationSummary( todo, noHtmlMode ) );
-  html += htmlRow( i18n( "Where:" ), invitationLocation( todo, noHtmlMode ) );
+  const QString location = invitationLocation( todo, noHtmlMode );
+
+  if ( !location.isEmpty() ) {
+    html += htmlRow( i18n( "Where:" ), location );
+  }
 
   if ( todo->hasStartDate() && todo->dtStart().isValid() ) {
-    html += htmlRow( i18n( "Start Date:" ),
-                     IncidenceFormatter::dateToString( todo->dtStart(), false ) );
-    if ( !todo->doesFloat() ) {
-      html += htmlRow( i18n( "Start Time:" ),
-                       IncidenceFormatter::timeToString( todo->dtStart(), false ) );
-    }
+    // Start and end combine into a single when.
+    html += htmlRow( i18n( "When:" ), IncidenceFormatter::formatStartEnd ( todo->dtStart(),
+          todo->dtDue(), todo->doesFloat() ) );
+  } else if ( todo->hasDueDate() && todo->dtDue().isValid() ) {
+    // Only a due date.
+    html += htmlRow( i18n( "Due:" ),
+        IncidenceFormatter::dateTimeToString( todo->dtDue(), todo->doesFloat() ) );
   }
-  if ( todo->hasDueDate() && todo->dtDue().isValid() ) {
-    html += htmlRow( i18n( "Due Date:" ),
-                     IncidenceFormatter::dateToString( todo->dtDue(), false ) );
-    if ( !todo->doesFloat() ) {
-      html += htmlRow( i18n( "Due Time:" ),
-                       IncidenceFormatter::timeToString( todo->dtDue(), false ) );
-    }
-  } else {
-    html += htmlRow( i18n( "Due Date:" ), i18n( "Due Date: None", "None" ) );
-  }
-
-  // Invitation Duration Row
-  html += htmlRow( i18n( "Duration:" ), IncidenceFormatter::durationString( todo ) );
 
   // Completeness
   if ( todo->percentComplete() > 0 ) {
@@ -1762,7 +1706,6 @@ static QString invitationDetailsTodo( Todo *todo, bool noHtmlMode )
     html += htmlRow( i18n( "Recurrence:" ), IncidenceFormatter::recurrenceString( todo ) );
   }
 
-  html += htmlInvitationDetailsTableEnd();
   html += invitationDescriptionIncidence( todo, noHtmlMode );
   html += htmlInvitationDetailsEnd();
 
@@ -1786,78 +1729,38 @@ static QString invitationDetailsTodo( Todo *todo, Todo *oldtodo, ScheduleMessage
                             QString::null, noteColor() );
   }
 
-  html += htmlInvitationDetailsBegin();
-  html += htmlInvitationDetailsTableBegin();
-
-  html += htmlRow( i18n( "What:" ),
-                   invitationSummary( todo, noHtmlMode ),
-                   invitationSummary( todo, noHtmlMode ) );
+  html += htmlInvitationDetailsBegin( "view_pim_tasks",
+            htmlCompare( invitationSummary( todo, noHtmlMode ),
+                         invitationSummary( todo, noHtmlMode ) ) );
 
   html += htmlRow( i18n( "Where:" ),
                    invitationLocation( todo, noHtmlMode ),
                    invitationLocation( oldtodo, noHtmlMode ) );
 
-  if ( todo->hasStartDate() && todo->dtStart().isValid() ) {
-    html += htmlRow( i18n( "Start Date:" ),
-                     IncidenceFormatter::dateToString( todo->dtStart(), false ),
-                     IncidenceFormatter::dateToString( oldtodo->dtStart(), false ) );
-    QString startTimeStr, oldstartTimeStr;
-    if ( !todo->doesFloat() || !oldtodo->doesFloat() ) {
-      startTimeStr = todo->doesFloat() ?
-                     i18n( "All day" ) :
-                     IncidenceFormatter::timeToString( todo->dtStart(), false );
-      oldstartTimeStr = oldtodo->doesFloat() ?
-                        i18n( "All day" ) :
-                        IncidenceFormatter::timeToString( oldtodo->dtStart(), false );
-    }
-    html += htmlRow( i18n( "Start Time:" ), startTimeStr, oldstartTimeStr );
+  if ( ( todo->hasStartDate() && todo->dtStart().isValid() ) || oldtodo->hasStartDate() ) {
+    html += htmlRow( i18n( "When:" ),
+              IncidenceFormatter::formatStartEnd( todo->dtStart(), todo->dtDue(), todo->doesFloat() ),
+              IncidenceFormatter::formatStartEnd( oldtodo->dtStart(), oldtodo->dtDue(), oldtodo->doesFloat() ) );
+  } else if ( ( todo->hasDueDate() && todo->dtDue().isValid() ) || oldtodo->hasDueDate() ) {
+    html += htmlRow( i18n( "Due:" ),
+                     IncidenceFormatter::dateTimeToString( todo->dtDue(), todo->doesFloat() ),
+                     IncidenceFormatter::dateTimeToString( oldtodo->dtDue(), todo->doesFloat() ) );
   }
-
-  if ( todo->hasDueDate() && todo->dtDue().isValid() ) {
-    html += htmlRow( i18n( "Due Date:" ),
-                     IncidenceFormatter::dateToString( todo->dtDue(), false ),
-                     IncidenceFormatter::dateToString( oldtodo->dtDue(), false ) );
-    QString endTimeStr, oldendTimeStr;
-    if ( !todo->doesFloat() || !oldtodo->doesFloat() ) {
-      endTimeStr = todo->doesFloat() ?
-                   i18n( "All day" ) :
-                   IncidenceFormatter::timeToString( todo->dtDue(), false );
-      oldendTimeStr = oldtodo->doesFloat() ?
-                      i18n( "All day" ) :
-                      IncidenceFormatter::timeToString( oldtodo->dtDue(), false );
-    }
-    html += htmlRow( i18n( "Due Time:" ), endTimeStr, oldendTimeStr );
-  } else {
-    QString dueStr = i18n( "Due Date: None", "None" );
-    QString olddueStr;
-    if ( !oldtodo->hasDueDate() || !oldtodo->dtDue().isValid() ) {
-      olddueStr = i18n( "Due Date: None", "None" );
-    } else {
-      olddueStr = IncidenceFormatter::dateTimeToString( oldtodo->dtDue(),
-                                                        oldtodo->doesFloat(), false );
-    }
-    html += htmlRow( i18n( "Due Date:" ), dueStr, olddueStr );
-  }
-
-  html += htmlRow( i18n( "Duration:" ),
-                   IncidenceFormatter::durationString( todo ),
-                   IncidenceFormatter::durationString( oldtodo ) );
 
   QString completionStr, oldcompletionStr;
   if ( todo->percentComplete() > 0 || oldtodo->percentComplete() > 0 ) {
     completionStr = i18n( "%1%" ).arg( todo->percentComplete() );
     oldcompletionStr = i18n( "%1%" ).arg( oldtodo->percentComplete() );
+    html += htmlRow( i18n( "Percent Done:" ), completionStr, oldcompletionStr );
   }
-  html += htmlRow( i18n( "Percent Done:" ), completionStr, oldcompletionStr );
 
   QString recurStr, oldrecurStr;
   if ( todo->doesRecur() || oldtodo->doesRecur() ) {
     recurStr = IncidenceFormatter::recurrenceString( todo );
     oldrecurStr = IncidenceFormatter::recurrenceString( oldtodo );
+    html += htmlRow( i18n( "Recurrence:" ), recurStr, oldrecurStr );
   }
-  html += htmlRow( i18n( "Recurrence:" ), recurStr, oldrecurStr );
 
-  html += htmlInvitationDetailsTableEnd();
   html += invitationDescriptionIncidence( todo, noHtmlMode );
   html += htmlInvitationDetailsEnd();
 
@@ -1870,13 +1773,11 @@ static QString invitationDetailsJournal( Journal *journal, bool noHtmlMode )
     return QString::null;
   }
 
-  QString html = htmlInvitationDetailsBegin();
-  html += htmlInvitationDetailsTableBegin();
+  QString html = htmlInvitationDetailsBegin( "view_pim_journal",
+                                             invitationSummary( journal, noHtmlMode ) );
 
-  html += htmlRow( i18n( "Summary:" ), invitationSummary( journal, noHtmlMode ) );
   html += htmlRow( i18n( "Date:" ), IncidenceFormatter::dateToString( journal->dtStart(), false ) );
 
-  html += htmlInvitationDetailsTableEnd();
   html += invitationDescriptionIncidence( journal, noHtmlMode );
   html += htmlInvitationDetailsEnd();
 
@@ -1889,18 +1790,14 @@ static QString invitationDetailsJournal( Journal *journal, Journal *oldjournal, 
     return invitationDetailsJournal( journal, noHtmlMode );
   }
 
-  QString html = htmlInvitationDetailsBegin();
-  html += htmlInvitationDetailsTableBegin();
-
-  html += htmlRow( i18n( "What:" ),
-                   invitationSummary( journal, noHtmlMode ),
-                   invitationSummary( oldjournal, noHtmlMode ) );
+  QString html = htmlInvitationDetailsBegin( "view_pim_journal",
+                   htmlCompare( invitationSummary( journal, noHtmlMode ),
+                                invitationSummary( oldjournal, noHtmlMode ) ) );
 
   html += htmlRow( i18n( "Date:" ),
                    IncidenceFormatter::dateToString( journal->dtStart(), false ),
                    IncidenceFormatter::dateToString( oldjournal->dtStart(), false ) );
 
-  html += htmlInvitationDetailsTableEnd();
   html += invitationDescriptionIncidence( journal, noHtmlMode );
   html += htmlInvitationDetailsEnd();
 
@@ -1913,7 +1810,7 @@ static QString invitationDetailsFreeBusy( FreeBusy *fb, bool /*noHtmlMode*/ )
     return QString::null;
   }
 
-  QString html = htmlInvitationDetailsTableBegin();
+  QString html = "<table>";
 
   html += htmlRow( i18n("Person:"), fb->organizer().fullName() );
   html += htmlRow( i18n("Start date:"),
@@ -1962,7 +1859,7 @@ static QString invitationDetailsFreeBusy( FreeBusy *fb, bool /*noHtmlMode*/ )
     }
   }
 
-  html += htmlInvitationDetailsTableEnd();
+  html += "</table>";
   return html;
 }
 
@@ -2172,43 +2069,43 @@ static QString invitationHeaderTodo( Todo *todo, Incidence *existingIncidence,
 
   switch ( msg->method() ) {
   case Scheduler::Publish:
-    return i18n("This task has been published");
+    return QString::null; // i18n("This task has been published");
   case Scheduler::Request:
     if ( existingIncidence && todo->revision() > 0 ) {
       QString orgStr = organizerName( todo, sender );
       if ( senderIsOrganizer( todo, sender ) ) {
-        return i18n( "This task has been updated by the organizer %1" ).arg( orgStr );
+        return i18n( "This task has been updated by the organizer <b>%1</b>." ).arg( orgStr );
       } else {
-        return i18n( "This task has been updated by %1 as a representative of %2" ).
+        return i18n( "This task has been updated by <b>%1</b> as a representative of <b>%2</b>." ).
           arg( sender, orgStr );
       }
     } else {
       if ( iamOrganizer( todo ) ) {
-        return i18n( "I created this task" );
+        return QString::null; //i18n( "I created this task" );
       } else {
         QString orgStr = organizerName( todo, sender );
         if ( senderIsOrganizer( todo, sender ) ) {
-          return i18n( "You have been assigned this task by %1" ).arg( orgStr );
+          return i18n( "You have been assigned this task by <b>%1</b>." ).arg( orgStr );
         } else {
-          return i18n( "You have been assigned this task by %1 as a representative of %2" ).
+          return i18n( "You have been assigned this task by <b>%1</b> as a representative of <b>%2</b>." ).
             arg( sender, orgStr );
         }
       }
     }
   case Scheduler::Refresh:
-    return i18n( "This task was refreshed" );
+    return i18n( "This task was refreshed." );
   case Scheduler::Cancel:
     if ( iamOrganizer( todo ) ) {
-      return i18n( "This task was canceled" );
+      return i18n( "This task was canceled." );
     } else {
-      return i18n( "The organizer has removed you from this task" );
+      return i18n( "The organizer has removed you from this task." );
     }
   case Scheduler::Add:
-    return i18n( "Addition to the task" );
+    return i18n( "Addition to the task." );
   case Scheduler::Reply:
   {
     if ( replyMeansCounter( todo ) ) {
-      return i18n( "Counter proposal" );
+      return i18n( "<b>%1</b> sent a counter proposal." ).arg( sender );
     }
 
     Attendee::List attendees = todo->attendees();
@@ -2231,43 +2128,43 @@ static QString invitationHeaderTodo( Todo *todo, Incidence *existingIncidence,
 
     switch( attendee->status() ) {
     case Attendee::NeedsAction:
-      return i18n( "%1 indicates this task assignment still needs some action" ).arg( attendeeName );
+      return i18n( "<b>%1</b> indicates this task assignment still needs some action." ).arg( attendeeName );
     case Attendee::Accepted:
       if ( todo->revision() > 0 ) {
         if ( !sender.isEmpty() ) {
           if ( todo->isCompleted() ) {
-            return i18n( "This task has been completed by assignee %1" ).arg( sender );
+            return i18n( "This task has been completed by assignee <b>%1</b>." ).arg( sender );
           } else {
-            return i18n( "This task has been updated by assignee %1" ).arg( sender );
+            return i18n( "This task has been updated by assignee <b>%1</b>." ).arg( sender );
           }
         } else {
           if ( todo->isCompleted() ) {
-            return i18n( "This task has been completed by an assignee" );
+            return i18n( "This task has been completed by an assignee." );
           } else {
-            return i18n( "This task has been updated by an assignee" );
+            return i18n( "This task has been updated by an assignee." );
           }
         }
       } else {
         if ( delegatorName.isEmpty() ) {
-          return i18n( "%1 accepts this task" ).arg( attendeeName );
+          return i18n( "<b>%1</b> accepts this task." ).arg( attendeeName );
         } else {
-          return i18n( "%1 accepts this task on behalf of %2" ).
+          return i18n( "<b>%1</b> accepts this task on behalf of <b>%2</b>." ).
             arg( attendeeName ).arg( delegatorName );
         }
       }
     case Attendee::Tentative:
       if ( delegatorName.isEmpty() ) {
-        return i18n( "%1 tentatively accepts this task" ).
+        return i18n( "<b>%1</b> tentatively accepts this task." ).
           arg( attendeeName );
       } else {
-        return i18n( "%1 tentatively accepts this task on behalf of %2" ).
+        return i18n( "<b>%1</b> tentatively accepts this task on behalf of <b>%2</b>." ).
           arg( attendeeName ).arg( delegatorName );
       }
     case Attendee::Declined:
       if ( delegatorName.isEmpty() ) {
-        return i18n( "%1 declines this task" ).arg( attendeeName );
+        return i18n( "<b>%1</b> declines this task." ).arg( attendeeName );
       } else {
-        return i18n( "%1 declines this task on behalf of %2" ).
+        return i18n( "<b>%1</b> declines this task on behalf of <b>%2</b>." ).
           arg( attendeeName ).arg( delegatorName );
       }
     case Attendee::Delegated: {
@@ -2277,34 +2174,34 @@ static QString invitationHeaderTodo( Todo *todo, Incidence *existingIncidence,
         delegate = attendee->delegate();
       }
       if ( !delegate.isEmpty() ) {
-        return i18n( "%1 has delegated this request for the task to %2" ).
+        return i18n( "<b>%1</b> has delegated this request for the task to <b>%2</b>." ).
           arg( attendeeName ).arg( delegate );
       } else {
-        return i18n( "%1 has delegated this request for the task" ).
+        return i18n( "<b>%1</b> has delegated this request for the task." ).
           arg( attendeeName );
       }
     }
     case Attendee::Completed:
-      return i18n( "The request for this task is now completed" );
+      return i18n( "The request for this task is now completed." );
     case Attendee::InProcess:
-      return i18n( "%1 is still processing the task" ).
+      return i18n( "<b>%1</b> is still processing the task." ).
         arg( attendeeName );
     default:
-      return i18n( "Unknown response to this task" );
+      return i18n( "Unknown response to this task." );
     }
     break;
   }
 
   case Scheduler::Counter:
-    return i18n( "Counter proposal" );
+    return i18n( "<b>%1</b> sent a counter proposal." ).arg( sender );
 
   case Scheduler::Declinecounter:
   {
     QString orgStr = organizerName( todo, sender );
     if ( senderIsOrganizer( todo, sender ) ) {
-      return i18n( "%1 declines the counter proposal" ).arg( orgStr );
+      return i18n( "<b>%1</b> declines the counter proposa.l" ).arg( orgStr );
     } else {
-      return i18n( "%1 declines the counter proposal on behalf of %2" ).arg( sender, orgStr );
+      return i18n( "<b>%1</b> declines the counter proposal on behalf of <b>%2</b>." ).arg( sender, orgStr );
     }
   }
 
@@ -2323,19 +2220,19 @@ static QString invitationHeaderJournal( Journal *journal, ScheduleMessage *msg )
 
   switch ( msg->method() ) {
   case Scheduler::Publish:
-    return i18n("This journal has been published");
+    return i18n("This journal has been published.");
   case Scheduler::Request:
-    return i18n( "You have been assigned this journal" );
+    return i18n( "You have been assigned this journal." );
   case Scheduler::Refresh:
-    return i18n( "This journal was refreshed" );
+    return i18n( "This journal was refreshed." );
   case Scheduler::Cancel:
-    return i18n( "This journal was canceled" );
+    return i18n( "This journal was canceled." );
   case Scheduler::Add:
-    return i18n( "Addition to the journal" );
+    return i18n( "Addition to the journal." );
   case Scheduler::Reply:
   {
     if ( replyMeansCounter( journal ) ) {
-      return i18n( "Counter proposal" );
+      return i18n( "Counter proposal." );
     }
 
     Attendee::List attendees = journal->attendees();
@@ -2351,28 +2248,28 @@ static QString invitationHeaderJournal( Journal *journal, ScheduleMessage *msg )
 
     switch( attendee->status() ) {
     case Attendee::NeedsAction:
-      return i18n( "Sender indicates this journal assignment still needs some action" );
+      return i18n( "Sender indicates this journal assignment still needs some action." );
     case Attendee::Accepted:
-      return i18n( "Sender accepts this journal" );
+      return i18n( "Sender accepts this journal." );
     case Attendee::Tentative:
-      return i18n( "Sender tentatively accepts this journal" );
+      return i18n( "Sender tentatively accepts this journal." );
     case Attendee::Declined:
-      return i18n( "Sender declines this journal" );
+      return i18n( "Sender declines this journal." );
     case Attendee::Delegated:
-      return i18n( "Sender has delegated this request for the journal" );
+      return i18n( "Sender has delegated this request for the journal." );
     case Attendee::Completed:
-      return i18n( "The request for this journal is now completed" );
+      return i18n( "The request for this journal is now completed." );
     case Attendee::InProcess:
-      return i18n( "Sender is still processing the invitation" );
+      return i18n( "Sender is still processing the invitation." );
     default:
-      return i18n( "Unknown response to this journal" );
+      return i18n( "Unknown response to this journal." );
     }
     break;
   }
   case Scheduler::Counter:
     return i18n( "Counter proposal" );
   case Scheduler::Declinecounter:
-    return i18n( "Sender declines the counter proposal" );
+    return i18n( "Sender declines the counter proposal." );
   case Scheduler::NoMethod:
     return i18n("Error: iTIP message with unknown method: '%1'").
       arg( msg->method() );
@@ -2388,15 +2285,15 @@ static QString invitationHeaderFreeBusy( FreeBusy *fb, ScheduleMessage *msg )
 
   switch ( msg->method() ) {
   case Scheduler::Publish:
-    return i18n("This free/busy list has been published");
+    return i18n("This free/busy list has been published.");
   case Scheduler::Request:
-    return i18n( "The free/busy list has been requested" );
+    return i18n( "The free/busy list has been requested." );
   case Scheduler::Refresh:
-    return i18n( "This free/busy list was refreshed" );
+    return i18n( "This free/busy list was refreshed." );
   case Scheduler::Cancel:
-    return i18n( "This free/busy list was canceled" );
+    return i18n( "This free/busy list was canceled." );
   case Scheduler::Add:
-    return i18n( "Addition to the free/busy list" );
+    return i18n( "Addition to the free/busy list." );
   case Scheduler::NoMethod:
   default:
     return i18n("Error: Free/Busy iTIP message with unknown method: '%1'").
@@ -3027,7 +2924,7 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
 
   html += invitationCommentsIncidence( inc, noHtmlMode );
 
-  html += "\n<hr>\n";
+  html += "\n<hr>\n<table>";
 
   if ( outlookCompareStyle ||
        msg->method() == Scheduler::Declinecounter ) { //use Outlook style for decline counters
@@ -4680,6 +4577,9 @@ QString IncidenceFormatter::dateToString( const QDateTime &date, bool shortfmt )
 QString IncidenceFormatter::dateTimeToString( const QDateTime &date,
                                               bool allDay, bool shortfmt )
 {
+  if ( !date.isValid() ) {
+    return QString::null;
+  }
   if ( allDay ) {
     return dateToString( date, shortfmt );
   }

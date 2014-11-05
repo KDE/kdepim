@@ -119,13 +119,14 @@ class LIBKCAL_EXPORT IncidenceFormatter
     /**
      Returns a formated <start> - <end> string that includes
      dates and times as necessary.
-     The alternative start time is necessary to handle
-     recurrances.
 
-     @param event The event to use.
-     @param altStartDt an optional alternative start time to use.
+     @param start start time to use.
+     @param end end time to use.
+     @param floating optional wether or not it is a floating ( full day ) interval.
+            default false.
+
     **/
-    static QString formatEventStartEnd ( Event * event, const QDateTime &altStartDt = QDateTime() );
+    static QString formatStartEnd ( const QDateTime &start, const QDateTime &end  = QDateTime(), bool floats = false );
 
     /**
       Returns a Calendar Resource label name for the specified Incidence.
