@@ -76,7 +76,7 @@ public:
     void showNotification(const QString &errorMsg, const QString &jobErrorString);
 
     bool isMatching( const Akonadi::Item &item, const MailCommon::MailFilter *filter );
-    bool beginFiltering( const Akonadi::Item &item ) const;
+    void beginFiltering( const Akonadi::Item &item ) const;
     void endFiltering( const Akonadi::Item &item ) const;
     bool atLeastOneFilterAppliesTo( const QString &accountId ) const;
     bool atLeastOneIncomingFilterAppliesTo( const QString &accountId ) const;
@@ -259,7 +259,7 @@ bool FilterManager::Private::isMatching( const Akonadi::Item &item, const MailCo
     return result;
 }
 
-bool FilterManager::Private::beginFiltering( const Akonadi::Item &item ) const
+void FilterManager::Private::beginFiltering( const Akonadi::Item &item ) const
 {
     if ( FilterLog::instance()->isLogging() ) {
         FilterLog::instance()->addSeparator();
@@ -272,8 +272,6 @@ bool FilterManager::Private::beginFiltering( const Akonadi::Item &item ) const
                                      subject, from, date ) );
         FilterLog::instance()->add( logText, FilterLog::PatternDescription );
     }
-
-    return true;
 }
 
 void FilterManager::Private::endFiltering( const Akonadi::Item &/*item*/ ) const
@@ -415,9 +413,7 @@ bool FilterManager::process( const Akonadi::Item& item, bool needsFullPayload, c
     bool applyOnOutbound = false;
     if ( d->isMatching( item, filter ) ) {
         // do the actual filtering stuff
-        if ( !d->beginFiltering( item ) ) {
-            return false;
-        }
+        d->beginFiltering( item );
 
         ItemContext context( item, needsFullPayload );
 
@@ -491,9 +487,7 @@ bool FilterManager::process(const QList< MailFilter* >& mailFilters, const Akona
 
     bool stopIt = false;
 
-    if ( !d->beginFiltering( item ) ) {
-        return false;
-    }
+    d->beginFiltering( item );
 
     ItemContext context( item, needsFullPayload );
     QList<MailCommon::MailFilter*>::const_iterator end( mailFilters.constEnd() );
