@@ -606,17 +606,20 @@ static QString displayViewFormatEventForList( Calendar *calendar, Event *event, 
 }
 
 /* Format the events on the same day list for an inviation. */
-static QString displayViewFormatEventsOnSameDays( Calendar *calendar, Event *event, bool noHtmlMode )
+static QString displayViewFormatEventsOnSameDays( InvitationFormatterHelper *helper, Event *event, bool noHtmlMode )
 {
-  if ( !event || !calendar ) {
+  if ( !event || !helper ) {
     return QString::null;
   }
 
-  Event::List matchingEvents = calendar->events( event->dtStart().date(), event->hasEndDate() ?
+  // Check calendar
+  const QString checkCalBtn = helper->makeBtnLink( "check_calendar", i18n("Check calendar..." ), "go_jump_today" );
+
+  Event::List matchingEvents = helper->calendar()->events( event->dtStart().date(), event->hasEndDate() ?
                                                  event->dateEnd() : event->dtStart().date(),
                                                  false );
   if ( matchingEvents.isEmpty() ) {
-    return QString::null;
+    return checkCalBtn;
   }
 
   QString tmpStr;
@@ -627,14 +630,14 @@ static QString displayViewFormatEventsOnSameDays( Calendar *calendar, Event *eve
   } else {
     tmpStr += i18n( "Events on this day:" );
   }
-  tmpStr += "</span>\n";
+  tmpStr += "&nbsp;&nbsp;" + checkCalBtn + "</span>\n";
   tmpStr += "<ul>\n";
   int count = 0;
   for ( Event::List::ConstIterator it = matchingEvents.begin(), end = matchingEvents.end();
       it != end && count < 50;
       ++it) {
     ++count;
-    tmpStr += QString( "<li>" ) + displayViewFormatEventForList( calendar, *it, noHtmlMode ) +
+    tmpStr += QString( "<li>" ) + displayViewFormatEventForList( helper->calendar(), *it, noHtmlMode ) +
       QString( "</li>\n" );
   }
   if ( count == 50 ) {
@@ -3105,13 +3108,8 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
   html += "\n<hr/>\n";
 
   // Add events on the same day
-  html += displayViewFormatEventsOnSameDays ( helper->calendar(), dynamic_cast<Event*>( inc ),
+  html += displayViewFormatEventsOnSameDays ( helper, dynamic_cast<Event*>( inc ),
                                               noHtmlMode );
-
-  // Check calendar
-  if ( inc && inc->type() == "Event" ) {
-    html += helper->makeBtnLink( "check_calendar", i18n("Check calendar..." ), "go_jump_today" );
-  }
 
   html += "</div>";
 
