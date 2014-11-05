@@ -230,10 +230,9 @@ void FilterManager::Private::modifyJobResult( KJob *job )
 
 void FilterManager::Private::showNotification(const QString &errorMsg, const QString &jobErrorString)
 {
-    const QPixmap pixmap = KIcon( QLatin1String("view-filter") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
     KNotification *notify = new KNotification( QLatin1String("mailfilterjoberror") );
     notify->setComponentData( KComponentData("akonadi_mailfilter_agent") );
-    notify->setPixmap( pixmap );
+    notify->setPixmap( pixmapNotification );
     notify->setText( errorMsg + QLatin1Char('\n') + jobErrorString );
     notify->sendEvent();
 }
