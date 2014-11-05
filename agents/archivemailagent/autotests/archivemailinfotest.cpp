@@ -19,8 +19,8 @@
 #include "../archivemailinfo.h"
 #include <AkonadiCore/Collection>
 #include <qtest.h>
-#include <KGlobal>
 #include <KConfigGroup>
+#include <KSharedConfig>
 
 ArchiveMailInfoTest::ArchiveMailInfoTest(QObject *parent)
     : QObject(parent)

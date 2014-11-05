@@ -17,7 +17,7 @@
 
 #include "archivemaildialogtest.h"
 #include "../archivemaildialog.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 ArchiveMailDialogTest::ArchiveMailDialogTest(QObject *parent)
     : QObject(parent)
@@ -44,4 +44,4 @@ void ArchiveMailDialogTest::shouldHaveDefaultValue()
 
 }
 
-QTEST_KDEMAIN(ArchiveMailDialogTest, GUI)
+QTEST_MAIN(ArchiveMailDialogTest)
