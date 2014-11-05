@@ -36,7 +36,7 @@ public:
         return "plain";
     }
 
-    QString format(KMime::Message *message) const;
+    QString format(KMime::Message *message) const Q_DECL_OVERRIDE;
 
 private:
     QString formatAllMessageHeaders(KMime::Message *message) const;

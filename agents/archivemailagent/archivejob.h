@@ -31,8 +31,8 @@ public:
     explicit ArchiveJob(ArchiveMailManager *manager, ArchiveMailInfo *info, const Akonadi::Collection &folder, bool immediate);
     ~ArchiveJob();
 
-    void execute();
-    void kill();
+    void execute() Q_DECL_OVERRIDE;
+    void kill() Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void slotBackupDone(const QString &info);

@@ -25,8 +25,7 @@
 #include <KHelpMenu>
 #include <QMenu>
 #include <KMessageBox>
-#include <KIcon>
-#include <KGlobal>
+#include <QIcon>
 #include <QPointer>
 
 static QString sendLaterItemPattern = QLatin1String("SendLaterItem \\d+");
@@ -103,7 +102,7 @@ void SendLaterWidget::customContextMenuRequested(const QPoint &)
             menu.addAction(i18n("Send now"), this, SLOT(slotSendNow()));
         }
         menu.addSeparator();
-        menu.addAction(KIcon(QLatin1String("edit-delete")), i18n("Delete"), this, SLOT(slotRemoveItem()));
+        menu.addAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Delete"), this, SLOT(slotRemoveItem()));
         menu.exec(QCursor::pos());
     }
 }

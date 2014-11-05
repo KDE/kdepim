@@ -45,10 +45,10 @@ private:
     {
         Q_UNUSED(parent);
     }
-    void clearSelections();
-    void searchText(bool backward, bool isAutoSearch);
-    void updateHighLight(bool);
-    void updateSensitivity(bool sensitivity);
+    void clearSelections() Q_DECL_OVERRIDE;
+    void searchText(bool backward, bool isAutoSearch) Q_DECL_OVERRIDE;
+    void updateHighLight(bool) Q_DECL_OVERRIDE;
+    void updateSensitivity(bool sensitivity) Q_DECL_OVERRIDE;
 
 private:
     MailWebView *mView;

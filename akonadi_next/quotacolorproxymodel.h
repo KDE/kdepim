@@ -68,9 +68,9 @@ class AKONADI_NEXT_EXPORT QuotaColorProxyModel : public QIdentityProxyModel
     void setWarningColor( const QColor &color );
     QColor warningColor() const;
 
-    virtual QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
+    QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const Q_DECL_OVERRIDE;
 
-    virtual void setSourceModel( QAbstractItemModel *sourceModel );
+    void setSourceModel( QAbstractItemModel *sourceModel ) Q_DECL_OVERRIDE;
 
   private:
     //@cond PRIVATE

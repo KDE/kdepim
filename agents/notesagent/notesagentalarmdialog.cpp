@@ -28,7 +28,7 @@
 #include <ItemModifyJob>
 
 #include <KLocalizedString>
-#include <KDateTime>
+#include <QDateTime>
 #include <QMenu>
 #include <QAction>
 #include <KMessageBox>

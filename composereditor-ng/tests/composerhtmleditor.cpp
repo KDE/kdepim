@@ -21,12 +21,11 @@
 #include "widgets/domtreewidget.h"
 #include "composerview.h"
 
-#include <kapplication.h>
 #include <kactioncollection.h>
 #include <kstandardaction.h>
 #include <KLocalizedString>
 #include <qdebug.h>
-
+#include <QApplication>
 #include <QSplitter>
 
 ComposerHtmlEditor::ComposerHtmlEditor()
@@ -56,7 +55,7 @@ ComposerHtmlEditor::~ComposerHtmlEditor()
 
 void ComposerHtmlEditor::setupActions()
 {
-    KStandardAction::quit(kapp, SLOT(quit()),
+    KStandardAction::quit(qApp, SLOT(quit()),
                           actionCollection());
 }
 

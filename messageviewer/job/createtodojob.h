@@ -32,7 +32,7 @@ public:
     explicit CreateTodoJob(const KCalCore::Todo::Ptr &todoPtr, const Akonadi::Collection &collection, const Akonadi::Item &item, QObject *parent = 0);
     ~CreateTodoJob();
 
-    void start();
+    void start() Q_DECL_OVERRIDE;
 
 private slots:
     void slotFetchDone(KJob *job);

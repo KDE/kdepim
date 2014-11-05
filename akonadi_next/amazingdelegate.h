@@ -31,9 +31,9 @@ class AKONADI_NEXT_EXPORT AmazingContactItemDelegate : public QStyledItemDelegat
 public:
   explicit AmazingContactItemDelegate(QObject* parent = 0);
 
-  void paint( QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index ) const;
+  void paint( QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index ) const Q_DECL_OVERRIDE;
 
-  virtual QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const;
+  QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const Q_DECL_OVERRIDE;
 
 };
 

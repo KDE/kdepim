@@ -30,7 +30,7 @@
 #include <AkonadiCore/ChangeRecorder>
 
 #include <KMime/KMimeMessage>
-#include <KDateTime>
+#include <QDateTime>
 #include <ksocketfactory.h>
 #include <KNotification>
 #include <KIconLoader>

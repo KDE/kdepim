@@ -17,7 +17,6 @@
 
 #include "archivemailkernel.h"
 
-#include <kglobal.h>
 #include <KIdentityManagement/kidentitymanagement/identitymanager.h>
 #include <mailcommon/folder/foldercollectionmonitor.h>
 #include <mailcommon/job/jobscheduler.h>
