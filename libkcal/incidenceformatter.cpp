@@ -2014,9 +2014,9 @@ static QString invitationHeaderEvent( Event *event, Incidence *existingIncidence
     if ( existingIncidence && event->revision() > 0 ) {
       QString orgStr = organizerName( event, sender );
       if ( senderIsOrganizer( event, sender ) ) {
-        return i18n( "This invitation has been updated by the organizer %1" ).arg( orgStr );
+        return i18n( "This invitation has been updated by the organizer <b>%1</b>." ).arg( orgStr );
       } else {
-        return i18n( "This invitation has been updated by %1 as a representative of %2" ).
+        return i18n( "This invitation has been updated by <b>%1</b> as a representative of <b>%2</b>." ).
           arg( sender, orgStr );
       }
     }
@@ -2025,17 +2025,17 @@ static QString invitationHeaderEvent( Event *event, Incidence *existingIncidence
     } else {
       QString orgStr = organizerName( event, sender );
       if ( senderIsOrganizer( event, sender ) ) {
-        return QString::null; // i18n( "You received an invitation from %1" ).arg( orgStr );
+        return QString::null; // i18n( "You received an invitation from <b>%1</b>" ).arg( orgStr );
       } else {
-        return i18n( "You received an invitation from %1 as a representative of %2" ).
+        return i18n( "You received an invitation from <b>%1</b> as a representative of <b>%2</b>." ).
           arg( sender, orgStr );
       }
     }
   case Scheduler::Refresh:
-    return i18n( "This invitation was refreshed" );
+    return i18n( "This invitation was refreshed." );
   case Scheduler::Cancel:
     if ( iamOrganizer( event ) ) {
-      return i18n( "This invitation has been canceled" );
+      return i18n( "This invitation has been canceled." );
     } else {
       const Event *existingEvent = dynamic_cast<Event*>( existingIncidence );
       if ( existingEvent ) {
@@ -2065,17 +2065,17 @@ static QString invitationHeaderEvent( Event *event, Incidence *existingIncidence
           hasAllAttendees = false;
 
         if ( hasAllAttendees )
-          return i18n( "The organizer has canceled the event" );
+          return i18n( "The organizer has canceled the event." );
       }
 
-      return i18n( "The organizer has removed you from the invitation" );
+      return i18n( "The organizer has removed you from the invitation." );
     }
   case Scheduler::Add:
-    return i18n( "Addition to the invitation" );
+    return i18n( "Addition to the invitation." );
   case Scheduler::Reply:
   {
     if ( replyMeansCounter( event ) ) {
-      return i18n( "Counter proposal" );
+      return i18n( "<b>%1</b> sent a counter proposal." ).arg( sender );
     }
 
     Attendee::List attendees = event->attendees();
@@ -2098,35 +2098,35 @@ static QString invitationHeaderEvent( Event *event, Incidence *existingIncidence
 
     switch( attendee->status() ) {
     case Attendee::NeedsAction:
-      return i18n( "%1 indicates this invitation still needs some action" ).arg( attendeeName );
+      return i18n( "<b>%1</b> indicates this invitation still needs some action." ).arg( attendeeName );
     case Attendee::Accepted:
       if ( event->revision() > 0 ) {
         if ( !sender.isEmpty() ) {
-          return i18n( "This invitation has been updated by attendee %1" ).arg( sender );
+          return i18n( "This invitation has been updated by attendee <b>%1</b>." ).arg( sender );
         } else {
-          return i18n( "This invitation has been updated by an attendee" );
+          return i18n( "This invitation has been updated by an attendee." );
         }
       } else {
         if ( delegatorName.isEmpty() ) {
-          return i18n( "%1 accepts this invitation" ).arg( attendeeName );
+          return i18n( "<b>%1</b> accepts this invitation." ).arg( attendeeName );
         } else {
-          return i18n( "%1 accepts this invitation on behalf of %2" ).
+          return i18n( "<b>%1</b> accepts this invitation on behalf of <b>%2</b>." ).
             arg( attendeeName ).arg( delegatorName );
         }
       }
     case Attendee::Tentative:
       if ( delegatorName.isEmpty() ) {
-        return i18n( "%1 tentatively accepts this invitation" ).
+        return i18n( "<b>%1</b> tentatively accepts this invitation." ).
           arg( attendeeName );
       } else {
-        return i18n( "%1 tentatively accepts this invitation on behalf of %2" ).
+        return i18n( "<b>%1</b> tentatively accepts this invitation on behalf of <b>%2</b>." ).
           arg( attendeeName ).arg( delegatorName );
       }
     case Attendee::Declined:
       if ( delegatorName.isEmpty() ) {
-        return i18n( "%1 declines this invitation" ).arg( attendeeName );
+        return i18n( "<b>%1</b> declines this invitation" ).arg( attendeeName );
       } else {
-        return i18n( "%1 declines this invitation on behalf of %2" ).
+        return i18n( "<b>%1</b> declines this invitation on behalf of <b>%2</b>." ).
           arg( attendeeName ).arg( delegatorName );
       }
     case Attendee::Delegated: {
@@ -2136,33 +2136,33 @@ static QString invitationHeaderEvent( Event *event, Incidence *existingIncidence
         delegate = attendee->delegate();
       }
       if ( !delegate.isEmpty() ) {
-        return i18n( "%1 has delegated this invitation to %2" ).
+        return i18n( "<b>%1</b> has delegated this invitation to <b>%2</b>." ).
           arg( attendeeName ) .arg( delegate );
       } else {
-        return i18n( "%1 has delegated this invitation" ).arg( attendeeName );
+        return i18n( "<b>%1</b> has delegated this invitation" ).arg( attendeeName );
       }
     }
     case Attendee::Completed:
-      return i18n( "This invitation is now completed" );
+      return i18n( "This invitation is now completed." );
     case Attendee::InProcess:
-      return i18n( "%1 is still processing the invitation" ).
+      return i18n( "<b>%1</b> is still processing the invitation." ).
         arg( attendeeName );
     default:
-      return i18n( "Unknown response to this invitation" );
+      return i18n( "Unknown response to this invitation." );
     }
     break;
   }
 
   case Scheduler::Counter:
-    return i18n( "Counter proposal" );
+    return i18n( "<b>%1</b> sent a counter proposal." ).arg( sender );
 
   case Scheduler::Declinecounter:
   {
     QString orgStr = organizerName( event, sender );
     if ( senderIsOrganizer( event, sender ) ) {
-      return i18n( "%1 declines your counter proposal" ).arg( orgStr );
+      return i18n( "<b>%1</b> declines your counter proposal." ).arg( orgStr );
     } else {
-      return i18n( "%1 declines your counter proposal on behalf of %2" ).arg( sender, orgStr );
+      return i18n( "<b>%1</b> declines your counter proposal on behalf of <b>%2</b>." ).arg( sender, orgStr );
     }
   }
 
@@ -2977,8 +2977,9 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
 
   QString headerResult = headerVisitor.result();
 
+  html += "<p>"; // Header and event info paragraph
   if ( !headerResult.isEmpty() ) {
-    html += headerResult + "<br>";
+    html += headerResult;
   }
 
   // Some more conditional status information
@@ -2986,30 +2987,30 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
   if ( !myInc && a ) {
     if ( rsvpRec && inc ) {
       if ( inc->revision() == 0 ) {
-        eventInfo += i18n( "Your <b>%1</b> response has been recorded" ).
+        eventInfo += i18n( "The response <b>\"%1\"</b> has already been recorded." ).
                 arg( ea->statusStr() );
       } else {
-        eventInfo += i18n( "Your status for this invitation is <b>%1</b>" ).
+        eventInfo += i18n( "Your status for this invitation is <b>%1</b>." ).
                 arg( ea->statusStr() );
       }
       rsvpReq = false;
     } else if ( msg->method() == Scheduler::Cancel ) {
-      eventInfo += i18n( "This invitation was canceled" );
+      eventInfo += i18n( "This invitation was canceled." );
     } else if ( msg->method() == Scheduler::Add ) {
-      eventInfo += i18n( "This invitation was accepted" );
+      eventInfo += i18n( "This invitation was accepted." );
     } else if ( msg->method() == Scheduler::Declinecounter ) {
       rsvpReq = true;
       // eventInfo += rsvpRequestedStr( rsvpReq, role );
     } else {
       if ( isDelegated ) {
-        eventInfo += i18n( "Awaiting delegation response" );
+        eventInfo += i18n( "Awaiting delegation response." );
       } else {
       //  eventInfo += rsvpRequestedStr( rsvpReq, role );
       }
     }
   }
   if ( !eventInfo.isEmpty() ) {
-    html += QString( "<i><u>%1</u></i><br>" ).arg( eventInfo );
+    html += QString( "<i>%1.</i>" ).arg( eventInfo );
   }
 
   // Print if the organizer gave you a preset status
@@ -3024,6 +3025,7 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
       }
     }
   }
+  html += "</p>";
 
   // Add the groupware links if necessary
   html += formatGroupwareLinks(helper,
@@ -3207,15 +3209,15 @@ QString IncidenceFormatter::formatGroupwareLinks(InvitationFormatterHelper *help
           html += "</td></tr>";
         } else {
           // not newer than we have recorded
-          html += "<br><u><i>";
+          html += "<br><i>";
           if ( inc->revision() > 0 ) {
             // an update we already have recorded
-            html += i18n( "This update has been recorded" );
+            html += i18n( "This update has been recorded." );
           } else {
             // not an update
-            html += i18n( "This <b>%1</b> response has been recorded" ).arg( ea->statusStr() );
+            html += i18n( "This <b>%1</b> response has been recorded." ).arg( ea->statusStr() );
           }
-          html += "</i></u>";
+          html += "</i>";
         }
       } else {
         // Not seen or recorded with a response yet
