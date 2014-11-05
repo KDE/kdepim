@@ -33,7 +33,9 @@
 #include <kconfiggroup.h>
 #include <qdebug.h>
 #include <KLocalizedString>
-#include <kmessagebox.h>
+#include <KNotification>
+#include <QIcon>
+#include <KIconLoader>
 #include <kmime/kmime_message.h>
 #include <mailcommon/filter/filterimporterexporter.h>
 #include <mailcommon/filter/filterlog.h>
@@ -64,27 +66,27 @@ public:
           mTotalProgressCount(0),
           mCurrentProgressCount(0)
     {
+        pixmapNotification = QIcon::fromTheme( QLatin1String("view-filter") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
     }
 
-    void itemsFetchJobForFilterDone(KJob *job);
-    void itemFetchJobForFilterDone(KJob *job);
-    void moveJobResult(KJob *);
-    void modifyJobResult(KJob *);
-    void deleteJobResult(KJob *);
-    void slotItemsFetchedForFilter(const Akonadi::Item::List &items);
+    void itemsFetchJobForFilterDone( KJob *job );
+    void itemFetchJobForFilterDone( KJob *job );
+    void moveJobResult( KJob* );
+    void modifyJobResult( KJob* );
+    void deleteJobResult( KJob* );
+    void slotItemsFetchedForFilter( const Akonadi::Item::List &items );
+    void showNotification(const QString &errorMsg, const QString &jobErrorString);
 
-    bool isMatching(const Akonadi::Item &item, const MailCommon::MailFilter *filter);
-    bool beginFiltering(const Akonadi::Item &item) const;
-    void endFiltering(const Akonadi::Item &item) const;
-    bool atLeastOneFilterAppliesTo(const QString &accountId) const;
-    bool atLeastOneIncomingFilterAppliesTo(const QString &accountId) const;
-    /*
-    bool folderRemoved( const Akonadi::Collection &folder, const Akonadi::Collection &newFolder );
-    */
+    bool isMatching( const Akonadi::Item &item, const MailCommon::MailFilter *filter );
+    void beginFiltering( const Akonadi::Item &item ) const;
+    void endFiltering( const Akonadi::Item &item ) const;
+    bool atLeastOneFilterAppliesTo( const QString &accountId ) const;
+    bool atLeastOneIncomingFilterAppliesTo( const QString &accountId ) const;
     FilterManager *q;
     QList<MailCommon::MailFilter *> mFilters;
     QMap<QString, SearchRule::RequiredPart> mRequiredParts;
     SearchRule::RequiredPart mRequiredPartsBasedOnAll;
+    QPixmap pixmapNotification;
     bool mInboundFiltersExist;
     int mTotalProgressCount;
     int mCurrentProgressCount;
@@ -209,7 +211,7 @@ void FilterManager::Private::moveJobResult(KJob *job)
             qCritical() << "Error while moving items. " << job->error() << job->errorString();
         }
         //Laurent: not real info and when we have 200 errors it's very long to click all the time on ok.
-        //KMessageBox::error(qApp->activeWindow(), job->errorString(), i18n("Error applying mail filter move"));
+        showNotification(i18n("Error applying mail filter move"), job->errorString());
     }
 }
 
@@ -217,7 +219,7 @@ void FilterManager::Private::deleteJobResult(KJob *job)
 {
     if (job->error()) {
         qCritical() << "Error while delete items. " << job->error() << job->errorString();
-        KMessageBox::error(qApp->activeWindow(), job->errorString(), i18n("Error applying mail filter delete"));
+        showNotification(i18n("Error applying mail filter delete"), job->errorString());
     }
 }
 
@@ -225,11 +227,20 @@ void FilterManager::Private::modifyJobResult(KJob *job)
 {
     if (job->error()) {
         qCritical() << "Error while modifying items. " << job->error() << job->errorString();
-        KMessageBox::error(qApp->activeWindow(), job->errorString(), i18n("Error applying mail filter modifications"));
+        showNotification(i18n("Error applying mail filter modifications"), job->errorString());
     }
 }
 
-bool FilterManager::Private::isMatching(const Akonadi::Item &item, const MailCommon::MailFilter *filter)
+void FilterManager::Private::showNotification(const QString &errorMsg, const QString &jobErrorString)
+{
+    KNotification *notify = new KNotification( QLatin1String("mailfilterjoberror") );
+    notify->setComponentName( QLatin1String("akonadi_mailfilter_agent") );
+    notify->setPixmap( pixmapNotification );
+    notify->setText( errorMsg + QLatin1Char('\n') + jobErrorString );
+    notify->sendEvent();
+}
+
+bool FilterManager::Private::isMatching( const Akonadi::Item &item, const MailCommon::MailFilter *filter )
 {
     bool result = false;
     if (FilterLog::instance()->isLogging()) {
@@ -250,7 +261,7 @@ bool FilterManager::Private::isMatching(const Akonadi::Item &item, const MailCom
     return result;
 }
 
-bool FilterManager::Private::beginFiltering(const Akonadi::Item &item) const
+void FilterManager::Private::beginFiltering( const Akonadi::Item &item ) const
 {
     if (FilterLog::instance()->isLogging()) {
         FilterLog::instance()->addSeparator();
@@ -263,8 +274,6 @@ bool FilterManager::Private::beginFiltering(const Akonadi::Item &item) const
                                    subject, from, date));
         FilterLog::instance()->add(logText, FilterLog::PatternDescription);
     }
-
-    return true;
 }
 
 void FilterManager::Private::endFiltering(const Akonadi::Item &/*item*/) const
@@ -292,25 +301,6 @@ bool FilterManager::Private::atLeastOneIncomingFilterAppliesTo(const QString &ac
 
     return false;
 }
-
-/*
-void FilterManager::Private::slotFolderRemoved( const Akonadi::Collection &folder )
-{
-  folderRemoved( folder, Akonadi::Collection() );
-}
-
-bool FilterManager::Private::folderRemoved( const Akonadi::Collection &folder, const Akonadi::Collection &newFolder )
-{
-  bool removed = false;
-
-  foreach ( MailCommon::MailFilter *filter, mFilters ) {
-    if ( filter->folderRemoved( folder, newFolder ) )
-      removed = true;
-  }
-
-  return removed;
-}
-*/
 
 FilterManager::FilterManager(QObject *parent)
     : QObject(parent), d(new Private(this))
@@ -426,9 +416,7 @@ bool FilterManager::process(const Akonadi::Item &item, bool needsFullPayload, co
     bool applyOnOutbound = false;
     if (d->isMatching(item, filter)) {
         // do the actual filtering stuff
-        if (!d->beginFiltering(item)) {
-            return false;
-        }
+        d->beginFiltering( item );
 
         ItemContext context(item, needsFullPayload);
 
@@ -502,18 +490,17 @@ bool FilterManager::process(const QList< MailFilter * > &mailFilters, const Akon
 
     bool stopIt = false;
 
-    if (!d->beginFiltering(item)) {
-        return false;
-    }
+    d->beginFiltering( item );
 
     ItemContext context(item, needsFullPayload);
     QList<MailCommon::MailFilter *>::const_iterator end(mailFilters.constEnd());
+
+    const bool applyOnOutbound = ((set & Outbound) || (set & BeforeOutbound));
 
     for (QList<MailCommon::MailFilter *>::const_iterator it = mailFilters.constBegin();
             !stopIt && it != end ; ++it) {
         if ((*it)->isEnabled()) {
 
-            const bool applyOnOutbound = ((set & Outbound) || (set & BeforeOutbound));
             const bool inboundOk = ((set & Inbound) && (*it)->applyOnInbound());
             const bool outboundOk = ((set & Outbound) && (*it)->applyOnOutbound());
             const bool beforeOutboundOk = ((set & BeforeOutbound) && (*it)->applyBeforeOutbound());

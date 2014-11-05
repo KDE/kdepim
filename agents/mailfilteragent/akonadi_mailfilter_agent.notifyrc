@@ -130,3 +130,6 @@ Name[zh_CN]=邮件过滤器日志已启用
 Name[zh_TW]=郵件過濾紀錄已開啟
 Action=Popup
 
+[Event/mailfilterjoberror]
+Name=An error occurred during filtering
+Action=None

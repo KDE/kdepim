@@ -877,7 +877,6 @@ void MessageComposer::ComposerViewBase::queueMessage(KMime::Message::Ptr message
         message->setHeader(new KMime::Headers::Generic(customHeader.key(), message.get(), customHeader.value(), "utf-8"));
     }
     message->assemble();
-
     connect(qjob, &MailTransport::MessageQueueJob::result, this, &ComposerViewBase::slotQueueResult);
     m_pendingQueueJobs++;
     qjob->start();

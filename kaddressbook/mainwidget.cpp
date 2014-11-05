@@ -55,6 +55,11 @@
 #include <AkonadiCore/MimeTypeChecker>
 #include <AkonadiCore/AttributeFactory>
 #include <AkonadiWidgets/CollectionPropertiesDialog>
+#include <pimcommon/baloodebug/baloodebugdialog.h>
+
+#include <QtCore/QPointer>
+
+
 #include <Akonadi/Contact/ContactDefaultActions>
 #include <Akonadi/Contact/ContactGroupEditorDialog>
 #include <Akonadi/Contact/ContactGroupViewer>
@@ -705,6 +710,13 @@ void MainWidget::setupActions(KActionCollection *collection)
     action->setText(i18n("Send an email..."));
     action->setIcon(KIconLoader::global()->loadIcon(QLatin1String("mail-message-new"), KIconLoader::Small));
     connect(action, &QAction::triggered, this, &MainWidget::slotSendMail);
+
+  if (!qgetenv("KDEPIM_BALOO_DEBUG").isEmpty()) {
+      action = collection->addAction( QLatin1String("debug_baloo") );
+      //Don't translate it. It's just for debug
+      action->setText( QLatin1String( "Debug baloo...") );
+      connect( action, SIGNAL(triggered(bool)), this, SLOT(slotDebugBaloo()));
+  }
 }
 
 void MainWidget::printPreview()
@@ -1021,4 +1033,17 @@ void MainWidget::slotSendMails(const QStringList &emails)
         url.setPath(emails.join(QLatin1String(";")));
         QDesktopServices::openUrl(url);
     }
+}
+
+void MainWidget::slotDebugBaloo()
+{
+    const Akonadi::Item::List lst = Utils::collectSelectedAllContactsItem(mItemView->selectionModel());
+    if (lst.isEmpty()) {
+        return;
+    }
+    QPointer<PimCommon::BalooDebugDialog> dlg = new PimCommon::BalooDebugDialog;
+    dlg->setAkonadiId(lst.at(0).id());
+    dlg->setAttribute( Qt::WA_DeleteOnClose );
+    dlg->setSearchType(PimCommon::BalooDebugSearchPathComboBox::Contacts);
+    dlg->show();
 }
