@@ -3000,7 +3000,7 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
     }
   }
   if ( !eventInfo.isEmpty() ) {
-    html += QString( "<i>%1.</i>" ).arg( eventInfo );
+    html += QString( "<br/><i>%1.</i>" ).arg( eventInfo );
   }
 
   // Print if the organizer gave you a preset status
