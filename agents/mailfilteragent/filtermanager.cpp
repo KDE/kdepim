@@ -80,9 +80,6 @@ public:
     void endFiltering( const Akonadi::Item &item ) const;
     bool atLeastOneFilterAppliesTo( const QString &accountId ) const;
     bool atLeastOneIncomingFilterAppliesTo( const QString &accountId ) const;
-    /*
-    bool folderRemoved( const Akonadi::Collection &folder, const Akonadi::Collection &newFolder );
-*/
     FilterManager *q;
     QList<MailCommon::MailFilter *> mFilters;
     QMap<QString, SearchRule::RequiredPart> mRequiredParts;
@@ -304,25 +301,6 @@ bool FilterManager::Private::atLeastOneIncomingFilterAppliesTo( const QString &a
 
     return false;
 }
-
-/*
-void FilterManager::Private::slotFolderRemoved( const Akonadi::Collection &folder )
-{
-  folderRemoved( folder, Akonadi::Collection() );
-}
-
-bool FilterManager::Private::folderRemoved( const Akonadi::Collection &folder, const Akonadi::Collection &newFolder )
-{
-  bool removed = false;
-
-  foreach ( MailCommon::MailFilter *filter, mFilters ) {
-    if ( filter->folderRemoved( folder, newFolder ) )
-      removed = true;
-  }
-
-  return removed;
-}
-*/
 
 FilterManager::FilterManager( QObject *parent )
     : QObject( parent ), d( new Private( this ) )
