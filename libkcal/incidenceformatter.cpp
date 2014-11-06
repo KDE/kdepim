@@ -1658,7 +1658,7 @@ static QString invitationDetailsEvent( Event *event, Event *oldevent, ScheduleMe
 
   html += htmlRow( i18n( "When:" ),
       IncidenceFormatter::formatStartEnd ( newDateToUse, event->dtEnd(), event->doesFloat() ),
-      IncidenceFormatter::formatStartEnd ( oldDateToUse, event->dtEnd(), event->doesFloat() ) );
+      IncidenceFormatter::formatStartEnd ( oldDateToUse, oldevent->dtEnd(), oldevent->doesFloat() ) );
 
   if ( !location.isEmpty() ) {
     html += htmlRow( i18n( "Where:" ), location );
@@ -3041,6 +3041,10 @@ QString IncidenceFormatter::formatGroupwareLinks(InvitationFormatterHelper *help
       }
 
       if ( !myInc && a ) {
+        if ( !html.isEmpty() ) {
+            // Break after the record in my.. button
+            html += "<br/>";
+        }
         html += responseButtons( inc, rsvpReq, rsvpRec, helper );
       }
       break;
@@ -3065,7 +3069,7 @@ QString IncidenceFormatter::formatGroupwareLinks(InvitationFormatterHelper *help
       if ( inc ) {
         // First, determine if this reply is really a counter in disguise.
         if ( replyMeansCounter( inc ) ) {
-          html += "<tr>" + counterButtons( inc, helper ) + "</tr>";
+          html += counterButtons( inc, helper );
           break;
         }
 
@@ -3078,7 +3082,7 @@ QString IncidenceFormatter::formatGroupwareLinks(InvitationFormatterHelper *help
         if ( a ) {
           if ( a->status() != Attendee::Accepted ||
                a->status() != Attendee::Tentative ) {
-            html += "<tr>" + responseButtons( inc, rsvpReq, rsvpRec, helper ) + "</tr>";
+            html += responseButtons( inc, rsvpReq, rsvpRec, helper );
             break;
           }
         }
@@ -3096,13 +3100,11 @@ QString IncidenceFormatter::formatGroupwareLinks(InvitationFormatterHelper *help
         if ( inc->revision() > 0 &&
              ( inc->lastModified() > existingIncidence->lastModified() ) ) {
           // newer than we have recorded, so an update
-          html += "<tr><td>";
           if ( inc->type() == "Todo" ) {
             html += helper->makeBtnLink( "reply", i18n( "Record update in my task list" ), "dialog_ok" );
           } else {
             html += helper->makeBtnLink( "reply", i18n( "Record update in my calendar" ), "dialog_ok" );
           }
-          html += "</td></tr>";
         } else {
           // not newer than we have recorded
           html += "<br><i>";
@@ -3118,13 +3120,11 @@ QString IncidenceFormatter::formatGroupwareLinks(InvitationFormatterHelper *help
       } else {
         // Not seen or recorded with a response yet
         if ( inc ) {
-          html += "<tr><td>";
           if ( inc->type() == "Todo" ) {
             html += helper->makeBtnLink( "reply", i18n( "Record response in my task list" ), "dialog_ok" );
           } else {
             html += helper->makeBtnLink( "reply", i18n( "Record response in my calendar" ), "dialog_ok" );
           }
-          html += "</td></tr>";
         }
       }
       break;
@@ -3132,11 +3132,11 @@ QString IncidenceFormatter::formatGroupwareLinks(InvitationFormatterHelper *help
 
     case Scheduler::Counter:
       // Counter proposal
-      html += "<tr>" + counterButtons( inc, helper ) + "</tr>";
+      html += counterButtons( inc, helper );
       break;
 
     case Scheduler::Declinecounter:
-      html += "<tr>" + responseButtons( inc, rsvpReq, rsvpRec, helper ) + "</tr>";
+      html += responseButtons( inc, rsvpReq, rsvpRec, helper );
       break;
 
     case Scheduler::NoMethod:
