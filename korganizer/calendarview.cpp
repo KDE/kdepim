@@ -2198,9 +2198,12 @@ void CalendarView::showIncidence( Incidence *incidence, const QDate &date )
   eventViewer->show();
 }
 
-bool CalendarView::editIncidence( Incidence *incidence, const QDate &date, bool isCounter )
+bool CalendarView::editIncidence( Incidence *incidence, const QDate &date, bool isCounter, Incidence** newIncidence )
 {
   kdDebug(5850) << "CalendarView::editEvent()" << endl;
+  if ( newIncidence ) {
+    *newIncidence = NULL;
+  }
 
   CalendarResources *stdcal = dynamic_cast<CalendarResources *>( mCalendar );
   if( stdcal && !stdcal->hasCalendarResources() ) {
@@ -2279,6 +2282,9 @@ bool CalendarView::editIncidence( Incidence *incidence, const QDate &date, bool 
     mDialogList.insert( incToChange, incidenceEditor );
     if ( incidence != incToChange ) {
       incidenceEditor->setRecurringIncidence( incidence, incidenceCopy );
+      if ( newIncidence ) {
+        *newIncidence = incToChange;
+      }
     }
     incidenceEditor->setResource( p.first, p.second );
     incidenceEditor->editIncidence( incToChange, date, mCalendar );

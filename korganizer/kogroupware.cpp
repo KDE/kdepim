@@ -241,9 +241,23 @@ void KOGroupware::incomingDirChanged( const QString& path )
   }
 
   if ( action.startsWith( "counter" ) ) {
-    mView->editIncidence( incidence, QDate(), true );
-    KOIncidenceEditor *tmp = mView->editorDialog( incidence );
-    tmp->selectInvitationCounterProposal( true );
+    Incidence *possiblyNewIncidence = NULL;
+    KOIncidenceEditor *tmp = NULL;
+
+    mView->editIncidence( incidence, QDate(), true, &possiblyNewIncidence );
+    if ( possiblyNewIncidence ) {
+      // If a new incidence was created we need to use that to find
+      // the corresponding dialog.
+      tmp = mView->editorDialog( possiblyNewIncidence );
+    }
+    if ( !tmp ) {
+      tmp = mView->editorDialog( incidence );
+    }
+    if ( tmp ) {
+      tmp->selectInvitationCounterProposal( true );
+    } else {
+      kdError(5850) << "Failed to find counter proposal editor." << endl;
+    }
   }
   mView->updateView();
 }

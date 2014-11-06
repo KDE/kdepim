@@ -289,8 +289,10 @@ class KDE_EXPORT CalendarView : public KOrg::CalendarViewBase, public Calendar::
 
     /** Create a read-only viewer dialog for the supplied incidence. It calls the correct showXXX method*/
     void showIncidence( Incidence *, const QDate & );
-    /** Create an editor for the supplied incidence. It calls the correct editXXX method*/
-    bool editIncidence( Incidence *incidence, const QDate &date, bool isCounter = false );
+    /** Create an editor for the supplied incidence. It calls the correct editXXX method.
+     * If newIcidence is not NULL it will be used to return a pointer to a newly created
+     * incidence ( for recurrences ) or NULL if no new incidence was created. */
+    bool editIncidence( Incidence *incidence, const QDate &date, bool isCounter = false, Incidence** = NULL );
     /**
       Delete the supplied incidence. It calls the correct deleteXXX method
       @param force If true, all recurrences and sub-todos (if applicable) will be
