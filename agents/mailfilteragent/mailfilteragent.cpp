@@ -321,5 +321,23 @@ void MailFilterAgent::emitProgressMessage(const QString &message)
     emit status(AgentBase::Running, message);
 }
 
-AKONADI_AGENT_MAIN(MailFilterAgent)
+QString MailFilterAgent::printCollectionMonitored()
+{
+    QString printDebugCollection;
+    Akonadi::Collection::List collections = changeRecorder()->collectionsMonitored();
+    if (collections.isEmpty()) {
+        printDebugCollection = QLatin1String("No collection is monitored!");
+    } else {
+        foreach( const Akonadi::Collection &collection, collections) {
+            if (!printDebugCollection.isEmpty()) {
+                printDebugCollection += QLatin1Char('\n');
+            }
+            printDebugCollection += QString::fromLatin1("Collection name: %1\n").arg(collection.name());
+            printDebugCollection += QString::fromLatin1("Collection id: %1\n").arg(collection.id());
+        }
+    }
+    return printDebugCollection;
+}
+
+AKONADI_AGENT_MAIN( MailFilterAgent )
 
