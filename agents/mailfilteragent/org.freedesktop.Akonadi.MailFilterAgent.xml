@@ -30,6 +30,9 @@
     <method name="showFilterLogDialog">
      <arg direction="in" type="x" name="windowId" />
     </method>
+    <method name="printCollectionMonitored">
+     <arg direction="out" type="s"/>
+    </method>
     <signal name="filtersChanged"/>
   </interface>
 </node>

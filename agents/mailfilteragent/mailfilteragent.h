@@ -51,6 +51,7 @@ public:
     void reload();
 
     void showFilterLogDialog(qlonglong windowId = 0);
+    QString printCollectionMonitored();
 
 private Q_SLOTS:
     void initializeCollections();
