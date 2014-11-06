@@ -1429,7 +1429,7 @@ static QString myStatusStr( Incidence *incidence )
   Attendee *a = findMyAttendee( incidence );
   if ( a &&
        a->status() != Attendee::NeedsAction && a->status() != Attendee::Delegated ) {
-    ret = i18n( "(<b>Note</b>: the Organizer preset your response to <b>%1</b>)" ).
+    ret = i18n( "(Note: the Organizer preset your response to <b>%1</b>.)" ).
           arg( Attendee::statusName( a->status() ) );
   }
   return ret;
@@ -2011,7 +2011,7 @@ static QString invitationHeaderEvent( Event *event, Incidence *existingIncidence
       }
     case Attendee::Declined:
       if ( delegatorName.isEmpty() ) {
-        return i18n( "<b>%1</b> declines this invitation" ).arg( attendeeName );
+        return i18n( "<b>%1</b> declines this invitation." ).arg( attendeeName );
       } else {
         return i18n( "<b>%1</b> declines this invitation on behalf of <b>%2</b>." ).
           arg( attendeeName ).arg( delegatorName );
@@ -2026,7 +2026,7 @@ static QString invitationHeaderEvent( Event *event, Incidence *existingIncidence
         return i18n( "<b>%1</b> has delegated this invitation to <b>%2</b>." ).
           arg( attendeeName ) .arg( delegate );
       } else {
-        return i18n( "<b>%1</b> has delegated this invitation" ).arg( attendeeName );
+        return i18n( "<b>%1</b> has delegated this invitation." ).arg( attendeeName );
       }
     }
     case Attendee::Completed:
@@ -2199,7 +2199,7 @@ static QString invitationHeaderTodo( Todo *todo, Incidence *existingIncidence,
   {
     QString orgStr = organizerName( todo, sender );
     if ( senderIsOrganizer( todo, sender ) ) {
-      return i18n( "<b>%1</b> declines the counter proposa.l" ).arg( orgStr );
+      return i18n( "<b>%1</b> declines the counter proposal." ).arg( orgStr );
     } else {
       return i18n( "<b>%1</b> declines the counter proposal on behalf of <b>%2</b>." ).arg( sender, orgStr );
     }
@@ -2417,7 +2417,7 @@ static QString invitationAttachments( InvitationFormatterHelper *helper, Inciden
 
   Attachment::List attachments = incidence->attachments();
   if ( !attachments.isEmpty() ) {
-    tmpStr += "<tr>\n<td class=\"leftColumn\">" + i18n( "Attached Documents:" ) + "</td><td>";
+    tmpStr += "<tr>\n<td class=\"leftColumn\">" + i18n( "Attachments:" ) + "</td><td>";
 
     Attachment::List::ConstIterator it;
     for( it = attachments.begin(); it != attachments.end(); ++it ) {
@@ -2578,10 +2578,10 @@ class IncidenceFormatter::IncidenceCompareVisitor
       if ( !oldEvent || !newEvent )
         return;
       if ( oldEvent->dtStart() != newEvent->dtStart() || oldEvent->doesFloat() != newEvent->doesFloat() )
-        mChanges += i18n( "The invitation starting time has been changed from %1 to %2" )
+        mChanges += i18n( "The invitation starting time has been changed from %1 to %2." )
                     .arg( eventStartTimeStr( oldEvent ) ).arg( eventStartTimeStr( newEvent ) );
       if ( oldEvent->dtEnd() != newEvent->dtEnd() || oldEvent->doesFloat() != newEvent->doesFloat() )
-        mChanges += i18n( "The invitation ending time has been changed from %1 to %2" )
+        mChanges += i18n( "The invitation ending time has been changed from %1 to %2." )
                     .arg( eventEndTimeStr( oldEvent ) ).arg( eventEndTimeStr( newEvent ) );
     }
 
@@ -2592,40 +2592,40 @@ class IncidenceFormatter::IncidenceCompareVisitor
       }
 
       if ( !oldTodo->isCompleted() && newTodo->isCompleted() ) {
-        mChanges += i18n( "The task has been completed" );
+        mChanges += i18n( "The task has been completed." );
       }
       if ( oldTodo->isCompleted() && !newTodo->isCompleted() ) {
-        mChanges += i18n( "The task is no longer completed" );
+        mChanges += i18n( "The task is no longer completed." );
       }
       if ( oldTodo->percentComplete() != newTodo->percentComplete() ) {
         const QString oldPer = i18n( "%1%" ).arg( oldTodo->percentComplete() );
         const QString newPer = i18n( "%1%" ).arg( newTodo->percentComplete() );
-        mChanges += i18n( "The task completed percentage has changed from %1 to %2" ).
+        mChanges += i18n( "The task completed percentage has changed from %1 to %2." ).
                     arg( oldPer ).arg( newPer );
       }
 
       if ( !oldTodo->hasStartDate() && newTodo->hasStartDate() ) {
-        mChanges += i18n( "A task starting time has been added" );
+        mChanges += i18n( "A task starting time has been added." );
       }
       if ( oldTodo->hasStartDate() && !newTodo->hasStartDate() ) {
-        mChanges += i18n( "The task starting time has been removed" );
+        mChanges += i18n( "The task starting time has been removed." );
       }
       if ( oldTodo->hasStartDate() && newTodo->hasStartDate() &&
            oldTodo->dtStart() != newTodo->dtStart() ) {
-        mChanges += i18n( "The task starting time has been changed from %1 to %2" ).
+        mChanges += i18n( "The task starting time has been changed from %1 to %2." ).
                     arg( dateTimeToString( oldTodo->dtStart(), oldTodo->doesFloat(), false ) ).
                     arg( dateTimeToString( newTodo->dtStart(), newTodo->doesFloat(), false ) );
       }
 
       if ( !oldTodo->hasDueDate() && newTodo->hasDueDate() ) {
-        mChanges += i18n( "A task due time has been added" );
+        mChanges += i18n( "A task due time has been added." );
       }
       if ( oldTodo->hasDueDate() && !newTodo->hasDueDate() ) {
-        mChanges += i18n( "The task due time has been removed" );
+        mChanges += i18n( "The task due time has been removed." );
       }
       if ( ( oldTodo->hasDueDate() && newTodo->hasDueDate() ) &&
            ( oldTodo->dtDue() != newTodo->dtDue() ) ) {
-        mChanges += i18n( "The task due time has been changed from %1 to %2" ).
+        mChanges += i18n( "The task due time has been changed from %1 to %2." ).
                     arg( dateTimeToString( oldTodo->dtDue(), oldTodo->doesFloat(), false ) ).
                     arg( dateTimeToString( newTodo->dtDue(), newTodo->doesFloat(), false ) );
       }
@@ -2647,7 +2647,7 @@ class IncidenceFormatter::IncidenceCompareVisitor
             it != newAttendees.constEnd(); ++it ) {
         Attendee *oldAtt = oldInc->attendeeByMail( (*it)->email() );
         if ( !oldAtt ) {
-          mChanges += i18n( "Attendee %1 has been added" ).arg( (*it)->fullName() );
+          mChanges += i18n( "Attendee %1 has been added." ).arg( (*it)->fullName() );
         } else {
           if ( oldAtt->status() != (*it)->status() )
             mChanges += i18n( "The status of attendee %1 has been changed to: %2" ).
@@ -2660,7 +2660,7 @@ class IncidenceFormatter::IncidenceCompareVisitor
           if ( !attendeeIsOrganizer( oldInc, (*it) ) ) {
             Attendee *newAtt = newInc->attendeeByMail( (*it)->email() );
             if ( !newAtt ) {
-              mChanges += i18n( "Attendee %1 has been removed" ).arg( (*it)->fullName() );
+              mChanges += i18n( "Attendee %1 has been removed." ).arg( (*it)->fullName() );
             }
           }
         }
@@ -2897,7 +2897,7 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
     }
   }
   if ( !eventInfo.isEmpty() ) {
-    html += QString( "<br/><i>%1.</i>" ).arg( eventInfo );
+    html += QString( "<br/><i>%1</i>" ).arg( eventInfo );
   }
 
   // Print if the organizer gave you a preset status
