@@ -4977,13 +4977,6 @@ MiscPageGroupwareTab::MiscPageGroupwareTab( QWidget* parent, const char* name )
   connect( mExchangeCompatibleInvitations, SIGNAL( stateChanged( int ) ),
            this, SLOT( slotEmitChanged( void ) ) );
 
-  mOutlookCompatibleInvitationComments = new QCheckBox( i18n( "Outlook compatible invitation reply comments" ), gBox );
-  QToolTip::add( mOutlookCompatibleInvitationComments, i18n( "Send invitation reply comments in a way that Microsoft Outlook(tm) understands." ) );
-  QWhatsThis::add( mOutlookCompatibleInvitationComments, i18n( GlobalSettings::self()->
-           outlookCompatibleInvitationReplyCommentsItem()->whatsThis().utf8() ) );
-  connect( mOutlookCompatibleInvitationComments, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
-
   mOutlookCompatibleInvitationComparisons =
     new QCheckBox( i18n( "Show invitation update differences in the Outlook style" ), gBox );
   QToolTip::add( mOutlookCompatibleInvitationComparisons,
@@ -5041,7 +5034,6 @@ void MiscPage::GroupwareTab::doLoadFromGlobalSettings() {
 
   mExchangeCompatibleInvitations->setChecked( GlobalSettings::self()->exchangeCompatibleInvitations() );
 
-  mOutlookCompatibleInvitationComments->setChecked( GlobalSettings::self()->outlookCompatibleInvitationReplyComments() );
   mOutlookCompatibleInvitationComparisons->setChecked( GlobalSettings::self()->outlookCompatibleInvitationComparisons() );
 
   mAutomaticSending->setChecked( GlobalSettings::self()->automaticSending() );
@@ -5106,7 +5098,6 @@ void MiscPage::GroupwareTab::save() {
   groupware.writeEntry( "LegacyMangleFromToHeaders", mLegacyMangleFromTo->isChecked() );
   groupware.writeEntry( "LegacyBodyInvites", mLegacyBodyInvites->isChecked() );
   groupware.writeEntry( "ExchangeCompatibleInvitations", mExchangeCompatibleInvitations->isChecked() );
-  groupware.writeEntry( "OutlookCompatibleInvitationReplyComments", mOutlookCompatibleInvitationComments->isChecked() );
   groupware.writeEntry( "OutlookCompatibleInvitationComparisons", mOutlookCompatibleInvitationComparisons->isChecked() );
   groupware.writeEntry( "AutomaticSending", mAutomaticSending->isChecked() );
 
@@ -5116,7 +5107,6 @@ void MiscPage::GroupwareTab::save() {
   GlobalSettings::self()->setLegacyMangleFromToHeaders( mLegacyMangleFromTo->isChecked() );
   GlobalSettings::self()->setLegacyBodyInvites( mLegacyBodyInvites->isChecked() );
   GlobalSettings::self()->setExchangeCompatibleInvitations( mExchangeCompatibleInvitations->isChecked() );
-  GlobalSettings::self()->setOutlookCompatibleInvitationReplyComments( mOutlookCompatibleInvitationComments->isChecked() );
   GlobalSettings::self()->setOutlookCompatibleInvitationComparisons( mOutlookCompatibleInvitationComparisons->isChecked() );
   GlobalSettings::self()->setAutomaticSending( mAutomaticSending->isChecked() );
 

@@ -513,11 +513,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         }
 
         if ( !comment.isEmpty() ) {
-          if ( callback.outlookCompatibleInvitationReplyComments() ) {
-            incidence->setDescription( comment );
-          } else {
-            incidence->addComment( comment );
-          }
+          incidence->addComment( comment );
         }
       }
 
@@ -680,11 +676,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         }
 
         if ( !comment.isEmpty() ) {
-          if ( callback.outlookCompatibleInvitationReplyComments() ) {
-            existing->setDescription( comment );
-          } else {
-            existing->addComment( comment );
-          }
+          existing->addComment( comment );
         }
       }
       return mail( existing, callback, Attendee::NeedsAction, Scheduler::Declinecounter,
