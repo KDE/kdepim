@@ -71,3 +71,8 @@ void BalooDebugDialog::setSearchType(BalooDebugSearchPathComboBox::SearchType ty
     mBalooDebugWidget->setSearchType(type);
 }
 
+void BalooDebugDialog::doSearch()
+{
+    mBalooDebugWidget->doSearch();
+}
+

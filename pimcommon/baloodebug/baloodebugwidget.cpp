@@ -18,13 +18,15 @@
 #include "baloodebugwidget.h"
 #include "baloodebugsearchjob.h"
 #include "baloodebugsearchpathcombobox.h"
+#include "baloosyntaxhighlighter.h"
 #include <KLineEdit>
 #include <QPushButton>
 
 #include <QVBoxLayout>
 #include <QLabel>
 
-#include <texteditor/plaintexteditor/plaintexteditorwidget.h>
+#include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
+#include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 
 using namespace PimCommon;
 
@@ -56,6 +58,7 @@ BalooDebugWidget::BalooDebugWidget(QWidget *parent)
     mSearchButton->setEnabled(false);
 
     mPlainTextEditor = new PimCommon::PlainTextEditorWidget;
+    new PimCommon::BalooSyntaxHighlighter(mPlainTextEditor->editor()->document());
     mPlainTextEditor->setReadOnly(true);
     mainLayout->addWidget(mPlainTextEditor);
     mPlainTextEditor->setObjectName(QLatin1String("plaintexteditor"));
@@ -84,10 +87,18 @@ void BalooDebugWidget::setSearchType(BalooDebugSearchPathComboBox::SearchType ty
     mSearchPathComboBox->setSearchType(type);
 }
 
+void BalooDebugWidget::doSearch()
+{
+    slotSearch();
+}
+
 void BalooDebugWidget::slotSearch()
 {
+    const QString searchId = mLineEdit->text();
+    if (searchId.isEmpty())
+        return;
     PimCommon::BalooDebugSearchJob *job = new PimCommon::BalooDebugSearchJob(this);
-    job->setAkonadiId(mLineEdit->text());
+    job->setAkonadiId(searchId);
     job->setSearchPath(mSearchPathComboBox->searchPath());
     connect(job, SIGNAL(result(QString)), this, SLOT(slotResult(QString)));
     connect(job, SIGNAL(error(QString)), this, SLOT(slotError(QString)));

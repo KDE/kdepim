@@ -15,33 +15,32 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef BALOODEBUGDIALOG_H
-#define BALOODEBUGDIALOG_H
+#ifndef BALOOSYNTAXHIGHLIGHTER_H
+#define BALOOSYNTAXHIGHLIGHTER_H
 
-#include <QDialog>
-#include "pimcommon_export.h"
-#include "baloodebugsearchpathcombobox.h"
-#include <AkonadiCore/Item>
-
-namespace PimCommon
-{
-class BalooDebugWidget;
-class PIMCOMMON_EXPORT BalooDebugDialog : public QDialog
+#include <QSyntaxHighlighter>
+namespace PimCommon {
+class BalooSyntaxHighlighter : public QSyntaxHighlighter
 {
     Q_OBJECT
 public:
-    explicit BalooDebugDialog(QWidget *parent = 0);
-    ~BalooDebugDialog();
+    explicit BalooSyntaxHighlighter(QTextDocument *doc);
+    ~BalooSyntaxHighlighter();
 
-    void setAkonadiId(Akonadi::Item::Id akonadiId);
-    void setSearchType(BalooDebugSearchPathComboBox::SearchType type);
-    void doSearch();
+    void highlightBlock(const QString &text);
+
 private:
-    void readConfig();
-    void writeConfig();
-    BalooDebugWidget *mBalooDebugWidget;
+    void init();
+
+    struct Rule {
+        QRegExp pattern;
+        QTextCharFormat format;
+
+        Rule( const QRegExp &r, const QTextCharFormat &f )
+            : pattern(r), format(f) {}
+    };
+
+    QList<Rule> m_rules;
 };
 }
-
-#endif // BALOODEBUGDIALOG_H
-
+#endif // BALOOSYNTAXHIGHLIGHTER_H
