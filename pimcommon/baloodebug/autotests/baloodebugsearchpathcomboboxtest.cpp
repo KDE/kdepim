@@ -61,6 +61,4 @@ void BalooDebugSearchPathComboBoxTest::shouldSelectCorrectType()
 
 }
 
-
-
 QTEST_MAIN(BalooDebugSearchPathComboBoxTest)

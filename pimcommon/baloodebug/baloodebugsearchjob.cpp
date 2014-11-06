@@ -48,7 +48,7 @@ void BalooDebugSearchJob::start()
         QStringList arguments;
         arguments << QLatin1String("-r") << mAkonadiId;
         arguments << mPath;
-        mProcess->start(delvePath,QStringList()<< arguments);
+        mProcess->start(delvePath, QStringList() << arguments);
     }
 }
 

@@ -17,14 +17,12 @@
 
 #include "pimcommon/baloodebug/baloodebugdialog.h"
 
-
-
 #include <KLocalizedString>
 #include <QApplication>
 #include <KAboutData>
 #include <QCommandLineParser>
 
-int main (int argc, char **argv)
+int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
     QCommandLineParser parser;

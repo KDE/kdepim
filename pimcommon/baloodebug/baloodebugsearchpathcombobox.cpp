@@ -54,7 +54,7 @@ void BalooDebugSearchPathComboBox::initialize()
 QString BalooDebugSearchPathComboBox::pathFromEnum(SearchType type) const
 {
     const QString xdgpath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/');
-    switch(type) {
+    switch (type) {
     case Contacts:
         return QString(xdgpath + QLatin1String("baloo/contacts/"));
     case ContactCompleter:

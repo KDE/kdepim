@@ -90,7 +90,6 @@ void BalooDebugWidgetTest::shouldChangeSearchType()
     const QString path = searchCombo->pathFromEnum(type);
     QCOMPARE(searchCombo->searchPath(), path);
 
-
 }
 
 QTEST_MAIN(BalooDebugWidgetTest)
