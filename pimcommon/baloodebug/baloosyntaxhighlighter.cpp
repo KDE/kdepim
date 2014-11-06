@@ -50,7 +50,41 @@ void BalooSyntaxHighlighter::init()
     testFormat.setForeground( Qt::black );
     testFormat.setFontWeight( QFont::Bold );
     QStringList testType;
+    //Collection
     testType << QLatin1String("C\\d+");
+
+    //Emails:
+    //From
+    testType << QLatin1String("\\bF");
+    //To
+    testType << QLatin1String("\\bT");
+    //CC
+    testType << QLatin1String("\\bCC");
+    //BC
+    testType << QLatin1String("\\bBC");
+    //Organization
+    testType << QLatin1String("\\bO");
+    //Reply To
+    testType << QLatin1String("\\bRT");
+    //Resent-from
+    testType << QLatin1String("\\bRF");
+    //List Id
+    testType << QLatin1String("\\bLI");
+    //X-Loop
+    testType << QLatin1String("\\bXL");
+    //X-Mailing-List
+    testType << QLatin1String("\\bXML");
+    //X-Spam-Flag
+    testType << QLatin1String("\\bXSF");
+    //BO body element
+    testType << QLatin1String("\\bBO");
+
+    //Contacts:
+    //Name
+    testType << QLatin1String("\\bNA");
+    //NickName
+    testType << QLatin1String("\\bNI");
+
 
     Q_FOREACH ( const QString &s, testType ) {
         const QRegExp regex( s, Qt::CaseSensitive );
