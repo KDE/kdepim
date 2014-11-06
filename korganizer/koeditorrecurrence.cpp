@@ -1152,7 +1152,7 @@ void KOEditorRecurrence::setDefaults( const QDateTime &from, const QDateTime &to
 {
   setDateTimes( from, to );
 
-  setRecurrenceEnabled( false );
+  setRecurrenceEnabled( true );
 
   mRecurrenceRange->setDefaults( from );
 
