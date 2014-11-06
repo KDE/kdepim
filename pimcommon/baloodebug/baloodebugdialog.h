@@ -34,6 +34,7 @@ public:
 
     void setAkonadiId(Akonadi::Item::Id akonadiId);
     void setSearchType(BalooDebugSearchPathComboBox::SearchType type);
+    void doSearch();
 private:
     void readConfig();
     void writeConfig();

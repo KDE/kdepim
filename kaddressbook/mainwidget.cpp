@@ -1040,5 +1040,6 @@ void MainWidget::slotDebugBaloo()
     dlg->setAkonadiId(lst.at(0).id());
     dlg->setAttribute( Qt::WA_DeleteOnClose );
     dlg->setSearchType(PimCommon::BalooDebugSearchPathComboBox::Contacts);
+    dlg->doSearch();
     dlg->show();
 }

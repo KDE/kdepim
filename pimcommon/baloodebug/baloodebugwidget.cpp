@@ -84,10 +84,18 @@ void BalooDebugWidget::setSearchType(BalooDebugSearchPathComboBox::SearchType ty
     mSearchPathComboBox->setSearchType(type);
 }
 
+void BalooDebugWidget::doSearch()
+{
+    slotSearch();
+}
+
 void BalooDebugWidget::slotSearch()
 {
+    const QString searchId = mLineEdit->text();
+    if (searchId.isEmpty())
+        return;
     PimCommon::BalooDebugSearchJob *job = new PimCommon::BalooDebugSearchJob(this);
-    job->setAkonadiId(mLineEdit->text());
+    job->setAkonadiId(searchId);
     job->setSearchPath(mSearchPathComboBox->searchPath());
     connect(job, SIGNAL(result(QString)), this, SLOT(slotResult(QString)));
     connect(job, SIGNAL(error(QString)), this, SLOT(slotError(QString)));
