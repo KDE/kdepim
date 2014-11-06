@@ -33,10 +33,9 @@
 #include "korgacadaptor.h"
 
 #include <calendarsupport/utils.h>
-#include "kdbusconnectionpool.h"
 #include <AkonadiCore/ChangeRecorder>
 #include <AkonadiCore/Collection>
-#include <AkonadiCore/DBusConnectionPool>
+#include <kdbusconnectionpool.h>
 #include <AkonadiCore/EntityTreeModel>
 #include <AkonadiCore/Item>
 #include <AkonadiCore/ItemFetchScope>
