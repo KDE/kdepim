@@ -305,6 +305,8 @@ class KOEditorRecurrence : public QWidget
     void setDateTimes( const QDateTime &start, const QDateTime &end );
     void setDateTimeStr( const QString & );
 
+    virtual void show();
+
   signals:
     void dateTimesChanged( const QDateTime &start, const QDateTime &end );
 

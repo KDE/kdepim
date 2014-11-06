@@ -1152,7 +1152,7 @@ void KOEditorRecurrence::setDefaults( const QDateTime &from, const QDateTime &to
 {
   setDateTimes( from, to );
 
-  setRecurrenceEnabled( true );
+  setRecurrenceEnabled( false );
 
   mRecurrenceRange->setDefaults( from );
 
@@ -1176,6 +1176,12 @@ void KOEditorRecurrence::setDefaults( const QDateTime &from, const QDateTime &to
   mYearly->setByPos( ( from.date().day() - 1 ) / 7 + 1,
       from.date().dayOfWeek(), from.date().month() );
   mYearly->setByMonth( from.date().day(), from.date().month() );
+}
+
+void KOEditorRecurrence::show()
+{
+    setRecurrenceEnabled( true );
+    QWidget::show();
 }
 
 void KOEditorRecurrence::readIncidence(Incidence *incidence)
