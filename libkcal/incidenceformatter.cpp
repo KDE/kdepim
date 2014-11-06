@@ -636,9 +636,16 @@ static QString displayViewFormatEventsOnSameDays( InvitationFormatterHelper *hel
   for ( Event::List::ConstIterator it = matchingEvents.begin(), end = matchingEvents.end();
       it != end && count < 50;
       ++it) {
+    if ( (*it)->schedulingID() == event->uid() ) {
+        continue;
+    }
     ++count;
     tmpStr += QString( "<li>" ) + displayViewFormatEventForList( helper->calendar(), *it, noHtmlMode ) +
       QString( "</li>\n" );
+  }
+  if ( count == 0 ) {
+      /* Only the same event on this day. */
+      return checkCalBtn;
   }
   if ( count == 50 ) {
     /* Abort after 50 entries to limit resource usage */
