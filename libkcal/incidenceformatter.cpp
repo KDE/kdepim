@@ -2358,9 +2358,9 @@ static QString invitationRsvpList( Incidence *incidence, Attendee *sender )
   tmpStr += "<tr>\n<td class=\"leftColumn\">";
 
   if ( incidence->type() == "Todo" ) {
-    tmpStr += i18n( "Assignees" );
+    tmpStr += i18n( "Assignees" ) + ":" ;
   } else {
-    tmpStr += i18n( "Participants" );
+    tmpStr += i18n( "Participants" ) + ":";
   }
   tmpStr += "</td>\n<td>";
 
