@@ -297,11 +297,12 @@ void KOAlarmClient::forceAlarmCheck()
   saveLastCheckTime();
 }
 
-void KOAlarmClient::dumpDebug()
+QString KOAlarmClient::dumpDebug()
 {
   KConfigGroup cfg( KGlobal::config(), "Alarms" );
   const QDateTime lastChecked = cfg.readEntry( "CalendarsLastChecked", QDateTime() );
-  kDebug() << "Last Check:" << lastChecked;
+  QString str = QString::fromLatin1("Last Check: %1").arg(lastChecked.toString());
+  return str;
 }
 
 QStringList KOAlarmClient::dumpAlarms()
@@ -316,17 +317,16 @@ QStringList KOAlarmClient::dumpAlarms()
          end.toString();
 
   Alarm::List alarms = mCalendar->alarms( start, end );
-  foreach( Alarm::Ptr a, alarms ) {
-    const Incidence::Ptr parentIncidence = mCalendar->incidence( a->parentUid() );
-    lst << QLatin1String( "  " ) + parentIncidence->summary() + QLatin1String(" (") + a->time().toString() + QLatin1Char(')');
+  if (alarms.isEmpty() ) {
+          lst << QLatin1String("No alarm found.");
+  } else {
+      foreach( Alarm::Ptr a, alarms ) {
+          const Incidence::Ptr parentIncidence = mCalendar->incidence( a->parentUid() );
+          lst << QLatin1String( "  " ) + parentIncidence->summary() + QLatin1String(" (") + a->time().toString() + QLatin1Char(')');
+      }
   }
 
   return lst;
-}
-
-void KOAlarmClient::debugShowDialog()
-{
-//   showAlarmDialog();
 }
 
 void KOAlarmClient::hide()
