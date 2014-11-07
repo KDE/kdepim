@@ -35,11 +35,11 @@ class GMXXXPort : public XXPort
 public:
     explicit GMXXXPort(QWidget *parent = 0);
 
-    bool exportContacts(const KABC::AddresseeList &list) const;
-    KABC::Addressee::List importContacts() const;
+    bool exportContacts(const KContacts::AddresseeList &list) const;
+    KContacts::Addressee::List importContacts() const;
 
 private:
-    void doExport(QFile *fp, const KABC::AddresseeList &list) const;
+    void doExport(QFile *fp, const KContacts::AddresseeList &list) const;
 };
 
 #endif

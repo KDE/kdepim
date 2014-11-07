@@ -17,7 +17,7 @@
 
 #include "mergecontactshowresulttabwidget.h"
 #include "mergecontactinfowidget.h"
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 
 #include <QTabBar>
 
@@ -47,8 +47,8 @@ void MergeContactShowResultTabWidget::setContacts(const Akonadi::Item::List &lst
 {
     clear();
     Q_FOREACH (const Akonadi::Item &item, lstItem) {
-        if (item.hasPayload<KABC::Addressee>()) {
-            const KABC::Addressee address = item.payload<KABC::Addressee>();
+        if (item.hasPayload<KContacts::Addressee>()) {
+            const KContacts::Addressee address = item.payload<KContacts::Addressee>();
             MergeContactInfoWidget *infoWidget = new MergeContactInfoWidget;
             infoWidget->setContact(item);
             addTab(infoWidget, address.name());

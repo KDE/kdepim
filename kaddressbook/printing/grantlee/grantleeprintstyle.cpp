@@ -28,7 +28,7 @@
 #include <grantlee/engine.h>
 #include <grantlee/templateloader.h>
 
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 
 #include <KLocalizedString>
 
@@ -39,7 +39,7 @@
 
 using namespace KABPrinting;
 
-QString GrantleePrintStyle::contactsToHtml(const KABC::Addressee::List &contacts)
+QString GrantleePrintStyle::contactsToHtml(const KContacts::Addressee::List &contacts)
 {
     if (!mErrorMessage.isEmpty()) {
         return mErrorMessage;
@@ -47,7 +47,7 @@ QString GrantleePrintStyle::contactsToHtml(const KABC::Addressee::List &contacts
 
     QVariantList contactsList;
     QList<ContactGrantleePrintObject *> lst;
-    Q_FOREACH (const KABC::Addressee &address, contacts) {
+    Q_FOREACH (const KContacts::Addressee &address, contacts) {
         ContactGrantleePrintObject *contactPrintObject = new ContactGrantleePrintObject(address);
         lst.append(contactPrintObject);
         contactsList << QVariant::fromValue(static_cast<QObject *>(contactPrintObject));
@@ -108,7 +108,7 @@ GrantleePrintStyle::~GrantleePrintStyle()
     delete mEngine;
 }
 
-void GrantleePrintStyle::print(const KABC::Addressee::List &contacts, PrintProgress *progress)
+void GrantleePrintStyle::print(const KContacts::Addressee::List &contacts, PrintProgress *progress)
 {
     QPrinter *printer = wizard()->printer();
     printer->setPageMargins(20, 20, 20, 20, QPrinter::DevicePixel);

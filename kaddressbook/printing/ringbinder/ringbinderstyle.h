@@ -39,7 +39,7 @@ public:
     explicit RingBinderPrintStyle(PrintingWizard *parent);
     ~RingBinderPrintStyle();
 
-    void print(const KABC::Addressee::List &contacts, PrintProgress *);
+    void print(const KContacts::Addressee::List &contacts, PrintProgress *);
 
 private:
     RingBinderStyleAppearanceForm *mPageAppearance;

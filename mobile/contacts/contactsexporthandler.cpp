@@ -19,8 +19,8 @@
 
 #include "contactsexporthandler.h"
 
-#include <kabc/addressee.h>
-#include <kabc/vcardconverter.h>
+#include <kcontacts/addressee.h>
+#include <kcontacts/vcardconverter.h>
 #include <KLocalizedString>
 #include <kmessagebox.h>
 #include <KUrl>
@@ -28,7 +28,7 @@
 #include <QtCore/QFile>
 #include <QFileDialog>
 
-static QString contactFileName( const KABC::Addressee &contact )
+static QString contactFileName( const KContacts::Addressee &contact )
 {
   if ( !contact.givenName().isEmpty() && !contact.familyName().isEmpty() )
     return QString::fromLatin1( "%1_%2" ).arg( contact.givenName() ).arg( contact.familyName() );
@@ -80,19 +80,19 @@ QString ContactsExportHandler::dialogLocalOnlyText() const
 
 QStringList ContactsExportHandler::mimeTypes() const
 {
-  return QStringList( KABC::Addressee::mimeType() );
+  return QStringList( KContacts::Addressee::mimeType() );
 }
 
 bool ContactsExportHandler::exportItems( const Akonadi::Item::List &items )
 {
-  KABC::Addressee::List contacts;
+  KContacts::Addressee::List contacts;
 
   foreach ( const Akonadi::Item &item, items ) {
-    if ( item.hasPayload<KABC::Addressee>() )
-      contacts << item.payload<KABC::Addressee>();
+    if ( item.hasPayload<KContacts::Addressee>() )
+      contacts << item.payload<KContacts::Addressee>();
   }
 
-  KABC::VCardConverter converter;
+  KContacts::VCardConverter converter;
   QString fileName;
 
   bool ok = true;
@@ -101,7 +101,7 @@ bool ContactsExportHandler::exportItems( const Akonadi::Item::List &items )
     if ( fileName.isEmpty() ) // user canceled export
       return true;
 
-    ok = exportVCard( fileName, converter.createVCards( contacts, KABC::VCardConverter::v3_0 ) );
+    ok = exportVCard( fileName, converter.createVCards( contacts, KContacts::VCardConverter::v3_0 ) );
   } else {
     const QString msg = i18n( "You have selected a list of contacts, shall they be "
                               "exported to several files?" );
@@ -114,10 +114,10 @@ bool ContactsExportHandler::exportItems( const Akonadi::Item::List &items )
           if ( path.isEmpty() )
             return true; // user canceled export
 
-          foreach ( const KABC::Addressee &contact, contacts ) {
+          foreach ( const KContacts::Addressee &contact, contacts ) {
             fileName = path + QDir::separator() + contactFileName( contact ) + QLatin1String( ".vcf" );
 
-            const bool tmpOk = exportVCard( fileName, converter.createVCard( contact, KABC::VCardConverter::v3_0 ) );
+            const bool tmpOk = exportVCard( fileName, converter.createVCard( contact, KContacts::VCardConverter::v3_0 ) );
 
             ok = ok && tmpOk;
           }
@@ -130,7 +130,7 @@ bool ContactsExportHandler::exportItems( const Akonadi::Item::List &items )
           if ( fileName.isEmpty() )
             return true; // user canceled export
 
-          ok = exportVCard( fileName, converter.createVCards( contacts, KABC::VCardConverter::v3_0 ) );
+          ok = exportVCard( fileName, converter.createVCards( contacts, KContacts::VCardConverter::v3_0 ) );
         }
     }
   }

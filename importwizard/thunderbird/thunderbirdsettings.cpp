@@ -24,7 +24,7 @@
 #include <KIdentityManagement/kidentitymanagement/signature.h>
 
 #include <QUrl>
-#include <KABC/VCardConverter>
+#include <KContacts/VCardConverter>
 #include <QTextStream>
 #include <QStringList>
 #include <QFile>
@@ -837,15 +837,15 @@ void ThunderbirdSettings::readIdentity(const QString &account)
     if (mHashConfig.contains(attachVcardContentStr)) {
         const QString str = mHashConfig.value(attachVcardContentStr).toString();
         QByteArray vcard = QByteArray::fromPercentEncoding(str.toLocal8Bit());
-        KABC::VCardConverter converter;
-        KABC::Addressee addr = converter.parseVCard(vcard);
+        KContacts::VCardConverter converter;
+        KContacts::Addressee addr = converter.parseVCard(vcard);
 
         const QString filename = QStandardPaths::writableLocation(QStandardPaths::DataLocation) + QLatin1Char('/') + newIdentity->identityName() + QLatin1String(".vcf");
         QFileInfo fileInfo(filename);
         QDir().mkpath(fileInfo.absolutePath());
         QFile file(filename);
         if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-            const QByteArray data = converter.exportVCard(addr, KABC::VCardConverter::v3_0);
+            const QByteArray data = converter.exportVCard(addr, KContacts::VCardConverter::v3_0);
             file.write(data);
             file.flush();
             file.close();

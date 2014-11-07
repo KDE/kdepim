@@ -118,7 +118,7 @@ target_link_libraries(kaddressbookprivate
   pimcommon
   kaddressbookgrantlee
   KF5::AkonadiCore
-  KF5::Abc
+  KF5::Contacts
   KF5::AkonadiContact
   KF5::Ldap
   KF5::KCMUtils

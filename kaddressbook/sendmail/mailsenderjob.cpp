@@ -28,8 +28,8 @@
 #include <AkonadiCore/ItemFetchJob>
 #include <AkonadiCore/ItemFetchScope>
 
-#include <KABC/Addressee>
-#include <KABC/ContactGroup>
+#include <KContacts/Addressee>
+#include <KContacts/ContactGroup>
 
 #include <QDebug>
 using namespace KABMailSender;
@@ -49,16 +49,16 @@ MailSenderJob::~MailSenderJob()
 void MailSenderJob::start()
 {
     Q_FOREACH (const Akonadi::Item &item, mListItem) {
-        if (item.hasPayload<KABC::Addressee>()) {
-            const KABC::Addressee contact = item.payload<KABC::Addressee>();
+        if (item.hasPayload<KContacts::Addressee>()) {
+            const KContacts::Addressee contact = item.payload<KContacts::Addressee>();
             const QString preferredEmail = contact.preferredEmail();
             if (!preferredEmail.isEmpty() && !mEmailAddresses.contains(preferredEmail)) {
                 if (KPIMUtils::isValidSimpleAddress(contact.preferredEmail())) {
                     mEmailAddresses <<  KPIMUtils::normalizedAddress(contact.formattedName(), preferredEmail);
                 }
             }
-        } else if (item.hasPayload<KABC::ContactGroup>()) {
-            const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
+        } else if (item.hasPayload<KContacts::ContactGroup>()) {
+            const KContacts::ContactGroup group = item.payload<KContacts::ContactGroup>();
             unsigned int nbDataCount(group.dataCount());
             for (unsigned int i = 0; i < nbDataCount; ++i) {
                 const QString currentEmail(group.data(i).email());
@@ -71,7 +71,7 @@ void MailSenderJob::start()
             }
             const unsigned int nbContactReference(group.contactReferenceCount());
             for (unsigned int i = 0; i < nbContactReference; ++i) {
-                KABC::ContactGroup::ContactReference reference = group.contactReference(i);
+                KContacts::ContactGroup::ContactReference reference = group.contactReference(i);
 
                 Akonadi::Item item;
                 if (reference.gid().isEmpty()) {
@@ -125,7 +125,7 @@ void MailSenderJob::fetchJobFinished(KJob *job)
     }
 
     const Akonadi::Item item = fetchJob->items().first();
-    const KABC::Addressee contact = item.payload<KABC::Addressee>();
+    const KContacts::Addressee contact = item.payload<KContacts::Addressee>();
 
     if (!contact.preferredEmail().isEmpty()) {
         if (KPIMUtils::isValidSimpleAddress(contact.preferredEmail())) {

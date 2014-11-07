@@ -26,7 +26,7 @@
 
 #include "contactfields.h"
 
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 
 #include <QtCore/QHash>
 #include <QtCore/QStringList>
@@ -88,7 +88,7 @@ public:
      * @param contacts The filtered and sorted list of contacts.
      * @param progress The object to inform the user about the progress of printing.
      */
-    virtual void print(const KABC::Addressee::List &contacts, PrintProgress *progress) = 0;
+    virtual void print(const KContacts::Addressee::List &contacts, PrintProgress *progress) = 0;
 
     /**
      * This method should be reimplemented to provide a preview of what

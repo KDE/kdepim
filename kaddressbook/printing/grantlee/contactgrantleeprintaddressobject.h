@@ -18,7 +18,7 @@
 #ifndef CONTACTGRANTLEEPRINTADDRESSOBJECT_H
 #define CONTACTGRANTLEEPRINTADDRESSOBJECT_H
 #include <QObject>
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 namespace KABPrinting
 {
 class ContactGrantleePrintAddressObject : public QObject
@@ -35,7 +35,7 @@ class ContactGrantleePrintAddressObject : public QObject
     Q_PROPERTY(QString formattedAddress READ formattedAddress)
 
 public:
-    explicit ContactGrantleePrintAddressObject(const KABC::Address &address, QObject *parent = 0);
+    explicit ContactGrantleePrintAddressObject(const KContacts::Address &address, QObject *parent = 0);
     ~ContactGrantleePrintAddressObject();
 
     QString type() const;
@@ -49,7 +49,7 @@ public:
     QString formattedAddress() const;
 
 private:
-    KABC::Address mAddress;
+    KContacts::Address mAddress;
 };
 }
 #endif // CONTACTGRANTLEEPRINTADDRESSOBJECT_H

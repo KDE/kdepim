@@ -18,7 +18,7 @@
 #include "contactgrantleeprintaddressobject.h"
 
 using namespace KABPrinting;
-ContactGrantleePrintAddressObject::ContactGrantleePrintAddressObject(const KABC::Address &address, QObject *parent)
+ContactGrantleePrintAddressObject::ContactGrantleePrintAddressObject(const KContacts::Address &address, QObject *parent)
     : QObject(parent),
       mAddress(address)
 {
@@ -30,7 +30,7 @@ ContactGrantleePrintAddressObject::~ContactGrantleePrintAddressObject()
 
 QString ContactGrantleePrintAddressObject::type() const
 {
-    return KABC::Address::typeLabel(mAddress.type());
+    return KContacts::Address::typeLabel(mAddress.type());
 }
 
 QString ContactGrantleePrintAddressObject::street() const

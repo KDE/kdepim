@@ -752,9 +752,9 @@ static QString searchFullEmailByUid(const QString &uid)
     job->setLimit(1);
     job->setQuery(Akonadi::ContactSearchJob::ContactUid, uid, Akonadi::ContactSearchJob::ExactMatch);
     job->exec();
-    const KABC::Addressee::List res = job->contacts();
+    const KContacts::Addressee::List res = job->contacts();
     if (!res.isEmpty()) {
-        KABC::Addressee addr = res.first();
+        KContacts::Addressee addr = res.first();
         fullEmail = addr.fullEmail();
     }
     return fullEmail;

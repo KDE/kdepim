@@ -22,7 +22,7 @@
 
 #include "contactfields.h"
 
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 
 #include <KDialog>
 
@@ -45,7 +45,7 @@ public:
     explicit CSVImportDialog(QWidget *parent = 0);
     ~CSVImportDialog();
 
-    KABC::AddresseeList contacts() const;
+    KContacts::AddresseeList contacts() const;
 
 protected Q_SLOTS:
     virtual void slotButtonClicked(int);

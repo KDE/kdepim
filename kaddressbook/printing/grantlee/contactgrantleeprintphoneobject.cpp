@@ -18,7 +18,7 @@
 #include "contactgrantleeprintphoneobject.h"
 
 using namespace KABPrinting;
-ContactGrantleePrintPhoneObject::ContactGrantleePrintPhoneObject(const KABC::PhoneNumber &phone, QObject *parent)
+ContactGrantleePrintPhoneObject::ContactGrantleePrintPhoneObject(const KContacts::PhoneNumber &phone, QObject *parent)
     : QObject(parent),
       mPhoneNumber(phone)
 {

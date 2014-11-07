@@ -28,8 +28,8 @@
 #include <AkonadiCore/ItemFetchJob>
 #include <AkonadiCore/ItemFetchScope>
 
-#include <KABC/Addressee>
-#include <KABC/ContactGroup>
+#include <KContacts/Addressee>
+#include <KContacts/ContactGroup>
 
 #include <KLocalizedString>
 #include <QDebug>
@@ -69,7 +69,7 @@ class EditorContactGroup::Private
       mInputs << new Recipient( mUi.recipient2, q );
       mLastRow = 2; // third row
 
-      mUi.collectionSelector->setMimeTypeFilter( QStringList() << KABC::ContactGroup::mimeType() );
+      mUi.collectionSelector->setMimeTypeFilter( QStringList() << KContacts::ContactGroup::mimeType() );
       mUi.collectionSelector->setAccessRightsFilter( Akonadi::Collection::CanCreateItem | Akonadi::Collection::CanChangeItem );
 
       QObject::connect( mUi.launchAccountWizardButton, SIGNAL(clicked()), q, SIGNAL(requestLaunchAccountWizard()) );
@@ -87,7 +87,7 @@ class EditorContactGroup::Private
   public:
     Ui::EditorContactGroup mUi;
 
-    KABC::ContactGroup mContactGroup;
+    KContacts::ContactGroup mContactGroup;
 
     QList<Recipient*> mInputs;
 
@@ -138,10 +138,10 @@ void EditorContactGroup::Private::fetchResult( KJob *job )
   const Akonadi::Item item = fetchJob->items().isEmpty() ? recipient->mItem : fetchJob->items().first();
   if ( fetchJob->error() != 0 ) {
     qCritical() << "Fetching contact item" << item.id() << "failed:" << fetchJob->errorString();
-  } else if ( !item.hasPayload<KABC::Addressee>() ) {
+  } else if ( !item.hasPayload<KContacts::Addressee>() ) {
     qCritical() << "Fetching contact item" << item.id() << "worked but it is not a contact";
   } else {
-    const KABC::Addressee contact = item.payload<KABC::Addressee>();
+    const KContacts::Addressee contact = item.payload<KContacts::Addressee>();
 
     recipient->mItem = item;
     recipient->mInput->setEnabled( true );
@@ -250,13 +250,13 @@ EditorContactGroup::~EditorContactGroup()
   delete d;
 }
 
-void EditorContactGroup::loadContactGroup( const KABC::ContactGroup &contactGroup )
+void EditorContactGroup::loadContactGroup( const KContacts::ContactGroup &contactGroup )
 {
   d->mContactGroup = contactGroup;
 
   d->mUi.groupName->setText( contactGroup.name() );
 
-  KABC::Addressee contact;
+  KContacts::Addressee contact;
 
   d->ensureRows( contactGroup.dataCount() + contactGroup.contactReferenceCount() );
 
@@ -264,7 +264,7 @@ void EditorContactGroup::loadContactGroup( const KABC::ContactGroup &contactGrou
 
   QStringList emails;
   for ( uint i = 0; i < contactGroup.dataCount(); ++i, ++count ) {
-    const KABC::ContactGroup::Data &data = contactGroup.data( i );
+    const KContacts::ContactGroup::Data &data = contactGroup.data( i );
     contact.setNameFromString( data.name() );
     emails << contact.fullEmail( data.email() );
   }
@@ -276,7 +276,7 @@ void EditorContactGroup::loadContactGroup( const KABC::ContactGroup &contactGrou
   }
 
   for ( uint i = 0; inputIt != d->mInputs.constEnd() && i < contactGroup.contactReferenceCount(); ++inputIt, ++i, ++count ) {
-    const KABC::ContactGroup::ContactReference &ref = contactGroup.contactReference( i );
+    const KContacts::ContactGroup::ContactReference &ref = contactGroup.contactReference( i );
     (*inputIt)->mItem.setId( ref.uid().toLongLong() );
     (*inputIt)->mPreferredEmail = ref.preferredEmail();
     (*inputIt)->mInput->setText( i18nc( "@info:status", "Loading..." ) );
@@ -289,7 +289,7 @@ void EditorContactGroup::loadContactGroup( const KABC::ContactGroup &contactGrou
   }
 }
 
-void EditorContactGroup::saveContactGroup( KABC::ContactGroup &contactGroup ) const
+void EditorContactGroup::saveContactGroup( KContacts::ContactGroup &contactGroup ) const
 {
   contactGroup.setName(  d->mUi.groupName->text() );
   contactGroup.setId( d->mContactGroup.id() );
@@ -299,13 +299,13 @@ void EditorContactGroup::saveContactGroup( KABC::ContactGroup &contactGroup ) co
     if ( !email.isEmpty() ) {
       QString namePart;
       QString emailPart;
-      KABC::Addressee::parseEmailAddress( email, namePart, emailPart );
+      KContacts::Addressee::parseEmailAddress( email, namePart, emailPart );
       if ( namePart.isEmpty() ) {
         namePart = emailPart;
       }
 
       if ( !emailPart.isEmpty() ) {
-        contactGroup.append( KABC::ContactGroup::Data( namePart, emailPart ) );
+        contactGroup.append( KContacts::ContactGroup::Data( namePart, emailPart ) );
       }
     }
   }

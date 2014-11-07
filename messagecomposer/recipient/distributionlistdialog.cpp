@@ -57,12 +57,12 @@ public:
         setFlags(flags() | Qt::ItemIsUserCheckable);
     }
 
-    void setAddressee(const KABC::Addressee &a, const QString &email)
+    void setAddressee(const KContacts::Addressee &a, const QString &email)
     {
         init(a, email);
     }
 
-    void init(const KABC::Addressee &a, const QString &email)
+    void init(const KContacts::Addressee &a, const QString &email)
     {
         mAddressee = a;
         mEmail = email;
@@ -71,7 +71,7 @@ public:
         setText(1, mEmail);
     }
 
-    KABC::Addressee addressee() const
+    KContacts::Addressee addressee() const
     {
         return mAddressee;
     }
@@ -97,7 +97,7 @@ public:
     }
 
 private:
-    KABC::Addressee mAddressee;
+    KContacts::Addressee mAddressee;
     QString mEmail;
     Akonadi::Entity::Id mId;
 };
@@ -168,7 +168,7 @@ void DistributionListDialog::setRecipients(const Recipient::List &recipients)
         for (QStringList::ConstIterator it2 = emails.constBegin(); it2 != end2; ++it2) {
             QString name;
             QString email;
-            KABC::Addressee::parseEmailAddress(*it2, name, email);
+            KContacts::Addressee::parseEmailAddress(*it2, name, email);
             if (!email.isEmpty()) {
                 Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob(this);
                 job->setQuery(Akonadi::ContactSearchJob::Email, email.toLower(), Akonadi::ContactSearchJob::ExactMatch);
@@ -200,7 +200,7 @@ void DistributionListDialog::slotDelayedSetRecipients(KJob *job)
     }
 
     if (akItems.isEmpty()) {
-        KABC::Addressee contact;
+        KContacts::Addressee contact;
         contact.setNameFromString(name);
         contact.insertEmail(email);
 
@@ -210,8 +210,8 @@ void DistributionListDialog::slotDelayedSetRecipients(KJob *job)
     } else {
         bool isFirst = true;
         foreach (const Akonadi::Item &akItem, akItems) {
-            if (akItem.hasPayload<KABC::Addressee>()) {
-                const KABC::Addressee contact = akItem.payload<KABC::Addressee>();
+            if (akItem.hasPayload<KContacts::Addressee>()) {
+                const KContacts::Addressee contact = akItem.payload<KContacts::Addressee>();
 
                 DistributionListItem *item = new DistributionListItem(mRecipientsList);
                 item->setAddressee(contact, email);
@@ -288,8 +288,8 @@ void DistributionListDialog::slotDelayedUser1(KJob *job)
 
     QPointer<Akonadi::CollectionDialog> dlg =
         new Akonadi::CollectionDialog(Akonadi::CollectionDialog::KeepTreeExpanded, 0, this);
-    dlg->setMimeTypeFilter(QStringList() << KABC::Addressee::mimeType()
-                           << KABC::ContactGroup::mimeType());
+    dlg->setMimeTypeFilter(QStringList() << KContacts::Addressee::mimeType()
+                           << KContacts::ContactGroup::mimeType());
     dlg->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
     dlg->setWindowTitle(i18nc("@title:window", "Select Address Book"));
     dlg->setDescription(i18n("Select the address book folder to store the contact group in:"));
@@ -297,16 +297,16 @@ void DistributionListDialog::slotDelayedUser1(KJob *job)
         const Akonadi::Collection targetCollection = dlg->selectedCollection();
         delete dlg;
 
-        KABC::ContactGroup group(name);
+        KContacts::ContactGroup group(name);
         const int numberOfTopLevel(mRecipientsList->topLevelItemCount());
         for (int i = 0; i < numberOfTopLevel; ++i) {
             DistributionListItem *item = static_cast<DistributionListItem *>(mRecipientsList->topLevelItem(i));
             if (item && item->checkState(0) == Qt::Checked) {
                 qDebug() << item->addressee().fullEmail() << item->addressee().uid();
                 if (item->isTransient()) {
-                    group.append(KABC::ContactGroup::Data(item->addressee().realName(), item->email()));
+                    group.append(KContacts::ContactGroup::Data(item->addressee().realName(), item->email()));
                 } else {
-                    KABC::ContactGroup::ContactReference reference(QString::number(item->id()));
+                    KContacts::ContactGroup::ContactReference reference(QString::number(item->id()));
                     if (item->email() != item->addressee().preferredEmail()) {
                         reference.setPreferredEmail(item->email());
                     }
@@ -315,8 +315,8 @@ void DistributionListDialog::slotDelayedUser1(KJob *job)
             }
         }
 
-        Akonadi::Item groupItem(KABC::ContactGroup::mimeType());
-        groupItem.setPayload<KABC::ContactGroup>(group);
+        Akonadi::Item groupItem(KContacts::ContactGroup::mimeType());
+        groupItem.setPayload<KContacts::ContactGroup>(group);
 
         Akonadi::Job *createJob = new Akonadi::ItemCreateJob(groupItem, targetCollection);
         connect(createJob, &Akonadi::ItemCreateJob::result, this, &DistributionListDialog::slotContactGroupCreateJobResult);

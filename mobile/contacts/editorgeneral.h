@@ -38,18 +38,18 @@ class EditorGeneral : public EditorBase
 
     void setDefaultCollection( const Akonadi::Collection &collection );
 
-    void loadContact( const KABC::Addressee &contact, const Akonadi::ContactMetaData &metaData );
+    void loadContact( const KContacts::Addressee &contact, const Akonadi::ContactMetaData &metaData );
 
-    void saveContact( KABC::Addressee &contact, Akonadi::ContactMetaData &metaData ) const;
+    void saveContact( KContacts::Addressee &contact, Akonadi::ContactMetaData &metaData ) const;
 
     Akonadi::Collection selectedCollection() const;
 
   public Q_SLOTS:
-    void updateName( const KABC::Addressee& );
+    void updateName( const KContacts::Addressee& );
 
   Q_SIGNALS:
     void collectionChanged( const Akonadi::Collection &collection );
-    void nameChanged( const KABC::Addressee& );
+    void nameChanged( const KContacts::Addressee& );
 
     void saveClicked();
     void cancelClicked();

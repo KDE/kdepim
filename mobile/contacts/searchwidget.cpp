@@ -21,8 +21,8 @@
 
 #include "stylesheetloader.h"
 
-#include <kabc/addressee.h>
-#include <kabc/contactgroup.h>
+#include <kcontacts/addressee.h>
+#include <kcontacts/contactgroup.h>
 
 SearchWidget::SearchWidget( QWidget *parent )
   : QWidget( parent )
@@ -33,8 +33,8 @@ SearchWidget::SearchWidget( QWidget *parent )
   mUi.inNames->setChecked( true );
   mUi.inEmailAddresses->setChecked( true );
   mUi.inCategories->setChecked( true );
-  mUi.collectionCombo->setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType()
-                                                        << KABC::ContactGroup::mimeType() );
+  mUi.collectionCombo->setMimeTypeFilter( QStringList() << KContacts::Addressee::mimeType()
+                                                        << KContacts::ContactGroup::mimeType() );
 }
 
 QString SearchWidget::query() const

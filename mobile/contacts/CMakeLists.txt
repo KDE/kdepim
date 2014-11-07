@@ -69,7 +69,7 @@ add_executable(kaddressbook-mobile ${kab_mobile_srcs} )
 
 target_link_libraries(kaddressbook-mobile
     Qt5::Declarative
-    KF5::Abc
+    KF5::Contacts
     KF5::AkonadiCore
     KF5::KCMUtils
     kdepim

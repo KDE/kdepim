@@ -29,11 +29,11 @@ class CsvXXPort : public XXPort
 public:
     explicit CsvXXPort(QWidget *parent = 0);
 
-    bool exportContacts(const KABC::Addressee::List &contacts) const;
-    KABC::Addressee::List importContacts() const;
+    bool exportContacts(const KContacts::Addressee::List &contacts) const;
+    KContacts::Addressee::List importContacts() const;
 
 private:
-    void exportToFile(QFile *, const KABC::Addressee::List &) const;
+    void exportToFile(QFile *, const KContacts::Addressee::List &) const;
 };
 
 #endif

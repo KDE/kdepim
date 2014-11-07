@@ -22,8 +22,8 @@
 #include "interfaces/bodypart.h"
 #include "viewer/viewer.h"
 
-#include <KABC/Picture>
-#include <KABC/Addressee>
+#include <KContacts/Picture>
+#include <KContacts/Addressee>
 
 #include <QObject>
 
@@ -38,9 +38,9 @@ class ContactDisplayMessageMemento : public QObject, public Interface::BodyPartM
 public:
     explicit ContactDisplayMessageMemento(const QString &emailAddress);
     ~ContactDisplayMessageMemento();
-    void processAddress(const KABC::Addressee &addressee);
+    void processAddress(const KContacts::Addressee &addressee);
     bool allowToRemoteContent() const;
-    KABC::Picture photo() const;
+    KContacts::Picture photo() const;
 
     bool finished() const;
 
@@ -55,11 +55,11 @@ private Q_SLOTS:
     void slotSearchJobFinished(KJob *job);
 
 private:
-    void searchPhoto(const KABC::AddresseeList &list);
+    void searchPhoto(const KContacts::AddresseeList &list);
     bool mFinished;
     bool mMailAllowToRemoteContent;
     Viewer::DisplayFormatMessage mForceDisplayTo;
-    KABC::Picture mPhoto;
+    KContacts::Picture mPhoto;
 };
 
 }

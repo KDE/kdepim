@@ -21,7 +21,7 @@
 
 #include "ui_editorbusiness.h"
 
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 
 #include <QAbstractTextDocumentLayout>
 
@@ -42,15 +42,15 @@ class EditorBusiness::Private
   public:
     Ui::EditorBusiness mUi;
 
-    KABC::Addressee mContact;
+    KContacts::Addressee mContact;
 };
 
-static QString loadCustom( const KABC::Addressee &contact, const QString &key )
+static QString loadCustom( const KContacts::Addressee &contact, const QString &key )
 {
   return contact.custom( QLatin1String( "KADDRESSBOOK" ), key );
 }
 
-static void storeCustom( KABC::Addressee &contact, const QString &key, const QString &value )
+static void storeCustom( KContacts::Addressee &contact, const QString &key, const QString &value )
 {
   if ( value.isEmpty() )
     contact.removeCustom( QLatin1String( "KADDRESSBOOK" ), key );
@@ -69,7 +69,7 @@ EditorBusiness::~EditorBusiness()
   delete d;
 }
 
-void EditorBusiness::loadContact( const KABC::Addressee &contact, const Akonadi::ContactMetaData& )
+void EditorBusiness::loadContact( const KContacts::Addressee &contact, const Akonadi::ContactMetaData& )
 {
   d->mUi.logoButton->loadContact( contact );
   d->mUi.organizationLineEdit->setText( contact.organization() );
@@ -84,7 +84,7 @@ void EditorBusiness::loadContact( const KABC::Addressee &contact, const Akonadi:
   d->mUi.noteTextEdit->setMinimumHeight( qMax( 200, (int)d->mUi.noteTextEdit->document()->documentLayout()->documentSize().height() + 50 ) );
 }
 
-void EditorBusiness::saveContact( KABC::Addressee &contact, Akonadi::ContactMetaData& ) const
+void EditorBusiness::saveContact( KContacts::Addressee &contact, Akonadi::ContactMetaData& ) const
 {
   d->mUi.logoButton->storeContact( contact );
   contact.setOrganization( d->mUi.organizationLineEdit->text().trimmed() );

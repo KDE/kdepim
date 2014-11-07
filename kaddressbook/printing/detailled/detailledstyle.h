@@ -26,7 +26,7 @@
 
 #include "printing/printstyle.h"
 
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 
 namespace KABPrinting
 {
@@ -41,7 +41,7 @@ public:
     explicit DetailledPrintStyle(PrintingWizard *parent);
     ~DetailledPrintStyle();
 
-    void print(const KABC::Addressee::List &contacts, PrintProgress *);
+    void print(const KContacts::Addressee::List &contacts, PrintProgress *);
 
 private:
     AppearancePage *mPageAppearance;

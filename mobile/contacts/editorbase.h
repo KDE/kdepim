@@ -22,7 +22,7 @@
 
 #include <QWidget>
 
-namespace KABC
+namespace KContacts
 {
   class Addressee;
 }
@@ -41,9 +41,9 @@ class EditorBase : public QWidget
 
     ~EditorBase();
 
-    virtual void loadContact( const KABC::Addressee &contact, const Akonadi::ContactMetaData &metaData ) = 0;
+    virtual void loadContact( const KContacts::Addressee &contact, const Akonadi::ContactMetaData &metaData ) = 0;
 
-    virtual void saveContact( KABC::Addressee &contact, Akonadi::ContactMetaData &metaData ) const = 0;
+    virtual void saveContact( KContacts::Addressee &contact, Akonadi::ContactMetaData &metaData ) const = 0;
 };
 
 #endif

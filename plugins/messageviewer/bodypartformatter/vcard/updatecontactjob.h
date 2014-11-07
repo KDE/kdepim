@@ -20,7 +20,7 @@
 
 #include <kjob.h>
 
-namespace KABC
+namespace KContacts
 {
 class Addressee;
 }
@@ -29,7 +29,7 @@ class UpdateContactJob : public KJob
 {
     Q_OBJECT
 public:
-    explicit UpdateContactJob(const QString &email, const KABC::Addressee &contact, QWidget *parentWidget, QObject *parent = 0);
+    explicit UpdateContactJob(const QString &email, const KContacts::Addressee &contact, QWidget *parentWidget, QObject *parent = 0);
     ~UpdateContactJob();
 
     void start();

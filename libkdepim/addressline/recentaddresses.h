@@ -31,7 +31,7 @@
 #define KDEPIM_RECENTADDRESSES_H
 
 #include "kdepim_export.h"
-#include <kabc/addressee.h>
+#include <kcontacts/addressee.h>
 #include <QDialog>
 #include <QStringList>
 class KConfig;
@@ -98,7 +98,7 @@ public:
      * like "Foo <foo@bar.org>, Bar Baz <bar@baz.org>".
      */
     QStringList     addresses() const;
-    const KABC::Addressee::List &kabcAddresses() const
+    const KContacts::Addressee::List &kabcAddresses() const
     {
         return m_addresseeList;
     }
@@ -144,7 +144,7 @@ public:
 private:
     explicit RecentAddresses(KConfig *config = 0);
 
-    KABC::Addressee::List m_addresseeList;
+    KContacts::Addressee::List m_addresseeList;
 
     void adjustSize();
 

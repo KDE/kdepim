@@ -23,7 +23,7 @@
 
 #include <QComboBox>
 
-#include <KABC/PhoneNumber>
+#include <KContacts/PhoneNumber>
 
 /**
  * @short A combobox to select a phone number type.
@@ -48,12 +48,12 @@ class PhoneTypeCombo : public QComboBox
     /**
      * Sets the phone number @p type that shall be selected.
      */
-    void setType( KABC::PhoneNumber::Type type );
+    void setType( KContacts::PhoneNumber::Type type );
 
     /**
      * Returns the selected phone number type.
      */
-    KABC::PhoneNumber::Type type() const;
+    KContacts::PhoneNumber::Type type() const;
 
   private:
     class Private;

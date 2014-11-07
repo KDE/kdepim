@@ -29,7 +29,7 @@ namespace Akonadi
 class Collection;
 }
 
-namespace KABC
+namespace KContacts
 {
 class Addressee;
 }
@@ -58,7 +58,7 @@ public:
      * @param parentWidget The widget that will be used as parent for dialog.
      * @param parent The parent object.
      */
-    AddContactJob(const KABC::Addressee &contact, QWidget *parentWidget, QObject *parent = 0);
+    AddContactJob(const KContacts::Addressee &contact, QWidget *parentWidget, QObject *parent = 0);
 
     /**
      * Creates a new add contact job.
@@ -67,7 +67,7 @@ public:
      * @param collection The address book collection where the contact shall be stored in.
      * @param parent The parent object.
      */
-    AddContactJob(const KABC::Addressee &contact, const Akonadi::Collection &collection, QObject *parent = 0);
+    AddContactJob(const KContacts::Addressee &contact, const Akonadi::Collection &collection, QObject *parent = 0);
 
     /**
      * Destroys the add email address job.

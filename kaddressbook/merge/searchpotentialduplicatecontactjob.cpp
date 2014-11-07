@@ -17,7 +17,7 @@
 
 #include "searchpotentialduplicatecontactjob.h"
 
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 
 using namespace KABMergeContacts;
 
@@ -73,12 +73,12 @@ Akonadi::Item::List SearchPotentialDuplicateContactJob::checkList(const Akonadi:
 
 bool SearchPotentialDuplicateContactJob::isDuplicate(const Akonadi::Item &itemA, const Akonadi::Item &itemB)
 {
-    if (!itemA.hasPayload<KABC::Addressee>() || !itemB.hasPayload<KABC::Addressee>()) {
+    if (!itemA.hasPayload<KContacts::Addressee>() || !itemB.hasPayload<KContacts::Addressee>()) {
         return false;
     }
 
-    KABC::Addressee addressA = itemA.payload<KABC::Addressee>();
-    KABC::Addressee addressB = itemB.payload<KABC::Addressee>();
+    KContacts::Addressee addressA = itemA.payload<KContacts::Addressee>();
+    KContacts::Addressee addressB = itemB.payload<KContacts::Addressee>();
     //
     if (!addressA.name().isEmpty() && !addressB.name().isEmpty()) {
         //qDebug()<<" addressB"<<addressB.name()<<" addressA.name()"<<addressA.name();

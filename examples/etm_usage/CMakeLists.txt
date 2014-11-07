@@ -42,7 +42,7 @@ target_link_libraries(etm_usage
   KF5::AkonadiMime
   KF5::AkonadiCore
   KF5::AkonadiCore
-  KF5::Abc
+  KF5::Contacts
   KF5::Mime
   akonadi_next
   kdepim

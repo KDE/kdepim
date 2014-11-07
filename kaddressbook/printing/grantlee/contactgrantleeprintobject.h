@@ -18,7 +18,7 @@
 #ifndef CONTACTGRANTLEEPRINTOBJECT_H
 #define CONTACTGRANTLEEPRINTOBJECT_H
 #include <QObject>
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 
 namespace KABPrinting
 {
@@ -64,7 +64,7 @@ class ContactGrantleePrintObject : public QObject
 
     //Add more functions
 public:
-    explicit ContactGrantleePrintObject(const KABC::Addressee &address, QObject *parent = 0);
+    explicit ContactGrantleePrintObject(const KContacts::Addressee &address, QObject *parent = 0);
     ~ContactGrantleePrintObject();
 
     QString name() const;
@@ -106,7 +106,7 @@ private:
     QList<QObject *> mListIm;
     ContactGrantleePrintGeoObject *mGeoObject;
     ContactGrantleePrintCryptoObject *mCryptoObject;
-    KABC::Addressee mAddress;
+    KContacts::Addressee mAddress;
 };
 }
 //Q_DECLARE_METATYPE(KABPrinting::ContactGrantleePrintObject*)

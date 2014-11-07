@@ -24,7 +24,7 @@
 
 #include <QObject>
 #include <QMap>
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 
 class KJob;
 
@@ -36,7 +36,7 @@ struct VCard {
         : email(str), found(b)
     {
     }
-    KABC::Addressee address;
+    KContacts::Addressee address;
     QString email;
     bool found;
 };
@@ -54,7 +54,7 @@ public:
 
     bool vcardExist(int index) const;
 
-    KABC::Addressee address(int index) const;
+    KContacts::Addressee address(int index) const;
 
 private Q_SLOTS:
     void slotSearchJobFinished(KJob *job);

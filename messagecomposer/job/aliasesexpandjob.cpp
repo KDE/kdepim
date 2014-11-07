@@ -70,7 +70,7 @@ void DistributionListExpandJob::slotSearchDone(KJob *job)
 
     const Akonadi::ContactGroupSearchJob *searchJob = qobject_cast<Akonadi::ContactGroupSearchJob *>(job);
 
-    const KABC::ContactGroup::List groups = searchJob->contactGroups();
+    const KContacts::ContactGroup::List groups = searchJob->contactGroups();
     if (groups.isEmpty()) {
         emitResult();
         return;
@@ -92,9 +92,9 @@ void DistributionListExpandJob::slotExpansionDone(KJob *job)
 
     const Akonadi::ContactGroupExpandJob *expandJob = qobject_cast<Akonadi::ContactGroupExpandJob *>(job);
 
-    const KABC::Addressee::List contacts = expandJob->contacts();
+    const KContacts::Addressee::List contacts = expandJob->contacts();
 
-    foreach (const KABC::Addressee &contact, contacts) {
+    foreach (const KContacts::Addressee &contact, contacts) {
         mEmailAddresses << contact.fullEmail();
     }
 
@@ -192,10 +192,10 @@ void AliasesExpandJob::slotNicknameExpansionDone(KJob *job)
     }
 
     const Akonadi::ContactSearchJob *searchJob = qobject_cast<Akonadi::ContactSearchJob *>(job);
-    const KABC::Addressee::List contacts = searchJob->contacts();
+    const KContacts::Addressee::List contacts = searchJob->contacts();
     const QString recipient = searchJob->property("recipient").toString();
 
-    foreach (const KABC::Addressee &contact, contacts) {
+    foreach (const KContacts::Addressee &contact, contacts) {
         if (contact.nickName().toLower() == recipient.toLower()) {
             mNicknameExpansionResults.insert(recipient, contact.fullEmail());
             break;

@@ -31,8 +31,8 @@ class EditorLocation : public EditorBase
 
     ~EditorLocation();
 
-    void loadContact( const KABC::Addressee &contact, const Akonadi::ContactMetaData &metaData );
-    void saveContact( KABC::Addressee &contact, Akonadi::ContactMetaData &metaData ) const;
+    void loadContact( const KContacts::Addressee &contact, const Akonadi::ContactMetaData &metaData );
+    void saveContact( KContacts::Addressee &contact, Akonadi::ContactMetaData &metaData ) const;
 
   private:
     class Private;

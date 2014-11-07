@@ -18,7 +18,7 @@
 #include "mergecontactwidgettest.h"
 #include <AkonadiCore/Item>
 #include "../mergecontactwidget.h"
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 #include <AkonadiCore/EntityTreeModel>
 
 #include <qtest.h>
@@ -45,7 +45,7 @@ MergeContactWidgetTest::MergeContactWidgetTest()
         Akonadi::Collection collection(id);
         collection.setRights(Akonadi::Collection::AllRights);
         collection.setName(QString::number(id));
-        collection.setContentMimeTypes(QStringList() << KABC::Addressee::mimeType());
+        collection.setContentMimeTypes(QStringList() << KContacts::Addressee::mimeType());
 
         QStandardItem *item = new QStandardItem(collection.name());
         item->setData(QVariant::fromValue(collection),
@@ -63,7 +63,7 @@ Akonadi::Item::List MergeContactWidgetTest::createItems()
     Akonadi::Item::List lst;
     for (int i = 0; i < 10; ++i) {
         Akonadi::Item item(i);
-        KABC::Addressee address;
+        KContacts::Addressee address;
         item.setPayload(address);
         lst.append(item);
     }

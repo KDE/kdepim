@@ -222,7 +222,7 @@ void PrintingWizard::print()
     setCurrentPage(progressItem);
     qApp->processEvents();
 
-    KABC::Addressee::List contacts = mSelectionPage->selectedContacts();
+    KContacts::Addressee::List contacts = mSelectionPage->selectedContacts();
 
     const ContactSorter sorter(mStylePage->sortField(), mStylePage->sortOrder());
     sorter.sort(contacts);

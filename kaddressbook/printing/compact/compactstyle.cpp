@@ -28,7 +28,7 @@
 #include "printingwizard.h"
 #include "ui_compactstyle.h"
 
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 
 #include <KLocalizedString>
 #include <KConfigGroup>
@@ -64,7 +64,7 @@ public:
 
 }
 
-QString CompactStyle::contactsToHtml(const KABC::Addressee::List &contacts) const
+QString CompactStyle::contactsToHtml(const KContacts::Addressee::List &contacts) const
 {
     // collect the fields are need to print
     ContactFields::Fields fields;
@@ -97,7 +97,7 @@ QString CompactStyle::contactsToHtml(const KABC::Addressee::List &contacts) cons
     content += QLatin1String("  <table style=\"font-size:50%; border-width: 0px; \"width=\"100%\">\n");
 
     bool odd = false;
-    foreach (const KABC::Addressee &contact, contacts) {
+    foreach (const KContacts::Addressee &contact, contacts) {
         // get the values
         QStringList values;
         foreach (const ContactFields::Field &field, fields) {
@@ -163,7 +163,7 @@ CompactStyle::~CompactStyle()
 {
 }
 
-void CompactStyle::print(const KABC::Addressee::List &contacts, PrintProgress *progress)
+void CompactStyle::print(const KContacts::Addressee::List &contacts, PrintProgress *progress)
 {
     // from UI to members
     withAlternating = mPageSettings->cbAlternating->isChecked();

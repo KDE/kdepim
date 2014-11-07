@@ -27,7 +27,7 @@
 #include <AkonadiCore/Collection>
 #include <AkonadiCore/Item>
 
-#include <KABC/ContactGroup>
+#include <KContacts/ContactGroup>
 #include <KLocalizedString>
 #include <QDebug>
 
@@ -65,7 +65,7 @@ class ContactGroupEditorView::Private : public IncidenceEditorNG::ItemEditorUi
 
     bool hasSupportedPayload( const Item &item ) const
     {
-      return item.hasPayload<KABC::ContactGroup>();
+      return item.hasPayload<KContacts::ContactGroup>();
     }
 
     bool isDirty() const
@@ -106,12 +106,12 @@ void ContactGroupEditorView::Private::saveFailed( IncidenceEditorNG::EditorItemM
 
 void ContactGroupEditorView::Private::load( const Item &item )
 {
-  Q_ASSERT( item.hasPayload<KABC::ContactGroup>() );
+  Q_ASSERT( item.hasPayload<KContacts::ContactGroup>() );
 
   mItem = item;
   mCollection = item.parentCollection();
 
-  const KABC::ContactGroup contactGroup = mItem.payload<KABC::ContactGroup>();
+  const KContacts::ContactGroup contactGroup = mItem.payload<KContacts::ContactGroup>();
 
   if ( mEditor != 0 ) {
     mEditor->setDefaultCollection( mCollection );
@@ -123,14 +123,14 @@ Item ContactGroupEditorView::Private::save( const Item &item )
 {
   Item result = item;
 
-  result.setMimeType( KABC::ContactGroup::mimeType() );
+  result.setMimeType( KContacts::ContactGroup::mimeType() );
 
-  KABC::ContactGroup contactGroup;
+  KContacts::ContactGroup contactGroup;
   if ( mEditor != 0 ) {
     mEditor->saveContactGroup( contactGroup );
   }
 
-  result.setPayload<KABC::ContactGroup>( contactGroup );
+  result.setPayload<KContacts::ContactGroup>( contactGroup );
 
   return result;
 }

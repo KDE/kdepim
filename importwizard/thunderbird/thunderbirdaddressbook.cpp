@@ -18,7 +18,7 @@
 #include "thunderbirdaddressbook.h"
 #include "addressbook/MorkParser.h"
 
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 #include <QUrl>
 #include <QDebug>
 
@@ -65,11 +65,11 @@ void ThunderBirdAddressBook::readAddressBook(const QString &filename)
                     MorkRowMap::iterator endRow(rows->end());
                     for (MorkRowMap::iterator rowIter = rows->begin(); rowIter != endRow; ++rowIter) {
                         if (rowIter.key() != 0) {
-                            KABC::Addressee contact;
+                            KContacts::Addressee contact;
                             MorkCells cells = rowIter.value();
                             MorkCells::iterator endCellIter = cells.end();
-                            KABC::Address homeAddr = KABC::Address(KABC::Address::Home);
-                            KABC::Address workAddr = KABC::Address(KABC::Address::Work);
+                            KContacts::Address homeAddr = KContacts::Address(KContacts::Address::Home);
+                            KContacts::Address workAddr = KContacts::Address(KContacts::Address::Work);
                             int birthday = -1;
                             int birthmonth = -1;
                             int birthyear = -1;
@@ -105,7 +105,7 @@ void ThunderBirdAddressBook::readAddressBook(const QString &filename)
                                 } else if (column == QLatin1String("PreferDisplayName")) {
                                     qDebug() << " column " << column << " found but not imported. Need to look at how to import it";
                                 } else if (column == QLatin1String("PhotoURI")) {
-                                    KABC::Picture photo;
+                                    KContacts::Picture photo;
                                     photo.setUrl(value);
                                     contact.setLogo(photo);
                                 } else if (column == QLatin1String("PhotoName")) {
@@ -144,15 +144,15 @@ void ThunderBirdAddressBook::readAddressBook(const QString &filename)
                                 } else if (column == QLatin1String("AllowRemoteContent")) {
                                     contact.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("MailAllowToRemoteContent"), value);
                                 } else if (column == QLatin1String("WorkPhone")) {
-                                    contact.insertPhoneNumber(KABC::PhoneNumber(value, KABC::PhoneNumber::Work));
+                                    contact.insertPhoneNumber(KContacts::PhoneNumber(value, KContacts::PhoneNumber::Work));
                                 } else if (column == QLatin1String("HomePhone")) {
-                                    contact.insertPhoneNumber(KABC::PhoneNumber(value, KABC::PhoneNumber::Home));
+                                    contact.insertPhoneNumber(KContacts::PhoneNumber(value, KContacts::PhoneNumber::Home));
                                 } else if (column == QLatin1String("FaxNumber")) {
-                                    contact.insertPhoneNumber(KABC::PhoneNumber(value, KABC::PhoneNumber::Fax));
+                                    contact.insertPhoneNumber(KContacts::PhoneNumber(value, KContacts::PhoneNumber::Fax));
                                 } else if (column == QLatin1String("PagerNumber")) {
-                                    contact.insertPhoneNumber(KABC::PhoneNumber(value, KABC::PhoneNumber::Pager));
+                                    contact.insertPhoneNumber(KContacts::PhoneNumber(value, KContacts::PhoneNumber::Pager));
                                 } else if (column == QLatin1String("CellularNumber")) {
-                                    contact.insertPhoneNumber(KABC::PhoneNumber(value, KABC::PhoneNumber::Cell));
+                                    contact.insertPhoneNumber(KContacts::PhoneNumber(value, KContacts::PhoneNumber::Cell));
                                 } else if (column == QLatin1String("WorkPhoneType")) {
                                     qDebug() << " column " << column << " found but not imported. Need to look at how to import it";
                                 } else if (column == QLatin1String("HomePhoneType")) {

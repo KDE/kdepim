@@ -67,8 +67,8 @@
 #include <Akonadi/Contact/ContactViewer>
 #include <Akonadi/Contact/StandardContactActionManager>
 
-#include <KABC/Addressee>
-#include <KABC/ContactGroup>
+#include <KContacts/Addressee>
+#include <KContacts/ContactGroup>
 #include <QDebug>
 #include <KCmdLineArgs>
 #include <QAction>
@@ -104,7 +104,7 @@ namespace
 static bool isStructuralCollection(const Akonadi::Collection &collection)
 {
     QStringList mimeTypes;
-    mimeTypes << KABC::Addressee::mimeType() << KABC::ContactGroup::mimeType();
+    mimeTypes << KContacts::Addressee::mimeType() << KContacts::ContactGroup::mimeType();
     const QStringList collectionMimeTypes = collection.contentMimeTypes();
     foreach (const QString &mimeType, mimeTypes) {
         if (collectionMimeTypes.contains(mimeType)) {
@@ -780,10 +780,10 @@ void MainWidget::newGroup()
  */
 void MainWidget::itemSelected(const Akonadi::Item &item)
 {
-    if (Akonadi::MimeTypeChecker::isWantedItem(item, KABC::Addressee::mimeType())) {
+    if (Akonadi::MimeTypeChecker::isWantedItem(item, KContacts::Addressee::mimeType())) {
         mDetailsViewStack->setCurrentWidget(mContactDetails);
         mContactDetails->setContact(item);
-    } else if (Akonadi::MimeTypeChecker::isWantedItem(item, KABC::ContactGroup::mimeType())) {
+    } else if (Akonadi::MimeTypeChecker::isWantedItem(item, KContacts::ContactGroup::mimeType())) {
         mDetailsViewStack->setCurrentWidget(mContactGroupDetails);
         mContactGroupDetails->setContactGroup(item);
     }

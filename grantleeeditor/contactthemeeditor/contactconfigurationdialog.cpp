@@ -23,7 +23,7 @@
 
 #include <Akonadi/Contact/ContactEditor>
 
-#include <KABC/VCardConverter>
+#include <KContacts/VCardConverter>
 
 #include <KLocalizedString>
 #include <KConfig>
@@ -93,11 +93,11 @@ void ContactConfigureDialog::slotDefaultClicked()
     mConfigureWidget->setDefault();
 
     if (!contacteditorutil::defaultContact().isEmpty()) {
-        KABC::VCardConverter converter;
-        KABC::Addressee addr = converter.parseVCard(contacteditorutil::defaultContact().toUtf8());
+        KContacts::VCardConverter converter;
+        KContacts::Addressee addr = converter.parseVCard(contacteditorutil::defaultContact().toUtf8());
         mDefaultContact->setContactTemplate(addr);
     } else {
-        mDefaultContact->setContactTemplate(KABC::Addressee());
+        mDefaultContact->setContactTemplate(KContacts::Addressee());
     }
     mDefaultTemplate->clear();
 }
@@ -115,20 +115,20 @@ void ContactConfigureDialog::readConfig()
         KConfigGroup group = config->group(QLatin1String("Global"));
         const QString defaultContact = group.readEntry("defaultContact", contacteditorutil::defaultContact());
         if (!defaultContact.isEmpty()) {
-            KABC::VCardConverter converter;
-            KABC::Addressee addr = converter.parseVCard(defaultContact.toUtf8());
+            KContacts::VCardConverter converter;
+            KContacts::Addressee addr = converter.parseVCard(defaultContact.toUtf8());
             mDefaultContact->setContactTemplate(addr);
         } else {
-            mDefaultContact->setContactTemplate(KABC::Addressee());
+            mDefaultContact->setContactTemplate(KContacts::Addressee());
         }
         mDefaultTemplate->setPlainText(group.readEntry("defaultTemplate", QString()));
     } else {
         if (!contacteditorutil::defaultContact().isEmpty()) {
-            KABC::VCardConverter converter;
-            KABC::Addressee addr = converter.parseVCard(contacteditorutil::defaultContact().toUtf8());
+            KContacts::VCardConverter converter;
+            KContacts::Addressee addr = converter.parseVCard(contacteditorutil::defaultContact().toUtf8());
             mDefaultContact->setContactTemplate(addr);
         } else {
-            mDefaultContact->setContactTemplate(KABC::Addressee());
+            mDefaultContact->setContactTemplate(KContacts::Addressee());
         }
         mDefaultTemplate->setPlainText(QString());
     }
@@ -146,9 +146,9 @@ void ContactConfigureDialog::writeConfig()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
     KConfigGroup group = config->group(QLatin1String("Global"));
-    const KABC::Addressee addr = mDefaultContact->contact();
-    KABC::VCardConverter converter;
-    const QByteArray data = converter.exportVCard(addr, KABC::VCardConverter::v3_0);
+    const KContacts::Addressee addr = mDefaultContact->contact();
+    KContacts::VCardConverter converter;
+    const QByteArray data = converter.exportVCard(addr, KContacts::VCardConverter::v3_0);
     group.writeEntry("defaultContact", data);
 
     group.writeEntry("defaultTemplate", mDefaultTemplate->toPlainText());

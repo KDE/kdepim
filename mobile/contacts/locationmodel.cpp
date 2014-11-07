@@ -28,13 +28,13 @@ LocationModel::~LocationModel()
 {
 }
 
-void LocationModel::setLocations( const KABC::Address::List &locations )
+void LocationModel::setLocations( const KContacts::Address::List &locations )
 {
   mLocations = locations;
   reset();
 }
 
-KABC::Address::List LocationModel::locations() const
+KContacts::Address::List LocationModel::locations() const
 {
   return mLocations;
 }
@@ -60,7 +60,7 @@ QVariant LocationModel::data( const QModelIndex &index, int role ) const
   if ( !index.isValid() || index.row() >= mLocations.count() || index.column() >= 8 )
     return QVariant();
 
-  const KABC::Address address = mLocations.at( index.row() );
+  const KContacts::Address address = mLocations.at( index.row() );
   if ( role == Qt::DisplayRole ) {
     switch ( index.column() ) {
       case 0:
@@ -126,11 +126,11 @@ bool LocationModel::setData( const QModelIndex &index, const QVariant &value, in
   if ( !index.isValid() || index.row() >= mLocations.count() || index.column() >= 8 )
     return false;
 
-  KABC::Address &address = mLocations[ index.row() ];
+  KContacts::Address &address = mLocations[ index.row() ];
   if ( role == Qt::EditRole ) {
     switch ( index.column() ) {
       case 0:
-        address.setType( KABC::Address::Type( value.toInt() ) );
+        address.setType( KContacts::Address::Type( value.toInt() ) );
         emit dataChanged( index, index );
         return true;
         break;
@@ -188,7 +188,7 @@ bool LocationModel::insertRows( int row, int count, const QModelIndex &parent )
   beginInsertRows( parent, row, row + count - 1 );
 
   for ( int pos = row; pos < row + count; ++pos )
-    mLocations.insert( row, KABC::Address() );
+    mLocations.insert( row, KContacts::Address() );
 
   endInsertRows();
 

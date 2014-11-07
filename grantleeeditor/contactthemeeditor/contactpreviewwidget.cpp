@@ -18,7 +18,7 @@
 #include "contactpreviewwidget.h"
 #include "contacteditorutil.h"
 
-#include <KABC/VCardConverter>
+#include <KContacts/VCardConverter>
 
 #include "kaddressbookgrantlee/formatter/grantleecontactformatter.h"
 #include "kaddressbookgrantlee/formatter/grantleecontactgroupformatter.h"
@@ -114,17 +114,17 @@ void ContactPreviewWidget::loadConfig()
         KConfigGroup group = config->group(QLatin1String("Global"));
         const QString defaultContact = group.readEntry("defaultContact", contacteditorutil::defaultContact());
         if (!defaultContact.isEmpty()) {
-            KABC::VCardConverter converter;
+            KContacts::VCardConverter converter;
             mContact = converter.parseVCard(defaultContact.toUtf8());
         } else {
-            mContact = KABC::Addressee();
+            mContact = KContacts::Addressee();
         }
     } else {
         if (!contacteditorutil::defaultContact().isEmpty()) {
-            KABC::VCardConverter converter;
+            KContacts::VCardConverter converter;
             mContact = converter.parseVCard(contacteditorutil::defaultContact().toUtf8());
         } else {
-            mContact = KABC::Addressee();
+            mContact = KContacts::Addressee();
         }
     }
 }

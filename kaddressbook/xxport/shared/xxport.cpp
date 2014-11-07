@@ -28,12 +28,12 @@ XXPort::~XXPort()
 {
 }
 
-KABC::Addressee::List XXPort::importContacts() const
+KContacts::Addressee::List XXPort::importContacts() const
 {
-    return KABC::Addressee::List();
+    return KContacts::Addressee::List();
 }
 
-bool XXPort::exportContacts(const KABC::Addressee::List &) const
+bool XXPort::exportContacts(const KContacts::Addressee::List &) const
 {
     return false;
 }
@@ -53,7 +53,7 @@ QWidget *XXPort::parentWidget() const
     return mParentWidget;
 }
 
-QString XXPort::contactFileName(const KABC::Addressee &contact) const
+QString XXPort::contactFileName(const KContacts::Addressee &contact) const
 {
     if (!contact.givenName().isEmpty() && !contact.familyName().isEmpty()) {
         return QString::fromLatin1("%1_%2").arg(contact.givenName()).arg(contact.familyName());

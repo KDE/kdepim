@@ -29,7 +29,7 @@ public:
     ~OperaAddressBook();
 
 private:
-    void appendContact(KABC::Addressee *contact);
+    void appendContact(KContacts::Addressee *contact);
 };
 
 #endif // OPERAADDRESSBOOK_H

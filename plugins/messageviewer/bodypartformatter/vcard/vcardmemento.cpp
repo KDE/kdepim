@@ -94,7 +94,7 @@ bool VcardMemento::vcardExist(int index) const
     return mVCardList.at(index).found;
 }
 
-KABC::Addressee VcardMemento::address(int index) const
+KContacts::Addressee VcardMemento::address(int index) const
 {
     return mVCardList.at(index).address;
 }

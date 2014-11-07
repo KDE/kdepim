@@ -30,97 +30,97 @@ QString ContactFields::label(Field field)
         return i18nc("@item Undefined import field type", "Undefined");
         break;
     case FormattedName:
-        return KABC::Addressee::formattedNameLabel();
+        return KContacts::Addressee::formattedNameLabel();
         break;
     case Prefix:
-        return KABC::Addressee::prefixLabel();
+        return KContacts::Addressee::prefixLabel();
         break;
     case GivenName:
-        return KABC::Addressee::givenNameLabel();
+        return KContacts::Addressee::givenNameLabel();
         break;
     case AdditionalName:
-        return KABC::Addressee::additionalNameLabel();
+        return KContacts::Addressee::additionalNameLabel();
         break;
     case FamilyName:
-        return KABC::Addressee::familyNameLabel();
+        return KContacts::Addressee::familyNameLabel();
         break;
     case Suffix:
-        return KABC::Addressee::suffixLabel();
+        return KContacts::Addressee::suffixLabel();
         break;
     case NickName:
-        return KABC::Addressee::nickNameLabel();
+        return KContacts::Addressee::nickNameLabel();
         break;
     case Birthday:
-        return KABC::Addressee::birthdayLabel();
+        return KContacts::Addressee::birthdayLabel();
         break;
     case Anniversary:
         return i18nc("The wedding anniversary of a contact", "Anniversary");
         break;
     case HomeAddressStreet:
-        return KABC::Addressee::homeAddressStreetLabel();
+        return KContacts::Addressee::homeAddressStreetLabel();
         break;
     case HomeAddressPostOfficeBox:
-        return KABC::Addressee::homeAddressPostOfficeBoxLabel();
+        return KContacts::Addressee::homeAddressPostOfficeBoxLabel();
         break;
     case HomeAddressLocality:
-        return KABC::Addressee::homeAddressLocalityLabel();
+        return KContacts::Addressee::homeAddressLocalityLabel();
         break;
     case HomeAddressRegion:
-        return KABC::Addressee::homeAddressRegionLabel();
+        return KContacts::Addressee::homeAddressRegionLabel();
         break;
     case HomeAddressPostalCode:
-        return KABC::Addressee::homeAddressPostalCodeLabel();
+        return KContacts::Addressee::homeAddressPostalCodeLabel();
         break;
     case HomeAddressCountry:
-        return KABC::Addressee::homeAddressCountryLabel();
+        return KContacts::Addressee::homeAddressCountryLabel();
         break;
     case HomeAddressLabel:
-        return KABC::Addressee::homeAddressLabelLabel();
+        return KContacts::Addressee::homeAddressLabelLabel();
         break;
     case BusinessAddressStreet:
-        return KABC::Addressee::businessAddressStreetLabel();
+        return KContacts::Addressee::businessAddressStreetLabel();
         break;
     case BusinessAddressPostOfficeBox:
-        return KABC::Addressee::businessAddressPostOfficeBoxLabel();
+        return KContacts::Addressee::businessAddressPostOfficeBoxLabel();
         break;
     case BusinessAddressLocality:
-        return KABC::Addressee::businessAddressLocalityLabel();
+        return KContacts::Addressee::businessAddressLocalityLabel();
         break;
     case BusinessAddressRegion:
-        return KABC::Addressee::businessAddressRegionLabel();
+        return KContacts::Addressee::businessAddressRegionLabel();
         break;
     case BusinessAddressPostalCode:
-        return KABC::Addressee::businessAddressPostalCodeLabel();
+        return KContacts::Addressee::businessAddressPostalCodeLabel();
         break;
     case BusinessAddressCountry:
-        return KABC::Addressee::businessAddressCountryLabel();
+        return KContacts::Addressee::businessAddressCountryLabel();
         break;
     case BusinessAddressLabel:
-        return KABC::Addressee::businessAddressLabelLabel();
+        return KContacts::Addressee::businessAddressLabelLabel();
         break;
     case HomePhone:
-        return KABC::Addressee::homePhoneLabel();
+        return KContacts::Addressee::homePhoneLabel();
         break;
     case BusinessPhone:
-        return KABC::Addressee::businessPhoneLabel();
+        return KContacts::Addressee::businessPhoneLabel();
         break;
     case MobilePhone:
-        return KABC::Addressee::mobilePhoneLabel();
+        return KContacts::Addressee::mobilePhoneLabel();
         break;
     case HomeFax:
-        return KABC::Addressee::homeFaxLabel();
+        return KContacts::Addressee::homeFaxLabel();
         break;
     case BusinessFax:
-        return KABC::Addressee::businessFaxLabel();
+        return KContacts::Addressee::businessFaxLabel();
         break;
     case CarPhone:
-        return KABC::Addressee::carPhoneLabel();
+        return KContacts::Addressee::carPhoneLabel();
         break;
     case Isdn:
-        return KABC::Addressee::isdnLabel();
+        return KContacts::Addressee::isdnLabel();
         break;
     case Pager:
-        return KABC::Addressee::pagerLabel();
+        return KContacts::Addressee::pagerLabel();
         break;
     case PreferredEmail:
         return i18nc("Preferred email address", "EMail (preferred)");
@@ -135,22 +135,22 @@ QString ContactFields::label(Field field)
         return i18nc("Fourth email address", "EMail (4)");
         break;
     case Mailer:
-        return KABC::Addressee::mailerLabel();
+        return KContacts::Addressee::mailerLabel();
         break;
     case Title:
-        return KABC::Addressee::titleLabel();
+        return KContacts::Addressee::titleLabel();
         break;
     case Role:
-        return KABC::Addressee::roleLabel();
+        return KContacts::Addressee::roleLabel();
         break;
     case Organization:
-        return KABC::Addressee::organizationLabel();
+        return KContacts::Addressee::organizationLabel();
         break;
     case Note:
-        return KABC::Addressee::noteLabel();
+        return KContacts::Addressee::noteLabel();
         break;
     case Homepage:
-        return KABC::Addressee::urlLabel();
+        return KContacts::Addressee::urlLabel();
         break;
     case BlogFeed:
         return i18n("Blog Feed");
@@ -231,7 +231,7 @@ ContactFields::Fields ContactFields::allFields()
     return fields;
 }
 
-void ContactFields::setValue(Field field, const QString &value, KABC::Addressee &contact)
+void ContactFields::setValue(Field field, const QString &value, KContacts::Addressee &contact)
 {
     switch (field) {
     case ContactFields::Undefined:
@@ -295,136 +295,136 @@ void ContactFields::setValue(Field field, const QString &value, KABC::Addressee 
         contact.setNote(value);
         break;
     case ContactFields::HomePhone: {
-        KABC::PhoneNumber number = contact.phoneNumber(KABC::PhoneNumber::Home);
+        KContacts::PhoneNumber number = contact.phoneNumber(KContacts::PhoneNumber::Home);
         number.setNumber(value);
         contact.insertPhoneNumber(number);
     }
     break;
     case ContactFields::BusinessPhone: {
-        KABC::PhoneNumber number = contact.phoneNumber(KABC::PhoneNumber::Work);
+        KContacts::PhoneNumber number = contact.phoneNumber(KContacts::PhoneNumber::Work);
         number.setNumber(value);
         contact.insertPhoneNumber(number);
     }
     break;
     case ContactFields::MobilePhone: {
-        KABC::PhoneNumber number = contact.phoneNumber(KABC::PhoneNumber::Cell);
+        KContacts::PhoneNumber number = contact.phoneNumber(KContacts::PhoneNumber::Cell);
         number.setNumber(value);
         contact.insertPhoneNumber(number);
     }
     break;
     case ContactFields::HomeFax: {
-        KABC::PhoneNumber number = contact.phoneNumber(KABC::PhoneNumber::Home |
-                                   KABC::PhoneNumber::Fax);
+        KContacts::PhoneNumber number = contact.phoneNumber(KContacts::PhoneNumber::Home |
+                                   KContacts::PhoneNumber::Fax);
         number.setNumber(value);
         contact.insertPhoneNumber(number);
     }
     break;
     case ContactFields::BusinessFax: {
-        KABC::PhoneNumber number = contact.phoneNumber(KABC::PhoneNumber::Work |
-                                   KABC::PhoneNumber::Fax);
+        KContacts::PhoneNumber number = contact.phoneNumber(KContacts::PhoneNumber::Work |
+                                   KContacts::PhoneNumber::Fax);
         number.setNumber(value);
         contact.insertPhoneNumber(number);
     }
     break;
     case ContactFields::CarPhone: {
-        KABC::PhoneNumber number = contact.phoneNumber(KABC::PhoneNumber::Car);
+        KContacts::PhoneNumber number = contact.phoneNumber(KContacts::PhoneNumber::Car);
         number.setNumber(value);
         contact.insertPhoneNumber(number);
     }
     break;
     case ContactFields::Isdn: {
-        KABC::PhoneNumber number = contact.phoneNumber(KABC::PhoneNumber::Isdn);
+        KContacts::PhoneNumber number = contact.phoneNumber(KContacts::PhoneNumber::Isdn);
         number.setNumber(value);
         contact.insertPhoneNumber(number);
     }
     break;
     case ContactFields::Pager: {
-        KABC::PhoneNumber number = contact.phoneNumber(KABC::PhoneNumber::Pager);
+        KContacts::PhoneNumber number = contact.phoneNumber(KContacts::PhoneNumber::Pager);
         number.setNumber(value);
         contact.insertPhoneNumber(number);
     }
     break;
 
     case ContactFields::HomeAddressStreet: {
-        KABC::Address address = contact.address(KABC::Address::Home);
+        KContacts::Address address = contact.address(KContacts::Address::Home);
         address.setStreet(value);
         contact.insertAddress(address);
     }
     break;
     case ContactFields::HomeAddressPostOfficeBox: {
-        KABC::Address address = contact.address(KABC::Address::Home);
+        KContacts::Address address = contact.address(KContacts::Address::Home);
         address.setPostOfficeBox(value);
         contact.insertAddress(address);
     }
     break;
     case ContactFields::HomeAddressLocality: {
-        KABC::Address address = contact.address(KABC::Address::Home);
+        KContacts::Address address = contact.address(KContacts::Address::Home);
         address.setLocality(value);
         contact.insertAddress(address);
     }
     break;
     case ContactFields::HomeAddressRegion: {
-        KABC::Address address = contact.address(KABC::Address::Home);
+        KContacts::Address address = contact.address(KContacts::Address::Home);
         address.setRegion(value);
         contact.insertAddress(address);
     }
     break;
     case ContactFields::HomeAddressPostalCode: {
-        KABC::Address address = contact.address(KABC::Address::Home);
+        KContacts::Address address = contact.address(KContacts::Address::Home);
         address.setPostalCode(value);
         contact.insertAddress(address);
     }
     break;
     case ContactFields::HomeAddressCountry: {
-        KABC::Address address = contact.address(KABC::Address::Home);
+        KContacts::Address address = contact.address(KContacts::Address::Home);
         address.setCountry(value);
         contact.insertAddress(address);
     }
     break;
     case ContactFields::HomeAddressLabel: {
-        KABC::Address address = contact.address(KABC::Address::Home);
+        KContacts::Address address = contact.address(KContacts::Address::Home);
         address.setLabel(value);
         contact.insertAddress(address);
     }
     break;
     case ContactFields::BusinessAddressStreet: {
-        KABC::Address address = contact.address(KABC::Address::Work);
+        KContacts::Address address = contact.address(KContacts::Address::Work);
         address.setStreet(value);
         contact.insertAddress(address);
     }
     break;
     case ContactFields::BusinessAddressPostOfficeBox: {
-        KABC::Address address = contact.address(KABC::Address::Work);
+        KContacts::Address address = contact.address(KContacts::Address::Work);
         address.setPostOfficeBox(value);
         contact.insertAddress(address);
     }
     break;
     case ContactFields::BusinessAddressLocality: {
-        KABC::Address address = contact.address(KABC::Address::Work);
+        KContacts::Address address = contact.address(KContacts::Address::Work);
         address.setLocality(value);
         contact.insertAddress(address);
     }
     break;
     case ContactFields::BusinessAddressRegion: {
-        KABC::Address address = contact.address(KABC::Address::Work);
+        KContacts::Address address = contact.address(KContacts::Address::Work);
         address.setRegion(value);
         contact.insertAddress(address);
     }
     break;
     case ContactFields::BusinessAddressPostalCode: {
-        KABC::Address address = contact.address(KABC::Address::Work);
+        KContacts::Address address = contact.address(KContacts::Address::Work);
         address.setPostalCode(value);
         contact.insertAddress(address);
     }
     break;
     case ContactFields::BusinessAddressCountry: {
-        KABC::Address address = contact.address(KABC::Address::Work);
+        KContacts::Address address = contact.address(KContacts::Address::Work);
         address.setCountry(value);
         contact.insertAddress(address);
     }
     break;
     case ContactFields::BusinessAddressLabel: {
-        KABC::Address address = contact.address(KABC::Address::Work);
+        KContacts::Address address = contact.address(KContacts::Address::Work);
         address.setLabel(value);
         contact.insertAddress(address);
     }
@@ -456,7 +456,7 @@ void ContactFields::setValue(Field field, const QString &value, KABC::Addressee 
     }
 }
 
-QString ContactFields::value(Field field, const KABC::Addressee &contact)
+QString ContactFields::value(Field field, const KContacts::Addressee &contact)
 {
     switch (field) {
     case Undefined:
@@ -496,98 +496,98 @@ QString ContactFields::value(Field field, const KABC::Addressee &contact)
         return contact.custom(QLatin1String("KADDRESSBOOK"), QLatin1String("X-Anniversary"));
         break;
     case HomeAddressStreet: {
-        const KABC::Address address = contact.address(KABC::Address::Home);
+        const KContacts::Address address = contact.address(KContacts::Address::Home);
         return address.street();
     }
     break;
     case HomeAddressPostOfficeBox: {
-        const KABC::Address address = contact.address(KABC::Address::Home);
+        const KContacts::Address address = contact.address(KContacts::Address::Home);
         return address.postOfficeBox();
     }
     break;
     case HomeAddressLocality: {
-        const KABC::Address address = contact.address(KABC::Address::Home);
+        const KContacts::Address address = contact.address(KContacts::Address::Home);
         return address.locality();
     }
     break;
     case HomeAddressRegion: {
-        const KABC::Address address = contact.address(KABC::Address::Home);
+        const KContacts::Address address = contact.address(KContacts::Address::Home);
         return address.region();
     }
     break;
     case HomeAddressPostalCode: {
-        const KABC::Address address = contact.address(KABC::Address::Home);
+        const KContacts::Address address = contact.address(KContacts::Address::Home);
         return address.postalCode();
     }
     break;
     case HomeAddressCountry: {
-        const KABC::Address address = contact.address(KABC::Address::Home);
+        const KContacts::Address address = contact.address(KContacts::Address::Home);
         return address.country();
     }
     break;
     case HomeAddressLabel: {
-        const KABC::Address address = contact.address(KABC::Address::Home);
+        const KContacts::Address address = contact.address(KContacts::Address::Home);
         return address.label();
     }
     break;
     case BusinessAddressStreet: {
-        const KABC::Address address = contact.address(KABC::Address::Work);
+        const KContacts::Address address = contact.address(KContacts::Address::Work);
         return address.street();
     }
     break;
     case BusinessAddressPostOfficeBox: {
-        const KABC::Address address = contact.address(KABC::Address::Work);
+        const KContacts::Address address = contact.address(KContacts::Address::Work);
         return address.postOfficeBox();
     }
     break;
     case BusinessAddressLocality: {
-        const KABC::Address address = contact.address(KABC::Address::Work);
+        const KContacts::Address address = contact.address(KContacts::Address::Work);
         return address.locality();
     }
     break;
     case BusinessAddressRegion: {
-        const KABC::Address address = contact.address(KABC::Address::Work);
+        const KContacts::Address address = contact.address(KContacts::Address::Work);
         return address.region();
     }
     break;
     case BusinessAddressPostalCode: {
-        const KABC::Address address = contact.address(KABC::Address::Work);
+        const KContacts::Address address = contact.address(KContacts::Address::Work);
         return address.postalCode();
     }
     break;
     case BusinessAddressCountry: {
-        const KABC::Address address = contact.address(KABC::Address::Work);
+        const KContacts::Address address = contact.address(KContacts::Address::Work);
         return address.country();
     }
     break;
     case BusinessAddressLabel: {
-        const KABC::Address address = contact.address(KABC::Address::Work);
+        const KContacts::Address address = contact.address(KContacts::Address::Work);
         return address.label();
     }
     break;
     case HomePhone:
-        return contact.phoneNumber(KABC::PhoneNumber::Home).number();
+        return contact.phoneNumber(KContacts::PhoneNumber::Home).number();
         break;
     case BusinessPhone:
-        return contact.phoneNumber(KABC::PhoneNumber::Work).number();
+        return contact.phoneNumber(KContacts::PhoneNumber::Work).number();
         break;
     case MobilePhone:
-        return contact.phoneNumber(KABC::PhoneNumber::Cell).number();
+        return contact.phoneNumber(KContacts::PhoneNumber::Cell).number();
         break;
     case HomeFax:
-        return contact.phoneNumber(KABC::PhoneNumber::Home | KABC::PhoneNumber::Fax).number();
+        return contact.phoneNumber(KContacts::PhoneNumber::Home | KContacts::PhoneNumber::Fax).number();
         break;
     case BusinessFax:
-        return contact.phoneNumber(KABC::PhoneNumber::Work | KABC::PhoneNumber::Fax).number();
+        return contact.phoneNumber(KContacts::PhoneNumber::Work | KContacts::PhoneNumber::Fax).number();
         break;
     case CarPhone:
-        return contact.phoneNumber(KABC::PhoneNumber::Car).number();
+        return contact.phoneNumber(KContacts::PhoneNumber::Car).number();
         break;
     case Isdn:
-        return contact.phoneNumber(KABC::PhoneNumber::Isdn).number();
+        return contact.phoneNumber(KContacts::PhoneNumber::Isdn).number();
         break;
     case Pager:
-        return contact.phoneNumber(KABC::PhoneNumber::Pager).number();
+        return contact.phoneNumber(KContacts::PhoneNumber::Pager).number();
         break;
     case PreferredEmail: {
         const QStringList emails = contact.emails();

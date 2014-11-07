@@ -21,7 +21,7 @@
 
 #include <AkonadiCore/Collection>
 #include <AkonadiCore/Item>
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 namespace KABMergeContacts
 {
 class MergeContactsJob : public QObject
@@ -46,7 +46,7 @@ private slots:
 
 private:
     void generateMergedContact();
-    void createMergedContact(const KABC::Addressee &addressee);
+    void createMergedContact(const KContacts::Addressee &addressee);
 
     Akonadi::Collection mCollection;
     Akonadi::Item::List mListItem;

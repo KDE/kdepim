@@ -20,7 +20,7 @@
 
 #include <QListWidget>
 #include <AkonadiCore/Item>
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 
 namespace KABMergeContacts
 {
@@ -46,7 +46,7 @@ public:
     Akonadi::Item::List listSelectedContacts() const;
     Akonadi::Item currentAkonadiItem() const;
 private:
-    QString itemName(const KABC::Addressee &address) const;
+    QString itemName(const KContacts::Addressee &address) const;
 };
 }
 

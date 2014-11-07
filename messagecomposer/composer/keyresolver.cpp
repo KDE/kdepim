@@ -1947,10 +1947,10 @@ Kleo::KeyResolver::ContactPreferences Kleo::KeyResolver::lookupContactPreference
     job->setQuery(Akonadi::ContactSearchJob::Email, address);
     job->exec();
 
-    const KABC::Addressee::List res = job->contacts();
+    const KContacts::Addressee::List res = job->contacts();
     ContactPreferences pref;
     if (!res.isEmpty()) {
-        KABC::Addressee addr = res.first();
+        KContacts::Addressee addr = res.first();
         QString encryptPref = addr.custom(QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOENCRYPTPREF"));
         pref.encryptionPreference = Kleo::stringToEncryptionPreference(encryptPref);
         QString signPref = addr.custom(QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOSIGNPREF"));

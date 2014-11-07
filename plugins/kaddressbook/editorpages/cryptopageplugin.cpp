@@ -31,7 +31,7 @@
 #include <QLayout>
 #include <QPushButton>
 
-#include <kabc/addressee.h>
+#include <kcontacts/addressee.h>
 #include <kcombobox.h>
 #include <qdebug.h>
 #include <QHBoxLayout>
@@ -133,7 +133,7 @@ QString CryptoPagePlugin::title() const
     return i18n("Crypto Settings");
 }
 
-void CryptoPagePlugin::loadContact(const KABC::Addressee &contact)
+void CryptoPagePlugin::loadContact(const KContacts::Addressee &contact)
 {
     const QStringList protocolPrefs = contact.custom(QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOPROTOPREF")).split(QLatin1Char(','), QString::SkipEmptyParts);
     const uint cryptoFormats = Kleo::stringListToCryptoMessageFormats(protocolPrefs);
@@ -153,7 +153,7 @@ void CryptoPagePlugin::loadContact(const KABC::Addressee &contact)
     mSmimeCert->setFingerprints(contact.custom(QLatin1String("KADDRESSBOOK"), QLatin1String("SMIMEFP")).split(QLatin1Char(','), QString::SkipEmptyParts));
 }
 
-void CryptoPagePlugin::storeContact(KABC::Addressee &contact) const
+void CryptoPagePlugin::storeContact(KContacts::Addressee &contact) const
 {
     uint cryptoFormats = 0;
     uint msgFormat = 1;

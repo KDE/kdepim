@@ -18,8 +18,8 @@
 #include "balsaaddressbook.h"
 #include "importwizardutil.h"
 
-#include <KABC/Addressee>
-#include <KABC/LDIFConverter>
+#include <KContacts/Addressee>
+#include <KContacts/LDIFConverter>
 
 #include <KConfig>
 #include <KConfigGroup>
@@ -74,7 +74,7 @@ void BalsaAddressBook::readAddressBook(const KConfigGroup &grp)
     } else if (type == QLatin1String("LibBalsaAddressBookLdif")) {
         const QString path = grp.readEntry(QLatin1String("Path"));
         if (!path.isEmpty()) {
-            KABC::Addressee::List contacts;
+            KContacts::Addressee::List contacts;
             QFile file(path);
             if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
                 QTextStream stream(&file);
@@ -84,8 +84,8 @@ void BalsaAddressBook::readAddressBook(const KConfigGroup &grp)
                 const QDateTime dtDefault = QFileInfo(file).lastModified();
                 file.close();
 
-                KABC::LDIFConverter::LDIFToAddressee(wholeFile, contacts, dtDefault);
-                Q_FOREACH (KABC::Addressee contact, contacts) {
+                KContacts::LDIFConverter::LDIFToAddressee(wholeFile, contacts, dtDefault);
+                Q_FOREACH (KContacts::Addressee contact, contacts) {
                     addImportNote(contact, QLatin1String("Balsa"));
                     createContact(contact);
                 }

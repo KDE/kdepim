@@ -22,7 +22,7 @@
 #ifndef NAMEPARTSEDITWIDGET_H
 #define NAMEPARTSEDITWIDGET_H
 
-#include <kabc/addressee.h>
+#include <kcontacts/addressee.h>
 
 #include <QWidget>
 
@@ -36,11 +36,11 @@ class NamePartsEditWidget : public QWidget
   public:
     explicit NamePartsEditWidget( QWidget *parent = 0 );
 
-    void loadContact( const KABC::Addressee &contact );
-    void storeContact( KABC::Addressee &contact ) const;
+    void loadContact( const KContacts::Addressee &contact );
+    void storeContact( KContacts::Addressee &contact ) const;
 
   Q_SIGNALS:
-    void nameChanged( const KABC::Addressee &contact );
+    void nameChanged( const KContacts::Addressee &contact );
 
   private Q_SLOTS:
     void inputChanged();
@@ -51,7 +51,7 @@ class NamePartsEditWidget : public QWidget
     KLineEdit *mFamilyNameEdit;
     KLineEdit *mGivenNameEdit;
     KLineEdit *mAdditionalNameEdit;
-    KABC::Addressee mContact;
+    KContacts::Addressee mContact;
 };
 
 #endif

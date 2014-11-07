@@ -159,9 +159,9 @@ static QString makeFilter(const QString &query, const QString &attr, bool starts
     return result;
 }
 
-static KABC::Addressee convertLdapAttributesToAddressee(const KLDAP::LdapAttrMap &attrs)
+static KContacts::Addressee convertLdapAttributesToAddressee(const KLDAP::LdapAttrMap &attrs)
 {
-    KABC::Addressee addr;
+    KContacts::Addressee addr;
 
     // name
     if (!attrs.value(QLatin1String("cn")).isEmpty()) {
@@ -186,7 +186,7 @@ static KABC::Addressee convertLdapAttributesToAddressee(const KLDAP::LdapAttrMap
     }
 
     // Address
-    KABC::Address workAddr(KABC::Address::Work);
+    KContacts::Address workAddr(KContacts::Address::Work);
 
     if (!attrs.value(QLatin1String("department")).isEmpty()) {
         addr.setDepartment(asUtf8(attrs[ QLatin1String("department") ].first()));
@@ -198,32 +198,32 @@ static KABC::Addressee convertLdapAttributesToAddressee(const KLDAP::LdapAttrMap
 
     // phone
     if (!attrs.value(QLatin1String("homePhone")).isEmpty()) {
-        KABC::PhoneNumber homeNr = asUtf8(attrs[  QLatin1String("homePhone") ].first());
-        homeNr.setType(KABC::PhoneNumber::Home);
+        KContacts::PhoneNumber homeNr = asUtf8(attrs[  QLatin1String("homePhone") ].first());
+        homeNr.setType(KContacts::PhoneNumber::Home);
         addr.insertPhoneNumber(homeNr);
     }
 
     if (!attrs.value(QLatin1String("telephoneNumber")).isEmpty()) {
-        KABC::PhoneNumber workNr = asUtf8(attrs[  QLatin1String("telephoneNumber") ].first());
-        workNr.setType(KABC::PhoneNumber::Work);
+        KContacts::PhoneNumber workNr = asUtf8(attrs[  QLatin1String("telephoneNumber") ].first());
+        workNr.setType(KContacts::PhoneNumber::Work);
         addr.insertPhoneNumber(workNr);
     }
 
     if (!attrs.value(QLatin1String("facsimileTelephoneNumber")).isEmpty()) {
-        KABC::PhoneNumber faxNr = asUtf8(attrs[  QLatin1String("facsimileTelephoneNumber") ].first());
-        faxNr.setType(KABC::PhoneNumber::Fax);
+        KContacts::PhoneNumber faxNr = asUtf8(attrs[  QLatin1String("facsimileTelephoneNumber") ].first());
+        faxNr.setType(KContacts::PhoneNumber::Fax);
         addr.insertPhoneNumber(faxNr);
     }
 
     if (!attrs.value(QLatin1String("mobile")).isEmpty()) {
-        KABC::PhoneNumber cellNr = asUtf8(attrs[  QLatin1String("mobile") ].first());
-        cellNr.setType(KABC::PhoneNumber::Cell);
+        KContacts::PhoneNumber cellNr = asUtf8(attrs[  QLatin1String("mobile") ].first());
+        cellNr.setType(KContacts::PhoneNumber::Cell);
         addr.insertPhoneNumber(cellNr);
     }
 
     if (!attrs.value(QLatin1String("pager")).isEmpty()) {
-        KABC::PhoneNumber pagerNr = asUtf8(attrs[  QLatin1String("pager") ].first());
-        pagerNr.setType(KABC::PhoneNumber::Pager);
+        KContacts::PhoneNumber pagerNr = asUtf8(attrs[  QLatin1String("pager") ].first());
+        pagerNr.setType(KContacts::PhoneNumber::Pager);
         addr.insertPhoneNumber(pagerNr);
     }
 
@@ -504,7 +504,7 @@ public:
     int mNumHosts;
     QList<KLDAP::LdapClient *> mLdapClientList;
     bool mIsConfigured;
-    KABC::Addressee::List mSelectedContacts;
+    KContacts::Addressee::List mSelectedContacts;
 
     KComboBox *mFilterCombo;
     KComboBox *mSearchType;
@@ -672,7 +672,7 @@ void LdapSearchDialog::setSearchText(const QString &text)
     d->mSearchEdit->setText(text);
 }
 
-KABC::Addressee::List LdapSearchDialog::selectedContacts() const
+KContacts::Addressee::List LdapSearchDialog::selectedContacts() const
 {
     return d->mSelectedContacts;
 }
@@ -892,7 +892,7 @@ void LdapSearchDialog::slotUser1()
         const QDateTime now = QDateTime::currentDateTime();
 
         for (int i = 0; i < items.count(); ++i) {
-            KABC::Addressee contact = convertLdapAttributesToAddressee(items.at(i).first);
+            KContacts::Addressee contact = convertLdapAttributesToAddressee(items.at(i).first);
 
             // set a comment where the contact came from
             contact.setNote(i18nc("arguments are host name, datetime",

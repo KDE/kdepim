@@ -87,7 +87,7 @@ NamePartsEditWidget::NamePartsEditWidget( QWidget *parent )
   connect( mAdditionalNameEdit, SIGNAL(textChanged(QString)), this, SLOT(inputChanged()) );
 }
 
-void NamePartsEditWidget::loadContact( const KABC::Addressee &contact )
+void NamePartsEditWidget::loadContact( const KContacts::Addressee &contact )
 {
   mContact = contact;
 
@@ -114,7 +114,7 @@ void NamePartsEditWidget::loadContact( const KABC::Addressee &contact )
   connect( mAdditionalNameEdit, SIGNAL(textChanged(QString)), this, SLOT(inputChanged()) );
 }
 
-void NamePartsEditWidget::storeContact( KABC::Addressee &contact ) const
+void NamePartsEditWidget::storeContact( KContacts::Addressee &contact ) const
 {
   contact.setPrefix( mPrefixCombo->currentText() );
   contact.setGivenName( mGivenNameEdit->text() );

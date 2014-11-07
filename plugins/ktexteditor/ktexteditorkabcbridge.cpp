@@ -16,7 +16,7 @@
   Boston, MA 02110-1301, USA.
 */
 
-#include <kabc/addressee.h>
+#include <kcontacts/addressee.h>
 #include <kcmultidialog.h>
 #include <kmessagebox.h>
 #include <KIdentityManagement/kidentitymanagement/identity.h>
@@ -60,7 +60,7 @@ Q_DECL_EXPORT QString ktexteditorkabcbridge(const QString &placeHolder, QWidget 
         *ok = true;
     }
 
-    KABC::Addressee contact;
+    KContacts::Addressee contact;
     contact.setNameFromString(defaultIdentity.fullName());
 
     if (placeHolder == QLatin1String("firstname")) {

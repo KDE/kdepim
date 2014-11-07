@@ -28,9 +28,9 @@
 #include <messagecore/utils/stringutil.h>
 
 #include <KPIMUtils/kpimutils/email.h>
-#include <kabc/vcarddrag.h>
-#include <kabc/contactgroup.h>
-#include <kabc/vcardconverter.h>
+#include <kcontacts/vcarddrag.h>
+#include <kcontacts/contactgroup.h>
+#include <kcontacts/vcardconverter.h>
 
 #include <kio/netaccess.h>
 #include <qmenu.h>
@@ -43,7 +43,7 @@
 #include <QCursor>
 #include <QKeyEvent>
 #include <QDropEvent>
-#include <kabc/contactgrouptool.h>
+#include <kcontacts/contactgrouptool.h>
 #include <Akonadi/Contact/ContactGroupExpandJob>
 #include <QtCore/QBuffer>
 #include <KLocalizedString>
@@ -112,12 +112,12 @@ void ComposerLineEdit::dropEvent(QDropEvent *event)
 
     // Case one: The user dropped a text/directory (i.e. vcard), so decode its
     //           contents
-    if (KABC::VCardDrag::canDecode(md)) {
-        KABC::Addressee::List list;
-        KABC::VCardDrag::fromMimeData(md, list);
+    if (KContacts::VCardDrag::canDecode(md)) {
+        KContacts::Addressee::List list;
+        KContacts::VCardDrag::fromMimeData(md, list);
 
-        KABC::Addressee::List::ConstIterator ait;
-        KABC::Addressee::List::ConstIterator end(list.constEnd());
+        KContacts::Addressee::List::ConstIterator ait;
+        KContacts::Addressee::List::ConstIterator end(list.constEnd());
         for (ait = list.constBegin(); ait != end; ++ait) {
             insertEmails((*ait).emails());
         }
@@ -128,21 +128,21 @@ void ComposerLineEdit::dropEvent(QDropEvent *event)
     // and for other Urls, download the Url and assume it points to a vCard
     else if (KUrl::List::canDecode(md)) {
         KUrl::List urls = KUrl::List::fromMimeData(md);
-        KABC::Addressee::List list;
+        KContacts::Addressee::List list;
 
         foreach (const KUrl &url, urls) {
 
             // First, let's deal with mailto Urls. The path() part contains the
             // email-address.
             if (url.protocol() == QLatin1String("mailto")) {
-                KABC::Addressee addressee;
+                KContacts::Addressee addressee;
                 addressee.insertEmail(KPIMUtils::decodeMailtoUrl(url), true /* preferred */);
                 list += addressee;
             }
 
             // Otherwise, download the vCard to which the Url points
             else {
-                KABC::VCardConverter converter;
+                KContacts::VCardConverter converter;
                 QString fileName;
                 if (KIO::NetAccess::download(url, fileName, parentWidget())) {
                     QFile file(fileName);
@@ -153,11 +153,11 @@ void ComposerLineEdit::dropEvent(QDropEvent *event)
                         KIO::NetAccess::removeTempFile(fileName);
 
                         if (list.isEmpty()) {  // try to parse a contact group
-                            KABC::ContactGroup group;
+                            KContacts::ContactGroup group;
                             QBuffer dataStream(&data);
                             dataStream.open(QIODevice::ReadOnly);
                             QString error;
-                            if (KABC::ContactGroupTool::convertFromXml(&dataStream, group, &error)) {
+                            if (KContacts::ContactGroupTool::convertFromXml(&dataStream, group, &error)) {
                                 Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob(group);
                                 connect(expandJob, &Akonadi::ContactGroupExpandJob::result, this, &ComposerLineEdit::groupDropExpandResult);
                                 expandJob->start();
@@ -173,7 +173,7 @@ void ComposerLineEdit::dropEvent(QDropEvent *event)
         }
 
         // Now, let the user choose which addressee to add.
-        foreach (const KABC::Addressee &addressee, list) {
+        foreach (const KContacts::Addressee &addressee, list) {
             insertEmails(addressee.emails());
         }
     }
@@ -193,8 +193,8 @@ void ComposerLineEdit::groupDropExpandResult(KJob *job)
         return;
     }
 
-    const KABC::Addressee::List contacts = expandJob->contacts();
-    foreach (const KABC::Addressee &addressee, contacts) {
+    const KContacts::Addressee::List contacts = expandJob->contacts();
+    foreach (const KContacts::Addressee &addressee, contacts) {
         insertEmails(addressee.emails());
     }
 
@@ -246,7 +246,7 @@ void ComposerLineEdit::loadContacts()
 
         QStringList::ConstIterator end = recent.constEnd();
         for (; it != end; ++it) {
-            KABC::Addressee addr;
+            KContacts::Addressee addr;
             KPIMUtils::extractEmailAddressAndName(*it, email, name);
             name = KPIMUtils::quoteNameIfNecessary(name);
             if ((name[0] == QLatin1Char('"')) && (name[name.length() - 1] == QLatin1Char('"'))) {

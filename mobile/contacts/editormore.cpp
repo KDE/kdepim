@@ -34,7 +34,7 @@
 #include <calendarsupport/categoryconfig.h>
 #include <incidenceeditor-ng/categorydialog.h>
 
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 
 #include <phonon/mediaobject.h>
 
@@ -100,10 +100,10 @@ class EditorMore::Private
 
       mUi.pageWidget->setCurrentIndex( 0 );
 
-      connect( mNamePage.namePartsWidget, SIGNAL(nameChanged(KABC::Addressee)),
-               mNamePage.displayNameWidget, SLOT(changeName(KABC::Addressee)) );
-      connect( mNamePage.namePartsWidget, SIGNAL(nameChanged(KABC::Addressee)),
-               q, SIGNAL(nameChanged(KABC::Addressee)) );
+      connect( mNamePage.namePartsWidget, SIGNAL(nameChanged(KContacts::Addressee)),
+               mNamePage.displayNameWidget, SLOT(changeName(KContacts::Addressee)) );
+      connect( mNamePage.namePartsWidget, SIGNAL(nameChanged(KContacts::Addressee)),
+               q, SIGNAL(nameChanged(KContacts::Addressee)) );
       connect( mNamePage.pronunciationLabel, SIGNAL(linkActivated(QString)),
                q, SLOT(playPronunciation()) );
 
@@ -177,17 +177,17 @@ class EditorMore::Private
     Ui::CategoriesPage mCategoriesPage;
     QSignalMapper *mMapper;
 
-    KABC::Addressee mContact;
+    KContacts::Addressee mContact;
     CustomField::List mLocalCustomFields;
     QStringList mCategories;
 };
 
-static QString loadCustom( const KABC::Addressee &contact, const QString &key )
+static QString loadCustom( const KContacts::Addressee &contact, const QString &key )
 {
   return contact.custom( QLatin1String( "KADDRESSBOOK" ), key );
 }
 
-static void storeCustom( KABC::Addressee &contact, const QString &key, const QString &value )
+static void storeCustom( KContacts::Addressee &contact, const QString &key, const QString &value )
 {
   if ( value.isEmpty() )
     contact.removeCustom( QLatin1String( "KADDRESSBOOK" ), key );
@@ -221,7 +221,7 @@ EditorMore::~EditorMore()
   delete d;
 }
 
-void EditorMore::loadContact( const KABC::Addressee &contact, const Akonadi::ContactMetaData &metaData )
+void EditorMore::loadContact( const KContacts::Addressee &contact, const Akonadi::ContactMetaData &metaData )
 {
   Q_UNUSED( metaData );
 
@@ -256,7 +256,7 @@ void EditorMore::loadContact( const KABC::Addressee &contact, const Akonadi::Con
   d->mCategoriesPage.categoriesEdit->setText( d->mCategories.join( QLatin1String(", ") ) );
 }
 
-void EditorMore::loadCustomFields( const KABC::Addressee &contact, const Akonadi::ContactMetaData &metaData )
+void EditorMore::loadCustomFields( const KContacts::Addressee &contact, const Akonadi::ContactMetaData &metaData )
 {
   d->mLocalCustomFields.clear();
   foreach ( const QVariant &description, metaData.customFieldDescriptions() )
@@ -342,7 +342,7 @@ void EditorMore::loadCustomFields( const KABC::Addressee &contact, const Akonadi
   }
 }
 
-void EditorMore::saveContact( KABC::Addressee &contact, Akonadi::ContactMetaData &metaData ) const
+void EditorMore::saveContact( KContacts::Addressee &contact, Akonadi::ContactMetaData &metaData ) const
 {
   Q_UNUSED( metaData );
 
@@ -371,7 +371,7 @@ void EditorMore::saveContact( KABC::Addressee &contact, Akonadi::ContactMetaData
   contact.setCategories( d->mCategories );
 }
 
-void EditorMore::saveCustomFields( KABC::Addressee &contact, Akonadi::ContactMetaData &metaData ) const
+void EditorMore::saveCustomFields( KContacts::Addressee &contact, Akonadi::ContactMetaData &metaData ) const
 {
   CustomField::List customFields;
   for ( int index = 0; index < d->mCustomFieldsPage.customFieldsLister->count(); ++index ) {
@@ -437,7 +437,7 @@ void EditorMore::updateOrganization( const QString &organization )
   d->mNamePage.displayNameWidget->changeOrganization( organization );
 }
 
-void EditorMore::updateName( const KABC::Addressee &contact )
+void EditorMore::updateName( const KContacts::Addressee &contact )
 {
   // this slot is called when the name has been changed in the 'General' page
   blockSignals( true );

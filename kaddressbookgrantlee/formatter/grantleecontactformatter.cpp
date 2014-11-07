@@ -29,7 +29,7 @@
 
 #include <AkonadiCore/Item>
 
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 
 #include <KColorScheme>
 
@@ -125,7 +125,7 @@ inline static void setHashField(QVariantHash &hash, const QString &name, const Q
     }
 }
 
-static QVariantHash phoneNumberHash(const KABC::PhoneNumber &phoneNumber, int counter)
+static QVariantHash phoneNumberHash(const KContacts::PhoneNumber &phoneNumber, int counter)
 {
     QVariantHash numberObject;
 
@@ -139,7 +139,7 @@ static QVariantHash phoneNumberHash(const KABC::PhoneNumber &phoneNumber, int co
             arg(phoneNumber.number());
         numberObject.insert(QLatin1String("numberLink"), url);
 
-        if (phoneNumber.type() & KABC::PhoneNumber::Cell) {
+        if (phoneNumber.type() & KContacts::PhoneNumber::Cell) {
             const QString url =
                 QString::fromLatin1("<a href=\"sms:?index=%1\"><img src=\"sms_icon\" align=\"top\"/></a>").arg(counter);
             numberObject.insert(QLatin1String("smsLink"), url);
@@ -167,12 +167,12 @@ static QVariantHash imAddressHash(const QString &typeKey, const QString &imAddre
     return addressObject;
 }
 
-static QVariantHash addressHash(const KABC::Address &address, int counter)
+static QVariantHash addressHash(const KContacts::Address &address, int counter)
 {
     QVariantHash addressObject;
 
     setHashField(addressObject, QLatin1String("type"),
-                 KABC::Address::typeLabel(address.type()));
+                 KContacts::Address::typeLabel(address.type()));
 
     setHashField(addressObject, QLatin1String("street"), address.street());
 
@@ -229,10 +229,10 @@ QString GrantleeContactFormatter::toHtml(HtmlForm form) const
         return d->mErrorMessage;
     }
 
-    KABC::Addressee rawContact;
+    KContacts::Addressee rawContact;
     const Akonadi::Item localItem = item();
-    if (localItem.isValid() && localItem.hasPayload<KABC::Addressee>()) {
-        rawContact = localItem.payload<KABC::Addressee>();
+    if (localItem.isValid() && localItem.hasPayload<KContacts::Addressee>()) {
+        rawContact = localItem.payload<KContacts::Addressee>();
     } else {
         rawContact = contact();
     }
@@ -292,7 +292,7 @@ QString GrantleeContactFormatter::toHtml(HtmlForm form) const
     // Phone numbers
     QVariantList phoneNumbers;
     int counter = 0;
-    foreach (const KABC::PhoneNumber &phoneNumber, rawContact.phoneNumbers()) {
+    foreach (const KContacts::PhoneNumber &phoneNumber, rawContact.phoneNumbers()) {
         phoneNumbers.append(phoneNumberHash(phoneNumber, counter));
         counter++;
     }
@@ -349,7 +349,7 @@ QString GrantleeContactFormatter::toHtml(HtmlForm form) const
     // Addresses
     QVariantList addresses;
     counter = 0;
-    foreach (const KABC::Address &address, rawContact.addresses()) {
+    foreach (const KContacts::Address &address, rawContact.addresses()) {
         addresses.append(addressHash(address, counter));
         counter++;
     }

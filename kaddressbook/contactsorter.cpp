@@ -20,7 +20,7 @@
 
 #include "contactsorter.h"
 
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 
 class ContactSortHelper
 {
@@ -30,8 +30,8 @@ public:
     {
     }
 
-    inline bool operator()(const KABC::Addressee &contact,
-                           const KABC::Addressee &otherContact) const
+    inline bool operator()(const KContacts::Addressee &contact,
+                           const KContacts::Addressee &otherContact) const
     {
         int result =
             QString::localeAwareCompare(
@@ -82,7 +82,7 @@ ContactSorter::ContactSorter(ContactFields::Field field, Qt::SortOrder sortOrder
 {
 }
 
-void ContactSorter::sort(QList<KABC::Addressee> &contacts) const
+void ContactSorter::sort(QList<KContacts::Addressee> &contacts) const
 {
     qStableSort(contacts.begin(), contacts.end(), ContactSortHelper(mSortField, mSortOrder));
 }

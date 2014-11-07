@@ -19,7 +19,7 @@
 #include "../searchpotentialduplicatecontactjob.h"
 
 #include <AkonadiCore/item.h>
-#include <kabc/addressee.h>
+#include <kcontacts/addressee.h>
 #include <QList>
 #include <qtest.h>
 #include <QSignalSpy>
@@ -58,10 +58,10 @@ void SearchPotentialDuplicateContactJobTest::shouldReturnListWhenTwoItemsAreDupl
 {
     Akonadi::Item::List lst;
     Akonadi::Item itemA;
-    KABC::Addressee address;
+    KContacts::Addressee address;
     address.setName(QLatin1String("foo1"));
-    itemA.setPayload<KABC::Addressee>(address);
-    itemA.setMimeType(KABC::Addressee::mimeType());
+    itemA.setPayload<KContacts::Addressee>(address);
+    itemA.setMimeType(KContacts::Addressee::mimeType());
 
     lst << itemA << itemA;
 

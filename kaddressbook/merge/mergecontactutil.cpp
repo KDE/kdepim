@@ -17,7 +17,7 @@
 
 #include "mergecontactutil.h"
 
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 using namespace KABMergeContacts;
 bool MergeContactUtil::hasSameNames(const Akonadi::Item::List &lst)
 {
@@ -26,8 +26,8 @@ bool MergeContactUtil::hasSameNames(const Akonadi::Item::List &lst)
 
     //Improve check name
     Q_FOREACH (const Akonadi::Item &item, lst) {
-        if (item.hasPayload<KABC::Addressee>()) {
-            const KABC::Addressee address = item.payload<KABC::Addressee>();
+        if (item.hasPayload<KContacts::Addressee>()) {
+            const KContacts::Addressee address = item.payload<KContacts::Addressee>();
             const QString name = address.realName().toLower();
             if (!names.isEmpty() && !names.contains(name)) {
                 foundSameName = false;

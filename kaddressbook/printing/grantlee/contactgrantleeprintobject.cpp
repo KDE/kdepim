@@ -22,8 +22,8 @@
 #include "contactgrantleeprintgeoobject.h"
 #include "contactgrantleeprintcryptoobject.h"
 
-#include <KABC/Address>
-#include <KABC/PhoneNumber>
+#include <KContacts/Address>
+#include <KContacts/PhoneNumber>
 
 #include <QBuffer>
 
@@ -32,14 +32,14 @@
 
 using namespace KABPrinting;
 
-ContactGrantleePrintObject::ContactGrantleePrintObject(const KABC::Addressee &address, QObject *parent)
+ContactGrantleePrintObject::ContactGrantleePrintObject(const KContacts::Addressee &address, QObject *parent)
     : QObject(parent),
       mAddress(address)
 {
-    Q_FOREACH (const KABC::Address &addr, address.addresses()) {
+    Q_FOREACH (const KContacts::Address &addr, address.addresses()) {
         mListAddress << new ContactGrantleePrintAddressObject(addr);
     }
-    Q_FOREACH (const KABC::PhoneNumber &phone, address.phoneNumbers()) {
+    Q_FOREACH (const KContacts::PhoneNumber &phone, address.phoneNumbers()) {
         mListPhones << new ContactGrantleePrintPhoneObject(phone);
     }
     const QStringList customs = mAddress.customs();

@@ -55,7 +55,7 @@ void ContactDisplayMessageMemento::slotSearchJobFinished(KJob *job)
     const int contactSize(searchJob->contacts().size());
     if (contactSize >= 1) {
         searchPhoto(searchJob->contacts());
-        KABC::Addressee addressee = searchJob->contacts().first();
+        KContacts::Addressee addressee = searchJob->contacts().first();
         processAddress(addressee);
         emit update(Viewer::Delayed);
         if (contactSize > 1) {
@@ -80,9 +80,9 @@ bool ContactDisplayMessageMemento::allowToRemoteContent() const
     return mMailAllowToRemoteContent;
 }
 
-void ContactDisplayMessageMemento::searchPhoto(const KABC::AddresseeList &list)
+void ContactDisplayMessageMemento::searchPhoto(const KContacts::AddresseeList &list)
 {
-    Q_FOREACH(const KABC::Addressee & addressee, list) {
+    Q_FOREACH(const KContacts::Addressee & addressee, list) {
         if (!addressee.photo().isEmpty()) {
             mPhoto = addressee.photo();
             break;
@@ -90,7 +90,7 @@ void ContactDisplayMessageMemento::searchPhoto(const KABC::AddresseeList &list)
     }
 }
 
-void ContactDisplayMessageMemento::processAddress(const KABC::Addressee &addressee)
+void ContactDisplayMessageMemento::processAddress(const KContacts::Addressee &addressee)
 {
     const QStringList customs = addressee.customs();
     Q_FOREACH(const QString & custom, customs) {
@@ -111,7 +111,7 @@ void ContactDisplayMessageMemento::processAddress(const KABC::Addressee &address
     emit changeDisplayMail(mForceDisplayTo, mMailAllowToRemoteContent);
 }
 
-KABC::Picture ContactDisplayMessageMemento::photo() const
+KContacts::Picture ContactDisplayMessageMemento::photo() const
 {
     return mPhoto;
 }

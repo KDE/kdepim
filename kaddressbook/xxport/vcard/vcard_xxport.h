@@ -27,16 +27,16 @@ class VCardXXPort : public XXPort
 public:
     explicit VCardXXPort(QWidget *parent = 0);
 
-    bool exportContacts(const KABC::Addressee::List &contacts) const;
-    KABC::Addressee::List importContacts() const;
+    bool exportContacts(const KContacts::Addressee::List &contacts) const;
+    KContacts::Addressee::List importContacts() const;
 
 private:
-    KABC::Addressee::List parseVCard(const QByteArray &data) const;
+    KContacts::Addressee::List parseVCard(const QByteArray &data) const;
     bool doExport(const QUrl &url, const QByteArray &data) const;
 
-    void addKey(KABC::Addressee &addr, KABC::Key::Type type) const;
+    void addKey(KContacts::Addressee &addr, KContacts::Key::Type type) const;
 
-    KABC::Addressee::List filterContacts(const KABC::Addressee::List &) const;
+    KContacts::Addressee::List filterContacts(const KContacts::Addressee::List &) const;
 };
 
 #endif

@@ -37,7 +37,7 @@
 
 #include "pimcommon/widgets/renamefiledialog.h"
 
-#include <KABC/LDIFConverter>
+#include <KContacts/LDIFConverter>
 
 #include <KFileDialog>
 #include <KLocalizedString>
@@ -49,10 +49,10 @@
 #include <QtCore/QTextStream>
 #include <QFileDialog>
 
-void doExport(QFile *file, const KABC::Addressee::List &list)
+void doExport(QFile *file, const KContacts::Addressee::List &list)
 {
     QString data;
-    KABC::LDIFConverter::addresseeToLDIF(list, data);
+    KContacts::LDIFConverter::addresseeToLDIF(list, data);
 
     QTextStream stream(file);
     stream.setCodec("UTF-8");
@@ -64,9 +64,9 @@ LDIFXXPort::LDIFXXPort(QWidget *parentWidget)
 {
 }
 
-KABC::Addressee::List LDIFXXPort::importContacts() const
+KContacts::Addressee::List LDIFXXPort::importContacts() const
 {
-    KABC::Addressee::List contacts;
+    KContacts::Addressee::List contacts;
 
     const QString fileName = QFileDialog::getOpenFileName(0 , QString(),  QDir::homePath(), QLatin1String("text/x-ldif"));
     if (fileName.isEmpty()) {
@@ -87,12 +87,12 @@ KABC::Addressee::List LDIFXXPort::importContacts() const
     const QDateTime dtDefault = QFileInfo(file).lastModified();
     file.close();
 
-    KABC::LDIFConverter::LDIFToAddressee(wholeFile, contacts, dtDefault);
+    KContacts::LDIFConverter::LDIFToAddressee(wholeFile, contacts, dtDefault);
 
     return contacts;
 }
 
-bool LDIFXXPort::exportContacts(const KABC::Addressee::List &list) const
+bool LDIFXXPort::exportContacts(const KContacts::Addressee::List &list) const
 {
     const KUrl url =
         KFileDialog::getSaveUrl(KUrl(QDir::homePath() + QLatin1String("/addressbook.ldif")), QLatin1String("text/x-ldif"));

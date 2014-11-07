@@ -40,7 +40,7 @@ public:
     explicit MikesStyle(PrintingWizard *parent);
     ~MikesStyle();
 
-    void print(const KABC::Addressee::List &, PrintProgress *);
+    void print(const KContacts::Addressee::List &, PrintProgress *);
 };
 
 class MikesStyleFactory : public PrintStyleFactory

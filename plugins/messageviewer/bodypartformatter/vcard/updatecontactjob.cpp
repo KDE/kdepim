@@ -18,14 +18,14 @@
 #include "updatecontactjob.h"
 #include <Akonadi/Contact/ContactSearchJob>
 #include <AkonadiCore/itemmodifyjob.h>
-#include <kabc/addressee.h>
+#include <kcontacts/addressee.h>
 #include <KLocalizedString>
 #include <kmessagebox.h>
 
 class UpdateContactJob::Private
 {
 public:
-    Private(UpdateContactJob *qq, const QString &email, const KABC::Addressee &contact, QWidget *parentWidget)
+    Private(UpdateContactJob *qq, const QString &email, const KContacts::Addressee &contact, QWidget *parentWidget)
         : q(qq), mEmail(email), mContact(contact), mParentWidget(parentWidget)
     {
     }
@@ -41,7 +41,7 @@ public:
 
         const Akonadi::ContactSearchJob *searchJob = qobject_cast<Akonadi::ContactSearchJob *>(job);
 
-        const KABC::Addressee::List contacts = searchJob->contacts();
+        const KContacts::Addressee::List contacts = searchJob->contacts();
 
         if (contacts.isEmpty()) {
             const QString text = i18n("The vCard's primary email address is already in addressbook.");
@@ -57,7 +57,7 @@ public:
             return;
         }
         Akonadi::Item item = searchJob->items().first();
-        item.setPayload<KABC::Addressee>(mContact);
+        item.setPayload<KContacts::Addressee>(mContact);
         Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob(item);
         q->connect(modifyJob, SIGNAL(result(KJob*)), SLOT(slotUpdateContactDone(KJob*)));
     }
@@ -81,11 +81,11 @@ public:
 
     UpdateContactJob *q;
     QString mEmail;
-    KABC::Addressee mContact;
+    KContacts::Addressee mContact;
     QWidget *mParentWidget;
 };
 
-UpdateContactJob::UpdateContactJob(const QString &email, const KABC::Addressee &contact, QWidget *parentWidget, QObject *parent)
+UpdateContactJob::UpdateContactJob(const QString &email, const KContacts::Addressee &contact, QWidget *parentWidget, QObject *parent)
     : KJob(parent), d(new Private(this, email, contact, parentWidget))
 {
 }

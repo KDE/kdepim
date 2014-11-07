@@ -91,7 +91,7 @@ add_library(kdepim ${LIBRARY_TYPE} ${kdepim_LIB_SRCS})
 generate_export_header(kdepim BASE_NAME kdepim)
 
 target_link_libraries(kdepim
-  KF5::Abc
+  KF5::Contacts
   KF5::PimUtils
   KF5::Ldap
   KF5::IdentityManagement
@@ -111,7 +111,7 @@ target_link_libraries(kdepim
 
 
 target_link_libraries(kdepim LINK_INTERFACE_LIBRARIES
-  KF5::Abc
+  KF5::Contacts
   KF5::PimUtils
   KF5::Ldap
   KF5::IdentityManagement

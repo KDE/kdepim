@@ -20,7 +20,7 @@
 #ifndef LOCATIONMODEL_H
 #define LOCATIONMODEL_H
 
-#include <KABC/Address>
+#include <KContacts/Address>
 
 #include <QtCore/QAbstractTableModel>
 
@@ -30,8 +30,8 @@ class LocationModel : public QAbstractTableModel
     explicit LocationModel( QObject *parent = 0 );
     ~LocationModel();
 
-    void setLocations( const KABC::Address::List &locations );
-    KABC::Address::List locations() const;
+    void setLocations( const KContacts::Address::List &locations );
+    KContacts::Address::List locations() const;
 
     /**
      * @reimplemented
@@ -46,7 +46,7 @@ class LocationModel : public QAbstractTableModel
     bool removeRows( int row, int count, const QModelIndex &parent = QModelIndex() );
 
   private:
-    KABC::Address::List mLocations;
+    KContacts::Address::List mLocations;
 };
 
 #endif /* LOCATIONMODEL_H */

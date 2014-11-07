@@ -209,9 +209,9 @@ CSVImportDialog::~CSVImportDialog()
     delete mDevice;
 }
 
-KABC::AddresseeList CSVImportDialog::contacts() const
+KContacts::AddresseeList CSVImportDialog::contacts() const
 {
-    KABC::AddresseeList contacts;
+    KContacts::AddresseeList contacts;
     DateParser dateParser(mDatePatternEdit->text());
 
     QProgressDialog progressDialog(const_cast<CSVImportDialog *>(this)->mainWidget());
@@ -223,7 +223,7 @@ KABC::AddresseeList CSVImportDialog::contacts() const
     kapp->processEvents();
 
     for (int row = 1; row < mModel->rowCount(); ++row) {
-        KABC::Addressee contact;
+        KContacts::Addressee contact;
         bool emptyRow = true;
 
         for (int column = 0; column < mModel->columnCount(); ++column) {
@@ -249,7 +249,7 @@ KABC::AddresseeList CSVImportDialog::contacts() const
         kapp->processEvents();
 
         if (progressDialog.wasCanceled()) {
-            return KABC::AddresseeList();
+            return KContacts::AddresseeList();
         }
 
         progressDialog.setValue(progressDialog.value() + 1);

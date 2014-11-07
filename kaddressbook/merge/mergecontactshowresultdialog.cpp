@@ -19,7 +19,7 @@
 #include "mergecontactshowresulttabwidget.h"
 #include "mergecontactinfowidget.h"
 
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 
 #include <KLocalizedString>
 #include <KSharedConfig>

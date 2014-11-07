@@ -79,8 +79,8 @@
 #include <KLocalizedString>
 #include <QMimeData>
 #include <KIO/NetAccess>
-#include <KABC/Addressee>
-#include <KABC/VCardConverter>
+#include <KContacts/Addressee>
+#include <KContacts/VCardConverter>
 #include <KPIMUtils/Email>
 #include <AkonadiCore/ItemModifyJob>
 #include <AkonadiCore/ItemCreateJob>
@@ -368,7 +368,7 @@ void ViewerPrivate::openAttachment(KMime::Content *node, const QString &name)
     // prefer the value of the Content-Type header
     mimetype = KMimeType::mimeType(QString::fromLatin1(node->contentType()->mimeType().toLower()),
                                    KMimeType::ResolveAliases);
-    if (!mimetype.isNull() && mimetype->is(KABC::Addressee::mimeType())) {
+    if (!mimetype.isNull() && mimetype->is(KContacts::Addressee::mimeType())) {
         showVCard(node);
         return;
     }
@@ -727,7 +727,7 @@ KService::Ptr ViewerPrivate::getServiceOffer(KMime::Content *content)
     // prefer the value of the Content-Type header
     mimetype = KMimeType::mimeType(contentTypeStr, KMimeType::ResolveAliases);
 
-    if (!mimetype.isNull() && mimetype->is(KABC::Addressee::mimeType())) {
+    if (!mimetype.isNull() && mimetype->is(KContacts::Addressee::mimeType())) {
         attachmentView(content);
         return KService::Ptr(0);
     }
@@ -983,7 +983,7 @@ void ViewerPrivate::parseContent(KMime::Content *content)
         // ### FIXME: We should only do this if the vCard belongs to the sender,
         // ### i.e. if the sender's email address is contained in the vCard.
         const QByteArray vCard = vCardContent->decodedContent();
-        KABC::VCardConverter t;
+        KContacts::VCardConverter t;
         if (!t.parseVCards(vCard).isEmpty()) {
             hasVCard = true;
             mNodeHelper->writeNodeToTempFile(vCardContent);

@@ -62,7 +62,7 @@ target_link_libraries(messagecore
   KF5::Mime
   
   KF5::KIOCore
-  KF5::Abc
+  KF5::Contacts
   KF5::PimUtils
   KF5::AkonadiCore
   KF5::PimTextEdit

@@ -19,7 +19,7 @@
 #define MERGECONTACTS_H
 
 #include <AkonadiCore/Item>
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 
 #include "kaddressbook_export.h"
 
@@ -31,12 +31,12 @@ public:
     MergeContacts(const Akonadi::Item::List &items = Akonadi::Item::List());
     ~MergeContacts();
 
-    KABC::Addressee mergedContact();
+    KContacts::Addressee mergedContact();
 
     bool needManualSelectInformations();
 
 private:
-    void mergeToContact(KABC::Addressee &newAddress, const KABC::Addressee &fromContact);
+    void mergeToContact(KContacts::Addressee &newAddress, const KContacts::Addressee &fromContact);
     Akonadi::Item::List mListItem;
 };
 }

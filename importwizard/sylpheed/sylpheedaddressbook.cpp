@@ -16,8 +16,8 @@
 */
 
 #include "sylpheedaddressbook.h"
-#include <KABC/Addressee>
-#include <kabc/contactgroup.h>
+#include <KContacts/Addressee>
+#include <kcontacts/contactgroup.h>
 
 #include <QDebug>
 #include <KLocalizedString>
@@ -82,7 +82,7 @@ void SylpheedAddressBook::readAddressBook(const QString &filename)
 
         const QString tag = e.tagName();
         if (tag == QLatin1String("person")) {
-            KABC::Addressee contact;
+            KContacts::Addressee contact;
             //uid="333304265" first-name="dd" last-name="ccc" nick-name="" cn="laurent"
             QString uidPerson;
             if (e.hasAttribute(QLatin1String("uid"))) {
@@ -154,7 +154,7 @@ void SylpheedAddressBook::readAddressBook(const QString &filename)
             if (e.hasAttribute(QLatin1String("name"))) {
                 name = e.attribute(QLatin1String("name"));
             }
-            KABC::ContactGroup group(name);
+            KContacts::ContactGroup group(name);
             //TODO: create Group
             for (QDomElement groupElement = e.firstChildElement(); !groupElement.isNull(); groupElement = groupElement.nextSiblingElement()) {
                 const QString groupTag = groupElement.tagName();

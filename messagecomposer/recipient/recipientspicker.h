@@ -23,7 +23,7 @@
 
 #include <messagecomposer/recipient/recipient.h>
 
-#include <kabc/addressee.h>
+#include <kcontacts/addressee.h>
 #include <QDialog>
 
 class QPushButton;

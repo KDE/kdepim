@@ -24,7 +24,7 @@
 #include "libkdepim/job/addcontactjob.h"
 
 #include <CollectionComboBox>
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 #include <QLineEdit>
 #include <KLocalizedString>
 #include <KPIMUtils/Email>
@@ -72,9 +72,9 @@ FilterAction::ReturnCode FilterActionAddToAddressBook::process(ItemContext &cont
 
     foreach (const QString &singleEmail, emails) {
         QString name, email;
-        KABC::Addressee::parseEmailAddress(singleEmail, name, email);
+        KContacts::Addressee::parseEmailAddress(singleEmail, name, email);
 
-        KABC::Addressee contact;
+        KContacts::Addressee contact;
         contact.setNameFromString(name);
         contact.insertEmail(email, true);
         if (!mCategory.isEmpty()) {
@@ -115,7 +115,7 @@ QWidget *FilterActionAddToAddressBook::createParamWidget(QWidget *parent) const
     layout->addWidget(label, 1, 1);
 
     Akonadi::CollectionComboBox *collectionComboBox = new Akonadi::CollectionComboBox(widget);
-    collectionComboBox->setMimeTypeFilter(QStringList() << KABC::Addressee::mimeType());
+    collectionComboBox->setMimeTypeFilter(QStringList() << KContacts::Addressee::mimeType());
     collectionComboBox->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
 
     collectionComboBox->setObjectName(QLatin1String("AddressBookComboBox"));

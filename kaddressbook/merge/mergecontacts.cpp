@@ -29,16 +29,16 @@ MergeContacts::~MergeContacts()
 
 }
 
-KABC::Addressee MergeContacts::mergedContact()
+KContacts::Addressee MergeContacts::mergedContact()
 {
-    KABC::Addressee newContact;
+    KContacts::Addressee newContact;
     if (mListItem.count() == 1) {
         return newContact;
     }
     bool firstAddress = true;
     Q_FOREACH (const Akonadi::Item &item, mListItem) {
-        if (item.hasPayload<KABC::Addressee>()) {
-            KABC::Addressee address = item.payload<KABC::Addressee>();
+        if (item.hasPayload<KContacts::Addressee>()) {
+            KContacts::Addressee address = item.payload<KContacts::Addressee>();
             if (firstAddress) {
                 firstAddress = false;
                 newContact = address;
@@ -50,7 +50,7 @@ KABC::Addressee MergeContacts::mergedContact()
     return newContact;
 }
 
-void MergeContacts::mergeToContact(KABC::Addressee &newContact, const KABC::Addressee &fromContact)
+void MergeContacts::mergeToContact(KContacts::Addressee &newContact, const KContacts::Addressee &fromContact)
 {
 #if 0
     //TODO
@@ -69,8 +69,8 @@ bool MergeContacts::needManualSelectInformations()
     }
     //TODO
     Q_FOREACH (const Akonadi::Item &item, mListItem) {
-        if (item.hasPayload<KABC::Addressee>()) {
-            const KABC::Addressee address = item.payload<KABC::Addressee>();
+        if (item.hasPayload<KContacts::Addressee>()) {
+            const KContacts::Addressee address = item.payload<KContacts::Addressee>();
             if (address.birthday().isValid()) {
                 result = true;
             }

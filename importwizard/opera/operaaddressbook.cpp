@@ -17,7 +17,7 @@
 
 #include "operaaddressbook.h"
 
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 #include <QUrl>
 #include <QDebug>
 #include <QFile>
@@ -33,7 +33,7 @@ OperaAddressBook::OperaAddressBook(const QString &filename, ImportWizard *parent
 
     QTextStream stream(&file);
     bool foundContact = false;
-    KABC::Addressee *contact = 0;
+    KContacts::Addressee *contact = 0;
     while (!stream.atEnd()) {
         QString line = stream.readLine();
         if (line == QLatin1String("#CONTACT")) {
@@ -46,7 +46,7 @@ OperaAddressBook::OperaAddressBook(const QString &filename, ImportWizard *parent
         } else if (foundContact) {
             line = line.trimmed();
             if (!contact) {
-                contact = new KABC::Addressee;
+                contact = new KContacts::Addressee;
             }
             if (line.startsWith(QLatin1String("ID"))) {
                 //Nothing
@@ -57,9 +57,9 @@ OperaAddressBook::OperaAddressBook(const QString &filename, ImportWizard *parent
             } else if (line.startsWith(QLatin1String("DESCRIPTION"))) {
                 contact->setNote(line.remove(QLatin1String("DESCRIPTION=")));
             } else if (line.startsWith(QLatin1String("PHONE"))) {
-                contact->insertPhoneNumber(KABC::PhoneNumber(line.remove(QLatin1String("PHONE=")), KABC::PhoneNumber::Home));
+                contact->insertPhoneNumber(KContacts::PhoneNumber(line.remove(QLatin1String("PHONE=")), KContacts::PhoneNumber::Home));
             } else if (line.startsWith(QLatin1String("FAX"))) {
-                contact->insertPhoneNumber(KABC::PhoneNumber(line.remove(QLatin1String("FAX=")), KABC::PhoneNumber::Fax));
+                contact->insertPhoneNumber(KContacts::PhoneNumber(line.remove(QLatin1String("FAX=")), KContacts::PhoneNumber::Fax));
             } else if (line.startsWith(QLatin1String("POSTALADDRESS"))) {
                 //TODO
             } else if (line.startsWith(QLatin1String("PICTUREURL"))) {
@@ -79,7 +79,7 @@ OperaAddressBook::~OperaAddressBook()
 
 }
 
-void OperaAddressBook::appendContact(KABC::Addressee *contact)
+void OperaAddressBook::appendContact(KContacts::Addressee *contact)
 {
     if (contact) {
         addImportNote(*contact, QLatin1String("Opera"));

@@ -20,7 +20,7 @@
 #ifndef XXPORT_H
 #define XXPORT_H
 
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 
 #include <QtCore/QMap>
 
@@ -48,12 +48,12 @@ public:
     /**
      * Imports a list of contacts.
      */
-    virtual KABC::Addressee::List importContacts() const = 0;
+    virtual KContacts::Addressee::List importContacts() const = 0;
 
     /**
      * Exports the list of @p contacts.
      */
-    virtual bool exportContacts(const KABC::Addressee::List &contacts) const = 0;
+    virtual bool exportContacts(const KContacts::Addressee::List &contacts) const = 0;
 
     /**
      * Sets module specific options.
@@ -78,7 +78,7 @@ protected:
     /**
      * Returns a file name depending on the passed @p contact.
      */
-    QString contactFileName(const KABC::Addressee &contact) const;
+    QString contactFileName(const KContacts::Addressee &contact) const;
 
 private:
     QWidget *mParentWidget;

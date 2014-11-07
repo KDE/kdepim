@@ -328,8 +328,8 @@ void IncidenceAttendee::expandResult( KJob *job )
   Akonadi::ContactGroupExpandJob *expandJob = qobject_cast<Akonadi::ContactGroupExpandJob*>( job );
   Q_ASSERT( expandJob );
 
-  const KABC::Addressee::List groupMembers = expandJob->contacts();
-  foreach ( const KABC::Addressee &member, groupMembers ) {
+  const KContacts::Addressee::List groupMembers = expandJob->contacts();
+  foreach ( const KContacts::Addressee &member, groupMembers ) {
     insertAttendeeFromAddressee( member );
   }
 }
@@ -342,13 +342,13 @@ void IncidenceAttendee::groupSearchResult( KJob *job )
   Q_ASSERT( mMightBeGroupLines.contains( job ) );
   KPIM::MultiplyingLine *line = mMightBeGroupLines.take( job ).data();
 
-  const KABC::ContactGroup::List contactGroups = searchJob->contactGroups();
+  const KContacts::ContactGroup::List contactGroups = searchJob->contactGroups();
   if ( contactGroups.isEmpty() ) {
     return; // Nothing todo, probably a normal email address was entered
   }
 
   // TODO: Give the user the possibility to choose a group when there is more than one?!
-  KABC::ContactGroup group = contactGroups.first();
+  KContacts::ContactGroup group = contactGroups.first();
   if ( line ) {
     line->slotPropagateDeletion();
   }
@@ -376,19 +376,19 @@ void IncidenceAttendee::slotSelectAddresses()
       const Akonadi::EmailAddressSelection::List list = dialogPtr->selectedAddresses();
       foreach ( const Akonadi::EmailAddressSelection &selection, list ) {
 
-        if ( selection.item().hasPayload<KABC::ContactGroup>() ) {
+        if ( selection.item().hasPayload<KContacts::ContactGroup>() ) {
           Akonadi::ContactGroupExpandJob *job =
             new Akonadi::ContactGroupExpandJob(
-              selection.item().payload<KABC::ContactGroup>(), this );
+              selection.item().payload<KContacts::ContactGroup>(), this );
           connect(job, &Akonadi::ContactGroupExpandJob::result, this, &IncidenceAttendee::expandResult);
           job->start();
         } else {
-          KABC::Addressee contact;
+          KContacts::Addressee contact;
           contact.setName( selection.name() );
           contact.insertEmail( selection.email() );
 
-          if ( selection.item().hasPayload<KABC::Addressee>() ) {
-            contact.setUid( selection.item().payload<KABC::Addressee>().uid() );
+          if ( selection.item().hasPayload<KContacts::Addressee>() ) {
+            contact.setUid( selection.item().payload<KContacts::Addressee>().uid() );
           }
           insertAttendeeFromAddressee( contact );
         }
@@ -461,7 +461,7 @@ bool IncidenceAttendee::iAmOrganizer() const
   return true;
 }
 
-void IncidenceAttendee::insertAttendeeFromAddressee( const KABC::Addressee &a )
+void IncidenceAttendee::insertAttendeeFromAddressee( const KContacts::Addressee &a )
 {
   const bool sameAsOrganizer = mUi->mOrganizerCombo &&
                                KPIMUtils::compareEmail( a.preferredEmail(),

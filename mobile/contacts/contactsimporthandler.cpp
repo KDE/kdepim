@@ -19,8 +19,8 @@
 
 #include "contactsimporthandler.h"
 
-#include <kabc/addressee.h>
-#include <kabc/vcardconverter.h>
+#include <kcontacts/addressee.h>
+#include <kcontacts/vcardconverter.h>
 #include <KLocalizedString>
 #include <kmessagebox.h>
 
@@ -58,7 +58,7 @@ QString ContactsImportHandler::importDialogTitle() const
 
 QStringList ContactsImportHandler::mimeTypes() const
 {
-  return QStringList( KABC::Addressee::mimeType() );
+  return QStringList( KContacts::Addressee::mimeType() );
 }
 
 Akonadi::Item::List ContactsImportHandler::createItems( const QStringList &fileNames, bool *ok )
@@ -67,8 +67,8 @@ Akonadi::Item::List ContactsImportHandler::createItems( const QStringList &fileN
 
   Akonadi::Item::List items;
 
-  KABC::VCardConverter converter;
-  KABC::Addressee::List contacts;
+  KContacts::VCardConverter converter;
+  KContacts::Addressee::List contacts;
 
   foreach ( const QString &fileName, fileNames ) {
     QFile file( fileName );
@@ -100,10 +100,10 @@ Akonadi::Item::List ContactsImportHandler::createItems( const QStringList &fileN
     return items; // nothing to import
   }
 
-  foreach ( const KABC::Addressee &contact, contacts ) {
+  foreach ( const KContacts::Addressee &contact, contacts ) {
     Akonadi::Item item;
-    item.setPayload<KABC::Addressee>( contact );
-    item.setMimeType( KABC::Addressee::mimeType() );
+    item.setPayload<KContacts::Addressee>( contact );
+    item.setMimeType( KContacts::Addressee::mimeType() );
 
     items << item;
   }

@@ -121,9 +121,9 @@ static bool checkDateTime(const QString &dateStr, QDateTime &dt)
 
 /* import */
 
-KABC::Addressee::List GMXXXPort::importContacts() const
+KContacts::Addressee::List GMXXXPort::importContacts() const
 {
-    KABC::Addressee::List addresseeList;
+    KContacts::Addressee::List addresseeList;
 
     QString fileName =
         KFileDialog::getOpenFileName(QDir::homePath(), GMX_FILESELECTION_STRING, 0);
@@ -155,7 +155,7 @@ KABC::Addressee::List GMXXXPort::importContacts() const
 
     QStringList itemList;
     QMap<QString, QString>  categoriesOfAddressee;
-    typedef QMap<QString, KABC::Addressee *> AddresseeMap;
+    typedef QMap<QString, KContacts::Addressee *> AddresseeMap;
     AddresseeMap addresseeMap;
 
     // "Address_id,Nickname,Firstname,Lastname,Title,Birthday,Comments,
@@ -173,7 +173,7 @@ KABC::Addressee::List GMXXXPort::importContacts() const
         };
 
         // populate the addressee
-        KABC::Addressee *addressee = new KABC::Addressee;
+        KContacts::Addressee *addressee = new KContacts::Addressee;
         addressee->setNickName(itemList.at(1));
         addressee->setGivenName(itemList.at(2));
         addressee->setFamilyName(itemList.at(3));
@@ -217,46 +217,46 @@ KABC::Addressee::List GMXXXPort::importContacts() const
             line.append(gmxStream.readLine());
         };
 
-        KABC::Addressee *addressee = addresseeMap[ itemList[0] ];
+        KContacts::Addressee *addressee = addresseeMap[ itemList[0] ];
         if (addressee) {
             // itemList[1] = Record_id (numbered item, ignore here)
             int recordTypeId = itemList[14].toInt();
-            KABC::Address::Type addressType;
-            KABC::PhoneNumber::Type phoneType;
+            KContacts::Address::Type addressType;
+            KContacts::PhoneNumber::Type phoneType;
             switch (recordTypeId) {
             case typeHome:
-                addressType = KABC::Address::Home;
-                phoneType = KABC::PhoneNumber::Home;
+                addressType = KContacts::Address::Home;
+                phoneType = KContacts::PhoneNumber::Home;
                 break;
             case typeWork:
-                addressType = KABC::Address::Work;
-                phoneType = KABC::PhoneNumber::Work;
+                addressType = KContacts::Address::Work;
+                phoneType = KContacts::PhoneNumber::Work;
                 break;
             case typeOther:
             default:
-                addressType = KABC::Address::Intl;
-                phoneType = KABC::PhoneNumber::Voice;
+                addressType = KContacts::Address::Intl;
+                phoneType = KContacts::PhoneNumber::Voice;
                 break;
             }
-            KABC::Address address = addressee->address(addressType);
+            KContacts::Address address = addressee->address(addressType);
             address.setStreet(itemList[2]);
             address.setCountry(itemList[3]);
             address.setPostalCode(itemList[4]);
             address.setLocality(itemList[5]);
             if (!itemList[6].isEmpty()) {
                 addressee->insertPhoneNumber(
-                    KABC::PhoneNumber(itemList[6], phoneType));
+                    KContacts::PhoneNumber(itemList[6], phoneType));
             }
             if (!itemList[7].isEmpty()) {
                 addressee->insertPhoneNumber(
-                    KABC::PhoneNumber(itemList[7], KABC::PhoneNumber::Fax));
+                    KContacts::PhoneNumber(itemList[7], KContacts::PhoneNumber::Fax));
             }
-            KABC::PhoneNumber::Type cellType = KABC::PhoneNumber::Cell;
+            KContacts::PhoneNumber::Type cellType = KContacts::PhoneNumber::Cell;
             // itemList[9]=Mobile_type // always 0 or -1(default phone).
-            // if ( itemList[19].toInt() & 4 ) cellType |= KABC::PhoneNumber::Pref;
+            // if ( itemList[19].toInt() & 4 ) cellType |= KContacts::PhoneNumber::Pref;
             // don't do the above to avoid duplicate mobile numbers
             if (!itemList[8].isEmpty()) {
-                addressee->insertPhoneNumber(KABC::PhoneNumber(itemList[8], cellType));
+                addressee->insertPhoneNumber(KContacts::PhoneNumber(itemList[8], cellType));
             }
             bool preferred = false;
             if (itemList[19].toInt() & 1) {
@@ -317,7 +317,7 @@ KABC::Addressee::List GMXXXPort::importContacts() const
     // now add the addresses to addresseeList
     for (AddresseeMap::Iterator addresseeIt = addresseeMap.begin();
             addresseeIt != addresseeMap.end(); ++addresseeIt) {
-        KABC::Addressee *addressee = addresseeIt.value();
+        KContacts::Addressee *addressee = addresseeIt.value();
         // Add categories
         // catgories is a bitfield with max 31 defined categories
         int categories = categoriesOfAddressee[ addresseeIt.key() ].toInt();
@@ -341,7 +341,7 @@ KABC::Addressee::List GMXXXPort::importContacts() const
 
 /* export */
 
-bool GMXXXPort::exportContacts(const KABC::AddresseeList &list) const
+bool GMXXXPort::exportContacts(const KContacts::AddresseeList &list) const
 {
     QUrl url = KFileDialog::getSaveUrl(KUrl(QDir::homePath() + QLatin1String("/addressbook.gmx")), GMX_FILESELECTION_STRING);
     if (url.isEmpty()) {
@@ -403,13 +403,13 @@ static const QString dateString(const QDateTime &dt)
     return d;
 }
 
-static const QStringList assignedCategoriesSorted(const KABC::AddresseeList &list)
+static const QStringList assignedCategoriesSorted(const KContacts::AddresseeList &list)
 {
     // Walk through the addressees and return a unique list of up to 31
     // categories, alphabetically sorted
     QStringList categoryList;
-    const KABC::Addressee *addressee;
-    for (KABC::AddresseeList::ConstIterator addresseeIt = list.begin();
+    const KContacts::Addressee *addressee;
+    for (KContacts::AddresseeList::ConstIterator addresseeIt = list.begin();
             addresseeIt != list.end() && categoryList.count() < 32; ++addresseeIt) {
         addressee = &(*addresseeIt);
         if (addressee->isEmpty()) {
@@ -426,7 +426,7 @@ static const QStringList assignedCategoriesSorted(const KABC::AddresseeList &lis
     return categoryList;
 }
 
-void GMXXXPort::doExport(QFile *fp, const KABC::AddresseeList &list) const
+void GMXXXPort::doExport(QFile *fp, const KContacts::AddresseeList &list) const
 {
     if (!fp || !list.count()) {
         return;
@@ -435,9 +435,9 @@ void GMXXXPort::doExport(QFile *fp, const KABC::AddresseeList &list) const
     QTextStream t(fp);
     t.setCodec("ISO 8859-1");
 
-    typedef QMap<int, const KABC::Addressee *> AddresseeMap;
+    typedef QMap<int, const KContacts::Addressee *> AddresseeMap;
     AddresseeMap addresseeMap;
-    const KABC::Addressee *addressee;
+    const KContacts::Addressee *addressee;
 
     t << "AB_ADDRESSES:\n";
     t << "Address_id,Nickname,Firstname,Lastname,Title,Birthday,Comments,"
@@ -448,7 +448,7 @@ void GMXXXPort::doExport(QFile *fp, const KABC::AddresseeList &list) const
 
     int addresseeId = 0;
     const QChar DELIM(QLatin1Char('#'));
-    for (KABC::AddresseeList::ConstIterator it = list.begin();
+    for (KContacts::AddresseeList::ConstIterator it = list.begin();
             it != list.end(); ++it) {
         addressee = &(*it);
         if (addressee->isEmpty()) {
@@ -496,14 +496,14 @@ void GMXXXPort::doExport(QFile *fp, const KABC::AddresseeList &list) const
     addresseeId = 1;
     while ((addressee = addresseeMap[ addresseeId ]) != 0) {
 
-        const KABC::PhoneNumber::List cellPhones =
-            addressee->phoneNumbers(KABC::PhoneNumber::Cell);
+        const KContacts::PhoneNumber::List cellPhones =
+            addressee->phoneNumbers(KContacts::PhoneNumber::Cell);
 
         const QStringList emails = addressee->emails();
 
         for (int recId = 0; recId < 3; ++recId) {
-            KABC::Address address;
-            KABC::PhoneNumber phone, fax, cell;
+            KContacts::Address address;
+            KContacts::PhoneNumber phone, fax, cell;
 
             // address preference flag:
             // & 1: preferred email address
@@ -513,8 +513,8 @@ void GMXXXPort::doExport(QFile *fp, const KABC::AddresseeList &list) const
             switch (recId) {
             // Assign address, phone and cellphone, fax if applicable
             case typeHome:
-                address = addressee->address(KABC::Address::Home);
-                phone   = addressee->phoneNumber(KABC::PhoneNumber::Home);
+                address = addressee->address(KContacts::Address::Home);
+                phone   = addressee->phoneNumber(KContacts::PhoneNumber::Home);
                 if (cellPhones.count() > 0) {
                     cell  = cellPhones.at(0);
                     if (!cell.isEmpty()) {
@@ -523,56 +523,56 @@ void GMXXXPort::doExport(QFile *fp, const KABC::AddresseeList &list) const
                 }
                 break;
             case typeWork:
-                address = addressee->address(KABC::Address::Work);
-                phone   = addressee->phoneNumber(KABC::PhoneNumber::Work);
+                address = addressee->address(KContacts::Address::Work);
+                phone   = addressee->phoneNumber(KContacts::PhoneNumber::Work);
                 if (cellPhones.count() >= 2) {
                     cell  = cellPhones.at(1);
                 }
-                fax = addressee->phoneNumber(KABC::PhoneNumber::Fax);
+                fax = addressee->phoneNumber(KContacts::PhoneNumber::Fax);
                 break;
             case typeOther:
             default:
-                if (addressee->addresses(KABC::Address::Home).count() > 1) {
-                    address = addressee->addresses(KABC::Address::Home).at(1);
+                if (addressee->addresses(KContacts::Address::Home).count() > 1) {
+                    address = addressee->addresses(KContacts::Address::Home).at(1);
                 }
                 if ((address.isEmpty()) &&
-                        (addressee->addresses(KABC::Address::Work).count() > 1)) {
-                    address = addressee->addresses(KABC::Address::Work).at(1);
+                        (addressee->addresses(KContacts::Address::Work).count() > 1)) {
+                    address = addressee->addresses(KContacts::Address::Work).at(1);
                 }
                 if (address.isEmpty()) {
-                    address = addressee->address(KABC::Address::Dom);
+                    address = addressee->address(KContacts::Address::Dom);
                 }
                 if (address.isEmpty()) {
-                    address = addressee->address(KABC::Address::Intl);
+                    address = addressee->address(KContacts::Address::Intl);
                 }
                 if (address.isEmpty()) {
-                    address = addressee->address(KABC::Address::Postal);
+                    address = addressee->address(KContacts::Address::Postal);
                 }
                 if (address.isEmpty()) {
-                    address = addressee->address(KABC::Address::Parcel);
+                    address = addressee->address(KContacts::Address::Parcel);
                 }
 
-                if (addressee->phoneNumbers(KABC::PhoneNumber::Home).count() > 1) {
-                    phone = addressee->phoneNumbers(KABC::PhoneNumber::Home).at(1);
+                if (addressee->phoneNumbers(KContacts::PhoneNumber::Home).count() > 1) {
+                    phone = addressee->phoneNumbers(KContacts::PhoneNumber::Home).at(1);
                 }
                 if ((phone.isEmpty()) && (addressee->phoneNumbers(
-                                              KABC::PhoneNumber::Work).count() > 1)) {
-                    phone = addressee->phoneNumbers(KABC::PhoneNumber::Work).at(1);
+                                              KContacts::PhoneNumber::Work).count() > 1)) {
+                    phone = addressee->phoneNumbers(KContacts::PhoneNumber::Work).at(1);
                 }
                 if (phone.isEmpty()) {
-                    phone = addressee->phoneNumber(KABC::PhoneNumber::Voice);
+                    phone = addressee->phoneNumber(KContacts::PhoneNumber::Voice);
                 }
                 if (phone.isEmpty()) {
-                    phone = addressee->phoneNumber(KABC::PhoneNumber::Msg);
+                    phone = addressee->phoneNumber(KContacts::PhoneNumber::Msg);
                 }
                 if (phone.isEmpty()) {
-                    phone = addressee->phoneNumber(KABC::PhoneNumber::Isdn);
+                    phone = addressee->phoneNumber(KContacts::PhoneNumber::Isdn);
                 }
                 if (phone.isEmpty()) {
-                    phone = addressee->phoneNumber(KABC::PhoneNumber::Car);
+                    phone = addressee->phoneNumber(KContacts::PhoneNumber::Car);
                 }
                 if (phone.isEmpty()) {
-                    phone = addressee->phoneNumber(KABC::PhoneNumber::Pager);
+                    phone = addressee->phoneNumber(KContacts::PhoneNumber::Pager);
                 }
 
                 switch (cellPhones.count()) {

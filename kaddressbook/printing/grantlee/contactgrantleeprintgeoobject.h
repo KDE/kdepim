@@ -19,7 +19,7 @@
 #define CONTACTGRANTLEEPRINTGEOOBJECT_H
 
 #include <QObject>
-#include <kabc/geo.h>
+#include <kcontacts/geo.h>
 
 namespace KABPrinting
 {
@@ -33,7 +33,7 @@ class ContactGrantleePrintGeoObject : public QObject
     Q_PROPERTY(bool isValid READ isValid)
 
 public:
-    explicit ContactGrantleePrintGeoObject(const KABC::Geo &geo, QObject *parent = 0);
+    explicit ContactGrantleePrintGeoObject(const KContacts::Geo &geo, QObject *parent = 0);
     ~ContactGrantleePrintGeoObject();
 
     float latitude() const;
@@ -42,7 +42,7 @@ public:
     bool isValid() const;
 
 private:
-    KABC::Geo mGeo;
+    KContacts::Geo mGeo;
 };
 }
 #endif // CONTACTGRANTLEEPRINTGEOOBJECT_H

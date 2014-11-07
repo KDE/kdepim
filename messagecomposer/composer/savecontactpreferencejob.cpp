@@ -67,7 +67,7 @@ void SaveContactPreferenceJob::slotSearchContact(KJob *job)
 
         QPointer<Akonadi::CollectionDialog> dlg =
             new Akonadi::CollectionDialog(Akonadi::CollectionDialog::KeepTreeExpanded);
-        dlg->setMimeTypeFilter(QStringList() << KABC::Addressee::mimeType());
+        dlg->setMimeTypeFilter(QStringList() << KContacts::Addressee::mimeType());
         dlg->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
         dlg->setDescription(i18n("Select the address book folder to store the new contact in:"));
         if (!dlg->exec()) {
@@ -79,23 +79,23 @@ void SaveContactPreferenceJob::slotSearchContact(KJob *job)
         const Akonadi::Collection targetCollection = dlg->selectedCollection();
         delete dlg;
 
-        KABC::Addressee contact;
+        KContacts::Addressee contact;
         contact.setNameFromString(fullName);
         contact.insertEmail(mEmail, true);
         writeCustomContactProperties(contact, mPref);
 
-        Akonadi::Item item(KABC::Addressee::mimeType());
-        item.setPayload<KABC::Addressee>(contact);
+        Akonadi::Item item(KContacts::Addressee::mimeType());
+        item.setPayload<KContacts::Addressee>(contact);
 
         Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob(item, targetCollection);
         connect(job, &Akonadi::ContactSearchJob::result, this, &SaveContactPreferenceJob::slotModifyCreateItem);
     } else {
         Akonadi::Item item = items.first();
 
-        KABC::Addressee contact = item.payload<KABC::Addressee>();
+        KContacts::Addressee contact = item.payload<KContacts::Addressee>();
         writeCustomContactProperties(contact, mPref);
 
-        item.setPayload<KABC::Addressee>(contact);
+        item.setPayload<KContacts::Addressee>(contact);
 
         Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(item);
         connect(job, &Akonadi::ContactSearchJob::result, this, &SaveContactPreferenceJob::slotModifyCreateItem);
@@ -103,7 +103,7 @@ void SaveContactPreferenceJob::slotSearchContact(KJob *job)
     }
 }
 
-void SaveContactPreferenceJob::writeCustomContactProperties(KABC::Addressee &contact, const Kleo::KeyResolver::ContactPreferences &pref) const
+void SaveContactPreferenceJob::writeCustomContactProperties(KContacts::Addressee &contact, const Kleo::KeyResolver::ContactPreferences &pref) const
 {
     contact.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOENCRYPTPREF"), QLatin1String(Kleo::encryptionPreferenceToString(pref.encryptionPreference)));
     contact.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOSIGNPREF"), QLatin1String(Kleo::signingPreferenceToString(pref.signingPreference)));

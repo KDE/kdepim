@@ -23,7 +23,7 @@ target_link_libraries(akonadi_next
   KF5::AkonadiCore
   KF5::KIOCore
   KF5::Mime
-  KF5::Abc
+  KF5::Contacts
 )
 
 set_target_properties(akonadi_next PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})

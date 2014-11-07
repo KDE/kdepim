@@ -30,8 +30,8 @@
 #include <AkonadiCore/Item>
 #include <Akonadi/Contact/ContactGroupExpandJob>
 
-#include <KABC/Addressee>
-#include <KABC/ContactGroup>
+#include <KContacts/Addressee>
+#include <KContacts/ContactGroup>
 
 #include <KColorScheme>
 
@@ -103,14 +103,14 @@ inline static void setHashField(QVariantHash &hash, const QString &name, const Q
     }
 }
 
-static QVariantHash memberHash(const KABC::ContactGroup::Data &data)
+static QVariantHash memberHash(const KContacts::ContactGroup::Data &data)
 {
     QVariantHash memberObject;
 
     setHashField(memberObject, QLatin1String("name"), data.name());
     setHashField(memberObject, QLatin1String("email"), data.email());
 
-    KABC::Addressee contact;
+    KContacts::Addressee contact;
     contact.setFormattedName(data.name());
     contact.insertEmail(data.email());
 
@@ -129,10 +129,10 @@ QString GrantleeContactGroupFormatter::toHtml(HtmlForm form) const
         return d->mErrorMessage;
     }
 
-    KABC::ContactGroup group;
+    KContacts::ContactGroup group;
     const Akonadi::Item localItem = item();
-    if (localItem.isValid() && localItem.hasPayload<KABC::ContactGroup>()) {
-        group = localItem.payload<KABC::ContactGroup>();
+    if (localItem.isValid() && localItem.hasPayload<KContacts::ContactGroup>()) {
+        group = localItem.payload<KContacts::ContactGroup>();
     } else {
         group = contactGroup();
     }
@@ -148,8 +148,8 @@ QString GrantleeContactGroupFormatter::toHtml(HtmlForm form) const
         Akonadi::ContactGroupExpandJob *job = new Akonadi::ContactGroupExpandJob(group);
         if (job->exec()) {
             group.removeAllContactData();
-            foreach (const KABC::Addressee &contact, job->contacts()) {
-                group.append(KABC::ContactGroup::Data(contact.realName(), contact.preferredEmail()));
+            foreach (const KContacts::Addressee &contact, job->contacts()) {
+                group.append(KContacts::ContactGroup::Data(contact.realName(), contact.preferredEmail()));
             }
         }
     }

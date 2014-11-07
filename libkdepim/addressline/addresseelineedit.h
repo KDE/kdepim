@@ -45,7 +45,7 @@ namespace Akonadi
 class Item;
 }
 
-namespace KABC
+namespace KContacts
 {
 class Addressee;
 class ContactGroup;
@@ -108,12 +108,12 @@ protected:
      * @p source index
      * @p append  is added to completion string, but removed, when mail is selected.
      */
-    void addContact(const KABC::Addressee &contact, int weight, int source = -1, QString append = QString());
+    void addContact(const KContacts::Addressee &contact, int weight, int source = -1, QString append = QString());
 
     /**
      * Same as the above, but this time with contact groups.
      */
-    void addContactGroup(const KABC::ContactGroup &group, int weight, int source = -1);
+    void addContactGroup(const KContacts::ContactGroup &group, int weight, int source = -1);
 
     void addItem(const Akonadi::Item &item, int weight, int source = -1);
 

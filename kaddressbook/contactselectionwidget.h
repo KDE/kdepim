@@ -20,7 +20,7 @@
 #ifndef CONTACTSELECTIONWIDGET_H
 #define CONTACTSELECTIONWIDGET_H
 
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 #include <AkonadiCore/Item>
 #include <QWidget>
 
@@ -66,15 +66,15 @@ public:
     /**
      * Returns the list of selected contacts.
      */
-    KABC::Addressee::List selectedContacts() const;
+    KContacts::Addressee::List selectedContacts() const;
 
     Akonadi::Item::List selectedContactsItem() const;
 private:
     void initGui();
 
-    KABC::Addressee::List collectAllContacts() const;
-    KABC::Addressee::List collectSelectedContacts() const;
-    KABC::Addressee::List collectAddressBookContacts() const;
+    KContacts::Addressee::List collectAllContacts() const;
+    KContacts::Addressee::List collectSelectedContacts() const;
+    KContacts::Addressee::List collectAddressBookContacts() const;
     Akonadi::Item::List collectAllContactsItem() const;
     Akonadi::Item::List collectSelectedContactsItem() const;
     Akonadi::Item::List collectAddressBookContactsItem() const;

@@ -41,8 +41,8 @@
 #include <entitytreemodel.h>
 #include <monitor.h>
 
-#include <kabc/addressee.h>
-#include <kabc/contactgroup.h>
+#include <kcontacts/addressee.h>
+#include <kcontacts/contactgroup.h>
 #include <kldap/ldapserver.h>
 
 #include <KConfigGroup>
@@ -302,8 +302,8 @@ void CompletionOrderEditor::loadCompletionItems()
     Akonadi::ChangeRecorder *monitor = new Akonadi::ChangeRecorder(this);
     monitor->fetchCollection(true);
     monitor->setCollectionMonitored(Akonadi::Collection::root());
-    monitor->setMimeTypeMonitored(KABC::Addressee::mimeType(), true);
-    monitor->setMimeTypeMonitored(KABC::ContactGroup::mimeType(), true);
+    monitor->setMimeTypeMonitored(KContacts::Addressee::mimeType(), true);
+    monitor->setMimeTypeMonitored(KContacts::ContactGroup::mimeType(), true);
 
     Akonadi::EntityTreeModel *model = new Akonadi::EntityTreeModel(monitor, this);
     model->setItemPopulationStrategy(Akonadi::EntityTreeModel::NoItemPopulation);
@@ -313,8 +313,8 @@ void CompletionOrderEditor::loadCompletionItems()
     descendantsProxy->setSourceModel(model);
 
     Akonadi::CollectionFilterProxyModel *mimeTypeProxy = new Akonadi::CollectionFilterProxyModel(this);
-    mimeTypeProxy->addMimeTypeFilters(QStringList() << KABC::Addressee::mimeType()
-                                      << KABC::ContactGroup::mimeType());
+    mimeTypeProxy->addMimeTypeFilters(QStringList() << KContacts::Addressee::mimeType()
+                                      << KContacts::ContactGroup::mimeType());
     mimeTypeProxy->setSourceModel(descendantsProxy);
     mimeTypeProxy->setExcludeVirtualCollections(true);
 

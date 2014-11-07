@@ -19,9 +19,9 @@
 
 #include <QItemSelectionModel>
 
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 #include <AkonadiCore/EntityTreeModel>
-#include <KABC/ContactGroup>
+#include <KContacts/ContactGroup>
 
 Akonadi::Item::List Utils::collectSelectedContactsItem(QItemSelectionModel *model)
 {
@@ -33,7 +33,7 @@ Akonadi::Item::List Utils::collectSelectedContactsItem(QItemSelectionModel *mode
         if (index.isValid()) {
             const Akonadi::Item item =
                 index.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
-            if (item.isValid() && item.hasPayload<KABC::Addressee>()) {
+            if (item.isValid() && item.hasPayload<KContacts::Addressee>()) {
                 lst.append(item);
             }
         }
@@ -52,7 +52,7 @@ Akonadi::Item::List Utils::collectSelectedAllContactsItem(QItemSelectionModel *m
             const Akonadi::Item item =
                 index.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
             if (item.isValid()) {
-                if (item.hasPayload<KABC::Addressee>()  || item.hasPayload<KABC::ContactGroup>()) {
+                if (item.hasPayload<KContacts::Addressee>()  || item.hasPayload<KContacts::ContactGroup>()) {
                     lst.append(item);
                 }
             }

@@ -17,8 +17,8 @@
 
 #include "pimsettingexporterkernel.h"
 
-#include <KABC/Addressee>
-#include <KABC/ContactGroup>
+#include <KContacts/Addressee>
+#include <KContacts/ContactGroup>
 
 #include <kalarmcal/kacalendar.h>
 #include <KIdentityManagement/kidentitymanagement/identitymanager.h>
@@ -38,8 +38,8 @@ PimSettingExporterKernel::PimSettingExporterKernel(QObject *parent)
     Akonadi::Session *session = new Akonadi::Session("Backup Mail Kernel ETM", this);
 
     mFolderCollectionMonitor = new MailCommon::FolderCollectionMonitor(session, this);
-    mFolderCollectionMonitor->monitor()->setMimeTypeMonitored(KABC::Addressee::mimeType(), true);
-    mFolderCollectionMonitor->monitor()->setMimeTypeMonitored(KABC::ContactGroup::mimeType(), true);
+    mFolderCollectionMonitor->monitor()->setMimeTypeMonitored(KContacts::Addressee::mimeType(), true);
+    mFolderCollectionMonitor->monitor()->setMimeTypeMonitored(KContacts::ContactGroup::mimeType(), true);
     mFolderCollectionMonitor->monitor()->setMimeTypeMonitored(KAlarmCal::MIME_ACTIVE);
     mFolderCollectionMonitor->monitor()->setMimeTypeMonitored(KAlarmCal::MIME_ARCHIVED);
     mFolderCollectionMonitor->monitor()->setMimeTypeMonitored(KAlarmCal::MIME_TEMPLATE);

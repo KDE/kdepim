@@ -29,7 +29,7 @@
 #include "printprogress.h"
 #include "printstyle.h"
 
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 
 #include <KLocalizedString>
 
@@ -38,7 +38,7 @@
 
 using namespace KABPrinting;
 
-static QString contactsToHtml(const KABC::Addressee::List &contacts)
+static QString contactsToHtml(const KContacts::Addressee::List &contacts)
 {
     QString content;
 
@@ -59,7 +59,7 @@ static QString contactsToHtml(const KABC::Addressee::List &contacts)
     int counter = 0;
     content += QLatin1String("<html>\n");
     content += QLatin1String(" <body>\n");
-    foreach (const KABC::Addressee &contact, contacts) {
+    foreach (const KContacts::Addressee &contact, contacts) {
         const int max = qMax(leftFields.count(), rightFields.count());
 
         const QString name = contact.realName();
@@ -120,7 +120,7 @@ MikesStyle::~MikesStyle()
 {
 }
 
-void MikesStyle::print(const KABC::Addressee::List &contacts, PrintProgress *progress)
+void MikesStyle::print(const KContacts::Addressee::List &contacts, PrintProgress *progress)
 {
     QPrinter *printer = wizard()->printer();
     printer->setPageMargins(20, 20, 20, 20, QPrinter::DevicePixel);

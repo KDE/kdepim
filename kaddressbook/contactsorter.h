@@ -29,7 +29,7 @@ public:
     explicit ContactSorter(ContactFields::Field field,
                            Qt::SortOrder sortOrder = Qt::AscendingOrder);
 
-    void sort(QList<KABC::Addressee> &contacts) const;
+    void sort(QList<KContacts::Addressee> &contacts) const;
 
 private:
     const ContactFields::Field mSortField;

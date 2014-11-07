@@ -50,8 +50,8 @@
 #include <AkonadiCore/tagdeletejob.h>
 #include <kviewstatemaintainer.h>
 
-#include <kabc/addressee.h>
-#include <kabc/contactgroup.h>
+#include <kcontacts/addressee.h>
+#include <kcontacts/contactgroup.h>
 #include <KCalCore/Incidence>
 
 #include <qdebug.h>
@@ -294,10 +294,10 @@ void BrowserWidget::contentViewChanged()
 void BrowserWidget::setItem( const Akonadi::Item &item )
 {
   mCurrentItem = item;
-  if ( item.hasPayload<KABC::Addressee>() ) {
+  if ( item.hasPayload<KContacts::Addressee>() ) {
     contentUi.contactView->setItem( item );
     contentUi.stack->setCurrentWidget( contentUi.contactViewPage );
-  } else if ( item.hasPayload<KABC::ContactGroup>() ) {
+  } else if ( item.hasPayload<KContacts::ContactGroup>() ) {
     contentUi.contactGroupView->setItem( item );
     contentUi.stack->setCurrentWidget( contentUi.contactGroupViewPage );
   } else if ( item.hasPayload<KCalCore::Incidence::Ptr>() ) {

@@ -43,8 +43,8 @@
 #include <calendarsupport/categoryconfig.h>
 #include <incidenceeditor-ng/categoryeditdialog.h>
 #include <incidenceeditor-ng/editorconfig.h>
-#include <kabc/addressee.h>
-#include <kabc/contactgroup.h>
+#include <kcontacts/addressee.h>
+#include <kcontacts/contactgroup.h>
 #include <QAction>
 #include <kactioncollection.h>
 #include <kconfigskeleton.h>
@@ -84,8 +84,8 @@ void MainView::doDelayedInit()
 
   setWindowTitle( i18n( "Contacts" ) );
 
-  addMimeType( KABC::Addressee::mimeType() );
-  addMimeType( KABC::ContactGroup::mimeType() );
+  addMimeType( KContacts::Addressee::mimeType() );
+  addMimeType( KContacts::ContactGroup::mimeType() );
   itemFetchScope().fetchFullPayload();
 
   QAction *action = new QAction( i18n( "Import Contacts" ), this );
@@ -136,9 +136,9 @@ void MainView::itemSelectionChanged( const QItemSelection &selected, const QItem
 
   if ( !qobject_cast<ContactsGuiStateManager*>( guiStateManager() )->inViewContactState() &&
        !qobject_cast<ContactsGuiStateManager*>( guiStateManager() )->inViewContactGroupState() ) {
-    if ( item.hasPayload<KABC::Addressee>() )
+    if ( item.hasPayload<KContacts::Addressee>() )
       guiStateManager()->pushState( ContactsGuiStateManager::ViewContactState );
-    else if ( item.hasPayload<KABC::ContactGroup>() )
+    else if ( item.hasPayload<KContacts::ContactGroup>() )
       guiStateManager()->pushState( ContactsGuiStateManager::ViewContactGroupState );
   }
 }
@@ -163,17 +163,17 @@ void MainView::sendMailTo()
     if ( !item.isValid() )
       continue;
 
-    if ( item.hasPayload<KABC::Addressee>() ) {
-      const KABC::Addressee contact = item.payload<KABC::Addressee>();
+    if ( item.hasPayload<KContacts::Addressee>() ) {
+      const KContacts::Addressee contact = item.payload<KContacts::Addressee>();
       if ( !contact.preferredEmail().isEmpty() )
         emailAddresses << contact.preferredEmail();
     }
 
-    if ( item.hasPayload<KABC::ContactGroup>() ) {
+    if ( item.hasPayload<KContacts::ContactGroup>() ) {
       // resolve the contact group right now
-      Akonadi::ContactGroupExpandJob *job = new Akonadi::ContactGroupExpandJob( item.payload<KABC::ContactGroup>() );
+      Akonadi::ContactGroupExpandJob *job = new Akonadi::ContactGroupExpandJob( item.payload<KContacts::ContactGroup>() );
       if ( job->exec() ) {
-        foreach ( const KABC::Addressee &contact, job->contacts() ) {
+        foreach ( const KContacts::Addressee &contact, job->contacts() ) {
           if ( !contact.preferredEmail().isEmpty() )
             emailAddresses << contact.preferredEmail();
         }
@@ -246,9 +246,9 @@ void MainView::editItem()
 
   const Akonadi::Item item = items.first();
 
-  if ( item.hasPayload<KABC::Addressee>() )
+  if ( item.hasPayload<KContacts::Addressee>() )
     editContact( item );
-  else if ( item.hasPayload<KABC::ContactGroup>() )
+  else if ( item.hasPayload<KContacts::ContactGroup>() )
     editContactGroup( item );
 }
 
@@ -308,7 +308,7 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
   ActionHelper::adaptStandardActionTexts( mActionManager );
 
   mActionManager->action( StandardActionManager::CreateCollection )->setText( i18n( "New Sub Address Book" ) );
-  mActionManager->action( StandardActionManager::CreateCollection )->setProperty( "ContentMimeTypes", QStringList( KABC::Addressee::mimeType() ) );
+  mActionManager->action( StandardActionManager::CreateCollection )->setProperty( "ContentMimeTypes", QStringList( KContacts::Addressee::mimeType() ) );
   mActionManager->setActionText( StandardActionManager::SynchronizeCollections, ki18np( "Synchronize This Address Book", "Synchronize These Address Books" ) );
   mActionManager->action( StandardActionManager::CollectionProperties )->setText( i18n( "Address Book Properties" ) );
   mActionManager->setActionText( StandardActionManager::DeleteCollections, ki18np( "Delete Address Book", "Delete Address Books" ) );
@@ -334,13 +334,13 @@ void MainView::updateActionTexts()
   const int itemCount = items.count();
   const Akonadi::Item item = items.first();
   const QString mimeType = item.mimeType();
-  if ( mimeType == KABC::Addressee::mimeType() ) {
+  if ( mimeType == KContacts::Addressee::mimeType() ) {
     actionCollection()->action( QLatin1String("akonadi_item_copy") )->setText( ki18np( "Copy Contact", "Copy %1 Contacts" ).subs( itemCount ).toString() );
     actionCollection()->action( QLatin1String("akonadi_item_copy_to_dialog") )->setText( i18n( "Copy Contact To" ) );
     actionCollection()->action( QLatin1String("akonadi_item_delete") )->setText( ki18np( "Delete Contact", "Delete %1 Contacts" ).subs( itemCount ).toString() );
     actionCollection()->action( QLatin1String("akonadi_item_move_to_dialog") )->setText( i18n( "Move Contact To" ) );
     actionCollection()->action( QLatin1String("akonadi_contact_item_edit") )->setText( i18n( "Edit Contact" ) );
-  } else if ( mimeType == KABC::ContactGroup::mimeType() ) {
+  } else if ( mimeType == KContacts::ContactGroup::mimeType() ) {
     actionCollection()->action( QLatin1String("akonadi_item_copy") )->setText( ki18np( "Copy Group Of Contacts", "Copy %1 Groups Of Contacts" ).subs( itemCount ).toString() );
     actionCollection()->action( QLatin1String("akonadi_item_copy_to_dialog") )->setText( i18n( "Copy Group Of Contacts To" ) );
     actionCollection()->action( QLatin1String("akonadi_item_delete") )->setText( ki18np( "Delete Group Of Contacts", "Delete %1 Groups Of Contacts" ).subs( itemCount ).toString() );
@@ -398,11 +398,11 @@ void MainView::searchLdap()
 void MainView::importFromLdap()
 {
   Q_ASSERT( mLdapSearchDialog );
-  const KABC::Addressee::List contacts = mLdapSearchDialog->selectedContacts();
+  const KContacts::Addressee::List contacts = mLdapSearchDialog->selectedContacts();
   if ( contacts.isEmpty() ) // nothing to import
     return;
 
-  const QStringList mimeTypes( KABC::Addressee::mimeType() );
+  const QStringList mimeTypes( KContacts::Addressee::mimeType() );
 
   QPointer<Akonadi::CollectionDialog> dlg = new Akonadi::CollectionDialog( entityTreeModel(), this );
   dlg->setMimeTypeFilter( mimeTypes );
@@ -427,10 +427,10 @@ void MainView::importFromLdap()
   if ( !collection.isValid() )
     return;
 
-  foreach ( const KABC::Addressee &addr, contacts ) {
+  foreach ( const KContacts::Addressee &addr, contacts ) {
     Akonadi::Item item;
-    item.setPayload<KABC::Addressee>( addr );
-    item.setMimeType( KABC::Addressee::mimeType() );
+    item.setPayload<KContacts::Addressee>( addr );
+    item.setMimeType( KContacts::Addressee::mimeType() );
 
     new Akonadi::ItemCreateJob( item, collection );
   }

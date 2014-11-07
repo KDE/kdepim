@@ -46,8 +46,8 @@ using MessageViewer::Interface::BodyPart;
 #include <Akonadi/Contact/ContactViewer>
 #include <Akonadi/Contact/StandardContactFormatter>
 
-#include <KABC/VCardConverter>
-#include <KABC/Addressee>
+#include <KContacts/VCardConverter>
+#include <KContacts/Addressee>
 
 #include <KLocalizedString>
 #include <KFileDialog>
@@ -86,15 +86,15 @@ public:
             return AsIcon;
         }
 
-        KABC::VCardConverter vcc;
-        const KABC::Addressee::List al = vcc.parseVCards(vCard.toUtf8());
+        KContacts::VCardConverter vcc;
+        const KContacts::Addressee::List al = vcc.parseVCards(vCard.toUtf8());
 
         MessageViewer::VcardMemento *memento = dynamic_cast<MessageViewer::VcardMemento *>(bodyPart->memento());
         QStringList lst;
 
         // Pre-count the number of non-empty addressees
         int count = 0;
-        foreach (const KABC::Addressee &a, al) {
+        foreach (const KContacts::Addressee &a, al) {
             if (a.isEmpty()) {
                 continue;
             }
@@ -126,7 +126,7 @@ public:
             }
         }
 
-        foreach (const KABC::Addressee &a, al) {
+        foreach (const KContacts::Addressee &a, al) {
             if (a.isEmpty()) {
                 continue;
             }
@@ -134,7 +134,7 @@ public:
             formatter.setContact(a);
             formatter.setDisplayQRCode(false);
             QString htmlStr = formatter.toHtml(Akonadi::StandardContactFormatter::EmbeddableForm);
-            const KABC::Picture photo = a.photo();
+            const KContacts::Picture photo = a.photo();
             htmlStr.replace(QLatin1String("<img src=\"map_icon\""), QString::fromLatin1("<img src=\"%1\"").arg(defaultMapIconPath));
             if (photo.isEmpty()) {
                 htmlStr.replace(QLatin1String("img src=\"contact_photo\""), QString::fromLatin1("img src=\"%1\"").arg(defaultPixmapPath));
@@ -194,13 +194,13 @@ public:
         if (vCard.isEmpty()) {
             return true;
         }
-        KABC::VCardConverter vcc;
-        const KABC::Addressee::List al = vcc.parseVCards(vCard.toUtf8());
+        KContacts::VCardConverter vcc;
+        const KContacts::Addressee::List al = vcc.parseVCards(vCard.toUtf8());
         const int index = path.right(path.length() - path.lastIndexOf(QLatin1Char(':')) - 1).toInt();
         if (index == -1 || index >= al.count()) {
             return true;
         }
-        const KABC::Addressee a = al.at(index);
+        const KContacts::Addressee a = al.at(index);
         if (a.isEmpty()) {
             return true;
         }
@@ -217,18 +217,18 @@ public:
         return true;
     }
 
-    static KABC::Addressee findAddressee(BodyPart *part, const QString &path)
+    static KContacts::Addressee findAddressee(BodyPart *part, const QString &path)
     {
         const QString vCard = part->asText();
         if (!vCard.isEmpty()) {
-            KABC::VCardConverter vcc;
-            const KABC::Addressee::List al = vcc.parseVCards(vCard.toUtf8());
+            KContacts::VCardConverter vcc;
+            const KContacts::Addressee::List al = vcc.parseVCards(vCard.toUtf8());
             const int index = path.right(path.length() - path.lastIndexOf(QLatin1Char(':')) - 1).toInt();
             if (index >= 0 && index < al.count()) {
                 return al.at(index);
             }
         }
-        return KABC::Addressee();
+        return KContacts::Addressee();
     }
 
     bool handleContextMenuRequest(BodyPart *part, const QString &path, const QPoint &point) const
@@ -237,7 +237,7 @@ public:
         if (vCard.isEmpty()) {
             return true;
         }
-        KABC::Addressee a = findAddressee(part, path);
+        KContacts::Addressee a = findAddressee(part, path);
         if (a.isEmpty()) {
             return true;
         }
@@ -260,7 +260,7 @@ public:
 
     QString statusBarMessage(BodyPart *part, const QString &path) const
     {
-        KABC::Addressee a = findAddressee(part, path);
+        KContacts::Addressee a = findAddressee(part, path);
         const bool addToAddressBook = path.startsWith(QLatin1String("addToAddressBook"));
         if (a.realName().isEmpty()) {
             return addToAddressBook ? i18n("Add this contact to the address book.") : i18n("Update this contact to the address book.");
@@ -269,7 +269,7 @@ public:
         }
     }
 
-    bool openVCard(const KABC::Addressee &a, const QString &vCard) const
+    bool openVCard(const KContacts::Addressee &a, const QString &vCard) const
     {
         Q_UNUSED(vCard);
         Akonadi::ContactViewer *view = new Akonadi::ContactViewer(0);
@@ -279,7 +279,7 @@ public:
         return true;
     }
 
-    bool saveAsVCard(const KABC::Addressee &a, const QString &vCard) const
+    bool saveAsVCard(const KContacts::Addressee &a, const QString &vCard) const
     {
         QString fileName;
         const QString givenName(a.givenName());

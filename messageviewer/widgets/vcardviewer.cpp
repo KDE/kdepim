@@ -22,9 +22,9 @@
 #include "settings/globalsettings.h"
 #include "kaddressbookgrantlee/widget/grantleecontactviewer.h"
 
-#include <kabc/vcardconverter.h>
-using KABC::VCardConverter;
-using KABC::Addressee;
+#include <kcontacts/vcardconverter.h>
+using KContacts::VCardConverter;
+using KContacts::Addressee;
 
 #include <KLocalizedString>
 
@@ -35,8 +35,8 @@ using KABC::Addressee;
 #include <KGuiItem>
 #include <QVBoxLayout>
 
-#ifndef KABC_ADDRESSEE_METATYPE_DEFINED
-Q_DECLARE_METATYPE(KABC::Addressee)
+#ifndef KCONTACTS_ADDRESSEE_METATYPE_DEFINED
+Q_DECLARE_METATYPE(KContacts::Addressee)
 #endif
 
 using namespace MessageViewer;
@@ -85,7 +85,7 @@ VCardViewer::VCardViewer(QWidget *parent, const QByteArray &vCard)
         connect(mUser2Button, &QPushButton::clicked, this, &VCardViewer::slotUser2);
         connect(mUser3Button, &QPushButton::clicked, this, &VCardViewer::slotUser3);
     } else {
-        mContactViewer->setRawContact(KABC::Addressee());
+        mContactViewer->setRawContact(KContacts::Addressee());
         user1Button->setEnabled(false);
         mUser2Button->setVisible(false);
         mUser3Button->setVisible(false);
@@ -117,7 +117,7 @@ void VCardViewer::writeConfig()
 
 void VCardViewer::slotUser1()
 {
-    const KABC::Addressee contact = *itAddresseeList;
+    const KContacts::Addressee contact = *itAddresseeList;
 
     KPIM::AddContactJob *job = new KPIM::AddContactJob(contact, this, this);
     job->start();

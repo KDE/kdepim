@@ -20,7 +20,7 @@
 #ifndef CONTACTSELECTIONDIALOG_H
 #define CONTACTSELECTIONDIALOG_H
 
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 #include <QDialog>
 
 class ContactSelectionWidget;
@@ -63,7 +63,7 @@ public:
     /**
      * Returns the list of selected contacts.
      */
-    KABC::Addressee::List selectedContacts() const;
+    KContacts::Addressee::List selectedContacts() const;
 
 private:
     ContactSelectionWidget *mSelectionWidget;

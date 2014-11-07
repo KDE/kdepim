@@ -42,10 +42,10 @@ public:
     /**
      * prints the contacts
      */
-    void print(const KABC::Addressee::List &, PrintProgress *);
+    void print(const KContacts::Addressee::List &, PrintProgress *);
 
 private:
-    QString contactsToHtml(const KABC::Addressee::List &contacts) const;
+    QString contactsToHtml(const KContacts::Addressee::List &contacts) const;
 
     CompactStyleForm *mPageSettings;
 

@@ -945,9 +945,9 @@ bool SearchRuleString::matchesInternal(const QString &msgContents) const
             job->setQuery(Akonadi::ContactSearchJob::Email, KPIMUtils::extractEmailAddress(*it).toLower());
             job->exec();
 
-            const KABC::Addressee::List contacts = job->contacts();
+            const KContacts::Addressee::List contacts = job->contacts();
 
-            foreach (const KABC::Addressee &contact, contacts) {
+            foreach (const KContacts::Addressee &contact, contacts) {
                 if (contact.hasCategory(category)) {
                     return true;
                 }
@@ -966,9 +966,9 @@ bool SearchRuleString::matchesInternal(const QString &msgContents) const
             job->setQuery(Akonadi::ContactSearchJob::Email, KPIMUtils::extractEmailAddress(*it).toLower());
             job->exec();
 
-            const KABC::Addressee::List contacts = job->contacts();
+            const KContacts::Addressee::List contacts = job->contacts();
 
-            foreach (const KABC::Addressee &contact, contacts) {
+            foreach (const KContacts::Addressee &contact, contacts) {
                 if (contact.hasCategory(category)) {
                     return false;
                 }

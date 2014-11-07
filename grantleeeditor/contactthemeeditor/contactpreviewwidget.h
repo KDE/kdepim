@@ -20,7 +20,7 @@
 
 #include <QWidget>
 
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 
 class QTabWidget;
 
@@ -49,7 +49,7 @@ public:
     void loadConfig();
 
 private:
-    KABC::Addressee mContact;
+    KContacts::Addressee mContact;
     Akonadi::ContactViewer *mContactViewer;
     Akonadi::ContactGroupViewer *mGroupViewer;
 

@@ -26,7 +26,7 @@
 #include <Akonadi/Contact/ContactSearchJob>
 #include <item.h>
 #include <itemcreatejob.h>
-#include <kabc/addressee.h>
+#include <kcontacts/addressee.h>
 #include <KLocalizedString>
 #include <kmessagebox.h>
 
@@ -38,7 +38,7 @@ public:
     Private(OpenEmailAddressJob *qq, const QString &emailString, QWidget *parentWidget)
         : q(qq), mCompleteAddress(emailString), mParentWidget(parentWidget)
     {
-        KABC::Addressee::parseEmailAddress(emailString, mName, mEmail);
+        KContacts::Addressee::parseEmailAddress(emailString, mName, mEmail);
     }
 
     void slotSearchDone(KJob *job)

@@ -99,9 +99,9 @@ void RecentAddresses::load(KConfig *config)
     addresses = cg.readEntry("Recent Addresses", QStringList());
     QStringList::ConstIterator end(addresses.constEnd());
     for (QStringList::ConstIterator it = addresses.constBegin(); it != end; ++it) {
-        KABC::Addressee::parseEmailAddress(*it, name, email);
+        KContacts::Addressee::parseEmailAddress(*it, name, email);
         if (!email.isEmpty()) {
-            KABC::Addressee addr;
+            KContacts::Addressee addr;
             addr.setNameFromString(name);
             addr.insertEmail(email, true);
             m_addresseeList.append(addr);
@@ -129,12 +129,12 @@ void RecentAddresses::add(const QString &entry)
             }
             QString email;
             QString fullName;
-            KABC::Addressee addr;
+            KContacts::Addressee addr;
 
-            KABC::Addressee::parseEmailAddress(*e_it, fullName, email);
+            KContacts::Addressee::parseEmailAddress(*e_it, fullName, email);
 
-            KABC::Addressee::List::Iterator end(m_addresseeList.end());
-            for (KABC::Addressee::List::Iterator it = m_addresseeList.begin();
+            KContacts::Addressee::List::Iterator end(m_addresseeList.end());
+            for (KContacts::Addressee::List::Iterator it = m_addresseeList.begin();
                     it != end; ++it) {
                 if (email == (*it).preferredEmail()) {
                     //already inside, remove it here and add it later at pos==1
@@ -174,8 +174,8 @@ void RecentAddresses::clear()
 QStringList RecentAddresses::addresses() const
 {
     QStringList addresses;
-    KABC::Addressee::List::ConstIterator end = m_addresseeList.constEnd();
-    for (KABC::Addressee::List::ConstIterator it = m_addresseeList.constBegin();
+    KContacts::Addressee::List::ConstIterator end = m_addresseeList.constEnd();
+    for (KContacts::Addressee::List::ConstIterator it = m_addresseeList.constBegin();
             it != end; ++it) {
         addresses.append((*it).fullEmail());
     }

@@ -46,8 +46,8 @@ public:
     ~CryptoPagePlugin();
 
     virtual QString title() const;
-    virtual void loadContact(const KABC::Addressee &contact);
-    virtual void storeContact(KABC::Addressee &contact) const;
+    virtual void loadContact(const KContacts::Addressee &contact);
+    virtual void storeContact(KContacts::Addressee &contact) const;
     virtual void setReadOnly(bool readOnly);
 
 private:

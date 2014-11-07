@@ -24,7 +24,7 @@
 
 #include <QWidget>
 
-#include <kabc/addressee.h>
+#include <kcontacts/addressee.h>
 
 class KComboBox;
 
@@ -55,8 +55,8 @@ class DisplayNameEditWidget : public QWidget
     explicit DisplayNameEditWidget( QWidget *parent = 0 );
     ~DisplayNameEditWidget();
 
-    void loadContact( const KABC::Addressee &contact );
-    void storeContact( KABC::Addressee &contact ) const;
+    void loadContact( const KContacts::Addressee &contact );
+    void storeContact( KContacts::Addressee &contact ) const;
 
     void setReadOnly( bool readOnly );
 
@@ -64,7 +64,7 @@ class DisplayNameEditWidget : public QWidget
     DisplayType displayType() const;
 
   public Q_SLOTS:
-    void changeName( const KABC::Addressee &contact );
+    void changeName( const KContacts::Addressee &contact );
     void changeOrganization( const QString &organization );
 
   protected:
@@ -78,7 +78,7 @@ class DisplayNameEditWidget : public QWidget
 
     KComboBox *mView;
     DisplayType mDisplayType;
-    KABC::Addressee mContact;
+    KContacts::Addressee mContact;
     QWidget *mViewport;
     int mAdditionalPopupWidth;
 };

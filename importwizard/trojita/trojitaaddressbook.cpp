@@ -16,7 +16,7 @@
 */
 
 #include "trojitaaddressbook.h"
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 
 #include <QUrl>
 
@@ -39,11 +39,11 @@ void TrojitaAddressBook::readAddressBook()
 {
     const QStringList contacts = settings->childGroups();
     Q_FOREACH (const QString &contact, contacts) {
-        KABC::Addressee contactABC;
+        KContacts::Addressee contactABC;
         settings->beginGroup(contact);
         contactABC.setEmails(QStringList() << settings->value(QLatin1String("email")).toStringList());
 
-        KABC::Address homeAddr = KABC::Address(KABC::Address::Home);
+        KContacts::Address homeAddr = KContacts::Address(KContacts::Address::Home);
         homeAddr.setLocality(settings->value(QLatin1String("city")).toString());
         homeAddr.setRegion(settings->value(QLatin1String("state")).toString());
         homeAddr.setPostalCode(settings->value(QLatin1String("zip")).toString());
@@ -53,10 +53,10 @@ void TrojitaAddressBook::readAddressBook()
             contactABC.insertAddress(homeAddr);
         }
 
-        contactABC.insertPhoneNumber(KABC::PhoneNumber(settings->value(QLatin1String("phone")).toString(), KABC::PhoneNumber::Home));
-        contactABC.insertPhoneNumber(KABC::PhoneNumber(settings->value(QLatin1String("workphone")).toString(), KABC::PhoneNumber::Work));
-        contactABC.insertPhoneNumber(KABC::PhoneNumber(settings->value(QLatin1String("fax")).toString(), KABC::PhoneNumber::Fax));
-        contactABC.insertPhoneNumber(KABC::PhoneNumber(settings->value(QLatin1String("mobile")).toString(), KABC::PhoneNumber::Cell));
+        contactABC.insertPhoneNumber(KContacts::PhoneNumber(settings->value(QLatin1String("phone")).toString(), KContacts::PhoneNumber::Home));
+        contactABC.insertPhoneNumber(KContacts::PhoneNumber(settings->value(QLatin1String("workphone")).toString(), KContacts::PhoneNumber::Work));
+        contactABC.insertPhoneNumber(KContacts::PhoneNumber(settings->value(QLatin1String("fax")).toString(), KContacts::PhoneNumber::Fax));
+        contactABC.insertPhoneNumber(KContacts::PhoneNumber(settings->value(QLatin1String("mobile")).toString(), KContacts::PhoneNumber::Cell));
         contactABC.setNickName(settings->value(QLatin1String("nick")).toString());
         contactABC.setUrl(QUrl(settings->value(QLatin1String("url")).toString()));
 

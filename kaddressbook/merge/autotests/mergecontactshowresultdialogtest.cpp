@@ -20,7 +20,7 @@
 #include "mergecontactshowresulttabwidget.h"
 #include <qtest.h>
 #include <AkonadiCore/Item>
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 
 using namespace KABMergeContacts;
 
@@ -43,9 +43,9 @@ void MergeContactShowResultDialogTest::shouldDontShowTabBarWhenWeHaveJustOneCont
     MergeContactShowResultDialog dlg;
     Akonadi::Item::List lst;
     Akonadi::Item item;
-    KABC::Addressee address;
+    KContacts::Addressee address;
     address.setName(QLatin1String("foo1"));
-    item.setPayload<KABC::Addressee>(address);
+    item.setPayload<KContacts::Addressee>(address);
 
     lst.append(item);
     dlg.setContacts(lst);
@@ -59,9 +59,9 @@ void MergeContactShowResultDialogTest::shouldShowTabBarWhenWeHaveMoreThanOneCont
 {
     MergeContactShowResultDialog dlg;
     Akonadi::Item item;
-    KABC::Addressee address;
+    KContacts::Addressee address;
     address.setName(QLatin1String("foo1"));
-    item.setPayload<KABC::Addressee>(address);
+    item.setPayload<KContacts::Addressee>(address);
     Akonadi::Item::List lst;
     lst << item << item;
     dlg.setContacts(lst);

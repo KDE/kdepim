@@ -860,7 +860,7 @@ void AddresseeLineEdit::Private::slotLDAPSearchData(const KLDAP::LdapResult::Lis
     }
 
     foreach (const KLDAP::LdapResult &result, results) {
-        KABC::Addressee contact;
+        KContacts::Addressee contact;
         contact.setNameFromString(result.name);
         contact.setEmails(result.email);
         QString ou;
@@ -1270,19 +1270,19 @@ void AddresseeLineEdit::enableCompletion(bool enable)
 void AddresseeLineEdit::addItem(const Akonadi::Item &item, int weight, int source)
 {
     //Let Akonadi results always have a higher weight than baloo results
-    if (item.hasPayload<KABC::Addressee>()) {
-        addContact(item.payload<KABC::Addressee>(), weight + 1, source);
-    } else if (item.hasPayload<KABC::ContactGroup>()) {
-        addContactGroup(item.payload<KABC::ContactGroup>(), weight + 1, source);
+    if (item.hasPayload<KContacts::Addressee>()) {
+        addContact(item.payload<KContacts::Addressee>(), weight + 1, source);
+    } else if (item.hasPayload<KContacts::ContactGroup>()) {
+        addContactGroup(item.payload<KContacts::ContactGroup>(), weight + 1, source);
     }
 }
 
-void AddresseeLineEdit::addContactGroup(const KABC::ContactGroup &group, int weight, int source)
+void AddresseeLineEdit::addContactGroup(const KContacts::ContactGroup &group, int weight, int source)
 {
     d->addCompletionItem(group.name(), weight, source);
 }
 
-void AddresseeLineEdit::addContact(const KABC::Addressee &addr, int weight, int source, QString append)
+void AddresseeLineEdit::addContact(const KContacts::Addressee &addr, int weight, int source, QString append)
 {
     const QStringList emails = addr.emails();
     QStringList::ConstIterator it;

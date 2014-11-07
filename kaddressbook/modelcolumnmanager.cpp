@@ -21,7 +21,7 @@
 #include "modelcolumnmanager.h"
 #include "settings.h"
 
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 
 #include <KLocalizedString>
 
@@ -91,7 +91,7 @@ bool ModelColumnManager::eventFilter(QObject *watched, QEvent *event)
             givenNameAction->setChecked(
                 columns.contains(Akonadi::ContactsTreeModel::GivenName));
 
-            QAction *birthdayAction = menu.addAction(KABC::Addressee::birthdayLabel());
+            QAction *birthdayAction = menu.addAction(KContacts::Addressee::birthdayLabel());
             birthdayAction->setCheckable(true);
             birthdayAction->setChecked(
                 columns.contains(Akonadi::ContactsTreeModel::Birthday));
@@ -121,22 +121,22 @@ bool ModelColumnManager::eventFilter(QObject *watched, QEvent *event)
             allEmailsAction->setChecked(
                 columns.contains(Akonadi::ContactsTreeModel::AllEmails));
 
-            QAction *organizationAction = menu.addAction(KABC::Addressee::organizationLabel());
+            QAction *organizationAction = menu.addAction(KContacts::Addressee::organizationLabel());
             organizationAction->setCheckable(true);
             organizationAction->setChecked(
                 columns.contains(Akonadi::ContactsTreeModel::Organization));
 
-            QAction *roleAction = menu.addAction(KABC::Addressee::roleLabel());
+            QAction *roleAction = menu.addAction(KContacts::Addressee::roleLabel());
             roleAction->setCheckable(true);
             roleAction->setChecked(
                 columns.contains(Akonadi::ContactsTreeModel::Role));
 
-            QAction *homepageAction = menu.addAction(KABC::Addressee::urlLabel());
+            QAction *homepageAction = menu.addAction(KContacts::Addressee::urlLabel());
             homepageAction->setCheckable(true);
             homepageAction->setChecked(
                 columns.contains(Akonadi::ContactsTreeModel::Homepage));
 
-            QAction *noteAction = menu.addAction(KABC::Addressee::noteLabel());
+            QAction *noteAction = menu.addAction(KContacts::Addressee::noteLabel());
             noteAction->setCheckable(true);
             noteAction->setChecked(
                 columns.contains(Akonadi::ContactsTreeModel::Note));

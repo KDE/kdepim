@@ -29,7 +29,7 @@
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
-#include <KABC/VCardDrag>
+#include <KContacts/VCardDrag>
 
 #include <KCalUtils/ICalDrag>
 #include <KCalUtils/VCalDrag>
@@ -625,7 +625,7 @@ void AgendaItem::dragEnterEvent( QDragEnterEvent *e )
     e->ignore();
     return;
   }
-  if ( KABC::VCardDrag::canDecode( md ) || md->hasText() ) {
+  if ( KContacts::VCardDrag::canDecode( md ) || md->hasText() ) {
     e->accept();
   } else {
     e->ignore();
@@ -675,10 +675,10 @@ void AgendaItem::dropEvent( QDropEvent *e )
     return;
   }
 
-  KABC::Addressee::List list;
+  KContacts::Addressee::List list;
 
-  if ( KABC::VCardDrag::fromMimeData( md, list ) ) {
-    Q_FOREACH ( const KABC::Addressee &addressee, list ) {
+  if ( KContacts::VCardDrag::fromMimeData( md, list ) ) {
+    Q_FOREACH ( const KContacts::Addressee &addressee, list ) {
       QString em( addressee.fullEmail() );
       if ( em.isEmpty() ) {
         em = addressee.realName();

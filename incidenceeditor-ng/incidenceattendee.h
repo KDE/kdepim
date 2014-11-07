@@ -32,7 +32,7 @@ namespace KPIM {
   class MultiplyingLine;
 }
 
-namespace KABC {
+namespace KContacts {
   class Addressee;
 }
 
@@ -89,13 +89,13 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
     /** Returns if I was the organizer of the loaded event */
     bool iAmOrganizer() const;
 
-    /** Reads values from a KABC::Addressee and inserts a new Attendee
+    /** Reads values from a KContacts::Addressee and inserts a new Attendee
      * item into the listview with those items. Used when adding attendees
      * from the addressbook and expanding distribution lists.
      * The optional Attendee parameter can be used to pass in default values
      * to be used by the new Attendee.
      */
-    void insertAttendeeFromAddressee( const KABC::Addressee &a );
+    void insertAttendeeFromAddressee( const KContacts::Addressee &a );
     void fillOrganizerCombo();
 
 #ifdef KDEPIM_MOBILE_UI

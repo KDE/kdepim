@@ -31,7 +31,7 @@
 #include <KLocalizedString>
 #include <KConfigGroup>
 
-#include <kabc/addressee.h>
+#include <kcontacts/addressee.h>
 #include <KSharedConfig>
 
 namespace KPIM
@@ -40,7 +40,7 @@ namespace KPIM
 SelectedCollectionDialog::SelectedCollectionDialog(QWidget *parent)
     : Akonadi::CollectionDialog(parent)
 {
-    const QStringList mimeTypes(KABC::Addressee::mimeType());
+    const QStringList mimeTypes(KContacts::Addressee::mimeType());
     setMimeTypeFilter(mimeTypes);
     setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
     setCaption(i18nc("@title:window", "Select Address Book"));

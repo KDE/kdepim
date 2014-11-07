@@ -21,8 +21,8 @@
 #include "contactlistproxy.h"
 
 #include <AkonadiCore/entitytreemodel.h>
-#include <kabc/addressee.h>
-#include <kabc/contactgroup.h>
+#include <kcontacts/addressee.h>
+#include <kcontacts/contactgroup.h>
 #include <QIcon>
 #include <QPixmap>
 #include <KIconLoader>
@@ -55,15 +55,15 @@ QPixmap ContactImageProvider::requestPixmap( const QString &id, QSize *size, con
   if ( !contactItem.isValid() )
     return QPixmap();
 
-  if ( contactItem.hasPayload<KABC::Addressee>() ) {
-    const KABC::Addressee addressee = contactItem.payload<KABC::Addressee>();
+  if ( contactItem.hasPayload<KContacts::Addressee>() ) {
+    const KContacts::Addressee addressee = contactItem.payload<KContacts::Addressee>();
     if ( addressee.photo().isEmpty() ) {
       const QIcon icon = KIconLoader::global()->loadIcon( QLatin1String("user-identity"), KIconLoader::Dialog, KIconLoader::SizeHuge );
       return icon.pixmap( width, height );
     }
 
     return QPixmap::fromImage( addressee.photo().data().scaled( width, height, Qt::KeepAspectRatio, Qt::SmoothTransformation ) );
-  } else if ( contactItem.hasPayload<KABC::ContactGroup>() ) {
+  } else if ( contactItem.hasPayload<KContacts::ContactGroup>() ) {
     const QIcon icon = KIconLoader::global()->loadIcon( QLatin1String("x-mail-distribution-list"), KIconLoader::Dialog, KIconLoader::SizeHuge );
     return icon.pixmap( width, height );
   }
@@ -85,8 +85,8 @@ ContactListProxy::ContactListProxy(QObject* parent) : ListProxy( parent )
 QVariant ContactListProxy::data(const QModelIndex& index, int role) const
 {
   const Akonadi::Item item = QSortFilterProxyModel::data( index, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-  if ( item.isValid() && item.hasPayload<KABC::Addressee>() ) {
-    const KABC::Addressee addressee = item.payload<KABC::Addressee>();
+  if ( item.isValid() && item.hasPayload<KContacts::Addressee>() ) {
+    const KContacts::Addressee addressee = item.payload<KContacts::Addressee>();
     switch ( role ) {
       case NameRole:
         return addressee.realName();
@@ -95,8 +95,8 @@ QVariant ContactListProxy::data(const QModelIndex& index, int role) const
       case TypeRole:
         return QLatin1String( "contact" );
     }
-  } else if ( item.isValid() && item.hasPayload<KABC::ContactGroup>() ) {
-    const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
+  } else if ( item.isValid() && item.hasPayload<KContacts::ContactGroup>() ) {
+    const KContacts::ContactGroup group = item.payload<KContacts::ContactGroup>();
     switch( role ) {
       case NameRole:
         return group.name();
@@ -125,11 +125,11 @@ void ContactListProxy::setSourceModel(QAbstractItemModel* sourceModel)
 
 static QString nameForItem( const Akonadi::Item &item )
 {
-  if ( item.hasPayload<KABC::Addressee>() )
-    return item.payload<KABC::Addressee>().realName();
+  if ( item.hasPayload<KContacts::Addressee>() )
+    return item.payload<KContacts::Addressee>().realName();
 
-  if ( item.hasPayload<KABC::ContactGroup>() )
-    return item.payload<KABC::ContactGroup>().name();
+  if ( item.hasPayload<KContacts::ContactGroup>() )
+    return item.payload<KContacts::ContactGroup>().name();
 
   return QString();
 }

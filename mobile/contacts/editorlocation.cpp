@@ -22,7 +22,7 @@
 #include "locationmodel.h"
 #include "ui_editorlocation.h"
 
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 #include <KMessageBox>
 
 #include <KLocalizedString>
@@ -53,14 +53,14 @@ class AddressTypeDialog : public KDialog
 
       QGridLayout *buttonLayout = new QGridLayout( box );
 
-      mTypeList = KABC::Address::typeList();
-      mTypeList.removeAll( KABC::Address::Pref );
+      mTypeList = KContacts::Address::typeList();
+      mTypeList.removeAll( KContacts::Address::Pref );
 
-      KABC::Address::TypeList::ConstIterator it;
+      KContacts::Address::TypeList::ConstIterator it;
       int i = 0;
       int row = 0;
       for ( it = mTypeList.constBegin(); it != mTypeList.constEnd(); ++it, ++i ) {
-        QCheckBox *checkBox = new QCheckBox( KABC::Address::typeLabel( *it ), box );
+        QCheckBox *checkBox = new QCheckBox( KContacts::Address::typeLabel( *it ), box );
         buttonLayout->addWidget( checkBox, row, i % 3 );
 
         if ( i % 3 == 2 )
@@ -70,9 +70,9 @@ class AddressTypeDialog : public KDialog
       }
     }
 
-    KABC::Address::Type type() const
+    KContacts::Address::Type type() const
     {
-      KABC::Address::Type type;
+      KContacts::Address::Type type;
       for ( int i = 0; i < mGroup->buttons().count(); ++i ) {
         QCheckBox *box = dynamic_cast<QCheckBox*>( mGroup->buttons().at( i ) );
         if ( box && box->isChecked() )
@@ -85,7 +85,7 @@ class AddressTypeDialog : public KDialog
   private:
     QButtonGroup *mGroup;
 
-    KABC::Address::TypeList mTypeList;
+    KContacts::Address::TypeList mTypeList;
 };
 
 
@@ -133,7 +133,7 @@ class EditorLocation::Private
       if ( !dlg.exec() )
         return;
 
-      const KABC::Address::Type addressType = dlg.type();
+      const KContacts::Address::Type addressType = dlg.type();
 
       if ( mModel->insertRows( 0, 1 ) ) {
         mModel->setData( mModel->index( 0, 0 ), QVariant::fromValue( static_cast<int>( addressType ) ) );
@@ -189,7 +189,7 @@ class EditorLocation::Private
   public:
     Ui::EditorLocation mUi;
 
-    KABC::Addressee mContact;
+    KContacts::Addressee mContact;
     LocationModel *mModel;
     QDataWidgetMapper *mMapper;
 };
@@ -205,7 +205,7 @@ EditorLocation::~EditorLocation()
   delete d;
 }
 
-void EditorLocation::loadContact( const KABC::Addressee &contact, const Akonadi::ContactMetaData& )
+void EditorLocation::loadContact( const KContacts::Addressee &contact, const Akonadi::ContactMetaData& )
 {
   d->mModel->setLocations( contact.addresses() );
   d->mUi.addressSelectionCombo->setCurrentIndex( 0 );
@@ -213,13 +213,13 @@ void EditorLocation::loadContact( const KABC::Addressee &contact, const Akonadi:
   d->addressCountChanged();
 }
 
-void EditorLocation::saveContact( KABC::Addressee &contact, Akonadi::ContactMetaData& ) const
+void EditorLocation::saveContact( KContacts::Addressee &contact, Akonadi::ContactMetaData& ) const
 {
-  const KABC::Address::List oldAddresses = contact.addresses();
-  foreach ( const KABC::Address &oldAddress, oldAddresses )
+  const KContacts::Address::List oldAddresses = contact.addresses();
+  foreach ( const KContacts::Address &oldAddress, oldAddresses )
     contact.removeAddress( oldAddress );
 
-  foreach ( const KABC::Address &newAddress, d->mModel->locations() )
+  foreach ( const KContacts::Address &newAddress, d->mModel->locations() )
     contact.insertAddress( newAddress );
 }
 

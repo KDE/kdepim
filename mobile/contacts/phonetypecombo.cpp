@@ -26,10 +26,10 @@ class PhoneTypeCombo::Private
   PhoneTypeCombo *const q;
 
   public:
-    Private( PhoneTypeCombo *parent ): q( parent ), mType( KABC::PhoneNumber::Home ), mLastSelected( 0 )
+    Private( PhoneTypeCombo *parent ): q( parent ), mType( KContacts::PhoneNumber::Home ), mLastSelected( 0 )
     {
-      for ( int i = 0; i < KABC::PhoneNumber::typeList().count(); ++i )
-        mTypeList.append( KABC::PhoneNumber::typeList().at( i ) );
+      for ( int i = 0; i < KContacts::PhoneNumber::typeList().count(); ++i )
+        mTypeList.append( KContacts::PhoneNumber::typeList().at( i ) );
 
       update();
     }
@@ -39,14 +39,14 @@ class PhoneTypeCombo::Private
       q->clear();
 
       for ( int i = 0; i < mTypeList.count(); ++i ) {
-        q->addItem( KABC::PhoneNumber::typeLabel( KABC::PhoneNumber::Type( mTypeList.at( i ) ) ) );
+        q->addItem( KContacts::PhoneNumber::typeLabel( KContacts::PhoneNumber::Type( mTypeList.at( i ) ) ) );
       }
 
       q->setCurrentIndex( mLastSelected = mTypeList.indexOf( mType ) );
     }
 
   public:
-    KABC::PhoneNumber::Type mType;
+    KContacts::PhoneNumber::Type mType;
     int mLastSelected;
     QList<int> mTypeList;
 
@@ -56,7 +56,7 @@ class PhoneTypeCombo::Private
 
 void PhoneTypeCombo::Private::selected( int pos )
 {
-  mType = KABC::PhoneNumber::Type( mTypeList.at( pos ) );
+  mType = KContacts::PhoneNumber::Type( mTypeList.at( pos ) );
   mLastSelected = pos;
 }
 
@@ -70,7 +70,7 @@ PhoneTypeCombo::~PhoneTypeCombo()
   delete d;
 }
 
-void PhoneTypeCombo::setType( KABC::PhoneNumber::Type type )
+void PhoneTypeCombo::setType( KContacts::PhoneNumber::Type type )
 {
   if ( !d->mTypeList.contains( type ) )
     d->mTypeList.insert( d->mTypeList.at( d->mTypeList.count() - 1 ), type );
@@ -79,7 +79,7 @@ void PhoneTypeCombo::setType( KABC::PhoneNumber::Type type )
   d->update();
 }
 
-KABC::PhoneNumber::Type PhoneTypeCombo::type() const
+KContacts::PhoneNumber::Type PhoneTypeCombo::type() const
 {
   return d->mType;
 }

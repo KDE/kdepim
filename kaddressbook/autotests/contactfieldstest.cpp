@@ -14,7 +14,7 @@ private Q_SLOTS:
     void testSetGet();
 
 private:
-    KABC::Addressee mContact;
+    KContacts::Addressee mContact;
 };
 
 QTEST_MAIN(ContactFieldsTest)
@@ -74,7 +74,7 @@ void ContactFieldsTest::testFieldCount()
 
 void ContactFieldsTest::testSetGet()
 {
-    KABC::Addressee contact;
+    KContacts::Addressee contact;
 
     ContactFields::setValue(ContactFields::FormattedName, s_formattedName, contact);
     ContactFields::setValue(ContactFields::Prefix, s_prefix, contact);
@@ -125,7 +125,7 @@ void ContactFieldsTest::testSetGet()
     ContactFields::setValue(ContactFields::Anniversary, s_anniversary, contact);
     ContactFields::setValue(ContactFields::Spouse, s_spouse, contact);
 
-    const KABC::Addressee contactCopy = contact;
+    const KContacts::Addressee contactCopy = contact;
 
     QCOMPARE(ContactFields::value(ContactFields::FormattedName, contactCopy), s_formattedName);
     QCOMPARE(ContactFields::value(ContactFields::Prefix, contactCopy), s_prefix);

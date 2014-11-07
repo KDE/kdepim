@@ -30,7 +30,7 @@
 #include <qgpgme/dataprovider.h>
 #endif // QGPGME_FOUND
 
-#include <KABC/VCardConverter>
+#include <KContacts/VCardConverter>
 
 #include <QDebug>
 #include <QDialog>
@@ -60,11 +60,11 @@ class VCardViewerDialog : public QDialog
 {
     Q_OBJECT
 public:
-    VCardViewerDialog(const KABC::Addressee::List &list,
+    VCardViewerDialog(const KContacts::Addressee::List &list,
                       QWidget *parent);
     ~VCardViewerDialog();
 
-    KABC::Addressee::List contacts() const;
+    KContacts::Addressee::List contacts() const;
 
 protected Q_SLOTS:
     void slotYes();
@@ -79,8 +79,8 @@ private:
 
     KAddressBookGrantlee::GrantleeContactViewer *mView;
 
-    KABC::Addressee::List mContacts;
-    KABC::Addressee::List::Iterator mIt;
+    KContacts::Addressee::List mContacts;
+    KContacts::Addressee::List::Iterator mIt;
     QPushButton *mApplyButton;
 };
 
@@ -111,12 +111,12 @@ VCardXXPort::VCardXXPort(QWidget *parent)
 {
 }
 
-bool VCardXXPort::exportContacts(const KABC::Addressee::List &contacts) const
+bool VCardXXPort::exportContacts(const KContacts::Addressee::List &contacts) const
 {
-    KABC::VCardConverter converter;
+    KContacts::VCardConverter converter;
     QUrl url;
 
-    const KABC::Addressee::List list = filterContacts(contacts);
+    const KContacts::Addressee::List list = filterContacts(contacts);
     if (list.isEmpty()) {   // no contact selected
         return true;
     }
@@ -133,11 +133,11 @@ bool VCardXXPort::exportContacts(const KABC::Addressee::List &contacts) const
         }
 
         if (option(QLatin1String("version")) == QLatin1String("v21")) {
-            ok = doExport(url, converter.exportVCards(list, KABC::VCardConverter::v2_1));
+            ok = doExport(url, converter.exportVCards(list, KContacts::VCardConverter::v2_1));
         } else if (option(QLatin1String("version")) == QLatin1String("v30")) {
-            ok = doExport(url, converter.exportVCards(list, KABC::VCardConverter::v3_0));
+            ok = doExport(url, converter.exportVCards(list, KContacts::VCardConverter::v3_0));
         } else {
-            ok = doExport(url, converter.exportVCards(list, KABC::VCardConverter::v4_0));
+            ok = doExport(url, converter.exportVCards(list, KContacts::VCardConverter::v4_0));
         }
     } else {
         const int answer =
@@ -158,18 +158,18 @@ bool VCardXXPort::exportContacts(const KABC::Addressee::List &contacts) const
             }
 
             for (int i = 0; i < list.count(); ++i) {
-                const KABC::Addressee contact = list.at(i);
+                const KContacts::Addressee contact = list.at(i);
 
                 url = baseUrl.url() + QLatin1Char('/') + contactFileName(contact) + QLatin1String(".vcf");
 
                 bool tmpOk = false;
 
                 if (option(QLatin1String("version")) == QLatin1String("v21")) {
-                    tmpOk = doExport(url, converter.exportVCard(contact, KABC::VCardConverter::v2_1));
+                    tmpOk = doExport(url, converter.exportVCard(contact, KContacts::VCardConverter::v2_1));
                 } else if (option(QLatin1String("version")) == QLatin1String("v30")) {
-                    tmpOk = doExport(url, converter.exportVCard(contact, KABC::VCardConverter::v3_0));
+                    tmpOk = doExport(url, converter.exportVCard(contact, KContacts::VCardConverter::v3_0));
                 } else {
-                    tmpOk = doExport(url, converter.exportVCard(contact, KABC::VCardConverter::v4_0));
+                    tmpOk = doExport(url, converter.exportVCard(contact, KContacts::VCardConverter::v4_0));
                 }
 
                 ok = ok && tmpOk;
@@ -183,11 +183,11 @@ bool VCardXXPort::exportContacts(const KABC::Addressee::List &contacts) const
             }
 
             if (option(QLatin1String("version")) == QLatin1String("v21")) {
-                ok = doExport(url, converter.exportVCards(list, KABC::VCardConverter::v2_1));
+                ok = doExport(url, converter.exportVCards(list, KContacts::VCardConverter::v2_1));
             } else if (option(QLatin1String("version")) == QLatin1String("v30")) {
-                ok = doExport(url, converter.exportVCards(list, KABC::VCardConverter::v3_0));
+                ok = doExport(url, converter.exportVCards(list, KContacts::VCardConverter::v3_0));
             } else {
-                ok = doExport(url, converter.exportVCards(list, KABC::VCardConverter::v4_0));
+                ok = doExport(url, converter.exportVCards(list, KContacts::VCardConverter::v4_0));
             }
             break;
         }
@@ -200,10 +200,10 @@ bool VCardXXPort::exportContacts(const KABC::Addressee::List &contacts) const
     return ok;
 }
 
-KABC::Addressee::List VCardXXPort::importContacts() const
+KContacts::Addressee::List VCardXXPort::importContacts() const
 {
     QString fileName;
-    KABC::Addressee::List addrList;
+    KContacts::Addressee::List addrList;
     KUrl::List urls;
 
     if (!option(QLatin1String("importData")).isEmpty()) {
@@ -290,9 +290,9 @@ KABC::Addressee::List VCardXXPort::importContacts() const
     return addrList;
 }
 
-KABC::Addressee::List VCardXXPort::parseVCard(const QByteArray &data) const
+KContacts::Addressee::List VCardXXPort::parseVCard(const QByteArray &data) const
 {
-    KABC::VCardConverter converter;
+    KContacts::VCardConverter converter;
 
     return converter.parseVCards(data);
 }
@@ -321,9 +321,9 @@ bool VCardXXPort::doExport(const QUrl &url, const QByteArray &data) const
     return KIO::NetAccess::upload(tmpFile.fileName(), newUrl, parentWidget());
 }
 
-KABC::Addressee::List VCardXXPort::filterContacts(const KABC::Addressee::List &addrList) const
+KContacts::Addressee::List VCardXXPort::filterContacts(const KContacts::Addressee::List &addrList) const
 {
-    KABC::Addressee::List list;
+    KContacts::Addressee::List list;
 
     if (addrList.isEmpty()) {
         return addrList;
@@ -335,10 +335,10 @@ KABC::Addressee::List VCardXXPort::filterContacts(const KABC::Addressee::List &a
         return list;
     }
 
-    KABC::Addressee::List::ConstIterator it;
-    KABC::Addressee::List::ConstIterator end(addrList.end());
+    KContacts::Addressee::List::ConstIterator it;
+    KContacts::Addressee::List::ConstIterator end(addrList.end());
     for (it = addrList.begin(); it != end; ++it) {
-        KABC::Addressee addr;
+        KContacts::Addressee addr;
 
         addr.setUid((*it).uid());
         addr.setFormattedName((*it).formattedName());
@@ -398,41 +398,41 @@ KABC::Addressee::List VCardXXPort::filterContacts(const KABC::Addressee::List &a
             addr.setOrganization((*it).organization());
             addr.setDepartment((*it).department());
 
-            KABC::PhoneNumber::List phones = (*it).phoneNumbers(KABC::PhoneNumber::Work);
-            KABC::PhoneNumber::List::Iterator phoneIt;
+            KContacts::PhoneNumber::List phones = (*it).phoneNumbers(KContacts::PhoneNumber::Work);
+            KContacts::PhoneNumber::List::Iterator phoneIt;
             for (phoneIt = phones.begin(); phoneIt != phones.end(); ++phoneIt) {
                 addr.insertPhoneNumber(*phoneIt);
             }
 
-            KABC::Address::List addresses = (*it).addresses(KABC::Address::Work);
-            KABC::Address::List::Iterator addrIt;
+            KContacts::Address::List addresses = (*it).addresses(KContacts::Address::Work);
+            KContacts::Address::List::Iterator addrIt;
             for (addrIt = addresses.begin(); addrIt != addresses.end(); ++addrIt) {
                 addr.insertAddress(*addrIt);
             }
         }
 
-        KABC::PhoneNumber::List phones = (*it).phoneNumbers();
-        KABC::PhoneNumber::List::Iterator phoneIt;
+        KContacts::PhoneNumber::List phones = (*it).phoneNumbers();
+        KContacts::PhoneNumber::List::Iterator phoneIt;
         for (phoneIt = phones.begin(); phoneIt != phones.end(); ++phoneIt) {
             int type = (*phoneIt).type();
 
-            if (type & KABC::PhoneNumber::Home && dlg->exportPrivateFields()) {
+            if (type & KContacts::PhoneNumber::Home && dlg->exportPrivateFields()) {
                 addr.insertPhoneNumber(*phoneIt);
-            } else if (type & KABC::PhoneNumber::Work && dlg->exportBusinessFields()) {
+            } else if (type & KContacts::PhoneNumber::Work && dlg->exportBusinessFields()) {
                 addr.insertPhoneNumber(*phoneIt);
             } else if (dlg->exportOtherFields()) {
                 addr.insertPhoneNumber(*phoneIt);
             }
         }
 
-        KABC::Address::List addresses = (*it).addresses();
-        KABC::Address::List::Iterator addrIt;
+        KContacts::Address::List addresses = (*it).addresses();
+        KContacts::Address::List::Iterator addrIt;
         for (addrIt = addresses.begin(); addrIt != addresses.end(); ++addrIt) {
             int type = (*addrIt).type();
 
-            if (type & KABC::Address::Home && dlg->exportPrivateFields()) {
+            if (type & KContacts::Address::Home && dlg->exportPrivateFields()) {
                 addr.insertAddress(*addrIt);
-            } else if (type & KABC::Address::Work && dlg->exportBusinessFields()) {
+            } else if (type & KContacts::Address::Work && dlg->exportBusinessFields()) {
                 addr.insertAddress(*addrIt);
             } else if (dlg->exportOtherFields()) {
                 addr.insertAddress(*addrIt);
@@ -444,8 +444,8 @@ KABC::Addressee::List VCardXXPort::filterContacts(const KABC::Addressee::List &a
         }
 
         if (dlg->exportEncryptionKeys()) {
-            addKey(addr, KABC::Key::PGP);
-            addKey(addr, KABC::Key::X509);
+            addKey(addr, KContacts::Key::PGP);
+            addKey(addr, KContacts::Key::X509);
         }
 
         list.append(addr);
@@ -456,11 +456,11 @@ KABC::Addressee::List VCardXXPort::filterContacts(const KABC::Addressee::List &a
     return list;
 }
 
-void VCardXXPort::addKey(KABC::Addressee &addr, KABC::Key::Type type) const
+void VCardXXPort::addKey(KContacts::Addressee &addr, KContacts::Key::Type type) const
 {
 #ifdef QGPGME_FOUND
     const QString fingerprint = addr.custom(QLatin1String("KADDRESSBOOK"),
-                                            (type == KABC::Key::PGP ? QLatin1String("OPENPGPFP") : QLatin1String("SMIMEFP")));
+                                            (type == KContacts::Key::PGP ? QLatin1String("OPENPGPFP") : QLatin1String("SMIMEFP")));
     if (fingerprint.isEmpty()) {
         return;
     }
@@ -484,7 +484,7 @@ void VCardXXPort::addKey(KABC::Addressee &addr, KABC::Key::Type type) const
         return;
     }
 
-    KABC::Key key;
+    KContacts::Key key;
     key.setType(type);
     key.setBinaryData(dataProvider.data());
 
@@ -496,7 +496,7 @@ void VCardXXPort::addKey(KABC::Addressee &addr, KABC::Key::Type type) const
 
 // ---------- VCardViewer Dialog ---------------- //
 
-VCardViewerDialog::VCardViewerDialog(const KABC::Addressee::List &list, QWidget *parent)
+VCardViewerDialog::VCardViewerDialog(const KContacts::Addressee::List &list, QWidget *parent)
     : QDialog(parent),
       mContacts(list)
 {
@@ -570,7 +570,7 @@ void VCardViewerDialog::writeConfig()
     group.sync();
 }
 
-KABC::Addressee::List VCardViewerDialog::contacts() const
+KContacts::Addressee::List VCardViewerDialog::contacts() const
 {
     return mContacts;
 }
@@ -579,7 +579,7 @@ void VCardViewerDialog::updateView()
 {
     mView->setRawContact(*mIt);
 
-    KABC::Addressee::List::Iterator it = mIt;
+    KContacts::Addressee::List::Iterator it = mIt;
     mApplyButton->setEnabled(++it != mContacts.end());
 }
 

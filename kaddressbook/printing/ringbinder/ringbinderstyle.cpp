@@ -55,7 +55,7 @@ enum PrintField {
     Note = 32
 };
 
-static QString contactsToHtml(const KABC::Addressee::List &contacts, int fields)
+static QString contactsToHtml(const KContacts::Addressee::List &contacts, int fields)
 {
     QString content;
 
@@ -63,7 +63,7 @@ static QString contactsToHtml(const KABC::Addressee::List &contacts, int fields)
     content += QLatin1String(" <body>\n");
     content += QLatin1String("  <table style=\"border-width: 1px; border-style: solid; "
                              "border-color: gray;\" width=\"100%\" cellspacing=\"0\">\n");
-    foreach (const KABC::Addressee &contact, contacts) {
+    foreach (const KContacts::Addressee &contact, contacts) {
         QString nameString = contact.familyName() + QLatin1String(", ") + contact.givenName();
 
         if (fields & Organization) {
@@ -81,8 +81,8 @@ static QString contactsToHtml(const KABC::Addressee::List &contacts, int fields)
 
         QStringList leftBlock, rightBlock;
         if (fields & PhoneNumbers) {
-            const KABC::PhoneNumber::List numbers = contact.phoneNumbers();
-            foreach (const KABC::PhoneNumber &number, numbers) {
+            const KContacts::PhoneNumber::List numbers = contact.phoneNumbers();
+            foreach (const KContacts::PhoneNumber &number, numbers) {
                 rightBlock.append(number.typeLabel() + QLatin1String(": ") + number.number());
             }
         }
@@ -100,8 +100,8 @@ static QString contactsToHtml(const KABC::Addressee::List &contacts, int fields)
             }
         }
         if (fields & Addresses) {
-            const KABC::Address::List addresses = contact.addresses();
-            foreach (const KABC::Address &address, addresses) {
+            const KContacts::Address::List addresses = contact.addresses();
+            foreach (const KContacts::Address &address, addresses) {
                 const QString data =
                     address.formattedAddress().replace(QLatin1String("\n\n"), QLatin1String("\n")).replace(QLatin1Char('\n'), QLatin1String("<br/>"));
                 const QString subBlock = QLatin1String("<p style=\"margin-top: 0px; margin-left: 20px\">") + data + QLatin1String("</p>");
@@ -165,7 +165,7 @@ RingBinderPrintStyle::~RingBinderPrintStyle()
 {
 }
 
-void RingBinderPrintStyle::print(const KABC::Addressee::List &contacts, PrintProgress *progress)
+void RingBinderPrintStyle::print(const KContacts::Addressee::List &contacts, PrintProgress *progress)
 {
     progress->addMessage(i18n("Setting up fields"));
     progress->setProgress(0);

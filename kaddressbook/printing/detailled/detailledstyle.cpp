@@ -57,7 +57,7 @@ struct ColorSettings {
     QString headerBackgroundColor;
 };
 
-QString contactsToHtml(const KABC::Addressee::List &contacts, const ColorSettings &settings)
+QString contactsToHtml(const KContacts::Addressee::List &contacts, const ColorSettings &settings)
 {
     QString content;
 
@@ -71,7 +71,7 @@ QString contactsToHtml(const KABC::Addressee::List &contacts, const ColorSetting
     content += QLatin1String("  </style>\n");
     content += QLatin1String(" </head>\n");
     content += QLatin1String(" <body>\n");
-    foreach (const KABC::Addressee &contact, contacts) {
+    foreach (const KContacts::Addressee &contact, contacts) {
         QString name = contact.realName();
         if (!contact.title().isEmpty() || !contact.role().isEmpty()) {
             QStringList content;
@@ -107,14 +107,14 @@ QString contactsToHtml(const KABC::Addressee::List &contacts, const ColorSetting
         }
 
         if (!contact.phoneNumbers().isEmpty()) {
-            const KABC::PhoneNumber::List numbers = contact.phoneNumbers();
+            const KContacts::PhoneNumber::List numbers = contact.phoneNumbers();
 
             ContactBlock block;
             block.header = (numbers.count() == 1 ?
                             i18n("Telephone:") :
                             i18n("Telephones:"));
 
-            foreach (const KABC::PhoneNumber &number, numbers) {
+            foreach (const KContacts::PhoneNumber &number, numbers) {
                 const QString line = number.typeLabel() + QLatin1String(": ") + number.number();
                 block.entries.append(line);
             }
@@ -131,31 +131,31 @@ QString contactsToHtml(const KABC::Addressee::List &contacts, const ColorSetting
         }
 
         if (!contact.addresses().isEmpty()) {
-            const KABC::Address::List addresses = contact.addresses();
+            const KContacts::Address::List addresses = contact.addresses();
 
-            foreach (const KABC::Address &address, addresses) {
+            foreach (const KContacts::Address &address, addresses) {
                 ContactBlock block;
 
                 switch (address.type()) {
-                case KABC::Address::Dom:
+                case KContacts::Address::Dom:
                     block.header = i18n("Domestic Address");
                     break;
-                case KABC::Address::Intl:
+                case KContacts::Address::Intl:
                     block.header = i18n("International Address");
                     break;
-                case KABC::Address::Postal:
+                case KContacts::Address::Postal:
                     block.header = i18n("Postal Address");
                     break;
-                case KABC::Address::Parcel:
+                case KContacts::Address::Parcel:
                     block.header = i18n("Parcel Address");
                     break;
-                case KABC::Address::Home:
+                case KContacts::Address::Home:
                     block.header = i18n("Home Address");
                     break;
-                case KABC::Address::Work:
+                case KContacts::Address::Work:
                     block.header = i18n("Work Address");
                     break;
-                case KABC::Address::Pref:
+                case KContacts::Address::Pref:
                 default:
                     block.header = i18n("Preferred Address");
                 }
@@ -273,7 +273,7 @@ DetailledPrintStyle::~DetailledPrintStyle()
 {
 }
 
-void DetailledPrintStyle::print(const KABC::Addressee::List &contacts, PrintProgress *progress)
+void DetailledPrintStyle::print(const KContacts::Addressee::List &contacts, PrintProgress *progress)
 {
     progress->addMessage(i18n("Setting up colors"));
     progress->setProgress(0);

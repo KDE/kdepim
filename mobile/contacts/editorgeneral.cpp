@@ -23,8 +23,8 @@
 
 #include <AkonadiCore/Collection>
 
-#include <KABC/Addressee>
-#include <KABC/PhoneNumber>
+#include <KContacts/Addressee>
+#include <KContacts/PhoneNumber>
 
 #include <KIconLoader>
 
@@ -62,11 +62,11 @@ class EditorGeneral::Private
       QObject::connect( mUi.phone1, SIGNAL(clearClicked()), q, SLOT(clearPhoneClicked()) );
       QObject::connect( mUi.phone2, SIGNAL(clearClicked()), q, SLOT(clearPhoneClicked()) );
       mPhoneWidgets << new PhoneWidgets( mUi.phone1, mUi.phone1Type );
-      mUi.phone1Type->setType( KABC::PhoneNumber::Pref );
+      mUi.phone1Type->setType( KContacts::PhoneNumber::Pref );
       mPhoneWidgets << new PhoneWidgets( mUi.phone2, mUi.phone2Type );
       mLastPhoneRow = 4; // fifth row
 
-      mUi.collectionSelector->setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
+      mUi.collectionSelector->setMimeTypeFilter( QStringList() << KContacts::Addressee::mimeType() );
       mUi.collectionSelector->setAccessRightsFilter( Akonadi::Collection::CanCreateItem | Akonadi::Collection::CanChangeItem );
 
       mUi.gridLayout->removeWidget( mUi.pictureButton );
@@ -98,7 +98,7 @@ class EditorGeneral::Private
   public:
     Ui::EditorGeneral mUi;
 
-    KABC::Addressee mContact;
+    KContacts::Addressee mContact;
 
     QList<MobileLineEdit*> mEmailInputs;
     QList<PhoneWidgets*> mPhoneWidgets;
@@ -334,7 +334,7 @@ void EditorGeneral::Private::clearPhoneClicked()
     mUi.gridLayout->addWidget( mUi.launchAccountWizardButton, mLastPhoneRow + 1, 1, 1, 1 );
   } else {
     last->mInput->clear();
-    last->mType->setType( KABC::PhoneNumber::Home );
+    last->mType->setType( KContacts::PhoneNumber::Home );
     last->mId.clear();
   }
 }
@@ -368,7 +368,7 @@ EditorGeneral::~EditorGeneral()
   delete d;
 }
 
-void EditorGeneral::loadContact( const KABC::Addressee &contact, const Akonadi::ContactMetaData& )
+void EditorGeneral::loadContact( const KContacts::Addressee &contact, const Akonadi::ContactMetaData& )
 {
   d->mContact = contact;
 
@@ -385,11 +385,11 @@ void EditorGeneral::loadContact( const KABC::Addressee &contact, const Akonadi::
     ++inputIt;
   }
 
-  const KABC::PhoneNumber::List phones = contact.phoneNumbers();
+  const KContacts::PhoneNumber::List phones = contact.phoneNumbers();
   d->ensurePhoneRows( phones.count() );
 
   QList<PhoneWidgets*>::iterator widgetIt = d->mPhoneWidgets.begin();
-  Q_FOREACH( const KABC::PhoneNumber &phone, phones ) {
+  Q_FOREACH( const KContacts::PhoneNumber &phone, phones ) {
     PhoneWidgets* widgets = *widgetIt;
 
     widgets->mId = phone.id();
@@ -403,7 +403,7 @@ void EditorGeneral::loadContact( const KABC::Addressee &contact, const Akonadi::
   d->mUi.pictureButton->loadContact( contact );
 }
 
-void EditorGeneral::saveContact( KABC::Addressee &contact, Akonadi::ContactMetaData& ) const
+void EditorGeneral::saveContact( KContacts::Addressee &contact, Akonadi::ContactMetaData& ) const
 {
   contact.setPrefix( d->mContact.prefix() );
   contact.setGivenName( d->mContact.givenName() );
@@ -421,7 +421,7 @@ void EditorGeneral::saveContact( KABC::Addressee &contact, Akonadi::ContactMetaD
   Q_FOREACH( PhoneWidgets *widgets, d->mPhoneWidgets ) {
     const QString number = widgets->mInput->text().trimmed();
     if ( !number.isEmpty() ) {
-      KABC::PhoneNumber phone( number, widgets->mType->type() );
+      KContacts::PhoneNumber phone( number, widgets->mType->type() );
       if ( !widgets->mId.isEmpty() ) {
         phone.setId( widgets->mId );
       }
@@ -442,7 +442,7 @@ void EditorGeneral::setDefaultCollection( const Akonadi::Collection &collection 
   d->mUi.collectionSelector->setDefaultCollection( collection );
 }
 
-void EditorGeneral::updateName( const KABC::Addressee &contact )
+void EditorGeneral::updateName( const KContacts::Addressee &contact )
 {
   // this slot is called when the name parts have been changed in the 'More' page
   blockSignals( true );

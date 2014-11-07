@@ -20,7 +20,7 @@
 
 #include <KLocalizedString>
 
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 
 #include <AkonadiWidgets/CollectionComboBox>
 #include <QListWidget>
@@ -58,7 +58,7 @@ MergeContactWidget::MergeContactWidget(const Akonadi::Item::List &items, QWidget
     mCollectionCombobox = new Akonadi::CollectionComboBox(_k_mergeStubModel);
     mCollectionCombobox->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
     mCollectionCombobox->setMinimumWidth(250);
-    mCollectionCombobox->setMimeTypeFilter(QStringList() << KABC::Addressee::mimeType());
+    mCollectionCombobox->setMimeTypeFilter(QStringList() << KContacts::Addressee::mimeType());
     mCollectionCombobox->setObjectName(QLatin1String("akonadicombobox"));
     hbox->addWidget(mCollectionCombobox);
 

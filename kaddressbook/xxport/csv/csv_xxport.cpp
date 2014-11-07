@@ -39,7 +39,7 @@ CsvXXPort::CsvXXPort(QWidget *parent)
 {
 }
 
-bool CsvXXPort::exportContacts(const KABC::Addressee::List &contacts) const
+bool CsvXXPort::exportContacts(const KContacts::Addressee::List &contacts) const
 {
     QUrl url = KFileDialog::getSaveUrl(KUrl(QLatin1String("addressbook.csv")));
     if (url.isEmpty()) {
@@ -89,7 +89,7 @@ bool CsvXXPort::exportContacts(const KABC::Addressee::List &contacts) const
     }
 }
 
-void CsvXXPort::exportToFile(QFile *file, const KABC::Addressee::List &contacts) const
+void CsvXXPort::exportToFile(QFile *file, const KContacts::Addressee::List &contacts) const
 {
     QTextStream stream(file);
     stream.setCodec(QTextCodec::codecForLocale());
@@ -117,7 +117,7 @@ void CsvXXPort::exportToFile(QFile *file, const KABC::Addressee::List &contacts)
     // Then all the contacts
     for (int i = 0; i < contacts.count(); ++i) {
 
-        const KABC::Addressee contact = contacts.at(i);
+        const KContacts::Addressee contact = contacts.at(i);
         first = true;
 
         for (int j = 0; j < fields.count(); ++j) {
@@ -148,9 +148,9 @@ void CsvXXPort::exportToFile(QFile *file, const KABC::Addressee::List &contacts)
     }
 }
 
-KABC::Addressee::List CsvXXPort::importContacts() const
+KContacts::Addressee::List CsvXXPort::importContacts() const
 {
-    KABC::Addressee::List contacts;
+    KContacts::Addressee::List contacts;
 
     QPointer<CSVImportDialog> dlg = new CSVImportDialog(parentWidget());
     if (dlg->exec() && dlg) {

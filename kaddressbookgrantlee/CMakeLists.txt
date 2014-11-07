@@ -28,7 +28,7 @@ target_link_libraries(kaddressbookgrantlee
   Grantlee5::Templates
   grantleetheme
   KF5::AkonadiCore
-  KF5::Abc
+  KF5::Contacts
   KF5::AkonadiContact
 )
 

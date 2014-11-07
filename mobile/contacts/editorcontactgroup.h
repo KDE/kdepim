@@ -27,7 +27,7 @@ namespace Akonadi
   class Collection;
 }
 
-namespace KABC
+namespace KContacts
 {
   class ContactGroup;
 }
@@ -45,9 +45,9 @@ class EditorContactGroup : public QWidget
 
     void setDefaultCollection( const Akonadi::Collection &collection );
 
-    void loadContactGroup( const KABC::ContactGroup &contactGroup );
+    void loadContactGroup( const KContacts::ContactGroup &contactGroup );
 
-    void saveContactGroup( KABC::ContactGroup &contactGroup ) const;
+    void saveContactGroup( KContacts::ContactGroup &contactGroup ) const;
 
     Akonadi::Collection selectedCollection() const;
 

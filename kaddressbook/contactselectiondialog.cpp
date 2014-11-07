@@ -59,7 +59,7 @@ void ContactSelectionDialog::setDefaultAddressBook(const Akonadi::Collection &ad
     mSelectionWidget->setDefaultAddressBook(addressBook);
 }
 
-KABC::Addressee::List ContactSelectionDialog::selectedContacts() const
+KContacts::Addressee::List ContactSelectionDialog::selectedContacts() const
 {
     return mSelectionWidget->selectedContacts();
 }

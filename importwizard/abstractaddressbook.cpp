@@ -18,8 +18,8 @@
 #include "importwizard.h"
 #include "importaddressbookpage.h"
 
-#include <KABC/Addressee>
-#include <kabc/contactgroup.h>
+#include <KContacts/Addressee>
+#include <kcontacts/contactgroup.h>
 #include <KLocalizedString>
 #include <QDebug>
 #include <AkonadiCore/ItemCreateJob>
@@ -42,7 +42,7 @@ bool AbstractAddressBook::selectAddressBook()
 {
     addAddressBookImportInfo(i18n("Creating new contact..."));
     if (!mCollection.isValid()) {
-        const QStringList mimeTypes(KABC::Addressee::mimeType());
+        const QStringList mimeTypes(KContacts::Addressee::mimeType());
         QPointer<Akonadi::CollectionDialog> dlg = new Akonadi::CollectionDialog(mImportWizard);
         dlg->setMimeTypeFilter(mimeTypes);
         dlg->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
@@ -61,19 +61,19 @@ bool AbstractAddressBook::selectAddressBook()
     return true;
 }
 
-void AbstractAddressBook::createGroup(const KABC::ContactGroup &group)
+void AbstractAddressBook::createGroup(const KContacts::ContactGroup &group)
 {
     if (selectAddressBook()) {
         Akonadi::Item item;
-        item.setPayload<KABC::ContactGroup>(group);
-        item.setMimeType(KABC::ContactGroup::mimeType());
+        item.setPayload<KContacts::ContactGroup>(group);
+        item.setMimeType(KContacts::ContactGroup::mimeType());
 
         Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob(item, mCollection);
         connect(job, &Akonadi::ItemCreateJob::result, this, &AbstractAddressBook::slotStoreDone);
     }
 }
 
-void AbstractAddressBook::addImportNote(KABC::Addressee &address, const QString &applicationName)
+void AbstractAddressBook::addImportNote(KContacts::Addressee &address, const QString &applicationName)
 {
     QString currentNote = address.note();
     if (!currentNote.isEmpty()) {
@@ -83,12 +83,12 @@ void AbstractAddressBook::addImportNote(KABC::Addressee &address, const QString 
     address.setNote(currentNote);
 }
 
-void AbstractAddressBook::createContact(const KABC::Addressee &address)
+void AbstractAddressBook::createContact(const KContacts::Addressee &address)
 {
     if (selectAddressBook()) {
         Akonadi::Item item;
-        item.setPayload<KABC::Addressee>(address);
-        item.setMimeType(KABC::Addressee::mimeType());
+        item.setPayload<KContacts::Addressee>(address);
+        item.setMimeType(KContacts::Addressee::mimeType());
         Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob(item, mCollection);
         connect(job, &Akonadi::ItemCreateJob::result, this, &AbstractAddressBook::slotStoreDone);
     }

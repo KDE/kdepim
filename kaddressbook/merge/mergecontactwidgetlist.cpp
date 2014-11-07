@@ -28,7 +28,7 @@ MergeContactWidgetList::~MergeContactWidgetList()
 
 }
 
-QString MergeContactWidgetList::itemName(const KABC::Addressee &address) const
+QString MergeContactWidgetList::itemName(const KContacts::Addressee &address) const
 {
     const QString realName = address.realName();
     if (!realName.isEmpty()) {
@@ -44,9 +44,9 @@ QString MergeContactWidgetList::itemName(const KABC::Addressee &address) const
 void MergeContactWidgetList::fillListContact(const Akonadi::Item::List &items)
 {
     Q_FOREACH (const Akonadi::Item &item, items) {
-        if (item.hasPayload<KABC::Addressee>()) {
+        if (item.hasPayload<KContacts::Addressee>()) {
             MergeContactWidgetListItem *widgetItem = new MergeContactWidgetListItem(item, this);
-            KABC::Addressee address = item.payload<KABC::Addressee>();
+            KContacts::Addressee address = item.payload<KContacts::Addressee>();
 
             widgetItem->setText(itemName(address));
         }

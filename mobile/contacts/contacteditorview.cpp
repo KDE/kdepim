@@ -33,7 +33,7 @@
 #include <AkonadiCore/Item>
 #include <AkonadiCore/ItemFetchScope>
 
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 #include <KLocalizedString>
 #include <QDebug>
 
@@ -78,7 +78,7 @@ class ContactEditorView::Private : public IncidenceEditorNG::ItemEditorUi
 
     bool hasSupportedPayload( const Item &item ) const
     {
-      return item.hasPayload<KABC::Addressee>();
+      return item.hasPayload<KContacts::Addressee>();
     }
 
     bool isDirty() const
@@ -116,8 +116,8 @@ void ContactEditorView::Private::addDetailEditor( EditorBase *editor )
   if ( editor != 0 ) {
     mDetailEditors << editor;
 
-    if ( mItem.hasPayload<KABC::Addressee>() ) {
-      const KABC::Addressee contact = mItem.payload<KABC::Addressee>();
+    if ( mItem.hasPayload<KContacts::Addressee>() ) {
+      const KContacts::Addressee contact = mItem.payload<KContacts::Addressee>();
       // tokoe: enable when ContactMetaData is part of public API
       // mContactMetaData.load( mItem );
       editor->loadContact( contact, mContactMetaData );
@@ -138,12 +138,12 @@ void ContactEditorView::Private::saveFailed( IncidenceEditorNG::EditorItemManage
 
 void ContactEditorView::Private::load( const Item &item )
 {
-  Q_ASSERT( item.hasPayload<KABC::Addressee>() );
+  Q_ASSERT( item.hasPayload<KContacts::Addressee>() );
 
   mItem = item;
   mCollection = item.parentCollection();
 
-  const KABC::Addressee contact = mItem.payload<KABC::Addressee>();
+  const KContacts::Addressee contact = mItem.payload<KContacts::Addressee>();
   // tokoe: enable when ContactMetaData is part of public API
   // mContactMetaData.load( mItem );
 
@@ -161,9 +161,9 @@ Item ContactEditorView::Private::save( const Item &item )
 {
   Item result = item;
 
-  result.setMimeType( KABC::Addressee::mimeType() );
+  result.setMimeType( KContacts::Addressee::mimeType() );
 
-  KABC::Addressee contact;
+  KContacts::Addressee contact;
   if ( mEditorGeneral != 0 ) {
     mEditorGeneral->saveContact( contact, mContactMetaData );
   }
@@ -172,7 +172,7 @@ Item ContactEditorView::Private::save( const Item &item )
     editor->saveContact( contact, mContactMetaData );
   }
 
-  result.setPayload<KABC::Addressee>( contact );
+  result.setPayload<KContacts::Addressee>( contact );
   // tokoe: enable when ContactMetaData is part of public API
   // mContactMetaData.store( result );
 
@@ -279,10 +279,10 @@ void ContactEditorView::setEditorMore( EditorMore *editor )
     qWarning( "No business editor set!" );
   }
 
-  connect( d->mEditorGeneral, SIGNAL(nameChanged(KABC::Addressee)),
-           d->mEditorMore, SLOT(updateName(KABC::Addressee)) );
-  connect( d->mEditorMore, SIGNAL(nameChanged(KABC::Addressee)),
-           d->mEditorGeneral, SLOT(updateName(KABC::Addressee)) );
+  connect( d->mEditorGeneral, SIGNAL(nameChanged(KContacts::Addressee)),
+           d->mEditorMore, SLOT(updateName(KContacts::Addressee)) );
+  connect( d->mEditorMore, SIGNAL(nameChanged(KContacts::Addressee)),
+           d->mEditorGeneral, SLOT(updateName(KContacts::Addressee)) );
 }
 
 void ContactEditorView::setDefaultCollection( const Akonadi::Collection &collection )

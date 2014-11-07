@@ -464,7 +464,7 @@ void AclManager::save()
             Akonadi::ContactGroupExpandJob *expandJob =
                 new Akonadi::ContactGroupExpandJob(searchJob->contactGroups().first(), this);
             if (expandJob->exec()) {
-                foreach (const KABC::Addressee &contact, expandJob->contacts()) {
+                foreach (const KContacts::Addressee &contact, expandJob->contacts()) {
                     const QByteArray rawEmail =
                         KPIMUtils::extractEmailAddress(contact.preferredEmail().toUtf8());
                     if (!rawEmail.isEmpty()) {

@@ -33,7 +33,7 @@
 #include <Akonadi/Contact/ContactsTreeModel>
 #include <AkonadiWidgets/entitylistview.h>
 #include <AkonadiWidgets/entitytreeview.h>
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 #include <AkonadiCore/ItemFetchScope>
 
 RecursiveItemListWidget::RecursiveItemListWidget(QWidget *parent, Qt::WindowFlags f)
@@ -42,7 +42,7 @@ RecursiveItemListWidget::RecursiveItemListWidget(QWidget *parent, Qt::WindowFlag
 
     Akonadi::ChangeRecorder *changeRecorder = new Akonadi::ChangeRecorder(this);
     changeRecorder->setAllMonitored(true);
-    changeRecorder->setMimeTypeMonitored(KABC::Addressee::mimeType());
+    changeRecorder->setMimeTypeMonitored(KContacts::Addressee::mimeType());
     changeRecorder->itemFetchScope().fetchFullPayload(true);
     m_etm = new Akonadi::ContactsTreeModel(changeRecorder, this);
 

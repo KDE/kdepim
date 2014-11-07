@@ -31,19 +31,19 @@ class EditorMore : public EditorBase
 
     ~EditorMore();
 
-    void loadContact( const KABC::Addressee &contact, const Akonadi::ContactMetaData &metaData );
-    void saveContact( KABC::Addressee &contact, Akonadi::ContactMetaData &metaData ) const;
+    void loadContact( const KContacts::Addressee &contact, const Akonadi::ContactMetaData &metaData );
+    void saveContact( KContacts::Addressee &contact, Akonadi::ContactMetaData &metaData ) const;
 
   public Q_SLOTS:
     void updateOrganization( const QString &organization );
-    void updateName( const KABC::Addressee &contact );
+    void updateName( const KContacts::Addressee &contact );
 
   Q_SIGNALS:
-    void nameChanged( const KABC::Addressee &contact );
+    void nameChanged( const KContacts::Addressee &contact );
 
   private:
-    void loadCustomFields( const KABC::Addressee &contact, const Akonadi::ContactMetaData &metaData );
-    void saveCustomFields( KABC::Addressee &contact, Akonadi::ContactMetaData &metaData ) const;
+    void loadCustomFields( const KContacts::Addressee &contact, const Akonadi::ContactMetaData &metaData );
+    void saveCustomFields( KContacts::Addressee &contact, Akonadi::ContactMetaData &metaData ) const;
 
     class Private;
     Private *const d;

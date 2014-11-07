@@ -25,8 +25,8 @@
 #include <AkonadiCore/entitytreemodel.h>
 #include <AkonadiCore/item.h>
 
-#include <kabc/addressee.h>
-#include <kabc/contactgroup.h>
+#include <kcontacts/addressee.h>
+#include <kcontacts/contactgroup.h>
 
 #include "categoryselectwidget.h"
 
@@ -85,8 +85,8 @@ bool CategoryFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &pare
     }
 
     //qDebug() << "for row" << row << "item" << item.url() << "filter" << d->filterIdList;
-    if (item.hasPayload<KABC::Addressee>()) {
-        const KABC::Addressee contact = item.payload<KABC::Addressee>();
+    if (item.hasPayload<KContacts::Addressee>()) {
+        const KContacts::Addressee contact = item.payload<KContacts::Addressee>();
 
         const QStringList categories = contact.categories();
         //qDebug() << "is contact" << contact.assembledName() << "cats" << categories;
@@ -115,7 +115,7 @@ bool CategoryFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &pare
             //qDebug() << "item with no categories";
             return d->filterIdList.contains(CategorySelectWidget::FilterUntagged);
         }
-    } else if (item.hasPayload<KABC::ContactGroup>()) { // a contact group item
+    } else if (item.hasPayload<KContacts::ContactGroup>()) { // a contact group item
         return d->filterIdList.contains(CategorySelectWidget::FilterGroups);
     }
 

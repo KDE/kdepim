@@ -18,7 +18,7 @@
 #include "mailsenderjobtest.h"
 #include "mailsenderjob.h"
 
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 
 #include <qtest.h>
 #include <QSignalSpy>
@@ -40,7 +40,7 @@ void MailSenderJobTest::shouldNotSendSignalWhenNoValidAddressItem()
 {
     Akonadi::Item::List lst;
     Akonadi::Item item;
-    KABC::Addressee address;
+    KContacts::Addressee address;
     address.setName(QLatin1String("foo1"));
     lst << item << item;
     KABMailSender::MailSenderJob mailsender(lst);
@@ -53,9 +53,9 @@ void MailSenderJobTest::shouldNotSendSignalWhenNoEmails()
 {
     Akonadi::Item::List lst;
     Akonadi::Item item;
-    KABC::Addressee address;
+    KContacts::Addressee address;
     address.setName(QLatin1String("foo1"));
-    item.setPayload<KABC::Addressee>(address);
+    item.setPayload<KContacts::Addressee>(address);
     lst << item << item;
     KABMailSender::MailSenderJob mailsender(lst);
     QSignalSpy spy(&mailsender, SIGNAL(sendMails(QStringList)));
@@ -67,10 +67,10 @@ void MailSenderJobTest::shouldSendSignalWhenOneEmail()
 {
     Akonadi::Item::List lst;
     Akonadi::Item item;
-    KABC::Addressee address;
+    KContacts::Addressee address;
     address.setName(QLatin1String("foo1"));
     address.insertEmail(QLatin1String("foo@kde.org"), true);
-    item.setPayload<KABC::Addressee>(address);
+    item.setPayload<KContacts::Addressee>(address);
     lst << item;
     KABMailSender::MailSenderJob mailsender(lst);
     QSignalSpy spy(&mailsender, SIGNAL(sendMails(QStringList)));
@@ -84,10 +84,10 @@ void MailSenderJobTest::shouldNotSendTwiceEmails()
 {
     Akonadi::Item::List lst;
     Akonadi::Item item;
-    KABC::Addressee address;
+    KContacts::Addressee address;
     address.setName(QLatin1String("foo1"));
     address.insertEmail(QLatin1String("foo@kde.org"), true);
-    item.setPayload<KABC::Addressee>(address);
+    item.setPayload<KContacts::Addressee>(address);
     lst << item << item;
     KABMailSender::MailSenderJob mailsender(lst);
     QSignalSpy spy(&mailsender, SIGNAL(sendMails(QStringList)));
@@ -100,11 +100,11 @@ void MailSenderJobTest::shouldNotAddInvalidEmail()
 {
     Akonadi::Item::List lst;
     Akonadi::Item item;
-    KABC::Addressee address;
+    KContacts::Addressee address;
     address.setName(QLatin1String("foo1"));
     //Invalid email
     address.insertEmail(QLatin1String("foo2"), true);
-    item.setPayload<KABC::Addressee>(address);
+    item.setPayload<KContacts::Addressee>(address);
     lst << item << item;
     KABMailSender::MailSenderJob mailsender(lst);
     QSignalSpy spy(&mailsender, SIGNAL(sendMails(QStringList)));
@@ -116,32 +116,32 @@ void MailSenderJobTest::shouldEmitSignalIfThereIsAValidEmail()
 {
     Akonadi::Item::List lst;
     Akonadi::Item item;
-    KABC::Addressee address;
+    KContacts::Addressee address;
     address.setName(QLatin1String("foo1"));
     //Invalid email
     address.insertEmail(QLatin1String("foo2"), true);
-    item.setPayload<KABC::Addressee>(address);
+    item.setPayload<KContacts::Addressee>(address);
     lst << item;
 
     Akonadi::Item item2;
-    KABC::Addressee address2;
+    KContacts::Addressee address2;
     address2.setName(QLatin1String("foo2"));
     address2.insertEmail(QLatin1String("foo2@kde.org"), true);
-    item2.setPayload<KABC::Addressee>(address2);
+    item2.setPayload<KContacts::Addressee>(address2);
     lst << item2;
 
     Akonadi::Item item3;
-    KABC::Addressee address3;
+    KContacts::Addressee address3;
     address3.setName(QLatin1String("foo3"));
     address3.insertEmail(QLatin1String("foo3@"), true);
-    item3.setPayload<KABC::Addressee>(address3);
+    item3.setPayload<KContacts::Addressee>(address3);
     lst << item3;
 
     Akonadi::Item item4;
-    KABC::Addressee address4;
+    KContacts::Addressee address4;
     address4.setName(QLatin1String("foo4"));
     address4.insertEmail(QLatin1String("foo4@kde.org"), true);
-    item4.setPayload<KABC::Addressee>(address4);
+    item4.setPayload<KContacts::Addressee>(address4);
     lst << item4;
 
     KABMailSender::MailSenderJob mailsender(lst);

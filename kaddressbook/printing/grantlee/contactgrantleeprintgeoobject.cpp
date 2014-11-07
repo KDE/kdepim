@@ -19,7 +19,7 @@
 
 using namespace KABPrinting;
 
-ContactGrantleePrintGeoObject::ContactGrantleePrintGeoObject(const KABC::Geo &geo, QObject *parent)
+ContactGrantleePrintGeoObject::ContactGrantleePrintGeoObject(const KContacts::Geo &geo, QObject *parent)
     : QObject(parent),
       mGeo(geo)
 {

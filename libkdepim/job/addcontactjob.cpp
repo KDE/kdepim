@@ -24,7 +24,7 @@
 #include <Akonadi/Contact/ContactSearchJob>
 #include <item.h>
 #include <itemcreatejob.h>
-#include <kabc/addressee.h>
+#include <kcontacts/addressee.h>
 #include <KLocalizedString>
 #include <kmessagebox.h>
 
@@ -35,12 +35,12 @@ using namespace KPIM;
 class AddContactJob::Private
 {
 public:
-    Private(AddContactJob *qq, const KABC::Addressee &contact, QWidget *parentWidget)
+    Private(AddContactJob *qq, const KContacts::Addressee &contact, QWidget *parentWidget)
         : q(qq), mContact(contact), mParentWidget(parentWidget), mShowMessageBox(true)
     {
     }
 
-    Private(AddContactJob *qq, const KABC::Addressee &contact, const Akonadi::Collection &collection)
+    Private(AddContactJob *qq, const KContacts::Addressee &contact, const Akonadi::Collection &collection)
         : q(qq), mContact(contact), mParentWidget(0), mCollection(collection), mShowMessageBox(true)
     {
     }
@@ -56,7 +56,7 @@ public:
 
         const Akonadi::ContactSearchJob *searchJob = qobject_cast<Akonadi::ContactSearchJob *>(job);
 
-        const KABC::Addressee::List contacts = searchJob->contacts();
+        const KContacts::Addressee::List contacts = searchJob->contacts();
 
         if (!contacts.isEmpty()) {   // contact is already part of the address book...
             if (mShowMessageBox) {
@@ -93,8 +93,8 @@ public:
         if (mCollection.isValid()) {
             // create the new item
             Akonadi::Item item;
-            item.setMimeType(KABC::Addressee::mimeType());
-            item.setPayload<KABC::Addressee>(mContact);
+            item.setMimeType(KContacts::Addressee::mimeType());
+            item.setPayload<KContacts::Addressee>(mContact);
 
             // save the new item in akonadi storage
             Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob(item, mCollection);
@@ -130,18 +130,18 @@ public:
     }
 
     AddContactJob *q;
-    KABC::Addressee mContact;
+    KContacts::Addressee mContact;
     QWidget *mParentWidget;
     Akonadi::Collection mCollection;
     bool mShowMessageBox;
 };
 
-AddContactJob::AddContactJob(const KABC::Addressee &contact, QWidget *parentWidget, QObject *parent)
+AddContactJob::AddContactJob(const KContacts::Addressee &contact, QWidget *parentWidget, QObject *parent)
     : KJob(parent), d(new Private(this, contact, parentWidget))
 {
 }
 
-AddContactJob::AddContactJob(const KABC::Addressee &contact, const Akonadi::Collection &collection, QObject *parent)
+AddContactJob::AddContactJob(const KContacts::Addressee &contact, const Akonadi::Collection &collection, QObject *parent)
     : KJob(parent), d(new Private(this, contact, collection))
 {
 }

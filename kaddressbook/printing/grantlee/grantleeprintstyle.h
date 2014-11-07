@@ -39,9 +39,9 @@ public:
     explicit GrantleePrintStyle(const QString &themePath, PrintingWizard *parent);
     ~GrantleePrintStyle();
 
-    void print(const KABC::Addressee::List &, PrintProgress *);
+    void print(const KContacts::Addressee::List &, PrintProgress *);
 private:
-    QString contactsToHtml(const KABC::Addressee::List &contacts);
+    QString contactsToHtml(const KContacts::Addressee::List &contacts);
     QString mErrorMessage;
     Grantlee::Engine *mEngine;
     QSharedPointer<Grantlee::FileSystemTemplateLoader> mTemplateLoader;

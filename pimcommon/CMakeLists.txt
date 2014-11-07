@@ -245,7 +245,7 @@ if ( Qt5TextToSpeech_FOUND )
 endif()
 
 target_link_libraries(pimcommon
-    KF5::Abc
+    KF5::Contacts
     KF5::AkonadiContact
     KF5::AkonadiCore
     KF5::PimUtils

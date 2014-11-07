@@ -26,7 +26,7 @@
 #include <calendarsupport/kcalprefs.h>
 #include <akonadi/calendar/calendarsettings.h>
 
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 
 #include <KCalCore/Event>
 #include <KCalCore/Todo>
@@ -322,7 +322,7 @@ void IncidenceDefaults::setAttendees( const QStringList &attendees )
   QStringList::ConstIterator it;
   for ( it = attendees.begin(); it != attendees.end(); ++it ) {
     QString name, email;
-    KABC::Addressee::parseEmailAddress( *it, name, email );
+    KContacts::Addressee::parseEmailAddress( *it, name, email );
     d->mAttendees << KCalCore::Attendee::Ptr(
       new KCalCore::Attendee( name, email, true, KCalCore::Attendee::NeedsAction ) );
   }

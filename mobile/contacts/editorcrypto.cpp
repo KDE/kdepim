@@ -23,7 +23,7 @@
 
 #include "libkleo/kleo/enum.h"
 
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 
 class EditorCrypto::Private
 {
@@ -59,12 +59,12 @@ class EditorCrypto::Private
     QCheckBox* mProtocolCB[NumberOfProtocols];
 };
 
-static QString loadCustom( const KABC::Addressee &contact, const QString &key )
+static QString loadCustom( const KContacts::Addressee &contact, const QString &key )
 {
   return contact.custom( QLatin1String( "KADDRESSBOOK" ), key );
 }
 
-static void storeCustom( KABC::Addressee &contact, const QString &key, const QString &value )
+static void storeCustom( KContacts::Addressee &contact, const QString &key, const QString &value )
 {
   if ( value.isEmpty() )
     contact.removeCustom( QLatin1String( "KADDRESSBOOK" ), key );
@@ -83,7 +83,7 @@ EditorCrypto::~EditorCrypto()
   delete d;
 }
 
-void EditorCrypto::loadContact( const KABC::Addressee &contact, const Akonadi::ContactMetaData& )
+void EditorCrypto::loadContact( const KContacts::Addressee &contact, const Akonadi::ContactMetaData& )
 {
   const QStringList protocolPrefs = loadCustom( contact, QLatin1String( "CRYPTOPROTOPREF" ) ).split( QLatin1Char( ',' ), QString::SkipEmptyParts );
   const uint cryptoFormats = Kleo::stringListToCryptoMessageFormats( protocolPrefs );
@@ -99,7 +99,7 @@ void EditorCrypto::loadContact( const KABC::Addressee &contact, const Akonadi::C
   d->mUi.smimeCertificateRequester->setFingerprints( loadCustom( contact, QLatin1String( "SMIMEFP" ) ).split( QLatin1Char( ',' ), QString::SkipEmptyParts ) );
 }
 
-void EditorCrypto::saveContact( KABC::Addressee &contact, Akonadi::ContactMetaData& ) const
+void EditorCrypto::saveContact( KContacts::Addressee &contact, Akonadi::ContactMetaData& ) const
 {
   uint cryptoFormats = 0;
   uint msgFormat = 1;

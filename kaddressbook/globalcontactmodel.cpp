@@ -26,8 +26,8 @@
 #include <AkonadiCore/Session>
 #include <Akonadi/Contact/ContactsTreeModel>
 
-#include <KABC/Addressee>
-#include <KABC/ContactGroup>
+#include <KContacts/Addressee>
+#include <KContacts/ContactGroup>
 
 GlobalContactModel *GlobalContactModel::mInstance = 0;
 
@@ -44,8 +44,8 @@ GlobalContactModel::GlobalContactModel()
     mMonitor->fetchCollection(true);
     mMonitor->setItemFetchScope(scope);
     mMonitor->setCollectionMonitored(Akonadi::Collection::root());
-    mMonitor->setMimeTypeMonitored(KABC::Addressee::mimeType(), true);
-    mMonitor->setMimeTypeMonitored(KABC::ContactGroup::mimeType(), true);
+    mMonitor->setMimeTypeMonitored(KContacts::Addressee::mimeType(), true);
+    mMonitor->setMimeTypeMonitored(KContacts::ContactGroup::mimeType(), true);
 
     mModel = new Akonadi::ContactsTreeModel(mMonitor);
 }

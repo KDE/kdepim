@@ -23,7 +23,7 @@
 #include "settings/messagecomposersettings.h"
 
 #include <Akonadi/Contact/EmailAddressSelectionWidget>
-#include <kabc/contactgroup.h>
+#include <kcontacts/contactgroup.h>
 #include <libkdepim/ldap/ldapsearchdialog.h>
 #include <KPIMUtils/kpimutils/email.h>
 
@@ -220,8 +220,8 @@ void RecipientsPicker::slotSearchLDAP()
 
 void RecipientsPicker::ldapSearchResult()
 {
-    const KABC::Addressee::List contacts = mLdapSearchDialog->selectedContacts();
-    foreach (const KABC::Addressee &contact, contacts) {
+    const KContacts::Addressee::List contacts = mLdapSearchDialog->selectedContacts();
+    foreach (const KContacts::Addressee &contact, contacts) {
         bool tooManyAddress = false;
         emit pickedRecipient(Recipient(contact.fullEmail(), Recipient::Undefined), tooManyAddress);
         if (tooManyAddress) {

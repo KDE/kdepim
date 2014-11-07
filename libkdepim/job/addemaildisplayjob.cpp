@@ -35,8 +35,8 @@
 #include <AgentFilterProxyModel>
 #include <AgentInstanceCreateJob>
 
-#include <KABC/Addressee>
-#include <KABC/ContactGroup>
+#include <KContacts/Addressee>
+#include <KContacts/ContactGroup>
 
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -55,7 +55,7 @@ public:
           mCompleteAddress(emailString),
           mParentWidget(parentWidget)
     {
-        KABC::Addressee::parseEmailAddress(emailString, mName, mEmail);
+        KContacts::Addressee::parseEmailAddress(emailString, mName, mEmail);
     }
 
     void slotResourceCreationDone(KJob *job)
@@ -82,11 +82,11 @@ public:
     void modifyContact()
     {
         Akonadi::Item item = contact;
-        if (item.hasPayload<KABC::Addressee>()) {
-            KABC::Addressee address = item.payload<KABC::Addressee>();
+        if (item.hasPayload<KContacts::Addressee>()) {
+            KContacts::Addressee address = item.payload<KContacts::Addressee>();
             address.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("MailPreferedFormatting"), mShowAsHTML ? QLatin1String("HTML") : QLatin1String("TEXT"));
             address.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("MailAllowToRemoteContent"), mRemoteContent ? QLatin1String("TRUE") : QLatin1String("FALSE"));
-            item.setPayload<KABC::Addressee>(address);
+            item.setPayload<KContacts::Addressee>(address);
             Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(item);
             q->connect(job, SIGNAL(result(KJob*)), SLOT(slotAddModifyContactDone(KJob*)));
         } else {
@@ -110,10 +110,10 @@ public:
             createContact();
         } else {
             Akonadi::Item item = items.at(0);
-            KABC::Addressee contact = searchJob->contacts()[0];
+            KContacts::Addressee contact = searchJob->contacts()[0];
             contact.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("MailPreferedFormatting"), mShowAsHTML ? QLatin1String("HTML") : QLatin1String("TEXT"));
             contact.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("MailAllowToRemoteContent"), mRemoteContent ? QLatin1String("TRUE") : QLatin1String("FALSE"));
-            item.setPayload<KABC::Addressee>(contact);
+            item.setPayload<KContacts::Addressee>(contact);
             Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(item);
             q->connect(job, SIGNAL(result(KJob*)), SLOT(slotAddModifyContactDone(KJob*)));
         }
@@ -121,7 +121,7 @@ public:
 
     void createContact()
     {
-        const QStringList mimeTypes(KABC::Addressee::mimeType());
+        const QStringList mimeTypes(KContacts::Addressee::mimeType());
 
         Akonadi::CollectionFetchJob *const addressBookJob =
             new Akonadi::CollectionFetchJob(Akonadi::Collection::root(),
@@ -162,8 +162,8 @@ public:
                         i18nc("@title:window", "No Address Book Available")) == KMessageBox::Yes) {
                 Akonadi::AgentTypeDialog dlg(mParentWidget);
                 dlg.setWindowTitle(i18n("Add Address Book"));
-                dlg.agentFilterProxyModel()->addMimeTypeFilter(KABC::Addressee::mimeType());
-                dlg.agentFilterProxyModel()->addMimeTypeFilter(KABC::ContactGroup::mimeType());
+                dlg.agentFilterProxyModel()->addMimeTypeFilter(KContacts::Addressee::mimeType());
+                dlg.agentFilterProxyModel()->addMimeTypeFilter(KContacts::ContactGroup::mimeType());
                 dlg.agentFilterProxyModel()->addCapabilityFilter(QLatin1String("Resource"));
 
                 if (dlg.exec()) {
@@ -215,7 +215,7 @@ public:
             q->emitResult();
             return;
         }
-        KABC::Addressee contact;
+        KContacts::Addressee contact;
         contact.setNameFromString(mName);
         contact.insertEmail(mEmail, true);
         contact.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("MailPreferedFormatting"), mShowAsHTML ? QLatin1String("HTML") : QLatin1String("TEXT"));
@@ -223,8 +223,8 @@ public:
 
         // create the new item
         Akonadi::Item item;
-        item.setMimeType(KABC::Addressee::mimeType());
-        item.setPayload<KABC::Addressee>(contact);
+        item.setMimeType(KContacts::Addressee::mimeType());
+        item.setPayload<KContacts::Addressee>(contact);
 
         // save the new item in akonadi storage
         Akonadi::ItemCreateJob *createJob = new Akonadi::ItemCreateJob(item, addressBook, q);

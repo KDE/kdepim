@@ -20,8 +20,8 @@
 #include <AkonadiCore/ItemCreateJob>
 #include <AkonadiCore/ItemDeleteJob>
 
-#include <KABC/Address>
-#include <KABC/Addressee>
+#include <KContacts/Address>
+#include <KContacts/Addressee>
 
 #include <QDebug>
 
@@ -57,7 +57,7 @@ void MergeContactsJob::start()
 void MergeContactsJob::generateMergedContact()
 {
     MergeContacts mergeContact(mListItem);
-    KABC::Addressee newContact = mergeContact.mergedContact();
+    KContacts::Addressee newContact = mergeContact.mergedContact();
     if (newContact.isEmpty()) {
         Q_EMIT finished(mCreatedContact);
         deleteLater();
@@ -76,11 +76,11 @@ void MergeContactsJob::setDestination(const Akonadi::Collection &collection)
     mCollection = collection;
 }
 
-void MergeContactsJob::createMergedContact(const KABC::Addressee &addressee)
+void MergeContactsJob::createMergedContact(const KContacts::Addressee &addressee)
 {
     Akonadi::Item item;
-    item.setMimeType(KABC::Addressee::mimeType());
-    item.setPayload<KABC::Addressee>(addressee);
+    item.setMimeType(KContacts::Addressee::mimeType());
+    item.setPayload<KContacts::Addressee>(addressee);
 
     Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob(item, mCollection, this);
     connect(job, &Akonadi::ItemCreateJob::result, this, &MergeContactsJob::slotCreateMergedContactFinished);

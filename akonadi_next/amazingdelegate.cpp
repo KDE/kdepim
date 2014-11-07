@@ -23,7 +23,7 @@
 
 #include <qdebug.h>
 #include <entitytreemodel.h>
-#include <kabc/addressee.h>
+#include <kcontacts/addressee.h>
 #include <klocalizedstring.h>
 #include <entitydisplayattribute.h>
 
@@ -42,13 +42,13 @@ void AmazingContactItemDelegate::paint(QPainter* painter, const QStyleOptionView
   if (!item.isValid())
       QStyledItemDelegate::paint(painter, option, index);
 
-  if (!item.hasPayload<KABC::Addressee>())
+  if (!item.hasPayload<KContacts::Addressee>())
   {
-    qWarning() << "Not a KABC::Addressee" << item.id() << item.remoteId();
+    qWarning() << "Not a KContacts::Addressee" << item.id() << item.remoteId();
     return;
   }
 
-  KABC::Addressee addressee = item.payload<KABC::Addressee>();
+  KContacts::Addressee addressee = item.payload<KContacts::Addressee>();
 
   painter->save();
 
@@ -63,7 +63,7 @@ void AmazingContactItemDelegate::paint(QPainter* painter, const QStyleOptionView
 
   QString name = addressee.givenName() + QLatin1Char( ' ' ) + addressee.familyName();
 
-  KABC::Picture pic =addressee.photo();
+  KContacts::Picture pic =addressee.photo();
 
   if (!pic.isEmpty())
   {

@@ -22,8 +22,8 @@
 
 #include <kmime/kmime_message.h>
 
-#include <kabc/addressee.h>
-#include <kabc/contactgroup.h>
+#include <kcontacts/addressee.h>
+#include <kcontacts/contactgroup.h>
 
 #include <KCalCore/Incidence>
 #include <KCalCore/Event>
@@ -126,14 +126,14 @@ public:
     if (Qt::DisplayRole != role)
       return QVariant();
 
-    if ( !item.hasPayload<KABC::Addressee>() && !item.hasPayload<KABC::ContactGroup>() )
+    if ( !item.hasPayload<KContacts::Addressee>() && !item.hasPayload<KContacts::ContactGroup>() )
     {
       return QVariant();
     }
 
-    if ( item.hasPayload<KABC::Addressee>() )
+    if ( item.hasPayload<KContacts::Addressee>() )
     {
-      const KABC::Addressee addr = item.payload<KABC::Addressee>();
+      const KContacts::Addressee addr = item.payload<KContacts::Addressee>();
 
       switch (column)
       {
@@ -146,12 +146,12 @@ public:
       }
       return QVariant();
     }
-    if ( item.hasPayload<KABC::ContactGroup>() ) {
+    if ( item.hasPayload<KContacts::ContactGroup>() ) {
 
       switch (column)
       {
       case 0:
-        const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
+        const KContacts::ContactGroup group = item.payload<KContacts::ContactGroup>();
         return group.name();
       }
       return QVariant();

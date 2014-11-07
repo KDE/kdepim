@@ -34,9 +34,9 @@ LDAPXXPort::LDAPXXPort(QWidget *parentWidget)
 {
 }
 
-KABC::Addressee::List LDAPXXPort::importContacts() const
+KContacts::Addressee::List LDAPXXPort::importContacts() const
 {
-    KABC::Addressee::List contacts;
+    KContacts::Addressee::List contacts;
 
     QPointer<KLDAP::LdapSearchDialog> dlg = new KLDAP::LdapSearchDialog(parentWidget());
 
@@ -49,7 +49,7 @@ KABC::Addressee::List LDAPXXPort::importContacts() const
     return contacts;
 }
 
-bool LDAPXXPort::exportContacts(const KABC::Addressee::List &) const
+bool LDAPXXPort::exportContacts(const KContacts::Addressee::List &) const
 {
     return false;
 }

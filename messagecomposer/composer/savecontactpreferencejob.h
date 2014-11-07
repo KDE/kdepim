@@ -19,7 +19,7 @@
 #define SAVECONTACTPREFERENCEJOB_H
 
 #include <KJob>
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 #include "keyresolver.h"
 
 namespace Kleo
@@ -37,7 +37,7 @@ private slots:
 
     void slotModifyCreateItem(KJob *job);
 private:
-    void writeCustomContactProperties(KABC::Addressee &contact, const Kleo::KeyResolver::ContactPreferences &pref) const;
+    void writeCustomContactProperties(KContacts::Addressee &contact, const Kleo::KeyResolver::ContactPreferences &pref) const;
     QString mEmail;
     Kleo::KeyResolver::ContactPreferences mPref;
 };

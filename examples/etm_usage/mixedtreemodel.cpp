@@ -24,7 +24,7 @@
 #include "mixedtreemodel.h"
 
 #include <KMime/Message>
-#include <KABC/Addressee>
+#include <KContacts/Addressee>
 
 MixedTreeModel::MixedTreeModel(Akonadi::ChangeRecorder *monitor, QObject *parent)
     : EntityTreeModel(monitor, parent)
@@ -80,8 +80,8 @@ QVariant MixedTreeModel::entityData(const Akonadi::Item &item, int column, int r
             }
         }
 
-        if (item.hasPayload<KABC::Addressee>()) {
-            KABC::Addressee addressee = item.payload<KABC::Addressee>();
+        if (item.hasPayload<KContacts::Addressee>()) {
+            KContacts::Addressee addressee = item.payload<KContacts::Addressee>();
             switch (column) {
             case 0:
                 return addressee.name();

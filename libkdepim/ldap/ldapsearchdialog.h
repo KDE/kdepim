@@ -26,7 +26,7 @@
 
 #include "libkdepim/kdepim_export.h"
 
-#include <kabc/addressee.h>
+#include <kcontacts/addressee.h>
 #include <QDialog>
 
 class QCloseEvent;
@@ -72,7 +72,7 @@ public:
      * Returns a list of contacts that have been selected
      * in the LDAP search.
      */
-    KABC::Addressee::List selectedContacts() const;
+    KContacts::Addressee::List selectedContacts() const;
 
 Q_SIGNALS:
     /**

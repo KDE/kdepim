@@ -21,7 +21,7 @@
 #ifndef MESSAGEVIEWER_VCARDVIEWER_H
 #define MESSAGEVIEWER_VCARDVIEWER_H
 #include <QDialog>
-#include <kabc/addressee.h>
+#include <kcontacts/addressee.h>
 
 namespace Akonadi
 {
@@ -53,8 +53,8 @@ private:
     void writeConfig();
     KAddressBookGrantlee::GrantleeContactViewer *mContactViewer;
 
-    KABC::Addressee::List mAddresseeList;
-    KABC::Addressee::List::ConstIterator itAddresseeList;
+    KContacts::Addressee::List mAddresseeList;
+    KContacts::Addressee::List::ConstIterator itAddresseeList;
     QPushButton *mUser2Button;
     QPushButton *mUser3Button;
 };

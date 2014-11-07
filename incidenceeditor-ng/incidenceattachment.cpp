@@ -29,7 +29,7 @@
 
 #include <libkdepimdbusinterfaces/urihandler.h>
 
-#include <KABC/VCardDrag>
+#include <KContacts/VCardDrag>
 
 #include <KMime/Message>
 
@@ -401,10 +401,10 @@ void IncidenceAttachment::handlePasteOrDrop( const QMimeData *mimeData )
   bool probablyWeHaveUris = false;
   QStringList labels;
 
-  if ( KABC::VCardDrag::canDecode( mimeData ) ) {
-    KABC::Addressee::List addressees;
-    KABC::VCardDrag::fromMimeData( mimeData, addressees );
-    for ( KABC::Addressee::List::ConstIterator it = addressees.constBegin();
+  if ( KContacts::VCardDrag::canDecode( mimeData ) ) {
+    KContacts::Addressee::List addressees;
+    KContacts::VCardDrag::fromMimeData( mimeData, addressees );
+    for ( KContacts::Addressee::List::ConstIterator it = addressees.constBegin();
           it != addressees.constEnd(); ++it ) {
       urls.append( QString( QLatin1String( "uid:" ) + ( *it ).uid() ) );
       // there is some weirdness about realName(), hence fromUtf8
