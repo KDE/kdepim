@@ -42,8 +42,8 @@ void BalooDebugSearchJob::start()
         return;
     } else {
         mProcess = new QProcess(this);
-        connect(mProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(slotReadStandard()));
-        connect(mProcess, SIGNAL(readyReadStandardError()), this, SLOT(slotReadError()));
+        connect(mProcess, &QProcess::readyReadStandardOutput, this, &BalooDebugSearchJob::slotReadStandard);
+        connect(mProcess, &QProcess::readyReadStandardError, this, &BalooDebugSearchJob::slotReadError);
         mProcess->setWorkingDirectory(mPath);
         QStringList arguments;
         arguments << QLatin1String("-r") << mAkonadiId;

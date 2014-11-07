@@ -44,10 +44,8 @@ XXPortManager::XXPortManager(QWidget *parent)
     mImportMapper = new QSignalMapper(this);
     mExportMapper = new QSignalMapper(this);
 
-    connect(mImportMapper, SIGNAL(mapped(QString)),
-            this, SLOT(slotImport(QString)));
-    connect(mExportMapper, SIGNAL(mapped(QString)),
-            this, SLOT(slotExport(QString)));
+    connect(mImportMapper, static_cast<void (QSignalMapper::*)(const QString &)>(&QSignalMapper::mapped), this, &XXPortManager::slotImport);
+    connect(mExportMapper, static_cast<void (QSignalMapper::*)(const QString &)>(&QSignalMapper::mapped), this, &XXPortManager::slotExport);
 }
 
 XXPortManager::~XXPortManager()

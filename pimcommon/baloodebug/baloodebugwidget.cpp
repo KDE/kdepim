@@ -44,7 +44,7 @@ BalooDebugWidget::BalooDebugWidget(QWidget *parent)
     mLineEdit->setTrapReturnKey(true);
     mLineEdit->setClearButtonShown(true);
     mLineEdit->setObjectName(QLatin1String("lineedit"));
-    connect(mLineEdit, SIGNAL(textChanged(QString)), this, SLOT(slotSearchLineTextChanged(QString)));
+    connect(mLineEdit, &KLineEdit::textChanged, this, &BalooDebugWidget::slotSearchLineTextChanged);
     hbox->addWidget(mLineEdit);
 
     mSearchPathComboBox = new PimCommon::BalooDebugSearchPathComboBox;
@@ -53,7 +53,7 @@ BalooDebugWidget::BalooDebugWidget(QWidget *parent)
 
     mSearchButton = new QPushButton(QLatin1String("Search"));
     mSearchButton->setObjectName(QLatin1String("searchbutton"));
-    connect(mSearchButton, SIGNAL(clicked()), this, SLOT(slotSearch()));
+    connect(mSearchButton, &QPushButton::clicked, this, &BalooDebugWidget::slotSearch);
     hbox->addWidget(mSearchButton);
     mSearchButton->setEnabled(false);
 
@@ -63,7 +63,7 @@ BalooDebugWidget::BalooDebugWidget(QWidget *parent)
     mainLayout->addWidget(mPlainTextEditor);
     mPlainTextEditor->setObjectName(QLatin1String("plaintexteditor"));
 
-    connect(mLineEdit, SIGNAL(returnPressed()), this, SLOT(slotSearch()));
+    connect(mLineEdit, &KLineEdit::returnPressed, this, &BalooDebugWidget::slotSearch);
 
 }
 
@@ -100,8 +100,8 @@ void BalooDebugWidget::slotSearch()
     PimCommon::BalooDebugSearchJob *job = new PimCommon::BalooDebugSearchJob(this);
     job->setAkonadiId(searchId);
     job->setSearchPath(mSearchPathComboBox->searchPath());
-    connect(job, SIGNAL(result(QString)), this, SLOT(slotResult(QString)));
-    connect(job, SIGNAL(error(QString)), this, SLOT(slotError(QString)));
+    connect(job, &PimCommon::BalooDebugSearchJob::result, this, &BalooDebugWidget::slotResult);
+    connect(job, &PimCommon::BalooDebugSearchJob::error, this, &BalooDebugWidget::slotError);
     job->start();
 }
 

@@ -180,8 +180,8 @@ AlarmDialog::AlarmDialog(const Akonadi::ETMCalendar::Ptr &calendar, QWidget *par
     buttonBox->addButton(mUser2Button, QDialogButtonBox::ActionRole);
     mUser3Button = new QPushButton;
     buttonBox->addButton(mUser3Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &AlarmDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &AlarmDialog::reject);
     mainLayout->addWidget(buttonBox);
 
     mUser3Button->setText(i18nc("@action:button", "Dismiss Reminder"));
@@ -236,10 +236,8 @@ AlarmDialog::AlarmDialog(const Akonadi::ETMCalendar::Ptr &calendar, QWidget *par
 
     mTopLayout->addWidget(mIncidenceTree);
 
-    connect(mIncidenceTree, SIGNAL(itemActivated(QTreeWidgetItem*,int)),
-            SLOT(update()));
-    connect(mIncidenceTree, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
-            SLOT(edit()));
+    connect(mIncidenceTree, &QTreeWidget::itemActivated, this, &AlarmDialog::update);
+    connect(mIncidenceTree, &QTreeWidget::itemDoubleClicked, this, &AlarmDialog::edit);
     connect(mIncidenceTree, &ReminderTree::customContextMenuRequested, this, &AlarmDialog::popupItemMenu);
 
     mDetailView = new CalendarSupport::IncidenceViewer(mCalendar.data(), topBox);

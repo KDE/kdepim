@@ -80,10 +80,8 @@ KOAlarmClient::KOAlarmClient(QObject *parent)
     mETM = mCalendar->entityTreeModel();
 
     connect(&mCheckTimer, &QTimer::timeout, this, &KOAlarmClient::checkAlarms);
-    connect(mETM, SIGNAL(collectionPopulated(Akonadi::Collection::Id)),
-            SLOT(deferredInit()));
-    connect(mETM, SIGNAL(collectionTreeFetched(Akonadi::Collection::List)),
-            SLOT(deferredInit()));
+    connect(mETM, &Akonadi::EntityTreeModel::collectionPopulated, this, &KOAlarmClient::deferredInit);
+    connect(mETM, &Akonadi::EntityTreeModel::collectionTreeFetched, this, &KOAlarmClient::deferredInit);
 
     KConfigGroup alarmGroup(KSharedConfig::openConfig(), "Alarms");
     const int interval = alarmGroup.readEntry("Interval", 60);
@@ -236,12 +234,9 @@ void KOAlarmClient::createReminder(const Akonadi::ETMCalendar::Ptr &calendar,
         mDialog = new AlarmDialog(calendar);
         connect(this, &KOAlarmClient::saveAllSignal, mDialog, &AlarmDialog::slotSave);
         if (mDocker) {
-            connect(mDialog, SIGNAL(reminderCount(int)),
-                    mDocker, SLOT(slotUpdate(int)));
-            connect(mDocker, SIGNAL(suspendAllSignal()),
-                    mDialog, SLOT(suspendAll()));
-            connect(mDocker, SIGNAL(dismissAllSignal()),
-                    mDialog, SLOT(dismissAll()));
+            connect(mDialog, &AlarmDialog::reminderCount, mDocker, &AlarmDockWindow::slotUpdate);
+            connect(mDocker, &AlarmDockWindow::suspendAllSignal, mDialog, &AlarmDialog::suspendAll);
+            connect(mDocker, &AlarmDockWindow::dismissAllSignal, mDialog, &AlarmDialog::dismissAll);
         }
     }
 
@@ -350,12 +345,9 @@ void KOAlarmClient::show()
         }
 
         if (mDialog) {
-            connect(mDialog, SIGNAL(reminderCount(int)),
-                    mDocker, SLOT(slotUpdate(int)));
-            connect(mDocker, SIGNAL(suspendAllSignal()),
-                    mDialog, SLOT(suspendAll()));
-            connect(mDocker, SIGNAL(dismissAllSignal()),
-                    mDialog, SLOT(dismissAll()));
+            connect(mDialog, &AlarmDialog::reminderCount, mDocker, &AlarmDockWindow::slotUpdate);
+            connect(mDocker, &AlarmDockWindow::suspendAllSignal, mDialog, &AlarmDialog::suspendAll);
+            connect(mDocker, &AlarmDockWindow::dismissAllSignal, mDialog, &AlarmDialog::dismissAll);
         }
     }
 #endif
