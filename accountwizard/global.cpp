@@ -55,12 +55,12 @@ void Global::setAssistant(const QString &assistant)
     Q_FOREACH (const QString &dir, dirs) {
         const QStringList directories = QDir(dir).entryList(QDir::AllDirs);
         Q_FOREACH (const QString &directory, directories) {
-           const QString fullPath = dir + QLatin1Char('/') + directory;
-           const QStringList fileNames = QDir(fullPath).entryList(QStringList() << QStringLiteral("*.desktop"));
-           Q_FOREACH (const QString &file, fileNames) {
-              list.append(fullPath + QLatin1Char('/') + file);
-              
-           }
+            const QString fullPath = dir + QLatin1Char('/') + directory;
+            const QStringList fileNames = QDir(fullPath).entryList(QStringList() << QStringLiteral("*.desktop"));
+            Q_FOREACH (const QString &file, fileNames) {
+                list.append(fullPath + QLatin1Char('/') + file);
+
+            }
         }
     }
     foreach (const QString &entry, list) {
