@@ -1,5 +1,6 @@
 Applications:
 -------------
+accountwizard         Laurent Montel <montel@kde.org>
 akonadiconsole        ?
 akregator             Frank Osterfeld <osterfeld@kde.org>
 archivemailagent      Laurent Montel <montel@kde.org>
@@ -25,8 +26,6 @@ konsolekalendar       Allen Winter <winter@kde.org>
 kontact               Laurent Montel <montel@kde.org>
 korganizer            Allen Winter <winter@kde.org> and Sérgio Martins <iamsergio@gmail.com>
 korgac                Allen Winter <winter@kde.org>
-kresources            DEPRECATED
-ksendemail            ?
 ktnef                 Allen Winter <winter@kde.org>
 followupreminderagent Laurent Montel <montel@kde.org>
 libkdepim             Laurent Montel <montel@kde.org>
