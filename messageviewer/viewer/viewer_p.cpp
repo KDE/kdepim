@@ -986,6 +986,7 @@ void ViewerPrivate::parseContent( KMime::Content *content )
     MailViewerSource otpSource( this );
     ObjectTreeParser otp( &otpSource, mNodeHelper, 0, mMessage.get() != content /* show only single node */ );
     otp.setAllowAsync( !mPrinting );
+    otp.setPrinting( mPrinting );
     otp.setShowRawToltecMail( mShowRawToltecMail );
     otp.parseObjectTree( content );
 

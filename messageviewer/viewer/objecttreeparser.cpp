@@ -177,7 +177,8 @@ ObjectTreeParser::ObjectTreeParser( ObjectTreeSourceIf *source,
       mHasPendingAsyncJobs( false ),
       mAllowAsync( false ),
       mShowRawToltecMail( false ),
-      mAttachmentStrategy( strategy )
+      mAttachmentStrategy( strategy ),
+      mPrinting(false)
 {
     init();
 }
@@ -264,6 +265,11 @@ void ObjectTreeParser::parseObjectTree( KMime::Content * node )
 {
     mTopLevelContent = node;
     parseObjectTreeInternal( node );
+}
+
+void ObjectTreeParser::setPrinting(bool printing)
+{
+    mPrinting = printing;
 }
 
 void ObjectTreeParser::parseObjectTreeInternal( KMime::Content * node )
@@ -2400,7 +2406,7 @@ QString ObjectTreeParser::sigStatusToString( const Kleo::CryptoBackend::Protocol
 }
 
 
-static QString writeSimpleSigstatHeader( const PartMetaData &block )
+static QString writeSimpleSigstatHeader( const PartMetaData &block, bool printing )
 {
     QString html;
     html += QLatin1String("<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"><tr><td>");
@@ -2430,10 +2436,14 @@ static QString writeSimpleSigstatHeader( const PartMetaData &block )
         // should not happen
         html += i18n( "Unknown signature state" );
     }
-    html += QLatin1String("</td><td align=\"right\">");
-    html += QLatin1String("<a href=\"kmail:showSignatureDetails\">");
-    html += i18n( "Show Details" );
-    html += QLatin1String("</a></td></tr></table>");
+    html += QLatin1String("</td>");
+    if (!printing) {
+        html +=QLatin1String("<td align=\"right\">");
+        html += QLatin1String("<a href=\"kmail:showSignatureDetails\">");
+        html += i18n( "Show Details" );
+        html += QLatin1String("</a></td>");
+    }
+    html += QLatin1String("</tr></table>");
     return html;
 }
 
@@ -2677,7 +2687,7 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
                                                                                                                                                "<tr class=\"") + block.signClass + QLatin1String("H\"><td dir=\"") + dir + QLatin1String("\">");
             htmlStr += frame + beginVerboseSigstatHeader();
             simpleHtmlStr += frame;
-            simpleHtmlStr += writeSimpleSigstatHeader( block );
+            simpleHtmlStr += writeSimpleSigstatHeader( block, mPrinting );
             if( block.technicalProblem ) {
                 htmlStr += block.errorText;
             }
@@ -2763,7 +2773,7 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
                                                                                                                                                    "<tr class=\"") + block.signClass + QLatin1String("H\"><td dir=\"" )+ dir + QLatin1String("\">");
                 htmlStr += frame + beginVerboseSigstatHeader();
                 simpleHtmlStr += frame;
-                simpleHtmlStr += writeSimpleSigstatHeader( block );
+                simpleHtmlStr += writeSimpleSigstatHeader( block, mPrinting );
                 if( block.technicalProblem ) {
                     htmlStr += block.errorText;
                 }
@@ -2811,7 +2821,7 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
                                                                                                                                                        "<tr class=\"") + block.signClass + QLatin1String("H\"><td dir=\"") + dir + QLatin1String("\">");
                     htmlStr += frame + beginVerboseSigstatHeader();
                     simpleHtmlStr += frame;
-                    simpleHtmlStr += writeSimpleSigstatHeader( block );
+                    simpleHtmlStr += writeSimpleSigstatHeader( block, mPrinting );
                     if( !block.keyId.isEmpty() )
                         htmlStr += i18n( "Message was signed by %2 (Key ID: %1).",
                                          keyWithWithoutURL,
@@ -2855,7 +2865,7 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
                                                                                                                                                        "<tr class=\"") + block.signClass + QLatin1String("H\"><td dir=\"") + dir + QLatin1String("\">");
                     htmlStr += frame + beginVerboseSigstatHeader();
                     simpleHtmlStr += frame;
-                    simpleHtmlStr += writeSimpleSigstatHeader( block );
+                    simpleHtmlStr += writeSimpleSigstatHeader( block, mPrinting );
                     if( !block.keyId.isEmpty() )
                         htmlStr += i18n( "Message was signed by %2 (Key ID: %1).",
                                          keyWithWithoutURL,

@@ -409,6 +409,8 @@ public:
       the children of that node and it's next sibling. */
     void parseObjectTree( KMime::Content * node );
 
+    void setPrinting(bool printing);
+
 private:
     void extractNodeInfos( KMime::Content *curNode, bool isFirstTextPart );
 
@@ -611,7 +613,7 @@ private:
     QString mCollapseIcon;
     QString mExpandIcon;
     bool mDeleteNodeHelper;
-
+    bool mPrinting;
 };
 
 }
