@@ -119,6 +119,20 @@ class LIBKCAL_EXPORT Event : public Incidence
     */
     void setDuration( int seconds );
 
+    /** Check if an incidence slices an interval.
+     *
+     * An event slices an interval if it either starts before
+     * this interval ( and has not ended before the interval )
+     * or if it has a recurrance that starts in the interval and
+     * has not ended.
+     *
+     * @param start Start time of the interval
+     * @param end End time of the interval
+     *
+     * @returns true if the event in this interval.
+     */
+    bool slicesInterval( const QDateTime& startDt, const QDateTime& endDt );
+
   protected:
     /** Return the end date/time of the base incidence. */
     virtual QDateTime endDateRecurrenceBase() const { return dtEnd(); }

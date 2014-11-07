@@ -152,3 +152,38 @@ void Event::setDuration(int seconds)
   setHasEndDate(false);
   Incidence::setDuration(seconds);
 }
+
+bool Event::slicesInterval( const QDateTime& startDt, const QDateTime& endDt )
+{
+    QDateTime closestStart = dtStart();
+    QDateTime closestEnd = dtEnd();
+    if ( doesRecur() ) {
+        if ( !recurrence()->timesInInterval( startDt, endDt ).isEmpty() ) {
+            // If there is a recurrence in this interval we know already that we slice.
+            return true;
+        }
+        closestStart = recurrence()->getPreviousDateTime( startDt );
+        if ( hasEndDate() ) {
+            closestEnd = closestStart.addSecs( dtStart().secsTo( dtEnd() ) );
+        }
+    } else {
+        if ( !hasEndDate() && hasDuration() ) {
+            closestEnd = closestStart.addSecs( duration() );
+        }
+    }
+
+    if ( !closestEnd.isValid () ) {
+        // All events without an ending still happen if they are
+        // started.
+        return closestStart <= startDt;
+    }
+
+    if ( closestStart <= startDt ) {
+        // It starts before the interval and ends after the start of the interval.
+        return closestEnd > startDt;
+    }
+
+    // Are start and end both in this interval?
+    return ( closestStart >= startDt && closestStart <= endDt ) &&
+           ( closestEnd >= startDt && closestEnd <= endDt );
+}

@@ -615,9 +615,12 @@ static QString displayViewFormatEventsOnSameDays( InvitationFormatterHelper *hel
   // Check calendar
   const QString checkCalBtn = helper->makeBtnLink( "check_calendar", i18n("Check calendar..." ), "go_jump_today" );
 
-  Event::List matchingEvents = helper->calendar()->events( event->dtStart().date(), event->hasEndDate() ?
-                                                 event->dateEnd() : event->dtStart().date(),
-                                                 false );
+  QDateTime startDay = event->dtStart();
+  QDateTime endDay = event->hasEndDate() ? event->dtEnd() : event->dtStart();
+  startDay.setTime( QTime( 0, 0, 0 ) );
+  endDay.setTime( QTime( 23, 59, 59 ) );
+
+  Event::List matchingEvents = helper->calendar()->events(startDay.date(), endDay.date(), false);
   if ( matchingEvents.isEmpty() ) {
     return checkCalBtn;
   }
@@ -637,7 +640,16 @@ static QString displayViewFormatEventsOnSameDays( InvitationFormatterHelper *hel
       it != end && count < 50;
       ++it) {
     if ( (*it)->schedulingID() == event->uid() ) {
-        continue;
+      // Exclude the same event from the list.
+      continue;
+    }
+    if ( !(*it)->slicesInterval( startDay, endDay ) ) {
+      /* Calendar::events includes events that have a recurrence that is
+       * "active" in the specified interval. Wether or not the event is actually
+       * happening ( has a recurrence that falls into the interval ).
+       * This appears to be done deliberately and not to be a bug so we additionally
+       * check if the event is actually happening here. */
+      continue;
     }
     ++count;
     tmpStr += QString( "<li>" ) + displayViewFormatEventForList( helper->calendar(), *it, noHtmlMode ) +
