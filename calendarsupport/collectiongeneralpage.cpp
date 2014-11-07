@@ -49,8 +49,6 @@ CollectionGeneralPage::CollectionGeneralPage( QWidget *parent )
   setPageTitle( i18nc( "@title:tab General settings for a folder.", "General" ) );
 
   QVBoxLayout *topLayout = new QVBoxLayout( this );
-//TODO PORT QT5   topLayout->setSpacing( QDialog::spacingHint() );
-  topLayout->setMargin( 0 );
 
   QHBoxLayout *hbox = new QHBoxLayout();
   topLayout->addItem( hbox );

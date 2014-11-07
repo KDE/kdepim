@@ -54,8 +54,10 @@ public:
     /** constructor */
     explicit FilterLogDialog(QWidget *parent);
     ~FilterLogDialog();
-protected slots:
-    void slotLogEntryAdded(const QString &logEntry);
+
+private slots:
+    void slotTextChanged();
+    void slotLogEntryAdded( const QString& logEntry );
     void slotLogShrinked();
     void slotLogStateChanged();
     void slotChangeLogDetail();
@@ -67,21 +69,20 @@ protected slots:
 private:
     void readConfig();
     void writeConfig();
-protected:
-    PimCommon::PlainTextEditorWidget *mTextEdit;
-    QCheckBox *mLogActiveBox;
-    QGroupBox *mLogDetailsBox;
-    QCheckBox *mLogPatternDescBox;
-    QCheckBox *mLogRuleEvaluationBox;
-    QCheckBox *mLogPatternResultBox;
-    QCheckBox *mLogFilterActionBox;
-    QSpinBox   *mLogMemLimitSpin;
-    bool mIsInitialized;
-private slots:
-    void slotTextChanged();
 private:
+    PimCommon::PlainTextEditorWidget * mTextEdit;
+    QCheckBox * mLogActiveBox;
+    QGroupBox * mLogDetailsBox;
+    QCheckBox * mLogPatternDescBox;
+    QCheckBox * mLogRuleEvaluationBox;
+    QCheckBox * mLogPatternResultBox;
+    QCheckBox * mLogFilterActionBox;
+    QSpinBox  * mLogMemLimitSpin;
     QPushButton *mUser1Button;
     QPushButton *mUser2Button;
+
+    bool mIsInitialized;
+
 };
 
 #endif
