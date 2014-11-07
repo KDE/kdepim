@@ -4977,16 +4977,6 @@ MiscPageGroupwareTab::MiscPageGroupwareTab( QWidget* parent, const char* name )
   connect( mExchangeCompatibleInvitations, SIGNAL( stateChanged( int ) ),
            this, SLOT( slotEmitChanged( void ) ) );
 
-  mOutlookCompatibleInvitationComparisons =
-    new QCheckBox( i18n( "Show invitation update differences in the Outlook style" ), gBox );
-  QToolTip::add( mOutlookCompatibleInvitationComparisons,
-                 i18n( "Display invitation update differences in the Microsoft Outlook(tm) style." ) );
-  QWhatsThis::add( mOutlookCompatibleInvitationComparisons,
-                   i18n( GlobalSettings::self()->
-                         outlookCompatibleInvitationComparisonsItem()->whatsThis().utf8() ) );
-  connect( mOutlookCompatibleInvitationComparisons, SIGNAL( stateChanged( int ) ),
-           this, SLOT( slotEmitChanged( void ) ) );
-
   mAutomaticSending = new QCheckBox( i18n( "Automatic invitation sending" ), gBox );
   QToolTip::add( mAutomaticSending, i18n( "When this is on, the user will not see the mail composer window. Invitation mails are sent automatically" ) );
   QWhatsThis::add( mAutomaticSending, i18n( GlobalSettings::self()->
@@ -5033,8 +5023,6 @@ void MiscPage::GroupwareTab::doLoadFromGlobalSettings() {
   mLegacyBodyInvites->blockSignals( false );
 
   mExchangeCompatibleInvitations->setChecked( GlobalSettings::self()->exchangeCompatibleInvitations() );
-
-  mOutlookCompatibleInvitationComparisons->setChecked( GlobalSettings::self()->outlookCompatibleInvitationComparisons() );
 
   mAutomaticSending->setChecked( GlobalSettings::self()->automaticSending() );
   mAutomaticSending->setEnabled( !mLegacyBodyInvites->isChecked() );
@@ -5098,7 +5086,6 @@ void MiscPage::GroupwareTab::save() {
   groupware.writeEntry( "LegacyMangleFromToHeaders", mLegacyMangleFromTo->isChecked() );
   groupware.writeEntry( "LegacyBodyInvites", mLegacyBodyInvites->isChecked() );
   groupware.writeEntry( "ExchangeCompatibleInvitations", mExchangeCompatibleInvitations->isChecked() );
-  groupware.writeEntry( "OutlookCompatibleInvitationComparisons", mOutlookCompatibleInvitationComparisons->isChecked() );
   groupware.writeEntry( "AutomaticSending", mAutomaticSending->isChecked() );
 
   if ( mEnableGwCB ) {
@@ -5107,7 +5094,6 @@ void MiscPage::GroupwareTab::save() {
   GlobalSettings::self()->setLegacyMangleFromToHeaders( mLegacyMangleFromTo->isChecked() );
   GlobalSettings::self()->setLegacyBodyInvites( mLegacyBodyInvites->isChecked() );
   GlobalSettings::self()->setExchangeCompatibleInvitations( mExchangeCompatibleInvitations->isChecked() );
-  GlobalSettings::self()->setOutlookCompatibleInvitationComparisons( mOutlookCompatibleInvitationComparisons->isChecked() );
   GlobalSettings::self()->setAutomaticSending( mAutomaticSending->isChecked() );
 
   int format = mStorageFormatCombo->currentItem();

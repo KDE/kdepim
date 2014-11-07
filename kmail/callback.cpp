@@ -278,11 +278,6 @@ bool Callback::exchangeCompatibleInvitations() const
   return GlobalSettings::self()->exchangeCompatibleInvitations();
 }
 
-bool Callback::outlookCompatibleInvitationComparisons() const
-{
-  return GlobalSettings::self()->outlookCompatibleInvitationComparisons();
-}
-
 QString Callback::sender() const
 {
   return mMsg->from();

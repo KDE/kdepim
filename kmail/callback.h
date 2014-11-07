@@ -81,7 +81,6 @@ public:
   bool askForComment( KCal::Attendee::PartStat status ) const;
   bool deleteInvitationAfterReply() const;
   bool exchangeCompatibleInvitations() const;
-  bool outlookCompatibleInvitationComparisons() const;
 
 private:
   QString askForTransport( bool nullIdentity ) const;

@@ -1208,36 +1208,6 @@ static QString invitationLocation( Incidence *incidence, bool noHtmlMode )
   return locationStr;
 }
 
-static QString eventStartTimeStr( Event *event )
-{
-  QString tmp;
-  if ( !event->doesFloat() ) {
-    tmp = i18n( "%1: Start Date, %2: Start Time", "%1 %2" ).
-          arg( IncidenceFormatter::dateToString( event->dtStart(), true ),
-               IncidenceFormatter::timeToString( event->dtStart(), true ) );
-  } else {
-    tmp = i18n( "%1: Start Date", "%1 (all day)" ).
-          arg( IncidenceFormatter::dateToString( event->dtStart(), true ) );
-  }
-  return tmp;
-}
-
-static QString eventEndTimeStr( Event *event )
-{
-  QString tmp;
-  if ( event->hasEndDate() && event->dtEnd().isValid() ) {
-    if ( !event->doesFloat() ) {
-      tmp = i18n( "%1: End Date, %2: End Time", "%1 %2" ).
-            arg( IncidenceFormatter::dateToString( event->dtEnd(), true ),
-                 IncidenceFormatter::timeToString( event->dtEnd(), true ) );
-    } else {
-      tmp = i18n( "%1: End Date", "%1 (all day)" ).
-            arg( IncidenceFormatter::dateToString( event->dtEnd(), true ) );
-    }
-  }
-  return tmp;
-}
-
 static QString htmlInvitationDetailsBegin(const QString &iconName, const QString &caption)
 {
   QString dir = ( QApplication::reverseLayout() ? "rtl" : "ltr" );
@@ -2529,158 +2499,6 @@ class IncidenceFormatter::InvitationBodyVisitor
     bool mNoHtmlMode;
 };
 
-class IncidenceFormatter::IncidenceCompareVisitor
-  : public IncidenceBase::Visitor
-{
-  public:
-    IncidenceCompareVisitor() : mExistingIncidence(0) {}
-    bool act( IncidenceBase *incidence, Incidence *existingIncidence, int method )
-    {
-      Incidence *inc = dynamic_cast<Incidence*>( incidence );
-      if ( !inc || !existingIncidence  || inc->revision() <= existingIncidence->revision() )
-        return false;
-      mExistingIncidence = existingIncidence;
-      mMethod = method;
-      return incidence->accept( *this );
-    }
-
-    QString result() const
-    {
-      if ( mChanges.isEmpty() ) {
-        return QString::null;
-      }
-      QString html = "<div align=\"left\"><ul><li>";
-      html += mChanges.join( "</li><li>" );
-      html += "</li><ul></div>";
-      return html;
-    }
-
-  protected:
-    bool visit( Event *event )
-    {
-      compareEvents( event, dynamic_cast<Event*>( mExistingIncidence ) );
-      compareIncidences( event, mExistingIncidence, mMethod );
-      return !mChanges.isEmpty();
-    }
-    bool visit( Todo *todo )
-    {
-      compareTodos( todo, dynamic_cast<Todo*>( mExistingIncidence ) );
-      compareIncidences( todo, mExistingIncidence, mMethod );
-      return !mChanges.isEmpty();
-    }
-    bool visit( Journal *journal )
-    {
-      compareIncidences( journal, mExistingIncidence, mMethod );
-      return !mChanges.isEmpty();
-    }
-    bool visit( FreeBusy *fb )
-    {
-      Q_UNUSED( fb );
-      return !mChanges.isEmpty();
-    }
-
-  private:
-    void compareEvents( Event *newEvent, Event *oldEvent )
-    {
-      if ( !oldEvent || !newEvent )
-        return;
-      if ( oldEvent->dtStart() != newEvent->dtStart() || oldEvent->doesFloat() != newEvent->doesFloat() )
-        mChanges += i18n( "The invitation starting time has been changed from %1 to %2." )
-                    .arg( eventStartTimeStr( oldEvent ) ).arg( eventStartTimeStr( newEvent ) );
-      if ( oldEvent->dtEnd() != newEvent->dtEnd() || oldEvent->doesFloat() != newEvent->doesFloat() )
-        mChanges += i18n( "The invitation ending time has been changed from %1 to %2." )
-                    .arg( eventEndTimeStr( oldEvent ) ).arg( eventEndTimeStr( newEvent ) );
-    }
-
-    void compareTodos( Todo *newTodo, Todo *oldTodo )
-    {
-      if ( !oldTodo || !newTodo ) {
-        return;
-      }
-
-      if ( !oldTodo->isCompleted() && newTodo->isCompleted() ) {
-        mChanges += i18n( "The task has been completed." );
-      }
-      if ( oldTodo->isCompleted() && !newTodo->isCompleted() ) {
-        mChanges += i18n( "The task is no longer completed." );
-      }
-      if ( oldTodo->percentComplete() != newTodo->percentComplete() ) {
-        const QString oldPer = i18n( "%1%" ).arg( oldTodo->percentComplete() );
-        const QString newPer = i18n( "%1%" ).arg( newTodo->percentComplete() );
-        mChanges += i18n( "The task completed percentage has changed from %1 to %2." ).
-                    arg( oldPer ).arg( newPer );
-      }
-
-      if ( !oldTodo->hasStartDate() && newTodo->hasStartDate() ) {
-        mChanges += i18n( "A task starting time has been added." );
-      }
-      if ( oldTodo->hasStartDate() && !newTodo->hasStartDate() ) {
-        mChanges += i18n( "The task starting time has been removed." );
-      }
-      if ( oldTodo->hasStartDate() && newTodo->hasStartDate() &&
-           oldTodo->dtStart() != newTodo->dtStart() ) {
-        mChanges += i18n( "The task starting time has been changed from %1 to %2." ).
-                    arg( dateTimeToString( oldTodo->dtStart(), oldTodo->doesFloat(), false ) ).
-                    arg( dateTimeToString( newTodo->dtStart(), newTodo->doesFloat(), false ) );
-      }
-
-      if ( !oldTodo->hasDueDate() && newTodo->hasDueDate() ) {
-        mChanges += i18n( "A task due time has been added." );
-      }
-      if ( oldTodo->hasDueDate() && !newTodo->hasDueDate() ) {
-        mChanges += i18n( "The task due time has been removed." );
-      }
-      if ( ( oldTodo->hasDueDate() && newTodo->hasDueDate() ) &&
-           ( oldTodo->dtDue() != newTodo->dtDue() ) ) {
-        mChanges += i18n( "The task due time has been changed from %1 to %2." ).
-                    arg( dateTimeToString( oldTodo->dtDue(), oldTodo->doesFloat(), false ) ).
-                    arg( dateTimeToString( newTodo->dtDue(), newTodo->doesFloat(), false ) );
-      }
-    }
-
-    void compareIncidences( Incidence *newInc, Incidence *oldInc, int method )
-    {
-      if ( !oldInc || !newInc )
-        return;
-      if ( oldInc->summary() != newInc->summary() )
-        mChanges += i18n( "The summary has been changed to: \"%1\"" ).arg( newInc->summary() );
-      if ( oldInc->location() != newInc->location() )
-        mChanges += i18n( "The location has been changed to: \"%1\"" ).arg( newInc->location() );
-      if ( oldInc->description() != newInc->description() )
-        mChanges += i18n( "The description has been changed to: \"%1\"" ).arg( newInc->description() );
-      Attendee::List oldAttendees = oldInc->attendees();
-      Attendee::List newAttendees = newInc->attendees();
-      for ( Attendee::List::ConstIterator it = newAttendees.constBegin();
-            it != newAttendees.constEnd(); ++it ) {
-        Attendee *oldAtt = oldInc->attendeeByMail( (*it)->email() );
-        if ( !oldAtt ) {
-          mChanges += i18n( "Attendee %1 has been added." ).arg( (*it)->fullName() );
-        } else {
-          if ( oldAtt->status() != (*it)->status() )
-            mChanges += i18n( "The status of attendee %1 has been changed to: %2" ).
-                        arg( (*it)->fullName() ).arg( (*it)->statusStr() );
-        }
-      }
-      if ( method == Scheduler::Request ) {
-        for ( Attendee::List::ConstIterator it = oldAttendees.constBegin();
-              it != oldAttendees.constEnd(); ++it ) {
-          if ( !attendeeIsOrganizer( oldInc, (*it) ) ) {
-            Attendee *newAtt = newInc->attendeeByMail( (*it)->email() );
-            if ( !newAtt ) {
-              mChanges += i18n( "Attendee %1 has been removed." ).arg( (*it)->fullName() );
-            }
-          }
-        }
-      }
-    }
-
-  private:
-    Incidence *mExistingIncidence;
-    int mMethod;
-    QStringList mChanges;
-};
-
-
 QString InvitationFormatterHelper::makeLink( const QString &id, const QString &text )
 {
   if ( !id.startsWith( "ATTACH:" ) ) {
@@ -2769,8 +2587,7 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
                                                         Calendar *mCalendar,
                                                         InvitationFormatterHelper *helper,
                                                         bool noHtmlMode,
-                                                        const QString &sender,
-                                                        bool outlookCompareStyle )
+                                                        const QString &sender )
 {
   if ( invitation.isEmpty() ) {
     return QString::null;
@@ -2933,62 +2750,23 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
 
   html += "\n<hr>\n<table>";
 
-  if ( outlookCompareStyle ||
-       msg->method() == Scheduler::Declinecounter ) { //use Outlook style for decline counters
-    // use the Outlook 2007 Comparison Style
-    InvitationBodyVisitor bodyVisitor( noHtmlMode );
-    bool bodyOk;
-    if ( msg->method() == Scheduler::Request || msg->method() == Scheduler::Reply ||
-         msg->method() == Scheduler::Declinecounter ) {
-      if ( inc && existingIncidence &&
-           inc->lastModified() < existingIncidence->lastModified() ) {
-        bodyOk = bodyVisitor.act( existingIncidence, inc, msg, sender );
-      } else {
-        bodyOk = bodyVisitor.act( inc, existingIncidence, msg, sender );
-      }
+  InvitationBodyVisitor bodyVisitor( noHtmlMode );
+  bool bodyOk;
+  if ( msg->method() == Scheduler::Request || msg->method() == Scheduler::Reply ||
+       msg->method() == Scheduler::Declinecounter ) {
+    if ( inc && existingIncidence &&
+         inc->lastModified() < existingIncidence->lastModified() ) {
+      bodyOk = bodyVisitor.act( existingIncidence, inc, msg, sender );
     } else {
-      bodyOk = bodyVisitor.act( inc, 0, msg, sender );
-    }
-    if ( bodyOk ) {
-      html += bodyVisitor.result();
-    } else {
-      return QString::null;
+      bodyOk = bodyVisitor.act( inc, existingIncidence, msg, sender );
     }
   } else {
-    // use our "Classic: Comparison Style
-    InvitationBodyVisitor bodyVisitor( noHtmlMode );
-    if ( !bodyVisitor.act( inc, 0, msg, sender ) )
-      return QString::null;
+    bodyOk = bodyVisitor.act( inc, 0, msg, sender );
+  }
+  if ( bodyOk ) {
     html += bodyVisitor.result();
-
-    if ( msg->method() == Scheduler::Request ) {
-      IncidenceCompareVisitor compareVisitor;
-      if ( compareVisitor.act( inc, existingIncidence, msg->method() ) ) {
-        html += "<p align=\"left\">";
-        if ( senderIsOrganizer( inc, sender ) ) {
-          html += i18n( "The following changes have been made by the organizer:" );
-        } else if ( !sender.isEmpty() ) {
-          html += i18n( "The following changes have been made by %1:" ).arg( sender );
-        } else {
-          html += i18n( "The following changes have been made:" );
-        }
-        html += "</p>";
-        html += compareVisitor.result();
-      }
-    }
-    if ( msg->method() == Scheduler::Reply ) {
-      IncidenceCompareVisitor compareVisitor;
-      if ( compareVisitor.act( inc, existingIncidence, msg->method() ) ) {
-        html += "<p align=\"left\">";
-        if ( !sender.isEmpty() ) {
-          html += i18n( "The following changes have been made by %1:" ).arg( sender );
-        } else {
-          html += i18n( "The following changes have been made by an attendee:" );
-        }
-        html += "</p>";
-        html += compareVisitor.result();
-      }
-    }
+  } else {
+    return QString::null;
   }
 
   // Add the attendee list
@@ -3148,14 +2926,14 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation,
                                                   Calendar *mCalendar,
                                                   InvitationFormatterHelper *helper )
 {
-  return formatICalInvitationHelper( invitation, mCalendar, helper, false, QString(), true );
+  return formatICalInvitationHelper( invitation, mCalendar, helper, false, QString() );
 }
 
 QString IncidenceFormatter::formatICalInvitationNoHtml( QString invitation,
                                                         Calendar *mCalendar,
                                                         InvitationFormatterHelper *helper )
 {
-  return formatICalInvitationHelper( invitation, mCalendar, helper, true, QString(), true );
+  return formatICalInvitationHelper( invitation, mCalendar, helper, true, QString() );
 }
 
 QString IncidenceFormatter::formatICalInvitationNoHtml( QString invitation,
@@ -3163,16 +2941,7 @@ QString IncidenceFormatter::formatICalInvitationNoHtml( QString invitation,
                                                         InvitationFormatterHelper *helper,
                                                         const QString &sender )
 {
-  return formatICalInvitationHelper( invitation, mCalendar, helper, true, sender, true );
-}
-
-QString IncidenceFormatter::formatICalInvitationNoHtml( QString invitation,
-                                                        Calendar *mCalendar,
-                                                        InvitationFormatterHelper *helper,
-                                                        const QString &sender,
-                                                        bool outlookCompareStyle )
-{
-  return formatICalInvitationHelper( invitation, mCalendar, helper, true, sender, outlookCompareStyle );
+  return formatICalInvitationHelper( invitation, mCalendar, helper, true, sender );
 }
 
 /*******************************************************************
