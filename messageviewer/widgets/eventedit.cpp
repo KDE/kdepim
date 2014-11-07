@@ -95,7 +95,7 @@ EventEdit::EventEdit(QWidget *parent)
 
     lab = new QLabel(i18n("Start:"));
     hbox->addWidget(lab);
-    KDateTime currentDateTime = KDateTime::currentDateTime(KDateTime::LocalZone);
+    QDateTime currentDateTime = QDateTime::currentDateTime();
     mStartDateTimeEdit = new EventDateTimeWidget;
     mStartDateTimeEdit->setObjectName(QLatin1String("startdatetimeedit"));
     //QT5 mStartDateTimeEdit->setDateTime(currentDateTime);
@@ -111,7 +111,7 @@ EventEdit::EventEdit(QWidget *parent)
     hbox->addWidget(lab);
     mEndDateTimeEdit = new EventDateTimeWidget;
     mEndDateTimeEdit->setObjectName(QLatin1String("enddatetimeedit"));
-    //QT5 mEndDateTimeEdit->setDateTime(currentDateTime.addSecs(3600));
+    mEndDateTimeEdit->setDateTime(currentDateTime.addSecs(3600));
 #ifndef QT_NO_ACCESSIBILITY
     mEndDateTimeEdit->setAccessibleDescription(i18n("Select end time for event."));
 #endif
