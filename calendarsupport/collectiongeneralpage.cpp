@@ -49,7 +49,6 @@ CollectionGeneralPage::CollectionGeneralPage( QWidget *parent )
 
   QVBoxLayout *topLayout = new QVBoxLayout( this );
   topLayout->setSpacing( KDialog::spacingHint() );
-  topLayout->setMargin( 0 );
 
   QHBoxLayout *hbox = new QHBoxLayout();
   topLayout->addItem( hbox );
