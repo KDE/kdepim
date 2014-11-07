@@ -847,6 +847,7 @@ void KMFolderTree::slotFolderRemoved(KMFolder *aFolder)
     doFolderSelected( qlvi );
   }
   removeFromFolderToItemMap( aFolder );
+  mFolderToUpdateCount.remove( aFolder->idString() );
 
   if ( dropItem == fti ) { // The removed item is the dropItem
     dropItem = 0; // it becomes invalid
