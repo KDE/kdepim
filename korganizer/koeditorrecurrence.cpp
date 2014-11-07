@@ -1178,10 +1178,10 @@ void KOEditorRecurrence::setDefaults( const QDateTime &from, const QDateTime &to
   mYearly->setByMonth( from.date().day(), from.date().month() );
 }
 
-void KOEditorRecurrence::show()
+void KOEditorRecurrence::showEvent(QShowEvent *e)
 {
     setRecurrenceEnabled( true );
-    QWidget::show();
+    QWidget::showEvent(e);
 }
 
 void KOEditorRecurrence::readIncidence(Incidence *incidence)
