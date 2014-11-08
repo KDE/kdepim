@@ -15,11 +15,10 @@
   <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
   </method>
   <method name="dumpDebug">
-  <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
+  <arg type="s" direction="out"/>
   </method>
   <method name="dumpAlarms">
   <arg type="as" direction="out"/>
   </method>
-  <method name="debugShowDialog"/>
   </interface>
 </node>

@@ -50,10 +50,8 @@ public:
     void hide();
     void show();
     void forceAlarmCheck();
-    void dumpDebug();
+    QString dumpDebug();
     QStringList dumpAlarms();
-
-    void debugShowDialog();
 
 public slots:
     void slotQuit();
