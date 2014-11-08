@@ -31,7 +31,7 @@ class FilterLogDialog;
 class FilterManager;
 class KJob;
 
-class MailFilterAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::ObserverV2
+class MailFilterAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::ObserverV3
 {
     Q_OBJECT
 
@@ -39,7 +39,6 @@ public:
     explicit MailFilterAgent( const QString &id );
     ~MailFilterAgent();
 
-    void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
 
     QString createUniqueName( const QString &nameTemplate );
     void filterItems( const QList< qint64 >& itemIds, int filterSet );
@@ -52,6 +51,9 @@ public:
 
     void showFilterLogDialog(qlonglong windowId = 0);
     QString printCollectionMonitored();
+
+protected:
+    void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
 
 private Q_SLOTS:
     void initializeCollections();
