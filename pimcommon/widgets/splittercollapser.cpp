@@ -42,9 +42,9 @@ enum Direction {
     BottomToTop
 };
 
-const int TIMELINE_DURATION = 500;
+const static int TIMELINE_DURATION = 500;
 
-const qreal MINIMUM_OPACITY = 0.3;
+const static qreal MINIMUM_OPACITY = 0.3;
 
 class ArrowTypes {
 public:
@@ -80,7 +80,7 @@ public:
     QWidget *mWidget;
     Direction mDirection;
     QTimeLine *mOpacityTimeLine;
-    QList<int> mSizeAtCollaps;
+    QList<int> mSizeAtCollapse;
 
     bool isVertical() const;
 
@@ -307,11 +307,11 @@ void SplitterCollapser::slotClicked()
     QList<int> sizes = d->mSplitter->sizes();
     const int index = d->mSplitter->indexOf(d->mWidget);
     if (d->isVisible()) {
-        d->mSizeAtCollaps = sizes;
+        d->mSizeAtCollapse = sizes;
         sizes[index] = 0;
     } else {
-        if (!d->mSizeAtCollaps.isEmpty()) {
-            sizes = d->mSizeAtCollaps;
+        if (!d->mSizeAtCollapse.isEmpty()) {
+            sizes = d->mSizeAtCollapse;
         } else {
             if (d->isVertical()) {
                 sizes[index] = d->mWidget->sizeHint().height();
