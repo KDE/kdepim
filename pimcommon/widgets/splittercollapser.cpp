@@ -99,15 +99,13 @@ bool SplitterCollapser::Private::isVertical() const
 
 bool SplitterCollapser::Private::isVisible() const
 {
-    bool isVisible = mWidget->isVisible();
     const QRect widgetRect = mWidget->geometry();
-    if (isVisible) {
-        const QPoint br = widgetRect.bottomRight();
-        if ((br.x() <= 0) || (br.y() <= 0)) {
-            isVisible = false;
-        }
+    const QPoint br = widgetRect.bottomRight();
+    if ((br.x() <= 0) || (br.y() <= 0)) {
+        return false;
+    } else {
+        return true;
     }
-    return isVisible;
 }
 
 void SplitterCollapser::Private::updatePosition()
