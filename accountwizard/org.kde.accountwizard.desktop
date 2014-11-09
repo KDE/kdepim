@@ -1,5 +1,12 @@
 [Desktop Entry]
 Name=Account Wizard
+Name[de]=Zugangsassistent 
+Name[nl]=Accountassistent
+Name[pl]=Pomocnik konta 
+Name[pt_BR]=Assistente de Contas
+Name[sk]=Sprievodca účtom
+Name[uk]=Майстер облікових записів
+Name[x-test]=xxAccount Wizardxx
 Exec=accountwizard --package %u
 Type=Application
 NoDisplay=true
@@ -15,8 +22,12 @@ Comment[it]=Esegue la procedura guidata per la creazione di account per configur
 Comment[kk]=PIM тіркелгілерін баптау үшін шеберін жегеді.
 Comment[nds]=Konto-Hölper för't Inrichten vun PIM-Kontos starten
 Comment[nl]=Start de accountassistent om PIM-accounts in te stellen.
+Comment[pl]=Uruchom pomocnika konta, aby ustawić konta ZIO.
+Comment[pt_BR]=Executa o assistente para configuração das contas PIM.
+Comment[sk]=Spustí sprievodcu účtami na nasatavenie PIM účtov.
 Comment[sv]=Starta kontoguiden för att anpassa konton för personlig informationshantering.
 Comment[uk]=Запустити майстер облікових записів для налаштування.
+Comment[x-test]=xxLaunch the account wizard to configure PIM accounts.xx
 Comment[zh_CN]=调用账户向导配置个人信息账户。
 Comment[zh_TW]=啟動帳號精靈來設定 PIM 帳號
 MimeType=application/x-accountwizard-package;

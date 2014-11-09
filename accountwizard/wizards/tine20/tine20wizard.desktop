@@ -1,7 +1,21 @@
 [Desktop Entry]
 Name=Tine 2.0 Groupware Server
+Name[de]=Tine 2.0 Groupware-Server
+Name[nl]=Tine 2.0 groupwareserver
+Name[pl]=Serwer Groupware Tine 2.0
+Name[pt_BR]=Servidor groupware Tine 2.0
+Name[sk]=Tine 2.0 Groupware Server
+Name[uk]=Сервер групової роботи Tine 2.0
+Name[x-test]=xxTine 2.0 Groupware Serverxx
 Icon=applications-internet
 Comment=Tine 2.0 Groupware Server
+Comment[de]=Tine 2.0 Groupware-Server
+Comment[nl]=Tine 2.0 groupwareserver
+Comment[pl]=Serwer Groupware Tine 2.0
+Comment[pt_BR]=Servidor groupware Tine 2.0
+Comment[sk]=Tine 2.0 Groupware Server
+Comment[uk]=Сервер групової роботи Tine 2.0
+Comment[x-test]=xxTine 2.0 Groupware Serverxx
 
 [Wizard]
 Type=message/rfc822,text/directory,text/calendar
