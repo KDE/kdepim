@@ -95,8 +95,9 @@ void BalooDebugWidget::doSearch()
 void BalooDebugWidget::slotSearch()
 {
     const QString searchId = mLineEdit->text();
-    if (searchId.isEmpty())
+    if (searchId.isEmpty()) {
         return;
+    }
     PimCommon::BalooDebugSearchJob *job = new PimCommon::BalooDebugSearchJob(this);
     job->setAkonadiId(searchId);
     job->setSearchPath(mSearchPathComboBox->searchPath());

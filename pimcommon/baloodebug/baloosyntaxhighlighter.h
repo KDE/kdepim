@@ -19,7 +19,8 @@
 #define BALOOSYNTAXHIGHLIGHTER_H
 
 #include <QSyntaxHighlighter>
-namespace PimCommon {
+namespace PimCommon
+{
 class BalooSyntaxHighlighter : public QSyntaxHighlighter
 {
     Q_OBJECT
@@ -36,7 +37,7 @@ private:
         QRegExp pattern;
         QTextCharFormat format;
 
-        Rule( const QRegExp &r, const QTextCharFormat &f )
+        Rule(const QRegExp &r, const QTextCharFormat &f)
             : pattern(r), format(f) {}
     };
 

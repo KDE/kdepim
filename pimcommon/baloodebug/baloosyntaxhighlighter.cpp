@@ -37,7 +37,7 @@ void BalooSyntaxHighlighter::highlightBlock(const QString &text)
         const QRegExp expression(rule.pattern);
         int index = expression.indexIn(text);
         int length = 0;
-        while (index >= 0 && ( length = expression.matchedLength() ) > 0 ) {
+        while (index >= 0 && (length = expression.matchedLength()) > 0) {
             setFormat(index, length, rule.format);
             index = expression.indexIn(text, index + length);
         }
@@ -47,8 +47,8 @@ void BalooSyntaxHighlighter::highlightBlock(const QString &text)
 void BalooSyntaxHighlighter::init()
 {
     QTextCharFormat testFormat;
-    testFormat.setForeground( Qt::black );
-    testFormat.setFontWeight( QFont::Bold );
+    testFormat.setForeground(Qt::black);
+    testFormat.setFontWeight(QFont::Bold);
     QStringList testType;
     //Collection
     testType << QLatin1String("C\\d+");
@@ -85,10 +85,9 @@ void BalooSyntaxHighlighter::init()
     //NickName
     testType << QLatin1String("\\bNI");
 
-
-    Q_FOREACH ( const QString &s, testType ) {
-        const QRegExp regex( s, Qt::CaseSensitive );
-        m_rules.append( Rule( regex, testFormat ) );
+    Q_FOREACH (const QString &s, testType) {
+        const QRegExp regex(s, Qt::CaseSensitive);
+        m_rules.append(Rule(regex, testFormat));
     }
 }
 

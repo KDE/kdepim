@@ -36,7 +36,7 @@ License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 using namespace PimCommon;
 
 enum Direction {
-    LeftToRight =0,
+    LeftToRight = 0,
     RightToLeft,
     TopToBottom,
     BottomToTop
