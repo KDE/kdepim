@@ -64,9 +64,9 @@ private Q_SLOTS:
     void slotClicked();
 
 protected:
-    bool eventFilter(QObject *, QEvent *);
-    QSize sizeHint() const;
-    void paintEvent(QPaintEvent *);
+    bool eventFilter(QObject *, QEvent *) Q_DECL_OVERRIDE;
+    QSize sizeHint() const Q_DECL_OVERRIDE;
+    void paintEvent(QPaintEvent *) Q_DECL_OVERRIDE;
 
 private:
     class Private;
