@@ -55,6 +55,9 @@ public:
      */
     bool isCollapsed() const;
 
+    QSize sizeHint() const;
+
+
 public Q_SLOTS:
     void collapse();
     void restore();
@@ -65,7 +68,6 @@ private Q_SLOTS:
 
 protected:
     bool eventFilter(QObject *, QEvent *);
-    QSize sizeHint() const;
     void paintEvent(QPaintEvent *);
 
 private:
