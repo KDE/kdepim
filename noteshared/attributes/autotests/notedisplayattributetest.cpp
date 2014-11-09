@@ -16,8 +16,7 @@
 */
 
 #include "notedisplayattributetest.h"
-#include <kglobalsettings.h>
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <QFontDatabase>
 #include "attributes/notedisplayattribute.h"
 
@@ -78,4 +77,4 @@ void NoteDisplayAttributeTest::shouldEqualWhenCloning()
 }
 
 
-QTEST_KDEMAIN(NoteDisplayAttributeTest, NoGUI)
+QTEST_MAIN(NoteDisplayAttributeTest)
