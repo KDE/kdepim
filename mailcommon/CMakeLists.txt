@@ -209,7 +209,6 @@ target_link_libraries(mailcommon
   incidenceeditorsng
 )
 
-add_subdirectory(widgets/tests/)
 
 set_target_properties(mailcommon PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS mailcommon ${INSTALL_TARGETS_DEFAULT_ARGS})
