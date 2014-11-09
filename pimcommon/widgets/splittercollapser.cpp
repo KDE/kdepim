@@ -302,7 +302,7 @@ void SplitterCollapser::slotClicked()
     d->mSplitter->setSizes(sizes);
 }
 
-void SplitterCollapser::slotCollapse()
+void SplitterCollapser::collapse()
 {
     if (d->isVisible()) {
         slotClicked();
@@ -310,7 +310,7 @@ void SplitterCollapser::slotCollapse()
     // else do nothing
 }
 
-void SplitterCollapser::slotRestore()
+void SplitterCollapser::restore()
 {
     if (!d->isVisible()) {
         slotClicked();
@@ -318,7 +318,7 @@ void SplitterCollapser::slotRestore()
     // else do nothing
 }
 
-void SplitterCollapser::slotSetCollapsed(bool collapse)
+void SplitterCollapser::setCollapsed(bool collapse)
 {
     if (collapse == d->isVisible()) {
         slotClicked();

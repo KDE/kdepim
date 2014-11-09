@@ -46,9 +46,9 @@ public:
     QSize sizeHint() const;
 
 public Q_SLOTS:
-    void slotCollapse();
-    void slotRestore();
-    void slotSetCollapsed(bool collapsed);
+    void collapse();
+    void restore();
+    void setCollapsed(bool collapsed);
 
 private Q_SLOTS:
     void slotClicked();
