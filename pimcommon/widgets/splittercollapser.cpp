@@ -36,7 +36,7 @@ License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 using namespace PimCommon;
 
 enum Direction {
-    LeftToRight,
+    LeftToRight =0,
     RightToLeft,
     TopToBottom,
     BottomToTop
@@ -46,28 +46,14 @@ const static int TIMELINE_DURATION = 500;
 
 const static qreal MINIMUM_OPACITY = 0.3;
 
-class ArrowTypes {
-public:
-    ArrowTypes()
-        : mVisible(Qt::NoArrow),
-          mNotVisible(Qt::NoArrow)
-    {
-    }
-
-    ArrowTypes(Qt::ArrowType t1, Qt::ArrowType t2)
-        : mVisible(t1),
-          mNotVisible(t2)
-    {
-
-    }
-
-    Qt::ArrowType arrowType(bool isVisible) const
-    {
-        return isVisible ? mVisible : mNotVisible;
-    }
-private:
-    Qt::ArrowType mVisible;
-    Qt::ArrowType mNotVisible;
+static const struct {
+    Qt::ArrowType arrowVisible;
+    Qt::ArrowType notArrowVisible;
+} s_arrowDirection[] = {
+    {Qt::LeftArrow,  Qt::RightArrow},
+    {Qt::RightArrow, Qt::LeftArrow},
+    {Qt::UpArrow, Qt::DownArrow},
+    {Qt::DownArrow,  Qt::UpArrow}
 };
 
 class SplitterCollapser::Private
@@ -172,14 +158,7 @@ void SplitterCollapser::Private::updatePosition()
 
 void SplitterCollapser::Private::updateArrow()
 {
-    static QHash<Direction, ArrowTypes> arrowForDirection;
-    if (arrowForDirection.isEmpty()) {
-        arrowForDirection[LeftToRight] = ArrowTypes(Qt::LeftArrow,  Qt::RightArrow);
-        arrowForDirection[RightToLeft] = ArrowTypes(Qt::RightArrow, Qt::LeftArrow);
-        arrowForDirection[TopToBottom] = ArrowTypes(Qt::UpArrow,    Qt::DownArrow);
-        arrowForDirection[BottomToTop] = ArrowTypes(Qt::DownArrow,  Qt::UpArrow);
-    }
-    q->setArrowType(arrowForDirection[mDirection].arrowType(isVisible()));
+    q->setArrowType(isVisible() ? s_arrowDirection[mDirection].arrowVisible : s_arrowDirection[mDirection].notArrowVisible);
 }
 
 void SplitterCollapser::Private::widgetEventFilter(QEvent *event)
