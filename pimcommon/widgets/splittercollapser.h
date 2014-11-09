@@ -39,9 +39,20 @@ class PIMCOMMON_EXPORT SplitterCollapser : public QToolButton
 {
     Q_OBJECT
 public:
+    /**
+     * @brief SplitterCollapser create a splitter collapser
+     * @param splitter the splitter where we put the splitter collapser
+     * @param widget the widget which be associate with splitter collapser.
+     * @param parent the parent widget.
+     */
     explicit SplitterCollapser(QSplitter *splitter, QWidget *widget, QWidget *parent = 0);
+
     ~SplitterCollapser();
 
+    /**
+     * @brief isCollapsed
+     * @return true if splitter is collapsed.
+     */
     bool isCollapsed() const;
 
 public Q_SLOTS:
