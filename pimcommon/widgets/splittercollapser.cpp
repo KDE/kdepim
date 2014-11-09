@@ -36,39 +36,24 @@ License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 using namespace PimCommon;
 
 enum Direction {
-    LeftToRight,
+    LeftToRight =0,
     RightToLeft,
     TopToBottom,
     BottomToTop
 };
 
-const int TIMELINE_DURATION = 500;
+const static int TIMELINE_DURATION = 500;
 
-const qreal MINIMUM_OPACITY = 0.3;
+const static qreal MINIMUM_OPACITY = 0.3;
 
-class ArrowTypes
-{
-public:
-    ArrowTypes()
-        : mVisible(Qt::NoArrow),
-          mNotVisible(Qt::NoArrow)
-    {
-    }
-
-    ArrowTypes(Qt::ArrowType t1, Qt::ArrowType t2)
-        : mVisible(t1),
-          mNotVisible(t2)
-    {
-
-    }
-
-    Qt::ArrowType arrowType(bool isVisible) const
-    {
-        return isVisible ? mVisible : mNotVisible;
-    }
-private:
-    Qt::ArrowType mVisible;
-    Qt::ArrowType mNotVisible;
+static const struct {
+    Qt::ArrowType arrowVisible;
+    Qt::ArrowType notArrowVisible;
+} s_arrowDirection[] = {
+    {Qt::LeftArrow,  Qt::RightArrow},
+    {Qt::RightArrow, Qt::LeftArrow},
+    {Qt::UpArrow, Qt::DownArrow},
+    {Qt::DownArrow,  Qt::UpArrow}
 };
 
 class SplitterCollapser::Private
@@ -81,7 +66,7 @@ public:
     QWidget *mWidget;
     Direction mDirection;
     QTimeLine *mOpacityTimeLine;
-    QList<int> mSizeAtCollaps;
+    QList<int> mSizeAtCollapse;
 
     bool isVertical() const;
 
@@ -114,15 +99,13 @@ bool SplitterCollapser::Private::isVertical() const
 
 bool SplitterCollapser::Private::isVisible() const
 {
-    bool isVisible = mWidget->isVisible();
     const QRect widgetRect = mWidget->geometry();
-    if (isVisible) {
-        const QPoint br = widgetRect.bottomRight();
-        if ((br.x() <= 0) || (br.y() <= 0)) {
-            isVisible = false;
-        }
+    const QPoint br = widgetRect.bottomRight();
+    if ((br.x() <= 0) || (br.y() <= 0)) {
+        return false;
+    } else {
+        return true;
     }
-    return isVisible;
 }
 
 void SplitterCollapser::Private::updatePosition()
@@ -173,14 +156,7 @@ void SplitterCollapser::Private::updatePosition()
 
 void SplitterCollapser::Private::updateArrow()
 {
-    static QHash<Direction, ArrowTypes> arrowForDirection;
-    if (arrowForDirection.isEmpty()) {
-        arrowForDirection[LeftToRight] = ArrowTypes(Qt::LeftArrow,  Qt::RightArrow);
-        arrowForDirection[RightToLeft] = ArrowTypes(Qt::RightArrow, Qt::LeftArrow);
-        arrowForDirection[TopToBottom] = ArrowTypes(Qt::UpArrow,    Qt::DownArrow);
-        arrowForDirection[BottomToTop] = ArrowTypes(Qt::DownArrow,  Qt::UpArrow);
-    }
-    q->setArrowType(arrowForDirection[mDirection].arrowType(isVisible()));
+    q->setArrowType(isVisible() ? s_arrowDirection[mDirection].arrowVisible : s_arrowDirection[mDirection].notArrowVisible);
 }
 
 void SplitterCollapser::Private::widgetEventFilter(QEvent *event)
@@ -307,11 +283,11 @@ void SplitterCollapser::slotClicked()
     QList<int> sizes = d->mSplitter->sizes();
     const int index = d->mSplitter->indexOf(d->mWidget);
     if (d->isVisible()) {
-        d->mSizeAtCollaps = sizes;
+        d->mSizeAtCollapse = sizes;
         sizes[index] = 0;
     } else {
-        if (!d->mSizeAtCollaps.isEmpty()) {
-            sizes = d->mSizeAtCollaps;
+        if (!d->mSizeAtCollapse.isEmpty()) {
+            sizes = d->mSizeAtCollapse;
         } else {
             if (d->isVertical()) {
                 sizes[index] = d->mWidget->sizeHint().height();
@@ -323,7 +299,7 @@ void SplitterCollapser::slotClicked()
     d->mSplitter->setSizes(sizes);
 }
 
-void SplitterCollapser::slotCollapse()
+void SplitterCollapser::collapse()
 {
     if (d->isVisible()) {
         slotClicked();
@@ -331,7 +307,7 @@ void SplitterCollapser::slotCollapse()
     // else do nothing
 }
 
-void SplitterCollapser::slotRestore()
+void SplitterCollapser::restore()
 {
     if (!d->isVisible()) {
         slotClicked();
@@ -339,7 +315,7 @@ void SplitterCollapser::slotRestore()
     // else do nothing
 }
 
-void SplitterCollapser::slotSetCollapsed(bool collapse)
+void SplitterCollapser::setCollapsed(bool collapse)
 {
     if (collapse == d->isVisible()) {
         slotClicked();
