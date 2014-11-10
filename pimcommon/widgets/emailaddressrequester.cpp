@@ -91,8 +91,7 @@ EmailAddressRequester::EmailAddressRequester(QWidget *parent)
     layout->addWidget(button);
 
     connect(button, SIGNAL(clicked()), this, SLOT(slotAddressBook()));
-    connect(d->mLineEdit, SIGNAL(textChanged(QString)),
-            this, SIGNAL(textChanged()));
+    connect(d->mLineEdit, &KLineEdit::textChanged, this, &EmailAddressRequester::textChanged);
 }
 
 EmailAddressRequester::~EmailAddressRequester()

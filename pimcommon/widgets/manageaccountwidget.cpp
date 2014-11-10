@@ -39,21 +39,15 @@ ManageAccountWidget::ManageAccountWidget(QWidget *parent)
 {
     mWidget = new Ui::ManageAccountWidget;
     mWidget->setupUi(this);
-    connect(mWidget->mAddAccountButton, SIGNAL(clicked()),
-            this, SLOT(slotAddAccount()));
+    connect(mWidget->mAddAccountButton, &QPushButton::clicked, this, &ManageAccountWidget::slotAddAccount);
 
-    connect(mWidget->mModifyAccountButton, SIGNAL(clicked()),
-            this, SLOT(slotModifySelectedAccount()));
+    connect(mWidget->mModifyAccountButton, &QPushButton::clicked, this, &ManageAccountWidget::slotModifySelectedAccount);
 
-    connect(mWidget->mRemoveAccountButton, SIGNAL(clicked()),
-            this, SLOT(slotRemoveSelectedAccount()));
-    connect(mWidget->mRestartAccountButton, SIGNAL(clicked()),
-            this, SLOT(slotRestartSelectedAccount()));
+    connect(mWidget->mRemoveAccountButton, &QPushButton::clicked, this, &ManageAccountWidget::slotRemoveSelectedAccount);
+    connect(mWidget->mRestartAccountButton, &QPushButton::clicked, this, &ManageAccountWidget::slotRestartSelectedAccount);
 
-    connect(mWidget->mAccountList, SIGNAL(clicked(Akonadi::AgentInstance)),
-            SLOT(slotAccountSelected(Akonadi::AgentInstance)));
-    connect(mWidget->mAccountList, SIGNAL(doubleClicked(Akonadi::AgentInstance)),
-            this, SLOT(slotModifySelectedAccount()));
+    connect(mWidget->mAccountList, &Akonadi::AgentInstanceWidget::clicked, this, &ManageAccountWidget::slotAccountSelected);
+    connect(mWidget->mAccountList, &Akonadi::AgentInstanceWidget::doubleClicked, this, &ManageAccountWidget::slotModifySelectedAccount);
 
     mWidget->mAccountList->view()->setSelectionMode(QAbstractItemView::SingleSelection);
 
