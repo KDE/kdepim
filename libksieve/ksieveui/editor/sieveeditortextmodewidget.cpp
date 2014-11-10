@@ -110,7 +110,7 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     mTemplateSplitter->addWidget(textEditWidget);
     mTemplateSplitter->addWidget(mExtraSplitter);
     mTemplateSplitter->setCollapsible(0, false);
-    new PimCommon::SplitterCollapser(mTemplateSplitter, mExtraSplitter, this);
+    new PimCommon::SplitterCollapser(mExtraSplitter, mTemplateSplitter);
 
     connect(sieveTemplateWidget, &SieveTemplateWidget::insertTemplate, mTextEdit, &SieveTextEdit::insertPlainText);
 

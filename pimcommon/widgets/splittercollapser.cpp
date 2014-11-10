@@ -32,6 +32,7 @@ License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QStyleOptionToolButton>
 #include <QStylePainter>
 #include <QTimeLine>
+#include <QDebug>
 
 using namespace PimCommon;
 
@@ -62,11 +63,11 @@ public:
     Private(SplitterCollapser *qq);
 
     SplitterCollapser *q;
-    QSplitter *mSplitter;
-    QWidget *mWidget;
-    Direction mDirection;
-    QTimeLine *mOpacityTimeLine;
-    QList<int> mSizeAtCollapse;
+    QSplitter *splitter;
+    QWidget *childWidget;
+    Direction direction;
+    QTimeLine *opacityTimeLine;
+    QList<int> sizeAtCollapse;
 
     bool isVertical() const;
 
@@ -85,21 +86,21 @@ public:
 
 SplitterCollapser::Private::Private(PimCommon::SplitterCollapser *qq)
     : q(qq),
-      mSplitter(0),
-      mWidget(0),
-      mOpacityTimeLine(0)
+      splitter(0),
+      childWidget(0),
+      opacityTimeLine(0)
 {
 
 }
 
 bool SplitterCollapser::Private::isVertical() const
 {
-    return (mSplitter->orientation() == Qt::Vertical);
+    return (splitter->orientation() == Qt::Vertical);
 }
 
 bool SplitterCollapser::Private::isVisible() const
 {
-    const QRect widgetRect = mWidget->geometry();
+    const QRect widgetRect = childWidget->geometry();
     const QPoint br = widgetRect.bottomRight();
     if ((br.x() <= 0) || (br.y() <= 0)) {
         return false;
@@ -112,15 +113,15 @@ void SplitterCollapser::Private::updatePosition()
 {
     int x = 0;
     int y = 0;
-    const QRect widgetRect = mWidget->geometry();
-    const int handleWidth = mSplitter->handleWidth();
+    const QRect widgetRect = childWidget->geometry();
+    const int handleWidth = splitter->handleWidth();
 
     if (!isVertical()) {
-        const int splitterWidth = mSplitter->width();
+        const int splitterWidth = splitter->width();
         const int width = q->width();
         // FIXME: Make this configurable
         y = 30;
-        if (mDirection == LeftToRight) {
+        if (direction == LeftToRight) {
             if (isVisible()) {
                 x = widgetRect.right() + handleWidth;
             } else {
@@ -136,16 +137,16 @@ void SplitterCollapser::Private::updatePosition()
     } else {
         x = 30;
         const int height = q->height();
-        const int splitterHeight = mSplitter->height();
-        if (mDirection == TopToBottom) {
+        const int splitterHeight = splitter->height();
+        if (direction == TopToBottom) {
             if (isVisible()) {
-                y = widgetRect.bottom() - height;
+                y = widgetRect.bottom() + handleWidth;
             } else {
                 y = 0;
             }
         } else { // BottomToTop
             if (isVisible()) {
-                y = widgetRect.top() + handleWidth;
+                y = widgetRect.top() - handleWidth - height;
             } else {
                 y = splitterHeight - handleWidth - height;
             }
@@ -156,7 +157,7 @@ void SplitterCollapser::Private::updatePosition()
 
 void SplitterCollapser::Private::updateArrow()
 {
-    q->setArrowType(isVisible() ? s_arrowDirection[mDirection].arrowVisible : s_arrowDirection[mDirection].notArrowVisible);
+    q->setArrowType(isVisible() ? s_arrowDirection[direction].arrowVisible : s_arrowDirection[direction].notArrowVisible);
 }
 
 void SplitterCollapser::Private::widgetEventFilter(QEvent *event)
@@ -185,25 +186,25 @@ void SplitterCollapser::Private::updateOpacity()
     const QPoint pos = q->parentWidget()->mapFromGlobal(QCursor::pos());
     const QRect opaqueRect = q->geometry();
     const bool opaqueCollapser = opaqueRect.contains(pos);
-    const int frame = mOpacityTimeLine->currentFrame();
-    if (opaqueCollapser && frame == mOpacityTimeLine->startFrame()) {
-        mOpacityTimeLine->setDirection(QTimeLine::Forward);
+    const int frame = opacityTimeLine->currentFrame();
+    if (opaqueCollapser && frame == opacityTimeLine->startFrame()) {
+        opacityTimeLine->setDirection(QTimeLine::Forward);
         startTimeLine();
-    } else if (!opaqueCollapser && frame == mOpacityTimeLine->endFrame()) {
-        mOpacityTimeLine->setDirection(QTimeLine::Backward);
+    } else if (!opaqueCollapser && frame == opacityTimeLine->endFrame()) {
+        opacityTimeLine->setDirection(QTimeLine::Backward);
         startTimeLine();
     }
 }
 
 void SplitterCollapser::Private::startTimeLine()
 {
-    if (mOpacityTimeLine->state() != QTimeLine::Running) {
-        mOpacityTimeLine->start();
+    if (opacityTimeLine->state() != QTimeLine::Running) {
+        opacityTimeLine->start();
     }
 }
 
-SplitterCollapser::SplitterCollapser(QSplitter *splitter, QWidget *widget, QWidget *parent)
-    : QToolButton(parent),
+SplitterCollapser::SplitterCollapser(QWidget *childWidget, QSplitter *splitter)
+    : QToolButton(),
       d(new Private(this))
 {
     setObjectName(QLatin1String("splittercollapser"));
@@ -211,32 +212,32 @@ SplitterCollapser::SplitterCollapser(QSplitter *splitter, QWidget *widget, QWidg
     // splitter!
     setAttribute(Qt::WA_NoChildEventsForParent);
 
-    d->mOpacityTimeLine = new QTimeLine(TIMELINE_DURATION, this);
-    d->mOpacityTimeLine->setFrameRange(int(MINIMUM_OPACITY * 1000), 1000);
-    connect(d->mOpacityTimeLine, SIGNAL(valueChanged(qreal)), SLOT(update()));
+    d->opacityTimeLine = new QTimeLine(TIMELINE_DURATION, this);
+    d->opacityTimeLine->setFrameRange(int(MINIMUM_OPACITY * 1000), 1000);
+    connect(d->opacityTimeLine, SIGNAL(valueChanged(qreal)), SLOT(update()));
 
-    d->mWidget = widget;
-    d->mWidget->installEventFilter(this);
+    d->childWidget = childWidget;
+    d->childWidget->installEventFilter(this);
 
     qApp->installEventFilter(this);
 
-    d->mSplitter = splitter;
-    setParent(d->mSplitter);
+    d->splitter = splitter;
+    setParent(d->splitter);
 
     switch (splitter->orientation()) {
     case Qt::Horizontal: {
-        if (splitter->indexOf(widget) < splitter->count() / 2) {
-            d->mDirection = LeftToRight;
+        if (splitter->indexOf(childWidget) < splitter->count() / 2) {
+            d->direction = LeftToRight;
         } else {
-            d->mDirection = RightToLeft;
+            d->direction = RightToLeft;
         }
         break;
     }
     case Qt::Vertical:
-        if (splitter->indexOf(widget) < splitter->count() / 2) {
-            d->mDirection = TopToBottom;
+        if (splitter->indexOf(childWidget) < splitter->count() / 2) {
+            d->direction = TopToBottom;
         } else {
-            d->mDirection = BottomToTop;
+            d->direction = BottomToTop;
         }
         break;
     }
@@ -258,7 +259,7 @@ bool SplitterCollapser::isCollapsed() const
 
 bool SplitterCollapser::eventFilter(QObject *object, QEvent *event)
 {
-    if (object == d->mWidget) {
+    if (object == d->childWidget) {
         d->widgetEventFilter(event);
     } else { /* app */
         if (event->type() == QEvent::MouseMove) {
@@ -280,23 +281,23 @@ QSize SplitterCollapser::sizeHint() const
 
 void SplitterCollapser::slotClicked()
 {
-    QList<int> sizes = d->mSplitter->sizes();
-    const int index = d->mSplitter->indexOf(d->mWidget);
+    QList<int> sizes = d->splitter->sizes();
+    const int index = d->splitter->indexOf(d->childWidget);
     if (d->isVisible()) {
-        d->mSizeAtCollapse = sizes;
+        d->sizeAtCollapse = sizes;
         sizes[index] = 0;
     } else {
-        if (!d->mSizeAtCollapse.isEmpty()) {
-            sizes = d->mSizeAtCollapse;
+        if (!d->sizeAtCollapse.isEmpty()) {
+            sizes = d->sizeAtCollapse;
         } else {
             if (d->isVertical()) {
-                sizes[index] = d->mWidget->sizeHint().height();
+                sizes[index] = d->childWidget->sizeHint().height();
             } else {
-                sizes[index] = d->mWidget->sizeHint().width();
+                sizes[index] = d->childWidget->sizeHint().width();
             }
         }
     }
-    d->mSplitter->setSizes(sizes);
+    d->splitter->setSizes(sizes);
 }
 
 void SplitterCollapser::collapse()
@@ -326,15 +327,24 @@ void SplitterCollapser::setCollapsed(bool collapse)
 void SplitterCollapser::paintEvent(QPaintEvent *)
 {
     QStylePainter painter(this);
-    const qreal opacity = d->mOpacityTimeLine->currentFrame() / 1000.;
+    const qreal opacity = d->opacityTimeLine->currentFrame() / 1000.;
     painter.setOpacity(opacity);
 
     QStyleOptionToolButton opt;
     initStyleOption(&opt);
-    if (d->mDirection == LeftToRight) {
-        opt.rect.setLeft(-width());
+
+    if (d->isVertical()) {
+        if (d->direction == TopToBottom) {
+            opt.rect.setTop(-height());
+        } else {
+            opt.rect.setHeight(height()*2);
+        }
     } else {
-        opt.rect.setWidth(width() * 2);
+        if (d->direction == LeftToRight) {
+            opt.rect.setLeft(-width());
+        } else {
+            opt.rect.setWidth(width() * 2);
+        }
     }
     painter.drawPrimitive(QStyle::PE_PanelButtonTool, opt);
 

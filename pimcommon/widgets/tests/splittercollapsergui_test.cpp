@@ -39,9 +39,9 @@ SplitterCollapserGui_test::SplitterCollapserGui_test(int indexOfWidgetAssociateT
     QTextEdit *leftTextEdit = new QTextEdit;
     splitter->addWidget(leftTextEdit);
     if (indexOfWidgetAssociateToSplitterCollapser == 0) {
-        new PimCommon::SplitterCollapser(splitter, rightTextEdit, this);
+        new PimCommon::SplitterCollapser(rightTextEdit, splitter);
     } else {
-        new PimCommon::SplitterCollapser(splitter, leftTextEdit, this);
+        new PimCommon::SplitterCollapser(leftTextEdit, splitter);
     }
 }
 

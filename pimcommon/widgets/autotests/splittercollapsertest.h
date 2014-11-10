@@ -26,7 +26,7 @@ class TestSplitter : public QWidget
 {
     Q_OBJECT
 public:
-    explicit TestSplitter(QObject *parent = 0);
+    explicit TestSplitter(QWidget *parent = 0);
     QSplitter *splitter;
     QTextEdit *edit1;
     QTextEdit *edit2;
