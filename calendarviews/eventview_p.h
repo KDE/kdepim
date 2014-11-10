@@ -32,11 +32,12 @@
 
 class KCheckableProxyModel;
 
-namespace EventViews {
+namespace EventViews
+{
 
 class EventViewPrivate
 {
-  public: /// Methods
+public: /// Methods
     EventViewPrivate();
     ~EventViewPrivate();
 
@@ -46,10 +47,10 @@ class EventViewPrivate
      */
     void finishTypeAhead();
 
-  public: // virtual functions
+public: // virtual functions
     void setUpModels();
 
-  public: /// Members
+public: /// Members
     Akonadi::ETMCalendar::Ptr calendar;
     CalendarSupport::CollectionSelection *customCollectionSelection;
     KCheckableProxyModel *collectionSelectionModel;

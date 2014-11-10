@@ -31,41 +31,41 @@
 #include <QPixmap>
 #include <QPixmapCache>
 
-QColor EventViews::getTextColor( const QColor &c )
+QColor EventViews::getTextColor(const QColor &c)
 {
-  double luminance = ( c.red() * 0.299 ) + ( c.green() * 0.587 ) + ( c.blue() * 0.114 );
-  return ( luminance > 128.0 ) ? QColor( 0, 0, 0 ) : QColor( 255, 255, 255 );
+    double luminance = (c.red() * 0.299) + (c.green() * 0.587) + (c.blue() * 0.114);
+    return (luminance > 128.0) ? QColor(0, 0, 0) : QColor(255, 255, 255);
 }
 
-QColor EventViews::resourceColor( const Akonadi::Collection &coll, const PrefsPtr &preferences )
+QColor EventViews::resourceColor(const Akonadi::Collection &coll, const PrefsPtr &preferences)
 {
-  if ( !coll.isValid() ) {
-    return QColor();
-  }
-  const QString id = QString::number( coll.id() );
-  return preferences->resourceColor( id );
+    if (!coll.isValid()) {
+        return QColor();
+    }
+    const QString id = QString::number(coll.id());
+    return preferences->resourceColor(id);
 }
 
-QColor EventViews::resourceColor( const Akonadi::Item &item, const PrefsPtr &preferences )
+QColor EventViews::resourceColor(const Akonadi::Item &item, const PrefsPtr &preferences)
 {
-  if ( !item.isValid() ) {
-    return QColor();
-  }
-  const QString id = QString::number( item.storageCollectionId() );
-  return preferences->resourceColor( id );
+    if (!item.isValid()) {
+        return QColor();
+    }
+    const QString id = QString::number(item.storageCollectionId());
+    return preferences->resourceColor(id);
 }
 
-int EventViews::yearDiff( const QDate &start, const QDate &end )
+int EventViews::yearDiff(const QDate &start, const QDate &end)
 {
-  return end.year() - start.year();
+    return end.year() - start.year();
 }
 
-QPixmap EventViews::cachedSmallIcon( const QString &name )
+QPixmap EventViews::cachedSmallIcon(const QString &name)
 {
-  QPixmap p;
-  if ( !QPixmapCache::find( name, &p ) ) {
-    p = SmallIcon( name );
-  }
+    QPixmap p;
+    if (!QPixmapCache::find(name, &p)) {
+        p = SmallIcon(name);
+    }
 
-  return p;
+    return p;
 }

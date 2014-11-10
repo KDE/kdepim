@@ -29,11 +29,12 @@
 
 #include <KDateTime>
 
-namespace CalendarSupport {
+namespace CalendarSupport
+{
 
 class CALENDARSUPPORT_EXPORT KCalPrefs : public KCalPrefsBase
 {
-  public:
+public:
     /** Constructor disabled for public. Use instance() to create a KCalPrefs
     object. */
     KCalPrefs();
@@ -52,41 +53,41 @@ class CALENDARSUPPORT_EXPORT KCalPrefs : public KCalPrefsBase
     /** Write preferences to config file */
     bool usrSave();
 
-  protected:
+protected:
     void setTimeZoneDefault();
 
     /** Fill empty mail fields with default values. */
     void fillMailDefaults();
 
-  public:
+public:
     // preferences data
-    void setFullName( const QString & );
+    void setFullName(const QString &);
     QString fullName();
-    void setEmail( const QString & );
+    void setEmail(const QString &);
     QString email();
     /// Returns all email addresses for the user.
     QStringList allEmails();
     /// Returns all email addresses together with the full username for the user.
     QStringList fullEmails();
     /// Return true if the given email belongs to the user
-    bool thatIsMe( const QString &email );
+    bool thatIsMe(const QString &email);
 
-    void setTimeSpec( const KDateTime::Spec &spec );
+    void setTimeSpec(const KDateTime::Spec &spec);
     KDateTime::Spec timeSpec();
 
     QString mailTransport() const;
 
     Akonadi::Entity::Id defaultCalendarId() const;
-    void setDefaultCalendarId( const Akonadi::Entity::Id );
+    void setDefaultCalendarId(const Akonadi::Entity::Id);
 
-    void setCategoryColor( const QString &cat, const QColor &color );
-    QColor categoryColor( const QString &cat ) const;
-    bool hasCategoryColor( const QString &cat ) const;
+    void setCategoryColor(const QString &cat, const QColor &color);
+    QColor categoryColor(const QString &cat) const;
+    bool hasCategoryColor(const QString &cat) const;
 
-    void setDayBegins( const QDateTime &dateTime );
+    void setDayBegins(const QDateTime &dateTime);
     QDateTime dayBegins() const;
 
-  private:
+private:
     class Private;
     Private *const d;
 };

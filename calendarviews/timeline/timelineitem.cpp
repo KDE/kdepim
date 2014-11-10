@@ -29,133 +29,132 @@
 #include <KCalCore/Incidence>
 #include <KCalUtils/IncidenceFormatter>
 
-
 using namespace KCalCore;
 using namespace KCalUtils;
 using namespace EventViews;
 
-TimelineItem::TimelineItem( const Akonadi::ETMCalendar::Ptr &calendar, uint index,
-                            QStandardItemModel *model, QObject *parent )
-  : QObject( parent ), mCalendar( calendar ), mModel( model ), mIndex( index )
+TimelineItem::TimelineItem(const Akonadi::ETMCalendar::Ptr &calendar, uint index,
+                           QStandardItemModel *model, QObject *parent)
+    : QObject(parent), mCalendar(calendar), mModel(model), mIndex(index)
 {
- mModel->removeRow( mIndex );
- QStandardItem *dummyItem = new QStandardItem;
- dummyItem->setData( KDGantt::TypeTask, KDGantt::ItemTypeRole );
+    mModel->removeRow(mIndex);
+    QStandardItem *dummyItem = new QStandardItem;
+    dummyItem->setData(KDGantt::TypeTask, KDGantt::ItemTypeRole);
 
- mModel->insertRow( mIndex, dummyItem );
+    mModel->insertRow(mIndex, dummyItem);
 }
 
-void TimelineItem::insertIncidence( const Akonadi::Item &aitem,
-                                    const KDateTime &_start, const KDateTime &_end )
+void TimelineItem::insertIncidence(const Akonadi::Item &aitem,
+                                   const KDateTime &_start, const KDateTime &_end)
 {
-  const Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
-  KDateTime start(_start);
-  KDateTime end(_end);
-  if ( !start.isValid() ) {
-    start = incidence->dtStart().toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() );
-  }
-  if ( !end.isValid() ) {
-    end = incidence->dateTime( Incidence::RoleEnd ).toTimeSpec(
-      CalendarSupport::KCalPrefs::instance()->timeSpec() );
-  }
-  if ( incidence->allDay() ) {
-    end = end.addDays( 1 );
-  }
-
-  typedef QList<QStandardItem*> ItemList;
-  ItemList list = mItemMap.value( aitem.id() );
-  for ( ItemList::ConstIterator it = list.constBegin(); it != list.constEnd(); ++it ) {
-    if ( KDateTime( static_cast<TimelineSubItem *>(*it)->startTime() ) == start &&
-         KDateTime( static_cast<TimelineSubItem *>(*it)->endTime() ) == end ) {
-      return;
+    const Incidence::Ptr incidence = CalendarSupport::incidence(aitem);
+    KDateTime start(_start);
+    KDateTime end(_end);
+    if (!start.isValid()) {
+        start = incidence->dtStart().toTimeSpec(CalendarSupport::KCalPrefs::instance()->timeSpec());
     }
-  }
+    if (!end.isValid()) {
+        end = incidence->dateTime(Incidence::RoleEnd).toTimeSpec(
+                  CalendarSupport::KCalPrefs::instance()->timeSpec());
+    }
+    if (incidence->allDay()) {
+        end = end.addDays(1);
+    }
 
-  TimelineSubItem *item = new TimelineSubItem( mCalendar, aitem, this );
+    typedef QList<QStandardItem *> ItemList;
+    ItemList list = mItemMap.value(aitem.id());
+    for (ItemList::ConstIterator it = list.constBegin(); it != list.constEnd(); ++it) {
+        if (KDateTime(static_cast<TimelineSubItem *>(*it)->startTime()) == start &&
+                KDateTime(static_cast<TimelineSubItem *>(*it)->endTime()) == end) {
+            return;
+        }
+    }
 
-  item->setStartTime( start.dateTime() );
-  item->setOriginalStart( start );
-  item->setEndTime( end.dateTime() );
-  item->setData( mColor, Qt::DecorationRole );
+    TimelineSubItem *item = new TimelineSubItem(mCalendar, aitem, this);
 
-  list = mModel->takeRow( mIndex );
+    item->setStartTime(start.dateTime());
+    item->setOriginalStart(start);
+    item->setEndTime(end.dateTime());
+    item->setData(mColor, Qt::DecorationRole);
 
-  mItemMap[aitem.id()].append( item );
+    list = mModel->takeRow(mIndex);
 
-  list.append( mItemMap[aitem.id()] );
+    mItemMap[aitem.id()].append(item);
 
-  mModel->insertRow( mIndex, list );
+    list.append(mItemMap[aitem.id()]);
+
+    mModel->insertRow(mIndex, list);
 }
 
-void TimelineItem::removeIncidence( const Akonadi::Item &incidence )
+void TimelineItem::removeIncidence(const Akonadi::Item &incidence)
 {
-  qDeleteAll( mItemMap.value( incidence.id() ) );
-  mItemMap.remove( incidence.id() );
+    qDeleteAll(mItemMap.value(incidence.id()));
+    mItemMap.remove(incidence.id());
 }
 
-void TimelineItem::moveItems( const Akonadi::Item &incidence, int delta, int duration )
+void TimelineItem::moveItems(const Akonadi::Item &incidence, int delta, int duration)
 {
-  typedef QList<QStandardItem*> ItemList;
-  ItemList list = mItemMap.value( incidence.id() );
-  for ( ItemList::ConstIterator it = list.constBegin(); it != list.constEnd(); ++it ) {
-    QDateTime start = static_cast<TimelineSubItem *>(*it)->originalStart().dateTime();
-    start = start.addSecs( delta );
-    static_cast<TimelineSubItem *>(*it)->setStartTime( start );
-    static_cast<TimelineSubItem *>(*it)->setOriginalStart( KDateTime( start ) );
-    static_cast<TimelineSubItem *>(*it)->setEndTime( start.addSecs( duration ) );
-  }
+    typedef QList<QStandardItem *> ItemList;
+    ItemList list = mItemMap.value(incidence.id());
+    for (ItemList::ConstIterator it = list.constBegin(); it != list.constEnd(); ++it) {
+        QDateTime start = static_cast<TimelineSubItem *>(*it)->originalStart().dateTime();
+        start = start.addSecs(delta);
+        static_cast<TimelineSubItem *>(*it)->setStartTime(start);
+        static_cast<TimelineSubItem *>(*it)->setOriginalStart(KDateTime(start));
+        static_cast<TimelineSubItem *>(*it)->setEndTime(start.addSecs(duration));
+    }
 }
 
-void TimelineItem::setColor( const QColor &color )
+void TimelineItem::setColor(const QColor &color)
 {
-  mColor = color;
+    mColor = color;
 }
 
-TimelineSubItem::TimelineSubItem( const Akonadi::ETMCalendar::Ptr &calendar,
-                                  const Akonadi::Item &incidence, TimelineItem *parent )
-  : QStandardItem(), mCalendar( calendar ), mIncidence( incidence ),
-    mParent( parent ), mToolTipNeedsUpdate( true )
+TimelineSubItem::TimelineSubItem(const Akonadi::ETMCalendar::Ptr &calendar,
+                                 const Akonadi::Item &incidence, TimelineItem *parent)
+    : QStandardItem(), mCalendar(calendar), mIncidence(incidence),
+      mParent(parent), mToolTipNeedsUpdate(true)
 {
-  setData( KDGantt::TypeTask, KDGantt::ItemTypeRole );
-  if ( !CalendarSupport::incidence( incidence )->isReadOnly() ) {
-    setFlags( Qt::ItemIsSelectable );
-  }
+    setData(KDGantt::TypeTask, KDGantt::ItemTypeRole);
+    if (!CalendarSupport::incidence(incidence)->isReadOnly()) {
+        setFlags(Qt::ItemIsSelectable);
+    }
 }
 
 TimelineSubItem::~TimelineSubItem()
 {
 }
 
-void TimelineSubItem::setStartTime( const QDateTime &dt )
+void TimelineSubItem::setStartTime(const QDateTime &dt)
 {
-  setData( dt, KDGantt::StartTimeRole );
+    setData(dt, KDGantt::StartTimeRole);
 }
 
 QDateTime TimelineSubItem::startTime() const
 {
-  return data( KDGantt::StartTimeRole ).toDateTime();
+    return data(KDGantt::StartTimeRole).toDateTime();
 }
 
-void TimelineSubItem::setEndTime( const QDateTime &dt )
+void TimelineSubItem::setEndTime(const QDateTime &dt)
 {
-  setData( dt, KDGantt::EndTimeRole );
+    setData(dt, KDGantt::EndTimeRole);
 }
 
 QDateTime TimelineSubItem::endTime() const
 {
-  return data( KDGantt::EndTimeRole ).toDateTime();
+    return data(KDGantt::EndTimeRole).toDateTime();
 }
 
 void TimelineSubItem::updateToolTip()
 {
-  if ( !mToolTipNeedsUpdate ) {
-    return;
-  }
+    if (!mToolTipNeedsUpdate) {
+        return;
+    }
 
-  mToolTipNeedsUpdate = false;
+    mToolTipNeedsUpdate = false;
 
-  setData( IncidenceFormatter::toolTipStr(
-             CalendarSupport::displayName( mCalendar.data(), mIncidence.parentCollection() ),
-             CalendarSupport::incidence( mIncidence ), originalStart().date(),
-             true, CalendarSupport::KCalPrefs::instance()->timeSpec() ), Qt::ToolTipRole );
+    setData(IncidenceFormatter::toolTipStr(
+                CalendarSupport::displayName(mCalendar.data(), mIncidence.parentCollection()),
+                CalendarSupport::incidence(mIncidence), originalStart().date(),
+                true, CalendarSupport::KCalPrefs::instance()->timeSpec()), Qt::ToolTipRole);
 }

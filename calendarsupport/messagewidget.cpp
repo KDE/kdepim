@@ -56,11 +56,12 @@ void MessageWidget::hideEvent(QHideEvent *event)
 
 bool MessageWidget::eventFilter(QObject *, QEvent *event)
 {
-    if (event->type() == QEvent::MouseButtonPress)
+    if (event->type() == QEvent::MouseButtonPress) {
         hide();
+    }
 
     if (event->type() == QEvent::KeyPress) {
-        QKeyEvent *ev = dynamic_cast<QKeyEvent*>(event);
+        QKeyEvent *ev = dynamic_cast<QKeyEvent *>(event);
         hide();
         if (ev->key() == Qt::Key_Escape) {
             return true; // We eat this one, it's for us

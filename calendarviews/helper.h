@@ -26,13 +26,15 @@
 
 #include <QColor>
 
-namespace boost {
-  template <typename T> class shared_ptr;
+namespace boost
+{
+template <typename T> class shared_ptr;
 }
 
-namespace Akonadi {
-  class Collection;
-  class Item;
+namespace Akonadi
+{
+class Collection;
+class Item;
 }
 
 class QPixmap;
@@ -43,42 +45,42 @@ class QDate;
 namespace EventViews
 {
 
-  class Prefs;
-  typedef boost::shared_ptr<Prefs> PrefsPtr;
+class Prefs;
+typedef boost::shared_ptr<Prefs> PrefsPtr;
 
-  /**
-   Returns a nice QColor for text, give the input color &c.
-  */
-  EVENTVIEWS_EXPORT QColor getTextColor( const QColor &c );
+/**
+ Returns a nice QColor for text, give the input color &c.
+*/
+EVENTVIEWS_EXPORT QColor getTextColor(const QColor &c);
 
-  /**
-    This method returns the proper resource / subresource color for the view.
-    @return The resource color for the incidence. If the incidence belongs
-    to a subresource, the color for the subresource is returned (if set).
-    @param calendar the calendar for which the resource color should be obtained
-    @param incidence the incidence for which the color is needed (to
-                     determine which  subresource needs to be used)
-  */
-  EVENTVIEWS_EXPORT QColor resourceColor( const Akonadi::Item &incidence,
-                                          const PrefsPtr &preferences );
+/**
+  This method returns the proper resource / subresource color for the view.
+  @return The resource color for the incidence. If the incidence belongs
+  to a subresource, the color for the subresource is returned (if set).
+  @param calendar the calendar for which the resource color should be obtained
+  @param incidence the incidence for which the color is needed (to
+                   determine which  subresource needs to be used)
+*/
+EVENTVIEWS_EXPORT QColor resourceColor(const Akonadi::Item &incidence,
+                                       const PrefsPtr &preferences);
 
-  EVENTVIEWS_EXPORT QColor resourceColor( const Akonadi::Collection &collection,
-                                          const PrefsPtr &preferences );
+EVENTVIEWS_EXPORT QColor resourceColor(const Akonadi::Collection &collection,
+                                       const PrefsPtr &preferences);
 
-  /**
-    Returns the number of years between the @p start QDate and the @p end QDate
-    (i.e. the difference in the year number of both dates)
-  */
-  EVENTVIEWS_EXPORT int yearDiff( const QDate &start, const QDate &end );
+/**
+  Returns the number of years between the @p start QDate and the @p end QDate
+  (i.e. the difference in the year number of both dates)
+*/
+EVENTVIEWS_EXPORT int yearDiff(const QDate &start, const QDate &end);
 
-  /**
-     Equivalent to SmallIcon( name ), but uses QPixmapCache.
-     KIconLoader already uses a cache, but it's 20x slower on my tests.
+/**
+   Equivalent to SmallIcon( name ), but uses QPixmapCache.
+   KIconLoader already uses a cache, but it's 20x slower on my tests.
 
-     @return A new pixmap if it isn't yet in cache, otherwise returns the
-             cached one.
-  */
-  EVENTVIEWS_EXPORT QPixmap cachedSmallIcon( const QString &name );
+   @return A new pixmap if it isn't yet in cache, otherwise returns the
+           cached one.
+*/
+EVENTVIEWS_EXPORT QPixmap cachedSmallIcon(const QString &name);
 
 }
 

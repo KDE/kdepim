@@ -32,7 +32,8 @@
 class QButtonGroup;
 class QStackedWidget;
 
-namespace CalendarSupport {
+namespace CalendarSupport
+{
 
 /**
   CalPrinter is a class for printing Calendars.  It can print in several
@@ -41,16 +42,16 @@ namespace CalendarSupport {
 */
 class CALENDARSUPPORT_EXPORT CalPrinter : public QObject, public CalPrinterBase
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     enum ePrintOrientation {
-      eOrientPlugin=0,
-      eOrientPrinter,
-      eOrientPortrait,
-      eOrientLandscape
+        eOrientPlugin = 0,
+        eOrientPrinter,
+        eOrientPortrait,
+        eOrientLandscape
     };
 
-  public:
+public:
     /**
       \param par parent widget for dialogs
       \param cal calendar to be printed
@@ -58,12 +59,12 @@ class CALENDARSUPPORT_EXPORT CalPrinter : public QObject, public CalPrinterBase
       provide the option to print an single incidence; else, all possible types
       of print types will be shown
     */
-    CalPrinter( QWidget *par, const Akonadi::ETMCalendar::Ptr &calendar,
-                bool uniqItem = false );
+    CalPrinter(QWidget *par, const Akonadi::ETMCalendar::Ptr &calendar,
+               bool uniqItem = false);
 
     virtual ~CalPrinter();
 
-    void init( const Akonadi::ETMCalendar::Ptr &calendar );
+    void init(const Akonadi::ETMCalendar::Ptr &calendar);
 
     /**
       Set date range to be printed.
@@ -71,26 +72,26 @@ class CALENDARSUPPORT_EXPORT CalPrinter : public QObject, public CalPrinterBase
       \param start Start date
       \param end   End date
     */
-    void setDateRange( const QDate &start, const QDate &end );
+    void setDateRange(const QDate &start, const QDate &end);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void updateConfig();
 
-  private Q_SLOTS:
-    void doPrint( PrintPlugin *selectedStyle,
-                  ePrintOrientation dlgorientation, bool preview = false );
+private Q_SLOTS:
+    void doPrint(PrintPlugin *selectedStyle,
+                 ePrintOrientation dlgorientation, bool preview = false);
 
-  public:
-    void print( int type, const QDate &fd, const QDate &td,
-                KCalCore::Incidence::List selectedIncidences = KCalCore::Incidence::List(),
-                bool preview = false );
+public:
+    void print(int type, const QDate &fd, const QDate &td,
+               KCalCore::Incidence::List selectedIncidences = KCalCore::Incidence::List(),
+               bool preview = false);
     Akonadi::ETMCalendar::Ptr calendar() const;
     KConfig *config() const;
 
-  protected:
+protected:
     PrintPlugin::List mPrintPlugins;
 
-  private:
+private:
     Akonadi::ETMCalendar::Ptr mCalendar;
     QWidget *mParent;
     KConfig *mConfig;
@@ -99,31 +100,31 @@ class CALENDARSUPPORT_EXPORT CalPrinter : public QObject, public CalPrinterBase
 
 class CalPrintDialog : public QDialog
 {
-  Q_OBJECT
-  public:
-    explicit CalPrintDialog( int initialPrintType, PrintPlugin::List plugins,
-                             QWidget *parent = 0, bool mUniqItem = false );
+    Q_OBJECT
+public:
+    explicit CalPrintDialog(int initialPrintType, PrintPlugin::List plugins,
+                            QWidget *parent = 0, bool mUniqItem = false);
 
     virtual ~CalPrintDialog();
 
     PrintPlugin *selectedPlugin();
-    void setOrientation( CalPrinter::ePrintOrientation orientation );
+    void setOrientation(CalPrinter::ePrintOrientation orientation);
     CalPrinter::ePrintOrientation orientation()
     {
-      return mOrientation;
+        return mOrientation;
     }
 
-  public Q_SLOTS:
-    void setPrintType( int );
-    void setPreview( bool );
+public Q_SLOTS:
+    void setPrintType(int);
+    void setPreview(bool);
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     void slotOk();
 
-  private:
+private:
     QButtonGroup *mTypeGroup;
     QStackedWidget *mConfigArea;
-    QMap<int, PrintPlugin*> mPluginIDs;
+    QMap<int, PrintPlugin *> mPluginIDs;
     QString mPreviewText;
     KComboBox *mOrientationSelection;
     QPushButton *mOkButton;

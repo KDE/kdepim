@@ -27,35 +27,36 @@
 
 #include <QLabel>
 
-namespace EventViews {
+namespace EventViews
+{
 
 class EVENTVIEWS_EXPORT AlternateLabel : public QLabel
 {
-  Q_OBJECT
-  public:
-    AlternateLabel( const QString &shortlabel, const QString &longlabel,
-                    const QString &extensivelabel = QString(), QWidget *parent = 0 );
+    Q_OBJECT
+public:
+    AlternateLabel(const QString &shortlabel, const QString &longlabel,
+                   const QString &extensivelabel = QString(), QWidget *parent = 0);
     ~AlternateLabel();
 
     virtual QSize minimumSizeHint() const;
 
     enum TextType {
-      Short = 0,
-      Long = 1,
-      Extensive = 2
+        Short = 0,
+        Long = 1,
+        Extensive = 2
     };
 
     TextType largestFittingTextType() const;
-    void setFixedType( TextType type );
+    void setFixedType(TextType type);
 
-  public slots:
+public slots:
     void useShortText();
     void useLongText();
     void useExtensiveText();
     void useDefaultText();
 
-  protected:
-    virtual void resizeEvent( QResizeEvent * );
+protected:
+    virtual void resizeEvent(QResizeEvent *);
     virtual void squeezeTextToLabel();
     bool mTextTypeFixed;
     QString mShortText, mLongText, mExtensiveText;

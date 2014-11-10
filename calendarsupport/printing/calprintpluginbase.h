@@ -53,7 +53,8 @@ class QWidget;
 
 #define TIMELINE_WIDTH 50           // width of timeline (day and timetable)
 
-namespace CalendarSupport {
+namespace CalendarSupport
+{
 
 /**
   Base class for Calendar printing classes. Each sub class represents one
@@ -61,13 +62,13 @@ namespace CalendarSupport {
 */
 class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
 {
-  public:
+public:
     enum DisplayFlags {
-      Text=0x0001,
-      TimeBoxes=0x0002
+        Text = 0x0001,
+        TimeBoxes = 0x0002
     };
 
-  public:
+public:
     /**
       Constructor
     */
@@ -77,7 +78,7 @@ class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
     /**
       Returns widget for configuring the print format.
     */
-    virtual QWidget *createConfigWidget( QWidget * );
+    virtual QWidget *createConfigWidget(QWidget *);
 
     /**
       Actually do the printing.
@@ -86,11 +87,11 @@ class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
       @param width Width of printable area
       @param height Height of printable area
     */
-    virtual void print( QPainter &p, int width, int height ) = 0;
+    virtual void print(QPainter &p, int width, int height) = 0;
     /**
       Start printing.
     */
-    virtual void doPrint( QPrinter *printer );
+    virtual void doPrint(QPrinter *printer);
 
     /**
       Load print format configuration from config file.
@@ -110,20 +111,20 @@ class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
     */
     void doSaveConfig();
 
-  /** HELPER FUNCTIONS */
-  public:
+    /** HELPER FUNCTIONS */
+public:
     bool useColors() const;
-    void setUseColors( bool useColors );
+    void setUseColors(bool useColors);
 
     bool printFooter() const;
-    void setPrintFooter( bool printFooter );
+    void setPrintFooter(bool printFooter);
 
     /**
       Determines the column of the given weekday ( 1=Monday, 7=Sunday ), taking the
       start of the week setting into account as given in kcontrol.
       @param weekday Index of the weekday
     */
-    static int weekdayColumn( int weekday );
+    static int weekdayColumn(int weekday);
 
     QPrinter::Orientation orientation() const;
 
@@ -133,41 +134,41 @@ class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
         @return height of the page header of the printout
     */
     int headerHeight() const;
-    void setHeaderHeight( const int height );
+    void setHeaderHeight(const int height);
 
     int subHeaderHeight() const;
-    void setSubHeaderHeight( const int height );
+    void setSubHeaderHeight(const int height);
     /** Returns the height of the page footer. If the height was explicitly
         set using setFooterHeight, that value is returned, otherwise a
         default value based on the printer orientation.
         @return height of the page footer of the printout
     */
     int footerHeight() const;
-    void setFooterHeight( const int height );
+    void setFooterHeight(const int height);
 
     int margin() const;
-    void setMargin( const int margin );
+    void setMargin(const int margin);
 
     int padding() const;
-    void setPadding( const int margin );
+    void setPadding(const int margin);
 
     int borderWidth() const;
-    void setBorderWidth( const int border );
+    void setBorderWidth(const int border);
 
     const KCalendarSystem *calendarSystem();
-    void setCalendarSystem( const KCalendarSystem *calsys );
+    void setCalendarSystem(const KCalendarSystem *calsys);
 
-  /*****************************************************************
-   **               PRINTING HELPER FUNCTIONS                     **
-   *****************************************************************/
-  public:
+    /*****************************************************************
+     **               PRINTING HELPER FUNCTIONS                     **
+     *****************************************************************/
+public:
     /**
       Draw a box with given width at the given coordinates.
       @param p The printer to be used
       @param linewidth The border width of the box
       @param rect The rectangle of the box
     */
-    static void drawBox( QPainter &p, int linewidth, const QRect &rect );
+    static void drawBox(QPainter &p, int linewidth, const QRect &rect);
     /**
       Draw a shaded box with given width at the given coordinates.
       @param p The printer to be used
@@ -175,7 +176,7 @@ class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
       @param brush The brush to fill the box
       @param rect The rectangle of the box
     */
-    static void drawShadedBox( QPainter &p, int linewidth, const QBrush &brush, const QRect &rect );
+    static void drawShadedBox(QPainter &p, int linewidth, const QBrush &brush, const QRect &rect);
 
     /**
       Print the given string (event summary) in the given rectangle. Margins
@@ -184,7 +185,7 @@ class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
       @param box Coordinates of the surrounding event box
       @param str The text to be printed in the box
     */
-    void printEventString( QPainter &p, const QRect &box, const QString &str, int flags = -1 );
+    void printEventString(QPainter &p, const QRect &box, const QString &str, int flags = -1);
     /**
       Print the box for the given event with the given string.
       @param p QPainter of the printout
@@ -195,8 +196,8 @@ class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
       @param str The string to print inside the box
       @param flags is a bitwise OR of Qt::AlignmentFlags and Qt::TextFlags values.
     */
-    void showEventBox( QPainter &p, int linewidth, const QRect &box,
-                       const KCalCore::Incidence::Ptr &incidence, const QString &str, int flags = -1 );
+    void showEventBox(QPainter &p, int linewidth, const QRect &box,
+                      const KCalCore::Incidence::Ptr &incidence, const QString &str, int flags = -1);
 
     /**
       Draw a subheader box with a shaded background and the given string
@@ -204,7 +205,7 @@ class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
       @param str Text to be printed inside the box
       @param box Coordinates of the box
     */
-    void drawSubHeaderBox( QPainter &p, const QString &str, const QRect &box );
+    void drawSubHeaderBox(QPainter &p, const QString &str, const QRect &box);
 
     /**
       Draw an event box with vertical text.
@@ -214,8 +215,8 @@ class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
       @param str ext to be printed inside the box
       @param flags is a bitwise OR of Qt::AlignmentFlags and Qt::TextFlags values.
     */
-    void drawVerticalBox( QPainter &p, int linewidth, const QRect &box, const QString &str,
-                          int flags=-1 );
+    void drawVerticalBox(QPainter &p, int linewidth, const QRect &box, const QString &str,
+                         int flags = -1);
 
     /**
       Draw a component box with a heading (printed in bold).
@@ -238,10 +239,10 @@ class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
               the contents, use the return value as the top-value of your
               custom contents in that case.
     */
-    int drawBoxWithCaption( QPainter &p, const QRect &box, const QString &caption,
-                            const QString &contents, bool sameLine, bool expand,
-                            const QFont &captionFont, const QFont &textFont,
-                            bool richContents = false );
+    int drawBoxWithCaption(QPainter &p, const QRect &box, const QString &caption,
+                           const QString &contents, bool sameLine, bool expand,
+                           const QFont &captionFont, const QFont &textFont,
+                           bool richContents = false);
 
     /**
       Draw the gray header bar of the printout to the QPainter.
@@ -271,10 +272,10 @@ class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
               is box.bottom, otherwise it is larger than box.bottom
               and matches the y-coordinate of the surrounding rectangle.
     */
-    int drawHeader( QPainter &p, const QString &title,
-                     const QDate &month1, const QDate &month2,
-                     const QRect &box, bool expand = false,
-                     QColor backColor = QColor() );
+    int drawHeader(QPainter &p, const QString &title,
+                   const QDate &month1, const QDate &month2,
+                   const QRect &box, bool expand = false,
+                   QColor backColor = QColor());
 
     /**
       Draw a page footer containing the printing date and possibly
@@ -283,7 +284,7 @@ class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
       @param box coordinates of the footer
       @return The bottom of the printed box.
     */
-    int drawFooter( QPainter &p, const QRect &box );
+    int drawFooter(QPainter &p, const QRect &box);
 
     /**
       Draw a small calendar with the days of a month into the given area.
@@ -292,7 +293,7 @@ class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
       @param qd Arbitrary Date within the month to be printed.
       @param box coordinates of the small calendar
     */
-    void drawSmallMonth( QPainter &p, const QDate &qd, const QRect &box );
+    void drawSmallMonth(QPainter &p, const QDate &qd, const QRect &box);
 
     /**
       Draw a horizontal bar with the weekday names of the given date range
@@ -303,9 +304,9 @@ class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
       @param toDate Last date of the printed dates
       @param box coordinates of the box for the days of the week
     */
-    void drawDaysOfWeek( QPainter &p,
-                         const QDate &fromDate, const QDate &toDate,
-                         const QRect &box );
+    void drawDaysOfWeek(QPainter &p,
+                        const QDate &fromDate, const QDate &toDate,
+                        const QRect &box);
     /**
       Draw a single weekday name in a box inside the given area of the painter.
       This is called in a loop by drawDaysOfWeek.
@@ -313,7 +314,7 @@ class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
       @param qd Date of the printed day
       @param box coordinates of the weekbox
     */
-    void drawDaysOfWeekBox( QPainter &p, const QDate &qd, const QRect &box );
+    void drawDaysOfWeekBox(QPainter &p, const QDate &qd, const QRect &box);
 
     /**
       Draw a (vertical) time scale from time fromTime to toTime inside the
@@ -325,9 +326,9 @@ class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
       @param toTime End time of the time range to display
       @param box coordinates of the timeline
     */
-    void drawTimeLine( QPainter &p,
-                       const QTime &fromTime, const QTime &toTime,
-                       const QRect &box );
+    void drawTimeLine(QPainter &p,
+                      const QTime &fromTime, const QTime &toTime,
+                      const QRect &box);
 
     /**
       Draw the all-day box for the agenda print view (the box on top which
@@ -349,10 +350,10 @@ class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
       @param excludePrivate Whether to exclude Incidence marked private.
       @return The height used for the all-day box.
     */
-    int drawAllDayBox( QPainter &p, const KCalCore::Event::List &eventList,
-                        const QDate &qd, bool expandable,
-                        const QRect &box,
-                        bool excludeConfidential, bool excludePrivate );
+    int drawAllDayBox(QPainter &p, const KCalCore::Event::List &eventList,
+                      const QDate &qd, bool expandable,
+                      const QRect &box,
+                      bool excludeConfidential, bool excludePrivate);
     /**
       Draw the agenda box for the day print style (the box showing all events of that day).
       Also draws a grid with half-hour spacing of the grid lines.
@@ -379,19 +380,19 @@ class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
       @param excludePrivate Whether to exclude Incidence marked private.
       @param workDays List of workDays
     */
-    void drawAgendaDayBox( QPainter &p, const KCalCore::Event::List &eventList,
-                           const QDate &qd, bool expandable,
-                           const QTime &fromTime, const QTime &toTime,
-                           const QRect &box,
-                           bool includeDescription, bool excludeTime,
-                           bool excludeConfidential, bool excludePrivate,
-                           const QList<QDate> &workDays );
+    void drawAgendaDayBox(QPainter &p, const KCalCore::Event::List &eventList,
+                          const QDate &qd, bool expandable,
+                          const QTime &fromTime, const QTime &toTime,
+                          const QRect &box,
+                          bool includeDescription, bool excludeTime,
+                          bool excludeConfidential, bool excludePrivate,
+                          const QList<QDate> &workDays);
 
-    void drawAgendaItem( PrintCellItem *item, QPainter &p,
-                         const KDateTime &startPrintDate,
-                         const KDateTime &endPrintDate,
-                         float minlen, const QRect &box,
-                         bool includeDescription, bool excludeTime );
+    void drawAgendaItem(PrintCellItem *item, QPainter &p,
+                        const KDateTime &startPrintDate,
+                        const KDateTime &endPrintDate,
+                        float minlen, const QRect &box,
+                        bool includeDescription, bool excludeTime);
 
     /**
       Draw the box containing a list of all events of the given day (with their times,
@@ -412,16 +413,16 @@ class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
       @param excludeConfidential Whether to exclude Incidence marked confidential.
       @param excludePrivate Whether to exclude Incidence marked private.
     */
-    void drawDayBox( QPainter &p, const QDate &qd,
-                     const QTime &fromTime, const QTime &toTime,
-                     const QRect &box,
-                     bool fullDate = false, bool printRecurDaily = true,
-                     bool printRecurWeekly = true,
-                     bool singleLineLimit = true,
-                     bool showNoteLines = false,
-                     bool includeDescription = false,
-                     bool excludeDescription = true,
-                     bool excludePrivate = true );
+    void drawDayBox(QPainter &p, const QDate &qd,
+                    const QTime &fromTime, const QTime &toTime,
+                    const QRect &box,
+                    bool fullDate = false, bool printRecurDaily = true,
+                    bool printRecurWeekly = true,
+                    bool singleLineLimit = true,
+                    bool showNoteLines = false,
+                    bool includeDescription = false,
+                    bool excludeDescription = true,
+                    bool excludePrivate = true);
     /**
       Draw the week (filofax) table of the week containing the date qd. The first
       three days of the week will be shown in the first column (using drawDayBox),
@@ -438,11 +439,11 @@ class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
       @param excludeConfidential Whether to exclude Incidence marked confidential.
       @param excludePrivate Whether to exclude Incidence marked private.
     */
-    void drawWeek( QPainter &p, const QDate &qd,
-                   const QTime &fromTime, const QTime &toTime,
-                   const QRect &box, bool singleLineLimit,
-                   bool showNoteLines, bool includeDescription,
-                   bool excludeConfidential, bool excludePrivate );
+    void drawWeek(QPainter &p, const QDate &qd,
+                  const QTime &fromTime, const QTime &toTime,
+                  const QRect &box, bool singleLineLimit,
+                  bool showNoteLines, bool includeDescription,
+                  bool excludeConfidential, bool excludePrivate);
     /**
       Draw the (filofax) table for a bunch of days, using drawDayBox.
       @param p QPainter of the printout
@@ -457,11 +458,11 @@ class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
       @param excludeConfidential Whether to exclude Incidence marked confidential.
       @param excludePrivate Whether to exclude Incidence marked private.
     */
-    void drawDays( QPainter &p, const QDate &start, const QDate &end,
-                   const QTime &fromTime, const QTime &toTime,
-                   const QRect &box, bool singleLineLimit, bool showNoteLines,
-                   bool includeDescription, bool excludeConfidential,
-                   bool excludePrivate );
+    void drawDays(QPainter &p, const QDate &start, const QDate &end,
+                  const QTime &fromTime, const QTime &toTime,
+                  const QRect &box, bool singleLineLimit, bool showNoteLines,
+                  bool includeDescription, bool excludeConfidential,
+                  bool excludePrivate);
     /**
       Draw the timetable view of the given time range from fromDate to toDate.
       On the left side the time scale is printed (using drawTimeLine), then each
@@ -482,11 +483,11 @@ class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
       @param excludeConfidential Whether to exclude Incidence marked confidential.
       @param excludePrivate Whether to exclude Incidence marked private.
     */
-    void drawTimeTable( QPainter &p, const QDate &fromDate, const QDate &toDate,
-                        bool expandable, const QTime &fromTime, const QTime &toTime,
-                        const QRect &box, bool includeDescription,
-                        bool excludeTime, bool excludeConfidential,
-                        bool excludePrivate );
+    void drawTimeTable(QPainter &p, const QDate &fromDate, const QDate &toDate,
+                       bool expandable, const QTime &fromTime, const QTime &toTime,
+                       const QRect &box, bool includeDescription,
+                       bool excludeTime, bool excludeConfidential,
+                       bool excludePrivate);
 
     /**
       Draw the month table of the month containing the date qd. Each day gets one
@@ -508,13 +509,13 @@ class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
       @param excludePrivate Whether to exclude Incidence marked private.
       @param box coordinates of the month.
     */
-    void drawMonthTable( QPainter &p, const QDate &qd,
-                         const QTime &fromTime, const QTime &toTime,
-                         bool weeknumbers,
-                         bool recurDaily, bool recurWeekly, bool singleLineLimit,
-                         bool showNoteLines, bool includeDescription,
-                         bool excludeConfidential, bool excludePrivate,
-                         const QRect &box );
+    void drawMonthTable(QPainter &p, const QDate &qd,
+                        const QTime &fromTime, const QTime &toTime,
+                        bool weeknumbers,
+                        bool recurDaily, bool recurWeekly, bool singleLineLimit,
+                        bool showNoteLines, bool includeDescription,
+                        bool excludeConfidential, bool excludePrivate,
+                        const QRect &box);
     /**
       Draw a vertical representation of the month containing the date dt. Each
       day gets one line.
@@ -532,10 +533,10 @@ class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
       @param excludeConfidential Whether to exclude Incidence marked confidential.
       @param excludePrivate Whether to exclude Incidence marked private.
     */
-    void drawMonth( QPainter &p, const QDate &dt, const QRect &box,
-                    int maxdays = -1, int subDailyFlags = TimeBoxes,
-                    int holidaysFlags = Text,
-                    bool excludeConfidential = false, bool excludePrivate = false );
+    void drawMonth(QPainter &p, const QDate &dt, const QRect &box,
+                   int maxdays = -1, int subDailyFlags = TimeBoxes,
+                   int holidaysFlags = Text,
+                   bool excludeConfidential = false, bool excludePrivate = false);
 
     /**
       Internal class representing the start of a todo.
@@ -578,15 +579,15 @@ class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
       @param r Internal (used when printing sub-to-dos to give information
       about its parent)
     */
-    void drawTodo( int &count, const KCalCore::Todo::Ptr &todo, QPainter &p,
-                   KCalCore::TodoSortField sortField,
-                   KCalCore::SortDirection sortDir,
-                   bool connectSubTodos, bool strikeoutCompleted, bool desc,
-                   int posPriority, int posSummary, int posDueDt,
-                   int posPercentComplete, int level, int x, int &y,
-                   int width, int pageHeight,
-                   const KCalCore::Todo::List &todoList, TodoParentStart *r,
-                   bool excludeConfidential, bool excludePrivate );
+    void drawTodo(int &count, const KCalCore::Todo::Ptr &todo, QPainter &p,
+                  KCalCore::TodoSortField sortField,
+                  KCalCore::SortDirection sortDir,
+                  bool connectSubTodos, bool strikeoutCompleted, bool desc,
+                  int posPriority, int posSummary, int posDueDt,
+                  int posPercentComplete, int level, int x, int &y,
+                  int width, int pageHeight,
+                  const KCalCore::Todo::List &todoList, TodoParentStart *r,
+                  bool excludeConfidential, bool excludePrivate);
 
     /**
       Draws single journal item.
@@ -598,8 +599,8 @@ class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
       @param pageHeight Total height allowed for the list on a page. If an item
                    would be below that line, a new page is started.
     */
-    void drawJournal( const KCalCore::Journal::Ptr &journal, QPainter &p, int x, int &y,
-                      int width, int pageHeight );
+    void drawJournal(const KCalCore::Journal::Ptr &journal, QPainter &p, int x, int &y,
+                     int width, int pageHeight);
     /**
       Draws text lines splitting on page boundaries.
       @param p QPainter of the printout
@@ -609,12 +610,12 @@ class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
       @param pageHeight size of the page. A new page is started when the
              text reaches the end of the page.
     */
-    void drawTextLines( QPainter &p, const QString &entry,
-                        int x, int &y, int width, int pageHeight,
-                        bool richTextEntry );
+    void drawTextLines(QPainter &p, const QString &entry,
+                       int x, int &y, int width, int pageHeight,
+                       bool richTextEntry);
 
-    void drawSplitHeaderRight( QPainter &p, const QDate &fd, const QDate &td,
-                               const QDate &cd, int width, int height );
+    void drawSplitHeaderRight(QPainter &p, const QDate &fd, const QDate &td,
+                              const QDate &cd, int width, int height);
 
     /**
       Draws dotted lines for notes in a box.
@@ -622,23 +623,23 @@ class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
       @param box coordinates of the box where the lines will be placed
       @param startY starting y-coordinate for the first line
     */
-    void drawNoteLines( QPainter &p, const QRect &box, int startY );
+    void drawNoteLines(QPainter &p, const QRect &box, int startY);
 
-  protected:
+protected:
     QTime dayStart() const;
-    QColor categoryBgColor( const KCalCore::Incidence::Ptr &incidence ) const;
+    QColor categoryBgColor(const KCalCore::Incidence::Ptr &incidence) const;
 
-    void drawIncidence( QPainter &p, const QRect &dayBox, const QString &time,
-                        const QString &summary, const QString &description,
-                        int &textY, bool singleLineLimit,
-                        bool includeDescription, bool richDescription );
-    QString toPlainText( const QString &htmlText );
-    void drawTodoLines( QPainter &p, const QString &entry,
-                        int x, int &y, int width, int pageHeight,
-                        bool richTextEntry, QList<TodoParentStart *> &startPoints,
-                        bool connectSubTodos );
+    void drawIncidence(QPainter &p, const QRect &dayBox, const QString &time,
+                       const QString &summary, const QString &description,
+                       int &textY, bool singleLineLimit,
+                       bool includeDescription, bool richDescription);
+    QString toPlainText(const QString &htmlText);
+    void drawTodoLines(QPainter &p, const QString &entry,
+                       int x, int &y, int width, int pageHeight,
+                       bool richTextEntry, QList<TodoParentStart *> &startPoints,
+                       bool connectSubTodos);
 
-  protected:
+protected:
     bool mUseColors;
     bool mPrintFooter;
     bool mShowNoteLines;
@@ -650,24 +651,23 @@ class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
     int mBorder;
     const KCalendarSystem *mCalSys;
 
-  private:
-    QColor categoryColor( const QStringList &categories ) const;
+private:
+    QColor categoryColor(const QStringList &categories) const;
 
     /**
      * Sets the QPainter's brush and pen color according to the Incidence's category.
      */
-    void setColorsByIncidenceCategory( QPainter &p,
-                                       const KCalCore::Incidence::Ptr &incidence ) const;
+    void setColorsByIncidenceCategory(QPainter &p,
+                                      const KCalCore::Incidence::Ptr &incidence) const;
 
+    QString holidayString(const QDate &date) const;
 
-    QString holidayString( const QDate &date ) const;
-
-    KCalCore::Event::Ptr holidayEvent( const QDate &date ) const;
+    KCalCore::Event::Ptr holidayEvent(const QDate &date) const;
 
     /**
      * Returns a nice QColor for text, give the input color &c.
      */
-    QColor getTextColor( const QColor &c ) const;
+    QColor getTextColor(const QColor &c) const;
 };
 
 }

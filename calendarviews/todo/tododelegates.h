@@ -42,40 +42,40 @@ class QTextDocument;
 */
 class TodoCompleteDelegate : public QStyledItemDelegate
 {
-  Q_OBJECT
-  public:
-    explicit TodoCompleteDelegate( QObject *parent = 0 );
+    Q_OBJECT
+public:
+    explicit TodoCompleteDelegate(QObject *parent = 0);
 
     ~TodoCompleteDelegate();
 
-    void paint( QPainter *painter, const QStyleOptionViewItem &option,
-                const QModelIndex &index ) const;
-    QSize sizeHint( const QStyleOptionViewItem &option,
-                    const QModelIndex &index ) const;
+    void paint(QPainter *painter, const QStyleOptionViewItem &option,
+               const QModelIndex &index) const;
+    QSize sizeHint(const QStyleOptionViewItem &option,
+                   const QModelIndex &index) const;
 
-    QWidget *createEditor( QWidget *parent, const QStyleOptionViewItem &option,
-                           const QModelIndex &index ) const;
-    void setEditorData( QWidget *editor, const QModelIndex &index ) const;
-    void setModelData( QWidget *editor, QAbstractItemModel *model,
-                       const QModelIndex &index ) const;
-    void updateEditorGeometry( QWidget *editor,
-                               const QStyleOptionViewItem &option,
-                               const QModelIndex &index ) const;
+    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
+                          const QModelIndex &index) const;
+    void setEditorData(QWidget *editor, const QModelIndex &index) const;
+    void setModelData(QWidget *editor, QAbstractItemModel *model,
+                      const QModelIndex &index) const;
+    void updateEditorGeometry(QWidget *editor,
+                              const QStyleOptionViewItem &option,
+                              const QModelIndex &index) const;
 
-  private:
-    void initStyleOptionProgressBar( QStyleOptionProgressBar *option,
-                                     const QModelIndex &index ) const;
+private:
+    void initStyleOptionProgressBar(QStyleOptionProgressBar *option,
+                                    const QModelIndex &index) const;
 };
 
 class TodoCompleteSlider : public QSlider
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit TodoCompleteSlider( QWidget *parent );
+public:
+    explicit TodoCompleteSlider(QWidget *parent);
 
-  private Q_SLOTS:
-    void updateTip( int value );
+private Q_SLOTS:
+    void updateTip(int value);
 };
 
 /**
@@ -87,20 +87,20 @@ class TodoCompleteSlider : public QSlider
  */
 class TodoPriorityDelegate : public QStyledItemDelegate
 {
-  Q_OBJECT
-  public:
-    explicit TodoPriorityDelegate( QObject *parent = 0 );
+    Q_OBJECT
+public:
+    explicit TodoPriorityDelegate(QObject *parent = 0);
 
     ~TodoPriorityDelegate();
 
-    QWidget *createEditor( QWidget *parent, const QStyleOptionViewItem &option,
-                           const QModelIndex &index ) const;
-    void setEditorData( QWidget *editor, const QModelIndex &index ) const;
-    void setModelData( QWidget *editor, QAbstractItemModel *model,
-                       const QModelIndex &index ) const;
-    void updateEditorGeometry( QWidget *editor,
-                               const QStyleOptionViewItem &option,
-                               const QModelIndex &index ) const;
+    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
+                          const QModelIndex &index) const;
+    void setEditorData(QWidget *editor, const QModelIndex &index) const;
+    void setModelData(QWidget *editor, QAbstractItemModel *model,
+                      const QModelIndex &index) const;
+    void updateEditorGeometry(QWidget *editor,
+                              const QStyleOptionViewItem &option,
+                              const QModelIndex &index) const;
 };
 
 /**
@@ -112,20 +112,20 @@ class TodoPriorityDelegate : public QStyledItemDelegate
  */
 class TodoDueDateDelegate : public QStyledItemDelegate
 {
-  Q_OBJECT
-  public:
-    explicit TodoDueDateDelegate( QObject *parent = 0 );
+    Q_OBJECT
+public:
+    explicit TodoDueDateDelegate(QObject *parent = 0);
 
     ~TodoDueDateDelegate();
 
-    QWidget *createEditor( QWidget *parent, const QStyleOptionViewItem &option,
-                           const QModelIndex &index ) const;
-    void setEditorData( QWidget *editor, const QModelIndex &index ) const;
-    void setModelData( QWidget *editor, QAbstractItemModel *model,
-                       const QModelIndex &index ) const;
-    void updateEditorGeometry( QWidget *editor,
-                               const QStyleOptionViewItem &option,
-                               const QModelIndex &index ) const;
+    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
+                          const QModelIndex &index) const;
+    void setEditorData(QWidget *editor, const QModelIndex &index) const;
+    void setModelData(QWidget *editor, QAbstractItemModel *model,
+                      const QModelIndex &index) const;
+    void updateEditorGeometry(QWidget *editor,
+                              const QStyleOptionViewItem &option,
+                              const QModelIndex &index) const;
 };
 
 /**
@@ -137,23 +137,23 @@ class TodoDueDateDelegate : public QStyledItemDelegate
  */
 class TodoCategoriesDelegate : public QStyledItemDelegate
 {
-  Q_OBJECT
-  public:
-    explicit TodoCategoriesDelegate( QObject *parent = 0 );
+    Q_OBJECT
+public:
+    explicit TodoCategoriesDelegate(QObject *parent = 0);
 
     ~TodoCategoriesDelegate();
 
-    QWidget *createEditor( QWidget *parent, const QStyleOptionViewItem &option,
-                           const QModelIndex &index ) const;
-    void setEditorData( QWidget *editor, const QModelIndex &index ) const;
-    void setModelData( QWidget *editor, QAbstractItemModel *model,
-                       const QModelIndex &index ) const;
-    void updateEditorGeometry( QWidget *editor,
-                               const QStyleOptionViewItem &option,
-                               const QModelIndex &index ) const;
+    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
+                          const QModelIndex &index) const;
+    void setEditorData(QWidget *editor, const QModelIndex &index) const;
+    void setModelData(QWidget *editor, QAbstractItemModel *model,
+                      const QModelIndex &index) const;
+    void updateEditorGeometry(QWidget *editor,
+                              const QStyleOptionViewItem &option,
+                              const QModelIndex &index) const;
 
-    void setCalendar( const Akonadi::ETMCalendar::Ptr &cal );
-  private:
+    void setCalendar(const Akonadi::ETMCalendar::Ptr &cal);
+private:
     Akonadi::ETMCalendar::Ptr mCalendar;
 };
 
@@ -165,17 +165,17 @@ class TodoCategoriesDelegate : public QStyledItemDelegate
  */
 class TodoRichTextDelegate : public QStyledItemDelegate
 {
-  Q_OBJECT
-  public:
-    explicit TodoRichTextDelegate( QObject *parent = 0 );
+    Q_OBJECT
+public:
+    explicit TodoRichTextDelegate(QObject *parent = 0);
 
     ~TodoRichTextDelegate();
 
-    void paint( QPainter *painter, const QStyleOptionViewItem &option,
-                const QModelIndex &index ) const;
-    QSize sizeHint( const QStyleOptionViewItem &option,
-                    const QModelIndex &index ) const;
-  private:
+    void paint(QPainter *painter, const QStyleOptionViewItem &option,
+               const QModelIndex &index) const;
+    QSize sizeHint(const QStyleOptionViewItem &option,
+                   const QModelIndex &index) const;
+private:
     QTextDocument *m_textDoc;
 };
 

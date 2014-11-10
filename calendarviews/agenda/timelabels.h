@@ -32,7 +32,8 @@
 
 #include <boost/shared_ptr.hpp>
 
-namespace EventViews {
+namespace EventViews
+{
 
 class Agenda;
 class TimeLabelsZone;
@@ -42,24 +43,24 @@ typedef boost::shared_ptr<Prefs> PrefsPtr;
 
 class EVENTVIEWS_EXPORT TimeLabels : public QFrame
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     typedef QList<TimeLabels *> List;
 
-    TimeLabels( const KDateTime::Spec &spec, int rows,
-                TimeLabelsZone *parent = 0, Qt::WindowFlags f = 0 );
+    TimeLabels(const KDateTime::Spec &spec, int rows,
+               TimeLabelsZone *parent = 0, Qt::WindowFlags f = 0);
 
     /** updates widget's internal state */
     void updateConfig();
 
     /**  */
-    void setAgenda( Agenda *agenda );
+    void setAgenda(Agenda *agenda);
 
     /**  */
-    virtual void paintEvent( QPaintEvent *e );
+    virtual void paintEvent(QPaintEvent *e);
 
     /** */
-    virtual void contextMenuEvent( QContextMenuEvent *event );
+    virtual void contextMenuEvent(QContextMenuEvent *event);
 
     /** Returns time spec of this label */
     KDateTime::Spec timeSpec();
@@ -78,16 +79,16 @@ class EVENTVIEWS_EXPORT TimeLabels : public QFrame
 
     QSize minimumSizeHint() const;
 
-  private slots:
+private slots:
     /** update the position of the marker showing the mouse position */
-    void mousePosChanged( const QPoint &pos );
+    void mousePosChanged(const QPoint &pos);
 
     void showMousePos();
     void hideMousePos();
 
-    void setCellHeight( double height );
+    void setCellHeight(double height);
 
-  private:
+private:
     void colorMousePos();
     KDateTime::Spec mSpec;
     int mRows;

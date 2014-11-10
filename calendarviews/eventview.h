@@ -40,36 +40,42 @@
 #include <QByteArray>
 #include <QDate>
 
-namespace boost {
-  template <typename T> class shared_ptr;
+namespace boost
+{
+template <typename T> class shared_ptr;
 }
 
-namespace KCalCore {
-  template <typename T> class SortableList;
-  typedef SortableList<QDate> DateList;
+namespace KCalCore
+{
+template <typename T> class SortableList;
+typedef SortableList<QDate> DateList;
 }
 
-namespace KHolidays {
-  class HolidayRegion;
-  typedef boost::shared_ptr<HolidayRegion> HolidayRegionPtr;
+namespace KHolidays
+{
+class HolidayRegion;
+typedef boost::shared_ptr<HolidayRegion> HolidayRegionPtr;
 }
 
-namespace CalendarSupport {
-  class CollectionSelection;
-  class KCalPrefs;
+namespace CalendarSupport
+{
+class CollectionSelection;
+class KCalPrefs;
 }
 
-namespace Akonadi {
-  class IncidenceChanger;
+namespace Akonadi
+{
+class IncidenceChanger;
 }
 
 class KCheckableProxyModel;
 class KConfigGroup;
 
-namespace EventViews {
+namespace EventViews
+{
 
 enum {
-  BUSY_BACKGROUND_ALPHA = 70
+    BUSY_BACKGROUND_ALPHA = 70
 };
 
 class EventViewPrivate;
@@ -92,39 +98,39 @@ typedef boost::shared_ptr<CalendarSupport::KCalPrefs> KCalPrefsPtr;
 */
 class EVENTVIEWS_EXPORT EventView : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     enum {
-      // This value is passed to QColor's lighter(int factor) for selected events
-      BRIGHTNESS_FACTOR = 125
+        // This value is passed to QColor's lighter(int factor) for selected events
+        BRIGHTNESS_FACTOR = 125
     };
 
     enum ItemIcon {
-      CalendarCustomIcon = 0,
-      TaskIcon,
-      JournalIcon,
-      RecurringIcon,
-      ReminderIcon,
-      ReadOnlyIcon,
-      ReplyIcon,
-      AttendingIcon,
-      TentativeIcon,
-      OrganizerIcon,
-      IconCount = 10 // Always keep at the end
+        CalendarCustomIcon = 0,
+        TaskIcon,
+        JournalIcon,
+        RecurringIcon,
+        ReminderIcon,
+        ReadOnlyIcon,
+        ReplyIcon,
+        AttendingIcon,
+        TentativeIcon,
+        OrganizerIcon,
+        IconCount = 10 // Always keep at the end
     };
 
     enum Change {
-      NothingChanged = 0,
-      IncidencesAdded = 1,
-      IncidencesEdited = 2,
-      IncidencesDeleted = 4,
-      DatesChanged = 8,
-      FilterChanged = 16,
-      ResourcesChanged = 32,
-      ZoomChanged = 64,
-      ConfigChanged = 128
+        NothingChanged = 0,
+        IncidencesAdded = 1,
+        IncidencesEdited = 2,
+        IncidencesDeleted = 4,
+        DatesChanged = 8,
+        FilterChanged = 16,
+        ResourcesChanged = 32,
+        ZoomChanged = 64,
+        ConfigChanged = 128
     };
-    Q_DECLARE_FLAGS( Changes, Change )
+    Q_DECLARE_FLAGS(Changes, Change)
 
     /**
      * Constructs a view.
@@ -132,14 +138,14 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
      *        will be retrieved for display.
      * @param parent is the parent QWidget.
      */
-    explicit EventView( QWidget *parent = 0 );
+    explicit EventView(QWidget *parent = 0);
 
     /**
      * Destructor. Views will do view-specific cleanups here.
      */
     ~EventView();
 
-    virtual void setCalendar( const Akonadi::ETMCalendar::Ptr &cal );
+    virtual void setCalendar(const Akonadi::ETMCalendar::Ptr &cal);
 
     /**
       Return calendar object of this view.
@@ -149,10 +155,10 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     /*
       update config is called after prefs are set.
     */
-    virtual void setPreferences( const PrefsPtr &preferences );
+    virtual void setPreferences(const PrefsPtr &preferences);
     PrefsPtr preferences() const;
 
-    virtual void setKCalPreferences( const KCalPrefsPtr &preferences );
+    virtual void setKCalPreferences(const KCalPrefsPtr &preferences);
     KCalPrefsPtr kcalPreferences() const;
 
     /**
@@ -193,7 +199,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
       Enable or disable date range selection.
       @see dateRangeSelectionEnabled()
      */
-    void setDateRangeSelectionEnabled( bool enable );
+    void setDateRangeSelectionEnabled(bool enable);
 
     /**
       Returns the number of currently shown dates.
@@ -209,10 +215,10 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
 
     virtual bool hasConfigurationDialog() const;
 
-    virtual void showConfigurationDialog( QWidget *parent );
+    virtual void showConfigurationDialog(QWidget *parent);
 
     QByteArray identifier() const;
-    void setIdentifier( const QByteArray &identifier );
+    void setIdentifier(const QByteArray &identifier);
 
     /**
      * reads the view configuration. View-specific configuration can be
@@ -221,7 +227,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
      * @param configGroup the group to read settings from
      * @see doRestoreConfig()
      */
-    void restoreConfig( const KConfigGroup &configGroup );
+    void restoreConfig(const KConfigGroup &configGroup);
 
     /**
      * writes out the view configuration. View-specific configuration can be
@@ -230,25 +236,25 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
      * @param configGroup the group to store settings in
      * @see doSaveConfig()
      */
-    void saveConfig( KConfigGroup &configGroup );
+    void saveConfig(KConfigGroup &configGroup);
 
     /**
       Makes the eventview display only items of collection @p id.
       Useful for example in multi-agendaview (side-by-side) where
       each AgendaView displays only one collection.
     */
-    void setCollectionId( Akonadi::Collection::Id id );
+    void setCollectionId(Akonadi::Collection::Id id);
     Akonadi::Collection::Id collectionId() const;
 
     //----------------------------------------------------------------------------
     KCheckableProxyModel *takeCustomCollectionSelectionProxyModel();
     KCheckableProxyModel *customCollectionSelectionProxyModel() const;
-    void setCustomCollectionSelectionProxyModel( KCheckableProxyModel *model );
+    void setCustomCollectionSelectionProxyModel(KCheckableProxyModel *model);
 
     CalendarSupport::CollectionSelection *customCollectionSelection() const;
 
     static CalendarSupport::CollectionSelection *globalCollectionSelection();
-    static void setGlobalCollectionSelection( CalendarSupport::CollectionSelection *selection );
+    static void setGlobalCollectionSelection(CalendarSupport::CollectionSelection *selection);
     //----------------------------------------------------------------------------
 
     /**
@@ -256,15 +262,15 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
      * itself, except for composite views, where a subview will be returned.
      * The default implementation returns @p this .
      */
-    virtual EventView *viewAt( const QPoint &p );
+    virtual EventView *viewAt(const QPoint &p);
 
     /**
      * @param preferredMonth Used by month orientated views.  Contains the
      * month to show when the week crosses months.  It's a QDate instead
      * of uint so it can be easily fed to KCalendarSystem's functions.
      */
-    virtual void setDateRange( const KDateTime &start, const KDateTime &end,
-                               const QDate &preferredMonth = QDate() );
+    virtual void setDateRange(const KDateTime &start, const KDateTime &end,
+                              const QDate &preferredMonth = QDate());
 
     KDateTime startDateTime() const;
     KDateTime endDateTime() const;
@@ -272,18 +278,18 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     KDateTime actualStartDateTime() const;
     KDateTime actualEndDateTime() const;
 
-    int showMoveRecurDialog( const KCalCore::Incidence::Ptr &incidence, const QDate &date );
+    int showMoveRecurDialog(const KCalCore::Incidence::Ptr &incidence, const QDate &date);
 
     /**
       Handles key events, opens the new event dialog when enter is pressed, activates type ahead.
     */
-    bool processKeyEvent( QKeyEvent * );
+    bool processKeyEvent(QKeyEvent *);
 
     /*
      * Sets the QObject that will receive key events that were made
      * while the new event dialog was still being created.
      */
-    void setTypeAheadReceiver( QObject *o );
+    void setTypeAheadReceiver(QObject *o);
 
     /**
       Returns the selection of collection to be used by this view
@@ -295,7 +301,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
       Notifies the view that there are pending changes so a redraw is needed.
       @param needed if the update is needed or not.
     */
-    virtual void setChanges( Changes changes );
+    virtual void setChanges(Changes changes);
 
     /**
       Returns if there are pending changes and a redraw is needed.
@@ -306,11 +312,11 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
      * Returns a variation of @p color that will be used for the border
      * of an agenda or month item.
      */
-    static QColor itemFrameColor( const QColor &color, bool selected );
+    static QColor itemFrameColor(const QColor &color, bool selected);
 
-    QString iconForItem( const Akonadi::Item &);
+    QString iconForItem(const Akonadi::Item &);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
       Shows given incidences. Depending on the actual view it might not
       be possible to show all given events.
@@ -318,20 +324,20 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
       @param incidenceList a list of incidences to show.
       @param date is the QDate on which the incidences are being shown.
     */
-    virtual void showIncidences( const Akonadi::Item::List &incidenceList,
-                                 const QDate &date ) = 0;
+    virtual void showIncidences(const Akonadi::Item::List &incidenceList,
+                                const QDate &date) = 0;
 
     /**
       Updates the current display to reflect changes that may have happened
       in the calendar since the last display refresh.
     */
     virtual void updateView() = 0;
-    virtual void dayPassed( const QDate & );
+    virtual void dayPassed(const QDate &);
 
     /**
       Assign a new incidence change helper object.
      */
-    virtual void setIncidenceChanger( Akonadi::IncidenceChanger *changer );
+    virtual void setIncidenceChanger(Akonadi::IncidenceChanger *changer);
 
     /**
       Write all unsaved data back to calendar store.
@@ -353,23 +359,23 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
       Sets the default start/end date/time for new events.
       Return true if anything was changed
     */
-    virtual bool eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay ) const;
+    virtual bool eventDurationHint(QDateTime &startDt, QDateTime &endDt, bool &allDay) const;
 
-    void focusChanged( QWidget *, QWidget * );
+    void focusChanged(QWidget *, QWidget *);
 
     /**
      Perform the default action for an incidence, e.g. open the event editor,
      when double-clicking an event in the agenda view.
     */
-    void defaultAction( const Akonadi::Item &incidence );
+    void defaultAction(const Akonadi::Item &incidence);
 
     /**
        Set which holidays the user wants to use.
        @param holidayRegion a HolidayRegion object initialized with the desired locale.
     */
-    void setHolidayRegion( const KHolidays::HolidayRegionPtr &holidayRegion );
+    void setHolidayRegion(const KHolidays::HolidayRegionPtr &holidayRegion);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * when the view changes the dates that are selected in one way or
      * another, this signal is emitted.  It should be connected back to
@@ -378,44 +384,44 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
      * selected dates has changed.
      *   @param datelist the new list of selected dates
      */
-    void datesSelected( const KCalCore::DateList &datelist );
+    void datesSelected(const KCalCore::DateList &datelist);
 
     /**
      * Emitted when an event is moved using the mouse in an agenda
      * view (week / month).
      */
-    void shiftedEvent( const QDate &olddate, const QDate &newdate );
+    void shiftedEvent(const QDate &olddate, const QDate &newdate);
 
-    void incidenceSelected( const Akonadi::Item &, const QDate );
+    void incidenceSelected(const Akonadi::Item &, const QDate);
 
     /**
      * instructs the receiver to show the incidence in read-only mode.
      */
-    void showIncidenceSignal( const Akonadi::Item & );
+    void showIncidenceSignal(const Akonadi::Item &);
 
     /**
      * instructs the receiver to begin editing the incidence specified in
      * some manner.  Doesn't make sense to connect to more than one
      * receiver.
      */
-    void editIncidenceSignal( const Akonadi::Item & );
+    void editIncidenceSignal(const Akonadi::Item &);
 
     /**
      * instructs the receiver to delete the Incidence in some manner; some
      * possibilities include automatically, with a confirmation dialog
      * box, etc.  Doesn't make sense to connect to more than one receiver.
      */
-    void deleteIncidenceSignal( const Akonadi::Item & );
+    void deleteIncidenceSignal(const Akonadi::Item &);
 
     /**
     * instructs the receiver to cut the Incidence
     */
-    void cutIncidenceSignal( const Akonadi::Item & );
+    void cutIncidenceSignal(const Akonadi::Item &);
 
     /**
     * instructs the receiver to copy the incidence
     */
-    void copyIncidenceSignal( const Akonadi::Item & );
+    void copyIncidenceSignal(const Akonadi::Item &);
 
     /**
     * instructs the receiver to paste the incidence
@@ -425,29 +431,29 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     /**
      * instructs the receiver to toggle the alarms of the Incidence.
      */
-    void toggleAlarmSignal( const Akonadi::Item & );
+    void toggleAlarmSignal(const Akonadi::Item &);
 
     /**
      * instructs the receiver to toggle the completion state of the Incidence
      * (which must be a Todo type).
      */
-    void toggleTodoCompletedSignal( const Akonadi::Item & );
+    void toggleTodoCompletedSignal(const Akonadi::Item &);
 
     /**
      * Copy the incidence to the specified resource.
      */
-    void copyIncidenceToResourceSignal( const Akonadi::Item &, const QString & );
+    void copyIncidenceToResourceSignal(const Akonadi::Item &, const QString &);
 
     /**
      * Move the incidence to the specified resource.
      */
-    void moveIncidenceToResourceSignal( const Akonadi::Item &, const QString & );
+    void moveIncidenceToResourceSignal(const Akonadi::Item &, const QString &);
 
     /** Dissociate from a recurring incidence the occurrence on the given
      *  date to a new incidence or dissociate all occurrences from the
      *  given date onwards.
      */
-    void dissociateOccurrencesSignal( const Akonadi::Item &, const QDate & );
+    void dissociateOccurrencesSignal(const Akonadi::Item &, const QDate &);
 
     /**
      * instructs the receiver to create a new event in given collection. Doesn't make
@@ -458,49 +464,49 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
      * instructs the receiver to create a new event with the specified beginning
      * time. Doesn't make sense to connect to more than one receiver.
      */
-    void newEventSignal( const QDate & );
+    void newEventSignal(const QDate &);
     /**
      * instructs the receiver to create a new event with the specified beginning
      * time. Doesn't make sense to connect to more than one receiver.
      */
-    void newEventSignal( const QDateTime & );
+    void newEventSignal(const QDateTime &);
     /**
      * instructs the receiver to create a new event, with the specified
      * beginning end ending times.  Doesn't make sense to connect to more
      * than one receiver.
      */
-    void newEventSignal( const QDateTime &, const QDateTime & );
+    void newEventSignal(const QDateTime &, const QDateTime &);
 
-    void newTodoSignal( const QDate & );
-    void newSubTodoSignal( const Akonadi::Item & );
+    void newTodoSignal(const QDate &);
+    void newSubTodoSignal(const Akonadi::Item &);
 
-    void newJournalSignal( const QDate & );
+    void newJournalSignal(const QDate &);
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     virtual void calendarReset();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void onCollectionChanged(const Akonadi::Collection &, const QSet<QByteArray> &);
 
-  protected:
-    bool makesWholeDayBusy( const KCalCore::Incidence::Ptr &incidence ) const;
+protected:
+    bool makesWholeDayBusy(const KCalCore::Incidence::Ptr &incidence) const;
     Akonadi::IncidenceChanger *changer() const;
 
-   /**
-     * reimplement to read view-specific settings.
-     */
-    virtual void doRestoreConfig( const KConfigGroup &configGroup );
+    /**
+      * reimplement to read view-specific settings.
+      */
+    virtual void doRestoreConfig(const KConfigGroup &configGroup);
 
     /**
      * reimplement to write view-specific settings.
      */
-    virtual void doSaveConfig( KConfigGroup &configGroup );
+    virtual void doSaveConfig(KConfigGroup &configGroup);
 
     /**
       @deprecated
      */
-    virtual void showDates( const QDate &start, const QDate &end,
-                            const QDate &preferredMonth = QDate() ) = 0;
+    virtual void showDates(const QDate &start, const QDate &end,
+                           const QDate &preferredMonth = QDate()) = 0;
 
     /**
      * from the requested date range (passed via setDateRange()), calculates the
@@ -512,21 +518,20 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
      * month to show when the week crosses months.  It's a QDate instead of
      * uint so it can be easily fed to KCalendarSystem's functions.
      */
-    virtual QPair<KDateTime,KDateTime> actualDateRange(
-      const KDateTime &start, const KDateTime &end, const QDate &preferredMonth = QDate() ) const;
+    virtual QPair<KDateTime, KDateTime> actualDateRange(
+        const KDateTime &start, const KDateTime &end, const QDate &preferredMonth = QDate()) const;
     /*
     virtual void incidencesAdded( const Akonadi::Item::List &incidences );
     virtual void incidencesAboutToBeRemoved( const Akonadi::Item::List &incidences );
     virtual void incidencesChanged( const Akonadi::Item::List &incidences );
     */
-    virtual void handleBackendError( const QString &error );
+    virtual void handleBackendError(const QString &error);
 
-  private:
-    EventViewPrivate * const d_ptr;
-    Q_DECLARE_PRIVATE( EventView )
+private:
+    EventViewPrivate *const d_ptr;
+    Q_DECLARE_PRIVATE(EventView)
 };
 
 }
 
 #endif
-// kate: space-indent on; indent-width 2; replace-tabs on;

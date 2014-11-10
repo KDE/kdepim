@@ -31,15 +31,17 @@
 #include <KConfigSkeleton>
 #include <KDateTime>
 
-namespace boost {
-  template <typename T> class shared_ptr;
+namespace boost
+{
+template <typename T> class shared_ptr;
 }
 
-namespace EventViews {
+namespace EventViews
+{
 
 class EVENTVIEWS_EXPORT Prefs
 {
-  public:
+public:
     /**
       Creates an instance of Prefs with just base config
     */
@@ -52,172 +54,172 @@ class EVENTVIEWS_EXPORT Prefs
       accessors is called. If one is found it is used for setting/getting the value
       otherwise the one from the eventviews base config is used.
     */
-    explicit Prefs( KCoreConfigSkeleton *appConfig );
+    explicit Prefs(KCoreConfigSkeleton *appConfig);
 
     ~Prefs();
 
     void readConfig();
     void writeConfig();
 
-  public:
-    void setMarcusBainsShowSeconds( bool showSeconds );
+public:
+    void setMarcusBainsShowSeconds(bool showSeconds);
     bool marcusBainsShowSeconds() const;
 
-    void setAgendaMarcusBainsLineLineColor( const QColor &color );
+    void setAgendaMarcusBainsLineLineColor(const QColor &color);
     QColor agendaMarcusBainsLineLineColor() const;
 
-    void setMarcusBainsEnabled( bool enabled );
+    void setMarcusBainsEnabled(bool enabled);
     bool marcusBainsEnabled() const;
 
-    void setAgendaMarcusBainsLineFont( const QFont &font );
+    void setAgendaMarcusBainsLineFont(const QFont &font);
     QFont agendaMarcusBainsLineFont() const;
 
-    void setHourSize( int size );
+    void setHourSize(int size);
     int hourSize() const;
 
-    void setDayBegins( const QDateTime &dateTime );
+    void setDayBegins(const QDateTime &dateTime);
     QDateTime dayBegins() const;
 
-    void setWorkingHoursStart( const QDateTime &dateTime );
+    void setWorkingHoursStart(const QDateTime &dateTime);
     QDateTime workingHoursStart() const;
 
-    void setWorkingHoursEnd( const QDateTime &dateTime );
+    void setWorkingHoursEnd(const QDateTime &dateTime);
     QDateTime workingHoursEnd() const;
 
-    void setSelectionStartsEditor( bool startEditor );
+    void setSelectionStartsEditor(bool startEditor);
     bool selectionStartsEditor() const;
 
-    void setAgendaGridWorkHoursBackgroundColor( const QColor &color );
+    void setAgendaGridWorkHoursBackgroundColor(const QColor &color);
     QColor agendaGridWorkHoursBackgroundColor() const;
 
-    void setAgendaGridHighlightColor( const QColor &color );
+    void setAgendaGridHighlightColor(const QColor &color);
     QColor agendaGridHighlightColor() const;
 
-    void setAgendaGridBackgroundColor( const QColor &color );
+    void setAgendaGridBackgroundColor(const QColor &color);
     QColor agendaGridBackgroundColor() const;
 
-    void setEnableAgendaItemIcons( bool enable );
+    void setEnableAgendaItemIcons(bool enable);
     bool enableAgendaItemIcons() const;
 
-    void setTodosUseCategoryColors( bool useColors );
+    void setTodosUseCategoryColors(bool useColors);
     bool todosUseCategoryColors() const;
 
-    void setAgendaHolidaysBackgroundColor( const QColor &color ) const;
+    void setAgendaHolidaysBackgroundColor(const QColor &color) const;
     QColor agendaHolidaysBackgroundColor() const;
 
-    void setAgendaViewColors( int colors );
+    void setAgendaViewColors(int colors);
     int agendaViewColors() const;
 
-    void setAgendaViewFont( const QFont &font );
+    void setAgendaViewFont(const QFont &font);
     QFont agendaViewFont() const;
 
-    void setMonthViewFont( const QFont &font );
+    void setMonthViewFont(const QFont &font);
     QFont monthViewFont() const;
 
     QColor monthGridBackgroundColor() const;
-    void setMonthGridBackgroundColor( const QColor &color );
+    void setMonthGridBackgroundColor(const QColor &color);
 
     QColor monthGridWorkHoursBackgroundColor() const;
-    void monthGridWorkHoursBackgroundColor( const QColor &color );
+    void monthGridWorkHoursBackgroundColor(const QColor &color);
 
-    void setMonthViewColors( int colors ) const;
+    void setMonthViewColors(int colors) const;
     int monthViewColors() const;
 
     bool enableMonthItemIcons() const;
-    void setEnableMonthItemIcons( bool enable );
+    void setEnableMonthItemIcons(bool enable);
 
     bool showTimeInMonthView() const;
-    void setShowTimeInMonthView( bool show );
+    void setShowTimeInMonthView(bool show);
 
     bool showTodosMonthView() const;
-    void setShowTodosMonthView( bool show );
+    void setShowTodosMonthView(bool show);
 
     bool showJournalsMonthView() const;
-    void setShowJournalsMonthView( bool show );
+    void setShowJournalsMonthView(bool show);
 
     bool fullViewMonth() const;
-    void setFullViewMonth( bool fullView );
+    void setFullViewMonth(bool fullView);
 
     bool sortCompletedTodosSeparately() const;
-    void setSortCompletedTodosSeparately( bool sort );
+    void setSortCompletedTodosSeparately(bool sort);
 
-    void setEnableToolTips( bool enable );
+    void setEnableToolTips(bool enable);
     bool enableToolTips() const;
 
-    void setShowTodosAgendaView( bool show );
+    void setShowTodosAgendaView(bool show);
     bool showTodosAgendaView() const;
 
-    void setAgendaTimeLabelsFont( const QFont &font );
+    void setAgendaTimeLabelsFont(const QFont &font);
     QFont agendaTimeLabelsFont() const;
 
-    KConfigSkeleton::ItemFont *fontItem( const QString &name ) const;
+    KConfigSkeleton::ItemFont *fontItem(const QString &name) const;
 
-    void setResourceColor ( const QString &, const QColor & );
-    QColor resourceColor( const QString & );
+    void setResourceColor(const QString &, const QColor &);
+    QColor resourceColor(const QString &);
 
-    void setTimeSpec( const KDateTime::Spec &spec );
+    void setTimeSpec(const KDateTime::Spec &spec);
     KDateTime::Spec timeSpec() const;
 
     QStringList timeScaleTimezones() const;
-    void setTimeScaleTimezones( const QStringList &list );
+    void setTimeScaleTimezones(const QStringList &list);
 
     QStringList selectedPlugins() const;
-    void setSelectedPlugins( const QStringList &);
+    void setSelectedPlugins(const QStringList &);
 
     QStringList decorationsAtAgendaViewTop() const;
-    void setDecorationsAtAgendaViewTop( const QStringList & );
+    void setDecorationsAtAgendaViewTop(const QStringList &);
 
     QStringList decorationsAtAgendaViewBottom() const;
-    void setDecorationsAtAgendaViewBottom( const QStringList & );
+    void setDecorationsAtAgendaViewBottom(const QStringList &);
 
     bool colorAgendaBusyDays() const;
-    void setColorAgendaBusyDays( bool enable );
+    void setColorAgendaBusyDays(bool enable);
 
     bool colorMonthBusyDays() const;
-    void setColorMonthBusyDays( bool enable );
+    void setColorMonthBusyDays(bool enable);
 
     QColor viewBgBusyColor() const;
-    void setViewBgBusyColor( const QColor & );
+    void setViewBgBusyColor(const QColor &);
 
     QColor holidayColor() const;
-    void setHolidayColor( const QColor &color );
+    void setHolidayColor(const QColor &color);
 
     QColor agendaViewBackgroundColor() const;
-    void setAgendaViewBackgroundColor( const QColor &color );
+    void setAgendaViewBackgroundColor(const QColor &color);
 
     QColor workingHoursColor() const;
-    void setWorkingHoursColor( const QColor &color );
+    void setWorkingHoursColor(const QColor &color);
 
     QColor todoDueTodayColor() const;
-    void setTodoDueTodayColor( const QColor &color );
+    void setTodoDueTodayColor(const QColor &color);
 
     QColor todoOverdueColor() const;
-    void setTodoOverdueColor( const QColor &color );
+    void setTodoOverdueColor(const QColor &color);
 
     QSet<EventViews::EventView::ItemIcon> agendaViewIcons() const;
-    void setAgendaViewIcons( const QSet<EventViews::EventView::ItemIcon> &icons );
+    void setAgendaViewIcons(const QSet<EventViews::EventView::ItemIcon> &icons);
 
     QSet<EventViews::EventView::ItemIcon> monthViewIcons() const;
-    void setMonthViewIcons( const QSet<EventViews::EventView::ItemIcon> &icons );
+    void setMonthViewIcons(const QSet<EventViews::EventView::ItemIcon> &icons);
 
-    void setFlatListTodo( bool );
+    void setFlatListTodo(bool);
     bool flatListTodo() const;
 
-    void setFullViewTodo( bool );
+    void setFullViewTodo(bool);
     bool fullViewTodo() const;
 
     bool enableTodoQuickSearch() const;
-    void setEnableTodoQuickSearch( bool enable );
+    void setEnableTodoQuickSearch(bool enable);
 
     bool enableQuickTodo() const;
-    void setEnableQuickTodo( bool enable );
+    void setEnableQuickTodo(bool enable);
 
     bool highlightTodos() const;
-    void setHighlightTodos( bool );
+    void setHighlightTodos(bool);
 
     KConfig *config() const;
 
-  private:
+private:
     class Private;
     Private *const d;
 };
@@ -228,4 +230,3 @@ typedef boost::shared_ptr<Prefs> PrefsPtr;
 
 #endif
 
-// kate: space-indent on; indent-width 2; replace-tabs on;

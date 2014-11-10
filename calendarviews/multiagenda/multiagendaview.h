@@ -25,7 +25,8 @@
 
 #include <QDateTime>
 
-namespace EventViews {
+namespace EventViews
+{
 
 class ConfigDialogInterface;
 
@@ -34,9 +35,9 @@ class ConfigDialogInterface;
 */
 class EVENTVIEWS_EXPORT MultiAgendaView : public EventView
 {
-  Q_OBJECT
-  public:
-    explicit MultiAgendaView( QWidget *parent = 0 );
+    Q_OBJECT
+public:
+    explicit MultiAgendaView(QWidget *parent = 0);
     ~MultiAgendaView();
 
     Akonadi::Item::List selectedIncidences() const;
@@ -44,62 +45,62 @@ class EVENTVIEWS_EXPORT MultiAgendaView : public EventView
     int currentDateCount() const;
     int maxDatesHint() const;
 
-    bool eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay ) const;
+    bool eventDurationHint(QDateTime &startDt, QDateTime &endDt, bool &allDay) const;
 
     /* reimp */
-    void setCalendar( const Akonadi::ETMCalendar::Ptr &cal );
+    void setCalendar(const Akonadi::ETMCalendar::Ptr &cal);
 
     /* reimp */
     bool hasConfigurationDialog() const;
 
-    void setChanges( Changes changes );
+    void setChanges(Changes changes);
 
     bool customColumnSetupUsed() const;
     int customNumberOfColumns() const;
     QVector<QString> customColumnTitles() const;
-    QVector<KCheckableProxyModel*>collectionSelectionModels() const;
+    QVector<KCheckableProxyModel *>collectionSelectionModels() const;
 
-    void setPreferences( const PrefsPtr &prefs );
+    void setPreferences(const PrefsPtr &prefs);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void showNewEventPopupSignal();
-    void showIncidencePopupSignal( const Akonadi::Item &, const QDate & );
+    void showIncidencePopupSignal(const Akonadi::Item &, const QDate &);
 
-  public slots:
+public slots:
 
-    void customCollectionsChanged( ConfigDialogInterface *dlg );
+    void customCollectionsChanged(ConfigDialogInterface *dlg);
 
-    void showDates( const QDate &start, const QDate &end, const QDate &preferredMonth = QDate() );
-    void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
+    void showDates(const QDate &start, const QDate &end, const QDate &preferredMonth = QDate());
+    void showIncidences(const Akonadi::Item::List &incidenceList, const QDate &date);
     void updateView();
     void updateConfig();
 
-    void setIncidenceChanger( Akonadi::IncidenceChanger *changer );
+    void setIncidenceChanger(Akonadi::IncidenceChanger *changer);
 
-  protected:
-    void resizeEvent( QResizeEvent *event );
-    void showEvent( QShowEvent *event );
+protected:
+    void resizeEvent(QResizeEvent *event);
+    void showEvent(QShowEvent *event);
 
-    /* reimp */void doRestoreConfig( const KConfigGroup &configGroup );
-    /* reimp */void doSaveConfig( KConfigGroup &configGroup );
+    /* reimp */void doRestoreConfig(const KConfigGroup &configGroup);
+    /* reimp */void doSaveConfig(KConfigGroup &configGroup);
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     /**
      * Reimplemented from KOrg::BaseView
      */
     void collectionSelectionChanged();
 
-  private slots:
+private slots:
     void slotSelectionChanged();
     void slotClearTimeSpanSelection();
     void resizeSplitters();
     void setupScrollBar();
-    void zoomView( const int delta, const QPoint &pos, const Qt::Orientation ori );
+    void zoomView(const int delta, const QPoint &pos, const Qt::Orientation ori);
     void slotResizeScrollView();
     void recreateViews();
     void forceRecreateViews();
 
-  private:
+private:
     class Private;
     Private *const d;
 };

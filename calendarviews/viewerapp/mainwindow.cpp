@@ -42,89 +42,87 @@ using namespace Akonadi;
 using namespace CalendarSupport;
 using namespace EventViews;
 
-MainWindow::MainWindow( const QStringList &viewNames )
-  : QMainWindow(),
-    mViewNames( viewNames ),
-    mIncidenceChanger( 0 ),
-    mSettings( 0 ),
-    mViewPreferences( 0 )
+MainWindow::MainWindow(const QStringList &viewNames)
+    : QMainWindow(),
+      mViewNames(viewNames),
+      mIncidenceChanger(0),
+      mSettings(0),
+      mViewPreferences(0)
 {
-  mUi.setupUi( this );
-  mUi.tabWidget->clear();
+    mUi.setupUi(this);
+    mUi.tabWidget->clear();
 
-  connect(mUi.addViewMenu, &QMenu::triggered, this, &MainWindow::addViewTriggered);
+    connect(mUi.addViewMenu, &QMenu::triggered, this, &MainWindow::addViewTriggered);
 
-  Akonadi::Control::widgetNeedsAkonadi( this );
+    Akonadi::Control::widgetNeedsAkonadi(this);
 
-  setGeometry( 0, 0, 800, 600 );
-  QMetaObject::invokeMethod( this, "delayedInit", Qt::QueuedConnection );
+    setGeometry(0, 0, 800, 600);
+    QMetaObject::invokeMethod(this, "delayedInit", Qt::QueuedConnection);
 }
 
 MainWindow::~MainWindow()
 {
-  delete mViewPreferences;
-  delete mSettings;
+    delete mViewPreferences;
+    delete mSettings;
 }
 
-void MainWindow::addView( const QString &viewName )
+void MainWindow::addView(const QString &viewName)
 {
-  EventView *eventView = 0;
+    EventView *eventView = 0;
 
-  const KDateTime start = KDateTime::currentLocalDateTime().addDays( -1 );
-  const KDateTime end = KDateTime::currentLocalDateTime().addDays( 1 );
+    const KDateTime start = KDateTime::currentLocalDateTime().addDays(-1);
+    const KDateTime end = KDateTime::currentLocalDateTime().addDays(1);
 
-  if ( viewName == QLatin1String( "agenda" ) ) {
-    eventView = new AgendaView( start.date(), end.date(), true, false, this );
-  } else if ( viewName == QLatin1String( "multiagenda" ) ) {
-    eventView = new MultiAgendaView( this );
-  } else if ( viewName == QLatin1String( "month" ) ) {
-    eventView = new MonthView( MonthView::Visible, this );
-  } else if ( viewName == QLatin1String( "timeline" ) ) {
-    eventView = new TimelineView( this );
-  }
+    if (viewName == QLatin1String("agenda")) {
+        eventView = new AgendaView(start.date(), end.date(), true, false, this);
+    } else if (viewName == QLatin1String("multiagenda")) {
+        eventView = new MultiAgendaView(this);
+    } else if (viewName == QLatin1String("month")) {
+        eventView = new MonthView(MonthView::Visible, this);
+    } else if (viewName == QLatin1String("timeline")) {
+        eventView = new TimelineView(this);
+    }
 
-  if ( eventView ) {
-    eventView->setPreferences( *mViewPreferences );
-    eventView->setCalendar( mCalendar );
-    eventView->setIncidenceChanger( mIncidenceChanger );
-    eventView->setDateRange( start, end );
-    eventView->updateConfig();
-    mUi.tabWidget->addTab( eventView, viewName );
-  } else {
-    qCritical() << "Cannot create view" << viewName;
-  }
+    if (eventView) {
+        eventView->setPreferences(*mViewPreferences);
+        eventView->setCalendar(mCalendar);
+        eventView->setIncidenceChanger(mIncidenceChanger);
+        eventView->setDateRange(start, end);
+        eventView->updateConfig();
+        mUi.tabWidget->addTab(eventView, viewName);
+    } else {
+        qCritical() << "Cannot create view" << viewName;
+    }
 }
 
 void MainWindow::delayedInit()
 {
-  // create our application settings
-  mSettings = new Settings;
+    // create our application settings
+    mSettings = new Settings;
 
-  // create view preferences so that matching values are retrieved from
-  // application settings
-  mViewPreferences = new PrefsPtr( new Prefs( mSettings ) );
+    // create view preferences so that matching values are retrieved from
+    // application settings
+    mViewPreferences = new PrefsPtr(new Prefs(mSettings));
 
-  mCalendar = Akonadi::ETMCalendar::Ptr( new Akonadi::ETMCalendar() );
-  KCheckableProxyModel *checkableProxy = mCalendar->checkableProxyModel();
-  QItemSelectionModel *selectionModel = checkableProxy->selectionModel();
+    mCalendar = Akonadi::ETMCalendar::Ptr(new Akonadi::ETMCalendar());
+    KCheckableProxyModel *checkableProxy = mCalendar->checkableProxyModel();
+    QItemSelectionModel *selectionModel = checkableProxy->selectionModel();
 
-  CalendarSupport::CollectionSelection *collectionSelection = new CalendarSupport::CollectionSelection( selectionModel );
-  EventViews::EventView::setGlobalCollectionSelection( collectionSelection );
+    CalendarSupport::CollectionSelection *collectionSelection = new CalendarSupport::CollectionSelection(selectionModel);
+    EventViews::EventView::setGlobalCollectionSelection(collectionSelection);
 
-  mIncidenceChanger = new IncidenceChanger( this );
-  mCalendar->setCollectionFilteringEnabled( false );
+    mIncidenceChanger = new IncidenceChanger(this);
+    mCalendar->setCollectionFilteringEnabled(false);
 
-  Q_FOREACH( const QString &viewName, mViewNames ) {
-    addView( viewName );
-  }
+    Q_FOREACH (const QString &viewName, mViewNames) {
+        addView(viewName);
+    }
 }
 
-void MainWindow::addViewTriggered( QAction *action )
+void MainWindow::addViewTriggered(QAction *action)
 {
-  QString viewName = action->text().toLower();
-  viewName.remove( QLatin1Char( '&' ) );
-  addView( viewName );
+    QString viewName = action->text().toLower();
+    viewName.remove(QLatin1Char('&'));
+    addView(viewName);
 }
 
-
-// kate: space-indent on; indent-width 2; replace-tabs on;

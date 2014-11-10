@@ -29,7 +29,8 @@
 #include <QDate>
 #include <QGraphicsItem>
 
-namespace EventViews {
+namespace EventViews
+{
 
 class MonthItem;
 
@@ -39,20 +40,23 @@ class MonthItem;
  */
 class EVENTVIEWS_EXPORT ScrollIndicator : public QGraphicsItem
 {
-  public:
+public:
     enum ArrowDirection {
-      UpArrow,
-      DownArrow
+        UpArrow,
+        DownArrow
     };
 
-    explicit ScrollIndicator( ArrowDirection direction );
+    explicit ScrollIndicator(ArrowDirection direction);
 
     QRectF boundingRect() const;
-    void paint( QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget );
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-    ArrowDirection direction() const { return mDirection; }
+    ArrowDirection direction() const
+    {
+        return mDirection;
+    }
 
-  private:
+private:
     ArrowDirection mDirection;
 
     static const int mWidth = 30;
@@ -64,8 +68,8 @@ class EVENTVIEWS_EXPORT ScrollIndicator : public QGraphicsItem
  */
 class EVENTVIEWS_EXPORT MonthCell
 {
-  public:
-    MonthCell( int id, const QDate &date, QGraphicsScene *scene );
+public:
+    MonthCell(int id, const QDate &date, QGraphicsScene *scene);
     ~MonthCell();
 
     /**
@@ -77,28 +81,42 @@ class EVENTVIEWS_EXPORT MonthCell
     QHash<int, MonthItem *> mHeightHash;
 
     int firstFreeSpace();
-    void addMonthItem( MonthItem *manager, int height );
+    void addMonthItem(MonthItem *manager, int height);
 
-    int id() const { return mId; }
-    QDate date() const { return mDate; }
-
-    int x() const {
-      return mId % 7;
+    int id() const
+    {
+        return mId;
+    }
+    QDate date() const
+    {
+        return mDate;
     }
 
-    int y() const {
-      return mId / 7;
+    int x() const
+    {
+        return mId % 7;
+    }
+
+    int y() const
+    {
+        return mId / 7;
     }
 
     static int topMargin();
     // returns true if the cell contains events below the height @p height
-    bool hasEventBelow( int height );
+    bool hasEventBelow(int height);
 
     // TODO : move this to a new GUI class (monthcell could be GraphicsItems)
-    ScrollIndicator *upArrow() { return mUpArrow; }
-    ScrollIndicator *downArrow() { return mDownArrow; }
+    ScrollIndicator *upArrow()
+    {
+        return mUpArrow;
+    }
+    ScrollIndicator *downArrow()
+    {
+        return mDownArrow;
+    }
 
-  private:
+private:
     int mId;
     QDate mDate;
 
@@ -114,13 +132,13 @@ class EVENTVIEWS_EXPORT MonthCell
  */
 class EVENTVIEWS_EXPORT MonthGraphicsItem : public QObject, public QGraphicsItem
 {
-  Q_OBJECT
-  Q_INTERFACES( QGraphicsItem )
+    Q_OBJECT
+    Q_INTERFACES(QGraphicsItem)
 
-  public:
+public:
     typedef QList<MonthGraphicsItem *> List;
 
-    explicit MonthGraphicsItem( MonthItem *manager );
+    explicit MonthGraphicsItem(MonthItem *manager);
     ~MonthGraphicsItem();
 
     /**
@@ -132,7 +150,10 @@ class EVENTVIEWS_EXPORT MonthGraphicsItem : public QObject, public QGraphicsItem
     /**
       Returns the associated MonthItem.
     */
-    MonthItem *monthItem() const { return mMonthItem; }
+    MonthItem *monthItem() const
+    {
+        return mMonthItem;
+    }
 
     /**
       Returns the starting date of this item.
@@ -150,8 +171,8 @@ class EVENTVIEWS_EXPORT MonthGraphicsItem : public QObject, public QGraphicsItem
     */
     QDate endDate() const;
 
-    void setStartDate( const QDate &d );
-    void setDaySpan( int span );
+    void setStartDate(const QDate &d);
+    void setDaySpan(int span);
 
     /**
       Returns true if this item is currently being moved (ie. the
@@ -181,12 +202,12 @@ class EVENTVIEWS_EXPORT MonthGraphicsItem : public QObject, public QGraphicsItem
       Reimplemented from QGraphicsItem
     */
     virtual QRectF boundingRect() const;
-    virtual void paint( QPainter *, const QStyleOptionGraphicsItem *, QWidget * );
+    virtual void paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *);
     virtual QPainterPath shape() const;
 
-  private:
+private:
     // Shape of the item, see shape()
-    QPainterPath widgetPath( bool border ) const;
+    QPainterPath widgetPath(bool border) const;
 
     // See startDate()
     QDate mStartDate;

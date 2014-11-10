@@ -30,185 +30,185 @@
 
 using namespace EventViews;
 
-DecorationLabel::DecorationLabel( CalendarDecoration::Element *e,
-                                  QWidget *parent )
-  : QLabel( parent ), mAutomaticSqueeze( true ), mDecorationElement( e ),
-    mShortText( e->shortText() ), mLongText( e->longText() ),
-    mExtensiveText( e->extensiveText() )
+DecorationLabel::DecorationLabel(CalendarDecoration::Element *e,
+                                 QWidget *parent)
+    : QLabel(parent), mAutomaticSqueeze(true), mDecorationElement(e),
+      mShortText(e->shortText()), mLongText(e->longText()),
+      mExtensiveText(e->extensiveText())
 {
-  mPixmap = e->newPixmap( size() );
-  mUrl = e->url();
-  setUrl( e->url() );
+    mPixmap = e->newPixmap(size());
+    mUrl = e->url();
+    setUrl(e->url());
 
-  connect( e, SIGNAL(gotNewExtensiveText(QString)),
-           this, SLOT(setExtensiveText(QString)) );
-  connect( e, SIGNAL(gotNewLongText(QString)),
-           this, SLOT(setLongText(QString)) );
-  connect( e, SIGNAL(gotNewPixmap(QPixmap)),
-           this, SLOT(setPixmap(QPixmap)) );
-  connect( e, SIGNAL(gotNewShortText(QString)),
-           this, SLOT(setShortText(QString)) );
-  connect( e, SIGNAL(gotNewUrl(QUrl)),
-           this, SLOT(setUrl(QUrl)) );
-  squeezeContentsToLabel();
+    connect(e, SIGNAL(gotNewExtensiveText(QString)),
+            this, SLOT(setExtensiveText(QString)));
+    connect(e, SIGNAL(gotNewLongText(QString)),
+            this, SLOT(setLongText(QString)));
+    connect(e, SIGNAL(gotNewPixmap(QPixmap)),
+            this, SLOT(setPixmap(QPixmap)));
+    connect(e, SIGNAL(gotNewShortText(QString)),
+            this, SLOT(setShortText(QString)));
+    connect(e, SIGNAL(gotNewUrl(QUrl)),
+            this, SLOT(setUrl(QUrl)));
+    squeezeContentsToLabel();
 }
 
-DecorationLabel::DecorationLabel( const QString &shortText,
-                                  const QString &longText,
-                                  const QString &extensiveText,
-                                  const QPixmap &pixmap,
-                                  const QUrl &url,
-                                  QWidget *parent )
-  : QLabel( parent ), mAutomaticSqueeze( true ), mShortText( shortText ),
-    mLongText( longText ), mExtensiveText( extensiveText ),
-    mPixmap( pixmap )
+DecorationLabel::DecorationLabel(const QString &shortText,
+                                 const QString &longText,
+                                 const QString &extensiveText,
+                                 const QPixmap &pixmap,
+                                 const QUrl &url,
+                                 QWidget *parent)
+    : QLabel(parent), mAutomaticSqueeze(true), mShortText(shortText),
+      mLongText(longText), mExtensiveText(extensiveText),
+      mPixmap(pixmap)
 {
-  setUrl( url );
+    setUrl(url);
 
-  squeezeContentsToLabel();
+    squeezeContentsToLabel();
 }
 
 DecorationLabel::~DecorationLabel()
 {
 }
 
-void DecorationLabel::mouseReleaseEvent( QMouseEvent *event )
+void DecorationLabel::mouseReleaseEvent(QMouseEvent *event)
 {
-  QLabel::mouseReleaseEvent( event );
+    QLabel::mouseReleaseEvent(event);
 
-  switch ( event->button() ) {
+    switch (event->button()) {
     case Qt::LeftButton:
-      if ( ! mUrl.isEmpty() ) {
-        KToolInvocation::invokeBrowser( mUrl.url() );
-        setForegroundRole( QPalette::LinkVisited );
-      }
-      break;
+        if (! mUrl.isEmpty()) {
+            KToolInvocation::invokeBrowser(mUrl.url());
+            setForegroundRole(QPalette::LinkVisited);
+        }
+        break;
     case Qt::MidButton:
     case Qt::RightButton:
     default:
-      break;
-  }
+        break;
+    }
 }
 
-void DecorationLabel::resizeEvent( QResizeEvent *event )
+void DecorationLabel::resizeEvent(QResizeEvent *event)
 {
-  mPixmap = mDecorationElement->newPixmap( event->size() );
-  QLabel::resizeEvent( event );
-  squeezeContentsToLabel();
+    mPixmap = mDecorationElement->newPixmap(event->size());
+    QLabel::resizeEvent(event);
+    squeezeContentsToLabel();
 }
 
-void DecorationLabel::setExtensiveText( const QString &text )
+void DecorationLabel::setExtensiveText(const QString &text)
 {
-  mExtensiveText = text;
-  squeezeContentsToLabel();
+    mExtensiveText = text;
+    squeezeContentsToLabel();
 }
 
-void DecorationLabel::setLongText( const QString &text )
+void DecorationLabel::setLongText(const QString &text)
 {
-  mLongText = text;
-  squeezeContentsToLabel();
+    mLongText = text;
+    squeezeContentsToLabel();
 }
 
-void DecorationLabel::setPixmap( const QPixmap &pixmap )
+void DecorationLabel::setPixmap(const QPixmap &pixmap)
 {
-  mPixmap = pixmap.scaled( size(), Qt::KeepAspectRatio );
-  squeezeContentsToLabel();
+    mPixmap = pixmap.scaled(size(), Qt::KeepAspectRatio);
+    squeezeContentsToLabel();
 }
 
-void DecorationLabel::setShortText( const QString &text )
+void DecorationLabel::setShortText(const QString &text)
 {
-  mShortText = text;
-  squeezeContentsToLabel();
+    mShortText = text;
+    squeezeContentsToLabel();
 }
 
-void DecorationLabel::setText( const QString &text )
+void DecorationLabel::setText(const QString &text)
 {
-  setLongText( text );
+    setLongText(text);
 }
 
-void DecorationLabel::setUrl( const QUrl &url )
+void DecorationLabel::setUrl(const QUrl &url)
 {
-  mUrl = url;
-  QFont f = font();
-  if ( url.isEmpty() ) {
-    setForegroundRole( QPalette::WindowText );
-    f.setUnderline( false );
+    mUrl = url;
+    QFont f = font();
+    if (url.isEmpty()) {
+        setForegroundRole(QPalette::WindowText);
+        f.setUnderline(false);
 #ifndef QT_NO_CURSOR
-    setCursor( QCursor( Qt::ArrowCursor ) );
+        setCursor(QCursor(Qt::ArrowCursor));
 #endif
-  } else {
-    setForegroundRole( QPalette::Link );
-    f.setUnderline( true );
+    } else {
+        setForegroundRole(QPalette::Link);
+        f.setUnderline(true);
 #ifndef QT_NO_CURSOR
-    setCursor( QCursor( Qt::PointingHandCursor ) );
+        setCursor(QCursor(Qt::PointingHandCursor));
 #endif
-  }
-  setFont( f );
+    }
+    setFont(f);
 }
 
 void DecorationLabel::squeezeContentsToLabel()
 {
-  if ( !mAutomaticSqueeze ) { // The content type to use has been set manually
-    return;
-  }
+    if (!mAutomaticSqueeze) {   // The content type to use has been set manually
+        return;
+    }
 
-  QFontMetrics fm( fontMetrics() );
+    QFontMetrics fm(fontMetrics());
 
-  int labelWidth = size().width();
-  int longTextWidth = fm.width(mLongText);
-  int extensiveTextWidth = fm.width(mExtensiveText);
+    int labelWidth = size().width();
+    int longTextWidth = fm.width(mLongText);
+    int extensiveTextWidth = fm.width(mExtensiveText);
 
-  if ( ! mPixmap.isNull() ) {
-    usePixmap( true );
-  } else if ( ( !mExtensiveText.isEmpty() ) && ( extensiveTextWidth <= labelWidth ) ) {
-    useExtensiveText( true );
-  } else if ( ( !mLongText.isEmpty() ) && ( longTextWidth <= labelWidth ) ) {
-    useLongText( true );
-  } else {
-    useShortText( true );
-  }
+    if (! mPixmap.isNull()) {
+        usePixmap(true);
+    } else if ((!mExtensiveText.isEmpty()) && (extensiveTextWidth <= labelWidth)) {
+        useExtensiveText(true);
+    } else if ((!mLongText.isEmpty()) && (longTextWidth <= labelWidth)) {
+        useLongText(true);
+    } else {
+        useShortText(true);
+    }
 
-  setAlignment( Qt::AlignCenter );
-  setWordWrap( true );
-  QSize msh = QLabel::minimumSizeHint();
-  msh.setHeight( fontMetrics().lineSpacing() );
-  msh.setWidth( 0 );
-  setMinimumSize( msh );
-  setSizePolicy( sizePolicy().horizontalPolicy(),
-                 QSizePolicy::MinimumExpanding );
+    setAlignment(Qt::AlignCenter);
+    setWordWrap(true);
+    QSize msh = QLabel::minimumSizeHint();
+    msh.setHeight(fontMetrics().lineSpacing());
+    msh.setWidth(0);
+    setMinimumSize(msh);
+    setSizePolicy(sizePolicy().horizontalPolicy(),
+                  QSizePolicy::MinimumExpanding);
 }
 
 void DecorationLabel::useDefaultText()
 {
-  mAutomaticSqueeze = false;
-  squeezeContentsToLabel();
+    mAutomaticSqueeze = false;
+    squeezeContentsToLabel();
 }
 
-void DecorationLabel::useExtensiveText( bool allowAutomaticSqueeze )
+void DecorationLabel::useExtensiveText(bool allowAutomaticSqueeze)
 {
-  mAutomaticSqueeze = allowAutomaticSqueeze;
-  QLabel::setText( mExtensiveText );
-  setToolTip( QString() );
+    mAutomaticSqueeze = allowAutomaticSqueeze;
+    QLabel::setText(mExtensiveText);
+    setToolTip(QString());
 }
 
-void DecorationLabel::useLongText( bool allowAutomaticSqueeze )
+void DecorationLabel::useLongText(bool allowAutomaticSqueeze)
 {
-  mAutomaticSqueeze = allowAutomaticSqueeze;
-  QLabel::setText( mLongText );
-  setToolTip( mExtensiveText.isEmpty() ? QString() : mExtensiveText );
+    mAutomaticSqueeze = allowAutomaticSqueeze;
+    QLabel::setText(mLongText);
+    setToolTip(mExtensiveText.isEmpty() ? QString() : mExtensiveText);
 }
 
-void DecorationLabel::usePixmap( bool allowAutomaticSqueeze )
+void DecorationLabel::usePixmap(bool allowAutomaticSqueeze)
 {
-  mAutomaticSqueeze = allowAutomaticSqueeze;
-  QLabel::setPixmap( mPixmap );
-  setToolTip( mExtensiveText.isEmpty() ? mLongText : mExtensiveText );
+    mAutomaticSqueeze = allowAutomaticSqueeze;
+    QLabel::setPixmap(mPixmap);
+    setToolTip(mExtensiveText.isEmpty() ? mLongText : mExtensiveText);
 }
 
-void DecorationLabel::useShortText( bool allowAutomaticSqueeze )
+void DecorationLabel::useShortText(bool allowAutomaticSqueeze)
 {
-  mAutomaticSqueeze = allowAutomaticSqueeze;
-  QLabel::setText( mShortText );
-  setToolTip( mExtensiveText.isEmpty() ? mLongText : mExtensiveText );
+    mAutomaticSqueeze = allowAutomaticSqueeze;
+    QLabel::setText(mShortText);
+    setToolTip(mExtensiveText.isEmpty() ? mLongText : mExtensiveText);
 }
 

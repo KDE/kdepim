@@ -29,39 +29,40 @@
 
 #include <QLabel>
 
-namespace EventViews {
+namespace EventViews
+{
 
 class EVENTVIEWS_EXPORT DecorationLabel : public QLabel
 {
-  Q_OBJECT
-  public:
-    explicit DecorationLabel( EventViews::CalendarDecoration::Element *e,
-                              QWidget *parent = 0 );
+    Q_OBJECT
+public:
+    explicit DecorationLabel(EventViews::CalendarDecoration::Element *e,
+                             QWidget *parent = 0);
 
-    explicit DecorationLabel( const QString &shortText,
-                              const QString &longText = QString(),
-                              const QString &extensiveText = QString(),
-                              const QPixmap &pixmap = QPixmap(),
-                              const QUrl &url = QUrl(),
-                              QWidget *parent = 0 );
+    explicit DecorationLabel(const QString &shortText,
+                             const QString &longText = QString(),
+                             const QString &extensiveText = QString(),
+                             const QPixmap &pixmap = QPixmap(),
+                             const QUrl &url = QUrl(),
+                             QWidget *parent = 0);
     ~DecorationLabel();
 
-  public slots:
-    void setExtensiveText( const QString & );
-    void setLongText( const QString & );
-    void setPixmap( const QPixmap & );
-    void setShortText( const QString & );
-    void setText( const QString & );
-    void setUrl( const QUrl & );
-    void useShortText( bool allowAutomaticSqueeze = false );
-    void useLongText( bool allowAutomaticSqueeze = false );
-    void useExtensiveText( bool allowAutomaticSqueeze = false );
-    void usePixmap( bool allowAutomaticSqueeze = false );
+public slots:
+    void setExtensiveText(const QString &);
+    void setLongText(const QString &);
+    void setPixmap(const QPixmap &);
+    void setShortText(const QString &);
+    void setText(const QString &);
+    void setUrl(const QUrl &);
+    void useShortText(bool allowAutomaticSqueeze = false);
+    void useLongText(bool allowAutomaticSqueeze = false);
+    void useExtensiveText(bool allowAutomaticSqueeze = false);
+    void usePixmap(bool allowAutomaticSqueeze = false);
     void useDefaultText();
 
-  protected:
-    virtual void resizeEvent( QResizeEvent * );
-    virtual void mouseReleaseEvent( QMouseEvent * );
+protected:
+    virtual void resizeEvent(QResizeEvent *);
+    virtual void mouseReleaseEvent(QMouseEvent *);
     virtual void squeezeContentsToLabel();
     bool mAutomaticSqueeze;
     EventViews::CalendarDecoration::Element *mDecorationElement;

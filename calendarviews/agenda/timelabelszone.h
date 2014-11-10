@@ -33,7 +33,8 @@
 class QHBoxLayout;
 class QScrollArea;
 
-namespace EventViews {
+namespace EventViews
+{
 
 class Agenda;
 class AgendaView;
@@ -43,14 +44,14 @@ typedef boost::shared_ptr<Prefs> PrefsPtr;
 
 class EVENTVIEWS_EXPORT TimeLabelsZone : public QWidget
 {
-  Q_OBJECT
-  public:
-    explicit TimeLabelsZone( QWidget *parent, const PrefsPtr &preferences, Agenda *agenda = 0 );
+    Q_OBJECT
+public:
+    explicit TimeLabelsZone(QWidget *parent, const PrefsPtr &preferences, Agenda *agenda = 0);
 
     /** Add a new time label with the given spec.
         If spec is not valid, use the display timespec.
     */
-    void addTimeLabels( const KDateTime::Spec &spec );
+    void addTimeLabels(const KDateTime::Spec &spec);
 
     /**
        Returns the best width for each TimeLabels widget
@@ -60,11 +61,11 @@ class EVENTVIEWS_EXPORT TimeLabelsZone : public QWidget
     void updateAll();
     void reset();
     void init();
-    void setAgendaView( AgendaView *agenda );
+    void setAgendaView(AgendaView *agenda);
 
-    QList<QScrollArea*> timeLabels() const;
+    QList<QScrollArea *> timeLabels() const;
 
-    void setPreferences( const PrefsPtr &prefs );
+    void setPreferences(const PrefsPtr &prefs);
     PrefsPtr preferences() const;
 
     /** Checks how much agenda is scrolled relative to it's QScrollArea
@@ -72,14 +73,14 @@ class EVENTVIEWS_EXPORT TimeLabelsZone : public QWidget
     */
     void updateTimeLabelsPosition();
 
-  private:
-    void setupTimeLabel( QScrollArea *area );
+private:
+    void setupTimeLabel(QScrollArea *area);
     Agenda *mAgenda;
     PrefsPtr mPrefs;
     AgendaView *mParent;
 
     QHBoxLayout *mTimeLabelsLayout;
-    QList<QScrollArea*> mTimeLabelsList;
+    QList<QScrollArea *> mTimeLabelsList;
 };
 
 }

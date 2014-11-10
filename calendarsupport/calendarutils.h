@@ -29,11 +29,13 @@
 
 #include <QtCore/QObject>
 
-namespace Akonadi {
-  class Item;
+namespace Akonadi
+{
+class Item;
 }
 
-namespace CalendarSupport {
+namespace CalendarSupport
+{
 
 class CalendarUtilsPrivate;
 
@@ -44,13 +46,13 @@ class CalendarUtilsPrivate;
  */
 class CALENDARSUPPORT_EXPORT CalendarUtils : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
      * Creates a new CalendarUtils instance. The instance does not take owner ship
      * over the Calendar.
      */
-    explicit CalendarUtils( const Akonadi::ETMCalendar::Ptr &calendar, QObject *parent = 0 );
+    explicit CalendarUtils(const Akonadi::ETMCalendar::Ptr &calendar, QObject *parent = 0);
 
     ~CalendarUtils();
 
@@ -65,14 +67,14 @@ class CALENDARSUPPORT_EXPORT CalendarUtils : public QObject
      * started, false otherwise. This method is async, either actionFailed or
      * actionFinished will be emitted when the operation finished or failed.
      */
-    bool makeIndependent( const Akonadi::Item &item );
+    bool makeIndependent(const Akonadi::Item &item);
 
     /**
      * Makes all children of the incindence from @param item independent
      * Returns true when one or more incidence(s) where made independent,
      * false otherwise.
      */
-    bool makeChildrenIndependent( const Akonadi::Item &item );
+    bool makeChildrenIndependent(const Akonadi::Item &item);
 
     /** Todo specific methods ***************************************************/
 
@@ -81,19 +83,19 @@ class CALENDARSUPPORT_EXPORT CalendarUtils : public QObject
      */
     void purgeCompletedTodos();
 
-  Q_SIGNALS:
-    void actionFailed( const Akonadi::Item &item, const QString &msg );
-    void actionFinished( const Akonadi::Item &item );
+Q_SIGNALS:
+    void actionFailed(const Akonadi::Item &item, const QString &msg);
+    void actionFinished(const Akonadi::Item &item);
 
-  private:
+private:
     CalendarUtilsPrivate *const d_ptr;
-    Q_DECLARE_PRIVATE( CalendarUtils )
+    Q_DECLARE_PRIVATE(CalendarUtils)
 
-    Q_PRIVATE_SLOT( d_ptr,
-                    void handleChangeFinish( int changeId,
-                                             const Akonadi::Item &item,
-                                             Akonadi::IncidenceChanger::ResultCode resultCode,
-                                             const QString &errorString ) )
+    Q_PRIVATE_SLOT(d_ptr,
+                   void handleChangeFinish(int changeId,
+                                           const Akonadi::Item &item,
+                                           Akonadi::IncidenceChanger::ResultCode resultCode,
+                                           const QString &errorString))
 };
 
 }

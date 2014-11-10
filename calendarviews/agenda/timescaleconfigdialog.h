@@ -29,20 +29,21 @@
 
 #include <boost/shared_ptr.hpp>
 
-namespace EventViews {
+namespace EventViews
+{
 
 class Prefs;
 typedef boost::shared_ptr<Prefs> PrefsPtr;
 
 class EVENTVIEWS_EXPORT TimeScaleConfigDialog : public QDialog, private Ui::TimeScaleEditWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    TimeScaleConfigDialog( const PrefsPtr &preferences, QWidget *parent );
+public:
+    TimeScaleConfigDialog(const PrefsPtr &preferences, QWidget *parent);
     ~TimeScaleConfigDialog();
 
-  private slots:
+private slots:
     void add();
     void remove();
     void up();
@@ -53,7 +54,7 @@ class EVENTVIEWS_EXPORT TimeScaleConfigDialog : public QDialog, private Ui::Time
 private:
     QStringList zones();
 
-  private:
+private:
     class Private;
     Private *const d;
 };

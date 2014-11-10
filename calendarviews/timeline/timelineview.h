@@ -30,7 +30,8 @@
 
 #include <QDateTime>
 
-namespace EventViews {
+namespace EventViews
+{
 
 /**
   This class provides a view ....
@@ -38,8 +39,8 @@ namespace EventViews {
 class EVENTVIEWS_EXPORT TimelineView : public EventView
 {
     Q_OBJECT
-  public:
-    explicit TimelineView( QWidget *parent = 0 );
+public:
+    explicit TimelineView(QWidget *parent = 0);
     ~TimelineView();
 
     virtual Akonadi::Item::List selectedIncidences() const;
@@ -47,26 +48,26 @@ class EVENTVIEWS_EXPORT TimelineView : public EventView
     virtual int currentDateCount() const;
 
     // ensure start and end are valid before calling this.
-    virtual void showDates( const QDate &, const QDate &, const QDate &preferredMonth = QDate() );
+    virtual void showDates(const QDate &, const QDate &, const QDate &preferredMonth = QDate());
 
     // FIXME: we already have startDateTime() in the base class
     // why aren't we using it.
     QDate startDate() const;
     QDate endDate() const;
 
-    virtual void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
+    virtual void showIncidences(const Akonadi::Item::List &incidenceList, const QDate &date);
     virtual void updateView();
-    virtual void changeIncidenceDisplay( const Akonadi::Item &incidence, int mode );
-    virtual bool eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay ) const;
+    virtual void changeIncidenceDisplay(const Akonadi::Item &incidence, int mode);
+    virtual bool eventDurationHint(QDateTime &startDt, QDateTime &endDt, bool &allDay) const;
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void showNewEventPopupSignal();
-    void showIncidencePopupSignal( Akonadi::Item, const QDate & );
+    void showIncidencePopupSignal(Akonadi::Item, const QDate &);
 
-  protected:
-    virtual bool eventFilter( QObject *object, QEvent *event );
+protected:
+    virtual bool eventFilter(QObject *object, QEvent *event);
 
-  private:
+private:
     class Private;
     Private *const d;
 

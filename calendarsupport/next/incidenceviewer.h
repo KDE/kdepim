@@ -31,11 +31,13 @@
 
 class QAbstractItemModel;
 
-namespace Akonadi {
-  class ETMCalendar;
+namespace Akonadi
+{
+class ETMCalendar;
 }
 
-namespace CalendarSupport {
+namespace CalendarSupport
+{
 
 /**
  * @short A viewer component for incidences in Akonadi.
@@ -61,9 +63,9 @@ namespace CalendarSupport {
  */
 class CALENDARSUPPORT_EXPORT IncidenceViewer : public QWidget, public Akonadi::ItemMonitor
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new incidence viewer.
      *
@@ -71,7 +73,7 @@ class CALENDARSUPPORT_EXPORT IncidenceViewer : public QWidget, public Akonadi::I
      * @param calendar is a pointer to a Calendar instance.
      * @param parent it the parent widget.
      */
-    explicit IncidenceViewer( Akonadi::ETMCalendar *calendar, QWidget *parent = 0 );
+    explicit IncidenceViewer(Akonadi::ETMCalendar *calendar, QWidget *parent = 0);
 
     /**
      * Creates a new incidence viewer.
@@ -79,7 +81,7 @@ class CALENDARSUPPORT_EXPORT IncidenceViewer : public QWidget, public Akonadi::I
      * *param
      * @param parent it the parent widget.
      */
-    explicit IncidenceViewer( QWidget *parent = 0 );
+    explicit IncidenceViewer(QWidget *parent = 0);
 
     /**
      * Destroys the incidence viewer.
@@ -90,7 +92,7 @@ class CALENDARSUPPORT_EXPORT IncidenceViewer : public QWidget, public Akonadi::I
      * Sets the Calendar for this viewer.
      * @param calendar is a pointer to a Calendar instance.
      */
-    void setCalendar( Akonadi::ETMCalendar *calendar );
+    void setCalendar(Akonadi::ETMCalendar *calendar);
 
     /**
      * Returns the incidence that is currently displayed.
@@ -111,38 +113,38 @@ class CALENDARSUPPORT_EXPORT IncidenceViewer : public QWidget, public Akonadi::I
      * Sets whether the view shall be cleared as soon as an empty incidence is
      * set (default) or @p delayed when the next valid incidence is set.
      */
-    void setDelayedClear( bool delayed );
+    void setDelayedClear(bool delayed);
 
     /**
      * Sets the default @p message that shall be shown if no incidence is set.
      */
-    void setDefaultMessage( const QString &message );
+    void setDefaultMessage(const QString &message);
 
     /**
      * Sets an additional @p text that is shown above the incidence.
      */
-    void setHeaderText( const QString &text );
+    void setHeaderText(const QString &text);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
      * Sets the @p incidence that shall be displayed in the viewer.
      *
      * @param activeDate The active date is used to calculate the actual date of
      *                   the selected incidence in case of recurring incidences.
      */
-    void setIncidence( const Akonadi::Item &incidence, const QDate &activeDate = QDate() );
+    void setIncidence(const Akonadi::Item &incidence, const QDate &activeDate = QDate());
 
-  protected:
+protected:
     /**
      * Initialize the widget settings.
      */
     void init();
 
-  private:
+private:
     /**
      * This method is called whenever the displayed contact @p group has been changed.
      */
-    virtual void itemChanged( const Akonadi::Item &group );
+    virtual void itemChanged(const Akonadi::Item &group);
 
     /**
      * This method is called whenever the displayed contact group has been
@@ -150,13 +152,13 @@ class CALENDARSUPPORT_EXPORT IncidenceViewer : public QWidget, public Akonadi::I
      */
     virtual void itemRemoved();
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void slotParentCollectionFetched( KJob * ) )
-    Q_PRIVATE_SLOT( d, void slotAttachmentUrlClicked( const QString& ) )
+    Q_PRIVATE_SLOT(d, void slotParentCollectionFetched(KJob *))
+    Q_PRIVATE_SLOT(d, void slotAttachmentUrlClicked(const QString &))
     //@endcond
 };
 

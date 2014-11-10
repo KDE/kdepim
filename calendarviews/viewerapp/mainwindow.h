@@ -25,18 +25,20 @@
 #include <Akonadi/Calendar/ETMCalendar>
 #include <QMainWindow>
 
-namespace Akonadi {
-  class IncidenceChanger;
+namespace Akonadi
+{
+class IncidenceChanger;
 }
 
-namespace boost {
-  template <typename T> class shared_ptr;
+namespace boost
+{
+template <typename T> class shared_ptr;
 }
 
 namespace EventViews
 {
-  class Prefs;
-  typedef boost::shared_ptr<Prefs> PrefsPtr;
+class Prefs;
+typedef boost::shared_ptr<Prefs> PrefsPtr;
 }
 
 class QAction;
@@ -44,13 +46,13 @@ class Settings;
 
 class MainWindow : public QMainWindow
 {
-  Q_OBJECT
-  public:
-    explicit MainWindow( const QStringList &viewNames );
+    Q_OBJECT
+public:
+    explicit MainWindow(const QStringList &viewNames);
 
     ~MainWindow();
 
-  private:
+private:
     const QStringList mViewNames;
 
     Ui_MainWindow mUi;
@@ -60,12 +62,12 @@ class MainWindow : public QMainWindow
     Settings *mSettings;
     EventViews::PrefsPtr *mViewPreferences;
 
-  private:
-    void addView( const QString &viewName );
+private:
+    void addView(const QString &viewName);
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void delayedInit();
-    void addViewTriggered( QAction *action );
+    void addViewTriggered(QAction *action);
 };
 
 #endif

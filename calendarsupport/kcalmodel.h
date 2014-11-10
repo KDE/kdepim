@@ -23,33 +23,34 @@
 #include "calendarsupport_export.h"
 #include <ItemModel>
 
-namespace CalendarSupport {
+namespace CalendarSupport
+{
 
 class CALENDARSUPPORT_EXPORT KCalModel : public Akonadi::ItemModel
 {
-  public:
+public:
     enum Column {
-      Summary,
-      DateTimeStart,
-      DateTimeEnd,
-      Type
+        Summary,
+        DateTimeStart,
+        DateTimeEnd,
+        Type
     };
 
-    explicit KCalModel( QObject *parent = 0 );
+    explicit KCalModel(QObject *parent = 0);
 
     virtual ~KCalModel();
 
-    virtual int rowCount( const QModelIndex & parent = QModelIndex() ) const;
-    virtual int columnCount( const QModelIndex & parent = QModelIndex() ) const;
-    virtual QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
-    virtual QVariant headerData( int section, Qt::Orientation orientation,
-                                 int role = Qt::DisplayRole ) const;
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    virtual QVariant headerData(int section, Qt::Orientation orientation,
+                                int role = Qt::DisplayRole) const;
     /**
       Reimplemented from QAbstractItemModel.
     */
     virtual QStringList mimeTypes() const;
 
-  private:
+private:
     class Private;
     Private *const d;
 };

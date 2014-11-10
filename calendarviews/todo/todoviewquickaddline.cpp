@@ -29,40 +29,40 @@
 
 #include <QKeyEvent>
 
-TodoViewQuickAddLine::TodoViewQuickAddLine( QWidget *parent )
-  : KLineEdit( parent )
+TodoViewQuickAddLine::TodoViewQuickAddLine(QWidget *parent)
+    : KLineEdit(parent)
 {
-  connect( this, SIGNAL(returnPressed()),
-           this, SLOT(returnPressed()) );
+    connect(this, SIGNAL(returnPressed()),
+            this, SLOT(returnPressed()));
 
-  mClickMessage = i18n( "Click to add a new to-do" );
-  setToolTip( mClickMessage );
+    mClickMessage = i18n("Click to add a new to-do");
+    setToolTip(mClickMessage);
 }
 
-void TodoViewQuickAddLine::keyPressEvent( QKeyEvent *event )
+void TodoViewQuickAddLine::keyPressEvent(QKeyEvent *event)
 {
-  if ( event->key() == Qt::Key_Return ) {
-    mModifiers = event->modifiers();
-  }
+    if (event->key() == Qt::Key_Return) {
+        mModifiers = event->modifiers();
+    }
 
-  KLineEdit::keyPressEvent( event );
+    KLineEdit::keyPressEvent(event);
 }
 
 void TodoViewQuickAddLine::returnPressed()
 {
-  // Workaround bug #217592 (disappearing cursor)
-  unsetCursor();
+    // Workaround bug #217592 (disappearing cursor)
+    unsetCursor();
 
-  emit returnPressed( mModifiers );
+    emit returnPressed(mModifiers);
 }
 
-void TodoViewQuickAddLine::resizeEvent ( QResizeEvent * event )
+void TodoViewQuickAddLine::resizeEvent(QResizeEvent *event)
 {
-  KLineEdit::resizeEvent( event );
+    KLineEdit::resizeEvent(event);
 
-  setPlaceholderText( fontMetrics().elidedText(
-                     mClickMessage,
-                     Qt::ElideRight,
-                     width() - clearButtonUsedSize().width() ) );
+    setPlaceholderText(fontMetrics().elidedText(
+                           mClickMessage,
+                           Qt::ElideRight,
+                           width() - clearButtonUsedSize().width()));
 }
 

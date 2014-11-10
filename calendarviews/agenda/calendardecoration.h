@@ -28,9 +28,11 @@
 #include <QDate>
 #include <QPixmap>
 
-namespace EventViews {
+namespace EventViews
+{
 
-namespace CalendarDecoration {
+namespace CalendarDecoration
+{
 
 /**
   @class Element
@@ -42,12 +44,12 @@ namespace CalendarDecoration {
  */
 class EVENTVIEWS_EXPORT Element : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     typedef QList<Element *> List;
 
-    explicit Element( const QString &id );
+    explicit Element(const QString &id);
     virtual ~Element();
 
     /**
@@ -87,7 +89,7 @@ class EVENTVIEWS_EXPORT Element : public QObject
     /**
       Return a pixmap for a given date and a given size.
     */
-    virtual QPixmap newPixmap( const QSize & );
+    virtual QPixmap newPixmap(const QSize &);
 
     /**
       Return a URL pointing to more information about the content of the
@@ -95,14 +97,14 @@ class EVENTVIEWS_EXPORT Element : public QObject
      */
     virtual QUrl url();
 
-  Q_SIGNALS:
-    void gotNewPixmap( const QPixmap & ) const;
-    void gotNewShortText( const QString & ) const;
-    void gotNewLongText( const QString & ) const;
-    void gotNewExtensiveText( const QString & ) const;
-    void gotNewUrl( const QUrl & ) const;
+Q_SIGNALS:
+    void gotNewPixmap(const QPixmap &) const;
+    void gotNewShortText(const QString &) const;
+    void gotNewLongText(const QString &) const;
+    void gotNewExtensiveText(const QString &) const;
+    void gotNewUrl(const QUrl &) const;
 
-  protected:
+protected:
     QString mId;
 };
 
@@ -112,31 +114,31 @@ class EVENTVIEWS_EXPORT Element : public QObject
 */
 class EVENTVIEWS_EXPORT StoredElement : public Element
 {
-  public:
-    explicit StoredElement( const QString &id );
-    StoredElement( const QString &id, const QString &shortText );
-    StoredElement( const QString &id, const QString &shortText,
-                   const QString &longText );
-    StoredElement( const QString &id, const QString &shortText,
-                   const QString &longText, const QString &extensiveText );
-    StoredElement( const QString &id, const QPixmap &pixmap );
+public:
+    explicit StoredElement(const QString &id);
+    StoredElement(const QString &id, const QString &shortText);
+    StoredElement(const QString &id, const QString &shortText,
+                  const QString &longText);
+    StoredElement(const QString &id, const QString &shortText,
+                  const QString &longText, const QString &extensiveText);
+    StoredElement(const QString &id, const QPixmap &pixmap);
 
-    virtual void setShortText( const QString &t );
+    virtual void setShortText(const QString &t);
     virtual QString shortText();
 
-    virtual void setLongText( const QString &t );
+    virtual void setLongText(const QString &t);
     virtual QString longText();
 
-    virtual void setExtensiveText( const QString &t );
+    virtual void setExtensiveText(const QString &t);
     virtual QString extensiveText();
 
-    virtual void setPixmap( const QPixmap &p );
+    virtual void setPixmap(const QPixmap &p);
     virtual QPixmap pixmap();
 
-    virtual void setUrl( const QUrl &u );
+    virtual void setUrl(const QUrl &u);
     virtual QUrl url();
 
-  protected:
+protected:
     QString mShortText;
     QString mLongText;
     QString mExtensiveText;
@@ -154,11 +156,17 @@ class EVENTVIEWS_EXPORT StoredElement : public Element
  */
 class EVENTVIEWS_EXPORT Decoration : public CalendarSupport::Plugin
 {
-  public:
-    static int interfaceVersion() { return 2; }
-    static QString serviceType() { return QLatin1String( "Calendar/Decoration" ); }
+public:
+    static int interfaceVersion()
+    {
+        return 2;
+    }
+    static QString serviceType()
+    {
+        return QLatin1String("Calendar/Decoration");
+    }
 
-    typedef QList<Decoration*> List;
+    typedef QList<Decoration *> List;
 
     Decoration();
     virtual ~Decoration();
@@ -166,93 +174,93 @@ class EVENTVIEWS_EXPORT Decoration : public CalendarSupport::Plugin
     /**
       Return all Elements for the given day.
     */
-    virtual Element::List dayElements( const QDate &date );
+    virtual Element::List dayElements(const QDate &date);
 
     /**
       Return all elements for the week the given date belongs to.
     */
-    virtual Element::List weekElements( const QDate &d );
+    virtual Element::List weekElements(const QDate &d);
 
     /**
       Return all elements for the month the given date belongs to.
     */
-    virtual Element::List monthElements( const QDate &d );
+    virtual Element::List monthElements(const QDate &d);
 
     /**
       Return all elements for the year the given date belongs to.
     */
-    virtual Element::List yearElements( const QDate &d );
+    virtual Element::List yearElements(const QDate &d);
 
-  protected:
+protected:
     /**
       Register the given elements for the given date. They will be deleted when
       this object is destroyed.
     */
-    Element::List registerDayElements( Element::List e, const QDate &d );
+    Element::List registerDayElements(Element::List e, const QDate &d);
 
     /**
       Register the given elements for the week the given date belongs to. They
       will be deleted when this object is destroyed.
     */
-    Element::List registerWeekElements( Element::List e, const QDate &d );
+    Element::List registerWeekElements(Element::List e, const QDate &d);
 
     /**
       Register the given elements for the month the given date belongs to. They
       will be deleted when this object is destroyed.
     */
-    Element::List registerMonthElements( Element::List e, const QDate &d );
+    Element::List registerMonthElements(Element::List e, const QDate &d);
 
     /**
       Register the given elements for the year the given date belongs to. They
       will be deleted when this object is destroyed.
     */
-    Element::List registerYearElements( Element::List e, const QDate &d );
+    Element::List registerYearElements(Element::List e, const QDate &d);
 
     /**
       Create day elements for given date.
     */
-    virtual Element::List createDayElements( const QDate & );
+    virtual Element::List createDayElements(const QDate &);
 
     /**
       Create elements for the week the given date belongs to.
     */
-    virtual Element::List createWeekElements( const QDate & );
+    virtual Element::List createWeekElements(const QDate &);
 
     /**
       Create elements for the month the given date belongs to.
     */
-    virtual Element::List createMonthElements( const QDate & );
+    virtual Element::List createMonthElements(const QDate &);
 
     /**
       Create elements for the year the given date belongs to.
     */
-    virtual Element::List createYearElements( const QDate & );
+    virtual Element::List createYearElements(const QDate &);
 
     /**
       Map all dates of the same week to a single date.
     */
-    QDate weekDate( const QDate &date );
+    QDate weekDate(const QDate &date);
 
     /**
       Map all dates of the same month to a single date.
     */
-    QDate monthDate( const QDate &date );
+    QDate monthDate(const QDate &date);
 
     /**
       Map all dates of the same year to a single date.
     */
-    QDate yearDate( const QDate &date );
+    QDate yearDate(const QDate &date);
 
-  private:
-    QMap<QDate,Element::List> mDayElements;
-    QMap<QDate,Element::List> mWeekElements;
-    QMap<QDate,Element::List> mMonthElements;
-    QMap<QDate,Element::List> mYearElements;
+private:
+    QMap<QDate, Element::List> mDayElements;
+    QMap<QDate, Element::List> mWeekElements;
+    QMap<QDate, Element::List> mMonthElements;
+    QMap<QDate, Element::List> mYearElements;
 };
 
 class EVENTVIEWS_EXPORT DecorationFactory : public CalendarSupport::PluginFactory
 {
-  public:
+public:
     virtual Decoration *createPluginFactory() = 0;
 };
 

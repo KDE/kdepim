@@ -33,33 +33,34 @@
 class QItemSelection;
 class QItemSelectionModel;
 
-namespace CalendarSupport {
+namespace CalendarSupport
+{
 
 class CALENDARSUPPORT_EXPORT CollectionSelection : public QObject
 {
-  Q_OBJECT
-  public:
-    explicit CollectionSelection( QItemSelectionModel *selectionModel, QObject *parent = 0 );
+    Q_OBJECT
+public:
+    explicit CollectionSelection(QItemSelectionModel *selectionModel, QObject *parent = 0);
     ~CollectionSelection();
 
     QItemSelectionModel *model() const;
     Akonadi::Collection::List selectedCollections() const;
     QList<Akonadi::Collection::Id> selectedCollectionIds() const;
-    bool contains( const Akonadi::Collection &c ) const;
-    bool contains( const Akonadi::Collection::Id &id ) const;
+    bool contains(const Akonadi::Collection &c) const;
+    bool contains(const Akonadi::Collection::Id &id) const;
 
     bool hasSelection() const;
 
-  Q_SIGNALS:
-    void selectionChanged( const Akonadi::Collection::List &selected,
-                           const Akonadi::Collection::List &deselected );
-    void collectionDeselected( const Akonadi::Collection & );
-    void collectionSelected( const Akonadi::Collection & );
+Q_SIGNALS:
+    void selectionChanged(const Akonadi::Collection::List &selected,
+                          const Akonadi::Collection::List &deselected);
+    void collectionDeselected(const Akonadi::Collection &);
+    void collectionSelected(const Akonadi::Collection &);
 
-  private Q_SLOTS:
-    void slotSelectionChanged( const QItemSelection &, const QItemSelection & );
+private Q_SLOTS:
+    void slotSelectionChanged(const QItemSelection &, const QItemSelection &);
 
-  private:
+private:
     class Private;
     Private *const d;
 };

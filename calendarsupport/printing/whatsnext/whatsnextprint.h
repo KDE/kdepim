@@ -32,8 +32,8 @@ using namespace KOrg;
 
 class CalPrintWhatsNext : public CalPrintPluginBase
 {
-  public:
-    CalPrintWhatsNext():CalPrintPluginBase()
+public:
+    CalPrintWhatsNext(): CalPrintPluginBase()
     {
     }
 
@@ -43,43 +43,44 @@ class CalPrintWhatsNext : public CalPrintPluginBase
 
     virtual QString description()
     {
-      return i18n( "Print What's Next" );
+        return i18n("Print What's Next");
     }
 
     virtual QString info() const
     {
-      return i18n( "Prints a list of all upcoming events and todos." );
+        return i18n("Prints a list of all upcoming events and todos.");
     }
 
-    virtual QWidget *createConfigWidget( QWidget * );
+    virtual QWidget *createConfigWidget(QWidget *);
 
     virtual int sortID()
     {
-      return CalPrinterBase::WhatsNext;
+        return CalPrinterBase::WhatsNext;
     }
 
     virtual bool enabled()
     {
-      return true;
+        return true;
     }
 
-  public:
-    virtual void print( QPainter &p, int width, int height );
+public:
+    virtual void print(QPainter &p, int width, int height);
     virtual void readSettingsWidget();
     virtual void setSettingsWidget();
     virtual void loadConfig();
     virtual void saveConfig();
-    virtual void setDateRange( const QDate &from, const QDate &to );
+    virtual void setDateRange(const QDate &from, const QDate &to);
 
-  protected:
+protected:
     bool mUseDateRange;
 };
 
 class CalPrintWhatsNextConfig : public QWidget, public Ui::CalPrintWhatsNextConfig_Base
 {
-  public:
-    explicit CalPrintWhatsNextConfig( QWidget *parent ) : QWidget( parent ) {
-      setupUi( this );
+public:
+    explicit CalPrintWhatsNextConfig(QWidget *parent) : QWidget(parent)
+    {
+        setupUi(this);
     }
 };
 

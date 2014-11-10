@@ -32,34 +32,34 @@ class QMenu;
 
 class TodoViewView : public QTreeView
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit TodoViewView( QWidget *parent = 0 );
+public:
+    explicit TodoViewView(QWidget *parent = 0);
 
-    bool isEditing( const QModelIndex &index ) const;
+    bool isEditing(const QModelIndex &index) const;
 
-    virtual bool eventFilter( QObject *watched, QEvent *event );
+    virtual bool eventFilter(QObject *watched, QEvent *event);
 
-  protected:
-    virtual QModelIndex moveCursor( CursorAction cursorAction, Qt::KeyboardModifiers modifiers );
-    virtual void mousePressEvent( QMouseEvent * );
-    virtual void mouseReleaseEvent( QMouseEvent * );
-    virtual void mouseMoveEvent( QMouseEvent * );
+protected:
+    virtual QModelIndex moveCursor(CursorAction cursorAction, Qt::KeyboardModifiers modifiers);
+    virtual void mousePressEvent(QMouseEvent *);
+    virtual void mouseReleaseEvent(QMouseEvent *);
+    virtual void mouseMoveEvent(QMouseEvent *);
 
-  private:
-    QModelIndex getNextEditableIndex( const QModelIndex &cur, int inc );
+private:
+    QModelIndex getNextEditableIndex(const QModelIndex &cur, int inc);
 
     QMenu *mHeaderPopup;
     QList<QAction *> mColumnActions;
     QTimer mExpandTimer;
     bool mIgnoreNextMouseRelease;
 
-  signals:
+signals:
     void visibleColumnCountChanged();
 
-  private slots:
-    void toggleColumnHidden( QAction *action );
+private slots:
+    void toggleColumnHidden(QAction *action);
     void expandParent();
 };
 

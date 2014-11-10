@@ -37,37 +37,39 @@ class QCheckBox;
 class QRadioButton;
 class QPushButton;
 
-namespace Akonadi {
-  class IncidenceChanger;
-  class ETMCalendar;
+namespace Akonadi
+{
+class IncidenceChanger;
+class ETMCalendar;
 }
 
-namespace CalendarSupport {
+namespace CalendarSupport
+{
 
 class CALENDARSUPPORT_EXPORT ArchiveDialog : public QDialog
 {
-  Q_OBJECT
-  public:
-    ArchiveDialog( const Akonadi::ETMCalendar::Ptr &calendar,
-                   Akonadi::IncidenceChanger *changer,
-                   QWidget *parent = 0 );
+    Q_OBJECT
+public:
+    ArchiveDialog(const Akonadi::ETMCalendar::Ptr &calendar,
+                  Akonadi::IncidenceChanger *changer,
+                  QWidget *parent = 0);
     ~ArchiveDialog();
 
-  signals:
+signals:
     // connected by KODialogManager to CalendarView
     void eventsDeleted();
     void autoArchivingSettingsModified();
 
-  protected slots:
+protected slots:
     void slotEventsDeleted();
     void slotUser1();
     void slotEnableUser1();
     void slotActionChanged();
 
-  private slots:
+private slots:
     void showWhatsThis();
 
-  private:
+private:
     KUrlRequester *mArchiveFile;
     KDateComboBox *mDateEdit;
     QCheckBox *mDeleteCb;

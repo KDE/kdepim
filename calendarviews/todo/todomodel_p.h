@@ -32,20 +32,21 @@
 #include <QModelIndex>
 #include <QString>
 
-namespace Akonadi {
-  class IncidenceChanger;
+namespace Akonadi
+{
+class IncidenceChanger;
 }
 
 class TodoModel::Private : public QObject
 {
-  Q_OBJECT
-  public:
-    Private( const EventViews::PrefsPtr &preferences, TodoModel *qq );
+    Q_OBJECT
+public:
+    Private(const EventViews::PrefsPtr &preferences, TodoModel *qq);
 
     //TODO: O(N) complexity, see if the profiler complains about this
-    Akonadi::Item findItemByUid( const QString &uid, const QModelIndex &parent ) const;
+    Akonadi::Item findItemByUid(const QString &uid, const QModelIndex &parent) const;
 
-  public:
+public:
     Akonadi::ETMCalendar::Ptr m_calendar;
     Akonadi::IncidenceChanger *m_changer;
 
@@ -55,24 +56,24 @@ class TodoModel::Private : public QObject
     QList<int> m_columns;
     EventViews::PrefsPtr m_preferences;
 
-  private Q_SLOTS:
-    void onDataChanged( const QModelIndex &begin, const QModelIndex &end );
-    void onHeaderDataChanged( Qt::Orientation orientation, int first, int last );
+private Q_SLOTS:
+    void onDataChanged(const QModelIndex &begin, const QModelIndex &end);
+    void onHeaderDataChanged(Qt::Orientation orientation, int first, int last);
 
-    void onRowsAboutToBeInserted( const QModelIndex &parent, int begin, int end );
-    void onRowsInserted( const QModelIndex &parent, int begin, int end );
-    void onRowsAboutToBeRemoved( const QModelIndex &parent, int begin, int end );
-    void onRowsRemoved( const QModelIndex &parent, int begin, int end );
-    void onRowsAboutToBeMoved( const QModelIndex &sourceParent, int sourceStart, int sourceEnd,
-                               const QModelIndex &destinationParent, int destinationRow );
-    void onRowsMoved( const QModelIndex &, int, int, const QModelIndex &, int );
+    void onRowsAboutToBeInserted(const QModelIndex &parent, int begin, int end);
+    void onRowsInserted(const QModelIndex &parent, int begin, int end);
+    void onRowsAboutToBeRemoved(const QModelIndex &parent, int begin, int end);
+    void onRowsRemoved(const QModelIndex &parent, int begin, int end);
+    void onRowsAboutToBeMoved(const QModelIndex &sourceParent, int sourceStart, int sourceEnd,
+                              const QModelIndex &destinationParent, int destinationRow);
+    void onRowsMoved(const QModelIndex &, int, int, const QModelIndex &, int);
 
     void onModelAboutToBeReset();
     void onModelReset();
     void onLayoutAboutToBeChanged();
     void onLayoutChanged();
 
-  private:
+private:
     TodoModel *const q;
 };
 

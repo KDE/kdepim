@@ -30,24 +30,25 @@
 #include <QPrinter>
 #include <QDate>
 
-namespace CalendarSupport {
+namespace CalendarSupport
+{
 
 /**
   Base class of Calendar printer class.
 */
 class CalPrinterBase
 {
-  public:
+public:
     enum PrintType {
-      Incidence = 100,
-      Day=200,
-      Week=300,
-      Month=400,
-      Year=900,
-      Todolist=1000,
-      Journallist=2000,
-      WhatsNext=2100,
-      ItemList=2200
+        Incidence = 100,
+        Day = 200,
+        Week = 300,
+        Month = 400,
+        Year = 900,
+        Todolist = 1000,
+        Journallist = 2000,
+        WhatsNext = 2100,
+        ItemList = 2200
     };
 };
 
@@ -57,23 +58,36 @@ class CalPrinterBase
 */
 class PrintPlugin : public Plugin
 {
-  public:
-  PrintPlugin() : Plugin(), mConfigWidget(0), mPrinter(0),
-         mCalendar(0), mConfig(0) {}
+public:
+    PrintPlugin() : Plugin(), mConfigWidget(0), mPrinter(0),
+        mCalendar(0), mConfig(0) {}
     virtual ~PrintPlugin() {}
 
-    typedef QList<PrintPlugin*> List;
-    static int interfaceVersion() { return 2; }
+    typedef QList<PrintPlugin *> List;
+    static int interfaceVersion()
+    {
+        return 2;
+    }
 
-    virtual void setConfig( KConfig *cfg ) { mConfig = cfg; }
+    virtual void setConfig(KConfig *cfg)
+    {
+        mConfig = cfg;
+    }
 
-    virtual void setCalendar( const Akonadi::ETMCalendar::Ptr &cal ) { mCalendar = cal; }
+    virtual void setCalendar(const Akonadi::ETMCalendar::Ptr &cal)
+    {
+        mCalendar = cal;
+    }
 
-    virtual void setSelectedIncidences( KCalCore::Incidence::List inc )
-    { mSelectedIncidences = inc; }
+    virtual void setSelectedIncidences(KCalCore::Incidence::List inc)
+    {
+        mSelectedIncidences = inc;
+    }
 
     virtual KCalCore::Incidence::List selectedIncidences() const
-    { return mSelectedIncidences; }
+    {
+        return mSelectedIncidences;
+    }
 
     /**
      Returns KConfig group name where store settings
@@ -96,29 +110,35 @@ class PrintPlugin : public Plugin
       (negative) ID will be automatically generated and thus the position of
       the plugin in the selection list is undefined.
     */
-    virtual int sortID() { return -1; }
+    virtual int sortID()
+    {
+        return -1;
+    }
 
     /**
       Returns true if the plugin should be enabled; false otherwise.
     */
-    virtual bool enabled() { return false; }
-
-    QWidget *configWidget( QWidget *w )
+    virtual bool enabled()
     {
-      if ( !mConfigWidget ) {
-        mConfigWidget = createConfigWidget( w );
-        setSettingsWidget();
-      }
-      return mConfigWidget;
+        return false;
+    }
+
+    QWidget *configWidget(QWidget *w)
+    {
+        if (!mConfigWidget) {
+            mConfigWidget = createConfigWidget(w);
+            setSettingsWidget();
+        }
+        return mConfigWidget;
     }
     /* Create the config widget. setSettingsWidget will be automatically
        called on it */
-    virtual QWidget *createConfigWidget( QWidget * ) = 0;
+    virtual QWidget *createConfigWidget(QWidget *) = 0;
 
     /**
       Actually do the printing.
     */
-    virtual void doPrint( QPrinter *printer ) = 0;
+    virtual void doPrint(QPrinter *printer) = 0;
 
     /**
       Orientation of printout. Default is Portrait. If your plugin wants
@@ -127,7 +147,9 @@ class PrintPlugin : public Plugin
       return the desired orientation.
     */
     virtual QPrinter::Orientation defaultOrientation()
-    { return QPrinter::Portrait; }
+    {
+        return QPrinter::Portrait;
+    }
 
     /**
       Load complete config.
@@ -138,7 +160,7 @@ class PrintPlugin : public Plugin
     */
     virtual void doSaveConfig() {}
 
-  public:
+public:
     /**
       Read settings from configuration widget and apply them to current object.
     */
@@ -152,17 +174,17 @@ class PrintPlugin : public Plugin
     /**
       Set date range which should be printed.
     */
-    virtual void setDateRange( const QDate &from, const QDate &to )
+    virtual void setDateRange(const QDate &from, const QDate &to)
     {
-      mFromDate = from;
-      mToDate = to;
+        mFromDate = from;
+        mToDate = to;
     }
 
-  protected:
+protected:
     QDate mFromDate;
     QDate mToDate;
 
-  protected:
+protected:
     QPointer<QWidget> mConfigWidget;
     /** The printer object. This will only be available in the doPrint method
         of the selected plugin */
@@ -174,7 +196,7 @@ class PrintPlugin : public Plugin
 
 class PrintPluginFactory : public PluginFactory
 {
-  public:
+public:
     virtual PrintPlugin *createPluginFactory() = 0;
 };
 

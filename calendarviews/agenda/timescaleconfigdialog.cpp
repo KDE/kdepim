@@ -34,116 +34,116 @@ using namespace EventViews;
 
 class TimeScaleConfigDialog::Private
 {
-  public:
-    Private( TimeScaleConfigDialog *parent, const PrefsPtr &preferences )
-      : q( parent ), mPreferences( preferences )
+public:
+    Private(TimeScaleConfigDialog *parent, const PrefsPtr &preferences)
+        : q(parent), mPreferences(preferences)
     {
     }
 
-  public:
+public:
     TimeScaleConfigDialog *const q;
     PrefsPtr mPreferences;
 };
 
 enum {
-  TimeZoneNameRole = Qt::UserRole
+    TimeZoneNameRole = Qt::UserRole
 };
 
 typedef QPair<QString, QString> TimeZoneNamePair;
 
 //TODO: move to KCalCore::Stringify
-static QString tzUTCOffsetStr( const KTimeZone &tz )
+static QString tzUTCOffsetStr(const KTimeZone &tz)
 {
-  int utcOffsetHrs = tz.currentOffset() / 3600;  // in hours
-  int utcOffsetMins = ( tz.currentOffset() % 3600 ) / 60;  // in minutes
-  QString utcStr;
-  if ( utcOffsetMins > 0 ) {
-    utcStr = utcOffsetHrs >= 0 ?
-               QString::fromLatin1( "+%1:%2" ).arg( utcOffsetHrs ).arg( utcOffsetMins ) :
-               QString::fromLatin1( "%1:%2" ).arg( utcOffsetHrs ).arg( utcOffsetMins );
+    int utcOffsetHrs = tz.currentOffset() / 3600;  // in hours
+    int utcOffsetMins = (tz.currentOffset() % 3600) / 60;    // in minutes
+    QString utcStr;
+    if (utcOffsetMins > 0) {
+        utcStr = utcOffsetHrs >= 0 ?
+                 QString::fromLatin1("+%1:%2").arg(utcOffsetHrs).arg(utcOffsetMins) :
+                 QString::fromLatin1("%1:%2").arg(utcOffsetHrs).arg(utcOffsetMins);
 
-  } else {
-    utcStr = utcOffsetHrs >= 0 ?
-               QString::fromLatin1( "+%1" ).arg( utcOffsetHrs ) :
-               QString::fromLatin1( "%1" ).arg( utcOffsetHrs );
-  }
-  return utcStr;
+    } else {
+        utcStr = utcOffsetHrs >= 0 ?
+                 QString::fromLatin1("+%1").arg(utcOffsetHrs) :
+                 QString::fromLatin1("%1").arg(utcOffsetHrs);
+    }
+    return utcStr;
 }
 
 //TODO: move to KCalCore::Stringify
-static QString tzWithUTC( KTimeZones::ZoneMap::ConstIterator it )
+static QString tzWithUTC(KTimeZones::ZoneMap::ConstIterator it)
 {
-  return
-    QString::fromLatin1( "%1 (UTC%2)" ).
-      arg( i18n( it.key().toUtf8() ) ).
-      arg( tzUTCOffsetStr( it.value() ) );
+    return
+        QString::fromLatin1("%1 (UTC%2)").
+        arg(i18n(it.key().toUtf8())).
+        arg(tzUTCOffsetStr(it.value()));
 }
 
-TimeScaleConfigDialog::TimeScaleConfigDialog( const PrefsPtr &preferences, QWidget *parent )
-  : QDialog( parent ), d( new Private( this, preferences ) )
+TimeScaleConfigDialog::TimeScaleConfigDialog(const PrefsPtr &preferences, QWidget *parent)
+    : QDialog(parent), d(new Private(this, preferences))
 {
-  setWindowTitle( i18n( "Timezone" ) );
-  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
-  QVBoxLayout *mainLayout = new QVBoxLayout;
-  setLayout(mainLayout);
-  QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
-  okButton->setDefault(true);
-  okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-  connect(buttonBox, &QDialogButtonBox::rejected, this, &TimeScaleConfigDialog::reject);
-  okButton->setDefault(true);
-  setModal( true );
+    setWindowTitle(i18n("Timezone"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &TimeScaleConfigDialog::reject);
+    okButton->setDefault(true);
+    setModal(true);
 
-  QWidget *mainwidget = new QWidget( this );
-  setupUi( mainwidget );
-  
-  mainLayout->addWidget(mainwidget);
-  mainLayout->addWidget(buttonBox);
+    QWidget *mainwidget = new QWidget(this);
+    setupUi(mainwidget);
 
-  QStringList shownTimeZones( d->mPreferences->timeSpec().timeZone().name() );
-  shownTimeZones += d->mPreferences->timeScaleTimezones();
-  shownTimeZones.removeDuplicates();
+    mainLayout->addWidget(mainwidget);
+    mainLayout->addWidget(buttonBox);
 
-  QList<TimeZoneNamePair> availList, selList;
-  const KTimeZones::ZoneMap timezones = KSystemTimeZones::zones();
-  for ( KTimeZones::ZoneMap::ConstIterator it = timezones.begin();  it != timezones.end();  ++it ) {
-    // do not list timezones already shown
-    if ( !shownTimeZones.contains( it.key() ) ) {
-      availList.append(TimeZoneNamePair(tzWithUTC( it ), it.key()));
-    } else {
-      selList.append(TimeZoneNamePair(tzWithUTC( it ), it.key()));
+    QStringList shownTimeZones(d->mPreferences->timeSpec().timeZone().name());
+    shownTimeZones += d->mPreferences->timeScaleTimezones();
+    shownTimeZones.removeDuplicates();
+
+    QList<TimeZoneNamePair> availList, selList;
+    const KTimeZones::ZoneMap timezones = KSystemTimeZones::zones();
+    for (KTimeZones::ZoneMap::ConstIterator it = timezones.begin();  it != timezones.end();  ++it) {
+        // do not list timezones already shown
+        if (!shownTimeZones.contains(it.key())) {
+            availList.append(TimeZoneNamePair(tzWithUTC(it), it.key()));
+        } else {
+            selList.append(TimeZoneNamePair(tzWithUTC(it), it.key()));
+        }
     }
-  }
-  qSort(availList.begin(), availList.end());
+    qSort(availList.begin(), availList.end());
 
-  Q_FOREACH(const TimeZoneNamePair& item, availList) {
-    zoneCombo->addItem( item.first, item.second );
-  }
-  zoneCombo->setCurrentIndex( 0 );
+    Q_FOREACH (const TimeZoneNamePair &item, availList) {
+        zoneCombo->addItem(item.first, item.second);
+    }
+    zoneCombo->setCurrentIndex(0);
 
-  addButton->setIcon( QIcon::fromTheme( QLatin1String("list-add") ) );
-  removeButton->setIcon( QIcon::fromTheme( QLatin1String("list-remove") ) );
-  upButton->setIcon( QIcon::fromTheme( QLatin1String("go-up") ) );
-  downButton->setIcon( QIcon::fromTheme( QLatin1String("go-down") ) );
+    addButton->setIcon(QIcon::fromTheme(QLatin1String("list-add")));
+    removeButton->setIcon(QIcon::fromTheme(QLatin1String("list-remove")));
+    upButton->setIcon(QIcon::fromTheme(QLatin1String("go-up")));
+    downButton->setIcon(QIcon::fromTheme(QLatin1String("go-down")));
 
-  connect(addButton, &QPushButton::clicked, this, &TimeScaleConfigDialog::add);
-  connect(removeButton, &QPushButton::clicked, this, &TimeScaleConfigDialog::remove);
-  connect(upButton, &QPushButton::clicked, this, &TimeScaleConfigDialog::up);
-  connect(downButton, &QPushButton::clicked, this, &TimeScaleConfigDialog::down);
+    connect(addButton, &QPushButton::clicked, this, &TimeScaleConfigDialog::add);
+    connect(removeButton, &QPushButton::clicked, this, &TimeScaleConfigDialog::remove);
+    connect(upButton, &QPushButton::clicked, this, &TimeScaleConfigDialog::up);
+    connect(downButton, &QPushButton::clicked, this, &TimeScaleConfigDialog::down);
 
-  connect(okButton, &QPushButton::clicked, this, &TimeScaleConfigDialog::okClicked);
-  connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &TimeScaleConfigDialog::reject);
+    connect(okButton, &QPushButton::clicked, this, &TimeScaleConfigDialog::okClicked);
+    connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &TimeScaleConfigDialog::reject);
 
-  Q_FOREACH(const TimeZoneNamePair& item, selList) {
-    QListWidgetItem* widgetItem = new QListWidgetItem(item.first);
-    widgetItem->setData( TimeZoneNameRole, item.second );
-    listWidget->addItem( widgetItem );
-  }
-  slotUpdateButton();
+    Q_FOREACH (const TimeZoneNamePair &item, selList) {
+        QListWidgetItem *widgetItem = new QListWidgetItem(item.first);
+        widgetItem->setData(TimeZoneNameRole, item.second);
+        listWidget->addItem(widgetItem);
+    }
+    slotUpdateButton();
 }
 
 TimeScaleConfigDialog::~TimeScaleConfigDialog()
 {
-  delete d;
+    delete d;
 }
 
 void TimeScaleConfigDialog::slotUpdateButton()
@@ -153,58 +153,58 @@ void TimeScaleConfigDialog::slotUpdateButton()
 
 void TimeScaleConfigDialog::okClicked()
 {
-  d->mPreferences->setTimeScaleTimezones( zones() );
-  d->mPreferences->writeConfig();
-  accept();
+    d->mPreferences->setTimeScaleTimezones(zones());
+    d->mPreferences->writeConfig();
+    accept();
 }
 
 void TimeScaleConfigDialog::add()
 {
-  // Do not add duplicates
-  if (zoneCombo->currentIndex() >= 0) {
-    for ( int i=0; i < listWidget->count(); ++i ) {
-      if ( listWidget->item( i )->data(TimeZoneNameRole).toString() == zoneCombo->itemData( zoneCombo->currentIndex(), TimeZoneNameRole ).toString() ) {
-        return;
-      }
-    }
+    // Do not add duplicates
+    if (zoneCombo->currentIndex() >= 0) {
+        for (int i = 0; i < listWidget->count(); ++i) {
+            if (listWidget->item(i)->data(TimeZoneNameRole).toString() == zoneCombo->itemData(zoneCombo->currentIndex(), TimeZoneNameRole).toString()) {
+                return;
+            }
+        }
 
-    QListWidgetItem* item = new QListWidgetItem( zoneCombo->currentText() );
-    item->setData( TimeZoneNameRole, zoneCombo->itemData( zoneCombo->currentIndex(), TimeZoneNameRole ).toString() );
-    listWidget->addItem( item );
-    zoneCombo->removeItem( zoneCombo->currentIndex() );
-  }
-  slotUpdateButton();
+        QListWidgetItem *item = new QListWidgetItem(zoneCombo->currentText());
+        item->setData(TimeZoneNameRole, zoneCombo->itemData(zoneCombo->currentIndex(), TimeZoneNameRole).toString());
+        listWidget->addItem(item);
+        zoneCombo->removeItem(zoneCombo->currentIndex());
+    }
+    slotUpdateButton();
 }
 
 void TimeScaleConfigDialog::remove()
 {
-  zoneCombo->insertItem( 0, listWidget->currentItem()->text(), zoneCombo->itemData( zoneCombo->currentIndex(), TimeZoneNameRole ).toString() );
-  delete listWidget->takeItem( listWidget->currentRow() );
-  slotUpdateButton();
+    zoneCombo->insertItem(0, listWidget->currentItem()->text(), zoneCombo->itemData(zoneCombo->currentIndex(), TimeZoneNameRole).toString());
+    delete listWidget->takeItem(listWidget->currentRow());
+    slotUpdateButton();
 }
 
 void TimeScaleConfigDialog::up()
 {
-  int row = listWidget->currentRow();
-  QListWidgetItem *item = listWidget->takeItem( row );
-  listWidget->insertItem( qMax( row - 1, 0 ), item );
-  listWidget->setCurrentRow( qMax( row - 1, 0 ) );
+    int row = listWidget->currentRow();
+    QListWidgetItem *item = listWidget->takeItem(row);
+    listWidget->insertItem(qMax(row - 1, 0), item);
+    listWidget->setCurrentRow(qMax(row - 1, 0));
 }
 
 void TimeScaleConfigDialog::down()
 {
-  int row = listWidget->currentRow();
-  QListWidgetItem *item = listWidget->takeItem( row );
-  listWidget->insertItem( qMin( row + 1, listWidget->count() ), item );
-  listWidget->setCurrentRow( qMin( row + 1, listWidget->count() - 1 ) );
+    int row = listWidget->currentRow();
+    QListWidgetItem *item = listWidget->takeItem(row);
+    listWidget->insertItem(qMin(row + 1, listWidget->count()), item);
+    listWidget->setCurrentRow(qMin(row + 1, listWidget->count() - 1));
 }
 
 QStringList TimeScaleConfigDialog::zones()
 {
-  QStringList list;
-  for ( int i=0; i < listWidget->count(); ++i ) {
-    list << listWidget->item( i )->data(TimeZoneNameRole).toString();
-  }
-  return list;
+    QStringList list;
+    for (int i = 0; i < listWidget->count(); ++i) {
+        list << listWidget->item(i)->data(TimeZoneNameRole).toString();
+    }
+    return list;
 }
 

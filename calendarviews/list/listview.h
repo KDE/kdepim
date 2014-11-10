@@ -41,14 +41,15 @@ class QModelIndex;
   @see KOBaseView, KODayListView
 */
 
-namespace EventViews {
+namespace EventViews
+{
 
 class EVENTVIEWS_EXPORT ListView : public EventView
 {
-  Q_OBJECT
-  public:
-    explicit ListView( const Akonadi::ETMCalendar::Ptr &calendar,
-                       QWidget *parent = 0, bool nonInteractive = false );
+    Q_OBJECT
+public:
+    explicit ListView(const Akonadi::ETMCalendar::Ptr &calendar,
+                      QWidget *parent = 0, bool nonInteractive = false);
     ~ListView();
 
     virtual int currentDateCount() const;
@@ -58,37 +59,37 @@ class EVENTVIEWS_EXPORT ListView : public EventView
     // Shows all incidences of the calendar
     void showAll();
 
-    void readSettings( KConfig *config );
-    void writeSettings( KConfig *config );
+    void readSettings(KConfig *config);
+    void writeSettings(KConfig *config);
 
     void clear();
     QSize sizeHint() const;
 
-  public slots:
+public slots:
     virtual void updateView();
 
-    virtual void showDates( const QDate &start, const QDate &end,
-                            const QDate &preferredMonth = QDate() );
+    virtual void showDates(const QDate &start, const QDate &end,
+                           const QDate &preferredMonth = QDate());
 
-    virtual void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
+    virtual void showIncidences(const Akonadi::Item::List &incidenceList, const QDate &date);
 
     void clearSelection();
 
-    void changeIncidenceDisplay( const Akonadi::Item &, int );
+    void changeIncidenceDisplay(const Akonadi::Item &, int);
 
-    void defaultItemAction( const QModelIndex & );
-    void defaultItemAction( const Akonadi::Item::Id id );
+    void defaultItemAction(const QModelIndex &);
+    void defaultItemAction(const Akonadi::Item::Id id);
 
-    void popupMenu( const QPoint & );
+    void popupMenu(const QPoint &);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void showNewEventPopupSignal();
-    void showIncidencePopupSignal( const Akonadi::Item &, const QDate & );
+    void showIncidencePopupSignal(const Akonadi::Item &, const QDate &);
 
-  protected slots:
+protected slots:
     void processSelectionChange();
 
-  private:
+private:
     class Private;
     Private *const d;
 };

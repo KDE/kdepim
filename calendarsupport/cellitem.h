@@ -25,23 +25,36 @@
 #include "calendarsupport_export.h"
 #include <QList>
 
-namespace CalendarSupport {
+namespace CalendarSupport
+{
 
 class CALENDARSUPPORT_EXPORT CellItem
 {
-  public:
+public:
     CellItem()
-      : mSubCells( 0 ), mSubCell( -1 )
+        : mSubCells(0), mSubCell(-1)
     {
     }
     virtual ~CellItem() {}
-    void setSubCells( int v ) { mSubCells = v; }
-    int subCells() const { return mSubCells; }
+    void setSubCells(int v)
+    {
+        mSubCells = v;
+    }
+    int subCells() const
+    {
+        return mSubCells;
+    }
 
-    void setSubCell( int v ) { mSubCell = v; }
-    int subCell() const { return mSubCell; }
+    void setSubCell(int v)
+    {
+        mSubCell = v;
+    }
+    int subCell() const
+    {
+        return mSubCell;
+    }
 
-    virtual bool overlaps( CellItem *other ) const = 0;
+    virtual bool overlaps(CellItem *other) const = 0;
 
     virtual QString label() const;
 
@@ -53,9 +66,9 @@ class CALENDARSUPPORT_EXPORT CellItem
 
       @return Placed items
     */
-    static QList<CellItem*> placeItem( QList<CellItem*> cells, CellItem *placeItem );
+    static QList<CellItem *> placeItem(QList<CellItem *> cells, CellItem *placeItem);
 
-  private:
+private:
     int mSubCells;
     int mSubCell;
 };

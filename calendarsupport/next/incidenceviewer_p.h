@@ -24,19 +24,20 @@
 
 #include <QTextBrowser>
 
-namespace CalendarSupport {
+namespace CalendarSupport
+{
 
 class TextBrowser : public QTextBrowser
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit TextBrowser( QWidget *parent = 0 );
+public:
+    explicit TextBrowser(QWidget *parent = 0);
 
-    void setSource( const QUrl &name );
+    void setSource(const QUrl &name);
 
-  Q_SIGNALS:
-    void attachmentUrlClicked( const QString &uri );
+Q_SIGNALS:
+    void attachmentUrlClicked(const QString &uri);
 };
 
 }

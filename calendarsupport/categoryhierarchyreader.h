@@ -28,36 +28,37 @@ class KComboBox;
 class QTreeWidget;
 class QTreeWidgetItem;
 
-namespace CalendarSupport {
+namespace CalendarSupport
+{
 
 class CALENDARSUPPORT_EXPORT CategoryHierarchyReader
 {
-  public:
-    void read( QStringList categories );
+public:
+    void read(QStringList categories);
     virtual ~CategoryHierarchyReader() {}
-    static QStringList path( QString string );
+    static QStringList path(QString string);
 
-  protected:
+protected:
     CategoryHierarchyReader() {}
     virtual void clear() = 0;
     virtual void goUp() = 0;
-    virtual void addChild( const QString &label, const QVariant &userData = QVariant() ) = 0;
+    virtual void addChild(const QString &label, const QVariant &userData = QVariant()) = 0;
     virtual int depth() const = 0;
 };
 
 class CALENDARSUPPORT_EXPORT CategoryHierarchyReaderQComboBox : public CategoryHierarchyReader
 {
-  public:
-    CategoryHierarchyReaderQComboBox( KComboBox *box ) : mBox( box ), mCurrentDepth( 0 ) {}
+public:
+    CategoryHierarchyReaderQComboBox(KComboBox *box) : mBox(box), mCurrentDepth(0) {}
     virtual ~CategoryHierarchyReaderQComboBox() {}
 
-  protected:
+protected:
     virtual void clear();
     virtual void goUp();
-    virtual void addChild( const QString &label, const QVariant &userData = QVariant() );
+    virtual void addChild(const QString &label, const QVariant &userData = QVariant());
     virtual int depth() const;
 
-  private:
+private:
     KComboBox *mBox;
     int mCurrentDepth;
 };
@@ -65,18 +66,18 @@ class CALENDARSUPPORT_EXPORT CategoryHierarchyReaderQComboBox : public CategoryH
 #ifndef QT_NO_TREEWIDGET
 class CALENDARSUPPORT_EXPORT CategoryHierarchyReaderQTreeWidget : public CategoryHierarchyReader
 {
-  public:
-    explicit CategoryHierarchyReaderQTreeWidget( QTreeWidget *tree )
-      : mTree( tree ), mItem( 0 ), mCurrentDepth( 0 ) {}
+public:
+    explicit CategoryHierarchyReaderQTreeWidget(QTreeWidget *tree)
+        : mTree(tree), mItem(0), mCurrentDepth(0) {}
     virtual ~CategoryHierarchyReaderQTreeWidget() {}
 
-  protected:
+protected:
     virtual void clear();
     virtual void goUp();
-    virtual void addChild( const QString &label, const QVariant &userData = QVariant() );
+    virtual void addChild(const QString &label, const QVariant &userData = QVariant());
     virtual int depth() const;
 
-  private:
+private:
     QTreeWidget *mTree;
     QTreeWidgetItem *mItem;
     int mCurrentDepth;

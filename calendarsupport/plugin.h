@@ -21,7 +21,8 @@
 
 #include <KPluginFactory>
 
-namespace CalendarSupport {
+namespace CalendarSupport
+{
 
 /**
    @class Plugin
@@ -34,31 +35,39 @@ namespace CalendarSupport {
 class Plugin
 {
 
-  enum {
-    INTERFACE_VERSION = 2
-  };
+    enum {
+        INTERFACE_VERSION = 2
+    };
 
-  public:
-    static int interfaceVersion() { return INTERFACE_VERSION; }
+public:
+    static int interfaceVersion()
+    {
+        return INTERFACE_VERSION;
+    }
 
-    static QString serviceType() { return QLatin1String( "Calendar/Plugin" ); }
+    static QString serviceType()
+    {
+        return QLatin1String("Calendar/Plugin");
+    }
 
     Plugin() {}
     virtual ~Plugin() {}
 
     virtual QString info() const = 0;
 
-    virtual void configure( QWidget * ) {}
+    virtual void configure(QWidget *) {}
 };
 
 class PluginFactory : public KPluginFactory
 {
-  public:
+public:
     virtual Plugin *createPluginFactory() = 0;
 
-  protected:
-    virtual QObject *createObject( QObject *, const char *, const QStringList & )
-    { return 0; }
+protected:
+    virtual QObject *createObject(QObject *, const char *, const QStringList &)
+    {
+        return 0;
+    }
 };
 
 }

@@ -41,12 +41,14 @@ class TodoViewQuickSearch;
 class TodoViewSortFilterProxyModel;
 class TodoViewView;
 
-namespace KPIM {
-  class KDatePickerPopup;
+namespace KPIM
+{
+class KDatePickerPopup;
 }
 
-namespace Akonadi {
-  class ETMViewStateSaver;
+namespace Akonadi
+{
+class ETMViewStateSaver;
 }
 
 class QItemSelection;
@@ -55,59 +57,66 @@ class QModelIndex;
 class QToolButton;
 class QTimer;
 
-namespace EventViews {
+namespace EventViews
+{
 
 class EVENTVIEWS_EXPORT TodoView : public EventViews::EventView
 {
-  Q_OBJECT
-  friend class ModelStack;
+    Q_OBJECT
+    friend class ModelStack;
 
-  public:
-    TodoView( const EventViews::PrefsPtr &preferences, bool sidebarView, QWidget *parent );
+public:
+    TodoView(const EventViews::PrefsPtr &preferences, bool sidebarView, QWidget *parent);
     ~TodoView();
 
-    virtual void setCalendar( const Akonadi::ETMCalendar::Ptr & );
+    virtual void setCalendar(const Akonadi::ETMCalendar::Ptr &);
 
     virtual Akonadi::Item::List selectedIncidences() const;
     virtual KCalCore::DateList selectedIncidenceDates() const;
-    virtual int currentDateCount() const { return 0; }
+    virtual int currentDateCount() const
+    {
+        return 0;
+    }
 
-    void setDocumentId( const QString & ) {}
+    void setDocumentId(const QString &) {}
 
-    void saveLayout( KConfig *config, const QString &group ) const;
+    void saveLayout(KConfig *config, const QString &group) const;
 
-    void restoreLayout( KConfig *config, const QString &group, bool minimalDefaults );
+    void restoreLayout(KConfig *config, const QString &group, bool minimalDefaults);
 
     /** documentation in baseview.h */
-    void getHighlightMode( bool &highlightEvents,
-                           bool &highlightTodos,
-                           bool &highlightJournals );
+    void getHighlightMode(bool &highlightEvents,
+                          bool &highlightTodos,
+                          bool &highlightJournals);
 
     bool usesFullWindow();
 
-    bool supportsDateRangeSelection() { return false; }
+    bool supportsDateRangeSelection()
+    {
+        return false;
+    }
 
-  public Q_SLOTS:
-    virtual void setIncidenceChanger( Akonadi::IncidenceChanger *changer );
-    virtual void showDates( const QDate &start, const QDate &end,
-                            const QDate &preferredMonth = QDate() );
-    virtual void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
+public Q_SLOTS:
+    virtual void setIncidenceChanger(Akonadi::IncidenceChanger *changer);
+    virtual void showDates(const QDate &start, const QDate &end,
+                           const QDate &preferredMonth = QDate());
+    virtual void showIncidences(const Akonadi::Item::List &incidenceList, const QDate &date);
     virtual void updateView();
-    virtual void changeIncidenceDisplay( const Akonadi::Item &incidence, Akonadi::IncidenceChanger::ChangeType changeType );
+    virtual void changeIncidenceDisplay(const Akonadi::Item &incidence, Akonadi::IncidenceChanger::ChangeType changeType);
     virtual void updateConfig();
     virtual void clearSelection();
-    void expandIndex( const QModelIndex &index );
+    void expandIndex(const QModelIndex &index);
     void restoreViewState();
     void saveViewState();
 
-  protected Q_SLOTS:
-    void resizeEvent( QResizeEvent * ) /*Q_DECL_OVERRIDE*/;
-    void addQuickTodo( Qt::KeyboardModifiers modifier );
+protected Q_SLOTS:
+    void resizeEvent(QResizeEvent *) /*Q_DECL_OVERRIDE*/;
+    void addQuickTodo(Qt::KeyboardModifiers modifier);
 
-    void contextMenu( const QPoint &pos );
+    void contextMenu(const QPoint &pos);
 
-    void selectionChanged( const QItemSelection &selected,
-                           const QItemSelection &deselected );
+    void selectionChanged(const QItemSelection &selected,
+                          const QItemSelection &deselected);
 
     // slots used by popup-menus
     void showTodo();
@@ -115,40 +124,40 @@ class EVENTVIEWS_EXPORT TodoView : public EventViews::EventView
     void deleteTodo();
     void newTodo();
     void newSubTodo();
-    void copyTodoToDate( const QDate &date );
+    void copyTodoToDate(const QDate &date);
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void scheduleResizeColumns();
     void resizeColumns();
-    void itemDoubleClicked( const QModelIndex &index );
-    void setNewDate( const QDate &date );
-    void setNewPercentage( QAction *action );
-    void setNewPriority( QAction *action );
-    void changedCategories( QAction *action );
-    void setFullView( bool fullView );
+    void itemDoubleClicked(const QModelIndex &index);
+    void setNewDate(const QDate &date);
+    void setNewPercentage(QAction *action);
+    void setNewPriority(QAction *action);
+    void changedCategories(QAction *action);
+    void setFullView(bool fullView);
 
-    void setFlatView( bool flatView, bool notifyOtherViews = true );
+    void setFlatView(bool flatView, bool notifyOtherViews = true);
 
-    void onRowsInserted( const QModelIndex &parent, int start, int end );
-    void onTagsFetched(KJob*);
+    void onRowsInserted(const QModelIndex &parent, int start, int end);
+    void onTagsFetched(KJob *);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void purgeCompletedSignal();
     void unSubTodoSignal();
     void unAllSubTodoSignal();
     void configChanged();
-    void fullViewChanged( bool enabled );
+    void fullViewChanged(bool enabled);
     void printPreviewTodo();
     void printTodo();
 
-  private:
+private:
     QMenu *createCategoryPopupMenu();
     QString stateSaverGroup() const;
 
     /** Creates a new todo with the given text as summary under the given parent */
-    void addTodo( const QString &summary,
-                  const Akonadi::Item &parentItem,
-                  const QStringList &categories = QStringList() );
+    void addTodo(const QString &summary,
+                 const Akonadi::Item &parentItem,
+                 const QStringList &categories = QStringList());
 
     TodoViewView *mView;
     TodoViewSortFilterProxyModel *mProxyModel;
@@ -164,21 +173,20 @@ class EVENTVIEWS_EXPORT TodoView : public EventViews::EventView
     KPIM::KDatePickerPopup *mMovePopupMenu;
     QMenu *mPriorityPopupMenu;
     QMenu *mPercentageCompletedPopupMenu;
-    QList<QAction*> mItemPopupMenuItemOnlyEntries;
-    QList<QAction*> mItemPopupMenuReadWriteEntries;
+    QList<QAction *> mItemPopupMenuItemOnlyEntries;
+    QList<QAction *> mItemPopupMenuReadWriteEntries;
 
     QAction *mMakeTodoIndependent;
     QAction *mMakeSubtodosIndependent;
 
     QPointer<Akonadi::ETMViewStateSaver> mTreeStateRestorer;
 
-    QMap<QAction *,int> mPercentage;
-    QMap<QAction *,int> mPriority;
+    QMap<QAction *, int> mPercentage;
+    QMap<QAction *, int> mPriority;
     bool mSidebarView;
     bool mResizeColumnsScheduled;
     QTimer *mResizeColumnsTimer;
 };
-
 
 }
 

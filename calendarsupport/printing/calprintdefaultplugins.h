@@ -36,11 +36,12 @@
 
 #include <KLocalizedString>
 
-namespace CalendarSupport {
+namespace CalendarSupport
+{
 
 class CALENDARSUPPORT_EXPORT CalPrintIncidence : public CalPrintPluginBase
 {
-  public:
+public:
     CalPrintIncidence();
     virtual ~CalPrintIncidence();
     virtual QString groupName()
@@ -49,42 +50,42 @@ class CALENDARSUPPORT_EXPORT CalPrintIncidence : public CalPrintPluginBase
     }
     virtual QString description()
     {
-      return i18n( "Print &incidence" );
+        return i18n("Print &incidence");
     }
     virtual QString info() const
     {
-      return i18n( "Prints an incidence on one page" );
+        return i18n("Prints an incidence on one page");
     }
     virtual int sortID()
     {
-      return CalPrinterBase::Incidence;
+        return CalPrinterBase::Incidence;
     }
 
-  // Enable the Print Incidence option only if there are selected incidences.
+    // Enable the Print Incidence option only if there are selected incidences.
     virtual bool enabled()
     {
-      if ( mSelectedIncidences.count() > 0 ) {
-        return true;
-      } else {
-        return false;
-      }
+        if (mSelectedIncidences.count() > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
-    virtual QWidget *createConfigWidget( QWidget * );
+    virtual QWidget *createConfigWidget(QWidget *);
     virtual QPrinter::Orientation defaultOrientation()
     {
-      return QPrinter::Portrait;
+        return QPrinter::Portrait;
     }
 
-  public:
-    void print( QPainter &p, int width, int height );
+public:
+    void print(QPainter &p, int width, int height);
     virtual void readSettingsWidget();
     virtual void setSettingsWidget();
     virtual void loadConfig();
     virtual void saveConfig();
 
-  protected:
-    int printCaptionAndText( QPainter &p, const QRect &box, const QString &caption,
-                             const QString &text, QFont captionFont, QFont textFont );
+protected:
+    int printCaptionAndText(QPainter &p, const QRect &box, const QString &caption,
+                            const QString &text, QFont captionFont, QFont textFont);
 
     bool mShowOptions;
     bool mShowSubitemsNotes;
@@ -95,44 +96,44 @@ class CALENDARSUPPORT_EXPORT CalPrintIncidence : public CalPrintPluginBase
 
 class CalPrintDay : public CalPrintPluginBase
 {
-  public:
+public:
     CalPrintDay();
     virtual ~CalPrintDay();
     virtual QString groupName()
     {
-      return QString::fromLatin1( "Print day" );
+        return QString::fromLatin1("Print day");
     }
     virtual QString description()
     {
-      return i18n( "Print da&y" );
+        return i18n("Print da&y");
     }
     virtual QString info() const
     {
-      return i18n( "Prints all events of a single day on one page" );
+        return i18n("Prints all events of a single day on one page");
     }
     virtual int sortID()
     {
-      return CalPrinterBase::Day;
+        return CalPrinterBase::Day;
     }
     virtual bool enabled()
     {
-      return true;
+        return true;
     }
-    virtual QWidget *createConfigWidget( QWidget * );
+    virtual QWidget *createConfigWidget(QWidget *);
 
-  public:
-    void print( QPainter &p, int width, int height );
+public:
+    void print(QPainter &p, int width, int height);
     virtual void readSettingsWidget();
     virtual void setSettingsWidget();
     virtual void loadConfig();
     virtual void saveConfig();
-    virtual void setDateRange( const QDate &from, const QDate &to );
+    virtual void setDateRange(const QDate &from, const QDate &to);
 
-  protected:
+protected:
     enum eDayPrintType {
-      Filofax=0,
-      Timetable,
-      SingleTimetable
+        Filofax = 0,
+        Timetable,
+        SingleTimetable
     } mDayPrintType;
     QTime mStartTime, mEndTime;
     bool mIncludeDescription;
@@ -146,50 +147,50 @@ class CalPrintDay : public CalPrintPluginBase
 
 class CalPrintWeek : public CalPrintPluginBase
 {
-  public:
+public:
     CalPrintWeek();
     virtual ~CalPrintWeek();
 
     virtual QString groupName()
     {
-      return QString::fromLatin1( "Print week" );
+        return QString::fromLatin1("Print week");
     }
     virtual QString description()
     {
-      return i18n( "Print &week" );
+        return i18n("Print &week");
     }
     virtual QString info() const
     {
-      return i18n( "Prints all events of one week on one page" );
+        return i18n("Prints all events of one week on one page");
     }
     virtual int sortID()
     {
-      return CalPrinterBase::Week;
+        return CalPrinterBase::Week;
     }
     virtual bool enabled()
     {
-      return true;
+        return true;
     }
-    virtual QWidget *createConfigWidget( QWidget * );
+    virtual QWidget *createConfigWidget(QWidget *);
 
     /**
       Returns the default orientation for the eWeekPrintType.
     */
     virtual QPrinter::Orientation defaultOrientation();
 
-  public:
-    void print( QPainter &p, int width, int height );
+public:
+    void print(QPainter &p, int width, int height);
     virtual void readSettingsWidget();
     virtual void setSettingsWidget();
     virtual void loadConfig();
     virtual void saveConfig();
-    virtual void setDateRange( const QDate &from, const QDate &to );
+    virtual void setDateRange(const QDate &from, const QDate &to);
 
-  protected:
+protected:
     enum eWeekPrintType {
-      Filofax=0,
-      Timetable,
-      SplitWeek
+        Filofax = 0,
+        Timetable,
+        SplitWeek
     } mWeekPrintType;
     QTime mStartTime, mEndTime;
     bool mSingleLineLimit;
@@ -202,7 +203,7 @@ class CalPrintWeek : public CalPrintPluginBase
 
 class CalPrintMonth : public CalPrintPluginBase
 {
-  public:
+public:
     CalPrintMonth();
     virtual ~CalPrintMonth();
     virtual QString groupName()
@@ -211,35 +212,35 @@ class CalPrintMonth : public CalPrintPluginBase
     }
     virtual QString description()
     {
-      return i18n( "Print mont&h" );
+        return i18n("Print mont&h");
     }
     virtual QString info() const
     {
-      return i18n( "Prints all events of one month on one page" );
+        return i18n("Prints all events of one month on one page");
     }
     virtual int sortID()
     {
-      return CalPrinterBase::Month;
+        return CalPrinterBase::Month;
     }
     virtual bool enabled()
     {
-      return true;
+        return true;
     }
-    virtual QWidget *createConfigWidget( QWidget * );
+    virtual QWidget *createConfigWidget(QWidget *);
     virtual QPrinter::Orientation defaultOrientation()
     {
-      return QPrinter::Landscape;
+        return QPrinter::Landscape;
     }
 
-  public:
-    void print( QPainter &p, int width, int height );
+public:
+    void print(QPainter &p, int width, int height);
     virtual void readSettingsWidget();
     virtual void setSettingsWidget();
     virtual void loadConfig();
     virtual void saveConfig();
-    virtual void setDateRange( const QDate &from, const QDate &to );
+    virtual void setDateRange(const QDate &from, const QDate &to);
 
-  protected:
+protected:
     bool mWeekNumbers;
     bool mRecurDaily;
     bool mRecurWeekly;
@@ -252,61 +253,61 @@ class CalPrintMonth : public CalPrintPluginBase
 
 class CalPrintTodos : public CalPrintPluginBase
 {
-  public:
+public:
     CalPrintTodos();
     virtual ~CalPrintTodos();
 
     virtual QString groupName()
     {
-      return QString::fromLatin1( "Print to-dos" );
+        return QString::fromLatin1("Print to-dos");
     }
     virtual QString description()
     {
-      return i18n( "Print to-&dos" );
+        return i18n("Print to-&dos");
     }
     virtual QString info() const
     {
-      return i18n( "Prints all to-dos in a (tree-like) list" );
+        return i18n("Prints all to-dos in a (tree-like) list");
     }
     virtual int sortID()
     {
-      return CalPrinterBase::Todolist;
+        return CalPrinterBase::Todolist;
     }
     virtual bool enabled()
     {
-      return true;
+        return true;
     }
-    virtual QWidget *createConfigWidget( QWidget * );
+    virtual QWidget *createConfigWidget(QWidget *);
 
-  public:
-    void print( QPainter &p, int width, int height );
+public:
+    void print(QPainter &p, int width, int height);
     virtual void readSettingsWidget();
     virtual void setSettingsWidget();
     virtual void loadConfig();
     virtual void saveConfig();
 
-  protected:
+protected:
     QString mPageTitle;
 
     enum eTodoPrintType {
-      TodosAll = 0,
-      TodosUnfinished,
-      TodosDueRange
+        TodosAll = 0,
+        TodosUnfinished,
+        TodosDueRange
     } mTodoPrintType;
 
     enum eTodoSortField {
-      TodoFieldSummary = 0,
-      TodoFieldStartDate,
-      TodoFieldDueDate,
-      TodoFieldPriority,
-      TodoFieldPercentComplete,
-      TodoFieldUnset
+        TodoFieldSummary = 0,
+        TodoFieldStartDate,
+        TodoFieldDueDate,
+        TodoFieldPriority,
+        TodoFieldPercentComplete,
+        TodoFieldUnset
     } mTodoSortField;
 
     enum eTodoSortDirection {
-      TodoDirectionAscending = 0,
-      TodoDirectionDescending,
-      TodoDirectionUnset
+        TodoDirectionAscending = 0,
+        TodoDirectionDescending,
+        TodoDirectionUnset
     } mTodoSortDirection;
 
     bool mIncludeDescription;
@@ -323,46 +324,46 @@ class CalPrintTodos : public CalPrintPluginBase
 
 class CalPrintIncidenceConfig : public QWidget, public Ui::CalPrintIncidenceConfig_Base
 {
-  public:
-    explicit CalPrintIncidenceConfig( QWidget *parent ) : QWidget( parent )
+public:
+    explicit CalPrintIncidenceConfig(QWidget *parent) : QWidget(parent)
     {
-      setupUi( this );
+        setupUi(this);
     }
 };
 
 class CalPrintDayConfig : public QWidget, public Ui::CalPrintDayConfig_Base
 {
-  public:
-    explicit CalPrintDayConfig( QWidget *parent ) : QWidget( parent )
+public:
+    explicit CalPrintDayConfig(QWidget *parent) : QWidget(parent)
     {
-      setupUi( this );
+        setupUi(this);
     }
 };
 
 class CalPrintWeekConfig : public QWidget, public Ui::CalPrintWeekConfig_Base
 {
-  public:
-    explicit CalPrintWeekConfig( QWidget *parent ) : QWidget( parent )
+public:
+    explicit CalPrintWeekConfig(QWidget *parent) : QWidget(parent)
     {
-      setupUi( this );
+        setupUi(this);
     }
 };
 
 class CalPrintMonthConfig : public QWidget, public Ui::CalPrintMonthConfig_Base
 {
-  public:
-    explicit CalPrintMonthConfig( QWidget *parent ) : QWidget( parent )
+public:
+    explicit CalPrintMonthConfig(QWidget *parent) : QWidget(parent)
     {
-      setupUi( this );
+        setupUi(this);
     }
 };
 
 class CalPrintTodoConfig : public QWidget, public Ui::CalPrintTodoConfig_Base
 {
-  public:
-    explicit CalPrintTodoConfig( QWidget *parent ) : QWidget( parent )
+public:
+    explicit CalPrintTodoConfig(QWidget *parent) : QWidget(parent)
     {
-      setupUi( this );
+        setupUi(this);
     }
 };
 

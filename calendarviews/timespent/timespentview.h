@@ -28,7 +28,8 @@
 #include "eventview.h"
 #include <Akonadi/Calendar/IncidenceChanger>
 
-namespace EventViews {
+namespace EventViews
+{
 
 class TimeSpentWidget;
 
@@ -37,32 +38,32 @@ class TimeSpentWidget;
 */
 class EVENTVIEWS_EXPORT TimeSpentView : public EventViews::EventView
 {
-  Q_OBJECT
-  public:
-    explicit TimeSpentView( QWidget *parent = 0 );
+    Q_OBJECT
+public:
+    explicit TimeSpentView(QWidget *parent = 0);
     ~TimeSpentView();
 
     virtual int currentDateCount() const;
 
     virtual Akonadi::Item::List selectedIncidences() const
     {
-      return Akonadi::Item::List();
+        return Akonadi::Item::List();
     }
 
     KCalCore::DateList selectedIncidenceDates() const
     {
-      return KCalCore::DateList();
+        return KCalCore::DateList();
     }
 
-  public Q_SLOTS:
+public Q_SLOTS:
     virtual void updateView();
-    virtual void showDates( const QDate &start, const QDate &end,
-                            const QDate &preferredMonth = QDate() );
-    virtual void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
+    virtual void showDates(const QDate &start, const QDate &end,
+                           const QDate &preferredMonth = QDate());
+    virtual void showIncidences(const Akonadi::Item::List &incidenceList, const QDate &date);
 
-    void changeIncidenceDisplay( const Akonadi::Item &, Akonadi::IncidenceChanger::ChangeType );
+    void changeIncidenceDisplay(const Akonadi::Item &, Akonadi::IncidenceChanger::ChangeType);
 
-  private:
+private:
     TimeSpentWidget *mView;
     QDate mStartDate;
     QDate mEndDate;

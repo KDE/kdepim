@@ -34,205 +34,203 @@
 #include <QHeaderView>
 #include <QMouseEvent>
 
-TodoViewView::TodoViewView( QWidget *parent )
-  : QTreeView( parent ), mHeaderPopup( 0 ), mIgnoreNextMouseRelease( false )
+TodoViewView::TodoViewView(QWidget *parent)
+    : QTreeView(parent), mHeaderPopup(0), mIgnoreNextMouseRelease(false)
 {
-  header()->installEventFilter( this );
-  setAlternatingRowColors( true );
-  connect(&mExpandTimer, &QTimer::timeout, this, &TodoViewView::expandParent);
-  mExpandTimer.setInterval( 1000 );
-  header()->setStretchLastSection( false );
+    header()->installEventFilter(this);
+    setAlternatingRowColors(true);
+    connect(&mExpandTimer, &QTimer::timeout, this, &TodoViewView::expandParent);
+    mExpandTimer.setInterval(1000);
+    header()->setStretchLastSection(false);
 }
 
-bool TodoViewView::isEditing( const QModelIndex &index ) const
+bool TodoViewView::isEditing(const QModelIndex &index) const
 {
-  return state() & QAbstractItemView::EditingState &&
-         currentIndex() == index;
+    return state() & QAbstractItemView::EditingState &&
+           currentIndex() == index;
 }
 
-bool TodoViewView::eventFilter( QObject *watched, QEvent *event )
+bool TodoViewView::eventFilter(QObject *watched, QEvent *event)
 {
-  Q_UNUSED( watched );
-  if ( event->type() == QEvent::ContextMenu ) {
-    QContextMenuEvent *e = static_cast<QContextMenuEvent *>( event );
+    Q_UNUSED(watched);
+    if (event->type() == QEvent::ContextMenu) {
+        QContextMenuEvent *e = static_cast<QContextMenuEvent *>(event);
 
-    if ( !mHeaderPopup ) {
-      mHeaderPopup = new QMenu( this );
-      mHeaderPopup->setTitle( i18n( "View Columns" ) );
-      // First entry can't be disabled
-      for ( int i = 1; i < model()->columnCount(); ++i ) {
-        QAction *tmp =
-          mHeaderPopup->addAction( model()->headerData( i, Qt::Horizontal ).toString() );
-        tmp->setData( QVariant( i ) );
-        tmp->setCheckable( true );
-        mColumnActions << tmp;
-      }
+        if (!mHeaderPopup) {
+            mHeaderPopup = new QMenu(this);
+            mHeaderPopup->setTitle(i18n("View Columns"));
+            // First entry can't be disabled
+            for (int i = 1; i < model()->columnCount(); ++i) {
+                QAction *tmp =
+                    mHeaderPopup->addAction(model()->headerData(i, Qt::Horizontal).toString());
+                tmp->setData(QVariant(i));
+                tmp->setCheckable(true);
+                mColumnActions << tmp;
+            }
 
-      connect( mHeaderPopup, SIGNAL(triggered(QAction*)),
-               this, SLOT(toggleColumnHidden(QAction*)) );
-    }
-
-    foreach ( QAction *action, mColumnActions ) {
-      int column = action->data().toInt();
-      action->setChecked( !isColumnHidden( column ) );
-    }
-
-    mHeaderPopup->popup( mapToGlobal( e->pos() ) );
-    return true;
-  }
-
-  return false;
-}
-
-void TodoViewView::toggleColumnHidden( QAction *action )
-{
-  if ( action->isChecked() ) {
-    showColumn( action->data().toInt() );
-  } else {
-    hideColumn( action->data().toInt() );
-  }
-
-  emit visibleColumnCountChanged();
-}
-
-QModelIndex TodoViewView::moveCursor( CursorAction cursorAction,
-                                      Qt::KeyboardModifiers modifiers )
-{
-  QModelIndex current = currentIndex();
-  if ( !current.isValid() ) {
-    return QTreeView::moveCursor( cursorAction, modifiers );
-  }
-
-  switch ( cursorAction ) {
-    case MoveNext:
-    {
-      // try to find an editable item right of the current one
-      QModelIndex tmp = getNextEditableIndex(
-        current.sibling( current.row(), current.column() + 1 ), 1 );
-      if ( tmp.isValid() ) {
-        return tmp;
-      }
-
-      // check if the current item is expanded, and find an editable item
-      // just below it if so
-      current = current.sibling( current.row(), 0 );
-      if ( isExpanded( current ) ) {
-        tmp = getNextEditableIndex( current.child( 0, 0 ), 1 );
-        if ( tmp.isValid() ) {
-          return tmp;
+            connect(mHeaderPopup, SIGNAL(triggered(QAction*)),
+                    this, SLOT(toggleColumnHidden(QAction*)));
         }
-      }
 
-      // find an editable item in the item below the currently edited one
-      tmp = getNextEditableIndex( current.sibling( current.row() + 1, 0 ), 1 );
-      if ( tmp.isValid() ) {
-        return tmp;
-      }
+        foreach (QAction *action, mColumnActions) {
+            int column = action->data().toInt();
+            action->setChecked(!isColumnHidden(column));
+        }
 
-      // step back a hierarchy level, and search for an editable item there
-      while ( current.isValid() ) {
+        mHeaderPopup->popup(mapToGlobal(e->pos()));
+        return true;
+    }
+
+    return false;
+}
+
+void TodoViewView::toggleColumnHidden(QAction *action)
+{
+    if (action->isChecked()) {
+        showColumn(action->data().toInt());
+    } else {
+        hideColumn(action->data().toInt());
+    }
+
+    emit visibleColumnCountChanged();
+}
+
+QModelIndex TodoViewView::moveCursor(CursorAction cursorAction,
+                                     Qt::KeyboardModifiers modifiers)
+{
+    QModelIndex current = currentIndex();
+    if (!current.isValid()) {
+        return QTreeView::moveCursor(cursorAction, modifiers);
+    }
+
+    switch (cursorAction) {
+    case MoveNext: {
+        // try to find an editable item right of the current one
+        QModelIndex tmp = getNextEditableIndex(
+                              current.sibling(current.row(), current.column() + 1), 1);
+        if (tmp.isValid()) {
+            return tmp;
+        }
+
+        // check if the current item is expanded, and find an editable item
+        // just below it if so
+        current = current.sibling(current.row(), 0);
+        if (isExpanded(current)) {
+            tmp = getNextEditableIndex(current.child(0, 0), 1);
+            if (tmp.isValid()) {
+                return tmp;
+            }
+        }
+
+        // find an editable item in the item below the currently edited one
+        tmp = getNextEditableIndex(current.sibling(current.row() + 1, 0), 1);
+        if (tmp.isValid()) {
+            return tmp;
+        }
+
+        // step back a hierarchy level, and search for an editable item there
+        while (current.isValid()) {
+            current = current.parent();
+            tmp = getNextEditableIndex(current.sibling(current.row() + 1, 0), 1);
+            if (tmp.isValid()) {
+                return tmp;
+            }
+        }
+        return QModelIndex();
+    }
+    case MovePrevious: {
+        // try to find an editable item left of the current one
+        QModelIndex tmp = getNextEditableIndex(
+                              current.sibling(current.row(), current.column() - 1), -1);
+        if (tmp.isValid()) {
+            return tmp;
+        }
+
+        int lastCol = model()->columnCount(QModelIndex()) - 1;
+
+        // search on top of the item, also include expanded items
+        tmp = current.sibling(current.row() - 1, 0);
+        while (tmp.isValid() && isExpanded(tmp)) {
+            tmp = tmp.child(model()->rowCount(tmp) - 1, 0);
+        }
+        if (tmp.isValid()) {
+            tmp = getNextEditableIndex(tmp.sibling(tmp.row(), lastCol), -1);
+            if (tmp.isValid()) {
+                return tmp;
+            }
+        }
+
+        // step back a hierarchy level, and search for an editable item there
         current = current.parent();
-        tmp = getNextEditableIndex( current.sibling( current.row() + 1, 0 ), 1 );
-        if ( tmp.isValid() ) {
-          return tmp;
-        }
-      }
-      return QModelIndex();
-    }
-    case MovePrevious:
-    {
-      // try to find an editable item left of the current one
-      QModelIndex tmp = getNextEditableIndex(
-        current.sibling( current.row(), current.column() - 1 ), -1 );
-      if ( tmp.isValid() ) {
-        return tmp;
-      }
-
-      int lastCol = model()->columnCount( QModelIndex() ) - 1;
-
-      // search on top of the item, also include expanded items
-      tmp = current.sibling( current.row() - 1, 0 );
-      while ( tmp.isValid() && isExpanded( tmp ) ) {
-        tmp = tmp.child( model()->rowCount( tmp ) - 1, 0 );
-      }
-      if ( tmp.isValid() ) {
-        tmp = getNextEditableIndex( tmp.sibling( tmp.row(), lastCol ), -1 );
-        if ( tmp.isValid() ) {
-          return tmp;
-        }
-      }
-
-      // step back a hierarchy level, and search for an editable item there
-      current = current.parent();
-      return getNextEditableIndex( current.sibling( current.row(), lastCol ), -1 );
+        return getNextEditableIndex(current.sibling(current.row(), lastCol), -1);
     }
     default:
-      break;
-  }
-
-  return QTreeView::moveCursor( cursorAction, modifiers );
-}
-
-QModelIndex TodoViewView::getNextEditableIndex( const QModelIndex &cur, int inc )
-{
-  if ( !cur.isValid() ) {
-    return QModelIndex();
-  }
-
-  QModelIndex tmp;
-  int colCount = model()->columnCount( QModelIndex() );
-  int end = inc == 1 ? colCount : -1;
-
-  for ( int c = cur.column(); c != end; c += inc ) {
-    tmp = cur.sibling( cur.row(), c );
-    if ( ( tmp.flags() & Qt::ItemIsEditable ) && !isIndexHidden( tmp ) ) {
-      return tmp;
+        break;
     }
-  }
-  return QModelIndex();
+
+    return QTreeView::moveCursor(cursorAction, modifiers);
 }
 
-void TodoViewView::mouseReleaseEvent ( QMouseEvent *event )
+QModelIndex TodoViewView::getNextEditableIndex(const QModelIndex &cur, int inc)
 {
-  mExpandTimer.stop();
+    if (!cur.isValid()) {
+        return QModelIndex();
+    }
 
-  if ( mIgnoreNextMouseRelease ) {
-    mIgnoreNextMouseRelease = false;
-    return;
-  }
+    QModelIndex tmp;
+    int colCount = model()->columnCount(QModelIndex());
+    int end = inc == 1 ? colCount : -1;
 
-  if ( !indexAt( event->pos() ).isValid() ) {
-    clearSelection();
-    event->accept();
-  } else {
-    QTreeView::mouseReleaseEvent( event );
-  }
+    for (int c = cur.column(); c != end; c += inc) {
+        tmp = cur.sibling(cur.row(), c);
+        if ((tmp.flags() & Qt::ItemIsEditable) && !isIndexHidden(tmp)) {
+            return tmp;
+        }
+    }
+    return QModelIndex();
 }
 
-void TodoViewView::mouseMoveEvent( QMouseEvent *event )
+void TodoViewView::mouseReleaseEvent(QMouseEvent *event)
 {
-  mExpandTimer.stop();
-  QTreeView::mouseMoveEvent( event );
+    mExpandTimer.stop();
+
+    if (mIgnoreNextMouseRelease) {
+        mIgnoreNextMouseRelease = false;
+        return;
+    }
+
+    if (!indexAt(event->pos()).isValid()) {
+        clearSelection();
+        event->accept();
+    } else {
+        QTreeView::mouseReleaseEvent(event);
+    }
 }
 
-void TodoViewView::mousePressEvent( QMouseEvent *event )
+void TodoViewView::mouseMoveEvent(QMouseEvent *event)
 {
-  mExpandTimer.stop();
-  QModelIndex index = indexAt( event->pos() );
-  if ( index.isValid() && event->button() == Qt::LeftButton ) {
-    mExpandTimer.start();
-  }
+    mExpandTimer.stop();
+    QTreeView::mouseMoveEvent(event);
+}
 
-  QTreeView::mousePressEvent( event );
+void TodoViewView::mousePressEvent(QMouseEvent *event)
+{
+    mExpandTimer.stop();
+    QModelIndex index = indexAt(event->pos());
+    if (index.isValid() && event->button() == Qt::LeftButton) {
+        mExpandTimer.start();
+    }
+
+    QTreeView::mousePressEvent(event);
 }
 
 void TodoViewView::expandParent()
 {
-  QModelIndex index = indexAt( viewport()->mapFromGlobal( QCursor::pos() ) );
-  if ( index.isValid() ) {
-    mIgnoreNextMouseRelease = true;
-    QKeyEvent keyEvent = QKeyEvent( QEvent::KeyPress, Qt::Key_Asterisk, Qt::NoModifier );
-    QTreeView::keyPressEvent( &keyEvent );
-  }
+    QModelIndex index = indexAt(viewport()->mapFromGlobal(QCursor::pos()));
+    if (index.isValid()) {
+        mIgnoreNextMouseRelease = true;
+        QKeyEvent keyEvent = QKeyEvent(QEvent::KeyPress, Qt::Key_Asterisk, Qt::NoModifier);
+        QTreeView::keyPressEvent(&keyEvent);
+    }
 }
 

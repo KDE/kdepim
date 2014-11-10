@@ -39,63 +39,63 @@ class QMimeData;
 
 class TodoModel : public QAbstractProxyModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /** This enum defines all columns this model provides */
     enum {
-      SummaryColumn = 0,
-      RecurColumn,
-      PriorityColumn,
-      PercentColumn,
-      StartDateColumn,
-      DueDateColumn,
-      CategoriesColumn,
-      DescriptionColumn,
-      CalendarColumn,
-      ColumnCount // Just for iteration/column count purposes. Always keep at the end of enum.
+        SummaryColumn = 0,
+        RecurColumn,
+        PriorityColumn,
+        PercentColumn,
+        StartDateColumn,
+        DueDateColumn,
+        CategoriesColumn,
+        DescriptionColumn,
+        CalendarColumn,
+        ColumnCount // Just for iteration/column count purposes. Always keep at the end of enum.
     };
 
     /** This enum defines the user defined roles of the items in this model */
     enum {
-      TodoRole = Akonadi::EntityTreeModel::UserRole + 1,
-      IsRichTextRole
+        TodoRole = Akonadi::EntityTreeModel::UserRole + 1,
+        IsRichTextRole
     };
 
-    explicit TodoModel( const EventViews::PrefsPtr &preferences, QObject *parent = 0 );
+    explicit TodoModel(const EventViews::PrefsPtr &preferences, QObject *parent = 0);
 
     ~TodoModel();
 
     /**reimp*/
-    int rowCount( const QModelIndex &parent = QModelIndex() ) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
     /**reimp*/
-    int columnCount( const QModelIndex &parent = QModelIndex() ) const;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
     /**reimp*/
-    void setSourceModel( QAbstractItemModel *sourceModel );
+    void setSourceModel(QAbstractItemModel *sourceModel);
 
     /**reimp*/
-    QVariant data( const QModelIndex &index, int role ) const;
+    QVariant data(const QModelIndex &index, int role) const;
 
     /**reimp*/
-    bool setData( const QModelIndex &index, const QVariant &value, int role );
+    bool setData(const QModelIndex &index, const QVariant &value, int role);
 
     /**reimp*/
-    QVariant headerData( int section, Qt::Orientation, int role ) const;
+    QVariant headerData(int section, Qt::Orientation, int role) const;
 
     /**reimp*/
-    void setCalendar( const Akonadi::ETMCalendar::Ptr &calendar );
+    void setCalendar(const Akonadi::ETMCalendar::Ptr &calendar);
 
     /**reimp*/
-    void setIncidenceChanger( Akonadi::IncidenceChanger *changer );
+    void setIncidenceChanger(Akonadi::IncidenceChanger *changer);
 
     /**reimp*/
-    QMimeData *mimeData( const QModelIndexList &indexes ) const;
+    QMimeData *mimeData(const QModelIndexList &indexes) const;
 
     /**reimp*/
-    bool dropMimeData( const QMimeData *data, Qt::DropAction action,
-                       int row, int column, const QModelIndex &parent );
+    bool dropMimeData(const QMimeData *data, Qt::DropAction action,
+                      int row, int column, const QModelIndex &parent);
 
     /**reimp*/
     QStringList mimeTypes() const;
@@ -104,25 +104,25 @@ class TodoModel : public QAbstractProxyModel
     Qt::DropActions supportedDropActions() const;
 
     /**reimp*/
-    Qt::ItemFlags flags( const QModelIndex &index ) const;
+    Qt::ItemFlags flags(const QModelIndex &index) const;
 
     /**reimp*/
-    QModelIndex parent( const QModelIndex &child ) const;
+    QModelIndex parent(const QModelIndex &child) const;
 
     /**reimp*/
-    QModelIndex mapFromSource( const QModelIndex &sourceIndex ) const;
+    QModelIndex mapFromSource(const QModelIndex &sourceIndex) const;
 
     /**reimp*/
-    QModelIndex mapToSource( const QModelIndex &proxyIndex ) const;
+    QModelIndex mapToSource(const QModelIndex &proxyIndex) const;
 
     /**reimp*/
-    QModelIndex index( int row, int column,
-                       const QModelIndex &parent = QModelIndex() ) const;
+    QModelIndex index(int row, int column,
+                      const QModelIndex &parent = QModelIndex()) const;
 
     /**reimp*/
-    QModelIndex buddy( const QModelIndex &index ) const;
+    QModelIndex buddy(const QModelIndex &index) const;
 
-  private:
+private:
     class Private;
     Private *const d;
 };

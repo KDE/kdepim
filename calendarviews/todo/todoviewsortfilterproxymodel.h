@@ -32,37 +32,37 @@
 
 class TodoViewSortFilterProxyModel : public QSortFilterProxyModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit TodoViewSortFilterProxyModel( const EventViews::PrefsPtr &prefs,
-                                           QObject *parent = 0 );
+public:
+    explicit TodoViewSortFilterProxyModel(const EventViews::PrefsPtr &prefs,
+                                          QObject *parent = 0);
 
-    void sort( int column, Qt::SortOrder order = Qt::AscendingOrder );
+    void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
 
     const QStringList &categories() const
     {
-      return mCategories;
+        return mCategories;
     }
 
     const QStringList &priorities() const
     {
-      return mPriorities;
+        return mPriorities;
     }
 
-  protected:
-    bool filterAcceptsRow( int source_row, const QModelIndex &source_parent ) const;
-    bool lessThan( const QModelIndex &left, const QModelIndex &right ) const;
+protected:
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
+    bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
 
-  public Q_SLOTS:
-    void setCategoryFilter( const QStringList &categories );
-    void setPriorityFilter( const QStringList &priorities );
+public Q_SLOTS:
+    void setCategoryFilter(const QStringList &categories);
+    void setPriorityFilter(const QStringList &priorities);
 
-  private:
-    int compareStartDates( const QModelIndex &left, const QModelIndex &right ) const;
-    int compareDueDates( const QModelIndex &left, const QModelIndex &right ) const;
-    int comparePriorities( const QModelIndex &left, const QModelIndex &right ) const;
-    int compareCompletion( const QModelIndex &left, const QModelIndex &right ) const;
+private:
+    int compareStartDates(const QModelIndex &left, const QModelIndex &right) const;
+    int compareDueDates(const QModelIndex &left, const QModelIndex &right) const;
+    int comparePriorities(const QModelIndex &left, const QModelIndex &right) const;
+    int compareCompletion(const QModelIndex &left, const QModelIndex &right) const;
     QStringList mCategories;
     QStringList mPriorities;
     Qt::SortOrder mSortOrder;

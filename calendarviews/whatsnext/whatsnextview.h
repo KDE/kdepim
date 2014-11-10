@@ -30,18 +30,19 @@
 #include <Akonadi/Calendar/ETMCalendar>
 #include <QTextBrowser>
 
-namespace EventViews {
+namespace EventViews
+{
 
 class WhatsNextTextBrowser : public QTextBrowser
 {
-  Q_OBJECT
-  public:
-    explicit WhatsNextTextBrowser( QWidget *parent ) : QTextBrowser( parent ) {}
+    Q_OBJECT
+public:
+    explicit WhatsNextTextBrowser(QWidget *parent) : QTextBrowser(parent) {}
     /** Reimplemented from QTextBrowser to handle links. */
-    void setSource( const QUrl &name );
+    void setSource(const QUrl &name);
 
-  Q_SIGNALS:
-    void showIncidence( const QString &uid );
+Q_SIGNALS:
+    void showIncidence(const QString &uid);
 };
 
 /**
@@ -49,34 +50,43 @@ class WhatsNextTextBrowser : public QTextBrowser
 */
 class EVENTVIEWS_EXPORT WhatsNextView : public EventViews::EventView
 {
-  Q_OBJECT
-  public:
-    explicit WhatsNextView( QWidget *parent = 0 );
+    Q_OBJECT
+public:
+    explicit WhatsNextView(QWidget *parent = 0);
     ~WhatsNextView();
 
     /**reimp*/ int currentDateCount() const;
-    /**reimp*/ Akonadi::Item::List selectedIncidences() const { return Akonadi::Item::List(); }
-    /**reimp*/ KCalCore::DateList selectedIncidenceDates() const { return KCalCore::DateList(); }
+    /**reimp*/ Akonadi::Item::List selectedIncidences() const
+    {
+        return Akonadi::Item::List();
+    }
+    /**reimp*/ KCalCore::DateList selectedIncidenceDates() const
+    {
+        return KCalCore::DateList();
+    }
 
-    /**reimp*/ bool supportsDateNavigation() const { return true; }
+    /**reimp*/ bool supportsDateNavigation() const
+    {
+        return true;
+    }
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**reimp*/ void updateView();
-    /**reimp*/ void showDates( const QDate &start, const QDate &end, const QDate &preferredMonth );
-    /**reimp*/ void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
+    /**reimp*/ void showDates(const QDate &start, const QDate &end, const QDate &preferredMonth);
+    /**reimp*/ void showIncidences(const Akonadi::Item::List &incidenceList, const QDate &date);
 
-    /**reimp*/ void changeIncidenceDisplay( const Akonadi::Item &, Akonadi::IncidenceChanger::ChangeType );
+    /**reimp*/ void changeIncidenceDisplay(const Akonadi::Item &, Akonadi::IncidenceChanger::ChangeType);
 
-  protected:
-    void appendEvent( const KCalCore::Incidence::Ptr &,
-                      const QDateTime &start = QDateTime(),
-                      const QDateTime &end = QDateTime() );
-    void appendTodo( const KCalCore::Incidence::Ptr & );
+protected:
+    void appendEvent(const KCalCore::Incidence::Ptr &,
+                     const QDateTime &start = QDateTime(),
+                     const QDateTime &end = QDateTime());
+    void appendTodo(const KCalCore::Incidence::Ptr &);
 
-  private Q_SLOTS:
-    void showIncidence( const QString & );
+private Q_SLOTS:
+    void showIncidence(const QString &);
 
-  private:
+private:
     WhatsNextTextBrowser *mView;
     QString mText;
     QDate mStartDate;

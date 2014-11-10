@@ -39,306 +39,306 @@
 
 using namespace CalendarSupport;
 
-Q_GLOBAL_STATIC( KCalPrefs, globalPrefs )
+Q_GLOBAL_STATIC(KCalPrefs, globalPrefs)
 
 class KCalPrefs::Private
 {
-  public:
-    Private( KCalPrefs *qq ) : mDefaultCalendarId( -1 ), q( qq )
+public:
+    Private(KCalPrefs *qq) : mDefaultCalendarId(-1), q(qq)
     {
-      mDefaultCategoryColor = QColor( 151, 235, 121 );
-      mCategoryConfig = new CategoryConfig( q );
+        mDefaultCategoryColor = QColor(151, 235, 121);
+        mCategoryConfig = new CategoryConfig(q);
     }
 
     ~Private()
     {
-      delete mCategoryConfig;
+        delete mCategoryConfig;
     }
 
     KDateTime::Spec mTimeSpec;
     Akonadi::Entity::Id mDefaultCalendarId;
 
     CategoryConfig *mCategoryConfig;
-    QHash<QString,QColor> mCategoryColors;
+    QHash<QString, QColor> mCategoryColors;
     QColor mDefaultCategoryColor;
     QDateTime mDayBegins;
 
-  private:
+private:
     KCalPrefs *q;
 };
 
-KCalPrefs::KCalPrefs() : KCalPrefsBase(), d( new Private( this ) )
+KCalPrefs::KCalPrefs() : KCalPrefsBase(), d(new Private(this))
 {
 }
 
 KCalPrefs::~KCalPrefs()
 {
-  delete d;
+    delete d;
 }
 
 KCalPrefs *KCalPrefs::instance()
 {
-  static bool firstCall = true;
+    static bool firstCall = true;
 
-  if ( firstCall ) {
-    firstCall = false;
-    globalPrefs->load();
-  }
+    if (firstCall) {
+        firstCall = false;
+        globalPrefs->load();
+    }
 
-  return globalPrefs;
+    return globalPrefs;
 }
 
 void KCalPrefs::usrSetDefaults()
 {
-  // Default should be set a bit smarter, respecting username and locale
-  // settings for example.
+    // Default should be set a bit smarter, respecting username and locale
+    // settings for example.
 
-  KEMailSettings settings;
-  QString tmp = settings.getSetting( KEMailSettings::RealName );
-  if ( !tmp.isEmpty() ) {
-    setUserName( tmp );
-  }
-  tmp = settings.getSetting( KEMailSettings::EmailAddress );
-  if ( !tmp.isEmpty() ) {
-    setUserEmail( tmp );
-  }
-  fillMailDefaults();
+    KEMailSettings settings;
+    QString tmp = settings.getSetting(KEMailSettings::RealName);
+    if (!tmp.isEmpty()) {
+        setUserName(tmp);
+    }
+    tmp = settings.getSetting(KEMailSettings::EmailAddress);
+    if (!tmp.isEmpty()) {
+        setUserEmail(tmp);
+    }
+    fillMailDefaults();
 
-  setTimeZoneDefault();
+    setTimeZoneDefault();
 
-  KConfigSkeleton::usrSetDefaults();
+    KConfigSkeleton::usrSetDefaults();
 }
 
 KDateTime::Spec KCalPrefs::timeSpec()
 {
-  return KSystemTimeZones::local();
+    return KSystemTimeZones::local();
 }
 
-void KCalPrefs::setTimeSpec( const KDateTime::Spec &spec )
+void KCalPrefs::setTimeSpec(const KDateTime::Spec &spec)
 {
-  d->mTimeSpec = spec;
+    d->mTimeSpec = spec;
 }
 
 Akonadi::Entity::Id KCalPrefs::defaultCalendarId() const
 {
-  return d->mDefaultCalendarId;
+    return d->mDefaultCalendarId;
 }
 
-void KCalPrefs::setDefaultCalendarId( const Akonadi::Entity::Id id )
+void KCalPrefs::setDefaultCalendarId(const Akonadi::Entity::Id id)
 {
-  d->mDefaultCalendarId = id;
+    d->mDefaultCalendarId = id;
 }
 
 void KCalPrefs::setTimeZoneDefault()
 {
-  KTimeZone zone = KSystemTimeZones::local();
-  if ( !zone.isValid() ) {
-    qCritical() << "KSystemTimeZones::local() return 0";
-    return;
-  }
+    KTimeZone zone = KSystemTimeZones::local();
+    if (!zone.isValid()) {
+        qCritical() << "KSystemTimeZones::local() return 0";
+        return;
+    }
 
-  qDebug() << "----- time zone:" << zone.name();
+    qDebug() << "----- time zone:" << zone.name();
 
-  d->mTimeSpec = zone;
+    d->mTimeSpec = zone;
 }
 
 void KCalPrefs::fillMailDefaults()
 {
-  userEmailItem()->swapDefault();
-  QString defEmail = userEmailItem()->value();
-  userEmailItem()->swapDefault();
+    userEmailItem()->swapDefault();
+    QString defEmail = userEmailItem()->value();
+    userEmailItem()->swapDefault();
 
-  if ( userEmail() == defEmail ) {
-    // No korg settings - but maybe there's a kcontrol[/kmail] setting available
-    KEMailSettings settings;
-    if ( !settings.getSetting( KEMailSettings::EmailAddress ).isEmpty() ) {
-      mEmailControlCenter = true;
+    if (userEmail() == defEmail) {
+        // No korg settings - but maybe there's a kcontrol[/kmail] setting available
+        KEMailSettings settings;
+        if (!settings.getSetting(KEMailSettings::EmailAddress).isEmpty()) {
+            mEmailControlCenter = true;
+        }
     }
-  }
 }
 
 void KCalPrefs::usrRead()
 {
-  KConfigGroup generalConfig( config(), "General" );
+    KConfigGroup generalConfig(config(), "General");
 
-  if ( !d->mTimeSpec.isValid() ) {
-    setTimeZoneDefault();
-  }
+    if (!d->mTimeSpec.isValid()) {
+        setTimeZoneDefault();
+    }
 
-  KConfigGroup defaultCalendarConfig( config(), "Calendar" );
-  d->mDefaultCalendarId = defaultCalendarConfig.readEntry( "Default Calendar", -1 );
+    KConfigGroup defaultCalendarConfig(config(), "Calendar");
+    d->mDefaultCalendarId = defaultCalendarConfig.readEntry("Default Calendar", -1);
 
-  // Category colors
-  d->mCategoryColors = d->mCategoryConfig->readColors();
+    // Category colors
+    d->mCategoryColors = d->mCategoryConfig->readColors();
 #if 0
-  config()->setGroup( "FreeBusy" );
-  if ( mRememberRetrievePw ) {
-    d->mRetrievePassword =
-      KStringHandler::obscure( config()->readEntry( "Retrieve Server Password" ) );
-  }
+    config()->setGroup("FreeBusy");
+    if (mRememberRetrievePw) {
+        d->mRetrievePassword =
+            KStringHandler::obscure(config()->readEntry("Retrieve Server Password"));
+    }
 #endif
 
-  KConfigSkeleton::usrRead();
-  fillMailDefaults();
+    KConfigSkeleton::usrRead();
+    fillMailDefaults();
 }
 
 bool KCalPrefs::usrSave()
 {
-  KConfigGroup generalConfig( config(), "General" );
-  d->mCategoryConfig->setColors( d->mCategoryColors );
+    KConfigGroup generalConfig(config(), "General");
+    d->mCategoryConfig->setColors(d->mCategoryColors);
 
 #if 0
-  if ( mRememberRetrievePw ) {
-    config()->writeEntry( "Retrieve Server Password",
-                          KStringHandler::obscure( d->mRetrievePassword ) );
-  } else {
-    config()->deleteEntry( "Retrieve Server Password" );
-  }
+    if (mRememberRetrievePw) {
+        config()->writeEntry("Retrieve Server Password",
+                             KStringHandler::obscure(d->mRetrievePassword));
+    } else {
+        config()->deleteEntry("Retrieve Server Password");
+    }
 #endif
 
-  KConfigGroup defaultCalendarConfig( config(), "Calendar" );
-  defaultCalendarConfig.writeEntry( "Default Calendar", defaultCalendarId() );
+    KConfigGroup defaultCalendarConfig(config(), "Calendar");
+    defaultCalendarConfig.writeEntry("Default Calendar", defaultCalendarId());
 
-  return KConfigSkeleton::usrSave();
+    return KConfigSkeleton::usrSave();
 }
 
 QString KCalPrefs::fullName()
 {
-  QString tusername;
-  if ( mEmailControlCenter ) {
-    KEMailSettings settings;
-    tusername = settings.getSetting( KEMailSettings::RealName );
-  } else {
-    tusername = userName();
-  }
+    QString tusername;
+    if (mEmailControlCenter) {
+        KEMailSettings settings;
+        tusername = settings.getSetting(KEMailSettings::RealName);
+    } else {
+        tusername = userName();
+    }
 
-  // Quote the username as it might contain commas and other quotable chars.
-  tusername = KPIMUtils::quoteNameIfNecessary( tusername );
+    // Quote the username as it might contain commas and other quotable chars.
+    tusername = KPIMUtils::quoteNameIfNecessary(tusername);
 
-  QString tname, temail;
-  // ignore the return value from extractEmailAddressAndName() because
-  // it will always be false since tusername does not contain "@domain".
-  KPIMUtils::extractEmailAddressAndName( tusername, temail, tname );
-  return tname;
+    QString tname, temail;
+    // ignore the return value from extractEmailAddressAndName() because
+    // it will always be false since tusername does not contain "@domain".
+    KPIMUtils::extractEmailAddressAndName(tusername, temail, tname);
+    return tname;
 }
 
 QString KCalPrefs::email()
 {
-  if ( mEmailControlCenter ) {
-    KEMailSettings settings;
-    return settings.getSetting( KEMailSettings::EmailAddress );
-  } else {
-    return userEmail();
-  }
+    if (mEmailControlCenter) {
+        KEMailSettings settings;
+        return settings.getSetting(KEMailSettings::EmailAddress);
+    } else {
+        return userEmail();
+    }
 }
 
 QStringList KCalPrefs::allEmails()
 {
-  // Grab emails from the email identities
-  QStringList lst = CalendarSupport::identityManager()->allEmails();
-  // Add emails configured in korganizer
-  lst += mAdditionalMails;
-  // Add the email entered as the userEmail here
-  lst += email();
+    // Grab emails from the email identities
+    QStringList lst = CalendarSupport::identityManager()->allEmails();
+    // Add emails configured in korganizer
+    lst += mAdditionalMails;
+    // Add the email entered as the userEmail here
+    lst += email();
 
-  // Warning, this list could contain duplicates.
-  return lst;
+    // Warning, this list could contain duplicates.
+    return lst;
 }
 
 QStringList KCalPrefs::fullEmails()
 {
-  QStringList fullEmails;
-  // The user name and email from the config dialog:
-  fullEmails << QString::fromUtf8( "%1 <%2>" ).arg( fullName() ).arg( email() );
+    QStringList fullEmails;
+    // The user name and email from the config dialog:
+    fullEmails << QString::fromUtf8("%1 <%2>").arg(fullName()).arg(email());
 
-  QStringList::Iterator it;
-  // Grab emails from the email identities
-  KIdentityManagement::IdentityManager *idmanager = CalendarSupport::identityManager();
-  QStringList lst = idmanager->identities();
-  KIdentityManagement::IdentityManager::ConstIterator it1;
-  for ( it1 = idmanager->begin(); it1 != idmanager->end(); ++it1 ) {
-    fullEmails << (*it1).fullEmailAddr();
-  }
-  // Add emails configured in korganizer
-  lst = mAdditionalMails;
-  for ( it = lst.begin(); it != lst.end(); ++it ) {
-    fullEmails << QString::fromUtf8( "%1 <%2>" ).arg( fullName() ).arg( *it );
-  }
+    QStringList::Iterator it;
+    // Grab emails from the email identities
+    KIdentityManagement::IdentityManager *idmanager = CalendarSupport::identityManager();
+    QStringList lst = idmanager->identities();
+    KIdentityManagement::IdentityManager::ConstIterator it1;
+    for (it1 = idmanager->begin(); it1 != idmanager->end(); ++it1) {
+        fullEmails << (*it1).fullEmailAddr();
+    }
+    // Add emails configured in korganizer
+    lst = mAdditionalMails;
+    for (it = lst.begin(); it != lst.end(); ++it) {
+        fullEmails << QString::fromUtf8("%1 <%2>").arg(fullName()).arg(*it);
+    }
 
-  // Warning, this list could contain duplicates.
-  return fullEmails;
+    // Warning, this list could contain duplicates.
+    return fullEmails;
 }
 
-bool KCalPrefs::thatIsMe( const QString &_email )
+bool KCalPrefs::thatIsMe(const QString &_email)
 {
-  // NOTE: this method is called for every created agenda view item,
-  // so we need to keep performance in mind
+    // NOTE: this method is called for every created agenda view item,
+    // so we need to keep performance in mind
 
-  /* identityManager()->thatIsMe() is quite expensive since it does parsing of
-     _email in a way which is unnecessarily complex for what we can have here,
-     so we do that ourselves. This makes sense since this
+    /* identityManager()->thatIsMe() is quite expensive since it does parsing of
+       _email in a way which is unnecessarily complex for what we can have here,
+       so we do that ourselves. This makes sense since this
 
-  if ( Akonadi::identityManager()->thatIsMe( _email ) ) {
-    return true;
-  }
-  */
-
-  // in case email contains a full name, strip it out.
-  // the below is the simpler but slower version of the following code:
-  // const QString email = KPIM::getEmailAddress( _email );
-  const QByteArray tmp = _email.toUtf8();
-  const char *cursor = tmp.constData();
-  const char *end = tmp.data() + tmp.length();
-  KMime::Types::Mailbox mbox;
-  KMime::HeaderParsing::parseMailbox( cursor, end, mbox );
-  const QString email = mbox.addrSpec().asString();
-
-  if ( this->email() == email ) {
-    return true;
-  }
-
-  CalendarSupport::IdentityManager::ConstIterator it;
-  for ( it = CalendarSupport::identityManager()->begin();
-        it != CalendarSupport::identityManager()->end(); ++it ) {
-    if ( (*it).matchesEmailAddress( email ) ) {
+    if ( Akonadi::identityManager()->thatIsMe( _email ) ) {
       return true;
     }
-  }
+    */
 
-  if ( mAdditionalMails.contains( email ) ) {
-    return true;
-  }
+    // in case email contains a full name, strip it out.
+    // the below is the simpler but slower version of the following code:
+    // const QString email = KPIM::getEmailAddress( _email );
+    const QByteArray tmp = _email.toUtf8();
+    const char *cursor = tmp.constData();
+    const char *end = tmp.data() + tmp.length();
+    KMime::Types::Mailbox mbox;
+    KMime::HeaderParsing::parseMailbox(cursor, end, mbox);
+    const QString email = mbox.addrSpec().asString();
 
-  return false;
+    if (this->email() == email) {
+        return true;
+    }
+
+    CalendarSupport::IdentityManager::ConstIterator it;
+    for (it = CalendarSupport::identityManager()->begin();
+            it != CalendarSupport::identityManager()->end(); ++it) {
+        if ((*it).matchesEmailAddress(email)) {
+            return true;
+        }
+    }
+
+    if (mAdditionalMails.contains(email)) {
+        return true;
+    }
+
+    return false;
 }
 
-void KCalPrefs::setCategoryColor( const QString &cat, const QColor &color )
+void KCalPrefs::setCategoryColor(const QString &cat, const QColor &color)
 {
-  d->mCategoryColors.insert( cat, color );
+    d->mCategoryColors.insert(cat, color);
 }
 
-QColor KCalPrefs::categoryColor( const QString &cat ) const
+QColor KCalPrefs::categoryColor(const QString &cat) const
 {
-  QColor color;
+    QColor color;
 
-  if ( !cat.isEmpty() ) {
-    color = d->mCategoryColors.value( cat );
-  }
+    if (!cat.isEmpty()) {
+        color = d->mCategoryColors.value(cat);
+    }
 
-  return color.isValid() ? color : d->mDefaultCategoryColor;
+    return color.isValid() ? color : d->mDefaultCategoryColor;
 }
 
-bool KCalPrefs::hasCategoryColor( const QString &cat ) const
+bool KCalPrefs::hasCategoryColor(const QString &cat) const
 {
-  return d->mCategoryColors[ cat ].isValid();
+    return d->mCategoryColors[ cat ].isValid();
 }
 
-void KCalPrefs::setDayBegins( const QDateTime &dateTime )
+void KCalPrefs::setDayBegins(const QDateTime &dateTime)
 {
-  d->mDayBegins = dateTime;
+    d->mDayBegins = dateTime;
 }
 
 QDateTime KCalPrefs::dayBegins() const
 {
-  return d->mDayBegins;
+    return d->mDayBegins;
 }

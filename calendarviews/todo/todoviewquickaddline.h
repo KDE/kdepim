@@ -29,23 +29,23 @@
 
 class TodoViewQuickAddLine : public KLineEdit
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit TodoViewQuickAddLine( QWidget *parent );
+public:
+    explicit TodoViewQuickAddLine(QWidget *parent);
     ~TodoViewQuickAddLine() {}
 
-  protected:
-    void keyPressEvent( QKeyEvent *event );
-    void resizeEvent( QResizeEvent *event );
+protected:
+    void keyPressEvent(QKeyEvent *event);
+    void resizeEvent(QResizeEvent *event);
 
-  Q_SIGNALS:
-    void returnPressed( Qt::KeyboardModifiers modifiers );
+Q_SIGNALS:
+    void returnPressed(Qt::KeyboardModifiers modifiers);
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void returnPressed();
 
-  private:
+private:
     Qt::KeyboardModifiers mModifiers;
     QString mClickMessage;
 };

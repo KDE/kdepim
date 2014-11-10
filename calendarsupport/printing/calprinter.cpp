@@ -47,285 +47,285 @@
 
 using namespace CalendarSupport;
 
-CalPrinter::CalPrinter( QWidget *parent, const Akonadi::ETMCalendar::Ptr &calendar,
-                        bool uniqItem )
-  : QObject( parent ), mUniqItem( uniqItem )
+CalPrinter::CalPrinter(QWidget *parent, const Akonadi::ETMCalendar::Ptr &calendar,
+                       bool uniqItem)
+    : QObject(parent), mUniqItem(uniqItem)
 {
-  mParent = parent;
-  mConfig = new KConfig( QLatin1String("calendar_printing.rc"), KConfig::SimpleConfig );
+    mParent = parent;
+    mConfig = new KConfig(QLatin1String("calendar_printing.rc"), KConfig::SimpleConfig);
 
-  init( calendar );
+    init(calendar);
 }
 
 CalPrinter::~CalPrinter()
 {
-  mPrintPlugins.clear();
-  delete mConfig;
+    mPrintPlugins.clear();
+    delete mConfig;
 }
 
-void CalPrinter::init( const Akonadi::ETMCalendar::Ptr &calendar )
+void CalPrinter::init(const Akonadi::ETMCalendar::Ptr &calendar)
 {
-  mCalendar = calendar;
+    mCalendar = calendar;
 
-  mPrintPlugins.clear();
+    mPrintPlugins.clear();
 
-  if( !mUniqItem ) {
-    mPrintPlugins.prepend( new CalPrintYear() );
-    mPrintPlugins.prepend( new CalPrintJournal() );
-    mPrintPlugins.prepend( new CalPrintTodos() );
-    mPrintPlugins.prepend( new CalPrintMonth() );
-    mPrintPlugins.prepend( new CalPrintWeek() );
-    mPrintPlugins.prepend( new CalPrintDay() );
-  }
-  mPrintPlugins.prepend( new CalPrintIncidence() );
-
-  PrintPlugin::List::Iterator it = mPrintPlugins.begin();
-  for ( ; it != mPrintPlugins.end(); ++it ) {
-    if ( *it ) {
-      (*it)->setConfig( mConfig );
-      (*it)->setCalendar( mCalendar );
-      (*it)->doLoadConfig();
+    if (!mUniqItem) {
+        mPrintPlugins.prepend(new CalPrintYear());
+        mPrintPlugins.prepend(new CalPrintJournal());
+        mPrintPlugins.prepend(new CalPrintTodos());
+        mPrintPlugins.prepend(new CalPrintMonth());
+        mPrintPlugins.prepend(new CalPrintWeek());
+        mPrintPlugins.prepend(new CalPrintDay());
     }
-  }
-}
+    mPrintPlugins.prepend(new CalPrintIncidence());
 
-void CalPrinter::setDateRange( const QDate &fd, const QDate &td )
-{
-  PrintPlugin::List::Iterator it = mPrintPlugins.begin();
-  for ( ; it != mPrintPlugins.end(); ++it ) {
-    (*it)->setDateRange( fd, td );
-  }
-}
-
-void CalPrinter::print( int type, const QDate &fd, const QDate &td,
-                        KCalCore::Incidence::List selectedIncidences, bool preview )
-{
-  PrintPlugin::List::Iterator it;
-  for ( it = mPrintPlugins.begin(); it != mPrintPlugins.end(); ++it ) {
-    (*it)->setSelectedIncidences( selectedIncidences );
-  }
-  QPointer<CalPrintDialog> printDialog =
-    new CalPrintDialog( type, mPrintPlugins, mParent, mUniqItem );
-
-  KConfigGroup grp( mConfig, "" ); //orientation setting isn't in a group
-  printDialog->setOrientation( CalPrinter::ePrintOrientation( grp.readEntry( "Orientation", 1 ) ) );
-  printDialog->setPreview( preview );
-  setDateRange( fd, td );
-
-  if ( printDialog->exec() == QDialog::Accepted ) {
-    grp.writeEntry( "Orientation", (int)printDialog->orientation() );
-
-    // Save all changes in the dialog
-    for ( it = mPrintPlugins.begin(); it != mPrintPlugins.end(); ++it ) {
-      (*it)->doSaveConfig();
+    PrintPlugin::List::Iterator it = mPrintPlugins.begin();
+    for (; it != mPrintPlugins.end(); ++it) {
+        if (*it) {
+            (*it)->setConfig(mConfig);
+            (*it)->setCalendar(mCalendar);
+            (*it)->doLoadConfig();
+        }
     }
-    doPrint( printDialog->selectedPlugin(), printDialog->orientation(), preview );
-  }
-  delete printDialog;
-
-  for ( it = mPrintPlugins.begin(); it != mPrintPlugins.end(); ++it ) {
-    (*it)->setSelectedIncidences( KCalCore::Incidence::List() );
-  }
 }
 
-void CalPrinter::doPrint( PrintPlugin *selectedStyle,
-                          CalPrinter::ePrintOrientation dlgorientation, bool preview )
+void CalPrinter::setDateRange(const QDate &fd, const QDate &td)
 {
-  if ( !selectedStyle ) {
-    KMessageBox::error(
-      mParent,
-      i18nc( "@info", "Unable to print, an invalid print style was specified." ),
-      i18nc( "@title:window", "Printing error" ) );
-    return;
-  }
+    PrintPlugin::List::Iterator it = mPrintPlugins.begin();
+    for (; it != mPrintPlugins.end(); ++it) {
+        (*it)->setDateRange(fd, td);
+    }
+}
 
-  QPrinter printer;
-  switch ( dlgorientation ) {
-  case eOrientPlugin:
-    printer.setOrientation( selectedStyle->defaultOrientation() );
-    break;
-  case eOrientPortrait:
-    printer.setOrientation( QPrinter::Portrait );
-    break;
-  case eOrientLandscape:
-    printer.setOrientation( QPrinter::Landscape );
-    break;
-  case eOrientPrinter:
-  default:
-    break;
-  }
+void CalPrinter::print(int type, const QDate &fd, const QDate &td,
+                       KCalCore::Incidence::List selectedIncidences, bool preview)
+{
+    PrintPlugin::List::Iterator it;
+    for (it = mPrintPlugins.begin(); it != mPrintPlugins.end(); ++it) {
+        (*it)->setSelectedIncidences(selectedIncidences);
+    }
+    QPointer<CalPrintDialog> printDialog =
+        new CalPrintDialog(type, mPrintPlugins, mParent, mUniqItem);
 
-  if ( preview ) {
-    QPointer<KPrintPreview> printPreview = new KPrintPreview( &printer );
-    selectedStyle->doPrint( &printer );
-    printPreview->exec();
-    delete printPreview;
-  } else {
-    QPointer<QPrintDialog> printDialog = KdePrint::createPrintDialog( &printer, mParent );
-    if ( printDialog->exec() == QDialog::Accepted ) {
-      selectedStyle->doPrint( &printer );
+    KConfigGroup grp(mConfig, "");   //orientation setting isn't in a group
+    printDialog->setOrientation(CalPrinter::ePrintOrientation(grp.readEntry("Orientation", 1)));
+    printDialog->setPreview(preview);
+    setDateRange(fd, td);
+
+    if (printDialog->exec() == QDialog::Accepted) {
+        grp.writeEntry("Orientation", (int)printDialog->orientation());
+
+        // Save all changes in the dialog
+        for (it = mPrintPlugins.begin(); it != mPrintPlugins.end(); ++it) {
+            (*it)->doSaveConfig();
+        }
+        doPrint(printDialog->selectedPlugin(), printDialog->orientation(), preview);
     }
     delete printDialog;
-  }
+
+    for (it = mPrintPlugins.begin(); it != mPrintPlugins.end(); ++it) {
+        (*it)->setSelectedIncidences(KCalCore::Incidence::List());
+    }
+}
+
+void CalPrinter::doPrint(PrintPlugin *selectedStyle,
+                         CalPrinter::ePrintOrientation dlgorientation, bool preview)
+{
+    if (!selectedStyle) {
+        KMessageBox::error(
+            mParent,
+            i18nc("@info", "Unable to print, an invalid print style was specified."),
+            i18nc("@title:window", "Printing error"));
+        return;
+    }
+
+    QPrinter printer;
+    switch (dlgorientation) {
+    case eOrientPlugin:
+        printer.setOrientation(selectedStyle->defaultOrientation());
+        break;
+    case eOrientPortrait:
+        printer.setOrientation(QPrinter::Portrait);
+        break;
+    case eOrientLandscape:
+        printer.setOrientation(QPrinter::Landscape);
+        break;
+    case eOrientPrinter:
+    default:
+        break;
+    }
+
+    if (preview) {
+        QPointer<KPrintPreview> printPreview = new KPrintPreview(&printer);
+        selectedStyle->doPrint(&printer);
+        printPreview->exec();
+        delete printPreview;
+    } else {
+        QPointer<QPrintDialog> printDialog = KdePrint::createPrintDialog(&printer, mParent);
+        if (printDialog->exec() == QDialog::Accepted) {
+            selectedStyle->doPrint(&printer);
+        }
+        delete printDialog;
+    }
 }
 
 void CalPrinter::updateConfig()
 {
 }
 
-CalPrintDialog::CalPrintDialog( int initialPrintType, PrintPlugin::List plugins,
-                                QWidget *parent, bool uniqItem )
-  : QDialog( parent )
+CalPrintDialog::CalPrintDialog(int initialPrintType, PrintPlugin::List plugins,
+                               QWidget *parent, bool uniqItem)
+    : QDialog(parent)
 {
-  setWindowTitle( i18nc( "@title:window", "Print" ) );
-  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
-  QVBoxLayout *mainLayout = new QVBoxLayout;
-  setLayout(mainLayout);
-  mOkButton = buttonBox->button(QDialogButtonBox::Ok);
-  mOkButton->setDefault(true);
-  mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-  connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotOk()));
-  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
-  mainLayout->addWidget(buttonBox);
-  setModal( true );
-  QWidget *page = new QWidget( this );
-  QVBoxLayout *pageVBoxLayout = new QVBoxLayout(page);
-  pageVBoxLayout->setMargin(0);
-  mainLayout->addWidget(page);
-  mainLayout->addWidget(buttonBox);
+    setWindowTitle(i18nc("@title:window", "Print"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+    mOkButton->setDefault(true);
+    mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotOk()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    mainLayout->addWidget(buttonBox);
+    setModal(true);
+    QWidget *page = new QWidget(this);
+    QVBoxLayout *pageVBoxLayout = new QVBoxLayout(page);
+    pageVBoxLayout->setMargin(0);
+    mainLayout->addWidget(page);
+    mainLayout->addWidget(buttonBox);
 
-  QSplitter *splitter = new QSplitter( page );
-  pageVBoxLayout->addWidget(splitter);
-  splitter->setOrientation( Qt::Horizontal );
-  splitter->setChildrenCollapsible( false );
-  QGroupBox *typeBox = new QGroupBox( i18nc( "@title:group", "Print Style" ), splitter );
-  QBoxLayout *typeLayout = new QVBoxLayout( typeBox );
-  mTypeGroup = new QButtonGroup( typeBox );
+    QSplitter *splitter = new QSplitter(page);
+    pageVBoxLayout->addWidget(splitter);
+    splitter->setOrientation(Qt::Horizontal);
+    splitter->setChildrenCollapsible(false);
+    QGroupBox *typeBox = new QGroupBox(i18nc("@title:group", "Print Style"), splitter);
+    QBoxLayout *typeLayout = new QVBoxLayout(typeBox);
+    mTypeGroup = new QButtonGroup(typeBox);
 
-  QWidget *splitterRight = new QWidget( splitter );
-  QGridLayout *splitterRightLayout = new QGridLayout( splitterRight );
-  //splitterRightLayout->setMargin( marginHint() );
-  //splitterRightLayout->setSpacing( spacingHint() );
+    QWidget *splitterRight = new QWidget(splitter);
+    QGridLayout *splitterRightLayout = new QGridLayout(splitterRight);
+    //splitterRightLayout->setMargin( marginHint() );
+    //splitterRightLayout->setSpacing( spacingHint() );
 
-  mConfigArea = new QStackedWidget( splitterRight );
-  splitterRightLayout->addWidget( mConfigArea, 0, 0, 1, 2 );
-  QLabel *orientationLabel = new QLabel( i18nc( "@label", "Page &orientation:" ), splitterRight );
-  orientationLabel->setAlignment( Qt::AlignRight );
-  splitterRightLayout->addWidget( orientationLabel, 1, 0 );
+    mConfigArea = new QStackedWidget(splitterRight);
+    splitterRightLayout->addWidget(mConfigArea, 0, 0, 1, 2);
+    QLabel *orientationLabel = new QLabel(i18nc("@label", "Page &orientation:"), splitterRight);
+    orientationLabel->setAlignment(Qt::AlignRight);
+    splitterRightLayout->addWidget(orientationLabel, 1, 0);
 
-  mOrientationSelection = new KComboBox( splitterRight );
-  mOrientationSelection->setToolTip(
-    i18nc( "@info:tooltip", "Set the print orientation" ) );
-  mOrientationSelection->setWhatsThis(
-    i18nc( "@info:whatsthis",
-           "Choose if you want your output to be printed in \"portrait\" or "
-           "\"landscape\". You can also default to the orientation best suited to "
-           "the selected style or to your printer's default setting." ) );
-  mOrientationSelection->addItem( i18nc( "@item:inlistbox",
-                                         "Use Default Orientation of Selected Style" ) );
-  mOrientationSelection->addItem( i18nc( "@item:inlistbox",
-                                         "Use Printer Default" ) );
-  mOrientationSelection->addItem( i18nc( "@item:inlistbox",
-                                         "Portrait" ) );
-  mOrientationSelection->addItem( i18nc( "@item:inlistbox",
-                                         "Landscape" ) );
-  splitterRightLayout->addWidget( mOrientationSelection, 1, 1 );
+    mOrientationSelection = new KComboBox(splitterRight);
+    mOrientationSelection->setToolTip(
+        i18nc("@info:tooltip", "Set the print orientation"));
+    mOrientationSelection->setWhatsThis(
+        i18nc("@info:whatsthis",
+              "Choose if you want your output to be printed in \"portrait\" or "
+              "\"landscape\". You can also default to the orientation best suited to "
+              "the selected style or to your printer's default setting."));
+    mOrientationSelection->addItem(i18nc("@item:inlistbox",
+                                         "Use Default Orientation of Selected Style"));
+    mOrientationSelection->addItem(i18nc("@item:inlistbox",
+                                         "Use Printer Default"));
+    mOrientationSelection->addItem(i18nc("@item:inlistbox",
+                                         "Portrait"));
+    mOrientationSelection->addItem(i18nc("@item:inlistbox",
+                                         "Landscape"));
+    splitterRightLayout->addWidget(mOrientationSelection, 1, 1);
 
-  // signals and slots connections
-  connect(mTypeGroup, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &CalPrintDialog::setPrintType);
-  orientationLabel->setBuddy( mOrientationSelection );
+    // signals and slots connections
+    connect(mTypeGroup, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &CalPrintDialog::setPrintType);
+    orientationLabel->setBuddy(mOrientationSelection);
 
-  // First insert the config widgets into the widget stack. This possibly assigns
-  // proper ids (when two plugins have the same sortID), so store them in a map
-  // and use these new IDs to later sort the plugins for the type selection.
-  for ( PrintPlugin::List::ConstIterator it=plugins.constBegin();
-        it != plugins.constEnd(); ++it ) {
-    int newid = mConfigArea->insertWidget( (*it)->sortID(), (*it)->configWidget( mConfigArea ) );
-    mPluginIDs[newid] = (*it);
-  }
-  // Insert all plugins in sorted order; plugins with clashing IDs will be first
-  QMap<int, PrintPlugin*>::ConstIterator mapit;
-  int firstButton = true;
-  int id = 0;
-  for ( mapit = mPluginIDs.constBegin(); mapit != mPluginIDs.constEnd(); ++mapit ) {
-    PrintPlugin *p = mapit.value();
-    QRadioButton *radioButton = new QRadioButton( p->description() );
-    radioButton->setEnabled( p->enabled() );
-    radioButton->setToolTip(
-      i18nc( "@info:tooltip", "Select the type of print" ) );
-    radioButton->setWhatsThis(
-      i18nc( "@info:whatsthis",
-             "Select one of the following types of prints you want to make. "
-             "You may want to print an individual item, or all the items for a "
-             "specific time range (like a day, week or month), or you may want "
-             "to print your to-do list." ) );
-    // Check the first available button (to ensure one is selected initially) and then
-    // the button matching the desired print type -- if such is available!
-    if ( ( firstButton || p->sortID() == initialPrintType ) && p->enabled() ) {
-      firstButton = false;
-      radioButton->setChecked( true );
-      setPrintType( id );
+    // First insert the config widgets into the widget stack. This possibly assigns
+    // proper ids (when two plugins have the same sortID), so store them in a map
+    // and use these new IDs to later sort the plugins for the type selection.
+    for (PrintPlugin::List::ConstIterator it = plugins.constBegin();
+            it != plugins.constEnd(); ++it) {
+        int newid = mConfigArea->insertWidget((*it)->sortID(), (*it)->configWidget(mConfigArea));
+        mPluginIDs[newid] = (*it);
     }
-    mTypeGroup->addButton( radioButton, mapit.key() );
-    typeLayout->addWidget( radioButton );
-    id++;
-  }
-  if ( uniqItem ) {
-    typeBox->hide();
-  }
-  typeLayout->insertStretch( -1, 100 );
-  setMinimumSize( minimumSizeHint() );
-  resize( minimumSizeHint() );
+    // Insert all plugins in sorted order; plugins with clashing IDs will be first
+    QMap<int, PrintPlugin *>::ConstIterator mapit;
+    int firstButton = true;
+    int id = 0;
+    for (mapit = mPluginIDs.constBegin(); mapit != mPluginIDs.constEnd(); ++mapit) {
+        PrintPlugin *p = mapit.value();
+        QRadioButton *radioButton = new QRadioButton(p->description());
+        radioButton->setEnabled(p->enabled());
+        radioButton->setToolTip(
+            i18nc("@info:tooltip", "Select the type of print"));
+        radioButton->setWhatsThis(
+            i18nc("@info:whatsthis",
+                  "Select one of the following types of prints you want to make. "
+                  "You may want to print an individual item, or all the items for a "
+                  "specific time range (like a day, week or month), or you may want "
+                  "to print your to-do list."));
+        // Check the first available button (to ensure one is selected initially) and then
+        // the button matching the desired print type -- if such is available!
+        if ((firstButton || p->sortID() == initialPrintType) && p->enabled()) {
+            firstButton = false;
+            radioButton->setChecked(true);
+            setPrintType(id);
+        }
+        mTypeGroup->addButton(radioButton, mapit.key());
+        typeLayout->addWidget(radioButton);
+        id++;
+    }
+    if (uniqItem) {
+        typeBox->hide();
+    }
+    typeLayout->insertStretch(-1, 100);
+    setMinimumSize(minimumSizeHint());
+    resize(minimumSizeHint());
 }
 
 CalPrintDialog::~CalPrintDialog()
 {
 }
 
-void CalPrintDialog::setPreview( bool preview )
+void CalPrintDialog::setPreview(bool preview)
 {
-  if ( preview ) {
-    mOkButton->setText(i18nc( "@action:button", "&Preview" ));
-  } else {
-    mOkButton->setText(KStandardGuiItem::print().text());
-  }
+    if (preview) {
+        mOkButton->setText(i18nc("@action:button", "&Preview"));
+    } else {
+        mOkButton->setText(KStandardGuiItem::print().text());
+    }
 }
 
-void CalPrintDialog::setPrintType( int i )
+void CalPrintDialog::setPrintType(int i)
 {
-  mConfigArea->setCurrentIndex( i );
-  mConfigArea->currentWidget()->raise();
-  QAbstractButton *btn = mTypeGroup->button( i );
-  if (btn) {
-    btn->setChecked( true );
-  }
+    mConfigArea->setCurrentIndex(i);
+    mConfigArea->currentWidget()->raise();
+    QAbstractButton *btn = mTypeGroup->button(i);
+    if (btn) {
+        btn->setChecked(true);
+    }
 }
 
-void CalPrintDialog::setOrientation( CalPrinter::ePrintOrientation orientation )
+void CalPrintDialog::setOrientation(CalPrinter::ePrintOrientation orientation)
 {
-  mOrientation = orientation;
-  mOrientationSelection->setCurrentIndex( mOrientation );
+    mOrientation = orientation;
+    mOrientationSelection->setCurrentIndex(mOrientation);
 }
 
 PrintPlugin *CalPrintDialog::selectedPlugin()
 {
-  int id = mConfigArea->currentIndex();
-  if ( mPluginIDs.contains( id ) ) {
-    return mPluginIDs[id];
-  } else {
-    return 0;
-  }
+    int id = mConfigArea->currentIndex();
+    if (mPluginIDs.contains(id)) {
+        return mPluginIDs[id];
+    } else {
+        return 0;
+    }
 }
 
 void CalPrintDialog::slotOk()
 {
-  mOrientation =
-    ( CalPrinter::ePrintOrientation )mOrientationSelection->currentIndex();
+    mOrientation =
+        (CalPrinter::ePrintOrientation)mOrientationSelection->currentIndex();
 
-  QMap<int, PrintPlugin*>::ConstIterator it = mPluginIDs.constBegin();
-  for ( ; it != mPluginIDs.constEnd(); ++it ) {
-    if ( it.value() ) {
-      it.value()->readSettingsWidget();
+    QMap<int, PrintPlugin *>::ConstIterator it = mPluginIDs.constBegin();
+    for (; it != mPluginIDs.constEnd(); ++it) {
+        if (it.value()) {
+            it.value()->readSettingsWidget();
+        }
     }
-  }
 }

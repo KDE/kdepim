@@ -47,8 +47,8 @@
 // ---------------- COMPLETION DELEGATE --------------------------
 // ---------------------------------------------------------------
 
-TodoCompleteDelegate::TodoCompleteDelegate( QObject *parent )
- : QStyledItemDelegate( parent )
+TodoCompleteDelegate::TodoCompleteDelegate(QObject *parent)
+    : QStyledItemDelegate(parent)
 {
 }
 
@@ -56,130 +56,130 @@ TodoCompleteDelegate::~TodoCompleteDelegate()
 {
 }
 
-void TodoCompleteDelegate::paint( QPainter *painter,
-                                    const QStyleOptionViewItem &option,
-                                    const QModelIndex &index ) const
+void TodoCompleteDelegate::paint(QPainter *painter,
+                                 const QStyleOptionViewItem &option,
+                                 const QModelIndex &index) const
 {
-  QStyle *style;
+    QStyle *style;
 
-  QStyleOptionViewItemV4 opt = option;
-  initStyleOption( &opt, index );
+    QStyleOptionViewItemV4 opt = option;
+    initStyleOption(&opt, index);
 
-  style = opt.widget ? opt.widget->style() : QApplication::style();
-  style->drawPrimitive( QStyle::PE_PanelItemViewItem, &opt, painter );
+    style = opt.widget ? opt.widget->style() : QApplication::style();
+    style->drawPrimitive(QStyle::PE_PanelItemViewItem, &opt, painter);
 
-  if ( index.data( Qt::EditRole ).toInt() > 0 ) {
-    bool isEditing = false;
-    TodoViewView *view = qobject_cast<TodoViewView*>( parent() );
-    if ( view ) {
-      isEditing = view->isEditing( index );
+    if (index.data(Qt::EditRole).toInt() > 0) {
+        bool isEditing = false;
+        TodoViewView *view = qobject_cast<TodoViewView *>(parent());
+        if (view) {
+            isEditing = view->isEditing(index);
+        }
+
+        // TODO QTreeView does not set State_Editing. Qt task id 205051
+        // should be fixed with Qt 4.5, but wasn't. According to the
+        // task tracker the fix arrives in "Some future release".
+        if (!(opt.state & QStyle::State_Editing) && !isEditing) {
+            QStyleOptionProgressBar pbOption;
+            pbOption.QStyleOption::operator=(option);
+            initStyleOptionProgressBar(&pbOption, index);
+
+            style->drawControl(QStyle::CE_ProgressBar, &pbOption, painter);
+        }
     }
-
-    // TODO QTreeView does not set State_Editing. Qt task id 205051
-    // should be fixed with Qt 4.5, but wasn't. According to the
-    // task tracker the fix arrives in "Some future release".
-    if ( !( opt.state & QStyle::State_Editing ) && !isEditing ) {
-      QStyleOptionProgressBar pbOption;
-      pbOption.QStyleOption::operator=( option );
-      initStyleOptionProgressBar( &pbOption, index );
-
-      style->drawControl( QStyle::CE_ProgressBar, &pbOption, painter );
-    }
-  }
 }
 
-QSize TodoCompleteDelegate::sizeHint( const QStyleOptionViewItem &option,
-                                        const QModelIndex &index ) const
+QSize TodoCompleteDelegate::sizeHint(const QStyleOptionViewItem &option,
+                                     const QModelIndex &index) const
 {
-  QStyleOptionViewItemV4 opt = option;
-  initStyleOption( &opt, index );
+    QStyleOptionViewItemV4 opt = option;
+    initStyleOption(&opt, index);
 
-  QStyle *style = opt.widget ? opt.widget->style() : QApplication::style();
+    QStyle *style = opt.widget ? opt.widget->style() : QApplication::style();
 
-  QStyleOptionProgressBar pbOption;
-  pbOption.QStyleOption::operator=( option );
-  initStyleOptionProgressBar( &pbOption, index );
+    QStyleOptionProgressBar pbOption;
+    pbOption.QStyleOption::operator=(option);
+    initStyleOptionProgressBar(&pbOption, index);
 
-  return style->sizeFromContents( QStyle::CT_ProgressBar, &pbOption,
-                                  QSize(), opt.widget );
+    return style->sizeFromContents(QStyle::CT_ProgressBar, &pbOption,
+                                   QSize(), opt.widget);
 }
 
 void TodoCompleteDelegate::initStyleOptionProgressBar(
-                                QStyleOptionProgressBar *option,
-                                const QModelIndex &index ) const
+    QStyleOptionProgressBar *option,
+    const QModelIndex &index) const
 {
-  option->rect.adjust( 0, 1, 0, -1 );
-  option->maximum = 100;
-  option->minimum = 0;
-  option->progress = index.data().toInt();
-  option->text = index.data().toString() + QChar::fromLatin1( '%' );
-  option->textAlignment = Qt::AlignCenter;
-  option->textVisible = true;
+    option->rect.adjust(0, 1, 0, -1);
+    option->maximum = 100;
+    option->minimum = 0;
+    option->progress = index.data().toInt();
+    option->text = index.data().toString() + QChar::fromLatin1('%');
+    option->textAlignment = Qt::AlignCenter;
+    option->textVisible = true;
 }
 
-QWidget *TodoCompleteDelegate::createEditor( QWidget *parent,
-                                               const QStyleOptionViewItem &option,
-                                               const QModelIndex &index ) const
+QWidget *TodoCompleteDelegate::createEditor(QWidget *parent,
+        const QStyleOptionViewItem &option,
+        const QModelIndex &index) const
 {
-  Q_UNUSED( option );
-  Q_UNUSED( index );
+    Q_UNUSED(option);
+    Q_UNUSED(index);
 
-  TodoCompleteSlider *slider = new TodoCompleteSlider( parent );
+    TodoCompleteSlider *slider = new TodoCompleteSlider(parent);
 
-  slider->setRange( 0, 100 );
-  slider->setOrientation( Qt::Horizontal );
+    slider->setRange(0, 100);
+    slider->setOrientation(Qt::Horizontal);
 
-  return slider;
+    return slider;
 }
 
-void TodoCompleteDelegate::setEditorData( QWidget *editor,
-                                            const QModelIndex &index ) const
+void TodoCompleteDelegate::setEditorData(QWidget *editor,
+        const QModelIndex &index) const
 {
-  QSlider *slider = static_cast<QSlider *>( editor );
+    QSlider *slider = static_cast<QSlider *>(editor);
 
-  slider->setValue( index.data( Qt::EditRole ).toInt() );
+    slider->setValue(index.data(Qt::EditRole).toInt());
 }
 
-void TodoCompleteDelegate::setModelData( QWidget *editor,
-                                           QAbstractItemModel *model,
-                                           const QModelIndex &index ) const
+void TodoCompleteDelegate::setModelData(QWidget *editor,
+                                        QAbstractItemModel *model,
+                                        const QModelIndex &index) const
 {
-  QSlider *slider = static_cast<QSlider *>( editor );
+    QSlider *slider = static_cast<QSlider *>(editor);
 
-  model->setData( index, slider->value() );
+    model->setData(index, slider->value());
 }
 
-void TodoCompleteDelegate::updateEditorGeometry( QWidget *editor,
-                                                   const QStyleOptionViewItem &option,
-                                                   const QModelIndex &index ) const
+void TodoCompleteDelegate::updateEditorGeometry(QWidget *editor,
+        const QStyleOptionViewItem &option,
+        const QModelIndex &index) const
 {
-  Q_UNUSED( index );
+    Q_UNUSED(index);
 
-  editor->setGeometry( option.rect );
+    editor->setGeometry(option.rect);
 }
 
-TodoCompleteSlider::TodoCompleteSlider( QWidget *parent )
-  : QSlider( parent )
+TodoCompleteSlider::TodoCompleteSlider(QWidget *parent)
+    : QSlider(parent)
 {
-  connect(this, &TodoCompleteSlider::valueChanged, this, &TodoCompleteSlider::updateTip);
+    connect(this, &TodoCompleteSlider::valueChanged, this, &TodoCompleteSlider::updateTip);
 }
 
-void TodoCompleteSlider::updateTip( int value )
+void TodoCompleteSlider::updateTip(int value)
 {
-  QPoint p;
-  p.setY( height() / 2 );
-  p.setX( style()->sliderPositionFromValue ( minimum(), maximum(),
-                                             value, width() ) );
+    QPoint p;
+    p.setY(height() / 2);
+    p.setX(style()->sliderPositionFromValue(minimum(), maximum(),
+                                            value, width()));
 
-  QString text = QString::fromLatin1( "%1%" ).arg( value );
-  QToolTip::showText( mapToGlobal( p ), text, this );
+    QString text = QString::fromLatin1("%1%").arg(value);
+    QToolTip::showText(mapToGlobal(p), text, this);
 }
 
 // ---------------- PRIORITY DELEGATE ----------------------------
 // ---------------------------------------------------------------
 
-TodoPriorityDelegate::TodoPriorityDelegate( QObject *parent )
-  : QStyledItemDelegate( parent )
+TodoPriorityDelegate::TodoPriorityDelegate(QObject *parent)
+    : QStyledItemDelegate(parent)
 {
 }
 
@@ -187,60 +187,60 @@ TodoPriorityDelegate::~TodoPriorityDelegate()
 {
 }
 
-QWidget *TodoPriorityDelegate::createEditor( QWidget *parent,
-                                               const QStyleOptionViewItem &option,
-                                               const QModelIndex &index ) const
+QWidget *TodoPriorityDelegate::createEditor(QWidget *parent,
+        const QStyleOptionViewItem &option,
+        const QModelIndex &index) const
 {
-  Q_UNUSED( option );
-  Q_UNUSED( index );
+    Q_UNUSED(option);
+    Q_UNUSED(index);
 
-  KComboBox *combo = new KComboBox( parent );
+    KComboBox *combo = new KComboBox(parent);
 
-  combo->addItem( i18nc( "@action:inmenu Unspecified priority", "unspecified" ) );
-  combo->addItem( i18nc( "@action:inmenu highest priority", "1 (highest)" ) );
-  combo->addItem( i18nc( "@action:inmenu", "2" ) );
-  combo->addItem( i18nc( "@action:inmenu", "3" ) );
-  combo->addItem( i18nc( "@action:inmenu", "4" ) );
-  combo->addItem( i18nc( "@action:inmenu medium priority", "5 (medium)" ) );
-  combo->addItem( i18nc( "@action:inmenu", "6" ) );
-  combo->addItem( i18nc( "@action:inmenu", "7" ) );
-  combo->addItem( i18nc( "@action:inmenu", "8" ) );
-  combo->addItem( i18nc( "@action:inmenu lowest priority", "9 (lowest)" ) );
+    combo->addItem(i18nc("@action:inmenu Unspecified priority", "unspecified"));
+    combo->addItem(i18nc("@action:inmenu highest priority", "1 (highest)"));
+    combo->addItem(i18nc("@action:inmenu", "2"));
+    combo->addItem(i18nc("@action:inmenu", "3"));
+    combo->addItem(i18nc("@action:inmenu", "4"));
+    combo->addItem(i18nc("@action:inmenu medium priority", "5 (medium)"));
+    combo->addItem(i18nc("@action:inmenu", "6"));
+    combo->addItem(i18nc("@action:inmenu", "7"));
+    combo->addItem(i18nc("@action:inmenu", "8"));
+    combo->addItem(i18nc("@action:inmenu lowest priority", "9 (lowest)"));
 
-  return combo;
+    return combo;
 }
 
-void TodoPriorityDelegate::setEditorData( QWidget *editor,
-                                            const QModelIndex &index ) const
+void TodoPriorityDelegate::setEditorData(QWidget *editor,
+        const QModelIndex &index) const
 {
-  KComboBox *combo = static_cast<KComboBox *>( editor );
+    KComboBox *combo = static_cast<KComboBox *>(editor);
 
-  combo->setCurrentIndex( index.data( Qt::EditRole ).toInt() );
+    combo->setCurrentIndex(index.data(Qt::EditRole).toInt());
 }
 
-void TodoPriorityDelegate::setModelData( QWidget *editor,
-                                           QAbstractItemModel *model,
-                                           const QModelIndex &index ) const
+void TodoPriorityDelegate::setModelData(QWidget *editor,
+                                        QAbstractItemModel *model,
+                                        const QModelIndex &index) const
 {
-  KComboBox *combo = static_cast<KComboBox *>( editor );
+    KComboBox *combo = static_cast<KComboBox *>(editor);
 
-  model->setData( index, combo->currentIndex() );
+    model->setData(index, combo->currentIndex());
 }
 
-void TodoPriorityDelegate::updateEditorGeometry( QWidget *editor,
-                                                   const QStyleOptionViewItem &option,
-                                                   const QModelIndex &index ) const
+void TodoPriorityDelegate::updateEditorGeometry(QWidget *editor,
+        const QStyleOptionViewItem &option,
+        const QModelIndex &index) const
 {
-  Q_UNUSED( index );
+    Q_UNUSED(index);
 
-  editor->setGeometry( option.rect );
+    editor->setGeometry(option.rect);
 }
 
 // ---------------- DUE DATE DELEGATE ----------------------------
 // ---------------------------------------------------------------
 
-TodoDueDateDelegate::TodoDueDateDelegate( QObject *parent )
-  : QStyledItemDelegate( parent )
+TodoDueDateDelegate::TodoDueDateDelegate(QObject *parent)
+    : QStyledItemDelegate(parent)
 {
 }
 
@@ -248,49 +248,49 @@ TodoDueDateDelegate::~TodoDueDateDelegate()
 {
 }
 
-QWidget *TodoDueDateDelegate::createEditor( QWidget *parent,
-                                              const QStyleOptionViewItem &option,
-                                              const QModelIndex &index ) const
+QWidget *TodoDueDateDelegate::createEditor(QWidget *parent,
+        const QStyleOptionViewItem &option,
+        const QModelIndex &index) const
 {
-  Q_UNUSED( option );
-  Q_UNUSED( index );
+    Q_UNUSED(option);
+    Q_UNUSED(index);
 
-  KDateComboBox *dateEdit = new KDateComboBox( parent );
+    KDateComboBox *dateEdit = new KDateComboBox(parent);
 
-  return dateEdit;
+    return dateEdit;
 }
 
-void TodoDueDateDelegate::setEditorData( QWidget *editor,
-                                           const QModelIndex &index ) const
+void TodoDueDateDelegate::setEditorData(QWidget *editor,
+                                        const QModelIndex &index) const
 {
-  KDateComboBox *dateEdit = static_cast<KDateComboBox *>( editor );
+    KDateComboBox *dateEdit = static_cast<KDateComboBox *>(editor);
 
-  dateEdit->setDate( index.data( Qt::EditRole ).toDate() );
+    dateEdit->setDate(index.data(Qt::EditRole).toDate());
 }
 
-void TodoDueDateDelegate::setModelData( QWidget *editor,
-                                          QAbstractItemModel *model,
-                                          const QModelIndex &index ) const
+void TodoDueDateDelegate::setModelData(QWidget *editor,
+                                       QAbstractItemModel *model,
+                                       const QModelIndex &index) const
 {
-  KDateComboBox *dateEdit = static_cast<KDateComboBox *>( editor );
+    KDateComboBox *dateEdit = static_cast<KDateComboBox *>(editor);
 
-  model->setData( index, dateEdit->date() );
+    model->setData(index, dateEdit->date());
 }
 
-void TodoDueDateDelegate::updateEditorGeometry( QWidget *editor,
-                                                  const QStyleOptionViewItem &option,
-                                                  const QModelIndex &index ) const
+void TodoDueDateDelegate::updateEditorGeometry(QWidget *editor,
+        const QStyleOptionViewItem &option,
+        const QModelIndex &index) const
 {
-  Q_UNUSED( index );
-  editor->setGeometry( QStyle::alignedRect( QApplication::layoutDirection(), Qt::AlignCenter,
-                                            editor->size(), option.rect ) );
+    Q_UNUSED(index);
+    editor->setGeometry(QStyle::alignedRect(QApplication::layoutDirection(), Qt::AlignCenter,
+                                            editor->size(), option.rect));
 }
 
 // ---------------- CATEGORIES DELEGATE --------------------------
 // ---------------------------------------------------------------
 
-TodoCategoriesDelegate::TodoCategoriesDelegate( QObject *parent )
-  : QStyledItemDelegate( parent ), mCalendar(0)
+TodoCategoriesDelegate::TodoCategoriesDelegate(QObject *parent)
+    : QStyledItemDelegate(parent), mCalendar(0)
 {
 }
 
@@ -298,133 +298,133 @@ TodoCategoriesDelegate::~TodoCategoriesDelegate()
 {
 }
 
-QWidget *TodoCategoriesDelegate::createEditor( QWidget *parent,
-                                                 const QStyleOptionViewItem &option,
-                                                 const QModelIndex &index ) const
+QWidget *TodoCategoriesDelegate::createEditor(QWidget *parent,
+        const QStyleOptionViewItem &option,
+        const QModelIndex &index) const
 {
-  Q_UNUSED( option );
-  Q_UNUSED( index );
+    Q_UNUSED(option);
+    Q_UNUSED(index);
 
-  return new KPIM::TagSelectionCombo( parent );
+    return new KPIM::TagSelectionCombo(parent);
 }
 
-void TodoCategoriesDelegate::setEditorData( QWidget *editor,
-                                              const QModelIndex &index ) const
+void TodoCategoriesDelegate::setEditorData(QWidget *editor,
+        const QModelIndex &index) const
 {
-  KPIM::KCheckComboBox *combo = static_cast<KPIM::KCheckComboBox *>( editor );
+    KPIM::KCheckComboBox *combo = static_cast<KPIM::KCheckComboBox *>(editor);
 
-  combo->setCheckedItems( index.data( Qt::EditRole ).toStringList(), Qt::UserRole );
+    combo->setCheckedItems(index.data(Qt::EditRole).toStringList(), Qt::UserRole);
 }
 
-void TodoCategoriesDelegate::setModelData( QWidget *editor,
-                                             QAbstractItemModel *model,
-                                             const QModelIndex &index ) const
+void TodoCategoriesDelegate::setModelData(QWidget *editor,
+        QAbstractItemModel *model,
+        const QModelIndex &index) const
 {
-  KPIM::KCheckComboBox *combo = static_cast<KPIM::KCheckComboBox *>( editor );
+    KPIM::KCheckComboBox *combo = static_cast<KPIM::KCheckComboBox *>(editor);
 
-  model->setData( index, combo->checkedItems( Qt::UserRole ) );
+    model->setData(index, combo->checkedItems(Qt::UserRole));
 }
 
-void TodoCategoriesDelegate::updateEditorGeometry( QWidget *editor,
-                                                     const QStyleOptionViewItem &option,
-                                                     const QModelIndex &index ) const
+void TodoCategoriesDelegate::updateEditorGeometry(QWidget *editor,
+        const QStyleOptionViewItem &option,
+        const QModelIndex &index) const
 {
-  Q_UNUSED( index );
+    Q_UNUSED(index);
 
-  editor->setGeometry( option.rect );
+    editor->setGeometry(option.rect);
 }
 
-void TodoCategoriesDelegate::setCalendar( const Akonadi::ETMCalendar::Ptr &cal )
+void TodoCategoriesDelegate::setCalendar(const Akonadi::ETMCalendar::Ptr &cal)
 {
-  mCalendar = cal;
+    mCalendar = cal;
 }
 
 // ---------------- RICH TEXT DELEGATE ---------------------------
 // ---------------------------------------------------------------
 
-TodoRichTextDelegate::TodoRichTextDelegate( QObject *parent )
-  : QStyledItemDelegate( parent )
+TodoRichTextDelegate::TodoRichTextDelegate(QObject *parent)
+    : QStyledItemDelegate(parent)
 {
-  m_textDoc = new QTextDocument( this );
+    m_textDoc = new QTextDocument(this);
 }
 
 TodoRichTextDelegate::~TodoRichTextDelegate()
 {
 }
 
-void TodoRichTextDelegate::paint( QPainter *painter,
-                                    const QStyleOptionViewItem &option,
-                                    const QModelIndex &index ) const
+void TodoRichTextDelegate::paint(QPainter *painter,
+                                 const QStyleOptionViewItem &option,
+                                 const QModelIndex &index) const
 {
-  if ( index.data( TodoModel::IsRichTextRole ).toBool() ) {
-    QStyleOptionViewItemV4 opt = option;
-    initStyleOption( &opt, index );
+    if (index.data(TodoModel::IsRichTextRole).toBool()) {
+        QStyleOptionViewItemV4 opt = option;
+        initStyleOption(&opt, index);
 
-    const QWidget *widget = opt.widget;
-    QStyle *style = widget ? widget->style() : QApplication::style();
+        const QWidget *widget = opt.widget;
+        QStyle *style = widget ? widget->style() : QApplication::style();
 
-    QRect textRect = style->subElementRect( QStyle::SE_ItemViewItemText,
-                                            &opt, widget );
+        QRect textRect = style->subElementRect(QStyle::SE_ItemViewItemText,
+                                               &opt, widget);
 
-    // draw the item without text
-    opt.text.clear();
-    style->drawControl( QStyle::CE_ItemViewItem, &opt, painter, widget );
+        // draw the item without text
+        opt.text.clear();
+        style->drawControl(QStyle::CE_ItemViewItem, &opt, painter, widget);
 
-    // draw the text (rich text)
-    QPalette::ColorGroup cg = opt.state & QStyle::State_Enabled ?
-                                QPalette::Normal : QPalette::Disabled;
-    if ( cg == QPalette::Normal && !( opt.state & QStyle::State_Active ) ) {
-      cg = QPalette::Inactive;
-    }
+        // draw the text (rich text)
+        QPalette::ColorGroup cg = opt.state & QStyle::State_Enabled ?
+                                  QPalette::Normal : QPalette::Disabled;
+        if (cg == QPalette::Normal && !(opt.state & QStyle::State_Active)) {
+            cg = QPalette::Inactive;
+        }
 
-    if ( opt.state & QStyle::State_Selected ) {
-      painter->setPen(
-        QPen( opt.palette.brush( cg, QPalette::HighlightedText ), 0 ) );
+        if (opt.state & QStyle::State_Selected) {
+            painter->setPen(
+                QPen(opt.palette.brush(cg, QPalette::HighlightedText), 0));
+        } else {
+            painter->setPen(
+                QPen(opt.palette.brush(cg, QPalette::Text), 0));
+        }
+        if (opt.state & QStyle::State_Editing) {
+            painter->setPen(QPen(opt.palette.brush(cg, QPalette::Text), 0));
+            painter->drawRect(textRect.adjusted(0, 0, -1, -1));
+        }
+
+        m_textDoc->setHtml(index.data().toString());
+
+        painter->save();
+        painter->translate(textRect.topLeft());
+
+        QRect tmpRect = textRect;
+        tmpRect.moveTo(0, 0);
+        m_textDoc->setTextWidth(tmpRect.width());
+        m_textDoc->drawContents(painter, tmpRect);
+
+        painter->restore();
     } else {
-      painter->setPen(
-        QPen( opt.palette.brush( cg, QPalette::Text ), 0 ) );
+        // align the text at top so that when it has more than two lines
+        // it will just cut the extra lines out instead of aligning centered vertically
+        QStyleOptionViewItem copy = option;
+        copy.displayAlignment = Qt::AlignLeft | Qt::AlignTop;
+        QStyledItemDelegate::paint(painter, copy, index);
     }
-    if ( opt.state & QStyle::State_Editing ) {
-      painter->setPen( QPen( opt.palette.brush( cg, QPalette::Text ), 0 ) );
-      painter->drawRect( textRect.adjusted( 0, 0, -1, -1 ) );
-    }
-
-    m_textDoc->setHtml( index.data().toString() );
-
-    painter->save();
-    painter->translate( textRect.topLeft() );
-
-    QRect tmpRect = textRect;
-    tmpRect.moveTo( 0, 0 );
-    m_textDoc->setTextWidth( tmpRect.width() );
-    m_textDoc->drawContents( painter, tmpRect );
-
-    painter->restore();
-  } else {
-    // align the text at top so that when it has more than two lines
-    // it will just cut the extra lines out instead of aligning centered vertically
-    QStyleOptionViewItem copy = option;
-    copy.displayAlignment = Qt::AlignLeft | Qt::AlignTop;
-    QStyledItemDelegate::paint( painter, copy, index );
-  }
 }
 
-QSize TodoRichTextDelegate::sizeHint( const QStyleOptionViewItem &option,
-                                      const QModelIndex &index ) const
+QSize TodoRichTextDelegate::sizeHint(const QStyleOptionViewItem &option,
+                                     const QModelIndex &index) const
 {
-  QSize ret = QStyledItemDelegate::sizeHint( option, index );
-  if ( index.data( TodoModel::IsRichTextRole ).toBool() ) {
-    m_textDoc->setHtml( index.data().toString() );
-    ret = ret.expandedTo( m_textDoc->size().toSize() );
-  }
-  // limit height to max. 2 lines
-  // TODO add graphical hint when truncating! make configurable height?
-  if ( ret.height() > option.fontMetrics.height() * 2 ) {
-    ret.setHeight( option.fontMetrics.height() * 2 );
-  }
+    QSize ret = QStyledItemDelegate::sizeHint(option, index);
+    if (index.data(TodoModel::IsRichTextRole).toBool()) {
+        m_textDoc->setHtml(index.data().toString());
+        ret = ret.expandedTo(m_textDoc->size().toSize());
+    }
+    // limit height to max. 2 lines
+    // TODO add graphical hint when truncating! make configurable height?
+    if (ret.height() > option.fontMetrics.height() * 2) {
+        ret.setHeight(option.fontMetrics.height() * 2);
+    }
 
-  // This row might not have a checkbox, so give it more height so it appears the same size as other rows.
-  const int checkboxHeight = QApplication::style()->sizeFromContents( QStyle::CT_CheckBox, &option, QSize() ).height();
-  return QSize( ret.width(), qMax( ret.height(), checkboxHeight ) );
+    // This row might not have a checkbox, so give it more height so it appears the same size as other rows.
+    const int checkboxHeight = QApplication::style()->sizeFromContents(QStyle::CT_CheckBox, &option, QSize()).height();
+    return QSize(ret.width(), qMax(ret.height(), checkboxHeight));
 }
 

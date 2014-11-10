@@ -42,8 +42,8 @@
 using namespace KCalCore;
 using namespace EventViews;
 
-TimelineView::Private::Private( TimelineView *parent ) :
-  q( parent )
+TimelineView::Private::Private(TimelineView *parent) :
+    q(parent)
 {
 }
 
@@ -53,177 +53,177 @@ TimelineView::Private::~Private()
 
 void TimelineView::Private::splitterMoved()
 {
-  mLeftView->setColumnWidth( 0, mLeftView->width() );
+    mLeftView->setColumnWidth(0, mLeftView->width());
 }
 
-void TimelineView::Private::itemSelected( const QModelIndex &index )
+void TimelineView::Private::itemSelected(const QModelIndex &index)
 {
-  TimelineSubItem *tlitem =
-    dynamic_cast<TimelineSubItem *>( static_cast<QStandardItemModel*>(
-                                       mGantt->model() )->item( index.row(), index.column() ) );
-  if ( tlitem ) {
-    emit q->incidenceSelected( tlitem->incidence(), tlitem->originalStart().date() );
-  }
+    TimelineSubItem *tlitem =
+        dynamic_cast<TimelineSubItem *>(static_cast<QStandardItemModel *>(
+                                            mGantt->model())->item(index.row(), index.column()));
+    if (tlitem) {
+        emit q->incidenceSelected(tlitem->incidence(), tlitem->originalStart().date());
+    }
 }
 
-void TimelineView::Private::itemDoubleClicked( const QModelIndex &index )
+void TimelineView::Private::itemDoubleClicked(const QModelIndex &index)
 {
-  TimelineSubItem *tlitem =
-    dynamic_cast<TimelineSubItem *>( static_cast<QStandardItemModel*>(
-                                       mGantt->model() )->item( index.row(), index.column() ) );
-  if ( tlitem ) {
-    emit q->editIncidenceSignal( tlitem->incidence() );
-  }
+    TimelineSubItem *tlitem =
+        dynamic_cast<TimelineSubItem *>(static_cast<QStandardItemModel *>(
+                                            mGantt->model())->item(index.row(), index.column()));
+    if (tlitem) {
+        emit q->editIncidenceSignal(tlitem->incidence());
+    }
 }
 
-void TimelineView::Private::contextMenuRequested( const QPoint &point )
+void TimelineView::Private::contextMenuRequested(const QPoint &point)
 {
-  QPersistentModelIndex index = mGantt->indexAt( point );
-  // mHintDate = QDateTime( mGantt->getDateTimeForCoordX( QCursor::pos().x(), true ) );
-  TimelineSubItem *tlitem =
-    dynamic_cast<TimelineSubItem *>( static_cast<QStandardItemModel*>(
-                                       mGantt->model() )->item( index.row(), index.column() ) );
-  if ( !tlitem ) {
-    emit q->showNewEventPopupSignal();
-    mSelectedItemList = Akonadi::Item::List();
-  } else {
-    emit q->showIncidencePopupSignal(
-      tlitem->incidence(),
-      CalendarSupport::incidence( tlitem->incidence() )->dtStart().date() );
+    QPersistentModelIndex index = mGantt->indexAt(point);
+    // mHintDate = QDateTime( mGantt->getDateTimeForCoordX( QCursor::pos().x(), true ) );
+    TimelineSubItem *tlitem =
+        dynamic_cast<TimelineSubItem *>(static_cast<QStandardItemModel *>(
+                                            mGantt->model())->item(index.row(), index.column()));
+    if (!tlitem) {
+        emit q->showNewEventPopupSignal();
+        mSelectedItemList = Akonadi::Item::List();
+    } else {
+        emit q->showIncidencePopupSignal(
+            tlitem->incidence(),
+            CalendarSupport::incidence(tlitem->incidence())->dtStart().date());
 
-    mSelectedItemList << tlitem->incidence();
-  }
+        mSelectedItemList << tlitem->incidence();
+    }
 }
 
 //slot
-void TimelineView::Private::newEventWithHint( const QDateTime &dt )
+void TimelineView::Private::newEventWithHint(const QDateTime &dt)
 {
-  mHintDate = dt;
-  emit q->newEventSignal( dt );
+    mHintDate = dt;
+    emit q->newEventSignal(dt);
 }
 
-TimelineItem *TimelineView::Private::calendarItemForIncidence( const Akonadi::Item &incidence )
+TimelineItem *TimelineView::Private::calendarItemForIncidence(const Akonadi::Item &incidence)
 {
-  Akonadi::ETMCalendar::Ptr calres = q->calendar();
-  TimelineItem *item = 0;
-  if ( !calres ) {
-    item = mCalendarItemMap.value( -1 );
-  } else {
-    item = mCalendarItemMap.value( incidence.parentCollection().id() );
-  }
-  return item;
-}
-
-void TimelineView::Private::insertIncidence( const Akonadi::Item &aitem, const QDate &day )
-{
-  const Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
-  //qDebug() << "Item " << aitem.id() << " parentcollection: " << aitem.parentCollection().id();
-  TimelineItem *item = calendarItemForIncidence( aitem );
-  if ( !item ) {
-    qWarning() << "Help! Something is really wrong here!";
-    return;
-  }
-
-  if ( incidence->recurs() ) {
-    KCalCore::OccurrenceIterator occurIter( *(q->calendar()), incidence, KDateTime( day, QTime( 0, 0 ,0 ) ), KDateTime( day, QTime( 23, 59, 59 ) ) );
-    while ( occurIter.hasNext() ) {
-      occurIter.next();
-      const Akonadi::Item akonadiItem = q->calendar()->item( occurIter.incidence() );
-      const KDateTime startOfOccurrence = occurIter.occurrenceStartDate();
-      const KDateTime endOfOccurrence = occurIter.incidence()->endDateForStart( startOfOccurrence );
-      const KDateTime::Spec spec = CalendarSupport::KCalPrefs::instance()->timeSpec();
-      item->insertIncidence( akonadiItem, startOfOccurrence.toTimeSpec( spec ),  endOfOccurrence.toTimeSpec( spec ) );
+    Akonadi::ETMCalendar::Ptr calres = q->calendar();
+    TimelineItem *item = 0;
+    if (!calres) {
+        item = mCalendarItemMap.value(-1);
+    } else {
+        item = mCalendarItemMap.value(incidence.parentCollection().id());
     }
-  } else {
-    if ( incidence->dtStart().date() == day ||
-         incidence->dtStart().date() < mStartDate ) {
-      item->insertIncidence( aitem );
-    }
-  }
+    return item;
 }
 
-void TimelineView::Private::insertIncidence( const Akonadi::Item &incidence )
+void TimelineView::Private::insertIncidence(const Akonadi::Item &aitem, const QDate &day)
 {
-  const Event::Ptr event = CalendarSupport::event( incidence );
-  if ( !event ) {
-    return;
-  }
-
-  if ( event->recurs() ) {
-    insertIncidence( incidence, QDate() );
-  }
-
-  KDateTime::Spec timeSpec = CalendarSupport::KCalPrefs::instance()->timeSpec();
-  for ( QDate day = mStartDate; day <= mEndDate; day = day.addDays( 1 ) ) {
-    KCalCore::Event::List events = q->calendar()->events( day,
-                                                          timeSpec,
-                                                          KCalCore::EventSortStartDate,
-                                                          KCalCore::SortDirectionAscending );
-    if ( events.contains( event ) ) {
-      //PENDING(AKONADI_PORT) check if correct. also check the original if,
-      //was inside the for loop (unnecessarily)
-      foreach( const KCalCore::Event::Ptr &i, events ) {
-        Akonadi::Item item = q->calendar()->item( i );
-        insertIncidence( item, day );
-      }
+    const Incidence::Ptr incidence = CalendarSupport::incidence(aitem);
+    //qDebug() << "Item " << aitem.id() << " parentcollection: " << aitem.parentCollection().id();
+    TimelineItem *item = calendarItemForIncidence(aitem);
+    if (!item) {
+        qWarning() << "Help! Something is really wrong here!";
+        return;
     }
-  }
-}
 
-void TimelineView::Private::removeIncidence( const Akonadi::Item &incidence )
-{
-  TimelineItem *item = calendarItemForIncidence( incidence );
-  if ( item ) {
-    item->removeIncidence( incidence );
-  } else {
-#if 0 //AKONADI_PORT_DISABLED
-    // try harder, the incidence might already be removed from the resource
-    typedef QMap<QString, KOrg::TimelineItem *> M2_t;
-    typedef QMap<KCalCore::ResourceCalendar *, M2_t> M1_t;
-    for ( M1_t::ConstIterator it1 = d->mCalendarItemMap.constBegin();
-          it1 != mCalendarItemMap.constEnd(); ++it1 ) {
-      for ( M2_t::ConstIterator it2 = it1.value().constBegin();
-            it2 != it1.value().constEnd(); ++it2 ) {
-        if ( it2.value() ) {
-          it2.value()->removeIncidence( incidence );
+    if (incidence->recurs()) {
+        KCalCore::OccurrenceIterator occurIter(*(q->calendar()), incidence, KDateTime(day, QTime(0, 0 , 0)), KDateTime(day, QTime(23, 59, 59)));
+        while (occurIter.hasNext()) {
+            occurIter.next();
+            const Akonadi::Item akonadiItem = q->calendar()->item(occurIter.incidence());
+            const KDateTime startOfOccurrence = occurIter.occurrenceStartDate();
+            const KDateTime endOfOccurrence = occurIter.incidence()->endDateForStart(startOfOccurrence);
+            const KDateTime::Spec spec = CalendarSupport::KCalPrefs::instance()->timeSpec();
+            item->insertIncidence(akonadiItem, startOfOccurrence.toTimeSpec(spec),  endOfOccurrence.toTimeSpec(spec));
         }
-      }
+    } else {
+        if (incidence->dtStart().date() == day ||
+                incidence->dtStart().date() < mStartDate) {
+            item->insertIncidence(aitem);
+        }
     }
-#endif
-  }
 }
 
-void TimelineView::Private::itemChanged( QStandardItem *item )
+void TimelineView::Private::insertIncidence(const Akonadi::Item &incidence)
 {
-  TimelineSubItem *tlit = dynamic_cast<TimelineSubItem *>( item );
-  if ( !tlit ) {
-    return;
-  }
-
-  const Akonadi::Item i = tlit->incidence();
-  const Incidence::Ptr inc = CalendarSupport::incidence( i );
-
-  KDateTime newStart( tlit->startTime() );
-  if ( inc->allDay() ) {
-    newStart = KDateTime( newStart.date() );
-  }
-
-  int delta = tlit->originalStart().secsTo( newStart );
-  inc->setDtStart( inc->dtStart().addSecs( delta ) );
-  int duration = tlit->startTime().secsTo( tlit->endTime() );
-  int allDayOffset = 0;
-  if ( inc->allDay() ) {
-    int secsPerDay = 60 * 60 * 24;
-    duration /= secsPerDay;
-    duration *= secsPerDay;
-    allDayOffset = secsPerDay;
-    duration -= allDayOffset;
-    if ( duration < 0 ) {
-      duration = 0;
+    const Event::Ptr event = CalendarSupport::event(incidence);
+    if (!event) {
+        return;
     }
-  }
-  inc->setDuration( duration );
-  TimelineItem *parent = tlit->parent();
-  parent->moveItems( i, tlit->originalStart().secsTo( newStart ), duration + allDayOffset );
+
+    if (event->recurs()) {
+        insertIncidence(incidence, QDate());
+    }
+
+    KDateTime::Spec timeSpec = CalendarSupport::KCalPrefs::instance()->timeSpec();
+    for (QDate day = mStartDate; day <= mEndDate; day = day.addDays(1)) {
+        KCalCore::Event::List events = q->calendar()->events(day,
+                                       timeSpec,
+                                       KCalCore::EventSortStartDate,
+                                       KCalCore::SortDirectionAscending);
+        if (events.contains(event)) {
+            //PENDING(AKONADI_PORT) check if correct. also check the original if,
+            //was inside the for loop (unnecessarily)
+            foreach (const KCalCore::Event::Ptr &i, events) {
+                Akonadi::Item item = q->calendar()->item(i);
+                insertIncidence(item, day);
+            }
+        }
+    }
+}
+
+void TimelineView::Private::removeIncidence(const Akonadi::Item &incidence)
+{
+    TimelineItem *item = calendarItemForIncidence(incidence);
+    if (item) {
+        item->removeIncidence(incidence);
+    } else {
+#if 0 //AKONADI_PORT_DISABLED
+        // try harder, the incidence might already be removed from the resource
+        typedef QMap<QString, KOrg::TimelineItem *> M2_t;
+        typedef QMap<KCalCore::ResourceCalendar *, M2_t> M1_t;
+        for (M1_t::ConstIterator it1 = d->mCalendarItemMap.constBegin();
+                it1 != mCalendarItemMap.constEnd(); ++it1) {
+            for (M2_t::ConstIterator it2 = it1.value().constBegin();
+                    it2 != it1.value().constEnd(); ++it2) {
+                if (it2.value()) {
+                    it2.value()->removeIncidence(incidence);
+                }
+            }
+        }
+#endif
+    }
+}
+
+void TimelineView::Private::itemChanged(QStandardItem *item)
+{
+    TimelineSubItem *tlit = dynamic_cast<TimelineSubItem *>(item);
+    if (!tlit) {
+        return;
+    }
+
+    const Akonadi::Item i = tlit->incidence();
+    const Incidence::Ptr inc = CalendarSupport::incidence(i);
+
+    KDateTime newStart(tlit->startTime());
+    if (inc->allDay()) {
+        newStart = KDateTime(newStart.date());
+    }
+
+    int delta = tlit->originalStart().secsTo(newStart);
+    inc->setDtStart(inc->dtStart().addSecs(delta));
+    int duration = tlit->startTime().secsTo(tlit->endTime());
+    int allDayOffset = 0;
+    if (inc->allDay()) {
+        int secsPerDay = 60 * 60 * 24;
+        duration /= secsPerDay;
+        duration *= secsPerDay;
+        allDayOffset = secsPerDay;
+        duration -= allDayOffset;
+        if (duration < 0) {
+            duration = 0;
+        }
+    }
+    inc->setDuration(duration);
+    TimelineItem *parent = tlit->parent();
+    parent->moveItems(i, tlit->originalStart().secsTo(newStart), duration + allDayOffset);
 }
 

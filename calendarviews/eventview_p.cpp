@@ -37,42 +37,42 @@
 using namespace EventViews;
 
 EventViewPrivate::EventViewPrivate()
-  : calendar( 0 ),
-    customCollectionSelection( 0 ),
-    collectionSelectionModel( 0 ),
-    mReturnPressed( false ),
-    mDateRangeSelectionEnabled( true ),
-    mTypeAhead( false ),
-    mTypeAheadReceiver( 0 ),
-    mPrefs( new Prefs() ),
-    mKCalPrefs( new CalendarSupport::KCalPrefs() ),
-    mChanger( 0 ),
-    mChanges( EventView::DatesChanged ),
-    mCollectionId( -1 )
+    : calendar(0),
+      customCollectionSelection(0),
+      collectionSelectionModel(0),
+      mReturnPressed(false),
+      mDateRangeSelectionEnabled(true),
+      mTypeAhead(false),
+      mTypeAheadReceiver(0),
+      mPrefs(new Prefs()),
+      mKCalPrefs(new CalendarSupport::KCalPrefs()),
+      mChanger(0),
+      mChanges(EventView::DatesChanged),
+      mCollectionId(-1)
 { }
 
 EventViewPrivate::~EventViewPrivate()
 {
-  delete collectionSelectionModel;
+    delete collectionSelectionModel;
 }
 
 void EventViewPrivate::finishTypeAhead()
 {
-  if ( mTypeAheadReceiver ) {
-    foreach ( QEvent *e, mTypeAheadEvents ) {
-      QApplication::sendEvent( mTypeAheadReceiver, e );
+    if (mTypeAheadReceiver) {
+        foreach (QEvent *e, mTypeAheadEvents) {
+            QApplication::sendEvent(mTypeAheadReceiver, e);
+        }
     }
-  }
-  qDeleteAll( mTypeAheadEvents );
-  mTypeAheadEvents.clear();
-  mTypeAhead = false;
+    qDeleteAll(mTypeAheadEvents);
+    mTypeAheadEvents.clear();
+    mTypeAhead = false;
 }
 
 void EventViewPrivate::setUpModels()
 {
-  delete customCollectionSelection;
-  customCollectionSelection = 0;
-  if ( collectionSelectionModel ) {
-    customCollectionSelection = new CalendarSupport::CollectionSelection( collectionSelectionModel->selectionModel() );
-  }
+    delete customCollectionSelection;
+    customCollectionSelection = 0;
+    if (collectionSelectionModel) {
+        customCollectionSelection = new CalendarSupport::CollectionSelection(collectionSelectionModel->selectionModel());
+    }
 }

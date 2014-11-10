@@ -30,25 +30,26 @@
 #include <Akonadi/Calendar/ETMCalendar>
 #include <QWidget>
 
-namespace KPIM {
-  class KCheckComboBox;
-  class TagSelectionCombo;
+namespace KPIM
+{
+class KCheckComboBox;
+class TagSelectionCombo;
 }
 
 class QLineEdit;
 
 class TodoViewQuickSearch : public QWidget
 {
-  Q_OBJECT
-  public:
-    TodoViewQuickSearch( const Akonadi::ETMCalendar::Ptr &calendar,
-                         QWidget *parent );
+    Q_OBJECT
+public:
+    TodoViewQuickSearch(const Akonadi::ETMCalendar::Ptr &calendar,
+                        QWidget *parent);
     ~TodoViewQuickSearch() {}
 
-    void setCalendar( const Akonadi::ETMCalendar::Ptr &calendar );
+    void setCalendar(const Akonadi::ETMCalendar::Ptr &calendar);
 
-  Q_SIGNALS:
-    void searchTextChanged( const QString & );
+Q_SIGNALS:
+    void searchTextChanged(const QString &);
 
     /**
      * The string list contains the new categories which are set on the filter.
@@ -56,17 +57,17 @@ class TodoViewQuickSearch : public QWidget
      * so, if someone checks a subcategory, the value will be "ParentCategory:subCategory"
      * and not " subcategory".
      * */
-    void filterCategoryChanged( const QStringList & );
-    void filterPriorityChanged( const QStringList & );
+    void filterCategoryChanged(const QStringList &);
+    void filterPriorityChanged(const QStringList &);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void reset();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void emitFilterCategoryChanged();
     void emitFilterPriorityChanged();
 
-  private:
+private:
     /** Helper method for the filling of the priority combo. */
     void fillPriorities();
 

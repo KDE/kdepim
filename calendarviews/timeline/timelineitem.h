@@ -32,30 +32,30 @@
 #include <QList>
 #include <QStandardItemModel>
 
-
-namespace EventViews {
+namespace EventViews
+{
 
 class TimelineSubItem;
 
 class TimelineItem : public QObject
 {
-  Q_OBJECT
-  public:
-    TimelineItem( const Akonadi::ETMCalendar::Ptr &calendar, uint index, QStandardItemModel *model,
-                  QObject *parent );
+    Q_OBJECT
+public:
+    TimelineItem(const Akonadi::ETMCalendar::Ptr &calendar, uint index, QStandardItemModel *model,
+                 QObject *parent);
 
-    void insertIncidence( const Akonadi::Item &incidence,
-                          const KDateTime &start = KDateTime(),
-                          const KDateTime &end = KDateTime() );
-    void removeIncidence( const Akonadi::Item &incidence );
+    void insertIncidence(const Akonadi::Item &incidence,
+                         const KDateTime &start = KDateTime(),
+                         const KDateTime &end = KDateTime());
+    void removeIncidence(const Akonadi::Item &incidence);
 
-    void moveItems( const Akonadi::Item &incidence, int delta, int duration );
+    void moveItems(const Akonadi::Item &incidence, int delta, int duration);
 
-    void setColor( const QColor &color );
+    void setColor(const QColor &color);
 
-  private:
+private:
     Akonadi::ETMCalendar::Ptr mCalendar;
-    QMap<Akonadi::Item::Id, QList<QStandardItem*> > mItemMap;
+    QMap<Akonadi::Item::Id, QList<QStandardItem *> > mItemMap;
     QStandardItemModel *mModel;
     QColor mColor;
     uint mIndex;
@@ -63,40 +63,40 @@ class TimelineItem : public QObject
 
 class TimelineSubItem : public QStandardItem
 {
-  public:
-    TimelineSubItem( const Akonadi::ETMCalendar::Ptr &calendar,
-                     const Akonadi::Item &incidence, TimelineItem *parent );
+public:
+    TimelineSubItem(const Akonadi::ETMCalendar::Ptr &calendar,
+                    const Akonadi::Item &incidence, TimelineItem *parent);
     ~TimelineSubItem();
 
     Akonadi::Item  incidence() const
     {
-      return mIncidence;
+        return mIncidence;
     }
 
     KDateTime originalStart() const
     {
-      return mStart;
+        return mStart;
     }
 
-    void setOriginalStart( const KDateTime &dt )
+    void setOriginalStart(const KDateTime &dt)
     {
-      mStart = dt;
+        mStart = dt;
     }
 
-    void setStartTime( const QDateTime &dt );
+    void setStartTime(const QDateTime &dt);
     QDateTime startTime() const;
 
-    void setEndTime( const QDateTime &dt );
+    void setEndTime(const QDateTime &dt);
     QDateTime endTime() const;
 
     TimelineItem *parent()
     {
-      return mParent;
+        return mParent;
     }
 
     void updateToolTip();
 
-  private:
+private:
     Akonadi::ETMCalendar::Ptr mCalendar;
     Akonadi::Item mIncidence;
     KDateTime mStart;

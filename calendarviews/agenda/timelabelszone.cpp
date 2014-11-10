@@ -33,149 +33,149 @@
 
 using namespace EventViews;
 
-TimeLabelsZone::TimeLabelsZone( QWidget *parent, const PrefsPtr &preferences, Agenda *agenda )
-  : QWidget( parent ), mAgenda( agenda ), mPrefs( preferences ),
-    mParent( qobject_cast<AgendaView*>( parent ) )
+TimeLabelsZone::TimeLabelsZone(QWidget *parent, const PrefsPtr &preferences, Agenda *agenda)
+    : QWidget(parent), mAgenda(agenda), mPrefs(preferences),
+      mParent(qobject_cast<AgendaView *>(parent))
 {
-  mTimeLabelsLayout = new QHBoxLayout( this );
-  mTimeLabelsLayout->setMargin( 0 );
-  mTimeLabelsLayout->setSpacing( 0 );
+    mTimeLabelsLayout = new QHBoxLayout(this);
+    mTimeLabelsLayout->setMargin(0);
+    mTimeLabelsLayout->setSpacing(0);
 
-  init();
+    init();
 }
 
 void TimeLabelsZone::reset()
 {
-  foreach ( QScrollArea *label, mTimeLabelsList ) {
-    label->hide();
-    label->deleteLater();
-  }
-  mTimeLabelsList.clear();
+    foreach (QScrollArea *label, mTimeLabelsList) {
+        label->hide();
+        label->deleteLater();
+    }
+    mTimeLabelsList.clear();
 
-  init();
+    init();
 
-  // Update some related geometry from the agenda view
-  updateAll();
-  if ( mParent ) {
-    mParent->updateTimeBarWidth();
-    mParent->createDayLabels( true );
-  }
+    // Update some related geometry from the agenda view
+    updateAll();
+    if (mParent) {
+        mParent->updateTimeBarWidth();
+        mParent->createDayLabels(true);
+    }
 }
 
 void TimeLabelsZone::init()
 {
-  QStringList seenTimeZones( mPrefs->timeSpec().timeZone().name() );
+    QStringList seenTimeZones(mPrefs->timeSpec().timeZone().name());
 
-  addTimeLabels( mPrefs->timeSpec() );
+    addTimeLabels(mPrefs->timeSpec());
 
-  foreach ( const QString &zoneStr, mPrefs->timeScaleTimezones() ) {
-    if ( !seenTimeZones.contains( zoneStr ) ) {
-      KTimeZone zone = KSystemTimeZones::zone( zoneStr );
-      if ( zone.isValid() ) {
-        addTimeLabels( zone );
-        seenTimeZones += zoneStr;
-      }
+    foreach (const QString &zoneStr, mPrefs->timeScaleTimezones()) {
+        if (!seenTimeZones.contains(zoneStr)) {
+            KTimeZone zone = KSystemTimeZones::zone(zoneStr);
+            if (zone.isValid()) {
+                addTimeLabels(zone);
+                seenTimeZones += zoneStr;
+            }
+        }
     }
-  }
 }
 
-void TimeLabelsZone::addTimeLabels( const KDateTime::Spec &spec )
+void TimeLabelsZone::addTimeLabels(const KDateTime::Spec &spec)
 {
-  QScrollArea *area = new QScrollArea( this );
-  TimeLabels *labels = new TimeLabels( spec, 24, this );
-  mTimeLabelsList.prepend( area );
-  area->setWidgetResizable( true );
-  area->setWidget( labels );
-  area->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-  area->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-  area->setBackgroundRole( QPalette::Window );
-  area->setFrameStyle( QFrame::NoFrame );
-  area->show();
-  mTimeLabelsLayout->insertWidget( 0, area );
+    QScrollArea *area = new QScrollArea(this);
+    TimeLabels *labels = new TimeLabels(spec, 24, this);
+    mTimeLabelsList.prepend(area);
+    area->setWidgetResizable(true);
+    area->setWidget(labels);
+    area->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    area->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    area->setBackgroundRole(QPalette::Window);
+    area->setFrameStyle(QFrame::NoFrame);
+    area->show();
+    mTimeLabelsLayout->insertWidget(0, area);
 
-  setupTimeLabel( area );
+    setupTimeLabel(area);
 }
 
-void TimeLabelsZone::setupTimeLabel( QScrollArea *area )
+void TimeLabelsZone::setupTimeLabel(QScrollArea *area)
 {
-  if ( mAgenda && mAgenda->verticalScrollBar() ) {
-    // Scrolling the agenda will scroll the timelabel
-    connect( mAgenda->verticalScrollBar(), SIGNAL(valueChanged(int)),
-             area->verticalScrollBar(), SLOT(setValue(int)) );
-    // and vice-versa. ( this won't loop )
-    connect( area->verticalScrollBar(), SIGNAL(valueChanged(int)),
-             mAgenda->verticalScrollBar(), SLOT(setValue(int)) );
+    if (mAgenda && mAgenda->verticalScrollBar()) {
+        // Scrolling the agenda will scroll the timelabel
+        connect(mAgenda->verticalScrollBar(), SIGNAL(valueChanged(int)),
+                area->verticalScrollBar(), SLOT(setValue(int)));
+        // and vice-versa. ( this won't loop )
+        connect(area->verticalScrollBar(), SIGNAL(valueChanged(int)),
+                mAgenda->verticalScrollBar(), SLOT(setValue(int)));
 
-    area->verticalScrollBar()->setValue( mAgenda->verticalScrollBar()->value() );
+        area->verticalScrollBar()->setValue(mAgenda->verticalScrollBar()->value());
 
-  }
+    }
 
-  TimeLabels *timeLabels = static_cast<TimeLabels*>( area->widget() );
-  timeLabels->setAgenda( mAgenda );
+    TimeLabels *timeLabels = static_cast<TimeLabels *>(area->widget());
+    timeLabels->setAgenda(mAgenda);
 
-  // timelabel's scroll is just a slave, this shouldn't be here
-  // if ( mParent ) {
-  //  connect( area->verticalScrollBar(), SIGNAL(valueChanged(int)),
-  //           mParent, SLOT(setContentsPos(int)) );
-  // }
+    // timelabel's scroll is just a slave, this shouldn't be here
+    // if ( mParent ) {
+    //  connect( area->verticalScrollBar(), SIGNAL(valueChanged(int)),
+    //           mParent, SLOT(setContentsPos(int)) );
+    // }
 }
 
 int TimeLabelsZone::preferedTimeLabelsWidth() const
 {
-  if ( mTimeLabelsList.isEmpty() ) {
-    return 0;
-  } else {
-    return mTimeLabelsList.first()->widget()->sizeHint().width();
-  }
+    if (mTimeLabelsList.isEmpty()) {
+        return 0;
+    } else {
+        return mTimeLabelsList.first()->widget()->sizeHint().width();
+    }
 }
 
 void TimeLabelsZone::updateAll()
 {
-  foreach ( QScrollArea *area, mTimeLabelsList ) {
-    TimeLabels *timeLabel = static_cast<TimeLabels*>( area->widget() );
-    timeLabel->updateConfig();
-  }
+    foreach (QScrollArea *area, mTimeLabelsList) {
+        TimeLabels *timeLabel = static_cast<TimeLabels *>(area->widget());
+        timeLabel->updateConfig();
+    }
 }
 
-QList<QScrollArea*> TimeLabelsZone::timeLabels() const
+QList<QScrollArea *> TimeLabelsZone::timeLabels() const
 {
-  return mTimeLabelsList;
+    return mTimeLabelsList;
 }
 
-void TimeLabelsZone::setAgendaView( AgendaView *agendaView )
+void TimeLabelsZone::setAgendaView(AgendaView *agendaView)
 {
-  mParent = agendaView;
-  mAgenda = agendaView ? agendaView->agenda() : 0;
+    mParent = agendaView;
+    mAgenda = agendaView ? agendaView->agenda() : 0;
 
-  foreach ( QScrollArea *timeLabel, mTimeLabelsList ) {
-    setupTimeLabel( timeLabel );
-  }
+    foreach (QScrollArea *timeLabel, mTimeLabelsList) {
+        setupTimeLabel(timeLabel);
+    }
 }
 
 void TimeLabelsZone::updateTimeLabelsPosition()
 {
-  if ( mAgenda ) {
-    foreach ( QScrollArea *area, timeLabels() ) {
-      TimeLabels *label = static_cast<TimeLabels*>( area->widget() );
-      const int adjustment = mAgenda->contentsY();
-      // y() is the offset to our parent (QScrollArea)
-      // and gets negative as we scroll
-      if ( adjustment != -label->y() ) {
-        area->verticalScrollBar()->setValue( adjustment );
-      }
+    if (mAgenda) {
+        foreach (QScrollArea *area, timeLabels()) {
+            TimeLabels *label = static_cast<TimeLabels *>(area->widget());
+            const int adjustment = mAgenda->contentsY();
+            // y() is the offset to our parent (QScrollArea)
+            // and gets negative as we scroll
+            if (adjustment != -label->y()) {
+                area->verticalScrollBar()->setValue(adjustment);
+            }
+        }
     }
-  }
 }
 
 PrefsPtr TimeLabelsZone::preferences() const
 {
-  return mPrefs;
+    return mPrefs;
 }
 
-void TimeLabelsZone::setPreferences( const PrefsPtr &prefs )
+void TimeLabelsZone::setPreferences(const PrefsPtr &prefs)
 {
-  if ( prefs != mPrefs ) {
-    mPrefs = prefs;
-  }
+    if (prefs != mPrefs) {
+        mPrefs = prefs;
+    }
 }
 

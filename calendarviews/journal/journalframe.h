@@ -38,51 +38,61 @@
 class QTextBrowser;
 class QPushButton;
 
-namespace EventViews {
+namespace EventViews
+{
 
 class JournalFrame : public QFrame
 {
-  Q_OBJECT
-  public:
-    typedef QList<JournalFrame*> List;
+    Q_OBJECT
+public:
+    typedef QList<JournalFrame *> List;
 
-    JournalFrame( const Akonadi::Item &journal,
-                  const Akonadi::ETMCalendar::Ptr &calendar,
-                  QWidget *parent );
+    JournalFrame(const Akonadi::Item &journal,
+                 const Akonadi::ETMCalendar::Ptr &calendar,
+                 QWidget *parent);
 
     ~JournalFrame();
-    bool eventFilter ( QObject *, QEvent * );
+    bool eventFilter(QObject *, QEvent *);
 
-    void setJournal( const Akonadi::Item &journal );
-    Akonadi::Item journal() const { return mJournal; }
+    void setJournal(const Akonadi::Item &journal);
+    Akonadi::Item journal() const
+    {
+        return mJournal;
+    }
 
-    void setCalendar( const Akonadi::ETMCalendar::Ptr &  );
-    QDate date() const { return mDate; }
+    void setCalendar(const Akonadi::ETMCalendar::Ptr &);
+    QDate date() const
+    {
+        return mDate;
+    }
 
     void clear();
-    void readJournal( const Akonadi::Item &journal );
+    void readJournal(const Akonadi::Item &journal);
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     void setDirty();
     void deleteItem();
     void editItem();
     void printJournal();
     void printPreviewJournal();
 
-  public Q_SLOTS:
-    void setIncidenceChanger( Akonadi::IncidenceChanger *changer ) { mChanger = changer; }
-    void setDate( const QDate &date );
+public Q_SLOTS:
+    void setIncidenceChanger(Akonadi::IncidenceChanger *changer)
+    {
+        mChanger = changer;
+    }
+    void setDate(const QDate &date);
 
-  Q_SIGNALS:
-    void printJournal( const KCalCore::Journal::Ptr &, bool preview);
-    void deleteIncidence( const Akonadi::Item & );
-    void editIncidence( const Akonadi::Item & );
-    void incidenceSelected( const Akonadi::Item &, const QDate & );
+Q_SIGNALS:
+    void printJournal(const KCalCore::Journal::Ptr &, bool preview);
+    void deleteIncidence(const Akonadi::Item &);
+    void editIncidence(const Akonadi::Item &);
+    void incidenceSelected(const Akonadi::Item &, const QDate &);
 
-  protected:
+protected:
     void clearFields();
 
-  private:
+private:
     Akonadi::Item mJournal;
     Akonadi::ETMCalendar::Ptr mCalendar;
     QDate mDate;
@@ -101,41 +111,44 @@ class JournalFrame : public QFrame
 
 class JournalDateView : public KVBox
 {
-  Q_OBJECT
-  public:
-    typedef QList<JournalDateView*> List;
+    Q_OBJECT
+public:
+    typedef QList<JournalDateView *> List;
 
-    JournalDateView( const Akonadi::ETMCalendar::Ptr & , QWidget *parent );
+    JournalDateView(const Akonadi::ETMCalendar::Ptr &, QWidget *parent);
     ~JournalDateView();
 
-    void addJournal( const Akonadi::Item &journal );
+    void addJournal(const Akonadi::Item &journal);
     Akonadi::Item::List journals() const;
 
-    void setDate( const QDate &date );
-    QDate date() const { return mDate; }
+    void setDate(const QDate &date);
+    QDate date() const
+    {
+        return mDate;
+    }
 
     void clear();
 
-  Q_SIGNALS:
-    void setIncidenceChangerSignal( Akonadi::IncidenceChanger *changer );
-    void setDateSignal( const QDate & );
+Q_SIGNALS:
+    void setIncidenceChangerSignal(Akonadi::IncidenceChanger *changer);
+    void setDateSignal(const QDate &);
     void flushEntries();
-    void editIncidence( const Akonadi::Item &journal );
-    void deleteIncidence( const Akonadi::Item &journal );
-    void newJournal( const QDate & );
-    void incidenceSelected( const Akonadi::Item &, const QDate & );
-    void printJournal( const KCalCore::Journal::Ptr &, bool preview);
+    void editIncidence(const Akonadi::Item &journal);
+    void deleteIncidence(const Akonadi::Item &journal);
+    void newJournal(const QDate &);
+    void incidenceSelected(const Akonadi::Item &, const QDate &);
+    void printJournal(const KCalCore::Journal::Ptr &, bool preview);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void emitNewJournal();
-    void setIncidenceChanger( Akonadi::IncidenceChanger *changer );
-    void journalEdited( const Akonadi::Item & );
-    void journalDeleted( const Akonadi::Item & );
+    void setIncidenceChanger(Akonadi::IncidenceChanger *changer);
+    void journalEdited(const Akonadi::Item &);
+    void journalDeleted(const Akonadi::Item &);
 
-  private:
+private:
     Akonadi::ETMCalendar::Ptr mCalendar;
     QDate mDate;
-    QMap<Akonadi::Item::Id,JournalFrame *> mEntries;
+    QMap<Akonadi::Item::Id, JournalFrame *> mEntries;
 
     Akonadi::IncidenceChanger *mChanger;
 };

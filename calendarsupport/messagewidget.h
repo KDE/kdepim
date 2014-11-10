@@ -29,7 +29,8 @@
 
 #include <KMessageWidget>
 
-namespace CalendarSupport {
+namespace CalendarSupport
+{
 
 /**
  * Even less instrusive message dialog.

@@ -34,11 +34,13 @@
 #include <QGraphicsView>
 #include <QMap>
 
-namespace Akonadi {
-  class IncidenceChanger;
+namespace Akonadi
+{
+class IncidenceChanger;
 }
 
-namespace EventViews {
+namespace EventViews
+{
 
 class MonthCell;
 class MonthItem;
@@ -47,38 +49,47 @@ class ScrollIndicator;
 
 class EVENTVIEWS_EXPORT MonthScene : public QGraphicsScene
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  enum ActionType {
-    None,
-    Move,
-    Resize
-  };
-
-  public:
-    enum ResizeType {
-      ResizeLeft,
-      ResizeRight
+    enum ActionType {
+        None,
+        Move,
+        Resize
     };
 
-    explicit MonthScene( MonthView *parent );
+public:
+    enum ResizeType {
+        ResizeLeft,
+        ResizeRight
+    };
+
+    explicit MonthScene(MonthView *parent);
     ~MonthScene();
 
     int columnWidth() const;
     int rowHeight() const;
 
-    MonthCell *firstCellForMonthItem( MonthItem *manager );
-    int height( MonthItem *manager );
+    MonthCell *firstCellForMonthItem(MonthItem *manager);
+    int height(MonthItem *manager);
     int itemHeight();
     int itemHeightIncludingSpacing();
     QList<MonthItem *> mManagerList;
     MonthView *mMonthView;
 
-    MonthView *monthView() const { return mMonthView; }
-    QMap<QDate, MonthCell*> mMonthCellMap;
+    MonthView *monthView() const
+    {
+        return mMonthView;
+    }
+    QMap<QDate, MonthCell *> mMonthCellMap;
 
-    bool initialized() { return mInitialized; }
-    void setInitialized( bool i ) { mInitialized = i; }
+    bool initialized()
+    {
+        return mInitialized;
+    }
+    void setInitialized(bool i)
+    {
+        mInitialized = i;
+    }
     void resetAll();
     Akonadi::IncidenceChanger *incidenceChanger() const;
 
@@ -88,19 +99,19 @@ class EVENTVIEWS_EXPORT MonthScene : public QGraphicsScene
      * Returns the vertical position where the top of the cell should be
      * painted taking in account margins, rowHeight
      */
-    int cellVerticalPos( const MonthCell *cell ) const;
+    int cellVerticalPos(const MonthCell *cell) const;
 
     /**
      * Idem, for the horizontal position
      */
-    int cellHorizontalPos( const MonthCell *cell ) const;
+    int cellHorizontalPos(const MonthCell *cell) const;
 
     /**
       Select item. If the argument is 0, the currently selected item gets
       deselected. This function emits the itemSelected(bool) signal to inform
       about selection/deselection of events.
     */
-    void selectItem( MonthItem * );
+    void selectItem(MonthItem *);
     int maxRowCount();
 
     MonthCell *selectedCell() const;
@@ -109,17 +120,17 @@ class EVENTVIEWS_EXPORT MonthScene : public QGraphicsScene
     /**
       Get the space on the right of the cell associated to the date @p date.
     */
-    int getRightSpan( const QDate &date ) const;
+    int getRightSpan(const QDate &date) const;
 
     /**
       Get the space on the left of the cell associated to the date @p date.
     */
-    int getLeftSpan( const QDate &date ) const;
+    int getLeftSpan(const QDate &date) const;
 
     /**
       Returns the date in the first column of the row given by @p row.
     */
-    QDate firstDateOnRow( int row ) const;
+    QDate firstDateOnRow(int row) const;
 
     /**
       Calls updateGeometry() on each MonthItem
@@ -131,51 +142,84 @@ class EVENTVIEWS_EXPORT MonthScene : public QGraphicsScene
 
       @see MonthItem::height()
     */
-    int startHeight() { return mStartHeight; }
+    int startHeight()
+    {
+        return mStartHeight;
+    }
 
     /**
       Set the current height using @p height.
       If height = 0, then the view is not scrolled. Else it will be scrolled
       by step of one item.
     */
-    void setStartHeight( int height ) { mStartHeight = height; }
+    void setStartHeight(int height)
+    {
+        mStartHeight = height;
+    }
 
     /**
       Returns the resize type.
     */
-    ResizeType resizeType() { return mResizeType; }
+    ResizeType resizeType()
+    {
+        return mResizeType;
+    }
 
     /**
       Returns the currently selected item.
     */
-    MonthItem *selectedItem() { return mSelectedItem; }
+    MonthItem *selectedItem()
+    {
+        return mSelectedItem;
+    }
 
-    QPixmap birthdayPixmap() { return mBirthdayPixmap; }
-    QPixmap anniversaryPixmap() { return mAnniversaryPixmap; }
-    QPixmap alarmPixmap() { return mAlarmPixmap; }
-    QPixmap recurPixmap() { return mRecurPixmap; }
-    QPixmap readonlyPixmap() { return mReadonlyPixmap; }
-    QPixmap replyPixmap() { return  mReplyPixmap; }
-    QPixmap holidayPixmap() { return mHolidayPixmap; }
+    QPixmap birthdayPixmap()
+    {
+        return mBirthdayPixmap;
+    }
+    QPixmap anniversaryPixmap()
+    {
+        return mAnniversaryPixmap;
+    }
+    QPixmap alarmPixmap()
+    {
+        return mAlarmPixmap;
+    }
+    QPixmap recurPixmap()
+    {
+        return mRecurPixmap;
+    }
+    QPixmap readonlyPixmap()
+    {
+        return mReadonlyPixmap;
+    }
+    QPixmap replyPixmap()
+    {
+        return  mReplyPixmap;
+    }
+    QPixmap holidayPixmap()
+    {
+        return mHolidayPixmap;
+    }
 
     /**
        Removes an incidence from the scene
     */
-    void removeIncidence( const QString &uid );
+    void removeIncidence(const QString &uid);
 
-  signals:
-    void incidenceSelected( const Akonadi::Item &incidence, const QDate & );
-    void showIncidencePopupSignal( const Akonadi::Item &, const QDate & );
+signals:
+    void incidenceSelected(const Akonadi::Item &incidence, const QDate &);
+    void showIncidencePopupSignal(const Akonadi::Item &, const QDate &);
     void newEventSignal();
     void showNewEventPopupSignal();
 
-  protected:
-    virtual void mouseDoubleClickEvent( QGraphicsSceneMouseEvent *mouseEvent );
-    virtual void mouseMoveEvent( QGraphicsSceneMouseEvent *mouseEvent );
-    virtual void mousePressEvent( QGraphicsSceneMouseEvent *mouseEvent );
-    virtual void mouseReleaseEvent( QGraphicsSceneMouseEvent *mouseEvent );
-    virtual void wheelEvent( QGraphicsSceneWheelEvent *wheelEvent );
-    virtual void timerEvent( QTimerEvent *e );
+protected:
+    virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent);
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent);
+    virtual void wheelEvent(QGraphicsSceneWheelEvent *wheelEvent);
+    virtual void timerEvent(QTimerEvent *e);
     /**
        Scrolls all incidences in cells up
      */
@@ -190,7 +234,7 @@ class EVENTVIEWS_EXPORT MonthScene : public QGraphicsScene
        A click on a scroll indicator has occurred
        TODO : move this handler to the scrollindicator
     */
-    virtual void clickOnScrollIndicator( ScrollIndicator *scrollItem );
+    virtual void clickOnScrollIndicator(ScrollIndicator *scrollItem);
 
     /**
       Handles drag and drop events. Called from eventFilter.
@@ -200,9 +244,9 @@ class EVENTVIEWS_EXPORT MonthScene : public QGraphicsScene
     /**
       Returns true if the last item is visible in the given @p cell.
     */
-    bool lastItemFit( MonthCell *cell );
+    bool lastItemFit(MonthCell *cell);
 
-  private:
+private:
     /**
      * Returns the height of the header of the view
      */
@@ -219,24 +263,24 @@ class EVENTVIEWS_EXPORT MonthScene : public QGraphicsScene
      * Removes all the margins, frames, etc. to give the
      * X coordinate in the MonthGrid.
      */
-    int sceneXToMonthGridX( int xScene );
+    int sceneXToMonthGridX(int xScene);
 
     /**
      * Removes all the margins, frames, headers etc. to give the
      * Y coordinate in the MonthGrid.
      */
-    int sceneYToMonthGridY( int yScene );
+    int sceneYToMonthGridY(int yScene);
 
     /**
      * Given a pos in the scene coordinates,
      * returns the cell containing @p pos.
      */
-    MonthCell *getCellFromPos( const QPointF &pos );
+    MonthCell *getCellFromPos(const QPointF &pos);
 
     /**
        Returns true if (x, y) is in the monthgrid, false else.
     */
-    bool isInMonthGrid( int x, int y ) const;
+    bool isInMonthGrid(int x, int y) const;
 
     bool mInitialized;
 
@@ -279,25 +323,25 @@ class EVENTVIEWS_EXPORT MonthScene : public QGraphicsScene
  */
 class EVENTVIEWS_EXPORT MonthGraphicsView : public QGraphicsView
 {
-  public:
-    explicit MonthGraphicsView( MonthView *parent );
+public:
+    explicit MonthGraphicsView(MonthView *parent);
 
     /**
       Draws the cells.
     */
-    void drawBackground( QPainter *painter, const QRectF &rect );
+    void drawBackground(QPainter *painter, const QRectF &rect);
 
-    void setScene( MonthScene *scene );
+    void setScene(MonthScene *scene);
 
     /**
       Change the cursor according to @p actionType.
     */
-    void setActionCursor( MonthScene::ActionType actionType );
+    void setActionCursor(MonthScene::ActionType actionType);
 
-  protected:
-    virtual void resizeEvent( QResizeEvent * );
+protected:
+    virtual void resizeEvent(QResizeEvent *);
 
-  private:
+private:
     MonthScene *mScene;
     MonthView *mMonthView;
 };

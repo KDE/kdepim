@@ -32,7 +32,8 @@
 #include <QDate>
 #include <QObject>
 
-namespace EventViews {
+namespace EventViews
+{
 
 class MonthGraphicsItem;
 class MonthScene;
@@ -42,10 +43,10 @@ class MonthScene;
  */
 class EVENTVIEWS_EXPORT MonthItem : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit MonthItem( MonthScene *monthWidget );
+public:
+    explicit MonthItem(MonthScene *monthWidget);
     virtual ~MonthItem();
 
     QWidget *parentWidget() const;
@@ -60,13 +61,13 @@ class EVENTVIEWS_EXPORT MonthItem : public QObject
       - floating
       - finally, time in the day
     */
-    static bool greaterThan( const MonthItem *e1, const MonthItem *e2 );
+    static bool greaterThan(const MonthItem *e1, const MonthItem *e2);
 
     /**
       Compare this event with a second one, if the former function is not
       able to sort them.
     */
-    virtual bool greaterThanFallback( const MonthItem *other ) const;
+    virtual bool greaterThanFallback(const MonthItem *other) const;
 
     /**
       The start date of the incidence, generally realStartDate. But it
@@ -117,17 +118,26 @@ class EVENTVIEWS_EXPORT MonthItem : public QObject
     /**
       Returns true if this item is selected.
     */
-    bool selected() const { return mSelected; }
+    bool selected() const
+    {
+        return mSelected;
+    }
 
     /**
       Returns the position of the item ( > 0 ).
     */
-    int position() const { return mPosition; }
+    int position() const
+    {
+        return mPosition;
+    }
 
     /**
       Returns the associated month scene to this item.
     */
-    MonthScene *monthScene() const { return mMonthScene; }
+    MonthScene *monthScene() const
+    {
+        return mMonthScene;
+    }
 
     /**
       Begin a move.
@@ -153,23 +163,29 @@ class EVENTVIEWS_EXPORT MonthItem : public QObject
       Called during move to move the item a bit, relative to the previous
       move step.
     */
-    void moveBy( int offsetFromPreviousDate );
+    void moveBy(int offsetFromPreviousDate);
 
     /**
       Called during resize to resize the item a bit, relative to the previous
       resize step.
     */
-    bool resizeBy( int offsetFromPreviousDate );
+    bool resizeBy(int offsetFromPreviousDate);
 
     /**
       Returns true if the item is being moved.
     */
-    bool isMoving() const { return mMoving; }
+    bool isMoving() const
+    {
+        return mMoving;
+    }
 
     /**
       Returns true if the item is being resized.
     */
-    bool isResizing() const { return mResizing; }
+    bool isResizing() const
+    {
+        return mResizing;
+    }
 
     /**
       Returns true if the item can be moved.
@@ -184,7 +200,7 @@ class EVENTVIEWS_EXPORT MonthItem : public QObject
     /**
       Deletes all MonthGraphicsItem this item handles. Clear the list.
     */
-    void deleteAll( );
+    void deleteAll();
 
     /**
       Update the monthgraphicsitems
@@ -201,7 +217,10 @@ class EVENTVIEWS_EXPORT MonthItem : public QObject
     /**
       Sets the selection state of this item.
     */
-    void setSelected( bool selected ) { mSelected = selected; }
+    void setSelected(bool selected)
+    {
+        mSelected = selected;
+    }
 
     // METHODS NEEDED TO PAINT ITEMS
 
@@ -210,12 +229,12 @@ class EVENTVIEWS_EXPORT MonthItem : public QObject
 
      @param end True if the text at the end of an item should be returned.
     */
-    virtual QString text( bool end ) const = 0;
+    virtual QString text(bool end) const = 0;
 
     /**
        Returns the text for the tooltip of the item
      */
-    virtual QString toolTipText( const QDate &date ) const = 0;
+    virtual QString toolTipText(const QDate &date) const = 0;
 
     /**
       Returns the background color of the item.
@@ -234,23 +253,23 @@ class EVENTVIEWS_EXPORT MonthItem : public QObject
 
     QList<MonthGraphicsItem *> monthGraphicsItems() const;
 
-  protected:
+protected:
     /**
       Called after a move operation.
     */
-    virtual void finalizeMove( const QDate &newStartDate ) = 0;
+    virtual void finalizeMove(const QDate &newStartDate) = 0;
 
     /**
       Called after a resize operation.
     */
-    virtual void finalizeResize( const QDate &newStartDate,
-                                 const QDate &newEndDate ) = 0;
+    virtual void finalizeResize(const QDate &newStartDate,
+                                const QDate &newEndDate) = 0;
 
-  private:
+private:
     /**
       Sets the value of all MonthGraphicsItem to @param z.
     */
-    void setZValue( qreal z );
+    void setZValue(qreal z);
 
     QList<MonthGraphicsItem *> mMonthGraphicsItemList;
 
@@ -267,14 +286,14 @@ class EVENTVIEWS_EXPORT MonthItem : public QObject
 
 class EVENTVIEWS_EXPORT IncidenceMonthItem : public MonthItem
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    IncidenceMonthItem( MonthScene *monthScene,
-                        const Akonadi::ETMCalendar::Ptr &calendar,
-                        const Akonadi::Item &item,
-                        const KCalCore::Incidence::Ptr &incidence,
-                        const QDate &recurStartDate = QDate() );
+public:
+    IncidenceMonthItem(MonthScene *monthScene,
+                       const Akonadi::ETMCalendar::Ptr &calendar,
+                       const Akonadi::Item &item,
+                       const KCalCore::Incidence::Ptr &incidence,
+                       const QDate &recurStartDate = QDate());
 
     virtual ~IncidenceMonthItem();
 
@@ -282,7 +301,7 @@ class EVENTVIEWS_EXPORT IncidenceMonthItem : public MonthItem
     Akonadi::Item akonadiItem() const;
     Akonadi::Item::Id akonadiItemId() const;
 
-    virtual bool greaterThanFallback( const MonthItem *other ) const;
+    virtual bool greaterThanFallback(const MonthItem *other) const;
 
     virtual QDate realStartDate() const;
     virtual QDate realEndDate() const;
@@ -291,32 +310,32 @@ class EVENTVIEWS_EXPORT IncidenceMonthItem : public MonthItem
     virtual bool isMoveable() const;
     virtual bool isResizable() const;
 
-    QString text( bool end ) const;
-    QString toolTipText( const QDate &date ) const;
+    QString text(bool end) const;
+    QString toolTipText(const QDate &date) const;
 
     QColor bgColor() const;
     QColor frameColor() const;
 
     QList<QPixmap> icons() const;
 
-  protected:
-    virtual void finalizeMove( const QDate &newStartDate );
-    virtual void finalizeResize( const QDate &newStartDate,
-                                 const QDate &newEndDate );
+protected:
+    virtual void finalizeMove(const QDate &newStartDate);
+    virtual void finalizeResize(const QDate &newStartDate,
+                                const QDate &newEndDate);
 
-  protected slots:
+protected slots:
     /**
       Update the selected state of this item.
       If will be selected if incidence is the incidence managed by this item.
       Else it will be deselected.
     */
-    void updateSelection( const Akonadi::Item &incidence, const QDate &date );
+    void updateSelection(const Akonadi::Item &incidence, const QDate &date);
 
-  private:
-    void updateDates( int startOffset, int endOffset );
+private:
+    void updateDates(int startOffset, int endOffset);
 
-    void setNewDates( const KCalCore::Incidence::Ptr &incidence,
-                      int startOffset, int endOffset );
+    void setNewDates(const KCalCore::Incidence::Ptr &incidence,
+                     int startOffset, int endOffset);
 
     /**
       Returns the category color for this incidence.
@@ -332,39 +351,57 @@ class EVENTVIEWS_EXPORT IncidenceMonthItem : public MonthItem
 
 class EVENTVIEWS_EXPORT HolidayMonthItem : public MonthItem
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    HolidayMonthItem( MonthScene *monthScene, const QDate &date, const QString &name );
+public:
+    HolidayMonthItem(MonthScene *monthScene, const QDate &date, const QString &name);
     virtual ~HolidayMonthItem();
 
-    virtual bool greaterThanFallback( const MonthItem *other ) const;
+    virtual bool greaterThanFallback(const MonthItem *other) const;
 
-    virtual QDate realStartDate() const { return mDate; }
-    virtual QDate realEndDate() const { return mDate; }
-    virtual bool allDay() const { return true; }
-
-    virtual bool isMoveable() const { return false; }
-    virtual bool isResizable() const { return false; }
-
-    QString text( bool end ) const
+    virtual QDate realStartDate() const
     {
-      Q_UNUSED( end );
-      return mName;
+        return mDate;
     }
-    QString toolTipText( const QDate & ) const { return mName; }
+    virtual QDate realEndDate() const
+    {
+        return mDate;
+    }
+    virtual bool allDay() const
+    {
+        return true;
+    }
+
+    virtual bool isMoveable() const
+    {
+        return false;
+    }
+    virtual bool isResizable() const
+    {
+        return false;
+    }
+
+    QString text(bool end) const
+    {
+        Q_UNUSED(end);
+        return mName;
+    }
+    QString toolTipText(const QDate &) const
+    {
+        return mName;
+    }
 
     QColor bgColor() const;
     QColor frameColor() const;
 
     QList<QPixmap> icons() const;
 
-  protected:
-    virtual void finalizeMove( const QDate &newStartDate );
-    virtual void finalizeResize( const QDate &newStartDate,
-                                 const QDate &newEndDate );
+protected:
+    virtual void finalizeMove(const QDate &newStartDate);
+    virtual void finalizeResize(const QDate &newStartDate,
+                                const QDate &newEndDate);
 
-  private:
+private:
     QDate mDate;
     QString mName;
 };

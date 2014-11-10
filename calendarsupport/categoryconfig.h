@@ -28,24 +28,25 @@
 class KCoreConfigSkeleton;
 class QColor;
 
-namespace CalendarSupport {
+namespace CalendarSupport
+{
 
 class CALENDARSUPPORT_EXPORT CategoryConfig : public QObject
 {
-  Q_OBJECT
-  public:
-    explicit CategoryConfig( KCoreConfigSkeleton *cfg, QObject *parent=0 );
+    Q_OBJECT
+public:
+    explicit CategoryConfig(KCoreConfigSkeleton *cfg, QObject *parent = 0);
     ~CategoryConfig();
     QStringList customCategories() const;
-    void setCustomCategories( const QStringList &categories );
+    void setCustomCategories(const QStringList &categories);
 
-    QHash<QString,QColor> readColors() const;
-    void setColors( const QHash<QString,QColor> &colors );
+    QHash<QString, QColor> readColors() const;
+    void setColors(const QHash<QString, QColor> &colors);
 
     void writeConfig();
 
     static const QString categorySeparator;
-  private:
+private:
     Q_DISABLE_COPY(CategoryConfig)
     class Private;
     Private *const d;

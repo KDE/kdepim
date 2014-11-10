@@ -35,19 +35,19 @@
 #include <QWidget>
 #include <QPointer>
 
-namespace EventViews {
+namespace EventViews
+{
 
 class AgendaItem;
 class EventView;
 
-struct MultiItemInfo
-{
-  int mStartCellXLeft, mStartCellXRight;
-  int mStartCellYTop, mStartCellYBottom;
-  QPointer<AgendaItem> mFirstMultiItem;
-  QPointer<AgendaItem> mPrevMultiItem;
-  QPointer<AgendaItem> mNextMultiItem;
-  QPointer<AgendaItem> mLastMultiItem;
+struct MultiItemInfo {
+    int mStartCellXLeft, mStartCellXRight;
+    int mStartCellYTop, mStartCellYBottom;
+    QPointer<AgendaItem> mFirstMultiItem;
+    QPointer<AgendaItem> mPrevMultiItem;
+    QPointer<AgendaItem> mNextMultiItem;
+    QPointer<AgendaItem> mLastMultiItem;
 };
 
 /**
@@ -79,39 +79,39 @@ struct MultiItemInfo
 
 class EVENTVIEWS_EXPORT AgendaItem : public QWidget, public CalendarSupport::CellItem
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     typedef QPointer<AgendaItem> QPtr;
     typedef QList<QPtr> List;
 
-    AgendaItem( EventView *eventView,
-                const Akonadi::ETMCalendar::Ptr &calendar,
-                const Akonadi::Item &incidence,
-                int itemPos,
-                int itemCount,
-                const KDateTime &qd,
-                bool isSelected,
-                QWidget *parent );
+    AgendaItem(EventView *eventView,
+               const Akonadi::ETMCalendar::Ptr &calendar,
+               const Akonadi::Item &incidence,
+               int itemPos,
+               int itemCount,
+               const KDateTime &qd,
+               bool isSelected,
+               QWidget *parent);
     ~AgendaItem();
 
     int cellXLeft() const
     {
-      return mCellXLeft;
+        return mCellXLeft;
     }
 
     int cellXRight() const
     {
-      return mCellXRight;
+        return mCellXRight;
     }
 
     int cellYTop() const
     {
-      return mCellYTop;
+        return mCellYTop;
     }
 
     int cellYBottom() const
     {
-      return mCellYBottom;
+        return mCellYBottom;
     }
 
     int cellHeight() const;
@@ -119,18 +119,18 @@ class EVENTVIEWS_EXPORT AgendaItem : public QWidget, public CalendarSupport::Cel
 
     int itemPos() const
     {
-      return mItemPos;
+        return mItemPos;
     }
 
     int itemCount() const
     {
-      return mItemCount;
+        return mItemCount;
     }
 
-    void setCellXY( int X, int YTop, int YBottom );
-    void setCellY( int YTop, int YBottom );
-    void setCellX( int XLeft, int XRight );
-    void setCellXRight( int XRight );
+    void setCellXY(int X, int YTop, int YBottom);
+    void setCellY(int YTop, int YBottom);
+    void setCellX(int XLeft, int XRight);
+    void setCellXRight(int XRight);
 
     /** Start movement */
     void startMove();
@@ -141,7 +141,7 @@ class EVENTVIEWS_EXPORT AgendaItem : public QWidget, public CalendarSupport::Cel
     /** End the movement (i.e. clean up) */
     void endMove();
 
-    void moveRelative( int dx, int dy );
+    void moveRelative(int dx, int dy);
 
     /**
      * Expands the item's top.
@@ -154,120 +154,120 @@ class EVENTVIEWS_EXPORT AgendaItem : public QWidget, public CalendarSupport::Cel
      *                       moving items because it guarantees expandTop and the
      *                       following expandBottom call add the same value.
      */
-    void expandTop( int dy, const bool allowOverLimit = false );
-    void expandBottom( int dy );
-    void expandLeft( int dx );
-    void expandRight( int dx );
+    void expandTop(int dy, const bool allowOverLimit = false);
+    void expandBottom(int dy);
+    void expandLeft(int dx);
+    void expandRight(int dx);
 
     bool isMultiItem() const;
 
     AgendaItem::QPtr prevMoveItem() const
     {
-      return (mStartMoveInfo) ? (mStartMoveInfo->mPrevMultiItem) : 0;
+        return (mStartMoveInfo) ? (mStartMoveInfo->mPrevMultiItem) : 0;
     }
 
     AgendaItem::QPtr nextMoveItem() const
     {
-      return (mStartMoveInfo) ? (mStartMoveInfo->mNextMultiItem) : 0;
+        return (mStartMoveInfo) ? (mStartMoveInfo->mNextMultiItem) : 0;
     }
 
     MultiItemInfo *moveInfo() const
     {
-      return mStartMoveInfo;
+        return mStartMoveInfo;
     }
 
-    void setMultiItem( AgendaItem::QPtr first,AgendaItem::QPtr prev,
-                       AgendaItem::QPtr next, AgendaItem::QPtr last );
+    void setMultiItem(AgendaItem::QPtr first, AgendaItem::QPtr prev,
+                      AgendaItem::QPtr next, AgendaItem::QPtr last);
 
-    AgendaItem::QPtr prependMoveItem( AgendaItem::QPtr );
+    AgendaItem::QPtr prependMoveItem(AgendaItem::QPtr);
 
-    AgendaItem::QPtr appendMoveItem( AgendaItem::QPtr );
+    AgendaItem::QPtr appendMoveItem(AgendaItem::QPtr);
 
-    AgendaItem::QPtr removeMoveItem( AgendaItem::QPtr );
+    AgendaItem::QPtr removeMoveItem(AgendaItem::QPtr);
 
     AgendaItem::QPtr firstMultiItem() const
     {
-      return (mMultiItemInfo) ? (mMultiItemInfo->mFirstMultiItem) : 0;
+        return (mMultiItemInfo) ? (mMultiItemInfo->mFirstMultiItem) : 0;
     }
 
     AgendaItem::QPtr prevMultiItem() const
     {
-      return (mMultiItemInfo) ? (mMultiItemInfo->mPrevMultiItem) : 0;
+        return (mMultiItemInfo) ? (mMultiItemInfo->mPrevMultiItem) : 0;
     }
 
     AgendaItem::QPtr nextMultiItem() const
     {
-      return (mMultiItemInfo) ? (mMultiItemInfo->mNextMultiItem) : 0;
+        return (mMultiItemInfo) ? (mMultiItemInfo->mNextMultiItem) : 0;
     }
 
     AgendaItem::QPtr lastMultiItem() const
     {
-      return (mMultiItemInfo) ? (mMultiItemInfo->mLastMultiItem) : 0;
+        return (mMultiItemInfo) ? (mMultiItemInfo->mLastMultiItem) : 0;
     }
 
     bool dissociateFromMultiItem();
 
-    void setIncidence( const Akonadi::Item &incidence );
+    void setIncidence(const Akonadi::Item &incidence);
 
-    const Akonadi::Item & incidence() const
+    const Akonadi::Item &incidence() const
     {
-      return mIncidence;
+        return mIncidence;
     }
 
     KDateTime occurrenceDateTime() const
     {
-      return mOccurrenceDateTime;
+        return mOccurrenceDateTime;
     }
 
     QDate occurrenceDate() const;
 
     // /** Update the date of this item's occurrence (not in the event) */
-    void setOccurrenceDateTime( const KDateTime &qd );
+    void setOccurrenceDateTime(const KDateTime &qd);
 
-    void setText ( const QString &text )
+    void setText(const QString &text)
     {
-      mLabelText = text;
+        mLabelText = text;
     }
 
-    QString text ()
+    QString text()
     {
-      return mLabelText;
+        return mLabelText;
     }
 
     QList<AgendaItem::QPtr> &conflictItems();
-    void setConflictItems( QList<AgendaItem::QPtr> );
-    void addConflictItem( AgendaItem::QPtr ci );
+    void setConflictItems(QList<AgendaItem::QPtr>);
+    void addConflictItem(AgendaItem::QPtr ci);
 
     QString label() const;
 
     /** Tells whether this item overlaps item @p o */
-    bool overlaps( CellItem *o ) const;
+    bool overlaps(CellItem *o) const;
 
-    void setResourceColor( const QColor &color )
+    void setResourceColor(const QColor &color)
     {
-      mResourceColor = color;
+        mResourceColor = color;
     }
 
     QColor resourceColor()
     {
-      return mResourceColor;
+        return mResourceColor;
     }
 
-  signals:
-    void removeAgendaItem( AgendaItem::QPtr );
-    void showAgendaItem( AgendaItem::QPtr );
+signals:
+    void removeAgendaItem(AgendaItem::QPtr);
+    void showAgendaItem(AgendaItem::QPtr);
 
-  public slots:
+public slots:
     void updateIcons();
-    void select( bool selected = true );
-    void addAttendee( const QString & );
+    void select(bool selected = true);
+    void addAttendee(const QString &);
 
-  protected:
-    bool eventFilter( QObject *obj, QEvent *event );
-    bool event( QEvent *event );
-    void dragEnterEvent( QDragEnterEvent *e );
-    void dropEvent( QDropEvent *e );
-    /**reimp*/void paintEvent( QPaintEvent *e );
+protected:
+    bool eventFilter(QObject *obj, QEvent *event);
+    bool event(QEvent *event);
+    void dragEnterEvent(QDragEnterEvent *e);
+    void dropEvent(QDropEvent *e);
+    /**reimp*/void paintEvent(QPaintEvent *e);
 
     /** private movement functions. startMove needs to be called of only one of
      *  the multitems. it will then loop through the whole series using
@@ -281,15 +281,15 @@ class EVENTVIEWS_EXPORT AgendaItem : public QWidget, public CalendarSupport::Cel
     //Color of the resource
     QColor mResourceColor;
 
-  private:
-    void paintIcon( QPainter *p, int &x, int y, int ft );
+private:
+    void paintIcon(QPainter *p, int &x, int y, int ft);
 
     // paint all visible icons
-    void paintIcons( QPainter *p, int &x, int y, int ft );
+    void paintIcons(QPainter *p, int &x, int y, int ft);
 
-    void drawRoundedRect( QPainter *p, const QRect &rect,
-                          bool selected, const QColor &bgcolor,
-                          bool frame, int ft, bool roundTop, bool roundBottom );
+    void drawRoundedRect(QPainter *p, const QRect &rect,
+                         bool selected, const QColor &bgcolor,
+                         bool frame, int ft, bool roundTop, bool roundBottom);
 
     int mCellXLeft, mCellXRight;
     int mCellYTop, mCellYBottom;

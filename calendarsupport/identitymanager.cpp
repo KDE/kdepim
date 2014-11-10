@@ -28,15 +28,15 @@ using namespace CalendarSupport;
 // This is called to create a default identity in case emailidentities has none
 // (i.e. the user never used KMail before)
 // We provide the values from KCalPrefs, since those are configurable in korganizer.
-void IdentityManager::createDefaultIdentity( QString &fullName, QString &emailAddress )
+void IdentityManager::createDefaultIdentity(QString &fullName, QString &emailAddress)
 {
-  fullName = KCalPrefs::instance()->fullName();
-  emailAddress = KCalPrefs::instance()->email();
+    fullName = KCalPrefs::instance()->fullName();
+    emailAddress = KCalPrefs::instance()->email();
 }
 
-Q_GLOBAL_STATIC( CalendarSupport::IdentityManager, globalIdentityManager )
+Q_GLOBAL_STATIC(CalendarSupport::IdentityManager, globalIdentityManager)
 
 KIdentityManagement::IdentityManager *CalendarSupport::identityManager()
 {
-  return globalIdentityManager;
+    return globalIdentityManager;
 }

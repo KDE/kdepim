@@ -28,27 +28,28 @@ class QLineEdit;
 class KIconButton;
 class QCheckBox;
 
-namespace CalendarSupport {
+namespace CalendarSupport
+{
 
 class CALENDARSUPPORT_EXPORT CollectionGeneralPage : public Akonadi::CollectionPropertiesPage
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit CollectionGeneralPage( QWidget *parent = 0 );
+public:
+    explicit CollectionGeneralPage(QWidget *parent = 0);
     ~CollectionGeneralPage();
 
-    void load( const Akonadi::Collection &collection );
-    void save( Akonadi::Collection &collection );
+    void load(const Akonadi::Collection &collection);
+    void save(Akonadi::Collection &collection);
 
-  private:
+private:
     QCheckBox *mBlockAlarmsCheckBox;
     QLineEdit *mNameEdit;
     QCheckBox *mIconCheckBox;
     KIconButton *mIconButton;
 };
 
-AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY( CollectionGeneralPageFactory, CollectionGeneralPage )
+AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(CollectionGeneralPageFactory, CollectionGeneralPage)
 
 }
 

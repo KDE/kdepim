@@ -28,7 +28,6 @@
 #include <Collection>
 #include <AkonadiCore/Item>
 
-
 #include <QMap>
 #include <QModelIndex>
 #include <QObject>
@@ -36,46 +35,48 @@
 class QStandardItem;
 class QTreeWidget;
 
-namespace KDGantt {
-  class GraphicsView;
+namespace KDGantt
+{
+class GraphicsView;
 }
 
-namespace EventViews {
+namespace EventViews
+{
 
 class TimelineItem;
 class RowController;
 
 class TimelineView::Private : public QObject
 {
-  Q_OBJECT
-  public:
-    explicit Private( TimelineView *parent = 0 );
+    Q_OBJECT
+public:
+    explicit Private(TimelineView *parent = 0);
     ~Private();
 
-    TimelineItem *calendarItemForIncidence( const Akonadi::Item &incidence );
-    void insertIncidence( const Akonadi::Item &incidence );
-    void insertIncidence( const Akonadi::Item &incidence, const QDate &day );
-    void removeIncidence( const Akonadi::Item &incidence );
+    TimelineItem *calendarItemForIncidence(const Akonadi::Item &incidence);
+    void insertIncidence(const Akonadi::Item &incidence);
+    void insertIncidence(const Akonadi::Item &incidence, const QDate &day);
+    void removeIncidence(const Akonadi::Item &incidence);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     // void overscale( KDGantt::View::Scale scale );
-    void itemSelected( const QModelIndex &index );
-    void itemDoubleClicked( const QModelIndex &index );
-    void itemChanged( QStandardItem *item );
-    void contextMenuRequested( const QPoint &point );
-    void newEventWithHint( const QDateTime & );
+    void itemSelected(const QModelIndex &index);
+    void itemDoubleClicked(const QModelIndex &index);
+    void itemChanged(QStandardItem *item);
+    void contextMenuRequested(const QPoint &point);
+    void newEventWithHint(const QDateTime &);
     void splitterMoved();
 
-  public:
+public:
     Akonadi::Item::List mSelectedItemList;
     KDGantt::GraphicsView *mGantt;
     QTreeWidget *mLeftView;
     RowController *mRowController;
-    QMap<Akonadi::Collection::Id, TimelineItem*> mCalendarItemMap;
+    QMap<Akonadi::Collection::Id, TimelineItem *> mCalendarItemMap;
     QDate mStartDate, mEndDate;
     QDateTime mHintDate;
 
-  private:
+private:
     TimelineView *const q;
 };
 

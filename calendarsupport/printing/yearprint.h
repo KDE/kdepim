@@ -27,42 +27,58 @@
 #include "calprintpluginbase.h"
 #include "ui_calprintyearconfig_base.h"
 
-namespace CalendarSupport {
+namespace CalendarSupport
+{
 
 class CALENDARSUPPORT_EXPORT  CalPrintYear : public CalPrintPluginBase
 {
-  public:
-    CalPrintYear():CalPrintPluginBase() {}
+public:
+    CalPrintYear(): CalPrintPluginBase() {}
     virtual ~CalPrintYear() {}
-    virtual QString groupName() { return QString::fromLatin1( "Print year" ); }
-    virtual QString description() { return i18n( "Print &year" ); }
-    virtual QString info() const { return i18n( "Prints a calendar for an entire year" ); }
-    virtual int sortID() { return CalPrinterBase::Year; }
-    virtual bool enabled() { return true; }
-    virtual QWidget *createConfigWidget( QWidget * );
+    virtual QString groupName()
+    {
+        return QString::fromLatin1("Print year");
+    }
+    virtual QString description()
+    {
+        return i18n("Print &year");
+    }
+    virtual QString info() const
+    {
+        return i18n("Prints a calendar for an entire year");
+    }
+    virtual int sortID()
+    {
+        return CalPrinterBase::Year;
+    }
+    virtual bool enabled()
+    {
+        return true;
+    }
+    virtual QWidget *createConfigWidget(QWidget *);
     virtual QPrinter::Orientation defaultOrientation();
 
-  public:
-    virtual void print( QPainter &p, int width, int height );
+public:
+    virtual void print(QPainter &p, int width, int height);
     virtual void readSettingsWidget();
     virtual void setSettingsWidget();
     virtual void loadConfig();
     virtual void saveConfig();
-    virtual void setDateRange( const QDate &from, const QDate &to );
+    virtual void setDateRange(const QDate &from, const QDate &to);
 
-  protected:
+protected:
     int mYear;
     int mPages;
     int mSubDaysEvents, mHolidaysEvents;
 };
 
 class CALENDARSUPPORT_EXPORT CalPrintYearConfig
-  : public QWidget, public Ui::CalPrintYearConfig_Base
+    : public QWidget, public Ui::CalPrintYearConfig_Base
 {
-  public:
-    explicit CalPrintYearConfig( QWidget *parent ) : QWidget( parent )
+public:
+    explicit CalPrintYearConfig(QWidget *parent) : QWidget(parent)
     {
-      setupUi( this );
+        setupUi(this);
     }
 };
 

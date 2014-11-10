@@ -29,7 +29,6 @@
 #include <Akonadi/Calendar/IncidenceChanger>
 #include <KCalCore/Journal>
 
-
 class QScrollArea;
 
 /**
@@ -39,60 +38,61 @@ class QScrollArea;
  * @author Cornelius Schumacher <schumacher@kde.org>, Reinhold Kainhofer <reinhold@kainhofer.com>
  * @see KOBaseView
  */
-namespace EventViews {
+namespace EventViews
+{
 
 class JournalDateView;
 
 class EVENTVIEWS_EXPORT JournalView : public EventView
 {
-  Q_OBJECT
-  public:
-    explicit JournalView( QWidget *parent = 0 );
+    Q_OBJECT
+public:
+    explicit JournalView(QWidget *parent = 0);
     ~JournalView();
 
     /**reimp*/ int currentDateCount() const;
     /**reimp*/ Akonadi::Item::List selectedIncidences() const;
     KCalCore::DateList selectedIncidenceDates() const
     {
-      return KCalCore::DateList();
+        return KCalCore::DateList();
     }
 
-    void appendJournal( const Akonadi::Item &journal, const QDate &dt );
+    void appendJournal(const Akonadi::Item &journal, const QDate &dt);
 
     /** documentation in baseview.h */
-    void getHighlightMode( bool &highlightEvents,
-                           bool &highlightTodos,
-                           bool &highlightJournals );
+    void getHighlightMode(bool &highlightEvents,
+                          bool &highlightTodos,
+                          bool &highlightJournals);
 
-    bool eventFilter( QObject *, QEvent * );
+    bool eventFilter(QObject *, QEvent *);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     // Don't update the view when midnight passed, otherwise we'll have data loss (bug 79145)
-    virtual void dayPassed( const QDate & ) {}
+    virtual void dayPassed(const QDate &) {}
     void updateView();
     void flushView();
 
-    void showDates( const QDate &start, const QDate &end, const QDate &preferredMonth = QDate() );
-    void showIncidences( const Akonadi::Item::List &incidences, const QDate &date );
+    void showDates(const QDate &start, const QDate &end, const QDate &preferredMonth = QDate());
+    void showIncidences(const Akonadi::Item::List &incidences, const QDate &date);
 
-    void changeIncidenceDisplay( const Akonadi::Item &incidence,
-                                 Akonadi::IncidenceChanger::ChangeType );
-    void setIncidenceChanger( Akonadi::IncidenceChanger *changer );
+    void changeIncidenceDisplay(const Akonadi::Item &incidence,
+                                Akonadi::IncidenceChanger::ChangeType);
+    void setIncidenceChanger(Akonadi::IncidenceChanger *changer);
     void newJournal();
-  Q_SIGNALS:
+Q_SIGNALS:
     void flushEntries();
-    void setIncidenceChangerSignal( Akonadi::IncidenceChanger * );
-    void journalEdited( const Akonadi::Item &journal );
-    void journalDeleted( const Akonadi::Item &journal );
-    void printJournal( const KCalCore::Journal::Ptr &, bool preview );
+    void setIncidenceChangerSignal(Akonadi::IncidenceChanger *);
+    void journalEdited(const Akonadi::Item &journal);
+    void journalDeleted(const Akonadi::Item &journal);
+    void printJournal(const KCalCore::Journal::Ptr &, bool preview);
 
-  protected:
+protected:
     void clearEntries();
 
-  private:
+private:
     QScrollArea *mSA;
     QWidget *mVBox;
-    QMap<QDate, EventViews::JournalDateView*> mEntries;
+    QMap<QDate, EventViews::JournalDateView *> mEntries;
     Akonadi::IncidenceChanger *mChanger;
 //    DateList mSelectedDates;  // List of dates to be displayed
 };
