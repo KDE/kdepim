@@ -23,7 +23,8 @@
 #include <qtest_kde.h>
 #include <qtestmouse.h>
 
-TestSplitter::TestSplitter(QObject *parent)
+TestSplitter::TestSplitter(QWidget *parent)
+    : QWidget(parent)
 {
     QHBoxLayout *lay = new QHBoxLayout;
     setLayout(lay);
@@ -54,11 +55,12 @@ void SplitterCollapserTest::shouldHasDefaultValue()
 {
     TestSplitter testSplitter;
 
-    new PimCommon::SplitterCollapser(testSplitter.splitter, testSplitter.edit2);
+    new PimCommon::SplitterCollapser(testSplitter.edit2, testSplitter.splitter);
 
     testSplitter.show();
     QTest::qWaitForWindowShown(&testSplitter);
     QVERIFY(testSplitter.isVisible());
+
 
     PimCommon::SplitterCollapser *collapser = qFindChild<PimCommon::SplitterCollapser *>(&testSplitter, QLatin1String("splittercollapser"));
     QVERIFY(collapser);
@@ -76,8 +78,7 @@ void SplitterCollapserTest::shouldHasDefaultValue()
 void SplitterCollapserTest::shouldCollapsedWhenClickOnButton()
 {
     TestSplitter testSplitter;
-
-    new PimCommon::SplitterCollapser(testSplitter.splitter, testSplitter.edit2);
+    new PimCommon::SplitterCollapser(testSplitter.edit2, testSplitter.splitter);
 
     testSplitter.show();
     QTest::qWaitForWindowShown(&testSplitter);
@@ -95,7 +96,7 @@ void SplitterCollapserTest::shouldRestoreCorrectPosition()
 {
     TestSplitter testSplitter;
 
-    new PimCommon::SplitterCollapser(testSplitter.splitter, testSplitter.edit2);
+    new PimCommon::SplitterCollapser(testSplitter.edit2, testSplitter.splitter);
 
     testSplitter.show();
     QTest::qWaitForWindowShown(&testSplitter);
@@ -122,7 +123,7 @@ void SplitterCollapserTest::shouldRestoreCorrectPositionForFirstWidget()
 {
     TestSplitter testSplitter;
 
-    new PimCommon::SplitterCollapser(testSplitter.splitter, testSplitter.edit1);
+    new PimCommon::SplitterCollapser(testSplitter.edit1, testSplitter.splitter);
 
     testSplitter.show();
     QTest::qWaitForWindowShown(&testSplitter);
@@ -148,7 +149,7 @@ void SplitterCollapserTest::shouldTestVerticalSplitterFirstWidget()
 {
     TestSplitter testSplitter;
     testSplitter.splitter->setOrientation(Qt::Vertical);
-    new PimCommon::SplitterCollapser(testSplitter.splitter, testSplitter.edit1);
+    new PimCommon::SplitterCollapser(testSplitter.edit1, testSplitter.splitter);
 
     testSplitter.show();
     QTest::qWaitForWindowShown(&testSplitter);
@@ -175,7 +176,7 @@ void SplitterCollapserTest::shouldTestVerticalSplitterSecondWidget()
 {
     TestSplitter testSplitter;
     testSplitter.splitter->setOrientation(Qt::Vertical);
-    new PimCommon::SplitterCollapser(testSplitter.splitter, testSplitter.edit2);
+    new PimCommon::SplitterCollapser(testSplitter.edit2, testSplitter.splitter);
 
     testSplitter.show();
     QTest::qWaitForWindowShown(&testSplitter);

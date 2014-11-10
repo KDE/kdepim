@@ -65,7 +65,7 @@ EditorPage::EditorPage(GrantleeThemeEditor::EditorPage::PageType type, const QSt
     connect(mContactTemplate, SIGNAL(insertTemplate(QString)), mEditor->editor(), SLOT(insertPlainText(QString)));
     mMainSplitter->addWidget(mContactTemplate);
     mMainSplitter->setCollapsible(0, false);
-    new PimCommon::SplitterCollapser(mMainSplitter, mContactTemplate, this);
+    new PimCommon::SplitterCollapser(mContactTemplate, mMainSplitter);
 
 
     connect(mEditor->editor(), SIGNAL(textChanged()), this, SIGNAL(changed()));
