@@ -41,9 +41,11 @@ public:
 
     void showReplace();
     void showFind();
+    void setHideWhenClose(bool hide);
 
 Q_SIGNALS:
     void displayMessageIndicator(const QString &message);
+    void hideFindBar();
 
 protected:
     virtual bool viewIsReadOnly() const = 0;
@@ -77,6 +79,7 @@ protected:
     QString mLastSearchStr;
     TextFindWidget *mFindWidget;
     TextReplaceWidget *mReplaceWidget;
+    bool mHideWhenClose;
 };
 
 }

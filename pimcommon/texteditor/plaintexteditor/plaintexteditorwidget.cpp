@@ -19,10 +19,13 @@
 #include "plaintexteditor.h"
 #include "plaintexteditfindbar.h"
 #include "pimcommon/texttospeech/texttospeechwidget.h"
+#include "pimcommon/widgets/slidecontainer.h"
 
 #include <QVBoxLayout>
 #include <QShortcut>
 #include <QTextCursor>
+
+
 
 using namespace PimCommon;
 
@@ -72,9 +75,15 @@ void PlainTextEditorWidget::init(PlainTextEditor *customEditor)
     lay->addWidget(mEditor);
     connect(mEditor, &PlainTextEditor::say, mTextToSpeechWidget, &PimCommon::TextToSpeechWidget::say);
 
-    mFindBar = new PimCommon::PlainTextEditFindBar(mEditor, this);
+    mSliderContainer = new PimCommon::SlideContainer(this);
+
+    mFindBar = new PimCommon::PlainTextEditFindBar( mEditor, this );
+    mFindBar->setHideWhenClose(false);
     connect(mFindBar, &PimCommon::PlainTextEditFindBar::displayMessageIndicator, mEditor, &PlainTextEditor::slotDisplayMessageIndicator);
-    lay->addWidget(mFindBar);
+    connect(mFindBar, SIGNAL(hideFindBar()), mSliderContainer, SLOT(slideOut()));
+    mSliderContainer->setContent(mFindBar);
+
+    lay->addWidget(mSliderContainer);
 
     QShortcut *shortcut = new QShortcut(this);
     shortcut->setKey(Qt::Key_F + Qt::CTRL);
@@ -109,6 +118,8 @@ void PlainTextEditorWidget::slotReplace()
 
 void PlainTextEditorWidget::slotFind()
 {
+    mSliderContainer->slideIn();
+
     if (mEditor->searchSupport()) {
         if (mEditor->textCursor().hasSelection()) {
             mFindBar->setText(mEditor->textCursor().selectedText());

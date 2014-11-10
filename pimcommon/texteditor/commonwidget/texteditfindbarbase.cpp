@@ -35,7 +35,8 @@
 using namespace PimCommon;
 
 TextEditFindBarBase::TextEditFindBarBase(QWidget *parent)
-    : QWidget(parent)
+    : QWidget( parent ),
+      mHideWhenClose(true)
 {
     QVBoxLayout *topLayout = new QVBoxLayout;
     topLayout->setMargin(0);
@@ -95,6 +96,11 @@ void TextEditFindBarBase::showFind()
     }
 }
 
+void TextEditFindBarBase::setHideWhenClose(bool hide)
+{
+    mHideWhenClose = hide;
+}
+
 void TextEditFindBarBase::showReplace()
 {
     if (viewIsReadOnly()) {
@@ -146,10 +152,15 @@ void TextEditFindBarBase::autoSearch(const QString &str)
 void TextEditFindBarBase::messageInfo(bool backward, bool isAutoSearch, bool found)
 {
     if (!found && !isAutoSearch) {
+        QString str = mLastSearchStr;
+        if (str.length()>39) {
+            str.truncate(40);
+            str += QLatin1String("...");
+        }
         if (backward) {
-            Q_EMIT displayMessageIndicator(i18n("End of message reached.\nPhrase '%1' could not be found.", mLastSearchStr));
+            Q_EMIT displayMessageIndicator(i18n("End of message reached.\nPhrase '%1' could not be found.", str ));
         } else {
-            Q_EMIT displayMessageIndicator(i18n("End of message reached.\nPhrase '%1' could not be found.", mLastSearchStr));
+            Q_EMIT displayMessageIndicator(i18n("End of message reached.\nPhrase '%1' could not be found.", str ));
         }
     }
 }
@@ -202,7 +213,10 @@ void TextEditFindBarBase::closeBar()
     mFindWidget->search()->setText(QString());
     mReplaceWidget->replace()->setText(QString());
     clearSelections();
-    hide();
+    if (mHideWhenClose) {
+        hide();
+    }
+    Q_EMIT hideFindBar();
 }
 
 bool TextEditFindBarBase::event(QEvent *e)
