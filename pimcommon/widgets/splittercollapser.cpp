@@ -332,10 +332,19 @@ void SplitterCollapser::paintEvent(QPaintEvent *)
 
     QStyleOptionToolButton opt;
     initStyleOption(&opt);
-    if (d->mDirection == LeftToRight) {
-        opt.rect.setLeft(-width());
+
+    if (d->isVertical()) {
+        if (d->mDirection == TopToBottom) {
+            opt.rect.setTop(-height());
+        } else {
+            opt.rect.setHeight(height()*2);
+        }
     } else {
-        opt.rect.setWidth(width() * 2);
+        if (d->mDirection == LeftToRight) {
+            opt.rect.setLeft(-width());
+        } else {
+            opt.rect.setWidth(width() * 2);
+        }
     }
     painter.drawPrimitive(QStyle::PE_PanelButtonTool, opt);
 
