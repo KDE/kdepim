@@ -23,7 +23,7 @@
 class KJob;
 class QTemporaryFile;
 
-namespace KPIMUtils
+namespace KPIM
 {
 class ProgressIndicatorLabel;
 }
@@ -60,7 +60,7 @@ private:
     QString mListName;
     PimCommon::PlainTextEditorWidget *mTextEdit;
     QTemporaryFile *mTemporaryFile;
-    KPIMUtils::ProgressIndicatorLabel *mProgress;
+    KPIM::ProgressIndicatorLabel *mProgress;
     QPushButton *mUser1Button;
 };
 }

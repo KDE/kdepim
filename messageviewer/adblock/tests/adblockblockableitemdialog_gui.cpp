@@ -17,7 +17,7 @@
 
 #include "adblockblockableitemdialog_gui.h"
 #include "adblock/adblockblockableitemswidget.h"
-#include "KPIMUtils/ProgressIndicatorLabel"
+#include "libkdepim/widgets/progressindicatorlabel.h"
 #include <qdebug.h>
 
 #include <KLocalizedString>
@@ -44,7 +44,7 @@ AdBlockBlockableItemTestDialog::AdBlockBlockableItemTestDialog(const QString &fi
     mWidget = new MessageViewer::AdBlockBlockableItemsWidget;
     lay->addWidget(mWidget);
 
-    mProgress = new KPIMUtils::ProgressIndicatorLabel(i18n("Rendering page..."));
+    mProgress = new KPIM::ProgressIndicatorLabel(i18n("Rendering page..."));
     lay->addWidget(mProgress);
 
     QHBoxLayout *hbox = new QHBoxLayout;

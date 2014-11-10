@@ -21,7 +21,7 @@
 #include <QWidget>
 #include <QWebPage>
 
-namespace KPIMUtils
+namespace KPIM
 {
 class ProgressIndicatorLabel;
 }
@@ -43,7 +43,7 @@ private Q_SLOTS:
 private:
     MessageViewer::AdBlockBlockableItemsWidget *mWidget;
     QWebPage page;
-    KPIMUtils::ProgressIndicatorLabel *mProgress;
+    KPIM::ProgressIndicatorLabel *mProgress;
 };
 
 #endif

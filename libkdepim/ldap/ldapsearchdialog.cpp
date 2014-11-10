@@ -25,6 +25,8 @@
 
 #include "ldapclient.h"
 #include "ldapclientsearchconfig.h"
+#include "widgets/progressindicatorlabel.h"
+
 #include <QtCore/QPair>
 #include <QApplication>
 #include <QCheckBox>
@@ -54,7 +56,6 @@
 #include <kmessagebox.h>
 #include <QPushButton>
 
-#include <KPIMUtils/ProgressIndicatorLabel>
 #include <KLocale>
 #include <KConfigGroup>
 #include <QDialogButtonBox>
@@ -514,7 +515,7 @@ public:
     QTableView *mResultView;
     QPushButton *mSearchButton;
     ContactListModel *mModel;
-    KPIMUtils::ProgressIndicatorLabel *progressIndication;
+    KPIM::ProgressIndicatorLabel *progressIndication;
     QSortFilterProxyModel *sortproxy;
     QLineEdit *searchLine;
     QPushButton *user1Button;
@@ -632,7 +633,7 @@ LdapSearchDialog::LdapSearchDialog(QWidget *parent)
     buttonLayout->setMargin(0);
     topLayout->addLayout(buttonLayout);
 
-    d->progressIndication = new KPIMUtils::ProgressIndicatorLabel(i18n("Searching..."));
+    d->progressIndication = new KPIM::ProgressIndicatorLabel(i18n("Searching..."));
     buttonLayout->addWidget(d->progressIndication);
 
     QDialogButtonBox *buttons = new QDialogButtonBox(page);

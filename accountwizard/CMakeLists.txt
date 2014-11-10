@@ -75,6 +75,7 @@ set(accountwizard_libs
   KF5::NewStuff
   Qt5::UiTools
   KF5::DBusAddons
+  kdepim
 )
 
 if ( NOT ACCOUNTWIZARD_NO_GHNS )

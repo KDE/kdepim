@@ -19,7 +19,7 @@
 #include "shorturlutils.h"
 #include "abstractshorturl.h"
 #include "shorturl/shorturlconfiguredialog.h"
-#include <KPIMUtils/ProgressIndicatorLabel>
+#include "libkdepim/widgets/progressindicatorlabel.h"
 
 #include <KLineEdit>
 #include <KLocalizedString>
@@ -63,7 +63,7 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
 
     grid->addWidget(closeBtn, 0, 0);
 
-    mIndicatorLabel = new KPIMUtils::ProgressIndicatorLabel(i18n("In progress to generate short url..."));
+    mIndicatorLabel = new KPIM::ProgressIndicatorLabel(i18n("In progress to generate short url..."));
     grid->addWidget(mIndicatorLabel, 0, 1);
 
     QPushButton *configure = new QPushButton(i18n("Configure..."));

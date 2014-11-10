@@ -44,6 +44,8 @@ set(kdepim_widgets_LIB_SRCS
    widgets/pimmessagebox.cpp
    widgets/overlaywidget.cpp
    widgets/tagwidgets.cpp
+   widgets/progressindicatorlabel.cpp
+   widgets/progressindicatorwidget.cpp
 )
 
 set(kdepim_ldap_LIB_SRCS

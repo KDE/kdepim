@@ -126,7 +126,7 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_4">
             <item>
-             <widget class="KPIMUtils::ProgressIndicatorLabel" name="mProgress"/>
+             <widget class="KPIM::ProgressIndicatorLabel" name="mProgress"/>
             </item>
            </layout>
           </item>
@@ -264,9 +264,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KPIMUtils::ProgressIndicatorLabel</class>
+   <class>KPIM::ProgressIndicatorLabel</class>
    <extends>QLabel</extends>
-   <header location="global">kpimutils/progressindicatorlabel.h</header>
+   <header location="global">libkdepim/widgets/progressindicatorlabel.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

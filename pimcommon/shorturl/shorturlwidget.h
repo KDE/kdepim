@@ -27,7 +27,7 @@ class QPushButton;
 class QLabel;
 class QLineEdit;
 class QNetworkConfigurationManager;
-namespace KPIMUtils
+namespace KPIM
 {
 class ProgressIndicatorLabel;
 }
@@ -74,7 +74,7 @@ private:
     QPushButton *mInsertShortUrl;
     QPushButton *mOpenShortUrl;
     AbstractShortUrl *mEngine;
-    KPIMUtils::ProgressIndicatorLabel *mIndicatorLabel;
+    KPIM::ProgressIndicatorLabel *mIndicatorLabel;
     QNetworkConfigurationManager *mNetworkConfigurationManager;
     KToggleAction *mToggleAction;
     bool mStandalone;

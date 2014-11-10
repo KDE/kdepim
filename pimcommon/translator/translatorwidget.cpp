@@ -21,6 +21,7 @@
 #include "translatorutil.h"
 #include "googletranslator.h"
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
+#include "libkdepim/widgets/progressindicatorwidget.h"
 
 #include <KTextEdit>
 #include <QPushButton>
@@ -30,7 +31,7 @@
 #include <KSeparator>
 #include <KMessageBox>
 #include <KToggleAction>
-#include <KPIMUtils/kpimutils/progressindicatorwidget.h>
+
 #include <QIcon>
 #include <QMimeData>
 
@@ -76,7 +77,7 @@ public:
     MinimumComboBox *to;
     QPushButton *translate;
     PimCommon::AbstractTranslator *abstractTranslator;
-    KPIMUtils::ProgressIndicatorWidget *progressIndictor;
+    KPIM::ProgressIndicatorWidget *progressIndictor;
     QPushButton *invert;
     QSplitter *splitter;
     KToggleAction *action;
@@ -281,7 +282,7 @@ void TranslatorWidget::init()
     connect(debugButton, &QPushButton::clicked, this, &TranslatorWidget::slotDebug);
 #endif
 
-    d->progressIndictor = new KPIMUtils::ProgressIndicatorWidget(this);
+    d->progressIndictor = new KPIM::ProgressIndicatorWidget(this);
     hboxLayout->addWidget(d->progressIndictor);
 
     hboxLayout->addItem(new QSpacerItem(5, 5, QSizePolicy::MinimumExpanding, QSizePolicy::Minimum));

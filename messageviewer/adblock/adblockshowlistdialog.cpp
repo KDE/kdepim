@@ -20,7 +20,7 @@
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 
-#include <KPIMUtils/ProgressIndicatorLabel>
+#include "libkdepim/widgets/progressindicatorlabel.h"
 
 #include <KLocalizedString>
 #include <KIO/Job>
@@ -60,7 +60,7 @@ AdBlockShowListDialog::AdBlockShowListDialog(QWidget *parent)
     mTextEdit->setReadOnly(true);
     lay->addWidget(mTextEdit);
 
-    mProgress = new KPIMUtils::ProgressIndicatorLabel(i18n("Download..."));
+    mProgress = new KPIM::ProgressIndicatorLabel(i18n("Download..."));
     lay->addWidget(mProgress);
     w->setLayout(lay);
     mainLayout->addWidget(w);
