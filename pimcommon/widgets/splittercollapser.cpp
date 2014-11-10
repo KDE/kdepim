@@ -32,6 +32,7 @@ License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QStyleOptionToolButton>
 #include <QStylePainter>
 #include <QTimeLine>
+#include <QDebug>
 
 using namespace PimCommon;
 
@@ -139,13 +140,13 @@ void SplitterCollapser::Private::updatePosition()
         const int splitterHeight = mSplitter->height();
         if (mDirection == TopToBottom) {
             if (isVisible()) {
-                y = widgetRect.bottom() - height;
+                y = widgetRect.bottom() + handleWidth;
             } else {
                 y = 0;
             }
         } else { // BottomToTop
             if (isVisible()) {
-                y = widgetRect.top() + handleWidth;
+                y = widgetRect.top() - handleWidth - height;
             } else {
                 y = splitterHeight - handleWidth - height;
             }
