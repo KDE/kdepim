@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Account Wizard
 Name[de]=Zugangsassistent 
+Name[fi]=Opastettu tilin luonti
 Name[nl]=Accountassistent
 Name[pl]=Pomocnik konta 
 Name[pt_BR]=Assistente de Contas
@@ -16,6 +17,7 @@ Comment[de]=Den Postfach-Assistenten zum Einrichten von PIM-Zugängen starten.
 Comment[el]=Εκτέλεση του οδηγού λογαριασμού για τη ρύθμιση λογαριασμών PIM.
 Comment[en_GB]=Launch the account wizard to configure PIM accounts.
 Comment[et]=Kontonõustaja käivitamine PIM-kontode seadistamiseks.
+Comment[fi]=Käynnistä PIM-tilien opastettu asetus.
 Comment[fr]=Lancer l'assistant de compte pour configurer les comptes PIM
 Comment[ia]=Aperi le assistente de conto pro configurar contos del Administration de Informationes Personal
 Comment[it]=Esegue la procedura guidata per la creazione di account per configurare gli account di PIM.
