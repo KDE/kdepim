@@ -19,7 +19,6 @@
 
 #include "filteractionwithcommand.h"
 
-#include <KPIMUtils/KFileIO>
 #include <KProcess>
 #include <KShell>
 #include <QTemporaryFile>
@@ -107,20 +106,25 @@ QString FilterActionWithCommand::substituteCommandLineArgsFor(const KMime::Messa
             aTempFileList.append(tempFile);
             tempFileName = tempFile->fileName();
 
+            QFile file(tempFileName);
+            if (!file.open(QIODevice::WriteOnly)) {
+                qWarning() << "Faild to write message to file: " << file.errorString();
+                tempFile->close();
+                continue;
+            }
+
             if ((*it) == -1)
-                KPIMUtils::kByteArrayToFile(aMsg->encodedContent(), tempFileName,  //###
-                                            false, false, false);
+                file.write(aMsg->encodedContent());
             else if (aMsg->contents().size() == 0)
-                KPIMUtils::kByteArrayToFile(aMsg->decodedContent(), tempFileName,
-                                            false, false, false);
+                file.write(aMsg->decodedContent());
             else {
                 int index = *it; // we pass by reference below, so this is not const
                 KMime::Content *content = findMimeNodeForIndex(aMsg.get(), index);
                 if (content) {
-                    KPIMUtils::kByteArrayToFile(content->decodedContent(), tempFileName,
-                                                false, false, false);
+                    file.write(content->decodedContent());
                 }
             }
+            file.close();
             tempFile->close();
         }
 
@@ -215,13 +219,15 @@ FilterAction::ReturnCode FilterActionWithCommand::genericProcess(ItemContext &co
 
     // write message to file
     QString tempFileName = inFile->fileName();
-    if (!KPIMUtils::kByteArrayToFile(aMsg->encodedContent(), tempFileName,   //###
-                                     false, false, false)) {
+    QFile tempFile(tempFileName);
+    if (!tempFile.open(QIODevice::ReadWrite)) {
+        qWarning() << "Failed to write message to file: " << tempFile.errorString();
         qDeleteAll(atmList);
         atmList.clear();
         return CriticalError;
     }
-
+    tempFile.write(aMsg->encodedContent());
+    tempFile.close();
     inFile->close();
 
     KProcess shProc;

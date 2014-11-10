@@ -16,7 +16,6 @@ target_link_libraries(messageviewer_bodypartformatter_application_mstnef
   KF5::CalendarCore
   KF5::CalendarUtils
   KF5::Mime
-  KF5::PimUtils
   KF5::Tnef
   messagecore
   messageviewer

@@ -39,7 +39,6 @@
 #include <KLocalizedString>
 #include <kcharsets.h>
 #include <kde_file.h>
-#include <KPIMUtils/kpimutils/kfileio.h>
 #include <KUrl>
 #include <KLocale>
 
@@ -53,6 +52,7 @@
 #include <KLocalizedString>
 #include <QMimeDatabase>
 #include <QMimeType>
+#include <QFileDevice>
 
 namespace MessageViewer
 {
@@ -250,13 +250,17 @@ QString NodeHelper::writeNodeToTempFile(KMime::Content *node)
         // convert CRLF to LF before writing text attachments to disk
         data = KMime::CRLFtoLF(data);
     }
-    if (!KPIMUtils::kByteArrayToFile(data, fname, false, false, false)) {
+    QFile f(fname);
+    if (!f.open(QIODevice::ReadWrite)) {
+        qWarning() << "Failed to write note to file:" << f.errorString();
         return QString();
     }
+    f.write(data);
     mAttachmentFilesDir->addTempFile(fname);
     // make file read-only so that nobody gets the impression that he might
     // edit attached files (cf. bug #52813)
-    ::chmod(QFile::encodeName(fname), S_IRUSR);
+    f.setPermissions(QFileDevice::ReadUser);
+    f.close();
 
     return fname;
 }

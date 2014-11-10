@@ -85,8 +85,6 @@
 #include <AkonadiCore/ItemModifyJob>
 #include <AkonadiCore/ItemCreateJob>
 
-#include <KPIMUtils/kpimutils/kfileio.h>
-
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/cryptobackend.h>
 
@@ -761,7 +759,8 @@ void ViewerPrivate::attachmentOpenWith(KMime::Content *node, KService::Ptr offer
         linkName = name;
     }
 
-    KPIMUtils::checkAndCorrectPermissionsIfPossible(linkName, false, true, true);
+    const QFileDevice::Permissions perms = QFile::permissions(linkName);
+    QFile::setPermissions(linkName, perms | QFileDevice::ReadUser | QFileDevice::WriteUser);
 
     url.setPath(linkName);
     lst.append(url);
@@ -812,20 +811,23 @@ void ViewerPrivate::displaySplashPage(const QString &info)
 
 #ifdef KDEPIM_MOBILE_UI
     const QString location = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("messageviewer/about/main_mobile.html"));
-    QString content = QLatin1String(KPIMUtils::kFileToByteArray(location));
-    content = content.arg(QLatin1String(""));     // infopage stylesheet
-    content = content.arg(QLatin1String(""));     // rtl infopage stylesheet
+    const QString stylesheet = QLatin1String("");
+    const QString rtlStylesheet = QLatin1String("");
 #else
     const QString location = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kmail2/about/main.html"));  //FIXME(Andras) copy to $KDEDIR/share/apps/messageviewer
-    QString content = QLatin1String(KPIMUtils::kFileToByteArray(location));
-    content = content.arg(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kdeui/about/kde_infopage.css")));
-    if (QApplication::isRightToLeft())
-        content = content.arg(QLatin1String("@import \"") + KStandardDirs::locate("data",
-                              QLatin1String("kdeui/about/kde_infopage_rtl.css")) +  QLatin1String("\";"));
-    else {
-        content = content.arg(QString());
+    const QString stylesheet = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kdeui/about/kde_infopage.css"));
+    QString rtlStylesheet;
+    if (QApplication::isRightToLeft()) {
+        rtlStylesheet = QLatin1String("@import \"") + KStandardDirs::locate("data", QLatin1String("kdeui/about/kde_infopage_rtl.css")) +  QLatin1String("\";");
     }
 #endif
+    QFile f(location);
+    if (!f.open(QIODevice::ReadOnly)) {
+        qWarning() << "Failed to read splash page: " << f.errorString();
+        return;
+    }
+    const QString content = QString::fromLocal8Bit(f.readAll()).arg(stylesheet, rtlStylesheet);
+    f.close();
 
     const QString fontSize = QString::number(pointsToPixel(mCSSHelper->bodyFont().pointSize()));
     const QString catchPhrase; //not enough space for a catch phrase at default window size i18n("Part of the Kontact Suite");

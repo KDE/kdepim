@@ -20,9 +20,6 @@
 #include "filters.h"
 #include "filterinfo.h"
 
-// KDEPIM Includes
-#include <KPIMUtils/KFileIO>
-
 // Akonadi Includes
 #include <CollectionFetchJob>
 #include <Item>
@@ -339,9 +336,14 @@ bool Filter::doAddMessage(const QString &folderName,
     QUrl msgUrl(msgPath);
     if (!msgUrl.isEmpty() && msgUrl.isLocalFile()) {
 
-        // Read in the temporary file.
-        const QByteArray msgText =
-            KPIMUtils::kFileToByteArray(msgUrl.toLocalFile(), true, false);
+        QFile f(msgUrl.toLocalFile());
+        QByteArray msgText;
+        if (!f.open(QIODevice::ReadOnly)) {
+            qWarning() << "Failed to read temporary file: " << f.errorString();
+        } else {
+            msgText = f.readAll();
+            f.close();
+        }
         if (msgText.isEmpty()) {
             d->filterInfo->addErrorLogEntry(i18n("Error: failed to read temporary file at %1", msgPath));
             return false;

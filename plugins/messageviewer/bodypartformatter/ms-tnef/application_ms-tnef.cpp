@@ -35,8 +35,6 @@
 #include <messagecore/utils/stringutil.h>
 #include <messageviewer/utils/util.h>
 
-#include <KPIMUtils/KFileIO>
-
 #include <KCalCore/Event>
 #include <KCalCore/Incidence>
 #include <KCalCore/ICalFormat>
@@ -85,7 +83,14 @@ public:
 
         // Look for an invitation
         QString inviteStr;
-        QByteArray buf = KPIMUtils::kFileToByteArray(fileName, false, false);
+        QFile f(fileName);
+        QByteArray buf;
+        if (!f.open(QIODevice::ReadOnly)) {
+            qWarning() << "Failed to read attachment part: " << f.errorString();
+        } else {
+            buf = f.readAll();
+            f.close();
+        }
         if (!buf.isEmpty()) {
             KCalCore::MemoryCalendar::Ptr cl(
                 new KCalCore::MemoryCalendar(KSystemTimeZones::local()));

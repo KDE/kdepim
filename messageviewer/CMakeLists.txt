@@ -199,7 +199,6 @@ target_link_libraries(messageviewer messagecore kdepim kpgp kleo
   KF5::Mbox
   KF5::AkonadiCore
   KF5::AkonadiMime
-  KF5::PimUtils
   KF5::Contacts
   KF5::MailTransport
   KF5::Gpgmepp

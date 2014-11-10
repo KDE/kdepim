@@ -28,12 +28,12 @@
 #include <KLocalizedString>
 #include <KLocalizedString>
 #include <QTemporaryDir>
+#include <QFileDevice>
 
 #include <kmime/kmime_headers.h>
 #include <kmime/kmime_util.h>
 #include <AkonadiCore/item.h>
 
-#include <KPIMUtils/kpimutils/kfileio.h>
 #include <KFormat>
 
 using namespace MessageComposer;
@@ -165,10 +165,19 @@ QMimeData *AttachmentModel::mimeData(const QModelIndexList &indexes) const
         QTemporaryDir *tempDir = new QTemporaryDir; // Will remove the directory on destruction.
         d->tempDirs.append(tempDir);
         const QString fileName = tempDir->path() + attachmentName;
-        KPIMUtils::kByteArrayToFile(part->data(),
-                                    fileName,
-                                    false, false, false);
-        KPIMUtils::checkAndCorrectPermissionsIfPossible(fileName, false, true, true);
+        QFile f(fileName);
+        if (!f.open(QIODevice::WriteOnly)) {
+            qWarning() << "Cannot write attachment:" << f.errorString();
+            continue;
+        }
+        const QByteArray data = part->data();
+        if (f.write(data) != data.length()) {
+            qWarning() << "Failed to write all data to file!";
+            continue;
+        }
+        f.setPermissions(f.permissions() | QFileDevice::ReadUser | QFileDevice::WriteUser);
+        f.close();
+
         QUrl url;
         url.setScheme(QLatin1String("file"));
         url.setPath(fileName);

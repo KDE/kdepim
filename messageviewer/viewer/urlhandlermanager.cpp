@@ -51,7 +51,6 @@
 
 #include <kmime/kmime_content.h>
 #include <KPIMUtils/Email>
-#include <KPIMUtils/KFileIO>
 
 #include <QMenu>
 #include <KMimeType>
