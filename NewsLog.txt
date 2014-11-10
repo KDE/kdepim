@@ -1,4 +1,20 @@
 
+Monday 10 November 2014
+
+Problems addressed
+------------------
+
+* kolab/issue4380: Wish: opening recurrence dialog the first time should set: enable recurrence (rt#10089)
+* kolab/issue4873: Crash when moving folder with subfolders from dimap to imap account (RT#10270)
+* kolab/issue4874: Option to save decrypted copy of a message in the same folder (RT#10254)
+* kolab/issue4875: Counter proposal sometimes shows wrong actor (RT# 10190
+
+Features
+--------
+
+* RT#10190: Improved user experience of iTip messages
+
+
 Wednesday 05 February 2014
 
 Problems addressed
