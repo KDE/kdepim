@@ -41,7 +41,7 @@ class PIMCOMMON_EXPORT SplitterCollapser : public QToolButton
 public:
     /**
      * @brief SplitterCollapser create a splitter collapser
-     * @param splitter the splitter where we put the splitter collapser
+     * @param the splitted which this collapser should be associated with.
      * @param widget the widget which be associate with splitter collapser.
      * @param parent the parent widget.
      */
