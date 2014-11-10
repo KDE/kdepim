@@ -23,6 +23,8 @@
 #include <QShortcut>
 #include <QTextCursor>
 
+#include "pimcommon/widgets/slidecontainer.h"
+
 using namespace PimCommon;
 
 RichTextEditorWidget::RichTextEditorWidget(RichTextEditor *customEditor, QWidget *parent)
@@ -93,9 +95,15 @@ void RichTextEditorWidget::init(RichTextEditor *customEditor)
     }
     lay->addWidget(mEditor);
 
+    mSliderContainer = new PimCommon::SlideContainer(this);
+
+
     mFindBar = new PimCommon::RichTextEditFindBar( mEditor, this );
+    mFindBar->setHideWhenClose(false);
+    connect(mFindBar, SIGNAL(hideFindBar()), mSliderContainer, SLOT(slideOut()));
     connect(mFindBar, SIGNAL(displayMessageIndicator(QString)), mEditor, SLOT(slotDisplayMessageIndicator(QString)));
-    lay->addWidget(mFindBar);
+    mSliderContainer->setContent(mFindBar);
+    lay->addWidget(mSliderContainer);
 
     QShortcut *shortcut = new QShortcut( this );
     shortcut->setKey( Qt::Key_F+Qt::CTRL );
@@ -128,6 +136,7 @@ void RichTextEditorWidget::slotReplace()
 
 void RichTextEditorWidget::slotFind()
 {
+    mSliderContainer->slideIn();
     if ( mEditor->textCursor().hasSelection() )
         mFindBar->setText( mEditor->textCursor().selectedText() );
     mEditor->moveCursor(QTextCursor::Start);

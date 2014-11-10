@@ -25,6 +25,7 @@
 namespace PimCommon {
 class RichTextEditor;
 class RichTextEditFindBar;
+class SlideContainer;
 class PIMCOMMON_EXPORT RichTextEditorWidget : public QWidget
 {
     Q_OBJECT
@@ -58,6 +59,7 @@ private:
     void init(RichTextEditor *customEditor = 0);
     PimCommon::RichTextEditFindBar *mFindBar;
     RichTextEditor *mEditor;
+    PimCommon::SlideContainer *mSliderContainer;
 };
 }
 
