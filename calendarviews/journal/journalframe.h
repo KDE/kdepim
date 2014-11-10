@@ -67,13 +67,14 @@ class JournalFrame : public QFrame
     void deleteItem();
     void editItem();
     void printJournal();
+    void printPreviewJournal();
 
   public Q_SLOTS:
     void setIncidenceChanger( Akonadi::IncidenceChanger *changer ) { mChanger = changer; }
     void setDate( const QDate &date );
 
   Q_SIGNALS:
-    void printJournal( const KCalCore::Journal::Ptr &);
+    void printJournal( const KCalCore::Journal::Ptr &, bool preview);
     void deleteIncidence( const Akonadi::Item & );
     void editIncidence( const Akonadi::Item & );
     void incidenceSelected( const Akonadi::Item &, const QDate & );
@@ -91,6 +92,7 @@ class JournalFrame : public QFrame
     QPushButton *mEditButton;
     QPushButton *mDeleteButton;
     QPushButton *mPrintButton;
+    QPushButton *mPrintPreviewButton;
 
     bool mDirty;
     bool mWriteInProgress;
@@ -122,7 +124,7 @@ class JournalDateView : public KVBox
     void deleteIncidence( const Akonadi::Item &journal );
     void newJournal( const QDate & );
     void incidenceSelected( const Akonadi::Item &, const QDate & );
-    void printJournal( const KCalCore::Journal::Ptr &);
+    void printJournal( const KCalCore::Journal::Ptr &, bool preview);
 
   public Q_SLOTS:
     void emitNewJournal();

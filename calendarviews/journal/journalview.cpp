@@ -85,8 +85,8 @@ void JournalView::appendJournal( const Akonadi::Item &journal, const QDate &dt )
              this, SIGNAL(newJournalSignal(QDate)) );
     connect( entry, SIGNAL(incidenceSelected(Akonadi::Item,QDate)),
                     SIGNAL(incidenceSelected(Akonadi::Item,QDate)) );
-    connect( entry, SIGNAL(printJournal(KCalCore::Journal::Ptr)),
-                    SIGNAL(printJournal(KCalCore::Journal::Ptr)) );
+    connect( entry, SIGNAL(printJournal(KCalCore::Journal::Ptr,bool)),
+                    SIGNAL(printJournal(KCalCore::Journal::Ptr,bool)) );
     mEntries.insert( dt, entry );
   }
 

@@ -41,7 +41,7 @@ class PIMCOMMON_EXPORT SplitterCollapser : public QToolButton
 public:
     /**
      * @brief SplitterCollapser create a splitter collapser
-     * @param splitter the splitter where we put the splitter collapser
+     * @param the splitted which this collapser should be associated with.
      * @param widget the widget which be associate with splitter collapser.
      * @param parent the parent widget.
      */
@@ -55,6 +55,9 @@ public:
      */
     bool isCollapsed() const;
 
+    QSize sizeHint() const Q_DECL_OVERRIDE;
+
+
 public Q_SLOTS:
     void collapse();
     void restore();
@@ -65,7 +68,6 @@ private Q_SLOTS:
 
 protected:
     bool eventFilter(QObject *, QEvent *) Q_DECL_OVERRIDE;
-    QSize sizeHint() const Q_DECL_OVERRIDE;
     void paintEvent(QPaintEvent *) Q_DECL_OVERRIDE;
 
 private:

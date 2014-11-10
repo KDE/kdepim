@@ -84,7 +84,7 @@ class EVENTVIEWS_EXPORT JournalView : public EventView
     void setIncidenceChangerSignal( Akonadi::IncidenceChanger * );
     void journalEdited( const Akonadi::Item &journal );
     void journalDeleted( const Akonadi::Item &journal );
-    void printJournal( const KCalCore::Journal::Ptr & );
+    void printJournal( const KCalCore::Journal::Ptr &, bool preview );
 
   protected:
     void clearEntries();
