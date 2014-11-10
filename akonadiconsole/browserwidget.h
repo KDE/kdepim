@@ -40,7 +40,8 @@ class AkonadiBrowserModel;
 
 template <typename T> class KViewStateMaintainer;
 
-namespace Akonadi {
+namespace Akonadi
+{
 class ChangeRecorder;
 class EntityTreeView;
 class Job;
@@ -52,33 +53,33 @@ class StatisticsProxyModel;
 
 class BrowserWidget: public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit BrowserWidget( KXmlGuiWindow *xmlGuiWindow, QWidget *parent = 0 );
+public:
+    explicit BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget *parent = 0);
     ~BrowserWidget();
 
-  public slots:
+public slots:
     void dumpToXml();
     void clearCache();
 
-  private slots:
-    void itemActivated( const QModelIndex &index );
-    void itemFetchDone( KJob *job );
+private slots:
+    void itemActivated(const QModelIndex &index);
+    void itemFetchDone(KJob *job);
     void modelChanged();
     void save();
-    void saveResult( KJob* job );
+    void saveResult(KJob *job);
     void addAttribute();
     void delAttribute();
-    void setItem( const Akonadi::Item &item );
-    void dumpToXmlResult( KJob *job );
+    void setItem(const Akonadi::Item &item);
+    void dumpToXmlResult(KJob *job);
     void clear();
     void updateItemFetchScope();
 
     void contentViewChanged();
 
-    void tagViewContextMenuRequested( const QPoint &pos );
-    void tagViewDoubleClicked ( const QModelIndex &index );
+    void tagViewContextMenuRequested(const QPoint &pos);
+    void tagViewDoubleClicked(const QModelIndex &index);
     void addSubTagRequested();
     void addTagRequested();
     void editTagRequested();
@@ -86,8 +87,7 @@ class BrowserWidget: public QWidget
     void createTag();
     void modifyTag();
 
-
-  private:
+private:
     Akonadi::Collection currentCollection() const;
 
     Akonadi::ChangeRecorder *mBrowserMonitor;

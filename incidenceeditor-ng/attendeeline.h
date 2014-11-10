@@ -33,38 +33,39 @@
 
 class QKeyEvent;
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 class AttendeeData;
 
 class INCIDENCEEDITORS_NG_EXPORT AttendeeComboBox : public QToolButton
 {
-  Q_OBJECT
-  public:
-    explicit AttendeeComboBox( QWidget *parent );
+    Q_OBJECT
+public:
+    explicit AttendeeComboBox(QWidget *parent);
 
-    void addItem( const QIcon &icon, const QString &text );
-    void addItems( const QStringList &texts );
+    void addItem(const QIcon &icon, const QString &text);
+    void addItems(const QStringList &texts);
 
     int currentIndex() const;
 
-  signals:
+signals:
     void rightPressed();
     void leftPressed();
     void itemChanged();
 
-  public slots:
+public slots:
     /** Clears the combobox, removing all items. */
     void clear();
-    void setCurrentIndex( int index );
+    void setCurrentIndex(int index);
 
-  protected:
-    void keyPressEvent( QKeyEvent *ev );
+protected:
+    void keyPressEvent(QKeyEvent *ev);
 
-  private slots:
+private slots:
     void slotActionTriggered();
 
-  private:
+private:
     QMenu *mMenu;
     QList<QPair<QString, QIcon> > mList;
     int mCurrentIndex;
@@ -72,32 +73,32 @@ class INCIDENCEEDITORS_NG_EXPORT AttendeeComboBox : public QToolButton
 
 class INCIDENCEEDITORS_NG_EXPORT AttendeeLineEdit : public KPIM::AddresseeLineEdit
 {
-  Q_OBJECT
-  public:
-    explicit AttendeeLineEdit( QWidget * parent );
+    Q_OBJECT
+public:
+    explicit AttendeeLineEdit(QWidget *parent);
 
-  signals:
+signals:
     void deleteMe();
     void leftPressed();
     void rightPressed();
     void upPressed();
     void downPressed();
 
-  protected:
-    void keyPressEvent( QKeyEvent *ev );
+protected:
+    void keyPressEvent(QKeyEvent *ev);
 };
 
 class INCIDENCEEDITORS_NG_EXPORT AttendeeLine : public KPIM::MultiplyingLine
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     enum AttendeeActions {
-      EventActions,
-      TodoActions
+        EventActions,
+        TodoActions
     };
 
-    explicit AttendeeLine( QWidget *parent );
-    virtual ~AttendeeLine(){}
+    explicit AttendeeLine(QWidget *parent);
+    virtual ~AttendeeLine() {}
 
     virtual void activate();
     virtual bool isActive() const;
@@ -109,32 +110,32 @@ class INCIDENCEEDITORS_NG_EXPORT AttendeeLine : public KPIM::MultiplyingLine
     virtual void clearModified();
 
     virtual KPIM::MultiplyingLineData::Ptr data() const;
-    virtual void setData( const KPIM::MultiplyingLineData::Ptr &data );
+    virtual void setData(const KPIM::MultiplyingLineData::Ptr &data);
 
-    virtual void fixTabOrder( QWidget *previous );
+    virtual void fixTabOrder(QWidget *previous);
     virtual QWidget *tabOut() const;
 
     virtual void moveCompletionPopup();
-    virtual void setCompletionMode( KCompletion::CompletionMode );
+    virtual void setCompletionMode(KCompletion::CompletionMode);
 
-    virtual int setColumnWidth( int w );
+    virtual int setColumnWidth(int w);
 
     virtual void aboutToBeDeleted();
 
-    void setActions( AttendeeActions actions );
+    void setActions(AttendeeActions actions);
 
-  signals:
+signals:
     void changed();
-    void changed( const KCalCore::Attendee::Ptr &oldAttendee,
-                  const KCalCore::Attendee::Ptr &newAttendee );
-    void editingFinished( KPIM::MultiplyingLine * );
+    void changed(const KCalCore::Attendee::Ptr &oldAttendee,
+                 const KCalCore::Attendee::Ptr &newAttendee);
+    void editingFinished(KPIM::MultiplyingLine *);
 
-  private slots:
-    void slotTextChanged( const QString & );
+private slots:
+    void slotTextChanged(const QString &);
     void slotHandleChange();
     void slotComboChanged();
 
-  private:
+private:
     void dataFromFields();
     void fieldsFromData();
 

@@ -42,25 +42,25 @@
 
 using namespace IncidenceEditorNG;
 
-AttachmentIconItem::AttachmentIconItem( const KCalCore::Attachment::Ptr &att, QListWidget *parent )
-  : QListWidgetItem( parent )
+AttachmentIconItem::AttachmentIconItem(const KCalCore::Attachment::Ptr &att, QListWidget *parent)
+    : QListWidgetItem(parent)
 {
-  if ( att ) {
-    mAttachment = KCalCore::Attachment::Ptr( new KCalCore::Attachment( *att.data() ) );
-    mAttachment->setLabel( att->label() );
-  } else {
-    // for the enteprise, inline attachments are the default
+    if (att) {
+        mAttachment = KCalCore::Attachment::Ptr(new KCalCore::Attachment(*att.data()));
+        mAttachment->setLabel(att->label());
+    } else {
+        // for the enteprise, inline attachments are the default
 #ifdef KDEPIM_ENTERPRISE_BUILD
-    mAttachment =
-      KCalCore::Attachment::Ptr(
-        new KCalCore::Attachment( QByteArray() ) ); // use the non-uri constructor
-                                                    // as we want inline by default
+        mAttachment =
+            KCalCore::Attachment::Ptr(
+                new KCalCore::Attachment(QByteArray()));    // use the non-uri constructor
+        // as we want inline by default
 #else
-    mAttachment = KCalCore::Attachment::Ptr( new KCalCore::Attachment( QString() ) );
+        mAttachment = KCalCore::Attachment::Ptr(new KCalCore::Attachment(QString()));
 #endif
-  }
-  readAttachment();
-  setFlags( flags() | Qt::ItemIsDragEnabled );
+    }
+    readAttachment();
+    setFlags(flags() | Qt::ItemIsDragEnabled);
 }
 
 AttachmentIconItem::~AttachmentIconItem()
@@ -69,218 +69,218 @@ AttachmentIconItem::~AttachmentIconItem()
 
 KCalCore::Attachment::Ptr AttachmentIconItem::attachment() const
 {
-  return mAttachment;
+    return mAttachment;
 }
 
 const QString AttachmentIconItem::uri() const
 {
-  return mAttachment->uri();
+    return mAttachment->uri();
 }
 
 const QString AttachmentIconItem::savedUri() const
 {
-  return mSaveUri;
+    return mSaveUri;
 }
 
-void AttachmentIconItem::setUri( const QString &uri )
+void AttachmentIconItem::setUri(const QString &uri)
 {
-  mSaveUri = uri;
-  mAttachment->setUri( mSaveUri );
-  readAttachment();
+    mSaveUri = uri;
+    mAttachment->setUri(mSaveUri);
+    readAttachment();
 }
 
-void AttachmentIconItem::setData( const QByteArray &data )
+void AttachmentIconItem::setData(const QByteArray &data)
 {
-  mAttachment->setDecodedData( data );
-  readAttachment();
+    mAttachment->setDecodedData(data);
+    readAttachment();
 }
 
 const QString AttachmentIconItem::mimeType() const
 {
-  return mAttachment->mimeType();
+    return mAttachment->mimeType();
 }
 
-void AttachmentIconItem::setMimeType( const QString &mime )
+void AttachmentIconItem::setMimeType(const QString &mime)
 {
-  mAttachment->setMimeType( mime );
-  readAttachment();
+    mAttachment->setMimeType(mime);
+    readAttachment();
 }
 
 const QString AttachmentIconItem::label() const
 {
-  return mAttachment->label();
+    return mAttachment->label();
 }
 
-void AttachmentIconItem::setLabel( const QString &description )
+void AttachmentIconItem::setLabel(const QString &description)
 {
-  if ( mAttachment->label() == description ) {
-    return;
-  }
-  mAttachment->setLabel( description );
-  readAttachment();
+    if (mAttachment->label() == description) {
+        return;
+    }
+    mAttachment->setLabel(description);
+    readAttachment();
 }
 
 bool AttachmentIconItem::isBinary() const
 {
-  return mAttachment->isBinary();
+    return mAttachment->isBinary();
 }
 
 QPixmap AttachmentIconItem::icon() const
 {
-  return icon( KMimeType::mimeType( mAttachment->mimeType() ),
-                mAttachment->uri(), mAttachment->isBinary() );
+    return icon(KMimeType::mimeType(mAttachment->mimeType()),
+                mAttachment->uri(), mAttachment->isBinary());
 }
 
-QPixmap AttachmentIconItem::icon( KMimeType::Ptr mimeType,
-                                  const QString &uri,
-                                  bool binary )
+QPixmap AttachmentIconItem::icon(KMimeType::Ptr mimeType,
+                                 const QString &uri,
+                                 bool binary)
 {
 //QT5 use KIconEngine
 #if 0
-  QString iconStr = mimeType->iconName( uri );
-  QStringList overlays;
-  if ( !uri.isEmpty() && !binary ) {
-    overlays << "emblem-link";
-  }
+    QString iconStr = mimeType->iconName(uri);
+    QStringList overlays;
+    if (!uri.isEmpty() && !binary) {
+        overlays << "emblem-link";
+    }
 
-  return KIconLoader::global()->loadIcon( iconStr, KIconLoader::Desktop, 0,
-                                          KIconLoader::DefaultState,
-                                          overlays );
+    return KIconLoader::global()->loadIcon(iconStr, KIconLoader::Desktop, 0,
+                                           KIconLoader::DefaultState,
+                                           overlays);
 #else
-return QPixmap();
+    return QPixmap();
 #endif
 }
 
 void AttachmentIconItem::readAttachment()
 {
-  setText( mAttachment->label() );
-  setFlags( flags() | Qt::ItemIsEditable );
+    setText(mAttachment->label());
+    setFlags(flags() | Qt::ItemIsEditable);
 
-  if ( mAttachment->mimeType().isEmpty() || !( KMimeType::mimeType( mAttachment->mimeType() ) ) ) {
-    KMimeType::Ptr mimeType;
-    if ( mAttachment->isUri() ) {
-      mimeType = KMimeType::findByUrl( mAttachment->uri() );
-    } else {
-      mimeType = KMimeType::findByContent( mAttachment->decodedData() );
+    if (mAttachment->mimeType().isEmpty() || !(KMimeType::mimeType(mAttachment->mimeType()))) {
+        KMimeType::Ptr mimeType;
+        if (mAttachment->isUri()) {
+            mimeType = KMimeType::findByUrl(mAttachment->uri());
+        } else {
+            mimeType = KMimeType::findByContent(mAttachment->decodedData());
+        }
+        mAttachment->setMimeType(mimeType->name());
     }
-    mAttachment->setMimeType( mimeType->name() );
-  }
 
-  setIcon( icon() );
+    setIcon(icon());
 }
 
-AttachmentIconView::AttachmentIconView( QWidget *parent )
-  : QListWidget( parent )
+AttachmentIconView::AttachmentIconView(QWidget *parent)
+    : QListWidget(parent)
 {
-  setMovement( Static );
-  setAcceptDrops( true );
-  setSelectionMode( ExtendedSelection );
-  setSelectionRectVisible( false );
-  setIconSize( QSize( KIconLoader::SizeLarge, KIconLoader::SizeLarge ) );
-  setFlow( LeftToRight );
-  setWrapping( true );
+    setMovement(Static);
+    setAcceptDrops(true);
+    setSelectionMode(ExtendedSelection);
+    setSelectionRectVisible(false);
+    setIconSize(QSize(KIconLoader::SizeLarge, KIconLoader::SizeLarge));
+    setFlow(LeftToRight);
+    setWrapping(true);
 #ifndef QT_NO_DRAGANDDROP
-  setDragDropMode( DragDrop );
-  setDragEnabled( true );
+    setDragDropMode(DragDrop);
+    setDragEnabled(true);
 #endif
-  setEditTriggers( EditKeyPressed );
-  setContextMenuPolicy( Qt::CustomContextMenu );
+    setEditTriggers(EditKeyPressed);
+    setContextMenuPolicy(Qt::CustomContextMenu);
 }
 
-QUrl AttachmentIconView::tempFileForAttachment( const KCalCore::Attachment::Ptr &attachment ) const
+QUrl AttachmentIconView::tempFileForAttachment(const KCalCore::Attachment::Ptr &attachment) const
 {
-  if ( mTempFiles.contains( attachment ) ) {
-    return mTempFiles.value( attachment );
-  }
-  QTemporaryFile *file;
+    if (mTempFiles.contains(attachment)) {
+        return mTempFiles.value(attachment);
+    }
+    QTemporaryFile *file;
 
-  QStringList patterns = KMimeType::mimeType( attachment->mimeType() )->patterns();
+    QStringList patterns = KMimeType::mimeType(attachment->mimeType())->patterns();
 
-  if ( !patterns.empty() ) {
-      file = new QTemporaryFile(QDir::tempPath() + QLatin1String("/attachementview_XXXXX") + patterns.first().remove('*')); 
-  } else {
-      file = new QTemporaryFile();
-  }
-  file->setParent( const_cast<AttachmentIconView*>( this ) );
+    if (!patterns.empty()) {
+        file = new QTemporaryFile(QDir::tempPath() + QLatin1String("/attachementview_XXXXX") + patterns.first().remove('*'));
+    } else {
+        file = new QTemporaryFile();
+    }
+    file->setParent(const_cast<AttachmentIconView *>(this));
 
-  file->setAutoRemove( true );
-  file->open();
-  // read-only not to give the idea that it could be written to
-  file->setPermissions( QFile::ReadUser );
-  file->write( QByteArray::fromBase64( attachment->data() ) );
-  mTempFiles.insert( attachment, file->fileName() );
-  file->close();
-  return mTempFiles.value( attachment );
+    file->setAutoRemove(true);
+    file->open();
+    // read-only not to give the idea that it could be written to
+    file->setPermissions(QFile::ReadUser);
+    file->write(QByteArray::fromBase64(attachment->data()));
+    mTempFiles.insert(attachment, file->fileName());
+    file->close();
+    return mTempFiles.value(attachment);
 }
 
-QMimeData *AttachmentIconView::mimeData( const QList< QListWidgetItem*> items ) const
+QMimeData *AttachmentIconView::mimeData(const QList< QListWidgetItem *> items) const
 {
-  // create a list of the URL:s that we want to drag
-  QList<QUrl> urls;
-  QStringList labels;
-  foreach ( QListWidgetItem *it, items ) {
-    if ( it->isSelected() ) {
-      AttachmentIconItem *item = static_cast<AttachmentIconItem *>( it );
-      if ( item->isBinary() ) {
-        urls.append( tempFileForAttachment( item->attachment() ) );
-      } else {
-        urls.append( item->uri() );
-      }
-      labels.append( QUrl::toPercentEncoding( item->label() ) );
+    // create a list of the URL:s that we want to drag
+    QList<QUrl> urls;
+    QStringList labels;
+    foreach (QListWidgetItem *it, items) {
+        if (it->isSelected()) {
+            AttachmentIconItem *item = static_cast<AttachmentIconItem *>(it);
+            if (item->isBinary()) {
+                urls.append(tempFileForAttachment(item->attachment()));
+            } else {
+                urls.append(item->uri());
+            }
+            labels.append(QUrl::toPercentEncoding(item->label()));
+        }
     }
-  }
-  if ( selectionMode() == NoSelection ) {
-    AttachmentIconItem *item = static_cast<AttachmentIconItem *>( currentItem() );
-    if ( item ) {
-      urls.append( item->uri() );
-      labels.append( QUrl::toPercentEncoding( item->label() ) );
+    if (selectionMode() == NoSelection) {
+        AttachmentIconItem *item = static_cast<AttachmentIconItem *>(currentItem());
+        if (item) {
+            urls.append(item->uri());
+            labels.append(QUrl::toPercentEncoding(item->label()));
+        }
     }
-  }
 
-  QMap<QString, QString> metadata;
-  metadata["labels"] = labels.join( ":" );
+    QMap<QString, QString> metadata;
+    metadata["labels"] = labels.join(":");
 
-  QMimeData *mimeData = new QMimeData;
-  mimeData->setUrls(urls);
-  KUrlMimeData::setMetaData(metadata, mimeData);
-  return mimeData;
+    QMimeData *mimeData = new QMimeData;
+    mimeData->setUrls(urls);
+    KUrlMimeData::setMetaData(metadata, mimeData);
+    return mimeData;
 }
 
 QMimeData *AttachmentIconView::mimeData() const
 {
-  return mimeData( selectedItems() );
+    return mimeData(selectedItems());
 }
 
-void AttachmentIconView::startDrag( Qt::DropActions supportedActions )
+void AttachmentIconView::startDrag(Qt::DropActions supportedActions)
 {
-  Q_UNUSED( supportedActions );
+    Q_UNUSED(supportedActions);
 #ifndef QT_NO_DRAGANDDROP
-  QPixmap pixmap;
-  if ( selectedItems().size() > 1 ) {
-    pixmap = KIconLoader::global()->loadIcon( "mail-attachment", KIconLoader::Desktop );
-  }
-  if ( pixmap.isNull() ) {
-    pixmap = static_cast<AttachmentIconItem *>( currentItem() )->icon();
-  }
+    QPixmap pixmap;
+    if (selectedItems().size() > 1) {
+        pixmap = KIconLoader::global()->loadIcon("mail-attachment", KIconLoader::Desktop);
+    }
+    if (pixmap.isNull()) {
+        pixmap = static_cast<AttachmentIconItem *>(currentItem())->icon();
+    }
 
-  const QPoint hotspot( pixmap.width() / 2, pixmap.height() / 2 );
+    const QPoint hotspot(pixmap.width() / 2, pixmap.height() / 2);
 
-  QDrag *drag = new QDrag( this );
-  drag->setMimeData( mimeData() );
+    QDrag *drag = new QDrag(this);
+    drag->setMimeData(mimeData());
 
-  drag->setPixmap( pixmap );
-  drag->setHotSpot( hotspot );
-  drag->exec( Qt::CopyAction );
+    drag->setPixmap(pixmap);
+    drag->setHotSpot(hotspot);
+    drag->exec(Qt::CopyAction);
 #endif
 }
 
-void AttachmentIconView::keyPressEvent( QKeyEvent *event )
+void AttachmentIconView::keyPressEvent(QKeyEvent *event)
 {
-  if ( ( event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter ) &&
-       currentItem() && state() != EditingState ) {
-    emit itemDoubleClicked( currentItem() ); // ugly, but itemActivated() also includes single click
-    return;
-  }
-  QListWidget::keyPressEvent( event );
+    if ((event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) &&
+            currentItem() && state() != EditingState) {
+        emit itemDoubleClicked(currentItem());   // ugly, but itemActivated() also includes single click
+        return;
+    }
+    QListWidget::keyPressEvent(event);
 }
 

@@ -28,7 +28,8 @@
 #include <Akonadi/Calendar/IncidenceChanger>
 #include <KIdentityManagement/Identity>
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 class IndividualMailDialog;
 
@@ -66,11 +67,11 @@ public:
                                             const KGuiItem &buttonNo = KGuiItem(i18nc("@action:button dialog negative answer", "Do Not Send")));
 
     virtual void openDialogIncidenceModified(bool attendeeStatusChanged,
-                                             Recipient recipient,
-                                             const QString &question,
-                                             Action action = ActionAsk,
-                                             const KGuiItem &buttonYes = KGuiItem(i18nc("@action:button dialog positive answer", "Send Email")),
-                                             const KGuiItem &buttonNo = KGuiItem(i18nc("@action:button dialog negative answer", "Do Not Send")));
+            Recipient recipient,
+            const QString &question,
+            Action action = ActionAsk,
+            const KGuiItem &buttonYes = KGuiItem(i18nc("@action:button dialog positive answer", "Send Email")),
+            const KGuiItem &buttonNo = KGuiItem(i18nc("@action:button dialog negative answer", "Do Not Send")));
 
     virtual void openDialogIncidenceDeleted(Recipient recipient,
                                             const QString &question,

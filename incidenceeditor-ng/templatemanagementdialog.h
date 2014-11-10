@@ -44,34 +44,35 @@
 #include <KCalCore/IncidenceBase>
 
 #include <QDialog>
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 class INCIDENCEEDITORS_NG_EXPORT TemplateManagementDialog: public QDialog
 {
-  Q_OBJECT
-  public:
-    TemplateManagementDialog( QWidget *parent, const QStringList &templates,
-                              const QString &incidenceType );
+    Q_OBJECT
+public:
+    TemplateManagementDialog(QWidget *parent, const QStringList &templates,
+                             const QString &incidenceType);
 
-  signals:
+signals:
     /* Emitted whenever the user hits apply, indicating that the currently
        selected template should be loaded into to the incidence editor which
        triggered this.
     */
-    void loadTemplate( const QString &templateName );
+    void loadTemplate(const QString &templateName);
 
     /* Emitted whenever the user wants to add the current incidence as a
        template with the given name.
     */
-    void saveTemplate( const QString &templateName );
+    void saveTemplate(const QString &templateName);
 
     /* Emitted when the dialog changed the list of templates. Calling code
        can the replace the list that was handed in with the one this signal
        transports.
     */
-    void templatesChanged( const QStringList &templates );
+    void templatesChanged(const QStringList &templates);
 
-  protected slots:
+protected slots:
     void slotItemSelected();
     void slotAddTemplate();
     void slotRemoveTemplate();

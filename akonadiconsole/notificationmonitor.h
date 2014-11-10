@@ -28,16 +28,16 @@ class QFile;
 
 class NotificationMonitor : public QWidget
 {
-  Q_OBJECT
-  public:
-    explicit NotificationMonitor( QWidget *parent );
+    Q_OBJECT
+public:
+    explicit NotificationMonitor(QWidget *parent);
 
-  private slots:
-    void contextMenu(const QPoint& pos);
+private slots:
+    void contextMenu(const QPoint &pos);
     void slotSaveToFile();
 
-  private:
-    void writeRows( const QModelIndex &parent, QFile &file, int indentLevel );
+private:
+    void writeRows(const QModelIndex &parent, QFile &file, int indentLevel);
 
     NotificationModel *m_model;
 };

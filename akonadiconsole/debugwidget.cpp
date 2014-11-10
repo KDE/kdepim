@@ -39,185 +39,193 @@
 
 using org::freedesktop::Akonadi::DebugInterface;
 
-DebugWidget::DebugWidget( QWidget *parent )
-  : QWidget( parent )
+DebugWidget::DebugWidget(QWidget *parent)
+    : QWidget(parent)
 {
-  QVBoxLayout *layout = new QVBoxLayout( this );
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
-  QString service = "org.freedesktop.Akonadi";
-  if ( Akonadi::ServerManager::hasInstanceIdentifier() ) {
-    service += "." + Akonadi::ServerManager::instanceIdentifier();
-  }
-  mDebugInterface = new DebugInterface( service, "/debug", QDBusConnection::sessionBus(), this );
-  QCheckBox *cb = new QCheckBox( i18n("Enable debugger"), this );
-  cb->setChecked( mDebugInterface->isValid() && mDebugInterface->tracer().value() == QLatin1String( "dbus" ) );
-  connect(cb, &QCheckBox::toggled, this, &DebugWidget::enableDebugger);
-  layout->addWidget( cb );
+    QString service = "org.freedesktop.Akonadi";
+    if (Akonadi::ServerManager::hasInstanceIdentifier()) {
+        service += "." + Akonadi::ServerManager::instanceIdentifier();
+    }
+    mDebugInterface = new DebugInterface(service, "/debug", QDBusConnection::sessionBus(), this);
+    QCheckBox *cb = new QCheckBox(i18n("Enable debugger"), this);
+    cb->setChecked(mDebugInterface->isValid() && mDebugInterface->tracer().value() == QLatin1String("dbus"));
+    connect(cb, &QCheckBox::toggled, this, &DebugWidget::enableDebugger);
+    layout->addWidget(cb);
 
-  QSplitter *splitter = new QSplitter( Qt::Vertical, this );
-  splitter->setObjectName( "debugSplitter" );
-  layout->addWidget( splitter );
+    QSplitter *splitter = new QSplitter(Qt::Vertical, this);
+    splitter->setObjectName("debugSplitter");
+    layout->addWidget(splitter);
 
-  mConnectionPages = new QTabWidget( splitter );
-  mConnectionPages->setTabsClosable( true );
+    mConnectionPages = new QTabWidget(splitter);
+    mConnectionPages->setTabsClosable(true);
 
-  mGeneralView = new KTextEdit( splitter );
-  mGeneralView->setReadOnly( true );
+    mGeneralView = new KTextEdit(splitter);
+    mGeneralView->setReadOnly(true);
 
-  ConnectionPage *page = new ConnectionPage( "All" );
-  page->showAllConnections( true );
-  mConnectionPages->addTab( page, "All" );
+    ConnectionPage *page = new ConnectionPage("All");
+    page->showAllConnections(true);
+    mConnectionPages->addTab(page, "All");
 
-  connect(mConnectionPages, &QTabWidget::tabCloseRequested, this, &DebugWidget::tabCloseRequested);
+    connect(mConnectionPages, &QTabWidget::tabCloseRequested, this, &DebugWidget::tabCloseRequested);
 
-  org::freedesktop::Akonadi::TracerNotification *iface = new org::freedesktop::Akonadi::TracerNotification( QString(), "/tracing/notifications", QDBusConnection::sessionBus(), this );
+    org::freedesktop::Akonadi::TracerNotification *iface = new org::freedesktop::Akonadi::TracerNotification(QString(), "/tracing/notifications", QDBusConnection::sessionBus(), this);
 
-  connect(iface, &org::freedesktop::Akonadi::TracerNotification::connectionStarted, this, &DebugWidget::connectionStarted);
-  connect(iface, &org::freedesktop::Akonadi::TracerNotification::connectionEnded, this, &DebugWidget::connectionEnded);
-  connect(iface, &org::freedesktop::Akonadi::TracerNotification::signalEmitted, this, &DebugWidget::signalEmitted);
-  connect(iface, &org::freedesktop::Akonadi::TracerNotification::warningEmitted, this, &DebugWidget::warningEmitted);
-  connect(iface, &org::freedesktop::Akonadi::TracerNotification::errorEmitted, this, &DebugWidget::errorEmitted);
+    connect(iface, &org::freedesktop::Akonadi::TracerNotification::connectionStarted, this, &DebugWidget::connectionStarted);
+    connect(iface, &org::freedesktop::Akonadi::TracerNotification::connectionEnded, this, &DebugWidget::connectionEnded);
+    connect(iface, &org::freedesktop::Akonadi::TracerNotification::signalEmitted, this, &DebugWidget::signalEmitted);
+    connect(iface, &org::freedesktop::Akonadi::TracerNotification::warningEmitted, this, &DebugWidget::warningEmitted);
+    connect(iface, &org::freedesktop::Akonadi::TracerNotification::errorEmitted, this, &DebugWidget::errorEmitted);
 
-  // in case we started listening when the connection is already ongoing
-  connect(iface, &org::freedesktop::Akonadi::TracerNotification::connectionDataInput, this, &DebugWidget::connectionStarted);
-  connect(iface, &org::freedesktop::Akonadi::TracerNotification::connectionDataOutput, this, &DebugWidget::connectionStarted);
+    // in case we started listening when the connection is already ongoing
+    connect(iface, &org::freedesktop::Akonadi::TracerNotification::connectionDataInput, this, &DebugWidget::connectionStarted);
+    connect(iface, &org::freedesktop::Akonadi::TracerNotification::connectionDataOutput, this, &DebugWidget::connectionStarted);
 
-  QHBoxLayout *buttonLayout = new QHBoxLayout;
-  layout->addLayout( buttonLayout );
+    QHBoxLayout *buttonLayout = new QHBoxLayout;
+    layout->addLayout(buttonLayout);
 
-  QPushButton *clearAllButton = new QPushButton( "Clear All Tabs", this );
-  QPushButton *clearCurrentButton = new QPushButton( "Clear Current Tab", this );
-  QPushButton *clearGeneralButton = new QPushButton( "Clear Information View", this );
-  QPushButton *closeAllTabsButton = new QPushButton( "Close All Tabs", this );
-  QPushButton *saveRichtextButton = new QPushButton( "Save as RichText...", this );
+    QPushButton *clearAllButton = new QPushButton("Clear All Tabs", this);
+    QPushButton *clearCurrentButton = new QPushButton("Clear Current Tab", this);
+    QPushButton *clearGeneralButton = new QPushButton("Clear Information View", this);
+    QPushButton *closeAllTabsButton = new QPushButton("Close All Tabs", this);
+    QPushButton *saveRichtextButton = new QPushButton("Save as RichText...", this);
 
-  buttonLayout->addWidget( clearAllButton );
-  buttonLayout->addWidget( clearCurrentButton );
-  buttonLayout->addWidget( clearGeneralButton );
-  buttonLayout->addWidget( closeAllTabsButton );
-  buttonLayout->addWidget( saveRichtextButton );
+    buttonLayout->addWidget(clearAllButton);
+    buttonLayout->addWidget(clearCurrentButton);
+    buttonLayout->addWidget(clearGeneralButton);
+    buttonLayout->addWidget(closeAllTabsButton);
+    buttonLayout->addWidget(saveRichtextButton);
 
-  connect(clearAllButton, &QPushButton::clicked, this, &DebugWidget::clearAllTabs);
-  connect(clearCurrentButton, &QPushButton::clicked, this, &DebugWidget::clearCurrentTab);
-  connect(clearGeneralButton, &QPushButton::clicked, mGeneralView, &KTextEdit::clear);
-  connect(closeAllTabsButton, &QPushButton::clicked, this, &DebugWidget::closeAllTabs);
-  connect(saveRichtextButton, &QPushButton::clicked, this, &DebugWidget::saveRichText);
+    connect(clearAllButton, &QPushButton::clicked, this, &DebugWidget::clearAllTabs);
+    connect(clearCurrentButton, &QPushButton::clicked, this, &DebugWidget::clearCurrentTab);
+    connect(clearGeneralButton, &QPushButton::clicked, mGeneralView, &KTextEdit::clear);
+    connect(closeAllTabsButton, &QPushButton::clicked, this, &DebugWidget::closeAllTabs);
+    connect(saveRichtextButton, &QPushButton::clicked, this, &DebugWidget::saveRichText);
 
-  Akonadi::Control::widgetNeedsAkonadi( this );
+    Akonadi::Control::widgetNeedsAkonadi(this);
 }
 
-void DebugWidget::connectionStarted( const QString &identifier, const QString &msg )
+void DebugWidget::connectionStarted(const QString &identifier, const QString &msg)
 {
-  Q_UNUSED( msg );
-  if ( mPageHash.contains( identifier ) )
-    return;
-
-  ConnectionPage *page = new ConnectionPage( identifier );
-  mConnectionPages->addTab( page, identifier );
-
-  mPageHash.insert( identifier, page );
-}
-
-void DebugWidget::connectionEnded( const QString &identifier, const QString& )
-{
-  if ( !mPageHash.contains( identifier ) )
-    return;
-
-  QWidget *widget = mPageHash[ identifier ];
-
-  mConnectionPages->removeTab( mConnectionPages->indexOf( widget ) );
-
-  mPageHash.remove( identifier );
-  delete widget;
-}
-
-void DebugWidget::tabCloseRequested( int index )
-{
-  if ( index != 0 ) {
-    QWidget *page = mConnectionPages->widget( index );
-    QMutableHashIterator<QString, ConnectionPage*> it( mPageHash );
-    while ( it.hasNext() ) {
-      it.next();
-      if ( it.value() == page ) {
-        it.remove();
-        break;
-      }
+    Q_UNUSED(msg);
+    if (mPageHash.contains(identifier)) {
+        return;
     }
 
-    mConnectionPages->removeTab( index );
-    delete page;
-  }
+    ConnectionPage *page = new ConnectionPage(identifier);
+    mConnectionPages->addTab(page, identifier);
+
+    mPageHash.insert(identifier, page);
+}
+
+void DebugWidget::connectionEnded(const QString &identifier, const QString &)
+{
+    if (!mPageHash.contains(identifier)) {
+        return;
+    }
+
+    QWidget *widget = mPageHash[ identifier ];
+
+    mConnectionPages->removeTab(mConnectionPages->indexOf(widget));
+
+    mPageHash.remove(identifier);
+    delete widget;
+}
+
+void DebugWidget::tabCloseRequested(int index)
+{
+    if (index != 0) {
+        QWidget *page = mConnectionPages->widget(index);
+        QMutableHashIterator<QString, ConnectionPage *> it(mPageHash);
+        while (it.hasNext()) {
+            it.next();
+            if (it.value() == page) {
+                it.remove();
+                break;
+            }
+        }
+
+        mConnectionPages->removeTab(index);
+        delete page;
+    }
 }
 
 void DebugWidget::clearAllTabs()
 {
-  ConnectionPage *page = qobject_cast<ConnectionPage*>( mConnectionPages->widget( 0 ) );
-  if ( page )
-    page->clear();
+    ConnectionPage *page = qobject_cast<ConnectionPage *>(mConnectionPages->widget(0));
+    if (page) {
+        page->clear();
+    }
 
-  QMutableHashIterator<QString, ConnectionPage*> it( mPageHash );
-  while ( it.hasNext() )
-    it.next().value()->clear();
+    QMutableHashIterator<QString, ConnectionPage *> it(mPageHash);
+    while (it.hasNext()) {
+        it.next().value()->clear();
+    }
 }
 
 void DebugWidget::clearCurrentTab()
 {
-  ConnectionPage *page = qobject_cast<ConnectionPage*>( mConnectionPages->currentWidget() );
-  if ( !page )
-    return;
+    ConnectionPage *page = qobject_cast<ConnectionPage *>(mConnectionPages->currentWidget());
+    if (!page) {
+        return;
+    }
 
-  page->clear();
+    page->clear();
 }
 
 void DebugWidget::closeAllTabs()
 {
-  ConnectionPage *page = qobject_cast<ConnectionPage*>( mConnectionPages->widget( 0 ) );
-  if ( page ) {
-    page->clear();
-  }
+    ConnectionPage *page = qobject_cast<ConnectionPage *>(mConnectionPages->widget(0));
+    if (page) {
+        page->clear();
+    }
 
-  while ( mConnectionPages->count() > 1 ) {
-    mConnectionPages->removeTab( 1 );
-  }
-  qDeleteAll(mPageHash);
-  mPageHash.clear();
+    while (mConnectionPages->count() > 1) {
+        mConnectionPages->removeTab(1);
+    }
+    qDeleteAll(mPageHash);
+    mPageHash.clear();
 }
 
-void DebugWidget::signalEmitted( const QString &signalName, const QString &msg )
+void DebugWidget::signalEmitted(const QString &signalName, const QString &msg)
 {
-  mGeneralView->append( QString( "<font color=\"green\">%1 ( %2 )</font>" ).arg( signalName, msg ) );
+    mGeneralView->append(QString("<font color=\"green\">%1 ( %2 )</font>").arg(signalName, msg));
 }
 
-void DebugWidget::warningEmitted( const QString &componentName, const QString &msg )
+void DebugWidget::warningEmitted(const QString &componentName, const QString &msg)
 {
-  mGeneralView->append( QString( "<font color=\"blue\">%1: %2</font>" ).arg( componentName, msg ) );
+    mGeneralView->append(QString("<font color=\"blue\">%1: %2</font>").arg(componentName, msg));
 }
 
-void DebugWidget::errorEmitted( const QString &componentName, const QString &msg )
+void DebugWidget::errorEmitted(const QString &componentName, const QString &msg)
 {
-  mGeneralView->append( QString( "<font color=\"red\">%1: %2</font>" ).arg( componentName, msg ) );
+    mGeneralView->append(QString("<font color=\"red\">%1: %2</font>").arg(componentName, msg));
 }
 
 void DebugWidget::enableDebugger(bool enable)
 {
-  mDebugInterface->setTracer( enable ? QLatin1String( "dbus" ) : QLatin1String( "null" ) );
+    mDebugInterface->setTracer(enable ? QLatin1String("dbus") : QLatin1String("null"));
 }
 
 void DebugWidget::saveRichText()
 {
-  ConnectionPage *page = qobject_cast<ConnectionPage*>( mConnectionPages->currentWidget() );
-  if ( !page )
-    return;
+    ConnectionPage *page = qobject_cast<ConnectionPage *>(mConnectionPages->currentWidget());
+    if (!page) {
+        return;
+    }
 
-  const QString fileName = QFileDialog::getSaveFileName();
-  if ( fileName.isEmpty() )
-    return;
+    const QString fileName = QFileDialog::getSaveFileName();
+    if (fileName.isEmpty()) {
+        return;
+    }
 
-  QFile file( fileName );
-  if ( !file.open( QIODevice::WriteOnly ) )
-    return;
+    QFile file(fileName);
+    if (!file.open(QIODevice::WriteOnly)) {
+        return;
+    }
 
-  file.write( page->toHtml().toUtf8() );
-  file.close();
+    file.write(page->toHtml().toUtf8());
+    file.close();
 }
 

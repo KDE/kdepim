@@ -24,42 +24,43 @@
 
 #include <QIcon>
 
-DbBrowser::DbBrowser(QWidget* parent) :
-  QWidget( parent ),
-  mTableModel( 0 )
+DbBrowser::DbBrowser(QWidget *parent) :
+    QWidget(parent),
+    mTableModel(0)
 {
-  ui.setupUi( this );
+    ui.setupUi(this);
 
-  if ( DbAccess::database().isOpen() ) {
-    QStringList userTables = DbAccess::database().tables(QSql::Tables);
-    userTables.sort();
-    QStringList systemTables = DbAccess::database().tables(QSql::SystemTables);
-    systemTables.sort();
+    if (DbAccess::database().isOpen()) {
+        QStringList userTables = DbAccess::database().tables(QSql::Tables);
+        userTables.sort();
+        QStringList systemTables = DbAccess::database().tables(QSql::SystemTables);
+        systemTables.sort();
 
-    ui.tableBox->addItems( QStringList() << userTables << systemTables );
-  }
+        ui.tableBox->addItems(QStringList() << userTables << systemTables);
+    }
 
-  ui.refreshButton->setIcon( QIcon::fromTheme( "view-refresh" ) );
-  connect(ui.refreshButton, &QPushButton::clicked, this, &DbBrowser::refreshClicked);
+    ui.refreshButton->setIcon(QIcon::fromTheme("view-refresh"));
+    connect(ui.refreshButton, &QPushButton::clicked, this, &DbBrowser::refreshClicked);
 }
 
 void DbBrowser::refreshClicked()
 {
-  const QString table = ui.tableBox->currentText();
-  if ( table.isEmpty() )
-    return;
-  delete mTableModel;
-  mTableModel = new QSqlTableModel( this, DbAccess::database() );
-  mTableModel->setTable( table );
-  mTableModel->setEditStrategy( QSqlTableModel::OnRowChange );
-  mTableModel->select();
-  ui.tableView->setModel( mTableModel );
-  connect( ui.tableView->horizontalHeader(), SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)),
-          this, SLOT(onSortIndicatorChanged(int,Qt::SortOrder)) );
+    const QString table = ui.tableBox->currentText();
+    if (table.isEmpty()) {
+        return;
+    }
+    delete mTableModel;
+    mTableModel = new QSqlTableModel(this, DbAccess::database());
+    mTableModel->setTable(table);
+    mTableModel->setEditStrategy(QSqlTableModel::OnRowChange);
+    mTableModel->select();
+    ui.tableView->setModel(mTableModel);
+    connect(ui.tableView->horizontalHeader(), SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)),
+            this, SLOT(onSortIndicatorChanged(int,Qt::SortOrder)));
 }
 
-void DbBrowser::onSortIndicatorChanged( int column, Qt::SortOrder order )
+void DbBrowser::onSortIndicatorChanged(int column, Qt::SortOrder order)
 {
-  mTableModel->sort( column, order );
+    mTableModel->sort(column, order);
 }
 

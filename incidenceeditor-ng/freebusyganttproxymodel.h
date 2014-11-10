@@ -27,11 +27,13 @@
 
 #include <QSortFilterProxyModel>
 
-namespace KCalCore {
-  class FreeBusyPeriod;
+namespace KCalCore
+{
+class FreeBusyPeriod;
 }
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 /**
  * This is a private proxy model, that wraps the free busy data exposed
@@ -45,11 +47,11 @@ namespace IncidenceEditorNG {
  */
 class INCIDENCEEDITORS_NG_EXPORT FreeBusyGanttProxyModel : public QSortFilterProxyModel
 {
-  public:
-    explicit FreeBusyGanttProxyModel( QObject *parent = 0 );
-    QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
-    QString tooltipify( const KCalCore::FreeBusyPeriod &period,
-                        const KDateTime::Spec &timeSpec ) const;
+public:
+    explicit FreeBusyGanttProxyModel(QObject *parent = 0);
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    QString tooltipify(const KCalCore::FreeBusyPeriod &period,
+                       const KDateTime::Spec &timeSpec) const;
 };
 
 }

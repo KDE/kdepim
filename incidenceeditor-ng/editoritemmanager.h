@@ -27,15 +27,17 @@
 #include <Collection>
 #include <QObject>
 
-namespace Akonadi {
-  class Collection;
-  class Item;
-  class ItemFetchScope;
+namespace Akonadi
+{
+class Collection;
+class Item;
+class ItemFetchScope;
 }
 
 class KJob;
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 class ItemEditorUi;
 class ItemEditorPrivate;
@@ -49,14 +51,14 @@ class ItemEditorPrivate;
 // template <typename PayloadT>
 class INCIDENCEEDITORS_NG_EXPORT EditorItemManager : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
      * Creates an ItemEditor for a new Item.
      * Receives an option IncidenceChanger, so you can share the undo/redo stack with your
      * application.
      */
-    EditorItemManager( ItemEditorUi *ui, Akonadi::IncidenceChanger *changer = 0 );
+    EditorItemManager(ItemEditorUi *ui, Akonadi::IncidenceChanger *changer = 0);
 
     /**
      * Destructs the ItemEditor. Unsaved changes will get lost at this point.
@@ -64,21 +66,21 @@ class INCIDENCEEDITORS_NG_EXPORT EditorItemManager : public QObject
     ~EditorItemManager();
 
     enum ItemState {
-      AfterSave,  /**< Returns the last saved item */
-      BeforeSave  /**< Returns an item with the original payload before the last save call */
+        AfterSave,  /**< Returns the last saved item */
+        BeforeSave  /**< Returns an item with the original payload before the last save call */
     };
 
     /**
      * Returns the last saved item with payload or an invalid item when save is
      * not called yet.
      */
-    Akonadi::Item item( ItemState state = AfterSave ) const;
+    Akonadi::Item item(ItemState state = AfterSave) const;
 
     /**
      * Loads the @param item into the editor. The item passed <em>must</em> be
      * a valid item. When the payload is not set it will be fetched.
      */
-    void load( const Akonadi::Item &item );
+    void load(const Akonadi::Item &item);
 
     /**
      * Saves the new or modified item. This method does nothing when the
@@ -96,7 +98,7 @@ class INCIDENCEEDITORS_NG_EXPORT EditorItemManager : public QObject
      *
      * @see fetchScope()
      */
-    void setFetchScope( const Akonadi::ItemFetchScope &fetchScope );
+    void setFetchScope(const Akonadi::ItemFetchScope &fetchScope);
 
     /**
      * Returns the item fetch scope.
@@ -119,49 +121,49 @@ class INCIDENCEEDITORS_NG_EXPORT EditorItemManager : public QObject
     Akonadi::Collection collection() const;
 
     enum SaveAction {
-      Create, /**< A new item was created */
-      Modify, /**< An existing item was modified */
-      None,   /**< Nothing happened. */
-      Move,    /**< An existing item was moved to another collection */
-      MoveAndModify /**< An existing item was moved to another collection and modified */
+        Create, /**< A new item was created */
+        Modify, /**< An existing item was modified */
+        None,   /**< Nothing happened. */
+        Move,    /**< An existing item was moved to another collection */
+        MoveAndModify /**< An existing item was moved to another collection and modified */
     };
 
-    void setIsCounterProposal( bool isCounterProposal );
+    void setIsCounterProposal(bool isCounterProposal);
 
-  Q_SIGNALS:
-    void itemSaveFinished( IncidenceEditorNG::EditorItemManager::SaveAction action );
+Q_SIGNALS:
+    void itemSaveFinished(IncidenceEditorNG::EditorItemManager::SaveAction action);
 
-    void itemSaveFailed( IncidenceEditorNG::EditorItemManager::SaveAction action,
-                         const QString &message );
+    void itemSaveFailed(IncidenceEditorNG::EditorItemManager::SaveAction action,
+                        const QString &message);
 
     void revertFinished();
-    void revertFailed( const QString &message );
+    void revertFailed(const QString &message);
 
-  private:
+private:
     ItemEditorPrivate *const d_ptr;
-    Q_DECLARE_PRIVATE( ItemEditor )
-    Q_DISABLE_COPY( EditorItemManager )
+    Q_DECLARE_PRIVATE(ItemEditor)
+    Q_DISABLE_COPY(EditorItemManager)
 
-    Q_PRIVATE_SLOT(d_ptr, void itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) )
-    Q_PRIVATE_SLOT(d_ptr, void itemFetchResult( KJob* ) )
-    Q_PRIVATE_SLOT(d_ptr, void itemMoveResult( KJob* ) )
-    Q_PRIVATE_SLOT(d_ptr, void onModifyFinished( int changeId, const Akonadi::Item &item,
-                                                 Akonadi::IncidenceChanger::ResultCode resultCode,
-                                                 const QString &errorString ) )
-    Q_PRIVATE_SLOT(d_ptr, void onCreateFinished( int changeId,
-                                                 const Akonadi::Item &item,
-                                                 Akonadi::IncidenceChanger::ResultCode resultCode,
-                                                 const QString &errorString ) )
-    Q_PRIVATE_SLOT(d_ptr, void moveJobFinished( KJob *job ) )
+    Q_PRIVATE_SLOT(d_ptr, void itemChanged(const Akonadi::Item &, const QSet<QByteArray> &))
+    Q_PRIVATE_SLOT(d_ptr, void itemFetchResult(KJob *))
+    Q_PRIVATE_SLOT(d_ptr, void itemMoveResult(KJob *))
+    Q_PRIVATE_SLOT(d_ptr, void onModifyFinished(int changeId, const Akonadi::Item &item,
+                   Akonadi::IncidenceChanger::ResultCode resultCode,
+                   const QString &errorString))
+    Q_PRIVATE_SLOT(d_ptr, void onCreateFinished(int changeId,
+                   const Akonadi::Item &item,
+                   Akonadi::IncidenceChanger::ResultCode resultCode,
+                   const QString &errorString))
+    Q_PRIVATE_SLOT(d_ptr, void moveJobFinished(KJob *job))
 };
 
 class INCIDENCEEDITORS_NG_EXPORT ItemEditorUi
 {
-  public:
+public:
     enum RejectReason {
-      ItemFetchFailed,      ///> Either the fetchjob failed or no items where returned
-      ItemHasInvalidPayload, ///> The fetched item has an invalid payload
-      ItemMoveFailed ///> Item move failed
+        ItemFetchFailed,      ///> Either the fetchjob failed or no items where returned
+        ItemHasInvalidPayload, ///> The fetched item has an invalid payload
+        ItemMoveFailed ///> Item move failed
     };
 
     virtual ~ItemEditorUi();
@@ -170,13 +172,13 @@ class INCIDENCEEDITORS_NG_EXPORT ItemEditorUi
      * Returns whether or not the identifier set contains payload identifiers that
      * are displayed/editable in the Gui.
      */
-    virtual bool containsPayloadIdentifiers( const QSet<QByteArray> &partIdentifiers ) const = 0;
+    virtual bool containsPayloadIdentifiers(const QSet<QByteArray> &partIdentifiers) const = 0;
 
     /**
      * Returns whether or not @param item has a payload type that is supported by
      * the gui.
      */
-    virtual bool hasSupportedPayload( const Akonadi::Item &item ) const = 0;
+    virtual bool hasSupportedPayload(const Akonadi::Item &item) const = 0;
 
     /**
      * Returns whether or not the values in the ui differ from the original (i.e.
@@ -198,14 +200,14 @@ class INCIDENCEEDITORS_NG_EXPORT ItemEditorUi
      * Fills the ui with the values of the payload of @param item. The item is
      * guaranteed to have a payload.
      */
-    virtual void load( const Akonadi::Item &item ) = 0;
+    virtual void load(const Akonadi::Item &item) = 0;
 
     /**
      * Stores the values of the ui into the payload of @param item and returns the
      * item with an updated payload. The returned item must have a valid mimetype
      * too.
      */
-    virtual Akonadi::Item save( const Akonadi::Item &item ) = 0;
+    virtual Akonadi::Item save(const Akonadi::Item &item) = 0;
 
     /**
      * Returns the currently sellected collection in which the item will be stored.
@@ -217,7 +219,7 @@ class INCIDENCEEDITORS_NG_EXPORT ItemEditorUi
      * item cannot be continued. The implementing class must abort editting at
      * this point.
      */
-    virtual void reject( RejectReason reason, const QString &errorMessage = QString() ) = 0;
+    virtual void reject(RejectReason reason, const QString &errorMessage = QString()) = 0;
 };
 
 }

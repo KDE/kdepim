@@ -26,15 +26,15 @@ class QSqlTableModel;
 
 class DbBrowser : public QWidget
 {
-  Q_OBJECT
-  public:
-    explicit DbBrowser( QWidget *parent = 0 );
+    Q_OBJECT
+public:
+    explicit DbBrowser(QWidget *parent = 0);
 
-  private slots:
+private slots:
     void refreshClicked();
-    void onSortIndicatorChanged( int column, Qt::SortOrder order );
+    void onSortIndicatorChanged(int column, Qt::SortOrder order);
 
-  private:
+private:
     Ui::DbBrowser ui;
     QSqlTableModel *mTableModel;
 };

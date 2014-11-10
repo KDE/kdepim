@@ -26,43 +26,44 @@
 
 #include <libkdepim/multiplyingline/multiplyinglineeditor.h>
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 class INCIDENCEEDITORS_NG_EXPORT AttendeeLineFactory : public KPIM::MultiplyingLineFactory
 {
-  Q_OBJECT
-  public:
-    explicit AttendeeLineFactory( QObject *parent ) : KPIM::MultiplyingLineFactory( parent )
+    Q_OBJECT
+public:
+    explicit AttendeeLineFactory(QObject *parent) : KPIM::MultiplyingLineFactory(parent)
     {
     }
 
-    virtual KPIM::MultiplyingLine *newLine( QWidget *parent )
+    virtual KPIM::MultiplyingLine *newLine(QWidget *parent)
     {
-      return new AttendeeLine( parent );
+        return new AttendeeLine(parent);
     }
 };
 
 class INCIDENCEEDITORS_NG_EXPORT AttendeeEditor : public KPIM::MultiplyingLineEditor
 {
-  Q_OBJECT
-  public:
-    explicit AttendeeEditor( QWidget *parent = 0 );
+    Q_OBJECT
+public:
+    explicit AttendeeEditor(QWidget *parent = 0);
 
     AttendeeData::List attendees() const;
 
-    void addAttendee( const KCalCore::Attendee::Ptr &attendee );
-    void removeAttendee( const AttendeeData::Ptr &attendee );
+    void addAttendee(const KCalCore::Attendee::Ptr &attendee);
+    void removeAttendee(const AttendeeData::Ptr &attendee);
 
-    void setActions( AttendeeLine::AttendeeActions actions );
+    void setActions(AttendeeLine::AttendeeActions actions);
 
-  signals:
-    void countChanged( int );
-    void changed( const KCalCore::Attendee::Ptr &oldAttendee,
-                  const KCalCore::Attendee::Ptr &newAttendee );
-    void editingFinished( KPIM::MultiplyingLine * );
+signals:
+    void countChanged(int);
+    void changed(const KCalCore::Attendee::Ptr &oldAttendee,
+                 const KCalCore::Attendee::Ptr &newAttendee);
+    void editingFinished(KPIM::MultiplyingLine *);
 
-  protected slots:
-    void slotLineAdded( KPIM::MultiplyingLine * );
+protected slots:
+    void slotLineAdded(KPIM::MultiplyingLine *);
     void slotCalculateTotal();
 };
 

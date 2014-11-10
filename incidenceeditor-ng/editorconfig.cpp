@@ -29,12 +29,12 @@ using namespace IncidenceEditorNG;
 
 class EditorConfig::Private
 {
-  public:
+public:
     static EditorConfig *config;
     static void cleanup_config()
     {
-      delete config;
-      config = 0;
+        delete config;
+        config = 0;
     }
 
     QHash<KCalCore::IncidenceBase::IncidenceType, QStringList> mTemplates;
@@ -43,87 +43,87 @@ class EditorConfig::Private
 EditorConfig *EditorConfig::Private::config = 0;
 
 EditorConfig::EditorConfig()
-  : d( new Private )
+    : d(new Private)
 {
 }
 
 EditorConfig::~EditorConfig()
 {
-  delete d;
+    delete d;
 }
 
 EditorConfig *EditorConfig::instance()
 {
-  if ( !Private::config ) {
-    // No one called setEditorConfig(), so we default to a KorganizerEditorConfig.
-    EditorConfig::setEditorConfig( new IncidenceEditorNG::KOrganizerEditorConfig );
-  }
+    if (!Private::config) {
+        // No one called setEditorConfig(), so we default to a KorganizerEditorConfig.
+        EditorConfig::setEditorConfig(new IncidenceEditorNG::KOrganizerEditorConfig);
+    }
 
-  return Private::config;
+    return Private::config;
 }
 
-void EditorConfig::setEditorConfig( EditorConfig *config )
+void EditorConfig::setEditorConfig(EditorConfig *config)
 {
-  delete Private::config;
-  Private::config = config;
-  qAddPostRoutine( Private::cleanup_config );
+    delete Private::config;
+    Private::config = config;
+    qAddPostRoutine(Private::cleanup_config);
 }
 
 QString EditorConfig::fullName() const
 {
-  if ( Private::config != this ) {
-    return Private::config->fullName();
-  }
-  return QString();
+    if (Private::config != this) {
+        return Private::config->fullName();
+    }
+    return QString();
 }
 
 QString EditorConfig::email() const
 {
-  if ( Private::config != this ) {
-    return Private::config->email();
-  }
-  return QString();
+    if (Private::config != this) {
+        return Private::config->email();
+    }
+    return QString();
 }
 
-bool EditorConfig::thatIsMe( const QString &mail ) const
+bool EditorConfig::thatIsMe(const QString &mail) const
 {
-  if ( Private::config != this ) {
-    return Private::config->thatIsMe( mail );
-  }
-  return false;
+    if (Private::config != this) {
+        return Private::config->thatIsMe(mail);
+    }
+    return false;
 }
 
 QStringList EditorConfig::allEmails() const
 {
-  if ( Private::config != this ) {
-    return Private::config->allEmails();
-  }
+    if (Private::config != this) {
+        return Private::config->allEmails();
+    }
 
-  QStringList mails;
-  const QString m = email();
-  if ( !m.isEmpty() ) {
-    mails << m;
-  }
-  return mails;
+    QStringList mails;
+    const QString m = email();
+    if (!m.isEmpty()) {
+        mails << m;
+    }
+    return mails;
 }
 
 QStringList EditorConfig::fullEmails() const
 {
-  if ( Private::config != this ) {
-    return Private::config->fullEmails();
-  }
-  return QStringList();
+    if (Private::config != this) {
+        return Private::config->fullEmails();
+    }
+    return QStringList();
 }
 
 bool EditorConfig::showTimeZoneSelectorInIncidenceEditor() const
 {
-  if ( Private::config != this ) {
-    return Private::config->showTimeZoneSelectorInIncidenceEditor();
-  }
-  return true;
+    if (Private::config != this) {
+        return Private::config->showTimeZoneSelectorInIncidenceEditor();
+    }
+    return true;
 }
 
-QStringList &EditorConfig::templates( KCalCore::IncidenceBase::IncidenceType type )
+QStringList &EditorConfig::templates(KCalCore::IncidenceBase::IncidenceType type)
 {
-  return d->mTemplates[type];
+    return d->mTemplates[type];
 }

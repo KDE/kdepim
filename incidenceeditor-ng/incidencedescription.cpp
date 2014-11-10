@@ -32,12 +32,13 @@
 
 using namespace IncidenceEditorNG;
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 class IncidenceDescriptionPrivate
 {
-  public:
-    IncidenceDescriptionPrivate() : mRichTextEnabled( false )
+public:
+    IncidenceDescriptionPrivate() : mRichTextEnabled(false)
     {
     }
 
@@ -48,181 +49,180 @@ class IncidenceDescriptionPrivate
 }
 
 #ifdef KDEPIM_MOBILE_UI
-IncidenceDescription::IncidenceDescription( Ui::EventOrTodoMore *ui )
+IncidenceDescription::IncidenceDescription(Ui::EventOrTodoMore *ui)
 #else
-IncidenceDescription::IncidenceDescription( Ui::EventOrTodoDesktop *ui )
+IncidenceDescription::IncidenceDescription(Ui::EventOrTodoDesktop *ui)
 #endif
-  : IncidenceEditor( 0 ), mUi( ui ), d( new IncidenceDescriptionPrivate() )
+    : IncidenceEditor(0), mUi(ui), d(new IncidenceDescriptionPrivate())
 {
-  setObjectName( "IncidenceDescription" );
-  mUi->mDescriptionEdit->setRichTextSupport( KRichTextWidget::SupportBold |
-                                             KRichTextWidget::SupportBold |
-                                             KRichTextWidget::SupportItalic |
-                                             KRichTextWidget::SupportUnderline |
-                                             KRichTextWidget::SupportStrikeOut |
-                                             KRichTextWidget::SupportChangeListStyle |
-                                             KRichTextWidget::SupportAlignment |
-                                             KRichTextWidget::SupportFormatPainting );
-  mUi->mRichTextLabel->setContextMenuPolicy(Qt::NoContextMenu);
+    setObjectName("IncidenceDescription");
+    mUi->mDescriptionEdit->setRichTextSupport(KRichTextWidget::SupportBold |
+            KRichTextWidget::SupportBold |
+            KRichTextWidget::SupportItalic |
+            KRichTextWidget::SupportUnderline |
+            KRichTextWidget::SupportStrikeOut |
+            KRichTextWidget::SupportChangeListStyle |
+            KRichTextWidget::SupportAlignment |
+            KRichTextWidget::SupportFormatPainting);
+    mUi->mRichTextLabel->setContextMenuPolicy(Qt::NoContextMenu);
 #ifdef KDEPIM_MOBILE_UI
-  mUi->mRichTextLabel->hide();
+    mUi->mRichTextLabel->hide();
 #else
-  setupToolBar();
-  connect(mUi->mRichTextLabel, &QLabel::linkActivated, this, &IncidenceDescription::toggleRichTextDescription);
+    setupToolBar();
+    connect(mUi->mRichTextLabel, &QLabel::linkActivated, this, &IncidenceDescription::toggleRichTextDescription);
 #endif
-  connect(mUi->mDescriptionEdit, &KRichTextWidget::textChanged, this, &IncidenceDescription::checkDirtyStatus);
+    connect(mUi->mDescriptionEdit, &KRichTextWidget::textChanged, this, &IncidenceDescription::checkDirtyStatus);
 }
 
 IncidenceDescription::~IncidenceDescription()
 {
-  delete d;
+    delete d;
 }
 
-void IncidenceDescription::load( const KCalCore::Incidence::Ptr &incidence )
+void IncidenceDescription::load(const KCalCore::Incidence::Ptr &incidence)
 {
-  mLoadedIncidence = incidence;
+    mLoadedIncidence = incidence;
 
-  d->mRealOriginalDescriptionEditContents.clear();
+    d->mRealOriginalDescriptionEditContents.clear();
 
-  if ( incidence ) {
-    enableRichTextDescription( incidence->descriptionIsRich() );
-    if ( incidence->descriptionIsRich() ) {
-      mUi->mDescriptionEdit->setHtml( incidence->richDescription() );
-      d->mRealOriginalDescriptionEditContents = mUi->mDescriptionEdit->toHtml();
+    if (incidence) {
+        enableRichTextDescription(incidence->descriptionIsRich());
+        if (incidence->descriptionIsRich()) {
+            mUi->mDescriptionEdit->setHtml(incidence->richDescription());
+            d->mRealOriginalDescriptionEditContents = mUi->mDescriptionEdit->toHtml();
+        } else {
+            QString original = incidence->description();
+            mUi->mDescriptionEdit->setText(incidence->description());
+            d->mRealOriginalDescriptionEditContents = mUi->mDescriptionEdit->toPlainText();
+        }
     } else {
-      QString original = incidence->description();
-      mUi->mDescriptionEdit->setText( incidence->description() );
-      d->mRealOriginalDescriptionEditContents = mUi->mDescriptionEdit->toPlainText();
+        enableRichTextDescription(false);
+        mUi->mDescriptionEdit->clear();
     }
-  } else {
-    enableRichTextDescription( false );
-    mUi->mDescriptionEdit->clear();
-  }
 
-  mWasDirty = false;
+    mWasDirty = false;
 }
 
-void IncidenceDescription::save( const KCalCore::Incidence::Ptr &incidence )
+void IncidenceDescription::save(const KCalCore::Incidence::Ptr &incidence)
 {
-  if ( d->mRichTextEnabled ) {
-    incidence->setDescription( mUi->mDescriptionEdit->toHtml(), true );
-  } else {
-    incidence->setDescription( mUi->mDescriptionEdit->toPlainText(), false );
-  }
+    if (d->mRichTextEnabled) {
+        incidence->setDescription(mUi->mDescriptionEdit->toHtml(), true);
+    } else {
+        incidence->setDescription(mUi->mDescriptionEdit->toPlainText(), false);
+    }
 }
 
 bool IncidenceDescription::isDirty() const
 {
 
-  /* Sometimes, what you put in a KRichTextWidget isn't the same as what you get out.
-     Line terminators (cr,lf) for example can be converted.
+    /* Sometimes, what you put in a KRichTextWidget isn't the same as what you get out.
+       Line terminators (cr,lf) for example can be converted.
 
-     So, to see if the user changed something, we can't compare the original incidence
-     with the new editor content.
+       So, to see if the user changed something, we can't compare the original incidence
+       with the new editor content.
 
-     Instead we compare the new editor content, with the original editor content, this way
-     any tranformation regarding non-printable chars will be irrelevant.
-  */
-  if ( d->mRichTextEnabled ) {
-    return !mLoadedIncidence->descriptionIsRich() ||
-      d->mRealOriginalDescriptionEditContents != mUi->mDescriptionEdit->toHtml();
-  } else {
-    return mLoadedIncidence->descriptionIsRich() ||
-      d->mRealOriginalDescriptionEditContents != mUi->mDescriptionEdit->toPlainText();
-  }
+       Instead we compare the new editor content, with the original editor content, this way
+       any tranformation regarding non-printable chars will be irrelevant.
+    */
+    if (d->mRichTextEnabled) {
+        return !mLoadedIncidence->descriptionIsRich() ||
+               d->mRealOriginalDescriptionEditContents != mUi->mDescriptionEdit->toHtml();
+    } else {
+        return mLoadedIncidence->descriptionIsRich() ||
+               d->mRealOriginalDescriptionEditContents != mUi->mDescriptionEdit->toPlainText();
+    }
 }
 
-void IncidenceDescription::enableRichTextDescription( bool enable )
+void IncidenceDescription::enableRichTextDescription(bool enable)
 {
-  d->mRichTextEnabled = enable;
+    d->mRichTextEnabled = enable;
 
-  QString rt( i18nc( "@action Enable or disable rich text editting", "Enable rich text" ) );
-  QString placeholder( "<a href=\"show\"><font color='blue'>%1 &gt;&gt;</font></a>" );
+    QString rt(i18nc("@action Enable or disable rich text editting", "Enable rich text"));
+    QString placeholder("<a href=\"show\"><font color='blue'>%1 &gt;&gt;</font></a>");
 
-  if ( enable ) {
-    rt = i18nc( "@action Enable or disable rich text editting", "Disable rich text" );
-    placeholder = QString( "<a href=\"show\"><font color='blue'>&lt;&lt; %1</font></a>" );
-    mUi->mDescriptionEdit->enableRichTextMode();
-    d->mRealOriginalDescriptionEditContents = mUi->mDescriptionEdit->toHtml();
-  } else {
-    mUi->mDescriptionEdit->switchToPlainText();
-    d->mRealOriginalDescriptionEditContents = mUi->mDescriptionEdit->toPlainText();
-  }
+    if (enable) {
+        rt = i18nc("@action Enable or disable rich text editting", "Disable rich text");
+        placeholder = QString("<a href=\"show\"><font color='blue'>&lt;&lt; %1</font></a>");
+        mUi->mDescriptionEdit->enableRichTextMode();
+        d->mRealOriginalDescriptionEditContents = mUi->mDescriptionEdit->toHtml();
+    } else {
+        mUi->mDescriptionEdit->switchToPlainText();
+        d->mRealOriginalDescriptionEditContents = mUi->mDescriptionEdit->toPlainText();
+    }
 
-  placeholder = placeholder.arg( rt );
-  mUi->mRichTextLabel->setText( placeholder );
-  mUi->mEditToolBarPlaceHolder->setVisible( enable );
-  mUi->mDescriptionEdit->setActionsEnabled( enable );
-  checkDirtyStatus();
+    placeholder = placeholder.arg(rt);
+    mUi->mRichTextLabel->setText(placeholder);
+    mUi->mEditToolBarPlaceHolder->setVisible(enable);
+    mUi->mDescriptionEdit->setActionsEnabled(enable);
+    checkDirtyStatus();
 }
 
 void IncidenceDescription::toggleRichTextDescription()
 {
-  enableRichTextDescription( !d->mRichTextEnabled );
+    enableRichTextDescription(!d->mRichTextEnabled);
 }
 
 void IncidenceDescription::setupToolBar()
 {
 #ifndef QT_NO_TOOLBAR
-  KActionCollection *collection = new KActionCollection( this );
-  collection->addActions(mUi->mDescriptionEdit->createActions());
+    KActionCollection *collection = new KActionCollection(this);
+    collection->addActions(mUi->mDescriptionEdit->createActions());
 
+    KToolBar *mEditToolBar = new KToolBar(mUi->mEditToolBarPlaceHolder);
+    mEditToolBar->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    mEditToolBar->addAction(collection->action("format_text_bold"));
+    mEditToolBar->addAction(collection->action("format_text_italic"));
+    mEditToolBar->addAction(collection->action("format_text_underline"));
+    mEditToolBar->addAction(collection->action("format_text_strikeout"));
+    mEditToolBar->addSeparator();
 
-  KToolBar *mEditToolBar = new KToolBar( mUi->mEditToolBarPlaceHolder );
-  mEditToolBar->setToolButtonStyle( Qt::ToolButtonIconOnly );
-  mEditToolBar->addAction( collection->action( "format_text_bold" ) );
-  mEditToolBar->addAction( collection->action( "format_text_italic" ) );
-  mEditToolBar->addAction( collection->action( "format_text_underline" ) );
-  mEditToolBar->addAction( collection->action( "format_text_strikeout" ) );
-  mEditToolBar->addSeparator();
+    mEditToolBar->addAction(collection->action("format_list_style"));
+    mEditToolBar->addSeparator();
 
-  mEditToolBar->addAction( collection->action( "format_list_style" ) );
-  mEditToolBar->addSeparator();
+    mEditToolBar->addAction(collection->action("format_align_left"));
+    mEditToolBar->addAction(collection->action("format_align_center"));
+    mEditToolBar->addAction(collection->action("format_align_right"));
+    mEditToolBar->addAction(collection->action("format_align_justify"));
+    mEditToolBar->addSeparator();
 
-  mEditToolBar->addAction( collection->action( "format_align_left" ) );
-  mEditToolBar->addAction( collection->action( "format_align_center" ) );
-  mEditToolBar->addAction( collection->action( "format_align_right" ) );
-  mEditToolBar->addAction( collection->action( "format_align_justify" ) );
-  mEditToolBar->addSeparator();
+    mEditToolBar->addAction(collection->action("format_painter"));
+    mUi->mDescriptionEdit->setActionsEnabled(false);
 
-  mEditToolBar->addAction( collection->action( "format_painter" ) );
-  mUi->mDescriptionEdit->setActionsEnabled( false );
-
-  QGridLayout *layout = new QGridLayout( mUi->mEditToolBarPlaceHolder );
-  layout->addWidget( mEditToolBar );
+    QGridLayout *layout = new QGridLayout(mUi->mEditToolBarPlaceHolder);
+    layout->addWidget(mEditToolBar);
 #endif
 
-  // By default we don't show the rich text toolbar.
-  mUi->mEditToolBarPlaceHolder->setVisible( false );
-  d->mRichTextEnabled = false;
+    // By default we don't show the rich text toolbar.
+    mUi->mEditToolBarPlaceHolder->setVisible(false);
+    d->mRichTextEnabled = false;
 }
 
 void IncidenceDescription::printDebugInfo() const
 {
-  // We're going to crash
-  qDebug() << "RichText enabled " << d->mRichTextEnabled;
+    // We're going to crash
+    qDebug() << "RichText enabled " << d->mRichTextEnabled;
 
-  if ( mLoadedIncidence ) {
-    qDebug() << "Incidence description is rich " << mLoadedIncidence->descriptionIsRich();
+    if (mLoadedIncidence) {
+        qDebug() << "Incidence description is rich " << mLoadedIncidence->descriptionIsRich();
 
-    if ( mLoadedIncidence->descriptionIsRich() ) {
-      qDebug() << "desc is rich, and it is <desc>" <<  mLoadedIncidence->richDescription()
-               << "</desc>; "
-               << "widget has <desc>" << mUi->mDescriptionEdit->toHtml()
-               << "</desc>; "
-               << "expr mLoadedIncidence->richDescription() != mUi->mDescriptionEdit->toHtml() is "
-               << ( mLoadedIncidence->richDescription() != mUi->mDescriptionEdit->toHtml() );
+        if (mLoadedIncidence->descriptionIsRich()) {
+            qDebug() << "desc is rich, and it is <desc>" <<  mLoadedIncidence->richDescription()
+                     << "</desc>; "
+                     << "widget has <desc>" << mUi->mDescriptionEdit->toHtml()
+                     << "</desc>; "
+                     << "expr mLoadedIncidence->richDescription() != mUi->mDescriptionEdit->toHtml() is "
+                     << (mLoadedIncidence->richDescription() != mUi->mDescriptionEdit->toHtml());
+        } else {
+            qDebug() << "desc is not rich, and it is <desc>" << mLoadedIncidence->description()
+                     << "</desc>; "
+                     << "widget has <desc>" << mUi->mDescriptionEdit->toPlainText()
+                     << "</desc>; "
+                     << "expr mLoadedIncidence->description() != mUi->mDescriptionEdit->toPlainText() is "
+                     << (mLoadedIncidence->description() != mUi->mDescriptionEdit->toPlainText());
+        }
+
     } else {
-      qDebug() << "desc is not rich, and it is <desc>" << mLoadedIncidence->description()
-               << "</desc>; "
-               << "widget has <desc>" << mUi->mDescriptionEdit->toPlainText()
-               << "</desc>; "
-               << "expr mLoadedIncidence->description() != mUi->mDescriptionEdit->toPlainText() is "
-               <<  ( mLoadedIncidence->description() != mUi->mDescriptionEdit->toPlainText() );
+        qDebug() << "Incidence is invalid";
     }
-
-  } else {
-    qDebug() << "Incidence is invalid";
-  }
 }
 

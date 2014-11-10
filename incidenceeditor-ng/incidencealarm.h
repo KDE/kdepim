@@ -23,33 +23,35 @@
 
 #include "incidenceeditor-ng.h"
 
-namespace Ui {
-  class EventOrTodoDesktop;
-  class EventOrTodoMore;
+namespace Ui
+{
+class EventOrTodoDesktop;
+class EventOrTodoMore;
 }
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 class IncidenceDateTime;
 
 class INCIDENCEEDITORS_NG_EXPORT IncidenceAlarm : public IncidenceEditor
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
 #ifdef KDEPIM_MOBILE_UI
-    IncidenceAlarm( IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui );
+    IncidenceAlarm(IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui);
 #else
-    IncidenceAlarm( IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui );
+    IncidenceAlarm(IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui);
 #endif
 
-    virtual void load( const KCalCore::Incidence::Ptr &incidence );
-    virtual void save( const KCalCore::Incidence::Ptr &incidence );
+    virtual void load(const KCalCore::Incidence::Ptr &incidence);
+    virtual void save(const KCalCore::Incidence::Ptr &incidence);
     virtual bool isDirty() const;
 
-  Q_SIGNALS:
-    void alarmCountChanged( int newCount );
+Q_SIGNALS:
+    void alarmCountChanged(int newCount);
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void editCurrentAlarm();
     void handleDateTimeToggle();
     void newAlarm();
@@ -59,10 +61,10 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAlarm : public IncidenceEditor
     void updateAlarmList();
     void updateButtons();
 
-  private:
-    QString stringForAlarm( const KCalCore::Alarm::Ptr &alarm );
+private:
+    QString stringForAlarm(const KCalCore::Alarm::Ptr &alarm);
 
-  private:
+private:
 #ifdef KDEPIM_MOBILE_UI
     Ui::EventOrTodoMore *mUi;
 #else

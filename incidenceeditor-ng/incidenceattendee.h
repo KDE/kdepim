@@ -23,22 +23,26 @@
 
 #include "incidenceeditor-ng.h"
 
-namespace Ui {
-  class EventOrTodoDesktop;
-  class EventOrTodoMore;
+namespace Ui
+{
+class EventOrTodoDesktop;
+class EventOrTodoMore;
 }
 
-namespace KPIM {
-  class MultiplyingLine;
+namespace KPIM
+{
+class MultiplyingLine;
 }
 
-namespace KContacts {
-  class Addressee;
+namespace KContacts
+{
+class Addressee;
 }
 
 class KJob;
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 class AttendeeEditor;
 class ConflictResolver;
@@ -46,45 +50,45 @@ class IncidenceDateTime;
 
 class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
 #ifdef KDEPIM_MOBILE_UI
-    IncidenceAttendee( QWidget *parent, IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui );
+    IncidenceAttendee(QWidget *parent, IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui);
 #else
-    IncidenceAttendee( QWidget *parent, IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui );
+    IncidenceAttendee(QWidget *parent, IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui);
 #endif
     ~IncidenceAttendee();
 
-    virtual void load( const KCalCore::Incidence::Ptr &incidence );
-    virtual void save( const KCalCore::Incidence::Ptr &incidence );
+    virtual void load(const KCalCore::Incidence::Ptr &incidence);
+    virtual void save(const KCalCore::Incidence::Ptr &incidence);
     virtual bool isDirty() const;
     virtual void printDebugInfo() const;
 
-  signals:
-    void attendeeCountChanged( int );
+signals:
+    void attendeeCountChanged(int);
 
-  public slots:
+public slots:
     /// If the user is attendee of the loaded event, one of the following slots
     /// can be used to change the status.
     void acceptForMe();
     void declineForMe();
 
-  private slots:
-    void checkIfExpansionIsNeeded( KPIM::MultiplyingLine * );
-    void expandResult( KJob *job );
-    void groupSearchResult( KJob *job );
+private slots:
+    void checkIfExpansionIsNeeded(KPIM::MultiplyingLine *);
+    void expandResult(KJob *job);
+    void groupSearchResult(KJob *job);
     void slotSelectAddresses();
     void slotSolveConflictPressed();
-    void slotUpdateConflictLabel( int );
-    void slotAttendeeChanged( const KCalCore::Attendee::Ptr &oldAttendee,
-                              const KCalCore::Attendee::Ptr &newAttendee );
-    void slotOrganizerChanged( const QString &organizer );
+    void slotUpdateConflictLabel(int);
+    void slotAttendeeChanged(const KCalCore::Attendee::Ptr &oldAttendee,
+                             const KCalCore::Attendee::Ptr &newAttendee);
+    void slotOrganizerChanged(const QString &organizer);
 
     // wrapper for the conflict resolver
     void slotEventDurationChanged();
 
-  private:
-    void changeStatusForMe( KCalCore::Attendee::PartStat );
+private:
+    void changeStatusForMe(KCalCore::Attendee::PartStat);
 
     /** Returns if I was the organizer of the loaded event */
     bool iAmOrganizer() const;
@@ -95,7 +99,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
      * The optional Attendee parameter can be used to pass in default values
      * to be used by the new Attendee.
      */
-    void insertAttendeeFromAddressee( const KContacts::Addressee &a );
+    void insertAttendeeFromAddressee(const KContacts::Addressee &a);
     void fillOrganizerCombo();
 
 #ifdef KDEPIM_MOBILE_UI
@@ -106,7 +110,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
     QWidget *mParentWidget;
     AttendeeEditor *mAttendeeEditor;
     ConflictResolver *mConflictResolver;
-    QMap<KJob *,QWeakPointer<KPIM::MultiplyingLine> > mMightBeGroupLines;
+    QMap<KJob *, QWeakPointer<KPIM::MultiplyingLine> > mMightBeGroupLines;
     IncidenceDateTime *mDateTime;
     QString mOrganizer;
 };

@@ -26,59 +26,59 @@
 
 using namespace IncidenceEditorNG;
 
-FreeBusyItem::FreeBusyItem( const KCalCore::Attendee::Ptr &attendee, QWidget *parentWidget )
-  : mAttendee( attendee ), mTimerID( 0 ), mIsDownloading( false ), mParentWidget( parentWidget )
+FreeBusyItem::FreeBusyItem(const KCalCore::Attendee::Ptr &attendee, QWidget *parentWidget)
+    : mAttendee(attendee), mTimerID(0), mIsDownloading(false), mParentWidget(parentWidget)
 {
-  Q_ASSERT( attendee );
-  setFreeBusy( KCalCore::FreeBusy::Ptr() );
+    Q_ASSERT(attendee);
+    setFreeBusy(KCalCore::FreeBusy::Ptr());
 }
 
 KCalCore::Attendee::Ptr FreeBusyItem::attendee() const
 {
-  return mAttendee;
+    return mAttendee;
 }
 
-void FreeBusyItem::setFreeBusy( const KCalCore::FreeBusy::Ptr &fb )
+void FreeBusyItem::setFreeBusy(const KCalCore::FreeBusy::Ptr &fb)
 {
-  mFreeBusy = fb;
-  mIsDownloading = false;
+    mFreeBusy = fb;
+    mIsDownloading = false;
 }
 
 KCalCore::FreeBusy::Ptr FreeBusyItem::freeBusy() const
 {
-  return mFreeBusy;
+    return mFreeBusy;
 }
 
 QString FreeBusyItem::email() const
 {
-  return mAttendee->email();
+    return mAttendee->email();
 }
 
-void FreeBusyItem::setUpdateTimerID( int id )
+void FreeBusyItem::setUpdateTimerID(int id)
 {
-  mTimerID = id;
+    mTimerID = id;
 }
 
 int FreeBusyItem::updateTimerID() const
 {
-  return mTimerID;
+    return mTimerID;
 }
 
-void FreeBusyItem::startDownload( bool forceDownload )
+void FreeBusyItem::startDownload(bool forceDownload)
 {
-  mIsDownloading = true;
-  Akonadi::FreeBusyManager *m = Akonadi::FreeBusyManager::self();
-  if ( !m->retrieveFreeBusy( attendee()->email(), forceDownload, mParentWidget ) ) {
-    mIsDownloading = false;
-  }
+    mIsDownloading = true;
+    Akonadi::FreeBusyManager *m = Akonadi::FreeBusyManager::self();
+    if (!m->retrieveFreeBusy(attendee()->email(), forceDownload, mParentWidget)) {
+        mIsDownloading = false;
+    }
 }
 
-void FreeBusyItem::setIsDownloading( bool d )
+void FreeBusyItem::setIsDownloading(bool d)
 {
-  mIsDownloading = d;
+    mIsDownloading = d;
 }
 
 bool FreeBusyItem::isDownloading() const
 {
-  return mIsDownloading;
+    return mIsDownloading;
 }

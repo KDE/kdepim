@@ -26,37 +26,39 @@
 #include <KCalCore/IncidenceBase>
 #include <Collection>
 
-namespace Akonadi {
-  class IncidenceChanger;
+namespace Akonadi
+{
+class IncidenceChanger;
 }
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 class IncidenceDialog;
 
 namespace IncidenceDialogFactory
 {
-  /**
-   * Creates a new IncidenceDialog for given type. Returns 0 for unsupported types.
-   *
-   * @param needsSaving If true, the editor will be initialy dirty, and needs saving.
-   *                    Apply button will be turned on. This is used for example when
-   *                    we fill the editor with data that's not yet in akonadi, like
-   *                    the "Create To-do/Reminder" in KMail.
-   * @param type   The Incidence type for which to create a dialog.
-   * @param parent The parent widget of the dialog
-   * @param flags  The window flags for the dialog.
-   *
-   * TODO: Implement support for Journals.
-   * NOTE: There is no editor for Incidence::TypeFreeBusy
-   */
-  INCIDENCEEDITORS_NG_EXPORT IncidenceDialog *create(
+/**
+ * Creates a new IncidenceDialog for given type. Returns 0 for unsupported types.
+ *
+ * @param needsSaving If true, the editor will be initialy dirty, and needs saving.
+ *                    Apply button will be turned on. This is used for example when
+ *                    we fill the editor with data that's not yet in akonadi, like
+ *                    the "Create To-do/Reminder" in KMail.
+ * @param type   The Incidence type for which to create a dialog.
+ * @param parent The parent widget of the dialog
+ * @param flags  The window flags for the dialog.
+ *
+ * TODO: Implement support for Journals.
+ * NOTE: There is no editor for Incidence::TypeFreeBusy
+ */
+INCIDENCEEDITORS_NG_EXPORT IncidenceDialog *create(
     bool needsSaving,
     KCalCore::IncidenceBase::IncidenceType type,
     Akonadi::IncidenceChanger *changer,
-    QWidget *parent = 0, Qt::WindowFlags flags = 0 );
+    QWidget *parent = 0, Qt::WindowFlags flags = 0);
 
-  INCIDENCEEDITORS_NG_EXPORT IncidenceDialog *createTodoEditor(
+INCIDENCEEDITORS_NG_EXPORT IncidenceDialog *createTodoEditor(
     const QString &summary,
     const QString &description,
     const QStringList &attachments,
@@ -66,9 +68,9 @@ namespace IncidenceDialogFactory
     bool inlineAttachment,
     Akonadi::Collection defaultCollection,
     bool cleanupAttachmentTemp,
-    QWidget *parent = 0, Qt::WindowFlags flags = 0 );
+    QWidget *parent = 0, Qt::WindowFlags flags = 0);
 
-  INCIDENCEEDITORS_NG_EXPORT IncidenceDialog *createEventEditor(
+INCIDENCEEDITORS_NG_EXPORT IncidenceDialog *createEventEditor(
     const QString &summary,
     const QString &description,
     const QStringList &attachments,
@@ -78,7 +80,7 @@ namespace IncidenceDialogFactory
     bool inlineAttachment,
     Akonadi::Collection defaultCollection,
     bool cleanupAttachmentTempFiles,
-    QWidget *parent = 0, Qt::WindowFlags flags = 0 );
+    QWidget *parent = 0, Qt::WindowFlags flags = 0);
 
 } // namespace IncidenceDialogFactory
 

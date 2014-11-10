@@ -27,35 +27,36 @@
 
 #include <QAbstractTableModel>
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 class INCIDENCEEDITORS_NG_EXPORT FreePeriodModel : public QAbstractTableModel
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     enum Roles {
-      PeriodRole = Qt::UserRole
+        PeriodRole = Qt::UserRole
     };
-    explicit FreePeriodModel( QObject *parent = 0 );
+    explicit FreePeriodModel(QObject *parent = 0);
     virtual ~FreePeriodModel();
 
-    virtual QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
-    virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const;
-    virtual int columnCount( const QModelIndex &parent = QModelIndex() ) const;
-    virtual QVariant headerData( int section, Qt::Orientation orientation,
-                                 int role = Qt::DisplayRole ) const;
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual QVariant headerData(int section, Qt::Orientation orientation,
+                                int role = Qt::DisplayRole) const;
 
-  public slots:
-    void slotNewFreePeriods( const KCalCore::Period::List &freePeriods );
+public slots:
+    void slotNewFreePeriods(const KCalCore::Period::List &freePeriods);
 
-  private:
+private:
     /** Splits period blocks in the provided list, so that each period occurs on one day */
-    KCalCore::Period::List splitPeriodsByDay( const KCalCore::Period::List &freePeriods );
+    KCalCore::Period::List splitPeriodsByDay(const KCalCore::Period::List &freePeriods);
 
-    QString day( int index ) const;
-    QString date( int index ) const;
-    QString stringify( int index ) const;
-    QString tooltipify( int index ) const;
+    QString day(int index) const;
+    QString date(int index) const;
+    QString stringify(int index) const;
+    QString tooltipify(int index) const;
 
     KCalCore::Period::List mPeriodList;
     friend class FreePeriodModelTest;

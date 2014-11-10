@@ -29,11 +29,11 @@ class MonitorsWidget : public QWidget
 {
     Q_OBJECT
 
-  public:
-    explicit MonitorsWidget( QWidget *parent = 0 );
+public:
+    explicit MonitorsWidget(QWidget *parent = 0);
     virtual ~MonitorsWidget();
 
-  private:
+private:
     QTreeView *mTreeView;
     MonitorsModel *mModel;
 };

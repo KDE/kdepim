@@ -26,18 +26,18 @@ class QLocalSocket;
 
 class RawSocketConsole : public QWidget
 {
-  Q_OBJECT
-  public:
-    explicit RawSocketConsole( QWidget *parent = 0 );
+    Q_OBJECT
+public:
+    explicit RawSocketConsole(QWidget *parent = 0);
 
-  private slots:
+private slots:
     void execClicked();
     void dataReceived();
     void connected();
     void disconnected();
     void connectClicked();
 
-  private:
+private:
     QLocalSocket *mSocket;
     Ui::RawSocketConsole ui;
 };

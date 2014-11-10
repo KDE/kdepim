@@ -26,17 +26,15 @@
 
 class CollectionInternalsPage : public Akonadi::CollectionPropertiesPage
 {
-  Q_OBJECT
-  public:
-    explicit CollectionInternalsPage( QWidget *parent = 0 );
+    Q_OBJECT
+public:
+    explicit CollectionInternalsPage(QWidget *parent = 0);
 
-    void load( const Akonadi::Collection & col );
-    void save( Akonadi::Collection & col );
+    void load(const Akonadi::Collection &col);
+    void save(Akonadi::Collection &col);
 
-  private:
+private:
     Ui::CollectionInternalsPage ui;
 };
-
-
 
 #endif

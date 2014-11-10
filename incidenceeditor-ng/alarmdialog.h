@@ -27,47 +27,49 @@
 
 #include <QDialog>
 
-namespace Ui {
-  class AlarmDialog;
+namespace Ui
+{
+class AlarmDialog;
 }
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 class  INCIDENCEEDITORS_NG_EXPORT AlarmDialog : public QDialog
 {
-  public:
+public:
     enum Unit {
-      Minutes,
-      Hours,
-      Days
+        Minutes,
+        Hours,
+        Days
     };
 
     enum When {
-      BeforeStart = 0,
-      AfterStart,
-      BeforeEnd,
-      AfterEnd
+        BeforeStart = 0,
+        AfterStart,
+        BeforeEnd,
+        AfterEnd
     };
 
-  public:
+public:
     /**
       Constructs a new alarm dialog.
       @p incidenceType will influence i18n strings, that will be different for to-dos.
      */
-    explicit AlarmDialog( KCalCore::Incidence::IncidenceType incidenceType, QWidget *parent = 0 );
+    explicit AlarmDialog(KCalCore::Incidence::IncidenceType incidenceType, QWidget *parent = 0);
     ~AlarmDialog();
-    void load( const KCalCore::Alarm::Ptr &alarm );
-    void save( const KCalCore::Alarm::Ptr &alarm ) const;
-    void setAllowBeginReminders( bool allow );
-    void setAllowEndReminders( bool allow );
-    void setOffset( int offset );
-    void setUnit( Unit unit );
-    void setWhen( When when );
+    void load(const KCalCore::Alarm::Ptr &alarm);
+    void save(const KCalCore::Alarm::Ptr &alarm) const;
+    void setAllowBeginReminders(bool allow);
+    void setAllowEndReminders(bool allow);
+    void setOffset(int offset);
+    void setUnit(Unit unit);
+    void setWhen(When when);
 
-  private:
+private:
     void fillCombo();
 
-  private:
+private:
     Ui::AlarmDialog *mUi;
     KCalCore::Incidence::IncidenceType mIncidenceType;
     bool mAllowBeginReminders;

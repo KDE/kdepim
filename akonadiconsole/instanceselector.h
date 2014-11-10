@@ -27,8 +27,9 @@
 #include <QDialog>
 #include <KConfigGroup>
 
-namespace Ui {
-  class InstanceSelector;
+namespace Ui
+{
+class InstanceSelector;
 }
 
 /** Check if there are multiple instances of Akonadi running, and if so present
@@ -36,19 +37,19 @@ namespace Ui {
  */
 class InstanceSelector : public QDialog
 {
-  Q_OBJECT
-  public:
-    explicit InstanceSelector( const QString &remoteHost, QWidget* parent = 0, Qt::WindowFlags flags = 0 );
+    Q_OBJECT
+public:
+    explicit InstanceSelector(const QString &remoteHost, QWidget *parent = 0, Qt::WindowFlags flags = 0);
     virtual ~InstanceSelector();
 
 private Q_SLOTS:
     void slotAccept();
     void slotReject();
 
-  private:
+private:
     static QStringList instances();
 
-  private:
+private:
     QScopedPointer<Ui::InstanceSelector> ui;
     QString m_remoteHost;
     QString m_instance;

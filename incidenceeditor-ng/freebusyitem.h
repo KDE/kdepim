@@ -27,39 +27,40 @@
 
 #include <KCalCore/FreeBusy>
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 /**
  * The FreeBusyItem is the whole line for a given attendee..
  */
 class INCIDENCEEDITORS_NG_EXPORT FreeBusyItem
 {
-  public:
+public:
     typedef QSharedPointer<FreeBusyItem> Ptr;
 
     /**
      * @param parentWidget is passed to Akonadi when fetching free/busy data.
      */
-    FreeBusyItem( const KCalCore::Attendee::Ptr &attendee, QWidget *parentWidget );
+    FreeBusyItem(const KCalCore::Attendee::Ptr &attendee, QWidget *parentWidget);
     ~FreeBusyItem() {}
 
     KCalCore::Attendee::Ptr attendee() const;
-    void setFreeBusy( const KCalCore::FreeBusy::Ptr &fb );
+    void setFreeBusy(const KCalCore::FreeBusy::Ptr &fb);
     KCalCore::FreeBusy::Ptr freeBusy() const;
 
     QString email() const;
-    void setUpdateTimerID( int id );
+    void setUpdateTimerID(int id);
     int updateTimerID() const;
 
-    void startDownload( bool forceDownload );
-    void setIsDownloading( bool d );
+    void startDownload(bool forceDownload);
+    void setIsDownloading(bool d);
     bool isDownloading() const;
 
-  signals:
-    void attendeeChanged( const KCalCore::Attendee::Ptr &attendee );
-    void freebusyChanged( const KCalCore::FreeBusy::Ptr fb );
+signals:
+    void attendeeChanged(const KCalCore::Attendee::Ptr &attendee);
+    void freebusyChanged(const KCalCore::FreeBusy::Ptr fb);
 
-  private:
+private:
     KCalCore::Attendee::Ptr mAttendee;
     KCalCore::FreeBusy::Ptr mFreeBusy;
 

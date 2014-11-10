@@ -30,63 +30,63 @@
 using namespace IncidenceEditorNG;
 
 #ifdef KDEPIM_MOBILE_UI
-IncidenceSecrecy::IncidenceSecrecy( Ui::EventOrTodoMore *ui )
+IncidenceSecrecy::IncidenceSecrecy(Ui::EventOrTodoMore *ui)
 #else
-IncidenceSecrecy::IncidenceSecrecy( Ui::EventOrTodoDesktop *ui )
+IncidenceSecrecy::IncidenceSecrecy(Ui::EventOrTodoDesktop *ui)
 #endif
-  : mUi( ui )
+    : mUi(ui)
 {
-  setObjectName( "IncidenceSecrecy" );
-  mUi->mSecrecyCombo->addItems( KCalUtils::Stringify::secrecyList() );
-  connect( mUi->mSecrecyCombo, SIGNAL(currentIndexChanged(int)),
-           SLOT(checkDirtyStatus()));
+    setObjectName("IncidenceSecrecy");
+    mUi->mSecrecyCombo->addItems(KCalUtils::Stringify::secrecyList());
+    connect(mUi->mSecrecyCombo, SIGNAL(currentIndexChanged(int)),
+            SLOT(checkDirtyStatus()));
 }
 
-void IncidenceSecrecy::load( const KCalCore::Incidence::Ptr &incidence )
+void IncidenceSecrecy::load(const KCalCore::Incidence::Ptr &incidence)
 {
-  mLoadedIncidence = incidence;
-  if ( mLoadedIncidence ) {
-    Q_ASSERT( mUi->mSecrecyCombo->count() == KCalUtils::Stringify::secrecyList().count() );
-    mUi->mSecrecyCombo->setCurrentIndex( mLoadedIncidence->secrecy() );
+    mLoadedIncidence = incidence;
+    if (mLoadedIncidence) {
+        Q_ASSERT(mUi->mSecrecyCombo->count() == KCalUtils::Stringify::secrecyList().count());
+        mUi->mSecrecyCombo->setCurrentIndex(mLoadedIncidence->secrecy());
 
-    if ( incidence->type() == KCalCore::Incidence::TypeJournal ) {
-      mUi->mSecrecyCombo->setVisible( false );
-      mUi->mSecrecyLabel->setVisible( false );
+        if (incidence->type() == KCalCore::Incidence::TypeJournal) {
+            mUi->mSecrecyCombo->setVisible(false);
+            mUi->mSecrecyLabel->setVisible(false);
+        }
+    } else {
+        mUi->mSecrecyCombo->setCurrentIndex(0);
     }
-  } else {
-    mUi->mSecrecyCombo->setCurrentIndex( 0 );
-  }
 
-  mWasDirty = false;
+    mWasDirty = false;
 }
 
-void IncidenceSecrecy::save( const KCalCore::Incidence::Ptr &incidence )
+void IncidenceSecrecy::save(const KCalCore::Incidence::Ptr &incidence)
 {
-  Q_ASSERT( incidence );
-  switch( mUi->mSecrecyCombo->currentIndex() ) {
-  case 1:
-    incidence->setSecrecy( KCalCore::Incidence::SecrecyPrivate );
-    break;
-  case 2:
-    incidence->setSecrecy( KCalCore::Incidence::SecrecyConfidential );
-    break;
-  default:
-    incidence->setSecrecy( KCalCore::Incidence::SecrecyPublic );
-  }
+    Q_ASSERT(incidence);
+    switch (mUi->mSecrecyCombo->currentIndex()) {
+    case 1:
+        incidence->setSecrecy(KCalCore::Incidence::SecrecyPrivate);
+        break;
+    case 2:
+        incidence->setSecrecy(KCalCore::Incidence::SecrecyConfidential);
+        break;
+    default:
+        incidence->setSecrecy(KCalCore::Incidence::SecrecyPublic);
+    }
 }
 
 bool IncidenceSecrecy::isDirty() const
 {
-  if ( mLoadedIncidence ) {
-    if ( mLoadedIncidence->secrecy() != mUi->mSecrecyCombo->currentIndex() ) {
-      return true;
+    if (mLoadedIncidence) {
+        if (mLoadedIncidence->secrecy() != mUi->mSecrecyCombo->currentIndex()) {
+            return true;
+        }
+    } else {
+        if (mUi->mSecrecyCombo->currentIndex() != 0) {
+            return true;
+        }
     }
-  } else {
-    if ( mUi->mSecrecyCombo->currentIndex() != 0 ) {
-      return true;
-    }
-  }
 
-  return false;
+    return false;
 }
 

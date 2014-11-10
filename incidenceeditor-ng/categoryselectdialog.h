@@ -27,42 +27,44 @@
 
 class CategorySelectWidgetBase;
 
-namespace CalendarSupport {
-  class CategoryConfig;
+namespace CalendarSupport
+{
+class CategoryConfig;
 }
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 class AutoCheckTreeWidget;
 
 class INCIDENCEEDITORS_NG_EXPORT CategorySelectWidget : public QWidget
 {
-  Q_OBJECT
-  public:
-    explicit CategorySelectWidget( CalendarSupport::CategoryConfig *config, QWidget *parent=0 );
+    Q_OBJECT
+public:
+    explicit CategorySelectWidget(CalendarSupport::CategoryConfig *config, QWidget *parent = 0);
     ~CategorySelectWidget();
 
-    void setCategories( const QStringList &categoryList = QStringList() );
-    void setCategoryList( const QStringList &categories );
+    void setCategories(const QStringList &categoryList = QStringList());
+    void setCategoryList(const QStringList &categories);
 
-    void setSelected( const QStringList &selList );
+    void setSelected(const QStringList &selList);
     QStringList selectedCategories() const;
-    QStringList selectedCategories( QString &categoriesStr );
+    QStringList selectedCategories(QString &categoriesStr);
 
-    void setAutoselectChildren( bool autoselectChildren );
+    void setAutoselectChildren(bool autoselectChildren);
 
     void hideButton();
     void hideHeader();
 
     AutoCheckTreeWidget *listView() const;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void clear();
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void editCategories();
 
-  private:
+private:
     QStringList mCategoryList;
     CategorySelectWidgetBase *mWidgets;
     CalendarSupport::CategoryConfig *mCategoryConfig;
@@ -70,28 +72,28 @@ class INCIDENCEEDITORS_NG_EXPORT CategorySelectWidget : public QWidget
 
 class INCIDENCEEDITORS_NG_EXPORT CategorySelectDialog : public QDialog
 {
-  Q_OBJECT
-  public:
-    explicit CategorySelectDialog( CalendarSupport::CategoryConfig *cfg, QWidget *parent = 0 );
+    Q_OBJECT
+public:
+    explicit CategorySelectDialog(CalendarSupport::CategoryConfig *cfg, QWidget *parent = 0);
     ~CategorySelectDialog();
 
     QStringList selectedCategories() const;
-    void setCategoryList( const QStringList &categories );
+    void setCategoryList(const QStringList &categories);
 
-    void setAutoselectChildren( bool autoselectChildren );
-    void setSelected( const QStringList &selList );
+    void setAutoselectChildren(bool autoselectChildren);
+    void setSelected(const QStringList &selList);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void slotOk();
     void slotApply();
     void updateCategoryConfig();
 
-  Q_SIGNALS:
-    void categoriesSelected( const QString & );
-    void categoriesSelected( const QStringList & );
+Q_SIGNALS:
+    void categoriesSelected(const QString &);
+    void categoriesSelected(const QStringList &);
     void editCategories();
 
-  private:
+private:
     CategorySelectWidget *mWidgets;
 
     class CategorySelectDialogPrivate;

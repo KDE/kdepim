@@ -24,21 +24,21 @@ using namespace IncidenceEditorNG;
 
 void AttendeeData::clear()
 {
-  setName( QString() );
-  setEmail( QString() );
-  setRole( Attendee::ReqParticipant );
-  setStatus( Attendee::None );
-  setRSVP( false );
-  setUid( QString() );
+    setName(QString());
+    setEmail(QString());
+    setRole(Attendee::ReqParticipant);
+    setStatus(Attendee::None);
+    setRSVP(false);
+    setUid(QString());
 }
 
 bool AttendeeData::isEmpty() const
 {
-  return name().isEmpty() && email().isEmpty();
+    return name().isEmpty() && email().isEmpty();
 }
 
 KCalCore::Attendee::Ptr AttendeeData::attendee() const
 {
-  return KCalCore::Attendee::Ptr( new KCalCore::Attendee( *this ) );
+    return KCalCore::Attendee::Ptr(new KCalCore::Attendee(*this));
 }
 

@@ -59,7 +59,7 @@ bool TagPropertiesDialog::changed() const
 
 void TagPropertiesDialog::setupUi()
 {
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
@@ -123,7 +123,7 @@ void TagPropertiesDialog::setupUi()
             query.addBindValue(mTag.id());
             if (query.exec()) {
                 while (query.next()) {
-                    QList<QStandardItem*> items;
+                    QList<QStandardItem *> items;
                     QStandardItem *item = new QStandardItem(query.value(0).toString());
                     item->setEditable(false);
                     items << item;
@@ -241,7 +241,6 @@ void TagPropertiesDialog::remoteIdChanged(QStandardItem *item)
     // Don't change mChanged here, we will handle this internally
 }
 
-
 void TagPropertiesDialog::slotAccept()
 {
     mChanged |= (mTag.type() != ui.typeEdit->text().toLatin1());
@@ -282,9 +281,9 @@ void TagPropertiesDialog::slotAccept()
         QSqlQuery query(DbAccess::database());
         QString queryStr = QLatin1String("DELETE FROM TagRemoteIdResourceRelationTable "
                                          "WHERE tagId = ? AND "
-                                               "resourceId IN (SELECT id "
-                                                              "FROM ResourceTable "
-                                                              "WHERE ");
+                                         "resourceId IN (SELECT id "
+                                         "FROM ResourceTable "
+                                         "WHERE ");
         QStringList conds;
         for (int i = 0; i < mRemovedRIDs.count(); ++i) {
             conds << QLatin1String("name = ?");

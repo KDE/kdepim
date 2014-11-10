@@ -27,12 +27,12 @@ GlobalSettings *GlobalSettings::mSelf = 0;
 
 GlobalSettings *GlobalSettings::self()
 {
-  if ( !mSelf ) {
-    mSelf = new GlobalSettings();
-    mSelf->load();
-  }
+    if (!mSelf) {
+        mSelf = new GlobalSettings();
+        mSelf->load();
+    }
 
-  return mSelf;
+    return mSelf;
 }
 
 GlobalSettings::GlobalSettings()
@@ -42,5 +42,4 @@ GlobalSettings::GlobalSettings()
 GlobalSettings::~GlobalSettings()
 {
 }
-
 

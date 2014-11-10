@@ -30,34 +30,37 @@
 
 class NotificationModel : public QAbstractItemModel
 {
-  Q_OBJECT
-  public:
-    explicit NotificationModel( QObject *parent );
+    Q_OBJECT
+public:
+    explicit NotificationModel(QObject *parent);
     ~NotificationModel();
 
-    int columnCount(const QModelIndex& parent = QModelIndex()) const;
-    int rowCount(const QModelIndex& parent = QModelIndex()) const;
-    QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
-    QModelIndex parent(const QModelIndex& child) const;
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
+    QModelIndex parent(const QModelIndex &child) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
-    bool isEnabled() const { return m_source != 0; }
+    bool isEnabled() const
+    {
+        return m_source != 0;
+    }
 
-  public slots:
+public slots:
     void clear();
-    void setEnabled( bool enable );
+    void setEnabled(bool enable);
 
-  private slots:
-    void slotNotify( const Akonadi::NotificationMessageV3::List &msgs );
+private slots:
+    void slotNotify(const Akonadi::NotificationMessageV3::List &msgs);
 
-  private:
+private:
     class Item;
     class NotificationBlock;
     class NotificationNode;
     class NotificationEntity;
 
-    QList<NotificationBlock*> m_data;
+    QList<NotificationBlock *> m_data;
 
     org::freedesktop::Akonadi::NotificationManager *m_manager;
     org::freedesktop::Akonadi::NotificationSource *m_source;

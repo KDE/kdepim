@@ -33,84 +33,84 @@
 #include <QPushButton>
 #include <QFileDialog>
 
-NotificationMonitor::NotificationMonitor(QWidget* parent) :
-  QWidget( parent )
+NotificationMonitor::NotificationMonitor(QWidget *parent) :
+    QWidget(parent)
 {
-  m_model = new NotificationModel( this );
-  m_model->setEnabled( false ); // since it can be slow, default to off
+    m_model = new NotificationModel(this);
+    m_model->setEnabled(false);   // since it can be slow, default to off
 
-  QVBoxLayout *layout = new QVBoxLayout( this );
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
-  QCheckBox* enableCB = new QCheckBox( this );
-  enableCB->setText(i18n("Enable notification monitor"));
-  enableCB->setChecked(m_model->isEnabled());
-  connect(enableCB, &QCheckBox::toggled, m_model, &NotificationModel::setEnabled);
-  layout->addWidget(enableCB);
+    QCheckBox *enableCB = new QCheckBox(this);
+    enableCB->setText(i18n("Enable notification monitor"));
+    enableCB->setChecked(m_model->isEnabled());
+    connect(enableCB, &QCheckBox::toggled, m_model, &NotificationModel::setEnabled);
+    layout->addWidget(enableCB);
 
-  QTreeView *tv = new QTreeView( this );
-  tv->setModel( m_model );
-  tv->expandAll();
-  tv->setAlternatingRowColors( true );
-  tv->setContextMenuPolicy( Qt::CustomContextMenu );
-  tv->header()->setResizeMode( QHeaderView::ResizeToContents );
-  connect(tv, &QTreeView::customContextMenuRequested, this, &NotificationMonitor::contextMenu);
-  layout->addWidget( tv );
+    QTreeView *tv = new QTreeView(this);
+    tv->setModel(m_model);
+    tv->expandAll();
+    tv->setAlternatingRowColors(true);
+    tv->setContextMenuPolicy(Qt::CustomContextMenu);
+    tv->header()->setResizeMode(QHeaderView::ResizeToContents);
+    connect(tv, &QTreeView::customContextMenuRequested, this, &NotificationMonitor::contextMenu);
+    layout->addWidget(tv);
 
-  QHBoxLayout *layout2 = new QHBoxLayout( this );
-  QPushButton *button = new QPushButton( QLatin1String( "Save to file..." ), this );
-  connect(button, &QPushButton::clicked, this, &NotificationMonitor::slotSaveToFile);
-  layout2->addWidget( button );
-  layout2->addStretch( 1 );
-  layout->addLayout( layout2 );
+    QHBoxLayout *layout2 = new QHBoxLayout(this);
+    QPushButton *button = new QPushButton(QLatin1String("Save to file..."), this);
+    connect(button, &QPushButton::clicked, this, &NotificationMonitor::slotSaveToFile);
+    layout2->addWidget(button);
+    layout2->addStretch(1);
+    layout->addLayout(layout2);
 
-  Akonadi::Control::widgetNeedsAkonadi( this );
+    Akonadi::Control::widgetNeedsAkonadi(this);
 }
 
-void NotificationMonitor::contextMenu(const QPoint& pos)
+void NotificationMonitor::contextMenu(const QPoint &pos)
 {
-  QMenu menu;
-  menu.addAction( i18n( "Clear View" ), m_model, SLOT(clear()) );
-  menu.exec( mapToGlobal( pos ) );
+    QMenu menu;
+    menu.addAction(i18n("Clear View"), m_model, SLOT(clear()));
+    menu.exec(mapToGlobal(pos));
 }
 
 void NotificationMonitor::slotSaveToFile()
 {
-  const QString fileName = QFileDialog::getSaveFileName(0, QString(), QString(), QString());
-  if ( fileName.isEmpty() ) {
-    return;
-  }
+    const QString fileName = QFileDialog::getSaveFileName(0, QString(), QString(), QString());
+    if (fileName.isEmpty()) {
+        return;
+    }
 
-  QFile file( fileName );
-  if ( !file.open( QIODevice::WriteOnly | QIODevice::Truncate ) ) {
-    return;
-  }
+    QFile file(fileName);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+        return;
+    }
 
-  file.write("Operation/ID\tType/RID\tSession/REV\tResource/MimeType\tDestination Resource\tParent\tDestination\tParts\tAdded Flags\tRemoved Flags\n");
+    file.write("Operation/ID\tType/RID\tSession/REV\tResource/MimeType\tDestination Resource\tParent\tDestination\tParts\tAdded Flags\tRemoved Flags\n");
 
-  writeRows( QModelIndex(), file, 0 );
+    writeRows(QModelIndex(), file, 0);
 
-  file.close();
+    file.close();
 }
 
-void NotificationMonitor::writeRows( const QModelIndex &parent, QFile &file, int indentLevel )
+void NotificationMonitor::writeRows(const QModelIndex &parent, QFile &file, int indentLevel)
 {
-  for ( int row = 0; row < m_model->rowCount( parent ); ++row ) {
-    QByteArray data;
-    for ( int tabs = 0; tabs < indentLevel; ++tabs ) {
-      data += '\t';
-    }
-    const int columnCount = m_model->columnCount( parent );
-    for ( int column = 0; column < columnCount; ++column ) {
-      const QModelIndex index = m_model->index( row, column, parent );
-      data += index.data().toByteArray();
-      if ( column < columnCount - 1 ) {
-        data += '\t';
-      }
-    }
-    data += '\n';
-    file.write( data );
+    for (int row = 0; row < m_model->rowCount(parent); ++row) {
+        QByteArray data;
+        for (int tabs = 0; tabs < indentLevel; ++tabs) {
+            data += '\t';
+        }
+        const int columnCount = m_model->columnCount(parent);
+        for (int column = 0; column < columnCount; ++column) {
+            const QModelIndex index = m_model->index(row, column, parent);
+            data += index.data().toByteArray();
+            if (column < columnCount - 1) {
+                data += '\t';
+            }
+        }
+        data += '\n';
+        file.write(data);
 
-    const QModelIndex index = m_model->index( row, 0, parent );
-    writeRows( index, file, indentLevel + 1 );
-  }
+        const QModelIndex index = m_model->index(row, 0, parent);
+        writeRows(index, file, indentLevel + 1);
+    }
 }

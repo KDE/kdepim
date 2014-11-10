@@ -25,8 +25,8 @@
 
 #include <KCalCore/Incidence>
 
-
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 /**
  * KCal Incidences are complicated objects. The user interfaces to create/modify
@@ -36,20 +36,20 @@ namespace IncidenceEditorNG {
  */
 class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     virtual ~IncidenceEditor();
 
     /**
      * Load the values of @param incidence into the editor widgets. The passed
      * incidence is kept for comparing with the current values of the editor.
      */
-    virtual void load( const KCalCore::Incidence::Ptr &incidence ) = 0;
+    virtual void load(const KCalCore::Incidence::Ptr &incidence) = 0;
 
     /**
      * Store the current values of the editor into @param incidince.
      */
-    virtual void save( const KCalCore::Incidence::Ptr &incidence ) = 0;
+    virtual void save(const KCalCore::Incidence::Ptr &incidence) = 0;
 
     /**
      * Returns whether or not the current values in the editor differ from the
@@ -83,7 +83,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QObject
     template <typename IncidenceT>
     QSharedPointer<IncidenceT> incidence() const
     {
-      return mLoadedIncidence.dynamicCast<IncidenceT>();
+        return mLoadedIncidence.dynamicCast<IncidenceT>();
     }
 
     /**
@@ -96,31 +96,31 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceEditor : public QObject
     */
     virtual void printDebugInfo() const;
 
-  signals:
+signals:
     /**
      * Signals whether the dirty status of this editor has changed. The new dirty
      * status is passed as argument.
      */
-    void dirtyStatusChanged( bool isDirty );
+    void dirtyStatusChanged(bool isDirty);
 
-  public slots:
+public slots:
     /**
      * Checks if the dirty status has changed until last check and emits the
      * dirtyStatusChanged signal if needed.
      */
     void checkDirtyStatus();
 
-  protected:
+protected:
     /** Only subclasses can instantiate IncidenceEditors */
-    IncidenceEditor( QObject *parent = 0 );
+    IncidenceEditor(QObject *parent = 0);
 
     template <typename IncidenceT>
-    QSharedPointer<IncidenceT> incidence( KCalCore::Incidence::Ptr inc )
+    QSharedPointer<IncidenceT> incidence(KCalCore::Incidence::Ptr inc)
     {
-      return inc.dynamicCast<IncidenceT>();
+        return inc.dynamicCast<IncidenceT>();
     }
 
-  protected:
+protected:
     KCalCore::Incidence::Ptr mLoadedIncidence;
     mutable QString mLastErrorString;
     bool mWasDirty;

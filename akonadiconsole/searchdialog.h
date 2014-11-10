@@ -28,14 +28,14 @@ class KTextEdit;
 
 class SearchDialog : public QDialog
 {
-  public:
-    explicit SearchDialog( QWidget *parent = 0 );
+public:
+    explicit SearchDialog(QWidget *parent = 0);
     ~SearchDialog();
 
     QString searchName() const;
     QString searchQuery() const;
 
-  private:
+private:
     QLineEdit *mName;
     KTextEdit *mEdit;
 };

@@ -39,55 +39,56 @@
 
 #include <QListWidget>
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 class INCIDENCEEDITORS_NG_EXPORT AttachmentIconView : public QListWidget
 {
-  friend class EditorAttachments;
-  public:
-    explicit AttachmentIconView( QWidget *parent = 0 );
+    friend class EditorAttachments;
+public:
+    explicit AttachmentIconView(QWidget *parent = 0);
 
     QMimeData *mimeData() const;
-    QUrl tempFileForAttachment( const KCalCore::Attachment::Ptr &attachment ) const;
+    QUrl tempFileForAttachment(const KCalCore::Attachment::Ptr &attachment) const;
 
-  protected:
-    QMimeData * mimeData( const QList<QListWidgetItem*> items ) const;
-    void startDrag( Qt::DropActions supportedActions );
-    void keyPressEvent( QKeyEvent *event );
+protected:
+    QMimeData *mimeData(const QList<QListWidgetItem *> items) const;
+    void startDrag(Qt::DropActions supportedActions);
+    void keyPressEvent(QKeyEvent *event);
 
-  private:
+private:
     mutable QHash<KCalCore::Attachment::Ptr, QUrl> mTempFiles;
 };
 
 class INCIDENCEEDITORS_NG_EXPORT AttachmentIconItem : public QListWidgetItem
 {
-  public:
-    AttachmentIconItem( const KCalCore::Attachment::Ptr &att, QListWidget *parent );
+public:
+    AttachmentIconItem(const KCalCore::Attachment::Ptr &att, QListWidget *parent);
     ~AttachmentIconItem();
 
     KCalCore::Attachment::Ptr attachment() const;
     const QString uri() const;
     const QString savedUri() const;
-    void setUri( const QString &uri );
+    void setUri(const QString &uri);
 
     using QListWidgetItem::setData;
 
-    void setData( const QByteArray &data );
+    void setData(const QByteArray &data);
 
     const QString mimeType() const;
-    void setMimeType( const QString &mime );
+    void setMimeType(const QString &mime);
 
     const QString label() const;
-    void setLabel( const QString &description );
+    void setLabel(const QString &description);
 
     bool isBinary() const;
 
-    static QPixmap icon( KMimeType::Ptr mimeType, const QString &uri, bool binary = false );
+    static QPixmap icon(KMimeType::Ptr mimeType, const QString &uri, bool binary = false);
     QPixmap icon() const;
 
     void readAttachment();
 
-  private:
+private:
     KCalCore::Attachment::Ptr mAttachment;
     QString mSaveUri;
 };

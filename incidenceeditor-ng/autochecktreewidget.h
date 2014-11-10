@@ -23,7 +23,8 @@
 
 #include <QTreeWidget>
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 /**
   A tree widget which supports auto selecting child items, when clicking
@@ -36,18 +37,18 @@ namespace IncidenceEditorNG {
 */
 class INCIDENCEEDITORS_NG_EXPORT AutoCheckTreeWidget : public QTreeWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  Q_PROPERTY( bool autoCheckChildren READ autoCheckChildren WRITE setAutoCheckChildren )
+    Q_PROPERTY(bool autoCheckChildren READ autoCheckChildren WRITE setAutoCheckChildren)
 
-  Q_PROPERTY( bool autoCheck READ autoCheck WRITE setAutoCheck )
+    Q_PROPERTY(bool autoCheck READ autoCheck WRITE setAutoCheck)
 
-  public:
+public:
     /**
       Default constructor. The default behavior is like a QTreeWidget, so you
       have to activate the autoCheckChildren property manually.
     */
-    explicit AutoCheckTreeWidget( QWidget *parent = 0 );
+    explicit AutoCheckTreeWidget(QWidget *parent = 0);
 
     ~AutoCheckTreeWidget();
 
@@ -57,7 +58,7 @@ class INCIDENCEEDITORS_NG_EXPORT AutoCheckTreeWidget : public QTreeWidget
       @param path The path
       @returns a item which is represented by the path, if available.
     */
-    QTreeWidgetItem *itemByPath( const QStringList &path ) const;
+    QTreeWidgetItem *itemByPath(const QStringList &path) const;
 
     /**
       Returns a path by a given item as QStringList.
@@ -65,7 +66,7 @@ class INCIDENCEEDITORS_NG_EXPORT AutoCheckTreeWidget : public QTreeWidget
       @param item The item
       @returns a string list which is the represented path of the item.
     */
-    QStringList pathByItem( QTreeWidgetItem *item ) const;
+    QStringList pathByItem(QTreeWidgetItem *item) const;
 
     /**
       @returns whether autoCheckChildren is enabled or not.
@@ -79,7 +80,7 @@ class INCIDENCEEDITORS_NG_EXPORT AutoCheckTreeWidget : public QTreeWidget
       @param autoCheckChildren if true, children of items are auto checked or
                                not, otherwise. Default value is false.
     */
-    void setAutoCheckChildren( bool autoCheckChildren );
+    void setAutoCheckChildren(bool autoCheckChildren);
 
     /**
       @returns whether newly added items have checkboxes by default.
@@ -93,17 +94,17 @@ class INCIDENCEEDITORS_NG_EXPORT AutoCheckTreeWidget : public QTreeWidget
       @param autoCheck if true, newly added items have unchecked checkboxes
                        by default, otherwise not. Default value is true.
     */
-    void setAutoCheck( bool autoCheck );
+    void setAutoCheck(bool autoCheck);
 
-  protected:
-    QTreeWidgetItem *findItem( QTreeWidgetItem *parent, const QString &text ) const;
+protected:
+    QTreeWidgetItem *findItem(QTreeWidgetItem *parent, const QString &text) const;
 
-  protected Q_SLOTS:
-    void slotRowsInserted( const QModelIndex &parent, int start, int end );
-    void slotDataChanged( const QModelIndex &topLeft,
-                          const QModelIndex &bottomRight );
+protected Q_SLOTS:
+    void slotRowsInserted(const QModelIndex &parent, int start, int end);
+    void slotDataChanged(const QModelIndex &topLeft,
+                         const QModelIndex &bottomRight);
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private *const d;

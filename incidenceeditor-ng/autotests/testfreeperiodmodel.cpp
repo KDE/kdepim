@@ -25,63 +25,62 @@
 #include <KCalCore/Period>
 #include <KCalCore/Duration>
 
-
 #include <qtest.h>
 
-QTEST_MAIN( FreePeriodModelTest )
+QTEST_MAIN(FreePeriodModelTest)
 using namespace IncidenceEditorNG;
 
 void FreePeriodModelTest::testModelValidity()
 {
-  FreePeriodModel * model = new FreePeriodModel( this );
-  new ModelTest( model, this );
+    FreePeriodModel *model = new FreePeriodModel(this);
+    new ModelTest(model, this);
 
-  const KDateTime dt1( QDate( 2010, 7, 24 ), QTime( 7, 0, 0 ), KDateTime::UTC );
-  const KDateTime dt2( QDate( 2010, 7, 24 ), QTime( 10, 0, 0 ), KDateTime::UTC );
+    const KDateTime dt1(QDate(2010, 7, 24), QTime(7, 0, 0), KDateTime::UTC);
+    const KDateTime dt2(QDate(2010, 7, 24), QTime(10, 0, 0), KDateTime::UTC);
 
-  KCalCore::Period::List list;
+    KCalCore::Period::List list;
 
-  list << KCalCore::Period( dt1, KCalCore::Duration( 60 * 60 ) );
-  list << KCalCore::Period( dt2, KCalCore::Duration( 60 * 60 ) );
+    list << KCalCore::Period(dt1, KCalCore::Duration(60 * 60));
+    list << KCalCore::Period(dt2, KCalCore::Duration(60 * 60));
 
-  QVERIFY( model->rowCount() == 0 );
-  model->slotNewFreePeriods( list );
-  QCOMPARE( model->rowCount(), 2 );
+    QVERIFY(model->rowCount() == 0);
+    model->slotNewFreePeriods(list);
+    QCOMPARE(model->rowCount(), 2);
 }
 
 void FreePeriodModelTest::testSplitByDay()
 {
-  FreePeriodModel * model = new FreePeriodModel( this );
-  new ModelTest( model, this );
+    FreePeriodModel *model = new FreePeriodModel(this);
+    new ModelTest(model, this);
 
-  const KDateTime startDt( QDate( 2010, 7, 24 ), QTime( 8, 0, 0 ), KDateTime::UTC );
-  const KDateTime endDt( QDate( 2010, 7, 25 ), QTime( 8, 0, 0 ), KDateTime::UTC );
+    const KDateTime startDt(QDate(2010, 7, 24), QTime(8, 0, 0), KDateTime::UTC);
+    const KDateTime endDt(QDate(2010, 7, 25), QTime(8, 0, 0), KDateTime::UTC);
 
-  KCalCore::Period::List list;
+    KCalCore::Period::List list;
 
-  // This period goes from 8am on the 24th to 8am on the 25th
-  list << KCalCore::Period( startDt, endDt );
+    // This period goes from 8am on the 24th to 8am on the 25th
+    list << KCalCore::Period(startDt, endDt);
 
-  QVERIFY( model->rowCount() == 0 );
+    QVERIFY(model->rowCount() == 0);
 
-  // as part of adding the new periods
-  // the model should split the above period into two
-  // one from 8am-12 on the 24th, and the second from 00-08 on the 25th
-  model->slotNewFreePeriods( list );
+    // as part of adding the new periods
+    // the model should split the above period into two
+    // one from 8am-12 on the 24th, and the second from 00-08 on the 25th
+    model->slotNewFreePeriods(list);
 
-  const KDateTime endPeriod1( QDate( 2010, 7, 24 ), QTime( 23, 59, 59, 999 ), KDateTime::UTC );
-  const KDateTime startPeriod2( QDate( 2010, 7, 25 ), QTime( 0, 0, 0, 0 ), KDateTime::UTC );
+    const KDateTime endPeriod1(QDate(2010, 7, 24), QTime(23, 59, 59, 999), KDateTime::UTC);
+    const KDateTime startPeriod2(QDate(2010, 7, 25), QTime(0, 0, 0, 0), KDateTime::UTC);
 
-  QModelIndex index = model->index( 0, 0 );
-  KCalCore::Period period1 =
-    model->data( index, FreePeriodModel::PeriodRole ).value<KCalCore::Period>();
-  index = model->index( 1, 0 );
-  KCalCore::Period period2 =
-    model->data( index, FreePeriodModel::PeriodRole ).value<KCalCore::Period>();
+    QModelIndex index = model->index(0, 0);
+    KCalCore::Period period1 =
+        model->data(index, FreePeriodModel::PeriodRole).value<KCalCore::Period>();
+    index = model->index(1, 0);
+    KCalCore::Period period2 =
+        model->data(index, FreePeriodModel::PeriodRole).value<KCalCore::Period>();
 
-  QCOMPARE( period1.start(), startDt );
-  QCOMPARE( period1.end(), endPeriod1 );
-  QCOMPARE( period2.start(), startPeriod2 );
-  QCOMPARE( period2.end(), endDt );
+    QCOMPARE(period1.start(), startDt);
+    QCOMPARE(period1.end(), endPeriod1);
+    QCOMPARE(period2.start(), startPeriod2);
+    QCOMPARE(period2.end(), endDt);
 }
 

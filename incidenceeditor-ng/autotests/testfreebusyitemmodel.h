@@ -24,8 +24,8 @@
 
 class FreeBusyItemModelTest: public QObject
 {
-  Q_OBJECT
-  private Q_SLOTS:
+    Q_OBJECT
+private Q_SLOTS:
     void testModelValidity();
     void testModelValidity2();
     void testInsertFreeBusy();

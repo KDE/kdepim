@@ -27,7 +27,8 @@
 #include <QAbstractItemModel>
 #include <QTimer>
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 class ItemPrivateData;
 
@@ -40,34 +41,34 @@ class ItemPrivateData;
  */
 class INCIDENCEEDITORS_NG_EXPORT FreeBusyItemModel : public QAbstractItemModel
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     enum Roles {
         AttendeeRole = Qt::UserRole,
         FreeBusyRole,
         FreeBusyPeriodRole
     };
 
-    explicit FreeBusyItemModel( QObject *parent = 0 );
+    explicit FreeBusyItemModel(QObject *parent = 0);
     virtual ~FreeBusyItemModel();
 
-    virtual QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
-    virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const;
-    virtual int columnCount( const QModelIndex &parent = QModelIndex() ) const;
-    virtual QModelIndex index( int row, int column = 0,
-                               const QModelIndex &parent = QModelIndex() ) const;
-    virtual QModelIndex parent( const QModelIndex &child ) const;
-    virtual QVariant headerData( int section, Qt::Orientation orientation,
-                                 int role = Qt::DisplayRole ) const;
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual QModelIndex index(int row, int column = 0,
+                              const QModelIndex &parent = QModelIndex()) const;
+    virtual QModelIndex parent(const QModelIndex &child) const;
+    virtual QVariant headerData(int section, Qt::Orientation orientation,
+                                int role = Qt::DisplayRole) const;
 
-    void addItem( const FreeBusyItem::Ptr &freebusy );
+    void addItem(const FreeBusyItem::Ptr &freebusy);
 
     void clear();
-    void removeAttendee( const KCalCore::Attendee::Ptr &attendee );
-    void removeItem( const FreeBusyItem::Ptr &freebusy );
-    void removeRow( int row );
+    void removeAttendee(const KCalCore::Attendee::Ptr &attendee);
+    void removeItem(const FreeBusyItem::Ptr &freebusy);
+    void removeRow(int row);
 
-    bool containsAttendee( const KCalCore::Attendee::Ptr &attendee );
+    bool containsAttendee(const KCalCore::Attendee::Ptr &attendee);
 
     /**
      * Queues a reload of free/busy data.
@@ -86,22 +87,22 @@ class INCIDENCEEDITORS_NG_EXPORT FreeBusyItemModel : public QAbstractItemModel
      */
     void reload();
 
-  public slots:
-    void slotInsertFreeBusy( const KCalCore::FreeBusy::Ptr &fb, const QString &email );
+public slots:
+    void slotInsertFreeBusy(const KCalCore::FreeBusy::Ptr &fb, const QString &email);
 
-  protected:
-    void timerEvent( QTimerEvent * );
+protected:
+    void timerEvent(QTimerEvent *);
 
-  private slots:
+private slots:
     // Force the download of FB information
     void manualReload();
     // Only download FB if the auto-download option is set in config
     void autoReload();
 
-  private:
-    void setFreeBusyPeriods( const QModelIndex &parent,
-                             const KCalCore::FreeBusyPeriod::List &list );
-    void updateFreeBusyData( const FreeBusyItem::Ptr & );
+private:
+    void setFreeBusyPeriods(const QModelIndex &parent,
+                            const KCalCore::FreeBusyPeriod::List &list);
+    void updateFreeBusyData(const FreeBusyItem::Ptr &);
 
     QTimer mReloadTimer;
     bool mForceDownload;

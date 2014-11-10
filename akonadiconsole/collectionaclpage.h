@@ -26,14 +26,14 @@
 
 class CollectionAclPage : public Akonadi::CollectionPropertiesPage
 {
-  Q_OBJECT
-  public:
-    explicit CollectionAclPage( QWidget *parent = 0 );
+    Q_OBJECT
+public:
+    explicit CollectionAclPage(QWidget *parent = 0);
 
-    void load( const Akonadi::Collection & col );
-    void save( Akonadi::Collection & col );
+    void load(const Akonadi::Collection &col);
+    void save(Akonadi::Collection &col);
 
-  private:
+private:
     Ui::CollectionAclPage ui;
 };
 

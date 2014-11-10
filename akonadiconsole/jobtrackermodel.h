@@ -26,28 +26,28 @@
 
 class JobTrackerModel : public QAbstractItemModel
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  JobTrackerModel( const char *name, QObject *parent );
-  virtual ~JobTrackerModel();
+    JobTrackerModel(const char *name, QObject *parent);
+    virtual ~JobTrackerModel();
 
-  /* QAIM API */
-  virtual QModelIndex index(int, int, const QModelIndex&) const;
-  virtual QModelIndex parent(const QModelIndex&) const;
-  virtual int rowCount(const QModelIndex&) const;
-  virtual int columnCount(const QModelIndex&) const;
-  virtual QVariant data(const QModelIndex&, int role = Qt::DisplayRole) const;
-  virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
-  bool isEnabled() const;
+    /* QAIM API */
+    virtual QModelIndex index(int, int, const QModelIndex &) const;
+    virtual QModelIndex parent(const QModelIndex &) const;
+    virtual int rowCount(const QModelIndex &) const;
+    virtual int columnCount(const QModelIndex &) const;
+    virtual QVariant data(const QModelIndex &, int role = Qt::DisplayRole) const;
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+    bool isEnabled() const;
 public slots:
-  void resetTracker();
-  void jobsAdded( const QList< QPair<int, int> >& );
-  void jobsUpdated( const QList< QPair<int, int> >& );
-  void setEnabled(bool);
+    void resetTracker();
+    void jobsAdded(const QList< QPair<int, int> > &);
+    void jobsUpdated(const QList< QPair<int, int> > &);
+    void setEnabled(bool);
 
 private:
-  class Private;
-  Private * const d;
+    class Private;
+    Private *const d;
 
 };
 

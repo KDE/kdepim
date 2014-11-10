@@ -26,15 +26,15 @@ class QSqlQueryModel;
 
 class DbConsole : public QWidget
 {
-  Q_OBJECT
-  public:
-    explicit DbConsole( QWidget *parent = 0 );
+    Q_OBJECT
+public:
+    explicit DbConsole(QWidget *parent = 0);
 
-  private slots:
+private slots:
     void execClicked();
     void copyCell();
 
-  private:
+private:
     Ui::DbConsole ui;
     QSqlQueryModel *mQueryModel;
 };

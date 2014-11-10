@@ -33,16 +33,19 @@ class QResizeEvent;
 
 class AgentWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit AgentWidget( QWidget *parent = 0 );
-    Akonadi::AgentInstanceWidget *widget() const { return ui.instanceWidget; }
+public:
+    explicit AgentWidget(QWidget *parent = 0);
+    Akonadi::AgentInstanceWidget *widget() const
+    {
+        return ui.instanceWidget;
+    }
 
 protected:
-    void resizeEvent( QResizeEvent *event );
+    void resizeEvent(QResizeEvent *event);
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void addAgent();
     void removeAgent();
     void configureAgent();
@@ -55,15 +58,15 @@ protected:
     void abortAgent();
     void restartAgent();
     void cloneAgent();
-    void cloneAgent( KJob *job );
+    void cloneAgent(KJob *job);
 
     void currentChanged();
-    void showContextMenu( const QPoint &pos );
+    void showContextMenu(const QPoint &pos);
 
     void selectionChanged();
-    void slotDataChanged( const QModelIndex&, const QModelIndex& );
+    void slotDataChanged(const QModelIndex &, const QModelIndex &);
 
-  private:
+private:
     Ui::AgentWidget ui;
     QMenu *mSyncMenu, *mConfigMenu;
     Akonadi::AgentInstance mCloneSource;

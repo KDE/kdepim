@@ -28,7 +28,8 @@ class TestIndividualMailDialog : public QObject
 {
     Q_OBJECT
 private slots:
-    void testDialog() {
+    void testDialog()
+    {
         KCalCore::Attendee::List attendees;
         KGuiItem buttonYes = KGuiItem(QLatin1String("Send Email"));
         KGuiItem buttonNo = KGuiItem(QLatin1String("Do not send"));
@@ -62,9 +63,9 @@ private slots:
         QCOMPARE(dialog.editAttendees().count(), 1);
         QCOMPARE(dialog.updateAttendees().count(), 2);
         QCOMPARE(dialog.editAttendees()[0], attendee1);
-   }
- };
+    }
+};
 
-QTEST_MAIN( TestIndividualMailDialog )
+QTEST_MAIN(TestIndividualMailDialog)
 
 #include "testindividualmaildialog.moc"

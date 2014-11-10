@@ -30,7 +30,8 @@
 
 #include <QDialog>
 #include <KDateTime>
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 class FreePeriodModel;
 class ConflictResolver;
@@ -38,35 +39,35 @@ class VisualFreeBusyWidget;
 
 class INCIDENCEEDITORS_NG_EXPORT SchedulingDialog : public QDialog, private Ui_Dialog
 {
-  Q_OBJECT
-  public:
-    SchedulingDialog( const QDate &startDate, const QTime &startTime, int duration,
-                      ConflictResolver *resolver, QWidget *parent );
+    Q_OBJECT
+public:
+    SchedulingDialog(const QDate &startDate, const QTime &startTime, int duration,
+                     ConflictResolver *resolver, QWidget *parent);
     ~SchedulingDialog();
 
     QDate selectedStartDate() const;
     QTime selectedStartTime() const;
 
-  public slots:
-    void slotUpdateIncidenceStartEnd( const KDateTime &startDateTime,
-                                      const KDateTime &endDateTime );
+public slots:
+    void slotUpdateIncidenceStartEnd(const KDateTime &startDateTime,
+                                     const KDateTime &endDateTime);
 
-  signals:
-    void startDateChanged( const QDate &newDate );
-    void startTimeChanged( const QTime &newTime );
-    void endDateChanged( const QDate &newDate );
-    void endTimeChanged( const QTime &newTime );
+signals:
+    void startDateChanged(const QDate &newDate);
+    void startTimeChanged(const QTime &newTime);
+    void endDateChanged(const QDate &newDate);
+    void endTimeChanged(const QTime &newTime);
 
-  private slots:
+private slots:
     void slotWeekdaysChanged();
     void slotMandatoryRolesChanged();
-    void slotStartDateChanged( const QDate &newDate );
+    void slotStartDateChanged(const QDate &newDate);
 
-    void slotRowSelectionChanged( const QModelIndex &current, const QModelIndex &previous );
-    void slotSetEndTimeLabel( const QTime &startTime );
+    void slotRowSelectionChanged(const QModelIndex &current, const QModelIndex &previous);
+    void slotSetEndTimeLabel(const QTime &startTime);
 
-  private:
-    void updateWeekDays( const QDate &oldDate );
+private:
+    void updateWeekDays(const QDate &oldDate);
     void fillCombos();
 
     QDate mStDate;

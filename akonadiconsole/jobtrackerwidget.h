@@ -28,20 +28,20 @@ class QModelIndex;
 class QFile;
 class JobTrackerWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit JobTrackerWidget( const char *name, QWidget *parent, const QString& checkboxText );
+public:
+    explicit JobTrackerWidget(const char *name, QWidget *parent, const QString &checkboxText);
     ~JobTrackerWidget();
-  private slots:
-    void contextMenu(const QPoint& pos);
+private slots:
+    void contextMenu(const QPoint &pos);
     void slotSaveToFile();
 
-  private:
-    void writeRows( const QModelIndex &parent, QFile &file, int indentLevel );
+private:
+    void writeRows(const QModelIndex &parent, QFile &file, int indentLevel);
 
     class Private;
-    Private* const d;
+    Private *const d;
 };
 
 #endif

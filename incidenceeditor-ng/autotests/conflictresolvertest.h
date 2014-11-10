@@ -28,14 +28,15 @@
 
 #include <QObject>
 
-namespace IncidenceEditorNG {
-  class ConflictResolver;
+namespace IncidenceEditorNG
+{
+class ConflictResolver;
 }
 
 class ConflictResolverTest : public QObject
 {
-  Q_OBJECT
-  private slots:
+    Q_OBJECT
+private slots:
     void initTestCase();
     void init();
     void cleanup();
@@ -47,10 +48,10 @@ class ConflictResolverTest : public QObject
     void testPeriodIsLargerThenTimeframe();
     void testPeriodEndsAtSametimeAsTimeframe();
 
-  private:
+private:
     void insertAttendees();
-    void addAttendee( const QString &email, const KCalCore::FreeBusy::Ptr &fb,
-                      KCalCore::Attendee::Role role = KCalCore::Attendee::ReqParticipant ) ;
+    void addAttendee(const QString &email, const KCalCore::FreeBusy::Ptr &fb,
+                     KCalCore::Attendee::Role role = KCalCore::Attendee::ReqParticipant) ;
     QList<IncidenceEditorNG::FreeBusyItem::Ptr> attendees;
     QWidget *parent;
     IncidenceEditorNG::ConflictResolver *resolver;

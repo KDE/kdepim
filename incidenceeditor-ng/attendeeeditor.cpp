@@ -24,80 +24,80 @@
 
 using namespace IncidenceEditorNG;
 
-AttendeeEditor::AttendeeEditor( QWidget *parent )
-  : MultiplyingLineEditor( new AttendeeLineFactory( parent ), parent )
+AttendeeEditor::AttendeeEditor(QWidget *parent)
+    : MultiplyingLineEditor(new AttendeeLineFactory(parent), parent)
 {
-  connect( this, SIGNAL(lineAdded(KPIM::MultiplyingLine*)),
-           SLOT(slotLineAdded(KPIM::MultiplyingLine*)) );
+    connect(this, SIGNAL(lineAdded(KPIM::MultiplyingLine*)),
+            SLOT(slotLineAdded(KPIM::MultiplyingLine*)));
 
-  addData();
+    addData();
 }
 
-void AttendeeEditor::slotLineAdded( KPIM::MultiplyingLine *line )
+void AttendeeEditor::slotLineAdded(KPIM::MultiplyingLine *line)
 {
-  AttendeeLine *att = qobject_cast<AttendeeLine*>( line );
-  if( !att ) {
-    return;
-  }
+    AttendeeLine *att = qobject_cast<AttendeeLine *>(line);
+    if (!att) {
+        return;
+    }
 
-  connect( att, SIGNAL(changed()), SLOT(slotCalculateTotal()) );
-  connect( att, SIGNAL(changed(KCalCore::Attendee::Ptr,KCalCore::Attendee::Ptr)),
-           SIGNAL(changed(KCalCore::Attendee::Ptr,KCalCore::Attendee::Ptr)) );
-  connect( att, SIGNAL(editingFinished(KPIM::MultiplyingLine*)),
-           SIGNAL(editingFinished(KPIM::MultiplyingLine*)) );
+    connect(att, SIGNAL(changed()), SLOT(slotCalculateTotal()));
+    connect(att, SIGNAL(changed(KCalCore::Attendee::Ptr,KCalCore::Attendee::Ptr)),
+            SIGNAL(changed(KCalCore::Attendee::Ptr,KCalCore::Attendee::Ptr)));
+    connect(att, SIGNAL(editingFinished(KPIM::MultiplyingLine*)),
+            SIGNAL(editingFinished(KPIM::MultiplyingLine*)));
 }
 
 void AttendeeEditor::slotCalculateTotal()
 {
-  int empty = 0;
-  int count = 0;
+    int empty = 0;
+    int count = 0;
 
-  foreach ( KPIM::MultiplyingLine *line, lines() ) {
-    AttendeeLine *att = qobject_cast<AttendeeLine*>( line );
-    if ( att ) {
-      if ( att->isEmpty() ) {
-        ++empty;
-      } else {
-        ++count;
-      }
+    foreach (KPIM::MultiplyingLine *line, lines()) {
+        AttendeeLine *att = qobject_cast<AttendeeLine *>(line);
+        if (att) {
+            if (att->isEmpty()) {
+                ++empty;
+            } else {
+                ++count;
+            }
+        }
     }
-  }
-  emit countChanged( count );
-  // We always want at least one empty line
-  if ( empty == 0 ) {
-    addData();
-  }
+    emit countChanged(count);
+    // We always want at least one empty line
+    if (empty == 0) {
+        addData();
+    }
 }
 
 AttendeeData::List AttendeeEditor::attendees() const
 {
-  QList<KPIM::MultiplyingLineData::Ptr> dataList = allData();
-  AttendeeData::List attList;
-  //qDebug() << "num attendees:" << dataList.size();
-  foreach ( KPIM::MultiplyingLineData::Ptr datum, dataList ) {
-    AttendeeData::Ptr att = qSharedPointerDynamicCast<AttendeeData>( datum );
-    if ( !att ) {
-      continue;
+    QList<KPIM::MultiplyingLineData::Ptr> dataList = allData();
+    AttendeeData::List attList;
+    //qDebug() << "num attendees:" << dataList.size();
+    foreach (KPIM::MultiplyingLineData::Ptr datum, dataList) {
+        AttendeeData::Ptr att = qSharedPointerDynamicCast<AttendeeData>(datum);
+        if (!att) {
+            continue;
+        }
+        attList << att;
     }
-    attList << att;
-  }
-  return attList;
+    return attList;
 }
 
-void AttendeeEditor::addAttendee( const KCalCore::Attendee::Ptr &attendee )
+void AttendeeEditor::addAttendee(const KCalCore::Attendee::Ptr &attendee)
 {
-  addData( AttendeeData::Ptr( new AttendeeData( attendee ) ) );
+    addData(AttendeeData::Ptr(new AttendeeData(attendee)));
 }
 
-void AttendeeEditor::removeAttendee( const AttendeeData::Ptr &attendee )
+void AttendeeEditor::removeAttendee(const AttendeeData::Ptr &attendee)
 {
-  removeData( attendee );
+    removeData(attendee);
 }
 
-void AttendeeEditor::setActions( AttendeeLine::AttendeeActions actions )
+void AttendeeEditor::setActions(AttendeeLine::AttendeeActions actions)
 {
-  foreach ( KPIM::MultiplyingLine *line, lines() ) {
-    AttendeeLine *att = qobject_cast<AttendeeLine*>( line );
-    att->setActions( actions );
-  }
+    foreach (KPIM::MultiplyingLine *line, lines()) {
+        AttendeeLine *att = qobject_cast<AttendeeLine *>(line);
+        att->setActions(actions);
+    }
 }

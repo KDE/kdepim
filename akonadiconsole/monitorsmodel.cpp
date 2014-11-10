@@ -20,111 +20,108 @@
 #include "monitorsmodel.h"
 #include "monitoritem.h"
 
-
-
 #include <AkonadiCore/servermanager.h>
 
 #include <QtDBus/QDBusConnection>
 
-
-MonitorsModel::MonitorsModel(QObject* parent):
-  QAbstractItemModel( parent ), mManager( 0 )
+MonitorsModel::MonitorsModel(QObject *parent):
+    QAbstractItemModel(parent), mManager(0)
 {
-  QTimer::singleShot( 0, this, SLOT(init()) );
+    QTimer::singleShot(0, this, SLOT(init()));
 }
 
 MonitorsModel::~MonitorsModel()
 {
-  qDeleteAll( mData );
-  mData.clear();
+    qDeleteAll(mData);
+    mData.clear();
 }
 
 void MonitorsModel::init()
 {
-  qDeleteAll( mData );
-  mData.clear();
+    qDeleteAll(mData);
+    mData.clear();
 
-  QString service = QLatin1String( "org.freedesktop.Akonadi" );
-  if ( Akonadi::ServerManager::hasInstanceIdentifier() ) {
-    service += "." + Akonadi::ServerManager::instanceIdentifier();
-  }
-
-  mManager = new org::freedesktop::Akonadi::NotificationManager( service,
-    QLatin1String( "/notifications" ), QDBusConnection::sessionBus(), this );
-  if ( !mManager ) {
-    qWarning() << "Failed to connect to org.freedesktop.Akonadi.NotificationManager";
-    return;
-  }
-
-  const QStringList subscribers = mManager->subscribers();
-  Q_FOREACH ( const QString &subscriber, subscribers ) {
-    slotSubscriberSubscribed( subscriber );
-  }
-
-  connect(mManager, &org::freedesktop::Akonadi::NotificationManager::subscribed, this, &MonitorsModel::slotSubscriberSubscribed);
-  connect(mManager, &org::freedesktop::Akonadi::NotificationManager::unsubscribed, this, &MonitorsModel::slotSubscriberUnsubscribed);
-}
-
-void MonitorsModel::slotSubscriberSubscribed( const QString &identifier )
-{
-  // Avoid akonadiconsole's Monitors being duplicated on startup
-  if ( mData.contains( identifier ) ) {
-    return;
-  }
-
-  MonitorItem *item = new MonitorItem( identifier, this );
-  connect(item, &MonitorItem::changed, this, &MonitorsModel::slotItemChanged);
-  beginInsertRows( QModelIndex(), mData.count(), mData.count() );
-  mData.insert( identifier, item );
-  endInsertRows();
-}
-
-void MonitorsModel::slotSubscriberUnsubscribed( const QString &identifier )
-{
-  if ( !mData.contains( identifier) ) {
-    return;
-  }
-
-  const int row = mData.uniqueKeys().indexOf( identifier );
-  beginRemoveRows( QModelIndex(), row, row );
-  mData.take( identifier )->deleteLater();
-  endRemoveRows();
-}
-
-void MonitorsModel::slotItemChanged( MonitorsModel::Column column )
-{
-  MonitorItem *item = qobject_cast<MonitorItem*>( sender() );
-  const QModelIndex idx = index( mData.uniqueKeys().indexOf( item->identifier ), static_cast<int>( column ) );
-  Q_EMIT dataChanged( idx, idx );
-}
-
-QVariant MonitorsModel::headerData( int section, Qt::Orientation orientation, int role ) const
-{
-  if ( role == Qt::DisplayRole ) {
-    if ( orientation == Qt::Horizontal ) {
-      switch ( section ) {
-        case 0: return QLatin1String( "Subscriber" );
-        case 1: return QLatin1String( "All Monitored" );
-        case 2: return QLatin1String( "Monitored Collections" );
-        case 3: return QLatin1String( "Monitored Items" );
-        case 4: return QLatin1String( "Monitored Resources" );
-        case 5: return QLatin1String( "Monitored Mime Types" );
-        case 6: return QLatin1String( "Ignored Sessions" );
-      }
+    QString service = QLatin1String("org.freedesktop.Akonadi");
+    if (Akonadi::ServerManager::hasInstanceIdentifier()) {
+        service += "." + Akonadi::ServerManager::instanceIdentifier();
     }
-  }
 
-  return QVariant();
+    mManager = new org::freedesktop::Akonadi::NotificationManager(service,
+            QLatin1String("/notifications"), QDBusConnection::sessionBus(), this);
+    if (!mManager) {
+        qWarning() << "Failed to connect to org.freedesktop.Akonadi.NotificationManager";
+        return;
+    }
+
+    const QStringList subscribers = mManager->subscribers();
+    Q_FOREACH (const QString &subscriber, subscribers) {
+        slotSubscriberSubscribed(subscriber);
+    }
+
+    connect(mManager, &org::freedesktop::Akonadi::NotificationManager::subscribed, this, &MonitorsModel::slotSubscriberSubscribed);
+    connect(mManager, &org::freedesktop::Akonadi::NotificationManager::unsubscribed, this, &MonitorsModel::slotSubscriberUnsubscribed);
 }
 
-QVariant MonitorsModel::data( const QModelIndex &index, int role ) const
+void MonitorsModel::slotSubscriberSubscribed(const QString &identifier)
 {
-  if ( role != Qt::DisplayRole ) {
-    return QVariant();
-  }
+    // Avoid akonadiconsole's Monitors being duplicated on startup
+    if (mData.contains(identifier)) {
+        return;
+    }
 
-  MonitorItem *item = static_cast<MonitorItem*>( index.internalPointer() );
-  switch ( index.column() ) {
+    MonitorItem *item = new MonitorItem(identifier, this);
+    connect(item, &MonitorItem::changed, this, &MonitorsModel::slotItemChanged);
+    beginInsertRows(QModelIndex(), mData.count(), mData.count());
+    mData.insert(identifier, item);
+    endInsertRows();
+}
+
+void MonitorsModel::slotSubscriberUnsubscribed(const QString &identifier)
+{
+    if (!mData.contains(identifier)) {
+        return;
+    }
+
+    const int row = mData.uniqueKeys().indexOf(identifier);
+    beginRemoveRows(QModelIndex(), row, row);
+    mData.take(identifier)->deleteLater();
+    endRemoveRows();
+}
+
+void MonitorsModel::slotItemChanged(MonitorsModel::Column column)
+{
+    MonitorItem *item = qobject_cast<MonitorItem *>(sender());
+    const QModelIndex idx = index(mData.uniqueKeys().indexOf(item->identifier), static_cast<int>(column));
+    Q_EMIT dataChanged(idx, idx);
+}
+
+QVariant MonitorsModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (role == Qt::DisplayRole) {
+        if (orientation == Qt::Horizontal) {
+            switch (section) {
+            case 0: return QLatin1String("Subscriber");
+            case 1: return QLatin1String("All Monitored");
+            case 2: return QLatin1String("Monitored Collections");
+            case 3: return QLatin1String("Monitored Items");
+            case 4: return QLatin1String("Monitored Resources");
+            case 5: return QLatin1String("Monitored Mime Types");
+            case 6: return QLatin1String("Ignored Sessions");
+            }
+        }
+    }
+
+    return QVariant();
+}
+
+QVariant MonitorsModel::data(const QModelIndex &index, int role) const
+{
+    if (role != Qt::DisplayRole) {
+        return QVariant();
+    }
+
+    MonitorItem *item = static_cast<MonitorItem *>(index.internalPointer());
+    switch (index.column()) {
     case IdentifierColumn: return item->identifier;
     case IsAllMonitoredColumn: return item->allMonitored;
     case MonitoredCollectionsColumn: return item->monitoredCollections;
@@ -132,39 +129,39 @@ QVariant MonitorsModel::data( const QModelIndex &index, int role ) const
     case MonitoredResourcesColumn: return item->monitoredResources;
     case MonitoredMimeTypesColumn: return item->monitoredMimeTypes;
     case IgnoredSessionsColumn: return item->ignoredSessions;
-  }
+    }
 
-  return QVariant();
+    return QVariant();
 }
 
-int MonitorsModel::columnCount( const QModelIndex &parent ) const
+int MonitorsModel::columnCount(const QModelIndex &parent) const
 {
-  return ColumnsCount;
+    return ColumnsCount;
 }
 
-int MonitorsModel::rowCount( const QModelIndex &parent ) const
+int MonitorsModel::rowCount(const QModelIndex &parent) const
 {
-  if ( parent.isValid() ) {
-    return 0;
-  }
+    if (parent.isValid()) {
+        return 0;
+    }
 
-  return mData.count();
+    return mData.count();
 }
 
-QModelIndex MonitorsModel::parent( const QModelIndex &child ) const
+QModelIndex MonitorsModel::parent(const QModelIndex &child) const
 {
-  Q_UNUSED( child );
+    Q_UNUSED(child);
 
-  return QModelIndex();
-}
-
-QModelIndex MonitorsModel::index( int row, int column, const QModelIndex &parent ) const
-{
-  if ( row >= mData.uniqueKeys().count() ) {
     return QModelIndex();
-  }
+}
 
-  const QString key = mData.uniqueKeys().at( row );
-  return createIndex( row, column, mData.value( key ) );
+QModelIndex MonitorsModel::index(int row, int column, const QModelIndex &parent) const
+{
+    if (row >= mData.uniqueKeys().count()) {
+        return QModelIndex();
+    }
+
+    const QString key = mData.uniqueKeys().at(row);
+    return createIndex(row, column, mData.value(key));
 }
 

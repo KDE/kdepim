@@ -34,7 +34,8 @@
 
 class KConfigSkeleton;
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 /**
  * Configuration details. An application can inherit from this class
@@ -43,12 +44,12 @@ namespace IncidenceEditorNG {
  */
 class INCIDENCEEDITORS_NG_EXPORT EditorConfig
 {
-  public:
+public:
     EditorConfig();
     virtual ~EditorConfig();
 
     static EditorConfig *instance();
-    static void setEditorConfig( EditorConfig * );
+    static void setEditorConfig(EditorConfig *);
 
     virtual KConfigSkeleton *config() const = 0;
 
@@ -59,7 +60,7 @@ class INCIDENCEEDITORS_NG_EXPORT EditorConfig
     virtual QString email() const;
 
     /// Return true if the given email belongs to the user.
-    virtual bool thatIsMe( const QString &email ) const;
+    virtual bool thatIsMe(const QString &email) const;
 
     /// Returns all email addresses for the user.
     virtual QStringList allEmails() const;
@@ -71,21 +72,46 @@ class INCIDENCEEDITORS_NG_EXPORT EditorConfig
     virtual bool showTimeZoneSelectorInIncidenceEditor() const;
 
     virtual QDateTime defaultDuration() const
-    { return QDateTime( QDate( 1752, 1, 1 ), QTime( 2, 0 ) ); }
+    {
+        return QDateTime(QDate(1752, 1, 1), QTime(2, 0));
+    }
 
     virtual QDateTime startTime() const
-    { return QDateTime( QDate( 1752, 1, 1 ), QTime( 10, 0 ) ); }
+    {
+        return QDateTime(QDate(1752, 1, 1), QTime(10, 0));
+    }
 
-    virtual bool defaultAudioFileReminders() const { return false; }
-    virtual QUrl audioFilePath() const { return QUrl(); }
-    virtual int reminderTime() const { return 15; }
-    virtual int reminderTimeUnits() const { return 0; }
-    virtual bool defaultTodoReminders() const { return false; }
-    virtual bool defaultEventReminders() const { return false; }
-    virtual QStringList activeDesignerFields() const { return QStringList(); }
-    virtual QStringList &templates( KCalCore::IncidenceBase::IncidenceType type );
+    virtual bool defaultAudioFileReminders() const
+    {
+        return false;
+    }
+    virtual QUrl audioFilePath() const
+    {
+        return QUrl();
+    }
+    virtual int reminderTime() const
+    {
+        return 15;
+    }
+    virtual int reminderTimeUnits() const
+    {
+        return 0;
+    }
+    virtual bool defaultTodoReminders() const
+    {
+        return false;
+    }
+    virtual bool defaultEventReminders() const
+    {
+        return false;
+    }
+    virtual QStringList activeDesignerFields() const
+    {
+        return QStringList();
+    }
+    virtual QStringList &templates(KCalCore::IncidenceBase::IncidenceType type);
 
-  private:
+private:
     class Private;
     Private *const d;
 };

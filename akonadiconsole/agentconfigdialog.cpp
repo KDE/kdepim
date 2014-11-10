@@ -27,44 +27,44 @@
 #include <KGuiItem>
 #include <QVBoxLayout>
 
-AgentConfigDialog::AgentConfigDialog(QWidget* parent) :
-  QDialog(parent),
-  m_model( new AgentConfigModel( this ) )
+AgentConfigDialog::AgentConfigDialog(QWidget *parent) :
+    QDialog(parent),
+    m_model(new AgentConfigModel(this))
 {
-  QWidget *mainWidget = new QWidget(this);
-  QVBoxLayout *mainLayout = new QVBoxLayout;
-  setLayout(mainLayout);
-  mainLayout->addWidget(mainWidget);
-  ui.setupUi(mainWidget);
-  ui.propertyView->setModel( m_model );
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    ui.setupUi(mainWidget);
+    ui.propertyView->setModel(m_model);
 
-  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close|QDialogButtonBox::Apply);
-  QPushButton *user1Button = new QPushButton;
-  buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
-  QPushButton *user2Button = new QPushButton;
-  buttonBox->addButton(user2Button, QDialogButtonBox::ActionRole);
-  connect(buttonBox, &QDialogButtonBox::accepted, this, &AgentConfigDialog::accept);
-  connect(buttonBox, &QDialogButtonBox::rejected, this, &AgentConfigDialog::reject);
-  mainLayout->addWidget(buttonBox);
-  KGuiItem::assign(user1Button, KGuiItem( i18n( "Save Configuration" )));
-  KGuiItem::assign(user2Button, KGuiItem( i18n( "Refresh" )));
-  buttonBox->button(QDialogButtonBox::Apply)->setText(i18n( "Apply Configuration"  ));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close | QDialogButtonBox::Apply);
+    QPushButton *user1Button = new QPushButton;
+    buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
+    QPushButton *user2Button = new QPushButton;
+    buttonBox->addButton(user2Button, QDialogButtonBox::ActionRole);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &AgentConfigDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &AgentConfigDialog::reject);
+    mainLayout->addWidget(buttonBox);
+    KGuiItem::assign(user1Button, KGuiItem(i18n("Save Configuration")));
+    KGuiItem::assign(user2Button, KGuiItem(i18n("Refresh")));
+    buttonBox->button(QDialogButtonBox::Apply)->setText(i18n("Apply Configuration"));
 
-  setWindowTitle( i18n( "Agent Configuration" ) );
+    setWindowTitle(i18n("Agent Configuration"));
 
-  connect(buttonBox->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, &AgentConfigDialog::reconfigure);
-  connect(user1Button, &QPushButton::clicked, m_model, &AgentConfigModel::writeConfig);
-  connect(user2Button, &QPushButton::clicked, m_model, &AgentConfigModel::reload);
+    connect(buttonBox->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, &AgentConfigDialog::reconfigure);
+    connect(user1Button, &QPushButton::clicked, m_model, &AgentConfigModel::writeConfig);
+    connect(user2Button, &QPushButton::clicked, m_model, &AgentConfigModel::reload);
 }
 
-void AgentConfigDialog::setAgentInstance(const Akonadi::AgentInstance& instance)
+void AgentConfigDialog::setAgentInstance(const Akonadi::AgentInstance &instance)
 {
-  m_instance = instance;
-  m_model->setAgentInstance( instance );
+    m_instance = instance;
+    m_model->setAgentInstance(instance);
 }
 
 void AgentConfigDialog::reconfigure()
 {
-  m_instance.reconfigure();
+    m_instance.reconfigure();
 }
 

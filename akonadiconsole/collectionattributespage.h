@@ -29,19 +29,19 @@ class QStandardItemModel;
 
 class CollectionAttributePage : public Akonadi::CollectionPropertiesPage
 {
-  Q_OBJECT
-  public:
-    explicit CollectionAttributePage( QWidget *parent = 0 );
+    Q_OBJECT
+public:
+    explicit CollectionAttributePage(QWidget *parent = 0);
 
-    void load( const Akonadi::Collection & col );
-    void save( Akonadi::Collection & col );
+    void load(const Akonadi::Collection &col);
+    void save(Akonadi::Collection &col);
 
-  private slots:
+private slots:
     void addAttribute();
     void delAttribute();
-    void attributeChanged( QStandardItem *item );
+    void attributeChanged(QStandardItem *item);
 
-  private:
+private:
     Ui::CollectionAttributesPage ui;
     QStandardItemModel *mModel;
     QSet<QString> mDeleted;

@@ -30,58 +30,59 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 
-
 using namespace Akonadi;
 
 class DbAccessPrivate
 {
-  public:
+public:
     DbAccessPrivate()
     {
-      init();
+        init();
     }
 
     void init()
     {
-      const QString serverConfigFile = saveDir( "config" ) + QLatin1String("/akonadiserverrc");
-      QSettings settings( serverConfigFile, QSettings::IniFormat );
+        const QString serverConfigFile = saveDir("config") + QLatin1String("/akonadiserverrc");
+        QSettings settings(serverConfigFile, QSettings::IniFormat);
 
-      const QString driver = settings.value( "General/Driver", "QMYSQL" ).toString();
-      database = QSqlDatabase::addDatabase( driver );
-      settings.beginGroup( driver );
-      database.setHostName( settings.value( "Host", QString() ).toString() );
-      database.setDatabaseName( settings.value( "Name", "akonadi" ).toString() );
-      database.setUserName( settings.value( "User", QString() ).toString() );
-      database.setPassword( settings.value( "Password", QString() ).toString() );
-      database.setConnectOptions( settings.value( "Options", QString() ).toString() );
-      if ( !database.open() ) {
-        KMessageBox::error( 0, i18n( "Failed to connect to database: %1", database.lastError().text() ) );
-      }
+        const QString driver = settings.value("General/Driver", "QMYSQL").toString();
+        database = QSqlDatabase::addDatabase(driver);
+        settings.beginGroup(driver);
+        database.setHostName(settings.value("Host", QString()).toString());
+        database.setDatabaseName(settings.value("Name", "akonadi").toString());
+        database.setUserName(settings.value("User", QString()).toString());
+        database.setPassword(settings.value("Password", QString()).toString());
+        database.setConnectOptions(settings.value("Options", QString()).toString());
+        if (!database.open()) {
+            KMessageBox::error(0, i18n("Failed to connect to database: %1", database.lastError().text()));
+        }
     }
 
-    QString saveDir(const char* resource, const QString& relPath = QString() )
+    QString saveDir(const char *resource, const QString &relPath = QString())
     {
-      QString fullRelPath = QLatin1String("akonadi");
-      if ( ServerManager::hasInstanceIdentifier() )
-        fullRelPath += QLatin1String("/instance/") + ServerManager::instanceIdentifier();
-      if ( !relPath.isEmpty() )
-        fullRelPath += QLatin1Char('/') + relPath;
-      return XdgBaseDirs::saveDir( resource, fullRelPath );
+        QString fullRelPath = QLatin1String("akonadi");
+        if (ServerManager::hasInstanceIdentifier()) {
+            fullRelPath += QLatin1String("/instance/") + ServerManager::instanceIdentifier();
+        }
+        if (!relPath.isEmpty()) {
+            fullRelPath += QLatin1Char('/') + relPath;
+        }
+        return XdgBaseDirs::saveDir(resource, fullRelPath);
     }
 
     QSqlDatabase database;
 };
 
-Q_GLOBAL_STATIC( DbAccessPrivate, sInstance )
+Q_GLOBAL_STATIC(DbAccessPrivate, sInstance)
 QSqlDatabase DbAccess::database()
 {
-  // hack to detect database gone away error
-  QSqlQuery query( sInstance->database );
-  // prepare or exec of "SELECT 1" will only fail when we are not connected to database
-  if ( !query.prepare( QLatin1String( "SELECT 1" ) ) || !query.exec() ) {
-    sInstance->database.close();
-    QSqlDatabase::removeDatabase(sInstance->database.connectionName());
-    sInstance->init();
-  }
-  return sInstance->database;
+    // hack to detect database gone away error
+    QSqlQuery query(sInstance->database);
+    // prepare or exec of "SELECT 1" will only fail when we are not connected to database
+    if (!query.prepare(QLatin1String("SELECT 1")) || !query.exec()) {
+        sInstance->database.close();
+        QSqlDatabase::removeDatabase(sInstance->database.connectionName());
+        sInstance->init();
+    }
+    return sInstance->database;
 }

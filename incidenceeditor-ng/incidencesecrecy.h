@@ -23,28 +23,30 @@
 
 #include "incidenceeditor-ng.h"
 
-namespace Ui {
-  class EventOrTodoDesktop;
-  class EventOrTodoMore;
+namespace Ui
+{
+class EventOrTodoDesktop;
+class EventOrTodoMore;
 }
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 class INCIDENCEEDITORS_NG_EXPORT IncidenceSecrecy : public IncidenceEditor
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
 #ifdef KDEPIM_MOBILE_UI
-    explicit IncidenceSecrecy( Ui::EventOrTodoMore *ui );
+    explicit IncidenceSecrecy(Ui::EventOrTodoMore *ui);
 #else
-    explicit IncidenceSecrecy( Ui::EventOrTodoDesktop *ui );
+    explicit IncidenceSecrecy(Ui::EventOrTodoDesktop *ui);
 #endif
 
-    virtual void load( const KCalCore::Incidence::Ptr &incidence );
-    virtual void save( const KCalCore::Incidence::Ptr &incidence );
+    virtual void load(const KCalCore::Incidence::Ptr &incidence);
+    virtual void save(const KCalCore::Incidence::Ptr &incidence);
     virtual bool isDirty() const;
 
-  private:
+private:
 #ifdef KDEPIM_MOBILE_UI
     Ui::EventOrTodoMore *mUi;
 #else

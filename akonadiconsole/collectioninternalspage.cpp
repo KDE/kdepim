@@ -24,28 +24,28 @@
 #include <KLocalizedString>
 using namespace Akonadi;
 
-CollectionInternalsPage::CollectionInternalsPage(QWidget * parent) :
-    CollectionPropertiesPage( parent )
+CollectionInternalsPage::CollectionInternalsPage(QWidget *parent) :
+    CollectionPropertiesPage(parent)
 {
-  setPageTitle( i18n( "Internals" ) );
-  ui.setupUi( this );
+    setPageTitle(i18n("Internals"));
+    ui.setupUi(this);
 }
 
-void CollectionInternalsPage::load(const Akonadi::Collection & col)
+void CollectionInternalsPage::load(const Akonadi::Collection &col)
 {
-  ui.idLabel->setText( QString::number( col.id() ) );
-  ui.ridEdit->setText( col.remoteId() );
-  ui.rrevEdit->setText( col.remoteRevision() );
-  ui.resourceLabel->setText( col.resource() );
-  ui.contentTypes->setItems( col.contentMimeTypes() );
-  ui.virtCheck->setChecked( col.isVirtual() );
+    ui.idLabel->setText(QString::number(col.id()));
+    ui.ridEdit->setText(col.remoteId());
+    ui.rrevEdit->setText(col.remoteRevision());
+    ui.resourceLabel->setText(col.resource());
+    ui.contentTypes->setItems(col.contentMimeTypes());
+    ui.virtCheck->setChecked(col.isVirtual());
 }
 
-void CollectionInternalsPage::save(Akonadi::Collection & col)
+void CollectionInternalsPage::save(Akonadi::Collection &col)
 {
-  col.setRemoteId( ui.ridEdit->text() );
-  col.setRemoteRevision( ui.rrevEdit->text() );
-  col.setContentMimeTypes( ui.contentTypes->items() );
-  col.setVirtual( ui.virtCheck->isChecked() );
+    col.setRemoteId(ui.ridEdit->text());
+    col.setRemoteRevision(ui.rrevEdit->text());
+    col.setContentMimeTypes(ui.contentTypes->items());
+    col.setVirtual(ui.virtCheck->isChecked());
 }
 

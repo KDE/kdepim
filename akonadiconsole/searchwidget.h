@@ -35,20 +35,20 @@ class QStringListModel;
 
 class SearchWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit SearchWidget( QWidget *parent = 0 );
+public:
+    explicit SearchWidget(QWidget *parent = 0);
     ~SearchWidget();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void search();
-    void searchFinished( KJob * );
-    void querySelected( int );
-    void fetchItem( const QModelIndex & );
-    void itemFetched( KJob * );
+    void searchFinished(KJob *);
+    void querySelected(int);
+    void fetchItem(const QModelIndex &);
+    void itemFetched(KJob *);
 
-  private:
+private:
     KComboBox *mQueryCombo;
     QTextBrowser *mItemView;
     KTextEdit *mQueryWidget;

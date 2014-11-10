@@ -24,11 +24,13 @@
 #include "incidenceeditors_ng_export.h"
 #include "incidenceeditor-ng.h"
 
-namespace Ui {
-  class EventOrTodoDesktop;
+namespace Ui
+{
+class EventOrTodoDesktop;
 }
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 /**
  * The IncidenceGeneralEditor keeps track of the following Incidence parts:
@@ -38,17 +40,17 @@ namespace IncidenceEditorNG {
  */
 class INCIDENCEEDITORS_NG_EXPORT IncidenceWhatWhere : public IncidenceEditor
 {
-  Q_OBJECT
-  public:
-    explicit IncidenceWhatWhere( Ui::EventOrTodoDesktop *ui );
+    Q_OBJECT
+public:
+    explicit IncidenceWhatWhere(Ui::EventOrTodoDesktop *ui);
 
-    virtual void load( const KCalCore::Incidence::Ptr &incidence );
-    virtual void save( const KCalCore::Incidence::Ptr &incidence );
+    virtual void load(const KCalCore::Incidence::Ptr &incidence);
+    virtual void save(const KCalCore::Incidence::Ptr &incidence);
     virtual bool isDirty() const;
     virtual bool isValid() const;
     virtual void validate();
 
-  private:
+private:
     Ui::EventOrTodoDesktop *mUi;
 };
 

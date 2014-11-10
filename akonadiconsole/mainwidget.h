@@ -30,20 +30,20 @@ class KXmlGuiWindow;
 
 class MainWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit MainWidget( KXmlGuiWindow *parent = 0 );
+public:
+    explicit MainWidget(KXmlGuiWindow *parent = 0);
     ~MainWidget();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void createSearch();
     void startServer();
     void stopServer();
     void restartServer();
     void configureServer();
 
-  private:
+private:
     BrowserWidget *mBrowser;
 };
 

@@ -30,46 +30,48 @@
 
 class CategoryWidgetBase;
 
-namespace CalendarSupport {
-  class CategoryConfig;
+namespace CalendarSupport
+{
+class CategoryConfig;
 }
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 class AutoCheckTreeWidget;
 
 class INCIDENCEEDITORS_NG_EXPORT CategoryWidget : public QWidget
 {
-  Q_OBJECT
-  public:
-    explicit CategoryWidget( CalendarSupport::CategoryConfig *config, QWidget *parent=0 );
+    Q_OBJECT
+public:
+    explicit CategoryWidget(CalendarSupport::CategoryConfig *config, QWidget *parent = 0);
     ~CategoryWidget();
 
-    void setCategories( const QStringList &categoryList = QStringList() );
-    void setCategoryList( const QStringList &categories );
+    void setCategories(const QStringList &categoryList = QStringList());
+    void setCategoryList(const QStringList &categories);
 
-    void setSelected( const QStringList &selList );
+    void setSelected(const QStringList &selList);
     QStringList selectedCategories() const;
-    QStringList selectedCategories( QString &categoriesStr );
+    QStringList selectedCategories(QString &categoriesStr);
 
-    void setAutoselectChildren( bool autoselectChildren );
+    void setAutoselectChildren(bool autoselectChildren);
 
     void hideButton();
     void hideHeader();
 
     AutoCheckTreeWidget *listView() const;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void clear();
 
-  private Q_SLOTS:
-    void handleTextChanged( const QString &newText );
+private Q_SLOTS:
+    void handleTextChanged(const QString &newText);
     void handleSelectionChanged();
-    void handleColorChanged( const QColor & );
+    void handleColorChanged(const QColor &);
     void addCategory();
     void removeCategory();
 
-  private:
+private:
     QStringList mCategoryList;
     CategoryWidgetBase *mWidgets;
     CalendarSupport::CategoryConfig *mCategoryConfig;
@@ -77,27 +79,27 @@ class INCIDENCEEDITORS_NG_EXPORT CategoryWidget : public QWidget
 
 class INCIDENCEEDITORS_NG_EXPORT CategoryDialog : public QDialog
 {
-  Q_OBJECT
-  public:
-    explicit CategoryDialog( CalendarSupport::CategoryConfig *cfg, QWidget *parent = 0 );
+    Q_OBJECT
+public:
+    explicit CategoryDialog(CalendarSupport::CategoryConfig *cfg, QWidget *parent = 0);
     ~CategoryDialog();
 
     QStringList selectedCategories() const;
-    void setCategoryList( const QStringList &categories );
+    void setCategoryList(const QStringList &categories);
 
-    void setAutoselectChildren( bool autoselectChildren );
-    void setSelected( const QStringList &selList );
+    void setAutoselectChildren(bool autoselectChildren);
+    void setSelected(const QStringList &selList);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void slotOk();
     void slotApply();
     void updateCategoryConfig();
 
-  Q_SIGNALS:
-    void categoriesSelected( const QString & );
-    void categoriesSelected( const QStringList & );
+Q_SIGNALS:
+    void categoriesSelected(const QString &);
+    void categoriesSelected(const QStringList &);
 
-  private:
+private:
     CategoryWidget *mWidgets;
     CalendarSupport::CategoryConfig *mCategoryConfig;
     class CategorySelectDialogPrivate;

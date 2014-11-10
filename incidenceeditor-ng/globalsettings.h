@@ -26,16 +26,17 @@
 
 #include "incidenceeditor-ng/globalsettings_base.h"
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 class INCIDENCEEDITORS_NG_EXPORT GlobalSettings : public IncidenceEditorNG::GlobalSettingsBase
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     static GlobalSettings *self();
 
-  private:
+private:
     GlobalSettings();
     virtual ~GlobalSettings();
     static GlobalSettings *mSelf;

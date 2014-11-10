@@ -37,100 +37,98 @@
 #include <QFile>
 #include <QFileDialog>
 
-
 class JobTrackerWidget::Private
 {
-  public:
-    JobTrackerModel* model;
+public:
+    JobTrackerModel *model;
 };
 
-JobTrackerWidget::JobTrackerWidget( const char *name, QWidget *parent, const QString& checkboxText )
-  : QWidget( parent ),
-  d( new Private )
+JobTrackerWidget::JobTrackerWidget(const char *name, QWidget *parent, const QString &checkboxText)
+    : QWidget(parent),
+      d(new Private)
 {
-  d->model = new JobTrackerModel( name, this );
+    d->model = new JobTrackerModel(name, this);
 
-  QVBoxLayout *layout = new QVBoxLayout( this );
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
-  QCheckBox* enableCB = new QCheckBox( this );
-  enableCB->setText(checkboxText);
-  connect( enableCB, SIGNAL(toggled(bool)), d->model, SLOT(setEnabled(bool)) );
-  layout->addWidget(enableCB);
+    QCheckBox *enableCB = new QCheckBox(this);
+    enableCB->setText(checkboxText);
+    connect(enableCB, SIGNAL(toggled(bool)), d->model, SLOT(setEnabled(bool)));
+    layout->addWidget(enableCB);
 
-  QTreeView *tv = new QTreeView( this );
-  tv->setModel( d->model );
-  tv->expandAll();
-  tv->setAlternatingRowColors( true );
-  tv->setContextMenuPolicy( Qt::CustomContextMenu );
-  // too slow with many jobs:
-  // tv->header()->setResizeMode( QHeaderView::ResizeToContents );
-  connect(d->model, &JobTrackerModel::modelReset, tv, &QTreeView::expandAll);
-  connect(tv, &QTreeView::customContextMenuRequested, this, &JobTrackerWidget::contextMenu);
-  layout->addWidget( tv );
-  d->model->setEnabled( false ); // since it can be slow, default to off
+    QTreeView *tv = new QTreeView(this);
+    tv->setModel(d->model);
+    tv->expandAll();
+    tv->setAlternatingRowColors(true);
+    tv->setContextMenuPolicy(Qt::CustomContextMenu);
+    // too slow with many jobs:
+    // tv->header()->setResizeMode( QHeaderView::ResizeToContents );
+    connect(d->model, &JobTrackerModel::modelReset, tv, &QTreeView::expandAll);
+    connect(tv, &QTreeView::customContextMenuRequested, this, &JobTrackerWidget::contextMenu);
+    layout->addWidget(tv);
+    d->model->setEnabled(false);   // since it can be slow, default to off
 
+    QHBoxLayout *layout2 = new QHBoxLayout(this);
+    QPushButton *button = new QPushButton(QLatin1String("Save to file..."), this);
+    connect(button, SIGNAL(clicked(bool)),
+            this, SLOT(slotSaveToFile()));
+    layout2->addWidget(button);
+    layout2->addStretch(1);
+    layout->addLayout(layout2);
 
-  QHBoxLayout *layout2 = new QHBoxLayout( this );
-  QPushButton *button = new QPushButton( QLatin1String( "Save to file..." ), this );
-  connect( button, SIGNAL(clicked(bool)),
-           this, SLOT(slotSaveToFile()) );
-  layout2->addWidget( button );
-  layout2->addStretch( 1 );
-  layout->addLayout( layout2 );
-
-  Akonadi::Control::widgetNeedsAkonadi( this );
+    Akonadi::Control::widgetNeedsAkonadi(this);
 }
 
 JobTrackerWidget::~JobTrackerWidget()
 {
-  delete d;
+    delete d;
 }
 
-void JobTrackerWidget::contextMenu( const QPoint &pos )
+void JobTrackerWidget::contextMenu(const QPoint &pos)
 {
-  QMenu menu;
-  menu.addAction( i18n( "Clear View" ), d->model, SLOT(resetTracker()) );
-  menu.exec( mapToGlobal( pos ) );
+    QMenu menu;
+    menu.addAction(i18n("Clear View"), d->model, SLOT(resetTracker()));
+    menu.exec(mapToGlobal(pos));
 }
 
 void JobTrackerWidget::slotSaveToFile()
 {
-  const QString fileName = QFileDialog::getSaveFileName(0, QString(), QString(), QString());
-  if ( fileName.isEmpty() ) {
-    return;
-  }
+    const QString fileName = QFileDialog::getSaveFileName(0, QString(), QString(), QString());
+    if (fileName.isEmpty()) {
+        return;
+    }
 
-  QFile file( fileName );
-  if ( !file.open( QIODevice::WriteOnly | QIODevice::Truncate ) ) {
-    return;
-  }
+    QFile file(fileName);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+        return;
+    }
 
-  file.write("Job ID\t\tCreated\t\tWait Time\tJob Duration\tJob Type\t\tState\tInfo\n");
+    file.write("Job ID\t\tCreated\t\tWait Time\tJob Duration\tJob Type\t\tState\tInfo\n");
 
-  writeRows( QModelIndex(), file, 0 );
+    writeRows(QModelIndex(), file, 0);
 
-  file.close();
+    file.close();
 }
 
-void JobTrackerWidget::writeRows( const QModelIndex &parent, QFile &file, int indentLevel )
+void JobTrackerWidget::writeRows(const QModelIndex &parent, QFile &file, int indentLevel)
 {
-  for ( int row = 0; row < d->model->rowCount( parent ); ++row ) {
-    QByteArray data;
-    for ( int tabs = 0; tabs < indentLevel; ++tabs ) {
-      data += '\t';
-    }
-    const int columnCount = d->model->columnCount( parent );
-    for ( int column = 0; column < columnCount; ++column ) {
-      const QModelIndex index = d->model->index( row, column, parent );
-      data += index.data().toByteArray();
-      if ( column < columnCount - 1 ) {
-        data += '\t';
-      }
-    }
-    data += '\n';
-    file.write( data );
+    for (int row = 0; row < d->model->rowCount(parent); ++row) {
+        QByteArray data;
+        for (int tabs = 0; tabs < indentLevel; ++tabs) {
+            data += '\t';
+        }
+        const int columnCount = d->model->columnCount(parent);
+        for (int column = 0; column < columnCount; ++column) {
+            const QModelIndex index = d->model->index(row, column, parent);
+            data += index.data().toByteArray();
+            if (column < columnCount - 1) {
+                data += '\t';
+            }
+        }
+        data += '\n';
+        file.write(data);
 
-    const QModelIndex index = d->model->index( row, 0, parent );
-    writeRows( index, file, indentLevel + 1 );
-  }
+        const QModelIndex index = d->model->index(row, 0, parent);
+        writeRows(index, file, indentLevel + 1);
+    }
 }

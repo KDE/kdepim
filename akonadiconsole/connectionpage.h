@@ -28,23 +28,23 @@ class KTextEdit;
 
 class ConnectionPage : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit ConnectionPage( const QString &identifier, QWidget *parent = 0 );
+public:
+    explicit ConnectionPage(const QString &identifier, QWidget *parent = 0);
 
-    void showAllConnections( bool );
+    void showAllConnections(bool);
 
     QString toHtml() const;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void clear();
 
-  private Q_SLOTS:
-    void connectionDataInput( const QString&, const QString& );
-    void connectionDataOutput( const QString&, const QString& );
+private Q_SLOTS:
+    void connectionDataInput(const QString &, const QString &);
+    void connectionDataOutput(const QString &, const QString &);
 
-  private:
+private:
     KTextEdit *mDataView;
     QString mIdentifier;
     bool mShowAllConnections;

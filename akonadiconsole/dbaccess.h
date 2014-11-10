@@ -24,7 +24,7 @@ class QSqlDatabase;
 
 namespace DbAccess
 {
-  QSqlDatabase database();
+QSqlDatabase database();
 }
 
 #endif

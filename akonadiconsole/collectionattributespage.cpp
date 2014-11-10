@@ -22,94 +22,97 @@
 #include <AkonadiCore/attributefactory.h>
 #include <AkonadiCore/collection.h>
 
-
 #include <KLocalizedString>
 
 #include <QStandardItemModel>
 
 using namespace Akonadi;
 
-CollectionAttributePage::CollectionAttributePage(QWidget * parent) :
-    CollectionPropertiesPage( parent ),
-    mModel( 0 )
+CollectionAttributePage::CollectionAttributePage(QWidget *parent) :
+    CollectionPropertiesPage(parent),
+    mModel(0)
 {
-  setPageTitle( i18n( "Attributes" ) );
-  ui.setupUi( this );
+    setPageTitle(i18n("Attributes"));
+    ui.setupUi(this);
 
-  connect(ui.addButton, &QPushButton::clicked, this, &CollectionAttributePage::addAttribute);
-  connect(ui.deleteButton, &QPushButton::clicked, this, &CollectionAttributePage::delAttribute);
+    connect(ui.addButton, &QPushButton::clicked, this, &CollectionAttributePage::addAttribute);
+    connect(ui.deleteButton, &QPushButton::clicked, this, &CollectionAttributePage::delAttribute);
 }
 
-void CollectionAttributePage::load(const Collection & col)
+void CollectionAttributePage::load(const Collection &col)
 {
-  Attribute::List list = col.attributes();
-  mModel = new QStandardItemModel( list.count(), 2 );
-  QStringList labels;
-  labels << i18n( "Attribute" ) << i18n( "Value" );
-  mModel->setHorizontalHeaderLabels( labels );
+    Attribute::List list = col.attributes();
+    mModel = new QStandardItemModel(list.count(), 2);
+    QStringList labels;
+    labels << i18n("Attribute") << i18n("Value");
+    mModel->setHorizontalHeaderLabels(labels);
 
-  for ( int i = 0; i < list.count(); ++i ) {
-    QModelIndex index = mModel->index( i, 0 );
-    Q_ASSERT( index.isValid() );
-    mModel->setData( index, QString::fromLatin1( list[i]->type() ) );
-    mModel->item( i, 0 )->setEditable( false );
-    index = mModel->index( i, 1 );
-    Q_ASSERT( index.isValid() );
-    mModel->setData( index, QString::fromLatin1( list[i]->serialized() ) );
-    mModel->itemFromIndex( index )->setFlags( Qt::ItemIsEditable | mModel->flags( index ) );
-  }
-  ui.attrView->setModel( mModel );
-  connect(mModel, &QStandardItemModel::itemChanged, this, &CollectionAttributePage::attributeChanged);
+    for (int i = 0; i < list.count(); ++i) {
+        QModelIndex index = mModel->index(i, 0);
+        Q_ASSERT(index.isValid());
+        mModel->setData(index, QString::fromLatin1(list[i]->type()));
+        mModel->item(i, 0)->setEditable(false);
+        index = mModel->index(i, 1);
+        Q_ASSERT(index.isValid());
+        mModel->setData(index, QString::fromLatin1(list[i]->serialized()));
+        mModel->itemFromIndex(index)->setFlags(Qt::ItemIsEditable | mModel->flags(index));
+    }
+    ui.attrView->setModel(mModel);
+    connect(mModel, &QStandardItemModel::itemChanged, this, &CollectionAttributePage::attributeChanged);
 }
 
-void CollectionAttributePage::save(Collection & col)
+void CollectionAttributePage::save(Collection &col)
 {
-  foreach ( const QString &del, mDeleted )
-    col.removeAttribute( del.toLatin1() );
-  for ( int i = 0; i < mModel->rowCount(); ++i ) {
-    const QModelIndex typeIndex = mModel->index( i, 0 );
-    Q_ASSERT( typeIndex.isValid() );
-    if ( !mChanged.contains( typeIndex.data().toString() ) )
-      continue;
-    const QModelIndex valueIndex = mModel->index( i, 1 );
-    Q_ASSERT( valueIndex.isValid() );
-    Attribute* attr = AttributeFactory::createAttribute( mModel->data( typeIndex ).toString().toLatin1() );
-    Q_ASSERT( attr );
-    attr->deserialize( mModel->data( valueIndex ).toString().toLatin1() );
-    col.addAttribute( attr );
-  }
+    foreach (const QString &del, mDeleted) {
+        col.removeAttribute(del.toLatin1());
+    }
+    for (int i = 0; i < mModel->rowCount(); ++i) {
+        const QModelIndex typeIndex = mModel->index(i, 0);
+        Q_ASSERT(typeIndex.isValid());
+        if (!mChanged.contains(typeIndex.data().toString())) {
+            continue;
+        }
+        const QModelIndex valueIndex = mModel->index(i, 1);
+        Q_ASSERT(valueIndex.isValid());
+        Attribute *attr = AttributeFactory::createAttribute(mModel->data(typeIndex).toString().toLatin1());
+        Q_ASSERT(attr);
+        attr->deserialize(mModel->data(valueIndex).toString().toLatin1());
+        col.addAttribute(attr);
+    }
 }
 
 void CollectionAttributePage::addAttribute()
 {
-  if ( ui.attrName->text().isEmpty() )
-    return;
-  const QString attr = ui.attrName->text();
-  mChanged.insert( attr );
-  mDeleted.remove( attr );
-  const int row = mModel->rowCount();
-  mModel->insertRow( row );
-  QModelIndex index = mModel->index( row, 0 );
-  Q_ASSERT( index.isValid() );
-  mModel->setData( index, attr );
-  ui.attrName->clear();
+    if (ui.attrName->text().isEmpty()) {
+        return;
+    }
+    const QString attr = ui.attrName->text();
+    mChanged.insert(attr);
+    mDeleted.remove(attr);
+    const int row = mModel->rowCount();
+    mModel->insertRow(row);
+    QModelIndex index = mModel->index(row, 0);
+    Q_ASSERT(index.isValid());
+    mModel->setData(index, attr);
+    ui.attrName->clear();
 }
 
 void CollectionAttributePage::delAttribute()
 {
-  QModelIndexList selection = ui.attrView->selectionModel()->selectedRows();
-  if ( selection.count() != 1 )
-    return;
-  const QString attr = selection.first().data().toString();
-  mChanged.remove( attr );
-  mDeleted.insert( attr );
-  mModel->removeRow( selection.first().row() );
+    QModelIndexList selection = ui.attrView->selectionModel()->selectedRows();
+    if (selection.count() != 1) {
+        return;
+    }
+    const QString attr = selection.first().data().toString();
+    mChanged.remove(attr);
+    mDeleted.insert(attr);
+    mModel->removeRow(selection.first().row());
 }
 
-void CollectionAttributePage::attributeChanged( QStandardItem *item )
+void CollectionAttributePage::attributeChanged(QStandardItem *item)
 {
-  const QString attr = mModel->data( mModel->index( item->row(), 0 ) ).toString();
-  mDeleted.remove( attr );
-  mChanged.insert( attr );
+    const QString attr = mModel->data(mModel->index(item->row(), 0)).toString();
+    mDeleted.remove(attr);
+    mChanged.insert(attr);
 }
 

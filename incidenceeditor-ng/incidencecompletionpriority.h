@@ -23,28 +23,30 @@
 
 #include "incidenceeditor-ng.h"
 
-namespace Ui {
-  class EventOrTodoDesktop;
+namespace Ui
+{
+class EventOrTodoDesktop;
 }
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 class INCIDENCEEDITORS_NG_EXPORT IncidenceCompletionPriority : public IncidenceEditor
 {
-  Q_OBJECT
-  public:
-    explicit IncidenceCompletionPriority( Ui::EventOrTodoDesktop *ui );
+    Q_OBJECT
+public:
+    explicit IncidenceCompletionPriority(Ui::EventOrTodoDesktop *ui);
     ~IncidenceCompletionPriority();
 
-    void load( const KCalCore::Incidence::Ptr &incidence );
-    void save( const KCalCore::Incidence::Ptr &incidence );
+    void load(const KCalCore::Incidence::Ptr &incidence);
+    void save(const KCalCore::Incidence::Ptr &incidence);
     bool isDirty() const;
 
-  private:
+private:
     class Private;
     Private *const d;
 
-  Q_PRIVATE_SLOT( d, void sliderValueChanged(int) )
+    Q_PRIVATE_SLOT(d, void sliderValueChanged(int))
 };
 
 }

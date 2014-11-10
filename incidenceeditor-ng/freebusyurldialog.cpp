@@ -38,55 +38,55 @@
 
 using namespace IncidenceEditorNG;
 
-FreeBusyUrlDialog::FreeBusyUrlDialog( AttendeeData::Ptr attendee, QWidget *parent )
-  : QDialog( parent )
+FreeBusyUrlDialog::FreeBusyUrlDialog(AttendeeData::Ptr attendee, QWidget *parent)
+    : QDialog(parent)
 {
-  QFrame *topFrame = new QFrame( this );
-  setModal( true );
-  setWindowTitle( i18n( "Edit Free/Busy Location" ) );
-  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
-  QVBoxLayout *mainLayout = new QVBoxLayout;
-  setLayout(mainLayout);
-  mainLayout->addWidget(topFrame);
-  QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
-  okButton->setDefault(true);
-  okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-  connect(buttonBox, &QDialogButtonBox::accepted, this, &FreeBusyUrlDialog::accept);
-  connect(buttonBox, &QDialogButtonBox::rejected, this, &FreeBusyUrlDialog::reject);
-  mainLayout->addWidget(buttonBox);
-  okButton->setDefault(true);
+    QFrame *topFrame = new QFrame(this);
+    setModal(true);
+    setWindowTitle(i18n("Edit Free/Busy Location"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(topFrame);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &FreeBusyUrlDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &FreeBusyUrlDialog::reject);
+    mainLayout->addWidget(buttonBox);
+    okButton->setDefault(true);
 
-  QBoxLayout *topLayout = new QVBoxLayout( topFrame );
-  //QT5 topLayout->setSpacing( spacingHint() );
-  topLayout->setMargin( 0 );
+    QBoxLayout *topLayout = new QVBoxLayout(topFrame);
+    //QT5 topLayout->setSpacing( spacingHint() );
+    topLayout->setMargin(0);
 
-  mWidget = new FreeBusyUrlWidget( attendee, topFrame );
-  topLayout->addWidget( mWidget );
+    mWidget = new FreeBusyUrlWidget(attendee, topFrame);
+    topLayout->addWidget(mWidget);
 
-  mWidget->loadConfig();
-  connect(okButton, &QPushButton::clicked, this, &FreeBusyUrlDialog::slotOk);
+    mWidget->loadConfig();
+    connect(okButton, &QPushButton::clicked, this, &FreeBusyUrlDialog::slotOk);
 }
 
 void FreeBusyUrlDialog::slotOk()
 {
-  mWidget->saveConfig();
-  accept();
+    mWidget->saveConfig();
+    accept();
 }
 
-FreeBusyUrlWidget::FreeBusyUrlWidget( AttendeeData::Ptr attendee, QWidget *parent )
-  : QWidget( parent ), mAttendee( attendee )
+FreeBusyUrlWidget::FreeBusyUrlWidget(AttendeeData::Ptr attendee, QWidget *parent)
+    : QWidget(parent), mAttendee(attendee)
 {
-  QBoxLayout *topLayout = new QVBoxLayout( this );
+    QBoxLayout *topLayout = new QVBoxLayout(this);
 //TODO PORT QT5   topLayout->setSpacing( QDialog::spacingHint() );
 
-  QLabel *label =
-    new QLabel( xi18n( "Location of Free/Busy information for %1 <placeholder>%2</placeholder>:",
-                     mAttendee->name(), mAttendee->email() ), this );
-  topLayout->addWidget( label );
+    QLabel *label =
+        new QLabel(xi18n("Location of Free/Busy information for %1 <placeholder>%2</placeholder>:",
+                         mAttendee->name(), mAttendee->email()), this);
+    topLayout->addWidget(label);
 
-  mUrlEdit = new KLineEdit( this );
-  mUrlEdit->setFocus();
-  topLayout->addWidget( mUrlEdit );
+    mUrlEdit = new KLineEdit(this);
+    mUrlEdit->setFocus();
+    topLayout->addWidget(mUrlEdit);
 }
 
 FreeBusyUrlWidget::~FreeBusyUrlWidget()
@@ -95,18 +95,18 @@ FreeBusyUrlWidget::~FreeBusyUrlWidget()
 
 void FreeBusyUrlWidget::loadConfig()
 {
-  qDebug();
+    qDebug();
 
-  const QString url = KCalCore::FreeBusyUrlStore::self()->readUrl( mAttendee->email() );
-  mUrlEdit->setText( url );
+    const QString url = KCalCore::FreeBusyUrlStore::self()->readUrl(mAttendee->email());
+    mUrlEdit->setText(url);
 }
 
 void FreeBusyUrlWidget::saveConfig()
 {
-  qDebug();
+    qDebug();
 
-  const QString url = mUrlEdit->text();
-  KCalCore::FreeBusyUrlStore::self()->writeUrl( mAttendee->email(), url );
-  KCalCore::FreeBusyUrlStore::self()->sync();
+    const QString url = mUrlEdit->text();
+    KCalCore::FreeBusyUrlStore::self()->writeUrl(mAttendee->email(), url);
+    KCalCore::FreeBusyUrlStore::self()->sync();
 }
 

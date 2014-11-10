@@ -42,241 +42,242 @@
 
 using namespace IncidenceEditorNG;
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 class RowController : public KDGantt::AbstractRowController
 {
-  private:
+private:
     static const int ROW_HEIGHT ;
     QPointer<QAbstractItemModel> m_model;
 
-  public:
+public:
     RowController()
     {
-      mRowHeight = 20;
+        mRowHeight = 20;
     }
 
-    void setModel( QAbstractItemModel *model )
+    void setModel(QAbstractItemModel *model)
     {
-      m_model = model;
+        m_model = model;
     }
 
     /*reimp*/
     int headerHeight() const
     {
-      return 2 * mRowHeight + 10;
+        return 2 * mRowHeight + 10;
     }
 
     /*reimp*/
-    bool isRowVisible( const QModelIndex & ) const
+    bool isRowVisible(const QModelIndex &) const
     {
-      return true;
+        return true;
     }
 
     /*reimp*/
-    bool isRowExpanded( const QModelIndex & ) const
+    bool isRowExpanded(const QModelIndex &) const
     {
-      return false;
+        return false;
     }
 
     /*reimp*/
-    KDGantt::Span rowGeometry( const QModelIndex &idx ) const
+    KDGantt::Span rowGeometry(const QModelIndex &idx) const
     {
-      return KDGantt::Span( idx.row() * mRowHeight, mRowHeight );
+        return KDGantt::Span(idx.row() * mRowHeight, mRowHeight);
     }
 
     /*reimp*/
     int maximumItemHeight() const
     {
-      return mRowHeight / 2;
+        return mRowHeight / 2;
     }
 
     /*reimp*/
     int totalHeight() const
     {
-      return m_model->rowCount() * mRowHeight;
+        return m_model->rowCount() * mRowHeight;
     }
 
     /*reimp*/
-    QModelIndex indexAt( int height ) const
+    QModelIndex indexAt(int height) const
     {
-      return m_model->index( height / mRowHeight, 0 );
+        return m_model->index(height / mRowHeight, 0);
     }
 
     /*reimp*/
-    QModelIndex indexBelow( const QModelIndex &idx ) const
+    QModelIndex indexBelow(const QModelIndex &idx) const
     {
-      if ( !idx.isValid() ) {
-        return QModelIndex();
-      }
-      return idx.model()->index( idx.row() + 1, idx.column(), idx.parent() );
+        if (!idx.isValid()) {
+            return QModelIndex();
+        }
+        return idx.model()->index(idx.row() + 1, idx.column(), idx.parent());
     }
 
     /*reimp*/
-    QModelIndex indexAbove( const QModelIndex &idx ) const
+    QModelIndex indexAbove(const QModelIndex &idx) const
     {
-      if ( !idx.isValid() ) {
-        return QModelIndex();
-      }
-      return idx.model()->index( idx.row() - 1, idx.column(), idx.parent() );
+        if (!idx.isValid()) {
+            return QModelIndex();
+        }
+        return idx.model()->index(idx.row() - 1, idx.column(), idx.parent());
     }
 
-    void setRowHeight( int height )
+    void setRowHeight(int height)
     {
-      mRowHeight = height;
+        mRowHeight = height;
     }
 
-  private:
+private:
     int mRowHeight;
 
 };
 
 class GanttHeaderView : public QHeaderView
 {
-  public:
-    explicit GanttHeaderView( QWidget *parent = 0 ) : QHeaderView( Qt::Horizontal, parent )
+public:
+    explicit GanttHeaderView(QWidget *parent = 0) : QHeaderView(Qt::Horizontal, parent)
     {
     }
 
     QSize sizeHint() const
     {
-      QSize s = QHeaderView::sizeHint();
-      s.rheight() *= 2;
-      return s;
+        QSize s = QHeaderView::sizeHint();
+        s.rheight() *= 2;
+        return s;
     }
 };
 
 }
 
-VisualFreeBusyWidget::VisualFreeBusyWidget( FreeBusyItemModel *model, int spacing, QWidget *parent )
-  : QWidget( parent ), mGanttGrid( 0 ), mScaleCombo( 0 )
+VisualFreeBusyWidget::VisualFreeBusyWidget(FreeBusyItemModel *model, int spacing, QWidget *parent)
+    : QWidget(parent), mGanttGrid(0), mScaleCombo(0)
 {
-  QVBoxLayout *topLayout = new QVBoxLayout( this );
-  topLayout->setSpacing( spacing );
+    QVBoxLayout *topLayout = new QVBoxLayout(this);
+    topLayout->setSpacing(spacing);
 
-  // The control panel for the gantt widget
-  QBoxLayout *controlLayout = new QHBoxLayout();
-  controlLayout->setSpacing( topLayout->spacing() );
-  topLayout->addItem( controlLayout );
+    // The control panel for the gantt widget
+    QBoxLayout *controlLayout = new QHBoxLayout();
+    controlLayout->setSpacing(topLayout->spacing());
+    topLayout->addItem(controlLayout);
 
-  QLabel *label = new QLabel( i18nc( "@label", "Scale: " ), this );
-  controlLayout->addWidget( label );
+    QLabel *label = new QLabel(i18nc("@label", "Scale: "), this);
+    controlLayout->addWidget(label);
 
-  mScaleCombo = new KComboBox( this );
-  mScaleCombo->setToolTip(
-    i18nc( "@info:tooltip", "Set the Gantt chart zoom level" ) );
-  mScaleCombo->setWhatsThis(
-    xi18nc( "@info:whatsthis",
-           "Select the Gantt chart zoom level from one of the following:<nl/>"
-           "'Hour' shows a range of several hours,<nl/>"
-           "'Day' shows a range of a few days,<nl/>"
-           "'Week' shows a range of a few months,<nl/>"
-           "and 'Month' shows a range of a few years,<nl/>"
-           "while 'Automatic' selects the range most "
-           "appropriate for the current event or to-do." ) );
-  mScaleCombo->addItem( i18nc( "@item:inlistbox range in hours", "Hour" ),
-                        QVariant::fromValue<int>( KDGantt::DateTimeGrid::ScaleHour ) );
-  mScaleCombo->addItem( i18nc( "@item:inlistbox range in days", "Day" ),
-                        QVariant::fromValue<int>( KDGantt::DateTimeGrid::ScaleDay ) );
-  mScaleCombo->addItem( i18nc( "@item:inlistbox range in weeks", "Week" ),
-                        QVariant::fromValue<int>( KDGantt::DateTimeGrid::ScaleWeek ) );
-  mScaleCombo->addItem( i18nc( "@item:inlistbox range in months", "Month" ),
-                        QVariant::fromValue<int>( KDGantt::DateTimeGrid::ScaleMonth ) );
-  mScaleCombo->addItem( i18nc( "@item:inlistbox range is computed automatically", "Automatic" ),
-                        QVariant::fromValue<int>( KDGantt::DateTimeGrid::ScaleAuto ) );
-  mScaleCombo->setCurrentIndex( 0 ); // start with "hour"
-  connect(mScaleCombo, static_cast<void (KComboBox::*)(int)>(&KComboBox::activated), this, &VisualFreeBusyWidget::slotScaleChanged);
-  controlLayout->addWidget( mScaleCombo );
+    mScaleCombo = new KComboBox(this);
+    mScaleCombo->setToolTip(
+        i18nc("@info:tooltip", "Set the Gantt chart zoom level"));
+    mScaleCombo->setWhatsThis(
+        xi18nc("@info:whatsthis",
+               "Select the Gantt chart zoom level from one of the following:<nl/>"
+               "'Hour' shows a range of several hours,<nl/>"
+               "'Day' shows a range of a few days,<nl/>"
+               "'Week' shows a range of a few months,<nl/>"
+               "and 'Month' shows a range of a few years,<nl/>"
+               "while 'Automatic' selects the range most "
+               "appropriate for the current event or to-do."));
+    mScaleCombo->addItem(i18nc("@item:inlistbox range in hours", "Hour"),
+                         QVariant::fromValue<int>(KDGantt::DateTimeGrid::ScaleHour));
+    mScaleCombo->addItem(i18nc("@item:inlistbox range in days", "Day"),
+                         QVariant::fromValue<int>(KDGantt::DateTimeGrid::ScaleDay));
+    mScaleCombo->addItem(i18nc("@item:inlistbox range in weeks", "Week"),
+                         QVariant::fromValue<int>(KDGantt::DateTimeGrid::ScaleWeek));
+    mScaleCombo->addItem(i18nc("@item:inlistbox range in months", "Month"),
+                         QVariant::fromValue<int>(KDGantt::DateTimeGrid::ScaleMonth));
+    mScaleCombo->addItem(i18nc("@item:inlistbox range is computed automatically", "Automatic"),
+                         QVariant::fromValue<int>(KDGantt::DateTimeGrid::ScaleAuto));
+    mScaleCombo->setCurrentIndex(0);   // start with "hour"
+    connect(mScaleCombo, static_cast<void (KComboBox::*)(int)>(&KComboBox::activated), this, &VisualFreeBusyWidget::slotScaleChanged);
+    controlLayout->addWidget(mScaleCombo);
 
-  QPushButton *button = new QPushButton( i18nc( "@action:button", "Center on Start" ), this );
-  button->setToolTip(
-    i18nc( "@info:tooltip",
-           "Center the Gantt chart on the event start date and time" ) );
-  button->setWhatsThis(
-    i18nc( "@info:whatsthis",
-           "Click this button to center the Gantt chart on the start "
-           "time and day of this event." ) );
-  connect(button, &QPushButton::clicked, this, &VisualFreeBusyWidget::slotCenterOnStart);
-  controlLayout->addWidget( button );
+    QPushButton *button = new QPushButton(i18nc("@action:button", "Center on Start"), this);
+    button->setToolTip(
+        i18nc("@info:tooltip",
+              "Center the Gantt chart on the event start date and time"));
+    button->setWhatsThis(
+        i18nc("@info:whatsthis",
+              "Click this button to center the Gantt chart on the start "
+              "time and day of this event."));
+    connect(button, &QPushButton::clicked, this, &VisualFreeBusyWidget::slotCenterOnStart);
+    controlLayout->addWidget(button);
 
-  controlLayout->addStretch( 1 );
+    controlLayout->addStretch(1);
 
-  button = new QPushButton( i18nc( "@action:button", "Pick Date" ), this );
-  button->setToolTip(
-    i18nc( "@info:tooltip",
-           "Move the event to a date and time when all "
-           "attendees are available" ) );
-  button->setWhatsThis(
-    i18nc( "@info:whatsthis",
-           "Click this button to move the event to a date "
-           "and time when all the attendees have time "
-           "available in their Free/Busy lists." ) );
-  connect(button, &QPushButton::clicked, this, &VisualFreeBusyWidget::slotPickDate);
-  controlLayout->addWidget( button );
+    button = new QPushButton(i18nc("@action:button", "Pick Date"), this);
+    button->setToolTip(
+        i18nc("@info:tooltip",
+              "Move the event to a date and time when all "
+              "attendees are available"));
+    button->setWhatsThis(
+        i18nc("@info:whatsthis",
+              "Click this button to move the event to a date "
+              "and time when all the attendees have time "
+              "available in their Free/Busy lists."));
+    connect(button, &QPushButton::clicked, this, &VisualFreeBusyWidget::slotPickDate);
+    controlLayout->addWidget(button);
 
-  controlLayout->addStretch( 1 );
+    controlLayout->addStretch(1);
 
-  button = new QPushButton( i18nc( "@action:button reload freebusy data", "Reload" ), this );
-  button->setToolTip(
-    i18nc( "@info:tooltip",
-           "Reload Free/Busy data for all attendees" ) );
-  button->setWhatsThis(
-    i18nc( "@info:whatsthis",
-           "Pressing this button will cause the Free/Busy data for all "
-           "attendees to be reloaded from their corresponding servers." ) );
-  controlLayout->addWidget( button );
-  connect(button, &QPushButton::clicked, this, &VisualFreeBusyWidget::manualReload);
+    button = new QPushButton(i18nc("@action:button reload freebusy data", "Reload"), this);
+    button->setToolTip(
+        i18nc("@info:tooltip",
+              "Reload Free/Busy data for all attendees"));
+    button->setWhatsThis(
+        i18nc("@info:whatsthis",
+              "Pressing this button will cause the Free/Busy data for all "
+              "attendees to be reloaded from their corresponding servers."));
+    controlLayout->addWidget(button);
+    connect(button, &QPushButton::clicked, this, &VisualFreeBusyWidget::manualReload);
 
-  QSplitter *splitter = new QSplitter( Qt::Horizontal, this );
-  connect(splitter, &QSplitter::splitterMoved, this, &VisualFreeBusyWidget::splitterMoved);
-  mLeftView = new QTreeView( this );
-  mLeftView->setModel( model );
-  mLeftView->setHeader( new GanttHeaderView );
-  mLeftView->header()->setStretchLastSection( true );
-  mLeftView->setRootIsDecorated( false );
-  mLeftView->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-  mLeftView->setContextMenuPolicy( Qt::CustomContextMenu );
+    QSplitter *splitter = new QSplitter(Qt::Horizontal, this);
+    connect(splitter, &QSplitter::splitterMoved, this, &VisualFreeBusyWidget::splitterMoved);
+    mLeftView = new QTreeView(this);
+    mLeftView->setModel(model);
+    mLeftView->setHeader(new GanttHeaderView);
+    mLeftView->header()->setStretchLastSection(true);
+    mLeftView->setRootIsDecorated(false);
+    mLeftView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    mLeftView->setContextMenuPolicy(Qt::CustomContextMenu);
 
-  mGanttGraphicsView = new KDGantt::GraphicsView( this );
-  mGanttGraphicsView->setObjectName( "mGanttGraphicsView" );
-  mGanttGraphicsView->setToolTip(
-    i18nc( "@info:tooltip",
-           "Shows the Free/Busy status of all attendees" ) );
-  mGanttGraphicsView->setWhatsThis(
-    i18nc( "@info:whatsthis",
-           "Shows the Free/Busy status of all attendees. "
-           "Double-clicking on an attendee's entry in the "
-           "list will allow you to enter the location of "
-           "their Free/Busy Information." ) );
-  mModel = new FreeBusyGanttProxyModel( this );
-  mModel->setSourceModel( model );
+    mGanttGraphicsView = new KDGantt::GraphicsView(this);
+    mGanttGraphicsView->setObjectName("mGanttGraphicsView");
+    mGanttGraphicsView->setToolTip(
+        i18nc("@info:tooltip",
+              "Shows the Free/Busy status of all attendees"));
+    mGanttGraphicsView->setWhatsThis(
+        i18nc("@info:whatsthis",
+              "Shows the Free/Busy status of all attendees. "
+              "Double-clicking on an attendee's entry in the "
+              "list will allow you to enter the location of "
+              "their Free/Busy Information."));
+    mModel = new FreeBusyGanttProxyModel(this);
+    mModel->setSourceModel(model);
 
-  mRowController = new RowController;
-  mRowController->setRowHeight( fontMetrics().height() ); //TODO: detect
+    mRowController = new RowController;
+    mRowController->setRowHeight(fontMetrics().height());   //TODO: detect
 
-  mRowController->setModel( mModel );
-  mGanttGraphicsView->setRowController( mRowController );
+    mRowController->setModel(mModel);
+    mGanttGraphicsView->setRowController(mRowController);
 
-  mGanttGrid = new KDGantt::DateTimeGrid;
-  mGanttGrid->setScale( KDGantt::DateTimeGrid::ScaleHour );
-  mGanttGrid->setDayWidth( 800 );
-  mGanttGrid->setRowSeparators( true );
-  mGanttGraphicsView->setGrid( mGanttGrid );
-  mGanttGraphicsView->setModel( mModel );
-  mGanttGraphicsView->viewport()->setFixedWidth( 800 * 30 );
+    mGanttGrid = new KDGantt::DateTimeGrid;
+    mGanttGrid->setScale(KDGantt::DateTimeGrid::ScaleHour);
+    mGanttGrid->setDayWidth(800);
+    mGanttGrid->setRowSeparators(true);
+    mGanttGraphicsView->setGrid(mGanttGrid);
+    mGanttGraphicsView->setModel(mModel);
+    mGanttGraphicsView->viewport()->setFixedWidth(800 * 30);
 
-  splitter->addWidget( mLeftView );
-  splitter->addWidget( mGanttGraphicsView );
+    splitter->addWidget(mLeftView);
+    splitter->addWidget(mGanttGraphicsView);
 
-  topLayout->addWidget( splitter );
-  topLayout->setStretchFactor( splitter, 100 );
+    topLayout->addWidget(splitter);
+    topLayout->setStretchFactor(splitter, 100);
 
-  // Initially, show 15 days back and forth
-  // set start to even hours, i.e. to 12:AM 0 Min 0 Sec
-  QDateTime horizonStart =
-    QDateTime( QDateTime::currentDateTime().addDays( -15 ).date() );
-  QDateTime horizonEnd = QDateTime::currentDateTime().addDays( 15 );
-  mGanttGrid->setStartDateTime( horizonStart );
+    // Initially, show 15 days back and forth
+    // set start to even hours, i.e. to 12:AM 0 Min 0 Sec
+    QDateTime horizonStart =
+        QDateTime(QDateTime::currentDateTime().addDays(-15).date());
+    QDateTime horizonEnd = QDateTime::currentDateTime().addDays(15);
+    mGanttGrid->setStartDateTime(horizonStart);
 
 //connect( mGanttGraphicsView, SIGNAL(timeIntervalSelected(KDateTime,KDateTime)),
 //         mGanttGraphicsView, SLOT(zoomToSelection(KDateTime,KDateTime)) );
@@ -285,7 +286,7 @@ VisualFreeBusyWidget::VisualFreeBusyWidget( FreeBusyItemModel *model, int spacin
 //connect(mGanttGraphicsView,SIGNAL(intervalColorRectangleMoved(KDateTime,KDateTime)),
 //        this, SLOT(slotIntervalColorRectangleMoved(KDateTime,KDateTime)) );
 
-  connect(mLeftView, &QTreeView::customContextMenuRequested, this, &VisualFreeBusyWidget::showAttendeeStatusMenu);
+    connect(mLeftView, &QTreeView::customContextMenuRequested, this, &VisualFreeBusyWidget::showAttendeeStatusMenu);
 
 //   foreach ( FreeBusyItem::Ptr item, mResolver->freeBusyItems() ) {
 //     newFreeBusy( item );
@@ -346,17 +347,17 @@ void VisualFreeBusyWidget::showAttendeeStatusMenu()
 
 void VisualFreeBusyWidget::slotCenterOnStart()
 {
-  KDGantt::DateTimeGrid *grid = static_cast<KDGantt::DateTimeGrid*>( mGanttGraphicsView->grid() );
-  int daysTo = grid->startDateTime().daysTo( mDtStart.dateTime() );
-  mGanttGraphicsView->horizontalScrollBar()->setValue( daysTo * 800 );
+    KDGantt::DateTimeGrid *grid = static_cast<KDGantt::DateTimeGrid *>(mGanttGraphicsView->grid());
+    int daysTo = grid->startDateTime().daysTo(mDtStart.dateTime());
+    mGanttGraphicsView->horizontalScrollBar()->setValue(daysTo * 800);
 }
 
-void VisualFreeBusyWidget::slotIntervalColorRectangleMoved( const KDateTime &start,
-                                                            const KDateTime &end )
+void VisualFreeBusyWidget::slotIntervalColorRectangleMoved(const KDateTime &start,
+        const KDateTime &end)
 {
-  mDtStart = start;
-  mDtEnd = end;
-  emit dateTimesChanged( start, end );
+    mDtStart = start;
+    mDtEnd = end;
+    emit dateTimesChanged(start, end);
 }
 
 /*!
@@ -364,7 +365,7 @@ void VisualFreeBusyWidget::slotIntervalColorRectangleMoved( const KDateTime &sta
 */
 void VisualFreeBusyWidget::slotPickDate()
 {
-  //TODO implement or discard
+    //TODO implement or discard
 //  KDateTime::Spec timeSpec = KSystemTimeZones::local();
 //  KDateTime start = mDtStart;
 //  KDateTime end = mDtEnd;
@@ -396,34 +397,34 @@ void VisualFreeBusyWidget::slotPickDate()
 //  }
 }
 
-void VisualFreeBusyWidget::slotScaleChanged( int newScale )
+void VisualFreeBusyWidget::slotScaleChanged(int newScale)
 {
-  const QVariant var = mScaleCombo->itemData( newScale );
-  Q_ASSERT( var.isValid() );
+    const QVariant var = mScaleCombo->itemData(newScale);
+    Q_ASSERT(var.isValid());
 
-  int value = var.value<int>();
+    int value = var.value<int>();
 
-  mGanttGrid->setScale( ( KDGantt::DateTimeGrid::Scale )value );
+    mGanttGrid->setScale((KDGantt::DateTimeGrid::Scale)value);
 }
 
-void VisualFreeBusyWidget::slotUpdateIncidenceStartEnd( const KDateTime &dtFrom,
-                                                        const KDateTime &dtTo )
+void VisualFreeBusyWidget::slotUpdateIncidenceStartEnd(const KDateTime &dtFrom,
+        const KDateTime &dtTo)
 {
-  mDtStart = dtFrom;
-  mDtEnd = dtTo;
-  QDateTime horizonStart = QDateTime( dtFrom.addDays( -15 ).date() );
-  KDGantt::DateTimeGrid *grid = static_cast<KDGantt::DateTimeGrid*>( mGanttGraphicsView->grid() );
-  grid->setStartDateTime( horizonStart );
-  slotCenterOnStart();
-  mGanttGrid->setStartDateTime( horizonStart );
+    mDtStart = dtFrom;
+    mDtEnd = dtTo;
+    QDateTime horizonStart = QDateTime(dtFrom.addDays(-15).date());
+    KDGantt::DateTimeGrid *grid = static_cast<KDGantt::DateTimeGrid *>(mGanttGraphicsView->grid());
+    grid->setStartDateTime(horizonStart);
+    slotCenterOnStart();
+    mGanttGrid->setStartDateTime(horizonStart);
 }
 
 void VisualFreeBusyWidget::slotZoomToTime()
 {
 #if 0
-  mGanttGraphicsView->zoomToFit();
+    mGanttGraphicsView->zoomToFit();
 #else
-  qDebug() << "Disabled code, port to KDGantt2";
+    qDebug() << "Disabled code, port to KDGantt2";
 #endif
 }
 

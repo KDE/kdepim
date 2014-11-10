@@ -35,29 +35,31 @@
 #include <KMimeType>
 class QPushButton;
 
-namespace Ui {
-  class AttachmentEditDialog;
+namespace Ui
+{
+class AttachmentEditDialog;
 }
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 class AttachmentIconItem;
 
 class INCIDENCEEDITORS_NG_EXPORT AttachmentEditDialog : public QDialog
 {
-  Q_OBJECT
-  public:
-    AttachmentEditDialog( AttachmentIconItem *item, QWidget *parent, bool modal = true );
+    Q_OBJECT
+public:
+    AttachmentEditDialog(AttachmentIconItem *item, QWidget *parent, bool modal = true);
     virtual ~AttachmentEditDialog();
     void accept();
 
-  protected slots:
-    void inlineChanged( int state );
-    void urlChanged( const QUrl &url );
-    void urlChanged( const QString & url );
+protected slots:
+    void inlineChanged(int state);
+    void urlChanged(const QUrl &url);
+    void urlChanged(const QString &url);
     virtual void slotApply();
 
-  private:
+private:
     KCalCore::Attachment::Ptr mAttachment;
     AttachmentIconItem *mItem;
     KMimeType::Ptr mMimeType;

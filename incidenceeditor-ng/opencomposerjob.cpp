@@ -143,7 +143,7 @@ void OpenComposerJob::processMail()
 
     if (!composerDbusPath.isValid()) {
         setError(KJob::UserDefinedError);
-        setErrorText(i18nc( "errormessage: dbus is running but still no connection kmail", "Cannot connect to email service"));
+        setErrorText(i18nc("errormessage: dbus is running but still no connection kmail", "Cannot connect to email service"));
     }
     emitResult();
 

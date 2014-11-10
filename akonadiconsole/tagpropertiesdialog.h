@@ -26,7 +26,6 @@
 #include <QStandardItemModel>
 #include <KConfigGroup>
 
-
 #include "ui_tagpropertiesdialog.h"
 
 class TagPropertiesDialog : public QDialog

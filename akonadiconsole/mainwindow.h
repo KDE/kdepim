@@ -28,16 +28,16 @@
 
 class MainWindow : public KXmlGuiWindow
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit MainWindow( QWidget *parent = 0 );
+public:
+    explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-  protected:
-    void closeEvent( QCloseEvent *event );
+protected:
+    void closeEvent(QCloseEvent *event);
 
-  private:
+private:
     MainWidget *mMain;
 };
 

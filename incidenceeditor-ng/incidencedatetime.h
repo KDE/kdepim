@@ -29,25 +29,28 @@
 
 #include <QDate>
 
-namespace Ui {
-  class EventOrTodoDesktop;
+namespace Ui
+{
+class EventOrTodoDesktop;
 }
 
-namespace KCalCore {
-  class ICalTimeZones;
+namespace KCalCore
+{
+class ICalTimeZones;
 }
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
 {
-  Q_OBJECT
-  public:
-    explicit IncidenceDateTime( Ui::EventOrTodoDesktop *ui );
+    Q_OBJECT
+public:
+    explicit IncidenceDateTime(Ui::EventOrTodoDesktop *ui);
     ~IncidenceDateTime();
 
-    virtual void load( const KCalCore::Incidence::Ptr &incidence );
-    virtual void save( const KCalCore::Incidence::Ptr &incidence );
+    virtual void load(const KCalCore::Incidence::Ptr &incidence);
+    virtual void save(const KCalCore::Incidence::Ptr &incidence);
     virtual bool isDirty() const;
 
     /**
@@ -55,7 +58,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
      * date. It should be set <em>before</em> loading a non-empty (i.e. existing
      * incidence).
      */
-    void setActiveDate( const QDate &activeDate );
+    void setActiveDate(const QDate &activeDate);
 
     QDate startDate() const; /// Returns the current start date.
     QTime startTime() const; /// Returns the current start time.
@@ -66,8 +69,8 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
     KDateTime currentStartDateTime() const;
     KDateTime currentEndDateTime() const;
 
-    void setStartTime( const QTime &newTime );
-    void setStartDate( const QDate &newDate );
+    void setStartTime(const QTime &newTime);
+    void setStartDate(const QDate &newDate);
 
     bool startDateTimeEnabled() const;
     bool endDateTimeEnabled() const;
@@ -75,56 +78,56 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
     /**reimp*/ bool isValid() const;
     /**reimp*/ void printDebugInfo() const;
 
-  signals:
+signals:
     // used to indicate that the widgets were activated
-    void startDateFocus( QObject *obj );
-    void endDateFocus( QObject *obj );
-    void startTimeFocus( QObject *obj );
-    void endTimeFocus( QObject *obj );
+    void startDateFocus(QObject *obj);
+    void endDateFocus(QObject *obj);
+    void startTimeFocus(QObject *obj);
+    void endTimeFocus(QObject *obj);
 
     // general
-    void startDateTimeToggled( bool enabled );
-    void startDateChanged( const QDate &newDate );
-    void startTimeChanged( const QTime &newTime );
-    void endDateTimeToggled( bool enabled );
-    void endDateChanged( const QDate &newDate );
-    void endTimeChanged( const QTime &newTime );
+    void startDateTimeToggled(bool enabled);
+    void startDateChanged(const QDate &newDate);
+    void startTimeChanged(const QTime &newTime);
+    void endDateTimeToggled(bool enabled);
+    void endDateChanged(const QDate &newDate);
+    void endTimeChanged(const QTime &newTime);
 
-  private slots: /// General
-    void setTimeZonesVisibility( bool visible );
+private slots: /// General
+    void setTimeZonesVisibility(bool visible);
     void toggleTimeZoneVisibility();
-    void updateStartTime( const QTime &newTime );
-    void updateStartDate( const QDate &newDate );
+    void updateStartTime(const QTime &newTime);
+    void updateStartDate(const QDate &newDate);
     void updateStartSpec();
     void updateStartToolTips();
     void updateEndToolTips();
 
-  private slots: /// Todo specific
-    void enableStartEdit( bool enable );
-    void enableEndEdit( bool enable );
+private slots: /// Todo specific
+    void enableStartEdit(bool enable);
+    void enableEndEdit(bool enable);
     void enableTimeEdits();
-    bool isDirty( const KCalCore::Todo::Ptr &todo ) const;
+    bool isDirty(const KCalCore::Todo::Ptr &todo) const;
 
-  private slots: /// Event specific
-    bool isDirty( const KCalCore::Event::Ptr &event ) const;
-    bool isDirty( const KCalCore::Journal::Ptr &journal ) const;
+private slots: /// Event specific
+    bool isDirty(const KCalCore::Event::Ptr &event) const;
+    bool isDirty(const KCalCore::Journal::Ptr &journal) const;
 
-  protected:
-    bool eventFilter( QObject *obj, QEvent *event );
+protected:
+    bool eventFilter(QObject *obj, QEvent *event);
 
-  private:
-    void load( const KCalCore::Event::Ptr &event, bool isTemplate = false, bool templateOverridesTimes = false );
-    void load( const KCalCore::Todo::Ptr &todo, bool isTemplate = false, bool templateOverridesTimes = false );
-    void load( const KCalCore::Journal::Ptr &journal, bool isTemplate = false, bool templateOverridesTimes = false );
-    void save( const KCalCore::Event::Ptr &event );
-    void save( const KCalCore::Todo::Ptr &todo );
-    void save( const KCalCore::Journal::Ptr &journal );
-    void setDateTimes( const KDateTime &start, const KDateTime &end );
-    void setTimes( const KDateTime &start, const KDateTime &end );
-    void setTimeZoneLabelEnabled( bool enable );
-    bool timeZonesAreLocal( const KDateTime &start, const KDateTime &end );
+private:
+    void load(const KCalCore::Event::Ptr &event, bool isTemplate = false, bool templateOverridesTimes = false);
+    void load(const KCalCore::Todo::Ptr &todo, bool isTemplate = false, bool templateOverridesTimes = false);
+    void load(const KCalCore::Journal::Ptr &journal, bool isTemplate = false, bool templateOverridesTimes = false);
+    void save(const KCalCore::Event::Ptr &event);
+    void save(const KCalCore::Todo::Ptr &todo);
+    void save(const KCalCore::Journal::Ptr &journal);
+    void setDateTimes(const KDateTime &start, const KDateTime &end);
+    void setTimes(const KDateTime &start, const KDateTime &end);
+    void setTimeZoneLabelEnabled(bool enable);
+    bool timeZonesAreLocal(const KDateTime &start, const KDateTime &end);
 
-  private:
+private:
     KCalCore::ICalTimeZones *mTimeZones;
     Ui::EventOrTodoDesktop *mUi;
 

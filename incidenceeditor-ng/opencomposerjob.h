@@ -24,7 +24,8 @@
 #include <kmime/kmime_message.h>
 
 #include <KJob>
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 // Opens a Composer with a mail with one attachment (costructed my ITIPHandler)
 class OpenComposerJob : public KJob

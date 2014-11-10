@@ -29,34 +29,35 @@
 
 class KLineEdit;
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 class FreeBusyUrlWidget;
 
 class INCIDENCEEDITORS_NG_EXPORT FreeBusyUrlDialog : public QDialog
 {
-  Q_OBJECT
-  public:
-    explicit FreeBusyUrlDialog( AttendeeData::Ptr, QWidget *parent = 0 );
+    Q_OBJECT
+public:
+    explicit FreeBusyUrlDialog(AttendeeData::Ptr, QWidget *parent = 0);
 
-  public slots:
+public slots:
     void slotOk();
 
-  private:
+private:
     FreeBusyUrlWidget *mWidget;
 };
 
 class INCIDENCEEDITORS_NG_EXPORT FreeBusyUrlWidget : public QWidget
 {
-  Q_OBJECT
-  public:
-    explicit FreeBusyUrlWidget( AttendeeData::Ptr, QWidget *parent = 0 );
+    Q_OBJECT
+public:
+    explicit FreeBusyUrlWidget(AttendeeData::Ptr, QWidget *parent = 0);
     ~FreeBusyUrlWidget();
 
     void loadConfig();
     void saveConfig();
 
-  private:
+private:
     KLineEdit *mUrlEdit;
     AttendeeData::Ptr mAttendee;
 };

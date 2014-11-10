@@ -32,18 +32,18 @@ class QueryDebugger : public QWidget
 {
     Q_OBJECT
 
-  public:
-    explicit QueryDebugger( QWidget* parent = 0 );
+public:
+    explicit QueryDebugger(QWidget *parent = 0);
     virtual ~QueryDebugger();
 
-  private Q_SLOTS:
-    void contextMenu( const QPoint &pos );
-    void addQuery( double sequence, uint duration, const QString &query,
-                   const QMap<QString,QVariant> & values, int resultsCount,
-                   const QList<QList<QVariant> > & result, const QString &error );
+private Q_SLOTS:
+    void contextMenu(const QPoint &pos);
+    void addQuery(double sequence, uint duration, const QString &query,
+                  const QMap<QString, QVariant> &values, int resultsCount,
+                  const QList<QList<QVariant> > &result, const QString &error);
 
-  private:
-    QString variantToString( const QVariant &val );
+private:
+    QString variantToString(const QVariant &val);
 
     org::freedesktop::Akonadi::StorageDebugger *mDebugger;
 

@@ -29,24 +29,24 @@ class QDBusInterface;
 
 class AgentConfigModel : public QAbstractTableModel
 {
-  Q_OBJECT
-  public:
-    explicit AgentConfigModel( QObject * parent = 0 );
+    Q_OBJECT
+public:
+    explicit AgentConfigModel(QObject *parent = 0);
     ~AgentConfigModel();
-    void setAgentInstance( const Akonadi::AgentInstance &instance );
+    void setAgentInstance(const Akonadi::AgentInstance &instance);
 
-    int columnCount(const QModelIndex& parent = QModelIndex()) const;
-    int rowCount(const QModelIndex& parent = QModelIndex()) const;
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-    bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
+    int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-    Qt::ItemFlags flags(const QModelIndex& index) const;
+    Qt::ItemFlags flags(const QModelIndex &index) const;
 
-  public slots:
+public slots:
     void reload();
     void writeConfig();
 
-  private:
+private:
     QVector<QPair<QString, QVariant> > m_settings;
     QDBusInterface *m_interface;
 };

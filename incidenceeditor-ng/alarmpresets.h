@@ -25,50 +25,52 @@
 
 class QStringList;
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 enum {
-  // Fallback in case config is invalid
-  DEFAULT_REMINDER_OFFSET = 15 // minutes
+    // Fallback in case config is invalid
+    DEFAULT_REMINDER_OFFSET = 15 // minutes
 };
 
-namespace AlarmPresets {
+namespace AlarmPresets
+{
 
-  enum When {
+enum When {
     BeforeStart,
     BeforeEnd
-  };
+};
 
-  /**
-   * Returns the available presets.
-   */
-  QStringList availablePresets( When when = BeforeStart );
+/**
+ * Returns the available presets.
+ */
+QStringList availablePresets(When when = BeforeStart);
 
-  /**
-   * Returns a recurrence preset for given name. The name <em>must</em> be one
-   * of availablePresets().
-   *
-   * Note: The caller takes ownership over the pointer.
-   */
-  KCalCore::Alarm::Ptr preset( When when, const QString &name );
+/**
+ * Returns a recurrence preset for given name. The name <em>must</em> be one
+ * of availablePresets().
+ *
+ * Note: The caller takes ownership over the pointer.
+ */
+KCalCore::Alarm::Ptr preset(When when, const QString &name);
 
-  /**
-   * Returns an Alarm configured accordingly to the default preset.
-   *
-   * Note: The caller takes ownership over the pointer.
-   */
-  KCalCore::Alarm::Ptr defaultAlarm( When when );
+/**
+ * Returns an Alarm configured accordingly to the default preset.
+ *
+ * Note: The caller takes ownership over the pointer.
+ */
+KCalCore::Alarm::Ptr defaultAlarm(When when);
 
-  /**
-   * Returns the index of the preset in availablePresets for the given recurrence,
-   * or -1 if no preset is equal to the given recurrence.
-   */
-  int presetIndex( When when, const KCalCore::Alarm::Ptr &alarm );
+/**
+ * Returns the index of the preset in availablePresets for the given recurrence,
+ * or -1 if no preset is equal to the given recurrence.
+ */
+int presetIndex(When when, const KCalCore::Alarm::Ptr &alarm);
 
-  /**
-     Returns the index of the default preset. ( Comes from KCalPrefs ).
-   */
-  int defaultPresetIndex();
+/**
+   Returns the index of the default preset. ( Comes from KCalPrefs ).
+ */
+int defaultPresetIndex();
 
 }
 

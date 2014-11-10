@@ -24,9 +24,10 @@
 #include "incidenceeditor-ng.h"
 class QUrl;
 class KJob;
-namespace Ui {
-  class EventOrTodoDesktop;
-  class EventOrTodoMore;
+namespace Ui
+{
+class EventOrTodoDesktop;
+class EventOrTodoMore;
 }
 
 class QMenu;
@@ -34,62 +35,63 @@ class QMenu;
 class QListWidgetItem;
 class QMimeData;
 class QAction;
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 class AttachmentIconView;
 
 class INCIDENCEEDITORS_NG_EXPORT IncidenceAttachment : public IncidenceEditor
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
 #ifdef KDEPIM_MOBILE_UI
-    explicit IncidenceAttachment( Ui::EventOrTodoMore *ui );
+    explicit IncidenceAttachment(Ui::EventOrTodoMore *ui);
 #else
-    explicit IncidenceAttachment( Ui::EventOrTodoDesktop *ui );
+    explicit IncidenceAttachment(Ui::EventOrTodoDesktop *ui);
 #endif
 
     ~IncidenceAttachment();
 
-    virtual void load( const KCalCore::Incidence::Ptr &incidence );
-    virtual void save( const KCalCore::Incidence::Ptr &incidence );
+    virtual void load(const KCalCore::Incidence::Ptr &incidence);
+    virtual void save(const KCalCore::Incidence::Ptr &incidence);
     virtual bool isDirty() const;
 
     int attachmentCount() const;
 
-  signals:
-    void attachmentCountChanged( int newCount );
+signals:
+    void attachmentCountChanged(int newCount);
 
-  private slots:
+private slots:
     void addAttachment();
     void copyToClipboard(); /// Copies selected items to clip board
     void cutToClipboard();  /// Copies selected items to clipboard and removes them from the list
     void editSelectedAttachments();
-    void openURL( const QUrl &url );
+    void openURL(const QUrl &url);
     void pasteFromClipboard();
     void removeSelectedAttachments();
-    void saveAttachment( QListWidgetItem *item );
+    void saveAttachment(QListWidgetItem *item);
     void saveSelectedAttachments();
-    void showAttachment( QListWidgetItem *item );
-    void showContextMenu( const QPoint &pos );
+    void showAttachment(QListWidgetItem *item);
+    void showContextMenu(const QPoint &pos);
     void showSelectedAttachments();
-    void slotItemRenamed ( QListWidgetItem * item );
+    void slotItemRenamed(QListWidgetItem *item);
     void slotSelectionChanged();
-    void downloadComplete(KJob*);
+    void downloadComplete(KJob *);
 
-  private:
+private:
     //     void addAttachment( KCalCore::Attachment *attachment );
-    void addDataAttachment( const QByteArray &data,
-                            const QString &mimeType = QString(),
-                            const QString &label = QString() );
-    void addUriAttachment( const QString &uri,
+    void addDataAttachment(const QByteArray &data,
                            const QString &mimeType = QString(),
-                           const QString &label = QString(),
-                           bool inLine = false );
-    void handlePasteOrDrop( const QMimeData *mimeData );
+                           const QString &label = QString());
+    void addUriAttachment(const QString &uri,
+                          const QString &mimeType = QString(),
+                          const QString &label = QString(),
+                          bool inLine = false);
+    void handlePasteOrDrop(const QMimeData *mimeData);
     void setupActions();
     void setupAttachmentIconView();
 
-  private:
+private:
     AttachmentIconView *mAttachmentView;
 #ifdef KDEPIM_MOBILE_UI
     Ui::EventOrTodoMore *mUi;

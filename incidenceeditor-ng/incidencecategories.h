@@ -23,30 +23,32 @@
 
 #include "incidenceeditor-ng.h"
 
-namespace Ui {
-  class EventOrTodoDesktop;
-  class EventOrTodoMore;
+namespace Ui
+{
+class EventOrTodoDesktop;
+class EventOrTodoMore;
 }
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 class INCIDENCEEDITORS_NG_EXPORT IncidenceCategories : public IncidenceEditor
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
 #ifdef KDEPIM_MOBILE_UI
-    explicit IncidenceCategories( Ui::EventOrTodoMore *ui );
+    explicit IncidenceCategories(Ui::EventOrTodoMore *ui);
 #else
-    explicit IncidenceCategories( Ui::EventOrTodoDesktop *ui );
+    explicit IncidenceCategories(Ui::EventOrTodoDesktop *ui);
 #endif
 
-    virtual void load( const KCalCore::Incidence::Ptr &incidence );
-    virtual void save( const KCalCore::Incidence::Ptr &incidence );
+    virtual void load(const KCalCore::Incidence::Ptr &incidence);
+    virtual void save(const KCalCore::Incidence::Ptr &incidence);
 
     /**
      * Sets the currently selected categories.
      */
-    void setCategories( const QStringList &categories );
+    void setCategories(const QStringList &categories);
 
     /**
      * Returns the list of currently selected categories.
@@ -57,11 +59,11 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceCategories : public IncidenceEditor
     /**reimp*/
     void printDebugInfo() const;
 
-  private slots:
+private slots:
     void selectCategories();
     void onSelectionChanged(const QStringList &);
 
-  private:
+private:
 
     /** If the incidence comes from outside of KDE it can contain unknown categories.
      * KOrganizer usually checks for these, but it can happen that it checks before the
@@ -69,7 +71,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceCategories : public IncidenceEditor
      * So we make the check inside the editor, and add new categories to config. This way
      * the editor can be used standalone too.
      * */
-    void checkForUnknownCategories( const QStringList &categoriesToCheck );
+    void checkForUnknownCategories(const QStringList &categoriesToCheck);
 
     QStringList mSelectedCategories;
 #ifdef KDEPIM_MOBILE_UI

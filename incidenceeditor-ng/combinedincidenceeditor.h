@@ -26,7 +26,8 @@
 
 #include <KMessageWidget>
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 /**
  * The CombinedIncidenceEditor combines optional widgets with zero or more
@@ -35,16 +36,16 @@ namespace IncidenceEditorNG {
  */
 class INCIDENCEEDITORS_NG_EXPORT CombinedIncidenceEditor : public IncidenceEditor
 {
-  Q_OBJECT
-  public:
-    explicit CombinedIncidenceEditor( QWidget *parent = 0 );
+    Q_OBJECT
+public:
+    explicit CombinedIncidenceEditor(QWidget *parent = 0);
     /**
      * Deletes this editor as well as all editors which are combined into this
      * one.
      */
     ~CombinedIncidenceEditor();
 
-    void combine( IncidenceEditor *other );
+    void combine(IncidenceEditor *other);
 
     /**
      * Returns whether or not the current values in the editor differ from the
@@ -58,17 +59,17 @@ class INCIDENCEEDITORS_NG_EXPORT CombinedIncidenceEditor : public IncidenceEdito
      * you reimplement the load method in a subclass, make sure to call this
      * implementation too.
      */
-    virtual void load( const KCalCore::Incidence::Ptr &incidence );
-    virtual void save( const KCalCore::Incidence::Ptr &incidence );
+    virtual void load(const KCalCore::Incidence::Ptr &incidence);
+    virtual void save(const KCalCore::Incidence::Ptr &incidence);
 
-  private Q_SLOTS:
-    void handleDirtyStatusChange( bool isDirty );
+private Q_SLOTS:
+    void handleDirtyStatusChange(bool isDirty);
 
-  Q_SIGNALS:
-    void showMessage( const QString &reason, KMessageWidget::MessageType ) const;
+Q_SIGNALS:
+    void showMessage(const QString &reason, KMessageWidget::MessageType) const;
 
-  private:
-    QVector<IncidenceEditor*> mCombinedEditors;
+private:
+    QVector<IncidenceEditor *> mCombinedEditors;
     int mDirtyEditorCount;
 };
 

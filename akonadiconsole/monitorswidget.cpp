@@ -25,33 +25,31 @@
 
 #include <AkonadiCore/control.h>
 
-
 #include <KSharedConfig>
 #include <KConfigGroup>
 
-MonitorsWidget::MonitorsWidget( QWidget* parent ):
-  QWidget( parent )
+MonitorsWidget::MonitorsWidget(QWidget *parent):
+    QWidget(parent)
 {
-  mModel = new MonitorsModel( this );
+    mModel = new MonitorsModel(this);
 
-  QVBoxLayout *layout = new QVBoxLayout( this );
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
-  mTreeView = new QTreeView( this );
-  mTreeView->setModel( mModel );
-  mTreeView->setAlternatingRowColors( true );
-  layout->addWidget( mTreeView );
+    mTreeView = new QTreeView(this);
+    mTreeView->setModel(mModel);
+    mTreeView->setAlternatingRowColors(true);
+    layout->addWidget(mTreeView);
 
-  Akonadi::Control::widgetNeedsAkonadi( this );
+    Akonadi::Control::widgetNeedsAkonadi(this);
 
-  KConfigGroup config( KSharedConfig::openConfig(), "MonitorsWidget" );
+    KConfigGroup config(KSharedConfig::openConfig(), "MonitorsWidget");
 
-  mTreeView->header()->restoreState( config.readEntry<QByteArray>( "state", QByteArray() ) );
+    mTreeView->header()->restoreState(config.readEntry<QByteArray>("state", QByteArray()));
 }
 
 MonitorsWidget::~MonitorsWidget()
 {
-  KConfigGroup config( KSharedConfig::openConfig(), "MonitorsWidget" );
-  config.writeEntry( "state", mTreeView->header()->saveState() );
+    KConfigGroup config(KSharedConfig::openConfig(), "MonitorsWidget");
+    config.writeEntry("state", mTreeView->header()->saveState());
 }
-
 

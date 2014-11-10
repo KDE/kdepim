@@ -22,11 +22,10 @@
 
 #include <QDebug>
 
-
 using namespace IncidenceEditorNG;
 
-IncidenceEditor::IncidenceEditor( QObject *parent )
-  : QObject( parent ), mWasDirty( false ), mLoadingIncidence( false )
+IncidenceEditor::IncidenceEditor(QObject *parent)
+    : QObject(parent), mWasDirty(false), mLoadingIncidence(false)
 {
 }
 
@@ -36,31 +35,31 @@ IncidenceEditor::~IncidenceEditor()
 
 void IncidenceEditor::checkDirtyStatus()
 {
-  if ( !mLoadedIncidence ) {
-    qDebug() << "checkDirtyStatus called on an invalid incidence";
-    return;
-  }
+    if (!mLoadedIncidence) {
+        qDebug() << "checkDirtyStatus called on an invalid incidence";
+        return;
+    }
 
-  if ( mLoadingIncidence ) {
-    // Still loading the incidence, ignore changes to widgets.
-    return;
-  }
-  const bool dirty = isDirty();
-  if ( mWasDirty != dirty ) {
-    mWasDirty = dirty;
-    emit dirtyStatusChanged( dirty );
-  }
+    if (mLoadingIncidence) {
+        // Still loading the incidence, ignore changes to widgets.
+        return;
+    }
+    const bool dirty = isDirty();
+    if (mWasDirty != dirty) {
+        mWasDirty = dirty;
+        emit dirtyStatusChanged(dirty);
+    }
 }
 
 bool IncidenceEditor::isValid() const
 {
-  mLastErrorString.clear();
-  return true;
+    mLastErrorString.clear();
+    return true;
 }
 
 QString IncidenceEditor::lastErrorString() const
 {
-  return mLastErrorString;
+    return mLastErrorString;
 }
 
 void IncidenceEditor::focusInvalidField()
@@ -69,16 +68,16 @@ void IncidenceEditor::focusInvalidField()
 
 KCalCore::IncidenceBase::IncidenceType IncidenceEditor::type() const
 {
-  if ( mLoadedIncidence ) {
-    return mLoadedIncidence->type();
-  } else {
-    return KCalCore::IncidenceBase::TypeUnknown;
-  }
+    if (mLoadedIncidence) {
+        return mLoadedIncidence->type();
+    } else {
+        return KCalCore::IncidenceBase::TypeUnknown;
+    }
 }
 
 void IncidenceEditor::printDebugInfo() const
 {
-  // implement this in derived classes.
+    // implement this in derived classes.
 }
 
 #include "moc_incidenceeditor-ng.cpp"

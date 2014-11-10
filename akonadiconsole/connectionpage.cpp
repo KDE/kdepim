@@ -28,61 +28,61 @@
 
 #include "tracernotificationinterface.h"
 
-ConnectionPage::ConnectionPage( const QString &identifier, QWidget *parent )
-  : QWidget( parent ), mIdentifier( identifier ), mShowAllConnections( false )
+ConnectionPage::ConnectionPage(const QString &identifier, QWidget *parent)
+    : QWidget(parent), mIdentifier(identifier), mShowAllConnections(false)
 {
-  QVBoxLayout *layout = new QVBoxLayout( this );
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
-  mDataView = new KTextEdit( this );
-  mDataView->setReadOnly( true );
-  mDataView->setFont( QFontDatabase::systemFont(QFontDatabase::FixedFont) );
+    mDataView = new KTextEdit(this);
+    mDataView->setReadOnly(true);
+    mDataView->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
 
-  layout->addWidget( mDataView );
+    layout->addWidget(mDataView);
 
-  org::freedesktop::Akonadi::TracerNotification *iface = new org::freedesktop::Akonadi::TracerNotification( QString(), "/tracing/notifications", QDBusConnection::sessionBus(), this );
+    org::freedesktop::Akonadi::TracerNotification *iface = new org::freedesktop::Akonadi::TracerNotification(QString(), "/tracing/notifications", QDBusConnection::sessionBus(), this);
 
-  connect( iface, SIGNAL(connectionDataInput(QString,QString)),
-           this, SLOT(connectionDataInput(QString,QString)) );
-  connect( iface, SIGNAL(connectionDataOutput(QString,QString)),
-           this, SLOT(connectionDataOutput(QString,QString)) );
+    connect(iface, SIGNAL(connectionDataInput(QString,QString)),
+            this, SLOT(connectionDataInput(QString,QString)));
+    connect(iface, SIGNAL(connectionDataOutput(QString,QString)),
+            this, SLOT(connectionDataOutput(QString,QString)));
 }
 
-void ConnectionPage::connectionDataInput( const QString &identifier, const QString &msg )
+void ConnectionPage::connectionDataInput(const QString &identifier, const QString &msg)
 {
-  QString str;
-  if ( mShowAllConnections ) {
-    str += identifier + ' ';
-  }
-  if ( mShowAllConnections || identifier == mIdentifier ) {
-    str += QString( "<font color=\"red\">%1</font>" ).arg( msg.toHtmlEscaped() );
-    mDataView->append( str );
-  }
+    QString str;
+    if (mShowAllConnections) {
+        str += identifier + ' ';
+    }
+    if (mShowAllConnections || identifier == mIdentifier) {
+        str += QString("<font color=\"red\">%1</font>").arg(msg.toHtmlEscaped());
+        mDataView->append(str);
+    }
 }
 
-void ConnectionPage::connectionDataOutput( const QString &identifier, const QString &msg )
+void ConnectionPage::connectionDataOutput(const QString &identifier, const QString &msg)
 {
-  QString str;
-  if ( mShowAllConnections ) {
-    str += identifier + ' ';
-  }
-  if ( mShowAllConnections || identifier == mIdentifier ) {
-    str += QString( "<font color=\"blue\">%1</font>" ).arg( msg.toHtmlEscaped() );
-    mDataView->append( str );
-  }
+    QString str;
+    if (mShowAllConnections) {
+        str += identifier + ' ';
+    }
+    if (mShowAllConnections || identifier == mIdentifier) {
+        str += QString("<font color=\"blue\">%1</font>").arg(msg.toHtmlEscaped());
+        mDataView->append(str);
+    }
 }
 
-void ConnectionPage::showAllConnections( bool show )
+void ConnectionPage::showAllConnections(bool show)
 {
-  mShowAllConnections = show;
+    mShowAllConnections = show;
 }
 
 QString ConnectionPage::toHtml() const
 {
-  return mDataView->toHtml();
+    return mDataView->toHtml();
 }
 
 void ConnectionPage::clear()
 {
-  mDataView->clear();
+    mDataView->clear();
 }
 

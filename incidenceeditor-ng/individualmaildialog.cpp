@@ -28,7 +28,7 @@
 using namespace IncidenceEditorNG;
 
 IndividualMailDialog::IndividualMailDialog(const QString &question, const KCalCore::Attendee::List  &attendees,
-                                           const KGuiItem &buttonYes, const KGuiItem &buttonNo, QWidget *parent)
+        const KGuiItem &buttonYes, const KGuiItem &buttonNo, QWidget *parent)
     : KDialog(parent)
 {
     setCaption(i18nc("@title:window", "Group Scheduling Email"));
@@ -40,7 +40,7 @@ IndividualMailDialog::IndividualMailDialog(const QString &question, const KCalCo
     QWidget *widget = new QWidget();
     QGridLayout *layout = new QGridLayout(widget);
     int row = 0;
-    foreach (const KCalCore::Attendee::Ptr & attendee, attendees) {
+    foreach (const KCalCore::Attendee::Ptr &attendee, attendees) {
         QComboBox *options = new QComboBox();
         options->addItem(i18nc("@item:inlistbox ITIP Messages for one attendee", "Send update"), QVariant(Update));
         options->addItem(i18nc("@item:inlistbox ITIP Messages for one attendee", "Send no update"), QVariant(NoUpdate));
@@ -69,7 +69,7 @@ KCalCore::Attendee::List IndividualMailDialog::editAttendees() const
 {
     KCalCore::Attendee::List edit;
     QList<KCalCore::Attendee::Ptr> attendees = mAttendeeDecision.keys();
-    foreach (const KCalCore::Attendee::Ptr & attendee, attendees) {
+    foreach (const KCalCore::Attendee::Ptr &attendee, attendees) {
         int index = mAttendeeDecision[attendee]->currentIndex();
         if (mAttendeeDecision[attendee]->itemData(index, Qt::UserRole) == Edit) {
             edit.append(attendee);
@@ -82,7 +82,7 @@ KCalCore::Attendee::List IndividualMailDialog::updateAttendees() const
 {
     KCalCore::Attendee::List update;
     QList<KCalCore::Attendee::Ptr> attendees = mAttendeeDecision.keys();
-    foreach (const KCalCore::Attendee::Ptr & attendee, attendees) {
+    foreach (const KCalCore::Attendee::Ptr &attendee, attendees) {
         int index = mAttendeeDecision[attendee]->currentIndex();
         if (mAttendeeDecision[attendee]->itemData(index, Qt::UserRole) == Update) {
             update.append(attendee);

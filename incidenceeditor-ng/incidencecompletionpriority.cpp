@@ -32,131 +32,131 @@ using namespace IncidenceEditorNG;
 
 class IncidenceCompletionPriority::Private
 {
-  IncidenceCompletionPriority *const q;
-  public:
-    explicit Private( IncidenceCompletionPriority *parent )
-      : q( parent ), mUi( 0 ), mOrigPercentCompleted( -1 )
+    IncidenceCompletionPriority *const q;
+public:
+    explicit Private(IncidenceCompletionPriority *parent)
+        : q(parent), mUi(0), mOrigPercentCompleted(-1)
     {
     }
 
-  public:
+public:
     Ui::EventOrTodoDesktop *mUi;
     int mOrigPercentCompleted;
 
-  public: // slots
-    void sliderValueChanged( int );
+public: // slots
+    void sliderValueChanged(int);
 };
 
-void IncidenceCompletionPriority::Private::sliderValueChanged( int value )
+void IncidenceCompletionPriority::Private::sliderValueChanged(int value)
 {
-  if ( q->sender() == mUi->mCompletionSlider ) {
-    mOrigPercentCompleted = -1;
-  }
+    if (q->sender() == mUi->mCompletionSlider) {
+        mOrigPercentCompleted = -1;
+    }
 
-  mUi->mCompletedLabel->setText( QString( "%1%" ).arg( value ) );
-  q->checkDirtyStatus();
+    mUi->mCompletedLabel->setText(QString("%1%").arg(value));
+    q->checkDirtyStatus();
 }
 
-IncidenceCompletionPriority::IncidenceCompletionPriority( Ui::EventOrTodoDesktop *ui )
-  : IncidenceEditor(), d( new Private( this ) )
+IncidenceCompletionPriority::IncidenceCompletionPriority(Ui::EventOrTodoDesktop *ui)
+    : IncidenceEditor(), d(new Private(this))
 {
-  Q_ASSERT( ui != 0 );
-  setObjectName( "IncidenceCompletionPriority" );
+    Q_ASSERT(ui != 0);
+    setObjectName("IncidenceCompletionPriority");
 
-  d->mUi = ui;
+    d->mUi = ui;
 
-  d->sliderValueChanged( d->mUi->mCompletionSlider->value() );
-  d->mUi->mCompletionPriorityWidget->hide();
-  d->mUi->mTaskLabel->hide();
-  const QFontMetrics metrics( d->mUi->mCompletedLabel->font() );
-  d->mUi->mCompletedLabel->setMinimumWidth( metrics.width( QLatin1String( "100%" ) ) );
+    d->sliderValueChanged(d->mUi->mCompletionSlider->value());
+    d->mUi->mCompletionPriorityWidget->hide();
+    d->mUi->mTaskLabel->hide();
+    const QFontMetrics metrics(d->mUi->mCompletedLabel->font());
+    d->mUi->mCompletedLabel->setMinimumWidth(metrics.width(QLatin1String("100%")));
 #ifndef KDEPIM_MOBILE_UI
-  d->mUi->mTaskSeparator->hide();
+    d->mUi->mTaskSeparator->hide();
 #endif
 
 #ifdef Q_OS_MAEMO_5
-  // The default looks really bad in the editor.
-  QPalette palette = d->mUi->mCompletionSlider->palette();
-  palette.setColor( QPalette::Window, Qt::white );
-  d->mUi->mCompletionSlider->setPalette( palette );
+    // The default looks really bad in the editor.
+    QPalette palette = d->mUi->mCompletionSlider->palette();
+    palette.setColor(QPalette::Window, Qt::white);
+    d->mUi->mCompletionSlider->setPalette(palette);
 #endif
 
-  connect( d->mUi->mCompletionSlider, SIGNAL(valueChanged(int)), SLOT(sliderValueChanged(int)) );
-  connect(d->mUi->mPriorityCombo, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &IncidenceCompletionPriority::checkDirtyStatus);
+    connect(d->mUi->mCompletionSlider, SIGNAL(valueChanged(int)), SLOT(sliderValueChanged(int)));
+    connect(d->mUi->mPriorityCombo, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &IncidenceCompletionPriority::checkDirtyStatus);
 }
 
 IncidenceCompletionPriority::~IncidenceCompletionPriority()
 {
-  delete d;
+    delete d;
 }
 
-void IncidenceCompletionPriority::load( const KCalCore::Incidence::Ptr &incidence )
+void IncidenceCompletionPriority::load(const KCalCore::Incidence::Ptr &incidence)
 {
-  mLoadedIncidence = incidence;
+    mLoadedIncidence = incidence;
 
-  // TODO priority might be valid for other incidence types as well
-  // only for Todos
-  KCalCore::Todo::Ptr todo = IncidenceCompletionPriority::incidence<KCalCore::Todo>();
-  if ( todo == 0 ) {
-    mWasDirty = false;
-    return;
-  }
+    // TODO priority might be valid for other incidence types as well
+    // only for Todos
+    KCalCore::Todo::Ptr todo = IncidenceCompletionPriority::incidence<KCalCore::Todo>();
+    if (todo == 0) {
+        mWasDirty = false;
+        return;
+    }
 
-  d->mUi->mCompletionPriorityWidget->show();
-  d->mUi->mTaskLabel->show();
+    d->mUi->mCompletionPriorityWidget->show();
+    d->mUi->mTaskLabel->show();
 #ifndef KDEPIM_MOBILE_UI
-  d->mUi->mTaskSeparator->show();
+    d->mUi->mTaskSeparator->show();
 #endif
 
-  d->mOrigPercentCompleted = todo->percentComplete();
-  d->mUi->mCompletionSlider->blockSignals( true );
-  d->mUi->mCompletionSlider->setValue( todo->percentComplete() );
-  d->sliderValueChanged( d->mUi->mCompletionSlider->value() );
-  d->mUi->mCompletionSlider->blockSignals( false );
+    d->mOrigPercentCompleted = todo->percentComplete();
+    d->mUi->mCompletionSlider->blockSignals(true);
+    d->mUi->mCompletionSlider->setValue(todo->percentComplete());
+    d->sliderValueChanged(d->mUi->mCompletionSlider->value());
+    d->mUi->mCompletionSlider->blockSignals(false);
 
-  d->mUi->mPriorityCombo->blockSignals( true );
-  d->mUi->mPriorityCombo->setCurrentIndex( todo->priority() );
-  d->mUi->mPriorityCombo->blockSignals( false );
+    d->mUi->mPriorityCombo->blockSignals(true);
+    d->mUi->mPriorityCombo->setCurrentIndex(todo->priority());
+    d->mUi->mPriorityCombo->blockSignals(false);
 
-  mWasDirty = false;
+    mWasDirty = false;
 }
 
-void IncidenceCompletionPriority::save( const KCalCore::Incidence::Ptr &incidence )
+void IncidenceCompletionPriority::save(const KCalCore::Incidence::Ptr &incidence)
 {
-  // TODO priority might be valid for other incidence types as well
-  // only for Todos
-  KCalCore::Todo::Ptr todo = IncidenceCompletionPriority::incidence<KCalCore::Todo>( incidence );
-  if ( todo == 0 ) {
-    return;
-  }
+    // TODO priority might be valid for other incidence types as well
+    // only for Todos
+    KCalCore::Todo::Ptr todo = IncidenceCompletionPriority::incidence<KCalCore::Todo>(incidence);
+    if (todo == 0) {
+        return;
+    }
 
-  // we only have multiples of ten on our combo. If the combo did not change its value,
-  // see if we have an original value to restore
-  if ( d->mOrigPercentCompleted != -1 ) {
-    todo->setPercentComplete( d->mOrigPercentCompleted );
-  } else {
-    todo->setPercentComplete( d->mUi->mCompletionSlider->value() );
-  }
-  todo->setPriority( d->mUi->mPriorityCombo->currentIndex() );
+    // we only have multiples of ten on our combo. If the combo did not change its value,
+    // see if we have an original value to restore
+    if (d->mOrigPercentCompleted != -1) {
+        todo->setPercentComplete(d->mOrigPercentCompleted);
+    } else {
+        todo->setPercentComplete(d->mUi->mCompletionSlider->value());
+    }
+    todo->setPriority(d->mUi->mPriorityCombo->currentIndex());
 }
 
 bool IncidenceCompletionPriority::isDirty() const
 {
-  KCalCore::Todo::Ptr todo = IncidenceCompletionPriority::incidence<KCalCore::Todo>();
+    KCalCore::Todo::Ptr todo = IncidenceCompletionPriority::incidence<KCalCore::Todo>();
 
-  if ( !todo ) {
+    if (!todo) {
+        return false;
+    }
+
+    if (d->mUi->mCompletionSlider->value() != todo->percentComplete()) {
+        return true;
+    }
+
+    if (d->mUi->mPriorityCombo->currentIndex() != todo->priority()) {
+        return true;
+    }
+
     return false;
-  }
-
-  if ( d->mUi->mCompletionSlider->value() != todo->percentComplete() ) {
-    return true;
-  }
-
-  if ( d->mUi->mPriorityCombo->currentIndex() != todo->priority() ) {
-    return true;
-  }
-
-  return false;
 }
 
 #include "moc_incidencecompletionpriority.cpp"

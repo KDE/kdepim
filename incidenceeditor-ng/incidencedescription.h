@@ -23,12 +23,14 @@
 
 #include "incidenceeditor-ng.h"
 
-namespace Ui {
-  class EventOrTodoMore;
-  class EventOrTodoDesktop;
+namespace Ui
+{
+class EventOrTodoMore;
+class EventOrTodoDesktop;
 }
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 class IncidenceDescriptionPrivate;
 
@@ -38,18 +40,18 @@ class IncidenceDescriptionPrivate;
  */
 class INCIDENCEEDITORS_NG_EXPORT IncidenceDescription : public IncidenceEditor
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
 #ifdef KDEPIM_MOBILE_UI
-    explicit IncidenceDescription( Ui::EventOrTodoMore *ui );
+    explicit IncidenceDescription(Ui::EventOrTodoMore *ui);
 #else
-    explicit IncidenceDescription( Ui::EventOrTodoDesktop *ui );
+    explicit IncidenceDescription(Ui::EventOrTodoDesktop *ui);
 #endif
 
     ~IncidenceDescription();
 
-    virtual void load( const KCalCore::Incidence::Ptr &incidence );
-    virtual void save( const KCalCore::Incidence::Ptr &incidence );
+    virtual void load(const KCalCore::Incidence::Ptr &incidence);
+    virtual void save(const KCalCore::Incidence::Ptr &incidence);
     virtual bool isDirty() const;
 
     // For debugging pursposes
@@ -57,22 +59,22 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDescription : public IncidenceEditor
 
     virtual void printDebugInfo() const;
 
-  private slots:
+private slots:
     void toggleRichTextDescription();
-    void enableRichTextDescription( bool enable );
+    void enableRichTextDescription(bool enable);
 
-  private:
+private:
     void setupToolBar();
 
-  private:
+private:
 #ifdef KDEPIM_MOBILE_UI
     Ui::EventOrTodoMore *mUi;
 #else
     Ui::EventOrTodoDesktop *mUi;
 #endif
     //@cond PRIVATE
-    Q_DECLARE_PRIVATE( IncidenceDescription )
-    IncidenceDescriptionPrivate * const d;
+    Q_DECLARE_PRIVATE(IncidenceDescription)
+    IncidenceDescriptionPrivate *const d;
     //@endcond
 };
 

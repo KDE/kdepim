@@ -20,25 +20,23 @@
 #include "ktimezonecomboboxtest.h"
 #include "../ktimezonecombobox.h"
 
-
 #include "qtest.h"
 
-QTEST_MAIN( KTimeZoneComboBoxTest )
+QTEST_MAIN(KTimeZoneComboBoxTest)
 
 void KTimeZoneComboBoxTest::test_timeSpec()
 {
-  IncidenceEditorNG::KTimeZoneComboBox combo;
-  KDateTime::Spec spec;
+    IncidenceEditorNG::KTimeZoneComboBox combo;
+    KDateTime::Spec spec;
 
-  spec.setType( KDateTime::LocalZone );
-  combo.selectTimeSpec( spec );
-  QCOMPARE( combo.selectedTimeSpec().type(), KDateTime::TimeZone ); // KDateTime::Spec stores it as TimeZone, not LocalTime
+    spec.setType(KDateTime::LocalZone);
+    combo.selectTimeSpec(spec);
+    QCOMPARE(combo.selectedTimeSpec().type(), KDateTime::TimeZone);   // KDateTime::Spec stores it as TimeZone, not LocalTime
 
+    spec = KDateTime::Spec(KDateTime::ClockTime);
+    combo.selectTimeSpec(spec);
+    QCOMPARE(combo.selectedTimeSpec().type(), KDateTime::ClockTime);
 
-  spec = KDateTime::Spec( KDateTime::ClockTime );
-  combo.selectTimeSpec( spec );
-  QCOMPARE( combo.selectedTimeSpec().type(), KDateTime::ClockTime );
-
-  combo.setFloating( true );
-  QCOMPARE( combo.selectedTimeSpec().type(), KDateTime::ClockTime );
+    combo.setFloating(true);
+    QCOMPARE(combo.selectedTimeSpec().type(), KDateTime::ClockTime);
 }

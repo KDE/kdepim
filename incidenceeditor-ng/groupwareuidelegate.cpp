@@ -41,8 +41,8 @@ void GroupwareUiDelegate::requestIncidenceEditor(const Akonadi::Item &item)
     }
 
     IncidenceDialog *dialog = IncidenceDialogFactory::create(/*needs initial saving=*/ false,
-                                                             incidence->type(), 0);
-    dialog->setAttribute( Qt::WA_DeleteOnClose, false );
+                              incidence->type(), 0);
+    dialog->setAttribute(Qt::WA_DeleteOnClose, false);
     dialog->setIsCounterProposal(true);
     dialog->load(item, QDate::currentDate());
     dialog->exec();

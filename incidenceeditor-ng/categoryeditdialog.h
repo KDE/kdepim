@@ -27,49 +27,52 @@
 
 class QTreeWidgetItem;
 
-namespace Ui {
-  class CategoryEditDialog_base;
+namespace Ui
+{
+class CategoryEditDialog_base;
 }
 
-namespace CalendarSupport {
-  class CategoryConfig;
+namespace CalendarSupport
+{
+class CategoryConfig;
 }
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 class INCIDENCEEDITORS_NG_EXPORT CategoryEditDialog : public QDialog
 {
-  Q_OBJECT
-  public:
-    explicit CategoryEditDialog( CalendarSupport::CategoryConfig *categoryConfig,
-                                 QWidget *parent = 0 );
+    Q_OBJECT
+public:
+    explicit CategoryEditDialog(CalendarSupport::CategoryConfig *categoryConfig,
+                                QWidget *parent = 0);
 
     ~CategoryEditDialog();
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void reload();
     virtual void show();
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     void slotOk();
     void slotApply();
     void slotCancel();
-    void slotTextChanged( const QString &text );
+    void slotTextChanged(const QString &text);
     void slotSelectionChanged();
     void add();
     void addSubcategory();
     void remove();
     void editItem();
-    void expandIfToplevel( QTreeWidgetItem *item );
+    void expandIfToplevel(QTreeWidgetItem *item);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void categoryConfigChanged();
 
-  protected:
+protected:
     void fillList();
 
-  private:
-    void deleteItem( QTreeWidgetItem *item, QList<QTreeWidgetItem *> &to_remove );
+private:
+    void deleteItem(QTreeWidgetItem *item, QList<QTreeWidgetItem *> &to_remove);
     CalendarSupport::CategoryConfig *mCategoryConfig;
     Ui::CategoryEditDialog_base *mWidgets;
 };

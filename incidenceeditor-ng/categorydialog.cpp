@@ -39,44 +39,44 @@ using namespace CalendarSupport;
 
 class CategoryWidgetBase : public QWidget, public Ui::CategoryDialog_base
 {
-  public:
-    CategoryWidgetBase( QWidget *parent ) : QWidget( parent )
+public:
+    CategoryWidgetBase(QWidget *parent) : QWidget(parent)
     {
-      setupUi( this );
+        setupUi(this);
     }
 };
 
-CategoryWidget::CategoryWidget( CategoryConfig *cc, QWidget *parent )
-  : QWidget( parent ), mCategoryConfig( cc )
+CategoryWidget::CategoryWidget(CategoryConfig *cc, QWidget *parent)
+    : QWidget(parent), mCategoryConfig(cc)
 {
-  QHBoxLayout *topL = new QHBoxLayout( this );
-  topL->setMargin( 0 );
+    QHBoxLayout *topL = new QHBoxLayout(this);
+    topL->setMargin(0);
 //TODO PORT QT5   topL->setSpacing( QDialog::spacingHint() );
-  mWidgets = new CategoryWidgetBase( this );
-  topL->addWidget( mWidgets );
+    mWidgets = new CategoryWidgetBase(this);
+    topL->addWidget(mWidgets);
 
-  mWidgets->mButtonAdd->setIcon( QIcon::fromTheme( "list-add" ) );
-  mWidgets->mButtonRemove->setIcon( QIcon::fromTheme( "list-remove" ) );
-  mWidgets->mLineEdit->setPlaceholderText( i18n( "Click to add a new category" ) );
+    mWidgets->mButtonAdd->setIcon(QIcon::fromTheme("list-add"));
+    mWidgets->mButtonRemove->setIcon(QIcon::fromTheme("list-remove"));
+    mWidgets->mLineEdit->setPlaceholderText(i18n("Click to add a new category"));
 
-  connect( mWidgets->mLineEdit, SIGNAL(textChanged(QString)),
-           SLOT(handleTextChanged(QString)) );
+    connect(mWidgets->mLineEdit, SIGNAL(textChanged(QString)),
+            SLOT(handleTextChanged(QString)));
 
-  mWidgets->mButtonAdd->setEnabled( false );
-  mWidgets->mButtonRemove->setEnabled( false );
-  mWidgets->mColorCombo->setEnabled( false );
+    mWidgets->mButtonAdd->setEnabled(false);
+    mWidgets->mButtonRemove->setEnabled(false);
+    mWidgets->mColorCombo->setEnabled(false);
 
-  connect( mWidgets->mCategories, SIGNAL(itemSelectionChanged()),
-           SLOT(handleSelectionChanged()) );
+    connect(mWidgets->mCategories, SIGNAL(itemSelectionChanged()),
+            SLOT(handleSelectionChanged()));
 
-  connect( mWidgets->mButtonAdd, SIGNAL(clicked()),
-           SLOT(addCategory()) );
+    connect(mWidgets->mButtonAdd, SIGNAL(clicked()),
+            SLOT(addCategory()));
 
-  connect( mWidgets->mButtonRemove, SIGNAL(clicked()),
-           SLOT(removeCategory()) );
+    connect(mWidgets->mButtonRemove, SIGNAL(clicked()),
+            SLOT(removeCategory()));
 
-  connect( mWidgets->mColorCombo, SIGNAL(activated(QColor)),
-           SLOT(handleColorChanged(QColor)) );
+    connect(mWidgets->mColorCombo, SIGNAL(activated(QColor)),
+            SLOT(handleColorChanged(QColor)));
 
 }
 
@@ -86,255 +86,254 @@ CategoryWidget::~CategoryWidget()
 
 AutoCheckTreeWidget *CategoryWidget::listView() const
 {
-  return mWidgets->mCategories;
+    return mWidgets->mCategories;
 }
 
 void CategoryWidget::hideButton()
 {
 }
 
-void CategoryWidget::setCategories( const QStringList &categoryList )
+void CategoryWidget::setCategories(const QStringList &categoryList)
 {
-  mWidgets->mCategories->clear();
-  mCategoryList.clear();
+    mWidgets->mCategories->clear();
+    mCategoryList.clear();
 
-  QStringList::ConstIterator it;
-  QStringList cats = mCategoryConfig->customCategories();
-  for ( it = categoryList.begin(); it != categoryList.end(); ++it ) {
-    if ( !cats.contains( *it ) ) {
-      cats.append( *it );
+    QStringList::ConstIterator it;
+    QStringList cats = mCategoryConfig->customCategories();
+    for (it = categoryList.begin(); it != categoryList.end(); ++it) {
+        if (!cats.contains(*it)) {
+            cats.append(*it);
+        }
     }
-  }
-  mCategoryConfig->setCustomCategories( cats );
-  CategoryHierarchyReaderQTreeWidget( mWidgets->mCategories ).read( cats );
+    mCategoryConfig->setCustomCategories(cats);
+    CategoryHierarchyReaderQTreeWidget(mWidgets->mCategories).read(cats);
 }
 
-void CategoryWidget::setSelected( const QStringList &selList )
+void CategoryWidget::setSelected(const QStringList &selList)
 {
-  clear();
-  QStringList::ConstIterator it;
+    clear();
+    QStringList::ConstIterator it;
 
-  const bool remAutoCheckChildren = mWidgets->mCategories->autoCheckChildren();
-  mWidgets->mCategories->setAutoCheckChildren( false );
-  for ( it = selList.begin(); it != selList.end(); ++it ) {
-    QStringList path = CategoryHierarchyReader::path( *it );
-    QTreeWidgetItem *item = mWidgets->mCategories->itemByPath( path );
-    if ( item ) {
-      item->setCheckState( 0, Qt::Checked );
+    const bool remAutoCheckChildren = mWidgets->mCategories->autoCheckChildren();
+    mWidgets->mCategories->setAutoCheckChildren(false);
+    for (it = selList.begin(); it != selList.end(); ++it) {
+        QStringList path = CategoryHierarchyReader::path(*it);
+        QTreeWidgetItem *item = mWidgets->mCategories->itemByPath(path);
+        if (item) {
+            item->setCheckState(0, Qt::Checked);
+        }
     }
-  }
-  mWidgets->mCategories->setAutoCheckChildren( remAutoCheckChildren );
+    mWidgets->mCategories->setAutoCheckChildren(remAutoCheckChildren);
 }
 
-static QStringList getSelectedCategories( AutoCheckTreeWidget *categoriesView )
+static QStringList getSelectedCategories(AutoCheckTreeWidget *categoriesView)
 {
-  QStringList categories;
+    QStringList categories;
 
-  QTreeWidgetItemIterator it( categoriesView, QTreeWidgetItemIterator::Checked );
-  while ( *it ) {
-    QStringList path = categoriesView->pathByItem( *it++ );
-    if ( path.count() ) {
-      path.replaceInStrings( CategoryConfig::categorySeparator, QString( "\\" ) +
-                             CategoryConfig::categorySeparator );
-      categories.append( path.join( CategoryConfig::categorySeparator ) );
+    QTreeWidgetItemIterator it(categoriesView, QTreeWidgetItemIterator::Checked);
+    while (*it) {
+        QStringList path = categoriesView->pathByItem(*it++);
+        if (path.count()) {
+            path.replaceInStrings(CategoryConfig::categorySeparator, QString("\\") +
+                                  CategoryConfig::categorySeparator);
+            categories.append(path.join(CategoryConfig::categorySeparator));
+        }
     }
-  }
 
-  return categories;
+    return categories;
 }
 
 void CategoryWidget::clear()
 {
-  const bool remAutoCheckChildren = mWidgets->mCategories->autoCheckChildren();
-  mWidgets->mCategories->setAutoCheckChildren( false );
+    const bool remAutoCheckChildren = mWidgets->mCategories->autoCheckChildren();
+    mWidgets->mCategories->setAutoCheckChildren(false);
 
-  QTreeWidgetItemIterator it( mWidgets->mCategories );
-  while ( *it ) {
-    ( *it++ )->setCheckState( 0, Qt::Unchecked );
-  }
+    QTreeWidgetItemIterator it(mWidgets->mCategories);
+    while (*it) {
+        (*it++)->setCheckState(0, Qt::Unchecked);
+    }
 
-  mWidgets->mCategories->setAutoCheckChildren( remAutoCheckChildren );
+    mWidgets->mCategories->setAutoCheckChildren(remAutoCheckChildren);
 }
 
-void CategoryWidget::setAutoselectChildren( bool autoselectChildren )
+void CategoryWidget::setAutoselectChildren(bool autoselectChildren)
 {
-  mWidgets->mCategories->setAutoCheckChildren( autoselectChildren );
+    mWidgets->mCategories->setAutoCheckChildren(autoselectChildren);
 }
 
 void CategoryWidget::hideHeader()
 {
-  mWidgets->mCategories->header()->hide();
+    mWidgets->mCategories->header()->hide();
 }
 
-QStringList CategoryWidget::selectedCategories( QString &categoriesStr )
+QStringList CategoryWidget::selectedCategories(QString &categoriesStr)
 {
-  mCategoryList = getSelectedCategories( listView() );
-  categoriesStr = mCategoryList.join( ", " );
-  return mCategoryList;
+    mCategoryList = getSelectedCategories(listView());
+    categoriesStr = mCategoryList.join(", ");
+    return mCategoryList;
 }
 
 QStringList CategoryWidget::selectedCategories() const
 {
-  return mCategoryList;
+    return mCategoryList;
 }
 
-void CategoryWidget::setCategoryList( const QStringList &categories )
+void CategoryWidget::setCategoryList(const QStringList &categories)
 {
-   mCategoryList = categories;
+    mCategoryList = categories;
 }
 
 void CategoryWidget::addCategory()
 {
-  QTreeWidgetItem *newItem = new QTreeWidgetItem( listView(),
-                                                  QStringList( mWidgets->mLineEdit->text() ) );
-  listView()->scrollToItem( newItem );
-  listView()->clearSelection();
-  newItem->setSelected( true );
+    QTreeWidgetItem *newItem = new QTreeWidgetItem(listView(),
+            QStringList(mWidgets->mLineEdit->text()));
+    listView()->scrollToItem(newItem);
+    listView()->clearSelection();
+    newItem->setSelected(true);
 }
 
 void CategoryWidget::removeCategory()
 {
-  // Multi-select not supported, only one selected
-  QTreeWidgetItem *itemToDelete = listView()->selectedItems().first();
-  delete itemToDelete;
+    // Multi-select not supported, only one selected
+    QTreeWidgetItem *itemToDelete = listView()->selectedItems().first();
+    delete itemToDelete;
 }
 
-void CategoryWidget::handleTextChanged( const QString &newText )
+void CategoryWidget::handleTextChanged(const QString &newText)
 {
-  mWidgets->mButtonAdd->setEnabled( !newText.isEmpty() );
+    mWidgets->mButtonAdd->setEnabled(!newText.isEmpty());
 }
 
 void CategoryWidget::handleSelectionChanged()
 {
-  const bool hasSelection = !listView()->selectedItems().isEmpty();
-  mWidgets->mButtonRemove->setEnabled( hasSelection );
-  mWidgets->mColorCombo->setEnabled( hasSelection );
+    const bool hasSelection = !listView()->selectedItems().isEmpty();
+    mWidgets->mButtonRemove->setEnabled(hasSelection);
+    mWidgets->mColorCombo->setEnabled(hasSelection);
 
-  if ( hasSelection ) {
-    const QTreeWidgetItem *item = listView()->selectedItems().first();
-    const QColor &color = KCalPrefs::instance()->categoryColor( item->text( 0 ) );
-    if ( color.isValid() ) {
-      mWidgets->mColorCombo->setColor( color );
-      // update is needed. bug in KColorCombo?
-      mWidgets->mColorCombo->update();
+    if (hasSelection) {
+        const QTreeWidgetItem *item = listView()->selectedItems().first();
+        const QColor &color = KCalPrefs::instance()->categoryColor(item->text(0));
+        if (color.isValid()) {
+            mWidgets->mColorCombo->setColor(color);
+            // update is needed. bug in KColorCombo?
+            mWidgets->mColorCombo->update();
+        }
     }
-  }
 }
 
-void CategoryWidget::handleColorChanged( const QColor &newColor )
+void CategoryWidget::handleColorChanged(const QColor &newColor)
 {
-  if ( !listView()->selectedItems().isEmpty() ) {
-    const QTreeWidgetItem *item = listView()->selectedItems().first();
-    const QString category = item->text( 0 );
-    if ( newColor.isValid() ) {
-      KCalPrefs::instance()->setCategoryColor( category, newColor );
+    if (!listView()->selectedItems().isEmpty()) {
+        const QTreeWidgetItem *item = listView()->selectedItems().first();
+        const QString category = item->text(0);
+        if (newColor.isValid()) {
+            KCalPrefs::instance()->setCategoryColor(category, newColor);
+        }
     }
-  }
 }
 
-CategoryDialog::CategoryDialog( CategoryConfig *cc, QWidget *parent )
-  : QDialog( parent ), d( 0 )
+CategoryDialog::CategoryDialog(CategoryConfig *cc, QWidget *parent)
+    : QDialog(parent), d(0)
 {
-  setWindowTitle( i18n( "Select Categories" ) );
-  QVBoxLayout *mainLayout = new QVBoxLayout;
-  setLayout(mainLayout);
-  QDialogButtonBox *buttonBox = 0;
+    setWindowTitle(i18n("Select Categories"));
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    QDialogButtonBox *buttonBox = 0;
 
 #ifdef KDEPIM_MOBILE_UI
-  // HACK: This is for maemo, which hides the button if there is only a cancel
-  //       button.
-  buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok);
+    // HACK: This is for maemo, which hides the button if there is only a cancel
+    //       button.
+    buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok);
 #else
-  buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::Help|QDialogButtonBox::Apply);
+    buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::Help | QDialogButtonBox::Apply);
 #endif
 
-  QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
-  okButton->setDefault(true);
-  okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-  connect(buttonBox, &QDialogButtonBox::accepted, this, &CategoryDialog::accept);
-  connect(buttonBox, &QDialogButtonBox::rejected, this, &CategoryDialog::reject);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &CategoryDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &CategoryDialog::reject);
 
-
-  QWidget *page = new QWidget;
-  mainLayout->addWidget(page);
-  mainLayout->addWidget(buttonBox);
+    QWidget *page = new QWidget;
+    mainLayout->addWidget(page);
+    mainLayout->addWidget(buttonBox);
 //PORTING: Verify that widget was added to mainLayout:   setMainWidget( page );
 // Add mainLayout->addWidget(page); if necessary
-  QVBoxLayout *lay = new QVBoxLayout( page );
-  lay->setMargin( 0 );
+    QVBoxLayout *lay = new QVBoxLayout(page);
+    lay->setMargin(0);
 //TODO PORT QT5   lay->setSpacing( QDialog::spacingHint() );
 
-  mWidgets = new CategoryWidget( cc, this );
-  mCategoryConfig = cc;
-  mWidgets->setObjectName( "CategorySelection" );
-  mWidgets->hideHeader();
-  lay->addWidget( mWidgets );
+    mWidgets = new CategoryWidget(cc, this);
+    mCategoryConfig = cc;
+    mWidgets->setObjectName("CategorySelection");
+    mWidgets->hideHeader();
+    lay->addWidget(mWidgets);
 
-  mWidgets->setCategories();
-  mWidgets->listView()->setFocus();
+    mWidgets->setCategories();
+    mWidgets->listView()->setFocus();
 
-  connect(okButton, &QPushButton::clicked, this, &CategoryDialog::slotOk);
-  connect(buttonBox->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, &CategoryDialog::slotApply);
+    connect(okButton, &QPushButton::clicked, this, &CategoryDialog::slotOk);
+    connect(buttonBox->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, &CategoryDialog::slotApply);
 }
 
 CategoryDialog::~CategoryDialog()
 {
-  delete mWidgets;
+    delete mWidgets;
 }
 
 QStringList CategoryDialog::selectedCategories() const
 {
-  return mWidgets->selectedCategories();
+    return mWidgets->selectedCategories();
 }
 
 void CategoryDialog::slotApply()
 {
-  QStringList l;
+    QStringList l;
 
-  QStringList path;
-  QTreeWidgetItemIterator it( mWidgets->listView() );
-  while ( *it ) {
-    path = mWidgets->listView()->pathByItem( *it++ );
-    path.replaceInStrings(
-      CategoryConfig::categorySeparator,
-      QString( "\\" ) + CategoryConfig::categorySeparator );
-    l.append( path.join( CategoryConfig::categorySeparator ) );
-  }
-  mCategoryConfig->setCustomCategories( l );
-  mCategoryConfig->writeConfig();
+    QStringList path;
+    QTreeWidgetItemIterator it(mWidgets->listView());
+    while (*it) {
+        path = mWidgets->listView()->pathByItem(*it++);
+        path.replaceInStrings(
+            CategoryConfig::categorySeparator,
+            QString("\\") + CategoryConfig::categorySeparator);
+        l.append(path.join(CategoryConfig::categorySeparator));
+    }
+    mCategoryConfig->setCustomCategories(l);
+    mCategoryConfig->writeConfig();
 
-  QString categoriesStr;
-  QStringList categories = mWidgets->selectedCategories( categoriesStr );
-  emit categoriesSelected( categories );
-  emit categoriesSelected( categoriesStr );
+    QString categoriesStr;
+    QStringList categories = mWidgets->selectedCategories(categoriesStr);
+    emit categoriesSelected(categories);
+    emit categoriesSelected(categoriesStr);
 }
 
 void CategoryDialog::slotOk()
 {
-  slotApply();
-  accept();
+    slotApply();
+    accept();
 }
 
 void CategoryDialog::updateCategoryConfig()
 {
-  QString tmp;
-  QStringList selected = mWidgets->selectedCategories( tmp );
-  mWidgets->setCategories();
-  mWidgets->setSelected( selected );
+    QString tmp;
+    QStringList selected = mWidgets->selectedCategories(tmp);
+    mWidgets->setCategories();
+    mWidgets->setSelected(selected);
 }
 
-void CategoryDialog::setAutoselectChildren( bool autoselectChildren )
+void CategoryDialog::setAutoselectChildren(bool autoselectChildren)
 {
-  mWidgets->setAutoselectChildren( autoselectChildren );
+    mWidgets->setAutoselectChildren(autoselectChildren);
 }
 
-void CategoryDialog::setCategoryList( const QStringList &categories )
+void CategoryDialog::setCategoryList(const QStringList &categories)
 {
-  mWidgets->setCategoryList( categories );
+    mWidgets->setCategoryList(categories);
 }
 
-void CategoryDialog::setSelected( const QStringList &selList )
+void CategoryDialog::setSelected(const QStringList &selList)
 {
-  mWidgets->setSelected( selList );
+    mWidgets->setSelected(selList);
 }
 

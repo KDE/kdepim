@@ -25,13 +25,12 @@
 #include "monitorsmodel.h"
 #include "notificationsourceinterface.h"
 
-
 class MonitorItem : public QObject
 {
     Q_OBJECT
 
-  public:
-    explicit MonitorItem( const QString &identifier_, MonitorsModel *model );
+public:
+    explicit MonitorItem(const QString &identifier_, MonitorsModel *model);
     virtual ~MonitorItem();
 
     QString identifier;
@@ -42,10 +41,10 @@ class MonitorItem : public QObject
     QString monitoredMimeTypes;
     QString ignoredSessions;
 
-  Q_SIGNALS:
-    void changed( MonitorsModel::Column column );
+Q_SIGNALS:
+    void changed(MonitorsModel::Column column);
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void init();
 
     void monitoredCollectionsChanged();
@@ -55,7 +54,7 @@ class MonitorItem : public QObject
     void isAllMonitoredChanged();
     void ignoredSessionsChanged();
 
-  private:
+private:
     org::freedesktop::Akonadi::NotificationSource *mInterface;
 };
 

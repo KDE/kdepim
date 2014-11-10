@@ -48,104 +48,106 @@
 
 #include <QVBoxLayout>
 
-MainWidget::MainWidget( KXmlGuiWindow *parent )
-  : QWidget( parent )
+MainWidget::MainWidget(KXmlGuiWindow *parent)
+    : QWidget(parent)
 {
-  QVBoxLayout *layout = new QVBoxLayout( this );
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
-  QTabWidget *tabWidget = new QTabWidget( this );
-  tabWidget->setObjectName( "mainTab" );
-  layout->addWidget( tabWidget );
+    QTabWidget *tabWidget = new QTabWidget(this);
+    tabWidget->setObjectName("mainTab");
+    layout->addWidget(tabWidget);
 
-  tabWidget->addTab( new AgentWidget( tabWidget ), "Agents" );
-  mBrowser = new BrowserWidget( parent, tabWidget );
-  tabWidget->addTab( mBrowser, "Browser" );
-  tabWidget->addTab( new DebugWidget( tabWidget ), "Debugger" );
-  tabWidget->addTab( new RawSocketConsole( tabWidget ), "Raw Socket" );
-  tabWidget->addTab( new DbBrowser( tabWidget ), "DB Browser" );
-  tabWidget->addTab( new DbConsole( tabWidget ), "DB Console" );
-  tabWidget->addTab( new QueryDebugger( tabWidget ), "Query Debugger" );
-  tabWidget->addTab( new JobTrackerWidget( "jobtracker", tabWidget, "Enable job tracker" ), "Job Tracker" );
-  tabWidget->addTab( new JobTrackerWidget( "resourcesJobtracker", tabWidget, "Enable tracking of Resource Schedulers" ), "Resources Schedulers" );
-  tabWidget->addTab( new NotificationMonitor( tabWidget ), "Notification Monitor" );
-  tabWidget->addTab( new SearchWidget( tabWidget ), "Item Search" );
-  tabWidget->addTab( new MonitorsWidget( tabWidget ), "Monitors" );
+    tabWidget->addTab(new AgentWidget(tabWidget), "Agents");
+    mBrowser = new BrowserWidget(parent, tabWidget);
+    tabWidget->addTab(mBrowser, "Browser");
+    tabWidget->addTab(new DebugWidget(tabWidget), "Debugger");
+    tabWidget->addTab(new RawSocketConsole(tabWidget), "Raw Socket");
+    tabWidget->addTab(new DbBrowser(tabWidget), "DB Browser");
+    tabWidget->addTab(new DbConsole(tabWidget), "DB Console");
+    tabWidget->addTab(new QueryDebugger(tabWidget), "Query Debugger");
+    tabWidget->addTab(new JobTrackerWidget("jobtracker", tabWidget, "Enable job tracker"), "Job Tracker");
+    tabWidget->addTab(new JobTrackerWidget("resourcesJobtracker", tabWidget, "Enable tracking of Resource Schedulers"), "Resources Schedulers");
+    tabWidget->addTab(new NotificationMonitor(tabWidget), "Notification Monitor");
+    tabWidget->addTab(new SearchWidget(tabWidget), "Item Search");
+    tabWidget->addTab(new MonitorsWidget(tabWidget), "Monitors");
 
-  QAction *action = parent->actionCollection()->addAction( "akonadiconsole_search" );
-  action->setText( "Create Search..." );
-  connect(action, &QAction::triggered, this, &MainWidget::createSearch);
+    QAction *action = parent->actionCollection()->addAction("akonadiconsole_search");
+    action->setText("Create Search...");
+    connect(action, &QAction::triggered, this, &MainWidget::createSearch);
 
-  action = parent->actionCollection()->addAction( "akonadiconsole_akonadi2xml" );
-  action->setText( "Dump to XML..." );
-  connect(action, &QAction::triggered, mBrowser, &BrowserWidget::dumpToXml);
+    action = parent->actionCollection()->addAction("akonadiconsole_akonadi2xml");
+    action->setText("Dump to XML...");
+    connect(action, &QAction::triggered, mBrowser, &BrowserWidget::dumpToXml);
 
-  action = parent->actionCollection()->addAction( "akonadiconsole_clearcache" );
-  action->setText( "Clear Akonadi Cache" );
-  connect(action, &QAction::triggered, mBrowser, &BrowserWidget::clearCache);
+    action = parent->actionCollection()->addAction("akonadiconsole_clearcache");
+    action->setText("Clear Akonadi Cache");
+    connect(action, &QAction::triggered, mBrowser, &BrowserWidget::clearCache);
 
-  action = parent->actionCollection()->addAction( "akonadiserver_start" );
-  action->setText( "Start Server" );
-  connect(action, &QAction::triggered, this, &MainWidget::startServer);
+    action = parent->actionCollection()->addAction("akonadiserver_start");
+    action->setText("Start Server");
+    connect(action, &QAction::triggered, this, &MainWidget::startServer);
 
-  action = parent->actionCollection()->addAction( "akonadiserver_stop" );
-  action->setText( "Stop Server" );
-  connect(action, &QAction::triggered, this, &MainWidget::stopServer);
+    action = parent->actionCollection()->addAction("akonadiserver_stop");
+    action->setText("Stop Server");
+    connect(action, &QAction::triggered, this, &MainWidget::stopServer);
 
-  action = parent->actionCollection()->addAction( "akonadiserver_restart" );
-  action->setText( "Restart Server" );
-  connect(action, &QAction::triggered, this, &MainWidget::restartServer);
+    action = parent->actionCollection()->addAction("akonadiserver_restart");
+    action->setText("Restart Server");
+    connect(action, &QAction::triggered, this, &MainWidget::restartServer);
 
-  action = parent->actionCollection()->addAction( "akonadiserver_configure" );
-  action->setText( "Configure Server..." );
-  action->setIcon( QIcon::fromTheme("configure") );
-  connect(action, &QAction::triggered, this, &MainWidget::configureServer);
+    action = parent->actionCollection()->addAction("akonadiserver_configure");
+    action->setText("Configure Server...");
+    action->setIcon(QIcon::fromTheme("configure"));
+    connect(action, &QAction::triggered, this, &MainWidget::configureServer);
 }
 
 MainWidget::~MainWidget()
 {
-  delete mBrowser;
+    delete mBrowser;
 }
 
 void MainWidget::createSearch()
 {
 //QT5
 #if 0
-  SearchDialog dlg;
-  if ( !dlg.exec() )
-    return;
+    SearchDialog dlg;
+    if (!dlg.exec()) {
+        return;
+    }
 
-  const QString query = dlg.searchQuery();
-  if ( query.isEmpty() )
-    return;
+    const QString query = dlg.searchQuery();
+    if (query.isEmpty()) {
+        return;
+    }
 
-  QString name = dlg.searchName();
-  if ( name.isEmpty() )
-    name = "My Search";
+    QString name = dlg.searchName();
+    if (name.isEmpty()) {
+        name = "My Search";
+    }
 
-  new Akonadi::SearchCreateJob( name, query );
+    new Akonadi::SearchCreateJob(name, query);
 #endif
 }
 
 void MainWidget::startServer()
 {
-  Akonadi::ServerManager::start();
+    Akonadi::ServerManager::start();
 }
 
 void MainWidget::stopServer()
 {
-  Akonadi::ServerManager::stop();
+    Akonadi::ServerManager::stop();
 }
 
 void MainWidget::restartServer()
 {
-  Akonadi::Control::restart( this );
+    Akonadi::Control::restart(this);
 }
 
 void MainWidget::configureServer()
 {
-  KCMultiDialog dlg;
-  dlg.addModule( "kcm_akonadi_server" );
-  dlg.exec();
+    KCMultiDialog dlg;
+    dlg.addModule("kcm_akonadi_server");
+    dlg.exec();
 }
-
 

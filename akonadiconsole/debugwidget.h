@@ -34,30 +34,30 @@ class ConnectionPage;
 
 class DebugWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit DebugWidget( QWidget *parent = 0 );
+public:
+    explicit DebugWidget(QWidget *parent = 0);
 
-  private Q_SLOTS:
-    void connectionStarted( const QString&, const QString& );
-    void connectionEnded( const QString&, const QString& );
-    void signalEmitted( const QString&, const QString& );
-    void warningEmitted( const QString&, const QString& );
-    void errorEmitted( const QString&, const QString& );
+private Q_SLOTS:
+    void connectionStarted(const QString &, const QString &);
+    void connectionEnded(const QString &, const QString &);
+    void signalEmitted(const QString &, const QString &);
+    void warningEmitted(const QString &, const QString &);
+    void errorEmitted(const QString &, const QString &);
 
-    void enableDebugger( bool enable );
+    void enableDebugger(bool enable);
 
-    void tabCloseRequested( int index );
+    void tabCloseRequested(int index);
     void clearAllTabs();
     void clearCurrentTab();
     void saveRichText();
     void closeAllTabs();
 
-  private:
+private:
     KTextEdit *mGeneralView;
     QTabWidget *mConnectionPages;
-    QHash<QString, ConnectionPage*> mPageHash;
+    QHash<QString, ConnectionPage *> mPageHash;
     org::freedesktop::Akonadi::DebugInterface *mDebugInterface;
 };
 

@@ -31,68 +31,68 @@
 
 using namespace IncidenceEditorNG;
 
-IncidenceWhatWhere::IncidenceWhatWhere( Ui::EventOrTodoDesktop *ui )
-  : IncidenceEditor( 0 ), mUi( ui )
+IncidenceWhatWhere::IncidenceWhatWhere(Ui::EventOrTodoDesktop *ui)
+    : IncidenceEditor(0), mUi(ui)
 {
-  setObjectName( "IncidenceWhatWhere" );
-  connect(mUi->mSummaryEdit, &QLineEdit::textChanged, this, &IncidenceWhatWhere::checkDirtyStatus);
-  connect(mUi->mLocationEdit, &QLineEdit::textChanged, this, &IncidenceWhatWhere::checkDirtyStatus);
+    setObjectName("IncidenceWhatWhere");
+    connect(mUi->mSummaryEdit, &QLineEdit::textChanged, this, &IncidenceWhatWhere::checkDirtyStatus);
+    connect(mUi->mLocationEdit, &QLineEdit::textChanged, this, &IncidenceWhatWhere::checkDirtyStatus);
 }
 
-void IncidenceWhatWhere::load( const KCalCore::Incidence::Ptr &incidence )
+void IncidenceWhatWhere::load(const KCalCore::Incidence::Ptr &incidence)
 {
-  qDebug();
-  mLoadedIncidence = incidence;
-  if ( mLoadedIncidence ) {
-    mUi->mSummaryEdit->setText( mLoadedIncidence->summary() );
-    mUi->mLocationEdit->setText( mLoadedIncidence->location() );
-  } else {
-    mUi->mSummaryEdit->clear();
-    mUi->mLocationEdit->clear();
-  }
+    qDebug();
+    mLoadedIncidence = incidence;
+    if (mLoadedIncidence) {
+        mUi->mSummaryEdit->setText(mLoadedIncidence->summary());
+        mUi->mLocationEdit->setText(mLoadedIncidence->location());
+    } else {
+        mUi->mSummaryEdit->clear();
+        mUi->mLocationEdit->clear();
+    }
 
-  mUi->mLocationEdit->setVisible( type() != KCalCore::Incidence::TypeJournal );
-  mUi->mLocationLabel->setVisible( type() != KCalCore::Incidence::TypeJournal );
+    mUi->mLocationEdit->setVisible(type() != KCalCore::Incidence::TypeJournal);
+    mUi->mLocationLabel->setVisible(type() != KCalCore::Incidence::TypeJournal);
 
-  mWasDirty = false;
+    mWasDirty = false;
 }
 
-void IncidenceWhatWhere::save( const KCalCore::Incidence::Ptr &incidence )
+void IncidenceWhatWhere::save(const KCalCore::Incidence::Ptr &incidence)
 {
-  Q_ASSERT( incidence );
-  incidence->setSummary( mUi->mSummaryEdit->text() );
-  incidence->setLocation( mUi->mLocationEdit->text() );
+    Q_ASSERT(incidence);
+    incidence->setSummary(mUi->mSummaryEdit->text());
+    incidence->setLocation(mUi->mLocationEdit->text());
 }
 
 bool IncidenceWhatWhere::isDirty() const
 {
-  if ( mLoadedIncidence ) {
-    return
-      ( mUi->mSummaryEdit->text() != mLoadedIncidence->summary() ) ||
-      ( mUi->mLocationEdit->text() != mLoadedIncidence->location() );
-  } else {
-    return
-      mUi->mSummaryEdit->text().isEmpty() &&
-      mUi->mLocationEdit->text().isEmpty();
-  }
+    if (mLoadedIncidence) {
+        return
+            (mUi->mSummaryEdit->text() != mLoadedIncidence->summary()) ||
+            (mUi->mLocationEdit->text() != mLoadedIncidence->location());
+    } else {
+        return
+            mUi->mSummaryEdit->text().isEmpty() &&
+            mUi->mLocationEdit->text().isEmpty();
+    }
 }
 
 bool IncidenceWhatWhere::isValid() const
 {
-  if ( mUi->mSummaryEdit->text().isEmpty() ) {
-    qDebug() << "Specify a title";
-    mLastErrorString = i18nc( "@info", "Please specify a title." );
-    return false;
-  } else {
-    mLastErrorString.clear();
-    return true;
-  }
+    if (mUi->mSummaryEdit->text().isEmpty()) {
+        qDebug() << "Specify a title";
+        mLastErrorString = i18nc("@info", "Please specify a title.");
+        return false;
+    } else {
+        mLastErrorString.clear();
+        return true;
+    }
 }
 
 void IncidenceWhatWhere::validate()
 {
-  if ( mUi->mSummaryEdit->text().isEmpty() ) {
-    mUi->mSummaryEdit->setFocus();
-  }
+    if (mUi->mSummaryEdit->text().isEmpty()) {
+        mUi->mSummaryEdit->setFocus();
+    }
 }
 

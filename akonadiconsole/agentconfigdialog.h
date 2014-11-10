@@ -29,15 +29,15 @@ class AgentConfigModel;
 
 class AgentConfigDialog : public QDialog
 {
-  Q_OBJECT
-  public:
-    explicit AgentConfigDialog( QWidget *parent = 0 );
-    void setAgentInstance( const Akonadi::AgentInstance &instance );
+    Q_OBJECT
+public:
+    explicit AgentConfigDialog(QWidget *parent = 0);
+    void setAgentInstance(const Akonadi::AgentInstance &instance);
 
-  private slots:
+private slots:
     void reconfigure();
 
-  private:
+private:
     Ui::AgentConfigDialog ui;
     AgentConfigModel *m_model;
     Akonadi::AgentInstance m_instance;

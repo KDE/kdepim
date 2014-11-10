@@ -25,7 +25,6 @@
 #include <QDebug>
 #include "akonadiconsole_debug.h"
 
-
 #include <QIcon>
 #include <KLocalizedString>
 
@@ -36,90 +35,91 @@
 
 using namespace Akonadi;
 
-RawSocketConsole::RawSocketConsole(QWidget* parent) :
-  QWidget( parent ),
-  mSocket( new QLocalSocket( this ) )
+RawSocketConsole::RawSocketConsole(QWidget *parent) :
+    QWidget(parent),
+    mSocket(new QLocalSocket(this))
 {
-  ui.setupUi( this );
-  ui.execButton->setIcon( QIcon::fromTheme( "application-x-executable" ) );
-  connect(ui.execButton, &QPushButton::clicked, this, &RawSocketConsole::execClicked);
-  connect(ui.commandEdit, &QLineEdit::returnPressed, this, &RawSocketConsole::execClicked);
-  connect(ui.connectButton, &QPushButton::clicked, this, &RawSocketConsole::connectClicked);
-  connect(ui.clearButton, &QPushButton::clicked, ui.protocolView, &KTextEdit::clear);
-  ui.protocolView->setFont( QFontDatabase::systemFont(QFontDatabase::FixedFont) );
+    ui.setupUi(this);
+    ui.execButton->setIcon(QIcon::fromTheme("application-x-executable"));
+    connect(ui.execButton, &QPushButton::clicked, this, &RawSocketConsole::execClicked);
+    connect(ui.commandEdit, &QLineEdit::returnPressed, this, &RawSocketConsole::execClicked);
+    connect(ui.connectButton, &QPushButton::clicked, this, &RawSocketConsole::connectClicked);
+    connect(ui.clearButton, &QPushButton::clicked, ui.protocolView, &KTextEdit::clear);
+    ui.protocolView->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
 
-  connect(mSocket, &QLocalSocket::readyRead, this, &RawSocketConsole::dataReceived);
-  connect(mSocket, &QLocalSocket::connected, this, &RawSocketConsole::connected);
-  connect(mSocket, &QLocalSocket::disconnected, this, &RawSocketConsole::disconnected);
+    connect(mSocket, &QLocalSocket::readyRead, this, &RawSocketConsole::dataReceived);
+    connect(mSocket, &QLocalSocket::connected, this, &RawSocketConsole::connected);
+    connect(mSocket, &QLocalSocket::disconnected, this, &RawSocketConsole::disconnected);
 
-  disconnected();
-  connectClicked();
+    disconnected();
+    connectClicked();
 }
 
 void RawSocketConsole::execClicked()
 {
-  const QString command = ui.commandEdit->text().trimmed() + '\n';
-  if ( command.isEmpty() )
-    return;
-  mSocket->write( command.toUtf8() );
-  ui.commandEdit->clear();
-  ui.protocolView->append( "<font color=\"red\">" + command + "</font>" );
+    const QString command = ui.commandEdit->text().trimmed() + '\n';
+    if (command.isEmpty()) {
+        return;
+    }
+    mSocket->write(command.toUtf8());
+    ui.commandEdit->clear();
+    ui.protocolView->append("<font color=\"red\">" + command + "</font>");
 }
 
 void RawSocketConsole::dataReceived()
 {
-  while ( mSocket->canReadLine() ) {
-    const QString line = QString::fromUtf8( mSocket->readLine() );
-    ui.protocolView->append( "<font color=\"blue\">" + line + "</font>" );
-  }
+    while (mSocket->canReadLine()) {
+        const QString line = QString::fromUtf8(mSocket->readLine());
+        ui.protocolView->append("<font color=\"blue\">" + line + "</font>");
+    }
 }
 
 void RawSocketConsole::connected()
 {
-  ui.connectButton->setChecked( true );
-  ui.connectButton->setText( i18n( "Disconnect" ) );
-  ui.execButton->setEnabled( true );
-  ui.commandEdit->setEnabled( true );
+    ui.connectButton->setChecked(true);
+    ui.connectButton->setText(i18n("Disconnect"));
+    ui.execButton->setEnabled(true);
+    ui.commandEdit->setEnabled(true);
 }
 
 void RawSocketConsole::disconnected()
 {
-  ui.connectButton->setChecked( false );
-  ui.connectButton->setText( i18n( "Connect" ) );
-  ui.execButton->setEnabled( false );
-  ui.commandEdit->setEnabled( false );
+    ui.connectButton->setChecked(false);
+    ui.connectButton->setText(i18n("Connect"));
+    ui.execButton->setEnabled(false);
+    ui.commandEdit->setEnabled(false);
 }
 
 void RawSocketConsole::connectClicked()
 {
-  if ( mSocket->state() == QLocalSocket::ConnectedState ) {
-    mSocket->close();
-  } else {
-    QString connectionConfigFile;
-    if ( Akonadi::ServerManager::self()->hasInstanceIdentifier() ) {
-      const QString akonadiPath = XdgBaseDirs::findResourceDir( "config", QLatin1String( "akonadi" ) );
-      connectionConfigFile = akonadiPath + QLatin1String( "/instance/" )
-                           + Akonadi::ServerManager::self()->instanceIdentifier()
-                           + QLatin1String( "/akonadiconnectionrc" );
+    if (mSocket->state() == QLocalSocket::ConnectedState) {
+        mSocket->close();
     } else {
-      connectionConfigFile = XdgBaseDirs::akonadiConnectionConfigFile();
-    }
+        QString connectionConfigFile;
+        if (Akonadi::ServerManager::self()->hasInstanceIdentifier()) {
+            const QString akonadiPath = XdgBaseDirs::findResourceDir("config", QLatin1String("akonadi"));
+            connectionConfigFile = akonadiPath + QLatin1String("/instance/")
+                                   + Akonadi::ServerManager::self()->instanceIdentifier()
+                                   + QLatin1String("/akonadiconnectionrc");
+        } else {
+            connectionConfigFile = XdgBaseDirs::akonadiConnectionConfigFile();
+        }
 
-    if ( !QFile::exists( connectionConfigFile ) ) {
-      qCWarning(AKONADICONSOLE_LOG) << "Akonadi Client Session: connection config file '"
-      << "akonadi/akonadiconnectionrc cannot be found in '"
-      << XdgBaseDirs::homePath( "config" ) << "' nor in any of "
-      << XdgBaseDirs::systemPathList( "config" );
-    }
-    QSettings conSettings( connectionConfigFile, QSettings::IniFormat );
+        if (!QFile::exists(connectionConfigFile)) {
+            qCWarning(AKONADICONSOLE_LOG) << "Akonadi Client Session: connection config file '"
+                                          << "akonadi/akonadiconnectionrc cannot be found in '"
+                                          << XdgBaseDirs::homePath("config") << "' nor in any of "
+                                          << XdgBaseDirs::systemPathList("config");
+        }
+        QSettings conSettings(connectionConfigFile, QSettings::IniFormat);
 #ifdef Q_OS_WIN  //krazy:exclude=cpp
-    const QString namedPipe = conSettings.value( QLatin1String( "Data/NamedPipe" ), QLatin1String( "Akonadi" ) ).toString();
-    mSocket->connectToServer( namedPipe );
+        const QString namedPipe = conSettings.value(QLatin1String("Data/NamedPipe"), QLatin1String("Akonadi")).toString();
+        mSocket->connectToServer(namedPipe);
 #else
-    const QString defaultSocketDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) );
-    const QString path = conSettings.value( QLatin1String( "Data/UnixPath" ), QString( defaultSocketDir + QLatin1String( "/akonadiserver.socket" ) ) ).toString();
-    mSocket->connectToServer( path );
+        const QString defaultSocketDir = XdgBaseDirs::saveDir("data", QLatin1String("akonadi"));
+        const QString path = conSettings.value(QLatin1String("Data/UnixPath"), QString(defaultSocketDir + QLatin1String("/akonadiserver.socket"))).toString();
+        mSocket->connectToServer(path);
 #endif
-  }
+    }
 }
 

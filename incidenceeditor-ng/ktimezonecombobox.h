@@ -29,11 +29,13 @@
 #include <KComboBox>
 #include <KDateTime>
 
-namespace KCalCore {
-  class ICalTimeZones;
+namespace KCalCore
+{
+class ICalTimeZones;
 }
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 /**
  * A combobox that shows the system timezones available in KSystemTimeZones::zones()
@@ -43,14 +45,14 @@ namespace IncidenceEditorNG {
  */
 class INCIDENCEEDITORS_NG_EXPORT KTimeZoneComboBox : public KComboBox
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
      * Creates a new time zone combobox.
      *
      * @param parent The parent widget.
      */
-    explicit KTimeZoneComboBox( QWidget *parent = 0 );
+    explicit KTimeZoneComboBox(QWidget *parent = 0);
 
     /**
      * Creates a new time zone combobox.
@@ -58,7 +60,7 @@ class INCIDENCEEDITORS_NG_EXPORT KTimeZoneComboBox : public KComboBox
      * @param additionalZones Additional time zones that shall be included in the combobox.
      * @param parent The parent widget.
      */
-    explicit KTimeZoneComboBox( const KCalCore::ICalTimeZones *additionalZones, QWidget *parent=0 );
+    explicit KTimeZoneComboBox(const KCalCore::ICalTimeZones *additionalZones, QWidget *parent = 0);
 
     /**
      * Destroys the time zone combobox.
@@ -69,12 +71,12 @@ class INCIDENCEEDITORS_NG_EXPORT KTimeZoneComboBox : public KComboBox
       Sets additional time @p zones (usually from a calendar) which should be displayed
       additionally to the system time zones.
     */
-    void setAdditionalTimeZones( const KCalCore::ICalTimeZones *zones );
+    void setAdditionalTimeZones(const KCalCore::ICalTimeZones *zones);
 
     /**
      * Selects the item in the combobox corresponding to the given @p spec.
      */
-    void selectTimeSpec( const KDateTime::Spec &spec );
+    void selectTimeSpec(const KDateTime::Spec &spec);
 
     /**
      * Convenience version of selectTimeSpec(const KDateTime::Spec &).
@@ -87,14 +89,14 @@ class INCIDENCEEDITORS_NG_EXPORT KTimeZoneComboBox : public KComboBox
      * if @spec is valid, selects @p spec time zone, if not selects
      * local time zone.
      */
-    void setFloating( bool floating, const KDateTime::Spec &spec = KDateTime::Spec() );
+    void setFloating(bool floating, const KDateTime::Spec &spec = KDateTime::Spec());
 
     /**
      * Return the timespec associated with the currently selected item.
      */
     KDateTime::Spec selectedTimeSpec() const;
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private *const d;

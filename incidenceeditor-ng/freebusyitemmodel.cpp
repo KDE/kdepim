@@ -31,171 +31,172 @@
 
 using namespace IncidenceEditorNG;
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 class ItemPrivateData
 {
-  public:
-    ItemPrivateData( ItemPrivateData *parent ) : parentItem( parent )
+public:
+    ItemPrivateData(ItemPrivateData *parent) : parentItem(parent)
     {
     }
 
     ~ItemPrivateData()
     {
-      qDeleteAll( childItems );
+        qDeleteAll(childItems);
     }
 
-    ItemPrivateData *child( int row )
+    ItemPrivateData *child(int row)
     {
-      return childItems.value( row );
+        return childItems.value(row);
     }
 
-    void appendChild( ItemPrivateData *item )
+    void appendChild(ItemPrivateData *item)
     {
-      childItems.append(item);
+        childItems.append(item);
     }
 
-    ItemPrivateData *removeChild( int row )
+    ItemPrivateData *removeChild(int row)
     {
-      return childItems.takeAt( row );
+        return childItems.takeAt(row);
     }
 
     int childCount() const
     {
-      return childItems.count();
+        return childItems.count();
     }
 
     int row() const
     {
-      if ( parentItem ) {
-        return parentItem->childItems.indexOf( const_cast<ItemPrivateData*>(this) );
-      }
-      return 0;
+        if (parentItem) {
+            return parentItem->childItems.indexOf(const_cast<ItemPrivateData *>(this));
+        }
+        return 0;
     }
 
     ItemPrivateData *parent()
     {
-      return parentItem;
+        return parentItem;
     }
 
-  private:
-    QList<ItemPrivateData*> childItems;
+private:
+    QList<ItemPrivateData *> childItems;
     ItemPrivateData *parentItem;
 };
 
 }
 
-FreeBusyItemModel::FreeBusyItemModel( QObject *parent )
-  : QAbstractItemModel( parent ), mForceDownload( false )
+FreeBusyItemModel::FreeBusyItemModel(QObject *parent)
+    : QAbstractItemModel(parent), mForceDownload(false)
 {
-  qRegisterMetaType<KCalCore::Attendee::Ptr>( "KCalCore::Attendee::Ptr" );
-  qRegisterMetaType<KCalCore::FreeBusy::Ptr>( "KCalCore::FreeBusy::Ptr" );
-  qRegisterMetaType<KCalCore::Period>( "KCalCore::Period" );
+    qRegisterMetaType<KCalCore::Attendee::Ptr>("KCalCore::Attendee::Ptr");
+    qRegisterMetaType<KCalCore::FreeBusy::Ptr>("KCalCore::FreeBusy::Ptr");
+    qRegisterMetaType<KCalCore::Period>("KCalCore::Period");
 
-  Akonadi::FreeBusyManager *m = Akonadi::FreeBusyManager::self();
-  connect( m, SIGNAL(freeBusyRetrieved(KCalCore::FreeBusy::Ptr,QString)),
-           SLOT(slotInsertFreeBusy(KCalCore::FreeBusy::Ptr,QString)) );
+    Akonadi::FreeBusyManager *m = Akonadi::FreeBusyManager::self();
+    connect(m, SIGNAL(freeBusyRetrieved(KCalCore::FreeBusy::Ptr,QString)),
+            SLOT(slotInsertFreeBusy(KCalCore::FreeBusy::Ptr,QString)));
 
-  connect(&mReloadTimer, &QTimer::timeout, this, &FreeBusyItemModel::autoReload);
-  mReloadTimer.setSingleShot( true );
+    connect(&mReloadTimer, &QTimer::timeout, this, &FreeBusyItemModel::autoReload);
+    mReloadTimer.setSingleShot(true);
 
-  mRootData = new ItemPrivateData( 0 );
+    mRootData = new ItemPrivateData(0);
 }
 
 FreeBusyItemModel::~FreeBusyItemModel()
 {
-  delete mRootData;
+    delete mRootData;
 }
 
-QVariant FreeBusyItemModel::data( const QModelIndex &index, int role ) const
+QVariant FreeBusyItemModel::data(const QModelIndex &index, int role) const
 {
-  if ( !index.isValid() ) {
-    return QVariant();
-  }
-
-  ItemPrivateData *data = (ItemPrivateData*) index.internalPointer();
-
-  if ( data->parent() == mRootData ) {
-    int row = index.row();
-    if ( row >= mFreeBusyItems.size() ) {
-      return QVariant();
-    }
-
-    switch( role ) {
-    case Qt::DisplayRole:
-      return mFreeBusyItems.at( row )->attendee()->fullName();
-    case FreeBusyItemModel::AttendeeRole:
-      return QVariant::fromValue( mFreeBusyItems.at( row )->attendee() );
-    case FreeBusyItemModel::FreeBusyRole:
-      if ( mFreeBusyItems.at( row )->freeBusy() ) {
-        return QVariant::fromValue( mFreeBusyItems.at( row )->freeBusy() );
-      } else {
+    if (!index.isValid()) {
         return QVariant();
-      }
-    default:
-      return QVariant();
     }
-  }
 
-  FreeBusyItem::Ptr fbitem = mFreeBusyItems.at( data->parent()->row() );
-  if ( !fbitem->freeBusy() || index.row() >= fbitem->freeBusy()->busyPeriods().size() ) {
-    return QVariant();
-  }
+    ItemPrivateData *data = (ItemPrivateData *) index.internalPointer();
 
-  KCalCore::FreeBusyPeriod period = fbitem->freeBusy()->fullBusyPeriods().at( index.row() );
-  switch( role ) {
-  case Qt::DisplayRole: // return something to make modeltest happy
-    return QString( "%1 - %2" ).
-      arg( KLocale::global()->formatDateTime( period.start() ) ).
-      arg( KLocale::global()->formatDateTime( period.end() ) );
-  case FreeBusyItemModel::FreeBusyPeriodRole:
-    return QVariant::fromValue( period );
-  default:
-    return QVariant();
-  }
+    if (data->parent() == mRootData) {
+        int row = index.row();
+        if (row >= mFreeBusyItems.size()) {
+            return QVariant();
+        }
+
+        switch (role) {
+        case Qt::DisplayRole:
+            return mFreeBusyItems.at(row)->attendee()->fullName();
+        case FreeBusyItemModel::AttendeeRole:
+            return QVariant::fromValue(mFreeBusyItems.at(row)->attendee());
+        case FreeBusyItemModel::FreeBusyRole:
+            if (mFreeBusyItems.at(row)->freeBusy()) {
+                return QVariant::fromValue(mFreeBusyItems.at(row)->freeBusy());
+            } else {
+                return QVariant();
+            }
+        default:
+            return QVariant();
+        }
+    }
+
+    FreeBusyItem::Ptr fbitem = mFreeBusyItems.at(data->parent()->row());
+    if (!fbitem->freeBusy() || index.row() >= fbitem->freeBusy()->busyPeriods().size()) {
+        return QVariant();
+    }
+
+    KCalCore::FreeBusyPeriod period = fbitem->freeBusy()->fullBusyPeriods().at(index.row());
+    switch (role) {
+    case Qt::DisplayRole: // return something to make modeltest happy
+        return QString("%1 - %2").
+               arg(KLocale::global()->formatDateTime(period.start())).
+               arg(KLocale::global()->formatDateTime(period.end()));
+    case FreeBusyItemModel::FreeBusyPeriodRole:
+        return QVariant::fromValue(period);
+    default:
+        return QVariant();
+    }
 }
 
-int FreeBusyItemModel::rowCount( const QModelIndex &parent ) const
+int FreeBusyItemModel::rowCount(const QModelIndex &parent) const
 {
-  ItemPrivateData *parentData;
-  if ( parent.column() > 0 ) {
-    return 0;
-  }
+    ItemPrivateData *parentData;
+    if (parent.column() > 0) {
+        return 0;
+    }
 
-  if ( !parent.isValid() ) {
-    parentData = mRootData;
-  } else {
-    parentData = static_cast<ItemPrivateData*>( parent.internalPointer() );
-  }
+    if (!parent.isValid()) {
+        parentData = mRootData;
+    } else {
+        parentData = static_cast<ItemPrivateData *>(parent.internalPointer());
+    }
 
-  return parentData->childCount();
+    return parentData->childCount();
 }
 
-int FreeBusyItemModel::columnCount( const QModelIndex &parent ) const
+int FreeBusyItemModel::columnCount(const QModelIndex &parent) const
 {
-  Q_UNUSED( parent );
-  return 1;
+    Q_UNUSED(parent);
+    return 1;
 }
 
-QModelIndex FreeBusyItemModel::index( int row, int column, const QModelIndex &parent ) const
+QModelIndex FreeBusyItemModel::index(int row, int column, const QModelIndex &parent) const
 {
-  if ( !hasIndex( row, column, parent ) ) {
-    return QModelIndex();
-  }
+    if (!hasIndex(row, column, parent)) {
+        return QModelIndex();
+    }
 
-  ItemPrivateData *parentData;
-  if ( !parent.isValid() ) {
-    parentData = mRootData;
-  } else {
-    parentData = static_cast<ItemPrivateData*>( parent.internalPointer() );
-  }
+    ItemPrivateData *parentData;
+    if (!parent.isValid()) {
+        parentData = mRootData;
+    } else {
+        parentData = static_cast<ItemPrivateData *>(parent.internalPointer());
+    }
 
-  ItemPrivateData *childData = parentData->child( row );
-  if ( childData ) {
-    return createIndex( row, column, childData );
-  } else {
-    return QModelIndex();
-  }
+    ItemPrivateData *childData = parentData->child(row);
+    if (childData) {
+        return createIndex(row, column, childData);
+    } else {
+        return QModelIndex();
+    }
 //  FreeBusyItem::Ptr item = mFreeBusyItems.at( parent.row() );
 //  KCalCore::FreeBusy::Ptr fb = item->freeBusy();
 //  if( !fb )
@@ -209,207 +210,208 @@ QModelIndex FreeBusyItemModel::index( int row, int column, const QModelIndex &pa
 //  }
 }
 
-QModelIndex FreeBusyItemModel::parent( const QModelIndex &child ) const
+QModelIndex FreeBusyItemModel::parent(const QModelIndex &child) const
 {
-  if ( !child.isValid() ) {
-    return QModelIndex();
-  }
-
-  ItemPrivateData *childData = static_cast<ItemPrivateData*>( child.internalPointer() );
-  ItemPrivateData *parentData = childData->parent();
-  if ( parentData == mRootData ) {
-    return QModelIndex();
-  }
-
-  return createIndex( parentData->row(), 0, parentData );
-}
-
-QVariant FreeBusyItemModel::headerData( int section, Qt::Orientation orientation, int role ) const
-{
-  if ( role == Qt::DisplayRole && orientation == Qt::Horizontal && section == 0 ) {
-    return i18n( "Attendee" );
-  }
-  return QVariant();
-}
-
-void FreeBusyItemModel::addItem( const IncidenceEditorNG::FreeBusyItem::Ptr &freebusy )
-{
-  qDebug() << freebusy->attendee()->fullName();
-  int row = mFreeBusyItems.size();
-  beginInsertRows( QModelIndex(), row, row );
-  mFreeBusyItems.append( freebusy );
-  ItemPrivateData *data = new ItemPrivateData( mRootData );
-  mRootData->appendChild( data );
-  endInsertRows();
-
-  if ( freebusy->freeBusy() && freebusy->freeBusy()->fullBusyPeriods().size() > 0 ) {
-    QModelIndex parent = index( row, 0 );
-    setFreeBusyPeriods( parent, freebusy->freeBusy()->fullBusyPeriods() );
-  }
-  updateFreeBusyData( freebusy );
-}
-
-void FreeBusyItemModel::setFreeBusyPeriods( const QModelIndex &parent,
-                                            const KCalCore::FreeBusyPeriod::List &list )
-{
-  if(!parent.isValid())
-    return;
-
-  ItemPrivateData *parentData = static_cast<ItemPrivateData*>( parent.internalPointer() );
-  QModelIndex first = index( 0, 0, parent );
-  QModelIndex last = index( parentData->childCount() - 1, 0, parent );
-
-  if ( parentData->childCount() > 0 ) {
-    beginRemoveRows( parent, 0, parentData->childCount() - 1 );
-    for ( int i = parentData->childCount() - 1; i >= 0; --i ) {
-      delete parentData->removeChild( i );
+    if (!child.isValid()) {
+        return QModelIndex();
     }
-    endRemoveRows();
-  }
 
-  int fb_count = list.size();
-  beginInsertRows( parent, 0, fb_count - 1 );
-  for ( int i=0; i < fb_count; ++i ) {
-    ItemPrivateData *childData= new ItemPrivateData( parentData );
-    parentData->appendChild( childData );
-  }
-  endInsertRows();
-  emit dataChanged( first, last );
+    ItemPrivateData *childData = static_cast<ItemPrivateData *>(child.internalPointer());
+    ItemPrivateData *parentData = childData->parent();
+    if (parentData == mRootData) {
+        return QModelIndex();
+    }
+
+    return createIndex(parentData->row(), 0, parentData);
+}
+
+QVariant FreeBusyItemModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (role == Qt::DisplayRole && orientation == Qt::Horizontal && section == 0) {
+        return i18n("Attendee");
+    }
+    return QVariant();
+}
+
+void FreeBusyItemModel::addItem(const IncidenceEditorNG::FreeBusyItem::Ptr &freebusy)
+{
+    qDebug() << freebusy->attendee()->fullName();
+    int row = mFreeBusyItems.size();
+    beginInsertRows(QModelIndex(), row, row);
+    mFreeBusyItems.append(freebusy);
+    ItemPrivateData *data = new ItemPrivateData(mRootData);
+    mRootData->appendChild(data);
+    endInsertRows();
+
+    if (freebusy->freeBusy() && freebusy->freeBusy()->fullBusyPeriods().size() > 0) {
+        QModelIndex parent = index(row, 0);
+        setFreeBusyPeriods(parent, freebusy->freeBusy()->fullBusyPeriods());
+    }
+    updateFreeBusyData(freebusy);
+}
+
+void FreeBusyItemModel::setFreeBusyPeriods(const QModelIndex &parent,
+        const KCalCore::FreeBusyPeriod::List &list)
+{
+    if (!parent.isValid()) {
+        return;
+    }
+
+    ItemPrivateData *parentData = static_cast<ItemPrivateData *>(parent.internalPointer());
+    QModelIndex first = index(0, 0, parent);
+    QModelIndex last = index(parentData->childCount() - 1, 0, parent);
+
+    if (parentData->childCount() > 0) {
+        beginRemoveRows(parent, 0, parentData->childCount() - 1);
+        for (int i = parentData->childCount() - 1; i >= 0; --i) {
+            delete parentData->removeChild(i);
+        }
+        endRemoveRows();
+    }
+
+    int fb_count = list.size();
+    beginInsertRows(parent, 0, fb_count - 1);
+    for (int i = 0; i < fb_count; ++i) {
+        ItemPrivateData *childData = new ItemPrivateData(parentData);
+        parentData->appendChild(childData);
+    }
+    endInsertRows();
+    emit dataChanged(first, last);
 }
 
 void FreeBusyItemModel::clear()
 {
-  mFreeBusyItems.clear();
-  delete mRootData;
-  mRootData = new ItemPrivateData( 0 );
-  reset();
+    mFreeBusyItems.clear();
+    delete mRootData;
+    mRootData = new ItemPrivateData(0);
+    reset();
 }
 
-void IncidenceEditorNG::FreeBusyItemModel::removeRow( int row )
+void IncidenceEditorNG::FreeBusyItemModel::removeRow(int row)
 {
-  beginRemoveRows( QModelIndex(), row, row );
-  mFreeBusyItems.removeAt( row );
-  ItemPrivateData *data = mRootData->removeChild( row );
-  delete data;
-  endRemoveRows();
+    beginRemoveRows(QModelIndex(), row, row);
+    mFreeBusyItems.removeAt(row);
+    ItemPrivateData *data = mRootData->removeChild(row);
+    delete data;
+    endRemoveRows();
 }
 
-void FreeBusyItemModel::removeItem( const IncidenceEditorNG::FreeBusyItem::Ptr &freebusy )
+void FreeBusyItemModel::removeItem(const IncidenceEditorNG::FreeBusyItem::Ptr &freebusy)
 {
-  int row = mFreeBusyItems.indexOf( freebusy );
-  if( row >= 0 ) {
-    removeRow( row );
-  }
-}
-
-void FreeBusyItemModel::removeAttendee( const KCalCore::Attendee::Ptr &attendee )
-{
-  FreeBusyItem::Ptr anItem;
-  for ( int i = 0; i < mFreeBusyItems.count(); ++i ) {
-    anItem = mFreeBusyItems[i];
-    if ( *anItem->attendee() == *attendee ) {
-      if ( anItem->updateTimerID() != 0 ) {
-        killTimer( anItem->updateTimerID() );
-      }
-      removeRow( i );
-      break;
+    int row = mFreeBusyItems.indexOf(freebusy);
+    if (row >= 0) {
+        removeRow(row);
     }
-  }
 }
 
-bool FreeBusyItemModel::containsAttendee( const KCalCore::Attendee::Ptr &attendee )
+void FreeBusyItemModel::removeAttendee(const KCalCore::Attendee::Ptr &attendee)
 {
-  FreeBusyItem::Ptr anItem;
-  for ( int i = 0; i < mFreeBusyItems.count(); ++i ) {
-    anItem = mFreeBusyItems[i];
-    if ( *anItem->attendee() == *attendee ) {
-      return true;
+    FreeBusyItem::Ptr anItem;
+    for (int i = 0; i < mFreeBusyItems.count(); ++i) {
+        anItem = mFreeBusyItems[i];
+        if (*anItem->attendee() == *attendee) {
+            if (anItem->updateTimerID() != 0) {
+                killTimer(anItem->updateTimerID());
+            }
+            removeRow(i);
+            break;
+        }
     }
-  }
-  return false;
 }
 
-void FreeBusyItemModel::updateFreeBusyData( const FreeBusyItem::Ptr &item )
+bool FreeBusyItemModel::containsAttendee(const KCalCore::Attendee::Ptr &attendee)
 {
-  if ( item->isDownloading() ) {
-    // This item is already in the process of fetching the FB list
-    return;
-  }
-
-  if ( item->updateTimerID() != 0 ) {
-    // An update timer is already running. Reset it
-    killTimer( item->updateTimerID() );
-  }
-
-  // This item does not have a download running, and no timer is set
-  // Do the download in one second
-  item->setUpdateTimerID( startTimer( 1000 ) );
-}
-
-void FreeBusyItemModel::timerEvent( QTimerEvent *event )
-{
-  killTimer( event->timerId() );
-  Q_FOREACH ( FreeBusyItem::Ptr item, mFreeBusyItems ) {
-    if ( item->updateTimerID() == event->timerId() ) {
-      item->setUpdateTimerID( 0 );
-      item->startDownload( mForceDownload );
-      return;
+    FreeBusyItem::Ptr anItem;
+    for (int i = 0; i < mFreeBusyItems.count(); ++i) {
+        anItem = mFreeBusyItems[i];
+        if (*anItem->attendee() == *attendee) {
+            return true;
+        }
     }
-  }
+    return false;
 }
 
-void FreeBusyItemModel::slotInsertFreeBusy( const KCalCore::FreeBusy::Ptr &fb,
-                                            const QString &email )
+void FreeBusyItemModel::updateFreeBusyData(const FreeBusyItem::Ptr &item)
 {
-  if ( !fb ) {
-    return;
-  }
-
-  if ( fb->fullBusyPeriods().isEmpty() ) {
-    return;
-  }
-
-  fb->sortList();
-
-  Q_FOREACH ( FreeBusyItem::Ptr item, mFreeBusyItems ) {
-    if ( item->email() == email ) {
-      item->setFreeBusy( fb );
-      const int row = mFreeBusyItems.indexOf( item );
-      const QModelIndex parent = index( row, 0 );
-      setFreeBusyPeriods( parent, fb->fullBusyPeriods() );
+    if (item->isDownloading()) {
+        // This item is already in the process of fetching the FB list
+        return;
     }
-  }
+
+    if (item->updateTimerID() != 0) {
+        // An update timer is already running. Reset it
+        killTimer(item->updateTimerID());
+    }
+
+    // This item does not have a download running, and no timer is set
+    // Do the download in one second
+    item->setUpdateTimerID(startTimer(1000));
+}
+
+void FreeBusyItemModel::timerEvent(QTimerEvent *event)
+{
+    killTimer(event->timerId());
+    Q_FOREACH (FreeBusyItem::Ptr item, mFreeBusyItems) {
+        if (item->updateTimerID() == event->timerId()) {
+            item->setUpdateTimerID(0);
+            item->startDownload(mForceDownload);
+            return;
+        }
+    }
+}
+
+void FreeBusyItemModel::slotInsertFreeBusy(const KCalCore::FreeBusy::Ptr &fb,
+        const QString &email)
+{
+    if (!fb) {
+        return;
+    }
+
+    if (fb->fullBusyPeriods().isEmpty()) {
+        return;
+    }
+
+    fb->sortList();
+
+    Q_FOREACH (FreeBusyItem::Ptr item, mFreeBusyItems) {
+        if (item->email() == email) {
+            item->setFreeBusy(fb);
+            const int row = mFreeBusyItems.indexOf(item);
+            const QModelIndex parent = index(row, 0);
+            setFreeBusyPeriods(parent, fb->fullBusyPeriods());
+        }
+    }
 }
 
 void FreeBusyItemModel::autoReload()
 {
-  mForceDownload = false;
-  reload();
+    mForceDownload = false;
+    reload();
 }
 
 void FreeBusyItemModel::reload()
 {
-  Q_FOREACH ( FreeBusyItem::Ptr item, mFreeBusyItems ) {
-    if ( mForceDownload ) {
-      item->startDownload( mForceDownload );
-    } else {
-      updateFreeBusyData( item );
+    Q_FOREACH (FreeBusyItem::Ptr item, mFreeBusyItems) {
+        if (mForceDownload) {
+            item->startDownload(mForceDownload);
+        } else {
+            updateFreeBusyData(item);
+        }
     }
-  }
 }
 
 void FreeBusyItemModel::triggerReload()
 {
-  mReloadTimer.start( 1000 );
+    mReloadTimer.start(1000);
 }
 
 void FreeBusyItemModel::cancelReload()
 {
-  mReloadTimer.stop();
+    mReloadTimer.stop();
 }
 
 void FreeBusyItemModel::manualReload()
 {
-  mForceDownload = true;
-  reload();
+    mForceDownload = true;
+    reload();
 }

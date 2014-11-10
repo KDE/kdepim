@@ -23,18 +23,19 @@
 
 #include <KCalCore/IncidenceBase>
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 class INCIDENCEEDITORS_NG_EXPORT KOrganizerEditorConfig : public IncidenceEditorNG::EditorConfig
 {
-  public:
+public:
     KOrganizerEditorConfig();
     virtual ~KOrganizerEditorConfig();
 
     virtual KConfigSkeleton *config() const;
     virtual QString fullName() const;
     virtual QString email() const;
-    virtual bool thatIsMe( const QString &email ) const;
+    virtual bool thatIsMe(const QString &email) const;
     virtual QStringList allEmails() const;
     virtual QStringList fullEmails() const;
     virtual bool showTimeZoneSelectorInIncidenceEditor() const;
@@ -47,7 +48,7 @@ class INCIDENCEEDITORS_NG_EXPORT KOrganizerEditorConfig : public IncidenceEditor
     virtual bool defaultTodoReminders() const;
     virtual bool defaultEventReminders() const;
     virtual QStringList activeDesignerFields() const;
-    virtual QStringList &templates( KCalCore::IncidenceBase::IncidenceType type );
+    virtual QStringList &templates(KCalCore::IncidenceBase::IncidenceType type);
 };
 
 } // IncidenceEditors

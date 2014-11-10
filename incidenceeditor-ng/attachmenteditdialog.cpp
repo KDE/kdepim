@@ -29,7 +29,6 @@
 #include "ui_attachmenteditdialog.h"
 #include <KLocalizedString>
 
-
 #include <KMimeType>
 #include <KIO/NetAccess>
 #include <KLocale>
@@ -37,160 +36,159 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 
-
 using namespace IncidenceEditorNG;
 
-AttachmentEditDialog::AttachmentEditDialog( AttachmentIconItem *item,
-                                            QWidget *parent,
-                                            bool modal )
-  : QDialog( parent ),
+AttachmentEditDialog::AttachmentEditDialog(AttachmentIconItem *item,
+        QWidget *parent,
+        bool modal)
+    : QDialog(parent),
 #ifdef KDEPIM_ENTERPRISE_BUILD
-  mAttachment( new KCalCore::Attachment( '\0' ) ), //use the non-uri constructor
-                                                   // as we want inline by default
+      mAttachment(new KCalCore::Attachment('\0')),     //use the non-uri constructor
+      // as we want inline by default
 #else
-  mAttachment( new KCalCore::Attachment( QString() ) ),
+      mAttachment(new KCalCore::Attachment(QString())),
 #endif
-  mItem( item ),
-  mMimeType( KMimeType::mimeType( item->mimeType() ) ),
-  mUi( new Ui::AttachmentEditDialog )
+      mItem(item),
+      mMimeType(KMimeType::mimeType(item->mimeType())),
+      mUi(new Ui::AttachmentEditDialog)
 {
-  QWidget *page = new QWidget(this);
-  QVBoxLayout *mainLayout = new QVBoxLayout;
-  setLayout(mainLayout);
-  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
-  mOkButton = buttonBox->button(QDialogButtonBox::Ok);
-  mOkButton->setDefault(true);
-  mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-  connect(buttonBox, &QDialogButtonBox::accepted, this, &AttachmentEditDialog::accept);
-  connect(buttonBox, &QDialogButtonBox::rejected, this, &AttachmentEditDialog::reject);
-  mainLayout->addWidget(page);
-  mainLayout->addWidget(buttonBox);
+    QWidget *page = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+    mOkButton->setDefault(true);
+    mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &AttachmentEditDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &AttachmentEditDialog::reject);
+    mainLayout->addWidget(page);
+    mainLayout->addWidget(buttonBox);
 
-  mUi->setupUi( page );
-  mUi->mLabelEdit->setText( item->label().isEmpty() ? item->uri() : item->label() );
-  mUi->mIcon->setPixmap( item->icon() );
-  mUi->mInlineCheck->setChecked( item->isBinary() );
+    mUi->setupUi(page);
+    mUi->mLabelEdit->setText(item->label().isEmpty() ? item->uri() : item->label());
+    mUi->mIcon->setPixmap(item->icon());
+    mUi->mInlineCheck->setChecked(item->isBinary());
 
-  QString typecomment = item->mimeType().isEmpty() ?
-                        i18nc( "@label unknown mimetype", "Unknown" ) :
-                        mMimeType->comment();
-  mUi->mTypeLabel->setText( typecomment );
+    QString typecomment = item->mimeType().isEmpty() ?
+                          i18nc("@label unknown mimetype", "Unknown") :
+                          mMimeType->comment();
+    mUi->mTypeLabel->setText(typecomment);
 
-  setModal( modal );
-  mOkButton->setEnabled( false );
+    setModal(modal);
+    mOkButton->setEnabled(false);
 
-  mUi->mInlineCheck->setEnabled( false );
-  if ( item->attachment()->isUri() || item->attachment()->data().isEmpty() ) {
-    mUi->mStackedWidget->setCurrentIndex( 0 );
-    mUi->mURLRequester->setUrl( item->uri() );
-    urlChanged( item->uri() );
-  } else {
-    mUi->mInlineCheck->setEnabled( true );
-    mUi->mStackedWidget->setCurrentIndex( 1 );
-    mUi->mSizeLabel->setText( QString::fromLatin1( "%1 (%2)" ).
-                                 arg( KIO::convertSize( item->attachment()->size() ) ).
-                                 arg( KLocale::global()->formatNumber(
-                                        item->attachment()->size(), 0 ) ) );
-  }
+    mUi->mInlineCheck->setEnabled(false);
+    if (item->attachment()->isUri() || item->attachment()->data().isEmpty()) {
+        mUi->mStackedWidget->setCurrentIndex(0);
+        mUi->mURLRequester->setUrl(item->uri());
+        urlChanged(item->uri());
+    } else {
+        mUi->mInlineCheck->setEnabled(true);
+        mUi->mStackedWidget->setCurrentIndex(1);
+        mUi->mSizeLabel->setText(QString::fromLatin1("%1 (%2)").
+                                 arg(KIO::convertSize(item->attachment()->size())).
+                                 arg(KLocale::global()->formatNumber(
+                                         item->attachment()->size(), 0)));
+    }
 
-  connect( mUi->mInlineCheck, SIGNAL(stateChanged(int)),
-           SLOT(inlineChanged(int)) );
-  connect( mUi->mURLRequester, SIGNAL(urlSelected(QUrl)),
-           SLOT(urlChanged(QUrl)) );
-  connect( mUi->mURLRequester, SIGNAL(textChanged(QString)),
-           SLOT(urlChanged(QString)) );
+    connect(mUi->mInlineCheck, SIGNAL(stateChanged(int)),
+            SLOT(inlineChanged(int)));
+    connect(mUi->mURLRequester, SIGNAL(urlSelected(QUrl)),
+            SLOT(urlChanged(QUrl)));
+    connect(mUi->mURLRequester, SIGNAL(textChanged(QString)),
+            SLOT(urlChanged(QString)));
 }
 
 AttachmentEditDialog::~AttachmentEditDialog()
 {
-  delete mUi;
+    delete mUi;
 }
 
 void AttachmentEditDialog::accept()
 {
-  slotApply();
-  QDialog::accept();
+    slotApply();
+    QDialog::accept();
 }
 
 void AttachmentEditDialog::slotApply()
 {
-  QUrl url = mUi->mURLRequester->url();
+    QUrl url = mUi->mURLRequester->url();
 
-  if ( mUi->mLabelEdit->text().isEmpty() ) {
-    if ( url.isLocalFile() ) {
-      mItem->setLabel( url.fileName() );
-    } else {
-      mItem->setLabel( url.url() );
-    }
-  } else {
-    mItem->setLabel( mUi->mLabelEdit->text() );
-  }
-  if ( mItem->label().isEmpty() ) {
-    mItem->setLabel( i18nc( "@label", "New attachment" ) );
-  }
-  mItem->setMimeType( mMimeType->name() );
-
-  QString correctedUrl = url.url();
-  if ( !url.isEmpty() && url.isRelative() ) {
-    // If the user used KURLRequester's KURLCompletion
-    // (used the line edit instead of the file dialog)
-    // the returned url is not absolute and is always relative
-    // to the home directory (not pwd), so we must prepend home
-
-    correctedUrl = QDir::home().filePath( url.toLocalFile() );
-    url = QUrl::fromLocalFile( correctedUrl );
-    if ( url.isValid() ) {
-      urlChanged( url );
-      mItem->setLabel( url.fileName() );
-      mItem->setUri( correctedUrl );
-      mItem->setMimeType( mMimeType->name() );
-    }
-  }
-
-  if ( mUi->mStackedWidget->currentIndex() == 0 ) {
-    if ( mUi->mInlineCheck->isChecked() ) {
-      QString tmpFile;
-      if ( KIO::NetAccess::download( correctedUrl, tmpFile, this ) ) {
-        QFile f( tmpFile );
-        if ( !f.open( QIODevice::ReadOnly ) ) {
-          return;
+    if (mUi->mLabelEdit->text().isEmpty()) {
+        if (url.isLocalFile()) {
+            mItem->setLabel(url.fileName());
+        } else {
+            mItem->setLabel(url.url());
         }
-        QByteArray data = f.readAll();
-        f.close();
-        mItem->setData( data );
-      }
-      KIO::NetAccess::removeTempFile( tmpFile );
     } else {
-      mItem->setUri( correctedUrl );
+        mItem->setLabel(mUi->mLabelEdit->text());
     }
-  }
-}
-
-void AttachmentEditDialog::inlineChanged( int state )
-{
-  mOkButton->setEnabled( !mUi->mURLRequester->url().isEmpty() ||
-                  mUi->mStackedWidget->currentIndex() == 1 );
-  if ( state == Qt::Unchecked && mUi->mStackedWidget->currentIndex() == 1 ) {
-    mUi->mStackedWidget->setCurrentIndex( 0 );
-    if ( !mItem->savedUri().isEmpty() ) {
-      mUi->mURLRequester->setUrl( mItem->savedUri() );
-    } else {
-      mUi->mURLRequester->setUrl( mItem->uri() );
+    if (mItem->label().isEmpty()) {
+        mItem->setLabel(i18nc("@label", "New attachment"));
     }
-  }
+    mItem->setMimeType(mMimeType->name());
+
+    QString correctedUrl = url.url();
+    if (!url.isEmpty() && url.isRelative()) {
+        // If the user used KURLRequester's KURLCompletion
+        // (used the line edit instead of the file dialog)
+        // the returned url is not absolute and is always relative
+        // to the home directory (not pwd), so we must prepend home
+
+        correctedUrl = QDir::home().filePath(url.toLocalFile());
+        url = QUrl::fromLocalFile(correctedUrl);
+        if (url.isValid()) {
+            urlChanged(url);
+            mItem->setLabel(url.fileName());
+            mItem->setUri(correctedUrl);
+            mItem->setMimeType(mMimeType->name());
+        }
+    }
+
+    if (mUi->mStackedWidget->currentIndex() == 0) {
+        if (mUi->mInlineCheck->isChecked()) {
+            QString tmpFile;
+            if (KIO::NetAccess::download(correctedUrl, tmpFile, this)) {
+                QFile f(tmpFile);
+                if (!f.open(QIODevice::ReadOnly)) {
+                    return;
+                }
+                QByteArray data = f.readAll();
+                f.close();
+                mItem->setData(data);
+            }
+            KIO::NetAccess::removeTempFile(tmpFile);
+        } else {
+            mItem->setUri(correctedUrl);
+        }
+    }
 }
 
-void AttachmentEditDialog::urlChanged( const QString &url )
+void AttachmentEditDialog::inlineChanged(int state)
 {
-  mOkButton->setEnabled( !url.isEmpty() );
-  mUi->mInlineCheck->setEnabled( !url.isEmpty() ||
-                                 mUi->mStackedWidget->currentIndex() == 1 );
+    mOkButton->setEnabled(!mUi->mURLRequester->url().isEmpty() ||
+                          mUi->mStackedWidget->currentIndex() == 1);
+    if (state == Qt::Unchecked && mUi->mStackedWidget->currentIndex() == 1) {
+        mUi->mStackedWidget->setCurrentIndex(0);
+        if (!mItem->savedUri().isEmpty()) {
+            mUi->mURLRequester->setUrl(mItem->savedUri());
+        } else {
+            mUi->mURLRequester->setUrl(mItem->uri());
+        }
+    }
 }
 
-void AttachmentEditDialog::urlChanged( const QUrl &url )
+void AttachmentEditDialog::urlChanged(const QString &url)
 {
-  mMimeType = KMimeType::findByUrl( url );
-  mUi->mTypeLabel->setText( mMimeType->comment() );
-  mUi->mIcon->setPixmap( AttachmentIconItem::icon( mMimeType, url.path() ) );
+    mOkButton->setEnabled(!url.isEmpty());
+    mUi->mInlineCheck->setEnabled(!url.isEmpty() ||
+                                  mUi->mStackedWidget->currentIndex() == 1);
+}
+
+void AttachmentEditDialog::urlChanged(const QUrl &url)
+{
+    mMimeType = KMimeType::findByUrl(url);
+    mUi->mTypeLabel->setText(mMimeType->comment());
+    mUi->mIcon->setPixmap(AttachmentIconItem::icon(mMimeType, url.path()));
 }
 

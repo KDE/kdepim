@@ -30,7 +30,8 @@
 #include <QSet>
 #include <QTimer>
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 class FreeBusyItemModel;
 
@@ -44,28 +45,28 @@ class FreeBusyItemModel;
  */
 class INCIDENCEEDITORS_NG_EXPORT ConflictResolver : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
      * @param parentWidget is passed to Akonadi when fetching free/busy data.
      */
-    explicit ConflictResolver( QWidget *parentWidget, QObject *parent = 0 );
+    explicit ConflictResolver(QWidget *parentWidget, QObject *parent = 0);
 
     /**
      *  Add an attendee
      * The attendees free busy info will be fetched
      * and integrated into the resolver.
      */
-    void insertAttendee( const KCalCore::Attendee::Ptr &attendee );
+    void insertAttendee(const KCalCore::Attendee::Ptr &attendee);
 
-    void insertAttendee( const FreeBusyItem::Ptr &freebusy );
+    void insertAttendee(const FreeBusyItem::Ptr &freebusy);
     /**
      * Removes an attendee
      * The attendee will no longer be considered when
      * resolving conflicts
      */
 
-    void removeAttendee( const KCalCore::Attendee::Ptr &attendee );
+    void removeAttendee(const KCalCore::Attendee::Ptr &attendee);
 
     /**
      * Clear all attendees
@@ -75,7 +76,7 @@ class INCIDENCEEDITORS_NG_EXPORT ConflictResolver : public QObject
     /**
      * Returns whether the resolver contains the attendee
      */
-    bool containsAttendee( const KCalCore::Attendee::Ptr &attendee );
+    bool containsAttendee(const KCalCore::Attendee::Ptr &attendee);
 
     /**
      * Constrain the free time slot search to the weekdays
@@ -84,7 +85,7 @@ class INCIDENCEEDITORS_NG_EXPORT ConflictResolver : public QObject
      * @param weekdays a 7 bit array indicating the allowed days (bit 0=Monday, value 1=allowed).
      * @see KCalendarSystem
      */
-    void setAllowedWeekdays( const QBitArray &weekdays );
+    void setAllowedWeekdays(const QBitArray &weekdays);
 
     /**
      * Constrain the free time slot search to the set participant roles.
@@ -94,7 +95,7 @@ class INCIDENCEEDITORS_NG_EXPORT ConflictResolver : public QObject
      * Default is all roles are mandatory.
      * @param roles the set of mandatory participant roles
      */
-    void setMandatoryRoles( const QSet<KCalCore::Attendee::Role> &roles );
+    void setMandatoryRoles(const QSet<KCalCore::Attendee::Role> &roles);
 
     /**
      * Returns a list of date time ranges that conform to the
@@ -108,51 +109,51 @@ class INCIDENCEEDITORS_NG_EXPORT ConflictResolver : public QObject
       Finds a free slot in the future which has at least the same size as
       the initial slot.
     */
-    bool findFreeSlot( const KCalCore::Period &dateTimeRange );
+    bool findFreeSlot(const KCalCore::Period &dateTimeRange);
 
     QList<FreeBusyItem::Ptr> freeBusyItems() const;
 
     FreeBusyItemModel *model() const;
 
-  signals:
+signals:
     /**
      * Emitted when the user changes the start and end dateTimes
      * for the incidence.
      */
-    void dateTimesChanged( const KDateTime & newStart, const KDateTime & newEnd );
+    void dateTimesChanged(const KDateTime &newStart, const KDateTime &newEnd);
 
     /**
      * Emitted when there are conflicts
      * @param number the number of conflicts
      */
-    void conflictsDetected( int number );
+    void conflictsDetected(int number);
 
     /**
      * Emitted when the resolver locates new free slots.
      */
-    void freeSlotsAvailable( const KCalCore::Period::List & );
+    void freeSlotsAvailable(const KCalCore::Period::List &);
 
-  public slots:
+public slots:
     /**
      * Set the timeframe constraints
      *
      * These control the timeframe for which conflicts are to be resolved.
      */
-    void setEarliestDate( const QDate &newDate );
-    void setEarliestTime( const QTime &newTime );
-    void setLatestDate( const QDate &newDate );
-    void setLatestTime( const QTime &newTime );
+    void setEarliestDate(const QDate &newDate);
+    void setEarliestTime(const QTime &newTime);
+    void setLatestDate(const QDate &newDate);
+    void setLatestTime(const QTime &newTime);
 
-    void setEarliestDateTime( const KDateTime &newDateTime );
-    void setLatestDateTime( const KDateTime &newDateTime );
+    void setEarliestDateTime(const KDateTime &newDateTime);
+    void setLatestDateTime(const KDateTime &newDateTime);
 
     void freebusyDataChanged();
 
     void findAllFreeSlots();
 
-    void setResolution( int seconds );
+    void setResolution(int seconds);
 
-  private:
+private:
     /**
       Checks whether the slot specified by (tryFrom, tryTo) matches the
       search constraints. If yes, return true. The return value is the
@@ -160,7 +161,7 @@ class INCIDENCEEDITORS_NG_EXPORT ConflictResolver : public QObject
       that participant. In other words, the returned slot does not have to
       be free for everybody else.
     */
-    int tryDate( KDateTime &tryFrom, KDateTime &tryTo );
+    int tryDate(KDateTime &tryFrom, KDateTime &tryTo);
 
     /**
       Checks whether the slot specified by (tryFrom, tryTo) is available
@@ -169,31 +170,31 @@ class INCIDENCEEDITORS_NG_EXPORT ConflictResolver : public QObject
       possible slot for this participant (not necessarily a slot that is
       available for all participants).
     */
-    bool tryDate( const KCalCore::FreeBusy::Ptr &fb, KDateTime &tryFrom, KDateTime &tryTo );
+    bool tryDate(const KCalCore::FreeBusy::Ptr &fb, KDateTime &tryFrom, KDateTime &tryTo);
 
     /**
      * Checks whether the supplied attendee passes the
      * current mandatory role constraint.
      * @return true if the attendee is of one of the mandatory roles, false if not
      */
-    bool matchesRoleConstraint( const KCalCore::Attendee::Ptr &attendee );
+    bool matchesRoleConstraint(const KCalCore::Attendee::Ptr &attendee);
 
     void calculateConflicts();
 
     KCalCore::Period mTimeframeConstraint; //!< the datetime range for outside of which
-                                           //free slots won't be searched.
+    //free slots won't be searched.
     KCalCore::Period::List mAvailableSlots;
 
     QTimer mCalculateTimer; //!< A timer is used control the calculation of conflicts
-                            // to prevent the process from being repeated many times
-                            // after a series of quick parameter changes.
+    // to prevent the process from being repeated many times
+    // after a series of quick parameter changes.
 
     FreeBusyItemModel *mFBModel;
     QWidget *mParentWidget;
 
     QSet<KCalCore::Attendee::Role> mMandatoryRoles;
     QBitArray mWeekdays; //!< a 7 bit array indicating the allowed days
-                         //(bit 0 = Monday, value 1 = allowed).
+    //(bit 0 = Monday, value 1 = allowed).
 
     int mSlotResolutionSeconds;
 };

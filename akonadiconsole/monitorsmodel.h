@@ -30,40 +30,40 @@ class MonitorsModel : public QAbstractItemModel
 {
     Q_OBJECT
 
-  public:
+public:
     enum Column {
-      IdentifierColumn = 0,
-      IsAllMonitoredColumn ,
-      MonitoredCollectionsColumn,
-      MonitoredItemsColumn,
-      MonitoredResourcesColumn,
-      MonitoredMimeTypesColumn,
-      IgnoredSessionsColumn,
+        IdentifierColumn = 0,
+        IsAllMonitoredColumn ,
+        MonitoredCollectionsColumn,
+        MonitoredItemsColumn,
+        MonitoredResourcesColumn,
+        MonitoredMimeTypesColumn,
+        IgnoredSessionsColumn,
 
-      ColumnsCount
+        ColumnsCount
     };
 
-    explicit MonitorsModel( QObject* parent = 0 );
+    explicit MonitorsModel(QObject *parent = 0);
     virtual ~MonitorsModel();
 
-    void setEnabled( bool enabled );
+    void setEnabled(bool enabled);
 
-    QVariant data( const QModelIndex &index, int role ) const;
-    QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
-    int columnCount( const QModelIndex &parent ) const;
-    int rowCount( const QModelIndex &parent ) const;
-    QModelIndex parent( const QModelIndex &child ) const;
-    QModelIndex index( int row, int column, const QModelIndex &parent = QModelIndex() ) const;
+    QVariant data(const QModelIndex &index, int role) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+    int columnCount(const QModelIndex &parent) const;
+    int rowCount(const QModelIndex &parent) const;
+    QModelIndex parent(const QModelIndex &child) const;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void init();
 
-    void slotItemChanged( MonitorsModel::Column row );
-    void slotSubscriberSubscribed( const QString &identifier );
-    void slotSubscriberUnsubscribed( const QString &identifier );
+    void slotItemChanged(MonitorsModel::Column row);
+    void slotSubscriberSubscribed(const QString &identifier);
+    void slotSubscriberUnsubscribed(const QString &identifier);
 
-  private:
-    QMap<QString, MonitorItem* > mData;
+private:
+    QMap<QString, MonitorItem * > mData;
     org::freedesktop::Akonadi::NotificationManager *mManager;
 };
 

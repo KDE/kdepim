@@ -26,20 +26,22 @@
 
 #include <KDialog>
 
-namespace Akonadi {
-  class IncidenceChanger;
+namespace Akonadi
+{
+class IncidenceChanger;
 }
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 class IncidenceDialogPrivate;
 
 class INCIDENCEEDITORS_NG_EXPORT IncidenceDialog : public KDialog
 {
-  Q_OBJECT
-  public:
-    explicit IncidenceDialog( Akonadi::IncidenceChanger *changer = 0,
-                              QWidget *parent = 0, Qt::WindowFlags flags = 0 );
+    Q_OBJECT
+public:
+    explicit IncidenceDialog(Akonadi::IncidenceChanger *changer = 0,
+                             QWidget *parent = 0, Qt::WindowFlags flags = 0);
     ~IncidenceDialog();
 
     /**
@@ -53,14 +55,14 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDialog : public KDialog
      * When the item has is valid this method will fetch the payload when this is
      * not already set.
      */
-    virtual void load( const Akonadi::Item &item, const QDate &activeDate = QDate() );
+    virtual void load(const Akonadi::Item &item, const QDate &activeDate = QDate());
 
     /**
      * Sets the Collection combobox to @param collection.
      */
-    virtual void selectCollection( const Akonadi::Collection &collection );
+    virtual void selectCollection(const Akonadi::Collection &collection);
 
-    virtual void setIsCounterProposal( bool isCounterProposal );
+    virtual void setIsCounterProposal(bool isCounterProposal);
 
     /**
       Returns the object that will receive all key events.
@@ -76,7 +78,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDialog : public KDialog
        It's useful if you're creating a dialog with an already crafted content, like in kmail's
        "Create Todo/Reminder Feature".
     */
-    void setInitiallyDirty( bool initiallyDirty );
+    void setInitiallyDirty(bool initiallyDirty);
 
     Akonadi::Item item() const;
 
@@ -85,35 +87,35 @@ Q_SIGNALS:
      * This signal is emitted when an incidence is created.
      * @param collection The collection where it was created.
      */
-    void incidenceCreated( const Akonadi::Item & );
+    void incidenceCreated(const Akonadi::Item &);
     void invalidCollection() const;
-  protected:
-    virtual void closeEvent( QCloseEvent *event );
+protected:
+    virtual void closeEvent(QCloseEvent *event);
 
-  protected Q_SLOTS:
-    virtual void slotButtonClicked( int button );
-    void handleSelectedCollectionChange( const Akonadi::Collection &collection );
+protected Q_SLOTS:
+    virtual void slotButtonClicked(int button);
+    void handleSelectedCollectionChange(const Akonadi::Collection &collection);
 
-  private:
+private:
     IncidenceDialogPrivate *const d_ptr;
-    Q_DECLARE_PRIVATE( IncidenceDialog )
-    Q_DISABLE_COPY( IncidenceDialog )
+    Q_DECLARE_PRIVATE(IncidenceDialog)
+    Q_DISABLE_COPY(IncidenceDialog)
 
     void writeConfig();
     void readConfig();
 
-    Q_PRIVATE_SLOT( d_ptr, void handleAlarmCountChange(int) )
-    Q_PRIVATE_SLOT( d_ptr, void handleItemSaveFinish(IncidenceEditorNG::EditorItemManager::SaveAction) )
-    Q_PRIVATE_SLOT( d_ptr, void handleItemSaveFail(IncidenceEditorNG::EditorItemManager::SaveAction,QString) )
-    Q_PRIVATE_SLOT( d_ptr, void handleRecurrenceChange(IncidenceEditorNG::RecurrenceType) )
-    Q_PRIVATE_SLOT( d_ptr, void loadTemplate(QString) )
-    Q_PRIVATE_SLOT( d_ptr, void saveTemplate(QString) )
-    Q_PRIVATE_SLOT( d_ptr, void storeTemplatesInConfig(QStringList) )
-    Q_PRIVATE_SLOT( d_ptr, void updateAttachmentCount(int) )
-    Q_PRIVATE_SLOT( d_ptr, void updateAttendeeCount(int) )
-    Q_PRIVATE_SLOT( d_ptr, void updateButtonStatus(bool) )
-    Q_PRIVATE_SLOT( d_ptr, void showMessage(QString,KMessageWidget::MessageType) )
-    Q_PRIVATE_SLOT( d_ptr, void slotInvalidCollection() )
+    Q_PRIVATE_SLOT(d_ptr, void handleAlarmCountChange(int))
+    Q_PRIVATE_SLOT(d_ptr, void handleItemSaveFinish(IncidenceEditorNG::EditorItemManager::SaveAction))
+    Q_PRIVATE_SLOT(d_ptr, void handleItemSaveFail(IncidenceEditorNG::EditorItemManager::SaveAction, QString))
+    Q_PRIVATE_SLOT(d_ptr, void handleRecurrenceChange(IncidenceEditorNG::RecurrenceType))
+    Q_PRIVATE_SLOT(d_ptr, void loadTemplate(QString))
+    Q_PRIVATE_SLOT(d_ptr, void saveTemplate(QString))
+    Q_PRIVATE_SLOT(d_ptr, void storeTemplatesInConfig(QStringList))
+    Q_PRIVATE_SLOT(d_ptr, void updateAttachmentCount(int))
+    Q_PRIVATE_SLOT(d_ptr, void updateAttendeeCount(int))
+    Q_PRIVATE_SLOT(d_ptr, void updateButtonStatus(bool))
+    Q_PRIVATE_SLOT(d_ptr, void showMessage(QString, KMessageWidget::MessageType))
+    Q_PRIVATE_SLOT(d_ptr, void slotInvalidCollection())
 };
 
 }

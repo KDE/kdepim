@@ -33,53 +33,54 @@
 #include <QSqlError>
 #include <QFontDatabase>
 
-DbConsole::DbConsole(QWidget* parent) :
-  QWidget( parent ),
-  mQueryModel( 0 )
+DbConsole::DbConsole(QWidget *parent) :
+    QWidget(parent),
+    mQueryModel(0)
 {
-  ui.setupUi( this );
+    ui.setupUi(this);
 
-  QAction *copyAction = KStandardAction::copy( this, SLOT(copyCell()), this );
-  ui.resultView->addAction( copyAction );
+    QAction *copyAction = KStandardAction::copy(this, SLOT(copyCell()), this);
+    ui.resultView->addAction(copyAction);
 
-  ui.execButton->setIcon( QIcon::fromTheme( "application-x-executable" ) );
-  ui.execButton->setShortcut( Qt::CTRL + Qt::Key_Return );
-  connect(ui.execButton, &QPushButton::clicked, this, &DbConsole::execClicked);
+    ui.execButton->setIcon(QIcon::fromTheme("application-x-executable"));
+    ui.execButton->setShortcut(Qt::CTRL + Qt::Key_Return);
+    connect(ui.execButton, &QPushButton::clicked, this, &DbConsole::execClicked);
 
-  ui.queryEdit->setFont( QFontDatabase::systemFont(QFontDatabase::FixedFont) );
-  ui.errorView->setFont( QFontDatabase::systemFont(QFontDatabase::FixedFont) );
+    ui.queryEdit->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
+    ui.errorView->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
 
-  ui.queryEdit->setPlainText( KSharedConfig::openConfig()->group( "DBConsole" ).readEntry( "queryText" ) );
+    ui.queryEdit->setPlainText(KSharedConfig::openConfig()->group("DBConsole").readEntry("queryText"));
 }
 
 void DbConsole::execClicked()
 {
-  const QString query = ui.queryEdit->toPlainText();
-  if ( query.isEmpty() )
-    return;
-  delete mQueryModel;
-  mQueryModel = new QSqlQueryModel( this );
-  mQueryModel->setQuery( query, DbAccess::database() );
-  ui.resultView->setModel( mQueryModel );
+    const QString query = ui.queryEdit->toPlainText();
+    if (query.isEmpty()) {
+        return;
+    }
+    delete mQueryModel;
+    mQueryModel = new QSqlQueryModel(this);
+    mQueryModel->setQuery(query, DbAccess::database());
+    ui.resultView->setModel(mQueryModel);
 
-  if ( mQueryModel->lastError().isValid() ) {
-    ui.errorView->appendPlainText( mQueryModel->lastError().text() );
-    ui.resultStack->setCurrentWidget( ui.errorViewPage );
-  } else {
-    ui.errorView->clear();
-    ui.resultStack->setCurrentWidget( ui.resultViewPage );
-  }
+    if (mQueryModel->lastError().isValid()) {
+        ui.errorView->appendPlainText(mQueryModel->lastError().text());
+        ui.resultStack->setCurrentWidget(ui.errorViewPage);
+    } else {
+        ui.errorView->clear();
+        ui.resultStack->setCurrentWidget(ui.resultViewPage);
+    }
 
-  KSharedConfig::openConfig()->group( "DBConsole" ).writeEntry( "queryText", query );
+    KSharedConfig::openConfig()->group("DBConsole").writeEntry("queryText", query);
 }
 
 void DbConsole::copyCell()
 {
-  QModelIndex index = ui.resultView->currentIndex();
-  if ( !index.isValid() ) {
-    return;
-  }
-  QString text = index.data( Qt::DisplayRole ).toString();
-  QApplication::clipboard()->setText( text );
+    QModelIndex index = ui.resultView->currentIndex();
+    if (!index.isValid()) {
+        return;
+    }
+    QString text = index.data(Qt::DisplayRole).toString();
+    QApplication::clipboard()->setText(text);
 }
 

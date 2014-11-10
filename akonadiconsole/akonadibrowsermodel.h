@@ -29,56 +29,55 @@ using namespace Akonadi;
 
 class AkonadiBrowserModel : public EntityTreeModel
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit AkonadiBrowserModel( ChangeRecorder* monitor, QObject* parent = 0 );
-  ~AkonadiBrowserModel();
+    explicit AkonadiBrowserModel(ChangeRecorder *monitor, QObject *parent = 0);
+    ~AkonadiBrowserModel();
 
-  enum ItemDisplayMode
-  {
-    GenericMode,
-    MailMode,
-    ContactsMode,
-    CalendarMode
-  };
+    enum ItemDisplayMode {
+        GenericMode,
+        MailMode,
+        ContactsMode,
+        CalendarMode
+    };
 
-  void setItemDisplayMode( ItemDisplayMode itemDisplayMode );
-  ItemDisplayMode itemDisplayMode() const;
+    void setItemDisplayMode(ItemDisplayMode itemDisplayMode);
+    ItemDisplayMode itemDisplayMode() const;
 
-  virtual QVariant entityHeaderData( int section, Qt::Orientation orientation, int role, HeaderGroup headerGroup ) const;
+    virtual QVariant entityHeaderData(int section, Qt::Orientation orientation, int role, HeaderGroup headerGroup) const;
 
-  virtual QVariant entityData(const Item &item, int column, int role) const;
-  virtual QVariant entityData(const Collection &collection, int column, int role) const;
+    virtual QVariant entityData(const Item &item, int column, int role) const;
+    virtual QVariant entityData(const Collection &collection, int column, int role) const;
 
-  virtual int entityColumnCount( HeaderGroup headerGroup ) const;
+    virtual int entityColumnCount(HeaderGroup headerGroup) const;
 
-  class State;
+    class State;
 
 Q_SIGNALS:
-  void columnsChanged();
+    void columnsChanged();
 
 private:
-  State *m_currentState;
-  State *m_genericState;
-  State *m_mailState;
-  State *m_contactsState;
-  State *m_calendarState;
+    State *m_currentState;
+    State *m_genericState;
+    State *m_mailState;
+    State *m_contactsState;
+    State *m_calendarState;
 
-  ItemDisplayMode m_itemDisplayMode;
+    ItemDisplayMode m_itemDisplayMode;
 };
 
 class AkonadiBrowserSortModel : public QSortFilterProxyModel
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit AkonadiBrowserSortModel( AkonadiBrowserModel *browserModel, QObject *parent = 0 );
-  ~AkonadiBrowserSortModel();
+    explicit AkonadiBrowserSortModel(AkonadiBrowserModel *browserModel, QObject *parent = 0);
+    ~AkonadiBrowserSortModel();
 
 protected:
-  bool lessThan( const QModelIndex &left, const QModelIndex &right ) const;
+    bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
 
 private:
-  AkonadiBrowserModel *mBrowserModel;
+    AkonadiBrowserModel *mBrowserModel;
 };
 
 #endif

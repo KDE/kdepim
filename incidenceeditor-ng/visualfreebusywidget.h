@@ -27,16 +27,18 @@
 
 #include <QWidget>
 
-namespace KDGantt {
-  class DateTimeGrid;
-  class GraphicsView;
+namespace KDGantt
+{
+class DateTimeGrid;
+class GraphicsView;
 }
 
 class KComboBox;
 
 class QTreeView;
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 class FreeBusyItemModel;
 class FreeBusyGanttProxyModel;
@@ -44,30 +46,30 @@ class RowController;
 
 class INCIDENCEEDITORS_NG_EXPORT VisualFreeBusyWidget : public QWidget
 {
-  Q_OBJECT
-  public:
-    explicit VisualFreeBusyWidget( FreeBusyItemModel *model, int spacing = 8, QWidget *parent = 0 );
+    Q_OBJECT
+public:
+    explicit VisualFreeBusyWidget(FreeBusyItemModel *model, int spacing = 8, QWidget *parent = 0);
     ~VisualFreeBusyWidget();
 
-  public slots:
-    void slotUpdateIncidenceStartEnd( const KDateTime &, const KDateTime & );
+public slots:
+    void slotUpdateIncidenceStartEnd(const KDateTime &, const KDateTime &);
 
-  signals:
-    void dateTimesChanged( const KDateTime &, const KDateTime & );
+signals:
+    void dateTimesChanged(const KDateTime &, const KDateTime &);
     void manualReload();
 
-  protected slots:
-    void slotScaleChanged( int );
+protected slots:
+    void slotScaleChanged(int);
     void slotCenterOnStart() ;
     void slotZoomToTime();
     void slotPickDate();
     void showAttendeeStatusMenu();
-    void slotIntervalColorRectangleMoved( const KDateTime &start, const KDateTime &end );
+    void slotIntervalColorRectangleMoved(const KDateTime &start, const KDateTime &end);
 
-  private slots:
+private slots:
     void splitterMoved();
 
-  private:
+private:
     KDGantt::GraphicsView *mGanttGraphicsView;
     QTreeView *mLeftView;
     RowController *mRowController;

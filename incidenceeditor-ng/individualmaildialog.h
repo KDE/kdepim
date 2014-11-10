@@ -27,7 +27,8 @@
 
 class TestIndividualMailDialog;
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 
 // Shows a dialog with a question and the option to select which attendee should get the mail or to open a composer for him.
 // Used to get individual mails for attendees of an event.
