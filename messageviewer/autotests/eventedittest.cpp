@@ -25,7 +25,6 @@
 #include <AkonadiCore/EntityTreeModel>
 #include <QStandardItemModel>
 #include <KCalCore/Event>
-#include <KDateTimeEdit>
 #include <QPushButton>
 
 #include <qtest.h>
