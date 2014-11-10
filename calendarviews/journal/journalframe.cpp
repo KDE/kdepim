@@ -97,8 +97,8 @@ void JournalDateView::addJournal( const Akonadi::Item &j )
            this, SIGNAL(editIncidence(Akonadi::Item)) );
   connect( entry, SIGNAL(incidenceSelected(Akonadi::Item,QDate)),
                   SIGNAL(incidenceSelected(Akonadi::Item,QDate)) );
-  connect( entry, SIGNAL(printJournal(KCalCore::Journal::Ptr)),
-           SIGNAL(printJournal(KCalCore::Journal::Ptr)) );
+  connect( entry, SIGNAL(printJournal(KCalCore::Journal::Ptr,bool)),
+           SIGNAL(printJournal(KCalCore::Journal::Ptr,bool)) );
 }
 
 Akonadi::Item::List JournalDateView::journals() const
@@ -195,6 +195,15 @@ JournalFrame::JournalFrame( const Akonadi::Item &j,
   buttonsLayout->addWidget( mPrintButton );
   connect( mPrintButton, SIGNAL(clicked()), this, SLOT(printJournal()) );
 
+  mPrintPreviewButton = new QPushButton( this );
+  mPrintPreviewButton->setText( i18n( "Print preview" ) );
+  mPrintPreviewButton->setObjectName( QLatin1String("printButton") );
+  mPrintPreviewButton->setIcon( SmallIcon( QLatin1String("document-print-preview") ) );
+  mPrintPreviewButton->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
+  mPrintPreviewButton->setToolTip( i18n( "Print preview this journal entry" ) );
+  buttonsLayout->addWidget( mPrintPreviewButton );
+  connect( mPrintPreviewButton, SIGNAL(clicked()), this, SLOT(printPreviewJournal()) );
+
   readJournal( mJournal );
   mDirty = false;
   setFrameStyle( QFrame::Box );
@@ -274,7 +283,12 @@ void JournalFrame::setDirty()
 
 void JournalFrame::printJournal()
 {
-  emit printJournal( CalendarSupport::journal( mJournal ) );
+  emit printJournal( CalendarSupport::journal( mJournal ), false );
+}
+
+void JournalFrame::printPreviewJournal()
+{
+  emit printJournal( CalendarSupport::journal( mJournal ), true );
 }
 
 void JournalFrame::readJournal( const Akonadi::Item &j )
