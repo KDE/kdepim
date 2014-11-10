@@ -337,7 +337,7 @@ void SplitterCollapser::paintEvent(QPaintEvent *)
         if (d->direction == TopToBottom) {
             opt.rect.setTop(-height());
         } else {
-            opt.rect.setHeight(height()*2);
+            opt.rect.setHeight(height() * 2);
         }
     } else {
         if (d->direction == LeftToRight) {

@@ -56,7 +56,6 @@ public:
 
     QSize sizeHint() const Q_DECL_OVERRIDE;
 
-
 public Q_SLOTS:
     void collapse();
     void restore();

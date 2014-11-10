@@ -61,7 +61,6 @@ void SplitterCollapserTest::shouldHasDefaultValue()
     QTest::qWaitForWindowShown(&testSplitter);
     QVERIFY(testSplitter.isVisible());
 
-
     PimCommon::SplitterCollapser *collapser = qFindChild<PimCommon::SplitterCollapser *>(&testSplitter, QLatin1String("splittercollapser"));
     QVERIFY(collapser);
     QVERIFY(!collapser->isCollapsed());
