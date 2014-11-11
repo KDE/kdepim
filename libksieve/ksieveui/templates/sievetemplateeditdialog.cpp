@@ -19,6 +19,7 @@
 #include "editor/sievetextedit.h"
 
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditfindbar.h"
+#include "pimcommon/widgets/slidecontainer.h"
 
 #include <KLocalizedString>
 #include <KLineEdit>
@@ -61,8 +62,12 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTe
     mTextEdit->setReadOnly(defaultTemplate);
     vbox->addWidget(mTextEdit);
 
+    mSliderContainer = new PimCommon::SlideContainer(this);
     mFindBar = new PimCommon::PlainTextEditFindBar( mTextEdit, this );
-    vbox->addWidget(mFindBar);
+    mFindBar->setHideWhenClose(false);
+    connect(mFindBar, SIGNAL(hideFindBar()), mSliderContainer, SLOT(slideOut()));
+    mSliderContainer->setContent(mFindBar);
+    vbox->addWidget(mSliderContainer);
 
     QShortcut *shortcut = new QShortcut( this );
     shortcut->setKey( Qt::Key_F+Qt::CTRL );
@@ -87,6 +92,7 @@ SieveTemplateEditDialog::~SieveTemplateEditDialog()
 
 void SieveTemplateEditDialog::slotFind()
 {
+    mSliderContainer->slideIn();
     if ( mTextEdit->textCursor().hasSelection() )
         mFindBar->setText( mTextEdit->textCursor().selectedText() );
     mTextEdit->moveCursor(QTextCursor::Start);

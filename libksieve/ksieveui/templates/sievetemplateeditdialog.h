@@ -24,6 +24,7 @@ class KLineEdit;
 
 namespace PimCommon {
 class PlainTextEditFindBar;
+class SlideContainer;
 }
 
 
@@ -52,6 +53,7 @@ private:
     SieveTextEdit *mTextEdit;
     PimCommon::PlainTextEditFindBar *mFindBar;
     KLineEdit *mTemplateNameEdit;
+    PimCommon::SlideContainer *mSliderContainer;
 };
 }
 
