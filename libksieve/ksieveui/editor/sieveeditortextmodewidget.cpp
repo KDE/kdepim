@@ -32,6 +32,7 @@
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 #include "pimcommon/texteditor/commonwidget/textgotolinewidget.h"
 #include "pimcommon/widgets/splittercollapser.h"
+#include "pimcommon/widgets/slidecontainer.h"
 
 #include <ksieve/parser.h>
 #include <ksieve/error.h>
@@ -49,6 +50,8 @@
 #include <QVBoxLayout>
 
 #include <errno.h>
+
+
 
 using namespace KSieveUi;
 
@@ -96,9 +99,13 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     textEditLayout->addWidget(mGoToLine);
     connect(mGoToLine, SIGNAL(goToLine(int)), this, SLOT(slotGoToLine(int)));
 
+    mSliderContainer = new PimCommon::SlideContainer(this);
     mFindBar = new PimCommon::PlainTextEditFindBar( mTextEdit, textEditWidget );
+    mFindBar->setHideWhenClose(false);
+    connect(mFindBar, SIGNAL(hideFindBar()), mSliderContainer, SLOT(slideOut()));
     connect(mFindBar, SIGNAL(displayMessageIndicator(QString)),mTextEdit, SLOT(slotDisplayMessageIndicator(QString)));
-    textEditLayout->addWidget(mFindBar);
+    mSliderContainer->setContent(mFindBar);
+    textEditLayout->addWidget(mSliderContainer);
 
     mSieveEditorWarning = new SieveEditorWarning;
     textEditLayout->addWidget(mSieveEditorWarning);
@@ -220,6 +227,7 @@ void SieveEditorTextModeWidget::autoGenerateScripts()
 
 void SieveEditorTextModeWidget::slotFind()
 {
+    mSliderContainer->slideIn();
     if ( mTextEdit->textCursor().hasSelection() )
         mFindBar->setText( mTextEdit->textCursor().selectedText() );
     mTextEdit->moveCursor(QTextCursor::Start);

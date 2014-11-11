@@ -28,6 +28,7 @@ namespace PimCommon {
 class PlainTextEditFindBar;
 class PlainTextEditor;
 class TextGoToLineWidget;
+class SlideContainer;
 }
 
 namespace KSieveUi {
@@ -92,6 +93,7 @@ private:
     SieveEditorParsingMissingFeatureWarning *mSieveParsingWarning;
     SieveEditorTabWidget *mTabWidget;
     PimCommon::TextGoToLineWidget *mGoToLine;
+    PimCommon::SlideContainer *mSliderContainer;
 };
 
 }
