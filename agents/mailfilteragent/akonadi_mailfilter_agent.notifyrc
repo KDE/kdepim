@@ -134,6 +134,7 @@ Action=Popup
 Name=An error occurred during filtering
 Name[ca]=S'ha detectat un error durant el filtratge
 Name[de]=Es ist ein Fehler beim Filtern aufgetreten
+Name[es]=Ocurrió un error durante el filtrado
 Name[fi]=Suodattamisen aikana tapahtui virhe
 Name[nl]=Er is een fout opgetreden bij het filteren
 Name[pl]=Podczas filtrowania wystąpił błąd

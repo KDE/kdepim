@@ -1,6 +1,8 @@
 [Desktop Entry]
 Name=Account Wizard
+Name[ca]=Assistent de comptes
 Name[de]=Zugangsassistent 
+Name[es]=Asistente de cuentas
 Name[fi]=Opastettu tilin luonti
 Name[nl]=Accountassistent
 Name[pl]=Pomocnik konta 
@@ -12,10 +14,12 @@ Exec=accountwizard --package %u
 Type=Application
 NoDisplay=true
 Comment=Launch the account wizard to configure PIM accounts.
+Comment[ca]=Llança l'assistent de comptes per a configurar els comptes de la PIM.
 Comment[da]=Start kontoguiden for at konfigurere PIM-konti.
 Comment[de]=Den Postfach-Assistenten zum Einrichten von PIM-Zugängen starten.
 Comment[el]=Εκτέλεση του οδηγού λογαριασμού για τη ρύθμιση λογαριασμών PIM.
 Comment[en_GB]=Launch the account wizard to configure PIM accounts.
+Comment[es]=Lanzar el asistente de cuentas para configurar cuentas PIM.
 Comment[et]=Kontonõustaja käivitamine PIM-kontode seadistamiseks.
 Comment[fi]=Käynnistä PIM-tilien opastettu asetus.
 Comment[fr]=Lancer l'assistant de compte pour configurer les comptes PIM

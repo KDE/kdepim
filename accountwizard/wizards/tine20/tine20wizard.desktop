@@ -1,6 +1,8 @@
 [Desktop Entry]
 Name=Tine 2.0 Groupware Server
+Name[ca]=Servidor de treball en grup Tine 2.0
 Name[de]=Tine 2.0 Groupware-Server
+Name[es]=Servidor de colaboración Tine 2.0
 Name[fi]=Tine 2.0 -työryhmäpalvelin
 Name[nl]=Tine 2.0 groupwareserver
 Name[pl]=Serwer Groupware Tine 2.0
@@ -10,7 +12,9 @@ Name[uk]=Сервер групової роботи Tine 2.0
 Name[x-test]=xxTine 2.0 Groupware Serverxx
 Icon=applications-internet
 Comment=Tine 2.0 Groupware Server
+Comment[ca]=Servidor de treball en grup Tine 2.0
 Comment[de]=Tine 2.0 Groupware-Server
+Comment[es]=Servidor de colaboración Tine 2.0
 Comment[fi]=Tine 2.0 -työryhmäpalvelin
 Comment[nl]=Tine 2.0 groupwareserver
 Comment[pl]=Serwer Groupware Tine 2.0
