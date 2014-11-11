@@ -52,22 +52,22 @@ public:
     /**
      * @copydoc FilterAction::isEmpty
      */
-    virtual bool isEmpty() const;
+    bool isEmpty() const Q_DECL_OVERRIDE;
 
     /**
      * @copydoc FilterAction::argsFromString
      */
-    virtual void argsFromString(const QString &argsStr);
+    void argsFromString(const QString &argsStr) Q_DECL_OVERRIDE;
 
     /**
      * @copydoc FilterAction::argsAsString
      */
-    virtual QString argsAsString() const;
+    QString argsAsString() const Q_DECL_OVERRIDE;
 
     /**
      * @copydoc FilterAction::displayString
      */
-    virtual QString displayString() const;
+    QString displayString() const Q_DECL_OVERRIDE;
 
 protected:
     uint mParameter;

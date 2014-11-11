@@ -173,11 +173,11 @@ Q_SIGNALS:
     void checkedItemsChanged(const QStringList &items);
 
 protected:
-    virtual bool eventFilter(QObject *receiver, QEvent *event);
-    virtual void keyPressEvent(QKeyEvent *event);
-    virtual void resizeEvent(QResizeEvent *event);
+    bool eventFilter(QObject *receiver, QEvent *event) Q_DECL_OVERRIDE;
+    void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
+    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 #ifndef QT_NO_WHEELEVENT
-    virtual void wheelEvent(QWheelEvent *event);
+    void wheelEvent(QWheelEvent *event) Q_DECL_OVERRIDE;
 #endif
 
 private:

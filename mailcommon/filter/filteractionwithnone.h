@@ -52,17 +52,17 @@ public:
     /**
      * @copydoc FilterAction::argsFromString
      */
-    virtual void argsFromString(const QString &);
+    void argsFromString(const QString &) Q_DECL_OVERRIDE;
 
     /**
      * @copydoc FilterAction::argsAsString
      */
-    virtual QString argsAsString() const;
+    QString argsAsString() const Q_DECL_OVERRIDE;
 
     /**
      * @copydoc FilterAction::displayString
      */
-    virtual QString displayString() const;
+    QString displayString() const Q_DECL_OVERRIDE;
 };
 
 }
