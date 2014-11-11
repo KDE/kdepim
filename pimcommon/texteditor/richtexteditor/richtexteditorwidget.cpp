@@ -101,8 +101,7 @@ void RichTextEditorWidget::init(RichTextEditor *customEditor)
 
     mSliderContainer = new PimCommon::SlideContainer(this);
 
-
-    mFindBar = new PimCommon::RichTextEditFindBar( mEditor, this );
+    mFindBar = new PimCommon::RichTextEditFindBar(mEditor, this);
     mFindBar->setHideWhenClose(false);
     connect(mFindBar, &PimCommon::RichTextEditFindBar::displayMessageIndicator, mEditor, &RichTextEditor::slotDisplayMessageIndicator);
 

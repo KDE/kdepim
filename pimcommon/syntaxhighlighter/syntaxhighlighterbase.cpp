@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "syntaxhighlighterbase.h"
 using namespace PimCommon;
 SyntaxHighlighterBase::SyntaxHighlighterBase(QTextDocument *doc)
@@ -29,16 +28,15 @@ SyntaxHighlighterBase::~SyntaxHighlighterBase()
 
 }
 
-
-void SyntaxHighlighterBase::highlightBlock( const QString &text )
+void SyntaxHighlighterBase::highlightBlock(const QString &text)
 {
-    Q_FOREACH ( const Rule &rule, m_rules ) {
-        const QRegExp expression( rule.pattern );
-        int index = expression.indexIn( text );
+    Q_FOREACH (const Rule &rule, m_rules) {
+        const QRegExp expression(rule.pattern);
+        int index = expression.indexIn(text);
         int length = 0;
-        while ( index >= 0 && ( length = expression.matchedLength() ) > 0 ) {
-            setFormat( index, length, rule.format );
-            index = expression.indexIn( text, index + length );
+        while (index >= 0 && (length = expression.matchedLength()) > 0) {
+            setFormat(index, length, rule.format);
+            index = expression.indexIn(text, index + length);
         }
     }
 }

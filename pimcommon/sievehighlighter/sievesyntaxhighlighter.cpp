@@ -20,8 +20,8 @@
 
 using namespace PimCommon;
 
-SieveSyntaxHighlighter::SieveSyntaxHighlighter( QTextDocument *doc )
-    : SyntaxHighlighterBase( doc )
+SieveSyntaxHighlighter::SieveSyntaxHighlighter(QTextDocument *doc)
+    : SyntaxHighlighterBase(doc)
 {
     init();
 }

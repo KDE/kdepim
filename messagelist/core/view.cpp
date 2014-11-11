@@ -102,8 +102,8 @@ View::View(Widget *pParent)
     header()->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(header(), SIGNAL(customContextMenuRequested(QPoint)),
             SLOT(slotHeaderContextMenuRequested(QPoint)));
-    connect(header(), SIGNAL(sectionResized(int, int, int)),
-            SLOT(slotHeaderSectionResized(int, int, int)));
+    connect(header(), SIGNAL(sectionResized(int,int,int)),
+            SLOT(slotHeaderSectionResized(int,int,int)));
 
     header()->setClickable(true);
     header()->setResizeMode(QHeaderView::Interactive);
@@ -118,8 +118,8 @@ View::View(Widget *pParent)
 
     //connect( selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
     //         this, SLOT(slotCurrentIndexChanged(QModelIndex,QModelIndex)) );
-    connect(selectionModel(), SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
-            this, SLOT(slotSelectionChanged(QItemSelection, QItemSelection)),
+    connect(selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            this, SLOT(slotSelectionChanged(QItemSelection,QItemSelection)),
             Qt::UniqueConnection);
 
     // as in KDE3, when a root-item of a message thread is expanded, expand all children
@@ -159,12 +159,12 @@ Delegate *View::delegate() const
 void View::ignoreCurrentChanges(bool ignore)
 {
     if (ignore) {
-        disconnect(selectionModel(), SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
-                   this, SLOT(slotSelectionChanged(QItemSelection, QItemSelection)));
+        disconnect(selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+                   this, SLOT(slotSelectionChanged(QItemSelection,QItemSelection)));
         viewport()->setUpdatesEnabled(false);
     } else {
-        connect(selectionModel(), SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
-                this, SLOT(slotSelectionChanged(QItemSelection, QItemSelection)),
+        connect(selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+                this, SLOT(slotSelectionChanged(QItemSelection,QItemSelection)),
                 Qt::UniqueConnection);
         viewport()->setUpdatesEnabled(true);
     }

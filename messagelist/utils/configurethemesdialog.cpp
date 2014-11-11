@@ -118,8 +118,8 @@ ConfigureThemesDialog::ConfigureThemesDialog(QWidget *parent)
     d->mThemeList->setSortingEnabled(true);
     g->addWidget(d->mThemeList, 0, 0, 7, 1);
 
-    connect(d->mThemeList, SIGNAL(itemClicked(QListWidgetItem *)),
-            SLOT(themeListItemClicked(QListWidgetItem *)));
+    connect(d->mThemeList, SIGNAL(itemClicked(QListWidgetItem*)),
+            SLOT(themeListItemClicked(QListWidgetItem*)));
 
     d->mNewThemeButton = new QPushButton(i18n("New Theme"), base);
     d->mNewThemeButton->setIcon(QIcon::fromTheme(QLatin1String("document-new")));

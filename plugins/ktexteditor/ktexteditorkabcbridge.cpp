@@ -29,7 +29,7 @@ using namespace KIdentityManagement;
 // QLibrary resolve() that only knows how to resolve C functions
 // This function is used by kate/kwrite ( only gcc )
 #if defined(__GCC__)
-extern "C" 
+extern "C"
 #endif
 Q_DECL_EXPORT QString ktexteditorkabcbridge(const QString &placeHolder, QWidget *widget, bool *ok)
 {

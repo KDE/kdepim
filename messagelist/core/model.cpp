@@ -736,20 +736,20 @@ void Model::setStorageModel(StorageModel *storageModel, PreSelectionMode preSele
     d->clear();
 
     if (d->mStorageModel) {
-        disconnect(d->mStorageModel, SIGNAL(rowsInserted(QModelIndex, int, int)),
-                   this, SLOT(slotStorageModelRowsInserted(QModelIndex, int, int)));
-        disconnect(d->mStorageModel, SIGNAL(rowsRemoved(QModelIndex, int, int)),
-                   this, SLOT(slotStorageModelRowsRemoved(QModelIndex, int, int)));
+        disconnect(d->mStorageModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
+                   this, SLOT(slotStorageModelRowsInserted(QModelIndex,int,int)));
+        disconnect(d->mStorageModel, SIGNAL(rowsRemoved(QModelIndex,int,int)),
+                   this, SLOT(slotStorageModelRowsRemoved(QModelIndex,int,int)));
 
         disconnect(d->mStorageModel, SIGNAL(layoutChanged()),
                    this, SLOT(slotStorageModelLayoutChanged()));
         disconnect(d->mStorageModel, SIGNAL(modelReset()),
                    this, SLOT(slotStorageModelLayoutChanged()));
 
-        disconnect(d->mStorageModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)),
-                   this, SLOT(slotStorageModelDataChanged(QModelIndex, QModelIndex)));
-        disconnect(d->mStorageModel, SIGNAL(headerDataChanged(Qt::Orientation, int, int)),
-                   this, SLOT(slotStorageModelHeaderDataChanged(Qt::Orientation, int, int)));
+        disconnect(d->mStorageModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+                   this, SLOT(slotStorageModelDataChanged(QModelIndex,QModelIndex)));
+        disconnect(d->mStorageModel, SIGNAL(headerDataChanged(Qt::Orientation,int,int)),
+                   this, SLOT(slotStorageModelHeaderDataChanged(Qt::Orientation,int,int)));
     }
 
     d->mStorageModel = storageModel;
@@ -764,20 +764,20 @@ void Model::setStorageModel(StorageModel *storageModel, PreSelectionMode preSele
     d->mPreSelectionMode = preSelectionMode;
     d->mStorageModelContainsOutboundMessages = d->mStorageModel->containsOutboundMessages();
 
-    connect(d->mStorageModel, SIGNAL(rowsInserted(QModelIndex, int, int)),
-            this, SLOT(slotStorageModelRowsInserted(QModelIndex, int, int)));
-    connect(d->mStorageModel, SIGNAL(rowsRemoved(QModelIndex, int, int)),
-            this, SLOT(slotStorageModelRowsRemoved(QModelIndex, int, int)));
+    connect(d->mStorageModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
+            this, SLOT(slotStorageModelRowsInserted(QModelIndex,int,int)));
+    connect(d->mStorageModel, SIGNAL(rowsRemoved(QModelIndex,int,int)),
+            this, SLOT(slotStorageModelRowsRemoved(QModelIndex,int,int)));
 
     connect(d->mStorageModel, SIGNAL(layoutChanged()),
             this, SLOT(slotStorageModelLayoutChanged()));
     connect(d->mStorageModel, SIGNAL(modelReset()),
             this, SLOT(slotStorageModelLayoutChanged()));
 
-    connect(d->mStorageModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)),
-            this, SLOT(slotStorageModelDataChanged(QModelIndex, QModelIndex)));
-    connect(d->mStorageModel, SIGNAL(headerDataChanged(Qt::Orientation, int, int)),
-            this, SLOT(slotStorageModelHeaderDataChanged(Qt::Orientation, int, int)));
+    connect(d->mStorageModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+            this, SLOT(slotStorageModelDataChanged(QModelIndex,QModelIndex)));
+    connect(d->mStorageModel, SIGNAL(headerDataChanged(Qt::Orientation,int,int)),
+            this, SLOT(slotStorageModelHeaderDataChanged(Qt::Orientation,int,int)));
 
     if (d->mStorageModel->rowCount() == 0) {
         return;    // folder empty: nothing to fill

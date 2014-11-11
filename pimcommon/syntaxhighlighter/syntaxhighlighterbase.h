@@ -20,7 +20,8 @@
 
 #include <QSyntaxHighlighter>
 #include "pimcommon_export.h"
-namespace PimCommon {
+namespace PimCommon
+{
 class PIMCOMMON_EXPORT SyntaxHighlighterBase : public QSyntaxHighlighter
 {
     Q_OBJECT
@@ -28,7 +29,7 @@ public:
     explicit SyntaxHighlighterBase(QTextDocument *doc);
     ~SyntaxHighlighterBase();
 
-    void highlightBlock( const QString &text );
+    void highlightBlock(const QString &text);
 
 protected:
     virtual void init() = 0;
@@ -36,8 +37,8 @@ protected:
         QRegExp pattern;
         QTextCharFormat format;
 
-        Rule( const QRegExp &r, const QTextCharFormat &f )
-            : pattern( r ), format( f ) {}
+        Rule(const QRegExp &r, const QTextCharFormat &f)
+            : pattern(r), format(f) {}
     };
     QList<Rule> m_rules;
 };

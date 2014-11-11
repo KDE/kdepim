@@ -586,8 +586,8 @@ void Widget::sortOrderMenuAboutToShow(QMenu *menu)
         act->setData(QVariant((*it).second));
     }
 
-    connect(grp, SIGNAL(triggered(QAction *)),
-            SLOT(messageSortingSelected(QAction *)));
+    connect(grp, SIGNAL(triggered(QAction*)),
+            SLOT(messageSortingSelected(QAction*)));
 
     options = SortOrder::enumerateMessageSortDirectionOptions(d->mSortOrder.messageSorting());
 
@@ -604,8 +604,8 @@ void Widget::sortOrderMenuAboutToShow(QMenu *menu)
             act->setData(QVariant((*it).second));
         }
 
-        connect(grp, SIGNAL(triggered(QAction *)),
-                SLOT(messageSortDirectionSelected(QAction *)));
+        connect(grp, SIGNAL(triggered(QAction*)),
+                SLOT(messageSortDirectionSelected(QAction*)));
     }
 
     options = SortOrder::enumerateGroupSortingOptions(d->mAggregation->grouping());
@@ -624,8 +624,8 @@ void Widget::sortOrderMenuAboutToShow(QMenu *menu)
             act->setData(QVariant((*it).second));
         }
 
-        connect(grp, SIGNAL(triggered(QAction *)),
-                SLOT(groupSortingSelected(QAction *)));
+        connect(grp, SIGNAL(triggered(QAction*)),
+                SLOT(groupSortingSelected(QAction*)));
     }
 
     options = SortOrder::enumerateGroupSortDirectionOptions(d->mAggregation->grouping(),
@@ -644,8 +644,8 @@ void Widget::sortOrderMenuAboutToShow(QMenu *menu)
             act->setData(QVariant((*it).second));
         }
 
-        connect(grp, SIGNAL(triggered(QAction *)),
-                SLOT(groupSortDirectionSelected(QAction *)));
+        connect(grp, SIGNAL(triggered(QAction*)),
+                SLOT(groupSortDirectionSelected(QAction*)));
     }
 
     menu->addSeparator();

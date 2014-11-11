@@ -164,13 +164,13 @@ Pane::Pane(bool restoreSession, QAbstractItemModel *model, QItemSelectionModel *
             SLOT(onCloseTabClicked()));
 
     setTabsClosable(Core::Settings::self()->tabsHaveCloseButton());
-    connect(this, SIGNAL(closeRequest(QWidget *)), SLOT(closeTab(QWidget *)));
+    connect(this, SIGNAL(closeRequest(QWidget*)), SLOT(closeTab(QWidget*)));
 
     readConfig(restoreSession);
     setMovable(true);
 
-    connect(d->mSelectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
-            this, SLOT(onSelectionChanged(QItemSelection, QItemSelection)));
+    connect(d->mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            this, SLOT(onSelectionChanged(QItemSelection,QItemSelection)));
     connect(this, SIGNAL(currentChanged(int)),
             this, SLOT(onCurrentTabChanged()));
 
@@ -184,8 +184,8 @@ Pane::Pane(bool restoreSession, QAbstractItemModel *model, QItemSelectionModel *
     connect(this, SIGNAL(tabBarDoubleClicked(int)),
             this, SLOT(createNewTab()));
 
-    connect(this, SIGNAL(mouseMiddleClick(QWidget *)),
-            this, SLOT(closeTab(QWidget *)));
+    connect(this, SIGNAL(mouseMiddleClick(QWidget*)),
+            this, SLOT(closeTab(QWidget*)));
     tabBar()->installEventFilter(this);
 }
 
@@ -497,14 +497,14 @@ void Pane::Private::onSelectionChanged(const QItemSelection &selected, const QIt
     q->setTabIcon(index, icon);
     q->setTabToolTip(index, toolTip);
     if (mPreferEmptyTab) {
-        disconnect(mSelectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
-                   q, SLOT(onSelectionChanged(QItemSelection, QItemSelection)));
+        disconnect(mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+                   q, SLOT(onSelectionChanged(QItemSelection,QItemSelection)));
 
         mSelectionModel->select(mapSelectionFromSource(s->selection()),
                                 QItemSelectionModel::ClearAndSelect);
 
-        connect(mSelectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
-                q, SLOT(onSelectionChanged(QItemSelection, QItemSelection)));
+        connect(mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+                q, SLOT(onSelectionChanged(QItemSelection,QItemSelection)));
 
     }
 }
@@ -639,14 +639,14 @@ void Pane::Private::onCurrentTabChanged()
 
     QItemSelectionModel *s = mWidgetSelectionHash[w];
 
-    disconnect(mSelectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
-               q, SLOT(onSelectionChanged(QItemSelection, QItemSelection)));
+    disconnect(mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+               q, SLOT(onSelectionChanged(QItemSelection,QItemSelection)));
 
     mSelectionModel->select(mapSelectionFromSource(s->selection()),
                             QItemSelectionModel::ClearAndSelect);
 
-    connect(mSelectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
-            q, SLOT(onSelectionChanged(QItemSelection, QItemSelection)));
+    connect(mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            q, SLOT(onSelectionChanged(QItemSelection,QItemSelection)));
 }
 
 void Pane::Private::onTabContextMenuRequest(const QPoint &pos)
@@ -758,8 +758,8 @@ QItemSelectionModel *Pane::createNewTab()
             this, SIGNAL(messageActivated(Akonadi::Item)));
     connect(w, SIGNAL(selectionChanged()),
             this, SIGNAL(selectionChanged()));
-    connect(w, SIGNAL(messageStatusChangeRequest(Akonadi::Item, Akonadi::MessageStatus, Akonadi::MessageStatus)),
-            this, SIGNAL(messageStatusChangeRequest(Akonadi::Item, Akonadi::MessageStatus, Akonadi::MessageStatus)));
+    connect(w, SIGNAL(messageStatusChangeRequest(Akonadi::Item,Akonadi::MessageStatus,Akonadi::MessageStatus)),
+            this, SIGNAL(messageStatusChangeRequest(Akonadi::Item,Akonadi::MessageStatus,Akonadi::MessageStatus)));
 
     connect(w, SIGNAL(statusMessage(QString)),
             this, SIGNAL(statusMessage(QString)));

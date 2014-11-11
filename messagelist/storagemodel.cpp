@@ -114,8 +114,8 @@ StorageModel::StorageModel(QAbstractItemModel *model, QItemSelectionModel *selec
 
     qDebug() << "Using model:" << model->metaObject()->className();
 
-    connect(d->mModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)),
-            this, SLOT(onSourceDataChanged(QModelIndex, QModelIndex)));
+    connect(d->mModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+            this, SLOT(onSourceDataChanged(QModelIndex,QModelIndex)));
 
     connect(d->mModel, &QAbstractItemModel::layoutAboutToBeChanged, this, &StorageModel::layoutAboutToBeChanged);
     connect(d->mModel, &QAbstractItemModel::layoutChanged, this, &StorageModel::layoutChanged);
@@ -128,7 +128,7 @@ StorageModel::StorageModel(QAbstractItemModel *model, QItemSelectionModel *selec
     connect(d->mModel, &QAbstractItemModel::rowsAboutToBeRemoved, this, &StorageModel::rowsAboutToBeRemoved);
     connect(d->mModel, &QAbstractItemModel::rowsRemoved, this, &StorageModel::rowsRemoved);
 
-    connect(d->mSelectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
+    connect(d->mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
             this, SLOT(onSelectionChanged()));
 
     d->loadSettings();

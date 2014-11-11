@@ -25,8 +25,6 @@
 #include <QShortcut>
 #include <QTextCursor>
 
-
-
 using namespace PimCommon;
 
 PlainTextEditorWidget::PlainTextEditorWidget(PlainTextEditor *customEditor, QWidget *parent)
@@ -77,7 +75,7 @@ void PlainTextEditorWidget::init(PlainTextEditor *customEditor)
 
     mSliderContainer = new PimCommon::SlideContainer(this);
 
-    mFindBar = new PimCommon::PlainTextEditFindBar( mEditor, this );
+    mFindBar = new PimCommon::PlainTextEditFindBar(mEditor, this);
     mFindBar->setHideWhenClose(false);
     connect(mFindBar, &PimCommon::PlainTextEditFindBar::displayMessageIndicator, mEditor, &PlainTextEditor::slotDisplayMessageIndicator);
     connect(mFindBar, SIGNAL(hideFindBar()), mSliderContainer, SLOT(slideOut()));
