@@ -165,7 +165,7 @@ void SelectHeadersWidget::setListHeaders(const QMap<QString, QString> &lst, cons
             item->setCheckState(Qt::Unchecked);
         }
     }
-    Q_FOREACH(const QString & header, selectedHeaders) {
+    Q_FOREACH (const QString &header, selectedHeaders) {
         if (!lst.contains(header)) {
             QListWidgetItem *item = new QListWidgetItem(header, this);
             item->setData(HeaderId, header);

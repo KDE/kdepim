@@ -50,8 +50,6 @@
 
 #include <errno.h>
 
-
-
 using namespace KSieveUi;
 
 SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
@@ -98,10 +96,10 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     connect(mGoToLine, &PimCommon::TextGoToLineWidget::moveToLine, this, &SieveEditorTextModeWidget::slotGoToLine);
 
     mSliderContainer = new PimCommon::SlideContainer(this);
-    mFindBar = new PimCommon::PlainTextEditFindBar( mTextEdit, textEditWidget );
+    mFindBar = new PimCommon::PlainTextEditFindBar(mTextEdit, textEditWidget);
     mFindBar->setHideWhenClose(false);
     connect(mFindBar, SIGNAL(hideFindBar()), mSliderContainer, SLOT(slideOut()));
-    connect(mFindBar, SIGNAL(displayMessageIndicator(QString)),mTextEdit, SLOT(slotDisplayMessageIndicator(QString)));
+    connect(mFindBar, SIGNAL(displayMessageIndicator(QString)), mTextEdit, SLOT(slotDisplayMessageIndicator(QString)));
     mSliderContainer->setContent(mFindBar);
     textEditLayout->addWidget(mSliderContainer);
 
@@ -226,8 +224,9 @@ void SieveEditorTextModeWidget::autoGenerateScripts()
 void SieveEditorTextModeWidget::slotFind()
 {
     mSliderContainer->slideIn();
-    if ( mTextEdit->textCursor().hasSelection() )
-        mFindBar->setText( mTextEdit->textCursor().selectedText() );
+    if (mTextEdit->textCursor().hasSelection()) {
+        mFindBar->setText(mTextEdit->textCursor().selectedText());
+    }
     mTextEdit->moveCursor(QTextCursor::Start);
     mFindBar->showFind();
     mFindBar->focusAndSetCursor();

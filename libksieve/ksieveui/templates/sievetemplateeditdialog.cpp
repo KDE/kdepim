@@ -77,7 +77,7 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTe
     vbox->addWidget(mTextEdit);
 
     mSliderContainer = new PimCommon::SlideContainer(this);
-    mFindBar = new PimCommon::PlainTextEditFindBar( mTextEdit, this );
+    mFindBar = new PimCommon::PlainTextEditFindBar(mTextEdit, this);
     mFindBar->setHideWhenClose(false);
     connect(mFindBar, SIGNAL(hideFindBar()), mSliderContainer, SLOT(slideOut()));
     mSliderContainer->setContent(mFindBar);
@@ -111,8 +111,9 @@ SieveTemplateEditDialog::~SieveTemplateEditDialog()
 void SieveTemplateEditDialog::slotFind()
 {
     mSliderContainer->slideIn();
-    if ( mTextEdit->textCursor().hasSelection() )
-        mFindBar->setText( mTextEdit->textCursor().selectedText() );
+    if (mTextEdit->textCursor().hasSelection()) {
+        mFindBar->setText(mTextEdit->textCursor().selectedText());
+    }
     mTextEdit->moveCursor(QTextCursor::Start);
     mFindBar->show();
     mFindBar->focusAndSetCursor();

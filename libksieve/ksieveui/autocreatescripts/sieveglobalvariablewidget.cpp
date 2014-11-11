@@ -318,7 +318,7 @@ void SieveGlobalVariableLister::loadSetVariable(const QDomElement &element, QStr
         node = node.nextSibling();
     }
 
-    Q_FOREACH(QWidget * widget, widgets()) {
+    Q_FOREACH (QWidget *widget, widgets()) {
         SieveGlobalVariableActionWidget *w = static_cast<SieveGlobalVariableActionWidget *>(widget);
         if (w->variableName() == variableName) {
             w->setVariableValue(variableValue);

@@ -93,7 +93,7 @@ void MultiImapVacationDialog::init()
     mStackedWidget->setCurrentIndex(0);
     bool foundOneImap = false;
     const Akonadi::AgentInstance::List instances = KSieveUi::Util::imapAgentInstances();
-    foreach(const Akonadi::AgentInstance & instance, instances) {
+    foreach (const Akonadi::AgentInstance &instance, instances) {
         if (instance.status() == Akonadi::AgentInstance::Broken) {
             continue;
         }
