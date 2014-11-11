@@ -20,39 +20,26 @@
 #define KSIEVE_KSIEVEUI_SIEVESYNTAXHIGHLIGHTER_H
 
 #include "pimcommon_export.h"
+#include "pimcommon/syntaxhighlighter/syntaxhighlighterbase.h"
 
 #include <QList>
 #include <QRegExp>
-#include <QSyntaxHighlighter>
 
 class QTextDocument;
 
 namespace PimCommon {
 
-class PIMCOMMON_EXPORT SieveSyntaxHighlighter : public QSyntaxHighlighter
+class PIMCOMMON_EXPORT SieveSyntaxHighlighter : public SyntaxHighlighterBase
 {
     Q_OBJECT
 
 public:
     explicit SieveSyntaxHighlighter( QTextDocument *doc );
     ~SieveSyntaxHighlighter();
-
-    void highlightBlock(const QString &text);
-
     void addCapabilities(const QStringList &capabilities);
 
 private:
     void init();
-
-    struct Rule {
-        QRegExp pattern;
-        QTextCharFormat format;
-
-        Rule( const QRegExp &r, const QTextCharFormat &f )
-            : pattern(r), format(f) {}
-    };
-
-    QList<Rule> m_rules;
 
 };
 

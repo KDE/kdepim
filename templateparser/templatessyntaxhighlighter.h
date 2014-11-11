@@ -20,31 +20,19 @@
 #define TEMPLATEPARSER_TEMPLATESSYNTAXHIGHLIGHTER_H
 
 #include "templateparser_export.h"
-
-#include <QSyntaxHighlighter>
+#include "pimcommon/syntaxhighlighter/syntaxhighlighterbase.h"
 
 namespace TemplateParser {
 
-class TEMPLATEPARSER_EXPORT TemplatesSyntaxHighlighter : public QSyntaxHighlighter
+class TEMPLATEPARSER_EXPORT TemplatesSyntaxHighlighter : public PimCommon::SyntaxHighlighterBase
 {
     Q_OBJECT
 public:
     explicit TemplatesSyntaxHighlighter( QTextDocument *doc );
     ~TemplatesSyntaxHighlighter();
 
-    void highlightBlock( const QString &text );
-
 private:
     void init();
-    struct Rule {
-        QRegExp pattern;
-        QTextCharFormat format;
-
-        Rule( const QRegExp &r, const QTextCharFormat &f )
-            : pattern( r ), format( f ) {}
-    };
-    QList<Rule> m_rules;
-
 };
 
 }

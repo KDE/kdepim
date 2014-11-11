@@ -15,21 +15,30 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef BALOOSYNTAXHIGHLIGHTER_H
-#define BALOOSYNTAXHIGHLIGHTER_H
 
-#include <QSyntaxHighlighter>
-#include "pimcommon/syntaxhighlighter/syntaxhighlighterbase.h"
-namespace PimCommon {
-class BalooSyntaxHighlighter : public SyntaxHighlighterBase
+#include "syntaxhighlighterbase.h"
+using namespace PimCommon;
+SyntaxHighlighterBase::SyntaxHighlighterBase(QTextDocument *doc)
+    : QSyntaxHighlighter(doc)
 {
-    Q_OBJECT
-public:
-    explicit BalooSyntaxHighlighter(QTextDocument *doc);
-    ~BalooSyntaxHighlighter();
 
-private:
-    void init();
-};
 }
-#endif // BALOOSYNTAXHIGHLIGHTER_H
+
+SyntaxHighlighterBase::~SyntaxHighlighterBase()
+{
+
+}
+
+
+void SyntaxHighlighterBase::highlightBlock( const QString &text )
+{
+    Q_FOREACH ( const Rule &rule, m_rules ) {
+        const QRegExp expression( rule.pattern );
+        int index = expression.indexIn( text );
+        int length = 0;
+        while ( index >= 0 && ( length = expression.matchedLength() ) > 0 ) {
+            setFormat( index, length, rule.format );
+            index = expression.indexIn( text, index + length );
+        }
+    }
+}

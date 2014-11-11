@@ -21,26 +21,13 @@
 using namespace PimCommon;
 
 SieveSyntaxHighlighter::SieveSyntaxHighlighter( QTextDocument *doc )
-    : QSyntaxHighlighter( doc )
+    : SyntaxHighlighterBase( doc )
 {
     init();
 }
 
 SieveSyntaxHighlighter::~SieveSyntaxHighlighter()
 {
-}
-
-void SieveSyntaxHighlighter::highlightBlock(const QString &text)
-{
-    Q_FOREACH (const Rule &rule, m_rules) {
-        const QRegExp expression(rule.pattern);
-        int index = expression.indexIn(text);
-        int length = 0;
-        while (index >= 0 && ( length = expression.matchedLength() ) > 0 ) {
-            setFormat(index, length, rule.format);
-            index = expression.indexIn(text, index + length);
-        }
-    }
 }
 
 void SieveSyntaxHighlighter::addCapabilities(const QStringList &capabilities)

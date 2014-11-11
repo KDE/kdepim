@@ -18,32 +18,20 @@
 #ifndef ADBLOCKSYNTAXHIGHLIGHTER_H
 #define ADBLOCKSYNTAXHIGHLIGHTER_H
 
-#include <QSyntaxHighlighter>
+#include "pimcommon/syntaxhighlighter/syntaxhighlighterbase.h"
 #include <QList>
 #include <QRegExp>
 
 namespace MessageViewer {
-class AdBlockSyntaxHighlighter : public QSyntaxHighlighter
+class AdBlockSyntaxHighlighter : public PimCommon::SyntaxHighlighterBase
 {
     Q_OBJECT
 public:
     explicit AdBlockSyntaxHighlighter(QTextDocument *doc);
     ~AdBlockSyntaxHighlighter();
 
-    void highlightBlock(const QString &text);
-
 private:
     void init();
-    struct Rule {
-        QRegExp pattern;
-        QTextCharFormat format;
-
-        Rule( const QRegExp &r, const QTextCharFormat &f )
-            : pattern(r), format(f) {}
-    };
-
-    QList<Rule> m_rules;
-
 };
 }
 

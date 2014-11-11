@@ -176,6 +176,9 @@ set(libpimcommon_baloodebug_SRCS
   baloodebug/baloosyntaxhighlighter.cpp
 )
 
+set(libpimcommon_syntaxhighlighter_SRCS
+  syntaxhighlighter/syntaxhighlighterbase.cpp
+)
 
 set(libpimcommon_SRCS
   util/createresource.cpp
@@ -193,6 +196,7 @@ set(libpimcommon_SRCS
   ${libpimcommon_sieve_SRCS}
   ${libpimcommon_widgets_SRCS}
   ${libpimcommon_baloodebug_SRCS}
+  ${libpimcommon_syntaxhighlighter_SRCS}
 )
 
 

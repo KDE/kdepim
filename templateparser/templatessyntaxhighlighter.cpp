@@ -23,26 +23,13 @@
 using namespace TemplateParser;
 
 TemplatesSyntaxHighlighter::TemplatesSyntaxHighlighter( QTextDocument *doc )
-    : QSyntaxHighlighter( doc )
+    : PimCommon::SyntaxHighlighterBase( doc )
 {
     init();
 }
 
 TemplatesSyntaxHighlighter::~TemplatesSyntaxHighlighter()
 {
-}
-
-void TemplatesSyntaxHighlighter::highlightBlock( const QString &text )
-{
-    Q_FOREACH ( const Rule &rule, m_rules ) {
-        const QRegExp expression( rule.pattern );
-        int index = expression.indexIn( text );
-        int length = 0;
-        while ( index >= 0 && ( length = expression.matchedLength() ) > 0 ) {
-            setFormat( index, length, rule.format );
-            index = expression.indexIn( text, index + length );
-        }
-    }
 }
 
 void TemplatesSyntaxHighlighter::init()
@@ -68,7 +55,6 @@ void TemplatesSyntaxHighlighter::init()
         const QRegExp regex( s, Qt::CaseInsensitive );
         m_rules.append( Rule( regex, keywordWithArgsFormat ) );
     }
-
 }
 
 
