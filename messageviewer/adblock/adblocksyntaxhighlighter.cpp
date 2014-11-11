@@ -20,26 +20,13 @@
 using namespace MessageViewer;
 
 AdBlockSyntaxHighlighter::AdBlockSyntaxHighlighter(QTextDocument *doc)
-    : QSyntaxHighlighter(doc)
+    : PimCommon::SyntaxHighlighterBase(doc)
 {
     init();
 }
 
 AdBlockSyntaxHighlighter::~AdBlockSyntaxHighlighter()
 {
-}
-
-void AdBlockSyntaxHighlighter::highlightBlock(const QString &text)
-{
-    Q_FOREACH(const Rule & rule, m_rules) {
-        const QRegExp expression(rule.pattern);
-        int index = expression.indexIn(text);
-        int length = 0;
-        while (index >= 0 && (length = expression.matchedLength()) > 0) {
-            setFormat(index, length, rule.format);
-            index = expression.indexIn(text, index + length);
-        }
-    }
 }
 
 void AdBlockSyntaxHighlighter::init()

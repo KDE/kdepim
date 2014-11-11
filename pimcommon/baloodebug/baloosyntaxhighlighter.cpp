@@ -21,7 +21,7 @@
 using namespace PimCommon;
 
 BalooSyntaxHighlighter::BalooSyntaxHighlighter(QTextDocument *doc)
-    : QSyntaxHighlighter(doc)
+    : SyntaxHighlighterBase(doc)
 {
     init();
 }
@@ -29,19 +29,6 @@ BalooSyntaxHighlighter::BalooSyntaxHighlighter(QTextDocument *doc)
 BalooSyntaxHighlighter::~BalooSyntaxHighlighter()
 {
 
-}
-
-void BalooSyntaxHighlighter::highlightBlock(const QString &text)
-{
-    Q_FOREACH (const Rule &rule, m_rules) {
-        const QRegExp expression(rule.pattern);
-        int index = expression.indexIn(text);
-        int length = 0;
-        while (index >= 0 && (length = expression.matchedLength()) > 0) {
-            setFormat(index, length, rule.format);
-            index = expression.indexIn(text, index + length);
-        }
-    }
 }
 
 void BalooSyntaxHighlighter::init()

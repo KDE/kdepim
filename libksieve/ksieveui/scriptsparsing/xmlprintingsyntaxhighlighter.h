@@ -18,33 +18,21 @@
 #ifndef XMLPRINTINGSYNTAXHIGHLIGHTER_H
 #define XMLPRINTINGSYNTAXHIGHLIGHTER_H
 
+#include "pimcommon/syntaxhighlighter/syntaxhighlighterbase.h"
 #include <QList>
 #include <QRegExp>
-#include <QSyntaxHighlighter>
 
 class QTextDocument;
 
-class XMLPrintingSyntaxHighLighter : public QSyntaxHighlighter
+class XMLPrintingSyntaxHighLighter : public PimCommon::SyntaxHighlighterBase
 {
     Q_OBJECT
 public:
     explicit XMLPrintingSyntaxHighLighter(QTextDocument *doc);
     ~XMLPrintingSyntaxHighLighter();
 
-    void highlightBlock(const QString &text) Q_DECL_OVERRIDE;
 private:
-    void init();
-
-    struct Rule {
-        QRegExp pattern;
-        QTextCharFormat format;
-
-        Rule(const QRegExp &r, const QTextCharFormat &f)
-            : pattern(r), format(f) {}
-    };
-
-    QList<Rule> m_rules;
-
+    void init() Q_DECL_OVERRIDE;
 };
 
 #endif // XMLPRINTINGSYNTAXHIGHLIGHTER_H

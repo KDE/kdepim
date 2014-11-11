@@ -189,6 +189,9 @@ set(libpimcommon_baloodebug_SRCS
   baloodebug/baloosyntaxhighlighter.cpp
 )
 
+set(libpimcommon_syntaxhighlighter_SRCS
+  syntaxhighlighter/syntaxhighlighterbase.cpp
+)
 
 set(libpimcommon_SRCS
   util/createresource.cpp
@@ -207,7 +210,7 @@ set(libpimcommon_SRCS
   ${libpimcommon_widgets_SRCS}
   ${libtexttospeech_SRCS}
   ${libpimcommon_baloodebug_SRCS}
-
+  ${libpimcommon_syntaxhighlighter_SRCS}
 )
 
 ki18n_wrap_ui(libpimcommon_SRCS

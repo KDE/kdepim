@@ -26,6 +26,7 @@ class QPushButton;
 namespace PimCommon
 {
 class PlainTextEditFindBar;
+class SlideContainer;
 }
 
 namespace KSieveUi
@@ -55,6 +56,7 @@ private:
     PimCommon::PlainTextEditFindBar *mFindBar;
     QLineEdit *mTemplateNameEdit;
     QPushButton *mOkButton;
+    PimCommon::SlideContainer *mSliderContainer;
 };
 }
 

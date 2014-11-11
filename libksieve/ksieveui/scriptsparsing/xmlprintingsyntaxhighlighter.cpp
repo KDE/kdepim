@@ -17,27 +17,14 @@
 
 #include "xmlprintingsyntaxhighlighter.h"
 
-XMLPrintingSyntaxHighLighter::XMLPrintingSyntaxHighLighter(QTextDocument *doc)
-    : QSyntaxHighlighter(doc)
+XMLPrintingSyntaxHighLighter::XMLPrintingSyntaxHighLighter( QTextDocument *doc )
+    : PimCommon::SyntaxHighlighterBase( doc )
 {
     init();
 }
 
 XMLPrintingSyntaxHighLighter::~XMLPrintingSyntaxHighLighter()
 {
-}
-
-void XMLPrintingSyntaxHighLighter::highlightBlock(const QString &text)
-{
-    Q_FOREACH(const Rule & rule, m_rules) {
-        const QRegExp expression(rule.pattern);
-        int index = expression.indexIn(text);
-        int length = 0;
-        while (index >= 0 && (length = expression.matchedLength()) > 0) {
-            setFormat(index, length, rule.format);
-            index = expression.indexIn(text, index + length);
-        }
-    }
 }
 
 void XMLPrintingSyntaxHighLighter::init()
