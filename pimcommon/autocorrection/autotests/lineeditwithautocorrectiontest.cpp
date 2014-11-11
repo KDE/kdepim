@@ -34,7 +34,7 @@ void LineEditWithAutocorrectionTest::shouldNotAutocorrectWhenDisabled()
     entries.insert(originalWord, replaceWord);
     lineedit.autocorrection()->setAutocorrectEntries(entries);
     lineedit.show();
-    QTest::qWaitForWindowShown(&lineedit);
+    QTest::qWaitForWindowExposed(&lineedit);
     QTest::keyClicks(&lineedit, originalWord);
     QTest::keyClick(&lineedit, ' ');
     QCOMPARE(lineedit.toPlainText(), QString(originalWord + QLatin1Char(' ')));
@@ -51,7 +51,7 @@ void LineEditWithAutocorrectionTest::shouldReplaceWordWhenExactText()
     lineedit.autocorrection()->setEnabledAutoCorrection(true);
     lineedit.autocorrection()->setAdvancedAutocorrect(true);
     lineedit.show();
-    QTest::qWaitForWindowShown(&lineedit);
+    QTest::qWaitForWindowExposed(&lineedit);
     QTest::keyClicks(&lineedit, originalWord);
     QTest::keyClick(&lineedit, ' ');
     QCOMPARE(lineedit.toPlainText(), QString(replaceWord + QLatin1Char(' ')));
@@ -70,7 +70,7 @@ void LineEditWithAutocorrectionTest::shouldNotReplaceWordWhenInexactText()
     lineedit.autocorrection()->setAdvancedAutocorrect(true);
     lineedit.show();
     const QString nonExactText = QLatin1String("BLIBLI");
-    QTest::qWaitForWindowShown(&lineedit);
+    QTest::qWaitForWindowExposed(&lineedit);
     QTest::keyClicks(&lineedit, nonExactText);
     QTest::keyClick(&lineedit, ' ');
     QCOMPARE(lineedit.toPlainText(), QString(nonExactText + QLatin1Char(' ')));
@@ -83,7 +83,7 @@ void LineEditWithAutocorrectionTest::shouldNotAddTwoSpace()
     lineedit.autocorrection()->setSingleSpaces(true);
     lineedit.autocorrection()->setEnabledAutoCorrection(true);
     lineedit.show();
-    QTest::qWaitForWindowShown(&lineedit);
+    QTest::qWaitForWindowExposed(&lineedit);
     QTest::keyClicks(&lineedit, originalWord);
     QTest::keyClick(&lineedit, ' ');
     QCOMPARE(lineedit.toPlainText(), originalWord);

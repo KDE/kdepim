@@ -31,7 +31,7 @@ void ViewerTest::shouldHaveDefaultValuesOnCreation()
 {
     MessageViewer::Viewer viewer(0, 0, new KActionCollection(this));
     viewer.show();
-    QTest::qWaitForWindowShown(&viewer);
+    QTest::qWaitForWindowExposed(&viewer);
 
     QVERIFY(!viewer.message());
     QWidget *createtodowidget = qFindChild<QWidget *>(&viewer, QLatin1String("createtodowidget"));
@@ -67,7 +67,7 @@ void ViewerTest::shouldShowCreateTodoWidgetWhenActivateItAndWeHaveAMessage()
 {
     MessageViewer::Viewer viewer(0, 0, new KActionCollection(this));
     viewer.show();
-    QTest::qWaitForWindowShown(&viewer);
+    QTest::qWaitForWindowExposed(&viewer);
     QWidget *createtodowidget = qFindChild<QWidget *>(&viewer, QLatin1String("createtodowidget"));
     QVERIFY(viewer.createTodoAction());
 
@@ -86,7 +86,7 @@ void ViewerTest::shouldShowCreateEventWidgetWhenActivateItAndWeHaveAMessage()
 {
     MessageViewer::Viewer viewer(0, 0, new KActionCollection(this));
     viewer.show();
-    QTest::qWaitForWindowShown(&viewer);
+    QTest::qWaitForWindowExposed(&viewer);
     QWidget *createeventwidget = qFindChild<QWidget *>(&viewer, QLatin1String("createeventwidget"));
     QVERIFY(viewer.createEventAction());
 

@@ -34,7 +34,7 @@ void RichTextEditWithAutoCorrectionTest::shouldNotAutocorrectWhenDisabled()
     entries.insert(originalWord, replaceWord);
     richtext.autocorrection()->setAutocorrectEntries(entries);
     richtext.show();
-    QTest::qWaitForWindowShown(&richtext);
+    QTest::qWaitForWindowExposed(&richtext);
     QTest::keyClicks(&richtext, originalWord);
     QTest::keyClick(&richtext, ' ');
     QCOMPARE(richtext.toPlainText(), QString(originalWord + QLatin1Char(' ')));
@@ -51,7 +51,7 @@ void RichTextEditWithAutoCorrectionTest::shouldReplaceWordWhenExactText()
     richtext.autocorrection()->setEnabledAutoCorrection(true);
     richtext.autocorrection()->setAdvancedAutocorrect(true);
     richtext.show();
-    QTest::qWaitForWindowShown(&richtext);
+    QTest::qWaitForWindowExposed(&richtext);
     QTest::keyClicks(&richtext, originalWord);
     QTest::keyClick(&richtext, ' ');
     QCOMPARE(richtext.toPlainText(), QString(replaceWord + QLatin1Char(' ')));
@@ -69,7 +69,7 @@ void RichTextEditWithAutoCorrectionTest::shouldNotReplaceWordWhenInexactText()
     richtext.autocorrection()->setAdvancedAutocorrect(true);
     richtext.show();
     const QString nonExactText = QLatin1String("BLIBLI");
-    QTest::qWaitForWindowShown(&richtext);
+    QTest::qWaitForWindowExposed(&richtext);
     QTest::keyClicks(&richtext, nonExactText);
     QTest::keyClick(&richtext, ' ');
     QCOMPARE(richtext.toPlainText(), QString(nonExactText + QLatin1Char(' ')));
@@ -86,7 +86,7 @@ void RichTextEditWithAutoCorrectionTest::shouldReplaceWhenPressEnter()
     richtext.autocorrection()->setEnabledAutoCorrection(true);
     richtext.autocorrection()->setAdvancedAutocorrect(true);
     richtext.show();
-    QTest::qWaitForWindowShown(&richtext);
+    QTest::qWaitForWindowExposed(&richtext);
     QTest::keyClicks(&richtext, originalWord);
     QTest::keyPress(&richtext, Qt::Key_Enter);
     QCOMPARE(richtext.toPlainText(), QString(replaceWord + QLatin1Char('\n')));
@@ -103,7 +103,7 @@ void RichTextEditWithAutoCorrectionTest::shouldReplaceWhenPressReturn()
     richtext.autocorrection()->setEnabledAutoCorrection(true);
     richtext.autocorrection()->setAdvancedAutocorrect(true);
     richtext.show();
-    QTest::qWaitForWindowShown(&richtext);
+    QTest::qWaitForWindowExposed(&richtext);
     QTest::keyClicks(&richtext, originalWord);
     QTest::keyPress(&richtext, Qt::Key_Return);
     QCOMPARE(richtext.toPlainText(), QString(replaceWord + QLatin1Char('\n')));

@@ -104,13 +104,13 @@ void QuickSearchLineTest::shouldShowExtraOptionWidget()
     QuickSearchLine searchLine;
     searchLine.show();
     QTest::keyClick(searchLine.searchEdit(), 'F');
-    QTest::qWaitForWindowShown(&searchLine);
+    QTest::qWaitForWindowExposed(&searchLine);
     QWidget *widget = qFindChild<QWidget *>(&searchLine, QLatin1String("extraoptions"));
     QVERIFY(!widget->isVisible());
 
     searchLine.searchEdit()->clear();
     QTest::keyClicks(searchLine.searchEdit(), QLatin1String("F000"));
-    QTest::qWaitForWindowShown(&searchLine);
+    QTest::qWaitForWindowExposed(&searchLine);
     QVERIFY(widget->isVisible());
 
 }
@@ -120,7 +120,7 @@ void QuickSearchLineTest::shouldHideExtraOptionWidgetWhenClearLineEdit()
     QuickSearchLine searchLine;
     searchLine.show();
     QTest::keyClicks(searchLine.searchEdit(), QLatin1String("FOOFOO"));
-    QTest::qWaitForWindowShown(&searchLine);
+    QTest::qWaitForWindowExposed(&searchLine);
     QWidget *widget = qFindChild<QWidget *>(&searchLine, QLatin1String("extraoptions"));
 
     searchLine.searchEdit()->clear();
@@ -132,7 +132,7 @@ void QuickSearchLineTest::shouldHideExtraOptionWidgetWhenResetFilter()
     QuickSearchLine searchLine;
     searchLine.show();
     QTest::keyClicks(searchLine.searchEdit(), QLatin1String("FOOFOO"));
-    QTest::qWaitForWindowShown(&searchLine);
+    QTest::qWaitForWindowExposed(&searchLine);
     QWidget *widget = qFindChild<QWidget *>(&searchLine, QLatin1String("extraoptions"));
 
     searchLine.resetFilter();
@@ -153,7 +153,7 @@ void QuickSearchLineTest::shouldEmitSearchOptionChangedWhenUseTabPress()
 {
     QuickSearchLine searchLine;
     searchLine.show();
-    QTest::qWaitForWindowShown(&searchLine);
+    QTest::qWaitForWindowExposed(&searchLine);
     QPushButton *button = qFindChild<QPushButton *>(&searchLine, QLatin1String("full_message"));
     QTest::mouseClick(button, Qt::LeftButton);
     QTest::keyClick(button, Qt::Key_Right);
@@ -180,7 +180,7 @@ void QuickSearchLineTest::shouldShowTagComboBox()
 {
     QuickSearchLine searchLine;
     searchLine.show();
-    QTest::qWaitForWindowShown(&searchLine);
+    QTest::qWaitForWindowExposed(&searchLine);
     QCOMPARE(searchLine.tagFilterComboBox()->isVisible(), false);
     searchLine.tagFilterComboBox()->addItems(QStringList() << QLatin1String("1") << QLatin1String("2"));
     searchLine.updateComboboxVisibility();
@@ -191,7 +191,7 @@ void QuickSearchLineTest::shouldResetComboboxWhenResetFilter()
 {
     QuickSearchLine searchLine;
     searchLine.show();
-    QTest::qWaitForWindowShown(&searchLine);
+    QTest::qWaitForWindowExposed(&searchLine);
     QCOMPARE(searchLine.tagFilterComboBox()->isVisible(), false);
     searchLine.tagFilterComboBox()->addItems(QStringList() << QLatin1String("1") << QLatin1String("2"));
     searchLine.updateComboboxVisibility();
@@ -219,7 +219,7 @@ void QuickSearchLineTest::shouldShowExtraOptionWidgetWhenTextTrimmedIsNotEmpty()
     QuickSearchLine searchLine;
     searchLine.show();
     QTest::keyClick(searchLine.searchEdit(), ' ');
-    QTest::qWaitForWindowShown(&searchLine);
+    QTest::qWaitForWindowExposed(&searchLine);
     QWidget *widget = qFindChild<QWidget *>(&searchLine, QLatin1String("extraoptions"));
     QVERIFY(!widget->isVisible());
     searchLine.searchEdit()->clear();
@@ -244,7 +244,7 @@ void QuickSearchLineTest::shouldShowMoreOptionWhenClickOnMoreButton()
 {
     QuickSearchLine searchLine;
     searchLine.show();
-    QTest::qWaitForWindowShown(&searchLine);
+    QTest::qWaitForWindowExposed(&searchLine);
     QPushButton *moreButton = qFindChild<QPushButton *>(&searchLine, QLatin1String("moreoptions"));
     QTest::mouseClick(moreButton, Qt::LeftButton);
     QWidget *quickSearchFilterWidget = qFindChild<QWidget *>(&searchLine, QLatin1String("quicksearchfilterwidget"));
@@ -380,7 +380,7 @@ void QuickSearchLineTest::shouldHideExtraOptionWidgetWhenResetFilterWhenSetEmpty
     searchLine.show();
 
     QTest::keyClicks(searchLine.searchEdit(), QLatin1String("FOOFOO"));
-    QTest::qWaitForWindowShown(&searchLine);
+    QTest::qWaitForWindowExposed(&searchLine);
     QWidget *widget = qFindChild<QWidget *>(&searchLine, QLatin1String("extraoptions"));
 
     QVERIFY(widget->isVisible());

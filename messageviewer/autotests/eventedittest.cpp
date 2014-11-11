@@ -154,7 +154,7 @@ void EventEditTest::shouldHideWidgetWhenPressEnter()
 {
     MessageViewer::EventEdit edit;
     edit.show();
-    QTest::qWaitForWindowShown(&edit);
+    QTest::qWaitForWindowExposed(&edit);
     QVERIFY(edit.isVisible());
 
     KMime::Message::Ptr msg(new KMime::Message);
@@ -170,7 +170,7 @@ void EventEditTest::shouldHideWidgetWhenPressEscape()
 {
     MessageViewer::EventEdit edit;
     edit.show();
-    QTest::qWaitForWindowShown(&edit);
+    QTest::qWaitForWindowExposed(&edit);
     QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
     noteedit->setFocus();
     QVERIFY(noteedit->hasFocus());
@@ -182,7 +182,7 @@ void EventEditTest::shouldHideWidgetWhenSaveClicked()
 {
     MessageViewer::EventEdit edit;
     edit.show();
-    QTest::qWaitForWindowShown(&edit);
+    QTest::qWaitForWindowExposed(&edit);
 
     KMime::Message::Ptr msg(new KMime::Message);
     msg->subject(true)->fromUnicodeString(QLatin1String("Test Note"), "us-ascii");
@@ -196,7 +196,7 @@ void EventEditTest::shouldSaveCollectionSettings()
 {
     MessageViewer::EventEdit edit;
     edit.show();
-    QTest::qWaitForWindowShown(&edit);
+    QTest::qWaitForWindowExposed(&edit);
     Akonadi::CollectionComboBox *akonadicombobox = qFindChild<Akonadi::CollectionComboBox *>(&edit, QLatin1String("akonadicombobox"));
     akonadicombobox->setCurrentIndex(3);
     const Akonadi::Collection::Id id = akonadicombobox->currentCollection().id();
@@ -209,7 +209,7 @@ void EventEditTest::shouldSaveCollectionSettingsWhenCloseWidget()
 {
     MessageViewer::EventEdit edit;
     edit.show();
-    QTest::qWaitForWindowShown(&edit);
+    QTest::qWaitForWindowExposed(&edit);
     Akonadi::CollectionComboBox *akonadicombobox = qFindChild<Akonadi::CollectionComboBox *>(&edit, QLatin1String("akonadicombobox"));
     akonadicombobox->setCurrentIndex(4);
     const Akonadi::Collection::Id id = akonadicombobox->currentCollection().id();
@@ -311,7 +311,7 @@ void EventEditTest::shouldSetFocusWhenWeCallTodoEdit()
 {
     MessageViewer::EventEdit edit;
     edit.show();
-    QTest::qWaitForWindowShown(&edit);
+    QTest::qWaitForWindowExposed(&edit);
     QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
     edit.setFocus();
     edit.showEventEdit();

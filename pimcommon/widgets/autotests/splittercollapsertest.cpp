@@ -58,7 +58,7 @@ void SplitterCollapserTest::shouldHasDefaultValue()
     new PimCommon::SplitterCollapser(testSplitter.edit2, testSplitter.splitter);
 
     testSplitter.show();
-    QTest::qWaitForWindowShown(&testSplitter);
+    QTest::qWaitForWindowExposed(&testSplitter);
     QVERIFY(testSplitter.isVisible());
 
     PimCommon::SplitterCollapser *collapser = qFindChild<PimCommon::SplitterCollapser *>(&testSplitter, QLatin1String("splittercollapser"));
@@ -80,7 +80,7 @@ void SplitterCollapserTest::shouldCollapsedWhenClickOnButton()
     new PimCommon::SplitterCollapser(testSplitter.edit2, testSplitter.splitter);
 
     testSplitter.show();
-    QTest::qWaitForWindowShown(&testSplitter);
+    QTest::qWaitForWindowExposed(&testSplitter);
 
     PimCommon::SplitterCollapser *collapser = qFindChild<PimCommon::SplitterCollapser *>(&testSplitter, QLatin1String("splittercollapser"));
     QVERIFY(!collapser->isCollapsed());
@@ -98,7 +98,7 @@ void SplitterCollapserTest::shouldRestoreCorrectPosition()
     new PimCommon::SplitterCollapser(testSplitter.edit2, testSplitter.splitter);
 
     testSplitter.show();
-    QTest::qWaitForWindowShown(&testSplitter);
+    QTest::qWaitForWindowExposed(&testSplitter);
     QVERIFY(testSplitter.isVisible());
 
     PimCommon::SplitterCollapser *collapser = qFindChild<PimCommon::SplitterCollapser *>(&testSplitter, QLatin1String("splittercollapser"));
@@ -125,7 +125,7 @@ void SplitterCollapserTest::shouldRestoreCorrectPositionForFirstWidget()
     new PimCommon::SplitterCollapser(testSplitter.edit1, testSplitter.splitter);
 
     testSplitter.show();
-    QTest::qWaitForWindowShown(&testSplitter);
+    QTest::qWaitForWindowExposed(&testSplitter);
     QVERIFY(testSplitter.isVisible());
 
     PimCommon::SplitterCollapser *collapser = qFindChild<PimCommon::SplitterCollapser *>(&testSplitter, QLatin1String("splittercollapser"));
@@ -151,7 +151,7 @@ void SplitterCollapserTest::shouldTestVerticalSplitterFirstWidget()
     new PimCommon::SplitterCollapser(testSplitter.edit1, testSplitter.splitter);
 
     testSplitter.show();
-    QTest::qWaitForWindowShown(&testSplitter);
+    QTest::qWaitForWindowExposed(&testSplitter);
     QVERIFY(testSplitter.isVisible());
 
     PimCommon::SplitterCollapser *collapser = qFindChild<PimCommon::SplitterCollapser *>(&testSplitter, QLatin1String("splittercollapser"));
@@ -178,7 +178,7 @@ void SplitterCollapserTest::shouldTestVerticalSplitterSecondWidget()
     new PimCommon::SplitterCollapser(testSplitter.edit2, testSplitter.splitter);
 
     testSplitter.show();
-    QTest::qWaitForWindowShown(&testSplitter);
+    QTest::qWaitForWindowExposed(&testSplitter);
     QVERIFY(testSplitter.isVisible());
 
     PimCommon::SplitterCollapser *collapser = qFindChild<PimCommon::SplitterCollapser *>(&testSplitter, QLatin1String("splittercollapser"));

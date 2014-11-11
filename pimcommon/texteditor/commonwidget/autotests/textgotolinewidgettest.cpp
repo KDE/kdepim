@@ -33,7 +33,7 @@ void TextGoToLineWidgetTest::shouldHaveDefaultValuesOnCreation()
 {
     PimCommon::TextGoToLineWidget edit;
     edit.show();
-    QTest::qWaitForWindowShown(&edit);
+    QTest::qWaitForWindowExposed(&edit);
     QSpinBox *line = qFindChild<QSpinBox *>(&edit, QLatin1String("line"));
     QVERIFY(line);
     QCOMPARE(line->minimum(), 1);
@@ -70,7 +70,7 @@ void TextGoToLineWidgetTest::shouldHideWidgetWhenClickOnCloseButton()
 {
     PimCommon::TextGoToLineWidget edit;
     edit.show();
-    QTest::qWaitForWindowShown(&edit);
+    QTest::qWaitForWindowExposed(&edit);
     QVERIFY(edit.isVisible());
     QToolButton *closebutton = qFindChild<QToolButton *>(&edit, QLatin1String("closebutton"));
     QTest::mouseClick(closebutton, Qt::LeftButton);
@@ -81,7 +81,7 @@ void TextGoToLineWidgetTest::shouldHideWidgetWhenPressEscape()
 {
     PimCommon::TextGoToLineWidget edit;
     edit.show();
-    QTest::qWaitForWindowShown(&edit);
+    QTest::qWaitForWindowExposed(&edit);
     QTest::keyPress(&edit, Qt::Key_Escape);
     QCOMPARE(edit.isVisible(), false);
 }
@@ -90,7 +90,7 @@ void TextGoToLineWidgetTest::shouldEmitGoToLineSignalWhenSpinboxHasFocusAndWePre
 {
     PimCommon::TextGoToLineWidget edit;
     edit.show();
-    QTest::qWaitForWindowShown(&edit);
+    QTest::qWaitForWindowExposed(&edit);
     QSpinBox *line = qFindChild<QSpinBox *>(&edit, QLatin1String("line"));
     line->setFocus();
     QVERIFY(line->hasFocus());
@@ -105,14 +105,14 @@ void TextGoToLineWidgetTest::shouldHasFocusEachTimeThatItShown()
 {
     PimCommon::TextGoToLineWidget edit;
     edit.show();
-    QTest::qWaitForWindowShown(&edit);
+    QTest::qWaitForWindowExposed(&edit);
     QSpinBox *line = qFindChild<QSpinBox *>(&edit, QLatin1String("line"));
     QVERIFY(line);
     QVERIFY(line->hasFocus());
     edit.hide();
     QVERIFY(!line->hasFocus());
     edit.show();
-    QTest::qWaitForWindowShown(&edit);
+    QTest::qWaitForWindowExposed(&edit);
     QVERIFY(line->hasFocus());
 }
 
@@ -120,7 +120,7 @@ void TextGoToLineWidgetTest::shouldSetFocusWhenWeRecallGotToLine()
 {
     PimCommon::TextGoToLineWidget edit;
     edit.show();
-    QTest::qWaitForWindowShown(&edit);
+    QTest::qWaitForWindowExposed(&edit);
     QSpinBox *line = qFindChild<QSpinBox *>(&edit, QLatin1String("line"));
     QVERIFY(line->hasFocus());
     edit.setFocus();

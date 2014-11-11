@@ -64,7 +64,7 @@ void FindBarBaseTest::shouldClearLineWhenClose()
     MessageViewer::FindBarBase bar;
     bar.show();
     QSignalSpy spy(&bar, SIGNAL(hideFindBar()));
-    QTest::qWaitForWindowShown(&bar);
+    QTest::qWaitForWindowExposed(&bar);
     QVERIFY(bar.isVisible());
     bar.focusAndSetCursor();
     KLineEdit *lineedit = qFindChild<KLineEdit *>(&bar, QLatin1String("searchline"));
@@ -81,7 +81,7 @@ void FindBarBaseTest::shouldEnableDisableNextPreviousButton()
 {
     MessageViewer::FindBarBase bar;
     bar.show();
-    QTest::qWaitForWindowShown(&bar);
+    QTest::qWaitForWindowExposed(&bar);
     QPushButton *previous = qFindChild<QPushButton *>(&bar, QLatin1String("findprevious"));
 
     QPushButton *next = qFindChild<QPushButton *>(&bar, QLatin1String("findnext"));
@@ -100,7 +100,7 @@ void FindBarBaseTest::shouldClearAllWhenShowBar()
 {
     MessageViewer::FindBarBase bar;
     bar.show();
-    QTest::qWaitForWindowShown(&bar);
+    QTest::qWaitForWindowExposed(&bar);
     QLabel *status = qFindChild<QLabel *>(&bar, QLatin1String("status"));
     status->setText(QLatin1String("FOO"));
     bar.closeBar();
