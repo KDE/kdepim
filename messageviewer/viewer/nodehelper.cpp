@@ -106,7 +106,7 @@ void NodeHelper::setNodeProcessed(KMime::Content *node, bool recurse)
     //<< " decodedContent" << node->decodedContent();
     if (recurse) {
         KMime::Content::List contents = node->contents();
-        Q_FOREACH(KMime::Content * c, contents) {
+        Q_FOREACH (KMime::Content *c, contents) {
             setNodeProcessed(c, true);
         }
     }
@@ -122,7 +122,7 @@ void NodeHelper::setNodeUnprocessed(KMime::Content *node, bool recurse)
     //avoid double addition of extra nodes, eg. encrypted attachments
     const QMap<KMime::Content *, QList<KMime::Content *> >::iterator it = mExtraContents.find(node);
     if (it != mExtraContents.end()) {
-        Q_FOREACH(KMime::Content * c, it.value()) {
+        Q_FOREACH (KMime::Content *c, it.value()) {
             KMime::Content *p = c->parent();
             if (p) {
                 p->removeContent(c);
@@ -136,7 +136,7 @@ void NodeHelper::setNodeUnprocessed(KMime::Content *node, bool recurse)
     //qDebug() << "Node UNprocessed: " << node;
     if (recurse) {
         KMime::Content::List contents = node->contents();
-        Q_FOREACH(KMime::Content * c, contents) {
+        Q_FOREACH (KMime::Content *c, contents) {
             setNodeUnprocessed(c, true);
         }
     }
@@ -174,7 +174,7 @@ void NodeHelper::clear()
     QMap<KMime::Content *, QList<KMime::Content *> >::ConstIterator end(mExtraContents.constEnd());
 
     for (QMap<KMime::Content *, QList<KMime::Content *> >::ConstIterator it = mExtraContents.constBegin(); it != end; ++it) {
-        Q_FOREACH(KMime::Content * c, it.value()) {
+        Q_FOREACH (KMime::Content *c, it.value()) {
             KMime::Content *p = c->parent();
             if (p) {
                 p->removeContent(c);
@@ -273,7 +273,7 @@ KUrl NodeHelper::tempFileUrlFromNode(const KMime::Content *node)
 
     const QString index = persistentIndex(node);
 
-    foreach(const QString & path, mAttachmentFilesDir->temporaryFiles()) {
+    foreach (const QString &path, mAttachmentFilesDir->temporaryFiles()) {
         const int right = path.lastIndexOf(QLatin1Char('/'));
         int left = path.lastIndexOf(QLatin1String(".index."), right);
         if (left != -1) {
@@ -706,7 +706,7 @@ QString NodeHelper::persistentIndex(const KMime::Content *node) const
     QString indexStr = node->index().toString();
     const KMime::Content *const topLevel = node->topLevel();
     //if the node is an extra node, prepend the index of the extra node to the url
-    Q_FOREACH(const QList<KMime::Content *> &extraNodes, mExtraContents) {
+    Q_FOREACH (const QList<KMime::Content *> &extraNodes, mExtraContents) {
         const int extraNodesSize(extraNodes.size());
         for (int i = 0; i < extraNodesSize; ++i)
             if (topLevel == extraNodes[i]) {
@@ -868,7 +868,7 @@ void NodeHelper::mergeExtraNodes(KMime::Content *node)
     }
 
     QList<KMime::Content * > extraNodes = extraContents(node);
-    Q_FOREACH(KMime::Content * extra, extraNodes) {
+    Q_FOREACH (KMime::Content *extra, extraNodes) {
         if (node->bodyIsMessage()) {
             qWarning() << "Asked to attach extra content to a kmime::message, this does not make sense. Attaching to:" << node <<
                        node->encodedContent() << "\n====== with =======\n" <<  extra << extra->encodedContent();
@@ -880,7 +880,7 @@ void NodeHelper::mergeExtraNodes(KMime::Content *node)
         node->addContent(c);
     }
 
-    Q_FOREACH(KMime::Content * child, node->contents()) {
+    Q_FOREACH (KMime::Content *child, node->contents()) {
         mergeExtraNodes(child);
     }
 }
@@ -891,16 +891,16 @@ void NodeHelper::cleanFromExtraNodes(KMime::Content *node)
         return;
     }
     QList<KMime::Content * > extraNodes = extraContents(node);
-    Q_FOREACH(KMime::Content * extra, extraNodes) {
+    Q_FOREACH (KMime::Content *extra, extraNodes) {
         QByteArray s = extra->encodedContent();
         QList<KMime::Content * > children = node->contents();
-        Q_FOREACH(KMime::Content * c, children) {
+        Q_FOREACH (KMime::Content *c, children) {
             if (c->encodedContent() == s) {
                 node->removeContent(c);
             }
         }
     }
-    Q_FOREACH(KMime::Content * child, node->contents()) {
+    Q_FOREACH (KMime::Content *child, node->contents()) {
         cleanFromExtraNodes(child);
     }
 }
@@ -1059,7 +1059,7 @@ bool NodeHelper::unencryptedMessage_helper(KMime::Content *node, QByteArray &res
                 resultingData += curNode->head() + '\n';
             }
             const QByteArray boundary = curNode->contentType()->boundary();
-            foreach(KMime::Content * child, curNode->contents()) {
+            foreach (KMime::Content *child, curNode->contents()) {
                 resultingData += "\n--" + boundary + '\n';
                 const bool changed = unencryptedMessage_helper(child, resultingData, true, recursionLevel + 1);
                 if (changed) {

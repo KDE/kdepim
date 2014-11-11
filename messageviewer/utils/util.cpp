@@ -226,7 +226,7 @@ bool Util::saveContents(QWidget *parent, const QList<KMime::Content *> &contents
     bool globalResult = true;
     int unnamedAtmCount = 0;
     PimCommon::RenameFileDialog::RenameFileDialogResult result = PimCommon::RenameFileDialog::RENAMEFILE_IGNORE;
-    foreach(KMime::Content * content, contents) {
+    foreach (KMime::Content *content, contents) {
         KUrl curUrl;
         if (!dirUrl.isEmpty()) {
             curUrl = dirUrl;
@@ -510,7 +510,7 @@ bool Util::saveMessageInMbox(const QList<Akonadi::Item> &retrievedMsgs, QWidget 
             delete dlg;
             return false;
         }
-        foreach(const Akonadi::Item & item, retrievedMsgs) {
+        foreach (const Akonadi::Item &item, retrievedMsgs) {
             if (item.hasPayload<KMime::Message::Ptr>()) {
                 mbox.appendMessage(item.payload<KMime::Message::Ptr>());
             }

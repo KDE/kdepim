@@ -505,13 +505,13 @@ void MailWebView::showAccessKeys()
         unusedKeys << QLatin1Char(c);
     }
     if (mActionCollection) {
-        Q_FOREACH(QAction * act, mActionCollection->actions()) {
+        Q_FOREACH (QAction *act, mActionCollection->actions()) {
             QAction *a = qobject_cast<QAction *>(act);
             if (a) {
 #if 0 //QT5
                 const KShortcut shortCut = a->shortcut();
                 if (!shortCut.isEmpty()) {
-                    Q_FOREACH(const QChar & c, unusedKeys) {
+                    Q_FOREACH (const QChar &c, unusedKeys) {
                         if (shortCut.conflictsWith(QKeySequence(c))) {
                             unusedKeys.removeOne(c);
                         }
@@ -535,7 +535,7 @@ void MailWebView::showAccessKeys()
     QList<QWebElement> result = page()->mainFrame()->findAllElements(selectorQuery).toList();
 
     // Priority first goes to elements with accesskey attributes
-    Q_FOREACH(const QWebElement & element, result) {
+    Q_FOREACH (const QWebElement &element, result) {
         const QRect geometry = element.geometry();
         if (geometry.size().isEmpty() || !viewport.contains(geometry.topLeft())) {
             continue;
@@ -570,7 +570,7 @@ void MailWebView::showAccessKeys()
 
     // Pick an access key first from the letters in the text and then from the
     // list of unused access keys
-    Q_FOREACH(const QWebElement & element, unLabeledElements) {
+    Q_FOREACH (const QWebElement &element, unLabeledElements) {
         const QRect geometry = element.geometry();
         if (unusedKeys.isEmpty()
                 || geometry.size().isEmpty()

@@ -110,7 +110,7 @@ void AdBlockManager::loadSettings()
     const int days = GlobalSettings::self()->adBlockUpdateInterval();
 
     const QStringList itemList = config.groupList().filter(QRegExp(QLatin1String("FilterList \\d+")));
-    Q_FOREACH(const QString & item, itemList) {
+    Q_FOREACH (const QString &item, itemList) {
         KConfigGroup filtersGroup(&config, item);
         const bool isFilterEnabled = filtersGroup.readEntry(QLatin1String("FilterEnabled"), false);
         if (!isFilterEnabled) {
@@ -215,7 +215,7 @@ bool AdBlockManager::blockRequest(const QNetworkRequest &request)
 
     const QStringList whiteRefererList = GlobalSettings::self()->whiteReferer();
     const QString referer = QString::fromLatin1(request.rawHeader("referer"));
-    Q_FOREACH(const QString & host, whiteRefererList) {
+    Q_FOREACH (const QString &host, whiteRefererList) {
         if (referer.contains(host)) {
             return false;
         }
@@ -233,7 +233,7 @@ bool AdBlockManager::blockRequest(const QNetworkRequest &request)
         return false;
     }
 
-    Q_FOREACH(const AdBlockRule & filter, _whiteList) {
+    Q_FOREACH (const AdBlockRule &filter, _whiteList) {
         if (filter.match(request, urlString, urlStringLowerCase)) {
             qDebug() << "ADBLOCK: WHITE RULE (@@) Matched by string: " << urlString;
             return false;
@@ -246,7 +246,7 @@ bool AdBlockManager::blockRequest(const QNetworkRequest &request)
         return true;
     }
 
-    Q_FOREACH(const AdBlockRule & filter, _blackList) {
+    Q_FOREACH (const AdBlockRule &filter, _blackList) {
         if (filter.match(request, urlString, urlStringLowerCase)) {
             qDebug() << "ADBLOCK: BLACK RULE Matched by string: " << urlString;
             return true;

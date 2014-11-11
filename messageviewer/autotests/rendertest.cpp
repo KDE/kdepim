@@ -47,7 +47,7 @@ private slots:
         QTest::addColumn<QString>("outFileName");
 
         QDir dir(QLatin1String(MAIL_DATA_DIR));
-        foreach(const QString & file, dir.entryList(QStringList(QLatin1String("*.mbox")), QDir::Files | QDir::Readable | QDir::NoSymLinks)) {
+        foreach (const QString &file, dir.entryList(QStringList(QLatin1String("*.mbox")), QDir::Files | QDir::Readable | QDir::NoSymLinks)) {
             if (!QFile::exists(dir.path() + QLatin1Char('/') + file + QLatin1String(".html"))) {
                 continue;
             }

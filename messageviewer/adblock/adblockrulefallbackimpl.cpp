@@ -72,13 +72,13 @@ AdBlockRuleFallbackImpl::AdBlockRuleFallbackImpl(const QString &filter)
                 m_thirdPartyOptionReversed = true;
             }
 
-            Q_FOREACH(const QString & option, options) {
+            Q_FOREACH (const QString &option, options) {
                 // Domain restricted filter
                 const QString domainKeyword(QLatin1String("domain="));
                 if (option.startsWith(domainKeyword)) {
                     options.removeOne(option);
                     const QStringList domainList = option.mid(domainKeyword.length()).split(QLatin1Char('|'));
-                    Q_FOREACH(const QString & domain, domainList) {
+                    Q_FOREACH (const QString &domain, domainList) {
                         if (domain.startsWith(QLatin1Char('~'))) {
                             m_whiteDomains.insert(domain.toLower());
                         } else {

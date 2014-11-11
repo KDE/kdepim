@@ -82,7 +82,7 @@ bool ContactDisplayMessageMemento::allowToRemoteContent() const
 
 void ContactDisplayMessageMemento::searchPhoto(const KContacts::AddresseeList &list)
 {
-    Q_FOREACH(const KContacts::Addressee & addressee, list) {
+    Q_FOREACH (const KContacts::Addressee &addressee, list) {
         if (!addressee.photo().isEmpty()) {
             mPhoto = addressee.photo();
             break;
@@ -93,7 +93,7 @@ void ContactDisplayMessageMemento::searchPhoto(const KContacts::AddresseeList &l
 void ContactDisplayMessageMemento::processAddress(const KContacts::Addressee &addressee)
 {
     const QStringList customs = addressee.customs();
-    Q_FOREACH(const QString & custom, customs) {
+    Q_FOREACH (const QString &custom, customs) {
         if (custom.contains(QLatin1String("MailPreferedFormatting"))) {
             const QString value = addressee.custom(QLatin1String("KADDRESSBOOK"), QLatin1String("MailPreferedFormatting"));
             if (value == QLatin1String("TEXT")) {
