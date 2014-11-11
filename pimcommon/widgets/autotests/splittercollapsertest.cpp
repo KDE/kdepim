@@ -61,16 +61,16 @@ void SplitterCollapserTest::shouldHasDefaultValue()
     QTest::qWaitForWindowExposed(&testSplitter);
     QVERIFY(testSplitter.isVisible());
 
-    PimCommon::SplitterCollapser *collapser = qFindChild<PimCommon::SplitterCollapser *>(&testSplitter, QLatin1String("splittercollapser"));
+    PimCommon::SplitterCollapser *collapser = testSplitter.findChild<PimCommon::SplitterCollapser *>(QLatin1String("splittercollapser"));
     QVERIFY(collapser);
     QVERIFY(!collapser->isCollapsed());
 
-    QTextEdit *edit1 = qFindChild<QTextEdit *>(&testSplitter, QLatin1String("edit1"));
+    QTextEdit *edit1 = testSplitter.findChild<QTextEdit *>(QLatin1String("edit1"));
     QVERIFY(edit1);
-    QTextEdit *edit2 = qFindChild<QTextEdit *>(&testSplitter, QLatin1String("edit2"));
+    QTextEdit *edit2 = testSplitter.findChild<QTextEdit *>(QLatin1String("edit2"));
     QVERIFY(edit2);
 
-    QSplitter *splitter = qFindChild<QSplitter *>(&testSplitter, QLatin1String("splitter"));
+    QSplitter *splitter = testSplitter.findChild<QSplitter *>(QLatin1String("splitter"));
     QVERIFY(splitter);
 }
 
@@ -82,7 +82,7 @@ void SplitterCollapserTest::shouldCollapsedWhenClickOnButton()
     testSplitter.show();
     QTest::qWaitForWindowExposed(&testSplitter);
 
-    PimCommon::SplitterCollapser *collapser = qFindChild<PimCommon::SplitterCollapser *>(&testSplitter, QLatin1String("splittercollapser"));
+    PimCommon::SplitterCollapser *collapser = testSplitter.findChild<PimCommon::SplitterCollapser *>(QLatin1String("splittercollapser"));
     QVERIFY(!collapser->isCollapsed());
     QTest::mouseClick(collapser, Qt::LeftButton);
     QVERIFY(collapser->isCollapsed());
@@ -101,10 +101,10 @@ void SplitterCollapserTest::shouldRestoreCorrectPosition()
     QTest::qWaitForWindowExposed(&testSplitter);
     QVERIFY(testSplitter.isVisible());
 
-    PimCommon::SplitterCollapser *collapser = qFindChild<PimCommon::SplitterCollapser *>(&testSplitter, QLatin1String("splittercollapser"));
+    PimCommon::SplitterCollapser *collapser = testSplitter.findChild<PimCommon::SplitterCollapser *>(QLatin1String("splittercollapser"));
     QVERIFY(!collapser->isCollapsed());
 
-    QTextEdit *edit2 = qFindChild<QTextEdit *>(&testSplitter, QLatin1String("edit2"));
+    QTextEdit *edit2 = testSplitter.findChild<QTextEdit *>(QLatin1String("edit2"));
 
     int size = edit2->width();
 
@@ -128,10 +128,10 @@ void SplitterCollapserTest::shouldRestoreCorrectPositionForFirstWidget()
     QTest::qWaitForWindowExposed(&testSplitter);
     QVERIFY(testSplitter.isVisible());
 
-    PimCommon::SplitterCollapser *collapser = qFindChild<PimCommon::SplitterCollapser *>(&testSplitter, QLatin1String("splittercollapser"));
+    PimCommon::SplitterCollapser *collapser = testSplitter.findChild<PimCommon::SplitterCollapser *>(QLatin1String("splittercollapser"));
     QVERIFY(!collapser->isCollapsed());
 
-    QTextEdit *edit1 = qFindChild<QTextEdit *>(&testSplitter, QLatin1String("edit1"));
+    QTextEdit *edit1 = testSplitter.findChild<QTextEdit *>(QLatin1String("edit1"));
 
     int size = edit1->width();
 
@@ -154,10 +154,10 @@ void SplitterCollapserTest::shouldTestVerticalSplitterFirstWidget()
     QTest::qWaitForWindowExposed(&testSplitter);
     QVERIFY(testSplitter.isVisible());
 
-    PimCommon::SplitterCollapser *collapser = qFindChild<PimCommon::SplitterCollapser *>(&testSplitter, QLatin1String("splittercollapser"));
+    PimCommon::SplitterCollapser *collapser = testSplitter.findChild<PimCommon::SplitterCollapser *>(QLatin1String("splittercollapser"));
     QVERIFY(!collapser->isCollapsed());
 
-    QTextEdit *edit1 = qFindChild<QTextEdit *>(&testSplitter, QLatin1String("edit1"));
+    QTextEdit *edit1 = testSplitter.findChild<QTextEdit *>(QLatin1String("edit1"));
 
     int size = edit1->height();
 
@@ -181,10 +181,10 @@ void SplitterCollapserTest::shouldTestVerticalSplitterSecondWidget()
     QTest::qWaitForWindowExposed(&testSplitter);
     QVERIFY(testSplitter.isVisible());
 
-    PimCommon::SplitterCollapser *collapser = qFindChild<PimCommon::SplitterCollapser *>(&testSplitter, QLatin1String("splittercollapser"));
+    PimCommon::SplitterCollapser *collapser = testSplitter.findChild<PimCommon::SplitterCollapser *>(QLatin1String("splittercollapser"));
     QVERIFY(!collapser->isCollapsed());
 
-    QTextEdit *edit2 = qFindChild<QTextEdit *>(&testSplitter, QLatin1String("edit2"));
+    QTextEdit *edit2 = testSplitter.findChild<QTextEdit *>(QLatin1String("edit2"));
 
     int size = edit2->height();
 

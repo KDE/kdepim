@@ -36,10 +36,10 @@ FollowupReminderNoAnswerDialogTest::~FollowupReminderNoAnswerDialogTest()
 void FollowupReminderNoAnswerDialogTest::shouldHaveDefaultValues()
 {
     FollowUpReminderNoAnswerDialog dlg;
-    FollowUpReminderInfoWidget *infowidget = qFindChild<FollowUpReminderInfoWidget *>(&dlg, QLatin1String("FollowUpReminderInfoWidget"));
+    FollowUpReminderInfoWidget *infowidget = dlg.findChild<FollowUpReminderInfoWidget *>(QLatin1String("FollowUpReminderInfoWidget"));
     QVERIFY(infowidget);
 
-    QTreeWidget *treeWidget = qFindChild<QTreeWidget *>(infowidget, QLatin1String("treewidget"));
+    QTreeWidget *treeWidget = infowidget->findChild<QTreeWidget *>(QLatin1String("treewidget"));
     QVERIFY(treeWidget);
 
     QCOMPARE(treeWidget->topLevelItemCount(), 0);
@@ -48,8 +48,8 @@ void FollowupReminderNoAnswerDialogTest::shouldHaveDefaultValues()
 void FollowupReminderNoAnswerDialogTest::shouldAddItemInTreeList()
 {
     FollowUpReminderNoAnswerDialog dlg;
-    FollowUpReminderInfoWidget *infowidget = qFindChild<FollowUpReminderInfoWidget *>(&dlg, QLatin1String("FollowUpReminderInfoWidget"));
-    QTreeWidget *treeWidget = qFindChild<QTreeWidget *>(infowidget, QLatin1String("treewidget"));
+    FollowUpReminderInfoWidget *infowidget = dlg.findChild<FollowUpReminderInfoWidget *>(QLatin1String("FollowUpReminderInfoWidget"));
+    QTreeWidget *treeWidget = infowidget->findChild<QTreeWidget *>(QLatin1String("treewidget"));
     QList<FollowUpReminder::FollowUpReminderInfo *> lstInfo;
     for (int i = 0; i < 10; ++i) {
         FollowUpReminder::FollowUpReminderInfo *info = new FollowUpReminder::FollowUpReminderInfo();
@@ -76,8 +76,8 @@ void FollowupReminderNoAnswerDialogTest::shouldAddItemInTreeList()
 void FollowupReminderNoAnswerDialogTest::shouldItemHaveInfo()
 {
     FollowUpReminderNoAnswerDialog dlg;
-    FollowUpReminderInfoWidget *infowidget = qFindChild<FollowUpReminderInfoWidget *>(&dlg, QLatin1String("FollowUpReminderInfoWidget"));
-    QTreeWidget *treeWidget = qFindChild<QTreeWidget *>(infowidget, QLatin1String("treewidget"));
+    FollowUpReminderInfoWidget *infowidget = dlg.findChild<FollowUpReminderInfoWidget *>(QLatin1String("FollowUpReminderInfoWidget"));
+    QTreeWidget *treeWidget = infowidget->findChild<QTreeWidget *>(QLatin1String("treewidget"));
     QList<FollowUpReminder::FollowUpReminderInfo *> lstInfo;
 
     //Load valid infos

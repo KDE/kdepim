@@ -36,9 +36,9 @@ EventDateTimeWidgetTest::~EventDateTimeWidgetTest()
 void EventDateTimeWidgetTest::shouldHaveDefaultValue()
 {
     MessageViewer::EventDateTimeWidget edit;
-    KDateComboBox *datecombobox = qFindChild<KDateComboBox *>(&edit, QLatin1String("eventdatecombobox"));
+    KDateComboBox *datecombobox = edit.findChild<KDateComboBox *>(QLatin1String("eventdatecombobox"));
     QVERIFY(datecombobox);
-    KTimeComboBox *timecombobox = qFindChild<KTimeComboBox *>(&edit, QLatin1String("eventtimecombobox"));
+    KTimeComboBox *timecombobox = edit.findChild<KTimeComboBox *>(QLatin1String("eventtimecombobox"));
     QVERIFY(timecombobox);
 }
 

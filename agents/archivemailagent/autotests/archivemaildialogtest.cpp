@@ -33,10 +33,10 @@ ArchiveMailDialogTest::~ArchiveMailDialogTest()
 void ArchiveMailDialogTest::shouldHaveDefaultValue()
 {
     ArchiveMailDialog dlg;
-    ArchiveMailWidget *mailwidget = qFindChild<ArchiveMailWidget *>(&dlg, QLatin1String("archivemailwidget"));
+    ArchiveMailWidget *mailwidget = dlg.findChild<ArchiveMailWidget *>(QLatin1String("archivemailwidget"));
     QVERIFY(mailwidget);
 
-    QTreeWidget *treeWidget = qFindChild<QTreeWidget *>(mailwidget, QLatin1String("treewidget"));
+    QTreeWidget *treeWidget = mailwidget->findChild<QTreeWidget *>(QLatin1String("treewidget"));
 
     QVERIFY(treeWidget);
 

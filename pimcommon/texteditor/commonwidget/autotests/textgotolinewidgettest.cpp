@@ -34,12 +34,12 @@ void TextGoToLineWidgetTest::shouldHaveDefaultValuesOnCreation()
     PimCommon::TextGoToLineWidget edit;
     edit.show();
     QTest::qWaitForWindowExposed(&edit);
-    QSpinBox *line = qFindChild<QSpinBox *>(&edit, QLatin1String("line"));
+    QSpinBox *line = edit.findChild<QSpinBox *>(QLatin1String("line"));
     QVERIFY(line);
     QCOMPARE(line->minimum(), 1);
-    QPushButton *gotolinebutton = qFindChild<QPushButton *>(&edit, QLatin1String("gotoline"));
+    QPushButton *gotolinebutton = edit.findChild<QPushButton *>(QLatin1String("gotoline"));
     QVERIFY(gotolinebutton);
-    QToolButton *closebutton = qFindChild<QToolButton *>(&edit, QLatin1String("closebutton"));
+    QToolButton *closebutton = edit.findChild<QToolButton *>(QLatin1String("closebutton"));
     QVERIFY(closebutton);
     QVERIFY(line->hasFocus());
 }
@@ -47,7 +47,7 @@ void TextGoToLineWidgetTest::shouldHaveDefaultValuesOnCreation()
 void TextGoToLineWidgetTest::shouldEmitGoToLineSignalWhenPressOnButton()
 {
     PimCommon::TextGoToLineWidget edit;
-    QPushButton *gotolinebutton = qFindChild<QPushButton *>(&edit, QLatin1String("gotoline"));
+    QPushButton *gotolinebutton = edit.findChild<QPushButton *>(QLatin1String("gotoline"));
     QSignalSpy spy(&edit, SIGNAL(goToLine(int)));
     QTest::mouseClick(gotolinebutton, Qt::LeftButton);
     QCOMPARE(spy.count(), 1);
@@ -56,8 +56,8 @@ void TextGoToLineWidgetTest::shouldEmitGoToLineSignalWhenPressOnButton()
 void TextGoToLineWidgetTest::shouldEmitGoToLineSignalCorrectValueWhenPressOnButton()
 {
     PimCommon::TextGoToLineWidget edit;
-    QPushButton *gotolinebutton = qFindChild<QPushButton *>(&edit, QLatin1String("gotoline"));
-    QSpinBox *line = qFindChild<QSpinBox *>(&edit, QLatin1String("line"));
+    QPushButton *gotolinebutton = edit.findChild<QPushButton *>(QLatin1String("gotoline"));
+    QSpinBox *line = edit.findChild<QSpinBox *>(QLatin1String("line"));
     line->setValue(5);
     QCOMPARE(line->value(), 5);
     QSignalSpy spy(&edit, SIGNAL(moveToLine(int)));
@@ -72,7 +72,7 @@ void TextGoToLineWidgetTest::shouldHideWidgetWhenClickOnCloseButton()
     edit.show();
     QTest::qWaitForWindowExposed(&edit);
     QVERIFY(edit.isVisible());
-    QToolButton *closebutton = qFindChild<QToolButton *>(&edit, QLatin1String("closebutton"));
+    QToolButton *closebutton = edit.findChild<QToolButton *>(QLatin1String("closebutton"));
     QTest::mouseClick(closebutton, Qt::LeftButton);
     QVERIFY(!edit.isVisible());
 }
@@ -91,7 +91,7 @@ void TextGoToLineWidgetTest::shouldEmitGoToLineSignalWhenSpinboxHasFocusAndWePre
     PimCommon::TextGoToLineWidget edit;
     edit.show();
     QTest::qWaitForWindowExposed(&edit);
-    QSpinBox *line = qFindChild<QSpinBox *>(&edit, QLatin1String("line"));
+    QSpinBox *line = edit.findChild<QSpinBox *>(QLatin1String("line"));
     line->setFocus();
     QVERIFY(line->hasFocus());
     line->setValue(5);
@@ -106,7 +106,7 @@ void TextGoToLineWidgetTest::shouldHasFocusEachTimeThatItShown()
     PimCommon::TextGoToLineWidget edit;
     edit.show();
     QTest::qWaitForWindowExposed(&edit);
-    QSpinBox *line = qFindChild<QSpinBox *>(&edit, QLatin1String("line"));
+    QSpinBox *line = edit.findChild<QSpinBox *>(QLatin1String("line"));
     QVERIFY(line);
     QVERIFY(line->hasFocus());
     edit.hide();
@@ -121,7 +121,7 @@ void TextGoToLineWidgetTest::shouldSetFocusWhenWeRecallGotToLine()
     PimCommon::TextGoToLineWidget edit;
     edit.show();
     QTest::qWaitForWindowExposed(&edit);
-    QSpinBox *line = qFindChild<QSpinBox *>(&edit, QLatin1String("line"));
+    QSpinBox *line = edit.findChild<QSpinBox *>(QLatin1String("line"));
     QVERIFY(line->hasFocus());
     edit.setFocus();
     QVERIFY(!line->hasFocus());

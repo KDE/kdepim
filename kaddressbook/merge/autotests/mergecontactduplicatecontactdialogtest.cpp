@@ -33,7 +33,7 @@ void MergeContactDuplicateContactDialogTest::shouldHaveDefaultValueOnCreation()
     Akonadi::Item::List lst;
     MergeContactDuplicateContactDialog dlg(lst);
     dlg.show();
-    QStackedWidget *stackedWidget = qFindChild<QStackedWidget *>(&dlg, QLatin1String("stackedwidget"));
+    QStackedWidget *stackedWidget = dlg.findChild<QStackedWidget *>(QLatin1String("stackedwidget"));
     QVERIFY(stackedWidget);
     QCOMPARE(stackedWidget->currentWidget()->objectName(), QLatin1String("nocontactselected"));
 }
@@ -44,7 +44,7 @@ void MergeContactDuplicateContactDialogTest::shouldShowNoEnoughPageWhenSelectOne
     lst << Akonadi::Item(42);
     MergeContactDuplicateContactDialog dlg(lst);
     dlg.show();
-    QStackedWidget *stackedWidget = qFindChild<QStackedWidget *>(&dlg, QLatin1String("stackedwidget"));
+    QStackedWidget *stackedWidget = dlg.findChild<QStackedWidget *>(QLatin1String("stackedwidget"));
     QVERIFY(stackedWidget);
     QCOMPARE(stackedWidget->currentWidget()->objectName(), QLatin1String("noenoughcontactselected"));
 }

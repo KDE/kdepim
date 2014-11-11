@@ -43,16 +43,16 @@ void TextToSpeechConfigWidgetTest::shouldHaveDefaultValue()
 {
     PimCommon::TextToSpeechConfigWidget textToSpeechConfigWidget;
     addInterface(&textToSpeechConfigWidget);
-    QSlider *volume = qFindChild<QSlider *>(&textToSpeechConfigWidget, QLatin1String("volume"));
+    QSlider *volume = textToSpeechConfigWidget.findChild<QSlider *>(QLatin1String("volume"));
     QVERIFY(volume);
 
-    QSlider *rate = qFindChild<QSlider *>(&textToSpeechConfigWidget, QLatin1String("rate"));
+    QSlider *rate = textToSpeechConfigWidget.findChild<QSlider *>(QLatin1String("rate"));
     QVERIFY(rate);
 
-    QSlider *pitch = qFindChild<QSlider *>(&textToSpeechConfigWidget, QLatin1String("pitch"));
+    QSlider *pitch = textToSpeechConfigWidget.findChild<QSlider *>(QLatin1String("pitch"));
     QVERIFY(pitch);
 
-    QComboBox *language = qFindChild<QComboBox *>(&textToSpeechConfigWidget, QLatin1String("language"));
+    QComboBox *language = textToSpeechConfigWidget.findChild<QComboBox *>(QLatin1String("language"));
     QVERIFY(language);
     //FIXME
     //QVERIFY(language->count()>0);
@@ -63,19 +63,19 @@ void TextToSpeechConfigWidgetTest::shouldEmitConfigChangedWhenChangeConfigValue(
     PimCommon::TextToSpeechConfigWidget textToSpeechConfigWidget;
     addInterface(&textToSpeechConfigWidget);
     QSignalSpy spy(&textToSpeechConfigWidget, SIGNAL(configChanged(bool)));
-    QSlider *volume = qFindChild<QSlider *>(&textToSpeechConfigWidget, QLatin1String("volume"));
+    QSlider *volume = textToSpeechConfigWidget.findChild<QSlider *>(QLatin1String("volume"));
     volume->setValue(5);
     QCOMPARE(spy.count(), 1);
 
-    QSlider *rate = qFindChild<QSlider *>(&textToSpeechConfigWidget, QLatin1String("rate"));
+    QSlider *rate = textToSpeechConfigWidget.findChild<QSlider *>(QLatin1String("rate"));
     rate->setValue(5);
     QCOMPARE(spy.count(), 2);
 
-    QSlider *pitch = qFindChild<QSlider *>(&textToSpeechConfigWidget, QLatin1String("pitch"));
+    QSlider *pitch = textToSpeechConfigWidget.findChild<QSlider *>(QLatin1String("pitch"));
     pitch->setValue(5);
     QCOMPARE(spy.count(), 3);
 
-    QComboBox *language = qFindChild<QComboBox *>(&textToSpeechConfigWidget, QLatin1String("language"));
+    QComboBox *language = textToSpeechConfigWidget.findChild<QComboBox *>(QLatin1String("language"));
     language->blockSignals(true);
     QStringList lst;
     lst << QLatin1String("foo");

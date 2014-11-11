@@ -37,26 +37,26 @@ BalooDebugWidgetTest::~BalooDebugWidgetTest()
 void BalooDebugWidgetTest::shouldHaveDefaultValue()
 {
     PimCommon::BalooDebugWidget widget;
-    QPushButton *button = qFindChild<QPushButton *>(&widget, QLatin1String("searchbutton"));
+    QPushButton *button = widget.findChild<QPushButton *>(QLatin1String("searchbutton"));
     QVERIFY(button);
     QVERIFY(!button->isEnabled());
-    KLineEdit *lineEdit = qFindChild<KLineEdit *>(&widget, QLatin1String("lineedit"));
+    KLineEdit *lineEdit = widget.findChild<KLineEdit *>(QLatin1String("lineedit"));
     QVERIFY(lineEdit);
     QVERIFY(lineEdit->text().isEmpty());
     QVERIFY(lineEdit->trapReturnKey());
     QVERIFY(lineEdit->isClearButtonShown());
-    PimCommon::PlainTextEditorWidget *editorWidget = qFindChild<PimCommon::PlainTextEditorWidget *>(&widget, QLatin1String("plaintexteditor"));
+    PimCommon::PlainTextEditorWidget *editorWidget = widget.findChild<PimCommon::PlainTextEditorWidget *>(QLatin1String("plaintexteditor"));
     QVERIFY(editorWidget->isReadOnly());
     QVERIFY(editorWidget);
     QVERIFY(editorWidget->toPlainText().isEmpty());
-    PimCommon::BalooDebugSearchPathComboBox *searchCombo = qFindChild<PimCommon::BalooDebugSearchPathComboBox *>(&widget, QLatin1String("searchpathcombo"));
+    PimCommon::BalooDebugSearchPathComboBox *searchCombo = widget.findChild<PimCommon::BalooDebugSearchPathComboBox *>(QLatin1String("searchpathcombo"));
     QVERIFY(searchCombo);
 }
 
 void BalooDebugWidgetTest::shouldFillLineEditWhenWeWantToSearchItem()
 {
     PimCommon::BalooDebugWidget widget;
-    KLineEdit *lineEdit = qFindChild<KLineEdit *>(&widget, QLatin1String("lineedit"));
+    KLineEdit *lineEdit = widget.findChild<KLineEdit *>(QLatin1String("lineedit"));
     const int value = 42;
     const QString akonadiItem = QString::number(value);
     widget.setAkonadiId(value);
@@ -68,10 +68,10 @@ void BalooDebugWidgetTest::shouldEnabledPushButtonWhenLineEditIsNotEmpty()
     PimCommon::BalooDebugWidget widget;
     const int value = 42;
     widget.setAkonadiId(value);
-    QPushButton *button = qFindChild<QPushButton *>(&widget, QLatin1String("searchbutton"));
+    QPushButton *button = widget.findChild<QPushButton *>(QLatin1String("searchbutton"));
     QVERIFY(button->isEnabled());
 
-    KLineEdit *lineEdit = qFindChild<KLineEdit *>(&widget, QLatin1String("lineedit"));
+    KLineEdit *lineEdit = widget.findChild<KLineEdit *>(QLatin1String("lineedit"));
     lineEdit->setText(QLatin1String(""));
     QVERIFY(!button->isEnabled());
 
@@ -86,7 +86,7 @@ void BalooDebugWidgetTest::shouldChangeSearchType()
     PimCommon::BalooDebugWidget widget;
     PimCommon::BalooDebugSearchPathComboBox::SearchType type = PimCommon::BalooDebugSearchPathComboBox::Emails;
     widget.setSearchType(type);
-    PimCommon::BalooDebugSearchPathComboBox *searchCombo = qFindChild<PimCommon::BalooDebugSearchPathComboBox *>(&widget, QLatin1String("searchpathcombo"));
+    PimCommon::BalooDebugSearchPathComboBox *searchCombo = widget.findChild<PimCommon::BalooDebugSearchPathComboBox *>(QLatin1String("searchpathcombo"));
     const QString path = searchCombo->pathFromEnum(type);
     QCOMPARE(searchCombo->searchPath(), path);
 

@@ -29,7 +29,7 @@ MergeContactInfoWidgetTest::MergeContactInfoWidgetTest()
 void MergeContactInfoWidgetTest::shouldHaveDefaultValueOnCreation()
 {
     MergeContactInfoWidget infoWidget;
-    QStackedWidget *stackedWidget = qFindChild<QStackedWidget *>(&infoWidget, QLatin1String("stackedwidget"));
+    QStackedWidget *stackedWidget = infoWidget.findChild<QStackedWidget *>(QLatin1String("stackedwidget"));
     QVERIFY(stackedWidget);
     QCOMPARE(stackedWidget->currentWidget()->objectName(), QLatin1String("nocontact"));
 }
@@ -39,7 +39,7 @@ void MergeContactInfoWidgetTest::shouldHaveActivateDisplayWidgetWhenSelectOneCon
     MergeContactInfoWidget infoWidget;
     Akonadi::Item item(4);
     infoWidget.setContact(item);
-    QStackedWidget *stackedWidget = qFindChild<QStackedWidget *>(&infoWidget, QLatin1String("stackedwidget"));
+    QStackedWidget *stackedWidget = infoWidget.findChild<QStackedWidget *>(QLatin1String("stackedwidget"));
     QCOMPARE(stackedWidget->currentWidget()->objectName(), QLatin1String("contactwidget"));
 }
 
@@ -48,7 +48,7 @@ void MergeContactInfoWidgetTest::shouldHaveActivateNoWidgetWhenSelectNoContact()
     MergeContactInfoWidget infoWidget;
     Akonadi::Item item(4);
     infoWidget.setContact(item);
-    QStackedWidget *stackedWidget = qFindChild<QStackedWidget *>(&infoWidget, QLatin1String("stackedwidget"));
+    QStackedWidget *stackedWidget = infoWidget.findChild<QStackedWidget *>(QLatin1String("stackedwidget"));
     QCOMPARE(stackedWidget->currentWidget()->objectName(), QLatin1String("contactwidget"));
     infoWidget.setContact(Akonadi::Item());
     QCOMPARE(stackedWidget->currentWidget()->objectName(), QLatin1String("nocontact"));

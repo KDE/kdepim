@@ -37,11 +37,11 @@ BalooDebugDialogTest::~BalooDebugDialogTest()
 void BalooDebugDialogTest::shouldHaveDefaultValue()
 {
     PimCommon::BalooDebugDialog dlg;
-    PimCommon::BalooDebugWidget *debugWidget = qFindChild<PimCommon::BalooDebugWidget *>(&dlg, QLatin1String("baloodebugwidget"));
+    PimCommon::BalooDebugWidget *debugWidget = dlg.findChild<PimCommon::BalooDebugWidget *>(QLatin1String("baloodebugwidget"));
     QVERIFY(debugWidget);
-    PimCommon::PlainTextEditorWidget *editorWidget = qFindChild<PimCommon::PlainTextEditorWidget *>(debugWidget, QLatin1String("plaintexteditor"));
+    PimCommon::PlainTextEditorWidget *editorWidget = debugWidget->findChild<PimCommon::PlainTextEditorWidget *>(QLatin1String("plaintexteditor"));
     QVERIFY(editorWidget);
-    KLineEdit *lineEdit = qFindChild<KLineEdit *>(debugWidget, QLatin1String("lineedit"));
+    KLineEdit *lineEdit = debugWidget->findChild<KLineEdit *>(QLatin1String("lineedit"));
     QVERIFY(lineEdit);
     QVERIFY(lineEdit->text().isEmpty());
 }
@@ -49,9 +49,9 @@ void BalooDebugDialogTest::shouldHaveDefaultValue()
 void BalooDebugDialogTest::shouldFillLineEditWhenWeWantToSearchItem()
 {
     PimCommon::BalooDebugDialog dlg;
-    PimCommon::BalooDebugWidget *debugWidget = qFindChild<PimCommon::BalooDebugWidget *>(&dlg, QLatin1String("baloodebugwidget"));
+    PimCommon::BalooDebugWidget *debugWidget = dlg.findChild<PimCommon::BalooDebugWidget *>(QLatin1String("baloodebugwidget"));
     QVERIFY(debugWidget);
-    KLineEdit *lineEdit = qFindChild<KLineEdit *>(debugWidget, QLatin1String("lineedit"));
+    KLineEdit *lineEdit = debugWidget->findChild<KLineEdit *>(QLatin1String("lineedit"));
     QVERIFY(lineEdit);
     const int value = 42;
     const QString akonadiItem = QString::number(value);

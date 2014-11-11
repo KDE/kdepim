@@ -31,7 +31,7 @@ void MergeContactSelectInformationDialogTest::shouldHaveDefaultValueOnCreation()
     Akonadi::Item::List lst;
     MergeContactSelectInformationDialog dlg(lst);
     dlg.show();
-    KABMergeContacts::MergeContactShowResultTabWidget *tabWidget = qFindChild<KABMergeContacts::MergeContactShowResultTabWidget *>(&dlg, QLatin1String("tabwidget"));
+    KABMergeContacts::MergeContactShowResultTabWidget *tabWidget = dlg.findChild<KABMergeContacts::MergeContactShowResultTabWidget *>(QLatin1String("tabwidget"));
     QVERIFY(tabWidget);
     QCOMPARE(tabWidget->count(), 0);
     QCOMPARE(tabWidget->tabBarVisible(), false);

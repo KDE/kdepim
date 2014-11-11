@@ -32,7 +32,7 @@ void MergeContactShowResultDialogTest::shouldHaveDefaultValueOnCreation()
 {
     MergeContactShowResultDialog dlg;
     dlg.show();
-    KABMergeContacts::MergeContactShowResultTabWidget *tabWidget = qFindChild<KABMergeContacts::MergeContactShowResultTabWidget *>(&dlg, QLatin1String("tabwidget"));
+    KABMergeContacts::MergeContactShowResultTabWidget *tabWidget = dlg.findChild<KABMergeContacts::MergeContactShowResultTabWidget *>(QLatin1String("tabwidget"));
     QVERIFY(tabWidget);
     QCOMPARE(tabWidget->count(), 0);
     QCOMPARE(tabWidget->tabBarVisible(), false);
@@ -50,7 +50,7 @@ void MergeContactShowResultDialogTest::shouldDontShowTabBarWhenWeHaveJustOneCont
     lst.append(item);
     dlg.setContacts(lst);
     dlg.show();
-    KABMergeContacts::MergeContactShowResultTabWidget *tabWidget = qFindChild<KABMergeContacts::MergeContactShowResultTabWidget *>(&dlg, QLatin1String("tabwidget"));
+    KABMergeContacts::MergeContactShowResultTabWidget *tabWidget = dlg.findChild<KABMergeContacts::MergeContactShowResultTabWidget *>(QLatin1String("tabwidget"));
     QCOMPARE(tabWidget->tabBarVisible(), false);
     QCOMPARE(tabWidget->count(), 1);
 }
@@ -66,7 +66,7 @@ void MergeContactShowResultDialogTest::shouldShowTabBarWhenWeHaveMoreThanOneCont
     lst << item << item;
     dlg.setContacts(lst);
     dlg.show();
-    KABMergeContacts::MergeContactShowResultTabWidget *tabWidget = qFindChild<KABMergeContacts::MergeContactShowResultTabWidget *>(&dlg, QLatin1String("tabwidget"));
+    KABMergeContacts::MergeContactShowResultTabWidget *tabWidget = dlg.findChild<KABMergeContacts::MergeContactShowResultTabWidget *>(QLatin1String("tabwidget"));
     QCOMPARE(tabWidget->tabBarVisible(), true);
     QCOMPARE(tabWidget->count(), 2);
 }
