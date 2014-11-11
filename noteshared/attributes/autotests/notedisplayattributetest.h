@@ -24,7 +24,7 @@ class NoteDisplayAttributeTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit NoteDisplayAttributeTest(QObject *parent=0);
+    explicit NoteDisplayAttributeTest(QObject *parent = 0);
     ~NoteDisplayAttributeTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();

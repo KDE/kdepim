@@ -20,7 +20,6 @@
 
 #include "composerhtmleditor.h"
 
-
 #include <KAboutData>
 
 #include <QApplication>

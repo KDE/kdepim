@@ -45,8 +45,9 @@ static void print(const QString &message, bool newline = true)
 {
     QTextStream out(stdout);
     out << message;
-    if (newline)
+    if (newline) {
         out << "\n";
+    }
 }
 
 static void bailOut()
@@ -63,8 +64,9 @@ static bool collectionIsReadOnly(const Akonadi::Collection &collection)
 
 static bool incidenceIsOld(const KCalCore::Incidence::Ptr &incidence)
 {
-    if (incidence->recurs() || incidence->type() == KCalCore::Incidence::TypeJournal)
+    if (incidence->recurs() || incidence->type() == KCalCore::Incidence::TypeJournal) {
         return false;
+    }
 
     KDateTime datetime = incidence->dtStart();
     if (!datetime.isValid() && incidence->type() == KCalCore::Incidence::TypeTodo) {
@@ -75,13 +77,13 @@ static bool incidenceIsOld(const KCalCore::Incidence::Ptr &incidence)
 }
 
 CalendarJanitor::CalendarJanitor(const Options &options, QObject *parent) : QObject(parent)
-                                                                          , m_collectionLoader(new CollectionLoader(this))
-                                                                          , m_options(options)
-                                                                          , m_currentSanityCheck(Options::CheckNone)
-                                                                          , m_pendingModifications(0)
-                                                                          , m_pendingDeletions(0)
-                                                                          , m_strippingOldAlarms(false)
-                                                                          , m_returnCode(0)
+    , m_collectionLoader(new CollectionLoader(this))
+    , m_options(options)
+    , m_currentSanityCheck(Options::CheckNone)
+    , m_pendingModifications(0)
+    , m_pendingDeletions(0)
+    , m_strippingOldAlarms(false)
+    , m_returnCode(0)
 {
     m_changer = new Akonadi::IncidenceChanger(this);
     m_changer->setShowDialogsOnError(false);
@@ -105,8 +107,9 @@ void CalendarJanitor::onCollectionsFetched(bool success)
     }
 
     foreach (const Akonadi::Collection &collection, m_collectionLoader->collections()) {
-        if (m_options.testCollection(collection.id()))
+        if (m_options.testCollection(collection.id())) {
             m_collectionsToProcess << collection;
+        }
     }
 
     if (m_collectionsToProcess.isEmpty()) {
@@ -142,8 +145,9 @@ void CalendarJanitor::onModifyFinished(int changeId, const Akonadi::Item &item,
         bailOut();
         return;
     }
-    if (!m_options.stripOldAlarms())
+    if (!m_options.stripOldAlarms()) {
         print(i18n("Fixed item %1", item.id()));
+    }
 
     m_pendingModifications--;
     if (m_pendingModifications == 0) {
@@ -224,9 +228,9 @@ void CalendarJanitor::runNextTest()
     }
 
     int currentType = static_cast<int>(m_currentSanityCheck);
-    m_currentSanityCheck = static_cast<Options::SanityCheck>(currentType+1);
+    m_currentSanityCheck = static_cast<Options::SanityCheck>(currentType + 1);
 
-    switch(m_currentSanityCheck) {
+    switch (m_currentSanityCheck) {
     case Options::CheckEmptySummary:
         sanityCheck1();
         break;
@@ -269,7 +273,7 @@ void CalendarJanitor::sanityCheck1()
     foreach (const Akonadi::Item &item, m_itemsToProcess) {
         KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence(item);
         if (incidence->summary().isEmpty() && incidence->description().isEmpty()
-            && incidence->attachments().isEmpty()) {
+                && incidence->attachments().isEmpty()) {
             printFound(item);
             deleteIncidence(item);
         }
@@ -303,8 +307,9 @@ void CalendarJanitor::sanityCheck3()
     foreach (const Akonadi::Item &item, m_itemsToProcess) {
         KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence(item);
         KCalCore::Event::Ptr event = incidence.dynamicCast<KCalCore::Event>();
-        if (!event)
+        if (!event) {
             continue;
+        }
 
         KDateTime start = event->dtStart();
         KDateTime end   = event->dtEnd();
@@ -339,8 +344,9 @@ void CalendarJanitor::sanityCheck4()
     foreach (const Akonadi::Item &item, m_itemsToProcess) {
         KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence(item);
         KCalCore::Todo::Ptr todo = incidence.dynamicCast<KCalCore::Todo>();
-        if (!todo)
+        if (!todo) {
             continue;
+        }
 
         KDateTime start = todo->dtStart();
         KDateTime due   = todo->dtDue();
@@ -373,8 +379,9 @@ void CalendarJanitor::sanityCheck5()
     beginTest(i18n("Checking for journals with invalid DTSTART..."));
     foreach (const Akonadi::Item &item, m_itemsToProcess) {
         KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence(item);
-        if (incidence->type() != KCalCore::Incidence::TypeJournal)
+        if (incidence->type() != KCalCore::Incidence::TypeJournal) {
             continue;
+        }
 
         if (!incidence->dtStart().isValid()) {
             printFound(item);
@@ -416,8 +423,9 @@ void CalendarJanitor::sanityCheck7()
         KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence(item);
         QList<KCalCore::Incidence::Ptr> existingIncidences = m_incidenceMap.values(incidence->instanceIdentifier());
 
-        if (existingIncidences.count() == 1)
+        if (existingIncidences.count() == 1) {
             continue;
+        }
 
         foreach (const KCalCore::Incidence::Ptr &existingIncidence, existingIncidences) {
             if (existingIncidence != incidence && *incidence == *existingIncidence) {
@@ -432,10 +440,11 @@ void CalendarJanitor::sanityCheck7()
         KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence(item);
         QList<KCalCore::Incidence::Ptr> existingIncidences = m_incidenceMap.values(incidence->instanceIdentifier());
 
-        if (existingIncidences.count() == 1)
+        if (existingIncidences.count() == 1) {
             continue;
+        }
 
-        for (int i=1; i<existingIncidences.count(); ++i) {
+        for (int i = 1; i < existingIncidences.count(); ++i) {
             printFound(item);
             if (m_fixingEnabled) {
                 KCalCore::Incidence::Ptr existingIncidence = existingIncidences.at(i);
@@ -489,15 +498,17 @@ void CalendarJanitor::sanityCheck8()
         m_counts[incidence->type()]++;
 
         if (incidenceIsOld(incidence)) {
-            if (!incidence->alarms().isEmpty())
+            if (!incidence->alarms().isEmpty()) {
                 numOldAlarms++;
+            }
             numOldIncidences++;
         }
 
         numAttachments += incidence->attachments().count();
 
-        if (item.remoteId().isEmpty())
+        if (item.remoteId().isEmpty()) {
             numEmptyRID++;
+        }
     }
 
     printStat(i18n("Events"), m_counts[KCalCore::Incidence::TypeEvent]);
@@ -514,9 +525,9 @@ void CalendarJanitor::sanityCheck8()
         printStat(i18n("Total size of inline attachments (KB)"), totalAttachmentSize / 1024);
     }
 
-    if (numEmptyRID > 0)
+    if (numEmptyRID > 0) {
         m_returnCode = -2;
-
+    }
 
     endTest(/**print=*/false);
 }
@@ -596,15 +607,17 @@ static QString dateString(const KCalCore::Incidence::Ptr &incidence)
 
     str += QLatin1String("\n        ");
 
-    if (incidence->type() == KCalCore::Incidence::TypeTodo)
+    if (incidence->type() == KCalCore::Incidence::TypeTodo) {
         str += QLatin1String("DTDUE=");
-    else if (incidence->type() == KCalCore::Incidence::TypeEvent)
+    } else if (incidence->type() == KCalCore::Incidence::TypeEvent) {
         str += QLatin1String("DTEND=");
+    }
 
-    str+= (start.isValid() ? end.toString() : i18n("invalid")) + QLatin1String("; ");
+    str += (start.isValid() ? end.toString() : i18n("invalid")) + QLatin1String("; ");
 
-    if (incidence->recurs())
+    if (incidence->recurs()) {
         str += i18n("recurrent");
+    }
 
     return str;
 }
@@ -639,10 +652,11 @@ void CalendarJanitor::endTest(bool printEnabled, const QString fixExplanation, c
         print(QLatin1String(" [OK]"));
     } else if (m_numDamaged > 0) {
         print(QLatin1String("\n    "), false);
-        if (m_options.action() == Options::ActionScanAndFix)
+        if (m_options.action() == Options::ActionScanAndFix) {
             print(fixExplanation2);
-        else
+        } else {
             print(fixExplanation);
+        }
 
         print(QString());
     }

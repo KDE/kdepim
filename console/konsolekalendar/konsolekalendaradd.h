@@ -43,12 +43,12 @@
  */
 class KonsoleKalendarAdd
 {
-  public:
+public:
     /**
      * Constructs a KonsoleKalendarAdd object from command line arguments.
      * @param vars is a KonsoleKalendarVariable object with Event information.
      */
-    explicit KonsoleKalendarAdd( KonsoleKalendarVariables *vars );
+    explicit KonsoleKalendarAdd(KonsoleKalendarVariables *vars);
     /**
      * Destructor
      */
@@ -64,7 +64,7 @@ class KonsoleKalendarAdd
      */
     bool addImportedCalendar();
 
-  private:
+private:
     /**
      * Print event specs for dryrun and verbose options
      */

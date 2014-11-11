@@ -17,7 +17,6 @@
     02110-1301, USA.
 */
 
-
 #include "amazingcompleter.h"
 
 #include <kselectionproxymodel.h>
@@ -30,32 +29,32 @@ using namespace Akonadi;
 class Akonadi::AmazingCompleterPrivate
 {
 public:
-  AmazingCompleterPrivate(AmazingCompleter *completer) //, QAbstractItemModel *model)
-    :   m_matchingRole(Qt::DisplayRole),
-        m_completionRole(Qt::DisplayRole),
-        m_minumumLength(3),
-        q_ptr(completer)
-  {
+    AmazingCompleterPrivate(AmazingCompleter *completer) //, QAbstractItemModel *model)
+        :   m_matchingRole(Qt::DisplayRole),
+            m_completionRole(Qt::DisplayRole),
+            m_minumumLength(3),
+            q_ptr(completer)
+    {
 
-  }
+    }
 
-  QAbstractItemModel *m_model;
-  KSelectionProxyModel *m_selectionProxyModel;
-  QItemSelectionModel *m_itemSelectionModel;
-  QAbstractItemView *m_view;
-  QWidget *m_widget;
-  int m_matchingRole;
-  int m_completionRole;
-  AmazingCompleter::ViewHandler m_viewHandler;
-  QVariant m_matchData;
-  int m_minumumLength;
+    QAbstractItemModel *m_model;
+    KSelectionProxyModel *m_selectionProxyModel;
+    QItemSelectionModel *m_itemSelectionModel;
+    QAbstractItemView *m_view;
+    QWidget *m_widget;
+    int m_matchingRole;
+    int m_completionRole;
+    AmazingCompleter::ViewHandler m_viewHandler;
+    QVariant m_matchData;
+    int m_minumumLength;
 
-  Q_DECLARE_PUBLIC(AmazingCompleter)
-  AmazingCompleter *q_ptr;
+    Q_DECLARE_PUBLIC(AmazingCompleter)
+    AmazingCompleter *q_ptr;
 
 };
 
-AmazingCompleter::AmazingCompleter( /* QAbstractItemModel* model, */ QObject* parent)
+AmazingCompleter::AmazingCompleter(/* QAbstractItemModel* model, */ QObject *parent)
     : QObject(parent), d_ptr(new AmazingCompleterPrivate(this) /* ,model) */)
 {
 
@@ -63,119 +62,118 @@ AmazingCompleter::AmazingCompleter( /* QAbstractItemModel* model, */ QObject* pa
 
 AmazingCompleter::~AmazingCompleter()
 {
-  delete d_ptr;
+    delete d_ptr;
 }
 
-void AmazingCompleter::setCompletionPrefixString(const QString& matchData)
+void AmazingCompleter::setCompletionPrefixString(const QString &matchData)
 {
-  if (matchData.isEmpty())
-    setCompletionPrefix(QVariant());
-  else
-    setCompletionPrefix(matchData);
+    if (matchData.isEmpty()) {
+        setCompletionPrefix(QVariant());
+    } else {
+        setCompletionPrefix(matchData);
+    }
 }
 
-void AmazingCompleter::setCompletionPrefix(const QVariant& matchData)
+void AmazingCompleter::setCompletionPrefix(const QVariant &matchData)
 {
-  Q_D(AmazingCompleter);
-  d->m_matchData = matchData;
-  d->m_itemSelectionModel->clearSelection();
+    Q_D(AmazingCompleter);
+    d->m_matchData = matchData;
+    d->m_itemSelectionModel->clearSelection();
 
-  if (!matchData.isValid())
-  {
-    d->m_view->hide();
-    return;
-  }
+    if (!matchData.isValid()) {
+        d->m_view->hide();
+        return;
+    }
 
-  QString matchString = matchData.toString();
-  if (matchString.size() < d->m_minumumLength)
-  {
-    d->m_view->hide();
-    return;
-  }
+    QString matchString = matchData.toString();
+    if (matchString.size() < d->m_minumumLength) {
+        d->m_view->hide();
+        return;
+    }
 
+    QModelIndex idx = d->m_model->index(0, 0);
 
-  QModelIndex idx = d->m_model->index(0, 0);
+    if (!idx.isValid()) {
+        return;
+    }
 
-  if (!idx.isValid())
-    return;
+    QModelIndexList matchingIndexes = d->m_model->match(idx, d->m_matchingRole, matchData, -1); // StartsWith
 
-  QModelIndexList matchingIndexes = d->m_model->match(idx, d->m_matchingRole, matchData, -1); // StartsWith
+    qDebug() << matchingIndexes.size();
 
-qDebug() << matchingIndexes.size();
+    if (matchingIndexes.size() > 0) {
+        d->m_view->show();
+    } else {
+        d->m_view->hide();
+    }
 
-  if (matchingIndexes.size() > 0)
-    d->m_view->show();
-  else
-    d->m_view->hide();
-
-  foreach(const QModelIndex &matchingIndex, matchingIndexes)
-    d->m_itemSelectionModel->select(matchingIndex, QItemSelectionModel::Select); // Put this in a queued connection?
+    foreach (const QModelIndex &matchingIndex, matchingIndexes) {
+        d->m_itemSelectionModel->select(matchingIndex, QItemSelectionModel::Select);    // Put this in a queued connection?
+    }
 }
 
 void AmazingCompleter::sourceRowsInserted(const QModelIndex &parent, int start, int end)
 {
-  Q_UNUSED( parent );
-  Q_UNUSED( start );
-  Q_UNUSED( end );
-  Q_D(AmazingCompleter);
-  if (d->m_matchData.isValid())
-    setCompletionPrefix(d->m_matchData);
+    Q_UNUSED(parent);
+    Q_UNUSED(start);
+    Q_UNUSED(end);
+    Q_D(AmazingCompleter);
+    if (d->m_matchData.isValid()) {
+        setCompletionPrefix(d->m_matchData);
+    }
 }
 
-void AmazingCompleter::setModel(QAbstractItemModel* model)
+void AmazingCompleter::setModel(QAbstractItemModel *model)
 {
-  Q_D(AmazingCompleter);
-  d->m_model = model;
-  d->m_itemSelectionModel = new QItemSelectionModel(model, this);
-  d->m_selectionProxyModel = new KSelectionProxyModel(d->m_itemSelectionModel, this);
-  d->m_selectionProxyModel->setSourceModel(d->m_model);
+    Q_D(AmazingCompleter);
+    d->m_model = model;
+    d->m_itemSelectionModel = new QItemSelectionModel(model, this);
+    d->m_selectionProxyModel = new KSelectionProxyModel(d->m_itemSelectionModel, this);
+    d->m_selectionProxyModel->setSourceModel(d->m_model);
 
-
-  connect(d->m_model, &QAbstractItemModel::rowsInserted, this, &AmazingCompleter::sourceRowsInserted);
-
+    connect(d->m_model, &QAbstractItemModel::rowsInserted, this, &AmazingCompleter::sourceRowsInserted);
 
 }
 
-void AmazingCompleter::setView(QAbstractItemView* view, ViewHandler handler)
+void AmazingCompleter::setView(QAbstractItemView *view, ViewHandler handler)
 {
-  Q_D(AmazingCompleter);
-  Q_UNUSED( handler );
+    Q_D(AmazingCompleter);
+    Q_UNUSED(handler);
 
-  d->m_view = view;
+    d->m_view = view;
 
-  QSize size = d->m_widget->size();
+    QSize size = d->m_widget->size();
 
-  size.setHeight(size.height()*10);
-  size.setWidth(size.width() * 2.5);
+    size.setHeight(size.height() * 10);
+    size.setWidth(size.width() * 2.5);
 
-  view->move(50, 50);
-  view->resize(size);
+    view->move(50, 50);
+    view->resize(size);
 
-  view->hide();
+    view->hide();
 
-
-  connectModelToView(d->m_selectionProxyModel, view);
+    connectModelToView(d->m_selectionProxyModel, view);
 }
 
 void AmazingCompleter::connectModelToView(QAbstractItemModel *model, QAbstractItemView *view)
 {
-  view->setModel(model);
+    view->setModel(model);
 }
 
-void AmazingCompleter::setWidget(QWidget* widget)
+void AmazingCompleter::setWidget(QWidget *widget)
 {
-  Q_D(AmazingCompleter);
-  d->m_widget = widget;
+    Q_D(AmazingCompleter);
+    d->m_widget = widget;
 }
 
 void AmazingCompleter::setCompletionRole(int role)
 {
-  Q_D(AmazingCompleter);
-  d->m_completionRole = role;
+    Q_D(AmazingCompleter);
+    d->m_completionRole = role;
 }
 
 void AmazingCompleter::setMatchingRole(int role)
 {
-  Q_D(AmazingCompleter);
-  d->m_matchingRole = role;
+    Q_D(AmazingCompleter);
+    d->m_matchingRole = role;
 }

@@ -45,13 +45,13 @@
  */
 class KonsoleKalendarExports
 {
-  public:
+public:
 
     /**
      * Constructs a KonsoleKalendarChange object from command line arguments.
      * @param vars is a KonsoleKalendarVariable object with Event information.
      */
-    explicit KonsoleKalendarExports( KonsoleKalendarVariables *vars = 0 );
+    explicit KonsoleKalendarExports(KonsoleKalendarVariables *vars = 0);
 
     /**
      * Destructor
@@ -64,7 +64,7 @@ class KonsoleKalendarExports
      * @param event pointer to the Event to export.
      * @param date is the QDate to be exported for.
      */
-    bool exportAsTxt( QTextStream *ts, const KCalCore::Event::Ptr &event, const QDate &date );
+    bool exportAsTxt(QTextStream *ts, const KCalCore::Event::Ptr &event, const QDate &date);
 
     /**
      * Export the Event in Short Text Mode.
@@ -74,8 +74,8 @@ class KonsoleKalendarExports
      * @param sameday flags that this Event is on the same date as the
      * previously exported Event.
      */
-    bool exportAsTxtShort( QTextStream *ts, const KCalCore::Event::Ptr &event, const QDate &date,
-                           bool sameday );
+    bool exportAsTxtShort(QTextStream *ts, const KCalCore::Event::Ptr &event, const QDate &date,
+                          bool sameday);
 
     /**
      * Export the Event in Comma-Separated Values (CSV) Mode.
@@ -83,9 +83,9 @@ class KonsoleKalendarExports
      * @param event pointer to the Event to export.
      * @param date is the QDate to be exported for.
      */
-    bool exportAsCSV( QTextStream *ts, const KCalCore::Event::Ptr &event, const QDate &date );
+    bool exportAsCSV(QTextStream *ts, const KCalCore::Event::Ptr &event, const QDate &date);
 
-  private:
+private:
     //@cond PRIVATE
     KonsoleKalendarVariables *m_variables;
     bool m_firstEntry;
@@ -98,7 +98,7 @@ class KonsoleKalendarExports
      * @param field is the field value to be processed.
      * @param dquote is a QString containing the double quote character.
      */
-    QString processField( const QString &field, const QString &dquote );
+    QString processField(const QString &field, const QString &dquote);
 
 };
 

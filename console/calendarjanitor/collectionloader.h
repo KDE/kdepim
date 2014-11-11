@@ -41,7 +41,7 @@ Q_SIGNALS:
     void loaded(bool succcess);
 
 private Q_SLOTS:
-    void onCollectionsLoaded(KJob*);
+    void onCollectionsLoaded(KJob *);
 
 private:
     Akonadi::Collection::List m_collections;

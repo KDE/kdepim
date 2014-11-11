@@ -22,8 +22,8 @@
 
 using namespace TemplateParser;
 
-TemplatesSyntaxHighlighter::TemplatesSyntaxHighlighter( QTextDocument *doc )
-    : PimCommon::SyntaxHighlighterBase( doc )
+TemplatesSyntaxHighlighter::TemplatesSyntaxHighlighter(QTextDocument *doc)
+    : PimCommon::SyntaxHighlighterBase(doc)
 {
     init();
 }

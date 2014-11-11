@@ -39,7 +39,7 @@ CollectionLoader::CollectionLoader(QObject *parent) :
 void CollectionLoader::load()
 {
     Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob(Akonadi::Collection::root(),
-                                                                       Akonadi::CollectionFetchJob::Recursive);
+            Akonadi::CollectionFetchJob::Recursive);
 
     job->fetchScope().setContentMimeTypes(KCalCore::Incidence::mimeTypes());
     connect(job, &Akonadi::CollectionFetchJob::result, this, &CollectionLoader::onCollectionsLoaded);
@@ -54,9 +54,9 @@ Akonadi::Collection::List CollectionLoader::collections() const
 void CollectionLoader::onCollectionsLoaded(KJob *job)
 {
     if (job->error() == 0) {
-        Akonadi::CollectionFetchJob *cfj = qobject_cast<Akonadi::CollectionFetchJob*>(job);
+        Akonadi::CollectionFetchJob *cfj = qobject_cast<Akonadi::CollectionFetchJob *>(job);
         Q_ASSERT(cfj);
-        foreach(const Akonadi::Collection &collection, cfj->collections()) {
+        foreach (const Akonadi::Collection &collection, cfj->collections()) {
             QSet<QString> mimeTypeSet = KCalCore::Incidence::mimeTypes().toSet();
             if (!mimeTypeSet.intersect(collection.contentMimeTypes().toSet()).isEmpty()) {
                 m_collections << collection;

@@ -19,7 +19,6 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef KCOLUMNFILTERPROXYMODEL_H
 #define KCOLUMNFILTERPROXYMODEL_H
 
@@ -41,37 +40,37 @@ class KColumnFilterProxyModelPrivate;
 class AKONADI_NEXT_EXPORT KColumnFilterProxyModel : public QSortFilterProxyModel
 {
 public:
-  explicit KColumnFilterProxyModel( QObject* parent = 0 );
-  virtual ~KColumnFilterProxyModel();
+    explicit KColumnFilterProxyModel(QObject *parent = 0);
+    virtual ~KColumnFilterProxyModel();
 
-  /**
-    Returns a vector containing the visible columns. If the vector is empy, all
-    columns are visible.
-  */
-  QVector<int> visbileColumns() const;
+    /**
+      Returns a vector containing the visible columns. If the vector is empy, all
+      columns are visible.
+    */
+    QVector<int> visbileColumns() const;
 
-  /**
-    Convenience function. Has the same effect as:
+    /**
+      Convenience function. Has the same effect as:
 
-    @code
-    setVisibleColumns( QVector<int>() << column );
-    @endcode
+      @code
+      setVisibleColumns( QVector<int>() << column );
+      @endcode
 
-    @see setVisbileColumns
-   */
-  void setVisibleColumn( int column );
+      @see setVisbileColumns
+     */
+    void setVisibleColumn(int column);
 
-  /**
-    Change the visible columns. Pass an empty vector to make all columns visible.
-   */
-  void setVisibleColumns( const QVector<int> &visibleColumns );
+    /**
+      Change the visible columns. Pass an empty vector to make all columns visible.
+     */
+    void setVisibleColumns(const QVector<int> &visibleColumns);
 
 protected:
-  bool filterAcceptsColumn( int column, const QModelIndex& parent ) const Q_DECL_OVERRIDE;
+    bool filterAcceptsColumn(int column, const QModelIndex &parent) const Q_DECL_OVERRIDE;
 
 private:
-  KColumnFilterProxyModelPrivate * const d_ptr;
-  Q_DECLARE_PRIVATE( KColumnFilterProxyModel )
+    KColumnFilterProxyModelPrivate *const d_ptr;
+    Q_DECLARE_PRIVATE(KColumnFilterProxyModel)
 };
 
 }

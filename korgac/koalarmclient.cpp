@@ -314,7 +314,7 @@ QStringList KOAlarmClient::dumpAlarms()
         end.toString();
 
     Alarm::List alarms = mCalendar->alarms(start, end);
-    if (alarms.isEmpty() ) {
+    if (alarms.isEmpty()) {
         lst << QLatin1String("No alarm found.");
     } else {
 

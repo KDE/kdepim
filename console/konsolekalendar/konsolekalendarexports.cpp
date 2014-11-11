@@ -32,7 +32,6 @@
  */
 #include "konsolekalendarexports.h"
 
-
 #include <qdebug.h>
 #include <klocale.h>
 
@@ -47,203 +46,203 @@
 using namespace KCalCore;
 using namespace std;
 
-KonsoleKalendarExports::KonsoleKalendarExports( KonsoleKalendarVariables *vars )
+KonsoleKalendarExports::KonsoleKalendarExports(KonsoleKalendarVariables *vars)
 {
-  m_variables = vars;
-  m_firstEntry = true;
+    m_variables = vars;
+    m_firstEntry = true;
 }
 
 KonsoleKalendarExports::~KonsoleKalendarExports()
 {
 }
 
-bool KonsoleKalendarExports::exportAsTxt( QTextStream *ts,
-                                          const Event::Ptr &event, const QDate &date )
+bool KonsoleKalendarExports::exportAsTxt(QTextStream *ts,
+        const Event::Ptr &event, const QDate &date)
 {
 
-  // Export "Text" Format:
-  //
-  // Date:\t<Incidence Date>(dddd yyyy-MM-dd)
-  // [\t<Incidence Start Time>(hh:mm) - <Incidence End Time>(hh:mm)]
-  // Summary:
-  // \t<Incidence Summary | "(no summary available)">
-  // Location:
-  // \t<Incidence Location | "(no location available)">
-  // Description:
-  // \t<Incidence Description | "(no description available)">
-  // UID:
-  // \t<Incidence UID>
-  // --------------------------------------------------
+    // Export "Text" Format:
+    //
+    // Date:\t<Incidence Date>(dddd yyyy-MM-dd)
+    // [\t<Incidence Start Time>(hh:mm) - <Incidence End Time>(hh:mm)]
+    // Summary:
+    // \t<Incidence Summary | "(no summary available)">
+    // Location:
+    // \t<Incidence Location | "(no location available)">
+    // Description:
+    // \t<Incidence Description | "(no description available)">
+    // UID:
+    // \t<Incidence UID>
+    // --------------------------------------------------
 
-  // Print Event Date (in user's preferred format)
-  *ts << i18n( "Date:" )
-      << "\t"
-      << KLocale::global()->formatDate( date )
-      << endl;
-
-  // Print Event Starttime - Endtime, for Non-All-Day Events Only
-  if ( !event->allDay() ) {
-    *ts << "\t"
-        << KLocale::global()->formatTime( event->dtStart().time() )
-        << " - "
-        << KLocale::global()->formatTime( event->dtEnd().time() );
-  }
-  *ts << endl;
-
-  // Print Event Summary
-  *ts << i18n( "Summary:" )
-      << endl;
-  if ( !event->summary().isEmpty() ) {
-    *ts << "\t"
-        << event->summary()
+    // Print Event Date (in user's preferred format)
+    *ts << i18n("Date:")
+        << "\t"
+        << KLocale::global()->formatDate(date)
         << endl;
-  } else {
-    *ts << "\t"
-        << i18n( "(no summary available)" )
-        << endl;
-  }
 
-  // Print Event Location
-  *ts << i18n( "Location:" )
-      << endl;
-  if ( !event->location().isEmpty() ) {
-    *ts << "\t"
-        << event->location()
-        << endl;
-  } else {
-    *ts << "\t"
-        << i18n( "(no location available)" )
-        << endl;
-  }
+    // Print Event Starttime - Endtime, for Non-All-Day Events Only
+    if (!event->allDay()) {
+        *ts << "\t"
+            << KLocale::global()->formatTime(event->dtStart().time())
+            << " - "
+            << KLocale::global()->formatTime(event->dtEnd().time());
+    }
+    *ts << endl;
 
-  // Print Event Description
-  *ts << i18n( "Description:" )
-      << endl;
-  if ( !event->description().isEmpty() ) {
-    *ts << "\t"
-        << event->description()
+    // Print Event Summary
+    *ts << i18n("Summary:")
         << endl;
-  } else {
-    *ts << "\t"
-        << i18n( "(no description available)" )
+    if (!event->summary().isEmpty()) {
+        *ts << "\t"
+            << event->summary()
+            << endl;
+    } else {
+        *ts << "\t"
+            << i18n("(no summary available)")
+            << endl;
+    }
+
+    // Print Event Location
+    *ts << i18n("Location:")
         << endl;
-  }
+    if (!event->location().isEmpty()) {
+        *ts << "\t"
+            << event->location()
+            << endl;
+    } else {
+        *ts << "\t"
+            << i18n("(no location available)")
+            << endl;
+    }
 
-  // Print Event UID
-  *ts << i18n( "UID:" )
-      << endl
-      << "\t"
-      << event->uid()
-      << endl;
+    // Print Event Description
+    *ts << i18n("Description:")
+        << endl;
+    if (!event->description().isEmpty()) {
+        *ts << "\t"
+            << event->description()
+            << endl;
+    } else {
+        *ts << "\t"
+            << i18n("(no description available)")
+            << endl;
+    }
 
-  // Print Line Separator
-  *ts << "--------------------------------------------------"
-      << endl;
+    // Print Event UID
+    *ts << i18n("UID:")
+        << endl
+        << "\t"
+        << event->uid()
+        << endl;
 
-  return true;
+    // Print Line Separator
+    *ts << "--------------------------------------------------"
+        << endl;
+
+    return true;
 }
 
-bool KonsoleKalendarExports::exportAsTxtShort( QTextStream *ts,
-                                               const Event::Ptr &event, const QDate &date,
-                                               bool sameday )
+bool KonsoleKalendarExports::exportAsTxtShort(QTextStream *ts,
+        const Event::Ptr &event, const QDate &date,
+        bool sameday)
 {
 
-  // Export "Text-Short" Format:
-  //
-  // [--------------------------------------------------]
-  // {<Incidence Date>(dddd yyyy-MM-dd)]
-  // [<Incidence Start Time>(hh:mm) - <Incidence End Time>(hh:mm) | "\t"]
-  // \t<Incidence Summary | \t>[, <Incidence Location>]
-  // \t\t<Incidence Description | "\t">
+    // Export "Text-Short" Format:
+    //
+    // [--------------------------------------------------]
+    // {<Incidence Date>(dddd yyyy-MM-dd)]
+    // [<Incidence Start Time>(hh:mm) - <Incidence End Time>(hh:mm) | "\t"]
+    // \t<Incidence Summary | \t>[, <Incidence Location>]
+    // \t\t<Incidence Description | "\t">
 
-  if ( !sameday ) {
-    // If a new date, then Print the Event Date (in user's preferred format)
-    *ts << KLocale::global()->formatDate( date ) << ":"
-        << endl;
-  }
-
-  // Print Event Starttime - Endtime
-  if ( !event->allDay() ) {
-    *ts << KLocale::global()->formatTime( event->dtStart().time() )
-        << " - "
-        << KLocale::global()->formatTime( event->dtEnd().time() );
-  } else {
-    *ts << i18n( "[all day]\t" );
-  }
-  *ts << "\t";
-
-  // Print Event Summary
-  *ts << event->summary().replace( QLatin1Char( '\n' ), QLatin1Char( ' ' ) );
-
-  // Print Event Location
-  if ( !event->location().isEmpty() ) {
-    if ( !event->summary().isEmpty() ) {
-      *ts << ", ";
+    if (!sameday) {
+        // If a new date, then Print the Event Date (in user's preferred format)
+        *ts << KLocale::global()->formatDate(date) << ":"
+            << endl;
     }
-    *ts << event->location().replace( QLatin1Char( '\n' ), QLatin1Char( ' ' ) );
-  }
-  *ts << endl;
 
-  // Print Event Description
-  if ( !event->description().isEmpty() ) {
-    *ts << "\t\t\t"
-        << event->description().replace( QLatin1Char( '\n' ), QLatin1Char( ' ' ) )
-        << endl;
-  }
+    // Print Event Starttime - Endtime
+    if (!event->allDay()) {
+        *ts << KLocale::global()->formatTime(event->dtStart().time())
+            << " - "
+            << KLocale::global()->formatTime(event->dtEnd().time());
+    } else {
+        *ts << i18n("[all day]\t");
+    }
+    *ts << "\t";
+
+    // Print Event Summary
+    *ts << event->summary().replace(QLatin1Char('\n'), QLatin1Char(' '));
+
+    // Print Event Location
+    if (!event->location().isEmpty()) {
+        if (!event->summary().isEmpty()) {
+            *ts << ", ";
+        }
+        *ts << event->location().replace(QLatin1Char('\n'), QLatin1Char(' '));
+    }
+    *ts << endl;
+
+    // Print Event Description
+    if (!event->description().isEmpty()) {
+        *ts << "\t\t\t"
+            << event->description().replace(QLatin1Char('\n'), QLatin1Char(' '))
+            << endl;
+    }
 
 // By user request, no longer print UIDs if export-type==short
 
-  // Print Separator
-  *ts << endl;
+    // Print Separator
+    *ts << endl;
 
-  return true;
+    return true;
 }
 
-QString KonsoleKalendarExports::processField( const QString &field,
-                                              const QString &dquote )
+QString KonsoleKalendarExports::processField(const QString &field,
+        const QString &dquote)
 {
-  // little function that processes a field for CSV compliance:
-  //   1. Replaces double quotes by a pair of consecutive double quotes
-  //   2. Surrounds field with double quotes
+    // little function that processes a field for CSV compliance:
+    //   1. Replaces double quotes by a pair of consecutive double quotes
+    //   2. Surrounds field with double quotes
 
-  QString double_dquote = dquote + dquote;
-  QString retField = field;
-  retField = dquote + retField.replace( dquote, double_dquote ) + dquote;
-  return retField;
+    QString double_dquote = dquote + dquote;
+    QString retField = field;
+    retField = dquote + retField.replace(dquote, double_dquote) + dquote;
+    return retField;
 }
 
 //@cond IGNORE
 #define pF( x )  processField( ( x ), dquote )
 //@endcond
 
-bool KonsoleKalendarExports::exportAsCSV( QTextStream *ts,
-                                          const Event::Ptr &event, const QDate &date )
+bool KonsoleKalendarExports::exportAsCSV(QTextStream *ts,
+        const Event::Ptr &event, const QDate &date)
 {
 
-  // Export "CSV" Format:
-  //
-  // startdate,starttime,enddate,endtime,summary,location,description,UID
+    // Export "CSV" Format:
+    //
+    // startdate,starttime,enddate,endtime,summary,location,description,UID
 
-  QString delim = i18n( "," );   // character to use as CSV field delimiter
-  QString dquote = i18n( "\"" ); // character to use to quote CSV fields
+    QString delim = i18n(",");     // character to use as CSV field delimiter
+    QString dquote = i18n("\"");   // character to use to quote CSV fields
 
-  if ( !event->allDay() ) {
-    *ts <<          pF( KLocale::global()->formatDate( date ) )
-        << delim << pF( KLocale::global()->formatTime( event->dtStart().time() ) )
-        << delim << pF( KLocale::global()->formatDate( date ) )
-        << delim << pF( KLocale::global()->formatTime( event->dtEnd().time() ) );
-  } else {
-    *ts <<          pF( KLocale::global()->formatDate( date ) )
-        << delim << pF( QLatin1String("") )
-        << delim << pF( KLocale::global()->formatDate( date ) )
-        << delim << pF( QLatin1String("") );
-  }
+    if (!event->allDay()) {
+        *ts <<          pF(KLocale::global()->formatDate(date))
+            << delim << pF(KLocale::global()->formatTime(event->dtStart().time()))
+            << delim << pF(KLocale::global()->formatDate(date))
+            << delim << pF(KLocale::global()->formatTime(event->dtEnd().time()));
+    } else {
+        *ts <<          pF(KLocale::global()->formatDate(date))
+            << delim << pF(QLatin1String(""))
+            << delim << pF(KLocale::global()->formatDate(date))
+            << delim << pF(QLatin1String(""));
+    }
 
-  *ts << delim << pF( event->summary().replace( QLatin1Char( '\n' ), QLatin1Char( ' ' ) ) )
-      << delim << pF( event->location().replace( QLatin1Char( '\n' ), QLatin1Char( ' ' ) ) )
-      << delim << pF( event->description().replace( QLatin1Char( '\n' ), QLatin1Char( ' ' ) ) )
-      << delim << pF( event->uid() )
-      << endl;
+    *ts << delim << pF(event->summary().replace(QLatin1Char('\n'), QLatin1Char(' ')))
+        << delim << pF(event->location().replace(QLatin1Char('\n'), QLatin1Char(' ')))
+        << delim << pF(event->description().replace(QLatin1Char('\n'), QLatin1Char(' ')))
+        << delim << pF(event->uid())
+        << endl;
 
-  return true;
+    return true;
 }

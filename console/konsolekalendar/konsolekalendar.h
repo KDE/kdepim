@@ -49,14 +49,14 @@ class QTextStream;
  */
 class KonsoleKalendar
 {
-  public:
+public:
     /**
      * Constructs a KonsoleKalendar object from command line arguments.
      *
      * @param variables is a pointer to a #KonsoleKalendarVariables object
      * containing all the command line arguments.
      */
-    explicit KonsoleKalendar( KonsoleKalendarVariables *variables );
+    explicit KonsoleKalendar(KonsoleKalendarVariables *variables);
 
     /**
      * Destructor
@@ -95,7 +95,7 @@ class KonsoleKalendar
      * @param  enddate   Ending date
      * @param  summary   Which summary event should have have
      */
-    bool isEvent( const QDateTime &startdate, const QDateTime &enddate, const QString &summary );
+    bool isEvent(const QDateTime &startdate, const QDateTime &enddate, const QString &summary);
 
     /**
      * Creates calendar file (If it doesn't exists)
@@ -107,7 +107,7 @@ class KonsoleKalendar
      */
     bool printCalendarList();
 
-  private:
+private:
     /**
      * Print event specs for dryrun and verbose options
      */
@@ -125,7 +125,7 @@ class KonsoleKalendar
      * @param eventList which event we should print
      * @param dt is the date to use when printing the event for recurring events
      */
-    bool printEventList( QTextStream *ts, KCalCore::Event::List *eventList, QDate dt );
+    bool printEventList(QTextStream *ts, KCalCore::Event::List *eventList, QDate dt);
 
     /**
      * Prints a single event in many formats
@@ -134,7 +134,7 @@ class KonsoleKalendar
      * @param event which we should print
      * @param dt is the date to use when printing the event for recurring events
      */
-    bool printEvent( QTextStream *ts, const KCalCore::Event::Ptr &event, QDate dt );
+    bool printEvent(QTextStream *ts, const KCalCore::Event::Ptr &event, QDate dt);
 
     /**
      * Variables that changes stuff in program

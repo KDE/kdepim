@@ -42,7 +42,7 @@
  */
 class KonsoleKalendarEpoch
 {
-  public:
+public:
     /**
      * Constructor.
      */
@@ -57,13 +57,13 @@ class KonsoleKalendarEpoch
      * Converts epoch time to QDateTime format.
      * @param epoch epoch time.
      */
-    static QDateTime epoch2QDateTime( uint epoch );
+    static QDateTime epoch2QDateTime(uint epoch);
 
     /**
      * Converts QT DateTime to epoch format.
      * @param dt is a QDateTime to convert to an epoch.
      */
-    static uint QDateTime2epoch( const QDateTime &dt );
+    static uint QDateTime2epoch(const QDateTime &dt);
 
 };
 

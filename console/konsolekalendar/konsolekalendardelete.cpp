@@ -42,9 +42,9 @@
 using namespace KCalCore;
 using namespace std;
 
-KonsoleKalendarDelete::KonsoleKalendarDelete( KonsoleKalendarVariables *vars )
+KonsoleKalendarDelete::KonsoleKalendarDelete(KonsoleKalendarVariables *vars)
 {
-  m_variables = vars;
+    m_variables = vars;
 }
 
 KonsoleKalendarDelete::~KonsoleKalendarDelete()
@@ -53,71 +53,71 @@ KonsoleKalendarDelete::~KonsoleKalendarDelete()
 
 bool KonsoleKalendarDelete::deleteEvent()
 {
-  bool status = false;
+    bool status = false;
 
-  qDebug() << "konsolekalendardelete.cpp::deleteEvent()";
+    qDebug() << "konsolekalendardelete.cpp::deleteEvent()";
 
-  /*
-   * Retrieve event on the basis of the unique string ID
-   */
-  Event::Ptr event = m_variables->getCalendar()->event( m_variables->getUID() );
-  if ( event ) {
-    if ( m_variables->isDryRun() ) {
-      cout << i18n( "Delete Event <Dry Run>:" ).data()
-           << endl;
-      printSpecs( event );
-    } else {
-      qDebug() << "konsolekalendardelete.cpp:deleteEvent() :"
-               << m_variables->getUID().data();
+    /*
+     * Retrieve event on the basis of the unique string ID
+     */
+    Event::Ptr event = m_variables->getCalendar()->event(m_variables->getUID());
+    if (event) {
+        if (m_variables->isDryRun()) {
+            cout << i18n("Delete Event <Dry Run>:").data()
+                 << endl;
+            printSpecs(event);
+        } else {
+            qDebug() << "konsolekalendardelete.cpp:deleteEvent() :"
+                     << m_variables->getUID().data();
 
-      if ( m_variables->isVerbose() ) {
-        cout << i18n( "Delete Event <Verbose>:" ).data()
-             << endl;
-        printSpecs( event );
-      }
+            if (m_variables->isVerbose()) {
+                cout << i18n("Delete Event <Verbose>:").data()
+                     << endl;
+                printSpecs(event);
+            }
 
-      QEventLoop loop;
-      Akonadi::CalendarBase::Ptr calendar = m_variables->getCalendar();
-      QObject::connect(calendar.data(), SIGNAL(deleteFinished(bool,QString)), &loop, SLOT(quit()));
-      calendar->deleteEvent( event );
-      loop.exec();
-      qDebug() << "Finished deleting";
-      status = calendar->incidence(event->uid()) == 0;
+            QEventLoop loop;
+            Akonadi::CalendarBase::Ptr calendar = m_variables->getCalendar();
+            QObject::connect(calendar.data(), SIGNAL(deleteFinished(bool,QString)), &loop, SLOT(quit()));
+            calendar->deleteEvent(event);
+            loop.exec();
+            qDebug() << "Finished deleting";
+            status = calendar->incidence(event->uid()) == 0;
 
-      if (status) {
-          cout << i18n( "Success: \"%1\" deleted", event->summary() ).data() << endl;
-      } else {
-          cout << i18n( "Error deleting: \"%1\"", event->summary() ).data() << endl;
-      }
+            if (status) {
+                cout << i18n("Success: \"%1\" deleted", event->summary()).data() << endl;
+            } else {
+                cout << i18n("Error deleting: \"%1\"", event->summary()).data() << endl;
+            }
+        }
     }
-  }
 
-  qDebug() << "konsolekalendardelete.cpp::deleteEvent() | Done";
-  return status;
+    qDebug() << "konsolekalendardelete.cpp::deleteEvent() | Done";
+    return status;
 }
 
-void KonsoleKalendarDelete::printSpecs( const Event::Ptr &event )
+void KonsoleKalendarDelete::printSpecs(const Event::Ptr &event)
 {
-  cout << i18n( "  UID:   %1",  m_variables->getUID() ).data()
-       << endl;
+    cout << i18n("  UID:   %1",  m_variables->getUID()).data()
+         << endl;
 
-  cout << i18n( "  What:  %1", event->summary() ).data()
-       << endl;
+    cout << i18n("  What:  %1", event->summary()).data()
+         << endl;
 
-  KDateTime::Spec timeSpec = m_variables->getCalendar()->timeSpec();
-  cout << i18n( "  Begin: %1",
-     event->dtStart().toTimeSpec( timeSpec ).dateTime().toString( Qt::TextDate ) ).data()
-       << endl;
+    KDateTime::Spec timeSpec = m_variables->getCalendar()->timeSpec();
+    cout << i18n("  Begin: %1",
+                 event->dtStart().toTimeSpec(timeSpec).dateTime().toString(Qt::TextDate)).data()
+         << endl;
 
-  cout << i18n( "  End:   %1",
-     event->dtEnd().toTimeSpec( timeSpec ).dateTime().toString( Qt::TextDate ) ).data()
-       << endl;
+    cout << i18n("  End:   %1",
+                 event->dtEnd().toTimeSpec(timeSpec).dateTime().toString(Qt::TextDate)).data()
+         << endl;
 
-  cout << i18n( "  Desc:  %1",
-     event->description() ).data()
-       << endl;
+    cout << i18n("  Desc:  %1",
+                 event->description()).data()
+         << endl;
 
-  cout << i18n( "  Location:  %1",
-     event->location() ).data()
-       << endl;
+    cout << i18n("  Location:  %1",
+                 event->location()).data()
+         << endl;
 }

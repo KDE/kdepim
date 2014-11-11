@@ -24,7 +24,8 @@
 
 #include "akonadi_next_export.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @short A proxy model that colors collection text if they're above a given quota
@@ -47,35 +48,35 @@ namespace Akonadi {
  */
 class AKONADI_NEXT_EXPORT QuotaColorProxyModel : public QIdentityProxyModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new quota color proxy model.
      *
      * @param parent The parent object.
      */
-    explicit QuotaColorProxyModel( QObject *parent = 0 );
+    explicit QuotaColorProxyModel(QObject *parent = 0);
 
     /**
      * Destroys the statistics tooltip proxy model.
      */
     virtual ~QuotaColorProxyModel();
 
-    void setWarningThreshold( qreal threshold );
+    void setWarningThreshold(qreal threshold);
     qreal warningThreshold() const;
 
-    void setWarningColor( const QColor &color );
+    void setWarningColor(const QColor &color);
     QColor warningColor() const;
 
-    QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-    void setSourceModel( QAbstractItemModel *sourceModel ) Q_DECL_OVERRIDE;
+    void setSourceModel(QAbstractItemModel *sourceModel) Q_DECL_OVERRIDE;
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
     //@endcond
 };
 

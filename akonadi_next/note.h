@@ -34,7 +34,7 @@ class AKONADI_NEXT_EXPORT Note
 {
 public:
 
-  static QString mimeType();
+    static QString mimeType();
 
 };
 

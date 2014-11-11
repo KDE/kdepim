@@ -45,17 +45,17 @@
  */
 class KonsoleKalendarChange
 {
-  public:
+public:
 
     /**
      * Constructs a KonsoleKalendarChange object from command line arguments.
      * @param vars is a KonsoleKalendarVariable object with Event information.
      */
-    explicit KonsoleKalendarChange( KonsoleKalendarVariables *vars );
+    explicit KonsoleKalendarChange(KonsoleKalendarVariables *vars);
 
-  /**
-     * Destructor
-     */
+    /**
+       * Destructor
+       */
     ~KonsoleKalendarChange();
 
     /**
@@ -63,13 +63,13 @@ class KonsoleKalendarChange
      */
     bool changeEvent();
 
-  private:
+private:
     /**
      * Print Event specs for dryrun and verbose options.
      *
      * @param event is a pointer to an Event to print.
      */
-    void printSpecs( const KCalCore::Event::Ptr &event );
+    void printSpecs(const KCalCore::Event::Ptr &event);
 
     /**
      * Print Event specs as provided from the command line arguments.

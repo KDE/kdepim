@@ -45,7 +45,7 @@
  */
 class KonsoleKalendarDelete
 {
-  public:
+public:
 
     /**
      * Constructs a KonsoleKalendarDelete object from command line arguments.
@@ -53,7 +53,7 @@ class KonsoleKalendarDelete
      * @param vars is a pointer to the #KonsoleKalendarVariables object
      * which contains all the command line arguments.
      */
-    explicit KonsoleKalendarDelete( KonsoleKalendarVariables *vars );
+    explicit KonsoleKalendarDelete(KonsoleKalendarVariables *vars);
 
     /**
      * Destructor
@@ -65,14 +65,14 @@ class KonsoleKalendarDelete
      */
     bool deleteEvent();
 
-  private:
+private:
 
     /**
      * Print event specs for dryrun and verbose options.
      *
      * @param event is a pointer to an Event that is to be printed.
      */
-    void printSpecs( const KCalCore::Event::Ptr &event );
+    void printSpecs(const KCalCore::Event::Ptr &event);
 
     //@cond PRIVATE
     KonsoleKalendarVariables *m_variables;

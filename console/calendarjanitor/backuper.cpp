@@ -80,7 +80,7 @@ void Backuper::backup(const QString &filename, const QList<Akonadi::Entity::Id> 
     m_filename = filename;
 
     Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob(Akonadi::Collection::root(),
-                                                                       Akonadi::CollectionFetchJob::Recursive);
+            Akonadi::CollectionFetchJob::Recursive);
 
     job->fetchScope().setContentMimeTypes(KCalCore::Incidence::mimeTypes());
     connect(job, &Akonadi::CollectionFetchJob::result, this, &Backuper::onCollectionsFetched);
@@ -91,10 +91,11 @@ void Backuper::onCollectionsFetched(KJob *job)
 {
     if (job->error() == 0) {
         QSet<QString> mimeTypeSet = KCalCore::Incidence::mimeTypes().toSet();
-        Akonadi::CollectionFetchJob *cfj = qobject_cast<Akonadi::CollectionFetchJob*>(job);
-        foreach(const Akonadi::Collection &collection, cfj->collections()) {
-            if (!m_requestedCollectionIds.isEmpty() && !m_requestedCollectionIds.contains(collection.id()))
+        Akonadi::CollectionFetchJob *cfj = qobject_cast<Akonadi::CollectionFetchJob *>(job);
+        foreach (const Akonadi::Collection &collection, cfj->collections()) {
+            if (!m_requestedCollectionIds.isEmpty() && !m_requestedCollectionIds.contains(collection.id())) {
                 continue;
+            }
             if (!mimeTypeSet.intersect(collection.contentMimeTypes().toSet()).isEmpty()) {
                 m_collections << collection;
                 loadCollection(collection);

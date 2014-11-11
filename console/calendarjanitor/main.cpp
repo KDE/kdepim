@@ -76,18 +76,17 @@ int main(int argv, char *argc[])
 {
     KLocalizedString::setApplicationDomain("calendarjanitor");
     K4AboutData aboutData(progName, 0,                 // internal program name
-                         ki18n(progDisplay),          // displayable program name.
-                         progVersion,                 // version string
-                         ki18n(progDesc),             // short program description
-                         K4AboutData::License_GPL,     // license type
-                         ki18n("(c) 2013, Sérgio Martins"),
-                         ki18n(0),                    // any free form text
-                         0,                           // program home page address
-                         "bugs.kde.org");
+                          ki18n(progDisplay),          // displayable program name.
+                          progVersion,                 // version string
+                          ki18n(progDesc),             // short program description
+                          K4AboutData::License_GPL,     // license type
+                          ki18n("(c) 2013, Sérgio Martins"),
+                          ki18n(0),                    // any free form text
+                          0,                           // program home page address
+                          "bugs.kde.org");
     aboutData.addAuthor(ki18n("Sérgio Martins"), ki18n("Maintainer"), "iamsergio@gmail.com", 0);
 
     KCmdLineArgs::init(argv, argc, &aboutData, KCmdLineArgs::CmdLineArgNone);
-
 
     KCmdLineOptions options;
     options.add("collections <ids>", ki18n("List of collection ids to scan"));
@@ -107,7 +106,7 @@ int main(int argv, char *argc[])
                           "$ calendarjanitor --backup backup.ics --collections 10,20\n\n"
                           "Strip alarms from incidences older than 365 days:\n"
                           "$ calendarjanitor --strip-old-alarms --collections 10,20")
-                );
+               );
 
     KCmdLineArgs::addCmdLineOptions(options);
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
@@ -174,7 +173,7 @@ int main(int argv, char *argc[])
         janitorOptions.setAction(Options::ActionScan);
     }
 
-    switch(janitorOptions.action()) {
+    switch (janitorOptions.action()) {
     case Options::ActionBackup: {
         Backuper *backuper = new Backuper();
         backuper->backup(backupFile, janitorOptions.collections());
@@ -189,7 +188,6 @@ int main(int argv, char *argc[])
     default:
         Q_ASSERT(false);
     }
-
 
     return app.exec();
 }

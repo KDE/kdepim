@@ -17,7 +17,6 @@
     02110-1301, USA.
 */
 
-
 #ifndef AMAZING_DELEGATE_H
 #define AMAZING_DELEGATE_H
 
@@ -27,13 +26,13 @@
 
 class AKONADI_NEXT_EXPORT AmazingContactItemDelegate : public QStyledItemDelegate
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit AmazingContactItemDelegate(QObject* parent = 0);
+    explicit AmazingContactItemDelegate(QObject *parent = 0);
 
-  void paint( QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index ) const Q_DECL_OVERRIDE;
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
 
-  QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const Q_DECL_OVERRIDE;
+    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
 
 };
 

@@ -29,76 +29,75 @@
 
 using namespace Akonadi;
 
-AmazingContactItemDelegate::AmazingContactItemDelegate(QObject* parent): QStyledItemDelegate(parent)
+AmazingContactItemDelegate::AmazingContactItemDelegate(QObject *parent): QStyledItemDelegate(parent)
 {
 
 }
 
-void AmazingContactItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
+void AmazingContactItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
 
-  Item item = index.data(EntityTreeModel::ItemRole).value<Item>();
+    Item item = index.data(EntityTreeModel::ItemRole).value<Item>();
 
-  if (!item.isValid())
-      QStyledItemDelegate::paint(painter, option, index);
+    if (!item.isValid()) {
+        QStyledItemDelegate::paint(painter, option, index);
+    }
 
-  if (!item.hasPayload<KContacts::Addressee>())
-  {
-    qWarning() << "Not a KContacts::Addressee" << item.id() << item.remoteId();
-    return;
-  }
+    if (!item.hasPayload<KContacts::Addressee>()) {
+        qWarning() << "Not a KContacts::Addressee" << item.id() << item.remoteId();
+        return;
+    }
 
-  KContacts::Addressee addressee = item.payload<KContacts::Addressee>();
+    KContacts::Addressee addressee = item.payload<KContacts::Addressee>();
 
-  painter->save();
+    painter->save();
 
-  if (option.state & QStyle::State_Selected)
-    painter->fillRect(option.rect, option.palette.highlight());
+    if (option.state & QStyle::State_Selected) {
+        painter->fillRect(option.rect, option.palette.highlight());
+    }
 
-  int PaintingScaleFactor = 2;
-  int yOffset = (option.rect.height() - PaintingScaleFactor) / 2;
-  painter->translate(option.rect.x(), option.rect.y() + yOffset);
+    int PaintingScaleFactor = 2;
+    int yOffset = (option.rect.height() - PaintingScaleFactor) / 2;
+    painter->translate(option.rect.x(), option.rect.y() + yOffset);
 
-  Collection parentCollection = index.data(EntityTreeModel::ParentCollectionRole).value<Collection>();
+    Collection parentCollection = index.data(EntityTreeModel::ParentCollectionRole).value<Collection>();
 
-  QString name = addressee.givenName() + QLatin1Char( ' ' ) + addressee.familyName();
+    QString name = addressee.givenName() + QLatin1Char(' ') + addressee.familyName();
 
-  KContacts::Picture pic =addressee.photo();
+    KContacts::Picture pic = addressee.photo();
 
-  if (!pic.isEmpty())
-  {
-    QImage image = pic.data();
-    painter->drawImage(QRect(0, 0, 40, 40), image);
-  }
+    if (!pic.isEmpty()) {
+        QImage image = pic.data();
+        painter->drawImage(QRect(0, 0, 40, 40), image);
+    }
 
-  const QString parentName = parentCollection.displayName();
+    const QString parentName = parentCollection.displayName();
 
-  QString email = addressee.preferredEmail();
-  if (email.isEmpty())
-    email =
-      xi18nc( "An email address is not known for a contact. This is the default text provided",
-             "<placeholder>no email</placeholder>" );
+    QString email = addressee.preferredEmail();
+    if (email.isEmpty())
+        email =
+            xi18nc("An email address is not known for a contact. This is the default text provided",
+                   "<placeholder>no email</placeholder>");
 
-  painter->drawText(50, 0, name);
-  painter->drawText(50, 15, email);
-  painter->drawText(50, 30, parentName);
+    painter->drawText(50, 0, name);
+    painter->drawText(50, 15, email);
+    painter->drawText(50, 30, parentName);
 
-
-  painter->restore();
+    painter->restore();
 
 }
 
-
-QSize AmazingContactItemDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
+QSize AmazingContactItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-  Item item = index.data(EntityTreeModel::ItemRole).value<Item>();
+    Item item = index.data(EntityTreeModel::ItemRole).value<Item>();
 
-  if (!item.isValid())
-    return QStyledItemDelegate::sizeHint(option, index);
+    if (!item.isValid()) {
+        return QStyledItemDelegate::sizeHint(option, index);
+    }
 
-  QSize s = QStyledItemDelegate::sizeHint(option, index);
-  s.setHeight( s.height() * 4.5);
-  return s;
+    QSize s = QStyledItemDelegate::sizeHint(option, index);
+    s.setHeight(s.height() * 4.5);
+    return s;
 
 }
 

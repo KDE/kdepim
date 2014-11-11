@@ -174,7 +174,6 @@ void NoteDisplayAttribute::setAutoIndent(bool b)
     mAutoIndent = b;
 }
 
-
 void NoteDisplayAttribute::setFont(const QFont &f)
 {
     mFont = f;
@@ -258,17 +257,17 @@ bool NoteDisplayAttribute::keepBelow() const
 bool NoteDisplayAttribute::operator ==(const NoteDisplayAttribute &other) const
 {
     return (backgroundColor() == other.backgroundColor()) &&
-            (foregroundColor() == other.foregroundColor()) &&
-            (size() == other.size()) &&
-            (rememberDesktop() == other.rememberDesktop()) &&
-            (tabSize() == other.tabSize()) &&
-            (font() == other.font()) &&
-            (titleFont() == other.titleFont()) &&
-            (desktop() == other.desktop()) &&
-            (isHidden() == other.isHidden()) &&
-            (position() == other.position()) &&
-            (showInTaskbar() == other.showInTaskbar()) &&
-            (keepAbove() == other.keepAbove()) &&
-            (keepBelow() == other.keepBelow()) &&
-            (autoIndent() == other.autoIndent());
+           (foregroundColor() == other.foregroundColor()) &&
+           (size() == other.size()) &&
+           (rememberDesktop() == other.rememberDesktop()) &&
+           (tabSize() == other.tabSize()) &&
+           (font() == other.font()) &&
+           (titleFont() == other.titleFont()) &&
+           (desktop() == other.desktop()) &&
+           (isHidden() == other.isHidden()) &&
+           (position() == other.position()) &&
+           (showInTaskbar() == other.showInTaskbar()) &&
+           (keepAbove() == other.keepAbove()) &&
+           (keepBelow() == other.keepBelow()) &&
+           (autoIndent() == other.autoIndent());
 }

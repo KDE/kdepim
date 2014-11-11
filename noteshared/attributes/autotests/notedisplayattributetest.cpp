@@ -45,9 +45,9 @@ void NoteDisplayAttributeTest::shouldHaveDefaultValue()
     QCOMPARE(attribute.tabSize(), 4);
     QCOMPARE(attribute.font(), QFontDatabase::systemFont(QFontDatabase::GeneralFont));
     QCOMPARE(attribute.titleFont(), QFontDatabase::systemFont(QFontDatabase::TitleFont));
-    QCOMPARE(attribute.size(), QSize(300,300));
+    QCOMPARE(attribute.size(), QSize(300, 300));
     QCOMPARE(attribute.desktop(), -10);
-    QCOMPARE(attribute.position(), QPoint( -10000, -10000 ));
+    QCOMPARE(attribute.position(), QPoint(-10000, -10000));
 }
 
 void NoteDisplayAttributeTest::shouldEqualWhenCloning()
@@ -59,14 +59,14 @@ void NoteDisplayAttributeTest::shouldEqualWhenCloning()
 
     attribute.setBackgroundColor(QColor("#454545"));
     attribute.setForegroundColor(QColor("#454545"));
-    attribute.setSize(QSize(50,70));
+    attribute.setSize(QSize(50, 70));
     attribute.setRememberDesktop(false);
     attribute.setTabSize(8);
     attribute.setFont(QFont());
     attribute.setTitleFont(QFont());
     attribute.setDesktop(7);
     attribute.setIsHidden(true);
-    attribute.setPosition(QPoint(7,8));
+    attribute.setPosition(QPoint(7, 8));
     attribute.setShowInTaskbar(false);
     attribute.setKeepAbove(false);
     attribute.setKeepBelow(false);
@@ -75,6 +75,5 @@ void NoteDisplayAttributeTest::shouldEqualWhenCloning()
     QVERIFY(attribute == *attr2);
     delete attr2;
 }
-
 
 QTEST_MAIN(NoteDisplayAttributeTest)
