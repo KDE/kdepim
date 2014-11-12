@@ -235,7 +235,7 @@ SplitterCollapser::SplitterCollapser(QWidget *childWidget, QSplitter *splitter)
         break;
     }
 
-    connect(this, SIGNAL(clicked()), SLOT(slotClicked()));
+    connect(this, &SplitterCollapser::clicked, this, &SplitterCollapser::slotClicked);
     show();
 }
 
