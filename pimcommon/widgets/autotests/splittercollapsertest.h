@@ -40,8 +40,8 @@ public:
     ~SplitterCollapserTest();
 
 private Q_SLOTS:
-    void shouldHasDefaultValue();
-    void shouldCollapsedWhenClickOnButton();
+    void shouldHaveDefaultValue();
+    void shouldCollapseWhenClickOnButton();
     void shouldRestoreCorrectPosition();
     void shouldRestoreCorrectPositionForFirstWidget();
     void shouldTestVerticalSplitterFirstWidget();
