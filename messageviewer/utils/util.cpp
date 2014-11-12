@@ -138,7 +138,7 @@ QString Util::fileNameForMimetype(const QString &mimeType, int iconSize,
 #include <QDesktopServices>
 #endif
 
-bool Util::handleUrlWithQDesktopServices(const KUrl &url)
+bool Util::handleUrlWithQDesktopServices(const QUrl &url)
 {
 #if defined Q_OS_WIN || defined Q_OS_MACX
     QDesktopServices::openUrl(url);

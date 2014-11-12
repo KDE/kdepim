@@ -90,7 +90,7 @@ bool MESSAGEVIEWER_EXPORT checkOverwrite(const QUrl &url, QWidget *w);
      * on Windows and MacOSX.
      * Returns false if it did nothing (such as on other platforms).
      */
-bool MESSAGEVIEWER_EXPORT handleUrlWithQDesktopServices(const KUrl &url);
+bool MESSAGEVIEWER_EXPORT handleUrlWithQDesktopServices(const QUrl &url);
 
 /**
      * evaluates GlobalSettings->disregardUmask()

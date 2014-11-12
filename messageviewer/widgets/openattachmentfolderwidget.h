@@ -19,7 +19,7 @@
 #define OPENATTACHMENTFOLDERWIDGET_H
 
 #include <KMessageWidget>
-#include <KUrl>
+#include <QUrl>
 class QTimer;
 namespace MessageViewer
 {
@@ -30,7 +30,7 @@ public:
     explicit OpenAttachmentFolderWidget(QWidget *parent = 0);
     ~OpenAttachmentFolderWidget();
 
-    void setFolder(const KUrl &url);
+    void setFolder(const QUrl &url);
 
 public slots:
     void slotShowWarning();
@@ -41,7 +41,7 @@ private slots:
     void slotTimeOut();
     void slotExplicitlyClosed();
 private:
-    KUrl mUrl;
+    QUrl mUrl;
     QTimer *mTimer;
 };
 }

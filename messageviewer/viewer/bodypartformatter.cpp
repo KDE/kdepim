@@ -38,7 +38,6 @@
 #include <kmime/kmime_content.h>
 
 #include <qdebug.h>
-#include <kascii.h>
 
 using namespace MessageViewer;
 

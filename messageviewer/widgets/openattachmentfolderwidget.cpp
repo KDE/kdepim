@@ -60,7 +60,7 @@ void OpenAttachmentFolderWidget::slotExplicitlyClosed()
     }
 }
 
-void OpenAttachmentFolderWidget::setFolder(const KUrl &url)
+void OpenAttachmentFolderWidget::setFolder(const QUrl &url)
 {
     mUrl = url;
 }

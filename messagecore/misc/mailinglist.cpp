@@ -3,7 +3,7 @@
 
 #include <kconfig.h>
 #include <kconfiggroup.h>
-#include <kurl.h>
+#include <QUrl>
 #include <qdebug.h>
 
 #include <QtCore/QSharedData>
@@ -277,13 +277,13 @@ public:
 
     Features mFeatures;
     Handler mHandler;
-    KUrl::List mPostUrls;
-    KUrl::List mSubscribeUrls;
-    KUrl::List mUnsubscribeUrls;
-    KUrl::List mHelpUrls;
-    KUrl::List mArchiveUrls;
-    KUrl::List mOwnerUrls;
-    KUrl::List mArchivedAtUrls;
+    QList<QUrl> mPostUrls;
+    QList<QUrl> mSubscribeUrls;
+    QList<QUrl> mUnsubscribeUrls;
+    QList<QUrl> mHelpUrls;
+    QList<QUrl> mArchiveUrls;
+    QList<QUrl> mOwnerUrls;
+    QList<QUrl> mArchivedAtUrls;
     QString mId;
 };
 
@@ -292,31 +292,31 @@ MailingList MailingList::detect(const KMime::Message::Ptr &message)
     MailingList mailingList;
 
     if (message->headerByType("List-Post")) {
-        mailingList.setPostUrls(headerToAddress(message->headerByType("List-Post")->asUnicodeString()));
+        mailingList.setPostUrls(QUrl::fromStringList(headerToAddress(message->headerByType("List-Post")->asUnicodeString())));
     }
 
     if (message->headerByType("List-Help")) {
-        mailingList.setHelpUrls(headerToAddress(message->headerByType("List-Help")->asUnicodeString()));
+        mailingList.setHelpUrls(QUrl::fromStringList(headerToAddress(message->headerByType("List-Help")->asUnicodeString())));
     }
 
     if (message->headerByType("List-Subscribe")) {
-        mailingList.setSubscribeUrls(headerToAddress(message->headerByType("List-Subscribe")->asUnicodeString()));
+        mailingList.setSubscribeUrls(QUrl::fromStringList(headerToAddress(message->headerByType("List-Subscribe")->asUnicodeString())));
     }
 
     if (message->headerByType("List-Unsubscribe")) {
-        mailingList.setUnsubscribeUrls(headerToAddress(message->headerByType("List-Unsubscribe")->asUnicodeString()));
+        mailingList.setUnsubscribeUrls(QUrl::fromStringList(headerToAddress(message->headerByType("List-Unsubscribe")->asUnicodeString())));
     }
 
     if (message->headerByType("List-Archive")) {
-        mailingList.setArchiveUrls(headerToAddress(message->headerByType("List-Archive")->asUnicodeString()));
+        mailingList.setArchiveUrls(QUrl::fromStringList(headerToAddress(message->headerByType("List-Archive")->asUnicodeString())));
     }
 
     if (message->headerByType("List-Owner")) {
-        mailingList.setOwnerUrls(headerToAddress(message->headerByType("List-Owner")->asUnicodeString()));
+        mailingList.setOwnerUrls(QUrl::fromStringList(headerToAddress(message->headerByType("List-Owner")->asUnicodeString())));
     }
 
     if (message->headerByType("Archived-At")) {
-        mailingList.setArchivedAtUrls(headerToAddress(message->headerByType("Archived-At")->asUnicodeString()));
+        mailingList.setArchivedAtUrls(QUrl::fromStringList(headerToAddress(message->headerByType("Archived-At")->asUnicodeString())));
     }
 
     if (message->headerByType("List-Id")) {
@@ -400,7 +400,7 @@ MailingList::Handler MailingList::handler() const
     return d->mHandler;
 }
 
-void MailingList::setPostUrls(const KUrl::List &urls)
+void MailingList::setPostUrls(const QList<QUrl> &urls)
 {
     d->mFeatures |= Post;
 
@@ -411,12 +411,12 @@ void MailingList::setPostUrls(const KUrl::List &urls)
     d->mPostUrls = urls;
 }
 
-KUrl::List MailingList::postUrls() const
+QList<QUrl> MailingList::postUrls() const
 {
     return d->mPostUrls;
 }
 
-void MailingList::setSubscribeUrls(const KUrl::List &urls)
+void MailingList::setSubscribeUrls(const QList<QUrl> &urls)
 {
     d->mFeatures |= Subscribe;
 
@@ -427,12 +427,12 @@ void MailingList::setSubscribeUrls(const KUrl::List &urls)
     d->mSubscribeUrls = urls;
 }
 
-KUrl::List MailingList::subscribeUrls() const
+QList<QUrl> MailingList::subscribeUrls() const
 {
     return d->mSubscribeUrls;
 }
 
-void MailingList::setUnsubscribeUrls(const KUrl::List &urls)
+void MailingList::setUnsubscribeUrls(const QList<QUrl> &urls)
 {
     d->mFeatures |= Unsubscribe;
 
@@ -443,12 +443,12 @@ void MailingList::setUnsubscribeUrls(const KUrl::List &urls)
     d->mUnsubscribeUrls = urls;
 }
 
-KUrl::List MailingList::unsubscribeUrls() const
+QList<QUrl> MailingList::unsubscribeUrls() const
 {
     return d->mUnsubscribeUrls;
 }
 
-void MailingList::setHelpUrls(const KUrl::List &urls)
+void MailingList::setHelpUrls(const QList<QUrl> &urls)
 {
     d->mFeatures |= Help;
 
@@ -459,12 +459,12 @@ void MailingList::setHelpUrls(const KUrl::List &urls)
     d->mHelpUrls = urls;
 }
 
-KUrl::List MailingList::helpUrls() const
+QList<QUrl> MailingList::helpUrls() const
 {
     return d->mHelpUrls;
 }
 
-void MailingList::setArchiveUrls(const KUrl::List &urls)
+void MailingList::setArchiveUrls(const QList<QUrl> &urls)
 {
     d->mFeatures |= Archive;
 
@@ -475,12 +475,12 @@ void MailingList::setArchiveUrls(const KUrl::List &urls)
     d->mArchiveUrls = urls;
 }
 
-KUrl::List MailingList::archiveUrls() const
+QList<QUrl> MailingList::archiveUrls() const
 {
     return d->mArchiveUrls;
 }
 
-void MailingList::setOwnerUrls(const KUrl::List &urls)
+void MailingList::setOwnerUrls(const QList<QUrl> &urls)
 {
     d->mFeatures |= Owner;
 
@@ -491,12 +491,12 @@ void MailingList::setOwnerUrls(const KUrl::List &urls)
     d->mOwnerUrls = urls;
 }
 
-KUrl::List MailingList::ownerUrls() const
+QList<QUrl> MailingList::ownerUrls() const
 {
     return d->mOwnerUrls;
 }
 
-void MailingList::setArchivedAtUrls(const KUrl::List &urls)
+void MailingList::setArchivedAtUrls(const QList<QUrl> &urls)
 {
     d->mFeatures |= ArchivedAt;
 
@@ -507,7 +507,7 @@ void MailingList::setArchivedAtUrls(const KUrl::List &urls)
     d->mArchivedAtUrls = urls;
 }
 
-KUrl::List MailingList::archivedAtUrls() const
+QList<QUrl> MailingList::archivedAtUrls() const
 {
     return d->mArchivedAtUrls;
 }
@@ -533,42 +533,42 @@ void MailingList::writeConfig(KConfigGroup &group) const
     group.writeEntry("MailingListFeatures", static_cast<int>(d->mFeatures));
     group.writeEntry("MailingListHandler", static_cast<int>(d->mHandler));
     group.writeEntry("MailingListId", d->mId);
-    QStringList lst = d->mPostUrls.toStringList();
+    QStringList lst = QUrl::toStringList(d->mPostUrls);
     if (!lst.isEmpty()) {
         group.writeEntry("MailingListPostingAddress", lst);
     } else {
         group.deleteEntry("MailingListPostingAddress");
     }
 
-    lst = d->mSubscribeUrls.toStringList();
+    lst = QUrl::toStringList(d->mSubscribeUrls);
     if (!lst.isEmpty()) {
         group.writeEntry("MailingListSubscribeAddress", lst);
     } else {
         group.deleteEntry("MailingListSubscribeAddress");
     }
 
-    lst = d->mUnsubscribeUrls.toStringList();
+    lst = QUrl::toStringList(d->mUnsubscribeUrls);
     if (!lst.isEmpty()) {
         group.writeEntry("MailingListUnsubscribeAddress", lst);
     } else {
         group.deleteEntry("MailingListUnsubscribeAddress");
     }
 
-    lst = d->mArchiveUrls.toStringList();
+    lst = QUrl::toStringList(d->mArchiveUrls);
     if (!lst.isEmpty()) {
         group.writeEntry("MailingListArchiveAddress", lst);
     } else {
         group.deleteEntry("MailingListArchiveAddress");
     }
 
-    lst = d->mOwnerUrls.toStringList();
+    lst = QUrl::toStringList(d->mOwnerUrls);
     if (!lst.isEmpty()) {
         group.writeEntry("MailingListOwnerAddress", lst);
     } else {
         group.deleteEntry("MailingListOwnerAddress");
     }
 
-    lst = d->mHelpUrls.toStringList();
+    lst = QUrl::toStringList(d->mHelpUrls);
     if (!lst.isEmpty()) {
         group.writeEntry("MailingListHelpAddress", lst);
     } else {
@@ -587,10 +587,10 @@ void MailingList::readConfig(const KConfigGroup &group)
     d->mHandler = static_cast<MailingList::Handler>(group.readEntry("MailingListHandler",
                   static_cast<int>(MailingList::KMail)));
     d->mId = group.readEntry("MailingListId");
-    d->mPostUrls = group.readEntry("MailingListPostingAddress", QStringList());
-    d->mSubscribeUrls = group.readEntry("MailingListSubscribeAddress", QStringList());
-    d->mUnsubscribeUrls = group.readEntry("MailingListUnsubscribeAddress", QStringList());
-    d->mArchiveUrls = group.readEntry("MailingListArchiveAddress", QStringList());
-    d->mOwnerUrls = group.readEntry("MailingListOwnerddress", QStringList());
-    d->mHelpUrls = group.readEntry("MailingListHelpAddress", QStringList());
+    d->mPostUrls = QUrl::fromStringList(group.readEntry("MailingListPostingAddress", QStringList()));
+    d->mSubscribeUrls = QUrl::fromStringList(group.readEntry("MailingListSubscribeAddress", QStringList()));
+    d->mUnsubscribeUrls = QUrl::fromStringList(group.readEntry("MailingListUnsubscribeAddress", QStringList()));
+    d->mArchiveUrls = QUrl::fromStringList(group.readEntry("MailingListArchiveAddress", QStringList()));
+    d->mOwnerUrls = QUrl::fromStringList(group.readEntry("MailingListOwnerddress", QStringList()));
+    d->mHelpUrls = QUrl::fromStringList(group.readEntry("MailingListHelpAddress", QStringList()));
 }

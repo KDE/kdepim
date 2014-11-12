@@ -34,8 +34,6 @@
 #include "partnodebodypart.h"
 #include "viewer/nodehelper.h"
 
-#include <kurl.h>
-
 #include <kmime/kmime_content.h>
 
 #include <QDebug>

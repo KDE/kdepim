@@ -49,8 +49,6 @@ int main(int argc, char **argv)
     parser.process(app);
     aboutData.processCommandLine(&parser);
 
-    //KCmdLineArgs::addStdCmdLineOptions();
-
     KMime::Message *msg = new KMime::Message;
     if (parser.positionalArguments().count() == 0) {
         QByteArray mail = "From: dfaure@example.com\n"

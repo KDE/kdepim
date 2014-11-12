@@ -5,7 +5,7 @@
 #include "messagecore_export.h"
 
 #include <kmime/kmime_message.h>
-#include <kurl.h>
+#include <QUrl>
 
 #include <QtCore/QByteArray>
 #include <QtCore/QSharedDataPointer>
@@ -102,72 +102,72 @@ public:
     /**
      * Sets the list of List-Post @p urls.
      */
-    void setPostUrls(const KUrl::List &urls);
+    void setPostUrls(const QList<QUrl> &urls);
 
     /**
      * Returns the list of List-Post urls.
      */
-    KUrl::List postUrls() const;
+    QList<QUrl> postUrls() const;
 
     /**
      * Sets the list of List-Subscribe @p urls.
      */
-    void setSubscribeUrls(const KUrl::List &urls);
+    void setSubscribeUrls(const QList<QUrl> &urls);
 
     /**
      * Returns the list of List-Subscribe urls.
      */
-    KUrl::List subscribeUrls() const;
+    QList<QUrl> subscribeUrls() const;
 
     /**
      * Sets the list of List-Unsubscribe @p urls.
      */
-    void setUnsubscribeUrls(const KUrl::List &urls);
+    void setUnsubscribeUrls(const QList<QUrl> &urls);
 
     /**
      * Returns the list of List-Unsubscribe urls.
      */
-    KUrl::List unsubscribeUrls() const;
+    QList<QUrl> unsubscribeUrls() const;
 
     /**
      * Sets the list of List-Help @p urls.
      */
-    void setHelpUrls(const KUrl::List &urls);
+    void setHelpUrls(const QList<QUrl> &urls);
 
     /**
      * Returns the list of List-Help urls.
      */
-    KUrl::List helpUrls() const;
+    QList<QUrl> helpUrls() const;
 
     /**
      * Sets the list of List-Archive @p urls.
      */
-    void setArchiveUrls(const KUrl::List &urls);
+    void setArchiveUrls(const QList<QUrl> &urls);
 
     /**
      * Returns the list of List-Archive urls.
      */
-    KUrl::List archiveUrls() const;
+    QList<QUrl> archiveUrls() const;
 
     /**
      * Sets the list of List-Owner @p urls.
      */
-    void setOwnerUrls(const KUrl::List &urls);
+    void setOwnerUrls(const QList<QUrl> &urls);
 
     /**
      * Returns the list of List-Owner urls.
      */
-    KUrl::List ownerUrls() const;
+    QList<QUrl> ownerUrls() const;
 
     /**
      * Sets the Archived-At @p url.
      */
-    void setArchivedAtUrls(const KUrl::List &url);
+    void setArchivedAtUrls(const QList<QUrl> &url);
 
     /**
      * Returns the Archived-At @p url.
      */
-    KUrl::List archivedAtUrls() const;
+    QList<QUrl> archivedAtUrls() const;
 
     /**
      * Sets the @p id of the mailing list.

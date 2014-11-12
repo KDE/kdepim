@@ -321,12 +321,12 @@ uint FolderCollection::identity() const
 QString FolderCollection::mailingListPostAddress() const
 {
     if (mMailingList.features() & MailingList::Post) {
-        KUrl::List post = mMailingList.postUrls();
-        KUrl::List::const_iterator end(post.constEnd());
-        for (KUrl::List::const_iterator it = post.constBegin(); it != end; ++it) {
+        QList<QUrl> post = mMailingList.postUrls();
+        QList<QUrl>::const_iterator end(post.constEnd());
+        for (QList<QUrl>::const_iterator it = post.constBegin(); it != end; ++it) {
             // We check for isEmpty because before 3.3 postAddress was just an
             // email@kde.org and that leaves protocol() field in the kurl class
-            const QString protocol = (*it).protocol();
+            const QString protocol = (*it).scheme();
             if (protocol == QLatin1String("mailto") || protocol.isEmpty()) {
                 return (*it).path();
             }
