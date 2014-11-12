@@ -8,6 +8,11 @@ endif ()
 #add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 
+include_directories(
+  ${CMAKE_SOURCE_DIR}/pimcommon
+)
+
+
 add_definitions( ${KDE4_ENABLE_EXCEPTIONS} )
 add_definitions( -DGPGMEPP_ERR_SOURCE_DEFAULT=13 ) # 13 is GPG_ERR_SOURCE_KLEO, even if gpg-error's too old to know about
 #parts of Boost don't build with the gcc pedantic option, so remove that option
@@ -99,7 +104,7 @@ kde4_add_ui_files(libkleo_ui_common_SRCS
 )
 
 set(kleo_LIB_SRCS ${libkleo_core_SRCS} ${libkleo_ui_common_SRCS} ${libkleo_backend_qgpgme_SRCS})
-set(kleo_LIB_LIBS ${KDE4_KDEUI_LIBS} ${QGPGME_LIBRARIES})
+set(kleo_LIB_LIBS ${KDE4_KDEUI_LIBS} ${QGPGME_LIBRARIES} pimcommon)
 if ( NOT KDEPIM_ONLY_KLEO )
    set( kleo_LIB_SRCS ${kleo_LIB_SRCS} ${libkleo_backend_chiasmus_SRCS} ${libkleo_ui_SRCS})
    set( kleo_LIB_LIBS ${kleo_LIB_LIBS} ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS})
