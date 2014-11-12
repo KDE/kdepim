@@ -91,12 +91,6 @@ if(RUNTIME_PLUGINS_STATIC)
   target_link_libraries(korgac akonadi_serializer_kcalcore)
 endif()
 
-# TODO: move this to FindQt4.cmake
-find_library(QT_QMAEMO5_LIBRARY QtMaemo5 HINTS ${QT_LIBRARY_DIR})
-if(QT_QMAEMO5_LIBRARY)
-  target_link_libraries(korgac ${QT_QMAEMO5_LIBRARY})
-endif()
-
 if(KORGAC_AKONADI_AGENT)
   install(TARGETS
     korgac
