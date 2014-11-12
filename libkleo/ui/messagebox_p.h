@@ -34,6 +34,7 @@
 #define __KLEO_UI_MESSAGEBOX_P_H__
 
 #include <KDialog>
+#include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
 
 class QString;
 class KTextEdit;
@@ -66,7 +67,7 @@ private:
     void readConfig();
 
     QString m_log;
-    KTextEdit *m_textEdit;
+    PimCommon::RichTextEditorWidget *m_textEdit;
 };
 
 }

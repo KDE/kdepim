@@ -9,6 +9,7 @@ add_definitions(-DTRANSLATION_DOMAIN=\"libkleopatra\")
 #add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 kde_enable_exceptions()
+
 add_definitions( -DGPGMEPP_ERR_SOURCE_DEFAULT=13 ) # 13 is GPG_ERR_SOURCE_KLEO, even if gpg-error's too old to know about
 #parts of Boost don't build with the gcc pedantic option, so remove that option
 string(REPLACE "-pedantic" "" FOO "${CMAKE_CXX_FLAGS}")
@@ -101,7 +102,7 @@ ki18n_wrap_ui(libkleo_ui_common_SRCS
 )
 
 set(kleo_LIB_SRCS ${libkleo_core_SRCS} ${libkleo_ui_common_SRCS} ${libkleo_backend_qgpgme_SRCS})
-set(kleo_LIB_LIBS  KF5::QGpgme)
+set(kleo_LIB_LIBS  KF5::QGpgme pimcommon)
 if ( NOT KDEPIM_ONLY_KLEO )
    set( kleo_LIB_SRCS ${kleo_LIB_SRCS} ${libkleo_backend_chiasmus_SRCS} ${libkleo_ui_SRCS})
    set( kleo_LIB_LIBS ${kleo_LIB_LIBS}  KF5::KIOCore KF5::Gpgmepp KF5::QGpgme KF5::I18n KF5::WidgetsAddons KF5::IconThemes KF5::Completion KF5::KDELibs4Support)
