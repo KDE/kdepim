@@ -46,6 +46,9 @@ public:
      */
     explicit SplitterCollapser(QWidget *childWidget, QSplitter *splitter);
 
+    /**
+      * Destructor
+      */
     ~SplitterCollapser();
 
     /**
@@ -58,8 +61,18 @@ public:
 
 
 public Q_SLOTS:
+    /**
+     * @brief collapse, this function collapses the splitter if not splitter is not collapsed.
+     */
     void collapse();
+    /**
+     * @brief restore, call this function to restore previous splitter position.
+     */
     void restore();
+    /**
+     * @brief setCollapsed, this function allows to collapse or not the splitter.
+     * @param collapsed
+     */
     void setCollapsed(bool collapsed);
 
 private Q_SLOTS:
