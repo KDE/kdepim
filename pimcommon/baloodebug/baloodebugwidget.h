@@ -37,6 +37,9 @@ public:
     void setAkonadiId(Akonadi::Item::Id akonadiId);
     void setSearchType(BalooDebugSearchPathComboBox::SearchType type);
     void doSearch();
+
+    QString plainText() const;
+
 private Q_SLOTS:
     void slotSearchLineTextChanged(const QString &text);
     void slotSearch();
