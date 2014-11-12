@@ -105,7 +105,7 @@ void KWatchGnuPGMainWindow::createActions()
     action->setIcon(QIcon::fromTheme(QLatin1String("edit-clear-history")));
     action->setText(i18n("C&lear History"));
     connect(action, &QAction::triggered, this, &KWatchGnuPGMainWindow::slotClear);
-    action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_L));
+    actionCollection()->setDefaultShortcut(action, QKeySequence(Qt::CTRL + Qt::Key_L));
     (void)KStandardAction::saveAs(this, SLOT(slotSaveAs()), actionCollection());
     (void)KStandardAction::close(this, SLOT(close()), actionCollection());
     (void)KStandardAction::quit(this, SLOT(slotQuit()), actionCollection());
