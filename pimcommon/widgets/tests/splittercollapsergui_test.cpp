@@ -20,11 +20,9 @@
 #include <QSplitter>
 #include <qapplication.h>
 
-#include <KLocalizedString>
 #include <QTextEdit>
 #include <QHBoxLayout>
 #include <QApplication>
-#include <KAboutData>
 #include <QCommandLineParser>
 
 SplitterCollapserGui_test::SplitterCollapserGui_test(int indexOfWidgetAssociateToSplitterCollapser, Qt::Orientation orientation, QWidget *parent)
