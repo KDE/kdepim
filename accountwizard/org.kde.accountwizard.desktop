@@ -8,6 +8,7 @@ Name[nl]=Accountassistent
 Name[pl]=Pomocnik konta 
 Name[pt_BR]=Assistente de Contas
 Name[sk]=Sprievodca účtom
+Name[tr]=Hesaplar
 Name[uk]=Майстер облікових записів
 Name[x-test]=xxAccount Wizardxx
 Exec=accountwizard --package %u
