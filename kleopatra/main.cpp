@@ -36,6 +36,9 @@
 #include "kleopatraapplication.h"
 #include "mainwindow.h"
 
+#include <kdelibs4configmigrator.h>
+
+
 #include <commands/reloadkeyscommand.h>
 #include <commands/selftestcommand.h>
 
@@ -203,6 +206,11 @@ static void fillKeyCache(SplashScreen *splash, Kleo::UiServer *server)
 int main(int argc, char **argv)
 {
     KLocalizedString::setApplicationDomain("kleopatra");
+
+    Kdelibs4ConfigMigrator migrate(QLatin1String("kleopatra"));
+    migrate.setConfigFiles(QStringList() << QLatin1String("kleopatrarc"));
+    migrate.setUiFiles(QStringList() << QLatin1String("kleopatra.rc"));
+    migrate.migrate();
 
     QTime timer;
     timer.start();

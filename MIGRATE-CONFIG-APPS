@@ -14,6 +14,7 @@ Migrate configrc done:
 - kalarm (kalarmrc, kalarmui.rc)
 - kmail (kmail_part.rc  kmcomposerui.rc  kmmainwin.rc  kmreadermainwin.rc, kmail2rc, kmail2.notifyrc) #TODO migrate autosave folder
 - kwatchgnupg (kwatchgnupgrc, kwatchgnupgui.rc)
+- kleopatra (kleopatrarc, kleopatra.rc)
 - knotes (knotesrc) #TODO need to migrate it in plugins too
 - blogilo (blogiloui.rc, blogilorc) #TODO need to migrate database
 - pimsettingexporter (pimsettingexporterrc, pimsettingexporter.rc)
