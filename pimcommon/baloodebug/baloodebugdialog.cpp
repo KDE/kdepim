@@ -17,6 +17,8 @@
 
 #include "baloodebugdialog.h"
 #include "baloodebugwidget.h"
+#include "pimcommon/util/pimutil.h"
+
 
 #include <QVBoxLayout>
 #include <KSharedConfig>
@@ -27,7 +29,10 @@ using namespace PimCommon;
 BalooDebugDialog::BalooDebugDialog(QWidget *parent)
     : KDialog(parent)
 {
-    setButtons(Close);
+    setButtons(User1|Close);
+    //Don't translate it.
+    setButtonText(User1, QLatin1String("Save As..."));
+    connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSaveAs()));
 
     //Don't translate it's just a dialog to debug
     setCaption(QLatin1String("Debug baloo"));
@@ -72,6 +77,12 @@ void BalooDebugDialog::setSearchType(BalooDebugSearchPathComboBox::SearchType ty
 void BalooDebugDialog::doSearch()
 {
     mBalooDebugWidget->doSearch();
+}
+
+void BalooDebugDialog::slotSaveAs()
+{
+    const QString filter = QLatin1String( "*.txt|all files (*)" );
+    PimCommon::Util::saveTextAs(mBalooDebugWidget->plainText(), filter, this);
 }
 
 

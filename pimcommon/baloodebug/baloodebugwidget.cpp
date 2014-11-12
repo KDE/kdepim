@@ -92,6 +92,11 @@ void BalooDebugWidget::doSearch()
     slotSearch();
 }
 
+QString BalooDebugWidget::plainText() const
+{
+    return QString::fromLatin1("Item: %1\n").arg(mLineEdit->text()) + mPlainTextEditor->toPlainText();
+}
+
 void BalooDebugWidget::slotSearch()
 {
     const QString searchId = mLineEdit->text();
