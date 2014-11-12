@@ -69,6 +69,8 @@ protected:
     bool eventFilter(QObject *, QEvent *);
     void paintEvent(QPaintEvent *);
 
+    void enterEvent(QEvent *event);
+    void leaveEvent(QEvent *event);
 private:
     class Private;
     Private *const d;

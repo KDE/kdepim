@@ -163,10 +163,6 @@ void SplitterCollapser::Private::widgetEventFilter(QEvent *event)
 {
     switch (event->type()) {
     case QEvent::Resize:
-        updatePosition();
-        updateOpacity();
-        break;
-
     case QEvent::Move:
     case QEvent::Show:
     case QEvent::Hide:
@@ -219,8 +215,6 @@ SplitterCollapser::SplitterCollapser(QWidget *childWidget, QSplitter *splitter)
     d->childWidget = childWidget;
     d->childWidget->installEventFilter(this);
 
-    qApp->installEventFilter(this);
-
     d->splitter = splitter;
     setParent(d->splitter);
 
@@ -260,12 +254,20 @@ bool SplitterCollapser::eventFilter(QObject *object, QEvent *event)
 {
     if (object == d->childWidget) {
         d->widgetEventFilter(event);
-    } else { /* app */
-        if (event->type() == QEvent::MouseMove) {
-            d->updateOpacity();
-        }
     }
     return false;
+}
+
+void SplitterCollapser::enterEvent(QEvent *event)
+{
+    Q_UNUSED(event)
+    d->updateOpacity();
+}
+
+void SplitterCollapser::leaveEvent(QEvent *event)
+{
+    Q_UNUSED(event)
+    d->updateOpacity();
 }
 
 QSize SplitterCollapser::sizeHint() const
@@ -297,6 +299,8 @@ void SplitterCollapser::slotClicked()
         }
     }
     d->splitter->setSizes(sizes);
+    d->opacityTimeLine->setDirection(QTimeLine::Backward);
+    d->startTimeLine();
 }
 
 void SplitterCollapser::collapse()
