@@ -259,9 +259,6 @@ if(KDEPIM_BUILD_EXAMPLES)
   add_subdirectory(examples)
 endif()
 
-set(KMAIL_SUPPORTED TRUE)
-add_definitions(-DKMAIL_SUPPORTED)
-
 add_subdirectory(korganizer)
 add_subdirectory(korgac)
 add_subdirectory(sieveeditor)
