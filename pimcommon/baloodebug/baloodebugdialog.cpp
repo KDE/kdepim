@@ -28,6 +28,10 @@ BalooDebugDialog::BalooDebugDialog(QWidget *parent)
     : KDialog(parent)
 {
     setButtons(Close);
+
+    //Don't translate it's just a dialog to debug
+    setCaption(QLatin1String("Debug baloo"));
+
     mBalooDebugWidget = new BalooDebugWidget(this);
     mBalooDebugWidget->setObjectName(QLatin1String("baloodebugwidget"));
     setMainWidget(mBalooDebugWidget);
