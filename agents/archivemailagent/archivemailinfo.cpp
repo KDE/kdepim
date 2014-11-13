@@ -97,7 +97,7 @@ QString ArchiveMailInfo::dirArchive(bool &dirExit) const
     return dirPath;
 }
 
-KUrl ArchiveMailInfo::realUrl(const QString &folderName, bool &dirExist) const
+QUrl ArchiveMailInfo::realUrl(const QString &folderName, bool &dirExist) const
 {
     const int numExtensions = 4;
     // The extensions here are also sorted, like the enum order of BackupJob::ArchiveType
@@ -107,7 +107,7 @@ KUrl ArchiveMailInfo::realUrl(const QString &folderName, bool &dirExist) const
     const QString path = dirPath + QLatin1Char('/') + i18nc("Start of the filename for a mail archive file" , "Archive")
                          + QLatin1Char('_') + normalizeFolderName(folderName) + QLatin1Char('_')
                          + QDate::currentDate().toString(Qt::ISODate) + QString::fromLatin1(extensions[mArchiveType]);
-    KUrl real(path);
+    QUrl real(QUrl::fromLocalFile(path));
     return real;
 }
 
@@ -174,7 +174,7 @@ QDate ArchiveMailInfo::lastDateSaved() const
 
 void ArchiveMailInfo::readConfig(const KConfigGroup &config)
 {
-    mPath = config.readEntry("storePath", QUrl());
+    mPath = QUrl::fromLocalFile(config.readEntry("storePath"));
 
     if (config.hasKey(QLatin1String("lastDateSaved"))) {
         mLastDateSaved = QDate::fromString(config.readEntry("lastDateSaved"), Qt::ISODate);
@@ -196,7 +196,7 @@ void ArchiveMailInfo::writeConfig(KConfigGroup &config)
     if (!isValid()) {
         return;
     }
-    config.writeEntry("storePath", mPath);
+    config.writeEntry("storePath", mPath.toLocalFile());
 
     if (mLastDateSaved.isValid()) {
         config.writeEntry("lastDateSaved", mLastDateSaved.toString(Qt::ISODate));
@@ -212,12 +212,12 @@ void ArchiveMailInfo::writeConfig(KConfigGroup &config)
     config.sync();
 }
 
-KUrl ArchiveMailInfo::url() const
+QUrl ArchiveMailInfo::url() const
 {
     return mPath;
 }
 
-void ArchiveMailInfo::setUrl(const KUrl &url)
+void ArchiveMailInfo::setUrl(const QUrl &url)
 {
     mPath = url;
 }

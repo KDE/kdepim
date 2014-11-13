@@ -382,7 +382,7 @@ void ArchiveMailWidget::slotOpenFolder()
         ArchiveMailItem *archiveItem = static_cast<ArchiveMailItem *>(item);
         ArchiveMailInfo *archiveItemInfo = archiveItem->info();
         if (archiveItemInfo) {
-            const KUrl url = archiveItemInfo->url();
+            const QUrl url = archiveItemInfo->url();
             KRun *runner = new KRun(url, this);   // will delete itself
             runner->setRunExecutables(false);
         }

@@ -20,7 +20,7 @@
 #include "mailcommon/job/backupjob.h"
 #include <KConfigGroup>
 #include <Collection>
-#include <KUrl>
+#include <QUrl>
 #include <QDate>
 
 class ArchiveMailInfo
@@ -40,7 +40,7 @@ public:
         ArchiveYears
     };
 
-    KUrl realUrl(const QString &folderName, bool &dirExist) const;
+    QUrl realUrl(const QString &folderName, bool &dirExist) const;
 
     bool isValid() const;
 
@@ -50,8 +50,8 @@ public:
     void setSaveSubCollection(bool b);
     bool saveSubCollection() const;
 
-    void setUrl(const KUrl &url);
-    KUrl url() const;
+    void setUrl(const QUrl &url);
+    QUrl url() const;
 
     void readConfig(const KConfigGroup &config);
     void writeConfig(KConfigGroup &config);

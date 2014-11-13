@@ -61,7 +61,7 @@ void ArchiveJob::execute()
         }
 
         bool dirExit = true;
-        const KUrl archivePath = mInfo->realUrl(realPath, dirExit);
+        const QUrl archivePath = mInfo->realUrl(realPath, dirExit);
         if (!dirExit) {
             mManager->backupDone(mInfo);
             KNotification::event(QLatin1String("archivemailfolderdoesntexist"),

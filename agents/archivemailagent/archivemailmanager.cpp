@@ -179,7 +179,7 @@ QString ArchiveMailManager::infoToStr(ArchiveMailInfo *info) const
     infoStr += QLatin1String("save sub collection: ") + (info->saveSubCollection() ? QLatin1String("true") : QLatin1String("false")) + QLatin1Char('\n');
     infoStr += QLatin1String("last Date Saved: ") + info->lastDateSaved().toString() + QLatin1Char('\n');
     infoStr += QLatin1String("maximum achive number: ") + QString::number(info->maximumArchiveCount()) + QLatin1Char('\n');
-    infoStr += QLatin1String("directory: ") + info->url().pathOrUrl() + QLatin1Char('\n');
+    infoStr += QLatin1String("directory: ") + info->url().toDisplayString() + QLatin1Char('\n');
     infoStr += QLatin1String("Enabled: ") + (info->isEnabled() ? QLatin1String("true") : QLatin1String("false"));
     return infoStr;
 }
@@ -204,7 +204,7 @@ void ArchiveMailManager::archiveFolder(const QString &path, Akonadi::Collection:
 {
     ArchiveMailInfo *info = new ArchiveMailInfo;
     info->setSaveCollectionId(collectionId);
-    info->setUrl(KUrl(path));
+    info->setUrl(QUrl::fromLocalFile(path));
     slotArchiveNow(info);
     delete info;
 }

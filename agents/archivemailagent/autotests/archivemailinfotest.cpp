@@ -38,7 +38,7 @@ void ArchiveMailInfoTest::shouldHaveDefaultValue()
     ArchiveMailInfo info;
     QCOMPARE(info.saveCollectionId(), Akonadi::Collection::Id(-1));
     QCOMPARE(info.saveSubCollection(), false);
-    QCOMPARE(info.url(), KUrl());
+    QCOMPARE(info.url(), QUrl());
     QCOMPARE(info.archiveType(), MailCommon::BackupJob::Zip);
     QCOMPARE(info.archiveUnit(), ArchiveMailInfo::ArchiveDays);
     QCOMPARE(info.archiveAge(), 1);
@@ -51,7 +51,7 @@ void ArchiveMailInfoTest::shouldRestoreFromSettings()
 {
     ArchiveMailInfo info;
     info.setSaveCollectionId(Akonadi::Collection::Id(42));
-    info.setUrl(KUrl("/foo/foo"));
+    info.setUrl(QUrl::fromLocalFile(QLatin1String("/foo/foo")));
     info.setArchiveType(MailCommon::BackupJob::TarBz2);
     info.setArchiveUnit(ArchiveMailInfo::ArchiveMonths);
     info.setArchiveAge(5);
@@ -70,7 +70,7 @@ void ArchiveMailInfoTest::shouldCopyArchiveInfo()
 {
     ArchiveMailInfo info;
     info.setSaveCollectionId(Akonadi::Collection::Id(42));
-    info.setUrl(KUrl("/foo/foo"));
+    info.setUrl(QUrl::fromLocalFile(QLatin1String("/foo/foo")));
     info.setArchiveType(MailCommon::BackupJob::TarBz2);
     info.setArchiveUnit(ArchiveMailInfo::ArchiveMonths);
     info.setArchiveAge(5);

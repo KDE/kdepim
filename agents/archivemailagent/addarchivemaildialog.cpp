@@ -221,12 +221,12 @@ Akonadi::Collection AddArchiveMailDialog::selectedFolder() const
     return mFolderRequester->collection();
 }
 
-KUrl AddArchiveMailDialog::path() const
+QUrl AddArchiveMailDialog::path() const
 {
     return mPath->url();
 }
 
-void AddArchiveMailDialog::setPath(const KUrl &url)
+void AddArchiveMailDialog::setPath(const QUrl &url)
 {
     mPath->setUrl(url);
 }

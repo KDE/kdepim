@@ -22,7 +22,7 @@
 #include "archivemailinfo.h"
 #include <QDialog>
 #include <Collection>
-
+class QUrl;
 class KComboBox;
 class QCheckBox;
 class KUrlRequester;
@@ -50,8 +50,8 @@ public:
     void setSelectedFolder(const Akonadi::Collection &collection);
     Akonadi::Collection selectedFolder() const;
 
-    KUrl path() const;
-    void setPath(const KUrl &);
+    QUrl path() const;
+    void setPath(const QUrl &);
 
     ArchiveMailInfo *info();
 
