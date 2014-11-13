@@ -198,7 +198,7 @@ const QString HTMLPrettyFormatter::reformat( const QString &src )
         source.insert(pos, QLatin1Char('\n'));
         pos += htmlTagRegExp.matchedLength() + 1;
         source.insert(pos, QLatin1Char('\n'));
-        pos++;
+        ++pos;
     }
 
     // Then split the source on newlines skiping empty parts.

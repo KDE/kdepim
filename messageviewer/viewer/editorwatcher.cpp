@@ -46,9 +46,11 @@ EditorWatcher::EditorWatcher( const KUrl & url, const QString &mimeType, bool op
     QObject( parent ),
     mUrl( url ),
     mMimeType( mimeType ),
-    mOpenWith( openWith ),
+    mInotifyFd(-1),
+    mInotifyWatch(-1),
     mEditor( 0 ),
     mParentWidget( parentWidget ),
+    mOpenWith( openWith ),
     mHaveInotify( false ),
     mFileOpen( false ),
     mEditorRunning( false ),
@@ -106,6 +108,16 @@ bool EditorWatcher::start()
 
     mEditTime.start();
     return true;
+}
+
+bool EditorWatcher::fileChanged() const
+{
+    return mFileModified;
+}
+
+KUrl EditorWatcher::url() const
+{
+    return mUrl;
 }
 
 void EditorWatcher::inotifyEvent()
