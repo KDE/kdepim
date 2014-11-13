@@ -54,8 +54,11 @@ void MailingListTest::shouldRestoreFromSettings()
     KUrl::List lst;
     lst << KUrl(QLatin1String("http://www.kde.org")) << KUrl(QLatin1String("http://www.koffice.org"));
     ml.setPostUrls( lst );
+    lst << KUrl(QLatin1String("mailto://www.kde2.org")) << KUrl(QLatin1String("http://www.koffice2.org"));
     ml.setSubscribeUrls( lst );
+    lst << KUrl(QLatin1String("mailto://www.kde3.org")) << KUrl(QLatin1String("http://www.koffice3.org"));
     ml.setUnsubscribeUrls( lst );
+    lst << KUrl(QLatin1String("mailto://www.kde4.org")) << KUrl(QLatin1String("http://www.koffice4.org"));
     ml.setHelpUrls( lst );
     /* Note: mArchivedAtUrl deliberately not saved here as it refers to a single
    * instance of a message rather than an element of a general mailing list.
@@ -63,7 +66,9 @@ void MailingListTest::shouldRestoreFromSettings()
    */
     //normal that we don't save it.
     //ml.setArchivedAtUrls(lst);
+    lst << KUrl(QLatin1String("mailto://www.kde5.org")) << KUrl(QLatin1String("http://www.koffice5.org"));
     ml.setArchiveUrls(lst);
+    lst << KUrl(QLatin1String("mailto://www.kde6.org")) << KUrl(QLatin1String("http://www.koffice6.org"));
     ml.setOwnerUrls(lst);
     ml.setId(QLatin1String("ID"));
     ml.setHandler(MessageCore::MailingList::Browser);
@@ -74,6 +79,38 @@ void MailingListTest::shouldRestoreFromSettings()
 
     MessageCore::MailingList restoreMl;
     restoreMl.readConfig(grp);
+    QCOMPARE(ml, restoreMl);
+}
+
+void MailingListTest::shouldCopyReminderInfo()
+{
+    MessageCore::MailingList ml;
+    KUrl::List lst;
+    lst << KUrl(QLatin1String("http://www.kde.org")) << KUrl(QLatin1String("http://www.koffice.org"));
+    ml.setPostUrls( lst );
+    lst << KUrl(QLatin1String("http://www.kde2.org")) << KUrl(QLatin1String("http://www.koffice2.org"));
+    ml.setSubscribeUrls( lst );
+    lst << KUrl(QLatin1String("http://www.kde3.org")) << KUrl(QLatin1String("http://www.koffice3.org"));
+    ml.setUnsubscribeUrls( lst );
+    lst << KUrl(QLatin1String("http://www.kde4.org")) << KUrl(QLatin1String("http://www.koffice4.org"));
+    ml.setHelpUrls( lst );
+    lst << KUrl(QLatin1String("http://www.kde5.org")) << KUrl(QLatin1String("http://www.koffice5.org"));
+    ml.setArchivedAtUrls(lst);
+    lst << KUrl(QLatin1String("http://www.kde5.org")) << KUrl(QLatin1String("http://www.koffice6.org"));
+    ml.setArchiveUrls(lst);
+    lst << KUrl(QLatin1String("http://www.kde6.org")) << KUrl(QLatin1String("http://www.koffice6.org"));
+    ml.setOwnerUrls(lst);
+    ml.setPostUrls( lst );
+    ml.setSubscribeUrls( lst );
+    ml.setUnsubscribeUrls( lst );
+    ml.setHelpUrls( lst );
+    ml.setArchivedAtUrls(lst);
+    ml.setArchiveUrls(lst);
+    ml.setOwnerUrls(lst);
+    ml.setId(QLatin1String("ID"));
+    ml.setHandler(MessageCore::MailingList::Browser);
+
+    MessageCore::MailingList restoreMl(ml);
     QCOMPARE(ml, restoreMl);
 }
 

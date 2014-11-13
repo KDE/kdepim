@@ -30,6 +30,7 @@ public:
 private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldRestoreFromSettings();
+    void shouldCopyReminderInfo();
 };
 
 #endif // MAILINGLISTTEST_H
