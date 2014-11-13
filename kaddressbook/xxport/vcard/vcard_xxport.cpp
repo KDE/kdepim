@@ -152,7 +152,7 @@ bool VCardXXPort::exportContacts(const KContacts::Addressee::List &contacts) con
 
         switch (answer) {
         case KMessageBox::No: {
-            const KUrl baseUrl = KFileDialog::getExistingDirectoryUrl();
+            const QUrl baseUrl = KFileDialog::getExistingDirectoryUrl();
             if (baseUrl.isEmpty()) {
                 return true; // user canceled export
             }
@@ -160,7 +160,7 @@ bool VCardXXPort::exportContacts(const KContacts::Addressee::List &contacts) con
             for (int i = 0; i < list.count(); ++i) {
                 const KContacts::Addressee contact = list.at(i);
 
-                url = baseUrl.url() + QLatin1Char('/') + contactFileName(contact) + QLatin1String(".vcf");
+                url = QUrl::fromLocalFile(baseUrl.path() + QLatin1Char('/') + contactFileName(contact) + QLatin1String(".vcf"));
 
                 bool tmpOk = false;
 
@@ -177,7 +177,7 @@ bool VCardXXPort::exportContacts(const KContacts::Addressee::List &contacts) con
             break;
         }
         case KMessageBox::Yes: {
-            url = KFileDialog::getSaveUrl(KUrl(QLatin1String("addressbook.vcf")));
+            url = KFileDialog::getSaveUrl(QUrl(QLatin1String("addressbook.vcf")));
             if (url.isEmpty()) {
                 return true; // user canceled export
             }

@@ -95,7 +95,7 @@ KContacts::Addressee::List LDIFXXPort::importContacts() const
 bool LDIFXXPort::exportContacts(const KContacts::Addressee::List &list) const
 {
     const KUrl url =
-        KFileDialog::getSaveUrl(KUrl(QDir::homePath() + QLatin1String("/addressbook.ldif")), QLatin1String("text/x-ldif"));
+        KFileDialog::getSaveUrl(QUrl::fromLocalFile(QDir::homePath() + QLatin1String("/addressbook.ldif")), QLatin1String("text/x-ldif"));
     if (url.isEmpty()) {
         return true;
     }

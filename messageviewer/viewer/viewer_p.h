@@ -489,7 +489,7 @@ public:
     void goOnline();
     void goResourceOnline();
 
-    bool isAShortUrl(const KUrl &url) const;
+    bool isAShortUrl(const QUrl &url) const;
 
     void showOpenAttachmentFolderWidget(const KUrl &url);
 

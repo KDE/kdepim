@@ -675,7 +675,7 @@ QAction *Viewer::openBlockableItems()
     return d->mBlockableItems;
 }
 
-bool Viewer::isAShortUrl(const KUrl &url) const
+bool Viewer::isAShortUrl(const QUrl &url) const
 {
     Q_D(const Viewer);
     return d->isAShortUrl(url);

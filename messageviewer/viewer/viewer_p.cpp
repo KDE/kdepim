@@ -3434,7 +3434,7 @@ void ViewerPrivate::slotOpenBlockableItems()
 #endif
 }
 
-bool ViewerPrivate::isAShortUrl(const KUrl &url) const
+bool ViewerPrivate::isAShortUrl(const QUrl &url) const
 {
     return mViewer->isAShortUrl(url);
 }

@@ -342,7 +342,7 @@ public:
 
     void saveMainFrameScreenshotInFile(const QString &filename);
     bool adblockEnabled() const;
-    bool isAShortUrl(const KUrl &url) const;
+    bool isAShortUrl(const QUrl &url) const;
 
     void showOpenAttachmentFolderWidget(const KUrl &url);
 signals:

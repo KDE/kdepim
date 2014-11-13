@@ -343,7 +343,7 @@ KContacts::Addressee::List GMXXXPort::importContacts() const
 
 bool GMXXXPort::exportContacts(const KContacts::AddresseeList &list) const
 {
-    QUrl url = KFileDialog::getSaveUrl(KUrl(QDir::homePath() + QLatin1String("/addressbook.gmx")), GMX_FILESELECTION_STRING);
+    QUrl url = KFileDialog::getSaveUrl(QUrl::fromLocalFile(QDir::homePath() + QLatin1String("/addressbook.gmx")), GMX_FILESELECTION_STRING);
     if (url.isEmpty()) {
         return true;
     }
