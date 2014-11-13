@@ -51,7 +51,6 @@ using MessageViewer::Interface::BodyPart;
 
 #include <KLocalizedString>
 #include <KFileDialog>
-#include <KUrl>
 #include <QIcon>
 #include <KLocalizedString>
 #include <QMenu>

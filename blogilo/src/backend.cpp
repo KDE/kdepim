@@ -203,14 +203,14 @@ void Backend::uploadMedia(BilboMedia *media)
         KIO::TransferJob *job = KIO::get(media->localUrl(), KIO::Reload, KIO::HideProgressInfo);
         if (!KIO::NetAccess::synchronousRun(job, 0, &data)) {
             qCritical() << "Job error: " << job->errorString();
-            tmp = i18n("Uploading media failed: Cannot read the media file, please check if it exists. Path: %1", media->localUrl().pathOrUrl());
+            tmp = i18n("Uploading media failed: Cannot read the media file, please check if it exists. Path: %1", media->localUrl().toDisplayString());
             qDebug() << "Emitting sigError...";
             Q_EMIT sigMediaError(tmp, media);
         }
 
         if (data.count() == 0) {
             qCritical() << "Cannot read the media file, please check if it exists.";
-            tmp = i18n("Uploading media failed: Cannot read the media file, please check if it exists. Path: %1", media->localUrl().pathOrUrl());
+            tmp = i18n("Uploading media failed: Cannot read the media file, please check if it exists. Path: %1", media->localUrl().toDisplayString());
             qDebug() << "Emitting sigError...";
             Q_EMIT sigMediaError(tmp, media);
             delete m;
@@ -225,7 +225,7 @@ void Backend::uploadMedia(BilboMedia *media)
         if (media->checksum() == 0) {
             qCritical() << "Media file checksum is zero";
             tmp = i18n("Uploading media failed: Media file checksum is zero, please check file path. Path: %1",
-                       media->localUrl().pathOrUrl());
+                       media->localUrl().toDisplayString());
             qDebug() << "Emitting sigError...";
             Q_EMIT sigMediaError(tmp, media);
             delete m;

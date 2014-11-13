@@ -2769,7 +2769,7 @@ QString ObjectTreeParser::writeSigstatHeader(PartMetaData &block,
                         signer.clear();
                     } else {
                         if (!blockAddrs.empty()) {
-                            const KUrl address = KPIMUtils::encodeMailtoUrl(blockAddrs.first());
+                            const QUrl address = KPIMUtils::encodeMailtoUrl(blockAddrs.first());
                             signer = QLatin1String("<a href=\"mailto:") + QLatin1String(QUrl::toPercentEncoding(address.path())) +
                                      QLatin1String("\">") + signer + QLatin1String("</a>");
                         }

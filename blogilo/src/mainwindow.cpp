@@ -66,6 +66,7 @@
 #include <kimagefilepreview.h>
 #include <KToolInvocation>
 #include <QMenu>
+#include <KUrl>
 
 #include <QDockWidget>
 #include <QProgressBar>

@@ -35,6 +35,7 @@
 #include <kio/jobclasses.h>
 #include <kio/job.h>
 #include <KLocalizedString>
+#include <KUrl>
 #include <KMimeType>
 #include <QIcon>
 

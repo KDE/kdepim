@@ -26,7 +26,7 @@
 #include <qdebug.h>
 #include <QIcon>
 #include <QPixmap>
-
+#include <QUrl>
 class BilboMedia::Private
 {
 public:
@@ -89,7 +89,7 @@ void BilboMedia::setUploaded(bool uploaded)
     d->mIsUploaded = uploaded;
 }
 
-KUrl BilboMedia::localUrl() const
+QUrl BilboMedia::localUrl() const
 {
     return d->mLocalUrl;
 }

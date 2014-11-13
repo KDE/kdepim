@@ -44,7 +44,6 @@
 #include <kxmlguiwindow.h>
 #include <kmessagebox.h>
 #include <kdatetime.h>
-#include <kurl.h>
 
 class Toolbox::Private
 {

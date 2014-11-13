@@ -25,7 +25,6 @@
 #define BILBOMEDIA_H
 
 #include <QObject>
-#include <KUrl>
 
 /**
 Contains needed properties of each media object, like images and videos.
@@ -55,7 +54,7 @@ public:
 //     bool isLocal() const;
 //     void setLocal( bool is_local );
 
-    KUrl localUrl() const;
+    QUrl localUrl() const;
     void setLocalUrl(const QUrl &url);
 
     QUrl remoteUrl() const;

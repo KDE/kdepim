@@ -22,7 +22,6 @@
 #include <kblog/blogpost.h>
 #include <kblog/blogcomment.h>
 
-#include <KUrl>
 #include <QDebug>
 #include <KLocalizedString>
 

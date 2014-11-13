@@ -27,8 +27,6 @@
 
 #include <QWidget>
 
-#include "kurl.h"
-
 class QCheckBox;
 class QProgressBar;
 class KWebView;

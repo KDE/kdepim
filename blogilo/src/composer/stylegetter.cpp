@@ -39,6 +39,7 @@
 #include <klocalizedstring.h>
 #include <qdebug.h>
 #include <kdatetime.h>
+#include <KUrl>
 
 #include <QFile>
 

@@ -31,7 +31,6 @@
 #include <kblog/movabletype.h>
 #include <kblog/wordpressbuggy.h>
 #include "blogger.h"
-#include <kurl.h>
 #include <kmessagebox.h>
 #include <qdebug.h>
 #include <kio/jobclasses.h>
