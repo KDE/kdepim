@@ -42,8 +42,8 @@ public:
     int mBlogId;
     int mMediaId;
     bool mIsUploaded;
-    KUrl mLocalUrl;
-    KUrl mRemoteUrl;
+    QUrl mLocalUrl;
+    QUrl mRemoteUrl;
     QString mMimeType;
     QString mName;
     quint16 mChecksum;
@@ -94,17 +94,17 @@ KUrl BilboMedia::localUrl() const
     return d->mLocalUrl;
 }
 
-void BilboMedia::setLocalUrl(const KUrl &url)
+void BilboMedia::setLocalUrl(const QUrl &url)
 {
     d->mLocalUrl = url;
 }
 
-KUrl BilboMedia::remoteUrl() const
+QUrl BilboMedia::remoteUrl() const
 {
     return d->mRemoteUrl;
 }
 
-void BilboMedia::setRemoteUrl(const KUrl &url)
+void BilboMedia::setRemoteUrl(const QUrl &url)
 {
     d->mRemoteUrl = url;
 }

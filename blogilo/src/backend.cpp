@@ -28,7 +28,6 @@
 #include "dbman.h"
 #include "settings.h"
 
-#include <kurl.h>
 #include <kblog/blogger1.h>
 #include <kblog/metaweblog.h>
 #include <kblog/movabletype.h>

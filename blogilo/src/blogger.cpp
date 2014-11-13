@@ -230,7 +230,7 @@ bool BloggerPrivate::handleError(KGAPI2::Job *job)
     return false;
 }
 
-Blogger::Blogger(const KUrl &server, QObject *parent)
+Blogger::Blogger(const QUrl &server, QObject *parent)
     : Blog(server, *new BloggerPrivate(this), parent)
 {
     qDebug();

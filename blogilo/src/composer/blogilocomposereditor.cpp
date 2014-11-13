@@ -116,7 +116,7 @@ QList< BilboMedia * > BlogiloComposerEditor::getLocalImages()
         if (elm.attribute(QLatin1String("src")).startsWith(QLatin1String("file://"))) {
             //             qDebug()<<elm.toOuterXml();
             BilboMedia *media = new BilboMedia(this);
-            KUrl mediaUrl(elm.attribute(QLatin1String("src")));
+            QUrl mediaUrl(elm.attribute(QLatin1String("src")));
             media->setLocalUrl(mediaUrl);
             QMimeDatabase db;
             media->setMimeType(db.mimeTypeForFile(mediaUrl.path(), QMimeDatabase::MatchExtension).name());

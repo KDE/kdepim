@@ -70,7 +70,7 @@ public:
       @param server The blog URL
       @param parent The parent object, inherited from QObject.
     */
-    explicit Blogger(const KUrl &server, QObject *parent = 0);
+    explicit Blogger(const QUrl &server, QObject *parent = 0);
 
     /**
        Destructor.

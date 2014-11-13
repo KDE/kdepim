@@ -208,12 +208,12 @@ void UploadMediaDialog::slotMediaObjectUploaded(BilboMedia *media)
     QString msg;
     emit sigBusy(false);
     if (Settings::copyMediaUrl()) {
-        QApplication::clipboard()->setText(media->remoteUrl().prettyUrl());
+        QApplication::clipboard()->setText(media->remoteUrl().toDisplayString());
         msg = i18n("Media uploaded, and URL copied to clipboard.\nYou can find it here:\n%1",
-                   media->remoteUrl().prettyUrl());
+                   media->remoteUrl().toDisplayString());
     } else {
         msg = i18n("Media uploaded.\nYou can find it here:\n%1",
-                   media->remoteUrl().prettyUrl());
+                  media->remoteUrl().toDisplayString());
     }
     KMessageBox::information(this, msg, i18n("Successfully uploaded"), QString(), KMessageBox::AllowLink);
     accept();

@@ -276,7 +276,7 @@ void AddEditBlog::fetchBlogId()
     case 1:
     case 2:
     case 3: {
-        KBlog::Blogger1 *blog = new KBlog::Blogger1(KUrl(d->ui.txtUrl->text()), this);
+        KBlog::Blogger1 *blog = new KBlog::Blogger1(QUrl(d->ui.txtUrl->text()), this);
         d->mBlog = blog;
         blog->setUsername(d->ui.txtUser->text());
         blog->setPassword(d->ui.txtPass->text());
@@ -289,7 +289,7 @@ void AddEditBlog::fetchBlogId()
         break;
     }
     case 4: {
-        KBlog::Blogger *blog = new KBlog::Blogger(KUrl(d->ui.txtUrl->text()), this);
+        KBlog::Blogger *blog = new KBlog::Blogger(QUrl(d->ui.txtUrl->text()), this);
         d->mBlog = blog;
         blog->setUsername(d->ui.txtUser->text());
         blog->setPassword(d->ui.txtPass->text());
@@ -564,7 +564,7 @@ void AddEditBlog::slotButtonClicked(int button)
         d->bBlog->setPassword(d->ui.txtPass->text());
         d->bBlog->setUsername(d->ui.txtUser->text());
         d->bBlog->setBlogId(d->ui.txtId->text());
-        d->bBlog->setUrl(KUrl(d->ui.txtUrl->text()));
+        d->bBlog->setUrl(QUrl(d->ui.txtUrl->text()));
         if (d->bBlog->blogUrl().isEmpty()) {
             d->bBlog->setBlogUrl(d->ui.txtUrl->text());
         }

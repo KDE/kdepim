@@ -25,7 +25,7 @@
 
 #include <KMessageBox>
 #include <KUrlRequester>
-#include <KUrl>
+#include <QUrl>
 
 #include <QVBoxLayout>
 #include <QProcess>
@@ -45,7 +45,7 @@ StorageServiceConfigureWidget::~StorageServiceConfigureWidget()
 
 void StorageServiceConfigureWidget::loadSettings()
 {
-    downloadFolder()->setUrl(KUrl(Settings::self()->downloadDirectory()));
+    downloadFolder()->setUrl(QUrl::fromLocalFile(Settings::self()->downloadDirectory()));
 }
 
 void StorageServiceConfigureWidget::writeSettings()

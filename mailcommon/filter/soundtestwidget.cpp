@@ -23,7 +23,7 @@
 #include <KUrlRequester>
 #include <KLineEdit>
 #include <QIcon>
-#include <KUrl>
+#include <QUrl>
 
 #include <QHBoxLayout>
 #include <QPushButton>

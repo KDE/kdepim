@@ -26,7 +26,7 @@
 
 #include "constants.h"
 
-#include <kurl.h>
+#include <qurl.h>
 #include <kblog/blog.h>
 
 #include <QObject>
@@ -56,8 +56,8 @@ public:
      * and it's blogUrl() is http://bilbo.wordpress.com/
      * @return url usable for xmlrpc!
      */
-    KUrl url() const;
-    void setUrl(const KUrl &);
+    QUrl url() const;
+    void setUrl(const QUrl &);
     QString blogid() const;
     void setBlogId(const QString &);
     QString username() const;

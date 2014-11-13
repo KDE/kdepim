@@ -56,10 +56,10 @@ public:
 //     void setLocal( bool is_local );
 
     KUrl localUrl() const;
-    void setLocalUrl(const KUrl &url);
+    void setLocalUrl(const QUrl &url);
 
-    KUrl remoteUrl() const;
-    void setRemoteUrl(const KUrl &url);
+    QUrl remoteUrl() const;
+    void setRemoteUrl(const QUrl &url);
 
     QString mimeType() const;
     void setMimeType(const QString &type);

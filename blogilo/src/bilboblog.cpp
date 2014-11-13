@@ -34,7 +34,7 @@ public:
     Private()
         : kblog(0)
     {}
-    KUrl mUrl;
+    QUrl mUrl;
     QString mBlogUrl;
     QString mBlogid;
     QString mUsername;
@@ -119,12 +119,12 @@ void BilboBlog::setError(bool isError)
     d->mError = isError;
 }
 
-KUrl BilboBlog::url() const
+QUrl BilboBlog::url() const
 {
     return d->mUrl;
 }
 
-void BilboBlog::setUrl(const KUrl &url)
+void BilboBlog::setUrl(const QUrl &url)
 {
     d->mUrl = url;
 }
@@ -244,7 +244,7 @@ void BilboBlog::setLocalDirectory(const QString &directory)
 QString BilboBlog::blogUrl() const
 {
     if (d->mBlogUrl.isEmpty()) {
-        return d->mUrl.prettyUrl();
+        return d->mUrl.toDisplayString();
     } else {
         return d->mBlogUrl;
     }
