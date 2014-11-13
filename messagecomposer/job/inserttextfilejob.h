@@ -22,7 +22,7 @@
 #include "messagecomposer_export.h"
 
 #include <KJob>
-#include <KUrl>
+#include <QUrl>
 
 #include <QPointer>
 
@@ -45,7 +45,7 @@ class MESSAGECOMPOSER_EXPORT InsertTextFileJob : public KJob
     Q_OBJECT
 
 public:
-    InsertTextFileJob(QTextEdit *editor, const KUrl &url);
+    InsertTextFileJob(QTextEdit *editor, const QUrl &url);
     ~InsertTextFileJob();
 
     void setEncoding(const QString &encoding);
@@ -60,7 +60,7 @@ private slots:
 private:
 
     QPointer<QTextEdit> mEditor;
-    KUrl mUrl;
+    QUrl mUrl;
     QString mEncoding;
     QByteArray mFileData;
 };

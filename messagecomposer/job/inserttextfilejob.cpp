@@ -28,7 +28,7 @@
 
 using namespace MessageComposer;
 
-InsertTextFileJob::InsertTextFileJob(QTextEdit *editor, const KUrl &url)
+InsertTextFileJob::InsertTextFileJob(QTextEdit *editor, const QUrl &url)
     : KJob(editor), mEditor(editor), mUrl(url)
 {
 }
