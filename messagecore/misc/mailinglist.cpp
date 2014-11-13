@@ -591,6 +591,6 @@ void MailingList::readConfig(const KConfigGroup &group)
     d->mSubscribeUrls = QUrl::fromStringList(group.readEntry("MailingListSubscribeAddress", QStringList()));
     d->mUnsubscribeUrls = QUrl::fromStringList(group.readEntry("MailingListUnsubscribeAddress", QStringList()));
     d->mArchiveUrls = QUrl::fromStringList(group.readEntry("MailingListArchiveAddress", QStringList()));
-    d->mOwnerUrls = QUrl::fromStringList(group.readEntry("MailingListOwnerddress", QStringList()));
+    d->mOwnerUrls = QUrl::fromStringList(group.readEntry("MailingListOwnerAddress", QStringList()));
     d->mHelpUrls = QUrl::fromStringList(group.readEntry("MailingListHelpAddress", QStringList()));
 }

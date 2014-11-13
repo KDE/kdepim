@@ -25,3 +25,5 @@ add_messagecore_test( attachmentpropertiesdialogtest.cpp )
 
 # Other tests
 add_messagecore_test( stringutiltest.cpp )
+add_messagecore_test( mailinglisttest.cpp ) 
+
