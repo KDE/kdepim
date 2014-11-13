@@ -562,6 +562,6 @@ void MailingList::readConfig( const KConfigGroup &group )
     d->mSubscribeUrls = group.readEntry( "MailingListSubscribeAddress", QStringList() );
     d->mUnsubscribeUrls = group.readEntry( "MailingListUnsubscribeAddress", QStringList() );
     d->mArchiveUrls = group.readEntry( "MailingListArchiveAddress", QStringList() );
-    d->mOwnerUrls = group.readEntry( "MailingListOwnerddress", QStringList() );
+    d->mOwnerUrls = group.readEntry( "MailingListOwnerAddress", QStringList() );
     d->mHelpUrls = group.readEntry( "MailingListHelpAddress", QStringList() );
 }
