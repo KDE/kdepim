@@ -46,7 +46,7 @@ using namespace PimCommon;
 static QString newDBusObjectName()
 {
     static int s_count = 0;
-    QString name(QLatin1String("/STORAGESERVICE_ServiceManager"));
+    QString name(QStringLiteral("/STORAGESERVICE_ServiceManager"));
     if (s_count++) {
         name += QLatin1Char('_');
         name += QString::number(s_count);
@@ -61,9 +61,9 @@ StorageServiceManager::StorageServiceManager(QObject *parent)
     QDBusConnection dbus = QDBusConnection::sessionBus();
     const QString dbusPath = newDBusObjectName();
     setProperty("uniqueDBusPath", dbusPath);
-    const QString dbusInterface = QLatin1String("org.kde.pim.StorageManager");
+    const QString dbusInterface = QStringLiteral("org.kde.pim.StorageManager");
     dbus.registerObject(dbusPath, this);
-    dbus.connect(QString(), QString(), dbusInterface, QLatin1String("configChanged"), this,
+    dbus.connect(QString(), QString(), dbusInterface, QStringLiteral("configChanged"), this,
                  SLOT(slotConfigChanged(QString)));
 
     readConfig();
@@ -324,7 +324,7 @@ void StorageServiceManager::readConfig()
 {
     mListService.clear();
     KConfig conf(kconfigName());
-    KConfigGroup grp(&conf, QLatin1String("General"));
+    KConfigGroup grp(&conf, QStringLiteral("General"));
 
     const QStringList services = grp.readEntry("Services", QStringList());
     Q_FOREACH (const QString &service, services) {
@@ -365,7 +365,7 @@ void StorageServiceManager::readConfig()
 void StorageServiceManager::writeConfig()
 {
     KConfig conf(kconfigName());
-    KConfigGroup grp(&conf, QLatin1String("General"));
+    KConfigGroup grp(&conf, QStringLiteral("General"));
     grp.writeEntry("Services", mListService.keys());
     conf.sync();
 }
@@ -516,6 +516,6 @@ StorageServiceAbstract::Capabilities StorageServiceManager::capabilities(Service
 
 QString StorageServiceManager::kconfigName()
 {
-    return QLatin1String("storageservicerc");
+    return QStringLiteral("storageservicerc");
 }
 

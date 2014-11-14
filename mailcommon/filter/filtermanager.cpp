@@ -43,8 +43,8 @@ public:
     Private(FilterManager *qq)
         : q(qq), mMailFilterAgentInterface(0), mMonitor(new Akonadi::Monitor), mInitialized(false)
     {
-        mMailFilterAgentInterface = new org::freedesktop::Akonadi::MailFilterAgent(QLatin1String("org.freedesktop.Akonadi.MailFilterAgent"),
-                QLatin1String("/MailFilterAgent"),
+        mMailFilterAgentInterface = new org::freedesktop::Akonadi::MailFilterAgent(QStringLiteral("org.freedesktop.Akonadi.MailFilterAgent"),
+                QStringLiteral("/MailFilterAgent"),
                 QDBusConnection::sessionBus(), q);
     }
 
@@ -65,7 +65,7 @@ public:
 
 void FilterManager::Private::readConfig()
 {
-    KSharedConfig::Ptr config = KSharedConfig::openConfig(QLatin1String("akonadi_mailfilter_agentrc"));
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(QStringLiteral("akonadi_mailfilter_agentrc"));
     clear();
     QStringList emptyFilters;
     mFilters = FilterImporterExporter::readFiltersFromConfig(config, emptyFilters);
@@ -74,7 +74,7 @@ void FilterManager::Private::readConfig()
 
 void FilterManager::Private::writeConfig(bool withSync) const
 {
-    KSharedConfig::Ptr config = KSharedConfig::openConfig(QLatin1String("akonadi_mailfilter_agentrc"));
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(QStringLiteral("akonadi_mailfilter_agentrc"));
 
     // Now, write out the new stuff:
     FilterImporterExporter::writeFiltersToConfig(mFilters, config);

@@ -41,7 +41,7 @@ NoteActionConfig::NoteActionConfig(QWidget *parent)
     layout->addWidget(label_MailAction, 0, 0);
 
     QLineEdit *kcfg_MailAction = new QLineEdit(this);
-    kcfg_MailAction->setObjectName(QLatin1String("kcfg_MailAction"));
+    kcfg_MailAction->setObjectName(QStringLiteral("kcfg_MailAction"));
     label_MailAction->setBuddy(kcfg_MailAction);
     layout->addWidget(kcfg_MailAction, 0, 1);
 

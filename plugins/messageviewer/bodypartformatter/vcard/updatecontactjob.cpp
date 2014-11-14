@@ -74,7 +74,7 @@ public:
         const QString text = i18n("The vCard was updated to your address book; "
                                   "you can add more information to this "
                                   "entry by opening the address book.");
-        KMessageBox::information(mParentWidget, text, QString(), QLatin1String("updatedtokabc"));
+        KMessageBox::information(mParentWidget, text, QString(), QStringLiteral("updatedtokabc"));
 
         q->emitResult();
     }

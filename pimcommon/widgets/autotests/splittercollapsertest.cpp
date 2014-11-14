@@ -30,13 +30,13 @@ TestSplitter::TestSplitter(QWidget *parent)
     setLayout(lay);
     splitter = new QSplitter;
     lay->addWidget(splitter);
-    splitter->setObjectName(QLatin1String("splitter"));
+    splitter->setObjectName(QStringLiteral("splitter"));
     edit1 = new QTextEdit;
-    edit1->setObjectName(QLatin1String("edit1"));
+    edit1->setObjectName(QStringLiteral("edit1"));
     splitter->addWidget(edit1);
 
     edit2 = new QTextEdit;
-    edit2->setObjectName(QLatin1String("edit2"));
+    edit2->setObjectName(QStringLiteral("edit2"));
     splitter->addWidget(edit2);
 }
 
@@ -61,16 +61,16 @@ void SplitterCollapserTest::shouldHaveDefaultValue()
     QTest::qWaitForWindowExposed(&testSplitter);
     QVERIFY(testSplitter.isVisible());
 
-    PimCommon::SplitterCollapser *collapser = testSplitter.findChild<PimCommon::SplitterCollapser *>(QLatin1String("splittercollapser"));
+    PimCommon::SplitterCollapser *collapser = testSplitter.findChild<PimCommon::SplitterCollapser *>(QStringLiteral("splittercollapser"));
     QVERIFY(collapser);
     QVERIFY(!collapser->isCollapsed());
 
-    QTextEdit *edit1 = testSplitter.findChild<QTextEdit *>(QLatin1String("edit1"));
+    QTextEdit *edit1 = testSplitter.findChild<QTextEdit *>(QStringLiteral("edit1"));
     QVERIFY(edit1);
-    QTextEdit *edit2 = testSplitter.findChild<QTextEdit *>(QLatin1String("edit2"));
+    QTextEdit *edit2 = testSplitter.findChild<QTextEdit *>(QStringLiteral("edit2"));
     QVERIFY(edit2);
 
-    QSplitter *splitter = testSplitter.findChild<QSplitter *>(QLatin1String("splitter"));
+    QSplitter *splitter = testSplitter.findChild<QSplitter *>(QStringLiteral("splitter"));
     QVERIFY(splitter);
 }
 
@@ -102,7 +102,7 @@ void SplitterCollapserTest::shouldRestoreCorrectPosition()
 
     QVERIFY(!splitterCollapser->isCollapsed());
 
-    QTextEdit *edit2 = testSplitter.findChild<QTextEdit *>(QLatin1String("edit2"));
+    QTextEdit *edit2 = testSplitter.findChild<QTextEdit *>(QStringLiteral("edit2"));
 
     int size = edit2->width();
 
@@ -128,7 +128,7 @@ void SplitterCollapserTest::shouldRestoreCorrectPositionForFirstWidget()
 
     QVERIFY(!splitterCollapser->isCollapsed());
 
-    QTextEdit *edit1 = testSplitter.findChild<QTextEdit *>(QLatin1String("edit1"));
+    QTextEdit *edit1 = testSplitter.findChild<QTextEdit *>(QStringLiteral("edit1"));
 
     int size = edit1->width();
 
@@ -153,7 +153,7 @@ void SplitterCollapserTest::shouldTestVerticalSplitterFirstWidget()
 
     QVERIFY(!splitterCollapser->isCollapsed());
 
-    QTextEdit *edit1 = testSplitter.findChild<QTextEdit *>(QLatin1String("edit1"));
+    QTextEdit *edit1 = testSplitter.findChild<QTextEdit *>(QStringLiteral("edit1"));
 
     int size = edit1->height();
 
@@ -179,7 +179,7 @@ void SplitterCollapserTest::shouldTestVerticalSplitterSecondWidget()
 
     QVERIFY(!splitterCollapser->isCollapsed());
 
-    QTextEdit *edit2 = testSplitter.findChild<QTextEdit *>(QLatin1String("edit2"));
+    QTextEdit *edit2 = testSplitter.findChild<QTextEdit *>(QStringLiteral("edit2"));
 
     int size = edit2->height();
 

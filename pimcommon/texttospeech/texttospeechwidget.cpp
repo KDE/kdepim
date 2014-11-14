@@ -48,20 +48,20 @@ TextToSpeechWidget::TextToSpeechWidget(QWidget *parent)
     hbox->addWidget(mVolume);
 
     mStopButton = new QToolButton;
-    mStopButton->setObjectName(QLatin1String("stopbutton"));
+    mStopButton->setObjectName(QStringLiteral("stopbutton"));
     mStopButton->setToolTip(i18n("Stop"));
     connect(mStopButton, &QToolButton::clicked, this, &TextToSpeechWidget::slotStop);
     hbox->addWidget(mStopButton);
 
     mPlayPauseButton = new QToolButton;
-    mPlayPauseButton->setObjectName(QLatin1String("playpausebutton"));
+    mPlayPauseButton->setObjectName(QStringLiteral("playpausebutton"));
     connect(mPlayPauseButton, &QToolButton::clicked, this, &TextToSpeechWidget::slotPlayPause);
     hbox->addWidget(mPlayPauseButton);
 
     mConfigureButton = new QToolButton;
-    mConfigureButton->setIcon(QIcon::fromTheme(QLatin1String("configure")));
+    mConfigureButton->setIcon(QIcon::fromTheme(QStringLiteral("configure")));
     mConfigureButton->setToolTip(i18n("Configure..."));
-    mConfigureButton->setObjectName(QLatin1String("configurebutton"));
+    mConfigureButton->setObjectName(QStringLiteral("configurebutton"));
     connect(mConfigureButton, &QToolButton::clicked, this, &TextToSpeechWidget::slotConfigure);
     hbox->addWidget(mConfigureButton);
 

@@ -35,7 +35,7 @@ TextToSpeechConfigWidget::TextToSpeechConfigWidget(QWidget *parent)
     QFormLayout *layout = new QFormLayout;
     setLayout(layout);
     mVolume = new QSlider;
-    mVolume->setObjectName(QLatin1String("volume"));
+    mVolume->setObjectName(QStringLiteral("volume"));
     mVolume->setRange(0, 100);
     mVolume->setOrientation(Qt::Horizontal);
     connect(mVolume, &QSlider::valueChanged, this, &TextToSpeechConfigWidget::valueChanged);
@@ -43,7 +43,7 @@ TextToSpeechConfigWidget::TextToSpeechConfigWidget(QWidget *parent)
     layout->addRow(i18n("Volume:"), mVolume);
 
     mRate = new QSlider;
-    mRate->setObjectName(QLatin1String("rate"));
+    mRate->setObjectName(QStringLiteral("rate"));
     mRate->setRange(-100, 100);
     mRate->setOrientation(Qt::Horizontal);
     layout->addRow(i18n("Rate:"), mRate);
@@ -52,12 +52,12 @@ TextToSpeechConfigWidget::TextToSpeechConfigWidget(QWidget *parent)
     mPitch = new QSlider;
     mPitch->setRange(-100, 100);
     connect(mPitch, &QSlider::valueChanged, this, &TextToSpeechConfigWidget::valueChanged);
-    mPitch->setObjectName(QLatin1String("pitch"));
+    mPitch->setObjectName(QStringLiteral("pitch"));
     mPitch->setOrientation(Qt::Horizontal);
     layout->addRow(i18n("Pitch:"), mPitch);
 
     mLanguage = new QComboBox;
-    mLanguage->setObjectName(QLatin1String("language"));
+    mLanguage->setObjectName(QStringLiteral("language"));
     layout->addRow(i18n("Language:"), mLanguage);
     connect(mLanguage, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &TextToSpeechConfigWidget::valueChanged);
 

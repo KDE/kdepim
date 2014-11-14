@@ -34,7 +34,7 @@ void ViewerTest::shouldHaveDefaultValuesOnCreation()
     QTest::qWaitForWindowExposed(&viewer);
 
     QVERIFY(!viewer.message());
-    QWidget *createtodowidget = viewer.findChild<QWidget *>(QLatin1String("createtodowidget"));
+    QWidget *createtodowidget = viewer.findChild<QWidget *>(QStringLiteral("createtodowidget"));
     QVERIFY(createtodowidget);
     QCOMPARE(createtodowidget->isVisible(), false);
 
@@ -68,7 +68,7 @@ void ViewerTest::shouldShowCreateTodoWidgetWhenActivateItAndWeHaveAMessage()
     MessageViewer::Viewer viewer(0, 0, new KActionCollection(this));
     viewer.show();
     QTest::qWaitForWindowExposed(&viewer);
-    QWidget *createtodowidget = viewer.findChild<QWidget *>(QLatin1String("createtodowidget"));
+    QWidget *createtodowidget = viewer.findChild<QWidget *>(QStringLiteral("createtodowidget"));
     QVERIFY(viewer.createTodoAction());
 
     viewer.createTodoAction()->trigger();
@@ -87,7 +87,7 @@ void ViewerTest::shouldShowCreateEventWidgetWhenActivateItAndWeHaveAMessage()
     MessageViewer::Viewer viewer(0, 0, new KActionCollection(this));
     viewer.show();
     QTest::qWaitForWindowExposed(&viewer);
-    QWidget *createeventwidget = viewer.findChild<QWidget *>(QLatin1String("createeventwidget"));
+    QWidget *createeventwidget = viewer.findChild<QWidget *>(QStringLiteral("createeventwidget"));
     QVERIFY(viewer.createEventAction());
 
     viewer.createTodoAction()->trigger();

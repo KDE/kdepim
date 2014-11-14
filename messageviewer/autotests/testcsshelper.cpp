@@ -57,7 +57,7 @@ TestCSSHelper::TestCSSHelper(const QPaintDevice *pd) :
         mQuoteColor[i] = QColor(0x00, 0x80 - i * 0x10, 0x00);
     }
 
-    QFont defaultFont = QFont(QLatin1String("Sans Serif"), 9);
+    QFont defaultFont = QFont(QStringLiteral("Sans Serif"), 9);
     mBodyFont = defaultFont;
     mPrintFont = defaultFont;
     mFixedFont = defaultFont;

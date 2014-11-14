@@ -31,20 +31,20 @@ BalooDebugDialog::BalooDebugDialog(QWidget *parent)
     : QDialog(parent)
 {
     //Don't translate it's just a dialog to debug
-    setWindowTitle(QLatin1String("Debug baloo"));
+    setWindowTitle(QStringLiteral("Debug baloo"));
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     QPushButton *user1Button = new QPushButton;
     buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
     //Don't translate it.
-    user1Button->setText(QLatin1String("Save As..."));
+    user1Button->setText(QStringLiteral("Save As..."));
     connect(user1Button, &QPushButton::clicked, this, &BalooDebugDialog::slotSaveAs);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &BalooDebugDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &BalooDebugDialog::reject);
     mBalooDebugWidget = new BalooDebugWidget(this);
-    mBalooDebugWidget->setObjectName(QLatin1String("baloodebugwidget"));
+    mBalooDebugWidget->setObjectName(QStringLiteral("baloodebugwidget"));
     mainLayout->addWidget(mBalooDebugWidget);
     mainLayout->addWidget(buttonBox);
     readConfig();
@@ -87,7 +87,7 @@ void BalooDebugDialog::doSearch()
 
 void BalooDebugDialog::slotSaveAs()
 {
-    const QString filter = QLatin1String("*.txt|all files (*)");
+    const QString filter = QStringLiteral("*.txt|all files (*)");
     PimCommon::Util::saveTextAs(mBalooDebugWidget->plainText(), filter, this);
 }
 

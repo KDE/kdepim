@@ -28,8 +28,7 @@ StorageServiceProgressIndicator::StorageServiceProgressIndicator(QObject *parent
     : QObject(parent),
       mProgressCount(0)
 {
-    KIconLoader loader;
-    mProgressPix = KIconLoader::global()->loadPixmapSequence(QLatin1String("process-working"), KIconLoader::SizeSmallMedium);
+    mProgressPix = KIconLoader::global()->loadPixmapSequence(QStringLiteral("process-working"), KIconLoader::SizeSmallMedium);
     mProgressTimer = new QTimer(this);
     connect(mProgressTimer, &QTimer::timeout, this, &StorageServiceProgressIndicator::slotTimerDone);
 }

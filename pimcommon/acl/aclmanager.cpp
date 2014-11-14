@@ -319,10 +319,10 @@ public:
         const QMap<QByteArray, KIMAP::Acl::Rights> rights = attribute->rights();
 
         QString resource = collection.resource();
-        if (resource.contains(QLatin1String("akonadi_kolabproxy_resource"))) {
-            QDBusInterface interface(QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_kolabproxy_resource"), QLatin1String("/KolabProxy"));
+        if (resource.contains(QStringLiteral("akonadi_kolabproxy_resource"))) {
+            QDBusInterface interface(QStringLiteral("org.freedesktop.Akonadi.Agent.akonadi_kolabproxy_resource"), QStringLiteral("/KolabProxy"));
             if (interface.isValid()) {
-                QDBusReply<QString> reply = interface.call(QLatin1String("imapResourceForCollection"), collection.remoteId().toLongLong());
+                QDBusReply<QString> reply = interface.call(QStringLiteral("imapResourceForCollection"), collection.remoteId().toLongLong());
                 if (reply.isValid()) {
                     resource = reply;
                 }

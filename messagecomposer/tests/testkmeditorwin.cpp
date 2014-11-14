@@ -29,7 +29,7 @@
 
 testKMeditorWindow::testKMeditorWindow()
 {
-    setWindowTitle(QLatin1String("test kmeditor window"));
+    setWindowTitle(QStringLiteral("test kmeditor window"));
     editor = new KMeditor;
     editor->setAcceptRichText(false);
     setCentralWidget(editor);
@@ -58,7 +58,7 @@ int main(int argc, char **argv)
 {
     KAboutData aboutData(QStringLiteral("testkmeditorwin"),
                          i18n("KMeditorTestWin"),
-                         QLatin1String("1.0"));
+                         QStringLiteral("1.0"));
 
     KAboutData::setApplicationData(aboutData);
 

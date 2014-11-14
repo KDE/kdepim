@@ -105,7 +105,7 @@ void TemplatesTextEditor::keyPressEvent(QKeyEvent *e)
 QString TemplatesTextEditor::wordUnderCursor()
 {
     static QString eow =
-        QLatin1String("~!@#$^&*()+{}|\"<>,./;'[]\\-= ");   // everything without ':', '?' and '_'
+        QStringLiteral("~!@#$^&*()+{}|\"<>,./;'[]\\-= ");   // everything without ':', '?' and '_'
     QTextCursor tc = textCursor();
 
     tc.anchor();

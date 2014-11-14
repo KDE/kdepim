@@ -127,7 +127,7 @@ void PlainTextEditor::contextMenuEvent(QContextMenuEvent *event)
         }
 
         if (!isReadOnly() && (d->supportFeatures & SpellChecking)) {
-            QAction *spellCheckAction = popup->addAction(QIcon::fromTheme(QLatin1String("tools-check-spelling")), i18n("Check Spelling..."), this, SLOT(slotCheckSpelling()));
+            QAction *spellCheckAction = popup->addAction(QIcon::fromTheme(QStringLiteral("tools-check-spelling")), i18n("Check Spelling..."), this, SLOT(slotCheckSpelling()));
             if (emptyDocument) {
                 spellCheckAction->setEnabled(false);
             }
@@ -136,7 +136,7 @@ void PlainTextEditor::contextMenuEvent(QContextMenuEvent *event)
         if (d->supportFeatures & TextToSpeech) {
             if (/*PimCommon::TextToSpeech::self()->isReady()*/1) {
                 QAction *speakAction = popup->addAction(i18n("Speak Text"));
-                speakAction->setIcon(QIcon::fromTheme(QLatin1String("preferences-desktop-text-to-speech")));
+                speakAction->setIcon(QIcon::fromTheme(QStringLiteral("preferences-desktop-text-to-speech")));
                 speakAction->setEnabled(!emptyDocument);
                 connect(speakAction, &QAction::triggered, this, &PlainTextEditor::slotSpeakText);
             }

@@ -107,7 +107,7 @@ StorageModel::StorageModel(QAbstractItemModel *model, QItemSelectionModel *selec
     EntityMimeTypeFilterModel *itemFilter = new EntityMimeTypeFilterModel(this);
     itemFilter->setSourceModel(childrenFilter);
     itemFilter->addMimeTypeExclusionFilter(Collection::mimeType());
-    itemFilter->addMimeTypeInclusionFilter(QLatin1String("message/rfc822"));
+    itemFilter->addMimeTypeInclusionFilter(QStringLiteral("message/rfc822"));
     itemFilter->setHeaderGroup(EntityTreeModel::ItemListHeaders);
 
     d->mModel = itemFilter;
@@ -169,7 +169,7 @@ QString StorageModel::id() const
     }
 
     ids.sort();
-    return ids.join(QLatin1String(":"));
+    return ids.join(QStringLiteral(":"));
 }
 
 bool StorageModel::isOutBoundFolder(const Akonadi::Collection &c) const

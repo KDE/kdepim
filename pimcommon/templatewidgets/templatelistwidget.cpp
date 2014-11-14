@@ -175,7 +175,7 @@ public:
             }
             if (lstSelectedItems.count() == 1 && !defaultTemplate) {
                 menu->addSeparator();
-                menu->addAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Remove"), q, SLOT(slotRemove()));
+                menu->addAction(QIcon::fromTheme(QStringLiteral("edit-delete")), i18n("Remove"), q, SLOT(slotRemove()));
             }
         }
         menu->addSeparator();
@@ -187,7 +187,7 @@ public:
         if (!knewstuffConfigName.isEmpty()) {
             menu->addSeparator();
             QAction *act = menu->addAction(i18n("Download new Templates..."), q, SLOT(slotDownloadTemplates()));
-            act->setIcon(QIcon::fromTheme(QLatin1String("get-hot-new-stuff")));
+            act->setIcon(QIcon::fromTheme(QStringLiteral("get-hot-new-stuff")));
         }
 
         menu->exec(q->mapToGlobal(pos));
@@ -208,7 +208,7 @@ public:
     void loadTemplates(KConfig *configFile)
     {
         KConfigGroup group = configFile->group("template");
-        if (group.hasKey(QLatin1String("templateCount"))) {
+        if (group.hasKey(QStringLiteral("templateCount"))) {
             const int numberTemplate = group.readEntry("templateCount", 0);
             for (int i = 0; i < numberTemplate; ++i) {
                 KConfigGroup group = configFile->group(QString::fromLatin1("templateDefine_%1").arg(i));
@@ -294,7 +294,7 @@ QList<PimCommon::defaultTemplate> TemplateListWidget::defaultTemplates()
 QStringList TemplateListWidget::mimeTypes() const
 {
     QStringList lst;
-    lst << QLatin1String("text/plain");
+    lst << QStringLiteral("text/plain");
     return lst;
 }
 

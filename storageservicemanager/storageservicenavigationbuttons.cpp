@@ -29,15 +29,15 @@
 StorageServiceNavigationButtons::StorageServiceNavigationButtons(QWidget *parent)
     : QToolBar(parent)
 {
-    mHome = addAction(QIcon::fromTheme(QLatin1String("go-home")), i18n("Home"), this, SIGNAL(goHome()));
+    mHome = addAction(QIcon::fromTheme(QStringLiteral("go-home")), i18n("Home"), this, SIGNAL(goHome()));
 
-    mGoBack = new QAction(QIcon::fromTheme(QLatin1String("go-previous")), i18n("Back"), this);
+    mGoBack = new QAction(QIcon::fromTheme(QStringLiteral("go-previous")), i18n("Back"), this);
     addAction(mGoBack);
     connect(mGoBack, &QAction::triggered, this, &StorageServiceNavigationButtons::slotGoBackClicked);
     mGoBack->setShortcuts(KStandardShortcut::shortcut(KStandardShortcut::Back));
     mGoBack->setEnabled(false);
 
-    mGoForward = new QAction(QIcon::fromTheme(QLatin1String("go-next")), i18n("Forward"), this);
+    mGoForward = new QAction(QIcon::fromTheme(QStringLiteral("go-next")), i18n("Forward"), this);
     mGoForward->setShortcuts(KStandardShortcut::shortcut(KStandardShortcut::Forward));
     connect(mGoForward, &QAction::triggered, this, &StorageServiceNavigationButtons::slotGoForwardClicked);
     addAction(mGoForward);

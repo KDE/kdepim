@@ -36,10 +36,10 @@ TextGoToLineWidget::TextGoToLineWidget(QWidget *parent)
     hbox->setMargin(2);
     setLayout(hbox);
     QToolButton *closeBtn = new QToolButton(this);
-    closeBtn->setIcon(QIcon::fromTheme(QLatin1String("dialog-close")));
+    closeBtn->setIcon(QIcon::fromTheme(QStringLiteral("dialog-close")));
     closeBtn->setIconSize(QSize(16, 16));
     closeBtn->setToolTip(i18n("Close"));
-    closeBtn->setObjectName(QLatin1String("closebutton"));
+    closeBtn->setObjectName(QStringLiteral("closebutton"));
 #ifndef QT_NO_ACCESSIBILITY
     closeBtn->setAccessibleName(i18n("Close"));
 #endif
@@ -52,13 +52,13 @@ TextGoToLineWidget::TextGoToLineWidget(QWidget *parent)
     hbox->addWidget(lab);
     mSpinbox = new QSpinBox;
     mSpinbox->setMinimum(1);
-    mSpinbox->setObjectName(QLatin1String("line"));
+    mSpinbox->setObjectName(QStringLiteral("line"));
     connect(mSpinbox, &QSpinBox::editingFinished, this, &TextGoToLineWidget::slotGoToLine);
     hbox->addWidget(mSpinbox);
-    mGoToLine = new QPushButton(QIcon::fromTheme(QLatin1String("go-jump")), i18n("Go"));
+    mGoToLine = new QPushButton(QIcon::fromTheme(QStringLiteral("go-jump")), i18n("Go"));
     mGoToLine->setFlat(true);
     connect(mGoToLine, &QPushButton::clicked, this, &TextGoToLineWidget::slotGoToLine);
-    mGoToLine->setObjectName(QLatin1String("gotoline"));
+    mGoToLine->setObjectName(QStringLiteral("gotoline"));
     hbox->addWidget(mGoToLine);
     hbox->addStretch();
     mSpinbox->setFocus();

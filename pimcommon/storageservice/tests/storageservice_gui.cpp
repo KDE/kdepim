@@ -84,9 +84,9 @@ StorageServiceTestWidget::StorageServiceTestWidget(QWidget *parent)
     connect(mStorageManager, &PimCommon::StorageServiceManager::actionFailed, this, &StorageServiceTestWidget::slotActionFailed);
     QToolBar *bar = new QToolBar;
     lay->addWidget(bar);
-    bar->addAction(QLatin1String("Settings..."), this, SLOT(slotSettings()));
-    QAction *act = bar->addAction(QLatin1String("service menu"));
-    QMenu *menu = new QMenu(QLatin1String("Service"));
+    bar->addAction(QStringLiteral("Settings..."), this, SLOT(slotSettings()));
+    QAction *act = bar->addAction(QStringLiteral("service menu"));
+    QMenu *menu = new QMenu(QStringLiteral("Service"));
     connect(menu, &QMenu::aboutToShow, this, &StorageServiceTestWidget::slotServiceMenu);
     act->setMenu(menu);
 
@@ -152,7 +152,7 @@ void StorageServiceTestWidget::slotSettings()
 
 int main(int argc, char **argv)
 {
-    KAboutData aboutData(QLatin1String("storageservice_gui"), i18n("storageservice_Gui"), QLatin1String("1.0"));
+    KAboutData aboutData(QStringLiteral("storageservice_gui"), i18n("storageservice_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for storageservice"));
     QApplication app(argc, argv);
     QCommandLineParser parser;

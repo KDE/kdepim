@@ -518,7 +518,7 @@ bool FolderTreeView::allowedToEnterFolder(const Akonadi::Collection &collection,
             i18n("Go to Next Unread Message"),
             KGuiItem(i18n("Go To")),
             KGuiItem(i18n("Do Not Go To")),     // defaults
-            QLatin1String(":kmail_AskNextFolder"), 0);
+            QStringLiteral(":kmail_AskNextFolder"), 0);
 
     return (result == KMessageBox::Yes);
 }
@@ -567,7 +567,7 @@ bool FolderTreeView::isUnreadFolder(const QModelIndex &current,
                                     i18n("Go to Next Unread Message"),
                                     KGuiItem(i18n("Go To")),
                                     KGuiItem(i18n("Do Not Go To")),     // defaults
-                                    QLatin1String(":kmail_AskNextFolder"),
+                                    QStringLiteral(":kmail_AskNextFolder"),
                                     0) == KMessageBox::No) {
                             return true; // assume selected (do not continue looping)
                         }

@@ -31,10 +31,10 @@ EventDateTimeWidget::EventDateTimeWidget(QWidget *parent)
     mainLayout->setMargin(0);
     setLayout(mainLayout);
     mDateEdit = new KDateComboBox;
-    mDateEdit->setObjectName(QLatin1String("eventdatecombobox"));
+    mDateEdit->setObjectName(QStringLiteral("eventdatecombobox"));
     mainLayout->addWidget(mDateEdit);
     mTimeEdit = new KTimeComboBox;
-    mTimeEdit->setObjectName(QLatin1String("eventtimecombobox"));
+    mTimeEdit->setObjectName(QStringLiteral("eventtimecombobox"));
     mainLayout->addWidget(mTimeEdit);
     const QDateTime currentDateTime = QDateTime::currentDateTime();
     setDateTime(currentDateTime);

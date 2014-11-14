@@ -81,7 +81,7 @@ void FavoriteCollectionWidget::updateMode()
 void FavoriteCollectionWidget::createMenu(KActionCollection *ac)
 {
     KActionMenu *iconSizeMenu  = new KActionMenu(i18n("Icon size"), this);
-    ac->addAction(QLatin1String("favorite_icon_size"), iconSizeMenu);
+    ac->addAction(QStringLiteral("favorite_icon_size"), iconSizeMenu);
 
     static const int icon_sizes[] = { 16, 22, 32 /*, 48, 64, 128 */ };
 
@@ -101,7 +101,7 @@ void FavoriteCollectionWidget::createMenu(KActionCollection *ac)
     }
 
     KActionMenu *modeFavoriteMenu = new KActionMenu(i18n("Mode"), this);
-    ac->addAction(QLatin1String("favorite_mode"), modeFavoriteMenu);
+    ac->addAction(QStringLiteral("favorite_mode"), modeFavoriteMenu);
 
     grp = new QActionGroup(modeFavoriteMenu);
     d->listMode = new QAction(i18n("List Mode"), modeFavoriteMenu);
