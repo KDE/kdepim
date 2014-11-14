@@ -37,7 +37,8 @@ void BalooDebugSearchJob::start()
 {
     const QString delvePath = QStandardPaths::findExecutable(QLatin1String("delve"));
     if (delvePath.isEmpty()) {
-        Q_EMIT error(QLatin1String("\"delve\" not installed on computer."));
+        //Don't translate it. Just debug
+        Q_EMIT error(QStringLiteral("\"delve\" not installed on computer."));
         deleteLater();
         return;
     } else {
