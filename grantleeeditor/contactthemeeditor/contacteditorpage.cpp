@@ -41,7 +41,7 @@
 
 ContactEditorPage::ContactEditorPage(const QString &projectDir, const QString &themeName, QWidget *parent)
     : QWidget(parent),
-      mThemeSession(new GrantleeThemeEditor::ThemeSession(projectDir, QLatin1String("contactthemeeditor"))),
+      mThemeSession(new GrantleeThemeEditor::ThemeSession(projectDir, QStringLiteral("contactthemeeditor"))),
       mChanged(false)
 {
     QHBoxLayout *lay = new QHBoxLayout;
@@ -49,20 +49,20 @@ ContactEditorPage::ContactEditorPage(const QString &projectDir, const QString &t
     connect(mTabWidget, &GrantleeThemeEditor::ThemeEditorTabWidget::currentChanged, this, &ContactEditorPage::slotCurrentWidgetChanged);
     lay->addWidget(mTabWidget);
     mEditorPage = new EditorPage(EditorPage::MainPage, projectDir);
-    mEditorPage->setPageFileName(QLatin1String("contact.html"));
+    mEditorPage->setPageFileName(QStringLiteral("contact.html"));
     connect(mEditorPage, &EditorPage::needUpdateViewer, this, &ContactEditorPage::slotUpdateViewer);
     connect(mEditorPage, &EditorPage::changed, this, &ContactEditorPage::slotChanged);
     mTabWidget->addTab(mEditorPage, i18n("Editor") + QLatin1String(" (contact.html)"));
 
-    mEditorEmbeddedPage = createCustomPage(QLatin1String("contact_embedded.html"));
+    mEditorEmbeddedPage = createCustomPage(QStringLiteral("contact_embedded.html"));
 
-    mEditorGroupPage = createCustomPage(QLatin1String("contactgroup.html"));
+    mEditorGroupPage = createCustomPage(QStringLiteral("contactgroup.html"));
 
-    mEditorGroupEmbeddedPage = createCustomPage(QLatin1String("contactgroup_embedded.html"));
+    mEditorGroupEmbeddedPage = createCustomPage(QStringLiteral("contactgroup_embedded.html"));
 
     GrantleeThemeEditor::DesktopFilePage::DesktopFileOptions opt;
-    mDesktopPage = new GrantleeThemeEditor::DesktopFilePage(QLatin1String("contact.html"), opt);
-    mDesktopPage->setDefaultDesktopName(QLatin1String("theme.desktop"));
+    mDesktopPage = new GrantleeThemeEditor::DesktopFilePage(QStringLiteral("contact.html"), opt);
+    mDesktopPage->setDefaultDesktopName(QStringLiteral("theme.desktop"));
     mDesktopPage->setThemeName(themeName);
     mTabWidget->addTab(mDesktopPage, i18n("Desktop File"));
 
@@ -118,7 +118,7 @@ void ContactEditorPage::insertFile()
     }
     GrantleeThemeEditor::EditorPage *page = dynamic_cast<GrantleeThemeEditor::EditorPage *>(w);
     if (page) {
-        const QString fileName = QFileDialog::getOpenFileName(this, QString(), QString(), QLatin1String("*"));
+        const QString fileName = QFileDialog::getOpenFileName(this, QString(), QString(), QStringLiteral("*"));
         if (!fileName.isEmpty()) {
             page->insertFile(fileName);
         }

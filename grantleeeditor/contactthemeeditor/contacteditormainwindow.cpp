@@ -54,7 +54,7 @@ ContactEditorMainWindow::~ContactEditorMainWindow()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
-    KConfigGroup group = config->group(QLatin1String("ContactEditorMainWindow"));
+    KConfigGroup group = config->group(QStringLiteral("ContactEditorMainWindow"));
     group.writeEntry("Size", size());
     mRecentFileAction->saveEntries(group);
 }
@@ -86,14 +86,14 @@ void ContactEditorMainWindow::setupActions()
 {
     mRecentFileAction = new KRecentFilesAction(i18n("Load Recent Theme..."), this);
     connect(mRecentFileAction, &KRecentFilesAction::urlSelected, this, &ContactEditorMainWindow::slotThemeSelected);
-    actionCollection()->addAction(QLatin1String("load_recent_theme"), mRecentFileAction);
+    actionCollection()->addAction(QStringLiteral("load_recent_theme"), mRecentFileAction);
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
-    KConfigGroup groupConfig = config->group(QLatin1String("ContactEditorMainWindow"));
+    KConfigGroup groupConfig = config->group(QStringLiteral("ContactEditorMainWindow"));
     mRecentFileAction->loadEntries(groupConfig);
 
     mAddExtraPage = new QAction(i18n("Add Extra Page..."), this);
     connect(mAddExtraPage, &QAction::triggered, this, &ContactEditorMainWindow::slotAddExtraPage);
-    actionCollection()->addAction(QLatin1String("add_extra_page"), mAddExtraPage);
+    actionCollection()->addAction(QStringLiteral("add_extra_page"), mAddExtraPage);
 
     mUploadTheme = KNS3::standardAction(i18n("Upload theme..."), this, SLOT(slotUploadTheme()), actionCollection(), "upload_theme");
 
@@ -112,21 +112,21 @@ void ContactEditorMainWindow::setupActions()
     KStandardAction::preferences(this, SLOT(slotConfigure()), actionCollection());
 
     mInstallTheme = new QAction(i18n("Install theme"), this);
-    actionCollection()->addAction(QLatin1String("install_theme"), mInstallTheme);
+    actionCollection()->addAction(QStringLiteral("install_theme"), mInstallTheme);
     connect(mInstallTheme, &QAction::triggered, this, &ContactEditorMainWindow::slotInstallTheme);
 
     mInsertFile = new QAction(i18n("Insert File..."), this);
-    actionCollection()->addAction(QLatin1String("insert_file"), mInsertFile);
+    actionCollection()->addAction(QStringLiteral("insert_file"), mInsertFile);
     connect(mInsertFile, &QAction::triggered, this, &ContactEditorMainWindow::slotInsertFile);
 
     mManageTheme = new QAction(i18n("Manage themes..."), this);
     connect(mManageTheme, &QAction::triggered, this, &ContactEditorMainWindow::slotManageTheme);
-    actionCollection()->addAction(QLatin1String("manage_themes"), mManageTheme);
+    actionCollection()->addAction(QStringLiteral("manage_themes"), mManageTheme);
 
     mUpdateView = new QAction(i18n("Update view"), this);
     actionCollection()->setDefaultShortcut(mUpdateView, QKeySequence(Qt::Key_F5));
     connect(mUpdateView, &QAction::triggered, this, &ContactEditorMainWindow::slotUpdateView);
-    actionCollection()->addAction(QLatin1String("update_view"), mUpdateView);
+    actionCollection()->addAction(QStringLiteral("update_view"), mUpdateView);
 }
 
 void ContactEditorMainWindow::slotConfigure()
@@ -142,7 +142,7 @@ void ContactEditorMainWindow::slotConfigure()
 
 void ContactEditorMainWindow::slotManageTheme()
 {
-    QPointer<GrantleeThemeEditor::ManageThemes> dialog = new GrantleeThemeEditor::ManageThemes(QLatin1String("kaddressbook/viewertemplates/"), this);
+    QPointer<GrantleeThemeEditor::ManageThemes> dialog = new GrantleeThemeEditor::ManageThemes(QStringLiteral("kaddressbook/viewertemplates/"), this);
     dialog->exec();
     delete dialog;
 }
@@ -191,7 +191,7 @@ void ContactEditorMainWindow::slotOpenTheme()
         return;
     }
 
-    const QString directory = KFileDialog::getExistingDirectory(QUrl(QLatin1String("kfiledialog:///OpenTheme")), this, i18n("Select theme directory"));
+    const QString directory = KFileDialog::getExistingDirectory(QUrl(QStringLiteral("kfiledialog:///OpenTheme")), this, i18n("Select theme directory"));
     if (directory.isEmpty()) {
         return;
     }
@@ -323,7 +323,7 @@ void ContactEditorMainWindow::slotThemeSelected(const QUrl &url)
 
 void ContactEditorMainWindow::slotSaveAsTheme()
 {
-    const QString directory = KFileDialog::getExistingDirectory(QUrl(QLatin1String("kfiledialog:///SaveTheme")), this, i18n("Select theme directory"));
+    const QString directory = KFileDialog::getExistingDirectory(QUrl(QStringLiteral("kfiledialog:///SaveTheme")), this, i18n("Select theme directory"));
     if (!directory.isEmpty()) {
         if (mContactEditor) {
             mContactEditor->saveThemeAs(directory);

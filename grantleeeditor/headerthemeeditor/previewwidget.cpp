@@ -36,7 +36,7 @@ PreviewWidget::PreviewWidget(const QString &projectDirectory, QWidget *parent)
     mGrantleeHeaderStyle = new MessageViewer::GrantleeHeaderTestStyle;
     mGrantleeHeaderStyle->setAbsolutePath(projectDirectory);
     //Default
-    mGrantleeHeaderStyle->setMainFilename(QLatin1String("header.html"));
+    mGrantleeHeaderStyle->setMainFilename(QStringLiteral("header.html"));
     mViewer->setHeaderStyleAndStrategy(mGrantleeHeaderStyle,
                                        MessageViewer::HeaderStrategy::create(QString()));
     lay->addWidget(mViewer);
@@ -67,8 +67,8 @@ void PreviewWidget::slotMainFileNameChanged(const QString &filename)
 void PreviewWidget::loadConfig()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
-    if (config->hasGroup(QLatin1String("Global"))) {
-        KConfigGroup group = config->group(QLatin1String("Global"));
+    if (config->hasGroup(QStringLiteral("Global"))) {
+        KConfigGroup group = config->group(QStringLiteral("Global"));
         mDefaultEmail = group.readEntry("defaultEmail", themeeditorutil::defaultMail()).toLatin1();
     } else {
         mDefaultEmail = themeeditorutil::defaultMail().toLatin1();

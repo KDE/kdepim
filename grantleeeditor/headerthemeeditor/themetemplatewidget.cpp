@@ -44,7 +44,7 @@ ThemeTemplateWidget::ThemeTemplateWidget(const QString &title, QWidget *parent)
     QVBoxLayout *lay = new QVBoxLayout;
     QLabel *lab = new QLabel(title);
     lay->addWidget(lab);
-    mListTemplate = new ThemeTemplateListWidget(QLatin1String("headerthemeeditorrc"));
+    mListTemplate = new ThemeTemplateListWidget(QStringLiteral("headerthemeeditorrc"));
     mListTemplate->setWhatsThis(i18n("You can drag and drop element on editor to import template"));
     connect(mListTemplate, &ThemeTemplateListWidget::insertTemplate, this, &ThemeTemplateWidget::insertTemplate);
     lay->addWidget(mListTemplate);

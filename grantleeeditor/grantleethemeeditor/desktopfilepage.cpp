@@ -83,7 +83,7 @@ DesktopFilePage::DesktopFilePage(const QString &defaultFileName, DesktopFilePage
     lab = new QLabel(i18n("Version:"));
     mVersion = new QLineEdit;
     mVersion->setClearButtonEnabled(true);
-    mVersion->setText(QLatin1String("0.1"));
+    mVersion->setText(QStringLiteral("0.1"));
     lay->addWidget(lab, row, 0);
     lay->addWidget(mVersion, row, 1);
 
@@ -164,16 +164,16 @@ void DesktopFilePage::loadTheme(const QString &path)
 {
     const QString filename = path + QDir::separator() + mDefaultDesktopName;
     KDesktopFile desktopFile(filename);
-    mName->setText(desktopFile.desktopGroup().readEntry(QLatin1String("Name")));
-    mDescription->setPlainText(desktopFile.desktopGroup().readEntry(QLatin1String("Description")));
+    mName->setText(desktopFile.desktopGroup().readEntry(QStringLiteral("Name")));
+    mDescription->setPlainText(desktopFile.desktopGroup().readEntry(QStringLiteral("Description")));
     if (mFilename) {
-        mFilename->setText(desktopFile.desktopGroup().readEntry(QLatin1String("FileName")));
+        mFilename->setText(desktopFile.desktopGroup().readEntry(QStringLiteral("FileName")));
     }
-    mAuthor->setText(desktopFile.desktopGroup().readEntry(QLatin1String("Author")));
-    mEmail->setText(desktopFile.desktopGroup().readEntry(QLatin1String("AuthorEmail")));
-    mVersion->setText(desktopFile.desktopGroup().readEntry(QLatin1String("ThemeVersion")));
+    mAuthor->setText(desktopFile.desktopGroup().readEntry(QStringLiteral("Author")));
+    mEmail->setText(desktopFile.desktopGroup().readEntry(QStringLiteral("AuthorEmail")));
+    mVersion->setText(desktopFile.desktopGroup().readEntry(QStringLiteral("ThemeVersion")));
     if (mExtraDisplayHeaders) {
-        const QStringList displayExtraHeaders = desktopFile.desktopGroup().readEntry(QLatin1String("DisplayExtraVariables"), QStringList());
+        const QStringList displayExtraHeaders = desktopFile.desktopGroup().readEntry(QStringLiteral("DisplayExtraVariables"), QStringList());
         mExtraDisplayHeaders->setStringList(displayExtraHeaders);
     }
 }
@@ -187,21 +187,21 @@ void DesktopFilePage::saveTheme(const QString &path)
 void DesktopFilePage::saveAsFilename(const QString &filename)
 {
     KDesktopFile desktopFile(filename);
-    desktopFile.desktopGroup().writeEntry(QLatin1String("Name"), mName->text());
-    desktopFile.desktopGroup().writeEntry(QLatin1String("Description"), mDescription->toPlainText());
+    desktopFile.desktopGroup().writeEntry(QStringLiteral("Name"), mName->text());
+    desktopFile.desktopGroup().writeEntry(QStringLiteral("Description"), mDescription->toPlainText());
     if (mFilename) {
-        desktopFile.desktopGroup().writeEntry(QLatin1String("FileName"), mFilename->text());
+        desktopFile.desktopGroup().writeEntry(QStringLiteral("FileName"), mFilename->text());
     }
     if (mExtraDisplayHeaders) {
         const QStringList displayExtraHeaders = mExtraDisplayHeaders->stringList();
         if (!displayExtraHeaders.isEmpty()) {
-            desktopFile.desktopGroup().writeEntry(QLatin1String("DisplayExtraVariables"), mExtraDisplayHeaders->stringList());
+            desktopFile.desktopGroup().writeEntry(QStringLiteral("DisplayExtraVariables"), mExtraDisplayHeaders->stringList());
         }
     }
 
-    desktopFile.desktopGroup().writeEntry(QLatin1String("Author"), mAuthor->text());
-    desktopFile.desktopGroup().writeEntry(QLatin1String("AuthorEmail"), mEmail->text());
-    desktopFile.desktopGroup().writeEntry(QLatin1String("ThemeVersion"), mVersion->text());
+    desktopFile.desktopGroup().writeEntry(QStringLiteral("Author"), mAuthor->text());
+    desktopFile.desktopGroup().writeEntry(QStringLiteral("AuthorEmail"), mEmail->text());
+    desktopFile.desktopGroup().writeEntry(QStringLiteral("ThemeVersion"), mVersion->text());
     desktopFile.desktopGroup().sync();
 }
 

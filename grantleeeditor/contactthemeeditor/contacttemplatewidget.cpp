@@ -44,7 +44,7 @@ ContactTemplateWidget::ContactTemplateWidget(const QString &title, QWidget *pare
     QVBoxLayout *lay = new QVBoxLayout;
     QLabel *lab = new QLabel(title);
     lay->addWidget(lab);
-    mListTemplate = new ContactTemplateListWidget(QLatin1String("contactthemeeditorrc"));
+    mListTemplate = new ContactTemplateListWidget(QStringLiteral("contactthemeeditorrc"));
     mListTemplate->setWhatsThis(i18n("You can drag and drop element on editor to import template"));
     connect(mListTemplate, &ContactTemplateListWidget::insertTemplate, this, &ContactTemplateWidget::insertTemplate);
     lay->addWidget(mListTemplate);

@@ -65,7 +65,7 @@ void ThemeEditorTabWidget::slotTabContextMenuRequest(const QPoint &pos)
     if (page->pageType() == EditorPage::ExtraPage) {
         QMenu menu(this);
         QAction *closeTab = menu.addAction(i18nc("@action:inmenu", "Close Tab"));
-        closeTab->setIcon(QIcon::fromTheme(QLatin1String("tab-close")));
+        closeTab->setIcon(QIcon::fromTheme(QStringLiteral("tab-close")));
 
         QAction *action = menu.exec(mapToGlobal(pos));
 

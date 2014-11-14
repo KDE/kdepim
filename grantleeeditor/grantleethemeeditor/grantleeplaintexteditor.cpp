@@ -99,7 +99,7 @@ void GrantleePlainTextEditor::keyPressEvent(QKeyEvent *e)
 
 QString GrantleePlainTextEditor::wordUnderCursor() const
 {
-    static QString eow = QLatin1String("~!@#$%^&*()+{}|\"<>,./;'[]\\-= ");   // everything without ':', '?' and '_'
+    static QString eow = QStringLiteral("~!@#$%^&*()+{}|\"<>,./;'[]\\-= ");   // everything without ':', '?' and '_'
     QTextCursor tc = textCursor();
 
     tc.anchor();

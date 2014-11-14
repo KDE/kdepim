@@ -29,20 +29,20 @@
 
 int main(int argc, char **argv)
 {
-    Kdelibs4ConfigMigrator migrate(QLatin1String("contactthemeeditor"));
-    migrate.setConfigFiles(QStringList() << QLatin1String("contactthemeeditorrc"));
-    migrate.setUiFiles(QStringList() << QLatin1String("contactthemeeditorui.rc"));
+    Kdelibs4ConfigMigrator migrate(QStringLiteral("contactthemeeditor"));
+    migrate.setConfigFiles(QStringList() << QStringLiteral("contactthemeeditorrc"));
+    migrate.setUiFiles(QStringList() << QStringLiteral("contactthemeeditorui.rc"));
     migrate.migrate();
     KLocalizedString::setApplicationDomain("contactthemeeditor");
     QApplication app(argc, argv);
     KAboutData aboutData(QStringLiteral("contactthemeeditor"),
                          i18n("Contact Theme Editor"),
-                         QLatin1String(KDEPIM_VERSION),
+                         QStringLiteral(KDEPIM_VERSION),
                          i18n("Contact Theme Editor"),
                          KAboutLicense::GPL_V2,
                          i18n("Copyright © 2013-2014 contactthemeeditor authors"));
     aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QStringLiteral("montel@kde.org"));
-    QApplication::setWindowIcon(QIcon::fromTheme(QLatin1String("kaddressbook")));
+    QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("kaddressbook")));
     aboutData.setOrganizationDomain(QByteArray("kde.org"));
     aboutData.setProductName(QByteArray("contactthemeeditor"));
 

@@ -110,8 +110,8 @@ void ContactPreviewWidget::loadConfig()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
-    if (config->hasGroup(QLatin1String("Global"))) {
-        KConfigGroup group = config->group(QLatin1String("Global"));
+    if (config->hasGroup(QStringLiteral("Global"))) {
+        KConfigGroup group = config->group(QStringLiteral("Global"));
         const QString defaultContact = group.readEntry("defaultContact", contacteditorutil::defaultContact());
         if (!defaultContact.isEmpty()) {
             KContacts::VCardConverter converter;

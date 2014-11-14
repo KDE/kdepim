@@ -82,7 +82,7 @@ ThemeConfigureDialog::~ThemeConfigureDialog()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
-    KConfigGroup group = config->group(QLatin1String("ThemeConfigureDialog"));
+    KConfigGroup group = config->group(QStringLiteral("ThemeConfigureDialog"));
     group.writeEntry("Size", size());
 }
 
@@ -101,8 +101,8 @@ void ThemeConfigureDialog::slotOkClicked()
 void ThemeConfigureDialog::readConfig()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
-    if (config->hasGroup(QLatin1String("Global"))) {
-        KConfigGroup group = config->group(QLatin1String("Global"));
+    if (config->hasGroup(QStringLiteral("Global"))) {
+        KConfigGroup group = config->group(QStringLiteral("Global"));
         mConfigureWidget->readConfig();
         mDefaultEmail->setPlainText(group.readEntry("defaultEmail", themeeditorutil::defaultMail()));
         mDefaultTemplate->setPlainText(group.readEntry("defaultTemplate", QString()));
@@ -120,7 +120,7 @@ void ThemeConfigureDialog::readConfig()
 void ThemeConfigureDialog::writeConfig()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
-    KConfigGroup group = config->group(QLatin1String("Global"));
+    KConfigGroup group = config->group(QStringLiteral("Global"));
     group.writeEntry("defaultEmail", mDefaultEmail->toPlainText());
     group.writeEntry("defaultTemplate", mDefaultTemplate->toPlainText());
     mConfigureWidget->writeConfig();

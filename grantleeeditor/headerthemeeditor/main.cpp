@@ -32,20 +32,20 @@
 
 int main(int argc, char **argv)
 {
-    Kdelibs4ConfigMigrator migrate(QLatin1String("headerthemeeditor"));
-    migrate.setConfigFiles(QStringList() << QLatin1String("headerthemeeditorrc"));
-    migrate.setUiFiles(QStringList() << QLatin1String("headerthemeeditorui.rc"));
+    Kdelibs4ConfigMigrator migrate(QStringLiteral("headerthemeeditor"));
+    migrate.setConfigFiles(QStringList() << QStringLiteral("headerthemeeditorrc"));
+    migrate.setUiFiles(QStringList() << QStringLiteral("headerthemeeditorui.rc"));
     migrate.migrate();
     KLocalizedString::setApplicationDomain("headerthemeeditor");
     QApplication app(argc, argv);
     KAboutData aboutData(QStringLiteral("headerthemeeditor"),
                          i18n("Header Theme Editor"),
-                         QLatin1String(KDEPIM_VERSION),
+                         QStringLiteral(KDEPIM_VERSION),
                          i18n("Messageviewer Header Theme Editor"),
                          KAboutLicense::GPL_V2,
                          i18n("Copyright © 2013, 2014 headerthemeeditor authors"));
     aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QStringLiteral("montel@kde.org"));
-    QApplication::setWindowIcon(QIcon::fromTheme(QLatin1String("kmail")));
+    QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("kmail")));
     aboutData.setOrganizationDomain(QByteArray("kde.org"));
     aboutData.setProductName(QByteArray("headerthemeeditor"));
 

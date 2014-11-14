@@ -84,7 +84,7 @@ ContactConfigureDialog::~ContactConfigureDialog()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
-    KConfigGroup group = config->group(QLatin1String("ContactConfigureDialog"));
+    KConfigGroup group = config->group(QStringLiteral("ContactConfigureDialog"));
     group.writeEntry("Size", size());
 }
 
@@ -111,8 +111,8 @@ void ContactConfigureDialog::readConfig()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
-    if (config->hasGroup(QLatin1String("Global"))) {
-        KConfigGroup group = config->group(QLatin1String("Global"));
+    if (config->hasGroup(QStringLiteral("Global"))) {
+        KConfigGroup group = config->group(QStringLiteral("Global"));
         const QString defaultContact = group.readEntry("defaultContact", contacteditorutil::defaultContact());
         if (!defaultContact.isEmpty()) {
             KContacts::VCardConverter converter;
@@ -145,7 +145,7 @@ void ContactConfigureDialog::readConfig()
 void ContactConfigureDialog::writeConfig()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
-    KConfigGroup group = config->group(QLatin1String("Global"));
+    KConfigGroup group = config->group(QStringLiteral("Global"));
     const KContacts::Addressee addr = mDefaultContact->contact();
     KContacts::VCardConverter converter;
     const QByteArray data = converter.exportVCard(addr, KContacts::VCardConverter::v3_0);

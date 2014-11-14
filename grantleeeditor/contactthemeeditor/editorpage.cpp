@@ -57,7 +57,7 @@ EditorPage::EditorPage(GrantleeThemeEditor::EditorPage::PageType type, const QSt
     mEditor = new ContactEditorWidget;
 
     if (mType == MainPage) {
-        KConfigGroup group(KSharedConfig::openConfig(), QLatin1String("Global"));
+        KConfigGroup group(KSharedConfig::openConfig(), QStringLiteral("Global"));
         mEditor->setPlainText(group.readEntry("defaultTemplate", QString()));
     }
     mMainSplitter->addWidget(mEditor);
