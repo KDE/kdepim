@@ -48,12 +48,12 @@ public:
      * @param parentWidget the parent widget of this EditorWatcher, which will be used as the parent
      *                     widget for message dialogs.
      */
-    EditorWatcher(const KUrl &url, const QString &mimeType, bool openWith,
+    EditorWatcher(const QUrl &url, const QString &mimeType, bool openWith,
                   QObject *parent, QWidget *parentWidget);
 
     bool start();
     bool fileChanged() const;
-    KUrl url() const;
+    QUrl url() const;
 signals:
     void editDone(MessageViewer::EditorWatcher *watcher);
 
@@ -63,7 +63,7 @@ private slots:
     void checkEditDone();
 
 private:
-    KUrl mUrl;
+    QUrl mUrl;
     QString mMimeType;
     QTimer mTimer;
     QTime mEditTime;

@@ -42,7 +42,7 @@
 
 namespace MessageViewer
 {
-EditorWatcher::EditorWatcher(const KUrl &url, const QString &mimeType, bool openWith,
+EditorWatcher::EditorWatcher(const QUrl &url, const QString &mimeType, bool openWith,
                              QObject *parent, QWidget *parentWidget) :
     QObject(parent),
     mUrl(url),
@@ -64,7 +64,7 @@ EditorWatcher::EditorWatcher(const KUrl &url, const QString &mimeType, bool open
 bool EditorWatcher::start()
 {
     // find an editor
-    KUrl::List list;
+    QList<QUrl> list;
     list.append(mUrl);
     KService::Ptr offer = KMimeTypeTrader::self()->preferredService(mMimeType, QLatin1String("Application"));
     if (mOpenWith || !offer) {
@@ -115,7 +115,7 @@ bool EditorWatcher::fileChanged() const
     return mFileModified;
 }
 
-KUrl EditorWatcher::url() const
+QUrl EditorWatcher::url() const
 {
     return mUrl;
 }

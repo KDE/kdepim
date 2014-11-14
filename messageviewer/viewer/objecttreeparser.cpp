@@ -108,6 +108,7 @@
 #else
 # include <QWebPage>
 # include <QWebFrame>
+#include <QUrlQuery>
 #endif
 
 // other includes
@@ -2534,12 +2535,13 @@ static QString makeShowAuditLogLink(const GpgME::Error &err, const QString &audi
     }
 
     if (!auditLog.isEmpty()) {
-        KUrl url;
+        QUrl url;
         url.setScheme(QLatin1String("kmail"));
         url.setPath(QLatin1String("showAuditLog"));
-        url.addQueryItem(QLatin1String("log"), auditLog);
-
-        return QLatin1String("<a href=\"") + url.url() + QLatin1String("\">") + i18nc("The Audit Log is a detailed error log from the gnupg backend", "Show Audit Log") + QLatin1String("</a>");
+        QUrlQuery urlquery(url);
+        urlquery.addQueryItem(QLatin1String("log"), auditLog);
+        url.setQuery(urlquery);
+        return QLatin1String("<a href=\"") + url.toDisplayString() + QLatin1String("\">") + i18nc("The Audit Log is a detailed error log from the gnupg backend", "Show Audit Log") + QLatin1String("</a>");
     }
 
     return QString();
