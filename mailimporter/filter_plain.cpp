@@ -55,7 +55,7 @@ void FilterPlain::import()
     } else {
         filterInfo()->addInfoLogEntry(i18n("Importing new mail files..."));
         QStringList::ConstIterator end(files.constEnd());
-        const QString destName = QString::fromLatin1("PLAIN-%1").arg(dir.dirName());
+        const QString destName = QStringLiteral("PLAIN-%1").arg(dir.dirName());
         for (QStringList::ConstIterator mailFile = files.constBegin(); mailFile != end; ++mailFile) {
             const QString dirRealPath = dir.filePath(*mailFile);
             filterInfo()->setFrom(dirRealPath);

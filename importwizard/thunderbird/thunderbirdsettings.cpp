@@ -277,27 +277,27 @@ void ThunderbirdSettings::readLdapSettings()
     //qDebug()<<" mLdapAccountList:"<<mLdapAccountList;
     Q_FOREACH (const QString &ldapAccountName, mLdapAccountList) {
         ldapStruct ldap;
-        const QString ldapDescription = QString::fromLatin1("%1.description").arg(ldapAccountName);
+        const QString ldapDescription = QStringLiteral("%1.description").arg(ldapAccountName);
         if (mHashConfig.contains(ldapDescription)) {
             ldap.description = mHashConfig.value(ldapDescription).toString();
         }
-        const QString ldapAuthDn = QString::fromLatin1("%1.auth.dn").arg(ldapAccountName);
+        const QString ldapAuthDn = QStringLiteral("%1.auth.dn").arg(ldapAccountName);
         if (mHashConfig.contains(ldapAuthDn)) {
             ldap.dn = mHashConfig.value(ldapAuthDn).toString();
         }
-        const QString ldapAuthSaslMech = QString::fromLatin1("%1.auth.saslmech").arg(ldapAccountName);
+        const QString ldapAuthSaslMech = QStringLiteral("%1.auth.saslmech").arg(ldapAccountName);
         if (mHashConfig.contains(ldapAuthSaslMech)) {
             ldap.saslMech = mHashConfig.value(ldapAuthSaslMech).toString();
         }
-        const QString ldapFilename = QString::fromLatin1("%1.filename").arg(ldapAccountName);
+        const QString ldapFilename = QStringLiteral("%1.filename").arg(ldapAccountName);
         if (mHashConfig.contains(ldapFilename)) {
             ldap.fileName = mHashConfig.value(ldapFilename).toString();
         }
-        const QString ldapMaxHits = QString::fromLatin1("%1.maxHits").arg(ldapAccountName);
+        const QString ldapMaxHits = QStringLiteral("%1.maxHits").arg(ldapAccountName);
         if (mHashConfig.contains(ldapMaxHits)) {
             ldap.fileName = mHashConfig.value(ldapMaxHits).toInt();
         }
-        const QString ldapUri = QString::fromLatin1("%1.uri").arg(ldapAccountName);
+        const QString ldapUri = QStringLiteral("%1.uri").arg(ldapAccountName);
         if (mHashConfig.contains(ldapUri)) {
             ldap.ldapUrl = QUrl(mHashConfig.value(ldapUri).toString());
             ldap.port = ldap.ldapUrl.port();
@@ -483,8 +483,8 @@ void ThunderbirdSettings::addAuth(QMap<QString, QVariant> &settings, const QStri
 void ThunderbirdSettings::readAccount()
 {
     Q_FOREACH (const QString &account, mAccountList) {
-        const QString serverName = mHashConfig.value(QString::fromLatin1("mail.account.%1").arg(account) + QLatin1String(".server")).toString();
-        const QString accountName = QString::fromLatin1("mail.server.%1").arg(serverName);
+        const QString serverName = mHashConfig.value(QStringLiteral("mail.account.%1").arg(account) + QLatin1String(".server")).toString();
+        const QString accountName = QStringLiteral("mail.server.%1").arg(serverName);
         const QString host = mHashConfig.value(accountName + QLatin1String(".hostname")).toString();
         const QString userName = mHashConfig.value(accountName + QLatin1String(".userName")).toString();
         const QString name = mHashConfig.value(accountName + QLatin1String(".name")).toString();
@@ -649,7 +649,7 @@ void ThunderbirdSettings::readAccount()
             continue;
         }
 
-        const QString identityConfig = QString::fromLatin1("mail.account.%1").arg(account) + QLatin1String(".identities");
+        const QString identityConfig = QStringLiteral("mail.account.%1").arg(account) + QLatin1String(".identities");
         if (mHashConfig.contains(identityConfig)) {
             const QStringList idList = mHashConfig.value(identityConfig).toString().split(QLatin1Char(','));
             Q_FOREACH (const QString &id, idList) {
@@ -673,7 +673,7 @@ void ThunderbirdSettings::readTransport()
     }
 
     Q_FOREACH (const QString &smtp, smtpList) {
-        const QString smtpName = QString::fromLatin1("mail.smtpserver.%1").arg(smtp);
+        const QString smtpName = QStringLiteral("mail.smtpserver.%1").arg(smtp);
         MailTransport::Transport *mt = createTransport();
         const QString name = mHashConfig.value(smtpName + QLatin1String(".description")).toString();
         mt->setName(name);
@@ -747,7 +747,7 @@ QString convertThunderbirdPath(const QString &path)
 
 void ThunderbirdSettings::readIdentity(const QString &account)
 {
-    const QString identity = QString::fromLatin1("mail.identity.%1").arg(account);
+    const QString identity = QStringLiteral("mail.identity.%1").arg(account);
     QString fullName = mHashConfig.value(identity + QLatin1String(".fullName")).toString();
     KIdentityManagement::Identity *newIdentity = createIdentity(fullName);
 

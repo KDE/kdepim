@@ -72,18 +72,18 @@ void Ldap::create()
     bool hasMyServer = false;
     uint selHosts = group.readEntry("NumSelectedHosts", 0);
     for (uint i = 0 ; i < selHosts && !hasMyServer; ++i)
-        if (group.readEntry(QString::fromLatin1("SelectedHost%1").arg(i), QString()) == host) {
+        if (group.readEntry(QStringLiteral("SelectedHost%1").arg(i), QString()) == host) {
             hasMyServer = true;
         }
     if (!hasMyServer) {
         group.writeEntry("NumSelectedHosts", selHosts + 1);
-        group.writeEntry(QString::fromLatin1("SelectedHost%1").arg(selHosts), host);
-        group.writeEntry(QString::fromLatin1("SelectedBase%1").arg(selHosts), basedn);
-        group.writeEntry(QString::fromLatin1("SelectedPort%1").arg(selHosts), "389");
+        group.writeEntry(QStringLiteral("SelectedHost%1").arg(selHosts), host);
+        group.writeEntry(QStringLiteral("SelectedBase%1").arg(selHosts), basedn);
+        group.writeEntry(QStringLiteral("SelectedPort%1").arg(selHosts), "389");
         if (!m_authMethod.isEmpty()) {
-            group.writeEntry(QString::fromLatin1("SelectedAuth%1").arg(selHosts), m_authMethod);
-            group.writeEntry(QString::fromLatin1("SelectedBind%1").arg(selHosts), m_bindDn);
-            group.writeEntry(QString::fromLatin1("SelectedPwdBind%1").arg(selHosts), m_password);
+            group.writeEntry(QStringLiteral("SelectedAuth%1").arg(selHosts), m_authMethod);
+            group.writeEntry(QStringLiteral("SelectedBind%1").arg(selHosts), m_bindDn);
+            group.writeEntry(QStringLiteral("SelectedPwdBind%1").arg(selHosts), m_password);
         }
     }
     emit finished(i18n("LDAP set up."));

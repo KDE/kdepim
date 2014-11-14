@@ -260,7 +260,7 @@ void EventEditTest::shouldEventHasCorrectSubject()
     QCOMPARE(spy.count(), 1);
     KCalCore::Event::Ptr eventPtr = spy.at(0).at(0).value<KCalCore::Event::Ptr>();
     QVERIFY(eventPtr);
-    QCOMPARE(eventPtr->summary(), QString::fromLatin1("Reply to \"%1\"").arg(subject));
+    QCOMPARE(eventPtr->summary(), QStringLiteral("Reply to \"%1\"").arg(subject));
 }
 
 void EventEditTest::shouldSelectLineWhenPutMessage()
@@ -273,7 +273,7 @@ void EventEditTest::shouldSelectLineWhenPutMessage()
     QLineEdit *noteedit = edit.findChild<QLineEdit *>(QLatin1String("noteedit"));
     QVERIFY(noteedit->hasSelectedText());
     const QString selectedText = noteedit->selectedText();
-    QCOMPARE(selectedText, QString::fromLatin1("Reply to \"%1\"").arg(subject));
+    QCOMPARE(selectedText, QStringLiteral("Reply to \"%1\"").arg(subject));
 }
 
 void EventEditTest::shouldHaveCorrectStartEndDateTime()

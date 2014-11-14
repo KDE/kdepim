@@ -101,7 +101,7 @@ void SylpheedSettings::readCustomHeader(QFile *customHeaderFile)
         int currentHeader = (oldValue > 0) ? oldValue : 0;
         for (QMapIterator<QString, QString> it(header);  it.hasNext();) {
             it.next();
-            addComposerHeaderGroup(QString::fromLatin1("Mime #%1").arg(currentHeader), (it).key(), (it).value());
+            addComposerHeaderGroup(QStringLiteral("Mime #%1").arg(currentHeader), (it).key(), (it).value());
             ++currentHeader;
         }
     }

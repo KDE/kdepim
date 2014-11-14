@@ -19,7 +19,7 @@
 
 QString themeeditorutil::defaultMail()
 {
-    const QString mail = QString::fromLatin1("From: montel@example.com\n"
+    const QString mail = QStringLiteral("From: montel@example.com\n"
                          "To: kde@example.com\n"
                          "Sender: montel@example.com\n"
                          "MIME-Version: 1.0\n"

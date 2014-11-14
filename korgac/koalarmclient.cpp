@@ -127,7 +127,7 @@ void KOAlarmClient::deferredInit()
     const int numReminders = genGroup.readEntry("Reminders", 0);
 
     for (int i = 1; i <= numReminders; ++i) {
-        const QString group(QString::fromLatin1("Incidence-%1").arg(i));
+        const QString group(QStringLiteral("Incidence-%1").arg(i));
         const KConfigGroup incGroup(KSharedConfig::openConfig(), group);
 
         const QUrl url = incGroup.readEntry("AkonadiUrl");
@@ -298,7 +298,7 @@ QString KOAlarmClient::dumpDebug()
 {
     KConfigGroup cfg(KSharedConfig::openConfig(), "Alarms");
     const QDateTime lastChecked = cfg.readEntry("CalendarsLastChecked", QDateTime());
-    QString str = QString::fromLatin1("Last Check: %1").arg(lastChecked.toString());
+    const QString str = QStringLiteral("Last Check: %1").arg(lastChecked.toString());
     return str;
 }
 

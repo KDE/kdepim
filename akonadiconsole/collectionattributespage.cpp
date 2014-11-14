@@ -50,11 +50,11 @@ void CollectionAttributePage::load(const Collection &col)
     for (int i = 0; i < list.count(); ++i) {
         QModelIndex index = mModel->index(i, 0);
         Q_ASSERT(index.isValid());
-        mModel->setData(index, QString::fromLatin1(list[i]->type()));
+        mModel->setData(index, QString::fromLatin1(list.at(i)->type()));
         mModel->item(i, 0)->setEditable(false);
         index = mModel->index(i, 1);
         Q_ASSERT(index.isValid());
-        mModel->setData(index, QString::fromLatin1(list[i]->serialized()));
+        mModel->setData(index, QString::fromLatin1(list.at(i)->serialized()));
         mModel->itemFromIndex(index)->setFlags(Qt::ItemIsEditable | mModel->flags(index));
     }
     ui.attrView->setModel(mModel);

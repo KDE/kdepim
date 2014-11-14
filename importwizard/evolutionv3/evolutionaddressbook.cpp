@@ -43,7 +43,7 @@ void EvolutionAddressBook::exportEvolutionAddressBook()
     QFile evolutionFile;
     bool found = false;
     for (int i = 0; i < 9; ++i) {
-        evolutionFile.setFileName(QString::fromLatin1("/usr/lib/evolution/3.%1/evolution-addressbook-export").arg(i));
+        evolutionFile.setFileName(QStringLiteral("/usr/lib/evolution/3.%1/evolution-addressbook-export").arg(i));
         if (evolutionFile.exists()) {
             found = true;
             break;
@@ -86,7 +86,7 @@ void EvolutionAddressBook::exportEvolutionAddressBook()
                 case 2:
                     if (!displayname.isEmpty() && !name.isEmpty()) {
                         arguments.clear();
-                        arguments << QLatin1String("--format=vcard") << name << QString::fromLatin1("--output=%1/%2.vcard").arg(directory).arg(displayname);
+                        arguments << QLatin1String("--format=vcard") << name << QStringLiteral("--output=%1/%2.vcard").arg(directory).arg(displayname);
                         proc.start(evolutionFile.fileName(), arguments);
                         if (proc.waitForFinished()) {
                             addAddressBookImportInfo(i18n("Address book \"%1\" exported.", displayname));

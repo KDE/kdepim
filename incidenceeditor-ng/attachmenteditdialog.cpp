@@ -85,7 +85,7 @@ AttachmentEditDialog::AttachmentEditDialog(AttachmentIconItem *item,
     } else {
         mUi->mInlineCheck->setEnabled(true);
         mUi->mStackedWidget->setCurrentIndex(1);
-        mUi->mSizeLabel->setText(QString::fromLatin1("%1 (%2)").
+        mUi->mSizeLabel->setText(QStringLiteral("%1 (%2)").
                                  arg(KIO::convertSize(item->attachment()->size())).
                                  arg(KLocale::global()->formatNumber(
                                          item->attachment()->size(), 0)));

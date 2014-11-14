@@ -67,7 +67,7 @@ QString FilterActionCopy::sieveCode() const
     } else {
         path = QString::number(mFolder.id());
     }
-    const QString result = QString::fromLatin1("fileinto :copy \"%1\";").arg(path);
+    const QString result = QStringLiteral("fileinto :copy \"%1\";").arg(path);
     return result;
 }
 

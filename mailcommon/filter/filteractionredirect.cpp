@@ -75,7 +75,7 @@ SearchRule::RequiredPart FilterActionRedirect::requiredPart() const
 
 QString FilterActionRedirect::sieveCode() const
 {
-    const QString result = QString::fromLatin1("redirect \"%1\";").arg(mParameter);
+    const QString result = QStringLiteral("redirect \"%1\";").arg(mParameter);
     return result;
 }
 

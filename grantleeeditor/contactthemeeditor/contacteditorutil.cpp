@@ -20,7 +20,7 @@
 QString contacteditorutil::defaultContact()
 {
 
-    const QString contact = QString::fromLatin1("BEGIN:VCARD\n"
+    const QString contact = QStringLiteral("BEGIN:VCARD\n"
                             "ADR;TYPE=home:;;10 street Eiffel Tower\n;Paris;;75016;France\n"
                             "EMAIL:test@kde.org\n"
                             "FN:Test\n"

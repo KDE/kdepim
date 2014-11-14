@@ -66,7 +66,7 @@ QString AbstractSettings::uniqueIdentityName(const QString &name)
     QString newName(name);
     int i = 0;
     while (!mManager->isUnique(newName)) {
-        newName = QString::fromLatin1("%1_%2").arg(name).arg(i);
+        newName = QStringLiteral("%1_%2").arg(name).arg(i);
         ++i;
     }
     return newName;
@@ -105,7 +105,7 @@ void AbstractSettings::addCheckMailOnStartup(const QString &agentIdentifyName, b
     if (agentIdentifyName.isEmpty()) {
         return;
     }
-    const QString groupName = QString::fromLatin1("Resource %1").arg(agentIdentifyName);
+    const QString groupName = QStringLiteral("Resource %1").arg(agentIdentifyName);
     addKmailConfig(groupName, QLatin1String("CheckOnStartup"), loginAtStartup);
 }
 
@@ -114,7 +114,7 @@ void AbstractSettings::addToManualCheck(const QString &agentIdentifyName, bool m
     if (agentIdentifyName.isEmpty()) {
         return;
     }
-    const QString groupName = QString::fromLatin1("Resource %1").arg(agentIdentifyName);
+    const QString groupName = QStringLiteral("Resource %1").arg(agentIdentifyName);
     addKmailConfig(groupName, QLatin1String("IncludeInManualChecks"), manualCheck);
 }
 

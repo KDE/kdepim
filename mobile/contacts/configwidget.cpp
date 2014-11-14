@@ -50,7 +50,7 @@ void ConfigWidget::load()
 {
   KConfig config( QLatin1String("akonadi_contactrc") );
   const KConfigGroup group( &config, "Show Address Settings" );
-  const QString addressUrl = group.readEntry( "AddressUrl", QString::fromLatin1( "http://open.mapquestapi.com/nominatim/v1/search.php?q=%s,+%z+%l,+%c" ) );
+  const QString addressUrl = group.readEntry( "AddressUrl", QStringLiteral( "http://open.mapquestapi.com/nominatim/v1/search.php?q=%s,+%z+%l,+%c" ) );
 
   Settings::self()->setMapService( mMapServiceBox->findData( addressUrl ) );
   mManager->updateWidgets();

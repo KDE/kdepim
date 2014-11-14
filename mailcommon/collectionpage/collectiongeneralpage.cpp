@@ -544,28 +544,28 @@ void CollectionGeneralPage::save(Collection &collection)
             QString iconName;
             switch (type) {
             case ContentsTypeCalendar:
-                iconName = QString::fromLatin1("view-calendar");
+                iconName = QStringLiteral("view-calendar");
                 break;
             case ContentsTypeContact:
-                iconName = QString::fromLatin1("view-pim-contacts");
+                iconName = QStringLiteral("view-pim-contacts");
                 break;
             case ContentsTypeNote:
-                iconName = QString::fromLatin1("view-pim-notes");
+                iconName = QStringLiteral("view-pim-notes");
                 break;
             case ContentsTypeTask:
-                iconName = QString::fromLatin1("view-pim-tasks");
+                iconName = QStringLiteral("view-pim-tasks");
                 break;
             case ContentsTypeJournal:
-                iconName = QString::fromLatin1("view-pim-journal");
+                iconName = QStringLiteral("view-pim-journal");
                 break;
             case ContentsTypeConfiguration:
-                iconName = QString::fromLatin1("configure");
+                iconName = QStringLiteral("configure");
                 break;
             case ContentsTypeFreebusy:
-                iconName = QString::fromLatin1("view-calendar-agenda");
+                iconName = QStringLiteral("view-calendar-agenda");
                 break;
             case ContentsTypeFile:
-                iconName = QString::fromLatin1("document-open");
+                iconName = QStringLiteral("document-open");
                 break;
             case ContentsTypeMail:
             default:
@@ -635,7 +635,7 @@ void CollectionGeneralPage::slotNameChanged(const QString &name)
             KStatefulBrush bgBrush(KColorScheme::View, bgColorScheme);
             mColorName = bgBrush.brush(this).color().name();
         }
-        styleSheet = QString::fromLatin1("QLineEdit{ background-color:%1 }").
+        styleSheet = QStringLiteral("QLineEdit{ background-color:%1 }").
                      arg(mColorName);
     }
     setStyleSheet(styleSheet);
