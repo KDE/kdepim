@@ -66,7 +66,7 @@ bool CustomManageSieveWidget::refreshList()
 
         QString serverName = type.name();
         last = new SieveTreeWidgetItem(treeView(), last);
-        last->setIcon(0, SmallIcon(QLatin1String("network-server")));
+        last->setIcon(0, SmallIcon(QStringLiteral("network-server")));
 
         const QUrl u = KSieveUi::Util::findSieveUrlForAccount(type.identifier());
         if (u.isEmpty()) {

@@ -66,11 +66,11 @@ KMailCVT::KMailCVT(QWidget *parent)
     KHelpMenu *helpMenu = new KHelpMenu(this, KAboutData::applicationData(), true);
     //Initialize menu
     QMenu *menu = helpMenu->menu();
-    helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(QIcon::fromTheme(QLatin1String("kmail")));
+    helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(QIcon::fromTheme(QStringLiteral("kmail")));
     button(QDialogButtonBox::Help)->setMenu(menu);
 
 #if 0 //QT5
-    setHelp(QString(), QLatin1String("kmailcvt"));
+    setHelp(QString(), QStringLiteral("kmailcvt"));
 #endif
 }
 

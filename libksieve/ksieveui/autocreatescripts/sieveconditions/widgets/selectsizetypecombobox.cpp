@@ -36,9 +36,9 @@ SelectSizeTypeComboBox::~SelectSizeTypeComboBox()
 void SelectSizeTypeComboBox::initialize()
 {
     addItem(i18n("Bytes"), QString());
-    addItem(i18n("KB"), QLatin1String("K"));
-    addItem(i18n("MB"), QLatin1String("M"));
-    addItem(i18n("GB"), QLatin1String("G"));
+    addItem(i18n("KB"), QStringLiteral("K"));
+    addItem(i18n("MB"), QStringLiteral("M"));
+    addItem(i18n("GB"), QStringLiteral("G"));
 }
 
 QString SelectSizeTypeComboBox::code() const

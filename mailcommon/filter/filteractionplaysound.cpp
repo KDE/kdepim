@@ -31,7 +31,7 @@
 using namespace MailCommon;
 
 FilterActionPlaySound::FilterActionPlaySound()
-    : FilterActionWithTest(QLatin1String("play sound"), i18n("Play Sound"))
+    : FilterActionWithTest(QStringLiteral("play sound"), i18n("Play Sound"))
     , mPlayer(0)
 {
 }

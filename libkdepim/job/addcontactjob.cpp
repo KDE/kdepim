@@ -124,7 +124,7 @@ public:
                 mParentWidget,
                 text,
                 QString(),
-                QLatin1String("addedtokabc"));
+                QStringLiteral("addedtokabc"));
         }
         q->emitResult();
     }

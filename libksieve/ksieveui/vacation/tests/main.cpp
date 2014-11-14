@@ -27,7 +27,7 @@ int main(int argc, char **argv)
     QApplication app(argc, argv);
     KAboutData aboutData(QStringLiteral("vacationmultiscripttest"),
                          i18n("VacationMultiScriptTest_Gui"),
-                         QLatin1String("1.0"));
+                         QStringLiteral("1.0"));
 
     KAboutData::setApplicationData(aboutData);
 

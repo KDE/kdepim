@@ -28,7 +28,7 @@
 
 int main(int argc, char **argv)
 {
-    KAboutData aboutData(QLatin1String("autocreatescripts_gui"), i18n("AutoCreateScripttest_Gui"), QLatin1String("1.0"));
+    KAboutData aboutData(QStringLiteral("autocreatescripts_gui"), i18n("AutoCreateScripttest_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for autocreate script dialog"));
     QApplication app(argc, argv);
     QCommandLineParser parser;

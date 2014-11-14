@@ -24,7 +24,7 @@
 using namespace MailCommon;
 
 FilterActionExec::FilterActionExec(QObject *parent)
-    : FilterActionWithCommand(QLatin1String("execute"), i18n("Execute Command"), parent)
+    : FilterActionWithCommand(QStringLiteral("execute"), i18n("Execute Command"), parent)
 {
 }
 

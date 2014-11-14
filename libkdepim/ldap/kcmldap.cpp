@@ -340,13 +340,13 @@ void KCMLdap::initGUI()
     upDownBoxVBoxLayout->setSpacing(6);
     mUpButton = new QToolButton(upDownBox);
     upDownBoxVBoxLayout->addWidget(mUpButton);
-    mUpButton->setIcon(QIcon::fromTheme(QLatin1String("go-up")));
+    mUpButton->setIcon(QIcon::fromTheme(QStringLiteral("go-up")));
     mUpButton->setIconSize(QSize(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
     mUpButton->setEnabled(false);   // b/c no item is selected yet
 
     mDownButton = new QToolButton(upDownBox);
     upDownBoxVBoxLayout->addWidget(mDownButton);
-    mDownButton->setIcon(QIcon::fromTheme(QLatin1String("go-down")));
+    mDownButton->setIcon(QIcon::fromTheme(QStringLiteral("go-down")));
     mDownButton->setIconSize(QSize(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
     mDownButton->setEnabled(false);   // b/c no item is selected yet
 

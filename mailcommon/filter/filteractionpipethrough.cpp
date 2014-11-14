@@ -29,7 +29,7 @@ FilterAction *FilterActionPipeThrough::newAction()
 }
 
 FilterActionPipeThrough::FilterActionPipeThrough(QObject *parent)
-    : FilterActionWithCommand(QLatin1String("filter app"), i18nc("pipe through with command", "Pipe Through"), parent)
+    : FilterActionWithCommand(QStringLiteral("filter app"), i18nc("pipe through with command", "Pipe Through"), parent)
 {
 }
 

@@ -26,7 +26,7 @@ int main(int argc, char **argv)
     QApplication app(argc, argv);
     app.setQuitOnLastWindowClosed(false);
     QApplication::setApplicationName(QStringLiteral("sievedebugdialog"));
-    QApplication::setApplicationVersion(QLatin1String("1.0"));
+    QApplication::setApplicationVersion(QStringLiteral("1.0"));
 
     KSieveUi::SieveDebugDialog *dlg = new KSieveUi::SieveDebugDialog;
     dlg->exec();

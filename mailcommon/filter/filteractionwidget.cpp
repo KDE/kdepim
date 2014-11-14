@@ -118,11 +118,11 @@ FilterActionWidget::FilterActionWidget(QWidget *parent)
     Q_ASSERT(d->mComboBox);
     d->mLayout->addWidget(d->mComboBox, 1, 1);
     d->mAdd = new QPushButton(widget);
-    d->mAdd->setIcon(QIcon::fromTheme(QLatin1String("list-add")));
+    d->mAdd->setIcon(QIcon::fromTheme(QStringLiteral("list-add")));
     d->mAdd->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
 
     d->mRemove = new QPushButton(widget);
-    d->mRemove->setIcon(QIcon::fromTheme(QLatin1String("list-remove")));
+    d->mRemove->setIcon(QIcon::fromTheme(QStringLiteral("list-remove")));
     d->mRemove->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
 
     mainLayout->setSpacing(4);
@@ -146,7 +146,7 @@ FilterActionWidget::FilterActionWidget(QWidget *parent)
     }
 
     // widget for the case where no action is selected.
-    d->mComboBox->addItem(QLatin1String(" "));
+    d->mComboBox->addItem(QStringLiteral(" "));
     d->mComboBox->setCurrentIndex(index);
 
     // don't show scroll bars.
