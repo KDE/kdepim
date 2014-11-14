@@ -51,7 +51,7 @@ void FollowUpReminderManager::load(bool forceReloadConfig)
     if (forceReloadConfig) {
         mConfig->reparseConfiguration();
     }
-    const QStringList itemList = mConfig->groupList().filter(QRegExp(QLatin1String("FollowupReminderItem \\d+")));
+    const QStringList itemList = mConfig->groupList().filter(QRegExp(QStringLiteral("FollowupReminderItem \\d+")));
     const int numberOfItems = itemList.count();
     QList<FollowUpReminder::FollowUpReminderInfo *> noAnswerList;
     for (int i = 0 ; i < numberOfItems; ++i) {
@@ -145,13 +145,13 @@ void FollowUpReminderManager::slotFinishTaskFailed()
 
 void FollowUpReminderManager::answerReceived(const QString &from)
 {
-    const QPixmap pixmap = QIcon::fromTheme(QLatin1String("kmail")).pixmap(KIconLoader::SizeSmall, KIconLoader::SizeSmall);
-    KNotification::event(QLatin1String("mailreceived"),
+    const QPixmap pixmap = QIcon::fromTheme(QStringLiteral("kmail")).pixmap(KIconLoader::SizeSmall, KIconLoader::SizeSmall);
+    KNotification::event(QStringLiteral("mailreceived"),
                          i18n("Answer from %1 received", from),
                          pixmap,
                          0,
                          KNotification::CloseOnTimeout,
-                         QLatin1String("akonadi_followupreminder_agent"));
+                         QStringLiteral("akonadi_followupreminder_agent"));
 
 }
 

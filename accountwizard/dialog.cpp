@@ -81,9 +81,9 @@ Dialog::Dialog(QWidget *parent, Qt::WindowFlags flags) :
     LoadPage *loadPage = new LoadPage(this);
     mLoadPage = addPage(loadPage, i18n("Loading Assistant"));
     setAppropriate(mLoadPage, false);
-    loadPage->exportObject(this, QLatin1String("Dialog"));
-    loadPage->exportObject(mSetupManager, QLatin1String("SetupManager"));
-    loadPage->exportObject(new ServerTest(this), QLatin1String("ServerTest"));
+    loadPage->exportObject(this, QStringLiteral("Dialog"));
+    loadPage->exportObject(mSetupManager, QStringLiteral("SetupManager"));
+    loadPage->exportObject(new ServerTest(this), QStringLiteral("ServerTest"));
     connect(loadPage, &LoadPage::aboutToStart, this, &Dialog::clearDynamicPages);
 
     SetupPage *setupPage = new SetupPage(this);

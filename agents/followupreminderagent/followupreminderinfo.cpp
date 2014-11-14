@@ -54,7 +54,7 @@ FollowUpReminderInfo::FollowUpReminderInfo(const FollowUpReminderInfo &info)
 
 void FollowUpReminderInfo::readConfig(const KConfigGroup &config)
 {
-    if (config.hasKey(QLatin1String("followUpReminderDate"))) {
+    if (config.hasKey(QStringLiteral("followUpReminderDate"))) {
         mFollowUpReminderDate = QDate::fromString(config.readEntry("followUpReminderDate"), Qt::ISODate);
     }
     mOriginalMessageItemId = config.readEntry("itemId", -1);

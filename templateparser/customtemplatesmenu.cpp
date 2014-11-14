@@ -35,17 +35,17 @@ CustomTemplatesMenu::CustomTemplatesMenu(QWidget *owner, KActionCollection *ac)
 {
     mOwnerActionCollection = ac;
 
-    mCustomForwardActionMenu = new KActionMenu(QIcon::fromTheme(QLatin1String("mail-forward-custom")),
+    mCustomForwardActionMenu = new KActionMenu(QIcon::fromTheme(QStringLiteral("mail-forward-custom")),
             i18n("With Custom Template"), owner);
-    mOwnerActionCollection->addAction(QLatin1String("custom_forward"), mCustomForwardActionMenu);
+    mOwnerActionCollection->addAction(QStringLiteral("custom_forward"), mCustomForwardActionMenu);
 
-    mCustomReplyActionMenu = new KActionMenu(QIcon::fromTheme(QLatin1String("mail-reply-custom")),
+    mCustomReplyActionMenu = new KActionMenu(QIcon::fromTheme(QStringLiteral("mail-reply-custom")),
             i18n("Reply With Custom Template"), owner);
-    mOwnerActionCollection->addAction(QLatin1String("custom_reply"), mCustomReplyActionMenu);
+    mOwnerActionCollection->addAction(QStringLiteral("custom_reply"), mCustomReplyActionMenu);
 
-    mCustomReplyAllActionMenu = new KActionMenu(QIcon::fromTheme(QLatin1String("mail-reply-all-custom")),
+    mCustomReplyAllActionMenu = new KActionMenu(QIcon::fromTheme(QStringLiteral("mail-reply-all-custom")),
             i18n("Reply to All With Custom Template"), owner);
-    mOwnerActionCollection->addAction(QLatin1String("custom_reply_all"), mCustomReplyAllActionMenu);
+    mOwnerActionCollection->addAction(QStringLiteral("custom_reply_all"), mCustomReplyAllActionMenu);
 
     mCustomForwardMapper = new QSignalMapper(this);
     connect(mCustomForwardMapper, SIGNAL(mapped(int)),

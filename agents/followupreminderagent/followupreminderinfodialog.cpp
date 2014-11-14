@@ -37,7 +37,7 @@ FollowUpReminderInfoDialog::FollowUpReminderInfoDialog(QWidget *parent)
     : QDialog(parent)
 {
     setWindowTitle(i18n("Configure"));
-    setWindowIcon(QIcon::fromTheme(QLatin1String("kmail")));
+    setWindowIcon(QIcon::fromTheme(QStringLiteral("kmail")));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::Help);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
@@ -50,21 +50,21 @@ FollowUpReminderInfoDialog::FollowUpReminderInfoDialog(QWidget *parent)
     connect(okButton, &QPushButton::clicked, this, &FollowUpReminderInfoDialog::slotSave);
 
     mWidget = new FollowUpReminderInfoWidget;
-    mWidget->setObjectName(QLatin1String("FollowUpReminderInfoWidget"));
+    mWidget->setObjectName(QStringLiteral("FollowUpReminderInfoWidget"));
     mainLayout->addWidget(mWidget);
     mainLayout->addWidget(buttonBox);
 
     readConfig();
     KAboutData aboutData = KAboutData(
-                               QLatin1String("followupreminderagent"),
+                               QStringLiteral("followupreminderagent"),
                                i18n("Follow Up Reminder Agent"),
-                               QLatin1String(KDEPIM_VERSION),
+                               QStringLiteral(KDEPIM_VERSION),
                                i18n("Follow Up Mail."),
                                KAboutLicense::GPL_V2,
                                i18n("Copyright (C) 2014 Laurent Montel"));
 
     aboutData.addAuthor(i18n("Laurent Montel"),
-                        i18n("Maintainer"), QLatin1String("montel@kde.org"));
+                        i18n("Maintainer"), QStringLiteral("montel@kde.org"));
 
     aboutData.setTranslator(i18nc("NAME OF TRANSLATORS", "Your names"),
                             i18nc("EMAIL OF TRANSLATORS", "Your emails"));
@@ -72,7 +72,7 @@ FollowUpReminderInfoDialog::FollowUpReminderInfoDialog(QWidget *parent)
     KHelpMenu *helpMenu = new KHelpMenu(this, aboutData, true);
     //Initialize menu
     QMenu *menu = helpMenu->menu();
-    helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(QIcon::fromTheme(QLatin1String("kmail")));
+    helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(QIcon::fromTheme(QStringLiteral("kmail")));
     buttonBox->button(QDialogButtonBox::Help)->setMenu(menu);
 }
 

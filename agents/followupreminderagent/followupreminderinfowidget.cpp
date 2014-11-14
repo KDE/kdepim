@@ -31,7 +31,7 @@
 #include <KSharedConfig>
 
 // #define DEBUG_MESSAGE_ID
-static QString followUpItemPattern = QLatin1String("FollowupReminderItem \\d+");
+static QString followUpItemPattern = QStringLiteral("FollowupReminderItem \\d+");
 
 FollowUpReminderInfoItem::FollowUpReminderInfoItem(QTreeWidget *parent)
     : QTreeWidgetItem(parent),
@@ -58,18 +58,18 @@ FollowUpReminderInfoWidget::FollowUpReminderInfoWidget(QWidget *parent)
     : QWidget(parent),
       mChanged(false)
 {
-    setObjectName(QLatin1String("FollowUpReminderInfoWidget"));
+    setObjectName(QStringLiteral("FollowUpReminderInfoWidget"));
     QHBoxLayout *hbox = new QHBoxLayout;
     mTreeWidget = new QTreeWidget;
-    mTreeWidget->setObjectName(QLatin1String("treewidget"));
+    mTreeWidget->setObjectName(QStringLiteral("treewidget"));
     QStringList headers;
     headers << i18n("To")
             << i18n("Subject")
             << i18n("Dead Line")
             << i18n("Answer")
 #ifdef DEBUG_MESSAGE_ID
-            << QLatin1String("Message Id")
-            << QLatin1String("Answer Message Id")
+            << QStringLiteral("Message Id")
+            << QStringLiteral("Answer Message Id")
 #endif
             ;
 
@@ -171,7 +171,7 @@ void FollowUpReminderInfoWidget::save()
         }
     }
     ++i;
-    KConfigGroup general = config->group(QLatin1String("General"));
+    KConfigGroup general = config->group(QStringLiteral("General"));
     general.writeEntry("Number", i);
     config->sync();
     config->reparseConfiguration();
@@ -188,7 +188,7 @@ void FollowUpReminderInfoWidget::customContextMenuRequested(const QPoint &pos)
         if (mailItem && mailItem->data(0, AnswerItemFound).toBool()) {
             showMessage = menu.addAction(i18n("Show Message"));
         }
-        QAction *deleteItem = menu.addAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Delete"));
+        QAction *deleteItem = menu.addAction(QIcon::fromTheme(QStringLiteral("edit-delete")), i18n("Delete"));
         QAction *result = menu.exec(QCursor::pos());
         if (result) {
             if (result == showMessage) {

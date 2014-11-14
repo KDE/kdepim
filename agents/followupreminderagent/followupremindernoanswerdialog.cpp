@@ -32,7 +32,7 @@ FollowUpReminderNoAnswerDialog::FollowUpReminderNoAnswerDialog(QWidget *parent)
     : QDialog(parent)
 {
     setWindowTitle(i18n("Follow Up Mail"));
-    setWindowIcon(QIcon::fromTheme(QLatin1String("kmail")));
+    setWindowIcon(QIcon::fromTheme(QStringLiteral("kmail")));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -50,7 +50,7 @@ FollowUpReminderNoAnswerDialog::FollowUpReminderNoAnswerDialog(QWidget *parent)
     vbox->addWidget(lab);
 
     mWidget = new FollowUpReminderInfoWidget;
-    mWidget->setObjectName(QLatin1String("FollowUpReminderInfoWidget"));
+    mWidget->setObjectName(QStringLiteral("FollowUpReminderInfoWidget"));
     vbox->addWidget(mWidget);
     mainLayout->addWidget(w);
     mainLayout->addWidget(buttonBox);

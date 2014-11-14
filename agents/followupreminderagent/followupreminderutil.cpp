@@ -23,7 +23,7 @@
 
 bool FollowUpReminder::FollowUpReminderUtil::followupReminderAgentWasRegistered()
 {
-    QDBusInterface interface(QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_followupreminder_agent"), QLatin1String("/FollowUpReminder"));
+    QDBusInterface interface(QStringLiteral("org.freedesktop.Akonadi.Agent.akonadi_followupreminder_agent"), QStringLiteral("/FollowUpReminder"));
     return interface.isValid();
 }
 
@@ -34,9 +34,9 @@ bool FollowUpReminder::FollowUpReminderUtil::followupReminderAgentEnabled()
 
 void FollowUpReminder::FollowUpReminderUtil::reload()
 {
-    QDBusInterface interface(QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_followupreminder_agent"), QLatin1String("/FollowUpReminder"));
+    QDBusInterface interface(QStringLiteral("org.freedesktop.Akonadi.Agent.akonadi_followupreminder_agent"), QStringLiteral("/FollowUpReminder"));
     if (interface.isValid()) {
-        interface.call(QLatin1String("reload"));
+        interface.call(QStringLiteral("reload"));
     }
 }
 
@@ -48,7 +48,7 @@ void FollowUpReminder::FollowUpReminderUtil::forceReparseConfiguration()
 
 KSharedConfig::Ptr FollowUpReminder::FollowUpReminderUtil::defaultConfig()
 {
-    return KSharedConfig::openConfig(QLatin1String("akonadi_followupreminder_agentrc"));
+    return KSharedConfig::openConfig(QStringLiteral("akonadi_followupreminder_agentrc"));
 }
 
 void FollowUpReminder::FollowUpReminderUtil::writeFollowupReminderInfo(KSharedConfig::Ptr config, FollowUpReminder::FollowUpReminderInfo *info, bool forceReload)
@@ -57,7 +57,7 @@ void FollowUpReminder::FollowUpReminderUtil::writeFollowupReminderInfo(KSharedCo
         return;
     }
 
-    KConfigGroup general = config->group(QLatin1String("General"));
+    KConfigGroup general = config->group(QStringLiteral("General"));
     int value = general.readEntry("Number", 0);
     int identifier = info->uniqueIdentifier();
     if (identifier == -1) {
@@ -92,7 +92,7 @@ bool FollowUpReminder::FollowUpReminderUtil::removeFollowupReminderInfo(KSharedC
     }
 
     bool needSaveConfig = false;
-    KConfigGroup general = config->group(QLatin1String("General"));
+    KConfigGroup general = config->group(QStringLiteral("General"));
     int value = general.readEntry("Number", 0);
 
     Q_FOREACH (qint32 identifier, listRemove) {

@@ -39,13 +39,13 @@
 FollowUpReminderAgent::FollowUpReminderAgent(const QString &id)
     : Akonadi::AgentBase(id)
 {
-    Kdelibs4ConfigMigrator migrate(QLatin1String("followupreminderagent"));
-    migrate.setConfigFiles(QStringList() << QLatin1String("akonadi_followupreminder_agentrc") << QLatin1String("akonadi_followupreminder_agent.notifyrc"));
+    Kdelibs4ConfigMigrator migrate(QStringLiteral("followupreminderagent"));
+    migrate.setConfigFiles(QStringList() << QStringLiteral("akonadi_followupreminder_agentrc") << QStringLiteral("akonadi_followupreminder_agent.notifyrc"));
     migrate.migrate();
 
     new FollowUpReminderAgentAdaptor(this);
-    KDBusConnectionPool::threadConnection().registerObject(QLatin1String("/FollowUpReminder"), this, QDBusConnection::ExportAdaptors);
-    KDBusConnectionPool::threadConnection().registerService(QLatin1String("org.freedesktop.Akonadi.FollowUpReminder"));
+    KDBusConnectionPool::threadConnection().registerObject(QStringLiteral("/FollowUpReminder"), this, QDBusConnection::ExportAdaptors);
+    KDBusConnectionPool::threadConnection().registerService(QStringLiteral("org.freedesktop.Akonadi.FollowUpReminder"));
     mManager = new FollowUpReminderManager(this);
     setNeedsNetwork(true);
 

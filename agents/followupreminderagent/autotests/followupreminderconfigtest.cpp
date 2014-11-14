@@ -34,8 +34,8 @@ FollowUpReminderConfigTest::~FollowUpReminderConfigTest()
 
 void FollowUpReminderConfigTest::init()
 {
-    mConfig = KSharedConfig::openConfig(QLatin1String("test-followupreminder.rc"));
-    mFollowupRegExpFilter = QRegExp(QLatin1String("FollowupReminderItem \\d+"));
+    mConfig = KSharedConfig::openConfig(QStringLiteral("test-followupreminder.rc"));
+    mFollowupRegExpFilter = QRegExp(QStringLiteral("FollowupReminderItem \\d+"));
     cleanup();
 }
 
@@ -64,17 +64,17 @@ void FollowUpReminderConfigTest::shouldConfigBeEmpty()
 void FollowUpReminderConfigTest::shouldAddAnItem()
 {
     FollowUpReminder::FollowUpReminderInfo info;
-    info.setMessageId(QLatin1String("foo"));
+    info.setMessageId(QStringLiteral("foo"));
     const QDate date(2014, 1, 1);
     info.setFollowUpReminderDate(QDate(date));
-    const QString to = QLatin1String("kde.org");
+    const QString to = QStringLiteral("kde.org");
     info.setTo(to);
     FollowUpReminder::FollowUpReminderUtil::writeFollowupReminderInfo(mConfig, &info, false);
     const QStringList itemList = mConfig->groupList().filter(mFollowupRegExpFilter);
 
     QCOMPARE(itemList.isEmpty(), false);
     QCOMPARE(itemList.count(), 1);
-    QCOMPARE(mConfig->hasGroup(QLatin1String("General")), true);
+    QCOMPARE(mConfig->hasGroup(QStringLiteral("General")), true);
 }
 
 void FollowUpReminderConfigTest::shouldNotAddAnInvalidItem()
@@ -88,10 +88,10 @@ void FollowUpReminderConfigTest::shouldNotAddAnInvalidItem()
 void FollowUpReminderConfigTest::shouldReplaceItem()
 {
     FollowUpReminder::FollowUpReminderInfo info;
-    info.setMessageId(QLatin1String("foo"));
+    info.setMessageId(QStringLiteral("foo"));
     const QDate date(2014, 1, 1);
     info.setFollowUpReminderDate(QDate(date));
-    const QString to = QLatin1String("kde.org");
+    const QString to = QStringLiteral("kde.org");
     info.setTo(to);
     qint32 uniq = 42;
     info.setUniqueIdentifier(uniq);
@@ -100,7 +100,7 @@ void FollowUpReminderConfigTest::shouldReplaceItem()
 
     QCOMPARE(itemList.count(), 1);
 
-    info.setTo(QLatin1String("kmail.org"));
+    info.setTo(QStringLiteral("kmail.org"));
     FollowUpReminder::FollowUpReminderUtil::writeFollowupReminderInfo(mConfig, &info, false);
     itemList = mConfig->groupList().filter(mFollowupRegExpFilter);
     QCOMPARE(itemList.count(), 1);
@@ -109,10 +109,10 @@ void FollowUpReminderConfigTest::shouldReplaceItem()
 void FollowUpReminderConfigTest::shouldAddSeveralItem()
 {
     FollowUpReminder::FollowUpReminderInfo info;
-    info.setMessageId(QLatin1String("foo"));
+    info.setMessageId(QStringLiteral("foo"));
     const QDate date(2014, 1, 1);
     info.setFollowUpReminderDate(QDate(date));
-    const QString to = QLatin1String("kde.org");
+    const QString to = QStringLiteral("kde.org");
     info.setTo(to);
     qint32 uniq = 42;
     info.setUniqueIdentifier(uniq);
@@ -121,7 +121,7 @@ void FollowUpReminderConfigTest::shouldAddSeveralItem()
 
     QCOMPARE(itemList.count(), 1);
 
-    info.setTo(QLatin1String("kmail.org"));
+    info.setTo(QStringLiteral("kmail.org"));
     uniq = 43;
     info.setUniqueIdentifier(uniq);
     FollowUpReminder::FollowUpReminderUtil::writeFollowupReminderInfo(mConfig, &info, false);
@@ -137,14 +137,14 @@ void FollowUpReminderConfigTest::shouldAddSeveralItem()
     //Replace It
 
     info.setUniqueIdentifier(uniq);
-    info.setTo(QLatin1String("kontact.org"));
+    info.setTo(QStringLiteral("kontact.org"));
     FollowUpReminder::FollowUpReminderUtil::writeFollowupReminderInfo(mConfig, &info, false);
     itemList = mConfig->groupList().filter(mFollowupRegExpFilter);
     QCOMPARE(itemList.count(), 3);
 
     // Add item without uniqIdentifier
     FollowUpReminder::FollowUpReminderInfo infoNotHaveUniq;
-    infoNotHaveUniq.setMessageId(QLatin1String("foo"));
+    infoNotHaveUniq.setMessageId(QStringLiteral("foo"));
     infoNotHaveUniq.setFollowUpReminderDate(QDate(date));
     infoNotHaveUniq.setTo(to);
 
@@ -158,10 +158,10 @@ void FollowUpReminderConfigTest::shouldAddSeveralItem()
 void FollowUpReminderConfigTest::shouldRemoveItems()
 {
     FollowUpReminder::FollowUpReminderInfo info;
-    info.setMessageId(QLatin1String("foo"));
+    info.setMessageId(QStringLiteral("foo"));
     const QDate date(2014, 1, 1);
     info.setFollowUpReminderDate(QDate(date));
-    const QString to = QLatin1String("kde.org");
+    const QString to = QStringLiteral("kde.org");
     info.setTo(to);
     qint32 uniq = 42;
     info.setUniqueIdentifier(uniq);
@@ -169,7 +169,7 @@ void FollowUpReminderConfigTest::shouldRemoveItems()
     QStringList itemList = mConfig->groupList().filter(mFollowupRegExpFilter);
     QCOMPARE(itemList.count(), 1);
 
-    info.setTo(QLatin1String("kmail.org"));
+    info.setTo(QStringLiteral("kmail.org"));
     uniq = 43;
     info.setUniqueIdentifier(uniq);
     FollowUpReminder::FollowUpReminderUtil::writeFollowupReminderInfo(mConfig, &info, false);
@@ -182,7 +182,7 @@ void FollowUpReminderConfigTest::shouldRemoveItems()
 
     // Add item without uniqIdentifier
     FollowUpReminder::FollowUpReminderInfo infoNotHaveUniq;
-    infoNotHaveUniq.setMessageId(QLatin1String("foo"));
+    infoNotHaveUniq.setMessageId(QStringLiteral("foo"));
     infoNotHaveUniq.setFollowUpReminderDate(QDate(date));
     infoNotHaveUniq.setTo(to);
 
@@ -210,17 +210,17 @@ void FollowUpReminderConfigTest::shouldNotRemoveItemWhenListIsEmpty()
 void FollowUpReminderConfigTest::shouldNotRemoveItemWhenItemDoesntExist()
 {
     FollowUpReminder::FollowUpReminderInfo info;
-    info.setMessageId(QLatin1String("foo"));
+    info.setMessageId(QStringLiteral("foo"));
     const QDate date(2014, 1, 1);
     info.setFollowUpReminderDate(QDate(date));
-    const QString to = QLatin1String("kde.org");
+    const QString to = QStringLiteral("kde.org");
     info.setTo(to);
     qint32 uniq = 42;
     info.setUniqueIdentifier(uniq);
     FollowUpReminder::FollowUpReminderUtil::writeFollowupReminderInfo(mConfig, &info, false);
     QStringList itemList = mConfig->groupList().filter(mFollowupRegExpFilter);
 
-    info.setTo(QLatin1String("kmail.org"));
+    info.setTo(QStringLiteral("kmail.org"));
     uniq = 43;
     info.setUniqueIdentifier(uniq);
     FollowUpReminder::FollowUpReminderUtil::writeFollowupReminderInfo(mConfig, &info, false);

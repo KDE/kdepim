@@ -40,17 +40,17 @@ void FollowUpReminderShowMessageJob::start()
         deleteLater();
         return;
     }
-    const QString kmailInterface = QLatin1String("org.kde.kmail");
+    const QString kmailInterface = QStringLiteral("org.kde.kmail");
     if (!QDBusConnection::sessionBus().interface()->isServiceRegistered(kmailInterface)) {
         // Program is not already running, so start it
         QString errmsg;
-        if (KToolInvocation::startServiceByDesktopName(QLatin1String("kmail2"), QString(), &errmsg)) {
+        if (KToolInvocation::startServiceByDesktopName(QStringLiteral("kmail2"), QString(), &errmsg)) {
             qDebug() << " Can not start kmail" << errmsg;
             deleteLater();
             return;
         }
     }
-    QDBusInterface kmail(kmailInterface, QLatin1String("/KMail"), QLatin1String("org.kde.kmail.kmail"));
-    kmail.call(QLatin1String("showMail"), mId);
+    QDBusInterface kmail(kmailInterface, QStringLiteral("/KMail"), QStringLiteral("org.kde.kmail.kmail"));
+    kmail.call(QStringLiteral("showMail"), mId);
     deleteLater();
 }
