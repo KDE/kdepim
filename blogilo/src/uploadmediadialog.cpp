@@ -214,7 +214,7 @@ void UploadMediaDialog::slotMediaObjectUploaded(BilboMedia *media)
                    media->remoteUrl().toDisplayString());
     } else {
         msg = i18n("Media uploaded.\nYou can find it here:\n%1",
-                  media->remoteUrl().toDisplayString());
+                   media->remoteUrl().toDisplayString());
     }
     KMessageBox::information(this, msg, i18n("Successfully uploaded"), QString(), KMessageBox::AllowLink);
     accept();

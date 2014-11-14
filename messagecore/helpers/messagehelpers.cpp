@@ -102,11 +102,11 @@ bool MessageCore::Util::getLinkInformation(const KMime::Message::Ptr &msg, QList
         return false;
     }
 
-    Q_FOREACH(const QString & idStr, messages) {
+    Q_FOREACH (const QString &idStr, messages) {
         id << idStr.toLongLong();
     }
 
-    Q_FOREACH(const QString & typeStr, types) {
+    Q_FOREACH (const QString &typeStr, types) {
         if (typeStr == QLatin1String("reply")) {
             status << Akonadi::MessageStatus::statusReplied();
         } else if (typeStr == QLatin1String("forward")) {

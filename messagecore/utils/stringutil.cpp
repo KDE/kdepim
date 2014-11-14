@@ -140,7 +140,7 @@ static bool flushPart(QString &msg, QStringList &textParts,
     }
 
     QString text;
-    foreach(const QString & line, textParts) {
+    foreach (const QString &line, textParts) {
 
         // An empty line in the input means that an empty line should be in the output as well.
         // Therefore, we write all of our text so far to the msg.
@@ -746,7 +746,7 @@ QString emailAddrAsAnchor(const KMime::Types::Mailbox::List &mailboxList,
     int numberAddresses = 0;
     bool expandableInserted = false;
 
-    foreach(const KMime::Types::Mailbox & mailbox, mailboxList) {
+    foreach (const KMime::Types::Mailbox &mailbox, mailboxList) {
         if (!mailbox.prettyAddress().isEmpty()) {
             numberAddresses++;
             if (expandable == ExpandableAddresses && !expandableInserted && numberAddresses > collapseNumber) {
@@ -873,7 +873,7 @@ QString smartQuote(const QString &msg, int maxLineLength)
     QString oldIndent;
     bool firstPart = true;
     QString result;
-    foreach(QString line, msg.split(QLatin1Char('\n'))) {
+    foreach (QString line, msg.split(QLatin1Char('\n'))) {
 
         // Split off the indent from the line
         const QString indent = splitLine(line);
@@ -1160,7 +1160,7 @@ KMime::Types::Mailbox mailboxFrom7BitString(const QByteArray &address)
 QString mailboxListToUnicodeString(const KMime::Types::Mailbox::List &addresses)
 {
     DummyHeader header;
-    foreach(const KMime::Types::Mailbox & mailbox, addresses) {
+    foreach (const KMime::Types::Mailbox &mailbox, addresses) {
         header.addAddress(mailbox);
     }
 

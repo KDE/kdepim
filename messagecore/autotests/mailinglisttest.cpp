@@ -55,17 +55,17 @@ void MailingListTest::shouldRestoreFromSettings()
     MessageCore::MailingList ml;
     QList<QUrl> lst;
     lst << QUrl(QLatin1String("http://www.kde.org")) << QUrl(QLatin1String("http://www.koffice.org"));
-    ml.setPostUrls( lst );
+    ml.setPostUrls(lst);
     lst << QUrl(QLatin1String("mailto://www.kde2.org")) << QUrl(QLatin1String("http://www.koffice2.org"));
-    ml.setSubscribeUrls( lst );
+    ml.setSubscribeUrls(lst);
     lst << QUrl(QLatin1String("mailto://www.kde3.org")) << QUrl(QLatin1String("http://www.koffice3.org"));
-    ml.setUnsubscribeUrls( lst );
+    ml.setUnsubscribeUrls(lst);
     lst << QUrl(QLatin1String("mailto://www.kde4.org")) << QUrl(QLatin1String("http://www.koffice4.org"));
-    ml.setHelpUrls( lst );
+    ml.setHelpUrls(lst);
     /* Note: mArchivedAtUrl deliberately not saved here as it refers to a single
-   * instance of a message rather than an element of a general mailing list.
-   * http://reviewboard.kde.org/r/1768/#review2783
-   */
+    * instance of a message rather than an element of a general mailing list.
+    * http://reviewboard.kde.org/r/1768/#review2783
+    */
     //normal that we don't save it.
     //ml.setArchivedAtUrls(lst);
     lst << QUrl(QLatin1String("mailto://www.kde5.org")) << QUrl(QLatin1String("http://www.koffice5.org"));
@@ -74,7 +74,6 @@ void MailingListTest::shouldRestoreFromSettings()
     ml.setOwnerUrls(lst);
     ml.setId(QLatin1String("ID"));
     ml.setHandler(MessageCore::MailingList::Browser);
-
 
     KConfigGroup grp(KSharedConfig::openConfig(), "testsettings");
     ml.writeConfig(grp);
@@ -89,23 +88,23 @@ void MailingListTest::shouldCopyReminderInfo()
     MessageCore::MailingList ml;
     QList<QUrl> lst;
     lst << QUrl(QLatin1String("http://www.kde.org")) << QUrl(QLatin1String("http://www.koffice.org"));
-    ml.setPostUrls( lst );
+    ml.setPostUrls(lst);
     lst << QUrl(QLatin1String("http://www.kde2.org")) << QUrl(QLatin1String("http://www.koffice2.org"));
-    ml.setSubscribeUrls( lst );
+    ml.setSubscribeUrls(lst);
     lst << QUrl(QLatin1String("http://www.kde3.org")) << QUrl(QLatin1String("http://www.koffice3.org"));
-    ml.setUnsubscribeUrls( lst );
+    ml.setUnsubscribeUrls(lst);
     lst << QUrl(QLatin1String("http://www.kde4.org")) << QUrl(QLatin1String("http://www.koffice4.org"));
-    ml.setHelpUrls( lst );
+    ml.setHelpUrls(lst);
     lst << QUrl(QLatin1String("http://www.kde5.org")) << QUrl(QLatin1String("http://www.koffice5.org"));
     ml.setArchivedAtUrls(lst);
     lst << QUrl(QLatin1String("http://www.kde5.org")) << QUrl(QLatin1String("http://www.koffice6.org"));
     ml.setArchiveUrls(lst);
     lst << QUrl(QLatin1String("http://www.kde6.org")) << QUrl(QLatin1String("http://www.koffice6.org"));
     ml.setOwnerUrls(lst);
-    ml.setPostUrls( lst );
-    ml.setSubscribeUrls( lst );
-    ml.setUnsubscribeUrls( lst );
-    ml.setHelpUrls( lst );
+    ml.setPostUrls(lst);
+    ml.setSubscribeUrls(lst);
+    ml.setUnsubscribeUrls(lst);
+    ml.setHelpUrls(lst);
     ml.setArchivedAtUrls(lst);
     ml.setArchiveUrls(lst);
     ml.setOwnerUrls(lst);
