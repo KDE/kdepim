@@ -110,6 +110,16 @@ bool EditorWatcher::start()
     return true;
 }
 
+bool EditorWatcher::fileChanged() const
+{
+    return mFileModified;
+}
+
+KUrl EditorWatcher::url() const
+{
+    return mUrl;
+}
+
 void EditorWatcher::inotifyEvent()
 {
     assert(mHaveInotify);

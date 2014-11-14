@@ -52,14 +52,8 @@ public:
                   QObject *parent, QWidget *parentWidget);
 
     bool start();
-    bool fileChanged() const
-    {
-        return mFileModified;
-    }
-    KUrl url() const
-    {
-        return mUrl;
-    }
+    bool fileChanged() const;
+    KUrl url() const;
 signals:
     void editDone(MessageViewer::EditorWatcher *watcher);
 
@@ -71,22 +65,20 @@ private slots:
 private:
     KUrl mUrl;
     QString mMimeType;
-    bool mOpenWith;
-    KProcess *mEditor;
-    QWidget *mParentWidget;
-
-    int mInotifyFd;
-    int mInotifyWatch;
-    bool mHaveInotify;
-
-    bool mFileOpen;
-    bool mEditorRunning;
-
-    bool mFileModified;
-
     QTimer mTimer;
     QTime mEditTime;
 
+    int mInotifyFd;
+    int mInotifyWatch;
+
+    KProcess *mEditor;
+    QWidget *mParentWidget;
+
+    bool mOpenWith;
+    bool mHaveInotify;
+    bool mFileOpen;
+    bool mEditorRunning;
+    bool mFileModified;
     bool mDone;
 };
 

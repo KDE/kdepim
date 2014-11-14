@@ -21,6 +21,9 @@
 #include <KConfigGroup>
 #include <QDebug>
 #include <KSharedConfig>
+
+//TODO add test for static MailingList detect(  const KMime::Message::Ptr &message ); and static QString name( ... );
+
 MailingListTest::MailingListTest(QObject *parent)
     : QObject(parent)
 {
