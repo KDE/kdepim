@@ -31,7 +31,7 @@
 #include <QMap>
 #include <QSet>
 
-class KUrl;
+class QUrl;
 class QTextCodec;
 
 namespace MessageViewer
@@ -162,7 +162,7 @@ public:
      * Returns the temporary file path and name where this node was saved, or an empty url
      * if it wasn't saved yet with writeNodeToTempFile()
      */
-    KUrl tempFileUrlFromNode(const KMime::Content *node);
+    QUrl tempFileUrlFromNode(const KMime::Content *node);
 
     /**
      * Creates a temporary dir for saving attachments, etc.

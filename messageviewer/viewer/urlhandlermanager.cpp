@@ -894,7 +894,7 @@ bool AttachmentURLHandler::handleDrag(const KUrl &url, ViewerPrivate *window) co
         return false;
     }
 
-    const KUrl tUrl = window->nodeHelper()->tempFileUrlFromNode(node);
+    const QUrl tUrl = window->nodeHelper()->tempFileUrlFromNode(node);
     const QString fileName = tUrl.path();
     if (!fileName.isEmpty()) {
         QFile f(fileName);

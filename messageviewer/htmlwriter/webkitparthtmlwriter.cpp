@@ -146,11 +146,11 @@ void WebKitPartHtmlWriter::resolveCidUrls()
     QWebElementCollection images = root.findAll(QLatin1String("img"));
     QWebElementCollection::iterator end(images.end());
     for (QWebElementCollection::iterator it = images.begin(); it != end; ++it) {
-        KUrl url((*it).attribute(QLatin1String("src")));
-        if (url.protocol() == QLatin1String("cid")) {
+        QUrl url((*it).attribute(QLatin1String("src")));
+        if (url.scheme() == QLatin1String("cid")) {
             EmbeddedPartMap::const_iterator cit = mEmbeddedPartMap.constFind(url.path());
             if (cit != mEmbeddedPartMap.constEnd()) {
-                qDebug() << "Replacing" << url.prettyUrl() << "by" << cit.value();
+                qDebug() << "Replacing" << url.toDisplayString() << "by" << cit.value();
                 (*it).setAttribute(QLatin1String("src"), cit.value());
             }
         }

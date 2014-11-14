@@ -39,7 +39,7 @@
 #include <KLocalizedString>
 #include <kcharsets.h>
 #include <kde_file.h>
-#include <KUrl>
+#include <QUrl>
 #include <KLocale>
 
 #include <QDir>
@@ -223,7 +223,7 @@ QString NodeHelper::writeNodeToTempFile(KMime::Content *node)
     // If the message part is already written to a file, no point in doing it again.
     // This function is called twice actually, once from the rendering of the attachment
     // in the body and once for the header.
-    KUrl existingFileName = tempFileUrlFromNode(node);
+    QUrl existingFileName = tempFileUrlFromNode(node);
     if (!existingFileName.isEmpty()) {
         return existingFileName.toLocalFile();
     }
@@ -265,10 +265,10 @@ QString NodeHelper::writeNodeToTempFile(KMime::Content *node)
     return fname;
 }
 
-KUrl NodeHelper::tempFileUrlFromNode(const KMime::Content *node)
+QUrl NodeHelper::tempFileUrlFromNode(const KMime::Content *node)
 {
     if (!node) {
-        return KUrl();
+        return QUrl();
     }
 
     const QString index = persistentIndex(node);
@@ -282,10 +282,10 @@ KUrl NodeHelper::tempFileUrlFromNode(const KMime::Content *node)
 
         QStringRef storedIndex(&path, left, right - left);
         if (left != -1 && storedIndex == index) {
-            return KUrl(path);
+            return QUrl::fromLocalFile(path);
         }
     }
-    return KUrl();
+    return QUrl();
 }
 
 QString NodeHelper::createTempDir(const QString &param)

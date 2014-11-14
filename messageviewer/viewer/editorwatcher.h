@@ -20,7 +20,7 @@
 #define MESSAGEVIEWER_EDITORWATCHER_H
 
 #include "messageviewer_export.h"
-#include <kurl.h>
+#include <qurl.h>
 
 #include <qobject.h>
 #include <qtimer.h>
