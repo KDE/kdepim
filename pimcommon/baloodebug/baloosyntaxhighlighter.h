@@ -30,7 +30,7 @@ public:
     ~BalooSyntaxHighlighter();
 
 private:
-    void init();
+    void init() Q_DECL_OVERRIDE;
 };
 }
 #endif // BALOOSYNTAXHIGHLIGHTER_H

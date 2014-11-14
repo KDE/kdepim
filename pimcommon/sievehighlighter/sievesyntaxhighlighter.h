@@ -40,7 +40,7 @@ public:
     void addCapabilities(const QStringList &capabilities);
 
 private:
-    void init();
+    void init() Q_DECL_OVERRIDE;
 };
 
 }

@@ -128,6 +128,11 @@ void TemplatesConfiguration::resetToDefault()
     lineEdit_quote->setText(DefaultTemplates::defaultQuoteString());
 }
 
+QLabel *TemplatesConfiguration::helpLabel() const
+{
+    return mHelp;
+}
+
 void TemplatesConfiguration::loadFromGlobal()
 {
     QString str;

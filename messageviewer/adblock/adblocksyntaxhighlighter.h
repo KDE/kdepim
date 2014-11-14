@@ -32,7 +32,7 @@ public:
     ~AdBlockSyntaxHighlighter();
 
 private:
-    void init();
+    void init() Q_DECL_OVERRIDE;
 };
 }
 

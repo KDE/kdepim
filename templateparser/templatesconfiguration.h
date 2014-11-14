@@ -41,10 +41,7 @@ public:
     void saveToFolder(const QString &id);
     void resetToDefault();
 
-    QLabel *helpLabel() const
-    {
-        return mHelp;
-    }
+    QLabel *helpLabel() const;
 
     /**
      * Returns the template configuration identifier string for a given identity.
@@ -58,12 +55,10 @@ public Q_SLOTS:
 signals:
     void changed();
 
-protected:
-    QString strOrBlank(const QString &str);
-    QString mHelpString;
-
 private:
     QTextEdit *currentTextEdit() const;
+    QString strOrBlank(const QString &str);
+    QString mHelpString;
 
 private Q_SLOTS:
     void slotHelpLinkClicked(const QString &);
