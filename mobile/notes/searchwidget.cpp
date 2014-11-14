@@ -29,7 +29,7 @@ SearchWidget::SearchWidget( QWidget *parent )
   // set defaults
   mUi.inTitles->setChecked( true );
   mUi.inContents->setChecked( true );
-  mUi.collectionCombo->setMimeTypeFilter( QStringList() << QLatin1String( "text/x-vnd.akonadi.note" ) );
+  mUi.collectionCombo->setMimeTypeFilter( QStringList() << QStringLiteral( "text/x-vnd.akonadi.note" ) );
 }
 
 QString SearchWidget::query() const

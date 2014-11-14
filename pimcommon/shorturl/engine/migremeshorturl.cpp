@@ -32,7 +32,7 @@ MigremeShortUrl::~MigremeShortUrl()
 
 QString MigremeShortUrl::shortUrlName() const
 {
-    return QLatin1String("migre.me");
+    return QStringLiteral("migre.me");
 }
 
 void MigremeShortUrl::start()

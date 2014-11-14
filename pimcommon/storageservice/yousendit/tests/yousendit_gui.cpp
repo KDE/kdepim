@@ -34,7 +34,7 @@ YouSendItTestWidget::YouSendItTestWidget(QWidget *parent)
 
 int main(int argc, char **argv)
 {
-    KAboutData aboutData(QLatin1String("yousendit_gui"), i18n("yousendit_Gui"), QLatin1String("1.0"));
+    KAboutData aboutData(QStringLiteral("yousendit_gui"), i18n("yousendit_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for short yousendit"));
     QApplication app(argc, argv);
     QCommandLineParser parser;

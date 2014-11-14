@@ -48,7 +48,7 @@ StorageServiceProgressWidget::StorageServiceProgressWidget(PimCommon::StorageSer
     box->addWidget(mProgressBar);
 
     mCancel = new QToolButton;
-    mCancel->setIcon(QIcon::fromTheme(QLatin1String("dialog-cancel")));
+    mCancel->setIcon(QIcon::fromTheme(QStringLiteral("dialog-cancel")));
     connect(mCancel, &QToolButton::clicked, this, &StorageServiceProgressWidget::slotCancelTask);
     box->addWidget(mCancel);
 

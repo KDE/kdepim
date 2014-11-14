@@ -30,7 +30,7 @@ ShortUrlMainWidget::ShortUrlMainWidget(QWidget *parent)
     mConfigWidget = new PimCommon::ShortUrlConfigureWidget;
     lay->addWidget(mConfigWidget);
 
-    QPushButton *saveConfig = new QPushButton(QLatin1String("Save config"));
+    QPushButton *saveConfig = new QPushButton(QStringLiteral("Save config"));
     connect(saveConfig, &QPushButton::clicked, this, &ShortUrlMainWidget::slotSaveConfig);
     lay->addWidget(saveConfig);
 

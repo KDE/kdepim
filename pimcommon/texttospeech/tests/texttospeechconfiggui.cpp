@@ -43,7 +43,7 @@ TextToSpeechConfigGui::~TextToSpeechConfigGui()
 
 int main(int argc, char **argv)
 {
-    KAboutData aboutData(QLatin1String("texttospeechconfig_gui"), i18n("texttospeechconfig_Gui"), QLatin1String("1.0"));
+    KAboutData aboutData(QStringLiteral("texttospeechconfig_gui"), i18n("texttospeechconfig_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for config text to speech"));
     QApplication app(argc, argv);
     QCommandLineParser parser;

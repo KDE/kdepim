@@ -32,7 +32,7 @@ TinyurlShortUrl::~TinyurlShortUrl()
 
 QString TinyurlShortUrl::shortUrlName() const
 {
-    return QLatin1String("TinyURL.com");
+    return QStringLiteral("TinyURL.com");
 }
 
 void TinyurlShortUrl::start()

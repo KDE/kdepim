@@ -73,11 +73,11 @@ void ExportJotJob::backupResources()
     const Akonadi::AgentInstance::List list = manager->instances();
     foreach (const Akonadi::AgentInstance &agent, list) {
         const QString identifier = agent.identifier();
-        if (identifier.contains(QLatin1String("akonadi_akonotes_resource_"))) {
+        if (identifier.contains(QStringLiteral("akonadi_akonotes_resource_"))) {
             const QString archivePath = Utils::jotPath() + identifier + QDir::separator();
             QUrl url = Utils::resourcePath(agent);
             if (!url.isEmpty()) {
-                const bool fileAdded = backupFullDirectory(url, archivePath, QLatin1String("job.zip"));
+                const bool fileAdded = backupFullDirectory(url, archivePath, QStringLiteral("job.zip"));
                 if (fileAdded) {
                     const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
                     if (!errorStr.isEmpty()) {
@@ -105,7 +105,7 @@ void ExportJotJob::backupConfig()
 {
     showInfo(i18n("Backing up config..."));
     MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
-    const QString kjotStr(QLatin1String("kjotrc"));
+    const QString kjotStr(QStringLiteral("kjotrc"));
     const QString kjotrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + kjotStr;
     if (QFile(kjotrc).exists()) {
         KSharedConfigPtr kjot = KSharedConfig::openConfig(kjotrc);
@@ -115,10 +115,10 @@ void ExportJotJob::backupConfig()
 
         KConfig *kjotConfig = kjot->copyTo(tmp.fileName());
 
-        const QString collectionsStr(QLatin1String("TreeState"));
+        const QString collectionsStr(QStringLiteral("TreeState"));
         if (kjotConfig->hasGroup(collectionsStr)) {
             KConfigGroup group = kjotConfig->group(collectionsStr);
-            const QString selectionKey(QLatin1String("Expansion"));
+            const QString selectionKey(QStringLiteral("Expansion"));
             Utils::convertCollectionIdsToRealPath(group, selectionKey);
         }
 

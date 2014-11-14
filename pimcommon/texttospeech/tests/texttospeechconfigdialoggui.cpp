@@ -28,7 +28,7 @@
 
 int main(int argc, char **argv)
 {
-    KAboutData aboutData(QLatin1String("texttospeechconfigdialog_gui"), i18n("texttospeechconfigdialog_Gui"), QLatin1String("1.0"));
+    KAboutData aboutData(QStringLiteral("texttospeechconfigdialog_gui"), i18n("texttospeechconfigdialog_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for config dialog text to speech"));
     QApplication app(argc, argv);
     QCommandLineParser parser;

@@ -367,7 +367,7 @@ QStringList AbstractImportExportJob::restoreResourceFile(const QString &resource
                         const KArchiveFile *file = static_cast<const KArchiveFile *>(dataResouceEntry);
                         file->copyTo(newUrl.adjusted(QUrl::RemoveFilename | QUrl::StripTrailingSlash).path());
                     }
-                    settings.insert(QLatin1String("Path"), newUrl.path());
+                    settings.insert(QStringLiteral("Path"), newUrl.path());
 
                     const QString agentConfigFile = value.akonadiAgentConfigFile;
                     if (!agentConfigFile.isEmpty()) {
