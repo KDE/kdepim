@@ -587,8 +587,8 @@ void AttachmentControllerBase::openWith(KService::Ptr offer)
                            i18n("Unable to open attachment"));
         return;
     }
-    KUrl::List lst;
-    KUrl url = QUrl::fromLocalFile(tempFile->fileName());
+    QList<QUrl> lst;
+    QUrl url = QUrl::fromLocalFile(tempFile->fileName());
     lst.append(url);
     bool result = false;
     if (offer) {
@@ -813,7 +813,7 @@ void AttachmentControllerBase::showAddAttachmentDialog()
     // use native dialog, while being much simpler, it actually fits on the screen much better than our own monster dialog
     const QString fileName = QFileDialog::getOpenFileName(d->wParent, i18n("Attach File") ,  QUrl(), QString());
     if (!fileName.isEmpty()) {
-        addAttachment(KUrl::fromLocalFile(fileName));
+        addAttachment(QUrl::fromLocalFile(fileName));
     }
 #endif
 }

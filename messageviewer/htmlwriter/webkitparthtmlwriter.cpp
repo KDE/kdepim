@@ -35,7 +35,7 @@
 #include "viewer/mailwebview.h"
 
 #include <QDebug>
-#include <KUrl>
+#include <QUrl>
 
 #include <cassert>
 #include <QByteArray>

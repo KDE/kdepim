@@ -22,7 +22,7 @@
 #include "pimcommon/storageservice/storageservicejobconfig.h"
 
 #include <KLocalizedString>
-#include <KUrl>
+#include <QUrl>
 
 #include <QFile>
 
