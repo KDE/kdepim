@@ -396,7 +396,7 @@ bool GMXXXPort::exportContacts(const KContacts::AddresseeList &list) const
 static const QString dateString(const QDateTime &dt)
 {
     if (!dt.isValid()) {
-        return QString::fromLatin1("1000-01-01 00:00:00");
+        return QStringLiteral("1000-01-01 00:00:00");
     }
     QString d(dt.toString(Qt::ISODate));
     d[10] = ' '; // remove the "T" in the middle of the string

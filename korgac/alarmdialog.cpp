@@ -1027,7 +1027,7 @@ void AlarmDialog::removeFromConfig(const QList<Akonadi::Item::Id> &ids)
     QList<ConfItem> newReminders;
     // Delete everything
     for (int i = 1; i <= oldNumReminders; ++i) {
-        const QString group(QString::fromLatin1("Incidence-%1").arg(i));
+        const QString group(QStringLiteral("Incidence-%1").arg(i));
         KConfigGroup incGroup(config, group);
         const QString uid = incGroup.readEntry("UID");
         const QDateTime remindAtDate = incGroup.readEntry("RemindAt", QDateTime());
@@ -1047,7 +1047,7 @@ void AlarmDialog::removeFromConfig(const QList<Akonadi::Item::Id> &ids)
 
     //Write everything except those which have an uid we don't want
     for (int i = 0; i < newReminders.count(); ++i) {
-        const QString group(QString::fromLatin1("Incidence-%1").arg(i + 1));
+        const QString group(QStringLiteral("Incidence-%1").arg(i + 1));
         KConfigGroup incGroup(config, group);
         incGroup.writeEntry("UID", newReminders[i].uid);
         incGroup.writeEntry("RemindAt", newReminders[i].remindAt);

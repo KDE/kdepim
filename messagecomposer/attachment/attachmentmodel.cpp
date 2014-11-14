@@ -193,7 +193,7 @@ QMimeData *AttachmentModel::mimeData(const QModelIndexList &indexes) const
 QStringList AttachmentModel::mimeTypes() const
 {
     QStringList types;
-    types << QString::fromLatin1("text/uri-list");
+    types << QStringLiteral("text/uri-list");
     return types;
 }
 

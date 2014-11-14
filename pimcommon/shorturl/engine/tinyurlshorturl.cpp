@@ -37,7 +37,7 @@ QString TinyurlShortUrl::shortUrlName() const
 
 void TinyurlShortUrl::start()
 {
-    const QString requestUrl = QString::fromLatin1("http://tinyurl.com/api-create.php?url=%1").arg(mOriginalUrl);
+    const QString requestUrl = QStringLiteral("http://tinyurl.com/api-create.php?url=%1").arg(mOriginalUrl);
     QNetworkReply *reply = mNetworkAccessManager->get(QNetworkRequest(requestUrl));
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &TinyurlShortUrl::slotErrorFound);
 }

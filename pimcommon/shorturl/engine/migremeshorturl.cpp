@@ -37,7 +37,7 @@ QString MigremeShortUrl::shortUrlName() const
 
 void MigremeShortUrl::start()
 {
-    const QString requestUrl = QString::fromLatin1("http://migre.me/api.txt?url=%1").arg(mOriginalUrl);
+    const QString requestUrl = QStringLiteral("http://migre.me/api.txt?url=%1").arg(mOriginalUrl);
     QNetworkReply *reply = mNetworkAccessManager->get(QNetworkRequest(requestUrl));
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &MigremeShortUrl::slotErrorFound);
 }

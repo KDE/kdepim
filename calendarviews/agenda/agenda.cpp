@@ -1829,7 +1829,7 @@ void Agenda::insertMultiItem(const Akonadi::Item &event, const KDateTime &occurr
             } else {
                 cellYBottom = rows() - 1;
             }
-            newtext = QString::fromLatin1("(%1/%2): ").arg(count).arg(width);
+            newtext = QStringLiteral("(%1/%2): ").arg(count).arg(width);
             newtext.append(ev->summary());
 
             current = insertItem(event, occurrenceDateTime, cellX, cellYTop, cellYBottom, count, width, isSelected);

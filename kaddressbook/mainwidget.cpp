@@ -916,7 +916,7 @@ void MainWidget::saveSplitterStates() const
         return;
     }
 
-    QString groupName = QString::fromLatin1("UiState_MainWidgetSplitter_%1").arg(currentMode);
+    const QString groupName = QStringLiteral("UiState_MainWidgetSplitter_%1").arg(currentMode);
     //qDebug() << "saving to group" << groupName;
     KConfigGroup group(Settings::self()->config(), groupName);
     KPIM::UiStateSaver::saveState(mMainWidgetSplitter1, group);
@@ -932,7 +932,7 @@ void MainWidget::restoreSplitterStates()
         return;
     }
 
-    QString groupName = QString::fromLatin1("UiState_MainWidgetSplitter_%1").arg(currentMode);
+    const QString groupName = QStringLiteral("UiState_MainWidgetSplitter_%1").arg(currentMode);
     //qDebug() << "restoring from group" << groupName;
     KConfigGroup group(Settings::self()->config(), groupName);
     KPIM::UiStateSaver::restoreState(mMainWidgetSplitter1, group);

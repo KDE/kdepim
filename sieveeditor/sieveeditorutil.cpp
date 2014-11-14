@@ -117,7 +117,7 @@ void SieveEditorUtil::writeServerSieveConfig(const QList<SieveEditorUtil::SieveS
     }
 
     Q_FOREACH (const SieveEditorUtil::SieveServerConfig &conf, lstConfig) {
-        KConfigGroup group = cfg->group(QString::fromLatin1("ServerSieve %1").arg(i));
+        KConfigGroup group = cfg->group(QStringLiteral("ServerSieve %1").arg(i));
         group.writeEntry(QLatin1String("Port"), conf.port);
         group.writeEntry(QLatin1String("ServerName"), conf.serverName);
         group.writeEntry(QLatin1String("UserName"), conf.userName);
@@ -145,7 +145,7 @@ void SieveEditorUtil::addServerSieveConfig(const SieveEditorUtil::SieveServerCon
     KSharedConfigPtr cfg = KSharedConfig::openConfig();
     const QRegExp re(QLatin1String("^ServerSieve (.+)$"));
     const QStringList groups = cfg->groupList().filter(re);
-    KConfigGroup group = cfg->group(QString::fromLatin1("ServerSieve %1").arg(groups.count()));
+    KConfigGroup group = cfg->group(QStringLiteral("ServerSieve %1").arg(groups.count()));
     group.writeEntry(QLatin1String("Port"), conf.port);
     group.writeEntry(QLatin1String("ServerName"), conf.serverName);
     group.writeEntry(QLatin1String("UserName"), conf.userName);

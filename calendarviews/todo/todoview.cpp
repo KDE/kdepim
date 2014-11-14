@@ -441,7 +441,7 @@ TodoView::TodoView(const EventViews::PrefsPtr &prefs,
 
     mPercentageCompletedPopupMenu = new QMenu(this);
     for (int i = 0; i <= 100; i += 10) {
-        const QString label = QString::fromLatin1("%1 %").arg(i);
+        const QString label = QStringLiteral("%1 %").arg(i);
         mPercentage[mPercentageCompletedPopupMenu->addAction(label)] = i;
     }
     connect(mPercentageCompletedPopupMenu, &QMenu::triggered, this, &TodoView::setNewPercentage);

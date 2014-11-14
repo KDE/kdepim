@@ -171,7 +171,7 @@ void TodoCompleteSlider::updateTip(int value)
     p.setX(style()->sliderPositionFromValue(minimum(), maximum(),
                                             value, width()));
 
-    QString text = QString::fromLatin1("%1%").arg(value);
+    const QString text = QStringLiteral("%1%").arg(value);
     QToolTip::showText(mapToGlobal(p), text, this);
 }
 

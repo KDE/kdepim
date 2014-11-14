@@ -1181,7 +1181,7 @@ void CalPrintPluginBase::drawDayBox(QPainter &p, const QDate &qd,
             const unsigned int invisibleIncidences =
                 (eventList.count() - visibleEventsCounter) + mCalendar->todos(qd).count();
             if (invisibleIncidences > 0) {
-                const QString warningMsg = QString::fromLatin1("%1 (%2)").arg(downArrow).arg(invisibleIncidences);
+                const QString warningMsg = QStringLiteral("%1 (%2)").arg(downArrow).arg(invisibleIncidences);
 
                 QFontMetrics fm(p.font());
                 QRect msgRect = fm.boundingRect(warningMsg);

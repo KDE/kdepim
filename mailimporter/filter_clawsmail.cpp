@@ -98,6 +98,6 @@ QString FilterClawsMail::defaultInstallFolder() const
 
 QString FilterClawsMail::markFile() const
 {
-    return QString::fromLatin1(".claws_mark");
+    return QStringLiteral(".claws_mark");
 }
 

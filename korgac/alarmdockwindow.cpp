@@ -192,7 +192,7 @@ void AlarmDockWindow::slotQuit()
                          KGuiItem(i18nc("@action:button start the reminder daemon", "Start")),
                          KGuiItem(i18nc("@action:button do not start the reminder daemon", "Do Not Start")),
                          KStandardGuiItem::cancel(),
-                         QString::fromLatin1("AskForStartAtLogin"));
+                         QStringLiteral("AskForStartAtLogin"));
 
         bool autostart = true;
         if (result == KMessageBox::No) {

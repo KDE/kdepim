@@ -37,7 +37,7 @@ public:
     virtual ~CalPrintYear() {}
     virtual QString groupName()
     {
-        return QString::fromLatin1("Print year");
+        return QStringLiteral("Print year");
     }
     virtual QString description()
     {

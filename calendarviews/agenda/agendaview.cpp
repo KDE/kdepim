@@ -2204,7 +2204,7 @@ CalendarDecoration::Decoration *AgendaView::Private::loadCalendarDecoration(cons
     QString constraint;
     if (version >= 0) {
         constraint =
-            QString::fromLatin1("[X-KDE-PluginInterfaceVersion] == %1").arg(QString::number(version));
+            QStringLiteral("[X-KDE-PluginInterfaceVersion] == %1").arg(QString::number(version));
     }
 
     KService::List list = KServiceTypeTrader::self()->query(type, constraint);

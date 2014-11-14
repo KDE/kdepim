@@ -142,7 +142,7 @@ void TodoEditTest::shouldHaveASubject()
     msg->subject(true)->fromUnicodeString(subject, "us-ascii");
     edit.setMessage(msg);
 
-    QCOMPARE(noteedit->text(), QString::fromLatin1("Reply to \"%1\"").arg(subject));
+    QCOMPARE(noteedit->text(), QStringLiteral("Reply to \"%1\"").arg(subject));
 }
 
 void TodoEditTest::shouldEmptySubjectWhenMessageIsNull()
@@ -180,7 +180,7 @@ void TodoEditTest::shouldSelectLineWhenPutMessage()
     QLineEdit *noteedit = edit.findChild<QLineEdit *>(QLatin1String("noteedit"));
     QVERIFY(noteedit->hasSelectedText());
     const QString selectedText = noteedit->selectedText();
-    QCOMPARE(selectedText, QString::fromLatin1("Reply to \"%1\"").arg(subject));
+    QCOMPARE(selectedText, QStringLiteral("Reply to \"%1\"").arg(subject));
 }
 
 void TodoEditTest::shouldEmitCollectionChangedWhenChangeComboboxItem()
@@ -244,7 +244,7 @@ void TodoEditTest::shouldTodoHasCorrectSubject()
     QCOMPARE(spy.count(), 1);
     KCalCore::Todo::Ptr todoPtr = spy.at(0).at(0).value<KCalCore::Todo::Ptr>();
     QVERIFY(todoPtr);
-    QCOMPARE(todoPtr->summary(), QString::fromLatin1("Reply to \"%1\"").arg(subject));
+    QCOMPARE(todoPtr->summary(), QStringLiteral("Reply to \"%1\"").arg(subject));
 }
 
 void TodoEditTest::shouldClearAllWhenCloseWidget()

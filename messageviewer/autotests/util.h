@@ -45,12 +45,12 @@ public:
 
     QString nonQuotedFontTag() const
     {
-        return QString::fromLatin1("<");
+        return QStringLiteral("<");
     }
 
     QString quoteFontTag(int) const
     {
-        return QString::fromLatin1("<");
+        return QStringLiteral("<");
     }
 };
 

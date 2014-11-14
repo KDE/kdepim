@@ -134,7 +134,7 @@ void InvitationSettings::save()
 
 QString InvitationSettings::helpAnchor() const
 {
-    return QString::fromLatin1("configure-misc-invites");
+    return QStringLiteral("configure-misc-invites");
 }
 
 void InvitationSettings::doResetToDefaultsOther()

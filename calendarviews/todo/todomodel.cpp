@@ -275,7 +275,7 @@ QVariant TodoModel::data(const QModelIndex &index, int role) const
             }
         case PriorityColumn:
             if (todo->priority() == 0) {
-                return QVariant(QString::fromLatin1("--"));
+                return QVariant(QStringLiteral("--"));
             }
             return QVariant(todo->priority());
         case PercentColumn:

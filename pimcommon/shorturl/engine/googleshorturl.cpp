@@ -39,7 +39,7 @@ void GoogleShortUrl::start()
     QNetworkRequest request(QUrl(QLatin1String("https://www.googleapis.com/urlshortener/v1/url")));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/json"));
 
-    const QString data = QString::fromLatin1("{\"longUrl\": \"%1/\"}").arg(mOriginalUrl);
+    const QString data = QStringLiteral("{\"longUrl\": \"%1/\"}").arg(mOriginalUrl);
 
     QNetworkReply *reply = mNetworkAccessManager->post(request, data.toUtf8());
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &GoogleShortUrl::slotErrorFound);

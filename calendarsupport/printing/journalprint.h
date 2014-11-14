@@ -38,7 +38,7 @@ public:
 
     virtual QString groupName()
     {
-        return QString::fromLatin1("Print journal");
+        return QStringLiteral("Print journal");
     }
     virtual QString description()
     {
