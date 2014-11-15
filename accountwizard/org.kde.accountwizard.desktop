@@ -1,11 +1,14 @@
 [Desktop Entry]
 Name=Account Wizard
 Name[ca]=Assistent de comptes
+Name[cs]=Průvodce nastavením účtu
 Name[de]=Zugangsassistent 
+Name[en_GB]=Account Wizard
 Name[es]=Asistente de cuentas
 Name[fi]=Opastettu tilin luonti
 Name[nl]=Accountassistent
 Name[pl]=Pomocnik konta 
+Name[pt]=Assistente de Contas
 Name[pt_BR]=Assistente de Contas
 Name[sk]=Sprievodca účtom
 Name[tr]=Hesaplar
@@ -30,9 +33,11 @@ Comment[kk]=PIM тіркелгілерін баптау үшін шеберін 
 Comment[nds]=Konto-Hölper för't Inrichten vun PIM-Kontos starten
 Comment[nl]=Start de accountassistent om PIM-accounts in te stellen.
 Comment[pl]=Uruchom pomocnika konta, aby ustawić konta ZIO.
+Comment[pt]=Invocar o assistente de contas para configurar as contas de PIM.
 Comment[pt_BR]=Executa o assistente para configuração das contas PIM.
 Comment[sk]=Spustí sprievodcu účtami na nasatavenie PIM účtov.
 Comment[sv]=Starta kontoguiden för att anpassa konton för personlig informationshantering.
+Comment[tr]=PIM hesaplarını düzenlemek için hesap sihirbazını başlat.
 Comment[uk]=Запустити майстер облікових записів для налаштування.
 Comment[x-test]=xxLaunch the account wizard to configure PIM accounts.xx
 Comment[zh_CN]=调用账户向导配置个人信息账户。

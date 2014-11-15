@@ -146,6 +146,7 @@ Name[sr]=Грешка у току филтрирања
 Name[sr@ijekavian]=Грешка у току филтрирања
 Name[sr@ijekavianlatin]=Greška u toku filtriranja
 Name[sr@latin]=Greška u toku filtriranja
+Name[tr]=Filtreleme sırasında bir hata oluştu
 Name[uk]=Під час фільтрування сталася помилка
 Name[x-test]=xxAn error occurred during filteringxx
 Action=None
