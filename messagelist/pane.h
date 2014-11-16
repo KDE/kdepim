@@ -447,7 +447,7 @@ signals:
     void currentTabChanged();
 
 private:
-
+    void restoreHeaderSettings(int index);
     void readConfig(bool restoreSession);
 
     Q_PRIVATE_SLOT(d, void onSelectionChanged(const QItemSelection &, const QItemSelection &))

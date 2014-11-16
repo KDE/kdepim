@@ -247,15 +247,14 @@ void AttachmentControllerBase::Private::viewSelectedAttachments()
 
 void AttachmentControllerBase::Private::editSelectedAttachment()
 {
-    Q_ASSERT(selectedParts.count() == 1);
-    q->editAttachment(selectedParts.first(), false /*openWith*/);
-    // TODO nicer api would be enum { OpenWithDialog, NoOpenWithDialog }
+    Q_ASSERT( selectedParts.count() == 1 );
+    q->editAttachment( selectedParts.first(), MessageViewer::EditorWatcher::NoOpenWithDialog );
 }
 
 void AttachmentControllerBase::Private::editSelectedAttachmentWith()
 {
-    Q_ASSERT(selectedParts.count() == 1);
-    q->editAttachment(selectedParts.first(), true /*openWith*/);
+    Q_ASSERT( selectedParts.count() == 1 );
+    q->editAttachment( selectedParts.first(), MessageViewer::EditorWatcher::OpenWithDialog );
 }
 
 void AttachmentControllerBase::Private::removeSelectedAttachments()
@@ -556,12 +555,16 @@ void AttachmentControllerBase::showContextMenu()
         menu->addAction(d->propertiesContextAction);
     }
 
-    menu->addSeparator();
-    menu->addAction(d->selectAllAction);
-    menu->addSeparator();
-    menu->addAction(d->addContextAction);
-
-    menu->exec(QCursor::pos());
+    const int nbAttachment = d->model->rowCount();
+    if (nbAttachment != numberOfParts) {
+        menu->addSeparator();
+        menu->addAction(d->selectAllAction);
+    }
+    if (numberOfParts == 0) {
+        menu->addSeparator();
+        menu->addAction(d->addContextAction);
+    }
+    menu->exec( QCursor::pos() );
     delete menu;
 }
 
@@ -661,7 +664,7 @@ void AttachmentControllerBase::Private::slotAttachmentContentCreated(KJob *job)
     }
 }
 
-void AttachmentControllerBase::editAttachment(AttachmentPart::Ptr part, bool openWith)
+void AttachmentControllerBase::editAttachment( AttachmentPart::Ptr part, MessageViewer::EditorWatcher::OpenWithOption openWithOption )
 {
     QTemporaryFile *tempFile = dumpAttachmentToTempFile(part);
     if (!tempFile) {
@@ -673,7 +676,7 @@ void AttachmentControllerBase::editAttachment(AttachmentPart::Ptr part, bool ope
 
     MessageViewer::EditorWatcher *watcher = new MessageViewer::EditorWatcher(
         QUrl::fromLocalFile(tempFile->fileName()),
-        QString::fromLatin1(part->mimeType()), openWith,
+        QString::fromLatin1(part->mimeType()), openWithOption,
         this, d->wParent);
     connect(watcher, SIGNAL(editDone(MessageViewer::EditorWatcher*)),
             this, SLOT(editDone(MessageViewer::EditorWatcher*)));
@@ -695,7 +698,7 @@ void AttachmentControllerBase::editAttachment(AttachmentPart::Ptr part, bool ope
 
 void AttachmentControllerBase::editAttachmentWith(AttachmentPart::Ptr part)
 {
-    editAttachment(part, true);
+    editAttachment( part, MessageViewer::EditorWatcher::OpenWithDialog );
 }
 
 void AttachmentControllerBase::saveAttachmentAs(AttachmentPart::Ptr part)

@@ -510,7 +510,7 @@ bool ViewerPrivate::editAttachment(KMime::Content *node, bool showWarning)
 
     EditorWatcher *watcher =
         new EditorWatcher(KUrl(file.fileName()), QLatin1String(node->contentType()->mimeType()),
-                          false, this, mMainWindow);
+                          MessageViewer::EditorWatcher::NoOpenWithDialog, this, mMainWindow);
     mEditorWatchers[ watcher ] = node;
 
     connect(watcher, SIGNAL(editDone(EditorWatcher*)), SLOT(slotAttachmentEditDone(EditorWatcher*)));

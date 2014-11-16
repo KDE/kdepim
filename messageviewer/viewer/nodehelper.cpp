@@ -709,7 +709,7 @@ QString NodeHelper::persistentIndex(const KMime::Content *node) const
     Q_FOREACH (const QList<KMime::Content *> &extraNodes, mExtraContents) {
         const int extraNodesSize(extraNodes.size());
         for (int i = 0; i < extraNodesSize; ++i)
-            if (topLevel == extraNodes[i]) {
+            if (topLevel == extraNodes.at(i)) {
                 return indexStr.prepend(QString::fromLatin1("%1:").arg(i));
             }
     }

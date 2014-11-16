@@ -33,6 +33,7 @@
 #include <KJob>
 #include <KService>
 #include "messagecomposer_export.h"
+#include "messageviewer/viewer/editorwatcher.h"
 class KActionCollection;
 class QAction;
 namespace MessageCore
@@ -70,7 +71,7 @@ public slots:
     void showContextMenu();
     void openAttachment(MessageCore::AttachmentPart::Ptr part);
     void viewAttachment(MessageCore::AttachmentPart::Ptr part);
-    void editAttachment(MessageCore::AttachmentPart::Ptr part, bool openWith = false);
+    void editAttachment(MessageCore::AttachmentPart::Ptr part, MessageViewer::EditorWatcher::OpenWithOption option = MessageViewer::EditorWatcher::NoOpenWithDialog);
     void editAttachmentWith(MessageCore::AttachmentPart::Ptr part);
     void saveAttachmentAs(MessageCore::AttachmentPart::Ptr part);
     void attachmentProperties(MessageCore::AttachmentPart::Ptr part);

@@ -40,21 +40,22 @@
 #include <sys/ioctl.h>
 #endif
 
-namespace MessageViewer
-{
-EditorWatcher::EditorWatcher(const QUrl &url, const QString &mimeType, bool openWith,
-                             QObject *parent, QWidget *parentWidget) :
-    QObject(parent),
-    mUrl(url),
-    mMimeType(mimeType),
-    mOpenWith(openWith),
-    mEditor(0),
-    mParentWidget(parentWidget),
-    mHaveInotify(false),
-    mFileOpen(false),
-    mEditorRunning(false),
-    mFileModified(true),   // assume the worst unless we know better
-    mDone(false)
+namespace MessageViewer {
+EditorWatcher::EditorWatcher( const KUrl & url, const QString &mimeType, OpenWithOption option,
+                              QObject * parent, QWidget *parentWidget ) :
+    QObject( parent ),
+    mUrl( url ),
+    mMimeType( mimeType ),
+    mInotifyFd(-1),
+    mInotifyWatch(-1),
+    mEditor( 0 ),
+    mParentWidget( parentWidget ),
+    mOpenWithOption( option ),
+    mHaveInotify( false ),
+    mFileOpen( false ),
+    mEditorRunning( false ),
+    mFileModified( true ), // assume the worst unless we know better
+    mDone( false )
 {
     assert(mUrl.isLocalFile());
     mTimer.setSingleShot(true);
@@ -67,7 +68,7 @@ bool EditorWatcher::start()
     QList<QUrl> list;
     list.append(mUrl);
     KService::Ptr offer = KMimeTypeTrader::self()->preferredService(mMimeType, QLatin1String("Application"));
-    if (mOpenWith || !offer) {
+    if ( (mOpenWithOption == OpenWithDialog) || !offer) {
         AutoQPointer<KOpenWithDialog> dlg(new KOpenWithDialog(list, i18n("Edit with:"),
                                           QString(), mParentWidget));
         const int dlgrc = dlg->exec();
