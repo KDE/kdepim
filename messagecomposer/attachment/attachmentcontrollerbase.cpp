@@ -248,14 +248,13 @@ void AttachmentControllerBase::Private::viewSelectedAttachments()
 void AttachmentControllerBase::Private::editSelectedAttachment()
 {
     Q_ASSERT( selectedParts.count() == 1 );
-    q->editAttachment( selectedParts.first(), false /*openWith*/ );
-    // TODO nicer api would be enum { OpenWithDialog, NoOpenWithDialog }
+    q->editAttachment( selectedParts.first(), MessageViewer::EditorWatcher::NoOpenWithDialog );
 }
 
 void AttachmentControllerBase::Private::editSelectedAttachmentWith()
 {
     Q_ASSERT( selectedParts.count() == 1 );
-    q->editAttachment( selectedParts.first(), true /*openWith*/ );
+    q->editAttachment( selectedParts.first(), MessageViewer::EditorWatcher::OpenWithDialog );
 }
 
 void AttachmentControllerBase::Private::removeSelectedAttachments()
@@ -672,7 +671,7 @@ void AttachmentControllerBase::Private::slotAttachmentContentCreated( KJob *job 
     }
 }
 
-void AttachmentControllerBase::editAttachment( AttachmentPart::Ptr part, bool openWith )
+void AttachmentControllerBase::editAttachment( AttachmentPart::Ptr part, MessageViewer::EditorWatcher::OpenWithOption openWithOption )
 {
     KTemporaryFile *tempFile = dumpAttachmentToTempFile( part );
     if( !tempFile ) {
@@ -684,7 +683,7 @@ void AttachmentControllerBase::editAttachment( AttachmentPart::Ptr part, bool op
 
     MessageViewer::EditorWatcher *watcher = new MessageViewer::EditorWatcher(
                 KUrl::fromPath( tempFile->fileName() ),
-                QString::fromLatin1( part->mimeType() ), openWith,
+                QString::fromLatin1( part->mimeType() ), openWithOption,
                 this, d->wParent );
     connect( watcher, SIGNAL(editDone(MessageViewer::EditorWatcher*)),
              this, SLOT(editDone(MessageViewer::EditorWatcher*)) );
@@ -706,7 +705,7 @@ void AttachmentControllerBase::editAttachment( AttachmentPart::Ptr part, bool op
 
 void AttachmentControllerBase::editAttachmentWith( AttachmentPart::Ptr part )
 {
-    editAttachment( part, true );
+    editAttachment( part, MessageViewer::EditorWatcher::OpenWithDialog );
 }
 
 void AttachmentControllerBase::saveAttachmentAs( AttachmentPart::Ptr part )
