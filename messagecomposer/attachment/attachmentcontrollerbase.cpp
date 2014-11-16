@@ -563,11 +563,15 @@ void AttachmentControllerBase::showContextMenu()
         menu->addAction(d->propertiesContextAction);
     }
 
-    menu->addSeparator();
-    menu->addAction(d->selectAllAction);
-    menu->addSeparator();
-    menu->addAction(d->addContextAction);
-
+    const int nbAttachment = d->model->rowCount();
+    if (nbAttachment != numberOfParts) {
+        menu->addSeparator();
+        menu->addAction(d->selectAllAction);
+    }
+    if (numberOfParts == 0) {
+        menu->addSeparator();
+        menu->addAction(d->addContextAction);
+    }
     menu->exec( QCursor::pos() );
     delete menu;
 }
