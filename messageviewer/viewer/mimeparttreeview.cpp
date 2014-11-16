@@ -29,7 +29,7 @@ using namespace MessageViewer;
 MimePartTreeView::MimePartTreeView(QWidget *parent)
     : QTreeView(parent)
 {
-    setObjectName(QLatin1String("mMimePartTree"));
+    setObjectName(QStringLiteral("mMimePartTree"));
 
     mMimePartModel = new MimeTreeModel(this);
     setModel(mMimePartModel);

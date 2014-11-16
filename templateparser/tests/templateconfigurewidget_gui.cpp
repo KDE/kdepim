@@ -39,7 +39,7 @@ TemplateConfigureTestWidget::~TemplateConfigureTestWidget()
 
 int main(int argc, char **argv)
 {
-    KAboutData aboutData(QLatin1String("templateconfiguretest_gui"), i18n("TemplateConfigureTest_Gui"), QLatin1String("1.0"));
+    KAboutData aboutData(QStringLiteral("templateconfiguretest_gui"), i18n("TemplateConfigureTest_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for template configure widget"));
     QApplication app(argc, argv);
     QCommandLineParser parser;

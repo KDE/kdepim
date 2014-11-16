@@ -47,7 +47,7 @@ QVariant NoteListProxy::data( const QModelIndex& index, int role ) const
     case PlainContent:
     {
       QTextDocument doc;
-      if ( note->contentType()->asUnicodeString() == QLatin1String( "text/plain" ) )
+      if ( note->contentType()->asUnicodeString() == QStringLiteral( "text/plain" ) )
         doc.setPlainText( note->mainBodyPart()->decodedText() );
       else
         doc.setHtml( note->mainBodyPart()->decodedText() );
@@ -56,7 +56,7 @@ QVariant NoteListProxy::data( const QModelIndex& index, int role ) const
     case ShortContent:
     {
       QTextDocument doc;
-      if ( note->contentType()->asUnicodeString() == QLatin1String( "text/plain" ) )
+      if ( note->contentType()->asUnicodeString() == QStringLiteral( "text/plain" ) )
         doc.setPlainText( note->mainBodyPart()->decodedText() );
       else
         doc.setHtml( note->mainBodyPart()->decodedText() );

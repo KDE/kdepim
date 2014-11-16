@@ -35,7 +35,7 @@ BalooDebugSearchJob::~BalooDebugSearchJob()
 
 void BalooDebugSearchJob::start()
 {
-    const QString delvePath = QStandardPaths::findExecutable(QLatin1String("delve"));
+    const QString delvePath = QStandardPaths::findExecutable(QStringLiteral("delve"));
     if (delvePath.isEmpty()) {
         //Don't translate it. Just debug
         Q_EMIT error(QStringLiteral("\"delve\" not installed on computer."));
@@ -47,7 +47,7 @@ void BalooDebugSearchJob::start()
         connect(mProcess, &QProcess::readyReadStandardError, this, &BalooDebugSearchJob::slotReadError);
         mProcess->setWorkingDirectory(mPath);
         QStringList arguments;
-        arguments << QLatin1String("-r") << mAkonadiId;
+        arguments << QStringLiteral("-r") << mAkonadiId;
         arguments << mPath;
         mProcess->start(delvePath, QStringList() << arguments);
     }

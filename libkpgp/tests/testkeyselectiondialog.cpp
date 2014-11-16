@@ -29,7 +29,7 @@
 int main(int argc,char **argv)
 {
   QApplication app(argc, argv);
-  KAboutData aboutData( QLatin1String("testkeyselectiondialog"),QString(), QLatin1String("0.1") );
+  KAboutData aboutData( QStringLiteral("testkeyselectiondialog"),QString(), QStringLiteral("0.1") );
   
   KAboutData::setApplicationData(aboutData);
 
@@ -40,7 +40,7 @@ int main(int argc,char **argv)
   parser.process(app);
   aboutData.processCommandLine(&parser);
 
-  Kpgp::KeySelectionDialog dlg( Kpgp::Module::getKpgp()->publicKeys(), QLatin1String("Public Keys") );
+  Kpgp::KeySelectionDialog dlg( Kpgp::Module::getKpgp()->publicKeys(), QStringLiteral("Public Keys") );
   dlg.show();  
   app.exec();
 }

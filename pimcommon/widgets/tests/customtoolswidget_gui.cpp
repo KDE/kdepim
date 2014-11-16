@@ -61,7 +61,7 @@ void CustomToolWidgetTest::slotSwitchComponent(int index)
 
 int main(int argc, char **argv)
 {
-    KAboutData aboutData(QLatin1String("customtoolswidget_gui"), i18n("CustomToolWidgetsTest_Gui"), QLatin1String("1.0"));
+    KAboutData aboutData(QStringLiteral("customtoolswidget_gui"), i18n("CustomToolWidgetsTest_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for customtoolswidget"));
     QApplication app(argc, argv);
     QCommandLineParser parser;

@@ -131,7 +131,7 @@ void NotesNetworkReceiver::slotConnectionClosed()
         QString noteText = QString(codec->toUnicode(*m_buffer)).trimmed();
 
         // First line is the note title or, in case of ATnotes, the id
-        const int pos = noteText.indexOf(QRegExp(QLatin1String("[\r\n]")));
+        const int pos = noteText.indexOf(QRegExp(QStringLiteral("[\r\n]")));
         const QString noteTitle = noteText.left(pos).trimmed() + m_titleAddon;
 
         noteText = noteText.mid(pos).trimmed();

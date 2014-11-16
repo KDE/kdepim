@@ -34,7 +34,7 @@ BoxTestWidget::BoxTestWidget(QWidget *parent)
 
 int main(int argc, char **argv)
 {
-    KAboutData aboutData(QLatin1String("box_gui"), i18n("box_Gui"), QLatin1String("1.0"));
+    KAboutData aboutData(QStringLiteral("box_gui"), i18n("box_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for box"));
     QApplication app(argc, argv);
     QCommandLineParser parser;

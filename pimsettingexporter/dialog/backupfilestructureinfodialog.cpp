@@ -70,7 +70,7 @@ BackupFileStructureInfoDialog::~BackupFileStructureInfoDialog()
 
 void BackupFileStructureInfoDialog::loadStructure()
 {
-    const QString fileName(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("pimsettingexporter/backup-structure.txt")));
+    const QString fileName(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("pimsettingexporter/backup-structure.txt")));
     if (!fileName.isEmpty()) {
         QFile f(fileName);
         if (!f.open(QIODevice::ReadOnly)) {

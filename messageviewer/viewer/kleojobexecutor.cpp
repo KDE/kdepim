@@ -37,7 +37,7 @@ using boost::shared_ptr;
 
 KleoJobExecutor::KleoJobExecutor(QObject *parent) : QObject(parent)
 {
-    setObjectName(QLatin1String("KleoJobExecutor"));
+    setObjectName(QStringLiteral("KleoJobExecutor"));
     mEventLoop = new QEventLoop(this);
 }
 

@@ -29,7 +29,7 @@
 using namespace MailCommon;
 
 FilterActionCopy::FilterActionCopy(QObject *parent)
-    : FilterActionWithFolder(QLatin1String("copy"), i18n("Copy Into Folder"), parent)
+    : FilterActionWithFolder(QStringLiteral("copy"), i18n("Copy Into Folder"), parent)
 {
 }
 
@@ -73,6 +73,6 @@ QString FilterActionCopy::sieveCode() const
 
 QStringList FilterActionCopy::sieveRequires() const
 {
-    return QStringList() << QLatin1String("fileinto") << QLatin1String("copy");
+    return QStringList() << QStringLiteral("fileinto") << QStringLiteral("copy");
 }
 

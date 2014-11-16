@@ -77,7 +77,7 @@ void StorageServiceSettings::closeWallet()
 bool StorageServiceSettings::createDefaultFolder()
 {
     KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
-    const QString folderName = QLatin1String("storageservice");
+    const QString folderName = QStringLiteral("storageservice");
     if (wallet) {
         if (!wallet->setFolder(folderName)) {
             wallet->createFolder(folderName);

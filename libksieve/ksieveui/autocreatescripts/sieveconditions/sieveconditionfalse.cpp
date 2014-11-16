@@ -26,7 +26,7 @@
 using namespace KSieveUi;
 
 SieveConditionFalse::SieveConditionFalse(QObject *parent)
-    : SieveCondition(QLatin1String("false"), i18n("False"), parent)
+    : SieveCondition(QStringLiteral("false"), i18n("False"), parent)
 {
 }
 
@@ -49,7 +49,7 @@ QWidget *SieveConditionFalse::createParamWidget(QWidget *parent) const
 
 QString SieveConditionFalse::code(QWidget *) const
 {
-    return QLatin1String("false");
+    return QStringLiteral("false");
 }
 
 QString SieveConditionFalse::help() const

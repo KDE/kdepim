@@ -127,7 +127,7 @@ Widget::Widget(QWidget *pParent)
             this, SLOT(themesChanged()));
 
     setAutoFillBackground(true);
-    setObjectName(QLatin1String("messagelistwidget"));
+    setObjectName(QStringLiteral("messagelistwidget"));
 
     QVBoxLayout *g = new QVBoxLayout(this);
     g->setMargin(0);
@@ -144,7 +144,7 @@ Widget::Widget(QWidget *pParent)
     d->mView = new View(this);
     d->mView->setFrameStyle(QFrame::NoFrame);
     d->mView->setSortOrder(&d->mSortOrder);
-    d->mView->setObjectName(QLatin1String("messagealistview"));
+    d->mView->setObjectName(QStringLiteral("messagealistview"));
     g->addWidget(d->mView, 1);
 
     connect(d->mView->header(), SIGNAL(sectionClicked(int)),

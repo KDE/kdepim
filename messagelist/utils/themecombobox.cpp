@@ -53,7 +53,7 @@ void ThemeComboBox::writeDefaultConfig() const
     KConfigGroup group(Settings::self()->config(), "MessageListView::StorageModelThemes");
 
     const QString themeID = currentTheme();
-    group.writeEntry(QLatin1String("DefaultSet"), themeID);
+    group.writeEntry(QStringLiteral("DefaultSet"), themeID);
     if (Manager::instance()) {
         Manager::instance()->themesConfigurationCompleted();
     }

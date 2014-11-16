@@ -203,7 +203,7 @@ void StorageServicePage::slotActionFailed(const QString &serviceName, const QStr
     if (verifyService(serviceName)) {
         mStorageServiceWarning->addLog(error);
         mStorageServiceWarning->animatedShow();
-        KNotification::event(QLatin1String("action-failed"), error, QPixmap() , this, KNotification::CloseOnTimeout);
+        KNotification::event(QStringLiteral("action-failed"), error, QPixmap() , this, KNotification::CloseOnTimeout);
     }
 }
 

@@ -179,7 +179,7 @@ QMimeData *AttachmentModel::mimeData(const QModelIndexList &indexes) const
         f.close();
 
         QUrl url;
-        url.setScheme(QLatin1String("file"));
+        url.setScheme(QStringLiteral("file"));
         url.setPath(fileName);
         qDebug() << url;
         urls.append(url);
