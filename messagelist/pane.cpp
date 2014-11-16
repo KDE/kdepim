@@ -1061,8 +1061,8 @@ void Pane::readConfig(bool restoreSession)
             createNewTab();
         } else {
             for(int i = 0; i<numberOfTab; ++i) {
-                KConfigGroup grp(MessageList::Core::Settings::self()->config(),QString::fromLatin1("MessageListTab%1").arg(i));
-                QItemSelectionModel *selectionModel = createNewTab();
+                restoreHeaderSettings(i);
+                createNewTab();
 #if 0
                 Akonadi::Collection::Id id = grp.readEntry(QLatin1String("collectionId"),-1);
                 ETMViewStateSaver *saver = new ETMViewStateSaver;
@@ -1075,24 +1075,24 @@ void Pane::readConfig(bool restoreSession)
                     saver->selectCollections(Akonadi::Collection::List()<<Akonadi::Collection(id));
                     saver->restoreCurrentItem( QString::fromLatin1("c%1").arg(id) );
                 }
-#else
-                Q_UNUSED( selectionModel );
 #endif
-                Widget *w = qobject_cast<Widget *>( widget( i ) );
-                w->view()->header()->restoreState(grp.readEntry(QLatin1String("HeaderState"),QByteArray()));
             }
             setCurrentIndex(conf.readEntry(QLatin1String("currentIndex"),0));
         }
     } else {
         createNewTab();
-        KConfigGroup grp(MessageList::Core::Settings::self()->config(),QString::fromLatin1("MessageListTab%1").arg(0));
-        if (grp.exists()) {
-            Widget *w = qobject_cast<Widget *>( widget( 0 ) );
-            w->view()->header()->restoreState(grp.readEntry(QLatin1String("HeaderState"),QByteArray()));
-        }
+        restoreHeaderSettings(0);
     }
 }
 
+void Pane::restoreHeaderSettings(int index)
+{
+    KConfigGroup grp(MessageList::Core::Settings::self()->config(),QString::fromLatin1("MessageListTab%1").arg(index));
+    if (grp.exists()) {
+        Widget *w = qobject_cast<Widget *>( widget( index ) );
+        w->view()->header()->restoreState(grp.readEntry(QLatin1String("HeaderState"),QByteArray()));
+    }
+}
 
 bool Pane::searchEditHasFocus() const
 {
