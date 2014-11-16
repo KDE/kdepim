@@ -1085,6 +1085,11 @@ void Pane::readConfig(bool restoreSession)
         }
     } else {
         createNewTab();
+        KConfigGroup grp(MessageList::Core::Settings::self()->config(),QString::fromLatin1("MessageListTab%1").arg(0));
+        if (grp.exists()) {
+            Widget *w = qobject_cast<Widget *>( widget( 0 ) );
+            w->view()->header()->restoreState(grp.readEntry(QLatin1String("HeaderState"),QByteArray()));
+        }
     }
 }
 
