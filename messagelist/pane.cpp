@@ -1061,8 +1061,8 @@ void Pane::readConfig(bool restoreSession)
             createNewTab();
         } else {
             for(int i = 0; i<numberOfTab; ++i) {
-                restoreHeaderSettings(i);
                 createNewTab();
+                restoreHeaderSettings(i);
 #if 0
                 Akonadi::Collection::Id id = grp.readEntry(QLatin1String("collectionId"),-1);
                 ETMViewStateSaver *saver = new ETMViewStateSaver;
