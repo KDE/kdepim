@@ -26,7 +26,6 @@
 #include "jobbase_p.h"
 
 #include <QTextCodec>
-#include <QTimer>
 #include <QHostInfo>
 #include <QUrl>
 

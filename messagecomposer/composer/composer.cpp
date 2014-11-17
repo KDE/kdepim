@@ -38,8 +38,6 @@
 #include "settings/messagecomposersettings.h"
 
 
-#include <QTimer>
-
 #include <KDebug>
 #include <klocalizedstring.h>
 
