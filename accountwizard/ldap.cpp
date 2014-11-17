@@ -64,7 +64,7 @@ void Ldap::create()
     return;
   }
 
-  const QString host = m_server;
+  QString host = m_server;
 
   // Figure out the basedn
   QString basedn = m_baseDn.isEmpty() ? host : m_baseDn;
@@ -78,16 +78,21 @@ void Ldap::create()
         if ( !h.isEmpty() )
           // The user did type in a domain on the email address. Use that
           basedn = h;
+          host = h;
       }
   }
-  { // while we're here, write default domain
+  if (!host.isEmpty()) {
+    // while we're here, write default domain
     KConfig c( QLatin1String("kmail2rc") );
     KConfigGroup group = c.group( "General" );
-    group.writeEntry( "Default domain", basedn );
+    group.writeEntry( "Default domain", host );
   }
 
   basedn.replace( QLatin1Char('.'), QLatin1String(",dc=") );
-  basedn.prepend( QLatin1String("dc=") );
+
+  if (!basedn.startsWith(QLatin1String("dc="))) {
+    basedn.prepend( QLatin1String("dc=") );
+  }
 
   // Set the changes
   KConfig *c = config();
