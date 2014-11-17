@@ -43,7 +43,7 @@ MergeContactWidget::MergeContactWidget(const Akonadi::Item::List &items, QWidget
     QLabel *lab = new QLabel(i18n("Select contacts that you want really to merge:"));
     lay->addWidget(lab);
     mListWidget = new MergeContactWidgetList;
-    mListWidget->setObjectName(QLatin1String("listcontact"));
+    mListWidget->setObjectName(QStringLiteral("listcontact"));
     mListWidget->setSelectionMode(QAbstractItemView::SingleSelection);
     lay->addWidget(mListWidget);
     connect(mListWidget, &MergeContactWidgetList::itemSelectionChanged, this, &MergeContactWidget::slotUpdateMergeButton);
@@ -59,7 +59,7 @@ MergeContactWidget::MergeContactWidget(const Akonadi::Item::List &items, QWidget
     mCollectionCombobox->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
     mCollectionCombobox->setMinimumWidth(250);
     mCollectionCombobox->setMimeTypeFilter(QStringList() << KContacts::Addressee::mimeType());
-    mCollectionCombobox->setObjectName(QLatin1String("akonadicombobox"));
+    mCollectionCombobox->setObjectName(QStringLiteral("akonadicombobox"));
     hbox->addWidget(mCollectionCombobox);
 
     lay->addLayout(hbox);
@@ -67,7 +67,7 @@ MergeContactWidget::MergeContactWidget(const Akonadi::Item::List &items, QWidget
     hbox = new QHBoxLayout;
     hbox->addStretch();
     mMergeButton = new QPushButton(i18n("merge"));
-    mMergeButton->setObjectName(QLatin1String("mergebutton"));
+    mMergeButton->setObjectName(QStringLiteral("mergebutton"));
     hbox->addWidget(mMergeButton);
     mMergeButton->setEnabled(false);
     lay->addLayout(hbox);

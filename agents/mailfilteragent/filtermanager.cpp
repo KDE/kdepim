@@ -66,7 +66,7 @@ public:
           mTotalProgressCount(0),
           mCurrentProgressCount(0)
     {
-        pixmapNotification = QIcon::fromTheme( QLatin1String("view-filter") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+        pixmapNotification = QIcon::fromTheme( QStringLiteral("view-filter") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
     }
 
     void itemsFetchJobForFilterDone( KJob *job );
@@ -233,8 +233,8 @@ void FilterManager::Private::modifyJobResult(KJob *job)
 
 void FilterManager::Private::showNotification(const QString &errorMsg, const QString &jobErrorString)
 {
-    KNotification *notify = new KNotification( QLatin1String("mailfilterjoberror") );
-    notify->setComponentName( QLatin1String("akonadi_mailfilter_agent") );
+    KNotification *notify = new KNotification( QStringLiteral("mailfilterjoberror") );
+    notify->setComponentName( QStringLiteral("akonadi_mailfilter_agent") );
     notify->setPixmap( pixmapNotification );
     notify->setText( errorMsg + QLatin1Char('\n') + jobErrorString );
     notify->sendEvent();

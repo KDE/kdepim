@@ -52,9 +52,9 @@ public:
         watch = new KDirWatch(q);
         initThemesDirectories(relativePath);
         downloadThemesAction = new QAction(i18n("Download New Themes..."), q);
-        downloadThemesAction->setIcon(QIcon::fromTheme(QLatin1String("get-hot-new-stuff")));
+        downloadThemesAction->setIcon(QIcon::fromTheme(QStringLiteral("get-hot-new-stuff")));
         if (actionCollection) {
-            actionCollection->addAction(QLatin1String("download_header_themes"), downloadThemesAction);
+            actionCollection->addAction(QStringLiteral("download_header_themes"), downloadThemesAction);
         }
         separatorAction = new QAction(q);
         separatorAction->setSeparator(true);
@@ -361,7 +361,7 @@ GrantleeTheme::Theme GrantleeThemeManager::loadTheme(const QString &themePath, c
 {
     const QString themeInfoFile = themePath + QDir::separator() + defaultDesktopFileName;
     KConfig config(themeInfoFile);
-    KConfigGroup group(&config, QLatin1String("Desktop Entry"));
+    KConfigGroup group(&config, QStringLiteral("Desktop Entry"));
 
     GrantleeTheme::Theme theme;
     theme.setDirName(dirName);

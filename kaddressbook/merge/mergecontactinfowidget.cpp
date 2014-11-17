@@ -31,16 +31,16 @@ MergeContactInfoWidget::MergeContactInfoWidget(QWidget *parent)
 {
     QHBoxLayout *lay = new QHBoxLayout;
     mStackWidget = new QStackedWidget;
-    mStackWidget->setObjectName(QLatin1String("stackedwidget"));
+    mStackWidget->setObjectName(QStringLiteral("stackedwidget"));
 
     mContactViewer = new KAddressBookGrantlee::GrantleeContactViewer;
-    mContactViewer->setObjectName(QLatin1String("contactwidget"));
+    mContactViewer->setObjectName(QStringLiteral("contactwidget"));
     mContactViewer->setForceDisableQRCode(true);
 
     mStackWidget->addWidget(mContactViewer);
 
     mNoContactSelected = new QLabel;
-    mNoContactSelected->setObjectName(QLatin1String("nocontact"));
+    mNoContactSelected->setObjectName(QStringLiteral("nocontact"));
     mStackWidget->addWidget(mNoContactSelected);
 
     lay->addWidget(mStackWidget);

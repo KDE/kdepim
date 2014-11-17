@@ -32,7 +32,7 @@ FilterAction *FilterActionMove::newAction()
 }
 
 FilterActionMove::FilterActionMove(QObject *parent)
-    : FilterActionWithFolder(QLatin1String("transfer"), i18n("Move Into Folder"), parent)
+    : FilterActionWithFolder(QStringLiteral("transfer"), i18n("Move Into Folder"), parent)
 {
 }
 
@@ -75,6 +75,6 @@ QString FilterActionMove::sieveCode() const
 
 QStringList FilterActionMove::sieveRequires() const
 {
-    return QStringList() << QLatin1String("fileinto");
+    return QStringList() << QStringLiteral("fileinto");
 }
 

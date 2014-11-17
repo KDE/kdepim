@@ -72,7 +72,7 @@ FilterLogDialog::FilterLogDialog(QWidget *parent)
     buttonBox->addButton(mUser2Button, QDialogButtonBox::ActionRole);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &FilterLogDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &FilterLogDialog::reject);
-    setWindowIcon(QIcon::fromTheme(QLatin1String("view-filter")));
+    setWindowIcon(QIcon::fromTheme(QStringLiteral("view-filter")));
     setModal(false);
     buttonBox->button(QDialogButtonBox::Close)->setDefault(true);
     KGuiItem::assign(mUser1Button, KStandardGuiItem::clear());
@@ -348,7 +348,7 @@ void FilterLogDialog::slotUser2()
 
     fdlg->setAcceptMode(QFileDialog::AcceptSave);
     fdlg->setFileMode(QFileDialog::AnyFile);
-    fdlg->selectFile(QLatin1String("kmail-filter.html"));
+    fdlg->selectFile(QStringLiteral("kmail-filter.html"));
     if (fdlg->exec() == QDialog::Accepted && fdlg) {
         const QStringList fileName = fdlg->selectedFiles();
 

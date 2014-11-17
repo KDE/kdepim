@@ -27,7 +27,7 @@
 using namespace MailCommon;
 
 FilterActionDelete::FilterActionDelete(QObject *parent)
-    : FilterActionWithNone(QLatin1String("delete"), i18n("Delete Message"), parent)
+    : FilterActionWithNone(QStringLiteral("delete"), i18n("Delete Message"), parent)
 {
 }
 
@@ -60,6 +60,6 @@ FilterAction *FilterActionDelete::newAction()
 
 QString FilterActionDelete::sieveCode() const
 {
-    return QLatin1String("discard;");
+    return QStringLiteral("discard;");
 }
 

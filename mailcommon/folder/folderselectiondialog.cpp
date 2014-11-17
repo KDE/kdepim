@@ -64,7 +64,7 @@ public:
 FolderSelectionDialog::FolderSelectionDialog(QWidget *parent, SelectionFolderOptions options)
     : QDialog(parent), d(new FolderSelectionDialogPrivate())
 {
-    setObjectName(QLatin1String("folder dialog"));
+    setObjectName(QStringLiteral("folder dialog"));
 
     d->mNotAllowToCreateNewFolder = (options & FolderSelectionDialog::NotAllowToCreateNewFolder);
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
@@ -81,7 +81,7 @@ FolderSelectionDialog::FolderSelectionDialog(QWidget *parent, SelectionFolderOpt
     if (!d->mNotAllowToCreateNewFolder) {
         d->mUser1Button = new QPushButton;
         buttonBox->addButton(d->mUser1Button, QDialogButtonBox::ActionRole);
-        KGuiItem::assign(d->mUser1Button, KGuiItem(i18n("&New Subfolder..."), QLatin1String("folder-new"),
+        KGuiItem::assign(d->mUser1Button, KGuiItem(i18n("&New Subfolder..."), QStringLiteral("folder-new"),
                          i18n("Create a new subfolder under the currently selected folder")));
     }
 

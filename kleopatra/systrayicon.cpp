@@ -166,8 +166,8 @@ SysTrayIcon::Private::Private(SysTrayIcon *qq)
       learnCertificatesAction(i18n("Learn NetKey v3 Card Certificates"), q),
       aboutDialog()
 {
-    q->setNormalIcon(QIcon::fromTheme(QLatin1String("kleopatra")));
-    q->setAttentionIcon(QIcon::fromTheme(QLatin1String("secure-card")));
+    q->setNormalIcon(QIcon::fromTheme(QStringLiteral("kleopatra")));
+    q->setAttentionIcon(QIcon::fromTheme(QStringLiteral("secure-card")));
 
     KDAB_SET_OBJECT_NAME(menu);
     KDAB_SET_OBJECT_NAME(openCertificateManagerAction);

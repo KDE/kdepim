@@ -43,7 +43,7 @@ void AbstractCalendar::addImportError(const QString &log)
 //eventviewsrc for calendar color for example
 void AbstractCalendar::addEvenViewConfig(const QString &groupName, const QString &key, const QString &value)
 {
-    KSharedConfigPtr eventViewConfig = KSharedConfig::openConfig(QLatin1String("eventviewsrc"));
+    KSharedConfigPtr eventViewConfig = KSharedConfig::openConfig(QStringLiteral("eventviewsrc"));
     KConfigGroup group = eventViewConfig->group(groupName);
     group.writeEntry(key, value);
     group.sync();

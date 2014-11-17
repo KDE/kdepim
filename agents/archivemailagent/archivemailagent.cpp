@@ -39,8 +39,8 @@
 ArchiveMailAgent::ArchiveMailAgent(const QString &id)
     : Akonadi::AgentBase(id)
 {
-    Kdelibs4ConfigMigrator migrate(QLatin1String("archivemailagent"));
-    migrate.setConfigFiles(QStringList() << QLatin1String("akonadi_archivemail_agentrc") << QLatin1String("akonadi_archivemail_agent.notifyrc"));
+    Kdelibs4ConfigMigrator migrate(QStringLiteral("archivemailagent"));
+    migrate.setConfigFiles(QStringList() << QStringLiteral("akonadi_archivemail_agentrc") << QStringLiteral("akonadi_archivemail_agent.notifyrc"));
     migrate.migrate();
 
     mArchiveManager = new ArchiveMailManager(this);
@@ -53,8 +53,8 @@ ArchiveMailAgent::ArchiveMailAgent(const QString &id)
     collectionMonitor->setMimeTypeMonitored(KMime::Message::mimeType());
 
     new ArchiveMailAgentAdaptor(this);
-    KDBusConnectionPool::threadConnection().registerObject(QLatin1String("/ArchiveMailAgent"), this, QDBusConnection::ExportAdaptors);
-    KDBusConnectionPool::threadConnection().registerService(QLatin1String("org.freedesktop.Akonadi.ArchiveMailAgent"));
+    KDBusConnectionPool::threadConnection().registerObject(QStringLiteral("/ArchiveMailAgent"), this, QDBusConnection::ExportAdaptors);
+    KDBusConnectionPool::threadConnection().registerService(QStringLiteral("org.freedesktop.Akonadi.ArchiveMailAgent"));
     connect(collectionMonitor, &Akonadi::Monitor::collectionRemoved, this, &ArchiveMailAgent::mailCollectionRemoved);
 
     if (enabledAgent()) {

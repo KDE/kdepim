@@ -218,7 +218,7 @@ void TodoModel::Private::onLayoutChanged()
 TodoModel::TodoModel(const EventViews::PrefsPtr &preferences, QObject *parent)
     : QAbstractProxyModel(parent), d(new Private(preferences, this))
 {
-    setObjectName(QLatin1String("TodoModel"));
+    setObjectName(QStringLiteral("TodoModel"));
 }
 
 TodoModel::~TodoModel()
@@ -365,7 +365,7 @@ QVariant TodoModel::data(const QModelIndex &index, int role) const
     // the checkbox ( which increments the next occurrence date ).
     if (role == Qt::DecorationRole && index.column() == SummaryColumn) {
         if (todo->recurs()) {
-            return QVariant(QIcon(SmallIcon(QLatin1String("task-recurring"))));
+            return QVariant(QIcon(SmallIcon(QStringLiteral("task-recurring"))));
         }
     }
 
@@ -732,7 +732,7 @@ bool TodoModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
                     KMessageBox::information(
                         0,
                         i18n("Cannot move to-do to itself or a child of itself."),
-                        i18n("Drop To-do"), QLatin1String("NoDropTodoOntoItself"));
+                        i18n("Drop To-do"), QStringLiteral("NoDropTodoOntoItself"));
                     return false;
                 }
                 const QString parentUid = tmp->relatedTo();
@@ -770,7 +770,7 @@ bool TodoModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
 
                 KCalCore::Todo::Ptr oldTodo = KCalCore::Todo::Ptr(destTodo->clone());
 
-                if (text.startsWith(QLatin1String("file:"))) {
+                if (text.startsWith(QStringLiteral("file:"))) {
                     destTodo->addAttachment(KCalCore::Attachment::Ptr(new KCalCore::Attachment(text)));
                 } else {
                     QStringList emails = KPIMUtils::splitAddressList(text);

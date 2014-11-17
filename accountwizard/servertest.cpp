@@ -49,9 +49,9 @@ void ServerTest::testFinished(QList< int > list)
 {
     qDebug() << "types: " << list;
     if (list.contains(MailTransport::Transport::EnumEncryption::TLS)) {
-        emit testResult(QLatin1String("tls"));
+        emit testResult(QStringLiteral("tls"));
     } else if (list.contains(MailTransport::Transport::EnumEncryption::SSL)) {
-        emit testResult(QLatin1String("ssl"));
+        emit testResult(QStringLiteral("ssl"));
     } else {
         KMessageBox::information(0, i18n("There seems to be a problem in reaching this server "
                                          "or choosing a safe way to sent the credentials to server. We advise you to "

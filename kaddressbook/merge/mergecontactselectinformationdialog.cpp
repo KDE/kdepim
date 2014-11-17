@@ -39,7 +39,7 @@ MergeContactSelectInformationDialog::MergeContactSelectInformationDialog(const A
     connect(buttonBox, &QDialogButtonBox::accepted, this, &MergeContactSelectInformationDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &MergeContactSelectInformationDialog::reject);
     mTabWidget = new MergeContactShowResultTabWidget(this);
-    mTabWidget->setObjectName(QLatin1String("tabwidget"));
+    mTabWidget->setObjectName(QStringLiteral("tabwidget"));
     mainLayout->addWidget(mTabWidget);
     mainLayout->addWidget(buttonBox);
 

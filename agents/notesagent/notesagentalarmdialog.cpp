@@ -48,7 +48,7 @@ NotesAgentAlarmDialog::NotesAgentAlarmDialog(QWidget *parent)
     : QDialog(parent)
 {
     setWindowTitle(i18n("Alarm"));
-    setWindowIcon(QIcon::fromTheme(QLatin1String("knotes")));
+    setWindowIcon(QIcon::fromTheme(QStringLiteral("knotes")));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -100,7 +100,7 @@ void NotesAgentAlarmDialog::slotCustomContextMenuRequested(const QPoint &pos)
     }
     Q_UNUSED(pos);
     QMenu *entriesContextMenu = new QMenu;
-    QAction *removeAlarm = new QAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Remove Alarm"), entriesContextMenu);
+    QAction *removeAlarm = new QAction(QIcon::fromTheme(QStringLiteral("edit-delete")), i18n("Remove Alarm"), entriesContextMenu);
     connect(removeAlarm, &QAction::triggered, this, &NotesAgentAlarmDialog::slotRemoveAlarm);
     QAction *showNote = new QAction(i18n("Show Note..."), entriesContextMenu);
     connect(showNote, &QAction::triggered, this, &NotesAgentAlarmDialog::slotShowNote);

@@ -169,13 +169,13 @@ void NotesManager::slotAcceptConnection()
 
 void NotesManager::slotNewNote(const QString &name, const QString &text)
 {
-    const QPixmap pixmap = QIcon::fromTheme(QLatin1String("knotes")).pixmap(KIconLoader::SizeSmall, KIconLoader::SizeSmall);
-    KNotification::event(QLatin1String("receivednotes"),
+    const QPixmap pixmap = QIcon::fromTheme(QStringLiteral("knotes")).pixmap(KIconLoader::SizeSmall, KIconLoader::SizeSmall);
+    KNotification::event(QStringLiteral("receivednotes"),
                          i18n("Note Received"),
                          pixmap,
                          0,
                          KNotification::CloseOnTimeout,
-                         QLatin1String("akonadi_notes_agent"));
+                         QStringLiteral("akonadi_notes_agent"));
     NoteShared::CreateNewNoteJob *job = new NoteShared::CreateNewNoteJob(this, 0);
     //For the moment it doesn't support richtext.
     job->setRichText(false);
@@ -190,7 +190,7 @@ void NotesManager::updateNetworkListener()
 
     if (NoteShared::NoteSharedGlobalConfig::receiveNotes()) {
         // create the socket and start listening for connections
-        mListener = KSocketFactory::listen(QLatin1String("knotes") , QHostAddress::Any,
+        mListener = KSocketFactory::listen(QStringLiteral("knotes") , QHostAddress::Any,
                                            NoteShared::NoteSharedGlobalConfig::port());
         connect(mListener, &QTcpServer::newConnection, this, &NotesManager::slotAcceptConnection);
     }

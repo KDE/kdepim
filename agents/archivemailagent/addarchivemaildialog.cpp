@@ -53,7 +53,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info, QWidget *paren
     connect(buttonBox, &QDialogButtonBox::rejected, this, &AddArchiveMailDialog::reject);
     mOkButton->setDefault(true);
     setModal(true);
-    setWindowIcon(QIcon::fromTheme(QLatin1String("kmail")));
+    setWindowIcon(QIcon::fromTheme(QStringLiteral("kmail")));
     QWidget *mainWidget = new QWidget(this);
     QGridLayout *mainLayout = new QGridLayout(mainWidget);
 //TODO PORT QT5     mainLayout->setSpacing( QDialog::spacingHint() );
