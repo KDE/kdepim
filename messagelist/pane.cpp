@@ -1085,7 +1085,7 @@ void Pane::readConfig(bool restoreSession)
         if (numberOfTab == 0) {
             createNewTab();
         } else {
-            for(int i = 0; i<numberOfTab; ++i) {
+            for (int i = 0; i < numberOfTab; ++i) {
                 createNewTab();
                 restoreHeaderSettings(i);
 #if 0
@@ -1112,10 +1112,10 @@ void Pane::readConfig(bool restoreSession)
 
 void Pane::restoreHeaderSettings(int index)
 {
-    KConfigGroup grp(MessageList::Core::Settings::self()->config(),QString::fromLatin1("MessageListTab%1").arg(index));
+    KConfigGroup grp(MessageList::Core::Settings::self()->config(), QString::fromLatin1("MessageListTab%1").arg(index));
     if (grp.exists()) {
-        Widget *w = qobject_cast<Widget *>( widget( index ) );
-        w->view()->header()->restoreState(grp.readEntry(QLatin1String("HeaderState"),QByteArray()));
+        Widget *w = qobject_cast<Widget *>(widget(index));
+        w->view()->header()->restoreState(grp.readEntry(QLatin1String("HeaderState"), QByteArray()));
     }
 }
 
