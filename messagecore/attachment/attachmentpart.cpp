@@ -48,29 +48,29 @@ class MessageCore::AttachmentPart::Private
 {
 public:
     Private()
-        : mIsInline( false ),
+        : mEncoding( KMime::Headers::CE7Bit ),
+          mSize( -1 ),
+          mIsInline( false ),
           mAutoEncoding( true ),
-          mEncoding( KMime::Headers::CE7Bit ),
           mCompressed( false ),
           mToEncrypt( false ),
-          mToSign( false ),
-          mSize( -1 )
+          mToSign( false )
     {
     }
 
     QString mName;
     QString mFileName;
     QString mDescription;
-    bool mIsInline;
-    bool mAutoEncoding;
-    KMime::Headers::contentEncoding mEncoding;
     QByteArray mCharset;
     QByteArray mMimeType;
+    QByteArray mData;
+    KMime::Headers::contentEncoding mEncoding;
+    qint64 mSize;
+    bool mIsInline;
+    bool mAutoEncoding;
     bool mCompressed;
     bool mToEncrypt;
     bool mToSign;
-    QByteArray mData;
-    qint64 mSize;
 };
 
 AttachmentPart::AttachmentPart()
