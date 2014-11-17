@@ -82,7 +82,7 @@ void AntiSpamConfig::readConfig()
     KConfigGroup general(&config, "General");
     unsigned int totalTools = general.readEntry("tools", 0);
     for (unsigned int i = 1; i <= totalTools; ++i) {
-        KConfigGroup tool(&config, QString::fromLatin1("Spamtool #%1").arg(i));
+        KConfigGroup tool(&config, QStringLiteral("Spamtool #%1").arg(i));
         if (tool.hasKey("ScoreHeader")) {
             const QString name        = tool.readEntry("ScoreName");
             const QByteArray header   = tool.readEntry("ScoreHeader").toLatin1();

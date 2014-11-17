@@ -82,7 +82,7 @@ QString FilterActionUnsetStatus::sieveCode() const
         flagCode = parameter;
     }
 
-    const QString result = QString::fromLatin1("removeflag \"%1\";").arg(flagCode);
+    const QString result = QStringLiteral("removeflag \"%1\";").arg(flagCode);
     return result;
 }
 

@@ -377,13 +377,13 @@ void TemplatesConfiguration::slotInsertCommand(const QString &cmd, int adjustCur
 QString TemplatesConfiguration::strOrBlank(const QString &str)
 {
     if (str.trimmed().isEmpty()) {
-        return QString::fromLatin1("%BLANK");
+        return QStringLiteral("%BLANK");
     }
     return str;
 }
 
 QString TemplatesConfiguration::configIdString(uint id)
 {
-    return QString::fromLatin1("IDENTITY_%1").arg(id);
+    return QStringLiteral("IDENTITY_%1").arg(id);
 }
 

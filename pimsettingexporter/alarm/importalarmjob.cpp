@@ -72,7 +72,7 @@ void ImportAlarmJob::restoreResources()
 {
     Q_EMIT info(i18n("Restore resources..."));
     QStringList listResource;
-    listResource << restoreResourceFile(QString::fromLatin1("akonadi_kalarm_resource"), Utils::alarmPath(), storeAlarm, false);
+    listResource << restoreResourceFile(QStringLiteral("akonadi_kalarm_resource"), Utils::alarmPath(), storeAlarm, false);
     if (!mListResourceFile.isEmpty()) {
         QDir dir(mTempDirName);
         dir.mkdir(Utils::alarmPath());
@@ -117,7 +117,7 @@ void ImportAlarmJob::restoreResources()
                         }
                     }
 
-                    const QString newResource = mCreateResource->createResource(QString::fromLatin1("akonadi_kalarm_dir_resource"), filename, settings, true);
+                    const QString newResource = mCreateResource->createResource(QStringLiteral("akonadi_kalarm_dir_resource"), filename, settings, true);
                     infoAboutNewResource(newResource);
                     listResource << newResource;
                     qDebug() << " newResource" << newResource;

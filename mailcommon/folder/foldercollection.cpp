@@ -174,7 +174,7 @@ void FolderCollection::slotIdentitiesChanged()
 
 QString FolderCollection::configGroupName(const Akonadi::Collection &col)
 {
-    return QString::fromLatin1("Folder-%1").arg(QString::number(col.id()));
+    return QStringLiteral("Folder-%1").arg(QString::number(col.id()));
 }
 
 void FolderCollection::readConfig()

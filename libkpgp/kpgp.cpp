@@ -1817,7 +1817,7 @@ Module::readAddressData()
 
   addressDataDict.clear();
   for( int i=1; i<=num; ++i ) {
-    KConfigGroup addrGroup( config, QString::fromLatin1("Address #%1").arg(i) );
+    KConfigGroup addrGroup( config, QStringLiteral("Address #%1").arg(i) );
     address = addrGroup.readEntry( "Address" );
     data.keyIds = KeyIDList::fromStringList( addrGroup.readEntry( "Key IDs" , QStringList() ) );
     data.encrPref = (EncryptPref) addrGroup.readEntry( "EncryptionPreference",
@@ -1842,7 +1842,7 @@ Module::writeAddressData()
   for ( i=1, it = addressDataDict.begin();
         it != addressDataDict.end();
         ++it, ++i ) {
-    KConfigGroup addrGroup( config, QString::fromLatin1("Address #%1").arg(i));
+    KConfigGroup addrGroup( config, QStringLiteral("Address #%1").arg(i));
     addrGroup.writeEntry( "Address", it.key() );
     addrGroup.writeEntry( "Key IDs", it.value().keyIds.toStringList() );
     addrGroup.writeEntry( "EncryptionPreference", (int)it.value().encrPref );

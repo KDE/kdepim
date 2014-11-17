@@ -39,7 +39,7 @@ void SieveSyntaxHighlighter::addCapabilities(const QStringList &capabilities)
     QStringList keywords;
     keywords << capabilities;
     Q_FOREACH (const QString &s, keywords) {
-        const QRegExp regex(QString::fromLatin1("\"%1\"").arg(s), Qt::CaseSensitive);
+        const QRegExp regex(QStringLiteral("\"%1\"").arg(s), Qt::CaseSensitive);
         m_rules.append(Rule(regex, keywordFormat));
     }
 }

@@ -202,6 +202,6 @@ QStringList FilterActionAddHeader::sieveRequires() const
 
 QString FilterActionAddHeader::sieveCode() const
 {
-    return QString::fromLatin1("addheader \"%1\" \"%2\";").arg(mParameter).arg(mValue);
+    return QStringLiteral("addheader \"%1\" \"%2\";").arg(mParameter).arg(mValue);
 }
 

@@ -62,7 +62,7 @@ void EncryptJobTest::testContentDirect()
     composer->globalPart()->setCharsets(charsets);
     MessageComposer::TextPart *part = new MessageComposer::TextPart(this);
     part->setWordWrappingEnabled(false);
-    part->setCleanPlainText(QString::fromLatin1("one flew over the cuckoo's nest"));
+    part->setCleanPlainText(QStringLiteral("one flew over the cuckoo's nest"));
 
     MessageComposer::MainTextJob *mainTextJob = new MessageComposer::MainTextJob(part, composer);
 
@@ -97,7 +97,7 @@ void EncryptJobTest::testContentChained()
     composer->globalPart()->setCharsets(charsets);
     MessageComposer::TextPart *part = new MessageComposer::TextPart(this);
     part->setWordWrappingEnabled(false);
-    part->setCleanPlainText(QString::fromLatin1("one flew over the cuckoo's nest"));
+    part->setCleanPlainText(QStringLiteral("one flew over the cuckoo's nest"));
 
     MessageComposer::MainTextJob *mainTextJob = new MessageComposer::MainTextJob(part, composer);
 

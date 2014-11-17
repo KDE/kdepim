@@ -33,7 +33,7 @@ QTEST_MAIN(AttachmentPartTest)
 
 void AttachmentPartTest::testApi()
 {
-    const QString str = QString::fromLatin1("test");
+    const QString str = QStringLiteral("test");
     AttachmentPart::Ptr part = AttachmentPart::Ptr(new AttachmentPart);
 
     // Test that an AttachmentPart::Ptr can be put in a QHash.

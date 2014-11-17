@@ -71,7 +71,7 @@ void ImportAddressbookJob::restoreResources()
 {
     Q_EMIT info(i18n("Restore resources..."));
     QStringList listResource;
-    listResource << restoreResourceFile(QString::fromLatin1("akonadi_vcard_resource"), Utils::addressbookPath(), QDir::homePath() + QLatin1String("/.kde/share/apps/kabc/"));
+    listResource << restoreResourceFile(QStringLiteral("akonadi_vcard_resource"), Utils::addressbookPath(), QDir::homePath() + QLatin1String("/.kde/share/apps/kabc/"));
 
     if (!mListResourceFile.isEmpty()) {
         QDir dir(mTempDirName);

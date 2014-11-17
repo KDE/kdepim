@@ -65,7 +65,7 @@ QString SieveConditionSize::code(QWidget *w) const
     const QComboBox *combo = w->findChild<QComboBox *>(QLatin1String("combosize"));
     const QString comparaison = combo->itemData(combo->currentIndex()).toString();
     const SelectSizeWidget *sizeWidget = w->findChild<SelectSizeWidget *>(QLatin1String("sizewidget"));
-    return QString::fromLatin1("size %1 %2").arg(comparaison).arg(sizeWidget->code());
+    return QStringLiteral("size %1 %2").arg(comparaison).arg(sizeWidget->code());
 }
 
 QString SieveConditionSize::help() const

@@ -247,7 +247,7 @@ void SieveEditorWidget::addMessageEntry(const QString &errorMsg, const QColor &c
 {
     QString msg = errorMsg;
     msg.replace(QLatin1Char('\n'), QLatin1String("<br>"));
-    const QString logText = QString::fromLatin1("<font color=%1>%2</font>")
+    const QString logText = QStringLiteral("<font color=%1>%2</font>")
                             .arg(color.name()).arg(msg);
 
     setDebugScript(logText);

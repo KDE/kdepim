@@ -49,7 +49,7 @@ QString MessageList::Util::groupSortDirectionConfigName()
 
 QString MessageList::Util::messageUniqueIdConfigName()
 {
-    return QString::fromLatin1("MessageUniqueIdForStorageModel%1");
+    return QStringLiteral("MessageUniqueIdForStorageModel%1");
 }
 
 QString MessageList::Util::storageModelSortOrderGroup()
@@ -69,7 +69,7 @@ QString MessageList::Util::storageModelAggregationsGroup()
 
 QString MessageList::Util::setForStorageModelConfigName()
 {
-    return QString::fromLatin1("SetForStorageModel%1");
+    return QStringLiteral("SetForStorageModel%1");
 }
 
 QString MessageList::Util::storageModelSelectedMessageGroup()

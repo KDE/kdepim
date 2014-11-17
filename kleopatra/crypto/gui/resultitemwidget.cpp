@@ -107,14 +107,14 @@ void ResultItemWidget::Private::updateShowDetailsLabel()
 
     const bool detailsVisible = m_detailsLabel->isVisible();
     const QString auditLogLink = m_result->auditLog().formatLink(auditlog_url_template());
-    m_showDetailsLabel->setText(QString::fromLatin1("<a href=\"kleoresultitem://toggledetails/\">%1</a><br/>%2").arg(detailsVisible ? i18n("Hide Details") : i18n("Show Details"), auditLogLink));
+    m_showDetailsLabel->setText(QStringLiteral("<a href=\"kleoresultitem://toggledetails/\">%1</a><br/>%2").arg(detailsVisible ? i18n("Hide Details") : i18n("Show Details"), auditLogLink));
     m_showDetailsLabel->setAccessibleDescription(detailsVisible ? i18n("Hide Details") : i18n("Show Details"));
 }
 
 ResultItemWidget::ResultItemWidget(const shared_ptr<const Task::Result> &result, QWidget *parent, Qt::WindowFlags flags) : QWidget(parent, flags), d(new Private(result, this))
 {
     const QColor color = colorForVisualCode(d->m_result->code());
-    setStyleSheet(QString::fromLatin1("* { background-color: %1; margin: 0px; } QFrame#resultFrame{ border-color: %2; border-style: solid; border-radius: 3px; border-width: 2px } QLabel { padding: 5px; border-radius: 3px }").arg(color.lighter(150).name(), color.name()));
+    setStyleSheet(QStringLiteral("* { background-color: %1; margin: 0px; } QFrame#resultFrame{ border-color: %2; border-style: solid; border-radius: 3px; border-width: 2px } QLabel { padding: 5px; border-radius: 3px }").arg(color.lighter(150).name(), color.name()));
     QVBoxLayout *topLayout = new QVBoxLayout(this);
     topLayout->setMargin(0);
     topLayout->setSpacing(0);

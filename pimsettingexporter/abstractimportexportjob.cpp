@@ -164,7 +164,7 @@ void AbstractImportExportJob::convertRealPathToCollection(KConfigGroup &group, c
             const Akonadi::Collection::Id id = convertPathToId(path);
             if (id != -1) {
                 if (addCollectionPrefix) {
-                    group.writeEntry(currentKey, QString::fromLatin1("c%1").arg(id));
+                    group.writeEntry(currentKey, QStringLiteral("c%1").arg(id));
                 } else {
                     group.writeEntry(currentKey, id);
                 }
@@ -185,9 +185,9 @@ void AbstractImportExportJob::convertRealPathToCollectionList(KConfigGroup &grou
                 const Akonadi::Collection::Id id = convertPathToId(collection);
                 if (id != -1) {
                     if (addCollectionPrefix) {
-                        result << QString::fromLatin1("c%1").arg(id);
+                        result << QStringLiteral("c%1").arg(id);
                     } else {
-                        result << QString::fromLatin1("%1").arg(id);
+                        result << QStringLiteral("%1").arg(id);
                     }
                 }
             }

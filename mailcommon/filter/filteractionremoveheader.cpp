@@ -105,6 +105,6 @@ QStringList FilterActionRemoveHeader::sieveRequires() const
 
 QString FilterActionRemoveHeader::sieveCode() const
 {
-    return QString::fromLatin1("deleteheader \"%1\";").arg(mParameter);
+    return QStringLiteral("deleteheader \"%1\";").arg(mParameter);
 }
 

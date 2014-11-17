@@ -115,7 +115,7 @@ void ImportJotJob::restoreResources()
                         }
                     }
 
-                    const QString newResource = mCreateResource->createResource(QString::fromLatin1("akonadi_akonotes_resource"), filename, settings, true);
+                    const QString newResource = mCreateResource->createResource(QStringLiteral("akonadi_akonotes_resource"), filename, settings, true);
                     infoAboutNewResource(newResource);
                     qDebug() << " newResource" << newResource;
                     listResource << newResource;

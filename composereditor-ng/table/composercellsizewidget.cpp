@@ -129,7 +129,7 @@ QString ComposerCellSizeWidgetPrivate::value() const
 {
     if (check->isChecked()) {
         if ((TypeSize)typeSize->itemData(typeSize->currentIndex()).toInt() == Percentage) {
-            return QString::fromLatin1("%1%").arg(size->value());
+            return QStringLiteral("%1%").arg(size->value());
         }
         return QString::number(size->value());
     } else {

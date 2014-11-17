@@ -62,7 +62,7 @@ void TranslatorTest::shouldEnableTranslateButtonWhenTextToTranslateIsNotEmpty()
     PimCommon::TranslatorWidget edit;
     PimCommon::TranslatorTextEdit *inputtext = edit.findChild<PimCommon::TranslatorTextEdit *>(QLatin1String("inputtext"));
     QPushButton *translate = edit.findChild<QPushButton *>(QLatin1String("translate-button"));
-    inputtext->setPlainText(QString::fromLatin1("Foo"));
+    inputtext->setPlainText(QStringLiteral("Foo"));
     QCOMPARE(translate->isEnabled(), true);
 }
 
@@ -72,7 +72,7 @@ void TranslatorTest::shouldDisableTranslateButtonAndClearTextWhenClickOnClearBut
     PimCommon::TranslatorTextEdit *inputtext = edit.findChild<PimCommon::TranslatorTextEdit *>(QLatin1String("inputtext"));
     QPushButton *translate = edit.findChild<QPushButton *>(QLatin1String("translate-button"));
     PimCommon::PlainTextEditorWidget *translatedText = edit.findChild<PimCommon::PlainTextEditorWidget *>(QLatin1String("translatedtext"));
-    inputtext->setPlainText(QString::fromLatin1("Foo"));
+    inputtext->setPlainText(QStringLiteral("Foo"));
     QPushButton *clear = edit.findChild<QPushButton *>(QLatin1String("clear-button"));
     QTest::mouseClick(clear, Qt::LeftButton);
     QCOMPARE(inputtext->toPlainText(), QString());

@@ -50,7 +50,7 @@ FolderCollectionMonitor::FolderCollectionMonitor(Akonadi::Session *session, QObj
     mMonitor->setAllMonitored(true);
     mMonitor->setMimeTypeMonitored(KMime::Message::mimeType());
 #ifdef MERGE_KNODE_IN_KMAIL
-    mMonitor->setMimeTypeMonitored(QString::fromLatin1("message/news"));
+    mMonitor->setMimeTypeMonitored(QStringLiteral("message/news"));
 #endif
     mMonitor->setResourceMonitored("akonadi_search_resource", true);
     mMonitor->itemFetchScope().fetchPayloadPart(Akonadi::MessagePart::Envelope);

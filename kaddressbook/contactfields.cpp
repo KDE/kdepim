@@ -314,14 +314,14 @@ void ContactFields::setValue(Field field, const QString &value, KContacts::Addre
     break;
     case ContactFields::HomeFax: {
         KContacts::PhoneNumber number = contact.phoneNumber(KContacts::PhoneNumber::Home |
-                                   KContacts::PhoneNumber::Fax);
+                                        KContacts::PhoneNumber::Fax);
         number.setNumber(value);
         contact.insertPhoneNumber(number);
     }
     break;
     case ContactFields::BusinessFax: {
         KContacts::PhoneNumber number = contact.phoneNumber(KContacts::PhoneNumber::Work |
-                                   KContacts::PhoneNumber::Fax);
+                                        KContacts::PhoneNumber::Fax);
         number.setNumber(value);
         contact.insertPhoneNumber(number);
     }

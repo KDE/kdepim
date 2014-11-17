@@ -186,7 +186,7 @@ QString FilterSylpheed::defaultInstallFolder() const
 
 QString FilterSylpheed::markFile() const
 {
-    return QString::fromLatin1(".sylpheed_mark");
+    return QStringLiteral(".sylpheed_mark");
 }
 
 /**

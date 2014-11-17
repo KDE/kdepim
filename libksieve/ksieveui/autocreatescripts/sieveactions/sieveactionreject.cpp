@@ -84,7 +84,7 @@ QString SieveActionReject::code(QWidget *w) const
     const MultiLineEdit *edit = w->findChild<MultiLineEdit *>(QLatin1String("rejectmessage"));
     const QString text = edit->toPlainText();
 
-    return QString::fromLatin1("reject text:%1").arg(AutoCreateScriptUtil::createMultiLine(text));
+    return QStringLiteral("reject text:%1").arg(AutoCreateScriptUtil::createMultiLine(text));
 }
 
 QStringList SieveActionReject::needRequires(QWidget *) const
