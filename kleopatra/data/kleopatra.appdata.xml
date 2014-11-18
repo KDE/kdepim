@@ -10,6 +10,7 @@
   <name xml:lang="en-GB">Kleopatra</name>
   <name xml:lang="es">Kleopatra</name>
   <name xml:lang="fi">Kleopatra</name>
+  <name xml:lang="fr">Kleopatra</name>
   <name xml:lang="hu">Kleopatra</name>
   <name xml:lang="ko">Kleopatra</name>
   <name xml:lang="nb">Kleopatra</name>
@@ -31,6 +32,7 @@
   <summary xml:lang="en-GB">Certificate Manager and Unified Crypto GUI</summary>
   <summary xml:lang="es">Gestor de certificados e interfaz gráfica unificada de cifrado</summary>
   <summary xml:lang="fi">Varmenteiden hallinta ja yhtenäinen salauskäyttöliittymä</summary>
+  <summary xml:lang="fr">Gestionnaire de certificats et interface utilisateur unifiée pour le chiffrement</summary>
   <summary xml:lang="hu">Tanúsítványkezelő és egységes kriptográfiai kezelőfelület</summary>
   <summary xml:lang="ko">인증서 관리자와 통합된 암호화 GUI</summary>
   <summary xml:lang="nb">Sertifikatbehandler og forent krypto-GUI</summary>
