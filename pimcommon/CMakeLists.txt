@@ -166,7 +166,6 @@ set(libpimcommon_widgets_SRCS
   widgets/slidecontainer.cpp
   widgets/emailaddressrequester.cpp
   widgets/annotationdialog.cpp
-  widgets/splittercollapser.cpp
   widgets/manageaccountwidget.cpp
 )
 

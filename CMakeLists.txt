@@ -44,15 +44,15 @@ if(DEFINED KDEPIM_DEV_VERSION)
   set(KDEPIM_DEV_VERSION " ${KDEPIM_DEV_VERSION}")
 endif()
 
-set(KDEPIM_VERSION "4.71${KDEPIM_DEV_VERSION}")
+set(KDEPIM_VERSION "4.72${KDEPIM_DEV_VERSION}")
 
 
 set(KDEPIMLIBS_LIB_VERSION "4.75.0")
-set(KDEPIM_LIB_VERSION "4.71.0")
+set(KDEPIM_LIB_VERSION "4.72.0")
 set(KDEPIM_LIB_SOVERSION "5")
 
 set(QT_REQUIRED_VERSION "5.3.0")
-set(KF5_VERSION "5.4.0")
+set(KF5_VERSION "5.5.0")
 
 option(KDEPIM_BUILD_EXAMPLES "Build the kdepim example applications." FALSE)
 option(KDEPIM_BUILD_MOBILE "Build the mobile applications. Note that you have to enable KDEPIM_MOBILE_UI if you want to run these applications on a mobile device." TRUE)

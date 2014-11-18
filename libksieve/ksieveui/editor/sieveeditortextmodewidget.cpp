@@ -31,7 +31,7 @@
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditfindbar.h"
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 #include "pimcommon/texteditor/commonwidget/textgotolinewidget.h"
-#include "pimcommon/widgets/splittercollapser.h"
+#include "KSplitterCollapserButton"
 #include "pimcommon/widgets/slidecontainer.h"
 
 #include <ksieve/parser.h>
@@ -115,7 +115,7 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     mTemplateSplitter->addWidget(textEditWidget);
     mTemplateSplitter->addWidget(mExtraSplitter);
     mTemplateSplitter->setCollapsible(0, false);
-    new PimCommon::SplitterCollapser(mExtraSplitter, mTemplateSplitter);
+    new KSplitterCollapserButton(mExtraSplitter, mTemplateSplitter);
 
     connect(sieveTemplateWidget, &SieveTemplateWidget::insertTemplate, mTextEdit, &SieveTextEdit::insertPlainText);
 

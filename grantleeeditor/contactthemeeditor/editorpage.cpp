@@ -22,7 +22,7 @@
 #include "contacttemplatewidget.h"
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 
-#include <pimcommon/widgets/splittercollapser.h>
+#include <KSplitterCollapserButton>
 
 #include <KLocalizedString>
 
@@ -65,7 +65,7 @@ EditorPage::EditorPage(GrantleeThemeEditor::EditorPage::PageType type, const QSt
     connect(mContactTemplate, SIGNAL(insertTemplate(QString)), mEditor->editor(), SLOT(insertPlainText(QString)));
     mMainSplitter->addWidget(mContactTemplate);
     mMainSplitter->setCollapsible(0, false);
-    new PimCommon::SplitterCollapser(mContactTemplate, mMainSplitter);
+    new KSplitterCollapserButton(mContactTemplate, mMainSplitter);
 
     connect(mEditor->editor(), SIGNAL(textChanged()), this, SIGNAL(changed()));
 
