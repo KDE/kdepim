@@ -1,1 +1,1 @@
-add_subdirectory(tine20)
+macro_optional_add_subdirectory(tine20)
