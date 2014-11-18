@@ -275,6 +275,10 @@ MESSAGECORE_EXPORT KMime::Types::Mailbox mailboxFrom7BitString(const QByteArray 
    * Converts a list of mailbox objects to a unicode string that contains the comma separated list of email addresses.
    */
 MESSAGECORE_EXPORT QString mailboxListToUnicodeString(const KMime::Types::Mailbox::List &addresses);
+
+MESSAGECORE_EXPORT void setEncodingFile(QUrl &url, const QString &encoding);
+
+
 }
 
 }

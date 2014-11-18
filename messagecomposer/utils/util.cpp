@@ -350,4 +350,3 @@ void MessageComposer::Util::addTextBox(QTextEdit *edit)
         edit->setTextCursor(cursor);
     }
 }
-

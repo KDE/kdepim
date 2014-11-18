@@ -43,7 +43,7 @@ public:
      * @param url The url that will be loaded as attachment.
      * @param parent The parent object.
      */
-    explicit AttachmentFromUrlJob(const KUrl &url = KUrl(), QObject *parent = 0);
+    explicit AttachmentFromUrlJob(const QUrl &url = QUrl(), QObject *parent = 0);
 
     /**
      * Destroys the job.

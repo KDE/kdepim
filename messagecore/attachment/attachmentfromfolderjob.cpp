@@ -39,7 +39,7 @@ public:
     void addEntity(const QFileInfoList &f, const QString &path);
 
     AttachmentFromFolderJob *const q;
-    KUrl mUrl;
+    QUrl mUrl;
     KZip::Compression mCompression;
     AttachmentPart::Ptr mCompressedFolder;
     QScopedPointer<KZip> mZip;
@@ -134,7 +134,7 @@ void AttachmentFromFolderJob::Private::addEntity(const QFileInfoList &f, const Q
     }
 }
 
-AttachmentFromFolderJob::AttachmentFromFolderJob(const KUrl &url, QObject *parent) :
+AttachmentFromFolderJob::AttachmentFromFolderJob(const QUrl &url, QObject *parent) :
     AttachmentFromUrlBaseJob(url, parent),
     d(new Private(this))
 {

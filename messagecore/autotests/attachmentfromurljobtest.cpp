@@ -25,6 +25,7 @@
 #include <qtest.h>
 
 #include <messagecore/attachment/attachmentfromurljob.h>
+#include <messagecore/utils/stringutil.h>
 using namespace MessageCore;
 
 QTEST_MAIN(AttachmentFromUrlJobTest)
@@ -51,7 +52,7 @@ void AttachmentFromUrlJobTest::testAttachments_data()
 
 void AttachmentFromUrlJobTest::testAttachments()
 {
-    QFETCH(KUrl, url);
+    QFETCH(QUrl, url);
     QFETCH(QString, filename);
     QFETCH(QByteArray, mimetype);
 
@@ -75,7 +76,7 @@ void AttachmentFromUrlJobTest::testAttachments()
 
 void AttachmentFromUrlJobTest::testAttachmentTooBig()
 {
-    const KUrl url = QUrl::fromLocalFile(PATH_ATTACHMENTS + QString::fromLatin1("doc.pdf"));
+    const QUrl url = QUrl::fromLocalFile(PATH_ATTACHMENTS + QString::fromLatin1("doc.pdf"));
     const QString name = QString::fromLatin1("doc.pdf");
     const QByteArray mimetype("application/pdf");
 
@@ -88,8 +89,8 @@ void AttachmentFromUrlJobTest::testAttachmentCharset()
 {
     const QByteArray charset("iso-8859-2");
     const QString filename = QString::fromLatin1("file.txt");
-    KUrl url = QUrl::fromLocalFile(PATH_ATTACHMENTS + filename);
-    url.setFileEncoding(QString::fromLatin1(charset));
+    QUrl url = QUrl::fromLocalFile(PATH_ATTACHMENTS + filename);
+    MessageCore::StringUtil::setEncodingFile(url, QString::fromLatin1(charset));
 
     AttachmentFromUrlJob *ljob = new AttachmentFromUrlJob(url, this);
     VERIFYEXEC(ljob);

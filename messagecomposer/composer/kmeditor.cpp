@@ -24,6 +24,7 @@
 #include "part/textpart.h"
 #include "messageviewer/viewer/nodehelper.h"
 #include "pimcommon/autocorrection/autocorrection.h"
+#include "messagecore/utils/stringutil.h"
 #include "settings/messagecomposersettings.h"
 
 #include <kmacroexpander.h>
@@ -353,17 +354,17 @@ void KMeditor::setFontForWholeText(const QFont &font)
     document()->setDefaultFont(font);
 }
 
-KUrl KMeditor::insertFile()
+QUrl KMeditor::insertFile()
 {
     const KEncodingFileDialog::Result result = KEncodingFileDialog::getOpenUrlAndEncoding(QString(),
             QUrl(),
             QString(),
             this,
             i18nc("@title:window", "Insert File"));
-    KUrl url;
+    QUrl url;
     if (!result.URLs.isEmpty()) {
         url = result.URLs.first();
-        url.setFileEncoding(MessageViewer::NodeHelper::fixEncoding(result.encoding));
+        MessageCore::StringUtil::setEncodingFile(url, MessageViewer::NodeHelper::fixEncoding(result.encoding));
     }
     return url;
 }

@@ -103,7 +103,7 @@ public:
      * The file dialog has an encoding combobox displayed, and the selected
      * encoding there will be set as the encoding of the URL's fileEncoding().
      */
-    KUrl insertFile();
+    QUrl insertFile();
 
     /**
      * Enables word wrap. Words will be wrapped at the specified column.

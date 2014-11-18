@@ -23,7 +23,7 @@
 
 #include "attachmentloadjob.h"
 
-#include <KUrl>
+#include <QUrl>
 
 namespace MessageCore
 {
@@ -33,13 +33,13 @@ class MESSAGECORE_EXPORT AttachmentFromUrlBaseJob : public AttachmentLoadJob
     Q_OBJECT
 
 public:
-    explicit AttachmentFromUrlBaseJob(const KUrl &url = KUrl(), QObject *parent = 0);
+    explicit AttachmentFromUrlBaseJob(const QUrl &url = QUrl(), QObject *parent = 0);
     virtual ~AttachmentFromUrlBaseJob();
 
     /**
      * Returns the url that will be loaded as attachment.
      */
-    KUrl url() const;
+    QUrl url() const;
 
     /**
      * Returns the maximum size the attachment is allowed to have.
@@ -49,7 +49,7 @@ public:
     /**
     * Sets the @p url of the folder that will be loaded as attachment.
     */
-    void setUrl(const KUrl &url);
+    void setUrl(const QUrl &url);
 
     /**
      * Sets the maximum @p size the attachment is allowed to have.

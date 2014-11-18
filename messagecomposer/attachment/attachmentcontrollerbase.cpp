@@ -31,6 +31,7 @@
 #include "messageviewer/viewer/editorwatcher.h"
 #include "messageviewer/viewer/nodehelper.h"
 #include "messageviewer/utils/util.h"
+#include "messagecore/utils/stringutil.h"
 
 #include <AkonadiCore/itemfetchjob.h>
 #include <kio/jobuidelegate.h>
@@ -772,7 +773,7 @@ void AttachmentControllerBase::showAddAttachmentDialog()
         for (int i = 0; i < numberOfFiles; ++i) {
             const QUrl url = result.URLs.at(i);
             QUrl urlWithEncoding = url;
-            //QT4 urlWithEncoding.setFileEncoding( encoding );
+            MessageCore::StringUtil::setEncodingFile(urlWithEncoding, encoding);
             if (KMimeType::findByUrl(urlWithEncoding)->name() == QLatin1String("inode/directory")) {
                 const int rc = KMessageBox::warningYesNo(d->wParent, i18n("Do you really want to attach this directory \"%1\" ?", url.toLocalFile()), i18n("Attach directory"));
                 if (rc == KMessageBox::Yes) {

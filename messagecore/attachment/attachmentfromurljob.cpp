@@ -33,6 +33,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include <KFormat>
+#include <QUrlQuery>
 
 using namespace MessageCore;
 
@@ -45,7 +46,7 @@ public:
     void transferJobResult(KJob *job);
 
     AttachmentFromUrlJob *const q;
-    KUrl mUrl;
+    QUrl mUrl;
     QByteArray mData;
 };
 
@@ -110,7 +111,9 @@ void AttachmentFromUrlJob::Private::transferJobResult(KJob *job)
     Q_ASSERT(q->attachmentPart() == 0);   // Not created before.
 
     AttachmentPart::Ptr part = AttachmentPart::Ptr(new AttachmentPart);
-    part->setCharset(mUrl.fileEncoding().toLatin1());
+    QUrlQuery query(mUrl);
+    const QString value = query.queryItemValue(QLatin1Literal("charset"));
+    part->setCharset(value.toLatin1());
     part->setMimeType(mimeType.toLatin1());
     part->setName(fileName);
     part->setFileName(fileName);
@@ -119,7 +122,7 @@ void AttachmentFromUrlJob::Private::transferJobResult(KJob *job)
     q->emitResult(); // Success.
 }
 
-AttachmentFromUrlJob::AttachmentFromUrlJob(const KUrl &url, QObject *parent)
+AttachmentFromUrlJob::AttachmentFromUrlJob(const QUrl &url, QObject *parent)
     : AttachmentFromUrlBaseJob(url, parent),
       d(new Private(this))
 {
@@ -135,7 +138,7 @@ void AttachmentFromUrlJob::doStart()
 {
     if (!d->mUrl.isValid()) {
         setError(KJob::UserDefinedError);
-        setErrorText(i18n("\"%1\" not found. Please specify the full path.", d->mUrl.prettyUrl()));
+        setErrorText(i18n("\"%1\" not found. Please specify the full path.", d->mUrl.toDisplayString()));
         emitResult();
         return;
     }

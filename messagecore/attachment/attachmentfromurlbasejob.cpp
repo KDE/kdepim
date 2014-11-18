@@ -24,21 +24,21 @@ class AttachmentFromUrlBaseJob::Private
 {
 
 public:
-    Private(const KUrl &url, AttachmentFromUrlBaseJob *qq);
+    Private(const QUrl &url, AttachmentFromUrlBaseJob *qq);
 
     AttachmentFromUrlBaseJob *const q;
     qint64 mMaxSize;
-    KUrl mUrl;
+    QUrl mUrl;
 };
 
-AttachmentFromUrlBaseJob::Private::Private(const KUrl &url, AttachmentFromUrlBaseJob *qq):
+AttachmentFromUrlBaseJob::Private::Private(const QUrl &url, AttachmentFromUrlBaseJob *qq):
     q(qq),
     mMaxSize(-1),
     mUrl(url)
 {
 }
 
-AttachmentFromUrlBaseJob::AttachmentFromUrlBaseJob(const KUrl &url, QObject *parent):
+AttachmentFromUrlBaseJob::AttachmentFromUrlBaseJob(const QUrl &url, QObject *parent):
     AttachmentLoadJob(parent),
     d(new Private(url, this))
 {
@@ -59,12 +59,12 @@ qint64 AttachmentFromUrlBaseJob::maximumAllowedSize() const
     return d->mMaxSize;
 }
 
-void AttachmentFromUrlBaseJob::setUrl(const KUrl &url)
+void AttachmentFromUrlBaseJob::setUrl(const QUrl &url)
 {
     d->mUrl = url;
 }
 
-KUrl AttachmentFromUrlBaseJob::url() const
+QUrl AttachmentFromUrlBaseJob::url() const
 {
     return d->mUrl;
 }
