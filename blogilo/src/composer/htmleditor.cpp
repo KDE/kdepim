@@ -23,7 +23,6 @@
 
 #include "htmleditor.h"
 
-#include <kglobal.h>
 #include <ktexteditor/editor.h>
 //#include <ktexteditor/editorchooser.h>
 #include <ktexteditor/view.h>

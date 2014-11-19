@@ -30,7 +30,6 @@
 #include <KGlobalSettings>
 #include <KMessageBox>
 #include <KLocalizedString>
-#include <KGlobal>
 
 #include <QPainter>
 #include <QHeaderView>

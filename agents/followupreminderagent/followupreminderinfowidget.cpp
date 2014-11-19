@@ -23,9 +23,9 @@
 #include <QHBoxLayout>
 #include <QHeaderView>
 
+#include <KGlobal>
 #include <QIcon>
 #include <QMenu>
-#include <KGlobal>
 #include <KLocalizedString>
 #include <KLocalizedString>
 #include <KSharedConfig>

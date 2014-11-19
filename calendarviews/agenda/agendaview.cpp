@@ -52,7 +52,6 @@
 #include <KVBox>
 #include <KWordWrap>
 #include <QDebug>
-#include <KGlobal>
 #include <KComponentData>
 
 #include <QApplication>

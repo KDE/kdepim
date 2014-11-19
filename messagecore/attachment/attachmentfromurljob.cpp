@@ -22,7 +22,6 @@
 #include "attachmentfromurljob.h"
 
 #include <QDebug>
-#include <KGlobal>
 #include <KIO/Scheduler>
 #include <KIO/TransferJob>
 #include <KLocalizedString>

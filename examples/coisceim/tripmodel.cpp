@@ -23,7 +23,7 @@
 
 #include <QTimer>
 
-#include <kicon.h>
+#include <qicon.h>
 #include <KGlobal>
 #include <KConfigGroup>
 #include <KConfig>
@@ -95,7 +95,7 @@ QVariant TripModel::data(const QModelIndex &index, int role) const
             return QVariant::fromValue<QWidget *>(m_createWidget);
         }
         if (role == Qt::DecorationRole) {
-            return KIcon(QLatin1String("list-add-new"));
+            return QIcon::fromTheme(QLatin1String("list-add-new"));
         }
         return QVariant();
     }

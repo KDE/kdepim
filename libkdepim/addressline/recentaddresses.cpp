@@ -33,7 +33,6 @@
 #include <KConfig>
 #include <KConfigGroup>
 #include <QDebug>
-#include <KGlobal>
 #include <KLocalizedString>
 #include <KLineEdit>
 #include <QPushButton>

@@ -78,7 +78,7 @@ void PlainTextEditorWidget::init(PlainTextEditor *customEditor)
     mFindBar = new PimCommon::PlainTextEditFindBar(mEditor, this);
     mFindBar->setHideWhenClose(false);
     connect(mFindBar, &PimCommon::PlainTextEditFindBar::displayMessageIndicator, mEditor, &PlainTextEditor::slotDisplayMessageIndicator);
-    connect(mFindBar, SIGNAL(hideFindBar()), mSliderContainer, SLOT(slideOut()));
+    connect(mFindBar, &PimCommon::PlainTextEditFindBar::hideFindBar, mSliderContainer, &PimCommon::SlideContainer::slideOut);
     mSliderContainer->setContent(mFindBar);
 
     lay->addWidget(mSliderContainer);

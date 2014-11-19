@@ -41,7 +41,6 @@
 #include <kcmdlineargs.h>
 #include <k4aboutdata.h>
 #include <KLocalizedString>
-#include <kglobal.h>
 #include <kconfig.h>
 
 #include <qdebug.h>

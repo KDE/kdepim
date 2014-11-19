@@ -52,7 +52,6 @@
 #include <KCalCore/CalFormat>
 #include <QIcon>
 #include <KIconLoader>
-#include <KGlobal>
 #include <KComponentData>
 #include <KJob>
 #include <QDebug>

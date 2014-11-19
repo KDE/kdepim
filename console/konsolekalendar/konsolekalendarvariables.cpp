@@ -34,7 +34,6 @@
 
 #include <KLocalizedString>
 #include <qdebug.h>
-#include <kglobal.h>
 #include <kconfig.h>
 
 #include <QtCore/QDateTime>

@@ -28,7 +28,6 @@
 #include <k4aboutdata.h>
 #include <KComponentData>
 #include <QDebug>
-#include <KGlobal>
 #include <KIconLoader>
 
 #include <kmime/kmime_content.h>
