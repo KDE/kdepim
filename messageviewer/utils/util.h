@@ -104,7 +104,7 @@ QList<KMime::Content *> MESSAGEVIEWER_EXPORT extractAttachments(const KMime::Mes
 bool MESSAGEVIEWER_EXPORT saveContents(QWidget *parent,
                                        const QList<KMime::Content *> &contents, KUrl &currentFolder);
 bool MESSAGEVIEWER_EXPORT saveContent(QWidget *parent, KMime::Content *content,
-                                      const KUrl &url);
+                                      const QUrl &url);
 
 /**
      * Finds the filename of an icon based on the given mimetype or filenames.

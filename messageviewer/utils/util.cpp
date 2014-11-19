@@ -302,7 +302,7 @@ bool Util::saveContents(QWidget *parent, const QList<KMime::Content *> &contents
     return globalResult;
 }
 
-bool Util::saveContent(QWidget *parent, KMime::Content *content, const KUrl &url)
+bool Util::saveContent(QWidget *parent, KMime::Content *content, const QUrl &url)
 {
     // FIXME: This is all horribly broken. First of all, creating a NodeHelper and then immediatley
     //        reading out the encryption/signature state will not work at all.
@@ -420,7 +420,7 @@ bool Util::saveContent(QWidget *parent, KMime::Content *content, const KUrl &url
             KMessageBox::error(parent,
                                xi18nc("1 = file name, 2 = error string",
                                       "<qt>Could not write to the file<br><filename>%1</filename><br><br>%2",
-                                      url.prettyUrl(),
+                                      url.toDisplayString(),
                                       KIO::NetAccess::lastErrorString()),
                                i18n("Error saving attachment"));
             return false;
