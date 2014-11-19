@@ -28,7 +28,7 @@
 #include <QtCore/QMetaType>
 
 #include <boost/shared_ptr.hpp>
-
+class KUrl;
 namespace MessageCore {
 
 /**
@@ -197,6 +197,10 @@ public:
      * (message/rfc822) or a collection of encapsulated messages (multipart/digest)
      */
     bool isMessageOrMessageCollection() const;
+
+    void setUrl(const KUrl &url);
+    KUrl url() const;
+
 private:
     //@cond PRIVATE
     class Private;

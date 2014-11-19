@@ -112,6 +112,7 @@ void AttachmentFromUrlJob::Private::transferJobResult( KJob *job )
     part->setMimeType( mimeType.toLatin1() );
     part->setName( fileName );
     part->setFileName( fileName );
+    part->setUrl(mUrl);
     part->setData( mData );
     q->setAttachmentPart( part );
     q->emitResult(); // Success.
