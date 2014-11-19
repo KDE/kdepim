@@ -120,6 +120,8 @@ private:
     Q_PRIVATE_SLOT( d, void editDone( MessageViewer::EditorWatcher* ) )
     Q_PRIVATE_SLOT( d, void attachPublicKeyJobResult( KJob* ) )
     Q_PRIVATE_SLOT( d, void slotAttachmentContentCreated( KJob * ) )
+    Q_PRIVATE_SLOT( d, void reloadAttachment() )
+    Q_PRIVATE_SLOT( d, void updateJobResult(KJob*) )
 };
 
 } //

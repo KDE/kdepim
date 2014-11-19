@@ -15,32 +15,26 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef ATTACHMENTUPDATEJOB_H
-#define ATTACHMENTUPDATEJOB_H
+#ifndef ATTACHMENTUPDATEJOBTEST_H
+#define ATTACHMENTUPDATEJOBTEST_H
 
-#include "messagecore_export.h"
-#include <KJob>
-#include "attachmentpart.h"
+#include <QObject>
 
-namespace MessageCore {
-class MESSAGECORE_EXPORT AttachmentUpdateJob : public KJob
+class AttachmentUpdateJobTest : public QObject
 {
     Q_OBJECT
 public:
-    AttachmentUpdateJob(const AttachmentPart::Ptr &part, QObject *parent = 0);
-    ~AttachmentUpdateJob();
+    explicit AttachmentUpdateJobTest(QObject *parent=0);
+    ~AttachmentUpdateJobTest();
 
-    virtual void start();
-    AttachmentPart::Ptr originalPart() const;
-    AttachmentPart::Ptr updatedPart() const;
-private:
-    //@cond PRIVATE
-    class Private;
-    Private *const d;
-    Q_PRIVATE_SLOT( d, void doStart() )
-    Q_PRIVATE_SLOT( d, void loadJobResult(KJob*) )
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
+    void shouldUpdateAttachment();
+    void shouldHaveSameNameDescriptionAfterUpdate();
+    void shouldHaveSameCryptoSignStatusAfterUpdate();
+    void shouldHaveSameEncodingAfterUpdate();
+    void shouldHaveSameMimetypeAfterUpdate();
+    void shouldNotUpdateWhenUrlIsEmpty();
 };
-}
 
-#endif // ATTACHMENTUPDATEJOB_H
-
+#endif // ATTACHMENTUPDATEJOBTEST_H
