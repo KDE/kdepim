@@ -40,7 +40,6 @@ public:
     void addEntity( const QFileInfoList &f, const QString &path );
 
     AttachmentFromFolderJob *const q;
-    KUrl mUrl;
     KZip::Compression mCompression;
     AttachmentPart::Ptr mCompressedFolder;
     QScopedPointer<KZip> mZip;
@@ -58,7 +57,7 @@ AttachmentFromFolderJob::Private::Private( AttachmentFromFolderJob* qq ) :
 void AttachmentFromFolderJob::Private::compressFolder()
 {
     kDebug() << "starting compression";
-    QString fileName = mUrl.fileName();
+    QString fileName = q->url().fileName();
     QByteArray array;
     QBuffer dev( &array );
     mZip.reset( new KZip( &dev ) );
@@ -69,9 +68,9 @@ void AttachmentFromFolderJob::Private::compressFolder()
         return;
     }
     mZip->setCompression( mCompression );
-    mZip->writeDir( mUrl.fileName(),QString(),QString(), 040755, mArchiveTime, mArchiveTime, mArchiveTime );
-    kDebug() << "writing root directory : " << mUrl.fileName();
-    addEntity(  QDir( mUrl.path() ).entryInfoList( QDir::Dirs | QDir::NoDotAndDotDot |
+    mZip->writeDir( q->url().fileName(),QString(),QString(), 040755, mArchiveTime, mArchiveTime, mArchiveTime );
+    kDebug() << "writing root directory : " << q->url().fileName();
+    addEntity(  QDir( q->url().path() ).entryInfoList( QDir::Dirs | QDir::NoDotAndDotDot |
                                                    QDir::NoSymLinks | QDir::Files, QDir::DirsFirst ), fileName + QLatin1Char('/') );
     mZip->close();
 
@@ -140,7 +139,6 @@ AttachmentFromFolderJob::AttachmentFromFolderJob( const KUrl &url, QObject *pare
     AttachmentFromUrlBaseJob ( url, parent ),
     d( new Private( this ) )
 {
-    d->mUrl = url;
 }
 
 AttachmentFromFolderJob::~AttachmentFromFolderJob()

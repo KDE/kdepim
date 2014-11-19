@@ -43,7 +43,6 @@ public:
     void transferJobResult( KJob *job );
 
     AttachmentFromUrlJob *const q;
-    KUrl mUrl;
     QByteArray mData;
 };
 
@@ -77,7 +76,7 @@ void AttachmentFromUrlJob::Private::transferJobResult( KJob *job )
     const QString mimeType = transferJob->mimetype();
     kDebug() << "Mimetype is" << mimeType;
 
-    QString fileName = mUrl.fileName();
+    QString fileName = q->url().fileName();
     if ( fileName.isEmpty() ) {
         const KMimeType::Ptr mimeTypePtr = KMimeType::mimeType( mimeType, KMimeType::ResolveAliases );
         if ( mimeTypePtr ) {
@@ -108,11 +107,11 @@ void AttachmentFromUrlJob::Private::transferJobResult( KJob *job )
     Q_ASSERT( q->attachmentPart() == 0 ); // Not created before.
 
     AttachmentPart::Ptr part = AttachmentPart::Ptr( new AttachmentPart );
-    part->setCharset( mUrl.fileEncoding().toLatin1() );
+    part->setCharset( q->url().fileEncoding().toLatin1() );
     part->setMimeType( mimeType.toLatin1() );
     part->setName( fileName );
     part->setFileName( fileName );
-    part->setUrl(mUrl);
+    part->setUrl(q->url());
     part->setData( mData );
     q->setAttachmentPart( part );
     q->emitResult(); // Success.
@@ -123,7 +122,6 @@ AttachmentFromUrlJob::AttachmentFromUrlJob( const KUrl &url, QObject *parent )
     : AttachmentFromUrlBaseJob( url, parent ),
       d( new Private( this ) )
 {
-    d->mUrl = url;
 }
 
 AttachmentFromUrlJob::~AttachmentFromUrlJob()
@@ -133,15 +131,15 @@ AttachmentFromUrlJob::~AttachmentFromUrlJob()
 
 void AttachmentFromUrlJob::doStart()
 {
-    if ( !d->mUrl.isValid() ) {
+    if ( !url().isValid() ) {
         setError( KJob::UserDefinedError );
-        setErrorText( i18n( "\"%1\" not found. Please specify the full path.", d->mUrl.prettyUrl() ) );
+        setErrorText( i18n( "\"%1\" not found. Please specify the full path.", url().prettyUrl() ) );
         emitResult();
         return;
     }
 
-    if ( maximumAllowedSize() != -1 && d->mUrl.isLocalFile() ) {
-        const qint64 size = QFileInfo( d->mUrl.toLocalFile() ).size();
+    if ( maximumAllowedSize() != -1 && url().isLocalFile() ) {
+        const qint64 size = QFileInfo( url().toLocalFile() ).size();
         if ( size > maximumAllowedSize() ) {
             setError( KJob::UserDefinedError );
             setErrorText( i18n( "You may not attach files bigger than %1. Share it with storage service.",
@@ -154,7 +152,7 @@ void AttachmentFromUrlJob::doStart()
     Q_ASSERT( d->mData.isEmpty() ); // Not started twice.
 
 #ifndef KDEPIM_MOBILE_UI
-    KIO::TransferJob *job = KIO::get( d->mUrl, KIO::NoReload,
+    KIO::TransferJob *job = KIO::get( url(), KIO::NoReload,
                                       ( uiDelegate() ? KIO::DefaultFlags : KIO::HideProgressInfo ) );
     QObject::connect( job, SIGNAL(result(KJob*)),
                       this, SLOT(transferJobResult(KJob*)) );
