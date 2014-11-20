@@ -516,7 +516,7 @@ void AttachmentControllerBase::createActions()
     connect( d->selectAllAction, SIGNAL(triggered(bool)),
              this, SIGNAL(selectedAllAttachment()) );
 
-    d->reloadAttachmentAction = new KAction( i18n("Reload"), this);
+    d->reloadAttachmentAction = new KAction( KIcon(QLatin1String("view-refresh")), i18n("Reload"), this);
     connect( d->reloadAttachmentAction, SIGNAL(triggered(bool)),
              this, SLOT(reloadAttachment()) );
 
