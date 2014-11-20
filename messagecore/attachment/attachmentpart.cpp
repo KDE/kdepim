@@ -23,6 +23,8 @@
 #include <kmime/kmime_content.h>
 #include <kmime/kmime_util.h>
 
+#include <QUrl>
+
 using namespace MessageCore;
 
 uint MessageCore::qHash(const MessageCore::AttachmentPart::Ptr &ptr)
@@ -57,7 +59,7 @@ public:
           mToSign( false )
     {
     }
-
+    QUrl mUrl;
     QString mName;
     QString mFileName;
     QString mDescription;
@@ -227,4 +229,14 @@ qint64 AttachmentPart::size() const
 bool AttachmentPart::isMessageOrMessageCollection() const
 {
     return (mimeType() == "message/rfc822") || (mimeType() == "multipart/digest");
+}
+
+void AttachmentPart::setUrl(const QUrl &url)
+{
+    d->mUrl = url;
+}
+
+QUrl AttachmentPart::url() const
+{
+    return d->mUrl;
 }
