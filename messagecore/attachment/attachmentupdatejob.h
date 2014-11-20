@@ -22,7 +22,8 @@
 #include <KJob>
 #include "attachmentpart.h"
 
-namespace MessageCore {
+namespace MessageCore
+{
 class MESSAGECORE_EXPORT AttachmentUpdateJob : public KJob
 {
     Q_OBJECT
@@ -37,8 +38,8 @@ private:
     //@cond PRIVATE
     class Private;
     Private *const d;
-    Q_PRIVATE_SLOT( d, void doStart() )
-    Q_PRIVATE_SLOT( d, void loadJobResult(KJob*) )
+    Q_PRIVATE_SLOT(d, void doStart())
+    Q_PRIVATE_SLOT(d, void loadJobResult(KJob *))
 };
 }
 

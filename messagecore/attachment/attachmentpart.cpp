@@ -50,13 +50,13 @@ class MessageCore::AttachmentPart::Private
 {
 public:
     Private()
-        : mEncoding( KMime::Headers::CE7Bit ),
-          mSize( -1 ),
-          mIsInline( false ),
-          mAutoEncoding( true ),
-          mCompressed( false ),
-          mToEncrypt( false ),
-          mToSign( false )
+        : mEncoding(KMime::Headers::CE7Bit),
+          mSize(-1),
+          mIsInline(false),
+          mAutoEncoding(true),
+          mCompressed(false),
+          mToEncrypt(false),
+          mToSign(false)
     {
     }
     QUrl mUrl;

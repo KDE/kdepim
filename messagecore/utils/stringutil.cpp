@@ -1172,7 +1172,6 @@ void setEncodingFile(QUrl &url, const QString &encoding)
     url.addQueryItem(QLatin1String("charset"), encoding);
 }
 
-
 }
 
 }

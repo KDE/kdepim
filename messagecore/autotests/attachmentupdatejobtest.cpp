@@ -35,7 +35,7 @@ AttachmentUpdateJobTest::~AttachmentUpdateJobTest()
 
 void AttachmentUpdateJobTest::shouldHaveDefaultValue()
 {
-    MessageCore::AttachmentPart::Ptr origPart = MessageCore::AttachmentPart::Ptr( new MessageCore::AttachmentPart );
+    MessageCore::AttachmentPart::Ptr origPart = MessageCore::AttachmentPart::Ptr(new MessageCore::AttachmentPart);
 
     MessageCore::AttachmentUpdateJob *job = new MessageCore::AttachmentUpdateJob(origPart, this);
     QCOMPARE(origPart, job->originalPart());
@@ -45,52 +45,50 @@ void AttachmentUpdateJobTest::shouldHaveDefaultValue()
 
 void AttachmentUpdateJobTest::shouldUpdateAttachment()
 {
-    const KUrl url = KUrl::fromPath( PATH_ATTACHMENTS + QString::fromLatin1( "file.txt" ) );
+    const KUrl url = KUrl::fromPath(PATH_ATTACHMENTS + QString::fromLatin1("file.txt"));
 
     // Some data.
-    QByteArray data( "This is short enough that compressing it is not efficient." );
-    const QString name = QString::fromLatin1( "name.txt" );
-    const QString description = QString::fromLatin1( "description" );
+    QByteArray data("This is short enough that compressing it is not efficient.");
+    const QString name = QString::fromLatin1("name.txt");
+    const QString description = QString::fromLatin1("description");
 
     // Create the original part.
-    MessageCore::AttachmentPart::Ptr origPart = MessageCore::AttachmentPart::Ptr( new MessageCore::AttachmentPart );
-    origPart->setName( name );
-    origPart->setDescription( description );
-    origPart->setMimeType( "text/plain" );
-    origPart->setEncoding( KMime::Headers::CE7Bit );
-    origPart->setData( data );
+    MessageCore::AttachmentPart::Ptr origPart = MessageCore::AttachmentPart::Ptr(new MessageCore::AttachmentPart);
+    origPart->setName(name);
+    origPart->setDescription(description);
+    origPart->setMimeType("text/plain");
+    origPart->setEncoding(KMime::Headers::CE7Bit);
+    origPart->setData(data);
     origPart->setUrl(url);
-
 
     MessageCore::AttachmentUpdateJob *job = new MessageCore::AttachmentUpdateJob(origPart, this);
 
-    VERIFYEXEC( job );
+    VERIFYEXEC(job);
     QVERIFY(origPart->size() != job->updatedPart()->size());
     QVERIFY(origPart->data() != job->updatedPart()->data());
 }
 
 void AttachmentUpdateJobTest::shouldHaveSameNameDescriptionAfterUpdate()
 {
-    const KUrl url = KUrl::fromPath( PATH_ATTACHMENTS + QString::fromLatin1( "file.txt" ) );
+    const KUrl url = KUrl::fromPath(PATH_ATTACHMENTS + QString::fromLatin1("file.txt"));
 
     // Some data.
-    QByteArray data( "This is short enough that compressing it is not efficient." );
-    const QString name = QString::fromLatin1( "name.txt" );
-    const QString description = QString::fromLatin1( "description" );
+    QByteArray data("This is short enough that compressing it is not efficient.");
+    const QString name = QString::fromLatin1("name.txt");
+    const QString description = QString::fromLatin1("description");
 
     // Create the original part.
-    MessageCore::AttachmentPart::Ptr origPart = MessageCore::AttachmentPart::Ptr( new MessageCore::AttachmentPart );
-    origPart->setName( name );
-    origPart->setDescription( description );
-    origPart->setMimeType( "text/plain" );
-    origPart->setEncoding( KMime::Headers::CE7Bit );
-    origPart->setData( data );
+    MessageCore::AttachmentPart::Ptr origPart = MessageCore::AttachmentPart::Ptr(new MessageCore::AttachmentPart);
+    origPart->setName(name);
+    origPart->setDescription(description);
+    origPart->setMimeType("text/plain");
+    origPart->setEncoding(KMime::Headers::CE7Bit);
+    origPart->setData(data);
     origPart->setUrl(url);
-
 
     MessageCore::AttachmentUpdateJob *job = new MessageCore::AttachmentUpdateJob(origPart, this);
 
-    VERIFYEXEC( job );
+    VERIFYEXEC(job);
     QCOMPARE(origPart->name(), job->updatedPart()->name());
     QCOMPARE(origPart->description(), job->updatedPart()->description());
 
@@ -98,100 +96,97 @@ void AttachmentUpdateJobTest::shouldHaveSameNameDescriptionAfterUpdate()
 
 void AttachmentUpdateJobTest::shouldHaveSameCryptoSignStatusAfterUpdate()
 {
-    const KUrl url = KUrl::fromPath( PATH_ATTACHMENTS + QString::fromLatin1( "file.txt" ) );
+    const KUrl url = KUrl::fromPath(PATH_ATTACHMENTS + QString::fromLatin1("file.txt"));
 
     // Some data.
-    QByteArray data( "This is short enough that compressing it is not efficient." );
-    const QString name = QString::fromLatin1( "name.txt" );
-    const QString description = QString::fromLatin1( "description" );
+    QByteArray data("This is short enough that compressing it is not efficient.");
+    const QString name = QString::fromLatin1("name.txt");
+    const QString description = QString::fromLatin1("description");
 
     // Create the original part.
-    MessageCore::AttachmentPart::Ptr origPart = MessageCore::AttachmentPart::Ptr( new MessageCore::AttachmentPart );
-    origPart->setName( name );
-    origPart->setDescription( description );
-    origPart->setMimeType( "text/plain" );
-    origPart->setEncoding( KMime::Headers::CE7Bit );
-    origPart->setData( data );
+    MessageCore::AttachmentPart::Ptr origPart = MessageCore::AttachmentPart::Ptr(new MessageCore::AttachmentPart);
+    origPart->setName(name);
+    origPart->setDescription(description);
+    origPart->setMimeType("text/plain");
+    origPart->setEncoding(KMime::Headers::CE7Bit);
+    origPart->setData(data);
     origPart->setUrl(url);
     origPart->setSigned(true);
     origPart->setEncrypted(true);
 
-
     MessageCore::AttachmentUpdateJob *job = new MessageCore::AttachmentUpdateJob(origPart, this);
 
-    VERIFYEXEC( job );
+    VERIFYEXEC(job);
     QCOMPARE(origPart->isSigned(), job->updatedPart()->isSigned());
     QCOMPARE(origPart->isEncrypted(), job->updatedPart()->isEncrypted());
 }
 
 void AttachmentUpdateJobTest::shouldHaveSameEncodingAfterUpdate()
 {
-    const KUrl url = KUrl::fromPath( PATH_ATTACHMENTS + QString::fromLatin1( "file.txt" ) );
+    const KUrl url = KUrl::fromPath(PATH_ATTACHMENTS + QString::fromLatin1("file.txt"));
 
     // Some data.
-    QByteArray data( "This is short enough that compressing it is not efficient." );
-    const QString name = QString::fromLatin1( "name.txt" );
-    const QString description = QString::fromLatin1( "description" );
+    QByteArray data("This is short enough that compressing it is not efficient.");
+    const QString name = QString::fromLatin1("name.txt");
+    const QString description = QString::fromLatin1("description");
 
     // Create the original part.
-    MessageCore::AttachmentPart::Ptr origPart = MessageCore::AttachmentPart::Ptr( new MessageCore::AttachmentPart );
-    origPart->setName( name );
-    origPart->setDescription( description );
-    origPart->setMimeType( "text/pdf" );
-    origPart->setEncoding( KMime::Headers::CE8Bit );
-    origPart->setData( data );
+    MessageCore::AttachmentPart::Ptr origPart = MessageCore::AttachmentPart::Ptr(new MessageCore::AttachmentPart);
+    origPart->setName(name);
+    origPart->setDescription(description);
+    origPart->setMimeType("text/pdf");
+    origPart->setEncoding(KMime::Headers::CE8Bit);
+    origPart->setData(data);
     origPart->setUrl(url);
     origPart->setSigned(true);
     origPart->setEncrypted(true);
 
-
     MessageCore::AttachmentUpdateJob *job = new MessageCore::AttachmentUpdateJob(origPart, this);
 
-    VERIFYEXEC( job );
+    VERIFYEXEC(job);
     QCOMPARE(origPart->encoding(), job->updatedPart()->encoding());
 }
 
 void AttachmentUpdateJobTest::shouldHaveSameMimetypeAfterUpdate()
 {
-    const KUrl url = KUrl::fromPath( PATH_ATTACHMENTS + QString::fromLatin1( "file.txt" ) );
+    const KUrl url = KUrl::fromPath(PATH_ATTACHMENTS + QString::fromLatin1("file.txt"));
 
     // Some data.
-    QByteArray data( "This is short enough that compressing it is not efficient." );
-    const QString name = QString::fromLatin1( "name.txt" );
-    const QString description = QString::fromLatin1( "description" );
+    QByteArray data("This is short enough that compressing it is not efficient.");
+    const QString name = QString::fromLatin1("name.txt");
+    const QString description = QString::fromLatin1("description");
 
     // Create the original part.
-    MessageCore::AttachmentPart::Ptr origPart = MessageCore::AttachmentPart::Ptr( new MessageCore::AttachmentPart );
-    origPart->setName( name );
-    origPart->setDescription( description );
-    origPart->setMimeType( "text/pdf" );
-    origPart->setEncoding( KMime::Headers::CE8Bit );
-    origPart->setData( data );
+    MessageCore::AttachmentPart::Ptr origPart = MessageCore::AttachmentPart::Ptr(new MessageCore::AttachmentPart);
+    origPart->setName(name);
+    origPart->setDescription(description);
+    origPart->setMimeType("text/pdf");
+    origPart->setEncoding(KMime::Headers::CE8Bit);
+    origPart->setData(data);
     origPart->setUrl(url);
     origPart->setSigned(true);
     origPart->setEncrypted(true);
 
-
     MessageCore::AttachmentUpdateJob *job = new MessageCore::AttachmentUpdateJob(origPart, this);
 
-    VERIFYEXEC( job );
+    VERIFYEXEC(job);
     QCOMPARE(origPart->mimeType(), job->updatedPart()->mimeType());
 
 }
 
 void AttachmentUpdateJobTest::shouldNotUpdateWhenUrlIsEmpty()
 {
-    QByteArray data( "This is short enough that compressing it is not efficient." );
-    const QString name = QString::fromLatin1( "name.txt" );
-    const QString description = QString::fromLatin1( "description" );
+    QByteArray data("This is short enough that compressing it is not efficient.");
+    const QString name = QString::fromLatin1("name.txt");
+    const QString description = QString::fromLatin1("description");
 
     // Create the original part.
-    MessageCore::AttachmentPart::Ptr origPart = MessageCore::AttachmentPart::Ptr( new MessageCore::AttachmentPart );
-    origPart->setName( name );
-    origPart->setDescription( description );
-    origPart->setMimeType( "text/plain" );
-    origPart->setEncoding( KMime::Headers::CE7Bit );
-    origPart->setData( data );
+    MessageCore::AttachmentPart::Ptr origPart = MessageCore::AttachmentPart::Ptr(new MessageCore::AttachmentPart);
+    origPart->setName(name);
+    origPart->setDescription(description);
+    origPart->setMimeType("text/plain");
+    origPart->setEncoding(KMime::Headers::CE7Bit);
+    origPart->setData(data);
 
     MessageCore::AttachmentUpdateJob *job = new MessageCore::AttachmentUpdateJob(origPart, this);
     job->exec();

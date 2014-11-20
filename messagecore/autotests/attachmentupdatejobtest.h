@@ -24,7 +24,7 @@ class AttachmentUpdateJobTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit AttachmentUpdateJobTest(QObject *parent=0);
+    explicit AttachmentUpdateJobTest(QObject *parent = 0);
     ~AttachmentUpdateJobTest();
 
 private Q_SLOTS:

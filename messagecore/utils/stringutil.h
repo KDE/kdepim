@@ -278,7 +278,6 @@ MESSAGECORE_EXPORT QString mailboxListToUnicodeString(const KMime::Types::Mailbo
 
 MESSAGECORE_EXPORT void setEncodingFile(QUrl &url, const QString &encoding);
 
-
 }
 
 }

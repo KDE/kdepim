@@ -279,7 +279,7 @@ QVariant AttachmentModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-    const AttachmentPart::Ptr part = d->parts.at( index.row() );
+    const AttachmentPart::Ptr part = d->parts.at(index.row());
 
     if (role == Qt::DisplayRole) {
         switch (index.column()) {

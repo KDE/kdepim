@@ -27,10 +27,10 @@ using namespace MessageCore;
 class MessageCore::AttachmentUpdateJob::Private
 {
 public:
-    Private( AttachmentUpdateJob *qq );
+    Private(AttachmentUpdateJob *qq);
 
     void doStart(); // slot
-    void loadJobResult(KJob*);
+    void loadJobResult(KJob *);
 
     MessageCore::AttachmentFromUrlBaseJob *createAttachmentJob(const KUrl &url);
 
@@ -39,37 +39,37 @@ public:
     AttachmentPart::Ptr mUpdatedPart;
 };
 
-AttachmentUpdateJob::Private::Private( AttachmentUpdateJob *qq )
-    : q( qq )
+AttachmentUpdateJob::Private::Private(AttachmentUpdateJob *qq)
+    : q(qq)
 {
 }
 
 void AttachmentUpdateJob::Private::doStart()
 {
-    Q_ASSERT( mOriginalPart );
+    Q_ASSERT(mOriginalPart);
     if (mOriginalPart->url().isEmpty()) {
-        qDebug()<< " url is empty. We can't update file";
-        q->setError( KJob::UserDefinedError );
+        qDebug() << " url is empty. We can't update file";
+        q->setError(KJob::UserDefinedError);
         //q->setErrorText( job->errorString() );
         q->emitResult();
         return;
     }
     MessageCore::AttachmentFromUrlBaseJob *job = createAttachmentJob(mOriginalPart->url());
-    connect( job, SIGNAL(result(KJob*)), q, SLOT(loadJobResult(KJob*)) );
+    connect(job, SIGNAL(result(KJob*)), q, SLOT(loadJobResult(KJob*)));
     job->start();
 }
 
 void AttachmentUpdateJob::Private::loadJobResult(KJob *job)
 {
-    if( job->error() ) {
-        q->setError( KJob::UserDefinedError );
+    if (job->error()) {
+        q->setError(KJob::UserDefinedError);
         //q->setErrorText( i18n( "Could not initiate attachment compression." ) );
         q->emitResult();
         return;
     }
 
-    Q_ASSERT( dynamic_cast<AttachmentLoadJob*>( job ) );
-    AttachmentLoadJob *ajob = static_cast<AttachmentLoadJob*>( job );
+    Q_ASSERT(dynamic_cast<AttachmentLoadJob *>(job));
+    AttachmentLoadJob *ajob = static_cast<AttachmentLoadJob *>(job);
     mUpdatedPart = ajob->attachmentPart();
     mUpdatedPart->setName(q->originalPart()->name());
     mUpdatedPart->setDescription(q->originalPart()->description());
@@ -83,11 +83,11 @@ void AttachmentUpdateJob::Private::loadJobResult(KJob *job)
 MessageCore::AttachmentFromUrlBaseJob *AttachmentUpdateJob::Private::createAttachmentJob(const KUrl &url)
 {
     MessageCore::AttachmentFromUrlBaseJob *ajob = 0;
-    if( KMimeType::findByUrl( url )->name() == QLatin1String( "inode/directory" ) ) {
+    if (KMimeType::findByUrl(url)->name() == QLatin1String("inode/directory")) {
         qDebug() << "Creating attachment from folder";
-        ajob = new AttachmentFromFolderJob ( url, q );
+        ajob = new AttachmentFromFolderJob(url, q);
     } else {
-        ajob = new AttachmentFromUrlJob( url, q );
+        ajob = new AttachmentFromUrlJob(url, q);
         qDebug() << "Creating attachment from file";
     }
     /*
@@ -98,10 +98,9 @@ MessageCore::AttachmentFromUrlBaseJob *AttachmentUpdateJob::Private::createAttac
     return ajob;
 }
 
-
 AttachmentUpdateJob::AttachmentUpdateJob(const AttachmentPart::Ptr &part, QObject *parent)
     : KJob(parent),
-      d( new Private( this ) )
+      d(new Private(this))
 {
     d->mOriginalPart = part;
 }
@@ -113,7 +112,7 @@ AttachmentUpdateJob::~AttachmentUpdateJob()
 
 void AttachmentUpdateJob::start()
 {
-    QTimer::singleShot( 0, this, SLOT(doStart()) );
+    QTimer::singleShot(0, this, SLOT(doStart()));
 }
 
 AttachmentPart::Ptr AttachmentUpdateJob::originalPart() const
@@ -125,6 +124,5 @@ AttachmentPart::Ptr AttachmentUpdateJob::updatedPart() const
 {
     return d->mUpdatedPart;
 }
-
 
 #include "moc_attachmentupdatejob.cpp"
