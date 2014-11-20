@@ -169,6 +169,7 @@ void StorageServiceManagerMainWindow::setupActions()
 
     mRefreshList = ac->addAction(QLatin1String("refresh_list"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotRefreshList()));
     mRefreshList->setText(i18n("Refresh List"));
+    mRefreshList->setIcon(KIcon(QLatin1String("view-refresh")));
     mRefreshList->setShortcut(QKeySequence( Qt::Key_F5 ));
 
     mAccountInfo = ac->addAction(QLatin1String("account_info"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotAccountInfo()));
