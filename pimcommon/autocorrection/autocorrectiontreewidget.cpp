@@ -36,5 +36,6 @@ void AutoCorrectionTreeWidget::keyPressEvent(QKeyEvent *event)
     if (event->key() == Qt::Key_Delete) {
         Q_EMIT deleteSelectedItems();
     }
+    QTreeWidget::keyPressEvent( event );
 }
 
