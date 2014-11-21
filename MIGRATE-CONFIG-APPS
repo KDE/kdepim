@@ -19,4 +19,4 @@ Migrate configrc done:
 - blogilo (blogiloui.rc, blogilorc) #TODO need to migrate database
 - pimsettingexporter (pimsettingexporterrc, pimsettingexporter.rc)
 - akonadiconsole ( akonadiconsolerc, akonadiconsoleui.rc )
-
+- korganizer (korganizer_htmlexportrc, korganizerrc, korganizer_part.rc, korganizerui.rc
