@@ -37,5 +37,6 @@ void AutoCorrectionListWidget::keyPressEvent( QKeyEvent *event )
     if ( event->key() == Qt::Key_Delete ) {
         Q_EMIT deleteSelectedItems();
     }
+    QListWidget::keyPressEvent( event );
 }
 
