@@ -100,11 +100,10 @@ bool SplitterCollapser::Private::isVertical() const
 bool SplitterCollapser::Private::isVisible() const
 {
     const QRect widgetRect = childWidget->geometry();
-    const QPoint br = widgetRect.bottomRight();
-    if ((br.x() <= 0) || (br.y() <= 0)) {
-        return false;
-    } else {
+    if ((widgetRect.height() == 0) || (widgetRect.width() == 0)) {
         return true;
+    } else {
+        return false;
     }
 }
 
@@ -117,17 +116,17 @@ void SplitterCollapser::Private::updatePosition()
 
     if (!isVertical()) {
         const int splitterWidth = splitter->width();
-        const int width = q->width();
+        const int width = q->sizeHint().width();
         // FIXME: Make this configurable
         y = 30;
         if (direction == LeftToRight) {
-            if (isVisible()) {
+            if (!isVisible()) {
                 x = widgetRect.right() + handleWidth;
             } else {
                 x = 0;
             }
         } else { // RightToLeft
-            if (isVisible()) {
+            if (!isVisible()) {
                 x = widgetRect.left() - handleWidth - width;
             } else {
                 x = splitterWidth - handleWidth - width;
@@ -135,16 +134,16 @@ void SplitterCollapser::Private::updatePosition()
         }
     } else {
         x = 30;
-        const int height = q->height();
+        const int height = q->sizeHint().height();
         const int splitterHeight = splitter->height();
         if (direction == TopToBottom) {
-            if (isVisible()) {
+            if (!isVisible()) {
                 y = widgetRect.bottom() + handleWidth;
             } else {
                 y = 0;
             }
         } else { // BottomToTop
-            if (isVisible()) {
+            if (!isVisible()) {
                 y = widgetRect.top() - handleWidth - height;
             } else {
                 y = splitterHeight - handleWidth - height;
@@ -156,7 +155,7 @@ void SplitterCollapser::Private::updatePosition()
 
 void SplitterCollapser::Private::updateArrow()
 {
-    q->setArrowType(isVisible() ? s_arrowDirection[direction].arrowVisible : s_arrowDirection[direction].notArrowVisible);
+    q->setArrowType(isVisible() ? s_arrowDirection[direction].notArrowVisible : s_arrowDirection[direction].arrowVisible);
 }
 
 void SplitterCollapser::Private::widgetEventFilter(QEvent *event)
@@ -181,11 +180,10 @@ void SplitterCollapser::Private::updateOpacity()
     const QPoint pos = q->parentWidget()->mapFromGlobal(QCursor::pos());
     const QRect opaqueRect = q->geometry();
     const bool opaqueCollapser = opaqueRect.contains(pos);
-    const int frame = opacityTimeLine->currentFrame();
-    if (opaqueCollapser && frame == opacityTimeLine->startFrame()) {
+    if (opaqueCollapser) {
         opacityTimeLine->setDirection(QTimeLine::Forward);
         startTimeLine();
-    } else if (!opaqueCollapser && frame == opacityTimeLine->endFrame()) {
+    } else {
         opacityTimeLine->setDirection(QTimeLine::Backward);
         startTimeLine();
     }
@@ -193,9 +191,10 @@ void SplitterCollapser::Private::updateOpacity()
 
 void SplitterCollapser::Private::startTimeLine()
 {
-    if (opacityTimeLine->state() != QTimeLine::Running) {
-        opacityTimeLine->start();
+    if (opacityTimeLine->state() == QTimeLine::Running) {
+        opacityTimeLine->stop();
     }
+    opacityTimeLine->start();
 }
 
 
@@ -237,7 +236,6 @@ SplitterCollapser::SplitterCollapser(QWidget *childWidget, QSplitter *splitter)
     }
 
     connect(this, SIGNAL(clicked()), SLOT(slotClicked()));
-    show();
 }
 
 SplitterCollapser::~SplitterCollapser()
@@ -247,7 +245,7 @@ SplitterCollapser::~SplitterCollapser()
 
 bool SplitterCollapser::isCollapsed() const
 {
-    return !d->isVisible();
+    return d->isVisible();
 }
 
 bool SplitterCollapser::eventFilter(QObject *object, QEvent *event)
@@ -255,7 +253,7 @@ bool SplitterCollapser::eventFilter(QObject *object, QEvent *event)
     if (object == d->childWidget) {
         d->widgetEventFilter(event);
     }
-    return false;
+    return QToolButton::eventFilter(object, event);
 }
 
 void SplitterCollapser::enterEvent(QEvent *event)
@@ -270,9 +268,18 @@ void SplitterCollapser::leaveEvent(QEvent *event)
     d->updateOpacity();
 }
 
+void SplitterCollapser::showEvent(QShowEvent *event)
+{
+    Q_UNUSED(event)
+    d->updateOpacity();
+}
+
+
 QSize SplitterCollapser::sizeHint() const
 {
-    const int extent = style()->pixelMetric(QStyle::PM_ScrollBarExtent);
+    QStyleOption opt;
+    opt.initFrom(this);
+    const int extent = style()->pixelMetric(QStyle::PM_ScrollBarExtent, &opt);
     QSize sh(extent * 3 / 4, extent * 240 / 100);
     if (d->isVertical()) {
         sh.transpose();
@@ -284,7 +291,7 @@ void SplitterCollapser::slotClicked()
 {
     QList<int> sizes = d->splitter->sizes();
     const int index = d->splitter->indexOf(d->childWidget);
-    if (d->isVisible()) {
+    if (!d->isVisible()) {
         d->sizeAtCollapse = sizes;
         sizes[index] = 0;
     } else {
@@ -305,7 +312,7 @@ void SplitterCollapser::slotClicked()
 
 void SplitterCollapser::collapse()
 {
-    if (d->isVisible()) {
+    if (!d->isVisible()) {
         slotClicked();
     }
     // else do nothing
@@ -313,7 +320,7 @@ void SplitterCollapser::collapse()
 
 void SplitterCollapser::restore()
 {
-    if (!d->isVisible()) {
+    if (d->isVisible()) {
         slotClicked();
     }
     // else do nothing
