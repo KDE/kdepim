@@ -20,6 +20,8 @@
 #include "setupautoconfigkolabfreebusy.h"
 #include "configfile.h"
 
+#include <QFileInfo>
+
 #include <KLocalizedString>
 
 SetupAutoconfigKolabFreebusy::SetupAutoconfigKolabFreebusy(QObject *parent)
@@ -43,6 +45,7 @@ void SetupAutoconfigKolabFreebusy::fillFreebusyServer(int i, QObject *o) const
 {
     freebusy isp = mIspdb->freebusyServers().values()[i];
     ConfigFile *korganizer = qobject_cast<ConfigFile *>(o);
+    QFileInfo path =  QFileInfo(isp.path);
     QString url(QLatin1String("https://"));
 
     if (isp.socketType == Ispdb::None) {
@@ -60,11 +63,13 @@ void SetupAutoconfigKolabFreebusy::fillFreebusyServer(int i, QObject *o) const
         url += QLatin1Char('/');
     }
 
-    url += isp.path;
+    url += path.path();
+
+    bool fullDomainRetrieval = (path.baseName() == QLatin1String("$EMAIL$"));
 
     QString group(QLatin1String("FreeBusy Retrieve"));
 
-    korganizer->setConfig(group, QLatin1String("FreeBusyFullDomainRetrieval"), QLatin1String("true"));
+    korganizer->setConfig(group, QLatin1String("FreeBusyFullDomainRetrieval"),  QLatin1String(fullDomainRetrieval?"true":"false"));
     korganizer->setConfig(group, QLatin1String("FreeBusyRetrieveAuto"), QLatin1String("true"));
     korganizer->setConfig(group, QLatin1String("FreeBusyRetrieveUrl"), url);
     korganizer->setConfig(group, QLatin1String("FreeBusyRetrieverUser"), isp.username);
