@@ -12,7 +12,7 @@ Migrate configrc done:
 - agent/archivemailagent (akonadi_archivemail_agentrc, akonadi_archivemail_agent.notifyrc)
 - agent/followupreminderagent (akonadi_followupreminder_agentrc, akonadi_followupreminder_agent.notifyrc)
 - kalarm (kalarmrc, kalarmui.rc)
-- kmail (kmail_part.rc  kmcomposerui.rc  kmmainwin.rc  kmreadermainwin.rc, kmail2rc, kmail2.notifyrc, kmailsnippetrc, customtemplatesrc, templatesconfigurationrc, kpimcompletionorder) #TODO migrate autosave folder
+- kmail (kmail_part.rc  kmcomposerui.rc  kmmainwin.rc  kmreadermainwin.rc, kmail2rc, kmail2.notifyrc, kmailsnippetrc, customtemplatesrc, templatesconfigurationrc, kpimcompletionorder, kabldaprc) #TODO migrate autosave folder
 - kwatchgnupg (kwatchgnupgrc, kwatchgnupgui.rc)
 - kleopatra (kleopatrarc, kleopatra.rc)
 - knotes (knotesrc) #TODO need to migrate it in plugins too
