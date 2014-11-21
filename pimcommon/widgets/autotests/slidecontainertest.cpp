@@ -112,7 +112,6 @@ void SlideContainerAutoTest::testSlideInDeleteSlideOut()
     // animation
     TestWindow window;
     window.show();
-
     window.mContainer->slideIn();
     while (window.mContainer->slideHeight() != window.mContent->height()) {
         QTest::qWait(100);

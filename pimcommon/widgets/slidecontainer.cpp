@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QEvent>
 #include <QPropertyAnimation>
 #include <QResizeEvent>
+#include <QDebug>
 
 namespace PimCommon
 {
@@ -30,10 +31,10 @@ namespace PimCommon
 static const int SLIDE_DURATION = 250;
 
 SlideContainer::SlideContainer(QWidget *parent)
-    : QFrame(parent)
+    : QFrame(parent),
+      mContent(0),
+      mSlidingOut(false)
 {
-    mContent = 0;
-    mSlidingOut = false;
     setFixedHeight(0);
 }
 
@@ -63,9 +64,9 @@ void SlideContainer::animTo(int newHeight)
     anim->setDuration(SLIDE_DURATION);
     anim->setStartValue(slideHeight());
     anim->setEndValue(newHeight);
+    mAnim = anim;
     anim->start(QAbstractAnimation::DeleteWhenStopped);
     connect(anim, &QPropertyAnimation::finished, this, &SlideContainer::slotAnimFinished);
-    mAnim = anim;
 }
 
 void SlideContainer::slideIn()
