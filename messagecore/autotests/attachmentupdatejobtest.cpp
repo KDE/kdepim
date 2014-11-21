@@ -45,7 +45,7 @@ void AttachmentUpdateJobTest::shouldHaveDefaultValue()
 
 void AttachmentUpdateJobTest::shouldUpdateAttachment()
 {
-    const KUrl url = KUrl::fromPath(PATH_ATTACHMENTS + QString::fromLatin1("file.txt"));
+    const QUrl url = QUrl::fromLocalFile(PATH_ATTACHMENTS + QString::fromLatin1("file.txt"));
 
     // Some data.
     QByteArray data("This is short enough that compressing it is not efficient.");
@@ -70,7 +70,7 @@ void AttachmentUpdateJobTest::shouldUpdateAttachment()
 
 void AttachmentUpdateJobTest::shouldHaveSameNameDescriptionAfterUpdate()
 {
-    const KUrl url = KUrl::fromPath(PATH_ATTACHMENTS + QString::fromLatin1("file.txt"));
+    const QUrl url = QUrl::fromLocalFile(PATH_ATTACHMENTS + QString::fromLatin1("file.txt"));
 
     // Some data.
     QByteArray data("This is short enough that compressing it is not efficient.");
@@ -96,7 +96,7 @@ void AttachmentUpdateJobTest::shouldHaveSameNameDescriptionAfterUpdate()
 
 void AttachmentUpdateJobTest::shouldHaveSameCryptoSignStatusAfterUpdate()
 {
-    const KUrl url = KUrl::fromPath(PATH_ATTACHMENTS + QString::fromLatin1("file.txt"));
+    const QUrl url = QUrl::fromLocalFile(PATH_ATTACHMENTS + QString::fromLatin1("file.txt"));
 
     // Some data.
     QByteArray data("This is short enough that compressing it is not efficient.");
@@ -123,7 +123,7 @@ void AttachmentUpdateJobTest::shouldHaveSameCryptoSignStatusAfterUpdate()
 
 void AttachmentUpdateJobTest::shouldHaveSameEncodingAfterUpdate()
 {
-    const KUrl url = KUrl::fromPath(PATH_ATTACHMENTS + QString::fromLatin1("file.txt"));
+    const QUrl url = QUrl::fromLocalFile(PATH_ATTACHMENTS + QString::fromLatin1("file.txt"));
 
     // Some data.
     QByteArray data("This is short enough that compressing it is not efficient.");
@@ -149,7 +149,7 @@ void AttachmentUpdateJobTest::shouldHaveSameEncodingAfterUpdate()
 
 void AttachmentUpdateJobTest::shouldHaveSameMimetypeAfterUpdate()
 {
-    const KUrl url = KUrl::fromPath(PATH_ATTACHMENTS + QString::fromLatin1("file.txt"));
+    const QUrl url = QUrl::fromLocalFile(PATH_ATTACHMENTS + QString::fromLatin1("file.txt"));
 
     // Some data.
     QByteArray data("This is short enough that compressing it is not efficient.");
