@@ -46,6 +46,8 @@ void AutoconfigKolabMail::slotResult(KJob *job)
 {
     if (job->error()) {
         if (job->error() == KIO::ERR_INTERNAL_SERVER ||   // error 500
+                job->error() == KIO::ERR_UNKNOWN_HOST ||  // unknown host
+                job->error() == KIO::ERR_COULD_NOT_CONNECT ||
                 job->error() == KIO::ERR_DOES_NOT_EXIST) {    // error 404
             if (serverType() == DataBase) {
                 setServerType(IspAutoConfig);
