@@ -26,6 +26,8 @@
 #include <QFile>
 #include <QDir>
 
+#include <KStandardDirs>
+
 extern "C" {
 #include <sasl/sasl.h>
 }
