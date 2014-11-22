@@ -341,7 +341,7 @@ QString QueryDebugger::variantToString(const QVariant &val)
 {
     if (val.canConvert(QVariant::String)) {
         return val.toString();
-    } else if (val.canConvert(QVariant::QVariant::DateTime)) {
+    } else if (val.canConvert(QVariant::DateTime)) {
         return val.toDateTime().toString(Qt::ISODate);
     }
 
