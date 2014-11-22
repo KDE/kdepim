@@ -126,7 +126,7 @@ install(TARGETS incidenceeditorsng ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ### Build the mobile version if needed
 
-#if(KDEPIM_MOBILE_UI)
+if(KDEPIM_MOBILE_UI)
   set(incidenceeditors_ng_mobile_LIB_SRCS
     ${incidenceeditors_ng_shared_LIB_SRCS}
   )
@@ -170,7 +170,7 @@ install(TARGETS incidenceeditorsng ${INSTALL_TARGETS_DEFAULT_ARGS})
   )
 
   install(TARGETS incidenceeditorsngmobile ${INSTALL_TARGETS_DEFAULT_ARGS})
-#endif(KDEPIM_MOBILE_UI)
+endif(KDEPIM_MOBILE_UI)
 
 ### Build the test app TODO: Make optional
 
