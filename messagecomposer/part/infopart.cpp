@@ -24,6 +24,13 @@ using namespace MessageComposer;
 class InfoPart::Private
 {
 public:
+    Private()
+        : transportId(0),
+          urgent(false)
+    {
+
+    }
+
     QString from;
     QStringList to;
     QStringList cc;
@@ -43,8 +50,6 @@ InfoPart::InfoPart( QObject *parent )
     : MessagePart( parent )
     , d( new Private )
 {
-    d->transportId = 0;
-    d->urgent = false;
 }
 
 InfoPart::~InfoPart()
