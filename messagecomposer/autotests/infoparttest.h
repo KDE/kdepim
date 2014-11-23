@@ -24,7 +24,7 @@ class InfoPartTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit InfoPartTest(QObject *parent=0);
+    explicit InfoPartTest(QObject *parent = 0);
     ~InfoPartTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
