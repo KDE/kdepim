@@ -121,7 +121,7 @@ void ComposerAnchorDialogPrivate::updateSettings()
 
 QString ComposerAnchorDialogPrivate::html() const
 {
-    return QString::fromLatin1("<a name=\"%1\"></a>").arg(anchorName->text());
+    return QStringLiteral("<a name=\"%1\"></a>").arg(anchorName->text());
 }
 
 void ComposerAnchorDialogPrivate::updateLinkHtml()

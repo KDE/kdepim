@@ -83,7 +83,7 @@ void StorageServiceManager::removeService(const QString &serviceName)
 
 QString StorageServiceManager::ourIdentifier() const
 {
-    const QString identifier = QString::fromLatin1("%1/%2").
+    const QString identifier = QStringLiteral("%1/%2").
                                arg(QDBusConnection::sessionBus().baseService()).
                                arg(property("uniqueDBusPath").toString());
     return identifier;

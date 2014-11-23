@@ -133,7 +133,7 @@ QString SieveActionRedirect::code(QWidget *w) const
         }
     }
 
-    return result + QString::fromLatin1("\"%1\";").arg(text);
+    return result + QStringLiteral("\"%1\";").arg(text);
 }
 
 QStringList SieveActionRedirect::needRequires(QWidget *parent) const

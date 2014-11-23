@@ -123,7 +123,7 @@ QString SieveActionDeleteHeader::code(QWidget *w) const
     const QLineEdit *value = w->findChild<QLineEdit *>(QLatin1String("valueedit"));
     const QString valueStr = value->text();
 
-    return QString::fromLatin1("deleteheader %1 \"%2\" \"%3\";").arg((isNegative ? QLatin1String("not ") + matchTypeStr : matchTypeStr)).arg(headerStr).arg(valueStr);
+    return QStringLiteral("deleteheader %1 \"%2\" \"%3\";").arg((isNegative ? QLatin1String("not ") + matchTypeStr : matchTypeStr)).arg(headerStr).arg(valueStr);
 }
 
 QString SieveActionDeleteHeader::help() const

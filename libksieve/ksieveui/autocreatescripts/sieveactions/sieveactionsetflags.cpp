@@ -34,7 +34,7 @@ SieveAction *SieveActionSetFlags::newAction()
 
 QString SieveActionSetFlags::flagsCode() const
 {
-    return QString::fromLatin1("setflag");
+    return QStringLiteral("setflag");
 }
 
 QString SieveActionSetFlags::help() const

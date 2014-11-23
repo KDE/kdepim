@@ -560,7 +560,7 @@ void MainWidget::setupGui()
 
 void MainWidget::setupActions(KActionCollection *collection)
 {
-    mGrantleeThemeManager = new GrantleeTheme::GrantleeThemeManager(GrantleeTheme::GrantleeThemeManager::Addressbook, QString::fromLatin1("theme.desktop"), collection, QLatin1String("kaddressbook/viewertemplates/"));
+    mGrantleeThemeManager = new GrantleeTheme::GrantleeThemeManager(GrantleeTheme::GrantleeThemeManager::Addressbook, QStringLiteral("theme.desktop"), collection, QLatin1String("kaddressbook/viewertemplates/"));
     mGrantleeThemeManager->setDownloadNewStuffConfigFile(QLatin1String("kaddressbook_themes.knsrc"));
     connect(mGrantleeThemeManager, &GrantleeTheme::GrantleeThemeManager::grantleeThemeSelected, this, &MainWidget::slotGrantleeThemeSelected);
     connect(mGrantleeThemeManager, &GrantleeTheme::GrantleeThemeManager::updateThemes, this, &MainWidget::slotGrantleeThemesUpdated);

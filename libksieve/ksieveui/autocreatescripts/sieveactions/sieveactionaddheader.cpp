@@ -119,7 +119,7 @@ QString SieveActionAddHeader::code(QWidget *w) const
     const QLineEdit *value = w->findChild<QLineEdit *>(QLatin1String("valueedit"));
     const QString valueStr = value->text();
 
-    return QString::fromLatin1("addheader %1 \"%2\" \"%3\";").arg(position).arg(headerStr).arg(valueStr);
+    return QStringLiteral("addheader %1 \"%2\" \"%3\";").arg(position).arg(headerStr).arg(valueStr);
 }
 
 QString SieveActionAddHeader::help() const

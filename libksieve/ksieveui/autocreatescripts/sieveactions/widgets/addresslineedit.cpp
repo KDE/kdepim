@@ -51,7 +51,7 @@ void AddressLineEdit::verifyAddress()
         //TODO improve check
         if (mNegativeBackground.isEmpty()) {
             KStatefulBrush bgBrush = KStatefulBrush(KColorScheme::View, KColorScheme::NegativeText);
-            mNegativeBackground = QString::fromLatin1("QLineEdit{ color:%1 }").arg(bgBrush.brush(this).color().name());
+            mNegativeBackground = QStringLiteral("QLineEdit{ color:%1 }").arg(bgBrush.brush(this).color().name());
         }
         if (mIncorrectEmail) {
             styleSheet = mNegativeBackground;

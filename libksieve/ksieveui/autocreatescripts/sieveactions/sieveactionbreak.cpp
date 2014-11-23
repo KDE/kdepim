@@ -97,7 +97,7 @@ QString SieveActionBreak::code(QWidget *w) const
     const QLineEdit *name = w->findChild<QLineEdit *>(QLatin1String("name"));
     const QString nameStr = name->text();
     if (!nameStr.isEmpty()) {
-        return QString::fromLatin1("break :name \"%1\";").arg(nameStr);
+        return QStringLiteral("break :name \"%1\";").arg(nameStr);
     }
     return QLatin1String("break;");
 }

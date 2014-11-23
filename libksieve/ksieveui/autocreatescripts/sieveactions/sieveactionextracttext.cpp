@@ -103,7 +103,7 @@ QString SieveActionExtractText::code(QWidget *w) const
     const QLineEdit *variableName = w->findChild<QLineEdit *>(QLatin1String("variablename"));
     const QString variableNameStr = variableName->text();
 
-    const QString result = QString::fromLatin1("extracttext :first %1 \"%2\";").arg(numberOfCharactersStr).arg(variableNameStr);
+    const QString result = QStringLiteral("extracttext :first %1 \"%2\";").arg(numberOfCharactersStr).arg(variableNameStr);
     return result;
 }
 
