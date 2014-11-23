@@ -194,18 +194,18 @@ void AddEditBlog::gotHtml(KJob *job)
     QString httpData(QString::fromUtf8(static_cast<KIO::StoredTransferJob *>(job)->data()));
     job->deleteLater();
 
-    QRegExp rxGData(QString::fromLatin1("content='blogger' name='generator'"));
+    QRegExp rxGData(QStringLiteral("content='blogger' name='generator'"));
     if (rxGData.indexIn(httpData) != -1) {
         qDebug() << "content='blogger' name='generator' matched";
         d->mFetchAPITimer->deleteLater();
         d->ui.comboApi->setCurrentIndex(4);
-        QRegExp rxBlogId(QString::fromLatin1("BlogID=(\\d+)"));
+        QRegExp rxBlogId(QStringLiteral("BlogID=(\\d+)"));
         d->ui.txtId->setText(rxBlogId.cap(1));
         hideWaitWidget();
         return;
     }
 
-    QRegExp rxLiveJournal(QString::fromLatin1("rel=\"openid.server\" href=\"http://www.livejournal.com/openid/server.bml\""));
+    QRegExp rxLiveJournal(QStringLiteral("rel=\"openid.server\" href=\"http://www.livejournal.com/openid/server.bml\""));
     if (rxLiveJournal.indexIn(httpData) != -1) {
         qDebug() << " rel=\"openid.server\" href=\"http://www.livejournal.com/openid/server.bml\" matched";
         d->mFetchAPITimer->deleteLater();
@@ -217,7 +217,7 @@ void AddEditBlog::gotHtml(KJob *job)
     }
 
     QString textUrl;
-    QRegExp rxWordpress(QString::fromLatin1("name=\"generator\" content=\"WordPress"));
+    QRegExp rxWordpress(QStringLiteral("name=\"generator\" content=\"WordPress"));
     if (rxWordpress.indexIn(httpData) != -1) {
         qDebug() << "name=\"generator\" content=\"WordPress matched";
         d->mFetchAPITimer->deleteLater();
@@ -237,7 +237,7 @@ void AddEditBlog::gotHtml(KJob *job)
     while (textUrl.endsWith(QLatin1Char('/'))) {
         textUrl.remove(textUrl.length() - 1, 1);
     }
-    KIO::StoredTransferJob *testXmlRpcJob = KIO::storedGet(QString::fromLatin1("%1/xmlrpc.php").arg(textUrl),
+    KIO::StoredTransferJob *testXmlRpcJob = KIO::storedGet(QStringLiteral("%1/xmlrpc.php").arg(textUrl),
                                             KIO::NoReload, KIO::HideProgressInfo);
 
     connect(testXmlRpcJob, &KIO::StoredTransferJob::result, this, &AddEditBlog::gotXmlRpcTest);

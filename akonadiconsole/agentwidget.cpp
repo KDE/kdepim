@@ -242,7 +242,7 @@ void AgentWidget::showTaskList()
         return;
     }
 
-    QDBusInterface iface(QString::fromLatin1("org.freedesktop.Akonadi.Agent.%1").arg(agent.identifier()),
+    QDBusInterface iface(QStringLiteral("org.freedesktop.Akonadi.Agent.%1").arg(agent.identifier()),
                          "/Debug", QString());
 
     QDBusReply<QString> reply = iface.call("dumpToString");
@@ -267,7 +267,7 @@ void AgentWidget::showChangeNotifications()
         return;
     }
 
-    QDBusInterface iface(QString::fromLatin1("org.freedesktop.Akonadi.Agent.%1").arg(agent.identifier()),
+    QDBusInterface iface(QStringLiteral("org.freedesktop.Akonadi.Agent.%1").arg(agent.identifier()),
                          "/Debug", QString());
 
     QDBusReply<QString> reply = iface.call("dumpNotificationListToString");
@@ -339,14 +339,14 @@ void AgentWidget::cloneAgent(KJob *job)
     Q_ASSERT(cloneTarget.isValid());
     Q_ASSERT(mCloneSource.isValid());
 
-    QDBusInterface sourceIface(QString::fromLatin1("org.freedesktop.Akonadi.Agent.%1").arg(mCloneSource.identifier()),
+    QDBusInterface sourceIface(QStringLiteral("org.freedesktop.Akonadi.Agent.%1").arg(mCloneSource.identifier()),
                                "/Settings");
     if (!sourceIface.isValid()) {
         qCritical() << "Unable to obtain KConfigXT D-Bus interface of source agent" << mCloneSource.identifier();
         return;
     }
 
-    QDBusInterface targetIface(QString::fromLatin1("org.freedesktop.Akonadi.Agent.%1").arg(cloneTarget.identifier()),
+    QDBusInterface targetIface(QStringLiteral("org.freedesktop.Akonadi.Agent.%1").arg(cloneTarget.identifier()),
                                "/Settings");
     if (!targetIface.isValid()) {
         qCritical() << "Unable to obtain KConfigXT D-Bus interface of target agent" << cloneTarget.identifier();

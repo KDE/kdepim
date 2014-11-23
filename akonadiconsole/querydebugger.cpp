@@ -100,18 +100,18 @@ void QueryDebugger::addQuery(double sequence, uint duration, const QString &quer
         q.replace(pos, 1, variantToString(val));
     }
 
-    mView->append(QString::fromLatin1("%1: <font color=\"blue\">%2</font>") .arg(sequence).arg(q));
+    mView->append(QStringLiteral("%1: <font color=\"blue\">%2</font>") .arg(sequence).arg(q));
 
     if (!error.isEmpty()) {
-        mView->append(QString::fromLatin1("<font color=\"red\">Error: %1</font>\n").arg(error));
+        mView->append(QStringLiteral("<font color=\"red\">Error: %1</font>\n").arg(error));
         return;
     }
 
-    mView->append(QString::fromLatin1("<font color=\"green\">Success</font>: Query took %1 msecs ").arg(duration));
+    mView->append(QStringLiteral("<font color=\"green\">Success</font>: Query took %1 msecs ").arg(duration));
     if (query.startsWith(QLatin1String("SELECT"))) {
-        mView->append(QString::fromLatin1("Fetched %1 results").arg(resultsCount));
+        mView->append(QStringLiteral("Fetched %1 results").arg(resultsCount));
     } else {
-        mView->append(QString::fromLatin1("Affected %1 rows").arg(resultsCount));
+        mView->append(QStringLiteral("Affected %1 rows").arg(resultsCount));
     }
 
     if (!result.isEmpty()) {

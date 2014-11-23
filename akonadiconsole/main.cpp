@@ -59,8 +59,8 @@ int main(int argc, char **argv)
     parser.addOption(QCommandLineOption(QStringList() << QLatin1String("remote"), i18n("Connect to an Akonadi remote debugging server"), "server"));
 
     if (parser.isSet("remote")) {
-        const QString akonadiAddr = QString::fromLatin1("tcp:host=%1,port=31415").arg(parser.value("remote"));
-        const QString dbusAddr = QString::fromLatin1("tcp:host=%1,port=31416").arg(parser.value("remote"));
+        const QString akonadiAddr = QStringLiteral("tcp:host=%1,port=31415").arg(parser.value("remote"));
+        const QString dbusAddr = QStringLiteral("tcp:host=%1,port=31416").arg(parser.value("remote"));
         setenv("AKONADI_SERVER_ADDRESS", akonadiAddr.toLatin1(), 1);
         setenv("DBUS_SESSION_BUS_ADDRESS", dbusAddr.toLatin1(), 1);
     }

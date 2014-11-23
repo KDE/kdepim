@@ -41,7 +41,7 @@ QString JobInfo::stateAsString() const
     case Ended:
         return QLatin1String("Ended");
     case Failed:
-        return QString::fromLatin1("Failed: %1").arg(error);
+        return QStringLiteral("Failed: %1").arg(error);
     default:
         return QLatin1String("Unknown state!");
     }
