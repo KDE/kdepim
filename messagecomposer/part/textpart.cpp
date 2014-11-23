@@ -25,6 +25,13 @@ using namespace MessageComposer;
 class TextPart::Private
 {
 public:
+    Private()
+        : wordWrappingEnabled(true),
+          warnBadCharset(true)
+    {
+
+    }
+
     bool wordWrappingEnabled;
     bool warnBadCharset;
     QString cleanPlainText;
@@ -37,8 +44,6 @@ TextPart::TextPart(QObject *parent)
     : MessagePart(parent)
     , d(new Private)
 {
-    d->wordWrappingEnabled = true;
-    d->warnBadCharset = true;
 }
 
 TextPart::~TextPart()
