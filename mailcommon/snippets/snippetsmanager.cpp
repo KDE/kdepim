@@ -70,7 +70,6 @@ public:
                        const QString &snippetText, const QString &snippetKeySequence);
 
     void load();
-    void loadFromOldFormat(const KConfigGroup &group);
     void save();
 
     SnippetsManager *q;
@@ -460,122 +459,52 @@ void SnippetsManager::Private::createSnippet(const QModelIndex &groupIndex,
                            snippetText);
 }
 
-void SnippetsManager::Private::loadFromOldFormat(const KConfigGroup &group)
-{
-    //Code from kmail1
-
-    //if entry doesn't get found, this will return -1 which we will need a bit later
-    int iCount = group.readEntry("snippetGroupCount", -1);
-    QMap< int, QModelIndex> listGroup;
-    for (int i = 0; i < iCount; ++i) { //read the group-list
-        const QString strNameVal =
-            group.readEntry(QString::fromLatin1("snippetGroupName_%1").arg(i), QString());
-
-        const int iIdVal =
-            group.readEntry(QString::fromLatin1("snippetGroupId_%1").arg(i), -1);
-
-        //qDebug() << "Read group "  << " " << iIdVal;
-
-        if (!strNameVal.isEmpty() && iIdVal != -1) {
-            // create group
-            const QModelIndex groupIndex = createGroup(strNameVal);
-            listGroup.insert(iIdVal, groupIndex);
-        }
-    }
-
-    /* Check if the snippetGroupCount property has been found
-     if iCount is -1 this means, that the user has his snippets
-     stored without groups.
-     Should only happen with an empty config file.
-    */
-
-    if (iCount != -1) {
-        iCount = group.readEntry("snippetCount", 0);
-        for (int i = 0; i < iCount; ++i) { //read the snippet-list
-            const QString snippetName =
-                group.readEntry(QString::fromLatin1("snippetName_%1").arg(i), QString());
-
-            const QString snippetText =
-                group.readEntry(QString::fromLatin1("snippetText_%1").arg(i), QString());
-
-            const int iParentVal =
-                group.readEntry(QString::fromLatin1("snippetParent_%1").arg(i), -1);
-
-            if (!snippetText.isEmpty() &&
-                    !snippetName.isEmpty() &&
-                    iParentVal != -1) {
-                const QString snippetKeySequence =
-                    group.readEntry(QString::fromLatin1("snippetShortcut_%1").arg(i), QString());
-
-                const QModelIndex groupIndex = listGroup.value(iParentVal);
-                createSnippet(groupIndex, snippetName, snippetText, snippetKeySequence);
-            }
-        }
-    }
-    iCount = group.readEntry("snippetSavedCount", 0);
-
-    for (int i = 1; i <= iCount; ++i) { //read the saved-values and store in QMap
-        const QString variableKey =
-            group.readEntry(QString::fromLatin1("snippetSavedName_%1").arg(i), QString());
-
-        const QString variableValue =
-            group.readEntry(QString::fromLatin1("snippetSavedVal_%1").arg(i), QString());
-
-        mSavedVariables.insert(variableKey, variableValue);
-    }
-    mDirty = true;
-}
 
 void SnippetsManager::Private::load()
 {
     const KSharedConfig::Ptr config =
-        KSharedConfig::openConfig(QLatin1String("kmailsnippetrc"), KConfig::NoGlobals);
+            KSharedConfig::openConfig(QLatin1String("kmailsnippetrc"), KConfig::NoGlobals);
 
     const KConfigGroup snippetPartGroup = config->group("SnippetPart");
 
-    //Old format has this entry not new format
-    if (snippetPartGroup.hasKey("snippetCount")) {
-        loadFromOldFormat(snippetPartGroup);
-    } else {
-        const int groupCount = snippetPartGroup.readEntry("snippetGroupCount", 0);
+    const int groupCount = snippetPartGroup.readEntry("snippetGroupCount", 0);
 
-        for (int i = 0; i < groupCount; ++i) {
-            const KConfigGroup group =
+    for (int i = 0; i < groupCount; ++i) {
+        const KConfigGroup group =
                 config->group(QString::fromLatin1("SnippetGroup_%1").arg(i));
 
-            const QString groupName = group.readEntry("Name");
+        const QString groupName = group.readEntry("Name");
 
-            // create group
-            QModelIndex groupIndex = createGroup(groupName);
+        // create group
+        QModelIndex groupIndex = createGroup(groupName);
 
-            const int snippetCount = group.readEntry("snippetCount", 0);
-            for (int j = 0; j < snippetCount; ++j) {
-                const QString snippetName =
+        const int snippetCount = group.readEntry("snippetCount", 0);
+        for (int j = 0; j < snippetCount; ++j) {
+            const QString snippetName =
                     group.readEntry(QString::fromLatin1("snippetName_%1").arg(j), QString());
 
-                const QString snippetText =
+            const QString snippetText =
                     group.readEntry(QString::fromLatin1("snippetText_%1").arg(j), QString());
 
-                const QString snippetKeySequence =
+            const QString snippetKeySequence =
                     group.readEntry(QString::fromLatin1("snippetKeySequence_%1").arg(j), QString());
 
-                createSnippet(groupIndex, snippetName, snippetText, snippetKeySequence);
-            }
+            createSnippet(groupIndex, snippetName, snippetText, snippetKeySequence);
         }
+    }
 
-        mSavedVariables.clear();
-        const KConfigGroup group = config->group("SavedVariablesPart");
-        const int variablesCount = group.readEntry("variablesCount", 0);
+    mSavedVariables.clear();
+    const KConfigGroup group = config->group("SavedVariablesPart");
+    const int variablesCount = group.readEntry("variablesCount", 0);
 
-        for (int i = 0; i < variablesCount; ++i) {
-            const QString variableKey =
+    for (int i = 0; i < variablesCount; ++i) {
+        const QString variableKey =
                 group.readEntry(QString::fromLatin1("variableName_%1").arg(i), QString());
 
-            const QString variableValue =
+        const QString variableValue =
                 group.readEntry(QString::fromLatin1("variableValue_%1").arg(i), QString());
 
-            mSavedVariables.insert(variableKey, variableValue);
-        }
+        mSavedVariables.insert(variableKey, variableValue);
     }
 }
 
