@@ -103,6 +103,7 @@ void FindBarMailWebView::updateSensitivity(bool sensitivity)
 void FindBarMailWebView::clearSelections()
 {
     mView->clearFindSelection();
+    mLastSearchStr.clear();
     FindBarBase::clearSelections();
 }
 
