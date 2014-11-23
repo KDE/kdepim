@@ -91,7 +91,7 @@ bool MessageListSettings::useGlobalSettings() const
 
 MessageListSettings MessageListSettings::fromConfig( qint64 collectionId )
 {
-  const QString groupName = QString::fromLatin1( "MessageListSettings-%1" ).arg( collectionId );
+  const QString groupName = QStringLiteral( "MessageListSettings-%1" ).arg( collectionId );
 
   MessageListSettings settings;
 
@@ -118,7 +118,7 @@ MessageListSettings MessageListSettings::fromConfig( qint64 collectionId )
 
 void MessageListSettings::toConfig( qint64 collectionId, const MessageListSettings &settings )
 {
-  const QString groupName = QString::fromLatin1( "MessageListSettings-%1" ).arg( collectionId );
+  const QString groupName = QStringLiteral( "MessageListSettings-%1" ).arg( collectionId );
 
   if ( settings.useGlobalSettings() ) {
     KSharedConfig::openConfig()->deleteGroup( groupName );

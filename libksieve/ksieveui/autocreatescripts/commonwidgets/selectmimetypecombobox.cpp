@@ -44,7 +44,7 @@ void SelectMimeTypeComboBox::initialize()
 
 QString SelectMimeTypeComboBox::code() const
 {
-    return QString::fromLatin1("\"%1\"").arg(itemData(currentIndex()).toString());
+    return QStringLiteral("\"%1\"").arg(itemData(currentIndex()).toString());
 }
 
 void SelectMimeTypeComboBox::setCode(const QString &code, const QString &name, QString &error)

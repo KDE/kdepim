@@ -51,7 +51,7 @@ SelectSizeWidget::~SelectSizeWidget()
 QString SelectSizeWidget::code() const
 {
     const QString type = mSelectSizeType->code();
-    return QString::fromLatin1("%1%2").arg(mSpinBoxSize->value()).arg(type);
+    return QStringLiteral("%1%2").arg(mSpinBoxSize->value()).arg(type);
 }
 
 void SelectSizeWidget::setCode(qlonglong value, const QString &identifier, const QString &name, QString &error)

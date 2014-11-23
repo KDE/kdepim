@@ -74,7 +74,7 @@ void ImportCalendarJob::restoreResources()
 {
     Q_EMIT info(i18n("Restore resources..."));
     QStringList listResource;
-    listResource << restoreResourceFile(QString::fromLatin1("akonadi_ical_resource"), Utils::calendarPath(), storeCalendar);
+    listResource << restoreResourceFile(QStringLiteral("akonadi_ical_resource"), Utils::calendarPath(), storeCalendar);
 
     if (!mListResourceFile.isEmpty()) {
         QDir dir(mTempDirName);
@@ -120,7 +120,7 @@ void ImportCalendarJob::restoreResources()
                         }
                     }
 
-                    const QString newResource = mCreateResource->createResource(QString::fromLatin1("akonadi_icaldir_resource"), filename, settings, true);
+                    const QString newResource = mCreateResource->createResource(QStringLiteral("akonadi_icaldir_resource"), filename, settings, true);
                     infoAboutNewResource(newResource);
                     listResource << newResource;
                     qDebug() << " newResource" << newResource;

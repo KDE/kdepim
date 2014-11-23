@@ -33,7 +33,7 @@ SieveAction *SieveActionAddFlags::newAction()
 
 QString SieveActionAddFlags::flagsCode() const
 {
-    return QString::fromLatin1("addflag");
+    return QStringLiteral("addflag");
 }
 
 QString SieveActionAddFlags::help() const

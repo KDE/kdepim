@@ -89,7 +89,7 @@ void FavoriteCollectionWidget::createMenu(KActionCollection *ac)
     const int nbElement((int)(sizeof(icon_sizes) / sizeof(int)));
     QAction *act = 0;
     for (int i = 0; i < nbElement; ++i) {
-        act = new QAction(QString::fromLatin1("%1x%2").arg(icon_sizes[ i ]).arg(icon_sizes[ i ]), iconSizeMenu);
+        act = new QAction(QStringLiteral("%1x%2").arg(icon_sizes[ i ]).arg(icon_sizes[ i ]), iconSizeMenu);
         iconSizeMenu->addAction(act);
         act->setCheckable(true);
         grp->addAction(act);

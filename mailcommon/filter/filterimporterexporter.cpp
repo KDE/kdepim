@@ -65,7 +65,7 @@ QList<MailFilter *> FilterImporterExporter::readFiltersFromConfig(
     bool filterNeedUpdate = false;
     QList<MailFilter *> filters;
     for (int i = 0; i < numFilters; ++i) {
-        const QString groupName = QString::fromLatin1("Filter #%1").arg(i);
+        const QString groupName = QStringLiteral("Filter #%1").arg(i);
 
         const KConfigGroup group = config->group(groupName);
         bool update = false;
@@ -110,7 +110,7 @@ void FilterImporterExporter::writeFiltersToConfig(const QList<MailFilter *> &fil
     int i = 0;
     foreach (const MailFilter *filter, filters) {
         if (!filter->isEmpty()) {
-            const QString groupName = QString::fromLatin1("Filter #%1").arg(i);
+            const QString groupName = QStringLiteral("Filter #%1").arg(i);
 
             KConfigGroup group = config->group(groupName);
             filter->writeConfig(group, exportFiler);

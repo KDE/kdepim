@@ -55,7 +55,7 @@ QString SelectComparatorComboBox::require() const
 
 QString SelectComparatorComboBox::code() const
 {
-    return QString::fromLatin1(":comparator \"%1\"").arg(itemText(currentIndex()));
+    return QStringLiteral(":comparator \"%1\"").arg(itemText(currentIndex()));
 }
 
 void SelectComparatorComboBox::setCode(const QString &code, const QString &name, QString &error)

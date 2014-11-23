@@ -46,7 +46,7 @@ FilterImporterBalsa::~FilterImporterBalsa()
 
 QString FilterImporterBalsa::defaultFiltersSettingsPath()
 {
-    return QString::fromLatin1("%1/.balsa/config").arg(QDir::homePath());
+    return QStringLiteral("%1/.balsa/config").arg(QDir::homePath());
 }
 
 void FilterImporterBalsa::addFilter(const KConfigGroup &grp)

@@ -71,7 +71,7 @@ QString SieveConditionExists::code(QWidget *w) const
     const QString comparaison = combo->itemData(combo->currentIndex()).toString();
 
     const SelectHeaderTypeComboBox *value = w->findChild<SelectHeaderTypeComboBox *>(QLatin1String("headervalue"));
-    return QString::fromLatin1("%1 %2").arg(comparaison).arg(value->code());
+    return QStringLiteral("%1 %2").arg(comparaison).arg(value->code());
 }
 
 QString SieveConditionExists::help() const

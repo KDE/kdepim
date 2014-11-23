@@ -58,7 +58,7 @@ FilterImporterClawsMails::~FilterImporterClawsMails()
 
 QString FilterImporterClawsMails::defaultFiltersSettingsPath()
 {
-    return QString::fromLatin1("%1/.claws-mail/matcherrc").arg(QDir::homePath());
+    return QStringLiteral("%1/.claws-mail/matcherrc").arg(QDir::homePath());
 }
 
 MailFilter *FilterImporterClawsMails::parseLine(const QString &line)
