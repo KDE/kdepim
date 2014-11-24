@@ -8,7 +8,6 @@ include_directories (
     ${CMAKE_SOURCE_DIR}/libkleo
     ${CMAKE_BINARY_DIR}/messagecomposer
     ${CMAKE_SOURCE_DIR}/messagecomposer
-    ${CMAKE_SOURCE_DIR}/messagecore/tests
     ${CMAKE_SOURCE_DIR}/templateparser
 )
 
