@@ -227,7 +227,7 @@ void AutoCorrectionTest::shouldNotReplaceUppercaseLetter()
     QCOMPARE(doc.toPlainText(), text);
 }
 
-void AutoCorrectionTest::shouldReplaceToBold()
+void AutoCorrectionTest::shouldReplaceToTextFormat()
 {
     PimCommon::AutoCorrection autocorrection;
     autocorrection.setEnabledAutoCorrection(true);
@@ -252,12 +252,24 @@ void AutoCorrectionTest::shouldReplaceToBold()
     position = text.length();
     autocorrection.autocorrect(true, doc, position);
     QCOMPARE(doc.toPlainText(), result);
+    QTextCursor cursor(&doc);
+    cursor.setPosition(2);
+    QTextCharFormat charFormat = cursor.charFormat();
+    QCOMPARE(charFormat.font().underline(), true);
+    QCOMPARE(charFormat.font().bold(), false);
+    QCOMPARE(charFormat.font().strikeOut(), false);
 
     text = QLatin1String("-foo-");
     doc.setHtml(text);
     position = text.length();
     autocorrection.autocorrect(true, doc, position);
     QCOMPARE(doc.toPlainText(), result);
+    cursor = QTextCursor(&doc);
+    cursor.setPosition(2);
+    charFormat = cursor.charFormat();
+    QCOMPARE(charFormat.font().underline(), false);
+    QCOMPARE(charFormat.font().bold(), false);
+    QCOMPARE(charFormat.font().strikeOut(), true);
 
     //Don't convert it.
     text = QLatin1String("-foo1");

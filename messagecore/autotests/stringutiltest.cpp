@@ -21,7 +21,7 @@
 #include "../utils/stringutil.h"
 
 #include "qtest.h"
-
+#include <KUrl>
 using namespace MessageCore;
 
 QTEST_MAIN(StringUtilTest)
@@ -355,5 +355,27 @@ void StringUtilTest::test_stripOffMessagePrefix()
     QBENCHMARK {
         StringUtil::stripOffPrefixes(subject);
     }
+}
+
+void StringUtilTest::test_parseMailtoUrl_data()
+{
+    QTest::addColumn<QString>( "mailToUrl" );
+    QTest::addColumn<bool>( "toIsNotEmpty" );
+    QTest::addColumn<int>( "numberOfTo" );
+
+    QTest::newRow("1 mailto") << QString::fromLatin1("mailto:foo@kde.org") << true << 1;
+    //QTest::newRow("invalid") << QString::fromLatin1("fookde.org") << false << 0;
+}
+
+void StringUtilTest::test_parseMailtoUrl()
+{
+    QFETCH( QString, mailToUrl );
+    QFETCH( bool, toIsNotEmpty );
+    QFETCH( int, numberOfTo );
+
+    KUrl url(mailToUrl);
+    QCOMPARE(!StringUtil::parseMailtoUrl(url).value(QLatin1String("to")).isEmpty(), toIsNotEmpty);
+    QCOMPARE(StringUtil::parseMailtoUrl(url).value(QLatin1String("to")).split(QLatin1String(", ")).count(), numberOfTo);
+
 }
 

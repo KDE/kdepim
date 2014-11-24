@@ -35,7 +35,7 @@ private Q_SLOTS:
     void shouldReplaceSingleQuote();
     void shouldReplaceDoubleQuote();
     void shouldNotReplaceUppercaseLetter();
-    void shouldReplaceToBold();
+    void shouldReplaceToTextFormat();
     void shouldReplaceAutoFraction();
     void shouldNotAddSpaceWhenWeAlreadyHaveASpace();
     void shouldAutocorrectWord();

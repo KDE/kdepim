@@ -31,6 +31,8 @@ private slots:
     void test_signatureStripping();
     void test_isCryptoPart();
     void test_stripOffMessagePrefix();
+    void test_parseMailtoUrl_data();
+    void test_parseMailtoUrl();
 };
 
 #endif
