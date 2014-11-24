@@ -76,7 +76,7 @@ static KUrl defaultOpenPGPService()
 
 static bool is_ldap_scheme(const KUrl &url)
 {
-    const QString scheme = url.protocol();
+    const QString scheme = url.scheme();
     return QString::compare(scheme, QLatin1String("ldap"),  Qt::CaseInsensitive) == 0
            || QString::compare(scheme, QLatin1String("ldaps"), Qt::CaseInsensitive) == 0;
 }
@@ -713,7 +713,7 @@ void DirectoryServicesWidget::Private::showHideColumns()
     assert(hv);
     // don't show 'scheme' column when only accepting X509Protocol (###?)
     hv->setSectionHidden(Model::Scheme,  protocols == X509Protocol);
-    // hide the protocol selection columns for if only one protocol is allowed anyway:
+    // hide the scheme selection columns for if only one scheme is allowed anyway:
     hv->setSectionHidden(Model::X509,    protocols != AllProtocols);
     hv->setSectionHidden(Model::OpenPGP, protocols != AllProtocols);
 }
@@ -962,7 +962,7 @@ void Model::setExclusivePgpFlag(unsigned int row)
 QString Model::toolTipForColumn(int column)
 {
     switch (column) {
-    case Scheme:   return i18n("Select the access protocol (scheme) that the "
+    case Scheme:   return i18n("Select the access scheme (scheme) that the "
                                    "directory service is available through.");
     case Host:     return i18n("Enter the name or IP address of the server "
                                    "hosting the directory service.");

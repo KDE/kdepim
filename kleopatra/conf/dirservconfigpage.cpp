@@ -108,7 +108,7 @@ public:
             const QString num = QString::number(j);
             KUrl url = *it;
 
-            Q_ASSERT(url.protocol() == "ldap");
+            Q_ASSERT(url.scheme() == "ldap");
             mConfig.writeEntry(QString("SelectedHost") + num, url.host());
             mConfig.writeEntry(QString("SelectedPort") + num, url.port());
 

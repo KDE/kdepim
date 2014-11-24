@@ -261,7 +261,7 @@ static QStringList files_from_args(const shared_ptr<const KCmdLineArgs> &args)
     QStringList result;
     for (int i = 0, end = args->count() ; i < end ; ++i) {
         const KUrl url = args->url(i);
-        if (url.protocol() == QLatin1String("file")) {
+        if (url.scheme() == QLatin1String("file")) {
             result.push_back(url.toLocalFile());
         }
     }
@@ -298,7 +298,7 @@ int KleopatraApplication::newInstance()
     }
 
     if (openpgp && cms) {
-        qDebug() << "ambigious protocol: --openpgp and --cms";
+        qDebug() << "ambigious scheme: --openpgp and --cms";
         return 1;
     }
 

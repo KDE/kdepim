@@ -516,7 +516,7 @@ static QString splitURL(int mRealArgType, const KUrl &url)
 {
     if (mRealArgType == 33) {   // LDAP server
         // The format is HOSTNAME:PORT:USERNAME:PASSWORD:BASE_DN
-        Q_ASSERT(url.protocol() == QLatin1String("ldap"));
+        Q_ASSERT(url.scheme() == QLatin1String("ldap"));
         return urlpart_encode(url.host()) + QLatin1Char(':') +
                (url.port() != -1 ? QString::number(url.port()) : QString()) + QLatin1Char(':') +     // -1 is used for default ports, omit
                urlpart_encode(url.user()) + QLatin1Char(':') +

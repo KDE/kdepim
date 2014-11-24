@@ -2190,7 +2190,7 @@ void ViewerPrivate::slotUrlOn(const QString &link, const QString &title, const Q
     // parse it correctly. To workaround that, we use QWebFrame::hitTestContent() on the mouse position
     // to get the URL before WebKit managed to mangle it.
     KUrl url(mViewer->linkOrImageUrlAt(QCursor::pos()));
-    const QString protocol = url.protocol();
+    const QString protocol = url.scheme();
     if (protocol == QLatin1String("kmail") ||
             protocol == QLatin1String("x-kmail") ||
             protocol == QLatin1String("attachment") ||
@@ -2230,7 +2230,7 @@ void ViewerPrivate::slotUrlPopup(const QUrl &aUrl, const QUrl &imageUrl, const Q
         return;
     }
 
-    if (url.protocol() == QLatin1String("mailto")) {
+    if (url.scheme() == QLatin1String("mailto")) {
         mCopyURLAction->setText(i18n("Copy Email Address"));
     } else {
         mCopyURLAction->setText(i18n("Copy Link Address"));
@@ -2841,7 +2841,7 @@ void ViewerPrivate::slotUrlCopy()
 {
 #ifndef QT_NO_CLIPBOARD
     QClipboard *clip = QApplication::clipboard();
-    if (mClickedUrl.protocol() == QLatin1String("mailto")) {
+    if (mClickedUrl.scheme() == QLatin1String("mailto")) {
         // put the url into the mouse selection and the clipboard
         const QString address = KPIMUtils::decodeMailtoUrl(mClickedUrl);
         clip->setText(address, QClipboard::Clipboard);
