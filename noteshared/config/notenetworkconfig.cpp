@@ -40,7 +40,6 @@ NoteNetworkConfigWidget::NoteNetworkConfigWidget(QWidget *parent)
     QWidget *w =  new QWidget(this);
     lay->addWidget(w);
     QVBoxLayout *layout = new QVBoxLayout(w);
-//TODO PORT QT5     layout->setSpacing( QDialog::spacingHint() );
     layout->setMargin(0);
 
     QGroupBox *incoming = new QGroupBox(i18n("Incoming Notes"));

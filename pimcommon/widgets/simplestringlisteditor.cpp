@@ -64,7 +64,6 @@ SimpleStringListEditor::SimpleStringListEditor(QWidget *parent,
 {
     setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
     QHBoxLayout *hlay = new QHBoxLayout(this);
-//TODO PORT QT5     hlay->setSpacing( QDialog::spacingHint() );
     hlay->setMargin(0);
 
     mListBox = new QListWidget(this);

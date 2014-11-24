@@ -42,8 +42,6 @@ SelectionTypeDialog::SelectionTypeDialog(QWidget *parent)
     setModal(true);
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout(mainWidget);
-//TODO PORT QT5     mainLayout->setSpacing( QDialog::spacingHint() );
-//TODO PORT QT5     mainLayout->setMargin( QDialog::marginHint() );
     mSelectionTreeWidget = new SelectionTypeTreeWidget(this);
     mainLayout->addWidget(mSelectionTreeWidget);
 

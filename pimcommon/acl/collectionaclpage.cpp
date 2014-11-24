@@ -118,7 +118,6 @@ void CollectionAclPage::init()
     QWidget *buttonBox = new QWidget;
     QVBoxLayout *buttonBoxVBoxLayout = new QVBoxLayout(buttonBox);
     buttonBoxVBoxLayout->setMargin(0);
-//TODO PORT QT5     buttonBoxVBoxLayout->setSpacing( QDialog::spacingHint() );
     layout->addWidget(buttonBox);
 
     ActionButton *button = new ActionButton(buttonBox);
