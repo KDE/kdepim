@@ -121,10 +121,10 @@ bool AttachmentModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
         //  return false;
     }
     // The dropped data is a list of URLs.
-    KUrl::List urls = KUrl::List::fromMimeData(data);
+    QList<QUrl> urls = data->urls();
     if (!urls.isEmpty()) {
         Akonadi::Item::List items;
-        foreach (const KUrl &url, urls) {
+        foreach (const QUrl &url, urls) {
             Akonadi::Item item = Akonadi::Item::fromUrl(url);
             if (item.isValid()) {
                 items << item;

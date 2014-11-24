@@ -876,7 +876,7 @@ void AttachmentControllerBase::addAttachment(AttachmentPart::Ptr part)
     emit fileAttached();
 }
 
-MessageCore::AttachmentFromUrlBaseJob *AttachmentControllerBase::createAttachmentJob(const KUrl &url)
+MessageCore::AttachmentFromUrlBaseJob *AttachmentControllerBase::createAttachmentJob(const QUrl &url)
 {
     MessageCore::AttachmentFromUrlBaseJob *ajob = 0;
     if (KMimeType::findByUrl(url)->name() == QLatin1String("inode/directory")) {
@@ -892,7 +892,7 @@ MessageCore::AttachmentFromUrlBaseJob *AttachmentControllerBase::createAttachmen
     return ajob;
 }
 
-void AttachmentControllerBase::addAttachmentUrlSync(const KUrl &url)
+void AttachmentControllerBase::addAttachmentUrlSync(const QUrl &url)
 {
     MessageCore::AttachmentFromUrlBaseJob *ajob = createAttachmentJob(url);
     if (ajob->exec()) {
@@ -905,16 +905,16 @@ void AttachmentControllerBase::addAttachmentUrlSync(const KUrl &url)
     }
 }
 
-void AttachmentControllerBase::addAttachment(const KUrl &url)
+void AttachmentControllerBase::addAttachment(const QUrl &url)
 {
     MessageCore::AttachmentFromUrlBaseJob *ajob = createAttachmentJob(url);
     connect(ajob, SIGNAL(result(KJob*)), this, SLOT(loadJobResult(KJob*)));
     ajob->start();
 }
 
-void AttachmentControllerBase::addAttachments(const KUrl::List &urls)
+void AttachmentControllerBase::addAttachments(const QList<QUrl> &urls)
 {
-    foreach (const KUrl &url, urls) {
+    foreach (const QUrl &url, urls) {
         addAttachment(url);
     }
 }

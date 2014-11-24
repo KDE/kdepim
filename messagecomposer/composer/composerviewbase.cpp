@@ -1198,14 +1198,14 @@ void MessageComposer::ComposerViewBase::slotCreateItemResult(KJob *job)
     }
 }
 
-void MessageComposer::ComposerViewBase::addAttachment(const KUrl &url, const QString &comment)
+void MessageComposer::ComposerViewBase::addAttachment(const QUrl &url, const QString &comment)
 {
     Q_UNUSED(comment);
     qDebug() << "adding attachment with url:" << url;
     m_attachmentController->addAttachment(url);
 }
 
-void MessageComposer::ComposerViewBase::addAttachmentUrlSync(const KUrl &url, const QString &comment)
+void MessageComposer::ComposerViewBase::addAttachmentUrlSync(const QUrl &url, const QString &comment)
 {
     Q_UNUSED(comment);
     qDebug() << "adding attachment with url:" << url;

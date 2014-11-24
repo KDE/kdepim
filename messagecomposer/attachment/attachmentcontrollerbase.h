@@ -78,9 +78,9 @@ public slots:
     void showAddAttachmentDialog();
     /// sets sign, encrypt, shows properties dialog if so configured
     void addAttachment(MessageCore::AttachmentPart::Ptr part);
-    void addAttachment(const KUrl &url);
-    void addAttachmentUrlSync(const KUrl &url);
-    void addAttachments(const KUrl::List &urls);
+    void addAttachment(const QUrl &url);
+    void addAttachmentUrlSync(const QUrl &url);
+    void addAttachments(const QList<QUrl> &urls);
     void showAttachPublicKeyDialog();
     virtual void attachMyPublicKey() {}
 
@@ -99,7 +99,7 @@ protected:
     void byteArrayToRemoteFile(const QByteArray &aData, const KUrl &aURL, bool overwrite = false);
     void openWith(KService::Ptr offer = KService::Ptr());
 private:
-    MessageCore::AttachmentFromUrlBaseJob *createAttachmentJob(const KUrl &url);
+    MessageCore::AttachmentFromUrlBaseJob *createAttachmentJob(const QUrl &url);
 private slots:
     void slotPutResult(KJob *job);
     void slotOpenWithDialog();

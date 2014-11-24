@@ -123,7 +123,7 @@ signals:
     void encryptEnabled(bool enabled);
     void signEnabled(bool enabled);
     void autoDisplayEnabled(bool enabled);
-    void attachUrlsRequested(const KUrl::List &urls);
+    void attachUrlsRequested(const QList<QUrl> &urls);
     void attachItemsRequester(const Akonadi::Item::List &);
     void attachmentRemoved(MessageCore::AttachmentPart::Ptr part);
     void attachmentCompressRequested(MessageCore::AttachmentPart::Ptr part, bool compress);
