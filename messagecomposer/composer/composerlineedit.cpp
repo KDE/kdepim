@@ -126,15 +126,15 @@ void ComposerLineEdit::dropEvent(QDropEvent *event)
     // Case two: The user dropped a list or Urls.
     // Iterate over that list. For mailto: Urls, just add the addressee to the list,
     // and for other Urls, download the Url and assume it points to a vCard
-    else if (KUrl::List::canDecode(md)) {
-        KUrl::List urls = KUrl::List::fromMimeData(md);
+    else if (md->hasUrls()) {
+        QList<QUrl> urls = md->urls();
         KContacts::Addressee::List list;
 
-        foreach (const KUrl &url, urls) {
+        foreach (const QUrl &url, urls) {
 
             // First, let's deal with mailto Urls. The path() part contains the
             // email-address.
-            if (url.protocol() == QLatin1String("mailto")) {
+            if (url.scheme() == QLatin1String("mailto")) {
                 KContacts::Addressee addressee;
                 addressee.insertEmail(KPIMUtils::decodeMailtoUrl(url), true /* preferred */);
                 list += addressee;

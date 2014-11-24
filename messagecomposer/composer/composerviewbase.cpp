@@ -248,7 +248,7 @@ void MessageComposer::ComposerViewBase::send(MessageComposer::MessageSender::Sen
     if (identity.attachVcard() && m_attachmentController->attachOwnVcard()) {
         const QString vcardFileName = identity.vCardFile();
         if (!vcardFileName.isEmpty()) {
-            m_attachmentController->addAttachmentUrlSync(KUrl(vcardFileName));
+            m_attachmentController->addAttachmentUrlSync(QUrl::fromLocalFile(vcardFileName));
         }
     }
     m_msg->setHeader(new KMime::Headers::Generic("X-KMail-Transport", m_msg.get(), QString::number(m_transport->currentTransportId()), "utf-8"));

@@ -204,18 +204,18 @@ KContacts::Addressee::List VCardXXPort::importContacts() const
 {
     QString fileName;
     KContacts::Addressee::List addrList;
-    KUrl::List urls;
+    QList<QUrl> urls;
 
     if (!option(QLatin1String("importData")).isEmpty()) {
         addrList = parseVCard(option(QLatin1String("importData")).toUtf8());
     } else {
         if (!option(QLatin1String("importUrl")).isEmpty()) {
-            urls.append(KUrl(option(QLatin1String("importUrl"))));
+            urls.append(QUrl::fromLocalFile(option(QLatin1String("importUrl"))));
         } else {
             const QString filter = i18n("*.vcf|vCard (*.vcf)\n*|all files (*)");
             urls =
                 KFileDialog::getOpenUrls(
-                    KUrl(),
+                    QUrl(),
                     filter,
                     parentWidget(),
                     i18nc("@title:window", "Select vCard to Import"));
@@ -230,7 +230,7 @@ KContacts::Addressee::List VCardXXPort::importContacts() const
 
         const int numberOfUrl(urls.count());
         for (int i = 0; i < numberOfUrl; ++i) {
-            const KUrl url = urls.at(i);
+            const QUrl url = urls.at(i);
 
             if (KIO::NetAccess::download(url, fileName, parentWidget())) {
 
@@ -250,7 +250,7 @@ KContacts::Addressee::List VCardXXPort::importContacts() const
                                             "<para>When trying to read the vCard, "
                                             "there was an error opening the file <filename>%1</filename>:</para>"
                                             "<para>%2</para>",
-                                            url.pathOrUrl(),
+                                            url.toDisplayString(),
                                             i18nc("QFile", file.errorString().toLatin1()));
                     KMessageBox::error(parentWidget(), msg, caption);
                     anyFailures = true;

@@ -29,7 +29,7 @@
 #include <KMime/Message>
 
 #include <QObject>
-#include <KUrl>
+#include <QUrl>
 #include <kleo/enum.h>
 
 class QTimer;
