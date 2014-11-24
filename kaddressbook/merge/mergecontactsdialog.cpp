@@ -92,7 +92,7 @@ void MergeContactsDialog::slotMergeContact(const Akonadi::Item::List &lst, const
 void MergeContactsDialog::slotMergeContactFinished(const Akonadi::Item &item)
 {
     if (!item.isValid()) {
-        KMessageBox::error(this, i18n("Error during merge contacts."), i18n("Merge contact"));
+        KMessageBox::error(this, i18n("Error while merging contacts."), i18n("Merge contact"));
     } else {
         mContactWidget->clear();
         QPointer<MergeContactShowResultDialog> dlg = new MergeContactShowResultDialog(this);

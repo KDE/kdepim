@@ -53,7 +53,7 @@ MergeContactDuplicateContactDialog::MergeContactDuplicateContactDialog(const Ako
     mNoContactSelected->setObjectName(QLatin1String("nocontactselected"));
     mStackedWidget->addWidget(mNoContactSelected);
 
-    mNoDuplicateContactFound = new QLabel(i18n("No contact duplicated found."));
+    mNoDuplicateContactFound = new QLabel(i18n("No duplicated contact found."));
     mNoDuplicateContactFound->setObjectName(QLatin1String("noduplicatecontactfound"));
     mStackedWidget->addWidget(mNoDuplicateContactFound);
 
