@@ -61,7 +61,7 @@ StyleGetter::StyleGetter(const int blogid, QObject *parent)
 //     QString blogDir = tempBlog.url().host();
 //     qDebug() << blogDir;
 //     mCachePath = KStandardDirs::locateLocal( "data", "bilbo/" + blogDir + '/' , true );
-    QString url = QString::fromLatin1("blogilo/%1/").arg(blogid);
+    QString url = QStringLiteral("blogilo/%1/").arg(blogid);
     mCachePath = KStandardDirs::locateLocal("data", url , true);
     generateRandomPostStrings();
     mParent = qobject_cast< QWidget * >(parent);
@@ -107,7 +107,7 @@ QString StyleGetter::styledHtml(const int blogid,
 //
 //     QString blogDir = tempBlog.url().host();
     //QString url = QString( "bilbo/%1/" ).arg( blogid );
-    QString url = QString::fromLatin1("blogilo/%1/").arg(blogid);
+    QString url = QStringLiteral("blogilo/%1/").arg(blogid);
     url = KStandardDirs::locateLocal("data", url , true);
     KUrl dest(url);
     dest.addPath(QLatin1String("style.html"));
@@ -130,8 +130,8 @@ QString StyleGetter::styledHtml(const int blogid,
     QRegExp typeRx(QLatin1String("(TYPE[^>]+>)"));
     buffer.remove(typeRx);
 
-    QRegExp titleRx(QString::fromLatin1("%1[\\d]*").arg(QLatin1String(POST_TITLE)));
-    QRegExp contentRx(QString::fromLatin1("%1[\\d]*").arg(QLatin1String(POST_CONTENT)));
+    QRegExp titleRx(QStringLiteral("%1[\\d]*").arg(QLatin1String(POST_TITLE)));
+    QRegExp contentRx(QStringLiteral("%1[\\d]*").arg(QLatin1String(POST_CONTENT)));
 
     buffer.replace(titleRx, title);
     buffer.replace(contentRx, content);
@@ -236,8 +236,8 @@ void StyleGetter::generateRandomPostStrings()
     qDebug();
     srand(time(0));
     int postRandomNumber = rand();
-    mPostTitle = QString::fromLatin1("%1%2").arg(QLatin1String(POST_TITLE)).arg(postRandomNumber);
-    mPostContent = QString::fromLatin1("%1%2").arg(QLatin1String(POST_CONTENT)).arg(postRandomNumber);
+    mPostTitle = QStringLiteral("%1%2").arg(QLatin1String(POST_TITLE)).arg(postRandomNumber);
+    mPostContent = QStringLiteral("%1%2").arg(QLatin1String(POST_CONTENT)).arg(postRandomNumber);
 }
 
 void StyleGetter::slotError(const QString &errMsg)

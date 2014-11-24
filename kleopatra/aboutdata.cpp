@@ -146,14 +146,14 @@ static QString gpg4win_version()
     p.setReadChannelMode(QProcess::MergedChannels);
     p.start(gpgConfPath(), QStringList(QLatin1String("--version")));
     if (!p.waitForFinished())
-        return QString::fromLatin1("%1 (%2)").arg(QLatin1String(gpg4win_version_guessed),
+        return QStringLiteral("%1 (%2)").arg(QLatin1String(gpg4win_version_guessed),
                 i18nc("Version string is a guess", "guessed"));
     const QString output = QTextStream(&p).readAll() ;
     QRegExp rx(QLatin1String("\\(Gpg4win\\s+([^\\s)]+)\\)"));
     if (rx.indexIn(output) != -1) {
         return rx.cap(1);
     } else
-        return QString::fromLatin1("%1 (%2)").arg(QLatin1String(gpg4win_version_guessed),
+        return QStringLiteral("%1 (%2)").arg(QLatin1String(gpg4win_version_guessed),
                 i18nc("Version string is a guess", "guessed"));
 }
 

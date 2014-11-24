@@ -72,7 +72,7 @@ void ComposerTableFormatDialogPrivate::applyChanges()
 {
     if (!webElement.isNull()) {
         webElement.setAttribute(QLatin1String("border"), QString::number(insertTableWidget->border()));
-        const QString width = QString::fromLatin1("%1%2").arg(insertTableWidget->length()).arg(insertTableWidget->typeOfLength() == QTextLength::PercentageLength ? QLatin1String("%") : QString());
+        const QString width = QStringLiteral("%1%2").arg(insertTableWidget->length()).arg(insertTableWidget->typeOfLength() == QTextLength::PercentageLength ? QLatin1String("%") : QString());
         webElement.setAttribute(QLatin1String("width"), width);
         if (useBackgroundColor->isChecked()) {
             const QColor col = backgroundColor->color();

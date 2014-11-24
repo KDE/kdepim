@@ -891,21 +891,21 @@ void ComposerViewPrivate::_k_slotAdjustActions()
 void ComposerViewPrivate::execCommand(const QString &cmd)
 {
     QWebFrame *frame = q->page()->mainFrame();
-    const QString js = QString::fromLatin1("document.execCommand(\"%1\", false, null)").arg(cmd);
+    const QString js = QStringLiteral("document.execCommand(\"%1\", false, null)").arg(cmd);
     frame->evaluateJavaScript(js);
 }
 
 void ComposerViewPrivate::execCommand(const QString &cmd, const QString &arg)
 {
     QWebFrame *frame = q->page()->mainFrame();
-    const QString js = QString::fromLatin1("document.execCommand(\"%1\", false, \"%2\")").arg(cmd).arg(arg);
+    const QString js = QStringLiteral("document.execCommand(\"%1\", false, \"%2\")").arg(cmd).arg(arg);
     frame->evaluateJavaScript(js);
 }
 
 bool ComposerViewPrivate::queryCommandState(const QString &cmd)
 {
     QWebFrame *frame = q->page()->mainFrame();
-    QString js = QString::fromLatin1("document.queryCommandState(\"%1\", false, null)").arg(cmd);
+    QString js = QStringLiteral("document.queryCommandState(\"%1\", false, null)").arg(cmd);
     const QVariant result = frame->evaluateJavaScript(js);
     return result.toString().simplified().toLower() == QLatin1String("true");
 }

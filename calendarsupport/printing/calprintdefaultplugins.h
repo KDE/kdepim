@@ -46,7 +46,7 @@ public:
     virtual ~CalPrintIncidence();
     virtual QString groupName()
     {
-        return QString::fromLatin1("Print incidence");
+        return QStringLiteral("Print incidence");
     }
     virtual QString description()
     {
@@ -101,7 +101,7 @@ public:
     virtual ~CalPrintDay();
     virtual QString groupName()
     {
-        return QString::fromLatin1("Print day");
+        return QStringLiteral("Print day");
     }
     virtual QString description()
     {
@@ -153,7 +153,7 @@ public:
 
     virtual QString groupName()
     {
-        return QString::fromLatin1("Print week");
+        return QStringLiteral("Print week");
     }
     virtual QString description()
     {
@@ -208,7 +208,7 @@ public:
     virtual ~CalPrintMonth();
     virtual QString groupName()
     {
-        return QString::fromLatin1("Print month");
+        return QStringLiteral("Print month");
     }
     virtual QString description()
     {
@@ -259,7 +259,7 @@ public:
 
     virtual QString groupName()
     {
-        return QString::fromLatin1("Print to-dos");
+        return QStringLiteral("Print to-dos");
     }
     virtual QString description()
     {

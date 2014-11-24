@@ -749,7 +749,7 @@ void AlarmDialog::slotSave()
     while (*it) {
         ReminderTreeItem *item = static_cast<ReminderTreeItem *>(*it);
         KConfigGroup incidenceConfig(config,
-                                     QString::fromLatin1("Incidence-%1").arg(numReminders + 1));
+                                     QStringLiteral("Incidence-%1").arg(numReminders + 1));
 
         Incidence::Ptr incidence = CalendarSupport::incidence(item->mIncidence);
         //QT5 port to QUrl incidenceConfig.writeEntry( "AkonadiUrl", item->mIncidence.url() );
