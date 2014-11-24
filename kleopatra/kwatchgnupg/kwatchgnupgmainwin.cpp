@@ -283,12 +283,10 @@ void KWatchGnuPGMainWindow::slotReadConfig()
 
 bool KWatchGnuPGMainWindow::queryClose()
 {
-#if 0 //QT5
-    if (!qApp->sessionSaving()) {
+    if (!qApp->isSavingSession()) {
         hide();
         return false;
     }
-#endif
     return KMainWindow::queryClose();
 }
 
