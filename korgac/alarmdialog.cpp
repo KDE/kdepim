@@ -752,7 +752,7 @@ void AlarmDialog::slotSave()
                                      QStringLiteral("Incidence-%1").arg(numReminders + 1));
 
         Incidence::Ptr incidence = CalendarSupport::incidence(item->mIncidence);
-        //QT5 port to QUrl incidenceConfig.writeEntry( "AkonadiUrl", item->mIncidence.url() );
+        incidenceConfig.writeEntry( "AkonadiUrl", item->mIncidence.url() );
         incidenceConfig.writeEntry("RemindAt", item->mRemindAt);
         ++numReminders;
         ++it;
@@ -1051,7 +1051,7 @@ void AlarmDialog::removeFromConfig(const QList<Akonadi::Item::Id> &ids)
         KConfigGroup incGroup(config, group);
         incGroup.writeEntry("UID", newReminders[i].uid);
         incGroup.writeEntry("RemindAt", newReminders[i].remindAt);
-        //QT5 port to QUrl incGroup.writeEntry( "AkonadiUrl", newReminders[i].akonadiUrl );
+        incGroup.writeEntry( "AkonadiUrl", newReminders[i].akonadiUrl );
         incGroup.sync();
     }
     genGroup.sync();
