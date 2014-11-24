@@ -751,7 +751,7 @@ void AttachmentControllerBase::saveAttachmentAs(AttachmentPart::Ptr part)
         pname = i18n("unnamed");
     }
 
-    KUrl url = KFileDialog::getSaveUrl(pname,
+    QUrl url = KFileDialog::getSaveUrl(pname,
                                        QString(/*filter*/), d->wParent,
                                        i18n("Save Attachment As"));
 
@@ -763,7 +763,7 @@ void AttachmentControllerBase::saveAttachmentAs(AttachmentPart::Ptr part)
     byteArrayToRemoteFile(part->data(), url);
 }
 
-void AttachmentControllerBase::byteArrayToRemoteFile(const QByteArray &aData, const KUrl &aURL, bool overwrite)
+void AttachmentControllerBase::byteArrayToRemoteFile(const QByteArray &aData, const QUrl &aURL, bool overwrite)
 {
     KIO::StoredTransferJob *job = KIO::storedPut(aData, aURL, -1, overwrite ? KIO::Overwrite : KIO::DefaultFlags);
     connect(job, &KIO::StoredTransferJob::result, this, &AttachmentControllerBase::slotPutResult);

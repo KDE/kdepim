@@ -34,7 +34,7 @@
 
 #include <kio/netaccess.h>
 #include <qmenu.h>
-#include <kurl.h>
+#include <qurl.h>
 #include <kmessagebox.h>
 #include <kcompletionbox.h>
 #include <KLocalizedString>

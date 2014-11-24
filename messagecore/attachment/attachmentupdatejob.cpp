@@ -18,7 +18,7 @@
 #include "attachmentfromurlbasejob.h"
 #include "attachmentfromurljob.h"
 #include "attachmentupdatejob.h"
-#include <KUrl>
+#include <QUrl>
 #include <KMimeType>
 #include <QDebug>
 #include <QTimer>
@@ -32,7 +32,7 @@ public:
     void doStart(); // slot
     void loadJobResult(KJob *);
 
-    MessageCore::AttachmentFromUrlBaseJob *createAttachmentJob(const KUrl &url);
+    MessageCore::AttachmentFromUrlBaseJob *createAttachmentJob(const QUrl &url);
 
     AttachmentUpdateJob *const q;
     AttachmentPart::Ptr mOriginalPart;
@@ -80,7 +80,7 @@ void AttachmentUpdateJob::Private::loadJobResult(KJob *job)
     q->emitResult(); // Success.
 }
 
-MessageCore::AttachmentFromUrlBaseJob *AttachmentUpdateJob::Private::createAttachmentJob(const KUrl &url)
+MessageCore::AttachmentFromUrlBaseJob *AttachmentUpdateJob::Private::createAttachmentJob(const QUrl &url)
 {
     MessageCore::AttachmentFromUrlBaseJob *ajob = 0;
     if (KMimeType::findByUrl(url)->name() == QLatin1String("inode/directory")) {

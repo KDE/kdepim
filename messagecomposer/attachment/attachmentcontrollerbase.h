@@ -25,7 +25,7 @@
 
 #include <QtCore/QObject>
 
-#include <KUrl>
+#include <QUrl>
 
 #include <KIdentityManagement/Identity>
 #include <messagecore/attachment/attachmentpart.h>
@@ -96,7 +96,7 @@ protected:
     void exportPublicKey(const QString &fingerprint);
     void enableAttachPublicKey(bool enable);
     void enableAttachMyPublicKey(bool enable);
-    void byteArrayToRemoteFile(const QByteArray &aData, const KUrl &aURL, bool overwrite = false);
+    void byteArrayToRemoteFile(const QByteArray &aData, const QUrl &aURL, bool overwrite = false);
     void openWith(KService::Ptr offer = KService::Ptr());
 private:
     MessageCore::AttachmentFromUrlBaseJob *createAttachmentJob(const QUrl &url);

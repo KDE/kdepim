@@ -79,7 +79,7 @@ void AttachmentJobTest::testAttachment()
 
 void AttachmentJobTest::testTextCharsetAutodetect_data()
 {
-    QTest::addColumn<KUrl>("url");
+    QTest::addColumn<QUrl>("url");
     QTest::addColumn<QByteArray>("charset");
 
     // PATH_ATTACHMENTS is defined by CMake.
@@ -92,7 +92,7 @@ void AttachmentJobTest::testTextCharsetAutodetect_data()
 
 void AttachmentJobTest::testTextCharsetAutodetect()
 {
-    QFETCH(KUrl, url);
+    QFETCH(QUrl, url);
     QFETCH(QByteArray, charset);
 
     AttachmentFromUrlJob *ljob = new AttachmentFromUrlJob(url);

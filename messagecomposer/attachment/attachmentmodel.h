@@ -24,7 +24,7 @@
 
 #include <QtCore/QAbstractItemModel>
 
-#include <KUrl>
+#include <QUrl>
 
 #include <messagecore/attachment/attachmentpart.h>
 #include <AkonadiCore/item.h>
