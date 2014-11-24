@@ -50,6 +50,7 @@
 #include <QMimeDatabase>
 #include <QMimeType>
 #include <QFileDialog>
+#include <QStatusBar>
 
 KTNEFMain::KTNEFMain(QWidget *parent)
     : KXmlGuiWindow(parent)
@@ -170,11 +171,7 @@ void KTNEFMain::slotConfigureKeys()
 
 void KTNEFMain::setupStatusbar()
 {
-//QT5
-#if 0
-    statusBar()->insertItem(i18nc("@info:status", "100 attachments found"), 0);
-    statusBar()->changeItem(i18nc("@info:status", "No file loaded"), 0);
-#endif
+    statusBar()->showMessage(i18nc("@info:status", "No file loaded"));
 }
 
 void KTNEFMain::setupTNEF()
@@ -212,8 +209,7 @@ void KTNEFMain::loadFile(const QString &filename)
         QString msg;
         msg = i18ncp("@info:status",
                      "%1 attachment found", "%1 attachments found", list.count());
-        //QT5
-        //statusBar()->changeItem( msg, 0 );
+        statusBar()->showMessage(msg);
         mView->setAttachments(list);
         enableExtractAll((list.count() > 0));
         enableSingleAction(false);
