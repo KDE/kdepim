@@ -750,8 +750,8 @@ void ViewerPrivate::attachmentOpenWith(KMime::Content *node, KService::Ptr offer
 {
     QString name = mNodeHelper->writeNodeToTempFile(node);
     QString linkName = createAtmFileLink(name);
-    KUrl::List lst;
-    KUrl url;
+    QList<QUrl> lst;
+    QUrl url;
     bool autoDelete = true;
 
     if (linkName.isEmpty()) {
