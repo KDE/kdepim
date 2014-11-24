@@ -92,7 +92,7 @@ void ExportAlarmJob::backupResources()
                         const QString filename = url.fileName();
                         const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
                         if (fileAdded) {
-                            Q_EMIT info(i18n("\"%1\" was backuped.", filename));
+                            Q_EMIT info(i18n("\"%1\" was backed up.", filename));
                         } else {
                             Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.", filename));
                         }
