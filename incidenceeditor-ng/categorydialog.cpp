@@ -51,7 +51,6 @@ CategoryWidget::CategoryWidget(CategoryConfig *cc, QWidget *parent)
 {
     QHBoxLayout *topL = new QHBoxLayout(this);
     topL->setMargin(0);
-//TODO PORT QT5   topL->setSpacing( QDialog::spacingHint() );
     mWidgets = new CategoryWidgetBase(this);
     topL->addWidget(mWidgets);
 
@@ -257,11 +256,8 @@ CategoryDialog::CategoryDialog(CategoryConfig *cc, QWidget *parent)
     QWidget *page = new QWidget;
     mainLayout->addWidget(page);
     mainLayout->addWidget(buttonBox);
-//PORTING: Verify that widget was added to mainLayout:   setMainWidget( page );
-// Add mainLayout->addWidget(page); if necessary
     QVBoxLayout *lay = new QVBoxLayout(page);
     lay->setMargin(0);
-//TODO PORT QT5   lay->setSpacing( QDialog::spacingHint() );
 
     mWidgets = new CategoryWidget(cc, this);
     mCategoryConfig = cc;

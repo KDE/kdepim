@@ -79,7 +79,6 @@ ArchiveDialog::ArchiveDialog(const Akonadi::ETMCalendar::Ptr &cal,
     mainLayout->addWidget(buttonBox);
 
     QVBoxLayout *topLayout = new QVBoxLayout(topFrame);
-    //QT5 topLayout->setSpacing( spacingHint() );
 #ifndef KDEPIM_MOBILE_UI
     QLabel *descLabel = new QLabel(topFrame);
     descLabel->setText(
@@ -188,7 +187,6 @@ ArchiveDialog::ArchiveDialog(const Akonadi::ETMCalendar::Ptr &cal,
 
     QHBoxLayout *fileLayout = new QHBoxLayout();
     fileLayout->setMargin(0);
-    //QT5 fileLayout->setSpacing( spacingHint() );
     QLabel *l = new QLabel(i18nc("@label", "Archive &file:"), topFrame);
     fileLayout->addWidget(l);
     mArchiveFile = new KUrlRequester(KCalPrefs::instance()->mArchiveFile, topFrame);

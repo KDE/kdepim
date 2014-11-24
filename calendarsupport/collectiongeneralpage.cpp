@@ -52,7 +52,6 @@ CollectionGeneralPage::CollectionGeneralPage(QWidget *parent)
 
     QHBoxLayout *hbox = new QHBoxLayout();
     topLayout->addItem(hbox);
-//TODO PORT QT5   hbox->setSpacing( QDialog::spacingHint() );
 
     QLabel *label = new QLabel(i18nc("@label:textbox Name of the folder.", "&Name:"), this);
     hbox->addWidget(label);
@@ -69,7 +68,6 @@ CollectionGeneralPage::CollectionGeneralPage(QWidget *parent)
     // should replies to mails in this folder be kept in this same folder?
     hbox = new QHBoxLayout();
     topLayout->addItem(hbox);
-//TODO PORT QT5   hbox->setSpacing( QDialog::spacingHint() );
 
     mBlockAlarmsCheckBox = new QCheckBox(i18nc("@option:check", "Block reminders locally"), this);
     mBlockAlarmsCheckBox->setToolTip(
@@ -84,7 +82,6 @@ CollectionGeneralPage::CollectionGeneralPage(QWidget *parent)
 #ifndef KDEPIM_MOBILE_UI
     hbox = new QHBoxLayout();
     topLayout->addItem(hbox);
-//TODO PORT QT5   hbox->setSpacing( QDialog::spacingHint() );
     mIconCheckBox = new QCheckBox(i18nc("@option:check", "&Use custom icon:"), this);
     mIconCheckBox->setToolTip(
         i18nc("@info:tooltip", "Set a custom icon"));

@@ -521,8 +521,6 @@ VCardViewerDialog::VCardViewerDialog(const KContacts::Addressee::List &list, QWi
     mainLayout->addWidget(buttonBox);
 
     QVBoxLayout *layout = new QVBoxLayout(page);
-    //QT5 layout->setSpacing( spacingHint() );
-    //QT5 layout->setMargin( marginHint() );
 
     QLabel *label =
         new QLabel(
@@ -648,8 +646,6 @@ VCardExportSelectionDialog::VCardExportSelectionDialog(QWidget *parent)
     mainLayout->addWidget(buttonBox);
 
     QGridLayout *layout = new QGridLayout(page);
-    //QT5 layout->setSpacing( spacingHint() );
-    //QT5 layout->setMargin( marginHint() );
 
     QGroupBox *gbox = new QGroupBox(
         i18nc("@title:group", "Fields to be exported"), page);

@@ -51,8 +51,6 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
     setLayout(vlay);
 
     QHBoxLayout *mainLayout = new QHBoxLayout(mainWidget);
-//TODO PORT QT5     mainLayout->setSpacing( QDialog::spacingHint() );
-//TODO PORT QT5     mainLayout->setMargin( QDialog::marginHint() );
     mWidget = new ArchiveMailWidget(this);
     connect(mWidget, &ArchiveMailWidget::archiveNow, this, &ArchiveMailDialog::archiveNow);
     mWidget->setObjectName(QLatin1String("archivemailwidget"));

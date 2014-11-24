@@ -265,8 +265,6 @@ DetailledPrintStyle::DetailledPrintStyle(PrintingWizard *parent)
     mPageAppearance->kcbHeaderTextColor->
     setColor(config.readEntry(ContactHeaderForeColor, QColor(Qt::white)));
 
-//TODO PORT QT5     mPageAppearance->layout()->setMargin( QDialog::marginHint() );
-//TODO PORT QT5     mPageAppearance->layout()->setSpacing( QDialog::spacingHint() );
 }
 
 DetailledPrintStyle::~DetailledPrintStyle()

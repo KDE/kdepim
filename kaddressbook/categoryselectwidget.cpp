@@ -108,8 +108,6 @@ void CategorySelectWidgetPrivate::init()
     updateTimer->setInterval(200);
     connect(updateTimer, &QTimer::timeout, this, &CategorySelectWidgetPrivate::slotCheckedItemsTimer);
 
-    //PORT QT5 hbox->addSpacing(KDialog::spacingHint());
-
     QToolButton *but = new QToolButton(q);
     but ->setAutoRaise(true);
     but->setIcon(QIcon::fromTheme(QLatin1String("edit-undo")));

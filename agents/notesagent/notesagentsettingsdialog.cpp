@@ -55,8 +55,6 @@ NotesAgentSettingsDialog::NotesAgentSettingsDialog(QWidget *parent)
     setModal(true);
     QWidget *mainWidget = new QWidget(this);
     QHBoxLayout *lay = new QHBoxLayout(mainWidget);
-//TODO PORT QT5     mainLayout->setSpacing( QDialog::spacingHint() );
-//TODO PORT QT5     mainLayout->setMargin( QDialog::marginHint() );
 
     QTabWidget *tab = new QTabWidget;
     lay->addWidget(tab);
