@@ -17,7 +17,7 @@
 #include "attachmentupdatejobtest.h"
 #include <messagecore/attachment/attachmentupdatejob.h>
 #include <messagecore/attachment/attachmentpart.h>
-#include <qtest_kde.h>
+#include <qtest.h>
 #include "qtest_messagecore.h"
 
 #define PATH_ATTACHMENTS QLatin1String( KDESRCDIR "/attachments/" )
@@ -193,4 +193,4 @@ void AttachmentUpdateJobTest::shouldNotUpdateWhenUrlIsEmpty()
     QVERIFY(!job->updatedPart());
 }
 
-QTEST_KDEMAIN(AttachmentUpdateJobTest, NoGUI)
+QTEST_MAIN(AttachmentUpdateJobTest)
