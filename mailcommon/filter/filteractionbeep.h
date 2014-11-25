@@ -30,9 +30,9 @@ class FilterActionBeep : public FilterActionWithNone
     Q_OBJECT
 public:
     explicit FilterActionBeep(QObject *parent = 0);
-    ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
+    ReturnCode process(ItemContext &context, bool applyOnOutbound) const Q_DECL_OVERRIDE;
     static FilterAction *newAction();
-    SearchRule::RequiredPart requiredPart() const;
+    SearchRule::RequiredPart requiredPart() const Q_DECL_OVERRIDE;
 };
 
 }

@@ -83,7 +83,7 @@ protected:
     void connectSingleItem();
     void activateSingleItemMode();
 
-    virtual bool eventFilter(QObject *, QEvent *);
+    bool eventFilter(QObject *, QEvent *) Q_DECL_OVERRIDE;
 
 private:
     unsigned int mShowTypeProgressItem;

@@ -44,7 +44,7 @@ public:
     void setRemoteContent(bool b);
     void setContact(const Akonadi::Item &contact);
 
-    virtual void start();
+    void start() Q_DECL_OVERRIDE;
 
 private:
     //@cond PRIVATE

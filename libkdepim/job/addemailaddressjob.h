@@ -61,7 +61,7 @@ public:
     /**
      * Starts the job.
      */
-    virtual void start();
+    void start() Q_DECL_OVERRIDE;
 
     /**
      * Returns the item that represents the new contact.

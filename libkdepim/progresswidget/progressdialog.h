@@ -61,8 +61,8 @@ public:
     virtual ~TransactionItemView() {}
     TransactionItem *addTransactionItem(ProgressItem *item, bool first);
 
-    QSize sizeHint() const;
-    QSize minimumSizeHint() const;
+    QSize sizeHint() const Q_DECL_OVERRIDE;
+    QSize minimumSizeHint() const Q_DECL_OVERRIDE;
 
 public Q_SLOTS:
     void slotLayoutFirstItem();

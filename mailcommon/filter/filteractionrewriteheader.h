@@ -36,17 +36,17 @@ class FilterActionRewriteHeader: public FilterActionWithStringList
     Q_OBJECT
 public:
     explicit FilterActionRewriteHeader(QObject *parent = 0);
-    ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
-    SearchRule::RequiredPart requiredPart() const;
-    QWidget *createParamWidget(QWidget *parent) const;
-    void setParamWidgetValue(QWidget *paramWidget) const;
-    void applyParamWidgetValue(QWidget *paramWidget);
-    void clearParamWidget(QWidget *paramWidget) const;
+    ReturnCode process(ItemContext &context, bool applyOnOutbound) const Q_DECL_OVERRIDE;
+    SearchRule::RequiredPart requiredPart() const Q_DECL_OVERRIDE;
+    QWidget *createParamWidget(QWidget *parent) const Q_DECL_OVERRIDE;
+    void setParamWidgetValue(QWidget *paramWidget) const Q_DECL_OVERRIDE;
+    void applyParamWidgetValue(QWidget *paramWidget) Q_DECL_OVERRIDE;
+    void clearParamWidget(QWidget *paramWidget) const Q_DECL_OVERRIDE;
 
-    QString argsAsString() const;
-    void argsFromString(const QString &argsStr);
+    QString argsAsString() const Q_DECL_OVERRIDE;
+    void argsFromString(const QString &argsStr) Q_DECL_OVERRIDE;
 
-    QString displayString() const;
+    QString displayString() const Q_DECL_OVERRIDE;
 
     static FilterAction *newAction();
 

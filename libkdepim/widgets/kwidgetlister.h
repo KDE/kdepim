@@ -66,16 +66,6 @@ class KDEPIM_EXPORT KWidgetLister : public QWidget
     Q_OBJECT
 
 public:
-    //TODO KDE5 merge two constructors
-    /**
-     * Creates a new widget lister.
-     *
-     * @param minWidgets The minimum number of widgets to stay on the screen.
-     * @param maxWidgets The maximum number of widgets to stay on the screen.
-     * @param parent The parent widget.
-     */
-    explicit KWidgetLister(int minWidgets = 1, int maxWidgets = 8, QWidget *parent = 0);
-
     /**
      * Creates a new widget lister.
      * @param fewerMoreButton Add or Not fewerMoreButton

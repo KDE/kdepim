@@ -33,11 +33,11 @@ class FilterActionDelete : public FilterActionWithNone
     Q_OBJECT
 public:
     explicit FilterActionDelete(QObject *parent = 0);
-    ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
-    SearchRule::RequiredPart requiredPart() const;
+    ReturnCode process(ItemContext &context, bool applyOnOutbound) const Q_DECL_OVERRIDE;
+    SearchRule::RequiredPart requiredPart() const Q_DECL_OVERRIDE;
     static FilterAction *newAction();
-    QWidget *createParamWidget(QWidget *parent) const;
-    QString sieveCode() const;
+    QWidget *createParamWidget(QWidget *parent) const Q_DECL_OVERRIDE;
+    QString sieveCode() const Q_DECL_OVERRIDE;
 };
 
 }

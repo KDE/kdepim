@@ -34,16 +34,16 @@ class FilterActionSendFakeDisposition: public FilterActionWithStringList
     Q_OBJECT
 public:
     explicit FilterActionSendFakeDisposition(QObject *parent = 0);
-    ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
-    SearchRule::RequiredPart requiredPart() const;
+    ReturnCode process(ItemContext &context, bool applyOnOutbound) const Q_DECL_OVERRIDE;
+    SearchRule::RequiredPart requiredPart() const Q_DECL_OVERRIDE;
 
     static FilterAction *newAction();
 
     bool isEmpty() const;
 
-    void argsFromString(const QString &argsStr);
-    QString argsAsString() const;
-    QString displayString() const;
+    void argsFromString(const QString &argsStr) Q_DECL_OVERRIDE;
+    QString argsAsString() const Q_DECL_OVERRIDE;
+    QString displayString() const Q_DECL_OVERRIDE;
 };
 
 }

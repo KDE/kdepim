@@ -29,11 +29,11 @@ class FilterActionStatus : public FilterActionWithStringList
     Q_OBJECT
 public:
     FilterActionStatus(const QString &name, const QString &label, QObject *parent = 0);
-    SearchRule::RequiredPart requiredPart() const;
-    bool isEmpty() const;
-    void argsFromString(const QString &argsStr);
-    QString argsAsString() const;
-    QString displayString() const;
+    SearchRule::RequiredPart requiredPart() const Q_DECL_OVERRIDE;
+    bool isEmpty() const Q_DECL_OVERRIDE;
+    void argsFromString(const QString &argsStr) Q_DECL_OVERRIDE;
+    QString argsAsString() const Q_DECL_OVERRIDE;
+    QString displayString() const Q_DECL_OVERRIDE;
 
     static QString realStatusString(const QString &statusStr);
 

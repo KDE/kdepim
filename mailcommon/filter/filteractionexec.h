@@ -34,8 +34,8 @@ class FilterActionExec : public FilterActionWithCommand
     Q_OBJECT
 public:
     explicit FilterActionExec(QObject *parent = 0);
-    ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
-    SearchRule::RequiredPart requiredPart() const;
+    ReturnCode process(ItemContext &context, bool applyOnOutbound) const Q_DECL_OVERRIDE;
+    SearchRule::RequiredPart requiredPart() const Q_DECL_OVERRIDE;
     static FilterAction *newAction();
 };
 

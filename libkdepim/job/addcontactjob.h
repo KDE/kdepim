@@ -77,7 +77,7 @@ public:
     /**
      * Starts the job.
      */
-    virtual void start();
+    void start() Q_DECL_OVERRIDE;
 
     void showMessageBox(bool b);
 

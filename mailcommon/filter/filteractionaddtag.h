@@ -39,22 +39,22 @@ class FilterActionAddTag: public FilterAction
     Q_OBJECT
 public:
     explicit FilterActionAddTag(QObject *parent = 0);
-    ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
-    SearchRule::RequiredPart requiredPart() const;
+    ReturnCode process(ItemContext &context, bool applyOnOutbound) const Q_DECL_OVERRIDE;
+    SearchRule::RequiredPart requiredPart() const Q_DECL_OVERRIDE;
 
     static FilterAction *newAction();
 
-    bool isEmpty() const;
+    bool isEmpty() const Q_DECL_OVERRIDE;
 
-    void argsFromString(const QString &argsStr);
-    QString argsAsString() const;
-    QString displayString() const;
-    bool argsFromStringInteractive(const QString &argsStr, const QString &filterName);
+    void argsFromString(const QString &argsStr) Q_DECL_OVERRIDE;
+    QString argsAsString() const Q_DECL_OVERRIDE;
+    QString displayString() const Q_DECL_OVERRIDE;
+    bool argsFromStringInteractive(const QString &argsStr, const QString &filterName) Q_DECL_OVERRIDE;
 
-    QWidget *createParamWidget(QWidget *parent) const;
-    void applyParamWidgetValue(QWidget *paramWidget);
-    void setParamWidgetValue(QWidget *paramWidget) const;
-    void clearParamWidget(QWidget *paramWidget) const;
+    QWidget *createParamWidget(QWidget *parent) const Q_DECL_OVERRIDE;
+    void applyParamWidgetValue(QWidget *paramWidget) Q_DECL_OVERRIDE;
+    void setParamWidgetValue(QWidget *paramWidget) const Q_DECL_OVERRIDE;
+    void clearParamWidget(QWidget *paramWidget) const Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void slotTagListingFinished();

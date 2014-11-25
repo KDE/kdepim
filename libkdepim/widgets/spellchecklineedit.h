@@ -57,10 +57,10 @@ public:
 protected:
     void createHighlighter();
 
-    QSize sizeHint() const;
-    QSize minimumSizeHint() const;
-    void keyPressEvent(QKeyEvent *);
-    void insertFromMimeData(const QMimeData *source);
+    QSize sizeHint() const Q_DECL_OVERRIDE;
+    QSize minimumSizeHint() const Q_DECL_OVERRIDE;
+    void keyPressEvent(QKeyEvent *) Q_DECL_OVERRIDE;
+    void insertFromMimeData(const QMimeData *source) Q_DECL_OVERRIDE;
 
 protected Q_SLOTS:
     void insertLanguageMenu(QMenu *contextMenu);

@@ -99,14 +99,6 @@ KWidgetLister::KWidgetLister(bool fewerMoreButton, int minWidgets, int maxWidget
     init(fewerMoreButton);
 }
 
-KWidgetLister::KWidgetLister(int minWidgets, int maxWidgets, QWidget *parent)
-    : QWidget(parent), d(new Private(this))
-{
-    d->mMinWidgets = qMax(minWidgets, 1);
-    d->mMaxWidgets = qMax(maxWidgets, d->mMinWidgets + 1);
-    init();
-}
-
 KWidgetLister::~KWidgetLister()
 {
     delete d;

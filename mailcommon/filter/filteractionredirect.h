@@ -34,10 +34,10 @@ class FilterActionRedirect: public FilterActionWithAddress
     Q_OBJECT
 public:
     explicit FilterActionRedirect(QObject *parent = 0);
-    ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
-    SearchRule::RequiredPart requiredPart() const;
+    ReturnCode process(ItemContext &context, bool applyOnOutbound) const Q_DECL_OVERRIDE;
+    SearchRule::RequiredPart requiredPart() const Q_DECL_OVERRIDE;
     static FilterAction *newAction();
-    QString sieveCode() const;
+    QString sieveCode() const Q_DECL_OVERRIDE;
 };
 
 }

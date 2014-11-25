@@ -34,12 +34,12 @@ class FilterActionRemoveHeader: public FilterActionWithStringList
     Q_OBJECT
 public:
     explicit FilterActionRemoveHeader(QObject *parent = 0);
-    ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
-    SearchRule::RequiredPart requiredPart() const;
-    QWidget *createParamWidget(QWidget *parent) const;
-    void setParamWidgetValue(QWidget *paramWidget) const;
-    QStringList sieveRequires() const;
-    QString sieveCode() const;
+    ReturnCode process(ItemContext &context, bool applyOnOutbound) const Q_DECL_OVERRIDE;
+    SearchRule::RequiredPart requiredPart() const Q_DECL_OVERRIDE;
+    QWidget *createParamWidget(QWidget *parent) const Q_DECL_OVERRIDE;
+    void setParamWidgetValue(QWidget *paramWidget) const Q_DECL_OVERRIDE;
+    QStringList sieveRequires() const Q_DECL_OVERRIDE;
+    QString sieveCode() const Q_DECL_OVERRIDE;
 
     static FilterAction *newAction();
 };

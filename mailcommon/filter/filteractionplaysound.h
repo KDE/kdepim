@@ -40,10 +40,10 @@ class FilterActionPlaySound : public FilterActionWithTest
 public:
     FilterActionPlaySound();
     ~FilterActionPlaySound();
-    ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
-    SearchRule::RequiredPart requiredPart() const;
+    ReturnCode process(ItemContext &context, bool applyOnOutbound) const Q_DECL_OVERRIDE;
+    SearchRule::RequiredPart requiredPart() const Q_DECL_OVERRIDE;
     static FilterAction *newAction();
-    bool argsFromStringInteractive(const QString &argsStr, const QString &filterName);
+    bool argsFromStringInteractive(const QString &argsStr, const QString &filterName) Q_DECL_OVERRIDE;
 
 private:
     mutable Phonon::MediaObject *mPlayer;

@@ -34,12 +34,12 @@ class FilterActionMove: public FilterActionWithFolder
     Q_OBJECT
 public:
     explicit FilterActionMove(QObject *parent = 0);
-    ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
+    ReturnCode process(ItemContext &context, bool applyOnOutbound) const Q_DECL_OVERRIDE;
     bool requiresBody() const;
-    SearchRule::RequiredPart requiredPart() const;
+    SearchRule::RequiredPart requiredPart() const Q_DECL_OVERRIDE;
     static FilterAction *newAction();
-    QString sieveCode() const;
-    QStringList sieveRequires() const;
+    QString sieveCode() const Q_DECL_OVERRIDE;
+    QStringList sieveRequires() const Q_DECL_OVERRIDE;
 
 };
 

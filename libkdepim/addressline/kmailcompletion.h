@@ -55,7 +55,7 @@ public:
      *
      * @returns email address
      */
-    QString makeCompletion(const QString &string);
+    QString makeCompletion(const QString &string) Q_DECL_OVERRIDE;
 
     /**
      * specify keywords for email.
@@ -72,7 +72,7 @@ public:
      * use internal map to replace all keywords in pMatches with corresponding
      * email addresses.
      */
-    virtual void postProcessMatches(QStringList *pMatches) const;
+    void postProcessMatches(QStringList *pMatches) const Q_DECL_OVERRIDE;
 
     // We are not using allWeightedMatches() anywhere, therefore we don't need
     // to override the other postProcessMatches() function
