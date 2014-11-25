@@ -457,8 +457,8 @@ bool DBMan::removeBlog(int blog_id)
         qDebug() << q.lastError().text();
         return res;
     }
-    QString path = KStandardDirs::locateLocal("data", QString::fromLatin1("blogilo/%1/").arg(blog_id) , false);
-    KIO::del(KUrl(path), KIO::HideProgressInfo);
+    const QString path = KStandardDirs::locateLocal("data", QString::fromLatin1("blogilo/%1/").arg(blog_id) , false);
+    KIO::del(QUrl::fromLocalFile(path), KIO::HideProgressInfo);
     reloadBlogList();
     return res;
 }
