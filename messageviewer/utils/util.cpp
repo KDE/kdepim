@@ -484,7 +484,7 @@ bool Util::saveMessageInMbox(const QList<Akonadi::Item> &retrievedMsgs, QWidget 
         dlg->setConfirmOverwrite(true);
     }
     if (dlg->exec()) {
-        KUrl url = dlg->selectedUrl();
+        QUrl url = dlg->selectedUrl();
         if (url.isEmpty()) {
             delete dlg;
             return true;
