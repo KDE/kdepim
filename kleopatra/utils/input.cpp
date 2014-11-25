@@ -85,7 +85,6 @@ namespace {
                 m_errorString = doErrorString();
             return m_errorString;
         }
-
     private:
         virtual QString doErrorString() const {
             if ( const shared_ptr<QIODevice> io = ioDevice() )
@@ -122,6 +121,7 @@ namespace {
         /* reimp */ unsigned int classification() const { return 0U; } // plain text
         /* reimp */ unsigned long long size() const { return 0; }
         /* reimp */ QString label() const;
+        /* reimp */ bool failed() const;
 
     private:
         /* reimp */ QString doErrorString() const;
@@ -309,6 +309,13 @@ QString ProcessStdOutInput::label() const {
         return i18nc( "e.g. \"Output of tar xf - file1 ...\"", "Output of %1 ...", cmdline );
     else
         return i18nc( "e.g. \"Output of tar xf - file\"",      "Output of %1",     cmdline );
+}
+
+bool ProcessStdOutInput::failed() const {
+    kleo_assert( m_proc );
+    if ( m_proc->exitStatus() == QProcess::NormalExit && m_proc->exitCode() == 0 )
+        return false;
+    return true;
 }
 
 QString ProcessStdOutInput::doErrorString() const {

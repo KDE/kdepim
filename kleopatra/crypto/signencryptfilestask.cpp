@@ -498,13 +498,8 @@ void SignEncryptFilesTask::Private::slotResult( const SigningResult & result ) {
     bool outputCreated = false;
     if ( result.error().code() ) {
         output->cancel();
-    } else if ( input && !input->errorString().isEmpty() ) {
-        /* Sign encrypt on an empty input is completly ok
-         * so we don't get a job error in that case.
-         * But as the input might be a pre processing command
-         * like gpgtar the input can fail leading to an empty output.
-         * With removeInput set to true there is the possibility of
-         * data loss in that case. */
+    } else if ( input->failed() ) {
+        output->cancel();
         q->emitResult( makeErrorResult( Error::fromCode( GPG_ERR_EIO ),
                                         i18n( "Input error: %1", escape( input->errorString() ) ),
                                         auditLog ) );
@@ -536,7 +531,7 @@ void SignEncryptFilesTask::Private::slotResult( const SigningResult & sresult, c
     bool outputCreated = false;
     if ( sresult.error().code() || eresult.error().code() ) {
         output->cancel();
-    } else if ( input && !input->errorString().isEmpty() ) {
+    } else if ( input->failed() ) {
         output->cancel();
         q->emitResult( makeErrorResult( Error::fromCode( GPG_ERR_EIO ),
                                         i18n( "Input error: %1", escape( input->errorString() ) ),
@@ -569,7 +564,7 @@ void SignEncryptFilesTask::Private::slotResult( const EncryptionResult & result 
     bool outputCreated = false;
     if ( result.error().code() ) {
         output->cancel();
-    } else if ( input && !input->errorString().isEmpty() ) {
+    } else if ( input->failed() ) {
         output->cancel();
         q->emitResult( makeErrorResult( Error::fromCode( GPG_ERR_EIO ),
                                         i18n( "Input error: %1", escape( input->errorString() ) ),

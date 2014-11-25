@@ -56,6 +56,8 @@ namespace Kleo {
         virtual unsigned int classification() const = 0;
         virtual unsigned long long size() const = 0;
         virtual QString errorString() const = 0;
+        /** Whether or not the input failed. */
+        virtual bool failed() const { return false; }
         void finalize(); // equivalent to ioDevice()->close();
 
         static boost::shared_ptr<Input> createFromPipeDevice( assuan_fd_t fd, const QString & label );
