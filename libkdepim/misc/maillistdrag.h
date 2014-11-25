@@ -86,15 +86,11 @@ public:
     /** Date the message was sent */
     time_t date() const;
 
-    //KDE_DUMMY_COMPARISON_OPERATOR(MailSummary)
 private:
     quint32 mSerialNumber;
     QString mMessageId, mSubject, mFrom, mTo;
     time_t mDate;
 };
-#ifdef MAKE_KDEPIM_LIBS
-//KDE_DUMMY_QHASH_FUNCTION(MailSummary)
-#endif
 
 /**
   Object for the drag object to call-back for message fulltext.
@@ -120,56 +116,6 @@ public:
     static QByteArray serialsFromMimeData(const QMimeData *md);
     static MailList decode(const QByteArray &payload);
     void populateMimeData(QMimeData *md);
-};
-
-/**
- * This special QMimeData has the ability to be associated with a MailTextSource.
- * This automatically adds another mimetype, "message/rfc822", which has the
- * text of all mails as data.
- * The class is needed because the new mimetype is only read on-demand when
- * dropped, so no unnecessary mail copying is done when doing drag & drop
- * inside of KMail.
- *
- * For this to work, MailList::populateMimeData() needs to be called for the
- * drag object so the mimedata for the MailSummarys is available, which is needed
- * to read the serial numbers of the mails.
- *
- * You only need to use this class when starting a drag with mails.
- */
-class KDEPIM_EXPORT MailListMimeData : public QMimeData
-{
-public:
-
-    /**
-     * @param src The callback class for getting the full text of the mail.
-     *            If not set, the message/rfc822 mimetype is not available.
-     *            This object takes ownership of src and deletes it in the
-     *            destructor.
-     */
-    explicit MailListMimeData(MailTextSource *src = 0);
-
-    ~MailListMimeData();
-
-protected:
-
-    /**
-     * Reimplemented so that the message/rfc822 mimetype data can be retrieved
-     * from mMailTextSource.
-     */
-    virtual QVariant retrieveData(const QString &mimeType,
-                                  QVariant::Type type) const;
-
-    virtual bool hasFormat(const QString &mimeType) const;
-
-    virtual QStringList formats() const;
-
-private:
-
-    MailTextSource *mMailTextSource;
-
-    // Acts as a cache for the mail text because retrieveData() can be called
-    // multiple times.
-    mutable QByteArray mMails;
 };
 
 } // namespace KPIM
