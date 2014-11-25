@@ -325,7 +325,7 @@ QString FolderCollection::mailingListPostAddress() const
         QList<QUrl>::const_iterator end(post.constEnd());
         for (QList<QUrl>::const_iterator it = post.constBegin(); it != end; ++it) {
             // We check for isEmpty because before 3.3 postAddress was just an
-            // email@kde.org and that leaves protocol() field in the kurl class
+            // email@kde.org and that leaves protocol() field in the qurl class
             const QString protocol = (*it).scheme();
             if (protocol == QLatin1String("mailto") || protocol.isEmpty()) {
                 return (*it).path();

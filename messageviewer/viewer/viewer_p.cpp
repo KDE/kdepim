@@ -3094,7 +3094,7 @@ void ViewerPrivate::slotAtmDecryptWithChiasmusResult(const GpgME::Error &err, co
         return;
     }
 
-    const KUrl url = KFileDialog::getSaveUrl(chomp(mCurrentFileName, QLatin1String(".xia"), false), QString(), mMainWindow);
+    const QUrl url = KFileDialog::getSaveUrl(chomp(mCurrentFileName, QLatin1String(".xia"), false), QString(), mMainWindow);
     if (url.isEmpty()) {
         return;
     }
