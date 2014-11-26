@@ -19,6 +19,7 @@ add_messagecore_test( attachmentfrommimecontentjobtest.cpp )
 add_messagecore_test( attachmentfromurljobtest.cpp )
 add_messagecore_test( attachmentparttest.cpp )
 add_messagecore_test( attachmentpropertiesdialogtest.cpp )
+add_messagecore_test( attachmentupdatejobtest.cpp )
 
 # Other tests
 add_messagecore_test( stringutiltest.cpp )

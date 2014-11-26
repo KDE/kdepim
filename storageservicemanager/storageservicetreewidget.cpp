@@ -34,7 +34,6 @@
 
 #include <QPainter>
 #include <QHeaderView>
-#include <QTimer>
 #include <QPointer>
 
 StorageServiceTreeWidget::StorageServiceTreeWidget(PimCommon::StorageServiceAbstract *storageService, QWidget *parent)

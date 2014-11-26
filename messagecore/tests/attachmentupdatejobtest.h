@@ -15,34 +15,26 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef AUTOCORRECTIONTEST_H
-#define AUTOCORRECTIONTEST_H
+#ifndef ATTACHMENTUPDATEJOBTEST_H
+#define ATTACHMENTUPDATEJOBTEST_H
 
 #include <QObject>
-#include <KSharedConfig>
-class AutoCorrectionTest : public QObject
+
+class AttachmentUpdateJobTest : public QObject
 {
     Q_OBJECT
 public:
-    AutoCorrectionTest();
-    ~AutoCorrectionTest();
+    explicit AttachmentUpdateJobTest(QObject *parent=0);
+    ~AttachmentUpdateJobTest();
 
 private Q_SLOTS:
     void shouldHaveDefaultValue();
-    void shouldRestoreValue();
-    void shouldUpperCaseFirstCharOfSentence();
-    void shouldFixTwoUpperCaseChars();
-    void shouldReplaceSingleQuote();
-    void shouldReplaceDoubleQuote();
-    void shouldNotReplaceUppercaseLetter();
-    void shouldReplaceToTextFormat();
-    void shouldReplaceAutoFraction();
-    void shouldNotAddSpaceWhenWeAlreadyHaveASpace();
-    void shouldAutocorrectWord();
-    void shouldNotUpperCaseFirstCharOfSentence();
-
-private:
-    KSharedConfig::Ptr mConfig;
+    void shouldUpdateAttachment();
+    void shouldHaveSameNameDescriptionAfterUpdate();
+    void shouldHaveSameCryptoSignStatusAfterUpdate();
+    void shouldHaveSameEncodingAfterUpdate();
+    void shouldHaveSameMimetypeAfterUpdate();
+    void shouldNotUpdateWhenUrlIsEmpty();
 };
 
-#endif // AUTOCORRECTIONTEST_H
+#endif // ATTACHMENTUPDATEJOBTEST_H

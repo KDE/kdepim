@@ -40,7 +40,10 @@ class MESSAGEVIEWER_EXPORT EditorWatcher : public QObject
 {
     Q_OBJECT
 public:
-
+    enum OpenWithOption {
+        OpenWithDialog,
+        NoOpenWithDialog
+    };
     /**
      * Constructs an EditorWatcher.
      * @param parent the parent object of this EditorWatcher, which will take care of deleting
@@ -48,7 +51,7 @@ public:
      * @param parentWidget the parent widget of this EditorWatcher, which will be used as the parent
      *                     widget for message dialogs.
      */
-    EditorWatcher( const KUrl &url, const QString &mimeType, bool openWith,
+    EditorWatcher( const KUrl &url, const QString &mimeType, OpenWithOption option,
                    QObject *parent, QWidget *parentWidget );
 
     bool start();
@@ -74,7 +77,7 @@ private:
     KProcess *mEditor;
     QWidget *mParentWidget;
 
-    bool mOpenWith;
+    OpenWithOption mOpenWithOption;
     bool mHaveInotify;
     bool mFileOpen;
     bool mEditorRunning;

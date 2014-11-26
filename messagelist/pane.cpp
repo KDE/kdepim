@@ -1054,40 +1054,47 @@ void Pane::writeConfig(bool restoreSession)
 
 void Pane::readConfig(bool restoreSession)
 {
-    if(restoreSession && MessageList::Core::Settings::self()->config()->hasGroup(QLatin1String("MessageListPane"))) {
+    if(MessageList::Core::Settings::self()->config()->hasGroup(QLatin1String("MessageListPane"))) {
         KConfigGroup conf( MessageList::Core::Settings::self()->config(),"MessageListPane");
         const int numberOfTab = conf.readEntry(QLatin1String("tabNumber"),0);
         if(numberOfTab == 0) {
             createNewTab();
         } else {
             for(int i = 0; i<numberOfTab; ++i) {
-                KConfigGroup grp(MessageList::Core::Settings::self()->config(),QString::fromLatin1("MessageListTab%1").arg(i));
-                QItemSelectionModel *selectionModel = createNewTab();
-#if 0
-                Akonadi::Collection::Id id = grp.readEntry(QLatin1String("collectionId"),-1);
-                ETMViewStateSaver *saver = new ETMViewStateSaver;
-                saver->setSelectionModel(selectionModel);
-
-                if(id != -1) {
+                createNewTab();
+                restoreHeaderSettings(i);
+                if (restoreSession) {
+#if 0 //TODO fix me
+                    Akonadi::Collection::Id id = grp.readEntry(QLatin1String("collectionId"),-1);
                     ETMViewStateSaver *saver = new ETMViewStateSaver;
                     saver->setSelectionModel(selectionModel);
-                    saver->restoreState( grp );
-                    saver->selectCollections(Akonadi::Collection::List()<<Akonadi::Collection(id));
-                    saver->restoreCurrentItem( QString::fromLatin1("c%1").arg(id) );
-                }
-#else
-                Q_UNUSED( selectionModel );
+
+                    if(id != -1) {
+                        ETMViewStateSaver *saver = new ETMViewStateSaver;
+                        saver->setSelectionModel(selectionModel);
+                        saver->restoreState( grp );
+                        saver->selectCollections(Akonadi::Collection::List()<<Akonadi::Collection(id));
+                        saver->restoreCurrentItem( QString::fromLatin1("c%1").arg(id) );
+                    }
 #endif
-                Widget *w = qobject_cast<Widget *>( widget( i ) );
-                w->view()->header()->restoreState(grp.readEntry(QLatin1String("HeaderState"),QByteArray()));
+                }
             }
             setCurrentIndex(conf.readEntry(QLatin1String("currentIndex"),0));
         }
     } else {
         createNewTab();
+        restoreHeaderSettings(0);
     }
 }
 
+void Pane::restoreHeaderSettings(int index)
+{
+    KConfigGroup grp(MessageList::Core::Settings::self()->config(),QString::fromLatin1("MessageListTab%1").arg(index));
+    if (grp.exists()) {
+        Widget *w = qobject_cast<Widget *>( widget( index ) );
+        w->view()->header()->restoreState(grp.readEntry(QLatin1String("HeaderState"),QByteArray()));
+    }
+}
 
 bool Pane::searchEditHasFocus() const
 {

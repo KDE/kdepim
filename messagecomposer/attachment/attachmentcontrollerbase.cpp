@@ -62,6 +62,7 @@
 #include <messagecore/attachment/attachmentfrommimecontentjob.h>
 #include <messagecore/attachment/attachmentfromurljob.h>
 #include <messagecore/attachment/attachmentpropertiesdialog.h>
+#include <messagecore/attachment/attachmentupdatejob.h>
 #include <settings/messagecomposersettings.h>
 #include <KIO/Job>
 
@@ -92,6 +93,8 @@ public:
     void addAttachmentPart( AttachmentPart::Ptr part );
     void selectedAllAttachment();
     void createOpenWithMenu( QMenu *topMenu, AttachmentPart::Ptr part );
+    void reloadAttachment();
+    void updateJobResult(KJob*);
 
     AttachmentControllerBase *const q;
     bool encryptEnabled;
@@ -120,6 +123,7 @@ public:
     QAction *selectAllAction;
     KActionMenu *attachmentMenu;
     QAction *addOwnVcardAction;
+    QAction *reloadAttachmentAction;
 
     // If part p is compressed, uncompressedParts[p] is the uncompressed part.
     QHash<AttachmentPart::Ptr, AttachmentPart::Ptr> uncompressedParts;
@@ -248,14 +252,13 @@ void AttachmentControllerBase::Private::viewSelectedAttachments()
 void AttachmentControllerBase::Private::editSelectedAttachment()
 {
     Q_ASSERT( selectedParts.count() == 1 );
-    q->editAttachment( selectedParts.first(), false /*openWith*/ );
-    // TODO nicer api would be enum { OpenWithDialog, NoOpenWithDialog }
+    q->editAttachment( selectedParts.first(), MessageViewer::EditorWatcher::NoOpenWithDialog );
 }
 
 void AttachmentControllerBase::Private::editSelectedAttachmentWith()
 {
     Q_ASSERT( selectedParts.count() == 1 );
-    q->editAttachment( selectedParts.first(), true /*openWith*/ );
+    q->editAttachment( selectedParts.first(), MessageViewer::EditorWatcher::OpenWithDialog );
 }
 
 void AttachmentControllerBase::Private::removeSelectedAttachments()
@@ -276,6 +279,33 @@ void AttachmentControllerBase::Private::selectedAttachmentProperties()
 {
     Q_ASSERT( selectedParts.count() == 1 );
     q->attachmentProperties( selectedParts.first() );
+}
+
+void AttachmentControllerBase::Private::reloadAttachment()
+{
+    Q_ASSERT( selectedParts.count() == 1 );
+    AttachmentUpdateJob *ajob = new AttachmentUpdateJob(selectedParts.first(), q);
+    connect( ajob, SIGNAL(result(KJob*)), q, SLOT(updateJobResult(KJob*)) );
+    ajob->start();
+}
+
+void AttachmentControllerBase::Private::updateJobResult(KJob *job)
+{
+    if( job->error() ) {
+        KMessageBox::sorry( wParent, job->errorString(), i18n( "Failed to reload attachment" ) );
+        return;
+    }
+    Q_ASSERT( dynamic_cast<AttachmentUpdateJob*>( job ) );
+    AttachmentUpdateJob *ajob = static_cast<AttachmentUpdateJob*>( job );
+    AttachmentPart::Ptr originalPart = ajob->originalPart();
+    AttachmentPart::Ptr updatedPart = ajob->updatedPart();
+
+    attachmentRemoved( originalPart );
+    bool ok = model->replaceAttachment( originalPart, updatedPart );
+    if( !ok ) {
+        // The attachment was removed from the model while we were compressing.
+        kDebug() << "Updated a zombie.";
+    }
 }
 
 void AttachmentControllerBase::Private::editDone( MessageViewer::EditorWatcher *watcher )
@@ -486,6 +516,11 @@ void AttachmentControllerBase::createActions()
     connect( d->selectAllAction, SIGNAL(triggered(bool)),
              this, SIGNAL(selectedAllAttachment()) );
 
+    d->reloadAttachmentAction = new KAction( KIcon(QLatin1String("view-refresh")), i18n("Reload"), this);
+    connect( d->reloadAttachmentAction, SIGNAL(triggered(bool)),
+             this, SLOT(reloadAttachment()) );
+
+
     // Insert the actions into the composer window's menu.
     KActionCollection *collection = d->mActionCollection;
     collection->addAction( QLatin1String( "attach_public_key" ), d->attachPublicKeyAction );
@@ -563,11 +598,22 @@ void AttachmentControllerBase::showContextMenu()
         menu->addAction(d->propertiesContextAction);
     }
 
-    menu->addSeparator();
-    menu->addAction(d->selectAllAction);
-    menu->addSeparator();
-    menu->addAction(d->addContextAction);
+    const int nbAttachment = d->model->rowCount();
+    if (nbAttachment != numberOfParts) {
+        menu->addSeparator();
+        menu->addAction(d->selectAllAction);
+    }
+    if (numberOfParts == 0) {
+        menu->addSeparator();
+        menu->addAction(d->addContextAction);
+    }
 
+    if(numberOfParts == 1) {
+        if (!d->selectedParts.first()->url().isEmpty()) {
+            menu->addSeparator();
+            menu->addAction(d->reloadAttachmentAction);
+        }
+    }
     menu->exec( QCursor::pos() );
     delete menu;
 }
@@ -668,7 +714,7 @@ void AttachmentControllerBase::Private::slotAttachmentContentCreated( KJob *job 
     }
 }
 
-void AttachmentControllerBase::editAttachment( AttachmentPart::Ptr part, bool openWith )
+void AttachmentControllerBase::editAttachment( AttachmentPart::Ptr part, MessageViewer::EditorWatcher::OpenWithOption openWithOption )
 {
     KTemporaryFile *tempFile = dumpAttachmentToTempFile( part );
     if( !tempFile ) {
@@ -680,7 +726,7 @@ void AttachmentControllerBase::editAttachment( AttachmentPart::Ptr part, bool op
 
     MessageViewer::EditorWatcher *watcher = new MessageViewer::EditorWatcher(
                 KUrl::fromPath( tempFile->fileName() ),
-                QString::fromLatin1( part->mimeType() ), openWith,
+                QString::fromLatin1( part->mimeType() ), openWithOption,
                 this, d->wParent );
     connect( watcher, SIGNAL(editDone(MessageViewer::EditorWatcher*)),
              this, SLOT(editDone(MessageViewer::EditorWatcher*)) );
@@ -702,7 +748,7 @@ void AttachmentControllerBase::editAttachment( AttachmentPart::Ptr part, bool op
 
 void AttachmentControllerBase::editAttachmentWith( AttachmentPart::Ptr part )
 {
-    editAttachment( part, true );
+    editAttachment( part, MessageViewer::EditorWatcher::OpenWithDialog );
 }
 
 void AttachmentControllerBase::saveAttachmentAs( AttachmentPart::Ptr part )

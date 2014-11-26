@@ -84,6 +84,7 @@ protected:
 
     void enterEvent(QEvent *event);
     void leaveEvent(QEvent *event);
+    void showEvent(QShowEvent *event);
 private:
     class Private;
     Private *const d;

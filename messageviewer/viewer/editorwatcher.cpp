@@ -41,7 +41,7 @@
 #endif
 
 namespace MessageViewer {
-EditorWatcher::EditorWatcher( const KUrl & url, const QString &mimeType, bool openWith,
+EditorWatcher::EditorWatcher( const KUrl & url, const QString &mimeType, OpenWithOption option,
                               QObject * parent, QWidget *parentWidget ) :
     QObject( parent ),
     mUrl( url ),
@@ -50,7 +50,7 @@ EditorWatcher::EditorWatcher( const KUrl & url, const QString &mimeType, bool op
     mInotifyWatch(-1),
     mEditor( 0 ),
     mParentWidget( parentWidget ),
-    mOpenWith( openWith ),
+    mOpenWithOption( option ),
     mHaveInotify( false ),
     mFileOpen( false ),
     mEditorRunning( false ),
@@ -68,7 +68,7 @@ bool EditorWatcher::start()
     KUrl::List list;
     list.append( mUrl );
     KService::Ptr offer = KMimeTypeTrader::self()->preferredService( mMimeType, QLatin1String("Application") );
-    if ( mOpenWith || !offer ) {
+    if ( (mOpenWithOption == OpenWithDialog) || !offer ) {
         AutoQPointer<KOpenWithDialog> dlg( new KOpenWithDialog( list, i18n("Edit with:"),
                                                                 QString(), mParentWidget ) );
         const int dlgrc = dlg->exec();

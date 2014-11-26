@@ -269,7 +269,7 @@ void AbstractImportExportJob::backupResourceDirectory(const Akonadi::AgentInstan
                 const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
                 if (!errorStr.isEmpty())
                     Q_EMIT error(errorStr);
-                Q_EMIT info(i18n("\"%1\" was backuped.",filename));
+                Q_EMIT info(i18n("\"%1\" was backed up.",filename));
 
                 url = Utils::akonadiAgentConfigPath(identifier);
                 if (!url.isEmpty()) {
@@ -278,7 +278,7 @@ void AbstractImportExportJob::backupResourceDirectory(const Akonadi::AgentInstan
                     if (QDir(url.path()).exists()) {
                         const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
                         if (fileAdded)
-                            Q_EMIT info(i18n("\"%1\" was backuped.",filename));
+                            Q_EMIT info(i18n("\"%1\" was backed up.",filename));
                         else
                             Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
                     }
@@ -306,14 +306,14 @@ void AbstractImportExportJob::backupResourceFile(const Akonadi::AgentInstance &a
             const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
             if (!errorStr.isEmpty())
                 Q_EMIT error(errorStr);
-            Q_EMIT info(i18n("\"%1\" was backuped.",filename));
+            Q_EMIT info(i18n("\"%1\" was backed up.",filename));
 
             url = Utils::akonadiAgentConfigPath(identifier);
             if (!url.isEmpty()) {
                 filename = url.fileName();
                 const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
                 if (fileAdded)
-                    Q_EMIT info(i18n("\"%1\" was backuped.",filename));
+                    Q_EMIT info(i18n("\"%1\" was backed up.",filename));
                 else
                     Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
             }
@@ -449,7 +449,7 @@ bool AbstractImportExportJob::backupFullDirectory(const KUrl &url, const QString
 
     const bool fileAdded = archive()->addLocalFile(tmp.fileName(), archivePath  + archivename);
     if (fileAdded)
-        Q_EMIT info(i18n("\"%1\" was backuped.",filename));
+        Q_EMIT info(i18n("\"%1\" was backed up.",filename));
     else
         Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
 

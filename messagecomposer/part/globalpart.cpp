@@ -24,6 +24,15 @@ using namespace MessageComposer;
 class GlobalPart::Private
 {
 public:
+    Private()
+        : guiEnabled(true),
+          parentWidgetForGui(0),
+          fallbackCharsetEnabled(false),
+          allow8Bit(false),
+          MDNRequested(false)
+    {
+    }
+
     bool guiEnabled;
     QWidget *parentWidgetForGui;
     bool fallbackCharsetEnabled;
@@ -36,11 +45,6 @@ GlobalPart::GlobalPart( QObject *parent )
     : MessagePart( parent )
     , d( new Private )
 {
-    d->guiEnabled = true;
-    d->parentWidgetForGui = 0;
-    d->fallbackCharsetEnabled = false;
-    d->allow8Bit = false;
-    d->MDNRequested = false;
 }
 
 GlobalPart::~GlobalPart()

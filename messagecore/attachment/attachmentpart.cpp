@@ -23,6 +23,8 @@
 #include <kmime/kmime_content.h>
 #include <kmime/kmime_util.h>
 
+#include <KUrl>
+
 using namespace MessageCore;
 
 uint MessageCore::qHash( const MessageCore::AttachmentPart::Ptr &ptr )
@@ -48,29 +50,29 @@ class MessageCore::AttachmentPart::Private
 {
 public:
     Private()
-        : mIsInline( false ),
+        : mEncoding( KMime::Headers::CE7Bit ),
+          mSize( -1 ),
+          mIsInline( false ),
           mAutoEncoding( true ),
-          mEncoding( KMime::Headers::CE7Bit ),
           mCompressed( false ),
           mToEncrypt( false ),
-          mToSign( false ),
-          mSize( -1 )
+          mToSign( false )
     {
     }
-
+    KUrl mUrl;
     QString mName;
     QString mFileName;
     QString mDescription;
-    bool mIsInline;
-    bool mAutoEncoding;
-    KMime::Headers::contentEncoding mEncoding;
     QByteArray mCharset;
     QByteArray mMimeType;
+    QByteArray mData;
+    KMime::Headers::contentEncoding mEncoding;
+    qint64 mSize;
+    bool mIsInline;
+    bool mAutoEncoding;
     bool mCompressed;
     bool mToEncrypt;
     bool mToSign;
-    QByteArray mData;
-    qint64 mSize;
 };
 
 AttachmentPart::AttachmentPart()
@@ -227,4 +229,14 @@ qint64 AttachmentPart::size() const
 bool AttachmentPart::isMessageOrMessageCollection() const
 {
     return ( mimeType() == "message/rfc822" ) || ( mimeType() == "multipart/digest" );
+}
+
+void AttachmentPart::setUrl(const KUrl &url)
+{
+    d->mUrl = url;
+}
+
+KUrl AttachmentPart::url() const
+{
+    return d->mUrl;
 }
