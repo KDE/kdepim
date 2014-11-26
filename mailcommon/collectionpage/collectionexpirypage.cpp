@@ -60,7 +60,6 @@ bool CollectionExpiryPage::canHandle(const Akonadi::Collection &col) const
 void CollectionExpiryPage::init()
 {
     QVBoxLayout *globalVBox = new QVBoxLayout(this);
-    //PORT QT5 globalVBox->setSpacing( KDialog::spacingHint() );
 
     QGridLayout *daysBox = new QGridLayout;
 

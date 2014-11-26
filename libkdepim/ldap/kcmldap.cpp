@@ -312,7 +312,6 @@ void KCMLdap::defaults()
 void KCMLdap::initGUI()
 {
     QVBoxLayout *layout = new QVBoxLayout;
-    //PORT TO QT5 layout->setSpacing( KDialog::spacingHint() );
     layout->setMargin(0);
     setLayout(layout);
 

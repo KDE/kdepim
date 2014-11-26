@@ -64,7 +64,6 @@ RegExpLineEdit::RegExpLineEdit(const QString &str, QWidget *parent)
 void RegExpLineEdit::initWidget(const QString &str)
 {
     QHBoxLayout *hlay = new QHBoxLayout(this);
-    //QT5 hlay->setSpacing(KDialog::spacingHint());
     hlay->setMargin(0);
 
     mLineEdit = new QLineEdit(str, this);
