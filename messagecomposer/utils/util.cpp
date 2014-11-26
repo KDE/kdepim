@@ -319,12 +319,13 @@ QString MessageComposer::Util::rot13(const QString &s)
 
     const int rLenght(r.length());
     for (int i=0; i<rLenght; ++i) {
-        if ( ( r[i] >= QLatin1Char('A') && r[i] <= QLatin1Char('M') ) ||
-             ( r[i] >= QLatin1Char('a') && r[i] <= QLatin1Char('m') ) ) {
+        const QChar rChar(r.at(i));
+        if ( ( rChar >= QLatin1Char('A') && rChar <= QLatin1Char('M') ) ||
+             ( rChar >= QLatin1Char('a') && rChar <= QLatin1Char('m') ) ) {
             r[i] = (char)((int)QChar(r[i]).toLatin1() + 13);
         } else {
-            if  ( ( r[i] >= QLatin1Char('N') && r[i] <= QLatin1Char('Z') ) ||
-                  ( r[i] >= QLatin1Char('n') && r[i] <= QLatin1Char('z') ) ) {
+            if  ( ( rChar >= QLatin1Char('N') && rChar <= QLatin1Char('Z') ) ||
+                  ( rChar >= QLatin1Char('n') && rChar <= QLatin1Char('z') ) ) {
                 r[i] = (char)((int)QChar(r[i]).toLatin1() - 13);
             }
         }
