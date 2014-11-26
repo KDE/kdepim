@@ -365,6 +365,9 @@ void StringUtilTest::test_parseMailtoUrl_data()
     QTest::addColumn<int>( "numberOfTo" );
 
     QTest::newRow("1 mailto") << QString::fromLatin1("mailto:foo@kde.org") << true << 1;
+    QTest::newRow("invalid (not mailto)") << QString::fromLatin1("http://www.kde.org") << false << 0;
+    QTest::newRow("invalid (no email address") << QString::fromLatin1("mailto:") << false << 0;
+    //QTest::newRow("2 address") << QString::fromLatin1("mailto:foo@kde.org?foo2@kde.org") << true << 2;
     //QTest::newRow("invalid") << QString::fromLatin1("fookde.org") << false << 0;
 }
 
@@ -376,6 +379,6 @@ void StringUtilTest::test_parseMailtoUrl()
 
     KUrl url(mailToUrl);
     QCOMPARE(!StringUtil::parseMailtoUrl(url).value(QLatin1String("to")).isEmpty(), toIsNotEmpty);
-    QCOMPARE(StringUtil::parseMailtoUrl(url).value(QLatin1String("to")).split(QLatin1String(", ")).count(), numberOfTo);
+    QCOMPARE(StringUtil::parseMailtoUrl(url).value(QLatin1String("to")).split(QLatin1String(", "), QString::SkipEmptyParts).count(), numberOfTo);
 
 }

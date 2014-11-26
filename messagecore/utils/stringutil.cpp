@@ -183,7 +183,6 @@ QMap<QString, QString> parseMailtoUrl( const KUrl &url )
         to << values.value( QLatin1String("to") );
 
     values.insert( QLatin1String("to"), to.join( QLatin1String(", ") ) );
-
     return values;
 }
 
