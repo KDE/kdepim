@@ -27,7 +27,6 @@
 
 #include <KCompletionBox>
 #include <QDebug>
-#include <KDialog>
 #include <KLocalizedString>
 #include <KIconLoader>
 
@@ -152,7 +151,6 @@ AttendeeLine::AttendeeLine(QWidget *parent)
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
     QBoxLayout *topLayout = new QHBoxLayout(this);
-    topLayout->setSpacing(KDialog::spacingHint());
     topLayout->setMargin(0);
 #ifdef KDEPIM_MOBILE_UI
     mRoleCombo->addItem(DesktopIcon("meeting-participant", 48),
