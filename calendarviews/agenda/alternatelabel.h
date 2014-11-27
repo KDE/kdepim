@@ -56,7 +56,7 @@ public slots:
     void useDefaultText();
 
 protected:
-    virtual void resizeEvent(QResizeEvent *);
+    void resizeEvent(QResizeEvent *) Q_DECL_OVERRIDE;
     virtual void squeezeTextToLabel();
     bool mTextTypeFixed;
     QString mShortText, mLongText, mExtensiveText;

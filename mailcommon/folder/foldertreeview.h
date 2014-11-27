@@ -70,7 +70,7 @@ public:
 
     void updatePalette();
 
-    void keyboardSearch(const QString &);   // reimp
+    void keyboardSearch(const QString &) Q_DECL_OVERRIDE;   // reimp
 protected:
     enum Move {
         Next = 0,

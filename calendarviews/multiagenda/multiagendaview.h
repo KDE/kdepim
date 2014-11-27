@@ -48,12 +48,12 @@ public:
     bool eventDurationHint(QDateTime &startDt, QDateTime &endDt, bool &allDay) const;
 
     /* reimp */
-    void setCalendar(const Akonadi::ETMCalendar::Ptr &cal);
+    void setCalendar(const Akonadi::ETMCalendar::Ptr &cal) Q_DECL_OVERRIDE;
 
     /* reimp */
-    bool hasConfigurationDialog() const;
+    bool hasConfigurationDialog() const Q_DECL_OVERRIDE;
 
-    void setChanges(Changes changes);
+    void setChanges(Changes changes) Q_DECL_OVERRIDE;
 
     bool customColumnSetupUsed() const;
     int customNumberOfColumns() const;
@@ -78,11 +78,11 @@ public slots:
     void setIncidenceChanger(Akonadi::IncidenceChanger *changer);
 
 protected:
-    void resizeEvent(QResizeEvent *event);
-    void showEvent(QShowEvent *event);
+    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+    void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
 
-    /* reimp */void doRestoreConfig(const KConfigGroup &configGroup);
-    /* reimp */void doSaveConfig(KConfigGroup &configGroup);
+    /* reimp */void doRestoreConfig(const KConfigGroup &configGroup) Q_DECL_OVERRIDE;
+    /* reimp */void doSaveConfig(KConfigGroup &configGroup) Q_DECL_OVERRIDE;
 
 protected Q_SLOTS:
     /**

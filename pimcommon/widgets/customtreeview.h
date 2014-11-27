@@ -40,7 +40,7 @@ private Q_SLOTS:
     void slotGeneralFontChanged();
 
 protected:
-    void paintEvent(QPaintEvent *event);
+    void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
 protected:
     bool mShowDefaultText;

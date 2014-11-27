@@ -49,7 +49,7 @@ Q_SIGNALS:
     void needUpdateConfigDialogBox();
 
 public Q_SLOTS:
-    void configure(WId windowId);
+    void configure(WId windowId) Q_DECL_OVERRIDE;
 
 protected:
     void doSetOnline(bool online);

@@ -87,7 +87,7 @@ public:
     void setButtonText(ButtonCode button, const QString &text);
 
     void setUpDownAutoRepeat(bool b);
-    QSize sizeHint() const;
+    QSize sizeHint() const Q_DECL_OVERRIDE;
 
     virtual void addNewEntry();
     virtual QString modifyEntry(const QString &text);

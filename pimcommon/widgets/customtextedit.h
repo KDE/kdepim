@@ -36,7 +36,7 @@ public:
     QString configName() const;
 
 protected:
-    void createHighlighter();
+    void createHighlighter() Q_DECL_OVERRIDE;
 
 protected Q_SLOTS:
     void insertLanguageMenu(QMenu *contextMenu);

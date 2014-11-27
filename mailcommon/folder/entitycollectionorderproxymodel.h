@@ -32,7 +32,7 @@ public:
 
     virtual ~EntityCollectionOrderProxyModel();
 
-    virtual bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
+    bool lessThan(const QModelIndex &left, const QModelIndex &right) const Q_DECL_OVERRIDE;
 
     void setManualSortingActive(bool active);
     bool isManualSortingActive() const;

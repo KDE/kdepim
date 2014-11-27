@@ -78,10 +78,10 @@ protected:
     bool canCreateCollection(Akonadi::Collection &parentCol);
 
     /*reimp*/
-    void hideEvent(QHideEvent *);
+    void hideEvent(QHideEvent *) Q_DECL_OVERRIDE;
 
     /*reimp*/
-    void showEvent(QShowEvent *);
+    void showEvent(QShowEvent *) Q_DECL_OVERRIDE;
 
 private:
     class FolderSelectionDialogPrivate;

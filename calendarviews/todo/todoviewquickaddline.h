@@ -36,8 +36,8 @@ public:
     ~TodoViewQuickAddLine() {}
 
 protected:
-    void keyPressEvent(QKeyEvent *event);
-    void resizeEvent(QResizeEvent *event);
+    void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
+    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     void returnPressed(Qt::KeyboardModifiers modifiers);

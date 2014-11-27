@@ -75,9 +75,9 @@ public:
     */
     QString headerToolTip() const;
 
-    QSize sizeHint() const;
+    QSize sizeHint() const Q_DECL_OVERRIDE;
 
-    QSize minimumSizeHint() const;
+    QSize minimumSizeHint() const Q_DECL_OVERRIDE;
 
 private slots:
     /** update the position of the marker showing the mouse position */
