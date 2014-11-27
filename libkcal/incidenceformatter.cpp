@@ -2534,11 +2534,27 @@ QString InvitationFormatterHelper::makeBtnLink( const QString &id, const QString
 }
 
 static QString responseButtons( Incidence *inc, bool rsvpReq, bool rsvpRec,
-                                InvitationFormatterHelper *helper )
+                                InvitationFormatterHelper *helper,
+                                Incidence *existingInc = NULL)
 {
   QString html;
   if ( !helper ) {
     return html;
+  }
+
+  bool hideAccept = false,
+       hideTentative = false,
+       hideDecline = false;
+
+  if ( existingInc ) {
+    Attendee *ea = findMyAttendee( existingInc );
+    if ( ea ) {
+      // If this is an update of an already accepted incidence
+      // do not show the buttons that confirm the status.
+      hideAccept = ea->status() == Attendee::Accepted;
+      hideDecline = ea->status() == Attendee::Declined;
+      hideTentative = ea->status() == Attendee::Tentative;
+    }
   }
 
   // Used suffix to indicate that the button will not trigger an immediate
@@ -2553,17 +2569,22 @@ static QString responseButtons( Incidence *inc, bool rsvpReq, bool rsvpRec,
     html += helper->makeBtnLink( "delete", i18n( "Move to Trash" ), "edittrash" );
 
   } else {
-
     // Accept
-    html += helper->makeBtnLink( "accept", i18n( "Accept" ), "dialog_ok_apply" );
+    if ( !hideAccept ) {
+      html += helper->makeBtnLink( "accept", i18n( "Accept" ), "dialog_ok_apply" );
+    }
 
     // Tentative
-    html += helper->makeBtnLink( "accept_conditionally",
-                                i18n( "Accept an invitation conditionally", "Provisorily" ),
-                                "dialog_ok" );
+    if ( !hideTentative ) {
+      html += helper->makeBtnLink( "accept_conditionally",
+                                  i18n( "Accept an invitation conditionally", "Provisorily" ),
+                                  "dialog_ok" );
+    }
 
     // Decline
-    html += helper->makeBtnLink( "decline", i18n( "Decline" ), "process_stop" );
+    if ( !hideDecline ) {
+      html += helper->makeBtnLink( "decline", i18n( "Decline" ), "process_stop" );
+    }
 
     // Counter proposal
     html += helper->makeBtnLink( "counter", i18n( "Counter proposal" ) + complexActionSuffix,
@@ -2835,7 +2856,7 @@ QString IncidenceFormatter::formatGroupwareLinks(InvitationFormatterHelper *help
             // Break after the record in my.. button
             html += "<br/>";
         }
-        html += responseButtons( inc, rsvpReq, rsvpRec, helper );
+        html += responseButtons( inc, rsvpReq, rsvpRec, helper, existingIncidence );
       }
       break;
     }
