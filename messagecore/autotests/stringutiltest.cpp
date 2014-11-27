@@ -364,6 +364,9 @@ void StringUtilTest::test_parseMailtoUrl_data()
     QTest::addColumn<int>( "numberOfTo" );
 
     QTest::newRow("1 mailto") << QString::fromLatin1("mailto:foo@kde.org") << true << 1;
+    QTest::newRow("invalid (not mailto)") << QString::fromLatin1("http://www.kde.org") << false << 0;
+    QTest::newRow("invalid (no email address") << QString::fromLatin1("mailto:") << false << 0;
+
     //QTest::newRow("invalid") << QString::fromLatin1("fookde.org") << false << 0;
 }
 
