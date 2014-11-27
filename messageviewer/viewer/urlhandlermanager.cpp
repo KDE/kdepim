@@ -69,6 +69,13 @@
 
 #include <algorithm>
 
+#include <ui/messagebox.h>
+
+#include <KLocalizedString>
+#include <kmessagebox.h>
+#include <QStandardPaths>
+
+
 using std::for_each;
 using std::remove;
 using std::find;
@@ -493,11 +500,6 @@ QString URLHandlerManager::statusBarMessage(const KUrl &url, ViewerPrivate *w) c
 //
 //
 
-#include <ui/messagebox.h>
-
-#include <KLocalizedString>
-#include <kmessagebox.h>
-#include <QStandardPaths>
 
 namespace
 {
