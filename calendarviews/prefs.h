@@ -217,6 +217,7 @@ class EVENTVIEWS_EXPORT Prefs
 
     KConfig *config() const;
 
+    void createNewColor(QColor &defColor, int seed);
   private:
     class Private;
     Private *const d;

@@ -946,6 +946,21 @@ void Prefs::setResourceColor ( const QString &cal, const QColor &color )
 {
   d->mBaseConfig.setResourceColor( cal, color );
 }
+#define USE_RANDOM
+void Prefs::createNewColor(QColor &defColor, int seed)
+{
+#ifdef USE_RANDOM
+    Q_UNUSED(seed);
+    QColor col = QColor(qrand() % 256, qrand() % 256, qrand() % 256);
+    defColor = col;
+#else
+    int h, s, v;
+    defColor.getHsv( &h, &s, &v );
+    h = ( seed % 12 ) * 30;
+    s -= s * static_cast<int>( ( ( seed / 12 ) % 2 ) * 0.5 );
+    defColor.setHsv( h, s, v );
+#endif
+}
 
 QColor Prefs::resourceColor( const QString &cal )
 {
@@ -970,17 +985,12 @@ QColor Prefs::resourceColor( const QString &cal )
     if ( seed > 0 && seed - 1 < (int)colors.size() ) {
         defColor = QColor( colors[seed-1] );
     } else {
-        int h, s, v;
-        defColor.getHsv( &h, &s, &v );
-        h = ( seed % 12 ) * 30;
-        s -= s * static_cast<int>( ( ( seed / 12 ) % 2 ) * 0.5 );
-        defColor.setHsv( h, s, v );
+        createNewColor(defColor, seed);
     }
     d->setInt( d->mBaseConfig.defaultResourceColorSeedItem(), ( seed + 1 ) );
     d->mBaseConfig.setResourceColor( cal, defColor );
     color = d->mBaseConfig.mResourceColors[cal];
   }
-
   if ( color.isValid() ) {
     return color;
   } else {
