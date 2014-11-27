@@ -113,11 +113,11 @@ QString FilterActionWithCommand::substituteCommandLineArgsFor(const KMime::Messa
                 continue;
             }
 
-            if ((*it) == -1)
+            if ((*it) == -1) {
                 file.write(aMsg->encodedContent());
-            else if (aMsg->contents().size() == 0)
+            } else if (aMsg->contents().size() == 0) {
                 file.write(aMsg->decodedContent());
-            else {
+            } else {
                 int index = *it; // we pass by reference below, so this is not const
                 KMime::Content *content = findMimeNodeForIndex(aMsg.get(), index);
                 if (content) {

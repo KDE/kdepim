@@ -247,7 +247,6 @@ void AutoCorrectionTest::shouldReplaceToTextFormat()
     autocorrection.autocorrect(true, doc, position);
     QCOMPARE(doc.toPlainText(), result);
 
-
     text = QLatin1String("*foo*");
     doc.setHtml(text);
     position = text.length();
@@ -259,8 +258,6 @@ void AutoCorrectionTest::shouldReplaceToTextFormat()
     QCOMPARE(charFormat.font().underline(), false);
     QCOMPARE(charFormat.font().bold(), true);
     QCOMPARE(charFormat.font().strikeOut(), false);
-
-
 
     text = QLatin1String("_foo_");
     doc.setHtml(text);

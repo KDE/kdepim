@@ -459,11 +459,10 @@ void SnippetsManager::Private::createSnippet(const QModelIndex &groupIndex,
                            snippetText);
 }
 
-
 void SnippetsManager::Private::load()
 {
     const KSharedConfig::Ptr config =
-            KSharedConfig::openConfig(QLatin1String("kmailsnippetrc"), KConfig::NoGlobals);
+        KSharedConfig::openConfig(QLatin1String("kmailsnippetrc"), KConfig::NoGlobals);
 
     const KConfigGroup snippetPartGroup = config->group("SnippetPart");
 
@@ -471,7 +470,7 @@ void SnippetsManager::Private::load()
 
     for (int i = 0; i < groupCount; ++i) {
         const KConfigGroup group =
-                config->group(QString::fromLatin1("SnippetGroup_%1").arg(i));
+            config->group(QString::fromLatin1("SnippetGroup_%1").arg(i));
 
         const QString groupName = group.readEntry("Name");
 
@@ -481,13 +480,13 @@ void SnippetsManager::Private::load()
         const int snippetCount = group.readEntry("snippetCount", 0);
         for (int j = 0; j < snippetCount; ++j) {
             const QString snippetName =
-                    group.readEntry(QString::fromLatin1("snippetName_%1").arg(j), QString());
+                group.readEntry(QString::fromLatin1("snippetName_%1").arg(j), QString());
 
             const QString snippetText =
-                    group.readEntry(QString::fromLatin1("snippetText_%1").arg(j), QString());
+                group.readEntry(QString::fromLatin1("snippetText_%1").arg(j), QString());
 
             const QString snippetKeySequence =
-                    group.readEntry(QString::fromLatin1("snippetKeySequence_%1").arg(j), QString());
+                group.readEntry(QString::fromLatin1("snippetKeySequence_%1").arg(j), QString());
 
             createSnippet(groupIndex, snippetName, snippetText, snippetKeySequence);
         }
@@ -499,10 +498,10 @@ void SnippetsManager::Private::load()
 
     for (int i = 0; i < variablesCount; ++i) {
         const QString variableKey =
-                group.readEntry(QString::fromLatin1("variableName_%1").arg(i), QString());
+            group.readEntry(QString::fromLatin1("variableName_%1").arg(i), QString());
 
         const QString variableValue =
-                group.readEntry(QString::fromLatin1("variableValue_%1").arg(i), QString());
+            group.readEntry(QString::fromLatin1("variableValue_%1").arg(i), QString());
 
         mSavedVariables.insert(variableKey, variableValue);
     }
