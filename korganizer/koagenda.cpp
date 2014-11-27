@@ -1149,7 +1149,15 @@ void KOAgenda::endItemAction()
                                                            KOGlobals::RECURRENCE_MODIFIED_ONE_ONLY :
                                                           KOGlobals::RECURRENCE_MODIFIED_ALL_FUTURE;
 
+        mChanger->blockSignals( true );
+        /* The mActionItem might be deleted if we change an incidence with
+         * the incididence changer. This already triggeres updates in
+         * the agenda view that might have caused the action item to be deleted.
+         * So we block the incidence changed signals as we update the view later ourself
+         * and thus ensure that mActionItem stays valid.
+         * kolab/issue4878 */
         const bool success = mChanger->changeIncidence( oldIncSaved, inc, whatChanged, this );
+        mChanger->blockSignals( false );
 
         if ( success ) {
           mActionItem->dissociateFromMultiItem();
