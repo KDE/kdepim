@@ -165,8 +165,8 @@ private:
     } ui;
 };
 
-DeleteCertificatesDialog::DeleteCertificatesDialog(QWidget *p, Qt::WindowFlags f)
-    : QDialog(p, f), d(new Private(this))
+DeleteCertificatesDialog::DeleteCertificatesDialog(QWidget *p)
+    : QDialog(p), d(new Private(this))
 {
     d->readConfig();
 }

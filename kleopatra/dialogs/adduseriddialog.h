@@ -51,7 +51,7 @@ class AddUserIDDialog : public QDialog
     Q_PROPERTY(QString email   READ email   WRITE setEmail)
     Q_PROPERTY(QString comment READ comment WRITE setComment)
 public:
-    explicit AddUserIDDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    explicit AddUserIDDialog(QWidget *parent = 0);
     ~AddUserIDDialog();
 
     void setName(const QString &name);

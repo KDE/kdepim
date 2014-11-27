@@ -501,8 +501,8 @@ private:
     } ui;
 };
 
-CertificateDetailsDialog::CertificateDetailsDialog(QWidget *p, Qt::WindowFlags f)
-    : KDialog(p, f), d(new Private(this))
+CertificateDetailsDialog::CertificateDetailsDialog(QWidget *p)
+    : KDialog(p), d(new Private(this))
 {
     d->readConfig();
 }

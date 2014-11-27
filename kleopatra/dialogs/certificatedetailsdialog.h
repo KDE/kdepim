@@ -51,7 +51,7 @@ class CertificateDetailsDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit CertificateDetailsDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    explicit CertificateDetailsDialog(QWidget *parent = 0);
     ~CertificateDetailsDialog();
 
     void setKey(const GpgME::Key &key);

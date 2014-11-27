@@ -178,8 +178,8 @@ private:
     } ui;
 };
 
-SetInitialPinDialog::SetInitialPinDialog(QWidget *p, Qt::WindowFlags f)
-    : QDialog(p, f), d(new Private(this))
+SetInitialPinDialog::SetInitialPinDialog(QWidget *p)
+    : QDialog(p), d(new Private(this))
 {
 
 }

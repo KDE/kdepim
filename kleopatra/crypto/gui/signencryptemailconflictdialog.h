@@ -71,7 +71,7 @@ class SignEncryptEMailConflictDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit SignEncryptEMailConflictDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    explicit SignEncryptEMailConflictDialog(QWidget *parent = 0);
     ~SignEncryptEMailConflictDialog();
 
     // Inputs

@@ -53,7 +53,7 @@ class SigningCertificateSelectionDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit SigningCertificateSelectionDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    explicit SigningCertificateSelectionDialog(QWidget *parent = 0);
     ~SigningCertificateSelectionDialog();
 
     void setAllowedProtocols(const QVector<GpgME::Protocol> &allowedProtocols);

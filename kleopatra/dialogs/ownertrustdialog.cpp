@@ -108,8 +108,8 @@ private:
     } ui;
 };
 
-OwnerTrustDialog::OwnerTrustDialog(QWidget *p, Qt::WindowFlags f)
-    : QDialog(p, f), d(new Private(this))
+OwnerTrustDialog::OwnerTrustDialog(QWidget *p)
+    : QDialog(p), d(new Private(this))
 {
     connect(d->ui.unknownRB, SIGNAL(toggled(bool)), this, SLOT(slotTrustLevelChanged()));
     connect(d->ui.neverRB, SIGNAL(toggled(bool)), this, SLOT(slotTrustLevelChanged()));

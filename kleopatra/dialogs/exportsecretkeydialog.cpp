@@ -151,8 +151,8 @@ private:
     } ui;
 };
 
-ExportSecretKeyDialog::ExportSecretKeyDialog(QWidget *p, Qt::WindowFlags f)
-    : QDialog(p, f), d(new Private(this))
+ExportSecretKeyDialog::ExportSecretKeyDialog(QWidget *p)
+    : QDialog(p), d(new Private(this))
 {
 
 }

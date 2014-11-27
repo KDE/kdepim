@@ -49,7 +49,7 @@ class ExpiryDialog : public QDialog
     Q_OBJECT
     Q_PROPERTY(QDate dateOfExpiry READ dateOfExpiry WRITE setDateOfExpiry)
 public:
-    explicit ExpiryDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    explicit ExpiryDialog(QWidget *parent = 0);
     ~ExpiryDialog();
 
     void setDateOfExpiry(const QDate &date);

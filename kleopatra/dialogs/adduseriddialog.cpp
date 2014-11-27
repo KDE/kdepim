@@ -242,8 +242,8 @@ private:
     } ui;
 };
 
-AddUserIDDialog::AddUserIDDialog(QWidget *p, Qt::WindowFlags f)
-    : QDialog(p, f), d(new Private(this))
+AddUserIDDialog::AddUserIDDialog(QWidget *p)
+    : QDialog(p), d(new Private(this))
 {
 
 }

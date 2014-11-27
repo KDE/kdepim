@@ -48,7 +48,7 @@ class ExportCertificatesDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit ExportCertificatesDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    explicit ExportCertificatesDialog(QWidget *parent = 0);
     ~ExportCertificatesDialog();
 
     void setOpenPgpExportFileName(const QString &fileName);

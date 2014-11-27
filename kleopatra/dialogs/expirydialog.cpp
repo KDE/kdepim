@@ -142,8 +142,8 @@ private:
     } ui;
 };
 
-ExpiryDialog::ExpiryDialog(QWidget *p, Qt::WindowFlags f)
-    : QDialog(p, f), d(new Private(this))
+ExpiryDialog::ExpiryDialog(QWidget *p)
+    : QDialog(p), d(new Private(this))
 {
 
 }

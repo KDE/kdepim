@@ -184,8 +184,8 @@ CertificateSelectionDialog::Private::Private(CertificateSelectionDialog *qq)
     q->setWindowTitle(i18n("Certificate Selection"));
 }
 
-CertificateSelectionDialog::CertificateSelectionDialog(QWidget *parent, Qt::WindowFlags f)
-    : QDialog(parent, f), d(new Private(this))
+CertificateSelectionDialog::CertificateSelectionDialog(QWidget *parent)
+    : QDialog(parent), d(new Private(this))
 {
     const KSharedConfig::Ptr config = KSharedConfig::openConfig(QLatin1String("kleopatracertificateselectiondialogrc"));
     d->ui.tabWidget.loadViews(config.data());

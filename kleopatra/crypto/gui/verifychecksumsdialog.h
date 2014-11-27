@@ -52,7 +52,7 @@ class VerifyChecksumsDialog : public QDialog
     Q_OBJECT
     Q_ENUMS(Status)
 public:
-    explicit VerifyChecksumsDialog(QWidget *parent = 0, Qt::WindowFlags flags = 0);
+    explicit VerifyChecksumsDialog(QWidget *parent = 0);
     ~VerifyChecksumsDialog();
 
     enum Status {

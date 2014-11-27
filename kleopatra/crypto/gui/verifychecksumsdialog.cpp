@@ -366,8 +366,8 @@ private:
     } ui;
 };
 
-VerifyChecksumsDialog::VerifyChecksumsDialog(QWidget *parent, Qt::WindowFlags flags)
-    : QDialog(parent, flags),
+VerifyChecksumsDialog::VerifyChecksumsDialog(QWidget *parent)
+    : QDialog(parent),
       d(new Private(this))
 {
 

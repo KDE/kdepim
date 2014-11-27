@@ -47,8 +47,8 @@
 using namespace Kleo;
 using namespace Kleo::Crypto::Gui;
 
-SigningCertificateSelectionDialog::SigningCertificateSelectionDialog(QWidget *parent, Qt::WindowFlags f)
-    : QDialog(parent, f),
+SigningCertificateSelectionDialog::SigningCertificateSelectionDialog(QWidget *parent)
+    : QDialog(parent),
       widget(new SigningCertificateSelectionWidget(this))
 {
     setWindowTitle(i18n("Select Signing Certificates"));

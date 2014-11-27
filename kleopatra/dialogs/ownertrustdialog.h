@@ -48,7 +48,7 @@ class OwnerTrustDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit OwnerTrustDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    explicit OwnerTrustDialog(QWidget *parent = 0);
     ~OwnerTrustDialog();
 
     void setFormattedCertificateName(const QString &formatted);
