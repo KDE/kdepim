@@ -66,7 +66,7 @@
 #include <kimagefilepreview.h>
 #include <KToolInvocation>
 #include <QMenu>
-#include <KUrl>
+#include <QUrl>
 
 #include <QDockWidget>
 #include <QProgressBar>
@@ -703,7 +703,7 @@ void MainWindow::uploadMediaObject()
 void MainWindow::slotOpenCurrentBlogInBrowser()
 {
     if (mCurrentBlogId > -1) {
-        KUrl url(DBMan::self()->blog(mCurrentBlogId)->blogUrl());
+        QUrl url(DBMan::self()->blog(mCurrentBlogId)->blogUrl());
         if (url.isValid()) {
             KToolInvocation::invokeBrowser(url.url());
         } else {
