@@ -47,14 +47,6 @@ void CreateEventJob::start()
         Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mItem );
         job->fetchScope().fetchFullPayload();
         connect( job, SIGNAL(result(KJob*)), this, SLOT(slotFetchDone(KJob*)) );
-
-        if ( job->exec() ) {
-            if ( job->items().count() == 1 ) {
-                mItem = job->items().first();
-            }
-        } else {
-            qDebug()<<" createTodo Error during fetch: "<<job->errorString();
-        }
     } else {
         createEvent();
     }
@@ -67,6 +59,7 @@ void CreateEventJob::slotFetchDone(KJob *job)
     if ( fetchJob->items().count() == 1 ) {
         mItem = fetchJob->items().first();
     } else {
+        qDebug()<<" createTodo Error during fetch: "<<job->errorString();
         Q_EMIT emitResult();
         return;
     }
