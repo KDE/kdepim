@@ -943,7 +943,7 @@ void ObjectTreeParser::writeDecryptionInProgressBlock()
     }
     // PENDING(marc) find an animated icon here:
     //const QString iconName = KGlobal::instance()->iconLoader()->iconPath( "decrypted", KIcon::Small );
-    const QString decryptedData = i18n("Encrypted data not shown");
+    //const QString decryptedData = i18n("Encrypted data not shown");
     PartMetaData messagePart;
     messagePart.isDecryptable = true;
     messagePart.isEncrypted = true;

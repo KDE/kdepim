@@ -26,6 +26,7 @@ class AttachmentPartTest : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
+    void shouldHaveDefaultValue();
     void testApi();
 };
 

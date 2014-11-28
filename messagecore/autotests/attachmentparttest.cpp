@@ -48,3 +48,22 @@ void AttachmentPartTest::testApi()
     QVERIFY(variant.value<AttachmentPart::Ptr>() == part);
 }
 
+void AttachmentPartTest::shouldHaveDefaultValue()
+{
+    AttachmentPart part;
+    QCOMPARE(part.size(), (qint64)-1);
+    QVERIFY(!part.isInline());
+    QVERIFY(part.isAutoEncoding());
+    QVERIFY(!part.isCompressed());
+    QVERIFY(!part.isEncrypted());
+    QVERIFY(!part.isSigned());
+    QCOMPARE(part.encoding(), KMime::Headers::CE7Bit);
+    QVERIFY(!part.url().isValid());
+    QVERIFY(part.name().isEmpty());
+    QVERIFY(part.fileName().isEmpty());
+    QVERIFY(part.description().isEmpty());
+    QVERIFY(part.charset().isEmpty());
+    QVERIFY(part.mimeType().isEmpty());
+    QVERIFY(part.data().isEmpty());
+}
+
