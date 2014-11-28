@@ -4157,7 +4157,7 @@ QString IncidenceFormatter::recurrenceString( Incidence *incidence )
         if ( addSpace ) {
           dayNames.append( i18n( "separator for list of days", ", " ) );
         }
-        dayNames.append( calSys->weekDayName( ( ( i + weekStart + 6 ) % 7 ) + 1, true ) );
+        dayNames.append( calSys->weekDayName( ( ( i + weekStart + 6 ) % 7 ) + 1, false ) );
         addSpace = true;
       }
     }
@@ -4322,7 +4322,7 @@ QString IncidenceFormatter::recurrenceString( Incidence *incidence )
       exStr << KGlobal::locale()->formatDate( (*il).date(), true );
       break;
     case Recurrence::rWeekly:
-      exStr << calSys->weekDayName( (*il).date(), true );
+      exStr << calSys->weekDayName( (*il).date(), false );
       break;
     case Recurrence::rMonthlyPos:
       exStr << KGlobal::locale()->formatDate( (*il).date(), true );
