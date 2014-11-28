@@ -59,22 +59,22 @@ using namespace boost;
 namespace
 {
 
-static KUrl defaultX509Service()
+static QUrl defaultX509Service()
 {
-    KUrl url;
+    QUrl url;
     url.setScheme(QLatin1String("ldap"));
     url.setHost(i18nc("default server name, keep it a valid domain name, ie. no spaces", "server"));
     return url;
 }
-static KUrl defaultOpenPGPService()
+static QUrl defaultOpenPGPService()
 {
-    KUrl url;
+    QUrl url;
     url.setScheme(QLatin1String("hkp"));
     url.setHost(QLatin1String("keys.gnupg.net"));
     return url;
 }
 
-static bool is_ldap_scheme(const KUrl &url)
+static bool is_ldap_scheme(const QUrl &url)
 {
     const QString scheme = url.scheme();
     return QString::compare(scheme, QLatin1String("ldap"),  Qt::CaseInsensitive) == 0
@@ -105,7 +105,7 @@ static unsigned short default_port(const QString &scheme)
     return 0;
 }
 
-static QString display_scheme(const KUrl &url)
+static QString display_scheme(const QUrl &url)
 {
     if (url.scheme().isEmpty()) {
         return QLatin1String("hkp");
@@ -114,7 +114,7 @@ static QString display_scheme(const KUrl &url)
     }
 }
 
-static QString display_host(const KUrl &url)
+static QString display_host(const QUrl &url)
 {
     // work around "subkeys.pgp.net" being interpreted as a path, not host
     if (url.host().isEmpty()) {
@@ -124,7 +124,7 @@ static QString display_host(const KUrl &url)
     }
 }
 
-static unsigned short display_port(const KUrl &url)
+static unsigned short display_port(const QUrl &url)
 {
     if (url.port() > 0) {
         return url.port();
@@ -133,7 +133,7 @@ static unsigned short display_port(const KUrl &url)
     }
 }
 
-static bool is_default_port(const KUrl &url)
+static bool is_default_port(const QUrl &url)
 {
     return display_port(url) == default_port(display_scheme(url)) ;
 }
@@ -145,13 +145,13 @@ static QRect calculate_geometry(const QRect &cell, const QSize &sizeHint)
                  cell.width(), height);
 }
 
-struct KUrl_compare : std::binary_function<KUrl, KUrl, bool> {
-    bool operator()(const KUrl &lhs, const KUrl &rhs) const
+struct KUrl_compare : std::binary_function<QUrl, QUrl, bool> {
+    bool operator()(const QUrl &lhs, const QUrl &rhs) const
     {
         return QString::compare(display_scheme(lhs), display_scheme(rhs), Qt::CaseInsensitive) == 0
                && QString::compare(display_host(lhs), display_host(rhs), Qt::CaseInsensitive) == 0
                && lhs.port() == rhs.port()
-               && lhs.user() == rhs.user()
+               && lhs.userName() == rhs.userName()
                // ... ignore password...
                && (!is_ldap_scheme(lhs)
                    || QUrl::fromPercentEncoding(lhs.query().mid(1).toLatin1())
@@ -326,7 +326,7 @@ private:
 
 private:
     struct Item {
-        KUrl url;
+        QUrl url;
         bool x509 : 1;
         bool pgp  : 1;
     };
@@ -336,7 +336,7 @@ private:
     DirectoryServicesWidget::Schemes m_schemes;
 
 private:
-    std::vector<Item>::iterator findExistingUrl(const KUrl &url)
+    std::vector<Item>::iterator findExistingUrl(const QUrl &url)
     {
         return std::find_if(m_items.begin(), m_items.end(),
                             boost::bind(KUrl_compare(), url, boost::bind(&Item::url, _1)));
@@ -778,9 +778,9 @@ QVariant Model::data(const QModelIndex &index, int role) const
                     return QVariant();
                 }
             case UserName:
-                return m_items[row].url.user();
+                return m_items[row].url.userName();
             case Password:
-                return m_items[row].url.pass();
+                return m_items[row].url.password();
             case X509:
             case OpenPGP:
             default:
@@ -892,11 +892,11 @@ bool Model::doSetData(unsigned int row, unsigned int column, const QVariant &val
                 const QModelIndex changed = index(row, Port);
                 emit dataChanged(changed, changed);
             }
-            m_items[row].url.setProtocol(value.toString());
+            m_items[row].url.setScheme(value.toString());
             return true;
         case Host:
             if (display_host(m_items[row].url) != m_items[row].url.host()) {
-                m_items[row].url.setProtocol(display_scheme(m_items[row].url));
+                m_items[row].url.setScheme(display_scheme(m_items[row].url));
                 m_items[row].url.setPath(QLatin1String("/"));
             }
             m_items[row].url.setHost(value.toString());
