@@ -824,12 +824,15 @@ static QString displayViewFormatEvent( Calendar *calendar, Event *event, const Q
 
   int attachmentCount = event->attachments().count();
   if ( attachmentCount > 0 ) {
-    tmpStr += "<tr>";
-    tmpStr += "<td><b>" +
-              i18n( "Attachment:", "%n Attachments:", attachmentCount ) +
-              "</b></td>";
-    tmpStr += "<td>" + displayViewFormatAttachments( event ) + "</td>";
-    tmpStr += "</tr>";
+    const QString formattedAttachments = displayViewFormatAttachments( event );
+    if ( !formattedAttachments.isEmpty() ) {
+      tmpStr += "<tr>";
+      tmpStr += "<td><b>" +
+        i18n( "Attachment:", "%n Attachments:", attachmentCount ) +
+        "</b></td>";
+      tmpStr += "<td>" + formattedAttachments + "</td>";
+      tmpStr += "</tr>";
+    }
   }
   tmpStr += "</table>";
 
@@ -974,12 +977,15 @@ static QString displayViewFormatTodo( Calendar *calendar, Todo *todo,
 
   int attachmentCount = todo->attachments().count();
   if ( attachmentCount > 0 ) {
-    tmpStr += "<tr>";
-    tmpStr += "<td><b>" +
-              i18n( "Attachment:", "Attachments:", attachmentCount ) +
-              "</b></td>";
-    tmpStr += "<td>" + displayViewFormatAttachments( todo ) + "</td>";
-    tmpStr += "</tr>";
+    const QString formattedAttachments = displayViewFormatAttachments( todo );
+    if ( !formattedAttachments.isEmpty() ) {
+      tmpStr += "<tr>";
+      tmpStr += "<td><b>" +
+                i18n( "Attachment:", "Attachments:", attachmentCount ) +
+                "</b></td>";
+      tmpStr += "<td>" + formattedAttachments + "</td>";
+      tmpStr += "</tr>";
+    }
   }
 
   tmpStr += "</table>";
@@ -2403,26 +2409,30 @@ static QString invitationAttachments( InvitationFormatterHelper *helper, Inciden
   }
 
   Attachment::List attachments = incidence->attachments();
+  QString rightCol;
   if ( !attachments.isEmpty() ) {
     tmpStr += "<tr>\n<td class=\"leftColumn\">" + i18n( "Attachments:" ) + "</td><td>";
 
     Attachment::List::ConstIterator it;
     for( it = attachments.begin(); it != attachments.end(); ++it ) {
       Attachment *a = *it;
+      if ( a->label().isEmpty() ) {
+          continue;
+      }
       // Attachment icon
       KMimeType::Ptr mimeType = KMimeType::mimeType( a->mimeType() );
       const QString iconStr = mimeType ? mimeType->icon( a->uri(), false ) : QString( "application-octet-stream" );
       const QString iconPath = KGlobal::iconLoader()->iconPath( iconStr, KIcon::Small );
       if ( !iconPath.isEmpty() ) {
-        tmpStr += "<img valign=\"top\" src=\"" + iconPath + "\">";
+        rightCol += "<img valign=\"top\" src=\"" + iconPath + "\">";
       }
       const QCString encodedLabel = KCodecs::base64Encode(a->label().utf8());
-      tmpStr += helper->makeLink( "ATTACH:" + QString::fromUtf8(encodedLabel.data(), encodedLabel.length()), a->label() );
-      tmpStr += "<br>";
+      rightCol += helper->makeLink( "ATTACH:" + QString::fromUtf8(encodedLabel.data(), encodedLabel.length()), a->label() );
+      rightCol += "<br>";
     }
   }
 
-  return tmpStr;
+  return rightCol.isEmpty() ? QString::null : tmpStr + rightCol;
 }
 
 class IncidenceFormatter::ScheduleMessageVisitor
