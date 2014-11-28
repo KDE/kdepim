@@ -699,7 +699,7 @@ QAction *Viewer::createEventAction()
     return d->mCreateEventAction;
 }
 
-void Viewer::showOpenAttachmentFolderWidget(const KUrl &url)
+void Viewer::showOpenAttachmentFolderWidget(const QUrl &url)
 {
     Q_D(Viewer);
     d->showOpenAttachmentFolderWidget(url);
