@@ -1177,9 +1177,9 @@ static QString string2HTML( const QString& str )
   QString html = QStyleSheet::convertFromPlainText(str, QStyleSheetItem::WhiteSpaceNormal);
   // convertFromPlainText always butts the plain text in a paragraph.
   // this is not helpful when you want to layout the plain text in html.
-  html = html.right( html.length() - 3 ); // remove <p>
-  html = html.left( html.length() - 4 ); // remove </p>
-  return html;
+  QRegExp para ( "<p>(.*)</p>" );
+  para.search( html );
+  return para.cap( 1 ).isEmpty() ? html : para.cap( 1 );
 }
 
 static QString cleanHtml( const QString &html )
