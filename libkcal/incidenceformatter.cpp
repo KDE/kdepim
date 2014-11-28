@@ -626,7 +626,6 @@ static QString displayViewFormatEventsOnSameDays( InvitationFormatterHelper *hel
   }
 
   QString tmpStr;
-  tmpStr += "<div class=\"floatleft\">\n";
   tmpStr += "<span class=\"leftColumn\">";
   if ( event->hasEndDate() && event->dateEnd().daysTo( event->dtStart().date() ) > 0 ) {
     tmpStr += i18n( "Events on these days:" );
@@ -664,7 +663,6 @@ static QString displayViewFormatEventsOnSameDays( InvitationFormatterHelper *hel
     tmpStr += "<li>...</li>\n";
   }
   tmpStr += "</ul>";
-  tmpStr += "</div>";
   return tmpStr;
 }
 
