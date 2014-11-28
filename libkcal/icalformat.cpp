@@ -418,20 +418,22 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
   // TODO FIXME: Don't we have to ical-free message??? MEMLEAK
   icalcomponent *message;
 
-  // XXX Begin evil Hack
-  // Libical treats , in all text fields as a field seperator
+  // XXX (remove after an libical upgrade or when merging)
+  // Our Libical treats , in all text fields as a field seperator
   // but RFC 2445 does not say that it should do this.
   // RFC 2446 / 5546 even have an example description that
-  // contains an usecaped comma (example 4.6)
+  // contains an unescaped comma (example 4.6)
+  //
+  // This issue has been fixed in more current versions of libical.
+  // Probably with commit 8badc779
   //
   // aheinecke 2014.11.28 could not figure out how to fix this properly
   // in libical without much rework of the very generalized ical parsing
-  // there. So he gave up and added this tasty hack to ensure that
+  // there. So instead we make sure that
   // all commas are escaped in a DESCRIPTION before feeding it
   // to the icalparser.
   //
-  // I'll probably burn in hell for this. But otherwise DESCRIPTIONS
-  // of invitations coming from clients that do not use libical
+  // This fixes descriptions coming from clients that do not use libical
   // (e.g. roundcube) can not be parsed.
   QString messageTextCopy;
 
@@ -447,7 +449,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
     escaped.replace( unescapedComma, "\\1\\," );
     messageTextCopy.replace( "DESCRIPTION:" + rx.cap( 1 ), "DESCRIPTION:" + escaped );
   }
-  // End evil Hack.
+  // End Hack.
   message = icalparser_parse_string(messageTextCopy.isEmpty() ? messageText.utf8() : messageTextCopy.utf8());
 
   if (!message)
