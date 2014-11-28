@@ -54,8 +54,8 @@ public:
     GpgME::Protocol protocol() const;
 
 private:
-    /* reimp */ void doStart();
-    /* reimp */ void doCancel();
+    /* reimp */ void doStart() Q_DECL_OVERRIDE;
+    /* reimp */ void doCancel() Q_DECL_OVERRIDE;
 
 private:
     class Private;

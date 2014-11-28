@@ -56,8 +56,8 @@ public Q_SLOTS:
     void setAnyCardCanLearnKeys(bool);
 
 private:
-    /* reimp */ void doActivated();
-    /* reimp */ void slotEnableDisableActions();
+    /* reimp */ void doActivated() Q_DECL_OVERRIDE;
+    /* reimp */ void slotEnableDisableActions() Q_DECL_OVERRIDE;
 
 private:
     class Private;

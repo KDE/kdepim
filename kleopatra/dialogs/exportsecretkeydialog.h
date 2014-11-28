@@ -67,7 +67,7 @@ public:
     bool useArmor() const;
 
 protected Q_SLOTS:
-    /* reimp */ void accept();
+    /* reimp */ void accept() Q_DECL_OVERRIDE;
 
 private:
     class Private;

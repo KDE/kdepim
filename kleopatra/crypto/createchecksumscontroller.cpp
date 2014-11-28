@@ -253,7 +253,7 @@ private:
     }
 
 private:
-    /* reimp */ void run();
+    /* reimp */ void run() Q_DECL_OVERRIDE;
 
 private:
 #ifndef QT_NO_PROGRESSDIALOG

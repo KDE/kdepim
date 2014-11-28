@@ -47,7 +47,7 @@ public:
     ~ImportCertificatesCommand();
 
 protected:
-    /* reimp */ void doCancel();
+    /* reimp */ void doCancel() Q_DECL_OVERRIDE;
 
 protected:
     class Private;

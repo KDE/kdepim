@@ -57,8 +57,8 @@ public:
     QMimeData *mimeData() const;
 
 protected:
-    /* reimp */ void mousePressEvent(QMouseEvent *);
-    /* reimp */ void mouseMoveEvent(QMouseEvent *);
+    /* reimp */ void mousePressEvent(QMouseEvent *) Q_DECL_OVERRIDE;
+    /* reimp */ void mouseMoveEvent(QMouseEvent *) Q_DECL_OVERRIDE;
 
 private:
     QPointer<QMimeData> m_data;

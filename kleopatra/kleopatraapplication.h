@@ -57,7 +57,7 @@ public:
         return qobject_cast<KleopatraApplication *>(qApp);
     }
 
-    /* reimp */ int newInstance();
+    /* reimp */ int newInstance() Q_DECL_OVERRIDE;
 
     void setMainWindow(MainWindow *mw);
 

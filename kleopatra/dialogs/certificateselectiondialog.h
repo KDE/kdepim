@@ -99,7 +99,7 @@ public:
 public Q_SLOTS:
     void setStringFilter(const QString &text);
     void setKeyFilter(const boost::shared_ptr<Kleo::KeyFilter> &filter);
-    /* reimp */ void accept();
+    /* reimp */ void accept() Q_DECL_OVERRIDE;
 
 protected:
     void hideEvent(QHideEvent *);

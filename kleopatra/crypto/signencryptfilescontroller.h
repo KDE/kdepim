@@ -91,7 +91,7 @@ public Q_SLOTS:
     void cancel();
 
 private:
-    /* reimp */ void doTaskDone(const Task *task, const boost::shared_ptr<const Task::Result> &);
+    /* reimp */ void doTaskDone(const Task *task, const boost::shared_ptr<const Task::Result> &) Q_DECL_OVERRIDE;
 
     class Private;
     kdtools::pimpl_ptr<Private> d;

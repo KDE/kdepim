@@ -72,12 +72,12 @@ public:
 
     GpgME::Protocol protocol() const;
 
-    /* reimp */ void cancel();
-    /* reimp */ QString label() const;
+    /* reimp */ void cancel() Q_DECL_OVERRIDE;
+    /* reimp */ QString label() const Q_DECL_OVERRIDE;
 
 private:
-    /* reimp */ void doStart();
-    /* reimp */ unsigned long long inputSize() const;
+    /* reimp */ void doStart() Q_DECL_OVERRIDE;
+    /* reimp */ unsigned long long inputSize() const Q_DECL_OVERRIDE;
 
 private:
     class Private;
