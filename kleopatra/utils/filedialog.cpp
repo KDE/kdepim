@@ -136,7 +136,7 @@ QString FileDialog::getSaveFileName(QWidget *parent, const QString &caption, con
 #ifndef QT_NO_FILEDIALOG
     const QString fname = QFileDialog::getSaveFileName(parent, caption, dir(dirID), filter);
 #else
-    const QString fname = KFileDialog::getSaveFileName(dirID.isEmpty() ? KUrl() : dir(dirID), qt2KdeFilter(filter), parent, caption);
+    const QString fname = KFileDialog::getSaveFileName(dirID.isEmpty() ? QUrl() : dir(dirID), qt2KdeFilter(filter), parent, caption);
 #endif
     update(fname, dirID);
     return fname;

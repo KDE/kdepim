@@ -260,7 +260,7 @@ static QStringList files_from_args(const shared_ptr<const KCmdLineArgs> &args)
 {
     QStringList result;
     for (int i = 0, end = args->count() ; i < end ; ++i) {
-        const KUrl url = args->url(i);
+        const QUrl url = QUrl(args->url(i));
         if (url.scheme() == QLatin1String("file")) {
             result.push_back(url.toLocalFile());
         }
