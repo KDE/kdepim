@@ -104,7 +104,7 @@ Q_SIGNALS:
     void reportMicAlg(const QString &micalg);
 
 private:
-    /* reimp */ void doTaskDone(const Task *task, const boost::shared_ptr<const Task::Result> &result);
+    /* reimp */ void doTaskDone(const Task *task, const boost::shared_ptr<const Task::Result> &result) Q_DECL_OVERRIDE;
 
     class Private;
     kdtools::pimpl_ptr<Private> d;

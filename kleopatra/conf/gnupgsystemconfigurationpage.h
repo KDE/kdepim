@@ -50,9 +50,9 @@ public:
     explicit GnuPGSystemConfigurationPage(QWidget *parent = 0, const QVariantList &args = QVariantList());
     ~GnuPGSystemConfigurationPage();
 
-    /* reimp */ void load();
-    /* reimp */ void save();
-    /* reimp */ void defaults();
+    /* reimp */ void load() Q_DECL_OVERRIDE;
+    /* reimp */ void save() Q_DECL_OVERRIDE;
+    /* reimp */ void defaults() Q_DECL_OVERRIDE;
 
 private:
     Kleo::CryptoConfigModule *mWidget;

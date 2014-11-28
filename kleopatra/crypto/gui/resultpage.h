@@ -60,7 +60,7 @@ public:
 
     void setTaskCollection(const boost::shared_ptr<TaskCollection> &coll);
 
-    /* reimp */ bool isComplete() const;
+    /* reimp */ bool isComplete() const Q_DECL_OVERRIDE;
 
     bool keepOpenWhenDone() const;
     void setKeepOpenWhenDone(bool keep);

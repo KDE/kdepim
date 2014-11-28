@@ -118,7 +118,7 @@ Q_SIGNALS:
 
 private:
 
-    /* reimp */ void doTaskDone(const Task *task, const boost::shared_ptr<const Kleo::Crypto::Task::Result> &);
+    /* reimp */ void doTaskDone(const Task *task, const boost::shared_ptr<const Kleo::Crypto::Task::Result> &) Q_DECL_OVERRIDE;
 
     class Private;
     kdtools::pimpl_ptr<Private> d;
