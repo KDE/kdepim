@@ -135,7 +135,7 @@ protected slots:
     void slotGeneralPaletteChanged();
 
 private:
-    virtual bool eventFilter(QObject *o, QEvent *e);
+    virtual bool eventFilter(QObject *o, QEvent *e) Q_DECL_OVERRIDE;
     class FolderTreeWidgetPrivate;
     FolderTreeWidgetPrivate *const d;
 

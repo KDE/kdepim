@@ -396,7 +396,7 @@ protected:
     /**
     * Reimplemented in order to handle clicks with sub-item precision.
     */
-    virtual void mousePressEvent(QMouseEvent *e);
+    virtual void mousePressEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
 
     /**
     * Reimplemented in order to handle double clicks with sub-item precision.
@@ -426,7 +426,7 @@ protected:
     /**
     * Reimplemented in order to handle message DnD
     */
-    virtual void dropEvent(QDropEvent *e);
+    virtual void dropEvent(QDropEvent *e) Q_DECL_OVERRIDE;
 
     /**
     * Reimplemented in order to resize columns when header is not visible

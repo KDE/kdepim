@@ -140,10 +140,10 @@ public:
 protected:
     virtual void dragMoveEvent(QDragMoveEvent *e);
     virtual void dragEnterEvent(QDragEnterEvent *e);
-    virtual void dropEvent(QDropEvent *e);
+    virtual void dropEvent(QDropEvent *e) Q_DECL_OVERRIDE;
     virtual void mouseMoveEvent(QMouseEvent *e);
-    virtual void mousePressEvent(QMouseEvent *e);
-    virtual void paintEvent(QPaintEvent *e);
+    virtual void mousePressEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
+    void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
     virtual void showEvent(QShowEvent *e);
 
 private:
@@ -188,7 +188,7 @@ public:
     void startDrag();
 
 protected:
-    void mousePressEvent(QMouseEvent *e);
+    void mousePressEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
     void mouseMoveEvent(QMouseEvent *e);
 
 private:

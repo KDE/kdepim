@@ -67,10 +67,10 @@ public:
     ~TodoModel();
 
     /**reimp*/
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
     /**reimp*/
-    int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
     /**reimp*/
     void setSourceModel(QAbstractItemModel *sourceModel);
@@ -104,7 +104,7 @@ public:
     Qt::DropActions supportedDropActions() const;
 
     /**reimp*/
-    Qt::ItemFlags flags(const QModelIndex &index) const;
+    Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
     /**reimp*/
     QModelIndex parent(const QModelIndex &child) const;

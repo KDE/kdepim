@@ -83,7 +83,7 @@ public Q_SLOTS:
 public:
     /* reimp */ int columnCount(const QModelIndex &pidx) const;
     /* reimp */ QVariant headerData(int section, Qt::Orientation o, int role = Qt::DisplayRole) const;
-    /* reimp */ QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    /* reimp */ QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
     /**
      * defines which information is displayed in tooltips

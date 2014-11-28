@@ -104,9 +104,9 @@ public:
     */
     Akonadi::Item::Id lastSelectedItemId() const;
 
-    bool eventFilter(QObject *, QEvent *);
+    bool eventFilter(QObject *, QEvent *) Q_DECL_OVERRIDE;
 
-    void paintEvent(QPaintEvent *);
+    void paintEvent(QPaintEvent *) Q_DECL_OVERRIDE;
 
     QPoint contentsToGrid(const QPoint &pos) const;
     QPoint gridToContents(const QPoint &gpos) const;

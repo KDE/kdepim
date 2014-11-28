@@ -52,7 +52,7 @@ public:
                  QWidget *parent);
 
     ~JournalFrame();
-    bool eventFilter(QObject *, QEvent *);
+    bool eventFilter(QObject *, QEvent *) Q_DECL_OVERRIDE;
 
     void setJournal(const Akonadi::Item &journal);
     Akonadi::Item journal() const

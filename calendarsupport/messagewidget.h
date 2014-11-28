@@ -42,9 +42,9 @@ class CALENDARSUPPORT_EXPORT MessageWidget : public KMessageWidget
 public:
     explicit MessageWidget(QWidget *parent = 0);
     ~MessageWidget();
-    /**reimp*/ bool eventFilter(QObject *watched, QEvent *event);
-    /**reimp*/ void showEvent(QShowEvent *event);
-    /**reimp*/ void hideEvent(QHideEvent *event);
+    /**reimp*/ bool eventFilter(QObject *watched, QEvent *event) Q_DECL_OVERRIDE;
+    /**reimp*/ void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
+    /**reimp*/ void hideEvent(QHideEvent *event) Q_DECL_OVERRIDE;
 };
 }
 

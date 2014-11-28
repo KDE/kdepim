@@ -464,7 +464,7 @@ private:
     Q_PRIVATE_SLOT(d, void updateTabControls())
     Q_PRIVATE_SLOT(d, void changeQuicksearchVisibility(bool))
 
-    bool eventFilter(QObject *obj, QEvent *event);
+    bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
 
     class Private;
     Private *const d;

@@ -43,9 +43,9 @@ public:
     explicit TimeSpentView(QWidget *parent = 0);
     ~TimeSpentView();
 
-    virtual int currentDateCount() const;
+    int currentDateCount() const Q_DECL_OVERRIDE;
 
-    virtual Akonadi::Item::List selectedIncidences() const
+    Akonadi::Item::List selectedIncidences() const
     {
         return Akonadi::Item::List();
     }

@@ -101,7 +101,7 @@ public:
     bool isAutoDisplayEnabled() const;
     void setAutoDisplayEnabled(bool enabled);
 
-    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
 
     bool addAttachment(MessageCore::AttachmentPart::Ptr part);
@@ -110,14 +110,14 @@ public:
     bool removeAttachment(MessageCore::AttachmentPart::Ptr part);
     MessageCore::AttachmentPart::List attachments() const;
 
-    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+    Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
     virtual QVariant headerData(int section, Qt::Orientation orientation,
                                 int role = Qt::DisplayRole) const;
     virtual QModelIndex index(int row, int column,
                               const QModelIndex &parent = QModelIndex()) const;
     virtual QModelIndex parent(const QModelIndex &index) const;
-    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
 signals:
     void encryptEnabled(bool enabled);

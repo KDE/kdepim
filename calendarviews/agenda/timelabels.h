@@ -57,7 +57,7 @@ public:
     void setAgenda(Agenda *agenda);
 
     /**  */
-    virtual void paintEvent(QPaintEvent *e);
+    void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
 
     /** */
     virtual void contextMenuEvent(QContextMenuEvent *event);

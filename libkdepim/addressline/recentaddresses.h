@@ -61,7 +61,7 @@ private slots:
 
 protected:
     void updateButtonState();
-    bool eventFilter(QObject *o, QEvent *e);
+    bool eventFilter(QObject *o, QEvent *e) Q_DECL_OVERRIDE;
 
 private:
     void readConfig();

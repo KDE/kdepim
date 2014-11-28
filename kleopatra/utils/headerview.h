@@ -67,7 +67,7 @@ private:
 #if 0
 protected:
     /* reimp */ void updateGeometries();
-    /* reimp */ void mousePressEvent(QMouseEvent *e);
+    /* reimp */ void mousePressEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
     /* reimp */ void mouseReleaseEvent(QMouseEvent *e);
 #endif
 private:

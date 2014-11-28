@@ -65,7 +65,7 @@ public:
     void setWidget(QWidget *view);
 
 protected:
-    virtual bool eventFilter(QObject *watched, QEvent *event);
+    bool eventFilter(QObject *watched, QEvent *event) Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void adaptHeaderView();

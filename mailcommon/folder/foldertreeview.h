@@ -88,7 +88,7 @@ protected:
     void setSortingPolicy(FolderTreeWidget::SortingPolicy policy,
                           bool writeInConfig = false);
 
-    virtual void mousePressEvent(QMouseEvent *e);
+    virtual void mousePressEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
 
 public slots:
     void slotFocusNextFolder();

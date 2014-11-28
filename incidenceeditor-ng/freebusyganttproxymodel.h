@@ -49,7 +49,7 @@ class INCIDENCEEDITORS_NG_EXPORT FreeBusyGanttProxyModel : public QSortFilterPro
 {
 public:
     explicit FreeBusyGanttProxyModel(QObject *parent = 0);
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     QString tooltipify(const KCalCore::FreeBusyPeriod &period,
                        const KDateTime::Spec &timeSpec) const;
 };

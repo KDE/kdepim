@@ -50,8 +50,8 @@ public:
 
     ~IncidenceTreeModel();
 
-    /**reimp*/ int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    /**reimp*/ int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    /**reimp*/ int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    /**reimp*/ int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
     /**reimp*/ QVariant data(const QModelIndex &index, int role) const;
 

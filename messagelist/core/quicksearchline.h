@@ -79,7 +79,7 @@ Q_SIGNALS:
     void statusButtonsClicked();
 
 protected:
-    bool eventFilter(QObject *object, QEvent *e);
+    bool eventFilter(QObject *object, QEvent *e) Q_DECL_OVERRIDE;
 private slots:
     void slotLockSearchClicked(bool locked);
     void slotSearchOptionChanged();

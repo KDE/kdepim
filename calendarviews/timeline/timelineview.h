@@ -65,7 +65,7 @@ Q_SIGNALS:
     void showIncidencePopupSignal(Akonadi::Item, const QDate &);
 
 protected:
-    virtual bool eventFilter(QObject *object, QEvent *event);
+    bool eventFilter(QObject *object, QEvent *event) Q_DECL_OVERRIDE;
 
 private:
     class Private;

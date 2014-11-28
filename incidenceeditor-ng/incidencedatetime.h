@@ -113,7 +113,7 @@ private slots: /// Event specific
     bool isDirty(const KCalCore::Journal::Ptr &journal) const;
 
 protected:
-    bool eventFilter(QObject *obj, QEvent *event);
+    bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
 
 private:
     void load(const KCalCore::Event::Ptr &event, bool isTemplate = false, bool templateOverridesTimes = false);

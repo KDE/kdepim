@@ -47,8 +47,8 @@ public:
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event);
-    void paintEvent(QPaintEvent *e);
-    void mousePressEvent(QMouseEvent *e);
+    void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
+    void mousePressEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
 
 private:
     QRect computeTextRect(const QString &message, int extra_width) const;

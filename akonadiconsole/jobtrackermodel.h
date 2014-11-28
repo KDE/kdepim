@@ -37,7 +37,7 @@ public:
     virtual int rowCount(const QModelIndex &) const;
     virtual int columnCount(const QModelIndex &) const;
     virtual QVariant data(const QModelIndex &, int role = Qt::DisplayRole) const;
-    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     bool isEnabled() const;
 public slots:
     void resetTracker();

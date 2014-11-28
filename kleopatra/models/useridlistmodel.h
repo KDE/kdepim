@@ -84,7 +84,7 @@ public:
     /* reimp */ int columnCount(const QModelIndex &pidx = QModelIndex()) const;
     /* reimp */ int rowCount(const QModelIndex &pidx = QModelIndex()) const;
     /* reimp */ QVariant headerData(int section, Qt::Orientation o, int role = Qt::DisplayRole) const;
-    /* reimp */ QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    /* reimp */ QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
     /* reimp */ QModelIndex index(int row, int col, const QModelIndex &parent = QModelIndex()) const;
     /* reimp */ QModelIndex parent(const QModelIndex &index) const;

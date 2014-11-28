@@ -71,8 +71,8 @@ public:
     void enableColumn(int column, bool enable);
 
 protected:
-    void paintEvent(QPaintEvent *event);
-    bool eventFilter(QObject *, QEvent *);
+    void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
+    bool eventFilter(QObject *, QEvent *) Q_DECL_OVERRIDE;
 
 private:
     class Private;
