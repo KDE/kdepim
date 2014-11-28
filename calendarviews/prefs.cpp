@@ -956,47 +956,47 @@ void Prefs::createNewColor(QColor &defColor, int seed)
     defColor = col;
 #else
     int h, s, v;
-    defColor.getHsv( &h, &s, &v );
-    h = ( seed % 12 ) * 30;
-    s -= s * static_cast<int>( ( ( seed / 12 ) % 2 ) * 0.5 );
-    defColor.setHsv( h, s, v );
+    defColor.getHsv(&h, &s, &v);
+    h = (seed % 12) * 30;
+    s -= s * static_cast<int>(((seed / 12) % 2) * 0.5);
+    defColor.setHsv(h, s, v);
 #endif
 }
 
-QColor Prefs::resourceColor( const QString &cal )
+QColor Prefs::resourceColor(const QString &cal)
 {
-  QColor color;
-  if ( !cal.isEmpty() ) {
-    if ( d->mBaseConfig.mResourceColors.contains( cal ) ) {
-      color = d->mBaseConfig.mResourceColors.value( cal );
-      if ( !color.isValid() ) {
-        return color;
-      }
-    }
-  } else {
-    return d->mBaseConfig.mDefaultResourceColor;
-  }
-
-  // assign default color if enabled
-  if ( !cal.isEmpty() && !color.isValid() &&
-       d->getBool( d->mBaseConfig.assignDefaultResourceColorsItem() ) ) {
-    QColor defColor( 0x37, 0x7A, 0xBC );
-    const int seed = d->getInt( d->mBaseConfig.defaultResourceColorSeedItem() );
-    const QStringList colors = d->getStringList( d->mBaseConfig.defaultResourceColorsItem() );
-    if ( seed > 0 && seed - 1 < (int)colors.size() ) {
-        defColor = QColor( colors[seed-1] );
+    QColor color;
+    if (!cal.isEmpty()) {
+        if (d->mBaseConfig.mResourceColors.contains(cal)) {
+            color = d->mBaseConfig.mResourceColors.value(cal);
+            if (!color.isValid()) {
+                return color;
+            }
+        }
     } else {
-        createNewColor(defColor, seed);
+        return d->mBaseConfig.mDefaultResourceColor;
     }
-    d->setInt( d->mBaseConfig.defaultResourceColorSeedItem(), ( seed + 1 ) );
-    d->mBaseConfig.setResourceColor( cal, defColor );
-    color = d->mBaseConfig.mResourceColors[cal];
-  }
-  if ( color.isValid() ) {
-    return color;
-  } else {
-    return d->mBaseConfig.mDefaultResourceColor;
-  }
+
+    // assign default color if enabled
+    if (!cal.isEmpty() && !color.isValid() &&
+            d->getBool(d->mBaseConfig.assignDefaultResourceColorsItem())) {
+        QColor defColor(0x37, 0x7A, 0xBC);
+        const int seed = d->getInt(d->mBaseConfig.defaultResourceColorSeedItem());
+        const QStringList colors = d->getStringList(d->mBaseConfig.defaultResourceColorsItem());
+        if (seed > 0 && seed - 1 < (int)colors.size()) {
+            defColor = QColor(colors[seed - 1]);
+        } else {
+            createNewColor(defColor, seed);
+        }
+        d->setInt(d->mBaseConfig.defaultResourceColorSeedItem(), (seed + 1));
+        d->mBaseConfig.setResourceColor(cal, defColor);
+        color = d->mBaseConfig.mResourceColors[cal];
+    }
+    if (color.isValid()) {
+        return color;
+    } else {
+        return d->mBaseConfig.mDefaultResourceColor;
+    }
 }
 
 QStringList Prefs::timeScaleTimezones() const

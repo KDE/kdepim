@@ -45,20 +45,19 @@ void CreateColorGui_test::createListWidgetItem()
     mListWidget->clear();
     for (int i = 0; i < 100; ++i) {
         QListWidgetItem *item = new QListWidgetItem;
-        QColor defColor( 0x37, 0x7A, 0xBC );
+        QColor defColor(0x37, 0x7A, 0xBC);
         prefs.createNewColor(defColor, i);
         item->setBackgroundColor(defColor);
         mListWidget->addItem(item);
     }
 }
 
-int main (int argc, char **argv)
+int main(int argc, char **argv)
 {
     KCmdLineArgs::init(argc, argv, "CreateColorGui_test", 0, ki18n("CreateColorGui_test"),
                        "1.0", ki18n("Test creating color"));
 
     KApplication app;
-
 
     CreateColorGui_test *createColor = new CreateColorGui_test;
     createColor->resize(800, 600);

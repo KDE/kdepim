@@ -24,7 +24,7 @@ class CreateColorGui_test : public QWidget
 {
     Q_OBJECT
 public:
-    explicit CreateColorGui_test(QWidget *parent=0);
+    explicit CreateColorGui_test(QWidget *parent = 0);
     ~CreateColorGui_test();
 private:
     void createListWidgetItem();
