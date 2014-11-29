@@ -59,7 +59,7 @@ void CreateEventJob::slotFetchDone(KJob *job)
     if (fetchJob->items().count() == 1) {
         mItem = fetchJob->items().first();
     } else {
-        qDebug()<<" createTodo Error during fetch: "<<job->errorString();
+        qDebug() << " createTodo Error during fetch: " << job->errorString();
         Q_EMIT emitResult();
         return;
     }
