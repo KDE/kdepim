@@ -38,7 +38,7 @@ namespace KDGantt {
         /*reimp*/ void setSourceModel( QAbstractItemModel* model );
 
         /*reimp*/ QVariant data( const QModelIndex& proxyIndex, int role = Qt::DisplayRole) const;
-        /*reimp*/ bool setData( const QModelIndex& index, const QVariant& value, int role = Qt::EditRole );
+        /*reimp*/ bool setData( const QModelIndex& index, const QVariant& value, int role = Qt::EditRole ) Q_DECL_OVERRIDE;
 
         /*reimp*/ Qt::ItemFlags flags( const QModelIndex& idx ) const;
 

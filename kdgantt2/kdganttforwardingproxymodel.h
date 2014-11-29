@@ -48,7 +48,7 @@ namespace KDGantt {
         /*reimp*/ int rowCount( const QModelIndex& idx = QModelIndex() ) const;
         /*reimp*/ int columnCount( const QModelIndex& idx = QModelIndex() ) const;
 
-        /*reimp*/ bool setData( const QModelIndex& index, const QVariant& value, int role = Qt::EditRole );
+        /*reimp*/ bool setData( const QModelIndex& index, const QVariant& value, int role = Qt::EditRole ) Q_DECL_OVERRIDE;
 
     protected Q_SLOTS:
         virtual void sourceModelAboutToBeReset();

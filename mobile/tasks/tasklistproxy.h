@@ -43,10 +43,10 @@ class TaskListProxy : public ListProxy
 
     explicit TaskListProxy( QObject* parent = 0 );
 
-    virtual QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const;
-    virtual bool setData( const QModelIndex& index, const QVariant& value, int role = Qt::EditRole );
+    virtual QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const Q_DECL_OVERRIDE;
+    virtual bool setData( const QModelIndex& index, const QVariant& value, int role = Qt::EditRole ) Q_DECL_OVERRIDE;
 
-    virtual void setSourceModel( QAbstractItemModel* sourceModel );
+    virtual void setSourceModel( QAbstractItemModel* sourceModel ) Q_DECL_OVERRIDE;
 
     void setPreferences( const EventViews::PrefsPtr &preferences );
 

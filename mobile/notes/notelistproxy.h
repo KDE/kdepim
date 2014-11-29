@@ -37,9 +37,9 @@ public:
 public:
   explicit NoteListProxy( int customRoleBaseline, QObject* parent = 0 );
 
-  virtual QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const;
+  virtual QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const Q_DECL_OVERRIDE;
 
-  virtual void setSourceModel( QAbstractItemModel* sourceModel );
+  virtual void setSourceModel( QAbstractItemModel* sourceModel ) Q_DECL_OVERRIDE;
 
 private:
   int absoluteCustomRole( int role ) const { return role + mCustomRoleBaseline; }

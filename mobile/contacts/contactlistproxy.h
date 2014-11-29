@@ -52,7 +52,7 @@ class ContactListProxy : public ListProxy
 
     explicit ContactListProxy( QObject* parent = 0 );
 
-    QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const;
+    QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const Q_DECL_OVERRIDE;
     void setSourceModel(QAbstractItemModel* sourceModel);
     bool lessThan(const QModelIndex& left, const QModelIndex& right) const;
 
