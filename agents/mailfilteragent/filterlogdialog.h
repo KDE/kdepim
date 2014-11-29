@@ -57,7 +57,7 @@ public:
 
 private slots:
     void slotTextChanged();
-    void slotLogEntryAdded( const QString& logEntry );
+    void slotLogEntryAdded(const QString &logEntry);
     void slotLogShrinked();
     void slotLogStateChanged();
     void slotChangeLogDetail();
@@ -70,14 +70,14 @@ private:
     void readConfig();
     void writeConfig();
 private:
-    PimCommon::PlainTextEditorWidget * mTextEdit;
-    QCheckBox * mLogActiveBox;
-    QGroupBox * mLogDetailsBox;
-    QCheckBox * mLogPatternDescBox;
-    QCheckBox * mLogRuleEvaluationBox;
-    QCheckBox * mLogPatternResultBox;
-    QCheckBox * mLogFilterActionBox;
-    QSpinBox  * mLogMemLimitSpin;
+    PimCommon::PlainTextEditorWidget *mTextEdit;
+    QCheckBox *mLogActiveBox;
+    QGroupBox *mLogDetailsBox;
+    QCheckBox *mLogPatternDescBox;
+    QCheckBox *mLogRuleEvaluationBox;
+    QCheckBox *mLogPatternResultBox;
+    QCheckBox *mLogFilterActionBox;
+    QSpinBox   *mLogMemLimitSpin;
     QPushButton *mUser1Button;
     QPushButton *mUser2Button;
 

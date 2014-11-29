@@ -38,7 +38,6 @@
 
 #include <kdelibs4configmigrator.h>
 
-
 #include <commands/reloadkeyscommand.h>
 #include <commands/selftestcommand.h>
 

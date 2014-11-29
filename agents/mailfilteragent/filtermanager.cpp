@@ -66,22 +66,22 @@ public:
           mTotalProgressCount(0),
           mCurrentProgressCount(0)
     {
-        pixmapNotification = QIcon::fromTheme( QStringLiteral("view-filter") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+        pixmapNotification = QIcon::fromTheme(QStringLiteral("view-filter")).pixmap(KIconLoader::SizeSmall, KIconLoader::SizeSmall);
     }
 
-    void itemsFetchJobForFilterDone( KJob *job );
-    void itemFetchJobForFilterDone( KJob *job );
-    void moveJobResult( KJob* );
-    void modifyJobResult( KJob* );
-    void deleteJobResult( KJob* );
-    void slotItemsFetchedForFilter( const Akonadi::Item::List &items );
+    void itemsFetchJobForFilterDone(KJob *job);
+    void itemFetchJobForFilterDone(KJob *job);
+    void moveJobResult(KJob *);
+    void modifyJobResult(KJob *);
+    void deleteJobResult(KJob *);
+    void slotItemsFetchedForFilter(const Akonadi::Item::List &items);
     void showNotification(const QString &errorMsg, const QString &jobErrorString);
 
-    bool isMatching( const Akonadi::Item &item, const MailCommon::MailFilter *filter );
-    void beginFiltering( const Akonadi::Item &item ) const;
-    void endFiltering( const Akonadi::Item &item ) const;
-    bool atLeastOneFilterAppliesTo( const QString &accountId ) const;
-    bool atLeastOneIncomingFilterAppliesTo( const QString &accountId ) const;
+    bool isMatching(const Akonadi::Item &item, const MailCommon::MailFilter *filter);
+    void beginFiltering(const Akonadi::Item &item) const;
+    void endFiltering(const Akonadi::Item &item) const;
+    bool atLeastOneFilterAppliesTo(const QString &accountId) const;
+    bool atLeastOneIncomingFilterAppliesTo(const QString &accountId) const;
     FilterManager *q;
     QList<MailCommon::MailFilter *> mFilters;
     QMap<QString, SearchRule::RequiredPart> mRequiredParts;
@@ -233,14 +233,14 @@ void FilterManager::Private::modifyJobResult(KJob *job)
 
 void FilterManager::Private::showNotification(const QString &errorMsg, const QString &jobErrorString)
 {
-    KNotification *notify = new KNotification( QStringLiteral("mailfilterjoberror") );
-    notify->setComponentName( QStringLiteral("akonadi_mailfilter_agent") );
-    notify->setPixmap( pixmapNotification );
-    notify->setText( errorMsg + QLatin1Char('\n') + jobErrorString );
+    KNotification *notify = new KNotification(QStringLiteral("mailfilterjoberror"));
+    notify->setComponentName(QStringLiteral("akonadi_mailfilter_agent"));
+    notify->setPixmap(pixmapNotification);
+    notify->setText(errorMsg + QLatin1Char('\n') + jobErrorString);
     notify->sendEvent();
 }
 
-bool FilterManager::Private::isMatching( const Akonadi::Item &item, const MailCommon::MailFilter *filter )
+bool FilterManager::Private::isMatching(const Akonadi::Item &item, const MailCommon::MailFilter *filter)
 {
     bool result = false;
     if (FilterLog::instance()->isLogging()) {
@@ -261,7 +261,7 @@ bool FilterManager::Private::isMatching( const Akonadi::Item &item, const MailCo
     return result;
 }
 
-void FilterManager::Private::beginFiltering( const Akonadi::Item &item ) const
+void FilterManager::Private::beginFiltering(const Akonadi::Item &item) const
 {
     if (FilterLog::instance()->isLogging()) {
         FilterLog::instance()->addSeparator();
@@ -416,7 +416,7 @@ bool FilterManager::process(const Akonadi::Item &item, bool needsFullPayload, co
     bool applyOnOutbound = false;
     if (d->isMatching(item, filter)) {
         // do the actual filtering stuff
-        d->beginFiltering( item );
+        d->beginFiltering(item);
 
         ItemContext context(item, needsFullPayload);
 
@@ -490,7 +490,7 @@ bool FilterManager::process(const QList< MailFilter * > &mailFilters, const Akon
 
     bool stopIt = false;
 
-    d->beginFiltering( item );
+    d->beginFiltering(item);
 
     ItemContext context(item, needsFullPayload);
     QList<MailCommon::MailFilter *>::const_iterator end(mailFilters.constEnd());

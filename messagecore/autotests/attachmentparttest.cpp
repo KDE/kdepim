@@ -51,7 +51,7 @@ void AttachmentPartTest::testApi()
 void AttachmentPartTest::shouldHaveDefaultValue()
 {
     AttachmentPart part;
-    QCOMPARE(part.size(), (qint64)-1);
+    QCOMPARE(part.size(), (qint64) - 1);
     QVERIFY(!part.isInline());
     QVERIFY(part.isAutoEncoding());
     QVERIFY(!part.isCompressed());

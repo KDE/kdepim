@@ -26,7 +26,6 @@
 #include <QDeclarativeEngine>
 #include <QDeclarativeContext>
 
-
 #include <AkonadiCore/ChangeRecorder>
 #include <AkonadiCore/ItemFetchScope>
 

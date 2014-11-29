@@ -328,7 +328,7 @@ QString MailFilterAgent::printCollectionMonitored()
     if (collections.isEmpty()) {
         printDebugCollection = QLatin1String("No collection is monitored!");
     } else {
-        foreach( const Akonadi::Collection &collection, collections) {
+        foreach (const Akonadi::Collection &collection, collections) {
             if (!printDebugCollection.isEmpty()) {
                 printDebugCollection += QLatin1Char('\n');
             }
@@ -339,5 +339,5 @@ QString MailFilterAgent::printCollectionMonitored()
     return printDebugCollection;
 }
 
-AKONADI_AGENT_MAIN( MailFilterAgent )
+AKONADI_AGENT_MAIN(MailFilterAgent)
 
