@@ -91,7 +91,7 @@ public:
     void setIncidenceChanger(Akonadi::IncidenceChanger *changer);
 
     /**reimp*/
-    QMimeData *mimeData(const QModelIndexList &indexes) const;
+    QMimeData *mimeData(const QModelIndexList &indexes) const Q_DECL_OVERRIDE;
 
     /**reimp*/
     bool dropMimeData(const QMimeData *data, Qt::DropAction action,

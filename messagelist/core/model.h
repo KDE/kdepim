@@ -217,7 +217,7 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
     /// Called when user initiates a drag from the messagelist
-    virtual QMimeData *mimeData(const QModelIndexList &indexes) const;
+    virtual QMimeData *mimeData(const QModelIndexList &indexes) const Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     /**

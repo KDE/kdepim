@@ -79,7 +79,7 @@ public:
 
     virtual bool dropMimeData(const QMimeData *data, Qt::DropAction action,
                               int row, int column, const QModelIndex &parent);
-    virtual QMimeData *mimeData(const QModelIndexList &indexes) const;
+    virtual QMimeData *mimeData(const QModelIndexList &indexes) const Q_DECL_OVERRIDE;
     virtual QStringList mimeTypes() const;
     virtual Qt::DropActions supportedDropActions() const Q_DECL_OVERRIDE;
 
