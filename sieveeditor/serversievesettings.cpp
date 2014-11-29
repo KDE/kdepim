@@ -108,7 +108,7 @@ void ServerSieveSettings::populateDefaultAuthenticationOptions()
 
 void ServerSieveSettings::slotUserServerNameChanged()
 {
-    Q_EMIT enableOkButton(!ui->userName->text().isEmpty() && !ui->serverName->text().isEmpty());
+    Q_EMIT enableOkButton(!ui->userName->text().trimmed().isEmpty() && !ui->serverName->text().trimmed().isEmpty());
 }
 
 QString ServerSieveSettings::serverName() const

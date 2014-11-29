@@ -57,3 +57,5 @@ install(FILES
   DESTINATION  ${KXMLGUI_INSTALL_DIR}/sieveeditor)
 
 install(PROGRAMS org.kde.sieveeditor.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+
+add_subdirectory(autotests)
