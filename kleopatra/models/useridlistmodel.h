@@ -87,7 +87,7 @@ public:
     /* reimp */ QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
     /* reimp */ QModelIndex index(int row, int col, const QModelIndex &parent = QModelIndex()) const;
-    /* reimp */ QModelIndex parent(const QModelIndex &index) const;
+    /* reimp */ QModelIndex parent(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
 private:
     class Private;

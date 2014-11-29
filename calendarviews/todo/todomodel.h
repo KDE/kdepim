@@ -101,7 +101,7 @@ public:
     QStringList mimeTypes() const;
 
     /**reimp*/
-    Qt::DropActions supportedDropActions() const;
+    Qt::DropActions supportedDropActions() const Q_DECL_OVERRIDE;
 
     /**reimp*/
     Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;

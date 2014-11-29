@@ -81,7 +81,7 @@ public:
                               int row, int column, const QModelIndex &parent);
     virtual QMimeData *mimeData(const QModelIndexList &indexes) const;
     virtual QStringList mimeTypes() const;
-    virtual Qt::DropActions supportedDropActions() const;
+    virtual Qt::DropActions supportedDropActions() const Q_DECL_OVERRIDE;
 
     /// for the save/discard warning
     bool isModified() const;
@@ -102,7 +102,7 @@ public:
     void setAutoDisplayEnabled(bool enabled);
 
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-    virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+    virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
 
     bool addAttachment(MessageCore::AttachmentPart::Ptr part);
     bool updateAttachment(MessageCore::AttachmentPart::Ptr part);
@@ -115,7 +115,7 @@ public:
                                 int role = Qt::DisplayRole) const;
     virtual QModelIndex index(int row, int column,
                               const QModelIndex &parent = QModelIndex()) const;
-    virtual QModelIndex parent(const QModelIndex &index) const;
+    virtual QModelIndex parent(const QModelIndex &index) const Q_DECL_OVERRIDE;
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     virtual int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
