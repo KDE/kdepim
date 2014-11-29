@@ -33,9 +33,9 @@ public:
 
     /* QAIM API */
     virtual QModelIndex index(int, int, const QModelIndex &) const;
-    virtual QModelIndex parent(const QModelIndex &) const;
+    virtual QModelIndex parent(const QModelIndex &) const Q_DECL_OVERRIDE;
     virtual int rowCount(const QModelIndex &) const;
-    virtual int columnCount(const QModelIndex &) const;
+    virtual int columnCount(const QModelIndex &) const Q_DECL_OVERRIDE;
     virtual QVariant data(const QModelIndex &, int role = Qt::DisplayRole) const;
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     bool isEnabled() const;

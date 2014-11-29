@@ -112,9 +112,9 @@ private Q_SLOTS:
     // void rowsAboutToBeRemoved( const QModelIndex &parent, int start, int end );
 
 #ifndef QT_NO_WHEELEVENT
-    virtual void wheelEvent(QWheelEvent *event);
+    virtual void wheelEvent(QWheelEvent *event) Q_DECL_OVERRIDE;
 #endif
-    virtual void keyPressEvent(QKeyEvent *event);
+    virtual void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
     virtual void keyReleaseEvent(QKeyEvent *event);
 
     ///* reimp */void incidencesAdded( const Akonadi::Item::List &incidences );

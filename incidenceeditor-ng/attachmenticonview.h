@@ -54,7 +54,7 @@ public:
 protected:
     QMimeData *mimeData(const QList<QListWidgetItem *> items) const;
     void startDrag(Qt::DropActions supportedActions);
-    void keyPressEvent(QKeyEvent *event);
+    void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 
 private:
     mutable QHash<KCalCore::Attachment::Ptr, QUrl> mTempFiles;

@@ -178,7 +178,7 @@ Q_SIGNALS:
     void contextMenu(Kleo::KeyListViewItem *, const QPoint &);
 
 protected:
-    void keyPressEvent(QKeyEvent *event);
+    void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 
 public Q_SLOTS:
     virtual void slotAddKey(const GpgME::Key &key);

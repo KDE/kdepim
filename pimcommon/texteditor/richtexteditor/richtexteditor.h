@@ -88,7 +88,7 @@ protected:
     void contextMenuEvent(QContextMenuEvent *event);
     void focusInEvent(QFocusEvent *event);
     bool event(QEvent *ev);
-    void keyPressEvent(QKeyEvent *event);
+    void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     void findText();

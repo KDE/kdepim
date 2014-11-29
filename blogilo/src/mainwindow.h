@@ -111,7 +111,7 @@ private slots:
     void slotActionFailed(const QString &serviceName, const QString &filename);
 
 protected:
-    void keyPressEvent(QKeyEvent *event);
+    void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
     void closeEvent(QCloseEvent *event);
 
 private:

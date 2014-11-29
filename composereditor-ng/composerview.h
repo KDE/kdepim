@@ -117,8 +117,8 @@ public:
 protected:
     void contextMenuEvent(QContextMenuEvent *event);
     void mousePressEvent(QMouseEvent *event);
-    void keyPressEvent(QKeyEvent *event);
-    void wheelEvent(QWheelEvent *event);
+    void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
+    void wheelEvent(QWheelEvent *event) Q_DECL_OVERRIDE;
     void mouseDoubleClickEvent(QMouseEvent *);
 
 Q_SIGNALS:
