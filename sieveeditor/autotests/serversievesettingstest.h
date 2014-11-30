@@ -33,7 +33,8 @@ public:
 private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldSetValue();
-
+    void shouldEmitEnableOkButtonSignal();
+    void shouldEmitSignalWithValueTrue();
 
 };
 

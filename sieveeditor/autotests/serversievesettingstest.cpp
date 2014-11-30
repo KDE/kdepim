@@ -21,6 +21,7 @@
 #include "serversievesettingstest.h"
 #include "../serversievesettings.h"
 #include <qtest_kde.h>
+#include <QSignalSpy>
 ServerSieveSettingsTest::ServerSieveSettingsTest(QObject *parent)
     : QObject(parent)
 {
@@ -52,6 +53,56 @@ void ServerSieveSettingsTest::shouldSetValue()
     QCOMPARE(widget.serverName(), servername);
     QCOMPARE(widget.userName(), username);
     QCOMPARE(widget.password(), password);
+}
+
+void ServerSieveSettingsTest::shouldEmitEnableOkButtonSignal()
+{
+    ServerSieveSettings widget;
+    widget.show();
+    QTest::qWaitForWindowShown(&widget);
+    QSignalSpy spy(&widget, SIGNAL(enableOkButton(bool)));
+    widget.setPassword(QLatin1String("foo"));
+    QCOMPARE(spy.count(), 0);
+
+    int numberEmitSignal = 1;
+    widget.setServerName(QLatin1String("foo"));
+    QCOMPARE(spy.count(), numberEmitSignal);
+    ++numberEmitSignal;
+    widget.setUserName(QLatin1String("foo"));
+    QCOMPARE(spy.count(), numberEmitSignal);
+    ++numberEmitSignal;
+    widget.setUserName(QLatin1String(""));
+    QCOMPARE(spy.count(), numberEmitSignal);
+    ++numberEmitSignal;
+    widget.setServerName(QLatin1String(""));
+    QCOMPARE(spy.count(), numberEmitSignal);
+}
+
+void ServerSieveSettingsTest::shouldEmitSignalWithValueTrue()
+{
+    ServerSieveSettings widget;
+    widget.show();
+    QTest::qWaitForWindowShown(&widget);
+    QSignalSpy spy(&widget, SIGNAL(enableOkButton(bool)));
+    widget.setServerName(QLatin1String("foo"));
+    QCOMPARE(spy.count(), 1);
+    //We need servername!=empty and username != empty
+    QCOMPARE(spy.at(0).at(0).toBool(), false);
+
+    widget.setUserName(QLatin1String("foo"));
+    QCOMPARE(spy.count(), 2);
+    QCOMPARE(spy.at(1).at(0).toBool(), true);
+
+    //We don't want empty string
+    widget.setUserName(QLatin1String(" "));
+    QCOMPARE(spy.count(), 3);
+    QCOMPARE(spy.at(2).at(0).toBool(), false);
+
+    //We don't want empty string
+    widget.setServerName(QLatin1String(" "));
+    QCOMPARE(spy.count(), 4);
+    QCOMPARE(spy.at(3).at(0).toBool(), false);
+
 }
 
 QTEST_KDEMAIN(ServerSieveSettingsTest, GUI)
