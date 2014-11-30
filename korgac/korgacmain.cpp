@@ -25,18 +25,20 @@
 #include "koalarmclient.h"
 #include "kdepim-version.h"
 
-#include <k4aboutdata.h>
-#include <KCmdLineArgs>
-#include <KUniqueApplication>
+#include <kaboutdata.h>
 
 #include <kdelibs4configmigrator.h>
 #include <stdlib.h>
-
+#include <QCommandLineParser>
+#include <KDBusService>
+#include <KLocalizedString>
+#include <QApplication>
 #ifdef SERIALIZER_PLUGIN_STATIC
 
 Q_IMPORT_PLUGIN(akonadi_serializer_kcalcore)
 #endif
 
+#if 0
 class ReminderDaemonApp : public KUniqueApplication
 {
 public:
@@ -61,7 +63,7 @@ public:
 private:
     KOAlarmClient *mClient;
 };
-
+#endif
 static const char korgacVersion[] = KDEPIM_VERSION;
 
 int main(int argc, char **argv)
@@ -71,30 +73,31 @@ int main(int argc, char **argv)
     migrate.setConfigFiles(QStringList() << QLatin1String("korgacrc"));
     migrate.migrate();
 
-    K4AboutData aboutData("korgac", QByteArray(), ki18n("KOrganizer Reminder Daemon"),
-                          korgacVersion, ki18n("KOrganizer Reminder Daemon"),
-                          K4AboutData::License_GPL,
-                          ki18n("(c) 2003 Cornelius Schumacher"),
-                          KLocalizedString(), "http://pim.kde.org");
-    aboutData.addAuthor(ki18n("Cornelius Schumacher"), ki18n("Former Maintainer"),
-                        "schumacher@kde.org");
-    aboutData.addAuthor(ki18n("Reinhold Kainhofer"), ki18n("Former Maintainer"),
-                        "kainhofer@kde.org");
-    aboutData.addAuthor(ki18n("Allen Winter"), ki18n("Janitorial Staff"),
-                        "winter@kde.org");
+    KAboutData aboutData(QLatin1String("korgac"), i18n("KOrganizer Reminder Daemon"),
+                          QLatin1String(korgacVersion), i18n("KOrganizer Reminder Daemon"),
+                          KAboutLicense::GPL,
+                          i18n("(c) 2003 Cornelius Schumacher"),
+                          QString(), QLatin1String("http://pim.kde.org"));
+    aboutData.addAuthor(i18n("Cornelius Schumacher"), i18n("Former Maintainer"),
+                        QLatin1String("schumacher@kde.org"));
+    aboutData.addAuthor(i18n("Reinhold Kainhofer"), i18n("Former Maintainer"),
+                        QLatin1String("kainhofer@kde.org"));
+    aboutData.addAuthor(i18n("Allen Winter"), i18n("Janitorial Staff"),
+                        QLatin1String("winter@kde.org"));
 
-    KCmdLineArgs::init(argc, argv, &aboutData);
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-    KCmdLineOptions options;
-    KCmdLineArgs::addCmdLineOptions(options);
-    KUniqueApplication::addCmdLineOptions();
-
-    if (!ReminderDaemonApp::start()) {
-        exit(0);
-    }
-
-    ReminderDaemonApp app;
-    app.disableSessionManagement();
+    KDBusService service(KDBusService::Unique);
+    KOAlarmClient *client = new KOAlarmClient;
+    //ReminderDaemonApp app;
+    //app.disableSessionManagement();
 
     return app.exec();
 }
