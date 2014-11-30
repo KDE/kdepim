@@ -29,6 +29,7 @@
 #include <KCmdLineArgs>
 #include <KUniqueApplication>
 
+#include <kdelibs4configmigrator.h>
 #include <stdlib.h>
 
 #ifdef SERIALIZER_PLUGIN_STATIC
@@ -65,6 +66,11 @@ static const char korgacVersion[] = KDEPIM_VERSION;
 
 int main(int argc, char **argv)
 {
+    Kdelibs4ConfigMigrator migrate(QLatin1String("korgac"));
+
+    migrate.setConfigFiles(QStringList() << QLatin1String("korgacrc"));
+    migrate.migrate();
+
     K4AboutData aboutData("korgac", QByteArray(), ki18n("KOrganizer Reminder Daemon"),
                           korgacVersion, ki18n("KOrganizer Reminder Daemon"),
                           K4AboutData::License_GPL,
