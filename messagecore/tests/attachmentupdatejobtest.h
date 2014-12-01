@@ -35,6 +35,7 @@ private Q_SLOTS:
     void shouldHaveSameEncodingAfterUpdate();
     void shouldHaveSameMimetypeAfterUpdate();
     void shouldNotUpdateWhenUrlIsEmpty();
+    void shouldHaveSameInlineStatus();
 };
 
 #endif // ATTACHMENTUPDATEJOBTEST_H
