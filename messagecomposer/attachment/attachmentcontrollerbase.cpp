@@ -594,6 +594,11 @@ void AttachmentControllerBase::showContextMenu()
         menu->addAction(d->removeContextAction);
     }
     if(numberOfParts == 1) {
+        if (!d->selectedParts.first()->url().isEmpty()) {
+            menu->addAction(d->reloadAttachmentAction);
+        }
+    }
+    if(numberOfParts == 1) {
         menu->addAction(d->saveAsContextAction);
         menu->addAction(d->propertiesContextAction);
     }
@@ -608,12 +613,6 @@ void AttachmentControllerBase::showContextMenu()
         menu->addAction(d->addContextAction);
     }
 
-    if(numberOfParts == 1) {
-        if (!d->selectedParts.first()->url().isEmpty()) {
-            menu->addSeparator();
-            menu->addAction(d->reloadAttachmentAction);
-        }
-    }
     menu->exec( QCursor::pos() );
     delete menu;
 }
