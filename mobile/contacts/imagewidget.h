@@ -56,17 +56,16 @@ class ImageWidget : public QPushButton
   protected:
 #ifndef QT_NO_DRAGANDDROP
     // image drop handling
-    virtual void dragEnterEvent( QDragEnterEvent* );
-    virtual void dropEvent( QDropEvent* );
+    virtual void dragEnterEvent( QDragEnterEvent* ) Q_DECL_OVERRIDE;
+    virtual void dropEvent( QDropEvent* ) Q_DECL_OVERRIDE;
 #endif
 
     // image drag handling
-    virtual void mousePressEvent( QMouseEvent* );
-    virtual void mouseMoveEvent( QMouseEvent* );
-
+    virtual void mousePressEvent( QMouseEvent* ) Q_DECL_OVERRIDE;
+    virtual void mouseMoveEvent( QMouseEvent* ) Q_DECL_OVERRIDE;
 #ifndef QT_NO_CONTEXTMENU
     // context menu handling
-    virtual void contextMenuEvent( QContextMenuEvent* );
+    virtual void contextMenuEvent( QContextMenuEvent* ) Q_DECL_OVERRIDE;
 #endif
 
   private Q_SLOTS:

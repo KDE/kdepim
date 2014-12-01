@@ -115,11 +115,11 @@ public:
     QMap<QString, QString> localImages() const;
 
 protected:
-    void contextMenuEvent(QContextMenuEvent *event);
-    void mousePressEvent(QMouseEvent *event);
+    void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
+    void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
     void wheelEvent(QWheelEvent *event) Q_DECL_OVERRIDE;
-    void mouseDoubleClickEvent(QMouseEvent *);
+    void mouseDoubleClickEvent(QMouseEvent *) Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     void showFindBar();

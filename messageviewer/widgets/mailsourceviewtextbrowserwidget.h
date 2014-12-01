@@ -92,7 +92,7 @@ class MailSourceViewTextBrowser: public QPlainTextEdit
 public:
     explicit MailSourceViewTextBrowser(PimCommon::TextToSpeechInterface *textToSpeechInterface, QWidget *parent = 0);
 protected:
-    void contextMenuEvent(QContextMenuEvent *event);
+    void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
 private slots:
     void slotSpeakText();
     void slotSaveAs();

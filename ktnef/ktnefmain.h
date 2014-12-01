@@ -45,7 +45,7 @@ public:
 
 protected:
     /** @reimp */
-    void contextMenuEvent(QContextMenuEvent *event);
+    void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
 
 protected slots:
     void openFile();

@@ -85,9 +85,9 @@ private Q_SLOTS:
 
 protected:
     virtual void addExtraMenuEntry(QMenu *menu, const QPoint &pos);
-    void contextMenuEvent(QContextMenuEvent *event);
-    void focusInEvent(QFocusEvent *event);
-    bool event(QEvent *ev);
+    void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
+    void focusInEvent(QFocusEvent *event) Q_DECL_OVERRIDE;
+    bool event(QEvent *ev) Q_DECL_OVERRIDE;
     void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 
 Q_SIGNALS:

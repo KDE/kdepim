@@ -138,13 +138,13 @@ public:
     void setTheme(Core::Theme *theme);
 
 protected:
-    virtual void dragMoveEvent(QDragMoveEvent *e);
-    virtual void dragEnterEvent(QDragEnterEvent *e);
+    virtual void dragMoveEvent(QDragMoveEvent *e) Q_DECL_OVERRIDE;
+    virtual void dragEnterEvent(QDragEnterEvent *e) Q_DECL_OVERRIDE;
     virtual void dropEvent(QDropEvent *e) Q_DECL_OVERRIDE;
-    virtual void mouseMoveEvent(QMouseEvent *e);
+    virtual void mouseMoveEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
     virtual void mousePressEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
     void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
-    virtual void showEvent(QShowEvent *e);
+    virtual void showEvent(QShowEvent *e) Q_DECL_OVERRIDE;
 
 private:
     void internalHandleDragMoveEvent(QDragMoveEvent *e);

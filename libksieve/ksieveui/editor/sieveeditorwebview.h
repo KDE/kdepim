@@ -30,7 +30,7 @@ public:
     ~SieveEditorWebView();
 
 protected:
-    void contextMenuEvent(QContextMenuEvent *ev);
+    void contextMenuEvent(QContextMenuEvent *ev) Q_DECL_OVERRIDE;
 };
 }
 

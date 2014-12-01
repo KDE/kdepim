@@ -171,7 +171,7 @@ protected:
      *
      * See QLineEdit::contextMenuEvent().
      */
-    virtual void contextMenuEvent(QContextMenuEvent *);
+    virtual void contextMenuEvent(QContextMenuEvent *) Q_DECL_OVERRIDE;
 #endif
 
 private:

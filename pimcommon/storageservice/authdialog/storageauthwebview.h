@@ -29,7 +29,7 @@ public:
     ~StorageAuthWebView();
 
 protected:
-    void contextMenuEvent(QContextMenuEvent *);
+    void contextMenuEvent(QContextMenuEvent *) Q_DECL_OVERRIDE;
 };
 }
 #endif // STORAGEAUTHWEBVIEW_H

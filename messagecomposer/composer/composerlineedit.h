@@ -49,7 +49,7 @@ protected:
     virtual void keyPressEvent(QKeyEvent *);
 
 #ifndef QT_NO_CONTEXTMENU
-    virtual void contextMenuEvent(QContextMenuEvent *e);
+    virtual void contextMenuEvent(QContextMenuEvent *e) Q_DECL_OVERRIDE;
 #endif
 
 private slots:

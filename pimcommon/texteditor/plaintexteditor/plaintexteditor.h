@@ -70,8 +70,8 @@ protected:
     virtual void addExtraMenuEntry(QMenu *menu, const QPoint &pos);
 
 protected:
-    void contextMenuEvent(QContextMenuEvent *event);
-    bool event(QEvent *ev);
+    void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
+    bool event(QEvent *ev) Q_DECL_OVERRIDE;
     void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
     bool overrideShortcut(const QKeyEvent *event);
     bool handleShortcut(const QKeyEvent *event);
