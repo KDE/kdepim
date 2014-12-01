@@ -81,6 +81,7 @@ void AttachmentFromFolderJob::Private::compressFolder()
     mCompressedFolder->setName( newName );
     mCompressedFolder->setFileName( newName );
     mCompressedFolder->setMimeType( "application/zip" );
+    mCompressedFolder->setUrl(q->url());
     //     mCompressedFolder->setCompressed( true );
     mCompressedFolder->setData( array );
     //     mCompressedFolder->setCompressible(false);
