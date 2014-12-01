@@ -154,6 +154,7 @@ class EVENTVIEWS_EXPORT Prefs
 
     void setResourceColor ( const QString &, const QColor & );
     QColor resourceColor( const QString & );
+    QColor resourceColorKnown( const QString & );
 
     void setTimeSpec( const KDateTime::Spec &spec );
     KDateTime::Spec timeSpec() const;
