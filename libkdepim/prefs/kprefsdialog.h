@@ -455,11 +455,18 @@ public:
     void writeConfig();
 
     KComboBox *comboBox();
+
+    /**
+      Return QLabel used by this control element.
+    */
+    QLabel *label();
+
     QList<QWidget *> widgets() const;
 
 private:
     KConfigSkeleton::ItemEnum *mItem;
     KComboBox *mCombo;
+    QLabel *mLabel;
 };
 
 /**

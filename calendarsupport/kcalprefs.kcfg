@@ -101,6 +101,22 @@
       <default>true</default>
     </entry>
 
+    <entry type="Enum" key="Send Policy" name="SendPolicy">
+      <label>Default Policy what to do with invitations to other users:</label>
+      <choices>
+        <choice name="InvitationPolicySend">
+          <label>Send mails without asking.</label>
+        </choice>
+        <choice name="InvitationPolicyAsk">
+          <label>Ask for every individual attendee what to do.</label>
+        </choice>
+        <choice name="InvitationPolicyDontSend">
+          <label>Do not send invitation mails at all (This can break group scheduling for iTip compliant clients).</label>
+        </choice>
+      </choices>
+      <default>InvitationPolicySend</default>
+    </entry>
+
     <entry type="StringList" name="AdditionalMails">
     </entry>
   </group>
