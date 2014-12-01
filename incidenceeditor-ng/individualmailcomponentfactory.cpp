@@ -20,6 +20,7 @@
 #include "individualmailcomponentfactory.h"
 #include "individualmaildialog.h"
 
+#include <calendarsupport/kcalprefs.h>
 #include <KPIMUtils/Email>
 
 #include <KMessageBox>
@@ -159,9 +160,21 @@ void IndividualMailITIPHandlerDialogDelegate::openDialog(const QString &question
         emit dialogClosed(KMessageBox::No, mMethod, mIncidence);
         break;
     default:
-        mDialog = new IndividualMailDialog(question, attendees, buttonYes, buttonNo, mParent);
-        connect(mDialog, SIGNAL(finished(int)), SLOT(onDialogClosed(int)));
-        mDialog->show();
+        switch (CalendarSupport::KCalPrefs::instance()->sendPolicy()) {
+        case(CalendarSupport::KCalPrefs::InvitationPolicySend):
+            emit setUpdate(mIncidence, attendees);
+            emit dialogClosed(KMessageBox::Yes, mMethod, mIncidence);
+            break;
+        case(CalendarSupport::KCalPrefs::InvitationPolicyDontSend):
+            emit dialogClosed(KMessageBox::No, mMethod, mIncidence);
+            break;
+        case(CalendarSupport::KCalPrefs::InvitationPolicyAsk):
+        default:
+            mDialog = new IndividualMailDialog(question, attendees, buttonYes, buttonNo, mParent);
+            connect(mDialog, SIGNAL(finished(int)), SLOT(onDialogClosed(int)));
+            mDialog->show();
+            break;
+        }
         break;
     }
 }

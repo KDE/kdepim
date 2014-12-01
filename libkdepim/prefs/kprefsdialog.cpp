@@ -488,7 +488,7 @@ KPrefsWidCombo::KPrefsWidCombo( KConfigSkeleton::ItemEnum *item, QWidget *parent
     : mItem( item )
 {
     KHBox *hbox = new KHBox( parent );
-    new QLabel( mItem->label(), hbox );
+    mLabel = new QLabel( mItem->label(), hbox );
     mCombo = new KComboBox( hbox );
     connect( mCombo, SIGNAL(activated(int)), SIGNAL(changed()) );
 }
@@ -517,6 +517,11 @@ QList<QWidget *> KPrefsWidCombo::widgets() const
 KComboBox *KPrefsWidCombo::comboBox()
 {
     return mCombo;
+}
+
+QLabel *KPrefsWidCombo::label()
+{
+    return mLabel;
 }
 
 KPrefsWidString::KPrefsWidString( KConfigSkeleton::ItemString *item, QWidget *parent,
