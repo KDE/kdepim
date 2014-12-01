@@ -67,7 +67,7 @@ using namespace KCalCore;
 #include <QInputDialog>
 #include <QMenu>
 #include <KMessageBox>
-#include <KMimeType>
+
 #include <KRun>
 #include <KSystemTimeZone>
 #include <QTemporaryFile>
@@ -76,6 +76,8 @@ using namespace KCalCore;
 #include <QIcon>
 #include <KLocalizedString>
 #include <QFileDialog>
+#include <QMimeDatabase>
+#include <QMimeType>
 
 using namespace MailTransport;
 
@@ -1076,7 +1078,8 @@ public:
         } else {
             // put the attachment in a temporary file and launch it
             QTemporaryFile *file;
-            QStringList patterns = KMimeType::mimeType(attachment->mimeType())->patterns();
+            QMimeDatabase db;
+            QStringList patterns = db.mimeTypeForName(attachment->mimeType()).globPatterns();
             if (!patterns.empty()) {
                 QString pattern = patterns.first();
                 file = new QTemporaryFile(QDir::tempPath() + QLatin1String("/messageviewer_XXXXXX") + pattern.remove(QLatin1Char('*')));
@@ -1123,7 +1126,8 @@ public:
         } else {
             // put the attachment in a temporary file and save it
             QTemporaryFile *file;
-            QStringList patterns = KMimeType::mimeType(a->mimeType())->patterns();
+            QMimeDatabase db;
+            QStringList patterns = db.mimeTypeForName(a->mimeType()).globPatterns();
             if (!patterns.empty()) {
                 QString pattern = patterns.first();
                 file = new QTemporaryFile(QDir::tempPath() + QLatin1String("/messageviewer_XXXXXX") + pattern.remove(QLatin1Char('*')));
