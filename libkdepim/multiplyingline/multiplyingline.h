@@ -216,7 +216,7 @@ protected:
       Handles key press events on this line.
       Default behavior handles Up and Down presses.
     */
-    virtual void keyPressEvent(QKeyEvent *);
+    virtual void keyPressEvent(QKeyEvent *) Q_DECL_OVERRIDE;
 };
 
 }

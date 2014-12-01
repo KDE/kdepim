@@ -100,8 +100,8 @@ private Q_SLOTS:
     void popupItemMenu(const QPoint &point);
 
 protected:
-    void keyPressEvent(QKeyEvent *e);
-    void closeEvent(QCloseEvent *);
+    void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
+    void closeEvent(QCloseEvent *) Q_DECL_OVERRIDE;
 
 private:
     static KDateTime triggerDateForIncidence(const KCalCore::Incidence::Ptr &inc,

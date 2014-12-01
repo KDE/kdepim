@@ -40,7 +40,7 @@ private Q_SLOTS:
     void slotInsertCompletion(const QString &completion);
 
 protected:
-    void keyPressEvent(QKeyEvent *e);
+    void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
 
 protected:
     QCompleter *mCompleter;

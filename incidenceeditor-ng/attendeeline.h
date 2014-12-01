@@ -60,7 +60,7 @@ public slots:
     void setCurrentIndex(int index);
 
 protected:
-    void keyPressEvent(QKeyEvent *ev);
+    void keyPressEvent(QKeyEvent *ev) Q_DECL_OVERRIDE;
 
 private slots:
     void slotActionTriggered();
@@ -85,7 +85,7 @@ signals:
     void downPressed();
 
 protected:
-    void keyPressEvent(QKeyEvent *ev);
+    void keyPressEvent(QKeyEvent *ev) Q_DECL_OVERRIDE;
 };
 
 class INCIDENCEEDITORS_NG_EXPORT AttendeeLine : public KPIM::MultiplyingLine

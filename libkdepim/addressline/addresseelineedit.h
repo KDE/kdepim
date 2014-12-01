@@ -158,7 +158,7 @@ protected:
     /**
      * Reimplemented for internal reasons.
      */
-    virtual void keyPressEvent(QKeyEvent *);
+    virtual void keyPressEvent(QKeyEvent *) Q_DECL_OVERRIDE;
 
 #ifndef QT_NO_CONTEXTMENU
     /**

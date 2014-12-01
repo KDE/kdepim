@@ -43,7 +43,7 @@ signals:
     void rightPressed();
 
 protected:
-    void keyPressEvent(QKeyEvent *ev);
+    void keyPressEvent(QKeyEvent *ev) Q_DECL_OVERRIDE;
 };
 
 class RecipientLineEdit : public MessageComposer::ComposerLineEdit
@@ -58,7 +58,7 @@ signals:
     void rightPressed();
 
 protected:
-    void keyPressEvent(QKeyEvent *ev);
+    void keyPressEvent(QKeyEvent *ev) Q_DECL_OVERRIDE;
 };
 
 class RecipientLineNG : public KPIM::MultiplyingLine

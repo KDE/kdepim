@@ -85,7 +85,7 @@ private Q_SLOTS:
     void delayedTextChanged();
 
 protected:
-    void keyPressEvent(QKeyEvent *);
+    void keyPressEvent(QKeyEvent *) Q_DECL_OVERRIDE;
 
 private:
     QLineEdit *mEdit;

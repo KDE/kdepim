@@ -35,7 +35,7 @@ protected Q_SLOTS:
 
 protected:
     void initCompleter();
-    void keyPressEvent(QKeyEvent *e);
+    void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
 
 private:
     QCompleter *m_completer;
