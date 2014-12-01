@@ -27,6 +27,8 @@
 #include "storagedebuggerinterface.h"
 
 class KTextEdit;
+class QCheckBox;
+class QueryDebuggerModel;
 
 class QueryDebugger : public QWidget
 {
@@ -37,10 +39,10 @@ class QueryDebugger : public QWidget
     virtual ~QueryDebugger();
 
   private Q_SLOTS:
-    void contextMenu( const QPoint &pos );
     void addQuery( double sequence, uint duration, const QString &query,
                    const QMap<QString,QVariant> & values, int resultsCount,
                    const QList<QList<QVariant> > & result, const QString &error );
+    void clear();
 
   private:
     QString variantToString( const QVariant &val );
@@ -48,6 +50,8 @@ class QueryDebugger : public QWidget
     org::freedesktop::Akonadi::StorageDebugger *mDebugger;
 
     KTextEdit *mView;
+    QueryDebuggerModel *mModel;
+    QCheckBox* mOnlyAggregate;
 };
 
 #endif // QUERYDEBUGGER_H
