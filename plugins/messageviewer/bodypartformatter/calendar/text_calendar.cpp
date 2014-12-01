@@ -130,66 +130,6 @@ static bool hasMyWritableEventsFolders(const QString &family)
 #endif
 }
 
-#if 0
-#ifndef KDEPIM_NO_KRESOURCES
-// Double negation, this is enabled when the old resource based code is build.
-class CalendarManager
-{
-public:
-    CalendarManager();
-    ~CalendarManager();
-    static KCal::CalendarResources *calendar();
-
-private:
-    KCal::CalendarResources *mCalendar;
-};
-
-CalendarManager::CalendarManager()
-{
-    mCalendar = new CalendarResources(KSystemTimeZones::local());
-    mCalendar->readConfig();
-    mCalendar->load();
-    bool multipleKolabResources = false;
-    CalendarResourceManager *mgr = mCalendar->resourceManager();
-    CalendarResourceManager::ActiveIterator end = mgr->activeEnd();
-    for (CalendarResourceManager::ActiveIterator it = mgr->activeBegin();
-            it != end; ++it) {
-        if ((*it)->type() == "imap" || (*it)->type() == "kolab") {
-            const QStringList subResources = (*it)->subresources();
-            QSet<QString> prefixSet;
-            QStringList::ConstIterator subEnd = subResources.constEnd();
-            for (QStringList::ConstIterator subIt = subResources.constBegin();
-                    subIt != subEnd; ++subIt) {
-                if (!(*subIt).contains("/.INBOX.directory/")) {
-                    // we don't care about shared folders
-                    continue;
-                }
-                prefixSet.insert((*subIt).left((*subIt).indexOf("/.INBOX.directory/")));
-            }
-            if (prefixSet.count() > 1) {
-                multipleKolabResources = true;
-            }
-        }
-    }
-    if (multipleKolabResources) {
-        qDebug() << "disabling calendar lookup because multiple active Kolab resources";
-        delete mCalendar;
-        mCalendar = 0;
-    }
-}
-
-CalendarManager::~CalendarManager()
-{
-    delete mCalendar;
-}
-
-KCal::CalendarResources *CalendarManager::calendar()
-{
-    Q_GLOBAL_STATIC(CalendarManager, _self)
-    return _self->mCalendar;
-}
-#endif
-#endif
 
 static bool occurredAlready(const Incidence::Ptr &incidence)
 {
