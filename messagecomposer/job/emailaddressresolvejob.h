@@ -58,7 +58,7 @@ public:
     /**
      * Starts the job.
      */
-    virtual void start();
+    void start() Q_DECL_OVERRIDE;
 
     /**
      * Sets the from address to expand.

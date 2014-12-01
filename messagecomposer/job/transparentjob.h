@@ -42,7 +42,7 @@ public:
     virtual ~TransparentJob();
 
     void setContent(KMime::Content *content);
-    void process();
+    void process() Q_DECL_OVERRIDE;
 
 private:
     Q_DECLARE_PRIVATE(TransparentJob)

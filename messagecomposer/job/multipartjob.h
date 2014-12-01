@@ -42,7 +42,7 @@ public:
     void setMultipartSubtype(const QByteArray &subtype);
 
 protected Q_SLOTS:
-    virtual void process();
+    void process() Q_DECL_OVERRIDE;
 
 private:
     Q_DECLARE_PRIVATE(MultipartJob)

@@ -49,7 +49,7 @@ public:
       Emits finished() after all processing is done, and the
       content is reachable through content().
     */
-    virtual void start();
+    void start() Q_DECL_OVERRIDE;
 
     /**
       Get the resulting KMime::Content that the ContentJobBase has generated.

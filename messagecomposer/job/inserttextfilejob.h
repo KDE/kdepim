@@ -50,7 +50,7 @@ public:
 
     void setEncoding(const QString &encoding);
 
-    virtual void start();
+    void start() Q_DECL_OVERRIDE;
 
 private slots:
 

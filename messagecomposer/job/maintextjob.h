@@ -41,8 +41,8 @@ public:
     void setTextPart(TextPart *part);
 
 protected Q_SLOTS:
-    virtual void doStart();
-    virtual void process();
+    void doStart() Q_DECL_OVERRIDE;
+    void process() Q_DECL_OVERRIDE;
 
 private:
     Q_DECLARE_PRIVATE(MainTextJob)

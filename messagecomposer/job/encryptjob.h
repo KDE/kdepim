@@ -63,7 +63,7 @@ public:
 
 protected Q_SLOTS:
     //virtual void doStart();
-    virtual void process();
+    void process() Q_DECL_OVERRIDE;
 
 private:
     Q_DECLARE_PRIVATE(EncryptJob)
