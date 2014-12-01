@@ -239,8 +239,8 @@ MessageFactory::MessageReply MessageFactory::createReply()
 
             // in case of a reply to self, toList might be empty. if that's the case
             // then propagate a cc recipient to To: (if there is any).
-            if (toList.isEmpty() && !ccRecipients.isEmpty()) {
-                toList << ccRecipients[ 0 ];
+            if ( toList.isEmpty() && !ccRecipients.isEmpty() ) {
+                toList << ccRecipients.at( 0 );
                 ccRecipients.pop_front();
             }
 
@@ -251,7 +251,7 @@ MessageFactory::MessageReply MessageFactory::createReply()
 
         if (toList.isEmpty() && !recipients.isEmpty()) {
             // reply to self without other recipients
-            toList << recipients[ 0 ];
+            toList << recipients.at(0);
         }
     }
     break;
@@ -513,18 +513,18 @@ KMime::Message::Ptr MessageFactory::createRedirect(const QString &toStr, const Q
         m_identityManager->identityForUoidOrDefault(id);
 
     // X-KMail-Redirect-From: content
-    QString strByWayOf = QString::fromLocal8Bit("%1 (by way of %2 <%3>)")
-                         .arg(m_origMsg->from()->asUnicodeString())
-                         .arg(ident.fullName())
-                         .arg(ident.primaryEmailAddress());
+    const QString strByWayOf = QString::fromLocal8Bit("%1 (by way of %2 <%3>)")
+            .arg( m_origMsg->from()->asUnicodeString() )
+            .arg( ident.fullName() )
+            .arg( ident.primaryEmailAddress() );
 
     // Resent-From: content
-    QString strFrom = QString::fromLocal8Bit("%1 <%2>")
-                      .arg(ident.fullName())
-                      .arg(ident.primaryEmailAddress());
+    const QString strFrom = QString::fromLocal8Bit("%1 <%2>")
+            .arg( ident.fullName() )
+            .arg( ident.primaryEmailAddress() );
 
     // format the current date to be used in Resent-Date:
-    QString newDate = KDateTime::currentLocalDateTime().toString(KDateTime::RFCDateDay);
+    const QString newDate = KDateTime::currentLocalDateTime().toString( KDateTime::RFCDateDay );
 
     // Clean up any resent headers
     msg->removeHeader("Resent-Cc");

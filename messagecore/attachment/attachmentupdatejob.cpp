@@ -50,7 +50,7 @@ void AttachmentUpdateJob::Private::doStart()
     if (mOriginalPart->url().isEmpty()) {
         qDebug() << " url is empty. We can't update file";
         q->setError(KJob::UserDefinedError);
-        //q->setErrorText( job->errorString() );
+        q->setErrorText( QLatin1String("Url is empty.") );
         q->emitResult();
         return;
     }
@@ -61,9 +61,9 @@ void AttachmentUpdateJob::Private::doStart()
 
 void AttachmentUpdateJob::Private::loadJobResult(KJob *job)
 {
-    if (job->error()) {
-        q->setError(KJob::UserDefinedError);
-        //q->setErrorText( i18n( "Could not initiate attachment compression." ) );
+    if( job->error() ) {
+        q->setError( KJob::UserDefinedError );
+        q->setErrorText( job->errorString() );
         q->emitResult();
         return;
     }
