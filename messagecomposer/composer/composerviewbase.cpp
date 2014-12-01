@@ -263,11 +263,11 @@ void MessageComposer::ComposerViewBase::send ( MessageComposer::MessageSender::S
     }
 
     if ( m_editor->isFormattingUsed() && inlineSigningEncryptionSelected() ) {
-        QString keepBtnText = m_encrypt ?
+        const QString keepBtnText = m_encrypt ?
                     m_sign ? i18n( "&Keep markup, do not sign/encrypt" )
                            : i18n( "&Keep markup, do not encrypt" )
                            : i18n( "&Keep markup, do not sign" );
-        QString yesBtnText = m_encrypt ?
+        const QString yesBtnText = m_encrypt ?
                     m_sign ? i18n("Sign/Encrypt (delete markup)")
                            : i18n( "Encrypt (delete markup)" )
                            : i18n( "Sign (delete markup)" );
