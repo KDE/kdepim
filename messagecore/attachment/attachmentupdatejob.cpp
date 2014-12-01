@@ -63,7 +63,7 @@ void AttachmentUpdateJob::Private::loadJobResult(KJob *job)
 {
     if( job->error() ) {
         q->setError( KJob::UserDefinedError );
-        //q->setErrorText( i18n( "Could not initiate attachment compression." ) );
+        q->setErrorText( job->errorString() );
         q->emitResult();
         return;
     }
