@@ -29,12 +29,14 @@
 #include "ui_attachmenteditdialog.h"
 #include <KLocalizedString>
 
-#include <KMimeType>
+
 #include <KIO/NetAccess>
 #include <KLocale>
 #include <KConfigGroup>
 #include <QDialogButtonBox>
 #include <QPushButton>
+#include <QMimeDatabase>
+#include <QMimeType>
 
 using namespace IncidenceEditorNG;
 
@@ -49,9 +51,10 @@ AttachmentEditDialog::AttachmentEditDialog(AttachmentIconItem *item,
       mAttachment(new KCalCore::Attachment(QString())),
 #endif
       mItem(item),
-      mMimeType(KMimeType::mimeType(item->mimeType())),
       mUi(new Ui::AttachmentEditDialog)
 {
+    QMimeDatabase db;
+    mMimeType = db.mimeTypeForName(item->mimeType());
     QWidget *page = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
@@ -71,7 +74,7 @@ AttachmentEditDialog::AttachmentEditDialog(AttachmentIconItem *item,
 
     QString typecomment = item->mimeType().isEmpty() ?
                           i18nc("@label unknown mimetype", "Unknown") :
-                          mMimeType->comment();
+                          mMimeType.comment();
     mUi->mTypeLabel->setText(typecomment);
 
     setModal(modal);
@@ -126,7 +129,7 @@ void AttachmentEditDialog::slotApply()
     if (mItem->label().isEmpty()) {
         mItem->setLabel(i18nc("@label", "New attachment"));
     }
-    mItem->setMimeType(mMimeType->name());
+    mItem->setMimeType(mMimeType.name());
 
     QString correctedUrl = url.url();
     if (!url.isEmpty() && url.isRelative()) {
@@ -141,7 +144,7 @@ void AttachmentEditDialog::slotApply()
             urlChanged(url);
             mItem->setLabel(url.fileName());
             mItem->setUri(correctedUrl);
-            mItem->setMimeType(mMimeType->name());
+            mItem->setMimeType(mMimeType.name());
         }
     }
 
@@ -187,8 +190,9 @@ void AttachmentEditDialog::urlChanged(const QString &url)
 
 void AttachmentEditDialog::urlChanged(const QUrl &url)
 {
-    mMimeType = KMimeType::findByUrl(url);
-    mUi->mTypeLabel->setText(mMimeType->comment());
+    QMimeDatabase db;
+    mMimeType = db.mimeTypeForUrl(url);
+    mUi->mTypeLabel->setText(mMimeType.comment());
     mUi->mIcon->setPixmap(AttachmentIconItem::icon(mMimeType, url.path()));
 }
 

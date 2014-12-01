@@ -48,6 +48,8 @@
 
 #include <QClipboard>
 #include <QMimeData>
+#include <QMimeDatabase>
+#include <QMimeType>
 
 using namespace IncidenceEditorNG;
 
@@ -458,9 +460,10 @@ void IncidenceAttachment::handlePasteOrDrop(const QMimeData *mimeData)
     if (!mimeData->formats().isEmpty() && !probablyWeHaveUris) {
         mimeType = mimeData->formats().first();
         data = mimeData->data(mimeType);
-        KMimeType::Ptr mime = KMimeType::mimeType(mimeType);
-        if (mime) {
-            label = mime->comment();
+        QMimeDatabase db;
+        QMimeType mime = db.mimeTypeForName(mimeType);
+        if (mime.isValid()) {
+            label = mime.comment();
         }
     }
 
@@ -574,7 +577,8 @@ void IncidenceAttachment::addDataAttachment(const QByteArray &data,
     item->setData(data);
     item->setLabel(nlabel);
     if (mimeType.isEmpty()) {
-        item->setMimeType(KMimeType::findByContent(data)->name());
+        QMimeDatabase db;
+        item->setMimeType(db.mimeTypeForData(data).name());
     } else {
         item->setMimeType(mimeType);
     }
@@ -602,7 +606,8 @@ void IncidenceAttachment::addUriAttachment(const QString &uri,
             } else if (uri.startsWith(QLatin1String("news:"))) {
                 item->setMimeType("message/news");
             } else {
-                item->setMimeType(KMimeType::findByUrl(uri)->name());
+                QMimeDatabase db;
+                item->setMimeType(db.mimeTypeForUrl(uri).name());
             }
         }
     } else {

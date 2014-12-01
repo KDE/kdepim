@@ -34,7 +34,7 @@
 
 #include <KCalCore/Attachment>
 
-#include <KMimeType>
+#include <QMimeType>
 #include <QUrl>
 
 #include <QListWidget>
@@ -83,7 +83,7 @@ public:
 
     bool isBinary() const;
 
-    static QPixmap icon(KMimeType::Ptr mimeType, const QString &uri, bool binary = false);
+    static QPixmap icon(QMimeType mimeType, const QString &uri, bool binary = false);
     QPixmap icon() const;
 
     void readAttachment();

@@ -32,7 +32,9 @@
 #include <KCalCore/Attachment>
 #include <QUrl>
 #include <QDialog>
-#include <KMimeType>
+#include <QMimeDatabase>
+#include <QMimeType>
+
 class QPushButton;
 
 namespace Ui
@@ -62,7 +64,7 @@ protected slots:
 private:
     KCalCore::Attachment::Ptr mAttachment;
     AttachmentIconItem *mItem;
-    KMimeType::Ptr mMimeType;
+    QMimeType mMimeType;
     Ui::AttachmentEditDialog *mUi;
     QPushButton *mOkButton;
 };

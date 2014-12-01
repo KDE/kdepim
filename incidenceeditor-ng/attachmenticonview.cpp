@@ -39,6 +39,8 @@
 #include <QDrag>
 #include <QKeyEvent>
 #include <QMimeData>
+#include <QMimeDatabase>
+#include <QMimeType>
 
 using namespace IncidenceEditorNG;
 
@@ -127,17 +129,18 @@ bool AttachmentIconItem::isBinary() const
 
 QPixmap AttachmentIconItem::icon() const
 {
-    return icon(KMimeType::mimeType(mAttachment->mimeType()),
+    QMimeDatabase db;
+    return icon(db.mimeTypeForName(mAttachment->mimeType()),
                 mAttachment->uri(), mAttachment->isBinary());
 }
 
-QPixmap AttachmentIconItem::icon(KMimeType::Ptr mimeType,
+QPixmap AttachmentIconItem::icon(QMimeType mimeType,
                                  const QString &uri,
                                  bool binary)
 {
 //QT5 use KIconEngine
 #if 0
-    QString iconStr = mimeType->iconName(uri);
+    QString iconStr = mimeType.iconName(uri);
     QStringList overlays;
     if (!uri.isEmpty() && !binary) {
         overlays << "emblem-link";
@@ -156,14 +159,15 @@ void AttachmentIconItem::readAttachment()
     setText(mAttachment->label());
     setFlags(flags() | Qt::ItemIsEditable);
 
-    if (mAttachment->mimeType().isEmpty() || !(KMimeType::mimeType(mAttachment->mimeType()))) {
-        KMimeType::Ptr mimeType;
+    QMimeDatabase db;
+    if (mAttachment->mimeType().isEmpty() || !(db.mimeTypeForName(mAttachment->mimeType()).isDefault())) {
+        QMimeType mimeType;
         if (mAttachment->isUri()) {
-            mimeType = KMimeType::findByUrl(mAttachment->uri());
+            mimeType = db.mimeTypeForUrl(mAttachment->uri());
         } else {
-            mimeType = KMimeType::findByContent(mAttachment->decodedData());
+            mimeType = db.mimeTypeForData(mAttachment->decodedData());
         }
-        mAttachment->setMimeType(mimeType->name());
+        mAttachment->setMimeType(mimeType.name());
     }
 
     setIcon(icon());
@@ -194,7 +198,8 @@ QUrl AttachmentIconView::tempFileForAttachment(const KCalCore::Attachment::Ptr &
     }
     QTemporaryFile *file;
 
-    QStringList patterns = KMimeType::mimeType(attachment->mimeType())->patterns();
+    QMimeDatabase db;
+    QStringList patterns = db.mimeTypeForName(attachment->mimeType()).globPatterns();
 
     if (!patterns.empty()) {
         file = new QTemporaryFile(QDir::tempPath() + QLatin1String("/attachementview_XXXXX") + patterns.first().remove('*'));

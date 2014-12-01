@@ -59,7 +59,6 @@
 #include <kmessagebox.h>
 #include <kio/netaccess.h>
 #include <qdebug.h>
-#include <KMimeType>
 #include <QTemporaryFile>
 #include <ktoolinvocation.h>
 #include <QAction>
