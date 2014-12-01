@@ -18,10 +18,10 @@
 #ifndef POSTSTABWIDGET_H
 #define POSTSTABWIDGET_H
 
-#include <KTabWidget>
+#include <QTabWidget>
 class QToolButton;
 
-class PostsTabWidget : public KTabWidget
+class PostsTabWidget : public QTabWidget
 {
     Q_OBJECT
 public:

@@ -51,7 +51,7 @@
 #include "libkdepim/progresswidget/statusbarprogresswidget.h"
 #include "libkdepim/progresswidget/progressstatusbarwidget.h"
 
-#include <ktabwidget.h>
+#include <qtabwidget.h>
 #include <KStatusNotifierItem>
 #include <qstatusbar.h>
 #include <KToggleAction>
@@ -514,7 +514,7 @@ void MainWindow::slotRemoveAllExclude(int pos)
             }
         }
         DBMan::self()->removeTempEntry(*widget->currentPost());
-        tabPosts->removePage(widget);
+        tabPosts->removeTab(tabPosts->indexOf(widget));
         widget->close();
     }
     if (tabPosts->count() < 1) {
@@ -538,7 +538,7 @@ void MainWindow::slotRemovePostEntry(int pos)
         }
     }
     DBMan::self()->removeTempEntry(*widget->currentPost());
-    tabPosts->removePage(widget);
+    tabPosts->removeTab(tabPosts->indexOf(widget));
     widget->close();
 
     if (tabPosts->count() < 1) {

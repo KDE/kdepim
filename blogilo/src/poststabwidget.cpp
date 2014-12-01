@@ -25,7 +25,7 @@
 #include <QTabBar>
 
 PostsTabWidget::PostsTabWidget(QWidget *parent)
-    : KTabWidget(parent)
+    : QTabWidget(parent)
 {
     setElideMode(Qt::ElideRight);
     setTabsClosable(true);
