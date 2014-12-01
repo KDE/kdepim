@@ -77,6 +77,7 @@ void AttachmentUpdateJob::Private::loadJobResult(KJob *job)
     mUpdatedPart->setEncrypted(q->originalPart()->isEncrypted());
     mUpdatedPart->setEncoding(q->originalPart()->encoding());
     mUpdatedPart->setMimeType(q->originalPart()->mimeType());
+    mUpdatedPart->setInline(q->originalPart()->isInline());
     q->emitResult(); // Success.
 }
 
