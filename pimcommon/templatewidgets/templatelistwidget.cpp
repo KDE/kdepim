@@ -211,7 +211,7 @@ public:
         if (group.hasKey(QStringLiteral("templateCount"))) {
             const int numberTemplate = group.readEntry("templateCount", 0);
             for (int i = 0; i < numberTemplate; ++i) {
-                KConfigGroup group = configFile->group(QString::fromLatin1("templateDefine_%1").arg(i));
+                KConfigGroup group = configFile->group(QStringLiteral("templateDefine_%1").arg(i));
                 const QString name = group.readEntry("Name", QString());
                 const QString text = group.readEntry("Text", QString());
 
@@ -231,7 +231,7 @@ public:
         for (int i = 0; i < q->count(); ++i) {
             QListWidgetItem *templateItem = q->item(i);
             if (templateItem->data(TemplateListWidget::DefaultTemplate).toBool() == false) {
-                KConfigGroup group = configFile->group(QString::fromLatin1("templateDefine_%1").arg(numberOfTemplate));
+                KConfigGroup group = configFile->group(QStringLiteral("templateDefine_%1").arg(numberOfTemplate));
                 group.writeEntry("Name", templateItem->text());
                 group.writeEntry("Text", templateItem->data(TemplateListWidget::Text));
                 ++numberOfTemplate;

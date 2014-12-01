@@ -110,7 +110,7 @@ QString CreateResource::createResource(const QString &resources, const QString &
             QMap<QString, QVariant>::const_iterator end(settings.constEnd());
             for (QMap<QString, QVariant>::const_iterator it = settings.constBegin(); it != end; ++it) {
                 qDebug() << "Setting up " << it.key() << " for agent " << instance.identifier();
-                const QString methodName = QString::fromLatin1("set%1").arg(it.key());
+                const QString methodName = QStringLiteral("set%1").arg(it.key());
                 QVariant arg = it.value();
                 const QVariant::Type targetType = argumentType(iface.metaObject(), methodName);
                 if (!arg.canConvert(targetType)) {

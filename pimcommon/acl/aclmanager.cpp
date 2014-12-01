@@ -297,14 +297,14 @@ public:
         } else {
             int pos = serverName.lastIndexOf(QLatin1Char('.'));
             if (pos == -1) {   // no qualified domain name, only hostname
-                return QString::fromLatin1("%1@%2").arg(loginName).arg(serverName);
+                return QStringLiteral("%1@%2").arg(loginName).arg(serverName);
             }
 
             pos = serverName.lastIndexOf(QLatin1Char('.'), pos - 1);
             if (pos == -1) {   // a simple domain name e.g. mydomain.org
-                return QString::fromLatin1("%1@%2").arg(loginName).arg(serverName);
+                return QStringLiteral("%1@%2").arg(loginName).arg(serverName);
             } else {
-                return QString::fromLatin1("%1@%2").arg(loginName).arg(serverName.mid(pos + 1));
+                return QStringLiteral("%1@%2").arg(loginName).arg(serverName.mid(pos + 1));
             }
         }
     }

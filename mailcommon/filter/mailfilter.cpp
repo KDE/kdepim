@@ -142,7 +142,7 @@ MailFilter::ReturnCode MailFilter::execActions(ItemContext &context, bool &stopI
         switch (result) {
         case FilterAction::CriticalError:
             if (FilterLog::instance()->isLogging()) {
-                const QString logText = QString::fromLatin1("<font color=#FF0000>%1</font>")
+                const QString logText = QStringLiteral("<font color=#FF0000>%1</font>")
                                         .arg(i18n("A critical error occurred. Processing stops here."));
                 FilterLog::instance()->add(logText, FilterLog::AppliedAction);
             }
@@ -150,7 +150,7 @@ MailFilter::ReturnCode MailFilter::execActions(ItemContext &context, bool &stopI
             return CriticalError;
         case FilterAction::ErrorButGoOn:
             if (FilterLog::instance()->isLogging()) {
-                const QString logText = QString::fromLatin1("<font color=#FF0000>%1</font>")
+                const QString logText = QStringLiteral("<font color=#FF0000>%1</font>")
                                         .arg(i18n("A problem was found while applying this action."));
                 FilterLog::instance()->add(logText, FilterLog::AppliedAction);
             }

@@ -25,7 +25,7 @@ QList<PimCommon::defaultTemplate> KSieveUi::SieveDefaultTemplate::defaultTemplat
     QList<PimCommon::defaultTemplate> lst;
     PimCommon::defaultTemplate tmp;
     tmp.name = i18n("Filter on Mailing List-ID");
-    tmp.text = QString::fromLatin1("require \"fileinto\";\n"
+    tmp.text = QStringLiteral("require \"fileinto\";\n"
                                    "if header :contains \"List-ID\" [ \"examples.com\", \"examples.mail.com\" ] {\n"
                                    "    fileinto \"list-example/examples\"; \n"
                                    "    stop;\n"
@@ -33,35 +33,35 @@ QList<PimCommon::defaultTemplate> KSieveUi::SieveDefaultTemplate::defaultTemplat
     lst << tmp;
 
     tmp.name = i18n("Filter on Subject");
-    tmp.text = QString::fromLatin1("require \"fileinto\";\n"
+    tmp.text = QStringLiteral("require \"fileinto\";\n"
                                    "if header :contains \"Subject\" \"Foo Foo\" { \n"
                                    "    fileinto \"INBOX.Foo\"; \n"
                                    "}\n");
     lst << tmp;
 
     tmp.name = i18n("Filter on Spamassassin");
-    tmp.text = QString::fromLatin1("require \"fileinto\";\n"
+    tmp.text = QStringLiteral("require \"fileinto\";\n"
                                    "if header :contains \"X-Spam-Level\" \"*********\" { \n"
                                    "    fileinto \"Spam\";\n"
                                    "}\n");
     lst << tmp;
 
     tmp.name = i18n("Flag messages");
-    tmp.text = QString::fromLatin1("require [\"imap4flags\"];\n"
+    tmp.text = QStringLiteral("require [\"imap4flags\"];\n"
                                    "if address \"From\" \"someone@example.org\" { \n"
                                    "    setflag \"\\\\Seen\";\n"
                                    "}\n");
     lst << tmp;
 
     tmp.name = i18n("Forward Message");
-    tmp.text = QString::fromLatin1("require [\"copy\"];\n"
+    tmp.text = QStringLiteral("require [\"copy\"];\n"
                                    "if header :contains \"Subject\" \"foo\" { \n"
                                    "    redirect :copy \"other@example.net\";\n"
                                    "}\n");
     lst << tmp;
 
     tmp.name = i18n("Forward Message and add copy");
-    tmp.text = QString::fromLatin1("require [\"copy\", \"fileinto\"];\n"
+    tmp.text = QStringLiteral("require [\"copy\", \"fileinto\"];\n"
                                    "if header :contains \"Subject\" \"foo\" { \n"
                                    "    redirect :copy \"other@example.net\";\n"
                                    "    fileinto \"Forwarded Messages\"; \n"
@@ -69,7 +69,7 @@ QList<PimCommon::defaultTemplate> KSieveUi::SieveDefaultTemplate::defaultTemplat
     lst << tmp;
 
     tmp.name = i18n("Destroy mail posted by...");
-    tmp.text = QString::fromLatin1("if header :contains [\"from\",\"cc\"]\n"
+    tmp.text = QStringLiteral("if header :contains [\"from\",\"cc\"]\n"
                                    "[\n"
                                    "\"from-foo@example.net\",\n"
                                    "\"pub@foo.com\"\n"
@@ -82,7 +82,7 @@ QList<PimCommon::defaultTemplate> KSieveUi::SieveDefaultTemplate::defaultTemplat
 
     tmp.name = i18n("Vacations");
 
-    tmp.text = QString::fromLatin1("require \"vacation\";\n\n"
+    tmp.text = QStringLiteral("require \"vacation\";\n\n"
                                    "if header :contains \"X-Spam-Flag\" \"YES\" { keep; stop; }\n"
                                    "vacation :addresses [ \"me@example.net\", \"other@example.net\" ] :days 7 text: \n%1"
                                    "\n.\n;\n").arg(VacationUtils::defaultMessageText());

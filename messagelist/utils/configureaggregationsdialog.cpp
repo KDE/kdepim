@@ -427,7 +427,7 @@ void ConfigureAggregationsDialog::Private::importAggregationButtonClicked()
             const int cnt = grp.readEntry("Count", 0);
             int idx = 0;
             while (idx < cnt) {
-                const QString data = grp.readEntry(QString::fromLatin1("Set%1").arg(idx), QString());
+                const QString data = grp.readEntry(QStringLiteral("Set%1").arg(idx), QString());
                 if (!data.isEmpty()) {
                     Aggregation *set = new Aggregation();
                     if (set->loadFromString(data)) {

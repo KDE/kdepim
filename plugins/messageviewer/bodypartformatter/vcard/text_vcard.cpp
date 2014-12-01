@@ -161,7 +161,7 @@ public:
             } else {
                 if (memento->address(count) != a) {
                     const QString addToLinkText = i18n("[Update this contact to the address book]");
-                    QString op = QString::fromLatin1("updateToAddressBook:%1").arg(count);
+                    const QString op = QStringLiteral("updateToAddressBook:%1").arg(count);
                     writer->queue(QLatin1String("<div align=\"center\"><a href=\"") +
                                   bodyPart->makeLink(op) +
                                   QLatin1String("\">") +

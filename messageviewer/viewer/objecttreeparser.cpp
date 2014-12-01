@@ -1384,7 +1384,7 @@ bool ObjectTreeParser::processMailmanMessage(KMime::Content *curNode)
         partStr += QLatin1String("Content-Type: text/plain\n");
         partStr += str.mid(thisDelim, nextDelim - thisDelim);
         QString subject = QString::fromLatin1("embedded message");
-        QString subSearch = QString::fromLatin1("\nSubject:");
+        QString subSearch = QStringLiteral("\nSubject:");
         int subPos = partStr.indexOf(subSearch, 0, Qt::CaseInsensitive);
         if (-1 < subPos) {
             subject = partStr.mid(subPos + subSearch.length());

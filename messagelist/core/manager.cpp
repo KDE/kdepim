@@ -957,7 +957,7 @@ void Manager::loadConfiguration()
 
         int idx = 0;
         while (idx < cnt) {
-            const QString data = conf.readEntry(QString::fromLatin1("Set%1").arg(idx), QString());
+            const QString data = conf.readEntry(QStringLiteral("Set%1").arg(idx), QString());
             if (!data.isEmpty()) {
                 Aggregation *set = new Aggregation();
                 if (set->loadFromString(data)) {

@@ -165,8 +165,8 @@ void ImageScalingWidget::initWriteImageFormat()
     }
     */
     //known by several mailer.
-    ui->WriteToImageFormat->addItem(QString::fromLatin1("JPG"));
-    ui->WriteToImageFormat->addItem(QString::fromLatin1("PNG"));
+    ui->WriteToImageFormat->addItem(QStringLiteral("JPG"));
+    ui->WriteToImageFormat->addItem(QStringLiteral("PNG"));
 }
 
 void ImageScalingWidget::updateSettings()

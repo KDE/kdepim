@@ -204,9 +204,9 @@ QString CSSHelperBase::quoteFontTag(int level) const
                                ? level % numQuoteLevels + 1
                                : qMin(level + 1, numQuoteLevels) ;
     if (level >= numQuoteLevels) {
-        return QString::fromLatin1("<div class=\"deepquotelevel%1\">").arg(effectiveLevel);
+        return QStringLiteral("<div class=\"deepquotelevel%1\">").arg(effectiveLevel);
     } else {
-        return QString::fromLatin1("<div class=\"quotelevel%1\">").arg(effectiveLevel);
+        return QStringLiteral("<div class=\"quotelevel%1\">").arg(effectiveLevel);
     }
 }
 

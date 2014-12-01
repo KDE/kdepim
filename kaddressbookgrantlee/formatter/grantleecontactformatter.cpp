@@ -201,12 +201,12 @@ static QVariantHash addressHash(const KContacts::Address &address, int counter)
     if (!formattedAddress.isEmpty()) {
         formattedAddress = formattedAddress.replace(QRegExp(QLatin1String("\n+")), QLatin1String("<br/>"));
 
-        const QString link = QString::fromLatin1("<a href=\"address:?index=%1\">%2</a>").
+        const QString link = QStringLiteral("<a href=\"address:?index=%1\">%2</a>").
                              arg(counter);
         QString url = link.arg(formattedAddress);
         addressObject.insert(QLatin1String("formattedAddressLink"), url);
 
-        url = link.arg(QString::fromLatin1("<img src=\"map_icon\" align=\"top\"/>"));
+        url = link.arg(QStringLiteral("<img src=\"map_icon\" align=\"top\"/>"));
         addressObject.insert(QLatin1String("formattedAddressIcon"), url);
     }
 

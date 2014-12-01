@@ -165,7 +165,7 @@ void CreateNewNoteJob::slotFetchCollection(KJob *job)
 
         Akonadi::EntityDisplayAttribute *eda = new Akonadi::EntityDisplayAttribute();
 
-        eda->setIconName(QString::fromLatin1("text-plain"));
+        eda->setIconName(QStringLiteral("text-plain"));
         newItem.addAttribute(eda);
 
         Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob(newItem, col, this);

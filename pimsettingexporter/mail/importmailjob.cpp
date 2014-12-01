@@ -425,11 +425,11 @@ void ImportMailJob::restoreResources()
 
                     QString newResource;
                     if (filename.contains(QLatin1String("kolab_"))) {
-                        newResource = mCreateResource->createResource(QString::fromLatin1("akonadi_kolab_resource"), filename, settings);
+                        newResource = mCreateResource->createResource(QStringLiteral("akonadi_kolab_resource"), filename, settings);
                     } else if (filename.contains(QLatin1String("gmail_"))) {
-                        newResource = mCreateResource->createResource(QString::fromLatin1("akonadi_gmail_resource"), filename, settings);
+                        newResource = mCreateResource->createResource(QStringLiteral("akonadi_gmail_resource"), filename, settings);
                     } else {
-                        newResource = mCreateResource->createResource(QString::fromLatin1("akonadi_imap_resource"), filename, settings);
+                        newResource = mCreateResource->createResource(QStringLiteral("akonadi_imap_resource"), filename, settings);
                     }
                     if (!newResource.isEmpty()) {
                         mHashResources.insert(filename, newResource);
@@ -522,7 +522,7 @@ void ImportMailJob::restoreMails()
                         settings.insert(QLatin1String("MessageCount"), compacting.readEntry(QLatin1String("MessageCount"), 50));
                     }
                 }
-                const QString newResource = mCreateResource->createResource(QString::fromLatin1("akonadi_mbox_resource"), filename, settings);
+                const QString newResource = mCreateResource->createResource(QStringLiteral("akonadi_mbox_resource"), filename, settings);
                 if (!newResource.isEmpty()) {
                     mHashResources.insert(filename, newResource);
                     infoAboutNewResource(newResource);
@@ -543,8 +543,8 @@ void ImportMailJob::restoreMails()
                 }
 
                 const QString newResource = mCreateResource->createResource(resourceName.contains(QLatin1String("akonadi_mixedmaildir_resource_")) ?
-                                            QString::fromLatin1("akonadi_mixedmaildir_resource")
-                                            : QString::fromLatin1("akonadi_maildir_resource")
+                                            QStringLiteral("akonadi_mixedmaildir_resource")
+                                            : QStringLiteral("akonadi_maildir_resource")
                                             , filename, settings);
                 if (!newResource.isEmpty()) {
                     mHashResources.insert(filename, newResource);

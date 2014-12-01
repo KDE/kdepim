@@ -1551,7 +1551,7 @@ void MainView::preferHTML(bool useHtml)
       Q_ASSERT( collection.isValid() );
 
       KSharedConfigPtr config = KSharedConfig::openConfig( QLatin1String("kmail-mobilerc") );
-      KConfigGroup group( config, QString::fromLatin1( "c%1" ).arg( collection.id() ) );
+      KConfigGroup group( config, QStringLiteral( "c%1" ).arg( collection.id() ) );
       group.writeEntry( "htmlMailOverride", useHtml );
     }
 
@@ -1593,7 +1593,7 @@ void MainView::loadExternalReferences(bool load)
       Q_ASSERT( collection.isValid() );
 
       KSharedConfigPtr config = KSharedConfig::openConfig( QLatin1String("kmail-mobilerc") );
-      KConfigGroup group( config, QString::fromLatin1("c%1" ).arg( collection.id() ) );
+      KConfigGroup group( config, QStringLiteral("c%1" ).arg( collection.id() ) );
       group.writeEntry( "htmlLoadExternalOverride", load );
     }
 
@@ -1621,7 +1621,7 @@ void MainView::folderChanged()
     const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
     Q_ASSERT( collection.isValid() );
 
-    KConfigGroup group( config, QString::fromLatin1( "c%1" ).arg( collection.id() ) );
+    KConfigGroup group( config, QStringLiteral( "c%1" ).arg( collection.id() ) );
     if ( group.readEntry( "htmlMailOverride", false ) == false )
       htmlMailOverrideInAll = false;
 
