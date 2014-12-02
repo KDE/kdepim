@@ -20,7 +20,7 @@
 
 #include "messagedisplayformatattributetest.h"
 #include "../viewer/messagedisplayformatattribute.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 MessageDisplayFormatAttributeTest::MessageDisplayFormatAttributeTest(QObject *parent)
     : QObject(parent)
@@ -64,4 +64,4 @@ void MessageDisplayFormatAttributeTest::shouldChangeMessageFormat()
 
 }
 
-QTEST_KDEMAIN(MessageDisplayFormatAttributeTest, NoGUI)
+QTEST_MAIN(MessageDisplayFormatAttributeTest)
