@@ -37,7 +37,7 @@ class MailList : public QObject
     Q_PROPERTY( QAbstractItemModel* model READ model CONSTANT )
 
 public:
-    explicit MailList( QObject *parent = 0 );
+    explicit MailList( QObject *parent = Q_NULLPTR );
 
     MailListModel *model() const;
 

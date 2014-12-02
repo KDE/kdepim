@@ -35,7 +35,7 @@ class IndicatorProgress : public QObject
 {
     Q_OBJECT
 public:
-    explicit IndicatorProgress(ProgressIndicatorWidget *widget, QObject *parent = 0);
+    explicit IndicatorProgress(ProgressIndicatorWidget *widget, QObject *parent = Q_NULLPTR);
     ~IndicatorProgress();
 
     bool isActive() const;

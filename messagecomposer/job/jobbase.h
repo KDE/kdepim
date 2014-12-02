@@ -50,7 +50,7 @@ public:
         UserError = UserDefinedError + 42
     };
 
-    explicit JobBase(QObject *parent = 0);
+    explicit JobBase(QObject *parent = Q_NULLPTR);
     virtual ~JobBase();
 
     // asserts if no Composer parent

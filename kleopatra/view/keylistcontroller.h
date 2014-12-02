@@ -57,7 +57,7 @@ class KeyListController : public QObject
 {
     Q_OBJECT
 public:
-    explicit KeyListController(QObject *parent = 0);
+    explicit KeyListController(QObject *parent = Q_NULLPTR);
     ~KeyListController();
 
     std::vector<QAbstractItemView *> views() const;

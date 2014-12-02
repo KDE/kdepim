@@ -26,7 +26,7 @@ class SieveActionRemoveFlags : public SieveActionAbstractFlags
 {
     Q_OBJECT
 public:
-    SieveActionRemoveFlags(QObject *parent = 0);
+    SieveActionRemoveFlags(QObject *parent = Q_NULLPTR);
     static SieveAction *newAction();
     QString flagsCode() const;
     QString help() const;

@@ -56,7 +56,7 @@ class CALENDARSUPPORT_EXPORT EventArchiver : public QObject
 {
     Q_OBJECT
 public:
-    explicit EventArchiver(QObject *parent = 0);
+    explicit EventArchiver(QObject *parent = Q_NULLPTR);
     virtual ~EventArchiver();
 
     /**

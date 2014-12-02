@@ -24,7 +24,7 @@ class RichTextEditorTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit RichTextEditorTest(QObject *parent = 0);
+    explicit RichTextEditorTest(QObject *parent = Q_NULLPTR);
     ~RichTextEditorTest();
 
 private Q_SLOTS:

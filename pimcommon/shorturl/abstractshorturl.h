@@ -29,7 +29,7 @@ class PIMCOMMON_EXPORT AbstractShortUrl : public QObject
 {
     Q_OBJECT
 public:
-    explicit AbstractShortUrl(QObject *parent = 0);
+    explicit AbstractShortUrl(QObject *parent = Q_NULLPTR);
     ~AbstractShortUrl();
 
     virtual QString shortUrlName() const = 0;

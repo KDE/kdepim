@@ -41,7 +41,7 @@ class CalendarJanitor : public QObject
 {
     Q_OBJECT
 public:
-    explicit CalendarJanitor(const Options &options, QObject *parent = 0);
+    explicit CalendarJanitor(const Options &options, QObject *parent = Q_NULLPTR);
 
     void start();
 

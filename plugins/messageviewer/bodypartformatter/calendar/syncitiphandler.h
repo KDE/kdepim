@@ -43,7 +43,7 @@ class SyncItipHandler : public QObject
     Q_OBJECT
 public:
     SyncItipHandler(const QString &receiver, const QString &iCal,
-                    const QString &type, QObject *parent = 0);
+                    const QString &type, QObject *parent = Q_NULLPTR);
 
 public Q_SLOTS:
     void onITipMessageProcessed(Akonadi::ITIPHandler::Result, const QString &errorMessage);

@@ -48,7 +48,7 @@ class StorageListWidgetItemProgress : public QObject
 {
     Q_OBJECT
 public:
-    explicit StorageListWidgetItemProgress(StorageListWidgetItem *item, QObject *parent = 0);
+    explicit StorageListWidgetItemProgress(StorageListWidgetItem *item, QObject *parent = Q_NULLPTR);
     ~StorageListWidgetItemProgress();
 
     void startAnimation();

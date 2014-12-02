@@ -74,7 +74,7 @@ class AbstractDecryptVerifyTask : public Task
 {
     Q_OBJECT
 public:
-    explicit AbstractDecryptVerifyTask(QObject *parent = 0);
+    explicit AbstractDecryptVerifyTask(QObject *parent = Q_NULLPTR);
     virtual ~AbstractDecryptVerifyTask();
     virtual void autodetectProtocolFromInput() = 0;
 
@@ -106,7 +106,7 @@ class DecryptTask : public AbstractDecryptVerifyTask
 {
     Q_OBJECT
 public:
-    explicit DecryptTask(QObject *parent = 0);
+    explicit DecryptTask(QObject *parent = Q_NULLPTR);
     ~DecryptTask();
 
     void setInput(const boost::shared_ptr<Input> &input);
@@ -138,7 +138,7 @@ class VerifyDetachedTask : public AbstractDecryptVerifyTask
 {
     Q_OBJECT
 public:
-    explicit VerifyDetachedTask(QObject *parent = 0);
+    explicit VerifyDetachedTask(QObject *parent = Q_NULLPTR);
     ~VerifyDetachedTask();
 
     void setInput(const boost::shared_ptr<Input> &input);
@@ -170,7 +170,7 @@ class VerifyOpaqueTask : public AbstractDecryptVerifyTask
 {
     Q_OBJECT
 public:
-    explicit VerifyOpaqueTask(QObject *parent = 0);
+    explicit VerifyOpaqueTask(QObject *parent = Q_NULLPTR);
     ~VerifyOpaqueTask();
 
     void setInput(const boost::shared_ptr<Input> &input);
@@ -202,7 +202,7 @@ class DecryptVerifyTask : public AbstractDecryptVerifyTask
 {
     Q_OBJECT
 public:
-    explicit DecryptVerifyTask(QObject *parent = 0);
+    explicit DecryptVerifyTask(QObject *parent = Q_NULLPTR);
     ~DecryptVerifyTask();
 
     void setInput(const boost::shared_ptr<Input> &input);

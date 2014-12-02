@@ -52,7 +52,7 @@ class TaskCollection : public QObject
 {
     Q_OBJECT
 public:
-    explicit TaskCollection(QObject *parent = 0);
+    explicit TaskCollection(QObject *parent = Q_NULLPTR);
     ~TaskCollection();
 
     std::vector<boost::shared_ptr<Task> > tasks() const;

@@ -25,7 +25,7 @@ class SieveActionReject : public SieveAction
 {
     Q_OBJECT
 public:
-    SieveActionReject(QObject *parent = 0);
+    SieveActionReject(QObject *parent = Q_NULLPTR);
 
     static SieveAction *newAction();
 

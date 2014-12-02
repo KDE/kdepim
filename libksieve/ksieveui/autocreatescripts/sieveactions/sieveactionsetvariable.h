@@ -25,7 +25,7 @@ class SieveActionSetVariable : public SieveAction
 {
     Q_OBJECT
 public:
-    SieveActionSetVariable(QObject *parent = 0);
+    SieveActionSetVariable(QObject *parent = Q_NULLPTR);
     static SieveAction *newAction();
     QString code(QWidget *) const;
     QString help() const;

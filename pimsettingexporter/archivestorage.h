@@ -24,7 +24,7 @@ class ArchiveStorage : public QObject
 {
     Q_OBJECT
 public:
-    explicit ArchiveStorage(const QString &filename, QObject *parent = 0);
+    explicit ArchiveStorage(const QString &filename, QObject *parent = Q_NULLPTR);
     ~ArchiveStorage();
 
     void closeArchive();

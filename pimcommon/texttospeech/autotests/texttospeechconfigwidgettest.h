@@ -27,7 +27,7 @@ class TextToSpeechConfigWidgetTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit TextToSpeechConfigWidgetTest(QObject *parent = 0);
+    explicit TextToSpeechConfigWidgetTest(QObject *parent = Q_NULLPTR);
     ~TextToSpeechConfigWidgetTest();
 
 private Q_SLOTS:

@@ -29,7 +29,7 @@ class NOTESHARED_EXPORT CreateNewNoteJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit CreateNewNoteJob(QObject *parent = 0, QWidget *widget = 0);
+    explicit CreateNewNoteJob(QObject *parent = Q_NULLPTR, QWidget *widget = 0);
     ~CreateNewNoteJob();
 
     void setNote(const QString &name, const QString &text);

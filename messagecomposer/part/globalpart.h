@@ -33,7 +33,7 @@ class MESSAGECOMPOSER_EXPORT GlobalPart : public MessageComposer::MessagePart
     Q_OBJECT
 
 public:
-    explicit GlobalPart(QObject *parent = 0);
+    explicit GlobalPart(QObject *parent = Q_NULLPTR);
     virtual ~GlobalPart();
 
     // default true

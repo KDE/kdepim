@@ -24,7 +24,7 @@ class FindBarBaseTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FindBarBaseTest(QObject *parent = 0);
+    explicit FindBarBaseTest(QObject *parent = Q_NULLPTR);
     ~FindBarBaseTest();
 
 private Q_SLOTS:

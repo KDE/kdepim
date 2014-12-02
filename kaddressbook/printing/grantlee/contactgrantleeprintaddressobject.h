@@ -35,7 +35,7 @@ class ContactGrantleePrintAddressObject : public QObject
     Q_PROPERTY(QString formattedAddress READ formattedAddress)
 
 public:
-    explicit ContactGrantleePrintAddressObject(const KContacts::Address &address, QObject *parent = 0);
+    explicit ContactGrantleePrintAddressObject(const KContacts::Address &address, QObject *parent = Q_NULLPTR);
     ~ContactGrantleePrintAddressObject();
 
     QString type() const;

@@ -50,7 +50,7 @@ public:
      *
      * @param parent The parent object.
      */
-    explicit AclManager(QObject *parent = 0);
+    explicit AclManager(QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the ACL manager.

@@ -32,7 +32,7 @@ class MOBILEUI_EXPORT ThreadSelectionModel : public QItemSelectionModel
 {
   Q_OBJECT
 public:
-  explicit ThreadSelectionModel(QAbstractItemModel* model, QItemSelectionModel *contentSelectionModel, QItemSelectionModel *navigationModel, QObject *parent = 0);
+  explicit ThreadSelectionModel(QAbstractItemModel* model, QItemSelectionModel *contentSelectionModel, QItemSelectionModel *navigationModel, QObject *parent = Q_NULLPTR);
   virtual ~ThreadSelectionModel();
   virtual void select(const QModelIndex& index, SelectionFlags command);
   virtual void select(const QItemSelection& selection, SelectionFlags command);

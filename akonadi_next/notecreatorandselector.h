@@ -49,7 +49,7 @@ class AKONADI_NEXT_EXPORT NoteCreatorAndSelector : public QObject
 public:
     explicit NoteCreatorAndSelector(QItemSelectionModel *primaryModel,
                                     QItemSelectionModel *secondaryModel = 0,
-                                    QObject *parent = 0);
+                                    QObject *parent = Q_NULLPTR);
 
     virtual ~NoteCreatorAndSelector();
 

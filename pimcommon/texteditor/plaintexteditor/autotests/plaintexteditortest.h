@@ -24,7 +24,7 @@ class PlainTextEditorTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit PlainTextEditorTest(QObject *parent = 0);
+    explicit PlainTextEditorTest(QObject *parent = Q_NULLPTR);
     ~PlainTextEditorTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();

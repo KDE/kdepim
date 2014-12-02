@@ -35,7 +35,7 @@ class KSIEVEUI_EXPORT VacationCreateScriptJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit VacationCreateScriptJob(QObject *parent = 0);
+    explicit VacationCreateScriptJob(QObject *parent = Q_NULLPTR);
     ~VacationCreateScriptJob();
 
     void start();

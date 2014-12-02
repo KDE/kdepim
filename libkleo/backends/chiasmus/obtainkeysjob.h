@@ -67,7 +67,7 @@ class ObtainKeysJob : public Kleo::SpecialJob
     Q_OBJECT
     Q_PROPERTY(QStringList result READ result)
 public:
-    explicit ObtainKeysJob(QObject *parent = 0);
+    explicit ObtainKeysJob(QObject *parent = Q_NULLPTR);
     ~ObtainKeysJob();
 
     /*!\reimp SpecialJob */

@@ -24,7 +24,7 @@ class BalooDebugDialogTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit BalooDebugDialogTest(QObject *parent = 0);
+    explicit BalooDebugDialogTest(QObject *parent = Q_NULLPTR);
     ~BalooDebugDialogTest();
 
 private Q_SLOTS:

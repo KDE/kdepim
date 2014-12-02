@@ -33,7 +33,7 @@ class MESSAGEVIEWER_EXPORT ScamDetection : public QObject
 {
     Q_OBJECT
 public:
-    explicit ScamDetection(QObject *parent = 0);
+    explicit ScamDetection(QObject *parent = Q_NULLPTR);
     ~ScamDetection();
 
     void scanPage(QWebFrame *frame);

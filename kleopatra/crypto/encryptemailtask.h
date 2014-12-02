@@ -63,7 +63,7 @@ class EncryptEMailTask : public Task
 {
     Q_OBJECT
 public:
-    explicit EncryptEMailTask(QObject *parent = 0);
+    explicit EncryptEMailTask(QObject *parent = Q_NULLPTR);
     ~EncryptEMailTask();
 
     void setInput(const boost::shared_ptr<Input> &input);

@@ -25,7 +25,7 @@ class SieveActionExtractText : public SieveAction
 {
     Q_OBJECT
 public:
-    SieveActionExtractText(QObject *parent = 0);
+    SieveActionExtractText(QObject *parent = Q_NULLPTR);
     static SieveAction *newAction();
     QWidget *createParamWidget(QWidget *parent) const;
     QString code(QWidget *) const;

@@ -59,7 +59,7 @@ class EmailsFilterProxyModel : public QSortFilterProxyModel
      *
      * @param parent The parent object.
      */
-    explicit EmailsFilterProxyModel( QObject *parent = 0 );
+    explicit EmailsFilterProxyModel( QObject *parent = Q_NULLPTR );
 
     /**
      * Destroys the emails filter proxy model.

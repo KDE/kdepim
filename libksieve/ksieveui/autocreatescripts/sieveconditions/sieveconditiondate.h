@@ -26,7 +26,7 @@ class SieveConditionDate : public SieveCondition
 {
     Q_OBJECT
 public:
-    SieveConditionDate(QObject *parent = 0);
+    SieveConditionDate(QObject *parent = Q_NULLPTR);
 
     static SieveCondition *newAction();
 

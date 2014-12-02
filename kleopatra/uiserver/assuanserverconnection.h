@@ -53,7 +53,7 @@ class AssuanServerConnection : public QObject
 {
     Q_OBJECT
 public:
-    AssuanServerConnection(assuan_fd_t fd, const std::vector< boost::shared_ptr<AssuanCommandFactory> > &factories, QObject *parent = 0);
+    AssuanServerConnection(assuan_fd_t fd, const std::vector< boost::shared_ptr<AssuanCommandFactory> > &factories, QObject *parent = Q_NULLPTR);
     ~AssuanServerConnection();
 
 public Q_SLOTS:

@@ -63,7 +63,7 @@ class SignEMailTask : public Task
 {
     Q_OBJECT
 public:
-    explicit SignEMailTask(QObject *parent = 0);
+    explicit SignEMailTask(QObject *parent = Q_NULLPTR);
     ~SignEMailTask();
 
     void setInput(const boost::shared_ptr<Input> &input);

@@ -33,7 +33,7 @@ class FilterActionAddHeader: public FilterActionWithStringList
 {
     Q_OBJECT
 public:
-    explicit FilterActionAddHeader(QObject *parent = 0);
+    explicit FilterActionAddHeader(QObject *parent = Q_NULLPTR);
     ReturnCode process(ItemContext &context, bool applyOnOutbound) const Q_DECL_OVERRIDE;
     QWidget *createParamWidget(QWidget *parent) const Q_DECL_OVERRIDE;
     void setParamWidgetValue(QWidget *paramWidget) const Q_DECL_OVERRIDE;

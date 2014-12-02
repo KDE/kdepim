@@ -35,7 +35,7 @@ class KADDRESSBOOK_EXPORT MailSenderJob : public QObject
     Q_OBJECT
 
 public:
-    explicit MailSenderJob(const Akonadi::Item::List &listItem, QObject *parent = 0);
+    explicit MailSenderJob(const Akonadi::Item::List &listItem, QObject *parent = Q_NULLPTR);
     ~MailSenderJob();
 
     void start();

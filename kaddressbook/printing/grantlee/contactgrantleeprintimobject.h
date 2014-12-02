@@ -27,7 +27,7 @@ class ContactGrantleePrintImObject : public QObject
     Q_PROPERTY(QString address READ address)
 
 public:
-    explicit ContactGrantleePrintImObject(const QString &type, const QString &address, QObject *parent = 0);
+    explicit ContactGrantleePrintImObject(const QString &type, const QString &address, QObject *parent = Q_NULLPTR);
     ~ContactGrantleePrintImObject();
 
     QString type() const;

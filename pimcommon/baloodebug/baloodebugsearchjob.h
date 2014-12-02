@@ -27,7 +27,7 @@ class BalooDebugSearchJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit BalooDebugSearchJob(QObject *parent = 0);
+    explicit BalooDebugSearchJob(QObject *parent = Q_NULLPTR);
     ~BalooDebugSearchJob();
 
     void start();

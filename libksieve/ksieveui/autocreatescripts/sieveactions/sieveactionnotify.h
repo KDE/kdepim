@@ -25,7 +25,7 @@ class SieveActionNotify : public SieveAction
 {
     Q_OBJECT
 public:
-    SieveActionNotify(QObject *parent = 0);
+    SieveActionNotify(QObject *parent = Q_NULLPTR);
     static SieveAction *newAction();
 
     QWidget *createParamWidget(QWidget *parent) const;

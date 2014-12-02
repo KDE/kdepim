@@ -37,7 +37,7 @@ class KDEPIM_EXPORT AddEmailDiplayJob : public KJob
     Q_OBJECT
 
 public:
-    explicit AddEmailDiplayJob(const QString &email, QWidget *parentWidget, QObject *parent = 0);
+    explicit AddEmailDiplayJob(const QString &email, QWidget *parentWidget, QObject *parent = Q_NULLPTR);
 
     ~AddEmailDiplayJob();
     void setShowAsHTML(bool html);

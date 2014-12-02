@@ -43,7 +43,7 @@ class MESSAGECOMPOSER_EXPORT SkeletonMessageJob : public JobBase
     Q_OBJECT
 
 public:
-    explicit SkeletonMessageJob(InfoPart *infoPart = 0, GlobalPart *globalPart = 0, QObject *parent = 0);
+    explicit SkeletonMessageJob(InfoPart *infoPart = 0, GlobalPart *globalPart = 0, QObject *parent = Q_NULLPTR);
     virtual ~SkeletonMessageJob();
 
     InfoPart *infoPart() const;

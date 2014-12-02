@@ -26,7 +26,7 @@ class SieveActionAbstractEditHeader : public SieveAction
 {
     Q_OBJECT
 public:
-    SieveActionAbstractEditHeader(const QString &name, const QString &label, QObject *parent = 0);
+    SieveActionAbstractEditHeader(const QString &name, const QString &label, QObject *parent = Q_NULLPTR);
 
     QStringList needRequires(QWidget *parent) const;
 

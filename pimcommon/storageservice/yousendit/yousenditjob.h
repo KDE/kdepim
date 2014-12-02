@@ -27,7 +27,7 @@ class YouSendItJob : public PimCommon::StorageServiceAbstractJob
 {
     Q_OBJECT
 public:
-    explicit YouSendItJob(QObject *parent = 0);
+    explicit YouSendItJob(QObject *parent = Q_NULLPTR);
     ~YouSendItJob();
 
     void requestTokenAccess();

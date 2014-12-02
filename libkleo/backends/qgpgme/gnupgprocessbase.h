@@ -51,7 +51,7 @@ class KLEO_EXPORT GnuPGProcessBase : public KProcess
 {
     Q_OBJECT
 public:
-    explicit GnuPGProcessBase(QObject *parent = 0);
+    explicit GnuPGProcessBase(QObject *parent = Q_NULLPTR);
     ~GnuPGProcessBase();
 
     void setUseStatusFD(bool use);

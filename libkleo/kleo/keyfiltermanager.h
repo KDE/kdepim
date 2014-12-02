@@ -60,7 +60,7 @@ class KLEO_EXPORT KeyFilterManager : public QObject
 {
     Q_OBJECT
 protected:
-    explicit KeyFilterManager(QObject *parent = 0);
+    explicit KeyFilterManager(QObject *parent = Q_NULLPTR);
     ~KeyFilterManager();
 
 public:

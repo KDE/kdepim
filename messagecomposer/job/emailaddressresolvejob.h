@@ -48,7 +48,7 @@ public:
      *
      * @param parent The parent object.
      */
-    explicit EmailAddressResolveJob(QObject *parent = 0);
+    explicit EmailAddressResolveJob(QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the email address resolve job.

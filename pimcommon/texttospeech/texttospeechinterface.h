@@ -29,7 +29,7 @@ class PIMCOMMON_EXPORT TextToSpeechInterface : public AbstractTextToSpeechInterf
 {
     Q_OBJECT
 public:
-    explicit TextToSpeechInterface(TextToSpeechWidget *textToSpeechWidget, QObject *parent = 0);
+    explicit TextToSpeechInterface(TextToSpeechWidget *textToSpeechWidget, QObject *parent = Q_NULLPTR);
     ~TextToSpeechInterface();
 
     bool isReady() const Q_DECL_OVERRIDE;

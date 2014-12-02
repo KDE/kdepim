@@ -42,7 +42,7 @@ class KOAlarmClient : public QObject
 {
     Q_OBJECT
 public:
-    explicit KOAlarmClient(QObject *parent = 0);
+    explicit KOAlarmClient(QObject *parent = Q_NULLPTR);
     ~KOAlarmClient();
 
     // DBUS interface

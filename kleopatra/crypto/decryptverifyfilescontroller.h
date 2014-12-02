@@ -57,8 +57,8 @@ class DecryptVerifyFilesController : public Controller
 {
     Q_OBJECT
 public:
-    explicit DecryptVerifyFilesController(QObject *parent = 0);
-    explicit DecryptVerifyFilesController(const boost::shared_ptr<const ExecutionContext> &ctx, QObject *parent = 0);
+    explicit DecryptVerifyFilesController(QObject *parent = Q_NULLPTR);
+    explicit DecryptVerifyFilesController(const boost::shared_ptr<const ExecutionContext> &ctx, QObject *parent = Q_NULLPTR);
 
     ~DecryptVerifyFilesController();
 

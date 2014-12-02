@@ -29,7 +29,7 @@ class UpdateContactJob : public KJob
 {
     Q_OBJECT
 public:
-    explicit UpdateContactJob(const QString &email, const KContacts::Addressee &contact, QWidget *parentWidget, QObject *parent = 0);
+    explicit UpdateContactJob(const QString &email, const KContacts::Addressee &contact, QWidget *parentWidget, QObject *parent = Q_NULLPTR);
     ~UpdateContactJob();
 
     void start();

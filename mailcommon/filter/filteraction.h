@@ -74,7 +74,7 @@ public:
      * The action is initialized with an identifier @p name and
      * an i18n'd @p label.
      */
-    FilterAction(const QString &name, const QString &label, QObject *parent = 0);
+    FilterAction(const QString &name, const QString &label, QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the filter action.

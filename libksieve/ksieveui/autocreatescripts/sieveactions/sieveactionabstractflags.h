@@ -25,7 +25,7 @@ class SieveActionAbstractFlags : public SieveAction
 {
     Q_OBJECT
 public:
-    SieveActionAbstractFlags(const QString &name, const QString &label, QObject *parent = 0);
+    SieveActionAbstractFlags(const QString &name, const QString &label, QObject *parent = Q_NULLPTR);
 
     QWidget *createParamWidget(QWidget *parent) const;
     bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error);

@@ -46,7 +46,7 @@ public:
      * @param model The model that shall be managed.
      * @param parent The parent object.
      */
-    explicit ModelColumnManager(Akonadi::ContactsTreeModel *model, QObject *parent = 0);
+    explicit ModelColumnManager(Akonadi::ContactsTreeModel *model, QObject *parent = Q_NULLPTR);
 
     /**
      * Loads the user configuration and applies it to the model.

@@ -54,7 +54,7 @@ public:
     enum length { Long = 0, Short };
 
     /** Constructor */
-    explicit Ispdb(QObject *parent = 0);
+    explicit Ispdb(QObject *parent = Q_NULLPTR);
 
     /** Destructor */
     ~Ispdb();

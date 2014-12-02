@@ -44,7 +44,7 @@ public:
         BLOGGER1_API = 0, METAWEBLOG_API, MOVABLETYPE_API, WORDPRESSBUGGY_API, BLOGGER_API
     };
 
-    explicit BilboBlog(QObject *parent = 0);
+    explicit BilboBlog(QObject *parent = Q_NULLPTR);
     BilboBlog(const BilboBlog &);
     ~BilboBlog();
 

@@ -29,7 +29,7 @@ class KADDRESSBOOK_EXPORT SearchPotentialDuplicateContactJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit SearchPotentialDuplicateContactJob(const Akonadi::Item::List &list, QObject *parent = 0);
+    explicit SearchPotentialDuplicateContactJob(const Akonadi::Item::List &list, QObject *parent = Q_NULLPTR);
     ~SearchPotentialDuplicateContactJob();
 
     void start();

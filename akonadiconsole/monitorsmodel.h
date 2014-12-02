@@ -43,7 +43,7 @@ public:
         ColumnsCount
     };
 
-    explicit MonitorsModel(QObject *parent = 0);
+    explicit MonitorsModel(QObject *parent = Q_NULLPTR);
     virtual ~MonitorsModel();
 
     void setEnabled(bool enabled);

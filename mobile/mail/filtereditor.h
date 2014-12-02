@@ -50,7 +50,7 @@ class FilterEditor : public QObject
      *                         actions (e.g. add, edit, delete) at
      * @param parent The parent object.
      */
-    explicit FilterEditor( KActionCollection *actionCollection, QObject *parent = 0 );
+    explicit FilterEditor( KActionCollection *actionCollection, QObject *parent = Q_NULLPTR );
 
   public Q_SLOTS:
     /**

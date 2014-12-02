@@ -31,7 +31,7 @@ class MessageHeaderGrantleeFilters : public QObject, public Grantlee::TagLibrary
     Q_INTERFACES(Grantlee::TagLibraryInterface)
     Q_PLUGIN_METADATA(IID "org.grantlee.TagLibraryInterface")
 public:
-    explicit MessageHeaderGrantleeFilters(QObject *parent = 0);
+    explicit MessageHeaderGrantleeFilters(QObject *parent = Q_NULLPTR);
     ~MessageHeaderGrantleeFilters();
     QHash<QString, Grantlee::Filter *> filters(const QString &name = QString());
 };

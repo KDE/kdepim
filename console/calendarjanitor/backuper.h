@@ -37,7 +37,7 @@ class Backuper : public QObject
 {
     Q_OBJECT
 public:
-    explicit Backuper(QObject *parent = 0);
+    explicit Backuper(QObject *parent = Q_NULLPTR);
     void backup(const QString &filename, const QList<Akonadi::Collection::Id> &collectionIds);
 
 Q_SIGNALS:

@@ -34,7 +34,7 @@ class KSIEVEUI_EXPORT VacationHelperJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit VacationHelperJob(const QUrl &url, QObject *parent = 0);
+    explicit VacationHelperJob(const QUrl &url, QObject *parent = Q_NULLPTR);
     ~VacationHelperJob();
 
     void searchActiveJob();

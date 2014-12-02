@@ -39,7 +39,7 @@ class ReceiverModel : public QAbstractListModel
     Q_OBJECT
 
 public:
-    explicit ReceiverModel(QObject *parent = 0);
+    explicit ReceiverModel(QObject *parent = Q_NULLPTR);
 
     enum Roles {
         Name = Qt::UserRole + 1,

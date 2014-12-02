@@ -29,7 +29,7 @@ class TasksActionManager : public QObject
 {
   Q_OBJECT
 public:
-  explicit TasksActionManager( KActionCollection *actionCollection, QObject *parent = 0 );
+  explicit TasksActionManager( KActionCollection *actionCollection, QObject *parent = Q_NULLPTR );
 
   void setCalendar( const Akonadi::ETMCalendar::Ptr &calendar );
   void setItemSelectionModel( QItemSelectionModel *itemSelectionModel );

@@ -70,8 +70,8 @@ class DecryptVerifyEMailController : public Controller
 {
     Q_OBJECT
 public:
-    explicit DecryptVerifyEMailController(QObject *parent = 0);
-    explicit DecryptVerifyEMailController(const boost::shared_ptr<const ExecutionContext> &cmd, QObject *parent = 0);
+    explicit DecryptVerifyEMailController(QObject *parent = Q_NULLPTR);
+    explicit DecryptVerifyEMailController(const boost::shared_ptr<const ExecutionContext> &cmd, QObject *parent = Q_NULLPTR);
 
     ~DecryptVerifyEMailController();
 

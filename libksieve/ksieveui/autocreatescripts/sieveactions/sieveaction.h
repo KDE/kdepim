@@ -26,7 +26,7 @@ class SieveAction : public QObject
 {
     Q_OBJECT
 public:
-    SieveAction(const QString &name, const QString &label, QObject *parent = 0);
+    SieveAction(const QString &name, const QString &label, QObject *parent = Q_NULLPTR);
     virtual ~SieveAction();
 
     QString name() const;

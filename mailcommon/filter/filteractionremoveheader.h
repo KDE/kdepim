@@ -33,7 +33,7 @@ class FilterActionRemoveHeader: public FilterActionWithStringList
 {
     Q_OBJECT
 public:
-    explicit FilterActionRemoveHeader(QObject *parent = 0);
+    explicit FilterActionRemoveHeader(QObject *parent = Q_NULLPTR);
     ReturnCode process(ItemContext &context, bool applyOnOutbound) const Q_DECL_OVERRIDE;
     SearchRule::RequiredPart requiredPart() const Q_DECL_OVERRIDE;
     QWidget *createParamWidget(QWidget *parent) const Q_DECL_OVERRIDE;

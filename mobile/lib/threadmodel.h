@@ -43,7 +43,7 @@ class MOBILEUI_EXPORT ThreadModel : public QAbstractListModel
       ThreadUnreadCountRole
     };
 
-    explicit ThreadModel( QAbstractItemModel *emailModel, QObject *parent = 0 );
+    explicit ThreadModel( QAbstractItemModel *emailModel, QObject *parent = Q_NULLPTR );
     virtual ~ThreadModel();
 
     virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const;

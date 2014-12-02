@@ -26,7 +26,7 @@ class Ldap : public SetupObject
 {
     Q_OBJECT
 public:
-    explicit Ldap(QObject *parent = 0);
+    explicit Ldap(QObject *parent = Q_NULLPTR);
     ~Ldap();
     void create();
     void destroy();

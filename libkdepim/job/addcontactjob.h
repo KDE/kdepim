@@ -58,7 +58,7 @@ public:
      * @param parentWidget The widget that will be used as parent for dialog.
      * @param parent The parent object.
      */
-    AddContactJob(const KContacts::Addressee &contact, QWidget *parentWidget, QObject *parent = 0);
+    AddContactJob(const KContacts::Addressee &contact, QWidget *parentWidget, QObject *parent = Q_NULLPTR);
 
     /**
      * Creates a new add contact job.
@@ -67,7 +67,7 @@ public:
      * @param collection The address book collection where the contact shall be stored in.
      * @param parent The parent object.
      */
-    AddContactJob(const KContacts::Addressee &contact, const Akonadi::Collection &collection, QObject *parent = 0);
+    AddContactJob(const KContacts::Addressee &contact, const Akonadi::Collection &collection, QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the add email address job.

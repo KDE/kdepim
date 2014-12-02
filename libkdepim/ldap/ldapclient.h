@@ -55,7 +55,7 @@ public:
      * @param clientNumber The unique number of this client.
      * @param parent The parent object.
      */
-    explicit LdapClient(int clientNumber, QObject *parent = 0);
+    explicit LdapClient(int clientNumber, QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the ldap client.

@@ -68,7 +68,7 @@ private Q_SLOTS:
     void slotStateChanged();
 
 private:
-    explicit TextToSpeech(QObject *parent = 0);
+    explicit TextToSpeech(QObject *parent = Q_NULLPTR);
     friend class TextToSpeechPrivate;
 
     void init();

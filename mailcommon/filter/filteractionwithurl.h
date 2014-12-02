@@ -52,7 +52,7 @@ public:
     /**
      * @copydoc FilterAction::FilterAction
      */
-    FilterActionWithUrl(const QString &name, const QString &label, QObject *parent = 0);
+    FilterActionWithUrl(const QString &name, const QString &label, QObject *parent = Q_NULLPTR);
 
     /**
      * @copydoc FilterAction::~FilterAction

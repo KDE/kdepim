@@ -47,7 +47,7 @@ class SearchManager : public QObject
      *
      * @param parent The parent object.
      */
-    explicit SearchManager( QObject *parent = 0 );
+    explicit SearchManager( QObject *parent = Q_NULLPTR );
 
     /**
      * Destroys the search manager.

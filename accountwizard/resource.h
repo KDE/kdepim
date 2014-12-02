@@ -30,7 +30,7 @@ class Resource : public SetupObject
 {
     Q_OBJECT
 public:
-    explicit Resource(const QString &type, QObject *parent = 0);
+    explicit Resource(const QString &type, QObject *parent = Q_NULLPTR);
     void create();
     void destroy();
 

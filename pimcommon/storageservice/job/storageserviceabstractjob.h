@@ -31,7 +31,7 @@ class StorageServiceAbstractJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit StorageServiceAbstractJob(QObject *parent = 0);
+    explicit StorageServiceAbstractJob(QObject *parent = Q_NULLPTR);
     ~StorageServiceAbstractJob();
 
     virtual QNetworkReply *uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination = QString()) = 0;

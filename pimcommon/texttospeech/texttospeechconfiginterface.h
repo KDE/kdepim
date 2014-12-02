@@ -25,7 +25,7 @@ class PIMCOMMON_EXPORT TextToSpeechConfigInterface : public AbstractTextToSpeech
 {
     Q_OBJECT
 public:
-    explicit TextToSpeechConfigInterface(QObject *parent = 0);
+    explicit TextToSpeechConfigInterface(QObject *parent = Q_NULLPTR);
     ~TextToSpeechConfigInterface();
 
     QVector<QLocale> availableLocales() const Q_DECL_OVERRIDE;

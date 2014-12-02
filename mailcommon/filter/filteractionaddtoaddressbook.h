@@ -33,7 +33,7 @@ class FilterActionAddToAddressBook: public FilterActionWithStringList
 {
     Q_OBJECT
 public:
-    explicit FilterActionAddToAddressBook(QObject *parent = 0);
+    explicit FilterActionAddToAddressBook(QObject *parent = Q_NULLPTR);
     ReturnCode process(ItemContext &context, bool applyOnOutbound) const Q_DECL_OVERRIDE;
     static FilterAction *newAction();
 

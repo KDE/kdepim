@@ -32,7 +32,7 @@ class VacationCheckJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit VacationCheckJob(const QUrl &url, const QString &serverName, QObject *parent = 0);
+    explicit VacationCheckJob(const QUrl &url, const QString &serverName, QObject *parent = Q_NULLPTR);
     ~VacationCheckJob();
 
 Q_SIGNALS:

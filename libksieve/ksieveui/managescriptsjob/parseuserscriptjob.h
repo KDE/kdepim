@@ -34,7 +34,7 @@ class KSIEVEUI_EXPORT ParseUserScriptJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit ParseUserScriptJob(QObject *parent = 0);
+    explicit ParseUserScriptJob(QObject *parent = Q_NULLPTR);
     ~ParseUserScriptJob();
 
     void start();

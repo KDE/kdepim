@@ -26,7 +26,7 @@ class SieveConditionIhave : public SieveCondition
 {
     Q_OBJECT
 public:
-    SieveConditionIhave(QObject *parent = 0);
+    SieveConditionIhave(QObject *parent = Q_NULLPTR);
 
     static SieveCondition *newAction();
 

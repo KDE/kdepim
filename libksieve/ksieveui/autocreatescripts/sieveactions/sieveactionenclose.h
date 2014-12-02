@@ -25,7 +25,7 @@ class SieveActionEnclose : public SieveAction
 {
     Q_OBJECT
 public:
-    SieveActionEnclose(QObject *parent = 0);
+    SieveActionEnclose(QObject *parent = Q_NULLPTR);
     static SieveAction *newAction();
     QString code(QWidget *) const;
     QWidget *createParamWidget(QWidget *parent) const;

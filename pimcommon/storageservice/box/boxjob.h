@@ -27,7 +27,7 @@ class BoxJob : public PimCommon::StorageServiceAbstractJob
 {
     Q_OBJECT
 public:
-    explicit BoxJob(QObject *parent = 0);
+    explicit BoxJob(QObject *parent = Q_NULLPTR);
     ~BoxJob();
 
     void deleteFile(const QString &filename);

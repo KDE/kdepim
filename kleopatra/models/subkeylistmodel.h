@@ -51,7 +51,7 @@ class SubkeyListModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit SubkeyListModel(QObject *parent = 0);
+    explicit SubkeyListModel(QObject *parent = Q_NULLPTR);
     ~SubkeyListModel();
 
     GpgME::Key key() const;

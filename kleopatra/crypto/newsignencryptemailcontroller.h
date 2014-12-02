@@ -72,8 +72,8 @@ class NewSignEncryptEMailController : public Controller
 {
     Q_OBJECT
 public:
-    explicit NewSignEncryptEMailController(QObject *parent = 0);
-    explicit NewSignEncryptEMailController(const boost::shared_ptr<ExecutionContext> &xc, QObject *parent = 0);
+    explicit NewSignEncryptEMailController(QObject *parent = Q_NULLPTR);
+    explicit NewSignEncryptEMailController(const boost::shared_ptr<ExecutionContext> &xc, QObject *parent = Q_NULLPTR);
     ~NewSignEncryptEMailController();
 
     static const char *mementoName()

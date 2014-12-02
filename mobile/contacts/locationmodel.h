@@ -27,7 +27,7 @@
 class LocationModel : public QAbstractTableModel
 {
   public:
-    explicit LocationModel( QObject *parent = 0 );
+    explicit LocationModel( QObject *parent = Q_NULLPTR );
     ~LocationModel();
 
     void setLocations( const KContacts::Address::List &locations );

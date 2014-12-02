@@ -59,7 +59,7 @@ class EventsFilterProxyModel : public QSortFilterProxyModel
      *
      * @param parent The parent object.
      */
-    explicit EventsFilterProxyModel( QObject *parent = 0 );
+    explicit EventsFilterProxyModel( QObject *parent = Q_NULLPTR );
 
     /**
      * Destroys the events filter proxy model.

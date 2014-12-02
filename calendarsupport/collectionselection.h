@@ -40,7 +40,7 @@ class CALENDARSUPPORT_EXPORT CollectionSelection : public QObject
 {
     Q_OBJECT
 public:
-    explicit CollectionSelection(QItemSelectionModel *selectionModel, QObject *parent = 0);
+    explicit CollectionSelection(QItemSelectionModel *selectionModel, QObject *parent = Q_NULLPTR);
     ~CollectionSelection();
 
     QItemSelectionModel *model() const;

@@ -74,8 +74,8 @@ public:
         NumModes
     };
 
-    explicit SignEMailController(Mode mode, QObject *parent = 0);
-    explicit SignEMailController(const boost::shared_ptr<ExecutionContext> &xc, Mode mode, QObject *parent = 0);
+    explicit SignEMailController(Mode mode, QObject *parent = Q_NULLPTR);
+    explicit SignEMailController(const boost::shared_ptr<ExecutionContext> &xc, Mode mode, QObject *parent = Q_NULLPTR);
     ~SignEMailController();
 
     Mode mode() const;

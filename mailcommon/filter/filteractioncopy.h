@@ -35,7 +35,7 @@ class FilterActionCopy: public FilterActionWithFolder
 {
     Q_OBJECT
 public:
-    explicit FilterActionCopy(QObject *parent = 0);
+    explicit FilterActionCopy(QObject *parent = Q_NULLPTR);
     ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
     SearchRule::RequiredPart requiredPart() const;
     static FilterAction *newAction();

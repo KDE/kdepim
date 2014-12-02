@@ -34,7 +34,7 @@ class FolderCollectionMonitor;
 class KMailCVTKernel : public QObject, public MailCommon::IKernel, public MailCommon::ISettings
 {
 public:
-    explicit  KMailCVTKernel(QObject *parent = 0);
+    explicit  KMailCVTKernel(QObject *parent = Q_NULLPTR);
 
     KIdentityManagement::IdentityManager *identityManager();
     MessageComposer::MessageSender *msgSender();

@@ -28,7 +28,7 @@ class MESSAGECORE_EXPORT AttachmentUpdateJob : public KJob
 {
     Q_OBJECT
 public:
-    AttachmentUpdateJob(const AttachmentPart::Ptr &part, QObject *parent = 0);
+    AttachmentUpdateJob(const AttachmentPart::Ptr &part, QObject *parent = Q_NULLPTR);
     ~AttachmentUpdateJob();
 
     virtual void start();

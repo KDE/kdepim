@@ -53,7 +53,7 @@ Q_OBJECT
 
 public:
 
-    explicit Composer ( QObject *parent = 0 );
+    explicit Composer ( QObject *parent = Q_NULLPTR );
 
     QString cc() const;
     QString bcc() const;

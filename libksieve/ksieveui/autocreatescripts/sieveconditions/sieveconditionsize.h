@@ -26,7 +26,7 @@ class SieveConditionSize : public SieveCondition
 {
     Q_OBJECT
 public:
-    SieveConditionSize(QObject *parent = 0);
+    SieveConditionSize(QObject *parent = Q_NULLPTR);
 
     static SieveCondition *newAction();
 

@@ -39,9 +39,9 @@ public:
     static DebugLevel debugLevel();
     static void setDebugLevel(DebugLevel level);
 
-    explicit KDPipeIODevice(QObject *parent = 0);
-    explicit KDPipeIODevice(int fd, OpenMode = ReadOnly, QObject *parent = 0);
-    explicit KDPipeIODevice(Qt::HANDLE handle, OpenMode = ReadOnly, QObject *parent = 0);
+    explicit KDPipeIODevice(QObject *parent = Q_NULLPTR);
+    explicit KDPipeIODevice(int fd, OpenMode = ReadOnly, QObject *parent = Q_NULLPTR);
+    explicit KDPipeIODevice(Qt::HANDLE handle, OpenMode = ReadOnly, QObject *parent = Q_NULLPTR);
     ~KDPipeIODevice();
 
     static std::pair<KDPipeIODevice *, KDPipeIODevice *> makePairOfConnectedPipes();

@@ -38,7 +38,7 @@ public:
         Addressbook
     };
 
-    explicit GrantleeThemeManager(GrantleeTheme::GrantleeThemeManager::Application applicationType, const QString &defaultDesktopFileName, KActionCollection *actionCollection, const QString &path, QObject *parent = 0);
+    explicit GrantleeThemeManager(GrantleeTheme::GrantleeThemeManager::Application applicationType, const QString &defaultDesktopFileName, KActionCollection *actionCollection, const QString &path, QObject *parent = Q_NULLPTR);
     ~GrantleeThemeManager();
 
     QMap<QString, GrantleeTheme::Theme> themes() const;

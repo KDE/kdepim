@@ -25,7 +25,7 @@ class TinyurlShortUrl : public PimCommon::AbstractShortUrl
 {
     Q_OBJECT
 public:
-    explicit TinyurlShortUrl(QObject *parent = 0);
+    explicit TinyurlShortUrl(QObject *parent = Q_NULLPTR);
     ~TinyurlShortUrl();
 
     void start();

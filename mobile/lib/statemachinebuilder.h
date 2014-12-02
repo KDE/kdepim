@@ -37,7 +37,7 @@ class MOBILEUI_EXPORT NotifyingStateMachine : public QStateMachine
 {
   Q_OBJECT
 public:
-  explicit NotifyingStateMachine(QObject *parent = 0);
+  explicit NotifyingStateMachine(QObject *parent = Q_NULLPTR);
 
   void requestState(const QString &state);
 

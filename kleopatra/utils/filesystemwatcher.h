@@ -47,8 +47,8 @@ class FileSystemWatcher : public QObject
 {
     Q_OBJECT
 public:
-    explicit FileSystemWatcher(QObject *parent = 0);
-    explicit FileSystemWatcher(const QStringList &paths, QObject *parent = 0);
+    explicit FileSystemWatcher(QObject *parent = Q_NULLPTR);
+    explicit FileSystemWatcher(const QStringList &paths, QObject *parent = Q_NULLPTR);
     ~FileSystemWatcher();
 
     void setDelay(int ms);

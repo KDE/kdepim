@@ -48,7 +48,7 @@ public:
      *
      * @param parent The parent object.
      */
-    explicit FilterController(QObject *parent = 0);
+    explicit FilterController(QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the filter controller.

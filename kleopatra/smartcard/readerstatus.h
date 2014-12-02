@@ -49,7 +49,7 @@ class ReaderStatus : public QObject
 {
     Q_OBJECT
 public:
-    explicit ReaderStatus(QObject *parent = 0);
+    explicit ReaderStatus(QObject *parent = Q_NULLPTR);
     ~ReaderStatus();
 
     static const ReaderStatus *instance();

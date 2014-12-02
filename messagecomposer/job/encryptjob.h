@@ -50,7 +50,7 @@ class MESSAGECOMPOSER_EXPORT EncryptJob : public ContentJobBase, public Abstract
     Q_OBJECT
 
 public:
-    explicit EncryptJob(QObject *parent = 0);
+    explicit EncryptJob(QObject *parent = Q_NULLPTR);
     virtual ~EncryptJob();
 
     void setContent(KMime::Content *content);

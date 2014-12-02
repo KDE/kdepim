@@ -23,7 +23,7 @@ class GlobalPartTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit GlobalPartTest(QObject *parent = 0);
+    explicit GlobalPartTest(QObject *parent = Q_NULLPTR);
     ~GlobalPartTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();

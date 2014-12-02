@@ -24,7 +24,7 @@ class BalooDebugSearchPathComboBoxTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit BalooDebugSearchPathComboBoxTest(QObject *parent = 0);
+    explicit BalooDebugSearchPathComboBoxTest(QObject *parent = Q_NULLPTR);
     ~BalooDebugSearchPathComboBoxTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();

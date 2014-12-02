@@ -26,7 +26,7 @@ class SieveCondition : public QObject
 {
     Q_OBJECT
 public:
-    SieveCondition(const QString &name, const QString &label, QObject *parent = 0);
+    SieveCondition(const QString &name, const QString &label, QObject *parent = Q_NULLPTR);
     virtual ~SieveCondition();
 
     QString name() const;

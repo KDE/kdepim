@@ -26,7 +26,7 @@ class SieveActionReplace : public SieveAction
 {
     Q_OBJECT
 public:
-    SieveActionReplace(QObject *parent = 0);
+    SieveActionReplace(QObject *parent = Q_NULLPTR);
     static SieveAction *newAction();
     QString code(QWidget *) const;
     QWidget *createParamWidget(QWidget *parent) const;

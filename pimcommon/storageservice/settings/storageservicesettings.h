@@ -44,7 +44,7 @@ private slots:
     void slotWalletClosed();
 
 private:
-    explicit StorageServiceSettings(QObject *parent = 0);
+    explicit StorageServiceSettings(QObject *parent = Q_NULLPTR);
     friend class StorageServiceSettingsPrivate;
     KWallet::Wallet *mWallet;
 };

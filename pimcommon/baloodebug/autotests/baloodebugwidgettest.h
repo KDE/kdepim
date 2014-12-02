@@ -24,7 +24,7 @@ class BalooDebugWidgetTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit BalooDebugWidgetTest(QObject *parent = 0);
+    explicit BalooDebugWidgetTest(QObject *parent = Q_NULLPTR);
     ~BalooDebugWidgetTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();

@@ -31,7 +31,7 @@ class AttachmentTemporaryFilesDirs : public QObject
 {
     Q_OBJECT
 public:
-    explicit AttachmentTemporaryFilesDirs(QObject *parent = 0);
+    explicit AttachmentTemporaryFilesDirs(QObject *parent = Q_NULLPTR);
     ~AttachmentTemporaryFilesDirs();
 
     void addTempFile(const QString &file);

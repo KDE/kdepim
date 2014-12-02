@@ -119,7 +119,7 @@ class MOBILEUI_EXPORT GuiStateManager : public QObject
      *
      * @param parent The parent object.
      */
-    GuiStateManager( QObject *parent = 0 );
+    GuiStateManager( QObject *parent = Q_NULLPTR );
 
     /**
      * Destroys the gui state manager.

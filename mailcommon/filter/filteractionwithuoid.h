@@ -47,7 +47,7 @@ public:
     /**
      * @copydoc FilterAction::FilterAction
      */
-    FilterActionWithUOID(const QString &name, const QString &label, QObject *parent = 0);
+    FilterActionWithUOID(const QString &name, const QString &label, QObject *parent = Q_NULLPTR);
 
     /**
      * @copydoc FilterAction::isEmpty

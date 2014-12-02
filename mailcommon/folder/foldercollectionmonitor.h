@@ -43,7 +43,7 @@ class MAILCOMMON_EXPORT FolderCollectionMonitor : public QObject
     Q_OBJECT
 
 public:
-    explicit FolderCollectionMonitor(Akonadi::Session *session, QObject *parent = 0);
+    explicit FolderCollectionMonitor(Akonadi::Session *session, QObject *parent = Q_NULLPTR);
     ~FolderCollectionMonitor();
 
     Akonadi::ChangeRecorder *monitor() const;

@@ -25,7 +25,7 @@ class MigremeShortUrl : public PimCommon::AbstractShortUrl
 {
     Q_OBJECT
 public:
-    explicit MigremeShortUrl(QObject *parent = 0);
+    explicit MigremeShortUrl(QObject *parent = Q_NULLPTR);
     ~MigremeShortUrl();
 
     void start();

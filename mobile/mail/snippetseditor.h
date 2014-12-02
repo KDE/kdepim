@@ -50,7 +50,7 @@ class SnippetsEditor : public QObject
      *                         actions (e.g. add, edit, delete) at
      * @param parent The parent object.
      */
-    explicit SnippetsEditor( KActionCollection *actionCollection, QObject *parent = 0 );
+    explicit SnippetsEditor( KActionCollection *actionCollection, QObject *parent = Q_NULLPTR );
 
     void setEditor( QObject *editor, const char *insertSnippetMethod, const char *dropSignal );
 

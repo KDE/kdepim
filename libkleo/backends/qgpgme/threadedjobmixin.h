@@ -95,7 +95,7 @@ template <typename T_result>
 class Thread : public QThread
 {
 public:
-    explicit Thread(QObject *parent = 0) : QThread(parent) {}
+    explicit Thread(QObject *parent = Q_NULLPTR) : QThread(parent) {}
 
     void setFunction(const boost::function<T_result()> &function)
     {

@@ -47,7 +47,7 @@ class UserIDListModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    explicit UserIDListModel(QObject *parent = 0);
+    explicit UserIDListModel(QObject *parent = Q_NULLPTR);
     ~UserIDListModel();
 
     GpgME::Key key() const;

@@ -55,7 +55,7 @@ class AclEditor : public QObject
      *                         actions (e.g. add, edit, delete) at
      * @param parent The parent object.
      */
-    explicit AclEditor( KActionCollection *actionCollection, QObject *parent = 0 );
+    explicit AclEditor( KActionCollection *actionCollection, QObject *parent = Q_NULLPTR );
 
     /**
      * Sets the @p collection whose ACLs shall be edited.

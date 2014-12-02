@@ -50,7 +50,7 @@ public:
     /**
      * @param parentWidget is passed to Akonadi when fetching free/busy data.
      */
-    explicit ConflictResolver(QWidget *parentWidget, QObject *parent = 0);
+    explicit ConflictResolver(QWidget *parentWidget, QObject *parent = Q_NULLPTR);
 
     /**
      *  Add an attendee

@@ -29,7 +29,7 @@ class FollowUpReminderFinishTaskJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit FollowUpReminderFinishTaskJob(Akonadi::Item::Id id, QObject *parent = 0);
+    explicit FollowUpReminderFinishTaskJob(Akonadi::Item::Id id, QObject *parent = Q_NULLPTR);
     ~FollowUpReminderFinishTaskJob();
 
     void start();

@@ -49,7 +49,7 @@ public:
         FreeBusyPeriodRole
     };
 
-    explicit FreeBusyItemModel(QObject *parent = 0);
+    explicit FreeBusyItemModel(QObject *parent = Q_NULLPTR);
     virtual ~FreeBusyItemModel();
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;

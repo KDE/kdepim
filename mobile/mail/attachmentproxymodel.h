@@ -41,7 +41,7 @@ class AttachmentProxyModel : public QSortFilterProxyModel
       AttachmentUrlRole = MessageViewer::MimeTreeModel::UserRole
     };
 
-    explicit AttachmentProxyModel( QObject *parent = 0 );
+    explicit AttachmentProxyModel( QObject *parent = Q_NULLPTR );
     ~AttachmentProxyModel();
 
     bool filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent ) const;

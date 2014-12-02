@@ -174,7 +174,7 @@ Q_SIGNALS:
     void requestSystemTrayUpdate();
 
 private:
-    Kernel(QObject *parent = 0);
+    Kernel(QObject *parent = Q_NULLPTR);
     friend class KernelPrivate;
 
     IKernel *mKernelIf;

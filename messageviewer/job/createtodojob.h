@@ -29,7 +29,7 @@ class CreateTodoJob : public KJob
 {
     Q_OBJECT
 public:
-    explicit CreateTodoJob(const KCalCore::Todo::Ptr &todoPtr, const Akonadi::Collection &collection, const Akonadi::Item &item, QObject *parent = 0);
+    explicit CreateTodoJob(const KCalCore::Todo::Ptr &todoPtr, const Akonadi::Collection &collection, const Akonadi::Item &item, QObject *parent = Q_NULLPTR);
     ~CreateTodoJob();
 
     void start() Q_DECL_OVERRIDE;

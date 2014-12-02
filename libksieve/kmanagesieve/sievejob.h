@@ -155,7 +155,7 @@ Q_SIGNALS:
 
 private:
     //@cond PRIVATE
-    SieveJob(QObject *parent = 0);
+    SieveJob(QObject *parent = Q_NULLPTR);
     ~SieveJob();
 
     class Private;

@@ -47,7 +47,7 @@ class Message : public QObject
     Q_PROPERTY (Error* error READ error CONSTANT)
 
 public:
-    explicit Message( QObject *parent = 0 );
+    explicit Message( QObject *parent = Q_NULLPTR );
     ~Message();
 
     QString subject() const;

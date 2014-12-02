@@ -36,7 +36,7 @@ public:
         NoError // everything is alright
     };
 
-    explicit Error( QObject *parent = 0 );
+    explicit Error( QObject *parent = Q_NULLPTR );
 
     int code() const;
     QString text() const;

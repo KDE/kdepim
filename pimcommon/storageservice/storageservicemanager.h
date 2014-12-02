@@ -44,7 +44,7 @@ public:
         EndListService
     };
 
-    explicit StorageServiceManager(QObject *parent = 0);
+    explicit StorageServiceManager(QObject *parent = Q_NULLPTR);
     ~StorageServiceManager();
 
     QString ourIdentifier() const;

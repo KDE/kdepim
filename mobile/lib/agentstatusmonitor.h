@@ -40,7 +40,7 @@ class AgentStatusMonitor : public QObject
     };
     Q_DECLARE_FLAGS( AgentStatus, Status )
 
-    explicit AgentStatusMonitor( QObject *parent = 0 );
+    explicit AgentStatusMonitor( QObject *parent = Q_NULLPTR );
 
     AgentStatus status() const;
     void setMimeTypeFilter( const QStringList &mimeTypes );

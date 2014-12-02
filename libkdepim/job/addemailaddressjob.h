@@ -51,7 +51,7 @@ public:
      * @param parentWidget The widget that will be used as parent for dialog.
      * @param parent The parent object.
      */
-    AddEmailAddressJob(const QString &email, QWidget *parentWidget, QObject *parent = 0);
+    AddEmailAddressJob(const QString &email, QWidget *parentWidget, QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the add email address job.

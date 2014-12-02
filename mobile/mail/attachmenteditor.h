@@ -55,7 +55,7 @@ class AttachmentEditor : public QObject
      * @param parent The parent object.
      */
     AttachmentEditor( KActionCollection *actionCollection, MessageComposer::AttachmentModel *model,
-                      MessageComposer::AttachmentControllerBase *controller, QObject *parent = 0 );
+                      MessageComposer::AttachmentControllerBase *controller, QObject *parent = Q_NULLPTR );
 
   public Q_SLOTS:
     /**

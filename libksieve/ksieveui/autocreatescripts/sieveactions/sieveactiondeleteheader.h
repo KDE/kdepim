@@ -25,7 +25,7 @@ class SieveActionDeleteHeader : public SieveActionAbstractEditHeader
 {
     Q_OBJECT
 public:
-    SieveActionDeleteHeader(QObject *parent = 0);
+    SieveActionDeleteHeader(QObject *parent = Q_NULLPTR);
     static SieveAction *newAction();
     QString code(QWidget *w) const;
     QWidget *createParamWidget(QWidget *parent) const;

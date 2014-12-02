@@ -44,7 +44,7 @@ public:
      *
      * @param parent The parent object.
      */
-    explicit MarkMessageReadHandler(QObject *parent = 0);
+    explicit MarkMessageReadHandler(QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the mark message read handler.

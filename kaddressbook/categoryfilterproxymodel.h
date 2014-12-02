@@ -44,7 +44,7 @@ public:
      *
      * @param parent The parent object
      **/
-    explicit CategoryFilterProxyModel(QObject *parent = 0);
+    explicit CategoryFilterProxyModel(QObject *parent = Q_NULLPTR);
 
     /**
      * Destructor.

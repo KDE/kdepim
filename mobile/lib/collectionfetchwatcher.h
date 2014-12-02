@@ -48,7 +48,7 @@ class MOBILEUI_EXPORT CollectionFetchWatcher : public QObject
      * @param model The model to work on.
      * @param parent The parent object.
      */
-    CollectionFetchWatcher( const QModelIndex &index, const QAbstractItemModel *model, QObject *parent = 0 );
+    CollectionFetchWatcher( const QModelIndex &index, const QAbstractItemModel *model, QObject *parent = Q_NULLPTR );
 
     /**
      * Destroys the collection fetch watcher.

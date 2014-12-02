@@ -33,7 +33,7 @@ class CollectionLoader : public QObject
 {
     Q_OBJECT
 public:
-    explicit CollectionLoader(QObject *parent = 0);
+    explicit CollectionLoader(QObject *parent = Q_NULLPTR);
     void load();
     Akonadi::Collection::List collections() const;
 

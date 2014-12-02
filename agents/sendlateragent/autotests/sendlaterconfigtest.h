@@ -26,7 +26,7 @@ class SendLaterConfigTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit SendLaterConfigTest(QObject *parent = 0);
+    explicit SendLaterConfigTest(QObject *parent = Q_NULLPTR);
     ~SendLaterConfigTest();
 
 private Q_SLOTS:

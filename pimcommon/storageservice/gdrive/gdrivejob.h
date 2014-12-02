@@ -32,7 +32,7 @@ class GDriveJob : public PimCommon::StorageServiceAbstractJob
 {
     Q_OBJECT
 public:
-    explicit GDriveJob(QObject *parent = 0);
+    explicit GDriveJob(QObject *parent = Q_NULLPTR);
     ~GDriveJob();
 
     void requestTokenAccess();

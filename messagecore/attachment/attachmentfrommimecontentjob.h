@@ -48,7 +48,7 @@ public:
      * @param content The mime content to load the attachment from.
      * @param parent The parent object.
      */
-    explicit AttachmentFromMimeContentJob(const KMime::Content *content, QObject *parent = 0);
+    explicit AttachmentFromMimeContentJob(const KMime::Content *content, QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the job.

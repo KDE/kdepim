@@ -55,7 +55,7 @@ public:
     /**
      * @copydoc FilterAction::FilterAction
      */
-    FilterActionWithStringList(const QString &name, const QString &label, QObject *parent = 0);
+    FilterActionWithStringList(const QString &name, const QString &label, QObject *parent = Q_NULLPTR);
 
     /**
      * @copydoc FilterAction::createParamWidget

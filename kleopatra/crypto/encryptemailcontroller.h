@@ -74,8 +74,8 @@ public:
         NumModes
     };
 
-    explicit EncryptEMailController(Mode mode, QObject *parent = 0);
-    explicit EncryptEMailController(const boost::shared_ptr<ExecutionContext> &xc, Mode mode, QObject *parent = 0);
+    explicit EncryptEMailController(Mode mode, QObject *parent = Q_NULLPTR);
+    explicit EncryptEMailController(const boost::shared_ptr<ExecutionContext> &xc, Mode mode, QObject *parent = Q_NULLPTR);
     ~EncryptEMailController();
 
     Mode mode() const;

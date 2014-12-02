@@ -30,7 +30,7 @@ class AccountWizard : public QObject
     Q_PLUGIN_METADATA(IID "org.kde.akonadi.AccountWizard");
 
 public:
-    explicit AccountWizard(QObject *parent = 0);
+    explicit AccountWizard(QObject *parent = Q_NULLPTR);
 
 public slots:
     void run(const QStringList &types, QWidget *parent);

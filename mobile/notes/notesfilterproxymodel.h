@@ -59,7 +59,7 @@ class NotesFilterProxyModel : public QSortFilterProxyModel
      *
      * @param parent The parent object.
      */
-    explicit NotesFilterProxyModel( QObject *parent = 0 );
+    explicit NotesFilterProxyModel( QObject *parent = Q_NULLPTR );
 
     /**
      * Destroys the notes filter proxy model.

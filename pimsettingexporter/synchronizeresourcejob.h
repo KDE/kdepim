@@ -25,7 +25,7 @@ class SynchronizeResourceJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit SynchronizeResourceJob(QObject *parent = 0);
+    explicit SynchronizeResourceJob(QObject *parent = Q_NULLPTR);
     ~SynchronizeResourceJob();
 
     void start();

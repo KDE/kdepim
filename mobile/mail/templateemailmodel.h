@@ -29,7 +29,7 @@
 class TemplateEmailModel : public Akonadi::SelectionProxyModel {
   Q_OBJECT
 public:
-    explicit TemplateEmailModel( QItemSelectionModel *selectionModel, QObject *parent = 0 ) : Akonadi::SelectionProxyModel( selectionModel, parent)  {
+    explicit TemplateEmailModel( QItemSelectionModel *selectionModel, QObject *parent = Q_NULLPTR ) : Akonadi::SelectionProxyModel( selectionModel, parent)  {
    }
 
    QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;

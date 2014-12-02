@@ -27,7 +27,7 @@ class Transport : public SetupObject
 {
     Q_OBJECT
 public:
-    explicit Transport(const QString &type, QObject *parent = 0);
+    explicit Transport(const QString &type, QObject *parent = Q_NULLPTR);
     void create();
     void destroy();
 

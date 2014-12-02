@@ -35,7 +35,7 @@ class CALENDARSUPPORT_EXPORT CategoryConfig : public QObject
 {
     Q_OBJECT
 public:
-    explicit CategoryConfig(KCoreConfigSkeleton *cfg, QObject *parent = 0);
+    explicit CategoryConfig(KCoreConfigSkeleton *cfg, QObject *parent = Q_NULLPTR);
     ~CategoryConfig();
     QStringList customCategories() const;
     void setCustomCategories(const QStringList &categories);

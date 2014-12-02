@@ -28,7 +28,7 @@ class MergeContactsJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit MergeContactsJob(QObject *parent = 0);
+    explicit MergeContactsJob(QObject *parent = Q_NULLPTR);
     ~MergeContactsJob();
 
     void start();

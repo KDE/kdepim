@@ -50,7 +50,7 @@ public:
     SymCryptRunProcessBase(const QString &class_, const QString &program,
                            const QString &keyFile, const QString &options,
                            Operation op,
-                           QObject *parent = 0);
+                           QObject *parent = Q_NULLPTR);
     virtual ~SymCryptRunProcessBase();
 
     bool launch(const QByteArray &input, bool block = true);

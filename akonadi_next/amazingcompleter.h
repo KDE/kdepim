@@ -40,7 +40,7 @@ public:
 
     enum ViewHandler { Popup, NoPopup };
 
-    explicit AmazingCompleter(/* QAbstractItemModel *model, */ QObject *parent = 0);
+    explicit AmazingCompleter(/* QAbstractItemModel *model, */ QObject *parent = Q_NULLPTR);
     ~AmazingCompleter();
 
     void setWidget(QWidget *widget);

@@ -33,7 +33,7 @@ class FilterActionSetIdentity: public FilterActionWithUOID
 {
     Q_OBJECT
 public:
-    explicit FilterActionSetIdentity(QObject *parent = 0);
+    explicit FilterActionSetIdentity(QObject *parent = Q_NULLPTR);
     ReturnCode process(ItemContext &context, bool applyOnOutbound) const Q_DECL_OVERRIDE;
     SearchRule::RequiredPart requiredPart() const Q_DECL_OVERRIDE;
     bool argsFromStringInteractive(const QString &argsStr, const QString &filterName) Q_DECL_OVERRIDE;

@@ -26,7 +26,7 @@ class TriopabShortUrl : public PimCommon::AbstractShortUrl
 {
     Q_OBJECT
 public:
-    explicit TriopabShortUrl(QObject *parent = 0);
+    explicit TriopabShortUrl(QObject *parent = Q_NULLPTR);
     ~TriopabShortUrl();
 
     void start();

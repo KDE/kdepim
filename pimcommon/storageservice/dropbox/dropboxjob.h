@@ -26,7 +26,7 @@ class DropBoxJob : public PimCommon::StorageServiceAbstractJob
 {
     Q_OBJECT
 public:
-    explicit DropBoxJob(QObject *parent = 0);
+    explicit DropBoxJob(QObject *parent = Q_NULLPTR);
     ~DropBoxJob();
 
     void requestTokenAccess();

@@ -25,7 +25,7 @@ class SieveActionVacation : public SieveAction
 {
     Q_OBJECT
 public:
-    SieveActionVacation(QObject *parent = 0);
+    SieveActionVacation(QObject *parent = Q_NULLPTR);
     static SieveAction *newAction();
 
     QWidget *createParamWidget(QWidget *parent) const;

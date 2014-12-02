@@ -28,7 +28,7 @@ class NOTESHARED_EXPORT LocalResourceCreator : public QObject
 {
     Q_OBJECT
 public:
-    explicit LocalResourceCreator(QObject *parent = 0);
+    explicit LocalResourceCreator(QObject *parent = Q_NULLPTR);
 
     void createIfMissing();
 

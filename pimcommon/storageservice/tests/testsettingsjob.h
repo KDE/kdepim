@@ -32,7 +32,7 @@ class PIMCOMMON_EXPORT TestSettingsJob : public QObject, public ISettingsJob
 {
     Q_OBJECT
 public:
-    explicit TestSettingsJob(QObject *parent = 0);
+    explicit TestSettingsJob(QObject *parent = Q_NULLPTR);
     ~TestSettingsJob();
 
     QString youSendItApiKey() const;

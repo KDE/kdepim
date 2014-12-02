@@ -166,7 +166,7 @@ public:
     void reloadConfig();
 
 private:
-    AdBlockManager(QObject *parent = 0);
+    AdBlockManager(QObject *parent = Q_NULLPTR);
 
     void updateSubscription(const QString &path, const QString &url, const QString &itemName);
     bool subscriptionFileExists(int);

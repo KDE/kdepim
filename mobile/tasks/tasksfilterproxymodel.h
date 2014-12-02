@@ -59,7 +59,7 @@ class TasksFilterProxyModel : public QSortFilterProxyModel
      *
      * @param parent The parent object.
      */
-    explicit TasksFilterProxyModel( QObject *parent = 0 );
+    explicit TasksFilterProxyModel( QObject *parent = Q_NULLPTR );
 
     /**
      * Destroys the tasks filter proxy model.

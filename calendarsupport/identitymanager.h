@@ -32,7 +32,7 @@ namespace CalendarSupport
 class CALENDARSUPPORT_EXPORT IdentityManager : public KIdentityManagement::IdentityManager
 {
 public:
-    explicit IdentityManager(QObject *parent = 0, const char *name = 0)
+    explicit IdentityManager(QObject *parent = Q_NULLPTR, const char *name = 0)
         : KIdentityManagement::IdentityManager(true/*readonly*/, parent, name) {}
 
 protected:

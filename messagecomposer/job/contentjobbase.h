@@ -40,7 +40,7 @@ class MESSAGECOMPOSER_EXPORT ContentJobBase : public JobBase
     Q_OBJECT
 
 public:
-    explicit ContentJobBase(QObject *parent = 0);
+    explicit ContentJobBase(QObject *parent = Q_NULLPTR);
     virtual ~ContentJobBase();
 
     /**

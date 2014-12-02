@@ -24,7 +24,7 @@ class MailingListTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit MailingListTest(QObject *parent = 0);
+    explicit MailingListTest(QObject *parent = Q_NULLPTR);
     ~MailingListTest();
 
 private Q_SLOTS:

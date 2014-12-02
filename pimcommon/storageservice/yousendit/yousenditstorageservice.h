@@ -26,7 +26,7 @@ class PIMCOMMON_EXPORT YouSendItStorageService : public PimCommon::StorageServic
 {
     Q_OBJECT
 public:
-    explicit YouSendItStorageService(QObject *parent = 0);
+    explicit YouSendItStorageService(QObject *parent = Q_NULLPTR);
     ~YouSendItStorageService();
 
     static QString name();

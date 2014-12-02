@@ -50,7 +50,7 @@ class FavoritesEditor : public QObject
      * @param config The config object to store the favorites.
      * @param parent The parent object.
      */
-    FavoritesEditor( KActionCollection *actionCollection, const KSharedConfig::Ptr &config, QObject *parent = 0 );
+    FavoritesEditor( KActionCollection *actionCollection, const KSharedConfig::Ptr &config, QObject *parent = Q_NULLPTR );
 
     /**
      * Returns the model that represents the list of favoritess.

@@ -55,7 +55,7 @@ class AbstractKeyListSortFilterProxyModel : public QSortFilterProxyModel, public
 protected:
     AbstractKeyListSortFilterProxyModel(const AbstractKeyListSortFilterProxyModel &);
 public:
-    explicit AbstractKeyListSortFilterProxyModel(QObject *parent = 0);
+    explicit AbstractKeyListSortFilterProxyModel(QObject *parent = Q_NULLPTR);
     ~AbstractKeyListSortFilterProxyModel();
 
     virtual AbstractKeyListSortFilterProxyModel *clone() const = 0;
@@ -77,7 +77,7 @@ class KeyListSortFilterProxyModel : public AbstractKeyListSortFilterProxyModel
 protected:
     KeyListSortFilterProxyModel(const KeyListSortFilterProxyModel &);
 public:
-    explicit KeyListSortFilterProxyModel(QObject *parent = 0);
+    explicit KeyListSortFilterProxyModel(QObject *parent = Q_NULLPTR);
     ~KeyListSortFilterProxyModel();
 
     boost::shared_ptr<const KeyFilter> keyFilter() const;

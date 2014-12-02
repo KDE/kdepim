@@ -51,7 +51,7 @@ public:
      * @param defaultDomain The default domain that shall be used when expanding aliases.
      * @param parent The parent object.
      */
-    AliasesExpandJob(const QString &recipients, const QString &defaultDomain, QObject *parent = 0);
+    AliasesExpandJob(const QString &recipients, const QString &defaultDomain, QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the aliases expand job.

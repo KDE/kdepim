@@ -52,11 +52,11 @@ class AbstractKeyListModel : public QAbstractItemModel, public KeyListModelInter
 {
     Q_OBJECT
 public:
-    explicit AbstractKeyListModel(QObject *parent = 0);
+    explicit AbstractKeyListModel(QObject *parent = Q_NULLPTR);
     ~AbstractKeyListModel();
 
-    static AbstractKeyListModel *createFlatKeyListModel(QObject *parent = 0);
-    static AbstractKeyListModel *createHierarchicalKeyListModel(QObject *parent = 0);
+    static AbstractKeyListModel *createFlatKeyListModel(QObject *parent = Q_NULLPTR);
+    static AbstractKeyListModel *createHierarchicalKeyListModel(QObject *parent = Q_NULLPTR);
 
     /* reimp */ GpgME::Key key(const QModelIndex &idx) const;
     /* reimp */ std::vector<GpgME::Key> keys(const QList<QModelIndex> &indexes) const;

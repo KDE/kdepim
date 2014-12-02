@@ -46,7 +46,7 @@ class IODeviceLogger : public QIODevice
 {
     Q_OBJECT
 public:
-    explicit IODeviceLogger(const boost::shared_ptr<QIODevice> &iod, QObject *parent = 0);
+    explicit IODeviceLogger(const boost::shared_ptr<QIODevice> &iod, QObject *parent = Q_NULLPTR);
     ~IODeviceLogger();
 
     void setWriteLogDevice(const boost::shared_ptr<QIODevice> &dev);

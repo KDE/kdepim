@@ -35,7 +35,7 @@ class ConfigFile : public SetupObject
 {
     Q_OBJECT
 public:
-    explicit ConfigFile(const QString &configName, QObject *parent = 0);
+    explicit ConfigFile(const QString &configName, QObject *parent = Q_NULLPTR);
     ~ConfigFile();
     void create();
     void destroy();

@@ -49,7 +49,7 @@ class VacationManager : public QObject
      * @param kernel The object that provide a bool askToGoOnline() slot.
      * @param parent The parent object.
      */
-    explicit VacationManager( KActionCollection *actionCollection, QObject *kernel, QObject *parent = 0 );
+    explicit VacationManager( KActionCollection *actionCollection, QObject *kernel, QObject *parent = Q_NULLPTR );
 
     /**
      * Destroys the vacation manager.

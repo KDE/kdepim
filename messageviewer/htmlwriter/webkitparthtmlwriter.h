@@ -52,7 +52,7 @@ class WebKitPartHtmlWriter : public QObject, public HtmlWriter
 {
     Q_OBJECT
 public:
-    explicit WebKitPartHtmlWriter(MailWebView *view, QObject *parent = 0);
+    explicit WebKitPartHtmlWriter(MailWebView *view, QObject *parent = Q_NULLPTR);
     ~WebKitPartHtmlWriter();
 
     void begin(const QString &cssDefs);

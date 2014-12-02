@@ -34,7 +34,7 @@ class Identity : public SetupObject
 {
     Q_OBJECT
 public:
-    explicit Identity(QObject *parent = 0);
+    explicit Identity(QObject *parent = Q_NULLPTR);
     ~Identity();
     void create();
     void destroy();

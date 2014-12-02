@@ -31,7 +31,7 @@ class KLEOPATRACLIENTCORE_EXPORT SelectCertificateCommand : public Command
 {
     Q_OBJECT
 public:
-    explicit SelectCertificateCommand(QObject *parent = 0);
+    explicit SelectCertificateCommand(QObject *parent = Q_NULLPTR);
     ~SelectCertificateCommand();
 
     // Inputs

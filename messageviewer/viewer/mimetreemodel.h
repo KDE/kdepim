@@ -46,7 +46,7 @@ public:
         AlternativeBodyPartRole,
         UserRole = Qt::UserRole + 100
     };
-    explicit MimeTreeModel(QObject *parent = 0);
+    explicit MimeTreeModel(QObject *parent = Q_NULLPTR);
     ~MimeTreeModel();
 
     void setRoot(KMime::Content *root);

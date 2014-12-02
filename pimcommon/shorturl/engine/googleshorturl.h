@@ -26,7 +26,7 @@ class GoogleShortUrl : public PimCommon::AbstractShortUrl
 {
     Q_OBJECT
 public:
-    explicit GoogleShortUrl(QObject *parent = 0);
+    explicit GoogleShortUrl(QObject *parent = Q_NULLPTR);
     ~GoogleShortUrl();
 
     void start();

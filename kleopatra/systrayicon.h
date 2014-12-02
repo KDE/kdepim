@@ -45,7 +45,7 @@ class SysTrayIcon : public Kleo::SystemTrayIcon
 {
     Q_OBJECT
 public:
-    explicit SysTrayIcon(QObject *parent = 0);
+    explicit SysTrayIcon(QObject *parent = Q_NULLPTR);
     ~SysTrayIcon();
 
     MainWindow *mainWindow() const;

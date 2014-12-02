@@ -60,7 +60,7 @@ public:
         KMime::MDN::DispositionType d);
 
 private:
-    explicit MDNAdviceHelper(QObject *parent = 0)
+    explicit MDNAdviceHelper(QObject *parent = Q_NULLPTR)
     {
         Q_UNUSED(parent);
     }

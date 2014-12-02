@@ -32,7 +32,7 @@ class MailActionManager : public QObject
   Q_OBJECT
 
   public:
-    explicit MailActionManager( KActionCollection *actionCollection, QObject *parent = 0 );
+    explicit MailActionManager( KActionCollection *actionCollection, QObject *parent = Q_NULLPTR );
 
     void setItemSelectionModel( QItemSelectionModel *selectionModel );
     void setItemActionSelectionModel( QItemSelectionModel *selectionModel );

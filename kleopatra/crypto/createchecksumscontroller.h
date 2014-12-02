@@ -53,8 +53,8 @@ class CreateChecksumsController : public Controller
 {
     Q_OBJECT
 public:
-    explicit CreateChecksumsController(QObject *parent = 0);
-    explicit CreateChecksumsController(const boost::shared_ptr<const ExecutionContext> &ctx, QObject *parent = 0);
+    explicit CreateChecksumsController(QObject *parent = Q_NULLPTR);
+    explicit CreateChecksumsController(const boost::shared_ptr<const ExecutionContext> &ctx, QObject *parent = Q_NULLPTR);
     ~CreateChecksumsController();
 
     void setAllowAddition(bool allow);

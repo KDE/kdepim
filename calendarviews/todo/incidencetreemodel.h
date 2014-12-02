@@ -34,7 +34,7 @@ public:
     /**
      * Constructs a new IncidenceTreeModel.
      */
-    explicit IncidenceTreeModel(QObject *parent = 0);
+    explicit IncidenceTreeModel(QObject *parent = Q_NULLPTR);
 
     /**
      * Constructs a new IncidenceTreeModel which will only show incidences of
@@ -46,7 +46,7 @@ public:
      * If you're more concerned about clean design than performance, use the default
      * constructor and stack a Akonadi::EntityMimeTypeFilterModel on top of this one.
      */
-    explicit IncidenceTreeModel(const QStringList &mimeTypes, QObject *parent = 0);
+    explicit IncidenceTreeModel(const QStringList &mimeTypes, QObject *parent = Q_NULLPTR);
 
     ~IncidenceTreeModel();
 

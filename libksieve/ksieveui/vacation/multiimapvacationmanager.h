@@ -28,7 +28,7 @@ class KSIEVEUI_EXPORT MultiImapVacationManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit MultiImapVacationManager(QObject *parent = 0);
+    explicit MultiImapVacationManager(QObject *parent = Q_NULLPTR);
     ~MultiImapVacationManager();
 
     void checkVacation();

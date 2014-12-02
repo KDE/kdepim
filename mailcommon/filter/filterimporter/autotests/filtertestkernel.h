@@ -33,7 +33,7 @@ class FolderCollectionMonitor;
 class FilterTestKernel : public QObject, public MailCommon::IKernel, public MailCommon::ISettings
 {
 public:
-    explicit FilterTestKernel(QObject *parent = 0);
+    explicit FilterTestKernel(QObject *parent = Q_NULLPTR);
 
     KIdentityManagement::IdentityManager *identityManager();
     MessageComposer::MessageSender *msgSender();

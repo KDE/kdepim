@@ -23,7 +23,7 @@ class EventDateTimeWidgetTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit EventDateTimeWidgetTest(QObject *parent = 0);
+    explicit EventDateTimeWidgetTest(QObject *parent = Q_NULLPTR);
     ~EventDateTimeWidgetTest();
 
 private Q_SLOTS:

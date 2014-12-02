@@ -25,7 +25,7 @@ class SieveActionReturn : public SieveAction
 {
     Q_OBJECT
 public:
-    SieveActionReturn(QObject *parent = 0);
+    SieveActionReturn(QObject *parent = Q_NULLPTR);
     static SieveAction *newAction();
     QString help() const;
     QStringList needRequires(QWidget *parent) const;

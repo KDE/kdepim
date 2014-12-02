@@ -40,7 +40,7 @@ class KColumnFilterProxyModelPrivate;
 class AKONADI_NEXT_EXPORT KColumnFilterProxyModel : public QSortFilterProxyModel
 {
 public:
-    explicit KColumnFilterProxyModel(QObject *parent = 0);
+    explicit KColumnFilterProxyModel(QObject *parent = Q_NULLPTR);
     virtual ~KColumnFilterProxyModel();
 
     /**

@@ -38,7 +38,7 @@ class KLEOPATRACLIENTCORE_EXPORT Command : public QObject
 {
     Q_OBJECT
 public:
-    explicit Command(QObject *parent = 0);
+    explicit Command(QObject *parent = Q_NULLPTR);
     ~Command();
 
     void setParentWId(WId wid);

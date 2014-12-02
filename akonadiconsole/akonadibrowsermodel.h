@@ -31,7 +31,7 @@ class AkonadiBrowserModel : public EntityTreeModel
 {
     Q_OBJECT
 public:
-    explicit AkonadiBrowserModel(ChangeRecorder *monitor, QObject *parent = 0);
+    explicit AkonadiBrowserModel(ChangeRecorder *monitor, QObject *parent = Q_NULLPTR);
     ~AkonadiBrowserModel();
 
     enum ItemDisplayMode {
@@ -70,7 +70,7 @@ class AkonadiBrowserSortModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 public:
-    explicit AkonadiBrowserSortModel(AkonadiBrowserModel *browserModel, QObject *parent = 0);
+    explicit AkonadiBrowserSortModel(AkonadiBrowserModel *browserModel, QObject *parent = Q_NULLPTR);
     ~AkonadiBrowserSortModel();
 
 protected:

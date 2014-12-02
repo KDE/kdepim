@@ -27,7 +27,7 @@ class TextToSpeechWidgetTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit TextToSpeechWidgetTest(QObject *parent = 0);
+    explicit TextToSpeechWidgetTest(QObject *parent = Q_NULLPTR);
 
 private:
     void addInterface(PimCommon::TextToSpeechWidget *widget);

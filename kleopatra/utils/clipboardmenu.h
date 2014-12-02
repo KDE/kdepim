@@ -30,7 +30,7 @@ class ClipboardMenu : public QObject
 {
     Q_OBJECT
 public:
-    explicit ClipboardMenu(QObject *parent = 0);
+    explicit ClipboardMenu(QObject *parent = Q_NULLPTR);
     ~ClipboardMenu();
 
     void setMainWindow(MainWindow *window);

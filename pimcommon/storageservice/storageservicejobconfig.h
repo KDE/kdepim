@@ -51,7 +51,7 @@ public:
     QString gdriveClientSecret() const;
 
 private:
-    StorageServiceJobConfig(QObject *parent = 0);
+    StorageServiceJobConfig(QObject *parent = Q_NULLPTR);
     friend class StorageServiceJobConfigPrivate;
     ISettingsJob *mSettingsJob;
 };

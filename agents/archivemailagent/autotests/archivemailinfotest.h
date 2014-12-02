@@ -24,7 +24,7 @@ class ArchiveMailInfoTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit ArchiveMailInfoTest(QObject *parent = 0);
+    explicit ArchiveMailInfoTest(QObject *parent = Q_NULLPTR);
     ~ArchiveMailInfoTest();
 
 private Q_SLOTS:

@@ -50,7 +50,7 @@ public:
     /**
     * Create a StorageModel wrapping the specified folder.
     */
-    explicit StorageModel(QAbstractItemModel *model, QItemSelectionModel *selectionModel, QObject *parent = 0);
+    explicit StorageModel(QAbstractItemModel *model, QItemSelectionModel *selectionModel, QObject *parent = Q_NULLPTR);
     ~StorageModel();
 
     Akonadi::Collection::List displayedCollections() const;

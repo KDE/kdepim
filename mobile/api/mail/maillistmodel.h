@@ -31,7 +31,7 @@ class MailListModel : public QAbstractListModel
     Q_OBJECT
 
 public:
-    MailListModel( QObject *parent = 0 );
+    MailListModel( QObject *parent = Q_NULLPTR );
     ~MailListModel();
 
     enum Roles {
