@@ -115,7 +115,7 @@ private Q_SLOTS:
     virtual void wheelEvent(QWheelEvent *event) Q_DECL_OVERRIDE;
 #endif
     virtual void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
-    virtual void keyReleaseEvent(QKeyEvent *event);
+    virtual void keyReleaseEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 
     ///* reimp */void incidencesAdded( const Akonadi::Item::List &incidences );
     ///* reimp */void incidencesAboutToBeRemoved( const Akonadi::Item::List &incidences );

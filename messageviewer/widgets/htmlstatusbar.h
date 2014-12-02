@@ -113,7 +113,7 @@ signals:
     void clicked();
 
 protected:
-    void mousePressEvent(QMouseEvent *event);
+    void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 
 private:
     QString message() const;
