@@ -152,7 +152,7 @@ Q_SIGNALS:
     void visibilityChanged(bool);
 
 protected:
-    virtual void closeEvent(QCloseEvent *) Q_DECL_OVERRIDE;
+    void closeEvent(QCloseEvent *) Q_DECL_OVERRIDE;
 
     TransactionItemView *mScrollView;
     QMap<const ProgressItem *, TransactionItem *> mTransactionsToListviewItems;

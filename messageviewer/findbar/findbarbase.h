@@ -42,7 +42,7 @@ public:
     void focusAndSetCursor();
 
 protected:
-    virtual bool event(QEvent *e) Q_DECL_OVERRIDE;
+    bool event(QEvent *e) Q_DECL_OVERRIDE;
     virtual void clearSelections();
     virtual void updateHighLight(bool);
     virtual void searchText(bool backward, bool isAutoSearch);

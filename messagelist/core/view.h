@@ -381,7 +381,7 @@ protected:
     /**
     * Reimplemented in order to catch QHelpEvent
     */
-    virtual bool event(QEvent *e) Q_DECL_OVERRIDE;
+    bool event(QEvent *e) Q_DECL_OVERRIDE;
 
     /**
     * Reimplemented in order to catch palette, font and style changes
