@@ -52,7 +52,7 @@ protected:
     QStringList mimeTypes() const;
     QMimeData *mimeData(const QList<QListWidgetItem *> items) const;
 
-    void dropEvent(QDropEvent *event);
+    void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     void insertTemplate(const QString &);

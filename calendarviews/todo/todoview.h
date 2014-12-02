@@ -110,7 +110,7 @@ public Q_SLOTS:
     void saveViewState();
 
 protected Q_SLOTS:
-    void resizeEvent(QResizeEvent *) /*Q_DECL_OVERRIDE*/;
+    void resizeEvent(QResizeEvent *) Q_DECL_OVERRIDE;
     void addQuickTodo(Qt::KeyboardModifiers modifier);
 
     void contextMenu(const QPoint &pos);

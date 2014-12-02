@@ -40,8 +40,8 @@ signals:
     void dragRequested(const QList<KTNEFAttach *> &list);
 
 protected:
-    void resizeEvent(QResizeEvent *e);
-    void startDrag(Qt::DropActions dropAction);
+    void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
+    void startDrag(Qt::DropActions dropAction) Q_DECL_OVERRIDE;
 
 private slots:
     void adjustColumnWidth();

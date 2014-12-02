@@ -79,7 +79,7 @@ class MOBILEUI_EXPORT KDeclarativeFullScreenView : public QDeclarativeView
     /** This is for KDeclarativeFullScreenView, don't touch! */
     virtual void doDelayedInitInternal() {}
 
-    virtual void resizeEvent( QResizeEvent* event );
+    void resizeEvent( QResizeEvent* event ) Q_DECL_OVERRIDE;
 
   private Q_SLOTS:
     void delayedInit();

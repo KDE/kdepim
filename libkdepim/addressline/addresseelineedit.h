@@ -146,13 +146,13 @@ protected:
     /**
      * Reimplemented for smart insertion with middle mouse button.
      */
-    virtual void mouseReleaseEvent(QMouseEvent *);
+    void mouseReleaseEvent(QMouseEvent *) Q_DECL_OVERRIDE;
 
 #ifndef QT_NO_DRAGANDDROP
     /**
      * Reimplemented for smart insertion of dragged email addresses.
      */
-    virtual void dropEvent(QDropEvent *);
+    void dropEvent(QDropEvent *) Q_DECL_OVERRIDE;
 #endif
 
     /**

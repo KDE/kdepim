@@ -98,7 +98,7 @@ namespace KDGantt {
         void setGrid( AbstractGrid* );
 
     protected:
-        /*reimp*/ void resizeEvent(QResizeEvent*);
+        /*reimp*/ void resizeEvent(QResizeEvent*) Q_DECL_OVERRIDE;
     };
 }
 

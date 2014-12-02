@@ -71,10 +71,10 @@ public Q_SLOTS:
     void message(const QString &msg);
 
 protected:
-    /*! \reimp */ void paintEvent(QPaintEvent *);
-    /*! \reimp */ void timerEvent(QTimerEvent *);
-    /*! \reimp */ void resizeEvent(QResizeEvent *);
-    /*! \reimp */ void changeEvent(QEvent *);
+    /*! \reimp */ void paintEvent(QPaintEvent *) Q_DECL_OVERRIDE;
+    /*! \reimp */ void timerEvent(QTimerEvent *) Q_DECL_OVERRIDE;
+    /*! \reimp */ void resizeEvent(QResizeEvent *) Q_DECL_OVERRIDE;
+    /*! \reimp */ void changeEvent(QEvent *) Q_DECL_OVERRIDE;
 
 private:
     class Private;

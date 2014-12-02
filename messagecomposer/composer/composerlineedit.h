@@ -58,7 +58,7 @@ private slots:
 
 private:
 #ifndef QT_NO_DRAGANDDROP
-    void dropEvent(QDropEvent *event);
+    void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
 #endif
     void insertEmails(const QStringList &emails);
 

@@ -412,10 +412,10 @@ public slots:
     void slotChangeDisplayMail(Viewer::DisplayFormatMessage, bool);
 protected:
     /** Some necessary event handling. */
-    virtual void closeEvent(QCloseEvent *);
-    virtual void resizeEvent(QResizeEvent *);
+    void closeEvent(QCloseEvent *) Q_DECL_OVERRIDE;
+    void resizeEvent(QResizeEvent *) Q_DECL_OVERRIDE;
     /** Watch for palette changes */
-    virtual bool event(QEvent *e);
+    bool event(QEvent *e) Q_DECL_OVERRIDE;
 
 #ifdef KDEPIM_MOBILE_UI
     friend class MessageViewItem;

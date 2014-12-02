@@ -61,8 +61,8 @@ public slots:
     void useDefaultText();
 
 protected:
-    virtual void resizeEvent(QResizeEvent *);
-    virtual void mouseReleaseEvent(QMouseEvent *);
+    void resizeEvent(QResizeEvent *) Q_DECL_OVERRIDE;
+    void mouseReleaseEvent(QMouseEvent *) Q_DECL_OVERRIDE;
     virtual void squeezeContentsToLabel();
     bool mAutomaticSqueeze;
     EventViews::CalendarDecoration::Element *mDecorationElement;

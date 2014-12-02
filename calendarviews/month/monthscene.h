@@ -339,7 +339,7 @@ public:
     void setActionCursor(MonthScene::ActionType actionType);
 
 protected:
-    virtual void resizeEvent(QResizeEvent *);
+    void resizeEvent(QResizeEvent *) Q_DECL_OVERRIDE;
 
 private:
     MonthScene *mScene;

@@ -110,7 +110,7 @@ signals:
     void lineAdded(KPIM::MultiplyingLine *);
 
 protected:
-    void resizeEvent(QResizeEvent *);
+    void resizeEvent(QResizeEvent *) Q_DECL_OVERRIDE;
     void resizeView();
 
 protected slots:

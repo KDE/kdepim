@@ -52,7 +52,7 @@ Q_SIGNALS:
     void translateText();
 
 protected:
-    void dropEvent(QDropEvent *);
+    void dropEvent(QDropEvent *) Q_DECL_OVERRIDE;
 };
 
 class PIMCOMMON_EXPORT TranslatorWidget : public QWidget
