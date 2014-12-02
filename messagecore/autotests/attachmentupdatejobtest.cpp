@@ -195,29 +195,28 @@ void AttachmentUpdateJobTest::shouldNotUpdateWhenUrlIsEmpty()
 
 void AttachmentUpdateJobTest::shouldHaveSameInlineStatus()
 {
-    const QUrl url = QUrl::fromLocalFile( PATH_ATTACHMENTS + QString::fromLatin1( "file.txt" ) );
+    const QUrl url = QUrl::fromLocalFile(PATH_ATTACHMENTS + QString::fromLatin1("file.txt"));
 
     // Some data.
-    QByteArray data( "This is short enough that compressing it is not efficient." );
-    const QString name = QString::fromLatin1( "name.txt" );
-    const QString description = QString::fromLatin1( "description" );
+    QByteArray data("This is short enough that compressing it is not efficient.");
+    const QString name = QString::fromLatin1("name.txt");
+    const QString description = QString::fromLatin1("description");
 
     // Create the original part.
-    MessageCore::AttachmentPart::Ptr origPart = MessageCore::AttachmentPart::Ptr( new MessageCore::AttachmentPart );
-    origPart->setName( name );
-    origPart->setDescription( description );
-    origPart->setMimeType( "text/pdf" );
-    origPart->setEncoding( KMime::Headers::CE8Bit );
-    origPart->setData( data );
+    MessageCore::AttachmentPart::Ptr origPart = MessageCore::AttachmentPart::Ptr(new MessageCore::AttachmentPart);
+    origPart->setName(name);
+    origPart->setDescription(description);
+    origPart->setMimeType("text/pdf");
+    origPart->setEncoding(KMime::Headers::CE8Bit);
+    origPart->setData(data);
     origPart->setUrl(url);
     origPart->setSigned(true);
     origPart->setEncrypted(true);
     origPart->setInline(true);
 
-
     MessageCore::AttachmentUpdateJob *job = new MessageCore::AttachmentUpdateJob(origPart, this);
 
-    VERIFYEXEC( job );
+    VERIFYEXEC(job);
     QCOMPARE(origPart->isInline(), job->updatedPart()->isInline());
 
 }

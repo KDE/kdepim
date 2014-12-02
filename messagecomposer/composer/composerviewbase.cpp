@@ -274,13 +274,13 @@ void MessageComposer::ComposerViewBase::send(MessageComposer::MessageSender::Sen
 
     if (m_editor->isFormattingUsed() && inlineSigningEncryptionSelected()) {
         const QString keepBtnText = m_encrypt ?
-                              m_sign ? i18n("&Keep markup, do not sign/encrypt")
-                              : i18n("&Keep markup, do not encrypt")
-                              : i18n("&Keep markup, do not sign");
+                                    m_sign ? i18n("&Keep markup, do not sign/encrypt")
+                                    : i18n("&Keep markup, do not encrypt")
+                                    : i18n("&Keep markup, do not sign");
         const QString yesBtnText = m_encrypt ?
-                             m_sign ? i18n("Sign/Encrypt (delete markup)")
-                             : i18n("Encrypt (delete markup)")
-                             : i18n("Sign (delete markup)");
+                                   m_sign ? i18n("Sign/Encrypt (delete markup)")
+                                   : i18n("Encrypt (delete markup)")
+                                   : i18n("Sign (delete markup)");
         int ret = KMessageBox::warningYesNoCancel(m_parentWidget,
                   i18n("<qt><p>Inline signing/encrypting of HTML messages is not possible;</p>"
                        "<p>do you want to delete your markup?</p></qt>"),

@@ -591,7 +591,7 @@ void AttachmentControllerBase::showContextMenu()
             menu->addAction(d->reloadAttachmentAction);
         }
     }
-    if(numberOfParts == 1) {
+    if (numberOfParts == 1) {
         menu->addAction(d->saveAsContextAction);
         menu->addAction(d->propertiesContextAction);
     }
