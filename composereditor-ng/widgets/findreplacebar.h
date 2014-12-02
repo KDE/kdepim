@@ -38,7 +38,7 @@ public Q_SLOTS:
     void showAndFocus();
 
 protected:
-    bool event(QEvent *e);
+    bool event(QEvent *e) Q_DECL_OVERRIDE;
 
 private:
     friend class FindReplaceBarPrivate;

@@ -40,7 +40,7 @@ public:
     void loadScript(const QDomDocument &doc, QString &error);
 
 protected:
-    bool event(QEvent *e);
+    bool event(QEvent *e) Q_DECL_OVERRIDE;
 
 private:
     void readConfig();

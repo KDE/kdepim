@@ -85,7 +85,7 @@ private Q_SLOTS:
     void slotConfigChanged();
 
 protected:
-    bool event(QEvent *e);
+    bool event(QEvent *e) Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     void translatorWasClosed();

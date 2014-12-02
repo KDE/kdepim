@@ -175,7 +175,7 @@ protected:
 #endif
 
 private:
-    virtual bool eventFilter(QObject *, QEvent *);
+    bool eventFilter(QObject *, QEvent *) Q_DECL_OVERRIDE;
     void emitTextCompleted();
 
     //@cond PRIVATE

@@ -30,7 +30,7 @@ public:
     ~SieveHelpButton();
 
 protected:
-    bool event(QEvent *event);
+    bool event(QEvent *event) Q_DECL_OVERRIDE;
 };
 }
 

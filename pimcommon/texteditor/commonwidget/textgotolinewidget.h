@@ -38,8 +38,8 @@ Q_SIGNALS:
     void moveToLine(int);
 
 protected:
-    bool event(QEvent *e);
-    void showEvent(QShowEvent *e);
+    bool event(QEvent *e) Q_DECL_OVERRIDE;
+    void showEvent(QShowEvent *e) Q_DECL_OVERRIDE;
 
 private slots:
     void slotCloseBar();

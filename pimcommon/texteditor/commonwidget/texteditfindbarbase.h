@@ -53,7 +53,7 @@ protected:
     virtual bool searchInDocument(const QString &text, QTextDocument::FindFlags searchOptions) = 0;
     virtual void autoSearchMoveCursor() = 0;
 
-    bool event(QEvent *e);
+    bool event(QEvent *e) Q_DECL_OVERRIDE;
     void clearSelections();
     void updateHighLight(bool);
     bool searchText(bool backward, bool isAutoSearch);
