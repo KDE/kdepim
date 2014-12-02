@@ -27,7 +27,7 @@ class PIMCOMMON_EXPORT TextToSpeechConfigDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit TextToSpeechConfigDialog(QWidget *parent = 0);
+    explicit TextToSpeechConfigDialog(QWidget *parent = Q_NULLPTR);
     ~TextToSpeechConfigDialog();
 
 private Q_SLOTS:

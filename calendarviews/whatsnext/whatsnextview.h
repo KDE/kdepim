@@ -52,7 +52,7 @@ class EVENTVIEWS_EXPORT WhatsNextView : public EventViews::EventView
 {
     Q_OBJECT
 public:
-    explicit WhatsNextView(QWidget *parent = 0);
+    explicit WhatsNextView(QWidget *parent = Q_NULLPTR);
     ~WhatsNextView();
 
     /**reimp*/ int currentDateCount() const;

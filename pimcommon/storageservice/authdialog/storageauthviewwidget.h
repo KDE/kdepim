@@ -28,7 +28,7 @@ class StorageAuthViewWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit StorageAuthViewWidget(QWidget *parent = 0);
+    explicit StorageAuthViewWidget(QWidget *parent = Q_NULLPTR);
     ~StorageAuthViewWidget();
 
     void setUrl(const QUrl &url);

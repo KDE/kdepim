@@ -41,7 +41,7 @@ public:
     };
     Q_DECLARE_FLAGS(DesktopFileOptions, DesktopFileOption)
 
-    explicit DesktopFilePage(const QString &defaultFileName, DesktopFilePage::DesktopFileOptions options, QWidget *parent = 0);
+    explicit DesktopFilePage(const QString &defaultFileName, DesktopFilePage::DesktopFileOptions options, QWidget *parent = Q_NULLPTR);
     ~DesktopFilePage();
 
     void saveTheme(const QString &path);

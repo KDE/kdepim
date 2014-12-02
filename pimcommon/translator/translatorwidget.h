@@ -31,7 +31,7 @@ class TranslatorResultTextEdit : public PimCommon::PlainTextEditor
 {
     Q_OBJECT
 public:
-    explicit TranslatorResultTextEdit(QWidget *parent = 0);
+    explicit TranslatorResultTextEdit(QWidget *parent = Q_NULLPTR);
 
     void setResultFailed(bool failed);
 
@@ -46,7 +46,7 @@ class PIMCOMMON_EXPORT TranslatorTextEdit : public KTextEdit
 {
     Q_OBJECT
 public:
-    explicit TranslatorTextEdit(QWidget *parent = 0);
+    explicit TranslatorTextEdit(QWidget *parent = Q_NULLPTR);
 
 Q_SIGNALS:
     void translateText();
@@ -59,8 +59,8 @@ class PIMCOMMON_EXPORT TranslatorWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit TranslatorWidget(QWidget *parent = 0);
-    explicit TranslatorWidget(const QString &text, QWidget *parent = 0);
+    explicit TranslatorWidget(QWidget *parent = Q_NULLPTR);
+    explicit TranslatorWidget(const QString &text, QWidget *parent = Q_NULLPTR);
     ~TranslatorWidget();
 
     void setTextToTranslate(const QString &);

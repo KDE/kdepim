@@ -44,7 +44,7 @@ class INCIDENCEEDITORS_NG_EXPORT CategoryWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit CategoryWidget(CalendarSupport::CategoryConfig *config, QWidget *parent = 0);
+    explicit CategoryWidget(CalendarSupport::CategoryConfig *config, QWidget *parent = Q_NULLPTR);
     ~CategoryWidget();
 
     void setCategories(const QStringList &categoryList = QStringList());
@@ -81,7 +81,7 @@ class INCIDENCEEDITORS_NG_EXPORT CategoryDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit CategoryDialog(CalendarSupport::CategoryConfig *cfg, QWidget *parent = 0);
+    explicit CategoryDialog(CalendarSupport::CategoryConfig *cfg, QWidget *parent = Q_NULLPTR);
     ~CategoryDialog();
 
     QStringList selectedCategories() const;

@@ -42,7 +42,7 @@ class CSVImportDialog : public KDialog
     Q_OBJECT
 
 public:
-    explicit CSVImportDialog(QWidget *parent = 0);
+    explicit CSVImportDialog(QWidget *parent = Q_NULLPTR);
     ~CSVImportDialog();
 
     KContacts::AddresseeList contacts() const;

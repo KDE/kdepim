@@ -26,7 +26,7 @@ class PIMCOMMON_EXPORT BalooDebugSearchPathComboBox : public QComboBox
 {
     Q_OBJECT
 public:
-    explicit BalooDebugSearchPathComboBox(QWidget *parent = 0);
+    explicit BalooDebugSearchPathComboBox(QWidget *parent = Q_NULLPTR);
     enum SearchType {
         Contacts = 0,
         ContactCompleter,

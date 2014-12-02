@@ -30,7 +30,7 @@ class PIMCOMMON_EXPORT StorageServiceCheckNameDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit StorageServiceCheckNameDialog(QWidget *parent = 0);
+    explicit StorageServiceCheckNameDialog(QWidget *parent = Q_NULLPTR);
     ~StorageServiceCheckNameDialog();
 
     void setDisallowedSymbols(const QRegExp &regExp);

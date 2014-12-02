@@ -28,7 +28,7 @@ class ImportFinishPage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ImportFinishPage(QWidget *parent = 0);
+    explicit ImportFinishPage(QWidget *parent = Q_NULLPTR);
     ~ImportFinishPage();
 
     void addImportInfo(const QString &log);

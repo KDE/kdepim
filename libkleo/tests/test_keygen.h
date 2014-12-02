@@ -48,7 +48,7 @@ class KeyGenerator : public QDialog
 {
     Q_OBJECT
 public:
-    KeyGenerator(QWidget *parent = 0);
+    KeyGenerator(QWidget *parent = Q_NULLPTR);
     ~KeyGenerator();
 
 public slots:

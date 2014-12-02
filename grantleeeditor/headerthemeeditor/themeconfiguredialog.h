@@ -33,7 +33,7 @@ class ThemeConfigureDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit ThemeConfigureDialog(QWidget *parent = 0);
+    explicit ThemeConfigureDialog(QWidget *parent = Q_NULLPTR);
     ~ThemeConfigureDialog();
 
     void readConfig();

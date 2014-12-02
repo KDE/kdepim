@@ -36,7 +36,7 @@ class KADDRESSBOOK_EXPORT MergeContactInfoWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MergeContactInfoWidget(QWidget *parent = 0);
+    explicit MergeContactInfoWidget(QWidget *parent = Q_NULLPTR);
     ~MergeContactInfoWidget();
 
 public Q_SLOTS:

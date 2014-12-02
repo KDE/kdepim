@@ -30,7 +30,7 @@ class SearchWidget : public QWidget
   Q_OBJECT
 
   public:
-    explicit SearchWidget( QWidget *parent = 0 );
+    explicit SearchWidget( QWidget *parent = Q_NULLPTR );
 
     QString query() const;
 

@@ -41,7 +41,7 @@ class ArchiveMailWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ArchiveMailWidget(QWidget *parent = 0);
+    explicit ArchiveMailWidget(QWidget *parent = Q_NULLPTR);
     ~ArchiveMailWidget();
 
     enum ArchiveMailColumn {
@@ -84,7 +84,7 @@ class ArchiveMailDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit ArchiveMailDialog(QWidget *parent = 0);
+    explicit ArchiveMailDialog(QWidget *parent = Q_NULLPTR);
     ~ArchiveMailDialog();
 
 Q_SIGNALS:

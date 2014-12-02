@@ -29,7 +29,7 @@ class StorageServicePropertiesDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit StorageServicePropertiesDialog(const QMap<QString, QString> &information, QWidget *parent = 0);
+    explicit StorageServicePropertiesDialog(const QMap<QString, QString> &information, QWidget *parent = Q_NULLPTR);
     ~StorageServicePropertiesDialog();
 
 private:

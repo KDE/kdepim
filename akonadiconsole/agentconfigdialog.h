@@ -31,7 +31,7 @@ class AgentConfigDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit AgentConfigDialog(QWidget *parent = 0);
+    explicit AgentConfigDialog(QWidget *parent = Q_NULLPTR);
     void setAgentInstance(const Akonadi::AgentInstance &instance);
 
 private slots:

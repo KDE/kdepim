@@ -29,7 +29,7 @@ class PIMCOMMON_EXPORT RichTextEditFindBar : public TextEditFindBarBase
 {
     Q_OBJECT
 public:
-    explicit RichTextEditFindBar(QTextEdit *view, QWidget *parent = 0);
+    explicit RichTextEditFindBar(QTextEdit *view, QWidget *parent = Q_NULLPTR);
     ~RichTextEditFindBar();
 
 protected:

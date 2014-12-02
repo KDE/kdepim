@@ -32,7 +32,7 @@ class PIMCOMMON_EXPORT TextToSpeechWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit TextToSpeechWidget(QWidget *parent = 0);
+    explicit TextToSpeechWidget(QWidget *parent = Q_NULLPTR);
     ~TextToSpeechWidget();
 
     enum State {

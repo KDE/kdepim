@@ -83,7 +83,7 @@ MESSAGECOMPOSER_EXPORT QStringList AttachmentKeywords();
 MESSAGECOMPOSER_EXPORT QString cleanedUpHeaderString(const QString &s);
 
 void addSendReplyForwardAction(const KMime::Message::Ptr &message, MailTransport::MessageQueueJob *qjob);
-MESSAGECOMPOSER_EXPORT bool sendMailDispatcherIsOnline(QWidget *parent = 0);
+MESSAGECOMPOSER_EXPORT bool sendMailDispatcherIsOnline(QWidget *parent = Q_NULLPTR);
 MESSAGECOMPOSER_EXPORT QString rot13(const QString &s);
 MESSAGECOMPOSER_EXPORT void addTextBox(QTextEdit *edit);
 }

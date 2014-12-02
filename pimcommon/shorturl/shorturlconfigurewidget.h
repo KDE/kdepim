@@ -29,7 +29,7 @@ class PIMCOMMON_EXPORT ShortUrlConfigureWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ShortUrlConfigureWidget(QWidget *parent = 0);
+    explicit ShortUrlConfigureWidget(QWidget *parent = Q_NULLPTR);
     ~ShortUrlConfigureWidget();
 
     void loadConfig();

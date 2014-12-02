@@ -24,7 +24,7 @@ class SelectComparatorComboBox : public KComboBox
 {
     Q_OBJECT
 public:
-    explicit SelectComparatorComboBox(QWidget *parent = 0);
+    explicit SelectComparatorComboBox(QWidget *parent = Q_NULLPTR);
     ~SelectComparatorComboBox();
 
     QString code() const;

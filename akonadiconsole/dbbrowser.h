@@ -28,7 +28,7 @@ class DbBrowser : public QWidget
 {
     Q_OBJECT
 public:
-    explicit DbBrowser(QWidget *parent = 0);
+    explicit DbBrowser(QWidget *parent = Q_NULLPTR);
 
 private slots:
     void refreshClicked();

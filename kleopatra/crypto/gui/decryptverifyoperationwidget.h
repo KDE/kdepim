@@ -65,7 +65,7 @@ class DecryptVerifyOperationWidget : public QWidget
     Q_PROPERTY(QString inputFileName READ inputFileName WRITE setInputFileName)
     Q_PROPERTY(QString signedDataFileName READ signedDataFileName WRITE setSignedDataFileName)
 public:
-    explicit DecryptVerifyOperationWidget(QWidget *parent = 0);
+    explicit DecryptVerifyOperationWidget(QWidget *parent = Q_NULLPTR);
     ~DecryptVerifyOperationWidget();
 
     enum Mode {

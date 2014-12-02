@@ -30,7 +30,7 @@ class NotesAgentNoteDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit NotesAgentNoteDialog(QWidget *parent = 0);
+    explicit NotesAgentNoteDialog(QWidget *parent = Q_NULLPTR);
     ~NotesAgentNoteDialog();
 
     void setNoteId(Akonadi::Item::Id id);

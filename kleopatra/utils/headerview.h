@@ -46,7 +46,7 @@ class HeaderView : public QHeaderView
 {
     Q_OBJECT
 public:
-    explicit HeaderView(Qt::Orientation o, QWidget *parent = 0);
+    explicit HeaderView(Qt::Orientation o, QWidget *parent = Q_NULLPTR);
     ~HeaderView();
 
     void setSectionSizes(const std::vector<int> &sizes);

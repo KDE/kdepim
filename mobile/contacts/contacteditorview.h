@@ -38,7 +38,7 @@ class ContactEditorView : public KDeclarativeFullScreenView
   Q_OBJECT
 
   public:
-    explicit ContactEditorView( QWidget *parent = 0 );
+    explicit ContactEditorView( QWidget *parent = Q_NULLPTR );
 
     ~ContactEditorView();
 

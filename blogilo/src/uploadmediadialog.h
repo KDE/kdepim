@@ -33,7 +33,7 @@ class UploadMediaDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit UploadMediaDialog(QWidget *parent = 0);
+    explicit UploadMediaDialog(QWidget *parent = Q_NULLPTR);
     ~UploadMediaDialog();
     enum UploadType {BlogAPI = 0, FTP};
 

@@ -78,7 +78,7 @@ class NewSignEncryptFilesWizard : public QWizard
 {
     Q_OBJECT
 public:
-    explicit NewSignEncryptFilesWizard(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    explicit NewSignEncryptFilesWizard(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = 0);
     ~NewSignEncryptFilesWizard();
 
     // Inputs

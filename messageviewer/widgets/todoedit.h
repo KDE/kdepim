@@ -38,7 +38,7 @@ class MESSAGEVIEWER_EXPORT TodoEdit : public QWidget
 {
     Q_OBJECT
 public:
-    explicit TodoEdit(QWidget *parent = 0);
+    explicit TodoEdit(QWidget *parent = Q_NULLPTR);
     ~TodoEdit();
 
     Akonadi::Collection collection() const;

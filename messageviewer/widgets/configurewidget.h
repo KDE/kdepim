@@ -39,7 +39,7 @@ class MESSAGEVIEWER_EXPORT ConfigureWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ConfigureWidget(QWidget *parent = 0);
+    explicit ConfigureWidget(QWidget *parent = Q_NULLPTR);
 
     ~ConfigureWidget();
 

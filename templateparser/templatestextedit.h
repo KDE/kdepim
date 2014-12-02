@@ -29,7 +29,7 @@ class TEMPLATEPARSER_EXPORT TemplatesTextEdit : public PimCommon::RichTextEditor
 {
     Q_OBJECT
 public:
-    explicit TemplatesTextEdit(QWidget *parent = 0);
+    explicit TemplatesTextEdit(QWidget *parent = Q_NULLPTR);
     ~TemplatesTextEdit();
 };
 

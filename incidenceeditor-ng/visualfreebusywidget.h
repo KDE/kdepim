@@ -48,7 +48,7 @@ class INCIDENCEEDITORS_NG_EXPORT VisualFreeBusyWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit VisualFreeBusyWidget(FreeBusyItemModel *model, int spacing = 8, QWidget *parent = 0);
+    explicit VisualFreeBusyWidget(FreeBusyItemModel *model, int spacing = 8, QWidget *parent = Q_NULLPTR);
     ~VisualFreeBusyWidget();
 
 public slots:

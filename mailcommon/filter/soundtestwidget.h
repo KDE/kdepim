@@ -41,7 +41,7 @@ public:
      *
      * @param parent The parent widget.
      */
-    explicit SoundTestWidget(QWidget *parent = 0);
+    explicit SoundTestWidget(QWidget *parent = Q_NULLPTR);
 
     /**
      * Destroys the sound test widget.

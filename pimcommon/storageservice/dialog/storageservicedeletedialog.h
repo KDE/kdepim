@@ -43,7 +43,7 @@ public:
         DeleteFolders
     };
 
-    explicit StorageServiceDeleteDialog(PimCommon::StorageServiceDeleteDialog::DeleteType type, PimCommon::StorageServiceAbstract *storage, QWidget *parent = 0);
+    explicit StorageServiceDeleteDialog(PimCommon::StorageServiceDeleteDialog::DeleteType type, PimCommon::StorageServiceAbstract *storage, QWidget *parent = Q_NULLPTR);
     ~StorageServiceDeleteDialog();
 
 Q_SIGNALS:
@@ -81,7 +81,7 @@ class StorageServiceDeleteTreeWidget : public PimCommon::StorageServiceTreeWidge
 {
     Q_OBJECT
 public:
-    explicit StorageServiceDeleteTreeWidget(PimCommon::StorageServiceDeleteDialog::DeleteType type, PimCommon::StorageServiceAbstract *storageService, QWidget *parent = 0);
+    explicit StorageServiceDeleteTreeWidget(PimCommon::StorageServiceDeleteDialog::DeleteType type, PimCommon::StorageServiceAbstract *storageService, QWidget *parent = Q_NULLPTR);
 
     PimCommon::StorageServiceDeleteDialog::DeleteType deleteType() const;
 

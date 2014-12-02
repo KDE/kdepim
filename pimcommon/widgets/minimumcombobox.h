@@ -31,7 +31,7 @@ class PIMCOMMON_EXPORT MinimumComboBox: public KComboBox
 {
     Q_OBJECT
 public:
-    explicit MinimumComboBox(QWidget *parent = 0);
+    explicit MinimumComboBox(QWidget *parent = Q_NULLPTR);
 
 protected:
     QSize minimumSizeHint() const Q_DECL_OVERRIDE;

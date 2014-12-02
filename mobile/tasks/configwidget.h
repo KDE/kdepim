@@ -36,7 +36,7 @@ class ConfigWidget : public QWidget
   Q_OBJECT
 
   public:
-    explicit ConfigWidget( QWidget *parent = 0 );
+    explicit ConfigWidget( QWidget *parent = Q_NULLPTR );
 
     void setPreferences( const EventViews::PrefsPtr &preferences );
 

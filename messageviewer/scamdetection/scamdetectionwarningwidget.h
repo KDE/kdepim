@@ -28,7 +28,7 @@ class MESSAGEVIEWER_EXPORT ScamDetectionWarningWidget : public KMessageWidget
 {
     Q_OBJECT
 public:
-    explicit ScamDetectionWarningWidget(QWidget *parent = 0);
+    explicit ScamDetectionWarningWidget(QWidget *parent = Q_NULLPTR);
     ~ScamDetectionWarningWidget();
 
     void setUseInTestApps(bool b);

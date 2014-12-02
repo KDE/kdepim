@@ -39,7 +39,7 @@ class EditorContactGroup : public QWidget
   Q_OBJECT
 
   public:
-    explicit EditorContactGroup( QWidget *parent = 0 );
+    explicit EditorContactGroup( QWidget *parent = Q_NULLPTR );
 
     ~EditorContactGroup();
 

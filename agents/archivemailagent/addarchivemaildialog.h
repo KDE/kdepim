@@ -38,7 +38,7 @@ class AddArchiveMailDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit AddArchiveMailDialog(ArchiveMailInfo *info, QWidget *parent = 0);
+    explicit AddArchiveMailDialog(ArchiveMailInfo *info, QWidget *parent = Q_NULLPTR);
     ~AddArchiveMailDialog();
 
     void setArchiveType(MailCommon::BackupJob::ArchiveType type);

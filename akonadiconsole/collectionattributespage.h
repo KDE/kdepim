@@ -31,7 +31,7 @@ class CollectionAttributePage : public Akonadi::CollectionPropertiesPage
 {
     Q_OBJECT
 public:
-    explicit CollectionAttributePage(QWidget *parent = 0);
+    explicit CollectionAttributePage(QWidget *parent = Q_NULLPTR);
 
     void load(const Akonadi::Collection &col);
     void save(Akonadi::Collection &col);

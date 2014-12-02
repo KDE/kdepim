@@ -32,7 +32,7 @@ class ConfigWidget : public QWidget
   Q_OBJECT
 
   public:
-    explicit ConfigWidget( QWidget *parent = 0 );
+    explicit ConfigWidget( QWidget *parent = Q_NULLPTR );
 
   public Q_SLOTS:
     void load();

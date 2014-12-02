@@ -204,7 +204,7 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
      *                  takes ownwership over the pointer.
      * @param parent The parent widget.
      */
-    KDeclarativeMainView( const QString &appName, ListProxy *listProxy, QWidget *parent = 0 );
+    KDeclarativeMainView( const QString &appName, ListProxy *listProxy, QWidget *parent = Q_NULLPTR );
 
     /**
      * Returns the global entity tree model.

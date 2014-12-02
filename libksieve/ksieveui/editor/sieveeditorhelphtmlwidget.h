@@ -28,7 +28,7 @@ class SieveEditorHelpHtmlWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SieveEditorHelpHtmlWidget(QWidget *parent = 0);
+    explicit SieveEditorHelpHtmlWidget(QWidget *parent = Q_NULLPTR);
     ~SieveEditorHelpHtmlWidget();
 
     void setHelp(const QString &variableName, const QString &url);

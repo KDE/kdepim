@@ -28,7 +28,7 @@ class FollowUpReminderNoAnswerDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit FollowUpReminderNoAnswerDialog(QWidget *parent = 0);
+    explicit FollowUpReminderNoAnswerDialog(QWidget *parent = Q_NULLPTR);
     ~FollowUpReminderNoAnswerDialog();
 
     void setInfo(const QList<FollowUpReminder::FollowUpReminderInfo *> &info);

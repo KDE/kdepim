@@ -26,7 +26,7 @@ class StorageServiceConfigureWidget : public PimCommon::StorageServiceConfigureW
 {
     Q_OBJECT
 public:
-    explicit StorageServiceConfigureWidget(QWidget *parent = 0);
+    explicit StorageServiceConfigureWidget(QWidget *parent = Q_NULLPTR);
     ~StorageServiceConfigureWidget();
     virtual void loadSettings();
     virtual void writeSettings();
@@ -40,7 +40,7 @@ class ConfigureStorageServiceWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ConfigureStorageServiceWidget(PimCommon::StorageServiceManager *storageManager, QWidget *parent = 0);
+    explicit ConfigureStorageServiceWidget(PimCommon::StorageServiceManager *storageManager, QWidget *parent = Q_NULLPTR);
     ~ConfigureStorageServiceWidget();
 
     void save();

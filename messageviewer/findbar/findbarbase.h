@@ -34,7 +34,7 @@ class FindBarBase : public QWidget
 {
     Q_OBJECT
 public:
-    explicit FindBarBase(QWidget *parent = 0);
+    explicit FindBarBase(QWidget *parent = Q_NULLPTR);
     virtual ~FindBarBase();
 
     QString text() const;

@@ -30,7 +30,7 @@ class SendToBlogDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit SendToBlogDialog(bool isNew, bool isPrivate, QWidget *parent = 0);
+    explicit SendToBlogDialog(bool isNew, bool isPrivate, QWidget *parent = Q_NULLPTR);
     ~SendToBlogDialog();
 
     bool isPrivate() const;

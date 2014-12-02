@@ -30,7 +30,7 @@ class SieveEditorScriptManagerWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SieveEditorScriptManagerWidget(QWidget *parent = 0);
+    explicit SieveEditorScriptManagerWidget(QWidget *parent = Q_NULLPTR);
     ~SieveEditorScriptManagerWidget();
 
     void updateServerList();

@@ -14,7 +14,7 @@ class KWidgetLister : public QWidget
      *
      * @param parent The parent widget.
      */
-    explicit KWidgetLister( QWidget *parent = 0 );
+    explicit KWidgetLister( QWidget *parent = Q_NULLPTR );
 
     /**
      * Destroys the widget lister.

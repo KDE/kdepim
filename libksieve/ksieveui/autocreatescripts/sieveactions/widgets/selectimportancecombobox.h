@@ -25,7 +25,7 @@ class SelectImportanceCombobox : public KComboBox
 {
     Q_OBJECT
 public:
-    explicit SelectImportanceCombobox(QWidget *parent = 0);
+    explicit SelectImportanceCombobox(QWidget *parent = Q_NULLPTR);
     ~SelectImportanceCombobox();
 
     QString code() const;

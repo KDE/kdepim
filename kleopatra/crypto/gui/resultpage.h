@@ -55,7 +55,7 @@ class ResultPage : public WizardPage
     Q_OBJECT
 
 public:
-    explicit ResultPage(QWidget *parent = 0, Qt::WindowFlags flags = 0);
+    explicit ResultPage(QWidget *parent = Q_NULLPTR, Qt::WindowFlags flags = 0);
     ~ResultPage();
 
     void setTaskCollection(const boost::shared_ptr<TaskCollection> &coll);

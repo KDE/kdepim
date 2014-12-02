@@ -35,7 +35,7 @@ class KSIEVEUI_EXPORT SieveEditorWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SieveEditorWidget(QWidget *parent = 0);
+    explicit SieveEditorWidget(QWidget *parent = Q_NULLPTR);
     ~SieveEditorWidget();
     enum EditorMode {
         Unknown = -1,

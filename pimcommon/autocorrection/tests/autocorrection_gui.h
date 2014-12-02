@@ -36,7 +36,7 @@ class ConfigureTestDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit ConfigureTestDialog(PimCommon::AutoCorrection *autoCorrection, QWidget *parent = 0);
+    explicit ConfigureTestDialog(PimCommon::AutoCorrection *autoCorrection, QWidget *parent = Q_NULLPTR);
     ~ConfigureTestDialog();
 
 private Q_SLOTS:
@@ -50,7 +50,7 @@ class TextEditAutoCorrectionWidget : public QTextEdit
 {
     Q_OBJECT
 public:
-    explicit TextEditAutoCorrectionWidget(PimCommon::AutoCorrection *autoCorrection, QWidget *parent = 0);
+    explicit TextEditAutoCorrectionWidget(PimCommon::AutoCorrection *autoCorrection, QWidget *parent = Q_NULLPTR);
     ~TextEditAutoCorrectionWidget();
 
 protected:
@@ -64,7 +64,7 @@ class AutocorrectionTestWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit AutocorrectionTestWidget(QWidget *parent = 0);
+    explicit AutocorrectionTestWidget(QWidget *parent = Q_NULLPTR);
     ~AutocorrectionTestWidget();
 
 private Q_SLOTS:

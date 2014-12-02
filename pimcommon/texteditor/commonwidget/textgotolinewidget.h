@@ -29,7 +29,7 @@ class PIMCOMMON_EXPORT TextGoToLineWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit TextGoToLineWidget(QWidget *parent = 0);
+    explicit TextGoToLineWidget(QWidget *parent = Q_NULLPTR);
     ~TextGoToLineWidget();
 
     void goToLine();

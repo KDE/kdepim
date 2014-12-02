@@ -25,7 +25,7 @@ class StorageAuthWebView : public QWebView
 {
     Q_OBJECT
 public:
-    explicit StorageAuthWebView(QWidget *parent = 0);
+    explicit StorageAuthWebView(QWidget *parent = Q_NULLPTR);
     ~StorageAuthWebView();
 
 protected:

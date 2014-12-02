@@ -26,7 +26,7 @@ class SieveEditorWebView : public QWebView
 {
     Q_OBJECT
 public:
-    explicit SieveEditorWebView(QWidget *parent = 0);
+    explicit SieveEditorWebView(QWidget *parent = Q_NULLPTR);
     ~SieveEditorWebView();
 
 protected:

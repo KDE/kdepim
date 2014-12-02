@@ -42,7 +42,7 @@ class KLEOPATRACLIENTGUI_EXPORT CertificateRequester : public QWidget
     Q_PROPERTY(bool onlySecretKeysAllowed READ onlySecretKeysAllowed WRITE setOnlySecretKeysAllowed)
     Q_PROPERTY(QStringList selectedCertificates READ selectedCertificates WRITE setSelectedCertificates)
 public:
-    explicit CertificateRequester(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    explicit CertificateRequester(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = 0);
     ~CertificateRequester();
 
     void setMultipleCertificatesAllowed(bool allow);

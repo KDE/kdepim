@@ -41,7 +41,7 @@ class ServerSieveListWidget : public QListWidget
 {
     Q_OBJECT
 public:
-    explicit ServerSieveListWidget(QWidget *parent = 0);
+    explicit ServerSieveListWidget(QWidget *parent = Q_NULLPTR);
     ~ServerSieveListWidget();
 
     void readConfig();

@@ -34,7 +34,7 @@ namespace PimCommon
 class PIMCOMMON_EXPORT TextMessageIndicator : public QWidget
 {
 public:
-    explicit TextMessageIndicator(QWidget *parent = 0);
+    explicit TextMessageIndicator(QWidget *parent = Q_NULLPTR);
 
     enum Icon {
         None,

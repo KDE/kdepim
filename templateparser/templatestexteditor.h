@@ -26,7 +26,7 @@ class TemplatesTextEditor : public PimCommon::RichTextEditor
 {
     Q_OBJECT
 public:
-    explicit TemplatesTextEditor(QWidget *parent = 0);
+    explicit TemplatesTextEditor(QWidget *parent = Q_NULLPTR);
     ~TemplatesTextEditor();
 
 protected Q_SLOTS:

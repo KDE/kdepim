@@ -39,7 +39,7 @@ class CustomManageSieveWidget : public KSieveUi::ManageSieveWidget
 {
     Q_OBJECT
 public:
-    explicit CustomManageSieveWidget(QWidget *parent = 0);
+    explicit CustomManageSieveWidget(QWidget *parent = Q_NULLPTR);
     virtual ~CustomManageSieveWidget();
 
 protected:
@@ -51,7 +51,7 @@ class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit ManageSieveScriptsDialog(QWidget *parent = 0);
+    explicit ManageSieveScriptsDialog(QWidget *parent = Q_NULLPTR);
     ~ManageSieveScriptsDialog();
 
 private slots:

@@ -31,7 +31,7 @@ class AttendeeSelector : public QDialog
 {
     Q_OBJECT
 public:
-    explicit AttendeeSelector(QWidget *parent = 0);
+    explicit AttendeeSelector(QWidget *parent = Q_NULLPTR);
 
     QStringList attendees() const;
 

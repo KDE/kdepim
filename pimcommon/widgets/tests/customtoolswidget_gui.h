@@ -28,7 +28,7 @@ class CustomToolWidgetTest : public QWidget
 {
     Q_OBJECT
 public:
-    explicit CustomToolWidgetTest(QWidget *parent = 0);
+    explicit CustomToolWidgetTest(QWidget *parent = Q_NULLPTR);
     ~CustomToolWidgetTest();
 
 private Q_SLOTS:

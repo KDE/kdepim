@@ -27,7 +27,7 @@ class AdBlockListWidget : public QListWidget
 {
     Q_OBJECT
 public:
-    explicit AdBlockListWidget(QWidget *parent = 0);
+    explicit AdBlockListWidget(QWidget *parent = Q_NULLPTR);
     ~AdBlockListWidget();
 
 private Q_SLOTS:

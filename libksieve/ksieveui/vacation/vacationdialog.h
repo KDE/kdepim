@@ -36,7 +36,7 @@ class VacationDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit VacationDialog(const QString &caption, QWidget *parent = 0,
+    explicit VacationDialog(const QString &caption, QWidget *parent = Q_NULLPTR,
                             bool modal = true);
     ~VacationDialog();
 

@@ -10,7 +10,7 @@ class MainWindow : public QWidget
 {
   Q_OBJECT
 public:
-  MainWindow(QWidget *parent = 0);
+  MainWindow(QWidget *parent = Q_NULLPTR);
 
 private slots:
   void doSelects();

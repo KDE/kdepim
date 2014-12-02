@@ -36,7 +36,7 @@ class SieveTemplateEditDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit SieveTemplateEditDialog(QWidget *parent = 0, bool defaultTemplate = false);
+    explicit SieveTemplateEditDialog(QWidget *parent = Q_NULLPTR, bool defaultTemplate = false);
     ~SieveTemplateEditDialog();
 
     void setTemplateName(const QString &name);

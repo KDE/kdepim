@@ -42,7 +42,7 @@ class PIMCOMMON_EXPORT SlideContainer : public QFrame
     Q_OBJECT
     Q_PROPERTY(int slideHeight READ slideHeight WRITE setSlideHeight)
 public:
-    SlideContainer(QWidget *parent = 0);
+    SlideContainer(QWidget *parent = Q_NULLPTR);
 
     /**
      * Returns the content widget

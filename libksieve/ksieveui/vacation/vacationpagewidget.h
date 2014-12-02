@@ -35,7 +35,7 @@ class VacationPageWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit VacationPageWidget(QWidget *parent = 0);
+    explicit VacationPageWidget(QWidget *parent = Q_NULLPTR);
     ~VacationPageWidget();
 
     void setServerUrl(const QUrl &url);

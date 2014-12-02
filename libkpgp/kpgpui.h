@@ -79,7 +79,7 @@ class LIBKPGP_EXPORT Config : public QWidget
   Q_OBJECT
 
   public:
-    explicit Config( QWidget *parent = 0, bool encrypt = true );
+    explicit Config( QWidget *parent = Q_NULLPTR, bool encrypt = true );
     virtual ~Config();
 
     virtual void setValues();
@@ -301,7 +301,7 @@ class LIBKPGP_EXPORT KeyApprovalDialog: public QDialog
     KeyApprovalDialog( const QStringList&,
                        const QVector<KeyIDList>&,
                        const int allowedKeys,
-                       QWidget *parent = 0 );
+                       QWidget *parent = Q_NULLPTR );
     virtual ~KeyApprovalDialog() {}
 
     QVector<KeyIDList> keys() const { return mKeys; }

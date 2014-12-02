@@ -34,7 +34,7 @@ class NamePartsEditWidget : public QWidget
   Q_OBJECT
 
   public:
-    explicit NamePartsEditWidget( QWidget *parent = 0 );
+    explicit NamePartsEditWidget( QWidget *parent = Q_NULLPTR );
 
     void loadContact( const KContacts::Addressee &contact );
     void storeContact( KContacts::Addressee &contact ) const;

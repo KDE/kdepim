@@ -30,7 +30,7 @@ class BlogiloComposerView : public ComposerEditorNG::ComposerView
 {
     Q_OBJECT
 public:
-    explicit BlogiloComposerView(QWidget *parent = 0);
+    explicit BlogiloComposerView(QWidget *parent = Q_NULLPTR);
     ~BlogiloComposerView();
 
     void startEditing();

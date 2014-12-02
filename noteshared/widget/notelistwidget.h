@@ -27,7 +27,7 @@ namespace NoteShared
 class NOTESHARED_EXPORT NoteListWidget : public QListWidget
 {
 public:
-    explicit NoteListWidget(QWidget *parent = 0);
+    explicit NoteListWidget(QWidget *parent = Q_NULLPTR);
     ~NoteListWidget();
 
     void setNotes(const Akonadi::Item::List &notes);

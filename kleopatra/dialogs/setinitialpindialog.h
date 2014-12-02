@@ -51,7 +51,7 @@ class SetInitialPinDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit SetInitialPinDialog(QWidget *parent = 0);
+    explicit SetInitialPinDialog(QWidget *parent = Q_NULLPTR);
     ~SetInitialPinDialog();
 
     void setNksPinPresent(bool);

@@ -30,7 +30,7 @@ class ImportCalendarPage : public QWidget
     Q_OBJECT
 
 public:
-    explicit ImportCalendarPage(QWidget *parent = 0);
+    explicit ImportCalendarPage(QWidget *parent = Q_NULLPTR);
     ~ImportCalendarPage();
 
     void addImportInfo(const QString &log);

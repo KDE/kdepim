@@ -40,7 +40,7 @@ class MESSAGEVIEWER_EXPORT AdBlockSettingWidget : public QWidget, private Ui::ad
     Q_OBJECT
 
 public:
-    explicit AdBlockSettingWidget(QWidget *parent = 0);
+    explicit AdBlockSettingWidget(QWidget *parent = Q_NULLPTR);
 
     bool changed() const;
 

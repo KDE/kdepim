@@ -30,7 +30,7 @@ class StorageServiceNavigationButtons : public QToolBar
 {
     Q_OBJECT
 public:
-    explicit StorageServiceNavigationButtons(QWidget *parent = 0);
+    explicit StorageServiceNavigationButtons(QWidget *parent = Q_NULLPTR);
 
     QAction *goBack() const;
     QAction *goForward() const;

@@ -39,7 +39,7 @@ class AdBlockShowListDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit AdBlockShowListDialog(QWidget *parent = 0);
+    explicit AdBlockShowListDialog(QWidget *parent = Q_NULLPTR);
     ~AdBlockShowListDialog();
 
     void setAdBlockListPath(const QString &localPath, const QString &url);

@@ -31,7 +31,7 @@ class KSIEVEUI_EXPORT MultiImapVacationDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit MultiImapVacationDialog(QWidget *parent = 0);
+    explicit MultiImapVacationDialog(QWidget *parent = Q_NULLPTR);
     ~MultiImapVacationDialog();
 
     QList<VacationCreateScriptJob *> listCreateJob() const;

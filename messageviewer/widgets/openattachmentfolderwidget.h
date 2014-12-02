@@ -27,7 +27,7 @@ class OpenAttachmentFolderWidget : public KMessageWidget
 {
     Q_OBJECT
 public:
-    explicit OpenAttachmentFolderWidget(QWidget *parent = 0);
+    explicit OpenAttachmentFolderWidget(QWidget *parent = Q_NULLPTR);
     ~OpenAttachmentFolderWidget();
 
     void setFolder(const QUrl &url);

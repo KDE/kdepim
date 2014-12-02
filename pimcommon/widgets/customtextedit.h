@@ -28,8 +28,8 @@ class PIMCOMMON_EXPORT CustomTextEdit : public KTextEdit
 {
     Q_OBJECT
 public:
-    explicit CustomTextEdit(QWidget *parent = 0);
-    explicit CustomTextEdit(const QString &configName, QWidget *parent = 0);
+    explicit CustomTextEdit(QWidget *parent = Q_NULLPTR);
+    explicit CustomTextEdit(const QString &configName, QWidget *parent = Q_NULLPTR);
     ~CustomTextEdit();
 
     void setConfigName(const QString &name);

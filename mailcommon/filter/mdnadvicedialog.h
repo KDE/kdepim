@@ -80,7 +80,7 @@ class MDNAdviceDialog : public QDialog
     Q_OBJECT
 
 public:
-    MDNAdviceDialog(const QString &text, bool canDeny, QWidget *parent = 0);
+    MDNAdviceDialog(const QString &text, bool canDeny, QWidget *parent = Q_NULLPTR);
     ~MDNAdviceDialog();
 
     MessageComposer::MDNAdvice result() const;

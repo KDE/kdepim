@@ -36,7 +36,7 @@ class WaitWidget : public QDialog, public Ui::WaitWidgetBase
 {
     Q_OBJECT
 public:
-    explicit WaitWidget(QWidget *parent = 0);
+    explicit WaitWidget(QWidget *parent = Q_NULLPTR);
     ~WaitWidget();
     // sets the text in the label
     void setText(const QString &text);

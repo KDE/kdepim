@@ -26,7 +26,7 @@ class SieveEditorWarning : public KMessageWidget
 {
     Q_OBJECT
 public:
-    explicit SieveEditorWarning(QWidget *parent = 0);
+    explicit SieveEditorWarning(QWidget *parent = Q_NULLPTR);
     ~SieveEditorWarning();
 };
 }

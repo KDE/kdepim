@@ -27,7 +27,7 @@ class EditorLocation : public EditorBase
   Q_OBJECT
 
   public:
-    explicit EditorLocation( QWidget *parent = 0 );
+    explicit EditorLocation( QWidget *parent = Q_NULLPTR );
 
     ~EditorLocation();
 

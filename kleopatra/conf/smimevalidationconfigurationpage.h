@@ -44,7 +44,7 @@ class SMimeValidationConfigurationPage : public KCModule
 {
     Q_OBJECT
 public:
-    explicit SMimeValidationConfigurationPage(QWidget *parent = 0, const QVariantList &args = QVariantList());
+    explicit SMimeValidationConfigurationPage(QWidget *parent = Q_NULLPTR, const QVariantList &args = QVariantList());
 
     /* reimp */ void load();
     /* reimp */ void save();

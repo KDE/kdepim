@@ -31,7 +31,7 @@ public:
         GraphicEditor
     };
 
-    explicit SieveEditorParsingMissingFeatureWarning(SieveEditorParsingMissingFeatureWarning::TextEditorType type, QWidget *parent = 0);
+    explicit SieveEditorParsingMissingFeatureWarning(SieveEditorParsingMissingFeatureWarning::TextEditorType type, QWidget *parent = Q_NULLPTR);
     ~SieveEditorParsingMissingFeatureWarning();
 
     void setErrors(const QString &initialScript, const QString &errors);

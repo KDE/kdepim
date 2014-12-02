@@ -52,7 +52,7 @@ class Wizard : public QDialog
 {
     Q_OBJECT
 public:
-    explicit Wizard(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    explicit Wizard(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = 0);
     ~Wizard();
 
     enum Page {

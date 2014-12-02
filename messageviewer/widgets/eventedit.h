@@ -39,7 +39,7 @@ class MESSAGEVIEWER_EXPORT EventEdit : public QWidget
 {
     Q_OBJECT
 public:
-    explicit EventEdit(QWidget *parent = 0);
+    explicit EventEdit(QWidget *parent = Q_NULLPTR);
     ~EventEdit();
 
     Akonadi::Collection collection() const;

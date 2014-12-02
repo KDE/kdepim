@@ -34,7 +34,7 @@ class SieveEditorGraphicalModeWidget : public SieveEditorAbstractWidget
 {
     Q_OBJECT
 public:
-    explicit SieveEditorGraphicalModeWidget(QWidget *parent = 0);
+    explicit SieveEditorGraphicalModeWidget(QWidget *parent = Q_NULLPTR);
     ~SieveEditorGraphicalModeWidget();
 
     QString script(QString &requires) const;

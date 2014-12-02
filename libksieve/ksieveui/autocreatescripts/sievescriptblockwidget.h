@@ -42,7 +42,7 @@ public:
         AllCondition
     };
 
-    explicit SieveScriptBlockWidget(QWidget *parent = 0);
+    explicit SieveScriptBlockWidget(QWidget *parent = Q_NULLPTR);
     ~SieveScriptBlockWidget();
 
     void setPageType(PageType type);

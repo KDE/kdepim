@@ -23,7 +23,7 @@ class ContactEditorWidget : public GrantleeThemeEditor::EditorWidget
 {
     Q_OBJECT
 public:
-    explicit ContactEditorWidget(QWidget *parent = 0);
+    explicit ContactEditorWidget(QWidget *parent = Q_NULLPTR);
     ~ContactEditorWidget();
 
 public Q_SLOTS:

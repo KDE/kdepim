@@ -49,8 +49,8 @@ class MAILCOMMON_EXPORT RegExpLineEdit : public QWidget
     Q_OBJECT
 
 public:
-    explicit RegExpLineEdit(const QString &str, QWidget *parent = 0);
-    explicit RegExpLineEdit(QWidget *parent = 0);
+    explicit RegExpLineEdit(const QString &str, QWidget *parent = Q_NULLPTR);
+    explicit RegExpLineEdit(QWidget *parent = Q_NULLPTR);
 
     QString text() const;
 

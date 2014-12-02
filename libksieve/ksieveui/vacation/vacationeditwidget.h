@@ -50,7 +50,7 @@ class VacationEditWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit VacationEditWidget(QWidget *parent = 0);
+    explicit VacationEditWidget(QWidget *parent = Q_NULLPTR);
     ~VacationEditWidget();
 
     void enableDomainAndSendForSpam(bool enable = true);

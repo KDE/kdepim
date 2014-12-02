@@ -30,7 +30,7 @@ class PIMCOMMON_EXPORT BalooDebugDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit BalooDebugDialog(QWidget *parent = 0);
+    explicit BalooDebugDialog(QWidget *parent = Q_NULLPTR);
     ~BalooDebugDialog();
 
     void setAkonadiId(Akonadi::Item::Id akonadiId);

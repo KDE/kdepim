@@ -30,7 +30,7 @@ class ShortUrlMainWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ShortUrlMainWidget(QWidget *parent = 0);
+    explicit ShortUrlMainWidget(QWidget *parent = Q_NULLPTR);
 
 private Q_SLOTS:
     void slotSaveConfig();

@@ -39,7 +39,7 @@ class MergeContactWidgetList :  public QListWidget
 {
     Q_OBJECT
 public:
-    explicit MergeContactWidgetList(QWidget *parent = 0);
+    explicit MergeContactWidgetList(QWidget *parent = Q_NULLPTR);
     ~MergeContactWidgetList();
 
     void fillListContact(const Akonadi::Item::List &items);

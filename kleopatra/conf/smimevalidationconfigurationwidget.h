@@ -46,7 +46,7 @@ class SMimeValidationConfigurationWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SMimeValidationConfigurationWidget(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    explicit SMimeValidationConfigurationWidget(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = 0);
     ~SMimeValidationConfigurationWidget();
 
 public Q_SLOTS:

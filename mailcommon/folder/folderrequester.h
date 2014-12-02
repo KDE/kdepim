@@ -66,7 +66,7 @@ public:
      * Constructor
      * @param parent the parent widget
      */
-    explicit FolderRequester(QWidget *parent = 0);
+    explicit FolderRequester(QWidget *parent = Q_NULLPTR);
     virtual ~FolderRequester();
 
     /**

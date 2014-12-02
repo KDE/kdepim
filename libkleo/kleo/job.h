@@ -72,7 +72,7 @@ protected:
 public:
     ~Job();
 
-    virtual void showErrorDialog(QWidget *parent = 0, const QString &caption = QString()) const;
+    virtual void showErrorDialog(QWidget *parent = Q_NULLPTR, const QString &caption = QString()) const;
 
     virtual QString auditLogAsHtml() const;
     virtual GpgME::Error auditLogError() const;

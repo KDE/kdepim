@@ -27,7 +27,7 @@ class EditorMore : public EditorBase
   Q_OBJECT
 
   public:
-    explicit EditorMore( QWidget *parent = 0 );
+    explicit EditorMore( QWidget *parent = Q_NULLPTR );
 
     ~EditorMore();
 

@@ -30,7 +30,7 @@ class KADDRESSBOOK_EXPORT MergeContactShowResultDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit MergeContactShowResultDialog(QWidget *parent = 0);
+    explicit MergeContactShowResultDialog(QWidget *parent = Q_NULLPTR);
     ~MergeContactShowResultDialog();
 
     void setContacts(const Akonadi::Item::List &lstItem);

@@ -53,7 +53,7 @@ class MESSAGELIST_EXPORT ConfigureAggregationsDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit ConfigureAggregationsDialog(QWidget *parent = 0);
+    explicit ConfigureAggregationsDialog(QWidget *parent = Q_NULLPTR);
     ~ConfigureAggregationsDialog();
 
     void selectAggregation(const QString &aggregationId);

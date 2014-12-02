@@ -29,7 +29,7 @@ class PIMCOMMON_EXPORT ShortUrlConfigureDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit ShortUrlConfigureDialog(QWidget *parent = 0);
+    explicit ShortUrlConfigureDialog(QWidget *parent = Q_NULLPTR);
     ~ShortUrlConfigureDialog();
 
 private Q_SLOTS:

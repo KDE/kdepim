@@ -25,7 +25,7 @@
 class VCardXXPort : public XXPort
 {
 public:
-    explicit VCardXXPort(QWidget *parent = 0);
+    explicit VCardXXPort(QWidget *parent = Q_NULLPTR);
 
     bool exportContacts(const KContacts::Addressee::List &contacts) const;
     KContacts::Addressee::List importContacts() const;

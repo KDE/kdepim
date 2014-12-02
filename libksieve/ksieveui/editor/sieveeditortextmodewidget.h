@@ -43,7 +43,7 @@ class SieveEditorTextModeWidget : public SieveEditorAbstractWidget
 {
     Q_OBJECT
 public:
-    explicit SieveEditorTextModeWidget(QWidget *parent = 0);
+    explicit SieveEditorTextModeWidget(QWidget *parent = Q_NULLPTR);
     ~SieveEditorTextModeWidget();
 
     void setSieveCapabilities(const QStringList &capabilities);

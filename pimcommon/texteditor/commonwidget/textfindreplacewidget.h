@@ -31,7 +31,7 @@ class TextFindWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit TextFindWidget(QWidget *parent = 0);
+    explicit TextFindWidget(QWidget *parent = Q_NULLPTR);
     ~TextFindWidget();
 
     QTextDocument::FindFlags searchOptions() const;
@@ -65,7 +65,7 @@ class TextReplaceWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit TextReplaceWidget(QWidget *parent = 0);
+    explicit TextReplaceWidget(QWidget *parent = Q_NULLPTR);
     ~TextReplaceWidget();
 
     QLineEdit *replace() const;

@@ -31,7 +31,7 @@ class KSIEVEUI_EXPORT AutoCreateScriptDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit AutoCreateScriptDialog(QWidget *parent = 0);
+    explicit AutoCreateScriptDialog(QWidget *parent = Q_NULLPTR);
     ~AutoCreateScriptDialog();
 
     QString script(QString &requires) const;

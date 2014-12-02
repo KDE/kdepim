@@ -29,7 +29,7 @@ class MobileLineEdit : public QWidget
   Q_OBJECT
 
   public:
-    explicit MobileLineEdit( QWidget *parent = 0 );
+    explicit MobileLineEdit( QWidget *parent = Q_NULLPTR );
 
     ~MobileLineEdit();
 

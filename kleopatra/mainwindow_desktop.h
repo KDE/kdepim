@@ -41,7 +41,7 @@ class MainWindow : public KXmlGuiWindow
 {
     Q_OBJECT
 public:
-    explicit MainWindow(QWidget *parent = 0, Qt::WindowFlags f = KDE_DEFAULT_WINDOWFLAGS);
+    explicit MainWindow(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = KDE_DEFAULT_WINDOWFLAGS);
     ~MainWindow();
 
 public Q_SLOTS:

@@ -28,7 +28,7 @@ class CollectionInternalsPage : public Akonadi::CollectionPropertiesPage
 {
     Q_OBJECT
 public:
-    explicit CollectionInternalsPage(QWidget *parent = 0);
+    explicit CollectionInternalsPage(QWidget *parent = Q_NULLPTR);
 
     void load(const Akonadi::Collection &col);
     void save(Akonadi::Collection &col);

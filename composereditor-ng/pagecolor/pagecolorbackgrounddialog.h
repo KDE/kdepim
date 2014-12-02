@@ -31,7 +31,7 @@ class PageColorBackgroundDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit PageColorBackgroundDialog(const QWebElement &element, QWidget *parent = 0);
+    explicit PageColorBackgroundDialog(const QWebElement &element, QWidget *parent = Q_NULLPTR);
     ~PageColorBackgroundDialog();
 
 private:

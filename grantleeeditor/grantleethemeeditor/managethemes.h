@@ -30,7 +30,7 @@ class GRANTLEETHEMEEDITOR_EXPORT ManageThemes : public QDialog
 {
     Q_OBJECT
 public:
-    explicit ManageThemes(const QString &relativeThemePath, QWidget *parent = 0);
+    explicit ManageThemes(const QString &relativeThemePath, QWidget *parent = Q_NULLPTR);
     ~ManageThemes();
 
 private Q_SLOTS:

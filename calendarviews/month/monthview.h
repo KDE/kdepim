@@ -48,7 +48,7 @@ public:
         Hidden
     };
 
-    explicit MonthView(NavButtonsVisibility visibility = Visible, QWidget *parent = 0);
+    explicit MonthView(NavButtonsVisibility visibility = Visible, QWidget *parent = Q_NULLPTR);
     ~MonthView();
 
     virtual int currentDateCount() const;

@@ -47,7 +47,7 @@ class PIMCOMMON_EXPORT CollectionAclPage : public Akonadi::CollectionPropertiesP
     Q_OBJECT
 
 public:
-    explicit CollectionAclPage(QWidget *parent = 0);
+    explicit CollectionAclPage(QWidget *parent = Q_NULLPTR);
 
     void load(const Akonadi::Collection &collection);
     void save(Akonadi::Collection &collection);

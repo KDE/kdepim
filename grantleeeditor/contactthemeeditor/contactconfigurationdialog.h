@@ -38,7 +38,7 @@ class ContactConfigureDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit ContactConfigureDialog(QWidget *parent = 0);
+    explicit ContactConfigureDialog(QWidget *parent = Q_NULLPTR);
     ~ContactConfigureDialog();
 
     void readConfig();

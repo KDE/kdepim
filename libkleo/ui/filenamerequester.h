@@ -48,8 +48,8 @@ class KLEO_EXPORT FileNameRequester : public QWidget
     Q_PROPERTY(QString fileName READ fileName WRITE setFileName)
     Q_PROPERTY(bool existingOnly READ existingOnly WRITE setExistingOnly)
 public:
-    explicit FileNameRequester(QWidget *parent = 0);
-    explicit FileNameRequester(QDir::Filters filter, QWidget *parent = 0);
+    explicit FileNameRequester(QWidget *parent = Q_NULLPTR);
+    explicit FileNameRequester(QDir::Filters filter, QWidget *parent = Q_NULLPTR);
     ~FileNameRequester();
 
     void setFileName(const QString &name);

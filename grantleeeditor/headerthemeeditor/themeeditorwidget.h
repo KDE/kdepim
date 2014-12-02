@@ -23,7 +23,7 @@ class ThemeEditorWidget : public GrantleeThemeEditor::EditorWidget
 {
     Q_OBJECT
 public:
-    explicit ThemeEditorWidget(QWidget *parent = 0);
+    explicit ThemeEditorWidget(QWidget *parent = Q_NULLPTR);
     ~ThemeEditorWidget();
 
 public Q_SLOTS:

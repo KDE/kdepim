@@ -28,7 +28,7 @@ class SelectionTypeTreeWidget : public QTreeWidget
 {
     Q_OBJECT
 public:
-    explicit SelectionTypeTreeWidget(QWidget *parent = 0);
+    explicit SelectionTypeTreeWidget(QWidget *parent = Q_NULLPTR);
     ~SelectionTypeTreeWidget();
 
     QHash<Utils::AppsType, Utils::importExportParameters> storedType() const;

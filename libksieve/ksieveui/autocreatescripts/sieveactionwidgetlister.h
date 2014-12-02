@@ -76,7 +76,7 @@ class SieveActionWidgetLister : public KPIM::KWidgetLister
 {
     Q_OBJECT
 public:
-    explicit SieveActionWidgetLister(QWidget *parent = 0);
+    explicit SieveActionWidgetLister(QWidget *parent = Q_NULLPTR);
     ~SieveActionWidgetLister();
 
     void generatedScript(QString &script, QStringList &requires, bool onlyActions);

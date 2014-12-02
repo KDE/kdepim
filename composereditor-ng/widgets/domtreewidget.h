@@ -33,7 +33,7 @@ class COMPOSEREDITORNG_EXPORT DomTreeWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit DomTreeWidget(QWebView *view, QWidget *parent = 0);
+    explicit DomTreeWidget(QWebView *view, QWidget *parent = Q_NULLPTR);
     ~DomTreeWidget();
 
 private:

@@ -28,7 +28,7 @@ class MimePartTreeView : public QTreeView
 {
     Q_OBJECT
 public:
-    explicit MimePartTreeView(QWidget *parent = 0);
+    explicit MimePartTreeView(QWidget *parent = Q_NULLPTR);
     ~MimePartTreeView();
 
     MessageViewer::MimeTreeModel *mimePartModel() const;

@@ -38,7 +38,7 @@ public:
      * @param parent The parent widget that shall be used as parent
      *               for GUI components.
      */
-    explicit XXPort(QWidget *parent = 0);
+    explicit XXPort(QWidget *parent = Q_NULLPTR);
 
     /**
      * Destroys the xxport object.

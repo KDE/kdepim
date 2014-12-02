@@ -34,7 +34,7 @@ class COMPOSEREDITORNG_EXPORT ComposerView : public KWebView
 {
     Q_OBJECT
 public:
-    explicit ComposerView(QWidget *parent = 0);
+    explicit ComposerView(QWidget *parent = Q_NULLPTR);
     ~ComposerView();
 
     /**

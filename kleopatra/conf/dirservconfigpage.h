@@ -57,7 +57,7 @@ class DirectoryServicesConfigurationPage : public KCModule
 {
     Q_OBJECT
 public:
-    explicit DirectoryServicesConfigurationPage(QWidget *parent = 0, const QVariantList &args = QVariantList());
+    explicit DirectoryServicesConfigurationPage(QWidget *parent = Q_NULLPTR, const QVariantList &args = QVariantList());
 
     /* reimp */ void load() Q_DECL_OVERRIDE;
     /* reimp */ void save() Q_DECL_OVERRIDE;

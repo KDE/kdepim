@@ -24,7 +24,7 @@ class SieveEditorTestWidget : public KSieveUi::SieveEditor
 {
     Q_OBJECT
 public:
-    explicit SieveEditorTestWidget(QWidget *parent = 0);
+    explicit SieveEditorTestWidget(QWidget *parent = Q_NULLPTR);
     ~SieveEditorTestWidget();
 
 private Q_SLOTS:

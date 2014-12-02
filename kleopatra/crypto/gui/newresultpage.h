@@ -62,7 +62,7 @@ class NewResultPage : public QWizardPage
 {
     Q_OBJECT
 public:
-    explicit NewResultPage(QWidget *parent = 0);
+    explicit NewResultPage(QWidget *parent = Q_NULLPTR);
     ~NewResultPage();
 
     void setTaskCollection(const boost::shared_ptr<TaskCollection> &coll);

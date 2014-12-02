@@ -73,7 +73,7 @@ public:
      * @param calendar is a pointer to a Calendar instance.
      * @param parent it the parent widget.
      */
-    explicit IncidenceViewer(Akonadi::ETMCalendar *calendar, QWidget *parent = 0);
+    explicit IncidenceViewer(Akonadi::ETMCalendar *calendar, QWidget *parent = Q_NULLPTR);
 
     /**
      * Creates a new incidence viewer.
@@ -81,7 +81,7 @@ public:
      * *param
      * @param parent it the parent widget.
      */
-    explicit IncidenceViewer(QWidget *parent = 0);
+    explicit IncidenceViewer(QWidget *parent = Q_NULLPTR);
 
     /**
      * Destroys the incidence viewer.

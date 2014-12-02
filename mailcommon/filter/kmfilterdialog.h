@@ -104,7 +104,7 @@ public:
     /**
      * Constructor.
      */
-    explicit KMFilterListBox(const QString &title, QWidget *parent = 0);
+    explicit KMFilterListBox(const QString &title, QWidget *parent = Q_NULLPTR);
 
     /**
      * Destructor.
@@ -348,7 +348,7 @@ public:
      * single filter dialog.
      */
     explicit KMFilterDialog(const QList<KActionCollection *> &actionCollection,
-                            QWidget *parent = 0, bool createDummyFilter = true);
+                            QWidget *parent = Q_NULLPTR, bool createDummyFilter = true);
 
     /**
      * Called from KMFilterMgr. Creates a new filter and presets

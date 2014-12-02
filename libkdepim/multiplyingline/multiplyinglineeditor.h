@@ -83,7 +83,7 @@ class KDEPIM_EXPORT MultiplyingLineEditor : public QWidget
 public:
 
     // We take ownership of factory
-    explicit MultiplyingLineEditor(MultiplyingLineFactory *factory, QWidget *parent = 0);
+    explicit MultiplyingLineEditor(MultiplyingLineFactory *factory, QWidget *parent = Q_NULLPTR);
 
     virtual ~MultiplyingLineEditor();
 

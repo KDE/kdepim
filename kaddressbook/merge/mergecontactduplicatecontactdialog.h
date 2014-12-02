@@ -31,7 +31,7 @@ class KADDRESSBOOK_EXPORT MergeContactDuplicateContactDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit MergeContactDuplicateContactDialog(const Akonadi::Item::List &list, QWidget *parent = 0);
+    explicit MergeContactDuplicateContactDialog(const Akonadi::Item::List &list, QWidget *parent = Q_NULLPTR);
     ~MergeContactDuplicateContactDialog();
 
 private slots:

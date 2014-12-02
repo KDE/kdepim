@@ -26,7 +26,7 @@ class SelectMatchTypeComboBox : public KComboBox
 {
     Q_OBJECT
 public:
-    explicit SelectMatchTypeComboBox(QWidget *parent = 0);
+    explicit SelectMatchTypeComboBox(QWidget *parent = Q_NULLPTR);
     ~SelectMatchTypeComboBox();
 
     QString code(bool &negative) const;

@@ -49,7 +49,7 @@ class NOTESHARED_EXPORT NoteHostDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit NoteHostDialog(const QString &caption, QWidget *parent = 0);
+    explicit NoteHostDialog(const QString &caption, QWidget *parent = Q_NULLPTR);
     ~NoteHostDialog();
 
     QString host() const;

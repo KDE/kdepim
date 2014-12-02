@@ -30,7 +30,7 @@ class KTNEFView : public QTreeWidget
     Q_OBJECT
 
 public:
-    explicit KTNEFView(QWidget *parent = 0);
+    explicit KTNEFView(QWidget *parent = Q_NULLPTR);
     ~KTNEFView();
 
     void setAttachments(const QList<KTNEFAttach *> &list);

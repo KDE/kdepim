@@ -32,8 +32,8 @@ class PIMCOMMON_EXPORT PlainTextEditorWidget : public QWidget
     Q_OBJECT
     Q_PROPERTY(bool readOnly READ isReadOnly WRITE setReadOnly)
 public:
-    explicit PlainTextEditorWidget(QWidget *parent = 0);
-    explicit PlainTextEditorWidget(PlainTextEditor *customEditor, QWidget *parent = 0);
+    explicit PlainTextEditorWidget(QWidget *parent = Q_NULLPTR);
+    explicit PlainTextEditorWidget(PlainTextEditor *customEditor, QWidget *parent = Q_NULLPTR);
     ~PlainTextEditorWidget();
 
     PlainTextEditor *editor() const;

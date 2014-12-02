@@ -63,7 +63,7 @@ public:
         Top,
         Bottom
     };
-    explicit EventIndicator(Location loc = Top, QWidget *parent = 0);
+    explicit EventIndicator(Location loc = Top, QWidget *parent = Q_NULLPTR);
     virtual ~EventIndicator();
 
     void changeColumns(int columns);
@@ -92,13 +92,13 @@ public:
                         const QDate &end,
                         bool isInteractive,
                         bool isSideBySide = false,
-                        QWidget *parent = 0);
+                        QWidget *parent = Q_NULLPTR);
 
     explicit AgendaView(const QDate &start,
                         const QDate &end,
                         bool isInteractive,
                         bool isSideBySide = false,
-                        QWidget *parent = 0);
+                        QWidget *parent = Q_NULLPTR);
 
     virtual ~AgendaView();
 

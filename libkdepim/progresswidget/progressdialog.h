@@ -56,7 +56,7 @@ class TransactionItemView : public QScrollArea
 {
     Q_OBJECT
 public:
-    explicit TransactionItemView(QWidget *parent = 0, const char *name = 0);
+    explicit TransactionItemView(QWidget *parent = Q_NULLPTR, const char *name = 0);
 
     virtual ~TransactionItemView() {}
     TransactionItem *addTransactionItem(ProgressItem *item, bool first);

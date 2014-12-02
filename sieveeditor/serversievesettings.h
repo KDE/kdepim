@@ -34,7 +34,7 @@ class ServerSieveSettings : public QWidget
     Q_OBJECT
 
 public:
-    explicit ServerSieveSettings(QWidget *parent = 0);
+    explicit ServerSieveSettings(QWidget *parent = Q_NULLPTR);
     ~ServerSieveSettings();
 
     QString serverName() const;

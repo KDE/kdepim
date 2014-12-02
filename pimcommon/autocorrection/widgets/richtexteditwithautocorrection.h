@@ -28,7 +28,7 @@ class PIMCOMMON_EXPORT RichTextEditWithAutoCorrection : public PimCommon::RichTe
 {
     Q_OBJECT
 public:
-    explicit RichTextEditWithAutoCorrection(QWidget *parent = 0);
+    explicit RichTextEditWithAutoCorrection(QWidget *parent = Q_NULLPTR);
     ~RichTextEditWithAutoCorrection();
 
     PimCommon::AutoCorrection *autocorrection() const;

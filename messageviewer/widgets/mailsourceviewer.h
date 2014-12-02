@@ -49,7 +49,7 @@ class MailSourceViewer : public QDialog
 {
     Q_OBJECT
 public:
-    explicit MailSourceViewer(QWidget *parent = 0);
+    explicit MailSourceViewer(QWidget *parent = Q_NULLPTR);
     ~MailSourceViewer();
 
     void setRawSource(const QString &source);

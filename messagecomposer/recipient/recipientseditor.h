@@ -56,7 +56,7 @@ class MESSAGECOMPOSER_EXPORT RecipientsEditor : public KPIM::MultiplyingLineEdit
 {
     Q_OBJECT
 public:
-    explicit RecipientsEditor(QWidget *parent = 0);
+    explicit RecipientsEditor(QWidget *parent = Q_NULLPTR);
     ~RecipientsEditor();
 
     Recipient::List recipients() const;

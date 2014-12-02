@@ -37,7 +37,7 @@ class EVENTVIEWS_EXPORT MultiAgendaView : public EventView
 {
     Q_OBJECT
 public:
-    explicit MultiAgendaView(QWidget *parent = 0);
+    explicit MultiAgendaView(QWidget *parent = Q_NULLPTR);
     ~MultiAgendaView();
 
     Akonadi::Item::List selectedIncidences() const;

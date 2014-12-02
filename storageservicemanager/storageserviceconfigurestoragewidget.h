@@ -24,7 +24,7 @@ class StorageServiceConfigureStorageWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit StorageServiceConfigureStorageWidget(QWidget *parent = 0);
+    explicit StorageServiceConfigureStorageWidget(QWidget *parent = Q_NULLPTR);
     ~StorageServiceConfigureStorageWidget();
 
 Q_SIGNALS:

@@ -32,7 +32,7 @@ class AdBlockCreateFilterDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit AdBlockCreateFilterDialog(QWidget *parent = 0);
+    explicit AdBlockCreateFilterDialog(QWidget *parent = Q_NULLPTR);
     ~AdBlockCreateFilterDialog();
 
     void setPattern(AdBlockBlockableItemsWidget::TypeElement type, const QString &pattern);

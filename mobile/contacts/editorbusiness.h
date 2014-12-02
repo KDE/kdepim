@@ -27,7 +27,7 @@ class EditorBusiness : public EditorBase
   Q_OBJECT
 
   public:
-    explicit EditorBusiness( QWidget *parent = 0 );
+    explicit EditorBusiness( QWidget *parent = Q_NULLPTR );
 
     ~EditorBusiness();
 

@@ -29,7 +29,7 @@ class KSelFilterPage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit KSelFilterPage(QWidget *parent = 0);
+    explicit KSelFilterPage(QWidget *parent = Q_NULLPTR);
     ~KSelFilterPage();
 
     void  addFilter(MailImporter::Filter *f);

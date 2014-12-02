@@ -69,7 +69,7 @@ public:
         Update
     };
 
-    explicit HtmlStatusBar(QWidget *parent = 0);
+    explicit HtmlStatusBar(QWidget *parent = Q_NULLPTR);
     ~HtmlStatusBar();
 
     /** @return current mode. */

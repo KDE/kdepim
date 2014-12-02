@@ -40,7 +40,7 @@ class ConfigureDialog : public KCMultiDialog
 {
     Q_OBJECT
 public:
-    explicit ConfigureDialog(QWidget *parent = 0);
+    explicit ConfigureDialog(QWidget *parent = Q_NULLPTR);
     ~ConfigureDialog();
 
 protected:

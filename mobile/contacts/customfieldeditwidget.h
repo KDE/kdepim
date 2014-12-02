@@ -20,7 +20,7 @@ class CustomFieldEditWidget : public QWidget
   Q_OBJECT
 
   public:
-    explicit CustomFieldEditWidget( QWidget *parent = 0 );
+    explicit CustomFieldEditWidget( QWidget *parent = Q_NULLPTR );
 
     void setCustomField( const CustomField &field );
     CustomField customField() const;

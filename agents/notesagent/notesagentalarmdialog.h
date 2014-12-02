@@ -31,7 +31,7 @@ class NotesAgentAlarmDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit NotesAgentAlarmDialog(QWidget *parent = 0);
+    explicit NotesAgentAlarmDialog(QWidget *parent = Q_NULLPTR);
     ~NotesAgentAlarmDialog();
 
     void addListAlarm(const Akonadi::Item::List &lstAlarm);

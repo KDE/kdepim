@@ -29,7 +29,7 @@ class MergeContactsDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit MergeContactsDialog(const Akonadi::Item::List &lst, QWidget *parent = 0);
+    explicit MergeContactsDialog(const Akonadi::Item::List &lst, QWidget *parent = Q_NULLPTR);
     ~MergeContactsDialog();
 
 private slots:

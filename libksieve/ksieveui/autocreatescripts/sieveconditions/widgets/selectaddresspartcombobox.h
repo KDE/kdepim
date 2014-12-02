@@ -26,7 +26,7 @@ class SelectAddressPartComboBox : public KComboBox
 {
     Q_OBJECT
 public:
-    explicit SelectAddressPartComboBox(QWidget *parent = 0);
+    explicit SelectAddressPartComboBox(QWidget *parent = Q_NULLPTR);
     ~SelectAddressPartComboBox();
 
     QString code() const;

@@ -51,7 +51,7 @@ class NewCertificateWizard : public QWizard
 {
     Q_OBJECT
 public:
-    explicit NewCertificateWizard(QWidget *parent = 0);
+    explicit NewCertificateWizard(QWidget *parent = Q_NULLPTR);
     ~NewCertificateWizard();
 
     void setProtocol(GpgME::Protocol protocol);

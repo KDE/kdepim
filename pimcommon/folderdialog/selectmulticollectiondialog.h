@@ -29,8 +29,8 @@ class PIMCOMMON_EXPORT SelectMultiCollectionDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit SelectMultiCollectionDialog(const QString &mimetype, const QList<Akonadi::Collection::Id> &selectedCollection, QWidget *parent = 0);
-    explicit SelectMultiCollectionDialog(const QString &mimetype, QWidget *parent = 0);
+    explicit SelectMultiCollectionDialog(const QString &mimetype, const QList<Akonadi::Collection::Id> &selectedCollection, QWidget *parent = Q_NULLPTR);
+    explicit SelectMultiCollectionDialog(const QString &mimetype, QWidget *parent = Q_NULLPTR);
     ~SelectMultiCollectionDialog();
 
     QList<Akonadi::Collection> selectedCollection() const;

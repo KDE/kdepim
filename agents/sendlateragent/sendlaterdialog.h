@@ -42,7 +42,7 @@ public:
         PutInOutbox = 3
     };
 
-    explicit SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent = 0);
+    explicit SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent = Q_NULLPTR);
     ~SendLaterDialog();
 
     SendLater::SendLaterInfo *info();

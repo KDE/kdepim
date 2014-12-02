@@ -44,7 +44,7 @@ class KLEO_EXPORT DirectoryServicesWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit DirectoryServicesWidget(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    explicit DirectoryServicesWidget(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = 0);
     ~DirectoryServicesWidget();
 
     enum Scheme {

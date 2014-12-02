@@ -33,7 +33,7 @@ class SieveScriptPage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SieveScriptPage(QWidget *parent = 0);
+    explicit SieveScriptPage(QWidget *parent = Q_NULLPTR);
     ~SieveScriptPage();
 
     void generatedScript(QString &script, QStringList &requires);

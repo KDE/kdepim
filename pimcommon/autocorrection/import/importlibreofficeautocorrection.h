@@ -32,7 +32,7 @@ namespace PimCommon
 class ImportLibreOfficeAutocorrection : public ImportAbstractAutocorrection
 {
 public:
-    explicit ImportLibreOfficeAutocorrection(QWidget *parent = 0);
+    explicit ImportLibreOfficeAutocorrection(QWidget *parent = Q_NULLPTR);
     ~ImportLibreOfficeAutocorrection();
 
     bool import(const QString &fileName, ImportAbstractAutocorrection::LoadAttribute loadAttribute = All) Q_DECL_OVERRIDE;

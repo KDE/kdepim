@@ -43,7 +43,7 @@ private:
 class KDEPIM_EXPORT CustomLogWidget : public QListWidget
 {
 public:
-    explicit CustomLogWidget(QWidget *parent = 0);
+    explicit CustomLogWidget(QWidget *parent = Q_NULLPTR);
     ~CustomLogWidget();
 
     void addInfoLogEntry(const QString &log);

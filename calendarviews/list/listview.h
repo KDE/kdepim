@@ -49,7 +49,7 @@ class EVENTVIEWS_EXPORT ListView : public EventView
     Q_OBJECT
 public:
     explicit ListView(const Akonadi::ETMCalendar::Ptr &calendar,
-                      QWidget *parent = 0, bool nonInteractive = false);
+                      QWidget *parent = Q_NULLPTR, bool nonInteractive = false);
     ~ListView();
 
     virtual int currentDateCount() const;

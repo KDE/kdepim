@@ -33,8 +33,8 @@ class PIMCOMMON_EXPORT RichTextEditorWidget : public QWidget
     Q_OBJECT
     Q_PROPERTY(bool readOnly READ isReadOnly WRITE setReadOnly)
 public:
-    explicit RichTextEditorWidget(QWidget *parent = 0);
-    explicit RichTextEditorWidget(RichTextEditor *customEditor, QWidget *parent = 0);
+    explicit RichTextEditorWidget(QWidget *parent = Q_NULLPTR);
+    explicit RichTextEditorWidget(RichTextEditor *customEditor, QWidget *parent = Q_NULLPTR);
     ~RichTextEditorWidget();
 
     void clear();

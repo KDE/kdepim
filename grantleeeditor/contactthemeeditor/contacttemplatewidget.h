@@ -25,7 +25,7 @@ class ContactTemplateListWidget : public PimCommon::TemplateListWidget
 {
     Q_OBJECT
 public:
-    explicit ContactTemplateListWidget(const QString &configName, QWidget *parent = 0);
+    explicit ContactTemplateListWidget(const QString &configName, QWidget *parent = Q_NULLPTR);
     ~ContactTemplateListWidget();
 
     QList<PimCommon::defaultTemplate> defaultTemplates();
@@ -35,7 +35,7 @@ class ContactTemplateWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ContactTemplateWidget(const QString &title, QWidget *parent = 0);
+    explicit ContactTemplateWidget(const QString &title, QWidget *parent = Q_NULLPTR);
     ~ContactTemplateWidget();
 
 Q_SIGNALS:

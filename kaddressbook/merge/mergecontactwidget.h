@@ -35,7 +35,7 @@ class KADDRESSBOOK_EXPORT MergeContactWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MergeContactWidget(const Akonadi::Item::List &items, QWidget *parent = 0);
+    explicit MergeContactWidget(const Akonadi::Item::List &items, QWidget *parent = Q_NULLPTR);
     ~MergeContactWidget();
 
     void clear();

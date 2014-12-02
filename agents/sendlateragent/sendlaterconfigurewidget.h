@@ -46,7 +46,7 @@ class SendLaterWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SendLaterWidget(QWidget *parent = 0);
+    explicit SendLaterWidget(QWidget *parent = Q_NULLPTR);
     ~SendLaterWidget();
 
     enum SendLaterColumn {

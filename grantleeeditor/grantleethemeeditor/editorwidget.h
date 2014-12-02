@@ -27,7 +27,7 @@ class GRANTLEETHEMEEDITOR_EXPORT EditorWidget : public PimCommon::PlainTextEdito
 {
     Q_OBJECT
 public:
-    explicit EditorWidget(QWidget *parent = 0);
+    explicit EditorWidget(QWidget *parent = Q_NULLPTR);
     ~EditorWidget();
 
     void insertFile(const QString &filename);

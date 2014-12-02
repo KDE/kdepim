@@ -29,7 +29,7 @@ class TemplateSelectionDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit TemplateSelectionDialog(QWidget *parent = 0);
+    explicit TemplateSelectionDialog(QWidget *parent = Q_NULLPTR);
 
     bool templatesAvailable() const;
 

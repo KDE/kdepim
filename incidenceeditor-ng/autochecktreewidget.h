@@ -48,7 +48,7 @@ public:
       Default constructor. The default behavior is like a QTreeWidget, so you
       have to activate the autoCheckChildren property manually.
     */
-    explicit AutoCheckTreeWidget(QWidget *parent = 0);
+    explicit AutoCheckTreeWidget(QWidget *parent = Q_NULLPTR);
 
     ~AutoCheckTreeWidget();
 

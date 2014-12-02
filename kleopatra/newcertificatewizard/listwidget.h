@@ -53,7 +53,7 @@ class ListWidget : public QWidget
     Q_PROPERTY(QRegExp regExpFilter READ regExpFilter WRITE setRegExpFilter)
     Q_PROPERTY(QString defaultValue READ defaultValue WRITE setDefaultValue)
 public:
-    explicit ListWidget(QWidget *parent = 0);
+    explicit ListWidget(QWidget *parent = Q_NULLPTR);
     ~ListWidget();
 
     void setDefaultValue(const QString &defaultValue);

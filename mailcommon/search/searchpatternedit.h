@@ -98,7 +98,7 @@ public:
      * QGroupBox, as usual.
      */
     explicit SearchPatternEdit(
-        QWidget *parent = 0,
+        QWidget *parent = Q_NULLPTR,
         SearchPatternEditOptions options = (SearchPatternEditOptions)(None),
         SearchModeType modeType = StandardMode);
 
@@ -177,7 +177,7 @@ public:
     * Constructor. You can give a MailCommon::SearchRule as parameter,
     * which will be used to initialize the widget.
     */
-    explicit SearchRuleWidget(QWidget *parent = 0,
+    explicit SearchRuleWidget(QWidget *parent = Q_NULLPTR,
                               MailCommon::SearchRule::Ptr aRule = MailCommon::SearchRule::Ptr(),
                               SearchPatternEdit::SearchPatternEditOptions options = (SearchPatternEdit::SearchPatternEditOptions)(SearchPatternEdit::None),
                               SearchPatternEdit::SearchModeType modeType = SearchPatternEdit::StandardMode);
@@ -285,7 +285,7 @@ class SearchRuleWidgetLister : public KPIM::KWidgetLister
     friend class SearchPatternEdit;
 
 public:
-    explicit SearchRuleWidgetLister(QWidget *parent = 0,
+    explicit SearchRuleWidgetLister(QWidget *parent = Q_NULLPTR,
                                     SearchPatternEdit::SearchPatternEditOptions opt = (SearchPatternEdit::SearchPatternEditOptions)(SearchPatternEdit::None),
                                     SearchPatternEdit::SearchModeType modeType = SearchPatternEdit::StandardMode);
 

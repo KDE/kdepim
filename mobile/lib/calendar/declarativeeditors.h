@@ -49,7 +49,7 @@ class MobileIncidenceGeneral : public QWidget
 {
   Q_OBJECT
   public:
-    explicit MobileIncidenceGeneral( QWidget *parent = 0 );
+    explicit MobileIncidenceGeneral( QWidget *parent = Q_NULLPTR );
 
     ~MobileIncidenceGeneral();
 
@@ -74,7 +74,7 @@ class MobileIncidenceMore : public QStackedWidget
 {
   Q_OBJECT
   public:
-    explicit MobileIncidenceMore( QWidget *parent = 0 );
+    explicit MobileIncidenceMore( QWidget *parent = Q_NULLPTR );
 
     ~MobileIncidenceMore();
 

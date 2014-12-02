@@ -40,7 +40,7 @@ class KSIEVEUI_EXPORT SieveDebugDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit SieveDebugDialog(QWidget *parent = 0);
+    explicit SieveDebugDialog(QWidget *parent = Q_NULLPTR);
     ~SieveDebugDialog();
 
 Q_SIGNALS:

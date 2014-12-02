@@ -46,7 +46,7 @@ class CryptoOperationsConfigWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit CryptoOperationsConfigWidget(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    explicit CryptoOperationsConfigWidget(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = 0);
     ~CryptoOperationsConfigWidget();
 
 public Q_SLOTS:

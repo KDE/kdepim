@@ -31,7 +31,7 @@ class PIMCOMMON_EXPORT BalooDebugWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit BalooDebugWidget(QWidget *parent = 0);
+    explicit BalooDebugWidget(QWidget *parent = Q_NULLPTR);
     ~BalooDebugWidget();
 
     void setAkonadiId(Akonadi::Item::Id akonadiId);

@@ -30,7 +30,7 @@ class SieveEditorScriptWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SieveEditorScriptWidget(QWidget *parent = 0);
+    explicit SieveEditorScriptWidget(QWidget *parent = Q_NULLPTR);
     ~SieveEditorScriptWidget();
 
     void setScript(const QString &script);

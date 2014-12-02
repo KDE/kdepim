@@ -37,14 +37,14 @@ class EVENTVIEWS_EXPORT DecorationLabel : public QLabel
     Q_OBJECT
 public:
     explicit DecorationLabel(EventViews::CalendarDecoration::Element *e,
-                             QWidget *parent = 0);
+                             QWidget *parent = Q_NULLPTR);
 
     explicit DecorationLabel(const QString &shortText,
                              const QString &longText = QString(),
                              const QString &extensiveText = QString(),
                              const QPixmap &pixmap = QPixmap(),
                              const QUrl &url = QUrl(),
-                             QWidget *parent = 0);
+                             QWidget *parent = Q_NULLPTR);
     ~DecorationLabel();
 
 public slots:

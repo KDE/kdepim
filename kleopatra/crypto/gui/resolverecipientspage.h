@@ -70,7 +70,7 @@ class ResolveRecipientsPage : public WizardPage
 {
     Q_OBJECT
 public:
-    explicit ResolveRecipientsPage(QWidget *parent = 0);
+    explicit ResolveRecipientsPage(QWidget *parent = Q_NULLPTR);
     ~ResolveRecipientsPage();
 
     bool isComplete() const;

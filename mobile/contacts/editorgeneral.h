@@ -32,7 +32,7 @@ class EditorGeneral : public EditorBase
   Q_OBJECT
 
   public:
-    explicit EditorGeneral( QWidget *parent = 0 );
+    explicit EditorGeneral( QWidget *parent = Q_NULLPTR );
 
     ~EditorGeneral();
 

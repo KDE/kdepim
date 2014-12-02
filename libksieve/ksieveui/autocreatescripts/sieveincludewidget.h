@@ -34,7 +34,7 @@ class SieveIncludeLocation : public KComboBox
 {
     Q_OBJECT
 public:
-    explicit SieveIncludeLocation(QWidget *parent = 0);
+    explicit SieveIncludeLocation(QWidget *parent = Q_NULLPTR);
     ~SieveIncludeLocation();
 
     QString code() const;
@@ -51,7 +51,7 @@ class SieveIncludeActionWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SieveIncludeActionWidget(QWidget *parent = 0);
+    explicit SieveIncludeActionWidget(QWidget *parent = Q_NULLPTR);
     ~SieveIncludeActionWidget();
 
     void generatedScript(QString &script);
@@ -83,7 +83,7 @@ class SieveIncludeWidgetLister : public KPIM::KWidgetLister
 {
     Q_OBJECT
 public:
-    explicit SieveIncludeWidgetLister(QWidget *parent = 0);
+    explicit SieveIncludeWidgetLister(QWidget *parent = Q_NULLPTR);
     ~SieveIncludeWidgetLister();
 
     void generatedScript(QString &script, QStringList &requires);
@@ -108,7 +108,7 @@ class SieveIncludeWidget : public SieveWidgetPageAbstract
 {
     Q_OBJECT
 public:
-    explicit SieveIncludeWidget(QWidget *parent = 0);
+    explicit SieveIncludeWidget(QWidget *parent = Q_NULLPTR);
     ~SieveIncludeWidget();
 
     void generatedScript(QString &script, QStringList &requires);

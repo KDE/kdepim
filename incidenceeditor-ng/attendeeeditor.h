@@ -47,7 +47,7 @@ class INCIDENCEEDITORS_NG_EXPORT AttendeeEditor : public KPIM::MultiplyingLineEd
 {
     Q_OBJECT
 public:
-    explicit AttendeeEditor(QWidget *parent = 0);
+    explicit AttendeeEditor(QWidget *parent = Q_NULLPTR);
 
     AttendeeData::List attendees() const;
 

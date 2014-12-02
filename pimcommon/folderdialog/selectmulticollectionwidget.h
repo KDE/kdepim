@@ -29,8 +29,8 @@ class SelectMultiCollectionWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SelectMultiCollectionWidget(const QString &mimetype, const QList<Akonadi::Collection::Id> &selectedCollection, QWidget *parent = 0);
-    explicit SelectMultiCollectionWidget(const QString &mimetype, QWidget *parent = 0);
+    explicit SelectMultiCollectionWidget(const QString &mimetype, const QList<Akonadi::Collection::Id> &selectedCollection, QWidget *parent = Q_NULLPTR);
+    explicit SelectMultiCollectionWidget(const QString &mimetype, QWidget *parent = Q_NULLPTR);
     ~SelectMultiCollectionWidget();
 
     QList<Akonadi::Collection> selectedCollection(const QModelIndex &parent = QModelIndex()) const;

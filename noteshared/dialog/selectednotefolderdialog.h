@@ -27,7 +27,7 @@ class NOTESHARED_EXPORT SelectedNotefolderDialog : public Akonadi::CollectionDia
 {
     Q_OBJECT
 public:
-    explicit SelectedNotefolderDialog(QWidget *parent = 0);
+    explicit SelectedNotefolderDialog(QWidget *parent = Q_NULLPTR);
     ~SelectedNotefolderDialog();
 
 private:

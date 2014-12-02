@@ -68,7 +68,7 @@ public:
      */
     PrintingWizard(QPrinter *printer,
                    QItemSelectionModel *selectionModel,
-                   QWidget *parent = 0);
+                   QWidget *parent = Q_NULLPTR);
 
     /**
      * Destroys the printing wizard.

@@ -36,7 +36,7 @@ public:
         SecondPage,
         ExtraPage
     };
-    explicit EditorPage(GrantleeThemeEditor::EditorPage::PageType type, QWidget *parent = 0);
+    explicit EditorPage(GrantleeThemeEditor::EditorPage::PageType type, QWidget *parent = Q_NULLPTR);
     ~EditorPage();
 
     EditorPage::PageType pageType() const;

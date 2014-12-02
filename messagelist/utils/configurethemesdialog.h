@@ -47,7 +47,7 @@ class MESSAGELIST_EXPORT ConfigureThemesDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit ConfigureThemesDialog(QWidget *parent = 0);
+    explicit ConfigureThemesDialog(QWidget *parent = Q_NULLPTR);
     ~ConfigureThemesDialog();
 
     void selectTheme(const QString &themeId);

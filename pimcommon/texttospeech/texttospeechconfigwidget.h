@@ -28,7 +28,7 @@ class PIMCOMMON_EXPORT TextToSpeechConfigWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit TextToSpeechConfigWidget(QWidget *parent = 0);
+    explicit TextToSpeechConfigWidget(QWidget *parent = Q_NULLPTR);
     ~TextToSpeechConfigWidget();
 
     void writeConfig();

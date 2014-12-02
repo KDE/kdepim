@@ -36,7 +36,7 @@ public:
         ShortUrlTool = 1
     };
 
-    explicit CustomToolsWidget(QWidget *parent = 0);
+    explicit CustomToolsWidget(QWidget *parent = Q_NULLPTR);
     ~CustomToolsWidget();
 
     void switchToTool(CustomToolsWidget::ToolType type);

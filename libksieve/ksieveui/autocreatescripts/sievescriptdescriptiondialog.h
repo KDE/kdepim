@@ -30,7 +30,7 @@ class SieveScriptDescriptionDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit SieveScriptDescriptionDialog(QWidget *parent = 0);
+    explicit SieveScriptDescriptionDialog(QWidget *parent = Q_NULLPTR);
     ~SieveScriptDescriptionDialog();
 
     void setDescription(const QString &desc);

@@ -52,7 +52,7 @@ class KLEO_EXPORT DNAttributeOrderConfigWidget : public QWidget
     Q_OBJECT
 public:
     /*! Use Kleo::DNAttributeMapper::instance()->configWidget( parent, name ) instead. */
-    explicit DNAttributeOrderConfigWidget(DNAttributeMapper *mapper, QWidget *parent = 0, Qt::WindowFlags f = 0);
+    explicit DNAttributeOrderConfigWidget(DNAttributeMapper *mapper, QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = 0);
     ~DNAttributeOrderConfigWidget();
 
     void load();

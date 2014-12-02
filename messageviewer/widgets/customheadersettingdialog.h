@@ -27,7 +27,7 @@ class CustomHeaderSettingDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit CustomHeaderSettingDialog(QWidget *parent = 0);
+    explicit CustomHeaderSettingDialog(QWidget *parent = Q_NULLPTR);
     ~CustomHeaderSettingDialog();
 
     void writeSettings();

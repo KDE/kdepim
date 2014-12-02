@@ -48,7 +48,7 @@ class RedirectWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit RedirectWidget(QWidget *parent = 0);
+    explicit RedirectWidget(QWidget *parent = Q_NULLPTR);
     ~RedirectWidget();
 
     void setFocus();
@@ -93,7 +93,7 @@ public:
      * @param mode The preferred send mode.
      * @param parent The parent widget.
      */
-    explicit RedirectDialog(SendMode mode = SendNow, QWidget *parent = 0);
+    explicit RedirectDialog(SendMode mode = SendNow, QWidget *parent = Q_NULLPTR);
 
     /**
      * Destroys the redirect dialog.

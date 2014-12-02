@@ -40,7 +40,7 @@ class CharsetSelectionDialog : public QDialog
      *
      * @param parent The parent widget.
      */
-    explicit CharsetSelectionDialog( QWidget *parent = 0 );
+    explicit CharsetSelectionDialog( QWidget *parent = Q_NULLPTR );
 
     /**
      * Destroys the charset selection dialog.

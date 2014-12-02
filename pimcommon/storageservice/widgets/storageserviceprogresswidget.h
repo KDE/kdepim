@@ -31,7 +31,7 @@ class PIMCOMMON_EXPORT StorageServiceProgressWidget : public QFrame
 {
     Q_OBJECT
 public:
-    explicit StorageServiceProgressWidget(PimCommon::StorageServiceAbstract *service, QWidget *parent = 0);
+    explicit StorageServiceProgressWidget(PimCommon::StorageServiceAbstract *service, QWidget *parent = Q_NULLPTR);
     ~StorageServiceProgressWidget();
 
     enum ProgressBarType {

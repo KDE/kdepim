@@ -38,7 +38,7 @@ class PhoneTypeCombo : public QComboBox
      *
      * @param parent The parent widget.
      */
-    explicit PhoneTypeCombo( QWidget *parent = 0 );
+    explicit PhoneTypeCombo( QWidget *parent = Q_NULLPTR );
 
     /**
      * Destroys the phone type combo.

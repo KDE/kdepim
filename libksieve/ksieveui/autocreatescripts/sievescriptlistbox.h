@@ -51,7 +51,7 @@ class SieveScriptListBox : public QGroupBox
 {
     Q_OBJECT
 public:
-    explicit SieveScriptListBox(const QString &title, QWidget *parent = 0);
+    explicit SieveScriptListBox(const QString &title, QWidget *parent = Q_NULLPTR);
     ~SieveScriptListBox();
 
     QString generatedScript(QString &requires) const;

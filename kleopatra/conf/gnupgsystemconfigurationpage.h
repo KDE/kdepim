@@ -47,7 +47,7 @@ class GnuPGSystemConfigurationPage : public KCModule
 {
     Q_OBJECT
 public:
-    explicit GnuPGSystemConfigurationPage(QWidget *parent = 0, const QVariantList &args = QVariantList());
+    explicit GnuPGSystemConfigurationPage(QWidget *parent = Q_NULLPTR, const QVariantList &args = QVariantList());
     ~GnuPGSystemConfigurationPage();
 
     /* reimp */ void load() Q_DECL_OVERRIDE;

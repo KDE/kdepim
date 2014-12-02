@@ -26,7 +26,7 @@ class KMailCVT : public KAssistantDialog
 {
     Q_OBJECT
 public:
-    explicit KMailCVT(QWidget *parent = 0);
+    explicit KMailCVT(QWidget *parent = Q_NULLPTR);
     ~KMailCVT();
 
     void next();

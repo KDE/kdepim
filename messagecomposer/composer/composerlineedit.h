@@ -33,7 +33,7 @@ class MESSAGECOMPOSER_EXPORT ComposerLineEdit : public KPIM::AddresseeLineEdit
     Q_OBJECT
 
 public:
-    explicit ComposerLineEdit(bool useCompletion, QWidget *parent = 0);
+    explicit ComposerLineEdit(bool useCompletion, QWidget *parent = Q_NULLPTR);
 
     void setRecentAddressConfig(KConfig *config);
 

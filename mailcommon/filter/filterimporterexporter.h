@@ -68,7 +68,7 @@ public:
      *
      * @param parent The parent widget.
      */
-    explicit FilterImporterExporter(QWidget *parent = 0);
+    explicit FilterImporterExporter(QWidget *parent = Q_NULLPTR);
 
     /**
      * Destroys the filter importer/exporter.

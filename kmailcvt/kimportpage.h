@@ -24,7 +24,7 @@ class KImportPage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit KImportPage(QWidget *parent = 0);
+    explicit KImportPage(QWidget *parent = Q_NULLPTR);
     ~KImportPage();
 
     Ui::KImportPageDlg *widget();

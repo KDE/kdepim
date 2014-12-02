@@ -36,7 +36,7 @@ class PageColorBackgroundWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit PageColorBackgroundWidget(QWidget *parent = 0);
+    explicit PageColorBackgroundWidget(QWidget *parent = Q_NULLPTR);
     ~PageColorBackgroundWidget();
 
     QColor pageBackgroundColor() const;

@@ -103,7 +103,7 @@ class CalPrintDialog : public QDialog
     Q_OBJECT
 public:
     explicit CalPrintDialog(int initialPrintType, PrintPlugin::List plugins,
-                            QWidget *parent = 0, bool mUniqItem = false);
+                            QWidget *parent = Q_NULLPTR, bool mUniqItem = false);
 
     virtual ~CalPrintDialog();
 

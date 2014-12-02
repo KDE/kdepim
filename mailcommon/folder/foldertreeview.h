@@ -45,9 +45,9 @@ class MAILCOMMON_EXPORT FolderTreeView : public Akonadi::EntityTreeView
     Q_OBJECT
 
 public:
-    explicit FolderTreeView(QWidget *parent = 0, bool showUnreadCount = true);
+    explicit FolderTreeView(QWidget *parent = Q_NULLPTR, bool showUnreadCount = true);
 
-    explicit FolderTreeView(KXMLGUIClient *xmlGuiClient, QWidget *parent = 0,
+    explicit FolderTreeView(KXMLGUIClient *xmlGuiClient, QWidget *parent = Q_NULLPTR,
                             bool showUnreadCount = true);
 
     virtual ~FolderTreeView();

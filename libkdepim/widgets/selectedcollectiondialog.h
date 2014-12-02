@@ -38,7 +38,7 @@ class SelectedCollectionDialog : public Akonadi::CollectionDialog
 {
     Q_OBJECT
 public:
-    explicit SelectedCollectionDialog(QWidget *parent = 0);
+    explicit SelectedCollectionDialog(QWidget *parent = Q_NULLPTR);
     ~SelectedCollectionDialog();
 
 private:

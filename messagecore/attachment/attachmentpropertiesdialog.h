@@ -49,7 +49,7 @@ public:
      * @param parent The parent object.
      */
     explicit AttachmentPropertiesDialog(const AttachmentPart::Ptr &part,
-                                        bool readOnly = false, QWidget *parent = 0);
+                                        bool readOnly = false, QWidget *parent = Q_NULLPTR);
 
     /**
      * Creates a new attachment properties dialog.
@@ -61,7 +61,7 @@ public:
      *       Therefore, saving the changes to the KMime::Content is not supported,
      *       and the dialog is in readOnly mode.
      */
-    explicit AttachmentPropertiesDialog(const KMime::Content *content, QWidget *parent = 0);
+    explicit AttachmentPropertiesDialog(const KMime::Content *content, QWidget *parent = Q_NULLPTR);
 
     /**
      * Destroys the attachment properties dialog.

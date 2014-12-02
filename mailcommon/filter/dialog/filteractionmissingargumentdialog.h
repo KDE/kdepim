@@ -57,7 +57,7 @@ public:
     explicit FilterActionMissingCollectionDialog(const Akonadi::Collection::List &list,
             const QString &filtername = QString(),
             const QString &argStr = QString(),
-            QWidget *parent = 0);
+            QWidget *parent = Q_NULLPTR);
     ~FilterActionMissingCollectionDialog();
 
     Akonadi::Collection selectedCollection() const;
@@ -91,7 +91,7 @@ class FilterActionMissingIdentityDialog : public QDialog
     Q_OBJECT
 public:
     explicit FilterActionMissingIdentityDialog(const QString &filtername,
-            QWidget *parent = 0);
+            QWidget *parent = Q_NULLPTR);
     ~FilterActionMissingIdentityDialog();
     int selectedIdentity() const;
 
@@ -106,7 +106,7 @@ class FilterActionMissingTransportDialog : public QDialog
     Q_OBJECT
 public:
     explicit FilterActionMissingTransportDialog(const QString &filtername,
-            QWidget *parent = 0);
+            QWidget *parent = Q_NULLPTR);
     ~FilterActionMissingTransportDialog();
     int selectedTransport() const;
 
@@ -122,7 +122,7 @@ class FilterActionMissingTemplateDialog : public QDialog
 public:
     explicit FilterActionMissingTemplateDialog(const QStringList &templateList,
             const QString &filtername,
-            QWidget *parent = 0);
+            QWidget *parent = Q_NULLPTR);
     ~FilterActionMissingTemplateDialog();
     QString selectedTemplate() const;
 
@@ -138,7 +138,7 @@ class FilterActionMissingAccountDialog : public QDialog
 public:
     explicit FilterActionMissingAccountDialog(const QStringList &lstAccount,
             const QString &filtername,
-            QWidget *parent = 0);
+            QWidget *parent = Q_NULLPTR);
     ~FilterActionMissingAccountDialog();
     QStringList selectedAccount() const;
     static bool allAccountExist(const QStringList &lst);
@@ -156,7 +156,7 @@ public:
     explicit FilterActionMissingTagDialog(const QMap<QUrl, QString> &templateList,
                                           const QString &filtername,
                                           const QString &argsStr,
-                                          QWidget *parent = 0);
+                                          QWidget *parent = Q_NULLPTR);
     ~FilterActionMissingTagDialog();
     QString selectedTag() const;
 
@@ -179,7 +179,7 @@ class FilterActionMissingSoundUrlDialog : public QDialog
 public:
     explicit FilterActionMissingSoundUrlDialog(const QString &filtername,
             const QString &argStr,
-            QWidget *parent = 0);
+            QWidget *parent = Q_NULLPTR);
     ~FilterActionMissingSoundUrlDialog();
     QString soundUrl() const;
 

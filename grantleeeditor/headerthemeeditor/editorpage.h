@@ -33,7 +33,7 @@ class EditorPage : public GrantleeThemeEditor::EditorPage
 {
     Q_OBJECT
 public:
-    explicit EditorPage(GrantleeThemeEditor::EditorPage::PageType type, const QString &projectDirectory, QWidget *parent = 0);
+    explicit EditorPage(GrantleeThemeEditor::EditorPage::PageType type, const QString &projectDirectory, QWidget *parent = Q_NULLPTR);
     ~EditorPage();
 
     GrantleeThemeEditor::PreviewWidget *preview() const;

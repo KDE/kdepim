@@ -33,8 +33,8 @@ class TagPropertiesDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit TagPropertiesDialog(QWidget *parent = 0);
-    explicit TagPropertiesDialog(const Akonadi::Tag &tag, QWidget *parent = 0);
+    explicit TagPropertiesDialog(QWidget *parent = Q_NULLPTR);
+    explicit TagPropertiesDialog(const Akonadi::Tag &tag, QWidget *parent = Q_NULLPTR);
     virtual ~TagPropertiesDialog();
 
     Akonadi::Tag tag() const;

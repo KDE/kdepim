@@ -36,7 +36,7 @@ class SieveEditorPageWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SieveEditorPageWidget(QWidget *parent = 0);
+    explicit SieveEditorPageWidget(QWidget *parent = Q_NULLPTR);
     ~SieveEditorPageWidget();
 
     void loadScript(const QUrl &url, const QStringList &capabilities);

@@ -33,7 +33,7 @@ class MAILIMPORTER_EXPORT SelectThunderbirdProfileWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit SelectThunderbirdProfileWidget(QWidget *parent = 0);
+    explicit SelectThunderbirdProfileWidget(QWidget *parent = Q_NULLPTR);
     ~SelectThunderbirdProfileWidget();
 
     void fillProfile(const QMap<QString, QString> &map, const QString &defaultProfile);
@@ -47,7 +47,7 @@ class SelectThunderbirdProfileDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit SelectThunderbirdProfileDialog(QWidget *parent = 0);
+    explicit SelectThunderbirdProfileDialog(QWidget *parent = Q_NULLPTR);
     ~SelectThunderbirdProfileDialog();
     QString selectedProfile() const;
     void fillProfile(const QMap<QString, QString> &map, const QString &defaultProfile);

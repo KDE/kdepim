@@ -47,7 +47,7 @@ class MainView : public KDeclarativeMainView
 {
   Q_OBJECT
   public:
-    explicit MainView( QWidget *parent = 0 );
+    explicit MainView( QWidget *parent = Q_NULLPTR );
     ~MainView();
 
     void setConfigWidget( ConfigWidget *configWidget );

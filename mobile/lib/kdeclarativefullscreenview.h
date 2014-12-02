@@ -47,7 +47,7 @@ class MOBILEUI_EXPORT KDeclarativeFullScreenView : public QDeclarativeView
     *
     * @param qmlFileName is used to find the QML file in ${APP_DATA_DIR}/qmlFileName.qml
     */
-    KDeclarativeFullScreenView( const QString &qmlFileName, QWidget *parent = 0 );
+    KDeclarativeFullScreenView( const QString &qmlFileName, QWidget *parent = Q_NULLPTR );
     virtual ~KDeclarativeFullScreenView();
 
   public Q_SLOTS:

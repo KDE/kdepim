@@ -45,7 +45,7 @@ class INCIDENCEEDITORS_NG_EXPORT CategoryEditDialog : public QDialog
     Q_OBJECT
 public:
     explicit CategoryEditDialog(CalendarSupport::CategoryConfig *categoryConfig,
-                                QWidget *parent = 0);
+                                QWidget *parent = Q_NULLPTR);
 
     ~CategoryEditDialog();
 

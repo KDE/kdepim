@@ -25,7 +25,7 @@ namespace PimCommon
 class ImportKMailAutocorrection : public ImportAbstractAutocorrection
 {
 public:
-    explicit ImportKMailAutocorrection(QWidget *parent = 0);
+    explicit ImportKMailAutocorrection(QWidget *parent = Q_NULLPTR);
     ~ImportKMailAutocorrection();
     bool import(const QString &fileName, ImportAbstractAutocorrection::LoadAttribute loadAttribute = All) Q_DECL_OVERRIDE;
 };

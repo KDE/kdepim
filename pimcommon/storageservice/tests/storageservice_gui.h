@@ -32,7 +32,7 @@ class StorageServiceSettingsDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit StorageServiceSettingsDialog(QWidget *parent = 0);
+    explicit StorageServiceSettingsDialog(QWidget *parent = Q_NULLPTR);
     QMap<QString, PimCommon::StorageServiceAbstract *> listService() const;
     void setListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &lst);
 
@@ -44,7 +44,7 @@ class StorageServiceTestWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit StorageServiceTestWidget(QWidget *parent = 0);
+    explicit StorageServiceTestWidget(QWidget *parent = Q_NULLPTR);
 
 private slots:
     void slotSettings();

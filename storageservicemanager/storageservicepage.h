@@ -39,7 +39,7 @@ class StorageServicePage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit StorageServicePage(const QString &serviceName, PimCommon::StorageServiceAbstract *storageService, QWidget *parent = 0);
+    explicit StorageServicePage(const QString &serviceName, PimCommon::StorageServiceAbstract *storageService, QWidget *parent = Q_NULLPTR);
     ~StorageServicePage();
 
     void authenticate();

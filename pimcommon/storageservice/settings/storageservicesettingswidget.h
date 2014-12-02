@@ -36,7 +36,7 @@ class PIMCOMMON_EXPORT StorageServiceSettingsWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit StorageServiceSettingsWidget(QWidget *parent = 0);
+    explicit StorageServiceSettingsWidget(QWidget *parent = Q_NULLPTR);
     ~StorageServiceSettingsWidget();
 
     void setListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &lst, const QList<StorageServiceAbstract::Capability> &lstCap = QList<PimCommon::StorageServiceAbstract::Capability>() << PimCommon::StorageServiceAbstract::AccountInfoCapability);

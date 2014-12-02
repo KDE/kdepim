@@ -30,7 +30,7 @@ class SieveForEveryPartWidget : public SieveWidgetPageAbstract
 {
     Q_OBJECT
 public:
-    explicit SieveForEveryPartWidget(QWidget *parent = 0);
+    explicit SieveForEveryPartWidget(QWidget *parent = Q_NULLPTR);
     ~SieveForEveryPartWidget();
 
     void generatedScript(QString &script, QStringList &requires);

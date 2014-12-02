@@ -27,7 +27,7 @@ class AutoCorrectionListWidget : public QListWidget
 {
     Q_OBJECT
 public:
-    explicit AutoCorrectionListWidget(QWidget *parent = 0);
+    explicit AutoCorrectionListWidget(QWidget *parent = Q_NULLPTR);
     ~AutoCorrectionListWidget();
 
 protected:

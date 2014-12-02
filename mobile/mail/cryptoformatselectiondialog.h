@@ -42,7 +42,7 @@ class CryptoFormatSelectionDialog : public QDialog
      *
      * @param parent The parent widget.
      */
-    explicit CryptoFormatSelectionDialog( QWidget *parent = 0 );
+    explicit CryptoFormatSelectionDialog( QWidget *parent = Q_NULLPTR );
 
     /**
      * Destroys the crypto format selection dialog.

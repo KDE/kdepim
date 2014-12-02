@@ -57,8 +57,8 @@ class SelfTestDialog : public QDialog
     Q_OBJECT
     Q_PROPERTY(bool runAtStartUp READ runAtStartUp WRITE setRunAtStartUp)
 public:
-    explicit SelfTestDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
-    explicit SelfTestDialog(const std::vector< boost::shared_ptr<SelfTest> > &tests, QWidget *parent = 0, Qt::WindowFlags f = 0);
+    explicit SelfTestDialog(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = 0);
+    explicit SelfTestDialog(const std::vector< boost::shared_ptr<SelfTest> > &tests, QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = 0);
     ~SelfTestDialog();
 
     void setAutomaticMode(bool automatic);

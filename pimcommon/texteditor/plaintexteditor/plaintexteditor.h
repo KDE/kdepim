@@ -31,7 +31,7 @@ class PIMCOMMON_EXPORT PlainTextEditor : public QPlainTextEdit
     Q_PROPERTY(bool spellCheckingSupport READ spellCheckingSupport WRITE setSpellCheckingSupport)
     Q_PROPERTY(bool textToSpeechSupport READ textToSpeechSupport WRITE setTextToSpeechSupport)
 public:
-    explicit PlainTextEditor(QWidget *parent = 0);
+    explicit PlainTextEditor(QWidget *parent = Q_NULLPTR);
     ~PlainTextEditor();
 
     enum SupportFeature {

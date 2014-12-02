@@ -96,7 +96,7 @@ public:
                        unsigned int keyUsage = AllKeys,
                        bool extendedSelection = false,
                        bool rememberChoice = false,
-                       QWidget *parent = 0,
+                       QWidget *parent = Q_NULLPTR,
                        bool modal = true);
     KeySelectionDialog(const QString &title,
                        const QString &text,
@@ -105,7 +105,7 @@ public:
                        unsigned int keyUsage = AllKeys,
                        bool extendedSelection = false,
                        bool rememberChoice = false,
-                       QWidget *parent = 0,
+                       QWidget *parent = Q_NULLPTR,
                        bool modal = true);
     KeySelectionDialog(const QString &title,
                        const QString &text,
@@ -113,7 +113,7 @@ public:
                        unsigned int keyUsage = AllKeys,
                        bool extendedSelection = false,
                        bool rememberChoice = false,
-                       QWidget *parent = 0,
+                       QWidget *parent = Q_NULLPTR,
                        bool modal = true);
     ~KeySelectionDialog();
 

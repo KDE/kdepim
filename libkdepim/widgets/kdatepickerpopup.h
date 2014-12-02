@@ -74,7 +74,7 @@ public:
      */
     explicit KDatePickerPopup(Modes modes = DatePicker,
                               const QDate &date = QDate::currentDate(),
-                              QWidget *parent = 0);
+                              QWidget *parent = Q_NULLPTR);
 
     /**
      * Destroys the date picker popup.

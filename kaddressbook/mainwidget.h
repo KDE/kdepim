@@ -70,7 +70,7 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit MainWidget(KXMLGUIClient *guiClient, QWidget *parent = 0);
+    explicit MainWidget(KXMLGUIClient *guiClient, QWidget *parent = Q_NULLPTR);
     ~MainWidget();
 
     XXPortManager *importManager() const;

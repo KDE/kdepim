@@ -46,7 +46,7 @@ public:
 
         MaxTypeElement
     };
-    explicit AdBlockBlockableItemsWidget(QWidget *parent = 0);
+    explicit AdBlockBlockableItemsWidget(QWidget *parent = Q_NULLPTR);
     ~AdBlockBlockableItemsWidget();
 
     static QString elementTypeToI18n(AdBlockBlockableItemsWidget::TypeElement type);

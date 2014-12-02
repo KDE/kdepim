@@ -71,7 +71,7 @@ class SieveConditionWidgetLister : public KPIM::KWidgetLister
 {
     Q_OBJECT
 public:
-    explicit SieveConditionWidgetLister(QWidget *parent = 0);
+    explicit SieveConditionWidgetLister(QWidget *parent = Q_NULLPTR);
     ~SieveConditionWidgetLister();
 
     void generatedScript(QString &script, int &numberOfCondition, QStringList &requires);

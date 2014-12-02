@@ -29,7 +29,7 @@ class KADDRESSBOOK_EXPORT MergeContactShowResultTabWidget : public QTabWidget
 {
     Q_OBJECT
 public:
-    explicit MergeContactShowResultTabWidget(QWidget *parent = 0);
+    explicit MergeContactShowResultTabWidget(QWidget *parent = Q_NULLPTR);
     ~MergeContactShowResultTabWidget();
 
     void updateTabWidget();

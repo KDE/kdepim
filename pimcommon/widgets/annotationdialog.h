@@ -49,7 +49,7 @@ public:
      * @param item The item.
      * @param parent The parent widget.
      */
-    explicit AnnotationEditDialog(const Akonadi::Item &item, QWidget *parent = 0);
+    explicit AnnotationEditDialog(const Akonadi::Item &item, QWidget *parent = Q_NULLPTR);
 
     /**
      * Destroys the annotation edit dialog.

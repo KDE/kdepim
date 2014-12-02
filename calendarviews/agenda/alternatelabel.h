@@ -35,7 +35,7 @@ class EVENTVIEWS_EXPORT AlternateLabel : public QLabel
     Q_OBJECT
 public:
     AlternateLabel(const QString &shortlabel, const QString &longlabel,
-                   const QString &extensivelabel = QString(), QWidget *parent = 0);
+                   const QString &extensivelabel = QString(), QWidget *parent = Q_NULLPTR);
     ~AlternateLabel();
 
     virtual QSize minimumSizeHint() const;

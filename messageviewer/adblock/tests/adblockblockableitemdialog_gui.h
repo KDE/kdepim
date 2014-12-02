@@ -33,7 +33,7 @@ class AdBlockBlockableItemTestDialog : public QWidget
 {
     Q_OBJECT
 public:
-    explicit AdBlockBlockableItemTestDialog(const QString &filename, QWidget *parent = 0);
+    explicit AdBlockBlockableItemTestDialog(const QString &filename, QWidget *parent = Q_NULLPTR);
     ~AdBlockBlockableItemTestDialog();
 
 private Q_SLOTS:

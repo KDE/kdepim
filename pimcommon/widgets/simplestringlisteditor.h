@@ -67,7 +67,7 @@ public:
     };
 
     /** Constructor. Populates the list with @p strings. */
-    explicit SimpleStringListEditor(QWidget *parent = 0,
+    explicit SimpleStringListEditor(QWidget *parent = Q_NULLPTR,
                                     ButtonCode buttons = Unsorted,
                                     const QString &addLabel = QString(),
                                     const QString &removeLabel = QString(),

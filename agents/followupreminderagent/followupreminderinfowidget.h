@@ -45,7 +45,7 @@ class FollowUpReminderInfoWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit FollowUpReminderInfoWidget(QWidget *parent = 0);
+    explicit FollowUpReminderInfoWidget(QWidget *parent = Q_NULLPTR);
     ~FollowUpReminderInfoWidget();
 
     void restoreTreeWidgetHeader(const QByteArray &data);

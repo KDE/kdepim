@@ -36,7 +36,7 @@ class CALENDARSUPPORT_EXPORT CollectionGeneralPage : public Akonadi::CollectionP
     Q_OBJECT
 
 public:
-    explicit CollectionGeneralPage(QWidget *parent = 0);
+    explicit CollectionGeneralPage(QWidget *parent = Q_NULLPTR);
     ~CollectionGeneralPage();
 
     void load(const Akonadi::Collection &collection);

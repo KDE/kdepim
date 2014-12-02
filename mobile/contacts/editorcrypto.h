@@ -27,7 +27,7 @@ class EditorCrypto : public EditorBase
   Q_OBJECT
 
   public:
-    explicit EditorCrypto( QWidget *parent = 0 );
+    explicit EditorCrypto( QWidget *parent = Q_NULLPTR );
 
     ~EditorCrypto();
 

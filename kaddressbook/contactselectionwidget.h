@@ -51,7 +51,7 @@ public:
      * @param selectionModel The model that contains the currently selected contacts.
      * @param parent The parent widget.
      */
-    explicit ContactSelectionWidget(QItemSelectionModel *selectionModel, QWidget *parent = 0);
+    explicit ContactSelectionWidget(QItemSelectionModel *selectionModel, QWidget *parent = Q_NULLPTR);
 
     /**
      * Sets the @p message text.

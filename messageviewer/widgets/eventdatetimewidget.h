@@ -30,7 +30,7 @@ class MESSAGEVIEWER_EXPORT EventDateTimeWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit EventDateTimeWidget(QWidget *parent = 0);
+    explicit EventDateTimeWidget(QWidget *parent = Q_NULLPTR);
     ~EventDateTimeWidget();
 
     void setMinimumDateTime(const QDateTime &dateTime);

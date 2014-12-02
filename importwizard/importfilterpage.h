@@ -29,7 +29,7 @@ class ImportFilterPage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ImportFilterPage(QWidget *parent = 0);
+    explicit ImportFilterPage(QWidget *parent = Q_NULLPTR);
     ~ImportFilterPage();
 
     void addImportInfo(const QString &log);

@@ -73,7 +73,7 @@ public:
      * @param maxWidgets The maximum number of widgets to stay on the screen.
      * @param parent The parent widget.
      */
-    explicit KWidgetLister(bool fewerMoreButton, int minWidgets = 1, int maxWidgets = 8, QWidget *parent = 0);
+    explicit KWidgetLister(bool fewerMoreButton, int minWidgets = 1, int maxWidgets = 8, QWidget *parent = Q_NULLPTR);
 
     /**
      * Destroys the widget lister.

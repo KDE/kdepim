@@ -29,7 +29,7 @@ class MESSAGEVIEWER_EXPORT PrintingSettings : public QWidget
 {
     Q_OBJECT
 public:
-    explicit PrintingSettings(QWidget *parent = 0);
+    explicit PrintingSettings(QWidget *parent = Q_NULLPTR);
     ~PrintingSettings();
 
     void save();

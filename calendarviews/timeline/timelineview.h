@@ -40,7 +40,7 @@ class EVENTVIEWS_EXPORT TimelineView : public EventView
 {
     Q_OBJECT
 public:
-    explicit TimelineView(QWidget *parent = 0);
+    explicit TimelineView(QWidget *parent = Q_NULLPTR);
     ~TimelineView();
 
     virtual Akonadi::Item::List selectedIncidences() const;

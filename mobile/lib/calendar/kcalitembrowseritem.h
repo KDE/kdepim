@@ -40,7 +40,7 @@ class ExtendedIncidenceViewer : public IncidenceViewer
   Q_OBJECT
 
   public:
-    explicit ExtendedIncidenceViewer( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *parent = 0 );
+    explicit ExtendedIncidenceViewer( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *parent = Q_NULLPTR );
 
   Q_SIGNALS:
     void incidenceRemoved();

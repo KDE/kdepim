@@ -25,7 +25,7 @@ class SelectAddHeaderPositionCombobox : public KComboBox
 {
     Q_OBJECT
 public:
-    explicit SelectAddHeaderPositionCombobox(QWidget *parent = 0);
+    explicit SelectAddHeaderPositionCombobox(QWidget *parent = Q_NULLPTR);
     ~SelectAddHeaderPositionCombobox();
 
     QString code() const;

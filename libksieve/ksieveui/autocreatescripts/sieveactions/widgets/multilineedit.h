@@ -26,7 +26,7 @@ class MultiLineEdit : public PimCommon::RichTextEditor
 {
     Q_OBJECT
 public:
-    explicit MultiLineEdit(QWidget *parent = 0);
+    explicit MultiLineEdit(QWidget *parent = Q_NULLPTR);
     ~MultiLineEdit();
 
 Q_SIGNALS:

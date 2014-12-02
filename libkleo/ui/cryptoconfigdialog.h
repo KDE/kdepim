@@ -48,7 +48,7 @@ class KLEO_EXPORT CryptoConfigDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit CryptoConfigDialog(Kleo::CryptoConfig *config, QWidget *parent = 0);
+    explicit CryptoConfigDialog(Kleo::CryptoConfig *config, QWidget *parent = Q_NULLPTR);
 
 protected Q_SLOTS:
     void slotOk();

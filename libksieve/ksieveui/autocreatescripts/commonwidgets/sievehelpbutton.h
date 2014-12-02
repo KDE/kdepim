@@ -26,7 +26,7 @@ class SieveHelpButton : public QToolButton
 {
     Q_OBJECT
 public:
-    explicit SieveHelpButton(QWidget *parent = 0);
+    explicit SieveHelpButton(QWidget *parent = Q_NULLPTR);
     ~SieveHelpButton();
 
 protected:

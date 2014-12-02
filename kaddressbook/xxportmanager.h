@@ -47,7 +47,7 @@ public:
      *
      * @param parent The widget that is used as parent for dialogs.
      */
-    explicit XXPortManager(QWidget *parent = 0);
+    explicit XXPortManager(QWidget *parent = Q_NULLPTR);
 
     /**
      * Destroys the xxport manager.

@@ -29,7 +29,7 @@ class SelectFileIntoDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit SelectFileIntoDialog(QWidget *parent = 0);
+    explicit SelectFileIntoDialog(QWidget *parent = Q_NULLPTR);
     ~SelectFileIntoDialog();
 
     QString selectedFolder() const;
@@ -39,7 +39,7 @@ class SelectFileIntoWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SelectFileIntoWidget(QWidget *parent = 0);
+    explicit SelectFileIntoWidget(QWidget *parent = Q_NULLPTR);
     ~SelectFileIntoWidget();
 
     QString selectedFolder() const;

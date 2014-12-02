@@ -45,7 +45,7 @@ class KWatchGnuPGMainWindow : public KXmlGuiWindow
 {
     Q_OBJECT
 public:
-    explicit KWatchGnuPGMainWindow(QWidget *parent = 0);
+    explicit KWatchGnuPGMainWindow(QWidget *parent = Q_NULLPTR);
     ~KWatchGnuPGMainWindow();
 
 private Q_SLOTS:

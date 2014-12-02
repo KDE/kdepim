@@ -37,7 +37,7 @@ class EditorBase : public QWidget
   Q_OBJECT
 
   public:
-    explicit EditorBase( QWidget *parent = 0 );
+    explicit EditorBase( QWidget *parent = Q_NULLPTR );
 
     ~EditorBase();
 

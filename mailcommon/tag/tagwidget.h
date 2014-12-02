@@ -39,7 +39,7 @@ class MAILCOMMON_EXPORT TagWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit TagWidget(const QList<KActionCollection *> &actionCollections, QWidget *parent = 0);
+    explicit TagWidget(const QList<KActionCollection *> &actionCollections, QWidget *parent = Q_NULLPTR);
     ~TagWidget();
 
     MailCommon::Tag::SaveFlags saveFlags() const;

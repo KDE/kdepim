@@ -58,7 +58,7 @@ class TabWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit TabWidget(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    explicit TabWidget(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = 0);
     ~TabWidget();
 
     void setFlatModel(AbstractKeyListModel *model);

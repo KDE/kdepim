@@ -28,7 +28,7 @@ class SieveInfoWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SieveInfoWidget(QWidget *parent = 0);
+    explicit SieveInfoWidget(QWidget *parent = Q_NULLPTR);
     ~SieveInfoWidget();
 
     void setServerInfo(QStringList info);

@@ -142,7 +142,7 @@ public:
 
     explicit KeyListView(const ColumnStrategy *strategy,
                          const DisplayStrategy *display = 0,
-                         QWidget *parent = 0, Qt::WindowFlags f = 0);
+                         QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = 0);
 
     ~KeyListView();
 

@@ -39,7 +39,7 @@ class AttachPropertyDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit AttachPropertyDialog(QWidget *parent = 0);
+    explicit AttachPropertyDialog(QWidget *parent = Q_NULLPTR);
     ~AttachPropertyDialog();
 
     void setAttachment(KTNEFAttach *attach);
