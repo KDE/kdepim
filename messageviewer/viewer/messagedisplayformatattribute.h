@@ -22,12 +22,13 @@
 #define MESSAGEDISPLAYFORMATATTRIBUTE_H
 
 #include <AkonadiCore/attribute.h>
+#include "messageviewer_export.h"
 #include "viewer/viewer.h"
 namespace MessageViewer
 {
 class MessageDisplayFormatAttributePrivate;
 
-class MessageDisplayFormatAttribute : public Akonadi::Attribute
+class MESSAGEVIEWER_EXPORT MessageDisplayFormatAttribute : public Akonadi::Attribute
 {
 public:
     explicit MessageDisplayFormatAttribute();
