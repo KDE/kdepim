@@ -35,7 +35,7 @@ public:
     ~MainWindow();
 
 protected:
-    void closeEvent(QCloseEvent *event);
+    void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
 
 private:
     MainWidget *mMain;

@@ -221,7 +221,7 @@ protected:
 
     void removeIncidence(const KCalCore::Incidence::Ptr &inc);
 
-    virtual void resizeEvent(QResizeEvent *resizeEvent);
+    void resizeEvent(QResizeEvent *resizeEvent) Q_DECL_OVERRIDE;
 
 protected Q_SLOTS:
     void updateEventIndicatorTop(int newY);

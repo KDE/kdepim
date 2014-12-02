@@ -68,7 +68,7 @@ public Q_SLOTS:
     void slotLayoutFirstItem();
 
 protected:
-    virtual void resizeEvent(QResizeEvent *event);
+    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
 private:
     QWidget *mBigBox;
@@ -152,7 +152,7 @@ Q_SIGNALS:
     void visibilityChanged(bool);
 
 protected:
-    virtual void closeEvent(QCloseEvent *);
+    virtual void closeEvent(QCloseEvent *) Q_DECL_OVERRIDE;
 
     TransactionItemView *mScrollView;
     QMap<const ProgressItem *, TransactionItem *> mTransactionsToListviewItems;

@@ -88,7 +88,7 @@ protected Q_SLOTS:
     void slotCancelClicked();
 
 protected:
-    void closeEvent(QCloseEvent *);
+    void closeEvent(QCloseEvent *) Q_DECL_OVERRIDE;
 
 private:
     //@cond PRIVATE

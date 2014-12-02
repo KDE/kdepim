@@ -52,7 +52,7 @@ class ContactGroupEditorView : public KDeclarativeFullScreenView
     void requestLaunchAccountWizard();
 
   protected:
-    void closeEvent( QCloseEvent *event );
+    void closeEvent( QCloseEvent *event ) Q_DECL_OVERRIDE;
     virtual void doDelayedInit();
 
   private:

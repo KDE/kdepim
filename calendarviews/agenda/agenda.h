@@ -247,7 +247,7 @@ protected:
     void drawContents(QPainter *p, int cx, int cy, int cw, int ch);
 
     int columnWidth(int column) const;
-    virtual void resizeEvent(QResizeEvent *);
+    void resizeEvent(QResizeEvent *) Q_DECL_OVERRIDE;
 
     /** Handles mouse events. Called from eventFilter */
     virtual bool eventFilter_mouse(QObject *, QMouseEvent *);
