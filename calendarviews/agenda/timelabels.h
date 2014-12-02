@@ -60,7 +60,7 @@ public:
     void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
 
     /** */
-    virtual void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
+    void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
 
     /** Returns time spec of this label */
     KDateTime::Spec timeSpec();

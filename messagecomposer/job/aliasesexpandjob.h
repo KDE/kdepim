@@ -61,7 +61,7 @@ public:
     /**
      * Starts the job.
      */
-    virtual void start() Q_DECL_OVERRIDE;
+    void start() Q_DECL_OVERRIDE;
 
     /**
      * Returns the expanded email addresses.

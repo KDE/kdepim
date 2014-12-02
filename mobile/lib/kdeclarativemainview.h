@@ -322,7 +322,7 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
 
     Akonadi::Item itemFromId( quint64 id ) const;
 
-    virtual void keyPressEvent( QKeyEvent *event ) Q_DECL_OVERRIDE;
+    void keyPressEvent( QKeyEvent *event ) Q_DECL_OVERRIDE;
 
     virtual QAbstractItemModel* createItemModelContext( QDeclarativeContext *context, QAbstractItemModel *model );
     void setItemNaigationAndActionSelectionModels( QItemSelectionModel *itemNavigationSelectionModel, QItemSelectionModel *itemActionSelectionModel );

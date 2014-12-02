@@ -46,10 +46,10 @@ protected:
     // Inherited. Always called by the parent when this widget is created.
     virtual void loadContacts();
 
-    virtual void keyPressEvent(QKeyEvent *) Q_DECL_OVERRIDE;
+    void keyPressEvent(QKeyEvent *) Q_DECL_OVERRIDE;
 
 #ifndef QT_NO_CONTEXTMENU
-    virtual void contextMenuEvent(QContextMenuEvent *e) Q_DECL_OVERRIDE;
+    void contextMenuEvent(QContextMenuEvent *e) Q_DECL_OVERRIDE;
 #endif
 
 private slots:

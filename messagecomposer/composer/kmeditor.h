@@ -224,7 +224,7 @@ protected:
     /**
      * Reimplemented to start the external editor and to emit focusUp().
      */
-    virtual void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
+    void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
 
 private:
     KMeditorPrivate *const d;

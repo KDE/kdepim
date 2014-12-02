@@ -39,7 +39,7 @@ class KBreadcrumbNavigationProxyModel : public Akonadi::SelectionProxyModel
     void setShowHiddenAscendantData( bool showHiddenAscendantData );
     bool showHiddenAscendantData() const;
 
-    virtual QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const Q_DECL_OVERRIDE;
+    QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const Q_DECL_OVERRIDE;
 
   private:
     bool m_showHiddenAscendantData;

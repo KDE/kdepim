@@ -158,7 +158,7 @@ protected:
     /**
      * Reimplemented for internal reasons.
      */
-    virtual void keyPressEvent(QKeyEvent *) Q_DECL_OVERRIDE;
+    void keyPressEvent(QKeyEvent *) Q_DECL_OVERRIDE;
 
 #ifndef QT_NO_CONTEXTMENU
     /**
@@ -171,7 +171,7 @@ protected:
      *
      * See QLineEdit::contextMenuEvent().
      */
-    virtual void contextMenuEvent(QContextMenuEvent *) Q_DECL_OVERRIDE;
+    void contextMenuEvent(QContextMenuEvent *) Q_DECL_OVERRIDE;
 #endif
 
 private:

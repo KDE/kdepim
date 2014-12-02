@@ -396,42 +396,42 @@ protected:
     /**
     * Reimplemented in order to handle clicks with sub-item precision.
     */
-    virtual void mousePressEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
+    void mousePressEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
 
     /**
     * Reimplemented in order to handle double clicks with sub-item precision.
     */
-    virtual void mouseDoubleClickEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
+    void mouseDoubleClickEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
 
     /**
     * Reimplemented in order to handle DnD
     */
-    virtual void mouseMoveEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
+    void mouseMoveEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
 
     /**
     * Reimplemented in order to handle context menu request via keyboard
     */
-    virtual void contextMenuEvent(QContextMenuEvent *e) Q_DECL_OVERRIDE;
+    void contextMenuEvent(QContextMenuEvent *e) Q_DECL_OVERRIDE;
 
     /**
     * Reimplemented in order to handle message DnD
     */
-    virtual void dragEnterEvent(QDragEnterEvent *e) Q_DECL_OVERRIDE;
+    void dragEnterEvent(QDragEnterEvent *e) Q_DECL_OVERRIDE;
 
     /**
     * Reimplemented in order to handle message DnD
     */
-    virtual void dragMoveEvent(QDragMoveEvent *e) Q_DECL_OVERRIDE;
+    void dragMoveEvent(QDragMoveEvent *e) Q_DECL_OVERRIDE;
 
     /**
     * Reimplemented in order to handle message DnD
     */
-    virtual void dropEvent(QDropEvent *e) Q_DECL_OVERRIDE;
+    void dropEvent(QDropEvent *e) Q_DECL_OVERRIDE;
 
     /**
     * Reimplemented in order to resize columns when header is not visible
     */
-    virtual void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
+    void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
 
     /**
     * Reimplemented in order to kill the QTreeView column auto-resizing

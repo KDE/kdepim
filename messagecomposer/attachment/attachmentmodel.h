@@ -79,9 +79,9 @@ public:
 
     virtual bool dropMimeData(const QMimeData *data, Qt::DropAction action,
                               int row, int column, const QModelIndex &parent);
-    virtual QMimeData *mimeData(const QModelIndexList &indexes) const Q_DECL_OVERRIDE;
+    QMimeData *mimeData(const QModelIndexList &indexes) const Q_DECL_OVERRIDE;
     virtual QStringList mimeTypes() const;
-    virtual Qt::DropActions supportedDropActions() const Q_DECL_OVERRIDE;
+    Qt::DropActions supportedDropActions() const Q_DECL_OVERRIDE;
 
     /// for the save/discard warning
     bool isModified() const;
@@ -101,8 +101,8 @@ public:
     bool isAutoDisplayEnabled() const;
     void setAutoDisplayEnabled(bool enabled);
 
-    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-    virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
 
     bool addAttachment(MessageCore::AttachmentPart::Ptr part);
     bool updateAttachment(MessageCore::AttachmentPart::Ptr part);
@@ -115,9 +115,9 @@ public:
                                 int role = Qt::DisplayRole) const;
     virtual QModelIndex index(int row, int column,
                               const QModelIndex &parent = QModelIndex()) const;
-    virtual QModelIndex parent(const QModelIndex &index) const Q_DECL_OVERRIDE;
-    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QModelIndex parent(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
 signals:
     void encryptEnabled(bool enabled);
