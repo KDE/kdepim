@@ -112,7 +112,7 @@ void ServerSieveSettings::slotUserServerNameChanged()
 
 QString ServerSieveSettings::serverName() const
 {
-    return ui->serverName->text();
+    return ui->serverName->text().trimmed();
 }
 
 void ServerSieveSettings::setServerName(const QString &name)
@@ -132,7 +132,7 @@ void ServerSieveSettings::setPort(int value)
 
 QString ServerSieveSettings::userName() const
 {
-    return ui->userName->text();
+    return ui->userName->text().trimmed();
 }
 
 void ServerSieveSettings::setUserName(const QString &name)
