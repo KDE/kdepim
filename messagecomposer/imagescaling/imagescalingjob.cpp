@@ -22,8 +22,7 @@
 
 using namespace MessageComposer;
 
-ImageScalingJob::ImageScalingJob(QObject *parent)
-    :QObject(parent)
+ImageScalingJob::ImageScalingJob()
 {
 }
 

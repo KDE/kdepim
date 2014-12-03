@@ -508,15 +508,14 @@ void Composer::addAttachmentPart( AttachmentPart::Ptr part, bool autoresizeImage
     Q_ASSERT( !d->attachmentParts.contains( part ) );
     if( autoresizeImage ) {
         if (MessageComposer::Utils::resizeImage(part)) {
-            MessageComposer::ImageScalingJob *autoResizeJob = new MessageComposer::ImageScalingJob(this);
-            if(autoResizeJob->loadImageFromData(part->data())) {
-                if(autoResizeJob->resizeImage()) {
-                    part->setData(autoResizeJob->imageArray());
-                    part->setMimeType(autoResizeJob->mimetype());
+            MessageComposer::ImageScalingJob autoResizeJob;
+            if(autoResizeJob.loadImageFromData(part->data())) {
+                if(autoResizeJob.resizeImage()) {
+                    part->setData(autoResizeJob.imageArray());
+                    part->setMimeType(autoResizeJob.mimetype());
                     MessageComposer::Utils::changeFileName(part);
                 }
             }
-            delete autoResizeJob;
         }
     }
     d->attachmentParts.append( part );

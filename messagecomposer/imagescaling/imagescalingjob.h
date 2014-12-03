@@ -23,11 +23,10 @@
 #include <QBuffer>
 
 namespace MessageComposer {
-class ImageScalingJob : public QObject
+class ImageScalingJob
 {
-    Q_OBJECT
 public:
-    explicit ImageScalingJob(QObject *parent);
+    ImageScalingJob();
     ~ImageScalingJob();
 
     /**
