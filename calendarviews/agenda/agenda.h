@@ -76,8 +76,8 @@ public:
 
     Akonadi::Item selectedIncidence() const;
     QDate selectedIncidenceDate() const;
-    QSize sizeHint() const;
-    QSize minimumSizeHint() const;
+    QSize sizeHint() const Q_DECL_OVERRIDE;
+    QSize minimumSizeHint() const Q_DECL_OVERRIDE;
     QSize minimumSize() const;
     int minimumHeight() const;
     // QSizePolicy sizePolicy() const;

@@ -53,8 +53,8 @@ public Q_SLOTS:
     void slotShareFile();
 
 protected:
-    void paintEvent(QPaintEvent *event);
-    void createMenuActions(QMenu *menu);
+    void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
+    void createMenuActions(QMenu *menu) Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
 

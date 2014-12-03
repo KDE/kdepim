@@ -48,7 +48,7 @@ protected slots:
     void slotChangeMode(bool);
 
 protected:
-    void paintEvent(QPaintEvent *);
+    void paintEvent(QPaintEvent *) Q_DECL_OVERRIDE;
 
 private:
     void createMenu(KActionCollection *ac);

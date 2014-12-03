@@ -45,8 +45,8 @@ namespace KDGantt
 
         /*reimp*/ void scrollTo( const QModelIndex&, ScrollHint = EnsureVisible ){}
 
-        /*reimp*/ QSize sizeHint() const;
-        /*reimp*/ QSize minimumSizeHint() const;
+        /*reimp*/ QSize sizeHint() const Q_DECL_OVERRIDE;
+        /*reimp*/ QSize minimumSizeHint() const Q_DECL_OVERRIDE;
 
         /*reimp*/ void setModel( QAbstractItemModel* model );
 
@@ -55,7 +55,7 @@ namespace KDGantt
         virtual QSize measureItem( const QModelIndex& index, bool recursive = true ) const;
         virtual StyleOptionGanttItem getStyleOption( const QModelIndex& index ) const;
 
-        /*reimp*/ void paintEvent( QPaintEvent* event );
+        /*reimp*/ void paintEvent( QPaintEvent* event ) Q_DECL_OVERRIDE;
 
         /*reimp*/ int horizontalOffset() const { return 0; }
         /*reimp*/ bool isIndexHidden( const QModelIndex& ) const { return false; }

@@ -34,7 +34,7 @@ public:
     QSize sizeHint() const Q_DECL_OVERRIDE;
 
 protected:
-    void paintEvent(QPaintEvent *event);
+    void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
 private:
     SieveTextEdit *m_sieveTextEdit;

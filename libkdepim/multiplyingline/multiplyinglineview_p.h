@@ -41,8 +41,8 @@ public:
     MultiplyingLineView(MultiplyingLineFactory *factory, MultiplyingLineEditor *parent);
     ~MultiplyingLineView() {}
 
-    QSize minimumSizeHint() const;
-    QSize sizeHint() const;
+    QSize minimumSizeHint() const Q_DECL_OVERRIDE;
+    QSize sizeHint() const Q_DECL_OVERRIDE;
 
     MultiplyingLine *activeLine() const;
 

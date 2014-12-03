@@ -134,7 +134,7 @@ private:
     bool mFirstShow;
     bool mReadOnly;
 public:
-    QSize sizeHint() const;
+    QSize sizeHint() const Q_DECL_OVERRIDE;
     void setTheme(Core::Theme *theme);
 
 protected:

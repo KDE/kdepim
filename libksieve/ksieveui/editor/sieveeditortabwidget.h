@@ -34,8 +34,8 @@ public Q_SLOTS:
     void slotAddHelpPage(const QString &variableName, const QString &url);
 
 protected:
-    void tabRemoved(int index);
-    void tabInserted(int index);
+    void tabRemoved(int index) Q_DECL_OVERRIDE;
+    void tabInserted(int index) Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void slotTitleChanged(KSieveUi::SieveEditorHelpHtmlWidget *widget, const QString &title);
