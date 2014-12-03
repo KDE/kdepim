@@ -30,8 +30,8 @@ ComposerAutoResizer::ComposerAutoResizer( QTextEdit* parent )
   Q_ASSERT( mComposer );
 
   // detect when the text changes
-  connect( parent, SIGNAL(textChanged()), this, SLOT(textEditChanged()) );
-  connect( parent, SIGNAL(cursorPositionChanged()), this, SLOT(textEditChanged()) );
+  connect( parent, &QTextEdit::textChanged, this, &ComposerAutoResizer::textEditChanged );
+  connect( parent, &QTextEdit::cursorPositionChanged, this, &ComposerAutoResizer::textEditChanged );
 }
 
 QDeclarativeItem *ComposerAutoResizer::findFlickable( QGraphicsItem *parent ) const

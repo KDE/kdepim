@@ -137,7 +137,7 @@ ImageWidget::ImageWidget( Type type, QWidget *parent )
   setIconSize( QSize( 100, 130 ) );
   setFixedSize( QSize( 120, 160 ) );
 
-  connect( this, SIGNAL(clicked()), SLOT(changeImage()) );
+  connect( this, &QAbstractButton::clicked, this, &ImageWidget::changeImage );
 
   setType( type );
 

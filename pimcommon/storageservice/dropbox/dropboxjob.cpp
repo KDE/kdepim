@@ -47,7 +47,7 @@ DropBoxJob::DropBoxJob(QObject *parent)
     mOauthSignatureMethod = QLatin1String("PLAINTEXT");
     mTimestamp = QString::number(QDateTime::currentMSecsSinceEpoch() / 1000);
     mNonce = PimCommon::StorageServiceUtils::generateNonce(8);
-    connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
+    connect(mNetworkAccessManager, &QNetworkAccessManager::finished, this, &DropBoxJob::slotSendDataFinished);
 }
 
 DropBoxJob::~DropBoxJob()

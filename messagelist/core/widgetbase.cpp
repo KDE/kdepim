@@ -604,8 +604,8 @@ void Widget::sortOrderMenuAboutToShow(QMenu *menu)
             act->setData(QVariant((*it).second));
         }
 
-        connect(grp, SIGNAL(triggered(QAction*)),
-                SLOT(messageSortDirectionSelected(QAction*)));
+        connect(grp, &QActionGroup::triggered,
+                this, &Widget::messageSortDirectionSelected);
     }
 
     options = SortOrder::enumerateGroupSortingOptions(d->mAggregation->grouping());

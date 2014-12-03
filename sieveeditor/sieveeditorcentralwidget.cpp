@@ -23,7 +23,7 @@ SieveEditorCentralWidget::SieveEditorCentralWidget(QWidget *parent)
     : QStackedWidget(parent)
 {
     mConfigureWidget = new SieveEditorConfigureServerPage;
-    connect(mConfigureWidget, SIGNAL(configureClicked()), SIGNAL(configureClicked()));
+    connect(mConfigureWidget, &SieveEditorConfigureServerPage::configureClicked, this, &SieveEditorCentralWidget::configureClicked);
     addWidget(mConfigureWidget);
     mSieveEditorMainWidget = new SieveEditorMainWidget;
     connect(mSieveEditorMainWidget, &SieveEditorMainWidget::serverSieveFound, this, &SieveEditorCentralWidget::slotServerSieveFound);

@@ -28,7 +28,7 @@ SieveEditorConfigureServerPage::SieveEditorConfigureServerPage(QWidget *parent)
     QHBoxLayout *hbox = new QHBoxLayout;
     QPushButton *button = new QPushButton(i18n("Configure..."));
     button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    connect(button, SIGNAL(clicked()), SIGNAL(configureClicked()));
+    connect(button, &QAbstractButton::clicked, this, &SieveEditorConfigureServerPage::configureClicked);
     hbox->addWidget(button);
     setLayout(hbox);
 }

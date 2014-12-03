@@ -38,8 +38,8 @@ StorageServiceAccountInfoDialog::StorageServiceAccountInfoDialog(const QString &
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 
     QGroupBox *grp = new QGroupBox(serviceName);
     mainLayout->addWidget(grp);

@@ -507,8 +507,8 @@ void AttachmentControllerBase::createActions()
             this, SLOT(selectedAttachmentProperties()));
 
     d->selectAllAction = new QAction(i18n("Select All"), this);
-    connect(d->selectAllAction, SIGNAL(triggered(bool)),
-            this, SIGNAL(selectedAllAttachment()));
+    connect(d->selectAllAction, &QAction::triggered,
+            this, &AttachmentControllerBase::selectedAllAttachment);
 
     d->reloadAttachmentAction = new QAction(QIcon::fromTheme(QLatin1String("view-refresh")), i18n("Reload"), this);
     connect(d->reloadAttachmentAction, SIGNAL(triggered(bool)),

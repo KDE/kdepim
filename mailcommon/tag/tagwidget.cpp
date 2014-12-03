@@ -142,8 +142,8 @@ TagWidget::TagWidget(const QList<KActionCollection *> &actionCollections, QWidge
     mInToolbarCheck = new QCheckBox(i18n("Enable &toolbar button"),
                                     this);
     settings->addWidget(mInToolbarCheck, 7, 0);
-    connect(mInToolbarCheck, SIGNAL(stateChanged(int)),
-            this, SLOT(slotEmitChangeCheck()));
+    connect(mInToolbarCheck, &QCheckBox::stateChanged,
+            this, &TagWidget::slotEmitChangeCheck);
 
 }
 
