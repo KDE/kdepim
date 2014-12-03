@@ -136,7 +136,7 @@ void CollectionGeneralPage::load(const Akonadi::Collection &collection)
     const QString displayName = collection.displayName();
 
     mNameEdit->setText(displayName);
-    mBlockAlarmsCheckBox->setChecked(collection.hasAttribute<BlockAlarmsAttribute>());
+    mBlockAlarmsCheckBox->setChecked(collection.hasAttribute<BlockAlarmsAttribute>() && collection.attribute<BlockAlarmsAttribute>()->isEverythingBlocked());
 
     QString iconName;
     if (collection.hasAttribute<EntityDisplayAttribute>()) {
@@ -174,16 +174,8 @@ void CollectionGeneralPage::save(Collection &collection)
         collection.setName(mNameEdit->text());
     }
 
-    if (mBlockAlarmsCheckBox->isChecked()) {
-        BlockAlarmsAttribute *attr = collection.attribute<BlockAlarmsAttribute>(Collection::AddIfMissing);
-        attr->blockAlarmType(KCalCore::Alarm::Audio, true);
-        attr->blockAlarmType(KCalCore::Alarm::Display, true);
-        attr->blockAlarmType(KCalCore::Alarm::Email, true);
-        attr->blockAlarmType(KCalCore::Alarm::Procedure, true);
-
-    } else {
-        collection.removeAttribute<BlockAlarmsAttribute>();
-    }
+    BlockAlarmsAttribute *attr = collection.attribute<BlockAlarmsAttribute>(Collection::AddIfMissing);
+    attr->blockEverything(mBlockAlarmsCheckBox->isChecked());
 
 #ifndef KDEPIM_MOBILE_UI
     if (mIconCheckBox->isChecked()) {
