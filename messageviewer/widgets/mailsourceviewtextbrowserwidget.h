@@ -63,7 +63,7 @@ public:
         : QSyntaxHighlighter(textdocument)
     {}
 protected:
-    void highlightBlock(const QString &text);
+    void highlightBlock(const QString &text) Q_DECL_OVERRIDE;
 };
 
 class MailSourceViewTextBrowserWidget : public QWidget

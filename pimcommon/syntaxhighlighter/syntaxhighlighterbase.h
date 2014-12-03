@@ -29,7 +29,7 @@ public:
     explicit SyntaxHighlighterBase(QTextDocument *doc);
     ~SyntaxHighlighterBase();
 
-    void highlightBlock(const QString &text);
+    void highlightBlock(const QString &text) Q_DECL_OVERRIDE;
 
 protected:
     virtual void init() = 0;
