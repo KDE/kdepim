@@ -2022,7 +2022,7 @@ void ActionManager::slotPreviewDialogFinished( PreviewDialog *dlg )
 void ActionManager::slotAutoArchivingSettingsModified()
 {
   if ( KOPrefs::instance()->mAutoArchive )
-    mAutoArchiveTimer->start( 4 * 60 * 60 * 1000, true ); // check again in 4 hours
+    mAutoArchiveTimer->start( 24 * 60 * 60 * 1000, true ); // check again in 24 hours
   else
     mAutoArchiveTimer->stop();
 }
