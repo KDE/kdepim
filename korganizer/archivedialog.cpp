@@ -54,7 +54,7 @@
 ArchiveDialog::ArchiveDialog(Calendar *cal,QWidget *parent, const char *name)
   : KDialogBase (Plain,i18n("Archive/Delete Past Events and To-dos"),
                  User1|Cancel,User1,parent,name,false,true,
-                 i18n("&Archive"))
+                 i18n("&Ok"))
 {
   mCalendar = cal;
 
@@ -77,6 +77,10 @@ ArchiveDialog::ArchiveDialog(Calendar *cal,QWidget *parent, const char *name)
   QButtonGroup* radioBG = new QButtonGroup( this );
   radioBG->hide(); // just for the exclusive behavior
   connect( radioBG, SIGNAL( clicked( int ) ), SLOT( slotActionChanged() ) );
+
+  mArchiveNeverRB = new QRadioButton(i18n("Do not Archive old items"),topFrame);
+  radioBG->insert(mArchiveNeverRB);
+  topLayout->addWidget(mArchiveNeverRB);
 
   QHBoxLayout *dateLayout = new QHBoxLayout(0);
   mArchiveOnceRB = new QRadioButton(i18n("Archive now items older than:"),topFrame);
@@ -198,15 +202,22 @@ ArchiveDialog::~ArchiveDialog()
 void ArchiveDialog::slotEnableUser1()
 {
   bool state = ( mDeleteCb->isChecked() ||
-                 !mArchiveFile->lineEdit()->text().isEmpty() );
+                 !mArchiveFile->lineEdit()->text().isEmpty() ||
+                 mArchiveNeverRB->isChecked());
   enableButton(KDialogBase::User1,state);
 }
 
 void ArchiveDialog::slotActionChanged()
 {
+  if ( mArchiveNeverRB->isChecked() ) {
+      setButtonText( User1, i18n ( "&Ok" ) );
+  } else {
+      setButtonText( User1, i18n ( "&Archive" ) );
+  }
   mDateEdit->setEnabled( mArchiveOnceRB->isChecked() );
   mExpiryTimeNumInput->setEnabled( mAutoArchiveRB->isChecked() );
   mExpiryUnitsComboBox->setEnabled( mAutoArchiveRB->isChecked() );
+  slotEnableUser1();
 }
 
 // Archive old events
@@ -221,33 +232,38 @@ void ArchiveDialog::slotUser1()
 
   KOPrefs::instance()->mArchiveOwnFoldersOnly = mArchiveOwnFolders->isChecked();
 
-  if (mDeleteCb->isChecked()) {
-    KOPrefs::instance()->mArchiveAction = KOPrefs::actionDelete;
-  } else {
-    KOPrefs::instance()->mArchiveAction = KOPrefs::actionArchive;
+  if ( mAutoArchiveRB->isChecked() || mArchiveOnceRB->isChecked() ) {
+      if (mDeleteCb->isChecked()) {
+        KOPrefs::instance()->mArchiveAction = KOPrefs::actionDelete;
+      } else {
+        KOPrefs::instance()->mArchiveAction = KOPrefs::actionArchive;
 
-    // Get destination URL
-    KURL destUrl( mArchiveFile->url() );
-    if ( !destUrl.isValid() ) {
-      KMessageBox::sorry(this,i18n("The archive file name is not valid.\n"));
-      return;
-    }
-    // Force filename to be ending with vCalendar extension
-    QString filename = destUrl.fileName();
-    if (!filename.endsWith(".vcs") && !filename.endsWith(".ics")) {
-      filename.append(".ics");
-      destUrl.setFileName(filename);
-    }
+        // Get destination URL
+        KURL destUrl( mArchiveFile->url() );
+        if ( !destUrl.isValid() ) {
+          KMessageBox::sorry(this,i18n("The archive file name is not valid.\n"));
+          return;
+        }
+        // Force filename to be ending with vCalendar extension
+        QString filename = destUrl.fileName();
+        if (!filename.endsWith(".vcs") && !filename.endsWith(".ics")) {
+          filename.append(".ics");
+          destUrl.setFileName(filename);
+        }
 
-    KOPrefs::instance()->mArchiveFile = destUrl.url();
+        KOPrefs::instance()->mArchiveFile = destUrl.url();
+      }
   }
-  if ( KOPrefs::instance()->mAutoArchive ) {
+  if ( mAutoArchiveRB->isChecked() ) {
     archiver.runAuto( mCalendar, this, true /*with gui*/ );
     emit autoArchivingSettingsModified();
     accept();
-  }
-  else
+  } else if ( mArchiveOnceRB->isChecked() ) {
     archiver.runOnce( mCalendar, mDateEdit->date(), this );
+  } else {
+    emit autoArchivingSettingsModified();
+    accept();
+  }
 }
 
 void ArchiveDialog::slotEventsDeleted()
