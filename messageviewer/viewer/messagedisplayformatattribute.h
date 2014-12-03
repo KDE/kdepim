@@ -35,10 +35,10 @@ public:
     ~MessageDisplayFormatAttribute();
 
     /* reimpl */
-    MessageDisplayFormatAttribute *clone() const;
-    QByteArray type() const;
-    QByteArray serialized() const;
-    void deserialize(const QByteArray &data);
+    MessageDisplayFormatAttribute *clone() const Q_DECL_OVERRIDE;
+    QByteArray type() const Q_DECL_OVERRIDE;
+    QByteArray serialized() const Q_DECL_OVERRIDE;
+    void deserialize(const QByteArray &data) Q_DECL_OVERRIDE;
 
     void setMessageFormat(Viewer::DisplayFormatMessage format);
     Viewer::DisplayFormatMessage messageFormat() const;

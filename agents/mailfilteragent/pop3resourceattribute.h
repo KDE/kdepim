@@ -28,10 +28,10 @@ public:
     ~Pop3ResourceAttribute();
 
     /* reimpl */
-    Pop3ResourceAttribute *clone() const;
-    QByteArray type() const;
-    QByteArray serialized() const;
-    void deserialize(const QByteArray &data);
+    Pop3ResourceAttribute *clone() const Q_DECL_OVERRIDE;
+    QByteArray type() const Q_DECL_OVERRIDE;
+    QByteArray serialized() const Q_DECL_OVERRIDE;
+    void deserialize(const QByteArray &data) Q_DECL_OVERRIDE;
 
     QString pop3AccountName() const;
     void setPop3AccountName(const QString &accountName);
