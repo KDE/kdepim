@@ -19,6 +19,7 @@
 */
 #include "sieveeditorutiltest.h"
 #include <qtest.h>
+#include "../sieveeditorutil.h"
 
 SieveEditorUtilTest::SieveEditorUtilTest(QObject *parent)
     : QObject(parent)
@@ -31,4 +32,15 @@ SieveEditorUtilTest::~SieveEditorUtilTest()
 
 }
 
+void SieveEditorUtilTest::shouldHaveDefaultValue()
+{
+    SieveEditorUtil::SieveServerConfig config;
+    QVERIFY(config.userName.isEmpty());
+    QVERIFY(config.password.isEmpty());
+    QVERIFY(config.serverName.isEmpty());
+    QCOMPARE(config.authenticationType, MailTransport::Transport::EnumAuthenticationType::PLAIN);
+    QCOMPARE(config.port, -1);
+}
+
 QTEST_MAIN(SieveEditorUtilTest)
+

@@ -29,6 +29,8 @@ class SieveEditorUtilTest : public QObject
 public:
     explicit SieveEditorUtilTest(QObject *parent = 0);
     ~SieveEditorUtilTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
 #endif // SIEVEEDITORUTILTEST_H

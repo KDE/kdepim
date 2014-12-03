@@ -63,7 +63,7 @@ set( messagecomposer_recipient_src
 )
 
 set( messagecomposer_imagescaling_src
-     imagescaling/imagescalingjob.cpp
+     imagescaling/imagescaling.cpp
      imagescaling/imagescalingwidget.cpp
      imagescaling/imagescalingutils.cpp
      imagescaling/imagescalingselectformat.cpp

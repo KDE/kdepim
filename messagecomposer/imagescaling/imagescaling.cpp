@@ -14,21 +14,20 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-#include "imagescalingjob.h"
+#include "imagescaling.h"
 #include "settings/messagecomposersettings.h"
 
 using namespace MessageComposer;
 
-ImageScalingJob::ImageScalingJob(QObject *parent)
-    : QObject(parent)
+ImageScaling::ImageScaling()
 {
 }
 
-ImageScalingJob::~ImageScalingJob()
+ImageScaling::~ImageScaling()
 {
 }
 
-bool ImageScalingJob::loadImageFromData(const QByteArray &data)
+bool ImageScaling::loadImageFromData(const QByteArray& data)
 {
     if (!mImage.loadFromData(data)) {
         return false;
@@ -36,7 +35,7 @@ bool ImageScalingJob::loadImageFromData(const QByteArray &data)
     return true;
 }
 
-bool ImageScalingJob::resizeImage()
+bool ImageScaling::resizeImage()
 {
     if (mImage.isNull()) {
         return false;
@@ -101,7 +100,7 @@ bool ImageScalingJob::resizeImage()
 
 }
 
-QByteArray ImageScalingJob::mimetype() const
+QByteArray ImageScaling::mimetype() const
 {
     //Add more mimetype if a day we add more saving format.
     const QString type = MessageComposer::MessageComposerSettings::self()->writeFormat();
@@ -113,7 +112,7 @@ QByteArray ImageScalingJob::mimetype() const
     return QByteArray();
 }
 
-QByteArray ImageScalingJob::imageArray() const
+QByteArray ImageScaling::imageArray() const
 {
     return mBuffer.data();
 }
