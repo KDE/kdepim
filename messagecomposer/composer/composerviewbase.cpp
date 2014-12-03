@@ -129,10 +129,10 @@ bool MessageComposer::ComposerViewBase::isComposing() const
 
 void MessageComposer::ComposerViewBase::setMessage ( const KMime::Message::Ptr& msg )
 {
-
-    foreach( MessageCore::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() )
-        m_attachmentModel->removeAttachment( attachment );
-
+    if (m_attachmentModel)  {
+        foreach( MessageCore::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() )
+            m_attachmentModel->removeAttachment( attachment );
+    }
     m_msg = msg;
     m_recipientsEditor->clear();
     m_recipientsEditor->setRecipientString( m_msg->to()->mailboxes(), MessageComposer::Recipient::To );
@@ -402,12 +402,16 @@ void MessageComposer::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
     // we first figure out if we need to create multiple messages with different crypto formats
     // if so, we create a composer per format
     // if we aren't signing or encrypting, this just returns a single empty message
+    bool wasCanceled = false;
     if( m_neverEncrypt && mSaveIn != MessageComposer::MessageSender::SaveInNone ) {
         MessageComposer::Composer* composer = new MessageComposer::Composer;
         composer->setNoCrypto( true );
         m_composers.append( composer );
     } else {
-        m_composers = generateCryptoMessages();
+        m_composers = generateCryptoMessages(wasCanceled);
+        if (wasCanceled) {
+            return;
+        }
     }
 
     if( m_composers.isEmpty() ) {
@@ -417,16 +421,18 @@ void MessageComposer::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
 
     if (autoresizeImage) {
         if (MessageComposer::MessageComposerSettings::self()->askBeforeResizing()) {
-            if (MessageComposer::Utils::containsImage(m_attachmentModel->attachments())) {
-                const int rc = KMessageBox::warningYesNo( m_parentWidget,i18n("Do you want to resize images?"),
-                                                          i18n("Auto Resize Images"), KStandardGuiItem::yes(), KStandardGuiItem::no());
-                if (rc == KMessageBox::Yes) {
-                    autoresizeImage = true;
+            if (m_attachmentModel) {
+                if (MessageComposer::Utils::containsImage(m_attachmentModel->attachments())) {
+                    const int rc = KMessageBox::warningYesNo( m_parentWidget,i18n("Do you want to resize images?"),
+                                                              i18n("Auto Resize Images"), KStandardGuiItem::yes(), KStandardGuiItem::no());
+                    if (rc == KMessageBox::Yes) {
+                        autoresizeImage = true;
+                    } else {
+                        autoresizeImage = false;
+                    }
                 } else {
                     autoresizeImage = false;
                 }
-            } else {
-                autoresizeImage = false;
             }
         }
     }
@@ -436,7 +442,8 @@ void MessageComposer::ComposerViewBase::slotEmailAddressResolved ( KJob* job )
         m_editor->fillComposerTextPart( composer->textPart() );
         fillInfoPart( composer->infoPart(), UseExpandedRecipients );
 
-        composer->addAttachmentParts( m_attachmentModel->attachments(), autoresizeImage );
+        if (m_attachmentModel)
+            composer->addAttachmentParts( m_attachmentModel->attachments(), autoresizeImage );
 
         connect( composer, SIGNAL(result(KJob*)), this, SLOT(slotSendComposeResult(KJob*)) );
         composer->start();
@@ -520,7 +527,7 @@ inline bool showKeyApprovalDialog()
 
 } // nameless namespace
 
-QList< MessageComposer::Composer* > MessageComposer::ComposerViewBase::generateCryptoMessages ()
+QList< MessageComposer::Composer* > MessageComposer::ComposerViewBase::generateCryptoMessages (bool &wasCanceled)
 {
 
     kDebug() << "filling crypto info";
@@ -566,16 +573,18 @@ QList< MessageComposer::Composer* > MessageComposer::ComposerViewBase::generateC
         return QList< MessageComposer::Composer* >();
     }
 
-    foreach( MessageCore::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() ) {
-        if( attachment->isSigned() ) {
-            signSomething = true;
-        } else {
-            doEncryptCompletely = false;
-        }
-        if( attachment->isEncrypted() ) {
-            encryptSomething = true;
-        } else {
-            doSignCompletely = false;
+    if (m_attachmentModel) {
+        foreach( MessageCore::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() ) {
+            if( attachment->isSigned() ) {
+                signSomething = true;
+            } else {
+                doEncryptCompletely = false;
+            }
+            if( attachment->isEncrypted() ) {
+                encryptSomething = true;
+            } else {
+                doSignCompletely = false;
+            }
         }
     }
 
@@ -586,19 +595,32 @@ QList< MessageComposer::Composer* > MessageComposer::ComposerViewBase::generateC
     keyResolver->setSecondaryRecipients( bcc );
 
     bool result = true;
-    signSomething = determineWhetherToSign( doSignCompletely, keyResolver,signSomething, result );
+    bool canceled = false;
+    signSomething = determineWhetherToSign( doSignCompletely, keyResolver,signSomething, result, canceled );
     if(!result) {
         /// TODO handle failure
         kDebug() << "determineWhetherToSign: failed to resolve keys! oh noes";
-        emit failed( i18n( "Failed to resolve keys. Please report a bug." ) );
+        if (!canceled) {
+            emit failed( i18n( "Failed to resolve keys. Please report a bug." ) );
+        } else {
+            emit failed(QString());
+        }
+        wasCanceled = canceled;
         return QList< MessageComposer::Composer*>();
     }
 
-    encryptSomething = determineWhetherToEncrypt( doEncryptCompletely,keyResolver,encryptSomething, signSomething, result );
+    canceled = false;
+    encryptSomething = determineWhetherToEncrypt( doEncryptCompletely,keyResolver,encryptSomething, signSomething, result, canceled );
     if(!result) {
         /// TODO handle failure
         kDebug() << "determineWhetherToEncrypt: failed to resolve keys! oh noes";
-        emit failed( i18n( "Failed to resolve keys. Please report a bug." ) );
+        if (!canceled) {
+            emit failed( i18n( "Failed to resolve keys. Please report a bug." ) );
+        } else {
+            emit failed(QString());
+        }
+
+        wasCanceled = canceled;
         return QList< MessageComposer::Composer*>();
     }
 
@@ -913,7 +935,8 @@ void MessageComposer::ComposerViewBase::initAutoSave()
 void MessageComposer::ComposerViewBase::updateAutoSave()
 {
     if ( m_autoSaveInterval == 0 ) {
-        delete m_autoSaveTimer; m_autoSaveTimer = 0;
+        delete m_autoSaveTimer;
+        m_autoSaveTimer = 0;
     } else {
         if ( !m_autoSaveTimer ) {
             m_autoSaveTimer = new QTimer( this );
@@ -931,7 +954,8 @@ void MessageComposer::ComposerViewBase::updateAutoSave()
 
 void MessageComposer::ComposerViewBase::cleanupAutoSave()
 {
-    delete m_autoSaveTimer; m_autoSaveTimer = 0;
+    delete m_autoSaveTimer;
+    m_autoSaveTimer = 0;
     if ( !m_autoSaveUUID.isEmpty() ) {
 
         kDebug() << "deleting autosave files" << m_autoSaveUUID;
@@ -1224,7 +1248,9 @@ MessageComposer::Composer* MessageComposer::ComposerViewBase::createSimpleCompos
     fillGlobalPart( composer->globalPart() );
     m_editor->fillComposerTextPart( composer->textPart() );
     fillInfoPart( composer->infoPart(), UseUnExpandedRecipients );
-    composer->addAttachmentParts( m_attachmentModel->attachments() );
+    if (m_attachmentModel)  {
+        composer->addAttachmentParts( m_attachmentModel->attachments() );
+    }
     return composer;
 }
 
@@ -1551,7 +1577,7 @@ bool MessageComposer::ComposerViewBase::hasMissingAttachments( const QStringList
 {
     if ( attachmentKeywords.isEmpty() )
         return false;
-    if ( m_attachmentModel->rowCount() > 0 ) {
+    if ( m_attachmentModel && m_attachmentModel->rowCount() > 0 ) {
         return false;
     }
 
@@ -1614,23 +1640,27 @@ MessageComposer::ComposerViewBase::MissingAttachment MessageComposer::ComposerVi
 
 void MessageComposer::ComposerViewBase::markAllAttachmentsForSigning(bool sign)
 {
-    foreach( MessageCore::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() ) {
-        if( attachment->isSigned() ) {
-            attachment->setSigned(sign);
+    if (m_attachmentModel) {
+        foreach( MessageCore::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() ) {
+            if( attachment->isSigned() ) {
+                attachment->setSigned(sign);
+            }
         }
     }
 }
 
 void MessageComposer::ComposerViewBase::markAllAttachmentsForEncryption(bool encrypt)
 {
-    foreach( MessageCore::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() ) {
-        if( attachment->isEncrypted() ) {
-            attachment->setEncrypted(encrypt);
+    if (m_attachmentModel) {
+        foreach( MessageCore::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() ) {
+            if( attachment->isEncrypted() ) {
+                attachment->setEncrypted(encrypt);
+            }
         }
     }
 }
 
-bool MessageComposer::ComposerViewBase::determineWhetherToSign( bool doSignCompletely, Kleo::KeyResolver* keyResolver, bool signSomething, bool & result )
+bool MessageComposer::ComposerViewBase::determineWhetherToSign( bool doSignCompletely, Kleo::KeyResolver* keyResolver, bool signSomething, bool & result, bool &canceled )
 {
     bool sign = false;
     switch ( keyResolver->checkSigningPreferences( signSomething ) ) {
@@ -1662,6 +1692,7 @@ bool MessageComposer::ComposerViewBase::determineWhetherToSign( bool doSignCompl
                                                    KGuiItem( i18n("Do &Not Sign") ) ) ) {
         case KMessageBox::Cancel:
             result = false;
+            canceled = true;
             return false;
         case KMessageBox::Yes:
             markAllAttachmentsForSigning( true );
@@ -1687,6 +1718,7 @@ bool MessageComposer::ComposerViewBase::determineWhetherToSign( bool doSignCompl
                                                   KGuiItem( i18n("Do &Not Sign") ) ) ) {
         case KMessageBox::Cancel:
             result = false;
+            canceled = true;
             return false;
         case KMessageBox::Yes:
             markAllAttachmentsForSigning( true );
@@ -1738,6 +1770,7 @@ bool MessageComposer::ComposerViewBase::determineWhetherToSign( bool doSignCompl
                                                       KGuiItem( i18n("Send &As Is") ) ) ) {
             case KMessageBox::Cancel:
                 result = false;
+                canceled = true;
                 return false;
             case KMessageBox::Yes:
                 markAllAttachmentsForSigning( true );
@@ -1750,7 +1783,7 @@ bool MessageComposer::ComposerViewBase::determineWhetherToSign( bool doSignCompl
     return sign || doSignCompletely;
 }
 
-bool MessageComposer::ComposerViewBase::determineWhetherToEncrypt( bool doEncryptCompletely, Kleo::KeyResolver* keyResolver, bool encryptSomething, bool signSomething, bool & result )
+bool MessageComposer::ComposerViewBase::determineWhetherToEncrypt( bool doEncryptCompletely, Kleo::KeyResolver* keyResolver, bool encryptSomething, bool signSomething, bool & result, bool &canceled )
 {
     bool encrypt = false;
     bool opportunistic = false;
@@ -1791,6 +1824,7 @@ bool MessageComposer::ComposerViewBase::determineWhetherToEncrypt( bool doEncryp
                                                              : i18n("&Send As-Is") ) ) ) {
         case KMessageBox::Cancel:
             result = false;
+            canceled = true;
             return false;
         case KMessageBox::Yes:
             markAllAttachmentsForEncryption( true );
@@ -1816,6 +1850,7 @@ bool MessageComposer::ComposerViewBase::determineWhetherToEncrypt( bool doEncryp
                                                   KGuiItem( i18n("Do &Not Encrypt")) ) ) {
         case KMessageBox::Cancel:
             result = false;
+            canceled = true;
             return false;
         case KMessageBox::Yes:
             markAllAttachmentsForEncryption( true );
@@ -1872,6 +1907,7 @@ bool MessageComposer::ComposerViewBase::determineWhetherToEncrypt( bool doEncryp
                                                                 : i18n("&Send As-Is")) ) ) {
             case KMessageBox::Cancel:
                 result = false;
+                canceled = true;
                 return false;
             case KMessageBox::Yes:
                 markAllAttachmentsForEncryption( true );

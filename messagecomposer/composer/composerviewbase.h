@@ -268,7 +268,7 @@ private:
     void readyForSending();
 
     enum RecipientExpansion { UseExpandedRecipients, UseUnExpandedRecipients };
-    QList< MessageComposer::Composer* > generateCryptoMessages();
+    QList< MessageComposer::Composer* > generateCryptoMessages(bool &wasCanceled);
     void fillGlobalPart( MessageComposer::GlobalPart *globalPart );
     void fillInfoPart( MessageComposer::InfoPart *part, RecipientExpansion expansion );
     void queueMessage( KMime::Message::Ptr message, MessageComposer::Composer* composer );
@@ -280,8 +280,8 @@ private:
 
     void markAllAttachmentsForSigning(bool sign);
     void markAllAttachmentsForEncryption(bool encrypt);
-    bool determineWhetherToSign(bool doSignCompletely , Kleo::KeyResolver *keyResolver, bool signSomething, bool & result);
-    bool determineWhetherToEncrypt(bool doEncryptCompletely , Kleo::KeyResolver *keyResolver, bool encryptSomething, bool signSomething, bool & result);
+    bool determineWhetherToSign(bool doSignCompletely , Kleo::KeyResolver *keyResolver, bool signSomething, bool & result, bool &canceled);
+    bool determineWhetherToEncrypt(bool doEncryptCompletely , Kleo::KeyResolver *keyResolver, bool encryptSomething, bool signSomething, bool & result, bool &canceled);
 
     /**
   * Writes out autosave data to the disk from the KMime::Message message.
