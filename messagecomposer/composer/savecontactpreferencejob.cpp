@@ -100,7 +100,6 @@ void SaveContactPreferenceJob::slotSearchContact(KJob* job)
 
         Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( item );
         connect(job, SIGNAL(result(KJob*)), SLOT(slotModifyCreateItem(KJob*)));
-        job->start();
     }
 }
 
