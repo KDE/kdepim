@@ -34,6 +34,8 @@ void TextPartTest::shouldHaveDefaultValue()
     MessageComposer::TextPart textpart;
     QVERIFY(textpart.warnBadCharset());
     QVERIFY(textpart.isWordWrappingEnabled());
+    QVERIFY(!textpart.hasEmbeddedImages());
+    QVERIFY(!textpart.isHtmlUsed());
 }
 
 QTEST_MAIN(TextPartTest)

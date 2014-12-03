@@ -49,11 +49,6 @@ MESSAGECORE_EXPORT KMime::Message::Ptr message(const Akonadi::Item &item);
 MESSAGECORE_EXPORT bool isStandaloneMessage(const Akonadi::Item &item);
 
 /**
-   * Get the message id as a string from the @p message.
-   */
-MESSAGECORE_EXPORT QString messageId(const KMime::Message::Ptr &message);
-
-/**
    * Adds private headers to the given @p message that links it to the original message.
    *
    * @param message The message to add the link information to.

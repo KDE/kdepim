@@ -38,28 +38,6 @@ bool MessageCore::Util::isStandaloneMessage(const Akonadi::Item &item)
     return item.hasPayload<KMime::Message::Ptr>() && !item.isValid();
 }
 
-QString MessageCore::Util::messageId(const KMime::Message::Ptr &message)
-{
-    if (!message->headerByType("Message-Id")) {
-        return QString();
-    }
-
-    QString messageId = message->headerByType("Message-Id")->asUnicodeString();
-
-    // search the end of the message id
-    const int rightAngle = messageId.indexOf(QLatin1Char('>'));
-    if (rightAngle != -1) {
-        messageId.truncate(rightAngle + 1);
-    }
-
-    // now search the start of the message id
-    const int leftAngle = messageId.lastIndexOf(QLatin1Char('<'));
-    if (leftAngle != -1) {
-        messageId = messageId.mid(leftAngle);
-    }
-
-    return messageId;
-}
 
 void MessageCore::Util::addLinkInformation(const KMime::Message::Ptr &msg, Akonadi::Item::Id id, const Akonadi::MessageStatus &status)
 {

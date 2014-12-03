@@ -1678,9 +1678,7 @@ void MessageComposer::ComposerViewBase::markAllAttachmentsForSigning(bool sign)
 {
     if (m_attachmentModel) {
         foreach( MessageCore::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() ) {
-            if( attachment->isSigned() ) {
-                attachment->setSigned(sign);
-            }
+            attachment->setSigned(sign);
         }
     }
 }
@@ -1689,9 +1687,7 @@ void MessageComposer::ComposerViewBase::markAllAttachmentsForEncryption(bool enc
 {
     if (m_attachmentModel) {
         foreach( MessageCore::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() ) {
-            if( attachment->isEncrypted() ) {
-                attachment->setEncrypted(encrypt);
-            }
+            attachment->setEncrypted(encrypt);
         }
     }
 }
