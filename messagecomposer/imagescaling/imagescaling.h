@@ -14,20 +14,19 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-#ifndef IMAGESCALINGJOB_H
-#define IMAGESCALINGJOB_H
+#ifndef IMAGESCALING_H
+#define IMAGESCALING_H
 
 #include <QByteArray>
-#include <QObject>
 #include <QImage>
 #include <QBuffer>
 
 namespace MessageComposer {
-class ImageScalingJob
+class ImageScaling
 {
 public:
-    ImageScalingJob();
-    ~ImageScalingJob();
+    ImageScaling();
+    ~ImageScaling();
 
     /**
      * @brief loadImageFromData
@@ -60,4 +59,4 @@ private:
 };
 }
 
-#endif // IMAGESCALINGJOB_H
+#endif // IMAGESCALING_H
