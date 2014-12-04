@@ -1069,7 +1069,7 @@ bool Kleo::KeyResolver::encryptionPossible() const {
                                EmptyKeyList ) == d->mSecondaryEncryptionKeys.end() ;
 }
 
-Kpgp::Result Kleo::KeyResolver::resolveAllKeys( bool& signingRequested, bool& encryptionRequested ) {
+Kpgp::Result Kleo::KeyResolver::resolveAllKeys( bool& signingRequested, bool& encryptionRequested  ) {
     if ( !encryptionRequested && !signingRequested ) {
         // make a dummy entry with all recipients, but no signing or
         // encryption keys to avoid special-casing on the caller side:
@@ -1079,8 +1079,13 @@ Kpgp::Result Kleo::KeyResolver::resolveAllKeys( bool& signingRequested, bool& en
         return Kpgp::Ok;
     }
     Kpgp::Result result = Kpgp::Ok;
-    if ( encryptionRequested )
-        result = resolveEncryptionKeys( signingRequested );
+    if ( encryptionRequested ) {
+        bool finalySendUnencrypted = false;
+        result = resolveEncryptionKeys( signingRequested, finalySendUnencrypted );
+        if (finalySendUnencrypted) {
+            encryptionRequested = false;
+        }
+    }
     if ( result != Kpgp::Ok )
         return result;
     if ( signingRequested ) {
@@ -1098,7 +1103,7 @@ Kpgp::Result Kleo::KeyResolver::resolveAllKeys( bool& signingRequested, bool& en
     return result;
 }
 
-Kpgp::Result Kleo::KeyResolver::resolveEncryptionKeys( bool signingRequested ) {
+Kpgp::Result Kleo::KeyResolver::resolveEncryptionKeys( bool signingRequested, bool &finalySendUnencrypted ) {
     //
     // 1. Get keys for all recipients:
     //
@@ -1134,7 +1139,7 @@ Kpgp::Result Kleo::KeyResolver::resolveEncryptionKeys( bool signingRequested ) {
 
     // 1a: Present them to the user
 
-    const Kpgp::Result res = showKeyApprovalDialog();
+    const Kpgp::Result res = showKeyApprovalDialog(finalySendUnencrypted);
     if ( res != Kpgp::Ok )
         return res;
 
@@ -1443,7 +1448,7 @@ void Kleo::KeyResolver::dump() const {
 #endif
 }
 
-Kpgp::Result Kleo::KeyResolver::showKeyApprovalDialog() {
+Kpgp::Result Kleo::KeyResolver::showKeyApprovalDialog(bool &finalySendUnencrypted) {
     const bool showKeysForApproval = showApprovalDialog()
             || std::find_if( d->mPrimaryEncryptionKeys.begin(), d->mPrimaryEncryptionKeys.end(),
                              ApprovalNeeded ) != d->mPrimaryEncryptionKeys.end()
@@ -1540,6 +1545,7 @@ Kpgp::Result Kleo::KeyResolver::showKeyApprovalDialog() {
                                                  KGuiItem(i18n("Send &Unencrypted")) )
              == KMessageBox::Cancel )
             return Kpgp::Canceled;
+        finalySendUnencrypted = true;
     } else if ( emptyListCount > 0 ) {
         const QString msg = ( emptyListCount == 1 )
                 ? i18n("You did not select an encryption key for one of "
