@@ -27,7 +27,7 @@ class AttachmentTemporaryFilesDirsTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit AttachmentTemporaryFilesDirsTest(QObject *parent=0);
+    explicit AttachmentTemporaryFilesDirsTest(QObject *parent = 0);
     ~AttachmentTemporaryFilesDirsTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();

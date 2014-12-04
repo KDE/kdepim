@@ -27,7 +27,7 @@ ImageScaling::~ImageScaling()
 {
 }
 
-bool ImageScaling::loadImageFromData(const QByteArray& data)
+bool ImageScaling::loadImageFromData(const QByteArray &data)
 {
     if (!mImage.loadFromData(data)) {
         return false;

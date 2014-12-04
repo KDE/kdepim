@@ -273,7 +273,7 @@ private:
     void readyForSending();
 
     enum RecipientExpansion { UseExpandedRecipients, UseUnExpandedRecipients };
-    QList< MessageComposer::Composer * > generateCryptoMessages( bool & wasCanceled);
+    QList< MessageComposer::Composer * > generateCryptoMessages(bool &wasCanceled);
     void fillGlobalPart(MessageComposer::GlobalPart *globalPart);
     void fillInfoPart(MessageComposer::InfoPart *part, RecipientExpansion expansion);
     void queueMessage(KMime::Message::Ptr message, MessageComposer::Composer *composer);

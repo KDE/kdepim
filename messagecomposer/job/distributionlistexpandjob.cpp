@@ -27,8 +27,8 @@
 
 using namespace MessageComposer;
 
-DistributionListExpandJob::DistributionListExpandJob( const QString &name, QObject *parent )
-    : KJob( parent ), mListName( name ), mIsEmpty( false )
+DistributionListExpandJob::DistributionListExpandJob(const QString &name, QObject *parent)
+    : KJob(parent), mListName(name), mIsEmpty(false)
 {
 }
 
@@ -38,14 +38,14 @@ DistributionListExpandJob::~DistributionListExpandJob()
 
 void DistributionListExpandJob::start()
 {
-    Akonadi::ContactGroupSearchJob *job = new Akonadi::ContactGroupSearchJob( this );
-    job->setQuery( Akonadi::ContactGroupSearchJob::Name, mListName );
-    connect( job, SIGNAL(result(KJob*)), SLOT(slotSearchDone(KJob*)) );
+    Akonadi::ContactGroupSearchJob *job = new Akonadi::ContactGroupSearchJob(this);
+    job->setQuery(Akonadi::ContactGroupSearchJob::Name, mListName);
+    connect(job, SIGNAL(result(KJob*)), SLOT(slotSearchDone(KJob*)));
 }
 
 QString DistributionListExpandJob::addresses() const
 {
-    return mEmailAddresses.join( QLatin1String( ", " ) );
+    return mEmailAddresses.join(QLatin1String(", "));
 }
 
 bool DistributionListExpandJob::isEmpty() const
@@ -53,43 +53,44 @@ bool DistributionListExpandJob::isEmpty() const
     return mIsEmpty;
 }
 
-void DistributionListExpandJob::slotSearchDone( KJob *job )
+void DistributionListExpandJob::slotSearchDone(KJob *job)
 {
-    if ( job->error() ) {
-        setError( job->error() );
-        setErrorText( job->errorText() );
+    if (job->error()) {
+        setError(job->error());
+        setErrorText(job->errorText());
         emitResult();
         return;
     }
 
-    const Akonadi::ContactGroupSearchJob *searchJob = qobject_cast<Akonadi::ContactGroupSearchJob*>( job );
+    const Akonadi::ContactGroupSearchJob *searchJob = qobject_cast<Akonadi::ContactGroupSearchJob *>(job);
 
     const KContacts::ContactGroup::List groups = searchJob->contactGroups();
-    if ( groups.isEmpty() ) {
+    if (groups.isEmpty()) {
         emitResult();
         return;
     }
 
-    Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob( groups.first() );
-    connect( expandJob, SIGNAL(result(KJob*)), SLOT(slotExpansionDone(KJob*)) );
+    Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob(groups.first());
+    connect(expandJob, SIGNAL(result(KJob*)), SLOT(slotExpansionDone(KJob*)));
     expandJob->start();
 }
 
-void DistributionListExpandJob::slotExpansionDone( KJob *job )
+void DistributionListExpandJob::slotExpansionDone(KJob *job)
 {
-    if ( job->error() ) {
-        setError( job->error() );
-        setErrorText( job->errorText() );
+    if (job->error()) {
+        setError(job->error());
+        setErrorText(job->errorText());
         emitResult();
         return;
     }
 
-    const Akonadi::ContactGroupExpandJob *expandJob = qobject_cast<Akonadi::ContactGroupExpandJob*>( job );
+    const Akonadi::ContactGroupExpandJob *expandJob = qobject_cast<Akonadi::ContactGroupExpandJob *>(job);
 
     const KContacts::Addressee::List contacts = expandJob->contacts();
 
-    foreach ( const KContacts::Addressee &contact, contacts )
+    foreach (const KContacts::Addressee &contact, contacts) {
         mEmailAddresses << contact.fullEmail();
+    }
 
     mIsEmpty = mEmailAddresses.isEmpty();
 

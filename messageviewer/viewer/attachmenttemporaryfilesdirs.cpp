@@ -69,14 +69,14 @@ void AttachmentTemporaryFilesDirs::slotRemoveTempFiles()
 void AttachmentTemporaryFilesDirs::addTempFile(const QString &file)
 {
     if (!mTempFiles.contains(file)) {
-        mTempFiles.append( file );
+        mTempFiles.append(file);
     }
 }
 
 void AttachmentTemporaryFilesDirs::addTempDir(const QString &dir)
 {
     if (!mTempDirs.contains(dir)) {
-        mTempDirs.append( dir );
+        mTempDirs.append(dir);
     }
 }
 
