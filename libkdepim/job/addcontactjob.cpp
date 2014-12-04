@@ -41,7 +41,7 @@ public:
     }
 
     Private(AddContactJob *qq, const KContacts::Addressee &contact, const Akonadi::Collection &collection)
-        : q(qq), mContact(contact), mParentWidget(0), mCollection(collection), mShowMessageBox(true)
+        : q(qq), mContact(contact), mParentWidget(Q_NULLPTR), mCollection(collection), mShowMessageBox(true)
     {
     }
 

@@ -34,8 +34,8 @@
 
 SendLaterManager::SendLaterManager(QObject *parent)
     : QObject(parent),
-      mCurrentInfo(0),
-      mCurrentJob(0),
+      mCurrentInfo(Q_NULLPTR),
+      mCurrentJob(Q_NULLPTR),
       mSender(new MessageComposer::AkonadiSender)
 {
     mConfig = KSharedConfig::openConfig();

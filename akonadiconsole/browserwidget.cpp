@@ -86,10 +86,10 @@ Q_DECLARE_METATYPE(QSet<QByteArray>)
 
 BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget *parent) :
     QWidget(parent),
-    mAttrModel(0),
-    mStdActionManager(0),
-    mMonitor(0),
-    mCacheOnlyAction(0)
+    mAttrModel(Q_NULLPTR),
+    mStdActionManager(Q_NULLPTR),
+    mMonitor(Q_NULLPTR),
+    mCacheOnlyAction(Q_NULLPTR)
 {
     Q_ASSERT(xmlGuiWindow);
     QVBoxLayout *layout = new QVBoxLayout(this);

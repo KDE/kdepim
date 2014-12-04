@@ -46,7 +46,7 @@ class SpellCheckLineEdit::Private
 public:
     Private()
         : activateLanguageMenu(true),
-          speller(0)
+          speller(Q_NULLPTR)
     {
     }
     ~Private()

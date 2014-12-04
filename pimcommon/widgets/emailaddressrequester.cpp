@@ -34,7 +34,7 @@ class PimCommon::EmailAddressRequester::Private
 {
 public:
     Private(EmailAddressRequester *qq)
-        : q(qq), mLineEdit(0)
+        : q(qq), mLineEdit(Q_NULLPTR)
     {
     }
 

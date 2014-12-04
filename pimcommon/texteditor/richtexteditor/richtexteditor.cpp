@@ -51,8 +51,8 @@ public:
     RichTextEditorPrivate(RichTextEditor *qq)
         : q(qq),
           mTextIndicator(new PimCommon::TextMessageIndicator(q)),
-          highLighter(0),
-          speller(0),
+          highLighter(Q_NULLPTR),
+          speller(Q_NULLPTR),
           customPalette(false)
     {
         KConfig sonnetKConfig(QLatin1String("sonnetrc"));

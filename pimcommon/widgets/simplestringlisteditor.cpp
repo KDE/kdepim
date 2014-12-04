@@ -57,8 +57,8 @@ SimpleStringListEditor::SimpleStringListEditor(QWidget *parent,
         const QString &modifyLabel,
         const QString &addDialogLabel)
     : QWidget(parent),
-      mAddButton(0), mRemoveButton(0), mModifyButton(0),
-      mUpButton(0), mDownButton(0),
+      mAddButton(Q_NULLPTR), mRemoveButton(Q_NULLPTR), mModifyButton(Q_NULLPTR),
+      mUpButton(Q_NULLPTR), mDownButton(Q_NULLPTR),
       mAddDialogLabel(addDialogLabel.isEmpty() ?
                       i18n("New entry:") : addDialogLabel)
 {

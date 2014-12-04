@@ -42,8 +42,8 @@
 
 NotesManager::NotesManager(QObject *parent)
     : QObject(parent),
-      mListener(0),
-      mCheckAlarm(0)
+      mListener(Q_NULLPTR),
+      mCheckAlarm(Q_NULLPTR)
 {
     Akonadi::Session *session = new Akonadi::Session("KNotes Session", this);
     mNoteRecorder = new NoteShared::NotesChangeRecorder(this);

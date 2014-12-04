@@ -35,7 +35,7 @@ static QString followUpItemPattern = QStringLiteral("FollowupReminderItem \\d+")
 
 FollowUpReminderInfoItem::FollowUpReminderInfoItem(QTreeWidget *parent)
     : QTreeWidgetItem(parent),
-      mInfo(0)
+      mInfo(Q_NULLPTR)
 {
 }
 

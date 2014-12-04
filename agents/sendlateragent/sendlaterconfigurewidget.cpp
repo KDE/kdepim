@@ -34,7 +34,7 @@ static QString sendLaterItemPattern = QLatin1String("SendLaterItem \\d+");
 
 SendLaterItem::SendLaterItem(QTreeWidget *parent)
     : QTreeWidgetItem(parent),
-      mInfo(0)
+      mInfo(Q_NULLPTR)
 {
 }
 

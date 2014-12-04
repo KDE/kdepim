@@ -62,7 +62,7 @@ static bool isFilterableCollection(const Akonadi::Collection &collection)
 
 MailFilterAgent::MailFilterAgent(const QString &id)
     : Akonadi::AgentBase(id),
-      m_filterLogDialog(0)
+      m_filterLogDialog(Q_NULLPTR)
 {
     Kdelibs4ConfigMigrator migrate(QLatin1String("mailfilteragent"));
     migrate.setConfigFiles(QStringList() << QLatin1String("akonadi_mailfilter_agentrc") << QLatin1String("akonadi_mailfilter_agent.notifyrc"));

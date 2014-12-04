@@ -33,7 +33,6 @@ using namespace PimCommon;
 StorageServiceProgressWidget::StorageServiceProgressWidget(PimCommon::StorageServiceAbstract *service, QWidget *parent)
     : QFrame(parent),
       mType(DownloadBar),
-      mCancel(0),
       mStorageService(service)
 {
     QHBoxLayout *box = new QHBoxLayout(this);

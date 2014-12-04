@@ -58,8 +58,8 @@ class StateMachineBuilderPrivate
 {
   StateMachineBuilderPrivate(StateMachineBuilder *qq)
     : q_ptr(qq),
-      m_navigationModel(0),
-      m_itemSelectionModel(0)
+      m_navigationModel(Q_NULLPTR),
+      m_itemSelectionModel(Q_NULLPTR)
   {
 
   }
