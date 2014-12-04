@@ -132,11 +132,12 @@ QString RefreshOpenPGPCertsCommand::crashExitMessage(const QStringList &args) co
                   "<para>Please check the output of <icode>%1</icode> for details.</para>", args.join(QLatin1String(" "))) ;
 }
 
-QString RefreshOpenPGPCertsCommand::errorExitMessage( const QStringList & args ) const {
+QString RefreshOpenPGPCertsCommand::errorExitMessage(const QStringList &args) const
+{
     return i18nc("@info",
                  "<para>An error occurred while trying to refresh OpenPGP certificates.</para> "
                  "<para>The output from <command>%1</command> was: <message>%2</message></para>",
-                 args[0], errorString().replace(QLatin1String("\n"), QLatin1String("<br>")) );
+                 args[0], errorString().replace(QLatin1String("\n"), QLatin1String("<br>")));
 }
 
 QString RefreshOpenPGPCertsCommand::successMessage(const QStringList &) const

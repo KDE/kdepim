@@ -25,7 +25,6 @@
 
 #include <kblog/blog.h>
 
-
 namespace KBlog
 {
 

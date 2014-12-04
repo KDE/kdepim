@@ -142,10 +142,10 @@ private:
                          "hierarchical view mode: In this mode, if you delete a certificate that has "
                          "children, those children will also be deleted. Think of CA certificates as "
                          "folders containing other certificates: When you delete the folder, you "
-                         "delete its contents, too.</para>" );
+                         "delete its contents, too.</para>");
             unselectedLB.setContextMenuPolicy(Qt::NoContextMenu);
-            unselectedLB.setWhatsThis( unselectedWhatsThis );
-            unselectedKTV.setWhatsThis( unselectedWhatsThis );
+            unselectedLB.setWhatsThis(unselectedWhatsThis);
+            unselectedKTV.setWhatsThis(unselectedWhatsThis);
 
             buttonBox.button(QDialogButtonBox::Ok)->setText(i18nc("@action:button", "Delete"));
 
