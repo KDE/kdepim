@@ -24,7 +24,8 @@
 #define ALIASESEXPANDJOB_P_H
 
 #include <kjob.h>
-
+#include <QStringList>
+namespace MessageComposer {
 /**
  * @short A job to expand a distribution list to its member email addresses.
  */
@@ -70,5 +71,5 @@ private:
     QStringList mEmailAddresses;
     bool mIsEmpty;
 };
-
+}
 #endif

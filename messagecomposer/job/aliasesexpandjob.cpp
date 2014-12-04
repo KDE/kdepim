@@ -21,87 +21,15 @@
  */
 
 #include "aliasesexpandjob.h"
-#include "aliasesexpandjob_p.h"
+#include "distributionlistexpandjob.h"
 
-#include <Akonadi/Contact/ContactGroupExpandJob>
-#include <Akonadi/Contact/ContactGroupSearchJob>
 #include <Akonadi/Contact/ContactSearchJob>
-
+#include <Akonadi/Contact/ContactGroupExpandJob>
 #include <KPIMUtils/Email>
 
 #include <messagecore/utils/stringutil.h>
 
 using namespace MessageComposer;
-
-DistributionListExpandJob::DistributionListExpandJob(const QString &name, QObject *parent)
-    : KJob(parent), mListName(name), mIsEmpty(false)
-{
-}
-
-DistributionListExpandJob::~DistributionListExpandJob()
-{
-}
-
-void DistributionListExpandJob::start()
-{
-    Akonadi::ContactGroupSearchJob *job = new Akonadi::ContactGroupSearchJob(this);
-    job->setQuery(Akonadi::ContactGroupSearchJob::Name, mListName);
-    connect(job, &Akonadi::ContactGroupSearchJob::result, this, &DistributionListExpandJob::slotSearchDone);
-}
-
-QString DistributionListExpandJob::addresses() const
-{
-    return mEmailAddresses.join(QLatin1String(", "));
-}
-
-bool DistributionListExpandJob::isEmpty() const
-{
-    return mIsEmpty;
-}
-
-void DistributionListExpandJob::slotSearchDone(KJob *job)
-{
-    if (job->error()) {
-        setError(job->error());
-        setErrorText(job->errorText());
-        emitResult();
-        return;
-    }
-
-    const Akonadi::ContactGroupSearchJob *searchJob = qobject_cast<Akonadi::ContactGroupSearchJob *>(job);
-
-    const KContacts::ContactGroup::List groups = searchJob->contactGroups();
-    if (groups.isEmpty()) {
-        emitResult();
-        return;
-    }
-
-    Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob(groups.first());
-    connect(expandJob, &Akonadi::ContactGroupExpandJob::result, this, &DistributionListExpandJob::slotExpansionDone);
-    expandJob->start();
-}
-
-void DistributionListExpandJob::slotExpansionDone(KJob *job)
-{
-    if (job->error()) {
-        setError(job->error());
-        setErrorText(job->errorText());
-        emitResult();
-        return;
-    }
-
-    const Akonadi::ContactGroupExpandJob *expandJob = qobject_cast<Akonadi::ContactGroupExpandJob *>(job);
-
-    const KContacts::Addressee::List contacts = expandJob->contacts();
-
-    foreach (const KContacts::Addressee &contact, contacts) {
-        mEmailAddresses << contact.fullEmail();
-    }
-
-    mIsEmpty = mEmailAddresses.isEmpty();
-
-    emitResult();
-}
 
 AliasesExpandJob::AliasesExpandJob(const QString &recipients, const QString &defaultDomain, QObject *parent)
     : KJob(parent),
@@ -257,5 +185,3 @@ void AliasesExpandJob::finishExpansion()
 
     emitResult();
 }
-
-#include "moc_aliasesexpandjob_p.cpp"

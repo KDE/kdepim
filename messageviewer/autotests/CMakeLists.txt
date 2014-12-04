@@ -69,6 +69,12 @@ endmacro ()
 add_messageviewer_mailsourceviewbrowserwidget_unittest( mailsourceviewtextbrowserwidgettest.cpp )
 ########### viewertest_gui ###############
 
+set( messageviewer_attachmentdirs_SRCS attachmenttemporaryfilesdirstest.cpp ../viewer/attachmenttemporaryfilesdirs.cpp)
+add_executable( messageviewer_attachmentdirstest ${messageviewer_attachmentdirs_SRCS})
+add_test(messageviewer_attachmentdirstest messageviewer_attachmentdirstest)
+ecm_mark_as_test(messageviewer_attachmentdirstest)
+target_link_libraries( messageviewer_attachmentdirstest Qt5::Test )
+
 
 set(KDEPIMLIBS_RUN_ISOLATED_TESTS TRUE)
 set(KDEPIMLIBS_RUN_SQLITE_ISOLATED_TESTS TRUE)
