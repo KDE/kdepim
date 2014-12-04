@@ -164,6 +164,7 @@ class KOTodoView : public KOrg::BaseView
     void setNewPriority( int );
     void setNewPercentage( int );
     void setNewDate( QDate );
+    void setNewStartDate( QDate );
     void copyTodoToDate( QDate );
     void changedCategories( int );
 
@@ -207,6 +208,7 @@ class KOTodoView : public KOrg::BaseView
     QPopupMenu *mPriorityPopupMenu;
     QPopupMenu *mPercentageCompletedPopupMenu;
     QPopupMenu *mCategoryPopupMenu;
+    KDatePickerPopup *mMoveStartPopupMenu;
     KDatePickerPopup *mMovePopupMenu;
     KDatePickerPopup *mCopyPopupMenu;
 
@@ -230,9 +232,10 @@ class KOTodoView : public KOrg::BaseView
       eRecurColumn = 1,
       ePriorityColumn = 2,
       ePercentColumn = 3,
-      eDueDateColumn = 4,
-      eCategoriesColumn = 5,
-      eFolderColumn = 6
+      eStartDateColumn = 4,
+      eDueDateColumn = 5,
+      eCategoriesColumn = 6,
+      eFolderColumn = 7
     };
     enum {
       ePopupEdit = 1300,
@@ -240,7 +243,8 @@ class KOTodoView : public KOrg::BaseView
       ePopupMoveTo = 1302,
       ePopupCopyTo = 1303,
       ePopupUnSubTodo = 1304,
-      ePopupUnAllSubTodo = 1305
+      ePopupUnAllSubTodo = 1305,
+      ePopupMoveStartTo = 1306
     };
 
 };

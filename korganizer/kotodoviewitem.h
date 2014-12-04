@@ -79,7 +79,9 @@ class KOTodoViewItem : public QCheckListItem
     Todo *mTodo;
     KOTodoView *mTodoView;
     QDateTime mEffectiveDueDate;
+    QDateTime mEffectiveStartDate;
     int compareDueDates( const KOTodoViewItem *b ) const;
+    int compareStartDates( const KOTodoViewItem *b ) const;
 
     uint m_odd : 1;
     uint m_known : 1;

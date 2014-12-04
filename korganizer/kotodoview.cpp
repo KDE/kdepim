@@ -389,6 +389,8 @@ KOTodoView::KOTodoView( Calendar *calendar, QWidget *parent, const char* name)
   mTodoListView->setColumnAlignment( ePriorityColumn, AlignHCenter );
   mTodoListView->addColumn( i18n("Complete") );
   mTodoListView->setColumnAlignment( ePercentColumn, AlignRight );
+  mTodoListView->addColumn( i18n("Start Date/Time") );
+  mTodoListView->setColumnAlignment( eStartDateColumn, AlignLeft );
   mTodoListView->addColumn( i18n("Due Date/Time") );
   mTodoListView->setColumnAlignment( eDueDateColumn, AlignLeft );
   mTodoListView->addColumn( i18n("Categories") );
@@ -406,6 +408,7 @@ KOTodoView::KOTodoView( Calendar *calendar, QWidget *parent, const char* name)
   mTodoListView->setColumnWidthMode( eRecurColumn, QListView::Manual );
   mTodoListView->setColumnWidthMode( ePriorityColumn, QListView::Manual );
   mTodoListView->setColumnWidthMode( ePercentColumn, QListView::Manual );
+  mTodoListView->setColumnWidthMode( eStartDateColumn, QListView::Manual );
   mTodoListView->setColumnWidthMode( eDueDateColumn, QListView::Manual );
   mTodoListView->setColumnWidthMode( eCategoriesColumn, QListView::Manual );
   mTodoListView->setColumnWidthMode( eFolderColumn, QListView::Manual );
@@ -439,6 +442,10 @@ KOTodoView::KOTodoView( Calendar *calendar, QWidget *parent, const char* name)
                              KDatePickerPopup::NoDate |
                              KDatePickerPopup::DatePicker |
                              KDatePickerPopup::Words );
+  mMoveStartPopupMenu = new KDatePickerPopup(
+                             KDatePickerPopup::NoDate |
+                             KDatePickerPopup::DatePicker |
+                             KDatePickerPopup::Words );
   mCopyPopupMenu = new KDatePickerPopup(
                              KDatePickerPopup::NoDate |
                              KDatePickerPopup::DatePicker |
@@ -447,6 +454,8 @@ KOTodoView::KOTodoView( Calendar *calendar, QWidget *parent, const char* name)
 
   connect( mMovePopupMenu, SIGNAL( dateChanged( QDate )),
            SLOT( setNewDate( QDate ) ) );
+  connect( mMoveStartPopupMenu, SIGNAL( dateChanged( QDate )),
+           SLOT( setNewStartDate( QDate ) ) );
   connect( mCopyPopupMenu, SIGNAL( dateChanged( QDate )),
            SLOT( copyTodoToDate( QDate ) ) );
 
@@ -472,11 +481,14 @@ KOTodoView::KOTodoView( Calendar *calendar, QWidget *parent, const char* name)
   mItemPopupMenu->insertSeparator();
   mItemPopupMenu->insertItem( i18n("&Copy To"), mCopyPopupMenu, ePopupCopyTo );
   mItemPopupMenu->insertItem(i18n("&Move To"), mMovePopupMenu, ePopupMoveTo );
+  mItemPopupMenu->insertItem(i18n("Move &Start To"), mMoveStartPopupMenu, ePopupMoveStartTo );
   mItemPopupMenu->insertSeparator();
   mItemPopupMenu->insertItem(i18n("delete completed to-dos","Pur&ge Completed"),
                              this, SLOT( purgeCompleted() ) );
 
   connect( mMovePopupMenu, SIGNAL( dateChanged( QDate ) ),
+           mItemPopupMenu, SLOT( hide() ) );
+  connect( mMoveStartPopupMenu, SIGNAL( dateChanged( QDate ) ),
            mItemPopupMenu, SLOT( hide() ) );
   connect( mCopyPopupMenu, SIGNAL( dateChanged( QDate ) ),
            mItemPopupMenu, SLOT( hide() ) );
@@ -793,11 +805,17 @@ void KOTodoView::popupMenu( QListViewItem *item, const QPoint &, int column )
     mItemPopupMenu->setItemEnabled( ePopupUnAllSubTodo, editable );
 
     if ( editable ) {
-      QDate date = mActiveItem->todo()->dtDue().date();
+      QDate dueDate = mActiveItem->todo()->dtDue().date();
       if ( mActiveItem->todo()->hasDueDate () ) {
-        mMovePopupMenu->datePicker()->setDate( date );
+        mMovePopupMenu->datePicker()->setDate( dueDate );
       } else {
         mMovePopupMenu->datePicker()->setDate( QDate::currentDate() );
+      }
+      if ( mActiveItem->todo()->hasStartDate () ) {
+        QDate date = mActiveItem->todo()->dtStart().date();
+        mMoveStartPopupMenu->datePicker()->setDate( date );
+      } else {
+        mMoveStartPopupMenu->datePicker()->setDate( QDate::currentDate() );
       }
       switch ( column ) {
         case ePriorityColumn:
@@ -807,6 +825,9 @@ void KOTodoView::popupMenu( QListViewItem *item, const QPoint &, int column )
           mPercentageCompletedPopupMenu->popup( QCursor::pos() );
           break;
         }
+        case eStartDateColumn:
+          mMoveStartPopupMenu->popup( QCursor::pos() );
+          break;
         case eDueDateColumn:
           mMovePopupMenu->popup( QCursor::pos() );
           break;
@@ -814,7 +835,7 @@ void KOTodoView::popupMenu( QListViewItem *item, const QPoint &, int column )
           getCategoryPopupMenu( mActiveItem )->popup( QCursor::pos() );
           break;
         default:
-          mCopyPopupMenu->datePicker()->setDate( date );
+          mCopyPopupMenu->datePicker()->setDate( dueDate );
           mCopyPopupMenu->datePicker()->setDate( QDate::currentDate() );
           mItemPopupMenu->setItemEnabled( ePopupUnSubTodo,
                                           mActiveItem->todo()->relatedTo() );
@@ -990,6 +1011,36 @@ void KOTodoView::setNewPercentage( KOTodoViewItem *item, int percentage )
 void KOTodoView::setNewPercentage( int index )
 {
   setNewPercentage( mActiveItem, mPercentage[index] );
+}
+
+void KOTodoView::setNewStartDate( QDate date ) {
+ if ( !mActiveItem || !mChanger ) return;
+  Todo *todo = mActiveItem->todo();
+  if ( !todo ) return;
+
+  if ( todo->hasDueDate() && todo->dtDue() < date ) {
+    KMessageBox::sorry(this,
+                 i18n("The start date cannot be after the due date."));
+    return;
+  }
+
+  if ( !todo->isReadOnly() && mChanger->beginChange( todo, 0, QString() ) ) {
+    Todo *oldTodo = todo->clone();
+
+    QDateTime dt;
+    dt.setDate( date );
+
+    todo->setHasStartDate( !date.isNull() );
+    kdDebug(5850) << "Changing start date to: " << dt << endl;
+    todo->setDtStart( dt );
+
+    mActiveItem->construct();
+    mChanger->changeIncidence( oldTodo, todo, KOGlobals::COMPLETION_MODIFIED, this );
+    mChanger->endChange( todo, 0, QString() );
+    delete oldTodo;
+  } else {
+    kdDebug(5850) << "No active item, active item is read-only, or locking failed" << endl;
+  }
 }
 
 void KOTodoView::setNewDate( QDate date )

@@ -62,6 +62,18 @@ inline int KOTodoViewItem::compareDueDates( const KOTodoViewItem *b ) const
     return b->mEffectiveDueDate.secsTo( mEffectiveDueDate );
 }
 
+inline int KOTodoViewItem::compareStartDates( const KOTodoViewItem *b ) const
+{
+  if ( mEffectiveStartDate.isValid() &&
+       !b->mEffectiveStartDate.isValid() )
+    return -1;
+  else if ( !mEffectiveStartDate.isValid() &&
+            b->mEffectiveStartDate.isValid() )
+    return 1;
+  else
+    return b->mEffectiveStartDate.secsTo( mEffectiveDueDate );
+}
+
 int KOTodoViewItem::compare( QListViewItem *it, int col, bool ascending ) const
 {
   KOTodoViewItem *i = dynamic_cast<KOTodoViewItem *>( it );
@@ -97,6 +109,13 @@ int KOTodoViewItem::compare( QListViewItem *it, int col, bool ascending ) const
 
   case KOTodoView::eDueDateColumn:
     c = compareDueDates( i );
+    if ( c ) {
+      return c;
+    } else {
+      return mTodo->priority() - i->todo()->priority();
+    }
+  case KOTodoView::eStartDateColumn:
+    c = compareStartDates( i );
     if ( c ) {
       return c;
     } else {
@@ -161,6 +180,23 @@ void KOTodoViewItem::construct()
       }
   } else
     setText( KOTodoView::eDueDateColumn, "" );
+
+  if (mTodo->hasStartDate()) {
+    QString dtStr = mTodo->dtStartDateStr();
+    if (!mTodo->doesFloat()) {
+      dtStr += " " + mTodo->dtStartTimeStr();
+    }
+    setText( KOTodoView::eStartDateColumn, dtStr );
+    mEffectiveStartDate = mTodo->dtStart();
+    KOTodoViewItem *myParent;
+    if ( ( myParent = dynamic_cast<KOTodoViewItem *>( parent() ) ) )
+      if ( !myParent->mEffectiveStartDate.isValid() ||
+          myParent->mEffectiveStartDate > mEffectiveStartDate ) {
+        myParent->mEffectiveStartDate = mEffectiveStartDate;
+      }
+  } else
+    setText( KOTodoView::eStartDateColumn, "" );
+
 
   setText( KOTodoView::eCategoriesColumn, mTodo->categoriesStr() );
 
