@@ -40,7 +40,7 @@ class MimeTreeModel::Private
 {
 public:
     Private() :
-        root(0)
+        root(Q_NULLPTR)
     {}
 
     // FIXME: this should actually be a member function of ContentIndex

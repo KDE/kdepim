@@ -271,7 +271,7 @@ public:
     bool openVCard(const KContacts::Addressee &a, const QString &vCard) const
     {
         Q_UNUSED(vCard);
-        Akonadi::ContactViewer *view = new Akonadi::ContactViewer(0);
+        Akonadi::ContactViewer *view = new Akonadi::ContactViewer(Q_NULLPTR);
         view->setRawContact(a);
         view->setMinimumSize(300, 400);
         view->show();

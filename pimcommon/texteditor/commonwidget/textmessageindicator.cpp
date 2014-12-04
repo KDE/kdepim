@@ -30,7 +30,7 @@
 using namespace PimCommon;
 TextMessageIndicator::TextMessageIndicator(QWidget *parent)
     : QWidget(parent),
-      mTimer(0),
+      mTimer(Q_NULLPTR),
       mLineSpacing(0)
 {
     setObjectName(QLatin1String("TextMessageIndicator"));

@@ -48,7 +48,7 @@ public:
 AttachmentFromFolderJob::Private::Private(AttachmentFromFolderJob *qq) :
     q(qq),
     mCompression(KZip::DeflateCompression),
-    mZip(0),
+    mZip(Q_NULLPTR),
     mArchiveTime(QDateTime::currentDateTime())
 {
 }

@@ -52,7 +52,7 @@ using namespace GpgME;
 using namespace MessageViewer;
 
 CryptoBodyPartMemento::CryptoBodyPartMemento()
-    : QObject(0),
+    : QObject(Q_NULLPTR),
       Interface::BodyPartMemento(),
       m_running(false)
 {

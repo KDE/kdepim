@@ -24,7 +24,7 @@
 using namespace MessageViewer;
 
 ContactDisplayMessageMemento::ContactDisplayMessageMemento(const QString &emailAddress)
-    : QObject(0),
+    : QObject(Q_NULLPTR),
       mFinished(false),
       mMailAllowToRemoteContent(false),
       mForceDisplayTo(Viewer::UseGlobalSetting)

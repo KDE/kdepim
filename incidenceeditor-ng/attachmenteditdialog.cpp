@@ -29,7 +29,6 @@
 #include "ui_attachmenteditdialog.h"
 #include <KLocalizedString>
 
-
 #include <KIO/NetAccess>
 #include <KLocale>
 #include <KConfigGroup>

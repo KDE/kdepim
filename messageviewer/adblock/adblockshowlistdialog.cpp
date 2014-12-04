@@ -38,7 +38,7 @@
 using namespace MessageViewer;
 AdBlockShowListDialog::AdBlockShowListDialog(QWidget *parent)
     : QDialog(parent),
-      mTemporaryFile(0)
+      mTemporaryFile(Q_NULLPTR)
 {
     setWindowTitle(i18n("Show adblock list"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);

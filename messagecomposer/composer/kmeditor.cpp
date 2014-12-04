@@ -62,9 +62,9 @@ public:
         : q(parent),
           useExtEditor(false),
           forcePlainTextMarkup(false),
-          mExtEditorProcess(0),
-          mExtEditorTempFile(0),
-          mAutoCorrection(0)
+          mExtEditorProcess(Q_NULLPTR),
+          mExtEditorTempFile(Q_NULLPTR),
+          mAutoCorrection(Q_NULLPTR)
     {
     }
 

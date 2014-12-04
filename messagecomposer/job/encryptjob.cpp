@@ -44,7 +44,7 @@ class MessageComposer::EncryptJobPrivate : public ContentJobBasePrivate
 public:
     EncryptJobPrivate(EncryptJob *qq)
         : ContentJobBasePrivate(qq)
-        , content(0)
+        , content(Q_NULLPTR)
     {
     }
 

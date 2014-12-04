@@ -44,7 +44,7 @@ class MessageComposer::MainTextJobPrivate : public ContentJobBasePrivate
 public:
     MainTextJobPrivate(MainTextJob *qq)
         : ContentJobBasePrivate(qq)
-        , textPart(0)
+        , textPart(Q_NULLPTR)
     {
     }
 

@@ -45,8 +45,8 @@ class AnnotationEditDialog::Private
 {
 public:
     Private()
-        : mTextEdit(0),
-          mNoteType(0),
+        : mTextEdit(Q_NULLPTR),
+          mNoteType(Q_NULLPTR),
           mHasAnnotation(false)
     {
     }

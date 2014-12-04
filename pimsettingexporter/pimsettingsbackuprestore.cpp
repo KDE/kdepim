@@ -51,8 +51,8 @@
 
 PimSettingsBackupRestore::PimSettingsBackupRestore(QWidget *parentWidget, QObject *parent)
     : QObject(parent),
-      mImportExportData(0),
-      mArchiveStorage(0),
+      mImportExportData(Q_NULLPTR),
+      mArchiveStorage(Q_NULLPTR),
       mParentWidget(parentWidget)
 {
 

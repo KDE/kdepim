@@ -46,7 +46,7 @@ Q_GLOBAL_STATIC(StorageServiceJobConfigPrivate, sInstance)
 
 StorageServiceJobConfig::StorageServiceJobConfig(QObject *parent)
     : QObject(parent),
-      mSettingsJob(0)
+      mSettingsJob(Q_NULLPTR)
 {
 }
 

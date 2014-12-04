@@ -129,14 +129,14 @@ void showJobError( KJob* job )
 
 
 SaveMailCommand::SaveMailCommand(const Akonadi::Item& message, QObject *parent) :
-    QObject(parent), mOffset(0), mJob(0), mTotalSize(0)
+    QObject(parent), mOffset(0), mJob(Q_NULLPTR), mTotalSize(0)
 {
     mMessages.append(message);
     mMsgListIndex = 0;
 }
 
 SaveMailCommand::SaveMailCommand(const Akonadi::Item::List& messages, QObject *parent) :
-    QObject(parent), mMessages(messages), mOffset(0), mJob(0), mTotalSize(0)
+    QObject(parent), mMessages(messages), mOffset(0), mJob(Q_NULLPTR), mTotalSize(0)
 {
     mMsgListIndex = 0;
 }
