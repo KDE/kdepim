@@ -20,8 +20,6 @@
 #include "individualmailcomponentfactory.h"
 #include "individualmaildialog.h"
 
-#include <KPIMUtils/Email>
-
 #include <KMessageBox>
 
 #include <QDBusConnection>

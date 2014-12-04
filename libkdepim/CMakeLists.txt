@@ -95,7 +95,7 @@ generate_export_header(kdepim BASE_NAME kdepim)
 
 target_link_libraries(kdepim
   KF5::Contacts
-  KF5::PimUtils
+  KF5::Codecs
   KF5::Ldap
   KF5::IdentityManagement
   KF5::KCMUtils
@@ -115,7 +115,7 @@ target_link_libraries(kdepim
 
 target_link_libraries(kdepim LINK_INTERFACE_LIBRARIES
   KF5::Contacts
-  KF5::PimUtils
+  KF5::Codecs
   KF5::Ldap
   KF5::IdentityManagement
   KF5::PimTextEdit

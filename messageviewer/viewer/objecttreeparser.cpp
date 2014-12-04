@@ -70,8 +70,6 @@
 #include <libkpgp/kpgp.h>
 
 // KDEPIMLIBS includes
-#include <KPIMUtils/kpimutils/email.h>
-#include <KPIMUtils/kpimutils/linklocator.h>
 #include <gpgme++/importresult.h>
 #include <gpgme++/decryptionresult.h>
 #include <gpgme++/key.h>
@@ -90,6 +88,9 @@
 #include <kiconloader.h>
 #include <kcodecs.h>
 #include <kconfiggroup.h>
+
+#include <KEmailAddress>
+#include <KTextToHTML>
 //#include <kstyle.h>
 
 // Qt includes
@@ -121,7 +122,6 @@
 #include <qtextdocument.h>
 #include <KLocalizedString>
 
-using KPIMUtils::LinkLocator;
 using namespace MessageViewer;
 using namespace MessageCore;
 
@@ -2698,7 +2698,7 @@ QString ObjectTreeParser::writeSigstatHeader(PartMetaData &block,
                 // extra hint for green case
                 // that email addresses in DN do not match fromAddress
                 QString greenCaseWarning;
-                QString msgFrom(KPIMUtils::extractEmailAddress(fromAddress));
+                QString msgFrom(KEmailAddress::extractEmailAddress(fromAddress));
                 QString certificate;
                 if (block.keyId.isEmpty()) {
                     certificate = i18n("certificate");
@@ -2730,7 +2730,7 @@ QString ObjectTreeParser::writeSigstatHeader(PartMetaData &block,
                                 greenCaseWarning.append(QLatin1String(", <br />&nbsp; &nbsp;"));
                             }
                             bStart = false;
-                            greenCaseWarning.append(KPIMUtils::extractEmailAddress(*it));
+                            greenCaseWarning.append(KEmailAddress::extractEmailAddress(*it));
                         }
                     }
                 } else {
@@ -2771,7 +2771,7 @@ QString ObjectTreeParser::writeSigstatHeader(PartMetaData &block,
                         signer.clear();
                     } else {
                         if (!blockAddrs.empty()) {
-                            const QUrl address = KPIMUtils::encodeMailtoUrl(blockAddrs.first());
+                            const QUrl address = KEmailAddress::encodeMailtoUrl(blockAddrs.first());
                             signer = QLatin1String("<a href=\"mailto:") + QLatin1String(QUrl::toPercentEncoding(address.path())) +
                                      QLatin1String("\">") + signer + QLatin1String("</a>");
                         }
@@ -3266,13 +3266,24 @@ void ObjectTreeParser::writeBodyStr(const QByteArray &aStr, const QTextCodec *aC
     }
 }
 
+static QString iconToDataUrl(const QString &iconPath)
+{
+    QFile f(iconPath);
+    if (!f.open(QIODevice::ReadOnly)) {
+        return QString();
+    }
+
+    const QByteArray ba = f.readAll();
+    return QString(QStringLiteral("data:image/png;base64,%1")).arg(QLatin1String(ba.toBase64().constData()));
+}
+
 QString ObjectTreeParser::quotedHTML(const QString &s, bool decorate)
 {
     assert(cssHelper());
 
-    int convertFlags = LinkLocator::PreserveSpaces | LinkLocator::HighlightText;
+    KTextToHTML::Options convertFlags = KTextToHTML::PreserveSpaces | KTextToHTML::HighlightText;
     if (decorate && GlobalSettings::self()->showEmoticons()) {
-        convertFlags |= LinkLocator::ReplaceSmileys;
+        convertFlags |= KTextToHTML::ReplaceSmileys;
     }
     QString htmlStr;
     const QString normalStartTag = cssHelper()->nonQuotedFontTag();
@@ -3304,12 +3315,11 @@ QString ObjectTreeParser::quotedHTML(const QString &s, bool decorate)
     if (GlobalSettings::self()->showExpandQuotesMark()) {
         // Cache Icons
         if (mCollapseIcon.isEmpty()) {
-            mCollapseIcon = LinkLocator::pngToDataUrl(
-                                IconNameCache::instance()->iconPath(QLatin1String("quotecollapse"), 0));
+            mCollapseIcon = iconToDataUrl(IconNameCache::instance()->iconPath(QLatin1String("quotecollapse"), 0));
         }
-        if (mExpandIcon.isEmpty())
-            mExpandIcon = LinkLocator::pngToDataUrl(
-                              IconNameCache::instance()->iconPath(QLatin1String("quoteexpand"), 0));
+        if (mExpandIcon.isEmpty()) {
+            mExpandIcon = iconToDataUrl(IconNameCache::instance()->iconPath(QLatin1String("quoteexpand"), 0));
+        }
     }
 
     while (beg < length) {
@@ -3407,7 +3417,7 @@ QString ObjectTreeParser::quotedHTML(const QString &s, bool decorate)
                     paraIsRTL = line.isRightToLeft();
                 }
                 htmlStr += QString::fromLatin1("<div dir=\"%1\">").arg(paraIsRTL ? QLatin1String("rtl") : QLatin1String("ltr"));
-                htmlStr += LinkLocator::convertToHtml(line, convertFlags);
+                htmlStr += KTextToHTML::convertToHtml(line, convertFlags);
                 htmlStr += QLatin1String("</div>");
                 startNewPara = looksLikeParaBreak(s, pos);
             } else {

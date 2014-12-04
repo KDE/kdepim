@@ -25,7 +25,6 @@
 #include <Akonadi/Contact/EmailAddressSelectionWidget>
 #include <kcontacts/contactgroup.h>
 #include <libkdepim/ldap/ldapsearchdialog.h>
-#include <KPIMUtils/kpimutils/email.h>
 
 #include <kconfiggroup.h>
 #include <KLocalizedString>

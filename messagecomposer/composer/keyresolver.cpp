@@ -42,7 +42,7 @@
 #endif
 #include "kleo_util.h"
 
-#include <KPIMUtils/kpimutils/email.h>
+#include <KEmailAddress>
 #include "libkleo/ui/keyselectiondialog.h"
 #include "kleo/cryptobackendfactory.h"
 #include "kleo/keylistjob.h"
@@ -632,7 +632,7 @@ void SigningFormatPreferenceCounter::operator()(const Kleo::KeyResolver::Item &i
 
 static QString canonicalAddress(const QString &_address)
 {
-    const QString address = KPIMUtils::extractEmailAddress(_address);
+    const QString address = KEmailAddress::extractEmailAddress(_address);
     if (!address.contains(QLatin1Char('@'))) {
         // local address
         //return address + '@' + KNetwork::KResolver::localHostName();
@@ -1754,7 +1754,7 @@ std::vector<GpgME::Key> Kleo::KeyResolver::selectKeys(
     QPointer<Kleo::KeySelectionDialog> dlg =
         new Kleo::KeySelectionDialog(
         i18n("Encryption Key Selection"),
-        msg, KPIMUtils::extractEmailAddress(person), selectedKeys,
+        msg, KEmailAddress::extractEmailAddress(person), selectedKeys,
         Kleo::KeySelectionDialog::ValidEncryptionKeys
         & ~(opgp ? 0 : Kleo::KeySelectionDialog::OpenPGPKeys)
         & ~(x509 ? 0 : Kleo::KeySelectionDialog::SMIMEKeys),

@@ -55,7 +55,7 @@ using namespace KCalCore;
 #include <KIdentityManagement/Identity>
 #include <KIdentityManagement/IdentityManager>
 
-#include <KPIMUtils/Email>
+#include <KEmailAddress>
 
 #include <MailTransport/MessageQueueJob>
 #include <MailTransport/TransportManager>
@@ -294,7 +294,7 @@ public:
         Attendee::List::ConstIterator end = attendees.constEnd();
         for (it = attendees.constBegin(); it != end; ++it) {
             // match only the email part, not the name
-            if (KPIMUtils::compareEmail((*it)->email(), receiver, false)) {
+            if (KEmailAddress::compareEmail((*it)->email(), receiver, false)) {
                 // We are the current one, and even the receiver, note
                 // this and quit searching.
                 myself = (*it);
@@ -466,7 +466,7 @@ public:
     {
         QString name;
         QString email;
-        KPIMUtils::extractEmailAddressAndName(receiver, email, name);
+        KEmailAddress::extractEmailAddressAndName(receiver, email, name);
         if (name.isEmpty() && myself) {
             name = myself->name();
         }
@@ -624,18 +624,18 @@ public:
 
         MailTransport::MessageQueueJob *job = new MailTransport::MessageQueueJob;
 
-        job->addressAttribute().setTo(QStringList() << KPIMUtils::extractEmailAddress(
-                                          KPIMUtils::normalizeAddressesAndEncodeIdn(to)));
+        job->addressAttribute().setTo(QStringList() << KEmailAddress::extractEmailAddress(
+                                          KEmailAddress::normalizeAddressesAndEncodeIdn(to)));
         job->transportAttribute().setTransportId(transport->id());
 
         if (transport->specifySenderOverwriteAddress()) {
             job->addressAttribute().setFrom(
-                KPIMUtils::extractEmailAddress(
-                    KPIMUtils::normalizeAddressesAndEncodeIdn(transport->senderOverwriteAddress())));
+                KEmailAddress::extractEmailAddress(
+                    KEmailAddress::normalizeAddressesAndEncodeIdn(transport->senderOverwriteAddress())));
         } else {
             job->addressAttribute().setFrom(
-                KPIMUtils::extractEmailAddress(
-                    KPIMUtils::normalizeAddressesAndEncodeIdn(msg->from()->asUnicodeString())));
+                KEmailAddress::extractEmailAddress(
+                    KEmailAddress::normalizeAddressesAndEncodeIdn(msg->from()->asUnicodeString())));
         }
 
         job->setMessage(msg);
@@ -690,7 +690,7 @@ public:
         if (incidence->organizer()->isEmpty()) {
             QString tname, temail;
             KMime::Message::Ptr message = viewerInstance->message();
-            KPIMUtils::extractEmailAddressAndName(message->sender()->asUnicodeString(),
+            KEmailAddress::extractEmailAddressAndName(message->sender()->asUnicodeString(),
                                                   temail, tname);
             incidence->setOrganizer(Person::Ptr(new Person(tname, temail)));
         }
@@ -913,7 +913,7 @@ public:
             if (delegateString.isEmpty()) {
                 return true;
             }
-            if (KPIMUtils::compareEmail(delegateString, incidence->organizer()->email(), false)) {
+            if (KEmailAddress::compareEmail(delegateString, incidence->organizer()->email(), false)) {
                 KMessageBox::sorry(0, i18n("Delegation to organizer is not possible."));
                 return true;
             }
@@ -932,7 +932,7 @@ public:
             Attendee::List::ConstIterator end = attendees.constEnd();
             for (Attendee::List::ConstIterator it = attendees.constBegin();
                     it != end; ++it) {
-                if (KPIMUtils::compareEmail((*it)->fullName(), myself->delegator(), false) &&
+                if (KEmailAddress::compareEmail((*it)->fullName(), myself->delegator(), false) &&
                         (*it)->status() == Attendee::Delegated) {
                     delegator = (*it)->fullName();
                     delegatorRSVP = (*it)->RSVP();
@@ -961,7 +961,7 @@ public:
             // forwarded invitation
             QString name;
             QString email;
-            KPIMUtils::extractEmailAddressAndName(receiver, email, name);
+            KEmailAddress::extractEmailAddressAndName(receiver, email, name);
             if (!email.isEmpty()) {
                 Attendee::Ptr newMyself(
                     new Attendee(name, email, true,  // RSVP, otherwise we would not be here
@@ -989,7 +989,7 @@ public:
                 myself->setDelegate(delegateString);
             }
             QString name, email;
-            KPIMUtils::extractEmailAddressAndName(delegateString, email, name);
+            KEmailAddress::extractEmailAddressAndName(delegateString, email, name);
             Attendee::Ptr delegate(new Attendee(name, email, true));
             delegate->setDelegator(receiver);
             incidence->addAttendee(delegate);

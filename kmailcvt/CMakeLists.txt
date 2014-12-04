@@ -29,7 +29,6 @@ target_link_libraries(kmailcvt
   KF5::AkonadiCore
   KF5::AkonadiMime
   KF5::Mime
-  KF5::PimUtils
   mailimporter
   mailcommon
   kdepim

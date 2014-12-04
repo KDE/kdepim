@@ -96,11 +96,11 @@ find_package(KF5DNSSD ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5TextEditor ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Sonnet ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5GlobalAccel ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Codecs ${KF5_VERSION} CONFIG REQUIRED)
 
 # Find KdepimLibs Package
 find_package(KF5Akonadi CONFIG REQUIRED)
 find_package(KF5Contacts ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
-find_package(KF5PimUtils ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5CalendarCore ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5AkonadiContact ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5IdentityManagement ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)

@@ -84,7 +84,6 @@ target_link_libraries(importwizard
   KF5::AkonadiCore
   KF5::AkonadiMime
   KF5::Mime
-  KF5::PimUtils
   KF5::MailTransport
   KF5::DBusAddons
   mailimporter

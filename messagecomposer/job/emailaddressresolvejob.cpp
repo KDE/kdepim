@@ -29,7 +29,7 @@
 #include "messagecomposer/composer/composer.h"
 #include "messagecomposer/part/infopart.h"
 
-#include <KPIMUtils/Email>
+#include <KEmailAddress>
 
 using namespace MessageComposer;
 
@@ -155,17 +155,17 @@ QString EmailAddressResolveJob::expandedFrom() const
 
 QStringList EmailAddressResolveJob::expandedTo() const
 {
-    return KPIMUtils::splitAddressList(mResultMap.value(QLatin1String("infoPartTo")).toString());
+    return KEmailAddress::splitAddressList(mResultMap.value(QLatin1String("infoPartTo")).toString());
 }
 
 QStringList EmailAddressResolveJob::expandedCc() const
 {
-    return KPIMUtils::splitAddressList(mResultMap.value(QLatin1String("infoPartCc")).toString());
+    return KEmailAddress::splitAddressList(mResultMap.value(QLatin1String("infoPartCc")).toString());
 
 }
 
 QStringList EmailAddressResolveJob::expandedBcc() const
 {
-    return KPIMUtils::splitAddressList(mResultMap.value(QLatin1String("infoPartBcc")).toString());
+    return KEmailAddress::splitAddressList(mResultMap.value(QLatin1String("infoPartBcc")).toString());
 }
 

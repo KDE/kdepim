@@ -250,7 +250,7 @@ target_link_libraries(pimcommon
     KF5::Contacts
     KF5::AkonadiContact
     KF5::AkonadiCore
-    KF5::PimUtils
+    KF5::Codecs
     KF5::SonnetCore
     KF5::NewStuff
     KF5::Wallet

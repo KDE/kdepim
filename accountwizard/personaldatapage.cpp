@@ -29,7 +29,7 @@
 #include "ispdb/ispdb.h"
 
 #include <libkdepim/misc/emailvalidator.h>
-#include <kpimutils/email.h>
+#include <KEmailAddress>
 
 #include <mailtransport/transport.h>
 
@@ -107,7 +107,7 @@ void PersonalDataPage::slotTextChanged()
     // Ignore the password field, as that can be empty when auth is based on ip-address.
     setValid(!ui.emailEdit->text().isEmpty() &&
              !ui.nameEdit->text().isEmpty()  &&
-             KPIMUtils::isValidSimpleAddress(ui.emailEdit->text()));
+             KEmailAddress::isValidSimpleAddress(ui.emailEdit->text()));
 }
 
 void PersonalDataPage::leavePageNext()

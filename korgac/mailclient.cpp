@@ -39,7 +39,7 @@
 
 #include <KIdentityManagement/Identity>
 
-#include <KPIMUtils/Email>
+#include <KEmailAddress>
 
 #include <MailTransport/MessageQueueJob>
 #include <MailTransport/Transport>
@@ -94,10 +94,10 @@ bool MailClient::mailAttendees(const KCalCore::IncidenceBase::Ptr &incidence,
 
         // Build a nice address for this attendee including the CN.
         QString tname, temail;
-        const QString username = KPIMUtils::quoteNameIfNecessary(a->name());
+        const QString username = KEmailAddress::quoteNameIfNecessary(a->name());
         // ignore the return value from extractEmailAddressAndName() because
         // it will always be false since tusername does not contain "@domain".
-        KPIMUtils::extractEmailAddressAndName(username, temail/*byref*/, tname/*byref*/);
+        KEmailAddress::extractEmailAddressAndName(username, temail/*byref*/, tname/*byref*/);
         tname += QLatin1String(" <") + email + QLatin1Char('>');
 
         // Optional Participants and Non-Participants are copied on the email
@@ -184,10 +184,10 @@ bool MailClient::mailTo(const KCalCore::IncidenceBase::Ptr &incidence,
 
 QStringList extractEmailAndNormalize(const QString &email)
 {
-    const QStringList splittedEmail = KPIMUtils::splitAddressList(email);
+    const QStringList splittedEmail = KEmailAddress::splitAddressList(email);
     QStringList normalizedEmail;
     Q_FOREACH (const QString &email, splittedEmail) {
-        const QString str = KPIMUtils::extractEmailAddress(KPIMUtils::normalizeAddressesAndEncodeIdn(email));
+        const QString str = KEmailAddress::extractEmailAddress(KEmailAddress::normalizeAddressesAndEncodeIdn(email));
         normalizedEmail << str;
     }
     return normalizedEmail;
@@ -347,12 +347,12 @@ bool MailClient::send(const KIdentityManagement::Identity &identity,
 
     if (transport && transport->specifySenderOverwriteAddress()) {
         qjob->addressAttribute().setFrom(
-            KPIMUtils::extractEmailAddress(
-                KPIMUtils::normalizeAddressesAndEncodeIdn(transport->senderOverwriteAddress())));
+            KEmailAddress::extractEmailAddress(
+                KEmailAddress::normalizeAddressesAndEncodeIdn(transport->senderOverwriteAddress())));
     } else {
         qjob->addressAttribute().setFrom(
-            KPIMUtils::extractEmailAddress(
-                KPIMUtils::normalizeAddressesAndEncodeIdn(from)));
+            KEmailAddress::extractEmailAddress(
+                KEmailAddress::normalizeAddressesAndEncodeIdn(from)));
     }
 
     if (!to.isEmpty()) {

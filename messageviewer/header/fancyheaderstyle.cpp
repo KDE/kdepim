@@ -21,12 +21,10 @@
 #include "header/headerstyle_util.h"
 
 #include "header/headerstrategy.h"
-#include <KPIMUtils/kpimutils/linklocator.h>
-using KPIMUtils::LinkLocator;
+#include <KTextToHTML>
 #include "settings/globalsettings.h"
 #include "viewer/nodehelper.h"
 
-#include <KPIMUtils/kpimutils/email.h>
 #include <messagecore/utils/stringutil.h>
 
 #include <qdebug.h>
@@ -97,9 +95,10 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
 
     // the subject line and box below for details
     if (strategy->showHeader(QLatin1String("subject"))) {
-        const int flags = LinkLocator::PreserveSpaces |
-                          (GlobalSettings::self()->showEmoticons() ?
-                           LinkLocator::ReplaceSmileys : 0);
+        KTextToHTML::Options flags = KTextToHTML::PreserveSpaces;
+        if (GlobalSettings::self()->showEmoticons()) {
+            flags |= KTextToHTML::ReplaceSmileys;
+        }
 
         headerStr += QString::fromLatin1("<div dir=\"%1\">%2</div>\n")
                      .arg(subjectDir)

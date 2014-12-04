@@ -28,7 +28,7 @@ using MailCommon::FilterLog;
 
 #include <KMime/KMimeMessage>
 
-#include <KPIMUtils/Email>
+#include <KEmailAddress>
 
 #include <QDebug>
 #include <KConfigGroup>
@@ -903,12 +903,12 @@ bool SearchRuleString::matchesInternal(const QString &msgContents) const
         return (QString::compare(msgContents.toLower(), contents().toLower()) >= 0);
 
     case FuncIsInAddressbook: {
-        const QStringList addressList = KPIMUtils::splitAddressList(msgContents.toLower());
+        const QStringList addressList = KEmailAddress::splitAddressList(msgContents.toLower());
         QStringList::ConstIterator end(addressList.constEnd());
         for (QStringList::ConstIterator it = addressList.constBegin(); (it != end); ++it) {
             Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
             job->setLimit(1);
-            job->setQuery(Akonadi::ContactSearchJob::Email, KPIMUtils::extractEmailAddress(*it).toLower());
+            job->setQuery(Akonadi::ContactSearchJob::Email, KEmailAddress::extractEmailAddress(*it).toLower());
             job->exec();
 
             if (!job->contacts().isEmpty()) {
@@ -919,13 +919,13 @@ bool SearchRuleString::matchesInternal(const QString &msgContents) const
     }
 
     case FuncIsNotInAddressbook: {
-        const QStringList addressList = KPIMUtils::splitAddressList(msgContents.toLower());
+        const QStringList addressList = KEmailAddress::splitAddressList(msgContents.toLower());
         QStringList::ConstIterator end(addressList.constEnd());
 
         for (QStringList::ConstIterator it = addressList.constBegin(); (it != end); ++it) {
             Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
             job->setLimit(1);
-            job->setQuery(Akonadi::ContactSearchJob::Email, KPIMUtils::extractEmailAddress(*it).toLower());
+            job->setQuery(Akonadi::ContactSearchJob::Email, KEmailAddress::extractEmailAddress(*it).toLower());
             job->exec();
 
             if (job->contacts().isEmpty()) {
@@ -937,12 +937,12 @@ bool SearchRuleString::matchesInternal(const QString &msgContents) const
 
     case FuncIsInCategory: {
         QString category = contents();
-        const QStringList addressList =  KPIMUtils::splitAddressList(msgContents.toLower());
+        const QStringList addressList =  KEmailAddress::splitAddressList(msgContents.toLower());
 
         QStringList::ConstIterator end(addressList.constEnd());
         for (QStringList::ConstIterator it = addressList.constBegin(); it != end; ++it) {
             Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
-            job->setQuery(Akonadi::ContactSearchJob::Email, KPIMUtils::extractEmailAddress(*it).toLower());
+            job->setQuery(Akonadi::ContactSearchJob::Email, KEmailAddress::extractEmailAddress(*it).toLower());
             job->exec();
 
             const KContacts::Addressee::List contacts = job->contacts();
@@ -958,12 +958,12 @@ bool SearchRuleString::matchesInternal(const QString &msgContents) const
 
     case FuncIsNotInCategory: {
         QString category = contents();
-        const QStringList addressList =  KPIMUtils::splitAddressList(msgContents.toLower());
+        const QStringList addressList =  KEmailAddress::splitAddressList(msgContents.toLower());
 
         QStringList::ConstIterator end(addressList.constEnd());
         for (QStringList::ConstIterator it = addressList.constBegin(); it != end; ++it) {
             Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
-            job->setQuery(Akonadi::ContactSearchJob::Email, KPIMUtils::extractEmailAddress(*it).toLower());
+            job->setQuery(Akonadi::ContactSearchJob::Email, KEmailAddress::extractEmailAddress(*it).toLower());
             job->exec();
 
             const KContacts::Addressee::List contacts = job->contacts();

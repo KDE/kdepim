@@ -25,7 +25,6 @@ target_link_libraries(testalarmdlg
   kdepimdbusinterfaces
   KF5::KIOCore
   KF5::Mime
-  KF5::PimUtils
   korganizer_core
   KF5::AkonadiCore
   KF5::CalendarCore

@@ -20,10 +20,7 @@
 #include "header/headerstyle_util.h"
 
 #include "header/headerstrategy.h"
-#include <KPIMUtils/kpimutils/linklocator.h>
-using KPIMUtils::LinkLocator;
 
-#include <KPIMUtils/kpimutils/email.h>
 #include <messagecore/utils/stringutil.h>
 
 #include <qdebug.h>
@@ -36,7 +33,6 @@ using KPIMUtils::LinkLocator;
 #include <QStandardPaths>
 
 using namespace MessageCore;
-using KPIMUtils::LinkLocator;
 using namespace MessageViewer;
 
 namespace MessageViewer

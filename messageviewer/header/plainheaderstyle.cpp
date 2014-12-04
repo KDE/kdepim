@@ -21,7 +21,6 @@
 
 #include "header/headerstrategy.h"
 
-#include <KPIMUtils/kpimutils/email.h>
 #include <messagecore/utils/stringutil.h>
 
 #include <qdebug.h>

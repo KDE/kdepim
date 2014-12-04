@@ -33,7 +33,7 @@
 #include <KCalCore/Journal>
 #include <KCalCore/Alarm>
 
-#include <KPIMUtils/Email>
+#include <KEmailAddress>
 #include <KIO/Job>
 #include <KIO/NetAccess>
 #include <QDebug>
@@ -97,7 +97,7 @@ KCalCore::Person::Ptr IncidenceDefaultsPrivate::organizerAsPerson() const
         foreach (const QString &fullEmail, mEmails) {
             QString name;
             QString email;
-            const bool success = KPIMUtils::extractEmailAddressAndName(fullEmail, email, name);
+            const bool success = KEmailAddress::extractEmailAddressAndName(fullEmail, email, name);
             if (success && email.endsWith(mGroupWareDomain)) {
                 organizer->setName(name);
                 organizer->setEmail(email);
@@ -112,7 +112,7 @@ KCalCore::Person::Ptr IncidenceDefaultsPrivate::organizerAsPerson() const
         foreach (const QString &fullEmail, mEmails) {
             QString name;
             QString email;
-            const bool success = KPIMUtils::extractEmailAddressAndName(fullEmail, email, name);
+            const bool success = KEmailAddress::extractEmailAddressAndName(fullEmail, email, name);
             if (success) {
                 organizer->setName(name);
                 organizer->setEmail(email);

@@ -27,7 +27,7 @@
 
 #include <messagecore/utils/stringutil.h>
 
-#include <KPIMUtils/kpimutils/email.h>
+#include <KEmailAddress>
 #include <kcontacts/vcarddrag.h>
 #include <kcontacts/contactgroup.h>
 #include <kcontacts/vcardconverter.h>
@@ -136,7 +136,7 @@ void ComposerLineEdit::dropEvent(QDropEvent *event)
             // email-address.
             if (url.scheme() == QLatin1String("mailto")) {
                 KContacts::Addressee addressee;
-                addressee.insertEmail(KPIMUtils::decodeMailtoUrl(url), true /* preferred */);
+                addressee.insertEmail(KEmailAddress::decodeMailtoUrl(url), true /* preferred */);
                 list += addressee;
             }
 
@@ -247,8 +247,8 @@ void ComposerLineEdit::loadContacts()
         QStringList::ConstIterator end = recent.constEnd();
         for (; it != end; ++it) {
             KContacts::Addressee addr;
-            KPIMUtils::extractEmailAddressAndName(*it, email, name);
-            name = KPIMUtils::quoteNameIfNecessary(name);
+            KEmailAddress::extractEmailAddressAndName(*it, email, name);
+            name = KEmailAddress::quoteNameIfNecessary(name);
             if ((name[0] == QLatin1Char('"')) && (name[name.length() - 1] == QLatin1Char('"'))) {
                 name.remove(0, 1);
                 name.truncate(name.length() - 1);

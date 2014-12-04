@@ -26,7 +26,7 @@
 #include <kmime/kmime_headers.h>
 #include <kmime/kmime_headers.h>
 #include <kmime/kmime_message.h>
-#include <KPIMUtils/Email>
+#include <KEmailAddress>
 
 #include <kascii.h>
 #include <KConfigGroup>
@@ -181,7 +181,7 @@ QMap<QString, QString> parseMailtoUrl(const KUrl &url)
     QMap<QString, QString> values = url.queryItems(KUrl::CaseInsensitiveKeys);
 
     QStringList to;
-    to << KPIMUtils::decodeMailtoUrl(url);
+    to << KEmailAddress::decodeMailtoUrl(url);
 
     if (!values.value(QLatin1String("to")).isEmpty()) {
         to << values.value(QLatin1String("to"));
@@ -278,7 +278,7 @@ QString generateMessageId(const QString &address, const QString &suffix)
     if (!suffix.isEmpty()) {
         msgIdStr += QLatin1Char('@') + suffix;
     } else {
-        msgIdStr += QLatin1Char('.') + KPIMUtils::toIdn(address);
+        msgIdStr += QLatin1Char('.') + KEmailAddress::toIdn(address);
     }
 
     msgIdStr += QLatin1Char('>');
@@ -756,7 +756,7 @@ QString emailAddrAsAnchor(const KMime::Types::Mailbox::List &mailboxList,
 
             if (link == ShowLink) {
                 result += QLatin1String("<a href=\"mailto:")
-                          + QString::fromLatin1(QUrl::toPercentEncoding(KPIMUtils::encodeMailtoUrl(mailbox.prettyAddress(KMime::Types::Mailbox::QuoteWhenNecessary)).path()))
+                          + QString::fromLatin1(QUrl::toPercentEncoding(KEmailAddress::encodeMailtoUrl(mailbox.prettyAddress(KMime::Types::Mailbox::QuoteWhenNecessary)).path()))
                           + QLatin1String("\" ") + cssStyle + QLatin1Char('>');
             }
             if (display == DisplayNameOnly) {
@@ -807,11 +807,11 @@ QStringList stripAddressFromAddressList(const QString &address,
                                         const QStringList &list)
 {
     QStringList addresses(list);
-    const QString addrSpec(KPIMUtils::extractEmailAddress(address));
+    const QString addrSpec(KEmailAddress::extractEmailAddress(address));
 
     for (QStringList::Iterator it = addresses.begin(); it != addresses.end();) {
         if (qstricmp(addrSpec.toUtf8().data(),
-                     KPIMUtils::extractEmailAddress(*it).toUtf8().data()) == 0) {
+                     KEmailAddress::extractEmailAddress(*it).toUtf8().data()) == 0) {
             it = addresses.erase(it);
         } else {
             ++it;
@@ -824,12 +824,12 @@ QStringList stripAddressFromAddressList(const QString &address,
 bool addressIsInAddressList(const QString &address,
                             const QStringList &addresses)
 {
-    const QString addrSpec = KPIMUtils::extractEmailAddress(address);
+    const QString addrSpec = KEmailAddress::extractEmailAddress(address);
 
     QStringList::ConstIterator end(addresses.constEnd());
     for (QStringList::ConstIterator it = addresses.constBegin(); it != end; ++it) {
         if (qstricmp(addrSpec.toUtf8().data(),
-                     KPIMUtils::extractEmailAddress(*it).toUtf8().data()) == 0) {
+                     KEmailAddress::extractEmailAddress(*it).toUtf8().data()) == 0) {
             return true;
         }
     }
@@ -851,7 +851,7 @@ QString guessEmailAddressFromLoginName(const QString &loginName)
     const KUser user(loginName);
     if (user.isValid()) {
         QString fullName = user.property(KUser::FullName).toString();
-        address = KPIMUtils::quoteNameIfNecessary(fullName) + QLatin1String(" <") + address + QLatin1Char('>');
+        address = KEmailAddress::quoteNameIfNecessary(fullName) + QLatin1String(" <") + address + QLatin1Char('>');
     }
 
     return address;

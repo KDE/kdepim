@@ -27,7 +27,7 @@
 #include <KContacts/Addressee>
 #include <QLineEdit>
 #include <KLocalizedString>
-#include <KPIMUtils/Email>
+#include <KEmailAddress>
 
 #include <QGridLayout>
 #include <QLabel>
@@ -68,7 +68,7 @@ FilterAction::ReturnCode FilterActionAddToAddressBook::process(ItemContext &cont
     case BccHeader: headerLine = msg->bcc()->asUnicodeString(); break;
     }
 
-    const QStringList emails = KPIMUtils::splitAddressList(headerLine);
+    const QStringList emails = KEmailAddress::splitAddressList(headerLine);
 
     foreach (const QString &singleEmail, emails) {
         QString name, email;

@@ -21,7 +21,8 @@
 
 #include "mailsenderjob.h"
 #include "utils.h"
-#include "kpimutils/email.h"
+
+#include <KEmailAddress>
 
 #include <KJob>
 
@@ -53,8 +54,8 @@ void MailSenderJob::start()
             const KContacts::Addressee contact = item.payload<KContacts::Addressee>();
             const QString preferredEmail = contact.preferredEmail();
             if (!preferredEmail.isEmpty() && !mEmailAddresses.contains(preferredEmail)) {
-                if (KPIMUtils::isValidSimpleAddress(contact.preferredEmail())) {
-                    mEmailAddresses <<  KPIMUtils::normalizedAddress(contact.formattedName(), preferredEmail);
+                if (KEmailAddress::isValidSimpleAddress(contact.preferredEmail())) {
+                    mEmailAddresses <<  KEmailAddress::normalizedAddress(contact.formattedName(), preferredEmail);
                 }
             }
         } else if (item.hasPayload<KContacts::ContactGroup>()) {
@@ -62,8 +63,8 @@ void MailSenderJob::start()
             unsigned int nbDataCount(group.dataCount());
             for (unsigned int i = 0; i < nbDataCount; ++i) {
                 const QString currentEmail(group.data(i).email());
-                if (KPIMUtils::isValidSimpleAddress(currentEmail)) {
-                    const QString email = KPIMUtils::normalizedAddress(group.data(i).name(), currentEmail);
+                if (KEmailAddress::isValidSimpleAddress(currentEmail)) {
+                    const QString email = KEmailAddress::normalizedAddress(group.data(i).name(), currentEmail);
                     if (!email.isEmpty() && !mEmailAddresses.contains(email)) {
                         mEmailAddresses << email;
                     }
@@ -128,8 +129,8 @@ void MailSenderJob::fetchJobFinished(KJob *job)
     const KContacts::Addressee contact = item.payload<KContacts::Addressee>();
 
     if (!contact.preferredEmail().isEmpty()) {
-        if (KPIMUtils::isValidSimpleAddress(contact.preferredEmail())) {
-            mEmailAddresses <<  KPIMUtils::normalizedAddress(contact.formattedName(), contact.preferredEmail());
+        if (KEmailAddress::isValidSimpleAddress(contact.preferredEmail())) {
+            mEmailAddresses <<  KEmailAddress::normalizedAddress(contact.formattedName(), contact.preferredEmail());
         }
     }
     fetchNextItem();

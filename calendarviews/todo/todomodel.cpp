@@ -31,7 +31,7 @@
 #include <KCalCore/Event>
 #include <KCalCore/Attachment>
 #include <KCalUtils/IncidenceFormatter>
-#include <KPIMUtils/Email>
+#include <KEmailAddress>
 
 #include <KCalUtils/DndFactory>
 #include <KCalUtils/ICalDrag>
@@ -773,12 +773,12 @@ bool TodoModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
                 if (text.startsWith(QStringLiteral("file:"))) {
                     destTodo->addAttachment(KCalCore::Attachment::Ptr(new KCalCore::Attachment(text)));
                 } else {
-                    QStringList emails = KPIMUtils::splitAddressList(text);
+                    QStringList emails = KEmailAddress::splitAddressList(text);
                     for (QStringList::ConstIterator it = emails.constBegin();
                             it != emails.constEnd(); ++it) {
                         QString name, email, comment;
-                        if (KPIMUtils::splitAddress(*it, name, email, comment) ==
-                                KPIMUtils::AddressOk) {
+                        if (KEmailAddress::splitAddress(*it, name, email, comment) ==
+                                KEmailAddress::AddressOk) {
                             destTodo->addAttendee(
                                 KCalCore::Attendee::Ptr(new KCalCore::Attendee(name, email)));
                         }

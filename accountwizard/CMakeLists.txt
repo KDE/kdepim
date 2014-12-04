@@ -65,7 +65,6 @@ ki18n_wrap_ui(accountwizard_srcs
 set(accountwizard_libs
   KF5::AkonadiCore
   KF5::MailTransport
-  KF5::PimUtils
   KF5::KrossCore
   KF5::KIOCore
   KF5::Mime

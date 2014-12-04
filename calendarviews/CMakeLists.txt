@@ -111,6 +111,7 @@ target_link_libraries(eventviews
   KF5::CalendarCore
   KF5::CalendarUtils
   KF5::AkonadiCalendar
+  KF5::Codecs
 )
 
 set_target_properties(eventviews PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})

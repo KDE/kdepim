@@ -41,7 +41,7 @@
 #include <QUrl>
 #include <baloo/pim/contactcompleter.h>
 
-#include <KPIMUtils/Email>
+#include <KEmailAddress>
 #include <KColorScheme>
 
 #include <kldap/LdapServer>
@@ -1238,9 +1238,9 @@ void AddresseeLineEdit::dropEvent(QDropEvent *event)
             const QMimeData *mimeData = event->mimeData();
             if (mimeData->hasText()) {
                 const QString dropData = mimeData->text();
-                const QStringList addrs = KPIMUtils::splitAddressList(dropData);
+                const QStringList addrs = KEmailAddress::splitAddressList(dropData);
                 if (!addrs.isEmpty()) {
-                    setText(KPIMUtils::normalizeAddressesAndDecodeIdn(dropData));
+                    setText(KEmailAddress::normalizeAddressesAndDecodeIdn(dropData));
                     setModified(true);
                     return;
                 }
@@ -1316,7 +1316,7 @@ void AddresseeLineEdit::addContact(const KContacts::Addressee &addr, int weight,
 
         // Finally, we can add the completion items
         if (!fullName.isEmpty()) {
-            const QString address = KPIMUtils::normalizedAddress(fullName, email, QString());
+            const QString address = KEmailAddress::normalizedAddress(fullName, email, QString());
             if (fullEmail != address) {
                 // This happens when fullEmail contains a middle name, while our own fullName+email only has "first last".
                 // Let's offer both, the fullEmail with 3 parts, looks a tad formal.

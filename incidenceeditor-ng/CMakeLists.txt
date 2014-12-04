@@ -101,6 +101,7 @@ target_link_libraries(incidenceeditorsng
   KF5::CalendarCore
   KF5::CalendarUtils
   KF5::MailTransport
+  KF5::Codecs
   kdepim
   kdepimdbusinterfaces # For UriHandler
   calendarsupport      # For KCalPrefs
@@ -140,6 +141,7 @@ install(TARGETS incidenceeditorsng ${INSTALL_TARGETS_DEFAULT_ARGS})
   target_link_libraries(incidenceeditorsngmobile
     KF5::AkonadiCalendar
     KF5::AkonadiMime
+    KF5::Codecs
     kdepim               # For KPIM::K{Date|Time}Edit
     calendarsupport      # For KCalPrefs
     kdepimdbusinterfaces # For UriHandler

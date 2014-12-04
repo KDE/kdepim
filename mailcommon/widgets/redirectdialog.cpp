@@ -36,7 +36,6 @@
 
 #include <Akonadi/Contact/EmailAddressSelectionDialog>
 
-#include <KPIMUtils/Email>
 #include <KIdentityManagement/Identity>
 #include <KIdentityManagement/IdentityCombo>
 #include <KIdentityManagement/IdentityManager>

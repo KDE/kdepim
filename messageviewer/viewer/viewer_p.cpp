@@ -81,7 +81,7 @@
 #include <KIO/NetAccess>
 #include <KContacts/Addressee>
 #include <KContacts/VCardConverter>
-#include <KPIMUtils/Email>
+#include <KEmailAddress>
 #include <AkonadiCore/ItemModifyJob>
 #include <AkonadiCore/ItemCreateJob>
 
@@ -2843,7 +2843,7 @@ void ViewerPrivate::slotUrlCopy()
     QClipboard *clip = QApplication::clipboard();
     if (mClickedUrl.scheme() == QLatin1String("mailto")) {
         // put the url into the mouse selection and the clipboard
-        const QString address = KPIMUtils::decodeMailtoUrl(mClickedUrl);
+        const QString address = KEmailAddress::decodeMailtoUrl(mClickedUrl);
         clip->setText(address, QClipboard::Clipboard);
         clip->setText(address, QClipboard::Selection);
         KPIM::BroadcastStatus::instance()->setStatusMsg(i18n("Address copied to clipboard."));
@@ -3359,7 +3359,7 @@ void ViewerPrivate::slotMessageMayBeAScam()
         }
         if (mMessageItem.hasPayload<KMime::Message::Ptr>()) {
             KMime::Message::Ptr message = mMessageItem.payload<KMime::Message::Ptr>();
-            const QString email = QLatin1String(KPIMUtils::firstEmailAddress(message->from()->as7BitString(false)));
+            const QString email = QLatin1String(KEmailAddress::firstEmailAddress(message->from()->as7BitString(false)));
             const QStringList lst = MessageViewer::GlobalSettings::self()->scamDetectionWhiteList();
             if (lst.contains(email)) {
                 return;
@@ -3405,7 +3405,7 @@ void ViewerPrivate::slotAddToWhiteList()
     if (mMessageItem.isValid()) {
         if (mMessageItem.hasPayload<KMime::Message::Ptr>()) {
             KMime::Message::Ptr message = mMessageItem.payload<KMime::Message::Ptr>();
-            const QString email = QLatin1String(KPIMUtils::firstEmailAddress(message->from()->as7BitString(false)));
+            const QString email = QLatin1String(KEmailAddress::firstEmailAddress(message->from()->as7BitString(false)));
             QStringList lst = MessageViewer::GlobalSettings::self()->scamDetectionWhiteList();
             if (lst.contains(email)) {
                 return;

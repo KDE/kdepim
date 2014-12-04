@@ -25,7 +25,7 @@
 #include <Akonadi/Contact/ContactGroupSearchJob>
 #include <Akonadi/Contact/ContactSearchJob>
 #include <AkonadiCore/itemcreatejob.h>
-#include <KPIMUtils/kpimutils/email.h>
+#include <KEmailAddress>
 
 #include <KLocalizedString>
 #include <QDebug>
@@ -163,7 +163,7 @@ void DistributionListDialog::setRecipients(const Recipient::List &recipients)
 {
     Recipient::List::ConstIterator end(recipients.constEnd());
     for (Recipient::List::ConstIterator it = recipients.constBegin(); it != end; ++it) {
-        const QStringList emails = KPIMUtils::splitAddressList((*it)->email());
+        const QStringList emails = KEmailAddress::splitAddressList((*it)->email());
         QStringList::ConstIterator end2(emails.constEnd());
         for (QStringList::ConstIterator it2 = emails.constBegin(); it2 != end2; ++it2) {
             QString name;

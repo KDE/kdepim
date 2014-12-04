@@ -20,7 +20,7 @@
 
 #include "recipientline.h"
 
-#include <KPIMUtils/kpimutils/email.h>
+#include <KEmailAddress>
 #include <QDialog>
 #include <KLocalizedString>
 #include <KCompletionBox>
@@ -120,7 +120,7 @@ void RecipientLineNG::slotTypeModified()
 
 void RecipientLineNG::analyzeLine(const QString &text)
 {
-    const QStringList r = KPIMUtils::splitAddressList(text);
+    const QStringList r = KEmailAddress::splitAddressList(text);
     if (int(r.count()) != mRecipientsCount) {
         mRecipientsCount = r.count();
     }

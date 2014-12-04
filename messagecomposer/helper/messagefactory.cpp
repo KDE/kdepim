@@ -31,7 +31,7 @@
 
 #include <Akonadi/KMime/MessageStatus>
 #include <kmime/kmime_dateformatter.h>
-#include <KPIMUtils/Email>
+#include <KEmailAddress>
 #include <messagecore/misc/mailinglist.h>
 #include <messagecore/helpers/messagehelpers.h>
 #include <messagecore/utils/stringutil.h>
@@ -836,10 +836,10 @@ bool MessageFactory::MDNConfirmMultipleRecipients(const KMime::Message::Ptr &msg
     // RFC 2298: [ Confirmation from the user SHOULD be obtained (or no
     // MDN sent) ] if there is more than one distinct address in the
     // Disposition-Notification-To header.
-    qDebug() << "KPIMUtils::splitAddressList(receiptTo):"
-             << KPIMUtils::splitAddressList(receiptTo).join(QString::fromLatin1("\n"));
+    qDebug() << "KEmailAddress::splitAddressList(receiptTo):"
+             << KEmailAddress::splitAddressList(receiptTo).join(QString::fromLatin1("\n"));
 
-    return KPIMUtils::splitAddressList(receiptTo).count() > 1;
+    return KEmailAddress::splitAddressList(receiptTo).count() > 1;
 }
 
 bool MessageFactory::MDNReturnPathEmpty(const KMime::Message::Ptr &msg)

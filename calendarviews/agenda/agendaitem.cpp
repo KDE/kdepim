@@ -35,7 +35,7 @@
 #include <KCalUtils/VCalDrag>
 #include <KCalUtils/IncidenceFormatter>
 
-#include <KPIMUtils/Email>
+#include <KEmailAddress>
 
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -643,13 +643,13 @@ void AgendaItem::addAttendee(const QString &newAttendee)
 
     const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence(mIncidence);
     QString name, email;
-    KPIMUtils::extractEmailAddressAndName(newAttendee, email, name);
+    KEmailAddress::extractEmailAddressAndName(newAttendee, email, name);
     if (!(name.isEmpty() && email.isEmpty())) {
         incidence->addAttendee(KCalCore::Attendee::Ptr(new KCalCore::Attendee(name, email)));
         KMessageBox::information(
             this,
             i18n("Attendee \"%1\" added to the calendar item \"%2\"",
-                 KPIMUtils::normalizedAddress(name, email, QString()), text()),
+                 KEmailAddress::normalizedAddress(name, email, QString()), text()),
             i18n("Attendee added"), QLatin1String("AttendeeDroppedAdded"));
     }
 }

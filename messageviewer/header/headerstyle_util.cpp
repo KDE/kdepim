@@ -32,8 +32,10 @@
 #include "contactdisplaymessagememento.h"
 #include "kxface.h"
 
-#include <KPIMUtils/kpimutils/email.h>
 #include <KLocale>
+
+#include <KEmailAddress>
+#include <KTextToHTML>
 
 using namespace MessageCore;
 
@@ -49,9 +51,9 @@ QString directionOf(const QString &str)
     return str.isRightToLeft() ? QLatin1String("rtl") : QLatin1String("ltr");
 }
 
-QString strToHtml(const QString &str, int flags)
+QString strToHtml(const QString &str, KTextToHTML::Options flags)
 {
-    return LinkLocator::convertToHtml(str, flags);
+    return KTextToHTML::convertToHtml(str, flags);
 }
 
 // Prepare the date string (when printing always use the localized date)
@@ -73,7 +75,7 @@ QString dateString(KMime::Message *message, bool printing, bool shortDate)
     }
 }
 
-QString subjectString(KMime::Message *message, int flags)
+QString subjectString(KMime::Message *message, KTextToHTML::Options flags)
 {
     QString subjectStr;
     const KMime::Headers::Subject *const subject = message->subject(false);
@@ -280,7 +282,7 @@ xfaceSettings xface(const MessageViewer::HeaderStyle *style, KMime::Message *mes
         ContactDisplayMessageMemento *photoMemento =
             dynamic_cast<ContactDisplayMessageMemento *>(style->nodeHelper()->bodyPartMemento(message, "contactphoto"));
         if (!photoMemento) {
-            const QString email = QString::fromLatin1(KPIMUtils::firstEmailAddress(message->from()->as7BitString(false)));
+            const QString email = QString::fromLatin1(KEmailAddress::firstEmailAddress(message->from()->as7BitString(false)));
             photoMemento = new ContactDisplayMessageMemento(email);
             style->nodeHelper()->setBodyPartMemento(message, "contactphoto", photoMemento);
             QObject::connect(photoMemento, SIGNAL(update(MessageViewer::Viewer::UpdateMode)),

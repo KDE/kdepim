@@ -19,12 +19,9 @@
 #include "header/headerstyle_util.h"
 
 #include "header/headerstrategy.h"
-#include <KPIMUtils/kpimutils/linklocator.h>
-using KPIMUtils::LinkLocator;
 #include "settings/globalsettings.h"
 #include "viewer/nodehelper.h"
 
-#include <KPIMUtils/kpimutils/email.h>
 #include <messagecore/utils/stringutil.h>
 
 #include <qdebug.h>
@@ -34,7 +31,6 @@ using KPIMUtils::LinkLocator;
 #include <kmime/kmime_dateformatter.h>
 
 using namespace MessageCore;
-using KPIMUtils::LinkLocator;
 using namespace MessageViewer;
 
 namespace MessageViewer

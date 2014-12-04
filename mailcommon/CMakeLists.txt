@@ -202,7 +202,7 @@ target_link_libraries(mailcommon messageviewer messagecore messagecomposer maili
   KF5::Mime
   KF5::AkonadiCore
   KF5::AkonadiMime
-  KF5::PimUtils
+  KF5::Codecs
   KF5::Imap
   KF5::MailTransport
   Phonon::phonon4qt5 

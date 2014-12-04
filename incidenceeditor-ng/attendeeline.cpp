@@ -23,7 +23,7 @@
 
 #include <KCalUtils/Stringify>
 
-#include <KPIMUtils/Email>
+#include <KEmailAddress>
 
 #include <KCompletionBox>
 #include <QDebug>
@@ -279,7 +279,7 @@ void AttendeeLine::dataFromFields()
     KCalCore::Attendee::Ptr oldAttendee(mData->attendee());
 
     QString email, name;
-    KPIMUtils::extractEmailAddressAndName(mEdit->text(), email, name);
+    KEmailAddress::extractEmailAddressAndName(mEdit->text(), email, name);
 
     mData->setName(name);
     mData->setEmail(email);

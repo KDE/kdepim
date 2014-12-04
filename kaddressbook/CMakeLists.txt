@@ -123,6 +123,7 @@ target_link_libraries(kaddressbookprivate
   KF5::Ldap
   KF5::KCMUtils
   KF5::KontactInterface
+  KF5::Codecs
   grantleetheme
   kleo
 )

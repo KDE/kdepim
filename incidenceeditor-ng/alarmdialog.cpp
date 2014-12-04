@@ -22,7 +22,7 @@
 #include "editorconfig.h"
 #include "ui_alarmdialog.h"
 
-#include <KPIMUtils/Email>
+#include <KEmailAddress>
 #include <KLocalizedString>
 #include <KConfigGroup>
 #include <QVBoxLayout>
@@ -212,7 +212,7 @@ void AlarmDialog::save(const KCalCore::Alarm::Ptr &alarm) const
         alarm->setProcedureAlarm(mUi->mApplication->url().toLocalFile(),
                                  mUi->mAppArguments->text());
     } else if (mUi->mTypeCombo->currentIndex() == 3) {   // Email
-        QStringList addresses = KPIMUtils::splitAddressList(mUi->mEmailAddress->text());
+        QStringList addresses = KEmailAddress::splitAddressList(mUi->mEmailAddress->text());
         KCalCore::Person::List add;
         for (QStringList::Iterator it = addresses.begin(); it != addresses.end(); ++it) {
             add << KCalCore::Person::fromFullName(*it);

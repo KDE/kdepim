@@ -64,7 +64,7 @@
 
 #include <KIdentityManagement/kidentitymanagement/identitycombo.h>
 #include <KIdentityManagement/kidentitymanagement/identitymanager.h>
-#include <KPIMUtils/kpimutils/email.h>
+#include <KEmailAddress>
 
 #include <QSaveFile>
 #include <KLocalizedString>
@@ -83,7 +83,7 @@ static QStringList encodeIdn(const QStringList &emails)
 {
     QStringList encoded;
     foreach (const QString &email, emails) {
-        encoded << KPIMUtils::normalizeAddressesAndEncodeIdn(email);
+        encoded << KEmailAddress::normalizeAddressesAndEncodeIdn(email);
     }
 
     return encoded;
@@ -937,9 +937,9 @@ void MessageComposer::ComposerViewBase::fillQueueJobHeaders(MailTransport::Messa
 {
     MailTransport::Transport *transport = MailTransport::TransportManager::self()->transportById(infoPart->transportId());
     if (transport && transport->specifySenderOverwriteAddress()) {
-        qjob->addressAttribute().setFrom(KPIMUtils::extractEmailAddress(KPIMUtils::normalizeAddressesAndEncodeIdn(transport->senderOverwriteAddress())));
+        qjob->addressAttribute().setFrom(KEmailAddress::extractEmailAddress(KEmailAddress::normalizeAddressesAndEncodeIdn(transport->senderOverwriteAddress())));
     } else {
-        qjob->addressAttribute().setFrom(KPIMUtils::extractEmailAddress(KPIMUtils::normalizeAddressesAndEncodeIdn(infoPart->from())));
+        qjob->addressAttribute().setFrom(KEmailAddress::extractEmailAddress(KEmailAddress::normalizeAddressesAndEncodeIdn(infoPart->from())));
     }
     // if this header is not empty, it contains the real recipient of the message, either the primary or one of the
     //  secondary recipients. so we set that to the transport job, while leaving the message itself alone.
@@ -1569,7 +1569,7 @@ QStringList MessageComposer::ComposerViewBase::cleanEmailList(const QStringList 
 {
     QStringList clean;
     foreach (const QString &email, emails) {
-        clean << KPIMUtils::extractEmailAddress(email);
+        clean << KEmailAddress::extractEmailAddress(email);
     }
     return clean;
 }

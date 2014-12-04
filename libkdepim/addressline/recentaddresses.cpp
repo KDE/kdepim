@@ -28,8 +28,8 @@
  *  your version.
  */
 #include "recentaddresses.h"
-#include <KPIMUtils/kpimutils/email.h>
 
+#include <KEmailAddress>
 #include <KConfig>
 #include <KConfigGroup>
 #include <QDebug>
@@ -119,11 +119,11 @@ void RecentAddresses::save(KConfig *config)
 void RecentAddresses::add(const QString &entry)
 {
     if (!entry.isEmpty() && m_maxCount > 0) {
-        const QStringList list = KPIMUtils::splitAddressList(entry);
+        const QStringList list = KEmailAddress::splitAddressList(entry);
         QStringList::const_iterator e_itEnd(list.constEnd());
         for (QStringList::const_iterator e_it = list.constBegin(); e_it != e_itEnd; ++e_it) {
-            KPIMUtils::EmailParseResult errorCode = KPIMUtils::isValidAddress(*e_it);
-            if (errorCode != KPIMUtils::AddressOk) {
+            KEmailAddress::EmailParseResult errorCode = KEmailAddress::isValidAddress(*e_it);
+            if (errorCode != KEmailAddress::AddressOk) {
                 continue;
             }
             QString email;

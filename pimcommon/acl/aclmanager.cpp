@@ -31,7 +31,7 @@
 #include <Akonadi/Contact/ContactGroupExpandJob>
 #include <Akonadi/Contact/ContactGroupSearchJob>
 
-#include <KPIMUtils/Email>
+#include <KEmailAddress>
 
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -466,14 +466,14 @@ void AclManager::save()
             if (expandJob->exec()) {
                 foreach (const KContacts::Addressee &contact, expandJob->contacts()) {
                     const QByteArray rawEmail =
-                        KPIMUtils::extractEmailAddress(contact.preferredEmail().toUtf8());
+                        KEmailAddress::extractEmailAddress(contact.preferredEmail().toUtf8());
                     if (!rawEmail.isEmpty()) {
                         newRights[ rawEmail ] = it.value();
                     }
                 }
             }
         } else { // it has been a normal contact
-            const QByteArray rawEmail = KPIMUtils::extractEmailAddress(it.key());
+            const QByteArray rawEmail = KEmailAddress::extractEmailAddress(it.key());
             if (!rawEmail.isEmpty()) {
                 newRights[ rawEmail ] = it.value();
             }

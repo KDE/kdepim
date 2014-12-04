@@ -39,7 +39,7 @@
 #include <Akonadi/Contact/ContactGroupSearchJob>
 #include <Akonadi/Contact/EmailAddressSelectionDialog>
 
-#include <KPIMUtils/Email>
+#include <KEmailAddress>
 
 #include <QDebug>
 #include <QTreeView>
@@ -61,7 +61,7 @@ static bool compareAttendees(const KCalCore::Attendee::Ptr &newAttendee,
         // when the user didn't edit anything.
         QString dummy;
         QString originalNameNormalized;
-        KPIMUtils::extractEmailAddressAndName(originalAttendee->fullName(), dummy, originalNameNormalized);
+        KEmailAddress::extractEmailAddressAndName(originalAttendee->fullName(), dummy, originalNameNormalized);
         originalClone->setName(originalNameNormalized);
     }
 
@@ -187,7 +187,7 @@ void IncidenceAttendee::save(const KCalCore::Incidence::Ptr &incidence)
         Q_ASSERT(attendee);
 
         bool skip = false;
-        if (KPIMUtils::isValidAddress(attendee->email())) {
+        if (KEmailAddress::isValidAddress(attendee->email())) {
             if (KMessageBox::warningYesNo(
                         0,
                         i18nc("@info",
@@ -463,7 +463,7 @@ bool IncidenceAttendee::iAmOrganizer() const
 void IncidenceAttendee::insertAttendeeFromAddressee(const KContacts::Addressee &a)
 {
     const bool sameAsOrganizer = mUi->mOrganizerCombo &&
-                                 KPIMUtils::compareEmail(a.preferredEmail(),
+                                 KEmailAddress::compareEmail(a.preferredEmail(),
                                          mUi->mOrganizerCombo->currentText(),
                                          false);
     KCalCore::Attendee::PartStat partStat = KCalCore::Attendee::NeedsAction;
@@ -497,13 +497,13 @@ void IncidenceAttendee::slotEventDurationChanged()
 
 void IncidenceAttendee::slotOrganizerChanged(const QString &newOrganizer)
 {
-    if (KPIMUtils::compareEmail(newOrganizer, mOrganizer, false)) {
+    if (KEmailAddress::compareEmail(newOrganizer, mOrganizer, false)) {
         return;
     }
 
     QString name;
     QString email;
-    bool success = KPIMUtils::extractEmailAddressAndName(newOrganizer, email, name);
+    bool success = KEmailAddress::extractEmailAddressAndName(newOrganizer, email, name);
 
     if (!success) {
         qWarning() << "Could not extract email address and name";

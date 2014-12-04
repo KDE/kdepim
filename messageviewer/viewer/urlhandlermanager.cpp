@@ -50,7 +50,7 @@
 #include <Akonadi/Contact/ContactSearchJob>
 
 #include <kmime/kmime_content.h>
-#include <KPIMUtils/Email>
+#include <KEmailAddress>
 
 #include <QMenu>
 #include <KMimeType>
@@ -736,7 +736,7 @@ namespace
 QString MailToURLHandler::statusBarMessage(const KUrl &url, ViewerPrivate *) const
 {
     if (url.scheme() == QLatin1String("mailto")) {
-        return KPIMUtils::decodeMailtoUrl(url);
+        return KEmailAddress::decodeMailtoUrl(url);
     }
     return QString();
 }

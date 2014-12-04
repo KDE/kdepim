@@ -19,15 +19,13 @@
 #define HEADERSTYLE_UTIL_H
 
 #include <QString>
-#include <KPIMUtils/kpimutils/linklocator.h>
+#include <KTextToHTML>
 
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_dateformatter.h>
 #include "antispam/spamheaderanalyzer.h"
 
 #include "header/headerstyle.h"
-
-using KPIMUtils::LinkLocator;
 
 namespace MessageViewer
 {
@@ -38,11 +36,11 @@ namespace HeaderStyleUtil
 //
 QString directionOf(const QString &str);
 
-QString strToHtml(const QString &str, int flags = LinkLocator::PreserveSpaces);
+QString strToHtml(const QString &str, KTextToHTML::Options flags = KTextToHTML::PreserveSpaces);
 
 QString dateString(KMime::Message *message, bool printing, bool shortDate);
 
-QString subjectString(KMime::Message *message, int flags = LinkLocator::PreserveSpaces);
+QString subjectString(KMime::Message *message, KTextToHTML::Options flags = KTextToHTML::PreserveSpaces);
 
 QString subjectDirectionString(KMime::Message *message);
 

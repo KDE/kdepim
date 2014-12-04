@@ -25,7 +25,7 @@
 
 #include <Akonadi/Contact/ContactSearchJob>
 #include <Akonadi/Contact/ContactGroupExpandJob>
-#include <KPIMUtils/Email>
+#include <KEmailAddress>
 
 #include <messagecore/utils/stringutil.h>
 
@@ -33,7 +33,7 @@ using namespace MessageComposer;
 
 AliasesExpandJob::AliasesExpandJob(const QString &recipients, const QString &defaultDomain, QObject *parent)
     : KJob(parent),
-      mRecipients(KPIMUtils::splitAddressList(recipients)),
+      mRecipients(KEmailAddress::splitAddressList(recipients)),
       mDefaultDomain(defaultDomain),
       mDistributionListExpansionJobs(0),
       mNicknameExpansionJobs(0)
@@ -170,10 +170,10 @@ void AliasesExpandJob::finishExpansion()
 
         // check whether the address is missing the domain part
         QString displayName, addrSpec, comment;
-        KPIMUtils::splitAddress(receiver, displayName, addrSpec, comment);
+        KEmailAddress::splitAddress(receiver, displayName, addrSpec, comment);
         if (!addrSpec.contains(QLatin1Char('@'))) {
             if (!mDefaultDomain.isEmpty())
-                mEmailAddresses += KPIMUtils::normalizedAddress(displayName, addrSpec + QLatin1Char('@') +
+                mEmailAddresses += KEmailAddress::normalizedAddress(displayName, addrSpec + QLatin1Char('@') +
                                    mDefaultDomain, comment);
             else {
                 mEmailAddresses += MessageCore::StringUtil::guessEmailAddressFromLoginName(addrSpec);
