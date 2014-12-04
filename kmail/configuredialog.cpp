@@ -3754,6 +3754,9 @@ SecurityPageGeneralTab::SecurityPageGeneralTab( QWidget * parent, const char * n
               "not known at the time this version of KMail was written.</p>"
               "<p>It is therefore advisable to <em>not</em> prefer HTML to "
               "plain text.</p>"
+              "<p>You can still prefer plain text mails in general but get "
+              "a hint that there is a HTML representation available which you "
+              "can activate on demand.</p>"
               "<p><b>Note:</b> You can set this option on a per-folder basis "
               "from the <i>Folder</i> menu of KMail's main window.</p></qt>" );
 
@@ -3806,10 +3809,29 @@ SecurityPageGeneralTab::SecurityPageGeneralTab( QWidget * parent, const char * n
   group = new QVGroupBox( i18n( "HTML Messages" ), this );
   group->layout()->setSpacing( KDialog::spacingHint() );
 
-  mHtmlMailCheck = new QCheckBox( i18n("Prefer H&TML to plain text"), group );
-  QWhatsThis::add( mHtmlMailCheck, htmlWhatsThis );
-  connect( mHtmlMailCheck, SIGNAL( stateChanged( int ) ),
+  QButtonGroup *rg = new QButtonGroup( group );
+  rg->hide();
+
+  mPlainMailRB = new QRadioButton( i18n("Prefer &plain text to HTML" ), group );
+  rg->insert( mPlainMailRB );
+  QWhatsThis::add( mPlainMailRB, htmlWhatsThis );
+  connect( mPlainMailRB, SIGNAL( stateChanged( int ) ),
            this, SLOT( slotEmitChanged( void ) ) );
+
+  mHtmlMailRB = new QRadioButton( i18n("Prefer H&TML to plain text"), group );
+  rg->insert( mHtmlMailRB );
+  QWhatsThis::add( mHtmlMailRB, htmlWhatsThis );
+  connect( mHtmlMailRB, SIGNAL( stateChanged( int ) ),
+           this, SLOT( slotEmitChanged( void ) ) );
+
+
+  mPlainWithOptionRB = new QRadioButton( i18n("Prefer &plain text and show hint to HTML version if available." ),
+      group );
+  rg->insert( mPlainWithOptionRB );
+  QWhatsThis::add( mPlainMailRB, htmlWhatsThis );
+  connect( mPlainWithOptionRB, SIGNAL( stateChanged( int ) ),
+           this, SLOT( slotEmitChanged( void ) ) );
+
   mExternalReferences = new QCheckBox( i18n("Allow messages to load e&xternal "
                                             "references from the Internet" ), group );
   QWhatsThis::add( mExternalReferences, externalWhatsThis );
@@ -3918,7 +3940,11 @@ SecurityPageGeneralTab::SecurityPageGeneralTab( QWidget * parent, const char * n
 void SecurityPage::GeneralTab::doLoadOther() {
   const KConfigGroup reader( KMKernel::config(), "Reader" );
 
-  mHtmlMailCheck->setChecked( reader.readBoolEntry( "htmlMail", false ) );
+  /* For historical reasons this is implemented as bool options as the htmlMail
+   * option was there first. */
+  mPlainMailRB->setChecked( reader.readBoolEntry( "plainMail", true ) );
+  mPlainWithOptionRB->setChecked( reader.readBoolEntry( "plainWithOption", false ) );
+  mHtmlMailRB->setChecked( reader.readBoolEntry( "htmlMail", false ) );
   mExternalReferences->setChecked( reader.readBoolEntry( "htmlLoadExternal", false ) );
   mAutomaticallyImportAttachedKeysCheck->setChecked( reader.readBoolEntry( "AutoImportKeys", false ) );
 
@@ -3939,8 +3965,10 @@ void SecurityPage::GeneralTab::installProfile( KConfig * profile ) {
   const KConfigGroup reader( profile, "Reader" );
   const KConfigGroup mdn( profile, "MDN" );
 
+  mPlainMailRB->setChecked( reader.readBoolEntry( "plainMail", true ) );
+  mPlainWithOptionRB->setChecked( reader.readBoolEntry( "plainWithOption", false ) );
   if ( reader.hasKey( "htmlMail" ) )
-    mHtmlMailCheck->setChecked( reader.readBoolEntry( "htmlMail" ) );
+    mHtmlMailRB->setChecked( reader.readBoolEntry( "htmlMail" ) );
   if ( reader.hasKey( "htmlLoadExternal" ) )
     mExternalReferences->setChecked( reader.readBoolEntry( "htmlLoadExternal" ) );
   if ( reader.hasKey( "AutoImportKeys" ) )
@@ -3964,13 +3992,15 @@ void SecurityPage::GeneralTab::save() {
   KConfigGroup reader( KMKernel::config(), "Reader" );
   KConfigGroup mdn( KMKernel::config(), "MDN" );
 
-  if (reader.readBoolEntry( "htmlMail", false ) != mHtmlMailCheck->isChecked())
+  if (reader.readBoolEntry( "htmlMail", false ) != mHtmlMailRB->isChecked())
   {
     if (KMessageBox::warningContinueCancel(this, i18n("Changing the global "
       "HTML setting will override all folder specific values."), QString::null,
       KStdGuiItem::cont(), "htmlMailOverride") == KMessageBox::Continue)
     {
-      reader.writeEntry( "htmlMail", mHtmlMailCheck->isChecked() );
+      reader.writeEntry( "htmlMail", mHtmlMailRB->isChecked() );
+      reader.writeEntry( "plainMail", mPlainMailRB->isChecked() );
+      reader.writeEntry( "plainWithOption", mPlainWithOptionRB->isChecked() );
       QStringList names;
       QValueList<QGuardedPtr<KMFolder> > folders;
       kmkernel->folderMgr()->createFolderList(&names, &folders);

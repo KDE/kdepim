@@ -121,6 +121,10 @@ namespace KMail {
 
     bool hasPendingAsyncJobs() const { return mHasPendingAsyncJobs; }
 
+    /*! @return true if a multipart/alternative was processed and the plain part
+     * choosen for display. */
+    bool isHTMLAlternativeAvailable() const { return mIsHTMLAlternativeAvailable; }
+
     QCString rawReplyString() const { return mRawReplyString; }
 
     /*! @return the text of the message, ie. what would appear in the
@@ -339,6 +343,7 @@ namespace KMail {
     bool mHasPendingAsyncJobs;
     bool mAllowAsync;
     bool mShowRawToltecMail;
+    bool mIsHTMLAlternativeAvailable;
     const KMail::AttachmentStrategy * mAttachmentStrategy;
     KMail::HtmlWriter * mHtmlWriter;
     KMail::CSSHelper * mCSSHelper;

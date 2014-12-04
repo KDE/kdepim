@@ -152,6 +152,7 @@ namespace KMail {
       mHasPendingAsyncJobs( false ),
       mAllowAsync( false ),
       mShowRawToltecMail( false ),
+      mIsHTMLAlternativeAvailable( false ),
       mAttachmentStrategy( strategy ),
       mHtmlWriter( htmlWriter ),
       mCSSHelper( cssHelper )
@@ -173,6 +174,7 @@ namespace KMail {
       mIncludeSignatures( other.includeSignatures() ),
       mHasPendingAsyncJobs( other.hasPendingAsyncJobs() ),
       mAllowAsync( other.allowAsync() ),
+      mIsHTMLAlternativeAvailable( other.isHTMLAlternativeAvailable() ),
       mAttachmentStrategy( other.attachmentStrategy() ),
       mHtmlWriter( other.htmlWriter() ),
       mCSSHelper( other.cssHelper() )
@@ -1206,6 +1208,18 @@ namespace KMail {
       mTextualContentCharset = curNode->msgPart().charset();
     }
 
+    const KConfigGroup reader( KMKernel::config(), "Reader" );
+    if ( mIsHTMLAlternativeAvailable && reader.readBoolEntry( "plainWithOption", false ) ) {
+      htmlWriter()->queue( "<div class=\"htmlWarn\">\n" );
+      htmlWriter()->queue( i18n("<b>Note:</b> This message has an alternative "
+                                "HTML representation. If you trust the sender of this "
+                                "message then you can activate formatted "
+                                "HTML display for this message "
+                                "<a href=\"kmail:showHTML\">by clicking here</a>.") );
+      htmlWriter()->queue( "</div><br><br>" );
+      mIsHTMLAlternativeAvailable = false; // ensure that this is shown only once.
+    }
+
     QString label = curNode->msgPart().fileName().stripWhiteSpace();
     if ( label.isEmpty() )
       label = curNode->msgPart().name().stripWhiteSpace();
@@ -1317,8 +1331,10 @@ namespace KMail {
     }
 
     if ( !mReader || (!mReader->htmlMail() && dataPlain) ) {
-      if ( dataHtml )
+      if ( dataHtml ) {
         dataHtml->setProcessed( true, false );
+        mIsHTMLAlternativeAvailable = true;
+      }
       stdChildHandling( dataPlain );
       return true;
     }
