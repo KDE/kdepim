@@ -24,11 +24,10 @@
 #include <QObject>
 #include "pimcommon/storageservice/interface/storageserviceinterface.h"
 
-class StorageServiceManagerSettingsJob : public QObject, public PimCommon::ISettingsJob
+class StorageServiceManagerSettingsJob : public PimCommon::ISettingsJob
 {
-    Q_OBJECT
 public:
-    explicit StorageServiceManagerSettingsJob(QObject *parent=0);
+    StorageServiceManagerSettingsJob();
     ~StorageServiceManagerSettingsJob();
 
     QString youSendItApiKey() const;

@@ -22,8 +22,7 @@
 
 using namespace PimCommon;
 
-TestSettingsJob::TestSettingsJob(QObject *parent)
-    : QObject(parent)
+TestSettingsJob::TestSettingsJob()
 {
 }
 

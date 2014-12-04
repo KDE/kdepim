@@ -21,17 +21,15 @@
 #ifndef TESTSETTINGSJOB_H
 #define TESTSETTINGSJOB_H
 
-#include <QObject>
 #include "pimcommon_export.h"
 #include "pimcommon/storageservice/interface/storageserviceinterface.h"
 
 namespace PimCommon {
 
-class PIMCOMMON_EXPORT TestSettingsJob : public QObject, public ISettingsJob
+class PIMCOMMON_EXPORT TestSettingsJob : public ISettingsJob
 {
-    Q_OBJECT
 public:
-    explicit TestSettingsJob(QObject *parent=0);
+    TestSettingsJob();
     ~TestSettingsJob();
 
     QString youSendItApiKey() const;
