@@ -140,7 +140,7 @@ private:
                          "children, those children will also be deleted. Think of CA certificates as "
                          "folders containing other certificates: When you delete the folder, you "
                          "delete its contents, too.</para>" );
-
+            unselectedLB.setContextMenuPolicy(Qt::NoContextMenu);
             unselectedLB.setWhatsThis( unselectedWhatsThis );
             unselectedKTV.setWhatsThis( unselectedWhatsThis );
 
