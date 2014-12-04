@@ -94,7 +94,7 @@ QString RefreshX509CertsCommand::errorExitMessage( const QStringList & args ) co
     return i18nc( "@info",
                   "<para>An error occurred while trying to refresh X.509 certificates.</para>"
                   "<para>The output from <command>%1</command> was: <message>%2</message></para>",
-                 args[0], errorString() );
+                 args[0], errorString().replace(QLatin1String("\n"), QLatin1String("<br>")) );
 }
 
 QString RefreshX509CertsCommand::successMessage( const QStringList & ) const {

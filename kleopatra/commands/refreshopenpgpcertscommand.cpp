@@ -127,7 +127,7 @@ QString RefreshOpenPGPCertsCommand::errorExitMessage( const QStringList & args )
     return i18nc("@info",
                  "<para>An error occurred while trying to refresh OpenPGP certificates.</para> "
                  "<para>The output from <command>%1</command> was: <message>%2</message></para>",
-                 args[0], errorString() );
+                 args[0], errorString().replace(QLatin1String("\n"), QLatin1String("<br>")) );
 }
 
 QString RefreshOpenPGPCertsCommand::successMessage( const QStringList & ) const {
