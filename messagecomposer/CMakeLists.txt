@@ -37,6 +37,7 @@ set( messagecomposer_job_src
      job/aliasesexpandjob.cpp
      job/emailaddressresolvejob.cpp
      job/attachmentfrompublickeyjob.cpp
+     job/distributionlistexpandjob.cpp
 )
 
 set( messagecomposer_composer_src
