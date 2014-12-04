@@ -28,7 +28,7 @@
 #include "resource.h"
 #include "ispdb/ispdb.h"
 
-#include <kpimutils/emailvalidator.h>
+#include <libkdepim/misc/emailvalidator.h>
 #include <kpimutils/email.h>
 
 #include <mailtransport/transport.h>
@@ -49,7 +49,7 @@ PersonalDataPage::PersonalDataPage(Dialog *parent) :
 
     ui.setupUi(pageParent);
 
-    KPIMUtils::EmailValidator *emailValidator = new KPIMUtils::EmailValidator(this);
+    KPIM::EmailValidator *emailValidator = new KPIM::EmailValidator(this);
     ui.emailEdit->setValidator(emailValidator);
 
     // KEmailSettings defaults

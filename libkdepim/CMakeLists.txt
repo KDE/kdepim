@@ -58,6 +58,7 @@ set(kdepim_ldap_LIB_SRCS
 
 set(kdepim_misc_LIB_SRCS
    misc/broadcaststatus.cpp
+   misc/emailvalidator.cpp
    misc/maillistdrag.cpp
    misc/uistatesaver.cpp
 )
