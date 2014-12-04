@@ -38,14 +38,8 @@
 #include <QTimer>
 #include <QWebElement>
 
-namespace GpgME { class Error; }
 namespace KIO { 
 class Job;
-}
-
-namespace Kleo
-{
-class SpecialJob;
 }
 
 class KAction;
@@ -466,8 +460,6 @@ private slots:
     void slotMessageIsNotAScam();
     void slotAddToWhiteList();
     void slotToggleCaretBrowsing(bool);
-    void slotAtmDecryptWithChiasmusResult( const GpgME::Error &, const QVariant & );
-    void slotAtmDecryptWithChiasmusUploadResult( KJob * );
 
     /** Show hide all fields specified inside this function */
     void toggleFullAddressList();
@@ -716,7 +708,6 @@ public:
     QString mCurrentFileName;
     QString mMessagePath;
     QMap<EditorWatcher*, KMime::Content*> mEditorWatchers;
-    Kleo::SpecialJob *mJob;
     Viewer *const q;
     bool mShowFullToAddressList;
     bool mShowFullCcAddressList;

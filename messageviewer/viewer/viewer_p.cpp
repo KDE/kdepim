@@ -37,6 +37,7 @@
 #include "viewer/mimeparttreeview.h"
 #include "widgets/openattachmentfolderwidget.h"
 #include "pimcommon/widgets/slidecontainer.h"
+#include "messageviewer/job/attachmentencryptwithchiasmusjob.h"
 
 #ifdef MESSAGEVIEWER_READER_HTML_DEBUG
 #include "htmlwriter/filehtmlwriter.h"
@@ -113,9 +114,7 @@
 #include <akonadi/kmime/specialmailcollections.h>
 #include <akonadi/attributefactory.h>
 #include <Akonadi/KMime/MessageParts>
-#include <kleo/specialjob.h>
 
-#include "chiasmuskeyselector.h"
 #include "utils/autoqpointer.h"
 
 
@@ -147,9 +146,6 @@
 
 #include <messagecore/utils/stringutil.h>
 
-#include <kio/jobuidelegate.h>
-
-#include <gpgme++/error.h>
 #include <messagecore/helpers/nodehelper.h>
 #include "messagecore/settings/globalsettings.h"
 #include <akonadi/agentinstance.h>
@@ -214,7 +210,6 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
       mRecursionCountForDisplayMessage( 0 ),
       mCurrentContent( 0 ),
       mMessagePartNode( 0 ),
-      mJob( 0 ),
       q( aParent ),
       mShowFullToAddressList( true ),
       mShowFullCcAddressList( true ),
@@ -2914,138 +2909,11 @@ void ViewerPrivate::setUseFixedFont( bool useFixedFont )
 
 void ViewerPrivate::attachmentEncryptWithChiasmus( KMime::Content *content )
 {
-    Q_UNUSED( content );
-
-    // FIXME: better detection of mimetype??
-    if ( !mCurrentFileName.endsWith( QLatin1String(".xia"), Qt::CaseInsensitive ) )
-        return;
-
-    const Kleo::CryptoBackend::Protocol * chiasmus =
-            Kleo::CryptoBackendFactory::instance()->protocol( "Chiasmus" );
-    Q_ASSERT( chiasmus );
-    if ( !chiasmus )
-        return;
-
-    const std::auto_ptr<Kleo::SpecialJob> listjob( chiasmus->specialJob( "x-obtain-keys", QMap<QString,QVariant>() ) );
-    if ( !listjob.get() ) {
-        const QString msg = i18n( "Chiasmus backend does not offer the "
-                                  "\"x-obtain-keys\" function. Please report this bug." );
-        KMessageBox::error( mMainWindow, msg, i18n( "Chiasmus Backend Error" ) );
-        return;
-    }
-
-    if ( listjob->exec() ) {
-        listjob->showErrorDialog( mMainWindow, i18n( "Chiasmus Backend Error" ) );
-        return;
-    }
-
-    const QVariant result = listjob->property( "result" );
-    if ( result.type() != QVariant::StringList ) {
-        const QString msg = i18n( "Unexpected return value from Chiasmus backend: "
-                                  "The \"x-obtain-keys\" function did not return a "
-                                  "string list. Please report this bug." );
-        KMessageBox::error( mMainWindow, msg, i18n( "Chiasmus Backend Error" ) );
-        return;
-    }
-
-    const QStringList keys = result.toStringList();
-    if ( keys.empty() ) {
-        const QString msg = i18n( "No keys have been found. Please check that a "
-                                  "valid key path has been set in the Chiasmus "
-                                  "configuration." );
-        KMessageBox::error( mMainWindow, msg, i18n( "Chiasmus Backend Error" ) );
-        return;
-    }
-    AutoQPointer<ChiasmusKeySelector> selectorDlg( new ChiasmusKeySelector( mMainWindow,
-                                                                            i18n( "Chiasmus Decryption Key Selection" ),
-                                                                            keys, GlobalSettings::chiasmusDecryptionKey(),
-                                                                            GlobalSettings::chiasmusDecryptionOptions() ) );
-    if ( selectorDlg->exec() != QDialog::Accepted || !selectorDlg ) {
-        return;
-    }
-
-    GlobalSettings::setChiasmusDecryptionOptions( selectorDlg->options() );
-    GlobalSettings::setChiasmusDecryptionKey( selectorDlg->key() );
-    assert( !GlobalSettings::chiasmusDecryptionKey().isEmpty() );
-    Kleo::SpecialJob * job = chiasmus->specialJob( "x-decrypt", QMap<QString,QVariant>() );
-    if ( !job ) {
-        const QString msg = i18n( "Chiasmus backend does not offer the "
-                                  "\"x-decrypt\" function. Please report this bug." );
-        KMessageBox::error( mMainWindow, msg, i18n( "Chiasmus Backend Error" ) );
-        return;
-    }
-
-    //PORT IT
-    const QByteArray input;// = node->msgPart().bodyDecodedBinary();
-
-    if ( !job->setProperty( "key", GlobalSettings::chiasmusDecryptionKey() ) ||
-         !job->setProperty( "options", GlobalSettings::chiasmusDecryptionOptions() ) ||
-         !job->setProperty( "input", input ) ) {
-        const QString msg = i18n( "The \"x-decrypt\" function does not accept "
-                                  "the expected parameters. Please report this bug." );
-        KMessageBox::error( mMainWindow, msg, i18n( "Chiasmus Backend Error" ) );
-        return;
-    }
-
-    if ( job->start() ) {
-        job->showErrorDialog( mMainWindow, i18n( "Chiasmus Decryption Error" ) );
-        return;
-    }
-
-    mJob = job;
-    connect( job, SIGNAL(result(GpgME::Error,QVariant)),
-             this, SLOT(slotAtmDecryptWithChiasmusResult(GpgME::Error,QVariant)) );
-}
-
-
-static const QString chomp( const QString & base, const QString & suffix, bool cs )
-{
-    return base.endsWith( suffix, cs ? (Qt::CaseSensitive) : (Qt::CaseInsensitive) ) ? base.left( base.length() - suffix.length() ) : base ;
-}
-
-
-void ViewerPrivate::slotAtmDecryptWithChiasmusResult( const GpgME::Error & err, const QVariant & result )
-{
-    if ( !mJob )
-        return;
-    Q_ASSERT( mJob == sender() );
-    if ( mJob != sender() )
-        return;
-    Kleo::Job * job = mJob;
-    mJob = 0;
-    if ( err.isCanceled() )
-        return;
-    if ( err ) {
-        job->showErrorDialog( mMainWindow, i18n( "Chiasmus Decryption Error" ) );
-        return;
-    }
-
-    if ( result.type() != QVariant::ByteArray ) {
-        const QString msg = i18n( "Unexpected return value from Chiasmus backend: "
-                                  "The \"x-decrypt\" function did not return a "
-                                  "byte array. Please report this bug." );
-        KMessageBox::error( mMainWindow, msg, i18n( "Chiasmus Backend Error" ) );
-        return;
-    }
-
-    const KUrl url = KFileDialog::getSaveUrl( chomp( mCurrentFileName, QLatin1String(".xia"), false ), QString(), mMainWindow );
-    if ( url.isEmpty() )
-        return;
-
-    bool overwrite = Util::checkOverwrite( url, mMainWindow );
-    if ( !overwrite )
-        return;
-
-    KIO::Job * uploadJob = KIO::storedPut( result.toByteArray(), url, -1, KIO::Overwrite );
-    uploadJob->ui()->setWindow( mMainWindow );
-    connect( uploadJob, SIGNAL(result(KJob*)),
-             this, SLOT(slotAtmDecryptWithChiasmusUploadResult(KJob*)) );
-}
-
-void ViewerPrivate::slotAtmDecryptWithChiasmusUploadResult( KJob * job )
-{
-    if ( job->error() )
-        static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
+    MessageViewer::AttachmentEncryptWithChiasmusJob *job = new MessageViewer::AttachmentEncryptWithChiasmusJob(this);
+    job->setContent(content);
+    job->setCurrentFileName(mCurrentFileName);
+    job->setMainWindow(mMainWindow);
+    job->start();
 }
 
 bool ViewerPrivate::showFullToAddressList() const
