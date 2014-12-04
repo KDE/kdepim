@@ -1288,6 +1288,38 @@ static QString htmlRow( const QString &title, const QString &value )
   }
 }
 
+static QString htmlRow( const QString &title, const QStringList &values )
+{
+  if ( !values.isEmpty() ) {
+    return "<tr><td class=\"leftColumn\">" + title + "</td>\n<td>" + values.join( "<br/>" ) + "</td></tr>\n";
+  } else {
+    return QString::null;
+  }
+}
+
+static QString htmlRow( const QString &title, const QStringList &values, const QStringList &oldValues )
+{
+  QStringList::ConstIterator it;
+  QStringList result;
+  QString color = diffColor();
+
+  for ( it = values.constBegin(); it != values.constEnd(); ++it ) {
+    if ( oldValues.contains( *it ) ) {
+      result << *it; // print normally
+    } else {
+      // It's new so print it red
+      result << "<font color=\"" + color + "\">" + *it + "</font>";
+    }
+  }
+  for ( it = oldValues.constBegin(); it != oldValues.constEnd(); ++it ) {
+    if ( !values.contains( *it ) ) {
+      // value has been removed so strike it.
+      result << "<strike>" + *it + "</strike>";
+    }
+  }
+  return htmlRow( title, result );
+}
+
 static QString htmlRow( const QString &title, const QString &value, const QString &oldvalue )
 {
   // if 'value' is empty, then print nothing
@@ -1595,7 +1627,10 @@ static QString invitationDetailsEvent( Event* event, bool noHtmlMode )
   }
 
   if ( event->doesRecur() ) {
-    html += htmlRow( i18n( "Recurrence:" ), IncidenceFormatter::recurrenceString( event ) );
+    html += htmlRow( i18n( "Recurrence:" ), IncidenceFormatter::recurrenceString( event, false ) );
+
+    const QStringList exceptions = IncidenceFormatter::exceptionStrings( event->recurrence() );
+    html += htmlRow ( i18n( "Excluding:" ), exceptions );
   }
 
   html += invitationDescriptionIncidence( event, noHtmlMode );
@@ -1652,9 +1687,14 @@ static QString invitationDetailsEvent( Event *event, Event *oldevent, ScheduleMe
 
   if ( event->doesRecur() || oldevent->doesRecur() ) {
     QString recurStr, oldrecurStr;
-    recurStr = IncidenceFormatter::recurrenceString( event );
-    oldrecurStr = IncidenceFormatter::recurrenceString( oldevent );
+    recurStr = IncidenceFormatter::recurrenceString( event, false );
+    oldrecurStr = IncidenceFormatter::recurrenceString( oldevent, false );
     html += htmlRow( i18n( "Recurrence:" ), recurStr, oldrecurStr );
+
+    const QStringList oldExceptions = IncidenceFormatter::exceptionStrings( oldevent->recurrence() );
+    const QStringList exceptions = IncidenceFormatter::exceptionStrings( event->recurrence() );
+
+    html += htmlRow ( i18n( "Excluding:" ), exceptions, oldExceptions );
   }
 
   html += invitationDescriptionIncidence( event, noHtmlMode );
@@ -1696,7 +1736,10 @@ static QString invitationDetailsTodo( Todo *todo, bool noHtmlMode )
 
   // Invitation Recurrence Row
   if ( todo->doesRecur() ) {
-    html += htmlRow( i18n( "Recurrence:" ), IncidenceFormatter::recurrenceString( todo ) );
+    html += htmlRow( i18n( "Recurrence:" ), IncidenceFormatter::recurrenceString( todo, false ) );
+
+    const QStringList exceptions = IncidenceFormatter::exceptionStrings( todo->recurrence() );
+    html += htmlRow ( i18n( "Excluding:" ), exceptions );
   }
 
   html += invitationDescriptionIncidence( todo, noHtmlMode );
@@ -1752,6 +1795,11 @@ static QString invitationDetailsTodo( Todo *todo, Todo *oldtodo, ScheduleMessage
     recurStr = IncidenceFormatter::recurrenceString( todo );
     oldrecurStr = IncidenceFormatter::recurrenceString( oldtodo );
     html += htmlRow( i18n( "Recurrence:" ), recurStr, oldrecurStr );
+
+    const QStringList oldExceptions = IncidenceFormatter::exceptionStrings( oldtodo->recurrence() );
+    const QStringList exceptions = IncidenceFormatter::exceptionStrings( todo->recurrence() );
+
+    html += htmlRow ( i18n( "Excluding:" ), exceptions, oldExceptions );
   }
 
   html += invitationDescriptionIncidence( todo, noHtmlMode );
@@ -2732,6 +2780,20 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
   html += "<p>"; // Header and event info paragraph
   if ( !headerResult.isEmpty() ) {
     html += headerResult;
+  }
+
+  if ( existingIncidence && inc->doesRecur() ) {
+    if ( !existingIncidence->doesRecur() ) {
+      html += "A recurrence has been added.";
+    } else {
+      if ( existingIncidence->recurrence()->exDates().count() >
+          inc->recurrence()->exDates().count() ) {
+        html += "An exception has been removed.";
+      } else if ( existingIncidence->recurrence()->exDates().count() <
+          inc->recurrence()->exDates().count() ) {
+        html += "An exception has been added.";
+      }
+    }
   }
 
   // Some more conditional status information
@@ -4035,7 +4097,53 @@ static QString recurEnd( Incidence *incidence )
 /************************************
  *  More static formatting functions
  ************************************/
-QString IncidenceFormatter::recurrenceString( Incidence *incidence )
+QStringList IncidenceFormatter::exceptionStrings( Recurrence * recur )
+{
+  if ( !recur ) {
+    return QStringList();
+  }
+  const KCalendarSystem *calSys = KGlobal::locale()->calendar();
+  DateTimeList exceptions = recur->exDateTimes();
+  DateTimeList::ConstIterator il;
+  QStringList exStr;
+  for ( il = exceptions.constBegin(); il != exceptions.constEnd(); ++il ) {
+    switch ( recur->recurrenceType() ) {
+    case Recurrence::rMinutely:
+      exStr << i18n( "minute %1" ).arg( (*il).time().minute() );
+      break;
+    case Recurrence::rHourly:
+      exStr << KGlobal::locale()->formatTime( (*il).time() );
+      break;
+    case Recurrence::rWeekly:
+      exStr << calSys->weekDayName( (*il).date(), false );
+      break;
+    case Recurrence::rDaily:
+    case Recurrence::rYearlyDay:
+    case Recurrence::rYearlyPos:
+    case Recurrence::rMonthlyPos:
+    case Recurrence::rMonthlyDay:
+      exStr << KGlobal::locale()->formatDate( (*il).date(), false );
+      break;
+    case Recurrence::rYearlyMonth:
+      exStr << calSys->monthName( (*il).date(), false );
+      break;
+    }
+  }
+
+  DateList d = recur->exDates();
+  DateList::ConstIterator dl;
+  for ( dl = d.constBegin(); dl != d.constEnd(); ++dl ) {
+    if ( recur->recurrenceType() == Recurrence::rYearlyMonth ) {
+      exStr << calSys->monthName( (*dl), false );
+    } else {
+      exStr << KGlobal::locale()->formatDate( (*dl), true );
+    }
+  }
+
+  return exStr;
+}
+
+QString IncidenceFormatter::recurrenceString( Incidence *incidence, bool includeExceptions )
 {
   if ( !incidence->doesRecur() ) {
     return i18n( "No recurrence" );
@@ -4306,75 +4414,11 @@ QString IncidenceFormatter::recurrenceString( Incidence *incidence )
   if ( recurStr.isEmpty() ) {
     recurStr = i18n( "Incidence recurs" );
   }
-  // Now, append the EXDATEs
-  DateTimeList l = recur->exDateTimes();
-  DateTimeList::ConstIterator il;
-  QStringList exStr;
-  for ( il = l.constBegin(); il != l.constEnd(); ++il ) {
-    switch ( recur->recurrenceType() ) {
-    case Recurrence::rMinutely:
-      exStr << i18n( "minute %1" ).arg( (*il).time().minute() );
-      break;
-    case Recurrence::rHourly:
-      exStr << KGlobal::locale()->formatTime( (*il).time() );
-      break;
-    case Recurrence::rDaily:
-      exStr << KGlobal::locale()->formatDate( (*il).date(), true );
-      break;
-    case Recurrence::rWeekly:
-      exStr << calSys->weekDayName( (*il).date(), false );
-      break;
-    case Recurrence::rMonthlyPos:
-      exStr << KGlobal::locale()->formatDate( (*il).date(), true );
-      break;
-    case Recurrence::rMonthlyDay:
-      exStr << KGlobal::locale()->formatDate( (*il).date(), true );
-      break;
-    case Recurrence::rYearlyMonth:
-      exStr << calSys->monthName( (*il).date(), false );
-      break;
-    case Recurrence::rYearlyDay:
-      exStr << KGlobal::locale()->formatDate( (*il).date(), true );
-      break;
-    case Recurrence::rYearlyPos:
-      exStr << KGlobal::locale()->formatDate( (*il).date(), true );
-      break;
+  if ( includeExceptions ) {
+    const QStringList exStrs = IncidenceFormatter::exceptionStrings( recur );
+    if ( !exStrs.isEmpty() ) {
+      recurStr = i18n( "%1 (excluding %2)" ).arg( recurStr, exStrs.join( "," ) );
     }
-  }
-
-  DateList d = recur->exDates();
-  DateList::ConstIterator dl;
-  for ( dl = d.constBegin(); dl != d.constEnd(); ++dl ) {
-    switch ( recur->recurrenceType() ) {
-    case Recurrence::rDaily:
-      exStr << KGlobal::locale()->formatDate( (*dl), true );
-      break;
-    case Recurrence::rWeekly:
-      // exStr << calSys->weekDayName( (*dl), true );
-      // kolab/issue4735, should be ( excluding 3 days ), instead of excluding( Fr,Fr,Fr )
-      if ( exStr.isEmpty() )
-        exStr << i18n( "1 day", "%n days", recur->exDates().count() );
-      break;
-    case Recurrence::rMonthlyPos:
-      exStr << KGlobal::locale()->formatDate( (*dl), true );
-      break;
-    case Recurrence::rMonthlyDay:
-      exStr << KGlobal::locale()->formatDate( (*dl), true );
-      break;
-    case Recurrence::rYearlyMonth:
-      exStr << calSys->monthName( (*dl), false );
-      break;
-    case Recurrence::rYearlyDay:
-      exStr << KGlobal::locale()->formatDate( (*dl), true );
-      break;
-    case Recurrence::rYearlyPos:
-      exStr << KGlobal::locale()->formatDate( (*dl), true );
-      break;
-    }
-  }
-
-  if ( !exStr.isEmpty() ) {
-    recurStr = i18n( "%1 (excluding %2)" ).arg( recurStr, exStr.join( "," ) );
   }
 
   return recurStr;

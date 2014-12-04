@@ -32,6 +32,7 @@
 namespace KCal {
 class Calendar;
 class Incidence;
+class Recurrence;
 class IncidenceBase;
 class ScheduleMessage;
 class Attendee;
@@ -84,7 +85,9 @@ class LIBKCAL_EXPORT IncidenceFormatter
     // Transform a TNEF attachment to an iCal or vCard
     static QString msTNEFToVPart( const QByteArray& tnef );
 
-    static QString recurrenceString( Incidence *incidence );
+    static QStringList exceptionStrings( Recurrence *recur );
+
+    static QString recurrenceString( Incidence *incidence, bool includeExceptions = true );
 
     static QString formatGroupwareLinks(InvitationFormatterHelper *helper,
                                         Incidence *existingIncidence,
