@@ -42,6 +42,12 @@ add_messageviewer_unittest( todoedittest.cpp )
 add_messageviewer_unittest( eventedittest.cpp )
 add_messageviewer_unittest( eventdatetimewidgettest.cpp )
 add_messageviewer_unittest( messagedisplayformatattributetest.cpp )
+
+set( messageviewer_attachmentdirs_SRCS attachmenttemporaryfilesdirstest.cpp ../viewer/attachmenttemporaryfilesdirs.cpp)
+kde4_add_unit_test( messageviewer_attachmentdirstest ${messageviewer_attachmentdirs_SRCS})
+target_link_libraries( messageviewer_attachmentdirstest ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS})
+
+
 ########### viewertest_gui ###############
 
 
