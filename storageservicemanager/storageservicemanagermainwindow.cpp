@@ -53,7 +53,7 @@
 StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
     : KXmlGuiWindow()
 {
-    StorageServiceManagerSettingsJob *settingsJob = new StorageServiceManagerSettingsJob(this);
+    StorageServiceManagerSettingsJob *settingsJob = new StorageServiceManagerSettingsJob;
     PimCommon::StorageServiceJobConfig *configJob = PimCommon::StorageServiceJobConfig::self();
     configJob->registerConfigIf(settingsJob);
 

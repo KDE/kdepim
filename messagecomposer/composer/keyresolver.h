@@ -235,11 +235,11 @@ private:
     std::vector<Item> getEncryptionItems(const QStringList &recipients);
     std::vector<GpgME::Key> getEncryptionKeys(const QString &recipient, bool quiet) const;
 
-    Kpgp::Result showKeyApprovalDialog();
+    Kpgp::Result showKeyApprovalDialog(bool &finalySendUnencrypted);
 
     bool encryptionPossible() const;
     bool signingPossible() const;
-    Kpgp::Result resolveEncryptionKeys(bool signingRequested);
+    Kpgp::Result resolveEncryptionKeys(bool signingRequested , bool &finalySendUnencrypted);
     Kpgp::Result resolveSigningKeysForEncryption();
     Kpgp::Result resolveSigningKeysForSigningOnly();
     Kpgp::Result checkKeyNearExpiry(const GpgME::Key &key,

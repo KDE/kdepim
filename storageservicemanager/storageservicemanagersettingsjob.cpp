@@ -22,8 +22,7 @@
 
 using namespace PimCommon;
 
-StorageServiceManagerSettingsJob::StorageServiceManagerSettingsJob(QObject *parent)
-    : QObject(parent)
+StorageServiceManagerSettingsJob::StorageServiceManagerSettingsJob()
 {
 }
 

@@ -266,9 +266,9 @@ QList<ContentJobBase *> ComposerPrivate::createEncryptJobs(ContentJobBase *conte
     qDebug() << "format:" << format;
     qDebug() << "enc data:" << encData.size();
 
-    if (encData.size() == 0) {  // no key data! bail!
-        q->setErrorText(i18n("No key data for recipients found."));
-        q->setError(Composer::IncompleteError);
+    if( encData.isEmpty() ) { // no key data! bail!
+        q->setErrorText( i18n( "No key data for recipients found." ) );
+        q->setError( Composer::IncompleteError );
         q->emitResult();
         return jobs;
     }

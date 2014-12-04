@@ -52,7 +52,7 @@ StorageServiceJobConfig::StorageServiceJobConfig(QObject *parent)
 
 StorageServiceJobConfig::~StorageServiceJobConfig()
 {
-
+    delete mSettingsJob;
 }
 
 StorageServiceJobConfig *StorageServiceJobConfig::self()

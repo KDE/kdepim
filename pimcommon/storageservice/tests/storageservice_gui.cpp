@@ -70,7 +70,7 @@ void StorageServiceSettingsDialog::setListService(const QMap<QString, PimCommon:
 StorageServiceTestWidget::StorageServiceTestWidget(QWidget *parent)
     : QWidget(parent)
 {
-    PimCommon::TestSettingsJob *settingsJob = new PimCommon::TestSettingsJob(this);
+    PimCommon::TestSettingsJob *settingsJob = new PimCommon::TestSettingsJob;
     PimCommon::StorageServiceJobConfig *configJob = PimCommon::StorageServiceJobConfig::self();
     configJob->registerConfigIf(settingsJob);
 

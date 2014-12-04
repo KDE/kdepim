@@ -21,14 +21,12 @@
 #ifndef STORAGESERVICEMANAGERSETTINGSJOB_H
 #define STORAGESERVICEMANAGERSETTINGSJOB_H
 
-#include <QObject>
 #include "pimcommon/storageservice/interface/storageserviceinterface.h"
 
-class StorageServiceManagerSettingsJob : public QObject, public PimCommon::ISettingsJob
+class StorageServiceManagerSettingsJob : public PimCommon::ISettingsJob
 {
-    Q_OBJECT
 public:
-    explicit StorageServiceManagerSettingsJob(QObject *parent = Q_NULLPTR);
+    StorageServiceManagerSettingsJob();
     ~StorageServiceManagerSettingsJob();
 
     QString youSendItApiKey() const;
