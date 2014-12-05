@@ -314,15 +314,15 @@ void AttachmentControllerBase::Private::editDone( MessageViewer::EditorWatcher *
     Q_ASSERT( part );
     KTemporaryFile *tempFile = editorTempFile.take( watcher );
     Q_ASSERT( tempFile );
-
     if( watcher->fileChanged() ) {
         kDebug() << "File has changed.";
-
-        // Read the new data and update the part in the model.
-        tempFile->reset();
-        QByteArray data = tempFile->readAll();
-        part->setData( data );
-        model->updateAttachment( part );
+        const QString name = watcher->url().path();
+        QFile file( name );
+        if ( file.open( QIODevice::ReadOnly ) ) {
+            const QByteArray data = file.readAll();
+            part->setData( data );
+            model->updateAttachment( part );
+        }
     }
 
     delete tempFile;
