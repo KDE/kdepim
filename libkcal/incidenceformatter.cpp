@@ -1618,7 +1618,8 @@ static QString invitationDetailsEvent( Event* event, bool noHtmlMode )
   QString html = htmlInvitationDetailsBegin( "view_pim_calendar",
                                              invitationSummary( event, noHtmlMode ) );
 
-  html += htmlRow( i18n( "When:" ), IncidenceFormatter::formatStartEnd ( event->dtStart(), event->dtEnd(), event->doesFloat() ) );
+  html += htmlRow( event->doesRecur() ? i18n( "First event:" ) : i18n( "When:" ),
+      IncidenceFormatter::formatStartEnd ( event->dtStart(), event->dtEnd(), event->doesFloat() ) );
 
   const QString location = invitationLocation( event, noHtmlMode );
 
@@ -1663,23 +1664,9 @@ static QString invitationDetailsEvent( Event *event, Event *oldevent, ScheduleMe
   const QString location = htmlCompare( invitationLocation( event, noHtmlMode ),
                    invitationLocation( oldevent, noHtmlMode ) );
 
-  QDateTime newDateToUse = event->dtStart();
-  QDateTime oldDateToUse = oldevent->dtStart();
-  const int exDatesCount = event->recurrence()->exDates().count();
-  if ( event->doesRecur() && oldevent->doesRecur() &&
-       exDatesCount == oldevent->recurrence()->exDates().count() + 1 &&
-       event->dtStart() == oldevent->dtStart() && event->dtEnd() == oldevent->dtEnd() )
-  {
-    // kolab/issue4735 - When you delete an occurrence of a recurring event, the date
-    // of the occurrence should be used. This is a bit of an hack because we don't support
-    // recurrence-id yet
-    newDateToUse = QDateTime( event->recurrence()->exDates()[exDatesCount-1], QTime( -1, -1 ) );
-    oldDateToUse = newDateToUse;
-  }
-
-  html += htmlRow( i18n( "When:" ),
-      IncidenceFormatter::formatStartEnd ( newDateToUse, event->dtEnd(), event->doesFloat() ),
-      IncidenceFormatter::formatStartEnd ( oldDateToUse, oldevent->dtEnd(), oldevent->doesFloat() ) );
+  html += htmlRow( event->doesRecur() ? i18n( "First event:" ) : i18n( "When:" ),
+      IncidenceFormatter::formatStartEnd ( event->dtStart(), event->dtEnd(), event->doesFloat() ),
+      IncidenceFormatter::formatStartEnd ( oldevent->dtStart(), oldevent->dtEnd(), oldevent->doesFloat() ) );
 
   if ( !location.isEmpty() ) {
     html += htmlRow( i18n( "Where:" ), location );
