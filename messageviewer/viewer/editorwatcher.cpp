@@ -125,6 +125,7 @@ QUrl EditorWatcher::url() const
 void EditorWatcher::inotifyEvent()
 {
     assert(mHaveInotify);
+    qDebug()<<" void EditorWatcher::inotifyEvent()";
 #ifdef HAVE_SYS_INOTIFY_H
     int pending = -1;
     char buffer[4096];
@@ -138,16 +139,20 @@ void EditorWatcher::inotifyEvent()
         int offset = 0;
         while (size > 0) {
             struct inotify_event *event = (struct inotify_event *) &buffer[offset];
-            size -= sizeof(struct inotify_event) + event->len;
-            offset += sizeof(struct inotify_event) + event->len;
-            if (event->mask & IN_OPEN) {
+            qDebug()<<" size > 0"<<event->mask;
+            size -= sizeof( struct inotify_event ) + event->len;
+            offset += sizeof( struct inotify_event ) + event->len;
+            if ( event->mask & IN_OPEN ) {
                 mFileOpen = true;
+                qDebug()<<" IN OPEN";
             }
-            if (event->mask & IN_CLOSE) {
+            if ( event->mask & IN_CLOSE ) {
                 mFileOpen = false;
+                qDebug()<<" IN CLOSE";
             }
-            if (event->mask & IN_MODIFY) {
+            if ( event->mask & IN_MODIFY ) {
                 mFileModified = true;
+                qDebug()<<" IN MODIFY";
             }
         }
     }
