@@ -2671,7 +2671,7 @@ void ViewerPrivate::slotAttachmentEdit()
 
 void ViewerPrivate::slotAttachmentEditDone( MessageViewer::EditorWatcher* editorWatcher )
 {
-    QString name = editorWatcher->url().fileName();
+    const QString name = editorWatcher->url().fileName();
     if ( editorWatcher->fileChanged() ) {
         QFile file( name );
         if ( file.open( QIODevice::ReadOnly ) ) {
