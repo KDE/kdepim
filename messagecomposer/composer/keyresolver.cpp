@@ -35,7 +35,7 @@
 */
 
 #include "keyresolver.h"
-#include "savecontactpreferencejob.h"
+#include "job/savecontactpreferencejob.h"
 
 #ifndef QT_NO_CURSOR
 #include "messageviewer/utils/kcursorsaver.h"
@@ -1824,7 +1824,7 @@ Kleo::KeyResolver::ContactPreferences Kleo::KeyResolver::lookupContactPreference
 void Kleo::KeyResolver::saveContactPreference( const QString& email, const ContactPreferences& pref ) const
 {
     d->mContactPreferencesMap.insert( std::make_pair( email, pref ) );
-    SaveContactPreferenceJob *saveContactPreferencesJob = new SaveContactPreferenceJob(email, pref);
+    MessageComposer::SaveContactPreferenceJob *saveContactPreferencesJob = new MessageComposer::SaveContactPreferenceJob(email, pref);
     saveContactPreferencesJob->start();
 }
 

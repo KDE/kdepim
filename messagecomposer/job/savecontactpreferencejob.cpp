@@ -28,7 +28,7 @@
 #include <QPointer>
 #include <QDebug>
 
-using namespace Kleo;
+using namespace MessageComposer;
 
 SaveContactPreferenceJob::SaveContactPreferenceJob( const QString& email, const Kleo::KeyResolver::ContactPreferences& pref, QObject *parent)
     : KJob(parent),

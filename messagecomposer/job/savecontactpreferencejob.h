@@ -22,7 +22,7 @@
 #include <KABC/Addressee>
 #include "keyresolver.h"
 
-namespace Kleo {
+namespace MessageComposer {
 class SaveContactPreferenceJob : public KJob
 {
     Q_OBJECT
