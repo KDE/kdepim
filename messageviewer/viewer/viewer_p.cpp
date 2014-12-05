@@ -1853,13 +1853,11 @@ void ViewerPrivate::createActions()
     ac->setDefaultShortcut(mFindInMessageAction, KStandardShortcut::find().first());
 
 #ifndef KDEPIM_NO_WEBKIT
-#if QTWEBKIT_VERSION >= QTWEBKIT_VERSION_CHECK(2, 3, 0)
     mCaretBrowsing = new KToggleAction(i18n("Toggle Caret Browsing"), this);
     ac->setDefaultShortcut(mCaretBrowsing, Qt::Key_F7);
     ac->addAction(QLatin1String("toggle_caret_browsing"), mCaretBrowsing);
     connect(mCaretBrowsing, SIGNAL(triggered(bool)), SLOT(slotToggleCaretBrowsing(bool)));
     mCaretBrowsing->setChecked(false);
-#endif
 #endif
     mBlockImage = new QAction(i18n("Block image"), this);
     ac->addAction(QLatin1String("adblock_image"), mBlockImage);
@@ -3172,14 +3170,12 @@ void ViewerPrivate::goResourceOnline()
 void ViewerPrivate::slotToggleCaretBrowsing(bool toggle)
 {
 #ifndef KDEPIM_NO_WEBKIT
-#if QTWEBKIT_VERSION >= QTWEBKIT_VERSION_CHECK(2, 3, 0)
     if (toggle) {
         KMessageBox::information(mMainWindow,
                                  i18n("Caret Browsing will be activated. Switch off with F7 shortcut."),
                                  i18n("Activate Caret Browsing"));
     }
     mViewer->settings()->setAttribute(QWebSettings::CaretBrowsingEnabled, toggle);
-#endif
 #endif
     Q_UNUSED(toggle);
 }

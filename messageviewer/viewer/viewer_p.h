@@ -697,9 +697,7 @@ public:
     KSelectAction *mSelectEncodingAction;
     KToggleAction *mToggleFixFontAction, *mToggleDisplayModeAction;
 #ifndef KDEPIM_NO_WEBKIT
-#if QTWEBKIT_VERSION >= QTWEBKIT_VERSION_CHECK(2, 3, 0)
     KToggleAction *mCaretBrowsing;
-#endif
 #endif
     KToggleAction *mZoomTextOnlyAction;
     QAction *mZoomInAction, *mZoomOutAction, *mZoomResetAction;

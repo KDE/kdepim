@@ -284,13 +284,11 @@ void ComposerView::contextMenuEvent(QContextMenuEvent *event)
         menu->addAction(d->action_spell_check);
         menu->addSeparator();
     }
-#if QTWEBKIT_VERSION >= QTWEBKIT_VERSION_CHECK(2, 3, 0)
     //Don't use "Auto Spell Check" it will confict with search menu entry in spellchecklineedit.
     QAction *autoSpellCheckingAction = menu->addAction(i18n("Enable Spell Checking"));
     autoSpellCheckingAction->setCheckable(true);
     autoSpellCheckingAction->setChecked(d->checkSpellingEnabled());
     connect(autoSpellCheckingAction, SIGNAL(triggered(bool)), this, SLOT(_k_changeAutoSpellChecking(bool)));
-#endif
     QAction *speakAction = menu->addAction(i18n("Speak Text"));
     speakAction->setIcon(QIcon::fromTheme(QLatin1String("preferences-desktop-text-to-speech")));
     speakAction->setEnabled(!emptyDocument);

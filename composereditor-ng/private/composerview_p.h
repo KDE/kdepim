@@ -142,9 +142,7 @@ public:
 
     void hideImageResizeWidget();
     void showImageResizeWidget();
-#if QTWEBKIT_VERSION >= QTWEBKIT_VERSION_CHECK(2, 3, 0)
     bool checkSpellingEnabled();
-#endif
 
     void connectActionGroup();
     void createAction(ComposerView::ComposerViewAction type);
