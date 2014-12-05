@@ -19,17 +19,21 @@
 #define ATTACHMENTENCRYPTWITHCHIASMUSJOB_H
 
 #include <QObject>
-namespace KMime {
+namespace KMime
+{
 class Content;
 }
-namespace Kleo {
+namespace Kleo
+{
 class SpecialJob;
 }
-namespace GpgME {
+namespace GpgME
+{
 class Error;
 }
 class KJob;
-namespace MessageViewer {
+namespace MessageViewer
+{
 class AttachmentEncryptWithChiasmusJob : public QObject
 {
     Q_OBJECT
