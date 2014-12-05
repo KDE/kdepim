@@ -63,6 +63,13 @@ EditorWatcher::EditorWatcher(const QUrl &url, const QString &mimeType, OpenWithO
     connect(&mTimer, &QTimer::timeout, this, &EditorWatcher::checkEditDone);
 }
 
+EditorWatcher::~EditorWatcher()
+{
+#ifdef HAVE_SYS_INOTIFY_H
+    ::close( mInotifyFd );
+#endif
+}
+
 bool EditorWatcher::start()
 {
     // find an editor
@@ -84,11 +91,13 @@ bool EditorWatcher::start()
 #ifdef HAVE_SYS_INOTIFY_H
     // monitor file
     mInotifyFd = inotify_init();
-    if (mInotifyFd > 0) {
-        mInotifyWatch = inotify_add_watch(mInotifyFd, mUrl.path().toLatin1(), IN_CLOSE | IN_OPEN | IN_MODIFY);
-        if (mInotifyWatch >= 0) {
-            QSocketNotifier *sn = new QSocketNotifier(mInotifyFd, QSocketNotifier::Read, this);
-            connect(sn, &QSocketNotifier::activated, this, &EditorWatcher::inotifyEvent);
+    if ( mInotifyFd > 0 ) {
+        (void)fcntl(mInotifyFd, F_SETFD, FD_CLOEXEC);
+        qDebug()<<" mUrl.path().toLatin1()"<<mUrl.path().toLatin1();
+        mInotifyWatch = inotify_add_watch( mInotifyFd, mUrl.path().toLatin1(), IN_CLOSE | IN_OPEN | IN_MODIFY | IN_ATTRIB );
+        if ( mInotifyWatch >= 0 ) {
+            QSocketNotifier *sn = new QSocketNotifier( mInotifyFd, QSocketNotifier::Read, this );
+            connect( sn, SIGNAL(activated(int)), SLOT(inotifyEvent()) );
             mHaveInotify = true;
             mFileModified = false;
         }
@@ -124,36 +133,49 @@ QUrl EditorWatcher::url() const
 
 void EditorWatcher::inotifyEvent()
 {
-    assert(mHaveInotify);
-    qDebug()<<" void EditorWatcher::inotifyEvent()";
+    assert( mHaveInotify );
+
 #ifdef HAVE_SYS_INOTIFY_H
     int pending = -1;
-    char buffer[4096];
-    ioctl(mInotifyFd, FIONREAD, &pending);
-    while (pending > 0) {
-        int size = read(mInotifyFd, buffer, qMin(pending, (int)sizeof(buffer)));
-        pending -= size;
-        if (size < 0) {
-            break;    // error
-        }
-        int offset = 0;
-        while (size > 0) {
-            struct inotify_event *event = (struct inotify_event *) &buffer[offset];
-            qDebug()<<" size > 0"<<event->mask;
-            size -= sizeof( struct inotify_event ) + event->len;
-            offset += sizeof( struct inotify_event ) + event->len;
+    int offsetStartRead = 0; // where we read into buffer
+    char buf[8192];
+    assert( mInotifyFd > -1 );
+    ioctl( mInotifyFd, FIONREAD, &pending );
+
+    while ( pending > 0 ) {
+
+        const int bytesToRead = qMin( pending, (int)sizeof( buf ) - offsetStartRead );
+
+        int bytesAvailable = read( mInotifyFd, &buf[offsetStartRead], bytesToRead );
+        pending -= bytesAvailable;
+        bytesAvailable += offsetStartRead;
+        offsetStartRead = 0;
+
+        int offsetCurrent = 0;
+        while ( bytesAvailable >= (int)sizeof( struct inotify_event ) ) {
+            const struct inotify_event * const event = (struct inotify_event *) &buf[offsetCurrent];
+            const int eventSize = sizeof( struct inotify_event ) + event->len;
+            if ( bytesAvailable < eventSize ) {
+                break;
+            }
+
+            bytesAvailable -= eventSize;
+            offsetCurrent += eventSize;
             if ( event->mask & IN_OPEN ) {
                 mFileOpen = true;
-                qDebug()<<" IN OPEN";
             }
             if ( event->mask & IN_CLOSE ) {
                 mFileOpen = false;
-                qDebug()<<" IN CLOSE";
             }
-            if ( event->mask & IN_MODIFY ) {
+            if ( event->mask & (IN_MODIFY|IN_ATTRIB) ) {
                 mFileModified = true;
-                qDebug()<<" IN MODIFY";
             }
+
+        }
+        if (bytesAvailable > 0) {
+            // copy partial event to beginning of buffer
+            memmove(buf, &buf[offsetCurrent], bytesAvailable);
+            offsetStartRead = bytesAvailable;
         }
     }
 #endif

@@ -54,6 +54,7 @@ public:
     EditorWatcher(const QUrl &url, const QString &mimeType, OpenWithOption option,
                   QObject *parent, QWidget *parentWidget);
 
+    ~EditorWatcher();
     bool start();
     bool fileChanged() const;
     QUrl url() const;
