@@ -2782,20 +2782,6 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
     html += headerResult;
   }
 
-  if ( existingIncidence && inc->doesRecur() ) {
-    if ( !existingIncidence->doesRecur() ) {
-      html += "A recurrence has been added.";
-    } else {
-      if ( existingIncidence->recurrence()->exDates().count() >
-          inc->recurrence()->exDates().count() ) {
-        html += "An exception has been removed.";
-      } else if ( existingIncidence->recurrence()->exDates().count() <
-          inc->recurrence()->exDates().count() ) {
-        html += "An exception has been added.";
-      }
-    }
-  }
-
   // Some more conditional status information
   QString eventInfo;
   if ( !myInc && a ) {
