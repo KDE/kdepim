@@ -560,7 +560,7 @@ public slots:
     void slotAttachmentCopy();
     void slotAttachmentDelete();
     void slotAttachmentEdit();
-    void slotAttachmentEditDone(EditorWatcher* editorWatcher);
+    void slotAttachmentEditDone(MessageViewer::EditorWatcher* editorWatcher);
     void slotLevelQuote( int l );
 
     /** Toggle display mode between HTML and plain text. */
