@@ -78,7 +78,7 @@ void AttachmentEditJob::setMainWindow(QWidget *mainWindow)
 
 void AttachmentEditJob::slotAttachmentEditDone( MessageViewer::EditorWatcher* editorWatcher )
 {
-    const QString name = editorWatcher->url().fileName();
+    const QString name = editorWatcher->url().path();
     if ( editorWatcher->fileChanged() ) {
         QFile file( name );
         if ( file.open( QIODevice::ReadOnly ) ) {

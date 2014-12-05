@@ -53,7 +53,7 @@ public:
      */
     EditorWatcher( const KUrl &url, const QString &mimeType, OpenWithOption option,
                    QObject *parent, QWidget *parentWidget );
-
+    ~EditorWatcher();
     bool start();
     bool fileChanged() const;
     KUrl url() const;
