@@ -65,7 +65,6 @@ class SlideContainer;
 namespace MessageViewer {
 class TodoEdit;
 class EventEdit;
-class EditorWatcher;
 class HtmlWriter;
 class CSSHelper;
 class AttachmentStrategy;
@@ -207,7 +206,7 @@ public:
 
     /** Edit the attachment the @param node points to. Returns false if the user
   cancelled the editing, true in all other cases! */
-    bool editAttachment( KMime::Content* node, bool showWarning = true );
+    void editAttachment( KMime::Content* node, bool showWarning = true );
 
     /** Access to the MailWebView used for the viewer. Use with
       care! */
@@ -493,6 +492,7 @@ private slots:
 
     void slotCreateEvent(const KCalCore::Event::Ptr &eventPtr, const Akonadi::Collection &collection);
 
+    void slotRefreshMessage(const Akonadi::Item &item);
 public slots:
     /** An URL has been activate with a click. */
     void slotUrlOpen( const QUrl &url = QUrl());
@@ -560,7 +560,6 @@ public slots:
     void slotAttachmentCopy();
     void slotAttachmentDelete();
     void slotAttachmentEdit();
-    void slotAttachmentEditDone(MessageViewer::EditorWatcher* editorWatcher);
     void slotLevelQuote( int l );
 
     /** Toggle display mode between HTML and plain text. */
@@ -707,7 +706,6 @@ public:
     KMime::Content *mMessagePartNode;
     QString mCurrentFileName;
     QString mMessagePath;
-    QMap<EditorWatcher*, KMime::Content*> mEditorWatchers;
     Viewer *const q;
     bool mShowFullToAddressList;
     bool mShowFullCcAddressList;

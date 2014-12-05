@@ -38,7 +38,7 @@
 #include "widgets/openattachmentfolderwidget.h"
 #include "pimcommon/widgets/slidecontainer.h"
 #include "messageviewer/job/attachmentencryptwithchiasmusjob.h"
-
+#include "messageviewer/job/attachmenteditjob.h"
 #ifdef MESSAGEVIEWER_READER_HTML_DEBUG
 #include "htmlwriter/filehtmlwriter.h"
 #include "htmlwriter/teehtmlwriter.h"
@@ -122,7 +122,6 @@
 #include "widgets/attachmentdialog.h"
 #include "viewer/attachmentstrategy.h"
 #include "csshelper.h"
-#include "viewer/editorwatcher.h"
 #include "settings/globalsettings.h"
 #include "header/headerstyle.h"
 #include "header/headerstrategy.h"
@@ -478,37 +477,15 @@ void ViewerPrivate::itemModifiedResult( KJob* job )
 }
 
 
-bool ViewerPrivate::editAttachment( KMime::Content * node, bool showWarning )
+void ViewerPrivate::editAttachment( KMime::Content * node, bool showWarning )
 {
-    //FIXME(Andras) just that I don't forget...handle the case when the user starts editing and switches to another message meantime
-    if ( showWarning && KMessageBox::warningContinueCancel( mMainWindow,
-                                                            i18n("Modifying an attachment might invalidate any digital signature on this message."),
-                                                            i18n("Edit Attachment"), KGuiItem( i18n("Edit"), QLatin1String("document-properties") ), KStandardGuiItem::cancel(),
-                                                            QLatin1String("EditAttachmentSignatureWarning") )
-         != KMessageBox::Continue ) {
-        return false;
-    }
-
-    KTemporaryFile file;
-    file.setAutoRemove( false );
-    if ( !file.open() ) {
-        kWarning() << "Edit Attachment: Unable to open temp file.";
-        return true;
-    }
-    file.write( node->decodedContent() );
-    file.flush();
-
-    EditorWatcher *watcher =
-            new EditorWatcher( KUrl( file.fileName() ), QLatin1String(node->contentType()->mimeType()),
-                               MessageViewer::EditorWatcher::NoOpenWithDialog, this, mMainWindow );
-    mEditorWatchers[ watcher ] = node;
-
-    connect( watcher, SIGNAL(editDone(MessageViewer::EditorWatcher*)), SLOT(slotAttachmentEditDone(MessageViewer::EditorWatcher*)) );
-    if ( !watcher->start() ) {
-        mEditorWatchers.remove( watcher );
-        QFile::remove( file.fileName() );
-    }
-    return true;
+    MessageViewer::AttachmentEditJob *job = new MessageViewer::AttachmentEditJob(this);
+    connect(job, SIGNAL(refreshMessage(Akonadi::Item)), this, SLOT(slotRefreshMessage(Akonadi::Item)));
+    job->setMainWindow(mMainWindow);
+    job->setMessageItem(mMessageItem);
+    job->setMessage(mMessage);
+    job->addAttachment(node, showWarning);
+    job->canDeleteJob();
 }
 
 void ViewerPrivate::createOpenWithMenu( KMenu *topMenu, const QString &contentTypeStr, bool fromCurrentContent )
@@ -2660,34 +2637,21 @@ void ViewerPrivate::slotAttachmentEdit()
     if ( contents.isEmpty() )
         return;
 
+    MessageViewer::AttachmentEditJob *job = new MessageViewer::AttachmentEditJob(this);
+    connect(job, SIGNAL(refreshMessage(Akonadi::Item)), this, SLOT(slotRefreshMessage(Akonadi::Item)));
+    job->setMainWindow(mMainWindow);
+    job->setMessageItem(mMessageItem);
+    job->setMessage(mMessage);
+
     bool showWarning = true;
     Q_FOREACH( KMime::Content *content, contents ) {
-        if ( !editAttachment( content, showWarning ) )
-            return;
+        if ( !job->addAttachment( content, showWarning ) )
+            break;
         showWarning = false;
     }
+    job->canDeleteJob();
 }
 
-
-void ViewerPrivate::slotAttachmentEditDone( MessageViewer::EditorWatcher* editorWatcher )
-{
-    const QString name = editorWatcher->url().fileName();
-    if ( editorWatcher->fileChanged() ) {
-        QFile file( name );
-        if ( file.open( QIODevice::ReadOnly ) ) {
-            QByteArray data = file.readAll();
-            KMime::Content *node = mEditorWatchers[editorWatcher];
-            node->setBody( data );
-            file.close();
-
-            mMessageItem.setPayloadFromData( mMessage->encodedContent() );
-            Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( mMessageItem );
-            connect( job, SIGNAL(result(KJob*)), SLOT(itemModifiedResult(KJob*)) );
-        }
-    }
-    mEditorWatchers.remove( editorWatcher );
-    QFile::remove( name );
-}
 
 void ViewerPrivate::slotLevelQuote( int l )
 {
@@ -3267,4 +3231,11 @@ void ViewerPrivate::slotCreateEvent(const KCalCore::Event::Ptr &eventPtr, const 
 {
     CreateEventJob *createJob = new CreateEventJob(eventPtr, collection, mMessageItem, this);
     createJob->start();
+}
+
+void ViewerPrivate::slotRefreshMessage(const Akonadi::Item &item)
+{
+    if (item.id() == mMessageItem.id()) {
+        setMessageItem( item, MessageViewer::Viewer::Force );
+    }
 }
