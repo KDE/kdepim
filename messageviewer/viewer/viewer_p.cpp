@@ -482,7 +482,7 @@ void ViewerPrivate::itemModifiedResult(KJob *job)
     }
 }
 
-void ViewerPrivate::editAttachment( KMime::Content * node, bool showWarning )
+void ViewerPrivate::editAttachment(KMime::Content *node, bool showWarning)
 {
     MessageViewer::AttachmentEditJob *job = new MessageViewer::AttachmentEditJob(this);
     connect(job, SIGNAL(refreshMessage(Akonadi::Item)), this, SLOT(slotRefreshMessage(Akonadi::Item)));
@@ -2707,15 +2707,16 @@ void ViewerPrivate::slotAttachmentEdit()
     job->setMessage(mMessage);
 
     bool showWarning = true;
-    Q_FOREACH( KMime::Content *content, contents ) {
-        if ( !job->addAttachment( content, showWarning ) )
+    Q_FOREACH (KMime::Content *content, contents) {
+        if (!job->addAttachment(content, showWarning)) {
             break;
+        }
         showWarning = false;
     }
     job->canDeleteJob();
 }
 
-void ViewerPrivate::slotLevelQuote( int l )
+void ViewerPrivate::slotLevelQuote(int l)
 {
     if (mLevelQuote != l) {
         mLevelQuote = l;
@@ -3311,6 +3312,6 @@ void ViewerPrivate::addHelpTextAction(QAction *act, const QString &text)
 void ViewerPrivate::slotRefreshMessage(const Akonadi::Item &item)
 {
     if (item.id() == mMessageItem.id()) {
-        setMessageItem( item, MessageViewer::Viewer::Force );
+        setMessageItem(item, MessageViewer::Viewer::Force);
     }
 }

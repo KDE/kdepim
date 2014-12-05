@@ -587,7 +587,7 @@ public slots:
     void slotAttachmentCopy();
     void slotAttachmentDelete();
     void slotAttachmentEdit();
-    void slotLevelQuote( int l );
+    void slotLevelQuote(int l);
 
     /** Toggle display mode between HTML and plain text. */
     void slotToggleHtmlMode();

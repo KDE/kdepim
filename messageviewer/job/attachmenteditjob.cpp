@@ -37,35 +37,35 @@ AttachmentEditJob::AttachmentEditJob(QObject *parent)
 
 AttachmentEditJob::~AttachmentEditJob()
 {
-    qDebug()<<" AttachmentEditJob::~AttachmentEditJob()";
+    qDebug() << " AttachmentEditJob::~AttachmentEditJob()";
 }
 
-bool AttachmentEditJob::addAttachment(KMime::Content * node, bool showWarning)
+bool AttachmentEditJob::addAttachment(KMime::Content *node, bool showWarning)
 {
-    if ( showWarning && KMessageBox::warningContinueCancel( mMainWindow,
-                                                            i18n("Modifying an attachment might invalidate any digital signature on this message."),
-                                                            i18n("Edit Attachment"), KGuiItem( i18n("Edit"), QLatin1String("document-properties") ), KStandardGuiItem::cancel(),
-                                                            QLatin1String("EditAttachmentSignatureWarning") )
-         != KMessageBox::Continue ) {
+    if (showWarning && KMessageBox::warningContinueCancel(mMainWindow,
+            i18n("Modifying an attachment might invalidate any digital signature on this message."),
+            i18n("Edit Attachment"), KGuiItem(i18n("Edit"), QLatin1String("document-properties")), KStandardGuiItem::cancel(),
+            QLatin1String("EditAttachmentSignatureWarning"))
+            != KMessageBox::Continue) {
         return false;
     }
 
     KTemporaryFile file;
-    file.setAutoRemove( false );
-    if ( !file.open() ) {
+    file.setAutoRemove(false);
+    if (!file.open()) {
         kWarning() << "Edit Attachment: Unable to open temp file.";
         return true;
     }
-    file.write( node->decodedContent() );
+    file.write(node->decodedContent());
     file.flush();
 
     EditorWatcher *watcher =
-            new EditorWatcher( KUrl( file.fileName() ), QLatin1String(node->contentType()->mimeType()),
-                               MessageViewer::EditorWatcher::NoOpenWithDialog, this, mMainWindow );
+        new EditorWatcher(KUrl(file.fileName()), QLatin1String(node->contentType()->mimeType()),
+                          MessageViewer::EditorWatcher::NoOpenWithDialog, this, mMainWindow);
     mEditorWatchers[ watcher ] = node;
 
-    connect( watcher, SIGNAL(editDone(MessageViewer::EditorWatcher*)), SLOT(slotAttachmentEditDone(MessageViewer::EditorWatcher*)) );
-    if ( !watcher->start() ) {
+    connect(watcher, SIGNAL(editDone(MessageViewer::EditorWatcher*)), SLOT(slotAttachmentEditDone(MessageViewer::EditorWatcher*)));
+    if (!watcher->start()) {
         removeEditorWatcher(watcher, file.fileName());
     }
     return true;
@@ -76,20 +76,20 @@ void AttachmentEditJob::setMainWindow(QWidget *mainWindow)
     mMainWindow = mainWindow;
 }
 
-void AttachmentEditJob::slotAttachmentEditDone( MessageViewer::EditorWatcher* editorWatcher )
+void AttachmentEditJob::slotAttachmentEditDone(MessageViewer::EditorWatcher *editorWatcher)
 {
     const QString name = editorWatcher->url().path();
-    if ( editorWatcher->fileChanged() ) {
-        QFile file( name );
-        if ( file.open( QIODevice::ReadOnly ) ) {
+    if (editorWatcher->fileChanged()) {
+        QFile file(name);
+        if (file.open(QIODevice::ReadOnly)) {
             QByteArray data = file.readAll();
             KMime::Content *node = mEditorWatchers[editorWatcher];
-            node->setBody( data );
+            node->setBody(data);
             file.close();
 
-            mMessageItem.setPayloadFromData( mMessage->encodedContent() );
-            Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( mMessageItem );
-            connect( job, SIGNAL(result(KJob*)), SLOT(slotItemModifiedResult(KJob*)) );
+            mMessageItem.setPayloadFromData(mMessage->encodedContent());
+            Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mMessageItem);
+            connect(job, SIGNAL(result(KJob*)), SLOT(slotItemModifiedResult(KJob*)));
             removeEditorWatcher(editorWatcher, name);
         }
     } else {
@@ -105,7 +105,7 @@ void AttachmentEditJob::setMessageItem(const Akonadi::Item &messageItem)
 
 void AttachmentEditJob::slotItemModifiedResult(KJob *job)
 {
-    if ( job->error() ) {
+    if (job->error()) {
         kDebug() << "Item update failed:" << job->errorString();
     } else {
         Q_EMIT refreshMessage(mMessageItem);
@@ -115,14 +115,15 @@ void AttachmentEditJob::slotItemModifiedResult(KJob *job)
 
 void AttachmentEditJob::canDeleteJob()
 {
-    if (mEditorWatchers.isEmpty())
+    if (mEditorWatchers.isEmpty()) {
         deleteLater();
+    }
 }
 
-void AttachmentEditJob::removeEditorWatcher(MessageViewer::EditorWatcher* editorWatcher, const QString &name)
+void AttachmentEditJob::removeEditorWatcher(MessageViewer::EditorWatcher *editorWatcher, const QString &name)
 {
-    mEditorWatchers.remove( editorWatcher );
-    QFile::remove( name );
+    mEditorWatchers.remove(editorWatcher);
+    QFile::remove(name);
 }
 
 void AttachmentEditJob::setMessage(const KMime::Message::Ptr &message)

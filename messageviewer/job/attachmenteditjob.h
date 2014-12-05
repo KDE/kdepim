@@ -22,16 +22,18 @@
 #include <AkonadiCore/Item>
 #include <QHash>
 #include <kmime/kmime_message.h>
-namespace KMime {
+namespace KMime
+{
 class Content;
 }
-namespace MessageViewer {
+namespace MessageViewer
+{
 class EditorWatcher;
 class AttachmentEditJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit AttachmentEditJob(QObject *parent=0);
+    explicit AttachmentEditJob(QObject *parent = 0);
     ~AttachmentEditJob();
 
     void setMainWindow(QWidget *mainWindow);
@@ -51,7 +53,7 @@ private slots:
     void slotItemModifiedResult(KJob *);
 private:
     void removeEditorWatcher(MessageViewer::EditorWatcher *editorWatcher, const QString &name);
-    QHash<EditorWatcher*, KMime::Content*> mEditorWatchers;
+    QHash<EditorWatcher *, KMime::Content *> mEditorWatchers;
     Akonadi::Item mMessageItem;
     KMime::Message::Ptr mMessage;
     bool mShowWarning;

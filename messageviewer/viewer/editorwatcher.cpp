@@ -66,7 +66,7 @@ EditorWatcher::EditorWatcher(const QUrl &url, const QString &mimeType, OpenWithO
 EditorWatcher::~EditorWatcher()
 {
 #ifdef HAVE_SYS_INOTIFY_H
-    ::close( mInotifyFd );
+    ::close(mInotifyFd);
 #endif
 }
 
@@ -91,13 +91,13 @@ bool EditorWatcher::start()
 #ifdef HAVE_SYS_INOTIFY_H
     // monitor file
     mInotifyFd = inotify_init();
-    if ( mInotifyFd > 0 ) {
+    if (mInotifyFd > 0) {
         (void)fcntl(mInotifyFd, F_SETFD, FD_CLOEXEC);
-        qDebug()<<" mUrl.path().toLatin1()"<<mUrl.path().toLatin1();
-        mInotifyWatch = inotify_add_watch( mInotifyFd, mUrl.path().toLatin1(), IN_CLOSE | IN_OPEN | IN_MODIFY | IN_ATTRIB );
-        if ( mInotifyWatch >= 0 ) {
-            QSocketNotifier *sn = new QSocketNotifier( mInotifyFd, QSocketNotifier::Read, this );
-            connect( sn, SIGNAL(activated(int)), SLOT(inotifyEvent()) );
+        qDebug() << " mUrl.path().toLatin1()" << mUrl.path().toLatin1();
+        mInotifyWatch = inotify_add_watch(mInotifyFd, mUrl.path().toLatin1(), IN_CLOSE | IN_OPEN | IN_MODIFY | IN_ATTRIB);
+        if (mInotifyWatch >= 0) {
+            QSocketNotifier *sn = new QSocketNotifier(mInotifyFd, QSocketNotifier::Read, this);
+            connect(sn, SIGNAL(activated(int)), SLOT(inotifyEvent()));
             mHaveInotify = true;
             mFileModified = false;
         }
@@ -133,41 +133,41 @@ QUrl EditorWatcher::url() const
 
 void EditorWatcher::inotifyEvent()
 {
-    assert( mHaveInotify );
+    assert(mHaveInotify);
 
 #ifdef HAVE_SYS_INOTIFY_H
     int pending = -1;
     int offsetStartRead = 0; // where we read into buffer
     char buf[8192];
-    assert( mInotifyFd > -1 );
-    ioctl( mInotifyFd, FIONREAD, &pending );
+    assert(mInotifyFd > -1);
+    ioctl(mInotifyFd, FIONREAD, &pending);
 
-    while ( pending > 0 ) {
+    while (pending > 0) {
 
-        const int bytesToRead = qMin( pending, (int)sizeof( buf ) - offsetStartRead );
+        const int bytesToRead = qMin(pending, (int)sizeof(buf) - offsetStartRead);
 
-        int bytesAvailable = read( mInotifyFd, &buf[offsetStartRead], bytesToRead );
+        int bytesAvailable = read(mInotifyFd, &buf[offsetStartRead], bytesToRead);
         pending -= bytesAvailable;
         bytesAvailable += offsetStartRead;
         offsetStartRead = 0;
 
         int offsetCurrent = 0;
-        while ( bytesAvailable >= (int)sizeof( struct inotify_event ) ) {
-            const struct inotify_event * const event = (struct inotify_event *) &buf[offsetCurrent];
-            const int eventSize = sizeof( struct inotify_event ) + event->len;
-            if ( bytesAvailable < eventSize ) {
+        while (bytesAvailable >= (int)sizeof(struct inotify_event)) {
+            const struct inotify_event *const event = (struct inotify_event *) &buf[offsetCurrent];
+            const int eventSize = sizeof(struct inotify_event) + event->len;
+            if (bytesAvailable < eventSize) {
                 break;
             }
 
             bytesAvailable -= eventSize;
             offsetCurrent += eventSize;
-            if ( event->mask & IN_OPEN ) {
+            if (event->mask & IN_OPEN) {
                 mFileOpen = true;
             }
-            if ( event->mask & IN_CLOSE ) {
+            if (event->mask & IN_CLOSE) {
                 mFileOpen = false;
             }
-            if ( event->mask & (IN_MODIFY|IN_ATTRIB) ) {
+            if (event->mask & (IN_MODIFY | IN_ATTRIB)) {
                 mFileModified = true;
             }
 

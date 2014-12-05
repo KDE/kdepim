@@ -311,18 +311,18 @@ void AttachmentControllerBase::Private::updateJobResult(KJob *job)
 
 void AttachmentControllerBase::Private::editDone(MessageViewer::EditorWatcher *watcher)
 {
-    AttachmentPart::Ptr part = editorPart.take( watcher );
-    Q_ASSERT( part );
-    QTemporaryFile *tempFile = editorTempFile.take( watcher );
-    Q_ASSERT( tempFile );
-    if( watcher->fileChanged() ) {
+    AttachmentPart::Ptr part = editorPart.take(watcher);
+    Q_ASSERT(part);
+    QTemporaryFile *tempFile = editorTempFile.take(watcher);
+    Q_ASSERT(tempFile);
+    if (watcher->fileChanged()) {
         qDebug() << "File has changed.";
         const QString name = watcher->url().path();
-        QFile file( name );
-        if ( file.open( QIODevice::ReadOnly ) ) {
+        QFile file(name);
+        if (file.open(QIODevice::ReadOnly)) {
             const QByteArray data = file.readAll();
-            part->setData( data );
-            model->updateAttachment( part );
+            part->setData(data);
+            model->updateAttachment(part);
         }
     }
 
