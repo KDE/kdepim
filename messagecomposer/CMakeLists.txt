@@ -41,6 +41,7 @@ set( messagecomposer_job_src
      job/emailaddressresolvejob.cpp
      job/attachmentfrompublickeyjob.cpp
      job/distributionlistexpandjob.cpp
+     job/savecontactpreferencejob.cpp
 )
 
 set( messagecomposer_composer_src
@@ -49,7 +50,6 @@ set( messagecomposer_composer_src
      composer/signaturecontroller.cpp
      composer/composerlineedit.cpp
      composer/composerviewbase.cpp
-     composer/savecontactpreferencejob.cpp
      composer/keyresolver.cpp
 )
 
