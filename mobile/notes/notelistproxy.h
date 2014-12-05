@@ -35,7 +35,7 @@ public:
   };
 
 public:
-  explicit NoteListProxy( int customRoleBaseline, QObject* parent = 0 );
+  explicit NoteListProxy( int customRoleBaseline, QObject* parent = Q_NULLPTR );
 
   QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const Q_DECL_OVERRIDE;
 

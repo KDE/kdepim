@@ -48,7 +48,7 @@ public Q_SLOTS:
     void setProgressValue(qint64 done, qint64 total);
 
 protected:
-    void hideEvent(QHideEvent *e);
+    void hideEvent(QHideEvent *e) Q_DECL_OVERRIDE;
 
 private slots:
     void slotCancelTask();

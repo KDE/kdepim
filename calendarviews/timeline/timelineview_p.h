@@ -50,7 +50,7 @@ class TimelineView::Private : public QObject
 {
     Q_OBJECT
 public:
-    explicit Private(TimelineView *parent = 0);
+    explicit Private(TimelineView *parent = Q_NULLPTR);
     ~Private();
 
     TimelineItem *calendarItemForIncidence(const Akonadi::Item &incidence);

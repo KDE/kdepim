@@ -50,7 +50,7 @@ class ContactViewItem : public DeclarativeAkonadiItem
   Q_OBJECT
 
   public:
-    explicit ContactViewItem( QDeclarativeItem *parent = 0 );
+    explicit ContactViewItem( QDeclarativeItem *parent = Q_NULLPTR );
     ~ContactViewItem();
 
     qint64 itemId() const;

@@ -29,7 +29,7 @@ class MessageListProxy : public ListProxy
   Q_OBJECT
 
   public:
-    explicit MessageListProxy(QObject* parent = 0);
+    explicit MessageListProxy(QObject* parent = Q_NULLPTR);
     enum Role {
       SubjectRole = Akonadi::EntityTreeModel::UserRole,
       FromRole,

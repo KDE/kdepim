@@ -31,7 +31,7 @@ class FollowUpReminderInfo;
 class FollowUpReminderInfoItem : public QTreeWidgetItem
 {
 public:
-    explicit FollowUpReminderInfoItem(QTreeWidget *parent = 0);
+    explicit FollowUpReminderInfoItem(QTreeWidget *parent = Q_NULLPTR);
     ~FollowUpReminderInfoItem();
 
     void setInfo(FollowUpReminder::FollowUpReminderInfo *info);

@@ -55,7 +55,7 @@ class ComposerView : public KDeclarativeFullScreenView
   Q_PROPERTY( int recipientsCount READ recipientsCount NOTIFY recipientsCountChanged )
 
   public:
-    explicit ComposerView(QWidget* parent = 0);
+    explicit ComposerView(QWidget* parent = Q_NULLPTR);
 
     void setIdentityCombo( KIdentityManagement::IdentityCombo* combo );
 

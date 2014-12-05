@@ -85,7 +85,7 @@ class MainView : public KDeclarativeMainView
   Q_PROPERTY( bool collectionIsSentMail READ collectionIsSentMail NOTIFY currentCollectionChanged )
 
   public:
-    explicit MainView(QWidget* parent = 0);
+    explicit MainView(QWidget* parent = Q_NULLPTR);
 
     ~MainView();
 

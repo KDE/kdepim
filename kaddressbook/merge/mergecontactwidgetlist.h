@@ -28,7 +28,7 @@ namespace KABMergeContacts
 class MergeContactWidgetListItem : public QListWidgetItem
 {
 public:
-    MergeContactWidgetListItem(const Akonadi::Item &item, QListWidget *parent = 0);
+    MergeContactWidgetListItem(const Akonadi::Item &item, QListWidget *parent = Q_NULLPTR);
     Akonadi::Item item() const;
 
 private:

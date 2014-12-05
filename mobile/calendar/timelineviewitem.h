@@ -53,7 +53,7 @@ class TimelineViewItem : public DeclarativeAkonadiItem
     };
 
   public:
-    explicit TimelineViewItem( QDeclarativeItem *parent = 0 );
+    explicit TimelineViewItem( QDeclarativeItem *parent = Q_NULLPTR );
     ~TimelineViewItem();
 
     virtual qint64 itemId() const { return -1; }

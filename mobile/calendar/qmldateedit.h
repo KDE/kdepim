@@ -33,7 +33,7 @@ class QmlDateEdit : public DeclarativeWidgetWrapper<QDateEdit>
   Q_PROPERTY( QString displayFormat READ displayFormat WRITE setDisplayFormat )
 
 public:
-  explicit QmlDateEdit( QDeclarativeItem *parent = 0 );
+  explicit QmlDateEdit( QDeclarativeItem *parent = Q_NULLPTR );
 
   QDate date() const;
   void setDate( const QDate &date );

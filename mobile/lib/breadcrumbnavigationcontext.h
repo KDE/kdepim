@@ -38,11 +38,11 @@ class MOBILEUI_EXPORT KBreadcrumbNavigationFactory : public QObject
   Q_PROPERTY( QString selectedDisplayText READ selectedDisplayText NOTIFY selectedDisplayTextChanged )
 
   public:
-    explicit KBreadcrumbNavigationFactory( QObject* parent = 0 );
+    explicit KBreadcrumbNavigationFactory( QObject* parent = Q_NULLPTR );
     ~KBreadcrumbNavigationFactory();
 
-    void createBreadcrumbContext( QAbstractItemModel *model, QObject* parent = 0 );
-    void createCheckableBreadcrumbContext( QAbstractItemModel *model, QObject* parent = 0 );
+    void createBreadcrumbContext( QAbstractItemModel *model, QObject* parent = Q_NULLPTR );
+    void createCheckableBreadcrumbContext( QAbstractItemModel *model, QObject* parent = Q_NULLPTR );
 
     void setBreadcrumbDepth( int depth );
     int breadcrumbDepth() const;

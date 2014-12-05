@@ -32,7 +32,7 @@ class SendLaterInfo;
 class SendLaterItem : public QTreeWidgetItem
 {
 public:
-    explicit SendLaterItem(QTreeWidget *parent = 0);
+    explicit SendLaterItem(QTreeWidget *parent = Q_NULLPTR);
     ~SendLaterItem();
 
     void setInfo(SendLater::SendLaterInfo *info);

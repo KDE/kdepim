@@ -55,7 +55,7 @@ class KCalItemBrowserItem : public DeclarativeAkonadiItem
   Q_PROPERTY( QObject* attachmentModel READ attachmentModel NOTIFY attachmentModelChanged )
   Q_PROPERTY( QDate activeDate WRITE setActiveDate READ activeDate )
   public:
-    explicit KCalItemBrowserItem( QDeclarativeItem *parent = 0 );
+    explicit KCalItemBrowserItem( QDeclarativeItem *parent = Q_NULLPTR );
     virtual ~KCalItemBrowserItem();
 
     virtual Akonadi::Item item() const;

@@ -31,7 +31,7 @@ class EventListProxy : public ListProxy
   Q_OBJECT
 
   public:
-    explicit EventListProxy(QObject* parent = 0);
+    explicit EventListProxy(QObject* parent = Q_NULLPTR);
     enum Role {
       SummaryRole = Akonadi::EntityTreeModel::UserRole,
       BeginRole,

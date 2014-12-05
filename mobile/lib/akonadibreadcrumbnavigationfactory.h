@@ -34,7 +34,7 @@ class MOBILEUI_EXPORT BreadcrumbNavigationFactory : public KBreadcrumbNavigation
   Q_OBJECT
 
   public:
-    explicit BreadcrumbNavigationFactory( QObject* parent = 0 );
+    explicit BreadcrumbNavigationFactory( QObject* parent = Q_NULLPTR );
 
   protected:
     virtual QAbstractItemModel* getChildItemsModel( QAbstractItemModel* model );

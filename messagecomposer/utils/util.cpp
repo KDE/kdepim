@@ -223,11 +223,6 @@ bool MessageComposer::Util::makeMultiMime(Kleo::CryptoMessageFormat format, bool
     }
 }
 
-bool MessageComposer::Util::makeMultiPartSigned(Kleo::CryptoMessageFormat f)
-{
-    return makeMultiMime(f, true);
-}
-
 QByteArray MessageComposer::Util::selectCharset(const QList<QByteArray> &charsets, const QString &text)
 {
     foreach (const QByteArray &name, charsets) {

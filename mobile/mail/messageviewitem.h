@@ -41,7 +41,7 @@ class MessageViewItem : public DeclarativeAkonadiItem
   Q_PROPERTY( QString messagePath READ messagePath WRITE setMessagePath )
 
   public:
-    explicit MessageViewItem( QDeclarativeItem *parent = 0 );
+    explicit MessageViewItem( QDeclarativeItem *parent = Q_NULLPTR );
     ~MessageViewItem();
 
     QString splashMessage() const;

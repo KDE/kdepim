@@ -44,7 +44,7 @@ signals:
   void previousItemRequest();
 
 protected:
-  explicit DeclarativeAkonadiItem( QDeclarativeItem *parent = 0 );
+  explicit DeclarativeAkonadiItem( QDeclarativeItem *parent = Q_NULLPTR );
   ~DeclarativeAkonadiItem();
 
   /**

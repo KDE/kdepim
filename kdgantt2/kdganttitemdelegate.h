@@ -47,7 +47,7 @@ namespace KDGantt {
                                 State_DragConstraint
         };
 
-        explicit ItemDelegate( QObject* parent = 0 );
+        explicit ItemDelegate( QObject* parent = Q_NULLPTR );
         virtual ~ItemDelegate();
 
         void setDefaultBrush( ItemType type, const QBrush& brush );

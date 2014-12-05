@@ -27,7 +27,7 @@ class QTreeWidget;
 class ArchiveMailItem : public QTreeWidgetItem
 {
 public:
-    explicit ArchiveMailItem(QTreeWidget *parent = 0);
+    explicit ArchiveMailItem(QTreeWidget *parent = Q_NULLPTR);
     ~ArchiveMailItem();
 
     void setInfo(ArchiveMailInfo *info);

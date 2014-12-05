@@ -65,7 +65,7 @@ public Q_SLOTS:
     /* reimp */ void show();
 
 protected:
-    /* reimp */ bool queryClose();
+    /* reimp */ bool queryClose() Q_DECL_OVERRIDE;
 
 private:
     void createActions();

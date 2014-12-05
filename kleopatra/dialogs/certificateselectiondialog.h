@@ -102,7 +102,7 @@ public Q_SLOTS:
     /* reimp */ void accept() Q_DECL_OVERRIDE;
 
 protected:
-    void hideEvent(QHideEvent *);
+    void hideEvent(QHideEvent *) Q_DECL_OVERRIDE;
 
 private:
     class Private;

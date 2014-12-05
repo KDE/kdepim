@@ -481,7 +481,7 @@ protected:
 class QListWidgetFilterItem : public QListWidgetItem
 {
 public:
-    explicit QListWidgetFilterItem(const QString &text, QListWidget *parent = 0);
+    explicit QListWidgetFilterItem(const QString &text, QListWidget *parent = Q_NULLPTR);
     ~QListWidgetFilterItem();
 
     void setFilter(MailCommon::MailFilter *filter);

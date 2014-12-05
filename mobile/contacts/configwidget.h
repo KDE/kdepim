@@ -49,7 +49,7 @@ class DeclarativeConfigWidget : public QGraphicsProxyWidget
   Q_OBJECT
 
   public:
-    explicit DeclarativeConfigWidget( QGraphicsItem *parent = 0 );
+    explicit DeclarativeConfigWidget( QGraphicsItem *parent = Q_NULLPTR );
     ~DeclarativeConfigWidget();
 
   public Q_SLOTS:

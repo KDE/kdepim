@@ -31,7 +31,7 @@ class MOBILEUI_EXPORT ListProxy : public QSortFilterProxyModel
   Q_PROPERTY( int itemCount READ rowCount )
 
   public:
-    explicit ListProxy( QObject* parent = 0 );
+    explicit ListProxy( QObject* parent = Q_NULLPTR );
 
     /** Make sure that reimplementing classes implement data for their own needs */
     virtual QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const = 0;

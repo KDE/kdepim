@@ -96,7 +96,7 @@ public QGraphicsProxyWidget
   Q_OBJECT
 
   public:
-    explicit DeclarativeBulkActionFilterLineEdit( QGraphicsItem *parent = 0 );
+    explicit DeclarativeBulkActionFilterLineEdit( QGraphicsItem *parent = Q_NULLPTR );
     ~DeclarativeBulkActionFilterLineEdit();
 
   public Q_SLOTS:

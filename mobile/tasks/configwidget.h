@@ -62,7 +62,7 @@ public QGraphicsProxyWidget
   Q_OBJECT
 
   public:
-    explicit DeclarativeConfigWidget( QGraphicsItem *parent = 0 );
+    explicit DeclarativeConfigWidget( QGraphicsItem *parent = Q_NULLPTR );
     ~DeclarativeConfigWidget();
 
     void setPreferences( const EventViews::PrefsPtr &preferences );

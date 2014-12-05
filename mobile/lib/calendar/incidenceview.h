@@ -51,7 +51,7 @@ class IncidenceView : public KDeclarativeFullScreenView, public IncidenceEditorN
 {
   Q_OBJECT
   public:
-    explicit IncidenceView( QWidget* parent = 0 );
+    explicit IncidenceView( QWidget* parent = Q_NULLPTR );
     ~IncidenceView();
 
     void load( const Akonadi::Item &item, const QDate &date );

@@ -50,7 +50,7 @@ class ContactListProxy : public ListProxy
       TypeRole
     };
 
-    explicit ContactListProxy( QObject* parent = 0 );
+    explicit ContactListProxy( QObject* parent = Q_NULLPTR );
 
     QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const Q_DECL_OVERRIDE;
     void setSourceModel(QAbstractItemModel* sourceModel);

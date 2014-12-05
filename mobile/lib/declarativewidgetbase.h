@@ -59,7 +59,7 @@ template <typename WidgetT, typename ViewT, void (ViewT::*registerFunc)( WidgetT
 class DeclarativeWidgetBase : public DeclarativeWidgetBaseHelper
 {
   public:
-    explicit DeclarativeWidgetBase( QGraphicsItem *parent = 0 )
+    explicit DeclarativeWidgetBase( QGraphicsItem *parent = Q_NULLPTR )
         : DeclarativeWidgetBaseHelper( new WidgetT, parent, &notify ) {}
 
     /** use this constructor if you inherit from this template to customize widget construction. */

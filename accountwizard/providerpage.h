@@ -41,7 +41,7 @@ class ProviderPage : public Page
 {
     Q_OBJECT
 public:
-    explicit ProviderPage(KAssistantDialog *parent = 0);
+    explicit ProviderPage(KAssistantDialog *parent = Q_NULLPTR);
 
     virtual void leavePageNext();
     virtual void leavePageNextRequested();

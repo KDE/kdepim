@@ -44,7 +44,7 @@ public:
     ~ConfigureDialog();
 
 protected:
-    void hideEvent(QHideEvent *);
+    void hideEvent(QHideEvent *) Q_DECL_OVERRIDE;
 
 };
 

@@ -29,7 +29,7 @@ class TypePage : public Page
 {
     Q_OBJECT
 public:
-    explicit TypePage(KAssistantDialog *parent = 0);
+    explicit TypePage(KAssistantDialog *parent = Q_NULLPTR);
 
     virtual void leavePageNext();
     QTreeView *treeview() const;

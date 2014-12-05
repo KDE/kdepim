@@ -48,7 +48,7 @@ public:
     typedef QList<TimeLabels *> List;
 
     TimeLabels(const KDateTime::Spec &spec, int rows,
-               TimeLabelsZone *parent = 0, Qt::WindowFlags f = 0);
+               TimeLabelsZone *parent = Q_NULLPTR, Qt::WindowFlags f = 0);
 
     /** updates widget's internal state */
     void updateConfig();

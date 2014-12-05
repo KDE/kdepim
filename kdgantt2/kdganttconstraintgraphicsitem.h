@@ -37,7 +37,7 @@ namespace KDGantt {
         enum { Type = UserType + 43 };
 
         explicit ConstraintGraphicsItem( const Constraint& c,
-                                         QGraphicsItem* parent = 0, GraphicsScene* scene = 0 );
+                                         QGraphicsItem* parent = Q_NULLPTR, GraphicsScene* scene = 0 );
         virtual ~ConstraintGraphicsItem();
 
         /*reimp*/ int type() const;

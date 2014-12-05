@@ -43,7 +43,7 @@ namespace KDGantt {
 	friend class GraphicsScene;
     public:
 
-        AbstractGrid(QObject* parent = 0);
+        AbstractGrid(QObject* parent = Q_NULLPTR);
         virtual ~AbstractGrid();
 
         QAbstractItemModel* model() const;

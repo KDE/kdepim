@@ -33,7 +33,7 @@ class MainWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit MainWidget(KXmlGuiWindow *parent = 0);
+    explicit MainWidget(KXmlGuiWindow *parent = Q_NULLPTR);
     ~MainWidget();
 
 private Q_SLOTS:

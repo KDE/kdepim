@@ -54,7 +54,7 @@ class AgendaViewItem : public DeclarativeAkonadiItem
     };
 
   public:
-    explicit AgendaViewItem( QDeclarativeItem *parent = 0 );
+    explicit AgendaViewItem( QDeclarativeItem *parent = Q_NULLPTR );
     ~AgendaViewItem();
 
     virtual qint64 itemId() const { return -1; }

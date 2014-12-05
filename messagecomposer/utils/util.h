@@ -71,10 +71,6 @@ void setNestedContentDisposition(KMime::Content *content, Kleo::CryptoMessageFor
       */
 bool makeMultiMime(Kleo::CryptoMessageFormat f, bool sign);
 
-/**
-      * Whether or not to make the message signed and multi-part
-      */
-bool makeMultiPartSigned(Kleo::CryptoMessageFormat f);
 
 MESSAGECOMPOSER_EXPORT QByteArray selectCharset(const QList<QByteArray> &charsets,
         const QString &text);

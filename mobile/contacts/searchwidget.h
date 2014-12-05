@@ -45,7 +45,7 @@ class DeclarativeSearchWidget : public QGraphicsProxyWidget
   Q_PROPERTY( QString query READ query )
 
   public:
-    explicit DeclarativeSearchWidget( QGraphicsItem *parent = 0 );
+    explicit DeclarativeSearchWidget( QGraphicsItem *parent = Q_NULLPTR );
     ~DeclarativeSearchWidget();
 
   public Q_SLOTS:

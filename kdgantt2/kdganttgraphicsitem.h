@@ -43,8 +43,8 @@ namespace KDGantt {
     public:
         enum { Type = UserType + 42 };
 
-        explicit GraphicsItem( QGraphicsItem* parent = 0, GraphicsScene* scene = 0 );
-        explicit GraphicsItem( const QModelIndex& idx, QGraphicsItem* parent = 0, GraphicsScene* scene = 0 );
+        explicit GraphicsItem( QGraphicsItem* parent = Q_NULLPTR, GraphicsScene* scene = 0 );
+        explicit GraphicsItem( const QModelIndex& idx, QGraphicsItem* parent = Q_NULLPTR, GraphicsScene* scene = 0 );
         virtual ~GraphicsItem();
 
         /*reimp*/int type() const;

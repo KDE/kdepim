@@ -29,7 +29,7 @@ class StorageListWidgetItemProgress;
 class StorageListWidgetItem : public QListWidgetItem
 {
 public:
-    explicit StorageListWidgetItem(QListWidget *parent = 0);
+    explicit StorageListWidgetItem(QListWidget *parent = Q_NULLPTR);
     ~StorageListWidgetItem();
 
     void startAnimation();

@@ -32,7 +32,7 @@ class KResettingProxyModel : public QSortFilterProxyModel
 {
   Q_OBJECT
 public:
-  explicit KResettingProxyModel(QObject* parent = 0);
+  explicit KResettingProxyModel(QObject* parent = Q_NULLPTR);
 
   virtual void setSourceModel(QAbstractItemModel* sourceModel);
 

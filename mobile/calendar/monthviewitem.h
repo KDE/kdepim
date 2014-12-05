@@ -33,7 +33,7 @@ class MonthViewItem : public DeclarativeAkonadiItem
   Q_PROPERTY( QObject* calendar READ calendar WRITE setCalendar )
 
   public:
-    explicit MonthViewItem( QDeclarativeItem *parent = 0 );
+    explicit MonthViewItem( QDeclarativeItem *parent = Q_NULLPTR );
     virtual ~MonthViewItem();
 
     virtual qint64 itemId() const { return -1; }
