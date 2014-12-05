@@ -117,6 +117,15 @@
 #include <cassert>
 #include "chiasmuskeyselector.h"
 
+/* RFC822 messages can be embedded as often as one likes and at some
+ * point display of multiple embedded levels leads to a denial of service
+ * as the message parsing is not really that efficient and parses
+ * the whole message body again and again. The display of those messages
+ * is also not very performant as there are several rendering steps for
+ * each level. So we enforce an arbitrary limit here after which we just
+ * show a warning. */
+#define MAX_RFC822_EMBEDD_DEPTH 10 /* Should be enough for most cases. */
+
 namespace KMail {
 
   // A small class that eases temporary CryptPlugWrapper changes:
@@ -153,6 +162,7 @@ namespace KMail {
       mAllowAsync( false ),
       mShowRawToltecMail( false ),
       mIsHTMLAlternativeAvailable( false ),
+      mRFC822RecursionCnt( 0 ),
       mAttachmentStrategy( strategy ),
       mHtmlWriter( htmlWriter ),
       mCSSHelper( cssHelper )
@@ -175,6 +185,7 @@ namespace KMail {
       mHasPendingAsyncJobs( other.hasPendingAsyncJobs() ),
       mAllowAsync( other.allowAsync() ),
       mIsHTMLAlternativeAvailable( other.isHTMLAlternativeAvailable() ),
+      mRFC822RecursionCnt( other.rfc822RecursionCnt() ),
       mAttachmentStrategy( other.attachmentStrategy() ),
       mHtmlWriter( other.htmlWriter() ),
       mCSSHelper( other.cssHelper() )
@@ -232,6 +243,7 @@ namespace KMail {
     } else {
     }
     ObjectTreeParser otp( mReader, cryptoProtocol() );
+    otp.setRFC822RecursionCnt( mRFC822RecursionCnt + 1 );
     otp.parseObjectTree( newNode );
     if ( addToTextualContent ) {
       mRawReplyString += otp.rawReplyString();
@@ -1578,11 +1590,21 @@ namespace KMail {
       htmlWriter()->queue( mReader->writeMsgHeader( &rfc822message ) );
       //mReader->parseMsgHeader( &rfc822message );
     // display the body of the encapsulated message
-    insertAndParseNewChildNode( *node,
-                                &*rfc822messageStr,
-                                "encapsulated message", false /*append*/,
-                                false /*add to textual content*/ );
-    node->setDisplayedEmbedded( true );
+    if ( mRFC822RecursionCnt < MAX_RFC822_EMBEDD_DEPTH ) {
+        kdDebug() << "Insert an parse child node " << mRFC822RecursionCnt << endl;
+        insertAndParseNewChildNode( *node,
+                                    &*rfc822messageStr,
+                                    "encapsulated message", false /*append*/,
+                                    false /*add to textual content*/ );
+        node->setDisplayedEmbedded( true );
+    } else {
+        htmlWriter()->queue( "<div class=\"htmlWarn\">\n" );
+        htmlWriter()->queue( i18n("<b>Warning:</b> This Message contains too many levels of "
+                          "embedded messages. For performance reasons "
+                          "no more levels are shown. Please refer to the message "
+                          "structure window to access other parts of the message." ) );
+        htmlWriter()->queue( "</div><br><br>" );
+    }
     if ( mReader )
       htmlWriter()->queue( writeSigstatFooter( messagePart ) );
     return true;

@@ -125,6 +125,10 @@ namespace KMail {
      * choosen for display. */
     bool isHTMLAlternativeAvailable() const { return mIsHTMLAlternativeAvailable; }
 
+    int rfc822RecursionCnt() const { return mRFC822RecursionCnt; }
+
+    void setRFC822RecursionCnt (int value )  { mRFC822RecursionCnt = value; }
+
     QCString rawReplyString() const { return mRawReplyString; }
 
     /*! @return the text of the message, ie. what would appear in the
@@ -344,6 +348,7 @@ namespace KMail {
     bool mAllowAsync;
     bool mShowRawToltecMail;
     bool mIsHTMLAlternativeAvailable;
+    int mRFC822RecursionCnt;
     const KMail::AttachmentStrategy * mAttachmentStrategy;
     KMail::HtmlWriter * mHtmlWriter;
     KMail::CSSHelper * mCSSHelper;
