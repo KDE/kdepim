@@ -31,7 +31,7 @@ protected:
     ~PlainHeaderStyle() {}
 
 public:
-    const char *name() const
+    const char *name() const Q_DECL_OVERRIDE
     {
         return "plain";
     }

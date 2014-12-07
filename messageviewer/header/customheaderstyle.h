@@ -31,13 +31,13 @@ protected:
     ~CustomHeaderStyle() {}
 
 public:
-    const char *name() const
+    const char *name() const Q_DECL_OVERRIDE
     {
         return "custom";
     }
 
 private:
-    QString format(KMime::Message *message) const;
+    QString format(KMime::Message *message) const Q_DECL_OVERRIDE;
     QString formatAllMessageHeaders(KMime::Message *message , const QStringList &headersToHide) const;
 };
 }

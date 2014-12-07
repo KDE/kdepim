@@ -31,14 +31,14 @@ protected:
     ~EnterpriseHeaderStyle() {}
 
 public:
-    const char *name() const
+    const char *name() const Q_DECL_OVERRIDE
     {
         return "enterprise";
     }
 
-    QString format(KMime::Message *message) const;
+    QString format(KMime::Message *message) const Q_DECL_OVERRIDE;
 
-    bool hasAttachmentQuickList() const
+    bool hasAttachmentQuickList() const Q_DECL_OVERRIDE
     {
         return true;
     }
