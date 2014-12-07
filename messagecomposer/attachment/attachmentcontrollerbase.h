@@ -98,8 +98,6 @@ protected:
     void enableAttachMyPublicKey(bool enable);
     void byteArrayToRemoteFile(const QByteArray &aData, const QUrl &aURL, bool overwrite = false);
     void openWith(KService::Ptr offer = KService::Ptr());
-private:
-    MessageCore::AttachmentFromUrlBaseJob *createAttachmentJob(const QUrl &url);
 private slots:
     void slotPutResult(KJob *job);
     void slotOpenWithDialog();
