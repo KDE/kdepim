@@ -3,6 +3,7 @@
  * folderdiaacltab.cpp
  *
  * Copyright (c) 2004 David Faure <faure@kde.org>
+ * Copyright (c) 2014 Intevation GmbH <aheinecke@intevation.de
  *
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -38,6 +39,7 @@
 #include "kmfoldercachedimap.h"
 #include "kmacctcachedimap.h"
 #include "kmfolder.h"
+#include "kmfolderdir.h"
 
 #include <addressesdialog.h>
 #include <kabc/addresseelist.h>
@@ -59,6 +61,7 @@
 #include <qwidgetstack.h>
 #include <qradiobutton.h>
 #include <qwhatsthis.h>
+#include <qcheckbox.h>
 
 #include <assert.h>
 #include <kmessagebox.h>
@@ -269,6 +272,48 @@ void KMail::FolderDiaACLTab::ListViewItem::load( const ACLListEntry& entry )
   mModified = entry.changed; // for dimap, so that earlier changes are still marked as changes
 }
 
+void KMail::FolderDiaACLTab::applyACLRecursive( KMFolderCachedImap *root, const ACLList& aclList )
+{
+  if ( !root || !root->folder() ) {
+    // Assert?
+    return;
+  }
+  QValueList<QGuardedPtr<KMFolder> > allFolders = root->folder()->getFolderAndSubfolders();
+  QValueList<QGuardedPtr<KMFolderCachedImap> > permissibleFolders;
+  QStringList folderPaths;
+  kdDebug() << "Apply acl recursive called for: " << allFolders.size () << " Subfolders." << endl;
+
+  for(QValueList<QGuardedPtr<KMFolder> >::iterator it = allFolders.begin(); it != allFolders.end(); ++it ) {
+    if ( !*it ) {
+      continue;
+    }
+    KMFolder *cur = *it;
+    if ( cur->folderType() != KMFolderTypeCachedImap ) {
+      continue;
+    }
+    KMFolderCachedImap* folderImap = static_cast<KMFolderCachedImap*>( cur->storage() );
+
+    if ( folderImap->userRightsState() == KMail::ACLJobs::Ok &&
+        folderImap->userRights() & ACLJobs::Administer ) {
+      permissibleFolders << QGuardedPtr<KMFolderCachedImap> ( folderImap );
+      folderPaths << cur->prettyURL();
+    }
+  }
+  if ( KMessageBox::Cancel == KMessageBox::warningContinueCancelList( topLevelWidget(),
+        i18n( "Do you really want to apply this folders permissions on the subdirectories:" ),
+        folderPaths,
+        i18n( "Apply Permissions" ) ) )
+    return;
+
+  for(QValueList<QGuardedPtr<KMFolderCachedImap> >::iterator it = permissibleFolders.begin(); it != permissibleFolders.end(); ++it ) {
+    if ( ! (*it) ) {
+      continue;
+    }
+    kdDebug () << "Setting acl list on: " << ( *it )->imapPath() << endl;
+    ( *it )->setACLList( aclList );
+  }
+}
+
 void KMail::FolderDiaACLTab::ListViewItem::save( ACLList& aclList,
 #ifdef KDEPIM_NEW_DISTRLISTS
                                                  KABC::AddressBook* addressBook,
@@ -333,11 +378,16 @@ KMail::FolderDiaACLTab::FolderDiaACLTab( KMFolderDialog* dlg, QWidget* parent, c
 
   mACLWidget = new QHBox( mStack );
   mACLWidget->setSpacing( KDialog::spacingHint() );
-  mListView = new KListView( mACLWidget );
+  QVBox *listCheck = new QVBox( mACLWidget );
+  mListView = new KListView( listCheck );
+
+  mRecursiveChk = new QCheckBox( i18n ( "Apply permissions on all &subfolders." ), listCheck);
+
   mListView->setAllColumnsShowFocus( true );
-  mStack->addWidget( mACLWidget );
   mListView->addColumn( i18n( "User Id" ) );
   mListView->addColumn( i18n( "Permissions" ) );
+
+  mRecursiveChk->setEnabled( false );
 
   connect( mListView, SIGNAL(doubleClicked(QListViewItem*,const QPoint&,int)),
 	   SLOT(slotEditACL(QListViewItem*)) );
@@ -371,6 +421,37 @@ KURL KMail::FolderDiaACLTab::imapURL() const
   return url;
 }
 
+bool hasPermissibleSubfolders( KMFolder *folder )
+{
+  if ( !folder ) {
+    return false;
+  }
+  QValueList<QGuardedPtr<KMFolder> > allFolders = folder->getFolderAndSubfolders();
+  for(QValueList<QGuardedPtr<KMFolder> >::iterator it = allFolders.begin(); it != allFolders.end(); ++it ) {
+    if ( !*it || *it == QGuardedPtr<KMFolder>(folder) ) {
+      /* Skip deleted or ourself. */
+      continue;
+    }
+    KMFolder *cur = *it;
+    if ( cur->folderType() == KMFolderTypeCachedImap ) {
+      KMFolderCachedImap* folderImap = static_cast<KMFolderCachedImap*>( cur->storage() );
+      if ( folderImap->userRightsState() == KMail::ACLJobs::Ok &&
+          folderImap->userRights() & ACLJobs::Administer ) {
+        return true;
+      }
+    } else if ( cur->folderType() == KMFolderTypeImap ) {
+      return false;
+/*    Not implemented.
+      KMFolderImap* folderImap = static_cast<KMFolderImap*>( cur->storage() );
+      if ( folderImap->userRightsState() == KMail::ACLJobs::Ok  &&
+          folderImap->userRights() & ACLJobs::Administer ) {
+        return true;
+      } */
+    }
+  }
+  return false;
+}
+
 void KMail::FolderDiaACLTab::initializeWithValuesFromFolder( KMFolder* folder )
 {
   // This can be simplified once KMFolderImap and KMFolderCachedImap have a common base class
@@ -381,9 +462,14 @@ void KMail::FolderDiaACLTab::initializeWithValuesFromFolder( KMFolder* folder )
     mImapAccount = folderImap->account();
     mUserRights = folderImap->userRights();
     mUserRightsState = folderImap->userRightsState();
+    /* Recursive ACL settings are not implemented for Online IMAP atm. */
+    mRecursiveChk->setEnabled( false );
+    mRecursiveChk->hide();
   }
   else if ( mFolderType == KMFolderTypeCachedImap ) {
     KMFolderCachedImap* folderImap = static_cast<KMFolderCachedImap*>( folder->storage() );
+    mRecursiveChk->show();
+    mRecursiveChk->setEnabled( hasPermissibleSubfolders ( folder ) );
     mImapPath = folderImap->imapPath();
     mImapAccount = folderImap->account();
     mUserRights = folderImap->userRights();
@@ -392,6 +478,7 @@ void KMail::FolderDiaACLTab::initializeWithValuesFromFolder( KMFolder* folder )
   else
     assert( 0 ); // see KMFolderDialog constructor
 }
+
 
 void KMail::FolderDiaACLTab::load()
 {
@@ -644,7 +731,7 @@ void KMail::FolderDiaACLTab::slotRemoveACL()
 
 KMail::FolderDiaTab::AcceptStatus KMail::FolderDiaACLTab::accept()
 {
-  if ( !mChanged || !mImapAccount )
+  if ( ( !mChanged && !mRecursiveChk->isChecked() ) || !mImapAccount )
     return Accepted; // (no change made), ok for accepting the dialog immediately
   // If there were changes, we need to apply them first (which is async)
   save();
@@ -657,7 +744,7 @@ KMail::FolderDiaTab::AcceptStatus KMail::FolderDiaACLTab::accept()
 
 bool KMail::FolderDiaACLTab::save()
 {
-  if ( !mChanged || !mImapAccount ) // no changes
+  if ( ( !mChanged && !mRecursiveChk->isChecked() ) || !mImapAccount ) // no changes
     return true;
   assert( mDlg->folder() ); // should have been created already
 
@@ -717,7 +804,11 @@ bool KMail::FolderDiaACLTab::save()
     // Apply the changes to the aclList stored in the folder.
     // We have to do this now and not before, so that cancel really cancels.
     KMFolderCachedImap* folderImap = static_cast<KMFolderCachedImap*>( mDlg->folder()->storage() );
-    folderImap->setACLList( aclList );
+    if ( mRecursiveChk->isChecked() ) {
+      applyACLRecursive( folderImap, aclList );
+    } else {
+      folderImap->setACLList( aclList );
+    }
     return true;
   }
 

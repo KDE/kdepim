@@ -37,10 +37,12 @@
 #include "kmfoldertype.h"
 
 class KMFolderImap;
+class KMFolderCachedImap;
 class KPushButton;
 class QWidgetStack;
 class QHBox;
 class QVButtonGroup;
+class QCheckBox;
 class KListView;
 namespace KIO { class Job; }
 
@@ -123,6 +125,10 @@ private:
   void loadListView( const KMail::ACLList& aclList );
   void loadFinished( const KMail::ACLList& aclList );
   void addACLs( const QStringList& userIds, unsigned int permissions );
+  /** Apply the ACLList to all subfolders of root.
+   * This function will ask the user for confirmation before applying
+   * the aclList. */
+  void applyACLRecursive( KMFolderCachedImap *root, const ACLList& aclList );
 
 private:
   // The widget containing the ACL widgets (listview and buttons)
@@ -147,6 +153,7 @@ private:
   QLabel* mLabel;
   QWidgetStack* mStack;
   KMFolderDialog* mDlg;
+  QCheckBox* mRecursiveChk;
 
   bool mChanged;
   bool mAccepting; // i.e. close when done
