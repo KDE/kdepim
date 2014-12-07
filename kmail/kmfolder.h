@@ -546,6 +546,10 @@ public:
   */
   bool isValidName( const QString &folderName, QString &message );
 
+  /**
+   * Returns a list of all subfolders of this folder. Including the folder itself. */
+  QValueList<QGuardedPtr<KMFolder> > getFolderAndSubfolders();
+
 signals:
   /** Emitted when the status, name, or associated accounts of this
     folder changed. */

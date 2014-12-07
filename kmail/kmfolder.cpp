@@ -639,7 +639,6 @@ void KMFolder::setIdentity( uint identity )
 uint KMFolder::identity() const
 {
   // if we don't have one set ourselves, check our account
-  kdDebug() << "FOO: " << mIdentity << " :: " << mStorage << endl;
   if ( !mIdentity && mStorage )
     if ( KMAccount *act = mStorage->account() )
       return act->identityId();
@@ -935,6 +934,26 @@ bool KMFolder::isValidName( const QString &folderName, QString &message )
     }
   }
   return true;
+}
+
+QValueList <QGuardedPtr<KMFolder> > KMFolder::getFolderAndSubfolders()
+{
+  KMFolder *folder;
+  QValueList <QGuardedPtr<KMFolder> > retval;
+  retval << this;
+
+  KMFolderDir *dir = child();
+  if (!dir)
+    return retval;
+
+  QPtrListIterator<KMFolderNode> it(*dir);
+  for ( ; it.current(); ++it )
+    if (!it.current()->isDir()) {
+      folder = static_cast<KMFolder*>(it.current());
+      retval += folder->getFolderAndSubfolders();
+    }
+
+  return retval;
 }
 
 #include "kmfolder.moc"
