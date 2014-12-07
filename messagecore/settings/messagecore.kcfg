@@ -79,6 +79,10 @@
   <group name="Composer">
     <entry name="ReplyPrefixes" key="reply-prefixes" type="StringList"/>
     <entry name="ForwardPrefixes" key="forward-prefixes" type="StringList"/>
+    <entry name="MaximumAttachmentSize" type="Int">
+        <label>The maximum size in bits that email attachments are allowed to have (-1 for no limit)</label>
+        <default>-1</default>
+    </entry>
   </group>
 
 </kcfg>

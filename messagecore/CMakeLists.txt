@@ -24,6 +24,7 @@ set(messagecore_attachment_LIB_SRCS
    attachment/attachmentpart.cpp
    attachment/attachmentpropertiesdialog.cpp
    attachment/attachmentupdatejob.cpp
+   attachment/attachmentfromurlutils.cpp
 )
 
 set(messagecore_misc_LIB_SRCS

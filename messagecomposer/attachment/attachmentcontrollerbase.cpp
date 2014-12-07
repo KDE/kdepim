@@ -63,6 +63,7 @@
 #include <messagecore/attachment/attachmentfromurljob.h>
 #include <messagecore/attachment/attachmentpropertiesdialog.h>
 #include <messagecore/attachment/attachmentupdatejob.h>
+#include <messagecore/attachment/attachmentfromurlutils.h>
 #include <settings/messagecomposersettings.h>
 #include <KIO/Job>
 
@@ -858,25 +859,9 @@ void AttachmentControllerBase::addAttachment( AttachmentPart::Ptr part )
     emit fileAttached();
 }
 
-MessageCore::AttachmentFromUrlBaseJob * AttachmentControllerBase::createAttachmentJob(const KUrl &url)
-{
-    MessageCore::AttachmentFromUrlBaseJob *ajob = 0;
-    if( KMimeType::findByUrl( url )->name() == QLatin1String( "inode/directory" ) ) {
-        kDebug() << "Creating attachment from folder";
-        ajob = new AttachmentFromFolderJob ( url, this );
-    } else {
-        ajob = new AttachmentFromUrlJob( url, this );
-        kDebug() << "Creating attachment from file";
-    }
-    if( MessageComposer::MessageComposerSettings::maximumAttachmentSize() > 0 ) {
-        ajob->setMaximumAllowedSize( MessageComposer::MessageComposerSettings::maximumAttachmentSize() );
-    }
-    return ajob;
-}
-
 void AttachmentControllerBase::addAttachmentUrlSync(const KUrl &url)
 {
-    MessageCore::AttachmentFromUrlBaseJob *ajob = createAttachmentJob(url);
+    MessageCore::AttachmentFromUrlBaseJob *ajob = MessageCore::AttachmentFromUrlUtils::createAttachmentJob(url, this);
     if(ajob->exec()) {
         AttachmentPart::Ptr part = ajob->attachmentPart();
         addAttachment( part );
@@ -889,7 +874,7 @@ void AttachmentControllerBase::addAttachmentUrlSync(const KUrl &url)
 
 void AttachmentControllerBase::addAttachment( const KUrl &url )
 {
-    MessageCore::AttachmentFromUrlBaseJob *ajob = createAttachmentJob(url);
+    MessageCore::AttachmentFromUrlBaseJob *ajob = MessageCore::AttachmentFromUrlUtils::createAttachmentJob(url, this);
     connect( ajob, SIGNAL(result(KJob*)), this, SLOT(loadJobResult(KJob*)) );
     ajob->start();
 }

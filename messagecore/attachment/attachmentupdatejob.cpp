@@ -18,6 +18,7 @@
 #include "attachmentfromurlbasejob.h"
 #include "attachmentfromurljob.h"
 #include "attachmentupdatejob.h"
+#include "attachmentfromurlutils.h"
 #include <KUrl>
 #include <KMimeType>
 #include <QDebug>
@@ -31,8 +32,6 @@ public:
 
     void doStart(); // slot
     void loadJobResult(KJob*);
-
-    MessageCore::AttachmentFromUrlBaseJob *createAttachmentJob(const KUrl &url);
 
     AttachmentUpdateJob *const q;
     AttachmentPart::Ptr mOriginalPart;
@@ -54,7 +53,7 @@ void AttachmentUpdateJob::Private::doStart()
         q->emitResult();
         return;
     }
-    MessageCore::AttachmentFromUrlBaseJob *job = createAttachmentJob(mOriginalPart->url());
+    MessageCore::AttachmentFromUrlBaseJob *job = MessageCore::AttachmentFromUrlUtils::createAttachmentJob(mOriginalPart->url(), q);
     connect( job, SIGNAL(result(KJob*)), q, SLOT(loadJobResult(KJob*)) );
     job->start();
 }
@@ -80,25 +79,6 @@ void AttachmentUpdateJob::Private::loadJobResult(KJob *job)
     mUpdatedPart->setInline(q->originalPart()->isInline());
     q->emitResult(); // Success.
 }
-
-MessageCore::AttachmentFromUrlBaseJob *AttachmentUpdateJob::Private::createAttachmentJob(const KUrl &url)
-{
-    MessageCore::AttachmentFromUrlBaseJob *ajob = 0;
-    if( KMimeType::findByUrl( url )->name() == QLatin1String( "inode/directory" ) ) {
-        qDebug() << "Creating attachment from folder";
-        ajob = new AttachmentFromFolderJob ( url, q );
-    } else {
-        ajob = new AttachmentFromUrlJob( url, q );
-        qDebug() << "Creating attachment from file";
-    }
-    /*
-    if( MessageComposer::MessageComposerSettings::maximumAttachmentSize() > 0 ) {
-        ajob->setMaximumAllowedSize( MessageComposer::MessageComposerSettings::maximumAttachmentSize() );
-    }
-    */
-    return ajob;
-}
-
 
 AttachmentUpdateJob::AttachmentUpdateJob(const AttachmentPart::Ptr &part, QObject *parent)
     : KJob(parent),
