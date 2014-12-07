@@ -1046,12 +1046,6 @@ void ViewerPrivate::showVCard(KMime::Content *msgPart)
 void ViewerPrivate::initHtmlWidget()
 {
     mViewer->setFocusPolicy(Qt::WheelFocus);
-#if 0
-    // (marc) I guess this is not needed? All events go through the
-    // Viewer, since the Page is just a QObject, and we're only
-    // interested in mouse events...
-    mViewer->page()->view()->installEventFilter(this);
-#endif
     mViewer->installEventFilter(this);
 
     if (!htmlWriter()) {
@@ -2729,31 +2723,41 @@ void ViewerPrivate::slotHandleAttachment(int choice)
     if (!mCurrentContent) {
         return;
     }
-    if (choice == Viewer::Delete) {
+    switch (choice) {
+    case Viewer::Delete:
         deleteAttachment(mCurrentContent);
-    } else if (choice == Viewer::Edit) {
+        break;
+    case Viewer::Edit:
         editAttachment(mCurrentContent);
-    } else if (choice == Viewer::Properties) {
+        break;
+    case Viewer::Properties:
         attachmentProperties(mCurrentContent);
-    } else if (choice == Viewer::Save) {
+        break;
+    case Viewer::Save: {
         KUrl currentUrl;
         if (Util::saveContents(mMainWindow, KMime::Content::List() << mCurrentContent, currentUrl)) {
             showOpenAttachmentFolderWidget(currentUrl);
         }
-    } else if (choice == Viewer::OpenWith) {
+        break;
+    }
+    case Viewer::OpenWith:
         attachmentOpenWith(mCurrentContent);
-    } else if (choice == Viewer::Open) {
+        break;
+    case Viewer::Open:
         attachmentOpen(mCurrentContent);
-    } else if (choice == Viewer::View) {
+        break;
+    case Viewer::View:
         attachmentView(mCurrentContent);
-    } else if (choice == Viewer::ChiasmusEncrypt) {
+        break;
+    case Viewer::ChiasmusEncrypt:
         attachmentEncryptWithChiasmus(mCurrentContent);
-    } else if (choice == Viewer::Copy) {
+        break;
+    case Viewer::Copy:
         attachmentCopy(KMime::Content::List() << mCurrentContent);
-    } else if (choice == Viewer::ScrollTo) {
+        break;
+    case Viewer::ScrollTo:
         scrollToAttachment(mCurrentContent);
-    } else {
-        qDebug() << " not implemented :" << choice;
+        break;
     }
 }
 

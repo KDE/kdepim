@@ -86,9 +86,11 @@ void HtmlStatusBar::setMultipartHtmlMode()
 
 void HtmlStatusBar::setMode(Util::HtmlMode m, UpdateMode mode)
 {
-    mMode = m;
-    if (mode == Update) {
-        update();
+    if (mMode != m) {
+        mMode = m;
+        if (mode == Update) {
+            update();
+        }
     }
 }
 
