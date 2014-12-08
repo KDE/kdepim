@@ -78,7 +78,7 @@ static QString contactsToHtml( const KABC::Addressee::List &contacts )
                                  "style=\"padding-left: 20px\" colspan=\"4\">") + name + QLatin1String("</th>\n");
         content += QLatin1String("   </tr>\n");
 
-        for ( int i = 0; i < max; i ++ ) {
+        for ( int i = 0; i < max; ++i ) {
             QString leftTitle, leftValue, rightTitle, rightValue;
 
             if ( i < leftFields.count() ) {
