@@ -36,6 +36,7 @@ public:
 
     void setDestination(const Akonadi::Collection &collection);
 
+    bool canStart();
 Q_SIGNALS:
     void finished(const Akonadi::Item &item);
 

@@ -21,6 +21,7 @@
 #include <KABC/Addressee>
 
 #include <QTabBar>
+#include <QDebug>
 
 using namespace KABMergeContacts;
 
@@ -53,6 +54,8 @@ void MergeContactShowResultTabWidget::setContacts(const Akonadi::Item::List &lst
             MergeContactInfoWidget *infoWidget = new MergeContactInfoWidget;
             infoWidget->setContact(item);
             addTab(infoWidget, address.name());
+        } else {
+            qDebug()<<" don't have address";
         }
     }
     updateTabWidget();
