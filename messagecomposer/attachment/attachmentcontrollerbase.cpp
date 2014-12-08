@@ -455,7 +455,7 @@ void AttachmentControllerBase::createActions()
     d->attachMyPublicKeyAction = new QAction(i18n("Attach &My Public Key"), this);
     connect(d->attachMyPublicKeyAction, &QAction::triggered, this, &AttachmentControllerBase::attachMyPublicKey);
 
-    d->attachmentMenu = new KActionMenu( KIcon( QLatin1String( "mail-attachment" ) ), i18n( "Attach" ), this );
+    d->attachmentMenu = new KActionMenu( QIcon::fromTheme( QLatin1String( "mail-attachment" ) ), i18n( "Attach" ), this );
     connect( d->attachmentMenu, SIGNAL(triggered(bool)), this, SLOT(showAddAttachmentFileDialog()) );
 
     d->attachmentMenu->setDelayed(true);
@@ -811,8 +811,10 @@ void AttachmentControllerBase::attachmentProperties(AttachmentPart::Ptr part)
     delete dialog;
 }
 
-void AttachmentControllerBase::attachFileDirectory(const KUrl::List &urls, const QString &encoding)
+void AttachmentControllerBase::attachFileDirectory(const QList<QUrl> &urls, const QString &encoding)
 {
+//QT5
+#if 0
     const int numberOfFiles(urls.count());
     for (int i=0; i<numberOfFiles; ++i) {
         const KUrl url = urls.at( i );
@@ -827,6 +829,7 @@ void AttachmentControllerBase::attachFileDirectory(const KUrl::List &urls, const
             addAttachment( urlWithEncoding );
         }
     }
+#endif
 }
 
 void AttachmentControllerBase::showAddAttachmentCompressedDirectoryDialog()

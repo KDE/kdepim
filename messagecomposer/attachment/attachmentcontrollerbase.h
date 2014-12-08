@@ -101,7 +101,7 @@ protected:
     void openWith(KService::Ptr offer = KService::Ptr());
 
 private:
-    void attachFileDirectory(const KUrl::List &urls, const QString &encoding);
+    void attachFileDirectory(const QList<QUrl> &urls, const QString &encoding);
 
 private slots:
     void slotPutResult(KJob *job);
