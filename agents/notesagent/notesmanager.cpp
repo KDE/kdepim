@@ -52,8 +52,8 @@ NotesManager::NotesManager(QObject *parent)
 
     connect(mNoteTreeModel, &NoteShared::NotesAkonadiTreeModel::rowsInserted, this, &NotesManager::slotRowInserted);
 
-    connect(mNoteRecorder->changeRecorder(), SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), SLOT(slotItemChanged(Akonadi::Item,QSet<QByteArray>)));
-    connect(mNoteRecorder->changeRecorder(), SIGNAL(itemRemoved(Akonadi::Item)), SLOT(slotItemRemoved(Akonadi::Item)));
+    connect(mNoteRecorder->changeRecorder(), &Akonadi::Monitor::itemChanged, this, &NotesManager::slotItemChanged);
+    connect(mNoteRecorder->changeRecorder(), &Akonadi::Monitor::itemRemoved, this, &NotesManager::slotItemRemoved);
 }
 
 NotesManager::~NotesManager()

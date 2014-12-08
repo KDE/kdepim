@@ -1490,8 +1490,8 @@ void ViewerPrivate::createWidgets()
     vlay->addWidget(mSplitter);
 #ifndef QT_NO_TREEVIEW
     mMimePartTree = new MimePartTreeView(mSplitter);
-    connect(mMimePartTree, SIGNAL(activated(QModelIndex)), this, SLOT(slotMimePartSelected(QModelIndex)));
-    connect(mMimePartTree, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slotMimeTreeContextMenuRequested(QPoint)));
+    connect(mMimePartTree, &QAbstractItemView::activated, this, &ViewerPrivate::slotMimePartSelected);
+    connect(mMimePartTree, &QWidget::customContextMenuRequested, this, &ViewerPrivate::slotMimeTreeContextMenuRequested);
 #endif
 
     mBox = new QWidget(mSplitter);
@@ -1529,20 +1529,20 @@ void ViewerPrivate::createWidgets()
 
     mCreateTodo = new MessageViewer::TodoEdit(readerBox);
     readerBoxVBoxLayout->addWidget(mCreateTodo);
-    connect(mCreateTodo, SIGNAL(createTodo(KCalCore::Todo::Ptr,Akonadi::Collection)), this, SLOT(slotCreateTodo(KCalCore::Todo::Ptr,Akonadi::Collection)));
+    connect(mCreateTodo, &TodoEdit::createTodo, this, &ViewerPrivate::slotCreateTodo);
     mCreateTodo->setObjectName(QLatin1String("createtodowidget"));
     mCreateTodo->hide();
 
     mCreateEvent = new MessageViewer::EventEdit(readerBox);
     readerBoxVBoxLayout->addWidget(mCreateEvent);
-    connect(mCreateEvent, SIGNAL(createEvent(KCalCore::Event::Ptr,Akonadi::Collection)), this, SLOT(slotCreateEvent(KCalCore::Event::Ptr,Akonadi::Collection)));
+    connect(mCreateEvent, &EventEdit::createEvent, this, &ViewerPrivate::slotCreateEvent);
     mCreateEvent->setObjectName(QLatin1String("createeventwidget"));
     mCreateEvent->hide();
 
     mSliderContainer = new PimCommon::SlideContainer(readerBox);
     readerBoxVBoxLayout->addWidget(mSliderContainer);
     mFindBar = new FindBarMailWebView(mViewer, q);
-    connect(mFindBar, SIGNAL(hideFindBar()), mSliderContainer, SLOT(slideOut()));
+    connect(mFindBar, &FindBarBase::hideFindBar, mSliderContainer, &PimCommon::SlideContainer::slideOut);
     mSliderContainer->setContent(mFindBar);
 
     mTranslatorWidget = new PimCommon::TranslatorWidget(readerBox);

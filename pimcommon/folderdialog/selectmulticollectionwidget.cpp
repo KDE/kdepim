@@ -58,8 +58,8 @@ void SelectMultiCollectionWidget::initialize(const QString &mimetype)
     connect(mCheckedCollectionWidget, &PimCommon::CheckedCollectionWidget::collectionAdded, this, &SelectMultiCollectionWidget::slotCollectionsTreeFetched);
     connect(mCheckedCollectionWidget, &PimCommon::CheckedCollectionWidget::collectionRemoved, this, &SelectMultiCollectionWidget::slotCollectionsTreeFetched);
 
-    connect(mCheckedCollectionWidget->entityTreeModel(), SIGNAL(collectionTreeFetched(Akonadi::Collection::List)),
-            this, SLOT(slotCollectionsTreeFetched()));
+    connect(mCheckedCollectionWidget->entityTreeModel(), &Akonadi::EntityTreeModel::collectionTreeFetched,
+            this, &SelectMultiCollectionWidget::slotCollectionsTreeFetched);
     vbox->addWidget(mCheckedCollectionWidget);
 }
 

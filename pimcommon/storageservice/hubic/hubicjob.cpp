@@ -31,7 +31,7 @@ using namespace PimCommon;
 HubicJob::HubicJob(QObject *parent)
     : PimCommon::StorageServiceAbstractJob(parent)
 {
-    connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
+    connect(mNetworkAccessManager, &QNetworkAccessManager::finished, this, &HubicJob::slotSendDataFinished);
     mScope = PimCommon::StorageServiceJobConfig::self()->hubicScope();
     mClientId = PimCommon::StorageServiceJobConfig::self()->hubicClientId();
     mClientSecret = PimCommon::StorageServiceJobConfig::self()->hubicClientSecret();

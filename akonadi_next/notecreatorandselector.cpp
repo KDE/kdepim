@@ -62,7 +62,7 @@ void NoteCreatorAndSelector::createNote(const Akonadi::Collection &containerColl
         doCreateNote();
     } else {
         m_giveupTimer->start();
-        connect(m_primarySelectionModel->model(), SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(trySelectCollection()));
+        connect(m_primarySelectionModel->model(), &QAbstractItemModel::rowsInserted, this, &NoteCreatorAndSelector::trySelectCollection);
         trySelectCollection();
     }
 }
@@ -76,7 +76,7 @@ void NoteCreatorAndSelector::trySelectCollection()
 
     m_giveupTimer->stop();
     m_primarySelectionModel->select(QItemSelection(idx, idx), QItemSelectionModel::Select);
-    disconnect(m_primarySelectionModel->model(), SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(trySelectCollection()));
+    disconnect(m_primarySelectionModel->model(), &QAbstractItemModel::rowsInserted, this, &NoteCreatorAndSelector::trySelectCollection);
     doCreateNote();
 }
 
@@ -125,7 +125,7 @@ void NoteCreatorAndSelector::noteCreationFinished(KJob *job)
     m_newNoteId = newItem.id();
 
     m_giveupTimer->start();
-    connect(m_primarySelectionModel->model(), SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(trySelectNote()));
+    connect(m_primarySelectionModel->model(), &QAbstractItemModel::rowsInserted, this, &NoteCreatorAndSelector::trySelectNote);
     trySelectNote();
 }
 

@@ -438,7 +438,7 @@ void MainView::saveAllAttachments()
   Akonadi::Item item( list.first().data( EntityTreeModel::ItemIdRole ).toInt() );
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
   job->fetchScope().fetchFullPayload();
-  connect( job, SIGNAL(result(KJob*)), this, SLOT(fetchForSaveAllAttachmentsDone(KJob*)) );
+  connect( job, &KJob::result, this, &MainView::fetchForSaveAllAttachmentsDone );
 }
 
 void MainView::fetchForSaveAllAttachmentsDone( KJob* job )
