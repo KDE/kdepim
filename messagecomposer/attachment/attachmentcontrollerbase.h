@@ -73,7 +73,8 @@ public slots:
     void editAttachmentWith( MessageCore::AttachmentPart::Ptr part );
     void saveAttachmentAs( MessageCore::AttachmentPart::Ptr part );
     void attachmentProperties( MessageCore::AttachmentPart::Ptr part );
-    void showAddAttachmentDialog();
+    void showAddAttachmentFileDialog();
+    void showAddAttachmentCompressedDirectoryDialog();
     /// sets sign, encrypt, shows properties dialog if so configured
     void addAttachment( MessageCore::AttachmentPart::Ptr part );
     void addAttachment( const KUrl &url );
@@ -96,6 +97,10 @@ protected:
     void enableAttachMyPublicKey( bool enable );
     void byteArrayToRemoteFile(const QByteArray &aData, const KUrl &aURL, bool overwrite = false);
     void openWith(KService::Ptr offer = KService::Ptr());
+
+private:
+    void attachFileDirectory(const KUrl::List &urls, const QString &encoding);
+
 private slots:
     void slotPutResult(KJob *job);
     void slotOpenWithDialog();
