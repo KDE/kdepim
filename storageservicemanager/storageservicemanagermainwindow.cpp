@@ -61,10 +61,10 @@ StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
     connect(mStorageManager, &PimCommon::StorageServiceManager::servicesChanged, this, &StorageServiceManagerMainWindow::slotServicesChanged);
     mStorageServiceMainWidget = new StorageServiceManagerMainWidget;
     connect(mStorageServiceMainWidget, &StorageServiceManagerMainWidget::configureClicked, this, &StorageServiceManagerMainWindow::slotConfigure);
-    connect(mStorageServiceMainWidget->storageServiceTabWidget(), SIGNAL(currentChanged(int)), this, SLOT(slotUpdateActions()));
-    connect(mStorageServiceMainWidget->storageServiceTabWidget(), SIGNAL(updateStatusBarMessage(QString)), this, SLOT(slotSetStatusBarMessage(QString)));
-    connect(mStorageServiceMainWidget->storageServiceTabWidget(), SIGNAL(listFileWasInitialized()), this, SLOT(slotUpdateActions()));
-    connect(mStorageServiceMainWidget->storageServiceTabWidget(), SIGNAL(selectionChanged()), this, SLOT(slotUpdateActions()));
+    connect(mStorageServiceMainWidget->storageServiceTabWidget(), &QTabWidget::currentChanged, this, &StorageServiceManagerMainWindow::slotUpdateActions);
+    connect(mStorageServiceMainWidget->storageServiceTabWidget(), &StorageServiceTabWidget::updateStatusBarMessage, this, &StorageServiceManagerMainWindow::slotSetStatusBarMessage);
+    connect(mStorageServiceMainWidget->storageServiceTabWidget(), &StorageServiceTabWidget::listFileWasInitialized, this, &StorageServiceManagerMainWindow::slotUpdateActions);
+    connect(mStorageServiceMainWidget->storageServiceTabWidget(), &StorageServiceTabWidget::selectionChanged, this, &StorageServiceManagerMainWindow::slotUpdateActions);
     setCentralWidget(mStorageServiceMainWidget);
 
     mNetworkConfigurationManager = new QNetworkConfigurationManager();
