@@ -84,32 +84,17 @@ bool Todo::operator==( const Todo& t2 ) const
 
 void Todo::setDtDue(const QDateTime &dtDue, bool first )
 {
-  //int diffsecs = mDtDue.secsTo(dtDue);
-
-  /*if (mReadOnly) return;
-  const Alarm::List& alarms = alarms();
-  for (Alarm* alarm = alarms.first(); alarm; alarm = alarms.next()) {
-    if (alarm->enabled()) {
-      alarm->setTime(alarm->time().addSecs(diffsecs));
-    }
-  }*/
   if( doesRecur() && !first ) {
     mDtRecurrence = dtDue;
   } else {
     mDtDue = dtDue;
-    // TODO: This doesn't seem right...
-    recurrence()->setStartDateTime( dtDue );
-    recurrence()->setFloats( doesFloat() );
   }
 
-  if ( doesRecur() && dtDue < recurrence()->startDateTime() )
+  recurrence()->setStartDateTime( dtDue );
+  recurrence()->setFloats( doesFloat() );
+
+  if ( doesRecur() && !hasStartDate() )
     setDtStart( dtDue );
-
-  //kdDebug(5800) << "setDtDue says date is " << mDtDue.toString() << endl;
-
-  /*const Alarm::List& alarms = alarms();
-  for (Alarm* alarm = alarms.first(); alarm; alarm = alarms.next())
-    alarm->setAlarmStart(mDtDue);*/
 
   updated();
 }
@@ -176,7 +161,7 @@ void Todo::setHasStartDate(bool f)
 
 QDateTime Todo::dtStart( bool first ) const
 {
-  if ( doesRecur() && !first ) {
+  if ( doesRecur() && !first && hasDueDate() ) {
     QDateTime dt = mDtRecurrence.addDays( dtDue( true ).daysTo( IncidenceBase::dtStart() ) );
 
     // We want the dtStart's time, not dtDue's
@@ -191,9 +176,9 @@ QDateTime Todo::dtStart( bool first ) const
 
 void Todo::setDtStart( const QDateTime &dtStart )
 {
-  // TODO: This doesn't seem right (rfc 2445/6 says, recurrence is calculated from the dtstart...)
-  if ( doesRecur() ) {
-    recurrence()->setStartDateTime( mDtDue );
+  if ( !hasDueDate() && doesRecur() ) {
+    mDtRecurrence = dtStart;
+    recurrence()->setStartDateTime( dtStart );
     recurrence()->setFloats( doesFloat() );
   }
   IncidenceBase::setDtStart( dtStart );
@@ -299,7 +284,7 @@ bool Todo::recurTodo()
   if ( doesRecur() ) {
     Recurrence *r = recurrence();
     QDateTime endDateTime = r->endDateTime();
-    QDateTime nextDate = r->getNextDateTime( dtDue() );
+    QDateTime nextDate = r->getNextDateTime( hasDueDate() ? dtDue() : dtStart() );
 
     if ( ( r->duration() == -1 || ( nextDate.isValid() && endDateTime.isValid()
            && nextDate <= endDateTime ) ) ) {
@@ -314,7 +299,7 @@ bool Todo::recurTodo()
         nextDate = r->getNextDateTime( nextDate );
       }
 
-      setDtDue( nextDate );
+      hasDueDate() ? setDtDue( nextDate ) : setDtStart( nextDate );
       setCompleted( false );
       setRevision( revision() + 1 );
 
