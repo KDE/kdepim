@@ -46,7 +46,7 @@ namespace GpgME { class Error; }
 namespace Kleo { class SpecialJob; }
 
 typedef QMap<int,KMFolder*> KMMenuToFolder;
-typedef QMap<partNode*, KMMessage*> PartNodeMessageMap;
+typedef QMap<QGuardedPtr<partNode>, KMMessage*> PartNodeMessageMap;
 
 class KDE_EXPORT KMCommand : public QObject
 {

@@ -774,3 +774,5 @@ partNode::AttachmentDisplayInfo partNode::attachmentDisplayInfo() const
   info.displayInHeader = !info.label.isEmpty() && !info.icon.isEmpty() && !typeBlacklisted;
   return info;
 }
+
+#include "partNode.moc"

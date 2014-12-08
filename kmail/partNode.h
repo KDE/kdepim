@@ -64,8 +64,9 @@ class KMReaderWin;
               It's purpose: Speed optimization for KDE 3.   (khz, 28.11.01)
  ===========================================================================
 */
-class partNode
+class partNode : public QObject
 {
+    Q_OBJECT
     partNode();
 
     int calcNodeIdOrFindNode( int& curId, const partNode* calcNode,

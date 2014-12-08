@@ -2558,10 +2558,15 @@ void KMSaveAttachmentsCommand::slotSaveAll()
   // c'tor
   if ( mImplicitAttachments ) {
     for ( PartNodeMessageMap::iterator it = mAttachmentMap.begin();
-          it != mAttachmentMap.end(); ) {
+          it != mAttachmentMap.end();) {
       // only body parts which have a filename or a name parameter (except for
       // the root node for which name is set to the message's subject) are
       // considered attachments
+      if ( !it.key() ) {
+          ++it;
+        kdDebug(5006) << "Message part was deleted while command was still running." << endl;
+        continue;
+      }
       if ( it.key()->msgPart().fileName().stripWhiteSpace().isEmpty() &&
            ( it.key()->msgPart().name().stripWhiteSpace().isEmpty() ||
              !it.key()->parentNode() ) ) {
@@ -2599,16 +2604,21 @@ void KMSaveAttachmentsCommand::slotSaveAll()
   }
   else {
     // only one item, get the desired filename
-    partNode *node = mAttachmentMap.begin().key();
-    // replace all ':' with '_' because ':' isn't allowed on FAT volumes
-    QString s =
-      node->msgPart().fileName().stripWhiteSpace().replace( ':', '_' );
-    if ( s.isEmpty() )
-      s = node->msgPart().name().stripWhiteSpace().replace( ':', '_' );
-    if ( s.isEmpty() )
-      s = i18n("filename for an unnamed attachment", "attachment.1");
-    url = KFileDialog::getSaveURL( s, QString::null, parentWidget(),
-                                   QString::null );
+    if ( mAttachmentMap.begin().key() ) {
+      partNode *node = mAttachmentMap.begin().key();
+
+      // replace all ':' with '_' because ':' isn't allowed on FAT volumes
+      QString s =
+        node->msgPart().fileName().stripWhiteSpace().replace( ':', '_' );
+      if ( s.isEmpty() )
+        s = node->msgPart().name().stripWhiteSpace().replace( ':', '_' );
+      if ( s.isEmpty() )
+        s = i18n("filename for an unnamed attachment", "attachment.1");
+      url = KFileDialog::getSaveURL( s, QString::null, parentWidget(),
+                                     QString::null );
+    } else {
+      kdDebug(5006) << "Node has been deleted." << endl;
+    }
     if ( url.isEmpty() ) {
       setResult( Canceled );
       emit completed( this );
@@ -2624,6 +2634,10 @@ void KMSaveAttachmentsCommand::slotSaveAll()
   for ( PartNodeMessageMap::const_iterator it = mAttachmentMap.begin();
         it != mAttachmentMap.end();
         ++it ) {
+    if ( !it.key() ) {
+      kdDebug(5006) << "Message part was deleted while command was still running." << endl;
+      continue;
+    }
     KURL curUrl;
     if ( !dirUrl.isEmpty() ) {
       curUrl = dirUrl;
@@ -2844,6 +2858,10 @@ void KMLoadPartsCommand::slotStart()
   for ( PartNodeMessageMap::const_iterator it = mPartMap.begin();
         it != mPartMap.end();
         ++it ) {
+    if ( !it.key() ) {
+      kdDebug(5006) << "Message part was deleted before loadparts command was started." << endl;
+      continue;
+    }
     if ( it.data() &&
          !it.key()->msgPart().isComplete() &&
          !it.key()->msgPart().partSpecifier().isEmpty() ) {
@@ -2876,6 +2894,10 @@ void KMLoadPartsCommand::slotPartRetrieved( KMMessage *msg,
     for ( PartNodeMessageMap::const_iterator it = mPartMap.begin();
           it != mPartMap.end();
           ++it ) {
+      if ( !it.key() ) {
+        kdDebug(5006) << "Message part was deleted while command was still running." << endl;
+        continue;
+      }
       if ( it.key()->dwPart() && ( it.key()->dwPart()->partId() == part->partId() ) ) {
         it.key()->setDwPart( part );
       }
