@@ -434,8 +434,7 @@ void TabWidget::Private::slotContextMenu( QWidget * w, const QPoint & p ) {
     
     QAction ** const actions = contextMenuPage == current ? currentPageActions : otherPageActions ;
 
-    if ( contextMenuPage != current )
-        enableDisablePageActions( actions, contextMenuPage );
+    enableDisablePageActions( actions, contextMenuPage );
 
     QMenu menu;
     menu.addAction( actions[Rename] );
