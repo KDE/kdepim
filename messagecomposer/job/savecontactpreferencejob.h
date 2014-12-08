@@ -32,7 +32,7 @@ public:
     ~SaveContactPreferenceJob();
     void start();
 
-private slots:
+private Q_SLOTS:
     void slotSearchContact(KJob *job);
 
     void slotModifyCreateItem(KJob *job);

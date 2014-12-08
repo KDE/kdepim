@@ -48,7 +48,7 @@ public:
     explicit AggregationConfigButton(QWidget *parent, const AggregationComboBox *aggregationComboBox = 0);
     ~AggregationConfigButton();
 
-signals:
+Q_SIGNALS:
     /**
     * A signal emitted when configure dialog has been successfully completed.
     */

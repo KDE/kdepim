@@ -53,16 +53,16 @@ public:
     QString dumpDebug();
     QStringList dumpAlarms();
 
-public slots:
+public Q_SLOTS:
     void slotQuit();
 
-protected slots:
+protected Q_SLOTS:
     void deferredInit();
     void checkAlarms();
-private slots:
+private Q_SLOTS:
     void slotCommitData(QSessionManager &);
 
-signals:
+Q_SIGNALS:
     void reminderCount(int);
     void saveAllSignal();
 

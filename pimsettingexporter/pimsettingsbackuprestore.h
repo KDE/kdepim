@@ -36,7 +36,7 @@ public:
 
     void setStoredParameters(const QHash<Utils::AppsType, Utils::importExportParameters> &stored);
 
-private slots:
+private Q_SLOTS:
     void slotJobFinished();
 
 Q_SIGNALS:

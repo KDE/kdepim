@@ -47,7 +47,7 @@ public:
                              QWidget *parent = Q_NULLPTR);
     ~DecorationLabel();
 
-public slots:
+public Q_SLOTS:
     void setExtensiveText(const QString &);
     void setLongText(const QString &);
     void setPixmap(const QPixmap &);

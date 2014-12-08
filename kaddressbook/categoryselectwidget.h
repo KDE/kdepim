@@ -68,7 +68,7 @@ public:
      **/
     QList<Akonadi::Tag::Id> filterTags() const;
 
-signals:
+Q_SIGNALS:
     /**
      * The tag filter selection has changed.
      *

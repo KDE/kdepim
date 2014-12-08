@@ -51,7 +51,7 @@ public:
      **/
     virtual ~CategoryFilterProxyModel();
 
-public slots:
+public Q_SLOTS:
     /**
      * Set the categories to be accepted by the filter.
      *

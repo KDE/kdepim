@@ -52,7 +52,7 @@ public:
 
     void start() Q_DECL_OVERRIDE;
 
-private slots:
+private Q_SLOTS:
 
     void slotGetJobFinished(KJob *job);
     void slotFileData(KIO::Job *job, const QByteArray &data);

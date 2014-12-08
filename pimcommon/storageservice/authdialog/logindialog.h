@@ -39,7 +39,7 @@ public:
 
     void setPassword(const QString &pass);
     void setUserName(const QString &name);
-private slots:
+private Q_SLOTS:
     void slotUserNameChanged(const QString &passwd);
 
 private:

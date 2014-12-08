@@ -47,11 +47,11 @@ public:
         return m_source != 0;
     }
 
-public slots:
+public Q_SLOTS:
     void clear();
     void setEnabled(bool enable);
 
-private slots:
+private Q_SLOTS:
     void slotNotify(const Akonadi::NotificationMessageV3::List &msgs);
 
 private:

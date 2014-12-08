@@ -49,13 +49,13 @@ public:
 
     QTreeView *treeview() const;
 
-signals:
+Q_SIGNALS:
     void ghnsNotWanted();
 
-public slots:
+public Q_SLOTS:
     void startFetchingData();
 
-private slots:
+private Q_SLOTS:
     void fillModel(const KNS3::Entry::List &);
     void selectionChanged();
     void providerStatusChanged(const KNS3::Entry &);

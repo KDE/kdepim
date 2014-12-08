@@ -115,7 +115,7 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
     QString applicationState() const;
     void setApplicationState( const QString &state );
 
-  public slots:
+  public Q_SLOTS:
     void setSelectedAccount( int row );
 
     void setAgentInstanceListSelectedRow( int row );

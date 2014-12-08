@@ -40,7 +40,7 @@ public:
     ~DistributionListDialog();
     void setRecipients(const Recipient::List &);
 
-public slots:
+public Q_SLOTS:
     void slotUser1();
     void slotTitleChanged(const QString &);
 

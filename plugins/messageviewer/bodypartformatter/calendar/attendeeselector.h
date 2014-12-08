@@ -35,7 +35,7 @@ public:
 
     QStringList attendees() const;
 
-private slots:
+private Q_SLOTS:
     void addClicked();
     void removeClicked();
     void textChanged(const QString &text);

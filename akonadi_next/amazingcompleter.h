@@ -61,7 +61,7 @@ public:
 
     void setMinimumLength(int length);
 
-public slots:
+public Q_SLOTS:
     void setCompletionPrefixString(const QString &matchData);
     void setCompletionPrefix(const QVariant &matchData);
 

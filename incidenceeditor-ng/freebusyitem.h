@@ -56,7 +56,7 @@ public:
     void setIsDownloading(bool d);
     bool isDownloading() const;
 
-signals:
+Q_SIGNALS:
     void attendeeChanged(const KCalCore::Attendee::Ptr &attendee);
     void freebusyChanged(const KCalCore::FreeBusy::Ptr fb);
 

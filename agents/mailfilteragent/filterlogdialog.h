@@ -55,7 +55,7 @@ public:
     explicit FilterLogDialog(QWidget *parent);
     ~FilterLogDialog();
 
-private slots:
+private Q_SLOTS:
     void slotTextChanged();
     void slotLogEntryAdded(const QString &logEntry);
     void slotLogShrinked();

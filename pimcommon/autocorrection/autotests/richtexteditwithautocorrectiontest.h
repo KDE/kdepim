@@ -24,7 +24,7 @@ class RichTextEditWithAutoCorrectionTest : public QObject
     Q_OBJECT
 public:
     RichTextEditWithAutoCorrectionTest();
-private slots:
+private Q_SLOTS:
     void shouldNotAutocorrectWhenDisabled();
     void shouldReplaceWordWhenExactText();
     void shouldNotReplaceWordWhenInexactText();

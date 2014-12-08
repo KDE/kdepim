@@ -50,7 +50,7 @@ public:
     static void formatPropertySet(KTNEFPropertySet *, QTreeWidget *);
     static void saveProperty(QTreeWidget *, KTNEFPropertySet *, QWidget *);
 
-private slots:
+private Q_SLOTS:
     void slotSave();
 
 protected:

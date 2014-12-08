@@ -39,7 +39,7 @@ public:
     virtual QVariant data(const QModelIndex &, int role = Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     bool isEnabled() const;
-public slots:
+public Q_SLOTS:
     void resetTracker();
     void jobsAdded(const QList< QPair<int, int> > &);
     void jobsUpdated(const QList< QPair<int, int> > &);

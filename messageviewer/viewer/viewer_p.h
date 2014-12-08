@@ -483,7 +483,7 @@ public:
 
     void showOpenAttachmentFolderWidget(const KUrl &url);
 
-private slots:
+private Q_SLOTS:
     void slotModifyItemDone(KJob *job);
     void slotMessageMayBeAScam();
     void slotMessageIsNotAScam();
@@ -522,7 +522,7 @@ private slots:
     void slotCreateEvent(const KCalCore::Event::Ptr &eventPtr, const Akonadi::Collection &collection);
 
     void slotRefreshMessage(const Akonadi::Item &item);
-public slots:
+public Q_SLOTS:
     /** An URL has been activate with a click. */
     void slotUrlOpen(const QUrl &url = QUrl());
 
@@ -634,7 +634,7 @@ public slots:
 
     void slotGeneralFontChanged();
 
-signals:
+Q_SIGNALS:
     void showStatusBarMessage(const QString &message);
     void replaceMsgByUnencryptedVersion();
     void popupMenu(const Akonadi::Item &msg, const KUrl &url, const KUrl &imageUrl, const QPoint &mousePos);

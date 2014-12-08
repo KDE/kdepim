@@ -75,7 +75,7 @@ Q_SIGNALS:
     void okClicked();
     void cancelClicked();
 
-private slots:
+private Q_SLOTS:
     void slotDialogDefaults();
 
     void slotAccepted();

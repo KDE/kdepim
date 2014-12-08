@@ -49,7 +49,7 @@ public:
 Q_SIGNALS:
     void changed();
 
-private slots:
+private Q_SLOTS:
     void slotManageStorageService();
 
 private:

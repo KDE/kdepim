@@ -48,7 +48,7 @@ public:
     void setAlarm(const QDateTime &dateTime);
     QDateTime alarm() const;
 
-private slots:
+private Q_SLOTS:
     void slotButtonChanged(int);
 
 private:

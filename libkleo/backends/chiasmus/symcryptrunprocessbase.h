@@ -64,7 +64,7 @@ public:
         return mStderr;
     }
 
-private slots:
+private Q_SLOTS:
     void slotReadyReadStandardError();
     void slotReadyReadStandardOutput();
 

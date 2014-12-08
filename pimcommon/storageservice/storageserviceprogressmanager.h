@@ -51,7 +51,7 @@ public:
 
     void addProgress(PimCommon::StorageServiceAbstract *storageService, ProgressType type);
 
-private slots:
+private Q_SLOTS:
     void slotProgressItemCanceled(KPIM::ProgressItem *item);
 
     void slotUploadFileDone(const QString &serviceName, const QString &);

@@ -44,7 +44,7 @@ public:
         sync, which is more efficient. */
     void requestSync();
 
-private slots:
+private Q_SLOTS:
     void slotSyncNow();
 
 private:

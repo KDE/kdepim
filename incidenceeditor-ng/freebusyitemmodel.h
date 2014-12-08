@@ -87,13 +87,13 @@ public:
      */
     void reload();
 
-public slots:
+public Q_SLOTS:
     void slotInsertFreeBusy(const KCalCore::FreeBusy::Ptr &fb, const QString &email);
 
 protected:
     void timerEvent(QTimerEvent *);
 
-private slots:
+private Q_SLOTS:
     // Force the download of FB information
     void manualReload();
     // Only download FB if the auto-download option is set in config

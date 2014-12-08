@@ -37,7 +37,7 @@ public:
     void setRoot(KMime::Content *root);
 
     KMime::Content::List selectedContents();
-private slots:
+private Q_SLOTS:
     void slotMimePartDestroyed();
 
 private:

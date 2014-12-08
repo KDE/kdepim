@@ -86,7 +86,7 @@ protected Q_SLOTS:
     void slotDownloadReadyRead();
     void slotuploadDownloadFileProgress(qint64 done, qint64 total);
 
-public slots:
+public Q_SLOTS:
     void slotSslErrors(QNetworkReply *reply, const QList<QSslError> &error);
     void slotError(QNetworkReply::NetworkError);
 

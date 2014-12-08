@@ -190,7 +190,7 @@ public:
                         const QList<KMime::MDN::DispositionModifier> &m =
                             QList<KMime::MDN::DispositionModifier>());
 
-signals:
+Q_SIGNALS:
     /**
      * Called to notify that the current FilterAction has had some
      * value modification

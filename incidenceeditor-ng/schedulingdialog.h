@@ -48,17 +48,17 @@ public:
     QDate selectedStartDate() const;
     QTime selectedStartTime() const;
 
-public slots:
+public Q_SLOTS:
     void slotUpdateIncidenceStartEnd(const KDateTime &startDateTime,
                                      const KDateTime &endDateTime);
 
-signals:
+Q_SIGNALS:
     void startDateChanged(const QDate &newDate);
     void startTimeChanged(const QTime &newTime);
     void endDateChanged(const QDate &newDate);
     void endTimeChanged(const QTime &newTime);
 
-private slots:
+private Q_SLOTS:
     void slotWeekdaysChanged();
     void slotMandatoryRolesChanged();
     void slotStartDateChanged(const QDate &newDate);

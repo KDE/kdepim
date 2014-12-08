@@ -43,7 +43,7 @@ public:
     TimeScaleConfigDialog(const PrefsPtr &preferences, QWidget *parent);
     ~TimeScaleConfigDialog();
 
-private slots:
+private Q_SLOTS:
     void add();
     void remove();
     void up();

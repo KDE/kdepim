@@ -33,7 +33,7 @@ public:
 Q_SIGNALS:
     void configureClicked();
 
-private slots:
+private Q_SLOTS:
     void slotTabCountchanged(bool hasTab);
 
 private:

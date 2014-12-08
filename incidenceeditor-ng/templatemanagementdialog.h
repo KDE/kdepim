@@ -54,7 +54,7 @@ public:
     TemplateManagementDialog(QWidget *parent, const QStringList &templates,
                              const QString &incidenceType);
 
-signals:
+Q_SIGNALS:
     /* Emitted whenever the user hits apply, indicating that the currently
        selected template should be loaded into to the incidence editor which
        triggered this.
@@ -72,14 +72,14 @@ signals:
     */
     void templatesChanged(const QStringList &templates);
 
-protected slots:
+protected Q_SLOTS:
     void slotItemSelected();
     void slotAddTemplate();
     void slotRemoveTemplate();
     void slotApplyTemplate();
     void slotOk();
 
-private slots:
+private Q_SLOTS:
     void slotHelp();
 private:
     void updateButtons();

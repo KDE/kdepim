@@ -53,7 +53,7 @@ public:
     QStringList addresses() const;
     void addAddresses(KConfig *config);
 
-private slots:
+private Q_SLOTS:
     void slotAddItem();
     void slotRemoveItem();
     void slotSelectionChanged();

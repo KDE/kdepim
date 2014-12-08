@@ -58,7 +58,7 @@ public:
 public Q_SLOTS:
     void update();
 
-signals:
+Q_SIGNALS:
     void replyTemplateSelected(const QString &tmpl);
     void replyAllTemplateSelected(const QString &tmpl);
     void forwardTemplateSelected(const QString &tmpl);

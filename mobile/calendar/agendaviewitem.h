@@ -79,7 +79,7 @@ class AgendaViewItem : public DeclarativeAkonadiItem
     void setPreferences( const PrefsPtr &preferences );
     PrefsPtr preferences() const;
 
-  public slots:
+  public Q_SLOTS:
     /** Unselects currently selected incidences */
     void clearSelection();
 
@@ -90,7 +90,7 @@ class AgendaViewItem : public DeclarativeAkonadiItem
 
     void updateConfig();
 
-  signals:
+  Q_SIGNALS:
     void itemSelected( Akonadi::Item item, const QDate &activeDate );
 
   private:

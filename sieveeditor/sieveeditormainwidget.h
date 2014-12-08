@@ -56,7 +56,7 @@ Q_SIGNALS:
     void modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode);
     void serverSieveFound(bool);
 
-private slots:
+private Q_SLOTS:
     void slotCreateScriptPage(const QUrl &url, const QStringList &capabilities, bool isNewScript);
     void slotScriptDeleted(const QUrl &url);
     void slotScriptModified(bool modified, SieveEditorPageWidget *page);

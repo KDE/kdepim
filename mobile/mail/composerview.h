@@ -77,7 +77,7 @@ class ComposerView : public KDeclarativeFullScreenView
 
     void setIdentity( uint );
 
-  public slots:
+  public Q_SLOTS:
     void setMessage( const KMime::Message::Ptr &msg, bool mayAutoSign = true );
     QObject* getAction( const QString &name ) const;
 
@@ -93,13 +93,13 @@ class ComposerView : public KDeclarativeFullScreenView
     void disableHtml( MessageComposer::ComposerViewBase::Confirmation confirmation );
     void addAttachment( KMime::Content* part );
 
-  signals:
+  Q_SIGNALS:
     void changed();
     void busyChanged();
     void cryptoStateChanged();
     void recipientsCountChanged();
 
-  private slots:
+  private Q_SLOTS:
     void qmlLoaded ( QDeclarativeView::Status );
     void success();
     void failed( const QString &errorMessage );

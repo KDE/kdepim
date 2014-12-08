@@ -53,7 +53,7 @@ public:
     void setItemDelegate(QAbstractItemDelegate *delegate);
 
     QAbstractItemView *view() const;
-private slots:
+private Q_SLOTS:
     void slotAccountSelected(const Akonadi::AgentInstance &current);
     void slotRemoveSelectedAccount();
     void slotRestartSelectedAccount();

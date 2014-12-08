@@ -36,7 +36,7 @@ public:
     void load(const Akonadi::Collection &col);
     void save(Akonadi::Collection &col);
 
-private slots:
+private Q_SLOTS:
     void addAttribute();
     void delAttribute();
     void attributeChanged(QStandardItem *item);

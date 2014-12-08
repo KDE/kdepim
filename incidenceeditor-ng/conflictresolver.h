@@ -115,7 +115,7 @@ public:
 
     FreeBusyItemModel *model() const;
 
-signals:
+Q_SIGNALS:
     /**
      * Emitted when the user changes the start and end dateTimes
      * for the incidence.
@@ -133,7 +133,7 @@ signals:
      */
     void freeSlotsAvailable(const KCalCore::Period::List &);
 
-public slots:
+public Q_SLOTS:
     /**
      * Set the timeframe constraints
      *

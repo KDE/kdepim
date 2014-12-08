@@ -73,7 +73,7 @@ class TimelineViewItem : public DeclarativeAkonadiItem
 
     qint64 selectedItemId() const;
 
-  public slots:
+  public Q_SLOTS:
     /** Unselects currently selected incidences */
     void clearSelection();
 
@@ -82,7 +82,7 @@ class TimelineViewItem : public DeclarativeAkonadiItem
     /** Show the preceding date range. */
     void gotoPrevious();
 
-  signals:
+  Q_SIGNALS:
     void itemSelected( Akonadi::Item item, const QDate &activeDate );
 
   private:

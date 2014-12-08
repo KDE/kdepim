@@ -69,7 +69,7 @@ private:
     bool saslClientStep(const QByteArray &challenge);
     void processResponse(const Response &response, const QByteArray &data);
 
-private slots:
+private Q_SLOTS:
     void dataReceived();
     void socketError();
     void startSsl();

@@ -57,7 +57,7 @@ public:
 Q_SIGNALS:
     void authorizationDone(const QString &refreshToken, const QString &token, const QDateTime &expireTime, const QString &accountName);
 
-private slots:
+private Q_SLOTS:
     void slotAuthJobFinished(KGAPI2::Job *job);
     void slotAboutFetchJobFinished(KGAPI2::Job *job);
     void slotDeleteFileFinished(KGAPI2::Job *job);

@@ -38,7 +38,7 @@ public:
 protected:
     void closeEvent(QCloseEvent *e) Q_DECL_OVERRIDE;
 
-private slots:
+private Q_SLOTS:
     void slotConfigure();
     void slotAddServerSieve();
     void slotCreateNewScript();

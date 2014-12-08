@@ -24,7 +24,7 @@ class QWebFrame;
 class ScamDetectionTest : public QObject
 {
     Q_OBJECT
-private slots:
+private Q_SLOTS:
     void testIp();
     void testNoScam();
     void testHref();

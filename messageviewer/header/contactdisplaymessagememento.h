@@ -46,7 +46,7 @@ public:
 
     void detach();
 
-signals:
+Q_SIGNALS:
     // TODO: Factor our update and detach into base class
     void update(MessageViewer::Viewer::UpdateMode);
     void changeDisplayMail(Viewer::DisplayFormatMessage displayAsHtml, bool remoteContent);

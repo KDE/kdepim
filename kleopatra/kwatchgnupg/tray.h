@@ -45,7 +45,7 @@ public:
     explicit KWatchGnuPGTray(KWatchGnuPGMainWindow *mainwin);
     virtual ~KWatchGnuPGTray();
 
-public slots:
+public Q_SLOTS:
     void setAttention(bool att);
 private:
     QIcon mNormalPix;

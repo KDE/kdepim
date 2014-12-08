@@ -50,7 +50,7 @@ Q_SIGNALS:
     void selectionChanged();
     void tabCountChanged(bool hasTab);
 
-public slots:
+public Q_SLOTS:
     void slotAuthenticate();
     void slotCreateFolder();
     void slotRefreshList();
@@ -60,7 +60,7 @@ public slots:
     void slotDownloadFile();
     void slotShowLog();
     void slotRename();
-private slots:
+private Q_SLOTS:
     void slotUpdateIcon(const QIcon &icon, StorageServicePage *page);
 
 private:

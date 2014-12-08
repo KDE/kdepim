@@ -85,7 +85,7 @@ public:
 
     MessageComposer::MDNAdvice result() const;
 
-private slots:
+private Q_SLOTS:
     void slotUser1Clicked();
     void slotUser2Clicked();
     void slotYesClicked();

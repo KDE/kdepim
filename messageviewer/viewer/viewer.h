@@ -345,7 +345,7 @@ public:
     bool isAShortUrl(const QUrl &url) const;
 
     void showOpenAttachmentFolderWidget(const QUrl &url);
-signals:
+Q_SIGNALS:
     void moveMessageToTrash();
 
     /**
@@ -387,7 +387,7 @@ signals:
 private:
     void initialize();
 
-public slots:
+public Q_SLOTS:
 
     /**
     * HTML Widget scrollbar and layout handling.

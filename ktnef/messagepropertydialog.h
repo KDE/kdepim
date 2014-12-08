@@ -33,7 +33,7 @@ class MessagePropertyDialog : public QDialog
 public:
     explicit MessagePropertyDialog(QWidget *parent, KTNEFMessage *msg);
 
-private slots:
+private Q_SLOTS:
     void slotSaveProperty();
 
 private:

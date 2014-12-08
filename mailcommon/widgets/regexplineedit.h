@@ -54,16 +54,16 @@ public:
 
     QString text() const;
 
-public slots:
+public Q_SLOTS:
     void clear();
     void setText(const QString &);
     void showEditButton(bool);
 
-signals:
+Q_SIGNALS:
     void textChanged(const QString &);
     void returnPressed();
 
-protected slots:
+protected Q_SLOTS:
     void slotEditRegExp();
 
 private:

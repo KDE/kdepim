@@ -40,7 +40,7 @@ public:
     virtual void leavePageNextRequested();
     virtual void leavePageBackRequested();
 
-signals:
+Q_SIGNALS:
     Q_SCRIPTABLE void pageEnteredNext();
     Q_SCRIPTABLE void pageEnteredBack();
     Q_SCRIPTABLE void pageLeftNext();
@@ -48,7 +48,7 @@ signals:
     Q_SCRIPTABLE void leavePageNextOk();
     Q_SCRIPTABLE void leavePageBackOk();
 
-public slots:
+public Q_SLOTS:
     Q_SCRIPTABLE void setValid(bool valid);
     Q_SCRIPTABLE void nextPage();
 

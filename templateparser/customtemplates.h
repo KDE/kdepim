@@ -53,7 +53,7 @@ public:
     void load();
     void save();
 
-signals:
+Q_SIGNALS:
     void changed();
     void templatesUpdated();
 

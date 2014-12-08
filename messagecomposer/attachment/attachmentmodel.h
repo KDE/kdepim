@@ -119,7 +119,7 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
-signals:
+Q_SIGNALS:
     void encryptEnabled(bool enabled);
     void signEnabled(bool enabled);
     void autoDisplayEnabled(bool enabled);

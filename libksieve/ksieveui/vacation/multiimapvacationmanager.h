@@ -37,7 +37,7 @@ Q_SIGNALS:
     void scriptActive(bool active, const QString &serverName);
     void requestEditVacation();
 
-private slots:
+private Q_SLOTS:
     void slotScriptActive(bool active, const QString &serverName);
 
 private:

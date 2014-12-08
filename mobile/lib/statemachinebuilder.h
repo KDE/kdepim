@@ -41,7 +41,7 @@ public:
 
   void requestState(const QString &state);
 
-signals:
+Q_SIGNALS:
   void stateRequested(const QString &state);
   void stateChanged();
 };

@@ -78,11 +78,11 @@ public:
     void setRealPath(const QString &path);
 
     void start();
-signals:
+Q_SIGNALS:
     void backupDone(const QString &);
     void error(const QString &);
 
-private slots:
+private Q_SLOTS:
     void itemFetchJobResult(KJob *job);
     void cancelJob();
     void archiveNextFolder();

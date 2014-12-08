@@ -33,7 +33,7 @@ Q_SIGNALS:
     void tabRemoveAllExclude(int index);
     void tabCloseRequestedIndex(int index);
 
-private slots:
+private Q_SLOTS:
     void slotTabContextMenuRequest(const QPoint &pos);
 };
 

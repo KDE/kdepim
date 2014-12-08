@@ -40,7 +40,7 @@ public:
 
     bool createDefaultFolder();
 
-private slots:
+private Q_SLOTS:
     void slotWalletClosed();
 
 private:

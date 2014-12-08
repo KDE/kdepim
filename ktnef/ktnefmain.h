@@ -47,7 +47,7 @@ protected:
     /** @reimp */
     void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
 
-protected slots:
+protected Q_SLOTS:
     void openFile();
     void viewFile();
     void viewFileAs();

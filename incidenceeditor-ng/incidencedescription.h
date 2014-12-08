@@ -59,7 +59,7 @@ public:
 
     virtual void printDebugInfo() const;
 
-private slots:
+private Q_SLOTS:
     void toggleRichTextDescription();
     void enableRichTextDescription(bool enable);
 

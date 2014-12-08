@@ -71,7 +71,7 @@ public:
     virtual void clear();
     virtual void sync(bool runtime);
 
-private slots:
+private Q_SLOTS:
     void slotCollectStdOut();
 private:
     /// @param showErrors if true, a messagebox will be shown if e.g. gpgconf wasn't found
@@ -111,7 +111,7 @@ public:
 
     void sync(bool runtime);
 
-private slots:
+private Q_SLOTS:
     void slotCollectStdOut();
 private:
     void runGpgConf();

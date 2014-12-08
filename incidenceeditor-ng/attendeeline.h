@@ -49,12 +49,12 @@ public:
 
     int currentIndex() const;
 
-signals:
+Q_SIGNALS:
     void rightPressed();
     void leftPressed();
     void itemChanged();
 
-public slots:
+public Q_SLOTS:
     /** Clears the combobox, removing all items. */
     void clear();
     void setCurrentIndex(int index);
@@ -62,7 +62,7 @@ public slots:
 protected:
     void keyPressEvent(QKeyEvent *ev) Q_DECL_OVERRIDE;
 
-private slots:
+private Q_SLOTS:
     void slotActionTriggered();
 
 private:
@@ -77,7 +77,7 @@ class INCIDENCEEDITORS_NG_EXPORT AttendeeLineEdit : public KPIM::AddresseeLineEd
 public:
     explicit AttendeeLineEdit(QWidget *parent);
 
-signals:
+Q_SIGNALS:
     void deleteMe();
     void leftPressed();
     void rightPressed();
@@ -124,13 +124,13 @@ public:
 
     void setActions(AttendeeActions actions);
 
-signals:
+Q_SIGNALS:
     void changed();
     void changed(const KCalCore::Attendee::Ptr &oldAttendee,
                  const KCalCore::Attendee::Ptr &newAttendee);
     void editingFinished(KPIM::MultiplyingLine *);
 
-private slots:
+private Q_SLOTS:
     void slotTextChanged(const QString &);
     void slotHandleChange();
     void slotComboChanged();

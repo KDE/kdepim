@@ -82,10 +82,10 @@ public:
 
     void detach();
 
-signals:
+Q_SIGNALS:
     void update(MessageViewer::Viewer::UpdateMode);
 
-protected slots:
+protected Q_SLOTS:
     void notify()
     {
         emit update(Viewer::Force);
@@ -125,7 +125,7 @@ public:
         return m_vr;
     }
 
-private slots:
+private Q_SLOTS:
     void slotResult(const GpgME::DecryptionResult &dr,
                     const GpgME::VerificationResult &vr,
                     const QByteArray &plainText);
@@ -167,7 +167,7 @@ public:
         return m_key;
     }
 
-private slots:
+private Q_SLOTS:
     void slotResult(const GpgME::VerificationResult &vr);
     void slotKeyListJobDone();
     void slotNextKey(const GpgME::Key &);
@@ -214,7 +214,7 @@ public:
         return m_key;
     }
 
-private slots:
+private Q_SLOTS:
     void slotResult(const GpgME::VerificationResult &vr,
                     const QByteArray &plainText);
     void slotKeyListJobDone();

@@ -59,11 +59,11 @@ public:
     explicit BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget *parent = Q_NULLPTR);
     ~BrowserWidget();
 
-public slots:
+public Q_SLOTS:
     void dumpToXml();
     void clearCache();
 
-private slots:
+private Q_SLOTS:
     void itemActivated(const QModelIndex &index);
     void itemFetchDone(KJob *job);
     void modelChanged();

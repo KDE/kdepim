@@ -65,7 +65,7 @@ public:
     void clear();
     QSize sizeHint() const Q_DECL_OVERRIDE;
 
-public slots:
+public Q_SLOTS:
     virtual void updateView();
 
     virtual void showDates(const QDate &start, const QDate &end,
@@ -86,7 +86,7 @@ Q_SIGNALS:
     void showNewEventPopupSignal();
     void showIncidencePopupSignal(const Akonadi::Item &, const QDate &);
 
-protected slots:
+protected Q_SLOTS:
     void processSelectionChange();
 
 private:

@@ -34,10 +34,10 @@ public:
     virtual void leavePageNext();
     QTreeView *treeview() const;
 
-signals:
+Q_SIGNALS:
     void ghnsWanted();
 
-private slots:
+private Q_SLOTS:
     void selectionChanged();
 private:
     Ui::TypePage ui;

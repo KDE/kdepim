@@ -58,10 +58,10 @@ public:
 
     int attachmentCount() const;
 
-signals:
+Q_SIGNALS:
     void attachmentCountChanged(int newCount);
 
-private slots:
+private Q_SLOTS:
     void addAttachment();
     void copyToClipboard(); /// Copies selected items to clip board
     void cutToClipboard();  /// Copies selected items to clipboard and removes them from the list

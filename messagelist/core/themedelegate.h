@@ -242,7 +242,7 @@ protected:
     */
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
-private slots:
+private Q_SLOTS:
     /**
     * Called when the global fonts change (from systemsettings)
     */

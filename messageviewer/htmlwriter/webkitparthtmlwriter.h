@@ -63,7 +63,7 @@ public:
     void flush();
     void embedPart(const QByteArray &contentId, const QString &url);
     void extraHead(const QString &str);
-signals:
+Q_SIGNALS:
     void finished();
 
 private:

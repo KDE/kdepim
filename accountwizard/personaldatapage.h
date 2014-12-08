@@ -40,14 +40,14 @@ public:
     virtual void leavePageNext();
     virtual void leavePageNextRequested();
 
-private slots:
+private Q_SLOTS:
     void ispdbSearchFinished(bool ok);
     void slotTextChanged();
     void slotCreateAccountClicked();
     void slotRadioButtonClicked(QAbstractButton *button);
     void slotSearchType(const QString &);
 
-signals:
+Q_SIGNALS:
     void manualWanted(bool);
 
 private:

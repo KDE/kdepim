@@ -115,7 +115,7 @@ public:
     void pause();
     void resume();
 
-private slots:
+private Q_SLOTS:
     /// Called by a timer to run the next job
     void slotRunNextJob();
 

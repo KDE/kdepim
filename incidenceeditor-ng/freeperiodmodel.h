@@ -46,7 +46,7 @@ public:
     virtual QVariant headerData(int section, Qt::Orientation orientation,
                                 int role = Qt::DisplayRole) const;
 
-public slots:
+public Q_SLOTS:
     void slotNewFreePeriods(const KCalCore::Period::List &freePeriods);
 
 private:

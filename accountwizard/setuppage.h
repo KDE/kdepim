@@ -41,7 +41,7 @@ public:
     void setStatus(const QString &msg);
     void setProgress(int percent);
 
-private slots:
+private Q_SLOTS:
     void detailsClicked();
 
 private:

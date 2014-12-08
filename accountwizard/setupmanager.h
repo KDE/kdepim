@@ -43,7 +43,7 @@ public:
     void setPassword(const QString &);
     void setPersonalDataAvailable(bool available);
 
-public slots:
+public Q_SLOTS:
     Q_SCRIPTABLE bool personalDataAvailable();
     Q_SCRIPTABLE QString name();
     Q_SCRIPTABLE QString email();
@@ -60,7 +60,7 @@ public slots:
 
     void requestRollback();
 
-signals:
+Q_SIGNALS:
     void rollbackComplete();
 
 private:
@@ -68,7 +68,7 @@ private:
     void rollback();
     SetupObject *connectObject(SetupObject *obj);
 
-private slots:
+private Q_SLOTS:
     void setupSucceeded(const QString &msg);
     void setupFailed(const QString &msg);
     void setupInfo(const QString &msg);

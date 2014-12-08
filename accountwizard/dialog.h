@@ -38,12 +38,12 @@ public:
     // give room for certain pages to create objects too.
     SetupManager *setupManager();
 
-public slots:
+public Q_SLOTS:
     Q_SCRIPTABLE QObject *addPage(const QString &uiFile, const QString &title);
 
     void reject();
 
-private slots:
+private Q_SLOTS:
     void slotNextPage();
 #ifndef ACCOUNTWIZARD_NO_GHNS
     void slotGhnsWanted();

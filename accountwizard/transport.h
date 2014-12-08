@@ -33,7 +33,7 @@ public:
 
     int transportId() const;
 
-public slots:
+public Q_SLOTS:
     Q_SCRIPTABLE void setName(const QString &name);
     Q_SCRIPTABLE void setHost(const QString &host);
     Q_SCRIPTABLE void setPort(int port);

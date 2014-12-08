@@ -137,7 +137,7 @@ public:
 
     QString mailingListPostAddress() const;
 
-protected slots:
+protected Q_SLOTS:
     void slotIdentitiesChanged();
 
 private:

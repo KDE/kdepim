@@ -62,14 +62,14 @@ protected:
     void setFoundMatch(bool match);
     void messageInfo(bool backward, bool isAutoSearch, bool found);
 
-public slots:
+public Q_SLOTS:
     void findNext();
     void findPrev();
     void autoSearch(const QString &str);
     virtual void slotSearchText(bool backward = false, bool isAutoSearch = true) = 0;
     void closeBar();
 
-private slots:
+private Q_SLOTS:
     void slotClearSearch();
     void slotUpdateSearchOptions();
     virtual void slotReplaceText() = 0;

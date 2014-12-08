@@ -127,7 +127,7 @@ public:
 protected:
     void changeToolTipsPolicyConfig(ToolTipDisplayPolicy);
 
-protected slots:
+protected Q_SLOTS:
     void slotChangeTooltipsPolicy(FolderTreeWidget::ToolTipDisplayPolicy);
     void slotManualSortingChanged(bool);
     void slotFilterFixedString(const QString &);

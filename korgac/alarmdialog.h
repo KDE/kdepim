@@ -70,7 +70,7 @@ public:
     void setRemindAt(const QDateTime &dt);
     void eventNotification();
 
-public slots:
+public Q_SLOTS:
     void slotOk();    // suspend
     void slotUser1(); // edit
     void slotUser2(); // dismiss all
@@ -92,7 +92,7 @@ public slots:
     */
     void slotCalendarChanged();
 
-signals:
+Q_SIGNALS:
     void reminderCount(int count);
 
 private Q_SLOTS:

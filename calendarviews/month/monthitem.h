@@ -323,7 +323,7 @@ protected:
     virtual void finalizeResize(const QDate &newStartDate,
                                 const QDate &newEndDate);
 
-protected slots:
+protected Q_SLOTS:
     /**
       Update the selected state of this item.
       If will be selected if incidence is the incidence managed by this item.

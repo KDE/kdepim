@@ -119,14 +119,14 @@ public:
      */
     void updateSearchPattern();
 
-public slots:
+public Q_SLOTS:
     /**
      * Called when the widget should let go of the currently referenced
      * filter and disable itself.
      */
     void reset();
 
-signals:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever the name of the processed
      * search pattern may have changed.
@@ -140,7 +140,7 @@ signals:
 
     void returnPressed();
 
-private slots:
+private Q_SLOTS:
     void slotRadioClicked(QAbstractButton *aRBtn);
     void slotAutoNameHack();
     void slotRuleAdded(QWidget *widget);
@@ -225,12 +225,12 @@ public:
 
     void setPatternEditOptions(MailCommon::SearchPatternEdit::SearchPatternEditOptions options);
 
-public slots:
+public Q_SLOTS:
     void slotFunctionChanged();
     void slotValueChanged();
     void slotReturnPressed();
 
-signals:
+Q_SIGNALS:
     /**
     * This signal is emitted whenever the user alters the field.
     * The pseudo-headers <...> are returned in their i18n form, but
@@ -261,7 +261,7 @@ protected:
     */
     int indexOfRuleField(const QByteArray &aName) const;
 
-protected slots:
+protected Q_SLOTS:
     void slotRuleFieldChanged(const QString &);
     void slotAddWidget();
     void slotRemoveWidget();
@@ -295,7 +295,7 @@ public:
 
     void setPatternEditOptions(SearchPatternEdit::SearchPatternEditOptions options);
 
-public slots:
+public Q_SLOTS:
     void reset();
     void slotAddWidget(QWidget *);
     void slotRemoveWidget(QWidget *);

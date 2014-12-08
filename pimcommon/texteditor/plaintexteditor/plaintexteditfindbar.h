@@ -40,10 +40,10 @@ protected:
     bool searchInDocument(const QString &text, QTextDocument::FindFlags searchOptions) Q_DECL_OVERRIDE;
     void autoSearchMoveCursor() Q_DECL_OVERRIDE;
 
-public slots:
+public Q_SLOTS:
     virtual void slotSearchText(bool backward = false, bool isAutoSearch = true);
 
-private slots:
+private Q_SLOTS:
     virtual void slotReplaceText();
     virtual void slotReplaceAllText();
 

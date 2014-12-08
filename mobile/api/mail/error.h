@@ -41,10 +41,10 @@ public:
     int code() const;
     QString text() const;
 
-signals:
+Q_SIGNALS:
     void errorChanged();
 
-public slots:
+public Q_SLOTS:
     void clear();
     void setError( ErrorCode code, const QString &text );
 

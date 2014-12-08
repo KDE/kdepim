@@ -63,11 +63,11 @@ class CalendarHelper : public QObject
     Q_INVOKABLE void nextYear();
     Q_INVOKABLE void previousYear();
 
-  protected slots:
+  protected Q_SLOTS:
     void updateDays();
     void updateWeeks();
 
-  signals:
+  Q_SIGNALS:
     void dayChanged( int newDay );
     void daysInMonthChanged( int newDays );
     void monthChanged( int newMonth );

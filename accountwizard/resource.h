@@ -34,13 +34,13 @@ public:
     void create();
     void destroy();
 
-public slots:
+public Q_SLOTS:
     Q_SCRIPTABLE void setName(const QString &name);
     Q_SCRIPTABLE void setOption(const QString &key, const QVariant &value);
     Q_SCRIPTABLE QString identifier();
     Q_SCRIPTABLE void reconfigure();
 
-private slots:
+private Q_SLOTS:
     void instanceCreateResult(KJob *job);
 
 private:

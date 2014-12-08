@@ -106,7 +106,7 @@ public:
         CQuoteHtml
     };
 
-signals:
+Q_SIGNALS:
     void insertCommand(TemplatesInsertCommand::Command cmd);
     void insertCommand(const QString &cmd, int adjustCursor = 0);
 

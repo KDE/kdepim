@@ -63,7 +63,7 @@ public:
     /** Applys the currently selected signature according to user preferences. */
     void applyCurrentSignature();
 
-public slots:
+public Q_SLOTS:
     /**
      * Append signature to the end of the text in the editor.
      */
@@ -81,7 +81,7 @@ public slots:
 
     void cleanSpace();
 
-signals:
+Q_SIGNALS:
     /**
      * A HTML signature is about to be inserted, so enable HTML support in the editor.
      */
@@ -96,7 +96,7 @@ private:
      */
     void insertSignatureHelper(KIdentityManagement::Signature::Placement placement);
 
-private slots:
+private Q_SLOTS:
     void identityChanged(uint id);
 
 private:

@@ -57,7 +57,7 @@ public Q_SLOTS:
 Q_SIGNALS:
     void stateChanged(PimCommon::TextToSpeechWidget::State state);
 
-private slots:
+private Q_SLOTS:
     void slotStop();
     void slotPlayPause();
     void slotVolumeChanged(int value);

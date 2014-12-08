@@ -66,7 +66,7 @@ Q_SIGNALS:
     void showNewEventPopupSignal();
     void showIncidencePopupSignal(const Akonadi::Item &, const QDate &);
 
-public slots:
+public Q_SLOTS:
 
     void customCollectionsChanged(ConfigDialogInterface *dlg);
 
@@ -90,7 +90,7 @@ protected Q_SLOTS:
      */
     void collectionSelectionChanged();
 
-private slots:
+private Q_SLOTS:
     void slotSelectionChanged();
     void slotClearTimeSpanSelection();
     void resizeSplitters();

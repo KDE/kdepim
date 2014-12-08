@@ -50,7 +50,7 @@ Q_SIGNALS:
     void deleteFileDone(const QString &, const QString &);
     void deleteFolderDone(const QString &, const QString &);
 
-private slots:
+private Q_SLOTS:
     void slotItemActivated(QTreeWidgetItem *item, int column);
 
     void slotUpdatePixmap(const QPixmap &pix);

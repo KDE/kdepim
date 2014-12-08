@@ -35,18 +35,18 @@ public:
     explicit BlogSettings(QWidget *parent = Q_NULLPTR);
     ~BlogSettings();
 
-signals:
+Q_SIGNALS:
     void blogAdded(const BilboBlog &blog);
     void blogEdited(const BilboBlog &blog);
     void blogRemoved(int blog_id);
 
-protected slots:
+protected Q_SLOTS:
     void addBlog();
     void editBlog();
     void removeBlog();
     void loadBlogsList();
 
-private slots:
+private Q_SLOTS:
     void slotBlogAdded(const BilboBlog &blog);
     void slotBlogEdited(const BilboBlog &blog);
     void blogsTablestateChanged();

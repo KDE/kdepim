@@ -52,7 +52,7 @@ public:
     // executes the modal dialog
     int exec();
 
-private slots:
+private Q_SLOTS:
     void saveClicked();
     void openClicked();
     void openWithClicked();

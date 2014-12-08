@@ -96,7 +96,7 @@ public:
 
     void setNotAllowToCreateNewFolder(bool notCreateNewFolder);
 
-protected slots:
+protected Q_SLOTS:
     /**
      * Opens the folder dialog.
      */
@@ -107,7 +107,7 @@ protected slots:
      */
     void slotCollectionsReceived(KJob *);
 
-signals:
+Q_SIGNALS:
     /**
      * Emitted when the folder changed.
      */

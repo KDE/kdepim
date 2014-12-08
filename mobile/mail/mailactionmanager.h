@@ -37,7 +37,7 @@ class MailActionManager : public QObject
     void setItemSelectionModel( QItemSelectionModel *selectionModel );
     void setItemActionSelectionModel( QItemSelectionModel *selectionModel );
 
-  private slots:
+  private Q_SLOTS:
     void updateActions();
 
   private:

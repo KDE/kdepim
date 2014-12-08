@@ -34,7 +34,7 @@ public:
     SetupObject *dependsOn() const;
     void setDependsOn(SetupObject *obj);
 
-signals:
+Q_SIGNALS:
     void error(const QString &msg);
     void info(const QString &msg);
     void finished(const QString &msg);

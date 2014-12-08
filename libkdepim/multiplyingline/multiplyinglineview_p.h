@@ -92,7 +92,7 @@ public:
 
     QList<MultiplyingLine *> lines() const;
 
-public slots:
+public Q_SLOTS:
     void setCompletionMode(KCompletion::CompletionMode mode);
     MultiplyingLine *addLine();
 
@@ -100,7 +100,7 @@ public slots:
     void setFocusTop();
     void setFocusBottom();
 
-signals:
+Q_SIGNALS:
     void focusUp();
     void focusDown();
     void focusRight();
@@ -113,7 +113,7 @@ protected:
     void resizeEvent(QResizeEvent *) Q_DECL_OVERRIDE;
     void resizeView();
 
-protected slots:
+protected Q_SLOTS:
     void slotReturnPressed(KPIM::MultiplyingLine *);
     void slotDownPressed(KPIM::MultiplyingLine *);
     void slotUpPressed(KPIM::MultiplyingLine *);

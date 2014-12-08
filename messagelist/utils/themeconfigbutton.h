@@ -48,7 +48,7 @@ public:
     explicit ThemeConfigButton(QWidget *parent, const ThemeComboBox *themeComboBox = 0);
     ~ThemeConfigButton();
 
-signals:
+Q_SIGNALS:
     /**
     * A signal emitted when configure dialog has been successfully completed.
     */

@@ -39,7 +39,7 @@ class RecipientComboBox : public KComboBox
 public:
     explicit RecipientComboBox(QWidget *parent);
 
-signals:
+Q_SIGNALS:
     void rightPressed();
 
 protected:
@@ -52,7 +52,7 @@ class RecipientLineEdit : public MessageComposer::ComposerLineEdit
 public:
     explicit RecipientLineEdit(QWidget *parent);
 
-signals:
+Q_SIGNALS:
     void deleteMe();
     void leftPressed();
     void rightPressed();
@@ -100,11 +100,11 @@ public:
      */
     void setRecentAddressConfig(KConfig *config);
 
-signals:
+Q_SIGNALS:
     void typeModified(RecipientLineNG *);
     void countChanged();
 
-protected slots:
+protected Q_SLOTS:
     void slotEditingFinished();
     void slotTypeModified();
     void analyzeLine(const QString &);

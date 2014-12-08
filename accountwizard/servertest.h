@@ -34,18 +34,18 @@ public:
     explicit ServerTest(QObject *parent);
     ~ServerTest();
 
-public slots:
+public Q_SLOTS:
     /* @p protocol being 'imap' 'smtp' or 'pop3' */
     Q_SCRIPTABLE void test(const QString server, const QString protocol);
 
-signals:
+Q_SIGNALS:
     /* returns the advised setting, @p result begin 'ssl' 'tls' or 'none'. */
     void testResult(const QString &result);
 
     /* returns if no connection is possible, test failed. */
     void testFail();
 
-private slots:
+private Q_SLOTS:
     void testFinished(QList< int > list);
 
 private:

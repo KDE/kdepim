@@ -76,7 +76,7 @@ public:
     void setPlainText(const QString &text);
     void setFixedFont();
     MessageViewer::MailSourceViewTextBrowser *textBrowser() const;
-private slots:
+private Q_SLOTS:
     void slotFind();
 private:
     MailSourceViewTextBrowser *mTextBrowser;
@@ -93,10 +93,10 @@ public:
     explicit MailSourceViewTextBrowser(PimCommon::TextToSpeechInterface *textToSpeechInterface, QWidget *parent = Q_NULLPTR);
 protected:
     void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
-private slots:
+private Q_SLOTS:
     void slotSpeakText();
     void slotSaveAs();
-signals:
+Q_SIGNALS:
     void findText();
 private:
     PimCommon::TextToSpeechInterface *mTextToSpeechInterface;

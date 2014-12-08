@@ -46,7 +46,7 @@ class StorageServiceTestWidget : public QWidget
 public:
     explicit StorageServiceTestWidget(QWidget *parent = Q_NULLPTR);
 
-private slots:
+private Q_SLOTS:
     void slotSettings();
 
     void slotServiceMenu();

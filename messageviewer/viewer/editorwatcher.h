@@ -58,10 +58,10 @@ public:
     bool start();
     bool fileChanged() const;
     QUrl url() const;
-signals:
+Q_SIGNALS:
     void editDone(MessageViewer::EditorWatcher *watcher);
 
-private slots:
+private Q_SLOTS:
     void editorExited();
     void inotifyEvent();
     void checkEditDone();

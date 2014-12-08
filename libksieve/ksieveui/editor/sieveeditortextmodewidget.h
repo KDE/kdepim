@@ -71,7 +71,7 @@ Q_SIGNALS:
     void switchToGraphicalMode();
     void valueChanged();
 
-private slots:
+private Q_SLOTS:
     void slotTextChanged();
     void slotFind();
     void slotReplace();

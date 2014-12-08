@@ -63,7 +63,7 @@ public:
 
     Akonadi::Collection::List selectedCollections() const;
 
-private slots:
+private Q_SLOTS:
     void slotSelectionChanged();
     void slotAddChildFolder();
     void collectionCreationResult(KJob *);

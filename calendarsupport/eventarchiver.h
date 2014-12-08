@@ -81,7 +81,7 @@ public:
     void runAuto(const Akonadi::ETMCalendar::Ptr &calendar, Akonadi::IncidenceChanger *changer,
                  QWidget *widget, bool withGUI);
 
-signals:
+Q_SIGNALS:
     void eventsDeleted();
 
 private:

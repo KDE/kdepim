@@ -81,18 +81,18 @@ public:
         get a list of smtp servers available for this provider */
     QList< server > smtpServers() const;
 
-public slots:
+public Q_SLOTS:
     /** Sets the emailaddress you want to servers for */
     void setEmail(const QString &);
 
     /** Starts looking up the servers which belong to the e-mailaddress */
     void start();
 
-private slots:
+private Q_SLOTS:
     void slotResult(KJob *);
     void dataArrived(KIO::Job *, const QByteArray &data);
 
-signals:
+Q_SIGNALS:
     /** emitted when done. **/
     void finished(bool);
     void searchType(const QString &type);

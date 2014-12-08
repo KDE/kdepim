@@ -388,7 +388,7 @@ public:
 
     void populateStatusFilterCombo();
 
-public slots:
+public Q_SLOTS:
     /**
     * Selects all the items in the current folder.
     */
@@ -405,7 +405,7 @@ public slots:
 
     void themeMenuAboutToShow();
 
-signals:
+Q_SIGNALS:
     /**
     * Emitted when a message is selected (that is, single clicked and thus made current in the view)
     * Note that this message CAN be 0 (when the current item is cleared, for example).

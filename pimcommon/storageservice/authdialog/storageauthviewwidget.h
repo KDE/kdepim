@@ -36,7 +36,7 @@ public:
 Q_SIGNALS:
     void urlChanged(const QUrl &);
 
-private slots:
+private Q_SLOTS:
     void slotLoadStarted();
     void slotLoadFinished(bool success);
 

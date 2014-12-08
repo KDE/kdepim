@@ -34,7 +34,7 @@ public:
 
     void start() Q_DECL_OVERRIDE;
 
-private slots:
+private Q_SLOTS:
     void slotFetchDone(KJob *job);
     void slotCreateNewTodo(KJob *job);
 

@@ -48,7 +48,7 @@ public:
 
 Q_SIGNALS:
     void refreshMessage(const Akonadi::Item &item);
-private slots:
+private Q_SLOTS:
     void slotAttachmentEditDone(MessageViewer::EditorWatcher *editorWatcher);
     void slotItemModifiedResult(KJob *);
 private:

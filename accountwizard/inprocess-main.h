@@ -32,7 +32,7 @@ class AccountWizard : public QObject
 public:
     explicit AccountWizard(QObject *parent = Q_NULLPTR);
 
-public slots:
+public Q_SLOTS:
     void run(const QStringList &types, QWidget *parent);
 };
 

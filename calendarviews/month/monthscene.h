@@ -207,7 +207,7 @@ public:
     */
     void removeIncidence(const QString &uid);
 
-signals:
+Q_SIGNALS:
     void incidenceSelected(const Akonadi::Item &incidence, const QDate &);
     void showIncidencePopupSignal(const Akonadi::Item &, const QDate &);
     void newEventSignal();

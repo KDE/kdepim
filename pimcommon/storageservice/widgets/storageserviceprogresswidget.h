@@ -50,7 +50,7 @@ public Q_SLOTS:
 protected:
     void hideEvent(QHideEvent *e) Q_DECL_OVERRIDE;
 
-private slots:
+private Q_SLOTS:
     void slotCancelTask();
 
 private:

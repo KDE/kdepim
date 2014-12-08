@@ -39,7 +39,7 @@ public:
   double swipeLength() const;
   void setSwipeLength( double length );
 
-signals:
+Q_SIGNALS:
   void nextItemRequest();
   void previousItemRequest();
 

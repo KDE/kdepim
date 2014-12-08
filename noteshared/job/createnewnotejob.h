@@ -41,7 +41,7 @@ public:
 Q_SIGNALS:
     void selectNewCollection();
 
-private slots:
+private Q_SLOTS:
     void slotNoteCreationFinished(KJob *);
 
     void slotFetchCollection(KJob *job);

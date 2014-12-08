@@ -41,7 +41,7 @@ private:
     KMime::Message::Ptr createPlainTestMessage();
     KMime::Message::Ptr loadMessageFromFile(QString filename);
 
-private slots:
+private Q_SLOTS:
     void test_multipartAlternative_data();
     void test_multipartAlternative();
 };

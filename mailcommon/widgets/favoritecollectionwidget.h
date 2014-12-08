@@ -41,7 +41,7 @@ public:
 
     void changeViewMode(QListView::ViewMode mode);
 
-protected slots:
+protected Q_SLOTS:
     void slotGeneralFontChanged();
     void slotGeneralPaletteChanged();
     void slotChangeIconSize(bool);

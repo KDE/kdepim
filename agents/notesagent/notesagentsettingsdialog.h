@@ -32,7 +32,7 @@ public:
     explicit NotesAgentSettingsDialog(QWidget *parent = Q_NULLPTR);
     ~NotesAgentSettingsDialog();
 
-private slots:
+private Q_SLOTS:
     void slotOkClicked();
 
 private:

@@ -35,7 +35,7 @@ public:
 
     bool isPrivate() const;
     bool isNew() const;
-public slots:
+public Q_SLOTS:
     void accept();
 private:
     class Private;

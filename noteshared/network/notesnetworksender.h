@@ -48,7 +48,7 @@ public:
     void setSenderId(const QString &sender);
     void setNote(const QString &title, const QString &text);
 
-protected slots:
+protected Q_SLOTS:
     void slotConnected();
     void slotError();
     void slotClosed();

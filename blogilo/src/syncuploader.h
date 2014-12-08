@@ -51,7 +51,7 @@ public:
     bool uploadMedia(Backend *backend, BilboMedia *media);
     QString errorMessage() const;
 
-private slots:
+private Q_SLOTS:
     void slotMediaFileUploaded(BilboMedia *media);
     void slotMediaError(const QString &errorMessage, BilboMedia *media);
 

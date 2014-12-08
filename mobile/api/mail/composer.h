@@ -74,7 +74,7 @@ public:
 
     QByteArray convert ( const QString &body );
 
-signals:
+Q_SIGNALS:
 
     void subjectChanged();
     void bodyChanged();
@@ -83,7 +83,7 @@ signals:
     void bccChanged();
     void ccChanged();
 
-public slots:
+public Q_SLOTS:
 
     void send();
     void saveDraft();
@@ -96,7 +96,7 @@ public slots:
     void replyToAuthor(const QUrl &url);
     void replyToMailingList(const QUrl &url);
 
-private slots:
+private Q_SLOTS:
 
     void replyFetchResult(KJob *job);
     void forwardFetchResult (KJob *job);

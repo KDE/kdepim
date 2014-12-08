@@ -306,7 +306,7 @@ public:
     */
     void themesConfigurationCompleted();
 
-protected slots:
+protected Q_SLOTS:
     /**
     * Reloads the global configuration from the config files (so we assume it has changed)
     * The settings private to MessageList (like Themes or Aggregations) aren't reloaded.
@@ -319,7 +319,7 @@ protected slots:
     */
     void reloadAllWidgets();
 
-signals:
+Q_SIGNALS:
     void aggregationsChanged();
     void themesChanged();
 

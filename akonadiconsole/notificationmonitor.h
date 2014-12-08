@@ -32,7 +32,7 @@ class NotificationMonitor : public QWidget
 public:
     explicit NotificationMonitor(QWidget *parent);
 
-private slots:
+private Q_SLOTS:
     void contextMenu(const QPoint &pos);
     void slotSaveToFile();
 

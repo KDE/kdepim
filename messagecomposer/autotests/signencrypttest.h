@@ -27,7 +27,7 @@ class SignEncryptTest : public QObject
 {
     Q_OBJECT
 
-public slots:
+public Q_SLOTS:
     void initTestCase();
 
 private Q_SLOTS:

@@ -43,7 +43,7 @@ public:
     KSieveUi::VacationCreateScriptJob *writeScript();
     void setDefault();
 
-private slots:
+private Q_SLOTS:
     void slotGetResult(KManageSieve::SieveJob *job, bool success, const QString &script, bool active);
 
 private:

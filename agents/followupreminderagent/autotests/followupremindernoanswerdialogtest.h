@@ -26,7 +26,7 @@ class FollowupReminderNoAnswerDialogTest : public QObject
 public:
     explicit FollowupReminderNoAnswerDialogTest(QObject *parent = Q_NULLPTR);
     ~FollowupReminderNoAnswerDialogTest();
-private slots:
+private Q_SLOTS:
     void shouldHaveDefaultValues();
     void shouldAddItemInTreeList();
     void shouldItemHaveInfo();

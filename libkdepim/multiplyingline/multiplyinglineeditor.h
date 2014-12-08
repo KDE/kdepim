@@ -156,7 +156,7 @@ public:
     void setDynamicSizeHint(bool dynamic);
     bool dynamicSizeHint() const;
 
-signals:
+Q_SIGNALS:
     void focusUp();
     void focusDown();
     void completionModeChanged(KCompletion::CompletionMode);
@@ -164,7 +164,7 @@ signals:
     void lineDeleted(int pos);
     void lineAdded(KPIM::MultiplyingLine *);
 
-public slots:
+public Q_SLOTS:
     void setFocus();
     void setFocusTop();
     void setFocusBottom();

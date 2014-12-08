@@ -80,7 +80,7 @@ Q_SIGNALS:
 
 protected:
     bool eventFilter(QObject *object, QEvent *e) Q_DECL_OVERRIDE;
-private slots:
+private Q_SLOTS:
     void slotLockSearchClicked(bool locked);
     void slotSearchOptionChanged();
     void slotSearchEditTextEdited(const QString &text);

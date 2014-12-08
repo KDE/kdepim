@@ -59,11 +59,11 @@ public:
 
     ~MainWindow();
 
-signals:
+Q_SIGNALS:
     void mediaFilesUploaded(int count);
     void settingsChanged();
 
-private slots:
+private Q_SLOTS:
     void slotOpenCurrentBlogInBrowser();
     void slotSettingsChanged();
     void slotCreateNewPost();

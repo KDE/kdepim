@@ -30,7 +30,7 @@ class DbConsole : public QWidget
 public:
     explicit DbConsole(QWidget *parent = Q_NULLPTR);
 
-private slots:
+private Q_SLOTS:
     void execClicked();
     void copyCell();
 

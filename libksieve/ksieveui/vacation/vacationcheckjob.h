@@ -38,7 +38,7 @@ public:
 Q_SIGNALS:
     void scriptActive(bool active, const QString &serverName);
 
-private slots:
+private Q_SLOTS:
     void slotGetResult(KManageSieve::SieveJob *job, bool success, const QString &script, bool active);
 
 private:

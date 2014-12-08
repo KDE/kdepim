@@ -32,7 +32,7 @@ public:
     void next();
     void reject();
 
-private slots:
+private Q_SLOTS:
     void collectionChanged(const Akonadi::Collection &selectedCollection);
 
 private:

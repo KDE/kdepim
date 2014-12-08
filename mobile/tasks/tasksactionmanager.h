@@ -34,7 +34,7 @@ public:
   void setCalendar( const Akonadi::ETMCalendar::Ptr &calendar );
   void setItemSelectionModel( QItemSelectionModel *itemSelectionModel );
 
-public slots:
+public Q_SLOTS:
   void updateActions();
 
 private:

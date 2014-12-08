@@ -78,7 +78,7 @@ public:
     /**reimp*/ bool isValid() const;
     /**reimp*/ void printDebugInfo() const;
 
-signals:
+Q_SIGNALS:
     // used to indicate that the widgets were activated
     void startDateFocus(QObject *obj);
     void endDateFocus(QObject *obj);
@@ -93,7 +93,7 @@ signals:
     void endDateChanged(const QDate &newDate);
     void endTimeChanged(const QTime &newTime);
 
-private slots: /// General
+private Q_SLOTS: /// General
     void setTimeZonesVisibility(bool visible);
     void toggleTimeZoneVisibility();
     void updateStartTime(const QTime &newTime);
@@ -102,13 +102,13 @@ private slots: /// General
     void updateStartToolTips();
     void updateEndToolTips();
 
-private slots: /// Todo specific
+private Q_SLOTS: /// Todo specific
     void enableStartEdit(bool enable);
     void enableEndEdit(bool enable);
     void enableTimeEdits();
     bool isDirty(const KCalCore::Todo::Ptr &todo) const;
 
-private slots: /// Event specific
+private Q_SLOTS: /// Event specific
     bool isDirty(const KCalCore::Event::Ptr &event) const;
     bool isDirty(const KCalCore::Journal::Ptr &journal) const;
 

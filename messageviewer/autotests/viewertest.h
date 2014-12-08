@@ -24,7 +24,7 @@ class ViewerTest : public QObject
     Q_OBJECT
 public:
     ViewerTest();
-private slots:
+private Q_SLOTS:
     void shouldHaveDefaultValuesOnCreation();
     void shouldShowCreateTodoWidgetWhenActivateItAndWeHaveAMessage();
     void shouldShowCreateEventWidgetWhenActivateItAndWeHaveAMessage();

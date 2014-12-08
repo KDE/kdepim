@@ -47,7 +47,7 @@ public:
     explicit CertListView(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = 0);
     ~CertListView();
 
-public slots:
+public Q_SLOTS:
     void slotResult(const GpgME::KeyListResult &result);
     void slotStart();
 };

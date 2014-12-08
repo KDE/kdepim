@@ -178,7 +178,7 @@ public:
      */
     virtual void aboutToBeDeleted();
 
-signals:
+Q_SIGNALS:
     /**
       Emitted when the return/enter key is pressed
     */
@@ -203,10 +203,10 @@ signals:
       Emitted when the completion mode changes
     */
     void completionModeChanged(KCompletion::CompletionMode);
-public slots:
+public Q_SLOTS:
     void slotPropagateDeletion();
 
-protected slots:
+protected Q_SLOTS:
     void slotReturnPressed();
     void slotFocusUp();
     void slotFocusDown();

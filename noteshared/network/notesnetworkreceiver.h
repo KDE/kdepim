@@ -49,10 +49,10 @@ public:
     explicit NotesNetworkReceiver(QTcpSocket *);
     ~NotesNetworkReceiver();
 
-signals:
+Q_SIGNALS:
     void sigNoteReceived(const QString &, const QString &);
 
-private slots:
+private Q_SLOTS:
     void slotDataAvailable();
     void slotReceptionTimeout();
     void slotConnectionClosed();

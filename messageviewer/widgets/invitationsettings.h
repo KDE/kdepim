@@ -48,7 +48,7 @@ public:
     /*reimp*/ void doLoadFromGlobalSettings();
     void doResetToDefaultsOther();
 
-private slots:
+private Q_SLOTS:
     void slotLegacyBodyInvitesToggled(bool on);
 
 Q_SIGNALS:

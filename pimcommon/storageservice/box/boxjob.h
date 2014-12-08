@@ -53,7 +53,7 @@ public:
 Q_SIGNALS:
     void authorizationDone(const QString &refreshToken, const QString &token, qint64 expireTime);
 
-private slots:
+private Q_SLOTS:
     void slotSendDataFinished(QNetworkReply *reply);
     void slotRedirect(const QUrl &url);
 private:

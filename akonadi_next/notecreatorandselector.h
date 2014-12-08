@@ -58,7 +58,7 @@ public:
 private:
     void doCreateNote();
 
-private slots:
+private Q_SLOTS:
     void trySelectCollection();
     void noteCreationFinished(KJob *job);
     void trySelectNote();

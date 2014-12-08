@@ -53,7 +53,7 @@ Q_SIGNALS:
     void changeUrl(const InformationUrl &);
     void goHome();
 
-private slots:
+private Q_SLOTS:
     void slotGoBackClicked();
     void slotGoForwardClicked();
 

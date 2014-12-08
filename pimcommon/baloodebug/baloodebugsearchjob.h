@@ -40,7 +40,7 @@ Q_SIGNALS:
     void error(const QString &errorString);
     void result(const QString &text);
 
-private slots:
+private Q_SLOTS:
     void slotReadStandard();
     void slotReadError();
 

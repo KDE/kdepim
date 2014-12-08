@@ -37,7 +37,7 @@ public:
 
     void setRecentAddressConfig(KConfig *config);
 
-signals:
+Q_SIGNALS:
     void focusUp();
     void focusDown();
 
@@ -52,7 +52,7 @@ protected:
     void contextMenuEvent(QContextMenuEvent *e) Q_DECL_OVERRIDE;
 #endif
 
-private slots:
+private Q_SLOTS:
     void editRecentAddresses();
     void groupDropExpandResult(KJob *);
 

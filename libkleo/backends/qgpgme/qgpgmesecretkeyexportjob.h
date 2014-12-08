@@ -60,7 +60,7 @@ public:
     /*! \reimp from ExportJob */
     GpgME::Error start(const QStringList &patterns);
 
-private slots:
+private Q_SLOTS:
     /*! \reimp from Job */
     void slotCancel();
 

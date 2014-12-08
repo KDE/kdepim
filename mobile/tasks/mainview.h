@@ -52,7 +52,7 @@ class MainView : public KDeclarativeMainView
 
     void setConfigWidget( ConfigWidget *configWidget );
 
-  public slots:
+  public Q_SLOTS:
     void newTask();
     void newSubTask();
     void makeTaskIndependent();
@@ -63,7 +63,7 @@ class MainView : public KDeclarativeMainView
     void editIncidence( const Akonadi::Item &item );
     void saveAllAttachments();
 
-  private slots:
+  private Q_SLOTS:
     void finishEdit( QObject *editor );
     void fetchForSaveAllAttachmentsDone( KJob* job );
     void processActionFail( const Akonadi::Item &item, const QString &msg );

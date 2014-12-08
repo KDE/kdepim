@@ -40,13 +40,13 @@ public:
     explicit StorageServiceManagerMainWindow();
     ~StorageServiceManagerMainWindow();
 
-public slots:
+public Q_SLOTS:
     void slotSetStatusBarMessage(const QString &message);
 
 protected:
     void closeEvent(QCloseEvent *e) Q_DECL_OVERRIDE;
 
-private slots:
+private Q_SLOTS:
     void slotConfigure();
     void slotUpdateActions();
     void slotServiceRemoved(const QString &serviceName);

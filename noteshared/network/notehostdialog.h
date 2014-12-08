@@ -58,7 +58,7 @@ public:
      */
     quint16 port() const;
 
-private slots:
+private Q_SLOTS:
     void slotTextChanged(const QString &);
     void serviceSelected(const QModelIndex &);
 

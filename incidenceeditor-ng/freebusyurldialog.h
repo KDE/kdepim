@@ -40,7 +40,7 @@ class INCIDENCEEDITORS_NG_EXPORT FreeBusyUrlDialog : public QDialog
 public:
     explicit FreeBusyUrlDialog(AttendeeData::Ptr, QWidget *parent = Q_NULLPTR);
 
-public slots:
+public Q_SLOTS:
     void slotOk();
 
 private:

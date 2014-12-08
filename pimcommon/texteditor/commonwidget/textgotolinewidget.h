@@ -41,7 +41,7 @@ protected:
     bool event(QEvent *e) Q_DECL_OVERRIDE;
     void showEvent(QShowEvent *e) Q_DECL_OVERRIDE;
 
-private slots:
+private Q_SLOTS:
     void slotCloseBar();
     void slotGoToLine();
 

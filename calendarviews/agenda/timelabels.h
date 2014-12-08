@@ -79,7 +79,7 @@ public:
 
     QSize minimumSizeHint() const Q_DECL_OVERRIDE;
 
-private slots:
+private Q_SLOTS:
     /** update the position of the marker showing the mouse position */
     void mousePosChanged(const QPoint &pos);
 

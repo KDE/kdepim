@@ -34,7 +34,7 @@ public:
     explicit MergeContactDuplicateContactDialog(const Akonadi::Item::List &list, QWidget *parent = Q_NULLPTR);
     ~MergeContactDuplicateContactDialog();
 
-private slots:
+private Q_SLOTS:
     void slotDuplicateFound(const QList<Akonadi::Item::List> &duplicate);
 
 private:

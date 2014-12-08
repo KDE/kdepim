@@ -59,7 +59,7 @@ public:
 
     QList<qint32> listRemoveId() const;
 
-private slots:
+private Q_SLOTS:
     void customContextMenuRequested(const QPoint &pos);
 
 private:

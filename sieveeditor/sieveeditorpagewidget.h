@@ -54,7 +54,7 @@ Q_SIGNALS:
     void scriptModified(bool, SieveEditorPageWidget *);
     void modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode);
 
-private slots:
+private Q_SLOTS:
     void slotGetResult(KManageSieve::SieveJob *, bool success, const QString &script, bool isActive);
     void slotCheckSyntaxClicked();
     void slotPutResultDebug(KManageSieve::SieveJob *, bool success, const QString &errorMsg);

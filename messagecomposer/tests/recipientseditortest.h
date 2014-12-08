@@ -37,7 +37,7 @@ class Composer : public QWidget
 public:
     Composer(QWidget *parent);
 
-public slots:
+public Q_SLOTS:
     void slotClose();
 
 private:

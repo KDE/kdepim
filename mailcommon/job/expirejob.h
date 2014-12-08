@@ -50,7 +50,7 @@ public:
     virtual void execute();
     virtual void kill();
 
-private slots:
+private Q_SLOTS:
     void slotDoWork();
     void slotExpireDone(KJob *job);
     void slotMoveDone(KJob *job);

@@ -39,7 +39,7 @@ public:
 
     QString newName() const;
 
-private slots:
+private Q_SLOTS:
     void slotNameChanged(const QString &text);
 
 private:

@@ -45,7 +45,7 @@ public:
 public Q_SLOTS:
     void load();
 
-private slots:
+private Q_SLOTS:
     void slotAcceptConnection();
     void slotNewNote(const QString &name, const QString &text);
     void slotCheckAlarm();

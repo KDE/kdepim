@@ -33,7 +33,7 @@ class MainView : public KDeclarativeMainView
   public:
     explicit MainView( QWidget *parent = Q_NULLPTR );
 
-  public slots:
+  public Q_SLOTS:
     QString noteTitle( int row ) const;
     QString noteContent( int row ) const;
 

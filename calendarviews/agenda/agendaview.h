@@ -155,7 +155,7 @@ public:
 
     QVector<bool> busyDayMask() const;
 
-public slots:
+public Q_SLOTS:
     virtual void updateView();
     virtual void updateConfig();
 

@@ -44,7 +44,7 @@ Q_SIGNALS:
 protected:
     bool hasChanged();
 
-private slots:
+private Q_SLOTS:
     void slotApplySettingsClicked();
     void slotDefaultClicked();
     void slotStorageServiceChanged();

@@ -59,13 +59,13 @@ public:
     QDateTime date() const;
     Error *error() const;
 
-signals:
+Q_SIGNALS:
     void messageChanged();
 
-public slots:
+public Q_SLOTS:
     void loadMessage(const QUrl &url);
 
-private slots:
+private Q_SLOTS:
     void slotItemReceived(const Akonadi::Item::List &itemList);
 
 private:

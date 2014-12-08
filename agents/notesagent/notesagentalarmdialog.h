@@ -37,7 +37,7 @@ public:
     void addListAlarm(const Akonadi::Item::List &lstAlarm);
     void removeAlarm(const Akonadi::Item &note);
 
-private slots:
+private Q_SLOTS:
     void slotItemDoubleClicked(QListWidgetItem *item);
     void slotCustomContextMenuRequested(const QPoint &pos);
     void slotShowNote();

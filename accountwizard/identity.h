@@ -39,7 +39,7 @@ public:
     void create();
     void destroy();
 
-public slots:
+public Q_SLOTS:
     Q_SCRIPTABLE void setIdentityName(const QString &name);
     Q_SCRIPTABLE void setRealName(const QString &name);
     Q_SCRIPTABLE void setEmail(const QString &email);

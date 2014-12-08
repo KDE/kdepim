@@ -68,7 +68,7 @@ protected:
     QCheckBox *mIsSenderOrReceiverCheck;
     KComboBox *mMessageSortingCombo;
 
-protected slots:
+protected Q_SLOTS:
     void slotOkButtonClicked();
 };
 
@@ -160,7 +160,7 @@ private:
 
     void applyThemeColumnWidths();
 
-protected slots:
+protected Q_SLOTS:
     void slotHeaderContextMenuRequested(const QPoint &pos);
     void slotAddColumn();
     void slotColumnProperties();
@@ -214,13 +214,13 @@ public:
     Core::Theme *editedTheme() const;
 
     void commit();
-signals:
+Q_SIGNALS:
     void themeNameChanged();
 
 private:
     void fillViewHeaderPolicyCombo();
 
-protected slots:
+protected Q_SLOTS:
     void slotNameEditTextEdited(const QString &newName);
     void slotIconSizeSpinBoxValueChanged(int val);
 

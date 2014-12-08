@@ -55,7 +55,7 @@ public:
     virtual ~AttachmentEditDialog();
     void accept();
 
-protected slots:
+protected Q_SLOTS:
     void inlineChanged(int state);
     void urlChanged(const QUrl &url);
     void urlChanged(const QString &url);

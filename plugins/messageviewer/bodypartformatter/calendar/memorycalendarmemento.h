@@ -43,11 +43,11 @@ public:
 
     virtual void detach();
 
-signals:
+Q_SIGNALS:
     // TODO: Factor our update and detach into base class
     void update(MessageViewer::Viewer::UpdateMode);
 
-private slots:
+private Q_SLOTS:
     void slotCalendarLoaded(bool success, const QString &errorMessage);
     void finalize();
 

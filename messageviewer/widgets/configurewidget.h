@@ -53,7 +53,7 @@ public:
     void writeConfig();
     void readConfig();
 
-signals:
+Q_SIGNALS:
 
     /**
     * Emitted when the user changes the setting in some widget. Useful to enable the "Apply"

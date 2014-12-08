@@ -50,7 +50,7 @@ public:
     void setCurrentPage(int index);
     void clearFields();
 
-public slots:
+public Q_SLOTS:
     void slotReloadCategoryList();
     void slotLoadCategoryListFromDB(int blog_id);
     void slotUpdateEntries(int count = 0);
@@ -65,12 +65,12 @@ public slots:
     void clearEntries();
     void setDateTimeNow();
 
-signals:
+Q_SIGNALS:
     void sigEntrySelected(BilboPost &post, int blog_id);
     void sigError(const QString &);
     void sigBusy(bool isBusy);
 
-protected slots:
+protected Q_SLOTS:
     void slotPostRemoved(int blog_id, const BilboPost &post);
     void openPostInBrowser();
     void copyPostTitle();

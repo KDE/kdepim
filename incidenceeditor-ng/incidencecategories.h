@@ -59,7 +59,7 @@ public:
     /**reimp*/
     void printDebugInfo() const;
 
-private slots:
+private Q_SLOTS:
     void selectCategories();
     void onSelectionChanged(const QStringList &);
 

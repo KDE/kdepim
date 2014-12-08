@@ -32,11 +32,11 @@ public:
 
     void setFolder(const QUrl &url);
 
-public slots:
+public Q_SLOTS:
     void slotShowWarning();
     void slotHideWarning();
 
-private slots:
+private Q_SLOTS:
     void slotOpenAttachmentFolder();
     void slotTimeOut();
     void slotExplicitlyClosed();

@@ -47,7 +47,7 @@ public:
 
     void setMainWindow(QWidget *mainWindow);
 
-private slots:
+private Q_SLOTS:
     void slotAtmDecryptWithChiasmusResult(const GpgME::Error &err, const QVariant &result);
     void slotAtmDecryptWithChiasmusUploadResult(KJob *job);
 private:

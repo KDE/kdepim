@@ -84,7 +84,7 @@ public:
     */
     void commit();
 
-signals:
+Q_SIGNALS:
     /**
     * This is triggered when the aggregation name changes in the editor text field.
     * It's connected to the Aggregation configuration dialog which updates
@@ -104,7 +104,7 @@ private:
     void fillFillViewStrategyCombo();
     void setReadOnly(bool readOnly);
 
-private slots:
+private Q_SLOTS:
 
     // Internal handlers for editing element interaction
 

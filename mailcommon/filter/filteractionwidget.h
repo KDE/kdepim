@@ -89,7 +89,7 @@ public:
 
     void updateAddRemoveButton(bool addButtonEnabled, bool removeButtonEnabled);
 
-signals:
+Q_SIGNALS:
     void filterModified();
     void addWidget(QWidget *);
     void removeWidget(QWidget *);
@@ -148,7 +148,7 @@ public Q_SLOTS:
     void slotAddWidget(QWidget *);
     void slotRemoveWidget(QWidget *);
 
-signals:
+Q_SIGNALS:
     void filterModified();
 
 protected:

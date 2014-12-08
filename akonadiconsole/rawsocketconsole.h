@@ -30,7 +30,7 @@ class RawSocketConsole : public QWidget
 public:
     explicit RawSocketConsole(QWidget *parent = Q_NULLPTR);
 
-private slots:
+private Q_SLOTS:
     void execClicked();
     void dataReceived();
     void connected();

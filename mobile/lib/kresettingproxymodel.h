@@ -36,9 +36,9 @@ public:
 
   virtual void setSourceModel(QAbstractItemModel* sourceModel);
 
-public slots:
+public Q_SLOTS:
 
-private slots:
+private Q_SLOTS:
   void slotBeginReset();
   void slotEndReset();
 

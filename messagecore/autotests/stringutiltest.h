@@ -25,7 +25,7 @@ class StringUtilTest : public QObject
 {
     Q_OBJECT
 
-private slots:
+private Q_SLOTS:
     void test_SmartQuote_data();
     void test_SmartQuote();
     void test_signatureStripping();

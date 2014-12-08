@@ -49,7 +49,7 @@ Q_SIGNALS:
     void result(bool);
     void scriptActive(bool activated, const QString &serverName);
 
-private slots:
+private Q_SLOTS:
     void slotPutActiveResult(KManageSieve::SieveJob *job, bool success);
     void slotPutInactiveResult(KManageSieve::SieveJob *job, bool success);
 

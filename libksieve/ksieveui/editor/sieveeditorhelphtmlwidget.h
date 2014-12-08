@@ -39,7 +39,7 @@ Q_SIGNALS:
     void progressIndicatorPixmapChanged(KSieveUi::SieveEditorHelpHtmlWidget *widget, const QPixmap &);
     void loadFinished(KSieveUi::SieveEditorHelpHtmlWidget *widget, bool success);
 
-private slots:
+private Q_SLOTS:
     void slotTitleChanged(const QString &);
     void slotFinished(bool b);
     void slotLoadStarted();

@@ -45,13 +45,13 @@ public:
 
     MessageComposer::RecipientsPicker *picker() const;
 
-public slots:
+public Q_SLOTS:
     void setTotal(int recipients, int lines);
     void setFocus();
     void updateTotalToolTip();
     void pickRecipient();
 
-signals:
+Q_SIGNALS:
     void pickedRecipient(const Recipient &, bool &);
     void saveDistributionList();
 

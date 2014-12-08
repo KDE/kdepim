@@ -74,7 +74,7 @@ public: /// Methods
 
   void openHtml( const QString &path );
 
-public slots:
+public Q_SLOTS:
   void initializeStateSaver();
   void saveState();
   void restoreState();

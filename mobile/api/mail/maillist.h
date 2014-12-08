@@ -41,10 +41,10 @@ public:
 
     MailListModel *model() const;
 
-public slots:
+public Q_SLOTS:
     void loadCollection( const QUrl &akonadiUrl );
 
-private slots:
+private Q_SLOTS:
     void slotItemsReceived( const Akonadi::Item::List &itemList );
 
 private:

@@ -42,7 +42,7 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
-public slots:
+public Q_SLOTS:
     void reload();
     void writeConfig();
 

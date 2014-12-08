@@ -91,7 +91,7 @@ public:
 
     virtual void addNewEntry();
     virtual QString modifyEntry(const QString &text);
-signals:
+Q_SIGNALS:
     /** Connected slots can alter the argument to be added or set the
       argument to QString() to suppress adding.
     */
@@ -101,7 +101,7 @@ signals:
 protected:
     void insertNewEntry(const QString &newEntry);
 
-protected slots:
+protected Q_SLOTS:
     void slotAdd();
     void slotRemove();
     void slotModify();

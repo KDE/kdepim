@@ -57,7 +57,7 @@ public:
     /*! \reimp from RefreshKeysJob */
     GpgME::Error start(const QStringList &patterns);
 
-private slots:
+private Q_SLOTS:
     /*! \reimp from Job */
     void slotCancel();
 

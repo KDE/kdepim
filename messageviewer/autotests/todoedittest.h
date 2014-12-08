@@ -26,7 +26,7 @@ class TodoEditTest : public QObject
 public:
     TodoEditTest();
 
-private slots:
+private Q_SLOTS:
     void shouldNotEmitWhenMessageIsNotChanged();
     void shouldHaveDefaultValuesOnCreation();
     void shouldEmitCollectionChanged();

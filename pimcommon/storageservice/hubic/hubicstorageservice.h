@@ -68,7 +68,7 @@ public:
     void shutdownService();
     bool hasValidSettings() const;
 
-private slots:
+private Q_SLOTS:
     void slotAuthorizationDone(const QString &refreshToken, const QString &token, qint64 expireTime);
     void slotAuthorizationFailed(const QString &errorMessage);
 

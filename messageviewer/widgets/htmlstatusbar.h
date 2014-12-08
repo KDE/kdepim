@@ -97,7 +97,7 @@ public:
     // Update the status bar, for example when the color scheme changed.
     void update();
 
-public slots:
+public Q_SLOTS:
     void setHtmlMode();
     /** Switch to "normal mode". */
     void setNormalMode();
@@ -108,7 +108,7 @@ public slots:
     /** Switch to mode @p m */
     void setMode(Util::HtmlMode m, UpdateMode mode = Update);
 
-signals:
+Q_SIGNALS:
     /** The user has clicked the status bar. */
     void clicked();
 

@@ -60,7 +60,7 @@ public:
 
     void updateQuickSearchText(const QString &text);
 
-public slots:
+public Q_SLOTS:
     void slotFocusQuickSearch();
 
 Q_SIGNALS:

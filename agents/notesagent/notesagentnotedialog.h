@@ -35,7 +35,7 @@ public:
 
     void setNoteId(Akonadi::Item::Id id);
 
-private slots:
+private Q_SLOTS:
     void slotFetchItem(KJob *job);
 
 private:

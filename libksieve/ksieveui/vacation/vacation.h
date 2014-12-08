@@ -56,13 +56,13 @@ protected:
     QUrl findURL(QString &serverName) const;
     void handlePutResult(KManageSieve::SieveJob *job, bool success, bool);
 
-signals:
+Q_SIGNALS:
     void result(bool success);
     // indicates if the vacation script is active or not
     void scriptActive(bool active, const QString &serverName);
     void requestEditVacation();
 
-protected slots:
+protected Q_SLOTS:
     void slotGetResult(KManageSieve::SieveJob *job, bool success,
                        const QString &script, bool active);
     void slotDialogOk();

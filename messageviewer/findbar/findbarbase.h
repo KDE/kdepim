@@ -51,7 +51,7 @@ protected:
     void setFoundMatch(bool match);
     QMenu *optionsMenu();
 
-public slots:
+public Q_SLOTS:
     void findNext();
     void findPrev();
     void autoSearch(const QString &str);
@@ -61,7 +61,7 @@ public slots:
 Q_SIGNALS:
     void hideFindBar();
 
-protected slots:
+protected Q_SLOTS:
     void caseSensitivityChanged(bool);
     void slotHighlightAllChanged(bool);
     void slotClearSearch();

@@ -107,10 +107,10 @@ public:
         return mOutput;
     }
 
-public slots:
+public Q_SLOTS:
     void slotCancel();
 
-private slots:
+private Q_SLOTS:
     GpgME::Error finished();
     void slotTimeout();
 

@@ -55,10 +55,10 @@ private:
     QTimer mExpandTimer;
     bool mIgnoreNextMouseRelease;
 
-signals:
+Q_SIGNALS:
     void visibleColumnCountChanged();
 
-private slots:
+private Q_SLOTS:
     void toggleColumnHidden(QAction *action);
     void expandParent();
 };

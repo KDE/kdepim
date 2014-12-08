@@ -65,7 +65,7 @@ protected:
     */
     KTextEdit *descriptionEdit() const;
 
-protected slots:
+protected Q_SLOTS:
     /**
     * Handles editing of the name field.
     * Pure virtual slot. Derived classes must provide an implementation.

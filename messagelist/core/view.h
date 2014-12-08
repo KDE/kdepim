@@ -612,7 +612,7 @@ protected:
     */
     void growOrShrinkExistingSelection(const QModelIndex &newSelectedIndex, bool movingUp);
 
-public slots:
+public Q_SLOTS:
     /**
     * Collapses all the group headers (if present in the current Aggregation)
     */
@@ -635,7 +635,7 @@ public slots:
     */
     void slotCollapseCurrentItem();
 
-protected slots:
+protected Q_SLOTS:
 
     /**
     * Handles context menu requests for the header.

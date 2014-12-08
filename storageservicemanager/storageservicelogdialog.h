@@ -39,7 +39,7 @@ public:
 Q_SIGNALS:
     void clearLog();
 
-private slots:
+private Q_SLOTS:
     void slotSaveAs();
     void slotClearLog();
     void slotTextChanged();

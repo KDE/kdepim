@@ -51,14 +51,14 @@ public:
     explicit VisualFreeBusyWidget(FreeBusyItemModel *model, int spacing = 8, QWidget *parent = Q_NULLPTR);
     ~VisualFreeBusyWidget();
 
-public slots:
+public Q_SLOTS:
     void slotUpdateIncidenceStartEnd(const KDateTime &, const KDateTime &);
 
-signals:
+Q_SIGNALS:
     void dateTimesChanged(const KDateTime &, const KDateTime &);
     void manualReload();
 
-protected slots:
+protected Q_SLOTS:
     void slotScaleChanged(int);
     void slotCenterOnStart() ;
     void slotZoomToTime();
@@ -66,7 +66,7 @@ protected slots:
     void showAttendeeStatusMenu();
     void slotIntervalColorRectangleMoved(const KDateTime &start, const KDateTime &end);
 
-private slots:
+private Q_SLOTS:
     void splitterMoved();
 
 private:

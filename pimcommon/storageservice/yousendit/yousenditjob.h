@@ -51,7 +51,7 @@ public:
 Q_SIGNALS:
     void authorizationDone(const QString &password, const QString &username, const QString &token);
 
-private slots:
+private Q_SLOTS:
     void slotSendDataFinished(QNetworkReply *reply);
 
 private:

@@ -52,7 +52,7 @@ public Q_SLOTS:
     void slotInsertCommand(const QString &cmd, int adjustCursor = 0);
     void slotTextChanged();
 
-signals:
+Q_SIGNALS:
     void changed();
 
 private:

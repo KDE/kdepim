@@ -42,7 +42,7 @@ public:
 
     QString delegate() const;
     bool rsvp() const;
-public slots:
+public Q_SLOTS:
     void slotTextChanged(const QString &text);
 private:
     KPIM::AddresseeLineEdit *mDelegate;

@@ -142,7 +142,7 @@ public:
 
     QStringList selectedFilterId(SearchRule::RequiredPart &requiredPart, const QString &resource) const;
 
-signals:
+Q_SIGNALS:
     /**
      * Emitted when a new filter has been selected by the user or if the
      * current filter has changed after a 'new' or 'delete' operation.
@@ -189,7 +189,7 @@ signals:
      */
     void filterOrderAltered();
 
-public slots:
+public Q_SLOTS:
     /**
      * Called when the name of a filter might have changed (e.g. through
      * changing the first rule in SearchPatternEdit). Updates the corresponding
@@ -200,7 +200,7 @@ public slots:
     void slotAccepted();
     void slotApplied();
 
-protected slots:
+protected Q_SLOTS:
     /**
      * Called when the user clicks on a filter in the filter list.
      * Calculates the corresponding filter and emits the filterSelected signal.
@@ -361,7 +361,7 @@ public:
         mFilterList->createFilter(field, value);
     }
 
-public slots:
+public Q_SLOTS:
     /**
      * Internally connected to KMFilterListBox::filterSelected.
      * Just does a simple check and then calls
@@ -373,7 +373,7 @@ public slots:
     /** Override QDialog::accept to allow disabling close */
     virtual void accept();
 
-protected slots:
+protected Q_SLOTS:
     void slotApplicabilityChanged();
     void slotApplicableAccountsChanged();
     void slotStopProcessingButtonToggled(bool aChecked);

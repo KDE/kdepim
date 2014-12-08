@@ -28,7 +28,7 @@ class DynamicPage : public Page
 public:
     explicit DynamicPage(const QString &uiFile, KAssistantDialog *parent = Q_NULLPTR);
 
-public slots:
+public Q_SLOTS:
     /// returns the top-level widget of the UI file
     Q_SCRIPTABLE QObject *widget() const;
 

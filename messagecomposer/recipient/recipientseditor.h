@@ -85,11 +85,11 @@ public:
      */
     void setRecentAddressConfig(KConfig *config);
 
-public slots:
+public Q_SLOTS:
     void selectRecipients();
     void saveDistributionList();
 
-protected slots:
+protected Q_SLOTS:
     void slotPickedRecipient(const Recipient &, bool &tooManyAddress);
     void slotLineAdded(KPIM::MultiplyingLine *);
     void slotLineDeleted(int pos);

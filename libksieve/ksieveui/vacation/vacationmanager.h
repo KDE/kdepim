@@ -44,7 +44,7 @@ Q_SIGNALS:
     void updateVacationScriptStatus(bool, const QString &);
     void editVacation();
 
-private slots:
+private Q_SLOTS:
     void slotDialogCanceled();
     void slotDialogOk();
 

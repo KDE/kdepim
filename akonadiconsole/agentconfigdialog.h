@@ -34,7 +34,7 @@ public:
     explicit AgentConfigDialog(QWidget *parent = Q_NULLPTR);
     void setAgentInstance(const Akonadi::AgentInstance &instance);
 
-private slots:
+private Q_SLOTS:
     void reconfigure();
 
 private:

@@ -30,7 +30,7 @@ public:
     ~Ldap();
     void create();
     void destroy();
-public slots:
+public Q_SLOTS:
     Q_SCRIPTABLE void setUser(const QString &name);
     Q_SCRIPTABLE void setServer(const QString &server);
     Q_SCRIPTABLE void setAuthenticationMethod(const QString &meth);

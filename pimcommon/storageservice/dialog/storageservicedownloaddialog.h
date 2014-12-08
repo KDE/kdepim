@@ -44,7 +44,7 @@ public:
 protected:
     void closeEvent(QCloseEvent *e) Q_DECL_OVERRIDE;
 
-private slots:
+private Q_SLOTS:
     void slotItemActivated(QTreeWidgetItem *item, int column);
     void slotDownloadFile();
 

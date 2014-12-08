@@ -32,7 +32,7 @@ public:
     explicit MergeContactsDialog(const Akonadi::Item::List &lst, QWidget *parent = Q_NULLPTR);
     ~MergeContactsDialog();
 
-private slots:
+private Q_SLOTS:
     void slotMergeContact(const Akonadi::Item::List &lst, const Akonadi::Collection &col);
 
     void slotMergeContactFinished(const Akonadi::Item &item);

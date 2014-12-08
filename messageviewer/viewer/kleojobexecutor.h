@@ -66,7 +66,7 @@ public:
     }
     QString auditLogAsHtml() const;
 
-private slots:
+private Q_SLOTS:
     void verificationResult(const GpgME::VerificationResult &result);
     void verificationResult(const GpgME::VerificationResult &result, const QByteArray &plainText);
     void decryptResult(const GpgME::DecryptionResult &decryptionresult,

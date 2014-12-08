@@ -32,7 +32,7 @@ class CalendarInterface : public QObject
   Q_OBJECT
 public:
     explicit CalendarInterface(QObject * parent = Q_NULLPTR) :QObject(parent){}
-public slots:
+public Q_SLOTS:
     void showDate(const QDate& date);
     void openEventEditor( const QString &);
     void openEventEditor( const QString &summary,
@@ -89,7 +89,7 @@ public slots:
     void goDate( const QDate &);
     void goDate( const QString &);
 
-signals:
+Q_SIGNALS:
     void showDateSignal(const QVariant& date);
     void showEventViewSignal();
     void openIncidenceEditorSignal( const QString &summary,

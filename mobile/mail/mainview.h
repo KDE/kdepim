@@ -143,7 +143,7 @@ class MainView : public KDeclarativeMainView
   Q_SIGNALS:
     void currentCollectionChanged();
 
-  protected slots:
+  protected Q_SLOTS:
     void forwardMessage();
     void forwardAsAttachment();
     void redirect();
@@ -187,7 +187,7 @@ class MainView : public KDeclarativeMainView
 
     virtual bool doNotUseFilterLineEditInCurrentState() const;
 
-  private slots:
+  private Q_SLOTS:
     void qmlInitialized( QDeclarativeView::Status status );
     void sendAgainFetchResult( KJob *job );
     void replyFetchResult( KJob *job );

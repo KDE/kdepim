@@ -46,7 +46,7 @@ Q_SIGNALS:
     void changed();
     void serviceRemoved(const QString &serviceName);
 
-private slots:
+private Q_SLOTS:
     void slotServiceSelected();
 
     void slotAddService();

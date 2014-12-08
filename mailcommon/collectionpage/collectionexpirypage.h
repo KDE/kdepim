@@ -51,7 +51,7 @@ public:
 protected:
     void init();
 
-protected slots:
+protected Q_SLOTS:
     void slotUpdateControls();
     void slotCollectionModified(KJob *job);
     void slotChanged();

@@ -25,7 +25,7 @@ class HTMLQuoteColorerTester : public QObject
 {
     Q_OBJECT
 
-private slots:
+private Q_SLOTS:
     void test_QuoteColor_data();
     void test_QuoteColor();
 };

@@ -40,7 +40,7 @@ public:
     void clearRanks();
     void setTopLevelOrder(const QStringList &list);
 
-public slots:
+public Q_SLOTS:
     void slotSpecialCollectionsChanged();
 
 private:

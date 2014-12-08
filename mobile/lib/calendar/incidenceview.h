@@ -73,11 +73,11 @@ class IncidenceView : public KDeclarativeFullScreenView, public IncidenceEditorN
     virtual Akonadi::Collection selectedCollection() const;
     virtual void reject( RejectReason reason, const QString &errorMessage = QString() );
 
-  signals:
+  Q_SIGNALS:
     void showCalendarWidget( int day, int month, int year );
     void showClockWidget( int hour, int minute );
 
-  public slots:
+  public Q_SLOTS:
     void save();   /// Ok clicked in the user interface
     void cancel(); /// Cancel clicked in the user interface
     void showCalendar( QObject *obj );
@@ -85,7 +85,7 @@ class IncidenceView : public KDeclarativeFullScreenView, public IncidenceEditorN
     void showClock( QObject *obj );
     void setNewTime( int hour, int minute );
 
-  private slots:
+  private Q_SLOTS:
     void slotSaveFinished( IncidenceEditorNG::EditorItemManager::SaveAction action );
     void slotSaveFailed( IncidenceEditorNG::EditorItemManager::SaveAction action,
                          const QString &message );

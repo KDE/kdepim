@@ -253,11 +253,11 @@ public:
         return mResourceColor;
     }
 
-signals:
+Q_SIGNALS:
     void removeAgendaItem(AgendaItem::QPtr);
     void showAgendaItem(AgendaItem::QPtr);
 
-public slots:
+public Q_SLOTS:
     void updateIcons();
     void select(bool selected = true);
     void addAttendee(const QString &);

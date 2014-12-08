@@ -56,13 +56,13 @@ public:
 
     void setActions(AttendeeLine::AttendeeActions actions);
 
-signals:
+Q_SIGNALS:
     void countChanged(int);
     void changed(const KCalCore::Attendee::Ptr &oldAttendee,
                  const KCalCore::Attendee::Ptr &newAttendee);
     void editingFinished(KPIM::MultiplyingLine *);
 
-protected slots:
+protected Q_SLOTS:
     void slotLineAdded(KPIM::MultiplyingLine *);
     void slotCalculateTotal();
 };

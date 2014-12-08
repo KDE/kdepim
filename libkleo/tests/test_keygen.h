@@ -51,7 +51,7 @@ public:
     KeyGenerator(QWidget *parent = Q_NULLPTR);
     ~KeyGenerator();
 
-public slots:
+public Q_SLOTS:
     void slotStartKeyGeneration();
     void slotResult(const GpgME::KeyGenerationResult &res, const QByteArray &keyData);
 private:

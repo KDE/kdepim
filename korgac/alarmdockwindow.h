@@ -39,17 +39,17 @@ public:
 
     void enableAutostart(bool enabled);
 
-public slots:
+public Q_SLOTS:
     void toggleAlarmsEnabled(bool checked);
     void toggleAutostart(bool checked);
     void slotUpdate(int reminders);
 
-signals:
+Q_SIGNALS:
     void quitSignal();
     void suspendAllSignal();
     void dismissAllSignal();
 
-protected slots:
+protected Q_SLOTS:
     virtual void activate(const QPoint &pos);
     void slotQuit();
     void slotSuspendAll();

@@ -90,21 +90,21 @@ protected:
 
     void mousePressEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
 
-public slots:
+public Q_SLOTS:
     void slotFocusNextFolder();
     void slotFocusPrevFolder();
     void slotSelectFocusFolder();
     void slotFocusFirstFolder();
     void slotFocusLastFolder();
 
-protected slots:
+protected Q_SLOTS:
     void slotHeaderContextMenuRequested(const QPoint &);
     void slotHeaderContextMenuChangeIconSize(bool);
     void slotHeaderContextMenuChangeHeader(bool);
     void slotHeaderContextMenuChangeToolTipDisplayPolicy(bool);
     void slotHeaderContextMenuChangeSortingPolicy(bool);
 
-signals:
+Q_SIGNALS:
     void changeTooltipsPolicy(FolderTreeWidget::ToolTipDisplayPolicy);
     void manualSortingChanged(bool actif);
     void prefereCreateNewTab(bool);

@@ -57,7 +57,7 @@ public:
 Q_SIGNALS:
     void addressChanged(const QString &);
 
-private slots:
+private Q_SLOTS:
     void slotAddressSelection();
 
 private:

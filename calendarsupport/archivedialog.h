@@ -55,18 +55,18 @@ public:
                   QWidget *parent = Q_NULLPTR);
     ~ArchiveDialog();
 
-signals:
+Q_SIGNALS:
     // connected by KODialogManager to CalendarView
     void eventsDeleted();
     void autoArchivingSettingsModified();
 
-protected slots:
+protected Q_SLOTS:
     void slotEventsDeleted();
     void slotUser1();
     void slotEnableUser1();
     void slotActionChanged();
 
-private slots:
+private Q_SLOTS:
     void showWhatsThis();
 
 private:

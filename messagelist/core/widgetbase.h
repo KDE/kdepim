@@ -139,7 +139,7 @@ public:
     void themeMenuAboutToShow(QMenu *menu);
     void aggregationMenuAboutToShow(QMenu *menu);
 
-public slots:
+public Q_SLOTS:
 
     /**
     * This is called to setup the status filter's KComboBox.
@@ -241,7 +241,7 @@ Q_SIGNALS:
     */
     void statusMessage(const QString &message);
 
-protected slots:
+protected Q_SLOTS:
     /**
     * This is called by Manager when the option sets stored within have changed.
     */

@@ -215,7 +215,7 @@ public:
     void setSendLaterInfo(SendLater::SendLaterInfo *info);
     SendLater::SendLaterInfo *sendLaterInfo() const;
 
-public slots:
+public Q_SLOTS:
 
     void identityChanged(const KIdentityManagement::Identity &ident, const KIdentityManagement::Identity &oldIdent, bool msgCleared = false);
 
@@ -224,7 +224,7 @@ public slots:
     */
     void autoSaveMessage();
 
-signals:
+Q_SIGNALS:
     /**
     * Message sending completed successfully.
     */
@@ -248,7 +248,7 @@ signals:
     void disableHtml(MessageComposer::ComposerViewBase::Confirmation);
     void enableHtml();
 
-private slots:
+private Q_SLOTS:
     void slotEmailAddressResolved(KJob *);
     void slotSendComposeResult(KJob *);
     void slotQueueResult(KJob *job);

@@ -49,7 +49,7 @@ public:
     TextType largestFittingTextType() const;
     void setFixedType(TextType type);
 
-public slots:
+public Q_SLOTS:
     void useShortText();
     void useLongText();
     void useExtensiveText();

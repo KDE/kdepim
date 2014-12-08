@@ -36,14 +36,14 @@ public:
     void setAttachments(const QList<KTNEFAttach *> &list);
     QList<KTNEFAttach *> getSelection();
 
-signals:
+Q_SIGNALS:
     void dragRequested(const QList<KTNEFAttach *> &list);
 
 protected:
     void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
     void startDrag(Qt::DropActions dropAction) Q_DECL_OVERRIDE;
 
-private slots:
+private Q_SLOTS:
     void adjustColumnWidth();
 
 private:

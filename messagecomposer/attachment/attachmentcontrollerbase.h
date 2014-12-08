@@ -62,7 +62,7 @@ public:
     bool attachOwnVcard() const;
     void setIdentityHasOwnVcard(bool state);
 
-public slots:
+public Q_SLOTS:
     /// model sets these
     void setEncryptEnabled(bool enabled);
     void setSignEnabled(bool enabled);
@@ -85,7 +85,7 @@ public slots:
     void showAttachPublicKeyDialog();
     virtual void attachMyPublicKey() {}
 
-signals:
+Q_SIGNALS:
     void actionsCreated();
     void refreshSelection();
     void showAttachment(KMime::Content *content, const QByteArray &charset);
@@ -103,7 +103,7 @@ protected:
 private:
     void attachFileDirectory(const QList<QUrl> &urls, const QString &encoding);
 
-private slots:
+private Q_SLOTS:
     void slotPutResult(KJob *job);
     void slotOpenWithDialog();
     void slotOpenWithAction(QAction *act);

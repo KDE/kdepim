@@ -38,7 +38,7 @@ Q_SIGNALS:
     void finishTaskDone();
     void finishTaskFailed();
 
-private slots:
+private Q_SLOTS:
     void slotItemFetchJobDone(KJob *job);
     void slotItemModifiedResult(KJob *job);
 

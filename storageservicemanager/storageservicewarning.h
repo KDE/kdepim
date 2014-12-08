@@ -32,7 +32,7 @@ public:
     void addLog(const QString &log);
 
     void showLog();
-private slots:
+private Q_SLOTS:
     void slotShowDetails(const QString &content);
     void slotClearLog();
 

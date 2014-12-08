@@ -39,7 +39,7 @@ public:
     ~ConfigFile();
     void create();
     void destroy();
-public slots:
+public Q_SLOTS:
     Q_SCRIPTABLE void write();
     Q_SCRIPTABLE void setName(const QString &name);
     Q_SCRIPTABLE void setConfig(const QString &group, const QString &key, const QString &value);

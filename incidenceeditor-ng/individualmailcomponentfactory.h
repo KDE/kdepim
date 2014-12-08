@@ -40,7 +40,7 @@ public:
     explicit IndividualMessageQueueJob(const KIdentityManagement::Identity &identity, const KCalCore::Attendee::List &update, const KCalCore::Attendee::List &edit, QObject *parent);
 
     virtual void start();
-private slots:
+private Q_SLOTS:
     void startQueueJob(const QStringList &to, const QStringList &cc);
     void startComposerJob(const QStringList &to, const QStringList &cc);
     void handleJobFinished(KJob *job);
@@ -79,7 +79,7 @@ public:
                                             const KGuiItem &buttonYes = KGuiItem(i18nc("@action:button dialog positive answer", "Send Email")),
                                             const KGuiItem &buttonNo = KGuiItem(i18nc("@action:button dialog negative answer", "Do Not Send")));
 
-signals:
+Q_SIGNALS:
     void setEdit(const KCalCore::Incidence::Ptr &incidence, const KCalCore::Attendee::List &edit);
     void setUpdate(const KCalCore::Incidence::Ptr &incidence, const KCalCore::Attendee::List &update);
 
@@ -88,7 +88,7 @@ protected:
                     Action action,
                     const KGuiItem &buttonYes, const KGuiItem &buttonNo);
 
-private slots:
+private Q_SLOTS:
     void onDialogClosed(int result);
 private:
     IndividualMailDialog *mDialog;
@@ -105,7 +105,7 @@ public:
     virtual Akonadi::ITIPHandlerDialogDelegate *createITIPHanderDialogDelegate(const KCalCore::Incidence::Ptr &incidence,
             KCalCore::iTIPMethod method, QWidget *parent);
 
-public slots:
+public Q_SLOTS:
     void onSetEdit(const KCalCore::Incidence::Ptr &incidence, const KCalCore::Attendee::List &edit);
     void onSetUpdate(const KCalCore::Incidence::Ptr &incidence, const KCalCore::Attendee::List &update);
 

@@ -61,7 +61,7 @@ public:
 
     //bool closeStatus();
 
-signals:
+Q_SIGNALS:
     void status(Kleo::GnuPGProcessBase *proc, const QString &type, const QStringList &args);
 
 protected:
@@ -74,7 +74,7 @@ protected:
 
     //int childStatus( int fd );
 
-private slots:
+private Q_SLOTS:
     //void slotChildStatus( int fd );
 
 private:

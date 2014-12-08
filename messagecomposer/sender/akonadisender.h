@@ -65,7 +65,7 @@ private:
     */
     void sendOrQueueMessage(const KMime::Message::Ptr &msg, MessageComposer::MessageSender::SendMethod method = MessageComposer::MessageSender::SendDefault);
 
-private slots:
+private Q_SLOTS:
     void queueJobResult(KJob *job);
 
 private:

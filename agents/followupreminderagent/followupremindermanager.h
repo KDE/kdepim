@@ -38,7 +38,7 @@ public:
     void checkFollowUp(const Akonadi::Item &item, const Akonadi::Collection &col);
 
     QString printDebugInfo();
-private slots:
+private Q_SLOTS:
     void slotCheckFollowUpFinished(const QString &messageId, Akonadi::Item::Id id);
 
     void slotFinishTaskDone();

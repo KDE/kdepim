@@ -172,7 +172,7 @@ Q_SIGNALS:
     void downLoadFileFailed(const QString &serviceName, const QString &folderName);
     void uploadFileFailed(const QString &serviceName, const QString &folderName);
 
-protected slots:
+protected Q_SLOTS:
     void slotActionFailed(const QString &error);
     void slotAccountInfoDone(const PimCommon::AccountInfo &info);
     void slotShareLinkDone(const QString &url);
@@ -216,7 +216,7 @@ protected:
     QPointer<QNetworkReply> mDownloadReply;
     bool mNeedToReadConfigFirst;
 
-private slots:
+private Q_SLOTS:
     void slotNextAction();
 
 private:

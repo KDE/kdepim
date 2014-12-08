@@ -42,7 +42,7 @@ public:
     QString fingerprint() const;
     void setFingerprint(const QString &fingerprint);
 
-protected slots:
+protected Q_SLOTS:
     void doStart() Q_DECL_OVERRIDE;
 
 private:

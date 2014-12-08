@@ -53,7 +53,7 @@ public:
     void setTextToSpeechSupport(bool b);
     bool textToSpeechSupport() const;
 
-public slots:
+public Q_SLOTS:
     void slotDisplayMessageIndicator(const QString &message);
 
 private Q_SLOTS:

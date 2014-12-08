@@ -64,16 +64,16 @@ public:
     virtual bool isDirty() const;
     virtual void printDebugInfo() const;
 
-signals:
+Q_SIGNALS:
     void attendeeCountChanged(int);
 
-public slots:
+public Q_SLOTS:
     /// If the user is attendee of the loaded event, one of the following slots
     /// can be used to change the status.
     void acceptForMe();
     void declineForMe();
 
-private slots:
+private Q_SLOTS:
     void checkIfExpansionIsNeeded(KPIM::MultiplyingLine *);
     void expandResult(KJob *job);
     void groupSearchResult(KJob *job);

@@ -54,7 +54,7 @@ public:
     explicit ManageSieveScriptsDialog(QWidget *parent = Q_NULLPTR);
     ~ManageSieveScriptsDialog();
 
-private slots:
+private Q_SLOTS:
     void slotGetResult(KManageSieve::SieveJob *, bool, const QString &, bool);
     void slotPutResult(KManageSieve::SieveJob *, bool);
     void slotPutResultDebug(KManageSieve::SieveJob *, bool success , const QString &errorMsg);

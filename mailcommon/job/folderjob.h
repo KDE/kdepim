@@ -85,7 +85,7 @@ public:
         mCancellable = b;
     }
 
-signals:
+Q_SIGNALS:
     /**
      * Emitted when the job finishes all processing.
      */

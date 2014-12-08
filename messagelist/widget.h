@@ -384,7 +384,7 @@ private Q_SLOTS:
     void slotExpandItem();
     void slotTagsFetched(KJob *job);
 
-signals:
+Q_SIGNALS:
     /**
     * Emitted when a message is selected (that is, single clicked and thus made current in the view)
     * Note that this message CAN be 0 (when the current item is cleared, for example).
