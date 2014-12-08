@@ -126,3 +126,4 @@ install(FILES
   DESTINATION ${DATA_INSTALL_DIR}/mobileui)
 
 add_subdirectory( tests )
+add_subdirectory( autotests )
