@@ -3,13 +3,14 @@ include_directories(${CMAKE_SOURCE_DIR}/calendarviews
 
 
 set(createcolorgui_test createcolorgui_test.cpp)
-kde4_add_executable(createcolorgui_test TEST ${createcolorgui_test})
+add_executable(createcolorgui_test ${createcolorgui_test})
+ecm_mark_as_test(createcolorgui_test)
 target_link_libraries(createcolorgui_test
-  ${QT_QTTEST_LIBRARY}
-  ${QT_QTCORE_LIBRARY}
-  ${QT_QTGUI_LIBRARY}
-  ${KDE4_KDECORE_LIBS}
-  ${KDE4_KDEUI_LIBS}
+  Qt5::Test
+  Qt5::Core
+  Qt5::Gui
+  KF5::KDELibs4Support
+  
   eventviews
 )
 
