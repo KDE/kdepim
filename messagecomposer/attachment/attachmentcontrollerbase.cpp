@@ -120,7 +120,8 @@ public:
     QAction *saveAsContextAction;
     QAction *propertiesAction;
     QAction *propertiesContextAction;
-    QAction *addAction;
+    QAction *addAttachmentFileAction;
+    QAction *addAttachmentDirectoryAction;
     QAction *addContextAction;
     QAction *selectAllAction;
     KActionMenu *attachmentMenu;
@@ -149,7 +150,8 @@ AttachmentControllerBase::Private::Private(AttachmentControllerBase *qq)
     , saveAsContextAction(0)
     , propertiesAction(0)
     , propertiesContextAction(0)
-    , addAction(0)
+    , addAttachmentFileAction( 0 )
+    , addAttachmentDirectoryAction( 0 )
     , addContextAction(0)
     , selectAllAction(0)
     , attachmentMenu(0)
@@ -453,24 +455,30 @@ void AttachmentControllerBase::createActions()
     d->attachMyPublicKeyAction = new QAction(i18n("Attach &My Public Key"), this);
     connect(d->attachMyPublicKeyAction, &QAction::triggered, this, &AttachmentControllerBase::attachMyPublicKey);
 
-    d->attachmentMenu = new KActionMenu(QIcon::fromTheme(QLatin1String("mail-attachment")), i18n("Attach"), this);
-    connect(d->attachmentMenu, &KActionMenu::triggered, this, &AttachmentControllerBase::showAddAttachmentDialog);
+    d->attachmentMenu = new KActionMenu( KIcon( QLatin1String( "mail-attachment" ) ), i18n( "Attach" ), this );
+    connect( d->attachmentMenu, SIGNAL(triggered(bool)), this, SLOT(showAddAttachmentFileDialog()) );
 
     d->attachmentMenu->setDelayed(true);
 
-    d->addAction = new QAction(QIcon::fromTheme(QLatin1String("mail-attachment")), i18n("&Attach File..."), this);
-    d->addAction->setIconText(i18n("Attach"));
-    d->addContextAction = new QAction(QIcon::fromTheme(QLatin1String("mail-attachment")),
-                                      i18n("Add Attachment..."), this);
-    connect(d->addAction, &QAction::triggered, this, &AttachmentControllerBase::showAddAttachmentDialog);
-    connect(d->addContextAction, &QAction::triggered, this, &AttachmentControllerBase::showAddAttachmentDialog);
+    d->addAttachmentFileAction = new QAction( QIcon::fromTheme( QLatin1String( "mail-attachment" ) ), i18n( "&Attach File..." ), this );
+    d->addAttachmentFileAction->setIconText( i18n( "Attach" ) );
+    d->addContextAction = new QAction( QIcon::fromTheme( QLatin1String( "mail-attachment" ) ),
+                                       i18n( "Add Attachment..." ), this );
+    connect( d->addAttachmentFileAction, SIGNAL(triggered(bool)), this, SLOT(showAddAttachmentFileDialog()) );
+    connect( d->addContextAction, SIGNAL(triggered(bool)), this, SLOT(showAddAttachmentFileDialog()) );
+
+    d->addAttachmentDirectoryAction = new QAction( QIcon::fromTheme( QLatin1String( "mail-attachment" ) ), i18n( "&Attach Directory..." ), this );
+    d->addAttachmentDirectoryAction->setIconText( i18n( "Attach" ) );
+    connect( d->addAttachmentDirectoryAction, SIGNAL(triggered(bool)), this, SLOT(showAddAttachmentCompressedDirectoryDialog()) );
+
 
     d->addOwnVcardAction = new QAction(i18n("Attach Own vCard"), this);
     d->addOwnVcardAction->setIconText(i18n("Own vCard"));
     d->addOwnVcardAction->setCheckable(true);
     connect(d->addOwnVcardAction, &QAction::triggered, this, &AttachmentControllerBase::addOwnVcard);
 
-    d->attachmentMenu->addAction(d->addAction);
+    d->attachmentMenu->addAction(d->addAttachmentFileAction);
+    d->attachmentMenu->addAction(d->addAttachmentDirectoryAction);
     d->attachmentMenu->addSeparator();
     d->attachmentMenu->addAction(d->addOwnVcardAction);
 
@@ -519,7 +527,9 @@ void AttachmentControllerBase::createActions()
     KActionCollection *collection = d->mActionCollection;
     collection->addAction(QLatin1String("attach_public_key"), d->attachPublicKeyAction);
     collection->addAction(QLatin1String("attach_my_public_key"), d->attachMyPublicKeyAction);
-    collection->addAction(QLatin1String("attach"), d->addAction);
+    collection->addAction( QLatin1String( "attach" ), d->addAttachmentFileAction );
+    collection->addAction( QLatin1String( "attach_directory" ), d->addAttachmentDirectoryAction );
+
     collection->addAction(QLatin1String("remove"), d->removeAction);
     collection->addAction(QLatin1String("attach_save"), d->saveAsAction);
     collection->addAction(QLatin1String("attach_properties"), d->propertiesAction);
@@ -801,8 +811,53 @@ void AttachmentControllerBase::attachmentProperties(AttachmentPart::Ptr part)
     delete dialog;
 }
 
-void AttachmentControllerBase::showAddAttachmentDialog()
+void AttachmentControllerBase::attachFileDirectory(const KUrl::List &urls, const QString &encoding)
 {
+    const int numberOfFiles(urls.count());
+    for (int i=0; i<numberOfFiles; ++i) {
+        const KUrl url = urls.at( i );
+        KUrl urlWithEncoding = url;
+        urlWithEncoding.setFileEncoding( encoding );
+        if ( KMimeType::findByUrl( urlWithEncoding )->name() == QLatin1String( "inode/directory" ) ) {
+            const int rc = KMessageBox::warningYesNo( d->wParent,i18n("Do you really want to attach this directory \"%1\" ?", url.toLocalFile() ),i18n( "Attach directory" ) );
+            if ( rc == KMessageBox::Yes ) {
+                addAttachment( urlWithEncoding );
+            }
+        } else {
+            addAttachment( urlWithEncoding );
+        }
+    }
+}
+
+void AttachmentControllerBase::showAddAttachmentCompressedDirectoryDialog()
+{
+#if 0 //QT5
+#ifndef KDEPIM_MOBILE_UI
+    QPointer<KEncodingFileDialog> dialog = new KEncodingFileDialog(
+                QString( /*startDir*/ ), QString( /*encoding*/ ), QString( /*filter*/ ),
+                i18n( "Attach Directory" ), KFileDialog::Other, d->wParent );
+
+    dialog->okButton()->setGuiItem( KGuiItem( i18n("&Attach"), QLatin1String( "document-open" ) ) );
+    dialog->setMode( KFile::Directory );
+    if( dialog->exec() == KDialog::Accepted && dialog ) {
+        const QString encoding = MessageViewer::NodeHelper::fixEncoding( dialog->selectedEncoding() );
+        attachFileDirectory(dialog->selectedUrls(), encoding);
+    }
+    delete dialog;
+#else
+    // use native dialog, while being much simpler, it actually fits on the screen much better than our own monster dialog
+    const QString fileName = KFileDialog::getExistingDirectory(KUrl(), QString(), d->wParent, i18n("Attach Directory" ) );
+    if ( !fileName.isEmpty() ) {
+        addAttachment( KUrl::fromLocalFile( fileName ) );
+    }
+#endif
+#endif
+}
+
+
+void AttachmentControllerBase::showAddAttachmentFileDialog()
+{
+#if 0 //QT5
 #ifndef KDEPIM_MOBILE_UI
     KEncodingFileDialog::Result result = KEncodingFileDialog::getOpenUrlsAndEncoding(QString(),
                                          QUrl(),
@@ -833,25 +888,11 @@ void AttachmentControllerBase::showAddAttachmentDialog()
         QUrl(/*startDir*/), QString(/*encoding*/), QString(/*filter*/),
         i18n("Attach File"), QFileDialog::Other, d->wParent);
 
-    //dialog->okButton()->setGuiItem( KGuiItem( i18n("&Attach"), QLatin1String( "document-open" ) ) );
-    //dialog->setMode( KFile::Files|KFile::Directory );
-    if (dialog->exec() == KDialog::Accepted && dialog) {
-        const KUrl::List files = dialog->selectedUrls();
-        const QString encoding = MessageViewer::NodeHelper::fixEncoding(dialog->selectedEncoding());
-        const int numberOfFiles(files.count());
-        for (int i = 0; i < numberOfFiles; ++i) {
-            const KUrl url = files.at(i);
-            KUrl urlWithEncoding = url;
-            urlWithEncoding.setFileEncoding(encoding);
-            if (KMimeType::findByUrl(urlWithEncoding)->name() == QLatin1String("inode/directory")) {
-                const int rc = KMessageBox::warningYesNo(d->wParent, i18n("Do you really want to attach this directory \"%1\" ?", url.toLocalFile()), i18n("Attach directory"));
-                if (rc == KMessageBox::Yes) {
-                    addAttachment(urlWithEncoding);
-                }
-            } else {
-                addAttachment(urlWithEncoding);
-            }
-        }
+    dialog->okButton()->setGuiItem( KGuiItem( i18n("&Attach"), QLatin1String( "document-open" ) ) );
+    dialog->setMode( KFile::Files );
+    if( dialog->exec() == KDialog::Accepted && dialog ) {
+        const QString encoding = MessageViewer::NodeHelper::fixEncoding( dialog->selectedEncoding() );
+        attachFileDirectory(dialog->selectedUrls(), encoding);
     }
     delete dialog;
 #endif
@@ -861,6 +902,7 @@ void AttachmentControllerBase::showAddAttachmentDialog()
     if (!fileName.isEmpty()) {
         addAttachment(QUrl::fromLocalFile(fileName));
     }
+#endif
 #endif
 }
 
