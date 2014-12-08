@@ -225,8 +225,8 @@ MainWidget::MainWidget(KXMLGUIClient *guiClient, QWidget *parent)
     mCollectionView->header()->setDefaultAlignment(Qt::AlignCenter);
     mCollectionView->header()->setSortIndicatorShown(false);
 
-    connect(mCollectionView->model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
-            SLOT(slotCheckNewCalendar(QModelIndex,int,int)));
+    connect(mCollectionView->model(), &QAbstractItemModel::rowsInserted,
+            this, &MainWidget::slotCheckNewCalendar);
 
     connect(mCollectionView, SIGNAL(currentChanged(Akonadi::Collection)),
             mXXPortManager, SLOT(setDefaultAddressBook(Akonadi::Collection)));
@@ -246,16 +246,16 @@ MainWidget::MainWidget(KXMLGUIClient *guiClient, QWidget *parent)
     mCategoryFilterModel->setFilterCategories(mCategorySelectWidget->filterTags());
     mCategoryFilterModel->setFilterEnabled(true);
 
-    connect(mCategorySelectWidget, SIGNAL(filterChanged(QList<Akonadi::Tag::Id>)),
-            mCategoryFilterModel, SLOT(setFilterCategories(QList<Akonadi::Tag::Id>)));
+    connect(mCategorySelectWidget, &CategorySelectWidget::filterChanged,
+            mCategoryFilterModel, &CategoryFilterProxyModel::setFilterCategories);
 
     mContactsFilterModel = new Akonadi::ContactsFilterProxyModel(this);
     mContactsFilterModel->setSourceModel(mCategoryFilterModel);
 
-    connect(mQuickSearchWidget, SIGNAL(filterStringChanged(QString)),
-            mContactsFilterModel, SLOT(setFilterString(QString)));
-    connect(mQuickSearchWidget, SIGNAL(filterStringChanged(QString)),
-            this, SLOT(selectFirstItem()));
+    connect(mQuickSearchWidget, &QuickSearchWidget::filterStringChanged,
+            mContactsFilterModel, &Akonadi::ContactsFilterProxyModel::setFilterString);
+    connect(mQuickSearchWidget, &QuickSearchWidget::filterStringChanged,
+            this, &MainWidget::selectFirstItem);
     connect(mQuickSearchWidget, SIGNAL(arrowDownKeyPressed()),
             mItemView, SLOT(setFocus()));
 
