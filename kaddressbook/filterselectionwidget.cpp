@@ -22,10 +22,12 @@
 */
 
 #include <qlabel.h>
+#include <qfontmetrics.h>
 
 #include <kcombobox.h>
 #include <kdialog.h>
 #include <klocale.h>
+#include <kdebug.h>
 
 #include "filterselectionwidget.h"
 
@@ -56,10 +58,40 @@ void FilterSelectionWidget::setCurrentItem( int index )
   mFilterCombo->setCurrentItem( index );
 }
 
+int FilterSelectionWidget::getOptimalSize()
+{
+  int reallyMax = 100; /* should never be used */
+  QWidget *par = dynamic_cast<QWidget*>( parent() );
+  if ( par ) {
+    reallyMax = par->topLevelWidget()->width() / 2;
+  }
+  int maxStringWidth = 0;
+  QFontMetrics fm = QFontMetrics ( font() );
+  for ( QStringList::const_iterator it = mComboItems.constBegin(); it != mComboItems.constEnd(); ++it ) {
+    int optimal = fm.width( *it );
+    if ( optimal > maxStringWidth ) {
+      maxStringWidth = optimal;
+    }
+  }
+  /* Wish i had QFontMetrics::elidedText
+   * if it really becomes a problem that filters get extremly huge we should
+   * probably do some eliding here. */
+
+  return ( maxStringWidth > reallyMax ? reallyMax : maxStringWidth ) + 5;
+}
+
+void FilterSelectionWidget::resizeEvent( QResizeEvent * e )
+{
+  mFilterCombo->setMinimumWidth( getOptimalSize() );
+  QHBox::resizeEvent( e );
+}
+
 void FilterSelectionWidget::setItems( const QStringList &names )
 {
   mFilterCombo->clear();
+  mComboItems = names;
   mFilterCombo->insertStringList( names );
+  mFilterCombo->setMinimumWidth( getOptimalSize() );
 }
 
 #include "filterselectionwidget.moc"

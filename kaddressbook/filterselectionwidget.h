@@ -46,11 +46,16 @@ class FilterSelectionWidget : public QHBox
     int currentItem() const;
     void setCurrentItem( int index );
 
-  signals:
+  protected:
+    void resizeEvent( QResizeEvent * e );
+
+signals:
     void filterActivated( int );
 
   private:
     KComboBox *mFilterCombo;
+    QStringList mComboItems;
+    int getOptimalSize();
 };
 
 #endif
