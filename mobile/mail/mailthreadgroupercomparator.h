@@ -59,17 +59,17 @@ class MailThreadGrouperComparator : public ThreadGrouperComparator
     /**
      * Returns the unique identifier for the given message @p item.
      */
-    QByteArray identifierForItem( const Akonadi::Item &item ) const;
+    QByteArray identifierForItem( const Akonadi::Item &item ) const Q_DECL_OVERRIDE;
 
     /**
      * Returns the parent identifier for the given message @p item.
      */
-    QByteArray parentIdentifierForItem( const Akonadi::Item &item ) const;
+    QByteArray parentIdentifierForItem( const Akonadi::Item &item ) const Q_DECL_OVERRIDE;
 
     /**
      * Returns if the @p left message item is smaller than the @p right message item.
      */
-    bool lessThan( const Akonadi::Item &left, const Akonadi::Item &right ) const;
+    bool lessThan( const Akonadi::Item &left, const Akonadi::Item &right ) const Q_DECL_OVERRIDE;
 
     /**
      * Sets the sorting @p option.

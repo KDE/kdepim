@@ -31,7 +31,7 @@ class OrderedChildCollectionsModel : public QSortFilterProxyModel
 public:
   explicit OrderedChildCollectionsModel(QObject* parent = Q_NULLPTR);
 
-  virtual bool lessThan(const QModelIndex& left, const QModelIndex& right) const;
+  virtual bool lessThan(const QModelIndex& left, const QModelIndex& right) const Q_DECL_OVERRIDE;
 
 private:
   QVector<qint64> specialCollectionOrder;

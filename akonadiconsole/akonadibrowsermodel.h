@@ -74,7 +74,7 @@ public:
     ~AkonadiBrowserSortModel();
 
 protected:
-    bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
+    bool lessThan(const QModelIndex &left, const QModelIndex &right) const Q_DECL_OVERRIDE;
 
 private:
     AkonadiBrowserModel *mBrowserModel;

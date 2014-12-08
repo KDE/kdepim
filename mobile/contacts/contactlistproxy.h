@@ -54,7 +54,7 @@ class ContactListProxy : public ListProxy
 
     QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const Q_DECL_OVERRIDE;
     void setSourceModel(QAbstractItemModel* sourceModel);
-    bool lessThan(const QModelIndex& left, const QModelIndex& right) const;
+    bool lessThan(const QModelIndex& left, const QModelIndex& right) const Q_DECL_OVERRIDE;
 
   public slots:
     QString typeForIndex( int row ) const;

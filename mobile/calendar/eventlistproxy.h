@@ -38,9 +38,9 @@ class EventListProxy : public ListProxy
       DurationRole
     };
 
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-    void setSourceModel(QAbstractItemModel* sourceModel);
-    bool lessThan(const QModelIndex& left, const QModelIndex& right) const;
+    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    void setSourceModel(QAbstractItemModel* sourceModel) Q_DECL_OVERRIDE;
+    bool lessThan(const QModelIndex& left, const QModelIndex& right) const Q_DECL_OVERRIDE;
 
   private Q_SLOTS:
     void dataChanged( const QModelIndex&, const QModelIndex& );

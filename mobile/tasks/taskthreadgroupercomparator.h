@@ -40,17 +40,17 @@ class TaskThreadGrouperComparator : public ThreadGrouperComparator
     /**
      * Returns the unique identifier for the given task @p item.
      */
-    QByteArray identifierForItem( const Akonadi::Item &item ) const;
+    QByteArray identifierForItem( const Akonadi::Item &item ) const Q_DECL_OVERRIDE;
 
     /**
      * Returns the parent identifier for the given task @p item.
      */
-    QByteArray parentIdentifierForItem( const Akonadi::Item &item ) const;
+    QByteArray parentIdentifierForItem( const Akonadi::Item &item ) const Q_DECL_OVERRIDE;
 
     /**
      * Returns if the @p left task item is smaller than the @p right task item.
      */
-    bool lessThan( const Akonadi::Item &left, const Akonadi::Item &right ) const;
+    bool lessThan( const Akonadi::Item &left, const Akonadi::Item &right ) const Q_DECL_OVERRIDE;
 };
 
 #endif
