@@ -33,8 +33,8 @@ public:
     QString description() const;
     void setDescription(const QString &description);
 
-    QString filename() const;
-    void setFilename(const QString &file);
+    QString themeFilename() const;
+    void setThemeFilename(const QString &file);
 
     QString name() const;
     void setName(const QString &);
@@ -56,7 +56,7 @@ public:
 
 private:
     QStringList mDisplayExtraVariables;
-    QString mFileName;
+    QString mThemeFileName;
     QString mDescription;
     QString mName;
     QString mDirName;

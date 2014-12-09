@@ -35,7 +35,7 @@ Theme::Theme(const QString &themePath, const QString &dirName, const QString &de
         setDirName(dirName);
         setName( group.readEntry( "Name", QString() ) );
         setDescription( group.readEntry( "Description", QString() ) );
-        setFilename( group.readEntry( "FileName" , QString() ) );
+        setThemeFilename( group.readEntry( "FileName" , QString() ) );
         setDisplayExtraVariables( group.readEntry( "DisplayExtraVariables", QStringList() ) );
         setAbsolutePath(themePath);
     }
@@ -49,7 +49,7 @@ Theme::~Theme()
 
 bool Theme::isValid() const
 {
-    return !mFileName.isEmpty() && !mName.isEmpty();
+    return !mThemeFileName.isEmpty() && !mName.isEmpty();
 }
 
 QString Theme::description() const
@@ -62,14 +62,14 @@ void Theme::setDescription(const QString &description)
     mDescription = description;
 }
 
-QString Theme::filename() const
+QString Theme::themeFilename() const
 {
-    return mFileName;
+    return mThemeFileName;
 }
 
-void Theme::setFilename(const QString &file)
+void Theme::setThemeFilename(const QString &file)
 {
-    mFileName = file;
+    mThemeFileName = file;
 }
 
 QString Theme::name() const

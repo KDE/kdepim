@@ -34,7 +34,7 @@ void GrantleeThemeTest::shouldHaveDefaultValue()
 {
     GrantleeTheme::Theme theme;
     QVERIFY(theme.description().isEmpty());
-    QVERIFY(theme.filename().isEmpty());
+    QVERIFY(theme.themeFilename().isEmpty());
     QVERIFY(theme.name().isEmpty());
     QVERIFY(theme.displayExtraVariables().isEmpty());
     QVERIFY(theme.dirName().isEmpty());
@@ -51,7 +51,7 @@ void GrantleeThemeTest::shouldInvalidWhenPathIsNotValid()
     const QString defaultDesktopFileName(QLatin1String("bla"));
     GrantleeTheme::Theme theme(themePath, dirName, defaultDesktopFileName);
     QVERIFY(theme.description().isEmpty());
-    QVERIFY(theme.filename().isEmpty());
+    QVERIFY(theme.themeFilename().isEmpty());
     QVERIFY(theme.name().isEmpty());
     QVERIFY(theme.displayExtraVariables().isEmpty());
     QVERIFY(!theme.dirName().isEmpty());
