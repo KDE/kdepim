@@ -70,7 +70,10 @@ void GrantleeThemeTest::shouldLoadTheme_data()
     QTest::addColumn<QStringList>("displayExtraVariables");
 
     QTest::newRow("valid theme") <<  QString(QLatin1String("valid")) << QString(QLatin1String("filename.testdesktop")) << true << QStringList();
-
+    QTest::newRow("not existing theme") <<  QString(QLatin1String("notvalid")) << QString(QLatin1String("filename.testdesktop")) << false << QStringList();
+    QStringList extraVariables;
+    extraVariables << QLatin1String("foo") << QLatin1String("bla");
+    QTest::newRow("valid with extra variable") <<  QString(QLatin1String("valid-with-extravariables")) << QString(QLatin1String("filename.testdesktop")) << true << extraVariables;
 }
 
 void GrantleeThemeTest::shouldLoadTheme()
@@ -80,11 +83,10 @@ void GrantleeThemeTest::shouldLoadTheme()
     QFETCH( bool, isvalid );
     QFETCH( QStringList, displayExtraVariables );
 
-    GrantleeTheme::Theme theme(QLatin1String( GRANTLEETHEME_DATA_DIR ), dirname, filename);
-    //QCOMPARE(theme.isValid(), isvalid);
+    GrantleeTheme::Theme theme(QLatin1String( GRANTLEETHEME_DATA_DIR ) + QDir::separator() + dirname, dirname, filename);
+    QCOMPARE(theme.isValid(), isvalid);
     QCOMPARE(theme.displayExtraVariables(), displayExtraVariables);
     QCOMPARE(theme.dirName(), dirname);
-    //QCOMPARE(theme.filename(), filename);
 }
 
 QTEST_KDEMAIN(GrantleeThemeTest, NoGUI)

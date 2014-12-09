@@ -19,6 +19,7 @@
 #include <KConfig>
 #include <KConfigGroup>
 #include <QDir>
+
 using namespace GrantleeTheme;
 
 Theme::Theme()
