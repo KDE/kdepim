@@ -51,7 +51,7 @@ private:
 
     KTextEdit *mView;
     QueryDebuggerModel *mModel;
-    QCheckBox* mOnlyAggregate;
+    QCheckBox *mOnlyAggregate;
 };
 
 #endif // QUERYDEBUGGER_H
