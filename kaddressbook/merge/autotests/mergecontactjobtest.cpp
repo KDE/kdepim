@@ -17,7 +17,7 @@
 
 
 #include "mergecontactjobtest.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 MergeContactJobTest::MergeContactJobTest(QObject *parent)
     : QObject(parent)
@@ -30,4 +30,4 @@ MergeContactJobTest::~MergeContactJobTest()
 
 }
 
-QTEST_KDEMAIN(MergeContactJobTest, NoGUI)
+QTEST_MAIN(MergeContactJobTest)
