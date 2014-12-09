@@ -37,16 +37,23 @@ MergeContactsJob::~MergeContactsJob()
 
 }
 
-void MergeContactsJob::start()
+bool MergeContactsJob::canStart()
 {
     if (!mCollection.isValid()) {
-        qDebug() << " mCollection is not valid !";
-        Q_EMIT finished(mCreatedContact);
-        deleteLater();
-        return;
+        qDebug()<<" mCollection is not valid !";
+        return false;
     }
     if (mListItem.isEmpty()) {
-        qDebug() << " list item is empty !";
+        qDebug()<<" list item is empty !";
+        return false;
+    }
+    return true;
+
+}
+
+void MergeContactsJob::start()
+{
+    if (!canStart()) {
         Q_EMIT finished(mCreatedContact);
         deleteLater();
         return;

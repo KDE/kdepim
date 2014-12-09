@@ -14,7 +14,9 @@ endmacro()
 
 kaddressbook_merge(mergecontactwidgettest.cpp)
 kaddressbook_merge(mergecontacttest.cpp)
+kaddressbook_merge(mergecontactjobtest.cpp)
 
+include(AkonadiMacros)
 set(KDEPIMLIBS_RUN_ISOLATED_TESTS TRUE)
 set(KDEPIMLIBS_RUN_SQLITE_ISOLATED_TESTS TRUE)
 
