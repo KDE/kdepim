@@ -20,7 +20,7 @@
 #include "mergecontactutil.h"
 #include "mergecontactwidget.h"
 #include "mergecontactinfowidget.h"
-#include "mergecontactsjob.h"
+#include "merge/job/mergecontactsjob.h"
 #include "mergecontactshowresultdialog.h"
 
 #include <AkonadiCore/Item>

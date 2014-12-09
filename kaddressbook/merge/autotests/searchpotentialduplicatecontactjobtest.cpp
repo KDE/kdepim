@@ -16,7 +16,7 @@
 */
 
 #include "searchpotentialduplicatecontactjobtest.h"
-#include "../searchpotentialduplicatecontactjob.h"
+#include "../job/searchpotentialduplicatecontactjob.h"
 
 #include <AkonadiCore/item.h>
 #include <kcontacts/addressee.h>
