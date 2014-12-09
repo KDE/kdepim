@@ -40,11 +40,11 @@ MergeContactsJob::~MergeContactsJob()
 bool MergeContactsJob::canStart()
 {
     if (!mCollection.isValid()) {
-        qDebug()<<" mCollection is not valid !";
+        qDebug() << " mCollection is not valid !";
         return false;
     }
     if (mListItem.isEmpty()) {
-        qDebug()<<" list item is empty !";
+        qDebug() << " list item is empty !";
         return false;
     }
     return true;

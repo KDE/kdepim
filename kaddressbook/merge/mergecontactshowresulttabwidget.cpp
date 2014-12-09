@@ -54,7 +54,7 @@ void MergeContactShowResultTabWidget::setContacts(const Akonadi::Item::List &lst
             infoWidget->setContact(item);
             addTab(infoWidget, address.name());
         } else {
-            qDebug()<<" don't have address";
+            qDebug() << " don't have address";
         }
     }
     updateTabWidget();

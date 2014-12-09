@@ -22,19 +22,20 @@
 #include <KMimeType>
 #include <QDebug>
 
-namespace MessageCore {
+namespace MessageCore
+{
 MessageCore::AttachmentFromUrlBaseJob *AttachmentFromUrlUtils::createAttachmentJob(const QUrl &url, QObject *parent)
 {
     MessageCore::AttachmentFromUrlBaseJob *ajob = 0;
-    if( KMimeType::findByUrl( url )->name() == QLatin1String( "inode/directory" ) ) {
+    if (KMimeType::findByUrl(url)->name() == QLatin1String("inode/directory")) {
         qDebug() << "Creating attachment from folder";
-        ajob = new MessageCore::AttachmentFromFolderJob ( url, parent );
+        ajob = new MessageCore::AttachmentFromFolderJob(url, parent);
     } else {
-        ajob = new MessageCore::AttachmentFromUrlJob( url, parent );
+        ajob = new MessageCore::AttachmentFromUrlJob(url, parent);
         qDebug() << "Creating attachment from file";
     }
-    if( MessageCore::GlobalSettings::maximumAttachmentSize() > 0 ) {
-        ajob->setMaximumAllowedSize( MessageCore::GlobalSettings::maximumAttachmentSize() );
+    if (MessageCore::GlobalSettings::maximumAttachmentSize() > 0) {
+        ajob->setMaximumAllowedSize(MessageCore::GlobalSettings::maximumAttachmentSize());
     }
     return ajob;
 }

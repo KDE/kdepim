@@ -1669,7 +1669,7 @@ MessageComposer::ComposerViewBase::MissingAttachment MessageComposer::ComposerVi
     if (rc == KMessageBox::Cancel) {
         return FoundMissingAttachmentAndCancel;
     }
-    if ( rc == KMessageBox::Yes ) {
+    if (rc == KMessageBox::Yes) {
         m_attachmentController->showAddAttachmentFileDialog();
         return FoundMissingAttachmentAndAddedAttachment;
     }
