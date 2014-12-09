@@ -20,7 +20,7 @@
 
 #include "mergecontactshowresulttabwidget.h"
 
-#include "searchpotentialduplicatecontactjob.h"
+#include "merge/job/searchpotentialduplicatecontactjob.h"
 
 #include <KLocalizedString>
 #include <KSharedConfig>
