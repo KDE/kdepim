@@ -1,4 +1,33 @@
 
+Tuesday 09 December 2014
+
+Problems addressed
+------------------
+
+* kolab/issue4347: Wish: Notice that a HTML-part exists in the default display of mails. (RT#10088)
+* kolab/issue4712: Sometimes a task with recurrence is not shown in the calendar.
+* kolab/issue4878: Crash when moving a floating recurring event to another day. (RT# 10190)
+* internal/issue2178: Several crashes have been fixed in combination with online imap.
+* internal/issue2115: Kontact hangs on a mail with huge / broken MIME structure.
+* RT#10107: Task view should include a Start column.
+* RT#10271: The Calendar archive dialog now allows to explicitly disable archiving.
+* RT#10190: Invitation update to recurring events sometimes don't show the start date.
+* RT#10190: Invitation descriptions with unescaped commas are not shown correctly.
+* RT#10190: Invitation display of rich text descriptions sometimes adds whitespace.
+* RT#10190: Invitation recurrences use short day format only for weekly recurrences.
+* RT#10190: Outlook attachments in invitations are shown without label in the invitation.
+* RT#10190: Confusing response buttons in invitation updates where a status is already set.
+* Tasks with reccurrence and no due date use invalid dates.
+
+
+Features
+--------
+
+* RT#10281: ACL's can now be set recursively on DIMAP folders.
+* RT#10190: Added exceptions to recurring events are now shown properly in invitations.
+
+
+
 Monday 10 November 2014
 
 Problems addressed
