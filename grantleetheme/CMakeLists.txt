@@ -20,3 +20,4 @@ set_target_properties(grantleetheme PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOV
 install(TARGETS grantleetheme ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory(kconf_update)
+add_subdirectory(autotest)

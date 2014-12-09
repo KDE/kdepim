@@ -83,7 +83,7 @@ QString GrantleeHeaderFormatter::toHtml(const GrantleeTheme::Theme &theme, bool 
         return errorMessage;
     }
     d->templateLoader->setTemplateDirs(QStringList() << theme.absolutePath());
-    Grantlee::Template headerTemplate = d->engine->loadByName(theme.filename());
+    Grantlee::Template headerTemplate = d->engine->loadByName(theme.themeFilename());
     if (headerTemplate->error()) {
         errorMessage = headerTemplate->errorString();
         return errorMessage;
