@@ -353,17 +353,7 @@ QString GrantleeThemeManager::pathFromThemes(const QString &themesRelativePath, 
 
 GrantleeTheme::Theme GrantleeThemeManager::loadTheme(const QString &themePath, const QString &dirName, const QString &defaultDesktopFileName )
 {
-    const QString themeInfoFile = themePath + QDir::separator() + defaultDesktopFileName;
-    KConfig config( themeInfoFile );
-    KConfigGroup group( &config, QLatin1String( "Desktop Entry" ) );
-
-    GrantleeTheme::Theme theme;
-    theme.setDirName(dirName);
-    theme.setName( group.readEntry( "Name", QString() ) );
-    theme.setDescription( group.readEntry( "Description", QString() ) );
-    theme.setFilename( group.readEntry( "FileName" , QString() ) );
-    theme.setDisplayExtraVariables( group.readEntry( "DisplayExtraVariables", QStringList() ) );
-    theme.setAbsolutePath(themePath);
+    const GrantleeTheme::Theme theme(themePath, dirName, defaultDesktopFileName);
     return theme;
 }
 

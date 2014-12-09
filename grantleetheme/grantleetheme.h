@@ -25,6 +25,7 @@ class GRANTLEETHEME_EXPORT Theme
 {
 public:
     Theme();
+    Theme(const QString &themePath, const QString &dirName, const QString &defaultDesktopFileName);
     ~Theme();
 
     bool isValid() const;

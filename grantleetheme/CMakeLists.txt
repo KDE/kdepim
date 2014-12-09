@@ -20,3 +20,4 @@ set_target_properties(grantleetheme PROPERTIES VERSION ${GENERIC_LIB_VERSION} SO
 install(TARGETS grantleetheme ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory(kconf_update)
+add_subdirectory(autotest)
