@@ -43,10 +43,10 @@ void SendLaterInfoTest::shouldHaveDefaultValue()
 void SendLaterInfoTest::shouldRestoreFromSettings()
 {
     SendLater::SendLaterInfo info;
-    const QString to = QLatin1String("kde.org");
+    const QString to = QStringLiteral("kde.org");
     info.setTo(to);
     info.setItemId(Akonadi::Item::Id(42));
-    info.setSubject(QLatin1String("Subject"));
+    info.setSubject(QStringLiteral("Subject"));
     info.setRecurrence(true);
     info.setRecurrenceEachValue(5);
     info.setRecurrenceUnit(SendLater::SendLaterInfo::Years);
@@ -65,9 +65,9 @@ void SendLaterInfoTest::shouldRestoreFromSettings()
 void SendLaterInfoTest::shouldNotValidIfIdIsNotValid()
 {
     SendLater::SendLaterInfo info;
-    const QString to = QLatin1String("kde.org");
+    const QString to = QStringLiteral("kde.org");
     info.setTo(to);
-    info.setSubject(QLatin1String("Subject"));
+    info.setSubject(QStringLiteral("Subject"));
     info.setRecurrence(true);
     info.setRecurrenceEachValue(5);
     info.setRecurrenceUnit(SendLater::SendLaterInfo::Years);
@@ -80,10 +80,10 @@ void SendLaterInfoTest::shouldNotValidIfIdIsNotValid()
 void SendLaterInfoTest::shouldNotValidIfDateIsNotValid()
 {
     SendLater::SendLaterInfo info;
-    const QString to = QLatin1String("kde.org");
+    const QString to = QStringLiteral("kde.org");
     info.setTo(to);
     info.setItemId(Akonadi::Item::Id(42));
-    info.setSubject(QLatin1String("Subject"));
+    info.setSubject(QStringLiteral("Subject"));
     info.setRecurrence(true);
     info.setRecurrenceEachValue(5);
     info.setRecurrenceUnit(SendLater::SendLaterInfo::Years);
@@ -95,10 +95,10 @@ void SendLaterInfoTest::shouldNotValidIfDateIsNotValid()
 void SendLaterInfoTest::shouldCopyInfo()
 {
     SendLater::SendLaterInfo info;
-    const QString to = QLatin1String("kde.org");
+    const QString to = QStringLiteral("kde.org");
     info.setTo(to);
     info.setItemId(Akonadi::Item::Id(42));
-    info.setSubject(QLatin1String("Subject"));
+    info.setSubject(QStringLiteral("Subject"));
     info.setRecurrence(true);
     info.setRecurrenceEachValue(5);
     info.setRecurrenceUnit(SendLater::SendLaterInfo::Years);

@@ -121,13 +121,13 @@ void KWidgetLister::init(bool fewerMoreButton)
         d->mBtnMore = new QPushButton(d->mButtonBox);
         mButtonBoxHBoxLayout->addWidget(d->mBtnMore);
         KGuiItem::assign(d->mBtnMore, KGuiItem(i18nc("more widgets", "More"),
-                                               QLatin1String("list-add")));
+                                               QStringLiteral("list-add")));
         mButtonBoxHBoxLayout->setStretchFactor(d->mBtnMore, 0);
 
         d->mBtnFewer = new QPushButton(d->mButtonBox);
         mButtonBoxHBoxLayout->addWidget(d->mBtnFewer);
         KGuiItem::assign(d->mBtnFewer, KGuiItem(i18nc("fewer widgets", "Fewer"),
-                                                QLatin1String("list-remove")));
+                                                QStringLiteral("list-remove")));
         mButtonBoxHBoxLayout->setStretchFactor(d->mBtnFewer, 0);
     }
     QWidget *spacer = new QWidget(d->mButtonBox);

@@ -41,13 +41,13 @@ void MonitorsModel::init()
     qDeleteAll(mData);
     mData.clear();
 
-    QString service = QLatin1String("org.freedesktop.Akonadi");
+    QString service = QStringLiteral("org.freedesktop.Akonadi");
     if (Akonadi::ServerManager::hasInstanceIdentifier()) {
         service += "." + Akonadi::ServerManager::instanceIdentifier();
     }
 
     mManager = new org::freedesktop::Akonadi::NotificationManager(service,
-            QLatin1String("/notifications"), QDBusConnection::sessionBus(), this);
+            QStringLiteral("/notifications"), QDBusConnection::sessionBus(), this);
     if (!mManager) {
         qWarning() << "Failed to connect to org.freedesktop.Akonadi.NotificationManager";
         return;
@@ -100,13 +100,13 @@ QVariant MonitorsModel::headerData(int section, Qt::Orientation orientation, int
     if (role == Qt::DisplayRole) {
         if (orientation == Qt::Horizontal) {
             switch (section) {
-            case 0: return QLatin1String("Subscriber");
-            case 1: return QLatin1String("All Monitored");
-            case 2: return QLatin1String("Monitored Collections");
-            case 3: return QLatin1String("Monitored Items");
-            case 4: return QLatin1String("Monitored Resources");
-            case 5: return QLatin1String("Monitored Mime Types");
-            case 6: return QLatin1String("Ignored Sessions");
+            case 0: return QStringLiteral("Subscriber");
+            case 1: return QStringLiteral("All Monitored");
+            case 2: return QStringLiteral("Monitored Collections");
+            case 3: return QStringLiteral("Monitored Items");
+            case 4: return QStringLiteral("Monitored Resources");
+            case 5: return QStringLiteral("Monitored Mime Types");
+            case 6: return QStringLiteral("Ignored Sessions");
             }
         }
     }
