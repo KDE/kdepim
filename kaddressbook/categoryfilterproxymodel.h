@@ -76,7 +76,7 @@ protected:
     /**
      * @reimp
      **/
-    virtual bool filterAcceptsRow(int row, const QModelIndex &parent) const;
+    bool filterAcceptsRow(int row, const QModelIndex &parent) const  Q_DECL_OVERRIDE;
 
 private:
     CategoryFilterProxyModelPrivate *const d_ptr;

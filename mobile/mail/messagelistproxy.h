@@ -47,8 +47,8 @@ class MessageListProxy : public ListProxy
       SenderGroupRole
     };
 
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-    void setSourceModel(QAbstractItemModel* sourceModel);
+    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    void setSourceModel(QAbstractItemModel* sourceModel) Q_DECL_OVERRIDE;
 };
 
 #endif

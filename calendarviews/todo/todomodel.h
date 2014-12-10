@@ -73,16 +73,16 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
     /**reimp*/
-    void setSourceModel(QAbstractItemModel *sourceModel);
+    void setSourceModel(QAbstractItemModel *sourceModel) Q_DECL_OVERRIDE;
 
     /**reimp*/
-    QVariant data(const QModelIndex &index, int role) const;
+    QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
 
     /**reimp*/
-    bool setData(const QModelIndex &index, const QVariant &value, int role);
+    bool setData(const QModelIndex &index, const QVariant &value, int role) Q_DECL_OVERRIDE;
 
     /**reimp*/
-    QVariant headerData(int section, Qt::Orientation, int role) const;
+    QVariant headerData(int section, Qt::Orientation, int role) const Q_DECL_OVERRIDE;
 
     /**reimp*/
     void setCalendar(const Akonadi::ETMCalendar::Ptr &calendar);
@@ -95,10 +95,10 @@ public:
 
     /**reimp*/
     bool dropMimeData(const QMimeData *data, Qt::DropAction action,
-                      int row, int column, const QModelIndex &parent);
+                      int row, int column, const QModelIndex &parent) Q_DECL_OVERRIDE;
 
     /**reimp*/
-    QStringList mimeTypes() const;
+    QStringList mimeTypes() const Q_DECL_OVERRIDE;
 
     /**reimp*/
     Qt::DropActions supportedDropActions() const Q_DECL_OVERRIDE;
@@ -107,20 +107,20 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
     /**reimp*/
-    QModelIndex parent(const QModelIndex &child) const;
+    QModelIndex parent(const QModelIndex &child) const Q_DECL_OVERRIDE;
 
     /**reimp*/
-    QModelIndex mapFromSource(const QModelIndex &sourceIndex) const;
+    QModelIndex mapFromSource(const QModelIndex &sourceIndex) const Q_DECL_OVERRIDE;
 
     /**reimp*/
-    QModelIndex mapToSource(const QModelIndex &proxyIndex) const;
+    QModelIndex mapToSource(const QModelIndex &proxyIndex) const Q_DECL_OVERRIDE;
 
     /**reimp*/
     QModelIndex index(int row, int column,
-                      const QModelIndex &parent = QModelIndex()) const;
+                      const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
     /**reimp*/
-    QModelIndex buddy(const QModelIndex &index) const;
+    QModelIndex buddy(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
 private:
     class Private;

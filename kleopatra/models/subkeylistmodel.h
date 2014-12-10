@@ -80,9 +80,9 @@ public Q_SLOTS:
     void clear();
 
 public:
-    /* reimp */ int columnCount(const QModelIndex &pidx = QModelIndex()) const;
-    /* reimp */ int rowCount(const QModelIndex &pidx = QModelIndex()) const;
-    /* reimp */ QVariant headerData(int section, Qt::Orientation o, int role = Qt::DisplayRole) const;
+    /* reimp */ int columnCount(const QModelIndex &pidx = QModelIndex()) const Q_DECL_OVERRIDE;
+    /* reimp */ int rowCount(const QModelIndex &pidx = QModelIndex()) const Q_DECL_OVERRIDE;
+    /* reimp */ QVariant headerData(int section, Qt::Orientation o, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     /* reimp */ QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
 private:

@@ -85,16 +85,16 @@ public:
         return null;
     }
 
-    /* reimp */ int rowCount(const QModelIndex &idx) const
+    /* reimp */ int rowCount(const QModelIndex &idx) const Q_DECL_OVERRIDE
     {
         return idx.isValid() ? 0 : m_tests.size() ;
     }
-    /* reimp */ int columnCount(const QModelIndex &) const
+    /* reimp */ int columnCount(const QModelIndex &) const Q_DECL_OVERRIDE
     {
         return NumColumns;
     }
 
-    /* reimp */ QVariant data(const QModelIndex &idx, int role) const
+    /* reimp */ QVariant data(const QModelIndex &idx, int role) const Q_DECL_OVERRIDE
     {
         const unsigned int row = idx.row();
         if (idx.isValid() && row < m_tests.size())
@@ -197,7 +197,7 @@ public Q_SLOTS:
     }
 
 private:
-    /* reimp */ bool filterAcceptsRow(int src_row, const QModelIndex &src_parent) const
+    /* reimp */ bool filterAcceptsRow(int src_row, const QModelIndex &src_parent) const Q_DECL_OVERRIDE
     {
         if (m_showAll) {
             return true;

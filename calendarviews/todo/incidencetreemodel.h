@@ -53,18 +53,18 @@ public:
     /**reimp*/ int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     /**reimp*/ int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
-    /**reimp*/ QVariant data(const QModelIndex &index, int role) const;
+    /**reimp*/ QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
 
     /**reimp*/ QModelIndex index(int row, int column,
-                                 const QModelIndex &parent = QModelIndex()) const;
+                                 const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
-    /**reimp*/ QModelIndex mapFromSource(const QModelIndex &sourceIndex) const;
-    /**reimp*/ QModelIndex mapToSource(const QModelIndex &proxyIndex) const;
+    /**reimp*/ QModelIndex mapFromSource(const QModelIndex &sourceIndex) const Q_DECL_OVERRIDE;
+    /**reimp*/ QModelIndex mapToSource(const QModelIndex &proxyIndex) const Q_DECL_OVERRIDE;
 
-    /**reimp*/ QModelIndex parent(const QModelIndex &child) const;
+    /**reimp*/ QModelIndex parent(const QModelIndex &child) const Q_DECL_OVERRIDE;
 
-    /**reimp*/ void setSourceModel(QAbstractItemModel *sourceModel);
-    /**reimp*/ bool hasChildren(const QModelIndex &parent = QModelIndex()) const;
+    /**reimp*/ void setSourceModel(QAbstractItemModel *sourceModel) Q_DECL_OVERRIDE;
+    /**reimp*/ bool hasChildren(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
     /**
      * Returns the akonadi item containing the incidence with @p incidenceUid.

@@ -298,11 +298,11 @@ public:
         endRemoveRows();
     }
 
-    /* reimp */ int columnCount(const QModelIndex & = QModelIndex()) const
+    /* reimp */ int columnCount(const QModelIndex & = QModelIndex()) const Q_DECL_OVERRIDE
     {
         return NumColumns;
     }
-    /* reimp */ int rowCount(const QModelIndex & = QModelIndex()) const
+    /* reimp */ int rowCount(const QModelIndex & = QModelIndex()) const Q_DECL_OVERRIDE
     {
         return m_items.size();
     }

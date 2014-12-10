@@ -37,16 +37,16 @@ namespace KDGantt {
         explicit ForwardingProxyModel( QObject* parent=0 );
         virtual ~ForwardingProxyModel();
 
-        /*reimp*/ QModelIndex mapFromSource ( const QModelIndex & sourceIndex ) const;
-        /*reimp*/ QModelIndex mapToSource ( const QModelIndex & proxyIndex ) const;
+        /*reimp*/ QModelIndex mapFromSource ( const QModelIndex & sourceIndex ) const Q_DECL_OVERRIDE;
+        /*reimp*/ QModelIndex mapToSource ( const QModelIndex & proxyIndex ) const Q_DECL_OVERRIDE;
 
-        /*reimp*/ void setSourceModel( QAbstractItemModel* model );
+        /*reimp*/ void setSourceModel( QAbstractItemModel* model ) Q_DECL_OVERRIDE;
 
-        /*reimp*/ QModelIndex index( int row, int column, const QModelIndex& parent = QModelIndex() ) const;
-        /*reimp*/ QModelIndex parent( const QModelIndex& idx ) const;
+        /*reimp*/ QModelIndex index( int row, int column, const QModelIndex& parent = QModelIndex() ) const Q_DECL_OVERRIDE;
+        /*reimp*/ QModelIndex parent( const QModelIndex& idx ) const Q_DECL_OVERRIDE;
 
-        /*reimp*/ int rowCount( const QModelIndex& idx = QModelIndex() ) const;
-        /*reimp*/ int columnCount( const QModelIndex& idx = QModelIndex() ) const;
+        /*reimp*/ int rowCount( const QModelIndex& idx = QModelIndex() ) const Q_DECL_OVERRIDE;
+        /*reimp*/ int columnCount( const QModelIndex& idx = QModelIndex() ) const Q_DECL_OVERRIDE;
 
         /*reimp*/ bool setData( const QModelIndex& index, const QVariant& value, int role = Qt::EditRole ) Q_DECL_OVERRIDE;
 

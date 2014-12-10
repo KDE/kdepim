@@ -293,7 +293,7 @@ public:
         }
     }
 
-    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE
     {
         if (!parent.isValid()) {
             return 18;

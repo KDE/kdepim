@@ -44,9 +44,9 @@ class AttachmentProxyModel : public QSortFilterProxyModel
     explicit AttachmentProxyModel( QObject *parent = Q_NULLPTR );
     ~AttachmentProxyModel();
 
-    bool filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent ) const;
-    void setSourceModel( QAbstractItemModel *sourceModel );
-    QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
+    bool filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent ) const Q_DECL_OVERRIDE;
+    void setSourceModel( QAbstractItemModel *sourceModel ) Q_DECL_OVERRIDE;
+    QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const Q_DECL_OVERRIDE;
 
   Q_SIGNALS:
     void rowCountChanged();

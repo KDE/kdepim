@@ -69,8 +69,8 @@ public:
     explicit Model(KeyFilterManager::Private *p)
         : QAbstractListModel(0), m_keyFilterManagerPrivate(p) {}
 
-    /* reimp */ int rowCount(const QModelIndex &) const;
-    /* reimp */ QVariant data(const QModelIndex &idx, int role) const;
+    /* reimp */ int rowCount(const QModelIndex &) const Q_DECL_OVERRIDE;
+    /* reimp */ QVariant data(const QModelIndex &idx, int role) const Q_DECL_OVERRIDE;
     /* upgrade to public */ using QAbstractListModel::reset;
 };
 
