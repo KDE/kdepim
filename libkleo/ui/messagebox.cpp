@@ -411,7 +411,7 @@ void MessageBox::make(QWidget *parent, QMessageBox::Icon icon, const QString &te
         dialog->setPlainCaption(caption);
     }
 #if 0 //QT5
-    if (KDialog::No == KMessageBox::createKMessageBox(dialog, icon, text, QStringList(), QString::null, 0, options)) {
+    if (KDialog::No == KMessageBox::createKMessageBox(dialog, icon, text, QStringList(), QString(), 0, options)) {
         auditLog(0, job);
     }
 #endif
