@@ -38,6 +38,8 @@ public:
     bool isAScam() const;
     void setIsAScam(bool b);
 
+    bool operator==(const ScamAttribute &other) const;
+
 private:
     friend class ScamAttributePrivate;
     ScamAttributePrivate * const d;

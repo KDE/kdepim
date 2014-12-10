@@ -28,3 +28,8 @@ target_link_libraries(scamdetection_gui
 )
 
 
+
+set( scamattributetest_source scamattributetest.cpp ../scamattribute.cpp)
+kde4_add_unit_test( scamattributetest ${scamattributetest_source})
+target_link_libraries( scamattributetest ${QT_QTTEST_LIBRARY} ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY} ${KDEPIMLIBS_AKONADI_LIBS})
+
