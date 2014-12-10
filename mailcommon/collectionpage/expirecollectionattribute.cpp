@@ -37,7 +37,8 @@ ExpireCollectionAttribute::ExpireCollectionAttribute()
 
 QByteArray ExpireCollectionAttribute::type() const
 {
-    return "expirationcollectionattribute";
+    static const QByteArray sType( "expirationcollectionattribute" );
+    return sType;
 }
 
 Akonadi::Attribute *ExpireCollectionAttribute::clone() const
