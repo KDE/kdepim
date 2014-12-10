@@ -98,7 +98,7 @@ EventEdit::EventEdit(QWidget *parent)
     QDateTime currentDateTime = QDateTime::currentDateTime();
     mStartDateTimeEdit = new EventDateTimeWidget;
     mStartDateTimeEdit->setObjectName(QStringLiteral("startdatetimeedit"));
-    //QT5 mStartDateTimeEdit->setDateTime(currentDateTime);
+    mStartDateTimeEdit->setDateTime(currentDateTime);
 #ifndef QT_NO_ACCESSIBILITY
     mStartDateTimeEdit->setAccessibleDescription(i18n("Select start time for event."));
 #endif
