@@ -545,14 +545,11 @@ LdapSearchDialog::LdapSearchDialog(QWidget *parent)
     mainLayout->addWidget(buttonBox);
 
     QVBoxLayout *topLayout = new QVBoxLayout(page);
-    //QT5 topLayout->setSpacing( spacingHint() );
-    //QT5 topLayout->setMargin( marginHint() );
 
     QGroupBox *groupBox = new QGroupBox(i18n("Search for Addresses in Directory"),
                                         page);
     QGridLayout *boxLayout = new QGridLayout();
     groupBox->setLayout(boxLayout);
-    //QT5 boxLayout->setSpacing( spacingHint() );
     boxLayout->setColumnStretch(1, 1);
 
     QLabel *label = new QLabel(i18n("Search for:"), groupBox);

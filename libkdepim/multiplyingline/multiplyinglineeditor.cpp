@@ -33,7 +33,6 @@ MultiplyingLineEditor::MultiplyingLineEditor(MultiplyingLineFactory *factory, QW
     : QWidget(parent), mModified(false), mMultiplyingLineFactory(factory)
 {
     QBoxLayout *topLayout = new QHBoxLayout();
-//TODO PORT QT5     topLayout->setSpacing( QDialog::spacingHint() );
     topLayout->setMargin(0);
     setLayout(topLayout);
 

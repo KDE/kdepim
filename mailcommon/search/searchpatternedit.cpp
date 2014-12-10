@@ -157,7 +157,6 @@ void SearchRuleWidget::setPatternEditOptions(SearchPatternEdit::SearchPatternEdi
 void SearchRuleWidget::initWidget(SearchPatternEdit::SearchModeType modeType)
 {
     QHBoxLayout *hlay = new QHBoxLayout(this);
-//TODO PORT QT5     hlay->setSpacing( QDialog::spacingHint() );
     hlay->setMargin(0);
 
     // initialize the header field combo box

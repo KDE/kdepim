@@ -253,7 +253,6 @@ AlarmDialog::AlarmDialog(const Akonadi::ETMCalendar::Ptr &calendar, QWidget *par
     QWidget *suspendBox = new QWidget(topBox);
     QHBoxLayout *suspendBoxHBoxLayout = new QHBoxLayout(suspendBox);
     suspendBoxHBoxLayout->setMargin(0);
-    //Port QT5 suspendBoxHBoxLayout->setSpacing( spacingHint() );
     mTopLayout->addWidget(suspendBox);
 
     QLabel *l = new QLabel(i18nc("@label:spinbox", "Suspend &duration:"), suspendBox);

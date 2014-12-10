@@ -54,8 +54,6 @@ FilterConvertToSieveResultDialog::FilterConvertToSieveResultDialog(QWidget *pare
     QWidget *mainWidget = new QWidget(this);
     QHBoxLayout *mainLayout = new QHBoxLayout(mainWidget);
 
-//TODO PORT QT5     mainLayout->setSpacing( QDialog::spacingHint() );
-//TODO PORT QT5     mainLayout->setMargin( QDialog::marginHint() );
     mEditor = new PimCommon::PlainTextEditorWidget;
     PimCommon::SieveSyntaxHighlighter *syntaxHighlighter = new PimCommon::SieveSyntaxHighlighter(mEditor->editor()->document());
     syntaxHighlighter->addCapabilities(PimCommon::SieveSyntaxHighlighterUtil::fullCapabilities());

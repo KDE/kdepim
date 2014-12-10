@@ -252,7 +252,6 @@ void CollectionGeneralPage::init(const Akonadi::Collection &collection)
     QLabel *label;
 
     QVBoxLayout *topLayout = new QVBoxLayout(this);
-//TODO PORT QT5     topLayout->setSpacing( QDialog::spacingHint() );
 
     // Musn't be able to edit details for a non-resource, system folder.
     if ((!mIsLocalSystemFolder || mIsResourceFolder) &&
@@ -260,8 +259,6 @@ void CollectionGeneralPage::init(const Akonadi::Collection &collection)
 
         QHBoxLayout *hl = new QHBoxLayout();
         topLayout->addItem(hl);
-//TODO PORT QT5         hl->setSpacing( QDialog::spacingHint() );
-//TODO PORT QT5         hl->setMargin( QDialog::marginHint() );
         label = new QLabel(i18nc("@label:textbox Name of the folder.", "&Name:"), this);
         hl->addWidget(label);
 
@@ -274,8 +271,6 @@ void CollectionGeneralPage::init(const Akonadi::Collection &collection)
     // should new mail in this folder be ignored?
     QHBoxLayout *hbl = new QHBoxLayout();
     topLayout->addItem(hbl);
-//TODO PORT QT5     hbl->setSpacing( QDialog::spacingHint() );
-//TODO PORT QT5     hbl->setMargin( QDialog::marginHint() );
     mNotifyOnNewMailCheckBox =
         new QCheckBox(i18n("Act on new/unread mail in this folder"), this);
     mNotifyOnNewMailCheckBox->setWhatsThis(
@@ -292,8 +287,6 @@ void CollectionGeneralPage::init(const Akonadi::Collection &collection)
     // should replies to mails in this folder be kept in this same folder?
     hbl = new QHBoxLayout();
     topLayout->addItem(hbl);
-//TODO PORT QT5     hbl->setSpacing( QDialog::spacingHint() );
-//TODO PORT QT5     hbl->setMargin( QDialog::marginHint() );
     mKeepRepliesInSameFolderCheckBox =
         new QCheckBox(i18n("Keep replies in this folder"), this);
     mKeepRepliesInSameFolderCheckBox->setWhatsThis(
@@ -305,8 +298,6 @@ void CollectionGeneralPage::init(const Akonadi::Collection &collection)
     // should this folder be shown in the folder selection dialog?
     hbl = new QHBoxLayout();
     topLayout->addItem(hbl);
-//TODO PORT QT5     hbl->setSpacing( QDialog::spacingHint() );
-//TODO PORT QT5     hbl->setMargin( QDialog::marginHint() );
     mHideInSelectionDialogCheckBox =
         new QCheckBox(i18n("Hide this folder in the folder selection dialog"), this);
     mHideInSelectionDialogCheckBox->setWhatsThis(
@@ -320,9 +311,7 @@ void CollectionGeneralPage::init(const Akonadi::Collection &collection)
     addLine(this, topLayout);
     // use grid layout for the following combobox settings
     QGridLayout *gl = new QGridLayout();
-//TODO PORT QT5     gl->setMargin( QDialog::marginHint() );
     topLayout->addItem(gl);
-//TODO PORT QT5     gl->setSpacing( QDialog::spacingHint() );
     gl->setColumnStretch(1, 100);   // make the second column use all available space
     int row = -1;
 

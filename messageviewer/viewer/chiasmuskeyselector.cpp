@@ -34,7 +34,6 @@ ChiasmusKeySelector::ChiasmusKeySelector(QWidget *parent, const QString &caption
     mainLayout->addWidget(buttonBox);
 
     QVBoxLayout *layout = new QVBoxLayout(page);
-//TODO PORT QT5     layout->setSpacing(QDialog::spacingHint());
 
     mLabel = new QLabel(i18n("Please select the Chiasmus key file to use:"), page);
     mainLayout->addWidget(mLabel);

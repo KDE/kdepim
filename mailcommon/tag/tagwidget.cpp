@@ -37,14 +37,11 @@ TagWidget::TagWidget(const QList<KActionCollection *> &actionCollections, QWidge
     : QWidget(parent)
 {
     QGridLayout *settings = new QGridLayout;
-//TODO PORT QT5     settings->setMargin( QDialog::marginHint() );
-//TODO PORT QT5     settings->setSpacing( QDialog::spacingHint() );
     setLayout(settings);
 
     //Stretcher layout for adding some space after the label
     QVBoxLayout *spacer = new QVBoxLayout();
     settings->addLayout(spacer, 0, 0, 1, 2);
-//TODO PORT QT5     spacer->addSpacing( 2 * QDialog::spacingHint() );
 
     //First row for renaming
     mTagNameLineEdit = new QLineEdit(this);

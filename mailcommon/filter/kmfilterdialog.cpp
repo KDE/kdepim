@@ -385,7 +385,6 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection *> &actionCollectio
     QVBoxLayout *topVLayout = new QVBoxLayout(w);
     QHBoxLayout *topLayout = new QHBoxLayout;
     topVLayout->addLayout(topLayout);
-    //QT5 topLayout->setSpacing(spacingHint());
     topLayout->setMargin(0);
     QVBoxLayout *vbl2 = 0;
 
@@ -401,18 +400,13 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection *> &actionCollectio
     QWidget *page1 = new QWidget(tabWidget);
     tabWidget->addTab(page1, i18nc("General mail filter settings.", "General"));
     QHBoxLayout *hbl = new QHBoxLayout(page1);
-    //QT5 hbl->setSpacing(spacingHint());
-    //QT5 hbl->setMargin(marginHint());
 
     QWidget *page2 = new QWidget(tabWidget);
     tabWidget->addTab(page2, i18nc("Advanced mail filter settings.", "Advanced"));
     vbl2 = new QVBoxLayout(page2);
-    //QT5 vbl2->setSpacing(spacingHint());
-    //QT5 vbl2->setMargin(marginHint());
 
     QVBoxLayout *vbl = new QVBoxLayout();
     hbl->addLayout(vbl);
-    //QT5 vbl->setSpacing(spacingHint());
     hbl->setStretchFactor(vbl, 2);
 
     QGroupBox *patternGroupBox = new QGroupBox(i18n("Filter Criteria"), page1);
@@ -436,7 +430,6 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection *> &actionCollectio
         QGridLayout *gl = new QGridLayout();
         QVBoxLayout *vbl3 = new QVBoxLayout();
         gl->addLayout(vbl3, 0, 0);
-        //QT5 vbl3->setSpacing(spacingHint());
         vbl3->addStretch(1);
 
         mApplyOnIn = new QCheckBox(i18n("Apply this filter to incoming messages:"), mAdvOptsGroup);

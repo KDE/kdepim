@@ -124,10 +124,8 @@ DistributionListDialog::DistributionListDialog(QWidget *parent)
     mUser1Button->setEnabled(false);
 
     QBoxLayout *topLayout = new QVBoxLayout(topFrame);
-    //PORT QT5 topLayout->setSpacing( spacingHint() );
 
     QBoxLayout *titleLayout = new QHBoxLayout();
-    //PORT QT5 titleLayout->setSpacing( spacingHint() );
     topLayout->addItem(titleLayout);
 
     QLabel *label = new QLabel(

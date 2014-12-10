@@ -37,8 +37,6 @@ SelectThunderbirdProfileDialog::SelectThunderbirdProfileDialog(QWidget *parent)
     connect(buttonBox, &QDialogButtonBox::rejected, this, &SelectThunderbirdProfileDialog::reject);
     okButton->setDefault(true);
     setModal(true);
-//TODO PORT QT5     mainLayout->setSpacing( QDialog::spacingHint() );
-//TODO PORT QT5     mainLayout->setMargin( QDialog::marginHint() );
     mSelectProfile = new SelectThunderbirdProfileWidget(this);
     topLayout->addWidget(mSelectProfile);
     topLayout->addWidget(buttonBox);

@@ -200,7 +200,6 @@ RecentAddressDialog::RecentAddressDialog(QWidget *parent)
     QWidget *page = new QWidget(this);
 
     QVBoxLayout *layout = new QVBoxLayout(page);
-    //PORT QT5 layout->setSpacing( spacingHint() );
     layout->setMargin(0);
 
     mLineEdit = new KLineEdit(this);

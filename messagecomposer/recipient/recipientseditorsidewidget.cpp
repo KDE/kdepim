@@ -41,7 +41,6 @@ RecipientsEditorSideWidget::RecipientsEditorSideWidget(RecipientsEditor *view, Q
 {
     QBoxLayout *topLayout = new QVBoxLayout(this);
 
-//TODO PORT QT5     topLayout->setSpacing( QDialog::spacingHint() );
     topLayout->setMargin(0);
     topLayout->addStretch(1);
 

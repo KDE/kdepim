@@ -89,8 +89,6 @@ KeyGenerator::KeyGenerator(QWidget *parent)
     mainLayout->addWidget(buttonBox);
 
     QGridLayout *glay = new QGridLayout(w);
-    //PORT to QT5 glay->setMargin( marginHint() );
-    //PORT to QT5 glay->setSpacing( spacingHint() );
 
     int row = -1;
 

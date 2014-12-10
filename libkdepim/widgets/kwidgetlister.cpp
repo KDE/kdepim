@@ -114,7 +114,6 @@ void KWidgetLister::init(bool fewerMoreButton)
     d->mButtonBox = new QWidget(this);
     QHBoxLayout *mButtonBoxHBoxLayout = new QHBoxLayout(d->mButtonBox);
     mButtonBoxHBoxLayout->setMargin(0);
-//TODO PORT QT5     mButtonBoxHBoxLayout->setSpacing( QDialog::spacingHint() );
     d->mLayout->addWidget(d->mButtonBox);
 
     if (fewerMoreButton) {
