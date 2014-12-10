@@ -41,6 +41,8 @@ public:
     QByteArray serialized() const Q_DECL_OVERRIDE;
     void deserialize(const QByteArray &data) Q_DECL_OVERRIDE;
 
+    bool operator==(const CollectionAnnotationsAttribute &other) const;
+
 private:
     QMap<QByteArray, QByteArray> mAnnotations;
 };

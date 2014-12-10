@@ -213,7 +213,7 @@ set_target_properties(mailcommon PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERS
 install(TARGETS mailcommon ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory(filter/filterimporter/autotests)
-
+add_subdirectory(collectionpage/autotests)
 #install(FILES viewer/viewer.h viewer/attachmentstrategy.h header/headerstrategy.h messageviewer_export.h DESTINATION ${INCLUDE_INSTALL_DIR}/messageviewer COMPONENT devel)
 
 
