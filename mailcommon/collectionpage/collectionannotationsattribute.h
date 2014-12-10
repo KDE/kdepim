@@ -40,6 +40,8 @@ public:
     QByteArray serialized() const;
     void deserialize( const QByteArray &data );
 
+    bool operator==(const CollectionAnnotationsAttribute &other) const;
+
 private:
     QMap<QByteArray, QByteArray> mAnnotations;
 };

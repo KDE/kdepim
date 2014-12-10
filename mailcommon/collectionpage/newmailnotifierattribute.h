@@ -38,6 +38,7 @@ public:
 
     bool ignoreNewMail() const;
     void setIgnoreNewMail(bool b);
+    bool operator==(const NewMailNotifierAttribute &other) const;
 
 private:
     friend class NewMailNotifierAttributePrivate;

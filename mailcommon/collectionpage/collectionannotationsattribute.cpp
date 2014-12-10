@@ -96,3 +96,8 @@ void CollectionAnnotationsAttribute::deserialize( const QByteArray &data )
         }
     }
 }
+
+bool CollectionAnnotationsAttribute::operator==(const CollectionAnnotationsAttribute &other) const
+{
+    return mAnnotations == other.annotations();
+}
