@@ -49,7 +49,9 @@
 # include <QFileDialog>
 #endif
 
-#include <kdialog.h>
+#include <QPushButton>
+#include <qdialog.h>
+#include <qdialogbuttonbox.h>
 #include <KLocalizedString>
 #include <QSaveFile>
 #include <kguiitem.h>
@@ -394,27 +396,26 @@ bool MessageBox::showAuditLogButton(const Kleo::Job *job)
 // static
 void MessageBox::make(QWidget *parent, QMessageBox::Icon icon, const QString &text, const Job *job, const QString &caption, KMessageBox::Options options)
 {
-    KDialog *dialog = new KDialog(parent);
-    dialog->setCaption(caption);
-    dialog->setButtons(showAuditLogButton(job) ? (KDialog::Yes | KDialog::No) : KDialog::Yes);
-    dialog->setDefaultButton(KDialog::Yes);
-    dialog->setEscapeButton(KDialog::Yes);
+    QDialog *dialog = new QDialog(parent);
+    dialog->setWindowTitle(caption);
+    QDialogButtonBox *box = new QDialogButtonBox(showAuditLogButton(job) ? (QDialogButtonBox::Yes | QDialogButtonBox::No) : QDialogButtonBox::Yes, parent);
+    QPushButton *yesButton = box->button(QDialogButtonBox::Yes);
+    yesButton->setDefault(true);
+    //dialog->setEscapeButton(KDialog::Yes);
     dialog->setObjectName(QLatin1String("error"));
     dialog->setModal(true);
-    dialog->showButtonSeparator(true);
-    dialog->setButtonGuiItem(KDialog::Yes, KStandardGuiItem::ok());
+    KGuiItem::assign(yesButton, KStandardGuiItem::ok());
     if (GpgME::hasFeature(GpgME::AuditLogFeature)) {
-        dialog->setButtonGuiItem(KDialog::No, KGuiItem_showAuditLog());
+        KGuiItem::assign(box->button(QDialogButtonBox::No), KGuiItem_showAuditLog());
     }
 
     if (options & KMessageBox::PlainCaption) {
-        dialog->setPlainCaption(caption);
-    }
-#if 0 //QT5
-    if (KDialog::No == KMessageBox::createKMessageBox(dialog, icon, text, QStringList(), QString(), 0, options)) {
+        //QT5 dialog->setPlainCaption(caption);
+    }    
+
+    if (QDialogButtonBox::No == KMessageBox::createKMessageBox(dialog, box, icon, text, QStringList(), QString(), 0, options)) {
         auditLog(0, job);
     }
-#endif
 }
 
 #include "moc_messagebox_p.cpp"
