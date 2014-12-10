@@ -57,7 +57,6 @@ void ConfigureImmutableWidgetUtils::populateButtonGroup(QGroupBox *box, QButtonG
     } else {
         box->setLayout(new QVBoxLayout());
     }
-//TODO PORT QT5     box->layout()->setSpacing( QDialog::spacingHint() );
     const int numberChoices(e->choices().size());
     for (int i = 0; i < numberChoices; ++i) {
         QRadioButton *button = new QRadioButton(e->choices().at(i).label, box);
