@@ -301,8 +301,8 @@ public Q_SLOTS:
     void slotRemoveWidget(QWidget *);
 
 protected:
-    virtual void clearWidget(QWidget *aWidget);
-    virtual QWidget *createWidget(QWidget *parent);
+    void clearWidget(QWidget *aWidget) Q_DECL_OVERRIDE;
+    QWidget *createWidget(QWidget *parent) Q_DECL_OVERRIDE;
 
 private:
     void reconnectWidget(SearchRuleWidget *w);
