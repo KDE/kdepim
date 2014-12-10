@@ -68,7 +68,6 @@ KMailCVT::KMailCVT(QWidget *parent)
     readConfig();
     KHelpMenu *helpMenu = new KHelpMenu(this, KGlobal::mainComponent().aboutData(), true);
     setButtonMenu( Help, helpMenu->menu() );
-    setHelp(QString(), QLatin1String("kmailcvt"));
 }
 
 KMailCVT::~KMailCVT()
