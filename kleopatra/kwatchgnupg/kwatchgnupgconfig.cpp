@@ -93,14 +93,12 @@ KWatchGnuPGConfig::KWatchGnuPGConfig(QWidget *parent)
     mainLayout->addWidget(mButtonBox);
 
     QVBoxLayout *vlay = new QVBoxLayout(top);
-    //QT5 vlay->setSpacing( spacingHint() );
     vlay->setMargin(0);
 
     group = new QGroupBox(i18n("WatchGnuPG"), top);
     vlay->addWidget(group);
 
     glay = new QGridLayout(group);
-    //QT5 glay->setSpacing( spacingHint() );
     glay->setColumnStretch(1, 1);
 
     int row = -1;
@@ -142,7 +140,6 @@ KWatchGnuPGConfig::KWatchGnuPGConfig(QWidget *parent)
     vlay->addWidget(group);
 
     glay = new QGridLayout(group);
-    //QT5 glay->setSpacing( spacingHint() );
     glay->setColumnStretch(1, 1);
 
     row = -1;

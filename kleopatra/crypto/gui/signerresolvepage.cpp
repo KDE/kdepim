@@ -311,7 +311,6 @@ SignerResolvePage::Private::Private(SignerResolvePage *qq)
 
 {
     QVBoxLayout *layout = new QVBoxLayout(q);
-//TODO PORT QT5     layout->setSpacing( QDialog::spacingHint() );
 
     signEncryptGroup = new QButtonGroup(q);
     q->connect(signEncryptGroup, SIGNAL(buttonClicked(int)), q, SLOT(operationButtonClicked(int)));

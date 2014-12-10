@@ -157,13 +157,11 @@ DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage(QWidget *
 {
     mConfig = Kleo::CryptoBackendFactory::instance()->config();
     QGridLayout *glay = new QGridLayout(this);
-//TODO PORT QT5   glay->setSpacing( QDialog::spacingHint() );
     glay->setMargin(0);
 
     int row = 0;
     mWidget = new Kleo::DirectoryServicesWidget(this);
     if (QLayout *l = mWidget->layout()) {
-//TODO PORT QT5       l->setSpacing( QDialog::spacingHint() );
         l->setMargin(0);
     }
     glay->addWidget(mWidget, row, 0, 1, 3);

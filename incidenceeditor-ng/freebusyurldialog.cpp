@@ -57,7 +57,6 @@ FreeBusyUrlDialog::FreeBusyUrlDialog(AttendeeData::Ptr attendee, QWidget *parent
     okButton->setDefault(true);
 
     QBoxLayout *topLayout = new QVBoxLayout(topFrame);
-    //QT5 topLayout->setSpacing( spacingHint() );
     topLayout->setMargin(0);
 
     mWidget = new FreeBusyUrlWidget(attendee, topFrame);
