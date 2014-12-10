@@ -58,7 +58,8 @@ QByteArray NoteAlarmAttribute::serialized() const
 
 QByteArray NoteAlarmAttribute::type() const
 {
-    return "NoteAlarmAttribute";
+    static const QByteArray sType( "NoteAlarmAttribute" );
+    return sType;
 }
 
 void NoteAlarmAttribute::setDateTime(const KDateTime &dateTime)
