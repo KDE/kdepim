@@ -48,7 +48,7 @@ public:
     /**
       Reimplemented from QAbstractItemModel.
     */
-    virtual QStringList mimeTypes() const;
+    QStringList mimeTypes() const Q_DECL_OVERRIDE;
 
 private:
     class Private;

@@ -71,7 +71,7 @@ public:
     std::vector<GpgME::Key> resolvedSigners() const;
     std::vector<GpgME::Key> signingCertificates(GpgME::Protocol protocol = GpgME::UnknownProtocol) const;
 
-    /*reimpl*/ bool isComplete() const;
+    /*reimpl*/ bool isComplete() const Q_DECL_OVERRIDE;
 
     bool encryptionSelected() const;
     void setEncryptionSelected(bool selected);
@@ -134,7 +134,7 @@ public:
     boost::shared_ptr<SigningPreferences> signingPreferences() const;
 
 private:
-    /*reimpl*/ void onNext();
+    /*reimpl*/ void onNext() Q_DECL_OVERRIDE;
 
 private:
     class Private;
