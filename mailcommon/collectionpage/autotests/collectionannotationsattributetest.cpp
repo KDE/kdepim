@@ -58,4 +58,16 @@ void CollectionAnnotationsAttributeTest::shouldDeserializedAttribute()
     QVERIFY(attr == result);
 }
 
+void CollectionAnnotationsAttributeTest::shouldCloneAttribute()
+{
+    QMap<QByteArray, QByteArray> annotations;
+    annotations.insert("foo", "foo");
+    annotations.insert("bla", "bla");
+    annotations.insert("foo2", "bli");
+    MailCommon::CollectionAnnotationsAttribute attr(annotations);
+    MailCommon::CollectionAnnotationsAttribute *result = static_cast<MailCommon::CollectionAnnotationsAttribute *>(attr.clone());
+    QVERIFY(attr == *result);
+    delete result;
+}
+
 QTEST_KDEMAIN(CollectionAnnotationsAttributeTest, NoGUI)

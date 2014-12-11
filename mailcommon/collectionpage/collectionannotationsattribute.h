@@ -36,7 +36,7 @@ public:
     QMap<QByteArray, QByteArray> annotations() const;
 
     QByteArray type() const;
-    Attribute *clone() const;
+    CollectionAnnotationsAttribute *clone() const;
     QByteArray serialized() const;
     void deserialize( const QByteArray &data );
 
