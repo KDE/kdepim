@@ -113,12 +113,10 @@ Config::Config( QWidget *parent, bool encrypt )
 
 
   QVBoxLayout *topLayout = new QVBoxLayout( this );
-//TODO PORT QT5   topLayout->setSpacing( QDialog::spacingHint() );
   topLayout->setMargin( 0 );
 
   group = new QGroupBox( i18n("Warning"), this );
   QVBoxLayout *lay = new QVBoxLayout(group);
-//TODO PORT QT5   lay->setSpacing( QDialog::spacingHint() );
   // (mmutz) work around Qt label bug in 3.0.0 (and possibly later):
   // 1. Don't use rich text: No <qt><b>...</b></qt>
   label = new QLabel( i18n("Please check if encryption really "
@@ -136,7 +134,6 @@ Config::Config( QWidget *parent, bool encrypt )
   topLayout->addWidget( group );
   group = new QGroupBox( i18n("Encryption Tool"), this );
   lay = new QVBoxLayout(group);
-//TODO PORT QT5   lay->setSpacing( QDialog::spacingHint() );
 
   QWidget * hbox = new QWidget( group );
   QHBoxLayout *hboxHBoxLayout = new QHBoxLayout(hbox);
@@ -163,7 +160,6 @@ Config::Config( QWidget *parent, bool encrypt )
 
   mpOptionsGroupBox = new QGroupBox( i18n("Options"), this );
   lay = new QVBoxLayout( mpOptionsGroupBox );
-//TODO PORT QT5   lay->setSpacing( QDialog::spacingHint() );
   storePass = new QCheckBox( i18n("&Keep passphrase in memory"),
                              mpOptionsGroupBox );
   lay->addWidget( storePass );
@@ -1194,7 +1190,6 @@ KeyRequester::KeyRequester( QWidget * parent, bool multipleKeys,
 {
   setObjectName( QLatin1String(name) );
   QHBoxLayout * hlay = new QHBoxLayout( this );
-//TODO PORT QT5   hlay->setSpacing( QDialog::spacingHint() );
   hlay->setMargin( 0 );
 
   // the label where the key id is to be displayed:
@@ -1372,7 +1367,6 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
   mainLayout->addWidget(page);
   mainLayout->addWidget(buttonBox); 
   QVBoxLayout *topLayout = new QVBoxLayout( page );
-//TODO PORT QT5   topLayout->setSpacing( QDialog::spacingHint() );
   topLayout->setMargin( 0 );
 
   QLabel *label = new QLabel( i18n("The following keys will be used for "
@@ -1387,8 +1381,6 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
   QVBoxLayout *bigvboxVBoxLayout = new QVBoxLayout(bigvbox);
   bigvboxVBoxLayout->setMargin(0);
   sv->setWidget( bigvbox );
-//TODO PORT QT5   //bigvboxVBoxLayout->setMargin( QDialog::marginHint() );
-//TODO PORT QT5   bigvboxVBoxLayout->setSpacing( QDialog::spacingHint() );
 
   QButtonGroup *mChangeButtonGroup = new QButtonGroup;
   mAddressLabels.resize( addresses.count() );

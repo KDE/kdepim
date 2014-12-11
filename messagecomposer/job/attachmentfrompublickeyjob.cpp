@@ -25,7 +25,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include <kdialogjobuidelegate.h> //krazy:exclude=camelcase TODO wait for kdelibs4.10
+#include <KDialogJobUiDelegate>
 #include <KLocalizedString>
 
 #include <kleo/cryptobackendfactory.h>

@@ -55,7 +55,6 @@ FolderRequester::FolderRequester(QWidget *parent)
       mMustBeReadWrite(true), mShowOutbox(true), mNotCreateNewFolder(false)
 {
     QHBoxLayout *hlay = new QHBoxLayout(this);
-//TODO PORT QT5   hlay->setSpacing( QDialog::spacingHint() );
     hlay->setContentsMargins(0, 0, 0, 0);
 
     mEdit = new QLineEdit(this);

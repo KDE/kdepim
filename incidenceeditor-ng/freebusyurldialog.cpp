@@ -76,7 +76,6 @@ FreeBusyUrlWidget::FreeBusyUrlWidget(AttendeeData::Ptr attendee, QWidget *parent
     : QWidget(parent), mAttendee(attendee)
 {
     QBoxLayout *topLayout = new QVBoxLayout(this);
-//TODO PORT QT5   topLayout->setSpacing( QDialog::spacingHint() );
 
     QLabel *label =
         new QLabel(xi18n("Location of Free/Busy information for %1 <placeholder>%2</placeholder>:",

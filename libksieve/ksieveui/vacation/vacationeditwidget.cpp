@@ -44,7 +44,6 @@ VacationEditWidget::VacationEditWidget(QWidget *parent)
     int row = -1;
 
     QGridLayout *glay = new QGridLayout(this);
-//TODO PORT QT5     glay->setSpacing( QDialog::spacingHint() );
     glay->setMargin(0);
     glay->setColumnStretch(1, 1);
 

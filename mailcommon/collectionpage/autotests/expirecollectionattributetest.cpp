@@ -17,7 +17,7 @@
 
 #include "expirecollectionattributetest.h"
 #include "../expirecollectionattribute.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 Q_DECLARE_METATYPE(MailCommon::ExpireCollectionAttribute::ExpireUnits)
 Q_DECLARE_METATYPE(MailCommon::ExpireCollectionAttribute::ExpireAction)
@@ -171,4 +171,4 @@ void ExpireCollectionAttributeTest::shouldSerializedValue()
     QVERIFY(attr == result);
 }
 
-QTEST_KDEMAIN(ExpireCollectionAttributeTest, NoGUI)
+QTEST_MAIN(ExpireCollectionAttributeTest)

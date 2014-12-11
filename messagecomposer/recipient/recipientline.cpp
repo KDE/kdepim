@@ -73,7 +73,6 @@ RecipientLineNG::RecipientLineNG(QWidget *parent)
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
     QBoxLayout *topLayout = new QHBoxLayout(this);
-//TODO PORT QT5     topLayout->setSpacing( QDialog::spacingHint() );
     topLayout->setMargin(0);
 
     const QStringList recipientTypes = Recipient::allTypeLabels();

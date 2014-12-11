@@ -76,7 +76,7 @@
 #include <KActionMenu>
 #include <KApplication>
 #include <KCheckableProxyModel>
-#include <kdescendantsproxymodel.h> //krazy:exclude=camelcase TODO wait for kdelibs4.9
+#include <KDescendantsProxyModel>
 #include <KLocalizedString>
 #include <KSelectionProxyModel>
 #include <QTextBrowser>
