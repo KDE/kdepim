@@ -41,7 +41,7 @@ QByteArray ExpireCollectionAttribute::type() const
     return sType;
 }
 
-Akonadi::Attribute *ExpireCollectionAttribute::clone() const
+ExpireCollectionAttribute *ExpireCollectionAttribute::clone() const
 {
     ExpireCollectionAttribute *expireAttr = new ExpireCollectionAttribute();
     expireAttr->setAutoExpire(mExpireMessages);

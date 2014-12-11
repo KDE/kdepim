@@ -30,6 +30,10 @@ private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldAssignValue_data();
     void shouldAssignValue();
+    void shouldCloneAttr_data();
+    void shouldCloneAttr();
+    void shouldSerializedValue_data();
+    void shouldSerializedValue();
 };
 
 #endif // EXPIRECOLLECTIONATTRIBUTETEST_H

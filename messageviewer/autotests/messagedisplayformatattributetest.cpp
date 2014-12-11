@@ -76,4 +76,15 @@ void MessageDisplayFormatAttributeTest::shouldDeserializeValue()
     QVERIFY(attr == result);
 }
 
+void MessageDisplayFormatAttributeTest::shouldCloneAttribute()
+{
+    MessageViewer::Viewer::DisplayFormatMessage format = MessageViewer::Viewer::Html;
+    MessageViewer::MessageDisplayFormatAttribute attr;
+    attr.setMessageFormat(format);
+    attr.setRemoteContent(true);
+    MessageViewer::MessageDisplayFormatAttribute *result = attr.clone();
+    QVERIFY(attr == *result);
+    delete result;
+}
+
 QTEST_MAIN(MessageDisplayFormatAttributeTest)
