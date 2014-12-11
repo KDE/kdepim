@@ -1043,7 +1043,7 @@ QString stripOffPrefixes( const QString &subject )
 
     QStringList forwardPrefixes = GlobalSettings::self()->forwardPrefixes();
     if ( forwardPrefixes.isEmpty() )
-        forwardPrefixes = defaultReplyPrefixes;
+        forwardPrefixes = defaultForwardPrefixes;
 
     const QStringList prefixRegExps = replyPrefixes + forwardPrefixes;
 
