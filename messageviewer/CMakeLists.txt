@@ -82,7 +82,6 @@ set(libmessageviewer_viewer_SRCS
   viewer/attachmenttemporaryfilesdirs.cpp
   viewer/objecttreeemptysource.cpp
   viewer/objecttreeparser.cpp
-  viewer/objecttreeparser_p.cpp
   viewer/objecttreeviewersource.cpp
   viewer/partnodebodypart.cpp
   viewer/pluginloaderbase.cpp
@@ -91,6 +90,10 @@ set(libmessageviewer_viewer_SRCS
   viewer/messagedisplayformatattribute.cpp
   viewer/urlhandlermanager.cpp
   viewer/mimeparttreeview.cpp
+  viewer/cryptobodypartmemento.cpp
+  viewer/decryptverifybodypartmemento.cpp
+  viewer/verifydetachedbodypartmemento.cpp
+  viewer/verifyopaquebodypartmemento.cpp
 )
 
 set(libmessageviewer_widgets_SRCS
