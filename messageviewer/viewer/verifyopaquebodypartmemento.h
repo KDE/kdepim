@@ -30,42 +30,52 @@
 #include "interfaces/bodypart.h"
 #include "viewer/viewer.h"
 
-namespace Kleo {
+namespace Kleo
+{
 class VerifyOpaqueJob;
 class KeyListJob;
 }
 
 class QStringList;
 
-namespace MessageViewer {
-
+namespace MessageViewer
+{
 
 class VerifyOpaqueBodyPartMemento
-        : public CryptoBodyPartMemento
+    : public CryptoBodyPartMemento
 {
     Q_OBJECT
 public:
-    VerifyOpaqueBodyPartMemento( Kleo::VerifyOpaqueJob * job,
-                                 Kleo::KeyListJob * klj,
-                                 const QByteArray & signature );
+    VerifyOpaqueBodyPartMemento(Kleo::VerifyOpaqueJob *job,
+                                Kleo::KeyListJob *klj,
+                                const QByteArray &signature);
     ~VerifyOpaqueBodyPartMemento();
 
     bool start();
     void exec();
 
-    const QByteArray & plainText() const { return m_plainText; }
-    const GpgME::VerificationResult & verifyResult() const { return m_vr; }
-    const GpgME::Key & signingKey() const { return m_key; }
+    const QByteArray &plainText() const
+    {
+        return m_plainText;
+    }
+    const GpgME::VerificationResult &verifyResult() const
+    {
+        return m_vr;
+    }
+    const GpgME::Key &signingKey() const
+    {
+        return m_key;
+    }
 
 private slots:
-    void slotResult( const GpgME::VerificationResult & vr,
-                     const QByteArray & plainText );
+    void slotResult(const GpgME::VerificationResult &vr,
+                    const QByteArray &plainText);
     void slotKeyListJobDone();
-    void slotNextKey( const GpgME::Key & );
+    void slotNextKey(const GpgME::Key &);
 
 private:
-    void saveResult( const GpgME::VerificationResult &,
-                     const QByteArray & );
+    void saveResult(const GpgME::VerificationResult &,
+                    const QByteArray &);
     bool canStartKeyListJob() const;
     QStringList keyListPattern() const;
     bool startKeyListJob();

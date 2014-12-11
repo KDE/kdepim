@@ -46,7 +46,7 @@ QMap<QByteArray, QByteArray> CollectionAnnotationsAttribute::annotations() const
 
 QByteArray CollectionAnnotationsAttribute::type() const
 {
-    static const QByteArray sType( "collectionannotations" );
+    static const QByteArray sType("collectionannotations");
     return sType;
 }
 

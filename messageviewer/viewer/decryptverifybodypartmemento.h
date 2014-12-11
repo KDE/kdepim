@@ -30,36 +30,47 @@
 #include "interfaces/bodypart.h"
 #include "viewer/viewer.h"
 
-namespace Kleo {
+namespace Kleo
+{
 class DecryptVerifyJob;
 }
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 class DecryptVerifyBodyPartMemento
-        : public CryptoBodyPartMemento
+    : public CryptoBodyPartMemento
 {
     Q_OBJECT
 public:
-    DecryptVerifyBodyPartMemento( Kleo::DecryptVerifyJob * job, const QByteArray & cipherText );
+    DecryptVerifyBodyPartMemento(Kleo::DecryptVerifyJob *job, const QByteArray &cipherText);
     ~DecryptVerifyBodyPartMemento();
 
     bool start();
     void exec();
 
-    const QByteArray & plainText() const { return m_plainText; }
-    const GpgME::DecryptionResult & decryptResult() const { return m_dr; }
-    const GpgME::VerificationResult & verifyResult() const { return m_vr; }
+    const QByteArray &plainText() const
+    {
+        return m_plainText;
+    }
+    const GpgME::DecryptionResult &decryptResult() const
+    {
+        return m_dr;
+    }
+    const GpgME::VerificationResult &verifyResult() const
+    {
+        return m_vr;
+    }
 
 private slots:
-    void slotResult( const GpgME::DecryptionResult & dr,
-                     const GpgME::VerificationResult & vr,
-                     const QByteArray & plainText );
+    void slotResult(const GpgME::DecryptionResult &dr,
+                    const GpgME::VerificationResult &vr,
+                    const QByteArray &plainText);
 
 private:
-    void saveResult( const GpgME::DecryptionResult &,
-                     const GpgME::VerificationResult &,
-                     const QByteArray & );
+    void saveResult(const GpgME::DecryptionResult &,
+                    const GpgME::VerificationResult &,
+                    const QByteArray &);
 private:
     // input:
     const QByteArray m_cipherText;

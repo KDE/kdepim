@@ -30,9 +30,9 @@ using namespace GpgME;
 using namespace MessageViewer;
 
 CryptoBodyPartMemento::CryptoBodyPartMemento()
-    : QObject( 0 ),
+    : QObject(0),
       Interface::BodyPartMemento(),
-      m_running( false )
+      m_running(false)
 {
 
 }
@@ -47,19 +47,19 @@ bool CryptoBodyPartMemento::isRunning() const
     return m_running;
 }
 
-void CryptoBodyPartMemento::setAuditLog( const Error & err, const QString & log )
+void CryptoBodyPartMemento::setAuditLog(const Error &err, const QString &log)
 {
     m_auditLogError = err;
     m_auditLog = log;
 }
 
-void CryptoBodyPartMemento::setRunning( bool running )
+void CryptoBodyPartMemento::setRunning(bool running)
 {
     m_running = running;
 }
 
 void CryptoBodyPartMemento::detach()
 {
-    disconnect( this, SIGNAL(update(MessageViewer::Viewer::UpdateMode)), 0, 0 );
+    disconnect(this, SIGNAL(update(MessageViewer::Viewer::UpdateMode)), 0, 0);
 }
 

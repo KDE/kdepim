@@ -45,7 +45,7 @@ public:
 
     void setRemoteContent(bool remote);
     bool remoteContent() const;
-    
+
     bool operator==(const MessageDisplayFormatAttribute &other) const;
 
 private:

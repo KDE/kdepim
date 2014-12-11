@@ -30,39 +30,47 @@
 #include "interfaces/bodypart.h"
 #include "viewer/viewer.h"
 
-namespace Kleo {
+namespace Kleo
+{
 class VerifyDetachedJob;
 class KeyListJob;
 }
 
 class QStringList;
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 class VerifyDetachedBodyPartMemento
-        : public CryptoBodyPartMemento
+    : public CryptoBodyPartMemento
 {
     Q_OBJECT
 public:
-    VerifyDetachedBodyPartMemento( Kleo::VerifyDetachedJob * job,
-                                   Kleo::KeyListJob * klj,
-                                   const QByteArray & signature,
-                                   const QByteArray & plainText );
+    VerifyDetachedBodyPartMemento(Kleo::VerifyDetachedJob *job,
+                                  Kleo::KeyListJob *klj,
+                                  const QByteArray &signature,
+                                  const QByteArray &plainText);
     ~VerifyDetachedBodyPartMemento();
 
     bool start();
     void exec();
 
-    const GpgME::VerificationResult & verifyResult() const { return m_vr; }
-    const GpgME::Key & signingKey() const { return m_key; }
+    const GpgME::VerificationResult &verifyResult() const
+    {
+        return m_vr;
+    }
+    const GpgME::Key &signingKey() const
+    {
+        return m_key;
+    }
 
 private slots:
-    void slotResult( const GpgME::VerificationResult & vr );
+    void slotResult(const GpgME::VerificationResult &vr);
     void slotKeyListJobDone();
-    void slotNextKey( const GpgME::Key & );
+    void slotNextKey(const GpgME::Key &);
 
 private:
-    void saveResult( const GpgME::VerificationResult & );
+    void saveResult(const GpgME::VerificationResult &);
     bool canStartKeyListJob() const;
     QStringList keyListPattern() const;
     bool startKeyListJob();

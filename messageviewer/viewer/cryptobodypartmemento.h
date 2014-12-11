@@ -28,11 +28,12 @@
 #include "interfaces/bodypart.h"
 #include "viewer/viewer.h"
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 class CryptoBodyPartMemento
-        : public QObject,
-        public Interface::BodyPartMemento
+    : public QObject,
+      public Interface::BodyPartMemento
 {
     Q_OBJECT
 public:
@@ -41,8 +42,14 @@ public:
 
     bool isRunning() const;
 
-    const QString & auditLogAsHtml() const { return m_auditLog; }
-    GpgME::Error auditLogError() const { return m_auditLogError; }
+    const QString &auditLogAsHtml() const
+    {
+        return m_auditLog;
+    }
+    GpgME::Error auditLogError() const
+    {
+        return m_auditLogError;
+    }
 
     void detach();
 
@@ -50,13 +57,14 @@ signals:
     void update(MessageViewer::Viewer::UpdateMode);
 
 protected slots:
-    void notify() {
+    void notify()
+    {
         emit update(Viewer::Force);
     }
 
 protected:
-    void setAuditLog( const GpgME::Error & err, const QString & log );
-    void setRunning( bool running );
+    void setAuditLog(const GpgME::Error &err, const QString &log);
+    void setRunning(bool running);
 
 private:
     bool m_running;

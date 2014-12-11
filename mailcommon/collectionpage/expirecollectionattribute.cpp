@@ -37,7 +37,7 @@ ExpireCollectionAttribute::ExpireCollectionAttribute()
 
 QByteArray ExpireCollectionAttribute::type() const
 {
-    static const QByteArray sType( "expirationcollectionattribute" );
+    static const QByteArray sType("expirationcollectionattribute");
     return sType;
 }
 
