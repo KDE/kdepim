@@ -49,7 +49,6 @@ namespace Akonadi
 {
 class Item;
 }
-
 class KJob;
 
 class QAbstractItemModel;
@@ -58,7 +57,7 @@ class QString;
 
 namespace MailCommon
 {
-
+class ExpireCollectionAttribute;
 /**
  * The Util namespace contains a collection of helper functions use in
  * various places.
@@ -126,6 +125,7 @@ MAILCOMMON_EXPORT bool foundMailer();
 MAILCOMMON_EXPORT bool isLocalCollection(const QString &resource);
 
 MAILCOMMON_EXPORT bool ignoreNewMailInFolder(const Akonadi::Collection &collection);
+MAILCOMMON_EXPORT MailCommon::ExpireCollectionAttribute *expirationCollectionAttribute(const Akonadi::Collection &collection, bool &mustDeleteExpirationAttribute);
 }
 
 }

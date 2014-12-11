@@ -36,6 +36,7 @@ public:
     QString pop3AccountName() const;
     void setPop3AccountName(const QString &accountName);
 
+    bool operator==(const Pop3ResourceAttribute &other) const;
 private:
     friend class Pop3ResourceAttributePrivate;
     Pop3ResourceAttributePrivate *const d;

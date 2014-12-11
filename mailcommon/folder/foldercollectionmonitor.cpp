@@ -94,7 +94,7 @@ void FolderCollectionMonitor::expireAllCollection(const QAbstractItemModel *mode
 
         bool mustDeleteExpirationAttribute = false;
         MailCommon::ExpireCollectionAttribute *attr =
-            MailCommon::ExpireCollectionAttribute::expirationCollectionAttribute(
+            MailCommon::Util::expirationCollectionAttribute(
                 collection, mustDeleteExpirationAttribute);
 
         if (attr->isAutoExpire()) {

@@ -79,3 +79,8 @@ void Pop3ResourceAttribute::setPop3AccountName(const QString &accountName)
     d->accountName = accountName;
 }
 
+bool Pop3ResourceAttribute::operator==(const Pop3ResourceAttribute &other) const
+{
+    return d->accountName == other.pop3AccountName();
+}
+

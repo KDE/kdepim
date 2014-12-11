@@ -55,13 +55,6 @@ public:
     QByteArray serialized() const Q_DECL_OVERRIDE;
     void deserialize(const QByteArray &data) Q_DECL_OVERRIDE;
 
-    static int daysToExpire(int number, ExpireCollectionAttribute::ExpireUnits units);
-
-    static ExpireCollectionAttribute *expirationCollectionAttribute(
-        const Akonadi::Collection &collection, bool &mustDeleteExpirationAttribute);
-
-    void loadFromConfig(const Akonadi::Collection &collection);
-
     void daysToExpire(int &unreadDays, int &readDays);
 
     /**
@@ -136,7 +129,9 @@ public:
      */
     ExpireUnits readExpireUnits() const;
 
+    bool operator==(const ExpireCollectionAttribute &other) const;
 private:
+    static int daysToExpire(int number, ExpireCollectionAttribute::ExpireUnits units);
     bool mExpireMessages;         // true if old messages are expired
     int mUnreadExpireAge;         // Given in unreadExpireUnits
     int mReadExpireAge;           // Given in readExpireUnits

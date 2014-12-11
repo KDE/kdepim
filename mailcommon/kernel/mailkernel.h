@@ -24,7 +24,7 @@
 
 #include <Collection>
 #include <Akonadi/KMime/SpecialMailCollections>
-
+#include <KConfigGroup>
 #include <KSharedConfig>
 
 #include <QObject>

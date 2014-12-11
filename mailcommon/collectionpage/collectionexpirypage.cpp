@@ -132,7 +132,7 @@ void CollectionExpiryPage::load(const Akonadi::Collection &collection)
     init();
 
     bool mustDeleteExpirationAttribute = false;
-    MailCommon::ExpireCollectionAttribute *attr = MailCommon::ExpireCollectionAttribute::expirationCollectionAttribute(mCollection, mustDeleteExpirationAttribute);
+    MailCommon::ExpireCollectionAttribute *attr = MailCommon::Util::expirationCollectionAttribute(mCollection, mustDeleteExpirationAttribute);
 
     // Load the values from the folder
     bool expiryGloballyOn = attr->isAutoExpire();
