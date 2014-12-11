@@ -23,7 +23,6 @@
     <entry name="ShowQuickSearch" type="Bool">
       <default>true</default>
     </entry>
-    <entry name="TagSelected" type="String"/>
   </group>
 
   <group name="MessageListView::Colors">

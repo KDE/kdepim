@@ -220,32 +220,19 @@ void Widget::slotTagsFetched(KJob *job)
     }
     Akonadi::TagFetchJob *fetchJob = static_cast<Akonadi::TagFetchJob*>(job);
 
-    KConfigGroup conf( MessageList::Core::Settings::self()->config(),"MessageListView");
-    const QString tagSelected= conf.readEntry(QLatin1String("TagSelected"));
-    if(tagSelected.isEmpty()) {
-        setCurrentStatusFilterItem();
-        return;
-    }
-    const QStringList tagSelectedLst = tagSelected.split(QLatin1Char(','));
-
     addMessageTagItem( SmallIcon( QLatin1String( "mail-flag" ) ), i18n( "All" ), QString() );
 
     QStringList tagFound;
     foreach( const Akonadi::Tag &akonadiTag, fetchJob->tags() ) {
-        if(tagSelectedLst.contains(akonadiTag.url().url())) {
-            tagFound.append(akonadiTag.url().url());
-            QString iconName = QLatin1String( "mail-tagged" );
-            const QString label = akonadiTag.name();
-            const QString id = akonadiTag.url().url();
-            Akonadi::TagAttribute *attr = akonadiTag.attribute<Akonadi::TagAttribute>();
-            if (attr) {
-                iconName = attr->iconName();
-            }
-            addMessageTagItem( SmallIcon( iconName ), label, QVariant( id ) );
+        QString iconName = QLatin1String( "mail-tagged" );
+        const QString label = akonadiTag.name();
+        const QString id = akonadiTag.url().url();
+        Akonadi::TagAttribute *attr = akonadiTag.attribute<Akonadi::TagAttribute>();
+        if (attr) {
+            iconName = attr->iconName();
         }
+        addMessageTagItem( SmallIcon( iconName ), label, QVariant( id ) );
     }
-    conf.writeEntry(QLatin1String("TagSelected"), tagFound);
-    conf.sync();
 
     setCurrentStatusFilterItem();
 }
