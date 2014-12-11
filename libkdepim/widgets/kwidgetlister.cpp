@@ -281,7 +281,6 @@ void KWidgetLister::addWidgetAfterThisWidget(QWidget*currentWidget, QWidget* wid
 
     int index = d->mLayout->indexOf( currentWidget ? currentWidget :  d->mButtonBox )+1;
     d->mLayout->insertWidget( index, widget );
-    index = 0;
     if (currentWidget) {
         index = d->mWidgetList.indexOf(currentWidget);
         d->mWidgetList.insert(index+1, widget);
