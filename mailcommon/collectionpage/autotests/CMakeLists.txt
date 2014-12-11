@@ -1,14 +1,20 @@
 
 set( mailcommon_newmailnotifierattribute_source newmailnotifierattributetest.cpp ../newmailnotifierattribute.cpp)
-kde4_add_unit_test( newmailnotifierattributetest ${mailcommon_newmailnotifierattribute_source})
-target_link_libraries( newmailnotifierattributetest ${QT_QTTEST_LIBRARY} ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY} ${KDEPIMLIBS_AKONADI_LIBS})
+add_executable( newmailnotifierattributetest ${mailcommon_newmailnotifierattribute_source})
+add_test(newmailnotifierattributetest newmailnotifierattributetest)
+ecm_mark_as_test(newmailnotifierattributetest)
+target_link_libraries( newmailnotifierattributetest Qt5::Test KF5::KDELibs4Support Qt5::Gui KF5::AkonadiCore mailcommon)
 
 
 set( mailcommon_collectionannotationsattributetest_source collectionannotationsattributetest.cpp ../collectionannotationsattribute.cpp)
-kde4_add_unit_test( collectionannotationsattributetest ${mailcommon_collectionannotationsattributetest_source})
-target_link_libraries( collectionannotationsattributetest ${QT_QTTEST_LIBRARY} ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY} ${KDEPIMLIBS_AKONADI_LIBS})
+add_executable( collectionannotationsattributetest ${mailcommon_collectionannotationsattributetest_source})
+add_test(collectionannotationsattributetest collectionannotationsattributetest)
+ecm_mark_as_test(collectionannotationsattributetest)
+target_link_libraries( collectionannotationsattributetest Qt5::Test KF5::KDELibs4Support Qt5::Gui KF5::AkonadiCore mailcommon)
 
 
 set( mailcommon_expirecollectionattributetest_source expirecollectionattributetest.cpp ../expirecollectionattribute.cpp )
-kde4_add_unit_test( expirecollectionattributetest ${mailcommon_expirecollectionattributetest_source})
-target_link_libraries( expirecollectionattributetest ${QT_QTTEST_LIBRARY} ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY} ${KDEPIMLIBS_AKONADI_LIBS})
+add_executable( expirecollectionattributetest ${mailcommon_expirecollectionattributetest_source})
+add_test(expirecollectionattributetest expirecollectionattributetest)
+ecm_mark_as_test(expirecollectionattributetest)
+target_link_libraries( expirecollectionattributetest Qt5::Test KF5::KDELibs4Support Qt5::Gui KF5::AkonadiCore mailcommon)
