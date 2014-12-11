@@ -54,7 +54,6 @@ public:
     QByteArray serialized() const;
     void deserialize( const QByteArray &data );
 
-    static int daysToExpire( int number, ExpireCollectionAttribute::ExpireUnits units );
 
     void daysToExpire( int &unreadDays, int &readDays );
 
@@ -130,7 +129,9 @@ public:
      */
     ExpireUnits readExpireUnits() const;
 
+    bool operator==(const ExpireCollectionAttribute &other) const;
 private:
+    static int daysToExpire( int number, ExpireCollectionAttribute::ExpireUnits units );
     bool mExpireMessages;         // true if old messages are expired
     int mUnreadExpireAge;         // Given in unreadExpireUnits
     int mReadExpireAge;           // Given in readExpireUnits

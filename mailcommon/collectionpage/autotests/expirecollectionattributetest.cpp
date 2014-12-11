@@ -16,6 +16,7 @@
 */
 
 #include "expirecollectionattributetest.h"
+#include "../expirecollectionattribute.h"
 #include <qtest_kde.h>
 ExpireCollectionAttributeTest::ExpireCollectionAttributeTest(QObject *parent)
     : QObject(parent)
@@ -26,6 +27,28 @@ ExpireCollectionAttributeTest::ExpireCollectionAttributeTest(QObject *parent)
 ExpireCollectionAttributeTest::~ExpireCollectionAttributeTest()
 {
 
+}
+
+void ExpireCollectionAttributeTest::shouldHaveDefaultValue()
+{
+    MailCommon::ExpireCollectionAttribute attr;
+    QVERIFY(!attr.isAutoExpire());
+    QCOMPARE(attr.unreadExpireAge(), 28);
+    QCOMPARE(attr.readExpireAge(), 14);
+    QCOMPARE(attr.expireAction(), MailCommon::ExpireCollectionAttribute::ExpireDelete);
+    QCOMPARE(attr.unreadExpireUnits(), MailCommon::ExpireCollectionAttribute::ExpireNever);
+    QCOMPARE(attr.readExpireUnits(), MailCommon::ExpireCollectionAttribute::ExpireNever);
+    QCOMPARE(attr.expireToFolderId(), (qint64)-1);
+}
+
+void ExpireCollectionAttributeTest::shouldAssignValue_data()
+{
+    //TODO
+}
+
+void ExpireCollectionAttributeTest::shouldAssignValue()
+{
+    MailCommon::ExpireCollectionAttribute attr;
 }
 
 QTEST_KDEMAIN(ExpireCollectionAttributeTest, NoGUI)

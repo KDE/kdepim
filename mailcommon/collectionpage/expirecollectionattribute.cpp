@@ -132,6 +132,17 @@ ExpireCollectionAttribute::ExpireUnits ExpireCollectionAttribute::readExpireUnit
     return mReadExpireUnits;
 }
 
+bool ExpireCollectionAttribute::operator==(const ExpireCollectionAttribute &other) const
+{
+    return (mExpireMessages == other.isAutoExpire()) &&
+            (mUnreadExpireAge == other.unreadExpireAge()) &&
+            (mReadExpireAge == other.readExpireAge()) &&
+            (mUnreadExpireUnits == other.unreadExpireUnits()) &&
+            (mReadExpireUnits == other.readExpireUnits()) &&
+            (mExpireAction == other.expireAction()) &&
+            (mExpireToFolderId == other.expireToFolderId());
+}
+
 int ExpireCollectionAttribute::daysToExpire( int number,
                                              ExpireCollectionAttribute::ExpireUnits units )
 {

@@ -9,6 +9,6 @@ kde4_add_unit_test( collectionannotationsattributetest ${mailcommon_collectionan
 target_link_libraries( collectionannotationsattributetest ${QT_QTTEST_LIBRARY} ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY} ${KDEPIMLIBS_AKONADI_LIBS})
 
 
-set( mailcommon_expirecollectionattributetest_source expirecollectionattributetest.cpp  )
+set( mailcommon_expirecollectionattributetest_source expirecollectionattributetest.cpp ../expirecollectionattribute.cpp )
 kde4_add_unit_test( expirecollectionattributetest ${mailcommon_expirecollectionattributetest_source})
 target_link_libraries( expirecollectionattributetest ${QT_QTTEST_LIBRARY} ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY} ${KDEPIMLIBS_AKONADI_LIBS})
