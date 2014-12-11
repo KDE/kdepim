@@ -17,7 +17,7 @@
 
 #include "todoedit.h"
 #include "messageviewer/globalsettings_base.h"
-
+#include "messageviewer_debug.h"
 #include <KLocalizedString>
 #include <QLineEdit>
 #include <QIcon>
@@ -220,12 +220,12 @@ void TodoEdit::slotCloseWidget()
 void TodoEdit::slotReturnPressed()
 {
     if (!mMessage) {
-        qDebug() << " Message is null";
+        qCDebug(MESSAGEVIEWER_LOG) << " Message is null";
         return;
     }
     const Akonadi::Collection collection = mCollectionCombobox->currentCollection();
     if (!collection.isValid()) {
-        qDebug() << " Collection is not valid";
+        qCDebug(MESSAGEVIEWER_LOG) << " Collection is not valid";
         return;
     }
 

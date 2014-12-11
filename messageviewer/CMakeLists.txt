@@ -180,6 +180,7 @@ set(libmessageviewer_SRCS
   ${libmessageviewer_antispam_SRCS}
   ${libmessageviewer_job_SRCS}
   settings/globalsettings.cpp
+  messageviewer_debug.cpp
   ${_mailwebview_cpp}
 )
 

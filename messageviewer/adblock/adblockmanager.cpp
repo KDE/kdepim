@@ -26,7 +26,7 @@
 
 // Self Includes
 #include "adblockmanager.h"
-
+#include "messageviewer_debug.h"
 #include "settings/globalsettings.h"
 #include "adblock/adblockutil.h"
 
@@ -142,7 +142,7 @@ void AdBlockManager::loadRules(const QString &rulesFilePath)
 {
     QFile ruleFile(rulesFilePath);
     if (!ruleFile.open(QFile::ReadOnly | QFile::Text)) {
-        qDebug() << "Unable to open rule file" << rulesFilePath;
+        qCDebug(MESSAGEVIEWER_LOG) << "Unable to open rule file" << rulesFilePath;
         return;
     }
 
@@ -229,26 +229,26 @@ bool AdBlockManager::blockRequest(const QNetworkRequest &request)
 
     // check white rules before :)
     if (_hostWhiteList.match(host)) {
-        qDebug() << "ADBLOCK: WHITE RULE (@@) Matched by string: " << urlString;
+        qCDebug(MESSAGEVIEWER_LOG) << "ADBLOCK: WHITE RULE (@@) Matched by string: " << urlString;
         return false;
     }
 
     Q_FOREACH (const AdBlockRule &filter, _whiteList) {
         if (filter.match(request, urlString, urlStringLowerCase)) {
-            qDebug() << "ADBLOCK: WHITE RULE (@@) Matched by string: " << urlString;
+            qCDebug(MESSAGEVIEWER_LOG) << "ADBLOCK: WHITE RULE (@@) Matched by string: " << urlString;
             return false;
         }
     }
 
     // then check the black ones :(
     if (_hostBlackList.match(host)) {
-        qDebug() << "ADBLOCK: BLACK RULE Matched by string: " << urlString;
+        qCDebug(MESSAGEVIEWER_LOG) << "ADBLOCK: BLACK RULE Matched by string: " << urlString;
         return true;
     }
 
     Q_FOREACH (const AdBlockRule &filter, _blackList) {
         if (filter.match(request, urlString, urlStringLowerCase)) {
-            qDebug() << "ADBLOCK: BLACK RULE Matched by string: " << urlString;
+            qCDebug(MESSAGEVIEWER_LOG) << "ADBLOCK: BLACK RULE Matched by string: " << urlString;
             return true;
         }
     }
@@ -319,7 +319,7 @@ void AdBlockManager::addCustomRule(const QString &stringRule, bool reloadPage)
 
     QFile ruleFile(localRulesFilePath);
     if (!ruleFile.open(QFile::ReadOnly)) {
-        qDebug() << "Unable to open rule file" << localRulesFilePath;
+        qCDebug(MESSAGEVIEWER_LOG) << "Unable to open rule file" << localRulesFilePath;
         return;
     }
 
@@ -333,7 +333,7 @@ void AdBlockManager::addCustomRule(const QString &stringRule, bool reloadPage)
     }
     ruleFile.close();
     if (!ruleFile.open(QFile::WriteOnly | QFile::Append)) {
-        qDebug() << "Unable to open rule file" << localRulesFilePath;
+        qCDebug(MESSAGEVIEWER_LOG) << "Unable to open rule file" << localRulesFilePath;
         return;
     }
 

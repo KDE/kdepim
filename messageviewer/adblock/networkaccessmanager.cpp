@@ -19,7 +19,7 @@
  */
 
 #include "networkaccessmanager.h"
-
+#include "messageviewer_debug.h"
 #include "settings/globalsettings.h"
 #include "adblockmanager.h"
 
@@ -131,7 +131,7 @@ static void hideBlockedElements(const QUrl &url, QWebElementCollection &collecti
         }
         const QUrl resolvedUrl(baseUrl.resolved(src));
         if (url == resolvedUrl) {
-            //qDebug() << "*** HIDING ELEMENT: " << (*it).tagName() << resolvedUrl;
+            qCDebug(MESSAGEVIEWER_LOG) << "*** HIDING ELEMENT: " << (*it).tagName() << resolvedUrl;
             (*it).removeFromDocument();
         }
     }

@@ -27,6 +27,7 @@
 
 // Self Includes
 #include "adblocksettingwidget.h"
+#include "messageviewer_debug.h"
 #include "settings/globalsettings.h"
 #include "adblockaddsubscriptiondialog.h"
 #include "adblockmanager.h"
@@ -234,7 +235,7 @@ void AdBlockSettingWidget::doLoadFromGlobalSettings()
 
     QFile ruleFile(localRulesFilePath);
     if (!ruleFile.open(QFile::ReadOnly | QFile::Text)) {
-        qDebug() << "Unable to open rule file" << localRulesFilePath;
+        qCDebug(MESSAGEVIEWER_LOG) << "Unable to open rule file" << localRulesFilePath;
         return;
     }
 
@@ -286,7 +287,7 @@ void AdBlockSettingWidget::save()
 
     QFile ruleFile(localRulesFilePath);
     if (!ruleFile.open(QFile::WriteOnly | QFile::Text)) {
-        qDebug() << "Unable to open rule file" << localRulesFilePath;
+        qCDebug(MESSAGEVIEWER_LOG) << "Unable to open rule file" << localRulesFilePath;
         return;
     }
 
@@ -351,7 +352,7 @@ void AdBlockSettingWidget::slotRemoveSubscription()
             const QString path = item->data(PathList).toString();
             if (!path.isEmpty()) {
                 if (!QFile(path).remove()) {
-                    qDebug() << " we can not remove file:" << path;
+                    qCDebug(MESSAGEVIEWER_LOG) << " we can not remove file:" << path;
                 }
             }
             delete item;
@@ -384,7 +385,7 @@ void AdBlockSettingWidget::slotDeleteList(const QString &listName)
         const QString path = item->data(PathList).toString();
         if (!path.isEmpty()) {
             if (!QFile(path).remove()) {
-                qDebug() << " we can not remove file:" << path;
+                qCDebug(MESSAGEVIEWER_LOG) << " we can not remove file:" << path;
             }
         }
         delete item;

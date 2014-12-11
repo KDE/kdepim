@@ -28,6 +28,7 @@
 
 // Self Includes
 #include "adblockrule.h"
+#include "messageviewer_debug.h"
 
 // Local Includes
 #include "adblockrulefallbackimpl.h"
@@ -73,7 +74,7 @@ bool AdBlockRule::match(const QNetworkRequest &request, const QString &encodedUr
     Q_ASSERT(encodedUrl.toLower() == encodedUrlLowerCase);
     const bool b = m_implementation->match(request, encodedUrl, encodedUrlLowerCase);
     if (b) {
-        qDebug() << m_implementation->ruleType() << ": rule string = " << m_implementation->ruleString();
+        qCDebug(MESSAGEVIEWER_LOG) << m_implementation->ruleType() << ": rule string = " << m_implementation->ruleString();
     }
     return b;
 }

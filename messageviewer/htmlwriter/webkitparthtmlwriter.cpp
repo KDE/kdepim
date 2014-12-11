@@ -31,7 +31,7 @@
 */
 
 #include "webkitparthtmlwriter.h"
-
+#include "messageviewer_debug.h"
 #include "viewer/mailwebview.h"
 
 #include <QDebug>
@@ -150,7 +150,7 @@ void WebKitPartHtmlWriter::resolveCidUrls()
         if (url.scheme() == QLatin1String("cid")) {
             EmbeddedPartMap::const_iterator cit = mEmbeddedPartMap.constFind(url.path());
             if (cit != mEmbeddedPartMap.constEnd()) {
-                qDebug() << "Replacing" << url.toDisplayString() << "by" << cit.value();
+                qCDebug(MESSAGEVIEWER_LOG) << "Replacing" << url.toDisplayString() << "by" << cit.value();
                 (*it).setAttribute(QLatin1String("src"), cit.value());
             }
         }

@@ -18,7 +18,7 @@
 */
 
 #include "mailwebview.h"
-
+#include "messageviewer_debug.h"
 #include <QDebug>
 #include <KActionCollection>
 
@@ -61,7 +61,7 @@ bool MailWebView::event(QEvent *event)
         QContextMenuEvent const *contextMenuEvent = static_cast<QContextMenuEvent *>(event);
         const QWebFrame *const frame = page()->currentFrame();
         const QWebHitTestResult hit = frame->hitTestContent(contextMenuEvent->pos());
-        qDebug() << "Right-clicked URL:" << hit.linkUrl();
+        qCDebug(MESSAGEVIEWER_LOG) << "Right-clicked URL:" << hit.linkUrl();
         emit popupMenu(hit.linkUrl().toString(), QUrl(), mapToGlobal(contextMenuEvent->pos()));
         event->accept();
         return true;
@@ -156,7 +156,7 @@ void MailWebView::clearSelection()
 bool MailWebView::isAttachmentInjectionPoint(const QPoint &global) const
 {
     // this is not needed in the cases we use QTextBrowser, but should eventually be implemented
-    qDebug() << "sorry, not implemented";
+    qCDebug(MESSAGEVIEWER_LOG) << "sorry, not implemented";
     Q_UNUSED(global);
     return false;
 }
@@ -164,7 +164,7 @@ bool MailWebView::isAttachmentInjectionPoint(const QPoint &global) const
 void MailWebView::injectAttachments(const function<QString()> &delayedHtml)
 {
     // this is not needed in the cases we use QTextBrowser, but should eventually be implemented
-    qDebug() << "sorry, not implemented";
+    qCDebug(MESSAGEVIEWER_LOG) << "sorry, not implemented";
     Q_UNUSED(delayedHtml);
 }
 
@@ -176,7 +176,7 @@ void MailWebView::scrollToAnchor(const QString &anchor)
 bool MailWebView::removeAttachmentMarking(const QString &id)
 {
     // this is not needed in the cases we use QTextBrowser, but should eventually be implemented
-    qDebug() << "sorry, not implemented";
+    qCDebug(MESSAGEVIEWER_LOG) << "sorry, not implemented";
     Q_UNUSED(id);
     return true;
 }
@@ -184,7 +184,7 @@ bool MailWebView::removeAttachmentMarking(const QString &id)
 void MailWebView::markAttachment(const QString &id, const QString &style)
 {
     // this is not needed in the cases we use QTextBrowser, but should eventually be implemented
-    qDebug() << "sorry, not implemented";
+    qCDebug(MESSAGEVIEWER_LOG) << "sorry, not implemented";
     Q_UNUSED(id);
     Q_UNUSED(style);
 }

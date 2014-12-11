@@ -17,7 +17,7 @@
  */
 
 #include "contactdisplaymessagememento.h"
-
+#include "messageviewer_debug.h"
 #include <Akonadi/Contact/ContactSearchJob>
 
 #include <QDebug>
@@ -59,7 +59,7 @@ void ContactDisplayMessageMemento::slotSearchJobFinished(KJob *job)
         processAddress(addressee);
         emit update(Viewer::Delayed);
         if (contactSize > 1) {
-            qDebug() << " more than 1 contact was found we return first contact";
+            qCDebug(MESSAGEVIEWER_LOG) << " more than 1 contact was found we return first contact";
         }
     }
 }

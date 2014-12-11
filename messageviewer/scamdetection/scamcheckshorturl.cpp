@@ -17,7 +17,7 @@
 */
 
 #include "scamcheckshorturl.h"
-
+#include "messageviewer_debug.h"
 #include <libkdepim/misc/broadcaststatus.h>
 
 #include <KLocalizedString>
@@ -56,7 +56,7 @@ void ScamCheckShortUrl::expandedUrl(const QUrl &url)
     }
     const QUrl newUrl = QString::fromLatin1("http://api.longurl.org/v2/expand?url=%1&format=json").arg(url.url());
 
-    //qDebug()<<" newUrl "<<newUrl;
+    qCDebug(MESSAGEVIEWER_LOG)<<" newUrl "<<newUrl;
     QNetworkReply *reply = mNetworkAccessManager->get(QNetworkRequest(newUrl));
     reply->setProperty("shortUrl", url.url());
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &ScamCheckShortUrl::slotError);
@@ -104,12 +104,12 @@ void ScamCheckShortUrl::loadLongUrlServices()
         QJsonParseError error;
         const QJsonDocument json = QJsonDocument::fromJson(servicesFile.readAll(), &error);
         if (error.error != QJsonParseError::NoError || json.isNull()) {
-            qDebug() << " Error during read longurlServices.json";
+            qCDebug(MESSAGEVIEWER_LOG) << " Error during read longurlServices.json";
             return;
         }
         const QMap<QString, QVariant> response = json.toVariant().toMap();
         sSupportedServices = response.uniqueKeys();
     } else {
-        qDebug() << " json file \'longurlServices.json\' not found";
+        qCDebug(MESSAGEVIEWER_LOG) << " json file \'longurlServices.json\' not found";
     }
 }

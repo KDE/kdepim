@@ -30,6 +30,7 @@
 */
 
 #include "bodypartformatter.h"
+#include "messageviewer_debug.h"
 #include "viewer/bodypartformatterfactory_p.h"
 #include "interfaces/bodypartformatter.h"
 
@@ -51,7 +52,7 @@ class AnyTypeBodyPartFormatter
 public:
     Result format(Interface::BodyPart *, HtmlWriter *) const
     {
-        qDebug() << "Acting as a Interface::BodyPartFormatter!";
+        qCDebug(MESSAGEVIEWER_LOG) << "Acting as a Interface::BodyPartFormatter!";
         return AsIcon;
     }
 

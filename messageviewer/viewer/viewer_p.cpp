@@ -23,6 +23,7 @@
 
 #include "viewer_p.h"
 #include "viewer.h"
+#include "messageviewer_debug.h"
 #include "viewer/objecttreeemptysource.h"
 #include "viewer/objecttreeviewersource.h"
 #include "messagedisplayformatattribute.h"
@@ -400,7 +401,7 @@ void ViewerPrivate::openAttachment(KMime::Content *node, const QString &name)
     } else if (choice == AttachmentDialog::OpenWith) {
         attachmentOpenWith(node);
     } else { // Cancel
-        qDebug() << "Canceled opening attachment";
+        qCDebug(MESSAGEVIEWER_LOG) << "Canceled opening attachment";
     }
 
 }
@@ -476,7 +477,7 @@ bool ViewerPrivate::deleteAttachment(KMime::Content *node, bool showWarning)
 void ViewerPrivate::itemModifiedResult(KJob *job)
 {
     if (job->error()) {
-        qDebug() << "Item update failed:" << job->errorString();
+        qCDebug(MESSAGEVIEWER_LOG) << "Item update failed:" << job->errorString();
     } else {
         setMessageItem(mMessageItem, MessageViewer::Viewer::Force);
     }
@@ -511,7 +512,7 @@ void ViewerPrivate::createOpenWithMenu(QMenu *topMenu, const QString &contentTyp
             menu->menuAction()->setObjectName(QLatin1String("openWith_submenu")); // for the unittest
             topMenu->addMenu(menu);
         }
-        //qDebug() << offers.count() << "offers" << topMenu << menu;
+        qCDebug(MESSAGEVIEWER_LOG) << offers.count() << "offers" << topMenu << menu;
 
         KService::List::ConstIterator it = offers.constBegin();
         KService::List::ConstIterator end = offers.constEnd();
@@ -751,7 +752,7 @@ void ViewerPrivate::attachmentOpen(KMime::Content *node)
 {
     KService::Ptr offer = getServiceOffer(node);
     if (!offer) {
-        qDebug() << "got no offer";
+        qCDebug(MESSAGEVIEWER_LOG) << "got no offer";
         return;
     }
     attachmentOpenWith(node, offer);
@@ -3021,7 +3022,7 @@ void ViewerPrivate::itemFetchResult(KJob *job)
 void ViewerPrivate::slotItemChanged(const Akonadi::Item &item, const QSet<QByteArray> &parts)
 {
     if (item.id() != messageItem().id()) {
-        qDebug() << "Update for an already forgotten item. Weird.";
+        qCDebug(MESSAGEVIEWER_LOG) << "Update for an already forgotten item. Weird.";
         return;
     }
     if (parts.contains("PLD:RFC822")) {
@@ -3278,7 +3279,7 @@ void ViewerPrivate::slotShowCreateTodoWidget()
         mCreateTodo->setMessage(mMessage);
         mCreateTodo->showToDoWidget();
     } else {
-        qDebug() << " There is not valid message";
+        qCDebug(MESSAGEVIEWER_LOG) << " There is not valid message";
     }
 }
 
@@ -3294,7 +3295,7 @@ void ViewerPrivate::slotShowCreateEventWidget()
         mCreateEvent->setMessage(mMessage);
         mCreateEvent->showEventEdit();
     } else {
-        qDebug() << " There is not valid message";
+        qCDebug(MESSAGEVIEWER_LOG) << " There is not valid message";
     }
 }
 

@@ -32,7 +32,7 @@
 */
 
 #include "spamheaderanalyzer.h"
-
+#include "messageviewer_debug.h"
 #include "antispamconfig.h"
 
 #include <kmime/kmime_message.h>
@@ -88,7 +88,7 @@ SpamScores SpamHeaderAnalyzer::getSpamScores(KMime::Message *message)
 
         if (!scoreValid) {
             spamError = couldNotFindTheScoreField;
-            qDebug() << "Score could not be extracted from header '"
+            qCDebug(MESSAGEVIEWER_LOG) << "Score could not be extracted from header '"
                      << mField << "'";
         } else {
             bool floatValid = false;
@@ -109,7 +109,7 @@ SpamScores SpamHeaderAnalyzer::getSpamScores(KMime::Message *message)
                 score = scoreString.toFloat(&floatValid);
                 if (!floatValid) {
                     spamError = couldNotConverScoreToFloat;
-                    qDebug() << "Score (" << scoreString << ") is no number";
+                    qCDebug(MESSAGEVIEWER_LOG) << "Score (" << scoreString << ") is no number";
                 } else {
                     score *= 100.0;
                 }
@@ -119,7 +119,7 @@ SpamScores SpamHeaderAnalyzer::getSpamScores(KMime::Message *message)
                 score = scoreString.toFloat(&floatValid);
                 if (!floatValid) {
                     spamError = couldNotConverScoreToFloat;
-                    qDebug() << "Score (" << scoreString << ") is no number";
+                    qCDebug(MESSAGEVIEWER_LOG) << "Score (" << scoreString << ") is no number";
                 }
                 break;
 
@@ -127,7 +127,7 @@ SpamScores SpamHeaderAnalyzer::getSpamScores(KMime::Message *message)
                 score = scoreString.toFloat(&floatValid);
                 if (!floatValid) {
                     spamError = couldNotConverScoreToFloat;
-                    qDebug() << "Score (" << scoreString << ") is no number";
+                    qCDebug(MESSAGEVIEWER_LOG) << "Score (" << scoreString << ") is no number";
                     break;
                 }
 
@@ -138,14 +138,14 @@ SpamScores SpamHeaderAnalyzer::getSpamScores(KMime::Message *message)
                     thresholdString = thresholdPattern.cap(1);
                 } else {
                     spamError = couldNotFindTheThresholdField;
-                    qDebug() << "Threshold could not be extracted from header '"
+                    qCDebug(MESSAGEVIEWER_LOG) << "Threshold could not be extracted from header '"
                              << mField << "'";
                     break;
                 }
                 const float threshold = thresholdString.toFloat(&floatValid);
                 if (!floatValid || (threshold <= 0.0)) {
                     spamError = couldNotConvertThresholdToFloatOrThresholdIsNegative;
-                    qDebug() << "Threshold (" << thresholdString << ") is no"
+                    qCDebug(MESSAGEVIEWER_LOG) << "Threshold (" << thresholdString << ") is no"
                              << "number or is negative";
                     break;
                 }
@@ -183,7 +183,7 @@ SpamScores SpamHeaderAnalyzer::getSpamScores(KMime::Message *message)
                     confidence = confidenceString.toFloat(&confidenceValid);
                     if (!confidenceValid) {
                         spamError = couldNotConvertConfidenceToFloat;
-                        qDebug() << "Unable to convert confidence to float:" << confidenceString;
+                        qCDebug(MESSAGEVIEWER_LOG) << "Unable to convert confidence to float:" << confidenceString;
                     }
                 }
             }

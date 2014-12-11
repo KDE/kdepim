@@ -20,6 +20,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "mailwebview.h"
+#include "messageviewer_debug.h"
 #include "scamdetection/scamdetection.h"
 #include "scamdetection/scamcheckshorturl.h"
 #include "adblock/adblockblockableitemsdialog.h"
@@ -108,9 +109,9 @@ static void handleDuplicateLinkElements(const QWebElement &element, QHash<QStrin
 {
     if (element.tagName().compare(QLatin1String("A"), Qt::CaseInsensitive) == 0) {
         const QString linkKey(linkElementKey(element));
-        // qDebug() << "LINK KEY:" << linkKey;
+        // qCDebug(MESSAGEVIEWER_LOG) << "LINK KEY:" << linkKey;
         if (dupLinkList->contains(linkKey)) {
-            // qDebug() << "***** Found duplicate link element:" << linkKey << endl;
+            // qCDebug(MESSAGEVIEWER_LOG) << "***** Found duplicate link element:" << linkKey << endl;
             *accessKey = dupLinkList->value(linkKey);
         } else if (!linkKey.isEmpty()) {
             dupLinkList->insert(linkKey, *accessKey);
@@ -152,7 +153,7 @@ bool MailWebView::event(QEvent *event)
         QContextMenuEvent const *contextMenuEvent = static_cast<QContextMenuEvent *>(event);
         const QWebFrame *const frame = page()->currentFrame();
         const QWebHitTestResult hit = frame->hitTestContent(contextMenuEvent->pos());
-        qDebug() << "Right-clicked URL:" << hit.linkUrl();
+        qCDebug(MESSAGEVIEWER_LOG) << "Right-clicked URL:" << hit.linkUrl();
 
         emit popupMenu(hit.linkUrl(), ((hit.pixmap().isNull()) ? QUrl() : hit.imageUrl()), mapToGlobal(contextMenuEvent->pos()));
         event->accept();

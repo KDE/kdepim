@@ -33,7 +33,7 @@
 */
 
 #include "urlhandlermanager.h"
-
+#include "messageviewer_debug.h"
 #include "interfaces/urlhandler.h"
 #include "interfaces/bodyparturlhandler.h"
 #include "partnodebodypart.h"
@@ -303,7 +303,7 @@ static KMime::Content *partNodeFromXKMailUrl(const KUrl &url, ViewerPrivate *w, 
 
     // urlPath format is: /bodypart/<random number>/<part id>/<path>
 
-    qDebug() << "BodyPartURLHandler: urlPath ==" << urlPath;
+    qCDebug(MESSAGEVIEWER_LOG) << "BodyPartURLHandler: urlPath ==" << urlPath;
     if (!urlPath.startsWith(QLatin1String("/bodypart/"))) {
         return 0;
     }

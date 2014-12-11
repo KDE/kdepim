@@ -16,7 +16,7 @@
 */
 
 #include "createtodojob.h"
-
+#include "messageviewer_debug.h"
 #include <Akonadi/KMime/MessageParts>
 #include <AkonadiCore/ItemFetchJob>
 #include <AkonadiCore/ItemFetchScope>
@@ -37,7 +37,7 @@ CreateTodoJob::CreateTodoJob(const KCalCore::Todo::Ptr &todoPtr, const Akonadi::
 
 CreateTodoJob::~CreateTodoJob()
 {
-    qDebug() << " CreateTodoJob::~CreateTodoJob()";
+    qCDebug(MESSAGEVIEWER_LOG) << " CreateTodoJob::~CreateTodoJob()";
 }
 
 void CreateTodoJob::start()
@@ -54,12 +54,12 @@ void CreateTodoJob::start()
 
 void CreateTodoJob::slotFetchDone(KJob *job)
 {
-    qDebug() << " void CreateTodoJob::slotFetchDone(KJob *job)";
+    qCDebug(MESSAGEVIEWER_LOG) << " void CreateTodoJob::slotFetchDone(KJob *job)";
     Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob *>(job);
     if (fetchJob->items().count() == 1) {
         mItem = fetchJob->items().first();
     } else {
-        qDebug() << " createTodo Error during fetch: " << job->errorString();
+        qCDebug(MESSAGEVIEWER_LOG) << " createTodo Error during fetch: " << job->errorString();
         Q_EMIT emitResult();
         return;
     }
@@ -69,7 +69,7 @@ void CreateTodoJob::slotFetchDone(KJob *job)
 void CreateTodoJob::createTodo()
 {
     if (!mItem.hasPayload<KMime::Message::Ptr>()) {
-        qDebug() << " item has not payload";
+        qCDebug(MESSAGEVIEWER_LOG) << " item has not payload";
         Q_EMIT emitResult();
         return;
     }
@@ -93,7 +93,7 @@ void CreateTodoJob::createTodo()
 void CreateTodoJob::slotCreateNewTodo(KJob *job)
 {
     if (job->error()) {
-        qDebug() << "Error during create new Todo " << job->errorString();
+        qCDebug(MESSAGEVIEWER_LOG) << "Error during create new Todo " << job->errorString();
     }
     Q_EMIT emitResult();
 }

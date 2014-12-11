@@ -19,7 +19,7 @@
 #include "adblocksyntaxhighlighter.h"
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
-
+#include "messageviewer_debug.h"
 #include "libkdepim/widgets/progressindicatorlabel.h"
 
 #include <KLocalizedString>
@@ -108,7 +108,7 @@ void AdBlockShowListDialog::downLoadList(const QString &url)
     delete mTemporaryFile;
     mTemporaryFile = new QTemporaryFile;
     if (!mTemporaryFile->open()) {
-        qDebug() << "can not open temporary file";
+        qCDebug(MESSAGEVIEWER_LOG) << "can not open temporary file";
         delete mTemporaryFile;
         mTemporaryFile = 0;
         return;

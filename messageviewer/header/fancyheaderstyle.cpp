@@ -16,7 +16,7 @@
 */
 
 #include "fancyheaderstyle.h"
-
+#include "messageviewer_debug.h"
 #include "header/headerstyle.h"
 #include "header/headerstyle_util.h"
 
@@ -87,7 +87,7 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
     QString userHTML;
     MessageViewer::HeaderStyleUtil::xfaceSettings xface = MessageViewer::HeaderStyleUtil::xface(this, message);
     if (!xface.photoURL.isEmpty()) {
-        //qDebug() << "Got a photo:" << photoURL;
+        qCDebug(MESSAGEVIEWER_LOG) << "Got a photo:" << xface.photoURL;
         userHTML = QString::fromLatin1("<img src=\"%1\" width=\"%2\" height=\"%3\">")
                    .arg(xface.photoURL).arg(xface.photoWidth).arg(xface.photoHeight);
         userHTML = QLatin1String("<div class=\"senderpic\">") + userHTML + QLatin1String("</div>");

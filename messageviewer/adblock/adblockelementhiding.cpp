@@ -27,6 +27,7 @@
 // Self Includes
 #include "adblockelementhiding.h"
 #include <QDebug>
+#include "messageviewer_debug.h"
 
 using namespace MessageViewer;
 AdBlockElementHiding::AdBlockElementHiding()
@@ -103,7 +104,7 @@ void AdBlockElementHiding::applyStringRule(QWebElement &document, const QString 
         if (el.isNull()) {
             continue;
         }
-        qDebug() << "Hide element: " << el.localName();
+        qCDebug(MESSAGEVIEWER_LOG) << "Hide element: " << el.localName();
         el.removeFromDocument();
     }
 }

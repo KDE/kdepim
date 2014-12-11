@@ -16,6 +16,7 @@
 */
 
 #include "scamdetectiondetailsdialog.h"
+#include "messageviewer_debug.h"
 #include "settings/globalsettings.h"
 #include "utils/autoqpointer.h"
 #include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
@@ -80,7 +81,7 @@ void ScamDetectionDetailsDialog::slotSaveAs()
         if (!fileName.isEmpty()) {
             QFile file(fileName);
             if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-                qDebug() << "We can't save in file :" << fileName;
+                qCDebug(MESSAGEVIEWER_LOG) << "We can't save in file :" << fileName;
                 return;
             }
             QTextStream ts(&file);

@@ -16,6 +16,7 @@
 */
 
 #include "attachmenteditjob.h"
+#include "messageviewer_debug.h"
 #include "viewer/editorwatcher.h"
 #include <KMessageBox>
 #include <KLocalizedString>
@@ -37,7 +38,7 @@ AttachmentEditJob::AttachmentEditJob(QObject *parent)
 
 AttachmentEditJob::~AttachmentEditJob()
 {
-    qDebug() << " AttachmentEditJob::~AttachmentEditJob()";
+    qCDebug(MESSAGEVIEWER_LOG) << " AttachmentEditJob::~AttachmentEditJob()";
 }
 
 bool AttachmentEditJob::addAttachment(KMime::Content *node, bool showWarning)

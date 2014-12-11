@@ -20,7 +20,7 @@
 #include "settings/globalsettings.h"
 #include "adblock/adblockmanager.h"
 #include "pimcommon/widgets/customtreeview.h"
-
+#include "messageviewer_debug.h"
 #include <KLocalizedString>
 #include <KTreeWidgetSearchLine>
 #include <QMenu>
@@ -153,7 +153,7 @@ QString AdBlockBlockableItemsWidget::elementType(AdBlockBlockableItemsWidget::Ty
         break;
     case AdBlockBlockableItemsWidget::None:
     default:
-        qDebug() << " unknown type " << type;
+        qCDebug(MESSAGEVIEWER_LOG) << " unknown type " << type;
     }
     return result;
 }
@@ -306,7 +306,7 @@ void AdBlockBlockableItemsWidget::saveFilters()
 
     QFile ruleFile(localRulesFilePath);
     if (!ruleFile.open(QFile::WriteOnly | QFile::Text)) {
-        qDebug() << "Unable to open rule file" << localRulesFilePath;
+        qCDebug(MESSAGEVIEWER_LOG) << "Unable to open rule file" << localRulesFilePath;
         return;
     }
 

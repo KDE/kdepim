@@ -33,6 +33,7 @@
 
 #include "bodypartformatterfactory.h"
 #include "bodypartformatterfactory_p.h"
+#include "messageviewer_debug.h"
 
 #include "interfaces/bodypartformatter.h"
 #include "pluginloader.h"
@@ -91,8 +92,8 @@ static void insertBodyPartFormatter(const char *type, const char *subtype,
 
     TypeRegistry::iterator type_it = all->find(type);
     if (type_it == all->end()) {
-        //qDebug() << "BodyPartFormatterFactory: instantiating new Subtype Registry for \""
-        //         << type << "\"";
+        qCDebug(MESSAGEVIEWER_LOG) << "BodyPartFormatterFactory: instantiating new Subtype Registry for \""
+                 << type << "\"";
         type_it = all->insert(std::make_pair(type, SubtypeRegistry())).first;
         assert(type_it != all->end());
     }
@@ -100,7 +101,7 @@ static void insertBodyPartFormatter(const char *type, const char *subtype,
     SubtypeRegistry &subtype_reg = type_it->second;
     SubtypeRegistry::iterator subtype_it = subtype_reg.find(subtype);
     if (subtype_it != subtype_reg.end()) {
-        qDebug() << "BodyPartFormatterFactory: overwriting previously registered formatter for \""
+        qCDebug(MESSAGEVIEWER_LOG) << "BodyPartFormatterFactory: overwriting previously registered formatter for \""
                  << type << "/" << subtype << "\"";
         subtype_reg.erase(subtype_it); subtype_it = subtype_reg.end();
     }
@@ -116,7 +117,7 @@ static void loadPlugins()
         return;
     }
     const QStringList types = pl->types();
-    //qDebug() << "BodyPartFormatterFactory: found" << types.size() << "plugins.";
+    qCDebug(MESSAGEVIEWER_LOG) << "BodyPartFormatterFactory: found" << types.size() << "plugins.";
     for (QStringList::const_iterator it = types.begin() ; it != types.end() ; ++it) {
         const Interface::BodyPartFormatterPlugin *plugin = pl->createForName(*it);
         if (!plugin) {
