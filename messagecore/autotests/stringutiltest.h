@@ -30,9 +30,11 @@ private Q_SLOTS:
     void test_SmartQuote();
     void test_signatureStripping();
     void test_isCryptoPart();
-    void test_stripOffMessagePrefix();
+    void test_stripOffMessagePrefixBenchmark();
     void test_parseMailtoUrl_data();
     void test_parseMailtoUrl();
+    void test_stripOffMessagePrefix_data();
+    void test_stripOffMessagePrefix();
 };
 
 #endif

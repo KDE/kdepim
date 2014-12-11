@@ -349,7 +349,7 @@ void StringUtilTest::test_isCryptoPart()
     QVERIFY(!StringUtil::isCryptoPart(QLatin1String("application"), QLatin1String("foo"), QLatin1String("encrypted.asc")));
 }
 
-void StringUtilTest::test_stripOffMessagePrefix()
+void StringUtilTest::test_stripOffMessagePrefixBenchmark()
 {
     const QString subject = QLatin1String("Fwd: Hello World Subject");
     QBENCHMARK {
@@ -364,10 +364,10 @@ void StringUtilTest::test_parseMailtoUrl_data()
     QTest::addColumn<int>("numberOfTo");
 
     QTest::newRow("1 mailto") << QString::fromLatin1("mailto:foo@kde.org") << true << 1;
-    //We can't test it it asserts in kpimtext
+    //I can't test it because it asserts in kpimutils
     //QTest::newRow("invalid (not mailto)") << QString::fromLatin1("http://www.kde.org") << false << 0;
     QTest::newRow("invalid (no email address") << QString::fromLatin1("mailto:") << false << 0;
-
+    //QTest::newRow("2 address") << QString::fromLatin1("mailto:foo@kde.org?foo2@kde.org") << true << 2;
     //QTest::newRow("invalid") << QString::fromLatin1("fookde.org") << false << 0;
 }
 
@@ -379,7 +379,28 @@ void StringUtilTest::test_parseMailtoUrl()
 
     KUrl url(mailToUrl);
     QCOMPARE(!StringUtil::parseMailtoUrl(url).value(QLatin1String("to")).isEmpty(), toIsNotEmpty);
-    QCOMPARE(StringUtil::parseMailtoUrl(url).value(QLatin1String("to")).split(QLatin1String(", ")).count(), numberOfTo);
+    QCOMPARE(StringUtil::parseMailtoUrl(url).value(QLatin1String("to")).split(QLatin1String(", "), QString::SkipEmptyParts).count(), numberOfTo);
 
 }
 
+void StringUtilTest::test_stripOffMessagePrefix_data()
+{
+    QTest::addColumn<QString>("subject");
+    QTest::addColumn<QString>("result");
+    QTest::newRow("no strip needed") << QString::fromLatin1("Hello World Subject") << QString::fromLatin1("Hello World Subject");
+    QTest::newRow("No default reply forward") << QString::fromLatin1("AA: Hello World Subject") << QString::fromLatin1("AA: Hello World Subject");
+    QTest::newRow("Default Reply Re:") << QString::fromLatin1("Re: Hello World Subject") << QString::fromLatin1("Hello World Subject");
+    QTest::newRow("Default Forward FW:") << QString::fromLatin1("FW: Hello World Subject") << QString::fromLatin1("Hello World Subject");
+    QTest::newRow("Default Forward Fwd:") << QString::fromLatin1("Fwd: Hello World Subject") << QString::fromLatin1("Hello World Subject");
+    QTest::newRow("Default Reply Re  :") << QString::fromLatin1("Re  : Hello World Subject") << QString::fromLatin1("Hello World Subject");
+    QTest::newRow("Default Reply Re1:") << QString::fromLatin1("Re1: Hello World Subject") << QString::fromLatin1("Hello World Subject");
+    QTest::newRow("Default Reply Re[2]:") << QString::fromLatin1("Re[2]: Hello World Subject") << QString::fromLatin1("Hello World Subject");
+}
+
+void StringUtilTest::test_stripOffMessagePrefix()
+{
+    QFETCH(QString, subject);
+    QFETCH(QString, result);
+    const QString subjectAfterStrip = StringUtil::stripOffPrefixes(subject);
+    QCOMPARE(subjectAfterStrip, result);
+}

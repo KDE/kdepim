@@ -2182,8 +2182,10 @@ void ViewerPrivate::slotUrlOn(const QString &link, const QString &title, const Q
 
 void ViewerPrivate::slotUrlPopup(const QUrl &aUrl, const QUrl &imageUrl, const QPoint &aPos)
 {
-    const KUrl url(aUrl);
-    const KUrl iUrl(imageUrl);
+    if (!mMsgDisplay)
+        return;
+    const KUrl url( aUrl );
+    const KUrl iUrl( imageUrl );
     mClickedUrl = url;
     mImageUrl = iUrl;
 
