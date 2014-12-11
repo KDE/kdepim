@@ -50,7 +50,7 @@ QByteArray CollectionAnnotationsAttribute::type() const
     return sType;
 }
 
-Akonadi::Attribute *CollectionAnnotationsAttribute::clone() const
+CollectionAnnotationsAttribute *CollectionAnnotationsAttribute::clone() const
 {
     return new CollectionAnnotationsAttribute(mAnnotations);
 }

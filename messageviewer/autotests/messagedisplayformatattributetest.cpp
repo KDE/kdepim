@@ -64,4 +64,16 @@ void MessageDisplayFormatAttributeTest::shouldChangeMessageFormat()
 
 }
 
+void MessageDisplayFormatAttributeTest::shouldDeserializeValue()
+{
+    MessageViewer::Viewer::DisplayFormatMessage format = MessageViewer::Viewer::Html;
+    MessageViewer::MessageDisplayFormatAttribute attr;
+    attr.setMessageFormat(format);
+    attr.setRemoteContent(true);
+    const QByteArray ba = attr.serialized();
+    MessageViewer::MessageDisplayFormatAttribute result;
+    result.deserialize(ba);
+    QVERIFY(attr == result);
+}
+
 QTEST_MAIN(MessageDisplayFormatAttributeTest)

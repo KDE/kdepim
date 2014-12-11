@@ -58,4 +58,13 @@ void NewMailNotifierAttributeTest::shouldSerializedData()
     QVERIFY(attr == result);
 }
 
+void NewMailNotifierAttributeTest::shouldCloneAttribute()
+{
+    MailCommon::NewMailNotifierAttribute attr;
+    attr.setIgnoreNewMail(true);
+    MailCommon::NewMailNotifierAttribute *result = attr.clone();
+    QVERIFY(attr == *result);
+    delete result;
+}
+
 QTEST_MAIN(NewMailNotifierAttributeTest)

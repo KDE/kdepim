@@ -18,22 +18,22 @@
 
 */
 
-#ifndef MESSAGEDISPLAYFORMATATTRIBUTETEST_H
-#define MESSAGEDISPLAYFORMATATTRIBUTETEST_H
+#ifndef SCAMATTRIBUTETEST_H
+#define SCAMATTRIBUTETEST_H
 
 #include <QObject>
 
-class MessageDisplayFormatAttributeTest : public QObject
+class ScamAttributeTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit MessageDisplayFormatAttributeTest(QObject *parent = Q_NULLPTR);
-    ~MessageDisplayFormatAttributeTest();
+    explicit ScamAttributeTest(QObject *parent = 0);
+    ~ScamAttributeTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
-    void shouldChangeRemoteValue();
-    void shouldChangeMessageFormat();
+    void shouldAffectValue();
     void shouldDeserializeValue();
+    void shouldCloneAttribute();
 };
 
-#endif // MESSAGEDISPLAYFORMATATTRIBUTETEST_H
+#endif // SCAMATTRIBUTETEST_H

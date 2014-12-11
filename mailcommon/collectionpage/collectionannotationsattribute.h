@@ -37,7 +37,7 @@ public:
     QMap<QByteArray, QByteArray> annotations() const;
 
     QByteArray type() const Q_DECL_OVERRIDE;
-    Attribute *clone() const Q_DECL_OVERRIDE;
+    CollectionAnnotationsAttribute *clone() const Q_DECL_OVERRIDE;
     QByteArray serialized() const Q_DECL_OVERRIDE;
     void deserialize(const QByteArray &data) Q_DECL_OVERRIDE;
 

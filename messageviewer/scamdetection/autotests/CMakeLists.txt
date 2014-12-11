@@ -13,3 +13,9 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/.. )
  
 ecm_add_tests(test_scamdetection.cpp NAME_PREFIX "messageviewer-" LINK_LIBRARIES messageviewer Qt5::Test)
 
+set( scamattributetest_source scamattributetest.cpp ../scamattribute.cpp)
+add_executable( scamattributetest ${scamattributetest_source})
+add_test(scamattributetest scamattributetest)
+ecm_mark_as_test(scamattributetest)
+target_link_libraries( scamattributetest Qt5::Test KF5::KDELibs4Support Qt5::Gui KF5::AkonadiCore)
+

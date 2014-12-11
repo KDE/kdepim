@@ -80,3 +80,8 @@ void ScamAttribute::setIsAScam(bool b)
 {
     d->isAScam = b;
 }
+
+bool ScamAttribute::operator==(const ScamAttribute &other) const
+{
+    return (d->isAScam == other.isAScam());
+}
