@@ -83,6 +83,7 @@
 #include <KMessageBox>
 #include <KTemporaryFile>
 #include <KIO/JobUiDelegate>
+#include <collectionpage/expirecollectionattribute.h>
 
 
 OrgKdeAkonadiPOP3SettingsInterface *MailCommon::Util::createPop3SettingsInterface(
@@ -451,5 +452,33 @@ bool MailCommon::Util::foundMailer()
         }
     }
     return false;
+}
+
+MailCommon::ExpireCollectionAttribute *MailCommon::Util::expirationCollectionAttribute(const Akonadi::Collection &collection, bool &mustDeleteExpirationAttribute )
+{
+    MailCommon::ExpireCollectionAttribute *attr = 0;
+    if ( collection.hasAttribute<MailCommon::ExpireCollectionAttribute>() ) {
+        attr = collection.attribute<MailCommon::ExpireCollectionAttribute>();
+        mustDeleteExpirationAttribute = false;
+    } else {
+        attr = new MailCommon::ExpireCollectionAttribute();
+        KConfigGroup configGroup( KernelIf->config(),
+                                  MailCommon::FolderCollection::configGroupName( collection ) );
+
+        if ( configGroup.hasKey( "ExpireMessages" ) ) {
+            attr->setAutoExpire(configGroup.readEntry( "ExpireMessages", false ));
+            attr->setReadExpireAge(configGroup.readEntry( "ReadExpireAge", 3 ));
+            attr->setReadExpireUnits((MailCommon::ExpireCollectionAttribute::ExpireUnits)configGroup.readEntry( "ReadExpireUnits", (int)MailCommon::ExpireCollectionAttribute::ExpireMonths ));
+            attr->setUnreadExpireAge(configGroup.readEntry( "UnreadExpireAge", 12 ));
+            attr->setUnreadExpireUnits((MailCommon::ExpireCollectionAttribute::ExpireUnits)configGroup.readEntry( "UnreadExpireUnits", (int)MailCommon::ExpireCollectionAttribute::ExpireNever ));
+            attr->setExpireAction(configGroup.readEntry( "ExpireAction", "Delete" ) == QLatin1String( "Move" ) ?
+                                      MailCommon::ExpireCollectionAttribute::ExpireMove :
+                                      MailCommon::ExpireCollectionAttribute::ExpireDelete);
+            attr->setExpireToFolderId(configGroup.readEntry( "ExpireToFolder", -1 ));
+        }
+
+        mustDeleteExpirationAttribute = true;
+    }
+    return attr;
 }
 

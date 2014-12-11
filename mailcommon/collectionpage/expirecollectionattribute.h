@@ -56,10 +56,6 @@ public:
 
     static int daysToExpire( int number, ExpireCollectionAttribute::ExpireUnits units );
 
-    static ExpireCollectionAttribute *expirationCollectionAttribute(
-            const Akonadi::Collection &collection, bool &mustDeleteExpirationAttribute );
-
-
     void daysToExpire( int &unreadDays, int &readDays );
 
     /**
@@ -135,7 +131,6 @@ public:
     ExpireUnits readExpireUnits() const;
 
 private:
-    void loadFromConfig( const Akonadi::Collection &collection );
     bool mExpireMessages;         // true if old messages are expired
     int mUnreadExpireAge;         // Given in unreadExpireUnits
     int mReadExpireAge;           // Given in readExpireUnits

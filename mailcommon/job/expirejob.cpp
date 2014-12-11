@@ -28,6 +28,7 @@
 #include "expirejob.h"
 #include "collectionpage/expirecollectionattribute.h"
 #include "kernel/mailkernel.h"
+#include "util/mailutil.h"
 
 #include <libkdepim/misc/broadcaststatus.h>
 using KPIM::BroadcastStatus;
@@ -83,7 +84,7 @@ void ExpireJob::execute()
     bool mustDeleteExpirationAttribute = false;
 
     MailCommon::ExpireCollectionAttribute *expirationAttribute =
-            MailCommon::ExpireCollectionAttribute::expirationCollectionAttribute(
+            MailCommon::Util::expirationCollectionAttribute(
                 mSrcFolder, mustDeleteExpirationAttribute );
 
     expirationAttribute->daysToExpire( unreadDays, readDays );
@@ -165,7 +166,7 @@ void ExpireJob::done()
         bool mustDeleteExpirationAttribute = false;
 
         MailCommon::ExpireCollectionAttribute *expirationAttribute =
-                MailCommon::ExpireCollectionAttribute::expirationCollectionAttribute(
+                MailCommon::Util::expirationCollectionAttribute(
                     mSrcFolder, mustDeleteExpirationAttribute );
 
         if ( expirationAttribute->expireAction() == MailCommon::ExpireCollectionAttribute::ExpireDelete ) {
@@ -253,7 +254,7 @@ void ExpireJob::slotExpireDone( KJob *job )
     bool mustDeleteExpirationAttribute = false;
 
     MailCommon::ExpireCollectionAttribute *expirationAttribute =
-            MailCommon::ExpireCollectionAttribute::expirationCollectionAttribute(
+            MailCommon::Util::expirationCollectionAttribute(
                 mSrcFolder, mustDeleteExpirationAttribute );
 
     switch ( error ) {

@@ -54,31 +54,6 @@ Akonadi::Attribute *ExpireCollectionAttribute::clone() const
     return expireAttr;
 }
 
-void ExpireCollectionAttribute::loadFromConfig( const Akonadi::Collection &collection )
-{
-    KConfigGroup configGroup( KernelIf->config(),
-                              MailCommon::FolderCollection::configGroupName( collection ) );
-
-    if ( configGroup.hasKey( "ExpireMessages" ) ) {
-        mExpireMessages = configGroup.readEntry( "ExpireMessages", false );
-
-        mReadExpireAge = configGroup.readEntry( "ReadExpireAge", 3 );
-
-        mReadExpireUnits = (ExpireUnits)configGroup.readEntry( "ReadExpireUnits", (int)ExpireMonths );
-
-        mUnreadExpireAge = configGroup.readEntry( "UnreadExpireAge", 12 );
-
-        mUnreadExpireUnits =
-                (ExpireUnits)configGroup.readEntry( "UnreadExpireUnits", (int)ExpireNever );
-
-        mExpireAction = configGroup.readEntry( "ExpireAction", "Delete" ) == QLatin1String( "Move" ) ?
-                    ExpireMove :
-                    ExpireDelete;
-
-        mExpireToFolderId = configGroup.readEntry( "ExpireToFolder", -1 );
-    }
-}
-
 void ExpireCollectionAttribute::setAutoExpire( bool enabled )
 {
     mExpireMessages = enabled;
@@ -178,21 +153,6 @@ void ExpireCollectionAttribute::daysToExpire( int &unreadDays, int &readDays )
 {
     unreadDays = ExpireCollectionAttribute::daysToExpire( unreadExpireAge(), unreadExpireUnits() );
     readDays = ExpireCollectionAttribute::daysToExpire( readExpireAge(), readExpireUnits() );
-}
-
-ExpireCollectionAttribute *ExpireCollectionAttribute::expirationCollectionAttribute(
-        const Akonadi::Collection &collection, bool &mustDeleteExpirationAttribute )
-{
-    MailCommon::ExpireCollectionAttribute *attr = 0;
-    if ( collection.hasAttribute<MailCommon::ExpireCollectionAttribute>() ) {
-        attr = collection.attribute<MailCommon::ExpireCollectionAttribute>();
-        mustDeleteExpirationAttribute = false;
-    } else {
-        attr = new MailCommon::ExpireCollectionAttribute();
-        attr->loadFromConfig( collection );
-        mustDeleteExpirationAttribute = true;
-    }
-    return attr;
 }
 
 QByteArray ExpireCollectionAttribute::serialized() const
