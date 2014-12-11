@@ -50,7 +50,7 @@ public:
     };
 
     QByteArray type() const;
-    Attribute *clone() const;
+    ExpireCollectionAttribute *clone() const;
     QByteArray serialized() const;
     void deserialize( const QByteArray &data );
 
