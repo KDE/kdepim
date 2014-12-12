@@ -74,7 +74,7 @@ class EventsFilterProxyModel : public QSortFilterProxyModel
 
   protected:
     //@cond PRIVATE
-    virtual bool filterAcceptsRow( int row, const QModelIndex &parent ) const Q_DECL_OVERRIDE;
+    bool filterAcceptsRow( int row, const QModelIndex &parent ) const Q_DECL_OVERRIDE;
     //@endcond
 
   private:

@@ -122,10 +122,10 @@ class MOBILEUI_EXPORT ThreadGrouperModel : public QSortFilterProxyModel
 
     virtual ~ThreadGrouperModel();
 
-    virtual void setSourceModel( QAbstractItemModel *sourceModel ) Q_DECL_OVERRIDE;
+    void setSourceModel( QAbstractItemModel *sourceModel ) Q_DECL_OVERRIDE;
 
-    virtual bool lessThan( const QModelIndex &left, const QModelIndex &right ) const Q_DECL_OVERRIDE;
-    virtual QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const Q_DECL_OVERRIDE;
+    bool lessThan( const QModelIndex &left, const QModelIndex &right ) const Q_DECL_OVERRIDE;
+    QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const Q_DECL_OVERRIDE;
 
     /**
      * Set whether threading will be @p enabled.
