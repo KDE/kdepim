@@ -1,5 +1,5 @@
 
-set( sieveedit_serversievesettings_source  serversievesettingstest.cpp ../serversievesettings.cpp)
+set( sieveedit_serversievesettings_source  serversievesettingstest.cpp ../serversievesettings.cpp ../sieveeditor_debug.cpp)
 ki18n_wrap_ui(sieveedit_serversievesettings_source
     ../ui/serversievesettings.ui
 )

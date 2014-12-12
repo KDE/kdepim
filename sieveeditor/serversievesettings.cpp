@@ -23,7 +23,7 @@
 #include <MailTransport/mailtransport/transport.h>
 
 #include <KLocalizedString>
-#include <QDebug>
+#include "sieveeditor_debug.h"
 
 /** static helper functions **/
 static QString authenticationModeString(MailTransport::Transport::EnumAuthenticationType::type mode)
@@ -53,28 +53,28 @@ static QString authenticationModeString(MailTransport::Transport::EnumAuthentica
 
 static void addAuthenticationItem(QComboBox *authCombo, MailTransport::Transport::EnumAuthenticationType::type authtype)
 {
-    //qDebug() << "adding auth item " << authenticationModeString( authtype );
+    //qCDebug(SIEVEEDITOR_LOG) << "adding auth item " << authenticationModeString( authtype );
     authCombo->addItem(authenticationModeString(authtype), QVariant(authtype));
 }
 
 static MailTransport::Transport::EnumAuthenticationType::type getCurrentAuthMode(QComboBox *authCombo)
 {
     MailTransport::Transport::EnumAuthenticationType::type authtype = (MailTransport::Transport::EnumAuthenticationType::type) authCombo->itemData(authCombo->currentIndex()).toInt();
-    //qDebug() << "current auth mode: " << authenticationModeString( authtype );
+    //qCDebug(SIEVEEDITOR_LOG) << "current auth mode: " << authenticationModeString( authtype );
     return authtype;
 }
 
 static void setCurrentAuthMode(QComboBox *authCombo, MailTransport::Transport::EnumAuthenticationType::type authtype)
 {
-    //qDebug() << "setting authcombo: " << authenticationModeString( authtype );
+    //qCDebug(SIEVEEDITOR_LOG) << "setting authcombo: " << authenticationModeString( authtype );
     int index = authCombo->findData(authtype);
     if (index == -1) {
-        qWarning() << "desired authmode not in the combo";
+        qCWarning(SIEVEEDITOR_LOG) << "desired authmode not in the combo";
     }
-    //qDebug() << "found corresponding index: " << index << "with data" << authenticationModeString( (MailTransport::Transport::EnumAuthenticationType::type) authCombo->itemData( index ).toInt() );
+    //qCDebug(SIEVEEDITOR_LOG) << "found corresponding index: " << index << "with data" << authenticationModeString( (MailTransport::Transport::EnumAuthenticationType::type) authCombo->itemData( index ).toInt() );
     authCombo->setCurrentIndex(index);
     MailTransport::Transport::EnumAuthenticationType::type t = (MailTransport::Transport::EnumAuthenticationType::type) authCombo->itemData(authCombo->currentIndex()).toInt();
-    //qDebug() << "selected auth mode:" << authenticationModeString( t );
+    //qCDebug(SIEVEEDITOR_LOG) << "selected auth mode:" << authenticationModeString( t );
     Q_ASSERT(t == authtype);
 }
 

@@ -17,6 +17,7 @@ kconfig_add_kcfg_files(sieveeditor_kcfg_SRCS ${sieveeditor_kcfg_SRCS})
 set(sieveeditor_SRCS
   ${sieveeditor_kcfg_SRCS}
   main.cpp
+  sieveeditor_debug.cpp
   sieveeditormainwindow.cpp
   serversievesettingsdialog.cpp
   serversievesettings.cpp

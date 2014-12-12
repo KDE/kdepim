@@ -26,7 +26,7 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 
-#include <QDebug>
+#include "sieveeditor_debug.h"
 #include <QVBoxLayout>
 
 SieveEditorPageWidget::SieveEditorPageWidget(QWidget *parent)
@@ -41,12 +41,12 @@ SieveEditorPageWidget::SieveEditorPageWidget(QWidget *parent)
     vbox->addWidget(mSieveEditorWidget);
     connect(mSieveEditorWidget, &KSieveUi::SieveEditorWidget::checkSyntax, this, &SieveEditorPageWidget::slotCheckSyntaxClicked);
     connect(mSieveEditorWidget, &KSieveUi::SieveEditorWidget::modeEditorChanged, this, &SieveEditorPageWidget::modeEditorChanged);
-    //qDebug()<<"SieveEditorPageWidget::SieveEditorPageWidget "<<this;
+    //qCDebug(SIEVEEDITOR_LOG)<<"SieveEditorPageWidget::SieveEditorPageWidget "<<this;
 }
 
 SieveEditorPageWidget::~SieveEditorPageWidget()
 {
-    //qDebug()<<" SieveEditorPageWidget::~SieveEditorPageWidget"<<this;
+    //qCDebug(SIEVEEDITOR_LOG)<<" SieveEditorPageWidget::~SieveEditorPageWidget"<<this;
 }
 
 void SieveEditorPageWidget::slotCheckSyntaxClicked()
