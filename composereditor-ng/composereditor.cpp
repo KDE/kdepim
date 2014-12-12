@@ -24,7 +24,7 @@
 
 #include <KToolBar>
 
-#include <QDebug>
+#include "composereditorng_debug.h"
 #include <QVBoxLayout>
 #include <QWebFrame>
 
@@ -106,7 +106,7 @@ ComposerEditor::ComposerEditor(QWidget *parent)
 ComposerEditor::~ComposerEditor()
 {
     //const QString content = d->view->page()->mainFrame()->toHtml();
-    //qDebug()<<" content :"<<content;
+    //qCDebug(COMPOSEREDITORNG_LOG)<<" content :"<<content;
     delete d;
 }
 

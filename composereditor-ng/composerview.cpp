@@ -33,7 +33,7 @@
 #include <KSelectAction>
 #include <KActionCollection>
 #include <KMessageBox>
-#include <QDebug>
+#include "composereditorng_debug.h"
 #include <QMenu>
 #include <KToolBar>
 #include <QIcon>
@@ -42,7 +42,7 @@
 #include <QFileInfo>
 #include <QWebElement>
 #include <QContextMenuEvent>
-#include <QDebug>
+#include "composereditorng_debug.h"
 #include <QStandardPaths>
 
 namespace ComposerEditorNG
@@ -53,7 +53,7 @@ ComposerView::ComposerView(QWidget *parent)
       d(new ComposerViewPrivate(this))
 {
     QFile file(initialHtml());
-    qDebug() << file.fileName();
+    qCDebug(COMPOSEREDITORNG_LOG) << file.fileName();
 
     if (!file.open(QIODevice::ReadOnly)) {
         KMessageBox::error(this, i18n("Cannot open template file %1.", QFileInfo(file).absoluteFilePath()), i18n("composer editor"));
@@ -238,7 +238,7 @@ void ComposerView::contextMenuEvent(QContextMenuEvent *event)
 
     const bool anchorSelected = (elm.tagName().toLower() == QLatin1String("a"));
 
-    qDebug() << " elm.tagName().toLower() " << elm.tagName().toLower();
+    qCDebug(COMPOSEREDITORNG_LOG) << " elm.tagName().toLower() " << elm.tagName().toLower();
 
     QMenu *menu = new QMenu;
     const QString selectedText = page()->mainFrame()->toPlainText().simplified();

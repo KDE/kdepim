@@ -31,7 +31,7 @@
 #include <QVBoxLayout>
 #include <QCheckBox>
 #include <QLabel>
-#include <QDebug>
+#include "composereditorng_debug.h"
 #include <KConfigGroup>
 #include <QDialogButtonBox>
 #include <QPushButton>

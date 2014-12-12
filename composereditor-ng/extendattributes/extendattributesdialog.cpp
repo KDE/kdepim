@@ -24,7 +24,7 @@
 
 #include <KLocalizedString>
 #include <QPushButton>
-#include <QDebug>
+#include "composereditorng_debug.h"
 
 #include <QWebElement>
 #include <QVBoxLayout>
@@ -83,7 +83,7 @@ public:
             tagName = QLatin1String("dl");
             break;
         default:
-            qDebug() << " extendattribute not implemented" << extendType;
+            qCDebug(COMPOSEREDITORNG_LOG) << " extendattribute not implemented" << extendType;
             break;
         }
 

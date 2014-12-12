@@ -24,7 +24,7 @@
 * ============================================================ */
 
 #include <stdio.h>
-#include <QDebug>
+#include "composereditorng_debug.h"
 #include "kspellplugin.h"
 #include <QTextBoundaryFinder>
 #include "globalsettings_base.h"
@@ -90,7 +90,7 @@ void KWebSpellChecker::checkSpellingOfString(const QString &word, int *misspelli
     *misspellingLocation = -1;
     *misspellingLength = 0;
 
-    qDebug() << word << endl;
+    qCDebug(COMPOSEREDITORNG_LOG) << word << endl;
 
     QTextBoundaryFinder finder =  QTextBoundaryFinder(QTextBoundaryFinder::Word, word);
 
@@ -104,7 +104,7 @@ void KWebSpellChecker::checkSpellingOfString(const QString &word, int *misspelli
             QString str = finder.string().mid(start, end - start);
             if (isValidWord(str)) {
 #if 1
-                qDebug() << "Word at " << start << " word = '"
+                qCDebug(COMPOSEREDITORNG_LOG) << "Word at " << start << " word = '"
                          <<  str << "', len = " << str.length();
 #endif
                 if (m_speller->isMisspelled(str)) {

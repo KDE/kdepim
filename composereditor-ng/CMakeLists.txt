@@ -18,7 +18,8 @@ qt5_wrap_cpp(wk_HEADERS_MOC spellplugin/qwebkitplatformplugin.h)
 
 #generate_export_header(COMPOSEREDITORNG BASE_NAME composereditor)
 
-set(libcomposereditor_ng_SRCS 
+set(libcomposereditor_ng_SRCS
+    composereditorng_debug.cpp 
     composereditor.cpp
     composerview.cpp
     link/composerlinkdialog.cpp

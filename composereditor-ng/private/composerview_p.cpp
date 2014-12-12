@@ -45,7 +45,7 @@
 #include <KSelectAction>
 #include <QColorDialog>
 #include <KMessageBox>
-#include <QDebug>
+#include "composereditorng_debug.h"
 #include <KFontAction>
 #include <KPrintPreview>
 #include <kdeprintdialog.h>
@@ -59,7 +59,7 @@
 #include <QDBusConnectionInterface>
 #include <QWebFrame>
 #include <QWebElement>
-#include <QDebug>
+#include "composereditorng_debug.h"
 #include <QPointer>
 #include <QPrinter>
 #include <QPrintDialog>
@@ -720,13 +720,13 @@ void ComposerViewPrivate::_k_spellCheckerCorrected(const QString &original, int 
     script += QString::number(index + original.length());
     script += QLatin1String(")");
 
-    //qDebug() << "**** script:" << script;
+    //qCDebug(COMPOSEREDITORNG_LOG) << "**** script:" << script;
     execJScript(contextMenuResult.element(), script);
 }
 
 void ComposerViewPrivate::_k_spellCheckerMisspelling(const QString &text, int pos)
 {
-    // qDebug() << text << pos;
+    // qCDebug(COMPOSEREDITORNG_LOG) << text << pos;
     QString selectionScript(QLatin1String("this.setSelectionRange("));
     selectionScript += QString::number(pos + spellTextSelectionStart);
     selectionScript += QLatin1Char(',');

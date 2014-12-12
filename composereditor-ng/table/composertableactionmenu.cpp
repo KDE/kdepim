@@ -27,7 +27,7 @@
 #include <QIcon>
 
 #include <QWebElement>
-#include <QDebug>
+#include "composereditorng_debug.h"
 
 namespace ComposerEditorNG
 {
@@ -140,7 +140,7 @@ void ComposerTableActionMenuPrivate::_k_slotInsertRowAbove()
 
 void ComposerTableActionMenuPrivate::_k_slotRemoveColumn()
 {
-    qDebug() << " tableColumn :" << TableHelper::tableColumnCount(webElement);
+    qCDebug(COMPOSEREDITORNG_LOG) << " tableColumn :" << TableHelper::tableColumnCount(webElement);
     //TODO
 }
 

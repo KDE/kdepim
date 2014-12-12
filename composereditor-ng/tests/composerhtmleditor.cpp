@@ -24,7 +24,7 @@
 #include <kactioncollection.h>
 #include <kstandardaction.h>
 #include <KLocalizedString>
-#include <qdebug.h>
+#include "composereditorng_debug.h"
 #include <QApplication>
 #include <QSplitter>
 
