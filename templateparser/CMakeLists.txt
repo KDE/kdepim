@@ -18,6 +18,7 @@ set(templateparser_LIB_SRCS
   templatessyntaxhighlighter.cpp
   templatestextedit.cpp
   templatestexteditor.cpp
+  templateparser_debug.cpp
 )
 
 include_directories(
