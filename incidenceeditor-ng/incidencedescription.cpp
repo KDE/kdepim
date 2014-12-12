@@ -25,7 +25,7 @@
 #include "ui_dialogdesktop.h"
 #endif
 
-#include <QDebug>
+#include "incidenceeditor_debug.h"
 #include <KActionCollection>
 #include <KToolBar>
 #include <KLocalizedString>
@@ -200,20 +200,20 @@ void IncidenceDescription::setupToolBar()
 void IncidenceDescription::printDebugInfo() const
 {
     // We're going to crash
-    qDebug() << "RichText enabled " << d->mRichTextEnabled;
+    qCDebug(INCIDENCEEDITOR_LOG) << "RichText enabled " << d->mRichTextEnabled;
 
     if (mLoadedIncidence) {
-        qDebug() << "Incidence description is rich " << mLoadedIncidence->descriptionIsRich();
+        qCDebug(INCIDENCEEDITOR_LOG) << "Incidence description is rich " << mLoadedIncidence->descriptionIsRich();
 
         if (mLoadedIncidence->descriptionIsRich()) {
-            qDebug() << "desc is rich, and it is <desc>" <<  mLoadedIncidence->richDescription()
+            qCDebug(INCIDENCEEDITOR_LOG) << "desc is rich, and it is <desc>" <<  mLoadedIncidence->richDescription()
                      << "</desc>; "
                      << "widget has <desc>" << mUi->mDescriptionEdit->toHtml()
                      << "</desc>; "
                      << "expr mLoadedIncidence->richDescription() != mUi->mDescriptionEdit->toHtml() is "
                      << (mLoadedIncidence->richDescription() != mUi->mDescriptionEdit->toHtml());
         } else {
-            qDebug() << "desc is not rich, and it is <desc>" << mLoadedIncidence->description()
+            qCDebug(INCIDENCEEDITOR_LOG) << "desc is not rich, and it is <desc>" << mLoadedIncidence->description()
                      << "</desc>; "
                      << "widget has <desc>" << mUi->mDescriptionEdit->toPlainText()
                      << "</desc>; "
@@ -222,7 +222,7 @@ void IncidenceDescription::printDebugInfo() const
         }
 
     } else {
-        qDebug() << "Incidence is invalid";
+        qCDebug(INCIDENCEEDITOR_LOG) << "Incidence is invalid";
     }
 }
 

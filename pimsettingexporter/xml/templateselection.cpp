@@ -17,7 +17,7 @@
 
 #include "templateselection.h"
 #include <QDomDocument>
-#include <QDebug>
+#include "pimsettingexport_debug.h"
 #include <QFile>
 
 TemplateSelection::TemplateSelection(const QString &path)
@@ -30,7 +30,7 @@ TemplateSelection::TemplateSelection(const QString &path)
         QFile file(path);
         if (file.open(QIODevice::ReadOnly)) {
             if (!doc.setContent(&file, &errorMsg, &errorRow, &errorCol)) {
-                qDebug() << "Unable to load document.Parse error in line " << errorRow
+                qCDebug(PIMSETTINGEXPORTER_LOG) << "Unable to load document.Parse error in line " << errorRow
                          << ", col " << errorCol << ": " << errorMsg;
             } else {
                 mDocument = doc;
@@ -83,7 +83,7 @@ QHash<Utils::AppsType, Utils::StoredTypes> TemplateSelection::loadTemplate(const
         QDomElement e = n.toElement();
         if (!e.isNull())  {
             const QString tagName(e.tagName());
-            qDebug() << "tag :" << tagName;
+            qCDebug(PIMSETTINGEXPORTER_LOG) << "tag :" << tagName;
             Utils::AppsType type = Utils::Unknown;
             if (tagName == QLatin1String("kmail")) {
                 type = Utils::KMail;

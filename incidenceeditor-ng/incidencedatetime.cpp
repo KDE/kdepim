@@ -37,7 +37,7 @@
 #include <KCalCore/ICalTimeZones>
 #include <KCalUtils/IncidenceFormatter>
 
-#include <QDebug>
+#include "incidenceeditor_debug.h"
 #include <KSystemTimeZone>
 
 using namespace IncidenceEditorNG;
@@ -141,16 +141,16 @@ bool IncidenceDateTime::eventFilter(QObject *obj, QEvent *event)
 {
     if (event->type() == QEvent::FocusIn) {
         if (obj == mUi->mStartDateEdit) {
-            qDebug() << "emiting startDateTime: " << mUi->mStartDateEdit;
+            qCDebug(INCIDENCEEDITOR_LOG) << "emiting startDateTime: " << mUi->mStartDateEdit;
             emit startDateFocus(obj);
         } else if (obj == mUi->mEndDateEdit) {
-            qDebug() << "emiting endDateTime: " << mUi->mEndDateEdit;
+            qCDebug(INCIDENCEEDITOR_LOG) << "emiting endDateTime: " << mUi->mEndDateEdit;
             emit endDateFocus(obj);
         } else if (obj == mUi->mStartTimeEdit) {
-            qDebug() << "emiting startTimeTime: " << mUi->mStartTimeEdit;
+            qCDebug(INCIDENCEEDITOR_LOG) << "emiting startTimeTime: " << mUi->mStartTimeEdit;
             emit startTimeFocus(obj);
         } else if (obj == mUi->mEndTimeEdit) {
-            qDebug() << "emiting endTimeTime: " << mUi->mEndTimeEdit;
+            qCDebug(INCIDENCEEDITOR_LOG) << "emiting endTimeTime: " << mUi->mEndTimeEdit;
             emit endTimeFocus(obj);
         }
 
@@ -181,7 +181,7 @@ void IncidenceDateTime::load(const KCalCore::Incidence::Ptr &incidence)
     } else if (KCalCore::Journal::Ptr journal = IncidenceDateTime::incidence<KCalCore::Journal>()) {
         load(journal, isTemplate, templateOverridesTimes);
     } else {
-        qDebug() << "Not an Incidence.";
+        qCDebug(INCIDENCEEDITOR_LOG) << "Not an Incidence.";
     }
 
     // Set the initial times before calling enableTimeEdits, as enableTimeEdits
@@ -916,13 +916,13 @@ bool IncidenceDateTime::isValid() const
 {
     if (startDateTimeEnabled() && !currentStartDateTime().isValid()) {
         //TODO: Add strings
-        qWarning() << "Start date is invalid";
+        qCWarning(INCIDENCEEDITOR_LOG) << "Start date is invalid";
         return false;
     }
 
     if (endDateTimeEnabled() && !currentEndDateTime().isValid()) {
         //TODO: Add strings
-        qWarning() << "End date is invalid";
+        qCWarning(INCIDENCEEDITOR_LOG) << "End date is invalid";
         return false;
     }
 
@@ -942,7 +942,7 @@ bool IncidenceDateTime::isValid() const
             return true;
         }
 
-        qDebug() << mLastErrorString;
+        qCDebug(INCIDENCEEDITOR_LOG) << mLastErrorString;
         return false;
     } else {
         mLastErrorString.clear();
@@ -958,36 +958,36 @@ static QString timespecToString(const KDateTime::Spec &spec)
 
 void IncidenceDateTime::printDebugInfo() const
 {
-    qDebug() << "startDateTimeEnabled()          : " << startDateTimeEnabled();
-    qDebug() << "endDateTimeEnabled()            : " << endDateTimeEnabled();
-    qDebug() << "currentStartDateTime().isValid(): " << currentStartDateTime().isValid();
-    qDebug() << "currentEndDateTime().isValid()  : " << currentEndDateTime().isValid();
-    qDebug() << "currentStartDateTime()          : " << currentStartDateTime().toString();
-    qDebug() << "currentEndDateTime()            : " << currentEndDateTime().toString();
-    qDebug() << "Incidence type                  : " << mLoadedIncidence->type();
-    qDebug() << "allday                          : " << mLoadedIncidence->allDay();
-    qDebug() << "mInitialStartDT                 : " << mInitialStartDT.toString();
-    qDebug() << "mInitialEndDT                   : " << mInitialEndDT.toString();
+    qCDebug(INCIDENCEEDITOR_LOG) << "startDateTimeEnabled()          : " << startDateTimeEnabled();
+    qCDebug(INCIDENCEEDITOR_LOG) << "endDateTimeEnabled()            : " << endDateTimeEnabled();
+    qCDebug(INCIDENCEEDITOR_LOG) << "currentStartDateTime().isValid(): " << currentStartDateTime().isValid();
+    qCDebug(INCIDENCEEDITOR_LOG) << "currentEndDateTime().isValid()  : " << currentEndDateTime().isValid();
+    qCDebug(INCIDENCEEDITOR_LOG) << "currentStartDateTime()          : " << currentStartDateTime().toString();
+    qCDebug(INCIDENCEEDITOR_LOG) << "currentEndDateTime()            : " << currentEndDateTime().toString();
+    qCDebug(INCIDENCEEDITOR_LOG) << "Incidence type                  : " << mLoadedIncidence->type();
+    qCDebug(INCIDENCEEDITOR_LOG) << "allday                          : " << mLoadedIncidence->allDay();
+    qCDebug(INCIDENCEEDITOR_LOG) << "mInitialStartDT                 : " << mInitialStartDT.toString();
+    qCDebug(INCIDENCEEDITOR_LOG) << "mInitialEndDT                   : " << mInitialEndDT.toString();
 
-    qDebug() << "currentStartDateTime().timeSpec(): " << timespecToString(currentStartDateTime().timeSpec());
-    qDebug() << "currentEndDateTime().timeSpec()  : " << timespecToString(currentStartDateTime().timeSpec());
-    qDebug() << "mInitialStartDT.timeSpec()       : " << timespecToString(mInitialStartDT.timeSpec());
-    qDebug() << "mInitialEndDT.timeSpec()         : " << timespecToString(mInitialEndDT.timeSpec());
+    qCDebug(INCIDENCEEDITOR_LOG) << "currentStartDateTime().timeSpec(): " << timespecToString(currentStartDateTime().timeSpec());
+    qCDebug(INCIDENCEEDITOR_LOG) << "currentEndDateTime().timeSpec()  : " << timespecToString(currentStartDateTime().timeSpec());
+    qCDebug(INCIDENCEEDITOR_LOG) << "mInitialStartDT.timeSpec()       : " << timespecToString(mInitialStartDT.timeSpec());
+    qCDebug(INCIDENCEEDITOR_LOG) << "mInitialEndDT.timeSpec()         : " << timespecToString(mInitialEndDT.timeSpec());
 
-    qDebug() << "dirty test1: " << (mLoadedIncidence->allDay() != mUi->mWholeDayCheck->isChecked());
+    qCDebug(INCIDENCEEDITOR_LOG) << "dirty test1: " << (mLoadedIncidence->allDay() != mUi->mWholeDayCheck->isChecked());
     if (mLoadedIncidence->type() == KCalCore::Incidence::TypeEvent) {
         KCalCore::Event::Ptr event = mLoadedIncidence.staticCast<KCalCore::Event>();
-        qDebug() << "dirty test2: " << (mUi->mFreeBusyCheck->isChecked() && event->transparency() != KCalCore::Event::Opaque);
-        qDebug() << "dirty test3: " << (!mUi->mFreeBusyCheck->isChecked() && event->transparency() != KCalCore::Event::Transparent) ;
+        qCDebug(INCIDENCEEDITOR_LOG) << "dirty test2: " << (mUi->mFreeBusyCheck->isChecked() && event->transparency() != KCalCore::Event::Opaque);
+        qCDebug(INCIDENCEEDITOR_LOG) << "dirty test3: " << (!mUi->mFreeBusyCheck->isChecked() && event->transparency() != KCalCore::Event::Transparent) ;
     }
 
     if (mLoadedIncidence->allDay()) {
-        qDebug() << "dirty test4: " << (mUi->mStartDateEdit->date() != mInitialStartDT.date() || mUi->mEndDateEdit->date() != mInitialEndDT.date());
+        qCDebug(INCIDENCEEDITOR_LOG) << "dirty test4: " << (mUi->mStartDateEdit->date() != mInitialStartDT.date() || mUi->mEndDateEdit->date() != mInitialEndDT.date());
     } else {
-        qDebug() << "dirty test4.1: " << (currentStartDateTime() != mInitialStartDT);
-        qDebug() << "dirty test4.2: " << (currentEndDateTime() != mInitialEndDT);
-        qDebug() << "dirty test4.3: " << (currentStartDateTime().timeSpec() != mInitialStartDT.timeSpec());
-        qDebug() << "dirty test4.4: " << (currentEndDateTime().timeSpec() != mInitialEndDT.timeSpec());
+        qCDebug(INCIDENCEEDITOR_LOG) << "dirty test4.1: " << (currentStartDateTime() != mInitialStartDT);
+        qCDebug(INCIDENCEEDITOR_LOG) << "dirty test4.2: " << (currentEndDateTime() != mInitialEndDT);
+        qCDebug(INCIDENCEEDITOR_LOG) << "dirty test4.3: " << (currentStartDateTime().timeSpec() != mInitialStartDT.timeSpec());
+        qCDebug(INCIDENCEEDITOR_LOG) << "dirty test4.4: " << (currentEndDateTime().timeSpec() != mInitialEndDT.timeSpec());
     }
 }
 

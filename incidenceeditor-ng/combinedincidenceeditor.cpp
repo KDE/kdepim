@@ -20,7 +20,7 @@
 
 #include "combinedincidenceeditor.h"
 
-#include <QDebug>
+#include "incidenceeditor_debug.h"
 
 using namespace IncidenceEditorNG;
 
@@ -99,8 +99,8 @@ void CombinedIncidenceEditor::load(const KCalCore::Incidence::Ptr &incidence)
 
         if (editor->isDirty()) {
             // We are going to crash due to assert. Print some useful info before crashing.
-            qWarning() << "Faulty editor was " << editor->objectName();
-            qWarning() << "Incidence " << (incidence ? incidence->uid() : "null");
+            qCWarning(INCIDENCEEDITOR_LOG) << "Faulty editor was " << editor->objectName();
+            qCWarning(INCIDENCEEDITOR_LOG) << "Incidence " << (incidence ? incidence->uid() : "null");
 
             editor->printDebugInfo();
 

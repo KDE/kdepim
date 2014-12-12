@@ -34,7 +34,7 @@
 
 #include <KJob>
 #include <KLocalizedString>
-#include <QDebug>
+#include "incidenceeditor_debug.h"
 
 #include <QMessageBox>
 #include <QPointer>
@@ -272,7 +272,7 @@ Akonadi::Item EditorItemManager::item(ItemState state) const
         if (d->mItem.hasPayload()) {
             return d->mItem;
         } else {
-            qDebug() << "Won't return mItem because isValid = " << d->mItem.isValid()
+            qCDebug(INCIDENCEEDITOR_LOG) << "Won't return mItem because isValid = " << d->mItem.isValid()
                      << "; and haPayload is " << d->mItem.hasPayload();
         }
         break;
@@ -280,12 +280,12 @@ Akonadi::Item EditorItemManager::item(ItemState state) const
         if (d->mPrevItem.hasPayload()) {
             return d->mPrevItem;
         } else {
-            qDebug() << "Won't return mPrevItem because isValid = " << d->mPrevItem.isValid()
+            qCDebug(INCIDENCEEDITOR_LOG) << "Won't return mPrevItem because isValid = " << d->mPrevItem.isValid()
                      << "; and haPayload is " << d->mPrevItem.hasPayload();
         }
         break;
     default:
-        qDebug() << "state = " << state;
+        qCDebug(INCIDENCEEDITOR_LOG) << "state = " << state;
         Q_ASSERT_X(false, "EditorItemManager::item", "Unknown enum value") ;
     }
     return Akonadi::Item();

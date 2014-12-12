@@ -215,7 +215,7 @@ Akonadi::Collection::Id AbstractImportExportJob::convertPathToId(const QString &
 void AbstractImportExportJob::initializeImportJob()
 {
     if (mTempDir) {
-        qDebug() << " initializeImportJob already called";
+        qCDebug(PIMSETTINGEXPORTER_LOG) << " initializeImportJob already called";
     } else {
         mTempDir = new QTemporaryDir();
         mTempDirName = mTempDir->path();
@@ -238,7 +238,7 @@ void AbstractImportExportJob::copyToFile(const KArchiveFile *archivefile, const 
     const QString copyToDirName(mTempDirName + QLatin1Char('/') + prefix);
     const bool created = dir.mkpath(copyToDirName);
     if (!created) {
-        qDebug() << " directory :" << prefix << " not created";
+        qCDebug(PIMSETTINGEXPORTER_LOG) << " directory :" << prefix << " not created";
     }
 
     archivefile->copyTo(copyToDirName);
@@ -246,8 +246,8 @@ void AbstractImportExportJob::copyToFile(const KArchiveFile *archivefile, const 
     file.setFileName(copyToDirName + QLatin1Char('/') + filename);
 
     //QFile doesn't overwrite => remove old file before
-    //qDebug()<<" dest "<<dest;
-    //qDebug()<<" file "<<file.fileName();
+    //qCDebug(PIMSETTINGEXPORTER_LOG)<<" dest "<<dest;
+    //qCDebug(PIMSETTINGEXPORTER_LOG)<<" file "<<file.fileName();
     QFile destination(dest);
     if (destination.exists()) {
         destination.remove();
@@ -351,7 +351,7 @@ QStringList AbstractImportExportJob::restoreResourceFile(const QString &resource
 
                     QString filename(file->name());
                     //TODO adapt filename otherwise it will use all the time the same filename.
-                    qDebug() << " filename :" << filename;
+                    qCDebug(PIMSETTINGEXPORTER_LOG) << " filename :" << filename;
 
                     KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
@@ -386,7 +386,7 @@ QStringList AbstractImportExportJob::restoreResourceFile(const QString &resource
                     const QString newResource = mCreateResource->createResource(resourceBaseName, filename, settings);
                     infoAboutNewResource(newResource);
                     resourceToSync << newResource;
-                    qDebug() << " newResource" << newResource;
+                    qCDebug(PIMSETTINGEXPORTER_LOG) << " newResource" << newResource;
                 }
             }
         }

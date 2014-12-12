@@ -26,7 +26,7 @@
 #include <KEmailAddress>
 
 #include <KCompletionBox>
-#include <QDebug>
+#include "incidenceeditor_debug.h"
 #include <KLocalizedString>
 #include <KIconLoader>
 
@@ -292,7 +292,7 @@ void AttendeeLine::dataFromFields()
     clearModified();
     if (!(oldAttendee == mData->attendee()) && !email.isEmpty()) {
         // if email is empty, we don't want to update anything
-        qDebug() << oldAttendee->email() << mData->email();
+        qCDebug(INCIDENCEEDITOR_LOG) << oldAttendee->email() << mData->email();
         emit changed(oldAttendee, mData->attendee());
     }
 }

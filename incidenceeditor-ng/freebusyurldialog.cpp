@@ -28,7 +28,7 @@
 #include <KLocalizedString>
 
 #include <QBoxLayout>
-#include <QDebug>
+#include "incidenceeditor_debug.h"
 #include <QFrame>
 #include <QLabel>
 #include <KConfigGroup>
@@ -93,7 +93,7 @@ FreeBusyUrlWidget::~FreeBusyUrlWidget()
 
 void FreeBusyUrlWidget::loadConfig()
 {
-    qDebug();
+    qCDebug(INCIDENCEEDITOR_LOG);
 
     const QString url = KCalCore::FreeBusyUrlStore::self()->readUrl(mAttendee->email());
     mUrlEdit->setText(url);
@@ -101,7 +101,7 @@ void FreeBusyUrlWidget::loadConfig()
 
 void FreeBusyUrlWidget::saveConfig()
 {
-    qDebug();
+    qCDebug(INCIDENCEEDITOR_LOG);
 
     const QString url = mUrlEdit->text();
     KCalCore::FreeBusyUrlStore::self()->writeUrl(mAttendee->email(), url);

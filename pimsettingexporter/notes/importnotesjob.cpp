@@ -118,7 +118,7 @@ void ImportNotesJob::restoreResources()
 
                     QString filename(file->name());
                     //TODO adapt filename otherwise it will use all the time the same filename.
-                    qDebug() << " filename :" << filename;
+                    qCDebug(PIMSETTINGEXPORTER_LOG) << " filename :" << filename;
 
                     KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
@@ -147,7 +147,7 @@ void ImportNotesJob::restoreResources()
 
                     const QString newResource = mCreateResource->createResource(QStringLiteral("akonadi_akonotes_resource"), filename, settings, true);
                     infoAboutNewResource(newResource);
-                    qDebug() << " newResource" << newResource;
+                    qCDebug(PIMSETTINGEXPORTER_LOG) << " newResource" << newResource;
                     listResource << newResource;
                 }
             }

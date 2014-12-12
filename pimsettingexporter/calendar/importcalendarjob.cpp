@@ -27,7 +27,7 @@
 #include <KArchive>
 #include <KZip>
 
-#include <QDebug>
+#include "pimsettingexport_debug.h"
 
 #include <QFile>
 #include <QDir>
@@ -93,7 +93,7 @@ void ImportCalendarJob::restoreResources()
 
                     QString filename(file->name());
                     //TODO adapt filename otherwise it will use all the time the same filename.
-                    qDebug() << " filename :" << filename;
+                    qCDebug(PIMSETTINGEXPORTER_LOG) << " filename :" << filename;
 
                     KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
@@ -123,7 +123,7 @@ void ImportCalendarJob::restoreResources()
                     const QString newResource = mCreateResource->createResource(QStringLiteral("akonadi_icaldir_resource"), filename, settings, true);
                     infoAboutNewResource(newResource);
                     listResource << newResource;
-                    qDebug() << " newResource" << newResource;
+                    qCDebug(PIMSETTINGEXPORTER_LOG) << " newResource" << newResource;
                 }
             }
         }
@@ -187,7 +187,7 @@ void ImportCalendarJob::storeCalendarArchiveResource(const KArchiveDirectory *di
                 files.debug();
                 mListResourceFile.append(files);
             } else {
-                qDebug() << " Problem in archive. number of file " << lst.count();
+                qCDebug(PIMSETTINGEXPORTER_LOG) << " Problem in archive. number of file " << lst.count();
             }
         }
     }

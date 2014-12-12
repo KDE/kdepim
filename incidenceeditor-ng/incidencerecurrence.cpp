@@ -28,7 +28,7 @@
 
 #include <KCalendarSystem>
 
-#include <QDebug>
+#include "incidenceeditor_debug.h"
 #include <KLocalizedString>
 #include <QLocale>
 
@@ -444,18 +444,18 @@ bool IncidenceRecurrence::isValid() const
                     incidence->recurrence()->getNextDateTime(referenceDate).isValid())) {
                 mLastErrorString = i18n("A recurring event or to-do must occur at least once. "
                                         "Adjust the recurring parameters.");
-                qDebug() << mLastErrorString;
+                qCDebug(INCIDENCEEDITOR_LOG) << mLastErrorString;
                 return false;
             }
         } else {
             mLastErrorString = i18n("The incidence's start date is invalid.");
-            qDebug() << mLastErrorString;
+            qCDebug(INCIDENCEEDITOR_LOG) << mLastErrorString;
             return false;
         }
 
         if (mUi->mRecurrenceEndCombo->currentIndex() == RecurrenceEndOn &&
                 !mUi->mRecurrenceEndDate->date().isValid()) {
-            qWarning() << "Recurrence end date is invalid."; // TODO: strings after freeze
+            qCWarning(INCIDENCEEDITOR_LOG) << "Recurrence end date is invalid."; // TODO: strings after freeze
             return false;
         }
     }
@@ -467,7 +467,7 @@ void IncidenceRecurrence::addException()
 {
     const QDate date = mUi->mExceptionDateEdit->date();
     if (!date.isValid()) {
-        qWarning() << "Refusing to add invalid date";
+        qCWarning(INCIDENCEEDITOR_LOG) << "Refusing to add invalid date";
         return;
     }
 

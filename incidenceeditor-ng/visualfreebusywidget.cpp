@@ -28,7 +28,7 @@
 #include <kdgantt2/kdganttabstractrowcontroller.h>
 
 #include <KComboBox>
-#include <QDebug>
+#include "incidenceeditor_debug.h"
 #include <KLocalizedString>
 
 #include <QHeaderView>
@@ -424,7 +424,7 @@ void VisualFreeBusyWidget::slotZoomToTime()
 #if 0
     mGanttGraphicsView->zoomToFit();
 #else
-    qDebug() << "Disabled code, port to KDGantt2";
+    qCDebug(INCIDENCEEDITOR_LOG) << "Disabled code, port to KDGantt2";
 #endif
 }
 

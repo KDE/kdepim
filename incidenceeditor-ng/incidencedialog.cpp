@@ -54,7 +54,7 @@
 
 #include <KIconLoader>
 #include <QIcon>
-#include <QDebug>
+#include "incidenceeditor_debug.h"
 
 #include <QCloseEvent>
 #include <KSharedConfig>
@@ -507,7 +507,7 @@ bool IncidenceDialogPrivate::isValid() const
         if (mCalSelector->currentCollection().isValid()) {
             return true;
         } else {
-            qWarning() << "Select a collection first";
+            qCWarning(INCIDENCEEDITOR_LOG) << "Select a collection first";
             emit q->invalidCollection();
         }
     }
@@ -545,7 +545,7 @@ void IncidenceDialogPrivate::load(const Akonadi::Item &item)
         mUi->mInvitationBar->hide();
     }
 
-    qDebug() << "Loading item " << item.id() << "; parent " << item.parentCollection().id()
+    qCDebug(INCIDENCEEDITOR_LOG) << "Loading item " << item.id() << "; parent " << item.parentCollection().id()
              << "; storage " << item.storageCollectionId();
 
     if (item.parentCollection().isValid()) {

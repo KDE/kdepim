@@ -36,7 +36,7 @@
 #include <KEmailAddress>
 #include <KIO/Job>
 #include <KIO/NetAccess>
-#include <QDebug>
+#include "incidenceeditor_debug.h"
 #include <KLocalizedString>
 #include <QUrl>
 
@@ -413,7 +413,7 @@ void IncidenceDefaults::setDefaults(const KCalCore::Incidence::Ptr &incidence) c
         d->journalDefaults(incidence.dynamicCast<KCalCore::Journal>());
         break;
     default:
-        qDebug() << "Unsupported incidence type, keeping current values. Type: "
+        qCDebug(INCIDENCEEDITOR_LOG) << "Unsupported incidence type, keeping current values. Type: "
                  << static_cast<int>(incidence->type());
     }
 }

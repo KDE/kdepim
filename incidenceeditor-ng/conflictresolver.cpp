@@ -24,7 +24,7 @@
 #include "freebusyitemmodel.h"
 
 #include <KCalendarSystem>
-#include <QDebug>
+#include "incidenceeditor_debug.h"
 
 static const int DEFAULT_RESOLUTION_SECONDS = 15 * 60; // 15 minutes, 1 slot = 15 minutes
 
@@ -255,14 +255,14 @@ void ConflictResolver::findAllFreeSlots()
     //          So, the array would have a length of 672
     const int range = begin.secsTo(end) / mSlotResolutionSeconds;
     if (range <= 0) {
-        qWarning() << "free slot calculation: invalid range. range( " << begin.secsTo(end)
+        qCWarning(INCIDENCEEDITOR_LOG) << "free slot calculation: invalid range. range( " << begin.secsTo(end)
                    << ") / mSlotResolutionSeconds(" << mSlotResolutionSeconds << ") = " << range;
         return;
     }
 
 //QT5
 #if 0
-    qDebug() << "from " << begin << " to " << end
+    qCDebug(INCIDENCEEDITOR_LOG) << "from " << begin << " to " << end
              << "; mSlotResolutionSeconds = " << mSlotResolutionSeconds
              << "; range = " << range;
 #endif
@@ -286,10 +286,10 @@ void ConflictResolver::findAllFreeSlots()
     // now we know the number of attendees we are calculating for
     const int number_attendees = filteredFBItems.size();
     if (number_attendees <= 0) {
-        qDebug() << "no attendees match search criteria";
+        qCDebug(INCIDENCEEDITOR_LOG) << "no attendees match search criteria";
         return;
     }
-    qDebug() << "num attendees: " << number_attendees;
+    qCDebug(INCIDENCEEDITOR_LOG) << "num attendees: " << number_attendees;
     // this is a 2 dimensional array where the rows are attendees
     // and the columns are 0 or 1 denoting freee or busy respectively.
     QVector< QVector<int> > fbTable;
@@ -335,9 +335,9 @@ void ConflictResolver::findAllFreeSlots()
                     duration = range - 1;
                 } else {
                     //QT5
-                    //qFatal() << "impossible condition reached" << it->start() << it->end();
+                    //qCCritical(INCIDENCEEDITOR_LOG) << "impossible condition reached" << it->start() << it->end();
                 }
-                //      qDebug() << start_index << "+" << duration << "="
+                //      qCDebug(INCIDENCEEDITOR_LOG) << start_index << "+" << duration << "="
                 //               << start_index + duration << "<=" << range;
                 Q_ASSERT((start_index + duration) < range);     // sanity check
                 for (int i = start_index; i <= start_index + duration; ++i) {

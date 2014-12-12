@@ -14,6 +14,7 @@ include_directories(
 )
 
 set(incidenceeditors_ng_shared_LIB_SRCS
+  incidenceeditor_debug.cpp
   attachmenteditdialog.cpp
   attachmenticonview.cpp
   attendeedata.cpp

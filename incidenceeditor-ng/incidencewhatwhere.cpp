@@ -26,7 +26,7 @@
 #include "ui_dialogdesktop.h"
 #endif
 
-#include <QDebug>
+#include "incidenceeditor_debug.h"
 #include <KLocalizedString>
 
 using namespace IncidenceEditorNG;
@@ -41,7 +41,7 @@ IncidenceWhatWhere::IncidenceWhatWhere(Ui::EventOrTodoDesktop *ui)
 
 void IncidenceWhatWhere::load(const KCalCore::Incidence::Ptr &incidence)
 {
-    qDebug();
+    qCDebug(INCIDENCEEDITOR_LOG);
     mLoadedIncidence = incidence;
     if (mLoadedIncidence) {
         mUi->mSummaryEdit->setText(mLoadedIncidence->summary());
@@ -80,7 +80,7 @@ bool IncidenceWhatWhere::isDirty() const
 bool IncidenceWhatWhere::isValid() const
 {
     if (mUi->mSummaryEdit->text().isEmpty()) {
-        qDebug() << "Specify a title";
+        qCDebug(INCIDENCEEDITOR_LOG) << "Specify a title";
         mLastErrorString = i18nc("@info", "Please specify a title.");
         return false;
     } else {

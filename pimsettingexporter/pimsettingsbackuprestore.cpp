@@ -45,7 +45,7 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 
-#include <QDebug>
+#include "pimsettingexport_debug.h"
 #include <QDateTime>
 #include <QLocale>
 
@@ -249,7 +249,7 @@ void PimSettingsBackupRestore::restoreStart(const QString &filename)
             return;
         }
     }
-    qDebug() << " version " << version;
+    qCDebug(PIMSETTINGEXPORTER_LOG) << " version " << version;
     AbstractImportExportJob::setArchiveVersion(version);
 
     const QDateTime now = QDateTime::currentDateTime();

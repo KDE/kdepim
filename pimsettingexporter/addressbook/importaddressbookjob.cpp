@@ -121,12 +121,12 @@ void ImportAddressbookJob::restoreResources()
                     } else if (value.akonadiConfigFile.contains(QLatin1String("akonadi_contacts_resource_"))) {
                         instanceType = QLatin1String("akonadi_contacts_resource");
                     } else {
-                        qDebug() << " not supported" << value.akonadiConfigFile;
+                        qCDebug(PIMSETTINGEXPORTER_LOG) << " not supported" << value.akonadiConfigFile;
                     }
 
                     const QString newResource = mCreateResource->createResource(instanceType, filename, settings, true);
                     infoAboutNewResource(newResource);
-                    qDebug() << " newResource" << newResource;
+                    qCDebug(PIMSETTINGEXPORTER_LOG) << " newResource" << newResource;
                     listResource << newResource;
                 }
             }
@@ -194,7 +194,7 @@ void ImportAddressbookJob::storeAddressBookArchiveResource(const KArchiveDirecto
                 files.debug();
                 mListResourceFile.append(files);
             } else {
-                qDebug() << " Problem in archive. number of file " << lst.count();
+                qCDebug(PIMSETTINGEXPORTER_LOG) << " Problem in archive. number of file " << lst.count();
             }
         }
     }

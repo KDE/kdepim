@@ -22,7 +22,7 @@
 
 #include <Akonadi/Calendar/FreeBusyManager>
 
-#include <QDebug>
+#include "incidenceeditor_debug.h"
 
 #include <KLocalizedString>
 #include <KLocale>
@@ -235,7 +235,7 @@ QVariant FreeBusyItemModel::headerData(int section, Qt::Orientation orientation,
 
 void FreeBusyItemModel::addItem(const IncidenceEditorNG::FreeBusyItem::Ptr &freebusy)
 {
-    qDebug() << freebusy->attendee()->fullName();
+    qCDebug(INCIDENCEEDITOR_LOG) << freebusy->attendee()->fullName();
     int row = mFreeBusyItems.size();
     beginInsertRows(QModelIndex(), row, row);
     mFreeBusyItems.append(freebusy);

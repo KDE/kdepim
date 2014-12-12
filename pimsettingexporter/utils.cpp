@@ -113,7 +113,7 @@ QUrl Utils::adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &st
     const QUrl url = Utils::resourcePath(resourceConfig);
     QUrl newUrl = url;
     if (!url.path().contains(QDir::homePath())) {
-        //qDebug()<<" url "<<url.path();
+        //qCDebug(PIMSETTINGEXPORTER_LOG)<<" url "<<url.path();
         newUrl.setPath(QDir::homePath() + QLatin1Char('/') + storedData + url.fileName());
         if (!QDir(QDir::homePath() + QLatin1Char('/') + storedData).exists()) {
             QDir dir(QDir::homePath());
@@ -226,7 +226,7 @@ QString Utils::storeResources(KZip *archive, const QString &identifier, const QS
 {
     const QString agentFileName = identifier + QLatin1String("rc");
     const QString configFileName = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + agentFileName ;
-    qDebug() << "configFileName " << configFileName << "agentFileName " << configFileName;
+    qCDebug(PIMSETTINGEXPORTER_LOG) << "configFileName " << configFileName << "agentFileName " << configFileName;
 
     KSharedConfigPtr resourceConfig = KSharedConfig::openConfig(configFileName);
     QTemporaryFile tmp;
@@ -292,7 +292,7 @@ void Utils::addVersion(KZip *archive)
     const bool fileAdded  = archive->addLocalFile(tmp.fileName(), Utils::infoPath() + QString::fromLatin1("VERSION_%1").arg(currentArchiveVersion()));
     if (!fileAdded) {
         //TODO add i18n ?
-        qDebug() << "version file can not add to archive";
+        qCDebug(PIMSETTINGEXPORTER_LOG) << "version file can not add to archive";
     }
 }
 
@@ -330,7 +330,7 @@ QString Utils::appTypeToI18n(AppsType type)
     case Blogilo:
         return i18n("Blogilo");
     }
-    qDebug() << " type unknown " << type;
+    qCDebug(PIMSETTINGEXPORTER_LOG) << " type unknown " << type;
     return QString();
 }
 
@@ -354,6 +354,6 @@ QString Utils::storedTypeToI18n(StoredType type)
     case Data:
         return i18n("Data");
     }
-    qDebug() << " type unknown " << type;
+    qCDebug(PIMSETTINGEXPORTER_LOG) << " type unknown " << type;
     return QString();
 }

@@ -29,7 +29,7 @@
 #endif
 
 #include <libkdepim/widgets/tagwidgets.h>
-#include <QDebug>
+#include "incidenceeditor_debug.h"
 
 #include <TagCreateJob>
 
@@ -119,8 +119,8 @@ void IncidenceCategories::setCategories(const QStringList &categories)
 
 void IncidenceCategories::printDebugInfo() const
 {
-    qDebug() << "mSelectedCategories = " << categories();
-    qDebug() << "mLoadedIncidence->categories() = " << mLoadedIncidence->categories();
+    qCDebug(INCIDENCEEDITOR_LOG) << "mSelectedCategories = " << categories();
+    qCDebug(INCIDENCEEDITOR_LOG) << "mLoadedIncidence->categories() = " << mLoadedIncidence->categories();
 }
 
 void IncidenceCategories::checkForUnknownCategories(const QStringList &categoriesToCheck)

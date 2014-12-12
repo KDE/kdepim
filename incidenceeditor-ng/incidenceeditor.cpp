@@ -20,7 +20,7 @@
 
 #include "incidenceeditor-ng.h"
 
-#include <QDebug>
+#include "incidenceeditor_debug.h"
 
 using namespace IncidenceEditorNG;
 
@@ -36,7 +36,7 @@ IncidenceEditor::~IncidenceEditor()
 void IncidenceEditor::checkDirtyStatus()
 {
     if (!mLoadedIncidence) {
-        qDebug() << "checkDirtyStatus called on an invalid incidence";
+        qCDebug(INCIDENCEEDITOR_LOG) << "checkDirtyStatus called on an invalid incidence";
         return;
     }
 

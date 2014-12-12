@@ -20,7 +20,7 @@
 
 #include "attendeeeditor.h"
 
-#include <QDebug>
+#include "incidenceeditor_debug.h"
 
 using namespace IncidenceEditorNG;
 
@@ -73,7 +73,7 @@ AttendeeData::List AttendeeEditor::attendees() const
 {
     QList<KPIM::MultiplyingLineData::Ptr> dataList = allData();
     AttendeeData::List attList;
-    //qDebug() << "num attendees:" << dataList.size();
+    //qCDebug(INCIDENCEEDITOR_LOG) << "num attendees:" << dataList.size();
     foreach (KPIM::MultiplyingLineData::Ptr datum, dataList) {
         AttendeeData::Ptr att = qSharedPointerDynamicCast<AttendeeData>(datum);
         if (!att) {

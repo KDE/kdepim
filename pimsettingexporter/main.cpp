@@ -20,7 +20,7 @@
 #include <kaboutdata.h>
 #include <KLocalizedString>
 #include <KDBusService>
-#include <QDebug>
+#include "pimsettingexport_debug.h"
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 #include <QApplication>

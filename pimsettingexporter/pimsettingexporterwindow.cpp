@@ -453,7 +453,7 @@ void PimSettingExporterWindow::restoreStart()
             return;
         }
     }
-    qDebug() << " version " << version;
+    qCDebug(PIMSETTINGEXPORTER_LOG) << " version " << version;
     AbstractImportExportJob::setArchiveVersion(version);
 
     const QDateTime now = QDateTime::currentDateTime();

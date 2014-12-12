@@ -22,7 +22,7 @@
 #include <AkonadiCore/AgentManager>
 
 #include <QStringList>
-#include <QDebug>
+#include "pimsettingexport_debug.h"
 #include <QApplication>
 #include <QCursor>
 
@@ -51,7 +51,7 @@ void SynchronizeResourceJob::nextSync()
 {
     if (mIndex < mListResources.count()) {
         const Akonadi::AgentInstance resource = Akonadi::AgentManager::self()->instance(mListResources.at(mIndex));
-        qDebug() << " resource.name" << resource.name();
+        qCDebug(PIMSETTINGEXPORTER_LOG) << " resource.name" << resource.name();
         Akonadi::ResourceSynchronizationJob *job = new Akonadi::ResourceSynchronizationJob(resource);
         job->setCollectionTreeOnly(true);
         connect(job, &Akonadi::ResourceSynchronizationJob::result, this, &SynchronizeResourceJob::slotSynchronizationFinished);

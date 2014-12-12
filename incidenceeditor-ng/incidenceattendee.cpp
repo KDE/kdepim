@@ -41,7 +41,7 @@
 
 #include <KEmailAddress>
 
-#include <QDebug>
+#include "incidenceeditor_debug.h"
 #include <QTreeView>
 #include <KMessageBox>
 #include <KLocalizedString>
@@ -222,7 +222,7 @@ bool IncidenceAttendee::isDirty() const
         tmp.setOrganizer(mUi->mOrganizerCombo->currentText());
 
         if (mLoadedIncidence->organizer()->email() != tmp.organizer()->email()) {
-            qDebug() << "Organizer changed. Old was " << mLoadedIncidence->organizer()->name()
+            qCDebug(INCIDENCEEDITOR_LOG) << "Organizer changed. Old was " << mLoadedIncidence->organizer()->name()
                      << mLoadedIncidence->organizer()->email() << "; new is " << tmp.organizer()->name()
                      << tmp.organizer()->email();
             return true;
@@ -304,7 +304,7 @@ void IncidenceAttendee::checkIfExpansionIsNeeded(KPIM::MultiplyingLine *line)
 {
     AttendeeData::Ptr data = qSharedPointerDynamicCast<AttendeeData>(line->data());
     if (!data) {
-        qDebug() << "dynamic cast failed";
+        qCDebug(INCIDENCEEDITOR_LOG) << "dynamic cast failed";
         return;
     }
 
@@ -393,7 +393,7 @@ void IncidenceAttendee::slotSelectAddresses()
                 }
             }
         } else {
-            qDebug() << "dialog was already deleted";
+            qCDebug(INCIDENCEEDITOR_LOG) << "dialog was already deleted";
         }
     }
 
@@ -412,7 +412,7 @@ void IncidenceEditorNG::IncidenceAttendee::slotSolveConflictPressed()
     dialog->slotUpdateIncidenceStartEnd(mDateTime->currentStartDateTime(),
                                         mDateTime->currentEndDateTime());
     if (dialog->exec() == QDialog::Accepted) {
-        qDebug() << dialog->selectedStartDate() << dialog->selectedStartTime();
+        qCDebug(INCIDENCEEDITOR_LOG) << dialog->selectedStartDate() << dialog->selectedStartTime();
         mDateTime->setStartDate(dialog->selectedStartDate());
         mDateTime->setStartTime(dialog->selectedStartTime());
     }
@@ -506,7 +506,7 @@ void IncidenceAttendee::slotOrganizerChanged(const QString &newOrganizer)
     bool success = KEmailAddress::extractEmailAddressAndName(newOrganizer, email, name);
 
     if (!success) {
-        qWarning() << "Could not extract email address and name";
+        qCWarning(INCIDENCEEDITOR_LOG) << "Could not extract email address and name";
         return;
     }
 
@@ -556,18 +556,18 @@ void IncidenceAttendee::slotOrganizerChanged(const QString &newOrganizer)
 
 void IncidenceAttendee::printDebugInfo() const
 {
-    qDebug() << "I'm organizer   : " << iAmOrganizer();
-    qDebug() << "Loaded organizer: " << mLoadedIncidence->organizer()->email();
+    qCDebug(INCIDENCEEDITOR_LOG) << "I'm organizer   : " << iAmOrganizer();
+    qCDebug(INCIDENCEEDITOR_LOG) << "Loaded organizer: " << mLoadedIncidence->organizer()->email();
 
     if (iAmOrganizer()) {
         KCalCore::Event tmp;
         tmp.setOrganizer(mUi->mOrganizerCombo->currentText());
-        qDebug() << "Organizer combo: " << tmp.organizer()->email();
+        qCDebug(INCIDENCEEDITOR_LOG) << "Organizer combo: " << tmp.organizer()->email();
     }
 
     const KCalCore::Attendee::List originalList = mLoadedIncidence->attendees();
     AttendeeData::List newList = mAttendeeEditor->attendees();
-    qDebug() << "List sizes: " << originalList.count() << newList.count();
+    qCDebug(INCIDENCEEDITOR_LOG) << "List sizes: " << originalList.count() << newList.count();
 
     if (originalList.count() != newList.count()) {
         return;
@@ -586,7 +586,7 @@ void IncidenceAttendee::printDebugInfo() const
         }
 
         if (!found) {
-            qDebug() << "Attendee not found: " << attendee->email()
+            qCDebug(INCIDENCEEDITOR_LOG) << "Attendee not found: " << attendee->email()
                      << attendee->name()
                      << attendee->status()
                      << attendee->RSVP()
@@ -597,7 +597,7 @@ void IncidenceAttendee::printDebugInfo() const
                      << "; we have:";
             for (int i = 0; i < newList.count(); ++i) {
                 KCalCore::Attendee::Ptr attendee = newList.at(i)->attendee();
-                qDebug() << "Attendee: " << attendee->email()
+                qCDebug(INCIDENCEEDITOR_LOG) << "Attendee: " << attendee->email()
                          << attendee->name()
                          << attendee->status()
                          << attendee->RSVP()
