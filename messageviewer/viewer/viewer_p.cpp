@@ -75,7 +75,7 @@
 #include <KPrintPreview>
 #include <kdeprintdialog.h>
 #include <QIcon>
-#include <QDebug>
+
 #include <kfileitemactions.h>
 #include <KFileItemListProperties>
 #include <KLocalizedString>

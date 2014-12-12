@@ -29,7 +29,7 @@
 #include <QUrl>
 
 #include <QHBoxLayout>
-#include <QDebug>
+
 #include <QDialogButtonBox>
 #include <KConfigGroup>
 #include <QPushButton>

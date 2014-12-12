@@ -23,7 +23,7 @@
 
 #include <messagecore/utils/stringutil.h>
 
-#include <qdebug.h>
+
 #include <KLocalizedString>
 
 #include <QFontMetrics>

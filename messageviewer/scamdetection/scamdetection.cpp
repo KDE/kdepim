@@ -24,7 +24,7 @@
 
 #include <QWebElement>
 #include <QWebFrame>
-#include <QDebug>
+
 
 using namespace MessageViewer;
 static QString IPv4_PATTERN = QLatin1String("\\b[0-9]{1,3}\\.[0-9]{1,3}(?:\\.[0-9]{0,3})?(?:\\.[0-9]{0,3})?");

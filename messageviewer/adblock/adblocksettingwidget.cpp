@@ -42,7 +42,7 @@ using namespace PimCommon::ConfigureImmutableWidgetUtils;
 #include <KSharedConfig>
 
 #include <QIcon>
-#include <QDebug>
+
 #include <KMessageBox>
 #include <KLocalizedString>
 

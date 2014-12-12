@@ -33,7 +33,7 @@
 #include <QVBoxLayout>
 #include <QWebFrame>
 #include <QWebElement>
-#include <QDebug>
+
 #include <QPointer>
 #include <QClipboard>
 #include <QApplication>

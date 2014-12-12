@@ -22,7 +22,7 @@
 #include "pluginloaderbase.h"
 
 #include <KConfigGroup>
-#include <QDebug>
+
 #include <KGlobal>
 #include <KLibrary>
 #include <KLocalizedString>

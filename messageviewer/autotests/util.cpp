@@ -19,7 +19,7 @@
 #include "util.h"
 
 #include <QFile>
-#include <QDebug>
+
 
 KMime::Message::Ptr readAndParseMail(const QString &mailFile)
 {

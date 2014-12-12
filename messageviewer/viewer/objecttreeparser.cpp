@@ -83,7 +83,7 @@
 #include <kmime/kmime_headers.h>
 
 // KDE includes
-#include <qdebug.h>
+
 #include <KLocalizedString>
 #include <kmimetype.h>
 #include <kglobal.h>

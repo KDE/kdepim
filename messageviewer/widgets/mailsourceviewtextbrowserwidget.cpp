@@ -56,7 +56,7 @@
 #include <QShortcut>
 #include <QVBoxLayout>
 #include <QContextMenuEvent>
-#include <QDebug>
+
 #include <QMenu>
 #include <QFontDatabase>
 #include <KConfigGroup>

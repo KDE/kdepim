@@ -19,7 +19,7 @@
 
 #include "mailwebview.h"
 #include "messageviewer_debug.h"
-#include <QDebug>
+
 #include <KActionCollection>
 
 #include <QContextMenuEvent>

@@ -34,7 +34,7 @@
 #include "messageviewer_debug.h"
 #include "viewer/mailwebview.h"
 
-#include <QDebug>
+
 #include <QUrl>
 
 #include <cassert>

@@ -21,7 +21,7 @@
 #include <KLocalizedString>
 #include <QLineEdit>
 #include <QIcon>
-#include <QDebug>
+
 #include <KMessageWidget>
 #include <QPushButton>
 #include <QPushButton>

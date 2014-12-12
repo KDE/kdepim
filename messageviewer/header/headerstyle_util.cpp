@@ -26,7 +26,7 @@
 
 #include <KLocalizedString>
 
-#include <QDebug>
+
 
 #include <QBuffer>
 #include "contactdisplaymessagememento.h"

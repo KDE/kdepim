@@ -22,7 +22,7 @@
 #include <KRun>
 
 #include <QTimer>
-#include <QDebug>
+
 #include <QAction>
 
 using namespace MessageViewer;

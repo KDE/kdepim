@@ -24,7 +24,7 @@
 
 #include <QFile>
 #include <QVariantMap>
-#include <QDebug>
+
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QStandardPaths>

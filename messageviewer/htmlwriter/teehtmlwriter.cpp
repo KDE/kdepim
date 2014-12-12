@@ -31,7 +31,7 @@
 
 #include "teehtmlwriter.h"
 
-#include <qdebug.h>
+
 
 namespace MessageViewer
 {

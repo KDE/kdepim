@@ -20,7 +20,7 @@
 #include "messageviewer_debug.h"
 #include <Akonadi/Contact/ContactSearchJob>
 
-#include <QDebug>
+
 using namespace MessageViewer;
 
 ContactDisplayMessageMemento::ContactDisplayMessageMemento(const QString &emailAddress)

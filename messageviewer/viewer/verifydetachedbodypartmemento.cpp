@@ -17,7 +17,7 @@
 
 #include "verifydetachedbodypartmemento.h"
 #include "messageviewer_debug.h"
-#include <qdebug.h>
+
 #include <kleo/verifydetachedjob.h>
 #include <kleo/keylistjob.h>
 
@@ -26,7 +26,7 @@
 #include <qstringlist.h>
 
 #include <cassert>
-#include <QDebug>
+
 
 using namespace Kleo;
 using namespace GpgME;

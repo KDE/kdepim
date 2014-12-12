@@ -18,12 +18,12 @@
 #include "scamdetection_gui.h"
 #include "scamdetection/scamdetectionwarningwidget.h"
 #include "scamdetection/scamdetection.h"
-#include <qdebug.h>
+
 
 #include <KLocalizedString>
 
 #include <QUrl>
-#include <QDebug>
+
 #include <QPointer>
 #include <QVBoxLayout>
 #include <QWebView>

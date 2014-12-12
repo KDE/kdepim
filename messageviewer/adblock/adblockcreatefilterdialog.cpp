@@ -20,7 +20,7 @@
 
 #include <KLocalizedString>
 
-#include <QDebug>
+
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <QDialogButtonBox>

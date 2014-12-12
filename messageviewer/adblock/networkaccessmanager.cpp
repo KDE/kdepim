@@ -23,7 +23,7 @@
 #include "settings/globalsettings.h"
 #include "adblockmanager.h"
 
-#include <QDebug>
+
 #include <KLocalizedString>
 #include <KProtocolInfo>
 #include <KRun>

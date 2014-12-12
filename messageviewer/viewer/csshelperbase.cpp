@@ -33,7 +33,7 @@
 #include "csshelperbase.h"
 
 #include <KColorScheme>
-#include <QDebug>
+
 
 #include <QApplication>
 #include <QPaintDevice>

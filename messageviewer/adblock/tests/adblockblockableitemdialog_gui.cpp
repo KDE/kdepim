@@ -18,12 +18,12 @@
 #include "adblockblockableitemdialog_gui.h"
 #include "adblock/adblockblockableitemswidget.h"
 #include "libkdepim/widgets/progressindicatorlabel.h"
-#include <qdebug.h>
+
 
 #include <KLocalizedString>
 #include <QUrl>
 
-#include <QDebug>
+
 #include <QPointer>
 #include <QVBoxLayout>
 #include <QWebView>

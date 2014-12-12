@@ -29,7 +29,7 @@
 
 #include <KConfigDialogManager>
 #include <KLocalizedString>
-#include <QDebug>
+
 
 using namespace MessageViewer;
 

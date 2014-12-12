@@ -58,7 +58,7 @@
 
 #include <KUrl>
 #include <QIcon>
-#include <QDebug>
+
 
 #include <QApplication>
 #include <QClipboard>

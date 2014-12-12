@@ -23,7 +23,7 @@
 #include <AkonadiCore/ItemCreateJob>
 
 #include <KMime/Message>
-#include <QDebug>
+
 
 using namespace MessageViewer;
 

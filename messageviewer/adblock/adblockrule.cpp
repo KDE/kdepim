@@ -35,7 +35,7 @@
 #include "adblockrulenullimpl.h"
 #include "adblockruletextmatchimpl.h"
 
-#include <QDebug>
+
 
 using namespace MessageViewer;
 AdBlockRule::AdBlockRule(const QString &filter)

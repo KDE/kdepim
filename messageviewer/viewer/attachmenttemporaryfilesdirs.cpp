@@ -23,7 +23,7 @@
 #include <QDir>
 #include <QFile>
 #include <QTimer>
-#include <QDebug>
+
 
 using namespace MessageViewer;
 

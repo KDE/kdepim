@@ -25,7 +25,7 @@
 #include <QIcon>
 #include <KDateTimeEdit>
 #include <QDateTime>
-#include <QDebug>
+
 
 #include <QHBoxLayout>
 #include <QEvent>

@@ -38,7 +38,7 @@
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_headers.h>
 
-#include <qdebug.h>
+
 
 #include <boost/shared_ptr.hpp>
 

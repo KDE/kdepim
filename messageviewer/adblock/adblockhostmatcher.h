@@ -31,7 +31,7 @@
 #include <QSet>
 #include <QString>
 
-#include <QDebug>
+
 
 namespace MessageViewer
 {

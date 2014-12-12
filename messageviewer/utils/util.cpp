@@ -58,7 +58,7 @@
 #include <KLocalizedString>
 #include <kmessagebox.h>
 #include <kio/netaccess.h>
-#include <qdebug.h>
+
 #include <QTemporaryFile>
 #include <ktoolinvocation.h>
 #include <QAction>

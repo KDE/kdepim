@@ -22,7 +22,7 @@
 
 #include <kmime/kmime_message.h>
 
-#include <QDebug>
+
 
 using namespace MessageViewer;
 

@@ -17,7 +17,7 @@
 
 #include "verifyopaquebodypartmemento.h"
 #include "messageviewer_debug.h"
-#include <QDebug>
+
 #include <kleo/verifyopaquejob.h>
 #include <kleo/keylistjob.h>
 

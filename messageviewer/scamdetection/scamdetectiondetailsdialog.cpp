@@ -22,7 +22,7 @@
 #include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
 
 #include <KLocalizedString>
-#include <QDebug>
+
 #include <QUrl>
 
 #include <KTextEdit>

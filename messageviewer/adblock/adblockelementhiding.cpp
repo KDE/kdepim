@@ -26,7 +26,7 @@
 
 // Self Includes
 #include "adblockelementhiding.h"
-#include <QDebug>
+
 #include "messageviewer_debug.h"
 
 using namespace MessageViewer;

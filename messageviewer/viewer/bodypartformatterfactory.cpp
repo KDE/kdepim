@@ -40,7 +40,7 @@
 #include "urlhandlermanager.h"
 
 // KDE
-#include <qdebug.h>
+
 
 // Qt
 #include <QString>

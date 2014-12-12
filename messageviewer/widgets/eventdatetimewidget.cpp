@@ -19,7 +19,7 @@
 #include <KDateComboBox>
 #include <KTimeComboBox>
 #include <QHBoxLayout>
-#include <QDebug>
+
 #include <QDateTime>
 
 using namespace MessageViewer;
