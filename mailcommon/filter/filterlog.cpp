@@ -29,7 +29,7 @@
 #include "filterlog.h"
 
 #include "messageviewer/utils/util.h"
-
+#include "mailcommon_debug.h"
 #include <QDebug>
 
 #include <QFile>
@@ -71,7 +71,7 @@ public:
 void FilterLog::Private::checkLogSize()
 {
     if (mCurrentLogSize > mMaxLogSize && mMaxLogSize > -1) {
-        qDebug() << "Filter log: memory limit reached, starting to discard old items, size ="
+        qCDebug(MAILCOMMON_LOG) << "Filter log: memory limit reached, starting to discard old items, size ="
                  << QString::number(mCurrentLogSize);
 
         // avoid some kind of hysteresis, shrink the log to 90% of its maximum
@@ -80,9 +80,9 @@ void FilterLog::Private::checkLogSize()
             if (it != mLogEntries.end()) {
                 mCurrentLogSize -= (*it).length();
                 mLogEntries.erase(it);
-                qDebug() << "Filter log: new size =" << QString::number(mCurrentLogSize);
+                qCDebug(MAILCOMMON_LOG) << "Filter log: new size =" << QString::number(mCurrentLogSize);
             } else {
-                qDebug() << "Filter log: size reduction disaster!";
+                qCDebug(MAILCOMMON_LOG) << "Filter log: size reduction disaster!";
                 q->clear();
             }
         }
@@ -196,11 +196,11 @@ QStringList FilterLog::logEntries() const
 void FilterLog::dump()
 {
 #ifndef NDEBUG
-    qDebug() << "----- starting filter log -----";
+    qCDebug(MAILCOMMON_LOG) << "----- starting filter log -----";
     foreach (const QString &entry, d->mLogEntries) {
-        qDebug() << entry;
+        qCDebug(MAILCOMMON_LOG) << entry;
     }
-    qDebug() << "------ end of filter log ------";
+    qCDebug(MAILCOMMON_LOG) << "------ end of filter log ------";
 #endif
 }
 

@@ -19,7 +19,7 @@
 #include "entitycollectionorderproxymodel.h"
 #include "kernel/mailkernel.h"
 #include "util/mailutil.h"
-
+#include "mailcommon_debug.h"
 #include <Collection>
 #include <EntityTreeModel>
 #include <Akonadi/KMime/SpecialMailCollections>
@@ -64,7 +64,7 @@ public:
             if (collection.parentCollection() == Akonadi::Collection::root()) {
                 const QString resource = collection.resource();
                 if (resource.isEmpty()) {
-                    qDebug() << " collection has not resource: " << collection;
+                    qCDebug(MAILCOMMON_LOG) << " collection has not resource: " << collection;
                     //Don't save in collectionranks because we don't have resource name => pb.
                     return rank;
                 }

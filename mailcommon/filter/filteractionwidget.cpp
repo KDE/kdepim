@@ -18,7 +18,7 @@
 */
 
 #include "filteractionwidget.h"
-
+#include "mailcommon_debug.h"
 #include "filteraction.h"
 #include "filteractiondict.h"
 #include "filtermanager.h"
@@ -316,7 +316,7 @@ void FilterActionWidgetLister::setActionList(QList<FilterAction *> *list)
 
     int superfluousItems = (int)d->mActionList->count() - widgetsMaximum();
     if (superfluousItems > 0) {
-        qDebug() << "FilterActionWidgetLister: Clipping action list to"
+        qCDebug(MAILCOMMON_LOG) << "FilterActionWidgetLister: Clipping action list to"
                  << widgetsMaximum() << "items!";
 
         for (; superfluousItems ; superfluousItems--) {

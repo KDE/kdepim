@@ -18,7 +18,7 @@
  */
 
 #include "filteractionredirect.h"
-
+#include "mailcommon_debug.h"
 #include "kernel/mailkernel.h"
 #include "util/mailutil.h"
 
@@ -61,7 +61,7 @@ FilterAction::ReturnCode FilterActionRedirect::process(ItemContext &context , bo
     sendMDN(context.item(), KMime::MDN::Dispatched);
 
     if (!KernelIf->msgSender()->send(rmsg, MessageComposer::MessageSender::SendLater)) {
-        qDebug() << "FilterAction: could not redirect message (sending failed)";
+        qCDebug(MAILCOMMON_LOG) << "FilterAction: could not redirect message (sending failed)";
         return ErrorButGoOn; // error: couldn't send
     }
 

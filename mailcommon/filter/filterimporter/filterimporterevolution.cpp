@@ -23,7 +23,7 @@
 
 #include <QFile>
 #include <QDir>
-
+#include "mailcommon_debug.h"
 using namespace MailCommon;
 
 FilterImporterEvolution::FilterImporterEvolution(QFile *file)
@@ -37,7 +37,7 @@ FilterImporterEvolution::FilterImporterEvolution(QFile *file)
     QDomElement filters = doc.documentElement();
 
     if (filters.isNull()) {
-        qDebug() << "No filters defined";
+        qCDebug(MAILCOMMON_LOG) << "No filters defined";
         return;
     }
     filters = filters.firstChildElement(QLatin1String("ruleset"));
@@ -46,7 +46,7 @@ FilterImporterEvolution::FilterImporterEvolution(QFile *file)
         if (tag == QLatin1String("rule")) {
             parseFilters(e);
         } else {
-            qDebug() << " unknown tag " << tag;
+            qCDebug(MAILCOMMON_LOG) << " unknown tag " << tag;
         }
     }
 }
@@ -71,7 +71,7 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter,
         if (nexttag == QLatin1String("part")) {
             if (partFilter.hasAttribute(QLatin1String("name"))) {
                 const QString name = partFilter.attribute(QLatin1String("name"));
-                qDebug() << " parsePartAction name attribute :" << name;
+                qCDebug(MAILCOMMON_LOG) << " parsePartAction name attribute :" << name;
                 if (type == FilterImporterEvolution::PartType) {
                     QByteArray fieldName;
 
@@ -126,10 +126,10 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter,
                         filter->pattern()->setOp(SearchPattern::OpAll);
                         break;
                     } else {
-                        qDebug() << " parttype part : name : not implemented :" << name;
+                        qCDebug(MAILCOMMON_LOG) << " parttype part : name : not implemented :" << name;
                     }
                     if (fieldName.isEmpty()) {
-                        qDebug() << " parttype part : name : not implemented :" << name;
+                        qCDebug(MAILCOMMON_LOG) << " parttype part : name : not implemented :" << name;
                         continue;
                     }
                     QString contents;
@@ -147,7 +147,7 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter,
                                 if (name == QLatin1String("flag")) {
 
                                     const QString flag = valueFilter.attribute(QLatin1String("value"));
-                                    qDebug() << " flag :" << flag;
+                                    qCDebug(MAILCOMMON_LOG) << " flag :" << flag;
                                     if (flag == QLatin1String("Seen")) {
                                         contents = QLatin1String("Read");
                                     } else if (flag == QLatin1String("Answered")) {
@@ -159,10 +159,10 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter,
                                     } else if (flag == QLatin1String("Junk")) {
                                         contents = QLatin1String("Spam");
                                     } else {
-                                        qDebug() << " unknown status flags " << flag;
+                                        qCDebug(MAILCOMMON_LOG) << " unknown status flags " << flag;
                                     }
                                 }
-                                qDebug() << " value filter name :" << name;
+                                qCDebug(MAILCOMMON_LOG) << " value filter name :" << name;
                             }
                             if (valueFilter.hasAttribute(QLatin1String("type"))) {
                                 const QString name = valueFilter.attribute(QLatin1String("type"));
@@ -190,13 +190,13 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter,
                                         contents = QString::number(val);
                                     }
                                 } else {
-                                    qDebug() << " type not implemented " << name;
+                                    qCDebug(MAILCOMMON_LOG) << " type not implemented " << name;
                                 }
 
                             }
                             if (valueFilter.hasAttribute(QLatin1String("value"))) {
                                 const QString value = valueFilter.attribute(QLatin1String("value"));
-                                qDebug() << " value filter value :" << name;
+                                qCDebug(MAILCOMMON_LOG) << " value filter value :" << name;
                                 if (value == QLatin1String("contains")) {
                                     functionName = SearchRule::FuncContains;
                                 } else if (value == QLatin1String("not contains")) {
@@ -271,7 +271,7 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter,
                         actionName = QLatin1String("forward");
                     }
                     if (actionName.isEmpty()) {
-                        qDebug() << " actiontype part : name : not implemented :" << name;
+                        qCDebug(MAILCOMMON_LOG) << " actiontype part : name : not implemented :" << name;
                     }
                     QString value;
                     for (QDomElement valueFilter = partFilter.firstChildElement();
@@ -281,11 +281,11 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter,
                         if (valueTag == QLatin1String("value")) {
                             if (valueFilter.hasAttribute(QLatin1String("name"))) {
                                 const QString name = valueFilter.attribute(QLatin1String("name"));
-                                qDebug() << " value filter name :" << name;
+                                qCDebug(MAILCOMMON_LOG) << " value filter name :" << name;
                             }
                             if (valueFilter.hasAttribute(QLatin1String("type"))) {
                                 const QString name = valueFilter.attribute(QLatin1String("type"));
-                                qDebug() << " value filter type :" << name;
+                                qCDebug(MAILCOMMON_LOG) << " value filter type :" << name;
                                 if (name == QLatin1String("option")) {
                                     //Nothing we will look at value
                                 } else if (name == QLatin1String("string")) {
@@ -298,7 +298,7 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter,
                                         if (!value.isEmpty()) {
                                             value.remove(QLatin1String("folder://"));
                                         }
-                                        qDebug() << " contents folder :" << value;
+                                        qCDebug(MAILCOMMON_LOG) << " contents folder :" << value;
                                     }
                                 } else if (name == QLatin1String("address")) {
                                     //TODO
@@ -307,7 +307,7 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter,
                             }
                             if (valueFilter.hasAttribute(QLatin1String("value"))) {
                                 const QString name = valueFilter.attribute(QLatin1String("value"));
-                                qDebug() << " value filter value :" << name;
+                                qCDebug(MAILCOMMON_LOG) << " value filter value :" << name;
                                 if (value == QLatin1String("contains")) {
                                     //TODO
                                 }
@@ -338,7 +338,7 @@ void FilterImporterEvolution::parseFilters(const QDomElement &e)
         } else if (attr == QLatin1String("any")) {
             filter->pattern()->setOp(SearchPattern::OpOr);
         } else {
-            qDebug() << " grouping not implemented: " << attr;
+            qCDebug(MAILCOMMON_LOG) << " grouping not implemented: " << attr;
         }
 
     }
@@ -351,7 +351,7 @@ void FilterImporterEvolution::parseFilters(const QDomElement &e)
             filter->setApplyOnInbound(false);
             filter->setApplyOnOutbound(true);
         } else {
-            qDebug() << " source not implemented :" << attr;
+            qCDebug(MAILCOMMON_LOG) << " source not implemented :" << attr;
         }
     }
     for (QDomElement ruleFilter = e.firstChildElement();
@@ -366,7 +366,7 @@ void FilterImporterEvolution::parseFilters(const QDomElement &e)
         } else if (nexttag == QLatin1String("actionset")) {
             parsePartAction(ruleFilter, filter, ActionType);
         } else {
-            qDebug() << " tag not implemented : " << nexttag;
+            qCDebug(MAILCOMMON_LOG) << " tag not implemented : " << nexttag;
         }
     }
 

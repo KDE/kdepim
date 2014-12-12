@@ -23,6 +23,7 @@
 #include "../kernel/mailkernel.h"
 #include "mdnadvicedialog.h"
 #include "util/mailutil.h"
+#include "mailcommon_debug.h"
 
 #include <messagecomposer/helper/messagefactory.h>
 #include <messagecomposer/sender/messagesender.h>
@@ -119,7 +120,7 @@ void FilterAction::sendMDN(const Akonadi::Item &item, KMime::MDN::DispositionTyp
         const KMime::Message::Ptr mdn = factory.createMDN(KMime::MDN::AutomaticAction, type, mdnSend.second, quote, modifiers);
         if (mdn) {
             if (!KernelIf->msgSender()->send(mdn, MessageComposer::MessageSender::SendLater)) {
-                qDebug() << "Sending failed.";
+                qCDebug(MAILCOMMON_LOG) << "Sending failed.";
             }
         }
     }

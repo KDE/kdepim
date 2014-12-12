@@ -23,6 +23,7 @@
 #include "foldercollection.h"
 #include "util/mailutil.h"
 #include "kernel/mailkernel.h"
+#include "mailcommon_debug.h"
 
 #include <CollectionModifyJob>
 
@@ -242,7 +243,7 @@ void CollectionExpiryPage::slotSaveAndExpire()
 void CollectionExpiryPage::slotCollectionModified(KJob *job)
 {
     if (job->error()) {
-        qDebug() << " Error when we modified collection";
+        qCDebug(MAILCOMMON_LOG) << " Error when we modified collection";
         return;
     }
 

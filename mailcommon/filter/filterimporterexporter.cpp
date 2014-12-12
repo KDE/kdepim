@@ -31,7 +31,7 @@
 #include "filteraction.h"
 #include "filtermanager.h"
 #include "mailfilter.h"
-
+#include "mailcommon_debug.h"
 #include "filterimporter/filterimporterthunderbird_p.h"
 #include "filterimporter/filterimporterevolution_p.h"
 #include "filterimporter/filterimportersylpheed_p.h"
@@ -76,7 +76,7 @@ QList<MailFilter *> FilterImporterExporter::readFiltersFromConfig(
         }
         if (filter->isEmpty()) {
 #ifndef NDEBUG
-            qDebug() << "Filter" << filter->asString() << "is empty!";
+            qCDebug(MAILCOMMON_LOG) << "Filter" << filter->asString() << "is empty!";
 #endif
             emptyFilters << filter->name();
             delete filter;

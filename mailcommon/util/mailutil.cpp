@@ -39,7 +39,7 @@
 #include "mailutil.h"
 #include "mailutil_p.h"
 #include "mailcommon/collectionpage/newmailnotifierattribute.h"
-
+#include "mailcommon_debug.h"
 #include "calendarinterface.h"
 #include "job/expirejob.h"
 #include "foldercollection.h"
@@ -127,7 +127,7 @@ bool MailCommon::Util::showJobErrorMessage(KJob *job)
         if (static_cast<KIO::Job *>(job)->ui()) {
             static_cast<KIO::Job *>(job)->ui()->showErrorMessage();
         } else {
-            qDebug() << " job->errorString() :" << job->errorString();
+            qCDebug(MAILCOMMON_LOG) << " job->errorString() :" << job->errorString();
         }
         return true;
     }
@@ -167,7 +167,7 @@ bool MailCommon::Util::ensureKorganizerRunning(bool switchTo)
     //Can't run the korganizer-mobile.sh through KDBusServiceStarter in these platforms.
     QDBusInterface *interface = new QDBusInterface(QLatin1String("org.kde.korganizer"), QLatin1String("/MainApplication"));
     if (!interface->isValid()) {
-        qDebug() << "Starting korganizer...";
+        qCDebug(MAILCOMMON_LOG) << "Starting korganizer...";
 
         QDBusServiceWatcher *watcher =
             new QDBusServiceWatcher(QLatin1String("org.kde.korganizer"), QDBusConnection::sessionBus(),
@@ -176,9 +176,9 @@ bool MailCommon::Util::ensureKorganizerRunning(bool switchTo)
         watcher->connect(watcher, &QDBusServiceWatcher::serviceRegistered, &loop, &QEventLoop::quit);
         result = QProcess::startDetached(QLatin1String("korganizer-mobile"));
         if (result) {
-            qDebug() << "Starting loop";
+            qCDebug(MAILCOMMON_LOG) << "Starting loop";
             loop.exec();
-            qDebug() << "Korganizer finished starting";
+            qCDebug(MAILCOMMON_LOG) << "Korganizer finished starting";
         } else {
             qWarning() << "Failed to start korganizer with QProcess";
         }

@@ -19,7 +19,7 @@
 */
 
 #include "snippetsmanager.h"
-
+#include "mailcommon_debug.h"
 #include "snippetdialog_p.h"
 #include "snippetsmodel_p.h"
 #include "snippetvariabledialog_p.h"
@@ -251,7 +251,7 @@ void SnippetsManager::Private::addSnippetGroup()
     if (dlg->exec()) {
 
         if (!mModel->insertRow(mModel->rowCount(), QModelIndex())) {
-            qDebug() << "unable to insert row";
+            qCDebug(MAILCOMMON_LOG) << "unable to insert row";
             delete dlg;
             return;
         }

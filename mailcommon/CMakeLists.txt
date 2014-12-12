@@ -150,6 +150,7 @@ set(libmailcommon_SRCS
   kernel/mailkernel.cpp
   util/mailutil.cpp
   mdn/sendmdnhandler.cpp
+  mailcommon_debug.cpp
   ${libmailcommon_widget_SRCS}
   ${libmailcommon_tag_SRCS}
   ${libmailcommon_snippets_SRCS}

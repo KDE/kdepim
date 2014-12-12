@@ -32,7 +32,7 @@
 
 #include <libkdepim/misc/broadcaststatus.h>
 using KPIM::BroadcastStatus;
-
+#include "mailcommon_debug.h"
 #include <QDebug>
 #include <KLocalizedString>
 
@@ -69,7 +69,7 @@ ExpireJob::ExpireJob(const Akonadi::Collection &folder, bool immediate)
 
 ExpireJob::~ExpireJob()
 {
-    qDebug();
+    qCDebug(MAILCOMMON_LOG);
 }
 
 void ExpireJob::kill()
@@ -94,20 +94,20 @@ void ExpireJob::execute()
     }
 
     if (unreadDays > 0) {
-        qDebug() << "ExpireJob: deleting unread older than" << unreadDays << "days";
+        qCDebug(MAILCOMMON_LOG) << "ExpireJob: deleting unread older than" << unreadDays << "days";
         mMaxUnreadTime = time(0) - unreadDays * 3600 * 24;
     }
     if (readDays > 0) {
-        qDebug() << "ExpireJob: deleting read older than" << readDays << "days";
+        qCDebug(MAILCOMMON_LOG) << "ExpireJob: deleting read older than" << readDays << "days";
         mMaxReadTime = time(0) - readDays * 3600 * 24;
     }
 
     if ((mMaxUnreadTime == 0) && (mMaxReadTime == 0)) {
-        qDebug() << "ExpireJob: nothing to do";
+        qCDebug(MAILCOMMON_LOG) << "ExpireJob: nothing to do";
         deleteLater();
         return;
     }
-    qDebug() << "ExpireJob: starting to expire in folder" << mSrcFolder.name();
+    qCDebug(MAILCOMMON_LOG) << "ExpireJob: starting to expire in folder" << mSrcFolder.name();
     slotDoWork();
     // do nothing here, we might be deleted!
 }
@@ -172,7 +172,7 @@ void ExpireJob::done()
 
         if (expirationAttribute->expireAction() == MailCommon::ExpireCollectionAttribute::ExpireDelete) {
             // Expire by deletion, i.e. move to null target folder
-            qDebug() << "ExpireJob: finished expiring in folder"
+            qCDebug(MAILCOMMON_LOG) << "ExpireJob: finished expiring in folder"
                      << mSrcFolder.name()
                      << count << "messages to remove.";
             Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob(mRemovedMsgs, this);
@@ -190,7 +190,7 @@ void ExpireJob::done()
                            mSrcFolder.name(), expirationAttribute->expireToFolderId());
                 qWarning() << str;
             } else {
-                qDebug() << "ExpireJob: finished expiring in folder"
+                qCDebug(MAILCOMMON_LOG) << "ExpireJob: finished expiring in folder"
                          << mSrcFolder.name()
                          << mRemovedMsgs.count() << "messages to move to"
                          << mMoveToFolder.name();

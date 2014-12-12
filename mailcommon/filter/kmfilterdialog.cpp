@@ -21,7 +21,7 @@
 */
 
 #include "kmfilterdialog.h"
-
+#include "mailcommon_debug.h"
 #include "filteractiondict.h"
 #include "filteractionwidget.h"
 #include "filterimporterexporter.h"
@@ -732,10 +732,10 @@ void KMFilterDialog::slotFilterSelected(MailFilter *aFilter)
     mPatternEdit->setSearchPattern(aFilter->pattern());
     mFilter = aFilter;
 
-    qDebug() << "apply on inbound ==" << aFilter->applyOnInbound();
-    qDebug() << "apply on outbound ==" << aFilter->applyOnOutbound();
-    qDebug() << "apply before outbound == " << aFilter->applyBeforeOutbound();
-    qDebug() << "apply on explicit ==" << aFilter->applyOnExplicit();
+    qCDebug(MAILCOMMON_LOG) << "apply on inbound ==" << aFilter->applyOnInbound();
+    qCDebug(MAILCOMMON_LOG) << "apply on outbound ==" << aFilter->applyOnOutbound();
+    qCDebug(MAILCOMMON_LOG) << "apply before outbound == " << aFilter->applyBeforeOutbound();
+    qCDebug(MAILCOMMON_LOG) << "apply on explicit ==" << aFilter->applyOnExplicit();
 
     // NOTE: setting these values activates the slot that sets them in
     // the filter! So make sure we have the correct values _before_ we
@@ -815,7 +815,7 @@ void KMFilterDialog::slotApplicabilityChanged()
         // Enable the apply button
         slotDialogUpdated();
 
-        qDebug() << "Setting filter to be applied at"
+        qCDebug(MAILCOMMON_LOG) << "Setting filter to be applied at"
                  << (mFilter->applyOnInbound() ? "incoming " : "")
                  << (mFilter->applyOnOutbound() ? "outgoing " : "")
                  << (mFilter->applyBeforeOutbound() ? "before_outgoing " : "")
@@ -1049,7 +1049,7 @@ KMFilterListBox::~KMFilterListBox()
 bool KMFilterListBox::itemIsValid(QListWidgetItem *item) const
 {
     if (!item) {
-        qDebug() << "Called while no filter is selected, ignoring.";
+        qCDebug(MAILCOMMON_LOG) << "Called while no filter is selected, ignoring.";
         return false;
     }
     if (item->isHidden()) {
@@ -1061,7 +1061,7 @@ bool KMFilterListBox::itemIsValid(QListWidgetItem *item) const
 void KMFilterListBox::slotFilterEnabledChanged(QListWidgetItem *item)
 {
     if (!item) {
-        qDebug() << "Called while no filter is selected, ignoring.";
+        qCDebug(MAILCOMMON_LOG) << "Called while no filter is selected, ignoring.";
         return;
     }
     QListWidgetFilterItem *itemFilter = static_cast<QListWidgetFilterItem *>(item);
@@ -1105,7 +1105,7 @@ void KMFilterListBox::slotUpdateFilterName()
 {
     QListWidgetItem *item = mListWidget->currentItem();
     if (!item) {
-        qDebug() << "Called while no filter is selected, ignoring.";
+        qCDebug(MAILCOMMON_LOG) << "Called while no filter is selected, ignoring.";
         return;
     }
     QListWidgetFilterItem *itemFilter = static_cast<QListWidgetFilterItem *>(item);
@@ -1361,7 +1361,7 @@ void KMFilterListBox::slotTop()
 
     const int numberOfItem(listWidgetItem.count());
     if ((numberOfItem == 1) && (mListWidget->currentRow() == 0)) {
-        qDebug() << "Called while the _topmost_ filter is selected, ignoring.";
+        qCDebug(MAILCOMMON_LOG) << "Called while the _topmost_ filter is selected, ignoring.";
         return;
     }
 
@@ -1422,7 +1422,7 @@ void KMFilterListBox::slotBottom()
     const int numberOfElement(mListWidget->count());
     const int numberOfItem(listWidgetItem.count());
     if ((numberOfItem == 1) && (mListWidget->currentRow() == numberOfElement - 1)) {
-        qDebug() << "Called while the _last_ filter is selected, ignoring.";
+        qCDebug(MAILCOMMON_LOG) << "Called while the _last_ filter is selected, ignoring.";
         return;
     }
 
@@ -1454,7 +1454,7 @@ void KMFilterListBox::slotUp()
 
     const int numberOfItem(listWidgetItem.count());
     if ((numberOfItem == 1) && (mListWidget->currentRow() == 0)) {
-        qDebug() << "Called while the _topmost_ filter is selected, ignoring.";
+        qCDebug(MAILCOMMON_LOG) << "Called while the _topmost_ filter is selected, ignoring.";
         return;
     }
     bool wasMoved = false;
@@ -1483,7 +1483,7 @@ void KMFilterListBox::slotDown()
     const int numberOfElement(mListWidget->count());
     const int numberOfItem(listWidgetItem.count());
     if ((numberOfItem == 1) && (mListWidget->currentRow() == numberOfElement - 1)) {
-        qDebug() << "Called while the _last_ filter is selected, ignoring.";
+        qCDebug(MAILCOMMON_LOG) << "Called while the _last_ filter is selected, ignoring.";
         return;
     }
 
@@ -1716,7 +1716,7 @@ void KMFilterDialog::slotDisableAccept()
 
 void KMFilterDialog::slotDialogUpdated()
 {
-    qDebug() << "Detected a change in data bound to the dialog!";
+    qCDebug(MAILCOMMON_LOG) << "Detected a change in data bound to the dialog!";
     if (!mIgnoreFilterUpdates) {
         buttonBox->button(QDialogButtonBox::Apply)->setEnabled(true);
     }

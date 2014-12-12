@@ -22,7 +22,7 @@
 #include "imapresourcesettings.h"
 #include "pimcommon/util/pimutil.h"
 #include "mailcommon/collectionpage/newmailnotifierattribute.h"
-
+#include "mailcommon_debug.h"
 #include <ItemFetchJob>
 #include <ItemFetchScope>
 #include <CollectionModifyJob>
@@ -80,7 +80,7 @@ FolderCollection::FolderCollection(const Akonadi::Collection &col, bool writecon
 
 FolderCollection::~FolderCollection()
 {
-    //qDebug()<<" FolderCollection::~FolderCollection"<<this;
+    //qCDebug(MAILCOMMON_LOG)<<" FolderCollection::~FolderCollection"<<this;
     if (mWriteConfig) {
         writeConfig();
     }

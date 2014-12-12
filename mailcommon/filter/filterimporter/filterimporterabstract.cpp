@@ -16,7 +16,7 @@
 */
 
 #include "filterimporterabstract_p.h"
-
+#include "mailcommon_debug.h"
 #include "filteractiondict.h"
 #include "filtermanager.h"
 #include "mailfilter.h"
@@ -59,7 +59,7 @@ void FilterImporterAbstract::appendFilter(MailCommon::MailFilter *filter)
     } else {
         mEmptyFilter << filter->name();
         // the filter is invalid:
-        qDebug() << " Empty filter";
+        qCDebug(MAILCOMMON_LOG) << " Empty filter";
         delete filter;
     }
 }
@@ -97,7 +97,7 @@ bool FilterImporterAbstract::loadDomElement(QDomDocument &doc, QFile *file)
     int errorRow;
     int errorCol;
     if (!doc.setContent(file, &errorMsg, &errorRow, &errorCol)) {
-        qDebug() << "Unable to load document.Parse error in line " << errorRow
+        qCDebug(MAILCOMMON_LOG) << "Unable to load document.Parse error in line " << errorRow
                  << ", col " << errorCol << ": " << errorMsg;
         return false;
     }

@@ -24,7 +24,7 @@
 #include "kernel/mailkernel.h"
 #include "util/mailutil.h"
 #include "mdnadvicedialog.h"
-
+#include "mailcommon_debug.h"
 #include <messagecomposer/helper/messagefactory.h>
 #include <messagecomposer/sender/messagesender.h>
 #include <messagecore/helpers/messagehelpers.h>
@@ -70,7 +70,7 @@ void SendMdnHandler::Private::handleMessages()
             return;
         }
 #else
-        qDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
+        qCDebug(MAILCOMMON_LOG) << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
 #endif
 
         const Akonadi::Collection collection = item.parentCollection();
@@ -100,7 +100,7 @@ void SendMdnHandler::Private::handleMessages()
                 factory.createMDN(KMime::MDN::ManualAction, KMime::MDN::Displayed, mdnSend.second, quote);
             if (mdn) {
                 if (!mKernel->msgSender()->send(mdn)) {
-                    qDebug() << "Sending failed.";
+                    qCDebug(MAILCOMMON_LOG) << "Sending failed.";
                 }
             }
         }

@@ -18,7 +18,7 @@
 #include "filterimporterbalsa_p.h"
 #include "filtermanager.h"
 #include "mailfilter.h"
-
+#include "mailcommon_debug.h"
 #include <KConfig>
 #include <KConfigGroup>
 
@@ -94,7 +94,7 @@ void FilterImporterBalsa::parseCondition(const QString &condition, MailCommon::M
             cond = cond.right(cond.length() - 3);
             cond = cond.trimmed();
         }
-        qDebug() << " cond" << cond;
+        qCDebug(MAILCOMMON_LOG) << " cond" << cond;
 
         //Date between
         QByteArray fieldName;
@@ -103,13 +103,13 @@ void FilterImporterBalsa::parseCondition(const QString &condition, MailCommon::M
             cond = cond.right(cond.length() - 4);
             cond = cond.trimmed();
             QStringList splitDate = cond.split(QLatin1Char(' '));
-            qDebug() << " splitDate " << splitDate;
+            qCDebug(MAILCOMMON_LOG) << " splitDate " << splitDate;
         } else if (cond.startsWith(QLatin1String("FLAG"))) {
-            qDebug() << " FLAG :";
+            qCDebug(MAILCOMMON_LOG) << " FLAG :";
         } else if (cond.startsWith(QLatin1String("STRING"))) {
-            qDebug() << " STRING";
+            qCDebug(MAILCOMMON_LOG) << " STRING";
         } else {
-            qDebug() << " condition not implemented :" << cond;
+            qCDebug(MAILCOMMON_LOG) << " condition not implemented :" << cond;
         }
 
         //SearchRule::Ptr rule = SearchRule::createInstance( fieldName, functionName, line );
@@ -149,7 +149,7 @@ void FilterImporterBalsa::parseAction(int actionType, const QString &action, Mai
         //Put color
         break;
     default:
-        qDebug() << " unknown parse action type " << actionType;
+        qCDebug(MAILCOMMON_LOG) << " unknown parse action type " << actionType;
         break;
     }
     if (!actionName.isEmpty()) {

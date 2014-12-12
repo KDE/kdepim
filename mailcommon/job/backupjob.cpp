@@ -22,7 +22,7 @@
 #include "backupjob.h"
 
 #include <libkdepim/misc/broadcaststatus.h>
-
+#include "mailcommon_debug.h"
 #include <CollectionDeleteJob>
 #include <CollectionFetchJob>
 #include <CollectionFetchScope>
@@ -232,14 +232,14 @@ void BackupJob::archiveNextMessage()
     }
 
     if (mPendingMessages.isEmpty()) {
-        qDebug() << "===> All messages done in folder " << mCurrentFolder.name();
+        qCDebug(MAILCOMMON_LOG) << "===> All messages done in folder " << mCurrentFolder.name();
         archiveNextFolder();
         return;
     }
 
     Akonadi::Item item = mPendingMessages.front();
     mPendingMessages.pop_front();
-    qDebug() << "Fetching item with ID" << item.id() << "for folder" << mCurrentFolder.name();
+    qCDebug(MAILCOMMON_LOG) << "Fetching item with ID" << item.id() << "for folder" << mCurrentFolder.name();
 
     mCurrentJob = new Akonadi::ItemFetchJob(item);
     mCurrentJob->fetchScope().fetchFullPayload(true);
@@ -253,14 +253,14 @@ void BackupJob::processMessage(const Akonadi::Item &item)
     }
 
     const KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
-    qDebug() << "Processing message with subject " << message->subject(false);
+    qCDebug(MAILCOMMON_LOG) << "Processing message with subject " << message->subject(false);
     const QByteArray messageData = message->encodedContent();
     const qint64 messageSize = messageData.size();
     const QString messageName = QString::number(item.id());
     const QString fileName = pathForCollection(mCurrentFolder) + QLatin1String("/cur/") + messageName;
 
     // PORT ME: user and group!
-    qDebug() << "AKONDI PORT: disabled code here!";
+    qCDebug(MAILCOMMON_LOG) << "AKONDI PORT: disabled code here!";
     if (!mArchive->writeFile(fileName, QLatin1String("user"), QLatin1String("group"), messageData, messageSize, archivePerms, mArchiveTime, mArchiveTime, mArchiveTime)) {
         abort(i18n("Failed to write a message into the archive folder '%1'.",
                    mCurrentFolder.name()));
@@ -299,7 +299,7 @@ void BackupJob::itemFetchJobResult(KJob *job)
 bool BackupJob::writeDirHelper(const QString &directoryPath)
 {
     // PORT ME: Correct user/group
-    qDebug() << "AKONDI PORT: Disabled code here!";
+    qCDebug(MAILCOMMON_LOG) << "AKONDI PORT: Disabled code here!";
     return mArchive->writeDir(directoryPath, QLatin1String("user"), QLatin1String("group"), 040755, mArchiveTime, mArchiveTime, mArchiveTime);
 }
 
@@ -352,7 +352,7 @@ void BackupJob::archiveNextFolder()
     }
 
     mCurrentFolder = mPendingFolders.takeAt(0);
-    qDebug() << "===> Archiving next folder: " << mCurrentFolder.name();
+    qCDebug(MAILCOMMON_LOG) << "===> Archiving next folder: " << mCurrentFolder.name();
     const QString archivingStr(i18n("Archiving folder %1", mCurrentFolder.name()));
     if (mProgressItem) {
         mProgressItem->setStatus(archivingStr);
@@ -431,7 +431,7 @@ void BackupJob::start()
     }
     }
 
-    qDebug() << "Starting backup.";
+    qCDebug(MAILCOMMON_LOG) << "Starting backup.";
     if (!mArchive->open(QIODevice::WriteOnly)) {
         abort(i18n("Unable to open archive for writing."));
         return;

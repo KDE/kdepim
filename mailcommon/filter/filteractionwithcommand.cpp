@@ -18,7 +18,7 @@
  */
 
 #include "filteractionwithcommand.h"
-
+#include "mailcommon_debug.h"
 #include <KProcess>
 #include <KShell>
 #include <QTemporaryFile>
@@ -99,7 +99,7 @@ QString FilterActionWithCommand::substituteCommandLineArgsFor(const KMime::Messa
             QTemporaryFile *tempFile = new QTemporaryFile();
             if (!tempFile->open()) {
                 delete tempFile;
-                qDebug() << "FilterActionWithCommand: Could not create temp file!";
+                qCDebug(MAILCOMMON_LOG) << "FilterActionWithCommand: Could not create temp file!";
                 return QString();
             }
 

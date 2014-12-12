@@ -18,7 +18,7 @@
  */
 
 #include "filteractionsetstatus.h"
-
+#include "mailcommon_debug.h"
 #include <Akonadi/KMime/MessageStatus>
 #include <KLocalizedString>
 using namespace MailCommon;
@@ -74,7 +74,7 @@ QString FilterActionSetStatus::sieveCode() const
     } else if (parameter == QLatin1String("A")) {
         flagCode = QLatin1String("\\\\Answered");
     } else {
-        qDebug() << " FilterActionSetStatus::sieveCode() unknown flags" << parameter;
+        qCDebug(MAILCOMMON_LOG) << " FilterActionSetStatus::sieveCode() unknown flags" << parameter;
         flagCode = parameter;
     }
 

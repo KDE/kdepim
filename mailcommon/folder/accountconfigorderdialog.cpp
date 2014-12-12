@@ -19,7 +19,7 @@
 #include "mailcommon/mailcommonsettings_base.h"
 #include "pimcommon/util/pimutil.h"
 #include "mailcommon/util/mailutil.h"
-
+#include "mailcommon_debug.h"
 #include <KLocalizedString>
 #include <QPushButton>
 #include <QVBoxLayout>
@@ -188,7 +188,7 @@ void AccountConfigOrderDialog::init()
                     } else if (identifier.startsWith(QLatin1String("akonadi_mixedmaildir_resource"))) {
                         instanceStruct.name += QLatin1String(" (Mixedmaildir)");
                     } else {
-                        qDebug() << " Unknown resource type " << identifier;
+                        qCDebug(MAILCOMMON_LOG) << " Unknown resource type " << identifier;
                     }
                     instanceStruct.icon = instance.type().icon();
                     mapInstance.insert(instance.identifier(), instanceStruct);

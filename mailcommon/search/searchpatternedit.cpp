@@ -20,7 +20,7 @@
 #include "searchpatternedit.h"
 #include "rulewidgethandlermanager.h"
 using MailCommon::RuleWidgetHandlerManager;
-
+#include "mailcommon_debug.h"
 #include <pimcommon/widgets/minimumcombobox.h>
 #include <QDebug>
 #include <QDialog>
@@ -242,7 +242,7 @@ void SearchRuleWidget::setRule(SearchRule::Ptr aRule)
 {
     Q_ASSERT(aRule);
 
-    qDebug() << "(" << aRule->asString() << ")";
+    qCDebug(MAILCOMMON_LOG) << "(" << aRule->asString() << ")";
 
     //--------------set the field
     int i = indexOfRuleField(aRule->field());
@@ -460,7 +460,7 @@ void SearchRuleWidgetLister::setRuleList(QList<SearchRule::Ptr> *aList)
 
     int superfluousItems = (int)mRuleList->count() - widgetsMaximum();
     if (superfluousItems > 0) {
-        qDebug() << "Clipping rule list to" << widgetsMaximum() << "items!";
+        qCDebug(MAILCOMMON_LOG) << "Clipping rule list to" << widgetsMaximum() << "items!";
 
         for (; superfluousItems ; superfluousItems--) {
             mRuleList->removeLast();
@@ -664,7 +664,7 @@ void SearchPatternEdit::initLayout(SearchPatternEditOptions options, SearchModeT
                     this, SIGNAL(returnPressed()));
         }
     } else {
-        qDebug() << "No first SearchRuleWidget, though slotClear() has been called!";
+        qCDebug(MAILCOMMON_LOG) << "No first SearchRuleWidget, though slotClear() has been called!";
     }
 
     connect(mRuleLister, SIGNAL(widgetAdded(QWidget*)),

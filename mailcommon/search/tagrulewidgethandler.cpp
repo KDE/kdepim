@@ -19,7 +19,7 @@
 #include "search/searchpattern.h"
 #include "widgets/regexplineedit.h"
 using MailCommon::RegExpLineEdit;
-
+#include "mailcommon_debug.h"
 #include <pimcommon/widgets/minimumcombobox.h>
 
 #include <QDebug>
@@ -62,7 +62,7 @@ void FillTagComboJob::onDestroyed()
 {
     mComboBox = 0;
     setError(KJob::UserDefinedError);
-    qDebug() << "Combobox destroyed";
+    qCDebug(MAILCOMMON_LOG) << "Combobox destroyed";
     emitResult();
 }
 
@@ -81,7 +81,7 @@ void FillTagComboJob::onTagsFetched(KJob *job)
         emitResult();
     }
     if (!mComboBox) {
-        qDebug() << "combobox already destroyed";
+        qCDebug(MAILCOMMON_LOG) << "combobox already destroyed";
         emitResult();
         return;
     }

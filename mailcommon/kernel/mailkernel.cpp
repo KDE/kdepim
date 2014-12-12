@@ -20,7 +20,7 @@
 #include "util/mailutil.h"
 #include "imapresourcesettings.h"
 #include "pop3settings.h"
-
+#include "mailcommon_debug.h"
 #include "pimcommon/util/pimutil.h"
 
 #include <AgentInstance>
@@ -48,7 +48,7 @@ public:
 
     ~KernelPrivate()
     {
-        qDebug();
+        qCDebug(MAILCOMMON_LOG);
         delete kernel;
     }
     Kernel *kernel;
@@ -65,7 +65,7 @@ Kernel::Kernel(QObject *parent) : QObject(parent)
 
 Kernel::~Kernel()
 {
-    qDebug();
+    qCDebug(MAILCOMMON_LOG);
 }
 
 Kernel *Kernel::self()
@@ -142,7 +142,7 @@ bool Kernel::isMainFolderCollection(const Akonadi::Collection &col)
 //-----------------------------------------------------------------------------
 void Kernel::initFolders()
 {
-    qDebug() << "Initialized and looking for specialcollection folders.";
+    qCDebug(MAILCOMMON_LOG) << "Initialized and looking for specialcollection folders.";
     findCreateDefaultCollection(Akonadi::SpecialMailCollections::Inbox);
     findCreateDefaultCollection(Akonadi::SpecialMailCollections::Outbox);
     findCreateDefaultCollection(Akonadi::SpecialMailCollections::SentMail);

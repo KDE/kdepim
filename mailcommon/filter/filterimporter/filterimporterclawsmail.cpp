@@ -18,7 +18,7 @@
 #include "filterimporterclawsmail_p.h"
 #include "filtermanager.h"
 #include "mailfilter.h"
-
+#include "mailcommon_debug.h"
 #include <QDebug>
 
 #include <QFile>
@@ -33,7 +33,7 @@ FilterImporterClawsMails::FilterImporterClawsMails(QFile *file)
     MailFilter *filter = 0;
     while (!stream.atEnd()) {
         QString line = stream.readLine();
-        qDebug() << " line :" << line << " filter " << filter;
+        qCDebug(MAILCOMMON_LOG) << " line :" << line << " filter " << filter;
 
         if (line.isEmpty()) {
             //Nothing
@@ -80,7 +80,7 @@ MailFilter *FilterImporterClawsMails::parseLine(const QString &line)
         filter->setToolbarName(name);
 
         tmp = tmp.mid(pos + 2); //remove "\" "
-        qDebug() << " new tmp" << tmp;
+        qCDebug(MAILCOMMON_LOG) << " new tmp" << tmp;
     }
 
     tmp = extractConditions(tmp, filter);
@@ -134,7 +134,7 @@ QString FilterImporterClawsMails::extractString(const QString &tmp, int &pos)
         }
     }
     pos = i;
-    qDebug() << " name " << name;
+    qCDebug(MAILCOMMON_LOG) << " name " << name;
     return name;
 }
 

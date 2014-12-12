@@ -19,7 +19,7 @@
 #include "util/mailutil.h"
 #include "foldercollection.h"
 #include "collectionpage/expirecollectionattribute.h"
-
+#include "mailcommon_debug.h"
 #include <ChangeRecorder>
 #include <Collection>
 #include <CollectionFetchScope>
@@ -120,7 +120,7 @@ void FolderCollectionMonitor::expunge(const Akonadi::Collection &col, bool sync)
             job->exec();
         }
     } else {
-        qDebug() << " Try to expunge an invalid collection :" << col;
+        qCDebug(MAILCOMMON_LOG) << " Try to expunge an invalid collection :" << col;
     }
 }
 

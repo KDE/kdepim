@@ -21,7 +21,7 @@
 #include "searchpattern.h"
 #include "filterlog.h"
 using MailCommon::FilterLog;
-
+#include "mailcommon_debug.h"
 #include <Akonadi/Contact/ContactSearchJob>
 
 #include <SearchQuery>
@@ -598,7 +598,7 @@ Akonadi::SearchTerm::Condition SearchRule::akonadiComparator() const
         //TODO is this sufficient?
         return Akonadi::SearchTerm::CondContains;
     default:
-        qDebug() << "Unhandled function type: " << function();
+        qCDebug(MAILCOMMON_LOG) << "Unhandled function type: " << function();
     }
 
     return Akonadi::SearchTerm::CondEqual;
@@ -695,7 +695,7 @@ SearchRule::RequiredPart SearchRuleString::requiredPart() const
                qstricmp(f, "to") == 0) {
         part = Header;
     } else {
-        qDebug() << "VERIFY IT: SearchRule::RequiredPart SearchRuleString::requiredPart() const use default \"Envelope\" for field :" << f;
+        qCDebug(MAILCOMMON_LOG) << "VERIFY IT: SearchRule::RequiredPart SearchRuleString::requiredPart() const use default \"Envelope\" for field :" << f;
     }
 
     return part;
@@ -1370,7 +1370,7 @@ void SearchPattern::purify()
         --it;
         if ((*it)->isEmpty()) {
 #ifndef NDEBUG
-            qDebug() << "Removing" << (*it)->asString();
+            qCDebug(MAILCOMMON_LOG) << "Removing" << (*it)->asString();
 #endif
             erase(it);
             it = end();
@@ -1384,7 +1384,7 @@ void SearchPattern::readConfig(const KConfigGroup &config)
 
     mName = config.readEntry("name");
     if (!config.hasKey("rules")) {
-        qDebug() << "Found legacy config! Converting.";
+        qCDebug(MAILCOMMON_LOG) << "Found legacy config! Converting.";
         importLegacyConfig(config);
         return;
     }
@@ -1537,7 +1537,7 @@ SearchPattern::SparqlQueryError SearchPattern::asAkonadiQuery(Akonadi::SearchQue
 
     if (term.subTerms().isEmpty()) {
         if (resultAddQuery) {
-            qDebug() << " innergroup is Empty. Need to report bug";
+            qCDebug(MAILCOMMON_LOG) << " innergroup is Empty. Need to report bug";
             return MissingCheck;
         } else {
             return EmptyResult;
