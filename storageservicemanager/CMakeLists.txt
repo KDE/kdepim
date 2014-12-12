@@ -15,6 +15,7 @@ kconfig_add_kcfg_files(storageservicemanager_kcfg_SRCS ${storageservicemanager_k
 set(storageservicemanager_SRCS
   ${storageservicemanager_kcfg_SRCS}
   main.cpp
+  storageservicemanager_debug.cpp
   storageservicemanagermainwindow.cpp
   storageservicepage.cpp
   storageservicetabwidget.cpp

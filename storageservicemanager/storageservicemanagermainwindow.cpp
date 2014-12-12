@@ -45,7 +45,7 @@
 #include <QPointer>
 #include <QCloseEvent>
 #include <QLabel>
-#include <QDebug>
+#include "storageservicemanager_debug.h"
 #include <KSharedConfig>
 #include <QAction>
 #include <QNetworkConfigurationManager>
@@ -86,7 +86,7 @@ StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()
 
     KConfigGroup group = config->group(QLatin1String("StorageServiceManagerMainWindow"));
     group.writeEntry("Size", size());
-    qDebug() << " StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()";
+    qCDebug(STORAGESERVICEMANAGER_LOG) << " StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()";
     if (StorageServiceManagerGlobalConfig::self()->closeWallet()) {
         PimCommon::StorageServiceSettings::self()->closeWallet();
     }

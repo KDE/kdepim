@@ -126,7 +126,7 @@ void StorageServiceNavigationButtons::slotGoBackClicked()
 {
     if (!mBackUrls.isEmpty()) {
         InformationUrl url = mBackUrls.takeFirst();
-        qDebug() << " back clicked" << url;
+        qCDebug(STORAGESERVICEMANAGER_LOG) << " back clicked" << url;
         Q_EMIT changeUrl(url);
         mForwardUrls.prepend(url);
         updateButtons();
@@ -137,7 +137,7 @@ void StorageServiceNavigationButtons::slotGoForwardClicked()
 {
     if (!mForwardUrls.isEmpty()) {
         InformationUrl url = mForwardUrls.takeFirst();
-        qDebug() << " forward clicked" << url;
+        qCDebug(STORAGESERVICEMANAGER_LOG) << " forward clicked" << url;
         Q_EMIT changeUrl(url);
         mBackUrls.prepend(url);
         updateButtons();

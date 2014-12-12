@@ -4,7 +4,7 @@ include_directories(
 )
 # convenience macro to add qtest unit tests
 macro(add_storageservice_unittest _source)
-  set(_test ${_source} ../storageservicenavigationbuttons.cpp ../storageservicemanagerutil.cpp)
+  set(_test ${_source} ../storageservicenavigationbuttons.cpp ../storageservicemanagerutil.cpp ../storageservicemanager_debug.cpp)
   get_filename_component(_name ${_source} NAME_WE)
   add_executable( ${_name} ${_test} )
   add_test( ${_name} ${_name} )

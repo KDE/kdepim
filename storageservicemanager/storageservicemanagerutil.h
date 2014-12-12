@@ -22,7 +22,7 @@
 #define STORAGESERVICEMANAGERUTIL_H
 
 #include <QString>
-#include <QDebug>
+#include "storageservicemanager_debug.h"
 struct InformationUrl {
     bool isValid() const
     {

@@ -34,7 +34,7 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QVBoxLayout>
-#include <QDebug>
+#include "storageservicemanager_debug.h"
 #include <QPointer>
 #include <QTimer>
 
@@ -210,7 +210,7 @@ void StorageServicePage::slotActionFailed(const QString &serviceName, const QStr
 bool StorageServicePage::verifyService(const QString &serviceName)
 {
     if (serviceName != mServiceName) {
-        qDebug() << " Error in signal/Slots";
+        qCDebug(STORAGESERVICEMANAGER_LOG) << " Error in signal/Slots";
         return false;
     }
     return true;

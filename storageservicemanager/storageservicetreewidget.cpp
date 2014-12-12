@@ -23,6 +23,7 @@
 #include "storageservice/dialog/storageservicechecknamedialog.h"
 #include "storageservicemanagerglobalconfig.h"
 #include "storageservice/storageserviceprogressmanager.h"
+#include "storageservicemanager_debug.h"
 
 #include <QMenu>
 #include <QInputDialog>
@@ -54,7 +55,7 @@ StorageServiceTreeWidget::StorageServiceTreeWidget(PimCommon::StorageServiceAbst
 
 StorageServiceTreeWidget::~StorageServiceTreeWidget()
 {
-    qDebug() << " StorageServiceTreeWidget::~StorageServiceTreeWidget()";
+    qCDebug(STORAGESERVICEMANAGER_LOG) << " StorageServiceTreeWidget::~StorageServiceTreeWidget()";
     writeConfig();
 }
 
@@ -282,7 +283,7 @@ void StorageServiceTreeWidget::slotCreateFolder()
         if (!checkName(folder)) {
             return;
         }
-        qDebug() << " mCurrentFolder" << mCurrentFolder;
+        qCDebug(STORAGESERVICEMANAGER_LOG) << " mCurrentFolder" << mCurrentFolder;
         mStorageService->createFolder(folder, mCurrentFolder);
     }
 }
@@ -379,7 +380,7 @@ bool StorageServiceTreeWidget::uploadFileToService()
     if (!filename.isEmpty()) {
         const QRegExp disallowedSymbols = mStorageService->disallowedSymbols();
         const qlonglong maximumLimit =  mStorageService->maximumUploadFileSize();
-        qDebug() << " maximumLimit" << maximumLimit;
+        qCDebug(STORAGESERVICEMANAGER_LOG) << " maximumLimit" << maximumLimit;
         QFileInfo info(filename);
         if (maximumLimit > 0 && (info.size() > maximumLimit)) {
             KMessageBox::error(this, i18n("File size (%1) is larger than limit (%2)", KFormat().formatByteSize(info.size(), 1), KFormat().formatByteSize(maximumLimit, 1)));
