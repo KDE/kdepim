@@ -66,7 +66,7 @@
 #include <KCalendarSystem>
 
 #include <QIcon>
-#include <QDebug>
+#include "messagelist_debug.h"
 #include <KLocalizedString>
 #include <QLocale>
 
@@ -410,7 +410,7 @@ bool ModelPrivate::applyFilterToSubtree(Item *item, const QModelIndex &parentInd
     // to a message tree starting at "item".
 
     if (!mModelForItemFunctions) {
-        qWarning() << "Cannot apply filter, the UI must be not disconnected.";
+        qCWarning(MESSAGELIST_LOG) << "Cannot apply filter, the UI must be not disconnected.";
         return true;
     }
     Q_ASSERT(item);                      // the item must obviously be valid
@@ -912,7 +912,7 @@ void Model::setStorageModel(StorageModel *storageModel, PreSelectionMode preSele
     }
     break;
     default:
-        qWarning() << "Unrecognized fill view strategy";
+        qCWarning(MESSAGELIST_LOG) << "Unrecognized fill view strategy";
         Q_ASSERT(false);
         break;
     }
@@ -1457,7 +1457,7 @@ MessageItem *ModelPrivate::findMessageParent(MessageItem *mi)
                     pParent->hasAncestor(mi)        // pParent is in the mi's children tree
                 )
             ) {
-                qWarning() << "Circular In-Reply-To reference loop detected in the message tree";
+                qCWarning(MESSAGELIST_LOG) << "Circular In-Reply-To reference loop detected in the message tree";
                 mi->setThreadingStatus(MessageItem::NonThreadable);
                 return 0; // broken message: throw it away
             }
@@ -1498,7 +1498,7 @@ MessageItem *ModelPrivate::findMessageParent(MessageItem *mi)
                     pParent->hasAncestor(mi)        // pParent is in the mi's children tree
                 )
             ) {
-                qWarning() << "Circular reference loop detected in the message tree";
+                qCWarning(MESSAGELIST_LOG) << "Circular reference loop detected in the message tree";
                 mi->setThreadingStatus(MessageItem::NonThreadable);
                 return 0; // broken message: throw it away
             }
@@ -1533,29 +1533,29 @@ MessageItem *ModelPrivate::findMessageParent(MessageItem *mi)
 // Debug helpers
 void dump_iterator_and_list(QList< MessageItem * >::Iterator &iter, QList< MessageItem * > *list)
 {
-    qDebug() << "Threading cache part dump" << endl;
+    qCDebug(MESSAGELIST_LOG) << "Threading cache part dump" << endl;
     if (iter == list->end()) {
-        qDebug() << "Iterator pointing to end of the list" << endl;
+        qCDebug(MESSAGELIST_LOG) << "Iterator pointing to end of the list" << endl;
     } else {
-        qDebug() << "Iterator pointing to " << *iter << " subject [" << (*iter)->subject() << "] date [" << (*iter)->date() << "]" << endl;
+        qCDebug(MESSAGELIST_LOG) << "Iterator pointing to " << *iter << " subject [" << (*iter)->subject() << "] date [" << (*iter)->date() << "]" << endl;
     }
 
     for (QList< MessageItem * >::Iterator it = list->begin(); it != list->end(); ++it) {
-        qDebug() << "List element " << *it << " subject [" << (*it)->subject() << "] date [" << (*it)->date() << "]" << endl;
+        qCDebug(MESSAGELIST_LOG) << "List element " << *it << " subject [" << (*it)->subject() << "] date [" << (*it)->date() << "]" << endl;
     }
 
-    qDebug() << "End of threading cache part dump" << endl;
+    qCDebug(MESSAGELIST_LOG) << "End of threading cache part dump" << endl;
 }
 
 void dump_list(QList< MessageItem * > *list)
 {
-    qDebug() << "Threading cache part dump" << endl;
+    qCDebug(MESSAGELIST_LOG) << "Threading cache part dump" << endl;
 
     for (QList< MessageItem * >::Iterator it = list->begin(); it != list->end(); ++it) {
-        qDebug() << "List element " << *it << " subject [" << (*it)->subject() << "] date [" << (*it)->date() << "]" << endl;
+        qCDebug(MESSAGELIST_LOG) << "List element " << *it << " subject [" << (*it)->subject() << "] date [" << (*it)->date() << "]" << endl;
     }
 
-    qDebug() << "End of threading cache part dump" << endl;
+    qCDebug(MESSAGELIST_LOG) << "End of threading cache part dump" << endl;
 }
 #endif // debug helpers
 
@@ -2618,7 +2618,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass2
                     break;
                 default:
                     // a bug for sure
-                    qWarning() << "ERROR: Invalid message threading status returned by findMessageParent()!";
+                    qCWarning(MESSAGELIST_LOG) << "ERROR: Invalid message threading status returned by findMessageParent()!";
                     Q_ASSERT(false);
                     break;
                 }
@@ -2628,7 +2628,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass2
             // Since we don't end here if mi has status of parent missing then mi must not have imperfect parent.
             Q_ASSERT(mi->threadingStatus() != MessageItem::ImperfectParentFound);
             if (!mi->isViewable()) {
-                qWarning() << "Non viewable message " << mi << " subject " << mi->subject().toUtf8().data();
+                qCWarning(MESSAGELIST_LOG) << "Non viewable message " << mi << " subject " << mi->subject().toUtf8().data();
                 Q_ASSERT(mi->isViewable());
             }
         }
@@ -2689,7 +2689,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1
 
         if (!mStorageModel->initializeMessageItem(mi, curIndex, bUseReceiver)) {
             // ugh
-            qWarning() << "Fill of the MessageItem at storage row index " << curIndex << " failed";
+            qCWarning(MESSAGELIST_LOG) << "Fill of the MessageItem at storage row index " << curIndex << " failed";
             curIndex++;
             continue;
         }
@@ -2812,7 +2812,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1
                         // Bad, bad message.. it has In-Reply-To equal to Message-Id
                         // or it's in a circular In-Reply-To reference loop.
                         // Will wait for Pass2 with References-Id only
-                        qWarning() << "Circular In-Reply-To reference loop detected in the message tree";
+                        qCWarning(MESSAGELIST_LOG) << "Circular In-Reply-To reference loop detected in the message tree";
                         mUnassignedMessageListForPass2.append(mi);
                     } else {
                         // wow, got a perfect parent for this message!
@@ -2861,7 +2861,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1
                     ) {
                         // We're done with this message: it will be surely either toplevel (no grouping in effect)
                         // or a thread leader with a well defined group. Do it :)
-                        //qDebug() << "Setting message status from " << mi->threadingStatus() << " to non threadable (1) " << mi;
+                        //qCDebug(MESSAGELIST_LOG) << "Setting message status from " << mi->threadingStatus() << " to non threadable (1) " << mi;
                         mi->setThreadingStatus(MessageItem::NonThreadable);
                         // Locate the parent group for this item
                         attachMessageToGroupHeader(mi);
@@ -2886,7 +2886,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1
         } else {
             // else no threading requested: we don't even need Pass2
             // set not threadable status (even if it might be not true, but in this mode we don't care)
-            //qDebug() << "Setting message status from " << mi->threadingStatus() << " to non threadable (2) " << mi;
+            //qCDebug(MESSAGELIST_LOG) << "Setting message status from " << mi->threadingStatus() << " to non threadable (2) " << mi;
             mi->setThreadingStatus(MessageItem::NonThreadable);
             // locate the parent group for this item
             if (mAggregation->grouping() == Aggregation::NoGrouping) {
@@ -3333,7 +3333,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJob(View
             break;
         default:
             // This is *really* a BUG
-            qWarning() << "ERROR: returned an invalid result";
+            qCWarning(MESSAGELIST_LOG) << "ERROR: returned an invalid result";
             Q_ASSERT(false);
             break;
         }
@@ -3360,7 +3360,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJob(View
             break;
         default:
             // This is *really* a BUG
-            qWarning() << "ERROR: returned an invalid result";
+            qCWarning(MESSAGELIST_LOG) << "ERROR: returned an invalid result";
             Q_ASSERT(false);
             break;
         }
@@ -3389,7 +3389,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJob(View
             break;
         default:
             // This is *really* a BUG
-            qWarning() << "ERROR: returned an invalid result";
+            qCWarning(MESSAGELIST_LOG) << "ERROR: returned an invalid result";
             Q_ASSERT(false);
             break;
         }
@@ -3421,7 +3421,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJob(View
             break;
         default:
             // This is *really* a BUG
-            qWarning() << "ERROR: returned an invalid result";
+            qCWarning(MESSAGELIST_LOG) << "ERROR: returned an invalid result";
             Q_ASSERT(false);
             break;
         }
@@ -3451,7 +3451,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJob(View
             break;
         default:
             // This is *really* a BUG
-            qWarning() << "ERROR: returned an invalid result";
+            qCWarning(MESSAGELIST_LOG) << "ERROR: returned an invalid result";
             Q_ASSERT(false);
             break;
         }
@@ -3481,7 +3481,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJob(View
             break;
         default:
             // This is *really* a BUG
-            qWarning() << "ERROR: returned an invalid result";;
+            qCWarning(MESSAGELIST_LOG) << "ERROR: returned an invalid result";;
             Q_ASSERT(false);
             break;
         }
@@ -3580,44 +3580,44 @@ void ModelPrivate::printStatistics()
         totalThreads = mRootItem->childItemCount();
     }
 
-    qDebug() << "Finished filling the view with" << totalMessages << "messages";
-    qDebug() << "That took" << totalTotalTime << "msecs inside the model and"
+    qCDebug(MESSAGELIST_LOG) << "Finished filling the view with" << totalMessages << "messages";
+    qCDebug(MESSAGELIST_LOG) << "That took" << totalTotalTime << "msecs inside the model and"
              << completeTime << "in total.";
-    qDebug() << (totalTotalTime / (float) completeTime) * 100.0f
+    qCDebug(MESSAGELIST_LOG) << (totalTotalTime / (float) completeTime) * 100.0f
              << "percent of the time was spent in the model.";
-    qDebug() << "Time for layoutChanged(), in msecs:" << layoutChangeTime
+    qCDebug(MESSAGELIST_LOG) << "Time for layoutChanged(), in msecs:" << layoutChangeTime
              << "(" << (layoutChangeTime / (float)totalTotalTime) * 100.0f << "percent )";
-    qDebug() << "Time to expand tree, in msecs:" << expandingTreeTime
+    qCDebug(MESSAGELIST_LOG) << "Time to expand tree, in msecs:" << expandingTreeTime
              << "(" << (expandingTreeTime / (float)totalTotalTime) * 100.0f << "percent )";
-    qDebug() << "Number of messages per second in the model:" << msgPerSecond;
-    qDebug() << "Number of messages per second in total:" << msgPerSecondComplete;
-    qDebug() << "Number of threads:" << totalThreads;
-    qDebug() << "Number of groups:" << mGroupHeaderItemHash.size();
-    qDebug() << "Messages per thread:" << totalMessages / (float)totalThreads;
-    qDebug() << "Threads per group:" << totalThreads / (float)mGroupHeaderItemHash.size();
-    qDebug() << "Messages with the same subject:"
+    qCDebug(MESSAGELIST_LOG) << "Number of messages per second in the model:" << msgPerSecond;
+    qCDebug(MESSAGELIST_LOG) << "Number of messages per second in total:" << msgPerSecondComplete;
+    qCDebug(MESSAGELIST_LOG) << "Number of threads:" << totalThreads;
+    qCDebug(MESSAGELIST_LOG) << "Number of groups:" << mGroupHeaderItemHash.size();
+    qCDebug(MESSAGELIST_LOG) << "Messages per thread:" << totalMessages / (float)totalThreads;
+    qCDebug(MESSAGELIST_LOG) << "Threads per group:" << totalThreads / (float)mGroupHeaderItemHash.size();
+    qCDebug(MESSAGELIST_LOG) << "Messages with the same subject:"
              << "Max:" << messagesWithSameSubjectMax
              << "Avg:" << messagesWithSameSubjectAvg;
-    qDebug();
-    qDebug() << "Now follows a breakdown of the jobs.";
-    qDebug();
+    qCDebug(MESSAGELIST_LOG);
+    qCDebug(MESSAGELIST_LOG) << "Now follows a breakdown of the jobs.";
+    qCDebug(MESSAGELIST_LOG);
     for (int i = 0; i < numberOfPasses; ++i) {
         if (totalTime[i] == 0) {
             continue;
         }
         float elementsPerSecond = numElements[i] / (totalTime[i] / 1000.0f);
         float percent = totalTime[i] / (float)totalTotalTime * 100.0f;
-        qDebug() << "----------------------------------------------";
-        qDebug() << "Job" << i + 1 << "(" << jobDescription[i] << ")";
-        qDebug() << "Share of complete time:" << percent << "percent";
-        qDebug() << "Time in msecs:" << totalTime[i];
-        qDebug() << "Number of elements:" << numElements[i]; // TODO: map of element string
-        qDebug() << "Elements per second:" << elementsPerSecond;
-        qDebug() << "Number of chunks:" << chunks[i];
-        qDebug();
+        qCDebug(MESSAGELIST_LOG) << "----------------------------------------------";
+        qCDebug(MESSAGELIST_LOG) << "Job" << i + 1 << "(" << jobDescription[i] << ")";
+        qCDebug(MESSAGELIST_LOG) << "Share of complete time:" << percent << "percent";
+        qCDebug(MESSAGELIST_LOG) << "Time in msecs:" << totalTime[i];
+        qCDebug(MESSAGELIST_LOG) << "Number of elements:" << numElements[i]; // TODO: map of element string
+        qCDebug(MESSAGELIST_LOG) << "Elements per second:" << elementsPerSecond;
+        qCDebug(MESSAGELIST_LOG) << "Number of chunks:" << chunks[i];
+        qCDebug(MESSAGELIST_LOG);
     }
 
-    qDebug() << "==========================================================";
+    qCDebug(MESSAGELIST_LOG) << "==========================================================";
     resetStats();
 }
 
@@ -3809,7 +3809,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternal()
             break;
         default:
             // This is *really* a BUG
-            qWarning() << "ERROR: returned an invalid result";
+            qCWarning(MESSAGELIST_LOG) << "ERROR: returned an invalid result";
             Q_ASSERT(false);
             break;
         }
@@ -3921,7 +3921,7 @@ void ModelPrivate::viewItemJobStep()
                 // deal with selection below
                 break;
             default:
-                qWarning() << "ERROR: Unrecognized pre-selection mode " << (int)mPreSelectionMode;
+                qCWarning(MESSAGELIST_LOG) << "ERROR: Unrecognized pre-selection mode " << (int)mPreSelectionMode;
                 break;
             }
 
@@ -3944,7 +3944,7 @@ void ModelPrivate::viewItemJobStep()
         break;
     default:
         // This is *really* a BUG
-        qWarning() << "ERROR: returned an invalid result";
+        qCWarning(MESSAGELIST_LOG) << "ERROR: returned an invalid result";
         Q_ASSERT(false);
         break;
     }
@@ -3987,7 +3987,7 @@ void ModelPrivate::viewItemJobStep()
                 // actually notify the view of the restored setting.
             }
             // Restore it
-            qDebug() << "Gonna restore current here" << mCurrentItemToRestoreAfterViewItemJobStep->subject();
+            qCDebug(MESSAGELIST_LOG) << "Gonna restore current here" << mCurrentItemToRestoreAfterViewItemJobStep->subject();
             mView->setCurrentIndex(q->index(mCurrentItemToRestoreAfterViewItemJobStep, 0));
         } else {
             // The item we're expected to set as current is already current
@@ -4001,7 +4001,7 @@ void ModelPrivate::viewItemJobStep()
                     stillIgnoringCurrentChanges = false;
                     mView->ignoreCurrentChanges(false);
 
-                    qDebug() << "Gonna restore selection here" << mCurrentItemToRestoreAfterViewItemJobStep->subject();
+                    qCDebug(MESSAGELIST_LOG) << "Gonna restore selection here" << mCurrentItemToRestoreAfterViewItemJobStep->subject();
 
                     QItemSelection selection;
                     selection.append(QItemSelectionRange(q->index(mCurrentItemToRestoreAfterViewItemJobStep, 0)));
@@ -4303,7 +4303,7 @@ void ModelPrivate::slotStorageModelRowsRemoved(const QModelIndex &parent, int fr
             ViewItemJob *job = mViewItemJobs.at(jobCount - 1);
             if (job->currentPass() == ViewItemJob::Pass1Cleanup) {
                 if ((job->currentIndex() <= job->endIndex()) && job->invariantIndexList()) {
-                    //qDebug() << "Appending " << invalidatedIndexes->count() << " invalidated indexes to existing cleanup job" << endl;
+                    //qCDebug(MESSAGELIST_LOG) << "Appending " << invalidatedIndexes->count() << " invalidated indexes to existing cleanup job" << endl;
                     // We can still attach this :)
                     *(job->invariantIndexList()) += *invalidatedIndexes;
                     job->setEndIndex(job->endIndex() + invalidatedIndexes->count());
@@ -4316,7 +4316,7 @@ void ModelPrivate::slotStorageModelRowsRemoved(const QModelIndex &parent, int fr
         if (invalidatedIndexes) {
             // Didn't append to any existing cleanup job.. create a new one
 
-            //qDebug() << "Creating new cleanup job for " << invalidatedIndexes->count() << " invalidated indexes" << endl;
+            //qCDebug(MESSAGELIST_LOG) << "Creating new cleanup job for " << invalidatedIndexes->count() << " invalidated indexes" << endl;
             // FIXME: Should take timing options from aggregation here ?
             ViewItemJob *job = new ViewItemJob(ViewItemJob::Pass1Cleanup, invalidatedIndexes, 100, 50, 10);
             mViewItemJobs.append(job);
@@ -4330,10 +4330,10 @@ void ModelPrivate::slotStorageModelRowsRemoved(const QModelIndex &parent, int fr
 
 void ModelPrivate::slotStorageModelLayoutChanged()
 {
-    qDebug() << "Storage model layout changed";
+    qCDebug(MESSAGELIST_LOG) << "Storage model layout changed";
     // need to reset everything...
     q->setStorageModel(mStorageModel);
-    qDebug() << "Storage model layout changed done";
+    qCDebug(MESSAGELIST_LOG) << "Storage model layout changed done";
 }
 
 void ModelPrivate::slotStorageModelDataChanged(const QModelIndex &fromIndex, const QModelIndex &toIndex)

@@ -25,7 +25,7 @@
 #include <QTimer>
 #include <QTime>
 
-#include <QDebug>
+#include "messagelist_debug.h"
 
 namespace MessageList
 {
@@ -234,7 +234,7 @@ ModelInvariantIndex *ModelInvariantRowMapperPrivate::modelIndexRowToModelInvaria
         idx--;
     }
 
-    qWarning() << "Requested invariant for storage row index "
+    qCWarning(MESSAGELIST_LOG) << "Requested invariant for storage row index "
                << modelIndexRow << " not found in history";
     return 0; // not found in history
 }
@@ -511,7 +511,7 @@ QList< ModelInvariantIndex * > *ModelInvariantRowMapper::modelRowsRemoved(int mo
             deadInvariants->append(dyingInvariant);
         } else {
             // got no dying invariant
-            qWarning() << "Could not find invariant to invalidate at current row " << idx;
+            qCWarning(MESSAGELIST_LOG) << "Could not find invariant to invalidate at current row " << idx;
         }
     }
 
@@ -642,7 +642,7 @@ void ModelInvariantRowMapperPrivate::slotPerformLazyUpdate()
                 int elapsed = startTime.msecsTo(QTime::currentTime());
                 if ((elapsed > mLazyUpdateChunkInterval) || (elapsed < 0)) {
                     // interrupt
-                    //qDebug() << "Lazy update fixed " << curIndex << " invariants " << endl;
+                    //qCDebug(MESSAGELIST_LOG) << "Lazy update fixed " << curIndex << " invariants " << endl;
                     mUpdateTimer->start(mLazyUpdateIdleInterval);
                     return;
                 }
@@ -655,7 +655,7 @@ void ModelInvariantRowMapperPrivate::slotPerformLazyUpdate()
         killFirstRowShift();
     }
 
-    //qDebug() << "Lazy update fixed " << curIndex << " invariants " << endl;
+    //qCDebug(MESSAGELIST_LOG) << "Lazy update fixed " << curIndex << " invariants " << endl;
 
     // if we're here then no more work needs to be done.
 }

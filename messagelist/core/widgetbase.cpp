@@ -44,7 +44,7 @@
 
 #include <QAction>
 #include <KComboBox>
-#include <QDebug>
+#include "messagelist_debug.h"
 #include <KLineEdit>
 #include <KLocalizedString>
 #include <QMenu>
@@ -279,7 +279,7 @@ void Widget::Private::setDefaultThemeForStorageModel(const StorageModel *storage
 void Widget::Private::checkSortOrder(const StorageModel *storageModel)
 {
     if (storageModel && mAggregation && !mSortOrder.validForAggregation(mAggregation)) {
-        qDebug() << "Could not restore sort order for folder" << storageModel->id();
+        qCDebug(MESSAGELIST_LOG) << "Could not restore sort order for folder" << storageModel->id();
         mSortOrder = SortOrder::defaultForAggregation(mAggregation, mSortOrder);
 
         // Change the global sort order if the sort order didn't fit the global aggregation.
@@ -974,7 +974,7 @@ void Widget::slotStatusButtonsClicked()
         if (d->mFilter) {
             d->mFilter->setStatus(lst);
             if (d->mFilter->isEmpty()) {
-                qDebug() << " RESET FILTER";
+                qCDebug(MESSAGELIST_LOG) << " RESET FILTER";
                 resetFilter();
                 return;
             }

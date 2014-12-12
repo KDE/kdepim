@@ -33,7 +33,7 @@
 #include <KIconLoader>
 #include <KLocalizedString>
 
-#include <QDebug>
+#include "messagelist_debug.h"
 using namespace MessageList::Core;
 
 Q_GLOBAL_STATIC(TagCache, s_tagCache)
@@ -757,7 +757,7 @@ void TagCache::cancelRequest(MessageItemPrivate *m)
 void TagCache::onTagsFetched(KJob *job)
 {
     if (job->error()) {
-        qWarning() << "Failed to fetch tags: " << job->errorString();
+        qCWarning(MESSAGELIST_LOG) << "Failed to fetch tags: " << job->errorString();
         return;
     }
     Akonadi::TagFetchJob *fetchJob = static_cast<Akonadi::TagFetchJob *>(job);

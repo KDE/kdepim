@@ -18,7 +18,7 @@
 */
 
 #include "../core/messageitem_p.h"
-
+#include "../messagelist_debug.h"
 #include <qtest.h>
 #include <QObject>
 
@@ -31,13 +31,13 @@ private slots:
 
     void testItemSize()
     {
-        qDebug() << sizeof(Item);
+        qCDebug(MESSAGELIST_LOG) << sizeof(Item);
         QVERIFY(sizeof(Item) <= 16);
-        qDebug() << sizeof(ItemPrivate);
+        qCDebug(MESSAGELIST_LOG) << sizeof(ItemPrivate);
         QVERIFY(sizeof(ItemPrivate) <= 120);
-        qDebug() << sizeof(MessageItem);
+        qCDebug(MESSAGELIST_LOG) << sizeof(MessageItem);
         QVERIFY(sizeof(MessageItem) <= 32);
-        qDebug() << sizeof(MessageItemPrivate);
+        qCDebug(MESSAGELIST_LOG) << sizeof(MessageItemPrivate);
         QVERIFY(sizeof(MessageItemPrivate) <= 192);
     }
 };

@@ -51,6 +51,7 @@ set(libmessagelist_SRCS
   utils/themeconfigbutton.cpp
   utils/themeeditor.cpp
 
+  messagelist_debug.cpp
   pane.cpp
   storagemodel.cpp
   widget.cpp

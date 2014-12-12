@@ -23,7 +23,7 @@
 #include <QDataStream>
 
 #include <KLocalizedString>
-#include <QDebug>
+#include "messagelist_debug.h"
 
 using namespace MessageList::Core;
 
@@ -208,7 +208,7 @@ bool Theme::ContentItem::load(QDataStream &stream, int /*themeVersion*/)
         // ok
         break;
     default:
-        qDebug() << "Invalid content item type";
+        qCDebug(MESSAGELIST_LOG) << "Invalid content item type";
         return false; // b0rken
         break;
     }
@@ -328,7 +328,7 @@ bool Theme::Row::LoadContentItem(int val, QDataStream &stream, int themeVersion,
     for (int i = 0; i < val ; ++i) {
         ContentItem *ci = new ContentItem(ContentItem::Subject);    // dummy type
         if (!ci->load(stream, themeVersion)) {
-            qDebug() << "Left content item loading failed";
+            qCDebug(MESSAGELIST_LOG) << "Left content item loading failed";
             delete ci;
             return false;
         }
@@ -344,7 +344,7 @@ bool Theme::Row::LoadContentItem(int val, QDataStream &stream, int themeVersion,
         if (ci->type() == ContentItem::AttachmentStateIcon &&
                 themeVersion < gThemeMinimumVersionWithAnnotationIcon &&
                 val > 1) {
-            qDebug() << "Old theme version detected, adding annotation item next to attachment icon.";
+            qCDebug(MESSAGELIST_LOG) << "Old theme version detected, adding annotation item next to attachment icon.";
             ContentItem *annotationItem = new ContentItem(ContentItem::AnnotationIcon) ;
             annotationItem->setHideWhenDisabled(true);
             if (leftItem) {
@@ -358,7 +358,7 @@ bool Theme::Row::LoadContentItem(int val, QDataStream &stream, int themeVersion,
         if (ci->type() == ContentItem::AttachmentStateIcon &&
                 themeVersion < gThemeMinimumVersionWithInvitationIcon &&
                 val > 1) {
-            qDebug() << "Old theme version detected, adding invitation item next to attachment icon.";
+            qCDebug(MESSAGELIST_LOG) << "Old theme version detected, adding invitation item next to attachment icon.";
             ContentItem *invitationItem = new ContentItem(ContentItem::InvitationIcon) ;
             invitationItem->setHideWhenDisabled(true);
             if (leftItem) {
@@ -428,7 +428,7 @@ bool Theme::Column::SharedRuntimeData::load(QDataStream &stream, int /* themeVer
     stream >> mCurrentlyVisible;
     stream >> mCurrentWidth;
     if (mCurrentWidth > 10000) {
-        qDebug() << "Theme has insane column width " << mCurrentWidth << " chopping to 100";
+        qCDebug(MESSAGELIST_LOG) << "Theme has insane column width " << mCurrentWidth << " chopping to 100";
         mCurrentWidth = 100; // avoid really insane values
     }
     return (mCurrentWidth >= -1);
@@ -583,7 +583,7 @@ bool Theme::Column::load(QDataStream &stream, int themeVersion)
     stream >> val;
     mMessageSorting = static_cast< SortOrder::MessageSorting >(val);
     if (!SortOrder::isValidMessageSorting(mMessageSorting)) {
-        qDebug() << "Invalid message sorting";
+        qCDebug(MESSAGELIST_LOG) << "Invalid message sorting";
         return false;
     }
 
@@ -602,14 +602,14 @@ bool Theme::Column::load(QDataStream &stream, int themeVersion)
     stream >> val;
 
     if ((val < 0) || (val > 50)) {
-        qDebug() << "Invalid group header row count";
+        qCDebug(MESSAGELIST_LOG) << "Invalid group header row count";
         return false; // senseless
     }
 
     for (int i = 0; i < val ; ++i) {
         Row *row = new Row();
         if (!row->load(stream, themeVersion)) {
-            qDebug() << "Group header row loading failed";
+            qCDebug(MESSAGELIST_LOG) << "Group header row loading failed";
             delete row;
             return false;
         }
@@ -620,14 +620,14 @@ bool Theme::Column::load(QDataStream &stream, int themeVersion)
     stream >> val;
 
     if ((val < 0) || (val > 50)) {
-        qDebug() << "Invalid message row count";
+        qCDebug(MESSAGELIST_LOG) << "Invalid message row count";
         return false; // senseless
     }
 
     for (int i = 0; i < val ; ++i) {
         Row *row = new Row();
         if (!row->load(stream, themeVersion)) {
-            qDebug() << "Message row loading failed";
+            qCDebug(MESSAGELIST_LOG) << "Message row loading failed";
             delete row;
             return false;
         }
@@ -637,7 +637,7 @@ bool Theme::Column::load(QDataStream &stream, int themeVersion)
     if (themeVersion >= gThemeMinimumVersionWithColumnRuntimeData) {
         // starting with version 0x1014 we have runtime data too
         if (!mSharedRuntimeData->load(stream, themeVersion)) {
-            qDebug() << "Shared runtime data loading failed";
+            qCDebug(MESSAGELIST_LOG) << "Shared runtime data loading failed";
             return false;
         }
     } else {
@@ -788,7 +788,7 @@ bool Theme::load(QDataStream &stream)
         (themeVersion > gThemeCurrentVersion) ||
         (themeVersion < gThemeMinimumSupportedVersion)
     ) {
-        qDebug() << "Invalid theme version";
+        qCDebug(MESSAGELIST_LOG) << "Invalid theme version";
         return false; // b0rken (invalid version)
     }
 
@@ -803,7 +803,7 @@ bool Theme::load(QDataStream &stream)
         // ok
         break;
     default:
-        qDebug() << "Invalid theme group header background mode";
+        qCDebug(MESSAGELIST_LOG) << "Invalid theme group header background mode";
         return false; // b0rken
         break;
     }
@@ -824,7 +824,7 @@ bool Theme::load(QDataStream &stream)
         // ok
         break;
     default:
-        qDebug() << "Invalid theme group header background style";
+        qCDebug(MESSAGELIST_LOG) << "Invalid theme group header background style";
         return false; // b0rken
         break;
     }
@@ -837,7 +837,7 @@ bool Theme::load(QDataStream &stream)
         // ok
         break;
     default:
-        qDebug() << "Invalid theme view header policy";
+        qCDebug(MESSAGELIST_LOG) << "Invalid theme view header policy";
         return false; // b0rken
         break;
     }
@@ -861,7 +861,7 @@ bool Theme::load(QDataStream &stream)
     for (int i = 0; i < val ; ++i) {
         Column *col = new Column();
         if (!col->load(stream, themeVersion)) {
-            qDebug() << "Column loading failed";
+            qCDebug(MESSAGELIST_LOG) << "Column loading failed";
             delete col;
             return false;
         }

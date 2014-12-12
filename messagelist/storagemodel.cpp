@@ -32,7 +32,7 @@
 #include <Akonadi/KMime/MessageFolderAttribute>
 #include <selectionproxymodel.h>
 
-#include <QDebug>
+#include "messagelist_debug.h"
 #include <KLocalizedString>
 #include "core/messageitem.h"
 #include "core/settings.h"
@@ -81,7 +81,7 @@ namespace
 KMime::Message::Ptr messageForItem(const Akonadi::Item &item)
 {
     if (!item.hasPayload<KMime::Message::Ptr>()) {
-        qWarning() << "Not a message" << item.id() << item.remoteId() << item.mimeType();
+        qCWarning(MESSAGELIST_LOG) << "Not a message" << item.id() << item.remoteId() << item.mimeType();
         return KMime::Message::Ptr();
     }
     return item.payload<KMime::Message::Ptr>();
@@ -112,7 +112,7 @@ StorageModel::StorageModel(QAbstractItemModel *model, QItemSelectionModel *selec
 
     d->mModel = itemFilter;
 
-    qDebug() << "Using model:" << model->metaObject()->className();
+    qCDebug(MESSAGELIST_LOG) << "Using model:" << model->metaObject()->className();
 
     connect(d->mModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
             this, SLOT(onSourceDataChanged(QModelIndex,QModelIndex)));

@@ -48,7 +48,7 @@
 
 #include <QMenu>
 #include <KLocalizedString>
-#include <QDebug>
+#include "messagelist_debug.h"
 
 using namespace MessageList::Core;
 
@@ -335,7 +335,7 @@ void View::applyThemeColumns()
         return;
     }
 
-    //qDebug() << "Apply theme columns";
+    //qCDebug(MESSAGELIST_LOG) << "Apply theme columns";
 
     const QList< Theme::Column * > &columns = d->mTheme->columns();
 
@@ -387,15 +387,15 @@ void View::applyThemeColumns()
 
     for (it = columns.constBegin(); it != end; ++it) {
         if ((*it)->currentlyVisible() || (idx == 0)) {
-            //qDebug() << "Column " << idx << " will be visible";
+            //qCDebug(MESSAGELIST_LOG) << "Column " << idx << " will be visible";
             // Column visible
             const int savedWidth = (*it)->currentWidth();
             const int hintWidth = d->mDelegate->sizeHintForItemTypeAndColumn(Item::Message, idx).width();
             totalVisibleWidthHint += savedWidth > 0 ? savedWidth : hintWidth;
             lColumnSizeHints.append(hintWidth);
-            //qDebug() << "Column " << idx << " size hint is " << hintWidth;
+            //qCDebug(MESSAGELIST_LOG) << "Column " << idx << " size hint is " << hintWidth;
         } else {
-            //qDebug() << "Column " << idx << " will be not visible";
+            //qCDebug(MESSAGELIST_LOG) << "Column " << idx << " will be not visible";
             // The column is not visible
             lColumnSizeHints.append(-1);   // dummy
         }
@@ -529,12 +529,12 @@ void View::applyThemeColumns()
 
     idx = 0;
 
-    //qDebug() << "Entering column show/hide loop";
+    //qCDebug(MESSAGELIST_LOG) << "Entering column show/hide loop";
 
     end = columns.constEnd();
     for (it = columns.constBegin(); it != end; ++it) {
         bool visible = (idx == 0) || (*it)->currentlyVisible();
-        //qDebug() << "Column " << idx << " visible " << visible;
+        //qCDebug(MESSAGELIST_LOG) << "Column " << idx << " visible " << visible;
         (*it)->setCurrentlyVisible(visible);
         header()->setSectionHidden(idx, !visible);
         idx++;
@@ -549,7 +549,7 @@ void View::applyThemeColumns()
     end = columns.constEnd();
     for (it = columns.constBegin(); it != end; ++it) {
         if ((*it)->currentlyVisible()) {
-            //qDebug() << "Resize section " << idx << " to " << lColumnWidths[ idx ];
+            //qCDebug(MESSAGELIST_LOG) << "Resize section " << idx << " to " << lColumnWidths[ idx ];
             const int columnWidth(lColumnWidths[ idx ]);
             (*it)->setCurrentWidth(columnWidth);
             header()->resizeSection(idx, columnWidth);
@@ -581,7 +581,7 @@ void View::applyThemeColumns()
 
     if (bTriggeredQtBug && bAllowRecursion) {
         bAllowRecursion = false;
-        //qDebug() << "I've triggered the QHeaderView bug: trying to fix by calling myself again";
+        //qCDebug(MESSAGELIST_LOG) << "I've triggered the QHeaderView bug: trying to fix by calling myself again";
         applyThemeColumns();
         bAllowRecursion = true;
     }
@@ -610,7 +610,7 @@ void View::saveThemeColumnState()
         return;    // don't save the state if it hasn't been applied at all
     }
 
-    //qDebug() << "Save theme column state";
+    //qCDebug(MESSAGELIST_LOG) << "Save theme column state";
 
     const QList< Theme::Column * > &columns = d->mTheme->columns();
 
@@ -623,11 +623,11 @@ void View::saveThemeColumnState()
     QList< Theme::Column * >::ConstIterator end(columns.constEnd());
     for (QList< Theme::Column * >::ConstIterator it = columns.constBegin(); it != end; ++it) {
         if (header()->isSectionHidden(idx)) {
-            //qDebug() << "Section " << idx << " is hidden";
+            //qCDebug(MESSAGELIST_LOG) << "Section " << idx << " is hidden";
             (*it)->setCurrentlyVisible(false);
             (*it)->setCurrentWidth(-1);     // reset (hmmm... we could use the "don't touch" policy here too...)
         } else {
-            //qDebug() << "Section " << idx << " is visible and has size " << header()->sectionSize( idx );
+            //qCDebug(MESSAGELIST_LOG) << "Section " << idx << " is visible and has size " << header()->sectionSize( idx );
             (*it)->setCurrentlyVisible(true);
             (*it)->setCurrentWidth(header()->sectionSize(idx));
         }
@@ -646,7 +646,7 @@ void View::triggerDelayedSaveThemeColumnState()
 
 void View::resizeEvent(QResizeEvent *e)
 {
-    qDebug() << "Resize event enter (viewport width is " << viewport()->width() << ")";
+    qCDebug(MESSAGELIST_LOG) << "Resize event enter (viewport width is " << viewport()->width() << ")";
 
     QTreeView::resizeEvent(e);
 
@@ -888,7 +888,7 @@ MessageItem *View::currentMessageItem(bool selectIfNeeded) const
 void View::setCurrentMessageItem(MessageItem *it, bool center)
 {
     if (it) {
-        qDebug() << "Setting current message to" << it->subject();
+        qCDebug(MESSAGELIST_LOG) << "Setting current message to" << it->subject();
 
         const QModelIndex index = d->mModel->index(it, 0);
         selectionModel()->setCurrentIndex(index, QItemSelectionModel::Select |
@@ -1969,7 +1969,7 @@ void View::slotSelectionChanged(const QItemSelection &, const QItemSelection &)
     switch (it->type()) {
     case Item::Message: {
         if (d->mLastCurrentItem != it) {
-            qDebug() << "View message selected [" << static_cast< MessageItem * >(it)->subject() << "]";
+            qCDebug(MESSAGELIST_LOG) << "View message selected [" << static_cast< MessageItem * >(it)->subject() << "]";
             d->mWidget->viewMessageSelected(static_cast< MessageItem * >(it));
             d->mLastCurrentItem = it;
         }
@@ -2125,7 +2125,7 @@ void View::mousePressEvent(QMouseEvent *e)
             // if we have multi selection then the meaning of hitting
             // the content item is quite unclear.
             if (d->mDelegate->hitContentItem() && (selectedIndexes().count() > 1)) {
-                qDebug() << "Left hit with selectedIndexes().count() == " << selectedIndexes().count();
+                qCDebug(MESSAGELIST_LOG) << "Left hit with selectedIndexes().count() == " << selectedIndexes().count();
 
                 switch (d->mDelegate->hitContentItem()->type()) {
                 case Theme::ContentItem::AnnotationIcon:

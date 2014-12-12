@@ -36,7 +36,7 @@
 #include <QDropEvent>
 #include <QMimeData>
 
-#include <QDebug>
+#include "messagelist_debug.h"
 #include <QIcon>
 #include <KIconLoader>
 #include <KLocalizedString>
@@ -216,7 +216,7 @@ void Widget::fillMessageTagCombo()
 void Widget::slotTagsFetched(KJob *job)
 {
     if (job->error()) {
-        qWarning() << "Failed to load tags " << job->errorString();
+        qCWarning(MESSAGELIST_LOG) << "Failed to load tags " << job->errorString();
         return;
     }
     Akonadi::TagFetchJob *fetchJob = static_cast<Akonadi::TagFetchJob *>(job);
@@ -410,7 +410,7 @@ void Widget::viewDropEvent(QDropEvent *e)
 
     QList<QUrl> urls = e->mimeData()->urls();
     if (urls.isEmpty()) {
-        qWarning() << "Could not decode drag data!";
+        qCWarning(MESSAGELIST_LOG) << "Could not decode drag data!";
         e->ignore();
         return;
     }

@@ -43,7 +43,7 @@
 #include <kmime/kmime_dateformatter.h> // kdepimlibs
 
 #include <KConfig>
-#include <QDebug>
+#include "messagelist_debug.h"
 #include <KIconLoader>
 #include <KLocalizedString>
 
@@ -998,7 +998,7 @@ void Manager::loadConfiguration()
                     }
                     mThemes.insert(set->id(), set);
                 } else {
-                    qWarning() << "Saved theme loading failed";
+                    qCWarning(MESSAGELIST_LOG) << "Saved theme loading failed";
                     delete set; // b0rken
                 }
             }
