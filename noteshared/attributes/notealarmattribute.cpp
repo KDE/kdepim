@@ -72,4 +72,9 @@ KDateTime NoteAlarmAttribute::dateTime() const
     return mDateTime;
 }
 
+bool NoteAlarmAttribute::operator ==(const NoteAlarmAttribute &other) const
+{
+    return mDateTime == other.dateTime();
+}
+
 

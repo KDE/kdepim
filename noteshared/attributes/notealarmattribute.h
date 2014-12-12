@@ -40,6 +40,7 @@ public:
     void setDateTime(const KDateTime &dateTime);
     KDateTime dateTime() const;
 
+    bool operator ==( const NoteAlarmAttribute &other) const;
 private:
     KDateTime mDateTime;
 };
