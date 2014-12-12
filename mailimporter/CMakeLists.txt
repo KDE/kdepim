@@ -29,6 +29,7 @@ set(libmailimporter_SRCS
   filterbalsa.cpp 
   selectthunderbirdprofilewidget.cpp 
   othermailerutil.cpp
+  mailimporter_debug.cpp
 )
 
 include_directories(${Boost_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/libkdepim)

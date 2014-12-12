@@ -32,7 +32,7 @@
 // KDE Includes
 #include <QUrl>
 #include <KLocalizedString>
-#include <QDebug>
+#include "mailimporter_debug.h"
 
 #include <QScopedPointer>
 
@@ -107,7 +107,7 @@ void Filter::setFilterInfo(FilterInfo *info)
 MailImporter::FilterInfo *Filter::filterInfo()
 {
     if (!d->filterInfo) {
-        qDebug() << " filterInfo must never be null. You forgot to create a filterinfo";
+        qCDebug(MAILIMPORTER_LOG) << " filterInfo must never be null. You forgot to create a filterinfo";
     }
     return d->filterInfo;
 }
@@ -339,7 +339,7 @@ bool Filter::doAddMessage(const QString &folderName,
         QFile f(msgUrl.toLocalFile());
         QByteArray msgText;
         if (!f.open(QIODevice::ReadOnly)) {
-            qWarning() << "Failed to read temporary file: " << f.errorString();
+            qCWarning(MAILIMPORTER_LOG) << "Failed to read temporary file: " << f.errorString();
         } else {
             msgText = f.readAll();
             f.close();

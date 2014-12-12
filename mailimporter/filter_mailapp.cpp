@@ -21,7 +21,7 @@
 
 #include <KLocalizedString>
 #include <qtemporaryfile.h>
-#include <qdebug.h>
+#include "mailimporter_debug.h"
 #include <QFileDialog>
 
 #include "filter_mailapp.h"
@@ -60,7 +60,7 @@ void FilterMailApp::importMails(const QString  &maildir)
 
     filterInfo()->setOverall(0);
 
-    //   qDebug() <<"starting by looking in directory" << directory;
+    //   qCDebug(MAILIMPORTER_LOG) <<"starting by looking in directory" << directory;
     traverseDirectory(mailDir());
 
     QStringList::ConstIterator end(mMboxFiles.constEnd());
@@ -73,7 +73,7 @@ void FilterMailApp::importMails(const QString  &maildir)
             filterInfo()->alert(i18n("Unable to open %1, skipping", *filename));
         } else {
             QFileInfo filenameInfo(*filename);
-            qDebug() << "importing filename" << *filename;
+            qCDebug(MAILIMPORTER_LOG) << "importing filename" << *filename;
             QStringList name = (*filename).split('/', QString::SkipEmptyParts);
             QString folderName(name[name.count() - 2]);
 
@@ -161,7 +161,7 @@ void FilterMailApp::traverseDirectory(const QString &dirName)
             traverseDirectory(fi.filePath());
         } else {
             if (!fi.isDir() && (filename == QLatin1String("mbox"))) {
-                qDebug() << "adding the file" << fi.filePath();
+                qCDebug(MAILIMPORTER_LOG) << "adding the file" << fi.filePath();
                 mMboxFiles.append(fi.filePath());
             }
         }

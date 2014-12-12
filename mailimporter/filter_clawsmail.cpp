@@ -20,7 +20,7 @@
 #include "filter_clawsmail.h"
 
 #include <KLocalizedString>
-#include <qdebug.h>
+#include "mailimporter_debug.h"
 #include <QDomDocument>
 #include <QDomElement>
 
@@ -58,7 +58,7 @@ QString FilterClawsMail::localMailDirPath()
         int errorRow;
         int errorCol;
         if (!doc.setContent(&folderListFile, &errorMsg, &errorRow, &errorCol)) {
-            qDebug() << "Unable to load document.Parse error in line " << errorRow
+            qCDebug(MAILIMPORTER_LOG) << "Unable to load document.Parse error in line " << errorRow
                      << ", col " << errorCol << ": " << errorMsg;
             return QString();
         }

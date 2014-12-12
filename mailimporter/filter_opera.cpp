@@ -18,7 +18,7 @@
 #include <KLocalizedString>
 #include <kfiledialog.h>
 #include <QTemporaryFile>
-#include <qdebug.h>
+#include "mailimporter_debug.h"
 #include <QPointer>
 
 #include "filter_opera.h"

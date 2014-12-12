@@ -20,7 +20,7 @@
 #include <QRegExp>
 #include <QPointer>
 #include <QTemporaryFile>
-#include <qdebug.h>
+#include "mailimporter_debug.h"
 
 #include "filter_pmail.h"
 
@@ -66,7 +66,7 @@ void FilterPMail::importMails(const QString  &chosenDir)
     const QStringList files = dir.entryList(QStringList() << QLatin1String("*.[cC][nN][mM]") << QLatin1String("*.[pP][mM][mM]") << QLatin1String("*.[mM][bB][xX]"), QDir::Files, QDir::Name);
     totalFiles = files.count();
     currentFile = 0;
-    qDebug() << "Count is" << totalFiles;
+    qCDebug(MAILIMPORTER_LOG) << "Count is" << totalFiles;
 
     if (!(folderParsed = parseFolderMatrix(mailDir()))) {
         filterInfo()->addErrorLogEntry(i18n("Cannot parse the folder structure; continuing import without subfolder support."));
@@ -92,7 +92,7 @@ void FilterPMail::processFiles(const QString &mask, void(FilterPMail::* workFunc
     }
 
     const QStringList files = dir.entryList(QStringList(mask), QDir::Files, QDir::Name);
-    //qDebug() <<"Mask is" << mask <<" count is" << files.count();
+    //qCDebug(MAILIMPORTER_LOG) <<"Mask is" << mask <<" count is" << files.count();
     QStringList::ConstIterator end = files.constEnd();
     for (QStringList::ConstIterator mailFile = files.constBegin(); mailFile != end; ++mailFile) {
         // Notify current file
@@ -292,7 +292,7 @@ void FilterPMail::importUnixMailFolder(const QString &file)
 /** Parse the m_filterInfoormation about folderstructure to folderMatrix */
 bool FilterPMail::parseFolderMatrix(const QString  &chosendir)
 {
-    qDebug() << "Start parsing the foldermatrix.";
+    qCDebug(MAILIMPORTER_LOG) << "Start parsing the foldermatrix.";
     filterInfo()->addInfoLogEntry(i18n("Parsing the folder structure..."));
 
     QFile hierarch(chosendir + QLatin1String("/hierarch.pm"));

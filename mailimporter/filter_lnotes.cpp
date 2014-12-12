@@ -18,7 +18,7 @@
 #include <KLocalizedString>
 #include <kfiledialog.h>
 #include <QTemporaryFile>
-#include <qdebug.h>
+#include "mailimporter_debug.h"
 #include <QFileInfo>
 
 #include "filter_lnotes.h"
