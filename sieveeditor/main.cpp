@@ -48,5 +48,6 @@ int main( int argc, char **argv )
     KGlobal::locale()->insertCatalog( QLatin1String("libpimcommon") );
     SieveEditorMainWindow *mw = new SieveEditorMainWindow();
     mw->show();
-    a.exec();
+    int val = a.exec();
+    return val;
 }

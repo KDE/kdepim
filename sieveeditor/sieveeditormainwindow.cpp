@@ -45,7 +45,7 @@ SieveEditorMainWindow::SieveEditorMainWindow()
     : KXmlGuiWindow(),
       mNetworkIsDown(false)
 {    
-    mMainWidget = new SieveEditorCentralWidget;
+    mMainWidget = new SieveEditorCentralWidget(this);
     connect(mMainWidget, SIGNAL(configureClicked()), SLOT(slotConfigure()));
     connect(mMainWidget->sieveEditorMainWidget(), SIGNAL(updateButtons(bool,bool,bool,bool)), this, SLOT(slotUpdateButtons(bool,bool,bool,bool)));
     setCentralWidget(mMainWidget);
