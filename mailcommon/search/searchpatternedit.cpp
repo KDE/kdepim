@@ -22,7 +22,7 @@
 using MailCommon::RuleWidgetHandlerManager;
 #include "mailcommon_debug.h"
 #include <pimcommon/widgets/minimumcombobox.h>
-#include <QDebug>
+
 #include <QDialog>
 #include <KLocalizedString>
 #include <QPushButton>

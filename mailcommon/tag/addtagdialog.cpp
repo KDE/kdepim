@@ -24,7 +24,7 @@
 #include <QLineEdit>
 #include <KMessageBox>
 #include <KJob>
-#include <QDebug>
+
 
 #include <QVBoxLayout>
 #include <KConfigGroup>

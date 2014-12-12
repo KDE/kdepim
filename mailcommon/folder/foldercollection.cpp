@@ -32,7 +32,7 @@ using namespace Akonadi;
 #include <KIdentityManagement/IdentityManager>
 #include <KIdentityManagement/Identity>
 
-#include <QDebug>
+
 
 #include <QMutex>
 #include <QMutexLocker>

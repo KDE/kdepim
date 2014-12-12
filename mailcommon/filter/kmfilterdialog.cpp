@@ -39,7 +39,7 @@ using MailCommon::FilterImporterExporter;
 #include <ItemFetchJob>
 
 #include <KConfigGroup>
-#include <QDebug>
+
 #include <KIconLoader>
 #include <KInputDialog>
 #include <KJob>

@@ -25,7 +25,6 @@
 
 // KDE includes
 #include <KLocalizedString>
-#include <qdebug.h>
 #include <KHelpMenu>
 #include <KConfigGroup>
 #include <KAboutData>

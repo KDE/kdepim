@@ -30,7 +30,7 @@
 
 #include "messageviewer/utils/util.h"
 #include "mailcommon_debug.h"
-#include <QDebug>
+
 
 #include <QFile>
 #include <QTime>

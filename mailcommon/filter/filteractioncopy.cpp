@@ -24,7 +24,7 @@
 
 #include <ItemCopyJob>
 #include <KLocalizedString>
-#include <QDebug>
+
 
 using namespace MailCommon;
 

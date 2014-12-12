@@ -33,7 +33,7 @@
 #include <libkdepim/misc/broadcaststatus.h>
 using KPIM::BroadcastStatus;
 #include "mailcommon_debug.h"
-#include <QDebug>
+
 #include <KLocalizedString>
 
 #include <ItemDeleteJob>

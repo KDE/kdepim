@@ -30,7 +30,7 @@
 #include <KPluralHandlingSpinBox>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <QDebug>
+
 
 #include <QCheckBox>
 #include <QGroupBox>

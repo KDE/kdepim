@@ -21,7 +21,7 @@
 #include "filtermanager.h"
 #include "mailfilter.h"
 
-#include <QDebug>
+
 
 #include <QFile>
 

@@ -19,7 +19,7 @@
 #include "filtermanager.h"
 #include "mailfilter.h"
 #include "mailcommon_debug.h"
-#include <QDebug>
+
 
 #include <QFile>
 #include <QDir>

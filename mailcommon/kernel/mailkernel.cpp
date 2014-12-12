@@ -32,7 +32,7 @@
 #include <KIdentityManagement/Identity>
 #include <KIdentityManagement/IdentityManager>
 
-#include <QDebug>
+
 #include <KLocalizedString>
 #include <KMessageBox>
 

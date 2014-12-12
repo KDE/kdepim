@@ -34,7 +34,7 @@
 #include <Item>
 #include <Akonadi/KMime/MessageFlags>
 
-#include <QDebug>
+
 
 #include <QQueue>
 #include <QTimer>

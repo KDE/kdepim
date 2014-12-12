@@ -61,7 +61,7 @@
 #include <messagecore/helpers/messagehelpers.h>
 
 #include <messagecomposer/helper/messagehelper.h>
-#include <QDebug>
+
 #include <AgentManager>
 #include <entitymimetypefiltermodel.h>
 #include <EntityTreeModel>

@@ -31,7 +31,7 @@
 #include <ItemFetchScope>
 #include <Akonadi/KMime/MessageParts>
 #include <AkonadiCore/entityannotationsattribute.h>
-#include <QDebug>
+
 #include <KMime/KMimeMessage>
 
 namespace MailCommon

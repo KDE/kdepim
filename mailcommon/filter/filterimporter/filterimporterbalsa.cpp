@@ -22,7 +22,7 @@
 #include <KConfig>
 #include <KConfigGroup>
 
-#include <QDebug>
+
 
 #include <QFile>
 #include <QDir>

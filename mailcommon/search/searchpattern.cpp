@@ -30,7 +30,7 @@ using MailCommon::FilterLog;
 
 #include <KEmailAddress>
 
-#include <QDebug>
+
 #include <KConfigGroup>
 #include <KLocalizedString>
 

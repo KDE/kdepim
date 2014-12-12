@@ -30,7 +30,7 @@
 #include <TagFetchScope>
 #include <TagAttribute>
 
-#include <QDebug>
+
 
 #include <QTimer>
 

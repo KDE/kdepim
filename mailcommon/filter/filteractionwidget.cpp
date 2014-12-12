@@ -28,7 +28,7 @@
 #include <KLocalizedString>
 #include <QPushButton>
 #include <QIcon>
-#include <QDebug>
+
 
 #include <QGridLayout>
 #include <QLabel>

@@ -34,7 +34,7 @@ using MessageComposer::MessageFactory;
 #include <ItemFetchJob>
 #include <ItemModifyJob>
 
-#include <QDebug>
+
 #include <KLocalizedString>
 #include <KMessageBox>
 

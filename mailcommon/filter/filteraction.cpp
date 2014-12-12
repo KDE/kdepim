@@ -31,7 +31,7 @@
 #include <messageviewer/settings/globalsettings.h>
 
 #include <KLocalizedString>
-#include <QDebug>
+
 
 using namespace MailCommon;
 
