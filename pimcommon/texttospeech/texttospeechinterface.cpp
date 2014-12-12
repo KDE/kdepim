@@ -17,7 +17,7 @@
 
 #include "texttospeechinterface.h"
 #include "texttospeech.h"
-#include <QDebug>
+#include "pimcommon_debug.h"
 
 using namespace PimCommon;
 

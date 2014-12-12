@@ -193,6 +193,7 @@ set(libpimcommon_syntaxhighlighter_SRCS
 )
 
 set(libpimcommon_SRCS
+  pimcommon_debug.cpp
   util/createresource.cpp
   util/pimutil.cpp
   util/editorutil.cpp

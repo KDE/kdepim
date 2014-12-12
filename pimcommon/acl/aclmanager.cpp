@@ -18,7 +18,7 @@
  */
 
 #include "aclmanager.h"
-
+#include "pimcommon_debug.h"
 #include "aclentrydialog_p.h"
 #include "aclutils_p.h"
 #include "imapaclattribute.h"
@@ -344,7 +344,7 @@ public:
                 serverName = reply;
             }
         } else {
-            qDebug() << " collection has not imap as resources: " << collection.resource();
+            qCDebug(PIMCOMMON_LOG) << " collection has not imap as resources: " << collection.resource();
         }
         delete imapSettingsInterface;
 

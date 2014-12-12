@@ -19,7 +19,7 @@
 #include "translatorutil.h"
 #include "translatordebugdialog.h"
 
-#include <QDebug>
+#include "pimcommon_debug.h"
 #include <QJsonParseError>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
@@ -155,7 +155,7 @@ void GoogleTranslator::slotTranslateFinished(QNetworkReply *reply)
     //  but this is not valid JSON for QJSON, it expects empty strings: ["foo","","bar"]
     mJsonData = mJsonData.replace(QRegExp(QLatin1String(",{3,3}")), QLatin1String(",\"\",\"\","));
     mJsonData = mJsonData.replace(QRegExp(QLatin1String(",{2,2}")), QLatin1String(",\"\","));
-    //qDebug() << mJsonData;
+    //qCDebug(PIMCOMMON_LOG) << mJsonData;
 
     QJsonParseError parsingError;
     const QJsonDocument jsonDoc = QJsonDocument::fromJson(mJsonData.toUtf8(), &parsingError);
@@ -164,7 +164,7 @@ void GoogleTranslator::slotTranslateFinished(QNetworkReply *reply)
         return;
     }
     const QVariantList json = jsonDoc.toVariant().toList();
-    //qDebug()<<" json"<<json;
+    //qCDebug(PIMCOMMON_LOG)<<" json"<<json;
     bool oldVersion = true;
     QMultiMap<int, QPair<QString, double> > sentences;
 

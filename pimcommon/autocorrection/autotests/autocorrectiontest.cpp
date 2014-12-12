@@ -19,7 +19,7 @@
 #include "../autocorrection.h"
 #include "pimcommon/settings/pimcommonsettings.h"
 #include <qtest.h>
-#include <QDebug>
+#include "pimcommon_debug.h"
 #include <QTextDocument>
 
 AutoCorrectionTest::AutoCorrectionTest()

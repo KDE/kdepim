@@ -24,7 +24,7 @@
 
 #include <QHBoxLayout>
 #include <QStackedWidget>
-#include <QDebug>
+#include "pimcommon_debug.h"
 
 using namespace PimCommon;
 
@@ -110,7 +110,7 @@ KToggleAction *CustomToolsWidget::action(CustomToolsWidget::ToolType type)
         act = mShortUrlWidget->toggleAction();
         break;
     default:
-        qDebug() << " type unknown :" << type;
+        qCDebug(PIMCOMMON_LOG) << " type unknown :" << type;
         break;
     }
     return act;
@@ -128,7 +128,7 @@ void CustomToolsWidget::switchToTool(CustomToolsWidget::ToolType type)
         mTranslatorWidget->toggleAction()->setChecked(false);
         break;
     default:
-        qDebug() << " type unknown :" << type;
+        qCDebug(PIMCOMMON_LOG) << " type unknown :" << type;
         break;
     }
     Q_EMIT toolSwitched(type);
@@ -141,7 +141,7 @@ CustomToolsWidget::ToolType CustomToolsWidget::toolType() const
     } else if (mStackedWidget->currentWidget() == mShortUrlWidget) {
         return ShortUrlTool;
     } else {
-        qDebug() << " unknow tool";
+        qCDebug(PIMCOMMON_LOG) << " unknow tool";
         return TranslatorTool;
     }
 }

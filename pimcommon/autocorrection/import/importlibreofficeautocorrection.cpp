@@ -21,7 +21,7 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <QTemporaryDir>
-#include <QDebug>
+#include "pimcommon_debug.h"
 #include <QDomDocument>
 #include <QDir>
 
@@ -110,7 +110,7 @@ bool ImportLibreOfficeAutocorrection::importFile(Type type, const KArchiveDirect
         if (loadDomElement(doc, &file)) {
             QDomElement list = doc.documentElement();
             if (list.isNull()) {
-                qDebug() << "No list defined in " << type;
+                qCDebug(PIMCOMMON_LOG) << "No list defined in " << type;
             } else {
                 for (QDomElement e = list.firstChildElement(); !e.isNull(); e = e.nextSiblingElement()) {
                     const QString tag = e.tagName();
@@ -135,7 +135,7 @@ bool ImportLibreOfficeAutocorrection::importFile(Type type, const KArchiveDirect
 
                         }
                     } else {
-                        qDebug() << " unknown tag " << tag;
+                        qCDebug(PIMCOMMON_LOG) << " unknown tag " << tag;
                     }
                 }
             }
@@ -152,7 +152,7 @@ bool ImportLibreOfficeAutocorrection::loadDomElement(QDomDocument &doc, QFile *f
     int errorRow;
     int errorCol;
     if (!doc.setContent(file, &errorMsg, &errorRow, &errorCol)) {
-        qDebug() << "Unable to load document.Parse error in line " << errorRow
+        qCDebug(PIMCOMMON_LOG) << "Unable to load document.Parse error in line " << errorRow
                  << ", col " << errorCol << ": " << errorMsg;
         return false;
     }

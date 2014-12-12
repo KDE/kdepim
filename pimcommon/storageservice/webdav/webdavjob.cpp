@@ -26,7 +26,7 @@
 #include <KLocalizedString>
 
 #include <QAuthenticator>
-#include <QDebug>
+#include "pimcommon_debug.h"
 #include <QNetworkReply>
 #include <QPointer>
 #include <QFile>
@@ -320,7 +320,7 @@ void WebDavJob::createFolderJob(const QString &foldername, const QString &destin
     } else {
         url.setPath(destination + QLatin1Char('/') + foldername);
     }
-    //qDebug()<<" url"<<url;
+    //qCDebug(PIMCOMMON_LOG)<<" url"<<url;
     mkdir(url);
 }
 
@@ -353,7 +353,7 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
         deleteLater();
     } else {
         const QString data = QString::fromUtf8(reply->readAll());
-        //qDebug()<<" data "<<data;
+        //qCDebug(PIMCOMMON_LOG)<<" data "<<data;
         reply->deleteLater();
         switch (mActionType) {
         case PimCommon::StorageServiceAbstract::NoneAction:
@@ -422,7 +422,7 @@ void WebDavJob::parseCreateServiceFolder(const QString &/*data*/)
 
 void WebDavJob::parseShareLink(const QString &data)
 {
-    qDebug() << " data" << data;
+    qCDebug(PIMCOMMON_LOG) << " data" << data;
     Q_EMIT shareLinkDone(data);
     deleteLater();
 }
@@ -513,7 +513,7 @@ void WebDavJob::parseCreateFolder(const QString &data)
 
 void WebDavJob::parseAccountInfo(const QString &data)
 {
-    //qDebug()<<" parseAccountInfo "<<data;
+    //qCDebug(PIMCOMMON_LOG)<<" parseAccountInfo "<<data;
     PimCommon::AccountInfo accountInfo;
     QDomDocument dom;
     dom.setContent(data.toLatin1(), true);
@@ -566,7 +566,7 @@ void WebDavJob::parseListFolder(const QString &data)
 {
     Q_UNUSED(data);
 
-    //qDebug()<<" data "<<data;
+    //qCDebug(PIMCOMMON_LOG)<<" data "<<data;
     Q_EMIT listFolderDone(data);
     deleteLater();
 }
@@ -583,8 +583,8 @@ void WebDavJob::shareLink(const QString &/*root*/, const QString &path)
     }
     QUrl path2(mServiceLocation);
     QNetworkRequest request(QUrl(path2.scheme() + QLatin1String("://") + path2.host() + mShareApi));
-    qDebug() << " filePath" << filePath;
-    qDebug() << " url" << (path2.scheme() + QLatin1String("://") + path2.host() + mShareApi);
+    qCDebug(PIMCOMMON_LOG) << " filePath" << filePath;
+    qCDebug(PIMCOMMON_LOG) << " url" << (path2.scheme() + QLatin1String("://") + path2.host() + mShareApi);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     QUrl postData;
     postData.addQueryItem(QLatin1String("path"), filePath);

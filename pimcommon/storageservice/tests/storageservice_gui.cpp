@@ -22,7 +22,7 @@
 #include "pimcommon/storageservice/storageservicejobconfig.h"
 #include <QWidget>
 
-#include <qdebug.h>
+#include "pimcommon_debug.h"
 
 #include <KLocalizedString>
 #include <QDialog>

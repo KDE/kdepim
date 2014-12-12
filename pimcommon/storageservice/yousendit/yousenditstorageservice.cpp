@@ -30,7 +30,7 @@
 
 #include <KLocalizedString>
 
-#include <QDebug>
+#include "pimcommon_debug.h"
 #include <KFormat>
 #include <QLocale>
 
@@ -422,7 +422,7 @@ void YouSendItStorageService::storageServiceCopyFolder(const QString &source, co
 QMap<QString, QString> YouSendItStorageService::itemInformation(const QVariantMap &variantMap)
 {
     QMap<QString, QString> information;
-    qDebug() << " variantMap " << variantMap;
+    qCDebug(PIMCOMMON_LOG) << " variantMap " << variantMap;
     bool folder = false;
     if (variantMap.contains(QLatin1String("name"))) {
         information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Name), variantMap.value(QLatin1String("name")).toString());
@@ -475,13 +475,13 @@ QString YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWi
     QJson::Parser parser;
     bool ok;
     const QMap<QString, QVariant> info = parser.parse(data.toString().toUtf8(), &ok).toMap();
-    //qDebug()<<" INFO "<<info;
+    //qCDebug(PIMCOMMON_LOG)<<" INFO "<<info;
     if (info.contains(QLatin1String("folders"))) {
         const QVariantMap mapFolder = info.value(QLatin1String("folders")).toMap();
         const QVariantList folders = mapFolder.value(QLatin1String("folder")).toList();
         Q_FOREACH (const QVariant &v, folders) {
             const QVariantMap map = v.toMap();
-            //qDebug()<<" folder map"<<map;
+            //qCDebug(PIMCOMMON_LOG)<<" folder map"<<map;
             if (map.contains(QLatin1String("name"))) {
                 const QString name = map.value(QLatin1String("name")).toString();
                 const QString folderId = map.value(QLatin1String("id")).toString();
@@ -501,14 +501,14 @@ QString YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWi
         const QVariantList files = mapFiles.value(QLatin1String("file")).toList();
         Q_FOREACH (const QVariant &v, files) {
             const QVariantMap map = v.toMap();
-            //qDebug()<<" file map !"<<map;
+            //qCDebug(PIMCOMMON_LOG)<<" file map !"<<map;
             if (map.contains(QLatin1String("name"))) {
                 const QString name = map.value(QLatin1String("name")).toString();
-                qDebug() << " name !" << name;
+                qCDebug(PIMCOMMON_LOG) << " name !" << name;
                 const QString fileId = map.value(QLatin1String("id")).toString();
                 StorageServiceTreeWidgetItem *item = listWidget->addFile(name, fileId);
                 if (map.contains(QLatin1String("size"))) {
-                    //qDebug()<<" size "<<map.value(QLatin1String("size"));
+                    //qCDebug(PIMCOMMON_LOG)<<" size "<<map.value(QLatin1String("size"));
                     const qulonglong size = map.value(QLatin1String("size")).toULongLong();
                     item->setSize(size);
                 }

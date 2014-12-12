@@ -24,7 +24,7 @@
 
 #include <KLocalizedString>
 
-#include <QDebug>
+#include "pimcommon_debug.h"
 #include <QFile>
 
 using namespace PimCommon;
@@ -79,7 +79,7 @@ void BoxJob::requestTokenAccess()
         url.addQueryItem(QLatin1String("scope"), mScope);
     }
     mAuthUrl = url;
-    //qDebug()<<" url"<<url;
+    //qCDebug(PIMCOMMON_LOG)<<" url"<<url;
     delete mAuthDialog;
     mAuthDialog = new PimCommon::StorageAuthViewDialog;
     connect(mAuthDialog.data(), &PimCommon::StorageAuthViewDialog::urlChanged, this, &BoxJob::slotRedirect);
@@ -96,7 +96,7 @@ void BoxJob::requestTokenAccess()
 void BoxJob::slotRedirect(const QUrl &url)
 {
     if (url != mAuthUrl) {
-        //qDebug()<<" Redirect !"<<url;
+        //qCDebug(PIMCOMMON_LOG)<<" Redirect !"<<url;
         mAuthDialog->accept();
         parseRedirectUrl(url);
     }
@@ -105,7 +105,7 @@ void BoxJob::slotRedirect(const QUrl &url)
 void BoxJob::parseRedirectUrl(const QUrl &url)
 {
     const QList<QPair<QString, QString> > listQuery = url.queryItems();
-    //qDebug()<< "listQuery "<<listQuery;
+    //qCDebug(PIMCOMMON_LOG)<< "listQuery "<<listQuery;
 
     QString authorizeCode;
     QString errorStr;
@@ -159,7 +159,7 @@ void BoxJob::slotSendDataFinished(QNetworkReply *reply)
             return;
         }
         const QMap<QString, QVariant> error = jsonDoc.toVariant().toMap();
-        qDebug() << " error " << error;
+        qCDebug(PIMCOMMON_LOG) << " error " << error;
         if (error.contains(QLatin1String("message")) || error.contains(QLatin1String("error_description"))) {
             QString errorStr;
             if (error.contains(QLatin1String("message"))) {
@@ -216,7 +216,7 @@ void BoxJob::slotSendDataFinished(QNetworkReply *reply)
         }
         return;
     }
-    //qDebug()<<" data: "<<data;
+    //qCDebug(PIMCOMMON_LOG)<<" data: "<<data;
     switch (mActionType) {
     case PimCommon::StorageServiceAbstract::NoneAction:
         deleteLater();
@@ -277,11 +277,11 @@ void BoxJob::slotSendDataFinished(QNetworkReply *reply)
 
 void BoxJob::parseAccountInfo(const QString &data)
 {
-    //qDebug()<<" info"<<info;
+    //qCDebug(PIMCOMMON_LOG)<<" info"<<info;
     QJsonParseError parsingError;
     const QJsonDocument jsonDoc = QJsonDocument::fromJson(data.toUtf8(), &parsingError);
     if (parsingError.error != QJsonParseError::NoError || jsonDoc.isNull()) {
-        qDebug() << "parseAccountInfo parse error " << data;
+        qCDebug(PIMCOMMON_LOG) << "parseAccountInfo parse error " << data;
         return;
     }
     const QMap<QString, QVariant> info = jsonDoc.toVariant().toMap();
@@ -307,7 +307,7 @@ void BoxJob::refreshToken()
     postData.addQueryItem(QLatin1String("grant_type"), QLatin1String("refresh_token"));
     postData.addQueryItem(QLatin1String("client_id"), mClientId);
     postData.addQueryItem(QLatin1String("client_secret"), mClientSecret);
-    //qDebug()<<"refreshToken postData: "<<postData;
+    //qCDebug(PIMCOMMON_LOG)<<"refreshToken postData: "<<postData;
 
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &BoxJob::slotError);
@@ -377,7 +377,7 @@ void BoxJob::moveFolder(const QString &source, const QString &destination)
     mError = false;
     QUrl url;
     url.setUrl(mApiUrl + mFolderInfoPath + source);
-    qDebug() << " url " << url;
+    qCDebug(PIMCOMMON_LOG) << " url " << url;
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer " + mToken.toLatin1());
@@ -392,7 +392,7 @@ void BoxJob::moveFile(const QString &source, const QString &destination)
     mError = false;
     QUrl url;
     url.setUrl(mApiUrl + mFileInfoPath + source);
-    //qDebug()<<" url "<<url;
+    //qCDebug(PIMCOMMON_LOG)<<" url "<<url;
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer " + mToken.toLatin1());
@@ -527,7 +527,7 @@ void BoxJob::parseDeleteFolder(const QString &data)
     bool ok;
 
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    qDebug()<<" info"<<info;
+    qCDebug(PIMCOMMON_LOG)<<" info"<<info;
     */
     Q_EMIT deleteFolderDone(QString());
 }
@@ -539,7 +539,7 @@ void BoxJob::parseDeleteFile(const QString &data)
     bool ok;
 
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    qDebug()<<" info"<<info;
+    qCDebug(PIMCOMMON_LOG)<<" info"<<info;
     */
     Q_EMIT deleteFileDone(QString());
 }
@@ -551,7 +551,7 @@ void BoxJob::parseCreateServiceFolder(const QString &data)
     bool ok;
 
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    qDebug() << " info" << info;
+    qCDebug(PIMCOMMON_LOG) << " info" << info;
 #endif
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
@@ -642,7 +642,7 @@ void BoxJob::parseShareLink(const QString &data)
     QJsonParseError parsingError;
     const QJsonDocument jsonDoc = QJsonDocument::fromJson(data.toUtf8(), &parsingError);
     if (parsingError.error != QJsonParseError::NoError || jsonDoc.isNull()) {
-        qDebug() << "parseShareLink error " << data;
+        qCDebug(PIMCOMMON_LOG) << "parseShareLink error " << data;
         return;
     }
     const QMap<QString, QVariant> info = jsonDoc.toVariant().toMap();
@@ -658,7 +658,7 @@ void BoxJob::parseShareLink(const QString &data)
 
 void BoxJob::parseDownloadFile(const QString &data)
 {
-    qDebug() << " Data " << data;
+    qCDebug(PIMCOMMON_LOG) << " Data " << data;
     Q_EMIT downLoadFileDone(QString());
 }
 
@@ -674,9 +674,9 @@ QNetworkReply *BoxJob::downloadFile(const QString &name, const QString &fileId, 
     mDownloadFile = new QFile(defaultDestination + QLatin1Char('/') + name);
     if (mDownloadFile->open(QIODevice::WriteOnly)) {
         QUrl url;
-        qDebug() << " fileId " << fileId << " name " << name;
+        qCDebug(PIMCOMMON_LOG) << " fileId " << fileId << " name " << name;
         url.setUrl(mApiUrl + mFileInfoPath + fileId + QLatin1String("/content"));
-        qDebug() << "url!" << url;
+        qCDebug(PIMCOMMON_LOG) << "url!" << url;
         QNetworkRequest request(url);
         request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
         request.setRawHeader("Authorization", "Bearer " + mToken.toLatin1());
@@ -697,12 +697,12 @@ void BoxJob::parseAccessToken(const QString &data)
     QJsonParseError parsingError;
     const QJsonDocument jsonDoc = QJsonDocument::fromJson(data.toUtf8(), &parsingError);
     if (parsingError.error != QJsonParseError::NoError || jsonDoc.isNull()) {
-        qDebug() << "parseAccessToken error " << data;
+        qCDebug(PIMCOMMON_LOG) << "parseAccessToken error " << data;
         return;
     }
     const QMap<QString, QVariant> info = jsonDoc.toVariant().toMap();
 
-    //qDebug()<<" info"<<info;
+    //qCDebug(PIMCOMMON_LOG)<<" info"<<info;
     if (info.contains(QLatin1String("refresh_token"))) {
         mRefreshToken = info.value(QLatin1String("refresh_token")).toString();
     }
@@ -713,7 +713,7 @@ void BoxJob::parseAccessToken(const QString &data)
     if (info.contains(QLatin1String("expires_in"))) {
         expireInTime = info.value(QLatin1String("expires_in")).toLongLong();
     }
-    //qDebug()<<" parseAccessToken";
+    //qCDebug(PIMCOMMON_LOG)<<" parseAccessToken";
     Q_EMIT authorizationDone(mRefreshToken, mToken, expireInTime);
     deleteLater();
 }

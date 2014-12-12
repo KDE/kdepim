@@ -20,7 +20,7 @@
 #include <KLocalizedString>
 
 #include <QNetworkAccessManager>
-#include <QDebug>
+#include "pimcommon_debug.h"
 #include <QFile>
 
 using namespace PimCommon;
@@ -32,24 +32,24 @@ StorageServiceAbstractJob::StorageServiceAbstractJob(QObject *parent)
       mError(false)
 {
     connect(mNetworkAccessManager, &QNetworkAccessManager::sslErrors, this, &StorageServiceAbstractJob::slotSslErrors);
-    qDebug() << "StorageServiceAbstractJob::StorageServiceAbstractJob() " << this;
+    qCDebug(PIMCOMMON_LOG) << "StorageServiceAbstractJob::StorageServiceAbstractJob() " << this;
 }
 
 StorageServiceAbstractJob::~StorageServiceAbstractJob()
 {
-    qDebug() << "StorageServiceAbstractJob::~StorageServiceAbstractJob() " << this;
+    qCDebug(PIMCOMMON_LOG) << "StorageServiceAbstractJob::~StorageServiceAbstractJob() " << this;
 }
 
 void StorageServiceAbstractJob::slotSslErrors(QNetworkReply *reply, const QList<QSslError> &error)
 {
-    qDebug() << " void StorageServiceAbstractJob::slotSslErrors(QNetworkReply *reply, const QList<QSslError> &error)" << error.count();
+    qCDebug(PIMCOMMON_LOG) << " void StorageServiceAbstractJob::slotSslErrors(QNetworkReply *reply, const QList<QSslError> &error)" << error.count();
     reply->ignoreSslErrors(error);
 }
 
 void StorageServiceAbstractJob::slotError(QNetworkReply::NetworkError error)
 {
     QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
-    qDebug() << " Error " << error << " reply" << reply->errorString();
+    qCDebug(PIMCOMMON_LOG) << " Error " << error << " reply" << reply->errorString();
     mError = true;
     mErrorMsg = reply->errorString();
 }

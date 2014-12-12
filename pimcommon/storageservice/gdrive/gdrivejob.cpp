@@ -34,11 +34,11 @@
 #include <kgapi/drive/filecopyjob.h>
 #include <KGAPI/Drive/ParentReference>
 
-#include <QDebug>
+#include "pimcommon_debug.h"
 #include <QNetworkReply>
 #include <QPointer>
 
-#include <QDebug>
+#include "pimcommon_debug.h"
 #include <QFile>
 #include <QPointer>
 
@@ -58,7 +58,7 @@ GDriveJob::~GDriveJob()
 
 bool GDriveJob::handleError(KGAPI2::Job *job)
 {
-    qDebug() << job->error() << job->errorString();
+    qCDebug(PIMCOMMON_LOG) << job->error() << job->errorString();
 
     switch (job->error()) {
     case KGAPI2::OK:
@@ -124,7 +124,7 @@ void GDriveJob::slotFileFetchFinished(KGAPI2::Job *job)
     KGAPI2::ObjectsList objects = fileFetchJob->items();
     Q_FOREACH (const KGAPI2::ObjectPtr &object, objects) {
         const KGAPI2::Drive::FilePtr file = object.dynamicCast<KGAPI2::Drive::File>();
-        qDebug() << " file " << file;
+        qCDebug(PIMCOMMON_LOG) << " file " << file;
 
         if (!file->labels() || file->labels()->trashed()) {
             continue;
@@ -161,7 +161,7 @@ void GDriveJob::slotAuthJobFinished(KGAPI2::Job *job)
         return;
     }
     KGAPI2::AccountPtr account = authJob->account();
-    //qDebug()<<" account->expireDateTime()"<<account->expireDateTime();
+    //qCDebug(PIMCOMMON_LOG)<<" account->expireDateTime()"<<account->expireDateTime();
     Q_EMIT authorizationDone(account->refreshToken(), account->accessToken(), account->expireDateTime(), account->accountName());
     /* Always remember to delete the jobs, otherwise your application will
      * leak memory. */
@@ -221,7 +221,7 @@ QNetworkReply *GDriveJob::uploadFile(const QString &filename, const QString &upl
 void GDriveJob::slotUploadDownLoadProgress(KGAPI2::Job *job, int progress, int total)
 {
     Q_UNUSED(job);
-    qDebug() << " progress " << progress << " total" << total;
+    qCDebug(PIMCOMMON_LOG) << " progress " << progress << " total" << total;
     Q_EMIT uploadDownloadFileProgress(progress, total);
 }
 
@@ -351,7 +351,7 @@ void GDriveJob::createServiceFolder()
 
 void GDriveJob::copyFile(const QString &source, const QString &destination)
 {
-    qDebug() << "source " << source << " destination" << destination;
+    qCDebug(PIMCOMMON_LOG) << "source " << source << " destination" << destination;
 
     mActionType = PimCommon::StorageServiceAbstract::CopyFileAction;
     mError = false;
@@ -406,9 +406,9 @@ void GDriveJob::slotCopyFolderJobFinished(KGAPI2::Job *job)
 void GDriveJob::renameFolder(const QString &source, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::RenameFolderAction;
-    qDebug() << " source " << source << " destination " << destination;
+    qCDebug(PIMCOMMON_LOG) << " source " << source << " destination " << destination;
     mError = false;
-    qDebug() << " not implemented";
+    qCDebug(PIMCOMMON_LOG) << " not implemented";
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     //TODO
     deleteLater();
@@ -417,9 +417,9 @@ void GDriveJob::renameFolder(const QString &source, const QString &destination)
 void GDriveJob::renameFile(const QString &oldName, const QString &newName)
 {
     mActionType = PimCommon::StorageServiceAbstract::RenameFileAction;
-    qDebug() << " oldName " << oldName << " newName " << newName;
+    qCDebug(PIMCOMMON_LOG) << " oldName " << oldName << " newName " << newName;
     mError = false;
-    qDebug() << " not implemented";
+    qCDebug(PIMCOMMON_LOG) << " not implemented";
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     //TODO
     deleteLater();
@@ -431,7 +431,7 @@ void GDriveJob::moveFolder(const QString &source, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::MoveFolderAction;
     mError = false;
-    qDebug() << " not implemented";
+    qCDebug(PIMCOMMON_LOG) << " not implemented";
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     //TODO
     deleteLater();
@@ -441,7 +441,7 @@ void GDriveJob::moveFile(const QString &source, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::MoveFileAction;
     mError = false;
-    qDebug() << " not implemented";
+    qCDebug(PIMCOMMON_LOG) << " not implemented";
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     //TODO
     deleteLater();

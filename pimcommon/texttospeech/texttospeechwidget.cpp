@@ -21,7 +21,7 @@
 #include <KLocalizedString>
 #include <QHBoxLayout>
 #include <QToolButton>
-#include <QDebug>
+#include "pimcommon_debug.h"
 #include <QLabel>
 #include <QSlider>
 #include <QPointer>

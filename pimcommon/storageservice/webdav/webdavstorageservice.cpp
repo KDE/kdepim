@@ -31,7 +31,7 @@
 #include <KLocalizedString>
 #include <QDateTime>
 
-#include <QDebug>
+#include "pimcommon_debug.h"
 #include <QFileInfo>
 #include <KFormat>
 #include <QLocale>
@@ -317,7 +317,7 @@ StorageServiceAbstract::Capabilities WebDavStorageService::capabilities() const
 
 QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QVariant &data, const QString &currentPath)
 {
-    //qDebug()<<" data"<<data;
+    //qCDebug(PIMCOMMON_LOG)<<" data"<<data;
     listWidget->clear();
     listWidget->createMoveUpItem();
     QString currentFolder = currentPath;
@@ -372,13 +372,13 @@ QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
             parentFolder.prepend(QLatin1String("/"));
         }
     }
-    //qDebug()<<" currentFolder "<<currentFolder<<" parentFolder" <<parentFolder;
+    //qCDebug(PIMCOMMON_LOG)<<" currentFolder "<<currentFolder<<" parentFolder" <<parentFolder;
     return parentFolder;
 }
 
 QMap<QString, QString> WebDavStorageService::itemInformation(const QVariantMap &variantMap)
 {
-    //qDebug()<<" variantMap"<<variantMap;
+    //qCDebug(PIMCOMMON_LOG)<<" variantMap"<<variantMap;
     QMap<QString, QString> information;
     if (variantMap.contains(QLatin1String("path"))) {
         information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Name), variantMap.value(QLatin1String("path")).toString());
@@ -395,7 +395,7 @@ QMap<QString, QString> WebDavStorageService::itemInformation(const QVariantMap &
     if (variantMap.contains(QLatin1String("creationdate"))) {
         information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Created), QLocale().toString((QDateTime::fromString(variantMap.value(QLatin1String("creationdate")).toString())), QLocale::ShortFormat));
     }
-    //qDebug()<<" information"<<information;
+    //qCDebug(PIMCOMMON_LOG)<<" information"<<information;
     return information;
 }
 

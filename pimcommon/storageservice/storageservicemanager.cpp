@@ -18,6 +18,7 @@
 #include "storageservicemanager.h"
 #include "storageserviceprogressmanager.h"
 #include "storagemanageradaptor.h"
+#include "pimcommon_debug.h"
 
 #include "settings/pimcommonsettings.h"
 #include "storageservice/utils/storageserviceutils.h"
@@ -91,7 +92,7 @@ QString StorageServiceManager::ourIdentifier() const
 
 void StorageServiceManager::slotConfigChanged(const QString &id)
 {
-    qDebug() << " void StorageServiceManager::slotConfigChanged(const QString &id)" << id;
+    qCDebug(PIMCOMMON_LOG) << " void StorageServiceManager::slotConfigChanged(const QString &id)" << id;
     if (id != ourIdentifier()) {
         readConfig();
         Q_EMIT servicesChanged();
@@ -173,7 +174,7 @@ KActionMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageService
                 case PimCommon::StorageServiceAbstract::MoveFileCapability:
                 case PimCommon::StorageServiceAbstract::CopyFileCapability:
                 case PimCommon::StorageServiceAbstract::CopyFolderCapability:
-                    qDebug() << " not implemented ";
+                    qCDebug(PIMCOMMON_LOG) << " not implemented ";
                     break;
                 case PimCommon::StorageServiceAbstract::DeleteFolderCapability:
                     menuService->setText(i18n("Delete Folder..."));

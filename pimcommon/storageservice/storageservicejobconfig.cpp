@@ -21,7 +21,7 @@
 #include "storageservicejobconfig.h"
 #include "interface/storageserviceinterface.h"
 
-#include <QDebug>
+#include "pimcommon_debug.h"
 
 namespace PimCommon
 {
@@ -36,7 +36,7 @@ public:
 
     ~StorageServiceJobConfigPrivate()
     {
-        qDebug() << " ~StorageServiceJobConfigPrivate ";
+        qCDebug(PIMCOMMON_LOG) << " ~StorageServiceJobConfigPrivate ";
         delete storageServiceJobConfig;
     }
     StorageServiceJobConfig *storageServiceJobConfig;
@@ -68,7 +68,7 @@ void StorageServiceJobConfig::registerConfigIf(ISettingsJob *settingsJob)
 QString StorageServiceJobConfig::youSendItApiKey() const
 {
     if (!mSettingsJob) {
-        qDebug() << " settings job not registered";
+        qCDebug(PIMCOMMON_LOG) << " settings job not registered";
         return QString();
     }
     return mSettingsJob->youSendItApiKey();
@@ -77,7 +77,7 @@ QString StorageServiceJobConfig::youSendItApiKey() const
 QString StorageServiceJobConfig::dropboxOauthConsumerKey() const
 {
     if (!mSettingsJob) {
-        qDebug() << " settings job not registered";
+        qCDebug(PIMCOMMON_LOG) << " settings job not registered";
         return QString();
     }
     return mSettingsJob->dropboxOauthConsumerKey();
@@ -86,7 +86,7 @@ QString StorageServiceJobConfig::dropboxOauthConsumerKey() const
 QString StorageServiceJobConfig::dropboxOauthSignature() const
 {
     if (!mSettingsJob) {
-        qDebug() << " settings job not registered";
+        qCDebug(PIMCOMMON_LOG) << " settings job not registered";
         return QString();
     }
     return mSettingsJob->dropboxOauthSignature();
@@ -95,7 +95,7 @@ QString StorageServiceJobConfig::dropboxOauthSignature() const
 QString StorageServiceJobConfig::boxClientId() const
 {
     if (!mSettingsJob) {
-        qDebug() << " settings job not registered";
+        qCDebug(PIMCOMMON_LOG) << " settings job not registered";
         return QString();
     }
     return mSettingsJob->boxClientId();
@@ -104,7 +104,7 @@ QString StorageServiceJobConfig::boxClientId() const
 QString StorageServiceJobConfig::boxClientSecret() const
 {
     if (!mSettingsJob) {
-        qDebug() << " settings job not registered";
+        qCDebug(PIMCOMMON_LOG) << " settings job not registered";
         return QString();
     }
     return mSettingsJob->boxClientSecret();
@@ -113,7 +113,7 @@ QString StorageServiceJobConfig::boxClientSecret() const
 QString StorageServiceJobConfig::hubicClientId() const
 {
     if (!mSettingsJob) {
-        qDebug() << " settings job not registered";
+        qCDebug(PIMCOMMON_LOG) << " settings job not registered";
         return QString();
     }
     return mSettingsJob->hubicClientId();
@@ -122,7 +122,7 @@ QString StorageServiceJobConfig::hubicClientId() const
 QString StorageServiceJobConfig::hubicClientSecret() const
 {
     if (!mSettingsJob) {
-        qDebug() << " settings job not registered";
+        qCDebug(PIMCOMMON_LOG) << " settings job not registered";
         return QString();
     }
     return mSettingsJob->hubicClientSecret();
@@ -131,7 +131,7 @@ QString StorageServiceJobConfig::hubicClientSecret() const
 QString StorageServiceJobConfig::dropboxRootPath() const
 {
     if (!mSettingsJob) {
-        qDebug() << " settings job not registered";
+        qCDebug(PIMCOMMON_LOG) << " settings job not registered";
         return QString();
     }
     return mSettingsJob->dropboxRootPath();
@@ -140,7 +140,7 @@ QString StorageServiceJobConfig::dropboxRootPath() const
 QString StorageServiceJobConfig::defaultUploadFolder() const
 {
     if (!mSettingsJob) {
-        qDebug() << " settings job not registered";
+        qCDebug(PIMCOMMON_LOG) << " settings job not registered";
         return QString();
     }
     return mSettingsJob->defaultUploadFolder();
@@ -149,7 +149,7 @@ QString StorageServiceJobConfig::defaultUploadFolder() const
 QString StorageServiceJobConfig::oauth2RedirectUrl() const
 {
     if (!mSettingsJob) {
-        qDebug() << " settings job not registered";
+        qCDebug(PIMCOMMON_LOG) << " settings job not registered";
         return QString();
     }
     return mSettingsJob->oauth2RedirectUrl();
@@ -158,7 +158,7 @@ QString StorageServiceJobConfig::oauth2RedirectUrl() const
 QString StorageServiceJobConfig::hubicScope() const
 {
     if (!mSettingsJob) {
-        qDebug() << " settings job not registered";
+        qCDebug(PIMCOMMON_LOG) << " settings job not registered";
         return QString();
     }
     return mSettingsJob->hubicScope();
@@ -167,7 +167,7 @@ QString StorageServiceJobConfig::hubicScope() const
 QString StorageServiceJobConfig::gdriveClientId() const
 {
     if (!mSettingsJob) {
-        qDebug() << " settings job not registered";
+        qCDebug(PIMCOMMON_LOG) << " settings job not registered";
         return QString();
     }
     return mSettingsJob->gdriveClientId();
@@ -176,7 +176,7 @@ QString StorageServiceJobConfig::gdriveClientId() const
 QString StorageServiceJobConfig::gdriveClientSecret() const
 {
     if (!mSettingsJob) {
-        qDebug() << " settings job not registered";
+        qCDebug(PIMCOMMON_LOG) << " settings job not registered";
         return QString();
     }
     return mSettingsJob->gdriveClientSecret();

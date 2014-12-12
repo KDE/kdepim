@@ -39,7 +39,7 @@
 #include <QScrollBar>
 #include <QApplication>
 #include <QClipboard>
-#include <QDebug>
+#include "pimcommon_debug.h"
 
 using namespace PimCommon;
 
@@ -162,7 +162,7 @@ void PlainTextEditor::slotSpeakText()
     } else {
         text = toPlainText();
     }
-    qDebug() << " PimCommon::TextToSpeech::self()->isReady() :" << PimCommon::TextToSpeech::self()->isReady();
+    qCDebug(PIMCOMMON_LOG) << " PimCommon::TextToSpeech::self()->isReady() :" << PimCommon::TextToSpeech::self()->isReady();
     Q_EMIT say(text);
 }
 

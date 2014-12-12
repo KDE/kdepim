@@ -20,7 +20,7 @@
 
 #include <QWidget>
 
-#include <qdebug.h>
+#include "pimcommon_debug.h"
 
 #include <KLocalizedString>
 #include <QApplication>

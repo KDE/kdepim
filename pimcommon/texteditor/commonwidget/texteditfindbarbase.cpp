@@ -30,7 +30,7 @@
 #include <QKeyEvent>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
-#include <QDebug>
+#include "pimcommon_debug.h"
 
 using namespace PimCommon;
 

@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <QEvent>
 #include <QPropertyAnimation>
 #include <QResizeEvent>
-#include <QDebug>
+#include "pimcommon_debug.h"
 
 namespace PimCommon
 {

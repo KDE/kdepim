@@ -25,7 +25,7 @@
 #include <QTimer>
 #include <QResizeEvent>
 #include <QApplication>
-#include <QDebug>
+#include "pimcommon_debug.h"
 
 using namespace PimCommon;
 TextMessageIndicator::TextMessageIndicator(QWidget *parent)

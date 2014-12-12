@@ -37,7 +37,7 @@
 #include <kiconloader.h>
 #include <QIcon>
 #include <KLocalizedString>
-#include <qdebug.h>
+#include "pimcommon_debug.h"
 #include <QPushButton>
 #include <QDialog>
 #include <QMenu>
@@ -75,7 +75,7 @@ SimpleStringListEditor::SimpleStringListEditor(QWidget *parent,
     hlay->addWidget(mListBox, 1);
 
     if (buttons == None) {
-        qDebug() << "SimpleStringListBox called with no buttons."
+        qCDebug(PIMCOMMON_LOG) << "SimpleStringListBox called with no buttons."
                  "Consider using a plain QListBox instead!";
     }
 
@@ -120,7 +120,7 @@ SimpleStringListEditor::SimpleStringListEditor(QWidget *parent,
 
     if (buttons & Up) {
         if (!(buttons & Down)) {
-            qDebug() << "Are you sure you want to use an Up button"
+            qCDebug(PIMCOMMON_LOG) << "Are you sure you want to use an Up button"
                      "without a Down button??";
         }
         mUpButton = new QPushButton(QString(), this);
@@ -134,7 +134,7 @@ SimpleStringListEditor::SimpleStringListEditor(QWidget *parent,
 
     if (buttons & Down) {
         if (!(buttons & Up)) {
-            qDebug() << "Are you sure you want to use a Down button"
+            qCDebug(PIMCOMMON_LOG) << "Are you sure you want to use a Down button"
                      "without an Up button??";
         }
         mDownButton = new QPushButton(QString(), this);
@@ -217,19 +217,19 @@ void SimpleStringListEditor::setButtonText(ButtonCode button, const QString &tex
         return;
     case Up:
     case Down:
-        qDebug() << "SimpleStringListEditor: Cannot change text of"
+        qCDebug(PIMCOMMON_LOG) << "SimpleStringListEditor: Cannot change text of"
                  "Up and Down buttons: they don't contains text!";
         return;
     default:
         if (button & All) {
-            qDebug() << "No such button!";
+            qCDebug(PIMCOMMON_LOG) << "No such button!";
         } else {
-            qDebug() << "Can only set text for one button at a time!";
+            qCDebug(PIMCOMMON_LOG) << "Can only set text for one button at a time!";
         }
         return;
     }
 
-    qDebug() << "The requested button has not been created!";
+    qCDebug(PIMCOMMON_LOG) << "The requested button has not been created!";
 }
 
 void SimpleStringListEditor::addNewEntry()
@@ -323,7 +323,7 @@ void SimpleStringListEditor::slotUp()
     const int numberOfItem(listWidgetItem.count());
     const int currentRow = mListBox->currentRow();
     if ((numberOfItem == 1) && (currentRow == 0)) {
-        qDebug() << "Called while the _topmost_ filter is selected, ignoring.";
+        qCDebug(PIMCOMMON_LOG) << "Called while the _topmost_ filter is selected, ignoring.";
         return;
     }
     bool wasMoved = false;
@@ -355,7 +355,7 @@ void SimpleStringListEditor::slotDown()
     const int numberOfItem(listWidgetItem.count());
     const int currentRow = mListBox->currentRow();
     if ((numberOfItem == 1) && (currentRow == numberOfElement - 1)) {
-        qDebug() << "Called while the _last_ filter is selected, ignoring.";
+        qCDebug(PIMCOMMON_LOG) << "Called while the _last_ filter is selected, ignoring.";
         return;
     }
 

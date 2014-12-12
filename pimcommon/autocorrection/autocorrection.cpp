@@ -22,7 +22,7 @@
 #include <KGlobal>
 #include <KColorScheme>
 
-#include <QDebug>
+#include "pimcommon_debug.h"
 #include <QTextBlock>
 #include <QTextDocument>
 #include <QDomDocument>
@@ -489,7 +489,7 @@ QString AutoCorrection::autoDetectURL(const QString &_word) const
 
     /* this method is ported from lib/kotext/KoAutoFormat.cpp KoAutoFormat::doAutoDetectUrl
      * from Calligra 1.x branch */
-    // qDebug() <<"link:" << word;
+    // qCDebug(PIMCOMMON_LOG) <<"link:" << word;
 
     bool secure = false;
     int link_type = 0;
@@ -577,7 +577,7 @@ QString AutoCorrection::autoDetectURL(const QString &_word) const
             newWord = (secure ? QLatin1String("ftps://") : QLatin1String("ftp://")) + word;
             break;
         }
-        //qDebug() <<"newWord:" << newWord;
+        //qCDebug(PIMCOMMON_LOG) <<"newWord:" << newWord;
         return newWord;
     }
 
@@ -974,8 +974,8 @@ void AutoCorrection::readAutoCorrectionXmlFile(bool forceGlobal)
     if (mAutoCorrectLang.isEmpty()) {
         mAutoCorrectLang = kdelang;
     }
-    //qDebug()<<" fname :"<<fname;
-    //qDebug()<<" LocalFile:"<<LocalFile;
+    //qCDebug(PIMCOMMON_LOG)<<" fname :"<<fname;
+    //qCDebug(PIMCOMMON_LOG)<<" LocalFile:"<<LocalFile;
 
     if (LocalFile.isEmpty()) {
         if (fname.isEmpty()) {
@@ -1020,7 +1020,7 @@ void AutoCorrection::writeAutoCorrectionXmlFile(const QString &filename)
     QDir().mkpath(fileInfo.absolutePath());
     QFile file(fname);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        qDebug() << "We can't save in file :" << fname;
+        qCDebug(PIMCOMMON_LOG) << "We can't save in file :" << fname;
         return;
     }
     QDomDocument root(QLatin1String("autocorrection"));

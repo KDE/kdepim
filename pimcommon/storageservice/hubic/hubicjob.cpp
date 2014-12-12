@@ -22,7 +22,7 @@
 
 #include <KLocalizedString>
 
-#include <QDebug>
+#include "pimcommon_debug.h"
 #include <QFile>
 #include <QJsonParseError>
 
@@ -62,7 +62,7 @@ void HubicJob::createServiceFolder()
     mError = false;
     //TODO
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    qDebug() << " not implemented";
+    qCDebug(PIMCOMMON_LOG) << " not implemented";
     deleteLater();
 }
 
@@ -78,7 +78,7 @@ void HubicJob::requestTokenAccess()
         url.addQueryItem(QLatin1String("scope"), mScope);
     }
     mAuthUrl = url;
-    //qDebug()<<" url"<<url;
+    //qCDebug(PIMCOMMON_LOG)<<" url"<<url;
     delete mAuthDialog;
     mAuthDialog = new PimCommon::StorageAuthViewDialog;
     connect(mAuthDialog.data(), &PimCommon::StorageAuthViewDialog::urlChanged, this, &HubicJob::slotRedirect);
@@ -95,7 +95,7 @@ void HubicJob::requestTokenAccess()
 void HubicJob::slotRedirect(const QUrl &url)
 {
     if (url != mAuthUrl) {
-        //qDebug()<<" Redirect !"<<url;
+        //qCDebug(PIMCOMMON_LOG)<<" Redirect !"<<url;
         mAuthDialog->accept();
         parseRedirectUrl(url);
     }
@@ -104,7 +104,7 @@ void HubicJob::slotRedirect(const QUrl &url)
 void HubicJob::parseRedirectUrl(const QUrl &url)
 {
     const QList<QPair<QString, QString> > listQuery = url.queryItems();
-    //qDebug()<< "listQuery "<<listQuery;
+    //qCDebug(PIMCOMMON_LOG)<< "listQuery "<<listQuery;
 
     QString authorizeCode;
     QString errorStr;
@@ -157,7 +157,7 @@ void HubicJob::slotSendDataFinished(QNetworkReply *reply)
             return;
         }
         const QMap<QString, QVariant> error = jsonDoc.toVariant().toMap();
-        qDebug() << " error " << error;
+        qCDebug(PIMCOMMON_LOG) << " error " << error;
         if (error.contains(QLatin1String("message"))) {
             const QString errorStr = error.value(QLatin1String("message")).toString();
             switch (mActionType) {
@@ -209,7 +209,7 @@ void HubicJob::slotSendDataFinished(QNetworkReply *reply)
         }
         return;
     }
-    qDebug() << " data: " << data;
+    qCDebug(PIMCOMMON_LOG) << " data: " << data;
     switch (mActionType) {
     case PimCommon::StorageServiceAbstract::NoneAction:
         deleteLater();
@@ -276,7 +276,7 @@ void HubicJob::parseAccountInfo(const QString &data)
         return;
     }
     const QMap<QString, QVariant> info = jsonDoc.toVariant().toMap();
-    //qDebug()<<" info"<<info;
+    //qCDebug(PIMCOMMON_LOG)<<" info"<<info;
     PimCommon::AccountInfo accountInfo;
     if (info.contains(QLatin1String("used"))) {
         accountInfo.shared = info.value(QLatin1String("used")).toLongLong();
@@ -298,7 +298,7 @@ void HubicJob::refreshToken()
     postData.addQueryItem(QLatin1String("grant_type"), QLatin1String("refresh_token"));
     postData.addQueryItem(QLatin1String("client_id"), mClientId);
     postData.addQueryItem(QLatin1String("client_secret"), mClientSecret);
-    qDebug() << "refreshToken postData: " << postData;
+    qCDebug(PIMCOMMON_LOG) << "refreshToken postData: " << postData;
 
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &HubicJob::slotError);
@@ -387,9 +387,9 @@ void HubicJob::listFolder(const QString &folder)
     mError = false;
     QUrl url;
     url.setUrl(mApiUrl + mSwiftTokenPath);
-    qDebug() << "url" << url;
+    qCDebug(PIMCOMMON_LOG) << "url" << url;
     QNetworkRequest request(url);
-    qDebug() << " mToken" << mToken;
+    qCDebug(PIMCOMMON_LOG) << " mToken" << mToken;
     request.setRawHeader("X-Auth-Token", mToken.toLatin1());
     QNetworkReply *reply = mNetworkAccessManager->get(request);
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &HubicJob::slotError);
@@ -438,7 +438,7 @@ void HubicJob::parseDeleteFolder(const QString &data)
     bool ok;
 
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    qDebug()<<" info"<<info;
+    qCDebug(PIMCOMMON_LOG)<<" info"<<info;
     */
     Q_EMIT deleteFolderDone(QString());
 }
@@ -450,7 +450,7 @@ void HubicJob::parseDeleteFile(const QString &data)
     bool ok;
 
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    qDebug()<<" info"<<info;
+    qCDebug(PIMCOMMON_LOG)<<" info"<<info;
     */
     Q_EMIT deleteFileDone(QString());
 }
@@ -462,7 +462,7 @@ void HubicJob::parseCreateServiceFolder(const QString &data)
     bool ok;
 
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    qDebug() << " info" << info;
+    qCDebug(PIMCOMMON_LOG) << " info" << info;
 #endif
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
@@ -484,7 +484,7 @@ void HubicJob::parseCreateFolder(const QString &data)
 void HubicJob::parseUploadFile(const QString &data)
 {
     const QString folderName = parseNameInfo(data);
-    qDebug() << " data" << data;
+    qCDebug(PIMCOMMON_LOG) << " data" << data;
     Q_EMIT uploadFileDone(folderName);
     //shareLink(QString());
     deleteLater();
@@ -570,7 +570,7 @@ void HubicJob::parseShareLink(const QString &data)
 
 void HubicJob::parseDownloadFile(const QString &data)
 {
-    qDebug() << " Data " << data;
+    qCDebug(PIMCOMMON_LOG) << " Data " << data;
     Q_EMIT downLoadFileDone(QString());
 }
 
@@ -586,9 +586,9 @@ QNetworkReply *HubicJob::downloadFile(const QString &name, const QString &fileId
     mDownloadFile = new QFile(defaultDestination + QLatin1Char('/') + name);
     if (mDownloadFile->open(QIODevice::WriteOnly)) {
         QUrl url;
-        qDebug() << " fileId " << fileId << " name " << name;
+        qCDebug(PIMCOMMON_LOG) << " fileId " << fileId << " name " << name;
         url.setUrl(mApiUrl + mFileInfoPath + fileId + QLatin1String("/content"));
-        qDebug() << "url!" << url;
+        qCDebug(PIMCOMMON_LOG) << "url!" << url;
         QNetworkRequest request(url);
         request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
         request.setRawHeader("Authorization", "Bearer " + mToken.toLatin1());
@@ -610,11 +610,11 @@ void HubicJob::parseAccessToken(const QString &data)
     QJsonParseError parsingError;
     const QJsonDocument jsonDoc = QJsonDocument::fromJson(data.toUtf8(), &parsingError);
     if (parsingError.error != QJsonParseError::NoError || jsonDoc.isNull()) {
-        qDebug() << " parseAccessToken error" << data;
+        qCDebug(PIMCOMMON_LOG) << " parseAccessToken error" << data;
         return;
     }
     const QMap<QString, QVariant> info = jsonDoc.toVariant().toMap();
-    qDebug() << " info" << info;
+    qCDebug(PIMCOMMON_LOG) << " info" << info;
     if (info.contains(QLatin1String("refresh_token"))) {
         mRefreshToken = info.value(QLatin1String("refresh_token")).toString();
     }
@@ -625,7 +625,7 @@ void HubicJob::parseAccessToken(const QString &data)
     if (info.contains(QLatin1String("expires_in"))) {
         expireInTime = info.value(QLatin1String("expires_in")).toLongLong();
     }
-    qDebug() << " parseAccessToken";
+    qCDebug(PIMCOMMON_LOG) << " parseAccessToken";
     Q_EMIT authorizationDone(mRefreshToken, mToken, expireInTime);
     deleteLater();
 }

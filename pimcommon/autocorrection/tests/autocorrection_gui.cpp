@@ -21,7 +21,7 @@
 #include "pimcommon/autocorrection/widgets/lineeditwithautocorrection.h"
 #include "pimcommon/settings/pimcommonsettings.h"
 
-#include <qdebug.h>
+#include "pimcommon_debug.h"
 
 #include <KLocalizedString>
 #include <KSharedConfig>

@@ -29,7 +29,7 @@
 
 #include <KLocalizedString>
 
-#include <QDebug>
+#include "pimcommon_debug.h"
 #include <KFormat>
 #include <QLocale>
 #include <QJsonParseError>
@@ -480,7 +480,7 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
         const QVariantList lst = info.value(QLatin1String("contents")).toList();
         Q_FOREACH (const QVariant &variant, lst) {
             const QVariantMap qwer = variant.toMap();
-            //qDebug()<<" qwer "<<qwer;
+            //qCDebug(PIMCOMMON_LOG)<<" qwer "<<qwer;
             if (qwer.contains(QLatin1String("is_dir"))) {
                 const bool isDir = qwer.value(QLatin1String("is_dir")).toBool();
                 const QString name = qwer.value(QLatin1String("path")).toString();

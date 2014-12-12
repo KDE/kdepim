@@ -385,7 +385,7 @@ void AutoCorrectionWidget::removeAutocorrectEntry()
 
         QString findStr;
         if (below) {
-            //qDebug() << "below";
+            //qCDebug(PIMCOMMON_LOG) << "below";
             findStr = item->text(0);
             delete item;
             item = 0;

@@ -18,7 +18,7 @@
 #include "baloodebugsearchjob.h"
 
 #include <QProcess>
-#include <QDebug>
+#include "pimcommon_debug.h"
 #include <QStandardPaths>
 
 using namespace PimCommon;

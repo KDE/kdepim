@@ -18,7 +18,7 @@
 #include "storageserviceabstract.h"
 #include "storageservice/settings/storageservicesettings.h"
 
-#include <QDebug>
+#include "pimcommon_debug.h"
 #include <QTimer>
 
 using namespace PimCommon;
@@ -85,7 +85,7 @@ void StorageServiceAbstract::changeProgressState(bool state)
 void StorageServiceAbstract::downloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
     if (mInProgress) {
-        qDebug() << "downloadFile: still in progress";
+        qCDebug(PIMCOMMON_LOG) << "downloadFile: still in progress";
         return;
     }
     changeProgressState(true);
@@ -95,7 +95,7 @@ void StorageServiceAbstract::downloadFile(const QString &name, const QString &fi
 void StorageServiceAbstract::uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
 {
     if (mInProgress) {
-        qDebug() << "uploadFile: still in progress";
+        qCDebug(PIMCOMMON_LOG) << "uploadFile: still in progress";
         return;
     }
 
@@ -106,7 +106,7 @@ void StorageServiceAbstract::uploadFile(const QString &filename, const QString &
 void StorageServiceAbstract::accountInfo()
 {
     if (mInProgress) {
-        qDebug() << "accountInfo: still in progress";
+        qCDebug(PIMCOMMON_LOG) << "accountInfo: still in progress";
         return;
     }
     changeProgressState(true);
@@ -116,7 +116,7 @@ void StorageServiceAbstract::accountInfo()
 void StorageServiceAbstract::createFolder(const QString &foldername, const QString &destination)
 {
     if (mInProgress) {
-        qDebug() << "createFolder: still in progress";
+        qCDebug(PIMCOMMON_LOG) << "createFolder: still in progress";
         return;
     }
     changeProgressState(true);
@@ -126,7 +126,7 @@ void StorageServiceAbstract::createFolder(const QString &foldername, const QStri
 void StorageServiceAbstract::listFolder(const QString &folder)
 {
     if (mInProgress) {
-        qDebug() << "listFolder; still in progress";
+        qCDebug(PIMCOMMON_LOG) << "listFolder; still in progress";
         return;
     }
     changeProgressState(true);
@@ -136,7 +136,7 @@ void StorageServiceAbstract::listFolder(const QString &folder)
 void StorageServiceAbstract::authentication()
 {
     if (mInProgress) {
-        qDebug() << "authentication: still in progress";
+        qCDebug(PIMCOMMON_LOG) << "authentication: still in progress";
         return;
     }
     changeProgressState(true);
@@ -146,7 +146,7 @@ void StorageServiceAbstract::authentication()
 void StorageServiceAbstract::shareLink(const QString &root, const QString &path)
 {
     if (mInProgress) {
-        qDebug() << "shareLink: still in progress";
+        qCDebug(PIMCOMMON_LOG) << "shareLink: still in progress";
         return;
     }
     changeProgressState(true);
@@ -156,7 +156,7 @@ void StorageServiceAbstract::shareLink(const QString &root, const QString &path)
 void StorageServiceAbstract::createServiceFolder()
 {
     if (mInProgress) {
-        qDebug() << "createServiceFolder: still in progress";
+        qCDebug(PIMCOMMON_LOG) << "createServiceFolder: still in progress";
         return;
     }
     changeProgressState(true);
@@ -166,7 +166,7 @@ void StorageServiceAbstract::createServiceFolder()
 void StorageServiceAbstract::deleteFile(const QString &filename)
 {
     if (mInProgress) {
-        qDebug() << "deleteFile: still in progress";
+        qCDebug(PIMCOMMON_LOG) << "deleteFile: still in progress";
         return;
     }
     changeProgressState(true);
@@ -176,7 +176,7 @@ void StorageServiceAbstract::deleteFile(const QString &filename)
 void StorageServiceAbstract::deleteFolder(const QString &foldername)
 {
     if (mInProgress) {
-        qDebug() << "deleteFolder: still in progress";
+        qCDebug(PIMCOMMON_LOG) << "deleteFolder: still in progress";
         return;
     }
     changeProgressState(true);
@@ -186,7 +186,7 @@ void StorageServiceAbstract::deleteFolder(const QString &foldername)
 void StorageServiceAbstract::renameFolder(const QString &source, const QString &destination)
 {
     if (mInProgress) {
-        qDebug() << "renameFolder: still in progress";
+        qCDebug(PIMCOMMON_LOG) << "renameFolder: still in progress";
         return;
     }
     changeProgressState(true);
@@ -196,7 +196,7 @@ void StorageServiceAbstract::renameFolder(const QString &source, const QString &
 void StorageServiceAbstract::renameFile(const QString &source, const QString &destination)
 {
     if (mInProgress) {
-        qDebug() << "renameFile: still in progress";
+        qCDebug(PIMCOMMON_LOG) << "renameFile: still in progress";
         return;
     }
     changeProgressState(true);
@@ -206,7 +206,7 @@ void StorageServiceAbstract::renameFile(const QString &source, const QString &de
 void StorageServiceAbstract::moveFile(const QString &source, const QString &destination)
 {
     if (mInProgress) {
-        qDebug() << "moveFile: still in progress";
+        qCDebug(PIMCOMMON_LOG) << "moveFile: still in progress";
         return;
     }
     changeProgressState(true);
@@ -216,7 +216,7 @@ void StorageServiceAbstract::moveFile(const QString &source, const QString &dest
 void StorageServiceAbstract::moveFolder(const QString &source, const QString &destination)
 {
     if (mInProgress) {
-        qDebug() << "moveFolder: still in progress";
+        qCDebug(PIMCOMMON_LOG) << "moveFolder: still in progress";
         return;
     }
     changeProgressState(true);
@@ -226,7 +226,7 @@ void StorageServiceAbstract::moveFolder(const QString &source, const QString &de
 void StorageServiceAbstract::copyFile(const QString &source, const QString &destination)
 {
     if (mInProgress) {
-        qDebug() << "copyFile: still in progress";
+        qCDebug(PIMCOMMON_LOG) << "copyFile: still in progress";
         return;
     }
     changeProgressState(true);
@@ -236,7 +236,7 @@ void StorageServiceAbstract::copyFile(const QString &source, const QString &dest
 void StorageServiceAbstract::copyFolder(const QString &source, const QString &destination)
 {
     if (mInProgress) {
-        qDebug() << "copyFolder: still in progress";
+        qCDebug(PIMCOMMON_LOG) << "copyFolder: still in progress";
         return;
     }
     changeProgressState(true);
@@ -344,7 +344,7 @@ void StorageServiceAbstract::slotAccountInfoDone(const PimCommon::AccountInfo &i
 
 void StorageServiceAbstract::slotActionFailed(const QString &error)
 {
-    //qDebug()<<" error found "<<error;
+    //qCDebug(PIMCOMMON_LOG)<<" error found "<<error;
     Q_EMIT actionFailed(storageServiceName(), error);
     changeProgressState(false);
 }

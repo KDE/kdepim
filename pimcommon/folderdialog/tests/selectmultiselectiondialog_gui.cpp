@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include <qdebug.h>
+#include "pimcommon_debug.h"
 
 #include "pimcommon/folderdialog/selectmulticollectiondialog.h"
 #include <KMime/Message>

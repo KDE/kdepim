@@ -29,7 +29,7 @@
 #include <QNetworkRequest>
 #include <QDateTime>
 #include <QStringList>
-#include <QDebug>
+#include "pimcommon_debug.h"
 #include <QPointer>
 #include <QFile>
 #include <QJsonDocument>
@@ -236,7 +236,7 @@ QString DropBoxJob::extractPathFromData(const QString &data)
 
 void DropBoxJob::parseCopyFile(const QString &data)
 {
-    //qDebug()<<" data :"<<data;
+    //qCDebug(PIMCOMMON_LOG)<<" data :"<<data;
     const QString name = extractPathFromData(data);
     Q_EMIT copyFileDone(name);
     deleteLater();
@@ -244,7 +244,7 @@ void DropBoxJob::parseCopyFile(const QString &data)
 
 void DropBoxJob::parseCopyFolder(const QString &data)
 {
-    //qDebug()<<" data :"<<data;
+    //qCDebug(PIMCOMMON_LOG)<<" data :"<<data;
     const QString name = extractPathFromData(data);
     Q_EMIT copyFolderDone(name);
     deleteLater();
@@ -252,7 +252,7 @@ void DropBoxJob::parseCopyFolder(const QString &data)
 
 void DropBoxJob::parseMoveFolder(const QString &data)
 {
-    //qDebug()<<" data :"<<data;
+    //qCDebug(PIMCOMMON_LOG)<<" data :"<<data;
     const QString name = extractPathFromData(data);
     Q_EMIT moveFolderDone(name);
     deleteLater();
@@ -260,7 +260,7 @@ void DropBoxJob::parseMoveFolder(const QString &data)
 
 void DropBoxJob::parseMoveFile(const QString &data)
 {
-    //qDebug()<<" data :"<<data;
+    //qCDebug(PIMCOMMON_LOG)<<" data :"<<data;
     const QString name = extractPathFromData(data);
     Q_EMIT moveFileDone(name);
     deleteLater();
@@ -268,7 +268,7 @@ void DropBoxJob::parseMoveFile(const QString &data)
 
 void DropBoxJob::parseRenameFile(const QString &data)
 {
-    //qDebug()<<" data :"<<data;
+    //qCDebug(PIMCOMMON_LOG)<<" data :"<<data;
     const QString name = extractPathFromData(data);
     Q_EMIT renameFileDone(name);
     deleteLater();
@@ -276,7 +276,7 @@ void DropBoxJob::parseRenameFile(const QString &data)
 
 void DropBoxJob::parseRenameFolder(const QString &data)
 {
-    //qDebug()<<" data :"<<data;
+    //qCDebug(PIMCOMMON_LOG)<<" data :"<<data;
     const QString name = extractPathFromData(data);
     Q_EMIT renameFolderDone(name);
     deleteLater();
@@ -355,10 +355,10 @@ void DropBoxJob::parseRequestToken(const QString &result)
         mOauthToken = tokenList.at(1);
         mAccessOauthSignature = mOauthSignature + mOauthTokenSecret;
 
-        //qDebug()<<" mOauthToken" <<mOauthToken<<"mAccessOauthSignature "<<mAccessOauthSignature<<" mOauthSignature"<<mOauthSignature;
+        //qCDebug(PIMCOMMON_LOG)<<" mOauthToken" <<mOauthToken<<"mAccessOauthSignature "<<mAccessOauthSignature<<" mOauthSignature"<<mOauthSignature;
 
     } else {
-        qDebug() << " data is not good: " << result;
+        qCDebug(PIMCOMMON_LOG) << " data is not good: " << result;
     }
     doAuthentication();
 }
@@ -382,7 +382,7 @@ void DropBoxJob::doAuthentication()
 void DropBoxJob::createFolderJob(const QString &foldername, const QString &destination)
 {
     if (foldername.isEmpty()) {
-        qDebug() << " folder empty!";
+        qCDebug(PIMCOMMON_LOG) << " folder empty!";
     }
     QUrl url(mApiPath + QLatin1String("fileops/create_folder"));
     url.addQueryItem(QLatin1String("root"), mRootPath);
@@ -716,7 +716,7 @@ void DropBoxJob::parseListFolder(const QString &data)
 
 void DropBoxJob::parseDownLoadFile(const QString &data)
 {
-    //qDebug()<<" data "<<data;
+    //qCDebug(PIMCOMMON_LOG)<<" data "<<data;
     Q_EMIT downLoadFileDone(QString());
     deleteLater();
 }

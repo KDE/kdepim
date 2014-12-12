@@ -36,7 +36,7 @@
  */
 
 #include <QUrl>
-#include <QDebug>
+#include "pimcommon_debug.h"
 
 #include "webdav_url_info.h"
 
@@ -128,7 +128,7 @@ void QWebdavUrlInfo::davParsePropstats(const QString &path, const QDomNodeList &
         QDomElement status = propstat.namedItem(QLatin1String("status")).toElement();
 
         if (status.isNull()) {
-            qDebug() << "Error, no status code in this propstat";
+            qCDebug(PIMCOMMON_LOG) << "Error, no status code in this propstat";
             return;
         }
 
@@ -141,7 +141,7 @@ void QWebdavUrlInfo::davParsePropstats(const QString &path, const QDomNodeList &
         const QDomElement prop = propstat.namedItem(QLatin1String("prop")).toElement();
 
         if (prop.isNull()) {
-            qDebug() << "Error: no prop segment in this propstat.";
+            qCDebug(PIMCOMMON_LOG) << "Error: no prop segment in this propstat.";
             return;
         }
 
@@ -196,7 +196,7 @@ void QWebdavUrlInfo::davParsePropstats(const QString &path, const QDomNodeList &
                     isDirectory = true;
                 }
             } else {
-                qDebug() << "Found unknown webdav property: " << property.tagName() << property.text();
+                qCDebug(PIMCOMMON_LOG) << "Found unknown webdav property: " << property.tagName() << property.text();
             }
         }
     }

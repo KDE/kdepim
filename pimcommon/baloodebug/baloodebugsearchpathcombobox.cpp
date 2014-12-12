@@ -18,7 +18,7 @@
 #include "baloodebugsearchpathcombobox.h"
 #include <QStandardPaths>
 
-#include <QDebug>
+#include "pimcommon_debug.h"
 
 using namespace PimCommon;
 BalooDebugSearchPathComboBox::BalooDebugSearchPathComboBox(QWidget *parent)

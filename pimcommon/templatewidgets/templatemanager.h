@@ -21,7 +21,7 @@
 #include "pimcommon_export.h"
 #include <QObject>
 #include <QStringList>
-#include <QDebug>
+#include "pimcommon_debug.h"
 
 class KDirWatch;
 namespace PimCommon
@@ -36,7 +36,7 @@ struct TemplateInfo {
     }
     void debug() const
     {
-        qDebug() << " name :" << name << " script :" << script;
+        qCDebug(PIMCOMMON_LOG) << " name :" << name << " script :" << script;
     }
 };
 

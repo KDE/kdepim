@@ -31,7 +31,7 @@
 
 #include <KLocalizedString>
 
-#include <QDebug>
+#include "pimcommon_debug.h"
 #include <KFormat>
 #include <QLocale>
 
@@ -567,13 +567,13 @@ QString BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, 
             }
         }
     }
-    //qDebug()<<" parentId"<<parentId;
+    //qCDebug(PIMCOMMON_LOG)<<" parentId"<<parentId;
     return parentId;
 }
 
 QMap<QString, QString> BoxStorageService::itemInformation(const QVariantMap &variantMap)
 {
-    qDebug() << " variantMap" << variantMap;
+    qCDebug(PIMCOMMON_LOG) << " variantMap" << variantMap;
     QMap<QString, QString> information;
     if (variantMap.contains(QLatin1String("type"))) {
         const QString type = variantMap.value(QLatin1String("type")).toString();

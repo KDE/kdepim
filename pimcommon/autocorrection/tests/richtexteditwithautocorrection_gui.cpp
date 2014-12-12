@@ -17,7 +17,7 @@
 
 #include "pimcommon/autocorrection/widgets/richtexteditwithautocorrection.h"
 
-#include <qdebug.h>
+#include "pimcommon_debug.h"
 
 #include <KLocalizedString>
 #include <QApplication>
