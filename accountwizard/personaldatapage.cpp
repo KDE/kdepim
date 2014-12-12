@@ -33,7 +33,7 @@
 
 #include <mailtransport/transport.h>
 
-#include <QDebug>
+#include "accountwizard_debug.h"
 
 QString accountName(Ispdb *ispdb, QString username)
 {
@@ -124,7 +124,7 @@ void PersonalDataPage::leavePageNext()
         emit manualWanted(false);
         setCursor(Qt::BusyCursor);
         ui.mProgress->start();
-        qDebug() << "Searching on internet";
+        qCDebug(ACCOUNTWIZARD_LOG) << "Searching on internet";
         delete mIspdb;
         mIspdb = new Ispdb(this);
         connect(mIspdb, &Ispdb::searchType, this, &PersonalDataPage::slotSearchType);
@@ -140,7 +140,7 @@ void PersonalDataPage::leavePageNext()
 
 void PersonalDataPage::ispdbSearchFinished(bool ok)
 {
-    qDebug() << ok;
+    qCDebug(ACCOUNTWIZARD_LOG) << ok;
 
     unsetCursor();
     ui.mProgress->stop();
@@ -168,7 +168,7 @@ void PersonalDataPage::configureSmtpAccount()
 {
     if (!mIspdb->smtpServers().isEmpty()) {
         server s = mIspdb->smtpServers().first(); // should be ok.
-        qDebug() << "Configuring transport for" << s.hostname;
+        qCDebug(ACCOUNTWIZARD_LOG) << "Configuring transport for" << s.hostname;
 
         QObject *object = mSetupManager->createTransport(QLatin1String("smtp"));
         Transport *t = qobject_cast<Transport *>(object);
@@ -193,7 +193,7 @@ void PersonalDataPage::configureSmtpAccount()
         default: break;
         }
     } else {
-        qDebug() << "No transport to be created....";
+        qCDebug(ACCOUNTWIZARD_LOG) << "No transport to be created....";
     }
 }
 
@@ -201,7 +201,7 @@ void PersonalDataPage::configureImapAccount()
 {
     if (!mIspdb->imapServers().isEmpty()) {
         server s = mIspdb->imapServers().first(); // should be ok.
-        qDebug() << "Configuring imap for" << s.hostname;
+        qCDebug(ACCOUNTWIZARD_LOG) << "Configuring imap for" << s.hostname;
 
         QObject *object = mSetupManager->createResource(QLatin1String("akonadi_imap_resource"));
         Resource *t = qobject_cast<Resource *>(object);
@@ -232,7 +232,7 @@ void PersonalDataPage::configurePop3Account()
 {
     if (!mIspdb->pop3Servers().isEmpty()) {
         server s = mIspdb->pop3Servers().first(); // should be ok.
-        qDebug() << "No Imap to be created, configuring pop3 for" << s.hostname;
+        qCDebug(ACCOUNTWIZARD_LOG) << "No Imap to be created, configuring pop3 for" << s.hostname;
 
         QObject *object = mSetupManager->createResource(QLatin1String("akonadi_pop3_resource"));
         Resource *t = qobject_cast<Resource *>(object);

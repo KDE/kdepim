@@ -18,7 +18,7 @@
 #include "importwizardutil.h"
 #include <KSharedConfig>
 #include <KConfigGroup>
-#include <QDebug>
+#include "importwizard_debug.h"
 #include <kwallet.h>
 #include <AkonadiCore/Tag>
 #include <AkonadiCore/TagAttribute>
@@ -60,7 +60,7 @@ void ImportWizardUtil::mergeLdap(const ldapStruct &ldap)
         grp.writeEntry(QString::fromLatin1("SelectedMech%1").arg(numberOfLdapSelected), QString::fromLatin1("PLAIN"));
         grp.writeEntry(QString::fromLatin1("SelectedAuth%1").arg(numberOfLdapSelected), QString::fromLatin1("Simple"));
     } else {
-        qDebug() << " Mech SASL undefined" << ldap.saslMech;
+        qCDebug(IMPORTWIZARD_LOG) << " Mech SASL undefined" << ldap.saslMech;
     }
     grp.writeEntry(QString::fromLatin1("SelectedVersion%1").arg(numberOfLdapSelected), QString::number(3));
     grp.writeEntry(QString::fromLatin1("SelectedBind%1").arg(numberOfLdapSelected), ldap.dn);

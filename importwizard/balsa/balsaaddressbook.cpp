@@ -26,7 +26,7 @@
 #include <KLocalizedString>
 #include <QUrl>
 
-#include <QDebug>
+#include "importwizard_debug.h"
 #include <QFile>
 #include <QFileInfo>
 
@@ -70,7 +70,7 @@ void BalsaAddressBook::readAddressBook(const KConfigGroup &grp)
         ImportWizardUtil::mergeLdap(ldap);
         addAddressBookImportInfo(i18n("Ldap created"));
     } else if (type == QLatin1String("LibBalsaAddressBookGpe")) {
-        qDebug() << " Import it !";
+        qCDebug(IMPORTWIZARD_LOG) << " Import it !";
     } else if (type == QLatin1String("LibBalsaAddressBookLdif")) {
         const QString path = grp.readEntry(QLatin1String("Path"));
         if (!path.isEmpty()) {
@@ -100,6 +100,6 @@ void BalsaAddressBook::readAddressBook(const KConfigGroup &grp)
             addAddressBookImportInfo(i18n("New addressbook created: %1", createResource(QLatin1String("akonadi_vcard_resource") , name, settings)));
         }
     } else {
-        qDebug() << " unknown addressbook type :" << type;
+        qCDebug(IMPORTWIZARD_LOG) << " unknown addressbook type :" << type;
     }
 }

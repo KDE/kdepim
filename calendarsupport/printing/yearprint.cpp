@@ -23,7 +23,7 @@
 #include "yearprint.h"
 
 #include <KCalendarSystem>
-#include <QDebug>
+#include "calendarsupport_debug.h"
 #include <KConfigGroup>
 #include <KLocalizedString>
 using namespace CalendarSupport;
@@ -88,7 +88,7 @@ void CalPrintYear::loadConfig()
 
 void CalPrintYear::saveConfig()
 {
-    qDebug();
+    qCDebug(CALENDARSUPPORT_LOG);
 
     readSettingsWidget();
     if (mConfig) {

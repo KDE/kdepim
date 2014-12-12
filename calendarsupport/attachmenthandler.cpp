@@ -41,7 +41,7 @@
 #include <KToolInvocation>
 #include <KIO/NetAccess>
 #include <KJob>
-#include <QDebug>
+#include "calendarsupport_debug.h"
 
 #include <QFile>
 #include <QPointer>
@@ -294,10 +294,10 @@ void AttachmentHandler::slotFinishSaveAs(KJob *job)
             Incidence::Ptr incidence = CalendarSupport::incidence(items.first());
             success = incidence && saveAs(info.attachmentName, incidence);
         } else {
-            qWarning() << Q_FUNC_INFO << "No item found";
+            qCWarning(CALENDARSUPPORT_LOG) << Q_FUNC_INFO << "No item found";
         }
     } else {
-        qWarning() << Q_FUNC_INFO << "Job error:" << job->errorString();
+        qCWarning(CALENDARSUPPORT_LOG) << Q_FUNC_INFO << "Job error:" << job->errorString();
     }
 
     emit saveAsFinished(info.uid, info.attachmentName, success);
@@ -316,10 +316,10 @@ void AttachmentHandler::slotFinishView(KJob *job)
             Incidence::Ptr incidence = CalendarSupport::incidence(items.first());
             success = incidence && view(info.attachmentName, incidence);
         } else {
-            qWarning() << Q_FUNC_INFO << "No item found";
+            qCWarning(CALENDARSUPPORT_LOG) << Q_FUNC_INFO << "No item found";
         }
     } else {
-        qWarning() << Q_FUNC_INFO << "Job error:" << job->errorString();
+        qCWarning(CALENDARSUPPORT_LOG) << Q_FUNC_INFO << "Job error:" << job->errorString();
     }
 
     emit viewFinished(info.uid, info.attachmentName, success);

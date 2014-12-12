@@ -43,7 +43,7 @@
 
 #include <KMessageBox>
 #include <KLocale>
-#include <QDebug>
+#include "calendarview_debug.h"
 
 #include <QApplication>
 #include <QLabel>
@@ -465,7 +465,7 @@ void Agenda::marcus_bains()
 void Agenda::changeColumns(int columns)
 {
     if (columns == 0) {
-        qDebug() << "called with argument 0";
+        qCDebug(CALENDARVIEW_LOG) << "called with argument 0";
         return;
     }
 
@@ -623,7 +623,7 @@ bool Agenda::eventFilter_wheel(QObject *object, QWheelEvent *e)
         } else {
             viewportPos = e->pos();
         }
-        //qDebug() << type:" << e->type() << "delta:" << e->delta();
+        //qCDebug(CALENDARVIEW_LOG) << type:" << e->type() << "delta:" << e->delta();
         emit zoomView(-e->delta(),
                       contentsToGrid(viewportPos), Qt::Horizontal);
         accepted = true;
@@ -1391,18 +1391,18 @@ void Agenda::placeAgendaItem(AgendaItem::QPtr item, double subCellWidth)
 void Agenda::placeSubCells(AgendaItem::QPtr placeItem)
 {
 #if 0
-    qDebug();
+    qCDebug(CALENDARVIEW_LOG);
     if (placeItem) {
         KCalCore::Incidence::Ptr event = placeItem->incidence();
         if (!event) {
-            qDebug() << "  event is 0";
+            qCDebug(CALENDARVIEW_LOG) << "  event is 0";
         } else {
-            qDebug() << "  event:" << event->summary();
+            qCDebug(CALENDARVIEW_LOG) << "  event:" << event->summary();
         }
     } else {
-        qDebug() << "  placeItem is 0";
+        qCDebug(CALENDARVIEW_LOG) << "  placeItem is 0";
     }
-    qDebug() << "Agenda::placeSubCells()...";
+    qCDebug(CALENDARVIEW_LOG) << "Agenda::placeSubCells()...";
 #endif
 
     QList<CalendarSupport::CellItem *> cells;
@@ -1699,7 +1699,7 @@ AgendaItem::QPtr Agenda::insertItem(const Akonadi::Item &incidence, const KDateT
                                     bool isSelected)
 {
     if (d->mAllDayMode) {
-        qDebug() << "using this in all-day mode is illegal.";
+        qCDebug(CALENDARVIEW_LOG) << "using this in all-day mode is illegal.";
         return 0;
     }
 
@@ -1711,7 +1711,7 @@ AgendaItem::QPtr Agenda::insertItem(const Akonadi::Item &incidence, const KDateT
     }
 
     if (YBottom <= YTop) {
-        qDebug() << "Text:" << agendaItem->text() << " YSize<0";
+        qCDebug(CALENDARVIEW_LOG) << "Text:" << agendaItem->text() << " YSize<0";
         YBottom = YTop;
     }
 
@@ -1782,7 +1782,7 @@ AgendaItem::QPtr Agenda::createAgendaItem(const Akonadi::Item &item, int itemPos
         int itemCount, const KDateTime &qd, bool isSelected)
 {
     if (!item.isValid()) {
-        qWarning() << "Agenda::createAgendaItem() item is invalid.";
+        qCWarning(CALENDARVIEW_LOG) << "Agenda::createAgendaItem() item is invalid.";
         return AgendaItem::QPtr();
     }
 
@@ -1803,7 +1803,7 @@ void Agenda::insertMultiItem(const Akonadi::Item &event, const KDateTime &occurr
     KCalCore::Event::Ptr ev = CalendarSupport::event(event);
     Q_ASSERT(ev);
     if (d->mAllDayMode) {
-        qDebug() << "using this in all-day mode is illegal.";
+        qCDebug(CALENDARVIEW_LOG) << "using this in all-day mode is illegal.";
         return;
     }
 
@@ -1866,7 +1866,7 @@ void Agenda::insertMultiItem(const Akonadi::Item &event, const KDateTime &occurr
 void Agenda::removeIncidence(const KCalCore::Incidence::Ptr &incidence)
 {
     if (!incidence) {
-        qWarning() << "Agenda::removeIncidence() incidence is invalid";
+        qCWarning(CALENDARVIEW_LOG) << "Agenda::removeIncidence() incidence is invalid";
         return;
     }
 
@@ -1879,7 +1879,7 @@ void Agenda::removeIncidence(const KCalCore::Incidence::Ptr &incidence)
 
         if (id == -1) {
             // Ok, we really don't know the ID, give up.
-            qWarning() << "Agenda::removeIncidence() Item to remove is invalid. uid = "
+            qCWarning(CALENDARVIEW_LOG) << "Agenda::removeIncidence() Item to remove is invalid. uid = "
                        << incidence->instanceIdentifier();
             return;
         }
@@ -1892,12 +1892,12 @@ void Agenda::removeIncidence(const KCalCore::Incidence::Ptr &incidence)
     AgendaItem::List agendaItems = d->mAgendaItemsById.values(id);
     if (agendaItems.isEmpty()) {
         // We're not displaying such item
-        // qDebug() << "Ignoring";
+        // qCDebug(CALENDARVIEW_LOG) << "Ignoring";
         return;
     }
     foreach (const AgendaItem::QPtr &agendaItem, agendaItems) {
         if (agendaItem && !removeAgendaItem(agendaItem)) {
-            qWarning() << "Agenda::removeIncidence() Failed to remove " << incidence->uid();
+            qCWarning(CALENDARVIEW_LOG) << "Agenda::removeIncidence() Failed to remove " << incidence->uid();
         }
     }
 }

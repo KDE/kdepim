@@ -35,7 +35,7 @@
 
 #include <klocalizedstring.h>
 #include <kross/core/action.h>
-#include <qdebug.h>
+#include "accountwizard_debug.h"
 #include <kmessagebox.h>
 #include <qplatformdefs.h>
 
@@ -148,7 +148,7 @@ void Dialog::slotBackOk()
 
 QObject *Dialog::addPage(const QString &uiFile, const QString &title)
 {
-    qDebug() << uiFile;
+    qCDebug(ACCOUNTWIZARD_LOG) << uiFile;
     DynamicPage *page = new DynamicPage(Global::assistantBasePath() + uiFile, this);
     connect(page, &DynamicPage::leavePageNextOk, this, &Dialog::slotNextOk);
     connect(page, &DynamicPage::leavePageBackOk, this, &Dialog::slotBackOk);

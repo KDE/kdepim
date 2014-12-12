@@ -40,7 +40,7 @@
 #include <Akonadi/Calendar/ETMCalendar>
 
 #include <KMessageBox>
-#include <QDebug>
+#include "calendarview_debug.h"
 #include <KIconLoader>
 
 #include <QMimeData>
@@ -241,7 +241,7 @@ QVariant TodoModel::data(const QModelIndex &index, int role) const
     const Akonadi::Item item =
         sourceIndex.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
     if (!item.isValid()) {
-        qWarning() << "Invalid index: " << sourceIndex;
+        qCWarning(CALENDARVIEW_LOG) << "Invalid index: " << sourceIndex;
         //Q_ASSERT( false );
         return QVariant();
     }
@@ -439,7 +439,7 @@ bool TodoModel::setData(const QModelIndex &index, const QVariant &value, int rol
     const KCalCore::Todo::Ptr todo = CalendarSupport::todo(item);
 
     if (!item.isValid() || !todo) {
-        qWarning() << "TodoModel::setData() called, bug item is invalid or doesn't have payload";
+        qCWarning(CALENDARVIEW_LOG) << "TodoModel::setData() called, bug item is invalid or doesn't have payload";
         Q_ASSERT(false);
         return false;
     }
@@ -702,7 +702,7 @@ bool TodoModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
     Q_UNUSED(column);
 
     if (action != Qt::MoveAction) {
-        qWarning() << "No action other than MoveAction currently supported!"; //TODO
+        qCWarning(CALENDARVIEW_LOG) << "No action other than MoveAction currently supported!"; //TODO
         return false;
     }
 
@@ -748,7 +748,7 @@ bool TodoModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
                 // again, no need to emit dataChanged, that's done by processChange
                 return true;
             } else {
-                qDebug() << "Todo's with recurring id can't have child todos yet.";
+                qCDebug(CALENDARVIEW_LOG) << "Todo's with recurring id can't have child todos yet.";
                 return false;
             }
 
@@ -757,7 +757,7 @@ bool TodoModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
         } else {
             if (!parent.isValid()) {
                 // TODO we should create a new todo with the data in the drop object
-                qDebug() << "TODO: Create a new todo with the given data";
+                qCDebug(CALENDARVIEW_LOG) << "TODO: Create a new todo with the given data";
                 return false;
             }
 
@@ -806,7 +806,7 @@ Qt::ItemFlags TodoModel::flags(const QModelIndex &index) const
 
     if (!item.isValid()) {
         Q_ASSERT(mapToSource(index).isValid());
-        qWarning() << "Item is invalid " << index;
+        qCWarning(CALENDARVIEW_LOG) << "Item is invalid " << index;
         Q_ASSERT(false);
         return 0;
     }

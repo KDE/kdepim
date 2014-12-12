@@ -40,7 +40,7 @@
 
 #include <KIconLoader>
 
-#include <QDebug>
+#include "calendarview_debug.h"
 #include <QBoxLayout>
 #include <QHeaderView>
 #include <QTreeWidget>
@@ -500,7 +500,7 @@ void ListView::changeIncidenceDisplay(const Akonadi::Item &aitem, int action)
         break;
     }
     default:
-        qDebug() << "Illegal action" << action;
+        qCDebug(CALENDARVIEW_LOG) << "Illegal action" << action;
     }
 }
 

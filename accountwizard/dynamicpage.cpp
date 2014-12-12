@@ -19,7 +19,7 @@
 
 #include "dynamicpage.h"
 
-#include <QDebug>
+#include "accountwizard_debug.h"
 
 #include <QUiLoader>
 #include <QFile>
@@ -45,7 +45,7 @@ DynamicPage::DynamicPage(const QString &uiFile, KAssistantDialog *parent) : Page
     QUiLoader loader;
     QFile file(uiFile);
     file.open(QFile::ReadOnly);
-    qDebug() << uiFile;
+    qCDebug(ACCOUNTWIZARD_LOG) << uiFile;
     m_dynamicWidget = loader.load(&file, pageParent);
     file.close();
 

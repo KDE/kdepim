@@ -23,7 +23,7 @@
 #include <KIdentityManagement/kidentitymanagement/identity.h>
 #include <KIdentityManagement/kidentitymanagement/signature.h>
 
-#include <QDebug>
+#include "importwizard_debug.h"
 
 #include <QSettings>
 
@@ -146,7 +146,7 @@ void TrojitaSettings::readTransport()
                 mt->setHost(settings->value(QLatin1String("msa.sendmail")).toString());
             }
         } else {
-            qWarning() << " smtpMethod unknown " << smtpMethod;
+            qCWarning(IMPORTWIZARD_LOG) << " smtpMethod unknown " << smtpMethod;
         }
         storeTransport(mt, true);   //only one smtp for the moment
     }
@@ -173,7 +173,7 @@ void TrojitaSettings::readIdentity()
             signature.setText(signatureStr);
             identity->setSignature(signature);
         }
-        qDebug() << " realName :" << realName << " address : " << address << " organisation : " << organisation << " signature: " << signatureStr;
+        qCDebug(IMPORTWIZARD_LOG) << " realName :" << realName << " address : " << address << " organisation : " << organisation << " signature: " << signatureStr;
         storeIdentity(identity);
     }
     settings->endArray();

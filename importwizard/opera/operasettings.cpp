@@ -16,7 +16,7 @@
 */
 
 #include "operasettings.h"
-
+#include "importwizard_debug.h"
 #include "mailimporter/filter_opera.h"
 
 #include <MailTransport/mailtransport/transportmanager.h>
@@ -108,7 +108,7 @@ void OperaSettings::readAccount(const KConfigGroup &grp)
         } else if (leaveOnServer == 0) {
             settings.insert(QLatin1String("LeaveOnServer"), false);
         } else {
-            qDebug() << " leave on server option unknown : " << leaveOnServer;
+            qCDebug(IMPORTWIZARD_LOG) << " leave on server option unknown : " << leaveOnServer;
         }
 
         const int removeMailFromSever = grp.readEntry(QLatin1String("Remove From Server Delay Enabled"), -1);
@@ -156,7 +156,7 @@ void OperaSettings::readAccount(const KConfigGroup &grp)
             settings.insert(QLatin1String("AuthenticationMethod"), MailTransport::Transport::EnumAuthenticationType::APOP);   //TODO: verify
             break;
         default:
-            qDebug() << " unknown authentication method :" << authMethod;
+            qCDebug(IMPORTWIZARD_LOG) << " unknown authentication method :" << authMethod;
             break;
         }
 
@@ -165,7 +165,7 @@ void OperaSettings::readAccount(const KConfigGroup &grp)
         addCheckMailOnStartup(agentIdentifyName, enableManualCheck);
         addToManualCheck(agentIdentifyName, enableManualCheck);
     } else {
-        qDebug() << " protocol unknown : " << incomingProtocol;
+        qCDebug(IMPORTWIZARD_LOG) << " protocol unknown : " << incomingProtocol;
     }
 }
 
@@ -211,7 +211,7 @@ void OperaSettings::readTransport(const KConfigGroup &grp)
             mt->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::PLAIN); //Don't know... Verify
             break;
         default:
-            qDebug() << " authMethod unknown :" << authMethod;
+            qCDebug(IMPORTWIZARD_LOG) << " authMethod unknown :" << authMethod;
         }
 
         //We can't specify a default smtp...
@@ -272,7 +272,7 @@ void OperaSettings::readIdentity(const KConfigGroup &grp)
                     signature.setText(QString(sigText));
                     break;
                 default:
-                    qDebug() << " pb with Signature is HTML " << signatureHtml;
+                    qCDebug(IMPORTWIZARD_LOG) << " pb with Signature is HTML " << signatureHtml;
                     break;
                 }
                 newIdentity->setSignature(signature);

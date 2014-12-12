@@ -294,10 +294,10 @@ bool MorkParser::parseCell()
         if (!Text.isEmpty()) {
             if (nowParsing_ == NPColumns) {
                 mColumns[ ColumnId ] = Text;
-                //qDebug()<<" column :"<<ColumnId<<" Text "<<Text;
+                //qCDebug(IMPORTWIZARD_LOG)<<" column :"<<ColumnId<<" Text "<<Text;
             } else {
                 mValues[ ColumnId ] = Text;
-                //qDebug()<<" ColumnId "<<ColumnId<<" Value : "<<Text;
+                //qCDebug(IMPORTWIZARD_LOG)<<" ColumnId "<<ColumnId<<" Value : "<<Text;
             }
         }
     } else {

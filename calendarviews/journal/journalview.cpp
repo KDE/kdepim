@@ -31,7 +31,7 @@
 #include <calendarsupport/utils.h>
 
 #include <QVBoxLayout>
-#include <QDebug>
+#include "calendarview_debug.h"
 #include <QEvent>
 #include <QScrollArea>
 #include <QVBoxLayout>
@@ -124,7 +124,7 @@ void JournalView::updateView()
         --it;
         it.value()->clear();
         const KCalCore::Journal::List journals = calendar()->journals(it.key());
-        qDebug() << "updateview found" << journals.count();
+        qCDebug(CALENDARVIEW_LOG) << "updateview found" << journals.count();
         Q_FOREACH (const KCalCore::Journal::Ptr &journal, journals) {
             Akonadi::Item item = calendar()->item(journal);
             it.value()->addJournal(item);
@@ -141,14 +141,14 @@ void JournalView::showDates(const QDate &start, const QDate &end, const QDate &)
 {
     clearEntries();
     if (end < start) {
-        qWarning() << "End is smaller than start. end=" << end << "; start=" << start;
+        qCWarning(CALENDARVIEW_LOG) << "End is smaller than start. end=" << end << "; start=" << start;
         return;
     }
 
     KCalCore::Journal::List jnls;
     for (QDate d = end; d >= start; d = d.addDays(-1)) {
         jnls = calendar()->journals(d);
-        //qDebug() << "Found" << jnls.count() << "journals on date" << d;
+        //qCDebug(CALENDARVIEW_LOG) << "Found" << jnls.count() << "journals on date" << d;
         foreach (const KCalCore::Journal::Ptr &journal, jnls) {
             Akonadi::Item item = calendar()->item(journal);
             appendJournal(item, d);
@@ -156,7 +156,7 @@ void JournalView::showDates(const QDate &start, const QDate &end, const QDate &)
         if (jnls.isEmpty()) {
             // create an empty dateentry widget
             //updateView();
-            //qDebug() << "Appended null journal";
+            //qCDebug(CALENDARVIEW_LOG) << "Appended null journal";
             appendJournal(Akonadi::Item(), d);
         }
     }
@@ -188,7 +188,7 @@ void JournalView::changeIncidenceDisplay(const Akonadi::Item &incidence,
             emit journalDeleted(incidence);
             break;
         default:
-            qWarning() << "Illegal change type" << changeType;
+            qCWarning(CALENDARVIEW_LOG) << "Illegal change type" << changeType;
         }
     }
 }

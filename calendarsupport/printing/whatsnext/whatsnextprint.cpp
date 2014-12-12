@@ -73,7 +73,7 @@ void CalPrintWhatsNext::loadConfig()
 
 void CalPrintWhatsNext::saveConfig()
 {
-    qDebug();
+    qCDebug(CALENDARSUPPORT_LOG);
 
     readSettingsWidget();
     if (mConfig) {

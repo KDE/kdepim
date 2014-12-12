@@ -66,7 +66,7 @@
 #include <KIdentityManagement/IdentityManager>
 #include <KFileDialog>
 #include <KIO/NetAccess>
-#include <QDebug>
+#include "calendarsupport_debug.h"
 
 using namespace CalendarSupport;
 using namespace KHolidays;
@@ -398,7 +398,7 @@ Akonadi::Collection CalendarSupport::selectCollection(QWidget *parent,
     dlg->setCaption(i18n("Select Calendar"));
     dlg->setDescription(i18n("Select the calendar where this item will be stored."));
     dlg->changeCollectionDialogOptions(Akonadi::CollectionDialog::KeepTreeExpanded);
-    qDebug() << "selecting collections with mimeType in " << mimeTypes;
+    qCDebug(CALENDARSUPPORT_LOG) << "selecting collections with mimeType in " << mimeTypes;
 
     dlg->setMimeTypeFilter(mimeTypes);
     dlg->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
@@ -413,7 +413,7 @@ Akonadi::Collection CalendarSupport::selectCollection(QWidget *parent,
         collection = dlg->selectedCollection();
 
         if (!collection.isValid()) {
-            qWarning() << "An invalid collection was selected!";
+            qCWarning(CALENDARSUPPORT_LOG) << "An invalid collection was selected!";
         }
     }
     delete dlg;

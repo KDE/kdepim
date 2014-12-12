@@ -19,7 +19,7 @@
 
 #include "typepage.h"
 
-#include <QDebug>
+#include "accountwizard_debug.h"
 #include <KDesktopFile>
 #include <KConfigGroup>
 #include <QIcon>
@@ -69,12 +69,12 @@ TypePage::TypePage(KAssistantDialog *parent) :
     const QStringList filter = Global::typeFilter();
     foreach (const QString &entry, list) {
         KDesktopFile f(entry);
-        qDebug() << entry << f.readName();
+        qCDebug(ACCOUNTWIZARD_LOG) << entry << f.readName();
         const KConfig configWizard(entry);
         KConfigGroup grp(&configWizard, "Wizard");
         const QStringList lstType = grp.readEntry("Type", QStringList());
         if (lstType.isEmpty()) {
-            qDebug() << QStringLiteral(" %1 doesn't contains specific type").arg(f.readName());
+            qCDebug(ACCOUNTWIZARD_LOG) << QStringLiteral(" %1 doesn't contains specific type").arg(f.readName());
         }
         if (!filter.isEmpty()) {
             // stolen from agentfilterproxymodel

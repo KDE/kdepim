@@ -24,7 +24,7 @@
 #include <KIdentityManagement/kidentitymanagement/identity.h>
 #include <KIdentityManagement/kidentitymanagement/signature.h>
 
-#include <QDebug>
+#include "importwizard_debug.h"
 #include <KConfig>
 #include <KConfigGroup>
 #include <QFile>
@@ -67,7 +67,7 @@ void ClawsMailSettings::importSettings(const QString &filename, const QString &p
     QFile customHeaderFile(customheaderrc);
     if (customHeaderFile.exists()) {
         if (!customHeaderFile.open(QIODevice::ReadOnly)) {
-            qDebug() << " We can't open file" << customheaderrc;
+            qCDebug(IMPORTWIZARD_LOG) << " We can't open file" << customheaderrc;
         } else {
             readCustomHeader(&customHeaderFile);
         }

@@ -32,7 +32,7 @@
 
 #include <KCalendarSystem>
 #include <KConfigGroup>
-#include <QDebug>
+#include "calendarsupport_debug.h"
 #include <KSystemTimeZones>
 #include <KWordWrap>
 #include <KConfig>
@@ -195,7 +195,7 @@ void CalPrintPluginBase::doLoadConfig()
         mPrintFooter = group.readEntry("PrintFooter", true);
         loadConfig();
     } else {
-        qDebug() << "No config available in loadConfig!!!!";
+        qCDebug(CALENDARSUPPORT_LOG) << "No config available in loadConfig!!!!";
     }
 }
 
@@ -213,7 +213,7 @@ void CalPrintPluginBase::doSaveConfig()
         group.writeEntry("PrintFooter", mPrintFooter);
         mConfig->sync();
     } else {
-        qDebug() << "No config available in saveConfig!!!!";
+        qCDebug(CALENDARSUPPORT_LOG) << "No config available in saveConfig!!!!";
     }
 }
 
@@ -1265,7 +1265,7 @@ void CalPrintPluginBase::drawIncidence(QPainter &p, const QRect &dayBox,
                                        bool includeDescription,
                                        bool richDescription)
 {
-    qDebug() << "summary =" << summary << ", singleLineLimit=" << singleLineLimit;
+    qCDebug(CALENDARSUPPORT_LOG) << "summary =" << summary << ", singleLineLimit=" << singleLineLimit;
 
     int flags = Qt::AlignLeft | Qt::OpaqueMode;
     QFontMetrics fm = p.fontMetrics();

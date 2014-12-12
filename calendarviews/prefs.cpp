@@ -27,7 +27,7 @@
 #include "prefs_base.h"
 
 #include <KSystemTimeZone>
-#include <QDebug>
+#include "calendarview_debug.h"
 #include <QFontDatabase>
 
 using namespace EventViews;
@@ -37,7 +37,7 @@ QSet<EventViews::EventView::ItemIcon> iconArrayToSet(const QByteArray &array)
     QSet<EventViews::EventView::ItemIcon> set;
     for (int i = 0; i < array.count(); ++i) {
         if (i >= EventViews::EventView::IconCount) {
-            qWarning() << "Icon array is too big: " << array.count();
+            qCWarning(CALENDARVIEW_LOG) << "Icon array is too big: " << array.count();
             return set;
         }
         if (array[i] != 0) {
@@ -177,7 +177,7 @@ void BaseConfig::usrRead()
     QStringList::ConstIterator it3;
     for (it3 = colorKeyList.begin(); it3 != colorKeyList.end(); ++it3) {
         QColor color = rColorsConfig.readEntry(*it3, mDefaultResourceColor);
-        //qDebug() << "key:" << (*it3) << "value:" << color;
+        //qCDebug(CALENDARVIEW_LOG) << "key:" << (*it3) << "value:" << color;
         setResourceColor(*it3, color);
     }
 
@@ -253,7 +253,7 @@ void BaseConfig::setTimeZoneDefault()
         return;
     }
 
-    qDebug() << "----- time zone:" << zone.name();
+    qCDebug(CALENDARVIEW_LOG) << "----- time zone:" << zone.name();
 
     mTimeSpec = zone;
 }

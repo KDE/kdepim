@@ -34,7 +34,7 @@
 
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <QDebug>
+#include "calendarsupport_debug.h"
 
 using namespace CalendarSupport;
 using namespace KCalCore;
@@ -118,19 +118,19 @@ void CalendarUtilsPrivate::handleChangeFinish(int,
             Q_ASSERT(!mMultiChange.inProgress());
 
             if (success) {
-                qDebug() << "MultiChange finished";
+                qCDebug(CALENDARSUPPORT_LOG) << "MultiChange finished";
                 emit q->actionFinished(parent);
             } else {
-                qDebug() << "MultiChange failed";
+                qCDebug(CALENDARSUPPORT_LOG) << "MultiChange failed";
                 emit q->actionFailed(parent, QString());
             }
         }
     } else {
         if (success) {
-            qDebug() << "Change finished";
+            qCDebug(CALENDARSUPPORT_LOG) << "Change finished";
             emit q->actionFinished(item);
         } else {
-            qDebug() << "Change failed";
+            qCDebug(CALENDARSUPPORT_LOG) << "Change failed";
             emit q->actionFailed(Akonadi::Item(), errorString);
         }
     }

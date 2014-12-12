@@ -39,7 +39,7 @@
 #include <QTextBrowser>
 #include <KLocalizedString>
 #include <KIconLoader>
-#include <QDebug>
+#include "calendarview_debug.h"
 
 #include <QEvent>
 #include <QHBoxLayout>
@@ -280,7 +280,7 @@ void JournalFrame::setJournal(const Akonadi::Item &journal)
 void JournalFrame::setDirty()
 {
     mDirty = true;
-    qDebug();
+    qCDebug(CALENDARVIEW_LOG);
 }
 
 void JournalFrame::printJournal()

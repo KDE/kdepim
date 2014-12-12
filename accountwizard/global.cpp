@@ -19,7 +19,7 @@
 
 #include "global.h"
 
-#include <qdebug.h>
+#include "accountwizard_debug.h"
 #include <QtCore/qfileinfo.h>
 #include <QtCore/QDir>
 #include <kio/copyjob.h>
@@ -103,7 +103,7 @@ QString Global::unpackAssistant(const QUrl &remotePackageUrl)
         QString remoteFileName = QFileInfo(remotePackageUrl.path()).fileName();
         localPackageFile = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + QLatin1String("/accountwizard/") + remoteFileName ;
         KIO::Job *job = KIO::copy(remotePackageUrl, QUrl::fromLocalFile(localPackageFile), KIO::Overwrite | KIO::HideProgressInfo);
-        qDebug() << "downloading remote URL" << remotePackageUrl << "to" << localPackageFile;
+        qCDebug(ACCOUNTWIZARD_LOG) << "downloading remote URL" << remotePackageUrl << "to" << localPackageFile;
         if (!KIO::NetAccess::synchronousRun(job, 0)) {
             return QString();
         }
@@ -116,10 +116,10 @@ QString Global::unpackAssistant(const QUrl &remotePackageUrl)
     QDir().mkpath(dest + file.fileName());
     KIO::Job *getJob = KIO::copy(file, QUrl::fromLocalFile(dest), KIO::Overwrite | KIO::HideProgressInfo);
     if (KIO::NetAccess::synchronousRun(getJob, 0)) {
-        qDebug() << "worked, unpacked in " << dest;
+        qCDebug(ACCOUNTWIZARD_LOG) << "worked, unpacked in " << dest;
         return dest + file.fileName() + QLatin1Char('/') + assistant + QLatin1Char('/') + assistant + QLatin1String(".desktop");
     } else {
-        qDebug() << "failed" << getJob->errorString();
+        qCDebug(ACCOUNTWIZARD_LOG) << "failed" << getJob->errorString();
         return QString();
     }
 }

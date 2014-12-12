@@ -22,7 +22,7 @@
 #include <KLocalizedString>
 #include <QVBoxLayout>
 #include <QListWidget>
-#include <QDebug>
+#include "calendarview_debug.h"
 
 CreateColorGui_test::CreateColorGui_test(QWidget *parent)
     : QWidget(parent)

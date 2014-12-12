@@ -4,6 +4,7 @@ project(importwizard)
 add_subdirectory(icons)
 
 set(importwizard_SRCS
+importwizard_debug.cpp
 abstractbase.cpp
 importwizardkernel.cpp
 selectprogrampage.cpp

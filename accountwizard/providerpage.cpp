@@ -21,7 +21,7 @@
 #include "providerpage.h"
 #include "global.h"
 
-#include <QDebug>
+#include "accountwizard_debug.h"
 #include <QSortFilterProxyModel>
 #include <kns3/downloadmanager.h>
 #include <KLocalizedString>
@@ -52,7 +52,7 @@ ProviderPage::ProviderPage(KAssistantDialog *parent) :
 
     connect(ui.listView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(selectionChanged()));
 
-    qDebug();
+    qCDebug(ACCOUNTWIZARD_LOG);
 }
 
 void ProviderPage::startFetchingData()
@@ -62,7 +62,7 @@ void ProviderPage::startFetchingData()
 
 void ProviderPage::fillModel(const KNS3::Entry::List &list)
 {
-    qDebug();
+    qCDebug(ACCOUNTWIZARD_LOG);
     m_model->removeRows(m_model->indexFromItem(m_fetchItem).row(), 1);
 
     // KNS3::Entry::Entry() is private, so we need to save the whole list.
@@ -70,7 +70,7 @@ void ProviderPage::fillModel(const KNS3::Entry::List &list)
     m_providerEntries = list;
 
     foreach (const KNS3::Entry &e, list) {
-        qDebug() << "Found Entry: " << e.name();
+        qCDebug(ACCOUNTWIZARD_LOG) << "Found Entry: " << e.name();
 
         QStandardItem *item = new QStandardItem(e.name());
         item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
@@ -103,7 +103,7 @@ void ProviderPage::leavePageNext()
 
     const QSortFilterProxyModel *proxy = static_cast<const QSortFilterProxyModel *>(ui.listView->model());
     const QStandardItem *item =  m_model->itemFromIndex(proxy->mapToSource(index));
-    qDebug() << "Item selected:" << item->text();
+    qCDebug(ACCOUNTWIZARD_LOG) << "Item selected:" << item->text();
 
     // download and execute it...
     foreach (const KNS3::Entry &e, m_providerEntries) {
@@ -114,10 +114,10 @@ void ProviderPage::leavePageNext()
             m_wantedProvider.entryProviderId = e.providerId();
 
             if (e.status() == KNS3::Entry::Installed) {
-                qDebug() << "already installed" << e.installedFiles();
+                qCDebug(ACCOUNTWIZARD_LOG) << "already installed" << e.installedFiles();
                 findDesktopAndSetAssistant(e.installedFiles());
             } else {
-                qDebug() << "Starting download for " << e.name();
+                qCDebug(ACCOUNTWIZARD_LOG) << "Starting download for " << e.name();
                 m_downloadManager->installEntry(e);
             }
 
@@ -128,7 +128,7 @@ void ProviderPage::leavePageNext()
 
 void ProviderPage::providerStatusChanged(const KNS3::Entry &e)
 {
-    qDebug() << e.name();
+    qCDebug(ACCOUNTWIZARD_LOG) << e.name();
     if (e.id() == m_wantedProvider.entryId &&
             e.providerId() == m_wantedProvider.entryProviderId &&
             e.status() == KNS3::Entry::Installed) {
@@ -139,13 +139,13 @@ void ProviderPage::providerStatusChanged(const KNS3::Entry &e)
 void ProviderPage::findDesktopAndSetAssistant(const QStringList &list)
 {
     foreach (const QString &file, list) {
-        qDebug() << file;
+        qCDebug(ACCOUNTWIZARD_LOG) << file;
         if (file.endsWith(QLatin1String(".desktop"))) {
-            qDebug() << "Yay, a desktop file!" << file;
+            qCDebug(ACCOUNTWIZARD_LOG) << "Yay, a desktop file!" << file;
             Global::setAssistant(file);
             m_newPageReady = true;
             if (m_newPageWanted) {
-                qDebug() << "New page was already requested, now we are done, approve it";
+                qCDebug(ACCOUNTWIZARD_LOG) << "New page was already requested, now we are done, approve it";
                 emit leavePageNextOk();
             }
             break;
@@ -168,10 +168,10 @@ void ProviderPage::leavePageNextRequested()
 {
     m_newPageWanted = true;
     if (m_newPageReady) {
-        qDebug() << "New page requested and we are done, so ok...";
+        qCDebug(ACCOUNTWIZARD_LOG) << "New page requested and we are done, so ok...";
         emit leavePageNextOk();
     } else {
-        qDebug() << "New page requested, but we are not done yet...";
+        qCDebug(ACCOUNTWIZARD_LOG) << "New page requested, but we are not done yet...";
     }
 }
 

@@ -42,7 +42,7 @@ using namespace Future;
 #include <KLocalizedString>
 #include <QVBoxLayout>
 #include <KViewStateMaintainer>
-#include <QDebug>
+#include "calendarview_debug.h"
 
 #include <QHBoxLayout>
 #include <QItemSelectionModel>
@@ -77,12 +77,12 @@ static void printObject( QObject *o, int level = 0 )
   QWidget *w = qobject_cast<QWidget*>( o );
 
   if ( w ) {
-    qDebug() << QString( level*2, '-' ) << o
+    qCDebug(CALENDARVIEW_LOG) << QString( level*2, '-' ) << o
              << w->sizeHint() << "/" << map[w->sizePolicy().verticalPolicy()]
              << "; minimumSize = " << w->minimumSize()
              << "; minimumSizeHint = " << w->minimumSizeHint();
   } else {
-    qDebug() << QString( level*2, '-' ) << o ;
+    qCDebug(CALENDARVIEW_LOG) << QString( level*2, '-' ) << o ;
   }
 
   foreach( QObject *child, o->children() ) {
@@ -668,7 +668,7 @@ void MultiAgendaView::setupScrollBar()
 
 void MultiAgendaView::collectionSelectionChanged()
 {
-    qDebug();
+    qCDebug(CALENDARVIEW_LOG);
     d->mPendingChanges = true;
     recreateViews();
 }

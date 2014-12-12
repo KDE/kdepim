@@ -36,6 +36,7 @@ endif()
 
 
 set(accountwizard_srcs
+  accountwizard_debug.cpp
   dialog.cpp
   typepage.cpp
   loadpage.cpp

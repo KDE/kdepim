@@ -25,7 +25,7 @@
 
 #include <KConfig>
 #include <KConfigGroup>
-#include <QDebug>
+#include "importwizard_debug.h"
 
 #include <QRegExp>
 #include <QStringList>
@@ -69,7 +69,7 @@ void SylpheedSettings::importSettings(const QString &filename, const QString &pa
     QFile customHeaderFile(customheaderrc);
     if (customHeaderFile.exists()) {
         if (!customHeaderFile.open(QIODevice::ReadOnly)) {
-            qDebug() << " We can't open file" << customheaderrc;
+            qCDebug(IMPORTWIZARD_LOG) << " We can't open file" << customheaderrc;
         } else {
             readCustomHeader(&customHeaderFile);
         }
@@ -273,7 +273,7 @@ void SylpheedSettings::readSignature(const KConfigGroup &accountConfig, KIdentit
         signature.setText(accountConfig.readEntry("signature_text"));
         break;
     default:
-        qDebug() << " signature type unknow :" << signatureType;
+        qCDebug(IMPORTWIZARD_LOG) << " signature type unknow :" << signatureType;
     }
     const int signatureEnabled = accountConfig.readEntry("auto_signature", -1);
     switch (signatureEnabled) {
@@ -286,7 +286,7 @@ void SylpheedSettings::readSignature(const KConfigGroup &accountConfig, KIdentit
         signature.setEnabledSignature(true);
         break;
     default:
-        qDebug() << " auto_signature undefined " << signatureEnabled;
+        qCDebug(IMPORTWIZARD_LOG) << " auto_signature undefined " << signatureEnabled;
     }
 
     //TODO  const bool signatureBeforeQuote = ( accountConfig.readEntry( "signature_before_quote", 0 ) == 1 ); not implemented in kmail
@@ -320,7 +320,7 @@ void SylpheedSettings::readPop3Account(const KConfigGroup &accountConfig, bool c
             settings.insert(QLatin1String("UseTLS"), true);
             break;
         default:
-            qDebug() << " unknown ssl_pop value " << sslPop;
+            qCDebug(IMPORTWIZARD_LOG) << " unknown ssl_pop value " << sslPop;
             break;
         }
     }
@@ -378,7 +378,7 @@ void SylpheedSettings::readImapAccount(const KConfigGroup &accountConfig, bool c
         settings.insert(QLatin1String("Safety"), QLatin1String("STARTTLS"));
         break;
     default:
-        qDebug() << " sslimap unknown " << sslimap;
+        qCDebug(IMPORTWIZARD_LOG) << " sslimap unknown " << sslimap;
         break;
     }
 
@@ -406,7 +406,7 @@ void SylpheedSettings::readImapAccount(const KConfigGroup &accountConfig, bool c
         settings.insert(QLatin1String("Authentication"), MailTransport::Transport::EnumAuthenticationType::PLAIN);
         break;
     default:
-        qDebug() << " imap auth unknown " << auth;
+        qCDebug(IMPORTWIZARD_LOG) << " imap auth unknown " << auth;
         break;
     }
 
@@ -438,14 +438,14 @@ void SylpheedSettings::readAccount(const KConfigGroup &accountConfig , bool chec
             readImapAccount(accountConfig, checkMailOnStartup, intervalCheckMail);
             break;
         case 4:
-            qDebug() << " Add it when nntp resource will implemented";
+            qCDebug(IMPORTWIZARD_LOG) << " Add it when nntp resource will implemented";
             //news
             break;
         case 5:
             //local
             break;
         default:
-            qDebug() << " protocol not defined" << protocol;
+            qCDebug(IMPORTWIZARD_LOG) << " protocol not defined" << protocol;
         }
     }
 }
@@ -528,7 +528,7 @@ QString SylpheedSettings::readTransport(const KConfigGroup &accountConfig)
                 mt->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::PLAIN);
                 break;
             default:
-                qDebug() << " smtp authentication unknown :" << authMethod;
+                qCDebug(IMPORTWIZARD_LOG) << " smtp authentication unknown :" << authMethod;
             }
         }
         const int sslSmtp = accountConfig.readEntry(QLatin1String("ssl_smtp"), 0);
@@ -543,7 +543,7 @@ QString SylpheedSettings::readTransport(const KConfigGroup &accountConfig)
             mt->setEncryption(MailTransport::Transport::EnumEncryption::TLS);
             break;
         default:
-            qDebug() << " smtp ssl config unknown :" << sslSmtp;
+            qCDebug(IMPORTWIZARD_LOG) << " smtp ssl config unknown :" << sslSmtp;
 
         }
         QString domainName;

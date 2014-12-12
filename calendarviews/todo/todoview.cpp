@@ -54,7 +54,7 @@
 #include <KIconLoader>
 #include <KComponentData>
 #include <KJob>
-#include <QDebug>
+#include "calendarview_debug.h"
 
 #include <QCheckBox>
 #include <QGridLayout>
@@ -681,7 +681,7 @@ void TodoView::addQuickTodo(Qt::KeyboardModifiers modifiers)
     } else if (modifiers == Qt::ControlModifier) {
         QModelIndexList selection = mView->selectionModel()->selectedRows();
         if (selection.count() != 1) {
-            qWarning() << "No to-do selected" << selection;
+            qCWarning(CALENDARVIEW_LOG) << "No to-do selected" << selection;
             return;
         }
         const QModelIndex idx = mProxyModel->mapToSource(selection[0]);
@@ -832,7 +832,7 @@ void TodoView::newSubTodo()
         emit newSubTodoSignal(todoItem);
     } else {
         // This never happens
-        qWarning() << "Selection size isn't 1";
+        qCWarning(CALENDARVIEW_LOG) << "Selection size isn't 1";
     }
 }
 
@@ -916,7 +916,7 @@ QMenu *TodoView::createCategoryPopupMenu()
 void TodoView::onTagsFetched(KJob *job)
 {
     if (job->error()) {
-        qWarning() << "Failed to fetch tags " << job->errorString();
+        qCWarning(CALENDARVIEW_LOG) << "Failed to fetch tags " << job->errorString();
         return;
     }
     Akonadi::TagFetchJob *fetchJob = static_cast<Akonadi::TagFetchJob *>(job);
@@ -959,7 +959,7 @@ void TodoView::setNewDate(const QDate &date)
 
         changer()->modifyIncidence(todoItem, oldTodo, this);
     } else {
-        qDebug() << "Item is readOnly";
+        qCDebug(CALENDARVIEW_LOG) << "Item is readOnly";
     }
 }
 
@@ -990,7 +990,7 @@ void TodoView::setNewPercentage(QAction *action)
             changer()->modifyIncidence(todoItem, oldTodo, this);
         }
     } else {
-        qDebug() << "Item is read only";
+        qCDebug(CALENDARVIEW_LOG) << "Item is read only";
     }
 }
 
@@ -1034,7 +1034,7 @@ void TodoView::changedCategories(QAction *action)
         todo->setCategories(categories);
         changer()->modifyIncidence(todoItem, oldTodo, this);
     } else {
-        qDebug() << "No active item, active item is read-only, or locking failed";
+        qCDebug(CALENDARVIEW_LOG) << "No active item, active item is read-only, or locking failed";
     }
 }
 
@@ -1206,7 +1206,7 @@ void TodoView::restoreViewState()
     KConfigGroup group(KComponentData::activeComponent().config().data(), stateSaverGroup());
     mTreeStateRestorer->setView(mView);
     mTreeStateRestorer->restoreState(group);
-    //qDebug() << "Took " << timer.elapsed();
+    //qCDebug(CALENDARVIEW_LOG) << "Took " << timer.elapsed();
 }
 
 QString TodoView::stateSaverGroup() const

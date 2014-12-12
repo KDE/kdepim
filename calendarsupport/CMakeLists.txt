@@ -15,6 +15,7 @@ add_definitions(-DTRANSLATION_DOMAIN=\"calendarsupport\")
 ########### next target ###############
 
 set(calendarsupport_LIB_SRCS
+  calendarsupport_debug.cpp
   archivedialog.cpp
   attachmenthandler.cpp
   # calendarsearch.cpp

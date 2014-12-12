@@ -43,7 +43,7 @@
 #include <QAction>
 #include <KAboutData>
 #include <KLocalizedString>
-#include <qdebug.h>
+#include "importwizard_debug.h"
 #include <KMessageBox>
 #include <KHelpMenu>
 #include <AkonadiCore/control.h>

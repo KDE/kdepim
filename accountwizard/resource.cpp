@@ -23,7 +23,7 @@
 #include <agentmanager.h>
 #include <agentinstancecreatejob.h>
 
-#include <QDebug>
+#include "accountwizard_debug.h"
 #include <KLocalizedString>
 
 #include <QMetaMethod>
@@ -45,9 +45,9 @@ static QVariant::Type argumentType(const QMetaObject *mo, const QString &method)
     }
 
     if (m.methodSignature().isEmpty()) {
-        qWarning() << "Did not find D-Bus method: " << method << " available methods are:";
+        qCWarning(ACCOUNTWIZARD_LOG) << "Did not find D-Bus method: " << method << " available methods are:";
         for (int i = 0; i < mo->methodCount(); ++i) {
-            qWarning() << mo->method(i).methodSignature();
+            qCWarning(ACCOUNTWIZARD_LOG) << mo->method(i).methodSignature();
         }
         return QVariant::Invalid;
     }
@@ -85,10 +85,10 @@ void Resource::create()
     }
 
     // check if unique instance already exists
-    qDebug() << type.capabilities();
+    qCDebug(ACCOUNTWIZARD_LOG) << type.capabilities();
     if (type.capabilities().contains(QLatin1String("Unique"))) {
         foreach (const AgentInstance &instance, AgentManager::self()->instances()) {
-            qDebug() << instance.type().identifier() << (instance.type() == type);
+            qCDebug(ACCOUNTWIZARD_LOG) << instance.type().identifier() << (instance.type() == type);
             if (instance.type() == type) {
                 emit finished(i18n("Resource '%1' is already set up.", type.name()));
                 return;
@@ -125,7 +125,7 @@ void Resource::instanceCreateResult(KJob *job)
         }
         QMap<QString, QVariant>::const_iterator end(m_settings.constEnd());
         for (QMap<QString, QVariant>::const_iterator it = m_settings.constBegin(); it != end; ++it) {
-            qDebug() << "Setting up " << it.key() << " for agent " << m_instance.identifier();
+            qCDebug(ACCOUNTWIZARD_LOG) << "Setting up " << it.key() << " for agent " << m_instance.identifier();
             const QString methodName = QStringLiteral("set%1").arg(it.key());
             QVariant arg = it.value();
             const QVariant::Type targetType = argumentType(iface.metaObject(), methodName);

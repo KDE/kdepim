@@ -24,7 +24,7 @@
 
 #include <MailTransport/mailtransport/transportmanager.h>
 
-#include <QDebug>
+#include "importwizard_debug.h"
 
 #include <QFile>
 #include <QDir>
@@ -45,7 +45,7 @@ void EvolutionSettings::loadAccount(const QString &filename)
     //Read gconf file
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly)) {
-        qDebug() << " We can't open file" << filename;
+        qCDebug(IMPORTWIZARD_LOG) << " We can't open file" << filename;
         return;
     }
     QDomDocument doc;
@@ -55,7 +55,7 @@ void EvolutionSettings::loadAccount(const QString &filename)
     QDomElement config = doc.documentElement();
 
     if (config.isNull()) {
-        qDebug() << "No config found in filename " << filename;
+        qCDebug(IMPORTWIZARD_LOG) << "No config found in filename " << filename;
         return;
     }
     for (QDomElement e = config.firstChildElement(); !e.isNull(); e = e.nextSiblingElement()) {
@@ -72,7 +72,7 @@ void EvolutionSettings::loadAccount(const QString &filename)
                 } else if (attr == QLatin1String("send_recv_on_start")) {
                     //TODO: implement it.
                 } else {
-                    qDebug() << " attr unknown " << attr;
+                    qCDebug(IMPORTWIZARD_LOG) << " attr unknown " << attr;
                 }
             }
         }
@@ -83,7 +83,7 @@ void EvolutionSettings::loadLdap(const QString &filename)
 {
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly)) {
-        qDebug() << " We can't open file" << filename;
+        qCDebug(IMPORTWIZARD_LOG) << " We can't open file" << filename;
         return;
     }
     QDomDocument doc;
@@ -106,7 +106,7 @@ void EvolutionSettings::loadLdap(const QString &filename)
 
 void EvolutionSettings::readLdap(const QString &ldapStr)
 {
-    qDebug() << " ldap " << ldapStr;
+    qCDebug(IMPORTWIZARD_LOG) << " ldap " << ldapStr;
     QDomDocument ldap;
     if (!EvolutionUtil::loadInDomDocument(ldapStr, ldap)) {
         return;
@@ -115,7 +115,7 @@ void EvolutionSettings::readLdap(const QString &ldapStr)
     QDomElement domElement = ldap.documentElement();
 
     if (domElement.isNull()) {
-        qDebug() << "ldap not found";
+        qCDebug(IMPORTWIZARD_LOG) << "ldap not found";
         return;
     }
     //Ldap server
@@ -129,7 +129,7 @@ void EvolutionSettings::readLdap(const QString &ldapStr)
             QUrl url(uri);
             ldap.port = url.port();
             ldap.ldapUrl = url;
-            qDebug() << " relative_uri" << relative_uri;
+            qCDebug(IMPORTWIZARD_LOG) << " relative_uri" << relative_uri;
 
             QDomElement propertiesElement = e.firstChildElement();
             if (!propertiesElement.isNull()) {
@@ -147,7 +147,7 @@ void EvolutionSettings::readLdap(const QString &ldapStr)
                                 } else if (value == QLatin1String("whenever_possible")) {
                                     ldap.useTLS = true;
                                 } else {
-                                    qDebug() << " ssl attribute unknown" << value;
+                                    qCDebug(IMPORTWIZARD_LOG) << " ssl attribute unknown" << value;
                                 }
                             } else if (propertyName == QLatin1String("limit")) {
                                 ldap.limit = property.attribute(QLatin1String("value")).toInt();
@@ -162,15 +162,15 @@ void EvolutionSettings::readLdap(const QString &ldapStr)
                                 } else if (value == QLatin1String("ldap/simple-binddn")) {
                                     //TODO:
                                 } else {
-                                    qDebug() << " Unknown auth value " << value;
+                                    qCDebug(IMPORTWIZARD_LOG) << " Unknown auth value " << value;
                                 }
-                                qDebug() << " auth" << value;
+                                qCDebug(IMPORTWIZARD_LOG) << " auth" << value;
                             } else {
-                                qDebug() << " property unknown :" << propertyName;
+                                qCDebug(IMPORTWIZARD_LOG) << " property unknown :" << propertyName;
                             }
                         }
                     } else {
-                        qDebug() << " tag unknown :" << propertyTag;
+                        qCDebug(IMPORTWIZARD_LOG) << " tag unknown :" << propertyTag;
                     }
                 }
                 ImportWizardUtil::mergeLdap(ldap);
@@ -191,7 +191,7 @@ void EvolutionSettings::readSignatures(const QDomElement &account)
 
 void EvolutionSettings::extractSignatureInfo(const QString &info)
 {
-    //qDebug()<<" signature info "<<info;
+    //qCDebug(IMPORTWIZARD_LOG)<<" signature info "<<info;
     QDomDocument signature;
     if (!EvolutionUtil::loadInDomDocument(info, signature)) {
         return;
@@ -200,7 +200,7 @@ void EvolutionSettings::extractSignatureInfo(const QString &info)
     QDomElement domElement = signature.documentElement();
 
     if (domElement.isNull()) {
-        qDebug() << "Signature not found";
+        qCDebug(IMPORTWIZARD_LOG) << "Signature not found";
         return;
     }
     for (QDomElement e = domElement.firstChildElement(); !e.isNull(); e = e.nextSiblingElement()) {
@@ -232,7 +232,7 @@ void EvolutionSettings::extractSignatureInfo(const QString &info)
         }
         mMapSignature.insert(uid, signature);
 
-        qDebug() << " signature tag :" << tag;
+        qCDebug(IMPORTWIZARD_LOG) << " signature tag :" << tag;
     }
 }
 
@@ -248,7 +248,7 @@ void EvolutionSettings::readAccount(const QDomElement &account)
 
 void EvolutionSettings::extractAccountInfo(const QString &info)
 {
-    qDebug() << " info " << info;
+    qCDebug(IMPORTWIZARD_LOG) << " info " << info;
     //Read QDomElement
     QDomDocument account;
     if (!EvolutionUtil::loadInDomDocument(info, account)) {
@@ -258,7 +258,7 @@ void EvolutionSettings::extractAccountInfo(const QString &info)
     QDomElement domElement = account.documentElement();
 
     if (domElement.isNull()) {
-        qDebug() << "Account not found";
+        qCDebug(IMPORTWIZARD_LOG) << "Account not found";
         return;
     }
 
@@ -291,7 +291,7 @@ void EvolutionSettings::extractAccountInfo(const QString &info)
                 } else if (identityTag == QLatin1String("reply-to")) {
                     newIdentity->setReplyToAddr(identity.text());
                 } else {
-                    qDebug() << " tag identity not found :" << identityTag;
+                    qCDebug(IMPORTWIZARD_LOG) << " tag identity not found :" << identityTag;
                 }
             }
         } else if (tag == QLatin1String("source")) {
@@ -309,14 +309,14 @@ void EvolutionSettings::extractAccountInfo(const QString &info)
             for (QDomElement server = e.firstChildElement(); !server.isNull(); server = server.nextSiblingElement()) {
                 const QString serverTag = server.tagName();
                 if (serverTag == QLatin1String("url")) {
-                    qDebug() << " server.text() :" << server.text();
+                    qCDebug(IMPORTWIZARD_LOG) << " server.text() :" << server.text();
                     QUrl serverUrl(server.text());
                     const QString scheme = serverUrl.scheme();
                     QMap<QString, QVariant> settings;
                     const int port = serverUrl.port();
 
                     const QString path = serverUrl.path();
-                    qDebug() << " path !" << path;
+                    qCDebug(IMPORTWIZARD_LOG) << " path !" << path;
                     const QString userName = serverUrl.userInfo();
 
                     const QStringList listArgument = path.split(QLatin1Char(';'));
@@ -343,7 +343,7 @@ void EvolutionSettings::extractAccountInfo(const QString &info)
                             } else if (securityMethod == QLatin1String("ssl-on-alternate-port")) {
                                 settings.insert(QLatin1String("Safety"), QLatin1String("SSL"));
                             } else {
-                                qDebug() << " security method unknown : " << path;
+                                qCDebug(IMPORTWIZARD_LOG) << " security method unknown : " << path;
                             }
                         } else {
                             settings.insert(QLatin1String("Safety"), QLatin1String("STARTTLS"));
@@ -366,7 +366,7 @@ void EvolutionSettings::extractAccountInfo(const QString &info)
                             } else if (securityMethod == QLatin1String("ssl-on-alternate-port")) {
                                 settings.insert(QLatin1String("UseSSL"), true);
                             } else {
-                                qDebug() << " security method unknown : " << path;
+                                qCDebug(IMPORTWIZARD_LOG) << " security method unknown : " << path;
                             }
                         } else {
                             settings.insert(QLatin1String("UseTLS"), true);
@@ -397,12 +397,12 @@ void EvolutionSettings::extractAccountInfo(const QString &info)
                         AbstractBase::createResource("akonadi_maildir_resource", name, settings);
                     } else if (scheme == QLatin1String("nntp")) {
                         //FIXME in the future
-                        qDebug() << " For the moment we can't import nntp resource";
+                        qCDebug(IMPORTWIZARD_LOG) << " For the moment we can't import nntp resource";
                     } else {
-                        qDebug() << " unknown scheme " << scheme;
+                        qCDebug(IMPORTWIZARD_LOG) << " unknown scheme " << scheme;
                     }
                 } else {
-                    qDebug() << " server tag unknow :" << serverTag;
+                    qCDebug(IMPORTWIZARD_LOG) << " server tag unknow :" << serverTag;
                 }
             }
         } else if (tag == QLatin1String("transport")) {
@@ -414,7 +414,7 @@ void EvolutionSettings::extractAccountInfo(const QString &info)
             for (QDomElement smtp = e.firstChildElement(); !smtp.isNull(); smtp = smtp.nextSiblingElement()) {
                 const QString smtpTag = smtp.tagName();
                 if (smtpTag == QLatin1String("url")) {
-                    qDebug() << " smtp.text() :" << smtp.text();
+                    qCDebug(IMPORTWIZARD_LOG) << " smtp.text() :" << smtp.text();
                     QUrl smtpUrl(smtp.text());
                     const QString scheme = smtpUrl.scheme();
                     if (scheme == QLatin1String("sendmail")) {
@@ -449,7 +449,7 @@ void EvolutionSettings::extractAccountInfo(const QString &info)
                             } else if (authMethod == QLatin1String("POPB4SMTP")) {
                                 transport->setAuthenticationType(MailTransport::Transport::EnumAuthenticationType::APOP); //????
                             } else {
-                                qDebug() << " smtp auth method unknown " << authMethod;
+                                qCDebug(IMPORTWIZARD_LOG) << " smtp auth method unknown " << authMethod;
                             }
                         }
 
@@ -464,14 +464,14 @@ void EvolutionSettings::extractAccountInfo(const QString &info)
                             } else if (securityMethod == QLatin1String("ssl-on-alternate-port")) {
                                 transport->setEncryption(MailTransport::Transport::EnumEncryption::SSL);
                             } else {
-                                qDebug() << " security method unknown : " << path;
+                                qCDebug(IMPORTWIZARD_LOG) << " security method unknown : " << path;
                             }
                         } else {
                             transport->setEncryption(MailTransport::Transport::EnumEncryption::TLS);
                         }
                     }
                 } else {
-                    qDebug() << " smtp tag unknow :" << smtpTag;
+                    qCDebug(IMPORTWIZARD_LOG) << " smtp tag unknow :" << smtpTag;
                 }
             }
             storeTransport(transport, true);
@@ -532,7 +532,7 @@ void EvolutionSettings::extractAccountInfo(const QString &info)
             }
             //TODO
         } else {
-            qDebug() << " tag not know :" << tag;
+            qCDebug(IMPORTWIZARD_LOG) << " tag not know :" << tag;
         }
 
     }
@@ -588,7 +588,7 @@ void EvolutionSettings::addAuth(QMap<QString, QVariant> &settings, const QString
         } else if (authMethod == QLatin1String("POPB4SMTP")) {
             settings.insert(argument, MailTransport::Transport::EnumAuthenticationType::APOP);   //????
         } else {
-            qDebug() << " smtp auth method unknown " << authMethod;
+            qCDebug(IMPORTWIZARD_LOG) << " smtp auth method unknown " << authMethod;
         }
     }
 }

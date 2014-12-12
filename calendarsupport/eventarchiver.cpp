@@ -35,7 +35,7 @@
 
 #include <KCalUtils/Stringify>
 
-#include <QDebug>
+#include "calendarsupport_debug.h"
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <QTemporaryFile>
@@ -135,7 +135,7 @@ void EventArchiver::run(const Akonadi::ETMCalendar::Ptr &calendar,
 
     const KCalCore::Incidence::List incidences = calendar->mergeIncidenceList(events, todos, journals);
 
-    qDebug() << "archiving incidences before" << limitDate
+    qCDebug(CALENDARSUPPORT_LOG) << "archiving incidences before" << limitDate
              << " ->" << incidences.count() << " incidences found.";
     if (incidences.isEmpty()) {
         if (withGUI && errorIfNone) {
@@ -210,7 +210,7 @@ void EventArchiver::archiveIncidences(const Akonadi::ETMCalendar::Ptr &calendar,
     // Save current calendar to disk
     storage.setFileName(tmpFileName);
     if (!storage.save()) {
-        qDebug() << "Can't save calendar to temp file";
+        qCDebug(CALENDARSUPPORT_LOG) << "Can't save calendar to temp file";
         return;
     }
 
@@ -223,7 +223,7 @@ void EventArchiver::archiveIncidences(const Akonadi::ETMCalendar::Ptr &calendar,
     ICalFormat *format = new ICalFormat();
     archiveStore.setSaveFormat(format);
     if (!archiveStore.load()) {
-        qDebug() << "Can't load calendar from temp file";
+        qCDebug(CALENDARSUPPORT_LOG) << "Can't load calendar from temp file";
         QFile::remove(tmpFileName);
         return;
     }
@@ -248,14 +248,14 @@ void EventArchiver::archiveIncidences(const Akonadi::ETMCalendar::Ptr &calendar,
     // There is no KIO::NetAccess availabe for Windows CE
     if (KIO::NetAccess::exists(archiveURL, KIO::NetAccess::SourceSide, widget)) {
         if (!KIO::NetAccess::download(archiveURL, archiveFile, widget)) {
-            qDebug() << "Can't download archive file";
+            qCDebug(CALENDARSUPPORT_LOG) << "Can't download archive file";
             QFile::remove(tmpFileName);
             return;
         }
         // Merge with events to be archived.
         archiveStore.setFileName(archiveFile);
         if (!archiveStore.load()) {
-            qDebug() << "Can't merge with archive file";
+            qCDebug(CALENDARSUPPORT_LOG) << "Can't merge with archive file";
             QFile::remove(tmpFileName);
             return;
         }
@@ -317,7 +317,7 @@ bool EventArchiver::isSubTreeComplete(const Akonadi::ETMCalendar::Ptr &calendar,
     // This QList is only to prevent infinit recursion
     if (checkedUids.contains(todo->uid())) {
         // Probably will never happen, calendar.cpp checks for this
-        qWarning() << "To-do hierarchy loop detected!";
+        qCWarning(CALENDARSUPPORT_LOG) << "To-do hierarchy loop detected!";
         return false;
     }
 

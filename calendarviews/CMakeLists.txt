@@ -40,6 +40,7 @@ endif()
 ########### next target ###############
 
 set(eventviews_LIB_SRCS
+  calendarview_debug.cpp
   eventview_p.cpp
   eventview.cpp
   helper.cpp

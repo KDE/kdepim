@@ -34,7 +34,7 @@
 #include <Akonadi/Calendar/IncidenceChanger>
 #include <KCalCore/OccurrenceIterator>
 
-#include <QDebug>
+#include "calendarview_debug.h"
 
 #include <QStandardItemModel>
 #include <QTreeWidget>
@@ -117,10 +117,10 @@ TimelineItem *TimelineView::Private::calendarItemForIncidence(const Akonadi::Ite
 void TimelineView::Private::insertIncidence(const Akonadi::Item &aitem, const QDate &day)
 {
     const Incidence::Ptr incidence = CalendarSupport::incidence(aitem);
-    //qDebug() << "Item " << aitem.id() << " parentcollection: " << aitem.parentCollection().id();
+    //qCDebug(CALENDARVIEW_LOG) << "Item " << aitem.id() << " parentcollection: " << aitem.parentCollection().id();
     TimelineItem *item = calendarItemForIncidence(aitem);
     if (!item) {
-        qWarning() << "Help! Something is really wrong here!";
+        qCWarning(CALENDARVIEW_LOG) << "Help! Something is really wrong here!";
         return;
     }
 

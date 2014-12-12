@@ -19,11 +19,11 @@
 #include <KContacts/Addressee>
 #include <kcontacts/contactgroup.h>
 
-#include <QDebug>
+#include "importwizard_debug.h"
 #include <KLocalizedString>
 
 #include <QDir>
-#include <QDebug>
+#include "importwizard_debug.h"
 #include <QDomDocument>
 
 SylpheedAddressBook::SylpheedAddressBook(const QDir &dir, ImportWizard *parent)
@@ -47,9 +47,9 @@ SylpheedAddressBook::~SylpheedAddressBook()
 void SylpheedAddressBook::readAddressBook(const QString &filename)
 {
     QFile file(filename);
-    //qDebug()<<" import filename :"<<filename;
+    //qCDebug(IMPORTWIZARD_LOG)<<" import filename :"<<filename;
     if (!file.open(QIODevice::ReadOnly)) {
-        qDebug() << " We can't open file" << filename;
+        qCDebug(IMPORTWIZARD_LOG) << " We can't open file" << filename;
         return;
     }
     QString errorMsg;
@@ -57,14 +57,14 @@ void SylpheedAddressBook::readAddressBook(const QString &filename)
     int errorCol;
     QDomDocument doc;
     if (!doc.setContent(&file, &errorMsg, &errorRow, &errorCol)) {
-        qDebug() << "Unable to load document.Parse error in line " << errorRow
+        qCDebug(IMPORTWIZARD_LOG) << "Unable to load document.Parse error in line " << errorRow
                  << ", col " << errorCol << ": " << errorMsg;
         return;
     }
     QDomElement domElement = doc.documentElement();
 
     if (domElement.isNull()) {
-        qDebug() << "addressbook not found";
+        qCDebug(IMPORTWIZARD_LOG) << "addressbook not found";
         return;
     }
 
@@ -117,7 +117,7 @@ void SylpheedAddressBook::readAddressBook(const QString &filename)
                                 uidAddress << addresslist.attribute(QLatin1String("uid"));
                             }
                         } else {
-                            qDebug() << " tagAddressList unknown :" << tagAddressList;
+                            qCDebug(IMPORTWIZARD_LOG) << " tagAddressList unknown :" << tagAddressList;
                         }
                     }
                     if (!emails.isEmpty()) {
@@ -134,18 +134,18 @@ void SylpheedAddressBook::readAddressBook(const QString &filename)
                                 contact.insertCustom(QLatin1String("KADDRESSBOOK"), name, value);
                             }
                         } else {
-                            qDebug() << "tagAttributeList not implemented " << tagAttributeList;
+                            qCDebug(IMPORTWIZARD_LOG) << "tagAttributeList not implemented " << tagAttributeList;
                         }
                     }
 
                 } else {
-                    qDebug() << " addressTag unknown :" << addressTag;
+                    qCDebug(IMPORTWIZARD_LOG) << " addressTag unknown :" << addressTag;
                 }
             }
             if (!mAddressBookUid.contains(uidPerson)) {
                 mAddressBookUid.insert(uidPerson, uidAddress);
             } else {
-                qDebug() << " problem uidPerson already stored" << uidPerson;
+                qCDebug(IMPORTWIZARD_LOG) << " problem uidPerson already stored" << uidPerson;
             }
             addImportNote(contact, QLatin1String("Sylpheed"));
             createContact(contact);
@@ -173,7 +173,7 @@ void SylpheedAddressBook::readAddressBook(const QString &filename)
                             if (!pid.isEmpty() && !eid.isEmpty()) {
                                 //TODO
                             } else {
-                                qDebug() << " Problem with group" << name;
+                                qCDebug(IMPORTWIZARD_LOG) << " Problem with group" << name;
                             }
                             //TODO
                         }
@@ -182,7 +182,7 @@ void SylpheedAddressBook::readAddressBook(const QString &filename)
             }
             createGroup(group);
         } else {
-            qDebug() << " SylpheedAddressBook::readAddressBook  tag unknown :" << tag;
+            qCDebug(IMPORTWIZARD_LOG) << " SylpheedAddressBook::readAddressBook  tag unknown :" << tag;
         }
     }
 }

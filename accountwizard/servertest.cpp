@@ -21,14 +21,14 @@
 #include <mailtransport/transport.h>
 #include <mailtransport/servertest.h>
 
-#include <qdebug.h>
+#include "accountwizard_debug.h"
 #include <kmessagebox.h>
 #include <KLocalizedString>
 
 ServerTest::ServerTest(QObject *parent) :
     QObject(parent), m_serverTest(new MailTransport::ServerTest(0))
 {
-    qDebug() << "Welcome!";
+    qCDebug(ACCOUNTWIZARD_LOG) << "Welcome!";
     connect(m_serverTest, &MailTransport::ServerTest::finished, this, &ServerTest::testFinished);
 }
 
@@ -39,7 +39,7 @@ ServerTest::~ServerTest()
 
 void ServerTest::test(const QString server, const QString protocol)
 {
-    qDebug() << server << protocol;
+    qCDebug(ACCOUNTWIZARD_LOG) << server << protocol;
     m_serverTest->setServer(server);
     m_serverTest->setProtocol(protocol);
     m_serverTest->start();
@@ -47,7 +47,7 @@ void ServerTest::test(const QString server, const QString protocol)
 
 void ServerTest::testFinished(QList< int > list)
 {
-    qDebug() << "types: " << list;
+    qCDebug(ACCOUNTWIZARD_LOG) << "types: " << list;
     if (list.contains(MailTransport::Transport::EnumEncryption::TLS)) {
         emit testResult(QStringLiteral("tls"));
     } else if (list.contains(MailTransport::Transport::EnumEncryption::SSL)) {
