@@ -23,7 +23,7 @@
 
 #include "bilbomedia.h"
 
-#include <qdebug.h>
+#include "blogilo_debug.h"
 #include <QIcon>
 #include <QPixmap>
 #include <QUrl>
@@ -141,7 +141,7 @@ QIcon BilboMedia::icon() const
         if (!iconPic.isNull()) {
             return QIcon(iconPic);
         } else {
-            qDebug() << "iconPic is Null";
+            qCDebug(BLOGILO_LOG) << "iconPic is Null";
         }
     }
 

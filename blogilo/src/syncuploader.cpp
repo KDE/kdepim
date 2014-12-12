@@ -23,7 +23,7 @@
 
 #include "syncuploader.h"
 
-#include <qdebug.h>
+#include "blogilo_debug.h"
 #include "backend.h"
 #include "bilbomedia.h"
 #include <QEventLoop>
@@ -79,7 +79,7 @@ bool SyncUploader::uploadMedia(Backend *backend, BilboMedia *media)
 void SyncUploader::slotMediaFileUploaded(BilboMedia *media)
 {
     if (media && media == d->mCurrentMedia) {
-        qDebug();
+        qCDebug(BLOGILO_LOG);
         d->success = true;
         d->loop->exit();
     }

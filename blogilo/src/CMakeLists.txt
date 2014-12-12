@@ -6,6 +6,7 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}
                      ${LibKGAPI2_INCLUDE_DIR} )
 
 set(blogilo_SRCS
+ blogilo_debug.cpp
  main.cpp
  mainwindow.cpp
  toolbox.cpp

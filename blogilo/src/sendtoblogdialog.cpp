@@ -23,7 +23,7 @@
 
 #include "sendtoblogdialog.h"
 #include "ui_sendtoblogbase.h"
-#include <qdebug.h>
+#include "blogilo_debug.h"
 #include <KLocalizedString>
 #include <KConfigGroup>
 #include <QDialogButtonBox>

@@ -37,7 +37,7 @@
 #include <kstandarddirs.h>
 #include <kmessagebox.h>
 #include <klocalizedstring.h>
-#include <qdebug.h>
+#include "blogilo_debug.h"
 #include <kdatetime.h>
 #include <KUrl>
 
@@ -49,7 +49,7 @@ static const char  POST_CONTENT[] = "Temporary-Post-Used-For-Style-Detection-Con
 StyleGetter::StyleGetter(const int blogid, QObject *parent)
     : QObject(parent)
 {
-    qDebug();
+    qCDebug(BLOGILO_LOG);
     BilboBlog *tempBlog = DBMan::self()->blog(blogid);
     if (tempBlog->isError()) {
         KMessageBox::detailedError(mParent, i18n("Cannot fetch the selected blog style."),
@@ -59,7 +59,7 @@ StyleGetter::StyleGetter(const int blogid, QObject *parent)
     // sets cachePath to ~/.kde4/share/apps/bilbo/blog_host_name/
 //     QString blogDir = DBMan::self()->getBlogInfo( blogid ).url().host();
 //     QString blogDir = tempBlog.url().host();
-//     qDebug() << blogDir;
+//     qCDebug(BLOGILO_LOG) << blogDir;
 //     mCachePath = KStandardDirs::locateLocal( "data", "bilbo/" + blogDir + '/' , true );
     QString url = QStringLiteral("blogilo/%1/").arg(blogid);
     mCachePath = KStandardDirs::locateLocal("data", url , true);
@@ -91,17 +91,17 @@ StyleGetter::StyleGetter(const int blogid, QObject *parent)
 
 StyleGetter::~StyleGetter()
 {
-    qDebug();
+    qCDebug(BLOGILO_LOG);
 }
 
 QString StyleGetter::styledHtml(const int blogid,
                                 const QString &title,
                                 const QString &content)
 {
-    qDebug();
+    qCDebug(BLOGILO_LOG);
 //     BilboBlog tempBlog = DBMan::self()->getBlogInfo( blogid );
 //     if ( tempBlog.isError() ) {
-//         qDebug() << DBMan::self()->lastErrorText();
+//         qCDebug(BLOGILO_LOG) << DBMan::self()->lastErrorText();
 //         return "<html><body><b>" + title + "</b><br>" + content + "</html>";
 //     }
 //
@@ -141,17 +141,17 @@ QString StyleGetter::styledHtml(const int blogid,
 
 void StyleGetter::slotTempPostPublished(int blogId, BilboPost *post)
 {
-    qDebug();
+    qCDebug(BLOGILO_LOG);
 
     KUrl postUrl;
 //     postUrl = post->permaLink();
     postUrl = post->link();
     if (postUrl.isEmpty()) {
-        qDebug() << "link was empty";
+        qCDebug(BLOGILO_LOG) << "link was empty";
 //         postUrl = post->link();
         postUrl = post->permaLink();
         if (postUrl.isEmpty()) {
-            qDebug() << "permaLink was empty";
+            qCDebug(BLOGILO_LOG) << "permaLink was empty";
             postUrl = KUrl(DBMan::self()->blog(blogId)->blogUrl());
         }
     }
@@ -167,7 +167,7 @@ void StyleGetter::slotTempPostPublished(int blogId, BilboPost *post)
 
 void StyleGetter::slotHtmlCopied(KJob *job)
 {
-    qDebug();
+    qCDebug(BLOGILO_LOG);
     if (job->error()) {
         KMessageBox::detailedError(mParent, i18n("Cannot get html file."),
                                    job->errorString());
@@ -233,7 +233,7 @@ void StyleGetter::slotTempPostRemoved(int blog_id, const BilboPost &post)
 
 void StyleGetter::generateRandomPostStrings()
 {
-    qDebug();
+    qCDebug(BLOGILO_LOG);
     srand(time(0));
     int postRandomNumber = rand();
     mPostTitle = QStringLiteral("%1%2").arg(QLatin1String(POST_TITLE)).arg(postRandomNumber);
@@ -242,7 +242,7 @@ void StyleGetter::generateRandomPostStrings()
 
 void StyleGetter::slotError(const QString &errMsg)
 {
-    qDebug();
+    qCDebug(BLOGILO_LOG);
     KMessageBox::detailedError(mParent, i18n("An error occurred in the latest transaction."), errMsg);
     b->deleteLater();
 }

@@ -16,7 +16,7 @@
 */
 
 #include "configuredialog.h"
-
+#include "blogilo_debug.h"
 #include "ui_advancedsettingsbase.h"
 #include "ui_settingsbase.h"
 #include "ui_editorsettingsbase.h"
@@ -87,7 +87,7 @@ bool ConfigureDialog::hasChanged()
 
 void ConfigureDialog::slotStorageServiceChanged()
 {
-    qDebug() << " void ConfigureDialog::slotStorageServiceChanged()";
+    qCDebug(BLOGILO_LOG) << " void ConfigureDialog::slotStorageServiceChanged()";
     mHasChanged = true;
     Q_EMIT settingsChanged();
     updateButtons();

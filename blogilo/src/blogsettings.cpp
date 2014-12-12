@@ -25,7 +25,7 @@
 #include "addeditblog.h"
 #include "dbman.h"
 
-#include <qdebug.h>
+#include "blogilo_debug.h"
 #include <KMessageBox>
 #include <QIcon>
 #include <KLocalizedString>

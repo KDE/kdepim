@@ -24,7 +24,7 @@
 #include "entriescountdialog.h"
 #include "settings.h"
 
-#include <qdebug.h>
+#include "blogilo_debug.h"
 #include <KConfigGroup>
 #include <QDialogButtonBox>
 #include <QVBoxLayout>

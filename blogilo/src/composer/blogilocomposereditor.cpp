@@ -23,7 +23,7 @@
 #include "bilbomedia.h"
 #include "global.h"
 
-#include <QDebug>
+#include "blogilo_debug.h"
 
 #include <QAction>
 #include <KLocalizedString>
@@ -109,12 +109,12 @@ void BlogiloComposerEditor::setReadOnly(bool _readOnly)
 
 QList< BilboMedia * > BlogiloComposerEditor::getLocalImages()
 {
-    qDebug();
+    qCDebug(BLOGILO_LOG);
     QList< BilboMedia * > list;
     QWebElementCollection images = view()->page()->mainFrame()->findAllElements(QLatin1String("img"));
     Q_FOREACH (const QWebElement &elm, images) {
         if (elm.attribute(QLatin1String("src")).startsWith(QLatin1String("file://"))) {
-            //             qDebug()<<elm.toOuterXml();
+            //             qCDebug(BLOGILO_LOG)<<elm.toOuterXml();
             BilboMedia *media = new BilboMedia(this);
             QUrl mediaUrl(elm.attribute(QLatin1String("src")));
             media->setLocalUrl(mediaUrl);

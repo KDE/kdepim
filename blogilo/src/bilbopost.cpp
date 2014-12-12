@@ -23,7 +23,7 @@
 
 #include "bilbopost.h"
 #include <kdatetime.h>
-#include <qdebug.h>
+#include "blogilo_debug.h"
 #include <QStringList>
 
 class BilboPostPrivate
@@ -150,7 +150,7 @@ void BilboPost::setCategoryList(const QList< Category > &list)
 
 void BilboPost::setProperties(const BilboPost &postProp)
 {
-    qDebug();
+    qCDebug(BLOGILO_LOG);
     this->setCreationDateTime(postProp.creationDateTime());
     this->setModificationDateTime(postProp.modificationDateTime());
     this->setLink(postProp.link());

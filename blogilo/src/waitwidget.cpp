@@ -23,36 +23,36 @@
 
 #include "waitwidget.h"
 
-#include <qdebug.h>
+#include "blogilo_debug.h"
 
 WaitWidget::WaitWidget(QWidget *parent)
     : QDialog(parent)
 {
-    qDebug();
+    qCDebug(BLOGILO_LOG);
     setupUi(this);
 }
 
 WaitWidget::~WaitWidget()
 {
-    qDebug();
+    qCDebug(BLOGILO_LOG);
 }
 
 void WaitWidget::setText(const QString &text)
 {
-    qDebug();
+    qCDebug(BLOGILO_LOG);
     operationNameLabel->setText(text);
     setWindowTitle(text);
 }
 
 void WaitWidget::setMaxJobs(int max)
 {
-    qDebug();
+    qCDebug(BLOGILO_LOG);
     progressBar->setMaximum(max);
 }
 
 void WaitWidget::jobDone()
 {
-    qDebug();
+    qCDebug(BLOGILO_LOG);
     progressBar->setValue(progressBar->value() + 1);
 }
 

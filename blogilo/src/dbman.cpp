@@ -26,7 +26,7 @@
 #include "bilboblog.h"
 #include "bilbopost.h"
 
-#include <qdebug.h>
+#include "blogilo_debug.h"
 #include <KLocalizedString>
 #include <kdatetime.h>
 #include <kurl.h>
@@ -67,26 +67,26 @@ DBMan::DBMan()
             d->mWallet->createFolder(QLatin1String("blogilo"));
         }
         d->mWallet->setFolder(QLatin1String("blogilo"));
-        qDebug() << "Wallet successfully opened.";
+        qCDebug(BLOGILO_LOG) << "Wallet successfully opened.";
     } else {
         d->useWallet = false;
-        qDebug() << "Could not use Wallet service, will use database to store passwords";
+        qCDebug(BLOGILO_LOG) << "Could not use Wallet service, will use database to store passwords";
     }
 
     if (!QFile::exists(CONF_DB)) {
         if (!this->createDB()) {
             KMessageBox::detailedError(0, i18n("Cannot create database"),
                                        i18n(d->db.lastError().text().toUtf8().data()));
-            qDebug() << "Cannot create database, SQL error: " << d->db.lastError().text() << endl;
+            qCDebug(BLOGILO_LOG) << "Cannot create database, SQL error: " << d->db.lastError().text() << endl;
             exit(1);
         }
     } else if (!connectDB()) {
-        qDebug() << d->mLastErrorText;
+        qCDebug(BLOGILO_LOG) << d->mLastErrorText;
         exit(1);
     }
 
     if (!updateDB()) {
-        qDebug() << d->mLastErrorText;
+        qCDebug(BLOGILO_LOG) << d->mLastErrorText;
         exit(1);
     }
 
@@ -95,7 +95,7 @@ DBMan::DBMan()
 
 DBMan::~DBMan()
 {
-    qDebug();
+    qCDebug(BLOGILO_LOG);
     d->db.close();
     if (d->useWallet) {
         d->mWallet->deleteLater();
@@ -137,7 +137,7 @@ void DBMan::reloadBlogList()
 
 bool DBMan::connectDB()
 {
-    qDebug();
+    qCDebug(BLOGILO_LOG);
     if (d->db.isOpen()) {
         return true;
     }
@@ -147,7 +147,7 @@ bool DBMan::connectDB()
     if (!d->db.open()) {
         KMessageBox::detailedError(0, i18n("Cannot connect to database"),
                                    i18n(d->db.lastError().text().toUtf8().data()));
-        qDebug() << "Cannot connect to database, SQL error: " << d->db.lastError().text();
+        qCDebug(BLOGILO_LOG) << "Cannot connect to database, SQL error: " << d->db.lastError().text();
         return false;
     }
     return true;
@@ -161,7 +161,7 @@ Will create configuration database!
 */
 bool DBMan::createDB()
 {
-    qDebug();
+    qCDebug(BLOGILO_LOG);
     bool ret = true;
     if (!connectDB()) {
         exit(1);
@@ -376,7 +376,7 @@ int DBMan::addBlog(const BilboBlog &blog)
         q.prepare(QLatin1String("INSERT INTO blog (blogid, blog_url, username, style_url, api_type, title,\
                direction, local_directory) VALUES(?, ?, ?, ?, ?, ?, ?, ?)"));
         if (d->mWallet && d->mWallet->writePassword(blog.url().url() + QLatin1Char('_') + blog.username(), blog.password()) == 0) {
-            qDebug() << "Password stored to kde wallet";
+            qCDebug(BLOGILO_LOG) << "Password stored to kde wallet";
         } else {
             return -1;
         }
@@ -410,7 +410,7 @@ bool DBMan::editBlog(const BilboBlog &blog)
         q.prepare(QLatin1String("UPDATE blog SET blogid=?, blog_url=?, username=? , style_url=? , api_type=?, \
                    title=?, direction=?, local_directory=? WHERE id=?"));
         if (d->mWallet && d->mWallet->writePassword(blog.url().url() + QLatin1Char('_') + blog.username(), blog.password()) == 0) {
-            qDebug() << "Password stored to kde wallet";
+            qCDebug(BLOGILO_LOG) << "Password stored to kde wallet";
         } else {
             return false;
         }
@@ -432,7 +432,7 @@ bool DBMan::editBlog(const BilboBlog &blog)
     bool res = q.exec();
     if (!res) {
         d->mLastErrorText = q.lastError().text();
-        qDebug() << q.lastError().text();
+        qCDebug(BLOGILO_LOG) << q.lastError().text();
         return res;
     }
     reloadBlogList();
@@ -445,7 +445,7 @@ bool DBMan::removeBlog(int blog_id)
     if (d->useWallet) {
         if (d->mWallet && d->mWallet->removeEntry(tmp->url().url() + QLatin1Char('_') + tmp->username()) == 0
                 && d->mWallet->removeEntry(QString::number(blog_id)) == 0) {
-            qDebug() << "Password removed to kde wallet";
+            qCDebug(BLOGILO_LOG) << "Password removed to kde wallet";
         }
     }
     QSqlQuery q;
@@ -454,7 +454,7 @@ bool DBMan::removeBlog(int blog_id)
     bool res = q.exec();
     if (!res) {
         d->mLastErrorText = q.lastError().text();
-        qDebug() << q.lastError().text();
+        qCDebug(BLOGILO_LOG) << q.lastError().text();
         return res;
     }
     const QString path = KStandardDirs::locateLocal("data", QString::fromLatin1("blogilo/%1/").arg(blog_id) , false);
@@ -465,7 +465,7 @@ bool DBMan::removeBlog(int blog_id)
 
 int DBMan::addPost(const BilboPost &post, int blog_id)
 {
-    qDebug() << "Adding post with title: " << post.title() << " to Blog " << blog_id;
+    qCDebug(BLOGILO_LOG) << "Adding post with title: " << post.title() << " to Blog " << blog_id;
     QSqlQuery q;
     q.prepare(QLatin1String("INSERT OR REPLACE INTO post (postid, blog_id, author, title, content, text_more, c_time, m_time,\
                is_private, is_comment_allowed, is_trackback_allowed, link, perma_link, summary, slug,\
@@ -505,7 +505,7 @@ int DBMan::addPost(const BilboPost &post, int blog_id)
 
         int cat_count = post.categories().count();
         if (cat_count > 0) {
-//             qDebug()<< "Adding "<<cat_count<<" category to post.";
+//             qCDebug(BLOGILO_LOG)<< "Adding "<<cat_count<<" category to post.";
             QSqlQuery q2;
             q2.prepare(QLatin1String("INSERT OR REPLACE INTO post_cat (blogId, postId, categoryId)\
             VALUES((SELECT blogid FROM blog where id=?), ?, \
@@ -516,14 +516,14 @@ int DBMan::addPost(const BilboPost &post, int blog_id)
                 q2.addBindValue(post.categories()[i]);
                 q2.addBindValue(blog_id);
                 if (!q2.exec()) {
-                    qDebug() << "Cannot add one of categories to Post, SQL Error: " << q2.lastError().text();
+                    qCDebug(BLOGILO_LOG) << "Cannot add one of categories to Post, SQL Error: " << q2.lastError().text();
                     d->mLastErrorText = q.lastError().text();
                 }
             }
         }
     } else {
         d->mLastErrorText = q.lastError().text();
-        qDebug() << "Cannot Add post to database!\n\tSQL Error: " << q.lastError().text();
+        qCDebug(BLOGILO_LOG) << "Cannot Add post to database!\n\tSQL Error: " << q.lastError().text();
         ret = -1;
     }
 
@@ -532,7 +532,7 @@ int DBMan::addPost(const BilboPost &post, int blog_id)
 
 bool DBMan::editPost(const BilboPost &post, int blog_id)
 {
-    qDebug();
+    qCDebug(BLOGILO_LOG);
     QSqlQuery q;
     q.prepare(QLatin1String("UPDATE post SET author=?, title=?, content=?, text_more=?, c_time=?, m_time=?,\
                is_private=?, is_comment_allowed=?, is_trackback_allowed=?, link=?, perma_link=?, summary=?,\
@@ -558,7 +558,7 @@ bool DBMan::editPost(const BilboPost &post, int blog_id)
 
     if (!q.exec()) {
         d->mLastErrorText = q.lastError().text();
-        qDebug() << "Modifying post failed, SQL ERROR: " << d->mLastErrorText;
+        qCDebug(BLOGILO_LOG) << "Modifying post failed, SQL ERROR: " << d->mLastErrorText;
         return false;
     }
 
@@ -569,14 +569,14 @@ bool DBMan::editPost(const BilboPost &post, int blog_id)
     qd.addBindValue(blog_id);
     if (!qd.exec()) {
         d->mLastErrorText = qd.lastError().text();
-        qDebug() << "Cannot delete previous categories.";
+        qCDebug(BLOGILO_LOG) << "Cannot delete previous categories.";
     }
 
     ///Add new Categories:
 
     int cat_count = post.categories().count();
     if (cat_count > 0) {
-//             qDebug()<< "Adding "<<cat_count<<" category to post.";
+//             qCDebug(BLOGILO_LOG)<< "Adding "<<cat_count<<" category to post.";
         QSqlQuery q2;
         q2.prepare(QLatin1String("INSERT OR REPLACE INTO post_cat (blogId, postId, categoryId)\
         VALUES((SELECT blogid FROM blog where id=?), ?, \
@@ -588,7 +588,7 @@ bool DBMan::editPost(const BilboPost &post, int blog_id)
             q2.addBindValue(blog_id);
             if (!q2.exec()) {
                 d->mLastErrorText = q2.lastError().text();
-                qDebug() << "Cannot add one of categories to Post, SQL Error: " << q2.lastError().text();
+                qCDebug(BLOGILO_LOG) << "Cannot add one of categories to Post, SQL Error: " << q2.lastError().text();
             }
         }
     }
@@ -604,7 +604,7 @@ bool DBMan::removePost(int id)
     bool res = q.exec();
     if (!res) {
         d->mLastErrorText = q.lastError().text();
-        qDebug() << d->mLastErrorText;
+        qCDebug(BLOGILO_LOG) << d->mLastErrorText;
     }
     return res;
 }
@@ -618,7 +618,7 @@ bool DBMan::removePost(int blog_id, const QString &postId)
     bool res = q.exec();
     if (!res) {
         d->mLastErrorText = q.lastError().text();
-        qDebug() << d->mLastErrorText;
+        qCDebug(BLOGILO_LOG) << d->mLastErrorText;
     }
     return res;
 }
@@ -631,7 +631,7 @@ bool DBMan::clearPosts(int blog_id)
     bool res = q.exec();
     if (!res) {
         d->mLastErrorText = q.lastError().text();
-        qDebug() << q.lastError().text();
+        qCDebug(BLOGILO_LOG) << q.lastError().text();
     }
     return res;
 }
@@ -666,7 +666,7 @@ bool DBMan::clearCategories(int blog_id)
     bool res = q.exec();
     if (!res) {
         d->mLastErrorText = q.lastError().text();
-        qDebug() << q.lastError().text();
+        qCDebug(BLOGILO_LOG) << q.lastError().text();
     }
     return res;
 }
@@ -718,7 +718,7 @@ bool DBMan::removeFile(int fileid)
     bool res = q.exec();
     if (!res) {
         d->mLastErrorText = q.lastError().text();
-        qDebug() << q.lastError().text();
+        qCDebug(BLOGILO_LOG) << q.lastError().text();
     }
     return res;
 }
@@ -731,7 +731,7 @@ bool DBMan::clearFiles(int blog_id)
     bool res = q.exec();
     if (!res) {
         d->mLastErrorText = q.lastError().text();
-        qDebug() << q.lastError().text();
+        qCDebug(BLOGILO_LOG) << q.lastError().text();
     }
     return res;
 }
@@ -748,10 +748,10 @@ int DBMan::saveTempEntry(const BilboPost &post, int blog_id)
 
 int DBMan::saveTemp_LocalEntry(const BilboPost &basePost, int blog_id, LocalPostState state)
 {
-    qDebug();
+    qCDebug(BLOGILO_LOG);
     QSqlQuery q;
     BilboPost post = basePost;
-//     qDebug()<<"postId: "<<post.postId();
+//     qCDebug(BLOGILO_LOG)<<"postId: "<<post.postId();
     QString postTable, postCatTable;
     if (state == Local) {
         postTable = QLatin1String("local_post");
@@ -762,10 +762,10 @@ int DBMan::saveTemp_LocalEntry(const BilboPost &basePost, int blog_id, LocalPost
     }
     int localId = post.localId();
 //    if(post.status() == KBlog::BlogPost::New) {///Post is new!
-//         qDebug()<<"Post is new!";
+//         qCDebug(BLOGILO_LOG)<<"Post is new!";
     if (post.localId() == -1) {
         ///Add new post to temp_post
-        qDebug() << "Add new post to temp_post";
+        qCDebug(BLOGILO_LOG) << "Add new post to temp_post";
         q.prepare(QLatin1String("INSERT OR REPLACE INTO ") + postTable + QLatin1String(" (postid, blog_id,\
             author, title, content, text_more, c_time, m_time, is_private, is_comment_allowed,\
             is_trackback_allowed, link, perma_link, summary, slug, tags, status)\
@@ -793,12 +793,12 @@ int DBMan::saveTemp_LocalEntry(const BilboPost &basePost, int blog_id, LocalPost
             localId = q.lastInsertId().toInt();
         } else {
             d->mLastErrorText = q.lastError().text();
-            qDebug() << "Cannot Add new local post to database!\n\tSQL Error: " << q.lastError().text();
+            qCDebug(BLOGILO_LOG) << "Cannot Add new local post to database!\n\tSQL Error: " << q.lastError().text();
             return -1;
         }
     } else {
         ///Update post, with id!
-        qDebug() << "Update post, with id!";
+        qCDebug(BLOGILO_LOG) << "Update post, with id!";
         q.prepare(QLatin1String("UPDATE ") + postTable + QLatin1String(" SET postid=?, blog_id=?,\
             author=?, title=?, content=?, text_more=?, c_time=?, m_time=?, is_private=?, is_comment_allowed=?,\
             is_trackback_allowed=?, link=?, perma_link=?, summary=?, slug=?, tags=?, status=?\
@@ -825,12 +825,12 @@ int DBMan::saveTemp_LocalEntry(const BilboPost &basePost, int blog_id, LocalPost
 
         if (!q.exec()) {
             d->mLastErrorText = q.lastError().text();
-            qDebug() << "Cannot Add new local post to database!\n\tSQL Error: " << q.lastError().text();
+            qCDebug(BLOGILO_LOG) << "Cannot Add new local post to database!\n\tSQL Error: " << q.lastError().text();
             return -1;
         }
     }
     /*} else {///Post is already created at "Post" table and has a valid id, postId and blog_id. So, local_id is useless here
-        qDebug()<<"Post is already created at \"Post\" table and has a valid id, postId and blog_id. So, local_id is useless here";
+        qCDebug(BLOGILO_LOG)<<"Post is already created at \"Post\" table and has a valid id, postId and blog_id. So, local_id is useless here";
         q.prepare( "INSERT OR REPLACE INTO "+ postTable +" (id, postid, blog_id, author, title,\
         content, text_more, c_time, m_time, is_private,\
         is_comment_allowed, is_trackback_allowed, link, perma_link, summary, slug, tags, status)\
@@ -859,7 +859,7 @@ int DBMan::saveTemp_LocalEntry(const BilboPost &basePost, int blog_id, LocalPost
             localId = q.lastInsertId().toInt();
         } else {
             d->mLastErrorText = q.lastError().text();
-            qDebug() << "Cannot Add or Edit local post to database!\n\tSQL Error: " << q.lastError().text();
+            qCDebug(BLOGILO_LOG) << "Cannot Add or Edit local post to database!\n\tSQL Error: " << q.lastError().text();
             return -1;
         }
     }*/
@@ -870,14 +870,14 @@ int DBMan::saveTemp_LocalEntry(const BilboPost &basePost, int blog_id, LocalPost
     qd.addBindValue(localId);
     if (!qd.exec()) {
         d->mLastErrorText = q.lastError().text();
-        qDebug() << "Cannot delete previouse categories.";
+        qCDebug(BLOGILO_LOG) << "Cannot delete previouse categories.";
     }
 
     ///Add new Categories:
     ///Using post_id or if it's empty local_id for postId
     int cat_count = post.categories().count();
     if (cat_count > 0) {
-        //qDebug()<< "Adding "<<cat_count<<" category to post.";
+        //qCDebug(BLOGILO_LOG)<< "Adding "<<cat_count<<" category to post.";
         QSqlQuery q2;
         q2.prepare(QLatin1String("INSERT OR REPLACE INTO ") + postCatTable + QLatin1String(" (local_id, categoryId)\
         VALUES(?, (SELECT categoryId FROM category WHERE name = ? AND blog_id= ?))"));
@@ -887,9 +887,9 @@ int DBMan::saveTemp_LocalEntry(const BilboPost &basePost, int blog_id, LocalPost
             q2.addBindValue(blog_id);
             if (!q2.exec()) {
                 d->mLastErrorText = q.lastError().text();
-                qDebug() << "Cannot add one of categories to Post, SQL Error: " << q2.lastError().text();
+                qCDebug(BLOGILO_LOG) << "Cannot add one of categories to Post, SQL Error: " << q2.lastError().text();
             }
-//             qDebug()<<"category "<<post.categories()[i] <<" added.";
+//             qCDebug(BLOGILO_LOG)<<"category "<<post.categories()[i] <<" added.";
         }
     }
     return localId;
@@ -897,68 +897,68 @@ int DBMan::saveTemp_LocalEntry(const BilboPost &basePost, int blog_id, LocalPost
 
 bool DBMan::removeLocalEntry(const BilboPost &post)
 {
-    qDebug();
+    qCDebug(BLOGILO_LOG);
     QSqlQuery q;
     q.prepare(QLatin1String("DELETE FROM local_post WHERE local_id=?"));
     q.addBindValue(post.localId());
     bool res = q.exec();
     if (!res) {
         d->mLastErrorText = q.lastError().text();
-        qDebug() << d->mLastErrorText;
+        qCDebug(BLOGILO_LOG) << d->mLastErrorText;
     }
     return res;
 }
 
 bool DBMan::removeLocalEntry(int local_id)
 {
-    qDebug();
+    qCDebug(BLOGILO_LOG);
     QSqlQuery q;
     q.prepare(QLatin1String("DELETE FROM local_post WHERE local_id=?"));
     q.addBindValue(local_id);
     bool res = q.exec();
     if (!res) {
         d->mLastErrorText = q.lastError().text();
-        qDebug() << d->mLastErrorText;
+        qCDebug(BLOGILO_LOG) << d->mLastErrorText;
     }
     return res;
 }
 
 bool DBMan::removeTempEntry(const BilboPost &post)
 {
-    qDebug();
+    qCDebug(BLOGILO_LOG);
     QSqlQuery q;
     q.prepare(QLatin1String("DELETE FROM temp_post WHERE local_id=?"));
     q.addBindValue(post.localId());
     bool res = q.exec();
     if (!res) {
         d->mLastErrorText = q.lastError().text();
-        qDebug() << q.lastError().text();
+        qCDebug(BLOGILO_LOG) << q.lastError().text();
     }
-    qDebug() << "Id: " << post.id() << "\tStatus: " << post.status();
+    qCDebug(BLOGILO_LOG) << "Id: " << post.id() << "\tStatus: " << post.status();
     return res;
 }
 
 bool DBMan::clearTempEntries()
 {
-    qDebug();
+    qCDebug(BLOGILO_LOG);
     QSqlQuery q;
     bool res = q.exec(QLatin1String("DELETE FROM temp_post"));
     if (!res) {
         d->mLastErrorText = q.lastError().text();
-        qDebug() << q.lastError().text();
+        qCDebug(BLOGILO_LOG) << q.lastError().text();
     }
     return res;
 }
 
 QMap<QString, QString> DBMan::getAuthData(int blog_id)
 {
-    qDebug() << blog_id;
+    qCDebug(BLOGILO_LOG) << blog_id;
     QSqlQuery q;
     q.prepare(QLatin1String("SELECT key, value FROM auth_data WHERE blog_id = ?"));
     q.addBindValue(blog_id);
     if (!q.exec()) {
         d->mLastErrorText = q.lastError().text();
-        qDebug() << q.lastError().text();
+        qCDebug(BLOGILO_LOG) << q.lastError().text();
         return QMap<QString, QString>();
     }
 
@@ -967,13 +967,13 @@ QMap<QString, QString> DBMan::getAuthData(int blog_id)
         result[q.value(0).toString() ] = q.value(1).toString();
     }
 
-    qDebug() << blog_id << result;
+    qCDebug(BLOGILO_LOG) << blog_id << result;
     return result;
 }
 
 bool DBMan::saveAuthData(const QMap<QString, QString> &authData, int blog_id)
 {
-    qDebug() << blog_id;
+    qCDebug(BLOGILO_LOG) << blog_id;
     QSqlQuery q;
     q.prepare(QLatin1String("INSERT OR REPLACE INTO auth_data (blog_id, key, value) VALUES (?, ?, ?)"));
     QMap<QString, QString>::ConstIterator iter, end = authData.constEnd();
@@ -989,21 +989,21 @@ bool DBMan::saveAuthData(const QMap<QString, QString> &authData, int blog_id)
     const bool res = q.execBatch();
     if (!res) {
         d->mLastErrorText = q.lastError().text();
-        qDebug() << q.lastError().text();
+        qCDebug(BLOGILO_LOG) << q.lastError().text();
     }
     return res;
 }
 
 bool DBMan::clearAuthData(int blog_id)
 {
-    qDebug() << blog_id;
+    qCDebug(BLOGILO_LOG) << blog_id;
     QSqlQuery q;
     q.prepare(QLatin1String("DELETE FROM auth_data WHERE blog_id = ?"));
     q.addBindValue(blog_id);
     const bool res = q.exec();
     if (!res) {
         d->mLastErrorText = q.lastError().text();
-        qDebug() << q.lastError().text();
+        qCDebug(BLOGILO_LOG) << q.lastError().text();
     }
     return res;
 }
@@ -1035,7 +1035,7 @@ QList< BilboBlog *> DBMan::listBlogs()
                 if (d->mWallet && d->mWallet->readPassword(tmp->url().url() + QLatin1Char('_') + tmp->username() , buffer)
                         == 0 && !buffer.isEmpty()) {
                     tmp->setPassword(buffer);
-                    qDebug() << "Password loaded from kde wallet.";
+                    qCDebug(BLOGILO_LOG) << "Password loaded from kde wallet.";
                 }
             } else {
                 tmp->setPassword(q.value(9).toString());
@@ -1120,7 +1120,7 @@ QList< BilboPost * > DBMan::listPosts(int blog_id)
         }
     } else {
         d->mLastErrorText = q.lastError().text();
-        qDebug() << "Cannot get list of posts for blog with id " << blog_id << "error: " << d->mLastErrorText;
+        qCDebug(BLOGILO_LOG) << "Cannot get list of posts for blog with id " << blog_id << "error: " << d->mLastErrorText;
     }
     return list;
 }
@@ -1183,12 +1183,12 @@ BilboPost DBMan::getPostInfo(int post_id)
             tmp.setCategoryList(catList);
         } else {
             d->mLastErrorText = i18n("There is no post with the requested ID");
-            qDebug() << "There isn't any post with id: " << post_id;
+            qCDebug(BLOGILO_LOG) << "There isn't any post with id: " << post_id;
             tmp.setStatus(KBlog::BlogPost::Error);
         }
     } else {
         d->mLastErrorText = q.lastError().text();
-        qDebug() << "Cannot get post with id " << post_id;
+        qCDebug(BLOGILO_LOG) << "Cannot get post with id " << post_id;
         tmp.setStatus(KBlog::BlogPost::Error);
     }
 
@@ -1207,7 +1207,7 @@ QMap< int, QString > DBMan::listPostsTitle(int blog_id)
         }
     } else {
         d->mLastErrorText = q.lastError().text();
-        qDebug() << "Cannot get list of posts for blog with id " << blog_id;
+        qCDebug(BLOGILO_LOG) << "Cannot get list of posts for blog with id " << blog_id;
     }
     return list;
 }
@@ -1229,7 +1229,7 @@ QList<QVariantMap> DBMan::listPostsInfo(int blog_id)
         }
     } else {
         d->mLastErrorText = q.lastError().text();
-        qDebug() << "Cannot get list of posts for blog with id " << blog_id;
+        qCDebug(BLOGILO_LOG) << "Cannot get list of posts for blog with id " << blog_id;
     }
     return list;
 }
@@ -1246,7 +1246,7 @@ QMap< QString, int > DBMan::listCategoriesName(int blog_id)
         }
     } else {
         d->mLastErrorText = q.lastError().text();
-        qDebug() << "Cannot get list of categories for blog with id " << blog_id;
+        qCDebug(BLOGILO_LOG) << "Cannot get list of categories for blog with id " << blog_id;
     }
     return list;
 }
@@ -1273,7 +1273,7 @@ QList< Category > DBMan::listCategories(int blog_id)
         }
     } else {
         d->mLastErrorText = q.lastError().text();
-        qDebug() << "Cannot get list of categories for blog with id " << blog_id;
+        qCDebug(BLOGILO_LOG) << "Cannot get list of categories for blog with id " << blog_id;
     }
     return list;
 }
@@ -1291,7 +1291,7 @@ QMap< QString, bool > DBMan::listCategoriesId(int blog_id)
         }
     } else {
         d->mLastErrorText = q.lastError().text();
-        qDebug() << "Cannot get list of categories for blog with id " << blog_id;
+        qCDebug(BLOGILO_LOG) << "Cannot get list of categories for blog with id " << blog_id;
     }
     return list;
 }
@@ -1350,19 +1350,19 @@ QMap<BilboPost *, int> DBMan::listTempPosts()
                 list.insert(tmp, blog_id);
             } else {
                 d->mLastErrorText = q2.lastError().text();
-                qDebug() << "Cannot get categories list of a post. SQL Error: " << q2.lastError().text();
+                qCDebug(BLOGILO_LOG) << "Cannot get categories list of a post. SQL Error: " << q2.lastError().text();
             }
         }
     } else {
         d->mLastErrorText = q.lastError().text();
-        qDebug() << "Cannot get list of temporary posts, SQL Error: " << q.lastError().text();
+        qCDebug(BLOGILO_LOG) << "Cannot get list of temporary posts, SQL Error: " << q.lastError().text();
     }
     return list;
 }
 
 QList<QVariantMap> DBMan::listLocalPosts()
 {
-    qDebug();
+    qCDebug(BLOGILO_LOG);
     QList<QVariantMap> list;
     QSqlQuery q;
     q.prepare(QLatin1String("SELECT local_post.local_id, local_post.title, local_post.blog_id, blog.title\
@@ -1378,7 +1378,7 @@ QList<QVariantMap> DBMan::listLocalPosts()
         }
     } else {
         d->mLastErrorText = q.lastError().text();
-        qDebug() << "Cannot get list of local posts. SQL Error: " << q.lastError().text();
+        qCDebug(BLOGILO_LOG) << "Cannot get list of local posts. SQL Error: " << q.lastError().text();
     }
     return list;
 }
@@ -1436,15 +1436,15 @@ BilboPost DBMan::localPost(int local_id)
                 tmp.setCategoryList(catList);
             } else {
                 d->mLastErrorText = q2.lastError().text();
-                qDebug() << "Cannot get categories list of local post. SQL Error: " << q2.lastError().text();
+                qCDebug(BLOGILO_LOG) << "Cannot get categories list of local post. SQL Error: " << q2.lastError().text();
             }
         } else {
             d->mLastErrorText = i18n("There is no local post with the requested ID ");
-            qDebug() << "there isn't any local post with local_id " << local_id;
+            qCDebug(BLOGILO_LOG) << "there isn't any local post with local_id " << local_id;
         }
     } else {
         d->mLastErrorText = q.lastError().text();
-        qDebug() << "Cannot get local post. SQL Error: " << q.lastError().text();
+        qCDebug(BLOGILO_LOG) << "Cannot get local post. SQL Error: " << q.lastError().text();
     }
     return tmp;
 }

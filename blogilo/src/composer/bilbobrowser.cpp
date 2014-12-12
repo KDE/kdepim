@@ -30,7 +30,7 @@
 #include <kmessagebox.h>
 #include <kseparator.h>
 #include <QPushButton>
-#include <QDebug>
+#include "blogilo_debug.h"
 
 #include "stylegetter.h"
 #include "global.h"
@@ -58,7 +58,7 @@ BilboBrowser::BilboBrowser(QWidget *parent)
 
 BilboBrowser::~BilboBrowser()
 {
-    qDebug();
+    qCDebug(BLOGILO_LOG);
 }
 
 void BilboBrowser::createUi(QWidget *parent)

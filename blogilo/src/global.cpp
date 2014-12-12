@@ -23,18 +23,18 @@
 
 #include "global.h"
 #include "dbman.h"
-#include <qdebug.h>
+#include "blogilo_debug.h"
 
 int __currentBlogId;
 
 void global_init()
 {
-    qDebug();
+    qCDebug(BLOGILO_LOG);
     __currentBlogId = -1;
 }
 
 void global_end()
 {
-    qDebug();
+    qCDebug(BLOGILO_LOG);
     delete DBMan::self();
 }
