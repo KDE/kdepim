@@ -21,7 +21,7 @@
 #include <QLineEdit>
 
 #include <QHBoxLayout>
-#include <QDebug>
+#include "libksieve_debug.h"
 #include <QLabel>
 #include <QDomNode>
 
@@ -98,7 +98,7 @@ bool SieveConditionServerMetaDataExists::setParamWidgetValue(const QDomElement &
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug() << " SieveConditionServerMetaDataExists::setParamWidgetValue unknown tagName " << tagName;
+                qCDebug(LIBKSIEVE_LOG) << " SieveConditionServerMetaDataExists::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();

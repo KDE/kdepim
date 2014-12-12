@@ -23,7 +23,7 @@
 
 #include <QCheckBox>
 #include <QHBoxLayout>
-#include <QDebug>
+#include "libksieve_debug.h"
 #include <QDomNode>
 //Add support for adding flags
 using namespace KSieveUi;
@@ -74,7 +74,7 @@ bool SieveActionFileInto::setParamWidgetValue(const QDomElement &element, QWidge
                         copy->setChecked(true);
                     } else {
                         error += i18n("Action \"fileinto\" has \"copy\" argument but current server does not support it") + QLatin1Char('\n');
-                        qDebug() << "SieveActionFileInto::setParamWidgetValue has not copy support ";
+                        qCDebug(LIBKSIEVE_LOG) << "SieveActionFileInto::setParamWidgetValue has not copy support ";
                     }
                 } else if (tagValue == QLatin1String("create")) {
                     if (mHasMailBoxSupport) {
@@ -82,7 +82,7 @@ bool SieveActionFileInto::setParamWidgetValue(const QDomElement &element, QWidge
                         create->setChecked(true);
                     } else {
                         serverDoesNotSupportFeatures(QLatin1String("fileinto"), error);
-                        qDebug() << "SieveActionFileInto::setParamWidgetValue server has not create support ";
+                        qCDebug(LIBKSIEVE_LOG) << "SieveActionFileInto::setParamWidgetValue server has not create support ";
                     }
                 }
             } else if (tagName == QLatin1String("str")) {
@@ -95,7 +95,7 @@ bool SieveActionFileInto::setParamWidgetValue(const QDomElement &element, QWidge
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug() << " SieveActionFileInto::setParamWidgetValue unknown tagName " << tagName;
+                qCDebug(LIBKSIEVE_LOG) << " SieveActionFileInto::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();

@@ -25,7 +25,7 @@
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QDomNode>
-#include <QDebug>
+#include "libksieve_debug.h"
 
 using namespace KSieveUi;
 SieveActionReject::SieveActionReject(QObject *parent)
@@ -71,7 +71,7 @@ bool SieveActionReject::setParamWidgetValue(const QDomElement &element, QWidget 
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug() << " SieveActionReject::setParamWidgetValue unknown tagName " << tagName;
+                qCDebug(LIBKSIEVE_LOG) << " SieveActionReject::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();

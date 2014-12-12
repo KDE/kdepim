@@ -26,7 +26,7 @@
 
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QDebug>
+#include "libksieve_debug.h"
 
 using namespace KSieveUi;
 
@@ -126,7 +126,7 @@ bool SieveConditionDate::setParamWidgetValue(const QDomElement &element, QWidget
                     value = e.text();
                 } else {
                     tooManyArgument(tagName, index, 3, error);
-                    qDebug() << " SieveConditionDate::setParamWidgetValue too many argument :" << index;
+                    qCDebug(LIBKSIEVE_LOG) << " SieveConditionDate::setParamWidgetValue too many argument :" << index;
                 }
                 ++index;
             } else if (tagName == QLatin1String("tag")) {
@@ -138,7 +138,7 @@ bool SieveConditionDate::setParamWidgetValue(const QDomElement &element, QWidget
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug() << "SieveConditionDate::setParamWidgetValue unknown tag " << tagName;
+                qCDebug(LIBKSIEVE_LOG) << "SieveConditionDate::setParamWidgetValue unknown tag " << tagName;
             }
         }
         node = node.nextSibling();

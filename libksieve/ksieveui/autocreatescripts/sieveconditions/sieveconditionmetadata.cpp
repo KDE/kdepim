@@ -25,7 +25,7 @@
 #include <QWidget>
 #include <QLabel>
 #include <QHBoxLayout>
-#include <QDebug>
+#include "libksieve_debug.h"
 #include <QDomNode>
 
 using namespace KSieveUi;
@@ -155,7 +155,7 @@ bool SieveConditionMetaData::setParamWidgetValue(const QDomElement &element, QWi
                 }
                 default: {
                     tooManyArgument(tagName, index, 3, error);
-                    qDebug() << " SieveConditionMetaData::setParamWidgetValue too many argument " << index;
+                    qCDebug(LIBKSIEVE_LOG) << " SieveConditionMetaData::setParamWidgetValue too many argument " << index;
                     break;
                 }
                 }
@@ -169,7 +169,7 @@ bool SieveConditionMetaData::setParamWidgetValue(const QDomElement &element, QWi
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug() << " SieveConditionMetaData::setParamWidgetValue unknown tagName " << tagName;
+                qCDebug(LIBKSIEVE_LOG) << " SieveConditionMetaData::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();

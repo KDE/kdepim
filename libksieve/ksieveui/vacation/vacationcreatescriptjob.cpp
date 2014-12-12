@@ -20,7 +20,7 @@
 
 #include <KMessageBox>
 #include <KLocalizedString>
-#include <QDebug>
+#include "libksieve_debug.h"
 
 using namespace KSieveUi;
 
@@ -52,7 +52,7 @@ void VacationCreateScriptJob::setServerName(const QString &servername)
 void VacationCreateScriptJob::start()
 {
     if (mUrl.isEmpty()) {
-        qDebug() << " server url is empty";
+        qCDebug(LIBKSIEVE_LOG) << " server url is empty";
         deleteLater();
         return;
     }
@@ -93,7 +93,7 @@ void VacationCreateScriptJob::handlePutResult(KManageSieve::SieveJob *, bool suc
                                  : i18n("Sieve script installed successfully on the server \'%1\'.\n"
                                         "Out of Office reply has been deactivated.", mServerName));
 
-    qDebug() << "( ???," << success << ", ? )";
+    qCDebug(LIBKSIEVE_LOG) << "( ???," << success << ", ? )";
     mSieveJob = 0; // job deletes itself after returning from this slot!
     Q_EMIT result(success);
     Q_EMIT scriptActive(activated, mServerName);

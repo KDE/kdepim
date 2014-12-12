@@ -24,7 +24,7 @@
 #include <QLabel>
 #include <QSpinBox>
 #include <QDomNode>
-#include <QDebug>
+#include "libksieve_debug.h"
 #include <QGridLayout>
 
 using namespace KSieveUi;
@@ -87,7 +87,7 @@ bool SieveActionExtractText::setParamWidgetValue(const QDomElement &element, QWi
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug() << " SieveActionExtractText::setParamWidgetValue unknown tagName " << tagName;
+                qCDebug(LIBKSIEVE_LOG) << " SieveActionExtractText::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();

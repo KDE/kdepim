@@ -27,7 +27,7 @@
 
 #include <QLabel>
 #include <QSpinBox>
-#include <QDebug>
+#include "libksieve_debug.h"
 #include <QDomNode>
 #include <QGridLayout>
 
@@ -122,7 +122,7 @@ bool SieveActionVacation::setParamWidgetValue(const QDomElement &element, QWidge
                     subject->setText(AutoCreateScriptUtil::strValue(e));
                 } else {
                     unknowTagValue(tagValue, error);
-                    qDebug() << "SieveActionVacation::setParamWidgetValue unknow tagValue :" << tagValue;
+                    qCDebug(LIBKSIEVE_LOG) << "SieveActionVacation::setParamWidgetValue unknow tagValue :" << tagValue;
                 }
             } else if (tagName == QLatin1String("num"))  {
                 QSpinBox *day = w->findChild<QSpinBox *>(QLatin1String("day"));
@@ -139,7 +139,7 @@ bool SieveActionVacation::setParamWidgetValue(const QDomElement &element, QWidge
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug() << " SieveActionVacation::setParamWidgetValue unknown tagName " << tagName;
+                qCDebug(LIBKSIEVE_LOG) << " SieveActionVacation::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();

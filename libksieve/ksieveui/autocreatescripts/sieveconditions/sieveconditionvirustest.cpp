@@ -24,7 +24,7 @@
 #include <KLocalizedString>
 
 #include <QSpinBox>
-#include <QDebug>
+#include "libksieve_debug.h"
 #include <QDomNode>
 #include <QVBoxLayout>
 
@@ -134,7 +134,7 @@ bool SieveConditionVirusTest::setParamWidgetValue(const QDomElement &element, QW
                     }
                 } else {
                     unknowTagValue(tagValue, error);
-                    qDebug() << " SieveConditionVirusTest::setParamWidgetValue unknow tagValue " << tagValue;
+                    qCDebug(LIBKSIEVE_LOG) << " SieveConditionVirusTest::setParamWidgetValue unknow tagValue " << tagValue;
                 }
             } else if (tagName == QLatin1String("str")) {
                 QSpinBox *spinbox = w->findChild<QSpinBox *>(QLatin1String("value"));
@@ -145,7 +145,7 @@ bool SieveConditionVirusTest::setParamWidgetValue(const QDomElement &element, QW
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug() << " SieveConditionVirusTest::setParamWidgetValue unknown tagName " << tagName;
+                qCDebug(LIBKSIEVE_LOG) << " SieveConditionVirusTest::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();

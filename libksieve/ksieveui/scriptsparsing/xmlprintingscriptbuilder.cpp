@@ -20,7 +20,7 @@
 using KSieve::Parser;
 
 #include <ksieve/error.h>
-#include <QDebug>
+#include "libksieve_debug.h"
 
 using namespace KSieveUi;
 XMLPrintingScriptBuilder::XMLPrintingScriptBuilder()
@@ -207,9 +207,9 @@ QDomDocument XMLPrintingScriptBuilder::toDom() const
     int errorCol;
     QDomDocument doc;
     if (!doc.setContent(mResult, &errorMsg, &errorRow, &errorCol)) {
-        qDebug() << "Unable to load document.Parse error in line " << errorRow
+        qCDebug(LIBKSIEVE_LOG) << "Unable to load document.Parse error in line " << errorRow
                  << ", col " << errorCol << ": " << errorMsg;
-        qDebug() << " mResult" << mResult;
+        qCDebug(LIBKSIEVE_LOG) << " mResult" << mResult;
 
     }
     return doc;

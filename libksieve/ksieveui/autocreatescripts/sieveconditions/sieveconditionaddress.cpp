@@ -27,7 +27,7 @@
 
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QDebug>
+#include "libksieve_debug.h"
 #include <QDomNode>
 
 using namespace KSieveUi;
@@ -129,7 +129,7 @@ bool SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWid
                     edit->setText(AutoCreateScriptUtil::quoteStr(e.text()));
                 } else {
                     tooManyArgument(tagName, indexStr, 2, error);
-                    qDebug() << " SieveConditionAddress::setParamWidgetValue too many argument :" << index;
+                    qCDebug(LIBKSIEVE_LOG) << " SieveConditionAddress::setParamWidgetValue too many argument :" << index;
                 }
                 ++indexStr;
             } else if (tagName == QLatin1String("list")) {
@@ -141,7 +141,7 @@ bool SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWid
                     edit->setText(AutoCreateScriptUtil::listValueToStr(e));
                 } else {
                     tooManyArgument(tagName, indexStr, 2, error);
-                    qDebug() << " SieveConditionAddress::setParamWidgetValue too many argument :" << index;
+                    qCDebug(LIBKSIEVE_LOG) << " SieveConditionAddress::setParamWidgetValue too many argument :" << index;
                 }
                 ++indexStr;
             } else if (tagName == QLatin1String("crlf")) {
@@ -150,7 +150,7 @@ bool SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWid
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug() << " SieveConditionAddress::setParamWidgetValue unknown tagName " << tagName;
+                qCDebug(LIBKSIEVE_LOG) << " SieveConditionAddress::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();
@@ -170,7 +170,7 @@ bool SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWid
         selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(lstTagValue.at(1), notCondition), name(), error);
     } else if (lstTagValue.count() > 2) {
         tooManyArgument(QLatin1String("tag"), lstTagValue.count(), 2, error);
-        qDebug() << "SieveConditionAddress::setParamWidgetValue too many argument :" << lstTagValue.count();
+        qCDebug(LIBKSIEVE_LOG) << "SieveConditionAddress::setParamWidgetValue too many argument :" << lstTagValue.count();
     }
     return true;
 }

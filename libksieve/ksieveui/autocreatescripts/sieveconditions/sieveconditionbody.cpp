@@ -26,7 +26,7 @@
 
 #include <QWidget>
 #include <QHBoxLayout>
-#include <QDebug>
+#include "libksieve_debug.h"
 
 using namespace KSieveUi;
 SieveConditionBody::SieveConditionBody(QObject *parent)
@@ -118,7 +118,7 @@ bool SieveConditionBody::setParamWidgetValue(const QDomElement &element, QWidget
                     tagValueList << AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition);
                 } else {
                     tooManyArgument(tagName, index, 2, error);
-                    qDebug() << " SieveConditionBody::setParamWidgetValue too many argument " << index;
+                    qCDebug(LIBKSIEVE_LOG) << " SieveConditionBody::setParamWidgetValue too many argument " << index;
                 }
                 ++index;
             } else if (tagName == QLatin1String("str")) {
@@ -130,7 +130,7 @@ bool SieveConditionBody::setParamWidgetValue(const QDomElement &element, QWidget
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug() << " SieveConditionBody::setParamWidgetValue unknown tagName " << tagName;
+                qCDebug(LIBKSIEVE_LOG) << " SieveConditionBody::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();

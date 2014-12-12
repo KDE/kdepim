@@ -26,7 +26,7 @@
 #include <ksieve/parser.h>
 #include <ksieve/scriptbuilder.h>
 
-#include <QDebug>
+#include "libksieve_debug.h"
 #include <cassert>
 #include <limits.h>
 #include <map>
@@ -235,7 +235,7 @@ private:
             if (string.toLower() != QString::fromUtf8(str).toLower()) {
                 found = false;
             }
-        qDebug() << (found ? "found:" : "not found:")
+        qCDebug(LIBKSIEVE_LOG) << (found ? "found:" : "not found:")
                  << mState << "->"
                  << (found ? expected.if_found : expected.if_not_found);
         mState = found ? expected.if_found : expected.if_not_found ;
@@ -250,96 +250,96 @@ private:
     }
     void commandStart(const QString &identifier)
     {
-        qDebug() ;
+        qCDebug(LIBKSIEVE_LOG) ;
         process(CommandStart, identifier);
     }
     void commandEnd()
     {
-        qDebug() ;
+        qCDebug(LIBKSIEVE_LOG) ;
         process(CommandEnd);
     }
     void testStart(const QString &identifier)
     {
-        qDebug() ;
+        qCDebug(LIBKSIEVE_LOG) ;
         process(TestStart, identifier);
     }
     void testEnd()
     {
-        qDebug() ;
+        qCDebug(LIBKSIEVE_LOG) ;
         process(TestEnd);
     }
     void testListStart()
     {
-        qDebug() ;
+        qCDebug(LIBKSIEVE_LOG) ;
         process(TestListStart);
     }
     void testListEnd()
     {
-        qDebug() ;
+        qCDebug(LIBKSIEVE_LOG) ;
         process(TestListEnd);
     }
     void blockStart()
     {
-        qDebug() ;
+        qCDebug(LIBKSIEVE_LOG) ;
         process(BlockStart);
         ++mNestingDepth;
     }
     void blockEnd()
     {
-        qDebug() ;
+        qCDebug(LIBKSIEVE_LOG) ;
         --mNestingDepth;
         process(BlockEnd);
     }
     void hashComment(const QString &)
     {
-        qDebug() ;
+        qCDebug(LIBKSIEVE_LOG) ;
     }
     void bracketComment(const QString &)
     {
-        qDebug() ;
+        qCDebug(LIBKSIEVE_LOG) ;
     }
     void lineFeed()
     {
-        qDebug() ;
+        qCDebug(LIBKSIEVE_LOG) ;
     }
     void error(const KSieve::Error &)
     {
-        qDebug() ;
+        qCDebug(LIBKSIEVE_LOG) ;
         mState = 0;
     }
     void finished()
     {
-        qDebug() ;
+        qCDebug(LIBKSIEVE_LOG) ;
     }
 
     void taggedArgument(const QString &tag)
     {
-        qDebug() ;
+        qCDebug(LIBKSIEVE_LOG) ;
         process(TaggedArgument, tag);
     }
     void stringArgument(const QString &string, bool, const QString &)
     {
-        qDebug() ;
+        qCDebug(LIBKSIEVE_LOG) ;
         process(StringArgument, string);
     }
     void numberArgument(unsigned long number, char)
     {
-        qDebug();
+        qCDebug(LIBKSIEVE_LOG);
         process(NumberArgument, QString::number(number));
     }
     void stringListArgumentStart()
     {
-        qDebug() ;
+        qCDebug(LIBKSIEVE_LOG) ;
         process(StringListArgumentStart);
     }
     void stringListEntry(const QString &string, bool, const QString &)
     {
-        qDebug() ;
+        qCDebug(LIBKSIEVE_LOG) ;
         process(StringListEntry, string);
     }
     void stringListArgumentEnd()
     {
-        qDebug() ;
+        qCDebug(LIBKSIEVE_LOG) ;
         process(StringListArgumentEnd);
     }
 };

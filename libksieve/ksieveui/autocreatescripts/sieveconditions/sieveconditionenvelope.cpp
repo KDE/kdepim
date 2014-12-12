@@ -28,7 +28,7 @@
 
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QDebug>
+#include "libksieve_debug.h"
 #include <QDomNode>
 
 using namespace KSieveUi;
@@ -139,7 +139,7 @@ bool SieveConditionEnvelope::setParamWidgetValue(const QDomElement &element, QWi
                     selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(tagValue, notCondition), name(), error);
                 } else {
                     tooManyArgument(tagName, indexTag, 2, error);
-                    qDebug() << "SieveConditionEnvelope::setParamWidgetValue too many argument :" << indexTag;
+                    qCDebug(LIBKSIEVE_LOG) << "SieveConditionEnvelope::setParamWidgetValue too many argument :" << indexTag;
                 }
                 ++indexTag;
             } else if (tagName == QLatin1String("str")) {
@@ -151,7 +151,7 @@ bool SieveConditionEnvelope::setParamWidgetValue(const QDomElement &element, QWi
                     edit->setText(AutoCreateScriptUtil::quoteStr(e.text()));
                 } else {
                     tooManyArgument(tagName, indexStr, 2, error);
-                    qDebug() << "SieveConditionEnvelope::setParamWidgetValue too many argument indexStr " << indexStr;
+                    qCDebug(LIBKSIEVE_LOG) << "SieveConditionEnvelope::setParamWidgetValue too many argument indexStr " << indexStr;
                 }
                 ++indexStr;
             } else if (tagName == QLatin1String("list")) {
@@ -169,7 +169,7 @@ bool SieveConditionEnvelope::setParamWidgetValue(const QDomElement &element, QWi
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug() << " SieveConditionEnvelope::setParamWidgetValue unknown tagName " << tagName;
+                qCDebug(LIBKSIEVE_LOG) << " SieveConditionEnvelope::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();

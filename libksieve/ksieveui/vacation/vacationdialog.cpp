@@ -15,7 +15,7 @@
 #include "vacationdialog.h"
 #include "vacationeditwidget.h"
 
-#include <qdebug.h>
+#include "libksieve_debug.h"
 #include <kiconloader.h>
 #include <kmime/kmime_header_parsing.h>
 #include <kwindowsystem.h>
@@ -69,7 +69,7 @@ VacationDialog::VacationDialog(const QString &caption, QWidget *parent,
 
 VacationDialog::~VacationDialog()
 {
-    qDebug() << "~VacationDialog()";
+    qCDebug(LIBKSIEVE_LOG) << "~VacationDialog()";
     writeConfig();
 }
 

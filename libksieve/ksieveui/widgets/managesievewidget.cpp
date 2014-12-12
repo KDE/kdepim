@@ -29,7 +29,7 @@
 #include <QHBoxLayout>
 #include <QMenu>
 #include <QTimer>
-#include <QDebug>
+#include "libksieve_debug.h"
 #include <QNetworkConfigurationManager>
 
 using namespace KSieveUi;
@@ -367,13 +367,13 @@ void ManageSieveWidget::slotUpdateButtons()
 
 void ManageSieveWidget::slotGotList(KManageSieve::SieveJob *job, bool success, const QStringList &listScript, const QString &activeScript)
 {
-    qDebug() << "void ManageSieveWidget::slotGotList(KManageSieve::SieveJob *job, bool success, const QStringList &listScript, const QString &activeScript) success: " << success << " listScript" << listScript;
+    qCDebug(LIBKSIEVE_LOG) << "void ManageSieveWidget::slotGotList(KManageSieve::SieveJob *job, bool success, const QStringList &listScript, const QString &activeScript) success: " << success << " listScript" << listScript;
     if (mClearAll) {
         return;
     }
-    qDebug() << " After mClear All";
+    qCDebug(LIBKSIEVE_LOG) << " After mClear All";
     QTreeWidgetItem *parent = mJobs[job];
-    qDebug() << " parent " << parent;
+    qCDebug(LIBKSIEVE_LOG) << " parent " << parent;
     if (!parent) {
         return;
     }
@@ -409,7 +409,7 @@ void ManageSieveWidget::slotGotList(KManageSieve::SieveJob *job, bool success, c
     }
     mBlockSignal = false;
 
-    qDebug() << " LOAD";
+    qCDebug(LIBKSIEVE_LOG) << " LOAD";
     const bool hasIncludeCapability = job->sieveCapabilities().contains(QLatin1String("include"));
     const bool hasUserActiveScript = (activeScript.toLower() == QLatin1String("USER"));
     //QStringList mUserActiveScriptList;

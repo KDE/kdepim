@@ -23,7 +23,7 @@ VacationDataExtractor::VacationDataExtractor()
       mContext(None),
       mNotificationInterval(0)
 {
-    qDebug();
+    qCDebug(LIBKSIEVE_LOG);
 }
 
 VacationDataExtractor::~VacationDataExtractor()
@@ -33,7 +33,7 @@ VacationDataExtractor::~VacationDataExtractor()
 
 void VacationDataExtractor::commandStart(const QString &identifier)
 {
-    qDebug() << "( \"" << identifier << "\" )";
+    qCDebug(LIBKSIEVE_LOG) << "( \"" << identifier << "\" )";
     if (identifier != QLatin1String("vacation")) {
         return;
     }
@@ -43,13 +43,13 @@ void VacationDataExtractor::commandStart(const QString &identifier)
 
 void VacationDataExtractor::commandEnd()
 {
-    qDebug();
+    qCDebug(LIBKSIEVE_LOG);
     mContext = None;
 }
 
 void VacationDataExtractor::error(const KSieve::Error &e)
 {
-    qDebug() << e.asString() << "@" << e.line() << "," << e.column();
+    qCDebug(LIBKSIEVE_LOG) << e.asString() << "@" << e.line() << "," << e.column();
 }
 
 void VacationDataExtractor::finished()
@@ -59,7 +59,7 @@ void VacationDataExtractor::finished()
 
 void VacationDataExtractor::taggedArgument(const QString &tag)
 {
-    qDebug() << "( \"" << tag << "\" )";
+    qCDebug(LIBKSIEVE_LOG) << "( \"" << tag << "\" )";
     if (mContext != VacationCommand) {
         return;
     }
@@ -72,7 +72,7 @@ void VacationDataExtractor::taggedArgument(const QString &tag)
 
 void VacationDataExtractor::stringArgument(const QString &string, bool, const QString &)
 {
-    qDebug() << "( \"" << string << "\" )";
+    qCDebug(LIBKSIEVE_LOG) << "( \"" << string << "\" )";
     if (mContext == Addresses) {
         mAliases.push_back(string);
         mContext = VacationCommand;
@@ -84,7 +84,7 @@ void VacationDataExtractor::stringArgument(const QString &string, bool, const QS
 
 void VacationDataExtractor::numberArgument(unsigned long number, char)
 {
-    qDebug() << "( \"" << number << "\" )";
+    qCDebug(LIBKSIEVE_LOG) << "( \"" << number << "\" )";
     if (mContext != Days) {
         return;
     }
@@ -102,7 +102,7 @@ void VacationDataExtractor::stringListArgumentStart()
 }
 void VacationDataExtractor::stringListEntry(const QString &string, bool, const QString &)
 {
-    qDebug() << "( \"" << string << "\" )";
+    qCDebug(LIBKSIEVE_LOG) << "( \"" << string << "\" )";
     if (mContext != Addresses) {
         return;
     }
@@ -111,7 +111,7 @@ void VacationDataExtractor::stringListEntry(const QString &string, bool, const Q
 
 void VacationDataExtractor::stringListArgumentEnd()
 {
-    qDebug();
+    qCDebug(LIBKSIEVE_LOG);
     if (mContext != Addresses) {
         return;
     }
@@ -120,7 +120,7 @@ void VacationDataExtractor::stringListArgumentEnd()
 
 void VacationDataExtractor::reset()
 {
-    qDebug();
+    qCDebug(LIBKSIEVE_LOG);
     mContext = None;
     mNotificationInterval = 0;
     mAliases.clear();

@@ -16,7 +16,7 @@
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 
 #include <agentinstance.h>
-#include <qdebug.h>
+#include "libksieve_debug.h"
 #include <KLocalizedString>
 #include <kmessagebox.h>
 #include <kmanagesieve/sievejob.h>
@@ -68,7 +68,7 @@ SieveDebugDialog::~SieveDebugDialog()
         mSieveJob->kill();
         mSieveJob = 0;
     }
-    qDebug();
+    qCDebug(LIBKSIEVE_LOG);
     writeConfig();
 }
 
@@ -145,7 +145,7 @@ void SieveDebugDialog::slotDiagNextScript()
 void SieveDebugDialog::slotGetScript(KManageSieve::SieveJob * /* job */, bool success,
                                      const QString &script, bool active)
 {
-    qDebug() << "( ??," << success
+    qCDebug(LIBKSIEVE_LOG) << "( ??," << success
              << ", ?," << active << ")" << endl
              << "script:" << endl
              << script;
@@ -167,7 +167,7 @@ void SieveDebugDialog::slotGetScript(KManageSieve::SieveJob * /* job */, bool su
 void SieveDebugDialog::slotGetScriptList(KManageSieve::SieveJob *job, bool success,
         const QStringList &scriptList, const QString &activeScript)
 {
-    qDebug() << "Success:" << success << ", List:" << scriptList.join(QLatin1String(",")) <<
+    qCDebug(LIBKSIEVE_LOG) << "Success:" << success << ", List:" << scriptList.join(QLatin1String(",")) <<
              ", active:" << activeScript;
     mSieveJob = 0; // job deletes itself after returning from this slot!
 

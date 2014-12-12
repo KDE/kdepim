@@ -30,7 +30,7 @@
 #include <QButtonGroup>
 #include <QRadioButton>
 #include <QLabel>
-#include <QDebug>
+#include "libksieve_debug.h"
 
 namespace KSieveUi
 {
@@ -275,7 +275,7 @@ void SieveScriptBlockWidget::loadScript(const QDomElement &element, bool onlyAct
                     mScriptActionLister->loadScript(e, false, error);
                 } else {
                     if (tagName != QLatin1String("crlf")) {
-                        qDebug() << " e.tag" << tagName;
+                        qCDebug(LIBKSIEVE_LOG) << " e.tag" << tagName;
                     }
                 }
             }

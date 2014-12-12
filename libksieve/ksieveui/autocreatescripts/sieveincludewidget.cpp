@@ -32,7 +32,7 @@
 #include <QLabel>
 #include <QWhatsThis>
 #include <QDomNode>
-#include <QDebug>
+#include "libksieve_debug.h"
 
 namespace KSieveUi
 {
@@ -99,12 +99,12 @@ void SieveIncludeActionWidget::loadScript(const QDomElement &element, QString &e
                 } else if (tagValue == QLatin1String("once")) {
                     mOnce->setChecked(true);
                 } else {
-                    qDebug() << " SieveIncludeActionWidget::loadScript unknown tagValue " << tagValue;
+                    qCDebug(LIBKSIEVE_LOG) << " SieveIncludeActionWidget::loadScript unknown tagValue " << tagValue;
                 }
             } else if (tagName == QLatin1String("str")) {
                 mIncludeName->setText(e.text());
             } else {
-                qDebug() << " SieveIncludeActionWidget::loadScript unknown tagName " << tagName;
+                qCDebug(LIBKSIEVE_LOG) << " SieveIncludeActionWidget::loadScript unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();

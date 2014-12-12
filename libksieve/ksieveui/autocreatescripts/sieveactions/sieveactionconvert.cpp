@@ -23,7 +23,7 @@
 #include <KLocalizedString>
 
 #include <QLabel>
-#include <QDebug>
+#include "libksieve_debug.h"
 #include <QDomNode>
 #include <QGridLayout>
 
@@ -89,7 +89,7 @@ bool SieveActionConvert::setParamWidgetValue(const QDomElement &element, QWidget
                     toMimeType->setCode(e.text(), name(), error);
                 } else {
                     tooManyArgument(tagName, index, 2, error);
-                    qDebug() << " SieveActionConvert::setParamWidgetValue too many argument :" << index;
+                    qCDebug(LIBKSIEVE_LOG) << " SieveActionConvert::setParamWidgetValue too many argument :" << index;
                 }
                 ++index;
             } else if (tagName == QLatin1String("list")) {
@@ -101,7 +101,7 @@ bool SieveActionConvert::setParamWidgetValue(const QDomElement &element, QWidget
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug() << "SieveActionConvert::setParamWidgetValue unknown tag " << tagName;
+                qCDebug(LIBKSIEVE_LOG) << "SieveActionConvert::setParamWidgetValue unknown tag " << tagName;
             }
         }
         node = node.nextSibling();

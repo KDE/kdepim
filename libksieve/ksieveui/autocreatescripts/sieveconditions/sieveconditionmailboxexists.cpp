@@ -23,7 +23,7 @@
 
 #include <QWidget>
 #include <QHBoxLayout>
-#include <QDebug>
+#include "libksieve_debug.h"
 #include <QDomNode>
 
 using namespace KSieveUi;
@@ -97,7 +97,7 @@ bool SieveConditionMailboxExists::setParamWidgetValue(const QDomElement &element
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug() << " SieveConditionMailboxExists::setParamWidgetValue unknown tagName " << tagName;
+                qCDebug(LIBKSIEVE_LOG) << " SieveConditionMailboxExists::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();

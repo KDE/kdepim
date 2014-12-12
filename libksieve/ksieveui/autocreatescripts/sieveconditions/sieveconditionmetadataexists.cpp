@@ -22,7 +22,7 @@
 #include <QLineEdit>
 
 #include <QLabel>
-#include <QDebug>
+#include "libksieve_debug.h"
 #include <QDomNode>
 #include <QGridLayout>
 
@@ -111,7 +111,7 @@ bool SieveConditionMetaDataExists::setParamWidgetValue(const QDomElement &elemen
                     value->setText(AutoCreateScriptUtil::quoteStr(tagValue));
                 } else {
                     tooManyArgument(tagName, index, 2, error);
-                    qDebug() << " SieveConditionServerMetaDataExists::setParamWidgetValue to many attribute " << index;
+                    qCDebug(LIBKSIEVE_LOG) << " SieveConditionServerMetaDataExists::setParamWidgetValue to many attribute " << index;
                 }
                 ++index;
             } else if (tagName == QLatin1String("crlf")) {
@@ -120,7 +120,7 @@ bool SieveConditionMetaDataExists::setParamWidgetValue(const QDomElement &elemen
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug() << " SieveConditionServerMetaDataExists::setParamWidgetValue unknown tagName " << tagName;
+                qCDebug(LIBKSIEVE_LOG) << " SieveConditionServerMetaDataExists::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();

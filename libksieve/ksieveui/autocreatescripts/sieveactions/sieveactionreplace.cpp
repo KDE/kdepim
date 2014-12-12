@@ -25,7 +25,7 @@
 
 #include <QLabel>
 #include <QDomNode>
-#include <QDebug>
+#include "libksieve_debug.h"
 #include <QGridLayout>
 
 using namespace KSieveUi;
@@ -99,7 +99,7 @@ bool SieveActionReplace::setParamWidgetValue(const QDomElement &element, QWidget
                     }
                 } else {
                     unknowTagValue(tagValue, error);
-                    qDebug() << " SieveActionReplace::setParamWidgetValue unknown tagValue " << tagValue;
+                    qCDebug(LIBKSIEVE_LOG) << " SieveActionReplace::setParamWidgetValue unknown tagValue " << tagValue;
                 }
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
@@ -107,7 +107,7 @@ bool SieveActionReplace::setParamWidgetValue(const QDomElement &element, QWidget
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug() << " SieveActionReplace::setParamWidgetValue unknown tagName " << tagName;
+                qCDebug(LIBKSIEVE_LOG) << " SieveActionReplace::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();

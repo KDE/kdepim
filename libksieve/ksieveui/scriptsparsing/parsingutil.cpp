@@ -23,7 +23,7 @@ using KSieve::Parser;
 #include <ksieve/error.h>
 #include <ksieve/scriptbuilder.h>
 
-#include <QDebug>
+#include "libksieve_debug.h"
 
 QDomDocument ParsingUtil::parseScript(const QString &scriptStr, bool &result)
 {
@@ -36,7 +36,7 @@ QDomDocument ParsingUtil::parseScript(const QString &scriptStr, bool &result)
         result = true;
         return psb.toDom();
     } else {
-        qDebug() << "cannot parse file";
+        qCDebug(LIBKSIEVE_LOG) << "cannot parse file";
         result = false;
     }
     return QDomDocument();

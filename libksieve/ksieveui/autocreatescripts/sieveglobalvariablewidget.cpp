@@ -30,7 +30,7 @@
 #include <QCheckBox>
 #include <QLabel>
 #include <QWhatsThis>
-#include <QDebug>
+#include "libksieve_debug.h"
 #include <QDomNode>
 
 namespace KSieveUi
@@ -128,7 +128,7 @@ void SieveGlobalVariableActionWidget::loadScript(const QDomElement &element, QSt
                 mVariableName->setText(e.text());
             } else {
                 error += i18n("Unknown tag \"%1\" during loading of variables.");
-                qDebug() << " SieveGlobalVariableActionWidget::loadScript unknown tagName " << tagName;
+                qCDebug(LIBKSIEVE_LOG) << " SieveGlobalVariableActionWidget::loadScript unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();
@@ -308,11 +308,11 @@ void SieveGlobalVariableLister::loadSetVariable(const QDomElement &element, QStr
                 } else if (index == 1) {
                     variableValue = e.text();
                 } else {
-                    qDebug() << " SieveGlobalVariableLister::loadSetVariable too many argument:" << index;
+                    qCDebug(LIBKSIEVE_LOG) << " SieveGlobalVariableLister::loadSetVariable too many argument:" << index;
                 }
                 ++index;
             } else {
-                qDebug() << " SieveGlobalVariableLister::loadSetVariable unknown tagName " << tagName;
+                qCDebug(LIBKSIEVE_LOG) << " SieveGlobalVariableLister::loadSetVariable unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();

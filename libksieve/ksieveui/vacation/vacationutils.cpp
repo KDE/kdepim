@@ -108,7 +108,7 @@ bool KSieveUi::VacationUtils::parseScript(const QString &script, QString &messag
     // slave somehow omits the last \n, which results in a lone \r at
     // the end, leading to a parse error.
     const QByteArray scriptUTF8 = script.trimmed().toUtf8();
-    qDebug() << "scriptUtf8 = \"" + scriptUTF8 + "\"";
+    qCDebug(LIBKSIEVE_LOG) << "scriptUtf8 = \"" + scriptUTF8 + "\"";
     KSieve::Parser parser(scriptUTF8.begin(),
                           scriptUTF8.begin() + scriptUTF8.length());
     VacationDataExtractor vdx;

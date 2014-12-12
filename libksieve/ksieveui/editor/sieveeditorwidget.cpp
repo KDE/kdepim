@@ -40,7 +40,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QToolBar>
-#include <QDebug>
+#include "libksieve_debug.h"
 #include <QAction>
 #include <QPointer>
 #include <QDir>
@@ -216,7 +216,7 @@ QString SieveEditorWidget::script() const
         currentScript = mGraphicalModeWidget->currentscript();
         break;
     case Unknown:
-        qDebug() << " Unknown Mode!";
+        qCDebug(LIBKSIEVE_LOG) << " Unknown Mode!";
         break;
     }
     return currentScript;
@@ -323,7 +323,7 @@ void SieveEditorWidget::slotSaveAs()
         mGraphicalModeWidget->saveAs(mScriptName->text());
         break;
     case Unknown:
-        qDebug() << " Unknown mode";
+        qCDebug(LIBKSIEVE_LOG) << " Unknown mode";
         break;
     }
 }
@@ -338,7 +338,7 @@ void SieveEditorWidget::slotImport()
         mGraphicalModeWidget->slotImport();
         break;
     case Unknown:
-        qDebug() << " Unknown mode";
+        qCDebug(LIBKSIEVE_LOG) << " Unknown mode";
         break;
     }
 }
@@ -367,7 +367,7 @@ void SieveEditorWidget::slotSwitchMode()
             }
         } else {
             mTextModeWidget->showEditorWarning();
-            qDebug() << "cannot parse file";
+            qCDebug(LIBKSIEVE_LOG) << "cannot parse file";
         }
         break;
     }
@@ -378,7 +378,7 @@ void SieveEditorWidget::slotSwitchMode()
         break;
     }
     case Unknown:
-        qDebug() << " Unknown mode";
+        qCDebug(LIBKSIEVE_LOG) << " Unknown mode";
         break;
     }
 }

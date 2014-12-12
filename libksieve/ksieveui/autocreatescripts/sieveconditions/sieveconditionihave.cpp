@@ -24,7 +24,7 @@
 
 #include <QWidget>
 #include <QHBoxLayout>
-#include <QDebug>
+#include "libksieve_debug.h"
 #include <QDomNode>
 
 using namespace KSieveUi;
@@ -99,7 +99,7 @@ bool SieveConditionIhave::setParamWidgetValue(const QDomElement &element, QWidge
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug() << " SieveConditionIhave::setParamWidgetValue unknown tagName " << tagName;
+                qCDebug(LIBKSIEVE_LOG) << " SieveConditionIhave::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();

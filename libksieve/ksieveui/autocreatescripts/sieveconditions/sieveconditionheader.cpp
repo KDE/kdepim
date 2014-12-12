@@ -26,7 +26,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QDomNode>
-#include <QDebug>
+#include "libksieve_debug.h"
 
 using namespace KSieveUi;
 
@@ -112,7 +112,7 @@ bool SieveConditionHeader::setParamWidgetValue(const QDomElement &element, QWidg
                     value->setText(e.text().replace(QLatin1String("\""), QLatin1String("\\\"")));
                 } else {
                     tooManyArgument(tagName, index, 2, error);
-                    qDebug() << " SieveConditionHeader::setParamWidgetValue too many argument " << index;
+                    qCDebug(LIBKSIEVE_LOG) << " SieveConditionHeader::setParamWidgetValue too many argument " << index;
                 }
                 ++index;
             } else if (tagName == QLatin1String("list")) {
@@ -125,7 +125,7 @@ bool SieveConditionHeader::setParamWidgetValue(const QDomElement &element, QWidg
                     value->setText(AutoCreateScriptUtil::listValueToStr(e));
                 } else {
                     tooManyArgument(tagName, index, 2, error);
-                    qDebug() << " SieveConditionHeader::setParamWidgetValue too many argument " << index;
+                    qCDebug(LIBKSIEVE_LOG) << " SieveConditionHeader::setParamWidgetValue too many argument " << index;
                 }
                 ++index;
             } else if (tagName == QLatin1String("crlf")) {
@@ -134,7 +134,7 @@ bool SieveConditionHeader::setParamWidgetValue(const QDomElement &element, QWidg
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug() << " SieveConditionHeader::setParamWidgetValue unknown tagName " << tagName;
+                qCDebug(LIBKSIEVE_LOG) << " SieveConditionHeader::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();

@@ -27,7 +27,7 @@
 #include <QLabel>
 #include <QStackedWidget>
 #include <QSpinBox>
-#include <QDebug>
+#include "libksieve_debug.h"
 #include <QDate>
 
 Q_DECLARE_METATYPE(KSieveUi::SelectDateWidget::DateType)
@@ -231,7 +231,7 @@ SelectDateWidget::DateType SelectDateWidget::dateTypeFromString(const QString &s
     } else if (str == QLatin1String("weekday")) {
         return Weekday;
     } else {
-        qDebug() << " date type unknown :" << str;
+        qCDebug(LIBKSIEVE_LOG) << " date type unknown :" << str;
     }
     return Year;
 }

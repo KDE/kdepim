@@ -31,7 +31,7 @@
 
 #include <QGridLayout>
 #include <QLabel>
-#include <QDebug>
+#include "libksieve_debug.h"
 #include <QToolButton>
 #include <QWhatsThis>
 #include <QDomElement>
@@ -354,7 +354,7 @@ void SieveActionWidgetLister::loadScript(const QDomElement &element, bool onlyAc
                 } else if (tagName == QLatin1String("crlf")) {
                     //nothing
                 } else {
-                    qDebug() << " SieveActionWidgetLister::loadScript don't have name attribute " << tagName;
+                    qCDebug(LIBKSIEVE_LOG) << " SieveActionWidgetLister::loadScript don't have name attribute " << tagName;
                 }
             }
         }
@@ -369,7 +369,7 @@ void SieveActionWidgetLister::loadScript(const QDomElement &element, bool onlyAc
                     if (e.hasAttribute(QLatin1String("name"))) {
                         const QString actionName = e.attribute(QLatin1String("name"));
                         if (tagName == QLatin1String("control") && actionName == QLatin1String("if")) {
-                            qDebug() << "We found an loop if in a loop if. Not supported";
+                            qCDebug(LIBKSIEVE_LOG) << "We found an loop if in a loop if. Not supported";
                             error += QLatin1Char('\n') + i18n("We detected a loop if in a loop if. It's not supported") + QLatin1Char('\n');
                         }
                         if (firstAction) {
@@ -381,7 +381,7 @@ void SieveActionWidgetLister::loadScript(const QDomElement &element, bool onlyAc
                         w->setAction(actionName, e, comment, error);
                         comment.clear();
                     } else {
-                        qDebug() << " SieveActionWidgetLister::loadScript don't have name attribute " << tagName;
+                        qCDebug(LIBKSIEVE_LOG) << " SieveActionWidgetLister::loadScript don't have name attribute " << tagName;
                     }
                 } else if (tagName == QLatin1String("comment")) {
                     if (!comment.isEmpty()) {
@@ -391,7 +391,7 @@ void SieveActionWidgetLister::loadScript(const QDomElement &element, bool onlyAc
                 } else if (tagName == QLatin1String("crlf")) {
                     //nothing
                 } else {
-                    qDebug() << " SieveActionWidgetLister::loadScript unknown tagName " << tagName;
+                    qCDebug(LIBKSIEVE_LOG) << " SieveActionWidgetLister::loadScript unknown tagName " << tagName;
                 }
             }
             node = node.nextSibling();

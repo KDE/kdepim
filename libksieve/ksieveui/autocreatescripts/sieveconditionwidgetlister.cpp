@@ -31,7 +31,7 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QWhatsThis>
-#include <QDebug>
+#include "libksieve_debug.h"
 #include <QDomElement>
 
 using namespace KSieveUi;
@@ -365,7 +365,7 @@ void SieveConditionWidgetLister::loadScript(const QDomElement &e, bool uniqTest,
                             } else if (testTagName == QLatin1String("crlf")) {
                                 //nothing
                             } else {
-                                qDebug() << " SieveConditionWidgetLister::loadScript unknown condition tag: " << testTagName;
+                                qCDebug(LIBKSIEVE_LOG) << " SieveConditionWidgetLister::loadScript unknown condition tag: " << testTagName;
                             }
                         }
                         testNode = testNode.nextSibling();

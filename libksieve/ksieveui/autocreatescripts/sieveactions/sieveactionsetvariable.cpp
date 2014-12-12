@@ -27,7 +27,7 @@
 #include <QCheckBox>
 #include <QLabel>
 #include <QDomNode>
-#include <QDebug>
+#include "libksieve_debug.h"
 #include <QGridLayout>
 
 using namespace KSieveUi;
@@ -126,7 +126,7 @@ bool SieveActionSetVariable::setParamWidgetValue(const QDomElement &element, QWi
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug() << " SieveActionSetVariable::setParamWidgetValue unknown tagName " << tagName;
+                qCDebug(LIBKSIEVE_LOG) << " SieveActionSetVariable::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();

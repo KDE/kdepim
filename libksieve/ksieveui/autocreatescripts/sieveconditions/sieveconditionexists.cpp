@@ -26,7 +26,7 @@
 #include <QComboBox>
 #include <QLabel>
 #include <QDomNode>
-#include <QDebug>
+#include "libksieve_debug.h"
 
 using namespace KSieveUi;
 
@@ -102,7 +102,7 @@ bool SieveConditionExists::setParamWidgetValue(const QDomElement &element, QWidg
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug() << " SieveConditionExists::setParamWidgetValue unknown tagName " << tagName;
+                qCDebug(LIBKSIEVE_LOG) << " SieveConditionExists::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();

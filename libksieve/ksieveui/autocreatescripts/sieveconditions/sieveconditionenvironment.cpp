@@ -25,7 +25,7 @@
 #include <QWidget>
 #include <QLabel>
 #include <QCompleter>
-#include <QDebug>
+#include "libksieve_debug.h"
 #include <QDomNode>
 #include <QGridLayout>
 
@@ -126,7 +126,7 @@ bool SieveConditionEnvironment::setParamWidgetValue(const QDomElement &element, 
                     value->setText(AutoCreateScriptUtil::quoteStr(e.text()));
                 } else {
                     tooManyArgument(tagName, index, 2, error);
-                    qDebug() << " SieveConditionEnvironment::setParamWidgetValue to many argument " << index;
+                    qCDebug(LIBKSIEVE_LOG) << " SieveConditionEnvironment::setParamWidgetValue to many argument " << index;
                 }
                 ++index;
             } else if (tagName == QLatin1String("crlf")) {
@@ -135,7 +135,7 @@ bool SieveConditionEnvironment::setParamWidgetValue(const QDomElement &element, 
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug() << " SieveActionSetVariable::setParamWidgetValue unknown tagName " << tagName;
+                qCDebug(LIBKSIEVE_LOG) << " SieveActionSetVariable::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();

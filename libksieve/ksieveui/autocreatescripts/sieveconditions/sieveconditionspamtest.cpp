@@ -25,7 +25,7 @@
 #include <KLocalizedString>
 
 #include <QSpinBox>
-#include <QDebug>
+#include "libksieve_debug.h"
 #include <QDomNode>
 #include <QCheckBox>
 #include <QVBoxLayout>
@@ -159,11 +159,11 @@ bool SieveConditionSpamTest::setParamWidgetValue(const QDomElement &element, QWi
                         checkbox->setChecked(true);
                     } else {
                         serverDoesNotSupportFeatures(QLatin1String("percent"), error);
-                        qDebug() << " SieveConditionSpamTest::setParamWidgetValue server has not percent support";
+                        qCDebug(LIBKSIEVE_LOG) << " SieveConditionSpamTest::setParamWidgetValue server has not percent support";
                     }
                 } else {
                     unknowTagValue(tagValue, error);
-                    qDebug() << " SieveConditionSpamTest::setParamWidgetValue unknown tagvalue " << tagValue;
+                    qCDebug(LIBKSIEVE_LOG) << " SieveConditionSpamTest::setParamWidgetValue unknown tagvalue " << tagValue;
                 }
             } else if (tagName == QLatin1String("str")) {
                 QSpinBox *spinbox = w->findChild<QSpinBox *>(QLatin1String("value"));
@@ -174,7 +174,7 @@ bool SieveConditionSpamTest::setParamWidgetValue(const QDomElement &element, QWi
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug() << " SieveSpamTest::setParamWidgetValue unknown tagName " << tagName;
+                qCDebug(LIBKSIEVE_LOG) << " SieveSpamTest::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();

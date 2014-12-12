@@ -27,7 +27,7 @@
 #include <QHBoxLayout>
 #include <QCheckBox>
 #include <QDomNode>
-#include <QDebug>
+#include "libksieve_debug.h"
 
 using namespace KSieveUi;
 
@@ -97,7 +97,7 @@ bool SieveActionRedirect::setParamWidgetValue(const QDomElement &element, QWidge
                     }
                 } else {
                     unknowTagValue(tagValue, error);
-                    qDebug() << " SieveActionRedirect::setParamWidgetValue tagValue unknown" << tagValue;
+                    qCDebug(LIBKSIEVE_LOG) << " SieveActionRedirect::setParamWidgetValue tagValue unknown" << tagValue;
                 }
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
@@ -105,7 +105,7 @@ bool SieveActionRedirect::setParamWidgetValue(const QDomElement &element, QWidge
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug() << " SieveActionRedirect::setParamWidgetValue unknown tagName " << tagName;
+                qCDebug(LIBKSIEVE_LOG) << " SieveActionRedirect::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();

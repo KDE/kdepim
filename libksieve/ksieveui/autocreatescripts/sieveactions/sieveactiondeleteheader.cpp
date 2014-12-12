@@ -26,7 +26,7 @@
 #include <QWidget>
 #include <QLabel>
 #include <QDomNode>
-#include <QDebug>
+#include "libksieve_debug.h"
 #include <QGridLayout>
 
 using namespace KSieveUi;
@@ -94,7 +94,7 @@ bool SieveActionDeleteHeader::setParamWidgetValue(const QDomElement &element, QW
                     value->setText(e.text());
                 } else {
                     tooManyArgument(tagName, index, 2, error);
-                    qDebug() << " SieveActionAddHeader::setParamWidgetValue too many argument :" << index;
+                    qCDebug(LIBKSIEVE_LOG) << " SieveActionAddHeader::setParamWidgetValue too many argument :" << index;
                 }
                 ++index;
             } else if (tagName == QLatin1String("crlf")) {
@@ -103,7 +103,7 @@ bool SieveActionDeleteHeader::setParamWidgetValue(const QDomElement &element, QW
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug() << "SieveActionAddHeader::setParamWidgetValue unknown tag " << tagName;
+                qCDebug(LIBKSIEVE_LOG) << "SieveActionAddHeader::setParamWidgetValue unknown tag " << tagName;
             }
         }
         node = node.nextSibling();

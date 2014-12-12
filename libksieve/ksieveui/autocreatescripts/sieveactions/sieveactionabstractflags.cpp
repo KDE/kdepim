@@ -22,7 +22,7 @@
 
 #include <QHBoxLayout>
 #include <QDomNode>
-#include <QDebug>
+#include "libksieve_debug.h"
 
 using namespace KSieveUi;
 SieveActionAbstractFlags::SieveActionAbstractFlags(const QString &name, const QString &label, QObject *parent)
@@ -62,7 +62,7 @@ bool SieveActionAbstractFlags::setParamWidgetValue(const QDomElement &element, Q
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug() << " SieveActionAbstractFlags::setParamWidgetValue unknown tag :" << tagName;
+                qCDebug(LIBKSIEVE_LOG) << " SieveActionAbstractFlags::setParamWidgetValue unknown tag :" << tagName;
             }
         }
         node = node.nextSibling();

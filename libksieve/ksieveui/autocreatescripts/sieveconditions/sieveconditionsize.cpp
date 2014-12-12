@@ -24,7 +24,7 @@
 #include <QHBoxLayout>
 #include <QComboBox>
 #include <QDomNode>
-#include <QDebug>
+#include "libksieve_debug.h"
 
 using namespace KSieveUi;
 
@@ -101,7 +101,7 @@ bool SieveConditionSize::setParamWidgetValue(const QDomElement &element, QWidget
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug() << " SieveConditionSize::setParamWidgetValue unknown tagName " << tagName;
+                qCDebug(LIBKSIEVE_LOG) << " SieveConditionSize::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();

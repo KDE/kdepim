@@ -149,6 +149,7 @@ set(ksieveui_scriptsparsing_LIB_SRCS
 
 set(ksieveui_LIB_SRCS
   managesievescriptsdialog.cpp
+  libksieve_debug.cpp
   widgets/sievetreewidgetitem.cpp
   widgets/managesievetreeview.cpp
   widgets/managesievewidget.cpp

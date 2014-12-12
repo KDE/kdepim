@@ -25,7 +25,7 @@
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QDomNode>
-#include <QDebug>
+#include "libksieve_debug.h"
 
 using namespace KSieveUi;
 SieveActionKeep::SieveActionKeep(QObject *parent)
@@ -102,13 +102,13 @@ bool SieveActionKeep::setParamWidgetValue(const QDomElement &element, QWidget *w
                     //implement in the future ?
                 } else {
                     unknownTag(tagName, error);
-                    qDebug() << " SieveActionAbstractFlags::setParamWidgetValue unknown tag :" << tagName;
+                    qCDebug(LIBKSIEVE_LOG) << " SieveActionAbstractFlags::setParamWidgetValue unknown tag :" << tagName;
                 }
             }
             node = node.nextSibling();
         }
     } else {
-        qDebug() << " Server doesn't support imapflags";
+        qCDebug(LIBKSIEVE_LOG) << " Server doesn't support imapflags";
     }
     return true;
 }

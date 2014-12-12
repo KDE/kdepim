@@ -25,7 +25,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QDomNode>
-#include <QDebug>
+#include "libksieve_debug.h"
 
 using namespace KSieveUi;
 SieveActionBreak::SieveActionBreak(QObject *parent)
@@ -69,7 +69,7 @@ bool SieveActionBreak::setParamWidgetValue(const QDomElement &element, QWidget *
                     name->setText(AutoCreateScriptUtil::strValue(e));
                 } else {
                     unknowTagValue(tagValue, error);
-                    qDebug() << " SieveActionBreak::setParamWidgetValue unknown tagValue " << tagValue;
+                    qCDebug(LIBKSIEVE_LOG) << " SieveActionBreak::setParamWidgetValue unknown tagValue " << tagValue;
                 }
             } else if (tagName == QLatin1String("str")) {
                 //Nothing
@@ -79,7 +79,7 @@ bool SieveActionBreak::setParamWidgetValue(const QDomElement &element, QWidget *
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug() << "SieveActionBreak::setParamWidgetValue unknown tag " << tagName;
+                qCDebug(LIBKSIEVE_LOG) << "SieveActionBreak::setParamWidgetValue unknown tag " << tagName;
             }
         }
         node = node.nextSibling();

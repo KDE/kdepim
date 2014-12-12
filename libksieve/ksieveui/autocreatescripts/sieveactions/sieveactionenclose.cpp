@@ -25,7 +25,7 @@
 
 #include <QLabel>
 #include <QDomNode>
-#include <QDebug>
+#include "libksieve_debug.h"
 #include <QGridLayout>
 
 using namespace KSieveUi;
@@ -96,7 +96,7 @@ bool SieveActionEnclose::setParamWidgetValue(const QDomElement &element, QWidget
                     }
                 } else {
                     unknowTagValue(tagValue, error);
-                    qDebug() << " SieveActionEnclose::setParamWidgetValue unknown tag value:" << tagValue;
+                    qCDebug(LIBKSIEVE_LOG) << " SieveActionEnclose::setParamWidgetValue unknown tag value:" << tagValue;
                 }
             } else if (tagName == QLatin1String("str")) {
                 MultiLineEdit *edit = w->findChild<MultiLineEdit *>(QLatin1String("text"));
@@ -107,7 +107,7 @@ bool SieveActionEnclose::setParamWidgetValue(const QDomElement &element, QWidget
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug() << " SieveActionEnclose::setParamWidgetValue unknown tagName " << tagName;
+                qCDebug(LIBKSIEVE_LOG) << " SieveActionEnclose::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();

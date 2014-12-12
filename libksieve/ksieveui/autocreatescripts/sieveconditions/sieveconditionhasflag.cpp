@@ -26,7 +26,7 @@
 
 #include <QWidget>
 #include <QHBoxLayout>
-#include <QDebug>
+#include "libksieve_debug.h"
 #include <QDomNode>
 #include <QLabel>
 
@@ -153,7 +153,7 @@ bool SieveConditionHasFlag::setParamWidgetValue(const QDomElement &element, QWid
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qDebug() << " SieveConditionExists::setParamWidgetValue unknown tagName " << tagName;
+                qCDebug(LIBKSIEVE_LOG) << " SieveConditionExists::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();
@@ -171,12 +171,12 @@ bool SieveConditionHasFlag::setParamWidgetValue(const QDomElement &element, QWid
             QLineEdit *value = w->findChild<QLineEdit *>(QLatin1String("value"));
             value->setText(strList.at(1));
         } else {
-            qDebug() << " SieveConditionHasFlag has not variable support";
+            qCDebug(LIBKSIEVE_LOG) << " SieveConditionHasFlag has not variable support";
         }
         break;
     }
     default:
-        qDebug() << " SieveConditionHasFlag::setParamWidgetValue str list count not correct :" << strList.count();
+        qCDebug(LIBKSIEVE_LOG) << " SieveConditionHasFlag::setParamWidgetValue str list count not correct :" << strList.count();
         break;
     }
     return true;

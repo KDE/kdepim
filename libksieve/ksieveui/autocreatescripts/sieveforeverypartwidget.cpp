@@ -30,7 +30,7 @@
 #include <QCheckBox>
 #include <QWhatsThis>
 #include <QDomNode>
-#include <QDebug>
+#include "libksieve_debug.h"
 
 namespace KSieveUi
 {
@@ -104,13 +104,13 @@ void SieveForEveryPartWidget::loadScript(const QDomElement &element, QString &er
                 mName->setText(AutoCreateScriptUtil::strValue(e));
             } else {
                 error += i18n("Unknown tagValue \"%1\" during loading loop \"for\"", tagValue);
-                qDebug() << " SieveForEveryPartWidget::loadScript unknown tagValue " << tagValue;
+                qCDebug(LIBKSIEVE_LOG) << " SieveForEveryPartWidget::loadScript unknown tagValue " << tagValue;
             }
             mForLoop->setChecked(true);
             mName->setEnabled(true);
         } else {
             error += i18n("Unknown tag \"%1\" during loading loop \"for\"", tagName);
-            qDebug() << " SieveForEveryPartWidget::loadScript unknown tagName " << tagName;
+            qCDebug(LIBKSIEVE_LOG) << " SieveForEveryPartWidget::loadScript unknown tagName " << tagName;
         }
     }
 }
