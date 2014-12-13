@@ -59,5 +59,6 @@ int main(int argc, char **argv)
 
     SieveEditorMainWindow *mw = new SieveEditorMainWindow();
     mw->show();
-    return app.exec();
+    int val = app.exec();
+    return val;
 }

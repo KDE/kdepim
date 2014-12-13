@@ -44,7 +44,7 @@
 SieveEditorMainWindow::SieveEditorMainWindow()
     : KXmlGuiWindow()
 {
-    mMainWidget = new SieveEditorCentralWidget;
+    mMainWidget = new SieveEditorCentralWidget(this);
     connect(mMainWidget, &SieveEditorCentralWidget::configureClicked, this, &SieveEditorMainWindow::slotConfigure);
     connect(mMainWidget->sieveEditorMainWidget(), &SieveEditorMainWidget::updateButtons, this, &SieveEditorMainWindow::slotUpdateButtons);
     setCentralWidget(mMainWidget);

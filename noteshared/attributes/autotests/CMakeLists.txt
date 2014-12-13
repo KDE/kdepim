@@ -13,4 +13,5 @@ macro(add_noteshared_unittest _source)
 endmacro ()
 
 add_noteshared_unittest( notedisplayattributetest.cpp )
+add_noteshared_unittest( notealarmattributetest.cpp )
 

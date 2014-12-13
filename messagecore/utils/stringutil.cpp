@@ -83,7 +83,7 @@ static QString splitLine(QString &line)
         } else {
             break;
         }
-        i++;
+        ++i;
     }
 
     // If the quote prefix only consists of whitespace, don't consider it as a quote prefix at all
@@ -211,7 +211,7 @@ QString stripSignature(const QString &msg)
         // Look for the SB beginning
         int posSignatureBlock = res.indexOf(QLatin1Char('-'), posDeletingStart);
         // The prefix before "-- "$
-        if (res[posDeletingStart] == QLatin1Char('\n')) {
+        if (res.at(posDeletingStart) == QLatin1Char('\n')) {
             ++posDeletingStart;
         }
 
@@ -850,7 +850,7 @@ QString guessEmailAddressFromLoginName(const QString &loginName)
     // try to determine the real name
     const KUser user(loginName);
     if (user.isValid()) {
-        QString fullName = user.property(KUser::FullName).toString();
+        const QString fullName = user.property(KUser::FullName).toString();
         address = KEmailAddress::quoteNameIfNecessary(fullName) + QLatin1String(" <") + address + QLatin1Char('>');
     }
 
@@ -979,7 +979,7 @@ QString formatString(const QString &wildString, const QString &fromAddr)
                 QString str = stripEmailAddr(fromAddr);
 
                 uint j = 0;
-                for (; str[j] > QLatin1Char(' '); j++)
+                for (; str[j] > QLatin1Char(' '); ++j)
                     ;
                 unsigned int strLength(str.length());
                 for (; j < strLength && str[j] <= QLatin1Char(' '); ++j)
