@@ -361,6 +361,7 @@ void BrowserWidget::setItem(const Akonadi::Item &item)
     mMonitor->itemFetchScope().fetchAllAttributes();
     qRegisterMetaType<QSet<QByteArray> >();
     connect(mMonitor, &Akonadi::Monitor::itemChanged, this, &BrowserWidget::setItem, Qt::QueuedConnection);
+    contentUi.saveButton->setEnabled( false );
 }
 
 void BrowserWidget::modelChanged()

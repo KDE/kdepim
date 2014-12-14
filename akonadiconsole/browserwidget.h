@@ -86,7 +86,6 @@ private Q_SLOTS:
     void removeTagRequested();
     void createTag();
     void modifyTag();
-
 private:
     Akonadi::Collection currentCollection() const;
 
