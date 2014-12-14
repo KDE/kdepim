@@ -24,7 +24,7 @@
 #include <QMimeData>
 #include <QUrl>
 
-#include <QDebug>
+#include "messagecomposer_debug.h"
 #include <KLocalizedString>
 #include <KLocalizedString>
 #include <QTemporaryDir>
@@ -111,7 +111,7 @@ bool AttachmentModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
     Q_UNUSED(column);
     Q_UNUSED(parent);
 
-    qDebug() << "data has formats" << data->formats()
+    qCDebug(MESSAGECOMPOSER_LOG) << "data has formats" << data->formats()
              << "urls" << data->urls()
              << "action" << int(action);
 
@@ -143,13 +143,13 @@ bool AttachmentModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
 
 QMimeData *AttachmentModel::mimeData(const QModelIndexList &indexes) const
 {
-    qDebug();
+    qCDebug(MESSAGECOMPOSER_LOG);
     QList<QUrl> urls;
     foreach (const QModelIndex &index, indexes) {
         if (index.column() != 0) {
             // Avoid processing the same attachment more than once, since the entire
             // row is selected.
-            qWarning() << "column != 0. Possibly duplicate rows passed to mimeData().";
+            qCWarning(MESSAGECOMPOSER_LOG) << "column != 0. Possibly duplicate rows passed to mimeData().";
             continue;
         }
 
@@ -167,12 +167,12 @@ QMimeData *AttachmentModel::mimeData(const QModelIndexList &indexes) const
         const QString fileName = tempDir->path() + attachmentName;
         QFile f(fileName);
         if (!f.open(QIODevice::WriteOnly)) {
-            qWarning() << "Cannot write attachment:" << f.errorString();
+            qCWarning(MESSAGECOMPOSER_LOG) << "Cannot write attachment:" << f.errorString();
             continue;
         }
         const QByteArray data = part->data();
         if (f.write(data) != data.length()) {
-            qWarning() << "Failed to write all data to file!";
+            qCWarning(MESSAGECOMPOSER_LOG) << "Failed to write all data to file!";
             continue;
         }
         f.setPermissions(f.permissions() | QFileDevice::ReadUser | QFileDevice::WriteUser);
@@ -181,7 +181,7 @@ QMimeData *AttachmentModel::mimeData(const QModelIndexList &indexes) const
         QUrl url;
         url.setScheme(QStringLiteral("file"));
         url.setPath(fileName);
-        qDebug() << url;
+        qCDebug(MESSAGECOMPOSER_LOG) << url;
         urls.append(url);
     }
 
@@ -311,7 +311,7 @@ QVariant AttachmentModel::data(const QModelIndex &index, int role) const
         if (index.column() == 0) {
             return QVariant::fromValue(part);
         } else {
-            qWarning() << "AttachmentPartRole and column != 0.";
+            qCWarning(MESSAGECOMPOSER_LOG) << "AttachmentPartRole and column != 0.";
             return QVariant();
         }
     } else if (role == NameRole) {
@@ -386,7 +386,7 @@ bool AttachmentModel::updateAttachment(AttachmentPart::Ptr part)
 {
     int idx = d->parts.indexOf(part);
     if (idx == -1) {
-        qWarning() << "Tried to update non-existent part.";
+        qCWarning(MESSAGECOMPOSER_LOG) << "Tried to update non-existent part.";
         return false;
     }
     // Emit dataChanged() for the whole row.
@@ -400,7 +400,7 @@ bool AttachmentModel::replaceAttachment(AttachmentPart::Ptr oldPart, AttachmentP
 
     int idx = d->parts.indexOf(oldPart);
     if (idx == -1) {
-        qWarning() << "Tried to replace non-existent part.";
+        qCWarning(MESSAGECOMPOSER_LOG) << "Tried to replace non-existent part.";
         return false;
     }
     d->parts[ idx ] = newPart;
@@ -413,7 +413,7 @@ bool AttachmentModel::removeAttachment(AttachmentPart::Ptr part)
 {
     int idx = d->parts.indexOf(part);
     if (idx < 0) {
-        qWarning() << "Attachment not found.";
+        qCWarning(MESSAGECOMPOSER_LOG) << "Attachment not found.";
         return false;
     }
 
@@ -471,7 +471,7 @@ QVariant AttachmentModel::headerData(int section, Qt::Orientation orientation, i
     case AutoDisplayColumn:
         return i18nc("@title column attachment inlined checkbox.", "Suggest Automatic Display");
     default:
-        qWarning() << "Bad column" << section;
+        qCWarning(MESSAGECOMPOSER_LOG) << "Bad column" << section;
         return QVariant();
     };
 }
@@ -484,7 +484,7 @@ QModelIndex AttachmentModel::index(int row, int column, const QModelIndex &paren
     Q_ASSERT(row >= 0 && row < rowCount());
 
     if (parent.isValid()) {
-        qWarning() << "Called with weird parent.";
+        qCWarning(MESSAGECOMPOSER_LOG) << "Called with weird parent.";
         return QModelIndex();
     }
 

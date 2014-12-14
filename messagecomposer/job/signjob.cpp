@@ -27,7 +27,7 @@
 #include "kleo/signjob.h"
 #include "util.h"
 
-#include <qdebug.h>
+#include "messagecomposer_debug.h"
 #include <kmime/kmime_headers.h>
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_content.h>
@@ -150,7 +150,7 @@ void SignJob::process()
 
     Q_ASSERT(proto);
 
-    qDebug() << "creating signJob from:" << proto->name() << proto->displayName();
+    qCDebug(MESSAGECOMPOSER_LOG) << "creating signJob from:" << proto->name() << proto->displayName();
     std::auto_ptr<Kleo::SignJob> job(proto->signJob(!d->binaryHint(d->format), d->format == Kleo::InlineOpenPGPFormat));
     // for now just do the main recipients
     QByteArray signature;
@@ -214,7 +214,7 @@ void SignJob::process()
             }
 
             if (changed) {
-                qDebug() << "Content changed";
+                qCDebug(MESSAGECOMPOSER_LOG) << "Content changed";
                 d->content->setBody(body);
                 d->content->contentTransferEncoding()->setDecoded(false);
             }
@@ -235,7 +235,7 @@ void SignJob::process()
     job->deleteLater();
 
     if (res.error()) {
-        qDebug() << "signing failed:" << res.error().asString();
+        qCDebug(MESSAGECOMPOSER_LOG) << "signing failed:" << res.error().asString();
         //        job->showErrorDialog( globalPart()->parentWidgetForGui() );
         setError(res.error().code());
         setErrorText(QString::fromLocal8Bit(res.error().asString()));

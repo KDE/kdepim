@@ -71,7 +71,7 @@
 #include <KMessageBox>
 #include <krichtextwidget.h>
 
-#include <QDebug>
+#include "messagecomposer_debug.h"
 
 #include <QDir>
 #include <QTimer>
@@ -265,11 +265,11 @@ void MessageComposer::ComposerViewBase::send(MessageComposer::MessageSender::Sen
     }
 
     if (m_editor->isFormattingUsed()) {
-        qDebug() << "Html mode";
+        qCDebug(MESSAGECOMPOSER_LOG) << "Html mode";
         m_msg->setHeader(new KMime::Headers::Generic("X-KMail-Markup", m_msg.get(), QLatin1String("true"), "utf-8"));
     } else {
         m_msg->removeHeader("X-KMail-Markup");
-        qDebug() << "Plain text";
+        qCDebug(MESSAGECOMPOSER_LOG) << "Plain text";
     }
 
     if (m_editor->isFormattingUsed() && inlineSigningEncryptionSelected()) {
@@ -326,15 +326,15 @@ void MessageComposer::ComposerViewBase::setCustomHeader(const QMap<QByteArray, Q
 
 void MessageComposer::ComposerViewBase::readyForSending()
 {
-    qDebug() << "Entering readyForSending";
+    qCDebug(MESSAGECOMPOSER_LOG) << "Entering readyForSending";
     if (!m_msg) {
-        qDebug() << "m_msg == 0!";
+        qCDebug(MESSAGECOMPOSER_LOG) << "m_msg == 0!";
         return;
     }
 
     if (!m_composers.isEmpty()) {
         // This may happen if e.g. the autosave timer calls applyChanges.
-        qDebug() << "Called while composer active; ignoring.";
+        qCDebug(MESSAGECOMPOSER_LOG) << "Called while composer active; ignoring.";
         return;
     }
 
@@ -355,7 +355,7 @@ void MessageComposer::ComposerViewBase::readyForSending()
 void MessageComposer::ComposerViewBase::slotEmailAddressResolved(KJob *job)
 {
     if (job->error()) {
-        qWarning() << "An error occurred while resolving the email addresses:" << job->errorString();
+        qCWarning(MESSAGECOMPOSER_LOG) << "An error occurred while resolving the email addresses:" << job->errorString();
         // This error could be caused by a broken search infrastructure, so we ignore it for now
         // to not block sending emails completely.
     }
@@ -462,7 +462,7 @@ void MessageComposer::ComposerViewBase::slotEmailAddressResolved(KJob *job)
 
         connect(composer, &MessageComposer::Composer::result, this, &ComposerViewBase::slotSendComposeResult);
         composer->start();
-        qDebug() << "Started a composer for sending!";
+        qCDebug(MESSAGECOMPOSER_LOG) << "Started a composer for sending!";
 
     }
 }
@@ -548,7 +548,7 @@ inline bool showKeyApprovalDialog()
 QList< MessageComposer::Composer * > MessageComposer::ComposerViewBase::generateCryptoMessages(bool &wasCanceled)
 {
 
-    qDebug() << "filling crypto info";
+    qCDebug(MESSAGECOMPOSER_LOG) << "filling crypto info";
     Kleo::KeyResolver *keyResolver = new Kleo::KeyResolver(encryptToSelf(),
             showKeyApprovalDialog(),
             MessageComposer::MessageComposerSettings::self()->pgpAutoEncrypt(),
@@ -571,7 +571,7 @@ QList< MessageComposer::Composer * > MessageComposer::ComposerViewBase::generate
     bool doEncryptCompletely = m_encrypt;
 
     //Add encryptionkeys from id to keyResolver
-    qDebug() << id.pgpEncryptionKey().isEmpty() << id.smimeEncryptionKey().isEmpty();
+    qCDebug(MESSAGECOMPOSER_LOG) << id.pgpEncryptionKey().isEmpty() << id.smimeEncryptionKey().isEmpty();
     if (!id.pgpEncryptionKey().isEmpty()) {
         encryptToSelfKeys.push_back(QLatin1String(id.pgpEncryptionKey()));
     }
@@ -579,7 +579,7 @@ QList< MessageComposer::Composer * > MessageComposer::ComposerViewBase::generate
         encryptToSelfKeys.push_back(QLatin1String(id.smimeEncryptionKey()));
     }
     if (keyResolver->setEncryptToSelfKeys(encryptToSelfKeys) != Kpgp::Ok) {
-        qDebug() << "Failed to set encryptoToSelf keys!";
+        qCDebug(MESSAGECOMPOSER_LOG) << "Failed to set encryptoToSelf keys!";
         return QList< MessageComposer::Composer * >();
     }
 
@@ -591,7 +591,7 @@ QList< MessageComposer::Composer * > MessageComposer::ComposerViewBase::generate
         signKeys.push_back(QLatin1String(id.smimeSigningKey()));
     }
     if (keyResolver->setSigningKeys(signKeys) != Kpgp::Ok) {
-        qDebug() << "Failed to set signing keys!";
+        qCDebug(MESSAGECOMPOSER_LOG) << "Failed to set signing keys!";
         return QList< MessageComposer::Composer * >();
     }
 
@@ -621,7 +621,7 @@ QList< MessageComposer::Composer * > MessageComposer::ComposerViewBase::generate
     signSomething = determineWhetherToSign(doSignCompletely, keyResolver, signSomething, result, canceled);
     if (!result) {
         /// TODO handle failure
-        qDebug() << "determineWhetherToSign: failed to resolve keys! oh noes";
+        qCDebug(MESSAGECOMPOSER_LOG) << "determineWhetherToSign: failed to resolve keys! oh noes";
         if (!canceled) {
             emit failed(i18n("Failed to resolve keys. Please report a bug."));
         } else {
@@ -635,7 +635,7 @@ QList< MessageComposer::Composer * > MessageComposer::ComposerViewBase::generate
     encryptSomething = determineWhetherToEncrypt(doEncryptCompletely, keyResolver, encryptSomething, signSomething, result, canceled);
     if (!result) {
         /// TODO handle failure
-        qDebug() << "determineWhetherToEncrypt: failed to resolve keys! oh noes";
+        qCDebug(MESSAGECOMPOSER_LOG) << "determineWhetherToEncrypt: failed to resolve keys! oh noes";
         if (!canceled) {
             emit failed(i18n("Failed to resolve keys. Please report a bug."));
         } else {
@@ -653,15 +653,15 @@ QList< MessageComposer::Composer * > MessageComposer::ComposerViewBase::generate
 
     const Kpgp::Result kpgpResult = keyResolver->resolveAllKeys(signSomething, encryptSomething);
     if (kpgpResult == Kpgp::Canceled) {
-        qDebug() << "resolveAllKeys: one key resolution canceled by user";
+        qCDebug(MESSAGECOMPOSER_LOG) << "resolveAllKeys: one key resolution canceled by user";
         return QList< MessageComposer::Composer *>();
     } else if (kpgpResult != Kpgp::Ok) {
         // TODO handle failure
-        qDebug() << "resolveAllKeys: failed to resolve keys! oh noes";
+        qCDebug(MESSAGECOMPOSER_LOG) << "resolveAllKeys: failed to resolve keys! oh noes";
         emit failed(i18n("Failed to resolve keys. Please report a bug."));
         return QList< MessageComposer::Composer *>();
     }
-    qDebug() << "done resolving keys:";
+    qCDebug(MESSAGECOMPOSER_LOG) << "done resolving keys:";
 
     QList< MessageComposer::Composer * > composers;
 
@@ -687,7 +687,7 @@ QList< MessageComposer::Composer * > MessageComposer::ComposerViewBase::generate
                 for (it = encData.begin(); it != end; ++it) {
                     QPair<QStringList, std::vector<GpgME::Key> > p(it->recipients, it->keys);
                     data.append(p);
-                    qDebug() << "got resolved keys for:" << it->recipients;
+                    qCDebug(MESSAGECOMPOSER_LOG) << "got resolved keys for:" << it->recipients;
                 }
                 composer->setEncryptionKeys(data);
             }
@@ -818,14 +818,14 @@ void MessageComposer::ComposerViewBase::fillInfoPart(MessageComposer::InfoPart *
 
 void MessageComposer::ComposerViewBase::slotSendComposeResult(KJob *job)
 {
-    qDebug() << "compose job might have error error" << job->error() << "errorString" << job->errorString();
+    qCDebug(MESSAGECOMPOSER_LOG) << "compose job might have error error" << job->error() << "errorString" << job->errorString();
     Q_ASSERT(dynamic_cast< MessageComposer::Composer * >(job));
     MessageComposer::Composer *composer = static_cast< MessageComposer::Composer * >(job);
 
     if (composer->error() == MessageComposer::Composer::NoError) {
         Q_ASSERT(m_composers.contains(composer));
         // The messages were composed successfully.
-        qDebug() << "NoError.";
+        qCDebug(MESSAGECOMPOSER_LOG) << "NoError.";
         const int numberOfMessage(composer->resultMessages().size());
         for (int i = 0; i < numberOfMessage; ++i) {
             if (mSaveIn == MessageComposer::MessageSender::SaveInNone) {
@@ -838,10 +838,10 @@ void MessageComposer::ComposerViewBase::slotSendComposeResult(KJob *job)
     } else if (composer->error() == MessageComposer::Composer::UserCancelledError) {
         // The job warned the user about something, and the user chose to return
         // to the message.  Nothing to do.
-        qDebug() << "UserCancelledError.";
+        qCDebug(MESSAGECOMPOSER_LOG) << "UserCancelledError.";
         emit failed(i18n("Job cancelled by the user"));
     } else {
-        qDebug() << "other Error.";
+        qCDebug(MESSAGECOMPOSER_LOG) << "other Error.";
         QString msg;
         if (composer->error() == MessageComposer::Composer::BugError) {
             msg = i18n("Could not compose message: %1 \n Please report this bug.", job->errorString());
@@ -904,18 +904,18 @@ void MessageComposer::ComposerViewBase::queueMessage(KMime::Message::Ptr message
     m_pendingQueueJobs++;
     qjob->start();
 
-    qDebug() << "Queued a message.";
+    qCDebug(MESSAGECOMPOSER_LOG) << "Queued a message.";
 }
 
 void MessageComposer::ComposerViewBase::slotQueueResult(KJob *job)
 {
     m_pendingQueueJobs--;
     MailTransport::MessageQueueJob *qjob = static_cast<MailTransport::MessageQueueJob * >(job);
-    qDebug() << "mPendingQueueJobs" << m_pendingQueueJobs;
+    qCDebug(MESSAGECOMPOSER_LOG) << "mPendingQueueJobs" << m_pendingQueueJobs;
     Q_ASSERT(m_pendingQueueJobs >= 0);
 
     if (job->error()) {
-        qDebug() << "Failed to queue a message:" << job->errorString();
+        qCDebug(MESSAGECOMPOSER_LOG) << "Failed to queue a message:" << job->errorString();
         // There is not much we can do now, since all the MessageQueueJobs have been
         // started.  So just wait for them to finish.
         // TODO show a message box or something
@@ -948,7 +948,7 @@ void MessageComposer::ComposerViewBase::fillQueueJobHeaders(MailTransport::Messa
         qjob->addressAttribute().setTo(cleanEmailList(encodeIdn(realTo->asUnicodeString().split(QLatin1Char('%')))));
         message->removeHeader("X-KMail-EncBccRecipients");
         message->assemble();
-        qDebug() << "sending with-bcc encr mail to a/n recipient:" <<  qjob->addressAttribute().to();
+        qCDebug(MESSAGECOMPOSER_LOG) << "sending with-bcc encr mail to a/n recipient:" <<  qjob->addressAttribute().to();
     } else {
         qjob->addressAttribute().setTo(cleanEmailList(encodeIdn(infoPart->to())));
         qjob->addressAttribute().setCc(cleanEmailList(encodeIdn(infoPart->cc())));
@@ -958,12 +958,12 @@ void MessageComposer::ComposerViewBase::fillQueueJobHeaders(MailTransport::Messa
 
 void MessageComposer::ComposerViewBase::initAutoSave()
 {
-    qDebug() << "initalising autosave";
+    qCDebug(MESSAGECOMPOSER_LOG) << "initalising autosave";
 
     // Ensure that the autosave directory exists.
     QDir dataDirectory(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kmail2/")) ;
     if (!dataDirectory.exists(QLatin1String("autosave"))) {
-        qDebug() << "Creating autosave directory.";
+        qCDebug(MESSAGECOMPOSER_LOG) << "Creating autosave directory.";
         dataDirectory.mkdir(QLatin1String("autosave"));
     }
 
@@ -1001,7 +1001,7 @@ void MessageComposer::ComposerViewBase::cleanupAutoSave()
     m_autoSaveTimer = 0;
     if (!m_autoSaveUUID.isEmpty()) {
 
-        qDebug() << "deleting autosave files" << m_autoSaveUUID;
+        qCDebug(MESSAGECOMPOSER_LOG) << "deleting autosave files" << m_autoSaveUUID;
 
         // Delete the autosave files
         QDir autoSaveDir(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kmail2/autosave"));
@@ -1013,7 +1013,7 @@ void MessageComposer::ComposerViewBase::cleanupAutoSave()
 
         // Return the files to be removed
         QStringList autoSaveFiles = autoSaveDir.entryList();
-        qDebug() << "There are" << autoSaveFiles.count() << "to be deleted.";
+        qCDebug(MESSAGECOMPOSER_LOG) << "There are" << autoSaveFiles.count() << "to be deleted.";
 
         // Delete each file
         foreach (const QString &file, autoSaveFiles) {
@@ -1026,7 +1026,7 @@ void MessageComposer::ComposerViewBase::cleanupAutoSave()
 //-----------------------------------------------------------------------------
 void MessageComposer::ComposerViewBase::autoSaveMessage()
 {
-    qDebug() << "Autosaving message";
+    qCDebug(MESSAGECOMPOSER_LOG) << "Autosaving message";
 
     if (m_autoSaveTimer) {
         m_autoSaveTimer->stop();
@@ -1034,7 +1034,7 @@ void MessageComposer::ComposerViewBase::autoSaveMessage()
 
     if (!m_composers.isEmpty()) {
         // This may happen if e.g. the autosave timer calls applyChanges.
-        qDebug() << "Called while composer active; ignoring.";
+        qCDebug(MESSAGECOMPOSER_LOG) << "Called while composer active; ignoring.";
         return;
     }
 
@@ -1064,7 +1064,7 @@ void MessageComposer::ComposerViewBase::slotAutoSaveComposeResult(KJob *job)
 
         // The messages were composed successfully. Only save the first message, there should
         // only be one anyway, since crypto is disabled.
-        qDebug() << "NoError.";
+        qCDebug(MESSAGECOMPOSER_LOG) << "NoError.";
         writeAutoSaveToDisk(composer->resultMessages().first());
         Q_ASSERT(composer->resultMessages().size() == 1);
 
@@ -1074,10 +1074,10 @@ void MessageComposer::ComposerViewBase::slotAutoSaveComposeResult(KJob *job)
     } else if (composer->error() == MessageComposer::Composer::UserCancelledError) {
         // The job warned the user about something, and the user chose to return
         // to the message.  Nothing to do.
-        qDebug() << "UserCancelledError.";
+        qCDebug(MESSAGECOMPOSER_LOG) << "UserCancelledError.";
         emit failed(i18n("Job cancelled by the user"), AutoSave);
     } else {
-        qDebug() << "other Error.";
+        qCDebug(MESSAGECOMPOSER_LOG) << "other Error.";
         emit failed(i18n("Could not autosave message: %1", job->errorString()), AutoSave);
     }
 
@@ -1091,7 +1091,7 @@ void MessageComposer::ComposerViewBase::writeAutoSaveToDisk(const KMime::Message
     const QString filename = autosavePath + m_autoSaveUUID;
     QSaveFile file(filename);
     QString errorMessage;
-    qDebug() << "Writing message to disk as" << filename;
+    qCDebug(MESSAGECOMPOSER_LOG) << "Writing message to disk as" << filename;
 
     if (file.open(QIODevice::WriteOnly)) {
         file.setPermissions(QFile::ReadUser | QFile::WriteUser);
@@ -1109,7 +1109,7 @@ void MessageComposer::ComposerViewBase::writeAutoSaveToDisk(const KMime::Message
     }
 
     if (!errorMessage.isEmpty()) {
-        qWarning() << "Auto saving failed:" << errorMessage << file.errorString() << " m_autoSaveUUID" << m_autoSaveUUID;
+        qCWarning(MESSAGECOMPOSER_LOG) << "Auto saving failed:" << errorMessage << file.errorString() << " m_autoSaveUUID" << m_autoSaveUUID;
         if (!m_autoSaveErrorShown) {
             KMessageBox::sorry(m_parentWidget, i18n("Autosaving the message as %1 failed.\n"
                                                     "%2\n"
@@ -1198,11 +1198,11 @@ Akonadi::Collection MessageComposer::ComposerViewBase::defaultSpecialTarget() co
 void MessageComposer::ComposerViewBase::slotCreateItemResult(KJob *job)
 {
     m_pendingQueueJobs--;
-    qDebug() << "mPendingCreateItemJobs" << m_pendingQueueJobs;
+    qCDebug(MESSAGECOMPOSER_LOG) << "mPendingCreateItemJobs" << m_pendingQueueJobs;
     Q_ASSERT(m_pendingQueueJobs >= 0);
 
     if (job->error()) {
-        qWarning() << "Failed to save a message:" << job->errorString();
+        qCWarning(MESSAGECOMPOSER_LOG) << "Failed to save a message:" << job->errorString();
         emit failed(i18n("Failed to save the message: %1", job->errorString()));
         return;
     }
@@ -1226,14 +1226,14 @@ void MessageComposer::ComposerViewBase::slotCreateItemResult(KJob *job)
 void MessageComposer::ComposerViewBase::addAttachment(const QUrl &url, const QString &comment)
 {
     Q_UNUSED(comment);
-    qDebug() << "adding attachment with url:" << url;
+    qCDebug(MESSAGECOMPOSER_LOG) << "adding attachment with url:" << url;
     m_attachmentController->addAttachment(url);
 }
 
 void MessageComposer::ComposerViewBase::addAttachmentUrlSync(const QUrl &url, const QString &comment)
 {
     Q_UNUSED(comment);
-    qDebug() << "adding attachment with url:" << url;
+    qCDebug(MESSAGECOMPOSER_LOG) << "adding attachment with url:" << url;
     m_attachmentController->addAttachmentUrlSync(url);
 }
 
@@ -1590,7 +1590,7 @@ void MessageComposer::ComposerViewBase::collectImages(KMime::Content *root)
             KMime::Content *node = MessageCore::NodeHelper::nextSibling(n);
             while (node) {
                 if (node->contentType()->isImage()) {
-                    qDebug() << "found image in multipart/related : " << node->contentType()->name();
+                    qCDebug(MESSAGECOMPOSER_LOG) << "found image in multipart/related : " << node->contentType()->name();
                     QImage img;
                     img.loadFromData(node->decodedContent());
                     m_editor->loadImage(img, QString::fromLatin1(QByteArray(QByteArray("cid:") + node->contentID()->identifier())),

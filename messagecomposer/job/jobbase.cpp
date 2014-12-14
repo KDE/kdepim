@@ -22,7 +22,7 @@
 #include "composer/composer.h"
 #include "jobbase_p.h"
 
-#include <QDebug>
+#include "messagecomposer_debug.h"
 
 using namespace MessageComposer;
 

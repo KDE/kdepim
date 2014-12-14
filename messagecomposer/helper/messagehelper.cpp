@@ -32,7 +32,7 @@
 #include <kmime/kmime_headers.h>
 #include <kidentitymanagement/identitymanager.h>
 #include <kidentitymanagement/identity.h>
-#include <QDebug>
+#include "messagecomposer_debug.h"
 
 using namespace MessageCore;
 
@@ -227,7 +227,7 @@ QString replacePrefixes(const QString &str, const QStringList &prefixRegExps,
             }
         }
     } else {
-        qWarning() << "bigRegExp = \""
+        qCWarning(MESSAGECOMPOSER_LOG) << "bigRegExp = \""
                    << bigRegExp << "\"\n"
                    << "prefix regexp is invalid!";
         // try good ole Re/Fwd:

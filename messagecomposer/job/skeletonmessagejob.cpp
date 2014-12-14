@@ -29,7 +29,7 @@
 #include <QUrl>
 
 #include <KCharsets>
-#include <QDebug>
+#include "messagecomposer_debug.h"
 
 #include <KProtocolManager>
 
@@ -155,7 +155,7 @@ void SkeletonMessageJobPrivate::doStart()
             fqdn = QUrl::toAce(QHostInfo::localHostName());
         }
         if (fqdn.isEmpty()) {
-            qWarning() << "Unable to generate a Message-ID, falling back to 'localhost.localdomain'.";
+            qCWarning(MESSAGECOMPOSER_LOG) << "Unable to generate a Message-ID, falling back to 'localhost.localdomain'.";
             fqdn = "local.domain";
         }
         messageId->generate(fqdn);

@@ -26,7 +26,7 @@
 #include <AkonadiCore/ItemModifyJob>
 
 #include <QPointer>
-#include <QDebug>
+#include "messagecomposer_debug.h"
 
 using namespace MessageComposer;
 
@@ -114,7 +114,7 @@ void SaveContactPreferenceJob::writeCustomContactProperties(KContacts::Addressee
 void SaveContactPreferenceJob::slotModifyCreateItem(KJob *job)
 {
     if (job->error()) {
-        qDebug() << "modify item failed " << job->errorString();
+        qCDebug(MESSAGECOMPOSER_LOG) << "modify item failed " << job->errorString();
     }
     emitResult();
 }

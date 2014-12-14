@@ -84,7 +84,7 @@ set( messagecomposer_src
      ${messagecomposer_composer_src}
      ${messagecomposer_recipient_src}
      utils/util.cpp
-
+     messagecomposer_debug.cpp
      attachment/attachmentcontrollerbase.cpp
      attachment/attachmentmodel.cpp
 

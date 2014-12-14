@@ -42,7 +42,7 @@
 
 #include <QAction>
 #include <KActionCollection>
-#include <QDebug>
+#include "messagecomposer_debug.h"
 #include <KEncodingFileDialog>
 #include <KFileDialog>
 #include <KLocalizedString>
@@ -215,12 +215,12 @@ void AttachmentControllerBase::Private::compressJobResult(KJob *job)
         }
     }
 
-    qDebug() << "Replacing uncompressed part in model.";
+    qCDebug(MESSAGECOMPOSER_LOG) << "Replacing uncompressed part in model.";
     uncompressedParts[ compressedPart ] = originalPart;
     bool ok = model->replaceAttachment(originalPart, compressedPart);
     if (!ok) {
         // The attachment was removed from the model while we were compressing.
-        qDebug() << "Compressed a zombie.";
+        qCDebug(MESSAGECOMPOSER_LOG) << "Compressed a zombie.";
     }
 }
 
@@ -308,7 +308,7 @@ void AttachmentControllerBase::Private::updateJobResult(KJob *job)
     bool ok = model->replaceAttachment(originalPart, updatedPart);
     if (!ok) {
         // The attachment was removed from the model while we were compressing.
-        qDebug() << "Updated a zombie.";
+        qCDebug(MESSAGECOMPOSER_LOG) << "Updated a zombie.";
     }
 }
 
@@ -319,7 +319,7 @@ void AttachmentControllerBase::Private::editDone(MessageViewer::EditorWatcher *w
     QTemporaryFile *tempFile = editorTempFile.take(watcher);
     Q_ASSERT(tempFile);
     if (watcher->fileChanged()) {
-        qDebug() << "File has changed.";
+        qCDebug(MESSAGECOMPOSER_LOG) << "File has changed.";
         const QString name = watcher->url().path();
         QFile file(name);
         if (file.open(QIODevice::ReadOnly)) {
@@ -347,7 +347,7 @@ void AttachmentControllerBase::Private::createOpenWithMenu(QMenu *topMenu, Attac
             menu->menuAction()->setObjectName(QLatin1String("openWith_submenu")); // for the unittest
             topMenu->addMenu(menu);
         }
-        //qDebug() << offers.count() << "offers" << topMenu << menu;
+        //qCDebug(MESSAGECOMPOSER_LOG) << offers.count() << "offers" << topMenu << menu;
 
         KService::List::ConstIterator it = offers.constBegin();
         KService::List::ConstIterator end = offers.constEnd();
@@ -380,7 +380,7 @@ void AttachmentControllerBase::Private::createOpenWithMenu(QMenu *topMenu, Attac
 void AttachmentControllerBase::exportPublicKey(const QString &fingerprint)
 {
     if (fingerprint.isEmpty() || !Kleo::CryptoBackendFactory::instance()->openpgp()) {
-        qWarning() << "Tried to export key with empty fingerprint, or no OpenPGP.";
+        qCWarning(MESSAGECOMPOSER_LOG) << "Tried to export key with empty fingerprint, or no OpenPGP.";
         Q_ASSERT(false);   // Can this happen?
         return;
     }
@@ -553,13 +553,13 @@ void AttachmentControllerBase::setSignEnabled(bool enabled)
 void AttachmentControllerBase::compressAttachment(AttachmentPart::Ptr part, bool compress)
 {
     if (compress) {
-        qDebug() << "Compressing part.";
+        qCDebug(MESSAGECOMPOSER_LOG) << "Compressing part.";
 
         AttachmentCompressJob *ajob = new AttachmentCompressJob(part, this);
         connect(ajob, SIGNAL(result(KJob*)), this, SLOT(compressJobResult(KJob*)));
         ajob->start();
     } else {
-        qDebug() << "Uncompressing part.";
+        qCDebug(MESSAGECOMPOSER_LOG) << "Uncompressing part.";
 
         // Replace the compressed part with the original uncompressed part, and delete
         // the compressed part.
@@ -712,7 +712,7 @@ void AttachmentControllerBase::Private::slotAttachmentContentCreated(KJob *job)
         emit q->showAttachment(attachmentJob->content(), QByteArray());
     } else {
         // TODO: show warning to the user
-        qWarning() << "Error creating KMime::Content for attachment:" << job->errorText();
+        qCWarning(MESSAGECOMPOSER_LOG) << "Error creating KMime::Content for attachment:" << job->errorText();
     }
 }
 
@@ -742,7 +742,7 @@ void AttachmentControllerBase::editAttachment(AttachmentPart::Ptr part, MessageV
         // Delete the temp file if the composer is closed (and this object is destroyed).
         tempFile->setParent(this);   // Manages lifetime.
     } else {
-        qWarning() << "Could not start EditorWatcher.";
+        qCWarning(MESSAGECOMPOSER_LOG) << "Could not start EditorWatcher.";
         delete watcher;
         delete tempFile;
     }
@@ -765,7 +765,7 @@ void AttachmentControllerBase::saveAttachmentAs(AttachmentPart::Ptr part)
                                        i18n("Save Attachment As"));
 
     if (url.isEmpty()) {
-        qDebug() << "Save Attachment As dialog canceled.";
+        qCDebug(MESSAGECOMPOSER_LOG) << "Save Attachment As dialog canceled.";
         return;
     }
 

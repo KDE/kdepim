@@ -30,7 +30,7 @@
 #include <QTextEdit>
 
 #include <KCharsets>
-#include <QDebug>
+#include "messagecomposer_debug.h"
 #include <KLocalizedString>
 #include <KMessageBox>
 
@@ -70,7 +70,7 @@ KMime::Content *MessageComposer::Util::composeHeadersAndBody(KMime::Content *ori
     Q_ASSERT(!encodedBody.isEmpty());
 
     if (!(format & Kleo::InlineOpenPGPFormat)) {    // make a MIME message
-        qDebug() << "making MIME message, format:" << format;
+        qCDebug(MESSAGECOMPOSER_LOG) << "making MIME message, format:" << format;
         makeToplevelContentType(result, format, sign, hashAlgo);
 
         if (makeMultiMime(format, sign)) {      // sign/enc PGPMime, sign SMIME
@@ -79,7 +79,7 @@ KMime::Content *MessageComposer::Util::composeHeadersAndBody(KMime::Content *ori
             result->contentType()->setBoundary(boundary);
 
             result->assemble();
-            //qDebug() << "processed header:" << result->head();
+            //qCDebug(MESSAGECOMPOSER_LOG) << "processed header:" << result->head();
 
             // Build the encapsulated MIME parts.
             // Build a MIME part holding the code information
@@ -119,7 +119,7 @@ KMime::Content *MessageComposer::Util::composeHeadersAndBody(KMime::Content *ori
             result->contentDisposition()->setFilename(QString::fromLatin1("smime.p7m"));
 
             result->assemble();
-            //qDebug() << "processed header:" << result->head();
+            //qCDebug(MESSAGECOMPOSER_LOG) << "processed header:" << result->head();
 
             result->setBody(encodedBody);
         }
@@ -152,7 +152,7 @@ void MessageComposer::Util::makeToplevelContentType(KMime::Content *content, Kle
         return;
     case Kleo::SMIMEFormat:
         if (sign) {
-            qDebug() << "setting headers for SMIME";
+            qCDebug(MESSAGECOMPOSER_LOG) << "setting headers for SMIME";
             content->contentType()->setMimeType(QByteArray("multipart/signed"));
             content->contentType()->setParameter(QString::fromLatin1("protocol"), QString::fromAscii("application/pkcs7-signature"));
             content->contentType()->setParameter(QString::fromLatin1("micalg"), QString::fromAscii(hashAlgo).toLower());
@@ -163,7 +163,7 @@ void MessageComposer::Util::makeToplevelContentType(KMime::Content *content, Kle
     // S/MIME)
     case Kleo::SMIMEOpaqueFormat:
 
-        qDebug() << "setting headers for SMIME/opaque";
+        qCDebug(MESSAGECOMPOSER_LOG) << "setting headers for SMIME/opaque";
         content->contentType()->setMimeType(QByteArray("application/pkcs7-mime"));
 
         if (sign) {
@@ -230,7 +230,7 @@ QByteArray MessageComposer::Util::selectCharset(const QList<QByteArray> &charset
         // the former knows us-ascii is latin1.
         QTextCodec *codec = KCharsets::charsets()->codecForName(QString::fromLatin1(name));
         if (!codec) {
-            qWarning() << "Could not get text codec for charset" << name;
+            qCWarning(MESSAGECOMPOSER_LOG) << "Could not get text codec for charset" << name;
             continue;
         }
         if (codec->canEncode(text)) {
@@ -238,11 +238,11 @@ QByteArray MessageComposer::Util::selectCharset(const QList<QByteArray> &charset
             if (name == "us-ascii" && !KMime::isUsAscii(text)) {
                 continue;
             }
-            qDebug() << "Chosen charset" << name;
+            qCDebug(MESSAGECOMPOSER_LOG) << "Chosen charset" << name;
             return name;
         }
     }
-    qDebug() << "No appropriate charset found.";
+    qCDebug(MESSAGECOMPOSER_LOG) << "No appropriate charset found.";
     return QByteArray();
 }
 

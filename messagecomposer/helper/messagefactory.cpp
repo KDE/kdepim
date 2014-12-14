@@ -38,7 +38,7 @@
 #include "helper/messagehelper.h"
 #include "templateparser/templateparser.h"
 #include <KLocalizedString>
-#include <QDebug>
+#include "messagecomposer_debug.h"
 #include <kcharsets.h>
 #include <QTextCodec>
 #include <KCharsets>
@@ -196,7 +196,7 @@ MessageFactory::MessageReply MessageFactory::createReply()
                 // The sender didn't set a Reply-to address, so we add the From
                 // address to the list of CC recipients.
                 ccRecipients += m_origMsg->from()->mailboxes();
-                qDebug() << "Added" << m_origMsg->from()->asUnicodeString() << "to the list of CC recipients";
+                qCDebug(MESSAGECOMPOSER_LOG) << "Added" << m_origMsg->from()->asUnicodeString() << "to the list of CC recipients";
             }
 
             // if it is a mailing list, add the posting address
@@ -207,7 +207,7 @@ MessageFactory::MessageReply MessageFactory::createReply()
                 // in case of replying to a normal message only then add the From
                 // address to the list of recipients if there was no Reply-to address
                 recipients += m_origMsg->from()->mailboxes();
-                qDebug() << "Added" << m_origMsg->from()->asUnicodeString() << "to the list of recipients";
+                qCDebug(MESSAGECOMPOSER_LOG) << "Added" << m_origMsg->from()->asUnicodeString() << "to the list of recipients";
             }
         }
 
@@ -228,7 +228,7 @@ MessageFactory::MessageReply MessageFactory::createReply()
                 if (!recipients.contains(mailbox) &&
                         !ccRecipients.contains(mailbox)) {
                     ccRecipients += mailbox;
-                    qDebug() << "Added" << mailbox.prettyAddress() << "to the list of CC recipients";
+                    qCDebug(MESSAGECOMPOSER_LOG) << "Added" << mailbox.prettyAddress() << "to the list of CC recipients";
                 }
             }
         }
@@ -468,7 +468,7 @@ KMime::Content *MessageFactory::createForwardAttachmentMessage(const KMime::Mess
     // THIS HAS TO BE AFTER setCte()!!!!
     msgPart->setCharset("");
 #else
-    qDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
+    qCDebug(MESSAGECOMPOSER_LOG) << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
 #endif
     MessageCore::Util::addLinkInformation(fwdMsg, m_origId, Akonadi::MessageStatus::statusForwarded());
     return msgPart;
@@ -711,7 +711,7 @@ KMime::Message::Ptr MessageFactory::createMDN(KMime::MDN::ActionMode a,
 
     receipt->assemble();
 
-    qDebug() << "final message:" + receipt->encodedContent();
+    qCDebug(MESSAGECOMPOSER_LOG) << "final message:" + receipt->encodedContent();
 
     receipt->assemble();
     return receipt;
@@ -758,7 +758,7 @@ QPair< KMime::Message::Ptr, KMime::Content * > MessageFactory::createForwardDige
     id = m_folderId;
     MessageHelper::initHeader(msg, m_identityManager, id);
 
-    //   qDebug() << "digest:" << digest->contents().size() << digest->encodedContent();
+    //   qCDebug(MESSAGECOMPOSER_LOG) << "digest:" << digest->contents().size() << digest->encodedContent();
 
     return QPair< KMime::Message::Ptr, KMime::Content * >(msg, digest);
 }
@@ -836,7 +836,7 @@ bool MessageFactory::MDNConfirmMultipleRecipients(const KMime::Message::Ptr &msg
     // RFC 2298: [ Confirmation from the user SHOULD be obtained (or no
     // MDN sent) ] if there is more than one distinct address in the
     // Disposition-Notification-To header.
-    qDebug() << "KEmailAddress::splitAddressList(receiptTo):"
+    qCDebug(MESSAGECOMPOSER_LOG) << "KEmailAddress::splitAddressList(receiptTo):"
              << KEmailAddress::splitAddressList(receiptTo).join(QString::fromLatin1("\n"));
 
     return KEmailAddress::splitAddressList(receiptTo).count() > 1;
@@ -859,7 +859,7 @@ bool MessageFactory::MDNReturnPathEmpty(const KMime::Message::Ptr &msg)
     KMime::Types::AddrSpecList returnPathList = MessageHelper::extractAddrSpecs(msg, "Return-Path");
     QString returnPath = returnPathList.isEmpty() ? QString()
                          : returnPathList.front().localPart + QChar::fromLatin1('@') + returnPathList.front().domain;
-    qDebug() << "clean return path:" << returnPath;
+    qCDebug(MESSAGECOMPOSER_LOG) << "clean return path:" << returnPath;
     return returnPath.isEmpty();
 }
 
@@ -880,7 +880,7 @@ bool MessageFactory::MDNReturnPathNotInRecieptTo(const  KMime::Message::Ptr &msg
     KMime::Types::AddrSpecList returnPathList = MessageHelper::extractAddrSpecs(msg, QString::fromLatin1("Return-Path").toLatin1());
     QString returnPath = returnPathList.isEmpty() ? QString()
                          : returnPathList.front().localPart + QChar::fromLatin1('@') + returnPathList.front().domain;
-    qDebug() << "clean return path:" << returnPath;
+    qCDebug(MESSAGECOMPOSER_LOG) << "clean return path:" << returnPath;
     return !receiptTo.contains(returnPath, Qt::CaseSensitive);
 }
 
@@ -931,7 +931,7 @@ QString MessageFactory::replaceHeadersInString(const KMime::Message::Ptr &msg, c
     QRegExp rxDate(QString::fromLatin1("\\$\\{date\\}"));
     Q_ASSERT(rxDate.isValid());
 
-    qDebug() << "creating mdn date:" << msg->date()->dateTime().toTime_t() << KMime::DateFormatter::formatDate(
+    qCDebug(MESSAGECOMPOSER_LOG) << "creating mdn date:" << msg->date()->dateTime().toTime_t() << KMime::DateFormatter::formatDate(
                  KMime::DateFormatter::Localized, msg->date()->dateTime().toTime_t());
     QString sDate = KMime::DateFormatter::formatDate(
                         KMime::DateFormatter::Localized, msg->date()->dateTime().toTime_t());

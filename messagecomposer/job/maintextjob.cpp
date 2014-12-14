@@ -29,7 +29,7 @@
 #include <QTextCodec>
 
 #include <KCharsets>
-#include <QDebug>
+#include "messagecomposer_debug.h"
 #include <KLocalizedString>
 #include <KMessageBox>
 
@@ -131,7 +131,7 @@ bool MainTextJobPrivate::chooseCharsetAndEncode()
             }
         } else if (textPart->warnBadCharset()) {
             // Should warn user but no Gui available.
-            qDebug() << "warnBadCharset but Gui is disabled.";
+            qCDebug(MESSAGECOMPOSER_LOG) << "warnBadCharset but Gui is disabled.";
             q->setError(JobBase::UserError);
             q->setErrorText(i18n("The selected encoding (%1) cannot fully encode the message.",
                                  QString::fromLatin1(charsets.first())));
@@ -166,7 +166,7 @@ bool MainTextJobPrivate::encodeTexts()
     if (!textPart->cleanHtml().isEmpty()) {
         encodedHtml = codec->fromUnicode(textPart->cleanHtml());
     }
-    qDebug() << "Done.";
+    qCDebug(MESSAGECOMPOSER_LOG) << "Done.";
     return true;
 }
 
@@ -205,7 +205,7 @@ SinglepartJob *MainTextJobPrivate::createImageJob(const QSharedPointer<KPIMTextE
     cjob->contentTransferEncoding()->setEncoding(KMime::Headers::CEbase64);
     cjob->contentTransferEncoding()->setDecoded(false);   // It is already encoded.
     cjob->contentID()->setIdentifier(image->contentID.toLatin1());
-    qDebug() << "cid" << cjob->contentID()->identifier();
+    qCDebug(MESSAGECOMPOSER_LOG) << "cid" << cjob->contentID()->identifier();
     cjob->setData(image->image);
     return cjob;
 }
@@ -257,7 +257,7 @@ void MainTextJob::doStart()
     // Assemble the Content.
     SinglepartJob *plainJob = d->createPlainTextJob();
     if (d->encodedHtml.isEmpty()) {
-        qDebug() << "Making text/plain";
+        qCDebug(MESSAGECOMPOSER_LOG) << "Making text/plain";
         // Content is text/plain.
         appendSubjob(plainJob);
     } else {
@@ -266,11 +266,11 @@ void MainTextJob::doStart()
         alternativeJob->appendSubjob(plainJob);   // text/plain first.
         alternativeJob->appendSubjob(d->createHtmlJob());   // text/html second.
         if (!d->textPart->hasEmbeddedImages()) {
-            qDebug() << "Have no images.  Making multipart/alternative.";
+            qCDebug(MESSAGECOMPOSER_LOG) << "Have no images.  Making multipart/alternative.";
             // Content is multipart/alternative.
             appendSubjob(alternativeJob);
         } else {
-            qDebug() << "Have related images.  Making multipart/related.";
+            qCDebug(MESSAGECOMPOSER_LOG) << "Have related images.  Making multipart/related.";
             // Content is multipart/related with a multipart/alternative sub-Content.
             MultipartJob *multipartJob = new MultipartJob;
             multipartJob->setMultipartSubtype("related");

@@ -20,7 +20,7 @@
 #include "contentjobbase.h"
 #include "contentjobbase_p.h"
 
-#include <QDebug>
+#include "messagecomposer_debug.h"
 
 #include <kmime/kmime_content.h>
 
@@ -41,7 +41,7 @@ void ContentJobBasePrivate::doNextSubjob()
     if (q->hasSubjobs()) {
         q->subjobs().first()->start();
     } else {
-        qDebug() << "Calling process.";
+        qCDebug(MESSAGECOMPOSER_LOG) << "Calling process.";
         q->process();
     }
 }
@@ -117,7 +117,7 @@ void ContentJobBase::slotResult(KJob *job)
 {
     Q_D(ContentJobBase);
     KCompositeJob::slotResult(job);   // Handles errors and removes subjob.
-    qDebug() << "A subjob finished." << subjobs().count() << "more to go.";
+    qCDebug(MESSAGECOMPOSER_LOG) << "A subjob finished." << subjobs().count() << "more to go.";
     if (error()) {
         return;
     }

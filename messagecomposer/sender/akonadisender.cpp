@@ -19,7 +19,7 @@
 
 #include "akonadisender.h"
 
-#include <QDebug>
+#include "messagecomposer_debug.h"
 
 #include "helper/messagehelper.h"
 #include "settings/messagecomposersettings.h"
@@ -93,7 +93,7 @@ bool AkonadiSender::doSend(const KMime::Message::Ptr &aMsg, short sendNow)
 
 bool AkonadiSender::doSendQueued(const QString &customTransport)
 {
-    qDebug() << "Sending queued message with custom transport:" << customTransport;
+    qCDebug(MESSAGECOMPOSER_LOG) << "Sending queued message with custom transport:" << customTransport;
     if (!MessageComposer::Util::sendMailDispatcherIsOnline()) {
         return false;
     }
@@ -113,7 +113,7 @@ bool AkonadiSender::doSendQueued(const QString &customTransport)
 void AkonadiSender::sendOrQueueMessage(const KMime::Message::Ptr &message, MessageComposer::MessageSender::SendMethod method)
 {
     Q_ASSERT(message);
-    qDebug() << "KMime::Message: \n[\n" << message->encodedContent().left(1000) << "\n]\n";
+    qCDebug(MESSAGECOMPOSER_LOG) << "KMime::Message: \n[\n" << message->encodedContent().left(1000) << "\n]\n";
 
     MessageQueueJob *qjob = new MessageQueueJob(this);
     if (message->hasHeader("X-KMail-FccDisabled")) {
@@ -139,14 +139,14 @@ void AkonadiSender::sendOrQueueMessage(const KMime::Message::Ptr &message, Messa
     }
     const Transport *transport = TransportManager::self()->transportById(transportId);
     if (!transport) {
-        qDebug() << " No transport defined. Need to create it";
+        qCDebug(MESSAGECOMPOSER_LOG) << " No transport defined. Need to create it";
         return;
     }
     if ((method == MessageComposer::MessageSender::SendImmediate) && !MessageComposer::Util::sendMailDispatcherIsOnline()) {
         return;
     }
 
-    qDebug() << "Using transport (" << transport->name() << "," << transport->id() << ")";
+    qCDebug(MESSAGECOMPOSER_LOG) << "Using transport (" << transport->name() << "," << transport->id() << ")";
     qjob->transportAttribute().setTransportId(transport->id());
 
     // if we want to manually queue it for sending later, then do it
@@ -172,7 +172,7 @@ void AkonadiSender::sendOrQueueMessage(const KMime::Message::Ptr &message, Messa
     connect(qjob, &MessageQueueJob::result, this, &AkonadiSender::queueJobResult);
     mPendingJobs.insert(qjob);
     qjob->start();
-    qDebug() << "QueueJob started.";
+    qCDebug(MESSAGECOMPOSER_LOG) << "QueueJob started.";
 
     // TODO potential problem:
     // The MDA finishes sending a message before I queue the next one, and
@@ -186,9 +186,9 @@ void AkonadiSender::queueJobResult(KJob *job)
     mPendingJobs.remove(job);
 
     if (job->error()) {
-        qDebug() << "QueueJob failed with error" << job->errorString();
+        qCDebug(MESSAGECOMPOSER_LOG) << "QueueJob failed with error" << job->errorString();
     } else {
-        qDebug() << "QueueJob success.";
+        qCDebug(MESSAGECOMPOSER_LOG) << "QueueJob success.";
     }
 }
 

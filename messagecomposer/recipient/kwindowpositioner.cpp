@@ -21,7 +21,7 @@
 
 #include "kwindowpositioner.h"
 
-#include <qdebug.h>
+#include "messagecomposer_debug.h"
 
 #include <QWidget>
 #include <QApplication>
@@ -56,7 +56,7 @@ void KWindowPositioner::reposition()
     if ((pos.y() + mSlave->frameGeometry().height()) > desktopRect.height()) {
         pos.setY(desktopRect.height() - mSlave->frameGeometry().height() - mMaster->height());
     }
-    qDebug() << mMaster->pos() << mMaster->mapToGlobal(mMaster->pos()) << pos.y() << (mMaster->pos().y() - pos.y()) << mSlave->frameGeometry().height();
+    qCDebug(MESSAGECOMPOSER_LOG) << mMaster->pos() << mMaster->mapToGlobal(mMaster->pos()) << pos.y() << (mMaster->pos().y() - pos.y()) << mSlave->frameGeometry().height();
     if (mMode == Bottom && mMaster->mapToGlobal(mMaster->pos()).y() > pos.y() && (mMaster->pos().y() - pos.y()) < mSlave->frameGeometry().height()) {
         pos.setY(mMaster->mapToGlobal(QPoint(0, -mSlave->frameGeometry().height())).y());
     }

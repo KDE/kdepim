@@ -21,7 +21,7 @@
 #include "composer/kmeditor.h"
 
 #include <KCharsets>
-#include <QDebug>
+#include "messagecomposer_debug.h"
 #include <KIO/Job>
 
 #include <QTextCodec>
@@ -46,7 +46,7 @@ void InsertTextFileJob::slotFileData(KIO::Job *job, const QByteArray &data)
 void InsertTextFileJob::slotGetJobFinished(KJob *job)
 {
     if (job->error()) {
-        qWarning() << job->errorString();
+        qCWarning(MESSAGECOMPOSER_LOG) << job->errorString();
         setError(job->error());
         setErrorText(job->errorText());
         emitResult();

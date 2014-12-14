@@ -28,7 +28,7 @@
 #include <KEmailAddress>
 
 #include <KLocalizedString>
-#include <QDebug>
+#include "messagecomposer_debug.h"
 #include <QLineEdit>
 #include <KMessageBox>
 #include <QInputDialog>
@@ -300,7 +300,7 @@ void DistributionListDialog::slotDelayedUser1(KJob *job)
         for (int i = 0; i < numberOfTopLevel; ++i) {
             DistributionListItem *item = static_cast<DistributionListItem *>(mRecipientsList->topLevelItem(i));
             if (item && item->checkState(0) == Qt::Checked) {
-                qDebug() << item->addressee().fullEmail() << item->addressee().uid();
+                qCDebug(MESSAGECOMPOSER_LOG) << item->addressee().fullEmail() << item->addressee().uid();
                 if (item->isTransient()) {
                     group.append(KContacts::ContactGroup::Data(item->addressee().realName(), item->email()));
                 } else {
@@ -327,7 +327,7 @@ void DistributionListDialog::slotContactGroupCreateJobResult(KJob *job)
 {
     if (job->error()) {
         KMessageBox::information(this, i18n("Unable to create distribution list: %1", job->errorString()));
-        qWarning() << "Unable to create distribution list:" << job->errorText();
+        qCWarning(MESSAGECOMPOSER_LOG) << "Unable to create distribution list:" << job->errorText();
     } else {
         accept();
     }
