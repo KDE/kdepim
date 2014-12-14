@@ -195,6 +195,7 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   connect( contentUi.saveButton, SIGNAL(clicked()), SLOT(save()) );
   splitter3->addWidget( contentViewParent );
 
+
   connect( contentUi.attrAddButton, SIGNAL(clicked()), SLOT(addAttribute()) );
   connect( contentUi.attrDeleteButton, SIGNAL(clicked()), SLOT(delAttribute()) );
 
@@ -220,12 +221,25 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   m_stateMaintainer->setView( mCollectionView );
 
   m_stateMaintainer->restoreState();
+  connect(contentUi.flags, SIGNAL(changed()), this, SLOT(slotFlagsChanged()));
+  connect(contentUi.tags, SIGNAL(changed()), this, SLOT(slotTagsChanged()));
 }
 
 BrowserWidget::~BrowserWidget()
 {
   m_stateMaintainer->saveState();
 }
+
+void BrowserWidget::slotFlagsChanged()
+{
+  contentUi.saveButton->setEnabled( true );
+}
+
+void BrowserWidget::slotTagsChanged()
+{
+  contentUi.saveButton->setEnabled( true );
+}
+
 
 void BrowserWidget::clear()
 {
@@ -240,6 +254,7 @@ void BrowserWidget::clear()
   contentUi.flags->clear();
   contentUi.tags->clear();
   contentUi.attrView->setModel( 0 );
+  contentUi.saveButton->setEnabled( false );
 }
 
 void BrowserWidget::itemActivated(const QModelIndex & index)
@@ -394,6 +409,7 @@ void BrowserWidget::saveResult(KJob * job)
   if ( job->error() ) {
     KMessageBox::error( this, i18n( "Failed to save changes: %1", job->errorString() ) );
   }
+  contentUi.saveButton->setEnabled( false ); 
 }
 
 void BrowserWidget::addAttribute()

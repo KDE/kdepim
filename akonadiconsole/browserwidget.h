@@ -75,6 +75,8 @@ class BrowserWidget: public QWidget
     void dumpToXmlResult( KJob *job );
     void clear();
     void updateItemFetchScope();
+    void slotFlagsChanged();
+    void slotTagsChanged();
 
   private:
     Akonadi::Collection currentCollection() const;
