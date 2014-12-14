@@ -14,6 +14,7 @@ add_definitions(-DTRANSLATION_DOMAIN=\"akonadi_sendlater_agent\")
 add_subdirectory(tests)
 add_subdirectory(autotests)
 set(sendlaterlib_SRCS 
+    sendlateragent_debug.cpp
     sendlaterinfo.cpp
     sendlaterdialog.cpp
     sendlaterutil.cpp
@@ -37,6 +38,7 @@ install( TARGETS sendlater ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 
 set(sendlateragent_SRCS
+   sendlateragent_debug.cpp
    sendlateragent.cpp
    sendlaterconfiguredialog.cpp
    sendlaterconfigurewidget.cpp

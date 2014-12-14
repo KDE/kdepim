@@ -35,19 +35,19 @@
 #include <KLocalizedString>
 #include <QIcon>
 #include <KIconLoader>
-#include <QDebug>
+#include "sendlateragent_debug.h"
 
 SendLaterJob::SendLaterJob(SendLaterManager *manager, SendLater::SendLaterInfo *info, QObject *parent)
     : QObject(parent),
       mManager(manager),
       mInfo(info)
 {
-    qDebug() << " SendLaterJob::SendLaterJob" << this;
+    qCDebug(SENDLATERAGENT_LOG) << " SendLaterJob::SendLaterJob" << this;
 }
 
 SendLaterJob::~SendLaterJob()
 {
-    qDebug() << " SendLaterJob::~SendLaterJob()" << this;
+    qCDebug(SENDLATERAGENT_LOG) << " SendLaterJob::~SendLaterJob()" << this;
 }
 
 void SendLaterJob::start()
@@ -65,12 +65,12 @@ void SendLaterJob::start()
             connect(fetch, &Akonadi::ItemFetchJob::result, this, &SendLaterJob::slotJobFinished);
             fetch->start();
         } else {
-            qDebug() << " message Id is invalid";
+            qCDebug(SENDLATERAGENT_LOG) << " message Id is invalid";
             sendError(i18n("Not message found."), SendLaterManager::ItemNotFound);
         }
     } else {
         sendError(i18n("Not message found."), SendLaterManager::UnknownError);
-        qDebug() << " Item is null. It's a bug!";
+        qCDebug(SENDLATERAGENT_LOG) << " Item is null. It's a bug!";
     }
 }
 
@@ -78,14 +78,14 @@ void SendLaterJob::slotMessageTransfered(const Akonadi::Item::List &items)
 {
     if (items.isEmpty()) {
         sendError(i18n("No message found."), SendLaterManager::ItemNotFound);
-        qDebug() << " slotMessageTransfered failed !";
+        qCDebug(SENDLATERAGENT_LOG) << " slotMessageTransfered failed !";
         return;
     } else if (items.count() == 1) {
         //Success
         mItem = items.first();
         return;
     }
-    qDebug() << "Error during fetching message.";
+    qCDebug(SENDLATERAGENT_LOG) << "Error during fetching message.";
     sendError(i18n("Error during fetching message."), SendLaterManager::TooManyItemFound);
 }
 
@@ -96,7 +96,7 @@ void SendLaterJob::slotJobFinished(KJob *job)
         return;
     }
     if (!MailTransport::TransportManager::self()->showTransportCreationDialog(0, MailTransport::TransportManager::IfNoTransportExists)) {
-        qDebug() << " we can't create transport ";
+        qCDebug(SENDLATERAGENT_LOG) << " we can't create transport ";
         sendError(i18n("We can't create transport"), SendLaterManager::CanNotCreateTransport);
         return;
     }
@@ -135,7 +135,7 @@ void SendLaterJob::updateAndCleanMessageBeforeSending(const KMime::Message::Ptr 
 void SendLaterJob::slotDeleteItem(KJob *job)
 {
     if (job->error()) {
-        qDebug() << " void SendLaterJob::slotDeleteItem( KJob *job ) :" << job->errorString();
+        qCDebug(SENDLATERAGENT_LOG) << " void SendLaterJob::slotDeleteItem( KJob *job ) :" << job->errorString();
     }
     sendDone();
 }

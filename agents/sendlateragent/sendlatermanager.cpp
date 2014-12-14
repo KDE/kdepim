@@ -27,7 +27,7 @@
 #include <KConfigGroup>
 #include <KMessageBox>
 #include <KLocalizedString>
-#include <QDebug>
+#include "sendlateragent_debug.h"
 
 #include <QStringList>
 #include <QTimer>
@@ -90,14 +90,14 @@ void SendLaterManager::createSendInfoList()
             const QDateTime now = QDateTime::currentDateTime();
             const int seconds = now.secsTo(mCurrentInfo->dateTime());
             if (seconds > 0) {
-                //qDebug()<<" seconds"<<seconds;
+                //qCDebug(SENDLATERAGENT_LOG)<<" seconds"<<seconds;
                 mTimer->start(seconds * 1000);
             } else {
                 //Create job when seconds <0
                 slotCreateJob();
             }
         } else {
-            qDebug() << " list is empty";
+            qCDebug(SENDLATERAGENT_LOG) << " list is empty";
             mTimer->stop();
         }
     } else {
@@ -136,7 +136,7 @@ void SendLaterManager::sendNow(Akonadi::Item::Id id)
             mCurrentInfo = info;
             slotCreateJob();
         } else {
-            qDebug() << " can't find info about current id: " << id;
+            qCDebug(SENDLATERAGENT_LOG) << " can't find info about current id: " << id;
             itemRemoved(id);
         }
     } else {
@@ -148,7 +148,7 @@ void SendLaterManager::sendNow(Akonadi::Item::Id id)
 void SendLaterManager::slotCreateJob()
 {
     if (mCurrentJob) {
-        qDebug() << " Problem we have already a job" << mCurrentJob;
+        qCDebug(SENDLATERAGENT_LOG) << " Problem we have already a job" << mCurrentJob;
         return;
     }
     mCurrentJob = new SendLaterJob(this, mCurrentInfo);

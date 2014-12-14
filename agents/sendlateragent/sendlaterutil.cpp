@@ -38,7 +38,7 @@ bool SendLater::SendLaterUtil::compareSendLaterInfo(SendLater::SendLaterInfo *le
 void SendLater::SendLaterUtil::changeRecurrentDate(SendLater::SendLaterInfo *info)
 {
     if (info && info->isRecurrence()) {
-        //qDebug()<<" SendLater::SendLaterUtil::changeRecurrentDate "<<info->dateTime().toString();
+        //qCDebug(SENDLATERAGENT_LOG)<<" SendLater::SendLaterUtil::changeRecurrentDate "<<info->dateTime().toString();
         QDateTime newInfoDateTime = info->dateTime();
         while (newInfoDateTime < QDateTime::currentDateTime()) {
             switch (info->recurrenceUnit()) {
@@ -57,7 +57,7 @@ void SendLater::SendLaterUtil::changeRecurrentDate(SendLater::SendLaterInfo *inf
             }
         }
         info->setDateTime(newInfoDateTime);
-        //qDebug()<<"AFTER SendLater::SendLaterUtil::changeRecurrentDate "<<info->dateTime().toString();
+        //qCDebug(SENDLATERAGENT_LOG)<<"AFTER SendLater::SendLaterUtil::changeRecurrentDate "<<info->dateTime().toString();
         writeSendLaterInfo(defaultConfig(), info, false);
     }
 }
