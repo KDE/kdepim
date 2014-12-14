@@ -76,9 +76,9 @@ class BrowserWidget: public QWidget
     void clear();
     void updateItemFetchScope();
     void slotFlagsChanged();
-    void slotTagsChanged();
-
-  private:
+    void slotTagsChanged();  
+    void slotDataViewChanged();
+private:
     Akonadi::Collection currentCollection() const;
 
     Akonadi::ChangeRecorder *mBrowserMonitor;

@@ -223,11 +223,17 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   m_stateMaintainer->restoreState();
   connect(contentUi.flags, SIGNAL(changed()), this, SLOT(slotFlagsChanged()));
   connect(contentUi.tags, SIGNAL(changed()), this, SLOT(slotTagsChanged()));
+  connect(contentUi.dataView, SIGNAL(textChanged()), this, SLOT(slotDataViewChanged()));
 }
 
 BrowserWidget::~BrowserWidget()
 {
   m_stateMaintainer->saveState();
+}
+
+void BrowserWidget::slotDataViewChanged()
+{
+    contentUi.saveButton->setEnabled( true );
 }
 
 void BrowserWidget::slotFlagsChanged()
@@ -352,6 +358,7 @@ void BrowserWidget::setItem( const Akonadi::Item &item )
   mMonitor->itemFetchScope().fetchAllAttributes();
   qRegisterMetaType<QSet<QByteArray> >();
   connect( mMonitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), SLOT(setItem(Akonadi::Item)), Qt::QueuedConnection );
+  contentUi.saveButton->setEnabled( false );
 }
 
 void BrowserWidget::modelChanged()
