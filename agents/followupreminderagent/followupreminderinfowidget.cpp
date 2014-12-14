@@ -18,6 +18,7 @@
 #include "followupreminderinfo.h"
 #include "followupreminderutil.h"
 #include "jobs/followupremindershowmessagejob.h"
+#include "followupreminderagent_debug.h"
 
 #include <QTreeWidget>
 #include <QHBoxLayout>
@@ -214,7 +215,7 @@ void FollowUpReminderInfoWidget::removeItem(FollowUpReminderInfoItem *mailItem)
         delete mailItem;
         mChanged = true;
     } else {
-        qDebug() << "Not item selected";
+        qCDebug(FOLLOWUPREMINDERAGENT_LOG) << "Not item selected";
     }
 }
 

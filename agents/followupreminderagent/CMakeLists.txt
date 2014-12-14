@@ -35,6 +35,7 @@ set(followupreminderagent_job_SRCS
 )
 
 set(followupreminderagent_SRCS
+    followupreminderagent_debug.cpp
     followupreminderagent.cpp
     followupremindermanager.cpp
     followupreminderinfodialog.cpp

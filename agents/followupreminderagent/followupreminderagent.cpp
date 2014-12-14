@@ -33,7 +33,7 @@
 #include <AkonadiCore/CollectionFetchScope>
 
 #include <QPointer>
-#include <QDebug>
+#include "followupreminderagent_debug.h"
 #include <QTimer>
 
 FollowUpReminderAgent::FollowUpReminderAgent(const QString &id)
@@ -125,7 +125,7 @@ void FollowUpReminderAgent::itemAdded(const Akonadi::Item &item, const Akonadi::
     }
 
     if (item.mimeType() != KMime::Message::mimeType()) {
-        qDebug() << "FollowUpReminderAgent::itemAdded called for a non-message item!";
+        qCDebug(FOLLOWUPREMINDERAGENT_LOG) << "FollowUpReminderAgent::itemAdded called for a non-message item!";
         return;
     }
     mManager->checkFollowUp(item, collection);

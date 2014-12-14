@@ -23,7 +23,7 @@
 
 #include <KMime/Message>
 
-#include <QDebug>
+#include "followupreminderagent_debug.h"
 
 FollowUpReminderJob::FollowUpReminderJob(QObject *parent)
     : QObject(parent)
@@ -38,7 +38,7 @@ FollowUpReminderJob::~FollowUpReminderJob()
 void FollowUpReminderJob::start()
 {
     if (!mItem.isValid()) {
-        qDebug() << " item is not valid";
+        qCDebug(FOLLOWUPREMINDERAGENT_LOG) << " item is not valid";
         deleteLater();
         return;
     }

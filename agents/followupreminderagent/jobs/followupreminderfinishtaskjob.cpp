@@ -20,7 +20,7 @@
 #include <AkonadiCore/Item>
 #include <AkonadiCore/ItemFetchJob>
 #include <AkonadiCore/ItemModifyJob>
-#include <QDebug>
+#include "followupreminderagent_debug.h"
 #include <KCalCore/Todo>
 
 FollowUpReminderFinishTaskJob::FollowUpReminderFinishTaskJob(Akonadi::Item::Id id, QObject *parent)
@@ -54,7 +54,7 @@ void FollowUpReminderFinishTaskJob::closeTodo()
 void FollowUpReminderFinishTaskJob::slotItemFetchJobDone(KJob *job)
 {
     if (job->error()) {
-        qWarning() << job->errorString();
+        qCWarning(FOLLOWUPREMINDERAGENT_LOG) << job->errorString();
         Q_EMIT finishTaskFailed();
         deleteLater();
         return;
@@ -64,7 +64,7 @@ void FollowUpReminderFinishTaskJob::slotItemFetchJobDone(KJob *job)
     if (lst.count() == 1) {
         const Akonadi::Item item = lst.first();
         if (!item.hasPayload<KCalCore::Todo::Ptr>()) {
-            qDebug() << " item is not a todo.";
+            qCDebug(FOLLOWUPREMINDERAGENT_LOG) << " item is not a todo.";
             Q_EMIT finishTaskFailed();
             deleteLater();
             return;
@@ -77,7 +77,7 @@ void FollowUpReminderFinishTaskJob::slotItemFetchJobDone(KJob *job)
         Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(updateItem);
         connect(job, &Akonadi::ItemModifyJob::result, this, &FollowUpReminderFinishTaskJob::slotItemModifiedResult);
     } else {
-        qWarning() << " Found item different from 1: " << lst.count();
+        qCWarning(FOLLOWUPREMINDERAGENT_LOG) << " Found item different from 1: " << lst.count();
         Q_EMIT finishTaskFailed();
         deleteLater();
         return;
@@ -87,7 +87,7 @@ void FollowUpReminderFinishTaskJob::slotItemFetchJobDone(KJob *job)
 void FollowUpReminderFinishTaskJob::slotItemModifiedResult(KJob *job)
 {
     if (job->error()) {
-        qWarning() << job->errorString();
+        qCWarning(FOLLOWUPREMINDERAGENT_LOG) << job->errorString();
         Q_EMIT finishTaskFailed();
     } else {
         Q_EMIT finishTaskDone();

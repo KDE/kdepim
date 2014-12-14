@@ -16,7 +16,7 @@
 */
 
 #include "followupremindershowmessagejob.h"
-
+#include "followupreminderagent_debug.h"
 #include <QDBusConnection>
 #include <QDBusInterface>
 #include <QDBusReply>
@@ -36,7 +36,7 @@ FollowUpReminderShowMessageJob::~FollowUpReminderShowMessageJob()
 void FollowUpReminderShowMessageJob::start()
 {
     if (mId < 0) {
-        qDebug() << " value < 0";
+        qCDebug(FOLLOWUPREMINDERAGENT_LOG) << " value < 0";
         deleteLater();
         return;
     }
@@ -45,7 +45,7 @@ void FollowUpReminderShowMessageJob::start()
         // Program is not already running, so start it
         QString errmsg;
         if (KToolInvocation::startServiceByDesktopName(QStringLiteral("kmail2"), QString(), &errmsg)) {
-            qDebug() << " Can not start kmail" << errmsg;
+            qCDebug(FOLLOWUPREMINDERAGENT_LOG) << " Can not start kmail" << errmsg;
             deleteLater();
             return;
         }
