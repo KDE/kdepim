@@ -32,7 +32,7 @@
 
 #include <KContacts/VCardConverter>
 
-#include <QDebug>
+#include "kaddressbook_debug.h"
 #include <QDialog>
 #include <KFileDialog>
 #include <KLocalizedString>

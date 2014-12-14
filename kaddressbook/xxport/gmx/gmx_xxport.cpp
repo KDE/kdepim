@@ -80,7 +80,7 @@
 #include "gmx_xxport.h"
 #include "pimcommon/widgets/renamefiledialog.h"
 
-#include <QDebug>
+#include "kaddressbook_debug.h"
 #include <KFileDialog>
 #include <KIO/NetAccess>
 #include <KLocalizedString>
@@ -197,7 +197,7 @@ KContacts::Addressee::List GMXXXPort::importContacts() const
     // now read the address records
     line  = gmxStream.readLine();
     if (!line.startsWith(QLatin1String("AB_ADDRESS_RECORDS:"))) {
-        qWarning() << "Could not find address records!";
+        qCWarning(KADDRESSBOOK_LOG) << "Could not find address records!";
         return addresseeList;
     }
     // Address_id,Record_id,Street,Country,Zipcode,City,Phone,Fax,Mobile,
@@ -285,7 +285,7 @@ KContacts::Addressee::List GMXXXPort::importContacts() const
             // itemList[20]=Status (should always be "1")
             addressee->insertAddress(address);
         } else {
-            qWarning() << "unresolved line:" << line;
+            qCWarning(KADDRESSBOOK_LOG) << "unresolved line:" << line;
         }
         line = gmxStream.readLine();
     }
@@ -296,7 +296,7 @@ KContacts::Addressee::List GMXXXPort::importContacts() const
     line2 = gmxStream.readLine();
     if (!line.startsWith(QLatin1String("AB_CATEGORIES:")) ||
             !line2.startsWith(QLatin1String("Category_id"))) {
-        qWarning() << "Could not find category records!";
+        qCWarning(KADDRESSBOOK_LOG) << "Could not find category records!";
     } else {
         while (!line.startsWith(QLatin1String("####")) &&
                 !gmxStream.atEnd()) {

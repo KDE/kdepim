@@ -24,7 +24,7 @@
 #include "printstyle.h"
 #include "printingwizard.h"
 
-#include <QDebug>
+#include "kaddressbook_debug.h"
 
 #include <QPushButton>
 #include <QPixmap>
@@ -60,14 +60,14 @@ bool PrintStyle::setPreview(const QString &fileName)
 
     const QString path = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kaddressbook/printing/") + fileName);
     if (path.isEmpty()) {
-        qDebug() << "cannot locate preview image " << fileName << " in appdata";
+        qCDebug(KADDRESSBOOK_LOG) << "cannot locate preview image " << fileName << " in appdata";
         return false;
     } else {
         if (preview.load(path)) {
             setPreview(preview);
             return true;
         } else {
-            qDebug() << "preview at '" << path << "' cannot be loaded.";
+            qCDebug(KADDRESSBOOK_LOG) << "preview at '" << path << "' cannot be loaded.";
             return false;
         }
     }

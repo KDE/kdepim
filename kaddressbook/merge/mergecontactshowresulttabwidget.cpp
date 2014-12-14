@@ -20,7 +20,7 @@
 #include <KContacts/Addressee>
 
 #include <QTabBar>
-#include <QDebug>
+#include "kaddressbook_debug.h"
 
 using namespace KABMergeContacts;
 
@@ -54,7 +54,7 @@ void MergeContactShowResultTabWidget::setContacts(const Akonadi::Item::List &lst
             infoWidget->setContact(item);
             addTab(infoWidget, address.name());
         } else {
-            qDebug() << " don't have address";
+            qCDebug(KADDRESSBOOK_LOG) << " don't have address";
         }
     }
     updateTabWidget();

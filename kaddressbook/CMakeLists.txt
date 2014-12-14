@@ -88,6 +88,7 @@ set(kaddressbook_merge_SRCS
 )
 
 set(kaddressbook_LIB_SRCS
+  kaddressbook_debug.cpp
   aboutdata.cpp
   categoryfilterproxymodel.cpp
   categoryselectwidget.cpp
@@ -144,6 +145,7 @@ install(TARGETS kaddressbookprivate ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAME
 ########### next target ###############
 
 set(kaddressbook_SRCS
+  kaddressbook_debug.cpp
   main.cpp
   mainwindow.cpp
 )
@@ -171,7 +173,7 @@ install(PROGRAMS data/org.kde.kaddressbook.desktop data/kaddressbook-importer.de
 install(FILES data/kaddressbook.appdata.xml DESTINATION ${CMAKE_INSTALL_METAINFODIR})
 install(FILES kaddressbookui.rc DESTINATION ${KXMLGUI_INSTALL_DIR}/kaddressbook)
 
-set(kaddressbook_PART_SRCS kaddressbookpart.cpp)
+set(kaddressbook_PART_SRCS kaddressbookpart.cpp kaddressbook_debug.cpp)
 add_library(kaddressbookpart MODULE ${kaddressbook_PART_SRCS})
 target_link_libraries(kaddressbookpart  kaddressbookprivate)
 install(TARGETS kaddressbookpart DESTINATION ${PLUGIN_INSTALL_DIR})

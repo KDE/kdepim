@@ -19,7 +19,7 @@
 
 #include "categoryselectwidget.h"
 
-#include <qdebug.h>
+#include "kaddressbook_debug.h"
 #include <KLocalizedString>
 #include <qtoolbutton.h>
 #include <qlayout.h>
@@ -165,7 +165,7 @@ void CategorySelectWidgetPrivate::slotTagsInserted(const QModelIndex &parent, in
     for (int row = start; row <= end; ++row) {
         QModelIndex idx = tagModel->index(row, 0, parent);
 #if 0
-        qDebug() << "idx" << idx << "=" << tagModel->data(idx, Qt::DisplayRole).toString()
+        qCDebug(KADDRESSBOOK_LOG) << "idx" << idx << "=" << tagModel->data(idx, Qt::DisplayRole).toString()
                  << "name" << tagModel->data(idx, TagModel::NameRole).toString()
                  << "tag" << tagModel->data(idx, TagModel::TagRole)
                  << "id" << tagModel->data(idx, TagModel::IdRole).toInt();
@@ -189,7 +189,7 @@ void CategorySelectWidgetPrivate::slotTagsInserted(const QModelIndex &parent, in
                 QModelIndex parentIndex = matchList.first();
                 itemModel()->itemFromIndex(parentIndex)->appendRow(it);
             } else {
-                qWarning() << "Cannot find parent with ID" << parentId;
+                qCWarning(KADDRESSBOOK_LOG) << "Cannot find parent with ID" << parentId;
                 itemModel()->insertRow(row + rowOffset, it);
             }
         } else {
@@ -275,7 +275,7 @@ QList<Akonadi::Tag::Id> CategorySelectWidgetPrivate::filterTags() const
         filter.append(CategorySelectWidget::FilterAll);
     }
 
-    //qDebug() << "filter" << filter;
+    //qCDebug(KADDRESSBOOK_LOG) << "filter" << filter;
     return filter;
 }
 

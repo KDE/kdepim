@@ -40,7 +40,7 @@
 #include "printing/grantlee/grantleeprintstyle.h"
 
 #include <QApplication>
-#include <QDebug>
+#include "kaddressbook_debug.h"
 #include <KLocalizedString>
 
 #include <QPushButton>
@@ -184,7 +184,7 @@ void PrintingWizard::slotStyleSelected(int index)
     mStyle = mStyleList.value(index);
     if (!mStyle) {
         PrintStyleFactory *factory = mStyleFactories.at(index);
-        qDebug() << "creating print style" << factory->description();
+        qCDebug(KADDRESSBOOK_LOG) << "creating print style" << factory->description();
 
         mStyle = factory->create();
         mStyleList.insert(index, mStyle);
@@ -227,7 +227,7 @@ void PrintingWizard::print()
     const ContactSorter sorter(mStylePage->sortField(), mStylePage->sortOrder());
     sorter.sort(contacts);
 
-    qDebug() << "printing" << contacts.count() << "contacts.";
+    qCDebug(KADDRESSBOOK_LOG) << "printing" << contacts.count() << "contacts.";
     // ... print:
     backButton()->setEnabled(false);
 

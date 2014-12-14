@@ -23,7 +23,7 @@
 #include <KContacts/Address>
 #include <KContacts/Addressee>
 
-#include <QDebug>
+#include "kaddressbook_debug.h"
 
 using namespace KABMergeContacts;
 
@@ -40,11 +40,11 @@ MergeContactsJob::~MergeContactsJob()
 bool MergeContactsJob::canStart()
 {
     if (!mCollection.isValid()) {
-        qDebug() << " mCollection is not valid !";
+        qCDebug(KADDRESSBOOK_LOG) << " mCollection is not valid !";
         return false;
     }
     if (mListItem.isEmpty()) {
-        qDebug() << " list item is empty !";
+        qCDebug(KADDRESSBOOK_LOG) << " list item is empty !";
         return false;
     }
     return true;
@@ -96,7 +96,7 @@ void MergeContactsJob::createMergedContact(const KContacts::Addressee &addressee
 void MergeContactsJob::slotCreateMergedContactFinished(KJob *job)
 {
     if (job->error()) {
-        qDebug() << job->errorString();
+        qCDebug(KADDRESSBOOK_LOG) << job->errorString();
         Q_EMIT finished(mCreatedContact);
         deleteLater();
         return;
@@ -111,7 +111,7 @@ void MergeContactsJob::slotCreateMergedContactFinished(KJob *job)
 void MergeContactsJob::slotDeleteContactsFinished(KJob *job)
 {
     if (job->error()) {
-        qDebug() << job->errorString();
+        qCDebug(KADDRESSBOOK_LOG) << job->errorString();
     }
     Q_EMIT finished(mCreatedContact);
     deleteLater();

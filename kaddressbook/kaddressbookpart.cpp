@@ -21,7 +21,7 @@
 #include "kaddressbookpart.h"
 #include "mainwidget.h"
 
-#include <QDebug>
+#include "kaddressbook_debug.h"
 #include <KIconLoader>
 #include <KLocalizedString>
 #include <KPluginFactory>
@@ -88,7 +88,7 @@ bool KAddressBookPart::openFile()
 
 void KAddressBookPart::guiActivateEvent(KParts::GUIActivateEvent *e)
 {
-    qDebug();
+    qCDebug(KADDRESSBOOK_LOG);
     KParts::ReadOnlyPart::guiActivateEvent(e);
 }
 

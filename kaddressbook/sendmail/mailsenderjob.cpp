@@ -32,7 +32,7 @@
 #include <KContacts/Addressee>
 #include <KContacts/ContactGroup>
 
-#include <QDebug>
+#include "kaddressbook_debug.h"
 using namespace KABMailSender;
 
 MailSenderJob::MailSenderJob(const Akonadi::Item::List &listItem, QObject *parent)
@@ -113,7 +113,7 @@ void MailSenderJob::fetchItem(const Akonadi::Item &item)
 void MailSenderJob::fetchJobFinished(KJob *job)
 {
     if (job->error()) {
-        qDebug() << " error during fetching " << job->errorString();
+        qCDebug(KADDRESSBOOK_LOG) << " error during fetching " << job->errorString();
         fetchNextItem();
         return;
     }
