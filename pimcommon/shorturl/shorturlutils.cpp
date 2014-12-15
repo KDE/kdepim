@@ -21,6 +21,7 @@
 #include "pimcommon/shorturl/engine/tinyurlshorturl.h"
 #include "pimcommon/shorturl/engine/migremeshorturl.h"
 #include "pimcommon/shorturl/engine/triopabshorturl.h"
+#include "pimcommon/shorturl/engine/ur1cashorturl.h"
 
 #include <KConfigGroup>
 #include <KSharedConfig>
@@ -44,6 +45,9 @@ PimCommon::AbstractShortUrl *PimCommon::ShortUrlUtils::loadEngine(QObject *paren
         break;
     case TriopAB:
         engine = new PimCommon::TriopabShortUrl(parent);
+        break;
+    case Ur1Ca:
+        engine = new PimCommon::Ur1CaShortUrl(parent);
         break;
     case EndListEngine:
     default:
@@ -69,6 +73,9 @@ QString PimCommon::ShortUrlUtils::stringFromEngineType(EngineType type)
         break;
     case TriopAB:
         name = i18n("TriopAB");
+        break;
+    case Ur1Ca:
+        name = i18n("Ur1Ca");
         break;
     case EndListEngine:
     default:

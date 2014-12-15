@@ -21,6 +21,7 @@ set(libpimcommon_shorturl_SRCS
   shorturl/shorturlconfiguredialog.cpp
   shorturl/engine/migremeshorturl.cpp
   shorturl/engine/triopabshorturl.cpp
+  shorturl/engine/ur1cashorturl.cpp
 )
 
 if( KF5GAPI_FOUND )

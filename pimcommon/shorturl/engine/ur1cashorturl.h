@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
+  Copyright (c) 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,31 +15,27 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SHORTURLUTILS_H
-#define SHORTURLUTILS_H
 
-#include <QObject>
+#ifndef UR1CASHORTURL_H
+#define UR1CASHORTURL_H
+#include "shorturl/abstractshorturl.h"
 
 namespace PimCommon
 {
-class AbstractShortUrl;
-namespace ShortUrlUtils
+class Ur1CaShortUrl : public PimCommon::AbstractShortUrl
 {
-enum EngineType {
-    Google = 0,
-    Tinyurl = 1,
-    MigreMe = 2,
-    TriopAB = 3,
-    Ur1Ca = 4,
-    //TODO add more engine.
-    EndListEngine
+    Q_OBJECT
+public:
+    explicit Ur1CaShortUrl(QObject *parent = Q_NULLPTR);
+    ~Ur1CaShortUrl();
+
+    void start() Q_DECL_OVERRIDE;
+    QString shortUrlName() const Q_DECL_OVERRIDE;
+
+private Q_SLOTS:
+    void slotShortUrlFinished(QNetworkReply *reply) Q_DECL_OVERRIDE;
+    void slotSslErrors(QNetworkReply *, const QList<QSslError> &error);
 };
-QString stringFromEngineType(EngineType type);
-AbstractShortUrl *loadEngine(QObject *parent);
-
-int readEngineSettings();
-void writeEngineSettings(int value);
-}
 }
 
-#endif // SHORTURLUTILS_H
+#endif // UR1CASHORTURL_H
