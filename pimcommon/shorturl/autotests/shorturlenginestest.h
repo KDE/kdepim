@@ -28,8 +28,8 @@ public:
     explicit ShortUrlEnginesTest(QObject *parent = 0);
     ~ShortUrlEnginesTest();
 private Q_SLOTS:
+    void shouldTestEngines_data();
     void shouldCreateEngine();
-    void shouldtestenginesData();
     void shouldTestEngines();
 };
 
