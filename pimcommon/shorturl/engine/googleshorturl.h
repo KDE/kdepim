@@ -29,11 +29,11 @@ public:
     explicit GoogleShortUrl(QObject *parent = Q_NULLPTR);
     ~GoogleShortUrl();
 
-    void start();
-    QString shortUrlName() const;
+    void start() Q_DECL_OVERRIDE;
+    QString shortUrlName() const Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
-    void slotShortUrlFinished(QNetworkReply *reply);
+    void slotShortUrlFinished(QNetworkReply *reply) Q_DECL_OVERRIDE;
     void slotSslErrors(QNetworkReply *, const QList<QSslError> &error);
 };
 }

@@ -28,12 +28,12 @@ public:
     explicit MigremeShortUrl(QObject *parent = Q_NULLPTR);
     ~MigremeShortUrl();
 
-    void start();
+    void start() Q_DECL_OVERRIDE;
 
-    QString shortUrlName() const;
+    QString shortUrlName() const Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
-    void slotShortUrlFinished(QNetworkReply *reply);
+    void slotShortUrlFinished(QNetworkReply *reply) Q_DECL_OVERRIDE;
 };
 }
 
