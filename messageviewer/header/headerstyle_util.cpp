@@ -26,8 +26,6 @@
 
 #include <KLocalizedString>
 
-
-
 #include <QBuffer>
 #include "contactdisplaymessagememento.h"
 #include "kxface.h"
@@ -346,7 +344,7 @@ xfaceSettings xface(const MessageViewer::HeaderStyle *style, KMime::Message *mes
                         settings.photoHeight = 48;
                     } else {
                         qCDebug(MESSAGEVIEWER_LOG) << "Face: header image is" << faceimage.width() << "by"
-                                 << faceimage.height() << "not 48x48 Pixels";
+                                                   << faceimage.height() << "not 48x48 Pixels";
                     }
                 } else {
                     qCDebug(MESSAGEVIEWER_LOG) << "Failed to load decoded png from Face: header";

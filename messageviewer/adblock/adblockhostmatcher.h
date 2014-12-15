@@ -31,8 +31,6 @@
 #include <QSet>
 #include <QString>
 
-
-
 namespace MessageViewer
 {
 class AdBlockHostMatcher

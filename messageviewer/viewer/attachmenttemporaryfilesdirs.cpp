@@ -24,7 +24,6 @@
 #include <QFile>
 #include <QTimer>
 
-
 using namespace MessageViewer;
 
 //10 secondes

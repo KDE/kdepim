@@ -19,10 +19,8 @@
 #include "adblock/adblockblockableitemswidget.h"
 #include "libkdepim/widgets/progressindicatorlabel.h"
 
-
 #include <KLocalizedString>
 #include <QUrl>
-
 
 #include <QPointer>
 #include <QVBoxLayout>

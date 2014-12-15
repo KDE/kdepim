@@ -27,7 +27,6 @@
 
 #include <messagecore/utils/stringutil.h>
 
-
 #include <KLocalizedString>
 
 #include <kcodecs.h>

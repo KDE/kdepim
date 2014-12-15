@@ -59,7 +59,6 @@
 #include <KUrl>
 #include <QIcon>
 
-
 #include <QApplication>
 #include <QClipboard>
 #include <QProcess>

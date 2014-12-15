@@ -20,4 +20,3 @@
 #include "messageviewer_debug.h"
 Q_LOGGING_CATEGORY(MESSAGEVIEWER_LOG, "log_messageviewer")
 
-

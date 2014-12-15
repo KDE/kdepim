@@ -34,7 +34,6 @@
 
 #include <KColorScheme>
 
-
 #include <QApplication>
 #include <QPaintDevice>
 #include <QFontDatabase>

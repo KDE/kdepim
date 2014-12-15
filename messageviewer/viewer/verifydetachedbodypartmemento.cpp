@@ -27,7 +27,6 @@
 
 #include <cassert>
 
-
 using namespace Kleo;
 using namespace GpgME;
 using namespace MessageViewer;

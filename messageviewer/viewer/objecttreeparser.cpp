@@ -821,8 +821,8 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData(KMime::Content *data,
         }
 #ifdef DEBUG_SIGNATURE
         qCDebug(MESSAGEVIEWER_LOG) << "\n  key id:" << messagePart.keyId
-                 << "\n  key trust:" << messagePart.keyTrust
-                 << "\n  signer:" << messagePart.signer;
+                                   << "\n  key trust:" << messagePart.keyTrust
+                                   << "\n  signer:" << messagePart.signer;
 #endif
     } else {
         messagePart.creationTime = QDateTime();
@@ -1625,7 +1625,7 @@ bool ObjectTreeParser::processMultiPartSignedSubtype(KMime::Content *node, Proce
     KMime::Content *child = MessageCore::NodeHelper::firstChild(node);
     if (node->contents().size() != 2) {
         qCDebug(MESSAGEVIEWER_LOG) << "mulitpart/signed must have exactly two child parts!" << endl
-                 << "processing as multipart/mixed";
+                                   << "processing as multipart/mixed";
         if (child) {
             stdChildHandling(child);
         }
@@ -2010,9 +2010,9 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype(KMime::Content *node, 
     // or there is neither signed nor encrypted parameter.
     if (!isSigned) {
         if (isEncrypted) {
-            ;qCDebug(MESSAGEVIEWER_LOG) << "pkcs7 mime     ==      S/MIME TYPE: enveloped (encrypted) data";
+            ; qCDebug(MESSAGEVIEWER_LOG) << "pkcs7 mime     ==      S/MIME TYPE: enveloped (encrypted) data";
         } else {
-            ;qCDebug(MESSAGEVIEWER_LOG) << "pkcs7 mime  -  type unknown  -  enveloped (encrypted) data ?";
+            ; qCDebug(MESSAGEVIEWER_LOG) << "pkcs7 mime  -  type unknown  -  enveloped (encrypted) data ?";
         }
         QByteArray decryptedData;
         PartMetaData messagePart;
@@ -2092,9 +2092,9 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype(KMime::Content *node, 
     // We now try signature verification if necessarry.
     if (signTestNode) {
         if (isSigned) {
-            ;qCDebug(MESSAGEVIEWER_LOG) << "pkcs7 mime     ==      S/MIME TYPE: opaque signed data";
+            ; qCDebug(MESSAGEVIEWER_LOG) << "pkcs7 mime     ==      S/MIME TYPE: opaque signed data";
         } else {
-            ;qCDebug(MESSAGEVIEWER_LOG) << "pkcs7 mime  -  type unknown  -  opaque signed data ?";
+            ; qCDebug(MESSAGEVIEWER_LOG) << "pkcs7 mime  -  type unknown  -  opaque signed data ?";
         }
 
         bool sigFound = writeOpaqueOrMultipartSignedData(0,
@@ -3440,8 +3440,8 @@ QString ObjectTreeParser::quotedHTML(const QString &s, bool decorate)
     }
 
     qCDebug(MESSAGEVIEWER_LOG) << "========================================\n"
-             << htmlStr
-             << "\n======================================\n";
+                               << htmlStr
+                               << "\n======================================\n";
     return htmlStr;
 }
 

@@ -24,7 +24,6 @@
 
 #include <KMime/Message>
 
-
 using namespace MessageViewer;
 
 CreateTodoJob::CreateTodoJob(const KCalCore::Todo::Ptr &todoPtr, const Akonadi::Collection &collection, const Akonadi::Item &item, QObject *parent)

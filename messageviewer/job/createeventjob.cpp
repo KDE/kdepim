@@ -24,7 +24,6 @@
 
 #include <KMime/Message>
 
-
 using namespace MessageViewer;
 
 CreateEventJob::CreateEventJob(const KCalCore::Event::Ptr &eventPtr, const Akonadi::Collection &collection, const Akonadi::Item &item, QObject *parent)

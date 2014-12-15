@@ -56,7 +56,7 @@ void ScamCheckShortUrl::expandedUrl(const QUrl &url)
     }
     const QUrl newUrl = QString::fromLatin1("http://api.longurl.org/v2/expand?url=%1&format=json").arg(url.url());
 
-    qCDebug(MESSAGEVIEWER_LOG)<<" newUrl "<<newUrl;
+    qCDebug(MESSAGEVIEWER_LOG) << " newUrl " << newUrl;
     QNetworkReply *reply = mNetworkAccessManager->get(QNetworkRequest(newUrl));
     reply->setProperty("shortUrl", url.url());
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &ScamCheckShortUrl::slotError);

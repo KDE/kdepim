@@ -40,8 +40,6 @@
 #include "header/entrepriseheaderstyle.h"
 #include "header/fancyheaderstyle.h"
 
-
-
 #include <KLocalizedString>
 
 #include "messagecore/settings/globalsettings.h"

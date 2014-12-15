@@ -26,7 +26,6 @@
 #include <KDateTimeEdit>
 #include <QDateTime>
 
-
 #include <QHBoxLayout>
 #include <QEvent>
 #include <QKeyEvent>

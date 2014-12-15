@@ -38,8 +38,6 @@
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_headers.h>
 
-
-
 #include <boost/shared_ptr.hpp>
 
 using namespace MessageViewer;
@@ -89,7 +87,7 @@ SpamScores SpamHeaderAnalyzer::getSpamScores(KMime::Message *message)
         if (!scoreValid) {
             spamError = couldNotFindTheScoreField;
             qCDebug(MESSAGEVIEWER_LOG) << "Score could not be extracted from header '"
-                     << mField << "'";
+                                       << mField << "'";
         } else {
             bool floatValid = false;
             switch ((*it).scoreType()) {
@@ -139,14 +137,14 @@ SpamScores SpamHeaderAnalyzer::getSpamScores(KMime::Message *message)
                 } else {
                     spamError = couldNotFindTheThresholdField;
                     qCDebug(MESSAGEVIEWER_LOG) << "Threshold could not be extracted from header '"
-                             << mField << "'";
+                                               << mField << "'";
                     break;
                 }
                 const float threshold = thresholdString.toFloat(&floatValid);
                 if (!floatValid || (threshold <= 0.0)) {
                     spamError = couldNotConvertThresholdToFloatOrThresholdIsNegative;
                     qCDebug(MESSAGEVIEWER_LOG) << "Threshold (" << thresholdString << ") is no"
-                             << "number or is negative";
+                                               << "number or is negative";
                     break;
                 }
 

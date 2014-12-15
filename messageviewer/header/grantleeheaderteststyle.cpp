@@ -22,8 +22,6 @@
 
 #include <kmime/kmime_message.h>
 
-
-
 using namespace MessageViewer;
 
 namespace MessageViewer

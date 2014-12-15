@@ -20,7 +20,8 @@
 
 #include <QObject>
 #include "viewer/viewer_p.h"
-namespace MessageViewer {
+namespace MessageViewer
+{
 class ModifyMessageDisplayFormatJob : public QObject
 {
     Q_OBJECT

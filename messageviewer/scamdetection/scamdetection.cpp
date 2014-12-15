@@ -25,7 +25,6 @@
 #include <QWebElement>
 #include <QWebFrame>
 
-
 using namespace MessageViewer;
 static QString IPv4_PATTERN = QLatin1String("\\b[0-9]{1,3}\\.[0-9]{1,3}(?:\\.[0-9]{0,3})?(?:\\.[0-9]{0,3})?");
 static QString addWarningColor(const QString &url)

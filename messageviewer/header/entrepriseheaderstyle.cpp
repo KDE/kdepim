@@ -22,7 +22,6 @@
 
 #include <messagecore/utils/stringutil.h>
 
-
 #include <KLocalizedString>
 #include <KColorScheme>
 

@@ -22,8 +22,6 @@
 #include <QAction>
 #include <QMenu>
 
-
-
 using namespace MessageViewer;
 
 ScamDetectionWarningWidget::ScamDetectionWarningWidget(QWidget *parent)

@@ -17,7 +17,6 @@
 
 #include "cryptobodypartmemento.h"
 
-
 #include <kleo/decryptverifyjob.h>
 #include <kleo/verifydetachedjob.h>
 #include <kleo/verifyopaquejob.h>

@@ -25,8 +25,6 @@
 
 #include "kxface.h"
 
-
-
 #include <QBuffer>
 #include <QImage>
 #include <QRegExp>

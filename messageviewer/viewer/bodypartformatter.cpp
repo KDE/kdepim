@@ -38,8 +38,6 @@
 
 #include <kmime/kmime_content.h>
 
-
-
 using namespace MessageViewer;
 
 namespace

@@ -21,8 +21,6 @@
 #include "htmlquotecolorer.h"
 #include "settings/globalsettings.h"
 
-
-
 #ifndef KDEPIM_NO_WEBKIT
 #include <QWebPage>
 #include <QWebFrame>

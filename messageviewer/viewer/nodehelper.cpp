@@ -34,7 +34,6 @@
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_headers.h>
 
-
 #include <kascii.h>
 #include <QTemporaryFile>
 #include <KLocalizedString>
@@ -436,7 +435,7 @@ KMMsgEncryptionState NodeHelper::overallEncryptionState(KMime::Content *node) co
         }
     }
 
-qCDebug(MESSAGEVIEWER_LOG) <<"\n\n  KMMsgEncryptionState:" << myState;
+    qCDebug(MESSAGEVIEWER_LOG) << "\n\n  KMMsgEncryptionState:" << myState;
 
     return myState;
 }
@@ -486,7 +485,7 @@ KMMsgSignatureState NodeHelper::overallSignatureState(KMime::Content *node) cons
         }
     }
 
-qCDebug(MESSAGEVIEWER_LOG) <<"\n\n  KMMsgSignatureState:" << myState;
+    qCDebug(MESSAGEVIEWER_LOG) << "\n\n  KMMsgSignatureState:" << myState;
 
     return myState;
 }
@@ -664,7 +663,7 @@ void NodeHelper::setBodyPartMemento(KMime::Content *node, const QByteArray &whic
 
 bool NodeHelper::isNodeDisplayedEmbedded(KMime::Content *node) const
 {
-    qCDebug(MESSAGEVIEWER_LOG) << "IS NODE: " << mDisplayEmbeddedNodes.contains( node );
+    qCDebug(MESSAGEVIEWER_LOG) << "IS NODE: " << mDisplayEmbeddedNodes.contains(node);
     return mDisplayEmbeddedNodes.contains(node);
 }
 
@@ -1007,7 +1006,7 @@ bool NodeHelper::unencryptedMessage_helper(KMime::Content *node, QByteArray &res
 
         if (decryptedNode) {
             qCDebug(MESSAGEVIEWER_LOG) << "Current node has an associated decrypted node, adding a modified header "
-                        "and then processing the children.";
+                                       "and then processing the children.";
 
             Q_ASSERT(addHeaders);
             KMime::Content headers;

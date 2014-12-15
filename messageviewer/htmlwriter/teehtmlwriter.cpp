@@ -31,8 +31,6 @@
 
 #include "teehtmlwriter.h"
 
-
-
 namespace MessageViewer
 {
 

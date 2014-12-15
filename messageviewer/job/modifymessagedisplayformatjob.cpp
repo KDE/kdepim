@@ -60,7 +60,7 @@ void ModifyMessageDisplayFormatJob::start()
             modifyDisplayFormat();
         }
     } else {
-        qDebug()<<" messageItem doesn't exist";
+        qDebug() << " messageItem doesn't exist";
         deleteLater();
     }
 }
@@ -73,26 +73,26 @@ void ModifyMessageDisplayFormatJob::setMessageItem(const Akonadi::Item &messageI
 void ModifyMessageDisplayFormatJob::resetDisplayFormat()
 {
     mMessageItem.removeAttribute<MessageViewer::MessageDisplayFormatAttribute>();
-    Akonadi::ItemModifyJob *modify = new Akonadi::ItemModifyJob( mMessageItem );
-    modify->setIgnorePayload( true );
+    Akonadi::ItemModifyJob *modify = new Akonadi::ItemModifyJob(mMessageItem);
+    modify->setIgnorePayload(true);
     modify->disableRevisionCheck();
-    connect( modify, SIGNAL(result(KJob*)), this, SLOT(slotModifyItemDone(KJob*)) );
+    connect(modify, SIGNAL(result(KJob*)), this, SLOT(slotModifyItemDone(KJob*)));
 }
 
 void ModifyMessageDisplayFormatJob::modifyDisplayFormat()
 {
-    MessageViewer::MessageDisplayFormatAttribute *attr  = mMessageItem.attribute<MessageViewer::MessageDisplayFormatAttribute>( Akonadi::Entity::AddIfMissing );
+    MessageViewer::MessageDisplayFormatAttribute *attr  = mMessageItem.attribute<MessageViewer::MessageDisplayFormatAttribute>(Akonadi::Entity::AddIfMissing);
     attr->setRemoteContent(mRemoteContent);
     attr->setMessageFormat(mMessageFormat);
-    Akonadi::ItemModifyJob *modify = new Akonadi::ItemModifyJob( mMessageItem );
-    modify->setIgnorePayload( true );
+    Akonadi::ItemModifyJob *modify = new Akonadi::ItemModifyJob(mMessageItem);
+    modify->setIgnorePayload(true);
     modify->disableRevisionCheck();
-    connect( modify, SIGNAL(result(KJob*)), this, SLOT(slotModifyItemDone(KJob*)) );
+    connect(modify, SIGNAL(result(KJob*)), this, SLOT(slotModifyItemDone(KJob*)));
 }
 
-void ModifyMessageDisplayFormatJob::slotModifyItemDone(KJob* job)
+void ModifyMessageDisplayFormatJob::slotModifyItemDone(KJob *job)
 {
-    if ( job && job->error() ) {
+    if (job && job->error()) {
         qWarning() << " Error trying to change attribute:" << job->errorText();
     }
     deleteLater();

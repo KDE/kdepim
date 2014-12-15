@@ -23,8 +23,6 @@
 #include <kleo/verifydetachedjob.h>
 #include <kleo/verifyopaquejob.h>
 
-
-
 #include <QBuffer>
 #include <QEventLoop>
 

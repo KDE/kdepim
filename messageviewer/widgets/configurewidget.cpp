@@ -30,7 +30,6 @@
 #include <KConfigDialogManager>
 #include <KLocalizedString>
 
-
 using namespace MessageViewer;
 
 ConfigureWidget::ConfigureWidget(QWidget *parent)

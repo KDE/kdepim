@@ -23,7 +23,6 @@
 
 #include <messagecore/utils/stringutil.h>
 
-
 #include <KLocalizedString>
 #include <QApplication>
 #include <kmime/kmime_message.h>

@@ -19,7 +19,6 @@
 #include "scamdetection/scamdetectionwarningwidget.h"
 #include "scamdetection/scamdetection.h"
 
-
 #include <KLocalizedString>
 
 #include <QUrl>

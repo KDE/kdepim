@@ -26,7 +26,6 @@
 #include "adblock/adblockblockableitemsdialog.h"
 #include "adblock/webpage.h"
 
-
 #include <KActionCollection>
 #include <QAction>
 

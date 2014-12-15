@@ -17,7 +17,6 @@
 
 #include "decryptverifybodypartmemento.h"
 
-
 #include <kleo/decryptverifyjob.h>
 
 #include <gpgme++/keylistresult.h>

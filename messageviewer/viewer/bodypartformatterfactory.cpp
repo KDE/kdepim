@@ -41,7 +41,6 @@
 
 // KDE
 
-
 // Qt
 #include <QString>
 #include <QStringList>
@@ -93,7 +92,7 @@ static void insertBodyPartFormatter(const char *type, const char *subtype,
     TypeRegistry::iterator type_it = all->find(type);
     if (type_it == all->end()) {
         qCDebug(MESSAGEVIEWER_LOG) << "BodyPartFormatterFactory: instantiating new Subtype Registry for \""
-                 << type << "\"";
+                                   << type << "\"";
         type_it = all->insert(std::make_pair(type, SubtypeRegistry())).first;
         assert(type_it != all->end());
     }
@@ -102,7 +101,7 @@ static void insertBodyPartFormatter(const char *type, const char *subtype,
     SubtypeRegistry::iterator subtype_it = subtype_reg.find(subtype);
     if (subtype_it != subtype_reg.end()) {
         qCDebug(MESSAGEVIEWER_LOG) << "BodyPartFormatterFactory: overwriting previously registered formatter for \""
-                 << type << "/" << subtype << "\"";
+                                   << type << "/" << subtype << "\"";
         subtype_reg.erase(subtype_it); subtype_it = subtype_reg.end();
     }
 
