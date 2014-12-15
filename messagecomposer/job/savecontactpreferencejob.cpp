@@ -31,7 +31,7 @@
 using namespace MessageComposer;
 
 SaveContactPreferenceJob::SaveContactPreferenceJob( const QString& email, const Kleo::KeyResolver::ContactPreferences& pref, QObject *parent)
-    : KJob(parent),
+    : QObject(parent),
       mEmail(email),
       mPref(pref)
 {
@@ -62,7 +62,7 @@ void SaveContactPreferenceJob::slotSearchContact(KJob* job)
         bool ok = true;
         const QString fullName = KInputDialog::getText( i18n( "Name Selection" ), i18n( "Which name shall the contact '%1' have in your address book?", mEmail ), QString(), &ok );
         if ( !ok ) {
-            emitResult();
+            deleteLater();
             return;
         }
 
@@ -73,7 +73,7 @@ void SaveContactPreferenceJob::slotSearchContact(KJob* job)
         dlg->setDescription( i18n( "Select the address book folder to store the new contact in:" ) );
         if ( !dlg->exec() ) {
             delete dlg;
-            emitResult();
+            deleteLater();
             return;
         }
 
@@ -117,5 +117,5 @@ void SaveContactPreferenceJob::slotModifyCreateItem(KJob *job)
     if ( job->error() ) {
         qDebug()<<"modify item failed "<<job->errorString();
     }
-    emitResult();
+    deleteLater();
 }

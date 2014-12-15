@@ -18,12 +18,11 @@
 #ifndef SAVECONTACTPREFERENCEJOB_H
 #define SAVECONTACTPREFERENCEJOB_H
 
-#include <KJob>
 #include <KABC/Addressee>
 #include "keyresolver.h"
-
+class KJob;
 namespace MessageComposer {
-class SaveContactPreferenceJob : public KJob
+class SaveContactPreferenceJob : public QObject
 {
     Q_OBJECT
 public:
