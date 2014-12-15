@@ -9,6 +9,7 @@ include_directories(
 add_definitions(-DTRANSLATION_DOMAIN=\"akonadi_archivemail_agent\")
 
 set(archivemailagent_SRCS
+   archivemailagent_debug.cpp
    archivemailkernel.cpp
    archivemailagent.cpp
    archivemailmanager.cpp

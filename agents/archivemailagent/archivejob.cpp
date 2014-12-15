@@ -18,7 +18,7 @@
 #include "archivejob.h"
 #include "archivemailinfo.h"
 #include "archivemailmanager.h"
-
+#include "archivemailagent_debug.h"
 #include "mailcommon/util/mailutil.h"
 
 #include <mailcommon/job/backupjob.h>
@@ -48,13 +48,13 @@ void ArchiveJob::execute()
         Akonadi::Collection collection(mInfo->saveCollectionId());
         const QString realPath = MailCommon::Util::fullCollectionPath(collection);
         if (realPath.isEmpty()) {
-            qDebug() << " We cannot find real path, collection doesn't exist";
+            qCDebug(ARCHIVEMAILAGENT_LOG) << " We cannot find real path, collection doesn't exist";
             mManager->collectionDoesntExist(mInfo);
             deleteLater();
             return;
         }
         if (mInfo->url().isEmpty()) {
-            qDebug() << " Path is empty";
+            qCDebug(ARCHIVEMAILAGENT_LOG) << " Path is empty";
             mManager->collectionDoesntExist(mInfo);
             deleteLater();
             return;
