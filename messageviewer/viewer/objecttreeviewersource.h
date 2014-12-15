@@ -35,18 +35,18 @@ class MailViewerSource : public ObjectTreeSourceIf
 public:
     explicit MailViewerSource(ViewerPrivate *viewer);
     ~MailViewerSource();
-    bool htmlMail();
-    bool decryptMessage();
-    bool htmlLoadExternal();
-    bool showSignatureDetails();
-    void setHtmlMode(Util::HtmlMode mode);
-    int levelQuote();
-    const QTextCodec *overrideCodec();
-    QString createMessageHeader(KMime::Message *message);
-    const AttachmentStrategy *attachmentStrategy();
-    HtmlWriter *htmlWriter();
-    CSSHelper *cssHelper();
-    QObject *sourceObject();
+    bool htmlMail() Q_DECL_OVERRIDE;
+    bool decryptMessage() Q_DECL_OVERRIDE;
+    bool htmlLoadExternal() Q_DECL_OVERRIDE;
+    bool showSignatureDetails() Q_DECL_OVERRIDE;
+    void setHtmlMode(Util::HtmlMode mode) Q_DECL_OVERRIDE;
+    int levelQuote() Q_DECL_OVERRIDE;
+    const QTextCodec *overrideCodec() Q_DECL_OVERRIDE;
+    QString createMessageHeader(KMime::Message *message) Q_DECL_OVERRIDE;
+    const AttachmentStrategy *attachmentStrategy() Q_DECL_OVERRIDE;
+    HtmlWriter *htmlWriter() Q_DECL_OVERRIDE;
+    CSSHelper *cssHelper() Q_DECL_OVERRIDE;
+    QObject *sourceObject() Q_DECL_OVERRIDE;
 
 private:
     ViewerPrivate *mViewer;
