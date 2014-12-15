@@ -201,9 +201,9 @@ public:
     /**
       Reimplemented from QGraphicsItem
     */
-    virtual QRectF boundingRect() const Q_DECL_OVERRIDE;
-    virtual void paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *) Q_DECL_OVERRIDE;
-    virtual QPainterPath shape() const Q_DECL_OVERRIDE;
+    QRectF boundingRect() const Q_DECL_OVERRIDE;
+    void paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *) Q_DECL_OVERRIDE;
+    QPainterPath shape() const Q_DECL_OVERRIDE;
 
 private:
     // Shape of the item, see shape()

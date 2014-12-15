@@ -41,7 +41,7 @@ protected:
     /**
     * Returns the Item for the specified model index. Reimplemented from ThemeDelegate.
     */
-    virtual Item *itemFromIndex(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    Item *itemFromIndex(const QModelIndex &index) const Q_DECL_OVERRIDE;
 };
 
 } // namespace Core

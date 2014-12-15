@@ -1199,12 +1199,12 @@ protected:
     /**
     * Pure virtual reimplemented from OptionSet.
     */
-    virtual void save(QDataStream &stream) const Q_DECL_OVERRIDE;
+    void save(QDataStream &stream) const Q_DECL_OVERRIDE;
 
     /**
     * Pure virtual reimplemented from OptionSet.
     */
-    virtual bool load(QDataStream &stream) Q_DECL_OVERRIDE;
+    bool load(QDataStream &stream) Q_DECL_OVERRIDE;
 
 };
 
