@@ -110,8 +110,7 @@ public:
     /**
     * Add the given attachment to the message.
     */
-    void addAttachment(const QUrl &url, const QString &comment);
-    void addAttachmentUrlSync(const QUrl &url, const QString &comment);
+    void addAttachment(const QUrl &url, const QString &comment, bool sync);
     void addAttachment(const QString &name, const QString &filename, const QString &charset, const QByteArray &data, const QByteArray &mimeType);
     void addAttachmentPart(KMime::Content *part);
 

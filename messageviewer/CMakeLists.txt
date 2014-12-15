@@ -167,6 +167,7 @@ set(libmessageviewer_job_SRCS
   job/createeventjob.cpp
   job/attachmentencryptwithchiasmusjob.cpp
   job/attachmenteditjob.cpp
+  job/modifymessagedisplayformatjob.cpp
 )
 
 set(libmessageviewer_SRCS

@@ -1161,7 +1161,7 @@ void MessageComposer::ComposerViewBase::saveMessage(KMime::Message::Ptr message,
         }
         Akonadi::ItemCreateJob *create = new Akonadi::ItemCreateJob(item, target, this);
         connect(create, &Akonadi::ItemCreateJob::result, this, &ComposerViewBase::slotCreateItemResult);
-        m_pendingQueueJobs++;
+        ++m_pendingQueueJobs;
     }
 }
 
@@ -1181,7 +1181,7 @@ void MessageComposer::ComposerViewBase::slotSaveMessage(KJob *job)
     }
     Akonadi::ItemCreateJob *create = new Akonadi::ItemCreateJob(item, target, this);
     connect(create, &Akonadi::ItemCreateJob::result, this, &ComposerViewBase::slotCreateItemResult);
-    m_pendingQueueJobs++;
+    ++m_pendingQueueJobs;
 }
 
 Akonadi::Collection MessageComposer::ComposerViewBase::defaultSpecialTarget() const
@@ -1197,7 +1197,7 @@ Akonadi::Collection MessageComposer::ComposerViewBase::defaultSpecialTarget() co
 
 void MessageComposer::ComposerViewBase::slotCreateItemResult(KJob *job)
 {
-    m_pendingQueueJobs--;
+    --m_pendingQueueJobs;
     qCDebug(MESSAGECOMPOSER_LOG) << "mPendingCreateItemJobs" << m_pendingQueueJobs;
     Q_ASSERT(m_pendingQueueJobs >= 0);
 
@@ -1223,21 +1223,18 @@ void MessageComposer::ComposerViewBase::slotCreateItemResult(KJob *job)
     }
 }
 
-void MessageComposer::ComposerViewBase::addAttachment(const QUrl &url, const QString &comment)
+void MessageComposer::ComposerViewBase::addAttachment ( const QUrl& url, const QString& comment, bool sync )
 {
-    Q_UNUSED(comment);
+    Q_UNUSED( comment );
     qCDebug(MESSAGECOMPOSER_LOG) << "adding attachment with url:" << url;
-    m_attachmentController->addAttachment(url);
+    if (sync) {
+        m_attachmentController->addAttachmentUrlSync( url );
+    } else {
+        m_attachmentController->addAttachment( url );
+    }
 }
 
-void MessageComposer::ComposerViewBase::addAttachmentUrlSync(const QUrl &url, const QString &comment)
-{
-    Q_UNUSED(comment);
-    qCDebug(MESSAGECOMPOSER_LOG) << "adding attachment with url:" << url;
-    m_attachmentController->addAttachmentUrlSync(url);
-}
-
-void MessageComposer::ComposerViewBase::addAttachment(const QString &name, const QString &filename, const QString &charset, const QByteArray &data, const QByteArray &mimeType)
+void MessageComposer::ComposerViewBase::addAttachment ( const QString& name, const QString& filename, const QString& charset, const QByteArray& data, const QByteArray& mimeType )
 {
     MessageCore::AttachmentPart::Ptr attachment = MessageCore::AttachmentPart::Ptr(new MessageCore::AttachmentPart());
     if (!data.isEmpty()) {

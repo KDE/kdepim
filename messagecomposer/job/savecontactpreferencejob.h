@@ -24,7 +24,7 @@
 
 namespace MessageComposer
 {
-class SaveContactPreferenceJob : public KJob
+class SaveContactPreferenceJob : public QObject
 {
     Q_OBJECT
 public:
