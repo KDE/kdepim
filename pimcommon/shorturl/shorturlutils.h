@@ -32,6 +32,7 @@ namespace ShortUrlUtils
         MigreMe = 2,
         TriopAB = 3,
         Ur1Ca = 4,
+        IsGd = 5,
 
         //TODO add more engine.
         EndListEngine

@@ -62,9 +62,10 @@ void GoogleShortUrl::slotShortUrlFinished(QNetworkReply *reply)
         return;
     }
 
-    qCDebug(PIMCOMMON_LOG) << "void GoogleShortUrl::slotShortUrlFinished(QNetworkReply *reply) " << reply->readAll();
+    const QByteArray data = reply->readAll();
+    qCDebug(PIMCOMMON_LOG) << "void GoogleShortUrl::slotShortUrlFinished(QNetworkReply *reply) " <<  data;
     QJsonParseError error;
-    const QJsonDocument json = QJsonDocument::fromJson(reply->readAll(), &error);
+    const QJsonDocument json = QJsonDocument::fromJson(data, &error);
     if (error.error != QJsonParseError::NoError || json.isNull()) {
         qCDebug(PIMCOMMON_LOG) << " Error during parsing" << error.errorString();
         return;

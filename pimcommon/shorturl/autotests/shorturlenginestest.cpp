@@ -19,7 +19,8 @@
 #include "shorturlenginestest.h"
 #include "pimcommon/shorturl/shorturlutils.h"
 #include "pimcommon/shorturl/abstractshorturl.h"
-#include <qtest_kde.h>
+#include <qtest.h>
+#include <QSignalSpy>
 #include <QSignalSpy>
 
 Q_DECLARE_METATYPE(PimCommon::ShortUrlUtils::EngineType)
@@ -55,6 +56,7 @@ void ShortUrlEnginesTest::shouldTestEngines_data()
     //WE can't test migreme...
     //QTest::newRow("migreme url") << PimCommon::ShortUrlUtils::MigreMe << QString::fromLatin1("http://www.kde.org") << QString::fromLatin1("http://migre.me/nwh5a");
     QTest::newRow("triopAB url") << PimCommon::ShortUrlUtils::TriopAB << QString::fromLatin1("http://www.kde.org") << QString::fromLatin1("http://to.ly/51UP");
+    QTest::newRow("ur1 url") << PimCommon::ShortUrlUtils::Ur1Ca << QString::fromLatin1("http://www.kde.org") << QString::fromLatin1("http://to.ly/51UP");
 }
 
 void ShortUrlEnginesTest::shouldTestEngines()
@@ -63,12 +65,12 @@ void ShortUrlEnginesTest::shouldTestEngines()
     QFETCH( QString, longurl );
     QFETCH( QString, shorturl );
     PimCommon::AbstractShortUrl *abstrShortUrl = PimCommon::ShortUrlUtils::loadEngine(engine, 0);
-    abstrShortUrl->shortUrl(longurl);
     QSignalSpy spy(abstrShortUrl, SIGNAL(shortUrlDone(QString)));
+    abstrShortUrl->shortUrl(longurl);
     abstrShortUrl->start();
-    QVERIFY(QTest::kWaitForSignal(abstrShortUrl, SIGNAL(shortUrlDone(QString)), 10000));
+    QVERIFY(spy.wait(10000));
     QCOMPARE(spy.at(0).count(), 1);
     QCOMPARE(spy.at(0).at(0).toString(), shorturl);
 }
 
-QTEST_KDEMAIN(ShortUrlEnginesTest, NoGUI)
+QTEST_MAIN(ShortUrlEnginesTest)

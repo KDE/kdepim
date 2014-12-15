@@ -22,6 +22,7 @@
 #include "pimcommon/shorturl/engine/migremeshorturl.h"
 #include "pimcommon/shorturl/engine/triopabshorturl.h"
 #include "pimcommon/shorturl/engine/ur1cashorturl.h"
+#include "pimcommon/shorturl/engine/isgdshorturl.h"
 
 #include <KConfigGroup>
 #include <KSharedConfig>
@@ -59,6 +60,9 @@ PimCommon::AbstractShortUrl *PimCommon::ShortUrlUtils::loadEngine(PimCommon::Sho
     case Ur1Ca:
         engine = new PimCommon::Ur1CaShortUrl(parent);
         break;
+    case IsGd:
+        engine = new PimCommon::IsGdShortUrl(parent);
+        break;
     case EndListEngine:
     default:
         break;
@@ -84,6 +88,9 @@ QString PimCommon::ShortUrlUtils::stringFromEngineType(EngineType type)
         break;
     case Ur1Ca:
         name = i18n("Ur1Ca");
+        break;
+    case IsGd:
+        name = i18n("IsGd");
         break;
     case EndListEngine:
     default:

@@ -22,6 +22,7 @@ set(libpimcommon_shorturl_SRCS
   shorturl/engine/migremeshorturl.cpp
   shorturl/engine/triopabshorturl.cpp
   shorturl/engine/ur1cashorturl.cpp
+  shorturl/engine/isgdshorturl.cpp
 )
 
 if( KF5GAPI_FOUND )
