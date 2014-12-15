@@ -289,9 +289,9 @@ public:
 
 protected:
     /* reimplemented from KCalCore::Calendar::CalendarObserver */
-    void calendarIncidenceAdded(const KCalCore::Incidence::Ptr &incidence);
-    void calendarIncidenceChanged(const KCalCore::Incidence::Ptr &incidence);
-    void calendarIncidenceDeleted(const KCalCore::Incidence::Ptr &incidence);
+    void calendarIncidenceAdded(const KCalCore::Incidence::Ptr &incidence) Q_DECL_OVERRIDE;
+    void calendarIncidenceChanged(const KCalCore::Incidence::Ptr &incidence) Q_DECL_OVERRIDE;
+    void calendarIncidenceDeleted(const KCalCore::Incidence::Ptr &incidence) Q_DECL_OVERRIDE;
 };
 
 bool AgendaView::Private::datesEqual(const KCalCore::Incidence::Ptr &one, const KCalCore::Incidence::Ptr &two) const

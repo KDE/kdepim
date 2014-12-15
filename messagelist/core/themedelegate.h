@@ -235,12 +235,12 @@ protected:
     /**
     * Reimplemented from QStyledItemDelegate
     */
-    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
 
     /**
     * Reimplemented from QStyledItemDelegate
     */
-    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     /**

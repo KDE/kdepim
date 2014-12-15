@@ -40,14 +40,14 @@ public:
     static QString iconName();
     static StorageServiceAbstract::Capabilities serviceCapabilities();
 
-    void storageServiceuploadFile(const QString &filename, const QString &uploadAsName, const QString &destination = QString());
-    void storageServiceaccountInfo();
-    void storageServicecreateFolder(const QString &folder, const QString &destination = QString());
-    void storageServicelistFolder(const QString &folder);
-    void removeConfig();
+    void storageServiceuploadFile(const QString &filename, const QString &uploadAsName, const QString &destination = QString()) Q_DECL_OVERRIDE;
+    void storageServiceaccountInfo() Q_DECL_OVERRIDE;
+    void storageServicecreateFolder(const QString &folder, const QString &destination = QString()) Q_DECL_OVERRIDE;
+    void storageServicelistFolder(const QString &folder) Q_DECL_OVERRIDE;
+    void removeConfig() Q_DECL_OVERRIDE;
     void storageServiceauthentication() Q_DECL_OVERRIDE;
-    void storageServiceShareLink(const QString &root, const QString &path);
-    void storageServicedownloadFile(const QString &name, const QString &fileId, const QString &destination);
+    void storageServiceShareLink(const QString &root, const QString &path) Q_DECL_OVERRIDE;
+    void storageServicedownloadFile(const QString &name, const QString &fileId, const QString &destination) Q_DECL_OVERRIDE;
     void storageServicedeleteFile(const QString &filename) Q_DECL_OVERRIDE;
     void storageServicedeleteFolder(const QString &foldername) Q_DECL_OVERRIDE;
     void storageServiceRenameFolder(const QString &source, const QString &destination) Q_DECL_OVERRIDE;
@@ -56,18 +56,18 @@ public:
     void storageServiceMoveFile(const QString &source, const QString &destination) Q_DECL_OVERRIDE;
     void storageServiceCopyFile(const QString &source, const QString &destination) Q_DECL_OVERRIDE;
     void storageServiceCopyFolder(const QString &source, const QString &destination) Q_DECL_OVERRIDE;
-    QMap<QString, QString> itemInformation(const QVariantMap &variantMap);
-    QString storageServiceName() const;
-    QString fileIdentifier(const QVariantMap &variantMap);
-    QString fileShareRoot(const QVariantMap &variantMap);
-    QIcon icon() const;
-    StorageServiceAbstract::Capabilities capabilities() const;
+    QMap<QString, QString> itemInformation(const QVariantMap &variantMap) Q_DECL_OVERRIDE;
+    QString storageServiceName() const Q_DECL_OVERRIDE;
+    QString fileIdentifier(const QVariantMap &variantMap) Q_DECL_OVERRIDE;
+    QString fileShareRoot(const QVariantMap &variantMap) Q_DECL_OVERRIDE;
+    QIcon icon() const Q_DECL_OVERRIDE;
+    StorageServiceAbstract::Capabilities capabilities() const Q_DECL_OVERRIDE;
     void storageServicecreateServiceFolder() Q_DECL_OVERRIDE;
-    QString fillListWidget(StorageServiceTreeWidget *listWidget, const QVariant &data, const QString &currentFolder);
+    QString fillListWidget(StorageServiceTreeWidget *listWidget, const QVariant &data, const QString &currentFolder) Q_DECL_OVERRIDE;
 
-    void shutdownService();
-    bool hasValidSettings() const;
-    bool hasCancelSupport() const;
+    void shutdownService() Q_DECL_OVERRIDE;
+    bool hasValidSettings() const Q_DECL_OVERRIDE;
+    bool hasCancelSupport() const Q_DECL_OVERRIDE;
 private Q_SLOTS:
     void slotAuthorizationDone(const QString &refreshToken, const QString &token, const QDateTime &expireTime, const QString &accountName);
     void slotAuthorizationFailed(const QString &errorMessage);
