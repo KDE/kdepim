@@ -262,6 +262,7 @@ add_subdirectory(storageservice/box/tests)
 add_subdirectory(storageservice/dropbox/icons/)
 add_subdirectory(baloodebug/autotests)
 add_subdirectory(baloodebug/tests)
+add_subdirectory(shorturl/autotests)
 
 if( LibKGAPI2_FOUND )
 add_subdirectory(storageservice/gdrive/tests/)
