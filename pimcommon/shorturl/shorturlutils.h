@@ -19,26 +19,29 @@
 #define SHORTURLUTILS_H
 
 #include <QObject>
+#include "pimcommon_export.h"
 
 namespace PimCommon
 {
 class AbstractShortUrl;
 namespace ShortUrlUtils
 {
-enum EngineType {
-    Google = 0,
-    Tinyurl = 1,
-    MigreMe = 2,
-    TriopAB = 3,
-    Ur1Ca = 4,
-    //TODO add more engine.
-    EndListEngine
-};
-QString stringFromEngineType(EngineType type);
-AbstractShortUrl *loadEngine(QObject *parent);
+    enum EngineType {
+        Google = 0,
+        Tinyurl = 1,
+        MigreMe = 2,
+        TriopAB = 3,
+        Ur1Ca = 4,
 
-int readEngineSettings();
-void writeEngineSettings(int value);
+        //TODO add more engine.
+        EndListEngine
+    };
+    QString stringFromEngineType(EngineType type);
+    AbstractShortUrl *loadEngine(QObject *parent);
+    PIMCOMMON_EXPORT PimCommon::AbstractShortUrl *loadEngine(PimCommon::ShortUrlUtils::EngineType type, QObject *parent);
+
+    int readEngineSettings();
+    void writeEngineSettings(int value);
 }
 }
 

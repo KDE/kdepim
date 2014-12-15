@@ -290,6 +290,7 @@ add_subdirectory(texttospeech/autotests)
 add_subdirectory(texttospeech/tests)
 add_subdirectory(baloodebug/autotests)
 add_subdirectory(baloodebug/tests)
+add_subdirectory(shorturl/autotests)
 
 if( LibKGAPI2_FOUND )
   add_subdirectory(storageservice/gdrive/tests/)
