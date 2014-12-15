@@ -39,6 +39,7 @@
 #include "pimcommon/widgets/slidecontainer.h"
 #include "messageviewer/job/attachmentencryptwithchiasmusjob.h"
 #include "messageviewer/job/attachmenteditjob.h"
+#include "messageviewer/job/modifymessagedisplayformatjob.h"
 #ifdef MESSAGEVIEWER_READER_HTML_DEBUG
 #include "htmlwriter/filehtmlwriter.h"
 #include "htmlwriter/teehtmlwriter.h"
@@ -3088,13 +3089,11 @@ void ViewerPrivate::slotToggleCaretBrowsing(bool toggle)
 void ViewerPrivate::slotSaveMessageDisplayFormat()
 {
     if (mMessageItem.isValid()) {
-        MessageViewer::MessageDisplayFormatAttribute *attr  = mMessageItem.attribute<MessageViewer::MessageDisplayFormatAttribute>( Akonadi::Entity::AddIfMissing );
-        attr->setRemoteContent(htmlLoadExtOverride());
-        attr->setMessageFormat(displayFormatMessageOverwrite());
-        Akonadi::ItemModifyJob *modify = new Akonadi::ItemModifyJob( mMessageItem );
-        modify->setIgnorePayload( true );
-        modify->disableRevisionCheck();
-        connect( modify, SIGNAL(result(KJob*)), this, SLOT(slotModifyItemDone(KJob*)) );
+        MessageViewer::ModifyMessageDisplayFormatJob *job = new MessageViewer::ModifyMessageDisplayFormatJob(this);
+        job->setMessageFormat(displayFormatMessageOverwrite());
+        job->setMessageItem(mMessageItem);
+        job->setRemoteContent(htmlLoadExtOverride());
+        job->start();
     }
 }
 
@@ -3102,11 +3101,10 @@ void ViewerPrivate::slotResetMessageDisplayFormat()
 {
     if (mMessageItem.isValid()) {
         if (mMessageItem.hasAttribute<MessageViewer::MessageDisplayFormatAttribute>()) {
-            mMessageItem.removeAttribute<MessageViewer::MessageDisplayFormatAttribute>();
-            Akonadi::ItemModifyJob *modify = new Akonadi::ItemModifyJob( mMessageItem );
-            modify->setIgnorePayload( true );
-            modify->disableRevisionCheck();
-            connect( modify, SIGNAL(result(KJob*)), this, SLOT(slotModifyItemDone(KJob*)) );
+            MessageViewer::ModifyMessageDisplayFormatJob *job = new MessageViewer::ModifyMessageDisplayFormatJob(this);
+            job->setMessageItem(mMessageItem);
+            job->setResetFormat(true);
+            job->start();
         }
     }
 }
