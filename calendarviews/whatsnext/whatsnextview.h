@@ -29,6 +29,7 @@
 #include <Akonadi/Calendar/IncidenceChanger>
 #include <Akonadi/Calendar/ETMCalendar>
 #include <KTextBrowser>
+#include <kiconloader.h>
 
 namespace EventViews {
 
@@ -77,6 +78,7 @@ class EVENTVIEWS_EXPORT WhatsNextView : public EventViews::EventView
     void showIncidence( const QString & );
 
   private:
+    void createTaskRow(KIconLoader &kil);
     KTextBrowser *mView;
     QString mText;
     QDate mStartDate;
