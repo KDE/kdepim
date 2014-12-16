@@ -91,6 +91,9 @@ void ComposerTest::testAutoSave()
     composer->start();
     QVERIFY(composer->finished());
     QCOMPARE(composer->resultMessages().size(), 1);
+    delete composer;
+    composer = 0;
+
 }
 
 void ComposerTest::testNonAsciiHeaders()
@@ -148,6 +151,8 @@ void ComposerTest::testBug271192()
     const KMime::Message::Ptr message = composer->resultMessages().first();
     QCOMPARE(message->to()->displayNames().size(), 1);
     QCOMPARE(message->to()->displayNames().first().toUtf8(), displayName.toUtf8());
+    delete composer;
+    composer = 0;
 }
 
 void ComposerTest::fillComposerData(Composer *composer)
