@@ -41,11 +41,11 @@ protected:
     void autoSearchMoveCursor() Q_DECL_OVERRIDE;
 
 public Q_SLOTS:
-    virtual void slotSearchText(bool backward = false, bool isAutoSearch = true);
+    virtual void slotSearchText(bool backward = false, bool isAutoSearch = true) Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
-    virtual void slotReplaceText();
-    virtual void slotReplaceAllText();
+    virtual void slotReplaceText() Q_DECL_OVERRIDE;
+    virtual void slotReplaceAllText() Q_DECL_OVERRIDE;
 
 private:
     QPlainTextEdit *mView;

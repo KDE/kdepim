@@ -57,20 +57,20 @@ public:
 //IKernel methods:
     /*reimp*/ Akonadi::ChangeRecorder* folderCollectionMonitor() const { return mMonitor; }
     /*reimp*/ MailCommon::JobScheduler* jobScheduler() const { return mJobScheduler; }
-    /*reimp*/ KSharedConfig::Ptr config();
-    /*reimp*/ void syncConfig();
-    /*reimp*/ KIdentityManagement::IdentityManager* identityManager();
+    /*reimp*/ KSharedConfig::Ptr config() Q_DECL_OVERRIDE;
+    /*reimp*/ void syncConfig() Q_DECL_OVERRIDE;
+    /*reimp*/ KIdentityManagement::IdentityManager* identityManager() Q_DECL_OVERRIDE;
     /*reimp*/ Akonadi::EntityMimeTypeFilterModel* collectionModel() const { return mCollectionModel; }
-    /*reimp*/ MessageComposer::MessageSender* msgSender();
+    /*reimp*/ MessageComposer::MessageSender* msgSender() Q_DECL_OVERRIDE;
 
 //ISettings methods:
-    /*reimp*/ void updateSystemTray();
-    /*reimp*/ void setLastSelectedFolder(const Akonadi::Entity::Id& col);
-    /*reimp*/ Akonadi::Entity::Id lastSelectedFolder();
-    /*reimp*/ qreal closeToQuotaThreshold();
-    /*reimp*/ bool excludeImportantMailFromExpiry();
-    /*reimp*/ bool showPopupAfterDnD();
-    /*reimp*/ QStringList customTemplates();
+    /*reimp*/ void updateSystemTray() Q_DECL_OVERRIDE;
+    /*reimp*/ void setLastSelectedFolder(const Akonadi::Entity::Id& col) Q_DECL_OVERRIDE;
+    /*reimp*/ Akonadi::Entity::Id lastSelectedFolder() Q_DECL_OVERRIDE;
+    /*reimp*/ qreal closeToQuotaThreshold() Q_DECL_OVERRIDE;
+    /*reimp*/ bool excludeImportantMailFromExpiry() Q_DECL_OVERRIDE;
+    /*reimp*/ bool showPopupAfterDnD() Q_DECL_OVERRIDE;
+    /*reimp*/ QStringList customTemplates() Q_DECL_OVERRIDE;
 
 //IFilter methods:
     virtual void createFilter(const QByteArray& field, const QString& value);
