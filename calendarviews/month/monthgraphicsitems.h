@@ -49,7 +49,7 @@ public:
     explicit ScrollIndicator(ArrowDirection direction);
 
     QRectF boundingRect() const;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) Q_DECL_OVERRIDE;
 
     ArrowDirection direction() const
     {

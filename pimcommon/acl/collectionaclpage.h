@@ -49,10 +49,10 @@ class PIMCOMMON_EXPORT CollectionAclPage : public Akonadi::CollectionPropertiesP
 public:
     explicit CollectionAclPage(QWidget *parent = Q_NULLPTR);
 
-    void load(const Akonadi::Collection &collection);
-    void save(Akonadi::Collection &collection);
+    void load(const Akonadi::Collection &collection) Q_DECL_OVERRIDE;
+    void save(Akonadi::Collection &collection) Q_DECL_OVERRIDE;
 
-    bool canHandle(const Akonadi::Collection &collection) const;
+    bool canHandle(const Akonadi::Collection &collection) const Q_DECL_OVERRIDE;
 
 protected:
     void init();
