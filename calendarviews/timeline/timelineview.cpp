@@ -380,8 +380,8 @@ void TimelineView::showDates(const QDate &start, const QDate &end, const QDate &
                     item->setColor(resourceColor);
                 }
                 qCDebug(CALENDARVIEW_LOG) << "Created item " << item
-                         << " (" <<  CalendarSupport::displayName(calendar().data(), collection) << ") "
-                         << "with index " <<  index - 1 << " from collection " << collection.id();
+                                          << " (" <<  CalendarSupport::displayName(calendar().data(), collection) << ") "
+                                          << "with index " <<  index - 1 << " from collection " << collection.id();
                 d->mCalendarItemMap.insert(collection.id(), item);
             }
         }

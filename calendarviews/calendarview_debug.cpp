@@ -20,4 +20,3 @@
 #include "calendarview_debug.h"
 Q_LOGGING_CATEGORY(CALENDARVIEW_LOG, "log_calendarview")
 
-

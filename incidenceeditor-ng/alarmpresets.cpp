@@ -55,7 +55,7 @@ int configuredReminderTimeInMinutes()
     const int unitsToUse = configuredUnits >= 0 && configuredUnits <= 2 ? configuredUnits : 0;
 
     const int configuredReminderTime = KCalPrefs::instance()->reminderTime();
-    const int reminderTimeToUse =  configuredReminderTime > 0 ?
+    const int reminderTimeToUse =  configuredReminderTime >= 0 ?
                                    configuredReminderTime :
                                    DEFAULT_REMINDER_OFFSET;
 

@@ -1880,7 +1880,7 @@ void Agenda::removeIncidence(const KCalCore::Incidence::Ptr &incidence)
         if (id == -1) {
             // Ok, we really don't know the ID, give up.
             qCWarning(CALENDARVIEW_LOG) << "Agenda::removeIncidence() Item to remove is invalid. uid = "
-                       << incidence->instanceIdentifier();
+                                        << incidence->instanceIdentifier();
             return;
         }
     }

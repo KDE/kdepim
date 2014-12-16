@@ -1395,12 +1395,12 @@ void AgendaView::updateEventDates(AgendaItem *item, bool addIncidence,
                                   Akonadi::Collection::Id collectionId)
 {
     qCDebug(CALENDARVIEW_LOG) << item->text()
-             << "; item->cellXLeft(): " << item->cellXLeft()
-             << "; item->cellYTop(): " << item->cellYTop()
-             << "; item->lastMultiItem(): " << item->lastMultiItem()
-             << "; item->itemPos(): " << item->itemPos()
-             << "; item->itemCount(): " << item->itemCount()
-             << endl;
+                              << "; item->cellXLeft(): " << item->cellXLeft()
+                              << "; item->cellYTop(): " << item->cellYTop()
+                              << "; item->lastMultiItem(): " << item->lastMultiItem()
+                              << "; item->itemPos(): " << item->itemPos()
+                              << "; item->itemCount(): " << item->itemCount()
+                              << endl;
 
     KDateTime startDt, endDt;
 
@@ -1788,7 +1788,7 @@ bool AgendaView::displayIncidence(const Akonadi::Item &aitem, bool createSelecte
             const Akonadi::Item item = calendar()->item(rIt.incidence());
             if (!item.isValid()) {
                 qCWarning(CALENDARVIEW_LOG) << "Couldn't find item for "
-                           << rIt.incidence()->uid() << rIt.incidence()->recurrenceId().toString();
+                                            << rIt.incidence()->uid() << rIt.incidence()->recurrenceId().toString();
                 continue;
             }
             Q_ASSERT(item.hasPayload());

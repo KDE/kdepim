@@ -34,7 +34,7 @@
 
 #include <QBoxLayout>
 #include <KLocale>
-
+#include <KGlobal>
 using namespace EventViews;
 
 void WhatsNextTextBrowser::setSource(const QUrl &name)
@@ -68,6 +68,18 @@ int WhatsNextView::currentDateCount() const
     return mStartDate.daysTo(mEndDate);
 }
 
+void WhatsNextView::createTaskRow(KIconLoader &kil)
+{
+    QString ipath;
+    kil.loadIcon(QLatin1String("view-calendar-tasks"), KIconLoader::NoGroup, 22,
+                 KIconLoader::DefaultState, QStringList(), &ipath);
+    mText += QLatin1String("<h2><img src=\"");
+    mText += ipath;
+    mText += QLatin1String("\">");
+    mText += i18n("To-dos:") + QLatin1String("</h2>\n");
+    mText += QLatin1String("<ul>\n");
+}
+
 void WhatsNextView::updateView()
 {
     KIconLoader kil(QLatin1String("korganizer"));
@@ -86,12 +98,12 @@ void WhatsNextView::updateView()
 
     mText += QLatin1String("<h2>");
     if (mStartDate.daysTo(mEndDate) < 1) {
-        mText += KLocale::global()->formatDate(mStartDate);
+        mText += KGlobal::locale()->formatDate(mStartDate);
     } else {
         mText += i18nc(
                      "date from - to", "%1 - %2",
-                     KLocale::global()->formatDate(mStartDate),
-                     KLocale::global()->formatDate(mEndDate));
+                     KGlobal::locale()->formatDate(mStartDate),
+                     KGlobal::locale()->formatDate(mEndDate));
     }
     mText += QLatin1String("</h2>\n");
 
@@ -146,15 +158,13 @@ void WhatsNextView::updateView()
     KCalCore::Todo::List todos = calendar()->todos(KCalCore::TodoSortDueDate,
                                  KCalCore::SortDirectionAscending);
     if (todos.count() > 0) {
-        kil.loadIcon(QLatin1String("view-calendar-tasks"), KIconLoader::NoGroup, 22,
-                     KIconLoader::DefaultState, QStringList(), &ipath);
-        mText += QLatin1String("<h2><img src=\"");
-        mText += ipath;
-        mText += QLatin1String("\">");
-        mText += i18n("To-dos:") + QLatin1String("</h2>\n");
-        mText += QLatin1String("<ul>\n");
+        bool taskHeaderWasCreated = false;
         Q_FOREACH (const KCalCore::Todo::Ptr &todo, todos) {
             if (!todo->isCompleted() && todo->hasDueDate() && todo->dtDue().date() <= mEndDate) {
+                if (!taskHeaderWasCreated) {
+                    createTaskRow(kil);
+                    taskHeaderWasCreated = true;
+                }
                 appendTodo(todo);
             }
         }
@@ -163,13 +173,19 @@ void WhatsNextView::updateView()
         while (!gotone && priority <= 9) {
             Q_FOREACH (const KCalCore::Todo::Ptr &todo, todos) {
                 if (!todo->isCompleted() && (todo->priority() == priority)) {
+                    if (!taskHeaderWasCreated) {
+                        createTaskRow(kil);
+                        taskHeaderWasCreated = true;
+                    }
                     appendTodo(todo);
                     gotone = true;
                 }
             }
             priority++;
         }
-        mText += QLatin1String("</ul>\n");
+        if (taskHeaderWasCreated) {
+            mText += QLatin1String("</ul>\n");
+        }
     }
 
     QStringList myEmails(CalendarSupport::KCalPrefs::instance()->allEmails());
@@ -221,6 +237,7 @@ void WhatsNextView::updateView()
     mText += QLatin1String("</td></tr>\n</table>\n");
 
     mView->setText(mText);
+
 }
 
 void WhatsNextView::showDates(const QDate &start, const QDate &end, const QDate &)
@@ -294,7 +311,6 @@ void WhatsNextView::appendTodo(const KCalCore::Incidence::Ptr &incidence)
     if (mTodos.contains(aitem)) {
         return;
     }
-
     mTodos.append(aitem);
     mText += QLatin1String("<li><a href=\"todo:") + incidence->uid() + QLatin1String("\">");
     mText += incidence->summary();
@@ -306,8 +322,8 @@ void WhatsNextView::appendTodo(const KCalCore::Incidence::Ptr &incidence)
                            KCalUtils::IncidenceFormatter::dateTimeToString(
                                todo->dtDue(), todo->allDay()));
         }
+        mText += QLatin1String("</li>\n");
     }
-    mText += QLatin1String("</li>\n");
 }
 
 void WhatsNextView::showIncidence(const QString &uid)
