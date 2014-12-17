@@ -24,12 +24,8 @@
 //krazy:excludeall=kdebug because we use the korgac(check) debug area in here
 
 #include "koalarmclient.h"
-#if !defined(KORGAC_AKONADI_AGENT)
 #include "alarmdialog.h"
 #include "alarmdockwindow.h"
-#else
-#include <KNotification>
-#endif
 #include "korgacadaptor.h"
 
 #include <calendarsupport/utils.h>
@@ -65,13 +61,11 @@ KOAlarmClient::KOAlarmClient(QObject *parent)
     KDBusConnectionPool::threadConnection().registerObject(QLatin1String("/ac"), this);
     qDebug();
 
-#if !defined(KORGAC_AKONADI_AGENT)
     if (dockerEnabled()) {
         mDocker = new AlarmDockWindow;
         connect(this, &KOAlarmClient::reminderCount, mDocker, &AlarmDockWindow::slotUpdate);
         connect(mDocker, &AlarmDockWindow::quitSignal, this, &KOAlarmClient::slotQuit);
     }
-#endif
     QStringList mimeTypes;
     mimeTypes << Event::eventMimeType() << Todo::todoMimeType();
     mCalendar = Akonadi::ETMCalendar::Ptr(new Akonadi::ETMCalendar(mimeTypes));
@@ -94,10 +88,8 @@ KOAlarmClient::KOAlarmClient(QObject *parent)
 
 KOAlarmClient::~KOAlarmClient()
 {
-#if !defined(KORGAC_AKONADI_AGENT)
     delete mDocker;
     delete mDialog;
-#endif
 }
 
 void checkAllItems(KCheckableProxyModel *model, const QModelIndex &parent = QModelIndex())
@@ -228,7 +220,7 @@ void KOAlarmClient::createReminder(const Akonadi::ETMCalendar::Ptr &calendar,
         return;
     }
 
-#if !defined(Q_OS_MAEMO_5) && !defined(KORGAC_AKONADI_AGENT)
+#if !defined(Q_OS_MAEMO_5)
     if (!mDialog) {
         mDialog = new AlarmDialog(calendar);
         connect(this, &KOAlarmClient::saveAllSignal, mDialog, &AlarmDialog::slotSave);
@@ -241,20 +233,6 @@ void KOAlarmClient::createReminder(const Akonadi::ETMCalendar::Ptr &calendar,
 
     mDialog->addIncidence(aitem, remindAtDate, displayText);
     mDialog->wakeUp();
-#else
-    const Incidence::Ptr incidence = CalendarSupport::incidence(aitem);
-    Q_UNUSED(calendar);
-    Q_UNUSED(remindAtDate);
-    Q_UNUSED(displayText);
-
-#if defined(Q_OS_MAEMO_5)
-    QMaemo5InformationBox::information(0, incidence->summary(), QMaemo5InformationBox::NoTimeout);
-#else
-    KNotification *notify = new KNotification(QLatin1String("reminder"), 0, KNotification::Persistent);
-    notify->setText(incidence->summary());
-    notify->sendEvent();
-#endif
-
 #endif
     saveLastCheckTime();
 }
@@ -276,9 +254,7 @@ void KOAlarmClient::saveLastCheckTime()
 void KOAlarmClient::quit()
 {
     qDebug();
-#if !defined(KORGAC_AKONADI_AGENT)
     kapp->quit();
-#endif
 }
 
 void KOAlarmClient::slotCommitData(QSessionManager &)
@@ -328,15 +304,12 @@ QStringList KOAlarmClient::dumpAlarms()
 
 void KOAlarmClient::hide()
 {
-#if !defined(KORGAC_AKONADI_AGENT)
     delete mDocker;
     mDocker = 0;
-#endif
 }
 
 void KOAlarmClient::show()
 {
-#if !defined(KORGAC_AKONADI_AGENT)
     if (!mDocker) {
         if (dockerEnabled()) {
             mDocker = new AlarmDockWindow;
@@ -350,6 +323,5 @@ void KOAlarmClient::show()
             connect(mDocker, &AlarmDockWindow::dismissAllSignal, mDialog, &AlarmDialog::dismissAll);
         }
     }
-#endif
 }
 
