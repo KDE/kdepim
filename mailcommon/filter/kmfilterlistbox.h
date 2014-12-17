@@ -20,7 +20,6 @@
 
 #include "mailcommon_export.h"
 #include "search/searchpattern.h"
-#include <KDialog>
 #include <QGroupBox>
 #include <QListWidgetItem>
 class QListWidget;

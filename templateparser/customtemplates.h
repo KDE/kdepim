@@ -133,10 +133,10 @@ public:
     explicit CustomTemplateItemDelegate(QObject *parent = Q_NULLPTR);
     ~CustomTemplateItemDelegate();
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
-                          const QModelIndex &index) const;
+                          const QModelIndex &index) const Q_DECL_OVERRIDE;
 
     void setModelData(QWidget *editor, QAbstractItemModel *model,
-                      const QModelIndex &index) const;
+                      const QModelIndex &index) const Q_DECL_OVERRIDE;
 
 };
 

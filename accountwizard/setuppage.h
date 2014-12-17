@@ -30,7 +30,7 @@ class SetupPage : public Page
     Q_OBJECT
 public:
     explicit SetupPage(KAssistantDialog *parent);
-    virtual void enterPageNext() Q_DECL_OVERRIDE;
+    void enterPageNext() Q_DECL_OVERRIDE;
 
     enum MessageType {
         Success,

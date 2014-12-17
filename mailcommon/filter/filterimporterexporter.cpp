@@ -48,7 +48,7 @@
 #include <KListWidgetSearchLine>
 #include <KMessageBox>
 #include <QPushButton>
-#include <KFileDialog>
+#include <QFileDialog>
 
 #include <QRegExp>
 #include <QFileDialog>
@@ -332,7 +332,7 @@ void FilterImporterExporter::exportFilters(const QList<MailFilter *> &filters, c
 {
     QUrl saveUrl;
     if (fileName.isEmpty()) {
-        saveUrl = KFileDialog::getSaveUrl(QDir::homePath(), QString(), d->mParent, i18n("Export Filters"));
+        saveUrl = QFileDialog::getSaveFileUrl(d->mParent, i18n("Export Filters"), QDir::homePath());
 
         if (saveUrl.isEmpty() ||
                 !MessageViewer::Util::checkOverwrite(saveUrl, d->mParent)) {

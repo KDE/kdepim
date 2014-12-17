@@ -34,7 +34,7 @@ Q_SIGNALS:
     void valueChanged();
 
 protected:
-    void focusOutEvent(QFocusEvent *ev);
+    void focusOutEvent(QFocusEvent *ev) Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void slotTextChanged();

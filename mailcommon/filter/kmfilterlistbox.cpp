@@ -22,7 +22,7 @@
 #include <KInputDialog>
 #include <KLocalizedString>
 #include <klistwidgetsearchline.h>
-#include <kpushbutton.h>
+#include <qpushbutton.h>
 #include <qboxlayout.h>
 #include <qlistwidget.h>
 #include <qshortcut.h>

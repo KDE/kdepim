@@ -36,7 +36,7 @@ public:
     explicit LoadPage(KAssistantDialog *parent);
 
     void enterPageNext() Q_DECL_OVERRIDE;
-    virtual void enterPageBack() Q_DECL_OVERRIDE;
+    void enterPageBack() Q_DECL_OVERRIDE;
 
     void exportObject(QObject *object, const QString &name);
 

@@ -60,8 +60,8 @@ template <typename T>
 class KDeclarativeApplication : public KDeclarativeApplicationBase
 {
   public:
-    KDeclarativeApplication() : KDeclarativeApplicationBase(), m_mainView( 0 ) {}
-    explicit KDeclarativeApplication( const KCmdLineOptions &applicationOptions ) : KDeclarativeApplicationBase( applicationOptions ), m_mainView( 0 ) {}
+    KDeclarativeApplication() : KDeclarativeApplicationBase(), m_mainView( Q_NULLPTR ) {}
+    explicit KDeclarativeApplication( const KCmdLineOptions &applicationOptions ) : KDeclarativeApplicationBase( applicationOptions ), m_mainView( Q_NULLPTR ) {}
     virtual ~KDeclarativeApplication()
     {
       delete m_mainView;
