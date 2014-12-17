@@ -97,7 +97,7 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void update();
-    void popupItemMenu(const QPoint &point);
+    void updateButtons();
 
 protected:
     void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
@@ -123,7 +123,6 @@ private:
     void dismiss(QList<ReminderTreeItem *> selections);
     int activeCount();
     QList<ReminderTreeItem *> selectedItems() const;
-    void updateButtons();
     void toggleDetails(QTreeWidgetItem *item);
     void showDetails(QTreeWidgetItem *item);
 
