@@ -318,9 +318,6 @@ void AlarmDialog::addIncidence( const Akonadi::Item &incidenceitem,
   item->mDisplayText = displayText;
   item->setText( 0, cleanSummary( incidence->summary() ) );
 
-  Event::Ptr event;
-  Todo::Ptr todo;
-
   QString displayStr;
   const KDateTime dateTime = triggerDateForIncidence( incidence, reminderAt,
                                                       displayStr );
