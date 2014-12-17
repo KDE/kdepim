@@ -111,12 +111,12 @@ bool ReminderTreeItem::operator<( const QTreeWidgetItem &other ) const
   case 1: // happening datetime
   {
     const ReminderTreeItem *item = static_cast<const ReminderTreeItem *>( &other );
-    return item->mHappening.secsTo( mHappening );
+    return item->mHappening < mHappening;
   }
   case 2: // trigger datetime
   {
     const ReminderTreeItem *item = static_cast<const ReminderTreeItem *>( &other );
-    return item->mTrigger.secsTo( mTrigger );
+    return item->mTrigger < mTrigger;
   }
   default:
     return QTreeWidgetItem::operator < ( other );
