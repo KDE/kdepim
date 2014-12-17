@@ -222,7 +222,6 @@ AlarmDialog::AlarmDialog( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *pa
            SLOT(update()) );
   connect( mIncidenceTree, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
            SLOT(edit()) );
-  connect( mIncidenceTree, SIGNAL(customContextMenuRequested(QPoint)), SLOT(popupItemMenu(QPoint)) );
 
   mDetailView = new CalendarSupport::IncidenceViewer( mCalendar.data(), topBox );
   QString s;
@@ -835,20 +834,6 @@ void AlarmDialog::update()
     QTreeWidgetItem *item = mIncidenceTree->selectedItems().first();
     toggleDetails( item );
   }
-}
-
-void AlarmDialog::popupItemMenu( const QPoint &point )
-{
-  QTreeWidgetItem *item = mIncidenceTree->itemAt( point );
-  if ( !item ) {
-    return;
-  }
-
-  ReminderTreeItem *reminderItem = dynamic_cast<ReminderTreeItem *>( item );
-  if ( reminderItem ) {
-    Incidence::Ptr incidence = CalendarSupport::incidence( reminderItem->mIncidence );
-  }
-
 }
 
 void AlarmDialog::accept()

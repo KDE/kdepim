@@ -94,7 +94,6 @@ class AlarmDialog : public KDialog
 
   private Q_SLOTS:
     void update();
-    void popupItemMenu( const QPoint &point );
 
   protected:
     void keyPressEvent( QKeyEvent *e );
