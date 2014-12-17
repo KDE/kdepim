@@ -36,10 +36,10 @@
 
 #include "objecttreeparser.h"
 
-#include "verifydetachedbodypartmemento.h"
-#include "verifyopaquebodypartmemento.h"
-#include "cryptobodypartmemento.h"
-#include "decryptverifybodypartmemento.h"
+#include "memento/verifydetachedbodypartmemento.h"
+#include "memento/verifyopaquebodypartmemento.h"
+#include "memento/cryptobodypartmemento.h"
+#include "memento/decryptverifybodypartmemento.h"
 #include "objecttreesourceif.h"
 #include "utils/autoqpointer.h"
 #include "viewer/viewer_p.h"
