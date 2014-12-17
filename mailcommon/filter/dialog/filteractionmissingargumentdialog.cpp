@@ -17,7 +17,7 @@
 */
 
 #include "filteractionmissingargumentdialog.h"
-#include "kmfilterdialog.h"
+#include "kmfilteraccountlist.h"
 #include "folderrequester.h"
 #include "kernel/mailkernel.h"
 #include "util/mailutil.h"
@@ -410,7 +410,7 @@ FilterActionMissingAccountDialog::FilterActionMissingAccountDialog(const QString
                         filtername));
     label->setWordWrap(true);
     lay->addWidget(label);
-    mAccountList = new MailCommon::AccountList(this);
+    mAccountList = new MailCommon::KMFilterAccountList(this);
     mAccountList->applyOnAccount(lstAccount);
     lay->addWidget(mAccountList);
     readConfig();

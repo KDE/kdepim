@@ -45,9 +45,9 @@ AlarmDockWindow::AlarmDockWindow()
 {
     // Read the autostart status from the config file
     KConfigGroup config(KSharedConfig::openConfig(), "General");
-    bool autostartSet = config.hasKey("Autostart");
-    bool autostart = config.readEntry("Autostart", true);
-    bool alarmsEnabled = config.readEntry("Enabled", true);
+    const bool autostartSet = config.hasKey("Autostart");
+    const bool autostart = config.readEntry("Autostart", true);
+    const bool alarmsEnabled = config.readEntry("Enabled", true);
 
     mName = i18nc("@title:window", "KOrganizer Reminder Daemon");
     setToolTipTitle(mName);

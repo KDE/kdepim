@@ -90,10 +90,10 @@ set(libmessageviewer_viewer_SRCS
   viewer/messagedisplayformatattribute.cpp
   viewer/urlhandlermanager.cpp
   viewer/mimeparttreeview.cpp
-  viewer/cryptobodypartmemento.cpp
-  viewer/decryptverifybodypartmemento.cpp
-  viewer/verifydetachedbodypartmemento.cpp
-  viewer/verifyopaquebodypartmemento.cpp
+  viewer/memento/cryptobodypartmemento.cpp
+  viewer/memento/decryptverifybodypartmemento.cpp
+  viewer/memento/verifydetachedbodypartmemento.cpp
+  viewer/memento/verifyopaquebodypartmemento.cpp
 )
 
 set(libmessageviewer_widgets_SRCS

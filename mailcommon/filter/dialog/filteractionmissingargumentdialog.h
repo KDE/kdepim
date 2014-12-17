@@ -37,7 +37,7 @@ class QPushButton;
 namespace MailCommon
 {
 class FolderRequester;
-class AccountList;
+class KMFilterAccountList;
 }
 
 namespace KIdentityManagement
@@ -146,7 +146,7 @@ public:
 private:
     void readConfig();
     void writeConfig();
-    MailCommon::AccountList *mAccountList;
+    MailCommon::KMFilterAccountList *mAccountList;
 };
 
 class FilterActionMissingTagDialog : public QDialog

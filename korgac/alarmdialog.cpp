@@ -117,11 +117,11 @@ bool ReminderTreeItem::operator<(const QTreeWidgetItem &other) const
     switch (treeWidget()->sortColumn()) {
     case 1: { // happening datetime
         const ReminderTreeItem *item = static_cast<const ReminderTreeItem *>(&other);
-        return item->mHappening.secsTo(mHappening);
+        return item->mHappening < mHappening;
     }
     case 2: { // trigger datetime
         const ReminderTreeItem *item = static_cast<const ReminderTreeItem *>(&other);
-        return item->mTrigger.secsTo(mTrigger);
+        return item->mTrigger < mTrigger;
     }
     default:
         return QTreeWidgetItem::operator < (other);
@@ -336,9 +336,6 @@ void AlarmDialog::addIncidence(const Akonadi::Item &incidenceitem,
     item->mTrigger = KDateTime::currentLocalDateTime();
     item->mDisplayText = displayText;
     item->setText(0, cleanSummary(incidence->summary()));
-
-    Event::Ptr event;
-    Todo::Ptr todo;
 
     QString displayStr;
     const KDateTime dateTime = triggerDateForIncidence(incidence, reminderAt,

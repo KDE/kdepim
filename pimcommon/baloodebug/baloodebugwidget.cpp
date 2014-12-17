@@ -16,7 +16,7 @@
 */
 
 #include "baloodebugwidget.h"
-#include "baloodebugsearchjob.h"
+#include "job/baloodebugsearchjob.h"
 #include "baloodebugsearchpathcombobox.h"
 #include "baloosyntaxhighlighter.h"
 #include <KLineEdit>

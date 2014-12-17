@@ -26,6 +26,8 @@ add_definitions(-DTRANSLATION_DOMAIN=\"libmailcommon\")
 
 
 set(libmailcommon_filter_SRCS
+  filter/kmfilteraccountlist.cpp
+  filter/kmfilterlistbox.cpp
   filter/filterselectiondialog.cpp
   filter/filterconverter/filterconverttosieve.cpp
   filter/filterconverter/filterconverttosieveresultdialog.cpp
