@@ -778,7 +778,7 @@ void AlarmDialog::updateButtons()
   enableButton( User3, enabled );  // enable Dismiss, if >1 selected
   if ( count == 1 ) {
       ReminderTreeItem  *item = selection.first();
-      enableButton( User1, (mCalendar->hasRight( item->mIncidence, Akonadi::Collection::CanChangeItem )) && (selection.count() == 1) );
+      enableButton( User1, (mCalendar->hasRight( item->mIncidence, Akonadi::Collection::CanChangeItem )));
   } else {
       enableButton( User1, false);
   }
