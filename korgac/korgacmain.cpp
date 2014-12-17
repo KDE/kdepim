@@ -74,10 +74,10 @@ int main(int argc, char **argv)
     migrate.migrate();
 
     KAboutData aboutData(QLatin1String("korgac"), i18n("KOrganizer Reminder Daemon"),
-                          QLatin1String(korgacVersion), i18n("KOrganizer Reminder Daemon"),
-                          KAboutLicense::GPL,
-                          i18n("(c) 2003 Cornelius Schumacher"),
-                          QString(), QLatin1String("http://pim.kde.org"));
+                         QLatin1String(korgacVersion), i18n("KOrganizer Reminder Daemon"),
+                         KAboutLicense::GPL,
+                         i18n("(c) 2003 Cornelius Schumacher"),
+                         QString(), QLatin1String("http://pim.kde.org"));
     aboutData.addAuthor(i18n("Cornelius Schumacher"), i18n("Former Maintainer"),
                         QLatin1String("schumacher@kde.org"));
     aboutData.addAuthor(i18n("Reinhold Kainhofer"), i18n("Former Maintainer"),

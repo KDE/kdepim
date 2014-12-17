@@ -382,9 +382,9 @@ void AlarmDialog::slotOk()
 void AlarmDialog::slotUser1()
 {
     const ReminderList selection = selectedItems();
-    if ( !selection.isEmpty() ) {
+    if (!selection.isEmpty()) {
         ReminderTreeItem  *item = selection.first();
-        if(mCalendar->hasRight( item->mIncidence, Akonadi::Collection::CanChangeItem )){
+        if (mCalendar->hasRight(item->mIncidence, Akonadi::Collection::CanChangeItem)) {
             edit();
         }
     }
@@ -743,7 +743,7 @@ void AlarmDialog::slotSave()
                                      QStringLiteral("Incidence-%1").arg(numReminders + 1));
 
         Incidence::Ptr incidence = CalendarSupport::incidence(item->mIncidence);
-        incidenceConfig.writeEntry( "AkonadiUrl", item->mIncidence.url() );
+        incidenceConfig.writeEntry("AkonadiUrl", item->mIncidence.url());
         incidenceConfig.writeEntry("RemindAt", item->mRemindAt);
         ++numReminders;
         ++it;
@@ -790,18 +790,18 @@ void AlarmDialog::closeEvent(QCloseEvent *)
 
 void AlarmDialog::updateButtons()
 {
-  const ReminderList selection = selectedItems();
-  const int count = selection.count();
-  const bool enabled = (count > 0);
-  qDebug() << "selected items=" << count;
-  mUser3Button->setEnabled(enabled);
-  mOkButton->setEnabled(enabled);
-  if ( count == 1 ) {
-      ReminderTreeItem  *item = selection.first();
-      mUser1Button->setEnabled(mCalendar->hasRight( item->mIncidence, Akonadi::Collection::CanChangeItem ));
-  } else {
-      mUser1Button->setEnabled(false);
-  }
+    const ReminderList selection = selectedItems();
+    const int count = selection.count();
+    const bool enabled = (count > 0);
+    qDebug() << "selected items=" << count;
+    mUser3Button->setEnabled(enabled);
+    mOkButton->setEnabled(enabled);
+    if (count == 1) {
+        ReminderTreeItem  *item = selection.first();
+        mUser1Button->setEnabled(mCalendar->hasRight(item->mIncidence, Akonadi::Collection::CanChangeItem));
+    } else {
+        mUser1Button->setEnabled(false);
+    }
 }
 
 void AlarmDialog::toggleDetails(QTreeWidgetItem *item)
@@ -849,14 +849,14 @@ void AlarmDialog::showDetails(QTreeWidgetItem *item)
 
 void AlarmDialog::update()
 {
-  updateButtons();
+    updateButtons();
 
-  const ReminderList selection = selectedItems();
-  if ( !selection.isEmpty() ) {
-      ReminderTreeItem  *item = selection.first();
-      mUser1Button->setEnabled((mCalendar->hasRight( item->mIncidence, Akonadi::Collection::CanChangeItem )) && (selection.count() == 1) );
-      toggleDetails( item );
-  }
+    const ReminderList selection = selectedItems();
+    if (!selection.isEmpty()) {
+        ReminderTreeItem  *item = selection.first();
+        mUser1Button->setEnabled((mCalendar->hasRight(item->mIncidence, Akonadi::Collection::CanChangeItem)) && (selection.count() == 1));
+        toggleDetails(item);
+    }
 }
 
 void AlarmDialog::accept()
@@ -1038,7 +1038,7 @@ void AlarmDialog::removeFromConfig(const QList<Akonadi::Item::Id> &ids)
         KConfigGroup incGroup(config, group);
         incGroup.writeEntry("UID", newReminders[i].uid);
         incGroup.writeEntry("RemindAt", newReminders[i].remindAt);
-        incGroup.writeEntry( "AkonadiUrl", newReminders[i].akonadiUrl );
+        incGroup.writeEntry("AkonadiUrl", newReminders[i].akonadiUrl);
         incGroup.sync();
     }
     genGroup.sync();

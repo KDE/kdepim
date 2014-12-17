@@ -338,9 +338,10 @@ void ViewerPrivate::openAttachment(KMime::Content *node, const QString &name)
         return;
     }
 
-    if(node->contentType(false)) {
-        if (node->contentType()->mimeType() == "text/x-moz-deleted")
+    if (node->contentType(false)) {
+        if (node->contentType()->mimeType() == "text/x-moz-deleted") {
             return;
+        }
     }
 
     const bool isEncapsulatedMessage = node->parent() && node->parent()->bodyIsMessage();
@@ -357,7 +358,7 @@ void ViewerPrivate::openAttachment(KMime::Content *node, const QString &name)
     // determine the MIME type of the attachment
     // prefer the value of the Content-Type header
     KMimeType::Ptr mimetype = KMimeType::mimeType(QString::fromLatin1(node->contentType()->mimeType().toLower()),
-                                   KMimeType::ResolveAliases);
+                              KMimeType::ResolveAliases);
     if (!mimetype.isNull() && mimetype->is(KContacts::Addressee::mimeType())) {
         showVCard(node);
         return;
@@ -1865,9 +1866,10 @@ void ViewerPrivate::showContextMenu(KMime::Content *content, const QPoint &pos)
         return;
     }
 
-    if(content->contentType(false)) {
-        if (content->contentType()->mimeType() == "text/x-moz-deleted")
+    if (content->contentType(false)) {
+        if (content->contentType()->mimeType() == "text/x-moz-deleted") {
             return;
+        }
     }
     const bool isAttachment = !content->contentType()->isMultipart() && !content->isTopLevel();
     const bool isRoot = (content == mMessage.get());
