@@ -24,6 +24,8 @@ include_directories(
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
 set(libmailcommon_filter_SRCS
+  filter/kmfilteraccountlist.cpp
+  filter/kmfilterlistbox.cpp
   filter/filterselectiondialog.cpp
   filter/filterconverter/filterconverttosieve.cpp
   filter/filterconverter/filterconverttosieveresultdialog.cpp

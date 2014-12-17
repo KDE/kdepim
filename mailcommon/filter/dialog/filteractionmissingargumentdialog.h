@@ -35,7 +35,7 @@ class QModelIndex;
 
 namespace MailCommon {
 class FolderRequester;
-class AccountList;
+class KMFilterAccountList;
 }
 
 namespace KPIMIdentities {
@@ -141,7 +141,7 @@ public:
 private:
     void readConfig();
     void writeConfig();
-    MailCommon::AccountList *mAccountList;
+    MailCommon::KMFilterAccountList *mAccountList;
 };
 
 class FilterActionMissingTagDialog : public KDialog
