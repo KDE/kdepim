@@ -19,8 +19,8 @@
 
 #include "filtermanager.h"
 
-#include "filteraction.h"
-#include "filteractiondict.h"
+#include "filteractions/filteraction.h"
+#include "filteractions/filteractiondict.h"
 #include "filterimporterexporter.h"
 #include "mailfilteragentinterface.h"
 #include <kconfiggroup.h>

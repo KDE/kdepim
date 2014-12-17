@@ -18,7 +18,7 @@
 #include "kmfilterlistbox.h"
 #include "mailfilter.h"
 #include "filtermanager.h"
-#include "filteractiondict.h"
+#include "filteractions/filteractiondict.h"
 #include <KInputDialog>
 #include <KLocalizedString>
 #include <khbox.h>

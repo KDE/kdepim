@@ -23,8 +23,8 @@
 #include "mailfilter.h"
 
 // other kmail headers
-#include "filteraction.h"
-#include "filteractiondict.h"
+#include "filteractions/filteraction.h"
+#include "filteractions/filteractiondict.h"
 #include "filtermanager.h"
 #include "filterlog.h"
 #include "dialog/filteractionmissingargumentdialog.h"

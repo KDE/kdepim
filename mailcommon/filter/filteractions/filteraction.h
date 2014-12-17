@@ -20,10 +20,10 @@
 #ifndef MAILCOMMON_FILTERACTION_H
 #define MAILCOMMON_FILTERACTION_H
 
-#include "../mailcommon_export.h"
-#include "../search/searchpattern.h"
+#include "mailcommon_export.h"
+#include "search/searchpattern.h"
 
-#include "itemcontext.h"
+#include "filter/itemcontext.h"
 
 #include <Akonadi/Collection>
 #include <Akonadi/Item>

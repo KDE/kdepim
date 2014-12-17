@@ -29,41 +29,41 @@ set(libmailcommon_filter_SRCS
   filter/filterselectiondialog.cpp
   filter/filterconverter/filterconverttosieve.cpp
   filter/filterconverter/filterconverttosieveresultdialog.cpp
-  filter/filteraction.cpp
-  filter/filteractionaddheader.cpp
-  filter/filteractionaddtag.cpp
-  filter/filteractionaddtoaddressbook.cpp
-  filter/filteractionbeep.cpp
-  filter/filteractioncopy.cpp
-  filter/filteractiondelete.cpp
-  filter/filteractiondict.cpp
-  filter/filteractionexec.cpp
-  filter/filteractionforward.cpp
+  filter/filteractions/filteraction.cpp
+  filter/filteractions/filteractionaddheader.cpp
+  filter/filteractions/filteractionaddtag.cpp
+  filter/filteractions/filteractionaddtoaddressbook.cpp
+  filter/filteractions/filteractionbeep.cpp
+  filter/filteractions/filteractioncopy.cpp
+  filter/filteractions/filteractiondelete.cpp
+  filter/filteractions/filteractiondict.cpp
+  filter/filteractions/filteractionexec.cpp
+  filter/filteractions/filteractionforward.cpp
   filter/dialog/filteractionmissingargumentdialog.cpp
-  filter/filteractionmove.cpp
-  filter/filteractionpipethrough.cpp
-  filter/filteractionplaysound.cpp
-  filter/filteractionredirect.cpp
-  filter/filteractionremoveheader.cpp
-  filter/filteractionreplyto.cpp
-  filter/filteractionrewriteheader.cpp
-  filter/filteractionsendfakedisposition.cpp
-  filter/filteractionsendreceipt.cpp
-  filter/filteractionsetidentity.cpp
-  filter/filteractionsetstatus.cpp
-  filter/filteractionstatus.cpp
-  filter/filteractionunsetstatus.cpp
-  filter/filteractionsettransport.cpp
-  filter/filteractionwidget.cpp
-  filter/filteractionwithaddress.cpp
-  filter/filteractionwithcommand.cpp
-  filter/filteractionwithfolder.cpp
-  filter/filteractionwithnone.cpp
-  filter/filteractionwithstring.cpp
-  filter/filteractionwithstringlist.cpp
-  filter/filteractionwithtest.cpp
-  filter/filteractionwithuoid.cpp
-  filter/filteractionwithurl.cpp
+  filter/filteractions/filteractionmove.cpp
+  filter/filteractions/filteractionpipethrough.cpp
+  filter/filteractions/filteractionplaysound.cpp
+  filter/filteractions/filteractionredirect.cpp
+  filter/filteractions/filteractionremoveheader.cpp
+  filter/filteractions/filteractionreplyto.cpp
+  filter/filteractions/filteractionrewriteheader.cpp
+  filter/filteractions/filteractionsendfakedisposition.cpp
+  filter/filteractions/filteractionsendreceipt.cpp
+  filter/filteractions/filteractionsetidentity.cpp
+  filter/filteractions/filteractionsetstatus.cpp
+  filter/filteractions/filteractionstatus.cpp
+  filter/filteractions/filteractionunsetstatus.cpp
+  filter/filteractions/filteractionsettransport.cpp
+  filter/filteractions/filteractionwidget.cpp
+  filter/filteractions/filteractionwithaddress.cpp
+  filter/filteractions/filteractionwithcommand.cpp
+  filter/filteractions/filteractionwithfolder.cpp
+  filter/filteractions/filteractionwithnone.cpp
+  filter/filteractions/filteractionwithstring.cpp
+  filter/filteractions/filteractionwithstringlist.cpp
+  filter/filteractions/filteractionwithtest.cpp
+  filter/filteractions/filteractionwithuoid.cpp
+  filter/filteractions/filteractionwithurl.cpp
   filter/filtercontroller.cpp
   filter/filtereditdialog.cpp
   filter/filterimporterexporter.cpp

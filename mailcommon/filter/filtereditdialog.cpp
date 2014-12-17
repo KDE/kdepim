@@ -19,7 +19,7 @@
 
 #include "filtereditdialog_p.h"
 
-#include "filteractionwidget.h"
+#include "filteractions/filteractionwidget.h"
 #include "filtermanager.h"
 #include "mailfilter.h"
 #include "search/searchpatternedit.h"

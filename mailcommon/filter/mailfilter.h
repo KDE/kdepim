@@ -22,7 +22,7 @@
 
 #include "../mailcommon_export.h"
 
-#include "filteraction.h"
+#include "filteractions/filteraction.h"
 #include "../search/searchpattern.h"
 
 #include <kshortcut.h>
