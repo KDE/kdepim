@@ -43,7 +43,7 @@ void TemplatesSyntaxHighlighter::init()
 
     Q_FOREACH ( const QString & s, keywords ) {
         const QRegExp regex( s, Qt::CaseInsensitive );
-        m_rules.append( Rule( regex, keywordFormat ) );
+        m_rules.append( PimCommon::Rule( regex, keywordFormat ) );
     }
 
     QTextCharFormat keywordWithArgsFormat;
@@ -53,7 +53,7 @@ void TemplatesSyntaxHighlighter::init()
 
     Q_FOREACH ( const QString & s, keywordsWithArgs ) {
         const QRegExp regex( s, Qt::CaseInsensitive );
-        m_rules.append( Rule( regex, keywordWithArgsFormat ) );
+        m_rules.append( PimCommon::Rule( regex, keywordWithArgsFormat ) );
     }
 }
 
