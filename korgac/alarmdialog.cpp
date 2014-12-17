@@ -79,21 +79,7 @@ class ReminderTree : public QTreeWidget
     {
     }
 
-    /*reimp*/
-    void mouseReleaseEvent( QMouseEvent *event );
 };
-
-void ReminderTree::mouseReleaseEvent( QMouseEvent *event )
-{
-  QTreeWidgetItem *item = itemAt( event->pos() );
-  if ( item ) {
-    if ( event->button() == Qt::LeftButton ) {
-      emit itemActivated( item, 0 );
-    } else if ( event->button() == Qt::RightButton ) {
-      emit customContextMenuRequested( event->pos() );
-    }
-  }
-}
 
 class ReminderTreeItem : public QTreeWidgetItem
 {
@@ -221,7 +207,7 @@ AlarmDialog::AlarmDialog( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *pa
   connect( mIncidenceTree, SIGNAL(itemActivated(QTreeWidgetItem*,int)),
            SLOT(update()) );
   connect( mIncidenceTree, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
-           SLOT(edit()) );
+           SLOT(slotUser1()) );
 
   mDetailView = new CalendarSupport::IncidenceViewer( mCalendar.data(), topBox );
   QString s;
@@ -374,7 +360,13 @@ void AlarmDialog::slotOk()
 
 void AlarmDialog::slotUser1()
 {
-  edit();
+    const ReminderList selection = selectedItems();
+    if ( !selection.isEmpty() ) {
+        ReminderTreeItem  *item = selection.first();
+        if(mCalendar->hasRight( item->mIncidence, Akonadi::Collection::CanChangeItem )){
+            edit();
+        }
+    }
 }
 
 void AlarmDialog::slotUser2()
@@ -778,10 +770,10 @@ void AlarmDialog::closeEvent( QCloseEvent * )
 void AlarmDialog::updateButtons()
 {
   const int count = selectedItems().count();
+  const bool enabled = (count > 0);
   kDebug() << "selected items=" << count;
-  enableButton( User3, count > 0 );  // enable Dismiss, if >1 selected
-  enableButton( User1, count == 1 ); // enable Edit, if only 1 selected
-  enableButton( Ok, count > 0 );     // enable Suspend, if >1 selected
+  enableButton( User3, enabled );  // enable Dismiss, if >1 selected
+  enableButton( Ok, enabled );     // enable Suspend, if >1 selected
 }
 
 void AlarmDialog::toggleDetails( QTreeWidgetItem *item )
@@ -830,9 +822,12 @@ void AlarmDialog::showDetails( QTreeWidgetItem *item )
 void AlarmDialog::update()
 {
   updateButtons();
-  if ( !mIncidenceTree->selectedItems().isEmpty() ) {
-    QTreeWidgetItem *item = mIncidenceTree->selectedItems().first();
-    toggleDetails( item );
+
+  const ReminderList selection = selectedItems();
+  if ( !selection.isEmpty() ) {
+      ReminderTreeItem  *item = selection.first();
+      enableButton( User1, (mCalendar->hasRight( item->mIncidence, Akonadi::Collection::CanChangeItem )) && (selection.count() == 1) );
+      toggleDetails( item );
   }
 }
 
