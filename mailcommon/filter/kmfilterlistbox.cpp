@@ -808,11 +808,11 @@ void KMFilterListBox::loadFilterList( bool createDummyFilter )
     // disabled dialog (usability tests indicated that the new-filter
     // button is too hard to find that way):
     const int numberOfItem( mListWidget->count() );
-    if ( !numberOfItem && createDummyFilter ) {
-        slotNew();
-    }
-
-    if ( numberOfItem > 0 ) {
+    if ( numberOfItem == 0 ) {
+        if (createDummyFilter ) {
+            slotNew();
+        }
+    } else {
         mListWidget->setCurrentRow( 0 );
     }
 
