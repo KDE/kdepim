@@ -204,10 +204,12 @@ AlarmDialog::AlarmDialog( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *pa
 
   mTopLayout->addWidget( mIncidenceTree );
 
-  connect( mIncidenceTree, SIGNAL(itemActivated(QTreeWidgetItem*,int)),
+  connect( mIncidenceTree, SIGNAL(itemClicked(QTreeWidgetItem*,int)),
            SLOT(update()) );
   connect( mIncidenceTree, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
            SLOT(slotUser1()) );
+  connect( mIncidenceTree, SIGNAL(itemSelectionChanged()),
+           SLOT(updateButtons()) );
 
   mDetailView = new CalendarSupport::IncidenceViewer( mCalendar.data(), topBox );
   QString s;
@@ -769,10 +771,17 @@ void AlarmDialog::closeEvent( QCloseEvent * )
 
 void AlarmDialog::updateButtons()
 {
-  const int count = selectedItems().count();
+  const ReminderList selection = selectedItems();
+  const int count = selection.count();
   const bool enabled = (count > 0);
   kDebug() << "selected items=" << count;
   enableButton( User3, enabled );  // enable Dismiss, if >1 selected
+  if ( count == 1 ) {
+      ReminderTreeItem  *item = selection.first();
+      enableButton( User1, (mCalendar->hasRight( item->mIncidence, Akonadi::Collection::CanChangeItem )) && (selection.count() == 1) );
+  } else {
+      enableButton( User1, false);
+  }
   enableButton( Ok, enabled );     // enable Suspend, if >1 selected
 }
 

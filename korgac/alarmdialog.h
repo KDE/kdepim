@@ -94,6 +94,7 @@ class AlarmDialog : public KDialog
 
   private Q_SLOTS:
     void update();
+    void updateButtons();
 
   protected:
     void keyPressEvent( QKeyEvent *e );
@@ -119,7 +120,6 @@ class AlarmDialog : public KDialog
     void dismiss( QList<ReminderTreeItem *> selections );
     int activeCount();
     QList<ReminderTreeItem *> selectedItems() const;
-    void updateButtons();
     void toggleDetails( QTreeWidgetItem *item );
     void showDetails( QTreeWidgetItem *item );
 
