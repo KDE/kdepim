@@ -20,7 +20,7 @@
 
 #include "mobilekernel.h"
 #include <pimcommon/autocorrection/autocorrection.h>
-#include <mailcommon/filter/filteraction.h>
+#include <mailcommon/filter/filteractions/filteraction.h>
 #include <mailcommon/kernel/mailkernel.h>
 #include <mailcommon/job/jobscheduler.h>
 #include <kpimidentities/identitymanager.h>
