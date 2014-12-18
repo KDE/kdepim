@@ -117,7 +117,7 @@ public:
     QString cc() const;
     QString bcc() const;
 protected:
-    virtual void accept();
+    void accept() Q_DECL_OVERRIDE;
 
 private:
     //@cond PRIVATE

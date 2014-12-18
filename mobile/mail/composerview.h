@@ -120,8 +120,8 @@ class ComposerView : public KDeclarativeFullScreenView
     void saveAsTemplate();
 
  protected:
-    void doDelayedInit();
-    void closeEvent ( QCloseEvent * event );
+    void doDelayedInit() Q_DECL_OVERRIDE;
+    void closeEvent ( QCloseEvent * event ) Q_DECL_OVERRIDE;
 
   private:
     MessageComposer::ComposerViewBase* m_composerBase;

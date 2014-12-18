@@ -53,7 +53,7 @@ class INCIDENCEEDITORS_NG_EXPORT AttachmentEditDialog : public QDialog
 public:
     AttachmentEditDialog(AttachmentIconItem *item, QWidget *parent, bool modal = true);
     virtual ~AttachmentEditDialog();
-    void accept();
+    void accept() Q_DECL_OVERRIDE;
 
 protected Q_SLOTS:
     void inlineChanged(int state);

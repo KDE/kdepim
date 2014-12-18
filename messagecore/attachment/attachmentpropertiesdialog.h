@@ -95,7 +95,7 @@ public:
 
 public Q_SLOTS:
     /* reimpl */
-    virtual void accept();
+    void accept() Q_DECL_OVERRIDE;
     void slotHelp();
 
 private:

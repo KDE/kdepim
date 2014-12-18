@@ -71,7 +71,7 @@ Q_SIGNALS:
     void detailsRequested(const GpgME::Key &certs);
 
 public Q_SLOTS:
-    /* reimp */ void accept();
+    /* reimp */ void accept() Q_DECL_OVERRIDE;
 
 private:
     class Private;

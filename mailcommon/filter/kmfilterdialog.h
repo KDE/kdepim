@@ -146,7 +146,7 @@ public Q_SLOTS:
     void slotFilterSelected(MailCommon::MailFilter *aFilter);
 
     /** Override QDialog::accept to allow disabling close */
-    virtual void accept();
+    void accept() Q_DECL_OVERRIDE;
 
 protected Q_SLOTS:
     void slotApplicabilityChanged();

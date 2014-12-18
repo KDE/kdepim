@@ -129,7 +129,7 @@ protected:
      * since it does the printing. It could display a progress
      * window, for example (hint, hint).
      */
-    void accept();
+    void accept() Q_DECL_OVERRIDE;
 
 private:
     void writeConfig();

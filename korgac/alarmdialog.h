@@ -84,7 +84,7 @@ public Q_SLOTS:
     void dismissAll();
     void dismissCurrent();
     /*reimp*/
-    void accept();
+    void accept() Q_DECL_OVERRIDE;
 
     /**
        If an incidence changed, for example in korg, we must update
