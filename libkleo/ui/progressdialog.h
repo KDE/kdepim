@@ -52,7 +52,7 @@ class KLEO_EXPORT ProgressDialog : public QProgressDialog
     Q_OBJECT
 public:
     ProgressDialog(Job *job, const QString &baseText,
-                   QWidget *creator = 0, Qt::WindowFlags f = 0);
+                   QWidget *widget = Q_NULLPTR, Qt::WindowFlags f = 0);
     ~ProgressDialog();
 
 public Q_SLOTS:

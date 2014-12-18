@@ -74,7 +74,7 @@ public:
     /**
      * Constructor.
      */
-    explicit KMFilterListBox(const QString &title, QWidget *parent = 0);
+    explicit KMFilterListBox(const QString &title, QWidget *widget = Q_NULLPTR);
 
     /**
      * Destructor.

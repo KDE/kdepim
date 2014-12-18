@@ -119,7 +119,7 @@ protected:
      * from derived classes (@p mLayout is private).
      * Make sure the parent of the QWidget to add is this KWidgetLister.
      */
-    virtual void addWidgetAtEnd(QWidget *widget = 0);
+    virtual void addWidgetAtEnd(QWidget *widget = Q_NULLPTR);
 
     /**
      * Removes a single (always the last) widget. Doesn't care if there
@@ -173,7 +173,7 @@ protected:
     /**
      * Add widget after specific widget
      */
-    virtual void addWidgetAfterThisWidget(QWidget *currentWidget, QWidget *widget = 0);
+    virtual void addWidgetAfterThisWidget(QWidget *currentWidget, QWidget *widget = Q_NULLPTR);
 
 private:
     void init(bool fewerMoreButton = true);

@@ -61,7 +61,7 @@ class LIBKPGP_EXPORT PassphraseDialog : public KPasswordDialog
   Q_OBJECT
 
   public:
-    explicit PassphraseDialog( QWidget *parent=0,
+    explicit PassphraseDialog( QWidget *widget = Q_NULLPTR,
                                const QString &caption=QString(),
                                const QString &keyID=QString());
     virtual ~PassphraseDialog();
@@ -120,7 +120,7 @@ class LIBKPGP_EXPORT KeySelectionDialog: public QDialog
                         const bool rememberChoice = false,
                         const unsigned int allowedKeys = AllKeys,
                         const bool extendedSelection = false,
-                        QWidget *parent=0 );
+                        QWidget *widget = Q_NULLPTR );
     virtual ~KeySelectionDialog();
 
     /** Returns the key ID of the selected key in single selection mode.
@@ -334,7 +334,7 @@ class LIBKPGP_EXPORT CipherTextDialog: public QDialog
   public:
     explicit CipherTextDialog( const QByteArray &text,
                                const QByteArray &charset=0,
-                               QWidget *parent=0 );
+                               QWidget *widget = Q_NULLPTR );
     virtual ~CipherTextDialog() {}
 
   private:

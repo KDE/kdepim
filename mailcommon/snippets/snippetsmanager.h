@@ -60,7 +60,7 @@ public:
      * @param parent The parent object.
      */
     explicit SnippetsManager(KActionCollection *actionCollection,
-                             QObject *parent = Q_NULLPTR, QWidget *widget = 0);
+                             QObject *parent = Q_NULLPTR, QWidget *widget = Q_NULLPTR);
 
     /**
      * Destroys the snippets manager.
