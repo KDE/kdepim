@@ -25,6 +25,9 @@ class ImapAclAttributeTest : public QObject
 public:
     explicit ImapAclAttributeTest(QObject *parent = 0);
     ~ImapAclAttributeTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
+    void shouldAssignValue();
 };
 
 #endif // IMAPACLATTRIBUTETEST_H

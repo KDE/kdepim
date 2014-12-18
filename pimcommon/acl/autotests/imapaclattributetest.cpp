@@ -16,6 +16,7 @@
 */
 
 #include "imapaclattributetest.h"
+#include "../imapaclattribute.h"
 #include <qtest_kde.h>
 ImapAclAttributeTest::ImapAclAttributeTest(QObject *parent)
     : QObject(parent)
@@ -24,6 +25,18 @@ ImapAclAttributeTest::ImapAclAttributeTest(QObject *parent)
 }
 
 ImapAclAttributeTest::~ImapAclAttributeTest()
+{
+
+}
+
+void ImapAclAttributeTest::shouldHaveDefaultValue()
+{
+    PimCommon::ImapAclAttribute attr;
+    QVERIFY(attr.oldRights().isEmpty());
+    QVERIFY(attr.rights().isEmpty());
+}
+
+void ImapAclAttributeTest::shouldAssignValue()
 {
 
 }
