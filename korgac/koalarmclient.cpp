@@ -95,7 +95,7 @@ KOAlarmClient::~KOAlarmClient()
 void checkAllItems(KCheckableProxyModel *model, const QModelIndex &parent = QModelIndex())
 {
     const int rowCount = model->rowCount(parent);
-    for (int row = 0; row < rowCount; row++) {
+    for (int row = 0; row < rowCount; ++row) {
         QModelIndex index = model->index(row, 0, parent);
         model->setData(index, Qt::Checked, Qt::CheckStateRole);
 
