@@ -28,7 +28,6 @@
 
 #include <KLocalizedString>
 
-
 using namespace MailCommon;
 
 FilterAction *FilterActionRedirect::newAction()

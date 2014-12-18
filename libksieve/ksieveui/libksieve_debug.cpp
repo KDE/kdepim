@@ -20,4 +20,3 @@
 #include "libksieve_debug.h"
 Q_LOGGING_CATEGORY(LIBKSIEVE_LOG, "log_libksieve")
 
-

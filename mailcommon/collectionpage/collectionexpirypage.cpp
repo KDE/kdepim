@@ -31,7 +31,6 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 
-
 #include <QCheckBox>
 #include <QGroupBox>
 #include <QPushButton>

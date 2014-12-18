@@ -22,7 +22,6 @@ using MailCommon::RegExpLineEdit;
 #include "mailcommon_debug.h"
 #include <pimcommon/widgets/minimumcombobox.h>
 
-
 #include <QIcon>
 #include <KLocalizedString>
 #include <KJob>

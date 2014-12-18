@@ -173,8 +173,8 @@ void ExpireJob::done()
         if (expirationAttribute->expireAction() == MailCommon::ExpireCollectionAttribute::ExpireDelete) {
             // Expire by deletion, i.e. move to null target folder
             qCDebug(MAILCOMMON_LOG) << "ExpireJob: finished expiring in folder"
-                     << mSrcFolder.name()
-                     << count << "messages to remove.";
+                                    << mSrcFolder.name()
+                                    << count << "messages to remove.";
             Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob(mRemovedMsgs, this);
             connect(job, &Akonadi::ItemDeleteJob::result, this, &ExpireJob::slotExpireDone);
             moving = true;
@@ -191,9 +191,9 @@ void ExpireJob::done()
                 qWarning() << str;
             } else {
                 qCDebug(MAILCOMMON_LOG) << "ExpireJob: finished expiring in folder"
-                         << mSrcFolder.name()
-                         << mRemovedMsgs.count() << "messages to move to"
-                         << mMoveToFolder.name();
+                                        << mSrcFolder.name()
+                                        << mRemovedMsgs.count() << "messages to move to"
+                                        << mMoveToFolder.name();
                 Akonadi::ItemMoveJob *job = new Akonadi::ItemMoveJob(mRemovedMsgs, mMoveToFolder, this);
                 connect(job, &Akonadi::ItemMoveJob::result, this, &ExpireJob::slotMoveDone);
                 moving = true;

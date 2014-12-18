@@ -30,8 +30,6 @@
 #include <TagFetchScope>
 #include <TagAttribute>
 
-
-
 #include <QTimer>
 
 namespace MailCommon

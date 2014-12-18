@@ -37,7 +37,6 @@
 #include <KZip>
 #include <kio/global.h> //krazy:exclude=camelcase as there is no such
 
-
 #include <QFileInfo>
 #include <QTimer>
 

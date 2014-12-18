@@ -20,4 +20,3 @@
 #include "mailcommon_debug.h"
 Q_LOGGING_CATEGORY(MAILCOMMON_LOG, "log_mailcommon")
 
-

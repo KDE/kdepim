@@ -23,7 +23,6 @@
 #include <KShell>
 #include <QTemporaryFile>
 
-
 using namespace MailCommon;
 
 FilterActionWithCommand::FilterActionWithCommand(const QString &name, const QString &label, QObject *parent)

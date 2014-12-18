@@ -32,7 +32,6 @@
 
 #include <KLocalizedString>
 
-
 using namespace MailCommon;
 
 FilterAction::FilterAction(const QString &name, const QString &label, QObject *parent)

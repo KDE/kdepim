@@ -153,7 +153,7 @@ bool ImportLibreOfficeAutocorrection::loadDomElement(QDomDocument &doc, QFile *f
     int errorCol;
     if (!doc.setContent(file, &errorMsg, &errorRow, &errorCol)) {
         qCDebug(PIMCOMMON_LOG) << "Unable to load document.Parse error in line " << errorRow
-                 << ", col " << errorCol << ": " << errorMsg;
+                               << ", col " << errorCol << ": " << errorMsg;
         return false;
     }
     return true;

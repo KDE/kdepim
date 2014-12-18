@@ -236,8 +236,8 @@ private:
                 found = false;
             }
         qCDebug(LIBKSIEVE_LOG) << (found ? "found:" : "not found:")
-                 << mState << "->"
-                 << (found ? expected.if_found : expected.if_not_found);
+                               << mState << "->"
+                               << (found ? expected.if_found : expected.if_not_found);
         mState = found ? expected.if_found : expected.if_not_found ;
         assert(mState < mNodes.size());
         if (found)

@@ -395,7 +395,7 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection *> &actionCollectio
 
 void KMFilterDialog::createFilter(const QByteArray &field, const QString &value)
 {
-    mFilterList->createFilter( field, value );
+    mFilterList->createFilter(field, value);
 }
 
 void KMFilterDialog::accept()
@@ -603,10 +603,10 @@ void KMFilterDialog::slotApplicabilityChanged()
         slotDialogUpdated();
 
         qCDebug(MAILCOMMON_LOG) << "Setting filter to be applied at"
-                 << (mFilter->applyOnInbound() ? "incoming " : "")
-                 << (mFilter->applyOnOutbound() ? "outgoing " : "")
-                 << (mFilter->applyBeforeOutbound() ? "before_outgoing " : "")
-                 << (mFilter->applyOnExplicit() ? "explicit CTRL-J" : "");
+                                << (mFilter->applyOnInbound() ? "incoming " : "")
+                                << (mFilter->applyOnOutbound() ? "outgoing " : "")
+                                << (mFilter->applyBeforeOutbound() ? "before_outgoing " : "")
+                                << (mFilter->applyOnExplicit() ? "explicit CTRL-J" : "");
     }
 }
 
@@ -685,7 +685,6 @@ void KMFilterDialog::slotUpdateAccountList()
 {
     mAccountList->updateAccountList(mFilter);
 }
-
 
 void KMFilterDialog::slotImportFilter(QAction *act)
 {

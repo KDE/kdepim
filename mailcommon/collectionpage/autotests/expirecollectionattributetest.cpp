@@ -80,7 +80,6 @@ void ExpireCollectionAttributeTest::shouldAssignValue()
     attr.setExpireAction(expireaction);
     attr.setExpireToFolderId(akonadiid);
 
-
     QCOMPARE(attr.isAutoExpire(), autoexpire);
     QCOMPARE(attr.unreadExpireAge(), unreadexpireage);
     QCOMPARE(attr.readExpireAge(), readexpireage);

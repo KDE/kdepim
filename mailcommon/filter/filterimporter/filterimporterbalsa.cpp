@@ -22,8 +22,6 @@
 #include <KConfig>
 #include <KConfigGroup>
 
-
-
 #include <QFile>
 #include <QDir>
 

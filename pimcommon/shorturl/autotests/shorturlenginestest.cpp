@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "shorturlenginestest.h"
 #include "pimcommon/shorturl/shorturlutils.h"
 #include "pimcommon/shorturl/abstractshorturl.h"
@@ -38,7 +37,7 @@ ShortUrlEnginesTest::~ShortUrlEnginesTest()
 
 void ShortUrlEnginesTest::shouldCreateEngine()
 {
-    for (int i=0; i <PimCommon::ShortUrlUtils::EndListEngine; ++i) {
+    for (int i = 0; i < PimCommon::ShortUrlUtils::EndListEngine; ++i) {
         PimCommon::AbstractShortUrl *abstrShortUrl = PimCommon::ShortUrlUtils::loadEngine(static_cast<PimCommon::ShortUrlUtils::EngineType>(i), 0);
         QVERIFY(abstrShortUrl);
         delete abstrShortUrl;
@@ -61,9 +60,9 @@ void ShortUrlEnginesTest::shouldTestEngines_data()
 
 void ShortUrlEnginesTest::shouldTestEngines()
 {
-    QFETCH( PimCommon::ShortUrlUtils::EngineType, engine );
-    QFETCH( QString, longurl );
-    QFETCH( QString, shorturl );
+    QFETCH(PimCommon::ShortUrlUtils::EngineType, engine);
+    QFETCH(QString, longurl);
+    QFETCH(QString, shorturl);
     PimCommon::AbstractShortUrl *abstrShortUrl = PimCommon::ShortUrlUtils::loadEngine(engine, 0);
     QSignalSpy spy(abstrShortUrl, SIGNAL(shortUrlDone(QString)));
     abstrShortUrl->shortUrl(longurl);

@@ -50,22 +50,22 @@ class QModelIndex;
  * @see MailCommon::MailFilter KMFilterDialog KMFilterActionEdit SearchPatternEdit
  */
 
-namespace MailCommon {
+namespace MailCommon
+{
 class MailFilter;
 
 class QListWidgetFilterItem : public QListWidgetItem
 {
 public:
-    explicit QListWidgetFilterItem( const QString &text, QListWidget *parent = 0 );
+    explicit QListWidgetFilterItem(const QString &text, QListWidget *parent = 0);
     ~QListWidgetFilterItem();
 
-    void setFilter( MailCommon::MailFilter *filter );
+    void setFilter(MailCommon::MailFilter *filter);
     MailCommon::MailFilter *filter();
 
 private:
     MailCommon::MailFilter *mFilter;
 };
-
 
 class MAILCOMMON_EXPORT KMFilterListBox : public QGroupBox
 {
@@ -74,7 +74,7 @@ public:
     /**
      * Constructor.
      */
-    explicit KMFilterListBox( const QString &title, QWidget *parent = 0 );
+    explicit KMFilterListBox(const QString &title, QWidget *parent = 0);
 
     /**
      * Destructor.
@@ -88,7 +88,7 @@ public:
      * instead call KMFilterMgr::createFilter.
      * @see KMFilterMgr::createFilter KMFilterDialog::createFilter
      */
-    void createFilter( const QByteArray &field, const QString &value );
+    void createFilter(const QByteArray &field, const QString &value);
 
     /**
      * Loads the filter list and selects the first filter. Should be
@@ -96,11 +96,11 @@ public:
      * is true, an empty filter is created to improve the usability of the
      * dialog in case no filter has been defined so far.
      */
-    void loadFilterList( bool createDummyFilter );
+    void loadFilterList(bool createDummyFilter);
 
-    void insertFilter( MailCommon::MailFilter *aFilter );
+    void insertFilter(MailCommon::MailFilter *aFilter);
 
-    void appendFilter( MailCommon::MailFilter *aFilter );
+    void appendFilter(MailCommon::MailFilter *aFilter);
 
     /**
      * Returns a list of _copies_ of the current list of filters.
@@ -108,16 +108,16 @@ public:
      * @param closeAfterSaving If true user is given option to continue editing
      * after being warned about invalid filters. Otherwise, user is just warned.
      */
-    QList<MailCommon::MailFilter *> filtersForSaving( bool closeAfterSaving ) const;
+    QList<MailCommon::MailFilter *> filtersForSaving(bool closeAfterSaving) const;
 
-    QStringList selectedFilterId( SearchRule::RequiredPart &requiredPart, const QString& resource ) const;
+    QStringList selectedFilterId(SearchRule::RequiredPart &requiredPart, const QString &resource) const;
 
 signals:
     /**
      * Emitted when a new filter has been selected by the user or if the
      * current filter has changed after a 'new' or 'delete' operation.
      */
-    void filterSelected( MailCommon::MailFilter *filter );
+    void filterSelected(MailCommon::MailFilter *filter);
 
     /**
      * Emitted when this widget wants the edit widgets to let go of
@@ -147,12 +147,12 @@ signals:
     /**
      * Emitted when a filter is deleted.
      */
-    void filterRemoved( const QList<MailCommon::MailFilter *> &filter );
+    void filterRemoved(const QList<MailCommon::MailFilter *> &filter);
 
     /**
      * Emitted when a filter is updated (e.g. renamed).
      */
-    void filterUpdated( MailCommon::MailFilter *filter );
+    void filterUpdated(MailCommon::MailFilter *filter);
 
     /**
      * Emitted whenever the order in which the filters are displayed is changed.
@@ -175,7 +175,7 @@ protected slots:
      * Called when the user clicks on a filter in the filter list.
      * Calculates the corresponding filter and emits the filterSelected signal.
      */
-    void slotSelected( int aIdx );
+    void slotSelected(int aIdx);
 
     /**
      * Called when the user clicks the 'New' button.
@@ -213,7 +213,7 @@ protected slots:
      */
     void slotRename();
 
-    void slotRowsMoved( const QModelIndex &, int, int, const QModelIndex &, int );
+    void slotRowsMoved(const QModelIndex &, int, int, const QModelIndex &, int);
 
     /**
      * Called when the user clicks the 'Top' button. Moves the current
@@ -227,7 +227,7 @@ protected slots:
      */
     void slotBottom();
 
-    void slotFilterEnabledChanged( QListWidgetItem *item );
+    void slotFilterEnabledChanged(QListWidgetItem *item);
 
     void slotSelectionChanged();
 
@@ -248,9 +248,9 @@ protected:
 private:
     void applyFilterChanged(bool closeAfterSaving);
     void enableControls();
-    bool itemIsValid( QListWidgetItem *item ) const;
-    QList<QListWidgetItem*> selectedFilter();
-    void swapNeighbouringFilters( int untouchedOne, int movedOne );
+    bool itemIsValid(QListWidgetItem *item) const;
+    QList<QListWidgetItem *> selectedFilter();
+    void swapNeighbouringFilters(int untouchedOne, int movedOne);
 };
 }
 #endif // KMFILTERLISTBOX_H

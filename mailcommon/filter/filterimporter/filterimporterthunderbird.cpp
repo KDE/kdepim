@@ -20,7 +20,6 @@
 #include "mailcommon_debug.h"
 #include <QUrl>
 
-
 #include <QFile>
 #include <QDir>
 

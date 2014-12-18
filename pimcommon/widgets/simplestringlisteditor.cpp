@@ -76,7 +76,7 @@ SimpleStringListEditor::SimpleStringListEditor(QWidget *parent,
 
     if (buttons == None) {
         qCDebug(PIMCOMMON_LOG) << "SimpleStringListBox called with no buttons."
-                 "Consider using a plain QListBox instead!";
+                               "Consider using a plain QListBox instead!";
     }
 
     mButtonLayout = new QVBoxLayout(); // inherits spacing
@@ -121,7 +121,7 @@ SimpleStringListEditor::SimpleStringListEditor(QWidget *parent,
     if (buttons & Up) {
         if (!(buttons & Down)) {
             qCDebug(PIMCOMMON_LOG) << "Are you sure you want to use an Up button"
-                     "without a Down button??";
+                                   "without a Down button??";
         }
         mUpButton = new QPushButton(QString(), this);
         mUpButton->setIcon(QIcon::fromTheme(QStringLiteral("go-up")));
@@ -135,7 +135,7 @@ SimpleStringListEditor::SimpleStringListEditor(QWidget *parent,
     if (buttons & Down) {
         if (!(buttons & Up)) {
             qCDebug(PIMCOMMON_LOG) << "Are you sure you want to use a Down button"
-                     "without an Up button??";
+                                   "without an Up button??";
         }
         mDownButton = new QPushButton(QString(), this);
         mDownButton->setIcon(QIcon::fromTheme(QStringLiteral("go-down")));
@@ -218,7 +218,7 @@ void SimpleStringListEditor::setButtonText(ButtonCode button, const QString &tex
     case Up:
     case Down:
         qCDebug(PIMCOMMON_LOG) << "SimpleStringListEditor: Cannot change text of"
-                 "Up and Down buttons: they don't contains text!";
+                               "Up and Down buttons: they don't contains text!";
         return;
     default:
         if (button & All) {

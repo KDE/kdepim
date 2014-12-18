@@ -18,17 +18,18 @@
 #ifndef KMFILTERACCOUNTLIST_H
 #define KMFILTERACCOUNTLIST_H
 #include <QTreeWidget>
-namespace MailCommon {
+namespace MailCommon
+{
 class MailFilter;
 class KMFilterAccountList : public QTreeWidget
 {
 public:
-    explicit KMFilterAccountList( QWidget *parent );
+    explicit KMFilterAccountList(QWidget *parent);
     ~KMFilterAccountList();
 
-    void updateAccountList( MailCommon::MailFilter *filter );
-    void applyOnAccount( MailCommon::MailFilter *filter );
-    void applyOnAccount( const QStringList &lst );
+    void updateAccountList(MailCommon::MailFilter *filter);
+    void applyOnAccount(MailCommon::MailFilter *filter);
+    void applyOnAccount(const QStringList &lst);
 
     QStringList selectedAccount();
 };

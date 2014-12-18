@@ -31,7 +31,6 @@
 #include "messageviewer/utils/util.h"
 #include "mailcommon_debug.h"
 
-
 #include <QFile>
 #include <QTime>
 #include <QTextDocument>
@@ -72,7 +71,7 @@ void FilterLog::Private::checkLogSize()
 {
     if (mCurrentLogSize > mMaxLogSize && mMaxLogSize > -1) {
         qCDebug(MAILCOMMON_LOG) << "Filter log: memory limit reached, starting to discard old items, size ="
-                 << QString::number(mCurrentLogSize);
+                                << QString::number(mCurrentLogSize);
 
         // avoid some kind of hysteresis, shrink the log to 90% of its maximum
         while (mCurrentLogSize > (mMaxLogSize * 0.9)) {

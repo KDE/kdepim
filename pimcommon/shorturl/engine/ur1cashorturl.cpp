@@ -69,8 +69,7 @@ void Ur1CaShortUrl::slotShortUrlFinished(QNetworkReply *reply)
     rx.indexIn(output);
     output = rx.cap(1);
     qDebug() << "Short url is: " << output;
-    if ( !output.isEmpty() )
-    {
+    if (!output.isEmpty()) {
         Q_EMIT shortUrlDone(output);
     }
 }

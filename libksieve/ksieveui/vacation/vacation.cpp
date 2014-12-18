@@ -87,9 +87,9 @@ void Vacation::slotGetResult(KManageSieve::SieveJob *job, bool success,
                              const QString &script, bool active)
 {
     qCDebug(LIBKSIEVE_LOG) << success
-             << ", ?," << active << ")" << endl
-             << "script:" << endl
-             << script;
+                           << ", ?," << active << ")" << endl
+                           << "script:" << endl
+                           << script;
     mSieveJob = 0; // job deletes itself after returning from this slot!
 
     if (!mCheckOnly && mUrl.scheme() == QLatin1String("sieve") &&

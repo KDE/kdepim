@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef UR1CASHORTURL_H
 #define UR1CASHORTURL_H
 #include "shorturl/abstractshorturl.h"

@@ -19,8 +19,6 @@
 #include "filtermanager.h"
 #include "mailfilter.h"
 
-
-
 #include <QFile>
 #include <QDir>
 #include "mailcommon_debug.h"

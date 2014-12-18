@@ -29,7 +29,6 @@
 #include <QPushButton>
 #include <QIcon>
 
-
 #include <QGridLayout>
 #include <QLabel>
 
@@ -317,7 +316,7 @@ void FilterActionWidgetLister::setActionList(QList<FilterAction *> *list)
     int superfluousItems = (int)d->mActionList->count() - widgetsMaximum();
     if (superfluousItems > 0) {
         qCDebug(MAILCOMMON_LOG) << "FilterActionWidgetLister: Clipping action list to"
-                 << widgetsMaximum() << "items!";
+                                << widgetsMaximum() << "items!";
 
         for (; superfluousItems ; superfluousItems--) {
             d->mActionList->removeLast();

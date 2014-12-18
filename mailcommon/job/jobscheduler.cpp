@@ -88,7 +88,7 @@ void JobScheduler::registerTask(ScheduledTask *task)
     } else {
 #ifdef DEBUG_SCHEDULER
         qCDebug(MAILCOMMON_LOG) << "JobScheduler: adding task" << task << "(type" << task->taskTypeId()
-                 << ") for folder" << task->folder() << task->folder().name();
+                                << ") for folder" << task->folder() << task->folder().name();
 #endif
         mTaskList.append(task);
         if (immediate) {
@@ -185,10 +185,10 @@ void JobScheduler::runTaskNow(ScheduledTask *task)
     mCurrentJob = mCurrentTask->run();
 #ifdef DEBUG_SCHEDULER
     qCDebug(MAILCOMMON_LOG) << "JobScheduler: task" << mCurrentTask
-             << "(type" << mCurrentTask->taskTypeId() << ")"
-             << "for folder" << mCurrentTask->folder()->label()
-             << "returned job" << mCurrentJob
-             << (mCurrentJob ? mCurrentJob->className() : 0);
+                            << "(type" << mCurrentTask->taskTypeId() << ")"
+                            << "for folder" << mCurrentTask->folder()->label()
+                            << "returned job" << mCurrentJob
+                            << (mCurrentJob ? mCurrentJob->className() : 0);
 #endif
     if (!mCurrentJob) {   // nothing to do, e.g. folder deleted
         delete mCurrentTask;

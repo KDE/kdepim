@@ -20,4 +20,3 @@
 #include "pimcommon_debug.h"
 Q_LOGGING_CATEGORY(PIMCOMMON_LOG, "log_pimcommon")
 
-

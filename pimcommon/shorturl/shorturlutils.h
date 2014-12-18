@@ -26,23 +26,23 @@ namespace PimCommon
 class AbstractShortUrl;
 namespace ShortUrlUtils
 {
-    enum EngineType {
-        Google = 0,
-        Tinyurl = 1,
-        MigreMe = 2,
-        TriopAB = 3,
-        Ur1Ca = 4,
-        IsGd = 5,
+enum EngineType {
+    Google = 0,
+    Tinyurl = 1,
+    MigreMe = 2,
+    TriopAB = 3,
+    Ur1Ca = 4,
+    IsGd = 5,
 
-        //TODO add more engine.
-        EndListEngine
-    };
-    QString stringFromEngineType(EngineType type);
-    AbstractShortUrl *loadEngine(QObject *parent);
-    PIMCOMMON_EXPORT PimCommon::AbstractShortUrl *loadEngine(PimCommon::ShortUrlUtils::EngineType type, QObject *parent);
+    //TODO add more engine.
+    EndListEngine
+};
+QString stringFromEngineType(EngineType type);
+AbstractShortUrl *loadEngine(QObject *parent);
+PIMCOMMON_EXPORT PimCommon::AbstractShortUrl *loadEngine(PimCommon::ShortUrlUtils::EngineType type, QObject *parent);
 
-    int readEngineSettings();
-    void writeEngineSettings(int value);
+int readEngineSettings();
+void writeEngineSettings(int value);
 }
 }
 

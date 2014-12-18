@@ -35,7 +35,7 @@ PimCommon::AbstractShortUrl *PimCommon::ShortUrlUtils::loadEngine(QObject *paren
     PimCommon::ShortUrlUtils::EngineType type = static_cast<PimCommon::ShortUrlUtils::EngineType>(readEngineSettings());
     PimCommon::AbstractShortUrl *engine = PimCommon::ShortUrlUtils::loadEngine(type, parent);
     if (!engine) {
-        qCDebug(PIMCOMMON_LOG)<<" Engine type undefined "<<type;
+        qCDebug(PIMCOMMON_LOG) << " Engine type undefined " << type;
         engine = new PimCommon::GoogleShortUrl(parent);
     }
     return engine;

@@ -113,7 +113,8 @@ class KJob;
  * @author Marc Mutz <mutz@kde.org>, based upon work by Stefan Taferner <taferner@kde.org>.
  * @see MailCommon::MailFilter KMFilterActionEdit SearchPatternEdit KMFilterListBox
  */
-namespace MailCommon {
+namespace MailCommon
+{
 class MAILCOMMON_EXPORT KMFilterDialog : public QDialog
 {
     Q_OBJECT
@@ -133,7 +134,7 @@ public:
      * KMFilterListBox::createFilter. You should instead call
      * KMFilterMgr::createFilter.
      */
-    void createFilter( const QByteArray &field, const QString &value );
+    void createFilter(const QByteArray &field, const QString &value);
 
 public Q_SLOTS:
     /**

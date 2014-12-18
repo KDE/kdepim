@@ -32,7 +32,6 @@
 #include <KIdentityManagement/Identity>
 #include <KIdentityManagement/IdentityManager>
 
-
 #include <KLocalizedString>
 #include <KMessageBox>
 

@@ -34,7 +34,6 @@ using MessageComposer::MessageFactory;
 #include <ItemFetchJob>
 #include <ItemModifyJob>
 
-
 #include <KLocalizedString>
 #include <KMessageBox>
 

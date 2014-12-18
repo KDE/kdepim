@@ -63,8 +63,7 @@ void IsGdShortUrl::slotShortUrlFinished(QNetworkReply *reply)
     QString output = QString::fromLatin1(reply->readAll());
     qCDebug(PIMCOMMON_LOG) << "void IsGdShortUrl::slotShortUrlFinished(QNetworkReply *reply) " << output;
     //TODO
-    if ( !output.isEmpty() )
-    {
+    if (!output.isEmpty()) {
         Q_EMIT shortUrlDone(output);
     }
 }

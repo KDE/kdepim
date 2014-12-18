@@ -32,8 +32,6 @@ using namespace Akonadi;
 #include <KIdentityManagement/IdentityManager>
 #include <KIdentityManagement/Identity>
 
-
-
 #include <QMutex>
 #include <QMutexLocker>
 #include <QSharedPointer>

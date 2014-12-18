@@ -31,7 +31,6 @@
 #include <templateparser/customtemplates.h>
 #include <templateparser/customtemplates_kfg.h>
 
-
 #include <KLocalizedString>
 #include <KLineEdit>
 

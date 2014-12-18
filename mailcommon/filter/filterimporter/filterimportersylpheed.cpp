@@ -20,7 +20,6 @@
 #include "mailfilter.h"
 #include "mailcommon_debug.h"
 
-
 #include <QFile>
 #include <QDir>
 

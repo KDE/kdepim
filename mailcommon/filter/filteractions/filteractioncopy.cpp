@@ -25,7 +25,6 @@
 #include <ItemCopyJob>
 #include <KLocalizedString>
 
-
 using namespace MailCommon;
 
 FilterActionCopy::FilterActionCopy(QObject *parent)
