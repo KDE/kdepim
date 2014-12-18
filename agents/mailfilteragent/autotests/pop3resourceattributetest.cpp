@@ -41,7 +41,7 @@ void Pop3ResourceAttributeTest::shouldAssignValue()
     QString accountName;
     attr.setPop3AccountName(accountName);
     QCOMPARE(attr.pop3AccountName(), accountName);
-    accountName = QLatin1String("foo");
+    accountName = QStringLiteral("foo");
     attr.setPop3AccountName(accountName);
     QCOMPARE(attr.pop3AccountName(), accountName);
     accountName.clear();
@@ -52,7 +52,7 @@ void Pop3ResourceAttributeTest::shouldAssignValue()
 void Pop3ResourceAttributeTest::shouldDeserializeValue()
 {
     Pop3ResourceAttribute attr;
-    QString accountName = QLatin1String("foo");
+    QString accountName = QStringLiteral("foo");
     attr.setPop3AccountName(accountName);
     const QByteArray ba = attr.serialized();
     Pop3ResourceAttribute result;
@@ -63,7 +63,7 @@ void Pop3ResourceAttributeTest::shouldDeserializeValue()
 void Pop3ResourceAttributeTest::shouldCloneAttribute()
 {
     Pop3ResourceAttribute attr;
-    QString accountName = QLatin1String("foo");
+    QString accountName = QStringLiteral("foo");
     attr.setPop3AccountName(accountName);
     Pop3ResourceAttribute *result = attr.clone();
     QVERIFY(attr == *result);

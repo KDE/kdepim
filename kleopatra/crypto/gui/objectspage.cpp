@@ -95,7 +95,7 @@ ObjectsPage::Private::~Private() {}
 
 void ObjectsPage::Private::add()
 {
-    const QString fname = FileDialog::getOpenFileName(q, i18n("Select File"), QLatin1String("enc"));
+    const QString fname = FileDialog::getOpenFileName(q, i18n("Select File"), QStringLiteral("enc"));
     if (fname.isEmpty()) {
         return;
     }
@@ -139,7 +139,7 @@ void ObjectsPage::Private::addFile(const QFileInfo &info)
 {
     QListWidgetItem *const item = new QListWidgetItem;
     if (info.isDir()) {
-        item->setIcon(QIcon::fromTheme(QLatin1String("folder")));
+        item->setIcon(QIcon::fromTheme(QStringLiteral("folder")));
     }
     item->setText(info.fileName());
     item->setData(AbsoluteFilePathRole, info.absoluteFilePath());

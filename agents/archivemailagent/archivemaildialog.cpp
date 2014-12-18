@@ -37,13 +37,13 @@
 #include <QPushButton>
 #include <QLocale>
 
-static QString archiveMailCollectionPattern = QLatin1String("ArchiveMailCollection \\d+");
+static QString archiveMailCollectionPattern = QStringLiteral("ArchiveMailCollection \\d+");
 
 ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
     : QDialog(parent)
 {
     setWindowTitle(i18n("Configure Archive Mail Agent"));
-    setWindowIcon(QIcon::fromTheme(QLatin1String("kmail")));
+    setWindowIcon(QIcon::fromTheme(QStringLiteral("kmail")));
     setModal(true);
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *vlay = new QVBoxLayout;
@@ -53,7 +53,7 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
     QHBoxLayout *mainLayout = new QHBoxLayout(mainWidget);
     mWidget = new ArchiveMailWidget(this);
     connect(mWidget, &ArchiveMailWidget::archiveNow, this, &ArchiveMailDialog::archiveNow);
-    mWidget->setObjectName(QLatin1String("archivemailwidget"));
+    mWidget->setObjectName(QStringLiteral("archivemailwidget"));
     mainLayout->addWidget(mWidget);
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::Help);
@@ -70,24 +70,24 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
     readConfig();
 
     KAboutData aboutData = KAboutData(
-                               QLatin1String("archivemailagent"),
+                               QStringLiteral("archivemailagent"),
                                i18n("Archive Mail Agent"),
-                               QLatin1String(KDEPIM_VERSION),
+                               QStringLiteral(KDEPIM_VERSION),
                                i18n("Archive emails automatically."),
                                KAboutLicense::GPL_V2,
                                i18n("Copyright (C) 2012, 2013, 2014 Laurent Montel"));
 
     aboutData.addAuthor(i18n("Laurent Montel"),
-                        i18n("Maintainer"), QLatin1String("montel@kde.org"));
+                        i18n("Maintainer"), QStringLiteral("montel@kde.org"));
 
-    QApplication::setWindowIcon(QIcon::fromTheme(QLatin1String("kmail")));
+    QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("kmail")));
     aboutData.setTranslator(i18nc("NAME OF TRANSLATORS", "Your names"),
                             i18nc("EMAIL OF TRANSLATORS", "Your emails"));
 
     KHelpMenu *helpMenu = new KHelpMenu(this, aboutData, true);
     //Initialize menu
     QMenu *menu = helpMenu->menu();
-    helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(QIcon::fromTheme(QLatin1String("kmail")));
+    helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(QIcon::fromTheme(QStringLiteral("kmail")));
     buttonBox->button(QDialogButtonBox::Help)->setMenu(menu);
 }
 
@@ -157,7 +157,7 @@ ArchiveMailWidget::ArchiveMailWidget(QWidget *parent)
     QStringList headers;
     headers << i18n("Name") << i18n("Last archive") << i18n("Next archive in") << i18n("Storage directory");
     mWidget->treeWidget->setHeaderLabels(headers);
-    mWidget->treeWidget->setObjectName(QLatin1String("treewidget"));
+    mWidget->treeWidget->setObjectName(QStringLiteral("treewidget"));
     mWidget->treeWidget->setSortingEnabled(true);
     mWidget->treeWidget->setRootIsDecorated(false);
     mWidget->treeWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -192,7 +192,7 @@ void ArchiveMailWidget::customContextMenuRequested(const QPoint &)
             menu.addAction(i18n("Archive now"), this, SLOT(slotArchiveNow()));
         }
         menu.addSeparator();
-        menu.addAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Delete"), this, SLOT(slotRemoveItem()));
+        menu.addAction(QIcon::fromTheme(QStringLiteral("edit-delete")), i18n("Delete"), this, SLOT(slotRemoveItem()));
     }
     menu.exec(QCursor::pos());
 }

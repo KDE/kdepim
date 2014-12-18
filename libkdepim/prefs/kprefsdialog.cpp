@@ -347,7 +347,7 @@ KPrefsWidDuration::KPrefsWidDuration(KConfigSkeleton::ItemDateTime *item,
     mTimeEdit = new QTimeEdit(parent);
     mLabel->setBuddy(mTimeEdit);
     if (format.isEmpty()) {
-        mTimeEdit->setDisplayFormat(QLatin1String("hh:mm:ss"));
+        mTimeEdit->setDisplayFormat(QStringLiteral("hh:mm:ss"));
     } else {
         mTimeEdit->setDisplayFormat(format);
     }

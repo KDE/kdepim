@@ -33,13 +33,13 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     KAboutData aboutData(QStringLiteral("mboximporter"),
                          i18n("MBox importer tool"),
-                         QLatin1String(KDEPIM_VERSION),
+                         QStringLiteral(KDEPIM_VERSION),
                          i18n("Messageviewer Header Theme Editor"),
                          KAboutLicense::GPL_V2,
                          i18n("Copyright © 2013 MBoxImporter authors"));
     aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QStringLiteral("montel@kde.org"));
 
-    QApplication::setWindowIcon(QIcon::fromTheme(QLatin1String("kmail")));
+    QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("kmail")));
     aboutData.setOrganizationDomain(QByteArray("kde.org"));
     aboutData.setProductName(QByteArray("mboximporter"));
 

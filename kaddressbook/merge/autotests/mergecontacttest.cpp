@@ -37,7 +37,7 @@ void MergeContactTest::shouldReturnDefaultAddressWhenOneItem()
     Akonadi::Item::List lst;
     Akonadi::Item item;
     KContacts::Addressee address;
-    address.setName(QLatin1String("foo1"));
+    address.setName(QStringLiteral("foo1"));
     item.setPayload<KContacts::Addressee>(address);
     lst << item;
 
@@ -58,7 +58,7 @@ void MergeContactTest::noNneedManualSelectionCheckWhenOneItem()
     Akonadi::Item::List lst;
     KContacts::Addressee address;
     Akonadi::Item item;
-    address.setName(QLatin1String("foo1"));
+    address.setName(QStringLiteral("foo1"));
     item.setPayload<KContacts::Addressee>(address);
     lst << item;
     MergeContacts contacts(lst);

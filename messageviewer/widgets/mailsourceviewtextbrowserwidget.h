@@ -105,7 +105,7 @@ private:
 namespace HTMLPrettyFormatter
 {
 // Best to be really verbose about this one...
-const QRegExp htmlTagRegExp(QLatin1String("<"
+const QRegExp htmlTagRegExp(QStringLiteral("<"
                             "(/)?"    //Captures the / if this is an end tag.
                             "(\\w+)"    //Captures TagName
                             "(?:"                //Groups tag contents

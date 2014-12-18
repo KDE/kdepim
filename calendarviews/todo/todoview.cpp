@@ -104,7 +104,7 @@ public:
 
     void setFlatView(bool flat)
     {
-        const QString todoMimeType = QLatin1String("application/x-vnd.akonadi.calendar.todo");
+        const QString todoMimeType = QStringLiteral("application/x-vnd.akonadi.calendar.todo");
         if (flat) {
             foreach (TodoView *view, views) {
                 // In flatview dropping confuses users and it's very easy to drop into a child item
@@ -337,18 +337,18 @@ TodoView::TodoView(const EventViews::PrefsPtr &prefs,
 
     mItemPopupMenu->addSeparator();
     mItemPopupMenuItemOnlyEntries << mItemPopupMenu->addAction(
-                                      cachedSmallIcon(QLatin1String("document-print")),
+                                      cachedSmallIcon(QStringLiteral("document-print")),
                                       i18nc("@action:inmenu print the to-do", "&Print..."),
                                       this, SIGNAL(printTodo()));
 
     mItemPopupMenuItemOnlyEntries << mItemPopupMenu->addAction(
-                                      cachedSmallIcon(QLatin1String("document-print-preview")),
+                                      cachedSmallIcon(QStringLiteral("document-print-preview")),
                                       i18nc("@action:inmenu print preview the to-do", "Print Previe&w..."),
                                       this, SIGNAL(printPreviewTodo()));
 
     mItemPopupMenu->addSeparator();
     a = mItemPopupMenu->addAction(
-            KIconLoader::global()->loadIcon(QLatin1String("edit-delete"), KIconLoader::NoGroup, KIconLoader::SizeSmall),
+            KIconLoader::global()->loadIcon(QStringLiteral("edit-delete"), KIconLoader::NoGroup, KIconLoader::SizeSmall),
             i18nc("@action:inmenu delete the to-do", "&Delete"),
             this, SLOT(deleteTodo()));
     mItemPopupMenuReadWriteEntries << a;
@@ -358,7 +358,7 @@ TodoView::TodoView(const EventViews::PrefsPtr &prefs,
 
     mItemPopupMenu->addAction(
         KIconLoader::global()->loadIcon(
-            QLatin1String("view-calendar-tasks"), KIconLoader::NoGroup, KIconLoader::SizeSmall),
+            QStringLiteral("view-calendar-tasks"), KIconLoader::NoGroup, KIconLoader::SizeSmall),
         i18nc("@action:inmenu create a new to-do", "New &To-do..."),
         this, SLOT(newTodo()));
 
@@ -1046,9 +1046,9 @@ void TodoView::setFullView(bool fullView)
 
     mFullViewButton->setChecked(fullView);
     if (fullView) {
-        mFullViewButton->setIcon(QIcon::fromTheme(QLatin1String("view-restore")));
+        mFullViewButton->setIcon(QIcon::fromTheme(QStringLiteral("view-restore")));
     } else {
-        mFullViewButton->setIcon(QIcon::fromTheme(QLatin1String("view-fullscreen")));
+        mFullViewButton->setIcon(QIcon::fromTheme(QStringLiteral("view-fullscreen")));
     }
 
     mFullViewButton->blockSignals(true);
@@ -1066,9 +1066,9 @@ void TodoView::setFullView(bool fullView)
 void TodoView::setFlatView(bool flatView, bool notifyOtherViews)
 {
     if (flatView) {
-        mFlatViewButton->setIcon(QIcon::fromTheme(QLatin1String("view-list-tree")));
+        mFlatViewButton->setIcon(QIcon::fromTheme(QStringLiteral("view-list-tree")));
     } else {
-        mFlatViewButton->setIcon(QIcon::fromTheme(QLatin1String("view-list-details")));
+        mFlatViewButton->setIcon(QIcon::fromTheme(QStringLiteral("view-list-details")));
     }
 
     if (notifyOtherViews) {
@@ -1211,7 +1211,7 @@ void TodoView::restoreViewState()
 
 QString TodoView::stateSaverGroup() const
 {
-    QString str = QLatin1String("TodoTreeViewState");
+    QString str = QStringLiteral("TodoTreeViewState");
     if (mSidebarView) {
         str += QLatin1Char('S');
     }

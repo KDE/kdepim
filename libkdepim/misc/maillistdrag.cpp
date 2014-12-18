@@ -138,7 +138,7 @@ void MailSummary::set(quint32 serialNumber, const QString &messageId,
 
 QString MailList::mimeDataType()
 {
-    return QLatin1String("x-kmail-drag/message-list");
+    return QStringLiteral("x-kmail-drag/message-list");
 }
 
 bool MailList::canDecode(const QMimeData *md)

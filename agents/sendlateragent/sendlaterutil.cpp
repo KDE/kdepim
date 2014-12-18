@@ -64,7 +64,7 @@ void SendLater::SendLaterUtil::changeRecurrentDate(SendLater::SendLaterInfo *inf
 
 KSharedConfig::Ptr SendLater::SendLaterUtil::defaultConfig()
 {
-    return KSharedConfig::openConfig(QLatin1String("akonadi_sendlater_agentrc"));
+    return KSharedConfig::openConfig(QStringLiteral("akonadi_sendlater_agentrc"));
 }
 
 void SendLater::SendLaterUtil::writeSendLaterInfo(KSharedConfig::Ptr config, SendLater::SendLaterInfo *info, bool forceReload)
@@ -92,7 +92,7 @@ void SendLater::SendLaterUtil::writeSendLaterInfo(KSharedConfig::Ptr config, Sen
 
 bool SendLater::SendLaterUtil::sentLaterAgentWasRegistered()
 {
-    QDBusInterface interface(QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_sendlater_agent"), QLatin1String("/SendLaterAgent"));
+    QDBusInterface interface(QStringLiteral("org.freedesktop.Akonadi.Agent.akonadi_sendlater_agent"), QStringLiteral("/SendLaterAgent"));
     return interface.isValid();
 }
 
@@ -109,9 +109,9 @@ bool SendLater::SendLaterUtil::sentLaterAgentEnabled()
 
 void SendLater::SendLaterUtil::reload()
 {
-    QDBusInterface interface(QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_sendlater_agent"), QLatin1String("/SendLaterAgent"));
+    QDBusInterface interface(QStringLiteral("org.freedesktop.Akonadi.Agent.akonadi_sendlater_agent"), QStringLiteral("/SendLaterAgent"));
     if (interface.isValid()) {
-        interface.call(QLatin1String("reload"));
+        interface.call(QStringLiteral("reload"));
     }
 }
 

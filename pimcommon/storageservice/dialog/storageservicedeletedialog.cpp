@@ -57,17 +57,17 @@ void StorageServiceDeleteTreeWidget::createMenuActions(QMenu *menu)
     switch (mDeleteType) {
     case PimCommon::StorageServiceDeleteDialog::DeleteAll:
         if (type != StorageServiceTreeWidget::UnKnown) {
-            menu->addAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Delete"), this, SIGNAL(deleteFileFolder()));
+            menu->addAction(QIcon::fromTheme(QStringLiteral("edit-delete")), i18n("Delete"), this, SIGNAL(deleteFileFolder()));
         }
         break;
     case PimCommon::StorageServiceDeleteDialog::DeleteFiles:
         if (type == StorageServiceTreeWidget::File) {
-            menu->addAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Delete File"), this, SIGNAL(deleteFileFolder()));
+            menu->addAction(QIcon::fromTheme(QStringLiteral("edit-delete")), i18n("Delete File"), this, SIGNAL(deleteFileFolder()));
         }
         break;
     case PimCommon::StorageServiceDeleteDialog::DeleteFolders:
         if (type != StorageServiceTreeWidget::Folder) {
-            menu->addAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Delete Folder"), this, SIGNAL(deleteFileFolder()));
+            menu->addAction(QIcon::fromTheme(QStringLiteral("edit-delete")), i18n("Delete Folder"), this, SIGNAL(deleteFileFolder()));
         }
         break;
     }
@@ -190,7 +190,7 @@ void StorageServiceDeleteDialog::writeConfig()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
-    KConfigGroup group = config->group(QLatin1String("StorageServiceDeleteDialog"));
+    KConfigGroup group = config->group(QStringLiteral("StorageServiceDeleteDialog"));
     group.writeEntry("Size", size());
     group.writeEntry(mStorage->storageServiceName(), mTreeWidget->header()->saveState());
 }

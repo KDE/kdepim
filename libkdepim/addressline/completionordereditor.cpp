@@ -81,7 +81,7 @@ public:
 
     virtual QIcon icon() const
     {
-        return QIcon::fromTheme(QLatin1String("view-ldap-resource"));
+        return QIcon::fromTheme(QStringLiteral("view-ldap-resource"));
     }
 
     virtual int completionWeight() const
@@ -195,7 +195,7 @@ private:
 
 CompletionOrderEditor::CompletionOrderEditor(KLDAP::LdapClientSearch *ldapSearch,
         QWidget *parent)
-    : QDialog(parent), mConfig(QLatin1String("kpimcompletionorder")), mLdapSearch(ldapSearch), mDirty(false)
+    : QDialog(parent), mConfig(QStringLiteral("kpimcompletionorder")), mLdapSearch(ldapSearch), mDirty(false)
 {
     setWindowTitle(i18n("Edit Completion Order"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
@@ -209,7 +209,7 @@ CompletionOrderEditor::CompletionOrderEditor(KLDAP::LdapClientSearch *ldapSearch
     okButton->setDefault(true);
     setModal(true);
     new CompletionOrderEditorAdaptor(this);
-    QDBusConnection::sessionBus().registerObject(QLatin1String("/"), this, QDBusConnection::ExportAdaptors);
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/"), this, QDBusConnection::ExportAdaptors);
 
     QWidget *page = new QWidget(this);
     QHBoxLayout *pageHBoxLayout = new QHBoxLayout(page);
@@ -232,16 +232,16 @@ CompletionOrderEditor::CompletionOrderEditor(KLDAP::LdapClientSearch *ldapSearch
     mUpButton = new QPushButton(upDownBox);
     upDownBoxVBoxLayout->addWidget(mUpButton);
     mUpButton->setAutoRepeat(true);
-    mUpButton->setObjectName(QLatin1String("mUpButton"));
-    mUpButton->setIcon(QIcon::fromTheme(QLatin1String("go-up")));
+    mUpButton->setObjectName(QStringLiteral("mUpButton"));
+    mUpButton->setIcon(QIcon::fromTheme(QStringLiteral("go-up")));
     mUpButton->setEnabled(false);   // b/c no item is selected yet
     mUpButton->setFocusPolicy(Qt::StrongFocus);
 
     mDownButton = new QPushButton(upDownBox);
     upDownBoxVBoxLayout->addWidget(mDownButton);
     mDownButton->setAutoRepeat(true);
-    mDownButton->setObjectName(QLatin1String("mDownButton"));
-    mDownButton->setIcon(QIcon::fromTheme(QLatin1String("go-down")));
+    mDownButton->setObjectName(QStringLiteral("mDownButton"));
+    mDownButton->setIcon(QIcon::fromTheme(QStringLiteral("go-down")));
     mDownButton->setEnabled(false);   // b/c no item is selected yet
     mDownButton->setFocusPolicy(Qt::StrongFocus);
 

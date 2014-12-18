@@ -30,51 +30,51 @@
 
 QString socketTypeToStr(Ispdb::socketType socketType)
 {
-    QString enc = QLatin1String("None");
+    QString enc = QStringLiteral("None");
     if (socketType == Ispdb::SSL) {
-        enc = QLatin1String("SSL");
+        enc = QStringLiteral("SSL");
     } else if (socketType == Ispdb::StartTLS) {
-        enc = QLatin1String("TLS");
+        enc = QStringLiteral("TLS");
     }
     return enc;
 }
 
 QString authTypeToStr(Ispdb::authType authType)
 {
-    QString auth = QLatin1String("unknown");
+    QString auth = QStringLiteral("unknown");
     switch (authType) {
     case Ispdb::Plain:
-        auth = QLatin1String("plain");
+        auth = QStringLiteral("plain");
         break;
     case Ispdb::CramMD5:
-        auth = QLatin1String("CramMD5");
+        auth = QStringLiteral("CramMD5");
         break;
     case Ispdb::NTLM:
-        auth = QLatin1String("NTLM");
+        auth = QStringLiteral("NTLM");
         break;
     case Ispdb::GSSAPI:
-        auth = QLatin1String("GSSAPI");
+        auth = QStringLiteral("GSSAPI");
         break;
     case Ispdb::ClientIP:
-        auth = QLatin1String("ClientIP");
+        auth = QStringLiteral("ClientIP");
         break;
     case Ispdb::NoAuth:
-        auth = QLatin1String("NoAuth");
+        auth = QStringLiteral("NoAuth");
         break;
     }
     return auth;
 }
 int main(int argc, char **argv)
 {
-    KAboutData aboutData(QLatin1String("ispdb"),
+    KAboutData aboutData(QStringLiteral("ispdb"),
                          i18n("ISPDB Assistant"),
-                         QLatin1String("0.1"),
+                         QStringLiteral("0.1"),
                          i18n("Helps setting up PIM accounts"),
                          KAboutLicense::LGPL,
                          i18n("(c) 2010 Omat Holding B.V."),
-                         QLatin1String("http://pim.kde.org/akonadi/"));
-    aboutData.setProgramIconName(QLatin1String("akonadi"));
-    aboutData.addAuthor(i18n("Tom Albers"),  i18n("Author"), QLatin1String("toma@kde.org"));
+                         QStringLiteral("http://pim.kde.org/akonadi/"));
+    aboutData.setProgramIconName(QStringLiteral("akonadi"));
+    aboutData.addAuthor(i18n("Tom Albers"),  i18n("Author"), QStringLiteral("toma@kde.org"));
 
     QApplication app(argc, argv);
     QCommandLineParser parser;
@@ -84,11 +84,11 @@ int main(int argc, char **argv)
     aboutData.setupCommandLine(&parser);
     parser.process(app);
     aboutData.processCommandLine(&parser);
-    parser.addOption(QCommandLineOption(QStringList() << QLatin1String("email"), i18n("Tries to fetch the settings for that email address"), QLatin1String("emailaddress")));
+    parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("email"), i18n("Tries to fetch the settings for that email address"), QStringLiteral("emailaddress")));
 
-    QString email(QLatin1String("blablabla@gmail.com"));
-    if (!parser.value(QLatin1String("email")).isEmpty()) {
-        email = parser.value(QLatin1String("email"));
+    QString email(QStringLiteral("blablabla@gmail.com"));
+    if (!parser.value(QStringLiteral("email")).isEmpty()) {
+        email = parser.value(QStringLiteral("email"));
     }
 
     QEventLoop loop;

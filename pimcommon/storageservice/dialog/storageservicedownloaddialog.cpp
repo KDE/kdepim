@@ -52,7 +52,7 @@ void StorageServiceDownloadTreeWidget::createMenuActions(QMenu *menu)
     menu->addSeparator();
     const PimCommon::StorageServiceTreeWidget::ItemType type = StorageServiceTreeWidget::itemTypeSelected();
     if (type == StorageServiceTreeWidget::File) {
-        menu->addAction(QIcon::fromTheme(QLatin1String("download")), i18n("Download File"), this, SIGNAL(downloadFile()));
+        menu->addAction(QIcon::fromTheme(QStringLiteral("download")), i18n("Download File"), this, SIGNAL(downloadFile()));
     }
     if ((type == StorageServiceTreeWidget::File) || (type == StorageServiceTreeWidget::Folder)) {
         menu->addSeparator();
@@ -191,7 +191,7 @@ void StorageServiceDownloadDialog::writeConfig()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
-    KConfigGroup group = config->group(QLatin1String("StorageServiceDownloadDialog"));
+    KConfigGroup group = config->group(QStringLiteral("StorageServiceDownloadDialog"));
     group.writeEntry("Size", size());
     group.writeEntry(mStorage->storageServiceName(), mTreeWidget->header()->saveState());
 }

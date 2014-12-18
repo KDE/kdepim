@@ -64,8 +64,8 @@ MailFilterAgent::MailFilterAgent(const QString &id)
     : Akonadi::AgentBase(id),
       m_filterLogDialog(Q_NULLPTR)
 {
-    Kdelibs4ConfigMigrator migrate(QLatin1String("mailfilteragent"));
-    migrate.setConfigFiles(QStringList() << QLatin1String("akonadi_mailfilter_agentrc") << QLatin1String("akonadi_mailfilter_agent.notifyrc"));
+    Kdelibs4ConfigMigrator migrate(QStringLiteral("mailfilteragent"));
+    migrate.setConfigFiles(QStringList() << QStringLiteral("akonadi_mailfilter_agentrc") << QStringLiteral("akonadi_mailfilter_agent.notifyrc"));
     migrate.migrate();
 
     Akonadi::AttributeFactory::registerAttribute<Pop3ResourceAttribute>();
@@ -96,8 +96,8 @@ MailFilterAgent::MailFilterAgent(const QString &id)
 
     new MailFilterAgentAdaptor(this);
 
-    KDBusConnectionPool::threadConnection().registerObject(QLatin1String("/MailFilterAgent"), this, QDBusConnection::ExportAdaptors);
-    KDBusConnectionPool::threadConnection().registerService(QLatin1String("org.freedesktop.Akonadi.MailFilterAgent"));
+    KDBusConnectionPool::threadConnection().registerObject(QStringLiteral("/MailFilterAgent"), this, QDBusConnection::ExportAdaptors);
+    KDBusConnectionPool::threadConnection().registerService(QStringLiteral("org.freedesktop.Akonadi.MailFilterAgent"));
     //Enabled or not filterlogdialog
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
     if (config->hasGroup("FilterLog")) {
@@ -105,8 +105,8 @@ MailFilterAgent::MailFilterAgent(const QString &id)
         if (group.hasKey("Enabled")) {
             if (group.readEntry("Enabled", false)) {
                 m_filterLogDialog = new FilterLogDialog(0);
-                const QPixmap pixmap = QIcon::fromTheme(QLatin1String("view-filter")).pixmap(KIconLoader::SizeSmall, KIconLoader::SizeSmall);
-                KNotification *notify = new KNotification(QLatin1String("mailfilterlogenabled"));
+                const QPixmap pixmap = QIcon::fromTheme(QStringLiteral("view-filter")).pixmap(KIconLoader::SizeSmall, KIconLoader::SizeSmall);
+                KNotification *notify = new KNotification(QStringLiteral("mailfilterlogenabled"));
                 notify->setComponentName(componentData().componentName());
                 notify->setPixmap(pixmap);
                 notify->setText(i18nc("Notification when the filter log was enabled", "Mail Filter Log Enabled"));
@@ -326,7 +326,7 @@ QString MailFilterAgent::printCollectionMonitored()
     QString printDebugCollection;
     Akonadi::Collection::List collections = changeRecorder()->collectionsMonitored();
     if (collections.isEmpty()) {
-        printDebugCollection = QLatin1String("No collection is monitored!");
+        printDebugCollection = QStringLiteral("No collection is monitored!");
     } else {
         foreach (const Akonadi::Collection &collection, collections) {
             if (!printDebugCollection.isEmpty()) {

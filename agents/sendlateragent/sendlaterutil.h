@@ -41,7 +41,7 @@ SENDLATER_EXPORT void reload();
 SENDLATER_EXPORT void changeRecurrentDate(SendLater::SendLaterInfo *info);
 SENDLATER_EXPORT void forceReparseConfiguration();
 
-static QString sendLaterPattern = QLatin1String("SendLaterItem %1");
+static QString sendLaterPattern = QStringLiteral("SendLaterItem %1");
 }
 }
 #endif // SENDLATERUTIL_H

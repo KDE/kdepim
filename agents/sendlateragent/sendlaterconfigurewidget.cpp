@@ -28,7 +28,7 @@
 #include <QIcon>
 #include <QPointer>
 
-static QString sendLaterItemPattern = QLatin1String("SendLaterItem \\d+");
+static QString sendLaterItemPattern = QStringLiteral("SendLaterItem \\d+");
 
 //#define DEBUG_MESSAGE_ID
 
@@ -70,7 +70,7 @@ SendLaterWidget::SendLaterWidget(QWidget *parent)
             ;
 #endif
 
-    mWidget->treeWidget->setObjectName(QLatin1String("treewidget"));
+    mWidget->treeWidget->setObjectName(QStringLiteral("treewidget"));
     mWidget->treeWidget->setHeaderLabels(headers);
     mWidget->treeWidget->setSortingEnabled(true);
     mWidget->treeWidget->setRootIsDecorated(false);
@@ -102,7 +102,7 @@ void SendLaterWidget::customContextMenuRequested(const QPoint &)
             menu.addAction(i18n("Send now"), this, SLOT(slotSendNow()));
         }
         menu.addSeparator();
-        menu.addAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Delete"), this, SLOT(slotRemoveItem()));
+        menu.addAction(QIcon::fromTheme(QStringLiteral("edit-delete")), i18n("Delete"), this, SLOT(slotRemoveItem()));
         menu.exec(QCursor::pos());
     }
 }

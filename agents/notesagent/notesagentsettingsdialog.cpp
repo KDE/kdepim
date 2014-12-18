@@ -40,7 +40,7 @@ NotesAgentSettingsDialog::NotesAgentSettingsDialog(QWidget *parent)
     : QDialog(parent)
 {
     setWindowTitle(i18n("Configure Notes Agent"));
-    setWindowIcon(QIcon::fromTheme(QLatin1String("knotes")));
+    setWindowIcon(QIcon::fromTheme(QStringLiteral("knotes")));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::Help);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
@@ -60,7 +60,7 @@ NotesAgentSettingsDialog::NotesAgentSettingsDialog(QWidget *parent)
     lay->addWidget(tab);
 
     mNotify = new KNotifyConfigWidget(this);
-    mNotify->setApplication(QLatin1String("akonadi_notes_agent"));
+    mNotify->setApplication(QStringLiteral("akonadi_notes_agent"));
     tab->addTab(mNotify, i18n("Notify"));
 
     mNetworkConfig = new NoteShared::NoteNetworkConfigWidget(this);
@@ -72,24 +72,24 @@ NotesAgentSettingsDialog::NotesAgentSettingsDialog(QWidget *parent)
     readConfig();
 
     KAboutData aboutData = KAboutData(
-                               QLatin1String("notesagent"),
+                               QStringLiteral("notesagent"),
                                i18n("Notes Agent"),
-                               QLatin1String(KDEPIM_VERSION),
+                               QStringLiteral(KDEPIM_VERSION),
                                i18n("Notes Agent."),
                                KAboutLicense::GPL_V2,
                                i18n("Copyright (C) 2013, 2014 Laurent Montel"));
 
     aboutData.addAuthor(i18n("Laurent Montel"),
-                        i18n("Maintainer"), QLatin1String("montel@kde.org"));
+                        i18n("Maintainer"), QStringLiteral("montel@kde.org"));
 
-    QApplication::setWindowIcon(QIcon::fromTheme(QLatin1String("knotes")));
+    QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("knotes")));
     aboutData.setTranslator(i18nc("NAME OF TRANSLATORS", "Your names"),
                             i18nc("EMAIL OF TRANSLATORS", "Your emails"));
 
     KHelpMenu *helpMenu = new KHelpMenu(this, aboutData, true);
     //Initialize menu
     QMenu *menu = helpMenu->menu();
-    helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(QIcon::fromTheme(QLatin1String("knotes")));
+    helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(QIcon::fromTheme(QStringLiteral("knotes")));
     buttonBox->button(QDialogButtonBox::Help)->setMenu(menu);
 }
 

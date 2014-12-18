@@ -28,7 +28,7 @@ Tag::Ptr Tag::createDefaultTag(const QString &name)
 {
     Tag::Ptr tag(new Tag());
     tag->tagName = name;
-    tag->iconName = QLatin1String("mail-tagged");
+    tag->iconName = QStringLiteral("mail-tagged");
 
     tag->priority = -1;
     tag->inToolbar = false;
@@ -42,7 +42,7 @@ Tag::Ptr Tag::fromAkonadi(const Akonadi::Tag &akonadiTag)
     tag->tagName = akonadiTag.name();
     tag->mTag = akonadiTag;
     tag->priority = -1;
-    tag->iconName = QLatin1String("mail-tagged");
+    tag->iconName = QStringLiteral("mail-tagged");
     tag->inToolbar = false;
     tag->isImmutable = akonadiTag.isImmutable();
     Akonadi::TagAttribute *attr = akonadiTag.attribute<Akonadi::TagAttribute>();

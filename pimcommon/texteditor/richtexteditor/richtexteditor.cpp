@@ -55,7 +55,7 @@ public:
           speller(Q_NULLPTR),
           customPalette(false)
     {
-        KConfig sonnetKConfig(QLatin1String("sonnetrc"));
+        KConfig sonnetKConfig(QStringLiteral("sonnetrc"));
         KConfigGroup group(&sonnetKConfig, "Spelling");
         checkSpellingEnabled = group.readEntry("checkerEnabledByDefault", false);
         supportFeatures |= RichTextEditor::Search;
@@ -141,7 +141,7 @@ void RichTextEditor::defaultPopupMenu(const QPoint &pos)
         }
 
         if (!isReadOnly() && spellCheckingSupport()) {
-            QAction *spellCheckAction = popup->addAction(QIcon::fromTheme(QLatin1String("tools-check-spelling")), i18n("Check Spelling..."), this, SLOT(slotCheckSpelling()));
+            QAction *spellCheckAction = popup->addAction(QIcon::fromTheme(QStringLiteral("tools-check-spelling")), i18n("Check Spelling..."), this, SLOT(slotCheckSpelling()));
             if (emptyDocument) {
                 spellCheckAction->setEnabled(false);
             }
@@ -178,7 +178,7 @@ void RichTextEditor::defaultPopupMenu(const QPoint &pos)
         }
         if (/*PimCommon::TextToSpeech::self()->isReady()*/1) {
             QAction *speakAction = popup->addAction(i18n("Speak Text"));
-            speakAction->setIcon(QIcon::fromTheme(QLatin1String("preferences-desktop-text-to-speech")));
+            speakAction->setIcon(QIcon::fromTheme(QStringLiteral("preferences-desktop-text-to-speech")));
             speakAction->setEnabled(!emptyDocument);
             connect(speakAction, &QAction::triggered, this, &RichTextEditor::slotSpeakText);
         }

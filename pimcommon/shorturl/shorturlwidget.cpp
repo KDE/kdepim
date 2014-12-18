@@ -52,7 +52,7 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
     setLayout(grid);
 
     QToolButton *closeBtn = new QToolButton(this);
-    closeBtn->setIcon(QIcon::fromTheme(QLatin1String("dialog-close")));
+    closeBtn->setIcon(QIcon::fromTheme(QStringLiteral("dialog-close")));
     closeBtn->setIconSize(QSize(16, 16));
     closeBtn->setToolTip(i18n("Close"));
 #ifndef QT_NO_ACCESSIBILITY

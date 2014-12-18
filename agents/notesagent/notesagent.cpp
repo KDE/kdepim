@@ -40,14 +40,14 @@
 NotesAgent::NotesAgent(const QString &id)
     : Akonadi::AgentBase(id)
 {
-    Kdelibs4ConfigMigrator migrate(QLatin1String("notesagent"));
-    migrate.setConfigFiles(QStringList() << QLatin1String("akonadi_notes_agentrc") << QLatin1String("akonadi_notes_agent.notifyrc"));
+    Kdelibs4ConfigMigrator migrate(QStringLiteral("notesagent"));
+    migrate.setConfigFiles(QStringList() << QStringLiteral("akonadi_notes_agentrc") << QStringLiteral("akonadi_notes_agent.notifyrc"));
     migrate.migrate();
 
     mNotesManager = new NotesManager(this);
     new NotesAgentAdaptor(this);
-    KDBusConnectionPool::threadConnection().registerObject(QLatin1String("/NotesAgent"), this, QDBusConnection::ExportAdaptors);
-    KDBusConnectionPool::threadConnection().registerService(QLatin1String("org.freedesktop.Akonadi.NotesAgent"));
+    KDBusConnectionPool::threadConnection().registerObject(QStringLiteral("/NotesAgent"), this, QDBusConnection::ExportAdaptors);
+    KDBusConnectionPool::threadConnection().registerService(QStringLiteral("org.freedesktop.Akonadi.NotesAgent"));
 
     setNeedsNetwork(true);
 

@@ -163,7 +163,7 @@ public:
     }
     static QString serviceType()
     {
-        return QLatin1String("Calendar/Decoration");
+        return QStringLiteral("Calendar/Decoration");
     }
 
     typedef QList<Decoration *> List;

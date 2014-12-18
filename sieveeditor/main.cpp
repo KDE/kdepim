@@ -29,9 +29,9 @@
 
 int main(int argc, char **argv)
 {
-    Kdelibs4ConfigMigrator migrate(QLatin1String("sieveeditor"));
-    migrate.setConfigFiles(QStringList() << QLatin1String("sieveeditorrc"));
-    migrate.setUiFiles(QStringList() << QLatin1String("sieveeditorui.rc"));
+    Kdelibs4ConfigMigrator migrate(QStringLiteral("sieveeditor"));
+    migrate.setConfigFiles(QStringList() << QStringLiteral("sieveeditorrc"));
+    migrate.setUiFiles(QStringList() << QStringLiteral("sieveeditorui.rc"));
     migrate.migrate();
 
     KLocalizedString::setApplicationDomain("sieveeditor");
@@ -43,9 +43,9 @@ int main(int argc, char **argv)
                          i18n("Sieve Editor"),
                          KAboutLicense::GPL_V2,
                          i18n("Copyright © 2013, 2014 sieveeditor authors"));
-    aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QLatin1String("montel@kde.org"));
+    aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QStringLiteral("montel@kde.org"));
 
-    QApplication::setWindowIcon(QIcon::fromTheme(QLatin1String("kmail")));
+    QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("kmail")));
     KAboutData::setApplicationData(aboutData);
 
     QCommandLineParser parser;

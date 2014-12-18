@@ -34,7 +34,7 @@ SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
     : QDialog(parent)
 {
     setWindowTitle(i18n("Configure"));
-    setWindowIcon(QIcon::fromTheme(QLatin1String("kmail")));
+    setWindowIcon(QIcon::fromTheme(QStringLiteral("kmail")));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::Help);
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     setLayout(mainLayout);
@@ -45,7 +45,7 @@ SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
     connect(buttonBox, &QDialogButtonBox::rejected, this, &SendLaterConfigureDialog::reject);
 
     mWidget = new SendLaterWidget(this);
-    mWidget->setObjectName(QLatin1String("sendlaterwidget"));
+    mWidget->setObjectName(QStringLiteral("sendlaterwidget"));
     connect(mWidget, &SendLaterWidget::sendNow, this, &SendLaterConfigureDialog::sendNow);
     mainLayout->addWidget(mWidget);
     mainLayout->addWidget(buttonBox);
@@ -54,24 +54,24 @@ SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
     readConfig();
 
     KAboutData aboutData = KAboutData(
-                               QLatin1String("sendlateragent"),
+                               QStringLiteral("sendlateragent"),
                                i18n("Send Later Agent"),
-                               QLatin1String(KDEPIM_VERSION),
+                               QStringLiteral(KDEPIM_VERSION),
                                i18n("Send emails later agent."),
                                KAboutLicense::GPL_V2,
                                i18n("Copyright (C) 2013, 2014 Laurent Montel"));
 
     aboutData.addAuthor(i18n("Laurent Montel"),
-                        i18n("Maintainer"), QLatin1String("montel@kde.org"));
+                        i18n("Maintainer"), QStringLiteral("montel@kde.org"));
 
-    QApplication::setWindowIcon(QIcon::fromTheme(QLatin1String("kmail")));
+    QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("kmail")));
     aboutData.setTranslator(i18nc("NAME OF TRANSLATORS", "Your names"),
                             i18nc("EMAIL OF TRANSLATORS", "Your emails"));
 
     KHelpMenu *helpMenu = new KHelpMenu(this, aboutData, true);
     //Initialize menu
     QMenu *menu = helpMenu->menu();
-    helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(QIcon::fromTheme(QLatin1String("kmail")));
+    helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(QIcon::fromTheme(QStringLiteral("kmail")));
     buttonBox->button(QDialogButtonBox::Help)->setMenu(menu);
 }
 

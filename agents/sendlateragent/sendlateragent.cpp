@@ -45,15 +45,15 @@
 SendLaterAgent::SendLaterAgent(const QString &id)
     : Akonadi::AgentBase(id)
 {
-    Kdelibs4ConfigMigrator migrate(QLatin1String("sendlateragent"));
-    migrate.setConfigFiles(QStringList() << QLatin1String("akonadi_sendlater_agentrc") << QLatin1String("akonadi_sendlater_agent.notifyrc"));
+    Kdelibs4ConfigMigrator migrate(QStringLiteral("sendlateragent"));
+    migrate.setConfigFiles(QStringList() << QStringLiteral("akonadi_sendlater_agentrc") << QStringLiteral("akonadi_sendlater_agent.notifyrc"));
     migrate.migrate();
 
     mManager = new SendLaterManager(this);
     connect(mManager, &SendLaterManager::needUpdateConfigDialogBox, this, &SendLaterAgent::needUpdateConfigDialogBox);
     new SendLaterAgentAdaptor(this);
-    KDBusConnectionPool::threadConnection().registerObject(QLatin1String("/SendLaterAgent"), this, QDBusConnection::ExportAdaptors);
-    KDBusConnectionPool::threadConnection().registerService(QLatin1String("org.freedesktop.Akonadi.SendLaterAgent"));
+    KDBusConnectionPool::threadConnection().registerObject(QStringLiteral("/SendLaterAgent"), this, QDBusConnection::ExportAdaptors);
+    KDBusConnectionPool::threadConnection().registerService(QStringLiteral("org.freedesktop.Akonadi.SendLaterAgent"));
 
     changeRecorder()->setMimeTypeMonitored(KMime::Message::mimeType());
     changeRecorder()->itemFetchScope().setCacheOnly(true);

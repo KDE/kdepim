@@ -30,7 +30,7 @@ Theme::Theme(const QString &themePath, const QString &dirName, const QString &de
 {
     const QString themeInfoFile = themePath + QDir::separator() + defaultDesktopFileName;
     KConfig config( themeInfoFile );
-    KConfigGroup group( &config, QLatin1String( "Desktop Entry" ) );
+    KConfigGroup group( &config, QStringLiteral( "Desktop Entry" ) );
     if (group.isValid()) {
         setDirName(dirName);
         setName( group.readEntry( "Name", QString() ) );

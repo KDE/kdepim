@@ -26,7 +26,7 @@
 
 int main(int argc, char **argv)
 {
-    KAboutData aboutData(QLatin1String("translator_gui"), i18n("TranslatorTest_Gui"), QLatin1String("1.0"));
+    KAboutData aboutData(QStringLiteral("translator_gui"), i18n("TranslatorTest_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for translator widget"));
     QApplication app(argc, argv);
     QCommandLineParser parser;

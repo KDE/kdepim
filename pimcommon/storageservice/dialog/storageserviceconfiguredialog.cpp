@@ -89,7 +89,7 @@ void StorageServiceConfigureDialog::writeConfig()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
-    KConfigGroup group = config->group(QLatin1String("StorageServiceConfigureDialog"));
+    KConfigGroup group = config->group(QStringLiteral("StorageServiceConfigureDialog"));
     group.writeEntry("Size", size());
 }
 

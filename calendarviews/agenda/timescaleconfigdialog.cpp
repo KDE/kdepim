@@ -120,10 +120,10 @@ TimeScaleConfigDialog::TimeScaleConfigDialog(const PrefsPtr &preferences, QWidge
     }
     zoneCombo->setCurrentIndex(0);
 
-    addButton->setIcon(QIcon::fromTheme(QLatin1String("list-add")));
-    removeButton->setIcon(QIcon::fromTheme(QLatin1String("list-remove")));
-    upButton->setIcon(QIcon::fromTheme(QLatin1String("go-up")));
-    downButton->setIcon(QIcon::fromTheme(QLatin1String("go-down")));
+    addButton->setIcon(QIcon::fromTheme(QStringLiteral("list-add")));
+    removeButton->setIcon(QIcon::fromTheme(QStringLiteral("list-remove")));
+    upButton->setIcon(QIcon::fromTheme(QStringLiteral("go-up")));
+    downButton->setIcon(QIcon::fromTheme(QStringLiteral("go-down")));
 
     connect(addButton, &QPushButton::clicked, this, &TimeScaleConfigDialog::add);
     connect(removeButton, &QPushButton::clicked, this, &TimeScaleConfigDialog::remove);

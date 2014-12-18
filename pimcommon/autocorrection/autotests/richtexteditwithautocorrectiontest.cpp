@@ -29,8 +29,8 @@ void RichTextEditWithAutoCorrectionTest::shouldNotAutocorrectWhenDisabled()
 {
     PimCommon::RichTextEditWithAutoCorrection richtext(0);
     QHash<QString, QString> entries;
-    const QString originalWord = QLatin1String("FOOFOO");
-    const QString replaceWord = QLatin1String("BLABLA");
+    const QString originalWord = QStringLiteral("FOOFOO");
+    const QString replaceWord = QStringLiteral("BLABLA");
     entries.insert(originalWord, replaceWord);
     richtext.autocorrection()->setAutocorrectEntries(entries);
     richtext.show();
@@ -43,8 +43,8 @@ void RichTextEditWithAutoCorrectionTest::shouldNotAutocorrectWhenDisabled()
 void RichTextEditWithAutoCorrectionTest::shouldReplaceWordWhenExactText()
 {
     PimCommon::RichTextEditWithAutoCorrection richtext(0);
-    const QString originalWord = QLatin1String("FOOFOO");
-    const QString replaceWord = QLatin1String("BLABLA");
+    const QString originalWord = QStringLiteral("FOOFOO");
+    const QString replaceWord = QStringLiteral("BLABLA");
     QHash<QString, QString> entries;
     entries.insert(originalWord, replaceWord);
     richtext.autocorrection()->setAutocorrectEntries(entries);
@@ -60,15 +60,15 @@ void RichTextEditWithAutoCorrectionTest::shouldReplaceWordWhenExactText()
 void RichTextEditWithAutoCorrectionTest::shouldNotReplaceWordWhenInexactText()
 {
     PimCommon::RichTextEditWithAutoCorrection richtext(0);
-    const QString originalWord = QLatin1String("FOOFOO");
-    const QString replaceWord = QLatin1String("BLABLA");
+    const QString originalWord = QStringLiteral("FOOFOO");
+    const QString replaceWord = QStringLiteral("BLABLA");
     QHash<QString, QString> entries;
     entries.insert(originalWord, replaceWord);
     richtext.autocorrection()->setAutocorrectEntries(entries);
     richtext.autocorrection()->setEnabledAutoCorrection(true);
     richtext.autocorrection()->setAdvancedAutocorrect(true);
     richtext.show();
-    const QString nonExactText = QLatin1String("BLIBLI");
+    const QString nonExactText = QStringLiteral("BLIBLI");
     QTest::qWaitForWindowExposed(&richtext);
     QTest::keyClicks(&richtext, nonExactText);
     QTest::keyClick(&richtext, ' ');
@@ -78,8 +78,8 @@ void RichTextEditWithAutoCorrectionTest::shouldNotReplaceWordWhenInexactText()
 void RichTextEditWithAutoCorrectionTest::shouldReplaceWhenPressEnter()
 {
     PimCommon::RichTextEditWithAutoCorrection richtext(0);
-    const QString originalWord = QLatin1String("FOOFOO");
-    const QString replaceWord = QLatin1String("BLABLA");
+    const QString originalWord = QStringLiteral("FOOFOO");
+    const QString replaceWord = QStringLiteral("BLABLA");
     QHash<QString, QString> entries;
     entries.insert(originalWord, replaceWord);
     richtext.autocorrection()->setAutocorrectEntries(entries);
@@ -95,8 +95,8 @@ void RichTextEditWithAutoCorrectionTest::shouldReplaceWhenPressEnter()
 void RichTextEditWithAutoCorrectionTest::shouldReplaceWhenPressReturn()
 {
     PimCommon::RichTextEditWithAutoCorrection richtext(0);
-    const QString originalWord = QLatin1String("FOOFOO");
-    const QString replaceWord = QLatin1String("BLABLA");
+    const QString originalWord = QStringLiteral("FOOFOO");
+    const QString replaceWord = QStringLiteral("BLABLA");
     QHash<QString, QString> entries;
     entries.insert(originalWord, replaceWord);
     richtext.autocorrection()->setAutocorrectEntries(entries);
