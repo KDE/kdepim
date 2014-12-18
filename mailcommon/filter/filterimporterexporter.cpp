@@ -28,7 +28,7 @@
 
 #include "filterimporterexporter.h"
 #include "filterselectiondialog.h"
-#include "filteraction.h"
+#include "filteractions/filteraction.h"
 #include "filtermanager.h"
 #include "mailfilter.h"
 #include "mailcommon_debug.h"

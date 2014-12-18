@@ -35,9 +35,9 @@ void XMLPrintingSyntaxHighLighter::init()
     QStringList testType;
     testType << QLatin1String("require");
 
-    Q_FOREACH (const QString &s, testType) {
-        const QRegExp regex(s, Qt::CaseInsensitive);
-        m_rules.append(Rule(regex, testFormat));
+    Q_FOREACH ( const QString &s, testType ) {
+        const QRegExp regex( s, Qt::CaseInsensitive );
+        m_rules.append( PimCommon::Rule( regex, testFormat ) );
     }
 
     QTextCharFormat quoteFormat;
@@ -45,26 +45,25 @@ void XMLPrintingSyntaxHighLighter::init()
     quoteFormat.setFontWeight(QFont::Bold);
     QStringList quoteType;
     quoteType << QLatin1String("quoted") << QLatin1String("hash") << QLatin1String("bracket") << QLatin1String("multiline");
-    Q_FOREACH (const QString &s, quoteType) {
-        const QRegExp regex(s, Qt::CaseInsensitive);
-        m_rules.append(Rule(regex, quoteFormat));
+    Q_FOREACH ( const QString &s, quoteType ) {
+        const QRegExp regex( s, Qt::CaseInsensitive );
+        m_rules.append( PimCommon::Rule( regex, quoteFormat ) );
     }
 
     QTextCharFormat misc;
     misc.setForeground(Qt::red);
     misc.setFontWeight(QFont::Bold);
     QStringList miscType;
-    miscType << QLatin1String("control") << QLatin1String("block") << QLatin1String("script") << QLatin1String("action") << QLatin1String("comment");
-    miscType << QLatin1String("num") << QLatin1String("tag") << QLatin1String("list") << QLatin1String("str") << QLatin1String("test") << QLatin1String("crlf/");
-    Q_FOREACH (const QString &s, miscType) {
-        const QRegExp regex(s, Qt::CaseInsensitive);
-        m_rules.append(Rule(regex, misc));
+    miscType << QLatin1String("control") << QLatin1String("block") << QLatin1String("script")<< QLatin1String("action")<<QLatin1String("comment");
+    miscType << QLatin1String("num") << QLatin1String("tag")<< QLatin1String("list")<< QLatin1String("str")<< QLatin1String("test") <<QLatin1String("crlf/");
+    Q_FOREACH ( const QString &s, miscType ) {
+        const QRegExp regex( s, Qt::CaseInsensitive );
+        m_rules.append( PimCommon::Rule( regex, misc ) );
     }
 
     QTextCharFormat header;
-    header.setForeground(Qt::black);
-    header.setFontWeight(QFont::Bold);
-    m_rules.append(Rule(QRegExp(QLatin1String("<\\?xml.*"), Qt::CaseInsensitive), header));
-
+    header.setForeground( Qt::black );
+    header.setFontWeight( QFont::Bold );
+    m_rules.append( PimCommon::Rule( QRegExp(QLatin1String("<\\?xml.*"), Qt::CaseInsensitive), header ) );
 }
 

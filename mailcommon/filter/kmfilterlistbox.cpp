@@ -18,7 +18,7 @@
 #include "kmfilterlistbox.h"
 #include "mailfilter.h"
 #include "filtermanager.h"
-#include "filteractiondict.h"
+#include "filteractions/filteractiondict.h"
 #include <KInputDialog>
 #include <KLocalizedString>
 #include <klistwidgetsearchline.h>
@@ -820,13 +820,13 @@ void KMFilterListBox::loadFilterList(bool createDummyFilter)
     // create an empty filter when there's none, to avoid a completely
     // disabled dialog (usability tests indicated that the new-filter
     // button is too hard to find that way):
-    const int numberOfItem(mListWidget->count());
-    if (!numberOfItem && createDummyFilter) {
-        slotNew();
-    }
-
-    if (numberOfItem > 0) {
-        mListWidget->setCurrentRow(0);
+    const int numberOfItem( mListWidget->count() );
+    if ( numberOfItem == 0 ) {
+        if (createDummyFilter ) {
+            slotNew();
+        }
+    } else {
+        mListWidget->setCurrentRow( 0 );
     }
 
     enableControls();

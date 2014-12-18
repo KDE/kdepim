@@ -96,8 +96,7 @@
 #include <KIdentityManagement/kidentitymanagement/identity.h>
 #include <KIdentityManagement/kidentitymanagement/identitymanager.h>
 #include <kselectionproxymodel.h>
-
-#include <mailcommon/filter/filteraction.h>
+#include <mailcommon/filter/filteractions/filteraction.h>
 #include <mailcommon/folder/foldercollection.h>
 #include <mailcommon/util/mailutil.h>
 #include <pimcommon/util/pimutil.h>

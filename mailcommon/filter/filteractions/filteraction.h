@@ -21,9 +21,9 @@
 #define MAILCOMMON_FILTERACTION_H
 
 #include "mailcommon_export.h"
-#include "../search/searchpattern.h"
+#include "search/searchpattern.h"
 
-#include "itemcontext.h"
+#include "filter/itemcontext.h"
 
 #include <Collection>
 #include <Item>

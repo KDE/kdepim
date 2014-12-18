@@ -32,23 +32,23 @@ AdBlockSyntaxHighlighter::~AdBlockSyntaxHighlighter()
 void AdBlockSyntaxHighlighter::init()
 {
     QTextCharFormat commentFormat;
-    commentFormat.setForeground(Qt::darkYellow);
-    QRegExp commentRegex(QLatin1String("^!.*"));
-    m_rules.append(Rule(commentRegex, commentFormat));
+    commentFormat.setForeground( Qt::darkYellow );
+    QRegExp commentRegex( QLatin1String( "^!.*" ) );
+    m_rules.append( PimCommon::Rule( commentRegex, commentFormat ) );
 
     QTextCharFormat exceptionFormat;
-    exceptionFormat.setForeground(Qt::magenta);
-    QRegExp exceptionRegex(QLatin1String("^@@.*"));
-    m_rules.append(Rule(exceptionRegex, exceptionFormat));
+    exceptionFormat.setForeground( Qt::magenta );
+    QRegExp exceptionRegex( QLatin1String( "^@@.*" ) );
+    m_rules.append( PimCommon::Rule( exceptionRegex, exceptionFormat ) );
 
     QTextCharFormat headerFormat;
-    headerFormat.setForeground(Qt::red);
-    QRegExp headerRegex(QLatin1String("^\\[.*"));
-    m_rules.append(Rule(headerRegex, headerFormat));
+    headerFormat.setForeground( Qt::red );
+    QRegExp headerRegex( QLatin1String( "^\\[.*" ) );
+    m_rules.append( PimCommon::Rule( headerRegex, headerFormat ) );
 
     QTextCharFormat elementFormat;
-    elementFormat.setForeground(Qt::blue);
-    QRegExp elementRegex(QLatin1String(".*##.*"));
-    m_rules.append(Rule(elementRegex, elementFormat));
+    elementFormat.setForeground( Qt::blue );
+    QRegExp elementRegex( QLatin1String( ".*##.*" ) );
+    m_rules.append( PimCommon::Rule( elementRegex, elementFormat ) );
 }
 

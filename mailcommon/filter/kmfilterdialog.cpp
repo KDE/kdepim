@@ -24,8 +24,8 @@
 #include "mailcommon_debug.h"
 #include "kmfilterlistbox.h"
 
-#include "filteractiondict.h"
-#include "filteractionwidget.h"
+#include "filteractions/filteractiondict.h"
+#include "filteractions/filteractionwidget.h"
 #include "filterimporterexporter.h"
 #include "filterselectiondialog.h"
 #include "kmfilteraccountlist.h"
