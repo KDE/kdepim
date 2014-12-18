@@ -40,10 +40,11 @@ public:
     QMap<QByteArray, KIMAP::Acl::Rights> rights() const;
     QMap<QByteArray, KIMAP::Acl::Rights> oldRights() const;
     QByteArray type() const;
-    Attribute *clone() const;
+    ImapAclAttribute *clone() const;
     QByteArray serialized() const;
     void deserialize( const QByteArray &data );
 
+    bool operator==(const ImapAclAttribute &other) const;
 private:
     QMap<QByteArray, KIMAP::Acl::Rights> mRights;
     QMap<QByteArray, KIMAP::Acl::Rights> mOldRights;

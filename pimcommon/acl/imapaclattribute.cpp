@@ -55,7 +55,7 @@ QByteArray ImapAclAttribute::type() const
     return sType;
 }
 
-Akonadi::Attribute *ImapAclAttribute::clone() const
+ImapAclAttribute *ImapAclAttribute::clone() const
 {
     return new ImapAclAttribute( mRights, mOldRights );
 }
@@ -126,4 +126,10 @@ void ImapAclAttribute::deserialize( const QByteArray &data )
     const QByteArray rightPart = data.mid( pos + 4 );
     fillRightsMap( leftPart.split( '%' ), mRights );
     fillRightsMap( rightPart.split( '%' ), mOldRights );
+}
+
+
+bool PimCommon::ImapAclAttribute::operator==(const PimCommon::ImapAclAttribute &other) const
+{
+    return (oldRights() == other.oldRights()) && (rights() == other.rights());
 }

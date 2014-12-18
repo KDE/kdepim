@@ -36,9 +36,56 @@ void ImapAclAttributeTest::shouldHaveDefaultValue()
     QVERIFY(attr.rights().isEmpty());
 }
 
+void ImapAclAttributeTest::shouldBuildAttribute()
+{
+    QMap<QByteArray, KIMAP::Acl::Rights> right;
+    right.insert("test", KIMAP::Acl::Admin);
+    right.insert("foo", KIMAP::Acl::Admin);
+
+    QMap<QByteArray, KIMAP::Acl::Rights> oldright;
+    right.insert("test", KIMAP::Acl::Delete);
+    right.insert("foo", KIMAP::Acl::Delete);
+    PimCommon::ImapAclAttribute attr(right, oldright);
+    QCOMPARE(attr.oldRights(), oldright);
+    QCOMPARE(attr.rights(), right);
+}
+
 void ImapAclAttributeTest::shouldAssignValue()
 {
+    PimCommon::ImapAclAttribute attr;
+    QMap<QByteArray, KIMAP::Acl::Rights> right;
+    right.insert("test", KIMAP::Acl::Admin);
+    right.insert("foo", KIMAP::Acl::Admin);
+    attr.setRights(right);
+    QCOMPARE(attr.rights(), right);
+}
 
+void ImapAclAttributeTest::shouldCloneAttr()
+{
+    PimCommon::ImapAclAttribute attr;
+    QMap<QByteArray, KIMAP::Acl::Rights> right;
+    right.insert("test", KIMAP::Acl::Admin);
+    right.insert("foo", KIMAP::Acl::Admin);
+    attr.setRights(right);
+    PimCommon::ImapAclAttribute *clone = attr.clone();
+    QVERIFY(attr==*clone);
+    delete clone;
+}
+
+void ImapAclAttributeTest::shouldSerializedAttribute()
+{
+    QMap<QByteArray, KIMAP::Acl::Rights> right;
+    right.insert("test", KIMAP::Acl::Admin);
+    right.insert("foo", KIMAP::Acl::Admin);
+
+    QMap<QByteArray, KIMAP::Acl::Rights> oldright;
+    right.insert("test", KIMAP::Acl::Delete);
+    right.insert("foo", KIMAP::Acl::Delete);
+    PimCommon::ImapAclAttribute attr(right, oldright);
+    const QByteArray ba = attr.serialized();
+    PimCommon::ImapAclAttribute result;
+    result.deserialize(ba);
+    QVERIFY(attr==result);
 }
 
 QTEST_KDEMAIN(ImapAclAttributeTest, NoGUI)

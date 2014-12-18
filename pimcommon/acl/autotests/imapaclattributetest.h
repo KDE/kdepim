@@ -27,7 +27,10 @@ public:
     ~ImapAclAttributeTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldBuildAttribute();
     void shouldAssignValue();
+    void shouldCloneAttr();
+    void shouldSerializedAttribute();
 };
 
 #endif // IMAPACLATTRIBUTETEST_H
