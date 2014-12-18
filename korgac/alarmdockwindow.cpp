@@ -114,7 +114,7 @@ AlarmDockWindow::~AlarmDockWindow()
 
 void AlarmDockWindow::slotUpdate( int reminders )
 {
-  bool actif = ( reminders > 0 );
+  const bool actif = ( reminders > 0 );
   mSuspendAll->setEnabled( actif );
   mDismissAll->setEnabled( actif );
   if ( actif ) {
