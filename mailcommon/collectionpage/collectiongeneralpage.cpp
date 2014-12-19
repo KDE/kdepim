@@ -55,7 +55,11 @@ using namespace Akonadi;
 using namespace MailCommon;
 
 CollectionGeneralPage::CollectionGeneralPage( QWidget *parent )
-    : CollectionPropertiesPage( parent ), mNameEdit( 0 ), mFolderCollection( 0 )
+    : CollectionPropertiesPage( parent ),
+      mContentsComboBox(0),
+      mIncidencesForComboBox(0),
+      mNameEdit( 0 ),
+      mFolderCollection( 0 )
 {
     setObjectName( QLatin1String( "MailCommon::CollectionGeneralPage" ) );
     setPageTitle( i18nc( "@title:tab General settings for a folder.", "General" ) );
@@ -225,8 +229,6 @@ void CollectionGeneralPage::init( const Akonadi::Collection &collection )
             mContentsComboBox->setEnabled( false );
         }
 
-    } else {
-        mContentsComboBox = 0;
     }
 
     // Kolab incidences-for annotation.
@@ -238,8 +240,6 @@ void CollectionGeneralPage::init( const Akonadi::Collection &collection )
         gl->addWidget(mIncidencesForComboBox, row, 0, 1, 1);
 
         mIncidencesForComboBox->setCurrentIndex( incidencesFor );
-    } else {
-        mIncidencesForComboBox = 0;
     }
 
     if ( PimCommon::Util::isImapResource(collection.resource()) ) {
