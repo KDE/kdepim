@@ -55,6 +55,9 @@ public:
     CollectionTypeUtil::FolderContentsType typeFromKolabName(const QByteArray &name);
     QString folderContentDescription(CollectionTypeUtil::FolderContentsType type);
     QByteArray kolabNameFromType(CollectionTypeUtil::FolderContentsType type);
+    QString incidencesForToString(CollectionTypeUtil::IncidencesFor type);
+    CollectionTypeUtil::FolderContentsType contentsTypeFromString(const QString &type);
+    QString typeNameFromKolabType(const QByteArray &type);
 };
 }
 #endif // COLLECTIONTYPEUTIL_H

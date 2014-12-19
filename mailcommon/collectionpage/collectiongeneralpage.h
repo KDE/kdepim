@@ -48,25 +48,6 @@ public:
     void load( const Akonadi::Collection &collection );
     void save( Akonadi::Collection &collection );
 
-    enum FolderContentsType {
-        ContentsTypeMail = 0,
-        ContentsTypeCalendar,
-        ContentsTypeContact,
-        ContentsTypeNote,
-        ContentsTypeTask,
-        ContentsTypeJournal,
-        ContentsTypeConfiguration,
-        ContentsTypeFreebusy,
-        ContentsTypeFile,
-        ContentsTypeLast = ContentsTypeFile
-    };
-
-    enum IncidencesFor {
-        IncForNobody,
-        IncForAdmins,
-        IncForReaders
-    };
-
 protected:
     void init( const Akonadi::Collection & );
 

@@ -59,6 +59,20 @@ QString CollectionTypeUtil::folderContentDescription( CollectionTypeUtil::Folder
 }
 
 
+QString CollectionTypeUtil::incidencesForToString( CollectionTypeUtil::IncidencesFor type )
+{
+    switch ( type ) {
+    case CollectionTypeUtil::IncForNobody:
+        return QLatin1String("nobody");
+    case CollectionTypeUtil::IncForAdmins:
+        return QLatin1String("admins");
+    case CollectionTypeUtil::IncForReaders:
+        return QLatin1String("readers");
+    }
+
+    return QString(); // can't happen
+}
+
 CollectionTypeUtil::IncidencesFor CollectionTypeUtil::incidencesForFromString( const QString &string )
 {
     if ( string == QLatin1String("nobody") ) {
@@ -126,4 +140,67 @@ QByteArray CollectionTypeUtil::kolabNameFromType( CollectionTypeUtil::FolderCont
     default:
         return QByteArray();
     }
+}
+
+CollectionTypeUtil::FolderContentsType CollectionTypeUtil::contentsTypeFromString( const QString &type )
+{
+    if ( type == i18nc( "type of folder content", "Mail" ) ) {
+        return CollectionTypeUtil::ContentsTypeMail;
+    }
+    if ( type == i18nc( "type of folder content", "Calendar" ) ) {
+        return CollectionTypeUtil::ContentsTypeCalendar;
+    }
+    if ( type == i18nc( "type of folder content", "Contacts" ) ) {
+        return CollectionTypeUtil::ContentsTypeContact;
+    }
+    if ( type == i18nc( "type of folder content", "Notes" ) ) {
+        return CollectionTypeUtil::ContentsTypeNote;
+    }
+    if ( type == i18nc( "type of folder content", "Tasks" ) ) {
+        return CollectionTypeUtil::ContentsTypeTask;
+    }
+    if ( type == i18nc( "type of folder content", "Journal" ) ) {
+        return CollectionTypeUtil::ContentsTypeJournal;
+    }
+    if ( type == i18nc( "type of folder content", "Configuration" ) ) {
+        return CollectionTypeUtil::ContentsTypeConfiguration;
+    }
+    if ( type == i18nc( "type of folder content", "Freebusy" ) ) {
+        return CollectionTypeUtil::ContentsTypeFreebusy;
+    }
+    if ( type == i18nc( "type of folder content", "Files" ) ) {
+        return CollectionTypeUtil::ContentsTypeFile;
+    }
+
+    return CollectionTypeUtil::ContentsTypeMail; //safety return value
+}
+
+QString CollectionTypeUtil::typeNameFromKolabType( const QByteArray &type )
+{
+    if ( type == "task" || type == "task.default" ) {
+        return i18nc( "type of folder content", "Tasks" );
+    }
+    if ( type == "event" || type == "event.default" ) {
+        return i18nc( "type of folder content", "Calendar" );
+    }
+    if ( type == "contact" || type == "contact.default" ) {
+        return i18nc( "type of folder content", "Contacts" );
+    }
+    if ( type == "note" || type == "note.default" ) {
+        return i18nc( "type of folder content", "Notes" );
+    }
+    if ( type == "journal" || type == "journal.default" ) {
+        return i18nc( "type of folder content", "Journal" );
+    }
+    if ( type == "configuration" || type == "configuration.default" ) {
+        return i18nc( "type of folder content", "Configuration" );
+    }
+    if ( type == "freebusy" || type == "freebusy.default" ) {
+        return i18nc( "type of folder content", "Freebusy" );
+    }
+    if ( type == "file" || type == "file.default" ) {
+        return i18nc( "type of folder content", "Files" );
+    }
+
+    return i18nc( "type of folder content", "Mail" );
 }
