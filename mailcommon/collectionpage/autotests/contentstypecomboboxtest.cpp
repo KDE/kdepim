@@ -53,8 +53,8 @@ void ContentsTypeComboBoxTest::shouldChangeComboBoxIndex()
     KComboBox *combo = qFindChild<KComboBox *>(&contentType, QLatin1String("contentstypecombobox"));
     for (int i = 0 ; i < combo->count() ; ++i) {
         contentType.setCurrentIndex(i);
-        QVERIFY(contentType.currentIndex() == i);
-        QVERIFY(combo->currentIndex() == i);
+        QCOMPARE(contentType.currentIndex(), i);
+        QCOMPARE(combo->currentIndex(), i);
     }
 }
 
@@ -65,7 +65,7 @@ void ContentsTypeComboBoxTest::shouldEmitSignalWhenIndexChanged()
     QTest::qWaitForWindowShown(&contentType);
     QSignalSpy spy(&contentType, SIGNAL(indexChanged(int)));
     contentType.setCurrentIndex(1);
-    QVERIFY(spy.at(0).count() == 1);
+    QCOMPARE(spy.at(0).count(), 1);
 }
 
 QTEST_KDEMAIN(ContentsTypeComboBoxTest, GUI)
