@@ -36,7 +36,7 @@ TemplateManager::TemplateManager(const QString &relativeTemplateDir, PimCommon::
     initTemplatesDirectories(relativeTemplateDir);
 
     connect(mDirWatch, &KDirWatch::dirty, this, &TemplateManager::slotDirectoryChanged);
-    loadTemplates();
+    loadTemplates(true);
 }
 
 TemplateManager::~TemplateManager()
@@ -63,14 +63,16 @@ void TemplateManager::initTemplatesDirectories(const QString &templatesRelativeP
     }
 }
 
-void TemplateManager::loadTemplates()
+void TemplateManager::loadTemplates(bool init)
 {
-    if (!mTemplatesDirectories.isEmpty()) {
-        Q_FOREACH (const QString &directory, mTemplatesDirectories) {
-            mDirWatch->removeDir(directory);
+    if (!init) {
+        if ( !mTemplatesDirectories.isEmpty() ) {
+            Q_FOREACH (const QString &directory, mTemplatesDirectories) {
+              mDirWatch->removeDir( directory );
+            }
+        } else {
+            return;
         }
-    } else {
-        return;
     }
 
     Q_FOREACH (const QString &directory, mTemplatesDirectories) {

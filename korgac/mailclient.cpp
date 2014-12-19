@@ -155,7 +155,7 @@ bool MailClient::mailOrganizer(const KCalCore::IncidenceBase::Ptr &incidence,
         subject = i18n("Free Busy Message");
     }
 
-    QString body = KCalUtils::IncidenceFormatter::mailBodyStr(incidence, KSystemTimeZones::local());
+    const QString body = KCalUtils::IncidenceFormatter::mailBodyStr(incidence, KSystemTimeZones::local());
 
     return send(identity, from, to, QString(), subject, body, false,
                 bccMe, attachment, mailTransport);

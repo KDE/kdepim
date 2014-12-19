@@ -61,7 +61,7 @@ public:
 
         q->connect(downloadThemesAction, SIGNAL(triggered(bool)), q, SLOT(slotDownloadHeaderThemes()));
         q->connect(watch, SIGNAL(dirty(QString)), SLOT(directoryChanged()));
-        updateThemesPath();
+        updateThemesPath(true);
     }
 
     ~Private()
@@ -97,14 +97,16 @@ public:
         Q_EMIT q->updateThemes();
     }
 
-    void updateThemesPath()
+    void updateThemesPath(bool init = false)
     {
-        if (!themesDirectories.isEmpty()) {
-            Q_FOREACH (const QString &directory, themesDirectories) {
-                watch->removeDir(directory);
-            }
-        } else {
-            return;
+        if (!init) {
+           if ( !themesDirectories.isEmpty() ) {
+               Q_FOREACH (const QString &directory, themesDirectories) {
+                   watch->removeDir( directory );
+               }
+           } else {
+               return;
+           }
         }
 
         // clear all previous theme information

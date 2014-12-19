@@ -18,3 +18,17 @@ add_executable( expirecollectionattributetest ${mailcommon_expirecollectionattri
 add_test(expirecollectionattributetest expirecollectionattributetest)
 ecm_mark_as_test(expirecollectionattributetest)
 target_link_libraries( expirecollectionattributetest Qt5::Test KF5::KDELibs4Support Qt5::Gui KF5::AkonadiCore mailcommon)
+
+set( mailcommon_incidencesforwidgettest_source incidencesforwidgettest.cpp )
+add_executable( incidencesforwidgettest ${mailcommon_incidencesforwidgettest_source})
+add_test(incidencesforwidgettest incidencesforwidgettest)
+ecm_mark_as_test(incidencesforwidgettest)
+target_link_libraries( incidencesforwidgettest Qt5::Test  Qt5::Gui mailcommon)
+
+set( mailcommon_contenttypewidgettest_source contenttypewidgettest.cpp )
+add_executable( contenttypewidgettest ${mailcommon_contenttypewidgettest_source})
+add_test(contenttypewidgettest contenttypewidgettest)
+ecm_mark_as_test(contenttypewidgettest)
+target_link_libraries( contenttypewidgettest Qt5::Test  Qt5::Gui mailcommon)
+
+

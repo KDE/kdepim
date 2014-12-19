@@ -33,12 +33,12 @@ namespace KIdentityManagement
 {
 class IdentityCombo;
 }
-
-namespace MailCommon
-{
+class QVBoxLayout;
+namespace MailCommon {
 
 class FolderCollection;
-
+class IncidencesForWidget;
+class ContentTypeWidget;
 class MAILCOMMON_EXPORT CollectionGeneralPage : public Akonadi::CollectionPropertiesPage
 {
     Q_OBJECT
@@ -50,25 +50,6 @@ public:
     void load(const Akonadi::Collection &collection);
     void save(Akonadi::Collection &collection);
 
-    enum FolderContentsType {
-        ContentsTypeMail = 0,
-        ContentsTypeCalendar,
-        ContentsTypeContact,
-        ContentsTypeNote,
-        ContentsTypeTask,
-        ContentsTypeJournal,
-        ContentsTypeConfiguration,
-        ContentsTypeFreebusy,
-        ContentsTypeFile,
-        ContentsTypeLast = ContentsTypeFile
-    };
-
-    enum IncidencesFor {
-        IncForNobody,
-        IncForAdmins,
-        IncForReaders
-    };
-
 protected:
     void init(const Akonadi::Collection &);
 
@@ -78,9 +59,10 @@ private Q_SLOTS:
     void slotNameChanged(const QString &name);
 
 private:
+    void addLine(QWidget *parent, QVBoxLayout *layout);
     QString mColorName;
-    KComboBox *mContentsComboBox;
-    KComboBox *mIncidencesForComboBox;
+    ContentTypeWidget *mContentsComboBox;
+    IncidencesForWidget *mIncidencesForComboBox;
     QCheckBox *mSharedSeenFlagsCheckBox;
     QCheckBox   *mNotifyOnNewMailCheckBox;
     QCheckBox   *mKeepRepliesInSameFolderCheckBox;

@@ -103,10 +103,12 @@ protected:
     void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
     void closeEvent(QCloseEvent *) Q_DECL_OVERRIDE;
 
-private:
-    static KDateTime triggerDateForIncidence(const KCalCore::Incidence::Ptr &inc,
-            const QDateTime &reminderAt,
-            QString &displayStr);
+  private:
+    typedef QList<ReminderTreeItem *> ReminderList;
+
+    static KDateTime triggerDateForIncidence( const KCalCore::Incidence::Ptr &inc,
+                                              const QDateTime &reminderAt,
+                                              QString &displayStr );
 
     // Removes each Incidence-X group that has one of the specified uids
     void removeFromConfig(const QList<Akonadi::Item::Id> &);
@@ -120,11 +122,11 @@ private:
     bool startKOrganizer();
     ReminderTreeItem *searchByItem(const Akonadi::Item &incidence);
     void setTimer();
-    void dismiss(QList<ReminderTreeItem *> selections);
+    void dismiss(ReminderList selections );
     int activeCount();
-    QList<ReminderTreeItem *> selectedItems() const;
-    void toggleDetails(QTreeWidgetItem *item);
-    void showDetails(QTreeWidgetItem *item);
+    ReminderList selectedItems() const;
+    void toggleDetails( QTreeWidgetItem *item );
+    void showDetails( QTreeWidgetItem *item );
 
     Akonadi::ETMCalendar::Ptr mCalendar;
     QTreeWidget *mIncidenceTree;

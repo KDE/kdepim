@@ -51,7 +51,7 @@ private Q_SLOTS:
     void slotDirectoryChanged();
 
 private:
-    void loadTemplates();
+    void loadTemplates(bool init = false);
     void initTemplatesDirectories(const QString &templatesRelativePath);
     TemplateInfo loadTemplate(const QString &themePath, const QString &defaultDesktopFileName);
 
