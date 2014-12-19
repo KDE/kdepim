@@ -57,11 +57,9 @@ CollectionGeneralPage::CollectionGeneralPage( QWidget *parent )
 void CollectionGeneralPage::init(const Akonadi::Collection &collection)
 {
   QVBoxLayout *topLayout = new QVBoxLayout( this );
-  topLayout->setSpacing( KDialog::spacingHint() );
 
   QHBoxLayout *hbox = new QHBoxLayout();
   topLayout->addItem( hbox );
-  hbox->setSpacing( KDialog::spacingHint() );
 
   QLabel *label = new QLabel( i18nc( "@label:textbox Name of the folder.", "&Name:" ), this );
   hbox->addWidget( label );
@@ -78,7 +76,6 @@ void CollectionGeneralPage::init(const Akonadi::Collection &collection)
   // should replies to mails in this folder be kept in this same folder?
   hbox = new QHBoxLayout();
   topLayout->addItem( hbox );
-  hbox->setSpacing( KDialog::spacingHint() );
 
   mBlockAlarmsCheckBox = new QCheckBox( i18nc( "@option:check", "Block reminders locally" ), this );
   mBlockAlarmsCheckBox->setToolTip(
@@ -88,7 +85,6 @@ void CollectionGeneralPage::init(const Akonadi::Collection &collection)
            "Check this box if you do not want to receive reminders from items "
            "associated with this calendar." ) );
   hbox->addWidget( mBlockAlarmsCheckBox );
->>>>>>> origin/KDE/4.14
 
 #ifndef KDEPIM_MOBILE_UI
     hbox = new QHBoxLayout();

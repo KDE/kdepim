@@ -99,7 +99,7 @@ target_link_libraries(
   KF5::KIOCore
   mailcommon
   pimcommon
-  akonadi-calendar
+  KF5::AkonadiCalendar
 )
 
 set_target_properties(calendarsupportcollectionpage
