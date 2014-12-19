@@ -36,7 +36,7 @@ class IdentityCombo;
 namespace MailCommon {
 
 class FolderCollection;
-
+class ContentsTypeComboBox;
 class MAILCOMMON_EXPORT CollectionGeneralPage : public Akonadi::CollectionPropertiesPage
 {
     Q_OBJECT
@@ -78,7 +78,7 @@ private Q_SLOTS:
 private:
     QString mColorName;
     KComboBox *mContentsComboBox;
-    KComboBox *mIncidencesForComboBox;
+    ContentsTypeComboBox *mIncidencesForComboBox;
     QCheckBox *mSharedSeenFlagsCheckBox;
     QCheckBox   *mNotifyOnNewMailCheckBox;
     QCheckBox   *mKeepRepliesInSameFolderCheckBox;

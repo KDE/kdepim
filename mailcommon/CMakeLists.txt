@@ -86,12 +86,14 @@ set(libmailcommon_filter_SRCS
 )
 
 set(libmailcommon_collection_SRCS
+  collectionpage/collectiontypeutil.cpp
   collectionpage/attributeregistrar.cpp
   collectionpage/collectionannotationsattribute.cpp
   collectionpage/collectiongeneralpage.cpp
   collectionpage/collectionexpirypage.cpp
   collectionpage/expirecollectionattribute.cpp
   collectionpage/newmailnotifierattribute.cpp
+  collectionpage/contentstypecombobox.cpp
 )
 
 set(libmailcommon_folder_SRCS
