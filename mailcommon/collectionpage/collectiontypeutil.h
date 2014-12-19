@@ -32,6 +32,11 @@ public:
     CollectionTypeUtil();
     ~CollectionTypeUtil();
 
+    static QByteArray kolabFolderType();
+    static QByteArray kolabIncidencesFor();
+    static QByteArray kolabSharedSeen();
+
+
     enum FolderContentsType {
         ContentsTypeMail = 0,
         ContentsTypeCalendar,
@@ -58,6 +63,7 @@ public:
     QString incidencesForToString(CollectionTypeUtil::IncidencesFor type);
     CollectionTypeUtil::FolderContentsType contentsTypeFromString(const QString &type);
     QString typeNameFromKolabType(const QByteArray &type);
+    QString iconNameFromContentsType(CollectionTypeUtil::FolderContentsType type);
 };
 }
 #endif // COLLECTIONTYPEUTIL_H

@@ -32,11 +32,12 @@ template <typename T> class QSharedPointer;
 namespace KPIMIdentities {
 class IdentityCombo;
 }
-
+class QVBoxLayout;
 namespace MailCommon {
 
 class FolderCollection;
 class IncidencesForWidget;
+class ContentTypeWidget;
 class MAILCOMMON_EXPORT CollectionGeneralPage : public Akonadi::CollectionPropertiesPage
 {
     Q_OBJECT
@@ -57,8 +58,9 @@ private Q_SLOTS:
     void slotNameChanged( const QString &name );
 
 private:
+    void addLine(QWidget *parent, QVBoxLayout *layout);
     QString mColorName;
-    KComboBox *mContentsComboBox;
+    ContentTypeWidget *mContentsComboBox;
     IncidencesForWidget *mIncidencesForComboBox;
     QCheckBox *mSharedSeenFlagsCheckBox;
     QCheckBox   *mNotifyOnNewMailCheckBox;

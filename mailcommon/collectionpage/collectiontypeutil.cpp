@@ -32,6 +32,22 @@ CollectionTypeUtil::~CollectionTypeUtil()
 
 }
 
+QByteArray CollectionTypeUtil::kolabFolderType()
+{
+    return "/shared/vendor/kolab/folder-type";
+}
+
+QByteArray CollectionTypeUtil::kolabIncidencesFor()
+{
+    return "/shared/vendor/kolab/incidences-for";
+}
+
+QByteArray CollectionTypeUtil::kolabSharedSeen()
+{
+    return "/shared/vendor/cmu/cyrus-imapd/sharedseen";
+}
+
+
 QString CollectionTypeUtil::folderContentDescription( CollectionTypeUtil::FolderContentsType type )
 {
     switch ( type ) {
@@ -204,3 +220,40 @@ QString CollectionTypeUtil::typeNameFromKolabType( const QByteArray &type )
 
     return i18nc( "type of folder content", "Mail" );
 }
+
+QString CollectionTypeUtil::iconNameFromContentsType(CollectionTypeUtil::FolderContentsType type)
+{
+    QString iconName;
+    switch (type) {
+    case CollectionTypeUtil::ContentsTypeCalendar:
+        iconName = QString::fromLatin1( "view-calendar" );
+        break;
+    case CollectionTypeUtil::ContentsTypeContact:
+        iconName= QString::fromLatin1( "view-pim-contacts" );
+        break;
+    case CollectionTypeUtil::ContentsTypeNote:
+        iconName = QString::fromLatin1( "view-pim-notes" );
+        break;
+    case CollectionTypeUtil::ContentsTypeTask:
+        iconName = QString::fromLatin1( "view-pim-tasks" );
+        break;
+    case CollectionTypeUtil::ContentsTypeJournal:
+        iconName = QString::fromLatin1( "view-pim-journal" );
+        break;
+    case CollectionTypeUtil::ContentsTypeConfiguration:
+        iconName = QString::fromLatin1( "configure" );
+        break;
+    case CollectionTypeUtil::ContentsTypeFreebusy:
+        iconName = QString::fromLatin1( "view-calendar-agenda" );
+        break;
+    case CollectionTypeUtil::ContentsTypeFile:
+        iconName = QString::fromLatin1( "document-open" );
+        break;
+    case CollectionTypeUtil::ContentsTypeMail:
+    default:
+        break;
+    }
+
+    return iconName;
+}
+

@@ -94,6 +94,7 @@ set(libmailcommon_collection_SRCS
   collectionpage/expirecollectionattribute.cpp
   collectionpage/newmailnotifierattribute.cpp
   collectionpage/incidencesforwidget.cpp
+  collectionpage/contenttypewidget.cpp
 )
 
 set(libmailcommon_folder_SRCS

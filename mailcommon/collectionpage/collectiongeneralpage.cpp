@@ -19,6 +19,7 @@
 #include "collectiontypeutil.h"
 
 #include "incidencesforwidget.h"
+#include "contenttypewidget.h"
 #include "collectionannotationsattribute.h"
 #include "newmailnotifierattribute.h"
 #include "foldercollection.h"
@@ -46,11 +47,6 @@
 #include <QLabel>
 #include <QVBoxLayout>
 
-// TODO Where should these be?
-#define KOLAB_FOLDERTYPE "/shared/vendor/kolab/folder-type"
-#define KOLAB_INCIDENCESFOR "/shared/vendor/kolab/incidences-for"
-#define KOLAB_SHAREDSEEN "/shared/vendor/cmu/cyrus-imapd/sharedseen"
-
 using namespace Akonadi;
 using namespace MailCommon;
 
@@ -58,6 +54,7 @@ CollectionGeneralPage::CollectionGeneralPage( QWidget *parent )
     : CollectionPropertiesPage( parent ),
       mContentsComboBox(0),
       mIncidencesForComboBox(0),
+      mSharedSeenFlagsCheckBox(0),
       mNameEdit( 0 ),
       mFolderCollection( 0 )
 {
@@ -69,7 +66,7 @@ CollectionGeneralPage::~CollectionGeneralPage()
 {
 }
 
-static void addLine( QWidget *parent, QVBoxLayout *layout )
+void CollectionGeneralPage::addLine( QWidget *parent, QVBoxLayout *layout )
 {
     QFrame *line = new QFrame( parent );
     line->setGeometry( QRect( 80, 150, 250, 20 ) );
@@ -183,43 +180,31 @@ void CollectionGeneralPage::init( const Akonadi::Collection &collection )
                       "automatically. Identities can be set up in the main configuration "
                       "dialog. (Settings -> Configure KMail)" ) );
 
-    CollectionTypeUtil::FolderContentsType contentsType = CollectionTypeUtil::ContentsTypeMail;
-
-    const CollectionAnnotationsAttribute *annotationAttribute =
-            collection.attribute<CollectionAnnotationsAttribute>();
-
-    const QMap<QByteArray, QByteArray> annotations =
-            ( annotationAttribute ?
-                  annotationAttribute->annotations() :
-                  QMap<QByteArray, QByteArray>() );
-
-    const bool sharedSeen = ( annotations.value( KOLAB_SHAREDSEEN ) == "true" );
-
-    CollectionTypeUtil collectionUtil;
-    const CollectionTypeUtil::IncidencesFor incidencesFor =
-            collectionUtil.incidencesForFromString( QLatin1String(annotations.value( KOLAB_INCIDENCESFOR )) );
-
-    const CollectionTypeUtil::FolderContentsType folderType = collectionUtil.typeFromKolabName( annotations.value( KOLAB_FOLDERTYPE ) );
 
     // Only do make this settable, if the IMAP resource is enabled
     // and it's not the personal folders (those must not be changed)
     if ( PimCommon::Util::isImapResource(collection.resource()) ) {
-        ++row;
-        label = new QLabel( i18n( "&Folder contents:" ), this );
-        gl->addWidget( label, row, 0 );
-        mContentsComboBox = new KComboBox( this );
-        label->setBuddy( mContentsComboBox );
-        gl->addWidget( mContentsComboBox, row, 1 );
-        mContentsComboBox->addItem( collectionUtil.folderContentDescription( CollectionTypeUtil::ContentsTypeMail ) );
-        mContentsComboBox->addItem( collectionUtil.folderContentDescription( CollectionTypeUtil::ContentsTypeCalendar ) );
-        mContentsComboBox->addItem( collectionUtil.folderContentDescription( CollectionTypeUtil::ContentsTypeContact ) );
-        mContentsComboBox->addItem( collectionUtil.folderContentDescription( CollectionTypeUtil::ContentsTypeNote ) );
-        mContentsComboBox->addItem( collectionUtil.folderContentDescription( CollectionTypeUtil::ContentsTypeTask ) );
-        mContentsComboBox->addItem( collectionUtil.folderContentDescription( CollectionTypeUtil::ContentsTypeJournal ) );
-        mContentsComboBox->addItem( collectionUtil.folderContentDescription( CollectionTypeUtil::ContentsTypeConfiguration ) );
-        mContentsComboBox->addItem( collectionUtil.folderContentDescription( CollectionTypeUtil::ContentsTypeFreebusy ) );
-        mContentsComboBox->addItem( collectionUtil.folderContentDescription( CollectionTypeUtil::ContentsTypeFile ) );
+        CollectionTypeUtil::FolderContentsType contentsType = CollectionTypeUtil::ContentsTypeMail;
 
+        const CollectionAnnotationsAttribute *annotationAttribute =
+                collection.attribute<CollectionAnnotationsAttribute>();
+
+        const QMap<QByteArray, QByteArray> annotations =
+                ( annotationAttribute ?
+                      annotationAttribute->annotations() :
+                      QMap<QByteArray, QByteArray>() );
+
+        const bool sharedSeen = ( annotations.value( CollectionTypeUtil::kolabSharedSeen() ) == "true" );
+
+        CollectionTypeUtil collectionUtil;
+        const CollectionTypeUtil::IncidencesFor incidencesFor =
+                collectionUtil.incidencesForFromString( QLatin1String(annotations.value( CollectionTypeUtil::kolabIncidencesFor() )) );
+
+        const CollectionTypeUtil::FolderContentsType folderType = collectionUtil.typeFromKolabName( annotations.value( CollectionTypeUtil::kolabFolderType() ) );
+
+        ++row;
+        mContentsComboBox = new ContentTypeWidget(this);
+        gl->addWidget(mContentsComboBox, row, 0, 1, 2);
         mContentsComboBox->setCurrentIndex( contentsType );
 
         connect( mContentsComboBox, SIGNAL(activated(int)),
@@ -235,7 +220,7 @@ void CollectionGeneralPage::init( const Akonadi::Collection &collection )
         const bool folderTypeComboboxEnabled = ( folderType == CollectionTypeUtil::ContentsTypeCalendar || folderType == CollectionTypeUtil::ContentsTypeTask );
         ++row;
         mIncidencesForComboBox = new IncidencesForWidget(this);
-        gl->addWidget(mIncidencesForComboBox, row, 0, 1, 1);
+        gl->addWidget(mIncidencesForComboBox, row, 0, 1, 2);
 
         mIncidencesForComboBox->setCurrentIndex( incidencesFor );
         mIncidencesForComboBox->setEnabled(folderTypeComboboxEnabled);
@@ -250,8 +235,6 @@ void CollectionGeneralPage::init( const Akonadi::Collection &collection )
                           "the same for all users having access to this folder. If disabled "
                           "(the default), every user with access to this folder has their "
                           "own unread state." ) );
-    } else {
-        mSharedSeenFlagsCheckBox = 0;
     }
 
     topLayout->addStretch( 100 ); // eat all superfluous space
@@ -290,10 +273,10 @@ void CollectionGeneralPage::load( const Akonadi::Collection &collection )
 
         if ( annotationsAttribute ) {
             const QMap<QByteArray, QByteArray> annotations = annotationsAttribute->annotations();
-            if ( annotations.contains( KOLAB_FOLDERTYPE ) ) {
+            if ( annotations.contains( CollectionTypeUtil::kolabFolderType() ) ) {
                 CollectionTypeUtil collectionUtil;
                 mContentsComboBox->setCurrentItem(
-                            collectionUtil.typeNameFromKolabType( annotations[ KOLAB_FOLDERTYPE ] ) );
+                            collectionUtil.typeNameFromKolabType( annotations[ CollectionTypeUtil::kolabFolderType() ] ) );
             }
         }
     }
@@ -338,12 +321,12 @@ void CollectionGeneralPage::save( Collection &collection )
 
     QMap<QByteArray, QByteArray> annotations = annotationsAttribute->annotations();
     if ( mSharedSeenFlagsCheckBox && mSharedSeenFlagsCheckBox->isEnabled() ) {
-        annotations[ KOLAB_SHAREDSEEN ] = mSharedSeenFlagsCheckBox->isChecked() ? "true" : "false";
+        annotations[ CollectionTypeUtil::kolabSharedSeen() ] = mSharedSeenFlagsCheckBox->isChecked() ? "true" : "false";
     }
 
     CollectionTypeUtil collectionUtil;
     if ( mIncidencesForComboBox && mIncidencesForComboBox->isEnabled() ) {
-        annotations[ KOLAB_INCIDENCESFOR ] =
+        annotations[ CollectionTypeUtil::kolabIncidencesFor() ] =
                 collectionUtil.incidencesForToString(
                     static_cast<CollectionTypeUtil::IncidencesFor>( mIncidencesForComboBox->currentIndex() ) ).toLatin1();
     }
@@ -354,42 +337,12 @@ void CollectionGeneralPage::save( Collection &collection )
 
         const QByteArray kolabName = collectionUtil.kolabNameFromType( type ) ;
         if ( !kolabName.isEmpty() ) {
-            QString iconName;
-            switch( type ) {
-            case CollectionTypeUtil::ContentsTypeCalendar:
-                iconName= QString::fromLatin1( "view-calendar" );
-                break;
-            case CollectionTypeUtil::ContentsTypeContact:
-                iconName= QString::fromLatin1( "view-pim-contacts" );
-                break;
-            case CollectionTypeUtil::ContentsTypeNote:
-                iconName = QString::fromLatin1( "view-pim-notes" );
-                break;
-            case CollectionTypeUtil::ContentsTypeTask:
-                iconName = QString::fromLatin1( "view-pim-tasks" );
-                break;
-            case CollectionTypeUtil::ContentsTypeJournal:
-                iconName = QString::fromLatin1( "view-pim-journal" );
-                break;
-            case CollectionTypeUtil::ContentsTypeConfiguration:
-                iconName = QString::fromLatin1( "configure" );
-                break;
-            case CollectionTypeUtil::ContentsTypeFreebusy:
-                iconName = QString::fromLatin1( "view-calendar-agenda" );
-                break;
-            case CollectionTypeUtil::ContentsTypeFile:
-                iconName = QString::fromLatin1( "document-open" );
-                break;
-            case CollectionTypeUtil::ContentsTypeMail:
-            default:
-                break;
-            }
-
+            const QString iconName = collectionUtil.iconNameFromContentsType(type);
             Akonadi::EntityDisplayAttribute *attribute =
                     collection.attribute<Akonadi::EntityDisplayAttribute>( Akonadi::Entity::AddIfMissing );
             attribute->setIconName( iconName );
             new Akonadi::CollectionModifyJob( collection );
-            annotations[ KOLAB_FOLDERTYPE ] = kolabName;
+            annotations[ CollectionTypeUtil::kolabFolderType() ] = kolabName;
         }
     }
     if ( annotations.isEmpty() ) {
