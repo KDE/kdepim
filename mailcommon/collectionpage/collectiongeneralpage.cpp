@@ -239,10 +239,7 @@ void CollectionGeneralPage::init( const Akonadi::Collection &collection )
 
         mIncidencesForComboBox->setCurrentIndex( incidencesFor );
         mIncidencesForComboBox->setEnabled(folderTypeComboboxEnabled);
-    }
 
-
-    if ( PimCommon::Util::isImapResource(collection.resource()) ) {
         mSharedSeenFlagsCheckBox = new QCheckBox( this );
         mSharedSeenFlagsCheckBox->setText( i18n( "Share unread state with all users" ) );
         mSharedSeenFlagsCheckBox->setChecked( sharedSeen );
