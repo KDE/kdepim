@@ -18,20 +18,20 @@
 
 */
 
-#ifndef CONTENTSTYPECOMBOBOX_H
-#define CONTENTSTYPECOMBOBOX_H
+#ifndef INCIDENCESFORWIDGET_H
+#define INCIDENCESFORWIDGET_H
 
 #include "mailcommon_export.h"
 #include <QWidget>
 class KComboBox;
 
 namespace MailCommon {
-class MAILCOMMON_EXPORT ContentsTypeComboBox : public QWidget
+class MAILCOMMON_EXPORT IncidencesForWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ContentsTypeComboBox(QWidget *parent=0);
-    ~ContentsTypeComboBox();
+    explicit IncidencesForWidget(QWidget *parent=0);
+    ~IncidencesForWidget();
 
     int currentIndex() const;
     void setCurrentIndex(int index);
@@ -44,4 +44,4 @@ private:
 };
 }
 
-#endif // CONTENTSTYPECOMBOBOX_H
+#endif // INCIDENCESFORWIDGET_H

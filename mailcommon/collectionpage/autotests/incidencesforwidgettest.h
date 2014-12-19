@@ -17,21 +17,21 @@
   02110-1301, USA.
 
 */
-#ifndef CONTENTSTYPECOMBOBOXTEST_H
-#define CONTENTSTYPECOMBOBOXTEST_H
+#ifndef INCIDENCESFORWIDGETTEST_H
+#define INCIDENCESFORWIDGETTEST_H
 
 #include <QObject>
 
-class ContentsTypeComboBoxTest : public QObject
+class IncidencesForWidgetTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit ContentsTypeComboBoxTest(QObject *parent = 0);
-    ~ContentsTypeComboBoxTest();
+    explicit IncidencesForWidgetTest(QObject *parent = 0);
+    ~IncidencesForWidgetTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldChangeComboBoxIndex();
     void shouldEmitSignalWhenIndexChanged();
 };
 
-#endif // CONTENTSTYPECOMBOBOXTEST_H
+#endif // INCIDENCESFORWIDGETTEST_H

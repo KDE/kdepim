@@ -18,27 +18,27 @@
 
 */
 
-#include "contentstypecomboboxtest.h"
-#include "../contentstypecombobox.h"
+#include "incidencesforwidgettest.h"
+#include "../incidencesforwidget.h"
 #include <kcombobox.h>
 #include <qlabel.h>
 #include <qtest_kde.h>
 #include <QSignalSpy>
 
-ContentsTypeComboBoxTest::ContentsTypeComboBoxTest(QObject *parent)
+IncidencesForWidgetTest::IncidencesForWidgetTest(QObject *parent)
     : QObject(parent)
 {
 
 }
 
-ContentsTypeComboBoxTest::~ContentsTypeComboBoxTest()
+IncidencesForWidgetTest::~IncidencesForWidgetTest()
 {
 
 }
 
-void ContentsTypeComboBoxTest::shouldHaveDefaultValue()
+void IncidencesForWidgetTest::shouldHaveDefaultValue()
 {
-    MailCommon::ContentsTypeComboBox contentType;
+    MailCommon::IncidencesForWidget contentType;
     QLabel *label = qFindChild<QLabel *>(&contentType, QLatin1String("contentstypelabel"));
     QVERIFY(label);
     KComboBox *combo = qFindChild<KComboBox *>(&contentType, QLatin1String("contentstypecombobox"));
@@ -47,9 +47,9 @@ void ContentsTypeComboBoxTest::shouldHaveDefaultValue()
     QCOMPARE(contentType.currentIndex(), 0);
 }
 
-void ContentsTypeComboBoxTest::shouldChangeComboBoxIndex()
+void IncidencesForWidgetTest::shouldChangeComboBoxIndex()
 {
-    MailCommon::ContentsTypeComboBox contentType;
+    MailCommon::IncidencesForWidget contentType;
     KComboBox *combo = qFindChild<KComboBox *>(&contentType, QLatin1String("contentstypecombobox"));
     for (int i = 0 ; i < combo->count() ; ++i) {
         contentType.setCurrentIndex(i);
@@ -58,9 +58,9 @@ void ContentsTypeComboBoxTest::shouldChangeComboBoxIndex()
     }
 }
 
-void ContentsTypeComboBoxTest::shouldEmitSignalWhenIndexChanged()
+void IncidencesForWidgetTest::shouldEmitSignalWhenIndexChanged()
 {
-    MailCommon::ContentsTypeComboBox contentType;
+    MailCommon::IncidencesForWidget contentType;
     contentType.show();
     QTest::qWaitForWindowShown(&contentType);
     QSignalSpy spy(&contentType, SIGNAL(indexChanged(int)));
@@ -68,4 +68,4 @@ void ContentsTypeComboBoxTest::shouldEmitSignalWhenIndexChanged()
     QCOMPARE(spy.at(0).count(), 1);
 }
 
-QTEST_KDEMAIN(ContentsTypeComboBoxTest, GUI)
+QTEST_KDEMAIN(IncidencesForWidgetTest, GUI)

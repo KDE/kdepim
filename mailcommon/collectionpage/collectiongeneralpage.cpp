@@ -18,7 +18,7 @@
 #include "collectiongeneralpage.h"
 #include "collectiontypeutil.h"
 
-#include "contentstypecombobox.h"
+#include "incidencesforwidget.h"
 #include "collectionannotationsattribute.h"
 #include "newmailnotifierattribute.h"
 #include "foldercollection.h"
@@ -234,7 +234,7 @@ void CollectionGeneralPage::init( const Akonadi::Collection &collection )
         // or if it's set to calendar or task (existing folder)
         const bool folderTypeComboboxEnabled = ( folderType == CollectionTypeUtil::ContentsTypeCalendar || folderType == CollectionTypeUtil::ContentsTypeTask );
         ++row;
-        mIncidencesForComboBox = new ContentsTypeComboBox(this);
+        mIncidencesForComboBox = new IncidencesForWidget(this);
         gl->addWidget(mIncidencesForComboBox, row, 0, 1, 1);
 
         mIncidencesForComboBox->setCurrentIndex( incidencesFor );

@@ -18,7 +18,7 @@
 
 */
 
-#include "contentstypecombobox.h"
+#include "incidencesforwidget.h"
 #include <QLabel>
 #include <QHBoxLayout>
 #include <KLocalizedString>
@@ -26,7 +26,7 @@
 
 using namespace MailCommon;
 
-ContentsTypeComboBox::ContentsTypeComboBox(QWidget *parent)
+IncidencesForWidget::IncidencesForWidget(QWidget *parent)
     : QWidget(parent)
 {
     QHBoxLayout *hbox = new QHBoxLayout(this);
@@ -61,17 +61,17 @@ ContentsTypeComboBox::ContentsTypeComboBox(QWidget *parent)
     connect(mIncidencesForComboBox, SIGNAL(currentIndexChanged(int)), SIGNAL(indexChanged(int)));
 }
 
-ContentsTypeComboBox::~ContentsTypeComboBox()
+IncidencesForWidget::~IncidencesForWidget()
 {
 
 }
 
-int ContentsTypeComboBox::currentIndex() const
+int IncidencesForWidget::currentIndex() const
 {
     return mIncidencesForComboBox->currentIndex();
 }
 
-void ContentsTypeComboBox::setCurrentIndex(int index)
+void IncidencesForWidget::setCurrentIndex(int index)
 {
     mIncidencesForComboBox->setCurrentIndex(index);
 }
