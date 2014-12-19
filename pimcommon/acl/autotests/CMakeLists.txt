@@ -3,5 +3,7 @@ include_directories(
 )
 
 set( pimcommon_imapaclattributetest_source imapaclattributetest.cpp ../imapaclattribute.cpp )
-kde4_add_unit_test( imapaclattributetest ${pimcommon_imapaclattributetest_source})
-target_link_libraries( imapaclattributetest ${QT_QTTEST_LIBRARY} ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY} ${KDEPIMLIBS_AKONADI_LIBS}  ${KDEPIMLIBS_KIMAP_LIBS})
+add_executable( imapaclattributetest ${pimcommon_imapaclattributetest_source})
+add_test(imapaclattributetest imapaclattributetest)
+ecm_mark_as_test(imapaclattributetest)
+target_link_libraries( imapaclattributetest Qt5::Test Qt5::Gui KF5::AkonadiCore  KF5::Imap mailcommon)

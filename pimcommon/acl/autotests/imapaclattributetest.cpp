@@ -17,7 +17,7 @@
 
 #include "imapaclattributetest.h"
 #include "../imapaclattribute.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 ImapAclAttributeTest::ImapAclAttributeTest(QObject *parent)
     : QObject(parent)
 {
@@ -88,4 +88,4 @@ void ImapAclAttributeTest::shouldSerializedAttribute()
     QVERIFY(attr == result);
 }
 
-QTEST_KDEMAIN(ImapAclAttributeTest, NoGUI)
+QTEST_MAIN(ImapAclAttributeTest)
