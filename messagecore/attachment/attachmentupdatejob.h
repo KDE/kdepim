@@ -31,7 +31,7 @@ public:
     AttachmentUpdateJob(const AttachmentPart::Ptr &part, QObject *parent = Q_NULLPTR);
     ~AttachmentUpdateJob();
 
-    virtual void start() Q_DECL_OVERRIDE;
+    void start() Q_DECL_OVERRIDE;
     AttachmentPart::Ptr originalPart() const;
     AttachmentPart::Ptr updatedPart() const;
 private:

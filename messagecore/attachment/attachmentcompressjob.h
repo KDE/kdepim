@@ -55,7 +55,7 @@ public:
     /**
      * Starts the attachment compress job.
      */
-    virtual void start() Q_DECL_OVERRIDE;
+    void start() Q_DECL_OVERRIDE;
 
     /**
      * Sets the original @p part of the compressed attachment.
