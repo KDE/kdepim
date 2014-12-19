@@ -20,7 +20,7 @@
 #ifndef CALENDARSUPPORT_COLLECTIONGENERALPAGE_H
 #define CALENDARSUPPORT_COLLECTIONGENERALPAGE_H
 
-#include "calendarsupport_export.h"
+#include "calendarsupportcollectionpage_export.h"
 
 #include <CollectionPropertiesPage>
 
@@ -28,10 +28,12 @@ class QLineEdit;
 class KIconButton;
 class QCheckBox;
 
-namespace CalendarSupport
-{
+namespace MailCommon {
+class IncidencesForWidget;
+}
+namespace CalendarSupport {
 
-class CALENDARSUPPORT_EXPORT CollectionGeneralPage : public Akonadi::CollectionPropertiesPage
+class CALENDARSUPPORTCOLLECTIONPAGE_EXPORT CollectionGeneralPage : public Akonadi::CollectionPropertiesPage
 {
     Q_OBJECT
 
@@ -43,10 +45,12 @@ public:
     void save(Akonadi::Collection &collection);
 
 private:
+    void init(const Akonadi::Collection &collection);
     QCheckBox *mBlockAlarmsCheckBox;
     QLineEdit *mNameEdit;
     QCheckBox *mIconCheckBox;
     KIconButton *mIconButton;
+    MailCommon::IncidencesForWidget *mIncidencesForComboBox;
 };
 
 AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(CollectionGeneralPageFactory, CollectionGeneralPage)

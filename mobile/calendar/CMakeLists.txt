@@ -55,6 +55,7 @@ target_link_libraries(korganizer-mobile
   incidenceeditorsngmobile
   eventviews
   calendarsupport
+  calendarsupportcollectionpage
   kdepim
 )
 

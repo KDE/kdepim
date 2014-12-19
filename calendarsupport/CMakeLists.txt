@@ -5,6 +5,8 @@
 include_directories(
   ${Boost_INCLUDE_DIR}
    ${CMAKE_BINARY_DIR}/calendarviews
+  ${CMAKE_SOURCE_DIR}/mailcommon
+  ${CMAKE_SOURCE_DIR}/pimcommon
 )
 add_definitions(-DQT_NO_CAST_FROM_ASCII)
 add_definitions(-DQT_NO_CAST_TO_ASCII)
@@ -23,7 +25,6 @@ set(calendarsupport_LIB_SRCS
   categoryconfig.cpp
   categoryhierarchyreader.cpp
   cellitem.cpp
-  collectiongeneralpage.cpp
   collectionselection.cpp
   eventarchiver.cpp
   identitymanager.cpp
@@ -83,4 +84,30 @@ set_target_properties(calendarsupport
 )
 
 install(TARGETS calendarsupport ${INSTALL_TARGETS_DEFAULT_ARGS})
+
+set(calendarsupportcollectionpage_LIB_SRCS
+    collectiongeneralpage.cpp
+)
+
+add_library(calendarsupportcollectionpage ${LIBRARY_TYPE} ${calendarsupportcollectionpage_LIB_SRCS})
+generate_export_header(calendarsupportcollectionpage BASE_NAME calendarsupportcollectionpage)
+target_link_libraries(
+  calendarsupportcollectionpage
+  KF5::AkonadiCore
+  KF5::CalendarCore
+  KF5::CalendarUtils
+  KF5::KIOCore
+  mailcommon
+  pimcommon
+  akonadi-calendar
+)
+
+set_target_properties(calendarsupportcollectionpage
+  PROPERTIES VERSION ${GENERIC_LIB_VERSION}
+  SOVERSION ${GENERIC_LIB_SOVERSION}
+)
+
+install(TARGETS calendarsupportcollectionpage ${INSTALL_TARGETS_DEFAULT_ARGS})
+
+
 install(FILES calendarplugin.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
