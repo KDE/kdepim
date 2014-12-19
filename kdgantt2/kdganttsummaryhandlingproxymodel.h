@@ -34,7 +34,7 @@ class KDGANTT_EXPORT SummaryHandlingProxyModel : public ForwardingProxyModel
     Q_OBJECT
     KDGANTT_DECLARE_PRIVATE_BASE_POLYMORPHIC(SummaryHandlingProxyModel)
 public:
-    explicit SummaryHandlingProxyModel(QObject *parent = 0);
+    explicit SummaryHandlingProxyModel(QObject *parent = Q_NULLPTR);
     virtual ~SummaryHandlingProxyModel();
 
     /*reimp*/ void setSourceModel(QAbstractItemModel *model) Q_DECL_OVERRIDE;

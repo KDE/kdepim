@@ -35,7 +35,7 @@ class KDGANTT_EXPORT ProxyModel : public ForwardingProxyModel
     Q_DISABLE_COPY(ProxyModel)
     KDGANTT_DECLARE_PRIVATE_BASE_POLYMORPHIC(ProxyModel)
 public:
-    explicit ProxyModel(QObject *parent = 0);
+    explicit ProxyModel(QObject *parent = Q_NULLPTR);
     virtual ~ProxyModel();
 
     void setColumn(int ganttrole, int col);

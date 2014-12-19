@@ -24,7 +24,7 @@ class CollectionAnnotationsAttributeTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit CollectionAnnotationsAttributeTest(QObject *parent = 0);
+    explicit CollectionAnnotationsAttributeTest(QObject *parent = Q_NULLPTR);
     ~CollectionAnnotationsAttributeTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();

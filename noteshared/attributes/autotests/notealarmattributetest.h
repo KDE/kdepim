@@ -24,7 +24,7 @@ class NoteAlarmAttributeTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit NoteAlarmAttributeTest(QObject *parent = 0);
+    explicit NoteAlarmAttributeTest(QObject *parent = Q_NULLPTR);
     ~NoteAlarmAttributeTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();

@@ -36,7 +36,7 @@ class KDGANTT_EXPORT ForwardingProxyModel : public QAbstractProxyModel
     Q_OBJECT
     Q_DISABLE_COPY(ForwardingProxyModel)
 public:
-    explicit ForwardingProxyModel(QObject *parent = 0);
+    explicit ForwardingProxyModel(QObject *parent = Q_NULLPTR);
     virtual ~ForwardingProxyModel();
 
     /*reimp*/ QModelIndex mapFromSource(const QModelIndex &sourceIndex) const Q_DECL_OVERRIDE;

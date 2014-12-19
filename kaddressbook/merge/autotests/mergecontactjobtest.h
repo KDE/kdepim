@@ -24,7 +24,7 @@ class MergeContactJobTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit MergeContactJobTest(QObject *parent = 0);
+    explicit MergeContactJobTest(QObject *parent = Q_NULLPTR);
     ~MergeContactJobTest();
 
 };

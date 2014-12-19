@@ -51,7 +51,7 @@ class GraphicsScene : public QGraphicsScene
     Q_OBJECT
     KDGANTT_DECLARE_PRIVATE_BASE_POLYMORPHIC(GraphicsScene)
 public:
-    explicit GraphicsScene(QObject *parent = 0);
+    explicit GraphicsScene(QObject *parent = Q_NULLPTR);
     virtual ~GraphicsScene();
 
     //qreal dateTimeToSceneX( const QDateTime& dt ) const;

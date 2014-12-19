@@ -27,7 +27,7 @@ class ScamAttributeTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit ScamAttributeTest(QObject *parent = 0);
+    explicit ScamAttributeTest(QObject *parent = Q_NULLPTR);
     ~ScamAttributeTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();

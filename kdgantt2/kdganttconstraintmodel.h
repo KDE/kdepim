@@ -38,7 +38,7 @@ class KDGANTT_EXPORT ConstraintModel : public QObject
     Q_OBJECT
     KDGANTT_DECLARE_PRIVATE_DERIVED_PARENT(ConstraintModel, QObject *)
 public:
-    explicit ConstraintModel(QObject *parent = 0);
+    explicit ConstraintModel(QObject *parent = Q_NULLPTR);
     virtual ~ConstraintModel();
 
     void addConstraint(const Constraint &c);

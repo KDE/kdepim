@@ -24,7 +24,7 @@ class ShortUrlEnginesTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit ShortUrlEnginesTest(QObject *parent = 0);
+    explicit ShortUrlEnginesTest(QObject *parent = Q_NULLPTR);
     ~ShortUrlEnginesTest();
 private Q_SLOTS:
     void shouldTestEngines_data();

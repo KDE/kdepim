@@ -24,7 +24,7 @@ class NewMailNotifierAttributeTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit NewMailNotifierAttributeTest(QObject *parent = 0);
+    explicit NewMailNotifierAttributeTest(QObject *parent = Q_NULLPTR);
     ~NewMailNotifierAttributeTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();

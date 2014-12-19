@@ -24,7 +24,7 @@ class ExpireCollectionAttributeTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit ExpireCollectionAttributeTest(QObject *parent = 0);
+    explicit ExpireCollectionAttributeTest(QObject *parent = Q_NULLPTR);
     ~ExpireCollectionAttributeTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();

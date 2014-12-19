@@ -38,7 +38,7 @@ class AttachmentEncryptWithChiasmusJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit AttachmentEncryptWithChiasmusJob(QObject *parent = 0);
+    explicit AttachmentEncryptWithChiasmusJob(QObject *parent = Q_NULLPTR);
     ~AttachmentEncryptWithChiasmusJob();
     void start();
 

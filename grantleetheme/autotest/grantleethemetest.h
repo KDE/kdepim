@@ -24,7 +24,7 @@ class GrantleeThemeTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit GrantleeThemeTest(QObject *parent = 0);
+    explicit GrantleeThemeTest(QObject *parent = Q_NULLPTR);
     ~GrantleeThemeTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();

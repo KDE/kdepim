@@ -26,7 +26,7 @@ class ModifyMessageDisplayFormatJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit ModifyMessageDisplayFormatJob(QObject *parent = 0);
+    explicit ModifyMessageDisplayFormatJob(QObject *parent = Q_NULLPTR);
     ~ModifyMessageDisplayFormatJob();
 
     void setRemoteContent(bool remote);
