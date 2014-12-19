@@ -22,7 +22,8 @@
 #include "../contenttypewidget.h"
 #include <kcombobox.h>
 #include <qlabel.h>
-#include <qtest_kde.h>
+#include <qtest.h>
+#include <QSignalSpy>
 ContentTypeWidgetTest::ContentTypeWidgetTest(QObject *parent)
     : QObject(parent)
 {
@@ -80,4 +81,4 @@ void ContentTypeWidgetTest::shouldChangeItem()
 
 }
 
-QTEST_KDEMAIN(ContentTypeWidgetTest, GUI)
+QTEST_MAIN(ContentTypeWidgetTest)

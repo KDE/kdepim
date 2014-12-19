@@ -22,7 +22,7 @@
 #include "../incidencesforwidget.h"
 #include <kcombobox.h>
 #include <qlabel.h>
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <QSignalSpy>
 
 IncidencesForWidgetTest::IncidencesForWidgetTest(QObject *parent)
@@ -68,4 +68,4 @@ void IncidencesForWidgetTest::shouldEmitSignalWhenIndexChanged()
     QCOMPARE(spy.at(0).count(), 1);
 }
 
-QTEST_KDEMAIN(IncidencesForWidgetTest, GUI)
+QTEST_MAIN(IncidencesForWidgetTest)
