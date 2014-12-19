@@ -3,6 +3,8 @@ kde4_no_enable_final(calendarsupport)
 include_directories(
   ${QT_QTDBUS_INCLUDE_DIR}
   ${Boost_INCLUDE_DIR}
+  ${CMAKE_SOURCE_DIR}/mailcommon
+  ${CMAKE_SOURCE_DIR}/pimcommon
 )
 add_definitions(-DQT_NO_CAST_FROM_ASCII)
 add_definitions(-DQT_NO_CAST_TO_ASCII)
@@ -18,7 +20,6 @@ set(calendarsupport_LIB_SRCS
   categoryconfig.cpp
   categoryhierarchyreader.cpp
   cellitem.cpp
-  collectiongeneralpage.cpp
   collectionselection.cpp
   eventarchiver.cpp
   identitymanager.cpp
@@ -79,4 +80,32 @@ set_target_properties(calendarsupport
 )
 
 install(TARGETS calendarsupport ${INSTALL_TARGETS_DEFAULT_ARGS})
+
+set(calendarsupportcollectionpage_LIB_SRCS
+    collectiongeneralpage.cpp
+)
+
+kde4_add_library(calendarsupportcollectionpage ${LIBRARY_TYPE} ${calendarsupportcollectionpage_LIB_SRCS})
+
+target_link_libraries(
+  calendarsupportcollectionpage
+  ${KDEPIMLIBS_AKONADI_LIBS}
+  ${KDEPIMLIBS_KCALCORE_LIBS}
+  ${KDEPIMLIBS_KCALUTILS_LIBS}
+  ${KDE4_KDEUI_LIBS}
+  ${KDE4_KIO_LIBS}
+  ${KDE4_KUTILS_LIBS}
+  mailcommon
+  pimcommon
+  akonadi-calendar
+)
+
+set_target_properties(calendarsupportcollectionpage
+  PROPERTIES VERSION ${GENERIC_LIB_VERSION}
+  SOVERSION ${GENERIC_LIB_SOVERSION}
+)
+
+install(TARGETS calendarsupportcollectionpage ${INSTALL_TARGETS_DEFAULT_ARGS})
+
+
 install(FILES calendarplugin.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})

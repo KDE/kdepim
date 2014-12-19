@@ -20,13 +20,14 @@
 #ifndef MAILCOMMON_COLLECTIONANNOTATIONSATTRIBUTE_H
 #define MAILCOMMON_COLLECTIONANNOTATIONSATTRIBUTE_H
 
+#include "mailcommon_export.h"
 #include <Akonadi/Attribute>
 
 #include <QMap>
 
 namespace MailCommon {
 
-class CollectionAnnotationsAttribute : public Akonadi::Attribute
+class MAILCOMMON_EXPORT CollectionAnnotationsAttribute : public Akonadi::Attribute
 {
 public:
     CollectionAnnotationsAttribute();

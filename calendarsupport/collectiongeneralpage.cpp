@@ -19,7 +19,7 @@
 */
 
 #include "collectiongeneralpage.h"
-
+#include "pimcommon/util/pimutil.h"
 #include <Akonadi/Collection>
 #include <Akonadi/EntityDisplayAttribute>
 #include <akonadi/calendar/blockalarmsattribute.h>
@@ -38,15 +38,23 @@
 #include <QLabel>
 #include <QVBoxLayout>
 
+#include <mailcommon/collectionpage/collectionannotationsattribute.h>
+#include <mailcommon/collectionpage/collectiontypeutil.h>
+#include <mailcommon/collectionpage/incidencesforwidget.h>
+
 using namespace Akonadi;
 using namespace CalendarSupport;
 
 CollectionGeneralPage::CollectionGeneralPage( QWidget *parent )
-  : CollectionPropertiesPage( parent )
+  : CollectionPropertiesPage( parent ),
+    mIncidencesForComboBox(0)
 {
   setObjectName( QLatin1String( "CalendarSupport::CollectionGeneralPage" ) );
   setPageTitle( i18nc( "@title:tab General settings for a folder.", "General" ) );
+}
 
+void CollectionGeneralPage::init(const Akonadi::Collection &collection)
+{
   QVBoxLayout *topLayout = new QVBoxLayout( this );
   topLayout->setSpacing( KDialog::spacingHint() );
 
@@ -98,6 +106,26 @@ CollectionGeneralPage::CollectionGeneralPage( QWidget *parent )
   hbox->addStretch();
 #endif
 
+  if ( PimCommon::Util::isImapResource(collection.resource()) ) {
+      const MailCommon::CollectionAnnotationsAttribute *annotationAttribute =
+              collection.attribute<MailCommon::CollectionAnnotationsAttribute>();
+
+      const QMap<QByteArray, QByteArray> annotations =
+              ( annotationAttribute ?
+                    annotationAttribute->annotations() :
+                    QMap<QByteArray, QByteArray>() );
+
+
+      MailCommon::CollectionTypeUtil collectionUtil;
+      const MailCommon::CollectionTypeUtil::IncidencesFor incidencesFor =
+              collectionUtil.incidencesForFromString( QLatin1String(annotations.value( MailCommon::CollectionTypeUtil::kolabIncidencesFor() )) );
+      hbox = new QHBoxLayout();
+      topLayout->addItem( hbox );
+      mIncidencesForComboBox = new MailCommon::IncidencesForWidget(this);
+      hbox->addWidget(mIncidencesForComboBox);
+
+      mIncidencesForComboBox->setCurrentIndex( incidencesFor );
+  }
   topLayout->addStretch( 100 ); // eat all superfluous space
 }
 
@@ -107,6 +135,7 @@ CollectionGeneralPage::~CollectionGeneralPage()
 
 void CollectionGeneralPage::load( const Akonadi::Collection &collection )
 {
+  init(collection);
   mNameEdit->setEnabled( collection.rights() & Collection::CanChangeCollection );
 
   const QString displayName = collection.displayName();
