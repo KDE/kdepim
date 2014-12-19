@@ -38,7 +38,7 @@ public:
                              const KMime::Message::Ptr &message, const KIdentityManagement::Identity &identity);
     virtual ~OpenComposerJob();
 
-    virtual void start();
+    virtual void start() Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void slotServiceOwnerChanged(const QString &, const QString &, const QString &);

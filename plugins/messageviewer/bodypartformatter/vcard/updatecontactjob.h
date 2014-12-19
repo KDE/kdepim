@@ -32,7 +32,7 @@ public:
     explicit UpdateContactJob(const QString &email, const KContacts::Addressee &contact, QWidget *parentWidget, QObject *parent = Q_NULLPTR);
     ~UpdateContactJob();
 
-    void start();
+    void start() Q_DECL_OVERRIDE;
 
 private:
     //@cond PRIVATE
