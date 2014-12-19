@@ -63,7 +63,7 @@ void IncidencesForWidgetTest::shouldEmitSignalWhenIndexChanged()
     MailCommon::IncidencesForWidget contentType;
     contentType.show();
     QTest::qWaitForWindowShown(&contentType);
-    QSignalSpy spy(&contentType, SIGNAL(indexChanged(int)));
+    QSignalSpy spy(&contentType, SIGNAL(currentIndexChanged(int)));
     contentType.setCurrentIndex(1);
     QCOMPARE(spy.at(0).count(), 1);
 }

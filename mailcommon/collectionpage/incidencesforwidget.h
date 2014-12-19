@@ -37,7 +37,7 @@ public:
     void setCurrentIndex(int index);
 
 Q_SIGNALS:
-    void indexChanged(int value);
+    void currentIndexChanged(int value);
 
 private:
     KComboBox *mIncidencesForComboBox;

@@ -30,10 +30,12 @@ IncidencesForWidget::IncidencesForWidget(QWidget *parent)
     : QWidget(parent)
 {
     QHBoxLayout *hbox = new QHBoxLayout(this);
+    hbox->setMargin(0);
 
     QLabel *label = new QLabel( i18n( "Generate free/&busy and activate alarms for:" ), this );
     label->setObjectName(QLatin1String("contentstypelabel"));
     hbox->addWidget(label);
+
     mIncidencesForComboBox = new KComboBox( this );
     label->setBuddy( mIncidencesForComboBox );
     hbox->addWidget(mIncidencesForComboBox);
@@ -58,7 +60,7 @@ IncidencesForWidget::IncidencesForWidget(QWidget *parent)
 
     mIncidencesForComboBox->setObjectName(QLatin1String("contentstypecombobox"));
     mIncidencesForComboBox->setWhatsThis( whatsThisForMyOwnFolders );
-    connect(mIncidencesForComboBox, SIGNAL(currentIndexChanged(int)), SIGNAL(indexChanged(int)));
+    connect(mIncidencesForComboBox, SIGNAL(currentIndexChanged(int)), SIGNAL(currentIndexChanged(int)));
 }
 
 IncidencesForWidget::~IncidencesForWidget()
