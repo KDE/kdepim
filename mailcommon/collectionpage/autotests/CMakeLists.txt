@@ -17,3 +17,8 @@ set( mailcommon_incidencesforwidgettest_source incidencesforwidgettest.cpp )
 kde4_add_unit_test( incidencesforwidgettest ${mailcommon_incidencesforwidgettest_source})
 target_link_libraries( incidencesforwidgettest ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY} mailcommon)
 
+set( mailcommon_contenttypewidgettest_source contenttypewidgettest.cpp )
+kde4_add_unit_test( contenttypewidgettest ${mailcommon_contenttypewidgettest_source})
+target_link_libraries( contenttypewidgettest ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY} mailcommon)
+
+
