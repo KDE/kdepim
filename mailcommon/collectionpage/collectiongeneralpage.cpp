@@ -234,13 +234,13 @@ void CollectionGeneralPage::init( const Akonadi::Collection &collection )
     // Kolab incidences-for annotation.
     // Show incidences-for combobox if the contents type can be changed (new folder),
     // or if it's set to calendar or task (existing folder)
-    if ( folderType == CollectionTypeUtil::ContentsTypeCalendar || folderType == CollectionTypeUtil::ContentsTypeTask ) {
-        ++row;
-        mIncidencesForComboBox = new ContentsTypeComboBox(this);
-        gl->addWidget(mIncidencesForComboBox, row, 0, 1, 1);
+    const bool folderTypeComboboxEnabled = ( folderType == CollectionTypeUtil::ContentsTypeCalendar || folderType == CollectionTypeUtil::ContentsTypeTask );
+    ++row;
+    mIncidencesForComboBox = new ContentsTypeComboBox(this);
+    gl->addWidget(mIncidencesForComboBox, row, 0, 1, 1);
 
-        mIncidencesForComboBox->setCurrentIndex( incidencesFor );
-    }
+    mIncidencesForComboBox->setCurrentIndex( incidencesFor );
+    mIncidencesForComboBox->setEnabled(folderTypeComboboxEnabled);
 
     if ( PimCommon::Util::isImapResource(collection.resource()) ) {
         mSharedSeenFlagsCheckBox = new QCheckBox( this );
