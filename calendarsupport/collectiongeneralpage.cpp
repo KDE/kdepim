@@ -180,9 +180,11 @@ void CollectionGeneralPage::save( Collection &collection )
   }
 
   if ( mBlockAlarmsCheckBox->isChecked() ) {
-    if ( !collection.hasAttribute<BlockAlarmsAttribute>() ) {
-      collection.attribute<BlockAlarmsAttribute>( Collection::AddIfMissing );
-    }
+      BlockAlarmsAttribute *attr = collection.attribute<BlockAlarmsAttribute>( Collection::AddIfMissing );
+      attr->blockAlarmType(KCalCore::Alarm::Audio, true);
+      attr->blockAlarmType(KCalCore::Alarm::Display, true);
+      attr->blockAlarmType(KCalCore::Alarm::Email, true);
+      attr->blockAlarmType(KCalCore::Alarm::Procedure, true);
   } else {
     collection.removeAttribute<BlockAlarmsAttribute>();
   }
