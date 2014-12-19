@@ -123,8 +123,6 @@ bool ReminderTreeItem::operator<( const QTreeWidgetItem &other ) const
   }
 }
 
-typedef QList<ReminderTreeItem *> ReminderList;
-
 AlarmDialog::AlarmDialog( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *parent )
   : KDialog( parent, Qt::WindowStaysOnTopHint ),
     mCalendar( calendar ), mSuspendTimer( this )
@@ -732,7 +730,7 @@ void AlarmDialog::slotSave()
   config->sync();
 }
 
-ReminderList AlarmDialog::selectedItems() const
+AlarmDialog::ReminderList AlarmDialog::selectedItems() const
 {
   ReminderList list;
 

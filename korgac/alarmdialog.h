@@ -101,6 +101,8 @@ class AlarmDialog : public KDialog
     void closeEvent( QCloseEvent * );
 
   private:
+    typedef QList<ReminderTreeItem *> ReminderList;
+
     static KDateTime triggerDateForIncidence( const KCalCore::Incidence::Ptr &inc,
                                               const QDateTime &reminderAt,
                                               QString &displayStr );
@@ -117,9 +119,9 @@ class AlarmDialog : public KDialog
     bool startKOrganizer();
     ReminderTreeItem *searchByItem( const Akonadi::Item &incidence );
     void setTimer();
-    void dismiss( QList<ReminderTreeItem *> selections );
+    void dismiss(ReminderList selections );
     int activeCount();
-    QList<ReminderTreeItem *> selectedItems() const;
+    ReminderList selectedItems() const;
     void toggleDetails( QTreeWidgetItem *item );
     void showDetails( QTreeWidgetItem *item );
 
