@@ -22,7 +22,7 @@
 
 #include <KContacts/Addressee>
 
-#include <QtCore/QMap>
+#include <QtCore/QHash>
 
 /**
  * @short The base class for all import/export modules.
@@ -82,7 +82,7 @@ protected:
 
 private:
     QWidget *mParentWidget;
-    QMap<QString, QString> mOptions;
+    QHash<QString, QString> mOptions;
 };
 
 #endif

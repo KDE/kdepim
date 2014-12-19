@@ -1,0 +1,5 @@
+set( mailcommon_itemcontexttest_source itemcontexttest.cpp ../itemcontext.cpp )
+add_executable( itemcontexttest ${mailcommon_itemcontexttest_source})
+add_test(itemcontexttest itemcontexttest)
+ecm_mark_as_test(itemcontexttest)
+target_link_libraries( itemcontexttest Qt5::Test Qt5::Gui KF5::AkonadiCore mailcommon)
