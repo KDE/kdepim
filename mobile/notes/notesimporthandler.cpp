@@ -26,86 +26,88 @@
 
 QString NotesImportHandler::fileDialogNameFilter() const
 {
-  return QLatin1String( "*.mbox|MBox" );
+    return QLatin1String("*.mbox|MBox");
 }
 
 QString NotesImportHandler::fileDialogTitle() const
 {
-  return i18n( "Select MBox to Import" );
+    return i18n("Select MBox to Import");
 }
 
 QString NotesImportHandler::collectionDialogText() const
 {
-  return i18n( "Select the folder the imported note(s) shall be saved in:" );
+    return i18n("Select the folder the imported note(s) shall be saved in:");
 }
 
 QString NotesImportHandler::collectionDialogTitle() const
 {
-  return i18n( "Select Folder" );
+    return i18n("Select Folder");
 }
 
-QString NotesImportHandler::importDialogText( int count, const QString &collectionName ) const
+QString NotesImportHandler::importDialogText(int count, const QString &collectionName) const
 {
-  return i18np( "Importing one note to %2", "Importing %1 notes to %2", count, collectionName );
+    return i18np("Importing one note to %2", "Importing %1 notes to %2", count, collectionName);
 }
 
 QString NotesImportHandler::importDialogTitle() const
 {
-  return i18n( "Import Notes" );
+    return i18n("Import Notes");
 }
 
 QStringList NotesImportHandler::mimeTypes() const
 {
-  return QStringList( QLatin1String( "text/x-vnd.akonadi.note" ) );
+    return QStringList(QLatin1String("text/x-vnd.akonadi.note"));
 }
 
-Akonadi::Item::List NotesImportHandler::createItems( const QStringList &fileNames, bool *ok )
+Akonadi::Item::List NotesImportHandler::createItems(const QStringList &fileNames, bool *ok)
 {
-  *ok = true;
+    *ok = true;
 
-  Akonadi::Item::List items;
+    Akonadi::Item::List items;
 
-  QList<KMime::Message::Ptr> notes;
+    QList<KMime::Message::Ptr> notes;
 
-  foreach ( const QString &fileName, fileNames ) {
-    KMBox::MBox mbox;
+    foreach (const QString &fileName, fileNames) {
+        KMBox::MBox mbox;
 
-    if ( mbox.load( fileName ) ) {
+        if (mbox.load(fileName)) {
 
-      const KMBox::MBoxEntry::List entries = mbox.entries();
-      mbox.lock();
-      foreach ( const KMBox::MBoxEntry &entry, entries ) {
-        KMime::Message *note = mbox.readMessage( entry );
-        if ( note )
-          notes << KMime::Message::Ptr( note );
-      }
-      mbox.unlock();
-    } else {
-      const QString caption( i18n( "MBox Import Failed" ) );
-      const QString msg = xi18nc( "@info",
-                                 "<para>When trying to read the MBox, there was an error opening the file <filename>%1</filename>:</para>",
-                                 fileName );
-      KMessageBox::error( 0, msg, caption );
-      *ok = false;
+            const KMBox::MBoxEntry::List entries = mbox.entries();
+            mbox.lock();
+            foreach (const KMBox::MBoxEntry &entry, entries) {
+                KMime::Message *note = mbox.readMessage(entry);
+                if (note) {
+                    notes << KMime::Message::Ptr(note);
+                }
+            }
+            mbox.unlock();
+        } else {
+            const QString caption(i18n("MBox Import Failed"));
+            const QString msg = xi18nc("@info",
+                                       "<para>When trying to read the MBox, there was an error opening the file <filename>%1</filename>:</para>",
+                                       fileName);
+            KMessageBox::error(0, msg, caption);
+            *ok = false;
+        }
     }
-  }
 
-  if ( notes.isEmpty() ) {
-    if ( !(*ok) && fileNames.count() > 1 )
-      KMessageBox::information( 0, i18n( "No notes were imported, due to errors with the MBox." ) );
-    else if ( *ok )
-      KMessageBox::information( 0, i18n( "The MBox does not contain any notes." ) );
+    if (notes.isEmpty()) {
+        if (!(*ok) && fileNames.count() > 1) {
+            KMessageBox::information(0, i18n("No notes were imported, due to errors with the MBox."));
+        } else if (*ok) {
+            KMessageBox::information(0, i18n("The MBox does not contain any notes."));
+        }
 
-    return items; // nothing to import
-  }
+        return items; // nothing to import
+    }
 
-  foreach ( const KMime::Message::Ptr &note, notes ) {
-    Akonadi::Item item;
-    item.setPayload<KMime::Message::Ptr>( note );
-    item.setMimeType( QLatin1String( "text/x-vnd.akonadi.note" ) );
+    foreach (const KMime::Message::Ptr &note, notes) {
+        Akonadi::Item item;
+        item.setPayload<KMime::Message::Ptr>(note);
+        item.setMimeType(QLatin1String("text/x-vnd.akonadi.note"));
 
-    items << item;
-  }
+        items << item;
+    }
 
-  return items;
+    return items;
 }

@@ -27,29 +27,30 @@
 class QMLCheckableItemProxyModel : public KCheckableProxyModel
 {
 public:
-  enum MoreRoles {
-    CheckOn = Qt::UserRole + 3000
-  };
-  explicit QMLCheckableItemProxyModel (QObject* parent = 0)
-    : KCheckableProxyModel(parent)
-  {
-  }
+    enum MoreRoles {
+        CheckOn = Qt::UserRole + 3000
+    };
+    explicit QMLCheckableItemProxyModel(QObject *parent = 0)
+        : KCheckableProxyModel(parent)
+    {
+    }
 
-  virtual void setSourceModel(QAbstractItemModel* sourceModel)
-  {
-    KCheckableProxyModel::setSourceModel(sourceModel);
+    virtual void setSourceModel(QAbstractItemModel *sourceModel)
+    {
+        KCheckableProxyModel::setSourceModel(sourceModel);
 
-    QHash<int, QByteArray> roles = roleNames();
-    roles.insert( CheckOn, "checkOn" );
-    setRoleNames(roles);
-  }
+        QHash<int, QByteArray> roles = roleNames();
+        roles.insert(CheckOn, "checkOn");
+        setRoleNames(roles);
+    }
 
-  virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const
-  {
-    if ( role == CheckOn )
-      return (index.data(Qt::CheckStateRole) == Qt::Checked);
-    return KCheckableProxyModel::data(index, role);
-  }
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const
+    {
+        if (role == CheckOn) {
+            return (index.data(Qt::CheckStateRole) == Qt::Checked);
+        }
+        return KCheckableProxyModel::data(index, role);
+    }
 
 };
 

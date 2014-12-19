@@ -19,8 +19,6 @@
 
 #include "agendaviewitem.h"
 
-
-
 #include <calendarviews/agenda/agendaview.h>
 #include <Akonadi/Calendar/ETMCalendar>
 #include <KLocale>
@@ -31,160 +29,162 @@
 
 using namespace EventViews;
 
-AgendaViewItem::AgendaViewItem(QDeclarativeItem* parent)
-  : DeclarativeAkonadiItem( parent )
-  , m_view( new AgendaView( QDate(), QDate(),
+AgendaViewItem::AgendaViewItem(QDeclarativeItem *parent)
+    : DeclarativeAkonadiItem(parent)
+    , m_view(new AgendaView(QDate(), QDate(),
                             false /*interactive*/,
                             false /*side-by-side*/,
-                            0 /*parent*/) )
-  , m_currentRange( Week )
+                            0 /*parent*/))
+    , m_currentRange(Week)
 {
-  // start with the oxygen palette (which is not necessarily the default on all platforms)
-  QPalette pal = KColorScheme::createApplicationPalette( KSharedConfig::openConfig() );
-  m_view->setPalette( pal );
-  m_view->setDateRangeSelectionEnabled( false );
+    // start with the oxygen palette (which is not necessarily the default on all platforms)
+    QPalette pal = KColorScheme::createApplicationPalette(KSharedConfig::openConfig());
+    m_view->setPalette(pal);
+    m_view->setDateRangeSelectionEnabled(false);
 
-  connect( m_view, SIGNAL(incidenceSelected(Akonadi::Item,QDate)),
-           SIGNAL(itemSelected(Akonadi::Item,QDate)) );
-  connect( this, SIGNAL(nextItemRequest()), SLOT(gotoNext()) );
-  connect( this, SIGNAL(previousItemRequest()), SLOT(gotoPrevious()) );
+    connect(m_view, SIGNAL(incidenceSelected(Akonadi::Item,QDate)),
+            SIGNAL(itemSelected(Akonadi::Item,QDate)));
+    connect(this, SIGNAL(nextItemRequest()), SLOT(gotoNext()));
+    connect(this, SIGNAL(previousItemRequest()), SLOT(gotoPrevious()));
 
-  setWidget( m_view );
-  showRange( QDate::currentDate(), Week );
+    setWidget(m_view);
+    showRange(QDate::currentDate(), Week);
 
-  preferences()->readConfig();
+    preferences()->readConfig();
 }
 
 AgendaViewItem::~AgendaViewItem()
 {
-  preferences()->writeConfig();
-  delete m_view;
+    preferences()->writeConfig();
+    delete m_view;
 }
 
 QDate AgendaViewItem::startDate() const
 {
-  return QDate( m_view->startDate() );
+    return QDate(m_view->startDate());
 }
 
-void AgendaViewItem::setStartDate(const QDate& startDate)
+void AgendaViewItem::setStartDate(const QDate &startDate)
 {
-  qDebug() << startDate;
-  if ( startDate.isValid() )
-    m_view->showDates( startDate, endDate() );
+    qDebug() << startDate;
+    if (startDate.isValid()) {
+        m_view->showDates(startDate, endDate());
+    }
 }
 
 QDate AgendaViewItem::endDate() const
 {
-  return QDate( m_view->endDate() );
+    return QDate(m_view->endDate());
 }
 
-void AgendaViewItem::setEndDate(const QDate& endDate)
+void AgendaViewItem::setEndDate(const QDate &endDate)
 {
-  qDebug() << endDate;
-  if ( endDate.isValid() )
-    m_view->showDates( startDate(), endDate );
+    qDebug() << endDate;
+    if (endDate.isValid()) {
+        m_view->showDates(startDate(), endDate);
+    }
 }
 
-QObject* AgendaViewItem::calendar() const
+QObject *AgendaViewItem::calendar() const
 {
-  return m_view->calendar().data();
+    return m_view->calendar().data();
 }
 
-void AgendaViewItem::setCalendar(QObject* calendarObj)
+void AgendaViewItem::setCalendar(QObject *calendarObj)
 {
-  Akonadi::ETMCalendar *cal = qobject_cast<Akonadi::ETMCalendar*>( calendarObj );
+    Akonadi::ETMCalendar *cal = qobject_cast<Akonadi::ETMCalendar *>(calendarObj);
 
-  qDebug() << calendarObj << cal;
-  if ( cal ) {
-    m_view->setCalendar( cal->weakPointer().toStrongRef().dynamicCast<Akonadi::ETMCalendar>() );
-    m_view->updateConfig();
-  }
+    qDebug() << calendarObj << cal;
+    if (cal) {
+        m_view->setCalendar(cal->weakPointer().toStrongRef().dynamicCast<Akonadi::ETMCalendar>());
+        m_view->updateConfig();
+    }
 }
 
-void AgendaViewItem::showRange( const QDate &date, int range )
+void AgendaViewItem::showRange(const QDate &date, int range)
 {
-  Q_ASSERT( range >= 0 && range <= LastRange );
+    Q_ASSERT(range >= 0 && range <= LastRange);
 
-  m_currentRange = Range( range );
-  switch( m_currentRange ) {
-  case Day: {
-    m_view->showDates( date, date );
-    break;
-  }
-  case Week: {
-    int weekStartDay = QLocale().firstDayOfWeek();
-    if ( weekStartDay > date.dayOfWeek() )
-      weekStartDay = weekStartDay - 7;
-    m_view->showDates( date.addDays( weekStartDay - date.dayOfWeek() ), date.addDays( weekStartDay + 6 - date.dayOfWeek() ) );
-    break;
-  }
-  case WorkWeek: {
-    int workingWeekStartDay = KLocale::global()->workingWeekStartDay();
-    int workingWeekEndDay = KLocale::global()->workingWeekEndDay();
-    m_view->showDates( date.addDays( workingWeekStartDay - date.dayOfWeek() ), date.addDays( workingWeekEndDay - date.dayOfWeek() ) );
-    break;
-  }
-  case Next3Days: {
-    m_view->showDates( date, date.addDays( 3 ) );
-    break;
-  }
-  default:;
-  }
+    m_currentRange = Range(range);
+    switch (m_currentRange) {
+    case Day: {
+        m_view->showDates(date, date);
+        break;
+    }
+    case Week: {
+        int weekStartDay = QLocale().firstDayOfWeek();
+        if (weekStartDay > date.dayOfWeek()) {
+            weekStartDay = weekStartDay - 7;
+        }
+        m_view->showDates(date.addDays(weekStartDay - date.dayOfWeek()), date.addDays(weekStartDay + 6 - date.dayOfWeek()));
+        break;
+    }
+    case WorkWeek: {
+        int workingWeekStartDay = KLocale::global()->workingWeekStartDay();
+        int workingWeekEndDay = KLocale::global()->workingWeekEndDay();
+        m_view->showDates(date.addDays(workingWeekStartDay - date.dayOfWeek()), date.addDays(workingWeekEndDay - date.dayOfWeek()));
+        break;
+    }
+    case Next3Days: {
+        m_view->showDates(date, date.addDays(3));
+        break;
+    }
+    default:;
+    }
 }
 
 void AgendaViewItem::showToday()
 {
-  showRange( QDate::currentDate() , m_currentRange );
+    showRange(QDate::currentDate() , m_currentRange);
 }
-
 
 qint64 AgendaViewItem::selectedItemId() const
 {
-  if ( m_view->selectedIncidences().size() < 1 )
-    return -1;
-  return m_view->selectedIncidences().first().id();
+    if (m_view->selectedIncidences().size() < 1) {
+        return -1;
+    }
+    return m_view->selectedIncidences().first().id();
 }
 
 void AgendaViewItem::clearSelection()
 {
-  m_view->clearSelection();
+    m_view->clearSelection();
 }
 
 void AgendaViewItem::gotoNext()
 {
-  const QDate start = (m_currentRange == WorkWeek ? startDate().addDays( 7 )
-                                                  : endDate().addDays( 1 ));
-  const QDate end = start.addDays( startDate().daysTo( endDate() ) );
-  m_view->blockSignals( true );
-  m_view->showDates( start, end );
-  m_view->clearSelection();
-  m_view->blockSignals( false );
+    const QDate start = (m_currentRange == WorkWeek ? startDate().addDays(7)
+                         : endDate().addDays(1));
+    const QDate end = start.addDays(startDate().daysTo(endDate()));
+    m_view->blockSignals(true);
+    m_view->showDates(start, end);
+    m_view->clearSelection();
+    m_view->blockSignals(false);
 }
 
 void AgendaViewItem::gotoPrevious()
 {
-  const QDate end = (m_currentRange == WorkWeek ? endDate().addDays( -7 )
-                                                : startDate().addDays( -1 ));
-  const QDate start = end.addDays( - startDate().daysTo( endDate() ) );
-  m_view->blockSignals( true );
-  m_view->showDates( start, end );
-  m_view->clearSelection();
-  m_view->blockSignals( false );
+    const QDate end = (m_currentRange == WorkWeek ? endDate().addDays(-7)
+                       : startDate().addDays(-1));
+    const QDate start = end.addDays(- startDate().daysTo(endDate()));
+    m_view->blockSignals(true);
+    m_view->showDates(start, end);
+    m_view->clearSelection();
+    m_view->blockSignals(false);
 }
 
-void AgendaViewItem::setPreferences( const PrefsPtr &preferences )
+void AgendaViewItem::setPreferences(const PrefsPtr &preferences)
 {
-  m_view->setPreferences( preferences );
+    m_view->setPreferences(preferences);
 }
 
 PrefsPtr AgendaViewItem::preferences() const
 {
-  return m_view->preferences();
+    return m_view->preferences();
 }
 
 void AgendaViewItem::updateConfig()
 {
-  m_view->updateConfig();
+    m_view->updateConfig();
 }
-
 

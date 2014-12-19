@@ -28,75 +28,77 @@
 
 #include <QAction>
 
-MessageListSettingsController::MessageListSettingsController( QObject *parent )
-  : QObject( parent )
+MessageListSettingsController::MessageListSettingsController(QObject *parent)
+    : QObject(parent)
 {
-  mEditAction = new QAction( this );
-  mEditAction->setText( i18n( "Change Sorting/Grouping..." ) );
-  mEditAction->setEnabled( false );
+    mEditAction = new QAction(this);
+    mEditAction->setText(i18n("Change Sorting/Grouping..."));
+    mEditAction->setEnabled(false);
 
-  connect( mEditAction, &QAction::triggered, this, &MessageListSettingsController::editSettings );
+    connect(mEditAction, &QAction::triggered, this, &MessageListSettingsController::editSettings);
 }
 
 QString MessageListSettingsController::groupingRole() const
 {
-  switch ( mSettings.groupingOption() ) {
+    switch (mSettings.groupingOption()) {
     case MessageListSettings::GroupByNone:
-      return QLatin1String( "" );
-      break;
+        return QLatin1String("");
+        break;
     case MessageListSettings::GroupByDate:
-      return QLatin1String( "dateGroup" );
-      break;
+        return QLatin1String("dateGroup");
+        break;
     case MessageListSettings::GroupBySenderReceiver:
-      return QLatin1String( "senderGroup" );
-      break;
-  }
+        return QLatin1String("senderGroup");
+        break;
+    }
 
-  return QString();
+    return QString();
 }
 
-QAction* MessageListSettingsController::editAction() const
+QAction *MessageListSettingsController::editAction() const
 {
-  return mEditAction;
+    return mEditAction;
 }
 
-void MessageListSettingsController::setCollection( const Akonadi::Collection &collection )
+void MessageListSettingsController::setCollection(const Akonadi::Collection &collection)
 {
-  mEditAction->setEnabled( collection.isValid() );
+    mEditAction->setEnabled(collection.isValid());
 
-  if ( !collection.isValid() )
-    return;
+    if (!collection.isValid()) {
+        return;
+    }
 
-  mCollectionId = collection.id();
+    mCollectionId = collection.id();
 
-  mSettings = MessageListSettings::fromConfig( mCollectionId );
+    mSettings = MessageListSettings::fromConfig(mCollectionId);
 
-  emit settingsChanged( mSettings );
+    emit settingsChanged(mSettings);
 }
 
 void MessageListSettingsController::editSettings()
 {
-  Ui_MessageListSettingsEditor ui;
+    Ui_MessageListSettingsEditor ui;
 
-  KDialog dialog;
-  ui.setupUi( dialog.mainWidget() );
+    KDialog dialog;
+    ui.setupUi(dialog.mainWidget());
 
-  ui.mSortingOption->setCurrentIndex( static_cast<int>( mSettings.sortingOption() ) );
-  ui.mSortingOrder->setCurrentIndex( mSettings.sortingOrder() == Qt::AscendingOrder ? 0 : 1 );
-  ui.mGroupingOption->setCurrentIndex( static_cast<int>( mSettings.groupingOption() ) );
-  ui.mUseThreading->setChecked( mSettings.useThreading() );
-  ui.mUseGlobalSettings->setChecked( mSettings.useGlobalSettings() );
+    ui.mSortingOption->setCurrentIndex(static_cast<int>(mSettings.sortingOption()));
+    ui.mSortingOrder->setCurrentIndex(mSettings.sortingOrder() == Qt::AscendingOrder ? 0 : 1);
+    ui.mGroupingOption->setCurrentIndex(static_cast<int>(mSettings.groupingOption()));
+    ui.mUseThreading->setChecked(mSettings.useThreading());
+    ui.mUseGlobalSettings->setChecked(mSettings.useGlobalSettings());
 
-  if ( !dialog.exec() )
-    return;
+    if (!dialog.exec()) {
+        return;
+    }
 
-  mSettings.setSortingOption( static_cast<MessageListSettings::SortingOption>( ui.mSortingOption->currentIndex() ) );
-  mSettings.setSortingOrder( ui.mSortingOrder->currentIndex() == 0 ? Qt::AscendingOrder : Qt::DescendingOrder );
-  mSettings.setGroupingOption( static_cast<MessageListSettings::GroupingOption>( ui.mGroupingOption->currentIndex() ) );
-  mSettings.setUseThreading( ui.mUseThreading->isChecked() );
-  mSettings.setUseGlobalSettings( ui.mUseGlobalSettings->isChecked() );
+    mSettings.setSortingOption(static_cast<MessageListSettings::SortingOption>(ui.mSortingOption->currentIndex()));
+    mSettings.setSortingOrder(ui.mSortingOrder->currentIndex() == 0 ? Qt::AscendingOrder : Qt::DescendingOrder);
+    mSettings.setGroupingOption(static_cast<MessageListSettings::GroupingOption>(ui.mGroupingOption->currentIndex()));
+    mSettings.setUseThreading(ui.mUseThreading->isChecked());
+    mSettings.setUseGlobalSettings(ui.mUseGlobalSettings->isChecked());
 
-  MessageListSettings::toConfig( mCollectionId, mSettings );
+    MessageListSettings::toConfig(mCollectionId, mSettings);
 
-  emit settingsChanged( mSettings );
+    emit settingsChanged(mSettings);
 }

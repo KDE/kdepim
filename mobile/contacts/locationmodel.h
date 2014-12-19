@@ -26,26 +26,26 @@
 
 class LocationModel : public QAbstractTableModel
 {
-  public:
-    explicit LocationModel( QObject *parent = Q_NULLPTR );
+public:
+    explicit LocationModel(QObject *parent = Q_NULLPTR);
     ~LocationModel();
 
-    void setLocations( const KContacts::Address::List &locations );
+    void setLocations(const KContacts::Address::List &locations);
     KContacts::Address::List locations() const;
 
     /**
      * @reimplemented
      */
-    int rowCount( const QModelIndex &parent = QModelIndex() ) const;
-    int columnCount( const QModelIndex &parent = QModelIndex() ) const;
-    QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
-    bool setData( const QModelIndex &index, const QVariant &value, int role = Qt::EditRole );
-    Qt::ItemFlags flags( const QModelIndex &index ) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+    Qt::ItemFlags flags(const QModelIndex &index) const;
 
-    bool insertRows( int row, int count, const QModelIndex &parent = QModelIndex() );
-    bool removeRows( int row, int count, const QModelIndex &parent = QModelIndex() );
+    bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());
+    bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
 
-  private:
+private:
     KContacts::Address::List mLocations;
 };
 

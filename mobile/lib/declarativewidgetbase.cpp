@@ -24,42 +24,43 @@
 #include <QGraphicsScene>
 #include <QWidget>
 
-DeclarativeWidgetBaseHelper::DeclarativeWidgetBaseHelper( QWidget * widget, QGraphicsItem * parent, const RegisterFunction & registerFunc )
-    : QGraphicsProxyWidget( parent ),
-      m_registerFunc( registerFunc ),
-      m_widget( widget )
+DeclarativeWidgetBaseHelper::DeclarativeWidgetBaseHelper(QWidget *widget, QGraphicsItem *parent, const RegisterFunction &registerFunc)
+    : QGraphicsProxyWidget(parent),
+      m_registerFunc(registerFunc),
+      m_widget(widget)
 {
-    Q_ASSERT( m_widget );
+    Q_ASSERT(m_widget);
 
     QPalette pal = m_widget->palette();
-    pal.setColor( QPalette::Window, QColor( 0, 0, 0, 0 ) );
-    m_widget->setPalette( pal );
-    StyleSheetLoader::applyStyle( m_widget );
-    setWidget( m_widget );
-    setFocusPolicy( Qt::StrongFocus );
+    pal.setColor(QPalette::Window, QColor(0, 0, 0, 0));
+    m_widget->setPalette(pal);
+    StyleSheetLoader::applyStyle(m_widget);
+    setWidget(m_widget);
+    setFocusPolicy(Qt::StrongFocus);
 }
 
 DeclarativeWidgetBaseHelper::~DeclarativeWidgetBaseHelper()
 {
 }
 
-QVariant DeclarativeWidgetBaseHelper::itemChange( GraphicsItemChange change, const QVariant & value )
+QVariant DeclarativeWidgetBaseHelper::itemChange(GraphicsItemChange change, const QVariant &value)
 {
-    if ( !m_registerFunc.empty() )
-        if ( change == ItemSceneHasChanged )
-            if ( QGraphicsScene* scene = value.value<QGraphicsScene*>() )
-                Q_FOREACH( QGraphicsView * v, scene->views() )
-                    m_registerFunc( v, m_widget );
-    return QGraphicsProxyWidget::itemChange ( change, value );
+    if (!m_registerFunc.empty())
+        if (change == ItemSceneHasChanged)
+            if (QGraphicsScene *scene = value.value<QGraphicsScene *>())
+                Q_FOREACH (QGraphicsView *v, scene->views()) {
+                    m_registerFunc(v, m_widget);
+                }
+    return QGraphicsProxyWidget::itemChange(change, value);
 }
 
 QString DeclarativeWidgetBaseHelper::styleSheet() const
 {
-  return m_widget->styleSheet();
+    return m_widget->styleSheet();
 }
 
-void DeclarativeWidgetBaseHelper::setStyleSheet(const QString& styleSheet)
+void DeclarativeWidgetBaseHelper::setStyleSheet(const QString &styleSheet)
 {
-  m_widget->setStyleSheet( styleSheet );
+    m_widget->setStyleSheet(styleSheet);
 }
 

@@ -21,7 +21,6 @@
 #include <k4aboutdata.h>
 #include <kcmdlineargs.h>
 
-
 #include <incidenceeditor-ng/korganizereditorconfig.h>
 
 #include "mainview.h"
@@ -38,22 +37,22 @@ using namespace Akonadi;
 using namespace CalendarSupport;
 using namespace IncidenceEditorNG;
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  const QByteArray& ba = QByteArray( "korganizer-mobile" );
-  const KLocalizedString name = ki18n( "Kontact Touch Calendar" );
+    const QByteArray &ba = QByteArray("korganizer-mobile");
+    const KLocalizedString name = ki18n("Kontact Touch Calendar");
 
-  // NOTE: This is necessary to avoid a crash, but will result in an empty config.
-  //       To make this really configurable do something like KOrganizerEditorConfig
-  //       in incidinceeditors/groupwareintegration.cpp
-  EditorConfig::setEditorConfig( new KOrganizerEditorConfig );
+    // NOTE: This is necessary to avoid a crash, but will result in an empty config.
+    //       To make this really configurable do something like KOrganizerEditorConfig
+    //       in incidinceeditors/groupwareintegration.cpp
+    EditorConfig::setEditorConfig(new KOrganizerEditorConfig);
 
-  K4AboutData aboutData( ba, ba, name, ba, name );
-  aboutData.setProductName( "KOrganizer Mobile/calendar" ); //has to match the bugzilla product name
+    K4AboutData aboutData(ba, ba, name, ba, name);
+    aboutData.setProductName("KOrganizer Mobile/calendar");   //has to match the bugzilla product name
 
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KDeclarativeApplication<MainView> app;
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KDeclarativeApplication<MainView> app;
 
-  return app.exec();
+    return app.exec();
 }
 

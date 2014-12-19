@@ -28,42 +28,44 @@
 
 class StyleSheetLoaderPrivate
 {
-  public:
+public:
     StyleSheetLoaderPrivate() : appliedGlobally(false)
     {
-      QFile f( QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("mobileui/stylesheet.css") ) );
-      if ( f.open( QFile::ReadOnly ) ) {
-        styleSheet = QString::fromUtf8( f.readAll() );
-        qDebug() << "loaded stylesheet" << f.fileName();
-      } else {
-        qCritical() << "failed to read stylesheet: " << f.fileName();
-      }
+        QFile f(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("mobileui/stylesheet.css")));
+        if (f.open(QFile::ReadOnly)) {
+            styleSheet = QString::fromUtf8(f.readAll());
+            qDebug() << "loaded stylesheet" << f.fileName();
+        } else {
+            qCritical() << "failed to read stylesheet: " << f.fileName();
+        }
     }
 
     QString styleSheet;
     bool appliedGlobally;
 };
 
-Q_GLOBAL_STATIC( StyleSheetLoaderPrivate, s_styleSheetLoader )
+Q_GLOBAL_STATIC(StyleSheetLoaderPrivate, s_styleSheetLoader)
 
-void StyleSheetLoader::applyStyle(QWidget* widget)
+void StyleSheetLoader::applyStyle(QWidget *widget)
 {
 #ifndef QT_NO_STYLE_STYLESHEET
-  if ( widget && !s_styleSheetLoader->appliedGlobally && !s_styleSheetLoader->styleSheet.isEmpty() )
-    widget->setStyleSheet( s_styleSheetLoader->styleSheet );
+    if (widget && !s_styleSheetLoader->appliedGlobally && !s_styleSheetLoader->styleSheet.isEmpty()) {
+        widget->setStyleSheet(s_styleSheetLoader->styleSheet);
+    }
 #endif
 }
 
-void StyleSheetLoader::applyStyle(QApplication* app)
+void StyleSheetLoader::applyStyle(QApplication *app)
 {
 #ifndef QT_NO_STYLE_STYLESHEET
-  if ( app && !s_styleSheetLoader->styleSheet.isEmpty() )
-    app->setStyleSheet( s_styleSheetLoader->styleSheet );
+    if (app && !s_styleSheetLoader->styleSheet.isEmpty()) {
+        app->setStyleSheet(s_styleSheetLoader->styleSheet);
+    }
 #endif
 }
 
 QString StyleSheetLoader::styleSheet()
 {
-  return s_styleSheetLoader->styleSheet;
+    return s_styleSheetLoader->styleSheet;
 }
 

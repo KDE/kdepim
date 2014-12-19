@@ -32,86 +32,86 @@
  */
 class MOBILEUI_EXPORT GuiStateManager : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  Q_PROPERTY( bool inHomeScreenState READ inHomeScreenState NOTIFY guiStateChanged )
-  Q_PROPERTY( bool inAccountScreenState READ inAccountScreenState NOTIFY guiStateChanged )
-  Q_PROPERTY( bool inSingleFolderScreenState READ inSingleFolderScreenState NOTIFY guiStateChanged )
-  Q_PROPERTY( bool inMultipleFolderScreenState READ inMultipleFolderScreenState NOTIFY guiStateChanged )
-  Q_PROPERTY( bool inBulkActionScreenState READ inBulkActionScreenState NOTIFY guiStateChanged )
-  Q_PROPERTY( bool inMultipleFolderSelectionScreenState READ inMultipleFolderSelectionScreenState NOTIFY guiStateChanged )
-  Q_PROPERTY( bool inViewSingleItemState READ inViewSingleItemState NOTIFY guiStateChanged )
-  Q_PROPERTY( bool inSearchScreenState READ inSearchScreenState NOTIFY guiStateChanged )
-  Q_PROPERTY( bool inSearchResultScreenState READ inSearchResultScreenState NOTIFY guiStateChanged )
-  Q_PROPERTY( bool inConfigScreenState READ inConfigScreenState NOTIFY guiStateChanged )
+    Q_PROPERTY(bool inHomeScreenState READ inHomeScreenState NOTIFY guiStateChanged)
+    Q_PROPERTY(bool inAccountScreenState READ inAccountScreenState NOTIFY guiStateChanged)
+    Q_PROPERTY(bool inSingleFolderScreenState READ inSingleFolderScreenState NOTIFY guiStateChanged)
+    Q_PROPERTY(bool inMultipleFolderScreenState READ inMultipleFolderScreenState NOTIFY guiStateChanged)
+    Q_PROPERTY(bool inBulkActionScreenState READ inBulkActionScreenState NOTIFY guiStateChanged)
+    Q_PROPERTY(bool inMultipleFolderSelectionScreenState READ inMultipleFolderSelectionScreenState NOTIFY guiStateChanged)
+    Q_PROPERTY(bool inViewSingleItemState READ inViewSingleItemState NOTIFY guiStateChanged)
+    Q_PROPERTY(bool inSearchScreenState READ inSearchScreenState NOTIFY guiStateChanged)
+    Q_PROPERTY(bool inSearchResultScreenState READ inSearchResultScreenState NOTIFY guiStateChanged)
+    Q_PROPERTY(bool inConfigScreenState READ inConfigScreenState NOTIFY guiStateChanged)
 
-  Q_ENUMS( GuiState )
+    Q_ENUMS(GuiState)
 
-  public:
+public:
     /**
      * Describes the state of the visible screens.
      */
     enum GuiState {
-      /**
-       * The state when the 'Home' entry is selected in the navigation bar.
-       */
-      HomeScreenState,
+        /**
+         * The state when the 'Home' entry is selected in the navigation bar.
+         */
+        HomeScreenState,
 
-      /**
-       * The state when an account entry (an Akonadi resource collection) is selected
-       * in the navigation bar.
-       */
-      AccountScreenState,
+        /**
+         * The state when an account entry (an Akonadi resource collection) is selected
+         * in the navigation bar.
+         */
+        AccountScreenState,
 
-      /**
-       * The state when a folder entry (a normal Akonadi collection) is selected
-       * in the navigation bar.
-       */
-      SingleFolderScreenState,
+        /**
+         * The state when a folder entry (a normal Akonadi collection) is selected
+         * in the navigation bar.
+         */
+        SingleFolderScreenState,
 
-      /**
-       * The state when the 'Home' entry is selected in the navigation bar and
-       * the user has selected multiple favorite folders.
-       */
-      MultipleFolderScreenState,
+        /**
+         * The state when the 'Home' entry is selected in the navigation bar and
+         * the user has selected multiple favorite folders.
+         */
+        MultipleFolderScreenState,
 
-      /**
-       * The state when the user activated the bulk action mode by double clicking on
-       * a folder in the navigation bar.
-       */
-      BulkActionScreenState,
+        /**
+         * The state when the user activated the bulk action mode by double clicking on
+         * a folder in the navigation bar.
+         */
+        BulkActionScreenState,
 
-      /**
-       * The state when the user activated the multiple folder selection mode by clicking on
-       * the 'Select' resp. 'Change Selection' button.
-       */
-      MultipleFolderSelectionScreenState,
+        /**
+         * The state when the user activated the multiple folder selection mode by clicking on
+         * the 'Select' resp. 'Change Selection' button.
+         */
+        MultipleFolderSelectionScreenState,
 
-      /**
-       * The state when the user selected a single item from a view and the item specific viewer
-       * is shown.
-       */
-      ViewSingleItemState,
+        /**
+         * The state when the user selected a single item from a view and the item specific viewer
+         * is shown.
+         */
+        ViewSingleItemState,
 
-      /**
-       * The state when the search dialog is shown.
-       */
-      SearchScreenState,
+        /**
+         * The state when the search dialog is shown.
+         */
+        SearchScreenState,
 
-      /**
-       * The state when the user started a search and the results are listed.
-       */
-      SearchResultScreenState,
+        /**
+         * The state when the user started a search and the results are listed.
+         */
+        SearchResultScreenState,
 
-      /**
-       * The state when the main configuration dialog is shown.
-       */
-      ConfigScreenState,
+        /**
+         * The state when the main configuration dialog is shown.
+         */
+        ConfigScreenState,
 
-      /**
-       * Point of extension.
-       */
-      UserState
+        /**
+         * Point of extension.
+         */
+        UserState
     };
 
     /**
@@ -119,18 +119,18 @@ class MOBILEUI_EXPORT GuiStateManager : public QObject
      *
      * @param parent The parent object.
      */
-    GuiStateManager( QObject *parent = Q_NULLPTR );
+    GuiStateManager(QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the gui state manager.
      */
     ~GuiStateManager();
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
      * Switches from the current gui state to the new gui @p state.
      */
-    void switchState( int state );
+    void switchState(int state);
 
     /**
      * Switches to the new gui @p state but stores the old one on the internal stack.
@@ -138,7 +138,7 @@ class MOBILEUI_EXPORT GuiStateManager : public QObject
      * This method should be used if you want to return to the previous gui state at
      * a later point in the execution.
      */
-    void pushState( int state );
+    void pushState(int state);
 
     /**
      * Switches to the new gui @p state, if it is not on the top of the stack already,
@@ -147,7 +147,7 @@ class MOBILEUI_EXPORT GuiStateManager : public QObject
      * This method should be used if you want to return to the previous gui state at
      * a later point in the execution.
      */
-    void pushUniqueState( int state );
+    void pushUniqueState(int state);
 
     /**
      * Switches to the gui state previously stored on the internal stack.
@@ -159,7 +159,7 @@ class MOBILEUI_EXPORT GuiStateManager : public QObject
      */
     int currentState() const;
 
-  public:
+public:
     /**
      * Returns whether the current state is the home screen state.
      */
@@ -210,7 +210,7 @@ class MOBILEUI_EXPORT GuiStateManager : public QObject
      */
     bool inConfigScreenState() const;
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever the current state has changed.
      */
@@ -222,15 +222,15 @@ class MOBILEUI_EXPORT GuiStateManager : public QObject
      * @param oldState The old state the manager was in.
      * @param newState The new state the manager is in.
      */
-    void guiStateChanged( int oldState, int newState );
+    void guiStateChanged(int oldState, int newState);
 
-  protected:
+protected:
     virtual void emitChangedSignal();
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
     //@endcond
 };
 

@@ -28,46 +28,46 @@
 #include <QtCore/QAbstractItemModel>
 #include <QItemSelectionModel>
 
-SnippetsEditor::SnippetsEditor( KActionCollection *actionCollection, QObject *parent )
-  : QObject( parent ), mSnippetsManager( new MailCommon::SnippetsManager( actionCollection, this ) )
+SnippetsEditor::SnippetsEditor(KActionCollection *actionCollection, QObject *parent)
+    : QObject(parent), mSnippetsManager(new MailCommon::SnippetsManager(actionCollection, this))
 {
-  actionCollection->addAction(QStringLiteral( "snippetseditor_add_snippet"), mSnippetsManager->addSnippetAction() );
-  actionCollection->addAction( QStringLiteral("snippetseditor_edit_snippet"), mSnippetsManager->editSnippetAction() );
-  actionCollection->addAction( QStringLiteral("snippetseditor_delete_snippet"), mSnippetsManager->deleteSnippetAction() );
+    actionCollection->addAction(QStringLiteral("snippetseditor_add_snippet"), mSnippetsManager->addSnippetAction());
+    actionCollection->addAction(QStringLiteral("snippetseditor_edit_snippet"), mSnippetsManager->editSnippetAction());
+    actionCollection->addAction(QStringLiteral("snippetseditor_delete_snippet"), mSnippetsManager->deleteSnippetAction());
 
-  actionCollection->addAction( QStringLiteral("snippetseditor_add_snippetgroup"), mSnippetsManager->addSnippetGroupAction() );
-  actionCollection->addAction( QStringLiteral("snippetseditor_edit_snippetgroup"), mSnippetsManager->editSnippetGroupAction() );
-  actionCollection->addAction( QStringLiteral("snippetseditor_delete_snippetgroup"), mSnippetsManager->deleteSnippetGroupAction() );
+    actionCollection->addAction(QStringLiteral("snippetseditor_add_snippetgroup"), mSnippetsManager->addSnippetGroupAction());
+    actionCollection->addAction(QStringLiteral("snippetseditor_edit_snippetgroup"), mSnippetsManager->editSnippetGroupAction());
+    actionCollection->addAction(QStringLiteral("snippetseditor_delete_snippetgroup"), mSnippetsManager->deleteSnippetGroupAction());
 
-  actionCollection->addAction( QStringLiteral("snippetseditor_insert_snippet"), mSnippetsManager->insertSnippetAction() );
+    actionCollection->addAction(QStringLiteral("snippetseditor_insert_snippet"), mSnippetsManager->insertSnippetAction());
 
-  mProxyModel = new KDescendantsProxyModel( this );
-  mProxyModel->setSourceModel( mSnippetsManager->model() );
+    mProxyModel = new KDescendantsProxyModel(this);
+    mProxyModel->setSourceModel(mSnippetsManager->model());
 }
 
-void SnippetsEditor::setEditor( QObject *editor, const char *insertSnippetMethod, const char *dropSignal )
+void SnippetsEditor::setEditor(QObject *editor, const char *insertSnippetMethod, const char *dropSignal)
 {
-  mSnippetsManager->setEditor( editor, insertSnippetMethod, dropSignal );
+    mSnippetsManager->setEditor(editor, insertSnippetMethod, dropSignal);
 }
 
 void SnippetsEditor::save()
 {
-  //TODO:mSnippetsManager->save();
+    //TODO:mSnippetsManager->save();
 }
 
-QAbstractItemModel* SnippetsEditor::model() const
+QAbstractItemModel *SnippetsEditor::model() const
 {
-  return mProxyModel;
+    return mProxyModel;
 }
 
-void SnippetsEditor::setRowSelected( int row )
+void SnippetsEditor::setRowSelected(int row)
 {
-  QItemSelectionModel *selectionModel = mSnippetsManager->selectionModel();
+    QItemSelectionModel *selectionModel = mSnippetsManager->selectionModel();
 
-  Q_ASSERT( row >= 0 && row < mProxyModel->rowCount() );
+    Q_ASSERT(row >= 0 && row < mProxyModel->rowCount());
 
-  const QModelIndex proxyIndex = mProxyModel->index( row, 0, QModelIndex() );
+    const QModelIndex proxyIndex = mProxyModel->index(row, 0, QModelIndex());
 
-  selectionModel->select( mProxyModel->mapToSource( proxyIndex ), QItemSelectionModel::ClearAndSelect );
+    selectionModel->select(mProxyModel->mapToSource(proxyIndex), QItemSelectionModel::ClearAndSelect);
 }
 

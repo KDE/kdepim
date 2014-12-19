@@ -28,45 +28,48 @@
 
 QString EventsExportHandler::dialogText() const
 {
-  return i18n( "Which events shall be exported?" );
+    return i18n("Which events shall be exported?");
 }
 
 QString EventsExportHandler::dialogAllText() const
 {
-  return i18n( "All Events" );
+    return i18n("All Events");
 }
 
 QString EventsExportHandler::dialogLocalOnlyText() const
 {
-  return i18n( "Events in current folder" );
+    return i18n("Events in current folder");
 }
 
 QStringList EventsExportHandler::mimeTypes() const
 {
-  return QStringList( KCalCore::Event::eventMimeType() );
+    return QStringList(KCalCore::Event::eventMimeType());
 }
 
-bool EventsExportHandler::exportItems( const Akonadi::Item::List &items )
+bool EventsExportHandler::exportItems(const Akonadi::Item::List &items)
 {
-  const QString fileName = QFileDialog::getSaveFileName(0, QString(), QLatin1String("calendar.ics"), QLatin1String( "*.ics" ) );
-  if ( fileName.isEmpty() )
+    const QString fileName = QFileDialog::getSaveFileName(0, QString(), QLatin1String("calendar.ics"), QLatin1String("*.ics"));
+    if (fileName.isEmpty()) {
+        return true;
+    }
+
+    KCalCore::MemoryCalendar::Ptr calendar(new KCalCore::MemoryCalendar(QLatin1String("UTC")));
+    calendar->startBatchAdding();
+    foreach (const Akonadi::Item &item, items) {
+        if (item.hasPayload<KCalCore::Event::Ptr>()) {
+            calendar->addIncidence(item.payload<KCalCore::Event::Ptr>());
+        }
+    }
+    calendar->endBatchAdding();
+
+    KCalCore::FileStorage::Ptr storage(new KCalCore::FileStorage(calendar, fileName, new KCalCore::ICalFormat()));
+
+    if (storage->open()) {
+        storage->save();
+        storage->close();
+    } else {
+        return false;
+    }
+
     return true;
-
-  KCalCore::MemoryCalendar::Ptr calendar( new KCalCore::MemoryCalendar( QLatin1String( "UTC" ) ) );
-  calendar->startBatchAdding();
-  foreach ( const Akonadi::Item &item, items ) {
-    if ( item.hasPayload<KCalCore::Event::Ptr>() )
-      calendar->addIncidence( item.payload<KCalCore::Event::Ptr>() );
-  }
-  calendar->endBatchAdding();
-
-  KCalCore::FileStorage::Ptr storage( new KCalCore::FileStorage( calendar, fileName, new KCalCore::ICalFormat() ) );
-
-  if ( storage->open() ) {
-    storage->save();
-    storage->close();
-  } else
-    return false;
-
-  return true;
 }

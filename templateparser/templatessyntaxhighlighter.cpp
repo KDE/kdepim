@@ -41,9 +41,9 @@ void TemplatesSyntaxHighlighter::init()
     QStringList keywords;
     keywords << Util::keywords();
 
-    Q_FOREACH ( const QString & s, keywords ) {
-        const QRegExp regex( s, Qt::CaseInsensitive );
-        m_rules.append( PimCommon::Rule( regex, keywordFormat ) );
+    Q_FOREACH (const QString &s, keywords) {
+        const QRegExp regex(s, Qt::CaseInsensitive);
+        m_rules.append(PimCommon::Rule(regex, keywordFormat));
     }
 
     QTextCharFormat keywordWithArgsFormat;
@@ -51,9 +51,9 @@ void TemplatesSyntaxHighlighter::init()
     QStringList keywordsWithArgs;
     keywordsWithArgs << Util::keywordsWithArgs();
 
-    Q_FOREACH ( const QString & s, keywordsWithArgs ) {
-        const QRegExp regex( s, Qt::CaseInsensitive );
-        m_rules.append( PimCommon::Rule( regex, keywordWithArgsFormat ) );
+    Q_FOREACH (const QString &s, keywordsWithArgs) {
+        const QRegExp regex(s, Qt::CaseInsensitive);
+        m_rules.append(PimCommon::Rule(regex, keywordWithArgsFormat));
     }
 }
 

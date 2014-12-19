@@ -27,26 +27,32 @@
 class NoteListProxy : public ListProxy
 {
 public:
-  enum Role {
-    Title,
-    Content,
-    PlainContent,
-    ShortContent
-  };
+    enum Role {
+        Title,
+        Content,
+        PlainContent,
+        ShortContent
+    };
 
 public:
-  explicit NoteListProxy( int customRoleBaseline, QObject* parent = Q_NULLPTR );
+    explicit NoteListProxy(int customRoleBaseline, QObject *parent = Q_NULLPTR);
 
-  QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-  void setSourceModel( QAbstractItemModel* sourceModel ) Q_DECL_OVERRIDE;
-
-private:
-  int absoluteCustomRole( int role ) const { return role + mCustomRoleBaseline; }
-  int relativeCustomRole( int role ) const { return role - mCustomRoleBaseline; }
+    void setSourceModel(QAbstractItemModel *sourceModel) Q_DECL_OVERRIDE;
 
 private:
-  int mCustomRoleBaseline;
+    int absoluteCustomRole(int role) const
+    {
+        return role + mCustomRoleBaseline;
+    }
+    int relativeCustomRole(int role) const
+    {
+        return role - mCustomRoleBaseline;
+    }
+
+private:
+    int mCustomRoleBaseline;
 };
 
 #endif // NOTELISTPROXY_H

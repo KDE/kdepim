@@ -27,14 +27,14 @@
 
 class OrderedChildCollectionsModel : public QSortFilterProxyModel
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit OrderedChildCollectionsModel(QObject* parent = Q_NULLPTR);
+    explicit OrderedChildCollectionsModel(QObject *parent = Q_NULLPTR);
 
-  bool lessThan(const QModelIndex& left, const QModelIndex& right) const Q_DECL_OVERRIDE;
+    bool lessThan(const QModelIndex &left, const QModelIndex &right) const Q_DECL_OVERRIDE;
 
 private:
-  QVector<qint64> specialCollectionOrder;
+    QVector<qint64> specialCollectionOrder;
 
 };
 

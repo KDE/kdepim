@@ -23,43 +23,47 @@
 
 #include "calendarviews/prefs.h"
 
-namespace EventViews {
+namespace EventViews
+{
 
 class MonthView;
 
 class MonthViewItem : public DeclarativeAkonadiItem
 {
-  Q_OBJECT
-  Q_PROPERTY( QObject* calendar READ calendar WRITE setCalendar )
+    Q_OBJECT
+    Q_PROPERTY(QObject *calendar READ calendar WRITE setCalendar)
 
-  public:
-    explicit MonthViewItem( QDeclarativeItem *parent = Q_NULLPTR );
+public:
+    explicit MonthViewItem(QDeclarativeItem *parent = Q_NULLPTR);
     virtual ~MonthViewItem();
 
-    virtual qint64 itemId() const { return -1; }
-    virtual void setItemId( qint64 /*id*/ ) {}
+    virtual qint64 itemId() const
+    {
+        return -1;
+    }
+    virtual void setItemId(qint64 /*id*/) {}
 
     QObject *calendar() const;
-    void setCalendar( QObject* calendarObj );
+    void setCalendar(QObject *calendarObj);
 
     /// Show the month from @param date.
-    Q_INVOKABLE void showMonth( const QDate &date );
+    Q_INVOKABLE void showMonth(const QDate &date);
 
-    void setPreferences( const PrefsPtr &preferences );
+    void setPreferences(const PrefsPtr &preferences);
     PrefsPtr preferences() const;
 
-  Q_SIGNALS:
-    void dateClicked( const QDate &date );
-    void itemSelected( qint64 selectedItemId, const QDate &activeDate );
+Q_SIGNALS:
+    void dateClicked(const QDate &date);
+    void itemSelected(qint64 selectedItemId, const QDate &activeDate);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void updateConfig();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void emitDateClicked();
-    void emitItemSelected( const Akonadi::Item &item, const QDate &activeDate );
+    void emitItemSelected(const Akonadi::Item &item, const QDate &activeDate);
 
-  private:
+private:
     MonthView *mView;
 };
 

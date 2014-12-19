@@ -27,23 +27,23 @@ class QItemSelectionModel;
 
 class TasksActionManager : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit TasksActionManager( KActionCollection *actionCollection, QObject *parent = Q_NULLPTR );
+    explicit TasksActionManager(KActionCollection *actionCollection, QObject *parent = Q_NULLPTR);
 
-  void setCalendar( const Akonadi::ETMCalendar::Ptr &calendar );
-  void setItemSelectionModel( QItemSelectionModel *itemSelectionModel );
+    void setCalendar(const Akonadi::ETMCalendar::Ptr &calendar);
+    void setItemSelectionModel(QItemSelectionModel *itemSelectionModel);
 
 public Q_SLOTS:
-  void updateActions();
+    void updateActions();
 
 private:
-  void initActions(); // Initializes the tasks application specific actions.
+    void initActions(); // Initializes the tasks application specific actions.
 
 private:
-  KActionCollection         *mActionCollection;
-  Akonadi::ETMCalendar::Ptr mCalendar;
-  QItemSelectionModel       *mItemSelectionModel;
+    KActionCollection         *mActionCollection;
+    Akonadi::ETMCalendar::Ptr mCalendar;
+    QItemSelectionModel       *mItemSelectionModel;
 };
 
 #endif // TASKACTIONMANAGER_H

@@ -27,16 +27,16 @@
 class Error : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY (int code READ code NOTIFY errorChanged)
-    Q_PROPERTY (QString text READ text NOTIFY errorChanged)
-    Q_ENUMS (ErrorCode)
+    Q_PROPERTY(int code READ code NOTIFY errorChanged)
+    Q_PROPERTY(QString text READ text NOTIFY errorChanged)
+    Q_ENUMS(ErrorCode)
 
 public:
     enum ErrorCode {
         NoError // everything is alright
     };
 
-    explicit Error( QObject *parent = Q_NULLPTR );
+    explicit Error(QObject *parent = Q_NULLPTR);
 
     int code() const;
     QString text() const;
@@ -46,7 +46,7 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void clear();
-    void setError( ErrorCode code, const QString &text );
+    void setError(ErrorCode code, const QString &text);
 
 private:
     ErrorCode m_code;

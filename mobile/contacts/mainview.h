@@ -25,14 +25,15 @@
 
 #include <AkonadiCore/Entity>
 
-namespace KLDAP {
+namespace KLDAP
+{
 class LdapSearchDialog;
 }
 
 namespace Akonadi
 {
-  class Item;
-  class StandardContactActionManager;
+class Item;
+class StandardContactActionManager;
 }
 
 class ContactListProxy;
@@ -40,21 +41,21 @@ class KLineEdit;
 
 class MainView : public KDeclarativeMainView
 {
-  Q_OBJECT
-  public:
-    explicit MainView( QWidget *parent = Q_NULLPTR );
+    Q_OBJECT
+public:
+    explicit MainView(QWidget *parent = Q_NULLPTR);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void newContact();
     void newContactGroup();
 
     void editItem();
-    void editContact( const Akonadi::Item &item );
-    void editContactGroup( const Akonadi::Item &item );
+    void editContact(const Akonadi::Item &item);
+    void editContactGroup(const Akonadi::Item &item);
 
-  private Q_SLOTS:
-    void finishEdit( QObject *editor );
-    void itemSelectionChanged( const QItemSelection &selected, const QItemSelection& );
+private Q_SLOTS:
+    void finishEdit(QObject *editor);
+    void itemSelectionChanged(const QItemSelection &selected, const QItemSelection &);
     void bulkActionSelectionChanged();
     void sendMailTo();
     void searchLdap();
@@ -62,23 +63,23 @@ class MainView : public KDeclarativeMainView
     void updateActionTexts();
     void configureCategories();
 
-  protected:
+protected:
     virtual void doDelayedInit();
-    virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
-                                             QItemSelectionModel *itemSelectionModel );
+    virtual void setupStandardActionManager(QItemSelectionModel *collectionSelectionModel,
+                                            QItemSelectionModel *itemSelectionModel);
 
-    virtual void setupAgentActionManager( QItemSelectionModel *selectionModel );
+    virtual void setupAgentActionManager(QItemSelectionModel *selectionModel);
 
-    virtual QAbstractProxyModel* createItemFilterModel() const;
-    virtual ImportHandlerBase* importHandler() const;
-    virtual ExportHandlerBase* exportHandler() const;
-    virtual GuiStateManager* createGuiStateManager() const;
+    virtual QAbstractProxyModel *createItemFilterModel() const;
+    virtual ImportHandlerBase *importHandler() const;
+    virtual ExportHandlerBase *exportHandler() const;
+    virtual GuiStateManager *createGuiStateManager() const;
 
-  private:
+private:
     Akonadi::StandardContactActionManager *mActionManager;
     ContactListProxy *mContactListProxy;
-    QHash<QObject*, Akonadi::Entity::Id> mOpenItemEditors;
-    KLDAP::LdapSearchDialog* mLdapSearchDialog;
+    QHash<QObject *, Akonadi::Entity::Id> mOpenItemEditors;
+    KLDAP::LdapSearchDialog *mLdapSearchDialog;
 };
 
 #endif // MAINVIEW_H

@@ -39,9 +39,9 @@ class QItemSelectionModel;
  */
 class FavoritesEditor : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new favorites editor.
      *
@@ -50,36 +50,36 @@ class FavoritesEditor : public QObject
      * @param config The config object to store the favorites.
      * @param parent The parent object.
      */
-    FavoritesEditor( KActionCollection *actionCollection, const KSharedConfig::Ptr &config, QObject *parent = Q_NULLPTR );
+    FavoritesEditor(KActionCollection *actionCollection, const KSharedConfig::Ptr &config, QObject *parent = Q_NULLPTR);
 
     /**
      * Returns the model that represents the list of favoritess.
      */
-    QAbstractItemModel* model() const;
+    QAbstractItemModel *model() const;
 
     /**
      * Sets the collection selection @p model the loading and saving of favorites
      * shall be applied on.
      */
-    void setCollectionSelectionModel( QItemSelectionModel *model );
+    void setCollectionSelectionModel(QItemSelectionModel *model);
 
     /**
      * Applies the favorite with the given @p name on the collection selection model.
      */
-    void loadFavorite( const QString &name ) const;
+    void loadFavorite(const QString &name) const;
 
     /**
      * Saves the current collection selection as favorite with the given @p name.
      */
-    void saveFavorite( const QString &name );
+    void saveFavorite(const QString &name);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
      * Sets the row of the favorite the user has selected in the UI.
      */
-    void setRowSelected( int row );
+    void setRowSelected(int row);
 
-  private:
+private:
     FavoritesController *mFavoritesController;
 };
 

@@ -17,17 +17,16 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-
 #include "templateemailmodel.h"
 #include <AkonadiCore/entitytreemodel.h>
 #include <kmime/kmime_message.h>
 
-QVariant TemplateEmailModel::data(const QModelIndex& index, int role) const
+QVariant TemplateEmailModel::data(const QModelIndex &index, int role) const
 {
-  if ( role == Qt::DisplayRole ) {
-    KMime::Message::Ptr message = Akonadi::SelectionProxyModel::data(index, Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>().payload<KMime::Message::Ptr>();
-    return message->subject()->asUnicodeString();
-  } else {
-    return Akonadi::SelectionProxyModel::data(index, role);
-  }
+    if (role == Qt::DisplayRole) {
+        KMime::Message::Ptr message = Akonadi::SelectionProxyModel::data(index, Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>().payload<KMime::Message::Ptr>();
+        return message->subject()->asUnicodeString();
+    } else {
+        return Akonadi::SelectionProxyModel::data(index, role);
+    }
 }

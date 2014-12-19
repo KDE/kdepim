@@ -43,283 +43,293 @@
  */
 class ImageLoader
 {
-  public:
-    ImageLoader( QWidget *parent = 0 );
+public:
+    ImageLoader(QWidget *parent = 0);
 
-    QImage loadImage( const KUrl &url, bool *ok );
+    QImage loadImage(const KUrl &url, bool *ok);
 
-  private:
+private:
     QImage mImage;
     QWidget *mParent;
 };
 
-
-ImageLoader::ImageLoader( QWidget *parent )
-  : mParent( parent )
+ImageLoader::ImageLoader(QWidget *parent)
+    : mParent(parent)
 {
 }
 
-QImage ImageLoader::loadImage( const KUrl &url, bool *ok )
+QImage ImageLoader::loadImage(const KUrl &url, bool *ok)
 {
-  QImage image;
-  QString tempFile;
+    QImage image;
+    QString tempFile;
 
-  if ( url.isEmpty() )
-    return image;
-
-  (*ok) = false;
-
-  if ( url.isLocalFile() ) {
-    if ( image.load( url.toLocalFile() ) ) {
-      (*ok) = true;
+    if (url.isEmpty()) {
+        return image;
     }
-  } else if ( KIO::NetAccess::download( url, tempFile, mParent ) ) {
-    if ( image.load( tempFile ) ) {
-      (*ok) = true;
-    }
-    KIO::NetAccess::removeTempFile( tempFile );
-  }
 
-  if ( !(*ok) ) {
-    // image does not exist (any more)
-    KMessageBox::sorry( mParent, i18n( "This contact's image cannot be found." ) );
-    return image;
-  }
-
-  QPixmap pixmap = QPixmap::fromImage( image );
-
-  image = KPixmapRegionSelectorDialog::getSelectedImage( pixmap, 100, 140, mParent );
-
-  if ( image.isNull() ) {
     (*ok) = false;
+
+    if (url.isLocalFile()) {
+        if (image.load(url.toLocalFile())) {
+            (*ok) = true;
+        }
+    } else if (KIO::NetAccess::download(url, tempFile, mParent)) {
+        if (image.load(tempFile)) {
+            (*ok) = true;
+        }
+        KIO::NetAccess::removeTempFile(tempFile);
+    }
+
+    if (!(*ok)) {
+        // image does not exist (any more)
+        KMessageBox::sorry(mParent, i18n("This contact's image cannot be found."));
+        return image;
+    }
+
+    QPixmap pixmap = QPixmap::fromImage(image);
+
+    image = KPixmapRegionSelectorDialog::getSelectedImage(pixmap, 100, 140, mParent);
+
+    if (image.isNull()) {
+        (*ok) = false;
+        return image;
+    }
+
+    if (image.height() != 140 || image.width() != 100) {
+        if (image.height() > image.width()) {
+            image = image.scaledToHeight(140);
+        } else {
+            image = image.scaledToWidth(100);
+        }
+    }
+
+    (*ok) = true;
+
     return image;
-  }
-
-  if ( image.height() != 140 || image.width() != 100 ) {
-    if ( image.height() > image.width() )
-      image = image.scaledToHeight( 140 );
-    else
-      image = image.scaledToWidth( 100 );
-  }
-
-  (*ok) = true;
-
-  return image;
 }
 
-
-
-ImageWidget::ImageWidget( QWidget *parent )
-  : QPushButton( parent ),
-    mType( Photo ),
-    mHasImage( false ),
-    mReadOnly( false ),
-    mImageLoader( 0 )
+ImageWidget::ImageWidget(QWidget *parent)
+    : QPushButton(parent),
+      mType(Photo),
+      mHasImage(false),
+      mReadOnly(false),
+      mImageLoader(0)
 {
-  setAcceptDrops( true );
+    setAcceptDrops(true);
 
-  setIconSize( QSize( 100, 130 ) );
-  setFixedSize( QSize( 120, 160 ) );
+    setIconSize(QSize(100, 130));
+    setFixedSize(QSize(120, 160));
 
-  connect( this, SIGNAL(clicked()), SLOT(changeImage()) );
+    connect(this, SIGNAL(clicked()), SLOT(changeImage()));
 
-  updateView();
+    updateView();
 }
 
-ImageWidget::ImageWidget( Type type, QWidget *parent )
-  : QPushButton( parent ),
-    mHasImage( false ),
-    mReadOnly( false ),
-    mImageLoader( 0 )
+ImageWidget::ImageWidget(Type type, QWidget *parent)
+    : QPushButton(parent),
+      mHasImage(false),
+      mReadOnly(false),
+      mImageLoader(0)
 {
-  setAcceptDrops( true );
+    setAcceptDrops(true);
 
-  setIconSize( QSize( 100, 130 ) );
-  setFixedSize( QSize( 120, 160 ) );
+    setIconSize(QSize(100, 130));
+    setFixedSize(QSize(120, 160));
 
-  connect( this, &QAbstractButton::clicked, this, &ImageWidget::changeImage );
+    connect(this, &QAbstractButton::clicked, this, &ImageWidget::changeImage);
 
-  setType( type );
+    setType(type);
 
-  updateView();
+    updateView();
 }
 
 ImageWidget::~ImageWidget()
 {
-  delete mImageLoader;
+    delete mImageLoader;
 }
 
-void ImageWidget::setType( Type type )
+void ImageWidget::setType(Type type)
 {
-  mType = type;
+    mType = type;
 
-  if ( mType == Photo )
-    setToolTip( i18n( "The photo of the contact (click to change)" ) );
-  else
-    setToolTip( i18n( "The logo of the company (click to change)" ) );
+    if (mType == Photo) {
+        setToolTip(i18n("The photo of the contact (click to change)"));
+    } else {
+        setToolTip(i18n("The logo of the company (click to change)"));
+    }
 
-  updateView();
+    updateView();
 }
 
-void ImageWidget::loadContact( const KContacts::Addressee &contact )
+void ImageWidget::loadContact(const KContacts::Addressee &contact)
 {
-  const KContacts::Picture picture = (mType == Photo ? contact.photo() : contact.logo());
-  if ( picture.isIntern() && !picture.data().isNull() ) {
-    mHasImage = true;
-    mImage = picture.data();
-  }
+    const KContacts::Picture picture = (mType == Photo ? contact.photo() : contact.logo());
+    if (picture.isIntern() && !picture.data().isNull()) {
+        mHasImage = true;
+        mImage = picture.data();
+    }
 
-  updateView();
+    updateView();
 }
 
-void ImageWidget::storeContact( KContacts::Addressee &contact ) const
+void ImageWidget::storeContact(KContacts::Addressee &contact) const
 {
-  if ( mType == Photo )
-    contact.setPhoto( mImage );
-  else
-    contact.setLogo( mImage );
+    if (mType == Photo) {
+        contact.setPhoto(mImage);
+    } else {
+        contact.setLogo(mImage);
+    }
 }
 
-void ImageWidget::setReadOnly( bool readOnly )
+void ImageWidget::setReadOnly(bool readOnly)
 {
-  mReadOnly = readOnly;
+    mReadOnly = readOnly;
 }
 
 void ImageWidget::updateView()
 {
-  if ( mHasImage ) {
-    setIcon( QPixmap::fromImage( mImage ) );
-  } else {
-    if ( mType == Photo )
-      setIcon( QIcon::fromTheme( QLatin1String( "user-identity" ) ) );
-    else
-      setIcon( QIcon::fromTheme( QLatin1String( "image-x-generic" ) ) );
-  }
+    if (mHasImage) {
+        setIcon(QPixmap::fromImage(mImage));
+    } else {
+        if (mType == Photo) {
+            setIcon(QIcon::fromTheme(QLatin1String("user-identity")));
+        } else {
+            setIcon(QIcon::fromTheme(QLatin1String("image-x-generic")));
+        }
+    }
 }
 
 #ifndef QT_NO_DRAGANDDROP
-void ImageWidget::dragEnterEvent( QDragEnterEvent *event )
+void ImageWidget::dragEnterEvent(QDragEnterEvent *event)
 {
-  const QMimeData *mimeData = event->mimeData();
-  event->setAccepted( mimeData->hasImage() || mimeData->hasUrls() );
+    const QMimeData *mimeData = event->mimeData();
+    event->setAccepted(mimeData->hasImage() || mimeData->hasUrls());
 }
 
-void ImageWidget::dropEvent( QDropEvent *event )
+void ImageWidget::dropEvent(QDropEvent *event)
 {
-  if ( mReadOnly )
-    return;
-
-  const QMimeData *mimeData = event->mimeData();
-  if ( mimeData->hasImage() ) {
-    mImage = qvariant_cast<QImage>(mimeData->imageData());
-    mHasImage = true;
-    updateView();
-  }
-
-  const KUrl::List urls = KUrl::List::fromMimeData( mimeData );
-  if ( urls.isEmpty() ) { // oops, no data
-    event->setAccepted( false );
-  } else {
-    bool ok = false;
-    const QImage image = imageLoader()->loadImage( urls.first(), &ok );
-    if ( ok ) {
-      mImage = image;
-      mHasImage = true;
-      updateView();
+    if (mReadOnly) {
+        return;
     }
-  }
+
+    const QMimeData *mimeData = event->mimeData();
+    if (mimeData->hasImage()) {
+        mImage = qvariant_cast<QImage>(mimeData->imageData());
+        mHasImage = true;
+        updateView();
+    }
+
+    const KUrl::List urls = KUrl::List::fromMimeData(mimeData);
+    if (urls.isEmpty()) {   // oops, no data
+        event->setAccepted(false);
+    } else {
+        bool ok = false;
+        const QImage image = imageLoader()->loadImage(urls.first(), &ok);
+        if (ok) {
+            mImage = image;
+            mHasImage = true;
+            updateView();
+        }
+    }
 }
 #endif
 
-void ImageWidget::mousePressEvent( QMouseEvent *event )
+void ImageWidget::mousePressEvent(QMouseEvent *event)
 {
-  mDragStartPos = event->pos();
-  QPushButton::mousePressEvent( event );
+    mDragStartPos = event->pos();
+    QPushButton::mousePressEvent(event);
 }
 
-void ImageWidget::mouseMoveEvent( QMouseEvent *event )
+void ImageWidget::mouseMoveEvent(QMouseEvent *event)
 {
 #ifndef QT_NO_DRAGANDDROP
-  if ( (event->buttons() & Qt::LeftButton) &&
-       (event->pos() - mDragStartPos).manhattanLength() > QApplication::startDragDistance() ) {
+    if ((event->buttons() & Qt::LeftButton) &&
+            (event->pos() - mDragStartPos).manhattanLength() > QApplication::startDragDistance()) {
 
-    if ( mHasImage ) {
-      QDrag *drag = new QDrag( this );
-      drag->setMimeData( new QMimeData() );
-      drag->mimeData()->setImageData( mImage );
-      drag->start();
+        if (mHasImage) {
+            QDrag *drag = new QDrag(this);
+            drag->setMimeData(new QMimeData());
+            drag->mimeData()->setImageData(mImage);
+            drag->start();
+        }
     }
-  }
 #endif
 }
 
 #ifndef QT_NO_CONTEXTMENU
-void ImageWidget::contextMenuEvent( QContextMenuEvent *event )
+void ImageWidget::contextMenuEvent(QContextMenuEvent *event)
 {
-  QMenu menu;
+    QMenu menu;
 
-  if ( mType == Photo ) {
-    if ( !mReadOnly )
-      menu.addAction( i18n( "Change photo..." ), this, SLOT(changeImage()) );
+    if (mType == Photo) {
+        if (!mReadOnly) {
+            menu.addAction(i18n("Change photo..."), this, SLOT(changeImage()));
+        }
 
-    if ( mHasImage ) {
-      menu.addAction( i18n( "Save photo..." ), this, SLOT(saveImage()) );
+        if (mHasImage) {
+            menu.addAction(i18n("Save photo..."), this, SLOT(saveImage()));
 
-      if ( !mReadOnly )
-        menu.addAction( i18n( "Remove photo" ), this, SLOT(deleteImage()) );
+            if (!mReadOnly) {
+                menu.addAction(i18n("Remove photo"), this, SLOT(deleteImage()));
+            }
+        }
+    } else {
+        if (!mReadOnly) {
+            menu.addAction(i18n("Change logo..."), this, SLOT(changeImage()));
+        }
+
+        if (mHasImage) {
+            menu.addAction(i18n("Save logo..."), this, SLOT(saveImage()));
+
+            if (!mReadOnly) {
+                menu.addAction(i18n("Remove logo"), this, SLOT(deleteImage()));
+            }
+        }
     }
-  } else {
-    if ( !mReadOnly )
-      menu.addAction( i18n( "Change logo..." ), this, SLOT(changeImage()) );
 
-    if ( mHasImage ) {
-      menu.addAction( i18n( "Save logo..." ), this, SLOT(saveImage()) );
-
-      if ( !mReadOnly )
-        menu.addAction( i18n( "Remove logo" ), this, SLOT(deleteImage()) );
-    }
-  }
-
-  menu.exec( event->globalPos() );
+    menu.exec(event->globalPos());
 }
 #endif
 
 void ImageWidget::changeImage()
 {
-  if ( mReadOnly )
-    return;
-
-  const KUrl url = KFileDialog::getOpenUrl( QString(), KImageIO::pattern(), 0 );
-  if ( url.isValid() ) {
-    bool ok = false;
-    const QImage image = imageLoader()->loadImage( url, &ok );
-    if ( ok ) {
-      mImage = image;
-      mHasImage = true;
-      updateView();
+    if (mReadOnly) {
+        return;
     }
-  }
+
+    const KUrl url = KFileDialog::getOpenUrl(QString(), KImageIO::pattern(), 0);
+    if (url.isValid()) {
+        bool ok = false;
+        const QImage image = imageLoader()->loadImage(url, &ok);
+        if (ok) {
+            mImage = image;
+            mHasImage = true;
+            updateView();
+        }
+    }
 }
 
 void ImageWidget::saveImage()
 {
-  const QString fileName = KFileDialog::getSaveFileName( QUrl(), KImageIO::pattern(), 0 );
-  if ( !fileName.isEmpty() )
-    mImage.save( fileName );
+    const QString fileName = KFileDialog::getSaveFileName(QUrl(), KImageIO::pattern(), 0);
+    if (!fileName.isEmpty()) {
+        mImage.save(fileName);
+    }
 }
 
 void ImageWidget::deleteImage()
 {
-  mHasImage = false;
-  mImage = QImage();
-  updateView();
+    mHasImage = false;
+    mImage = QImage();
+    updateView();
 }
 
-ImageLoader* ImageWidget::imageLoader()
+ImageLoader *ImageWidget::imageLoader()
 {
-  if ( !mImageLoader )
-    mImageLoader = new ImageLoader;
+    if (!mImageLoader) {
+        mImageLoader = new ImageLoader;
+    }
 
-  return mImageLoader;
+    return mImageLoader;
 }
 

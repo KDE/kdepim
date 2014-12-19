@@ -62,7 +62,6 @@ void GrantleeThemeTest::shouldInvalidWhenPathIsNotValid()
     QVERIFY(!theme.isValid());
 }
 
-
 void GrantleeThemeTest::shouldLoadTheme_data()
 {
     QTest::addColumn<QString>("dirname");
@@ -79,12 +78,12 @@ void GrantleeThemeTest::shouldLoadTheme_data()
 
 void GrantleeThemeTest::shouldLoadTheme()
 {
-    QFETCH( QString, dirname );
-    QFETCH( QString, filename );
-    QFETCH( bool, isvalid );
-    QFETCH( QStringList, displayExtraVariables );
+    QFETCH(QString, dirname);
+    QFETCH(QString, filename);
+    QFETCH(bool, isvalid);
+    QFETCH(QStringList, displayExtraVariables);
 
-    GrantleeTheme::Theme theme(QLatin1String( GRANTLEETHEME_DATA_DIR ) + QDir::separator() + dirname, dirname, filename);
+    GrantleeTheme::Theme theme(QLatin1String(GRANTLEETHEME_DATA_DIR) + QDir::separator() + dirname, dirname, filename);
     QCOMPARE(theme.isValid(), isvalid);
     QCOMPARE(theme.displayExtraVariables(), displayExtraVariables);
     QCOMPARE(theme.dirName(), dirname);

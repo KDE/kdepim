@@ -24,13 +24,13 @@
 
 class EventsExportHandler : public ExportHandlerBase
 {
-  protected:
+protected:
     virtual QString dialogText() const;
     virtual QString dialogAllText() const;
     virtual QString dialogLocalOnlyText() const;
 
     virtual QStringList mimeTypes() const;
-    virtual bool exportItems( const Akonadi::Item::List &items );
+    virtual bool exportItems(const Akonadi::Item::List &items);
 };
 
 #endif // EVENTSEXPORTHANDLER_H

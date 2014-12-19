@@ -27,51 +27,53 @@
 
 QString EmailsExportHandler::dialogText() const
 {
-  return i18n( "Which emails shall be exported?" );
+    return i18n("Which emails shall be exported?");
 }
 
 QString EmailsExportHandler::dialogAllText() const
 {
-  return i18n( "All Emails" );
+    return i18n("All Emails");
 }
 
 QString EmailsExportHandler::dialogLocalOnlyText() const
 {
-  return i18n( "Emails in current folder" );
+    return i18n("Emails in current folder");
 }
 
 QStringList EmailsExportHandler::mimeTypes() const
 {
-  return QStringList( KMime::Message::mimeType() );
+    return QStringList(KMime::Message::mimeType());
 }
 
-bool EmailsExportHandler::exportItems( const Akonadi::Item::List &items )
+bool EmailsExportHandler::exportItems(const Akonadi::Item::List &items)
 {
-  QList<KMime::Message::Ptr> messages;
+    QList<KMime::Message::Ptr> messages;
 
-  foreach ( const Akonadi::Item &item, items ) {
-    if ( item.hasPayload<KMime::Message::Ptr>() )
-      messages << item.payload<KMime::Message::Ptr>();
-  }
+    foreach (const Akonadi::Item &item, items) {
+        if (item.hasPayload<KMime::Message::Ptr>()) {
+            messages << item.payload<KMime::Message::Ptr>();
+        }
+    }
 
-  const QString fileName = QFileDialog::getSaveFileName(0, QString(), QLatin1String("emails.mbox"), QLatin1String( "*.mbox" ) );
-  if ( fileName.isEmpty() ) // user canceled export
+    const QString fileName = QFileDialog::getSaveFileName(0, QString(), QLatin1String("emails.mbox"), QLatin1String("*.mbox"));
+    if (fileName.isEmpty()) { // user canceled export
+        return true;
+    }
+
+    KMBox::MBox mbox;
+    if (!mbox.load(fileName)) {
+        KMessageBox::error(0, i18n("Unable to open MBox file %1", fileName));
+        return false;
+    }
+
+    foreach (const KMime::Message::Ptr &message, messages) {
+        mbox.appendMessage(message);
+    }
+
+    if (!mbox.save()) {
+        KMessageBox::error(0, i18n("Unable to save emails to MBox file %1", fileName));
+        return false;
+    }
+
     return true;
-
-  KMBox::MBox mbox;
-  if ( !mbox.load( fileName ) ) {
-    KMessageBox::error( 0, i18n( "Unable to open MBox file %1", fileName ) );
-    return false;
-  }
-
-  foreach ( const KMime::Message::Ptr &message, messages ) {
-    mbox.appendMessage( message );
-  }
-
-  if ( !mbox.save() ) {
-    KMessageBox::error( 0, i18n( "Unable to save emails to MBox file %1", fileName ) );
-    return false;
-  }
-
-  return true;
 }

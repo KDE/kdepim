@@ -28,29 +28,29 @@
 
 class TaskListProxy : public ListProxy
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     enum Role {
-      SummaryRole = Akonadi::EntityTreeModel::UserRole,
-      DescriptionRole,
-      PercentCompleteRole,
-      BackgroundColorRole,
-      IsSubTaskRole,
-      SingleLineDescriptionRole,
-      HasDescriptionRole
+        SummaryRole = Akonadi::EntityTreeModel::UserRole,
+        DescriptionRole,
+        PercentCompleteRole,
+        BackgroundColorRole,
+        IsSubTaskRole,
+        SingleLineDescriptionRole,
+        HasDescriptionRole
     };
 
-    explicit TaskListProxy( QObject* parent = Q_NULLPTR );
+    explicit TaskListProxy(QObject *parent = Q_NULLPTR);
 
-    QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const Q_DECL_OVERRIDE;
-    bool setData( const QModelIndex& index, const QVariant& value, int role = Qt::EditRole ) Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
 
-    void setSourceModel( QAbstractItemModel* sourceModel ) Q_DECL_OVERRIDE;
+    void setSourceModel(QAbstractItemModel *sourceModel) Q_DECL_OVERRIDE;
 
-    void setPreferences( const EventViews::PrefsPtr &preferences );
+    void setPreferences(const EventViews::PrefsPtr &preferences);
 
-  private:
+private:
     EventViews::PrefsPtr mViewPrefs;
 };
 

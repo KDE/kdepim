@@ -27,26 +27,26 @@
 #include <QtCore/QAbstractItemModel>
 #include <QItemSelectionModel>
 
-FilterEditor::FilterEditor( KActionCollection *actionCollection, QObject *parent )
-  : QObject( parent ), mFilterController( new MailCommon::FilterController( this ) )
+FilterEditor::FilterEditor(KActionCollection *actionCollection, QObject *parent)
+    : QObject(parent), mFilterController(new MailCommon::FilterController(this))
 {
-  actionCollection->addAction( QLatin1String("filtereditor_add"), mFilterController->addAction() );
-  actionCollection->addAction( QLatin1String("filtereditor_edit"), mFilterController->editAction() );
-  actionCollection->addAction( QLatin1String("filtereditor_delete"), mFilterController->removeAction() );
+    actionCollection->addAction(QLatin1String("filtereditor_add"), mFilterController->addAction());
+    actionCollection->addAction(QLatin1String("filtereditor_edit"), mFilterController->editAction());
+    actionCollection->addAction(QLatin1String("filtereditor_delete"), mFilterController->removeAction());
 
-  actionCollection->addAction( QLatin1String("filtereditor_moveup"), mFilterController->moveUpAction() );
-  actionCollection->addAction( QLatin1String("filtereditor_movedown"), mFilterController->moveDownAction() );
+    actionCollection->addAction(QLatin1String("filtereditor_moveup"), mFilterController->moveUpAction());
+    actionCollection->addAction(QLatin1String("filtereditor_movedown"), mFilterController->moveDownAction());
 }
 
-QAbstractItemModel* FilterEditor::model() const
+QAbstractItemModel *FilterEditor::model() const
 {
-  return mFilterController->model();
+    return mFilterController->model();
 }
 
-void FilterEditor::setRowSelected( int row )
+void FilterEditor::setRowSelected(int row)
 {
-  QItemSelectionModel *selectionModel = mFilterController->selectionModel();
+    QItemSelectionModel *selectionModel = mFilterController->selectionModel();
 
-  selectionModel->select( mFilterController->model()->index( row, 0 ), QItemSelectionModel::ClearAndSelect );
+    selectionModel->select(mFilterController->model()->index(row, 0), QItemSelectionModel::ClearAndSelect);
 }
 

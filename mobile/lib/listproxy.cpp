@@ -22,26 +22,27 @@
 #include <AkonadiCore/entitytreemodel.h>
 #include <AkonadiCore/item.h>
 
-ListProxy::ListProxy( QObject* parent ) : QSortFilterProxyModel( parent )
+ListProxy::ListProxy(QObject *parent) : QSortFilterProxyModel(parent)
 {
 }
 
-qint64 ListProxy::itemId( int row ) const
+qint64 ListProxy::itemId(int row) const
 {
-  if ( row < 0 || row >= rowCount() )
-    return -1;
+    if (row < 0 || row >= rowCount()) {
+        return -1;
+    }
 
-  QModelIndex idx = index( row, 0 );
-  if ( !idx.isValid() )
-    return -1;
+    QModelIndex idx = index(row, 0);
+    if (!idx.isValid()) {
+        return -1;
+    }
 
-  const Akonadi::Item item = QSortFilterProxyModel::data( idx, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-  return item.id();
+    const Akonadi::Item item = QSortFilterProxyModel::data(idx, Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
+    return item.id();
 }
 
-void ListProxy::setSourceModel(QAbstractItemModel* sourceModel)
+void ListProxy::setSourceModel(QAbstractItemModel *sourceModel)
 {
-  QSortFilterProxyModel::setSourceModel(sourceModel);
+    QSortFilterProxyModel::setSourceModel(sourceModel);
 }
-
 

@@ -28,35 +28,35 @@
 
 class MainView : public KDeclarativeMainView
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit MainView( QWidget *parent = Q_NULLPTR );
+public:
+    explicit MainView(QWidget *parent = Q_NULLPTR);
 
-  public Q_SLOTS:
-    QString noteTitle( int row ) const;
-    QString noteContent( int row ) const;
+public Q_SLOTS:
+    QString noteTitle(int row) const;
+    QString noteContent(int row) const;
 
-    void saveNote( const QString &title, const QString &content );
-    void saveCurrentNoteTitle( const QString &title );
-    void saveCurrentNoteContent( const QString &content );
+    void saveNote(const QString &title, const QString &content);
+    void saveCurrentNoteTitle(const QString &title);
+    void saveCurrentNoteContent(const QString &content);
 
     void startComposer();
 
-  protected:
+protected:
     virtual void doDelayedInit();
-    virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
-                                             QItemSelectionModel *itemSelectionModel );
+    virtual void setupStandardActionManager(QItemSelectionModel *collectionSelectionModel,
+                                            QItemSelectionModel *itemSelectionModel);
 
-    virtual void setupAgentActionManager( QItemSelectionModel *selectionModel );
+    virtual void setupAgentActionManager(QItemSelectionModel *selectionModel);
 
-    virtual QAbstractProxyModel* createItemFilterModel() const;
+    virtual QAbstractProxyModel *createItemFilterModel() const;
 
-    virtual ImportHandlerBase* importHandler() const;
-    virtual ExportHandlerBase* exportHandler() const;
+    virtual ImportHandlerBase *importHandler() const;
+    virtual ExportHandlerBase *exportHandler() const;
 
-  private:
-    Akonadi::Collection suitableContainerCollection( const QModelIndex &parent = QModelIndex() ) const;
+private:
+    Akonadi::Collection suitableContainerCollection(const QModelIndex &parent = QModelIndex()) const;
 };
 
 #endif // MAINVIEW_H

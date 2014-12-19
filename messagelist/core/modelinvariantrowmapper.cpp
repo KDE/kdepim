@@ -235,7 +235,7 @@ ModelInvariantIndex *ModelInvariantRowMapperPrivate::modelIndexRowToModelInvaria
     }
 
     qCWarning(MESSAGELIST_LOG) << "Requested invariant for storage row index "
-               << modelIndexRow << " not found in history";
+                               << modelIndexRow << " not found in history";
     return 0; // not found in history
 }
 

@@ -29,16 +29,16 @@ class KConfigDialogManager;
 
 class ConfigWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit ConfigWidget( QWidget *parent = Q_NULLPTR );
+public:
+    explicit ConfigWidget(QWidget *parent = Q_NULLPTR);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void load();
     void save();
 
-  private:
+private:
     KConfigDialogManager *mManager;
     KComboBox *mMapServiceBox;
     KCModuleProxy *mLdapConfigWidget;
@@ -46,17 +46,17 @@ class ConfigWidget : public QWidget
 
 class DeclarativeConfigWidget : public QGraphicsProxyWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit DeclarativeConfigWidget( QGraphicsItem *parent = Q_NULLPTR );
+public:
+    explicit DeclarativeConfigWidget(QGraphicsItem *parent = Q_NULLPTR);
     ~DeclarativeConfigWidget();
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void load();
     void save();
 
-  private:
+private:
     ConfigWidget *mConfigWidget;
 };
 

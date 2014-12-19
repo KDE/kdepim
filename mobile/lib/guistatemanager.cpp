@@ -21,148 +21,150 @@
 
 #include <QtCore/QDebug>
 
-static void printStack( const QStack<int> &stack )
+static void printStack(const QStack<int> &stack)
 {
-  QString output = QLatin1String( "UI-State-Stack: " );
-  for ( int i = 0; i < stack.count(); ++i )
-    output += QLatin1Char( ':' ) + QString::number( stack.at( i ) );
+    QString output = QLatin1String("UI-State-Stack: ");
+    for (int i = 0; i < stack.count(); ++i) {
+        output += QLatin1Char(':') + QString::number(stack.at(i));
+    }
 
-  qDebug( "%s", qPrintable( output ) );
+    qDebug("%s", qPrintable(output));
 }
 
 class GuiStateManager::Private
 {
-  public:
+public:
     Private()
     {
-      mGuiStates.push( GuiStateManager::HomeScreenState );
+        mGuiStates.push(GuiStateManager::HomeScreenState);
     }
 
     QStack<int> mGuiStates;
 };
 
-GuiStateManager::GuiStateManager( QObject *parent )
-  : QObject( parent ), d( new Private )
+GuiStateManager::GuiStateManager(QObject *parent)
+    : QObject(parent), d(new Private)
 {
 }
 
 GuiStateManager::~GuiStateManager()
 {
-  delete d;
+    delete d;
 }
 
-void GuiStateManager::switchState( int state )
+void GuiStateManager::switchState(int state)
 {
-  Q_ASSERT( !d->mGuiStates.isEmpty() );
+    Q_ASSERT(!d->mGuiStates.isEmpty());
 
-  const int previousState = d->mGuiStates.pop();
-  d->mGuiStates.push( state );
+    const int previousState = d->mGuiStates.pop();
+    d->mGuiStates.push(state);
 
-  printStack( d->mGuiStates );
-  emitChangedSignal();
+    printStack(d->mGuiStates);
+    emitChangedSignal();
 
-  emit guiStateChanged( previousState, state );
+    emit guiStateChanged(previousState, state);
 }
 
-void GuiStateManager::pushState( int state )
+void GuiStateManager::pushState(int state)
 {
-  const int previousState = (d->mGuiStates.isEmpty() ? -1 : d->mGuiStates.top());
+    const int previousState = (d->mGuiStates.isEmpty() ? -1 : d->mGuiStates.top());
 
-  d->mGuiStates.push( state );
+    d->mGuiStates.push(state);
 
-  printStack( d->mGuiStates );
-  emitChangedSignal();
+    printStack(d->mGuiStates);
+    emitChangedSignal();
 
-  emit guiStateChanged( previousState, state );
+    emit guiStateChanged(previousState, state);
 }
 
-void GuiStateManager::pushUniqueState( int state )
+void GuiStateManager::pushUniqueState(int state)
 {
-  const int previousState = (d->mGuiStates.isEmpty() ? -1 : d->mGuiStates.top());
+    const int previousState = (d->mGuiStates.isEmpty() ? -1 : d->mGuiStates.top());
 
-  if ( d->mGuiStates.isEmpty() ) {
-    d->mGuiStates.push( state );
-  } else {
-    if ( d->mGuiStates.top() != state )
-      d->mGuiStates.push( state );
-  }
+    if (d->mGuiStates.isEmpty()) {
+        d->mGuiStates.push(state);
+    } else {
+        if (d->mGuiStates.top() != state) {
+            d->mGuiStates.push(state);
+        }
+    }
 
-  printStack( d->mGuiStates );
-  emitChangedSignal();
+    printStack(d->mGuiStates);
+    emitChangedSignal();
 
-  emit guiStateChanged( previousState, state );
+    emit guiStateChanged(previousState, state);
 }
 
 void GuiStateManager::popState()
 {
-  const int previousState = d->mGuiStates.pop();
-  Q_ASSERT( !d->mGuiStates.isEmpty() );
+    const int previousState = d->mGuiStates.pop();
+    Q_ASSERT(!d->mGuiStates.isEmpty());
 
-  printStack( d->mGuiStates );
-  emitChangedSignal();
+    printStack(d->mGuiStates);
+    emitChangedSignal();
 
-  emit guiStateChanged( previousState, d->mGuiStates.top() );
+    emit guiStateChanged(previousState, d->mGuiStates.top());
 }
 
 int GuiStateManager::currentState() const
 {
-  Q_ASSERT( !d->mGuiStates.isEmpty() );
+    Q_ASSERT(!d->mGuiStates.isEmpty());
 
-  return d->mGuiStates.top();
+    return d->mGuiStates.top();
 }
 
 bool GuiStateManager::inHomeScreenState() const
 {
-  return (currentState() == HomeScreenState);
+    return (currentState() == HomeScreenState);
 }
 
 bool GuiStateManager::inAccountScreenState() const
 {
-  return (currentState() == AccountScreenState);
+    return (currentState() == AccountScreenState);
 }
 
 bool GuiStateManager::inSingleFolderScreenState() const
 {
-  return (currentState() == SingleFolderScreenState);
+    return (currentState() == SingleFolderScreenState);
 }
 
 bool GuiStateManager::inMultipleFolderScreenState() const
 {
-  return (currentState() == MultipleFolderScreenState);
+    return (currentState() == MultipleFolderScreenState);
 }
 
 bool GuiStateManager::inBulkActionScreenState() const
 {
-  return (currentState() == BulkActionScreenState);
+    return (currentState() == BulkActionScreenState);
 }
 
 bool GuiStateManager::inMultipleFolderSelectionScreenState() const
 {
-  return (currentState() == MultipleFolderSelectionScreenState);
+    return (currentState() == MultipleFolderSelectionScreenState);
 }
 
 bool GuiStateManager::inViewSingleItemState() const
 {
-  return (currentState() == ViewSingleItemState);
+    return (currentState() == ViewSingleItemState);
 }
 
 bool GuiStateManager::inSearchScreenState() const
 {
-  return (currentState() == SearchScreenState);
+    return (currentState() == SearchScreenState);
 }
 
 bool GuiStateManager::inSearchResultScreenState() const
 {
-  return (currentState() == SearchResultScreenState);
+    return (currentState() == SearchResultScreenState);
 }
 
 bool GuiStateManager::inConfigScreenState() const
 {
-  return (currentState() == ConfigScreenState);
+    return (currentState() == ConfigScreenState);
 }
 
 void GuiStateManager::emitChangedSignal()
 {
-  emit guiStateChanged();
+    emit guiStateChanged();
 }
 

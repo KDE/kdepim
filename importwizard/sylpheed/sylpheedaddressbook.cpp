@@ -58,7 +58,7 @@ void SylpheedAddressBook::readAddressBook(const QString &filename)
     QDomDocument doc;
     if (!doc.setContent(&file, &errorMsg, &errorRow, &errorCol)) {
         qCDebug(IMPORTWIZARD_LOG) << "Unable to load document.Parse error in line " << errorRow
-                 << ", col " << errorCol << ": " << errorMsg;
+                                  << ", col " << errorCol << ": " << errorMsg;
         return;
     }
     QDomElement domElement = doc.documentElement();

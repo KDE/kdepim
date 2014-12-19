@@ -123,7 +123,7 @@ const QRegExp htmlTagRegExp(QStringLiteral("<"
                             "|\\s*"            //Some white space.
                             ")"
                             "(/)?>" //Captures the "/" if this is a complete tag.
-                                         ));
+                                          ));
 
 const QString reformat(const QString &src);
 }

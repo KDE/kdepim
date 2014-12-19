@@ -20,4 +20,3 @@
 #include "mailimporter_debug.h"
 Q_LOGGING_CATEGORY(MAILIMPORTER_LOG, "log_mailimporter")
 
-

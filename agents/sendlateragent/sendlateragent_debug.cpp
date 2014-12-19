@@ -20,4 +20,3 @@
 #include "sendlateragent_debug.h"
 Q_LOGGING_CATEGORY(SENDLATERAGENT_LOG, "log_sendlateragent")
 
-

@@ -24,39 +24,39 @@
 using namespace Akonadi;
 using namespace Akonadi::Contact;
 
-ExtendedContactGroupViewer::ExtendedContactGroupViewer( QWidget *parent )
-  : ContactGroupViewer( parent )
+ExtendedContactGroupViewer::ExtendedContactGroupViewer(QWidget *parent)
+    : ContactGroupViewer(parent)
 {
 }
 
 void ExtendedContactGroupViewer::itemRemoved()
 {
-  emit contactGroupRemoved();
+    emit contactGroupRemoved();
 }
 
-
-ContactGroupViewItem::ContactGroupViewItem(QDeclarativeItem* parent)
-  : DeclarativeAkonadiItem( parent )
+ContactGroupViewItem::ContactGroupViewItem(QDeclarativeItem *parent)
+    : DeclarativeAkonadiItem(parent)
 {
-  m_viewer = new ExtendedContactGroupViewer( 0 );
-  connect( m_viewer, SIGNAL(contactGroupRemoved()), SIGNAL(contactGroupRemoved()) );
+    m_viewer = new ExtendedContactGroupViewer(0);
+    connect(m_viewer, SIGNAL(contactGroupRemoved()), SIGNAL(contactGroupRemoved()));
 
-  setWidget( m_viewer );
+    setWidget(m_viewer);
 }
 
 ContactGroupViewItem::~ContactGroupViewItem()
 {
-  delete m_viewer;
+    delete m_viewer;
 }
 
 qint64 ContactGroupViewItem::itemId() const
 {
-  return m_viewer->contactGroup().id();
+    return m_viewer->contactGroup().id();
 }
 
 void ContactGroupViewItem::setItemId(qint64 id)
 {
-  if ( itemId() != id )
-    m_viewer->setContactGroup( Akonadi::Item( id ) );
+    if (itemId() != id) {
+        m_viewer->setContactGroup(Akonadi::Item(id));
+    }
 }
 

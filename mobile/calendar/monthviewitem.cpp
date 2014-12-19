@@ -23,84 +23,83 @@
 #include <Akonadi/Calendar/ETMCalendar>
 #include <calendarviews/month/monthview.h>
 
-
 #include <QDebug>
 #include <KSharedConfig>
 #include <KColorScheme>
 
 using namespace EventViews;
 
-MonthViewItem::MonthViewItem( QDeclarativeItem* parent )
-  : DeclarativeAkonadiItem( parent )
-  , mView( new MonthView( MonthView::Hidden ) )
+MonthViewItem::MonthViewItem(QDeclarativeItem *parent)
+    : DeclarativeAkonadiItem(parent)
+    , mView(new MonthView(MonthView::Hidden))
 {
-  // start with the oxygen palette (which is not necessarily the default on all platforms)
-  QPalette pal = KColorScheme::createApplicationPalette( KSharedConfig::openConfig() );
-  mView->setPalette( pal );
-  setWidget( mView );
+    // start with the oxygen palette (which is not necessarily the default on all platforms)
+    QPalette pal = KColorScheme::createApplicationPalette(KSharedConfig::openConfig());
+    mView->setPalette(pal);
+    setWidget(mView);
 
-  connect( this, SIGNAL(previousItemRequest()),
-           mView, SLOT(moveBackMonth()) );
-  connect( this, SIGNAL(nextItemRequest()),
-           mView, SLOT(moveFwdMonth()) );
-  connect( mView, SIGNAL(newEventSignal()),
-           SLOT(emitDateClicked()));
-  connect( mView, SIGNAL(incidenceSelected(Akonadi::Item,QDate)),
-           SLOT(emitItemSelected(Akonadi::Item,QDate)) );
+    connect(this, SIGNAL(previousItemRequest()),
+            mView, SLOT(moveBackMonth()));
+    connect(this, SIGNAL(nextItemRequest()),
+            mView, SLOT(moveFwdMonth()));
+    connect(mView, SIGNAL(newEventSignal()),
+            SLOT(emitDateClicked()));
+    connect(mView, SIGNAL(incidenceSelected(Akonadi::Item,QDate)),
+            SLOT(emitItemSelected(Akonadi::Item,QDate)));
 
-  setPreferences( MainView::preferences() );
+    setPreferences(MainView::preferences());
 }
 
 MonthViewItem::~MonthViewItem()
 {
-  mView->preferences()->writeConfig();
-  delete mView;
+    mView->preferences()->writeConfig();
+    delete mView;
 }
 
 void MonthViewItem::emitDateClicked()
 {
-  emit dateClicked( mView->selectionStart().date() );
+    emit dateClicked(mView->selectionStart().date());
 }
 
-void MonthViewItem::emitItemSelected( const Akonadi::Item &item, const QDate &activeDate )
+void MonthViewItem::emitItemSelected(const Akonadi::Item &item, const QDate &activeDate)
 {
-  emit itemSelected( item.id(), activeDate );
+    emit itemSelected(item.id(), activeDate);
 }
 
-QObject* MonthViewItem::calendar() const
+QObject *MonthViewItem::calendar() const
 {
-  return mView->calendar().data();
+    return mView->calendar().data();
 }
 
-void MonthViewItem::setCalendar( QObject* calendarObj )
+void MonthViewItem::setCalendar(QObject *calendarObj)
 {
-  Akonadi::ETMCalendar* cal = qobject_cast<Akonadi::ETMCalendar*>( calendarObj );
-  qDebug() << calendarObj << cal;
-  if ( cal ) {
-    mView->setCalendar( cal->weakPointer().toStrongRef().dynamicCast<Akonadi::ETMCalendar>() );
-    mView->updateConfig();
-  }
+    Akonadi::ETMCalendar *cal = qobject_cast<Akonadi::ETMCalendar *>(calendarObj);
+    qDebug() << calendarObj << cal;
+    if (cal) {
+        mView->setCalendar(cal->weakPointer().toStrongRef().dynamicCast<Akonadi::ETMCalendar>());
+        mView->updateConfig();
+    }
 }
 
-void MonthViewItem::showMonth( const QDate &date )
+void MonthViewItem::showMonth(const QDate &date)
 {
-  const KDateTime start( QDate( date.year(), date.month(), 1 ) );
-  const KDateTime end( QDate( date.year(), date.month(), date.daysInMonth() ) );
-  mView->setDateRange( start, end );
+    const KDateTime start(QDate(date.year(), date.month(), 1));
+    const KDateTime end(QDate(date.year(), date.month(), date.daysInMonth()));
+    mView->setDateRange(start, end);
 }
 
-void MonthViewItem::setPreferences( const PrefsPtr &preferences )
+void MonthViewItem::setPreferences(const PrefsPtr &preferences)
 {
-  mView->setPreferences( preferences );
+    mView->setPreferences(preferences);
 }
 
 PrefsPtr MonthViewItem::preferences() const
 {
-  return mView->preferences();
+    return mView->preferences();
 }
 
 void MonthViewItem::updateConfig()
 {
-  mView->updateConfig();
+    mView->updateConfig();
 }
 

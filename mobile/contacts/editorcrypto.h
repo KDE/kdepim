@@ -24,17 +24,17 @@
 
 class EditorCrypto : public EditorBase
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit EditorCrypto( QWidget *parent = Q_NULLPTR );
+public:
+    explicit EditorCrypto(QWidget *parent = Q_NULLPTR);
 
     ~EditorCrypto();
 
-    void loadContact( const KContacts::Addressee &contact, const Akonadi::ContactMetaData &metaData );
-    void saveContact( KContacts::Addressee &contact, Akonadi::ContactMetaData &metaData ) const;
+    void loadContact(const KContacts::Addressee &contact, const Akonadi::ContactMetaData &metaData);
+    void saveContact(KContacts::Addressee &contact, Akonadi::ContactMetaData &metaData) const;
 
-  private:
+private:
     class Private;
     Private *const d;
 };

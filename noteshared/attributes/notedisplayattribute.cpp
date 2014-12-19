@@ -111,7 +111,7 @@ QByteArray NoteDisplayAttribute::serialized() const
 
 QByteArray NoteDisplayAttribute::type() const
 {
-    static const QByteArray sType( "NoteDisplayAttribute" );
+    static const QByteArray sType("NoteDisplayAttribute");
     return sType;
 }
 

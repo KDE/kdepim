@@ -24,8 +24,9 @@
 
 #include <QSortFilterProxyModel>
 
-namespace MessageViewer {
-  class NodeHelper;
+namespace MessageViewer
+{
+class NodeHelper;
 }
 
 /**
@@ -33,28 +34,28 @@ namespace MessageViewer {
  */
 class AttachmentProxyModel : public QSortFilterProxyModel
 {
-  Q_OBJECT
-  Q_PROPERTY( int attachmentCount READ rowCount NOTIFY rowCountChanged )
+    Q_OBJECT
+    Q_PROPERTY(int attachmentCount READ rowCount NOTIFY rowCountChanged)
 
-  public:
+public:
     enum Role {
-      AttachmentUrlRole = MessageViewer::MimeTreeModel::UserRole
+        AttachmentUrlRole = MessageViewer::MimeTreeModel::UserRole
     };
 
-    explicit AttachmentProxyModel( QObject *parent = Q_NULLPTR );
+    explicit AttachmentProxyModel(QObject *parent = Q_NULLPTR);
     ~AttachmentProxyModel();
 
-    bool filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent ) const Q_DECL_OVERRIDE;
-    void setSourceModel( QAbstractItemModel *sourceModel ) Q_DECL_OVERRIDE;
-    QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const Q_DECL_OVERRIDE;
+    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const Q_DECL_OVERRIDE;
+    void setSourceModel(QAbstractItemModel *sourceModel) Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void rowCountChanged();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void slotModelReset();
 
-  private:
+private:
     MessageViewer::NodeHelper *m_nodeHelper;
 };
 

@@ -199,8 +199,8 @@ KCalCore::Alarm::Ptr preset(When when, const QString &name)
         if (sBeforeStartPresetNames->count(name) != 1) {
             // print some debug info before crashing
             qCDebug(INCIDENCEEDITOR_LOG) << " name = " << name << "; when = " << when
-                     << "; count for name = " << sBeforeStartPresetNames->count(name)
-                     <<  "; global count = " << sBeforeStartPresetNames->count();
+                                         << "; count for name = " << sBeforeStartPresetNames->count(name)
+                                         <<  "; global count = " << sBeforeStartPresetNames->count();
             Q_ASSERT_X(false, "preset", "Number of presets should be one");
         }
 

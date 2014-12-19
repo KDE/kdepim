@@ -59,7 +59,7 @@ QString FilterClawsMail::localMailDirPath()
         int errorCol;
         if (!doc.setContent(&folderListFile, &errorMsg, &errorRow, &errorCol)) {
             qCDebug(MAILIMPORTER_LOG) << "Unable to load document.Parse error in line " << errorRow
-                     << ", col " << errorCol << ": " << errorMsg;
+                                      << ", col " << errorCol << ": " << errorMsg;
             return QString();
         }
         QDomElement settings = doc.documentElement();

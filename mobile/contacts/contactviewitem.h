@@ -24,42 +24,44 @@
 
 #include <Akonadi/Contact/ContactViewer>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
-namespace Contact {
+namespace Contact
+{
 
 /**
  * @short A wrapper class to make the 'removed' signal available.
  */
 class ExtendedContactViewer : public ContactViewer
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit ExtendedContactViewer( QWidget *parent = Q_NULLPTR );
+public:
+    explicit ExtendedContactViewer(QWidget *parent = Q_NULLPTR);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void contactRemoved();
 
-  private:
+private:
     virtual void itemRemoved();
 };
 
 class ContactViewItem : public DeclarativeAkonadiItem
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit ContactViewItem( QDeclarativeItem *parent = Q_NULLPTR );
+public:
+    explicit ContactViewItem(QDeclarativeItem *parent = Q_NULLPTR);
     ~ContactViewItem();
 
     qint64 itemId() const;
-    void setItemId( qint64 id );
+    void setItemId(qint64 id);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void contactRemoved();
 
-  private:
+private:
     ExtendedContactViewer *m_viewer;
 };
 

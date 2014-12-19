@@ -34,18 +34,18 @@
 class MailList : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY( QAbstractItemModel* model READ model CONSTANT )
+    Q_PROPERTY(QAbstractItemModel *model READ model CONSTANT)
 
 public:
-    explicit MailList( QObject *parent = Q_NULLPTR );
+    explicit MailList(QObject *parent = Q_NULLPTR);
 
     MailListModel *model() const;
 
 public Q_SLOTS:
-    void loadCollection( const QUrl &akonadiUrl );
+    void loadCollection(const QUrl &akonadiUrl);
 
 private Q_SLOTS:
-    void slotItemsReceived( const Akonadi::Item::List &itemList );
+    void slotItemsReceived(const Akonadi::Item::List &itemList);
 
 private:
     QScopedPointer<MailListModel> m_model;

@@ -26,36 +26,38 @@
 #include <Akonadi/Calendar/ETMCalendar>
 #include <QtCore/QAbstractItemModel>
 
-namespace CalendarSupport {
+namespace CalendarSupport
+{
 
 class Item;
 
-namespace KCal {
+namespace KCal
+{
 
 /**
  * @short A wrapper class to make the 'removed' signal available.
  */
 class ExtendedIncidenceViewer : public IncidenceViewer
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit ExtendedIncidenceViewer( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *parent = Q_NULLPTR );
+public:
+    explicit ExtendedIncidenceViewer(const Akonadi::ETMCalendar::Ptr &calendar, QWidget *parent = Q_NULLPTR);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void incidenceRemoved();
 
-  private:
+private:
     virtual void itemRemoved();
 };
 
 class KCalItemBrowserItem : public DeclarativeAkonadiItem
 {
-  Q_OBJECT
-  Q_PROPERTY( QObject* attachmentModel READ attachmentModel NOTIFY attachmentModelChanged )
-  Q_PROPERTY( QDate activeDate WRITE setActiveDate READ activeDate )
-  public:
-    explicit KCalItemBrowserItem( QDeclarativeItem *parent = Q_NULLPTR );
+    Q_OBJECT
+    Q_PROPERTY(QObject *attachmentModel READ attachmentModel NOTIFY attachmentModelChanged)
+    Q_PROPERTY(QDate activeDate WRITE setActiveDate READ activeDate)
+public:
+    explicit KCalItemBrowserItem(QDeclarativeItem *parent = Q_NULLPTR);
     virtual ~KCalItemBrowserItem();
 
     virtual Akonadi::Item item() const;
@@ -67,15 +69,15 @@ class KCalItemBrowserItem : public DeclarativeAkonadiItem
      * incideces that have recurrence.
      */
     QDate activeDate() const;
-    void setActiveDate( const QDate &date );
+    void setActiveDate(const QDate &date);
 
     QObject *attachmentModel() const;
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void attachmentModelChanged();
     void incidenceRemoved();
 
-  private:
+private:
     ExtendedIncidenceViewer *m_viewer;
 };
 

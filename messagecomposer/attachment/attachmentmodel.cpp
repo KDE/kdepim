@@ -112,8 +112,8 @@ bool AttachmentModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
     Q_UNUSED(parent);
 
     qCDebug(MESSAGECOMPOSER_LOG) << "data has formats" << data->formats()
-             << "urls" << data->urls()
-             << "action" << int(action);
+                                 << "urls" << data->urls()
+                                 << "action" << int(action);
 
     if (action == Qt::IgnoreAction) {
         return true;

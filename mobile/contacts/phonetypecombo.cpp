@@ -20,68 +20,69 @@
 
 #include "phonetypecombo.h"
 
-
 class PhoneTypeCombo::Private
 {
-  PhoneTypeCombo *const q;
+    PhoneTypeCombo *const q;
 
-  public:
-    Private( PhoneTypeCombo *parent ): q( parent ), mType( KContacts::PhoneNumber::Home ), mLastSelected( 0 )
+public:
+    Private(PhoneTypeCombo *parent): q(parent), mType(KContacts::PhoneNumber::Home), mLastSelected(0)
     {
-      for ( int i = 0; i < KContacts::PhoneNumber::typeList().count(); ++i )
-        mTypeList.append( KContacts::PhoneNumber::typeList().at( i ) );
+        for (int i = 0; i < KContacts::PhoneNumber::typeList().count(); ++i) {
+            mTypeList.append(KContacts::PhoneNumber::typeList().at(i));
+        }
 
-      update();
+        update();
     }
 
     void update()
     {
-      q->clear();
+        q->clear();
 
-      for ( int i = 0; i < mTypeList.count(); ++i ) {
-        q->addItem( KContacts::PhoneNumber::typeLabel( KContacts::PhoneNumber::Type( mTypeList.at( i ) ) ) );
-      }
+        for (int i = 0; i < mTypeList.count(); ++i) {
+            q->addItem(KContacts::PhoneNumber::typeLabel(KContacts::PhoneNumber::Type(mTypeList.at(i))));
+        }
 
-      q->setCurrentIndex( mLastSelected = mTypeList.indexOf( mType ) );
+        q->setCurrentIndex(mLastSelected = mTypeList.indexOf(mType));
     }
 
-  public:
+public:
     KContacts::PhoneNumber::Type mType;
     int mLastSelected;
     QList<int> mTypeList;
 
-  public: // slots
-    void selected( int index );
+public: // slots
+    void selected(int index);
 };
 
-void PhoneTypeCombo::Private::selected( int pos )
+void PhoneTypeCombo::Private::selected(int pos)
 {
-  mType = KContacts::PhoneNumber::Type( mTypeList.at( pos ) );
-  mLastSelected = pos;
+    mType = KContacts::PhoneNumber::Type(mTypeList.at(pos));
+    mLastSelected = pos;
 }
 
-PhoneTypeCombo::PhoneTypeCombo( QWidget *parent ) : QComboBox( parent ), d( new Private( this ) )
+PhoneTypeCombo::PhoneTypeCombo(QWidget *parent) : QComboBox(parent), d(new Private(this))
 {
-  connect( this, SIGNAL(activated(int)), SLOT(selected(int)) );
+    connect(this, SIGNAL(activated(int)), SLOT(selected(int)));
 }
 
 PhoneTypeCombo::~PhoneTypeCombo()
 {
-  delete d;
+    delete d;
 }
 
-void PhoneTypeCombo::setType( KContacts::PhoneNumber::Type type )
+void PhoneTypeCombo::setType(KContacts::PhoneNumber::Type type)
 {
-  if ( !d->mTypeList.contains( type ) )
-    d->mTypeList.insert( d->mTypeList.at( d->mTypeList.count() - 1 ), type );
+    if (!d->mTypeList.contains(type)) {
+        d->mTypeList.insert(d->mTypeList.at(d->mTypeList.count() - 1), type);
+    }
 
-  d->mType = type;
-  d->update();
+    d->mType = type;
+    d->update();
 }
 
 KContacts::PhoneNumber::Type PhoneTypeCombo::type() const
 {
-  return d->mType;
+    return d->mType;
 }
 
 #include "moc_phonetypecombo.cpp"

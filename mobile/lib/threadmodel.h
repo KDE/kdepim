@@ -32,30 +32,30 @@ class ThreadModelPrivate;
 
 class MOBILEUI_EXPORT ThreadModel : public QAbstractListModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
 
     enum Roles {
-      ThreadRangeStartRole = Akonadi::EntityTreeModel::UserRole + 20,
-      ThreadRangeEndRole,
-      ThreadSizeRole,
-      ThreadUnreadCountRole
+        ThreadRangeStartRole = Akonadi::EntityTreeModel::UserRole + 20,
+        ThreadRangeEndRole,
+        ThreadSizeRole,
+        ThreadUnreadCountRole
     };
 
-    explicit ThreadModel( QAbstractItemModel *emailModel, QObject *parent = Q_NULLPTR );
+    explicit ThreadModel(QAbstractItemModel *emailModel, QObject *parent = Q_NULLPTR);
     virtual ~ThreadModel();
 
-    virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const;
-    virtual QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
-  private:
-    Q_DECLARE_PRIVATE( ThreadModel )
-    ThreadModelPrivate* const d_ptr;
-    Q_PRIVATE_SLOT( d_func(), void populateThreadModel() )
-    Q_PRIVATE_SLOT( d_func(), void slotRowsInserted( QModelIndex, int, int ) )
-    Q_PRIVATE_SLOT( d_func(), void slotRowsRemoved( QModelIndex, int, int ) )
-    Q_PRIVATE_SLOT( d_func(), void slotResetModel() )
+private:
+    Q_DECLARE_PRIVATE(ThreadModel)
+    ThreadModelPrivate *const d_ptr;
+    Q_PRIVATE_SLOT(d_func(), void populateThreadModel())
+    Q_PRIVATE_SLOT(d_func(), void slotRowsInserted(QModelIndex, int, int))
+    Q_PRIVATE_SLOT(d_func(), void slotRowsRemoved(QModelIndex, int, int))
+    Q_PRIVATE_SLOT(d_func(), void slotResetModel())
 };
 
 #endif

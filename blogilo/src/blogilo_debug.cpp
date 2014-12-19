@@ -20,4 +20,3 @@
 #include "blogilo_debug.h"
 Q_LOGGING_CATEGORY(BLOGILO_LOG, "log_blogilo")
 
-

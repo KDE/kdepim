@@ -28,43 +28,43 @@
 #include <QtCore/QAbstractItemModel>
 #include <QItemSelectionModel>
 
-FavoritesEditor::FavoritesEditor( KActionCollection *actionCollection, const KSharedConfig::Ptr &config, QObject *parent )
-  : QObject( parent )
+FavoritesEditor::FavoritesEditor(KActionCollection *actionCollection, const KSharedConfig::Ptr &config, QObject *parent)
+    : QObject(parent)
 {
-  mFavoritesController = new FavoritesController( config, this );
+    mFavoritesController = new FavoritesController(config, this);
 
-  actionCollection->addAction( QLatin1String("favoriteseditor_moveup"), mFavoritesController->moveUpAction() );
-  actionCollection->addAction( QLatin1String("favoriteseditor_movedown"), mFavoritesController->moveDownAction() );
-  actionCollection->addAction( QLatin1String("favoriteseditor_remove"), mFavoritesController->removeAction() );
+    actionCollection->addAction(QLatin1String("favoriteseditor_moveup"), mFavoritesController->moveUpAction());
+    actionCollection->addAction(QLatin1String("favoriteseditor_movedown"), mFavoritesController->moveDownAction());
+    actionCollection->addAction(QLatin1String("favoriteseditor_remove"), mFavoritesController->removeAction());
 }
 
-QAbstractItemModel* FavoritesEditor::model() const
+QAbstractItemModel *FavoritesEditor::model() const
 {
-  return mFavoritesController->model();
+    return mFavoritesController->model();
 }
 
-void FavoritesEditor::setCollectionSelectionModel( QItemSelectionModel *model )
+void FavoritesEditor::setCollectionSelectionModel(QItemSelectionModel *model)
 {
-  mFavoritesController->setCollectionSelectionModel( model );
+    mFavoritesController->setCollectionSelectionModel(model);
 }
 
-void FavoritesEditor::loadFavorite( const QString &name ) const
+void FavoritesEditor::loadFavorite(const QString &name) const
 {
-  mFavoritesController->loadFavorite( name );
+    mFavoritesController->loadFavorite(name);
 }
 
-void FavoritesEditor::saveFavorite( const QString &name )
+void FavoritesEditor::saveFavorite(const QString &name)
 {
-  mFavoritesController->saveFavorite( name );
+    mFavoritesController->saveFavorite(name);
 }
 
-void FavoritesEditor::setRowSelected( int row )
+void FavoritesEditor::setRowSelected(int row)
 {
-  Q_ASSERT( row >= 0 && row < mFavoritesController->model()->rowCount() );
+    Q_ASSERT(row >= 0 && row < mFavoritesController->model()->rowCount());
 
-  QAbstractItemModel *model = mFavoritesController->model();
-  QItemSelectionModel *selectionModel = mFavoritesController->selectionModel();
+    QAbstractItemModel *model = mFavoritesController->model();
+    QItemSelectionModel *selectionModel = mFavoritesController->selectionModel();
 
-  selectionModel->select( model->index( row, 0, QModelIndex() ), QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows );
+    selectionModel->select(model->index(row, 0, QModelIndex()), QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
 }
 

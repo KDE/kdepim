@@ -20,4 +20,3 @@
 #include "followupreminderagent_debug.h"
 Q_LOGGING_CATEGORY(FOLLOWUPREMINDERAGENT_LOG, "log_followupreminderagent")
 
-

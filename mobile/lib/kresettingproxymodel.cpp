@@ -21,30 +21,30 @@
 
 #include "kresettingproxymodel.h"
 
-KResettingProxyModel::KResettingProxyModel(QObject* parent)
-  : QSortFilterProxyModel(parent)
+KResettingProxyModel::KResettingProxyModel(QObject *parent)
+    : QSortFilterProxyModel(parent)
 {
 
 }
 
-void KResettingProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
+void KResettingProxyModel::setSourceModel(QAbstractItemModel *sourceModel)
 {
-  connect(sourceModel, SIGNAL(layoutAboutToBeChanged()), this, SLOT(slotBeginReset()));
-  connect(sourceModel, SIGNAL(layoutChanged()), this, SLOT(slotEndReset()));
+    connect(sourceModel, SIGNAL(layoutAboutToBeChanged()), this, SLOT(slotBeginReset()));
+    connect(sourceModel, SIGNAL(layoutChanged()), this, SLOT(slotEndReset()));
 
-  QSortFilterProxyModel::setSourceModel(sourceModel);
+    QSortFilterProxyModel::setSourceModel(sourceModel);
 
-  disconnect(sourceModel, SIGNAL(layoutAboutToBeChanged()), this, SLOT(_q_sourceLayoutAboutToBeChanged()));
-  disconnect(sourceModel, SIGNAL(layoutChanged()), this, SLOT(_q_sourceLayoutChanged()));
+    disconnect(sourceModel, SIGNAL(layoutAboutToBeChanged()), this, SLOT(_q_sourceLayoutAboutToBeChanged()));
+    disconnect(sourceModel, SIGNAL(layoutChanged()), this, SLOT(_q_sourceLayoutChanged()));
 }
 
 void KResettingProxyModel::slotBeginReset()
 {
-  QMetaObject::invokeMethod(this, "_q_sourceAboutToBeReset", Qt::DirectConnection);
+    QMetaObject::invokeMethod(this, "_q_sourceAboutToBeReset", Qt::DirectConnection);
 }
 
 void KResettingProxyModel::slotEndReset()
 {
-  QMetaObject::invokeMethod(this, "_q_sourceReset", Qt::DirectConnection);
+    QMetaObject::invokeMethod(this, "_q_sourceReset", Qt::DirectConnection);
 }
 

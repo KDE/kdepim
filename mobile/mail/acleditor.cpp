@@ -30,61 +30,63 @@
 #include <QtCore/QAbstractItemModel>
 #include <QItemSelectionModel>
 
-AclEditor::AclEditor( KActionCollection *actionCollection, QObject *parent )
-  : QObject( parent ), mAclManager( new PimCommon::AclManager( this ) )
+AclEditor::AclEditor(KActionCollection *actionCollection, QObject *parent)
+    : QObject(parent), mAclManager(new PimCommon::AclManager(this))
 {
-  Akonadi::AttributeFactory::registerAttribute<PimCommon::ImapAclAttribute>();
+    Akonadi::AttributeFactory::registerAttribute<PimCommon::ImapAclAttribute>();
 
-  actionCollection->addAction( QLatin1String("acleditor_add"), mAclManager->addAction() );
-  actionCollection->addAction( QLatin1String("acleditor_edit"), mAclManager->editAction() );
-  actionCollection->addAction( QLatin1String("acleditor_delete"), mAclManager->deleteAction() );
+    actionCollection->addAction(QLatin1String("acleditor_add"), mAclManager->addAction());
+    actionCollection->addAction(QLatin1String("acleditor_edit"), mAclManager->editAction());
+    actionCollection->addAction(QLatin1String("acleditor_delete"), mAclManager->deleteAction());
 }
 
-void AclEditor::setCollection( const Akonadi::Collection &collection )
+void AclEditor::setCollection(const Akonadi::Collection &collection)
 {
-  mCollection = collection;
+    mCollection = collection;
 
-  emit collectionChanged( mCollection );
+    emit collectionChanged(mCollection);
 }
 
 QString AclEditor::collectionName() const
 {
-  if ( mCollection.isValid() )
-    return mCollection.displayName();
-  else
-    return QString();
+    if (mCollection.isValid()) {
+        return mCollection.displayName();
+    } else {
+        return QString();
+    }
 }
 
 bool AclEditor::collectionHasAcls() const
 {
-  if ( !mCollection.isValid() )
-    return false;
+    if (!mCollection.isValid()) {
+        return false;
+    }
 
-  return mCollection.hasAttribute<PimCommon::ImapAclAttribute>();
+    return mCollection.hasAttribute<PimCommon::ImapAclAttribute>();
 }
 
 void AclEditor::load()
 {
-  mAclManager->setCollection( mCollection );
+    mAclManager->setCollection(mCollection);
 }
 
 void AclEditor::save()
 {
-  mAclManager->save();
+    mAclManager->save();
 }
 
-QAbstractItemModel* AclEditor::model() const
+QAbstractItemModel *AclEditor::model() const
 {
-  return mAclManager->model();
+    return mAclManager->model();
 }
 
-void AclEditor::setRowSelected( int row )
+void AclEditor::setRowSelected(int row)
 {
-  const QAbstractItemModel *model = mAclManager->model();
-  QItemSelectionModel *selectionModel = mAclManager->selectionModel();
+    const QAbstractItemModel *model = mAclManager->model();
+    QItemSelectionModel *selectionModel = mAclManager->selectionModel();
 
-  Q_ASSERT( row >= 0 && row < model->rowCount() );
+    Q_ASSERT(row >= 0 && row < model->rowCount());
 
-  selectionModel->select( model->index( row, 0 ), QItemSelectionModel::ClearAndSelect );
+    selectionModel->select(model->index(row, 0), QItemSelectionModel::ClearAndSelect);
 }
 

@@ -25,7 +25,8 @@
 #include <QtCore/QObject>
 #include <QtCore/QPointer>
 
-namespace KSieveUi {
+namespace KSieveUi
+{
 class Vacation;
 }
 
@@ -37,11 +38,11 @@ class KActionCollection;
  */
 class VacationManager : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  Q_PROPERTY( bool activeVacationScriptAvailable READ activeVacationScriptAvailable NOTIFY vacationScriptActivityChanged )
+    Q_PROPERTY(bool activeVacationScriptAvailable READ activeVacationScriptAvailable NOTIFY vacationScriptActivityChanged)
 
-  public:
+public:
     /**
      * Creates a new vacation manager.
      *
@@ -49,7 +50,7 @@ class VacationManager : public QObject
      * @param kernel The object that provide a bool askToGoOnline() slot.
      * @param parent The parent object.
      */
-    explicit VacationManager( KActionCollection *actionCollection, QObject *kernel, QObject *parent = Q_NULLPTR );
+    explicit VacationManager(KActionCollection *actionCollection, QObject *kernel, QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the vacation manager.
@@ -61,24 +62,24 @@ class VacationManager : public QObject
      */
     bool activeVacationScriptAvailable() const;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
      * Opens the vacation script edit dialog.
      */
     void editVacation();
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever the activity of the vacation script has changed.
      */
     void vacationScriptActivityChanged();
 
-  private Q_SLOTS:
-    void updateVacationScriptActivity(bool , const QString &serverName=QString());
+private Q_SLOTS:
+    void updateVacationScriptActivity(bool , const QString &serverName = QString());
 
     void checkVacation();
 
-  private:
+private:
     bool askToGoOnline() const;
 
     QPointer<KSieveUi::Vacation> mVacation;

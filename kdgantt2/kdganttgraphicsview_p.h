@@ -31,56 +31,62 @@
 
 #include <QPointer>
 
-namespace KDGantt {
-    class HeaderWidget : public QWidget {
-        Q_OBJECT
-    public:
-        explicit HeaderWidget( GraphicsView* parent );
-        virtual ~HeaderWidget();
+namespace KDGantt
+{
+class HeaderWidget : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit HeaderWidget(GraphicsView *parent);
+    virtual ~HeaderWidget();
 
-        GraphicsView* view() const { return qobject_cast<GraphicsView*>( parent() );}
+    GraphicsView *view() const
+    {
+        return qobject_cast<GraphicsView *>(parent());
+    }
 
-    public Q_SLOTS:
-        void scrollTo( int );
-    protected:
-        /*reimp*/ void paintEvent( QPaintEvent* ev );
+public Q_SLOTS:
+    void scrollTo(int);
+protected:
+    /*reimp*/ void paintEvent(QPaintEvent *ev);
 #ifndef QT_NO_CONTEXTMENU
-        /*reimp*/ void contextMenuEvent( QContextMenuEvent* ev );
+    /*reimp*/ void contextMenuEvent(QContextMenuEvent *ev);
 #endif
-    private:
-        qreal m_offset;
-    };
+private:
+    qreal m_offset;
+};
 
-    class GraphicsView::Private {
-        Q_DISABLE_COPY( Private )
-    public:
-        explicit Private(GraphicsView* _q);
+class GraphicsView::Private
+{
+    Q_DISABLE_COPY(Private)
+public:
+    explicit Private(GraphicsView *_q);
 
-        void updateHeaderGeometry();
+    void updateHeaderGeometry();
 
-        void slotGridChanged();
-        void slotHorizontalScrollValueChanged( int val );
+    void slotGridChanged();
+    void slotHorizontalScrollValueChanged(int val);
 
-        /* slots for QAbstractItemModel signals */
-        void slotColumnsInserted( const QModelIndex& parent,  int start, int end );
-        void slotColumnsRemoved( const QModelIndex& parent,  int start, int end );
-        void slotDataChanged( const QModelIndex& topLeft, const QModelIndex& bottomRight );
-        void slotLayoutChanged();
-        void slotModelReset();
-        void slotRowsInserted( const QModelIndex& parent,  int start, int end );
-        void slotRowsAboutToBeRemoved( const QModelIndex& parent,  int start, int end );
-        void slotRowsRemoved( const QModelIndex& parent,  int start, int end );
+    /* slots for QAbstractItemModel signals */
+    void slotColumnsInserted(const QModelIndex &parent,  int start, int end);
+    void slotColumnsRemoved(const QModelIndex &parent,  int start, int end);
+    void slotDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+    void slotLayoutChanged();
+    void slotModelReset();
+    void slotRowsInserted(const QModelIndex &parent,  int start, int end);
+    void slotRowsAboutToBeRemoved(const QModelIndex &parent,  int start, int end);
+    void slotRowsRemoved(const QModelIndex &parent,  int start, int end);
 
-        void slotItemClicked( const QModelIndex& idx );
-        void slotItemDoubleClicked( const QModelIndex& idx );
+    void slotItemClicked(const QModelIndex &idx);
+    void slotItemDoubleClicked(const QModelIndex &idx);
 
-	void slotHeaderContextMenuRequested( const QPoint& pt );
+    void slotHeaderContextMenuRequested(const QPoint &pt);
 
-        GraphicsView* q;
-        AbstractRowController* rowcontroller;
-        HeaderWidget headerwidget;
-        GraphicsScene scene;
-    };
+    GraphicsView *q;
+    AbstractRowController *rowcontroller;
+    HeaderWidget headerwidget;
+    GraphicsScene scene;
+};
 }
 
 #endif /* KDGANTTGRAPHICSVIEW_P_H */

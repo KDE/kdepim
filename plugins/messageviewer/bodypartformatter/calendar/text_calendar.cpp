@@ -130,7 +130,6 @@ static bool hasMyWritableEventsFolders(const QString &family)
 #endif
 }
 
-
 static bool occurredAlready(const Incidence::Ptr &incidence)
 {
     Q_ASSERT(incidence);
@@ -691,7 +690,7 @@ public:
             QString tname, temail;
             KMime::Message::Ptr message = viewerInstance->message();
             KEmailAddress::extractEmailAddressAndName(message->sender()->asUnicodeString(),
-                                                  temail, tname);
+                    temail, tname);
             incidence->setOrganizer(Person::Ptr(new Person(tname, temail)));
         }
 

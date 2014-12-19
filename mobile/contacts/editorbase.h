@@ -24,26 +24,26 @@
 
 namespace KContacts
 {
-  class Addressee;
+class Addressee;
 }
 
 namespace Akonadi
 {
-  class ContactMetaData;
+class ContactMetaData;
 }
 
 class EditorBase : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit EditorBase( QWidget *parent = Q_NULLPTR );
+public:
+    explicit EditorBase(QWidget *parent = Q_NULLPTR);
 
     ~EditorBase();
 
-    virtual void loadContact( const KContacts::Addressee &contact, const Akonadi::ContactMetaData &metaData ) = 0;
+    virtual void loadContact(const KContacts::Addressee &contact, const Akonadi::ContactMetaData &metaData) = 0;
 
-    virtual void saveContact( KContacts::Addressee &contact, Akonadi::ContactMetaData &metaData ) const = 0;
+    virtual void saveContact(KContacts::Addressee &contact, Akonadi::ContactMetaData &metaData) const = 0;
 };
 
 #endif

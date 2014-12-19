@@ -24,7 +24,8 @@
 
 #include <QtCore/QObject>
 
-namespace MailCommon {
+namespace MailCommon
+{
 class FilterController;
 }
 
@@ -40,9 +41,9 @@ class QItemSelectionModel;
  */
 class FilterEditor : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new filter editor.
      *
@@ -50,20 +51,20 @@ class FilterEditor : public QObject
      *                         actions (e.g. add, edit, delete) at
      * @param parent The parent object.
      */
-    explicit FilterEditor( KActionCollection *actionCollection, QObject *parent = Q_NULLPTR );
+    explicit FilterEditor(KActionCollection *actionCollection, QObject *parent = Q_NULLPTR);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
      * Returns the filter list model.
      */
-    QAbstractItemModel* model() const;
+    QAbstractItemModel *model() const;
 
     /**
      * Sets the row of the filter the user has selected in the UI.
      */
-    void setRowSelected( int row );
+    void setRowSelected(int row);
 
-  private:
+private:
     MailCommon::FilterController *mFilterController;
 };
 

@@ -33,18 +33,18 @@ class KConfigDialogManager;
 
 class ConfigWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit ConfigWidget( QWidget *parent = Q_NULLPTR );
+public:
+    explicit ConfigWidget(QWidget *parent = Q_NULLPTR);
 
-    void setPreferences( const EventViews::PrefsPtr &preferences );
+    void setPreferences(const EventViews::PrefsPtr &preferences);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void load();
     void save();
 
-  private:
+private:
     void loadFromExternalSettings();
     void saveToExternalSettings();
 
@@ -54,20 +54,20 @@ class ConfigWidget : public QWidget
 
 class DeclarativeConfigWidget :
 #ifndef Q_MOC_RUN
-public DeclarativeWidgetBase<ConfigWidget, MainView, &MainView::setConfigWidget>
+    public DeclarativeWidgetBase<ConfigWidget, MainView, &MainView::setConfigWidget>
 #else
-public QGraphicsProxyWidget
+    public QGraphicsProxyWidget
 #endif
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit DeclarativeConfigWidget( QGraphicsItem *parent = Q_NULLPTR );
+public:
+    explicit DeclarativeConfigWidget(QGraphicsItem *parent = Q_NULLPTR);
     ~DeclarativeConfigWidget();
 
-    void setPreferences( const EventViews::PrefsPtr &preferences );
+    void setPreferences(const EventViews::PrefsPtr &preferences);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void load();
     void save();
 };

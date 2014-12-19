@@ -30,19 +30,19 @@ Q_IMPORT_PLUGIN(akonadi_serializer_addressee)
 Q_IMPORT_PLUGIN(akonadi_serializer_contactgroup)
 #endif
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  const QByteArray& ba = QByteArray( "kaddressbook-mobile" );
-  const KLocalizedString name = ki18n( "Kontact Touch Contacts" );
+    const QByteArray &ba = QByteArray("kaddressbook-mobile");
+    const KLocalizedString name = ki18n("Kontact Touch Contacts");
 
-  IncidenceEditorNG::EditorConfig::setEditorConfig( new IncidenceEditorNG::KOrganizerEditorConfig ); //FIXME: use our own config for contacts
+    IncidenceEditorNG::EditorConfig::setEditorConfig(new IncidenceEditorNG::KOrganizerEditorConfig);   //FIXME: use our own config for contacts
 
-  K4AboutData aboutData( ba, ba, name, ba, name );
-  aboutData.setProductName( "KAddressbook Mobile" ); //has to match the bugzilla product name
+    K4AboutData aboutData(ba, ba, name, ba, name);
+    aboutData.setProductName("KAddressbook Mobile");   //has to match the bugzilla product name
 
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KDeclarativeApplication<MainView> app;
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KDeclarativeApplication<MainView> app;
 
-  return app.exec();
+    return app.exec();
 }
 

@@ -43,24 +43,26 @@ ConstraintModel::Private::Private()
 {
 }
 
-void ConstraintModel::Private::addConstraintToIndex( const QModelIndex& idx, const Constraint& c )
+void ConstraintModel::Private::addConstraintToIndex(const QModelIndex &idx, const Constraint &c)
 {
     IndexType::iterator it = indexMap.find(idx);
     while (it != indexMap.end() && it.key() == idx) {
         // Check if we already have this
-        if ( *it == c ) return;
+        if (*it == c) {
+            return;
+        }
         ++it;
     }
 
-    indexMap.insert( idx, c );
+    indexMap.insert(idx, c);
 }
 
-void ConstraintModel::Private::removeConstraintFromIndex( const QModelIndex& idx,  const Constraint& c )
+void ConstraintModel::Private::removeConstraintFromIndex(const QModelIndex &idx,  const Constraint &c)
 {
     IndexType::iterator it = indexMap.find(idx);
     while (it != indexMap.end() && it.key() == idx) {
-        if ( *it == c ) {
-            it =indexMap.erase( it );
+        if (*it == c) {
+            it = indexMap.erase(it);
         } else {
             ++it;
         }
@@ -69,15 +71,15 @@ void ConstraintModel::Private::removeConstraintFromIndex( const QModelIndex& idx
 
 /*! Constructor. Creates an empty ConstraintModel with parent \a parent
  */
-ConstraintModel::ConstraintModel( QObject* parent )
-    : QObject( parent ), _d( new Private )
+ConstraintModel::ConstraintModel(QObject *parent)
+    : QObject(parent), _d(new Private)
 {
     init();
 }
 
 /*!\internal*/
-ConstraintModel::ConstraintModel( Private* d_ptr, QObject* parent )
-    : QObject( parent ), _d( d_ptr )
+ConstraintModel::ConstraintModel(Private *d_ptr, QObject *parent)
+    : QObject(parent), _d(d_ptr)
 {
     init();
 }
@@ -98,17 +100,17 @@ void ConstraintModel::init()
  *  If the Constraint \a c is already in this ConstraintModel,
  *  nothing happens.
  */
-void ConstraintModel::addConstraint( const Constraint& c )
+void ConstraintModel::addConstraint(const Constraint &c)
 {
     //int size = d->constraints.size();
-    bool hasConstraint = d->constraints.contains( c );
+    bool hasConstraint = d->constraints.contains(c);
     //d->constraints.insert( c );
     //if ( size != d->constraints.size() ) {
-    if ( !hasConstraint ) {
-        d->constraints.push_back( c );
-        d->addConstraintToIndex( c.startIndex(), c );
-        d->addConstraintToIndex( c.endIndex(), c );
-        emit constraintAdded( c );
+    if (!hasConstraint) {
+        d->constraints.push_back(c);
+        d->addConstraintToIndex(c.startIndex(), c);
+        d->addConstraintToIndex(c.endIndex(), c);
+        emit constraintAdded(c);
     }
 }
 
@@ -119,15 +121,15 @@ void ConstraintModel::addConstraint( const Constraint& c )
  * \returns If \a c was found and removed, it returns true,
  * otherwise it returns false.
  */
-bool ConstraintModel::removeConstraint( const Constraint& c )
+bool ConstraintModel::removeConstraint(const Constraint &c)
 {
     //qDebug() << "ConstraintModel::removeConstraint("<<c<<") from "<< d->constraints;
-    bool rc = d->constraints.removeAll( c );
+    bool rc = d->constraints.removeAll(c);
     //bool rc = d->constraints.remove( c );
-    if ( rc ) {
-        d->removeConstraintFromIndex( c.startIndex(), c );
-        d->removeConstraintFromIndex( c.endIndex(), c );
-        emit constraintRemoved( c );
+    if (rc) {
+        d->removeConstraintFromIndex(c.startIndex(), c);
+        d->removeConstraintFromIndex(c.endIndex(), c);
+        emit constraintRemoved(c);
     }
     return rc;
 }
@@ -139,8 +141,8 @@ bool ConstraintModel::removeConstraint( const Constraint& c )
 void ConstraintModel::clear()
 {
     QList<Constraint> lst = constraints();
-    Q_FOREACH( const Constraint& c, lst ) {
-        removeConstraint( c );
+    Q_FOREACH (const Constraint &c, lst) {
+        removeConstraint(c);
     }
 }
 
@@ -149,11 +151,13 @@ void ConstraintModel::cleanup()
 {
 #if 0
     QSet<Constraint> orphans;
-    Q_FOREACH( const Constraint& c, d->constraints ) {
-        if ( !c.startIndex().isValid() || !c.endIndex().isValid() ) orphans.insert( c );
+    Q_FOREACH (const Constraint &c, d->constraints) {
+        if (!c.startIndex().isValid() || !c.endIndex().isValid()) {
+            orphans.insert(c);
+        }
     }
     //qDebug() << "Constraint::cleanup() found" << orphans << "orphans";
-    d->constraints.subtract( orphans );
+    d->constraints.subtract(orphans);
 #endif
 }
 
@@ -169,20 +173,24 @@ QList<Constraint> ConstraintModel::constraints() const
 /*! \returns A list of all Constraints in this ConstraintModel
  * that have an endpoint at \a idx.
  */
-QList<Constraint> ConstraintModel::constraintsForIndex( const QModelIndex& idx ) const
+QList<Constraint> ConstraintModel::constraintsForIndex(const QModelIndex &idx) const
 {
-    assert( !idx.isValid() || d->indexMap.isEmpty() || !d->indexMap.keys().front().model() || idx.model() == d->indexMap.keys().front().model() );
-    if ( !idx.isValid() ) {
+    assert(!idx.isValid() || d->indexMap.isEmpty() || !d->indexMap.keys().front().model() || idx.model() == d->indexMap.keys().front().model());
+    if (!idx.isValid()) {
         // Because of a Qt bug we need to treat this as a special case
         QSet<Constraint> result;
-        Q_FOREACH( Constraint c, d->constraints ) {
-            if ( !c.startIndex().isValid() || !c.endIndex().isValid() ) result.insert( c );
+        Q_FOREACH (Constraint c, d->constraints) {
+            if (!c.startIndex().isValid() || !c.endIndex().isValid()) {
+                result.insert(c);
+            }
         }
         return result.toList();
     } else {
         QList<Constraint> result;
-        Q_FOREACH( Constraint c, d->constraints ) {
-            if ( c.startIndex() == idx || c.endIndex() == idx ) result.push_back( c );
+        Q_FOREACH (Constraint c, d->constraints) {
+            if (c.startIndex() == idx || c.endIndex() == idx) {
+                result.push_back(c);
+            }
         }
         return result;
     }
@@ -193,7 +201,7 @@ QList<Constraint> ConstraintModel::constraintsForIndex( const QModelIndex& idx )
 /*! Returns true if a Constraint with start \a s and end \a e
  * exists, otherwise false.
  */
-bool ConstraintModel::hasConstraint( const Constraint& c ) const
+bool ConstraintModel::hasConstraint(const Constraint &c) const
 {
     /*
     // Because of a Qt bug we have to search like this
@@ -202,14 +210,14 @@ bool ConstraintModel::hasConstraint( const Constraint& c ) const
     }
     return false;
     */
-    return d->constraints.contains( c );
+    return d->constraints.contains(c);
 }
 
 #ifndef QT_NO_DEBUG_STREAM
 
-QDebug operator<<( QDebug dbg, const KDGantt::ConstraintModel& model )
+QDebug operator<<(QDebug dbg, const KDGantt::ConstraintModel &model)
 {
-    dbg << "KDGantt::ConstraintModel[ " << static_cast<const QObject*>( &model ) << ":"
+    dbg << "KDGantt::ConstraintModel[ " << static_cast<const QObject *>(&model) << ":"
         << model.constraints() << "]";
     return dbg;
 }
@@ -224,61 +232,61 @@ QDebug operator<<( QDebug dbg, const KDGantt::ConstraintModel& model )
 
 #include "unittest/test.h"
 
-std::ostream& operator<<( std::ostream& os, const QModelIndex& idx )
+std::ostream &operator<<(std::ostream &os, const QModelIndex &idx)
 {
     QString str;
-    QDebug( &str )<<idx;
+    QDebug(&str) << idx;
 #ifdef QT_NO_STL
-    os<<str.toLatin1().constData();
+    os << str.toLatin1().constData();
 #else
-    os<<str.toStdString();
+    os << str.toStdString();
 #endif
     return os;
 }
 
-KDAB_SCOPED_UNITTEST_SIMPLE( KDGantt, ConstraintModel, "test" )
+KDAB_SCOPED_UNITTEST_SIMPLE(KDGantt, ConstraintModel, "test")
 {
-    QStandardItemModel dummyModel( 100, 100 );
+    QStandardItemModel dummyModel(100, 100);
     ConstraintModel model;
 
     QModelIndex invalidIndex;
-    assertEqual( invalidIndex, invalidIndex );
+    assertEqual(invalidIndex, invalidIndex);
 
-    assertEqual( model.constraints().count(), 0 );
+    assertEqual(model.constraints().count(), 0);
 
-    model.addConstraint( Constraint( QModelIndex(), QModelIndex() ) );
-    assertEqual( model.constraints().count(), 1 );
+    model.addConstraint(Constraint(QModelIndex(), QModelIndex()));
+    assertEqual(model.constraints().count(), 1);
 
-    model.addConstraint( Constraint( QModelIndex(), QModelIndex() ) );
-    assertEqual( model.constraints().count(), 1 );
+    model.addConstraint(Constraint(QModelIndex(), QModelIndex()));
+    assertEqual(model.constraints().count(), 1);
 
-    QPersistentModelIndex idx1 = dummyModel.index( 7, 17, QModelIndex() );
-    QPersistentModelIndex idx2 = dummyModel.index( 42, 17, QModelIndex() );
+    QPersistentModelIndex idx1 = dummyModel.index(7, 17, QModelIndex());
+    QPersistentModelIndex idx2 = dummyModel.index(42, 17, QModelIndex());
 
-    model.addConstraint( Constraint( idx1, idx2 ) );
-    assertEqual( model.constraints().count(), 2 );
-    assertTrue( model.hasConstraint( Constraint( idx1, idx2 ) ) );
+    model.addConstraint(Constraint(idx1, idx2));
+    assertEqual(model.constraints().count(), 2);
+    assertTrue(model.hasConstraint(Constraint(idx1, idx2)));
 
-    assertEqual( model.constraintsForIndex( QModelIndex() ).count(), 1 );
+    assertEqual(model.constraintsForIndex(QModelIndex()).count(), 1);
 
-    assertEqual( model.constraints().count(), 2 );
-    model.removeConstraint( Constraint( QModelIndex(), QModelIndex() ) );
-    assertEqual( model.constraints().count(), 1 );
-    assertFalse( model.hasConstraint( Constraint( QModelIndex(), QModelIndex() ) ) );
+    assertEqual(model.constraints().count(), 2);
+    model.removeConstraint(Constraint(QModelIndex(), QModelIndex()));
+    assertEqual(model.constraints().count(), 1);
+    assertFalse(model.hasConstraint(Constraint(QModelIndex(), QModelIndex())));
 
-    model.removeConstraint( Constraint( QModelIndex(), QModelIndex() ) );
-    assertEqual( model.constraints().count(), 1 );
+    model.removeConstraint(Constraint(QModelIndex(), QModelIndex()));
+    assertEqual(model.constraints().count(), 1);
 
-    model.removeConstraint( Constraint( idx1, idx2 ) );
-    assertEqual( model.constraints().count(), 0 );
-    assertFalse( model.hasConstraint( Constraint( idx1, idx2 ) ) );
+    model.removeConstraint(Constraint(idx1, idx2));
+    assertEqual(model.constraints().count(), 0);
+    assertFalse(model.hasConstraint(Constraint(idx1, idx2)));
 
-    model.addConstraint( Constraint( idx1, idx2 ) );
-    assertTrue( model.hasConstraint( Constraint( idx1, idx2 ) ) );
-    dummyModel.removeRow( 8 );
-    assertTrue( model.hasConstraint( Constraint( idx1, idx2 ) ) );
-    dummyModel.removeRow( 7 );
-    assertTrue( model.hasConstraint( Constraint( idx1, idx2 ) ) );
+    model.addConstraint(Constraint(idx1, idx2));
+    assertTrue(model.hasConstraint(Constraint(idx1, idx2)));
+    dummyModel.removeRow(8);
+    assertTrue(model.hasConstraint(Constraint(idx1, idx2)));
+    dummyModel.removeRow(7);
+    assertTrue(model.hasConstraint(Constraint(idx1, idx2)));
 }
 
 #endif /* KDAB_NO_UNIT_TESTS */

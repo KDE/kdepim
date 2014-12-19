@@ -31,24 +31,25 @@
 int staticInitKConfigGroupGui();
 #endif
 
-static inline bool runPreApplicationSetup( const KCmdLineOptions & opts ) {
+static inline bool runPreApplicationSetup(const KCmdLineOptions &opts)
+{
 
 #ifdef KDELIBS_STATIC_LIBS
-  //This is needed to get KConfig working with QColor
-  staticInitKConfigGroupGui();
+    //This is needed to get KConfig working with QColor
+    staticInitKConfigGroupGui();
 #endif
     KDeclarativeApplicationBase::preApplicationSetup(opts);
     return true; // <-- default value of KApplication(bool) ctor
 }
 
 KDeclarativeApplicationBase::KDeclarativeApplicationBase()
-    : KUniqueApplication( runPreApplicationSetup( KCmdLineOptions() ) ) // inject some code before KApplication ctor runs
+    : KUniqueApplication(runPreApplicationSetup(KCmdLineOptions()))     // inject some code before KApplication ctor runs
 {
     postApplicationSetup();
 }
 
-KDeclarativeApplicationBase::KDeclarativeApplicationBase( const KCmdLineOptions & opts )
-    : KUniqueApplication( runPreApplicationSetup( opts ) ) // inject some code before KApplication ctor runs
+KDeclarativeApplicationBase::KDeclarativeApplicationBase(const KCmdLineOptions &opts)
+    : KUniqueApplication(runPreApplicationSetup(opts))     // inject some code before KApplication ctor runs
 {
     postApplicationSetup();
 }
@@ -56,45 +57,44 @@ KDeclarativeApplicationBase::KDeclarativeApplicationBase( const KCmdLineOptions 
 // static
 void KDeclarativeApplicationBase::postApplicationSetup()
 {
-  static bool run = false;
+    static bool run = false;
 
-  if ( run ) {
-    qDebug() << "called twice";
-    return;
-  }
+    if (run) {
+        qDebug() << "called twice";
+        return;
+    }
 
-  run = true;
+    run = true;
 
-  setFont(QFontDatabase::systemFont(QFontDatabase::GeneralFont));
+    setFont(QFontDatabase::systemFont(QFontDatabase::GeneralFont));
 
 }
 
 // static
 void KDeclarativeApplicationBase::preApplicationSetup()
 {
-  preApplicationSetup( KCmdLineOptions() );
+    preApplicationSetup(KCmdLineOptions());
 }
 
-
 // static
-void KDeclarativeApplicationBase::preApplicationSetup( const KCmdLineOptions & appOptions )
+void KDeclarativeApplicationBase::preApplicationSetup(const KCmdLineOptions &appOptions)
 {
-  static bool run = false;
+    static bool run = false;
 
-  if ( run ) {
-    qDebug() << "called twice";
-    return;
-  }
+    if (run) {
+        qDebug() << "called twice";
+        return;
+    }
 
-  run = true;
+    run = true;
 
-  // doesn't really belong here, but needs to be called before the ctor
-  QApplication::setGraphicsSystem( QLatin1String("raster") );
+    // doesn't really belong here, but needs to be called before the ctor
+    QApplication::setGraphicsSystem(QLatin1String("raster"));
 
-  KCmdLineOptions options(appOptions);
-  options.add("timeit", ki18n("start timers for various parts of the application startup"));
-  options.add("enable-opengl", ki18n("use OpenGL ES acceleration for rendering (for testing only)"));
-  options.add("disable-opengl", ki18n("do not use OpenGL ES acceleration for rendering (for testing only)"));
-  KCmdLineArgs::addCmdLineOptions(options);
+    KCmdLineOptions options(appOptions);
+    options.add("timeit", ki18n("start timers for various parts of the application startup"));
+    options.add("enable-opengl", ki18n("use OpenGL ES acceleration for rendering (for testing only)"));
+    options.add("disable-opengl", ki18n("do not use OpenGL ES acceleration for rendering (for testing only)"));
+    KCmdLineArgs::addCmdLineOptions(options);
 }
 

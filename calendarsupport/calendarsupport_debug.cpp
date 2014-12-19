@@ -20,4 +20,3 @@
 #include "calendarsupport_debug.h"
 Q_LOGGING_CATEGORY(CALENDARSUPPORT_LOG, "log_calendarsupport")
 
-

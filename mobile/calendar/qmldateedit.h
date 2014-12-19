@@ -23,23 +23,23 @@
 #include <QDateEdit>
 #include "declarativewidgetwrapper.h"
 
-
-namespace Qt {
+namespace Qt
+{
 
 class QmlDateEdit : public DeclarativeWidgetWrapper<QDateEdit>
 {
-  Q_OBJECT
-  Q_PROPERTY( QDate date READ date WRITE setDate )
-  Q_PROPERTY( QString displayFormat READ displayFormat WRITE setDisplayFormat )
+    Q_OBJECT
+    Q_PROPERTY(QDate date READ date WRITE setDate)
+    Q_PROPERTY(QString displayFormat READ displayFormat WRITE setDisplayFormat)
 
 public:
-  explicit QmlDateEdit( QDeclarativeItem *parent = Q_NULLPTR );
+    explicit QmlDateEdit(QDeclarativeItem *parent = Q_NULLPTR);
 
-  QDate date() const;
-  void setDate( const QDate &date );
+    QDate date() const;
+    void setDate(const QDate &date);
 
-  QString displayFormat() const;
-  void setDisplayFormat( const QString &format );
+    QString displayFormat() const;
+    void setDisplayFormat(const QString &format);
 };
 
 }

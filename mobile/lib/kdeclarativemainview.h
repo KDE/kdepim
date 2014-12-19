@@ -31,7 +31,8 @@ class ListProxy;
 class QAbstractItemModel;
 class QAbstractProxyModel;
 
-namespace Akonadi {
+namespace Akonadi
+{
 class AgentActionManager;
 class ChangeRecorder;
 class EntityTreeModel;
@@ -48,13 +49,13 @@ class KDeclarativeMainViewPrivate;
 class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
 {
     Q_OBJECT
-    Q_PROPERTY( int numSelectedAccounts READ numSelectedAccounts NOTIFY numSelectedAccountsChanged )
-    Q_PROPERTY( bool isLoadingSelected READ isLoadingSelected NOTIFY isLoadingSelectedChanged )
-    Q_PROPERTY( QString version READ version CONSTANT )
-    Q_PROPERTY( QString name READ name CONSTANT )
-    Q_PROPERTY( QString state READ applicationState WRITE setApplicationState NOTIFY stateChanged )
+    Q_PROPERTY(int numSelectedAccounts READ numSelectedAccounts NOTIFY numSelectedAccountsChanged)
+    Q_PROPERTY(bool isLoadingSelected READ isLoadingSelected NOTIFY isLoadingSelectedChanged)
+    Q_PROPERTY(QString version READ version CONSTANT)
+    Q_PROPERTY(QString name READ name CONSTANT)
+    Q_PROPERTY(QString state READ applicationState WRITE setApplicationState NOTIFY stateChanged)
 
-  public:
+public:
     /**
      * Destroys the declarative main view.
      */
@@ -64,12 +65,12 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
      * Item fetch scope to specify how much data should be loaded for the list view.
      * By default nothing is loaded.
      */
-    Akonadi::ItemFetchScope& itemFetchScope();
+    Akonadi::ItemFetchScope &itemFetchScope();
 
     /**
      * Adds a mime type of the items handled by this application.
      */
-    void addMimeType( const QString &mimeType );
+    void addMimeType(const QString &mimeType);
 
     /**
      * Returns the mime types of the items handled by this application.
@@ -94,31 +95,31 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
     /**
      * Returns the monitor that is used by the application.
      */
-    Akonadi::ChangeRecorder* monitor() const;
+    Akonadi::ChangeRecorder *monitor() const;
 
     /**
      * Returns the gui state manager that will be used to manage the visibility
      * of the various gui elements of the application.
      */
-    GuiStateManager* guiStateManager() const;
+    GuiStateManager *guiStateManager() const;
 
     /**
      * Sets the @p lineEdit that is used to filter the items in the listview.
      */
-    void setFilterLineEdit( KLineEdit *lineEdit );
+    void setFilterLineEdit(KLineEdit *lineEdit);
 
     /**
      * Sets the @p lineEdit that is used to filter the items in the listview in bulk action mode.
      */
-    void setBulkActionFilterLineEdit( KLineEdit *lineEdit );
+    void setBulkActionFilterLineEdit(KLineEdit *lineEdit);
 
     QString applicationState() const;
-    void setApplicationState( const QString &state );
+    void setApplicationState(const QString &state);
 
-  public Q_SLOTS:
-    void setSelectedAccount( int row );
+public Q_SLOTS:
+    void setSelectedAccount(int row);
 
-    void setAgentInstanceListSelectedRow( int row );
+    void setAgentInstanceListSelectedRow(int row);
 
     /**
      * Starts the account wizard to add and configure new resources.
@@ -136,12 +137,12 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
     void openLicenses();
 
     void saveFavorite();
-    void loadFavorite( const QString &name );
+    void loadFavorite(const QString &name);
     void multipleSelectionFinished();
 
-    void persistCurrentSelection( const QString &key );
-    void clearPersistedSelection( const QString &key );
-    void restorePersistedSelection( const QString &key );
+    void persistCurrentSelection(const QString &key);
+    void clearPersistedSelection(const QString &key);
+    void restorePersistedSelection(const QString &key);
 
     /**
      * Starts the import of items to the application.
@@ -175,16 +176,16 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
     /**
      * Opens the HTML based documentation located at the given relative @p path.
      */
-    void openDocumentation( const QString &path );
+    void openDocumentation(const QString &path);
 
-    void openAttachment( const QString &url, const QString &mimeType );
-    void saveAttachment( const QString &url, const QString &defaultFileName = QString() );
+    void openAttachment(const QString &url, const QString &mimeType);
+    void saveAttachment(const QString &url, const QString &defaultFileName = QString());
 
     void reportBug();
 
-    void checkAllBulkActionItems( bool select );
+    void checkAllBulkActionItems(bool select);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void numSelectedAccountsChanged();
     void isLoadingSelectedChanged();
     void stateChanged();
@@ -195,7 +196,7 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
      */
     void collectionSelectionChanged();
 
-  protected:
+protected:
     /**
      * Creates a new main view for a mobile application.
      *
@@ -204,17 +205,17 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
      *                  takes ownwership over the pointer.
      * @param parent The parent widget.
      */
-    KDeclarativeMainView( const QString &appName, ListProxy *listProxy, QWidget *parent = Q_NULLPTR );
+    KDeclarativeMainView(const QString &appName, ListProxy *listProxy, QWidget *parent = Q_NULLPTR);
 
     /**
      * Returns the global entity tree model.
      */
-    Akonadi::EntityTreeModel* entityTreeModel() const;
+    Akonadi::EntityTreeModel *entityTreeModel() const;
 
     /**
      * Returns the filtered and QML-adapted item model.
      */
-    QAbstractItemModel* itemModel() const;
+    QAbstractItemModel *itemModel() const;
 
     /**
      * Returns whether the currently selected item is being loaded.
@@ -231,8 +232,8 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
      * @param collectionSelectionModel The selection model for the collections.
      * @param itemSelectionModel The selection model for the items.
      */
-    virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
-                                             QItemSelectionModel *itemSelectionModel );
+    virtual void setupStandardActionManager(QItemSelectionModel *collectionSelectionModel,
+                                            QItemSelectionModel *itemSelectionModel);
 
     /**
      * Initializes the agent action manager that will be used by the application.
@@ -240,12 +241,12 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
      *
      * @param selectionModel The selection model for the agent instances.
      */
-    virtual void setupAgentActionManager( QItemSelectionModel *selectionModel ) = 0;
+    virtual void setupAgentActionManager(QItemSelectionModel *selectionModel) = 0;
 
     /**
      * Returns the a proxy model that will be used on top of the entity tree model.
      */
-    virtual QAbstractProxyModel* createMainProxyModel() const;
+    virtual QAbstractProxyModel *createMainProxyModel() const;
 
     /**
      * Returns the filter proxy model that will be used to filter the item list.
@@ -254,37 +255,37 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
      * @note The model has to provide a public slot with the following signature:
      *       void setFilterString( const QString& )
      */
-    virtual QAbstractProxyModel* createItemFilterModel() const;
+    virtual QAbstractProxyModel *createItemFilterModel() const;
 
     /**
      * Set the filter proxy model that will be used to filter the item list.
      * Call this when calling createItemFilterModel() manually in your code.
      */
-    void setItemFilterModel( QAbstractProxyModel* model );
+    void setItemFilterModel(QAbstractProxyModel *model);
 
     /**
      * Returns the object that will be used for importing data.
      * If @c 0 is returned, no import functionality is offered.
      */
-    virtual ImportHandlerBase* importHandler() const;
+    virtual ImportHandlerBase *importHandler() const;
 
     /**
      * Returns the object that will be used for exporting data.
      * If @c 0 is returned, no export functionality is offered.
      */
-    virtual ExportHandlerBase* exportHandler() const;
+    virtual ExportHandlerBase *exportHandler() const;
 
     /**
      * Returns the gui state manager that will be used by the application.
      *
      * Subclasses should returns its custom gui state managers here.
      */
-    virtual GuiStateManager* createGuiStateManager() const;
+    virtual GuiStateManager *createGuiStateManager() const;
 
     /**
      * This method is called when a single @p item has been selected to view.
      */
-    virtual void viewSingleItem( const Akonadi::Item &item );
+    virtual void viewSingleItem(const Akonadi::Item &item);
 
     /**
      * Returns whether the application is in a state where the filter line edit
@@ -298,47 +299,47 @@ class MOBILEUI_EXPORT KDeclarativeMainView : public KDeclarativeFullScreenView
      */
     virtual bool doNotUseFilterLineEditInCurrentState() const;
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     void breadcrumbsSelectionChanged();
     void itemSelectionChanged();
 
-  protected:
+protected:
     /**
      * The selection model that belongs to the item model returned by entityTreeModel()
      * or to the one returned by createMainProxyModel().
      */
-    QItemSelectionModel* regularSelectionModel() const;
+    QItemSelectionModel *regularSelectionModel() const;
 
     /**
      * The selection model which provides the information about checked
      * items in the bulk action screen.
      */
-    QItemSelectionModel* itemActionModel() const;
+    QItemSelectionModel *itemActionModel() const;
 
-    QAbstractProxyModel* itemFilterModel() const;
-    QAbstractProxyModel* listProxy() const;
-    QItemSelectionModel* itemSelectionModel() const;
-    QAbstractItemModel* selectedItemsModel() const;
+    QAbstractProxyModel *itemFilterModel() const;
+    QAbstractProxyModel *listProxy() const;
+    QItemSelectionModel *itemSelectionModel() const;
+    QAbstractItemModel *selectedItemsModel() const;
 
-    Akonadi::Item itemFromId( quint64 id ) const;
+    Akonadi::Item itemFromId(quint64 id) const;
 
-    void keyPressEvent( QKeyEvent *event ) Q_DECL_OVERRIDE;
+    void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 
-    virtual QAbstractItemModel* createItemModelContext( QDeclarativeContext *context, QAbstractItemModel *model );
-    void setItemNaigationAndActionSelectionModels( QItemSelectionModel *itemNavigationSelectionModel, QItemSelectionModel *itemActionSelectionModel );
+    virtual QAbstractItemModel *createItemModelContext(QDeclarativeContext *context, QAbstractItemModel *model);
+    void setItemNaigationAndActionSelectionModels(QItemSelectionModel *itemNavigationSelectionModel, QItemSelectionModel *itemActionSelectionModel);
 
     /**
      * Returns a newly created AgentActionMananger with standard setup.
      * Use inside setupAgentActionManager();
      */
-    Akonadi::AgentActionManager *createAgentActionManager( QItemSelectionModel* agentSelectionModel );
+    Akonadi::AgentActionManager *createAgentActionManager(QItemSelectionModel *agentSelectionModel);
 
-  private:
+private:
     void doDelayedInitInternal();
-    KDeclarativeMainViewPrivate * const d;
+    KDeclarativeMainViewPrivate *const d;
 
-    Q_PRIVATE_SLOT( d, void filterLineEditChanged( const QString& ) )
-    Q_PRIVATE_SLOT( d, void bulkActionFilterLineEditChanged( const QString& ) )
+    Q_PRIVATE_SLOT(d, void filterLineEditChanged(const QString &))
+    Q_PRIVATE_SLOT(d, void bulkActionFilterLineEditChanged(const QString &))
 };
 
 #endif // KDECLARATIVEMAINVIEW_H

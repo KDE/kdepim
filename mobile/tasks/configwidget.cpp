@@ -28,64 +28,64 @@
 
 using namespace CalendarSupport;
 
-ConfigWidget::ConfigWidget( QWidget *parent )
-  : QWidget( parent )
+ConfigWidget::ConfigWidget(QWidget *parent)
+    : QWidget(parent)
 {
-  Ui_ConfigWidget ui;
-  ui.setupUi( this );
+    Ui_ConfigWidget ui;
+    ui.setupUi(this);
 
-  mManager = new KConfigDialogManager( this, Settings::self() );
+    mManager = new KConfigDialogManager(this, Settings::self());
 }
 
-void ConfigWidget::setPreferences( const EventViews::PrefsPtr &preferences )
+void ConfigWidget::setPreferences(const EventViews::PrefsPtr &preferences)
 {
-  mViewPrefs = preferences;
-  load();
+    mViewPrefs = preferences;
+    load();
 }
 
 void ConfigWidget::load()
 {
-  loadFromExternalSettings();
-  mManager->updateWidgets();
+    loadFromExternalSettings();
+    mManager->updateWidgets();
 }
 
 void ConfigWidget::save()
 {
-  mManager->updateSettings();
-  saveToExternalSettings();
+    mManager->updateSettings();
+    saveToExternalSettings();
 }
 
 void ConfigWidget::loadFromExternalSettings()
 {
-  // Date and Time
-  Settings::self()->setRemindersForNewTodos( KCalPrefs::instance()->defaultTodoReminders() );
-  Settings::self()->setReminderDefaultTime( KCalPrefs::instance()->reminderTime() );
-  Settings::self()->setReminderDefaultUnit( KCalPrefs::instance()->reminderTimeUnits() );
+    // Date and Time
+    Settings::self()->setRemindersForNewTodos(KCalPrefs::instance()->defaultTodoReminders());
+    Settings::self()->setReminderDefaultTime(KCalPrefs::instance()->reminderTime());
+    Settings::self()->setReminderDefaultUnit(KCalPrefs::instance()->reminderTimeUnits());
 
-  // Views
-  Settings::self()->setTodoDueColor( mViewPrefs->todoDueTodayColor() );
-  Settings::self()->setTodoOverdueColor( mViewPrefs->todoOverdueColor() );
+    // Views
+    Settings::self()->setTodoDueColor(mViewPrefs->todoDueTodayColor());
+    Settings::self()->setTodoOverdueColor(mViewPrefs->todoOverdueColor());
 
 }
 
 void ConfigWidget::saveToExternalSettings()
 {
-  // Date and Time
-  KCalPrefs::instance()->setDefaultTodoReminders( Settings::self()->remindersForNewTodos() );
-  KCalPrefs::instance()->setReminderTime( Settings::self()->reminderDefaultTime() );
-  KCalPrefs::instance()->setReminderTimeUnits( Settings::self()->reminderDefaultUnit() );
+    // Date and Time
+    KCalPrefs::instance()->setDefaultTodoReminders(Settings::self()->remindersForNewTodos());
+    KCalPrefs::instance()->setReminderTime(Settings::self()->reminderDefaultTime());
+    KCalPrefs::instance()->setReminderTimeUnits(Settings::self()->reminderDefaultUnit());
 
-  // Views
-  mViewPrefs->setTodoDueTodayColor( Settings::self()->todoDueColor() );
-  mViewPrefs->setTodoOverdueColor( Settings::self()->todoOverdueColor() );
+    // Views
+    mViewPrefs->setTodoDueTodayColor(Settings::self()->todoDueColor());
+    mViewPrefs->setTodoOverdueColor(Settings::self()->todoOverdueColor());
 
-  Settings::self()->save();
-  KCalPrefs::instance()->save();
-  mViewPrefs->writeConfig();
+    Settings::self()->save();
+    KCalPrefs::instance()->save();
+    mViewPrefs->writeConfig();
 }
 
-DeclarativeConfigWidget::DeclarativeConfigWidget( QGraphicsItem *parent )
-  : DeclarativeWidgetBase<ConfigWidget, MainView, &MainView::setConfigWidget>( parent )
+DeclarativeConfigWidget::DeclarativeConfigWidget(QGraphicsItem *parent)
+    : DeclarativeWidgetBase<ConfigWidget, MainView, &MainView::setConfigWidget>(parent)
 {
 }
 
@@ -93,18 +93,18 @@ DeclarativeConfigWidget::~DeclarativeConfigWidget()
 {
 }
 
-void DeclarativeConfigWidget::setPreferences( const EventViews::PrefsPtr &preferences )
+void DeclarativeConfigWidget::setPreferences(const EventViews::PrefsPtr &preferences)
 {
-  widget()->setPreferences( preferences );
+    widget()->setPreferences(preferences);
 }
 
 void DeclarativeConfigWidget::load()
 {
-  widget()->load();
+    widget()->load();
 }
 
 void DeclarativeConfigWidget::save()
 {
-  widget()->save();
+    widget()->save();
 }
 

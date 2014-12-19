@@ -26,23 +26,23 @@ class QCompleter;
 
 class MobileLineEdit : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit MobileLineEdit( QWidget *parent = Q_NULLPTR );
+public:
+    explicit MobileLineEdit(QWidget *parent = Q_NULLPTR);
 
     ~MobileLineEdit();
 
-    void setText( const QString &text );
+    void setText(const QString &text);
     QString text() const;
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void clearClicked();
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void clear();
 
-  private:
+private:
     class Private;
     Private *const d;
 };

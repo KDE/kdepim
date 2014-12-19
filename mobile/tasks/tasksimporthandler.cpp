@@ -28,79 +28,80 @@
 
 QString TasksImportHandler::fileDialogNameFilter() const
 {
-  return QLatin1String( "*.ics|iCals" );
+    return QLatin1String("*.ics|iCals");
 }
 
 QString TasksImportHandler::fileDialogTitle() const
 {
-  return i18n( "Select iCal to Import" );
+    return i18n("Select iCal to Import");
 }
 
 QString TasksImportHandler::collectionDialogText() const
 {
-  return i18n( "Select the calendar the imported task(s) shall be saved in:" );
+    return i18n("Select the calendar the imported task(s) shall be saved in:");
 }
 
 QString TasksImportHandler::collectionDialogTitle() const
 {
-  return i18n( "Select Calendar" );
+    return i18n("Select Calendar");
 }
 
-QString TasksImportHandler::importDialogText( int count, const QString &collectionName ) const
+QString TasksImportHandler::importDialogText(int count, const QString &collectionName) const
 {
-  return i18np( "Importing one task to %2", "Importing %1 tasks to %2", count, collectionName );
+    return i18np("Importing one task to %2", "Importing %1 tasks to %2", count, collectionName);
 }
 
 QString TasksImportHandler::importDialogTitle() const
 {
-  return i18n( "Import Tasks" );
+    return i18n("Import Tasks");
 }
 
 QStringList TasksImportHandler::mimeTypes() const
 {
-  return QStringList( KCalCore::Todo::todoMimeType() );
+    return QStringList(KCalCore::Todo::todoMimeType());
 }
 
-Akonadi::Item::List TasksImportHandler::createItems( const QStringList &fileNames, bool *ok )
+Akonadi::Item::List TasksImportHandler::createItems(const QStringList &fileNames, bool *ok)
 {
-  *ok = true;
+    *ok = true;
 
-  Akonadi::Item::List items;
+    Akonadi::Item::List items;
 
-  KCalCore::Todo::List tasks;
+    KCalCore::Todo::List tasks;
 
-  foreach ( const QString &fileName, fileNames ) {
-    KCalCore::MemoryCalendar::Ptr calendar( new KCalCore::MemoryCalendar( QLatin1String( "UTC" ) ) );
-    KCalCore::FileStorage::Ptr storage( new KCalCore::FileStorage( calendar, fileName, new KCalCore::ICalFormat() ) );
+    foreach (const QString &fileName, fileNames) {
+        KCalCore::MemoryCalendar::Ptr calendar(new KCalCore::MemoryCalendar(QLatin1String("UTC")));
+        KCalCore::FileStorage::Ptr storage(new KCalCore::FileStorage(calendar, fileName, new KCalCore::ICalFormat()));
 
-    if ( storage->load() ) {
-      tasks << calendar->todos();
-    } else {
-      const QString caption( i18n( "iCal Import Failed" ) );
-      const QString msg = xi18nc( "@info",
-                                 "<para>Error when trying to read the iCal <filename>%1</filename>:</para>",
-                                 fileName );
-      KMessageBox::error( 0, msg, caption );
-      *ok = false;
+        if (storage->load()) {
+            tasks << calendar->todos();
+        } else {
+            const QString caption(i18n("iCal Import Failed"));
+            const QString msg = xi18nc("@info",
+                                       "<para>Error when trying to read the iCal <filename>%1</filename>:</para>",
+                                       fileName);
+            KMessageBox::error(0, msg, caption);
+            *ok = false;
+        }
     }
-  }
 
-  if ( tasks.isEmpty() ) {
-    if ( !(*ok) && fileNames.count() > 1 )
-      KMessageBox::information( 0, i18n( "No tasks were imported, due to errors with the iCals." ) );
-    else if ( *ok )
-      KMessageBox::information( 0, i18n( "The iCal does not contain any tasks." ) );
+    if (tasks.isEmpty()) {
+        if (!(*ok) && fileNames.count() > 1) {
+            KMessageBox::information(0, i18n("No tasks were imported, due to errors with the iCals."));
+        } else if (*ok) {
+            KMessageBox::information(0, i18n("The iCal does not contain any tasks."));
+        }
 
-    return items; // nothing to import
-  }
+        return items; // nothing to import
+    }
 
-  foreach ( const KCalCore::Todo::Ptr &task, tasks ) {
-    Akonadi::Item item;
-    item.setPayload<KCalCore::Todo::Ptr>( task );
-    item.setMimeType( KCalCore::Todo::todoMimeType() );
+    foreach (const KCalCore::Todo::Ptr &task, tasks) {
+        Akonadi::Item item;
+        item.setPayload<KCalCore::Todo::Ptr>(task);
+        item.setMimeType(KCalCore::Todo::todoMimeType());
 
-    items << item;
-  }
+        items << item;
+    }
 
-  return items;
+    return items;
 }

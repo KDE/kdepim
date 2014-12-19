@@ -29,18 +29,18 @@
 
 class MailActionManager : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit MailActionManager( KActionCollection *actionCollection, QObject *parent = Q_NULLPTR );
+public:
+    explicit MailActionManager(KActionCollection *actionCollection, QObject *parent = Q_NULLPTR);
 
-    void setItemSelectionModel( QItemSelectionModel *selectionModel );
-    void setItemActionSelectionModel( QItemSelectionModel *selectionModel );
+    void setItemSelectionModel(QItemSelectionModel *selectionModel);
+    void setItemActionSelectionModel(QItemSelectionModel *selectionModel);
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void updateActions();
 
-  private:
+private:
     KActionCollection *m_actionCollection;
     QItemSelectionModel *m_itemSelectionModel;
     QItemSelectionModel *m_itemActionSelectionModel;

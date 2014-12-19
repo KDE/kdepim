@@ -20,4 +20,3 @@
 #include "messagelist_debug.h"
 Q_LOGGING_CATEGORY(MESSAGELIST_LOG, "log_messagelist")
 
-

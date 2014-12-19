@@ -24,7 +24,8 @@
 
 #include <QtCore/QObject>
 
-namespace MailCommon {
+namespace MailCommon
+{
 class SnippetsManager;
 }
 
@@ -40,9 +41,9 @@ class QAbstractItemModel;
  */
 class SnippetsEditor : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new snippets editor.
      *
@@ -50,11 +51,11 @@ class SnippetsEditor : public QObject
      *                         actions (e.g. add, edit, delete) at
      * @param parent The parent object.
      */
-    explicit SnippetsEditor( KActionCollection *actionCollection, QObject *parent = Q_NULLPTR );
+    explicit SnippetsEditor(KActionCollection *actionCollection, QObject *parent = Q_NULLPTR);
 
-    void setEditor( QObject *editor, const char *insertSnippetMethod, const char *dropSignal );
+    void setEditor(QObject *editor, const char *insertSnippetMethod, const char *dropSignal);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
      * Saves changes to the snippets back to disk.
      */
@@ -63,14 +64,14 @@ class SnippetsEditor : public QObject
     /**
      * Returns the snippets list model of the current collection.
      */
-    QAbstractItemModel* model() const;
+    QAbstractItemModel *model() const;
 
     /**
      * Sets the row of the snippets the user has selected in the UI.
      */
-    void setRowSelected( int row );
+    void setRowSelected(int row);
 
-  private:
+private:
     MailCommon::SnippetsManager *mSnippetsManager;
     KDescendantsProxyModel *mProxyModel;
 };

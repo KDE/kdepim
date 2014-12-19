@@ -8,16 +8,16 @@ class KBreadcrumbNavigationFactory;
 
 class MainWindow : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  MainWindow(QWidget *parent = Q_NULLPTR);
+    MainWindow(QWidget *parent = Q_NULLPTR);
 
 private Q_SLOTS:
-  void doSelects();
+    void doSelects();
 
 private:
-  KBreadcrumbNavigationFactory *m_bnf;
-  QStandardItemModel *m_model;
+    KBreadcrumbNavigationFactory *m_bnf;
+    QStandardItemModel *m_model;
 
 };
 

@@ -26,49 +26,47 @@
 
 class MessageListSettings
 {
-  public:
+public:
     MessageListSettings();
     ~MessageListSettings();
 
-    enum SortingOption
-    {
-      SortByDateTime,
-      SortByDateTimeMostRecent,
-      SortBySenderReceiver,
-      SortBySubject,
-      SortBySize,
-      SortByActionItem
+    enum SortingOption {
+        SortByDateTime,
+        SortByDateTimeMostRecent,
+        SortBySenderReceiver,
+        SortBySubject,
+        SortBySize,
+        SortByActionItem
     };
 
-    enum GroupingOption
-    {
-      GroupByNone,
-      GroupByDate,
-      GroupBySenderReceiver
+    enum GroupingOption {
+        GroupByNone,
+        GroupByDate,
+        GroupBySenderReceiver
     };
 
-    void setSortingOption( SortingOption option );
+    void setSortingOption(SortingOption option);
     SortingOption sortingOption() const;
 
-    void setSortingOrder( Qt::SortOrder order );
+    void setSortingOrder(Qt::SortOrder order);
     Qt::SortOrder sortingOrder() const;
 
-    void setGroupingOption( GroupingOption option );
+    void setGroupingOption(GroupingOption option);
     GroupingOption groupingOption() const;
 
-    void setUseThreading( bool threading );
+    void setUseThreading(bool threading);
     bool useThreading() const;
 
-    void setUseGlobalSettings( bool value );
+    void setUseGlobalSettings(bool value);
     bool useGlobalSettings() const;
 
-    static MessageListSettings fromConfig( qint64 collectionId );
-    static void toConfig( qint64 collectionId, const MessageListSettings &settings );
+    static MessageListSettings fromConfig(qint64 collectionId);
+    static void toConfig(qint64 collectionId, const MessageListSettings &settings);
 
     static MessageListSettings fromDefaultConfig();
-    static void toDefaultConfig( const MessageListSettings &settings );
+    static void toDefaultConfig(const MessageListSettings &settings);
 
-  private:
+private:
     SortingOption mSortingOption;
     bool mSortDescending;
     GroupingOption mGroupingOption;

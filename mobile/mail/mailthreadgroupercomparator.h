@@ -28,22 +28,20 @@
 
 class MailThreadGrouperComparator : public ThreadGrouperComparator
 {
-  public:
-    enum SortingOption
-    {
-      SortByDateTime,
-      SortByDateTimeMostRecent,
-      SortBySenderReceiver,
-      SortBySubject,
-      SortBySize,
-      SortByActionItem
+public:
+    enum SortingOption {
+        SortByDateTime,
+        SortByDateTimeMostRecent,
+        SortBySenderReceiver,
+        SortBySubject,
+        SortBySize,
+        SortByActionItem
     };
 
-    enum GroupingOption
-    {
-      GroupByNone,
-      GroupByDate,
-      GroupBySenderReceiver
+    enum GroupingOption {
+        GroupByNone,
+        GroupByDate,
+        GroupBySenderReceiver
     };
 
     /**
@@ -59,24 +57,24 @@ class MailThreadGrouperComparator : public ThreadGrouperComparator
     /**
      * Returns the unique identifier for the given message @p item.
      */
-    QByteArray identifierForItem( const Akonadi::Item &item ) const Q_DECL_OVERRIDE;
+    QByteArray identifierForItem(const Akonadi::Item &item) const Q_DECL_OVERRIDE;
 
     /**
      * Returns the parent identifier for the given message @p item.
      */
-    QByteArray parentIdentifierForItem( const Akonadi::Item &item ) const Q_DECL_OVERRIDE;
+    QByteArray parentIdentifierForItem(const Akonadi::Item &item) const Q_DECL_OVERRIDE;
 
     /**
      * Returns if the @p left message item is smaller than the @p right message item.
      */
-    bool lessThan( const Akonadi::Item &left, const Akonadi::Item &right ) const Q_DECL_OVERRIDE;
+    bool lessThan(const Akonadi::Item &left, const Akonadi::Item &right) const Q_DECL_OVERRIDE;
 
     /**
      * Sets the sorting @p option.
      *
      * @note invalidateModel must be called afterwards to trigger an update
      */
-    void setSortingOption( SortingOption option );
+    void setSortingOption(SortingOption option);
 
     /**
      * Returns the sorting option.
@@ -88,7 +86,7 @@ class MailThreadGrouperComparator : public ThreadGrouperComparator
      *
      * @note invalidateModel must be called afterwards to trigger an update
      */
-    void setGroupingOption( GroupingOption option );
+    void setGroupingOption(GroupingOption option);
 
     /**
      * Returns the grouping option.
@@ -101,12 +99,12 @@ class MailThreadGrouperComparator : public ThreadGrouperComparator
      *
      * @note invalidateModel must be called afterwards to trigger an update
      */
-    void setIsOutboundCollection( bool outbound );
+    void setIsOutboundCollection(bool outbound);
 
     /**
      * Returns the string that shall be used as grouping key for the given @p item.
      */
-    virtual QString grouperString( const Akonadi::Item &item ) const;
+    virtual QString grouperString(const Akonadi::Item &item) const;
 
     /**
      * Triggers an invalidation of the ThreadGrouperModel this comparator belongs to.
@@ -117,24 +115,23 @@ class MailThreadGrouperComparator : public ThreadGrouperComparator
      */
     void invalidateModel();
 
-  protected:
+protected:
     virtual void resetCaches();
 
-  private:
-    QByteArray identifierForMessage( const KMime::Message::Ptr&, Akonadi::Item::Id ) const;
-    QDateTime mostRecentDateTimeInThread( const KMime::Message::Ptr&, Akonadi::Item::Id ) const;
-    Akonadi::Item::Id mostRecentIdInThread( const KMime::Message::Ptr&, Akonadi::Item::Id ) const;
-    KMime::Message::Ptr messageForItem( const Akonadi::Item &item ) const;
+private:
+    QByteArray identifierForMessage(const KMime::Message::Ptr &, Akonadi::Item::Id) const;
+    QDateTime mostRecentDateTimeInThread(const KMime::Message::Ptr &, Akonadi::Item::Id) const;
+    Akonadi::Item::Id mostRecentIdInThread(const KMime::Message::Ptr &, Akonadi::Item::Id) const;
+    KMime::Message::Ptr messageForItem(const Akonadi::Item &item) const;
 
     SortingOption mSortingOption;
     GroupingOption mGroupingOption;
     bool mIsOutboundCollection;
     mutable QHash<Akonadi::Item::Id, KMime::Message::Ptr> mMessageCache;
 
-    struct MostRecentEntry
-    {
-      Akonadi::Item::Id id;
-      QDateTime dateTime;
+    struct MostRecentEntry {
+        Akonadi::Item::Id id;
+        QDateTime dateTime;
     };
 
     mutable QHash<Akonadi::Item::Id, MostRecentEntry> mMostRecentCache;

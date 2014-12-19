@@ -55,7 +55,7 @@ QByteArray NoteAlarmAttribute::serialized() const
 
 QByteArray NoteAlarmAttribute::type() const
 {
-    static const QByteArray sType( "NoteAlarmAttribute" );
+    static const QByteArray sType("NoteAlarmAttribute");
     return sType;
 }
 
@@ -73,5 +73,4 @@ bool NoteAlarmAttribute::operator ==(const NoteAlarmAttribute &other) const
 {
     return mDateTime == other.dateTime();
 }
-
 

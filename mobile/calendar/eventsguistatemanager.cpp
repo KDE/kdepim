@@ -21,33 +21,33 @@
 
 bool EventsGuiStateManager::inViewDayState() const
 {
-  return (currentState() == ViewDayState);
+    return (currentState() == ViewDayState);
 }
 
 bool EventsGuiStateManager::inViewWeekState() const
 {
-  return (currentState() == ViewWeekState);
+    return (currentState() == ViewWeekState);
 }
 
 bool EventsGuiStateManager::inViewMonthState() const
 {
-  return (currentState() == ViewMonthState);
+    return (currentState() == ViewMonthState);
 }
 
 bool EventsGuiStateManager::inViewEventListState() const
 {
-  return (currentState() == ViewEventListState);
+    return (currentState() == ViewEventListState);
 }
 
 bool EventsGuiStateManager::inViewTimelineState() const
 {
-  return (currentState() == ViewTimelineState);
+    return (currentState() == ViewTimelineState);
 }
 
 void EventsGuiStateManager::emitChangedSignal()
 {
-  GuiStateManager::emitChangedSignal();
+    GuiStateManager::emitChangedSignal();
 
-  emit guiStateChanged();
+    emit guiStateChanged();
 }
 

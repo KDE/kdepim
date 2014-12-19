@@ -24,58 +24,57 @@
 using namespace CalendarSupport;
 using namespace CalendarSupport::KCal;
 
-ExtendedIncidenceViewer::ExtendedIncidenceViewer( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *parent )
-  : IncidenceViewer( calendar.data(), parent )
+ExtendedIncidenceViewer::ExtendedIncidenceViewer(const Akonadi::ETMCalendar::Ptr &calendar, QWidget *parent)
+    : IncidenceViewer(calendar.data(), parent)
 {
 }
 
 void ExtendedIncidenceViewer::itemRemoved()
 {
-  emit incidenceRemoved();
+    emit incidenceRemoved();
 }
 
-
-KCalItemBrowserItem::KCalItemBrowserItem(QDeclarativeItem* parent) : DeclarativeAkonadiItem(parent)
+KCalItemBrowserItem::KCalItemBrowserItem(QDeclarativeItem *parent) : DeclarativeAkonadiItem(parent)
 {
-  m_viewer = new ExtendedIncidenceViewer( Akonadi::ETMCalendar::Ptr() );
-  connect( m_viewer, SIGNAL(incidenceRemoved()), SIGNAL(incidenceRemoved()) );
+    m_viewer = new ExtendedIncidenceViewer(Akonadi::ETMCalendar::Ptr());
+    connect(m_viewer, SIGNAL(incidenceRemoved()), SIGNAL(incidenceRemoved()));
 
-  setWidget( m_viewer );
+    setWidget(m_viewer);
 }
 
 KCalItemBrowserItem::~KCalItemBrowserItem()
 {
-  delete m_viewer;
+    delete m_viewer;
 }
 
 Akonadi::Item KCalItemBrowserItem::item() const
 {
-  return m_viewer->item();
+    return m_viewer->item();
 }
 
 qint64 KCalItemBrowserItem::itemId() const
 {
-  return m_viewer->item().id();
+    return m_viewer->item().id();
 }
 
 void KCalItemBrowserItem::setItemId(qint64 id)
 {
-  m_viewer->setItem( Akonadi::Item( id ) );
-  emit attachmentModelChanged();
+    m_viewer->setItem(Akonadi::Item(id));
+    emit attachmentModelChanged();
 }
 
 QDate KCalItemBrowserItem::activeDate() const
 {
-  return m_viewer->activeDate();
+    return m_viewer->activeDate();
 }
 
-void KCalItemBrowserItem::setActiveDate( const QDate &date )
+void KCalItemBrowserItem::setActiveDate(const QDate &date)
 {
-  m_viewer->setIncidence( m_viewer->item(), date );
+    m_viewer->setIncidence(m_viewer->item(), date);
 }
 
-QObject* KCalItemBrowserItem::attachmentModel() const
+QObject *KCalItemBrowserItem::attachmentModel() const
 {
-  return m_viewer->attachmentModel();
+    return m_viewer->attachmentModel();
 }
 

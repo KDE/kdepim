@@ -28,36 +28,36 @@
 
 class ContactImageProvider : public QDeclarativeImageProvider
 {
-  public:
+public:
     ContactImageProvider();
 
-    QPixmap requestPixmap( const QString &id, QSize *size, const QSize &requestedSize );
+    QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize);
 
-    void setModel( QAbstractItemModel *model );
+    void setModel(QAbstractItemModel *model);
 
-  private:
+private:
     QAbstractItemModel *mModel;
 };
 
 /** Adaptor proxy for contact access from QML. */
 class ContactListProxy : public ListProxy
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     enum Role {
-      NameRole = Akonadi::EntityTreeModel::UserRole + 1,
-      PictureRole,
-      TypeRole
+        NameRole = Akonadi::EntityTreeModel::UserRole + 1,
+        PictureRole,
+        TypeRole
     };
 
-    explicit ContactListProxy( QObject* parent = Q_NULLPTR );
+    explicit ContactListProxy(QObject *parent = Q_NULLPTR);
 
-    QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const Q_DECL_OVERRIDE;
-    void setSourceModel(QAbstractItemModel* sourceModel);
-    bool lessThan(const QModelIndex& left, const QModelIndex& right) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    void setSourceModel(QAbstractItemModel *sourceModel);
+    bool lessThan(const QModelIndex &left, const QModelIndex &right) const Q_DECL_OVERRIDE;
 
-  public Q_SLOTS:
-    QString typeForIndex( int row ) const;
+public Q_SLOTS:
+    QString typeForIndex(int row) const;
 };
 
 #endif /* CONTACTLISTPROXY_H */

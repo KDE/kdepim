@@ -28,56 +28,55 @@
 
 class MobileLineEdit::Private
 {
-  MobileLineEdit *const q;
+    MobileLineEdit *const q;
 
-  public:
-    explicit Private( MobileLineEdit *parent )
-      : q( parent ), mEdit( 0 ), mButton( 0 )
+public:
+    explicit Private(MobileLineEdit *parent)
+        : q(parent), mEdit(0), mButton(0)
     {
     }
 
-  public:
+public:
     KPIM::AddresseeLineEdit *mEdit;
     QPushButton *mButton;
 };
 
-MobileLineEdit::MobileLineEdit( QWidget *parent )
-  : QWidget( parent ), d( new Private( this ) )
+MobileLineEdit::MobileLineEdit(QWidget *parent)
+    : QWidget(parent), d(new Private(this))
 {
-  QHBoxLayout *box = new QHBoxLayout( this );
-  box->setMargin( 0 );
-  box->setSpacing( 0 );
+    QHBoxLayout *box = new QHBoxLayout(this);
+    box->setMargin(0);
+    box->setSpacing(0);
 
-  d->mEdit = new KPIM::AddresseeLineEdit( this );
-  box->addWidget( d->mEdit );
+    d->mEdit = new KPIM::AddresseeLineEdit(this);
+    box->addWidget(d->mEdit);
 
-  d->mButton = new QPushButton( this );
-  d->mButton->setIcon( QIcon::fromTheme( QLatin1String("edit-clear-locationbar-rtl") ) );
-  d->mButton->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Maximum );
-  box->addWidget( d->mButton );
+    d->mButton = new QPushButton(this);
+    d->mButton->setIcon(QIcon::fromTheme(QLatin1String("edit-clear-locationbar-rtl")));
+    d->mButton->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+    box->addWidget(d->mButton);
 
-  connect( d->mButton, SIGNAL(clicked()), SLOT(clear()) );
-  connect( d->mButton, SIGNAL(clicked()), SIGNAL(clearClicked()) );
+    connect(d->mButton, SIGNAL(clicked()), SLOT(clear()));
+    connect(d->mButton, SIGNAL(clicked()), SIGNAL(clearClicked()));
 }
 
 MobileLineEdit::~MobileLineEdit()
 {
-  delete d;
+    delete d;
 }
 
-void MobileLineEdit::setText( const QString &text )
+void MobileLineEdit::setText(const QString &text)
 {
-  d->mEdit->setText( text );
+    d->mEdit->setText(text);
 }
 
 QString MobileLineEdit::text() const
 {
-  return d->mEdit->text();
+    return d->mEdit->text();
 }
 
 void MobileLineEdit::clear()
 {
-  d->mEdit->clear();
+    d->mEdit->clear();
 }
-
 

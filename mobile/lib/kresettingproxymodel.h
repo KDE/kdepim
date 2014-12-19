@@ -30,17 +30,17 @@
  */
 class KResettingProxyModel : public QSortFilterProxyModel
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit KResettingProxyModel(QObject* parent = Q_NULLPTR);
+    explicit KResettingProxyModel(QObject *parent = Q_NULLPTR);
 
-  virtual void setSourceModel(QAbstractItemModel* sourceModel);
+    virtual void setSourceModel(QAbstractItemModel *sourceModel);
 
 public Q_SLOTS:
 
 private Q_SLOTS:
-  void slotBeginReset();
-  void slotEndReset();
+    void slotBeginReset();
+    void slotEndReset();
 
 };
 

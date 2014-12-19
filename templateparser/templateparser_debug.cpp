@@ -20,4 +20,3 @@
 #include "templateparser_debug.h"
 Q_LOGGING_CATEGORY(TEMPLATEPARSER_LOG, "log_templateparser")
 
-

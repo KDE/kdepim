@@ -33,8 +33,8 @@ using namespace KDGantt;
  * \internal
  */
 
-ConstraintProxy::ConstraintProxy( QObject* parent )
-    : QObject( parent )
+ConstraintProxy::ConstraintProxy(QObject *parent)
+    : QObject(parent)
 {
 }
 
@@ -42,76 +42,90 @@ ConstraintProxy::~ConstraintProxy()
 {
 }
 
-void ConstraintProxy::setSourceModel( ConstraintModel* src )
+void ConstraintProxy::setSourceModel(ConstraintModel *src)
 {
-    if ( m_source ) disconnect( m_source );
+    if (m_source) {
+        disconnect(m_source);
+    }
     m_source = src;
 
     copyFromSource();
 
-    connect( m_source, SIGNAL(constraintAdded(Constraint)),
-             this, SLOT(slotSourceConstraintAdded(Constraint)) );
-    connect( m_source, SIGNAL(constraintRemoved(Constraint)),
-             this, SLOT(slotSourceConstraintRemoved(Constraint)) );
+    connect(m_source, SIGNAL(constraintAdded(Constraint)),
+            this, SLOT(slotSourceConstraintAdded(Constraint)));
+    connect(m_source, SIGNAL(constraintRemoved(Constraint)),
+            this, SLOT(slotSourceConstraintRemoved(Constraint)));
 }
 
-void ConstraintProxy::setDestinationModel( ConstraintModel* dest )
+void ConstraintProxy::setDestinationModel(ConstraintModel *dest)
 {
-    if ( m_destination ) disconnect( m_destination );
+    if (m_destination) {
+        disconnect(m_destination);
+    }
     m_destination = dest;
 
     copyFromSource();
 
-    connect( m_destination, SIGNAL(constraintAdded(Constraint)),
-             this, SLOT(slotDestinationConstraintAdded(Constraint)) );
-    connect( m_destination, SIGNAL(constraintRemoved(Constraint)),
-             this, SLOT(slotDestinationConstraintRemoved(Constraint)) );
+    connect(m_destination, SIGNAL(constraintAdded(Constraint)),
+            this, SLOT(slotDestinationConstraintAdded(Constraint)));
+    connect(m_destination, SIGNAL(constraintRemoved(Constraint)),
+            this, SLOT(slotDestinationConstraintRemoved(Constraint)));
 }
 
-void ConstraintProxy::setProxyModel( QAbstractProxyModel* proxy )
+void ConstraintProxy::setProxyModel(QAbstractProxyModel *proxy)
 {
     m_proxy = proxy;
 }
 
-ConstraintModel* ConstraintProxy::sourceModel() const { return m_source; }
-ConstraintModel* ConstraintProxy::destinationModel() const { return m_destination; }
-QAbstractProxyModel* ConstraintProxy::proxyModel() const { return m_proxy; }
-
+ConstraintModel *ConstraintProxy::sourceModel() const
+{
+    return m_source;
+}
+ConstraintModel *ConstraintProxy::destinationModel() const
+{
+    return m_destination;
+}
+QAbstractProxyModel *ConstraintProxy::proxyModel() const
+{
+    return m_proxy;
+}
 
 void ConstraintProxy::copyFromSource()
 {
-    if ( m_destination ) {
+    if (m_destination) {
         m_destination->clear();
-        if ( !m_source ) return;
+        if (!m_source) {
+            return;
+        }
         QList<Constraint> lst = m_source->constraints();
-        Q_FOREACH( const Constraint& c, lst ) {
-            m_destination->addConstraint( Constraint( m_proxy->mapFromSource( c.startIndex() ),
-                                                      m_proxy->mapFromSource( c.endIndex() ) ) );
+        Q_FOREACH (const Constraint &c, lst) {
+            m_destination->addConstraint(Constraint(m_proxy->mapFromSource(c.startIndex()),
+                                                    m_proxy->mapFromSource(c.endIndex())));
         }
     }
 }
 
-void ConstraintProxy::slotSourceConstraintAdded( const Constraint& c )
+void ConstraintProxy::slotSourceConstraintAdded(const Constraint &c)
 {
-    if ( m_destination ) m_destination->addConstraint( Constraint( m_proxy->mapFromSource( c.startIndex() ),
-                                                                   m_proxy->mapFromSource( c.endIndex() ) ) );
+    if (m_destination) m_destination->addConstraint(Constraint(m_proxy->mapFromSource(c.startIndex()),
+                m_proxy->mapFromSource(c.endIndex())));
 }
 
-void ConstraintProxy::slotSourceConstraintRemoved( const Constraint& c )
+void ConstraintProxy::slotSourceConstraintRemoved(const Constraint &c)
 {
-    if ( m_destination ) m_destination->removeConstraint( Constraint( m_proxy->mapFromSource( c.startIndex() ),
-                                                                      m_proxy->mapFromSource( c.endIndex() ) ) );
+    if (m_destination) m_destination->removeConstraint(Constraint(m_proxy->mapFromSource(c.startIndex()),
+                m_proxy->mapFromSource(c.endIndex())));
 }
 
-void ConstraintProxy::slotDestinationConstraintAdded( const Constraint& c )
+void ConstraintProxy::slotDestinationConstraintAdded(const Constraint &c)
 {
-    if ( m_source ) m_source->addConstraint( Constraint( m_proxy->mapToSource( c.startIndex() ),
-                                                         m_proxy->mapToSource( c.endIndex() ) ) );
+    if (m_source) m_source->addConstraint(Constraint(m_proxy->mapToSource(c.startIndex()),
+                                              m_proxy->mapToSource(c.endIndex())));
 }
 
-void ConstraintProxy::slotDestinationConstraintRemoved( const Constraint& c )
+void ConstraintProxy::slotDestinationConstraintRemoved(const Constraint &c)
 {
-    if ( m_source ) m_source->removeConstraint( Constraint( m_proxy->mapToSource( c.startIndex() ),
-                                                            m_proxy->mapToSource( c.endIndex() ) ) );
+    if (m_source) m_source->removeConstraint(Constraint(m_proxy->mapToSource(c.startIndex()),
+                m_proxy->mapToSource(c.endIndex())));
 }
 

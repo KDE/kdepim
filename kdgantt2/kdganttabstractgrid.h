@@ -33,37 +33,39 @@ class QRectF;
 class QAbstractItemModel;
 class QModelIndex;
 
-namespace KDGantt {
-    class AbstractRowController;
-    class Span;
+namespace KDGantt
+{
+class AbstractRowController;
+class Span;
 
-    class KDGANTT_EXPORT AbstractGrid : public QObject {
-        Q_OBJECT
-        KDGANTT_DECLARE_PRIVATE_BASE_POLYMORPHIC( AbstractGrid )
-	friend class GraphicsScene;
-    public:
+class KDGANTT_EXPORT AbstractGrid : public QObject
+{
+    Q_OBJECT
+    KDGANTT_DECLARE_PRIVATE_BASE_POLYMORPHIC(AbstractGrid)
+    friend class GraphicsScene;
+public:
 
-        AbstractGrid(QObject* parent = Q_NULLPTR);
-        virtual ~AbstractGrid();
+    AbstractGrid(QObject *parent = Q_NULLPTR);
+    virtual ~AbstractGrid();
 
-        QAbstractItemModel* model() const;
-        QModelIndex rootIndex() const;
+    QAbstractItemModel *model() const;
+    QModelIndex rootIndex() const;
 
-        virtual Span mapToChart( const QModelIndex& idx ) const = 0;
-        virtual bool mapFromChart( const Span& span, const QModelIndex& idx,
-                                   const QList<Constraint>& constraints=QList<Constraint>() ) const = 0;
-        bool isSatisfiedConstraint( const Constraint& c ) const;
+    virtual Span mapToChart(const QModelIndex &idx) const = 0;
+    virtual bool mapFromChart(const Span &span, const QModelIndex &idx,
+                              const QList<Constraint> &constraints = QList<Constraint>()) const = 0;
+    bool isSatisfiedConstraint(const Constraint &c) const;
 
-        virtual void paintGrid( QPainter* painter, const QRectF& sceneRect, const QRectF& exposedRect,
-                                AbstractRowController* rowController = 0, QWidget* widget=0 ) = 0;
-        virtual void paintHeader( QPainter* painter, const QRectF& headerRect, const QRectF& exposedRect,
-                                  qreal offset, QWidget* widget=0 ) = 0;
-    public Q_SLOTS:
-        /*internal*/ virtual void setModel( QAbstractItemModel* model );
-        /*internal*/ virtual void setRootIndex( const QModelIndex& idx );
-    Q_SIGNALS:
-        void gridChanged();
-    };
+    virtual void paintGrid(QPainter *painter, const QRectF &sceneRect, const QRectF &exposedRect,
+                           AbstractRowController *rowController = 0, QWidget *widget = 0) = 0;
+    virtual void paintHeader(QPainter *painter, const QRectF &headerRect, const QRectF &exposedRect,
+                             qreal offset, QWidget *widget = 0) = 0;
+public Q_SLOTS:
+    /*internal*/ virtual void setModel(QAbstractItemModel *model);
+    /*internal*/ virtual void setRootIndex(const QModelIndex &idx);
+Q_SIGNALS:
+    void gridChanged();
+};
 }
 
 #endif /* KDGANTTABSTRACTGRID_H */

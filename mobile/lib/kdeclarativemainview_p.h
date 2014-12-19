@@ -43,63 +43,63 @@ class KActionCollection;
 class ListProxy;
 class KDeclarativeMainViewPrivate : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public: /// members
-  KDeclarativeMainView               *q;
-  Akonadi::ChangeRecorder            *mChangeRecorder;                // Deleted by ~QObject
-  QAbstractItemModel                 *mCollectionFilter;              // Deleted by ~QObject
-  Akonadi::EntityTreeModel           *mEtm;
-  ListProxy                          *mListProxy;
-  QAbstractItemModel                 *mItemModel;
-  QAbstractProxyModel                *mItemFilterModel;
-  Akonadi::AgentFilterProxyModel     *mAgentInstanceFilterModel;
-  QItemSelectionModel                *mAgentInstanceSelectionModel;
-  Akonadi::BreadcrumbNavigationFactory *mBnf;
-  Akonadi::BreadcrumbNavigationFactory *mMultiBnf;
-  QItemSelectionModel                *mItemNavigationSelectionModel;
-  QItemSelectionModel                *mItemActionSelectionModel;
-  QHash<QString, QStringList>        mPersistedSelections;
-  KViewStateMaintainer<Akonadi::ETMViewStateSaver> *mItemViewStateMaintainer;
-  QPointer<KLineEdit>                mFilterLineEdit;
-  QPointer<KLineEdit>                mBulkActionFilterLineEdit;
-  AgentStatusMonitor                 *mAgentStatusMonitor;
-  GuiStateManager                    *mGuiStateManager;
-  NotifyingStateMachine              *mStateMachine;
-  SearchManager                      *mSearchManager;
-  FavoritesEditor                    *mFavoritesEditor;
+    KDeclarativeMainView               *q;
+    Akonadi::ChangeRecorder            *mChangeRecorder;                // Deleted by ~QObject
+    QAbstractItemModel                 *mCollectionFilter;              // Deleted by ~QObject
+    Akonadi::EntityTreeModel           *mEtm;
+    ListProxy                          *mListProxy;
+    QAbstractItemModel                 *mItemModel;
+    QAbstractProxyModel                *mItemFilterModel;
+    Akonadi::AgentFilterProxyModel     *mAgentInstanceFilterModel;
+    QItemSelectionModel                *mAgentInstanceSelectionModel;
+    Akonadi::BreadcrumbNavigationFactory *mBnf;
+    Akonadi::BreadcrumbNavigationFactory *mMultiBnf;
+    QItemSelectionModel                *mItemNavigationSelectionModel;
+    QItemSelectionModel                *mItemActionSelectionModel;
+    QHash<QString, QStringList>        mPersistedSelections;
+    KViewStateMaintainer<Akonadi::ETMViewStateSaver> *mItemViewStateMaintainer;
+    QPointer<KLineEdit>                mFilterLineEdit;
+    QPointer<KLineEdit>                mBulkActionFilterLineEdit;
+    AgentStatusMonitor                 *mAgentStatusMonitor;
+    GuiStateManager                    *mGuiStateManager;
+    NotifyingStateMachine              *mStateMachine;
+    SearchManager                      *mSearchManager;
+    FavoritesEditor                    *mFavoritesEditor;
 
 public: /// Methods
-  explicit KDeclarativeMainViewPrivate( KDeclarativeMainView* );
+    explicit KDeclarativeMainViewPrivate(KDeclarativeMainView *);
 
-  void openHtml( const QString &path );
+    void openHtml(const QString &path);
 
 public Q_SLOTS:
-  void initializeStateSaver();
-  void saveState();
-  void restoreState();
-  void filterLineEditChanged( const QString &text );
-  void bulkActionFilterLineEditChanged( const QString &text );
-  void searchStarted( const Akonadi::Collection& );
-  void searchStopped();
-  void guiStateChanged( int oldState, int newState );
-  void configureAgentInstance();
+    void initializeStateSaver();
+    void saveState();
+    void restoreState();
+    void filterLineEditChanged(const QString &text);
+    void bulkActionFilterLineEditChanged(const QString &text);
+    void searchStarted(const Akonadi::Collection &);
+    void searchStopped();
+    void guiStateChanged(int oldState, int newState);
+    void configureAgentInstance();
 };
 
 class DeclarativeBulkActionFilterLineEdit :
 #ifndef Q_MOC_RUN
-public DeclarativeWidgetBase<KLineEdit, KDeclarativeMainView, &KDeclarativeMainView::setBulkActionFilterLineEdit>
+    public DeclarativeWidgetBase<KLineEdit, KDeclarativeMainView, &KDeclarativeMainView::setBulkActionFilterLineEdit>
 #else
-public QGraphicsProxyWidget
+    public QGraphicsProxyWidget
 #endif
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit DeclarativeBulkActionFilterLineEdit( QGraphicsItem *parent = Q_NULLPTR );
+public:
+    explicit DeclarativeBulkActionFilterLineEdit(QGraphicsItem *parent = Q_NULLPTR);
     ~DeclarativeBulkActionFilterLineEdit();
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void clear();
 };
 

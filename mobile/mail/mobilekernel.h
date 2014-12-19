@@ -17,7 +17,6 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef MOBILEKERNEL_H
 #define MOBILEKERNEL_H
 
@@ -25,23 +24,28 @@
 
 #include <KSharedConfig>
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 class AkonadiSender;
 }
-namespace KIdentityManagement {
+namespace KIdentityManagement
+{
 class IdentityManager;
 }
 
-namespace Akonadi {
+namespace Akonadi
+{
 class ChangeRecorder;
 }
 
-namespace MailCommon {
-  class JobScheduler;
+namespace MailCommon
+{
+class JobScheduler;
 }
 
-namespace PimCommon {
-  class AutoCorrection;
+namespace PimCommon
+{
+class AutoCorrection;
 }
 
 class MobileKernel : public MailCommon::IKernel, public MailCommon::ISettings, public MailCommon::IFilter
@@ -50,22 +54,37 @@ class MobileKernel : public MailCommon::IKernel, public MailCommon::ISettings, p
 public:
     static MobileKernel *self();
 
-    void setFolderCollectionMonitor( Akonadi::ChangeRecorder* monitor ) { mMonitor = monitor; }
-    void setCollectionModel( Akonadi::EntityMimeTypeFilterModel *collectionModel ) { mCollectionModel = collectionModel; }
-    PimCommon::AutoCorrection* composerAutoCorrection() const;
+    void setFolderCollectionMonitor(Akonadi::ChangeRecorder *monitor)
+    {
+        mMonitor = monitor;
+    }
+    void setCollectionModel(Akonadi::EntityMimeTypeFilterModel *collectionModel)
+    {
+        mCollectionModel = collectionModel;
+    }
+    PimCommon::AutoCorrection *composerAutoCorrection() const;
 
 //IKernel methods:
-    /*reimp*/ Akonadi::ChangeRecorder* folderCollectionMonitor() const { return mMonitor; }
-    /*reimp*/ MailCommon::JobScheduler* jobScheduler() const { return mJobScheduler; }
+    /*reimp*/ Akonadi::ChangeRecorder *folderCollectionMonitor() const
+    {
+        return mMonitor;
+    }
+    /*reimp*/ MailCommon::JobScheduler *jobScheduler() const
+    {
+        return mJobScheduler;
+    }
     /*reimp*/ KSharedConfig::Ptr config() Q_DECL_OVERRIDE;
     /*reimp*/ void syncConfig() Q_DECL_OVERRIDE;
-    /*reimp*/ KIdentityManagement::IdentityManager* identityManager() Q_DECL_OVERRIDE;
-    /*reimp*/ Akonadi::EntityMimeTypeFilterModel* collectionModel() const { return mCollectionModel; }
-    /*reimp*/ MessageComposer::MessageSender* msgSender() Q_DECL_OVERRIDE;
+    /*reimp*/ KIdentityManagement::IdentityManager *identityManager() Q_DECL_OVERRIDE;
+    /*reimp*/ Akonadi::EntityMimeTypeFilterModel *collectionModel() const
+    {
+        return mCollectionModel;
+    }
+    /*reimp*/ MessageComposer::MessageSender *msgSender() Q_DECL_OVERRIDE;
 
 //ISettings methods:
     /*reimp*/ void updateSystemTray() Q_DECL_OVERRIDE;
-    /*reimp*/ void setLastSelectedFolder(const Akonadi::Entity::Id& col) Q_DECL_OVERRIDE;
+    /*reimp*/ void setLastSelectedFolder(const Akonadi::Entity::Id &col) Q_DECL_OVERRIDE;
     /*reimp*/ Akonadi::Entity::Id lastSelectedFolder() Q_DECL_OVERRIDE;
     /*reimp*/ qreal closeToQuotaThreshold() Q_DECL_OVERRIDE;
     /*reimp*/ bool excludeImportantMailFromExpiry() Q_DECL_OVERRIDE;
@@ -73,8 +92,8 @@ public:
     /*reimp*/ QStringList customTemplates() Q_DECL_OVERRIDE;
 
 //IFilter methods:
-    virtual void createFilter(const QByteArray& field, const QString& value);
-    virtual void openFilterDialog( bool createDummyFilter = true );
+    virtual void createFilter(const QByteArray &field, const QString &value);
+    virtual void openFilterDialog(bool createDummyFilter = true);
 
     /*reimp*/ ~MobileKernel();
 

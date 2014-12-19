@@ -39,15 +39,15 @@ class KJob;
  */
 class SearchManager : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new search manager.
      *
      * @param parent The parent object.
      */
-    explicit SearchManager( QObject *parent = Q_NULLPTR );
+    explicit SearchManager(QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the search manager.
@@ -56,27 +56,27 @@ class SearchManager : public QObject
      */
     ~SearchManager();
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
      * Starts a new search.
      * A previous search will be stopped and its search collection will be removed.
      *
      * @param query The Sparql or XESAM query of the search.
      */
-    void startSearch( const QString &query );
+    void startSearch(const QString &query);
 
     /**
      * Stops the currently running search and removes its search collection.
      */
     void stopSearch();
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever a new search has successfully been started.
      *
      * @param collection The search collection of this search.
      */
-    void searchStarted( const Akonadi::Collection &collection );
+    void searchStarted(const Akonadi::Collection &collection);
 
     /**
      * This signal is emitted whenever a search has explicitly been stopped by
@@ -84,10 +84,10 @@ class SearchManager : public QObject
      */
     void searchStopped();
 
-  private Q_SLOTS:
-    void result( KJob* );
+private Q_SLOTS:
+    void result(KJob *);
 
-  private:
+private:
     void cleanUpSearch();
 
     Akonadi::Collection::Id mCurrentSearchCollection;

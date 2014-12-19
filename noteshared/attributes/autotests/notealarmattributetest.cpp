@@ -64,5 +64,4 @@ void NoteAlarmAttributeTest::shouldSerializeAttr()
     QVERIFY(attr == result);
 }
 
-
 QTEST_MAIN(NoteAlarmAttributeTest)

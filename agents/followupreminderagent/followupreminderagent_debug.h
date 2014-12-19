@@ -23,5 +23,5 @@
 #include <QLoggingCategory>
 Q_DECLARE_LOGGING_CATEGORY(FOLLOWUPREMINDERAGENT_LOG)
 
-#endif 
+#endif
 

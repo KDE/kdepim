@@ -22,7 +22,8 @@
 
 #include <QSortFilterProxyModel>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @short A proxy model for \a EntityTreeModel based event models.
@@ -51,36 +52,36 @@ namespace Akonadi {
  */
 class EventsFilterProxyModel : public QSortFilterProxyModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new events filter proxy model.
      *
      * @param parent The parent object.
      */
-    explicit EventsFilterProxyModel( QObject *parent = Q_NULLPTR );
+    explicit EventsFilterProxyModel(QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the events filter proxy model.
      */
     ~EventsFilterProxyModel();
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
      * Sets the @p filter that is used to filter for matching events.
      */
-    void setFilterString( const QString &filter );
+    void setFilterString(const QString &filter);
 
-  protected:
+protected:
     //@cond PRIVATE
-    bool filterAcceptsRow( int row, const QModelIndex &parent ) const Q_DECL_OVERRIDE;
+    bool filterAcceptsRow(int row, const QModelIndex &parent) const Q_DECL_OVERRIDE;
     //@endcond
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
     //@endcond
 };
 

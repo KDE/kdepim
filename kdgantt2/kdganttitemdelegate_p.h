@@ -29,14 +29,16 @@
 
 #include <QHash>
 
-namespace KDGantt {
-    class ItemDelegate::Private {
-    public:
-        Private();
+namespace KDGantt
+{
+class ItemDelegate::Private
+{
+public:
+    Private();
 
-        QHash<ItemType, QBrush> defaultbrush;
-        QHash<ItemType, QPen> defaultpen;
-    };
+    QHash<ItemType, QBrush> defaultbrush;
+    QHash<ItemType, QPen> defaultpen;
+};
 }
 
 #endif /* KDGANTTITEMDELEGATE_P_H */

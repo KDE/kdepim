@@ -34,45 +34,53 @@ class QWidget;
 */
 class MOBILEUI_EXPORT DeclarativeWidgetBaseHelper : public QGraphicsProxyWidget
 {
-  Q_OBJECT
-  Q_PROPERTY( QString styleSheet READ styleSheet WRITE setStyleSheet )
+    Q_OBJECT
+    Q_PROPERTY(QString styleSheet READ styleSheet WRITE setStyleSheet)
 public:
-  QString styleSheet() const;
-  void setStyleSheet( const QString &styleSheet );
+    QString styleSheet() const;
+    void setStyleSheet(const QString &styleSheet);
 
 protected:
-    typedef boost::function<void(QGraphicsView*,QWidget*)> RegisterFunction;
-    DeclarativeWidgetBaseHelper( QWidget * widget, QGraphicsItem *parent, const RegisterFunction & registerFunc );
+    typedef boost::function<void(QGraphicsView *, QWidget *)> RegisterFunction;
+    DeclarativeWidgetBaseHelper(QWidget *widget, QGraphicsItem *parent, const RegisterFunction &registerFunc);
     ~DeclarativeWidgetBaseHelper();
 
-    QWidget * widget() const { return m_widget; }
+    QWidget *widget() const
+    {
+        return m_widget;
+    }
 
 protected:
-    /* reimp */ QVariant itemChange( GraphicsItemChange change, const QVariant & value );
+    /* reimp */ QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
 private:
     const RegisterFunction m_registerFunc;
-    QWidget * m_widget;
+    QWidget *m_widget;
 };
 
-template <typename WidgetT, typename ViewT, void (ViewT::*registerFunc)( WidgetT* )>
+template <typename WidgetT, typename ViewT, void (ViewT::*registerFunc)(WidgetT *)>
 class DeclarativeWidgetBase : public DeclarativeWidgetBaseHelper
 {
-  public:
-    explicit DeclarativeWidgetBase( QGraphicsItem *parent = Q_NULLPTR )
-        : DeclarativeWidgetBaseHelper( new WidgetT, parent, &notify ) {}
+public:
+    explicit DeclarativeWidgetBase(QGraphicsItem *parent = Q_NULLPTR)
+        : DeclarativeWidgetBaseHelper(new WidgetT, parent, &notify) {}
 
     /** use this constructor if you inherit from this template to customize widget construction. */
-    DeclarativeWidgetBase( WidgetT *widget, QGraphicsItem *parent )
-        : DeclarativeWidgetBaseHelper( widget, parent, &notify ) {}
+    DeclarativeWidgetBase(WidgetT *widget, QGraphicsItem *parent)
+        : DeclarativeWidgetBaseHelper(widget, parent, &notify) {}
 
-  protected:
-    WidgetT * widget() const { return static_cast<WidgetT*>( DeclarativeWidgetBaseHelper::widget() ); }
+protected:
+    WidgetT *widget() const
+    {
+        return static_cast<WidgetT *>(DeclarativeWidgetBaseHelper::widget());
+    }
 
-  private:
-    static void notify( QGraphicsView * v, QWidget * w ) {
-        if ( ViewT * view = qobject_cast<ViewT*>( v ) )
-            (view->*registerFunc)( static_cast<WidgetT*>( w ) );
+private:
+    static void notify(QGraphicsView *v, QWidget *w)
+    {
+        if (ViewT *view = qobject_cast<ViewT *>(v)) {
+            (view->*registerFunc)(static_cast<WidgetT *>(w));
+        }
     }
 };
 

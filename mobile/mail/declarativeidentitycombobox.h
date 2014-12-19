@@ -29,9 +29,9 @@ class QDeclarativeItem;
 
 class DeclarativeIdentityComboBox : public DeclarativeWidgetBase<KIdentityManagement::IdentityCombo, ComposerView, &ComposerView::setIdentityCombo>
 {
-  Q_OBJECT
-  public:
-    explicit DeclarativeIdentityComboBox( QDeclarativeItem *parent = Q_NULLPTR );
+    Q_OBJECT
+public:
+    explicit DeclarativeIdentityComboBox(QDeclarativeItem *parent = Q_NULLPTR);
 };
 
 #endif // DECLRARATIVEIDENTITYCOMBOBOX_H

@@ -33,43 +33,45 @@
 #include "kdgantt_export.h"
 #include "kdganttglobal.h"
 
-namespace KDGantt {
-    class StyleOptionGanttItem;
+namespace KDGantt
+{
+class StyleOptionGanttItem;
 
-    class KDGANTT_EXPORT ItemDelegate : public QItemDelegate {
-        Q_OBJECT
-        KDGANTT_DECLARE_PRIVATE_BASE_POLYMORPHIC( ItemDelegate )
-    public:
-        enum InteractionState { State_None = 0,
-                                State_Move,
-                                State_ExtendLeft,
-                                State_ExtendRight,
-                                State_DragConstraint
-        };
+class KDGANTT_EXPORT ItemDelegate : public QItemDelegate
+{
+    Q_OBJECT
+    KDGANTT_DECLARE_PRIVATE_BASE_POLYMORPHIC(ItemDelegate)
+public:
+    enum InteractionState { State_None = 0,
+                            State_Move,
+                            State_ExtendLeft,
+                            State_ExtendRight,
+                            State_DragConstraint
+                          };
 
-        explicit ItemDelegate( QObject* parent = Q_NULLPTR );
-        virtual ~ItemDelegate();
+    explicit ItemDelegate(QObject *parent = Q_NULLPTR);
+    virtual ~ItemDelegate();
 
-        void setDefaultBrush( ItemType type, const QBrush& brush );
-        QBrush defaultBrush( ItemType type ) const;
+    void setDefaultBrush(ItemType type, const QBrush &brush);
+    QBrush defaultBrush(ItemType type) const;
 
-        void setDefaultPen( ItemType type, const QPen& pen );
-        QPen defaultPen( ItemType type ) const;
+    void setDefaultPen(ItemType type, const QPen &pen);
+    QPen defaultPen(ItemType type) const;
 
-        virtual Span itemBoundingSpan(const StyleOptionGanttItem& opt, const QModelIndex& idx) const;
-        virtual QRectF constraintBoundingRect( const QPointF& start, const QPointF& end ) const;
-        virtual InteractionState interactionStateFor( const QPointF& pos,
-						      const StyleOptionGanttItem& opt,
-						      const QModelIndex& idx ) const;
+    virtual Span itemBoundingSpan(const StyleOptionGanttItem &opt, const QModelIndex &idx) const;
+    virtual QRectF constraintBoundingRect(const QPointF &start, const QPointF &end) const;
+    virtual InteractionState interactionStateFor(const QPointF &pos,
+            const StyleOptionGanttItem &opt,
+            const QModelIndex &idx) const;
 
-        virtual void paintGanttItem( QPainter* p, const StyleOptionGanttItem& opt, const QModelIndex& idx );
-        virtual void paintConstraintItem( QPainter* p, const QStyleOptionGraphicsItem& opt,
-                                          const QPointF& start, const QPointF& end, const QPen& pen );
-    };
+    virtual void paintGanttItem(QPainter *p, const StyleOptionGanttItem &opt, const QModelIndex &idx);
+    virtual void paintConstraintItem(QPainter *p, const QStyleOptionGraphicsItem &opt,
+                                     const QPointF &start, const QPointF &end, const QPen &pen);
+};
 }
 
 #ifndef QT_NO_DEBUG_STREAM
-QDebug operator<<( QDebug dbg, KDGantt::ItemDelegate::InteractionState );
+QDebug operator<<(QDebug dbg, KDGantt::ItemDelegate::InteractionState);
 #endif
 
 #endif /* KDGANTTITEMDELEGATE_H */

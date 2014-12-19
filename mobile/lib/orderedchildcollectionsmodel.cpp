@@ -24,54 +24,56 @@
 #include <AkonadiCore/Entity>
 #include <AkonadiCore/EntityTreeModel>
 
-OrderedChildCollectionsModel::OrderedChildCollectionsModel( QObject* parent )
-  : QSortFilterProxyModel( parent )
+OrderedChildCollectionsModel::OrderedChildCollectionsModel(QObject *parent)
+    : QSortFilterProxyModel(parent)
 {
-  setDynamicSortFilter( true );
-  setSortCaseSensitivity( Qt::CaseInsensitive );
-  setSortLocaleAware( true );
-  // TODO: This does not actually work. The id() of each special collection is -1.
-  specialCollectionOrder <<
-          Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Inbox ).id()
-      <<  Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Outbox ).id()
-      <<  Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Trash ).id()
-      <<  Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Drafts ).id()
-      <<  Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Templates ).id()
-      <<  Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::SentMail ).id();
+    setDynamicSortFilter(true);
+    setSortCaseSensitivity(Qt::CaseInsensitive);
+    setSortLocaleAware(true);
+    // TODO: This does not actually work. The id() of each special collection is -1.
+    specialCollectionOrder <<
+                           Akonadi::SpecialMailCollections::self()->defaultCollection(Akonadi::SpecialMailCollections::Inbox).id()
+                           <<  Akonadi::SpecialMailCollections::self()->defaultCollection(Akonadi::SpecialMailCollections::Outbox).id()
+                           <<  Akonadi::SpecialMailCollections::self()->defaultCollection(Akonadi::SpecialMailCollections::Trash).id()
+                           <<  Akonadi::SpecialMailCollections::self()->defaultCollection(Akonadi::SpecialMailCollections::Drafts).id()
+                           <<  Akonadi::SpecialMailCollections::self()->defaultCollection(Akonadi::SpecialMailCollections::Templates).id()
+                           <<  Akonadi::SpecialMailCollections::self()->defaultCollection(Akonadi::SpecialMailCollections::SentMail).id();
 }
 
-bool OrderedChildCollectionsModel::lessThan( const QModelIndex &left, const QModelIndex &right ) const
+bool OrderedChildCollectionsModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
 {
-  const Akonadi::Entity::Id leftId = left.data( Akonadi::EntityTreeModel::CollectionIdRole ).toLongLong();
-  const Akonadi::Entity::Id rightId = right.data( Akonadi::EntityTreeModel::CollectionIdRole ).toLongLong();
-  if ( const int leftIndex = specialCollectionOrder.indexOf( leftId ) >= 0 ) {
-    if ( const int rightIndex = specialCollectionOrder.indexOf( rightId ) >= 0 ) {
-      return leftIndex < rightIndex;
+    const Akonadi::Entity::Id leftId = left.data(Akonadi::EntityTreeModel::CollectionIdRole).toLongLong();
+    const Akonadi::Entity::Id rightId = right.data(Akonadi::EntityTreeModel::CollectionIdRole).toLongLong();
+    if (const int leftIndex = specialCollectionOrder.indexOf(leftId) >= 0) {
+        if (const int rightIndex = specialCollectionOrder.indexOf(rightId) >= 0) {
+            return leftIndex < rightIndex;
+        }
+        // Left is a special collection, right is not.
+        return true;
+    } else {
+        if (const int rightIndex = specialCollectionOrder.indexOf(rightId) >= 0) {
+            // Right is a special collection, left is not.
+            return false;
+        }
     }
-    // Left is a special collection, right is not.
-    return true;
-  } else {
-    if ( const int rightIndex = specialCollectionOrder.indexOf( rightId ) >= 0 ) {
-      // Right is a special collection, left is not.
-      return false;
+    // Neither is special.
+
+    // First put inbox on top,
+
+    const Akonadi::Collection leftCol = left.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
+    if (leftCol.name().compare(QLatin1String("inbox"), Qt::CaseInsensitive) == 0) {
+        // If we have two collections called inbox make sure they have total order.
+        const Akonadi::Collection rightCol = right.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
+        if (rightCol.name().compare(QLatin1String("inbox"), Qt::CaseInsensitive) == 0) {
+            return leftId < rightId;
+        }
+        return true;
+    } else {
+        const Akonadi::Collection rightCol = right.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
+        if (rightCol.name().compare(QLatin1String("inbox"), Qt::CaseInsensitive) == 0) {
+            return false;
+        }
     }
-  }
-  // Neither is special.
-
-  // First put inbox on top,
-
-  const Akonadi::Collection leftCol = left.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-  if ( leftCol.name().compare( QLatin1String( "inbox" ), Qt::CaseInsensitive ) == 0 ) {
-    // If we have two collections called inbox make sure they have total order.
-    const Akonadi::Collection rightCol = right.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-    if ( rightCol.name().compare( QLatin1String( "inbox" ), Qt::CaseInsensitive ) == 0 )
-      return leftId < rightId;
-    return true;
-  } else {
-    const Akonadi::Collection rightCol = right.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-    if ( rightCol.name().compare( QLatin1String( "inbox" ), Qt::CaseInsensitive ) == 0 )
-      return false;
-  }
-  // ... then let QSFPM sort by display data
-  return QSortFilterProxyModel::lessThan( left, right );
+    // ... then let QSFPM sort by display data
+    return QSortFilterProxyModel::lessThan(left, right);
 }

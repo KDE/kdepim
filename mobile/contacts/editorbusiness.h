@@ -24,20 +24,20 @@
 
 class EditorBusiness : public EditorBase
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit EditorBusiness( QWidget *parent = Q_NULLPTR );
+public:
+    explicit EditorBusiness(QWidget *parent = Q_NULLPTR);
 
     ~EditorBusiness();
 
-    void loadContact( const KContacts::Addressee &contact, const Akonadi::ContactMetaData &metaData );
-    void saveContact( KContacts::Addressee &contact, Akonadi::ContactMetaData &metaData ) const;
+    void loadContact(const KContacts::Addressee &contact, const Akonadi::ContactMetaData &metaData);
+    void saveContact(KContacts::Addressee &contact, Akonadi::ContactMetaData &metaData) const;
 
-  Q_SIGNALS:
-    void organizationChanged( const QString &organization );
+Q_SIGNALS:
+    void organizationChanged(const QString &organization);
 
-  private:
+private:
     class Private;
     Private *const d;
 };

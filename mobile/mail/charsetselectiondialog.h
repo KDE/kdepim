@@ -34,13 +34,13 @@ class KComboBox;
  */
 class CharsetSelectionDialog : public QDialog
 {
-  public:
+public:
     /**
      * Creates a new charset selection dialog.
      *
      * @param parent The parent widget.
      */
-    explicit CharsetSelectionDialog( QWidget *parent = Q_NULLPTR );
+    explicit CharsetSelectionDialog(QWidget *parent = Q_NULLPTR);
 
     /**
      * Destroys the charset selection dialog.
@@ -50,14 +50,14 @@ class CharsetSelectionDialog : public QDialog
     /**
      * Sets the currently selected @p charset.
      */
-    void setCharset( const QString &charset );
+    void setCharset(const QString &charset);
 
     /**
      * Returns the currently selected charset.
      */
     QString charset() const;
 
-  private:
+private:
     KComboBox *mCharsetCombo;
 };
 

@@ -20,4 +20,3 @@
 #include "pimsettingexport_debug.h"
 Q_LOGGING_CATEGORY(PIMSETTINGEXPORTER_LOG, "log_pimsettingexporter")
 
-

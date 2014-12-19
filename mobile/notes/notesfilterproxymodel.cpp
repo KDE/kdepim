@@ -22,59 +22,62 @@
 #include <AkonadiCore/entitytreemodel.h>
 #include <KMime/Message>
 
-static bool noteMatchesFilter( const KMime::Message::Ptr &note, const QString &filterString );
+static bool noteMatchesFilter(const KMime::Message::Ptr &note, const QString &filterString);
 
 using namespace Akonadi;
 
 class NotesFilterProxyModel::Private
 {
-  public:
+public:
     QString mFilter;
 };
 
-NotesFilterProxyModel::NotesFilterProxyModel( QObject *parent )
-  : QSortFilterProxyModel( parent ), d( new Private )
+NotesFilterProxyModel::NotesFilterProxyModel(QObject *parent)
+    : QSortFilterProxyModel(parent), d(new Private)
 {
-  setSortLocaleAware( true );
-  setDynamicSortFilter( true );
+    setSortLocaleAware(true);
+    setDynamicSortFilter(true);
 }
 
 NotesFilterProxyModel::~NotesFilterProxyModel()
 {
-  delete d;
+    delete d;
 }
 
-void NotesFilterProxyModel::setFilterString( const QString &filter )
+void NotesFilterProxyModel::setFilterString(const QString &filter)
 {
-  d->mFilter = filter;
-  invalidateFilter();
+    d->mFilter = filter;
+    invalidateFilter();
 }
 
-bool NotesFilterProxyModel::filterAcceptsRow( int row, const QModelIndex &parent ) const
+bool NotesFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &parent) const
 {
-  if ( d->mFilter.isEmpty() )
+    if (d->mFilter.isEmpty()) {
+        return true;
+    }
+
+    const QModelIndex index = sourceModel()->index(row, 0, parent);
+
+    const Akonadi::Item item = index.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
+
+    if (item.hasPayload<KMime::Message::Ptr>()) {
+        const KMime::Message::Ptr note = item.payload<KMime::Message::Ptr>();
+        return noteMatchesFilter(note, d->mFilter);
+    }
+
     return true;
-
-  const QModelIndex index = sourceModel()->index( row, 0, parent );
-
-  const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-
-  if ( item.hasPayload<KMime::Message::Ptr>() ) {
-    const KMime::Message::Ptr note = item.payload<KMime::Message::Ptr>();
-    return noteMatchesFilter( note, d->mFilter );
-  }
-
-  return true;
 }
 
-static bool noteMatchesFilter( const KMime::Message::Ptr &note, const QString &filterString )
+static bool noteMatchesFilter(const KMime::Message::Ptr &note, const QString &filterString)
 {
-  if ( note->subject()->asUnicodeString().contains( filterString, Qt::CaseInsensitive ) )
-    return true;
+    if (note->subject()->asUnicodeString().contains(filterString, Qt::CaseInsensitive)) {
+        return true;
+    }
 
-  if ( note->mainBodyPart()->decodedText().contains( filterString, Qt::CaseInsensitive ) )
-    return true;
+    if (note->mainBodyPart()->decodedText().contains(filterString, Qt::CaseInsensitive)) {
+        return true;
+    }
 
-  return false;
+    return false;
 }
 

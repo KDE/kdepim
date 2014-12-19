@@ -29,75 +29,75 @@
 
 namespace Ui
 {
-  class EventOrTodoDesktop;
-  class EventOrTodoMore;
+class EventOrTodoDesktop;
+class EventOrTodoMore;
 }
 
 /// DIE == DeclarativeIncidenceEditor
 
 class DCollectionCombo
-  : public DeclarativeWidgetBase<Akonadi::CollectionComboBox,
-                                 IncidenceView,
-                                 &IncidenceView::setCollectionCombo>
+    : public DeclarativeWidgetBase<Akonadi::CollectionComboBox,
+      IncidenceView,
+      &IncidenceView::setCollectionCombo>
 {
-  Q_OBJECT
-  public:
-    explicit DCollectionCombo( QGraphicsItem *parent = Q_NULLPTR );
+    Q_OBJECT
+public:
+    explicit DCollectionCombo(QGraphicsItem *parent = Q_NULLPTR);
 };
 
 class MobileIncidenceGeneral : public QWidget
 {
-  Q_OBJECT
-  public:
-    explicit MobileIncidenceGeneral( QWidget *parent = Q_NULLPTR );
+    Q_OBJECT
+public:
+    explicit MobileIncidenceGeneral(QWidget *parent = Q_NULLPTR);
 
     ~MobileIncidenceGeneral();
 
-  public:
+public:
     Ui::EventOrTodoDesktop *mUi;
 };
 
 class DIEGeneral
-  : public DeclarativeWidgetBase<MobileIncidenceGeneral,
-                                 IncidenceView,
-                                 &IncidenceView::setGeneralEditor>
+    : public DeclarativeWidgetBase<MobileIncidenceGeneral,
+      IncidenceView,
+      &IncidenceView::setGeneralEditor>
 {
-  Q_OBJECT
-  public:
-    explicit DIEGeneral( QGraphicsItem *parent = Q_NULLPTR );
+    Q_OBJECT
+public:
+    explicit DIEGeneral(QGraphicsItem *parent = Q_NULLPTR);
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void hack();
 };
 
 class MobileIncidenceMore : public QStackedWidget
 {
-  Q_OBJECT
-  public:
-    explicit MobileIncidenceMore( QWidget *parent = Q_NULLPTR );
+    Q_OBJECT
+public:
+    explicit MobileIncidenceMore(QWidget *parent = Q_NULLPTR);
 
     ~MobileIncidenceMore();
 
-  public:
+public:
     Ui::EventOrTodoMore *mUi;
 };
 
 class DIEMore
-  : public DeclarativeWidgetBase<MobileIncidenceMore,
-                                 IncidenceView,
-                                 &IncidenceView::setMoreEditor>
+    : public DeclarativeWidgetBase<MobileIncidenceMore,
+      IncidenceView,
+      &IncidenceView::setMoreEditor>
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  Q_PROPERTY( int currentIndex READ currentIndex WRITE setCurrentIndex )
+    Q_PROPERTY(int currentIndex READ currentIndex WRITE setCurrentIndex)
 
-  public:
-    explicit DIEMore( QGraphicsItem *parent = Q_NULLPTR );
+public:
+    explicit DIEMore(QGraphicsItem *parent = Q_NULLPTR);
 
     int currentIndex() const;
 
-  public Q_SLOTS:
-    void setCurrentIndex( int index );
+public Q_SLOTS:
+    void setCurrentIndex(int index);
 };
 
 #endif

@@ -27,10 +27,10 @@
 #include <QUrl>
 #include <QtCore/QPointer>
 
-ImportHandlerBase::ImportHandlerBase( QObject *parent )
-  : QObject( parent ),
-    mImportProgressDialog( 0 ),
-    mSelectionModel( 0 )
+ImportHandlerBase::ImportHandlerBase(QObject *parent)
+    : QObject(parent),
+      mImportProgressDialog(0),
+      mSelectionModel(0)
 {
 }
 
@@ -38,84 +38,85 @@ ImportHandlerBase::~ImportHandlerBase()
 {
 }
 
-void ImportHandlerBase::setSelectionModel( QItemSelectionModel *model )
+void ImportHandlerBase::setSelectionModel(QItemSelectionModel *model)
 {
-  mSelectionModel = model;
+    mSelectionModel = model;
 }
 
 void ImportHandlerBase::exec()
 {
-  const QStringList fileNames = KFileDialog::getOpenFileNames( QUrl(), fileDialogNameFilter(),
-                                                               0, fileDialogTitle() );
+    const QStringList fileNames = KFileDialog::getOpenFileNames(QUrl(), fileDialogNameFilter(),
+                                  0, fileDialogTitle());
 
-  if ( fileNames.count() == 0 ) {
-    deleteLater();
-    return;
-  }
-
-  bool ok = false;
-  const Akonadi::Item::List items = createItems( fileNames, &ok );
-  if ( !ok || items.isEmpty() ) {
-    deleteLater();
-    return;
-  }
-
-  QPointer<Akonadi::CollectionDialog> dlg = new Akonadi::CollectionDialog();
-  dlg->setMimeTypeFilter( mimeTypes() );
-  dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
-  dlg->setCaption( collectionDialogTitle() );
-  dlg->setDescription( collectionDialogText() );
-
-  // preselect the currently selected folder
-  if ( mSelectionModel ) {
-    const QModelIndexList indexes = mSelectionModel->selectedRows();
-    if ( !indexes.isEmpty() ) {
-      const QModelIndex collectionIndex = indexes.first();
-      const Akonadi::Collection collection = collectionIndex.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-      if ( collection.isValid() )
-        dlg->setDefaultCollection( collection );
+    if (fileNames.count() == 0) {
+        deleteLater();
+        return;
     }
-  }
 
-  if ( !dlg->exec() || !dlg ) {
+    bool ok = false;
+    const Akonadi::Item::List items = createItems(fileNames, &ok);
+    if (!ok || items.isEmpty()) {
+        deleteLater();
+        return;
+    }
+
+    QPointer<Akonadi::CollectionDialog> dlg = new Akonadi::CollectionDialog();
+    dlg->setMimeTypeFilter(mimeTypes());
+    dlg->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
+    dlg->setCaption(collectionDialogTitle());
+    dlg->setDescription(collectionDialogText());
+
+    // preselect the currently selected folder
+    if (mSelectionModel) {
+        const QModelIndexList indexes = mSelectionModel->selectedRows();
+        if (!indexes.isEmpty()) {
+            const QModelIndex collectionIndex = indexes.first();
+            const Akonadi::Collection collection = collectionIndex.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
+            if (collection.isValid()) {
+                dlg->setDefaultCollection(collection);
+            }
+        }
+    }
+
+    if (!dlg->exec() || !dlg) {
+        delete dlg;
+        deleteLater();
+        return;
+    }
+
+    const Akonadi::Collection collection = dlg->selectedCollection();
     delete dlg;
-    deleteLater();
-    return;
-  }
 
-  const Akonadi::Collection collection = dlg->selectedCollection();
-  delete dlg;
+    if (!mImportProgressDialog) {
+        mImportProgressDialog = new QProgressDialog(0);
+        mImportProgressDialog->setWindowTitle(importDialogTitle());
+        mImportProgressDialog->setLabelText(importDialogText(items.count(), collection.name()));
+        mImportProgressDialog->setCancelButton(0);
+        mImportProgressDialog->setAutoClose(true);
+        mImportProgressDialog->setRange(1, items.count());
+    }
 
-  if ( !mImportProgressDialog ) {
-    mImportProgressDialog = new QProgressDialog( 0);
-    mImportProgressDialog->setWindowTitle(importDialogTitle() );
-    mImportProgressDialog->setLabelText( importDialogText( items.count(), collection.name() ) );
-    mImportProgressDialog->setCancelButton(0);
-    mImportProgressDialog->setAutoClose( true );
-    mImportProgressDialog->setRange( 1, items.count() );
-  }
+    mImportProgressDialog->show();
 
-  mImportProgressDialog->show();
-
-  foreach ( const Akonadi::Item &item, items ) {
-    Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, collection );
-    connect( job, SIGNAL(result(KJob*)), SLOT(slotImportJobDone(KJob*)) );
-  }
+    foreach (const Akonadi::Item &item, items) {
+        Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob(item, collection);
+        connect(job, SIGNAL(result(KJob*)), SLOT(slotImportJobDone(KJob*)));
+    }
 }
 
-void ImportHandlerBase::slotImportJobDone( KJob* )
+void ImportHandlerBase::slotImportJobDone(KJob *)
 {
-  if ( !mImportProgressDialog )
-    return;
+    if (!mImportProgressDialog) {
+        return;
+    }
 
+    mImportProgressDialog->setValue(mImportProgressDialog->value() + 1);
 
-  mImportProgressDialog->setValue( mImportProgressDialog->value() + 1 );
-
-  // cleanup on last step
-  if ( mImportProgressDialog->value() == mImportProgressDialog->maximum() ) {
-    mImportProgressDialog->deleteLater();
-    mImportProgressDialog = 0;
-    deleteLater();
-  }
+    // cleanup on last step
+    if (mImportProgressDialog->value() == mImportProgressDialog->maximum()) {
+        mImportProgressDialog->deleteLater();
+        mImportProgressDialog = 0;
+        deleteLater();
+    }
 }
 

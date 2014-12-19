@@ -37,25 +37,23 @@ using namespace KDGantt;
  * \internal
  */
 
-ConstraintGraphicsItem::ConstraintGraphicsItem( const Constraint& c, QGraphicsItem* parent, GraphicsScene* scene )
-    : QGraphicsItem( parent ),  m_constraint( c )
+ConstraintGraphicsItem::ConstraintGraphicsItem(const Constraint &c, QGraphicsItem *parent, GraphicsScene *scene)
+    : QGraphicsItem(parent),  m_constraint(c)
 {
     if (scene && !parent) {
-       scene->addItem(this);
+        scene->addItem(this);
     }
 
-    if (scene && parent)
-    {
-      if (scene != parent->scene())
-      {
-        qDebug("%s: parent scene is different than given scene", Q_FUNC_INFO);
-      }
+    if (scene && parent) {
+        if (scene != parent->scene()) {
+            qDebug("%s: parent scene is different than given scene", Q_FUNC_INFO);
+        }
     }
 
-    setPos( QPointF( 0., 0. ) );
-    setAcceptsHoverEvents( false );
-    setAcceptedMouseButtons( Qt::NoButton );
-    setZValue( 10. );
+    setPos(QPointF(0., 0.));
+    setAcceptsHoverEvents(false);
+    setAcceptedMouseButtons(Qt::NoButton);
+    setZValue(10.);
 }
 
 ConstraintGraphicsItem::~ConstraintGraphicsItem()
@@ -67,68 +65,69 @@ int ConstraintGraphicsItem::type() const
     return Type;
 }
 
-GraphicsScene* ConstraintGraphicsItem::scene() const
+GraphicsScene *ConstraintGraphicsItem::scene() const
 {
-    return qobject_cast<GraphicsScene*>( QGraphicsItem::scene() );
+    return qobject_cast<GraphicsScene *>(QGraphicsItem::scene());
 }
 
 Constraint ConstraintGraphicsItem::proxyConstraint() const
 {
-    return Constraint( scene()->summaryHandlingModel()->mapFromSource( m_constraint.startIndex() ),
-                       scene()->summaryHandlingModel()->mapFromSource( m_constraint.endIndex() ),
-                       m_constraint.type() );
+    return Constraint(scene()->summaryHandlingModel()->mapFromSource(m_constraint.startIndex()),
+                      scene()->summaryHandlingModel()->mapFromSource(m_constraint.endIndex()),
+                      m_constraint.type());
 }
 
 QRectF ConstraintGraphicsItem::boundingRect() const
 {
-    return scene()->itemDelegate()->constraintBoundingRect( m_start, m_end );
+    return scene()->itemDelegate()->constraintBoundingRect(m_start, m_end);
 }
 
-void ConstraintGraphicsItem::paint( QPainter* painter, const QStyleOptionGraphicsItem* option,
-                                    QWidget* widget )
+void ConstraintGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+                                   QWidget *widget)
 {
-    Q_UNUSED( widget );
+    Q_UNUSED(widget);
 
     QPen pen;
     QVariant dataPen;
 
     // default pens
-    if ( m_start.x() <= m_end.x() ) {
-        pen = QPen( Qt::black );
-        dataPen = m_constraint.data( Constraint::ValidConstraintPen );
+    if (m_start.x() <= m_end.x()) {
+        pen = QPen(Qt::black);
+        dataPen = m_constraint.data(Constraint::ValidConstraintPen);
     } else {
-        pen = QPen( Qt::red );
-        dataPen = m_constraint.data( Constraint::InvalidConstraintPen );
+        pen = QPen(Qt::red);
+        dataPen = m_constraint.data(Constraint::InvalidConstraintPen);
     }
 
     // data() pen
-    if( qVariantCanConvert< QPen >( dataPen ) )
-        pen = qVariantValue< QPen >( dataPen );
+    if (qVariantCanConvert< QPen >(dataPen)) {
+        pen = qVariantValue< QPen >(dataPen);
+    }
 
-    scene()->itemDelegate()->paintConstraintItem( painter, *option, m_start, m_end, pen );
+    scene()->itemDelegate()->paintConstraintItem(painter, *option, m_start, m_end, pen);
 }
 
 QString ConstraintGraphicsItem::ganttToolTip() const
 {
-    return m_constraint.data( Qt::ToolTipRole ).toString();
+    return m_constraint.data(Qt::ToolTipRole).toString();
 }
 
-void ConstraintGraphicsItem::setStart( const QPointF& start )
+void ConstraintGraphicsItem::setStart(const QPointF &start)
 {
     prepareGeometryChange();
     m_start = start;
     update();
 }
 
-void ConstraintGraphicsItem::setEnd( const QPointF& end )
+void ConstraintGraphicsItem::setEnd(const QPointF &end)
 {
     prepareGeometryChange();
     m_end = end;
     update();
 }
 
-void ConstraintGraphicsItem::updateItem( const QPointF& start,const QPointF& end )
+void ConstraintGraphicsItem::updateItem(const QPointF &start, const QPointF &end)
 {
-    setStart( start );
-    setEnd( end );
+    setStart(start);
+    setEnd(end);
 }

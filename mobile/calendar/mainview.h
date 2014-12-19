@@ -32,13 +32,15 @@
 
 #include <KCalCore/Incidence>
 
-namespace Akonadi {
+namespace Akonadi
+{
 class StandardCalendarActionManager;
 class IncidenceChanger;
 class ITIPHandler;
 }
 
-namespace KIdentityManagement {
+namespace KIdentityManagement
+{
 class IdentityManager;
 }
 
@@ -49,38 +51,38 @@ class ConfigWidget;
 
 class MainView : public KDeclarativeMainView
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit MainView( QWidget* parent = Q_NULLPTR );
+public:
+    explicit MainView(QWidget *parent = Q_NULLPTR);
 
     ~MainView();
 
-    void setConfigWidget( ConfigWidget *configWidget );
+    void setConfigWidget(ConfigWidget *configWidget);
 
     static EventViews::PrefsPtr preferences();
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void showRegularCalendar();
 
-    void setCurrentEventItemId( qint64 id );
+    void setCurrentEventItemId(qint64 id);
 
     void newEvent();
-    void newEventWithDate( const QDate &date );
+    void newEventWithDate(const QDate &date);
     void newTodo();
 
-    void openIncidenceEditor( const QString &summary,
-                              const QString &description,
-                              const QStringList &attachmentUris,
-                              const QStringList &attendees,
-                              const QStringList &atttachmentMimeTypes,
-                              bool attachmentIsInline,
-                              KCalCore::Incidence::IncidenceType type );
+    void openIncidenceEditor(const QString &summary,
+                             const QString &description,
+                             const QStringList &attachmentUris,
+                             const QStringList &attendees,
+                             const QStringList &atttachmentMimeTypes,
+                             bool attachmentIsInline,
+                             KCalCore::Incidence::IncidenceType type);
 
     void editIncidence();
-    void editIncidence( const Akonadi::Item &item, const QDate &date );
+    void editIncidence(const Akonadi::Item &item, const QDate &date);
     void deleteIncidence();
-    void deleteIncidence( const Akonadi::Item &item );
+    void deleteIncidence(const Akonadi::Item &item);
     void uploadFreeBusy();
     void mailFreeBusy();
     void sendAsICalendar();
@@ -94,38 +96,38 @@ class MainView : public KDeclarativeMainView
     void archiveOldEntries();
     void changeCalendarColor();
 
-  protected Q_SLOTS:
-    void qmlLoadingStateChanged( QDeclarativeView::Status status );
+protected Q_SLOTS:
+    void qmlLoadingStateChanged(QDeclarativeView::Status status);
 
-  private Q_SLOTS:
-    void finishEdit( QObject *editor );
-    void fetchForSendICalDone( KJob *job );
-    void fetchForPublishItemDone( KJob *job );
-    void fetchForiTIPMethodDone( KJob *job );
-    void fetchForSaveAllAttachmentsDone( KJob *job );
+private Q_SLOTS:
+    void finishEdit(QObject *editor);
+    void fetchForSendICalDone(KJob *job);
+    void fetchForPublishItemDone(KJob *job);
+    void fetchForiTIPMethodDone(KJob *job);
+    void fetchForSaveAllAttachmentsDone(KJob *job);
     void updateActionTexts();
     void configureCategories();
 
-  protected:
+protected:
     void doDelayedInit();
-    virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
-                                             QItemSelectionModel *itemSelectionModel );
+    virtual void setupStandardActionManager(QItemSelectionModel *collectionSelectionModel,
+                                            QItemSelectionModel *itemSelectionModel);
 
-    virtual void setupAgentActionManager( QItemSelectionModel *selectionModel );
+    virtual void setupAgentActionManager(QItemSelectionModel *selectionModel);
 
-    virtual QAbstractProxyModel* createItemFilterModel() const;
-    virtual ImportHandlerBase* importHandler() const;
-    virtual ExportHandlerBase* exportHandler() const;
-    virtual GuiStateManager* createGuiStateManager() const;
+    virtual QAbstractProxyModel *createItemFilterModel() const;
+    virtual ImportHandlerBase *importHandler() const;
+    virtual ExportHandlerBase *exportHandler() const;
+    virtual GuiStateManager *createGuiStateManager() const;
     virtual bool useFilterLineEditInCurrentState() const;
 
-    void scheduleiTIPMethod( KCalCore::iTIPMethod method );
+    void scheduleiTIPMethod(KCalCore::iTIPMethod method);
 
-  private:
+private:
     Akonadi::ETMCalendar::Ptr m_calendar;
-    CalendarInterface* m_calendarIface;
-    QHash<QObject*, Akonadi::Entity::Id> m_openItemEditors;
-    KIdentityManagement::IdentityManager* m_identityManager;
+    CalendarInterface *m_calendarIface;
+    QHash<QObject *, Akonadi::Entity::Id> m_openItemEditors;
+    KIdentityManagement::IdentityManager *m_identityManager;
     Akonadi::IncidenceChanger *m_changer;
     static EventViews::PrefsPtr m_calendarPrefs;
     Akonadi::StandardCalendarActionManager *mActionManager;

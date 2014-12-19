@@ -28,30 +28,33 @@ class KCmdLineOptions;
 
 class MOBILEUI_EXPORT KDeclarativeApplicationBase : public KUniqueApplication
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     KDeclarativeApplicationBase();
-    explicit KDeclarativeApplicationBase( const KCmdLineOptions & applicationOptions );
+    explicit KDeclarativeApplicationBase(const KCmdLineOptions &applicationOptions);
 
     /** Sets up some stuff. Only needs to be called (before the
         KApplication constructor) if you don't use
         KDeclarativeApplication as your KApplication.
         You can pass your own options as \a applicationOptions.
     */
-    static void preApplicationSetup( const KCmdLineOptions & applicationOptions );
+    static void preApplicationSetup(const KCmdLineOptions &applicationOptions);
     /**
        \overload
     */
     static void preApplicationSetup();
 
-    MOBILEUI_DEPRECATED_EXPORT static void initCmdLine() { preApplicationSetup(); }
+    MOBILEUI_DEPRECATED_EXPORT static void initCmdLine()
+    {
+        preApplicationSetup();
+    }
 
     /** Sets up some other stuff. Only needs to be called (after the
         KApplication constructor) if you don't use
         KDeclarativeApplication as your KApplication */
     static void postApplicationSetup();
 
-  private:
+private:
     static void emulateMaemo5();
     static void emulateMaemo6();
 };
@@ -59,29 +62,29 @@ class MOBILEUI_EXPORT KDeclarativeApplicationBase : public KUniqueApplication
 template <typename T>
 class KDeclarativeApplication : public KDeclarativeApplicationBase
 {
-  public:
-    KDeclarativeApplication() : KDeclarativeApplicationBase(), m_mainView( Q_NULLPTR ) {}
-    explicit KDeclarativeApplication( const KCmdLineOptions &applicationOptions ) : KDeclarativeApplicationBase( applicationOptions ), m_mainView( Q_NULLPTR ) {}
+public:
+    KDeclarativeApplication() : KDeclarativeApplicationBase(), m_mainView(Q_NULLPTR) {}
+    explicit KDeclarativeApplication(const KCmdLineOptions &applicationOptions) : KDeclarativeApplicationBase(applicationOptions), m_mainView(Q_NULLPTR) {}
     virtual ~KDeclarativeApplication()
     {
-      delete m_mainView;
+        delete m_mainView;
     }
 
     int newInstance()
     {
-      qDebug();
-      if ( !m_mainView ) {
-        m_mainView = new T;
-        m_mainView->show();
-      } else {
-        m_mainView->raise();
-      }
+        qDebug();
+        if (!m_mainView) {
+            m_mainView = new T;
+            m_mainView->show();
+        } else {
+            m_mainView->raise();
+        }
 
-      return 0;
+        return 0;
     }
 
-  protected:
-    T* m_mainView;
+protected:
+    T *m_mainView;
 };
 
 #endif

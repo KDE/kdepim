@@ -49,54 +49,54 @@ typedef DeclarativeWidgetBase<EditorMore, ContactEditorView, &ContactEditorView:
 
 class ContactEditorView::Private : public IncidenceEditorNG::ItemEditorUi
 {
-  ContactEditorView *const q;
+    ContactEditorView *const q;
 
-  public:
-    explicit Private( ContactEditorView *parent )
-      : q( parent ), mItemManager( new IncidenceEditorNG::EditorItemManager( this ) ),
-        mEditorBusiness( 0 ), mEditorGeneral( 0 ), mEditorMore( 0 )
+public:
+    explicit Private(ContactEditorView *parent)
+        : q(parent), mItemManager(new IncidenceEditorNG::EditorItemManager(this)),
+          mEditorBusiness(0), mEditorGeneral(0), mEditorMore(0)
     {
     }
 
     ~Private()
     {
-      delete mItemManager;
+        delete mItemManager;
     }
 
-    void addDetailEditor( EditorBase *editor );
+    void addDetailEditor(EditorBase *editor);
 
-  public: // slots
+public: // slots
     void saveFinished();
-    void saveFailed( IncidenceEditorNG::EditorItemManager::SaveAction, const QString &errorMessage );
-    void collectionChanged( const Akonadi::Collection &collection );
+    void saveFailed(IncidenceEditorNG::EditorItemManager::SaveAction, const QString &errorMessage);
+    void collectionChanged(const Akonadi::Collection &collection);
 
-  public: // ItemEditorGeneralUi interface
-    bool containsPayloadIdentifiers( const QSet<QByteArray> &partIdentifiers ) const
+public: // ItemEditorGeneralUi interface
+    bool containsPayloadIdentifiers(const QSet<QByteArray> &partIdentifiers) const
     {
-      return partIdentifiers.contains( Item::FullPayload );
+        return partIdentifiers.contains(Item::FullPayload);
     }
 
-    bool hasSupportedPayload( const Item &item ) const
+    bool hasSupportedPayload(const Item &item) const
     {
-      return item.hasPayload<KContacts::Addressee>();
+        return item.hasPayload<KContacts::Addressee>();
     }
 
     bool isDirty() const
     {
-      return true;
+        return true;
     }
 
     bool isValid() const
     {
-      return selectedCollection().isValid();
+        return selectedCollection().isValid();
     }
 
-    void load( const Item &item );
-    Item save( const Item &item );
+    void load(const Item &item);
+    Item save(const Item &item);
     Collection selectedCollection() const;
-    void reject( RejectReason reason, const QString &errorMessage = QString() );
+    void reject(RejectReason reason, const QString &errorMessage = QString());
 
-  public:
+public:
     Item mItem;
     ContactMetaData mContactMetaData;
     Collection mCollection;
@@ -108,212 +108,212 @@ class ContactEditorView::Private : public IncidenceEditorNG::ItemEditorUi
     EditorGeneral *mEditorGeneral;
     EditorMore *mEditorMore;
 
-    QList<EditorBase*> mDetailEditors;
+    QList<EditorBase *> mDetailEditors;
 };
 
-void ContactEditorView::Private::addDetailEditor( EditorBase *editor )
+void ContactEditorView::Private::addDetailEditor(EditorBase *editor)
 {
-  if ( editor != 0 ) {
-    mDetailEditors << editor;
+    if (editor != 0) {
+        mDetailEditors << editor;
 
-    if ( mItem.hasPayload<KContacts::Addressee>() ) {
-      const KContacts::Addressee contact = mItem.payload<KContacts::Addressee>();
-      // tokoe: enable when ContactMetaData is part of public API
-      // mContactMetaData.load( mItem );
-      editor->loadContact( contact, mContactMetaData );
+        if (mItem.hasPayload<KContacts::Addressee>()) {
+            const KContacts::Addressee contact = mItem.payload<KContacts::Addressee>();
+            // tokoe: enable when ContactMetaData is part of public API
+            // mContactMetaData.load( mItem );
+            editor->loadContact(contact, mContactMetaData);
+        }
     }
-  }
 }
 
 void ContactEditorView::Private::saveFinished()
 {
-  qDebug();
-  q->deleteLater();
+    qDebug();
+    q->deleteLater();
 }
 
-void ContactEditorView::Private::saveFailed( IncidenceEditorNG::EditorItemManager::SaveAction, const QString &errorMessage )
+void ContactEditorView::Private::saveFailed(IncidenceEditorNG::EditorItemManager::SaveAction, const QString &errorMessage)
 {
-  qCritical() << errorMessage;
+    qCritical() << errorMessage;
 }
 
-void ContactEditorView::Private::load( const Item &item )
+void ContactEditorView::Private::load(const Item &item)
 {
-  Q_ASSERT( item.hasPayload<KContacts::Addressee>() );
+    Q_ASSERT(item.hasPayload<KContacts::Addressee>());
 
-  mItem = item;
-  mCollection = item.parentCollection();
+    mItem = item;
+    mCollection = item.parentCollection();
 
-  const KContacts::Addressee contact = mItem.payload<KContacts::Addressee>();
-  // tokoe: enable when ContactMetaData is part of public API
-  // mContactMetaData.load( mItem );
+    const KContacts::Addressee contact = mItem.payload<KContacts::Addressee>();
+    // tokoe: enable when ContactMetaData is part of public API
+    // mContactMetaData.load( mItem );
 
-  if ( mEditorGeneral != 0 ) {
-    mEditorGeneral->setDefaultCollection( mCollection );
-    mEditorGeneral->loadContact( contact, mContactMetaData );
-  }
+    if (mEditorGeneral != 0) {
+        mEditorGeneral->setDefaultCollection(mCollection);
+        mEditorGeneral->loadContact(contact, mContactMetaData);
+    }
 
-  Q_FOREACH( EditorBase *editor, mDetailEditors ) {
-    editor->loadContact( contact, mContactMetaData );
-  }
+    Q_FOREACH (EditorBase *editor, mDetailEditors) {
+        editor->loadContact(contact, mContactMetaData);
+    }
 }
 
-Item ContactEditorView::Private::save( const Item &item )
+Item ContactEditorView::Private::save(const Item &item)
 {
-  Item result = item;
+    Item result = item;
 
-  result.setMimeType( KContacts::Addressee::mimeType() );
+    result.setMimeType(KContacts::Addressee::mimeType());
 
-  KContacts::Addressee contact;
-  if ( mEditorGeneral != 0 ) {
-    mEditorGeneral->saveContact( contact, mContactMetaData );
-  }
+    KContacts::Addressee contact;
+    if (mEditorGeneral != 0) {
+        mEditorGeneral->saveContact(contact, mContactMetaData);
+    }
 
-  Q_FOREACH( EditorBase *editor, mDetailEditors ) {
-    editor->saveContact( contact, mContactMetaData );
-  }
+    Q_FOREACH (EditorBase *editor, mDetailEditors) {
+        editor->saveContact(contact, mContactMetaData);
+    }
 
-  result.setPayload<KContacts::Addressee>( contact );
-  // tokoe: enable when ContactMetaData is part of public API
-  // mContactMetaData.store( result );
+    result.setPayload<KContacts::Addressee>(contact);
+    // tokoe: enable when ContactMetaData is part of public API
+    // mContactMetaData.store( result );
 
-  return result;
+    return result;
 }
 
-void ContactEditorView::Private::collectionChanged( const Akonadi::Collection &collection )
+void ContactEditorView::Private::collectionChanged(const Akonadi::Collection &collection)
 {
-  mCollection = collection;
+    mCollection = collection;
 }
 
 Collection ContactEditorView::Private::selectedCollection() const
 {
-  return ( !mCollection.isValid() && mEditorGeneral != 0 ? mEditorGeneral->selectedCollection() : mCollection );
+    return (!mCollection.isValid() && mEditorGeneral != 0 ? mEditorGeneral->selectedCollection() : mCollection);
 }
 
-void ContactEditorView::Private::reject( RejectReason reason, const QString &errorMessage )
+void ContactEditorView::Private::reject(RejectReason reason, const QString &errorMessage)
 {
-  switch ( reason ) {
+    switch (reason) {
     case ItemFetchFailed:
-      qWarning() << "Item Fetch Failed:" << errorMessage;
-      break;
+        qWarning() << "Item Fetch Failed:" << errorMessage;
+        break;
 
     case ItemHasInvalidPayload:
-      qWarning() << "Item has Invalid Payload:" << errorMessage;
-      break;
-  }
+        qWarning() << "Item has Invalid Payload:" << errorMessage;
+        break;
+    }
 
-  q->deleteLater();
+    q->deleteLater();
 }
 
-ContactEditorView::ContactEditorView( QWidget *parent )
-  : KDeclarativeFullScreenView( QLatin1String( "contact-editor" ), parent ),
-    d( new Private( this ) )
+ContactEditorView::ContactEditorView(QWidget *parent)
+    : KDeclarativeFullScreenView(QLatin1String("contact-editor"), parent),
+      d(new Private(this))
 {
-  setAttribute(Qt::WA_DeleteOnClose);
-  setWindowTitle( i18n( "Kontact Touch Contacts" ) );
+    setAttribute(Qt::WA_DeleteOnClose);
+    setWindowTitle(i18n("Kontact Touch Contacts"));
 }
 
 void ContactEditorView::doDelayedInit()
 {
-  qmlRegisterType<DeclarativeEditorGeneral>( "org.kde.contacteditors", 4, 5, "ContactEditorGeneral" );
-  qmlRegisterType<DeclarativeEditorBusiness>( "org.kde.contacteditors", 4, 5, "ContactEditorBusiness" );
-  qmlRegisterType<DeclarativeEditorLocation>( "org.kde.contacteditors", 4, 5, "ContactEditorLocation" );
-  qmlRegisterType<DeclarativeEditorCrypto>( "org.kde.contacteditors", 4, 5, "ContactEditorCrypto" );
-  qmlRegisterType<DeclarativeEditorMore>( "org.kde.contacteditors", 4, 5, "ContactEditorMore" );
+    qmlRegisterType<DeclarativeEditorGeneral>("org.kde.contacteditors", 4, 5, "ContactEditorGeneral");
+    qmlRegisterType<DeclarativeEditorBusiness>("org.kde.contacteditors", 4, 5, "ContactEditorBusiness");
+    qmlRegisterType<DeclarativeEditorLocation>("org.kde.contacteditors", 4, 5, "ContactEditorLocation");
+    qmlRegisterType<DeclarativeEditorCrypto>("org.kde.contacteditors", 4, 5, "ContactEditorCrypto");
+    qmlRegisterType<DeclarativeEditorMore>("org.kde.contacteditors", 4, 5, "ContactEditorMore");
 
-  connect( d->mItemManager, SIGNAL(itemSaveFinished(IncidenceEditorNG::EditorItemManager::SaveAction)),
-           SLOT(saveFinished()) );
-  connect( d->mItemManager, SIGNAL(itemSaveFailed(IncidenceEditorNG::EditorItemManager::SaveAction,QString)),
-           SLOT(saveFailed(IncidenceEditorNG::EditorItemManager::SaveAction,QString)) );
+    connect(d->mItemManager, SIGNAL(itemSaveFinished(IncidenceEditorNG::EditorItemManager::SaveAction)),
+            SLOT(saveFinished()));
+    connect(d->mItemManager, SIGNAL(itemSaveFailed(IncidenceEditorNG::EditorItemManager::SaveAction,QString)),
+            SLOT(saveFailed(IncidenceEditorNG::EditorItemManager::SaveAction,QString)));
 }
 
 ContactEditorView::~ContactEditorView()
 {
-  delete d;
+    delete d;
 }
 
-void ContactEditorView::setEditorGeneral( EditorGeneral *editor )
+void ContactEditorView::setEditorGeneral(EditorGeneral *editor)
 {
-  d->mEditorGeneral = editor;
+    d->mEditorGeneral = editor;
 
-  if ( d->mEditorGeneral != 0 ) {
-    if ( d->mDefaultCollection.isValid() ) {
-      d->mEditorGeneral->setDefaultCollection( d->mDefaultCollection );
+    if (d->mEditorGeneral != 0) {
+        if (d->mDefaultCollection.isValid()) {
+            d->mEditorGeneral->setDefaultCollection(d->mDefaultCollection);
+        }
+        if (d->mCollection.isValid()) {
+            d->mEditorGeneral->setDefaultCollection(d->mCollection);
+        }
+        connect(d->mEditorGeneral, SIGNAL(saveClicked()), SLOT(save()));
+        connect(d->mEditorGeneral, SIGNAL(cancelClicked()), SLOT(cancel()));
+        connect(d->mEditorGeneral, SIGNAL(collectionChanged(Akonadi::Collection)),
+                SLOT(collectionChanged(Akonadi::Collection)));
+        connect(d->mEditorGeneral, SIGNAL(requestLaunchAccountWizard()),
+                this, SIGNAL(requestLaunchAccountWizard()));
     }
-    if ( d->mCollection.isValid() ) {
-      d->mEditorGeneral->setDefaultCollection( d->mCollection );
+}
+
+void ContactEditorView::setEditorBusiness(EditorBusiness *editor)
+{
+    d->addDetailEditor(editor);
+    d->mEditorBusiness = editor;
+}
+
+void ContactEditorView::setEditorLocation(EditorLocation *editor)
+{
+    d->addDetailEditor(editor);
+}
+
+void ContactEditorView::setEditorCrypto(EditorCrypto *editor)
+{
+    d->addDetailEditor(editor);
+}
+
+void ContactEditorView::setEditorMore(EditorMore *editor)
+{
+    d->addDetailEditor(editor);
+    d->mEditorMore = editor;
+
+    if (d->mEditorBusiness) {
+        connect(d->mEditorBusiness, SIGNAL(organizationChanged(QString)),
+                d->mEditorMore, SLOT(updateOrganization(QString)));
+    } else {
+        qWarning("No business editor set!");
     }
-    connect( d->mEditorGeneral, SIGNAL(saveClicked()), SLOT(save()) );
-    connect( d->mEditorGeneral, SIGNAL(cancelClicked()), SLOT(cancel()) );
-    connect( d->mEditorGeneral, SIGNAL(collectionChanged(Akonadi::Collection)),
-             SLOT(collectionChanged(Akonadi::Collection)) );
-    connect( d->mEditorGeneral, SIGNAL(requestLaunchAccountWizard()),
-             this, SIGNAL(requestLaunchAccountWizard()) );
-  }
+
+    connect(d->mEditorGeneral, SIGNAL(nameChanged(KContacts::Addressee)),
+            d->mEditorMore, SLOT(updateName(KContacts::Addressee)));
+    connect(d->mEditorMore, SIGNAL(nameChanged(KContacts::Addressee)),
+            d->mEditorGeneral, SLOT(updateName(KContacts::Addressee)));
 }
 
-void ContactEditorView::setEditorBusiness( EditorBusiness *editor )
+void ContactEditorView::setDefaultCollection(const Akonadi::Collection &collection)
 {
-  d->addDetailEditor( editor );
-  d->mEditorBusiness = editor;
+    d->mDefaultCollection = collection;
 }
 
-void ContactEditorView::setEditorLocation( EditorLocation *editor )
+void ContactEditorView::loadContact(const Item &item)
 {
-  d->addDetailEditor( editor );
-}
-
-void ContactEditorView::setEditorCrypto( EditorCrypto *editor )
-{
-  d->addDetailEditor( editor );
-}
-
-void ContactEditorView::setEditorMore( EditorMore *editor )
-{
-  d->addDetailEditor( editor );
-  d->mEditorMore = editor;
-
-  if ( d->mEditorBusiness ) {
-    connect( d->mEditorBusiness, SIGNAL(organizationChanged(QString)),
-             d->mEditorMore, SLOT(updateOrganization(QString)) );
-  } else {
-    qWarning( "No business editor set!" );
-  }
-
-  connect( d->mEditorGeneral, SIGNAL(nameChanged(KContacts::Addressee)),
-           d->mEditorMore, SLOT(updateName(KContacts::Addressee)) );
-  connect( d->mEditorMore, SIGNAL(nameChanged(KContacts::Addressee)),
-           d->mEditorGeneral, SLOT(updateName(KContacts::Addressee)) );
-}
-
-void ContactEditorView::setDefaultCollection( const Akonadi::Collection &collection )
-{
-  d->mDefaultCollection = collection;
-}
-
-void ContactEditorView::loadContact( const Item &item )
-{
-  if ( !d->mEditorGeneral ) {
-    // the editor is not fully loaded yet, so try later again
-    QMetaObject::invokeMethod( this, "loadContact", Qt::QueuedConnection, Q_ARG( Akonadi::Item, item ) );
-  } else {
-    d->mItemManager->load( item );
-  }
+    if (!d->mEditorGeneral) {
+        // the editor is not fully loaded yet, so try later again
+        QMetaObject::invokeMethod(this, "loadContact", Qt::QueuedConnection, Q_ARG(Akonadi::Item, item));
+    } else {
+        d->mItemManager->load(item);
+    }
 }
 
 void ContactEditorView::save()
 {
-  d->mItemManager->save();
+    d->mItemManager->save();
 }
 
 void ContactEditorView::cancel()
 {
-  deleteLater();
+    deleteLater();
 }
 
-void ContactEditorView::closeEvent( QCloseEvent *event )
+void ContactEditorView::closeEvent(QCloseEvent *event)
 {
-  Q_UNUSED( event );
-  cancel();
+    Q_UNUSED(event);
+    cancel();
 }
 
 #include "moc_contacteditorview.cpp"

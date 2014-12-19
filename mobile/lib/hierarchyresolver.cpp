@@ -23,65 +23,68 @@
 
 #include <QDebug>
 
-void HierarchyResolver::addNode( const QByteArray &identifier )
+void HierarchyResolver::addNode(const QByteArray &identifier)
 {
-  mTopNodes.insert( identifier );
+    mTopNodes.insert(identifier);
 }
 
-void HierarchyResolver::addRelation( const QByteArray &child, const QByteArray &parent )
+void HierarchyResolver::addRelation(const QByteArray &child, const QByteArray &parent)
 {
-  if ( child != parent )
-    mRelations.insert( child, parent );
-  else
-    //TODO_TOKOE
-    qDebug() << "child equals parent: " << parent;
+    if (child != parent) {
+        mRelations.insert(child, parent);
+    } else
+        //TODO_TOKOE
+    {
+        qDebug() << "child equals parent: " << parent;
+    }
 }
 
-void HierarchyResolver::resolve( const QSet<QByteArray> &existingIdentifiers )
+void HierarchyResolver::resolve(const QSet<QByteArray> &existingIdentifiers)
 {
-  mChildParentResultMap.clear();
-  mParentChildrenResultMap.clear();
+    mChildParentResultMap.clear();
+    mParentChildrenResultMap.clear();
 
-  // first insert all top nodes
-  foreach ( const QByteArray &node, mTopNodes ) {
-    mChildParentResultMap.insert( node, node );
-    mParentChildrenResultMap.insert( node, QSet<QByteArray>() );
-  }
-
-  // search top-most parents for each added relation child node
-  QHashIterator<QByteArray, QByteArray> it( mRelations );
-  while ( it.hasNext() ) {
-    it.next();
-
-    // check if direct parent is top node
-    if ( mTopNodes.contains( it.value() ) ) {
-      mChildParentResultMap.insert( it.key(), it.value() );
-      mParentChildrenResultMap[ it.value() ].insert( it.key() );
-
-      continue; // we are done
+    // first insert all top nodes
+    foreach (const QByteArray &node, mTopNodes) {
+        mChildParentResultMap.insert(node, node);
+        mParentChildrenResultMap.insert(node, QSet<QByteArray>());
     }
 
-    QByteArray parentNode = it.value();
-    if ( !existingIdentifiers.contains( parentNode ) ) {
-      mChildParentResultMap.insert( it.key(), it.key() );
-      mParentChildrenResultMap[ it.key() ].insert( it.key() );
-    } else {
-      // iterate up the parent path
-      while ( mRelations.contains( parentNode ) && existingIdentifiers.contains( mRelations.value( parentNode ) ) )
-        parentNode = mRelations.value( parentNode );
+    // search top-most parents for each added relation child node
+    QHashIterator<QByteArray, QByteArray> it(mRelations);
+    while (it.hasNext()) {
+        it.next();
 
-      mChildParentResultMap.insert( it.key(), parentNode );
-      mParentChildrenResultMap[ parentNode ].insert( it.key() );
+        // check if direct parent is top node
+        if (mTopNodes.contains(it.value())) {
+            mChildParentResultMap.insert(it.key(), it.value());
+            mParentChildrenResultMap[ it.value() ].insert(it.key());
+
+            continue; // we are done
+        }
+
+        QByteArray parentNode = it.value();
+        if (!existingIdentifiers.contains(parentNode)) {
+            mChildParentResultMap.insert(it.key(), it.key());
+            mParentChildrenResultMap[ it.key() ].insert(it.key());
+        } else {
+            // iterate up the parent path
+            while (mRelations.contains(parentNode) && existingIdentifiers.contains(mRelations.value(parentNode))) {
+                parentNode = mRelations.value(parentNode);
+            }
+
+            mChildParentResultMap.insert(it.key(), parentNode);
+            mParentChildrenResultMap[ parentNode ].insert(it.key());
+        }
     }
-  }
 }
 
 QHash<QByteArray, QByteArray> HierarchyResolver::childParentMap() const
 {
-  return mChildParentResultMap;
+    return mChildParentResultMap;
 }
 
 QHash<QByteArray, QSet<QByteArray> > HierarchyResolver::parentChildrenMap() const
 {
-  return mParentChildrenResultMap;
+    return mParentChildrenResultMap;
 }

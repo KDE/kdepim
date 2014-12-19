@@ -23,22 +23,22 @@
 
 class ModelSelectionTransitionPrivate
 {
-  ModelSelectionTransitionPrivate(ModelSelectionTransition *qq, QItemSelectionModel *selectionModel, ModelSelectionTransition::Type type)
-    : q_ptr(qq), m_selectionModel(selectionModel), m_type(type)
-  {
+    ModelSelectionTransitionPrivate(ModelSelectionTransition *qq, QItemSelectionModel *selectionModel, ModelSelectionTransition::Type type)
+        : q_ptr(qq), m_selectionModel(selectionModel), m_type(type)
+    {
 
-  }
-  Q_DECLARE_PUBLIC(ModelSelectionTransition)
-  ModelSelectionTransition * const q_ptr;
+    }
+    Q_DECLARE_PUBLIC(ModelSelectionTransition)
+    ModelSelectionTransition *const q_ptr;
 
-  QItemSelectionModel * const m_selectionModel;
-  ModelSelectionTransition::Type m_type;
+    QItemSelectionModel *const m_selectionModel;
+    ModelSelectionTransition::Type m_type;
 };
 
-ModelSelectionTransition::ModelSelectionTransition(QItemSelectionModel* selectionModel, ModelSelectionTransition::Type type, QState* sourceState)
-  : QSignalTransition(selectionModel,
-                      SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-                      sourceState),
+ModelSelectionTransition::ModelSelectionTransition(QItemSelectionModel *selectionModel, ModelSelectionTransition::Type type, QState *sourceState)
+    : QSignalTransition(selectionModel,
+                        SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+                        sourceState),
     d_ptr(new ModelSelectionTransitionPrivate(this, selectionModel, type))
 {
 
@@ -49,27 +49,28 @@ ModelSelectionTransition::~ModelSelectionTransition()
     delete d_ptr;
 }
 
-bool ModelSelectionTransition::eventTest(QEvent* event)
+bool ModelSelectionTransition::eventTest(QEvent *event)
 {
-  Q_D(ModelSelectionTransition);
-  if (!QSignalTransition::eventTest(event))
-    return false;
+    Q_D(ModelSelectionTransition);
+    if (!QSignalTransition::eventTest(event)) {
+        return false;
+    }
 
-  // Yes, it does feel wrong to use a switch statement in a state machine.
-  // Oh well.
-  switch (d->m_type) {
-  case AcceptNoSelection:
-    return !d->m_selectionModel->hasSelection();
-  case AcceptMultiSelection:
-    return d->m_selectionModel->selectedRows().size() > 1;
-  case AcceptSingleSelection:
-    return d->m_selectionModel->selectedRows().size() == 1;
-  case AcceptSingleTopLevelSelection: {
-    const QModelIndexList list = d->m_selectionModel->selectedRows();
-    return list.size() == 1 && !list.first().parent().isValid();
-  }
-  }
-  Q_ASSERT(!"Unknown type");
-  return false;
+    // Yes, it does feel wrong to use a switch statement in a state machine.
+    // Oh well.
+    switch (d->m_type) {
+    case AcceptNoSelection:
+        return !d->m_selectionModel->hasSelection();
+    case AcceptMultiSelection:
+        return d->m_selectionModel->selectedRows().size() > 1;
+    case AcceptSingleSelection:
+        return d->m_selectionModel->selectedRows().size() == 1;
+    case AcceptSingleTopLevelSelection: {
+        const QModelIndexList list = d->m_selectionModel->selectedRows();
+        return list.size() == 1 && !list.first().parent().isValid();
+    }
+    }
+    Q_ASSERT(!"Unknown type");
+    return false;
 }
 

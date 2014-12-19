@@ -25,17 +25,16 @@
 #include "kdganttproxymodel.h"
 #include "kdganttproxymodel_p.h"
 
-
 using namespace KDGantt;
 
 typedef ForwardingProxyModel BASE;
 
-ProxyModel::Private::Private( ProxyModel* _q )
+ProxyModel::Private::Private(ProxyModel *_q)
 #if 0
-    : calendarMode( false )
+    : calendarMode(false)
 #endif
 {
-    Q_UNUSED( _q ); // for now
+    Q_UNUSED(_q);   // for now
 
     columnMap[Qt::DisplayRole]    = 0;
     columnMap[ItemTypeRole]       = 1;
@@ -52,8 +51,8 @@ ProxyModel::Private::Private( ProxyModel* _q )
     roleMap[LegendRole]         = Qt::DisplayRole;
 }
 
-ProxyModel::ProxyModel( QObject* parent )
-    : BASE( parent ), _d( new Private( this ) )
+ProxyModel::ProxyModel(QObject *parent)
+    : BASE(parent), _d(new Private(this))
 {
     init();
 }
@@ -69,67 +68,69 @@ void ProxyModel::init()
 {
 }
 
-QModelIndex ProxyModel::mapFromSource( const QModelIndex& sourceIdx ) const
+QModelIndex ProxyModel::mapFromSource(const QModelIndex &sourceIdx) const
 {
 #if 0
-    if( sourceIdx.isValid() ) {
-        if ( calendarMode() ) {
-            const QAbstractItemModel* model = sourceIdx.model();
-            if ( model->hasChildren( sourceIdx ) ) {
-                return BASE::mapFromSource( model->index( sourceIdx.row(),0,sourceIdx.parent()));
+    if (sourceIdx.isValid()) {
+        if (calendarMode()) {
+            const QAbstractItemModel *model = sourceIdx.model();
+            if (model->hasChildren(sourceIdx)) {
+                return BASE::mapFromSource(model->index(sourceIdx.row(), 0, sourceIdx.parent()));
             } else {
                 // Map children to columns
-                return BASE::mapFromSource( model->index( sourceIdx.row(),0,sourceIdx.parent()))
-                    .child( 0, sourceIdx.column() );
+                return BASE::mapFromSource(model->index(sourceIdx.row(), 0, sourceIdx.parent()))
+                       .child(0, sourceIdx.column());
             }
         }
-        return BASE::mapFromSource( sourceIdx.model()->index( sourceIdx.row(),0,sourceIdx.parent()));
+        return BASE::mapFromSource(sourceIdx.model()->index(sourceIdx.row(), 0, sourceIdx.parent()));
+    } else {
+        return QModelIndex();
     }
-    else return QModelIndex();
 #else
-    return BASE::mapFromSource( sourceIdx.model()?sourceIdx.model()->index( sourceIdx.row(),0,sourceIdx.parent()):QModelIndex());
+    return BASE::mapFromSource(sourceIdx.model() ? sourceIdx.model()->index(sourceIdx.row(), 0, sourceIdx.parent()) : QModelIndex());
 #endif
 }
 
-QModelIndex ProxyModel::mapToSource( const QModelIndex& proxyIdx ) const
+QModelIndex ProxyModel::mapToSource(const QModelIndex &proxyIdx) const
 {
 #if 0
-    if( proxyIdx.isValid() ) {
-        if ( calendarMode() && proxyIdx.column() > 0 ) {
-            return BASE::mapToSource( proxyIdx.model()->index( proxyIdx.column(), 0, proxyIdx ) );
+    if (proxyIdx.isValid()) {
+        if (calendarMode() && proxyIdx.column() > 0) {
+            return BASE::mapToSource(proxyIdx.model()->index(proxyIdx.column(), 0, proxyIdx));
         }
-        return BASE::mapToSource( proxyIdx );
+        return BASE::mapToSource(proxyIdx);
+    } else {
+        return QModelIndex();
     }
-    else return QModelIndex();
 #else
-    return BASE::mapToSource( proxyIdx );
+    return BASE::mapToSource(proxyIdx);
 #endif
 }
 
-void ProxyModel::setColumn( int ganttrole, int col )
+void ProxyModel::setColumn(int ganttrole, int col)
 {
     d->columnMap[ganttrole] = col;
 }
 
-int ProxyModel::column( int ganttrole ) const
+int ProxyModel::column(int ganttrole) const
 {
     return d->columnMap[ganttrole];
 }
 
-void ProxyModel::setRole( int ganttrole, int role )
+void ProxyModel::setRole(int ganttrole, int role)
 {
     d->roleMap[ganttrole] = role;
 }
 
-int ProxyModel::role( int ganttrole ) const
+int ProxyModel::role(int ganttrole) const
 {
     return d->roleMap[ganttrole];
 }
 
 #if 0
-void ProxyModel::setCalendarMode( bool enable )
+void ProxyModel::setCalendarMode(bool enable)
 {
-    if ( d->calendarMode != enable ) {
+    if (d->calendarMode != enable) {
         d->calendarMode = enable;
         reset();
     }
@@ -141,46 +142,54 @@ bool ProxyModel::calendarMode() const
 }
 #endif
 
-int ProxyModel::rowCount( const QModelIndex& proxyIndex ) const
+int ProxyModel::rowCount(const QModelIndex &proxyIndex) const
 {
     // TODO
-    return BASE::rowCount( proxyIndex );
+    return BASE::rowCount(proxyIndex);
 }
 
-int ProxyModel::columnCount( const QModelIndex& proxyIndex ) const
+int ProxyModel::columnCount(const QModelIndex &proxyIndex) const
 {
-    return qMin( sourceModel()->columnCount( mapToSource( proxyIndex ) ), 1 );
+    return qMin(sourceModel()->columnCount(mapToSource(proxyIndex)), 1);
 }
 
-QVariant ProxyModel::data( const QModelIndex& proxyIdx, int role ) const
+QVariant ProxyModel::data(const QModelIndex &proxyIdx, int role) const
 {
     int srole = role;
     int scol  = proxyIdx.column();
-    QHash<int, int>::const_iterator it = d->roleMap.find( role );
-    if ( it != d->roleMap.end() ) srole = *it;
-    it = d->columnMap.find( role );
-    if ( it != d->columnMap.end() ) scol = *it;
+    QHash<int, int>::const_iterator it = d->roleMap.find(role);
+    if (it != d->roleMap.end()) {
+        srole = *it;
+    }
+    it = d->columnMap.find(role);
+    if (it != d->columnMap.end()) {
+        scol = *it;
+    }
 
 #if 0
-    qDebug() << "mapping role"<<static_cast<ItemDataRole>(role)<<"to"<<static_cast<ItemDataRole>(srole);
-    qDebug() << "mapping column"<<proxyIdx.column()<<"to"<<scol
-             << "value="<<sourceModel()->data( sourceModel()->index( proxyIdx.row(), scol, mapToSource( proxyIdx.parent() ) ), srole );
+    qDebug() << "mapping role" << static_cast<ItemDataRole>(role) << "to" << static_cast<ItemDataRole>(srole);
+    qDebug() << "mapping column" << proxyIdx.column() << "to" << scol
+             << "value=" << sourceModel()->data(sourceModel()->index(proxyIdx.row(), scol, mapToSource(proxyIdx.parent())), srole);
 #endif
 
-    const QAbstractItemModel* model = sourceModel();
-    return model->data( model->index( proxyIdx.row(), scol, mapToSource( proxyIdx.parent() ) ), srole );
+    const QAbstractItemModel *model = sourceModel();
+    return model->data(model->index(proxyIdx.row(), scol, mapToSource(proxyIdx.parent())), srole);
 }
 
-bool ProxyModel::setData( const QModelIndex& proxyIdx, const QVariant& value, int role )
+bool ProxyModel::setData(const QModelIndex &proxyIdx, const QVariant &value, int role)
 {
     int srole = role;
     int scol  = proxyIdx.column();
-    QHash<int, int>::const_iterator it = d->roleMap.constFind( role );
-    if ( it != d->roleMap.constEnd() ) srole = *it;
-    it = d->columnMap.constFind( role );
-    if ( it != d->columnMap.constEnd() ) scol = *it;
+    QHash<int, int>::const_iterator it = d->roleMap.constFind(role);
+    if (it != d->roleMap.constEnd()) {
+        srole = *it;
+    }
+    it = d->columnMap.constFind(role);
+    if (it != d->columnMap.constEnd()) {
+        scol = *it;
+    }
 
-    QAbstractItemModel* model = sourceModel();
-    return model->setData( model->index( proxyIdx.row(), scol, mapToSource( proxyIdx.parent() ) ), value, srole );
+    QAbstractItemModel *model = sourceModel();
+    return model->setData(model->index(proxyIdx.row(), scol, mapToSource(proxyIdx.parent())), value, srole);
 }
 

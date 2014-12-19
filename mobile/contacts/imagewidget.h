@@ -34,48 +34,48 @@ class ImageLoader;
 
 class ImageWidget : public QPushButton
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     enum Type {
-      Photo,
-      Logo
+        Photo,
+        Logo
     };
 
-    explicit ImageWidget( QWidget *parent = Q_NULLPTR );
-    explicit ImageWidget( Type type, QWidget *parent = Q_NULLPTR );
+    explicit ImageWidget(QWidget *parent = Q_NULLPTR);
+    explicit ImageWidget(Type type, QWidget *parent = Q_NULLPTR);
     ~ImageWidget();
 
-    void setType( Type type );
+    void setType(Type type);
 
-    void loadContact( const KContacts::Addressee &contact );
-    void storeContact( KContacts::Addressee &contact ) const;
+    void loadContact(const KContacts::Addressee &contact);
+    void storeContact(KContacts::Addressee &contact) const;
 
-    void setReadOnly( bool readOnly );
+    void setReadOnly(bool readOnly);
 
-  protected:
+protected:
 #ifndef QT_NO_DRAGANDDROP
     // image drop handling
-    void dragEnterEvent( QDragEnterEvent* ) Q_DECL_OVERRIDE;
-    void dropEvent( QDropEvent* ) Q_DECL_OVERRIDE;
+    void dragEnterEvent(QDragEnterEvent *) Q_DECL_OVERRIDE;
+    void dropEvent(QDropEvent *) Q_DECL_OVERRIDE;
 #endif
 
     // image drag handling
-    void mousePressEvent( QMouseEvent* ) Q_DECL_OVERRIDE;
-    void mouseMoveEvent( QMouseEvent* ) Q_DECL_OVERRIDE;
+    void mousePressEvent(QMouseEvent *) Q_DECL_OVERRIDE;
+    void mouseMoveEvent(QMouseEvent *) Q_DECL_OVERRIDE;
 #ifndef QT_NO_CONTEXTMENU
     // context menu handling
-    void contextMenuEvent( QContextMenuEvent* ) Q_DECL_OVERRIDE;
+    void contextMenuEvent(QContextMenuEvent *) Q_DECL_OVERRIDE;
 #endif
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void updateView();
 
     void changeImage();
     void saveImage();
     void deleteImage();
 
-  private:
+private:
     ImageLoader *imageLoader();
 
     Type mType;

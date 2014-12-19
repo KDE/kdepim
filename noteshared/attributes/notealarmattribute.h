@@ -41,7 +41,7 @@ public:
     void setDateTime(const QDateTime &dateTime);
     QDateTime dateTime() const;
 
-    bool operator ==( const NoteAlarmAttribute &other) const;
+    bool operator ==(const NoteAlarmAttribute &other) const;
 private:
     QDateTime mDateTime;
 };

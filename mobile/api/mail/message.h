@@ -37,17 +37,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class Message : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY (QString subject READ subject NOTIFY messageChanged)
-    Q_PROPERTY (QString from READ from NOTIFY messageChanged)
-    Q_PROPERTY (QString to READ to NOTIFY messageChanged)
-    Q_PROPERTY (QString cc READ cc NOTIFY messageChanged)
-    Q_PROPERTY (QString bcc READ bcc NOTIFY messageChanged)
-    Q_PROPERTY (QDateTime date READ date NOTIFY messageChanged)
-    Q_PROPERTY (QString textContent READ textContent NOTIFY messageChanged)
-    Q_PROPERTY (Error* error READ error CONSTANT)
+    Q_PROPERTY(QString subject READ subject NOTIFY messageChanged)
+    Q_PROPERTY(QString from READ from NOTIFY messageChanged)
+    Q_PROPERTY(QString to READ to NOTIFY messageChanged)
+    Q_PROPERTY(QString cc READ cc NOTIFY messageChanged)
+    Q_PROPERTY(QString bcc READ bcc NOTIFY messageChanged)
+    Q_PROPERTY(QDateTime date READ date NOTIFY messageChanged)
+    Q_PROPERTY(QString textContent READ textContent NOTIFY messageChanged)
+    Q_PROPERTY(Error *error READ error CONSTANT)
 
 public:
-    explicit Message( QObject *parent = Q_NULLPTR );
+    explicit Message(QObject *parent = Q_NULLPTR);
     ~Message();
 
     QString subject() const;
@@ -78,6 +78,5 @@ private:
     QString m_textContent;
     QScopedPointer<Error> m_error;
 };
-
 
 #endif //MESSAGE_H

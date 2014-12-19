@@ -27,22 +27,22 @@
 
 using namespace Akonadi;
 
-BreadcrumbNavigationFactory::BreadcrumbNavigationFactory( QObject* parent )
-  : KBreadcrumbNavigationFactory(parent)
+BreadcrumbNavigationFactory::BreadcrumbNavigationFactory(QObject *parent)
+    : KBreadcrumbNavigationFactory(parent)
 {
 }
 
-QAbstractItemModel* BreadcrumbNavigationFactory::getChildItemsModel( QAbstractItemModel* model )
+QAbstractItemModel *BreadcrumbNavigationFactory::getChildItemsModel(QAbstractItemModel *model)
 {
-  EntityMimeTypeFilterModel *filterProxy = new Akonadi::EntityMimeTypeFilterModel( this );
-  filterProxy->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
-  filterProxy->setSourceModel( model );
-  filterProxy->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
+    EntityMimeTypeFilterModel *filterProxy = new Akonadi::EntityMimeTypeFilterModel(this);
+    filterProxy->setHeaderGroup(Akonadi::EntityTreeModel::CollectionTreeHeaders);
+    filterProxy->setSourceModel(model);
+    filterProxy->addMimeTypeInclusionFilter(Akonadi::Collection::mimeType());
 
-  OrderedChildCollectionsModel *orderProxy = new OrderedChildCollectionsModel( this );
-  orderProxy->sort(0, Qt::AscendingOrder );
-  orderProxy->setSourceModel( filterProxy );
+    OrderedChildCollectionsModel *orderProxy = new OrderedChildCollectionsModel(this);
+    orderProxy->sort(0, Qt::AscendingOrder);
+    orderProxy->setSourceModel(filterProxy);
 
-  return orderProxy;
+    return orderProxy;
 }
 

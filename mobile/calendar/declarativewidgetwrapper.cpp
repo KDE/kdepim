@@ -23,19 +23,19 @@
 
 using namespace Qt;
 
-DeclarativeWidgetWrapperBase::DeclarativeWidgetWrapperBase(QWidget* widget, QDeclarativeItem* parent) :
-  QDeclarativeItem(parent),
-  m_proxy( new QGraphicsProxyWidget( this ) )
+DeclarativeWidgetWrapperBase::DeclarativeWidgetWrapperBase(QWidget *widget, QDeclarativeItem *parent) :
+    QDeclarativeItem(parent),
+    m_proxy(new QGraphicsProxyWidget(this))
 {
-  m_proxy->setWidget( widget );
-  QPalette pal = widget->palette();
-  pal.setColor( QPalette::Background, QColor( 0, 0, 0, 0 ) );
-  widget->setPalette( pal );
+    m_proxy->setWidget(widget);
+    QPalette pal = widget->palette();
+    pal.setColor(QPalette::Background, QColor(0, 0, 0, 0));
+    widget->setPalette(pal);
 }
 
-void DeclarativeWidgetWrapperBase::geometryChanged(const QRectF& newGeometry, const QRectF& oldGeometry)
+void DeclarativeWidgetWrapperBase::geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry)
 {
-  QDeclarativeItem::geometryChanged( newGeometry, oldGeometry );
-  m_proxy->resize( newGeometry.size() );
+    QDeclarativeItem::geometryChanged(newGeometry, oldGeometry);
+    m_proxy->resize(newGeometry.size());
 }
 

@@ -26,29 +26,29 @@
 /** Proxy model to provide roles for accessing KMime::Message properties from QML. */
 class MessageListProxy : public ListProxy
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit MessageListProxy(QObject* parent = Q_NULLPTR);
+public:
+    explicit MessageListProxy(QObject *parent = Q_NULLPTR);
     enum Role {
-      SubjectRole = Akonadi::EntityTreeModel::UserRole,
-      FromRole,
-      DateRole,
-      SizeRole,
-      IsUnreadRole,
-      IsImportantRole,
-      IsActionItemRole,
-      HasAttachmentRole,
-      IsRepliedRole,
-      IsForwardedRole,
-      IsSignedRole,
-      IsEncryptedRole,
-      DateGroupRole,
-      SenderGroupRole
+        SubjectRole = Akonadi::EntityTreeModel::UserRole,
+        FromRole,
+        DateRole,
+        SizeRole,
+        IsUnreadRole,
+        IsImportantRole,
+        IsActionItemRole,
+        HasAttachmentRole,
+        IsRepliedRole,
+        IsForwardedRole,
+        IsSignedRole,
+        IsEncryptedRole,
+        DateGroupRole,
+        SenderGroupRole
     };
 
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-    void setSourceModel(QAbstractItemModel* sourceModel) Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    void setSourceModel(QAbstractItemModel *sourceModel) Q_DECL_OVERRIDE;
 };
 
 #endif

@@ -20,4 +20,3 @@
 #include "messagecomposer_debug.h"
 Q_LOGGING_CATEGORY(MESSAGECOMPOSER_LOG, "log_messagecomposer")
 
-

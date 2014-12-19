@@ -38,9 +38,9 @@ using namespace KDGantt;
 
 /*! Constructor. Creates an AbstractGrid with parent \a parent.
  * The QObject parent is not used for anything internally. */
-AbstractGrid::AbstractGrid( QObject* parent )
-    : QObject( parent ),
-      _d( new Private )
+AbstractGrid::AbstractGrid(QObject *parent)
+    : QObject(parent),
+      _d(new Private)
 {
 }
 
@@ -55,13 +55,13 @@ AbstractGrid::~AbstractGrid()
 /*! Sets the QAbstractItemModel used by this grid implementation.
  * This is called by the view, you should never need to call this
  * from client code.  */
-void AbstractGrid::setModel( QAbstractItemModel* model )
+void AbstractGrid::setModel(QAbstractItemModel *model)
 {
     d->model = model;
 }
 
 /*!\returns The QAbstractItemModel used by this grid */
-QAbstractItemModel* AbstractGrid::model() const
+QAbstractItemModel *AbstractGrid::model() const
 {
     return d->model;
 }
@@ -69,7 +69,7 @@ QAbstractItemModel* AbstractGrid::model() const
 /*! Sets the root index used by this grid implementation.
  * This is called by the view, you should never need to call this
  * from client code.  */
-void AbstractGrid::setRootIndex( const QModelIndex& idx )
+void AbstractGrid::setRootIndex(const QModelIndex &idx)
 {
     d->root = idx;
 }
@@ -83,15 +83,17 @@ QModelIndex AbstractGrid::rootIndex() const
 /*!\returns true if the startpoint is before the endpoint
  * of the constraint \a c.
  */
-bool AbstractGrid::isSatisfiedConstraint( const Constraint& c ) const
+bool AbstractGrid::isSatisfiedConstraint(const Constraint &c) const
 {
     // First check if the data is valid,
     // TODO: review if true is the right choice
-    if ( !c.startIndex().isValid() || !c.endIndex().isValid() ) return true;
+    if (!c.startIndex().isValid() || !c.endIndex().isValid()) {
+        return true;
+    }
 
-    Span ss = mapToChart( c.startIndex() );
-    Span es = mapToChart( c.endIndex() );
-    return ( ss.end() <= es.start() );
+    Span ss = mapToChart(c.startIndex());
+    Span es = mapToChart(c.endIndex());
+    return (ss.end() <= es.start());
 }
 
 /*!\fn virtual Span AbstractGrid::mapToChart( const QModelIndex& idx ) const
@@ -126,5 +128,4 @@ bool AbstractGrid::isSatisfiedConstraint( const Constraint& c ) const
  * \param offset -- the horizontal scroll offset of the view.
  * \param widget -- the widget used by the view -- may be 0.
  */
-
 

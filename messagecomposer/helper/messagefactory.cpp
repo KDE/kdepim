@@ -837,7 +837,7 @@ bool MessageFactory::MDNConfirmMultipleRecipients(const KMime::Message::Ptr &msg
     // MDN sent) ] if there is more than one distinct address in the
     // Disposition-Notification-To header.
     qCDebug(MESSAGECOMPOSER_LOG) << "KEmailAddress::splitAddressList(receiptTo):"
-             << KEmailAddress::splitAddressList(receiptTo).join(QString::fromLatin1("\n"));
+                                 << KEmailAddress::splitAddressList(receiptTo).join(QString::fromLatin1("\n"));
 
     return KEmailAddress::splitAddressList(receiptTo).count() > 1;
 }
@@ -932,7 +932,7 @@ QString MessageFactory::replaceHeadersInString(const KMime::Message::Ptr &msg, c
     Q_ASSERT(rxDate.isValid());
 
     qCDebug(MESSAGECOMPOSER_LOG) << "creating mdn date:" << msg->date()->dateTime().toTime_t() << KMime::DateFormatter::formatDate(
-                 KMime::DateFormatter::Localized, msg->date()->dateTime().toTime_t());
+                                     KMime::DateFormatter::Localized, msg->date()->dateTime().toTime_t());
     QString sDate = KMime::DateFormatter::formatDate(
                         KMime::DateFormatter::Localized, msg->date()->dateTime().toTime_t());
 

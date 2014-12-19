@@ -28,31 +28,30 @@
 /** Proxy model to provide roles for accessing KMime::Message properties from QML. */
 class EventListProxy : public ListProxy
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit EventListProxy(QObject* parent = Q_NULLPTR);
+public:
+    explicit EventListProxy(QObject *parent = Q_NULLPTR);
     enum Role {
-      SummaryRole = Akonadi::EntityTreeModel::UserRole,
-      BeginRole,
-      DurationRole
+        SummaryRole = Akonadi::EntityTreeModel::UserRole,
+        BeginRole,
+        DurationRole
     };
 
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-    void setSourceModel(QAbstractItemModel* sourceModel) Q_DECL_OVERRIDE;
-    bool lessThan(const QModelIndex& left, const QModelIndex& right) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    void setSourceModel(QAbstractItemModel *sourceModel) Q_DECL_OVERRIDE;
+    bool lessThan(const QModelIndex &left, const QModelIndex &right) const Q_DECL_OVERRIDE;
 
-  private Q_SLOTS:
-    void dataChanged( const QModelIndex&, const QModelIndex& );
+private Q_SLOTS:
+    void dataChanged(const QModelIndex &, const QModelIndex &);
 
-  private:
-    KDateTime startDateTimeForItem( const Akonadi::Item &item ) const;
-    KDateTime endDateTimeForItem( const Akonadi::Item &item ) const;
+private:
+    KDateTime startDateTimeForItem(const Akonadi::Item &item) const;
+    KDateTime endDateTimeForItem(const Akonadi::Item &item) const;
 
-    struct DateTimeHashEntry
-    {
-      KDateTime startDateTime;
-      KDateTime endDateTime;
+    struct DateTimeHashEntry {
+        KDateTime startDateTime;
+        KDateTime endDateTime;
     };
 
     mutable QHash<Akonadi::Item::Id, DateTimeHashEntry> mDateTimeHash;

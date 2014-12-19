@@ -3582,13 +3582,13 @@ void ModelPrivate::printStatistics()
 
     qCDebug(MESSAGELIST_LOG) << "Finished filling the view with" << totalMessages << "messages";
     qCDebug(MESSAGELIST_LOG) << "That took" << totalTotalTime << "msecs inside the model and"
-             << completeTime << "in total.";
+                             << completeTime << "in total.";
     qCDebug(MESSAGELIST_LOG) << (totalTotalTime / (float) completeTime) * 100.0f
-             << "percent of the time was spent in the model.";
+                             << "percent of the time was spent in the model.";
     qCDebug(MESSAGELIST_LOG) << "Time for layoutChanged(), in msecs:" << layoutChangeTime
-             << "(" << (layoutChangeTime / (float)totalTotalTime) * 100.0f << "percent )";
+                             << "(" << (layoutChangeTime / (float)totalTotalTime) * 100.0f << "percent )";
     qCDebug(MESSAGELIST_LOG) << "Time to expand tree, in msecs:" << expandingTreeTime
-             << "(" << (expandingTreeTime / (float)totalTotalTime) * 100.0f << "percent )";
+                             << "(" << (expandingTreeTime / (float)totalTotalTime) * 100.0f << "percent )";
     qCDebug(MESSAGELIST_LOG) << "Number of messages per second in the model:" << msgPerSecond;
     qCDebug(MESSAGELIST_LOG) << "Number of messages per second in total:" << msgPerSecondComplete;
     qCDebug(MESSAGELIST_LOG) << "Number of threads:" << totalThreads;
@@ -3596,8 +3596,8 @@ void ModelPrivate::printStatistics()
     qCDebug(MESSAGELIST_LOG) << "Messages per thread:" << totalMessages / (float)totalThreads;
     qCDebug(MESSAGELIST_LOG) << "Threads per group:" << totalThreads / (float)mGroupHeaderItemHash.size();
     qCDebug(MESSAGELIST_LOG) << "Messages with the same subject:"
-             << "Max:" << messagesWithSameSubjectMax
-             << "Avg:" << messagesWithSameSubjectAvg;
+                             << "Max:" << messagesWithSameSubjectMax
+                             << "Avg:" << messagesWithSameSubjectAvg;
     qCDebug(MESSAGELIST_LOG);
     qCDebug(MESSAGELIST_LOG) << "Now follows a breakdown of the jobs.";
     qCDebug(MESSAGELIST_LOG);

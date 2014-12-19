@@ -24,23 +24,23 @@
 
 class EditorLocation : public EditorBase
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit EditorLocation( QWidget *parent = Q_NULLPTR );
+public:
+    explicit EditorLocation(QWidget *parent = Q_NULLPTR);
 
     ~EditorLocation();
 
-    void loadContact( const KContacts::Addressee &contact, const Akonadi::ContactMetaData &metaData );
-    void saveContact( KContacts::Addressee &contact, Akonadi::ContactMetaData &metaData ) const;
+    void loadContact(const KContacts::Addressee &contact, const Akonadi::ContactMetaData &metaData);
+    void saveContact(KContacts::Addressee &contact, Akonadi::ContactMetaData &metaData) const;
 
-  private:
+private:
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void addAddress() )
-    Q_PRIVATE_SLOT( d, void removeAddress() )
-    Q_PRIVATE_SLOT( d, void addressCountChanged() )
+    Q_PRIVATE_SLOT(d, void addAddress())
+    Q_PRIVATE_SLOT(d, void removeAddress())
+    Q_PRIVATE_SLOT(d, void addressCountChanged())
 };
 
 #endif

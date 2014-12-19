@@ -20,4 +20,3 @@
 #include "archivemailagent_debug.h"
 Q_LOGGING_CATEGORY(ARCHIVEMAILAGENT_LOG, "log_archivemailagent")
 
-

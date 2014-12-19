@@ -22,59 +22,62 @@
 #include <AkonadiCore/entitytreemodel.h>
 #include <KCalCore/Todo>
 
-static bool taskMatchesFilter( const KCalCore::Todo::Ptr &task, const QString &filterString );
+static bool taskMatchesFilter(const KCalCore::Todo::Ptr &task, const QString &filterString);
 
 using namespace Akonadi;
 
 class TasksFilterProxyModel::Private
 {
-  public:
+public:
     QString mFilter;
 };
 
-TasksFilterProxyModel::TasksFilterProxyModel( QObject *parent )
-  : QSortFilterProxyModel( parent ), d( new Private )
+TasksFilterProxyModel::TasksFilterProxyModel(QObject *parent)
+    : QSortFilterProxyModel(parent), d(new Private)
 {
-  setSortLocaleAware( true );
-  setDynamicSortFilter( true );
+    setSortLocaleAware(true);
+    setDynamicSortFilter(true);
 }
 
 TasksFilterProxyModel::~TasksFilterProxyModel()
 {
-  delete d;
+    delete d;
 }
 
-void TasksFilterProxyModel::setFilterString( const QString &filter )
+void TasksFilterProxyModel::setFilterString(const QString &filter)
 {
-  d->mFilter = filter;
-  invalidateFilter();
+    d->mFilter = filter;
+    invalidateFilter();
 }
 
-bool TasksFilterProxyModel::filterAcceptsRow( int row, const QModelIndex &parent ) const
+bool TasksFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &parent) const
 {
-  if ( d->mFilter.isEmpty() )
+    if (d->mFilter.isEmpty()) {
+        return true;
+    }
+
+    const QModelIndex index = sourceModel()->index(row, 0, parent);
+
+    const Akonadi::Item item = index.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
+
+    if (item.hasPayload<KCalCore::Todo::Ptr>()) {
+        const KCalCore::Todo::Ptr task = item.payload<KCalCore::Todo::Ptr>();
+        return taskMatchesFilter(task, d->mFilter);
+    }
+
     return true;
-
-  const QModelIndex index = sourceModel()->index( row, 0, parent );
-
-  const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-
-  if ( item.hasPayload<KCalCore::Todo::Ptr>() ) {
-    const KCalCore::Todo::Ptr task = item.payload<KCalCore::Todo::Ptr>();
-    return taskMatchesFilter( task, d->mFilter );
-  }
-
-  return true;
 }
 
-static bool taskMatchesFilter( const KCalCore::Todo::Ptr &task, const QString &filterString )
+static bool taskMatchesFilter(const KCalCore::Todo::Ptr &task, const QString &filterString)
 {
-  if ( task->summary().contains( filterString, Qt::CaseInsensitive ) )
-    return true;
+    if (task->summary().contains(filterString, Qt::CaseInsensitive)) {
+        return true;
+    }
 
-  if ( task->description().contains( filterString, Qt::CaseInsensitive ) )
-    return true;
+    if (task->description().contains(filterString, Qt::CaseInsensitive)) {
+        return true;
+    }
 
-  return false;
+    return false;
 }
 

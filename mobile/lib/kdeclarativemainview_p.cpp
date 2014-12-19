@@ -31,127 +31,127 @@
 #include <QtDBus/QDBusInterface>
 #include <qplatformdefs.h>
 
-KDeclarativeMainViewPrivate::KDeclarativeMainViewPrivate( KDeclarativeMainView *qq )
-  : q( qq )
-  , mChangeRecorder( 0 )
-  , mCollectionFilter( 0 )
-  , mItemFilterModel( 0 )
-  , mBnf( 0 )
-  , mAgentStatusMonitor( 0 )
-  , mGuiStateManager( 0 )
-  , mStateMachine( 0 )
-  , mFavoritesEditor( 0 )
+KDeclarativeMainViewPrivate::KDeclarativeMainViewPrivate(KDeclarativeMainView *qq)
+    : q(qq)
+    , mChangeRecorder(0)
+    , mCollectionFilter(0)
+    , mItemFilterModel(0)
+    , mBnf(0)
+    , mAgentStatusMonitor(0)
+    , mGuiStateManager(0)
+    , mStateMachine(0)
+    , mFavoritesEditor(0)
 { }
 
 void KDeclarativeMainViewPrivate::initializeStateSaver()
 {
-  restoreState();
-  connect( mEtm, SIGNAL(modelAboutToBeReset()), this, SLOT(saveState()) );
-  connect( mEtm, SIGNAL(modelReset()), this, SLOT(restoreState()) );
+    restoreState();
+    connect(mEtm, SIGNAL(modelAboutToBeReset()), this, SLOT(saveState()));
+    connect(mEtm, SIGNAL(modelReset()), this, SLOT(restoreState()));
 }
 
 void KDeclarativeMainViewPrivate::restoreState()
 {
-  Akonadi::ETMViewStateSaver *saver = new Akonadi::ETMViewStateSaver;
-  saver->setSelectionModel( mBnf->selectionModel() );
-  KConfigGroup cfg( KSharedConfig::openConfig(), "SelectionState" );
-  saver->restoreState( cfg );
+    Akonadi::ETMViewStateSaver *saver = new Akonadi::ETMViewStateSaver;
+    saver->setSelectionModel(mBnf->selectionModel());
+    KConfigGroup cfg(KSharedConfig::openConfig(), "SelectionState");
+    saver->restoreState(cfg);
 }
 
 void KDeclarativeMainViewPrivate::saveState()
 {
-  Akonadi::ETMViewStateSaver saver;
-  saver.setSelectionModel( mBnf->selectionModel() );
+    Akonadi::ETMViewStateSaver saver;
+    saver.setSelectionModel(mBnf->selectionModel());
 
-  KConfigGroup cfg( KSharedConfig::openConfig(), "SelectionState" );
-  saver.saveState( cfg );
-  cfg.sync();
+    KConfigGroup cfg(KSharedConfig::openConfig(), "SelectionState");
+    saver.saveState(cfg);
+    cfg.sync();
 }
 
-void KDeclarativeMainViewPrivate::filterLineEditChanged( const QString &text )
+void KDeclarativeMainViewPrivate::filterLineEditChanged(const QString &text)
 {
-  if ( !text.isEmpty() ) {
-    mFilterLineEdit->setFixedHeight( 40 );
-    mFilterLineEdit->show();
-    mFilterLineEdit->setFocus();
-  } else if ( text.isEmpty() ) {
-    mFilterLineEdit->setFixedHeight( 0 );
-    mFilterLineEdit->hide();
-  }
+    if (!text.isEmpty()) {
+        mFilterLineEdit->setFixedHeight(40);
+        mFilterLineEdit->show();
+        mFilterLineEdit->setFocus();
+    } else if (text.isEmpty()) {
+        mFilterLineEdit->setFixedHeight(0);
+        mFilterLineEdit->hide();
+    }
 }
 
-void KDeclarativeMainViewPrivate::bulkActionFilterLineEditChanged( const QString &text )
+void KDeclarativeMainViewPrivate::bulkActionFilterLineEditChanged(const QString &text)
 {
-  if ( !text.isEmpty() ) {
-    mBulkActionFilterLineEdit->setFixedHeight( 40 );
-    mBulkActionFilterLineEdit->show();
-    mBulkActionFilterLineEdit->setFocus();
-  } else if ( text.isEmpty() ) {
-    mBulkActionFilterLineEdit->setFixedHeight( 0 );
-    mBulkActionFilterLineEdit->hide();
-  }
+    if (!text.isEmpty()) {
+        mBulkActionFilterLineEdit->setFixedHeight(40);
+        mBulkActionFilterLineEdit->show();
+        mBulkActionFilterLineEdit->setFocus();
+    } else if (text.isEmpty()) {
+        mBulkActionFilterLineEdit->setFixedHeight(0);
+        mBulkActionFilterLineEdit->hide();
+    }
 }
 
-void KDeclarativeMainViewPrivate::searchStarted( const Akonadi::Collection &searchCollection )
+void KDeclarativeMainViewPrivate::searchStarted(const Akonadi::Collection &searchCollection)
 {
-  q->persistCurrentSelection( QLatin1String("SelectionBeforeSearchStarted") );
+    q->persistCurrentSelection(QLatin1String("SelectionBeforeSearchStarted"));
 
-  const QStringList selection = QStringList() << QLatin1String( "c1" ) // the 'Search' collection
-                                              << QString::fromLatin1( "c%1" ).arg( searchCollection.id() );
-  Akonadi::ETMViewStateSaver *restorer = new Akonadi::ETMViewStateSaver;
+    const QStringList selection = QStringList() << QLatin1String("c1")   // the 'Search' collection
+                                  << QString::fromLatin1("c%1").arg(searchCollection.id());
+    Akonadi::ETMViewStateSaver *restorer = new Akonadi::ETMViewStateSaver;
 
-  mGuiStateManager->pushState( GuiStateManager::SearchResultScreenState );
+    mGuiStateManager->pushState(GuiStateManager::SearchResultScreenState);
 
-  QItemSelectionModel *selectionModel = mBnf->selectionModel();
-  selectionModel->clearSelection();
+    QItemSelectionModel *selectionModel = mBnf->selectionModel();
+    selectionModel->clearSelection();
 
-  restorer->setSelectionModel( selectionModel );
-  restorer->restoreSelection( selection );
+    restorer->setSelectionModel(selectionModel);
+    restorer->restoreSelection(selection);
 }
 
 void KDeclarativeMainViewPrivate::searchStopped()
 {
-  mGuiStateManager->popState();
+    mGuiStateManager->popState();
 
-  q->restorePersistedSelection( QLatin1String("SelectionBeforeSearchStarted") );
-  q->clearPersistedSelection( QLatin1String("SelectionBeforeSearchStarted") );
+    q->restorePersistedSelection(QLatin1String("SelectionBeforeSearchStarted"));
+    q->clearPersistedSelection(QLatin1String("SelectionBeforeSearchStarted"));
 }
 
-void KDeclarativeMainViewPrivate::guiStateChanged( int oldState, int newState )
+void KDeclarativeMainViewPrivate::guiStateChanged(int oldState, int newState)
 {
-  /**
-   * If we come back from the BulkActionScreen and we had a filter string
-   * entered before we entered the BulkActionScreen, we'll refresh this
-   * filter string now.
-   */
-  if ( oldState == GuiStateManager::BulkActionScreenState ) {
-    if ( newState == GuiStateManager::AccountScreenState ||
-         newState == GuiStateManager::SingleFolderScreenState ||
-         newState == GuiStateManager::MultipleFolderScreenState ) {
+    /**
+     * If we come back from the BulkActionScreen and we had a filter string
+     * entered before we entered the BulkActionScreen, we'll refresh this
+     * filter string now.
+     */
+    if (oldState == GuiStateManager::BulkActionScreenState) {
+        if (newState == GuiStateManager::AccountScreenState ||
+                newState == GuiStateManager::SingleFolderScreenState ||
+                newState == GuiStateManager::MultipleFolderScreenState) {
 
-      KLineEdit *lineEdit = mFilterLineEdit.data();
-      if ( lineEdit && mItemFilterModel ) {
-        const QString text = lineEdit->text();
-        if ( text.isEmpty() ) {
-          // just trigger a refresh of the item view
-          QMetaObject::invokeMethod( mItemFilterModel, "setFilterString", Qt::DirectConnection, Q_ARG( QString, text ) );
-        } else {
-          // trigger a refresh of the line edit and item view
-          lineEdit->clear();
-          lineEdit->setText( text );
+            KLineEdit *lineEdit = mFilterLineEdit.data();
+            if (lineEdit && mItemFilterModel) {
+                const QString text = lineEdit->text();
+                if (text.isEmpty()) {
+                    // just trigger a refresh of the item view
+                    QMetaObject::invokeMethod(mItemFilterModel, "setFilterString", Qt::DirectConnection, Q_ARG(QString, text));
+                } else {
+                    // trigger a refresh of the line edit and item view
+                    lineEdit->clear();
+                    lineEdit->setText(text);
+                }
+            }
         }
-      }
     }
-  }
 }
 
-void KDeclarativeMainViewPrivate::openHtml( const QString &path )
+void KDeclarativeMainViewPrivate::openHtml(const QString &path)
 {
-  q->openAttachment( path, QLatin1String( "text/html" ) );
+    q->openAttachment(path, QLatin1String("text/html"));
 }
 
-DeclarativeBulkActionFilterLineEdit::DeclarativeBulkActionFilterLineEdit( QGraphicsItem *parent )
-  : DeclarativeWidgetBase<KLineEdit, KDeclarativeMainView, &KDeclarativeMainView::setBulkActionFilterLineEdit>( parent )
+DeclarativeBulkActionFilterLineEdit::DeclarativeBulkActionFilterLineEdit(QGraphicsItem *parent)
+    : DeclarativeWidgetBase<KLineEdit, KDeclarativeMainView, &KDeclarativeMainView::setBulkActionFilterLineEdit>(parent)
 {
 }
 
@@ -161,14 +161,15 @@ DeclarativeBulkActionFilterLineEdit::~DeclarativeBulkActionFilterLineEdit()
 
 void DeclarativeBulkActionFilterLineEdit::clear()
 {
-  widget()->clear();
+    widget()->clear();
 }
 
 void KDeclarativeMainViewPrivate::configureAgentInstance()
 {
-  if (mAgentInstanceSelectionModel->selectedRows().isEmpty())
-    return;
-  Akonadi::AgentInstance instance = mAgentInstanceSelectionModel->selectedRows().first().data( Akonadi::AgentInstanceModel::InstanceRole ).value<Akonadi::AgentInstance>();
+    if (mAgentInstanceSelectionModel->selectedRows().isEmpty()) {
+        return;
+    }
+    Akonadi::AgentInstance instance = mAgentInstanceSelectionModel->selectedRows().first().data(Akonadi::AgentInstanceModel::InstanceRole).value<Akonadi::AgentInstance>();
 
-  instance.configure( q );
+    instance.configure(q);
 }

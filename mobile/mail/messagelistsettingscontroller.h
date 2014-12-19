@@ -32,28 +32,28 @@ class QAction;
 
 class MessageListSettingsController : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  Q_PROPERTY( QString groupingRole READ groupingRole NOTIFY settingsChanged )
-  Q_PROPERTY( QAction* editAction READ editAction )
+    Q_PROPERTY(QString groupingRole READ groupingRole NOTIFY settingsChanged)
+    Q_PROPERTY(QAction *editAction READ editAction)
 
-  public:
-    explicit MessageListSettingsController( QObject *parent = Q_NULLPTR );
+public:
+    explicit MessageListSettingsController(QObject *parent = Q_NULLPTR);
 
     QString groupingRole() const;
 
-    QAction* editAction() const;
+    QAction *editAction() const;
 
-  public Q_SLOTS:
-    void setCollection( const Akonadi::Collection &collection );
+public Q_SLOTS:
+    void setCollection(const Akonadi::Collection &collection);
 
-  Q_SIGNALS:
-    void settingsChanged( const MessageListSettings &settings );
+Q_SIGNALS:
+    void settingsChanged(const MessageListSettings &settings);
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void editSettings();
 
-  private:
+private:
     Akonadi::Collection::Id mCollectionId;
     MessageListSettings mSettings;
     QAction *mEditAction;

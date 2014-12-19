@@ -23,5 +23,5 @@
 #include <QLoggingCategory>
 Q_DECLARE_LOGGING_CATEGORY(ARCHIVEMAILAGENT_LOG)
 
-#endif 
+#endif
 

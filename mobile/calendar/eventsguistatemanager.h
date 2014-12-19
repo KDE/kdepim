@@ -24,23 +24,23 @@
 
 class EventsGuiStateManager : public GuiStateManager
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  Q_PROPERTY( bool inViewDayState READ inViewDayState NOTIFY guiStateChanged )
-  Q_PROPERTY( bool inViewWeekState READ inViewWeekState NOTIFY guiStateChanged )
-  Q_PROPERTY( bool inViewMonthState READ inViewMonthState NOTIFY guiStateChanged )
-  Q_PROPERTY( bool inViewEventListState READ inViewEventListState NOTIFY guiStateChanged )
-  Q_PROPERTY( bool inViewTimelineState READ inViewTimelineState NOTIFY guiStateChanged )
+    Q_PROPERTY(bool inViewDayState READ inViewDayState NOTIFY guiStateChanged)
+    Q_PROPERTY(bool inViewWeekState READ inViewWeekState NOTIFY guiStateChanged)
+    Q_PROPERTY(bool inViewMonthState READ inViewMonthState NOTIFY guiStateChanged)
+    Q_PROPERTY(bool inViewEventListState READ inViewEventListState NOTIFY guiStateChanged)
+    Q_PROPERTY(bool inViewTimelineState READ inViewTimelineState NOTIFY guiStateChanged)
 
-  Q_ENUMS( GuiState )
+    Q_ENUMS(GuiState)
 
-  public:
+public:
     enum GuiState {
-      ViewDayState = GuiStateManager::UserState,
-      ViewWeekState,
-      ViewMonthState,
-      ViewEventListState,
-      ViewTimelineState
+        ViewDayState = GuiStateManager::UserState,
+        ViewWeekState,
+        ViewMonthState,
+        ViewEventListState,
+        ViewTimelineState
     };
 
     /**
@@ -68,10 +68,10 @@ class EventsGuiStateManager : public GuiStateManager
      */
     bool inViewTimelineState() const;
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void guiStateChanged();
 
-  protected:
+protected:
     virtual void emitChangedSignal();
 };
 

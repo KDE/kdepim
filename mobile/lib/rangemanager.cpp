@@ -13,73 +13,75 @@ RangeManager::~RangeManager()
 
 int RangeManager::count() const
 {
-  return mRangeSizes.count();
+    return mRangeSizes.count();
 }
 
 void RangeManager::clear()
 {
-  mRangeSizes.clear();
+    mRangeSizes.clear();
 }
 
-void RangeManager::insertRange( int range, int size )
+void RangeManager::insertRange(int range, int size)
 {
-  mRangeSizes.insert( range, size );
+    mRangeSizes.insert(range, size);
 }
 
-void RangeManager::removeRange( int range )
+void RangeManager::removeRange(int range)
 {
-  mRangeSizes.remove( range );
+    mRangeSizes.remove(range);
 }
 
-void RangeManager::increaseRange( int range, int elements )
+void RangeManager::increaseRange(int range, int elements)
 {
-  mRangeSizes[ range ] += elements;
+    mRangeSizes[ range ] += elements;
 }
 
-void RangeManager::decreaseRange( int range, int elements )
+void RangeManager::decreaseRange(int range, int elements)
 {
-  mRangeSizes[ range ] -= elements;
+    mRangeSizes[ range ] -= elements;
 }
 
-int RangeManager::rangeStart( int range ) const
+int RangeManager::rangeStart(int range) const
 {
-  int start = 0;
+    int start = 0;
 
-  for ( int i = 0; i < range; ++i )
-    start += mRangeSizes.at( i );
+    for (int i = 0; i < range; ++i) {
+        start += mRangeSizes.at(i);
+    }
 
-  return start;
+    return start;
 }
 
-int RangeManager::rangeSize( int range ) const
+int RangeManager::rangeSize(int range) const
 {
-  return mRangeSizes.at( range );
+    return mRangeSizes.at(range);
 }
 
-int RangeManager::rangeForPosition( int position ) const
+int RangeManager::rangeForPosition(int position) const
 {
-  int start = 0;
-  for ( int range = 0; range < mRangeSizes.size(); ++range ) {
-    start += mRangeSizes.at( range );
-    if ( start > position )
-      return range;
-  }
+    int start = 0;
+    for (int range = 0; range < mRangeSizes.size(); ++range) {
+        start += mRangeSizes.at(range);
+        if (start > position) {
+            return range;
+        }
+    }
 
-  return -1;
+    return -1;
 }
 
 void RangeManager::dump() const
 {
-  QStringList output;
-  int counter = 0;
-  for ( int range = 0; range < mRangeSizes.size(); ++range ) {
-    QStringList foo;
-    for ( int i = 0; i < mRangeSizes.at( range ); ++i ) {
-      foo += QString::number( counter );
-      counter++;
+    QStringList output;
+    int counter = 0;
+    for (int range = 0; range < mRangeSizes.size(); ++range) {
+        QStringList foo;
+        for (int i = 0; i < mRangeSizes.at(range); ++i) {
+            foo += QString::number(counter);
+            counter++;
+        }
+        output += foo.join(QLatin1String(" "));
     }
-    output += foo.join(QLatin1String(" "));
-  }
 
-  qDebug("[%s]", qPrintable( output.join(QLatin1String(" | ")) ) );
+    qDebug("[%s]", qPrintable(output.join(QLatin1String(" | "))));
 }

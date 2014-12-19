@@ -27,10 +27,10 @@
 #include <QDebug>
 #include <QItemSelectionModel>
 
-ExportHandlerBase::ExportHandlerBase( QObject *parent )
-  : QObject( parent ),
-    mSelectionModel( 0 ),
-    mItemSelectionModel( 0 )
+ExportHandlerBase::ExportHandlerBase(QObject *parent)
+    : QObject(parent),
+      mSelectionModel(0),
+      mItemSelectionModel(0)
 {
 }
 
@@ -38,79 +38,81 @@ ExportHandlerBase::~ExportHandlerBase()
 {
 }
 
-void ExportHandlerBase::setSelectionModel( QItemSelectionModel *model )
+void ExportHandlerBase::setSelectionModel(QItemSelectionModel *model)
 {
-  mSelectionModel = model;
+    mSelectionModel = model;
 }
 
-void ExportHandlerBase::setItemSelectionModel( QItemSelectionModel *model )
+void ExportHandlerBase::setItemSelectionModel(QItemSelectionModel *model)
 {
-  mItemSelectionModel = model;
+    mItemSelectionModel = model;
 }
 
 void ExportHandlerBase::exec()
 {
-  Akonadi::Collection::List selectedCollections;
+    Akonadi::Collection::List selectedCollections;
 
-  if ( mSelectionModel ) {
-    const QModelIndexList indexes = mSelectionModel->selectedRows();
-    foreach ( const QModelIndex &index, indexes ) {
-      const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-      if ( collection.isValid() )
-        selectedCollections << collection;
+    if (mSelectionModel) {
+        const QModelIndexList indexes = mSelectionModel->selectedRows();
+        foreach (const QModelIndex &index, indexes) {
+            const Akonadi::Collection collection = index.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
+            if (collection.isValid()) {
+                selectedCollections << collection;
+            }
+        }
     }
-  }
 
-  bool exportAllItems = false;
-  if ( mSelectionModel && !selectedCollections.isEmpty() ) {
-    switch ( KMessageBox::questionYesNo( 0, dialogText(), QString(),
-                                         KGuiItem( dialogAllText() ),
-                                         KGuiItem( dialogLocalOnlyText() ) ) ) {
-      case KMessageBox::Yes:
-        exportAllItems = true;
-        break;
-      case KMessageBox::No: // fall through
-      default:
-        exportAllItems = false;
+    bool exportAllItems = false;
+    if (mSelectionModel && !selectedCollections.isEmpty()) {
+        switch (KMessageBox::questionYesNo(0, dialogText(), QString(),
+                                           KGuiItem(dialogAllText()),
+                                           KGuiItem(dialogLocalOnlyText()))) {
+        case KMessageBox::Yes:
+            exportAllItems = true;
+            break;
+        case KMessageBox::No: // fall through
+        default:
+            exportAllItems = false;
+        }
+    } else {
+        if (!mItemSelectionModel) {
+            exportAllItems = true;
+        }
     }
-  } else {
-    if ( !mItemSelectionModel ) {
-      exportAllItems = true;
-    }
-  }
 
-  Akonadi::Item::List items;
-  if ( exportAllItems ) {
-    Akonadi::RecursiveItemFetchJob *job = new Akonadi::RecursiveItemFetchJob( Akonadi::Collection::root(), mimeTypes() );
-    job->fetchScope().fetchFullPayload();
-
-    job->exec();
-
-    items << job->items();
-  } else {
-    if ( !mItemSelectionModel ) {
-      foreach ( const Akonadi::Collection &collection, selectedCollections ) {
-        Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( collection );
+    Akonadi::Item::List items;
+    if (exportAllItems) {
+        Akonadi::RecursiveItemFetchJob *job = new Akonadi::RecursiveItemFetchJob(Akonadi::Collection::root(), mimeTypes());
         job->fetchScope().fetchFullPayload();
 
-        if ( job->exec() )
-          items << job->items();
-      }
+        job->exec();
+
+        items << job->items();
     } else {
-      // use the selected item
-      foreach ( const QModelIndex &index, mItemSelectionModel->selectedRows() ) {
-        const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-        if ( item.isValid() ) {
-          items << item;
+        if (!mItemSelectionModel) {
+            foreach (const Akonadi::Collection &collection, selectedCollections) {
+                Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(collection);
+                job->fetchScope().fetchFullPayload();
+
+                if (job->exec()) {
+                    items << job->items();
+                }
+            }
         } else {
-          qDebug() << "Invalid item encountered during export!";
+            // use the selected item
+            foreach (const QModelIndex &index, mItemSelectionModel->selectedRows()) {
+                const Akonadi::Item item = index.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
+                if (item.isValid()) {
+                    items << item;
+                } else {
+                    qDebug() << "Invalid item encountered during export!";
+                }
+            }
         }
-      }
     }
-  }
 
-  exportItems( items );
+    exportItems(items);
 
-  deleteLater();
+    deleteLater();
 }
 

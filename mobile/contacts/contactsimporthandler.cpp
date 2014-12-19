@@ -28,85 +28,86 @@
 
 QString ContactsImportHandler::fileDialogNameFilter() const
 {
-  return QLatin1String( "*.vcf|vCards" );
+    return QLatin1String("*.vcf|vCards");
 }
 
 QString ContactsImportHandler::fileDialogTitle() const
 {
-  return i18n( "Select vCard to Import" );
+    return i18n("Select vCard to Import");
 }
 
 QString ContactsImportHandler::collectionDialogText() const
 {
-  return i18n( "Select the address book the imported contact(s) shall be saved in:" );
+    return i18n("Select the address book the imported contact(s) shall be saved in:");
 }
 
 QString ContactsImportHandler::collectionDialogTitle() const
 {
-  return i18n( "Select Address Book" );
+    return i18n("Select Address Book");
 }
 
-QString ContactsImportHandler::importDialogText( int count, const QString &collectionName ) const
+QString ContactsImportHandler::importDialogText(int count, const QString &collectionName) const
 {
-  return i18np( "Importing one contact to %2", "Importing %1 contacts to %2", count, collectionName );
+    return i18np("Importing one contact to %2", "Importing %1 contacts to %2", count, collectionName);
 }
 
 QString ContactsImportHandler::importDialogTitle() const
 {
-  return i18n( "Import Contacts" );
+    return i18n("Import Contacts");
 }
 
 QStringList ContactsImportHandler::mimeTypes() const
 {
-  return QStringList( KContacts::Addressee::mimeType() );
+    return QStringList(KContacts::Addressee::mimeType());
 }
 
-Akonadi::Item::List ContactsImportHandler::createItems( const QStringList &fileNames, bool *ok )
+Akonadi::Item::List ContactsImportHandler::createItems(const QStringList &fileNames, bool *ok)
 {
-  *ok = true;
+    *ok = true;
 
-  Akonadi::Item::List items;
+    Akonadi::Item::List items;
 
-  KContacts::VCardConverter converter;
-  KContacts::Addressee::List contacts;
+    KContacts::VCardConverter converter;
+    KContacts::Addressee::List contacts;
 
-  foreach ( const QString &fileName, fileNames ) {
-    QFile file( fileName );
+    foreach (const QString &fileName, fileNames) {
+        QFile file(fileName);
 
-    if ( file.open( QIODevice::ReadOnly ) ) {
-      const QByteArray data = file.readAll();
-      file.close();
-      if ( data.size() > 0 ) {
-        contacts += converter.parseVCards( data );
-      }
-    } else {
-      const QString caption( i18n( "vCard Import Failed" ) );
-      const QString msg = xi18nc( "@info",
-                                 "<para>When trying to read the vCard, there was an error opening the file <filename>%1</filename>:</para>"
-                                 "<para>%2</para>",
-                                 fileName,
-                                 i18nc( "QFile", file.errorString().toLatin1() ) );
-      KMessageBox::error( 0, msg, caption );
-      *ok = false;
+        if (file.open(QIODevice::ReadOnly)) {
+            const QByteArray data = file.readAll();
+            file.close();
+            if (data.size() > 0) {
+                contacts += converter.parseVCards(data);
+            }
+        } else {
+            const QString caption(i18n("vCard Import Failed"));
+            const QString msg = xi18nc("@info",
+                                       "<para>When trying to read the vCard, there was an error opening the file <filename>%1</filename>:</para>"
+                                       "<para>%2</para>",
+                                       fileName,
+                                       i18nc("QFile", file.errorString().toLatin1()));
+            KMessageBox::error(0, msg, caption);
+            *ok = false;
+        }
     }
-  }
 
-  if ( contacts.isEmpty() ) {
-    if ( !(*ok) && fileNames.count() > 1 )
-      KMessageBox::information( 0, i18n( "No contacts were imported, due to errors with the vCards." ) );
-    else if ( *ok )
-      KMessageBox::information( 0, i18n( "The vCard does not contain any contacts." ) );
+    if (contacts.isEmpty()) {
+        if (!(*ok) && fileNames.count() > 1) {
+            KMessageBox::information(0, i18n("No contacts were imported, due to errors with the vCards."));
+        } else if (*ok) {
+            KMessageBox::information(0, i18n("The vCard does not contain any contacts."));
+        }
 
-    return items; // nothing to import
-  }
+        return items; // nothing to import
+    }
 
-  foreach ( const KContacts::Addressee &contact, contacts ) {
-    Akonadi::Item item;
-    item.setPayload<KContacts::Addressee>( contact );
-    item.setMimeType( KContacts::Addressee::mimeType() );
+    foreach (const KContacts::Addressee &contact, contacts) {
+        Akonadi::Item item;
+        item.setPayload<KContacts::Addressee>(contact);
+        item.setMimeType(KContacts::Addressee::mimeType());
 
-    items << item;
-  }
+        items << item;
+    }
 
-  return items;
+    return items;
 }

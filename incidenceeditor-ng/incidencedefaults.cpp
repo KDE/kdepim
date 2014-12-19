@@ -414,7 +414,7 @@ void IncidenceDefaults::setDefaults(const KCalCore::Incidence::Ptr &incidence) c
         break;
     default:
         qCDebug(INCIDENCEEDITOR_LOG) << "Unsupported incidence type, keeping current values. Type: "
-                 << static_cast<int>(incidence->type());
+                                     << static_cast<int>(incidence->type());
     }
 }
 

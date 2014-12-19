@@ -24,16 +24,16 @@
 
 class NotesImportHandler : public ImportHandlerBase
 {
-  protected:
+protected:
     virtual QString fileDialogNameFilter() const;
     virtual QString fileDialogTitle() const;
     virtual QString collectionDialogText() const;
     virtual QString collectionDialogTitle() const;
-    virtual QString importDialogText( int count, const QString &collectionName ) const;
+    virtual QString importDialogText(int count, const QString &collectionName) const;
     virtual QString importDialogTitle() const;
 
     virtual QStringList mimeTypes() const;
-    virtual Akonadi::Item::List createItems( const QStringList &fileNames, bool *ok );
+    virtual Akonadi::Item::List createItems(const QStringList &fileNames, bool *ok);
 };
 
 #endif

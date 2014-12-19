@@ -28,52 +28,57 @@
 
 using namespace Akonadi;
 
-Q_DECLARE_METATYPE( AgentStatusMonitor::AgentStatus )
+Q_DECLARE_METATYPE(AgentStatusMonitor::AgentStatus)
 
-AgentStatusMonitor::AgentStatusMonitor( QObject* parent )
-  : QObject( parent ), m_status( Offline )
+AgentStatusMonitor::AgentStatusMonitor(QObject *parent)
+    : QObject(parent), m_status(Offline)
 {
-  qRegisterMetaType<AgentStatusMonitor::AgentStatus>();
-  connect( AgentManager::self(), SIGNAL(instanceAdded(Akonadi::AgentInstance)), SLOT(updateStatus()) );
-  connect( AgentManager::self(), SIGNAL(instanceRemoved(Akonadi::AgentInstance)), SLOT(updateStatus()) );
-  connect( AgentManager::self(), SIGNAL(instanceOnline(Akonadi::AgentInstance,bool)), SLOT(updateStatus()) );
-  connect( AgentManager::self(), SIGNAL(instanceStatusChanged(Akonadi::AgentInstance)), SLOT(updateStatus()) );
-  connect( Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)), SLOT(updateStatus()) );
-  updateStatus();
+    qRegisterMetaType<AgentStatusMonitor::AgentStatus>();
+    connect(AgentManager::self(), SIGNAL(instanceAdded(Akonadi::AgentInstance)), SLOT(updateStatus()));
+    connect(AgentManager::self(), SIGNAL(instanceRemoved(Akonadi::AgentInstance)), SLOT(updateStatus()));
+    connect(AgentManager::self(), SIGNAL(instanceOnline(Akonadi::AgentInstance,bool)), SLOT(updateStatus()));
+    connect(AgentManager::self(), SIGNAL(instanceStatusChanged(Akonadi::AgentInstance)), SLOT(updateStatus()));
+    connect(Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)), SLOT(updateStatus()));
+    updateStatus();
 }
 
 AgentStatusMonitor::AgentStatus AgentStatusMonitor::status() const
 {
-  return m_status;
+    return m_status;
 }
 
 void AgentStatusMonitor::updateStatus()
 {
-  const AgentStatus oldStatus = m_status;
+    const AgentStatus oldStatus = m_status;
 
-  m_status = Offline;
-  foreach ( const AgentInstance &instance, AgentManager::self()->instances() ) {
-    if ( instance.type().identifier() == QLatin1String( "akonadi_maildispatcher_agent" ) ) {
-      if ( instance.status() == AgentInstance::Running )
-        m_status |= Sending;
-    } else if ( instance.type().capabilities().contains( QLatin1String( "Resource" ) ) && m_mimeTypeChecker.containsWantedMimeType( instance.type().mimeTypes() ) ) {
-      if ( instance.status() == AgentInstance::Running  )
-        m_status |= Receiving;
-      if ( instance.isOnline() )
-        m_status |= Online;
+    m_status = Offline;
+    foreach (const AgentInstance &instance, AgentManager::self()->instances()) {
+        if (instance.type().identifier() == QLatin1String("akonadi_maildispatcher_agent")) {
+            if (instance.status() == AgentInstance::Running) {
+                m_status |= Sending;
+            }
+        } else if (instance.type().capabilities().contains(QLatin1String("Resource")) && m_mimeTypeChecker.containsWantedMimeType(instance.type().mimeTypes())) {
+            if (instance.status() == AgentInstance::Running) {
+                m_status |= Receiving;
+            }
+            if (instance.isOnline()) {
+                m_status |= Online;
+            }
+        }
     }
-  }
 
-  if ( Solid::Networking::status() != Solid::Networking::Connected && Solid::Networking::status() != Solid::Networking::Unknown )
-    m_status &= ~Online;
+    if (Solid::Networking::status() != Solid::Networking::Connected && Solid::Networking::status() != Solid::Networking::Unknown) {
+        m_status &= ~Online;
+    }
 
-  if ( m_status != oldStatus )
-    emit statusChanged();
+    if (m_status != oldStatus) {
+        emit statusChanged();
+    }
 }
 
-void AgentStatusMonitor::setMimeTypeFilter( const QStringList &mimeTypes )
+void AgentStatusMonitor::setMimeTypeFilter(const QStringList &mimeTypes)
 {
-  m_mimeTypeChecker.setWantedMimeTypes( mimeTypes );
-  updateStatus();
+    m_mimeTypeChecker.setWantedMimeTypes(mimeTypes);
+    updateStatus();
 }
 

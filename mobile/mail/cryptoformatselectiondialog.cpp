@@ -28,38 +28,39 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
-CryptoFormatSelectionDialog::CryptoFormatSelectionDialog( QWidget *parent )
-  : QDialog( parent )
+CryptoFormatSelectionDialog::CryptoFormatSelectionDialog(QWidget *parent)
+    : QDialog(parent)
 {
-  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
-  QVBoxLayout *mainLayout = new QVBoxLayout;
-  setLayout(mainLayout);
-  QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
-  okButton->setDefault(true);
-  okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-  connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
-  connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 
-  mCryptoFormatCombo = new KComboBox;
-  mainLayout->addWidget(mCryptoFormatCombo);
-  mainLayout->addWidget(buttonBox);
+    mCryptoFormatCombo = new KComboBox;
+    mainLayout->addWidget(mCryptoFormatCombo);
+    mainLayout->addWidget(buttonBox);
 
-  for ( int i = 0; i < numCryptoMessageFormats; ++i ) {
-    if ( cryptoMessageFormats[ i ] != Kleo::InlineOpenPGPFormat ) // deprecated
-      mCryptoFormatCombo->addItem( Kleo::cryptoMessageFormatToLabel( cryptoMessageFormats[ i ] ), static_cast<int>( cryptoMessageFormats[ i ] ) );
-  }
+    for (int i = 0; i < numCryptoMessageFormats; ++i) {
+        if (cryptoMessageFormats[ i ] != Kleo::InlineOpenPGPFormat) { // deprecated
+            mCryptoFormatCombo->addItem(Kleo::cryptoMessageFormatToLabel(cryptoMessageFormats[ i ]), static_cast<int>(cryptoMessageFormats[ i ]));
+        }
+    }
 }
 
 CryptoFormatSelectionDialog::~CryptoFormatSelectionDialog()
 {
 }
 
-void CryptoFormatSelectionDialog::setCryptoFormat( Kleo::CryptoMessageFormat format )
+void CryptoFormatSelectionDialog::setCryptoFormat(Kleo::CryptoMessageFormat format)
 {
-  mCryptoFormatCombo->setCurrentIndex( mCryptoFormatCombo->findData( static_cast<int>( format ) ) );
+    mCryptoFormatCombo->setCurrentIndex(mCryptoFormatCombo->findData(static_cast<int>(format)));
 }
 
 Kleo::CryptoMessageFormat CryptoFormatSelectionDialog::cryptoFormat() const
 {
-  return static_cast<Kleo::CryptoMessageFormat>( mCryptoFormatCombo->itemData( mCryptoFormatCombo->currentIndex() ).toInt() );
+    return static_cast<Kleo::CryptoMessageFormat>(mCryptoFormatCombo->itemData(mCryptoFormatCombo->currentIndex()).toInt());
 }

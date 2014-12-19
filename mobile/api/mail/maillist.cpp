@@ -26,28 +26,28 @@
 #include <AkonadiCore/Collection>
 #include <Akonadi/KMime/MessageParts>
 
-MailList::MailList( QObject *parent ) : QObject( parent ), m_model( new MailListModel )
+MailList::MailList(QObject *parent) : QObject(parent), m_model(new MailListModel)
 {
 }
 
-MailListModel* MailList::model() const
+MailListModel *MailList::model() const
 {
     return m_model.data();
 }
 
-void MailList::loadCollection( const QUrl &url )
+void MailList::loadCollection(const QUrl &url)
 {
     m_model->clearMails();
 
-    Akonadi::Collection collection = Akonadi::Collection::fromUrl( url );
+    Akonadi::Collection collection = Akonadi::Collection::fromUrl(url);
 
-    Akonadi::ItemFetchJob *fetchJob = new Akonadi::ItemFetchJob( collection );
+    Akonadi::ItemFetchJob *fetchJob = new Akonadi::ItemFetchJob(collection);
     fetchJob->fetchScope().fetchPayloadPart(Akonadi::MessagePart::Header);
 
-    connect( fetchJob, SIGNAL(itemsReceived(Akonadi::Item::List)), this, SLOT(slotItemsReceived(Akonadi::Item::List)));
+    connect(fetchJob, SIGNAL(itemsReceived(Akonadi::Item::List)), this, SLOT(slotItemsReceived(Akonadi::Item::List)));
 }
 
-void MailList::slotItemsReceived( const Akonadi::Item::List& itemList )
+void MailList::slotItemsReceived(const Akonadi::Item::List &itemList)
 {
-    m_model->addMails( itemList );
+    m_model->addMails(itemList);
 }

@@ -26,7 +26,8 @@
 
 #include <QtCore/QObject>
 
-namespace PimCommon {
+namespace PimCommon
+{
 class AclManager;
 }
 
@@ -42,12 +43,12 @@ class QAction;
  */
 class AclEditor : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  Q_PROPERTY( QString collectionName READ collectionName NOTIFY collectionChanged )
-  Q_PROPERTY( bool collectionHasAcls READ collectionHasAcls NOTIFY collectionChanged )
+    Q_PROPERTY(QString collectionName READ collectionName NOTIFY collectionChanged)
+    Q_PROPERTY(bool collectionHasAcls READ collectionHasAcls NOTIFY collectionChanged)
 
-  public:
+public:
     /**
      * Creates a new ACL editor.
      *
@@ -55,7 +56,7 @@ class AclEditor : public QObject
      *                         actions (e.g. add, edit, delete) at
      * @param parent The parent object.
      */
-    explicit AclEditor( KActionCollection *actionCollection, QObject *parent = Q_NULLPTR );
+    explicit AclEditor(KActionCollection *actionCollection, QObject *parent = Q_NULLPTR);
 
     /**
      * Sets the @p collection whose ACLs shall be edited.
@@ -63,7 +64,7 @@ class AclEditor : public QObject
      * @note This does not load the collection into the editor, load
      *       must be called explicitly.
      */
-    void setCollection( const Akonadi::Collection &collection );
+    void setCollection(const Akonadi::Collection &collection);
 
     /**
      * Returns the name of the current collection.
@@ -77,7 +78,7 @@ class AclEditor : public QObject
      */
     bool collectionHasAcls() const;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
      * Loads the current collection into the editor.
      */
@@ -91,23 +92,23 @@ class AclEditor : public QObject
     /**
      * Returns the ACL list model of the current collection.
      */
-    QAbstractItemModel* model() const;
+    QAbstractItemModel *model() const;
 
     /**
      * Sets the row of the ACL the user has selected in the UI.
      */
-    void setRowSelected( int row );
+    void setRowSelected(int row);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever the current collection has been
      * changed.
      *
      * @param collection The new current collection.
      */
-    void collectionChanged( const Akonadi::Collection &collection );
+    void collectionChanged(const Akonadi::Collection &collection);
 
-  private:
+private:
     PimCommon::AclManager *mAclManager;
     Akonadi::Collection mCollection;
 };

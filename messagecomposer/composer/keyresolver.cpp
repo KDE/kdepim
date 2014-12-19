@@ -711,7 +711,7 @@ Kpgp::Result Kleo::KeyResolver::checkKeyNearExpiry(const GpgME::Key &key, const 
     if (secsTillExpiry <= 0) {
         const int daysSinceExpiry = 1 + int(-secsTillExpiry / secsPerDay);
         qCDebug(MESSAGECOMPOSER_LOG) << "Key 0x" << key.shortKeyID() << " expired less than "
-                 << daysSinceExpiry << " days ago";
+                                     << daysSinceExpiry << " days ago";
         const QString msg =
             key.protocol() == GpgME::OpenPGP
             ? (mine ? sign
@@ -804,7 +804,7 @@ Kpgp::Result Kleo::KeyResolver::checkKeyNearExpiry(const GpgME::Key &key, const 
     } else {
         const int daysTillExpiry = 1 + int(secsTillExpiry / secsPerDay);
         qCDebug(MESSAGECOMPOSER_LOG) << "Key 0x" << key.shortKeyID() << "expires in less than"
-                 << daysTillExpiry << "days";
+                                     << daysTillExpiry << "days";
         const int threshold =
             ca
             ? (key.isRoot()
@@ -1561,7 +1561,7 @@ void Kleo::KeyResolver::dump() const
     }
     for (std::map<CryptoMessageFormat, FormatInfo>::const_iterator it = d->mFormatInfoMap.begin() ; it != d->mFormatInfoMap.end() ; ++it) {
         qCDebug(MESSAGECOMPOSER_LOG) << "Format info for " << Kleo::cryptoMessageFormatToString(it->first)
-                 << ":  Signing keys: ";
+                                     << ":  Signing keys: ";
         for (std::vector<GpgME::Key>::const_iterator sit = it->second.signKeys.begin() ; sit != it->second.signKeys.end() ; ++sit) {
             qCDebug(MESSAGECOMPOSER_LOG) << "  " << sit->shortKeyID() << " ";
         }
@@ -1572,7 +1572,7 @@ void Kleo::KeyResolver::dump() const
                 qCDebug(MESSAGECOMPOSER_LOG) << "  " << kit->shortKeyID();
             }
             qCDebug(MESSAGECOMPOSER_LOG) << "  SplitInfo #" << i << " recipients: "
-                     << qPrintable(sit->recipients.join(QLatin1String(", ")));
+                                         << qPrintable(sit->recipients.join(QLatin1String(", ")));
         }
     }
 #endif
@@ -1787,8 +1787,8 @@ std::vector<GpgME::Key> Kleo::KeyResolver::getEncryptionKeys(const QString &pers
 
     if (!fingerprints.empty()) {
         qCDebug(MESSAGECOMPOSER_LOG) << "Using encryption keys 0x"
-                 << fingerprints.join(QLatin1String(", 0x"))
-                 << "for" << person;
+                                     << fingerprints.join(QLatin1String(", 0x"))
+                                     << "for" << person;
         std::vector<GpgME::Key> keys = lookup(fingerprints);
         if (!keys.empty()) {
             // Check if all of the keys are trusted and valid encryption keys
@@ -1928,7 +1928,7 @@ void Kleo::KeyResolver::addKeys(const std::vector<Item> &items)
         }
         if (f == AutoFormat)
             qCWarning(MESSAGECOMPOSER_LOG) << "Something went wrong. Didn't find a format for \""
-                       << it->address << "\"";
+                                           << it->address << "\"";
         else
             std::remove_copy_if(it->keys.begin(), it->keys.end(),
                                 std::back_inserter(si.keys), IsNotForFormat(f));

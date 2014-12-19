@@ -22,7 +22,8 @@
 
 #include <QByteArray>
 
-namespace Kpgp {
+namespace Kpgp
+{
 
 /* member functions of Kpgp::KeyIDList --------------------------------- */
 
@@ -30,235 +31,236 @@ namespace Kpgp {
 */
 QStringList KeyIDList::toStringList() const
 {
-  QStringList res;
-  for( KeyIDList::ConstIterator it = begin(); it != end(); ++it ) {
-    res << QLatin1String((*it).data());
-  }
-  return res;
+    QStringList res;
+    for (KeyIDList::ConstIterator it = begin(); it != end(); ++it) {
+        res << QLatin1String((*it).data());
+    }
+    return res;
 }
 
 /** Converts from a QStringList to a KeyIDList.
 */
-KeyIDList KeyIDList::fromStringList( const QStringList& l )
+KeyIDList KeyIDList::fromStringList(const QStringList &l)
 {
-  KeyIDList res;
-  QStringList::ConstIterator end(l.end());
-  for( QStringList::ConstIterator it = l.begin(); it != end; ++it ) {
-    res << (*it).toLocal8Bit();
-  }
-  return res;
+    KeyIDList res;
+    QStringList::ConstIterator end(l.end());
+    for (QStringList::ConstIterator it = l.begin(); it != end; ++it) {
+        res << (*it).toLocal8Bit();
+    }
+    return res;
 }
 
 /* member functions of Kpgp::UserID ------------------------------------ */
 
-UserID::UserID(const QString& str, const Validity validity,
+UserID::UserID(const QString &str, const Validity validity,
                const bool revoked, const bool invalid)
 {
-  mText = str;
-  mValidity = validity;
-  mRevoked = revoked;
-  mInvalid = invalid;
+    mText = str;
+    mValidity = validity;
+    mRevoked = revoked;
+    mInvalid = invalid;
 }
-
 
 /* member functions of Kpgp::Subkey ------------------------------------ */
 
-Subkey::Subkey(const KeyID& keyID, const bool secret)
+Subkey::Subkey(const KeyID &keyID, const bool secret)
 {
-  mSecret = secret;
-  mKeyID = keyID;
+    mSecret = secret;
+    mKeyID = keyID;
 
-  mRevoked = false;
-  mExpired = false;
-  mDisabled = false;
-  mInvalid = false;
-  mCanEncrypt = false;
-  mCanSign = false;
-  mCanCertify = false;
-  mKeyAlgo = 0;
-  mKeyLen = 0;
-  mFingerprint = 0;
-  mTimestamp = 0;
-  mExpiration = 0;
+    mRevoked = false;
+    mExpired = false;
+    mDisabled = false;
+    mInvalid = false;
+    mCanEncrypt = false;
+    mCanSign = false;
+    mCanCertify = false;
+    mKeyAlgo = 0;
+    mKeyLen = 0;
+    mFingerprint = 0;
+    mTimestamp = 0;
+    mExpiration = 0;
 }
-
 
 /* member functions of Kpgp::Key --------------------------------------- */
 
-Key::Key(const KeyID& keyid, const QString& uid, const bool secret) :
-  mSubkeys(), mUserIDs()
+Key::Key(const KeyID &keyid, const QString &uid, const bool secret) :
+    mSubkeys(), mUserIDs()
 {
-  mSecret = secret;
-  if (!keyid.isEmpty())
-    addSubkey(keyid, secret);
-  if (!uid.isEmpty())
-    addUserID(uid);
+    mSecret = secret;
+    if (!keyid.isEmpty()) {
+        addSubkey(keyid, secret);
+    }
+    if (!uid.isEmpty()) {
+        addUserID(uid);
+    }
 
-  mRevoked = false;
-  mExpired = false;
-  mDisabled = false;
-  mInvalid = false;
-  mCanEncrypt = false;
-  mCanSign = false;
-  mCanCertify = false;
+    mRevoked = false;
+    mExpired = false;
+    mDisabled = false;
+    mInvalid = false;
+    mCanEncrypt = false;
+    mCanSign = false;
+    mCanCertify = false;
 
-  mEncryptPref = UnknownEncryptPref;
+    mEncryptPref = UnknownEncryptPref;
 }
 
 Key::~Key()
 {
-  //qCDebug(KPGP_LOG) <<"Kpgp::Key: Deleting key" << primaryUserID();
-  qDeleteAll( mUserIDs );
-  mUserIDs.clear();
-  qDeleteAll( mSubkeys );
-  mSubkeys.clear();
+    //qCDebug(KPGP_LOG) <<"Kpgp::Key: Deleting key" << primaryUserID();
+    qDeleteAll(mUserIDs);
+    mUserIDs.clear();
+    qDeleteAll(mSubkeys);
+    mSubkeys.clear();
 }
 
 void
 Key::clear()
 {
-  mSecret = false;
-  mRevoked = false;
-  mExpired = false;
-  mDisabled = false;
-  mInvalid = false;
-  mCanEncrypt = false;
-  mCanSign = false;
-  mCanCertify = false;
+    mSecret = false;
+    mRevoked = false;
+    mExpired = false;
+    mDisabled = false;
+    mInvalid = false;
+    mCanEncrypt = false;
+    mCanSign = false;
+    mCanCertify = false;
 
-  mEncryptPref = UnknownEncryptPref;
+    mEncryptPref = UnknownEncryptPref;
 
-  qDeleteAll( mSubkeys );
-  mSubkeys.clear();
-  qDeleteAll( mUserIDs );
-  mUserIDs.clear();
+    qDeleteAll(mSubkeys);
+    mSubkeys.clear();
+    qDeleteAll(mUserIDs);
+    mUserIDs.clear();
 }
 
 Validity
 Key::keyTrust() const
 {
-  Validity trust = KPGP_VALIDITY_UNKNOWN;
+    Validity trust = KPGP_VALIDITY_UNKNOWN;
 
-  foreach ( UserID* userId, mUserIDs )
-  {
-    if( userId->validity() > trust )
-      trust = userId->validity();
-  }
-  
-  return trust;
+    foreach (UserID *userId, mUserIDs) {
+        if (userId->validity() > trust) {
+            trust = userId->validity();
+        }
+    }
+
+    return trust;
 }
 
 Validity
-Key::keyTrust( const QString& uid ) const
+Key::keyTrust(const QString &uid) const
 {
-  Validity trust = KPGP_VALIDITY_UNKNOWN;
+    Validity trust = KPGP_VALIDITY_UNKNOWN;
 
-  if( uid.isEmpty() )
+    if (uid.isEmpty()) {
+        return trust;
+    }
+
+    foreach (UserID *userId, mUserIDs) {
+        if (userId->text() == uid) {
+            trust = userId->validity();
+        }
+    }
+
     return trust;
-
-  foreach ( UserID* userId, mUserIDs )
-  {
-    if( userId->text() == uid )
-      trust = userId->validity();
-  }
-  
-  return trust;
 }
 
 void
-Key::cloneKeyTrust( const Key* key )
+Key::cloneKeyTrust(const Key *key)
 {
-  if( !key )
-    return;
+    if (!key) {
+        return;
+    }
 
-  foreach ( UserID* userId, mUserIDs )
-  {
-    userId->setValidity( key->keyTrust( userId->text() ) );
-  }
+    foreach (UserID *userId, mUserIDs) {
+        userId->setValidity(key->keyTrust(userId->text()));
+    }
 }
 
 bool
 Key::isValid() const
 {
-  return ( !mRevoked && !mExpired && !mDisabled && !mInvalid );
+    return (!mRevoked && !mExpired && !mDisabled && !mInvalid);
 }
-
 
 bool
 Key::isValidEncryptionKey() const
 {
-  return ( !mRevoked && !mExpired && !mDisabled && !mInvalid && mCanEncrypt );
+    return (!mRevoked && !mExpired && !mDisabled && !mInvalid && mCanEncrypt);
 }
-
 
 bool
 Key::isValidSigningKey() const
 {
-  return ( !mRevoked && !mExpired && !mDisabled && !mInvalid && mCanSign );
+    return (!mRevoked && !mExpired && !mDisabled && !mInvalid && mCanSign);
 }
-
 
 void Key::addUserID(const QString &uid, const Validity validity,
                     const bool revoked, const bool invalid)
-{ 
-  if (!uid.isEmpty()) {
-    UserID *userID = new UserID(uid, validity, revoked, invalid);
-    mUserIDs.append(userID);
-  }
+{
+    if (!uid.isEmpty()) {
+        UserID *userID = new UserID(uid, validity, revoked, invalid);
+        mUserIDs.append(userID);
+    }
 }
 
-bool Key::matchesUserID(const QString& str, bool cs)
+bool Key::matchesUserID(const QString &str, bool cs)
 {
-  if (str.isEmpty() || mUserIDs.isEmpty())
+    if (str.isEmpty() || mUserIDs.isEmpty()) {
+        return false;
+    }
+
+    foreach (UserID *userId, mUserIDs) {
+        if ((userId->text().indexOf(str, 0, cs ? Qt::CaseSensitive : Qt::CaseInsensitive)) != -1) {
+            return true;
+        }
+    }
+
     return false;
-  
-  foreach ( UserID *userId, mUserIDs ) {
-    if ((userId->text().indexOf(str, 0, cs?Qt::CaseSensitive:Qt::CaseInsensitive)) != -1)
-      return true;
-  }
-
-  return false;
 }
 
-void Key::addSubkey(const KeyID& keyID, const bool secret)
+void Key::addSubkey(const KeyID &keyID, const bool secret)
 {
-  if (!keyID.isEmpty()) {
-    Subkey *key = new Subkey(keyID, secret);
-    mSubkeys.append(key);
-  }
+    if (!keyID.isEmpty()) {
+        Subkey *key = new Subkey(keyID, secret);
+        mSubkeys.append(key);
+    }
 }
 
-Subkey *Key::getSubkey(const KeyID& keyID)
+Subkey *Key::getSubkey(const KeyID &keyID)
 {
-  if (keyID.isEmpty() || mSubkeys.isEmpty())
+    if (keyID.isEmpty() || mSubkeys.isEmpty()) {
+        return 0;
+    }
+
+    // is the given key ID a long (16 chars) or a short (8 chars) key ID?
+    bool longKeyID = (keyID.length() == 16);
+
+    foreach (Subkey *subKey, mSubkeys) {
+        if (longKeyID) {
+            if (subKey->longKeyID() == keyID) {
+                return subKey;
+            }
+        } else {
+            if (subKey->keyID() == keyID) {
+                return subKey;
+            }
+        }
+    }
+
     return 0;
-  
-  // is the given key ID a long (16 chars) or a short (8 chars) key ID?
-  bool longKeyID = (keyID.length() == 16);
-
-  foreach ( Subkey* subKey, mSubkeys ) {
-    if (longKeyID) {
-      if (subKey->longKeyID() == keyID)
-        return subKey;
-    }
-    else {
-      if (subKey->keyID() == keyID)
-        return subKey;
-    }
-  }
-
-  return 0;
 }
 
-void Key::setFingerprint(const KeyID& keyID, const QByteArray &fpr)
+void Key::setFingerprint(const KeyID &keyID, const QByteArray &fpr)
 {
-  Subkey *key;
-  if ((key = getSubkey(keyID)) != 0) {
-    key->setFingerprint(fpr);
-  }
-  else
-    qCDebug(KPGP_LOG) <<"Error: Can't set fingerprint. A subkey with key ID 0x"
-                  << keyID << "doesn't exist.";
+    Subkey *key;
+    if ((key = getSubkey(keyID)) != 0) {
+        key->setFingerprint(fpr);
+    } else
+        qCDebug(KPGP_LOG) << "Error: Can't set fingerprint. A subkey with key ID 0x"
+                          << keyID << "doesn't exist.";
 }
 
 } // namespace Kpgp

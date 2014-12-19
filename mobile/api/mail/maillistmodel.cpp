@@ -27,7 +27,7 @@
 
 #include <QUrl>
 
-MailListModel::MailListModel( QObject *parent ) : QAbstractListModel( parent ), m_msgs()
+MailListModel::MailListModel(QObject *parent) : QAbstractListModel(parent), m_msgs()
 {
     QHash<int, QByteArray> roles;
 
@@ -39,7 +39,7 @@ MailListModel::MailListModel( QObject *parent ) : QAbstractListModel( parent ), 
     roles[StatusIcon] = "statusIcon";
     roles[Url] = "url";
 
-    setRoleNames( roles );
+    setRoleNames(roles);
 }
 
 MailListModel::~MailListModel()
@@ -47,35 +47,35 @@ MailListModel::~MailListModel()
 
 }
 
-QVariant MailListModel::data( const QModelIndex& index, int role ) const
+QVariant MailListModel::data(const QModelIndex &index, int role) const
 {
-    if ( !index.isValid() ) {
-      return QVariant();
+    if (!index.isValid()) {
+        return QVariant();
     }
 
-    if  ( index.row() >= m_msgs.count() || index.row() < 0 ) {
-      return QVariant();
+    if (index.row() >= m_msgs.count() || index.row() < 0) {
+        return QVariant();
     }
 
-    Akonadi::Item item = m_msgs.at( index.row() );
+    Akonadi::Item item = m_msgs.at(index.row());
 
-    if ( item.isValid() && item.hasPayload<KMime::Message::Ptr>() ) {
+    if (item.isValid() && item.hasPayload<KMime::Message::Ptr>()) {
         const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
 
         Akonadi::MessageStatus messageStatus;
-        messageStatus.setStatusFromFlags( item.flags() );
+        messageStatus.setStatusFromFlags(item.flags());
 
         switch (role) {
         case Subject:
             return msg->subject()->asUnicodeString().trimmed();;
         case SenderList: {
             QStringList l;
-            foreach ( const KMime::Types::Mailbox &mbox, msg->from()->mailboxes() ) {
-              if ( mbox.hasName() ) {
-                l.append( mbox.name() );
-              } else {
-                l.append( mbox.addrSpec().asPrettyString() );
-              }
+            foreach (const KMime::Types::Mailbox &mbox, msg->from()->mailboxes()) {
+                if (mbox.hasName()) {
+                    l.append(mbox.name());
+                } else {
+                    l.append(mbox.addrSpec().asPrettyString());
+                }
             }
             return l;
         }
@@ -84,44 +84,44 @@ QVariant MailListModel::data( const QModelIndex& index, int role ) const
         case IsUnread:
             return !messageStatus.isRead();
         case StatusIcon: {
-            if ( messageStatus.isReplied() ) {
-                if ( messageStatus.isForwarded() ) {
-                  return QLatin1String ( "mail-forwarded-replied" );
+            if (messageStatus.isReplied()) {
+                if (messageStatus.isForwarded()) {
+                    return QLatin1String("mail-forwarded-replied");
                 } else {
-                  return QLatin1String ( "mail-replied" );
+                    return QLatin1String("mail-replied");
                 }
             }
 
-            if ( messageStatus.isForwarded() ) {
-              return QLatin1String ( "mail-forwarded" );
+            if (messageStatus.isForwarded()) {
+                return QLatin1String("mail-forwarded");
             }
 
-            if ( messageStatus.isRead() ) {
-              return QLatin1String ( "mail-read" );
+            if (messageStatus.isRead()) {
+                return QLatin1String("mail-read");
             }
 
-            return QLatin1String ( "mail-unread" );
+            return QLatin1String("mail-unread");
         }
         case Date:
-          return msg->date()->dateTime();
+            return msg->date()->dateTime();
         case Url:
-            return QVariant::fromValue<QUrl>( item.url() );
+            return QVariant::fromValue<QUrl>(item.url());
         }
     }
     return QVariant();
 }
 
-int MailListModel::rowCount( const QModelIndex& ) const
+int MailListModel::rowCount(const QModelIndex &) const
 {
     return m_msgs.size();
 }
 
-bool MailListModel::addMails( const Akonadi::Item::List &items )
+bool MailListModel::addMails(const Akonadi::Item::List &items)
 {
-    beginInsertRows( QModelIndex(), rowCount(), rowCount() + items.size() -1 );
+    beginInsertRows(QModelIndex(), rowCount(), rowCount() + items.size() - 1);
 
-    foreach ( const Akonadi::Item &item, items ) {
-        m_msgs.append( item );
+    foreach (const Akonadi::Item &item, items) {
+        m_msgs.append(item);
     }
 
     endInsertRows();
@@ -131,7 +131,7 @@ bool MailListModel::addMails( const Akonadi::Item::List &items )
 
 void MailListModel::clearMails()
 {
-    if ( !m_msgs.isEmpty() ) {
+    if (!m_msgs.isEmpty()) {
         beginResetModel();
         m_msgs.clear();
         endResetModel();

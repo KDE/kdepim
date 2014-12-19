@@ -49,7 +49,8 @@ class QTreeWidgetItem;
 class QTreeWidget;          // needed by KeySelectionDialog
 class KPasswordEdit;        // needed by PassphraseDialog
 
-namespace Kpgp {
+namespace Kpgp
+{
 
 class Module;
 class Key;                  // needed by KeySelectionDialog
@@ -58,17 +59,16 @@ class KeyIDList;            // needed by KeySelectionDialog
 /** the passphrase dialog */
 class LIBKPGP_EXPORT PassphraseDialog : public KPasswordDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit PassphraseDialog( QWidget *widget = Q_NULLPTR,
-                               const QString &caption=QString(),
-                               const QString &keyID=QString());
+public:
+    explicit PassphraseDialog(QWidget *widget = Q_NULLPTR,
+                              const QString &caption = QString(),
+                              const QString &keyID = QString());
     virtual ~PassphraseDialog();
 
     QString passphrase();
 };
-
 
 // -------------------------------------------------------------------------
 /** A widget for configuring the pgp interface. Can be included into
@@ -76,51 +76,53 @@ class LIBKPGP_EXPORT PassphraseDialog : public KPasswordDialog
     button mechanism. */
 class LIBKPGP_EXPORT Config : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit Config( QWidget *parent = Q_NULLPTR, bool encrypt = true );
+public:
+    explicit Config(QWidget *parent = Q_NULLPTR, bool encrypt = true);
     virtual ~Config();
 
     virtual void setValues();
     virtual void applySettings();
-    QGroupBox* optionsGroupBox() { return mpOptionsGroupBox; }
-  Q_SIGNALS:
+    QGroupBox *optionsGroupBox()
+    {
+        return mpOptionsGroupBox;
+    }
+Q_SIGNALS:
     void changed();
 
-  protected:
+protected:
     Module *pgp;
     QCheckBox *storePass;
     QCheckBox *encToSelf;
     QCheckBox *showCipherText;
     QCheckBox *showKeyApprovalDlg;
     QComboBox *toolCombo;
-    QGroupBox* mpOptionsGroupBox;
+    QGroupBox *mpOptionsGroupBox;
 };
-
 
 // -------------------------------------------------------------------------
 #ifndef QT_NO_TREEWIDGET
 class LIBKPGP_EXPORT KeySelectionDialog: public QDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  enum TrustCheckMode { NoExpensiveTrustCheck,
-                        AllowExpensiveTrustCheck,
-                        ForceTrustCheck
-                      };
+    enum TrustCheckMode { NoExpensiveTrustCheck,
+                          AllowExpensiveTrustCheck,
+                          ForceTrustCheck
+                        };
 
-  public:
+public:
     /** allowedKeys: see kpgp.h
      */
-    KeySelectionDialog( const KeyList& keyList,
-                        const QString& title,
-                        const QString& text = QString(),
-                        const KeyIDList& keyIds = KeyIDList(),
-                        const bool rememberChoice = false,
-                        const unsigned int allowedKeys = AllKeys,
-                        const bool extendedSelection = false,
-                        QWidget *widget = Q_NULLPTR );
+    KeySelectionDialog(const KeyList &keyList,
+                       const QString &title,
+                       const QString &text = QString(),
+                       const KeyIDList &keyIds = KeyIDList(),
+                       const bool rememberChoice = false,
+                       const unsigned int allowedKeys = AllKeys,
+                       const bool extendedSelection = false,
+                       QWidget *widget = Q_NULLPTR);
     virtual ~KeySelectionDialog();
 
     /** Returns the key ID of the selected key in single selection mode.
@@ -129,47 +131,51 @@ class LIBKPGP_EXPORT KeySelectionDialog: public QDialog
 
     /** Returns a list of selected key IDs. */
     virtual KeyIDList keys() const
-      { return mKeyIds; }
+    {
+        return mKeyIds;
+    }
 
     virtual bool rememberSelection() const
-      { if( mRememberCB )
-          return mRememberCB->isChecked();
-        else
-          return false;
-      }
+    {
+        if (mRememberCB) {
+            return mRememberCB->isChecked();
+        } else {
+            return false;
+        }
+    }
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     virtual void slotRereadKeys();
     virtual void slotSelectionChanged();
-    virtual void slotCheckSelection( QTreeWidgetItem* = 0 );
-    virtual void slotRMB( const QPoint& pos );
+    virtual void slotCheckSelection(QTreeWidgetItem * = 0);
+    virtual void slotRMB(const QPoint &pos);
     virtual void slotRecheckKey();
     virtual void slotOk();
     virtual void slotCancel();
-    virtual void slotSearch( const QString & text );
+    virtual void slotSearch(const QString &text);
     virtual void slotFilter();
 
-  private:
-    void filterByKeyID( const QString & keyID );
-    void filterByKeyIDOrUID( const QString & keyID );
-    void filterByUID( const QString & uid );
+private:
+    void filterByKeyID(const QString &keyID);
+    void filterByKeyIDOrUID(const QString &keyID);
+    void filterByUID(const QString &uid);
     void showAllItems();
-    bool anyChildMatches( const QTreeWidgetItem * item, QRegExp & rx ) const;
+    bool anyChildMatches(const QTreeWidgetItem *item, QRegExp &rx) const;
 
-    void initKeylist( const KeyList& keyList, const KeyIDList& keyIds );
+    void initKeylist(const KeyList &keyList, const KeyIDList &keyIds);
 
-    QString keyInfo( const Kpgp::Key* ) const;
+    QString keyInfo(const Kpgp::Key *) const;
 
-    QString beautifyFingerprint( const QByteArray& ) const;
+    QString beautifyFingerprint(const QByteArray &) const;
 
     // Returns the key ID of the key the given QListViewItem belongs to
-    KeyID getKeyId( const QTreeWidgetItem* ) const;
+    KeyID getKeyId(const QTreeWidgetItem *) const;
 
     // Returns: -1 = unusable, 0 = unknown, 1 = valid, but untrusted, 2 = trusted
-    int keyValidity( const Kpgp::Key* ) const;
+    int keyValidity(const Kpgp::Key *) const;
 
     // Updates the given QListViewItem with the data of the given key
-    void updateKeyInfo( const Kpgp::Key*, QTreeWidgetItem* ) const;
+    void updateKeyInfo(const Kpgp::Key *, QTreeWidgetItem *) const;
 
     /** Checks if choosing the given key is allowed
         Returns:
@@ -178,166 +184,179 @@ class LIBKPGP_EXPORT KeySelectionDialog: public QDialog
              or not,
          1 = key can be chosen
     */
-    int keyAdmissibility( QTreeWidgetItem*,
-                          TrustCheckMode = NoExpensiveTrustCheck ) const;
+    int keyAdmissibility(QTreeWidgetItem *,
+                         TrustCheckMode = NoExpensiveTrustCheck) const;
 
     // Perform expensive trust checks for the given keys
-    bool checkKeys( const QList<QTreeWidgetItem*>& ) const;
+    bool checkKeys(const QList<QTreeWidgetItem *> &) const;
 
-  private:
+private:
     QTreeWidget *mListView;
     QCheckBox *mRememberCB;
     QPixmap *mKeyGoodPix, *mKeyBadPix, *mKeyUnknownPix, *mKeyValidPix;
     KeyIDList mKeyIds;
     unsigned int mAllowedKeys;
-    QTimer* mCheckSelectionTimer;
-    QTimer* mStartSearchTimer;
+    QTimer *mCheckSelectionTimer;
+    QTimer *mStartSearchTimer;
     QString mSearchText;
-    QTreeWidgetItem* mCurrentContextMenuItem;
+    QTreeWidgetItem *mCurrentContextMenuItem;
     QPushButton *mOkButton;
 
-  static const int sCheckSelectionDelay;
+    static const int sCheckSelectionDelay;
 };
 #endif
 
 class LIBKPGP_EXPORT KeyRequester: public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  explicit KeyRequester( QWidget * parent=0, bool multipleKeys=false,
-                         unsigned int allowedKeys=AllKeys, const char * name=0 );
-  virtual ~KeyRequester();
+    explicit KeyRequester(QWidget *parent = 0, bool multipleKeys = false,
+                          unsigned int allowedKeys = AllKeys, const char *name = 0);
+    virtual ~KeyRequester();
 
-  KeyIDList keyIDs() const;
-  void setKeyIDs( const KeyIDList & keyIDs );
+    KeyIDList keyIDs() const;
+    void setKeyIDs(const KeyIDList &keyIDs);
 
-  QPushButton * eraseButton() const { return mEraseButton; }
-  QPushButton * dialogButton() const { return mDialogButton; }
+    QPushButton *eraseButton() const
+    {
+        return mEraseButton;
+    }
+    QPushButton *dialogButton() const
+    {
+        return mDialogButton;
+    }
 
-  void setDialogCaption( const QString & caption );
-  void setDialogMessage( const QString & message );
+    void setDialogCaption(const QString &caption);
+    void setDialogMessage(const QString &message);
 
-  bool isMultipleKeysEnabled() const;
-  void setMultipleKeysEnabled( bool enable );
+    bool isMultipleKeysEnabled() const;
+    void setMultipleKeysEnabled(bool enable);
 
-  int allowedKeys() const;
-  void setAllowedKeys( int allowed );
+    int allowedKeys() const;
+    void setAllowedKeys(int allowed);
 
 protected:
-  /** Reimplement this to return a list of selected keys. */
-  virtual KeyIDList keyRequestHook( Module * pgp ) const = 0;
+    /** Reimplement this to return a list of selected keys. */
+    virtual KeyIDList keyRequestHook(Module *pgp) const = 0;
 
 protected:
-  QLabel * mLabel;
-  QPushButton * mEraseButton;
-  QPushButton * mDialogButton;
-  QString mDialogCaption, mDialogMessage;
-  bool mMulti;
-  int mAllowedKeys;
-  KeyIDList mKeys;
+    QLabel *mLabel;
+    QPushButton *mEraseButton;
+    QPushButton *mDialogButton;
+    QString mDialogCaption, mDialogMessage;
+    bool mMulti;
+    int mAllowedKeys;
+    KeyIDList mKeys;
 
 protected Q_SLOTS:
-  void slotDialogButtonClicked();
-  void slotEraseButtonClicked();
+    void slotDialogButtonClicked();
+    void slotEraseButtonClicked();
 
 Q_SIGNALS:
-  void changed();
+    void changed();
 
 private:
-  class Private;
-  Private * d;
+    class Private;
+    Private *d;
 protected:
-  virtual void virtual_hook( int, void* );
+    virtual void virtual_hook(int, void *);
 };
 
-
-class LIBKPGP_EXPORT PublicKeyRequester : public KeyRequester {
-  Q_OBJECT
+class LIBKPGP_EXPORT PublicKeyRequester : public KeyRequester
+{
+    Q_OBJECT
 public:
-  explicit PublicKeyRequester( QWidget * parent=0, bool multipleKeys=false,
-                               unsigned int allowedKeys=PublicKeys,
-                               const char * name=0 );
-  virtual ~PublicKeyRequester();
+    explicit PublicKeyRequester(QWidget *parent = 0, bool multipleKeys = false,
+                                unsigned int allowedKeys = PublicKeys,
+                                const char *name = 0);
+    virtual ~PublicKeyRequester();
 
 protected:
-  KeyIDList keyRequestHook( Module * pgp ) const;
+    KeyIDList keyRequestHook(Module *pgp) const;
 
 private:
-  typedef KeyRequester base;
-  class Private;
-  Private * d;
+    typedef KeyRequester base;
+    class Private;
+    Private *d;
 protected:
-  virtual void virtual_hook( int, void* );
+    virtual void virtual_hook(int, void *);
 };
 
-
-class LIBKPGP_EXPORT SecretKeyRequester : public KeyRequester {
-  Q_OBJECT
+class LIBKPGP_EXPORT SecretKeyRequester : public KeyRequester
+{
+    Q_OBJECT
 public:
-  explicit SecretKeyRequester( QWidget * parent=0, bool multipleKeys=false,
-                               unsigned int allowedKeys=SecretKeys,
-                               const char * name=0 );
-  virtual ~SecretKeyRequester();
+    explicit SecretKeyRequester(QWidget *parent = 0, bool multipleKeys = false,
+                                unsigned int allowedKeys = SecretKeys,
+                                const char *name = 0);
+    virtual ~SecretKeyRequester();
 
 protected:
-  KeyIDList keyRequestHook( Module * pgp ) const;
+    KeyIDList keyRequestHook(Module *pgp) const;
 
 private:
-  typedef KeyRequester base;
-  class Private;
-  Private * d;
+    typedef KeyRequester base;
+    class Private;
+    Private *d;
 protected:
-  virtual void virtual_hook( int, void* );
+    virtual void virtual_hook(int, void *);
 };
-
 
 // -------------------------------------------------------------------------
 class LIBKPGP_EXPORT KeyApprovalDialog: public QDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    KeyApprovalDialog( const QStringList&,
-                       const QVector<KeyIDList>&,
-                       const int allowedKeys,
-                       QWidget *parent = Q_NULLPTR );
+public:
+    KeyApprovalDialog(const QStringList &,
+                      const QVector<KeyIDList> &,
+                      const int allowedKeys,
+                      QWidget *parent = Q_NULLPTR);
     virtual ~KeyApprovalDialog() {}
 
-    QVector<KeyIDList> keys() const { return mKeys; }
+    QVector<KeyIDList> keys() const
+    {
+        return mKeys;
+    }
 
-    bool preferencesChanged() const { return mPrefsChanged; }
+    bool preferencesChanged() const
+    {
+        return mPrefsChanged;
+    }
 
-  protected Q_SLOTS:
-    void slotPrefsChanged( int ) { mPrefsChanged = true; }
-    void slotChangeEncryptionKey( int );
+protected Q_SLOTS:
+    void slotPrefsChanged(int)
+    {
+        mPrefsChanged = true;
+    }
+    void slotChangeEncryptionKey(int);
     virtual void slotOk();
     virtual void slotCancel();
 
-  private:
+private:
     QVector<KeyIDList> mKeys;
     int mAllowedKeys;
     int mEncryptToSelf;
     bool mPrefsChanged;
-    QVector<QLabel*> mAddressLabels;
-    QVector<QLabel*> mKeyIdsLabels;
+    QVector<QLabel *> mAddressLabels;
+    QVector<QLabel *> mKeyIdsLabels;
     //QPtrVector<QListBox> mKeyIdListBoxes;
-    QVector<QComboBox*> mEncrPrefCombos;
+    QVector<QComboBox *> mEncrPrefCombos;
 };
-
 
 // -------------------------------------------------------------------------
 class LIBKPGP_EXPORT CipherTextDialog: public QDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit CipherTextDialog( const QByteArray &text,
-                               const QByteArray &charset=0,
-                               QWidget *widget = Q_NULLPTR );
+public:
+    explicit CipherTextDialog(const QByteArray &text,
+                              const QByteArray &charset = 0,
+                              QWidget *widget = Q_NULLPTR);
     virtual ~CipherTextDialog() {}
 
-  private:
+private:
     void setMinimumSize();
     QTextEdit *mEditBox;
 };

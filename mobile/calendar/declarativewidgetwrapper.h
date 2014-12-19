@@ -25,36 +25,40 @@
 
 class QGraphicsProxyWidget;
 
-namespace Qt {
+namespace Qt
+{
 
 class DeclarativeWidgetWrapperBase : public QDeclarativeItem
 {
-  Q_OBJECT
-  public:
-    DeclarativeWidgetWrapperBase( QWidget *widget, QDeclarativeItem *parent );
+    Q_OBJECT
+public:
+    DeclarativeWidgetWrapperBase(QWidget *widget, QDeclarativeItem *parent);
 
-  protected:
-    void geometryChanged( const QRectF &newGeometry, const QRectF &oldGeometry );
+protected:
+    void geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry);
 
-    virtual QWidget* widget() const = 0;
+    virtual QWidget *widget() const = 0;
 
-  private:
+private:
     QGraphicsProxyWidget *m_proxy;
 };
 
 template <typename WidgetT>
 class DeclarativeWidgetWrapper : public DeclarativeWidgetWrapperBase
 {
-  public:
-    explicit DeclarativeWidgetWrapper( QDeclarativeItem* parent ) :
-      DeclarativeWidgetWrapperBase( m_widget = new WidgetT, parent )
+public:
+    explicit DeclarativeWidgetWrapper(QDeclarativeItem *parent) :
+        DeclarativeWidgetWrapperBase(m_widget = new WidgetT, parent)
     {
-      StyleSheetLoader::applyStyle( m_widget );
+        StyleSheetLoader::applyStyle(m_widget);
     }
 
-  protected:
-    WidgetT* widget() const { return m_widget; }
-    WidgetT* m_widget;
+protected:
+    WidgetT *widget() const
+    {
+        return m_widget;
+    }
+    WidgetT *m_widget;
 };
 
 }

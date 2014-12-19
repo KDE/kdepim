@@ -20,4 +20,3 @@
 #include "accountwizard_debug.h"
 Q_LOGGING_CATEGORY(ACCOUNTWIZARD_LOG, "log_accountwizard")
 
-

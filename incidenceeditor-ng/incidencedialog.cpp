@@ -546,7 +546,7 @@ void IncidenceDialogPrivate::load(const Akonadi::Item &item)
     }
 
     qCDebug(INCIDENCEEDITOR_LOG) << "Loading item " << item.id() << "; parent " << item.parentCollection().id()
-             << "; storage " << item.storageCollectionId();
+                                 << "; storage " << item.storageCollectionId();
 
     if (item.parentCollection().isValid()) {
         mCalSelector->setDefaultCollection(item.parentCollection());

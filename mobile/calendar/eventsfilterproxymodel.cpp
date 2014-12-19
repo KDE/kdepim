@@ -22,59 +22,62 @@
 #include <AkonadiCore/entitytreemodel.h>
 #include <KCalCore/Event>
 
-static bool eventMatchesFilter( const KCalCore::Event::Ptr &event, const QString &filterString );
+static bool eventMatchesFilter(const KCalCore::Event::Ptr &event, const QString &filterString);
 
 using namespace Akonadi;
 
 class EventsFilterProxyModel::Private
 {
-  public:
+public:
     QString mFilter;
 };
 
-EventsFilterProxyModel::EventsFilterProxyModel( QObject *parent )
-  : QSortFilterProxyModel( parent ), d( new Private )
+EventsFilterProxyModel::EventsFilterProxyModel(QObject *parent)
+    : QSortFilterProxyModel(parent), d(new Private)
 {
-  setSortLocaleAware( true );
-  setDynamicSortFilter( true );
+    setSortLocaleAware(true);
+    setDynamicSortFilter(true);
 }
 
 EventsFilterProxyModel::~EventsFilterProxyModel()
 {
-  delete d;
+    delete d;
 }
 
-void EventsFilterProxyModel::setFilterString( const QString &filter )
+void EventsFilterProxyModel::setFilterString(const QString &filter)
 {
-  d->mFilter = filter;
-  invalidateFilter();
+    d->mFilter = filter;
+    invalidateFilter();
 }
 
-bool EventsFilterProxyModel::filterAcceptsRow( int row, const QModelIndex &parent ) const
+bool EventsFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &parent) const
 {
-  if ( d->mFilter.isEmpty() )
+    if (d->mFilter.isEmpty()) {
+        return true;
+    }
+
+    const QModelIndex index = sourceModel()->index(row, 0, parent);
+
+    const Akonadi::Item item = index.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
+
+    if (item.hasPayload<KCalCore::Event::Ptr>()) {
+        const KCalCore::Event::Ptr event = item.payload<KCalCore::Event::Ptr>();
+        return eventMatchesFilter(event, d->mFilter);
+    }
+
     return true;
-
-  const QModelIndex index = sourceModel()->index( row, 0, parent );
-
-  const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-
-  if ( item.hasPayload<KCalCore::Event::Ptr>() ) {
-    const KCalCore::Event::Ptr event = item.payload<KCalCore::Event::Ptr>();
-    return eventMatchesFilter( event, d->mFilter );
-  }
-
-  return true;
 }
 
-static bool eventMatchesFilter( const KCalCore::Event::Ptr &event, const QString &filterString )
+static bool eventMatchesFilter(const KCalCore::Event::Ptr &event, const QString &filterString)
 {
-  if ( event->summary().contains( filterString, Qt::CaseInsensitive ) )
-    return true;
+    if (event->summary().contains(filterString, Qt::CaseInsensitive)) {
+        return true;
+    }
 
-  if ( event->description().contains( filterString, Qt::CaseInsensitive ) )
-    return true;
+    if (event->description().contains(filterString, Qt::CaseInsensitive)) {
+        return true;
+    }
 
-  return false;
+    return false;
 }
 

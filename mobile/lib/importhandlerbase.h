@@ -32,32 +32,32 @@ class QItemSelectionModel;
 
 class MOBILEUI_EXPORT ImportHandlerBase : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit ImportHandlerBase( QObject *parent = Q_NULLPTR );
+public:
+    explicit ImportHandlerBase(QObject *parent = Q_NULLPTR);
     ~ImportHandlerBase();
 
-    void setSelectionModel( QItemSelectionModel *model );
+    void setSelectionModel(QItemSelectionModel *model);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void exec();
 
-  protected:
+protected:
     virtual QString fileDialogNameFilter() const = 0;
     virtual QString fileDialogTitle() const = 0;
     virtual QString collectionDialogText() const = 0;
     virtual QString collectionDialogTitle() const = 0;
-    virtual QString importDialogText( int count, const QString &collectionName ) const = 0;
+    virtual QString importDialogText(int count, const QString &collectionName) const = 0;
     virtual QString importDialogTitle() const = 0;
 
     virtual QStringList mimeTypes() const = 0;
-    virtual Akonadi::Item::List createItems( const QStringList &fileNames, bool *ok ) = 0;
+    virtual Akonadi::Item::List createItems(const QStringList &fileNames, bool *ok) = 0;
 
-  private Q_SLOTS:
-    void slotImportJobDone( KJob* );
+private Q_SLOTS:
+    void slotImportJobDone(KJob *);
 
-  private:
+private:
     QProgressDialog *mImportProgressDialog;
     QItemSelectionModel *mSelectionModel;
 };

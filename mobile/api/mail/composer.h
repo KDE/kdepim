@@ -34,26 +34,27 @@ Copyright 2014  Abhijeet Nikam connect08nikam@gmail.com
 
 #include "receivermodel.h"
 
-namespace KIdentityManagement {
+namespace KIdentityManagement
+{
 class IdentityManager;
 }
 
 class Composer : public QObject
 {
 
-Q_OBJECT
+    Q_OBJECT
 
-    Q_PROPERTY (QString subject READ subject WRITE setSubject NOTIFY subjectChanged)
-    Q_PROPERTY (QString body READ body WRITE setBody NOTIFY bodyChanged)
-    Q_PROPERTY (QString cc READ cc WRITE setCC NOTIFY ccChanged)
-    Q_PROPERTY (QString to READ to WRITE setTo NOTIFY toChanged)
-    Q_PROPERTY (QString bcc READ bcc WRITE setBCC NOTIFY bccChanged)
-    Q_PROPERTY (QString from READ from WRITE setFrom NOTIFY fromChanged)
-    Q_PROPERTY (ReceiverModel* receiverModel READ receiverModel CONSTANT)
+    Q_PROPERTY(QString subject READ subject WRITE setSubject NOTIFY subjectChanged)
+    Q_PROPERTY(QString body READ body WRITE setBody NOTIFY bodyChanged)
+    Q_PROPERTY(QString cc READ cc WRITE setCC NOTIFY ccChanged)
+    Q_PROPERTY(QString to READ to WRITE setTo NOTIFY toChanged)
+    Q_PROPERTY(QString bcc READ bcc WRITE setBCC NOTIFY bccChanged)
+    Q_PROPERTY(QString from READ from WRITE setFrom NOTIFY fromChanged)
+    Q_PROPERTY(ReceiverModel *receiverModel READ receiverModel CONSTANT)
 
 public:
 
-    explicit Composer ( QObject *parent = Q_NULLPTR );
+    explicit Composer(QObject *parent = Q_NULLPTR);
 
     QString cc() const;
     QString bcc() const;
@@ -63,16 +64,16 @@ public:
     QString body() const;
     ReceiverModel *receiverModel() const;
 
-    void setFrom( const QString &from );
-    void setTo( const QString &replyTo );
-    void setCC( const QString &cc );
-    void setBCC( const QString &bcc );
-    void setSubject( const QString &subject );
-    void setBody ( const QString &body );
+    void setFrom(const QString &from);
+    void setTo(const QString &replyTo);
+    void setCC(const QString &cc);
+    void setBCC(const QString &bcc);
+    void setSubject(const QString &subject);
+    void setBody(const QString &body);
 
-    void setMessage ( const KMime::Message::Ptr &message );
+    void setMessage(const KMime::Message::Ptr &message);
 
-    QByteArray convert ( const QString &body );
+    QByteArray convert(const QString &body);
 
 Q_SIGNALS:
 
@@ -88,9 +89,9 @@ public Q_SLOTS:
     void send();
     void saveDraft();
     void sendLater();
-    void addRecipient( const QString &email , int type );
+    void addRecipient(const QString &email , int type);
 
-    void forwardMessage (const QUrl &url);
+    void forwardMessage(const QUrl &url);
     void replyToMessage(const QUrl &url);
     void replyToAll(const QUrl &url);
     void replyToAuthor(const QUrl &url);
@@ -99,7 +100,7 @@ public Q_SLOTS:
 private Q_SLOTS:
 
     void replyFetchResult(KJob *job);
-    void forwardFetchResult (KJob *job);
+    void forwardFetchResult(KJob *job);
 
 private:
 
@@ -116,9 +117,5 @@ private:
     KIdentityManagement::IdentityManager *m_IdentityManager;
 
 };
-
-
-
-
 
 #endif

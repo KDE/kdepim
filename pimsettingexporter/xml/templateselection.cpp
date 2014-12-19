@@ -31,7 +31,7 @@ TemplateSelection::TemplateSelection(const QString &path)
         if (file.open(QIODevice::ReadOnly)) {
             if (!doc.setContent(&file, &errorMsg, &errorRow, &errorCol)) {
                 qCDebug(PIMSETTINGEXPORTER_LOG) << "Unable to load document.Parse error in line " << errorRow
-                         << ", col " << errorCol << ": " << errorMsg;
+                                                << ", col " << errorCol << ": " << errorMsg;
             } else {
                 mDocument = doc;
             }

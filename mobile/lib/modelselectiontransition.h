@@ -31,22 +31,22 @@ class ModelSelectionTransitionPrivate;
 
 class MOBILEUI_EXPORT ModelSelectionTransition : public QSignalTransition
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  enum Type {
-    AcceptNoSelection,
-    AcceptSingleSelection,
-    AcceptMultiSelection,
-    AcceptSingleTopLevelSelection
-  };
-  ModelSelectionTransition(QItemSelectionModel *folderModel, Type type, QState* sourceState = 0);
-  virtual ~ModelSelectionTransition();
+    enum Type {
+        AcceptNoSelection,
+        AcceptSingleSelection,
+        AcceptMultiSelection,
+        AcceptSingleTopLevelSelection
+    };
+    ModelSelectionTransition(QItemSelectionModel *folderModel, Type type, QState *sourceState = 0);
+    virtual ~ModelSelectionTransition();
 protected:
-  virtual bool eventTest(QEvent* event);
+    virtual bool eventTest(QEvent *event);
 
 private:
-  Q_DECLARE_PRIVATE(ModelSelectionTransition)
-  ModelSelectionTransitionPrivate * const d_ptr;
+    Q_DECLARE_PRIVATE(ModelSelectionTransition)
+    ModelSelectionTransitionPrivate *const d_ptr;
 };
 
 #endif

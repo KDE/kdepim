@@ -17,25 +17,25 @@ class QTimeEdit;
 
 class CustomFieldEditWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit CustomFieldEditWidget( QWidget *parent = Q_NULLPTR );
+public:
+    explicit CustomFieldEditWidget(QWidget *parent = Q_NULLPTR);
 
-    void setCustomField( const CustomField &field );
+    void setCustomField(const CustomField &field);
     CustomField customField() const;
 
-    void setValue( const QString &value );
+    void setValue(const QString &value);
     QString value() const;
 
-  Q_SIGNALS:
-    void remove( QWidget *widget );
+Q_SIGNALS:
+    void remove(QWidget *widget);
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void remove();
     void edit();
 
-  private:
+private:
     mutable CustomField mCustomField;
 
     QGridLayout *mLayout;

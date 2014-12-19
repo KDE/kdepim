@@ -19,7 +19,7 @@
 
 #include "editorbase.h"
 
-EditorBase::EditorBase( QWidget *parent ) : QWidget( parent )
+EditorBase::EditorBase(QWidget *parent) : QWidget(parent)
 {
 }
 

@@ -31,7 +31,7 @@ class MailListModel : public QAbstractListModel
     Q_OBJECT
 
 public:
-    MailListModel( QObject *parent = Q_NULLPTR );
+    MailListModel(QObject *parent = Q_NULLPTR);
     ~MailListModel();
 
     enum Roles {
@@ -44,10 +44,10 @@ public:
         Url
     };
 
-    QVariant data( const QModelIndex &index, int role ) const;
-    int rowCount( const QModelIndex &parent = QModelIndex() ) const;
+    QVariant data(const QModelIndex &index, int role) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
-    bool addMails( const Akonadi::Item::List &items );
+    bool addMails(const Akonadi::Item::List &items);
     void clearMails();
 
 private:

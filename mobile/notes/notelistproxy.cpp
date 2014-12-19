@@ -28,60 +28,61 @@
 
 using namespace Akonadi;
 
-NoteListProxy::NoteListProxy( int customRoleBaseline, QObject* parent )
-  : ListProxy( parent ),
-    mCustomRoleBaseline( customRoleBaseline )
+NoteListProxy::NoteListProxy(int customRoleBaseline, QObject *parent)
+    : ListProxy(parent),
+      mCustomRoleBaseline(customRoleBaseline)
 { }
 
-QVariant NoteListProxy::data( const QModelIndex& index, int role ) const
+QVariant NoteListProxy::data(const QModelIndex &index, int role) const
 {
-  const Akonadi::Item item = QSortFilterProxyModel::data( index, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+    const Akonadi::Item item = QSortFilterProxyModel::data(index, Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
 
-  if ( item.isValid() && item.hasPayload<KMime::Message::Ptr>() ) {
-    const KMime::Message::Ptr note = item.payload<KMime::Message::Ptr>();
-    switch ( relativeCustomRole( role ) ) {
-    case Title:
-      return note->subject()->asUnicodeString();
-    case Content:
-      return note->mainBodyPart()->decodedText();
-    case PlainContent:
-    {
-      QTextDocument doc;
-      if ( note->contentType()->asUnicodeString() == QStringLiteral( "text/plain" ) )
-        doc.setPlainText( note->mainBodyPart()->decodedText() );
-      else
-        doc.setHtml( note->mainBodyPart()->decodedText() );
-      return doc.toPlainText();
+    if (item.isValid() && item.hasPayload<KMime::Message::Ptr>()) {
+        const KMime::Message::Ptr note = item.payload<KMime::Message::Ptr>();
+        switch (relativeCustomRole(role)) {
+        case Title:
+            return note->subject()->asUnicodeString();
+        case Content:
+            return note->mainBodyPart()->decodedText();
+        case PlainContent: {
+            QTextDocument doc;
+            if (note->contentType()->asUnicodeString() == QStringLiteral("text/plain")) {
+                doc.setPlainText(note->mainBodyPart()->decodedText());
+            } else {
+                doc.setHtml(note->mainBodyPart()->decodedText());
+            }
+            return doc.toPlainText();
+        }
+        case ShortContent: {
+            QTextDocument doc;
+            if (note->contentType()->asUnicodeString() == QStringLiteral("text/plain")) {
+                doc.setPlainText(note->mainBodyPart()->decodedText());
+            } else {
+                doc.setHtml(note->mainBodyPart()->decodedText());
+            }
+            const QString plain = doc.toPlainText();
+            const QStringList list = plain.split(QLatin1Char('\n'));
+            if (list.isEmpty()) {
+                return QString();
+            }
+            return list.first();
+        }
+        }
     }
-    case ShortContent:
-    {
-      QTextDocument doc;
-      if ( note->contentType()->asUnicodeString() == QStringLiteral( "text/plain" ) )
-        doc.setPlainText( note->mainBodyPart()->decodedText() );
-      else
-        doc.setHtml( note->mainBodyPart()->decodedText() );
-      const QString plain = doc.toPlainText();
-      const QStringList list = plain.split( QLatin1Char( '\n' ) );
-      if ( list.isEmpty() )
-        return QString();
-      return list.first();
-    }
-    }
-  }
 
-  return QSortFilterProxyModel::data(index, role);
+    return QSortFilterProxyModel::data(index, role);
 }
 
-void NoteListProxy::setSourceModel( QAbstractItemModel* sourceModel )
+void NoteListProxy::setSourceModel(QAbstractItemModel *sourceModel)
 {
-  ListProxy::setSourceModel(sourceModel);
+    ListProxy::setSourceModel(sourceModel);
 
-  QHash<int, QByteArray> names = roleNames();
-  names.insert( EntityTreeModel::ItemIdRole, "itemId" );
-  names.insert( absoluteCustomRole( Title ), "title" );
-  names.insert( absoluteCustomRole( Content ), "content" );
-  names.insert( absoluteCustomRole( PlainContent ), "plainContent" );
-  names.insert( absoluteCustomRole( ShortContent ), "shortContent" );
-  setRoleNames( names );
+    QHash<int, QByteArray> names = roleNames();
+    names.insert(EntityTreeModel::ItemIdRole, "itemId");
+    names.insert(absoluteCustomRole(Title), "title");
+    names.insert(absoluteCustomRole(Content), "content");
+    names.insert(absoluteCustomRole(PlainContent), "plainContent");
+    names.insert(absoluteCustomRole(ShortContent), "shortContent");
+    setRoleNames(names);
 }
 

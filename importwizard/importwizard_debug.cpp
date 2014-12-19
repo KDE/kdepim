@@ -20,4 +20,3 @@
 #include "importwizard_debug.h"
 Q_LOGGING_CATEGORY(IMPORTWIZARD_LOG, "log_importwizard")
 
-

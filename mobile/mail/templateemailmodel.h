@@ -17,7 +17,6 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-
 #ifndef TEMPLATEEMAILMODEL_H
 #define TEMPLATEEMAILMODEL_H
 
@@ -26,14 +25,15 @@
 /** A simple model that overrides the data() method, so the display role is the subject of the mails.
  * Then in QML one can use "display" to get it.
  */
-class TemplateEmailModel : public Akonadi::SelectionProxyModel {
-  Q_OBJECT
+class TemplateEmailModel : public Akonadi::SelectionProxyModel
+{
+    Q_OBJECT
 public:
-    explicit TemplateEmailModel( QItemSelectionModel *selectionModel, QObject *parent = Q_NULLPTR ) : Akonadi::SelectionProxyModel( selectionModel, parent)  {
-   }
+    explicit TemplateEmailModel(QItemSelectionModel *selectionModel, QObject *parent = Q_NULLPTR) : Akonadi::SelectionProxyModel(selectionModel, parent)
+    {
+    }
 
-   QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 };
-
 
 #endif // TEMPLATEEMAILMODEL_H

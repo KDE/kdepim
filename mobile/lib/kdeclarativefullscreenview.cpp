@@ -54,210 +54,219 @@
 #include <QStandardPaths>
 #endif
 
-KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileName, QWidget* parent) :
-  QDeclarativeView( parent ),
+KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString &qmlFileName, QWidget *parent) :
+    QDeclarativeView(parent),
 #ifndef Q_OS_WIN
-  m_glWidget( 0 ),
+    m_glWidget(0),
 #endif
-  m_qmlFileName( qmlFileName ),
-  m_splashScreen( 0 )
+    m_qmlFileName(qmlFileName),
+    m_splashScreen(0)
 {
-  bool openGlEnabled = false; // off by default, seems to have random bad side-effects on the N900
-  if ( KCmdLineArgs::parsedArgs()->isSet( "enable-opengl" ) )
-    openGlEnabled = true;
-  if ( KCmdLineArgs::parsedArgs()->isSet( "disable-opengl" ) )
-     openGlEnabled = false;
+    bool openGlEnabled = false; // off by default, seems to have random bad side-effects on the N900
+    if (KCmdLineArgs::parsedArgs()->isSet("enable-opengl")) {
+        openGlEnabled = true;
+    }
+    if (KCmdLineArgs::parsedArgs()->isSet("disable-opengl")) {
+        openGlEnabled = false;
+    }
 
-  if ( openGlEnabled ) {
-    // make MainView use OpenGL ES2 backend for better performance
-    // right now, the best performance can be achieved with a GLWidget
-    // and the use of the raster graphicssystem.
-    QGLFormat format = QGLFormat::defaultFormat();
-    format.setSampleBuffers(false);
-    m_glWidget = new QGLWidget(format, this); // use OpenGL ES2 backend.
-    m_glWidget->setAutoFillBackground(false);
-    setViewport(m_glWidget);
-    Akonadi::Control::widgetNeedsAkonadi( m_glWidget );
-  } else {
-    Akonadi::Control::widgetNeedsAkonadi( this );
-  }
+    if (openGlEnabled) {
+        // make MainView use OpenGL ES2 backend for better performance
+        // right now, the best performance can be achieved with a GLWidget
+        // and the use of the raster graphicssystem.
+        QGLFormat format = QGLFormat::defaultFormat();
+        format.setSampleBuffers(false);
+        m_glWidget = new QGLWidget(format, this); // use OpenGL ES2 backend.
+        m_glWidget->setAutoFillBackground(false);
+        setViewport(m_glWidget);
+        Akonadi::Control::widgetNeedsAkonadi(m_glWidget);
+    } else {
+        Akonadi::Control::widgetNeedsAkonadi(this);
+    }
 
 #ifdef KDEQMLPLUGIN_STATIC
-  rootContext()->setContextProperty( QLatin1String("KDE"), new KDEIntegration( this ) );
+    rootContext()->setContextProperty(QLatin1String("KDE"), new KDEIntegration(this));
 #endif
 
-  setResizeMode( QDeclarativeView::SizeRootObjectToView );
+    setResizeMode(QDeclarativeView::SizeRootObjectToView);
 
-  resize(800, 480);
+    resize(800, 480);
 
-  qApp->setStartDragDistance(40);
+    qApp->setStartDragDistance(40);
 
-  m_splashScreen = new QLabel( this );
-  QPixmap splashBackground;
-  splashBackground.load( QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String( "mobileui" ) + QDir::separator() + QLatin1String( "splashscreenstatic.png" ) ) );
-  m_splashScreen->setPixmap( splashBackground );
+    m_splashScreen = new QLabel(this);
+    QPixmap splashBackground;
+    splashBackground.load(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("mobileui") + QDir::separator() + QLatin1String("splashscreenstatic.png")));
+    m_splashScreen->setPixmap(splashBackground);
 
-  QMetaObject::invokeMethod( this, "delayedInit", Qt::QueuedConnection );
+    QMetaObject::invokeMethod(this, "delayedInit", Qt::QueuedConnection);
 }
 
 void KDeclarativeFullScreenView::delayedInit()
 {
-  qDebug();
-  static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet("timeit");
-  QTime t;
+    qDebug();
+    static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet("timeit");
+    QTime t;
 
-  connect( this, SIGNAL(statusChanged(QDeclarativeView::Status)), SLOT(slotStatusChanged(QDeclarativeView::Status)) );
+    connect(this, SIGNAL(statusChanged(QDeclarativeView::Status)), SLOT(slotStatusChanged(QDeclarativeView::Status)));
 
-  engine()->rootContext()->setContextProperty( QLatin1String("window"), QVariant::fromValue( static_cast<QObject*>( this ) ) );
+    engine()->rootContext()->setContextProperty(QLatin1String("window"), QVariant::fromValue(static_cast<QObject *>(this)));
 
-  if ( debugTiming ) {
-    qWarning() << "Adding QML import paths" << t.elapsed() << &t;
-  }
-  foreach ( const QString &importPath, KGlobal::dirs()->findDirs( "module", QLatin1String("imports") ) )
-    engine()->addImportPath( importPath );
-  QString qmlPath = QStandardPaths::locate(QStandardPaths::DataLocation, m_qmlFileName + QLatin1String(".qml") );
+    if (debugTiming) {
+        qWarning() << "Adding QML import paths" << t.elapsed() << &t;
+    }
+    foreach (const QString &importPath, KGlobal::dirs()->findDirs("module", QLatin1String("imports"))) {
+        engine()->addImportPath(importPath);
+    }
+    QString qmlPath = QStandardPaths::locate(QStandardPaths::DataLocation, m_qmlFileName + QLatin1String(".qml"));
 
-  if ( debugTiming ) {
-    qWarning() << "Adding QML import paths done" << t.elapsed() << &t;
-  }
+    if (debugTiming) {
+        qWarning() << "Adding QML import paths done" << t.elapsed() << &t;
+    }
 
-  if ( qmlPath.isEmpty() ) // Try harder
-    qmlPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String( "mobileui" ) + QDir::separator() + m_qmlFileName + QLatin1String(".qml") );
+    if (qmlPath.isEmpty()) { // Try harder
+        qmlPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("mobileui") + QDir::separator() + m_qmlFileName + QLatin1String(".qml"));
+    }
 
-  // TODO: Get this from a KXMLGUIClient?
-  mActionCollection = new KActionCollection( this );
+    // TODO: Get this from a KXMLGUIClient?
+    mActionCollection = new KActionCollection(this);
 
-  QAction *action = KStandardAction::close( this, SLOT(close()), this );
-  mActionCollection->addAction( QLatin1String( "close" ), action );
+    QAction *action = KStandardAction::close(this, SLOT(close()), this);
+    mActionCollection->addAction(QLatin1String("close"), action);
 
-  action = new QAction( i18n( "Full Shutdown" ), this );
-  connect( action, SIGNAL(triggered()), SLOT(closeAkonadi()) );
-  mActionCollection->addAction( QLatin1String( "quit_akonadi" ), action );
+    action = new QAction(i18n("Full Shutdown"), this);
+    connect(action, SIGNAL(triggered()), SLOT(closeAkonadi()));
+    mActionCollection->addAction(QLatin1String("quit_akonadi"), action);
 
-  if ( debugTiming ) {
-    qWarning() << "KDeclarativeFullScreenView ctor done" << t.elapsed() << &t << QDateTime::currentDateTime();
-  }
+    if (debugTiming) {
+        qWarning() << "KDeclarativeFullScreenView ctor done" << t.elapsed() << &t << QDateTime::currentDateTime();
+    }
 
-  doDelayedInitInternal();
-  doDelayedInit(); // let sub-classes do their init work
+    doDelayedInitInternal();
+    doDelayedInit(); // let sub-classes do their init work
 
-  // call setSource() only once our derived classes have set up everything
-  QMetaObject::invokeMethod( this, "setQmlFile", Qt::QueuedConnection, Q_ARG( QString, qmlPath ) );
+    // call setSource() only once our derived classes have set up everything
+    QMetaObject::invokeMethod(this, "setQmlFile", Qt::QueuedConnection, Q_ARG(QString, qmlPath));
 }
 
 KDeclarativeFullScreenView::~KDeclarativeFullScreenView()
 {
 #ifndef Q_OS_WIN
-  delete m_glWidget;
+    delete m_glWidget;
 #endif
 }
 
-void KDeclarativeFullScreenView::setQmlFile(const QString& source)
+void KDeclarativeFullScreenView::setQmlFile(const QString &source)
 {
-  static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet("timeit");
-  QTime t;
-  if ( debugTiming ) {
-    t.start();
-    qWarning() << "start setSource" << &t << " - " << QDateTime::currentDateTime();
-  }
-  qDebug() << QLatin1String("trying to load \"") +  source << QLatin1String("\"");
-  setSource( QUrl::fromLocalFile(source) );
-  if ( debugTiming ) {
-    qWarning() << "setSourceDone" << t.elapsed() << &t;
-  }
+    static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet("timeit");
+    QTime t;
+    if (debugTiming) {
+        t.start();
+        qWarning() << "start setSource" << &t << " - " << QDateTime::currentDateTime();
+    }
+    qDebug() << QLatin1String("trying to load \"") +  source << QLatin1String("\"");
+    setSource(QUrl::fromLocalFile(source));
+    if (debugTiming) {
+        qWarning() << "setSourceDone" << t.elapsed() << &t;
+    }
 }
 
 void KDeclarativeFullScreenView::closeAkonadi()
 {
-  const QString message = i18n( "A full shutdown will disable notifications\nabout new emails and upcoming events." );
-  const int result = KMessageBox::warningContinueCancel( 0, message );
+    const QString message = i18n("A full shutdown will disable notifications\nabout new emails and upcoming events.");
+    const int result = KMessageBox::warningContinueCancel(0, message);
 
-  if ( result == KMessageBox::Cancel )
-    return;
+    if (result == KMessageBox::Cancel) {
+        return;
+    }
 
-  Akonadi::ServerManager::self()->stop();
-  close();
+    Akonadi::ServerManager::self()->stop();
+    close();
 }
 
 void KDeclarativeFullScreenView::closeAllFrontends(const QString &qmlFileName)
 {
-  QStringList applications;
-  applications << QLatin1String( "notes-mobile" )
-               << QLatin1String( "tasks-mobile" )
-               << QLatin1String( "kmail-mobile" )
-               << QLatin1String( "kaddressbook-mobile" )
-               << QLatin1String( "korganizer-mobile" );
-  if ( !applications.contains( qmlFileName + QLatin1String( "-mobile" ) ) &&
-       !applications.contains( qmlFileName ) ){
-    return;
-  }
-  foreach( const QString &app, applications ) {
-    if ( app.startsWith( qmlFileName ) )
-      continue;
-    QDBusConnection::sessionBus().call( QDBusMessage::createMethodCall(
-          QLatin1String( "org.kde." ) + app, QLatin1String( "/MainApplication" ),
-          QLatin1String( "org.kde.KApplication" ), QLatin1String( "quit" ) ), QDBus::NoBlock );
-  }
-}
-
-void KDeclarativeFullScreenView::slotStatusChanged ( QDeclarativeView::Status status )
-{
-  if ( status == QDeclarativeView::Error ) {
-    QStringList errorMessages;
-    std::transform( errors().constBegin(), errors().constEnd(), std::back_inserter( errorMessages ), boost::bind( &QDeclarativeError::toString, _1 ) );
-    KMessageBox::error( this, i18n( "Application loading failed: %1", errorMessages.join( QLatin1String( "\n" ) ) ) );
-    QCoreApplication::instance()->exit( 1 );
-  }
-
-  if ( status == QDeclarativeView::Ready ) {
-    if ( m_splashScreen ) {
-      m_splashScreen->deleteLater();
-      m_splashScreen = 0;
+    QStringList applications;
+    applications << QLatin1String("notes-mobile")
+                 << QLatin1String("tasks-mobile")
+                 << QLatin1String("kmail-mobile")
+                 << QLatin1String("kaddressbook-mobile")
+                 << QLatin1String("korganizer-mobile");
+    if (!applications.contains(qmlFileName + QLatin1String("-mobile")) &&
+            !applications.contains(qmlFileName)) {
+        return;
     }
-  }
+    foreach (const QString &app, applications) {
+        if (app.startsWith(qmlFileName)) {
+            continue;
+        }
+        QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall(
+                                               QLatin1String("org.kde.") + app, QLatin1String("/MainApplication"),
+                                               QLatin1String("org.kde.KApplication"), QLatin1String("quit")), QDBus::NoBlock);
+    }
 }
 
-KActionCollection* KDeclarativeFullScreenView::actionCollection() const
+void KDeclarativeFullScreenView::slotStatusChanged(QDeclarativeView::Status status)
 {
-  return mActionCollection;
+    if (status == QDeclarativeView::Error) {
+        QStringList errorMessages;
+        std::transform(errors().constBegin(), errors().constEnd(), std::back_inserter(errorMessages), boost::bind(&QDeclarativeError::toString, _1));
+        KMessageBox::error(this, i18n("Application loading failed: %1", errorMessages.join(QLatin1String("\n"))));
+        QCoreApplication::instance()->exit(1);
+    }
+
+    if (status == QDeclarativeView::Ready) {
+        if (m_splashScreen) {
+            m_splashScreen->deleteLater();
+            m_splashScreen = 0;
+        }
+    }
 }
 
-QObject* KDeclarativeFullScreenView::getAction( const QString& name, const QString& argument ) const
+KActionCollection *KDeclarativeFullScreenView::actionCollection() const
 {
-  QAction * action = mActionCollection->action( name );
-  if ( !argument.isEmpty() && action )
-    action->setData( argument );
-  return action;
+    return mActionCollection;
 }
 
-QString KDeclarativeFullScreenView::getActionIconName( const QString& name ) const
+QObject *KDeclarativeFullScreenView::getAction(const QString &name, const QString &argument) const
 {
-  QAction * action = mActionCollection->action( name );
-  if ( action )
-    return action->icon().name();
-
-  return QString();
+    QAction *action = mActionCollection->action(name);
+    if (!argument.isEmpty() && action) {
+        action->setData(argument);
+    }
+    return action;
 }
 
-void KDeclarativeFullScreenView::setActionTitle(const QString& name, const QString& title)
+QString KDeclarativeFullScreenView::getActionIconName(const QString &name) const
 {
-  QAction * action = mActionCollection->action( name );
-  if ( !title.isEmpty() && action )
-    action->setText( title );
+    QAction *action = mActionCollection->action(name);
+    if (action) {
+        return action->icon().name();
+    }
+
+    return QString();
+}
+
+void KDeclarativeFullScreenView::setActionTitle(const QString &name, const QString &title)
+{
+    QAction *action = mActionCollection->action(name);
+    if (!title.isEmpty() && action) {
+        action->setText(title);
+    }
 }
 
 void KDeclarativeFullScreenView::bringToFront()
 {
-  activateWindow();
-  raise();
+    activateWindow();
+    raise();
 }
 
-void KDeclarativeFullScreenView::resizeEvent(QResizeEvent* event)
+void KDeclarativeFullScreenView::resizeEvent(QResizeEvent *event)
 {
-  QDeclarativeView::resizeEvent(event);
-  if ( m_splashScreen ) {
-    m_splashScreen->move( (event->size().width() - m_splashScreen->sizeHint().width())/2,
-                          (event->size().height() - m_splashScreen->sizeHint().height())/2 );
-  }
+    QDeclarativeView::resizeEvent(event);
+    if (m_splashScreen) {
+        m_splashScreen->move((event->size().width() - m_splashScreen->sizeHint().width()) / 2,
+                             (event->size().height() - m_splashScreen->sizeHint().height()) / 2);
+    }
 }
 

@@ -27,31 +27,31 @@
 
 class SearchWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit SearchWidget( QWidget *parent = Q_NULLPTR );
+public:
+    explicit SearchWidget(QWidget *parent = Q_NULLPTR);
 
     QString query() const;
 
-  private:
+private:
     Ui_SearchWidget mUi;
 };
 
 class DeclarativeSearchWidget : public QGraphicsProxyWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  Q_PROPERTY( QString query READ query )
+    Q_PROPERTY(QString query READ query)
 
-  public:
-    explicit DeclarativeSearchWidget( QGraphicsItem *parent = Q_NULLPTR );
+public:
+    explicit DeclarativeSearchWidget(QGraphicsItem *parent = Q_NULLPTR);
     ~DeclarativeSearchWidget();
 
-  public Q_SLOTS:
+public Q_SLOTS:
     QString query() const;
 
-  private:
+private:
     SearchWidget *mSearchWidget;
 };
 

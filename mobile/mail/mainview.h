@@ -31,14 +31,16 @@
 #include <messagecomposer/helper/messagefactory.h>
 #include <KUrl>
 
-namespace Akonadi {
-  class EntityMimeTypeFilterModel;
-  class QuotaColorProxyModel;
-  class StandardMailActionManager;
+namespace Akonadi
+{
+class EntityMimeTypeFilterModel;
+class QuotaColorProxyModel;
+class StandardMailActionManager;
 }
 
-namespace MessageViewer {
-  class MessageViewItem;
+namespace MessageViewer
+{
+class MessageViewItem;
 }
 
 class AclEditor;
@@ -58,92 +60,92 @@ class ThreadModel;
 
 class MainView : public KDeclarativeMainView
 {
-  Q_OBJECT
-  Q_CLASSINFO( "D-Bus Interface", "org.kde.kmailmobile.Composer" )
-  Q_CLASSINFO( "D-Bus Introspection", ""
-               "  <interface name=\"org.kde.kmailmobile.Composer\">\n"
-               "    <method name=\"openComposer\">\n"
-               "      <arg direction=\"out\" type=\"i\"/>\n"
-               "      <arg direction=\"in\" type=\"s\" name=\"to\"/>\n"
-               "      <arg direction=\"in\" type=\"s\" name=\"cc\"/>\n"
-               "      <arg direction=\"in\" type=\"s\" name=\"bcc\"/>\n"
-               "      <arg direction=\"in\" type=\"s\" name=\"subject\"/>\n"
-               "      <arg direction=\"in\" type=\"s\" name=\"body\"/>\n"
-               "    </method>\n"
-               "    <method name=\"openComposerAndAttach\">\n"
-               "      <arg direction=\"out\" type=\"i\"/>\n"
-               "      <arg direction=\"in\" type=\"s\" name=\"to\"/>\n"
-               "      <arg direction=\"in\" type=\"s\" name=\"cc\"/>\n"
-               "      <arg direction=\"in\" type=\"s\" name=\"bcc\"/>\n"
-               "      <arg direction=\"in\" type=\"s\" name=\"subject\"/>\n"
-               "      <arg direction=\"in\" type=\"s\" name=\"body\"/>\n"
-               "      <arg direction=\"in\" type=\"as\" name=\"attachments\"/>\n"
-               "    </method>\n"
-               "  </interface>\n"
-                       "")
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.kmailmobile.Composer")
+    Q_CLASSINFO("D-Bus Introspection", ""
+                "  <interface name=\"org.kde.kmailmobile.Composer\">\n"
+                "    <method name=\"openComposer\">\n"
+                "      <arg direction=\"out\" type=\"i\"/>\n"
+                "      <arg direction=\"in\" type=\"s\" name=\"to\"/>\n"
+                "      <arg direction=\"in\" type=\"s\" name=\"cc\"/>\n"
+                "      <arg direction=\"in\" type=\"s\" name=\"bcc\"/>\n"
+                "      <arg direction=\"in\" type=\"s\" name=\"subject\"/>\n"
+                "      <arg direction=\"in\" type=\"s\" name=\"body\"/>\n"
+                "    </method>\n"
+                "    <method name=\"openComposerAndAttach\">\n"
+                "      <arg direction=\"out\" type=\"i\"/>\n"
+                "      <arg direction=\"in\" type=\"s\" name=\"to\"/>\n"
+                "      <arg direction=\"in\" type=\"s\" name=\"cc\"/>\n"
+                "      <arg direction=\"in\" type=\"s\" name=\"bcc\"/>\n"
+                "      <arg direction=\"in\" type=\"s\" name=\"subject\"/>\n"
+                "      <arg direction=\"in\" type=\"s\" name=\"body\"/>\n"
+                "      <arg direction=\"in\" type=\"as\" name=\"attachments\"/>\n"
+                "    </method>\n"
+                "  </interface>\n"
+                "")
 
-  Q_PROPERTY( bool collectionIsSentMail READ collectionIsSentMail NOTIFY currentCollectionChanged )
+    Q_PROPERTY(bool collectionIsSentMail READ collectionIsSentMail NOTIFY currentCollectionChanged)
 
-  public:
-    explicit MainView(QWidget* parent = Q_NULLPTR);
+public:
+    explicit MainView(QWidget *parent = Q_NULLPTR);
 
     ~MainView();
 
     void handleCommandLine();
 
     enum ForwardMode {
-      InLine = 0,
-      AsAttachment,
-      Redirect
+        InLine = 0,
+        AsAttachment,
+        Redirect
     };
 
-    void setConfigWidget( ConfigWidget *configWidget );
+    void setConfigWidget(ConfigWidget *configWidget);
 
     bool collectionIsSentMail() const;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void startComposer();
-    void restoreDraft( quint64 id );
-    void restoreTemplate( quint64 id );
+    void restoreDraft(quint64 id);
+    void restoreTemplate(quint64 id);
 
-    void markImportant( bool checked );
-    void markMailTask( bool checked );
-    void modifyDone( KJob *job );
+    void markImportant(bool checked);
+    void markMailTask(bool checked);
+    void modifyDone(KJob *job);
     void dataChanged();
 
-    bool isDraftThreadContent( int row );
-    bool isDraftThreadRoot( int row );
-    bool isSingleMessage( int row );
-    bool folderIsDrafts( const Akonadi::Collection &collection );
-    bool isTemplateThreadContent( int row );
-    bool isTemplateThreadRoot( int row );
-    bool folderIsTemplates( const Akonadi::Collection &collection );
+    bool isDraftThreadContent(int row);
+    bool isDraftThreadRoot(int row);
+    bool isSingleMessage(int row);
+    bool folderIsDrafts(const Akonadi::Collection &collection);
+    bool isTemplateThreadContent(int row);
+    bool isTemplateThreadRoot(int row);
+    bool folderIsTemplates(const Akonadi::Collection &collection);
 
     void configureIdentity();
 
     int emailTemplateCount();
-    void newMessageFromTemplate( int index );
+    void newMessageFromTemplate(int index);
 
     void selectNextUnreadMessage();
 
-    Q_SCRIPTABLE int openComposer( const QString & to,
-                                   const QString & cc,
-                                   const QString & bcc,
-                                   const QString & subject,
-                                   const QString & body );
+    Q_SCRIPTABLE int openComposer(const QString &to,
+                                  const QString &cc,
+                                  const QString &bcc,
+                                  const QString &subject,
+                                  const QString &body);
 
-    Q_SCRIPTABLE int openComposerAndAttach( const QString & to,
-                                            const QString & cc,
-                                            const QString & bcc,
-                                            const QString & subject,
-                                            const QString & body,
-                                            const QStringList & attachments );
+    Q_SCRIPTABLE int openComposerAndAttach(const QString &to,
+                                           const QString &cc,
+                                           const QString &bcc,
+                                           const QString &subject,
+                                           const QString &body,
+                                           const QStringList &attachments);
     void mailActionStateUpdated();
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void currentCollectionChanged();
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     void forwardMessage();
     void forwardAsAttachment();
     void redirect();
@@ -155,12 +157,12 @@ class MainView : public KDeclarativeMainView
     void sendAgain();
     void sendQueued();
     void sendQueuedVia();
-    void sendQueuedVia( const QString &transport );
+    void sendQueuedVia(const QString &transport);
     void saveMessage();
     void findInMessage();
-    void preferHTML( bool useHtml );
-    void preferHtmlViewer( bool useHtml );
-    void loadExternalReferences( bool load );
+    void preferHTML(bool useHtml);
+    void preferHtmlViewer(bool useHtml);
+    void loadExternalReferences(bool load);
     void folderChanged();
     void moveToOrEmptyTrash();
     void useFixedFont();
@@ -170,53 +172,53 @@ class MainView : public KDeclarativeMainView
     void itemSelectionChanged();
     void slotCollectionSelectionChanged();
 
-  protected:
+protected:
     void doDelayedInit();
-    virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
-                                             QItemSelectionModel *itemSelectionModel );
+    virtual void setupStandardActionManager(QItemSelectionModel *collectionSelectionModel,
+                                            QItemSelectionModel *itemSelectionModel);
 
-    virtual void setupAgentActionManager( QItemSelectionModel *selectionModel );
+    virtual void setupAgentActionManager(QItemSelectionModel *selectionModel);
 
-    virtual QAbstractProxyModel* createMainProxyModel() const;
-    virtual QAbstractProxyModel* createItemFilterModel() const;
+    virtual QAbstractProxyModel *createMainProxyModel() const;
+    virtual QAbstractProxyModel *createItemFilterModel() const;
 
-    virtual ImportHandlerBase* importHandler() const;
-    virtual ExportHandlerBase* exportHandler() const;
+    virtual ImportHandlerBase *importHandler() const;
+    virtual ExportHandlerBase *exportHandler() const;
 
-    virtual QAbstractItemModel* createItemModelContext(QDeclarativeContext* context, QAbstractItemModel* model);
+    virtual QAbstractItemModel *createItemModelContext(QDeclarativeContext *context, QAbstractItemModel *model);
 
     virtual bool doNotUseFilterLineEditInCurrentState() const;
 
-  private Q_SLOTS:
-    void qmlInitialized( QDeclarativeView::Status status );
-    void sendAgainFetchResult( KJob *job );
-    void replyFetchResult( KJob *job );
-    void forwardFetchResult( KJob *job );
-    void composeFetchResult( KJob *job );
+private Q_SLOTS:
+    void qmlInitialized(QDeclarativeView::Status status);
+    void sendAgainFetchResult(KJob *job);
+    void replyFetchResult(KJob *job);
+    void forwardFetchResult(KJob *job);
+    void composeFetchResult(KJob *job);
     void initDefaultFolders();
-    void createDefaultCollectionDone( KJob *job);
-    void deleteItemResult( KJob *job );
-    void templateFetchResult( KJob *job );
+    void createDefaultCollectionDone(KJob *job);
+    void deleteItemResult(KJob *job);
+    void templateFetchResult(KJob *job);
     void updateConfig();
     bool askToGoOnline();
     void showMessageSource();
     void selectOverrideEncoding();
-    void toggleShowExtendedHeaders( bool );
-    void messageListSettingsChanged( const MessageListSettings& );
+    void toggleShowExtendedHeaders(bool);
+    void messageListSettingsChanged(const MessageListSettings &);
     bool selectNextUnreadMessageInCurrentFolder();
     void showTemplatesHelp();
-    void slotDeleteMessage( const Akonadi::Item &item );
+    void slotDeleteMessage(const Akonadi::Item &item);
 
-  private:
-    void reply( quint64 id, MessageComposer::ReplyStrategy replyStrategy, bool quoteOriginal = true );
-    void forward( quint64 id, ForwardMode mode );
-    void findCreateDefaultCollection( Akonadi::SpecialMailCollections::Type type );
+private:
+    void reply(quint64 id, MessageComposer::ReplyStrategy replyStrategy, bool quoteOriginal = true);
+    void forward(quint64 id, ForwardMode mode);
+    void findCreateDefaultCollection(Akonadi::SpecialMailCollections::Type type);
     void recoverAutoSavedMessages();
     Akonadi::Item currentItem() const;
     MessageViewer::MessageViewItem *messageViewerItem();
     uint currentFolderIdentity() const;
-    QString itemStorageCollectionAsPath( const Akonadi::Item& ) const;
-    KMime::Content *createAttachment( const KUrl &url ) const;
+    QString itemStorageCollectionAsPath(const Akonadi::Item &) const;
+    KMime::Content *createAttachment(const KUrl &url) const;
 
     bool mAskingToGoOnline;
     QWidget *mTransportDialog;
@@ -235,6 +237,6 @@ class MainView : public KDeclarativeMainView
     Akonadi::Collection mCurrentCollection;
 };
 
-Q_DECLARE_METATYPE( MainView::ForwardMode )
+Q_DECLARE_METATYPE(MainView::ForwardMode)
 
 #endif

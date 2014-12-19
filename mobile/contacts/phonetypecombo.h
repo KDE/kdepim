@@ -30,15 +30,15 @@
  */
 class PhoneTypeCombo : public QComboBox
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a phone type combo.
      *
      * @param parent The parent widget.
      */
-    explicit PhoneTypeCombo( QWidget *parent = Q_NULLPTR );
+    explicit PhoneTypeCombo(QWidget *parent = Q_NULLPTR);
 
     /**
      * Destroys the phone type combo.
@@ -48,18 +48,18 @@ class PhoneTypeCombo : public QComboBox
     /**
      * Sets the phone number @p type that shall be selected.
      */
-    void setType( KContacts::PhoneNumber::Type type );
+    void setType(KContacts::PhoneNumber::Type type);
 
     /**
      * Returns the selected phone number type.
      */
     KContacts::PhoneNumber::Type type() const;
 
-  private:
+private:
     class Private;
     Private *const d;
 
-  Q_PRIVATE_SLOT( d, void selected( int ) )
+    Q_PRIVATE_SLOT(d, void selected(int))
 };
 
 #endif

@@ -6,15 +6,15 @@
 
 class KWidgetLister : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new widget lister.
      *
      * @param parent The parent widget.
      */
-    explicit KWidgetLister( QWidget *parent = Q_NULLPTR );
+    explicit KWidgetLister(QWidget *parent = Q_NULLPTR);
 
     /**
      * Destroys the widget lister.
@@ -24,7 +24,7 @@ class KWidgetLister : public QWidget
     /**
      * Sets the @p orientation of the listed widgets.
      */
-    void setOrientation( Qt::Orientation orientation );
+    void setOrientation(Qt::Orientation orientation);
 
     /**
      * Returns the orientation of the listed widgets.
@@ -36,7 +36,7 @@ class KWidgetLister : public QWidget
      *
      * @note The lister takes ownership of the widget.
      */
-    void addWidget( QWidget *widget );
+    void addWidget(QWidget *widget);
 
     /**
      * Removes all widgets from the lister and deletes them.
@@ -52,21 +52,21 @@ class KWidgetLister : public QWidget
      * Returns the widget at the given @p index or @c 0 if the index
      * is out of range.
      */
-    QWidget* widget( int index ) const;
+    QWidget *widget(int index) const;
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted before the given @p widget is removed
      * from the lister.
      */
-    void aboutToBeRemoved( QWidget *widget );
+    void aboutToBeRemoved(QWidget *widget);
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void removeWidget( QWidget* ) )
+    Q_PRIVATE_SLOT(d, void removeWidget(QWidget *))
     //@endcond
 };
 

@@ -100,9 +100,8 @@ void Message::slotItemReceived(const Akonadi::Item::List &itemList)
     m_to = msg.to()->asUnicodeString();
     m_cc = msg.cc()->asUnicodeString();
     m_bcc = msg.bcc()->asUnicodeString();
-    m_textContent = msg.textContent()->decodedText(true,true);
+    m_textContent = msg.textContent()->decodedText(true, true);
     m_date = msg.date()->dateTime();
     emit messageChanged();
 }
-
 

@@ -273,7 +273,7 @@ Akonadi::Item EditorItemManager::item(ItemState state) const
             return d->mItem;
         } else {
             qCDebug(INCIDENCEEDITOR_LOG) << "Won't return mItem because isValid = " << d->mItem.isValid()
-                     << "; and haPayload is " << d->mItem.hasPayload();
+                                         << "; and haPayload is " << d->mItem.hasPayload();
         }
         break;
     case EditorItemManager::BeforeSave:
@@ -281,7 +281,7 @@ Akonadi::Item EditorItemManager::item(ItemState state) const
             return d->mPrevItem;
         } else {
             qCDebug(INCIDENCEEDITOR_LOG) << "Won't return mPrevItem because isValid = " << d->mPrevItem.isValid()
-                     << "; and haPayload is " << d->mPrevItem.hasPayload();
+                                         << "; and haPayload is " << d->mPrevItem.hasPayload();
         }
         break;
     default:

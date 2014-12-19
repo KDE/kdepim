@@ -24,42 +24,42 @@
 #include <kconfig.h>
 #include <kconfiggroup.h>
 
-void CustomFieldManager::setGlobalCustomFieldDescriptions( const CustomField::List &customFields )
+void CustomFieldManager::setGlobalCustomFieldDescriptions(const CustomField::List &customFields)
 {
-  KConfig config( QLatin1String( "akonadi_contactrc" ) );
-  KConfigGroup group( &config, QLatin1String( "GlobalCustomFields" ) );
+    KConfig config(QLatin1String("akonadi_contactrc"));
+    KConfigGroup group(&config, QLatin1String("GlobalCustomFields"));
 
-  group.deleteGroup();
-  foreach ( const CustomField &field, customFields ) {
-    const QString key = field.key();
-    const QString value = CustomField::typeToString( field.type() ) + QLatin1Char( ':' ) + field.title();
+    group.deleteGroup();
+    foreach (const CustomField &field, customFields) {
+        const QString key = field.key();
+        const QString value = CustomField::typeToString(field.type()) + QLatin1Char(':') + field.title();
 
-    group.writeEntry( key, value );
-  }
+        group.writeEntry(key, value);
+    }
 }
 
 CustomField::List CustomFieldManager::globalCustomFieldDescriptions()
 {
-  KConfig config( QLatin1String( "akonadi_contactrc" ) );
-  const KConfigGroup group( &config, QLatin1String( "GlobalCustomFields" ) );
+    KConfig config(QLatin1String("akonadi_contactrc"));
+    const KConfigGroup group(&config, QLatin1String("GlobalCustomFields"));
 
-  CustomField::List customFields;
+    CustomField::List customFields;
 
-  const QStringList keys = group.keyList();
-  foreach ( const QString &key, keys ) {
-    CustomField field;
-    field.setKey( key );
-    field.setScope( CustomField::GlobalScope );
+    const QStringList keys = group.keyList();
+    foreach (const QString &key, keys) {
+        CustomField field;
+        field.setKey(key);
+        field.setScope(CustomField::GlobalScope);
 
-    const QString value = group.readEntry( key, QString() );
-    const int pos = value.indexOf( QLatin1Char( ':' ) );
-    if ( pos != -1 ) {
-      field.setType( CustomField::stringToType( value.left( pos - 1 ) ) );
-      field.setTitle( value.mid( pos + 1 ) );
+        const QString value = group.readEntry(key, QString());
+        const int pos = value.indexOf(QLatin1Char(':'));
+        if (pos != -1) {
+            field.setType(CustomField::stringToType(value.left(pos - 1)));
+            field.setTitle(value.mid(pos + 1));
+        }
+
+        customFields << field;
     }
 
-    customFields << field;
-  }
-
-  return customFields;
+    return customFields;
 }

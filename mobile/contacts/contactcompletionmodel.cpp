@@ -30,102 +30,108 @@
 
 using namespace Akonadi;
 
-QAbstractItemModel* ContactCompletionModel::mSelf = 0;
+QAbstractItemModel *ContactCompletionModel::mSelf = 0;
 
-QAbstractItemModel* ContactCompletionModel::self()
+QAbstractItemModel *ContactCompletionModel::self()
 {
-  if ( mSelf )
+    if (mSelf) {
+        return mSelf;
+    }
+
+    ChangeRecorder *monitor = new ChangeRecorder;
+    monitor->fetchCollection(true);
+    monitor->itemFetchScope().fetchFullPayload();
+    monitor->setCollectionMonitored(Akonadi::Collection::root());
+    monitor->setMimeTypeMonitored(KContacts::Addressee::mimeType());
+
+    ContactCompletionModel *model = new ContactCompletionModel(monitor);
+
+    EntityMimeTypeFilterModel *filter = new Akonadi::EntityMimeTypeFilterModel(model);
+    filter->setSourceModel(model);
+    filter->addMimeTypeExclusionFilter(Akonadi::Collection::mimeType());
+    filter->setHeaderGroup(Akonadi::EntityTreeModel::ItemListHeaders);
+
+    mSelf = filter;
+
     return mSelf;
-
-  ChangeRecorder *monitor = new ChangeRecorder;
-  monitor->fetchCollection( true );
-  monitor->itemFetchScope().fetchFullPayload();
-  monitor->setCollectionMonitored( Akonadi::Collection::root() );
-  monitor->setMimeTypeMonitored( KContacts::Addressee::mimeType() );
-
-  ContactCompletionModel *model = new ContactCompletionModel( monitor );
-
-  EntityMimeTypeFilterModel *filter = new Akonadi::EntityMimeTypeFilterModel( model );
-  filter->setSourceModel( model );
-  filter->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
-  filter->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
-
-  mSelf = filter;
-
-  return mSelf;
 }
 
-ContactCompletionModel::ContactCompletionModel( ChangeRecorder *monitor, QObject *parent )
-  : EntityTreeModel( monitor, parent )
+ContactCompletionModel::ContactCompletionModel(ChangeRecorder *monitor, QObject *parent)
+    : EntityTreeModel(monitor, parent)
 {
-  setCollectionFetchStrategy( InvisibleCollectionFetch );
+    setCollectionFetchStrategy(InvisibleCollectionFetch);
 }
 
 ContactCompletionModel::~ContactCompletionModel()
 {
 }
 
-QVariant ContactCompletionModel::entityData( const Item &item, int column, int role ) const
+QVariant ContactCompletionModel::entityData(const Item &item, int column, int role) const
 {
-  if ( !item.hasPayload<KContacts::Addressee>() ) {
-    // Pass modeltest
-    if ( role == Qt::DisplayRole )
-      return item.remoteId();
+    if (!item.hasPayload<KContacts::Addressee>()) {
+        // Pass modeltest
+        if (role == Qt::DisplayRole) {
+            return item.remoteId();
+        }
 
-    return QVariant();
-  }
+        return QVariant();
+    }
 
-  if ( role == Qt::DisplayRole || role == Qt::EditRole ) {
-    const KContacts::Addressee contact = item.payload<KContacts::Addressee>();
+    if (role == Qt::DisplayRole || role == Qt::EditRole) {
+        const KContacts::Addressee contact = item.payload<KContacts::Addressee>();
 
-    switch ( column ) {
-      case NameColumn:
-        if ( !contact.formattedName().isEmpty() )
-          return contact.formattedName();
-        else
-          return contact.assembledName();
-        break;
-      case NameAndEmailColumn:
-        {
-          QString name = QString::fromLatin1( "%1 %2" ).arg( contact.givenName() )
-                                                       .arg( contact.familyName() ).simplified();
-          if ( name.isEmpty() )
-            name = contact.organization().simplified();
-          if ( name.isEmpty() )
-            return QString();
+        switch (column) {
+        case NameColumn:
+            if (!contact.formattedName().isEmpty()) {
+                return contact.formattedName();
+            } else {
+                return contact.assembledName();
+            }
+            break;
+        case NameAndEmailColumn: {
+            QString name = QString::fromLatin1("%1 %2").arg(contact.givenName())
+                           .arg(contact.familyName()).simplified();
+            if (name.isEmpty()) {
+                name = contact.organization().simplified();
+            }
+            if (name.isEmpty()) {
+                return QString();
+            }
 
-          const QString email = contact.preferredEmail().simplified();
-          if ( email.isEmpty() )
-            return QString();
+            const QString email = contact.preferredEmail().simplified();
+            if (email.isEmpty()) {
+                return QString();
+            }
 
-          return QString::fromLatin1( "%1 <%2>" ).arg( name ).arg( email );
+            return QString::fromLatin1("%1 <%2>").arg(name).arg(email);
         }
         break;
-      case EmailColumn:
-        return contact.preferredEmail();
-        break;
+        case EmailColumn:
+            return contact.preferredEmail();
+            break;
+        }
     }
-  }
 
-  return EntityTreeModel::entityData( item, column, role );
+    return EntityTreeModel::entityData(item, column, role);
 }
 
-QVariant ContactCompletionModel::entityData( const Collection &collection, int column, int role ) const
+QVariant ContactCompletionModel::entityData(const Collection &collection, int column, int role) const
 {
-  return EntityTreeModel::entityData( collection, column, role );
+    return EntityTreeModel::entityData(collection, column, role);
 }
 
-int ContactCompletionModel::columnCount( const QModelIndex &parent ) const
+int ContactCompletionModel::columnCount(const QModelIndex &parent) const
 {
-  if ( !parent.isValid() )
+    if (!parent.isValid()) {
+        return 3;
+    } else {
+        return 0;
+    }
+}
+
+int ContactCompletionModel::entityColumnCount(HeaderGroup) const
+{
     return 3;
-  else
-    return 0;
-}
-
-int ContactCompletionModel::entityColumnCount( HeaderGroup ) const
-{
-  return 3;
 }
 
 #include "moc_contactcompletionmodel_p.cpp"

@@ -28,125 +28,131 @@
 #include <KIconLoader>
 
 ContactImageProvider::ContactImageProvider()
-  : QDeclarativeImageProvider( QDeclarativeImageProvider::Pixmap ), mModel( 0 )
+    : QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap), mModel(0)
 {
 }
 
-QPixmap ContactImageProvider::requestPixmap( const QString &id, QSize *size, const QSize &requestedSize )
+QPixmap ContactImageProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
 {
-  int width = 50;
-  int height = 50;
-  if ( requestedSize.isValid() ) {
-    width = requestedSize.width();
-    height = requestedSize.height();
-  }
+    int width = 50;
+    int height = 50;
+    if (requestedSize.isValid()) {
+        width = requestedSize.width();
+        height = requestedSize.height();
+    }
 
-  if ( size )
-    *size = QSize( width, height );
+    if (size) {
+        *size = QSize(width, height);
+    }
 
-  const Akonadi::Item item( id.toLongLong() );
-  const QModelIndexList indexes = Akonadi::EntityTreeModel::modelIndexesForItem( mModel, item );
-  if ( indexes.isEmpty() || !indexes.first().isValid() )
+    const Akonadi::Item item(id.toLongLong());
+    const QModelIndexList indexes = Akonadi::EntityTreeModel::modelIndexesForItem(mModel, item);
+    if (indexes.isEmpty() || !indexes.first().isValid()) {
+        return QPixmap();
+    }
+
+    const QModelIndex index = indexes.first();
+
+    const Akonadi::Item contactItem = index.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
+    if (!contactItem.isValid()) {
+        return QPixmap();
+    }
+
+    if (contactItem.hasPayload<KContacts::Addressee>()) {
+        const KContacts::Addressee addressee = contactItem.payload<KContacts::Addressee>();
+        if (addressee.photo().isEmpty()) {
+            const QIcon icon = KIconLoader::global()->loadIcon(QLatin1String("user-identity"), KIconLoader::Dialog, KIconLoader::SizeHuge);
+            return icon.pixmap(width, height);
+        }
+
+        return QPixmap::fromImage(addressee.photo().data().scaled(width, height, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    } else if (contactItem.hasPayload<KContacts::ContactGroup>()) {
+        const QIcon icon = KIconLoader::global()->loadIcon(QLatin1String("x-mail-distribution-list"), KIconLoader::Dialog, KIconLoader::SizeHuge);
+        return icon.pixmap(width, height);
+    }
+
     return QPixmap();
+}
 
-  const QModelIndex index = indexes.first();
+void ContactImageProvider::setModel(QAbstractItemModel *model)
+{
+    mModel = model;
+}
 
-  const Akonadi::Item contactItem = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-  if ( !contactItem.isValid() )
-    return QPixmap();
+ContactListProxy::ContactListProxy(QObject *parent) : ListProxy(parent)
+{
+    setDynamicSortFilter(true);
+    sort(0, Qt::AscendingOrder);
+}
 
-  if ( contactItem.hasPayload<KContacts::Addressee>() ) {
-    const KContacts::Addressee addressee = contactItem.payload<KContacts::Addressee>();
-    if ( addressee.photo().isEmpty() ) {
-      const QIcon icon = KIconLoader::global()->loadIcon( QLatin1String("user-identity"), KIconLoader::Dialog, KIconLoader::SizeHuge );
-      return icon.pixmap( width, height );
+QVariant ContactListProxy::data(const QModelIndex &index, int role) const
+{
+    const Akonadi::Item item = QSortFilterProxyModel::data(index, Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
+    if (item.isValid() && item.hasPayload<KContacts::Addressee>()) {
+        const KContacts::Addressee addressee = item.payload<KContacts::Addressee>();
+        switch (role) {
+        case NameRole:
+            return addressee.realName();
+        case PictureRole:
+            return QString::fromLatin1("image://contact_images/%1").arg(item.id());
+        case TypeRole:
+            return QLatin1String("contact");
+        }
+    } else if (item.isValid() && item.hasPayload<KContacts::ContactGroup>()) {
+        const KContacts::ContactGroup group = item.payload<KContacts::ContactGroup>();
+        switch (role) {
+        case NameRole:
+            return group.name();
+        case PictureRole:
+            return QString::fromLatin1("image://contact_images/%1").arg(item.id());
+        case TypeRole:
+            return QLatin1String("group");
+        }
+    } else {
+        if (role == TypeRole) {
+            return QString();
+        }
     }
 
-    return QPixmap::fromImage( addressee.photo().data().scaled( width, height, Qt::KeepAspectRatio, Qt::SmoothTransformation ) );
-  } else if ( contactItem.hasPayload<KContacts::ContactGroup>() ) {
-    const QIcon icon = KIconLoader::global()->loadIcon( QLatin1String("x-mail-distribution-list"), KIconLoader::Dialog, KIconLoader::SizeHuge );
-    return icon.pixmap( width, height );
-  }
-
-  return QPixmap();
+    return QSortFilterProxyModel::data(index, role);
 }
 
-void ContactImageProvider::setModel( QAbstractItemModel *model )
+void ContactListProxy::setSourceModel(QAbstractItemModel *sourceModel)
 {
-  mModel = model;
+    ListProxy::setSourceModel(sourceModel);
+    QHash<int, QByteArray> names = roleNames();
+    names.insert(Akonadi::EntityTreeModel::ItemIdRole, "itemId");
+    names.insert(NameRole, "name");
+    names.insert(PictureRole, "picture");
+    setRoleNames(names);
 }
 
-ContactListProxy::ContactListProxy(QObject* parent) : ListProxy( parent )
+static QString nameForItem(const Akonadi::Item &item)
 {
-  setDynamicSortFilter( true );
-  sort( 0, Qt::AscendingOrder );
-}
-
-QVariant ContactListProxy::data(const QModelIndex& index, int role) const
-{
-  const Akonadi::Item item = QSortFilterProxyModel::data( index, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-  if ( item.isValid() && item.hasPayload<KContacts::Addressee>() ) {
-    const KContacts::Addressee addressee = item.payload<KContacts::Addressee>();
-    switch ( role ) {
-      case NameRole:
-        return addressee.realName();
-      case PictureRole:
-        return QString::fromLatin1( "image://contact_images/%1" ).arg( item.id() );
-      case TypeRole:
-        return QLatin1String( "contact" );
+    if (item.hasPayload<KContacts::Addressee>()) {
+        return item.payload<KContacts::Addressee>().realName();
     }
-  } else if ( item.isValid() && item.hasPayload<KContacts::ContactGroup>() ) {
-    const KContacts::ContactGroup group = item.payload<KContacts::ContactGroup>();
-    switch( role ) {
-      case NameRole:
-        return group.name();
-      case PictureRole:
-        return QString::fromLatin1( "image://contact_images/%1" ).arg( item.id() );
-      case TypeRole:
-        return QLatin1String( "group" );
+
+    if (item.hasPayload<KContacts::ContactGroup>()) {
+        return item.payload<KContacts::ContactGroup>().name();
     }
-  } else {
-    if ( role == TypeRole )
-      return QString();
-  }
 
-  return QSortFilterProxyModel::data( index, role );
+    return QString();
 }
 
-void ContactListProxy::setSourceModel(QAbstractItemModel* sourceModel)
+bool ContactListProxy::lessThan(const QModelIndex &left, const QModelIndex &right) const
 {
-  ListProxy::setSourceModel(sourceModel);
-  QHash<int, QByteArray> names = roleNames();
-  names.insert( Akonadi::EntityTreeModel::ItemIdRole, "itemId" );
-  names.insert( NameRole, "name" );
-  names.insert( PictureRole, "picture" );
-  setRoleNames( names );
-}
+    const Akonadi::Item leftItem = left.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
+    const Akonadi::Item rightItem = right.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
 
-static QString nameForItem( const Akonadi::Item &item )
-{
-  if ( item.hasPayload<KContacts::Addressee>() )
-    return item.payload<KContacts::Addressee>().realName();
+    const QString leftName = nameForItem(leftItem);
+    const QString rightName = nameForItem(rightItem);
 
-  if ( item.hasPayload<KContacts::ContactGroup>() )
-    return item.payload<KContacts::ContactGroup>().name();
-
-  return QString();
-}
-
-bool ContactListProxy::lessThan( const QModelIndex& left, const QModelIndex& right ) const
-{
-  const Akonadi::Item leftItem = left.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-  const Akonadi::Item rightItem = right.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-
-  const QString leftName = nameForItem( leftItem );
-  const QString rightName = nameForItem( rightItem );
-
-  return (QString::localeAwareCompare( leftName, rightName ) < 0);
+    return (QString::localeAwareCompare(leftName, rightName) < 0);
 }
 
 QString ContactListProxy::typeForIndex(int row) const
 {
-  return index( row, 0 ).data( TypeRole ).toString();
+    return index(row, 0).data(TypeRole).toString();
 }
 

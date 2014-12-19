@@ -36,13 +36,13 @@ class KComboBox;
  */
 class CryptoFormatSelectionDialog : public QDialog
 {
-  public:
+public:
     /**
      * Creates a new crypto format selection dialog.
      *
      * @param parent The parent widget.
      */
-    explicit CryptoFormatSelectionDialog( QWidget *parent = Q_NULLPTR );
+    explicit CryptoFormatSelectionDialog(QWidget *parent = Q_NULLPTR);
 
     /**
      * Destroys the crypto format selection dialog.
@@ -52,14 +52,14 @@ class CryptoFormatSelectionDialog : public QDialog
     /**
      * Sets the currently selected @p crypto format.
      */
-    void setCryptoFormat( Kleo::CryptoMessageFormat format );
+    void setCryptoFormat(Kleo::CryptoMessageFormat format);
 
     /**
      * Returns the currently selected crypto format.
      */
-     Kleo::CryptoMessageFormat cryptoFormat() const;
+    Kleo::CryptoMessageFormat cryptoFormat() const;
 
-  private:
+private:
     KComboBox *mCryptoFormatCombo;
 };
 

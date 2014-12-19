@@ -27,61 +27,61 @@
 #include <kconfigdialogmanager.h>
 #include <KLocalizedString>
 
-ConfigWidget::ConfigWidget( QWidget *parent )
-  : QWidget( parent )
+ConfigWidget::ConfigWidget(QWidget *parent)
+    : QWidget(parent)
 {
-  Ui_ConfigWidget ui;
-  ui.setupUi( this );
+    Ui_ConfigWidget ui;
+    ui.setupUi(this);
 
-  mLdapConfigWidget = new KCModuleProxy( QLatin1String( "kcmldap" ) );
+    mLdapConfigWidget = new KCModuleProxy(QLatin1String("kcmldap"));
 
-  ui.ldapServerSettingsLayout->addWidget( mLdapConfigWidget, 1, 1 );
+    ui.ldapServerSettingsLayout->addWidget(mLdapConfigWidget, 1, 1);
 
-  mMapServiceBox = ui.kcfg_MapService;
+    mMapServiceBox = ui.kcfg_MapService;
 
-  mManager = new KConfigDialogManager( this, Settings::self() );
+    mManager = new KConfigDialogManager(this, Settings::self());
 
-  mMapServiceBox->addItem( i18n( "None" ), QString() );
-  mMapServiceBox->addItem( i18n( "OpenStreetMap" ), QLatin1String( "http://open.mapquestapi.com/nominatim/v1/search.php?q=%s,+%z+%l,+%c" ) );
-  mMapServiceBox->addItem( i18n( "Google Maps" ), QLatin1String( "http://maps.google.com/maps?q=%n,%l,%s" ) );
+    mMapServiceBox->addItem(i18n("None"), QString());
+    mMapServiceBox->addItem(i18n("OpenStreetMap"), QLatin1String("http://open.mapquestapi.com/nominatim/v1/search.php?q=%s,+%z+%l,+%c"));
+    mMapServiceBox->addItem(i18n("Google Maps"), QLatin1String("http://maps.google.com/maps?q=%n,%l,%s"));
 }
 
 void ConfigWidget::load()
 {
-  KConfig config( QLatin1String("akonadi_contactrc") );
-  const KConfigGroup group( &config, "Show Address Settings" );
-  const QString addressUrl = group.readEntry( "AddressUrl", QStringLiteral( "http://open.mapquestapi.com/nominatim/v1/search.php?q=%s,+%z+%l,+%c" ) );
+    KConfig config(QLatin1String("akonadi_contactrc"));
+    const KConfigGroup group(&config, "Show Address Settings");
+    const QString addressUrl = group.readEntry("AddressUrl", QStringLiteral("http://open.mapquestapi.com/nominatim/v1/search.php?q=%s,+%z+%l,+%c"));
 
-  Settings::self()->setMapService( mMapServiceBox->findData( addressUrl ) );
-  mManager->updateWidgets();
+    Settings::self()->setMapService(mMapServiceBox->findData(addressUrl));
+    mManager->updateWidgets();
 
-  mLdapConfigWidget->load();
+    mLdapConfigWidget->load();
 }
 
 void ConfigWidget::save()
 {
-  mManager->updateSettings();
+    mManager->updateSettings();
 
-  const QString addressUrl = mMapServiceBox->itemData( Settings::self()->mapService() ).toString();
+    const QString addressUrl = mMapServiceBox->itemData(Settings::self()->mapService()).toString();
 
-  KConfig config( QLatin1String("akonadi_contactrc") );
-  KConfigGroup group( &config, "Show Address Settings" );
-  group.writeEntry( "AddressUrl", addressUrl );
-  config.sync();
+    KConfig config(QLatin1String("akonadi_contactrc"));
+    KConfigGroup group(&config, "Show Address Settings");
+    group.writeEntry("AddressUrl", addressUrl);
+    config.sync();
 
-  mLdapConfigWidget->save();
+    mLdapConfigWidget->save();
 }
 
-DeclarativeConfigWidget::DeclarativeConfigWidget( QGraphicsItem *parent )
-  : QGraphicsProxyWidget( parent ), mConfigWidget( new ConfigWidget )
+DeclarativeConfigWidget::DeclarativeConfigWidget(QGraphicsItem *parent)
+    : QGraphicsProxyWidget(parent), mConfigWidget(new ConfigWidget)
 {
-  QPalette palette = mConfigWidget->palette();
-  palette.setColor( QPalette::Window, QColor( 0, 0, 0, 0 ) );
-  mConfigWidget->setPalette( palette );
-  StyleSheetLoader::applyStyle( mConfigWidget );
+    QPalette palette = mConfigWidget->palette();
+    palette.setColor(QPalette::Window, QColor(0, 0, 0, 0));
+    mConfigWidget->setPalette(palette);
+    StyleSheetLoader::applyStyle(mConfigWidget);
 
-  setWidget( mConfigWidget );
-  setFocusPolicy( Qt::StrongFocus );
+    setWidget(mConfigWidget);
+    setFocusPolicy(Qt::StrongFocus);
 }
 
 DeclarativeConfigWidget::~DeclarativeConfigWidget()
@@ -90,11 +90,11 @@ DeclarativeConfigWidget::~DeclarativeConfigWidget()
 
 void DeclarativeConfigWidget::load()
 {
-  mConfigWidget->load();
+    mConfigWidget->load();
 }
 
 void DeclarativeConfigWidget::save()
 {
-  mConfigWidget->save();
+    mConfigWidget->save();
 }
 

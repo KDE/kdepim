@@ -24,32 +24,32 @@
 
 #include <AkonadiCore/entitytreemodel.h>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class ContactCompletionModel : public EntityTreeModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    enum Columns
-    {
-      NameColumn,         ///< The name of the contact.
-      NameAndEmailColumn, ///< The name and the email of the contact.
-      EmailColumn         ///< The preferred email of the contact.
+public:
+    enum Columns {
+        NameColumn,         ///< The name of the contact.
+        NameAndEmailColumn, ///< The name and the email of the contact.
+        EmailColumn         ///< The preferred email of the contact.
     };
 
-    explicit ContactCompletionModel( ChangeRecorder *monitor, QObject *parent = 0 );
+    explicit ContactCompletionModel(ChangeRecorder *monitor, QObject *parent = 0);
     virtual ~ContactCompletionModel();
 
-    virtual QVariant entityData( const Item &item, int column, int role = Qt::DisplayRole ) const;
-    virtual QVariant entityData( const Collection &collection, int column, int role = Qt::DisplayRole ) const;
-    virtual int columnCount( const QModelIndex &parent ) const;
-    virtual int entityColumnCount( HeaderGroup ) const;
+    virtual QVariant entityData(const Item &item, int column, int role = Qt::DisplayRole) const;
+    virtual QVariant entityData(const Collection &collection, int column, int role = Qt::DisplayRole) const;
+    virtual int columnCount(const QModelIndex &parent) const;
+    virtual int entityColumnCount(HeaderGroup) const;
 
-    static QAbstractItemModel* self();
+    static QAbstractItemModel *self();
 
-  private:
-    static QAbstractItemModel* mSelf;
+private:
+    static QAbstractItemModel *mSelf;
 };
 
 }

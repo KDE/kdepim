@@ -29,7 +29,8 @@
 class QAbstractItemModel;
 class QModelIndex;
 
-namespace AkonadiFuture {
+namespace AkonadiFuture
+{
 
 /**
  * @short A class that encapsulates logic to wait for an collection to be completely loaded into a model.
@@ -38,9 +39,9 @@ namespace AkonadiFuture {
  */
 class MOBILEUI_EXPORT CollectionFetchWatcher : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new collection fetch watcher.
      *
@@ -48,7 +49,7 @@ class MOBILEUI_EXPORT CollectionFetchWatcher : public QObject
      * @param model The model to work on.
      * @param parent The parent object.
      */
-    CollectionFetchWatcher( const QModelIndex &index, const QAbstractItemModel *model, QObject *parent = Q_NULLPTR );
+    CollectionFetchWatcher(const QModelIndex &index, const QAbstractItemModel *model, QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the collection fetch watcher.
@@ -60,19 +61,19 @@ class MOBILEUI_EXPORT CollectionFetchWatcher : public QObject
      */
     void start();
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted when the watched collection at @p index has been loaded completely into
      * the model.
      */
-    void collectionFetched( const QModelIndex &index );
+    void collectionFetched(const QModelIndex &index);
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void dataChanged( const QModelIndex&, const QModelIndex& ) )
+    Q_PRIVATE_SLOT(d, void dataChanged(const QModelIndex &, const QModelIndex &))
     //@endcond
 };
 

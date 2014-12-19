@@ -28,7 +28,6 @@
 #include <QGLWidget>
 #endif
 
-
 #include "mobileui_export.h"
 
 class KActionCollection;
@@ -40,55 +39,54 @@ class QLabel;
  */
 class MOBILEUI_EXPORT KDeclarativeFullScreenView : public QDeclarativeView
 {
-  Q_OBJECT
-  protected:
+    Q_OBJECT
+protected:
     /**
     * Creates a new full screen view for a mobile application.
     *
     * @param qmlFileName is used to find the QML file in ${APP_DATA_DIR}/qmlFileName.qml
     */
-    KDeclarativeFullScreenView( const QString &qmlFileName, QWidget *parent = Q_NULLPTR );
+    KDeclarativeFullScreenView(const QString &qmlFileName, QWidget *parent = Q_NULLPTR);
     virtual ~KDeclarativeFullScreenView();
 
-  public Q_SLOTS:
+public Q_SLOTS:
 
     /** Get an action based on name. If the @param argument is not empty, it sets that
      * as the data member of the action, see QAction::setData().
      */
-    QObject* getAction( const QString &name, const QString& argument ) const;
+    QObject *getAction(const QString &name, const QString &argument) const;
 
     /**
      * Returns the icon name for the action with the given @p name.
      */
-    QString getActionIconName( const QString &name ) const;
-
+    QString getActionIconName(const QString &name) const;
 
     /**
      * Brings the View to the foreground
      */
     void bringToFront();
 
-    void setActionTitle( const QString& name, const QString& title);
-    
-    KActionCollection* actionCollection() const;
+    void setActionTitle(const QString &name, const QString &title);
 
-  protected:
+    KActionCollection *actionCollection() const;
+
+protected:
     /** Most initialization work should be done here instead of the ctor.
      */
     virtual void doDelayedInit() = 0;
     /** This is for KDeclarativeFullScreenView, don't touch! */
     virtual void doDelayedInitInternal() {}
 
-    void resizeEvent( QResizeEvent* event ) Q_DECL_OVERRIDE;
+    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void delayedInit();
-    void setQmlFile( const QString &source );
-    void slotStatusChanged ( QDeclarativeView::Status );
+    void setQmlFile(const QString &source);
+    void slotStatusChanged(QDeclarativeView::Status);
     void closeAkonadi();
-    void closeAllFrontends( const QString &qmlFileName );
+    void closeAllFrontends(const QString &qmlFileName);
 
-  private:
+private:
 
     KActionCollection *mActionCollection;
 

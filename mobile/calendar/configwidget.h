@@ -37,69 +37,69 @@ class Ui_ConfigWidget;
 
 class ConfigWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit ConfigWidget( QWidget *parent = Q_NULLPTR );
+public:
+    explicit ConfigWidget(QWidget *parent = Q_NULLPTR);
     ~ConfigWidget();
 
-    void setPreferences( const EventViews::PrefsPtr &preferences );
+    void setPreferences(const EventViews::PrefsPtr &preferences);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void load();
     void save();
 
-    void setNewTime( int hour, int minute );
+    void setNewTime(int hour, int minute);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void configChanged();
-    void showClockWidget( int hour, int minute );
+    void showClockWidget(int hour, int minute);
 
-    void dayBeginsFocus( QObject *object );
-    void dailyStartingHourFocus( QObject *object );
-    void dailyEndingHourFocus( QObject *object );
-    void defaultAppointmentTimeFocus( QObject *object );
+    void dayBeginsFocus(QObject *object);
+    void dailyStartingHourFocus(QObject *object);
+    void dailyEndingHourFocus(QObject *object);
+    void defaultAppointmentTimeFocus(QObject *object);
 
-  protected:
-    bool eventFilter( QObject *object, QEvent *event ) Q_DECL_OVERRIDE;
+protected:
+    bool eventFilter(QObject *object, QEvent *event) Q_DECL_OVERRIDE;
 
-  private Q_SLOTS:
-    void showClock( QObject *object );
+private Q_SLOTS:
+    void showClock(QObject *object);
 
-  private:
+private:
     void loadFromExternalSettings();
     void saveToExternalSettings();
 
     Ui_ConfigWidget *mUi;
     KConfigDialogManager *mManager;
     KComboBox *mHolidayCombo;
-    QVector<QCheckBox*> mWorkDays;
+    QVector<QCheckBox *> mWorkDays;
     EventViews::PrefsPtr mViewPrefs;
     KTimeComboBox *mFocusedTimeWidget;
 };
 
 class DeclarativeConfigWidget :
 #ifndef Q_MOC_RUN
-public DeclarativeWidgetBase<ConfigWidget, MainView, &MainView::setConfigWidget>
+    public DeclarativeWidgetBase<ConfigWidget, MainView, &MainView::setConfigWidget>
 #else
-public QGraphicsProxyWidget
+    public QGraphicsProxyWidget
 #endif
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit DeclarativeConfigWidget( QGraphicsItem *parent = Q_NULLPTR );
+public:
+    explicit DeclarativeConfigWidget(QGraphicsItem *parent = Q_NULLPTR);
     ~DeclarativeConfigWidget();
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void load();
     void save();
 
-    void setNewTime( int hour, int minute );
+    void setNewTime(int hour, int minute);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void configChanged();
-    void showClockWidget( int hour, int minute );
+    void showClockWidget(int hour, int minute);
 };
 
 #endif

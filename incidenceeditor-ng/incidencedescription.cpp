@@ -207,18 +207,18 @@ void IncidenceDescription::printDebugInfo() const
 
         if (mLoadedIncidence->descriptionIsRich()) {
             qCDebug(INCIDENCEEDITOR_LOG) << "desc is rich, and it is <desc>" <<  mLoadedIncidence->richDescription()
-                     << "</desc>; "
-                     << "widget has <desc>" << mUi->mDescriptionEdit->toHtml()
-                     << "</desc>; "
-                     << "expr mLoadedIncidence->richDescription() != mUi->mDescriptionEdit->toHtml() is "
-                     << (mLoadedIncidence->richDescription() != mUi->mDescriptionEdit->toHtml());
+                                         << "</desc>; "
+                                         << "widget has <desc>" << mUi->mDescriptionEdit->toHtml()
+                                         << "</desc>; "
+                                         << "expr mLoadedIncidence->richDescription() != mUi->mDescriptionEdit->toHtml() is "
+                                         << (mLoadedIncidence->richDescription() != mUi->mDescriptionEdit->toHtml());
         } else {
             qCDebug(INCIDENCEEDITOR_LOG) << "desc is not rich, and it is <desc>" << mLoadedIncidence->description()
-                     << "</desc>; "
-                     << "widget has <desc>" << mUi->mDescriptionEdit->toPlainText()
-                     << "</desc>; "
-                     << "expr mLoadedIncidence->description() != mUi->mDescriptionEdit->toPlainText() is "
-                     << (mLoadedIncidence->description() != mUi->mDescriptionEdit->toPlainText());
+                                         << "</desc>; "
+                                         << "widget has <desc>" << mUi->mDescriptionEdit->toPlainText()
+                                         << "</desc>; "
+                                         << "expr mLoadedIncidence->description() != mUi->mDescriptionEdit->toPlainText() is "
+                                         << (mLoadedIncidence->description() != mUi->mDescriptionEdit->toPlainText());
         }
 
     } else {

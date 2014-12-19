@@ -22,25 +22,25 @@
 #include <KLocalizedString>
 
 #include <libkpgp/kpgp.h>
-#include <libkpgp/kpgpui.h> 
+#include <libkpgp/kpgpui.h>
 #include <QApplication>
 #include <QCommandLineParser>
 
-int main(int argc,char **argv)
+int main(int argc, char **argv)
 {
-  QApplication app(argc, argv);
-  KAboutData aboutData( QStringLiteral("testkeyselectiondialog"),QString(), QStringLiteral("0.1") );
-  
-  KAboutData::setApplicationData(aboutData);
+    QApplication app(argc, argv);
+    KAboutData aboutData(QStringLiteral("testkeyselectiondialog"), QString(), QStringLiteral("0.1"));
 
-  QCommandLineParser parser;
-  parser.addVersionOption();
-  parser.addHelpOption();
-  aboutData.setupCommandLine(&parser);
-  parser.process(app);
-  aboutData.processCommandLine(&parser);
+    KAboutData::setApplicationData(aboutData);
 
-  Kpgp::KeySelectionDialog dlg( Kpgp::Module::getKpgp()->publicKeys(), QStringLiteral("Public Keys") );
-  dlg.show();  
-  app.exec();
+    QCommandLineParser parser;
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
+
+    Kpgp::KeySelectionDialog dlg(Kpgp::Module::getKpgp()->publicKeys(), QStringLiteral("Public Keys"));
+    dlg.show();
+    app.exec();
 }

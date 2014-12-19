@@ -24,33 +24,33 @@
 
 class EditorMore : public EditorBase
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit EditorMore( QWidget *parent = Q_NULLPTR );
+public:
+    explicit EditorMore(QWidget *parent = Q_NULLPTR);
 
     ~EditorMore();
 
-    void loadContact( const KContacts::Addressee &contact, const Akonadi::ContactMetaData &metaData );
-    void saveContact( KContacts::Addressee &contact, Akonadi::ContactMetaData &metaData ) const;
+    void loadContact(const KContacts::Addressee &contact, const Akonadi::ContactMetaData &metaData);
+    void saveContact(KContacts::Addressee &contact, Akonadi::ContactMetaData &metaData) const;
 
-  public Q_SLOTS:
-    void updateOrganization( const QString &organization );
-    void updateName( const KContacts::Addressee &contact );
+public Q_SLOTS:
+    void updateOrganization(const QString &organization);
+    void updateName(const KContacts::Addressee &contact);
 
-  Q_SIGNALS:
-    void nameChanged( const KContacts::Addressee &contact );
+Q_SIGNALS:
+    void nameChanged(const KContacts::Addressee &contact);
 
-  private:
-    void loadCustomFields( const KContacts::Addressee &contact, const Akonadi::ContactMetaData &metaData );
-    void saveCustomFields( KContacts::Addressee &contact, Akonadi::ContactMetaData &metaData ) const;
+private:
+    void loadCustomFields(const KContacts::Addressee &contact, const Akonadi::ContactMetaData &metaData);
+    void saveCustomFields(KContacts::Addressee &contact, Akonadi::ContactMetaData &metaData) const;
 
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void playPronunciation() )
-    Q_PRIVATE_SLOT( d, void addCustomField() )
-    Q_PRIVATE_SLOT( d, void configureCategories() )
+    Q_PRIVATE_SLOT(d, void playPronunciation())
+    Q_PRIVATE_SLOT(d, void addCustomField())
+    Q_PRIVATE_SLOT(d, void configureCategories())
 };
 
 #endif

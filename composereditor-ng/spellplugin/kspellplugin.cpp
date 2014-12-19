@@ -105,7 +105,7 @@ void KWebSpellChecker::checkSpellingOfString(const QString &word, int *misspelli
             if (isValidWord(str)) {
 #if 1
                 qCDebug(COMPOSEREDITORNG_LOG) << "Word at " << start << " word = '"
-                         <<  str << "', len = " << str.length();
+                                              <<  str << "', len = " << str.length();
 #endif
                 if (m_speller->isMisspelled(str)) {
                     *misspellingLocation = start;

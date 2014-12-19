@@ -28,15 +28,15 @@
 
 class MOBILEUICALENDAR_EXPORT GroupwareUiDelegate : public QObject, public Akonadi::GroupwareUiDelegate
 {
-  public:
+public:
     GroupwareUiDelegate();
 
-    void setCalendar( const Akonadi::ETMCalendar::Ptr &calendar );
+    void setCalendar(const Akonadi::ETMCalendar::Ptr &calendar);
     void createCalendar();
 
-    void requestIncidenceEditor( const Akonadi::Item &item );
+    void requestIncidenceEditor(const Akonadi::Item &item);
 
-  private:
+private:
     Akonadi::ETMCalendar::Ptr mCalendar;
 };
 

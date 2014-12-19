@@ -28,19 +28,19 @@
 
 class FavoritesListModel : public QStringListModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit FavoritesListModel( const KSharedConfigPtr &config, QObject *parent = Q_NULLPTR );
+public:
+    explicit FavoritesListModel(const KSharedConfigPtr &config, QObject *parent = Q_NULLPTR);
 
     void reparseConfiguration();
 
-  public Q_SLOTS:
-    void moveUp( int row );
-    void moveDown( int row );
-    void removeItem( int row );
+public Q_SLOTS:
+    void moveUp(int row);
+    void moveDown(int row);
+    void removeItem(int row);
 
-  private:
+private:
     void saveConfig();
 
     KSharedConfigPtr mConfig;

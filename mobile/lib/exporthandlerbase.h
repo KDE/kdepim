@@ -30,27 +30,27 @@ class QItemSelectionModel;
 
 class MOBILEUI_EXPORT ExportHandlerBase : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit ExportHandlerBase( QObject *parent = Q_NULLPTR );
+public:
+    explicit ExportHandlerBase(QObject *parent = Q_NULLPTR);
     ~ExportHandlerBase();
 
-    void setSelectionModel( QItemSelectionModel *model );
-    void setItemSelectionModel( QItemSelectionModel *model );
+    void setSelectionModel(QItemSelectionModel *model);
+    void setItemSelectionModel(QItemSelectionModel *model);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void exec();
 
-  protected:
+protected:
     virtual QString dialogText() const = 0;
     virtual QString dialogAllText() const = 0;
     virtual QString dialogLocalOnlyText() const = 0;
 
     virtual QStringList mimeTypes() const = 0;
-    virtual bool exportItems( const Akonadi::Item::List &items ) = 0;
+    virtual bool exportItems(const Akonadi::Item::List &items) = 0;
 
-  private:
+private:
     QItemSelectionModel *mSelectionModel;
     QItemSelectionModel *mItemSelectionModel;
 };

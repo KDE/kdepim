@@ -27,35 +27,35 @@
 
 class AgentStatusMonitor : public QObject
 {
-  Q_OBJECT
-  Q_FLAGS( AgentStatus )
-  Q_PROPERTY( AgentStatus status READ status NOTIFY statusChanged )
+    Q_OBJECT
+    Q_FLAGS(AgentStatus)
+    Q_PROPERTY(AgentStatus status READ status NOTIFY statusChanged)
 
-  public:
+public:
     enum Status {
-      Offline = 0,
-      Online = 1,
-      Receiving = 2,
-      Sending = 4
+        Offline = 0,
+        Online = 1,
+        Receiving = 2,
+        Sending = 4
     };
-    Q_DECLARE_FLAGS( AgentStatus, Status )
+    Q_DECLARE_FLAGS(AgentStatus, Status)
 
-    explicit AgentStatusMonitor( QObject *parent = Q_NULLPTR );
+    explicit AgentStatusMonitor(QObject *parent = Q_NULLPTR);
 
     AgentStatus status() const;
-    void setMimeTypeFilter( const QStringList &mimeTypes );
+    void setMimeTypeFilter(const QStringList &mimeTypes);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void statusChanged();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void updateStatus();
 
-  private:
+private:
     AgentStatus m_status;
     Akonadi::MimeTypeChecker m_mimeTypeChecker;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS( AgentStatusMonitor::AgentStatus )
+Q_DECLARE_OPERATORS_FOR_FLAGS(AgentStatusMonitor::AgentStatus)
 
 #endif

@@ -136,7 +136,7 @@ void EventArchiver::run(const Akonadi::ETMCalendar::Ptr &calendar,
     const KCalCore::Incidence::List incidences = calendar->mergeIncidenceList(events, todos, journals);
 
     qCDebug(CALENDARSUPPORT_LOG) << "archiving incidences before" << limitDate
-             << " ->" << incidences.count() << " incidences found.";
+                                 << " ->" << incidences.count() << " incidences found.";
     if (incidences.isEmpty()) {
         if (withGUI && errorIfNone) {
             KMessageBox::information(widget,

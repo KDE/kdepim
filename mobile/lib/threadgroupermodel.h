@@ -35,7 +35,7 @@ class ThreadGrouperModelPrivate;
  */
 class MOBILEUI_EXPORT ThreadGrouperComparator
 {
-  public:
+public:
     /**
      * Creates a thread grouper comparator.
      */
@@ -49,38 +49,38 @@ class MOBILEUI_EXPORT ThreadGrouperComparator
     /**
      * Reimplement to return the unique identifier for the given @p item.
      */
-    virtual QByteArray identifierForItem( const Akonadi::Item &item ) const = 0;
+    virtual QByteArray identifierForItem(const Akonadi::Item &item) const = 0;
 
     /**
      * Reimplement to return the parent identifier for the given @p item.
      */
-    virtual QByteArray parentIdentifierForItem( const Akonadi::Item &item ) const = 0;
+    virtual QByteArray parentIdentifierForItem(const Akonadi::Item &item) const = 0;
 
     /**
      * Reimplement to return if the @p left item is smaller than the @p right item.
      */
-    virtual bool lessThan( const Akonadi::Item &left, const Akonadi::Item &right ) const = 0;
+    virtual bool lessThan(const Akonadi::Item &left, const Akonadi::Item &right) const = 0;
 
     /**
      * Returns the grouper string for the given @p item.
      */
-    virtual QString grouperString( const Akonadi::Item &item ) const;
+    virtual QString grouperString(const Akonadi::Item &item) const;
 
-  protected:
+protected:
     /**
      * Returns the thread item for @p item.
      */
-    Akonadi::Item threadItem( const Akonadi::Item &item ) const;
+    Akonadi::Item threadItem(const Akonadi::Item &item) const;
 
     /**
      * Returns the item for the given item @p identifier.
      */
-    Akonadi::Item itemForIdentifier( const QByteArray &identifier ) const;
+    Akonadi::Item itemForIdentifier(const QByteArray &identifier) const;
 
     /**
      * Returns the set of descendants identifiers for the given thread @p identifier.
      */
-    QSet<QByteArray> threadDescendants( const QByteArray &identifier ) const;
+    QSet<QByteArray> threadDescendants(const QByteArray &identifier) const;
 
     /**
      * Invalidates the ThreadGrouperModel to trigger a refresh.
@@ -92,8 +92,8 @@ class MOBILEUI_EXPORT ThreadGrouperComparator
      */
     virtual void resetCaches();
 
-  private:
-    Q_DISABLE_COPY( ThreadGrouperComparator )
+private:
+    Q_DISABLE_COPY(ThreadGrouperComparator)
     ThreadGrouperModelPrivate *m_grouper;
 
     friend class ThreadGrouperModelPrivate;
@@ -101,13 +101,13 @@ class MOBILEUI_EXPORT ThreadGrouperComparator
 
 class MOBILEUI_EXPORT ThreadGrouperModel : public QSortFilterProxyModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     enum CustomRoles {
-      // FIXME Fix custom role handling in proxies.
-      ThreadIdRole = Akonadi::EntityTreeModel::UserRole + 30,
-      GrouperRole
+        // FIXME Fix custom role handling in proxies.
+        ThreadIdRole = Akonadi::EntityTreeModel::UserRole + 30,
+        GrouperRole
     };
 
     /**
@@ -118,19 +118,19 @@ class MOBILEUI_EXPORT ThreadGrouperModel : public QSortFilterProxyModel
      *
      * @note The model does not take ownership of the comparator.
      */
-    explicit ThreadGrouperModel( ThreadGrouperComparator *comparator, QObject* parent = Q_NULLPTR );
+    explicit ThreadGrouperModel(ThreadGrouperComparator *comparator, QObject *parent = Q_NULLPTR);
 
     virtual ~ThreadGrouperModel();
 
-    void setSourceModel( QAbstractItemModel *sourceModel ) Q_DECL_OVERRIDE;
+    void setSourceModel(QAbstractItemModel *sourceModel) Q_DECL_OVERRIDE;
 
-    bool lessThan( const QModelIndex &left, const QModelIndex &right ) const Q_DECL_OVERRIDE;
-    QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const Q_DECL_OVERRIDE;
+    bool lessThan(const QModelIndex &left, const QModelIndex &right) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
     /**
      * Set whether threading will be @p enabled.
      */
-    void setThreadingEnabled( bool enabled );
+    void setThreadingEnabled(bool enabled);
 
     /**
      * Returns whether threading is enabled.
@@ -142,13 +142,13 @@ class MOBILEUI_EXPORT ThreadGrouperModel : public QSortFilterProxyModel
      *
      * @note Must be called before setSourceModel() to have any effect.
      */
-    void setDynamicModelRepopulation( bool enabled );
+    void setDynamicModelRepopulation(bool enabled);
 
-  private:
-    Q_DECLARE_PRIVATE( ThreadGrouperModel )
-    ThreadGrouperModelPrivate* const d_ptr;
-    Q_PRIVATE_SLOT( d_func(), void populateThreadGrouperModel() )
-    Q_PRIVATE_SLOT( d_func(), void resort() )
+private:
+    Q_DECLARE_PRIVATE(ThreadGrouperModel)
+    ThreadGrouperModelPrivate *const d_ptr;
+    Q_PRIVATE_SLOT(d_func(), void populateThreadGrouperModel())
+    Q_PRIVATE_SLOT(d_func(), void resort())
 };
 
 #endif

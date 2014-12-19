@@ -20,4 +20,3 @@
 #include "incidenceeditor_debug.h"
 Q_LOGGING_CATEGORY(INCIDENCEEDITOR_LOG, "log_incidenceeditor")
 
-

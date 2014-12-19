@@ -19,7 +19,6 @@
   02110-1301, USA.
 */
 
-
 #include "clockhelper.h"
 
 #include <QTime>
@@ -30,29 +29,28 @@ static const qreal Q_2PI  = qreal(6.28318530717958647693);   // 2*pi
 
 static inline qreal normalize(qreal angle)
 {
-  return angle - 360 * qFloor(angle / 360);   // qreal modulus 360
+    return angle - 360 * qFloor(angle / 360);   // qreal modulus 360
 }
 
 static inline qreal toRadians(qreal angle)
 {
-  return angle * Q_2PI / 360;
+    return angle * Q_2PI / 360;
 }
 
 static inline qreal fromRadians(qreal angle)
 {
-  return angle * 360 / Q_2PI;
+    return angle * 360 / Q_2PI;
 }
 
-
 ClockHelper::ClockHelper(QObject *parent)
-  : QObject(parent), m_origin(0, 0), m_position(0, 0),
-    m_angle(0), m_minutes(0), m_minutesAngle(0), m_hours(0),
-    m_hoursAngle(0), selected(ClockHelper::None)
+    : QObject(parent), m_origin(0, 0), m_position(0, 0),
+      m_angle(0), m_minutes(0), m_minutesAngle(0), m_hours(0),
+      m_hoursAngle(0), selected(ClockHelper::None)
 {
-  // init the clock with a sane value
-  QTime time = QTime::currentTime();
-  setHour( time.hour() );
-  setMinute( time.minute() );
+    // init the clock with a sane value
+    QTime time = QTime::currentTime();
+    setHour(time.hour());
+    setMinute(time.minute());
 }
 
 ClockHelper::~ClockHelper()
@@ -64,147 +62,153 @@ ClockHelper::~ClockHelper()
 */
 void ClockHelper::calculateAngle()
 {
-  const qreal projectionInX = m_position.x() - m_origin.x();
-  const qreal projectionInY = m_position.y() - m_origin.y();
-  const qreal oldAngle = m_angle;
+    const qreal projectionInX = m_position.x() - m_origin.x();
+    const qreal projectionInY = m_position.y() - m_origin.y();
+    const qreal oldAngle = m_angle;
 
-  const qreal radius = sqrt(projectionInX * projectionInX + projectionInY * projectionInY);
+    const qreal radius = sqrt(projectionInX * projectionInX + projectionInY * projectionInY);
 
-  if (radius == 0) {
-    // Corner case
-    m_angle = 0;
-  } else if (projectionInX > 0) {
-    if (projectionInY >= 0) {
-      // First quadrant
-      m_angle = qAsin(projectionInY / radius);
+    if (radius == 0) {
+        // Corner case
+        m_angle = 0;
+    } else if (projectionInX > 0) {
+        if (projectionInY >= 0) {
+            // First quadrant
+            m_angle = qAsin(projectionInY / radius);
+        } else {
+            // Fourth quadrant
+            m_angle = Q_2PI + qAsin(projectionInY / radius);
+        }
     } else {
-      // Fourth quadrant
-      m_angle = Q_2PI + qAsin(projectionInY / radius);
+        // Second and Third quadrants
+        m_angle = Q_PI - qAsin(projectionInY / radius);
     }
-  } else {
-    // Second and Third quadrants
-    m_angle = Q_PI - qAsin(projectionInY / radius);
-  }
 
-  // +90 because we need to adjust the clock '0 degree'
-  m_angle = normalize(fromRadians(m_angle) + 90);
+    // +90 because we need to adjust the clock '0 degree'
+    m_angle = normalize(fromRadians(m_angle) + 90);
 
-  if (oldAngle != m_angle) {
-    switch(selected) {
-    case ClockHelper::Hour:
-      setHour( m_angle/30 );
-      break;
-    case ClockHelper::Minute:
-      setMinute( m_angle/6 );
-      break;
-    case ClockHelper::None:
-    default:
-      break;
+    if (oldAngle != m_angle) {
+        switch (selected) {
+        case ClockHelper::Hour:
+            setHour(m_angle / 30);
+            break;
+        case ClockHelper::Minute:
+            setMinute(m_angle / 6);
+            break;
+        case ClockHelper::None:
+        default:
+            break;
+        }
     }
-  }
 }
 
 qreal ClockHelper::originX() const
 {
-  return m_origin.x();
+    return m_origin.x();
 }
 
 void ClockHelper::setOriginX(qreal x)
 {
-  if (x == m_origin.x())
-    return;
+    if (x == m_origin.x()) {
+        return;
+    }
 
-  m_origin.setX(x);
+    m_origin.setX(x);
 }
 
 qreal ClockHelper::originY() const
 {
-  return m_origin.y();
+    return m_origin.y();
 }
 
 void ClockHelper::setOriginY(qreal y)
 {
-  if (y == m_origin.y())
-    return;
+    if (y == m_origin.y()) {
+        return;
+    }
 
-  m_origin.setY(y);
+    m_origin.setY(y);
 }
 
 void ClockHelper::setXY(qreal x, qreal y)
 {
-  if (selected == ClockHelper::None)
-    return;
+    if (selected == ClockHelper::None) {
+        return;
+    }
 
-  const bool xEqual = (x == m_position.x());
-  const bool yEqual = (y == m_position.y());
+    const bool xEqual = (x == m_position.x());
+    const bool yEqual = (y == m_position.y());
 
-  if (xEqual && yEqual)
-    return;
+    if (xEqual && yEqual) {
+        return;
+    }
 
-  m_position.setX(x);
-  m_position.setY(y);
-  calculateAngle();
+    m_position.setX(x);
+    m_position.setY(y);
+    calculateAngle();
 }
 
 int ClockHelper::minutes() const
 {
-  return m_minutes;
+    return m_minutes;
 }
 
 int ClockHelper::minutesAngle() const
 {
-  return m_minutesAngle;
+    return m_minutesAngle;
 }
 
 void ClockHelper::setMinute(int min)
 {
-  if (min == m_minutes)
-    return;
+    if (min == m_minutes) {
+        return;
+    }
 
-  m_minutes = min;
-  emit minutesChanged(min);
+    m_minutes = min;
+    emit minutesChanged(min);
 
-  // match our angle
-  min = normalize(min) * 6;
-  m_minutesAngle = min;
-  emit minutesAngleChanged(min);
+    // match our angle
+    min = normalize(min) * 6;
+    m_minutesAngle = min;
+    emit minutesAngleChanged(min);
 }
 
 int ClockHelper::hours() const
 {
-  return m_hours;
+    return m_hours;
 }
 
 int ClockHelper::hoursAngle() const
 {
-  return m_hoursAngle;
+    return m_hoursAngle;
 }
 
 void ClockHelper::setHour(int hour)
 {
-  if (hour == m_hours)
-    return;
+    if (hour == m_hours) {
+        return;
+    }
 
-  m_hours = hour;
-  emit hoursChanged();
+    m_hours = hour;
+    emit hoursChanged();
 
-  // math our angle
-  hour = normalize(hour) * 30;
-  m_hoursAngle = hour;
-  emit hoursAngleChanged();
+    // math our angle
+    hour = normalize(hour) * 30;
+    m_hoursAngle = hour;
+    emit hoursAngleChanged();
 }
 
 void ClockHelper::selectMinute()
 {
-  selected = ClockHelper::Minute;
+    selected = ClockHelper::Minute;
 }
 
 void ClockHelper::selectHour()
 {
-  selected = ClockHelper::Hour;
+    selected = ClockHelper::Hour;
 }
 
 void ClockHelper::unselectAll()
 {
-  selected = ClockHelper::None;
+    selected = ClockHelper::None;
 }

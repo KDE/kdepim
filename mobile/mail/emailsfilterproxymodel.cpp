@@ -22,66 +22,70 @@
 #include <AkonadiCore/entitytreemodel.h>
 #include <KMime/Message>
 
-static bool emailMatchesFilter( const KMime::Message::Ptr &message, const QString &filterString );
+static bool emailMatchesFilter(const KMime::Message::Ptr &message, const QString &filterString);
 
 using namespace Akonadi;
 
 class EmailsFilterProxyModel::Private
 {
-  public:
+public:
     QString mFilter;
 };
 
-EmailsFilterProxyModel::EmailsFilterProxyModel( QObject *parent )
-  : QSortFilterProxyModel( parent ), d( new Private )
+EmailsFilterProxyModel::EmailsFilterProxyModel(QObject *parent)
+    : QSortFilterProxyModel(parent), d(new Private)
 {
-  setSortLocaleAware( true );
-  setDynamicSortFilter( true );
+    setSortLocaleAware(true);
+    setDynamicSortFilter(true);
 }
 
 EmailsFilterProxyModel::~EmailsFilterProxyModel()
 {
-  delete d;
+    delete d;
 }
 
-void EmailsFilterProxyModel::setFilterString( const QString &filter )
+void EmailsFilterProxyModel::setFilterString(const QString &filter)
 {
-  d->mFilter = filter;
-  invalidateFilter();
+    d->mFilter = filter;
+    invalidateFilter();
 }
 
-bool EmailsFilterProxyModel::filterAcceptsRow( int row, const QModelIndex &parent ) const
+bool EmailsFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &parent) const
 {
-  if ( d->mFilter.isEmpty() )
-    return true;
-
-  const QModelIndex index = sourceModel()->index( row, 0, parent );
-
-  const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-
-  if ( item.hasPayload<KMime::Message::Ptr>() ) {
-    const KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
-    return emailMatchesFilter( message, d->mFilter );
-  }
-
-  return true;
-}
-
-static bool emailMatchesFilter( const KMime::Message::Ptr &message, const QString &filterString )
-{
-  if ( message->subject()->asUnicodeString().contains( filterString, Qt::CaseInsensitive ) )
-    return true;
-
-  foreach ( const KMime::Types::Mailbox &mailbox, message->from()->mailboxes() ) {
-    if ( mailbox.hasName() ) {
-      if ( mailbox.name().contains( filterString, Qt::CaseInsensitive ) )
-        return true;
-    } else {
-      if ( mailbox.addrSpec().asPrettyString().contains( filterString, Qt::CaseInsensitive ) )
+    if (d->mFilter.isEmpty()) {
         return true;
     }
-  }
 
-  return false;
+    const QModelIndex index = sourceModel()->index(row, 0, parent);
+
+    const Akonadi::Item item = index.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
+
+    if (item.hasPayload<KMime::Message::Ptr>()) {
+        const KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
+        return emailMatchesFilter(message, d->mFilter);
+    }
+
+    return true;
+}
+
+static bool emailMatchesFilter(const KMime::Message::Ptr &message, const QString &filterString)
+{
+    if (message->subject()->asUnicodeString().contains(filterString, Qt::CaseInsensitive)) {
+        return true;
+    }
+
+    foreach (const KMime::Types::Mailbox &mailbox, message->from()->mailboxes()) {
+        if (mailbox.hasName()) {
+            if (mailbox.name().contains(filterString, Qt::CaseInsensitive)) {
+                return true;
+            }
+        } else {
+            if (mailbox.addrSpec().asPrettyString().contains(filterString, Qt::CaseInsensitive)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 

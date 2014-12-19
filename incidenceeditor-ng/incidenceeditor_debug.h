@@ -23,5 +23,5 @@
 #include <QLoggingCategory>
 Q_DECLARE_LOGGING_CATEGORY(INCIDENCEEDITOR_LOG)
 
-#endif 
+#endif
 

@@ -25,41 +25,41 @@
 using namespace Akonadi;
 using namespace Akonadi::Contact;
 
-ExtendedContactViewer::ExtendedContactViewer( QWidget *parent )
-  : ContactViewer( parent )
+ExtendedContactViewer::ExtendedContactViewer(QWidget *parent)
+    : ContactViewer(parent)
 {
 }
 
 void ExtendedContactViewer::itemRemoved()
 {
-  emit contactRemoved();
+    emit contactRemoved();
 }
 
-
-ContactViewItem::ContactViewItem(QDeclarativeItem* parent)
-  : DeclarativeAkonadiItem( parent )
+ContactViewItem::ContactViewItem(QDeclarativeItem *parent)
+    : DeclarativeAkonadiItem(parent)
 {
-  m_viewer = new ExtendedContactViewer( 0 );
-  connect( m_viewer, SIGNAL(contactRemoved()), SIGNAL(contactRemoved()) );
+    m_viewer = new ExtendedContactViewer(0);
+    connect(m_viewer, SIGNAL(contactRemoved()), SIGNAL(contactRemoved()));
 
-  ContactDefaultActions *actions = new ContactDefaultActions( this );
-  actions->connectToView( m_viewer );
-  setWidget( m_viewer );
+    ContactDefaultActions *actions = new ContactDefaultActions(this);
+    actions->connectToView(m_viewer);
+    setWidget(m_viewer);
 }
 
 ContactViewItem::~ContactViewItem()
 {
-  delete m_viewer;
+    delete m_viewer;
 }
 
 qint64 ContactViewItem::itemId() const
 {
-  return m_viewer->contact().id();
+    return m_viewer->contact().id();
 }
 
 void ContactViewItem::setItemId(qint64 id)
 {
-  if ( itemId() != id )
-    m_viewer->setContact( Akonadi::Item( id ) );
+    if (itemId() != id) {
+        m_viewer->setContact(Akonadi::Item(id));
+    }
 }
 

@@ -37,153 +37,153 @@
 
 using namespace MessageComposer;
 
-ConfigWidget::ConfigWidget( QWidget *parent )
-  : QWidget( parent )
+ConfigWidget::ConfigWidget(QWidget *parent)
+    : QWidget(parent)
 {
-  Ui_ConfigWidget ui;
-  ui.setupUi( this );
+    Ui_ConfigWidget ui;
+    ui.setupUi(this);
 
-  ui.kcfg_ComposerTemplatesNewMessage->setProperty( "kcfg_property", QByteArray( "plainText" ) );
-  ui.kcfg_ComposerTemplatesReplyToSender->setProperty( "kcfg_property", QByteArray( "plainText" ) );
-  ui.kcfg_ComposerTemplatesReplyToAll->setProperty( "kcfg_property", QByteArray( "plainText" ) );
-  ui.kcfg_ComposerTemplatesForwardMessage->setProperty( "kcfg_property", QByteArray( "plainText" ) );
+    ui.kcfg_ComposerTemplatesNewMessage->setProperty("kcfg_property", QByteArray("plainText"));
+    ui.kcfg_ComposerTemplatesReplyToSender->setProperty("kcfg_property", QByteArray("plainText"));
+    ui.kcfg_ComposerTemplatesReplyToAll->setProperty("kcfg_property", QByteArray("plainText"));
+    ui.kcfg_ComposerTemplatesForwardMessage->setProperty("kcfg_property", QByteArray("plainText"));
 
-  {
-    QLineEdit *lineEdit = ui.kcfg_ComposerWordWrapColumn->findChild<QLineEdit*>();
-    if ( lineEdit )
-      lineEdit->setReadOnly( true );
-  }
+    {
+        QLineEdit *lineEdit = ui.kcfg_ComposerWordWrapColumn->findChild<QLineEdit *>();
+        if (lineEdit) {
+            lineEdit->setReadOnly(true);
+        }
+    }
 
-  mManager = new KConfigDialogManager( this, Settings::self() );
+    mManager = new KConfigDialogManager(this, Settings::self());
 
-  connect( ui.configureCompletionOrderButton, SIGNAL(clicked()),
-           this, SLOT(configureCompletionOrder()) );
-  connect( ui.editRecentAddressesButton, SIGNAL(clicked()),
-           this, SLOT(editRecentAddresses()) );
+    connect(ui.configureCompletionOrderButton, SIGNAL(clicked()),
+            this, SLOT(configureCompletionOrder()));
+    connect(ui.editRecentAddressesButton, SIGNAL(clicked()),
+            this, SLOT(editRecentAddresses()));
 
-  ui.howDoesThisWorkLabel->setText( i18n( "<a href=\"help\">How does this work?</a>" ) );
-  connect( ui.howDoesThisWorkLabel, SIGNAL(linkActivated(QString)),
-           this, SIGNAL(showTemplatesHelp()) );
+    ui.howDoesThisWorkLabel->setText(i18n("<a href=\"help\">How does this work?</a>"));
+    connect(ui.howDoesThisWorkLabel, SIGNAL(linkActivated(QString)),
+            this, SIGNAL(showTemplatesHelp()));
 
-  ui.helpLabel->setVisible( false );
+    ui.helpLabel->setVisible(false);
 }
 
 void ConfigWidget::load()
 {
-  loadFromExternalSettings();
-  mManager->updateWidgets();
+    loadFromExternalSettings();
+    mManager->updateWidgets();
 }
 
 void ConfigWidget::save()
 {
-  mManager->updateSettings();
-  saveToExternalSettings();
+    mManager->updateSettings();
+    saveToExternalSettings();
 
-  emit configChanged();
+    emit configChanged();
 }
 
 void ConfigWidget::configureCompletionOrder()
 {
-  KLDAP::LdapClientSearch search;
-  KPIM::CompletionOrderEditor editor( &search, 0 );
-  editor.exec();
+    KLDAP::LdapClientSearch search;
+    KPIM::CompletionOrderEditor editor(&search, 0);
+    editor.exec();
 }
 
 void ConfigWidget::editRecentAddresses()
 {
-  KPIM::RecentAddressDialog dlg( 0 );
-  dlg.setAddresses( KPIM::RecentAddresses::self( MessageComposer::MessageComposerSettings::self()->config() )->addresses() );
-  if ( dlg.exec() ) {
-    KPIM::RecentAddresses::self( MessageComposer::MessageComposerSettings::self()->config() )->clear();
-    foreach ( const QString &address, dlg.addresses() ) {
-      KPIM::RecentAddresses::self( MessageComposer::MessageComposerSettings::self()->config() )->add( address );
+    KPIM::RecentAddressDialog dlg(0);
+    dlg.setAddresses(KPIM::RecentAddresses::self(MessageComposer::MessageComposerSettings::self()->config())->addresses());
+    if (dlg.exec()) {
+        KPIM::RecentAddresses::self(MessageComposer::MessageComposerSettings::self()->config())->clear();
+        foreach (const QString &address, dlg.addresses()) {
+            KPIM::RecentAddresses::self(MessageComposer::MessageComposerSettings::self()->config())->add(address);
+        }
     }
-  }
 }
 
 void ConfigWidget::loadFromExternalSettings()
 {
-  // Appearance
-  Settings::self()->setAppearanceShowHtmlStatusBar( MessageViewer::GlobalSettings::showColorBar() );
-  Settings::self()->setAppearanceReplaceSmileys( MessageViewer::GlobalSettings::showEmoticons() );
-  Settings::self()->setAppearanceReduceQuotedFontSize( MessageViewer::GlobalSettings::shrinkQuotes() );
+    // Appearance
+    Settings::self()->setAppearanceShowHtmlStatusBar(MessageViewer::GlobalSettings::showColorBar());
+    Settings::self()->setAppearanceReplaceSmileys(MessageViewer::GlobalSettings::showEmoticons());
+    Settings::self()->setAppearanceReduceQuotedFontSize(MessageViewer::GlobalSettings::shrinkQuotes());
 
-  // Composer
-  Settings::self()->setComposerInsertSignature( MessageComposerSettings::self()->autoTextSignature() == QLatin1String( "auto" ) );
-  Settings::self()->setComposertInsertSignatureAboveQuote( MessageComposerSettings::self()->prependSignature() );
-  Settings::self()->setComposerPrependSeparator( MessageComposerSettings::self()->dashDashSignature() );
-  Settings::self()->setComposerUseSmartQuoting( TemplateParser::GlobalSettings::self()->smartQuote() );
-  Settings::self()->setComposerUseRecentAddressCompletion( MessageComposerSettings::self()->showRecentAddressesInComposer() );
-  Settings::self()->setComposerWordWrapAtColumn( MessageComposerSettings::self()->wordWrap() );
-  Settings::self()->setComposerWordWrapColumn( MessageComposerSettings::self()->lineWrapWidth() );
-  Settings::self()->setComposerReplaceReplyPrefixes( MessageComposerSettings::self()->replaceReplyPrefix() );
-  Settings::self()->setComposerReplaceForwardPrefixes( MessageComposerSettings::self()->replaceForwardPrefix() );
-  Settings::self()->setComposerOutlookCompatibleNaming( MessageComposerSettings::self()->outlookCompatibleAttachments() );
-  Settings::self()->setComposerTemplatesNewMessage( TemplateParser::GlobalSettings::self()->templateNewMessage() );
-  Settings::self()->setComposerTemplatesReplyToSender( TemplateParser::GlobalSettings::self()->templateReply() );
-  Settings::self()->setComposerTemplatesReplyToAll( TemplateParser::GlobalSettings::self()->templateReplyAll() );
-  Settings::self()->setComposerTemplatesForwardMessage( TemplateParser::GlobalSettings::self()->templateForward() );
+    // Composer
+    Settings::self()->setComposerInsertSignature(MessageComposerSettings::self()->autoTextSignature() == QLatin1String("auto"));
+    Settings::self()->setComposertInsertSignatureAboveQuote(MessageComposerSettings::self()->prependSignature());
+    Settings::self()->setComposerPrependSeparator(MessageComposerSettings::self()->dashDashSignature());
+    Settings::self()->setComposerUseSmartQuoting(TemplateParser::GlobalSettings::self()->smartQuote());
+    Settings::self()->setComposerUseRecentAddressCompletion(MessageComposerSettings::self()->showRecentAddressesInComposer());
+    Settings::self()->setComposerWordWrapAtColumn(MessageComposerSettings::self()->wordWrap());
+    Settings::self()->setComposerWordWrapColumn(MessageComposerSettings::self()->lineWrapWidth());
+    Settings::self()->setComposerReplaceReplyPrefixes(MessageComposerSettings::self()->replaceReplyPrefix());
+    Settings::self()->setComposerReplaceForwardPrefixes(MessageComposerSettings::self()->replaceForwardPrefix());
+    Settings::self()->setComposerOutlookCompatibleNaming(MessageComposerSettings::self()->outlookCompatibleAttachments());
+    Settings::self()->setComposerTemplatesNewMessage(TemplateParser::GlobalSettings::self()->templateNewMessage());
+    Settings::self()->setComposerTemplatesReplyToSender(TemplateParser::GlobalSettings::self()->templateReply());
+    Settings::self()->setComposerTemplatesReplyToAll(TemplateParser::GlobalSettings::self()->templateReplyAll());
+    Settings::self()->setComposerTemplatesForwardMessage(TemplateParser::GlobalSettings::self()->templateForward());
 
-  // Invitations
-  Settings::self()->setInvitationsOutlookCompatible( MessageViewer::GlobalSettings::self()->legacyMangleFromToHeaders() &&
-                                                     MessageViewer::GlobalSettings::self()->legacyBodyInvites() &&
-                                                     MessageViewer::GlobalSettings::self()->exchangeCompatibleInvitations() &&
-                                                     MessageViewer::GlobalSettings::self()->outlookCompatibleInvitationReplyComments() &&
-                                                     MessageViewer::GlobalSettings::self()->outlookCompatibleInvitationComparisons() );
-  Settings::self()->setInvitationsAutomaticSending( MessageViewer::GlobalSettings::self()->automaticSending() );
-  Settings::self()->setInvitationsDeleteAfterReply( MessageViewer::GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply() );
+    // Invitations
+    Settings::self()->setInvitationsOutlookCompatible(MessageViewer::GlobalSettings::self()->legacyMangleFromToHeaders() &&
+            MessageViewer::GlobalSettings::self()->legacyBodyInvites() &&
+            MessageViewer::GlobalSettings::self()->exchangeCompatibleInvitations() &&
+            MessageViewer::GlobalSettings::self()->outlookCompatibleInvitationReplyComments() &&
+            MessageViewer::GlobalSettings::self()->outlookCompatibleInvitationComparisons());
+    Settings::self()->setInvitationsAutomaticSending(MessageViewer::GlobalSettings::self()->automaticSending());
+    Settings::self()->setInvitationsDeleteAfterReply(MessageViewer::GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply());
 
-  // MDN
-  Settings::self()->setMDNPolicy( MessageViewer::GlobalSettings::self()->defaultPolicy() );
-  Settings::self()->setMDNQuoteType( MessageViewer::GlobalSettings::self()->quoteMessage() );
+    // MDN
+    Settings::self()->setMDNPolicy(MessageViewer::GlobalSettings::self()->defaultPolicy());
+    Settings::self()->setMDNQuoteType(MessageViewer::GlobalSettings::self()->quoteMessage());
 }
 
 void ConfigWidget::saveToExternalSettings()
 {
-  // Appearance
-  MessageViewer::GlobalSettings::self()->setShowColorBar( Settings::self()->appearanceShowHtmlStatusBar() );
-  MessageViewer::GlobalSettings::self()->setShowEmoticons( Settings::self()->appearanceReplaceSmileys() );
-  MessageViewer::GlobalSettings::self()->setShrinkQuotes( Settings::self()->appearanceReduceQuotedFontSize() );
+    // Appearance
+    MessageViewer::GlobalSettings::self()->setShowColorBar(Settings::self()->appearanceShowHtmlStatusBar());
+    MessageViewer::GlobalSettings::self()->setShowEmoticons(Settings::self()->appearanceReplaceSmileys());
+    MessageViewer::GlobalSettings::self()->setShrinkQuotes(Settings::self()->appearanceReduceQuotedFontSize());
 
-  // Composer
-  MessageComposerSettings::self()->setAutoTextSignature( Settings::self()->composerInsertSignature() ? QLatin1String("auto") : QLatin1String("manual") );
-  MessageComposerSettings::self()->setPrependSignature( Settings::self()->composertInsertSignatureAboveQuote() );
-  MessageComposerSettings::self()->setDashDashSignature( Settings::self()->composerPrependSeparator() );
-  TemplateParser::GlobalSettings::self()->setSmartQuote( Settings::self()->composerUseSmartQuoting() );
-  MessageComposerSettings::self()->setShowRecentAddressesInComposer( Settings::self()->composerUseRecentAddressCompletion() );
-  MessageComposerSettings::self()->setWordWrap( Settings::self()->composerWordWrapAtColumn() );
-  MessageComposerSettings::self()->setLineWrapWidth( Settings::self()->composerWordWrapColumn() );
-  MessageComposerSettings::self()->setReplaceReplyPrefix( Settings::self()->composerReplaceReplyPrefixes() );
-  MessageComposerSettings::self()->setReplaceForwardPrefix( Settings::self()->composerReplaceForwardPrefixes() );
-  MessageComposerSettings::self()->setOutlookCompatibleAttachments( Settings::self()->composerOutlookCompatibleNaming() );
-  TemplateParser::GlobalSettings::self()->setTemplateNewMessage( Settings::self()->composerTemplatesNewMessage() );
-  TemplateParser::GlobalSettings::self()->setTemplateReply( Settings::self()->composerTemplatesReplyToSender() );
-  TemplateParser::GlobalSettings::self()->setTemplateReplyAll( Settings::self()->composerTemplatesReplyToAll() );
-  TemplateParser::GlobalSettings::self()->setTemplateForward( Settings::self()->composerTemplatesForwardMessage() );
+    // Composer
+    MessageComposerSettings::self()->setAutoTextSignature(Settings::self()->composerInsertSignature() ? QLatin1String("auto") : QLatin1String("manual"));
+    MessageComposerSettings::self()->setPrependSignature(Settings::self()->composertInsertSignatureAboveQuote());
+    MessageComposerSettings::self()->setDashDashSignature(Settings::self()->composerPrependSeparator());
+    TemplateParser::GlobalSettings::self()->setSmartQuote(Settings::self()->composerUseSmartQuoting());
+    MessageComposerSettings::self()->setShowRecentAddressesInComposer(Settings::self()->composerUseRecentAddressCompletion());
+    MessageComposerSettings::self()->setWordWrap(Settings::self()->composerWordWrapAtColumn());
+    MessageComposerSettings::self()->setLineWrapWidth(Settings::self()->composerWordWrapColumn());
+    MessageComposerSettings::self()->setReplaceReplyPrefix(Settings::self()->composerReplaceReplyPrefixes());
+    MessageComposerSettings::self()->setReplaceForwardPrefix(Settings::self()->composerReplaceForwardPrefixes());
+    MessageComposerSettings::self()->setOutlookCompatibleAttachments(Settings::self()->composerOutlookCompatibleNaming());
+    TemplateParser::GlobalSettings::self()->setTemplateNewMessage(Settings::self()->composerTemplatesNewMessage());
+    TemplateParser::GlobalSettings::self()->setTemplateReply(Settings::self()->composerTemplatesReplyToSender());
+    TemplateParser::GlobalSettings::self()->setTemplateReplyAll(Settings::self()->composerTemplatesReplyToAll());
+    TemplateParser::GlobalSettings::self()->setTemplateForward(Settings::self()->composerTemplatesForwardMessage());
 
-  // Invitations
-  MessageViewer::GlobalSettings::self()->setLegacyMangleFromToHeaders( Settings::self()->invitationsOutlookCompatible() );
-  MessageViewer::GlobalSettings::self()->setLegacyBodyInvites( Settings::self()->invitationsOutlookCompatible() );
-  MessageViewer::GlobalSettings::self()->setExchangeCompatibleInvitations( Settings::self()->invitationsOutlookCompatible() );
-  MessageViewer::GlobalSettings::self()->setOutlookCompatibleInvitationReplyComments( Settings::self()->invitationsOutlookCompatible() );
-  MessageViewer::GlobalSettings::self()->setOutlookCompatibleInvitationComparisons( Settings::self()->invitationsOutlookCompatible() );
-  MessageViewer::GlobalSettings::self()->setAutomaticSending( Settings::self()->invitationsAutomaticSending() );
-  MessageViewer::GlobalSettings::self()->setDeleteInvitationEmailsAfterSendingReply( Settings::self()->invitationsDeleteAfterReply() );
+    // Invitations
+    MessageViewer::GlobalSettings::self()->setLegacyMangleFromToHeaders(Settings::self()->invitationsOutlookCompatible());
+    MessageViewer::GlobalSettings::self()->setLegacyBodyInvites(Settings::self()->invitationsOutlookCompatible());
+    MessageViewer::GlobalSettings::self()->setExchangeCompatibleInvitations(Settings::self()->invitationsOutlookCompatible());
+    MessageViewer::GlobalSettings::self()->setOutlookCompatibleInvitationReplyComments(Settings::self()->invitationsOutlookCompatible());
+    MessageViewer::GlobalSettings::self()->setOutlookCompatibleInvitationComparisons(Settings::self()->invitationsOutlookCompatible());
+    MessageViewer::GlobalSettings::self()->setAutomaticSending(Settings::self()->invitationsAutomaticSending());
+    MessageViewer::GlobalSettings::self()->setDeleteInvitationEmailsAfterSendingReply(Settings::self()->invitationsDeleteAfterReply());
 
-  // MDN
-  MessageViewer::GlobalSettings::self()->setDefaultPolicy( Settings::self()->mDNPolicy() );
-  MessageViewer::GlobalSettings::self()->setQuoteMessage( Settings::self()->mDNQuoteType() );
+    // MDN
+    MessageViewer::GlobalSettings::self()->setDefaultPolicy(Settings::self()->mDNPolicy());
+    MessageViewer::GlobalSettings::self()->setQuoteMessage(Settings::self()->mDNQuoteType());
 
-  Settings::self()->save();
-  MessageViewer::GlobalSettings::self()->save();
-  TemplateParser::GlobalSettings::self()->save();
+    Settings::self()->save();
+    MessageViewer::GlobalSettings::self()->save();
+    TemplateParser::GlobalSettings::self()->save();
 }
 
-
-DeclarativeConfigWidget::DeclarativeConfigWidget( QGraphicsItem *parent )
-  : DeclarativeWidgetBase<ConfigWidget, MainView, &MainView::setConfigWidget>( parent )
+DeclarativeConfigWidget::DeclarativeConfigWidget(QGraphicsItem *parent)
+    : DeclarativeWidgetBase<ConfigWidget, MainView, &MainView::setConfigWidget>(parent)
 {
-  connect( this, SIGNAL(configChanged()), widget(), SIGNAL(configChanged()) );
+    connect(this, SIGNAL(configChanged()), widget(), SIGNAL(configChanged()));
 }
 
 DeclarativeConfigWidget::~DeclarativeConfigWidget()
@@ -192,11 +192,11 @@ DeclarativeConfigWidget::~DeclarativeConfigWidget()
 
 void DeclarativeConfigWidget::load()
 {
-  widget()->load();
+    widget()->load();
 }
 
 void DeclarativeConfigWidget::save()
 {
-  widget()->save();
+    widget()->save();
 }
 

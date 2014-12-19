@@ -24,50 +24,50 @@
 
 namespace Akonadi
 {
-  class Collection;
+class Collection;
 }
 
 namespace KContacts
 {
-  class ContactGroup;
+class ContactGroup;
 }
 
 class KJob;
 
 class EditorContactGroup : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit EditorContactGroup( QWidget *parent = Q_NULLPTR );
+public:
+    explicit EditorContactGroup(QWidget *parent = Q_NULLPTR);
 
     ~EditorContactGroup();
 
-    void setDefaultCollection( const Akonadi::Collection &collection );
+    void setDefaultCollection(const Akonadi::Collection &collection);
 
-    void loadContactGroup( const KContacts::ContactGroup &contactGroup );
+    void loadContactGroup(const KContacts::ContactGroup &contactGroup);
 
-    void saveContactGroup( KContacts::ContactGroup &contactGroup ) const;
+    void saveContactGroup(KContacts::ContactGroup &contactGroup) const;
 
     Akonadi::Collection selectedCollection() const;
 
-  Q_SIGNALS:
-    void collectionChanged( const Akonadi::Collection &collection );
+Q_SIGNALS:
+    void collectionChanged(const Akonadi::Collection &collection);
 
     void cancelClicked();
     void saveClicked();
     void requestLaunchAccountWizard();
 
-  private:
+private:
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void nameTextChanged( const QString& ) )
-    Q_PRIVATE_SLOT( d, void addRecipientClicked() )
-    Q_PRIVATE_SLOT( d, void fetchResult( KJob* ) )
-    Q_PRIVATE_SLOT( d, void clearRecipientClicked() )
-    Q_PRIVATE_SLOT( d, void availableCollectionsChanged() )
-    Q_PRIVATE_SLOT( d, void disableSaveButton() )
+    Q_PRIVATE_SLOT(d, void nameTextChanged(const QString &))
+    Q_PRIVATE_SLOT(d, void addRecipientClicked())
+    Q_PRIVATE_SLOT(d, void fetchResult(KJob *))
+    Q_PRIVATE_SLOT(d, void clearRecipientClicked())
+    Q_PRIVATE_SLOT(d, void availableCollectionsChanged())
+    Q_PRIVATE_SLOT(d, void disableSaveButton())
 };
 
 #endif

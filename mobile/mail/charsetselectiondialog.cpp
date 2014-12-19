@@ -30,48 +30,49 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
-CharsetSelectionDialog::CharsetSelectionDialog( QWidget *parent )
-  : QDialog( parent )
+CharsetSelectionDialog::CharsetSelectionDialog(QWidget *parent)
+    : QDialog(parent)
 {
-  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
-  QVBoxLayout *mainLayout = new QVBoxLayout;
-  setLayout(mainLayout);
-  QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
-  okButton->setDefault(true);
-  okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-  connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
-  connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 
-  mCharsetCombo = new KComboBox;
-  mainLayout->addWidget(mCharsetCombo);
-  mainLayout->addWidget(buttonBox);
+    mCharsetCombo = new KComboBox;
+    mainLayout->addWidget(mCharsetCombo);
+    mainLayout->addWidget(buttonBox);
 
-  QStringList charsets = MessageViewer::NodeHelper::supportedEncodings( false );
-  charsets.prepend( i18n( "Auto" ) );
+    QStringList charsets = MessageViewer::NodeHelper::supportedEncodings(false);
+    charsets.prepend(i18n("Auto"));
 
-  mCharsetCombo->addItems( charsets );
+    mCharsetCombo->addItems(charsets);
 }
 
 CharsetSelectionDialog::~CharsetSelectionDialog()
 {
 }
 
-void CharsetSelectionDialog::setCharset( const QString &charset )
+void CharsetSelectionDialog::setCharset(const QString &charset)
 {
-  for ( int i = 0; i < mCharsetCombo->count(); ++i ) {
-    if ( charset ==MessageViewer::NodeHelper::encodingForName( mCharsetCombo->itemText( i ) ) ) {
-      mCharsetCombo->setCurrentIndex( i );
-      return;
+    for (int i = 0; i < mCharsetCombo->count(); ++i) {
+        if (charset == MessageViewer::NodeHelper::encodingForName(mCharsetCombo->itemText(i))) {
+            mCharsetCombo->setCurrentIndex(i);
+            return;
+        }
     }
-  }
 
-  mCharsetCombo->setCurrentIndex( 0 );
+    mCharsetCombo->setCurrentIndex(0);
 }
 
 QString CharsetSelectionDialog::charset() const
 {
-  if ( mCharsetCombo->currentIndex() == 0 )
-    return QString();
-  else
-    return MessageViewer::NodeHelper::encodingForName( mCharsetCombo->currentText() );
+    if (mCharsetCombo->currentIndex() == 0) {
+        return QString();
+    } else {
+        return MessageViewer::NodeHelper::encodingForName(mCharsetCombo->currentText());
+    }
 }

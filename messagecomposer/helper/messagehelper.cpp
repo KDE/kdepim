@@ -228,8 +228,8 @@ QString replacePrefixes(const QString &str, const QStringList &prefixRegExps,
         }
     } else {
         qCWarning(MESSAGECOMPOSER_LOG) << "bigRegExp = \""
-                   << bigRegExp << "\"\n"
-                   << "prefix regexp is invalid!";
+                                       << bigRegExp << "\"\n"
+                                       << "prefix regexp is invalid!";
         // try good ole Re/Fwd:
         recognized = str.startsWith(newPrefix);
     }

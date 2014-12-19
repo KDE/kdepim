@@ -22,47 +22,48 @@
 
 #include "kdeclarativefullscreenview.h"
 
-namespace Akonadi {
-  class Collection;
-  class Item;
+namespace Akonadi
+{
+class Collection;
+class Item;
 }
 
 class EditorContactGroup;
 
 class ContactGroupEditorView : public KDeclarativeFullScreenView
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit ContactGroupEditorView( QWidget *parent = Q_NULLPTR );
+public:
+    explicit ContactGroupEditorView(QWidget *parent = Q_NULLPTR);
 
     ~ContactGroupEditorView();
 
-    void setEditor( EditorContactGroup *editor );
+    void setEditor(EditorContactGroup *editor);
 
-    void setDefaultCollection( const Akonadi::Collection &collection );
+    void setDefaultCollection(const Akonadi::Collection &collection);
 
-  public Q_SLOTS:
-    void loadContactGroup( const Akonadi::Item &item );
+public Q_SLOTS:
+    void loadContactGroup(const Akonadi::Item &item);
 
     void save();
     void cancel();
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void requestLaunchAccountWizard();
 
-  protected:
-    void closeEvent( QCloseEvent *event ) Q_DECL_OVERRIDE;
+protected:
+    void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
     virtual void doDelayedInit();
 
-  private:
+private:
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void saveFinished() )
-    Q_PRIVATE_SLOT( d, void saveFailed( IncidenceEditorNG::EditorItemManager::SaveAction,
-                                        const QString & ) )
-    Q_PRIVATE_SLOT( d, void collectionChanged( const Akonadi::Collection & ) )
+    Q_PRIVATE_SLOT(d, void saveFinished())
+    Q_PRIVATE_SLOT(d, void saveFailed(IncidenceEditorNG::EditorItemManager::SaveAction,
+                                      const QString &))
+    Q_PRIVATE_SLOT(d, void collectionChanged(const Akonadi::Collection &))
 };
 
 #endif

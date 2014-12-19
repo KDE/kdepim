@@ -27,51 +27,53 @@
 
 QString NotesExportHandler::dialogText() const
 {
-  return i18n( "Which notes shall be exported?" );
+    return i18n("Which notes shall be exported?");
 }
 
 QString NotesExportHandler::dialogAllText() const
 {
-  return i18n( "All Notes" );
+    return i18n("All Notes");
 }
 
 QString NotesExportHandler::dialogLocalOnlyText() const
 {
-  return i18n( "Notes in current folder" );
+    return i18n("Notes in current folder");
 }
 
 QStringList NotesExportHandler::mimeTypes() const
 {
-  return QStringList( QLatin1String( "text/x-vnd.akonadi.note" ) );
+    return QStringList(QLatin1String("text/x-vnd.akonadi.note"));
 }
 
-bool NotesExportHandler::exportItems( const Akonadi::Item::List &items )
+bool NotesExportHandler::exportItems(const Akonadi::Item::List &items)
 {
-  QList<KMime::Message::Ptr> notes;
+    QList<KMime::Message::Ptr> notes;
 
-  foreach ( const Akonadi::Item &item, items ) {
-    if ( item.hasPayload<KMime::Message::Ptr>() )
-      notes << item.payload<KMime::Message::Ptr>();
-  }
+    foreach (const Akonadi::Item &item, items) {
+        if (item.hasPayload<KMime::Message::Ptr>()) {
+            notes << item.payload<KMime::Message::Ptr>();
+        }
+    }
 
-  const QString fileName = QFileDialog::getSaveFileName(0, QString(), QLatin1String("notes.mbox"), QLatin1String( "*.mbox" ) );
-  if ( fileName.isEmpty() ) // user canceled export
+    const QString fileName = QFileDialog::getSaveFileName(0, QString(), QLatin1String("notes.mbox"), QLatin1String("*.mbox"));
+    if (fileName.isEmpty()) { // user canceled export
+        return true;
+    }
+
+    KMBox::MBox mbox;
+    if (!mbox.load(fileName)) {
+        KMessageBox::error(0, i18n("Unable to open MBox file %1", fileName));
+        return false;
+    }
+
+    foreach (const KMime::Message::Ptr &note, notes) {
+        mbox.appendMessage(note);
+    }
+
+    if (!mbox.save()) {
+        KMessageBox::error(0, i18n("Unable to save notes to MBox file %1", fileName));
+        return false;
+    }
+
     return true;
-
-  KMBox::MBox mbox;
-  if ( !mbox.load( fileName ) ) {
-    KMessageBox::error( 0, i18n( "Unable to open MBox file %1", fileName ) );
-    return false;
-  }
-
-  foreach ( const KMime::Message::Ptr &note, notes ) {
-    mbox.appendMessage( note );
-  }
-
-  if ( !mbox.save() ) {
-    KMessageBox::error( 0, i18n( "Unable to save notes to MBox file %1", fileName ) );
-    return false;
-  }
-
-  return true;
 }

@@ -27,11 +27,11 @@
 #include <KSharedConfig>
 
 MessageListSettings::MessageListSettings()
-  : mSortingOption( SortByDateTimeMostRecent ),
-    mSortDescending( false ),
-    mGroupingOption( GroupByDate ),
-    mUseThreading( true ),
-    mUseGlobalSettings( true )
+    : mSortingOption(SortByDateTimeMostRecent),
+      mSortDescending(false),
+      mGroupingOption(GroupByDate),
+      mUseThreading(true),
+      mUseGlobalSettings(true)
 {
 }
 
@@ -39,125 +39,125 @@ MessageListSettings::~MessageListSettings()
 {
 }
 
-void MessageListSettings::setSortingOption( SortingOption option )
+void MessageListSettings::setSortingOption(SortingOption option)
 {
-  mSortingOption = option;
+    mSortingOption = option;
 }
 
 MessageListSettings::SortingOption MessageListSettings::sortingOption() const
 {
-  return mSortingOption;
+    return mSortingOption;
 }
 
-void MessageListSettings::setSortingOrder( Qt::SortOrder order )
+void MessageListSettings::setSortingOrder(Qt::SortOrder order)
 {
-  mSortDescending = (order == Qt::DescendingOrder);
+    mSortDescending = (order == Qt::DescendingOrder);
 }
 
 Qt::SortOrder MessageListSettings::sortingOrder() const
 {
-  return (mSortDescending ? Qt::DescendingOrder : Qt::AscendingOrder);
+    return (mSortDescending ? Qt::DescendingOrder : Qt::AscendingOrder);
 }
 
-void MessageListSettings::setGroupingOption( GroupingOption option )
+void MessageListSettings::setGroupingOption(GroupingOption option)
 {
-  mGroupingOption = option;
+    mGroupingOption = option;
 }
 
 MessageListSettings::GroupingOption MessageListSettings::groupingOption() const
 {
-  return mGroupingOption;
+    return mGroupingOption;
 }
 
-void MessageListSettings::setUseThreading( bool threading )
+void MessageListSettings::setUseThreading(bool threading)
 {
-  mUseThreading = threading;
+    mUseThreading = threading;
 }
 
 bool MessageListSettings::useThreading() const
 {
-  return mUseThreading;
+    return mUseThreading;
 }
 
-void MessageListSettings::setUseGlobalSettings( bool value )
+void MessageListSettings::setUseGlobalSettings(bool value)
 {
-  mUseGlobalSettings = value;
+    mUseGlobalSettings = value;
 }
 
 bool MessageListSettings::useGlobalSettings() const
 {
-  return mUseGlobalSettings;
+    return mUseGlobalSettings;
 }
 
-MessageListSettings MessageListSettings::fromConfig( qint64 collectionId )
+MessageListSettings MessageListSettings::fromConfig(qint64 collectionId)
 {
-  const QString groupName = QStringLiteral( "MessageListSettings-%1" ).arg( collectionId );
+    const QString groupName = QStringLiteral("MessageListSettings-%1").arg(collectionId);
 
-  MessageListSettings settings;
+    MessageListSettings settings;
 
-  if ( KSharedConfig::openConfig()->hasGroup( groupName ) ) { // use collection specific settings
-    const KConfigGroup group( KSharedConfig::openConfig(), groupName );
+    if (KSharedConfig::openConfig()->hasGroup(groupName)) {     // use collection specific settings
+        const KConfigGroup group(KSharedConfig::openConfig(), groupName);
 
-    settings.mSortingOption = static_cast<SortingOption>( group.readEntry<int>( "SortingOption", SortByDateTimeMostRecent ) );
-    settings.mSortDescending = group.readEntry<bool>( "SortDescending", false );
-    settings.mGroupingOption = static_cast<GroupingOption>( group.readEntry<int>( "GroupingOption", GroupByDate ) );
-    settings.mUseThreading = group.readEntry<bool>( "UseThreading", true );
-    settings.mUseGlobalSettings = false;
-  } else { // use default settings
-    const KConfigGroup group( KSharedConfig::openConfig(), QLatin1String( "MessageListSettings-default" ) );
+        settings.mSortingOption = static_cast<SortingOption>(group.readEntry<int>("SortingOption", SortByDateTimeMostRecent));
+        settings.mSortDescending = group.readEntry<bool>("SortDescending", false);
+        settings.mGroupingOption = static_cast<GroupingOption>(group.readEntry<int>("GroupingOption", GroupByDate));
+        settings.mUseThreading = group.readEntry<bool>("UseThreading", true);
+        settings.mUseGlobalSettings = false;
+    } else { // use default settings
+        const KConfigGroup group(KSharedConfig::openConfig(), QLatin1String("MessageListSettings-default"));
 
-    settings.mSortingOption = static_cast<SortingOption>( group.readEntry<int>( "SortingOption", SortByDateTimeMostRecent ) );
-    settings.mSortDescending = group.readEntry<bool>( "SortDescending", false );
-    settings.mGroupingOption = static_cast<GroupingOption>( group.readEntry<int>( "GroupingOption", GroupByDate ) );
-    settings.mUseThreading = group.readEntry<bool>( "UseThreading", true );
-    settings.mUseGlobalSettings = true;
-  }
+        settings.mSortingOption = static_cast<SortingOption>(group.readEntry<int>("SortingOption", SortByDateTimeMostRecent));
+        settings.mSortDescending = group.readEntry<bool>("SortDescending", false);
+        settings.mGroupingOption = static_cast<GroupingOption>(group.readEntry<int>("GroupingOption", GroupByDate));
+        settings.mUseThreading = group.readEntry<bool>("UseThreading", true);
+        settings.mUseGlobalSettings = true;
+    }
 
-  return settings;
+    return settings;
 }
 
-void MessageListSettings::toConfig( qint64 collectionId, const MessageListSettings &settings )
+void MessageListSettings::toConfig(qint64 collectionId, const MessageListSettings &settings)
 {
-  const QString groupName = QStringLiteral( "MessageListSettings-%1" ).arg( collectionId );
+    const QString groupName = QStringLiteral("MessageListSettings-%1").arg(collectionId);
 
-  if ( settings.useGlobalSettings() ) {
-    KSharedConfig::openConfig()->deleteGroup( groupName );
-  } else {
-    KConfigGroup group( KSharedConfig::openConfig(), groupName );
+    if (settings.useGlobalSettings()) {
+        KSharedConfig::openConfig()->deleteGroup(groupName);
+    } else {
+        KConfigGroup group(KSharedConfig::openConfig(), groupName);
 
-    group.writeEntry( "SortingOption", static_cast<int>( settings.mSortingOption ) );
-    group.writeEntry( "SortDescending", settings.mSortDescending );
-    group.writeEntry( "GroupingOption", static_cast<int>( settings.mGroupingOption ) );
-    group.writeEntry( "UseThreading", settings.mUseThreading );
-  }
+        group.writeEntry("SortingOption", static_cast<int>(settings.mSortingOption));
+        group.writeEntry("SortDescending", settings.mSortDescending);
+        group.writeEntry("GroupingOption", static_cast<int>(settings.mGroupingOption));
+        group.writeEntry("UseThreading", settings.mUseThreading);
+    }
 
-  KSharedConfig::openConfig()->sync();
+    KSharedConfig::openConfig()->sync();
 }
 
 MessageListSettings MessageListSettings::fromDefaultConfig()
 {
-  const KConfigGroup group( KSharedConfig::openConfig(), QLatin1String( "MessageListSettings-default" ) );
+    const KConfigGroup group(KSharedConfig::openConfig(), QLatin1String("MessageListSettings-default"));
 
-  MessageListSettings settings;
-  settings.mSortingOption = static_cast<SortingOption>( group.readEntry<int>( "SortingOption", SortByDateTimeMostRecent ) );
-  settings.mSortDescending = group.readEntry<bool>( "SortDescending", false );
-  settings.mGroupingOption = static_cast<GroupingOption>( group.readEntry<int>( "GroupingOption", GroupByDate ) );
-  settings.mUseThreading = group.readEntry<bool>( "UseThreading", true );
-  settings.mUseGlobalSettings = true;
+    MessageListSettings settings;
+    settings.mSortingOption = static_cast<SortingOption>(group.readEntry<int>("SortingOption", SortByDateTimeMostRecent));
+    settings.mSortDescending = group.readEntry<bool>("SortDescending", false);
+    settings.mGroupingOption = static_cast<GroupingOption>(group.readEntry<int>("GroupingOption", GroupByDate));
+    settings.mUseThreading = group.readEntry<bool>("UseThreading", true);
+    settings.mUseGlobalSettings = true;
 
-  return settings;
+    return settings;
 }
 
-void MessageListSettings::toDefaultConfig( const MessageListSettings &settings )
+void MessageListSettings::toDefaultConfig(const MessageListSettings &settings)
 {
-  const QLatin1String groupName( "MessageListSettings-default" );
+    const QLatin1String groupName("MessageListSettings-default");
 
-  KConfigGroup group( KSharedConfig::openConfig(), groupName );
+    KConfigGroup group(KSharedConfig::openConfig(), groupName);
 
-  group.writeEntry( "SortingOption", static_cast<int>( settings.mSortingOption ) );
-  group.writeEntry( "SortDescending", settings.mSortDescending );
-  group.writeEntry( "GroupingOption", static_cast<int>( settings.mGroupingOption ) );
-  group.writeEntry( "UseThreading", settings.mUseThreading );
+    group.writeEntry("SortingOption", static_cast<int>(settings.mSortingOption));
+    group.writeEntry("SortDescending", settings.mSortDescending);
+    group.writeEntry("GroupingOption", static_cast<int>(settings.mGroupingOption));
+    group.writeEntry("UseThreading", settings.mUseThreading);
 
-  KSharedConfig::openConfig()->sync();
+    KSharedConfig::openConfig()->sync();
 }

@@ -20,4 +20,3 @@
 #include "composereditorng_debug.h"
 Q_LOGGING_CATEGORY(COMPOSEREDITORNG_LOG, "log_composereditorng")
 
-

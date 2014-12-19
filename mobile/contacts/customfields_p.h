@@ -44,52 +44,50 @@
  */
 class CustomField
 {
-  public:
+public:
     typedef QList<CustomField> List;
 
-    enum Type
-    {
-      TextType,
-      NumericType,
-      BooleanType,
-      DateType,
-      TimeType,
-      DateTimeType
+    enum Type {
+        TextType,
+        NumericType,
+        BooleanType,
+        DateType,
+        TimeType,
+        DateTimeType
     };
 
-    enum Scope
-    {
-      LocalScope,   ///< Field has been defined by user for one contact
-      GlobalScope,  ///< Field has been defined by user for all contacts
-      ExternalScope ///< Field has been defined by the external data source (e.g. vCard)
+    enum Scope {
+        LocalScope,   ///< Field has been defined by user for one contact
+        GlobalScope,  ///< Field has been defined by user for all contacts
+        ExternalScope ///< Field has been defined by the external data source (e.g. vCard)
     };
 
     CustomField();
-    CustomField( const QString &key, const QString &title, Type type, Scope scope );
+    CustomField(const QString &key, const QString &title, Type type, Scope scope);
 
-    static CustomField fromVariantMap( const QVariantMap &map, Scope scope );
+    static CustomField fromVariantMap(const QVariantMap &map, Scope scope);
 
-    void setKey( const QString &key );
+    void setKey(const QString &key);
     QString key() const;
 
-    void setTitle( const QString &title );
+    void setTitle(const QString &title);
     QString title() const;
 
-    void setType( Type type );
+    void setType(Type type);
     Type type() const;
 
-    void setScope( Scope scope );
+    void setScope(Scope scope);
     Scope scope() const;
 
-    void setValue( const QString &value );
+    void setValue(const QString &value);
     QString value() const;
 
     QVariantMap toVariantMap() const;
 
-    static QString typeToString( Type type );
-    static Type stringToType( const QString &type );
+    static QString typeToString(Type type);
+    static Type stringToType(const QString &type);
 
-  private:
+private:
     QString mKey;
     QString mTitle;
     Type mType;

@@ -22,17 +22,19 @@
 #ifndef ACTIONHELPER_H
 #define ACTIONHELPER_H
 
-namespace Akonadi {
+namespace Akonadi
+{
 class StandardActionManager;
 }
 
-namespace ActionHelper {
+namespace ActionHelper
+{
 
-  /**
-   * Adapts the texts of the standard actions to the mobile applications.
-   */
-  template <class T>
-  void adaptStandardActionTexts( T *manager );
+/**
+ * Adapts the texts of the standard actions to the mobile applications.
+ */
+template <class T>
+void adaptStandardActionTexts(T *manager);
 
 }
 

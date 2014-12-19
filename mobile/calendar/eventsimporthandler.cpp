@@ -28,79 +28,80 @@
 
 QString EventsImportHandler::fileDialogNameFilter() const
 {
-  return QLatin1String( "*.ics|iCals" );
+    return QLatin1String("*.ics|iCals");
 }
 
 QString EventsImportHandler::fileDialogTitle() const
 {
-  return i18n( "Select iCal to Import" );
+    return i18n("Select iCal to Import");
 }
 
 QString EventsImportHandler::collectionDialogText() const
 {
-  return i18n( "Select the calendar the imported event(s) shall be saved in:" );
+    return i18n("Select the calendar the imported event(s) shall be saved in:");
 }
 
 QString EventsImportHandler::collectionDialogTitle() const
 {
-  return i18n( "Select Calendar" );
+    return i18n("Select Calendar");
 }
 
-QString EventsImportHandler::importDialogText( int count, const QString &collectionName ) const
+QString EventsImportHandler::importDialogText(int count, const QString &collectionName) const
 {
-  return i18np( "Importing one event to %2", "Importing %1 events to %2", count, collectionName );
+    return i18np("Importing one event to %2", "Importing %1 events to %2", count, collectionName);
 }
 
 QString EventsImportHandler::importDialogTitle() const
 {
-  return i18n( "Import Events" );
+    return i18n("Import Events");
 }
 
 QStringList EventsImportHandler::mimeTypes() const
 {
-  return QStringList( KCalCore::Event::eventMimeType() );
+    return QStringList(KCalCore::Event::eventMimeType());
 }
 
-Akonadi::Item::List EventsImportHandler::createItems( const QStringList &fileNames, bool *ok )
+Akonadi::Item::List EventsImportHandler::createItems(const QStringList &fileNames, bool *ok)
 {
-  *ok = true;
+    *ok = true;
 
-  Akonadi::Item::List items;
+    Akonadi::Item::List items;
 
-  KCalCore::Event::List events;
+    KCalCore::Event::List events;
 
-  foreach ( const QString &fileName, fileNames ) {
-    KCalCore::MemoryCalendar::Ptr calendar( new KCalCore::MemoryCalendar( QLatin1String( "UTC" ) ) );
-    KCalCore::FileStorage::Ptr storage( new KCalCore::FileStorage( calendar, fileName, new KCalCore::ICalFormat() ) );
+    foreach (const QString &fileName, fileNames) {
+        KCalCore::MemoryCalendar::Ptr calendar(new KCalCore::MemoryCalendar(QLatin1String("UTC")));
+        KCalCore::FileStorage::Ptr storage(new KCalCore::FileStorage(calendar, fileName, new KCalCore::ICalFormat()));
 
-    if ( storage->load() ) {
-      events << calendar->events();
-    } else {
-      const QString caption( i18n( "iCal Import Failed" ) );
-      const QString msg = xi18nc( "@info",
-                                 "<para>Error when trying to read the iCal <filename>%1</filename>:</para>",
-                                 fileName );
-      KMessageBox::error( 0, msg, caption );
-      *ok = false;
+        if (storage->load()) {
+            events << calendar->events();
+        } else {
+            const QString caption(i18n("iCal Import Failed"));
+            const QString msg = xi18nc("@info",
+                                       "<para>Error when trying to read the iCal <filename>%1</filename>:</para>",
+                                       fileName);
+            KMessageBox::error(0, msg, caption);
+            *ok = false;
+        }
     }
-  }
 
-  if ( events.isEmpty() ) {
-    if ( !(*ok) && fileNames.count() > 1 )
-      KMessageBox::information( 0, i18n( "No events were imported, due to errors with the iCals." ) );
-    else if ( *ok )
-      KMessageBox::information( 0, i18n( "The iCal does not contain any events." ) );
+    if (events.isEmpty()) {
+        if (!(*ok) && fileNames.count() > 1) {
+            KMessageBox::information(0, i18n("No events were imported, due to errors with the iCals."));
+        } else if (*ok) {
+            KMessageBox::information(0, i18n("The iCal does not contain any events."));
+        }
 
-    return items; // nothing to import
-  }
+        return items; // nothing to import
+    }
 
-  foreach ( const KCalCore::Event::Ptr &event, events ) {
-    Akonadi::Item item;
-    item.setPayload<KCalCore::Event::Ptr>( event );
-    item.setMimeType( KCalCore::Event::eventMimeType() );
+    foreach (const KCalCore::Event::Ptr &event, events) {
+        Akonadi::Item item;
+        item.setPayload<KCalCore::Event::Ptr>(event);
+        item.setMimeType(KCalCore::Event::eventMimeType());
 
-    items << item;
-  }
+        items << item;
+    }
 
-  return items;
+    return items;
 }

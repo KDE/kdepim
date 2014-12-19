@@ -77,7 +77,7 @@ void MultipartJob::process()
         }
     }
     qCDebug(MESSAGECOMPOSER_LOG) << "Created" << d->resultContent->contentType()->mimeType() << "content with"
-             << d->resultContent->contents().count() << "subjobContents.";
+                                 << d->resultContent->contents().count() << "subjobContents.";
     emitResult();
 }
 

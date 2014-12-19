@@ -30,24 +30,24 @@ class KConfigDialogManager;
 
 class ConfigWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit ConfigWidget( QWidget *parent = Q_NULLPTR );
+public:
+    explicit ConfigWidget(QWidget *parent = Q_NULLPTR);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void load();
     void save();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void configureCompletionOrder();
     void editRecentAddresses();
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void configChanged();
     void showTemplatesHelp();
 
-  private:
+private:
     void loadFromExternalSettings();
     void saveToExternalSettings();
 
@@ -56,25 +56,25 @@ class ConfigWidget : public QWidget
 
 class DeclarativeConfigWidget :
 #ifndef Q_MOC_RUN
-public DeclarativeWidgetBase<ConfigWidget, MainView, &MainView::setConfigWidget>
+    public DeclarativeWidgetBase<ConfigWidget, MainView, &MainView::setConfigWidget>
 #else
-public QGraphicsProxyWidget
+    public QGraphicsProxyWidget
 #endif
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit DeclarativeConfigWidget( QGraphicsItem *parent = Q_NULLPTR );
+public:
+    explicit DeclarativeConfigWidget(QGraphicsItem *parent = Q_NULLPTR);
     ~DeclarativeConfigWidget();
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void load();
     void save();
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void configChanged();
 
-  private:
+private:
     ConfigWidget *mConfigWidget;
 };
 

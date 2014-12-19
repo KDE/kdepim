@@ -29,42 +29,44 @@
 
 #include "kdganttglobal.h"
 
-namespace KDGantt {
-    class KDGANTT_EXPORT ForwardingProxyModel : public QAbstractProxyModel {
-        Q_OBJECT
-        Q_DISABLE_COPY(ForwardingProxyModel)
-    public:
-        explicit ForwardingProxyModel( QObject* parent=0 );
-        virtual ~ForwardingProxyModel();
+namespace KDGantt
+{
+class KDGANTT_EXPORT ForwardingProxyModel : public QAbstractProxyModel
+{
+    Q_OBJECT
+    Q_DISABLE_COPY(ForwardingProxyModel)
+public:
+    explicit ForwardingProxyModel(QObject *parent = 0);
+    virtual ~ForwardingProxyModel();
 
-        /*reimp*/ QModelIndex mapFromSource ( const QModelIndex & sourceIndex ) const Q_DECL_OVERRIDE;
-        /*reimp*/ QModelIndex mapToSource ( const QModelIndex & proxyIndex ) const Q_DECL_OVERRIDE;
+    /*reimp*/ QModelIndex mapFromSource(const QModelIndex &sourceIndex) const Q_DECL_OVERRIDE;
+    /*reimp*/ QModelIndex mapToSource(const QModelIndex &proxyIndex) const Q_DECL_OVERRIDE;
 
-        /*reimp*/ void setSourceModel( QAbstractItemModel* model ) Q_DECL_OVERRIDE;
+    /*reimp*/ void setSourceModel(QAbstractItemModel *model) Q_DECL_OVERRIDE;
 
-        /*reimp*/ QModelIndex index( int row, int column, const QModelIndex& parent = QModelIndex() ) const Q_DECL_OVERRIDE;
-        /*reimp*/ QModelIndex parent( const QModelIndex& idx ) const Q_DECL_OVERRIDE;
+    /*reimp*/ QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    /*reimp*/ QModelIndex parent(const QModelIndex &idx) const Q_DECL_OVERRIDE;
 
-        /*reimp*/ int rowCount( const QModelIndex& idx = QModelIndex() ) const Q_DECL_OVERRIDE;
-        /*reimp*/ int columnCount( const QModelIndex& idx = QModelIndex() ) const Q_DECL_OVERRIDE;
+    /*reimp*/ int rowCount(const QModelIndex &idx = QModelIndex()) const Q_DECL_OVERRIDE;
+    /*reimp*/ int columnCount(const QModelIndex &idx = QModelIndex()) const Q_DECL_OVERRIDE;
 
-        /*reimp*/ bool setData( const QModelIndex& index, const QVariant& value, int role = Qt::EditRole ) Q_DECL_OVERRIDE;
+    /*reimp*/ bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
 
-    protected Q_SLOTS:
-        virtual void sourceModelAboutToBeReset();
-        virtual void sourceModelReset();
-        virtual void sourceLayoutAboutToBeChanged();
-        virtual void sourceLayoutChanged();
-        virtual void sourceDataChanged( const QModelIndex& from, const QModelIndex& to );
-        virtual void sourceColumnsAboutToBeInserted( const QModelIndex& idx, int start, int end );
-        virtual void sourceColumnsInserted( const QModelIndex& idx, int start, int end );
-        virtual void sourceColumnsAboutToBeRemoved( const QModelIndex& idx, int start, int end );
-        virtual void sourceColumnsRemoved( const QModelIndex& idx, int start, int end );
-        virtual void sourceRowsAboutToBeInserted( const QModelIndex& idx, int start, int end );
-        virtual void sourceRowsInserted( const QModelIndex& idx, int start, int end );
-        virtual void sourceRowsAboutToBeRemoved( const QModelIndex&, int start, int end );
-        virtual void sourceRowsRemoved( const QModelIndex&, int start, int end );
-    };
+protected Q_SLOTS:
+    virtual void sourceModelAboutToBeReset();
+    virtual void sourceModelReset();
+    virtual void sourceLayoutAboutToBeChanged();
+    virtual void sourceLayoutChanged();
+    virtual void sourceDataChanged(const QModelIndex &from, const QModelIndex &to);
+    virtual void sourceColumnsAboutToBeInserted(const QModelIndex &idx, int start, int end);
+    virtual void sourceColumnsInserted(const QModelIndex &idx, int start, int end);
+    virtual void sourceColumnsAboutToBeRemoved(const QModelIndex &idx, int start, int end);
+    virtual void sourceColumnsRemoved(const QModelIndex &idx, int start, int end);
+    virtual void sourceRowsAboutToBeInserted(const QModelIndex &idx, int start, int end);
+    virtual void sourceRowsInserted(const QModelIndex &idx, int start, int end);
+    virtual void sourceRowsAboutToBeRemoved(const QModelIndex &, int start, int end);
+    virtual void sourceRowsRemoved(const QModelIndex &, int start, int end);
+};
 }
 
 #endif /* KDGANTTFORWARDINGPROXYMODEL_H */

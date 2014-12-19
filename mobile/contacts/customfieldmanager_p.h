@@ -29,8 +29,8 @@
  */
 class CustomFieldManager
 {
-  public:
-    static void setGlobalCustomFieldDescriptions( const CustomField::List &customFields );
+public:
+    static void setGlobalCustomFieldDescriptions(const CustomField::List &customFields);
     static CustomField::List globalCustomFieldDescriptions();
 };
 

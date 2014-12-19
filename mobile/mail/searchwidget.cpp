@@ -27,36 +27,36 @@
 
 #include <qplatformdefs.h>
 
-SearchWidget::SearchWidget( QWidget *parent )
-  : QWidget( parent )
+SearchWidget::SearchWidget(QWidget *parent)
+    : QWidget(parent)
 {
-  mUi.setupUi( this );
+    mUi.setupUi(this);
 
-  // set defaults
-  mUi.inSubjects->setChecked( true );
-  mUi.inSenders->setChecked( true );
-  mUi.inBodyContents->setChecked( true );
-  mUi.startDate->setDate( QDate::currentDate() );
-  mUi.endDate->setDate( QDate::currentDate().addYears( 1 ) );
-  mUi.collectionCombo->setMimeTypeFilter( QStringList() << KMime::Message::mimeType() );
+    // set defaults
+    mUi.inSubjects->setChecked(true);
+    mUi.inSenders->setChecked(true);
+    mUi.inBodyContents->setChecked(true);
+    mUi.startDate->setDate(QDate::currentDate());
+    mUi.endDate->setDate(QDate::currentDate().addYears(1));
+    mUi.collectionCombo->setMimeTypeFilter(QStringList() << KMime::Message::mimeType());
 }
 
 QString SearchWidget::query() const
 {
-  //TODO create search query form dialog
-  return QString();
+    //TODO create search query form dialog
+    return QString();
 }
 
-DeclarativeSearchWidget::DeclarativeSearchWidget( QGraphicsItem *parent )
-  : QGraphicsProxyWidget( parent ), mSearchWidget( new SearchWidget )
+DeclarativeSearchWidget::DeclarativeSearchWidget(QGraphicsItem *parent)
+    : QGraphicsProxyWidget(parent), mSearchWidget(new SearchWidget)
 {
-  QPalette palette = mSearchWidget->palette();
-  palette.setColor( QPalette::Window, QColor( 0, 0, 0, 0 ) );
-  mSearchWidget->setPalette( palette );
-  StyleSheetLoader::applyStyle( mSearchWidget );
+    QPalette palette = mSearchWidget->palette();
+    palette.setColor(QPalette::Window, QColor(0, 0, 0, 0));
+    mSearchWidget->setPalette(palette);
+    StyleSheetLoader::applyStyle(mSearchWidget);
 
-  setWidget( mSearchWidget );
-  setFocusPolicy( Qt::StrongFocus );
+    setWidget(mSearchWidget);
+    setFocusPolicy(Qt::StrongFocus);
 }
 
 DeclarativeSearchWidget::~DeclarativeSearchWidget()
@@ -65,6 +65,6 @@ DeclarativeSearchWidget::~DeclarativeSearchWidget()
 
 QString DeclarativeSearchWidget::query() const
 {
-  return mSearchWidget->query();
+    return mSearchWidget->query();
 }
 

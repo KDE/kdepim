@@ -19,7 +19,6 @@ Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 
 #include "receivermodel.h"
 
-
 ReceiverModel::ReceiverModel(QObject *parent) : QAbstractListModel(parent)
 {
     QHash<int, QByteArray> roles;
@@ -28,12 +27,11 @@ ReceiverModel::ReceiverModel(QObject *parent) : QAbstractListModel(parent)
     roles[Email] = "email";
     roles[Type] = "type";
 
-    setRoleNames (roles);
+    setRoleNames(roles);
 
 }
 
-
-int ReceiverModel::rowCount( const QModelIndex &parent ) const
+int ReceiverModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid()) {
         return 0;
@@ -42,8 +40,7 @@ int ReceiverModel::rowCount( const QModelIndex &parent ) const
     return mRecipients.count();
 }
 
-
-QVariant ReceiverModel::data( const QModelIndex &index, int role ) const
+QVariant ReceiverModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) {
         return QVariant();
@@ -55,26 +52,25 @@ QVariant ReceiverModel::data( const QModelIndex &index, int role ) const
 
     int row = index.row();
 
-    switch(role) {
+    switch (role) {
 
-        case Name:
-            return mRecipients[row]->name();
-        case Email:
-            return mRecipients[row]->email();
-        case Type:
-            return mRecipients[row]->type();
+    case Name:
+        return mRecipients[row]->name();
+    case Email:
+        return mRecipients[row]->email();
+    case Type:
+        return mRecipients[row]->type();
     }
 
     return QVariant();
 }
 
-
-bool ReceiverModel::setData( const QModelIndex &index, const QVariant &value, int role )
+bool ReceiverModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (index.isValid() && role == Qt::EditRole && !(index.row() >= mRecipients.size() || index.row() < 0)) {
         int row = index.row();
 
-        switch(role) {
+        switch (role) {
 
         case Name:
             mRecipients[row]->setName(value.toString());
@@ -83,7 +79,7 @@ bool ReceiverModel::setData( const QModelIndex &index, const QVariant &value, in
             mRecipients[row]->setEmail(value.toString());
             break;
         case Type:
-            mRecipients[row]->setType(MessageComposer::Recipient::idToType (value.toInt()));
+            mRecipients[row]->setType(MessageComposer::Recipient::idToType(value.toInt()));
             break;
         default:
             return false;
@@ -96,8 +92,7 @@ bool ReceiverModel::setData( const QModelIndex &index, const QVariant &value, in
     return false;
 }
 
-
-Qt::ItemFlags ReceiverModel::flags( const QModelIndex &index ) const
+Qt::ItemFlags ReceiverModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid()) {
         return Qt::ItemIsEnabled;
@@ -106,41 +101,39 @@ Qt::ItemFlags ReceiverModel::flags( const QModelIndex &index ) const
     return QAbstractListModel::flags(index) | Qt::ItemIsEditable;
 }
 
-
-bool ReceiverModel::addRecipient( const MessageComposer::Recipient::Ptr &recipient )
+bool ReceiverModel::addRecipient(const MessageComposer::Recipient::Ptr &recipient)
 {
-    if ( mRecipients.contains( recipient ) ) {
+    if (mRecipients.contains(recipient)) {
         return false;
     }
 
-    beginInsertRows( QModelIndex(), rowCount(), rowCount() );
-    mRecipients.append( recipient );
+    beginInsertRows(QModelIndex(), rowCount(), rowCount());
+    mRecipients.append(recipient);
     endInsertRows();
     return true;
 
 }
 
-
-bool ReceiverModel::removeRecipient( const MessageComposer::Recipient::Ptr &recipient )
+bool ReceiverModel::removeRecipient(const MessageComposer::Recipient::Ptr &recipient)
 {
-   int index = mRecipients.indexOf( recipient );
+    int index = mRecipients.indexOf(recipient);
 
-    if ( index < 0 ) {
+    if (index < 0) {
         return false;
     }
 
-    beginRemoveRows( QModelIndex(), rowCount(), rowCount() );
-    mRecipients.removeAt( index );
+    beginRemoveRows(QModelIndex(), rowCount(), rowCount());
+    mRecipients.removeAt(index);
     endRemoveRows();
     return true;
 
 }
 
-QStringList ReceiverModel::recipientStringList( MessageComposer::Recipient::Type type ) const
+QStringList ReceiverModel::recipientStringList(MessageComposer::Recipient::Type type) const
 {
     QStringList selectedRecipients;
-    foreach ( const MessageComposer::Recipient::Ptr &r, mRecipients ) {
-        if ( r->type() == type ) {
+    foreach (const MessageComposer::Recipient::Ptr &r, mRecipients) {
+        if (r->type() == type) {
             selectedRecipients << r->email();
         }
     }
@@ -148,25 +141,25 @@ QStringList ReceiverModel::recipientStringList( MessageComposer::Recipient::Type
     return selectedRecipients;
 }
 
-QString ReceiverModel::recipientString( MessageComposer::Recipient::Type type ) const
+QString ReceiverModel::recipientString(MessageComposer::Recipient::Type type) const
 {
-    return recipientStringList( type ).join( QLatin1String(", ") );
+    return recipientStringList(type).join(QLatin1String(", "));
 }
 
-void ReceiverModel::setRecipientString( const QList< KMime::Types::Mailbox >& mailboxes, MessageComposer::Recipient::Type type )
+void ReceiverModel::setRecipientString(const QList< KMime::Types::Mailbox > &mailboxes, MessageComposer::Recipient::Type type)
 {
-    foreach ( const KMime::Types::Mailbox &mailbox, mailboxes ) {
+    foreach (const KMime::Types::Mailbox &mailbox, mailboxes) {
 
-        addRecipient( mailbox.prettyAddress( KMime::Types::Mailbox::QuoteWhenNecessary ), type );
+        addRecipient(mailbox.prettyAddress(KMime::Types::Mailbox::QuoteWhenNecessary), type);
 
     }
 
 }
 
-void ReceiverModel::addRecipient( const QString &email , MessageComposer::Recipient::Type type )
+void ReceiverModel::addRecipient(const QString &email , MessageComposer::Recipient::Type type)
 {
-    MessageComposer::Recipient::Ptr rec (new MessageComposer::Recipient);
-    rec->setEmail ( email );
-    rec->setType ( MessageComposer::Recipient::idToType(type) );
-    addRecipient ( rec );
+    MessageComposer::Recipient::Ptr rec(new MessageComposer::Recipient);
+    rec->setEmail(email);
+    rec->setType(MessageComposer::Recipient::idToType(type));
+    addRecipient(rec);
 }

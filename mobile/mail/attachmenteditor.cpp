@@ -31,89 +31,91 @@
 #include <QAction>
 #include <QItemSelectionModel>
 
-AttachmentEditor::AttachmentEditor( KActionCollection *actionCollection, MessageComposer::AttachmentModel *model,
-                                    MessageComposer::AttachmentControllerBase *controller, QObject *parent )
-  : QObject( parent ),
-    mModel( model ),
-    mSelectionModel( new QItemSelectionModel( mModel ) ),
-    mAttachmentController( controller )
+AttachmentEditor::AttachmentEditor(KActionCollection *actionCollection, MessageComposer::AttachmentModel *model,
+                                   MessageComposer::AttachmentControllerBase *controller, QObject *parent)
+    : QObject(parent),
+      mModel(model),
+      mSelectionModel(new QItemSelectionModel(mModel)),
+      mAttachmentController(controller)
 {
-  mAddAction = actionCollection->action( QLatin1String("attach") );
-  mAddAction->setText( i18n( "Add Attachment" ) );
-  mDeleteAction = actionCollection->action( QLatin1String("remove") );
-  mDeleteAction->setText( i18n( "Remove Attachment" ) );
+    mAddAction = actionCollection->action(QLatin1String("attach"));
+    mAddAction->setText(i18n("Add Attachment"));
+    mDeleteAction = actionCollection->action(QLatin1String("remove"));
+    mDeleteAction->setText(i18n("Remove Attachment"));
 
-  mSignAction = new QAction( this );
-  mSignAction->setText( i18n( "Sign" ) );
-  mSignAction->setCheckable( true );
-  connect( mSignAction, SIGNAL(triggered(bool)), SLOT(signAttachment(bool)) );
+    mSignAction = new QAction(this);
+    mSignAction->setText(i18n("Sign"));
+    mSignAction->setCheckable(true);
+    connect(mSignAction, SIGNAL(triggered(bool)), SLOT(signAttachment(bool)));
 
-  mEncryptAction = new QAction( this );
-  mEncryptAction->setText( i18n( "Encrypt" ) );
-  mEncryptAction->setCheckable( true );
-  connect( mEncryptAction, SIGNAL(triggered(bool)), SLOT(encryptAttachment(bool)) );
+    mEncryptAction = new QAction(this);
+    mEncryptAction->setText(i18n("Encrypt"));
+    mEncryptAction->setCheckable(true);
+    connect(mEncryptAction, SIGNAL(triggered(bool)), SLOT(encryptAttachment(bool)));
 
-  actionCollection->addAction( QLatin1String("toggle_attachment_signed"), mSignAction );
-  actionCollection->addAction( QLatin1String("toggle_attachment_encrypted"), mEncryptAction );
+    actionCollection->addAction(QLatin1String("toggle_attachment_signed"), mSignAction);
+    actionCollection->addAction(QLatin1String("toggle_attachment_encrypted"), mEncryptAction);
 
-  connect( mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-           this, SLOT(selectionChanged()) );
+    connect(mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            this, SLOT(selectionChanged()));
 
-  selectionChanged();
+    selectionChanged();
 }
 
-void AttachmentEditor::setRowSelected( int row )
+void AttachmentEditor::setRowSelected(int row)
 {
-  Q_ASSERT( row >= 0 && row < mModel->rowCount() );
+    Q_ASSERT(row >= 0 && row < mModel->rowCount());
 
-  mSelectionModel->select( mModel->index( row, 0, QModelIndex() ), QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows );
+    mSelectionModel->select(mModel->index(row, 0, QModelIndex()), QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
 }
 
 void AttachmentEditor::selectionChanged()
 {
-  mAddAction->setEnabled( true );
+    mAddAction->setEnabled(true);
 
-  if ( mSelectionModel->hasSelection() ) {
-    mDeleteAction->setEnabled( true );
-    mSignAction->setEnabled( true );
-    mEncryptAction->setEnabled( true );
+    if (mSelectionModel->hasSelection()) {
+        mDeleteAction->setEnabled(true);
+        mSignAction->setEnabled(true);
+        mEncryptAction->setEnabled(true);
 
-    const QModelIndex signIndex = mModel->index( mSelectionModel->selectedIndexes().first().row(), MessageComposer::AttachmentModel::SignColumn );
-    const QModelIndex encryptIndex = mModel->index( mSelectionModel->selectedIndexes().first().row(), MessageComposer::AttachmentModel::EncryptColumn );
+        const QModelIndex signIndex = mModel->index(mSelectionModel->selectedIndexes().first().row(), MessageComposer::AttachmentModel::SignColumn);
+        const QModelIndex encryptIndex = mModel->index(mSelectionModel->selectedIndexes().first().row(), MessageComposer::AttachmentModel::EncryptColumn);
 
-    mSignAction->setChecked( signIndex.data( Qt::CheckStateRole ).toBool() );
-    mEncryptAction->setChecked( encryptIndex.data( Qt::CheckStateRole ).toBool() );
-  } else {
-    mDeleteAction->setEnabled( false );
-    mSignAction->setEnabled( false );
-    mEncryptAction->setEnabled( false );
-  }
+        mSignAction->setChecked(signIndex.data(Qt::CheckStateRole).toBool());
+        mEncryptAction->setChecked(encryptIndex.data(Qt::CheckStateRole).toBool());
+    } else {
+        mDeleteAction->setEnabled(false);
+        mSignAction->setEnabled(false);
+        mEncryptAction->setEnabled(false);
+    }
 
-  const QModelIndexList selectedRows = mSelectionModel->selectedRows();
-  MessageCore::AttachmentPart::List selectedParts;
-  foreach( const QModelIndex &index, selectedRows ) {
-    const MessageCore::AttachmentPart::Ptr part = index.data( MessageComposer::AttachmentModel::AttachmentPartRole ).value<MessageCore::AttachmentPart::Ptr>();
-    selectedParts.append( part );
-  }
+    const QModelIndexList selectedRows = mSelectionModel->selectedRows();
+    MessageCore::AttachmentPart::List selectedParts;
+    foreach (const QModelIndex &index, selectedRows) {
+        const MessageCore::AttachmentPart::Ptr part = index.data(MessageComposer::AttachmentModel::AttachmentPartRole).value<MessageCore::AttachmentPart::Ptr>();
+        selectedParts.append(part);
+    }
 
-  mAttachmentController->setSelectedParts( selectedParts );
+    mAttachmentController->setSelectedParts(selectedParts);
 }
 
-void AttachmentEditor::signAttachment( bool value )
+void AttachmentEditor::signAttachment(bool value)
 {
-  if ( !mSelectionModel->hasSelection() )
-    return;
+    if (!mSelectionModel->hasSelection()) {
+        return;
+    }
 
-  const QModelIndex index = mModel->index( mSelectionModel->selectedIndexes().first().row(), MessageComposer::AttachmentModel::SignColumn );
-  mModel->setData( index, value, Qt::CheckStateRole );
+    const QModelIndex index = mModel->index(mSelectionModel->selectedIndexes().first().row(), MessageComposer::AttachmentModel::SignColumn);
+    mModel->setData(index, value, Qt::CheckStateRole);
 }
 
-void AttachmentEditor::encryptAttachment( bool value )
+void AttachmentEditor::encryptAttachment(bool value)
 {
-  if ( !mSelectionModel->hasSelection() )
-    return;
+    if (!mSelectionModel->hasSelection()) {
+        return;
+    }
 
-  const QModelIndex index = mModel->index( mSelectionModel->selectedIndexes().first().row(), MessageComposer::AttachmentModel::EncryptColumn );
-  mModel->setData( index, value, Qt::CheckStateRole );
+    const QModelIndex index = mModel->index(mSelectionModel->selectedIndexes().first().row(), MessageComposer::AttachmentModel::EncryptColumn);
+    mModel->setData(index, value, Qt::CheckStateRole);
 }
 

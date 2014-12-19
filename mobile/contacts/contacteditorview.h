@@ -22,9 +22,10 @@
 
 #include "kdeclarativefullscreenview.h"
 
-namespace Akonadi {
-  class Collection;
-  class Item;
+namespace Akonadi
+{
+class Collection;
+class Item;
 }
 
 class EditorBusiness;
@@ -35,46 +36,46 @@ class EditorMore;
 
 class ContactEditorView : public KDeclarativeFullScreenView
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit ContactEditorView( QWidget *parent = Q_NULLPTR );
+public:
+    explicit ContactEditorView(QWidget *parent = Q_NULLPTR);
 
     ~ContactEditorView();
 
-    void setEditorGeneral( EditorGeneral *editor );
+    void setEditorGeneral(EditorGeneral *editor);
 
-    void setEditorBusiness( EditorBusiness *editor );
+    void setEditorBusiness(EditorBusiness *editor);
 
-    void setEditorLocation( EditorLocation *editor );
+    void setEditorLocation(EditorLocation *editor);
 
-    void setEditorCrypto( EditorCrypto *editor );
+    void setEditorCrypto(EditorCrypto *editor);
 
-    void setEditorMore( EditorMore *editor );
+    void setEditorMore(EditorMore *editor);
 
-    void setDefaultCollection( const Akonadi::Collection &collection );
+    void setDefaultCollection(const Akonadi::Collection &collection);
 
-  public Q_SLOTS:
-    void loadContact( const Akonadi::Item &item );
+public Q_SLOTS:
+    void loadContact(const Akonadi::Item &item);
 
     void save();
     void cancel();
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void requestLaunchAccountWizard();
 
-  protected:
-    void closeEvent( QCloseEvent *event ) Q_DECL_OVERRIDE;
+protected:
+    void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
     virtual void doDelayedInit();
 
-  private:
+private:
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void saveFinished() )
-    Q_PRIVATE_SLOT( d, void saveFailed( IncidenceEditorNG::EditorItemManager::SaveAction,
-                                        const QString & ) )
-    Q_PRIVATE_SLOT( d, void collectionChanged( const Akonadi::Collection & ) )
+    Q_PRIVATE_SLOT(d, void saveFinished())
+    Q_PRIVATE_SLOT(d, void saveFailed(IncidenceEditorNG::EditorItemManager::SaveAction,
+                                      const QString &))
+    Q_PRIVATE_SLOT(d, void collectionChanged(const Akonadi::Collection &))
 };
 
 #endif

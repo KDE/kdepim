@@ -68,410 +68,424 @@
 
 using namespace Akonadi;
 
-QML_DECLARE_TYPE( CalendarSupport::KCal::KCalItemBrowserItem )
-QML_DECLARE_TYPE( DeclarativeConfigWidget )
-QML_DECLARE_TYPE( DeclarativeSearchWidget )
+QML_DECLARE_TYPE(CalendarSupport::KCal::KCalItemBrowserItem)
+QML_DECLARE_TYPE(DeclarativeConfigWidget)
+QML_DECLARE_TYPE(DeclarativeSearchWidget)
 
-MainView::MainView( QWidget *parent )
-  : KDeclarativeMainView( QLatin1String("tasks"), new TaskListProxy, parent )
-  , mCalendarUtils( 0 )
-  , mTasksActionManager( 0 )
-  , mCalendarPrefs( new EventViews::Prefs )
-  , mCalendar( 0 )
-  , mChanger( 0 )
+MainView::MainView(QWidget *parent)
+    : KDeclarativeMainView(QLatin1String("tasks"), new TaskListProxy, parent)
+    , mCalendarUtils(0)
+    , mTasksActionManager(0)
+    , mCalendarPrefs(new EventViews::Prefs)
+    , mCalendar(0)
+    , mChanger(0)
 {
-  mCalendarPrefs->readConfig();
-  qobject_cast<TaskListProxy*>( itemModel() )->setPreferences( mCalendarPrefs );
+    mCalendarPrefs->readConfig();
+    qobject_cast<TaskListProxy *>(itemModel())->setPreferences(mCalendarPrefs);
 
-  // re-sort the list when config options have changed
-  connect( Settings::self(), SIGNAL(configChanged()),
-           qobject_cast<TaskListProxy*>( itemModel() ), SLOT(invalidate()) );
+    // re-sort the list when config options have changed
+    connect(Settings::self(), SIGNAL(configChanged()),
+            qobject_cast<TaskListProxy *>(itemModel()), SLOT(invalidate()));
 }
 
 MainView::~MainView()
 {
-  mCalendarPrefs->writeConfig();
+    mCalendarPrefs->writeConfig();
 }
 
 void MainView::doDelayedInit()
 {
-  setWindowTitle( i18n( "Tasks" ) );
+    setWindowTitle(i18n("Tasks"));
 
-  addMimeType( KCalCore::Todo::todoMimeType() );
-  itemFetchScope().fetchFullPayload();
+    addMimeType(KCalCore::Todo::todoMimeType());
+    itemFetchScope().fetchFullPayload();
 
-  qmlRegisterType<CalendarSupport::KCal::KCalItemBrowserItem>( "org.kde.kcal", 4, 5, "IncidenceView" );
-  qmlRegisterType<DeclarativeConfigWidget>( "org.kde.akonadi.tasks", 4, 5, "ConfigWidget" );
-  qmlRegisterType<DeclarativeSearchWidget>( "org.kde.akonadi.tasks", 4, 5, "SearchWidget" );
+    qmlRegisterType<CalendarSupport::KCal::KCalItemBrowserItem>("org.kde.kcal", 4, 5, "IncidenceView");
+    qmlRegisterType<DeclarativeConfigWidget>("org.kde.akonadi.tasks", 4, 5, "ConfigWidget");
+    qmlRegisterType<DeclarativeSearchWidget>("org.kde.akonadi.tasks", 4, 5, "SearchWidget");
 
-  QStringList mimeTypes;
-  mimeTypes << KCalCore::Todo::todoMimeType();
-  mCalendar = Akonadi::ETMCalendar::Ptr( new Akonadi::ETMCalendar( mimeTypes ) );
+    QStringList mimeTypes;
+    mimeTypes << KCalCore::Todo::todoMimeType();
+    mCalendar = Akonadi::ETMCalendar::Ptr(new Akonadi::ETMCalendar(mimeTypes));
 
-  mChanger = new Akonadi::IncidenceChanger( this );
+    mChanger = new Akonadi::IncidenceChanger(this);
 
-  Akonadi::FreeBusyManager::self()->setCalendar( mCalendar );
+    Akonadi::FreeBusyManager::self()->setCalendar(mCalendar);
 
-  mCalendarUtils = new CalendarSupport::CalendarUtils( mCalendar, this );
-  mCalendar->setParent( mCalendarUtils );
-  connect( mCalendarUtils, SIGNAL(actionFinished(Akonadi::Item)),
-          SLOT(processActionFinish(Akonadi::Item)) );
-  connect( mCalendarUtils, SIGNAL(actionFailed(Akonadi::Item,QString)),
-          SLOT(processActionFail(Akonadi::Item,QString)) );
+    mCalendarUtils = new CalendarSupport::CalendarUtils(mCalendar, this);
+    mCalendar->setParent(mCalendarUtils);
+    connect(mCalendarUtils, SIGNAL(actionFinished(Akonadi::Item)),
+            SLOT(processActionFinish(Akonadi::Item)));
+    connect(mCalendarUtils, SIGNAL(actionFailed(Akonadi::Item,QString)),
+            SLOT(processActionFail(Akonadi::Item,QString)));
 
-  mTasksActionManager = new TasksActionManager( actionCollection(), this );
-  mTasksActionManager->setCalendar( mCalendar );
-  mTasksActionManager->setItemSelectionModel( itemSelectionModel() );
+    mTasksActionManager = new TasksActionManager(actionCollection(), this);
+    mTasksActionManager->setCalendar(mCalendar);
+    mTasksActionManager->setItemSelectionModel(itemSelectionModel());
 
-  connect( entityTreeModel(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-           mTasksActionManager, SLOT(updateActions()) );
+    connect(entityTreeModel(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+            mTasksActionManager, SLOT(updateActions()));
 
-  connect( actionCollection()->action( QLatin1String( "import_tasks" ) ),
-           SIGNAL(triggered(bool)), SLOT(importItems()) );
-  connect( actionCollection()->action( QLatin1String( "export_account_tasks" ) ),
-           SIGNAL(triggered(bool)), SLOT(exportItems()) );
-  connect( actionCollection()->action( QLatin1String( "export_selected_tasks" ) ),
-           SIGNAL(triggered(bool)), SLOT(exportItems()) );
-  connect( actionCollection()->action( QLatin1String( "make_subtask_independent" ) ),
-           SIGNAL(triggered(bool)), SLOT(makeTaskIndependent()) );
-  connect( actionCollection()->action( QLatin1String( "make_all_subtasks_independent" ) ),
-           SIGNAL(triggered(bool)), SLOT(makeAllSubtasksIndependent()) );
-  connect( actionCollection()->action( QLatin1String( "purge_completed_tasks" ) ),
-           SIGNAL(triggered(bool)), SLOT(purgeCompletedTasks()) );
-  connect( actionCollection()->action( QLatin1String( "save_all_attachments" ) ),
-           SIGNAL(triggered(bool)), SLOT(saveAllAttachments()) );
-  connect( actionCollection()->action( QLatin1String( "archive_old_entries" ) ),
-           SIGNAL(triggered(bool)), SLOT(archiveOldEntries()) );
+    connect(actionCollection()->action(QLatin1String("import_tasks")),
+            SIGNAL(triggered(bool)), SLOT(importItems()));
+    connect(actionCollection()->action(QLatin1String("export_account_tasks")),
+            SIGNAL(triggered(bool)), SLOT(exportItems()));
+    connect(actionCollection()->action(QLatin1String("export_selected_tasks")),
+            SIGNAL(triggered(bool)), SLOT(exportItems()));
+    connect(actionCollection()->action(QLatin1String("make_subtask_independent")),
+            SIGNAL(triggered(bool)), SLOT(makeTaskIndependent()));
+    connect(actionCollection()->action(QLatin1String("make_all_subtasks_independent")),
+            SIGNAL(triggered(bool)), SLOT(makeAllSubtasksIndependent()));
+    connect(actionCollection()->action(QLatin1String("purge_completed_tasks")),
+            SIGNAL(triggered(bool)), SLOT(purgeCompletedTasks()));
+    connect(actionCollection()->action(QLatin1String("save_all_attachments")),
+            SIGNAL(triggered(bool)), SLOT(saveAllAttachments()));
+    connect(actionCollection()->action(QLatin1String("archive_old_entries")),
+            SIGNAL(triggered(bool)), SLOT(archiveOldEntries()));
 
-  QAction *action = new QAction( i18n( "Configure Categories" ), this );
-  connect( action, SIGNAL(triggered(bool)), SLOT(configureCategories()) );
-  actionCollection()->addAction( QLatin1String( "configure_categories" ), action );
+    QAction *action = new QAction(i18n("Configure Categories"), this);
+    connect(action, SIGNAL(triggered(bool)), SLOT(configureCategories()));
+    actionCollection()->addAction(QLatin1String("configure_categories"), action);
 
-  KPIM::ReminderClient::startDaemon();
+    KPIM::ReminderClient::startDaemon();
 }
 
-void MainView::setConfigWidget( ConfigWidget *configWidget )
+void MainView::setConfigWidget(ConfigWidget *configWidget)
 {
-  Q_ASSERT( configWidget );
-  if ( configWidget )
-    configWidget->setPreferences( mCalendarPrefs );
+    Q_ASSERT(configWidget);
+    if (configWidget) {
+        configWidget->setPreferences(mCalendarPrefs);
+    }
 }
 
-void MainView::finishEdit( QObject *editor )
+void MainView::finishEdit(QObject *editor)
 {
-  mOpenItemEditors.remove( editor );
+    mOpenItemEditors.remove(editor);
 }
 
 void MainView::newTask()
 {
-  IncidenceView *editor = new IncidenceView;
-  editor->setWindowTitle( i18n( "Kontact Touch Tasks" ) );
+    IncidenceView *editor = new IncidenceView;
+    editor->setWindowTitle(i18n("Kontact Touch Tasks"));
 
-  Item item;
-  item.setMimeType( KCalCore::Todo::todoMimeType() );
-  KCalCore::Todo::Ptr todo( new KCalCore::Todo );
+    Item item;
+    item.setMimeType(KCalCore::Todo::todoMimeType());
+    KCalCore::Todo::Ptr todo(new KCalCore::Todo);
 
-  { // Set some defaults
-    IncidenceEditorNG::IncidenceDefaults defaults;
-    // Set the full emails manually here, to avoid that we get dependencies on
-    // KCalPrefs all over the place.
-    defaults.setFullEmails( CalendarSupport::KCalPrefs::instance()->fullEmails() );
-    // NOTE: At some point this should be generalized. That is, we now use the
-    //       freebusy url as a hack, but this assumes that the user has only one
-    //       groupware account. Which doesn't have to be the case necessarily.
-    //       This method should somehow depend on the calendar selected to which
-    //       the incidence is added.
-    if ( CalendarSupport::KCalPrefs::instance()->useGroupwareCommunication() )
-      defaults.setGroupWareDomain( QUrl( Akonadi::CalendarSettings::self()->freeBusyRetrieveUrl() ).host() );
+    {
+        // Set some defaults
+        IncidenceEditorNG::IncidenceDefaults defaults;
+        // Set the full emails manually here, to avoid that we get dependencies on
+        // KCalPrefs all over the place.
+        defaults.setFullEmails(CalendarSupport::KCalPrefs::instance()->fullEmails());
+        // NOTE: At some point this should be generalized. That is, we now use the
+        //       freebusy url as a hack, but this assumes that the user has only one
+        //       groupware account. Which doesn't have to be the case necessarily.
+        //       This method should somehow depend on the calendar selected to which
+        //       the incidence is added.
+        if (CalendarSupport::KCalPrefs::instance()->useGroupwareCommunication()) {
+            defaults.setGroupWareDomain(QUrl(Akonadi::CalendarSettings::self()->freeBusyRetrieveUrl()).host());
+        }
 
-    // make it due one day from now
-    const KDateTime now = KDateTime::currentLocalDateTime();
-    defaults.setStartDateTime( now );
-    defaults.setEndDateTime( now.addDays( 1 ) );
+        // make it due one day from now
+        const KDateTime now = KDateTime::currentLocalDateTime();
+        defaults.setStartDateTime(now);
+        defaults.setEndDateTime(now.addDays(1));
 
-    defaults.setDefaults( todo );
-  }
+        defaults.setDefaults(todo);
+    }
 
-  item.setPayload<KCalCore::Todo::Ptr>( todo );
-  editor->load( item );
+    item.setPayload<KCalCore::Todo::Ptr>(todo);
+    editor->load(item);
 
-  if ( regularSelectionModel()->hasSelection() ) {
-    const QModelIndex index = regularSelectionModel()->selectedIndexes().first();
-    const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-    if ( collection.isValid() )
-      editor->setDefaultCollection( collection );
-  }
+    if (regularSelectionModel()->hasSelection()) {
+        const QModelIndex index = regularSelectionModel()->selectedIndexes().first();
+        const Akonadi::Collection collection = index.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
+        if (collection.isValid()) {
+            editor->setDefaultCollection(collection);
+        }
+    }
 
-  editor->show();
+    editor->show();
 }
 
 void MainView::newSubTask()
 {
-  Item item = currentItem();
-  if ( !item.isValid() )
-    return;
+    Item item = currentItem();
+    if (!item.isValid()) {
+        return;
+    }
 
-  KCalCore::Todo::Ptr parentTodo = item.payload<KCalCore::Todo::Ptr>();
-  KCalCore::Todo::Ptr todo( new KCalCore::Todo );
+    KCalCore::Todo::Ptr parentTodo = item.payload<KCalCore::Todo::Ptr>();
+    KCalCore::Todo::Ptr todo(new KCalCore::Todo);
 
-  // make it due one day from now
-  todo->setDtStart( KDateTime::currentLocalDateTime() );
-  todo->setDtDue( KDateTime::currentLocalDateTime().addDays( 1 ) );
-  todo->setRelatedTo( parentTodo->uid(), KCalCore::Todo::RelTypeParent );
+    // make it due one day from now
+    todo->setDtStart(KDateTime::currentLocalDateTime());
+    todo->setDtDue(KDateTime::currentLocalDateTime().addDays(1));
+    todo->setRelatedTo(parentTodo->uid(), KCalCore::Todo::RelTypeParent);
 
-  item.setPayload<KCalCore::Todo::Ptr>( todo );
-  IncidenceView *editor = new IncidenceView;
-  editor->setWindowTitle( i18n( "Kontact Touch Tasks" ) );
-  editor->load( item );
-  editor->show();
+    item.setPayload<KCalCore::Todo::Ptr>(todo);
+    IncidenceView *editor = new IncidenceView;
+    editor->setWindowTitle(i18n("Kontact Touch Tasks"));
+    editor->load(item);
+    editor->show();
 }
 
 void MainView::makeTaskIndependent()
 {
-  Item item = currentItem();
-  if ( !item.isValid() )
-    return;
+    Item item = currentItem();
+    if (!item.isValid()) {
+        return;
+    }
 
-  if ( mCalendarUtils->makeIndependent( item ) ) {
-    actionCollection()->action( QLatin1String( "make_subtask_independent" ) )->setEnabled( false );
-  }
+    if (mCalendarUtils->makeIndependent(item)) {
+        actionCollection()->action(QLatin1String("make_subtask_independent"))->setEnabled(false);
+    }
 }
 
 void MainView::makeAllSubtasksIndependent()
 {
-  Item item = currentItem();
-  if ( !item.isValid() )
-    return;
+    Item item = currentItem();
+    if (!item.isValid()) {
+        return;
+    }
 
-  if ( mCalendarUtils->makeChildrenIndependent( item ) ) {
-    actionCollection()->action( QLatin1String( "make_all_subtasks_independent" ) )->setEnabled( false );
-  }
+    if (mCalendarUtils->makeChildrenIndependent(item)) {
+        actionCollection()->action(QLatin1String("make_all_subtasks_independent"))->setEnabled(false);
+    }
 }
 
 void MainView::purgeCompletedTasks()
 {
-  const int result = KMessageBox::warningContinueCancel(
-    this,
-    i18n( "Delete all completed to-dos?" ),
-    i18n( "Purge To-dos" ),
-    KGuiItem( i18n( "Purge" ) ) );
+    const int result = KMessageBox::warningContinueCancel(
+                           this,
+                           i18n("Delete all completed to-dos?"),
+                           i18n("Purge To-dos"),
+                           KGuiItem(i18n("Purge")));
 
-  if ( result == KMessageBox::Continue ) {
-    mCalendarUtils->purgeCompletedTodos();
-  }
+    if (result == KMessageBox::Continue) {
+        mCalendarUtils->purgeCompletedTodos();
+    }
 }
 
-void MainView::setPercentComplete( int row, int percentComplete )
+void MainView::setPercentComplete(int row, int percentComplete)
 {
-  const QModelIndex index = itemModel()->index( row, 0 );
-  itemModel()->setData( index, percentComplete, TaskListProxy::PercentCompleteRole );
+    const QModelIndex index = itemModel()->index(row, 0);
+    itemModel()->setData(index, percentComplete, TaskListProxy::PercentCompleteRole);
 }
 
 void MainView::editIncidence()
 {
-  const CalendarSupport::KCal::KCalItemBrowserItem *todoView = rootObject()->findChild<CalendarSupport::KCal::KCalItemBrowserItem*>();
-  Q_ASSERT( todoView );
-  if ( todoView )
-    editIncidence( todoView->item() );
+    const CalendarSupport::KCal::KCalItemBrowserItem *todoView = rootObject()->findChild<CalendarSupport::KCal::KCalItemBrowserItem *>();
+    Q_ASSERT(todoView);
+    if (todoView) {
+        editIncidence(todoView->item());
+    }
 }
 
-void MainView::editIncidence( const Akonadi::Item &item )
+void MainView::editIncidence(const Akonadi::Item &item)
 {
-  if ( mOpenItemEditors.values().contains( item.id() ) )
-    return; // An editor for this item is already open.
+    if (mOpenItemEditors.values().contains(item.id())) {
+        return;    // An editor for this item is already open.
+    }
 
-  IncidenceView *editor = new IncidenceView;
-  editor->setWindowTitle( i18n( "Kontact Touch Tasks" ) );
-  editor->load( item, QDate() );
+    IncidenceView *editor = new IncidenceView;
+    editor->setWindowTitle(i18n("Kontact Touch Tasks"));
+    editor->load(item, QDate());
 
-  mOpenItemEditors.insert(  editor, item.id() );
-  connect( editor, SIGNAL(destroyed(QObject*)), SLOT(finishEdit(QObject*)) );
+    mOpenItemEditors.insert(editor, item.id());
+    connect(editor, SIGNAL(destroyed(QObject*)), SLOT(finishEdit(QObject*)));
 
-  editor->show();
+    editor->show();
 }
 
-QAbstractItemModel* MainView::createItemModelContext( QDeclarativeContext *context, QAbstractItemModel *model )
+QAbstractItemModel *MainView::createItemModelContext(QDeclarativeContext *context, QAbstractItemModel *model)
 {
-  TaskThreadGrouperComparator *comparator = new TaskThreadGrouperComparator;
-  ThreadGrouperModel *grouperModel = new ThreadGrouperModel( comparator, this );
-  grouperModel->setDynamicModelRepopulation( true );
-  grouperModel->setSourceModel( model );
+    TaskThreadGrouperComparator *comparator = new TaskThreadGrouperComparator;
+    ThreadGrouperModel *grouperModel = new ThreadGrouperModel(comparator, this);
+    grouperModel->setDynamicModelRepopulation(true);
+    grouperModel->setSourceModel(model);
 
-  // trigger a resort whenever the task status has changed
-  connect( model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-           grouperModel, SLOT(invalidate()) );
+    // trigger a resort whenever the task status has changed
+    connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+            grouperModel, SLOT(invalidate()));
 
-  return KDeclarativeMainView::createItemModelContext( context, grouperModel );
+    return KDeclarativeMainView::createItemModelContext(context, grouperModel);
 }
 
-void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
-                                           QItemSelectionModel *itemSelectionModel )
+void MainView::setupStandardActionManager(QItemSelectionModel *collectionSelectionModel,
+        QItemSelectionModel *itemSelectionModel)
 {
-  mStandardActionManager = new Akonadi::StandardCalendarActionManager( actionCollection(), this );
-  mStandardActionManager->setCollectionSelectionModel( collectionSelectionModel );
-  mStandardActionManager->setItemSelectionModel( itemSelectionModel );
+    mStandardActionManager = new Akonadi::StandardCalendarActionManager(actionCollection(), this);
+    mStandardActionManager->setCollectionSelectionModel(collectionSelectionModel);
+    mStandardActionManager->setItemSelectionModel(itemSelectionModel);
 
-  mStandardActionManager->createAllActions();
-  mStandardActionManager->interceptAction( Akonadi::StandardActionManager::CreateResource );
-  mStandardActionManager->interceptAction( Akonadi::StandardCalendarActionManager::CreateTodo );
-  mStandardActionManager->interceptAction( Akonadi::StandardCalendarActionManager::CreateSubTodo );
-  mStandardActionManager->interceptAction( Akonadi::StandardCalendarActionManager::EditIncidence );
+    mStandardActionManager->createAllActions();
+    mStandardActionManager->interceptAction(Akonadi::StandardActionManager::CreateResource);
+    mStandardActionManager->interceptAction(Akonadi::StandardCalendarActionManager::CreateTodo);
+    mStandardActionManager->interceptAction(Akonadi::StandardCalendarActionManager::CreateSubTodo);
+    mStandardActionManager->interceptAction(Akonadi::StandardCalendarActionManager::EditIncidence);
 
-  connect( mStandardActionManager->action( Akonadi::StandardActionManager::CreateResource ),
-           SIGNAL(triggered(bool)), SLOT(launchAccountWizard()) );
-  connect( mStandardActionManager->action( Akonadi::StandardCalendarActionManager::CreateTodo ),
-           SIGNAL(triggered(bool)), SLOT(newTask()) );
-  connect( mStandardActionManager->action( Akonadi::StandardCalendarActionManager::CreateSubTodo ),
-           SIGNAL(triggered(bool)), SLOT(newSubTask()) );
-  connect( mStandardActionManager->action( Akonadi::StandardCalendarActionManager::EditIncidence ),
-           SIGNAL(triggered(bool)), SLOT(editIncidence()) );
-  connect( mStandardActionManager, SIGNAL(actionStateUpdated()), SLOT(updateActionTexts()) );
+    connect(mStandardActionManager->action(Akonadi::StandardActionManager::CreateResource),
+            SIGNAL(triggered(bool)), SLOT(launchAccountWizard()));
+    connect(mStandardActionManager->action(Akonadi::StandardCalendarActionManager::CreateTodo),
+            SIGNAL(triggered(bool)), SLOT(newTask()));
+    connect(mStandardActionManager->action(Akonadi::StandardCalendarActionManager::CreateSubTodo),
+            SIGNAL(triggered(bool)), SLOT(newSubTask()));
+    connect(mStandardActionManager->action(Akonadi::StandardCalendarActionManager::EditIncidence),
+            SIGNAL(triggered(bool)), SLOT(editIncidence()));
+    connect(mStandardActionManager, SIGNAL(actionStateUpdated()), SLOT(updateActionTexts()));
 
-  ActionHelper::adaptStandardActionTexts( mStandardActionManager );
+    ActionHelper::adaptStandardActionTexts(mStandardActionManager);
 
-  mStandardActionManager->action( StandardActionManager::CollectionProperties )->setText( i18n( "Task List Properties" ) );
-  mStandardActionManager->action( StandardActionManager::CreateCollection )->setText( i18n( "New Sub Task List" ) );
-  mStandardActionManager->action( StandardActionManager::CreateCollection )->setProperty( "ContentMimeTypes", QStringList( KCalCore::Todo::todoMimeType() ) );
-  mStandardActionManager->setActionText( StandardActionManager::SynchronizeCollections, ki18np( "Synchronize This Task List", "Synchronize These Task Lists" ) );
-  mStandardActionManager->setActionText( StandardActionManager::DeleteCollections, ki18np( "Delete Task List", "Delete Task Lists" ) );
-  mStandardActionManager->action( StandardActionManager::MoveCollectionToDialog )->setText( i18n( "Move Task List To" ) );
-  mStandardActionManager->action( StandardActionManager::CopyCollectionToDialog )->setText( i18n( "Copy Task List To" ) );
+    mStandardActionManager->action(StandardActionManager::CollectionProperties)->setText(i18n("Task List Properties"));
+    mStandardActionManager->action(StandardActionManager::CreateCollection)->setText(i18n("New Sub Task List"));
+    mStandardActionManager->action(StandardActionManager::CreateCollection)->setProperty("ContentMimeTypes", QStringList(KCalCore::Todo::todoMimeType()));
+    mStandardActionManager->setActionText(StandardActionManager::SynchronizeCollections, ki18np("Synchronize This Task List", "Synchronize These Task Lists"));
+    mStandardActionManager->setActionText(StandardActionManager::DeleteCollections, ki18np("Delete Task List", "Delete Task Lists"));
+    mStandardActionManager->action(StandardActionManager::MoveCollectionToDialog)->setText(i18n("Move Task List To"));
+    mStandardActionManager->action(StandardActionManager::CopyCollectionToDialog)->setText(i18n("Copy Task List To"));
 
-  mStandardActionManager->action( Akonadi::StandardCalendarActionManager::CreateTodo )->setText( i18n( "New Task" ) );
-  mStandardActionManager->action( Akonadi::StandardCalendarActionManager::CreateSubTodo )->setText( i18n( "New Sub Task" ) );
-  mStandardActionManager->action( Akonadi::StandardCalendarActionManager::EditIncidence )->setText( i18n( "Edit task" ) );
+    mStandardActionManager->action(Akonadi::StandardCalendarActionManager::CreateTodo)->setText(i18n("New Task"));
+    mStandardActionManager->action(Akonadi::StandardCalendarActionManager::CreateSubTodo)->setText(i18n("New Sub Task"));
+    mStandardActionManager->action(Akonadi::StandardCalendarActionManager::EditIncidence)->setText(i18n("Edit task"));
 
-  actionCollection()->action( QLatin1String("synchronize_all_items") )->setText( i18n( "Synchronize All Tasks" ) );
+    actionCollection()->action(QLatin1String("synchronize_all_items"))->setText(i18n("Synchronize All Tasks"));
 }
 
 void MainView::updateActionTexts()
 {
-  const Akonadi::Item::List items = mStandardActionManager->selectedItems();
-  if ( items.count() < 1 )
-    return;
+    const Akonadi::Item::List items = mStandardActionManager->selectedItems();
+    if (items.count() < 1) {
+        return;
+    }
 
-  const int itemCount = items.count();
-  const Akonadi::Item item = items.first();
-  const QString mimeType = item.mimeType();
-  if ( mimeType == KCalCore::Event::eventMimeType() ) {
-    actionCollection()->action( QLatin1String("akonadi_item_copy") )->setText( ki18np( "Copy Event", "Copy %1 Events" ).subs( itemCount ).toString() );
-    actionCollection()->action( QLatin1String("akonadi_item_copy_to_dialog") )->setText( i18n( "Copy Event To" ) );
-    actionCollection()->action( QLatin1String("akonadi_item_delete") )->setText( ki18np( "Delete Event", "Delete %1 Events" ).subs( itemCount ).toString() );
-    actionCollection()->action( QLatin1String("akonadi_item_move_to_dialog") )->setText( i18n( "Move Event To" ) );
-    actionCollection()->action( QLatin1String("akonadi_incidence_edit") )->setText( i18n( "Edit Event" ) );
-  } else if ( mimeType == KCalCore::Todo::todoMimeType() ) {
-    actionCollection()->action( QLatin1String("akonadi_item_copy") )->setText( ki18np( "Copy Task", "Copy %1 Tasks" ).subs( itemCount ).toString() );
-    actionCollection()->action( QLatin1String("akonadi_item_copy_to_dialog") )->setText( i18n( "Copy Task To" ) );
-    actionCollection()->action( QLatin1String("akonadi_item_delete") )->setText( ki18np( "Delete Task", "Delete %1 Tasks" ).subs( itemCount ).toString() );
-    actionCollection()->action( QLatin1String("akonadi_item_move_to_dialog") )->setText( i18n( "Move Task To" ) );
-    actionCollection()->action( QLatin1String("akonadi_incidence_edit") )->setText( i18n( "Edit Task" ) );
-  } else if ( mimeType == KCalCore::Journal::journalMimeType() ) {
-    actionCollection()->action( QLatin1String("akonadi_item_copy") )->setText( ki18np( "Copy Journal", "Copy %1 Journals" ).subs( itemCount ).toString() );
-    actionCollection()->action( QLatin1String("akonadi_item_copy_to_dialog") )->setText( i18n( "Copy Journal To" ) );
-    actionCollection()->action( QLatin1String("akonadi_item_delete") )->setText( ki18np( "Delete Journal", "Delete %1 Journals" ).subs( itemCount ).toString() );
-    actionCollection()->action( QLatin1String("akonadi_item_move_to_dialog") )->setText( i18n( "Move Journal To" ) );
-    actionCollection()->action( QLatin1String("akonadi_incidence_edit") )->setText( i18n( "Edit Journal" ) );
-  }
+    const int itemCount = items.count();
+    const Akonadi::Item item = items.first();
+    const QString mimeType = item.mimeType();
+    if (mimeType == KCalCore::Event::eventMimeType()) {
+        actionCollection()->action(QLatin1String("akonadi_item_copy"))->setText(ki18np("Copy Event", "Copy %1 Events").subs(itemCount).toString());
+        actionCollection()->action(QLatin1String("akonadi_item_copy_to_dialog"))->setText(i18n("Copy Event To"));
+        actionCollection()->action(QLatin1String("akonadi_item_delete"))->setText(ki18np("Delete Event", "Delete %1 Events").subs(itemCount).toString());
+        actionCollection()->action(QLatin1String("akonadi_item_move_to_dialog"))->setText(i18n("Move Event To"));
+        actionCollection()->action(QLatin1String("akonadi_incidence_edit"))->setText(i18n("Edit Event"));
+    } else if (mimeType == KCalCore::Todo::todoMimeType()) {
+        actionCollection()->action(QLatin1String("akonadi_item_copy"))->setText(ki18np("Copy Task", "Copy %1 Tasks").subs(itemCount).toString());
+        actionCollection()->action(QLatin1String("akonadi_item_copy_to_dialog"))->setText(i18n("Copy Task To"));
+        actionCollection()->action(QLatin1String("akonadi_item_delete"))->setText(ki18np("Delete Task", "Delete %1 Tasks").subs(itemCount).toString());
+        actionCollection()->action(QLatin1String("akonadi_item_move_to_dialog"))->setText(i18n("Move Task To"));
+        actionCollection()->action(QLatin1String("akonadi_incidence_edit"))->setText(i18n("Edit Task"));
+    } else if (mimeType == KCalCore::Journal::journalMimeType()) {
+        actionCollection()->action(QLatin1String("akonadi_item_copy"))->setText(ki18np("Copy Journal", "Copy %1 Journals").subs(itemCount).toString());
+        actionCollection()->action(QLatin1String("akonadi_item_copy_to_dialog"))->setText(i18n("Copy Journal To"));
+        actionCollection()->action(QLatin1String("akonadi_item_delete"))->setText(ki18np("Delete Journal", "Delete %1 Journals").subs(itemCount).toString());
+        actionCollection()->action(QLatin1String("akonadi_item_move_to_dialog"))->setText(i18n("Move Journal To"));
+        actionCollection()->action(QLatin1String("akonadi_incidence_edit"))->setText(i18n("Edit Journal"));
+    }
 }
 
-void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
+void MainView::setupAgentActionManager(QItemSelectionModel *selectionModel)
 {
-  Akonadi::AgentActionManager *manager = createAgentActionManager( selectionModel );
+    Akonadi::AgentActionManager *manager = createAgentActionManager(selectionModel);
 
-  manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::DialogTitle,
-                           i18nc( "@title:window", "New Account" ) );
-  manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::ErrorMessageText,
-                           ki18n( "Could not create account: %1" ) );
-  manager->setContextText( Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::ErrorMessageTitle,
-                           i18n( "Account creation failed" ) );
+    manager->setContextText(Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::DialogTitle,
+                            i18nc("@title:window", "New Account"));
+    manager->setContextText(Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::ErrorMessageText,
+                            ki18n("Could not create account: %1"));
+    manager->setContextText(Akonadi::AgentActionManager::CreateAgentInstance, Akonadi::AgentActionManager::ErrorMessageTitle,
+                            i18n("Account creation failed"));
 
-  manager->setContextText( Akonadi::AgentActionManager::DeleteAgentInstance, Akonadi::AgentActionManager::MessageBoxTitle,
-                           i18nc( "@title:window", "Delete Account?" ) );
-  manager->setContextText( Akonadi::AgentActionManager::DeleteAgentInstance, Akonadi::AgentActionManager::MessageBoxText,
-                           i18n( "Do you really want to delete the selected account?" ) );
+    manager->setContextText(Akonadi::AgentActionManager::DeleteAgentInstance, Akonadi::AgentActionManager::MessageBoxTitle,
+                            i18nc("@title:window", "Delete Account?"));
+    manager->setContextText(Akonadi::AgentActionManager::DeleteAgentInstance, Akonadi::AgentActionManager::MessageBoxText,
+                            i18n("Do you really want to delete the selected account?"));
 }
 
-QAbstractProxyModel* MainView::createItemFilterModel() const
+QAbstractProxyModel *MainView::createItemFilterModel() const
 {
-  return new TasksFilterProxyModel();
+    return new TasksFilterProxyModel();
 }
 
-ImportHandlerBase* MainView::importHandler() const
+ImportHandlerBase *MainView::importHandler() const
 {
-  return new TasksImportHandler();
+    return new TasksImportHandler();
 }
 
-ExportHandlerBase* MainView::exportHandler() const
+ExportHandlerBase *MainView::exportHandler() const
 {
-  return new TasksExportHandler();
+    return new TasksExportHandler();
 }
 
 void MainView::configureCategories()
 {
-  CalendarSupport::CategoryConfig config( IncidenceEditorNG::EditorConfig::instance()->config(), 0 );
-  IncidenceEditorNG::CategoryEditDialog dialog( &config, 0 );
-  if ( dialog.exec() )
-    config.writeConfig();
+    CalendarSupport::CategoryConfig config(IncidenceEditorNG::EditorConfig::instance()->config(), 0);
+    IncidenceEditorNG::CategoryEditDialog dialog(&config, 0);
+    if (dialog.exec()) {
+        config.writeConfig();
+    }
 }
 
 Item MainView::currentItem() const
 {
-  const QModelIndexList list = itemSelectionModel()->selectedRows();
+    const QModelIndexList list = itemSelectionModel()->selectedRows();
 
-  if ( list.size() != 1 )
-    return Item();
+    if (list.size() != 1) {
+        return Item();
+    }
 
-  const QModelIndex index = list.first();
-  const Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
-  if ( !item.hasPayload<KCalCore::Todo::Ptr>() )
-    return Item();
+    const QModelIndex index = list.first();
+    const Item item = index.data(EntityTreeModel::ItemRole).value<Item>();
+    if (!item.hasPayload<KCalCore::Todo::Ptr>()) {
+        return Item();
+    }
 
-  return item;
+    return item;
 }
 
 void MainView::saveAllAttachments()
 {
-  const QModelIndexList list = itemSelectionModel()->selectedIndexes();
-  if ( list.isEmpty() )
-    return;
+    const QModelIndexList list = itemSelectionModel()->selectedIndexes();
+    if (list.isEmpty()) {
+        return;
+    }
 
-  Akonadi::Item item( list.first().data( EntityTreeModel::ItemIdRole ).toInt() );
-  Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
-  job->fetchScope().fetchFullPayload();
-  connect( job, &KJob::result, this, &MainView::fetchForSaveAllAttachmentsDone );
+    Akonadi::Item item(list.first().data(EntityTreeModel::ItemIdRole).toInt());
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(item, this);
+    job->fetchScope().fetchFullPayload();
+    connect(job, &KJob::result, this, &MainView::fetchForSaveAllAttachmentsDone);
 }
 
-void MainView::fetchForSaveAllAttachmentsDone( KJob* job )
+void MainView::fetchForSaveAllAttachmentsDone(KJob *job)
 {
-  if ( job->error() ) {
-      qDebug() << "Error trying to fetch item";
-      //###: review error string
-      KMessageBox::sorry( this,
-                          i18n( "Cannot fetch calendar item." ),
-                          i18n( "Item Fetch Error" ) );
-      return;
-  }
+    if (job->error()) {
+        qDebug() << "Error trying to fetch item";
+        //###: review error string
+        KMessageBox::sorry(this,
+                           i18n("Cannot fetch calendar item."),
+                           i18n("Item Fetch Error"));
+        return;
+    }
 
-  const Akonadi::Item item = static_cast<Akonadi::ItemFetchJob*>( job )->items().first();
-  CalendarSupport::saveAttachments( item, this );
+    const Akonadi::Item item = static_cast<Akonadi::ItemFetchJob *>(job)->items().first();
+    CalendarSupport::saveAttachments(item, this);
 }
 
 void MainView::archiveOldEntries()
 {
-  CalendarSupport::ArchiveDialog archiveDialog( mCalendar, mChanger, this );
-  archiveDialog.exec();
+    CalendarSupport::ArchiveDialog archiveDialog(mCalendar, mChanger, this);
+    archiveDialog.exec();
 }
 
-void MainView::processActionFail( const Akonadi::Item &item, const QString &msg )
+void MainView::processActionFail(const Akonadi::Item &item, const QString &msg)
 {
-  Q_UNUSED( item );
-  Q_UNUSED( msg );
-  mTasksActionManager->updateActions();
+    Q_UNUSED(item);
+    Q_UNUSED(msg);
+    mTasksActionManager->updateActions();
 }
 
-void MainView::processActionFinish( const Akonadi::Item &item )
+void MainView::processActionFinish(const Akonadi::Item &item)
 {
-  Q_UNUSED( item );
-  mTasksActionManager->updateActions();
+    Q_UNUSED(item);
+    mTasksActionManager->updateActions();
 }
 

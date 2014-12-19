@@ -37,7 +37,7 @@
  */
 class MOBILEUI_EXPORT HierarchyResolver
 {
-  public:
+public:
     /**
      * Adds a single node to the resolver.
      *
@@ -46,7 +46,7 @@ class MOBILEUI_EXPORT HierarchyResolver
      *
      * @param identifier The unique identifier of this node
      */
-    void addNode( const QByteArray &identifier );
+    void addNode(const QByteArray &identifier);
 
     /**
      * Adds a child -> parent relation to the resolver.
@@ -54,12 +54,12 @@ class MOBILEUI_EXPORT HierarchyResolver
      * @param child The unique identifier of the child node.
      * @param parent The unique identifier of the parent node.
      */
-    void addRelation( const QByteArray &child, const QByteArray &parent );
+    void addRelation(const QByteArray &child, const QByteArray &parent);
 
     /**
      * Resolves the hierarchy.
      */
-    void resolve( const QSet<QByteArray> &existingIdentifiers );
+    void resolve(const QSet<QByteArray> &existingIdentifiers);
 
     /**
      * Returns a hash with the child node as key and its resolved top-most parent
@@ -75,7 +75,7 @@ class MOBILEUI_EXPORT HierarchyResolver
      */
     QHash<QByteArray, QSet<QByteArray> > parentChildrenMap() const;
 
-  private:
+private:
     QSet<QByteArray> mTopNodes;
     QHash<QByteArray, QByteArray> mRelations;
 

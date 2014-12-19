@@ -20,4 +20,3 @@
 #include "storageservicemanager_debug.h"
 Q_LOGGING_CATEGORY(STORAGESERVICEMANAGER_LOG, "log_storageservicemanager")
 
-

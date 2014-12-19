@@ -17,170 +17,167 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-
-
 #include "calendarinterface.h"
 #include "mainview.h"
 
 #include <QDebug>
 #include <QGraphicsItem>
 
-void CalendarInterface::showDate( const QDate &date )
+void CalendarInterface::showDate(const QDate &date)
 {
-  emit showDateSignal(QVariant::fromValue<QDate>( date ) );
+    emit showDateSignal(QVariant::fromValue<QDate>(date));
 }
 
-void CalendarInterface::goDate( const QDate& )
+void CalendarInterface::goDate(const QDate &)
 {
-  qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+    qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
 }
 
-void CalendarInterface::goDate( const QString& )
+void CalendarInterface::goDate(const QString &)
 {
-  qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+    qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
 }
 
-void CalendarInterface::openEventEditor( const QString& )
+void CalendarInterface::openEventEditor(const QString &)
 {
-  qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+    qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
 }
 
-void CalendarInterface::openEventEditor( const QString &summary,
-                                         const QString &description,
-                                         const QStringList &attachments)
-{
-  qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
-  Q_UNUSED( summary );
-  Q_UNUSED( description );
-  Q_UNUSED( attachments );
-}
-
-void CalendarInterface::openEventEditor( const QString &summary,
-                                         const QString &description,
-                                         const QStringList &attachments,
-                                         const QStringList &attendees)
-{
-  qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
-  Q_UNUSED( summary );
-  Q_UNUSED( description );
-  Q_UNUSED( attachments );
-  Q_UNUSED( attendees );
-}
-
-void CalendarInterface::openEventEditor( const QString &summary,
-                                         const QString &description,
-                                         const QString &uri,
-                                         const QString &file,
-                                         const QStringList &attendees,
-                                         const QString &attachmentMimetype)
-{
-  qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
-  Q_UNUSED( summary );
-  Q_UNUSED( description );
-  Q_UNUSED( uri );
-  Q_UNUSED( file );
-  Q_UNUSED( attendees );
-  Q_UNUSED( attachmentMimetype );
-}
-
-void CalendarInterface::openEventEditor( const QString &summary,
-                                         const QString &description,
-                                         const QStringList &attachmentUris,
-                                         const QStringList &attendees,
-                                         const QStringList &attachmentMimetypes,
-                                         bool attachmentIsInline )
-{
-  emit openIncidenceEditorSignal( summary, description, attachmentUris, attendees,
-                                  attachmentMimetypes, attachmentIsInline,
-                                  KCalCore::Incidence::TypeEvent );
-}
-
-void CalendarInterface::openJournalEditor( const QDate & )
-{
-  qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
-}
-
-void CalendarInterface::openJournalEditor( const QString &text, const QDate &date )
-{
-  qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
-  Q_UNUSED( text );
-  Q_UNUSED( date );
-}
-
-void CalendarInterface::openJournalEditor( const QString &text )
-{
-  qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
-  Q_UNUSED( text );
-}
-
-void CalendarInterface::openTodoEditor( const QString& )
-{
-  qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
-}
-
-void CalendarInterface::openTodoEditor( const QString &summary,
+void CalendarInterface::openEventEditor(const QString &summary,
                                         const QString &description,
-                                        const QStringList &attachments )
+                                        const QStringList &attachments)
 {
-  qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
-  Q_UNUSED( summary );
-  Q_UNUSED( description );
-  Q_UNUSED( attachments );
+    qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+    Q_UNUSED(summary);
+    Q_UNUSED(description);
+    Q_UNUSED(attachments);
 }
 
-
-void CalendarInterface::openTodoEditor( const QString &summary,
+void CalendarInterface::openEventEditor(const QString &summary,
                                         const QString &description,
                                         const QStringList &attachments,
-                                        const QStringList &attendees )
+                                        const QStringList &attendees)
 {
-  qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
-  Q_UNUSED( summary );
-  Q_UNUSED( description );
-  Q_UNUSED( attachments );
-  Q_UNUSED( attendees );
+    qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+    Q_UNUSED(summary);
+    Q_UNUSED(description);
+    Q_UNUSED(attachments);
+    Q_UNUSED(attendees);
 }
 
-void CalendarInterface::openTodoEditor( const QString &summary,
+void CalendarInterface::openEventEditor(const QString &summary,
                                         const QString &description,
                                         const QString &uri,
                                         const QString &file,
                                         const QStringList &attendees,
-                                        const QString &attachmentMimetype )
+                                        const QString &attachmentMimetype)
 {
-  qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
-  Q_UNUSED( summary );
-  Q_UNUSED( description );
-  Q_UNUSED( uri );
-  Q_UNUSED( file );
-  Q_UNUSED( attendees );
-  Q_UNUSED( attachmentMimetype );
+    qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+    Q_UNUSED(summary);
+    Q_UNUSED(description);
+    Q_UNUSED(uri);
+    Q_UNUSED(file);
+    Q_UNUSED(attendees);
+    Q_UNUSED(attachmentMimetype);
 }
 
-void CalendarInterface::openTodoEditor( const QString &summary,
+void CalendarInterface::openEventEditor(const QString &summary,
                                         const QString &description,
                                         const QStringList &attachmentUris,
                                         const QStringList &attendees,
                                         const QStringList &attachmentMimetypes,
-                                        bool attachmentIsInline )
+                                        bool attachmentIsInline)
 {
-  emit openIncidenceEditorSignal( summary, description, attachmentUris, attendees,
-                                  attachmentMimetypes, attachmentIsInline,
-                                  KCalCore::Incidence::TypeTodo );
+    emit openIncidenceEditorSignal(summary, description, attachmentUris, attendees,
+                                   attachmentMimetypes, attachmentIsInline,
+                                   KCalCore::Incidence::TypeEvent);
+}
+
+void CalendarInterface::openJournalEditor(const QDate &)
+{
+    qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+}
+
+void CalendarInterface::openJournalEditor(const QString &text, const QDate &date)
+{
+    qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+    Q_UNUSED(text);
+    Q_UNUSED(date);
+}
+
+void CalendarInterface::openJournalEditor(const QString &text)
+{
+    qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+    Q_UNUSED(text);
+}
+
+void CalendarInterface::openTodoEditor(const QString &)
+{
+    qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+}
+
+void CalendarInterface::openTodoEditor(const QString &summary,
+                                       const QString &description,
+                                       const QStringList &attachments)
+{
+    qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+    Q_UNUSED(summary);
+    Q_UNUSED(description);
+    Q_UNUSED(attachments);
+}
+
+void CalendarInterface::openTodoEditor(const QString &summary,
+                                       const QString &description,
+                                       const QStringList &attachments,
+                                       const QStringList &attendees)
+{
+    qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+    Q_UNUSED(summary);
+    Q_UNUSED(description);
+    Q_UNUSED(attachments);
+    Q_UNUSED(attendees);
+}
+
+void CalendarInterface::openTodoEditor(const QString &summary,
+                                       const QString &description,
+                                       const QString &uri,
+                                       const QString &file,
+                                       const QStringList &attendees,
+                                       const QString &attachmentMimetype)
+{
+    qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+    Q_UNUSED(summary);
+    Q_UNUSED(description);
+    Q_UNUSED(uri);
+    Q_UNUSED(file);
+    Q_UNUSED(attendees);
+    Q_UNUSED(attachmentMimetype);
+}
+
+void CalendarInterface::openTodoEditor(const QString &summary,
+                                       const QString &description,
+                                       const QStringList &attachmentUris,
+                                       const QStringList &attendees,
+                                       const QStringList &attachmentMimetypes,
+                                       bool attachmentIsInline)
+{
+    emit openIncidenceEditorSignal(summary, description, attachmentUris, attendees,
+                                   attachmentMimetypes, attachmentIsInline,
+                                   KCalCore::Incidence::TypeTodo);
 }
 
 void CalendarInterface::showEventView()
 {
-  emit showEventViewSignal();
+    emit showEventViewSignal();
 }
 
 void CalendarInterface::showJournalView()
 {
-  qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+    qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
 }
 
 void CalendarInterface::showTodoView()
 {
-  qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+    qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
 }
 

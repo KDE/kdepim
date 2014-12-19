@@ -26,86 +26,88 @@
 
 QString EmailsImportHandler::fileDialogNameFilter() const
 {
-  return QLatin1String( "*.mbox|MBox" );
+    return QLatin1String("*.mbox|MBox");
 }
 
 QString EmailsImportHandler::fileDialogTitle() const
 {
-  return i18n( "Select MBox to Import" );
+    return i18n("Select MBox to Import");
 }
 
 QString EmailsImportHandler::collectionDialogText() const
 {
-  return i18n( "Select the folder the imported email(s) shall be saved in:" );
+    return i18n("Select the folder the imported email(s) shall be saved in:");
 }
 
 QString EmailsImportHandler::collectionDialogTitle() const
 {
-  return i18n( "Select Folder" );
+    return i18n("Select Folder");
 }
 
-QString EmailsImportHandler::importDialogText( int count, const QString &collectionName ) const
+QString EmailsImportHandler::importDialogText(int count, const QString &collectionName) const
 {
-  return i18np( "Importing one email to %2", "Importing %1 emails to %2", count, collectionName );
+    return i18np("Importing one email to %2", "Importing %1 emails to %2", count, collectionName);
 }
 
 QString EmailsImportHandler::importDialogTitle() const
 {
-  return i18n( "Import Emails" );
+    return i18n("Import Emails");
 }
 
 QStringList EmailsImportHandler::mimeTypes() const
 {
-  return QStringList( KMime::Message::mimeType() );
+    return QStringList(KMime::Message::mimeType());
 }
 
-Akonadi::Item::List EmailsImportHandler::createItems( const QStringList &fileNames, bool *ok )
+Akonadi::Item::List EmailsImportHandler::createItems(const QStringList &fileNames, bool *ok)
 {
-  *ok = true;
+    *ok = true;
 
-  Akonadi::Item::List items;
+    Akonadi::Item::List items;
 
-  QList<KMime::Message::Ptr> messages;
+    QList<KMime::Message::Ptr> messages;
 
-  foreach ( const QString &fileName, fileNames ) {
-    KMBox::MBox mbox;
+    foreach (const QString &fileName, fileNames) {
+        KMBox::MBox mbox;
 
-    if ( mbox.load( fileName ) ) {
+        if (mbox.load(fileName)) {
 
-      const KMBox::MBoxEntry::List entries = mbox.entries();
-      mbox.lock();
-      foreach ( const KMBox::MBoxEntry &entry, entries ) {
-        KMime::Message *message = mbox.readMessage( entry );
-        if ( message )
-          messages << KMime::Message::Ptr( message );
-      }
-      mbox.unlock();
-    } else {
-      const QString caption( i18n( "MBox Import Failed" ) );
-      const QString msg = xi18nc( "@info",
-                                 "<para>When trying to read the MBox, there was an error opening the file <filename>%1</filename>:</para>",
-                                 fileName );
-      KMessageBox::error( 0, msg, caption );
-      *ok = false;
+            const KMBox::MBoxEntry::List entries = mbox.entries();
+            mbox.lock();
+            foreach (const KMBox::MBoxEntry &entry, entries) {
+                KMime::Message *message = mbox.readMessage(entry);
+                if (message) {
+                    messages << KMime::Message::Ptr(message);
+                }
+            }
+            mbox.unlock();
+        } else {
+            const QString caption(i18n("MBox Import Failed"));
+            const QString msg = xi18nc("@info",
+                                       "<para>When trying to read the MBox, there was an error opening the file <filename>%1</filename>:</para>",
+                                       fileName);
+            KMessageBox::error(0, msg, caption);
+            *ok = false;
+        }
     }
-  }
 
-  if ( messages.isEmpty() ) {
-    if ( !(*ok) && fileNames.count() > 1 )
-      KMessageBox::information( 0, i18n( "No emails were imported, due to errors with the MBox." ) );
-    else if ( *ok )
-      KMessageBox::information( 0, i18n( "The MBox does not contain any emails." ) );
+    if (messages.isEmpty()) {
+        if (!(*ok) && fileNames.count() > 1) {
+            KMessageBox::information(0, i18n("No emails were imported, due to errors with the MBox."));
+        } else if (*ok) {
+            KMessageBox::information(0, i18n("The MBox does not contain any emails."));
+        }
 
-    return items; // nothing to import
-  }
+        return items; // nothing to import
+    }
 
-  foreach ( const KMime::Message::Ptr &message, messages ) {
-    Akonadi::Item item;
-    item.setPayload<KMime::Message::Ptr>( message );
-    item.setMimeType( KMime::Message::mimeType() );
+    foreach (const KMime::Message::Ptr &message, messages) {
+        Akonadi::Item item;
+        item.setPayload<KMime::Message::Ptr>(message);
+        item.setMimeType(KMime::Message::mimeType());
 
-    items << item;
-  }
+        items << item;
+    }
 
-  return items;
+    return items;
 }

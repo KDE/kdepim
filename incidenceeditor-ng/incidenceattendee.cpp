@@ -223,8 +223,8 @@ bool IncidenceAttendee::isDirty() const
 
         if (mLoadedIncidence->organizer()->email() != tmp.organizer()->email()) {
             qCDebug(INCIDENCEEDITOR_LOG) << "Organizer changed. Old was " << mLoadedIncidence->organizer()->name()
-                     << mLoadedIncidence->organizer()->email() << "; new is " << tmp.organizer()->name()
-                     << tmp.organizer()->email();
+                                         << mLoadedIncidence->organizer()->email() << "; new is " << tmp.organizer()->name()
+                                         << tmp.organizer()->email();
             return true;
         }
     }
@@ -587,24 +587,24 @@ void IncidenceAttendee::printDebugInfo() const
 
         if (!found) {
             qCDebug(INCIDENCEEDITOR_LOG) << "Attendee not found: " << attendee->email()
-                     << attendee->name()
-                     << attendee->status()
-                     << attendee->RSVP()
-                     << attendee->role()
-                     << attendee->uid()
-                     << attendee->delegate()
-                     << attendee->delegator()
-                     << "; we have:";
+                                         << attendee->name()
+                                         << attendee->status()
+                                         << attendee->RSVP()
+                                         << attendee->role()
+                                         << attendee->uid()
+                                         << attendee->delegate()
+                                         << attendee->delegator()
+                                         << "; we have:";
             for (int i = 0; i < newList.count(); ++i) {
                 KCalCore::Attendee::Ptr attendee = newList.at(i)->attendee();
                 qCDebug(INCIDENCEEDITOR_LOG) << "Attendee: " << attendee->email()
-                         << attendee->name()
-                         << attendee->status()
-                         << attendee->RSVP()
-                         << attendee->role()
-                         << attendee->uid()
-                         << attendee->delegate()
-                         << attendee->delegator();
+                                             << attendee->name()
+                                             << attendee->status()
+                                             << attendee->RSVP()
+                                             << attendee->role()
+                                             << attendee->uid()
+                                             << attendee->delegate()
+                                             << attendee->delegator();
             }
 
             return;

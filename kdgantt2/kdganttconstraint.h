@@ -34,55 +34,59 @@
 #include <QDebug>
 #endif
 
-namespace KDGantt {
-    class KDGANTT_EXPORT Constraint {
-        class Private;
-    public:
-        enum Type
-        { 
-            TypeSoft = 0, 
-            TypeHard = 1
-        };	
-
-        enum ConstraintDataRole
-        {
-            ValidConstraintPen = Qt::UserRole,
-            InvalidConstraintPen
-        };
-
-        Constraint( const QModelIndex& idx1,  const QModelIndex& idx2, Type type=TypeSoft);
-        Constraint( const Constraint& other);
-        ~Constraint();
-
-        Type type() const;
-        QModelIndex startIndex() const;
-        QModelIndex endIndex() const;
-
-        void setData( int role, const QVariant& value );
-        QVariant data( int role ) const;
-
-        Constraint& operator=( const Constraint& other );
-
-        bool operator==( const Constraint& other ) const;
-
-        inline bool operator!=( const Constraint& other ) const {
-            return !operator==( other );
-        }
-
-        uint hash() const;
-#ifndef QT_NO_DEBUG_STREAM
-        QDebug debug( QDebug dbg) const;
-#endif
-
-    private:
-        QSharedDataPointer<Private> d;
+namespace KDGantt
+{
+class KDGANTT_EXPORT Constraint
+{
+    class Private;
+public:
+    enum Type {
+        TypeSoft = 0,
+        TypeHard = 1
     };
 
-    inline uint qHash( const Constraint& c ) {return c.hash();}
+    enum ConstraintDataRole {
+        ValidConstraintPen = Qt::UserRole,
+        InvalidConstraintPen
+    };
+
+    Constraint(const QModelIndex &idx1,  const QModelIndex &idx2, Type type = TypeSoft);
+    Constraint(const Constraint &other);
+    ~Constraint();
+
+    Type type() const;
+    QModelIndex startIndex() const;
+    QModelIndex endIndex() const;
+
+    void setData(int role, const QVariant &value);
+    QVariant data(int role) const;
+
+    Constraint &operator=(const Constraint &other);
+
+    bool operator==(const Constraint &other) const;
+
+    inline bool operator!=(const Constraint &other) const
+    {
+        return !operator==(other);
+    }
+
+    uint hash() const;
+#ifndef QT_NO_DEBUG_STREAM
+    QDebug debug(QDebug dbg) const;
+#endif
+
+private:
+    QSharedDataPointer<Private> d;
+};
+
+inline uint qHash(const Constraint &c)
+{
+    return c.hash();
+}
 }
 
 #ifndef QT_NO_DEBUG_STREAM
-QDebug operator<<( QDebug dbg, const KDGantt::Constraint& c );
+QDebug operator<<(QDebug dbg, const KDGantt::Constraint &c);
 #endif /* QT_NO_DEBUG_STREAM */
 
 #endif /* KDGANTTCONSTRAINT_H */

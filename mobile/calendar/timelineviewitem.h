@@ -24,56 +24,64 @@
 
 #include "declarativeakonadiitem.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 class Item;
 }
 
-namespace EventViews {
+namespace EventViews
+{
 
 class TimelineView;
 
 class TimelineViewItem : public DeclarativeAkonadiItem
 {
-  Q_OBJECT
-  Q_ENUMS( Range )
-  Q_PROPERTY( QDate startDate READ startDate WRITE setStartDate )
-  Q_PROPERTY( QDate endDate READ endDate WRITE setEndDate )
-  Q_PROPERTY( QObject* calendar READ calendar WRITE setCalendar )
-  Q_PROPERTY( qint64 selectedItemId READ selectedItemId NOTIFY itemSelected )
-  Q_PROPERTY( int range READ range )
+    Q_OBJECT
+    Q_ENUMS(Range)
+    Q_PROPERTY(QDate startDate READ startDate WRITE setStartDate)
+    Q_PROPERTY(QDate endDate READ endDate WRITE setEndDate)
+    Q_PROPERTY(QObject *calendar READ calendar WRITE setCalendar)
+    Q_PROPERTY(qint64 selectedItemId READ selectedItemId NOTIFY itemSelected)
+    Q_PROPERTY(int range READ range)
 
-  public:
+public:
     enum Range {
-      Day = 0,
-      Week,
-      WorkWeek,
-      Next3Days,
-      Next7Days,
-      LastRange
+        Day = 0,
+        Week,
+        WorkWeek,
+        Next3Days,
+        Next7Days,
+        LastRange
     };
 
-  public:
-    explicit TimelineViewItem( QDeclarativeItem *parent = Q_NULLPTR );
+public:
+    explicit TimelineViewItem(QDeclarativeItem *parent = Q_NULLPTR);
     ~TimelineViewItem();
 
-    virtual qint64 itemId() const { return -1; }
-    virtual void setItemId( qint64 /*id*/ ) {}
+    virtual qint64 itemId() const
+    {
+        return -1;
+    }
+    virtual void setItemId(qint64 /*id*/) {}
 
     QDate startDate() const;
-    void setStartDate( const QDate &startDate );
+    void setStartDate(const QDate &startDate);
     QDate endDate() const;
-    void setEndDate( const QDate &endDate );
+    void setEndDate(const QDate &endDate);
     QObject *calendar() const;
-    void setCalendar( QObject* calendarObj );
+    void setCalendar(QObject *calendarObj);
 
     /** Show the appropriate range for given date. */
-    Q_INVOKABLE void showRange( const QDate &date, /* Range */ int range ); // TODO: Figure out how to export enums to QML
+    Q_INVOKABLE void showRange(const QDate &date, /* Range */ int range);   // TODO: Figure out how to export enums to QML
 
-    int range() const { return m_currentRange; }
+    int range() const
+    {
+        return m_currentRange;
+    }
 
     qint64 selectedItemId() const;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /** Unselects currently selected incidences */
     void clearSelection();
 
@@ -82,10 +90,10 @@ class TimelineViewItem : public DeclarativeAkonadiItem
     /** Show the preceding date range. */
     void gotoPrevious();
 
-  Q_SIGNALS:
-    void itemSelected( Akonadi::Item item, const QDate &activeDate );
+Q_SIGNALS:
+    void itemSelected(Akonadi::Item item, const QDate &activeDate);
 
-  private:
+private:
     TimelineView *m_view;
     Range m_currentRange;
 };

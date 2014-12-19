@@ -31,13 +31,13 @@ namespace Akonadi
 
 class MOBILEUI_EXPORT BreadcrumbNavigationFactory : public KBreadcrumbNavigationFactory
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit BreadcrumbNavigationFactory( QObject* parent = Q_NULLPTR );
+public:
+    explicit BreadcrumbNavigationFactory(QObject *parent = Q_NULLPTR);
 
-  protected:
-    virtual QAbstractItemModel* getChildItemsModel( QAbstractItemModel* model );
+protected:
+    virtual QAbstractItemModel *getChildItemsModel(QAbstractItemModel *model);
 };
 
 }

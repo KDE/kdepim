@@ -35,7 +35,7 @@ class Item;
  */
 class ContactMetaData
 {
-  public:
+public:
     /**
      * Creates a contact meta data object.
      */
@@ -58,18 +58,18 @@ class ContactMetaData
      * Loads the meta data for the given @p contact.
      */
 #ifdef KDEPIM_STATIC_LIBS
-    void load( const Akonadi::Item &contact );
+    void load(const Akonadi::Item &contact);
 #else
-    void load( const Akonadi::Item &contact ) {}
+    void load(const Akonadi::Item &contact) {}
 #endif
 
     /**
      * Stores the meta data to the given @p contact.
      */
 #ifdef KDEPIM_STATIC_LIBS
-    void store( Akonadi::Item &contact );
+    void store(Akonadi::Item &contact);
 #else
-    void store( Akonadi::Item &contact ) {}
+    void store(Akonadi::Item &contact) {}
 #endif
 
     /**
@@ -77,9 +77,9 @@ class ContactMetaData
      * name of that contact.
      */
 #ifdef KDEPIM_STATIC_LIBS
-    void setDisplayNameMode( int mode );
+    void setDisplayNameMode(int mode);
 #else
-    void setDisplayNameMode( int mode ) {}
+    void setDisplayNameMode(int mode) {}
 #endif
 
     /**
@@ -89,7 +89,10 @@ class ContactMetaData
 #ifdef KDEPIM_STATIC_LIBS
     int displayNameMode() const;
 #else
-    int displayNameMode() const { return 0; }
+    int displayNameMode() const
+    {
+        return 0;
+    }
 #endif
 
     /**
@@ -109,9 +112,9 @@ class ContactMetaData
      *       - datetime
      */
 #ifdef KDEPIM_STATIC_LIBS
-    void setCustomFieldDescriptions( const QVariantList &descriptions );
+    void setCustomFieldDescriptions(const QVariantList &descriptions);
 #else
-    void setCustomFieldDescriptions( const QVariantList &descriptions ) {}
+    void setCustomFieldDescriptions(const QVariantList &descriptions) {}
 #endif
 
     /**
@@ -120,7 +123,10 @@ class ContactMetaData
 #ifdef KDEPIM_STATIC_LIBS
     QVariantList customFieldDescriptions() const;
 #else
-    QVariantList customFieldDescriptions() const { return QVariantList(); }
+    QVariantList customFieldDescriptions() const
+    {
+        return QVariantList();
+    }
 #endif
 };
 

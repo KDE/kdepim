@@ -27,8 +27,10 @@ Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 
 #include <KMime/Headers>
 
-namespace KMime {
-namespace Types {
+namespace KMime
+{
+namespace Types
+{
 class Mailbox;
 }
 }
@@ -47,24 +49,22 @@ public:
         Type
     };
 
-    int rowCount( const QModelIndex &parent = QModelIndex() ) const;
-    QVariant data( const QModelIndex &index, int role) const;
-    Qt::ItemFlags flags( const QModelIndex &index ) const;
-    bool setData( const QModelIndex &index, const QVariant &value, int role = Qt::EditRole );
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    QVariant data(const QModelIndex &index, int role) const;
+    Qt::ItemFlags flags(const QModelIndex &index) const;
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
 
-    void setRecipientString( const QList<KMime::Types::Mailbox> &mailboxes, MessageComposer::Recipient::Type );
-    void addRecipient( const QString &email , MessageComposer::Recipient::Type type );
-    bool addRecipient( const MessageComposer::Recipient::Ptr &recipient );
-    bool removeRecipient( const MessageComposer::Recipient::Ptr &recipient );
-    QStringList recipientStringList( MessageComposer::Recipient::Type ) const;
-    QString recipientString( MessageComposer::Recipient::Type type ) const;
+    void setRecipientString(const QList<KMime::Types::Mailbox> &mailboxes, MessageComposer::Recipient::Type);
+    void addRecipient(const QString &email , MessageComposer::Recipient::Type type);
+    bool addRecipient(const MessageComposer::Recipient::Ptr &recipient);
+    bool removeRecipient(const MessageComposer::Recipient::Ptr &recipient);
+    QStringList recipientStringList(MessageComposer::Recipient::Type) const;
+    QString recipientString(MessageComposer::Recipient::Type type) const;
 
 private:
 
     MessageComposer::Recipient::List mRecipients;
 
 };
-
-
 
 #endif

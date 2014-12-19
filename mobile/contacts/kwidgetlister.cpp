@@ -5,92 +5,96 @@
 
 class KWidgetLister::Private
 {
-  public:
-    Private( KWidgetLister *qq )
-      : q( qq ), mOrientation( Qt::Vertical )
+public:
+    Private(KWidgetLister *qq)
+        : q(qq), mOrientation(Qt::Vertical)
     {
-      mLayout = new QBoxLayout( QBoxLayout::TopToBottom, q );
-      mLayout->setMargin( 0 );
-      mLayout->setAlignment( Qt::AlignTop );
+        mLayout = new QBoxLayout(QBoxLayout::TopToBottom, q);
+        mLayout->setMargin(0);
+        mLayout->setAlignment(Qt::AlignTop);
     }
 
-    void addWidget( QWidget *widget )
+    void addWidget(QWidget *widget)
     {
-      if ( !widget )
-        return;
+        if (!widget) {
+            return;
+        }
 
-      q->connect( widget, SIGNAL(remove(QWidget*)), q, SLOT(removeWidget(QWidget*)) );
-      mWidgets.append( widget );
-      mLayout->addWidget( widget );
+        q->connect(widget, SIGNAL(remove(QWidget*)), q, SLOT(removeWidget(QWidget*)));
+        mWidgets.append(widget);
+        mLayout->addWidget(widget);
     }
 
-    void removeWidget( QWidget *widget )
+    void removeWidget(QWidget *widget)
     {
-      if ( !mWidgets.contains( widget ) ) {
-        qDebug( "Warning: try to remove non-existing widget" );
-        return;
-      }
+        if (!mWidgets.contains(widget)) {
+            qDebug("Warning: try to remove non-existing widget");
+            return;
+        }
 
-      emit q->aboutToBeRemoved( widget );
+        emit q->aboutToBeRemoved(widget);
 
-      mLayout->removeWidget( widget );
-      mWidgets.removeAll( widget );
-      widget->hide();
-      widget->deleteLater();
+        mLayout->removeWidget(widget);
+        mWidgets.removeAll(widget);
+        widget->hide();
+        widget->deleteLater();
     }
 
     KWidgetLister *q;
     Qt::Orientation mOrientation;
-    QList<QWidget*> mWidgets;
+    QList<QWidget *> mWidgets;
     QBoxLayout *mLayout;
 };
 
-KWidgetLister::KWidgetLister( QWidget *parent )
-  : QWidget( parent ), d( new Private( this ) )
+KWidgetLister::KWidgetLister(QWidget *parent)
+    : QWidget(parent), d(new Private(this))
 {
 }
 
 KWidgetLister::~KWidgetLister()
 {
-  delete d;
+    delete d;
 }
 
-void KWidgetLister::setOrientation( Qt::Orientation orientation )
+void KWidgetLister::setOrientation(Qt::Orientation orientation)
 {
-  d->mOrientation = orientation;
-  if ( d->mOrientation == Qt::Horizontal )
-    d->mLayout->setDirection( QBoxLayout::LeftToRight );
-  else
-    d->mLayout->setDirection( QBoxLayout::TopToBottom );
+    d->mOrientation = orientation;
+    if (d->mOrientation == Qt::Horizontal) {
+        d->mLayout->setDirection(QBoxLayout::LeftToRight);
+    } else {
+        d->mLayout->setDirection(QBoxLayout::TopToBottom);
+    }
 }
 
 Qt::Orientation KWidgetLister::orientation() const
 {
-  return d->mOrientation;
+    return d->mOrientation;
 }
 
-void KWidgetLister::addWidget( QWidget *widget )
+void KWidgetLister::addWidget(QWidget *widget)
 {
-  d->addWidget( widget );
+    d->addWidget(widget);
 }
 
 void KWidgetLister::clear()
 {
-  foreach ( QWidget *widget, d->mWidgets )
-    d->removeWidget( widget );
+    foreach (QWidget *widget, d->mWidgets) {
+        d->removeWidget(widget);
+    }
 }
 
 int KWidgetLister::count() const
 {
-  return d->mWidgets.count();
+    return d->mWidgets.count();
 }
 
-QWidget* KWidgetLister::widget( int index ) const
+QWidget *KWidgetLister::widget(int index) const
 {
-  if ( index < 0 || index >= d->mWidgets.count() )
-    return 0;
+    if (index < 0 || index >= d->mWidgets.count()) {
+        return 0;
+    }
 
-  return d->mWidgets.at( index );
+    return d->mWidgets.at(index);
 }
 
 #include "moc_kwidgetlister.cpp"

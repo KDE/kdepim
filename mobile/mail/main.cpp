@@ -43,47 +43,47 @@ extern bool ___MailTransport____INIT();
 class KMailMobileApplication : public KDeclarativeApplication<MainView>
 {
 public:
-  KMailMobileApplication();
-  explicit KMailMobileApplication( const KCmdLineOptions &applicationOptions );
-  virtual int newInstance();
+    KMailMobileApplication();
+    explicit KMailMobileApplication(const KCmdLineOptions &applicationOptions);
+    virtual int newInstance();
 };
 
 KMailMobileApplication::KMailMobileApplication(): KDeclarativeApplication<MainView>()
 {
 }
 
-KMailMobileApplication::KMailMobileApplication( const KCmdLineOptions &applicationOptions ): KDeclarativeApplication<MainView>( applicationOptions )
+KMailMobileApplication::KMailMobileApplication(const KCmdLineOptions &applicationOptions): KDeclarativeApplication<MainView>(applicationOptions)
 {
 }
 
 int KMailMobileApplication::newInstance()
 {
-  KDeclarativeApplication<MainView>::newInstance();
-  if ( m_mainView ) {
-    m_mainView->handleCommandLine();
-  }
-  return 0;
+    KDeclarativeApplication<MainView>::newInstance();
+    if (m_mainView) {
+        m_mainView->handleCommandLine();
+    }
+    return 0;
 }
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  qWarning() << "Starting main function" << QDateTime::currentDateTime();
+    qWarning() << "Starting main function" << QDateTime::currentDateTime();
 
 #ifdef KDEPIM_STATIC_LIBS
     ___MailTransport____INIT();
 #endif
 
-  const QByteArray& ba = QByteArray( "kmail-mobile" );
-  const KLocalizedString name = ki18n( "Kontact Touch Mail" );
-  K4AboutData aboutData( ba, ba, name, ba, name );
-  aboutData.setProductName( "KMail Mobile" ); //has to match the bugzilla product name
+    const QByteArray &ba = QByteArray("kmail-mobile");
+    const KLocalizedString name = ki18n("Kontact Touch Mail");
+    K4AboutData aboutData(ba, ba, name, ba, name);
+    aboutData.setProductName("KMail Mobile");   //has to match the bugzilla product name
 
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KMailMobileApplication app( kmailMobileOptions() );
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KMailMobileApplication app(kmailMobileOptions());
 
-  if ( !KMailMobileApplication::start() ) {
-     return 0;
-  }
+    if (!KMailMobileApplication::start()) {
+        return 0;
+    }
 
-  return app.exec();
+    return app.exec();
 }

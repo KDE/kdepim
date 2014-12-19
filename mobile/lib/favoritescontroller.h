@@ -32,22 +32,22 @@ class QItemSelectionModel;
 
 class FavoritesController : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  Q_PROPERTY( QAbstractItemModel* model READ model )
-  Q_PROPERTY( QItemSelectionModel* selectionModel READ selectionModel )
+    Q_PROPERTY(QAbstractItemModel *model READ model)
+    Q_PROPERTY(QItemSelectionModel *selectionModel READ selectionModel)
 
-  Q_PROPERTY( QAction* removeAction READ removeAction )
-  Q_PROPERTY( QAction* moveUpAction READ moveUpAction )
-  Q_PROPERTY( QAction* moveDownAction READ moveDownAction )
+    Q_PROPERTY(QAction *removeAction READ removeAction)
+    Q_PROPERTY(QAction *moveUpAction READ moveUpAction)
+    Q_PROPERTY(QAction *moveDownAction READ moveDownAction)
 
-  public:
+public:
     /**
      * Creates a new favorites controller.
      *
      * @param parent The parent object.
      */
-    explicit FavoritesController( const KSharedConfig::Ptr &config, QObject *parent = Q_NULLPTR );
+    explicit FavoritesController(const KSharedConfig::Ptr &config, QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the favorites controller.
@@ -57,55 +57,55 @@ class FavoritesController : public QObject
     /**
      * Returns the model that represents the list of favoritess.
      */
-    QAbstractItemModel* model() const;
+    QAbstractItemModel *model() const;
 
     /**
      * Returns the item selection model, which is used for adapting
      * the state of the actions.
      */
-    QItemSelectionModel* selectionModel() const;
+    QItemSelectionModel *selectionModel() const;
 
     /**
      * Sets the collection selection @p model the loading and saving of favorites
      * shall be applied on.
      */
-    void setCollectionSelectionModel( QItemSelectionModel *model );
+    void setCollectionSelectionModel(QItemSelectionModel *model);
 
     /**
      * Returns the action for removing the currently selected favorites.
      */
-    QAction* removeAction() const;
+    QAction *removeAction() const;
 
     /**
      * Returns the action for moving up the currently selected favorites.
      */
-    QAction* moveUpAction() const;
+    QAction *moveUpAction() const;
 
     /**
      * Returns the action for moving down the currently selected favorites.
      */
-    QAction* moveDownAction() const;
+    QAction *moveDownAction() const;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
      * Applies the favorite with the given @p name on the collection selection model.
      */
-    void loadFavorite( const QString &name ) const;
+    void loadFavorite(const QString &name) const;
 
     /**
      * Saves the current collection selection as favorite with the given @p name.
      */
-    void saveFavorite( const QString &name );
+    void saveFavorite(const QString &name);
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
-    Q_PRIVATE_SLOT( d, void selectionChanged() )
-    Q_PRIVATE_SLOT( d, void removeFavorite() )
-    Q_PRIVATE_SLOT( d, void moveUpFavorite() )
-    Q_PRIVATE_SLOT( d, void moveDownFavorite() )
+    Q_PRIVATE_SLOT(d, void selectionChanged())
+    Q_PRIVATE_SLOT(d, void removeFavorite())
+    Q_PRIVATE_SLOT(d, void moveUpFavorite())
+    Q_PRIVATE_SLOT(d, void moveDownFavorite())
     //@endcond
 };
 

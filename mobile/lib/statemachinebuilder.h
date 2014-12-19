@@ -32,27 +32,26 @@ class QItemSelectionModel;
 
 class StateMachineBuilderPrivate;
 
-
 class MOBILEUI_EXPORT NotifyingStateMachine : public QStateMachine
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit NotifyingStateMachine(QObject *parent = Q_NULLPTR);
+    explicit NotifyingStateMachine(QObject *parent = Q_NULLPTR);
 
-  void requestState(const QString &state);
+    void requestState(const QString &state);
 
 Q_SIGNALS:
-  void stateRequested(const QString &state);
-  void stateChanged();
+    void stateRequested(const QString &state);
+    void stateChanged();
 };
 
 class RequestNamedTransition : public QSignalTransition
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit RequestNamedTransition(QStateMachine *stateMachine, QState* sourceState = 0);
+    explicit RequestNamedTransition(QStateMachine *stateMachine, QState *sourceState = 0);
 
-  virtual bool eventTest(QEvent* event);
+    virtual bool eventTest(QEvent *event);
 
 };
 
@@ -62,17 +61,17 @@ public:
 class MOBILEUI_EXPORT StateMachineBuilder
 {
 public:
-  StateMachineBuilder();
-  virtual ~StateMachineBuilder();
+    StateMachineBuilder();
+    virtual ~StateMachineBuilder();
 
-  void setNavigationModel(QItemSelectionModel *model);
-  void setItemSelectionModel(QItemSelectionModel *model);
-  // TODO: Decide on granularity of the interface.
-  virtual NotifyingStateMachine* getMachine(QObject *parent) const;
+    void setNavigationModel(QItemSelectionModel *model);
+    void setItemSelectionModel(QItemSelectionModel *model);
+    // TODO: Decide on granularity of the interface.
+    virtual NotifyingStateMachine *getMachine(QObject *parent) const;
 
 private:
-  Q_DECLARE_PRIVATE(StateMachineBuilder)
-  StateMachineBuilderPrivate * const d_ptr;
+    Q_DECLARE_PRIVATE(StateMachineBuilder)
+    StateMachineBuilderPrivate *const d_ptr;
 };
 
 #endif

@@ -27,7 +27,6 @@
 
 #include "mainview.h"
 
-
 #ifdef KCALCORE_SERIALIZER_PLUGIN_STATIC
 
 Q_IMPORT_PLUGIN(akonadi_serializer_mail)
@@ -38,19 +37,19 @@ Q_IMPORT_PLUGIN(akonadi_serializer_kcalcore)
 
 using namespace IncidenceEditorNG;
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  const QByteArray& ba = QByteArray( "tasks-mobile" );
-  const KLocalizedString name = ki18n( "Kontact Touch Tasks" );
+    const QByteArray &ba = QByteArray("tasks-mobile");
+    const KLocalizedString name = ki18n("Kontact Touch Tasks");
 
-  EditorConfig::setEditorConfig( new KOrganizerEditorConfig );
+    EditorConfig::setEditorConfig(new KOrganizerEditorConfig);
 
-  K4AboutData aboutData( ba, ba, name, ba, name );
-  aboutData.setProductName( "KOrganizer Mobile/tasks" ); //has to match the bugzilla product name
+    K4AboutData aboutData(ba, ba, name, ba, name);
+    aboutData.setProductName("KOrganizer Mobile/tasks");   //has to match the bugzilla product name
 
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KDeclarativeApplication<MainView> app;
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KDeclarativeApplication<MainView> app;
 
-  return app.exec();
+    return app.exec();
 }
 

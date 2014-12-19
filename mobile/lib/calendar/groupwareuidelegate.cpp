@@ -34,33 +34,33 @@ GroupwareUiDelegate::GroupwareUiDelegate()
 {
 }
 
-void GroupwareUiDelegate::setCalendar( const Akonadi::ETMCalendar::Ptr &calendar )
+void GroupwareUiDelegate::setCalendar(const Akonadi::ETMCalendar::Ptr &calendar)
 {
-  mCalendar = calendar;
+    mCalendar = calendar;
 }
 
 void GroupwareUiDelegate::createCalendar()
 {
-  QStringList mimeTypes;
-  mimeTypes << KCalCore::Event::eventMimeType() << KCalCore::Todo::todoMimeType();
-  mCalendar = Akonadi::ETMCalendar::Ptr( new Akonadi::ETMCalendar( mimeTypes ) );
-  mCalendar->setObjectName( QLatin1String("Groupware calendar") );
-  mCalendar->setOwner( KCalCore::Person::Ptr( new KCalCore::Person( CalendarSupport::KCalPrefs::instance()->fullName(),
-                                         CalendarSupport::KCalPrefs::instance()->email() ) ) );
+    QStringList mimeTypes;
+    mimeTypes << KCalCore::Event::eventMimeType() << KCalCore::Todo::todoMimeType();
+    mCalendar = Akonadi::ETMCalendar::Ptr(new Akonadi::ETMCalendar(mimeTypes));
+    mCalendar->setObjectName(QLatin1String("Groupware calendar"));
+    mCalendar->setOwner(KCalCore::Person::Ptr(new KCalCore::Person(CalendarSupport::KCalPrefs::instance()->fullName(),
+                        CalendarSupport::KCalPrefs::instance()->email())));
 }
 
-void GroupwareUiDelegate::requestIncidenceEditor( const Akonadi::Item &item )
+void GroupwareUiDelegate::requestIncidenceEditor(const Akonadi::Item &item)
 {
-  const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
-  if ( !incidence ) {
-    qWarning() << "Incidence is null, won't open the editor";
-    return;
-  }
+    const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence(item);
+    if (!incidence) {
+        qWarning() << "Incidence is null, won't open the editor";
+        return;
+    }
 
-  IncidenceView *editor = new IncidenceView;
-  editor->setWindowTitle( i18n( "Kontact Touch Calendar" ) );
-  editor->load( item, QDate::currentDate() );
+    IncidenceView *editor = new IncidenceView;
+    editor->setWindowTitle(i18n("Kontact Touch Calendar"));
+    editor->load(item, QDate::currentDate());
 
-  editor->setIsCounterProposal( true );
-  editor->show();
+    editor->setIsCounterProposal(true);
+    editor->show();
 }

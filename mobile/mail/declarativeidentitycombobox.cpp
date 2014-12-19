@@ -23,9 +23,9 @@
 
 #include <QDeclarativeItem>
 
-DeclarativeIdentityComboBox::DeclarativeIdentityComboBox ( QDeclarativeItem* parent ) :
-  DeclarativeWidgetBase< KIdentityManagement::IdentityCombo, ComposerView, &ComposerView::setIdentityCombo>
-    ( new KIdentityManagement::IdentityCombo( MobileKernel::self()->identityManager(), 0 ), parent )
+DeclarativeIdentityComboBox::DeclarativeIdentityComboBox(QDeclarativeItem *parent) :
+    DeclarativeWidgetBase< KIdentityManagement::IdentityCombo, ComposerView, &ComposerView::setIdentityCombo>
+    (new KIdentityManagement::IdentityCombo(MobileKernel::self()->identityManager(), 0), parent)
 {
 }
 

@@ -47,17 +47,17 @@
 
 using namespace KDGantt;
 
-HeaderWidget::HeaderWidget( GraphicsView* parent )
-    : QWidget( parent ), m_offset( 0. )
+HeaderWidget::HeaderWidget(GraphicsView *parent)
+    : QWidget(parent), m_offset(0.)
 {
-    assert( parent ); // Parent must be set
+    assert(parent);   // Parent must be set
 }
 
 HeaderWidget::~HeaderWidget()
 {
 }
 
-void HeaderWidget::scrollTo( int v )
+void HeaderWidget::scrollTo(int v)
 {
     m_offset = v;
     // QWidget::scroll() wont work properly for me on Mac
@@ -65,108 +65,97 @@ void HeaderWidget::scrollTo( int v )
     update();
 }
 
-void HeaderWidget::paintEvent( QPaintEvent* ev )
+void HeaderWidget::paintEvent(QPaintEvent *ev)
 {
-    QPainter p( this );
-    view()->grid()->paintHeader( &p, rect(), ev->rect(), m_offset, this );
+    QPainter p(this);
+    view()->grid()->paintHeader(&p, rect(), ev->rect(), m_offset, this);
 }
 
 #ifndef QT_NO_CONTEXTMENU
-void HeaderWidget::contextMenuEvent( QContextMenuEvent* event )
+void HeaderWidget::contextMenuEvent(QContextMenuEvent *event)
 {
     QMenu contextMenu;
 
-    DateTimeGrid* const grid = qobject_cast< DateTimeGrid* >( view()->grid() );
-    QAction* actionScaleAuto = 0;
-    QAction* actionScaleDay = 0;
-    QAction* actionScaleHour = 0;
-    QAction* actionZoomIn = 0;
-    QAction* actionZoomOut = 0;
-    if( grid != 0 )
-    {
-        QMenu* menuScale = new QMenu( tr( "Scale" ), &contextMenu );
-        QActionGroup* scaleGroup = new QActionGroup( &contextMenu );
-        scaleGroup->setExclusive( true );
+    DateTimeGrid *const grid = qobject_cast< DateTimeGrid * >(view()->grid());
+    QAction *actionScaleAuto = 0;
+    QAction *actionScaleDay = 0;
+    QAction *actionScaleHour = 0;
+    QAction *actionZoomIn = 0;
+    QAction *actionZoomOut = 0;
+    if (grid != 0) {
+        QMenu *menuScale = new QMenu(tr("Scale"), &contextMenu);
+        QActionGroup *scaleGroup = new QActionGroup(&contextMenu);
+        scaleGroup->setExclusive(true);
 
-        actionScaleAuto = new QAction( tr( "Auto" ), menuScale );
-        actionScaleAuto->setCheckable( true );
-        actionScaleAuto->setChecked( grid->scale() == DateTimeGrid::ScaleAuto );
-        actionScaleDay = new QAction( tr( "Day" ), menuScale );
-        actionScaleDay->setCheckable( true );
-        actionScaleDay->setChecked( grid->scale() == DateTimeGrid::ScaleDay );
-        actionScaleHour = new QAction( tr( "Hour" ), menuScale );
-        actionScaleHour->setCheckable( true );
-        actionScaleHour->setChecked( grid->scale() == DateTimeGrid::ScaleHour );
+        actionScaleAuto = new QAction(tr("Auto"), menuScale);
+        actionScaleAuto->setCheckable(true);
+        actionScaleAuto->setChecked(grid->scale() == DateTimeGrid::ScaleAuto);
+        actionScaleDay = new QAction(tr("Day"), menuScale);
+        actionScaleDay->setCheckable(true);
+        actionScaleDay->setChecked(grid->scale() == DateTimeGrid::ScaleDay);
+        actionScaleHour = new QAction(tr("Hour"), menuScale);
+        actionScaleHour->setCheckable(true);
+        actionScaleHour->setChecked(grid->scale() == DateTimeGrid::ScaleHour);
 
-        scaleGroup->addAction( actionScaleAuto );
-        menuScale->addAction( actionScaleAuto );
+        scaleGroup->addAction(actionScaleAuto);
+        menuScale->addAction(actionScaleAuto);
 
-        scaleGroup->addAction( actionScaleDay );
-        menuScale->addAction( actionScaleDay );
+        scaleGroup->addAction(actionScaleDay);
+        menuScale->addAction(actionScaleDay);
 
-        scaleGroup->addAction( actionScaleHour );
-        menuScale->addAction( actionScaleHour );
+        scaleGroup->addAction(actionScaleHour);
+        menuScale->addAction(actionScaleHour);
 
-        contextMenu.addMenu( menuScale );
+        contextMenu.addMenu(menuScale);
 
         contextMenu.addSeparator();
 
-        actionZoomIn = new QAction( tr( "Zoom In" ), &contextMenu );
-        contextMenu.addAction( actionZoomIn );
-        actionZoomOut = new QAction( tr( "Zoom Out" ), &contextMenu );
-        contextMenu.addAction( actionZoomOut );
+        actionZoomIn = new QAction(tr("Zoom In"), &contextMenu);
+        contextMenu.addAction(actionZoomIn);
+        actionZoomOut = new QAction(tr("Zoom Out"), &contextMenu);
+        contextMenu.addAction(actionZoomOut);
     }
 
-    if( contextMenu.isEmpty() )
-    {
+    if (contextMenu.isEmpty()) {
         event->ignore();
         return;
     }
 
-    const QAction* const action = contextMenu.exec( event->globalPos() );
-    if( action == 0 ) {}
-    else if( action == actionScaleAuto )
-    {
-        assert( grid != 0 );
-        grid->setScale( DateTimeGrid::ScaleAuto );
-    }
-    else if( action == actionScaleDay )
-    {
-        assert( grid != 0 );
-        grid->setScale( DateTimeGrid::ScaleDay );
-    }
-    else if( action == actionScaleHour )
-    {
-        assert( grid != 0 );
-        grid->setScale( DateTimeGrid::ScaleHour );
-    }
-    else if( action == actionZoomIn )
-    {
-        assert( grid != 0 );
-        grid->setDayWidth( grid->dayWidth() + 10.0 );
-    }
-    else if( action == actionZoomOut )
-    {
-        assert( grid != 0 );
-        grid->setDayWidth( grid->dayWidth() - 10.0 );
+    const QAction *const action = contextMenu.exec(event->globalPos());
+    if (action == 0) {}
+    else if (action == actionScaleAuto) {
+        assert(grid != 0);
+        grid->setScale(DateTimeGrid::ScaleAuto);
+    } else if (action == actionScaleDay) {
+        assert(grid != 0);
+        grid->setScale(DateTimeGrid::ScaleDay);
+    } else if (action == actionScaleHour) {
+        assert(grid != 0);
+        grid->setScale(DateTimeGrid::ScaleHour);
+    } else if (action == actionZoomIn) {
+        assert(grid != 0);
+        grid->setDayWidth(grid->dayWidth() + 10.0);
+    } else if (action == actionZoomOut) {
+        assert(grid != 0);
+        grid->setDayWidth(grid->dayWidth() - 10.0);
     }
 
     event->accept();
 }
 #endif
 
-GraphicsView::Private::Private( GraphicsView* _q )
-  : q( _q ), rowcontroller(0), headerwidget( _q )
+GraphicsView::Private::Private(GraphicsView *_q)
+    : q(_q), rowcontroller(0), headerwidget(_q)
 {
 }
 
 void GraphicsView::Private::updateHeaderGeometry()
 {
-    q->setViewportMargins(0,rowcontroller->headerHeight(),0,0);
-    headerwidget.setGeometry( q->viewport()->x(),
-                              q->viewport()->y() - rowcontroller->headerHeight(),
-                              q->viewport()->width(),
-                              rowcontroller->headerHeight() );
+    q->setViewportMargins(0, rowcontroller->headerHeight(), 0, 0);
+    headerwidget.setGeometry(q->viewport()->x(),
+                             q->viewport()->y() - rowcontroller->headerHeight(),
+                             q->viewport()->width(),
+                             rowcontroller->headerHeight());
 }
 
 void GraphicsView::Private::slotGridChanged()
@@ -177,43 +166,43 @@ void GraphicsView::Private::slotGridChanged()
     q->update();
 }
 
-void GraphicsView::Private::slotHorizontalScrollValueChanged( int val )
+void GraphicsView::Private::slotHorizontalScrollValueChanged(int val)
 {
 #if QT_VERSION >= 0x040300
-    const QRectF viewRect = q->transform().mapRect( q->sceneRect() );
+    const QRectF viewRect = q->transform().mapRect(q->sceneRect());
 #else
     const QRectF viewRect = q->sceneRect();
 #endif
-    headerwidget.scrollTo( val-q->horizontalScrollBar()->minimum()+static_cast<int>( viewRect.left() ) );
+    headerwidget.scrollTo(val - q->horizontalScrollBar()->minimum() + static_cast<int>(viewRect.left()));
 }
 
-void GraphicsView::Private::slotColumnsInserted( const QModelIndex& parent,  int start, int end )
+void GraphicsView::Private::slotColumnsInserted(const QModelIndex &parent,  int start, int end)
 {
-    Q_UNUSED( start );
-    Q_UNUSED( end );
-    QModelIndex idx = scene.model()->index( 0, 0, scene.summaryHandlingModel()->mapToSource( parent ) );
+    Q_UNUSED(start);
+    Q_UNUSED(end);
+    QModelIndex idx = scene.model()->index(0, 0, scene.summaryHandlingModel()->mapToSource(parent));
     do {
-        scene.updateRow( scene.summaryHandlingModel()->mapFromSource( idx ) );
-    } while ( ( idx = rowcontroller->indexBelow( idx ) ) != QModelIndex() && rowcontroller->isRowVisible( idx ) );
-        //} while ( ( idx = d->treeview.indexBelow( idx ) ) != QModelIndex() && d->treeview.visualRect(idx).isValid() );
-     q->updateSceneRect();
+        scene.updateRow(scene.summaryHandlingModel()->mapFromSource(idx));
+    } while ((idx = rowcontroller->indexBelow(idx)) != QModelIndex() && rowcontroller->isRowVisible(idx));
+    //} while ( ( idx = d->treeview.indexBelow( idx ) ) != QModelIndex() && d->treeview.visualRect(idx).isValid() );
+    q->updateSceneRect();
 }
 
-void GraphicsView::Private::slotColumnsRemoved( const QModelIndex& parent,  int start, int end )
+void GraphicsView::Private::slotColumnsRemoved(const QModelIndex &parent,  int start, int end)
 {
     // TODO
-    Q_UNUSED( start );
-    Q_UNUSED( end );
-    Q_UNUSED( parent );
+    Q_UNUSED(start);
+    Q_UNUSED(end);
+    Q_UNUSED(parent);
     q->updateScene();
 }
 
-void GraphicsView::Private::slotDataChanged( const QModelIndex& topLeft, const QModelIndex& bottomRight )
+void GraphicsView::Private::slotDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
 {
     //qDebug() << "GraphicsView::slotDataChanged("<<topLeft<<bottomRight<<")";
     const QModelIndex parent = topLeft.parent();
-    for ( int row = topLeft.row(); row <= bottomRight.row(); ++row ) {
-        scene.updateRow( scene.summaryHandlingModel()->index( row, 0, parent ) );
+    for (int row = topLeft.row(); row <= bottomRight.row(); ++row) {
+        scene.updateRow(scene.summaryHandlingModel()->index(row, 0, parent));
     }
 }
 
@@ -229,55 +218,57 @@ void GraphicsView::Private::slotModelReset()
     q->updateScene();
 }
 
-void GraphicsView::Private::slotRowsInserted( const QModelIndex& parent,  int start, int end )
+void GraphicsView::Private::slotRowsInserted(const QModelIndex &parent,  int start, int end)
 {
-    Q_UNUSED( parent );
-    Q_UNUSED( start );
-    Q_UNUSED( end );
+    Q_UNUSED(parent);
+    Q_UNUSED(start);
+    Q_UNUSED(end);
     q->updateScene(); // TODO: This might be optimised
 }
 
-void GraphicsView::Private::slotRowsAboutToBeRemoved( const QModelIndex& parent,  int start, int end )
+void GraphicsView::Private::slotRowsAboutToBeRemoved(const QModelIndex &parent,  int start, int end)
 {
     //qDebug() << "GraphicsView::Private::slotRowsAboutToBeRemoved("<<parent<<start<<end<<")";
-    for ( int row = start; row <= end; ++row ) {
-        for ( int col = 0; col < scene.summaryHandlingModel()->columnCount( parent ); ++col ) {
+    for (int row = start; row <= end; ++row) {
+        for (int col = 0; col < scene.summaryHandlingModel()->columnCount(parent); ++col) {
             //qDebug() << "removing "<<scene.summaryHandlingModel()->index( row, col, parent );
-            scene.removeItem( scene.summaryHandlingModel()->index( row, col, parent ) );
+            scene.removeItem(scene.summaryHandlingModel()->index(row, col, parent));
         }
     }
 }
 
-void GraphicsView::Private::slotRowsRemoved( const QModelIndex& parent,  int start, int end )
+void GraphicsView::Private::slotRowsRemoved(const QModelIndex &parent,  int start, int end)
 {
     //qDebug() << "GraphicsView::Private::slotRowsRemoved("<<parent<<start<<end<<")";
     // TODO
-    Q_UNUSED( parent );
-    Q_UNUSED( start );
-    Q_UNUSED( end );
+    Q_UNUSED(parent);
+    Q_UNUSED(start);
+    Q_UNUSED(end);
 
     q->updateScene();
 }
 
-void GraphicsView::Private::slotItemClicked( const QModelIndex& idx )
+void GraphicsView::Private::slotItemClicked(const QModelIndex &idx)
 {
     QModelIndex sidx = idx;//scene.summaryHandlingModel()->mapToSource( idx );
-    emit q->clicked( sidx );
-    if (q->style()->styleHint(QStyle::SH_ItemView_ActivateItemOnSingleClick, 0, q))
-        emit q->activated( sidx );
+    emit q->clicked(sidx);
+    if (q->style()->styleHint(QStyle::SH_ItemView_ActivateItemOnSingleClick, 0, q)) {
+        emit q->activated(sidx);
+    }
 }
 
-void GraphicsView::Private::slotItemDoubleClicked( const QModelIndex& idx )
+void GraphicsView::Private::slotItemDoubleClicked(const QModelIndex &idx)
 {
     QModelIndex sidx = idx;//scene.summaryHandlingModel()->mapToSource( idx );
-    emit q->doubleClicked( sidx );
-    if (!q->style()->styleHint(QStyle::SH_ItemView_ActivateItemOnSingleClick, 0, q))
-        emit q->activated( sidx );
+    emit q->doubleClicked(sidx);
+    if (!q->style()->styleHint(QStyle::SH_ItemView_ActivateItemOnSingleClick, 0, q)) {
+        emit q->activated(sidx);
+    }
 }
 
-void GraphicsView::Private::slotHeaderContextMenuRequested( const QPoint& pt )
+void GraphicsView::Private::slotHeaderContextMenuRequested(const QPoint &pt)
 {
-    emit q->headerContextMenuRequested( headerwidget.mapToGlobal( pt ) );
+    emit q->headerContextMenuRequested(headerwidget.mapToGlobal(pt));
 }
 
 /*!\class KDGantt::GraphicsView kdganttgraphicsview.h KDGanttGraphicsView
@@ -301,33 +292,33 @@ void GraphicsView::Private::slotHeaderContextMenuRequested( const QPoint& pt )
 /*! Constructor. Creates a new KDGantt::GraphicsView with parent
  * \a parent.
  */
-GraphicsView::GraphicsView( QWidget* parent )
-    : QGraphicsView( parent ), _d( new Private( this ) )
+GraphicsView::GraphicsView(QWidget *parent)
+    : QGraphicsView(parent), _d(new Private(this))
 {
 
 #if defined KDAB_EVAL
-  EvalDialog::checkEvalLicense( "KD Gantt" );
+    EvalDialog::checkEvalLicense("KD Gantt");
 #endif
-    connect( horizontalScrollBar(), SIGNAL(valueChanged(int)),
-             this, SLOT(slotHorizontalScrollValueChanged(int)) );
-    connect( &_d->scene, SIGNAL(gridChanged()),
-             this, SLOT(slotGridChanged()) );
-    connect( &_d->scene, SIGNAL(entered(QModelIndex)),
-             this, SIGNAL(entered(QModelIndex)) );
-    connect( &_d->scene, SIGNAL(pressed(QModelIndex)),
-             this, SIGNAL(pressed(QModelIndex)) );
-    connect( &_d->scene, SIGNAL(clicked(QModelIndex)),
-             this, SLOT(slotItemClicked(QModelIndex)) );
-    connect( &_d->scene, SIGNAL(doubleClicked(QModelIndex)),
-             this, SLOT(slotItemDoubleClicked(QModelIndex)) );
-    connect( &_d->scene, SIGNAL(sceneRectChanged(QRectF)),
-             this, SLOT(updateSceneRect()) );
-    connect( &_d->headerwidget, SIGNAL(customContextMenuRequested(QPoint)),
-             this, SLOT(slotHeaderContextMenuRequested(QPoint)) );
-    setScene( &_d->scene );
+    connect(horizontalScrollBar(), SIGNAL(valueChanged(int)),
+            this, SLOT(slotHorizontalScrollValueChanged(int)));
+    connect(&_d->scene, SIGNAL(gridChanged()),
+            this, SLOT(slotGridChanged()));
+    connect(&_d->scene, SIGNAL(entered(QModelIndex)),
+            this, SIGNAL(entered(QModelIndex)));
+    connect(&_d->scene, SIGNAL(pressed(QModelIndex)),
+            this, SIGNAL(pressed(QModelIndex)));
+    connect(&_d->scene, SIGNAL(clicked(QModelIndex)),
+            this, SLOT(slotItemClicked(QModelIndex)));
+    connect(&_d->scene, SIGNAL(doubleClicked(QModelIndex)),
+            this, SLOT(slotItemDoubleClicked(QModelIndex)));
+    connect(&_d->scene, SIGNAL(sceneRectChanged(QRectF)),
+            this, SLOT(updateSceneRect()));
+    connect(&_d->headerwidget, SIGNAL(customContextMenuRequested(QPoint)),
+            this, SLOT(slotHeaderContextMenuRequested(QPoint)));
+    setScene(&_d->scene);
 
     // HACK!
-    setSummaryHandlingModel( _d->scene.summaryHandlingModel() );
+    setSummaryHandlingModel(_d->scene.summaryHandlingModel());
 
     //setCacheMode( CacheBackground );
 }
@@ -353,49 +344,49 @@ GraphicsView::~GraphicsView()
  * taken from the _last_ item in the row. The ItemRoles used are
  * Qt::DisplayRole and the roles defined in KDGantt::ItemDataRole.
  */
-void GraphicsView::setModel( QAbstractItemModel* model )
+void GraphicsView::setModel(QAbstractItemModel *model)
 {
-    if ( d->scene.model() ) {
-        disconnect( d->scene.model() );
+    if (d->scene.model()) {
+        disconnect(d->scene.model());
     }
 
-    d->scene.setModel( model );
-    connect( model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-             this, SLOT(updateSceneRect()) );
+    d->scene.setModel(model);
+    connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+            this, SLOT(updateSceneRect()));
     updateScene();
 }
 
 /*! \returns the current model displayed by this view
  */
-QAbstractItemModel* GraphicsView::model() const
+QAbstractItemModel *GraphicsView::model() const
 {
     return d->scene.model();
 }
 
-void GraphicsView::setSummaryHandlingModel( QAbstractProxyModel* proxyModel )
+void GraphicsView::setSummaryHandlingModel(QAbstractProxyModel *proxyModel)
 {
-    disconnect( d->scene.summaryHandlingModel() );
-    d->scene.setSummaryHandlingModel( proxyModel );
+    disconnect(d->scene.summaryHandlingModel());
+    d->scene.setSummaryHandlingModel(proxyModel);
 
     /* Connections. We have to rely on the treeview
      * to receive the signals before we do(!)
      */
-    connect( proxyModel, SIGNAL(columnsInserted(QModelIndex,int,int)),
-             this,  SLOT(slotColumnsInserted(QModelIndex,int,int)) );
-    connect( proxyModel, SIGNAL(columnsRemoved(QModelIndex,int,int)),
-             this,  SLOT(slotColumnsRemoved(QModelIndex,int,int)) );
-    connect( proxyModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-             this,  SLOT(slotDataChanged(QModelIndex,QModelIndex)) );
-    connect( proxyModel, SIGNAL(layoutChanged()),
-             this,  SLOT(slotLayoutChanged()) );
-    connect( proxyModel, SIGNAL(modelReset()),
-             this,  SLOT(slotModelReset()) );
-    connect( proxyModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
-             this,  SLOT(slotRowsInserted(QModelIndex,int,int)) );
-    connect( proxyModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
-             this,  SLOT(slotRowsAboutToBeRemoved(QModelIndex,int,int)) );
-    connect( proxyModel, SIGNAL(rowsRemoved(QModelIndex,int,int)),
-             this,  SLOT(slotRowsRemoved(QModelIndex,int,int)) );
+    connect(proxyModel, SIGNAL(columnsInserted(QModelIndex,int,int)),
+            this,  SLOT(slotColumnsInserted(QModelIndex,int,int)));
+    connect(proxyModel, SIGNAL(columnsRemoved(QModelIndex,int,int)),
+            this,  SLOT(slotColumnsRemoved(QModelIndex,int,int)));
+    connect(proxyModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+            this,  SLOT(slotDataChanged(QModelIndex,QModelIndex)));
+    connect(proxyModel, SIGNAL(layoutChanged()),
+            this,  SLOT(slotLayoutChanged()));
+    connect(proxyModel, SIGNAL(modelReset()),
+            this,  SLOT(slotModelReset()));
+    connect(proxyModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
+            this,  SLOT(slotRowsInserted(QModelIndex,int,int)));
+    connect(proxyModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
+            this,  SLOT(slotRowsAboutToBeRemoved(QModelIndex,int,int)));
+    connect(proxyModel, SIGNAL(rowsRemoved(QModelIndex,int,int)),
+            this,  SLOT(slotRowsRemoved(QModelIndex,int,int)));
 
     updateScene();
 }
@@ -403,21 +394,21 @@ void GraphicsView::setSummaryHandlingModel( QAbstractProxyModel* proxyModel )
 /*! Sets the constraintmodel displayed by this view.
  * \see KDGantt::ConstraintModel.
  */
-void GraphicsView::setConstraintModel( ConstraintModel* cmodel )
+void GraphicsView::setConstraintModel(ConstraintModel *cmodel)
 {
-    d->scene.setConstraintModel( cmodel );
+    d->scene.setConstraintModel(cmodel);
 }
 
 /*! \returns the KDGantt::ConstraintModel displayed by this view.
  */
-ConstraintModel* GraphicsView::constraintModel() const
+ConstraintModel *GraphicsView::constraintModel() const
 {
     return d->scene.constraintModel();
 }
 
 /*! \returns the KDGantt::SummaryHandlingProxyModel used by this view.
  */
-QAbstractProxyModel* GraphicsView::summaryHandlingModel() const
+QAbstractProxyModel *GraphicsView::summaryHandlingModel() const
 {
     return d->scene.summaryHandlingModel();
 }
@@ -425,9 +416,9 @@ QAbstractProxyModel* GraphicsView::summaryHandlingModel() const
 /*! Sets the root index of the model displayed by this view.
  * Similar to QAbstractItemView::setRootIndex, default is QModelIndex().
  */
-void GraphicsView::setRootIndex( const QModelIndex& idx )
+void GraphicsView::setRootIndex(const QModelIndex &idx)
 {
-    d->scene.setRootIndex( idx );
+    d->scene.setRootIndex(idx);
 }
 
 /*! \returns the rootindex for this view.
@@ -440,14 +431,14 @@ QModelIndex GraphicsView::rootIndex() const
 /*! Sets the QItemSelectionModel used by this view to manage
  * selections. Similar to QAbstractItemView::setSelectionModel
  */
-void GraphicsView::setSelectionModel( QItemSelectionModel* model )
+void GraphicsView::setSelectionModel(QItemSelectionModel *model)
 {
-    d->scene.setSelectionModel( model );
+    d->scene.setSelectionModel(model);
 }
 
 /*! \returns the QItemSelectionModel used by this view
  */
-QItemSelectionModel* GraphicsView::selectionModel() const
+QItemSelectionModel *GraphicsView::selectionModel() const
 {
     return d->scene.selectionModel();
 }
@@ -455,14 +446,14 @@ QItemSelectionModel* GraphicsView::selectionModel() const
 /*! Sets the KDGantt::ItemDelegate used for rendering items on this
  * view. \see ItemDelegate and QAbstractItemDelegate.
  */
-void GraphicsView::setItemDelegate( ItemDelegate* delegate )
+void GraphicsView::setItemDelegate(ItemDelegate *delegate)
 {
-    d->scene.setItemDelegate( delegate );
+    d->scene.setItemDelegate(delegate);
 }
 
 /*! \returns the ItemDelegate used by this view to render items
 */
-ItemDelegate* GraphicsView::itemDelegate() const
+ItemDelegate *GraphicsView::itemDelegate() const
 {
     return d->scene.itemDelegate();
 }
@@ -472,17 +463,17 @@ ItemDelegate* GraphicsView::itemDelegate() const
  * of each row and with which parts of the model are
  * displayed. \see AbstractRowController
  */
-void GraphicsView::setRowController( AbstractRowController* rowcontroller )
+void GraphicsView::setRowController(AbstractRowController *rowcontroller)
 {
     d->rowcontroller = rowcontroller;
-    d->scene.setRowController( rowcontroller );
+    d->scene.setRowController(rowcontroller);
     updateScene();
 }
 
 /*! \returns the AbstractRowController
  * for this view. \see setRowController
  */
-AbstractRowController* GraphicsView::rowController() const
+AbstractRowController *GraphicsView::rowController() const
 {
     return d->rowcontroller;
 }
@@ -492,15 +483,15 @@ AbstractRowController* GraphicsView::rowController() const
  * to and from the view and how the background and header
  * is rendered. \see AbstractGrid and DateTimeGrid.
  */
-void GraphicsView::setGrid( AbstractGrid* grid )
+void GraphicsView::setGrid(AbstractGrid *grid)
 {
-    d->scene.setGrid( grid );
+    d->scene.setGrid(grid);
     d->slotGridChanged();
 }
 
 /*! \returns the AbstractGrid used by this view.
  */
-AbstractGrid* GraphicsView::grid() const
+AbstractGrid *GraphicsView::grid() const
 {
     return d->scene.grid();
 }
@@ -508,9 +499,9 @@ AbstractGrid* GraphicsView::grid() const
 /*! Sets the view to read-only mode if \a to is true. The default is
  * read/write if the model permits it.
  */
-void GraphicsView::setReadOnly( bool ro )
+void GraphicsView::setReadOnly(bool ro)
 {
-    d->scene.setReadOnly( ro );
+    d->scene.setReadOnly(ro);
 }
 
 /*!\returns true iff the view is in read-only mode
@@ -529,9 +520,9 @@ bool GraphicsView::isReadOnly() const
  *
  * \see QWidget::setContextMenuPolicy( Qt::ContextMenuPolicy )
  */
-void GraphicsView::setHeaderContextMenuPolicy( Qt::ContextMenuPolicy p )
+void GraphicsView::setHeaderContextMenuPolicy(Qt::ContextMenuPolicy p)
 {
-    d->headerwidget.setContextMenuPolicy( p );
+    d->headerwidget.setContextMenuPolicy(p);
 }
 
 /*! \returns the context menu policy for the header
@@ -549,42 +540,47 @@ Qt::ContextMenuPolicy GraphicsView::headerContextMenuPolicy() const
  * in that case it adds a hard constraint. If a constraint is already
  * present, it is removed and nothing is added.
  */
-void GraphicsView::addConstraint( const QModelIndex& from,
-                                  const QModelIndex& to,
-                                  Qt::KeyboardModifiers modifiers )
+void GraphicsView::addConstraint(const QModelIndex &from,
+                                 const QModelIndex &to,
+                                 Qt::KeyboardModifiers modifiers)
 {
-    if ( isReadOnly() ) return;
-    ConstraintModel* cmodel = constraintModel();
-    assert( cmodel );
-    Constraint c( from, to, ( modifiers&Qt::ShiftModifier )?Constraint::TypeHard:Constraint::TypeSoft );
-    if ( cmodel->hasConstraint( c ) ) cmodel->removeConstraint( c );
-    else cmodel->addConstraint( c );
+    if (isReadOnly()) {
+        return;
+    }
+    ConstraintModel *cmodel = constraintModel();
+    assert(cmodel);
+    Constraint c(from, to, (modifiers & Qt::ShiftModifier) ? Constraint::TypeHard : Constraint::TypeSoft);
+    if (cmodel->hasConstraint(c)) {
+        cmodel->removeConstraint(c);
+    } else {
+        cmodel->addConstraint(c);
+    }
 }
 
-void GraphicsView::resizeEvent( QResizeEvent* ev )
+void GraphicsView::resizeEvent(QResizeEvent *ev)
 {
     d->updateHeaderGeometry();
     QRectF r = scene()->itemsBoundingRect();
     // To scroll more to the left than the actual item start, bug #4516
-    r.setLeft( qMin<qreal>( 0.0, r.left() ) );
+    r.setLeft(qMin<qreal>(0.0, r.left()));
     // TODO: take scrollbars into account (if not always on)
     // The scene should be at least the size of the viewport
     QSizeF size = viewport()->size();
     //TODO: why -2 below? size should be ex. frames etc?
-    if ( size.width() > r.width() ) {
-        r.setWidth( size.width() - 2 );
+    if (size.width() > r.width()) {
+        r.setWidth(size.width() - 2);
     }
-    if ( size.height() > r.height() ) {
-        r.setHeight( size.height() - 2 );
+    if (size.height() > r.height()) {
+        r.setHeight(size.height() - 2);
     }
     const int totalh = rowController()->totalHeight();
-    if ( r.height() < totalh ) {
-        r.setHeight( totalh );
+    if (r.height() < totalh) {
+        r.setHeight(totalh);
     }
 
-    scene()->setSceneRect( r );
+    scene()->setSceneRect(r);
 
-    QGraphicsView::resizeEvent( ev );
+    QGraphicsView::resizeEvent(ev);
 }
 
 /*!\returns The QModelIndex for the item located at
@@ -593,11 +589,11 @@ void GraphicsView::resizeEvent( QResizeEvent* ev )
  *
  * This is useful for for example contextmenus.
  */
-QModelIndex GraphicsView::indexAt( const QPoint& pos ) const
+QModelIndex GraphicsView::indexAt(const QPoint &pos) const
 {
-    QGraphicsItem* item = itemAt( pos );
-    if ( GraphicsItem* gitem = qgraphicsitem_cast<GraphicsItem*>( item ) ) {
-        return d->scene.summaryHandlingModel()->mapToSource( gitem->index() );
+    QGraphicsItem *item = itemAt(pos);
+    if (GraphicsItem *gitem = qgraphicsitem_cast<GraphicsItem *>(item)) {
+        return d->scene.summaryHandlingModel()->mapToSource(gitem->index());
     } else {
         return QModelIndex();
     }
@@ -610,9 +606,9 @@ void GraphicsView::clearItems()
 }
 
 /*! \internal */
-void GraphicsView::updateRow( const QModelIndex& idx )
+void GraphicsView::updateRow(const QModelIndex &idx)
 {
-    d->scene.updateRow( d->scene.summaryHandlingModel()->mapFromSource( idx ) );
+    d->scene.updateRow(d->scene.summaryHandlingModel()->mapFromSource(idx));
 }
 
 /*! \internal
@@ -623,26 +619,30 @@ void GraphicsView::updateSceneRect()
     /* What to do with this? We need to shrink the view to
      * make collapsing items work
      */
-    qreal range = horizontalScrollBar()->maximum()-horizontalScrollBar()->minimum();
-    const qreal hscroll = horizontalScrollBar()->value()/( range>0?range:1 );
+    qreal range = horizontalScrollBar()->maximum() - horizontalScrollBar()->minimum();
+    const qreal hscroll = horizontalScrollBar()->value() / (range > 0 ? range : 1);
     QRectF r = d->scene.itemsBoundingRect();
     // To scroll more to the left than the actual item start, bug #4516
-    r.setTop( 0. );
-    r.setLeft( qMin<qreal>( 0.0, r.left() ) );
-    r.setSize( r.size().expandedTo( viewport()->size() ) );
+    r.setTop(0.);
+    r.setLeft(qMin<qreal>(0.0, r.left()));
+    r.setSize(r.size().expandedTo(viewport()->size()));
     const int totalh = rowController()->totalHeight();
-    if ( r.height() < totalh ) r.setHeight( totalh );
-    d->scene.setSceneRect( r );
+    if (r.height() < totalh) {
+        r.setHeight(totalh);
+    }
+    d->scene.setSceneRect(r);
 
     /* set scrollbar to keep the same time in view */
-    range = horizontalScrollBar()->maximum()-horizontalScrollBar()->minimum();
-    if ( range>0 ) horizontalScrollBar()->setValue( qRound( hscroll*range ) );
+    range = horizontalScrollBar()->maximum() - horizontalScrollBar()->minimum();
+    if (range > 0) {
+        horizontalScrollBar()->setValue(qRound(hscroll * range));
+    }
 
     /* We have to update here to adjust for any rows with no
      * information because they are painted with a different
      * background brush
      */
-    d->scene.invalidate( QRectF(), QGraphicsScene::BackgroundLayer );
+    d->scene.invalidate(QRectF(), QGraphicsScene::BackgroundLayer);
 }
 
 /*! \internal
@@ -651,28 +651,34 @@ void GraphicsView::updateSceneRect()
 void GraphicsView::updateScene()
 {
     clearItems();
-    if( !model()) return;
-    if( !rowController()) return;
-    QModelIndex idx = model()->index( 0, 0, rootIndex() );
+    if (!model()) {
+        return;
+    }
+    if (!rowController()) {
+        return;
+    }
+    QModelIndex idx = model()->index(0, 0, rootIndex());
     do {
-        updateRow( idx );
-    } while ( ( idx = rowController()->indexBelow( idx ) ) != QModelIndex() && rowController()->isRowVisible(idx) );
+        updateRow(idx);
+    } while ((idx = rowController()->indexBelow(idx)) != QModelIndex() && rowController()->isRowVisible(idx));
     //constraintModel()->cleanup();
     //qDebug() << constraintModel();
     updateSceneRect();
-    if ( scene() ) scene()->invalidate( QRectF(), QGraphicsScene::BackgroundLayer );
+    if (scene()) {
+        scene()->invalidate(QRectF(), QGraphicsScene::BackgroundLayer);
+    }
 }
 
 /*! \internal */
-GraphicsItem* GraphicsView::createItem( ItemType type ) const
+GraphicsItem *GraphicsView::createItem(ItemType type) const
 {
-    return d->scene.createItem( type );
+    return d->scene.createItem(type);
 }
 
 /*! \internal */
-void GraphicsView::deleteSubtree( const QModelIndex& idx )
+void GraphicsView::deleteSubtree(const QModelIndex &idx)
 {
-    d->scene.deleteSubtree( d->scene.summaryHandlingModel()->mapFromSource( idx ) );
+    d->scene.deleteSubtree(d->scene.summaryHandlingModel()->mapFromSource(idx));
 }
 
 /*! Print the Gantt chart using \a printer. If \a drawRowLabels
@@ -681,9 +687,9 @@ void GraphicsView::deleteSubtree( const QModelIndex& idx )
  *
  * This version of print() will print multiple pages.
  */
-void GraphicsView::print( QPrinter* printer, bool drawRowLabels )
+void GraphicsView::print(QPrinter *printer, bool drawRowLabels)
 {
-    d->scene.print( printer, drawRowLabels );
+    d->scene.print(printer, drawRowLabels);
 }
 
 /*! Print part of the Gantt chart from \a start to \a end using \a printer.
@@ -696,18 +702,18 @@ void GraphicsView::print( QPrinter* printer, bool drawRowLabels )
  * qreal DateTimeGrid::mapFromDateTime( const QDateTime& dt) const
  * to figure out the values for \a start and \a end.
  */
-void GraphicsView::print( QPrinter* printer,  qreal start, qreal end, bool drawRowLabels )
+void GraphicsView::print(QPrinter *printer,  qreal start, qreal end, bool drawRowLabels)
 {
-    d->scene.print( printer, start, end, drawRowLabels );
+    d->scene.print(printer, start, end, drawRowLabels);
 }
 
 /*! Render the GanttView inside the rectangle \a target using the painter \a painter.
  * If \a drawRowLabels is true (the default), each row will have it's
  * label printed on the left side.
  */
-void GraphicsView::print( QPainter* painter, const QRectF& targetRect, bool drawRowLabels )
+void GraphicsView::print(QPainter *painter, const QRectF &targetRect, bool drawRowLabels)
 {
-  d->scene.print(painter,targetRect,drawRowLabels);
+    d->scene.print(painter, targetRect, drawRowLabels);
 }
 
 /*! Render the GanttView inside the rectangle \a target using the painter \a painter.
@@ -718,12 +724,11 @@ void GraphicsView::print( QPainter* painter, const QRectF& targetRect, bool draw
  * qreal DateTimeGrid::mapFromDateTime( const QDateTime& dt) const
  * to figure out the values for \a start and \a end.
  */
-void GraphicsView::print( QPainter* painter, qreal start, qreal end,
-                          const QRectF& targetRect, bool drawRowLabels )
+void GraphicsView::print(QPainter *painter, qreal start, qreal end,
+                         const QRectF &targetRect, bool drawRowLabels)
 {
-  d->scene.print(painter, start, end, targetRect, drawRowLabels);
+    d->scene.print(painter, start, end, targetRect, drawRowLabels);
 }
-
 
 #include "moc_kdganttgraphicsview.cpp"
 #include "moc_kdganttgraphicsview_p.cpp"

@@ -17,7 +17,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-
 #ifndef CALENDARINTERFACE_H
 #define CALENDARINTERFACE_H
 
@@ -29,76 +28,76 @@ class QDate;
 /** Implement the www.kde.korganizer/Calendar interface for korganizer-mobile */
 class CalendarInterface : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-    explicit CalendarInterface(QObject * parent = Q_NULLPTR) :QObject(parent){}
+    explicit CalendarInterface(QObject *parent = Q_NULLPTR) : QObject(parent) {}
 public Q_SLOTS:
-    void showDate(const QDate& date);
-    void openEventEditor( const QString &);
-    void openEventEditor( const QString &summary,
-                          const QString &description,
-                          const QStringList &attachments );
-    void openEventEditor( const QString &summary,
-                          const QString &description,
-                          const QStringList &attachments,
-                          const QStringList &attendees );
-    void openEventEditor( const QString &summary,
-                          const QString &description,
-                          const QString &uri,
-                          const QString &file,
-                          const QStringList &attendees,
-                          const QString &attachmentMimetype );
-
-    void openEventEditor( const QString &summary,
-                          const QString &description,
-                          const QStringList &attachmentUris,
-                          const QStringList &attendees,
-                          const QStringList &attachmentMimetypes,
-                          bool attachmentIsInline );
-
-    void openTodoEditor( const QString &);
-    void openTodoEditor( const QString &summary,
+    void showDate(const QDate &date);
+    void openEventEditor(const QString &);
+    void openEventEditor(const QString &summary,
                          const QString &description,
-                         const QStringList &attachments );
-    void openTodoEditor( const QString &summary,
+                         const QStringList &attachments);
+    void openEventEditor(const QString &summary,
                          const QString &description,
                          const QStringList &attachments,
-                         const QStringList &attendees );
-    void openTodoEditor( const QString &summary,
+                         const QStringList &attendees);
+    void openEventEditor(const QString &summary,
                          const QString &description,
                          const QString &uri,
                          const QString &file,
                          const QStringList &attendees,
-                         const QString &attachmentMimetype );
+                         const QString &attachmentMimetype);
 
-    void openTodoEditor( const QString &summary,
+    void openEventEditor(const QString &summary,
                          const QString &description,
                          const QStringList &attachmentUris,
                          const QStringList &attendees,
                          const QStringList &attachmentMimetypes,
-                         bool attachmentIsInline );
+                         bool attachmentIsInline);
 
-    void openJournalEditor( const QDate &date );
-    void openJournalEditor( const QString &text, const QDate &date );
-    void openJournalEditor( const QString &text );
+    void openTodoEditor(const QString &);
+    void openTodoEditor(const QString &summary,
+                        const QString &description,
+                        const QStringList &attachments);
+    void openTodoEditor(const QString &summary,
+                        const QString &description,
+                        const QStringList &attachments,
+                        const QStringList &attendees);
+    void openTodoEditor(const QString &summary,
+                        const QString &description,
+                        const QString &uri,
+                        const QString &file,
+                        const QStringList &attendees,
+                        const QString &attachmentMimetype);
+
+    void openTodoEditor(const QString &summary,
+                        const QString &description,
+                        const QStringList &attachmentUris,
+                        const QStringList &attendees,
+                        const QStringList &attachmentMimetypes,
+                        bool attachmentIsInline);
+
+    void openJournalEditor(const QDate &date);
+    void openJournalEditor(const QString &text, const QDate &date);
+    void openJournalEditor(const QString &text);
 
     void showJournalView();
     void showTodoView();
     void showEventView();
 
-    void goDate( const QDate &);
-    void goDate( const QString &);
+    void goDate(const QDate &);
+    void goDate(const QString &);
 
 Q_SIGNALS:
-    void showDateSignal(const QVariant& date);
+    void showDateSignal(const QVariant &date);
     void showEventViewSignal();
-    void openIncidenceEditorSignal( const QString &summary,
-                                    const QString &description,
-                                    const QStringList &attachmentUris,
-                                    const QStringList &attendees,
-                                    const QStringList &attachmentMimetypes,
-                                    bool attachmentIsInline,
-                                    KCalCore::Incidence::IncidenceType type );
+    void openIncidenceEditorSignal(const QString &summary,
+                                   const QString &description,
+                                   const QStringList &attachmentUris,
+                                   const QStringList &attendees,
+                                   const QStringList &attachmentMimetypes,
+                                   bool attachmentIsInline,
+                                   KCalCore::Incidence::IncidenceType type);
 };
 
 #endif // CALENDARINTERFACE_H

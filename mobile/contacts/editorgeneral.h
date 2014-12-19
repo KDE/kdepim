@@ -24,49 +24,49 @@
 
 namespace Akonadi
 {
-  class Collection;
+class Collection;
 }
 
 class EditorGeneral : public EditorBase
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit EditorGeneral( QWidget *parent = Q_NULLPTR );
+public:
+    explicit EditorGeneral(QWidget *parent = Q_NULLPTR);
 
     ~EditorGeneral();
 
-    void setDefaultCollection( const Akonadi::Collection &collection );
+    void setDefaultCollection(const Akonadi::Collection &collection);
 
-    void loadContact( const KContacts::Addressee &contact, const Akonadi::ContactMetaData &metaData );
+    void loadContact(const KContacts::Addressee &contact, const Akonadi::ContactMetaData &metaData);
 
-    void saveContact( KContacts::Addressee &contact, Akonadi::ContactMetaData &metaData ) const;
+    void saveContact(KContacts::Addressee &contact, Akonadi::ContactMetaData &metaData) const;
 
     Akonadi::Collection selectedCollection() const;
 
-  public Q_SLOTS:
-    void updateName( const KContacts::Addressee& );
+public Q_SLOTS:
+    void updateName(const KContacts::Addressee &);
 
-  Q_SIGNALS:
-    void collectionChanged( const Akonadi::Collection &collection );
-    void nameChanged( const KContacts::Addressee& );
+Q_SIGNALS:
+    void collectionChanged(const Akonadi::Collection &collection);
+    void nameChanged(const KContacts::Addressee &);
 
     void saveClicked();
     void cancelClicked();
 
     void requestLaunchAccountWizard();
 
-  private:
+private:
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT( d, void nameTextChanged( const QString& ) )
-    Q_PRIVATE_SLOT( d, void addEmailClicked() )
-    Q_PRIVATE_SLOT( d, void addPhoneClicked() )
-    Q_PRIVATE_SLOT( d, void clearEmailClicked() )
-    Q_PRIVATE_SLOT( d, void clearPhoneClicked() )
-    Q_PRIVATE_SLOT( d, void availableCollectionsChanged() )
-    Q_PRIVATE_SLOT( d, void disableSaveButton() )
+    Q_PRIVATE_SLOT(d, void nameTextChanged(const QString &))
+    Q_PRIVATE_SLOT(d, void addEmailClicked())
+    Q_PRIVATE_SLOT(d, void addPhoneClicked())
+    Q_PRIVATE_SLOT(d, void clearEmailClicked())
+    Q_PRIVATE_SLOT(d, void clearPhoneClicked())
+    Q_PRIVATE_SLOT(d, void availableCollectionsChanged())
+    Q_PRIVATE_SLOT(d, void disableSaveButton())
 };
 
 #endif

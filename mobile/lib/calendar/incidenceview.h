@@ -35,11 +35,13 @@ class KTimeComboBox;
 class QTimeEdit;
 class QDateEdit;
 
-namespace Akonadi {
+namespace Akonadi
+{
 class CollectionComboBox;
 }
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorNG
+{
 class IncidenceAttendee;
 class IncidenceDateTime;
 }
@@ -49,52 +51,52 @@ class MobileIncidenceMore;
 
 class IncidenceView : public KDeclarativeFullScreenView, public IncidenceEditorNG::ItemEditorUi
 {
-  Q_OBJECT
-  public:
-    explicit IncidenceView( QWidget* parent = Q_NULLPTR );
+    Q_OBJECT
+public:
+    explicit IncidenceView(QWidget *parent = Q_NULLPTR);
     ~IncidenceView();
 
-    void load( const Akonadi::Item &item, const QDate &date );
+    void load(const Akonadi::Item &item, const QDate &date);
 
-    void setCollectionCombo( Akonadi::CollectionComboBox * );
-    void setGeneralEditor( MobileIncidenceGeneral * );
-    void setMoreEditor( MobileIncidenceMore * );
+    void setCollectionCombo(Akonadi::CollectionComboBox *);
+    void setGeneralEditor(MobileIncidenceGeneral *);
+    void setMoreEditor(MobileIncidenceMore *);
 
-    void setDefaultCollection( const Akonadi::Collection &collection );
-    void setIsCounterProposal( bool isCounterProposal );
+    void setDefaultCollection(const Akonadi::Collection &collection);
+    void setIsCounterProposal(bool isCounterProposal);
 
-  public: /// ItemEditorUi function implementations
-    virtual bool containsPayloadIdentifiers( const QSet<QByteArray> &partIdentifiers ) const;
-    virtual bool hasSupportedPayload( const Akonadi::Item &item ) const;
+public: /// ItemEditorUi function implementations
+    virtual bool containsPayloadIdentifiers(const QSet<QByteArray> &partIdentifiers) const;
+    virtual bool hasSupportedPayload(const Akonadi::Item &item) const;
     virtual bool isDirty() const;
     virtual bool isValid() const;
-    virtual void load( const Akonadi::Item &item );
-    virtual Akonadi::Item save( const Akonadi::Item &item );
+    virtual void load(const Akonadi::Item &item);
+    virtual Akonadi::Item save(const Akonadi::Item &item);
     virtual Akonadi::Collection selectedCollection() const;
-    virtual void reject( RejectReason reason, const QString &errorMessage = QString() );
+    virtual void reject(RejectReason reason, const QString &errorMessage = QString());
 
-  Q_SIGNALS:
-    void showCalendarWidget( int day, int month, int year );
-    void showClockWidget( int hour, int minute );
+Q_SIGNALS:
+    void showCalendarWidget(int day, int month, int year);
+    void showClockWidget(int hour, int minute);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void save();   /// Ok clicked in the user interface
     void cancel(); /// Cancel clicked in the user interface
-    void showCalendar( QObject *obj );
-    void setNewDate( int day, int month, int year );
-    void showClock( QObject *obj );
-    void setNewTime( int hour, int minute );
+    void showCalendar(QObject *obj);
+    void setNewDate(int day, int month, int year);
+    void showClock(QObject *obj);
+    void setNewTime(int hour, int minute);
 
-  private Q_SLOTS:
-    void slotSaveFinished( IncidenceEditorNG::EditorItemManager::SaveAction action );
-    void slotSaveFailed( IncidenceEditorNG::EditorItemManager::SaveAction action,
-                         const QString &message );
+private Q_SLOTS:
+    void slotSaveFinished(IncidenceEditorNG::EditorItemManager::SaveAction action);
+    void slotSaveFailed(IncidenceEditorNG::EditorItemManager::SaveAction action,
+                        const QString &message);
 
-  private:
+private:
     void doDelayedInit();
     void initIncidenceMore();
 
-  private:
+private:
     QDate mActiveDate;
     Akonadi::Item mItem;
     IncidenceEditorNG::EditorItemManager *mItemManager;

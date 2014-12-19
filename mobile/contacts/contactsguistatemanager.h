@@ -24,17 +24,17 @@
 
 class ContactsGuiStateManager : public GuiStateManager
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  Q_PROPERTY( bool inViewContactState READ inViewContactState NOTIFY guiStateChanged )
-  Q_PROPERTY( bool inViewContactGroupState READ inViewContactGroupState NOTIFY guiStateChanged )
+    Q_PROPERTY(bool inViewContactState READ inViewContactState NOTIFY guiStateChanged)
+    Q_PROPERTY(bool inViewContactGroupState READ inViewContactGroupState NOTIFY guiStateChanged)
 
-  Q_ENUMS( GuiState )
+    Q_ENUMS(GuiState)
 
-  public:
+public:
     enum GuiState {
-      ViewContactState = GuiStateManager::UserState,
-      ViewContactGroupState
+        ViewContactState = GuiStateManager::UserState,
+        ViewContactGroupState
     };
 
     /**
@@ -47,10 +47,10 @@ class ContactsGuiStateManager : public GuiStateManager
      */
     bool inViewContactGroupState() const;
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void guiStateChanged();
 
-  protected:
+protected:
     virtual void emitChangedSignal();
 };
 

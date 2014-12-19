@@ -24,65 +24,65 @@
 
 #include <QtCore/QTimer>
 
-DCollectionCombo::DCollectionCombo( QGraphicsItem *parent )
-  : DeclarativeWidgetBase<Akonadi::CollectionComboBox,
-                          IncidenceView,
-                          &IncidenceView::setCollectionCombo>( parent )
+DCollectionCombo::DCollectionCombo(QGraphicsItem *parent)
+    : DeclarativeWidgetBase<Akonadi::CollectionComboBox,
+      IncidenceView,
+      &IncidenceView::setCollectionCombo>(parent)
 { }
 
-MobileIncidenceGeneral::MobileIncidenceGeneral( QWidget *parent )
-  : QWidget( parent ), mUi( new Ui::EventOrTodoDesktop )
+MobileIncidenceGeneral::MobileIncidenceGeneral(QWidget *parent)
+    : QWidget(parent), mUi(new Ui::EventOrTodoDesktop)
 {
-  mUi->setupUi( this );
+    mUi->setupUi(this);
 }
 
 MobileIncidenceGeneral::~MobileIncidenceGeneral()
 {
-  delete mUi;
+    delete mUi;
 }
 
-DIEGeneral::DIEGeneral( QGraphicsItem *parent )
-  : DeclarativeWidgetBase<MobileIncidenceGeneral,
-                          IncidenceView,
-                          &IncidenceView::setGeneralEditor>( parent )
+DIEGeneral::DIEGeneral(QGraphicsItem *parent)
+    : DeclarativeWidgetBase<MobileIncidenceGeneral,
+      IncidenceView,
+      &IncidenceView::setGeneralEditor>(parent)
 {
-  QTimer::singleShot( 0, this, SLOT(hack()) );
+    QTimer::singleShot(0, this, SLOT(hack()));
 }
 
 void DIEGeneral::hack()
 {
-  // For whatever reason, this is needed to make the widget resize correctly. If
-  // someone finds a nices way to make this actually work....
-  //
-  // Without this hack the widget gets a width that is too large for the app. It
-  // doesn't seem to matter which size you pass here.
-  widget()->resize( QSize() );
+    // For whatever reason, this is needed to make the widget resize correctly. If
+    // someone finds a nices way to make this actually work....
+    //
+    // Without this hack the widget gets a width that is too large for the app. It
+    // doesn't seem to matter which size you pass here.
+    widget()->resize(QSize());
 }
 
-MobileIncidenceMore::MobileIncidenceMore( QWidget *parent )
-  : QStackedWidget( parent ), mUi( new Ui::EventOrTodoMore )
+MobileIncidenceMore::MobileIncidenceMore(QWidget *parent)
+    : QStackedWidget(parent), mUi(new Ui::EventOrTodoMore)
 {
-  mUi->setupUi( this );
+    mUi->setupUi(this);
 }
 
 MobileIncidenceMore::~MobileIncidenceMore()
 {
-  delete mUi;
+    delete mUi;
 }
 
-DIEMore::DIEMore( QGraphicsItem *parent )
-  : DeclarativeWidgetBase<MobileIncidenceMore,
-                          IncidenceView,
-                          &IncidenceView::setMoreEditor>( parent )
+DIEMore::DIEMore(QGraphicsItem *parent)
+    : DeclarativeWidgetBase<MobileIncidenceMore,
+      IncidenceView,
+      &IncidenceView::setMoreEditor>(parent)
 { }
 
 int DIEMore::currentIndex() const
 {
-  return widget()->currentIndex();
+    return widget()->currentIndex();
 }
 
-void DIEMore::setCurrentIndex( int index )
+void DIEMore::setCurrentIndex(int index)
 {
-  widget()->setCurrentIndex( index );
+    widget()->setCurrentIndex(index);
 }
 

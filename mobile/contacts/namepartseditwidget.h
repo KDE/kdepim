@@ -31,21 +31,21 @@ class KComboBox;
 
 class NamePartsEditWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit NamePartsEditWidget( QWidget *parent = Q_NULLPTR );
+public:
+    explicit NamePartsEditWidget(QWidget *parent = Q_NULLPTR);
 
-    void loadContact( const KContacts::Addressee &contact );
-    void storeContact( KContacts::Addressee &contact ) const;
+    void loadContact(const KContacts::Addressee &contact);
+    void storeContact(KContacts::Addressee &contact) const;
 
-  Q_SIGNALS:
-    void nameChanged( const KContacts::Addressee &contact );
+Q_SIGNALS:
+    void nameChanged(const KContacts::Addressee &contact);
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void inputChanged();
 
-  private:
+private:
     KComboBox *mSuffixCombo;
     KComboBox *mPrefixCombo;
     KLineEdit *mFamilyNameEdit;

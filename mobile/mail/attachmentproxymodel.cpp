@@ -23,69 +23,70 @@
 
 #include <QtCore/QStringList>
 
-Q_DECLARE_METATYPE( KMime::Content* )
+Q_DECLARE_METATYPE(KMime::Content *)
 
-AttachmentProxyModel::AttachmentProxyModel( QObject* parent )
-  : QSortFilterProxyModel( parent ),
-    m_nodeHelper( new MessageViewer::NodeHelper )
+AttachmentProxyModel::AttachmentProxyModel(QObject *parent)
+    : QSortFilterProxyModel(parent),
+      m_nodeHelper(new MessageViewer::NodeHelper)
 {
-  connect( this, SIGNAL(modelReset()), SLOT(slotModelReset()) );
+    connect(this, SIGNAL(modelReset()), SLOT(slotModelReset()));
 }
 
 AttachmentProxyModel::~AttachmentProxyModel()
 {
-  delete m_nodeHelper;
+    delete m_nodeHelper;
 }
 
-bool AttachmentProxyModel::filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent ) const
+bool AttachmentProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-  const QModelIndex sourceIndex = sourceModel()->index( sourceRow, 0, sourceParent );
-  const QString mimeType = sourceIndex.data( MessageViewer::MimeTreeModel::MimeTypeRole ).toString();
+    const QModelIndex sourceIndex = sourceModel()->index(sourceRow, 0, sourceParent);
+    const QString mimeType = sourceIndex.data(MessageViewer::MimeTreeModel::MimeTypeRole).toString();
 
-  // filter out structutral nodes and crypto stuff
-  const QStringList blacklist = QStringList()
-    << QLatin1String( "application/pgp-encrypted" )
-    << QLatin1String( "application/pkcs7-mime" )
-    << QLatin1String( "application/pgp-signature" )
-    << QLatin1String( "application/pkcs7-signature" )
-    << QLatin1String( "application/x-pkcs7-signature" );
-  if ( mimeType.startsWith( QLatin1String( "multipart/" ) ) || blacklist.contains( mimeType ) )
-    return false;
+    // filter out structutral nodes and crypto stuff
+    const QStringList blacklist = QStringList()
+                                  << QLatin1String("application/pgp-encrypted")
+                                  << QLatin1String("application/pkcs7-mime")
+                                  << QLatin1String("application/pgp-signature")
+                                  << QLatin1String("application/pkcs7-signature")
+                                  << QLatin1String("application/x-pkcs7-signature");
+    if (mimeType.startsWith(QLatin1String("multipart/")) || blacklist.contains(mimeType)) {
+        return false;
+    }
 
-  // filter out the main body part
-  if ( sourceIndex.data( MessageViewer::MimeTreeModel::MainBodyPartRole ).toBool()
-    || sourceIndex.data( MessageViewer::MimeTreeModel::AlternativeBodyPartRole ).toBool() ) {
-    return false;
-  }
+    // filter out the main body part
+    if (sourceIndex.data(MessageViewer::MimeTreeModel::MainBodyPartRole).toBool()
+            || sourceIndex.data(MessageViewer::MimeTreeModel::AlternativeBodyPartRole).toBool()) {
+        return false;
+    }
 
-  return QSortFilterProxyModel::filterAcceptsRow( sourceRow, sourceParent );
+    return QSortFilterProxyModel::filterAcceptsRow(sourceRow, sourceParent);
 }
 
-void AttachmentProxyModel::setSourceModel( QAbstractItemModel *sourceModel )
+void AttachmentProxyModel::setSourceModel(QAbstractItemModel *sourceModel)
 {
-  QSortFilterProxyModel::setSourceModel( sourceModel );
+    QSortFilterProxyModel::setSourceModel(sourceModel);
 
-  QHash<int, QByteArray> names = roleNames();
-  names.insert( MessageViewer::MimeTreeModel::MimeTypeRole, "mimeType" );
-  names.insert( AttachmentProxyModel::AttachmentUrlRole, "attachmentUrl" );
-  setRoleNames( names );
+    QHash<int, QByteArray> names = roleNames();
+    names.insert(MessageViewer::MimeTreeModel::MimeTypeRole, "mimeType");
+    names.insert(AttachmentProxyModel::AttachmentUrlRole, "attachmentUrl");
+    setRoleNames(names);
 }
 
-QVariant AttachmentProxyModel::data( const QModelIndex &index, int role ) const
+QVariant AttachmentProxyModel::data(const QModelIndex &index, int role) const
 {
-  if ( role == AttachmentUrlRole ) {
-    KMime::Content *content = index.data( MessageViewer::MimeTreeModel::ContentRole ).value<KMime::Content*>();
-    return m_nodeHelper->writeNodeToTempFile( content );
-  }
+    if (role == AttachmentUrlRole) {
+        KMime::Content *content = index.data(MessageViewer::MimeTreeModel::ContentRole).value<KMime::Content *>();
+        return m_nodeHelper->writeNodeToTempFile(content);
+    }
 
-  return QSortFilterProxyModel::data( index, role );
+    return QSortFilterProxyModel::data(index, role);
 }
 
 void AttachmentProxyModel::slotModelReset()
 {
-  m_nodeHelper->removeTempFiles();
-  m_nodeHelper->clear();
-  // moc doesn't allow property NOTIFY to use signals in the base class apparently...
-  emit rowCountChanged();
+    m_nodeHelper->removeTempFiles();
+    m_nodeHelper->clear();
+    // moc doesn't allow property NOTIFY to use signals in the base class apparently...
+    emit rowCountChanged();
 }
 

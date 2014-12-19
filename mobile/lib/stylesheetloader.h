@@ -28,22 +28,22 @@ class QWidget;
 /** Applies style sheets to widgets embedded in QML */
 namespace StyleSheetLoader
 {
-  /**
-   * Applies the style sheet to @p widget, if it hasn't been set globally anyway.
-   */
-  MOBILEUI_EXPORT void applyStyle( QWidget *widget );
+/**
+ * Applies the style sheet to @p widget, if it hasn't been set globally anyway.
+ */
+MOBILEUI_EXPORT void applyStyle(QWidget *widget);
 
-  /**
-   * Globally apply the style sheet.
-   * Only use on platforms that don't have a sensible native widget style, such as Maemo >= 6.
-   */
-  MOBILEUI_EXPORT void applyStyle( QApplication *app );
+/**
+ * Globally apply the style sheet.
+ * Only use on platforms that don't have a sensible native widget style, such as Maemo >= 6.
+ */
+MOBILEUI_EXPORT void applyStyle(QApplication *app);
 
-  /**
-   * Returns the style sheet.
-   * @internal
-   */
-  QString styleSheet();
+/**
+ * Returns the style sheet.
+ * @internal
+ */
+QString styleSheet();
 }
 
 #endif

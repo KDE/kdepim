@@ -21,18 +21,18 @@
 
 bool ContactsGuiStateManager::inViewContactState() const
 {
-  return (currentState() == ViewContactState);
+    return (currentState() == ViewContactState);
 }
 
 bool ContactsGuiStateManager::inViewContactGroupState() const
 {
-  return (currentState() == ViewContactGroupState);
+    return (currentState() == ViewContactGroupState);
 }
 
 void ContactsGuiStateManager::emitChangedSignal()
 {
-  GuiStateManager::emitChangedSignal();
+    GuiStateManager::emitChangedSignal();
 
-  emit guiStateChanged();
+    emit guiStateChanged();
 }
 

@@ -34,61 +34,63 @@ class KJob;
 class TasksActionManager;
 class ConfigWidget;
 
-namespace Akonadi {
+namespace Akonadi
+{
 class StandardCalendarActionManager;
 class IncidenceChanger;
 }
 
-namespace CalendarSupport {
+namespace CalendarSupport
+{
 class CalendarUtils;
 }
 
 class MainView : public KDeclarativeMainView
 {
-  Q_OBJECT
-  public:
-    explicit MainView( QWidget *parent = Q_NULLPTR );
+    Q_OBJECT
+public:
+    explicit MainView(QWidget *parent = Q_NULLPTR);
     ~MainView();
 
-    void setConfigWidget( ConfigWidget *configWidget );
+    void setConfigWidget(ConfigWidget *configWidget);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void newTask();
     void newSubTask();
     void makeTaskIndependent();
     void makeAllSubtasksIndependent();
     void purgeCompletedTasks();
-    void setPercentComplete( int row, int percentComplete );
+    void setPercentComplete(int row, int percentComplete);
     void editIncidence();
-    void editIncidence( const Akonadi::Item &item );
+    void editIncidence(const Akonadi::Item &item);
     void saveAllAttachments();
 
-  private Q_SLOTS:
-    void finishEdit( QObject *editor );
-    void fetchForSaveAllAttachmentsDone( KJob* job );
-    void processActionFail( const Akonadi::Item &item, const QString &msg );
-    void processActionFinish( const Akonadi::Item &item );
+private Q_SLOTS:
+    void finishEdit(QObject *editor);
+    void fetchForSaveAllAttachmentsDone(KJob *job);
+    void processActionFail(const Akonadi::Item &item, const QString &msg);
+    void processActionFinish(const Akonadi::Item &item);
     void archiveOldEntries();
     void updateActionTexts();
     void configureCategories();
 
-  protected:
+protected:
     virtual void doDelayedInit();
-    virtual QAbstractItemModel* createItemModelContext( QDeclarativeContext *context, QAbstractItemModel *model );
-    virtual void setupStandardActionManager( QItemSelectionModel *collectionSelectionModel,
-                                             QItemSelectionModel *itemSelectionModel );
+    virtual QAbstractItemModel *createItemModelContext(QDeclarativeContext *context, QAbstractItemModel *model);
+    virtual void setupStandardActionManager(QItemSelectionModel *collectionSelectionModel,
+                                            QItemSelectionModel *itemSelectionModel);
 
-    virtual void setupAgentActionManager( QItemSelectionModel *selectionModel );
+    virtual void setupAgentActionManager(QItemSelectionModel *selectionModel);
 
-    virtual QAbstractProxyModel* createItemFilterModel() const;
-    virtual ImportHandlerBase* importHandler() const;
-    virtual ExportHandlerBase* exportHandler() const;
+    virtual QAbstractProxyModel *createItemFilterModel() const;
+    virtual ImportHandlerBase *importHandler() const;
+    virtual ExportHandlerBase *exportHandler() const;
 
     Akonadi::Item currentItem() const;
 
-  private:
+private:
     CalendarSupport::CalendarUtils *mCalendarUtils;
-    QHash<QObject*, Akonadi::Entity::Id> mOpenItemEditors;
+    QHash<QObject *, Akonadi::Entity::Id> mOpenItemEditors;
     Akonadi::StandardCalendarActionManager *mStandardActionManager;
     TasksActionManager *mTasksActionManager;
     EventViews::PrefsPtr mCalendarPrefs;

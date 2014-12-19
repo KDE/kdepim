@@ -29,14 +29,14 @@ Theme::Theme()
 Theme::Theme(const QString &themePath, const QString &dirName, const QString &defaultDesktopFileName)
 {
     const QString themeInfoFile = themePath + QDir::separator() + defaultDesktopFileName;
-    KConfig config( themeInfoFile );
-    KConfigGroup group( &config, QStringLiteral( "Desktop Entry" ) );
+    KConfig config(themeInfoFile);
+    KConfigGroup group(&config, QStringLiteral("Desktop Entry"));
     if (group.isValid()) {
         setDirName(dirName);
-        setName( group.readEntry( "Name", QString() ) );
-        setDescription( group.readEntry( "Description", QString() ) );
-        setThemeFilename( group.readEntry( "FileName" , QString() ) );
-        setDisplayExtraVariables( group.readEntry( "DisplayExtraVariables", QStringList() ) );
+        setName(group.readEntry("Name", QString()));
+        setDescription(group.readEntry("Description", QString()));
+        setThemeFilename(group.readEntry("FileName" , QString()));
+        setDisplayExtraVariables(group.readEntry("DisplayExtraVariables", QStringList()));
         setAbsolutePath(themePath);
     }
 }
@@ -44,8 +44,6 @@ Theme::Theme(const QString &themePath, const QString &dirName, const QString &de
 Theme::~Theme()
 {
 }
-
-
 
 bool Theme::isValid() const
 {

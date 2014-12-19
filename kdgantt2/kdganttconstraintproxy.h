@@ -31,40 +31,41 @@
 
 class QAbstractProxyModel;
 
-namespace KDGantt {
-    class Constraint;
-    class ConstraintModel;
+namespace KDGantt
+{
+class Constraint;
+class ConstraintModel;
 
-    class ConstraintProxy : public QObject {
-        Q_OBJECT
-    public:
-        explicit ConstraintProxy( QObject* parent = Q_NULLPTR );
-        virtual ~ConstraintProxy();
+class ConstraintProxy : public QObject
+{
+    Q_OBJECT
+public:
+    explicit ConstraintProxy(QObject *parent = Q_NULLPTR);
+    virtual ~ConstraintProxy();
 
-        void setSourceModel( ConstraintModel* src );
-        void setDestinationModel( ConstraintModel* dest );
-        void setProxyModel( QAbstractProxyModel* proxy );
+    void setSourceModel(ConstraintModel *src);
+    void setDestinationModel(ConstraintModel *dest);
+    void setProxyModel(QAbstractProxyModel *proxy);
 
-        ConstraintModel* sourceModel() const;
-        ConstraintModel* destinationModel() const;
-        QAbstractProxyModel* proxyModel() const;
+    ConstraintModel *sourceModel() const;
+    ConstraintModel *destinationModel() const;
+    QAbstractProxyModel *proxyModel() const;
 
+private Q_SLOTS:
 
-    private Q_SLOTS:
+    void slotSourceConstraintAdded(const Constraint &);
+    void slotSourceConstraintRemoved(const Constraint &);
 
-        void slotSourceConstraintAdded( const Constraint& );
-        void slotSourceConstraintRemoved( const Constraint& );
+    void slotDestinationConstraintAdded(const Constraint &);
+    void slotDestinationConstraintRemoved(const Constraint &);
 
-        void slotDestinationConstraintAdded( const Constraint& );
-        void slotDestinationConstraintRemoved( const Constraint& );
+private:
+    void copyFromSource();
 
-    private:
-        void copyFromSource();
-
-        QPointer<QAbstractProxyModel> m_proxy;
-        QPointer<ConstraintModel> m_source;
-        QPointer<ConstraintModel> m_destination;
-    };
+    QPointer<QAbstractProxyModel> m_proxy;
+    QPointer<ConstraintModel> m_source;
+    QPointer<ConstraintModel> m_destination;
+};
 }
 
 #endif /* KDGANTTCONSTRAINTPROXY_H */

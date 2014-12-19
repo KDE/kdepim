@@ -27,18 +27,18 @@
 /** Proxy model to provide roles for accessing Akonadi::Items properties from QML. */
 class MOBILEUI_EXPORT ListProxy : public QSortFilterProxyModel
 {
-  Q_OBJECT
-  Q_PROPERTY( int itemCount READ rowCount )
+    Q_OBJECT
+    Q_PROPERTY(int itemCount READ rowCount)
 
-  public:
-    explicit ListProxy( QObject* parent = Q_NULLPTR );
+public:
+    explicit ListProxy(QObject *parent = Q_NULLPTR);
 
     /** Make sure that reimplementing classes implement data for their own needs */
-    virtual QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const = 0;
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const = 0;
 
-    virtual void setSourceModel(QAbstractItemModel* sourceModel);
+    virtual void setSourceModel(QAbstractItemModel *sourceModel);
 
-    Q_INVOKABLE qint64 itemId( int row ) const;
+    Q_INVOKABLE qint64 itemId(int row) const;
 };
 
 #endif

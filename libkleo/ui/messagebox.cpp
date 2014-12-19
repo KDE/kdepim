@@ -42,7 +42,6 @@
 
 #include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
 
-
 #ifndef KDEPIM_ONLY_KLEO
 # include <kfiledialog.h>
 #else
@@ -91,10 +90,10 @@ static KGuiItem KGuiItem_showAuditLog()
 
 } // anon namespace
 
-AuditLogViewer::AuditLogViewer( const QString & log, QWidget * parent, Qt::WindowFlags f )
-    : KDialog( parent, f ),
-      m_log( /* sic */ ),
-      m_textEdit( new PimCommon::RichTextEditorWidget( this ) )
+AuditLogViewer::AuditLogViewer(const QString &log, QWidget *parent, Qt::WindowFlags f)
+    : KDialog(parent, f),
+      m_log(/* sic */),
+      m_textEdit(new PimCommon::RichTextEditorWidget(this))
 {
     setCaption(i18n("View GnuPG Audit Log"));
     setButtons(Close
@@ -180,7 +179,8 @@ void AuditLogViewer::slotUser1()
 #endif // QT_NO_FILEDIALOG
 
 #ifndef QT_NO_CLIPBOARD
-void AuditLogViewer::slotUser2() {
+void AuditLogViewer::slotUser2()
+{
     m_textEdit->editor()->selectAll();
     m_textEdit->editor()->copy();
     m_textEdit->editor()->textCursor().clearSelection();
@@ -411,7 +411,7 @@ void MessageBox::make(QWidget *parent, QMessageBox::Icon icon, const QString &te
 
     if (options & KMessageBox::PlainCaption) {
         //QT5 dialog->setPlainCaption(caption);
-    }    
+    }
 
     if (QDialogButtonBox::No == KMessageBox::createKMessageBox(dialog, box, icon, text, QStringList(), QString(), 0, options)) {
         auditLog(0, job);

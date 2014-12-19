@@ -18,32 +18,33 @@
 */
 #include "qmldateedit.h"
 
-namespace Qt {
-
-QmlDateEdit::QmlDateEdit( QDeclarativeItem *parent )
-  : DeclarativeWidgetWrapper< QDateEdit >( parent )
+namespace Qt
 {
-  m_widget->setDate( QDate::currentDate() );
+
+QmlDateEdit::QmlDateEdit(QDeclarativeItem *parent)
+    : DeclarativeWidgetWrapper< QDateEdit >(parent)
+{
+    m_widget->setDate(QDate::currentDate());
 }
 
 QDate QmlDateEdit::date() const
 {
-  return m_widget->date();
+    return m_widget->date();
 }
 
-void QmlDateEdit::setDate(const QDate& date)
+void QmlDateEdit::setDate(const QDate &date)
 {
-  m_widget->setDate( date );
+    m_widget->setDate(date);
 }
 
 QString QmlDateEdit::displayFormat() const
 {
-  return m_widget->displayFormat();
+    return m_widget->displayFormat();
 }
 
-void QmlDateEdit::setDisplayFormat( const QString &format )
+void QmlDateEdit::setDisplayFormat(const QString &format)
 {
-  m_widget->setDisplayFormat( format );
+    m_widget->setDisplayFormat(format);
 }
 
 }

@@ -256,15 +256,15 @@ void ConflictResolver::findAllFreeSlots()
     const int range = begin.secsTo(end) / mSlotResolutionSeconds;
     if (range <= 0) {
         qCWarning(INCIDENCEEDITOR_LOG) << "free slot calculation: invalid range. range( " << begin.secsTo(end)
-                   << ") / mSlotResolutionSeconds(" << mSlotResolutionSeconds << ") = " << range;
+                                       << ") / mSlotResolutionSeconds(" << mSlotResolutionSeconds << ") = " << range;
         return;
     }
 
 //QT5
 #if 0
     qCDebug(INCIDENCEEDITOR_LOG) << "from " << begin << " to " << end
-             << "; mSlotResolutionSeconds = " << mSlotResolutionSeconds
-             << "; range = " << range;
+                                 << "; mSlotResolutionSeconds = " << mSlotResolutionSeconds
+                                 << "; range = " << range;
 #endif
     // filter out attendees for which we don't have FB data
     // and which don't match the mandatory role contrstaint

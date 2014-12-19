@@ -27,55 +27,56 @@
 #include <QDebug>
 #include <QtCore/QUuid>
 
-SearchManager::SearchManager( QObject *parent )
-  : QObject( parent ),
-    mCurrentSearchCollection( -1 )
+SearchManager::SearchManager(QObject *parent)
+    : QObject(parent),
+      mCurrentSearchCollection(-1)
 {
 }
 
 SearchManager::~SearchManager()
 {
-  cleanUpSearch();
+    cleanUpSearch();
 }
 
-void SearchManager::startSearch( const QString &query )
+void SearchManager::startSearch(const QString &query)
 {
-  cleanUpSearch();
+    cleanUpSearch();
 #if 0 //QT5
-  const QString searchName = i18n( "Search Results" ) + QLatin1String( "                                      " ) + QUuid::createUuid().toString();
-  Akonadi::SearchCreateJob *job = new Akonadi::SearchCreateJob( searchName, query );
-  connect( job, SIGNAL(result(KJob*)), this, SLOT(result(KJob*)) );
+    const QString searchName = i18n("Search Results") + QLatin1String("                                      ") + QUuid::createUuid().toString();
+    Akonadi::SearchCreateJob *job = new Akonadi::SearchCreateJob(searchName, query);
+    connect(job, SIGNAL(result(KJob*)), this, SLOT(result(KJob*)));
 #endif
 }
 
 void SearchManager::stopSearch()
 {
-  cleanUpSearch();
+    cleanUpSearch();
 
-  emit searchStopped();
+    emit searchStopped();
 }
 
-void SearchManager::result( KJob *job )
+void SearchManager::result(KJob *job)
 {
-  if ( job->error() ) {
-    qWarning() << "Unable to create search collection:" << job->errorText();
-    return;
-  }
+    if (job->error()) {
+        qWarning() << "Unable to create search collection:" << job->errorText();
+        return;
+    }
 
-  const Akonadi::SearchCreateJob *searchJob = qobject_cast<Akonadi::SearchCreateJob*>( job );
+    const Akonadi::SearchCreateJob *searchJob = qobject_cast<Akonadi::SearchCreateJob *>(job);
 
-  const Akonadi::Collection collection = searchJob->createdCollection();
-  mCurrentSearchCollection = collection.id();
+    const Akonadi::Collection collection = searchJob->createdCollection();
+    mCurrentSearchCollection = collection.id();
 
-  emit searchStarted( collection );
+    emit searchStarted(collection);
 }
 
 void SearchManager::cleanUpSearch()
 {
-  // cleanup search collection
-  if ( mCurrentSearchCollection != -1 )
-    new Akonadi::CollectionDeleteJob( Akonadi::Collection( mCurrentSearchCollection ) );
+    // cleanup search collection
+    if (mCurrentSearchCollection != -1) {
+        new Akonadi::CollectionDeleteJob(Akonadi::Collection(mCurrentSearchCollection));
+    }
 
-  mCurrentSearchCollection = -1;
+    mCurrentSearchCollection = -1;
 }
 

@@ -48,16 +48,16 @@ using namespace KDGantt;
  */
 
 Constraint::Private::Private()
-    : type( TypeSoft )
+    : type(TypeSoft)
 {
 }
 
-Constraint::Private::Private( const Private& other )
-    : QSharedData( other )
+Constraint::Private::Private(const Private &other)
+    : QSharedData(other)
 {
-    start=other.start;
-    end=other.end;
-    type=other.type;
+    start = other.start;
+    end = other.end;
+    type = other.type;
 }
 
 /*! Constructor. Creates a dependency for \a idx2 on \a idx1.
@@ -70,18 +70,18 @@ Constraint::Private::Private( const Private& other )
  * Actually enforcing hard constraints is the responsibility of
  * the AbstractGrid subclass used in the view.
  */
-Constraint::Constraint( const QModelIndex& idx1,  const QModelIndex& idx2, Type type )
-    : d( new Private )
+Constraint::Constraint(const QModelIndex &idx1,  const QModelIndex &idx2, Type type)
+    : d(new Private)
 {
-    d->start=idx1;
-    d->end=idx2;
-    d->type=type;
-    Q_ASSERT_X( idx1 != idx2 || !idx1.isValid(), "Constraint::Constraint", "cannot create a constraint with idx1 == idx2" );
+    d->start = idx1;
+    d->end = idx2;
+    d->type = type;
+    Q_ASSERT_X(idx1 != idx2 || !idx1.isValid(), "Constraint::Constraint", "cannot create a constraint with idx1 == idx2");
 }
 
 /*! Copy-Constructor. */
-Constraint::Constraint( const Constraint& other )
-    : d( other.d )
+Constraint::Constraint(const Constraint &other)
+    : d(other.d)
 {
 }
 
@@ -91,7 +91,7 @@ Constraint::~Constraint()
 }
 
 /*! Assignment operator. */
-Constraint& Constraint::operator=( const Constraint& other )
+Constraint &Constraint::operator=(const Constraint &other)
 {
     d = other.d;
     return *this;
@@ -119,9 +119,9 @@ QModelIndex Constraint::endIndex() const
  * \param role The role to fetch the data for.
  * \sa ConstraintDataRole
  */
-QVariant Constraint::data( int role ) const
+QVariant Constraint::data(int role) const
 {
-    return d->data.value( role );
+    return d->data.value(role);
 }
 
 /*! Set data on this index for the specified role.
@@ -129,36 +129,38 @@ QVariant Constraint::data( int role ) const
  * \param value The data to set on the index.
  * \sa ConstraintDataRole
  */
-void Constraint::setData( int role, const QVariant& value )
+void Constraint::setData(int role, const QVariant &value)
 {
-    d->data.insert( role, value );
+    d->data.insert(role, value);
 }
 
 /*! Compare two Constraint objects. Two Constraints are equal
  * if the have the same start and end indexes
  */
-bool Constraint::operator==( const Constraint& other ) const
+bool Constraint::operator==(const Constraint &other) const
 {
-    if ( d == other.d ) return true;
-    return ( *d ).equals( *( other.d ) );
+    if (d == other.d) {
+        return true;
+    }
+    return (*d).equals(*(other.d));
 }
 
 /*!\internal*/
 uint Constraint::hash() const
 {
-    return ::qHash( d->start ) ^ ::qHash( d->end ) ^ ::qHash( static_cast<uint>( d->type ) );
+    return ::qHash(d->start) ^ ::qHash(d->end) ^ ::qHash(static_cast<uint>(d->type));
 }
 
 #ifndef QT_NO_DEBUG_STREAM
 
-QDebug operator<<( QDebug dbg, const Constraint& c )
+QDebug operator<<(QDebug dbg, const Constraint &c)
 {
-    return c.debug( dbg );
+    return c.debug(dbg);
 }
 
-QDebug Constraint::debug( QDebug dbg ) const
+QDebug Constraint::debug(QDebug dbg) const
 {
-    dbg << "KDGantt::Constraint[ start="<<d->start<<" end="<<d->end<<"]";
+    dbg << "KDGantt::Constraint[ start=" << d->start << " end=" << d->end << "]";
     return dbg;
 }
 
@@ -170,34 +172,34 @@ QDebug Constraint::debug( QDebug dbg ) const
 
 #include "unittest/test.h"
 
-KDAB_SCOPED_UNITTEST_SIMPLE( KDGantt, Constraint, "test" )
+KDAB_SCOPED_UNITTEST_SIMPLE(KDGantt, Constraint, "test")
 {
-    QStandardItemModel dummyModel( 100, 100 );
-    QModelIndex idx1 = dummyModel.index( 7, 17, QModelIndex() );
-    QModelIndex idx2 = dummyModel.index( 42, 17, QModelIndex() );
+    QStandardItemModel dummyModel(100, 100);
+    QModelIndex idx1 = dummyModel.index(7, 17, QModelIndex());
+    QModelIndex idx2 = dummyModel.index(42, 17, QModelIndex());
 
-    Constraint c1 = Constraint( QModelIndex(), QModelIndex(), Constraint::TypeSoft );
-    Constraint c2 = Constraint( QModelIndex(), QModelIndex(), Constraint::TypeSoft );
+    Constraint c1 = Constraint(QModelIndex(), QModelIndex(), Constraint::TypeSoft);
+    Constraint c2 = Constraint(QModelIndex(), QModelIndex(), Constraint::TypeSoft);
     Constraint c3 = c2;
-    Constraint c4( idx1, idx2 );
-    Constraint c5( idx2, idx1 );
+    Constraint c4(idx1, idx2);
+    Constraint c5(idx2, idx1);
 
-    assertTrue( c1==c2 );
-    assertEqual( qHash( c1 ), qHash( c2 ) );
-    assertTrue( c1==c3 );
-    assertEqual( qHash( c1 ), qHash( c3 ) );
-    assertTrue( c2==c3 );
-    assertEqual( qHash( c2 ), qHash( c3 ) );
+    assertTrue(c1 == c2);
+    assertEqual(qHash(c1), qHash(c2));
+    assertTrue(c1 == c3);
+    assertEqual(qHash(c1), qHash(c3));
+    assertTrue(c2 == c3);
+    assertEqual(qHash(c2), qHash(c3));
 
-    assertFalse( c2==c4 );
-    assertNotEqual( qHash( c2 ), qHash( c4 ) );
+    assertFalse(c2 == c4);
+    assertNotEqual(qHash(c2), qHash(c4));
 
-    assertFalse( c4==c5 );
+    assertFalse(c4 == c5);
 
-    assertEqual( c3.type(), Constraint::TypeSoft );
+    assertEqual(c3.type(), Constraint::TypeSoft);
 
-    dummyModel.removeRow( 8 );
-    assertFalse( c4==c5 );
+    dummyModel.removeRow(8);
+    assertFalse(c4 == c5);
 }
 
 #endif /* KDAB_NO_UNIT_TESTS */

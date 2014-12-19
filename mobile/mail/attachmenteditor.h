@@ -24,7 +24,8 @@
 
 #include <QtCore/QObject>
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 class AttachmentModel;
 class AttachmentControllerBase;
 }
@@ -42,9 +43,9 @@ class QItemSelectionModel;
  */
 class AttachmentEditor : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new attachment editor.
      *
@@ -54,21 +55,21 @@ class AttachmentEditor : public QObject
      * @param controller The attachment controller to use for composing the message.
      * @param parent The parent object.
      */
-    AttachmentEditor( KActionCollection *actionCollection, MessageComposer::AttachmentModel *model,
-                      MessageComposer::AttachmentControllerBase *controller, QObject *parent = Q_NULLPTR );
+    AttachmentEditor(KActionCollection *actionCollection, MessageComposer::AttachmentModel *model,
+                     MessageComposer::AttachmentControllerBase *controller, QObject *parent = Q_NULLPTR);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
      * Sets the row of the attachment the user has selected in the UI.
      */
-    void setRowSelected( int row );
+    void setRowSelected(int row);
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void selectionChanged();
-    void signAttachment( bool value );
-    void encryptAttachment( bool value );
+    void signAttachment(bool value);
+    void encryptAttachment(bool value);
 
-  private:
+private:
     MessageComposer::AttachmentModel *mModel;
     QItemSelectionModel *mSelectionModel;
 

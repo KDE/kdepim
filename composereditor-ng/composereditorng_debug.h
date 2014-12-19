@@ -23,5 +23,5 @@
 #include <QLoggingCategory>
 Q_DECLARE_LOGGING_CATEGORY(COMPOSEREDITORNG_LOG)
 
-#endif 
+#endif
 
