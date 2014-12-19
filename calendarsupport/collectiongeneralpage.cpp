@@ -106,7 +106,7 @@ void CollectionGeneralPage::init(const Akonadi::Collection &collection)
   hbox->addStretch();
 #endif
 
-  if ( PimCommon::Util::isImapResource(collection.resource()) ) {
+  if ( ( collection.parentCollection() != Akonadi::Collection::root() ) && PimCommon::Util::isImapResource(collection.resource()) ) {
       const MailCommon::CollectionAnnotationsAttribute *annotationAttribute =
               collection.attribute<MailCommon::CollectionAnnotationsAttribute>();
 
@@ -195,6 +195,23 @@ void CollectionGeneralPage::save( Collection &collection )
     collection.attribute<EntityDisplayAttribute>()->setIconName( QString() );
   }
 #endif
+  MailCommon::CollectionAnnotationsAttribute *annotationsAttribute =
+          collection.attribute<MailCommon::CollectionAnnotationsAttribute>( Entity::AddIfMissing );
+
+  QMap<QByteArray, QByteArray> annotations = annotationsAttribute->annotations();
+
+  MailCommon::CollectionTypeUtil collectionUtil;
+  if ( mIncidencesForComboBox && mIncidencesForComboBox->isEnabled() ) {
+      annotations[ MailCommon::CollectionTypeUtil::kolabIncidencesFor() ] =
+              collectionUtil.incidencesForToString(
+                  static_cast<MailCommon::CollectionTypeUtil::IncidencesFor>( mIncidencesForComboBox->currentIndex() ) ).toLatin1();
+  }
+
+  if ( annotations.isEmpty() ) {
+      collection.removeAttribute<MailCommon::CollectionAnnotationsAttribute>();
+  } else {
+      annotationsAttribute->setAnnotations( annotations );
+  }
 
 }
 
