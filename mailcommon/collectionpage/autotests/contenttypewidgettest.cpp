@@ -42,7 +42,7 @@ void ContentTypeWidgetTest::shouldHaveDefaultValue()
     QVERIFY(label);
     KComboBox *combo = qFindChild<KComboBox *>(&widget, QLatin1String("contentcombobox"));
     QVERIFY(combo);
-    QVERIFY(combo->count()>0);
+    QVERIFY(combo->count() > 0);
     QCOMPARE(widget.currentIndex(), 0);
 }
 

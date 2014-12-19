@@ -100,13 +100,13 @@ public:
     void updateThemesPath(bool init = false)
     {
         if (!init) {
-           if ( !themesDirectories.isEmpty() ) {
-               Q_FOREACH (const QString &directory, themesDirectories) {
-                   watch->removeDir( directory );
-               }
-           } else {
-               return;
-           }
+            if (!themesDirectories.isEmpty()) {
+                Q_FOREACH (const QString &directory, themesDirectories) {
+                    watch->removeDir(directory);
+                }
+            } else {
+                return;
+            }
         }
 
         // clear all previous theme information

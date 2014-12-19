@@ -43,7 +43,7 @@ void IncidencesForWidgetTest::shouldHaveDefaultValue()
     QVERIFY(label);
     KComboBox *combo = qFindChild<KComboBox *>(&contentType, QLatin1String("contentstypecombobox"));
     QVERIFY(combo);
-    QVERIFY(combo->count()>0);
+    QVERIFY(combo->count() > 0);
     QCOMPARE(contentType.currentIndex(), 0);
 }
 

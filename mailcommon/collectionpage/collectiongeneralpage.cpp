@@ -50,13 +50,13 @@
 using namespace Akonadi;
 using namespace MailCommon;
 
-CollectionGeneralPage::CollectionGeneralPage( QWidget *parent )
-    : CollectionPropertiesPage( parent ),
+CollectionGeneralPage::CollectionGeneralPage(QWidget *parent)
+    : CollectionPropertiesPage(parent),
       mContentsComboBox(0),
       mIncidencesForComboBox(0),
       mSharedSeenFlagsCheckBox(0),
-      mNameEdit( 0 ),
-      mFolderCollection( 0 )
+      mNameEdit(0),
+      mFolderCollection(0)
 {
     setObjectName(QLatin1String("MailCommon::CollectionGeneralPage"));
     setPageTitle(i18nc("@title:tab General settings for a folder.", "General"));
@@ -66,7 +66,7 @@ CollectionGeneralPage::~CollectionGeneralPage()
 {
 }
 
-void CollectionGeneralPage::addLine( QWidget *parent, QVBoxLayout *layout )
+void CollectionGeneralPage::addLine(QWidget *parent, QVBoxLayout *layout)
 {
     QFrame *line = new QFrame(parent);
     line->setGeometry(QRect(80, 150, 250, 20));
@@ -167,61 +167,60 @@ void CollectionGeneralPage::init(const Akonadi::Collection &collection)
              "automatically. Identities can be set up in the main configuration "
              "dialog. (Settings -> Configure KMail)"));
 
-
     // Only do make this settable, if the IMAP resource is enabled
     // and it's not the personal folders (those must not be changed)
-    if ( PimCommon::Util::isImapResource(collection.resource()) ) {
+    if (PimCommon::Util::isImapResource(collection.resource())) {
         CollectionTypeUtil::FolderContentsType contentsType = CollectionTypeUtil::ContentsTypeMail;
 
         const CollectionAnnotationsAttribute *annotationAttribute =
-                collection.attribute<CollectionAnnotationsAttribute>();
+            collection.attribute<CollectionAnnotationsAttribute>();
 
         const QMap<QByteArray, QByteArray> annotations =
-                ( annotationAttribute ?
-                      annotationAttribute->annotations() :
-                      QMap<QByteArray, QByteArray>() );
+            (annotationAttribute ?
+             annotationAttribute->annotations() :
+             QMap<QByteArray, QByteArray>());
 
-        const bool sharedSeen = ( annotations.value( CollectionTypeUtil::kolabSharedSeen() ) == "true" );
+        const bool sharedSeen = (annotations.value(CollectionTypeUtil::kolabSharedSeen()) == "true");
 
         CollectionTypeUtil collectionUtil;
         const CollectionTypeUtil::IncidencesFor incidencesFor =
-                collectionUtil.incidencesForFromString( QLatin1String(annotations.value( CollectionTypeUtil::kolabIncidencesFor() )) );
+            collectionUtil.incidencesForFromString(QLatin1String(annotations.value(CollectionTypeUtil::kolabIncidencesFor())));
 
-        const CollectionTypeUtil::FolderContentsType folderType = collectionUtil.typeFromKolabName( annotations.value( CollectionTypeUtil::kolabFolderType() ) );
+        const CollectionTypeUtil::FolderContentsType folderType = collectionUtil.typeFromKolabName(annotations.value(CollectionTypeUtil::kolabFolderType()));
 
         ++row;
         mContentsComboBox = new ContentTypeWidget(this);
         gl->addWidget(mContentsComboBox, row, 0, 1, 2);
-        mContentsComboBox->setCurrentIndex( contentsType );
+        mContentsComboBox->setCurrentIndex(contentsType);
 
-        connect( mContentsComboBox, SIGNAL(activated(int)),
-                 this, SLOT(slotFolderContentsSelectionChanged(int)) );
+        connect(mContentsComboBox, SIGNAL(activated(int)),
+                this, SLOT(slotFolderContentsSelectionChanged(int)));
 
-        if ( mFolderCollection->isReadOnly() || mIsResourceFolder ) {
-            mContentsComboBox->setEnabled( false );
+        if (mFolderCollection->isReadOnly() || mIsResourceFolder) {
+            mContentsComboBox->setEnabled(false);
         }
 
         // Kolab incidences-for annotation.
         // Show incidences-for combobox if the contents type can be changed (new folder),
         // or if it's set to calendar or task (existing folder)
-        const bool folderTypeComboboxEnabled = ( folderType == CollectionTypeUtil::ContentsTypeCalendar || folderType == CollectionTypeUtil::ContentsTypeTask );
+        const bool folderTypeComboboxEnabled = (folderType == CollectionTypeUtil::ContentsTypeCalendar || folderType == CollectionTypeUtil::ContentsTypeTask);
         ++row;
         mIncidencesForComboBox = new IncidencesForWidget(this);
         gl->addWidget(mIncidencesForComboBox, row, 0, 1, 2);
 
-        mIncidencesForComboBox->setCurrentIndex( incidencesFor );
+        mIncidencesForComboBox->setCurrentIndex(incidencesFor);
         mIncidencesForComboBox->setEnabled(folderTypeComboboxEnabled);
 
-        mSharedSeenFlagsCheckBox = new QCheckBox( this );
-        mSharedSeenFlagsCheckBox->setText( i18n( "Share unread state with all users" ) );
-        mSharedSeenFlagsCheckBox->setChecked( sharedSeen );
+        mSharedSeenFlagsCheckBox = new QCheckBox(this);
+        mSharedSeenFlagsCheckBox->setText(i18n("Share unread state with all users"));
+        mSharedSeenFlagsCheckBox->setChecked(sharedSeen);
         ++row;
         gl->addWidget(mSharedSeenFlagsCheckBox, row, 0, 1, 1);
         mSharedSeenFlagsCheckBox->setWhatsThis(
-                    i18n( "If enabled, the unread state of messages in this folder will be "
-                          "the same for all users having access to this folder. If disabled "
-                          "(the default), every user with access to this folder has their "
-                          "own unread state." ) );
+            i18n("If enabled, the unread state of messages in this folder will be "
+                 "the same for all users having access to this folder. If disabled "
+                 "(the default), every user with access to this folder has their "
+                 "own unread state."));
     }
 
     topLayout->addStretch(100);   // eat all superfluous space
@@ -260,10 +259,10 @@ void CollectionGeneralPage::load(const Akonadi::Collection &collection)
 
         if (annotationsAttribute) {
             const QMap<QByteArray, QByteArray> annotations = annotationsAttribute->annotations();
-            if ( annotations.contains( CollectionTypeUtil::kolabFolderType() ) ) {
+            if (annotations.contains(CollectionTypeUtil::kolabFolderType())) {
                 CollectionTypeUtil collectionUtil;
                 mContentsComboBox->setCurrentItem(
-                            collectionUtil.typeNameFromKolabType( annotations[ CollectionTypeUtil::kolabFolderType() ] ) );
+                    collectionUtil.typeNameFromKolabType(annotations[ CollectionTypeUtil::kolabFolderType() ]));
             }
         }
     }
@@ -307,28 +306,28 @@ void CollectionGeneralPage::save(Collection &collection)
         collection.attribute<CollectionAnnotationsAttribute>(Entity::AddIfMissing);
 
     QMap<QByteArray, QByteArray> annotations = annotationsAttribute->annotations();
-    if ( mSharedSeenFlagsCheckBox && mSharedSeenFlagsCheckBox->isEnabled() ) {
+    if (mSharedSeenFlagsCheckBox && mSharedSeenFlagsCheckBox->isEnabled()) {
         annotations[ CollectionTypeUtil::kolabSharedSeen() ] = mSharedSeenFlagsCheckBox->isChecked() ? "true" : "false";
     }
 
     CollectionTypeUtil collectionUtil;
-    if ( mIncidencesForComboBox && mIncidencesForComboBox->isEnabled() ) {
+    if (mIncidencesForComboBox && mIncidencesForComboBox->isEnabled()) {
         annotations[ CollectionTypeUtil::kolabIncidencesFor() ] =
-                collectionUtil.incidencesForToString(
-                    static_cast<CollectionTypeUtil::IncidencesFor>( mIncidencesForComboBox->currentIndex() ) ).toLatin1();
+            collectionUtil.incidencesForToString(
+                static_cast<CollectionTypeUtil::IncidencesFor>(mIncidencesForComboBox->currentIndex())).toLatin1();
     }
 
-    if ( mContentsComboBox ) {
+    if (mContentsComboBox) {
         const CollectionTypeUtil::FolderContentsType type =
-                collectionUtil.contentsTypeFromString( mContentsComboBox->currentText() );
+            collectionUtil.contentsTypeFromString(mContentsComboBox->currentText());
 
-        const QByteArray kolabName = collectionUtil.kolabNameFromType( type ) ;
-        if ( !kolabName.isEmpty() ) {
+        const QByteArray kolabName = collectionUtil.kolabNameFromType(type) ;
+        if (!kolabName.isEmpty()) {
             const QString iconName = collectionUtil.iconNameFromContentsType(type);
             Akonadi::EntityDisplayAttribute *attribute =
-                    collection.attribute<Akonadi::EntityDisplayAttribute>( Akonadi::Entity::AddIfMissing );
-            attribute->setIconName( iconName );
-            new Akonadi::CollectionModifyJob( collection );
+                collection.attribute<Akonadi::EntityDisplayAttribute>(Akonadi::Entity::AddIfMissing);
+            attribute->setIconName(iconName);
+            new Akonadi::CollectionModifyJob(collection);
             annotations[ CollectionTypeUtil::kolabFolderType() ] = kolabName;
         }
     }
@@ -357,9 +356,9 @@ void CollectionGeneralPage::slotFolderContentsSelectionChanged(int)
 {
     CollectionTypeUtil collectionUtil;
     const CollectionTypeUtil::FolderContentsType type =
-            collectionUtil.contentsTypeFromString( mContentsComboBox->currentText() );
+        collectionUtil.contentsTypeFromString(mContentsComboBox->currentText());
 
-    if ( type != CollectionTypeUtil::ContentsTypeMail ) {
+    if (type != CollectionTypeUtil::ContentsTypeMail) {
         const QString message =
             i18n("You have configured this folder to contain groupware information. "
                  "That means that this folder will disappear once the configuration "
@@ -368,8 +367,8 @@ void CollectionGeneralPage::slotFolderContentsSelectionChanged(int)
         KMessageBox::information(this, message);
     }
 
-    const bool enable = ( type == CollectionTypeUtil::ContentsTypeCalendar ||
-                          type == CollectionTypeUtil::ContentsTypeTask );
+    const bool enable = (type == CollectionTypeUtil::ContentsTypeCalendar ||
+                         type == CollectionTypeUtil::ContentsTypeTask);
 
     if (mIncidencesForComboBox) {
         mIncidencesForComboBox->setEnabled(enable);

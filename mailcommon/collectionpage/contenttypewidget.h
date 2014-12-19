@@ -24,12 +24,13 @@
 #include <QWidget>
 #include "mailcommon_export.h"
 class KComboBox;
-namespace MailCommon {
+namespace MailCommon
+{
 class MAILCOMMON_EXPORT ContentTypeWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ContentTypeWidget(QWidget *parent=0);
+    explicit ContentTypeWidget(QWidget *parent = 0);
     ~ContentTypeWidget();
 
     int currentIndex() const;

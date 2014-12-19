@@ -18,14 +18,14 @@
 
 */
 
-
 #ifndef COLLECTIONTYPEUTIL_H
 #define COLLECTIONTYPEUTIL_H
 #include "mailcommon_export.h"
 #include <QByteArray>
 #include <QString>
 
-namespace MailCommon {
+namespace MailCommon
+{
 class MAILCOMMON_EXPORT CollectionTypeUtil
 {
 public:
@@ -35,7 +35,6 @@ public:
     static QByteArray kolabFolderType();
     static QByteArray kolabIncidencesFor();
     static QByteArray kolabSharedSeen();
-
 
     enum FolderContentsType {
         ContentsTypeMail = 0,

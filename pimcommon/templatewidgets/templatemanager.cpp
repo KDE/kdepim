@@ -66,9 +66,9 @@ void TemplateManager::initTemplatesDirectories(const QString &templatesRelativeP
 void TemplateManager::loadTemplates(bool init)
 {
     if (!init) {
-        if ( !mTemplatesDirectories.isEmpty() ) {
+        if (!mTemplatesDirectories.isEmpty()) {
             Q_FOREACH (const QString &directory, mTemplatesDirectories) {
-              mDirWatch->removeDir( directory );
+                mDirWatch->removeDir(directory);
             }
         } else {
             return;

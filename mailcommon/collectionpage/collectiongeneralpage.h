@@ -34,7 +34,8 @@ namespace KIdentityManagement
 class IdentityCombo;
 }
 class QVBoxLayout;
-namespace MailCommon {
+namespace MailCommon
+{
 
 class FolderCollection;
 class IncidencesForWidget;

@@ -25,12 +25,13 @@
 #include <QWidget>
 class KComboBox;
 
-namespace MailCommon {
+namespace MailCommon
+{
 class MAILCOMMON_EXPORT IncidencesForWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit IncidencesForWidget(QWidget *parent=0);
+    explicit IncidencesForWidget(QWidget *parent = 0);
     ~IncidencesForWidget();
 
     int currentIndex() const;
