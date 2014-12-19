@@ -68,7 +68,7 @@ void ImapAclAttributeTest::shouldCloneAttr()
     right.insert("foo", KIMAP::Acl::Admin);
     attr.setRights(right);
     PimCommon::ImapAclAttribute *clone = attr.clone();
-    QVERIFY(attr==*clone);
+    QVERIFY(attr == *clone);
     delete clone;
 }
 
@@ -85,7 +85,7 @@ void ImapAclAttributeTest::shouldSerializedAttribute()
     const QByteArray ba = attr.serialized();
     PimCommon::ImapAclAttribute result;
     result.deserialize(ba);
-    QVERIFY(attr==result);
+    QVERIFY(attr == result);
 }
 
 QTEST_KDEMAIN(ImapAclAttributeTest, NoGUI)

@@ -21,8 +21,8 @@
 
 using namespace MailCommon;
 
-ItemContext::ItemContext( const Akonadi::Item& item, bool needsFullPayload )
-    : mItem( item ), mItemContextAction(needsFullPayload ? FullPayload : None)
+ItemContext::ItemContext(const Akonadi::Item &item, bool needsFullPayload)
+    : mItem(item), mItemContextAction(needsFullPayload ? FullPayload : None)
 {
 }
 

@@ -99,7 +99,6 @@ private:
     };
     Q_DECLARE_FLAGS(ItemContextActions, ItemContextAction)
 
-
     Akonadi::Item mItem;
     Akonadi::Collection mMoveTargetCollection;
     ItemContextActions mItemContextAction;

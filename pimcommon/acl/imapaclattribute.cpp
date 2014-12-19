@@ -128,7 +128,6 @@ void ImapAclAttribute::deserialize(const QByteArray &data)
     fillRightsMap(rightPart.split('%'), mOldRights);
 }
 
-
 bool PimCommon::ImapAclAttribute::operator==(const PimCommon::ImapAclAttribute &other) const
 {
     return (oldRights() == other.oldRights()) && (rights() == other.rights());

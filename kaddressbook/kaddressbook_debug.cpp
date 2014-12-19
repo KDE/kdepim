@@ -20,4 +20,3 @@
 #include "kaddressbook_debug.h"
 Q_LOGGING_CATEGORY(KADDRESSBOOK_LOG, "log_kaddressbook")
 
-

@@ -166,9 +166,9 @@ void CategorySelectWidgetPrivate::slotTagsInserted(const QModelIndex &parent, in
         QModelIndex idx = tagModel->index(row, 0, parent);
 #if 0
         qCDebug(KADDRESSBOOK_LOG) << "idx" << idx << "=" << tagModel->data(idx, Qt::DisplayRole).toString()
-                 << "name" << tagModel->data(idx, TagModel::NameRole).toString()
-                 << "tag" << tagModel->data(idx, TagModel::TagRole)
-                 << "id" << tagModel->data(idx, TagModel::IdRole).toInt();
+                                  << "name" << tagModel->data(idx, TagModel::NameRole).toString()
+                                  << "tag" << tagModel->data(idx, TagModel::TagRole)
+                                  << "id" << tagModel->data(idx, TagModel::IdRole).toInt();
 #endif
         QStandardItem *it = new QStandardItem(tagModel->data(idx, TagModel::NameRole).toString());
         it->setIcon(tagModel->data(idx, Qt::DecorationRole).value<QIcon>());
