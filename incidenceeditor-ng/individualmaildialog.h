@@ -34,7 +34,7 @@ namespace IncidenceEditorNG {
 class IndividualMailDialog : public KDialog
 {
     Q_OBJECT
-    friend TestIndividualMailDialog;
+    friend class TestIndividualMailDialog;
 public:
     enum Decisions {
         Update,         /**< send automatic mail to attendee */

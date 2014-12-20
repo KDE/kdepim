@@ -61,7 +61,7 @@ class Ldap : public SetupObject
 
     KLDAP::LdapClientSearchConfig *m_clientSearchConfig;
   private:
-    friend LdapTest;
+    friend class LdapTest;
     QString securityString();
 
     QString m_user;
