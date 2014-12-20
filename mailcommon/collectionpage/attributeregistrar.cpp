@@ -23,7 +23,6 @@
 
 #include <AkonadiCore/attributefactory.h>
 
-#ifndef KDELIBS_STATIC_LIBS
 namespace
 {
 
@@ -40,16 +39,3 @@ bool dummy()
 const bool registered = dummy();
 
 } // namespace
-
-#else
-
-extern bool ___MailCommon____INIT()
-{
-    Akonadi::AttributeFactory::registerAttribute<MailCommon::CollectionAnnotationsAttribute>();
-    Akonadi::AttributeFactory::registerAttribute<MailCommon::ExpirationCollectionAttribute>();
-    Akonadi::AttributeFactory::registerAttribute<MailCommon::NewMailNotifierAttribute>();
-
-    return true;
-}
-
-#endif
