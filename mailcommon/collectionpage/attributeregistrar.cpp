@@ -19,7 +19,7 @@
 
 #include "collectionpage/collectionannotationsattribute.h"
 #include "collectionpage/expirecollectionattribute.h"
-#include "collectionpage/newmailnotifierattribute.h"
+#include <AkonadiCore/NewMailNotifierAttribute>
 
 #include <AkonadiCore/attributefactory.h>
 
@@ -31,7 +31,7 @@ bool dummy()
 {
     Akonadi::AttributeFactory::registerAttribute<MailCommon::CollectionAnnotationsAttribute>();
     Akonadi::AttributeFactory::registerAttribute<MailCommon::ExpireCollectionAttribute>();
-    Akonadi::AttributeFactory::registerAttribute<MailCommon::NewMailNotifierAttribute>();
+    Akonadi::AttributeFactory::registerAttribute<Akonadi::NewMailNotifierAttribute>();
     return true;
 }
 

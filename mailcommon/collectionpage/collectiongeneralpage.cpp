@@ -21,7 +21,6 @@
 #include "incidencesforwidget.h"
 #include "contenttypewidget.h"
 #include "collectionannotationsattribute.h"
-#include "newmailnotifierattribute.h"
 #include "foldercollection.h"
 #include "kernel/mailkernel.h"
 #include "util/mailutil.h"
@@ -32,7 +31,7 @@
 #include <Collection>
 #include <CollectionModifyJob>
 #include <EntityDisplayAttribute>
-
+#include <AkonadiCore/NewMailNotifierAttribute>
 #include <KIdentityManagement/IdentityCombo>
 
 #include <KColorScheme>
@@ -296,10 +295,10 @@ void CollectionGeneralPage::save(Collection &collection)
     }
 
     if (!mNotifyOnNewMailCheckBox->isChecked()) {
-        MailCommon::NewMailNotifierAttribute *newMailNotifierAttr = collection.attribute<MailCommon::NewMailNotifierAttribute>(Akonadi::Entity::AddIfMissing);
+        Akonadi::NewMailNotifierAttribute *newMailNotifierAttr = collection.attribute<Akonadi::NewMailNotifierAttribute>(Akonadi::Entity::AddIfMissing);
         newMailNotifierAttr->setIgnoreNewMail(true);
     } else {
-        collection.removeAttribute<MailCommon::NewMailNotifierAttribute>();
+        collection.removeAttribute<Akonadi::NewMailNotifierAttribute>();
     }
 
     CollectionAnnotationsAttribute *annotationsAttribute =

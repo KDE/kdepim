@@ -21,7 +21,7 @@
 #include "util/mailutil.h"
 #include "imapresourcesettings.h"
 #include "pimcommon/util/pimutil.h"
-#include "mailcommon/collectionpage/newmailnotifierattribute.h"
+#include <AkonadiCore/NewMailNotifierAttribute>
 #include "mailcommon_debug.h"
 #include <ItemFetchJob>
 #include <ItemFetchScope>
@@ -192,7 +192,7 @@ void FolderCollection::readConfig()
     if (configGroup.hasKey(QLatin1String("IgnoreNewMail"))) {
         if (configGroup.readEntry(QLatin1String("IgnoreNewMail"), false)) {
             //migrate config.
-            MailCommon::NewMailNotifierAttribute *newMailNotifierAttr = mCollection.attribute<MailCommon::NewMailNotifierAttribute>(Akonadi::Entity::AddIfMissing);
+            Akonadi::NewMailNotifierAttribute *newMailNotifierAttr = mCollection.attribute<Akonadi::NewMailNotifierAttribute>(Akonadi::Entity::AddIfMissing);
             newMailNotifierAttr->setIgnoreNewMail(true);
             new Akonadi::CollectionModifyJob(mCollection, this);
             //TODO verify if it works;

@@ -38,7 +38,7 @@
 
 #include "mailutil.h"
 #include "mailutil_p.h"
-#include "mailcommon/collectionpage/newmailnotifierattribute.h"
+
 #include "mailcommon_debug.h"
 #include "calendarinterface.h"
 #include "job/expirejob.h"
@@ -68,6 +68,7 @@
 #include <ItemFetchJob>
 #include <ItemFetchScope>
 #include <Akonadi/KMime/MessageParts>
+#include <AkonadiCore/NewMailNotifierAttribute>
 
 #include <KMime/KMimeMessage>
 
@@ -353,8 +354,8 @@ QModelIndex MailCommon::Util::nextUnreadCollection(QAbstractItemModel *model,
 
 bool MailCommon::Util::ignoreNewMailInFolder(const Akonadi::Collection &collection)
 {
-    if (collection.hasAttribute<NewMailNotifierAttribute>()) {
-        if (collection.attribute<NewMailNotifierAttribute>()->ignoreNewMail()) {
+    if (collection.hasAttribute<Akonadi::NewMailNotifierAttribute>()) {
+        if (collection.attribute<Akonadi::NewMailNotifierAttribute>()->ignoreNewMail()) {
             return true;
         }
     }

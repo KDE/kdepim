@@ -102,7 +102,7 @@ find_package(KF5Codecs ${KF5_VERSION} CONFIG REQUIRED)
 # Find KdepimLibs Package
 find_package(KF5Akonadi CONFIG REQUIRED)
 find_package(KF5Contacts ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
-find_package(KF5CalendarCore ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5CalendarCore "4.79.0" CONFIG REQUIRED)
 find_package(KF5AkonadiContact ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5IdentityManagement ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5Ldap ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)

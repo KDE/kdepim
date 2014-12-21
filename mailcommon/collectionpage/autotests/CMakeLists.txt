@@ -1,11 +1,4 @@
 
-set( mailcommon_newmailnotifierattribute_source newmailnotifierattributetest.cpp ../newmailnotifierattribute.cpp)
-add_executable( newmailnotifierattributetest ${mailcommon_newmailnotifierattribute_source})
-add_test(newmailnotifierattributetest newmailnotifierattributetest)
-ecm_mark_as_test(newmailnotifierattributetest)
-target_link_libraries( newmailnotifierattributetest Qt5::Test KF5::KDELibs4Support Qt5::Gui KF5::AkonadiCore mailcommon)
-
-
 set( mailcommon_collectionannotationsattributetest_source collectionannotationsattributetest.cpp ../collectionannotationsattribute.cpp)
 add_executable( collectionannotationsattributetest ${mailcommon_collectionannotationsattributetest_source})
 add_test(collectionannotationsattributetest collectionannotationsattributetest)
