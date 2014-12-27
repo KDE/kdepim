@@ -24,7 +24,7 @@
 #include "filterlogdialog.h"
 #include "filtermanager.h"
 #include "mailfilteragentadaptor.h"
-#include "pop3resourceattribute.h"
+#include <AkonadiCore/Pop3ResourceAttribute>
 
 #include <AkonadiCore/changerecorder.h>
 #include <AkonadiCore/collectionfetchjob.h>
@@ -68,7 +68,7 @@ MailFilterAgent::MailFilterAgent(const QString &id)
     migrate.setConfigFiles(QStringList() << QStringLiteral("akonadi_mailfilter_agentrc") << QStringLiteral("akonadi_mailfilter_agent.notifyrc"));
     migrate.migrate();
 
-    Akonadi::AttributeFactory::registerAttribute<Pop3ResourceAttribute>();
+    Akonadi::AttributeFactory::registerAttribute<Akonadi::Pop3ResourceAttribute>();
     DummyKernel *kernel = new DummyKernel(this);
     CommonKernel->registerKernelIf(kernel);   //register KernelIf early, it is used by the Filter classes
     CommonKernel->registerSettingsIf(kernel);   //SettingsIf is used in FolderTreeWidget
@@ -186,7 +186,7 @@ void MailFilterAgent::itemAdded(const Akonadi::Item &item, const Akonadi::Collec
         job->fetchScope().fetchPayloadPart(Akonadi::MessagePart::Envelope, true);
     }
     job->fetchScope().setAncestorRetrieval(Akonadi::ItemFetchScope::Parent);
-    job->fetchScope().fetchAttribute<Pop3ResourceAttribute>();
+    job->fetchScope().fetchAttribute<Akonadi::Pop3ResourceAttribute>();
     job->setProperty("resource", collection.resource());
 
     //TODO: Error handling?
@@ -215,7 +215,7 @@ void MailFilterAgent::itemsReceiviedForFiltering(const Akonadi::Item::List &item
     }
 
     QString resource = sender()->property("resource").toString();
-    const Pop3ResourceAttribute *pop3ResourceAttribute = item.attribute<Pop3ResourceAttribute>();
+    const Akonadi::Pop3ResourceAttribute *pop3ResourceAttribute = item.attribute<Akonadi::Pop3ResourceAttribute>();
     if (pop3ResourceAttribute) {
         resource = pop3ResourceAttribute->pop3AccountName();
     }

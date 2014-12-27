@@ -18,7 +18,6 @@ set(akonadi_mailfilter_agent_SRCS
   filterlogdialog.cpp
   filtermanager.cpp
   mailfilteragent.cpp
-  pop3resourceattribute.cpp
 )
 
 qt5_add_dbus_adaptor(akonadi_mailfilter_agent_SRCS org.freedesktop.Akonadi.MailFilterAgent.xml mailfilteragent.h MailFilterAgent)
@@ -50,4 +49,3 @@ install(TARGETS akonadi_mailfilter_agent ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES mailfilteragent.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/akonadi/agents")
 install(FILES akonadi_mailfilter_agent.notifyrc DESTINATION ${KNOTIFYRC_INSTALL_DIR} )
 
-add_subdirectory(autotests)
