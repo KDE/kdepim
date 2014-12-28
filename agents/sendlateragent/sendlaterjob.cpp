@@ -25,7 +25,6 @@
 
 #include <mailtransport/transportattribute.h>
 #include <mailtransport/sentbehaviourattribute.h>
-#include <mailtransport/messagequeuejob.h>
 #include <mailtransport/transport.h>
 #include <mailtransport/transportmanager.h>
 
