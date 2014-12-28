@@ -83,6 +83,7 @@ void addSendReplyForwardAction(const KMime::Message::Ptr &message, MailTransport
 MESSAGECOMPOSER_EXPORT bool sendMailDispatcherIsOnline( QWidget *parent = 0);
 MESSAGECOMPOSER_EXPORT QString rot13(const QString &s);
 MESSAGECOMPOSER_EXPORT void addTextBox(QTextEdit *edit);
+MESSAGECOMPOSER_EXPORT void removeNotNecessaryHeaders(const KMime::Message::Ptr &msg);
 }
 
 }

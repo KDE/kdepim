@@ -297,9 +297,7 @@ void MessageComposer::ComposerViewBase::send ( MessageComposer::MessageSender::S
                                                        m_encrypt ? QLatin1String( "true" ) : QLatin1String( "false" ), "utf-8" ) );
         m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-CryptoMessageFormat", m_msg.get(), QString::number( m_cryptoMessageFormat ), "utf-8" ) );
     } else {
-        m_msg->removeHeader( "X-KMail-SignatureActionEnabled" );
-        m_msg->removeHeader( "X-KMail-EncryptActionEnabled" );
-        m_msg->removeHeader( "X-KMail-CryptoMessageFormat" );
+        MessageComposer::Util::removeNotNecessaryHeaders(m_msg);
     }
 
     if( mSendMethod == MessageComposer::MessageSender::SendImmediate  && checkMailDispatcher)

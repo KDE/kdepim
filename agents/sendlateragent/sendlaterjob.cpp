@@ -19,6 +19,7 @@
 #include "sendlaterinfo.h"
 
 #include "messagecomposer/sender/akonadisender.h"
+#include "messagecomposer/utils/util.h"
 #include "messagecore/helpers/messagehelpers.h"
 #include "messagecore/utils/stringutil.h"
 
@@ -127,9 +128,7 @@ void SendLaterJob::updateAndCleanMessageBeforeSending(const KMime::Message::Ptr 
 {
     msg->date()->setDateTime( KDateTime::currentLocalDateTime() );
     MessageCore::StringUtil::removePrivateHeaderFields(msg, true);
-    msg->removeHeader( "X-KMail-SignatureActionEnabled" );
-    msg->removeHeader( "X-KMail-EncryptActionEnabled" );
-    msg->removeHeader( "X-KMail-CryptoMessageFormat" );
+    MessageComposer::Util::removeNotNecessaryHeaders(msg);
     msg->assemble();
 }
 
