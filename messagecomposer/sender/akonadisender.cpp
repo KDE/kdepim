@@ -83,10 +83,10 @@ bool AkonadiSender::doSend(const KMime::Message::Ptr &aMsg, short sendNow)
     if (sendNow == -1) {
         sendNow = MessageComposer::MessageComposerSettings::self()->sendImmediate(); // -1 == use default setting
     }
-    if ( sendNow ) {
-        sendOrQueueMessage( aMsg, MessageComposer::MessageSender::SendImmediate );
+    if (sendNow) {
+        sendOrQueueMessage(aMsg, MessageComposer::MessageSender::SendImmediate);
     } else {
-        sendOrQueueMessage( aMsg, MessageComposer::MessageSender::SendLater );        
+        sendOrQueueMessage(aMsg, MessageComposer::MessageSender::SendLater);
     }
     return true;
 }
