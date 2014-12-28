@@ -111,6 +111,8 @@ void SendLater::SendLaterUtil::reload()
     QDBusInterface interface( QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_sendlater_agent"), QLatin1String("/SendLaterAgent") );
     if (interface.isValid()) {
         interface.call(QLatin1String("reload"));
+    } else {
+        qDebug()<<" Can not reload list";
     }
 }
 
