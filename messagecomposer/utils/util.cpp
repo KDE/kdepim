@@ -346,3 +346,10 @@ void MessageComposer::Util::addTextBox(QTextEdit *edit)
         edit->setTextCursor(cursor);
     }
 }
+
+void MessageComposer::Util::removeNotNecessaryHeaders(const KMime::Message::Ptr &msg)
+{
+    msg->removeHeader( "X-KMail-SignatureActionEnabled" );
+    msg->removeHeader( "X-KMail-EncryptActionEnabled" );
+    msg->removeHeader( "X-KMail-CryptoMessageFormat" );
+}

@@ -31,7 +31,6 @@
 #include <KIdentityManagement/kidentitymanagement/identity.h>
 #include <KIdentityManagement/kidentitymanagement/identitycombo.h>
 #include <KIdentityManagement/kidentitymanagement/identitymanager.h>
-#include <MailTransport/mailtransport/messagequeuejob.h>
 #include <MailTransport/mailtransport/transportcombobox.h>
 #include <MailTransport/mailtransport/transportmanager.h>
 #include <messageviewer/settings/globalsettings.h>
