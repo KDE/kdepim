@@ -36,7 +36,7 @@ public:
     void start();
     void setMessageItem(const Akonadi::Item &messageItem);
 
-private slots:
+private Q_SLOTS:
     void slotModifyItemDone(KJob *job);
 private:
     void resetDisplayFormat();

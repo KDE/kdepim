@@ -64,7 +64,7 @@ private:
     QList<Kleo::Job *> mRunningJobs;
     int mJobsStarted;
 
-public slots:
+public Q_SLOTS:
     void slotParallelKeyListJobFinished()
     {
         mParallelKeyListJobs.removeAll(static_cast<Kleo::KeyListJob *>(sender()));
@@ -129,7 +129,7 @@ public slots:
         }
     }
 
-private slots:
+private Q_SLOTS:
     void initTestCase()
     {
         qRegisterMetaType<GpgME::VerificationResult>();

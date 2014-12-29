@@ -64,7 +64,7 @@ public:
         return m_key;
     }
 
-private slots:
+private Q_SLOTS:
     void slotResult(const GpgME::VerificationResult &vr);
     void slotKeyListJobDone();
     void slotNextKey(const GpgME::Key &);

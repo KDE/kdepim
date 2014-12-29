@@ -53,7 +53,7 @@ public:
     void selectAll(Qt::CheckState state) const;
     QList<Akonadi::Tag::Id> filterTags() const;
 
-public slots:
+public Q_SLOTS:
     void slotSelectAll();
     void slotSelectNone();
 

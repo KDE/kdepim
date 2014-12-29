@@ -30,7 +30,7 @@ using namespace MessageViewer;
 class UnencryptedMessageTest : public QObject
 {
     Q_OBJECT
-private slots:
+private Q_SLOTS:
     void initTestCase();
     void testMailWithoutEncryption();
     void testSMIMESignedEncrypted();

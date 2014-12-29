@@ -53,10 +53,10 @@ public:
 
     void detach();
 
-signals:
+Q_SIGNALS:
     void update(MessageViewer::Viewer::UpdateMode);
 
-protected slots:
+protected Q_SLOTS:
     void notify()
     {
         emit update(Viewer::Force);

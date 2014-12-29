@@ -36,7 +36,7 @@ public:
     {
     }
 
-    // slots:
+    // Q_SLOTS:
     void abort();
     void instanceProgressChanged(const AgentInstance &instance);
     void instanceStatusChanged(const AgentInstance &instance);

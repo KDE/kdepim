@@ -27,7 +27,7 @@ using namespace IncidenceEditorNG;
 class TestIndividualMailDialog : public QObject
 {
     Q_OBJECT
-private slots:
+private Q_SLOTS:
     void testDialog()
     {
         KCalCore::Attendee::List attendees;

@@ -62,7 +62,7 @@ public:
         return m_vr;
     }
 
-private slots:
+private Q_SLOTS:
     void slotResult(const GpgME::DecryptionResult &dr,
                     const GpgME::VerificationResult &vr,
                     const QByteArray &plainText);
