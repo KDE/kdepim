@@ -82,5 +82,4 @@ void NoteDisplayAttributeTest::shouldHaveType()
     QCOMPARE(attribute.type(), QByteArray("NoteDisplayAttribute"));
 }
 
-
 QTEST_MAIN(NoteDisplayAttributeTest)
