@@ -76,5 +76,11 @@ void NoteDisplayAttributeTest::shouldEqualWhenCloning()
     delete attr2;
 }
 
+void NoteDisplayAttributeTest::shouldHaveType()
+{
+    NoteShared::NoteDisplayAttribute attribute;
+    QCOMPARE(attribute.type(), QByteArray("NoteDisplayAttribute"));
+}
+
 
 QTEST_KDEMAIN(NoteDisplayAttributeTest, NoGUI)

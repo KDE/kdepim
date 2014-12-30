@@ -69,4 +69,10 @@ void ScamAttributeTest::shouldCloneAttribute()
     delete cloneAttr;
 }
 
+void ScamAttributeTest::shouldHaveType()
+{
+    MessageViewer::ScamAttribute attr;
+    QCOMPARE(attr.type(), QByteArray("ScamAttribute"));
+}
+
 QTEST_KDEMAIN(ScamAttributeTest, NoGUI)

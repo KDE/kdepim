@@ -34,6 +34,7 @@ private Q_SLOTS:
     void shouldAffectValue();
     void shouldDeserializeValue();
     void shouldCloneAttribute();
+    void shouldHaveType();
 };
 
 #endif // SCAMATTRIBUTETEST_H
