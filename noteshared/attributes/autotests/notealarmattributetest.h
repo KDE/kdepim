@@ -31,6 +31,7 @@ private Q_SLOTS:
     void shouldAssignValue();
     void shouldCloneAttr();
     void shouldSerializeAttr();
+    void shouldHaveType();
 };
 
 #endif // NOTEALARMATTRIBUTETEST_H

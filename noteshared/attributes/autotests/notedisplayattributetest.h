@@ -29,6 +29,7 @@ public:
 private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldEqualWhenCloning();
+    void shouldHaveType();
 };
 
 #endif // NOTEDISPLAYATTRIBUTETEST_H

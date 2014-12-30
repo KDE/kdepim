@@ -31,6 +31,7 @@ private Q_SLOTS:
     void shouldAssignAttribute();
     void shouldDeserializedAttribute();
     void shouldCloneAttribute();
+    void shouldHaveType();
 };
 
 #endif // COLLECTIONANNOTATIONSATTRIBUTETEST_H

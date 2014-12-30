@@ -88,4 +88,10 @@ void ImapAclAttributeTest::shouldSerializedAttribute()
     QVERIFY(attr == result);
 }
 
+void ImapAclAttributeTest::shouldHaveType()
+{
+    PimCommon::ImapAclAttribute attr;
+    QCOMPARE(attr.type(), QByteArray("imapacl"));
+}
+
 QTEST_MAIN(ImapAclAttributeTest)

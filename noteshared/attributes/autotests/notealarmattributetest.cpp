@@ -64,4 +64,12 @@ void NoteAlarmAttributeTest::shouldSerializeAttr()
     QVERIFY(attr == result);
 }
 
+void NoteAlarmAttributeTest::shouldHaveType()
+{
+    NoteShared::NoteAlarmAttribute attr;
+    QCOMPARE(attr.type(), QByteArray("NoteAlarmAttribute"));
+}
+
+
+
 QTEST_MAIN(NoteAlarmAttributeTest)

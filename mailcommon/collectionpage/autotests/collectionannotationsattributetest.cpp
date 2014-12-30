@@ -70,4 +70,10 @@ void CollectionAnnotationsAttributeTest::shouldCloneAttribute()
     delete result;
 }
 
+void CollectionAnnotationsAttributeTest::shouldHaveType()
+{
+    MailCommon::CollectionAnnotationsAttribute attr;
+    QCOMPARE(attr.type(), QByteArray("collectionannotations"));
+}
+
 QTEST_MAIN(CollectionAnnotationsAttributeTest)

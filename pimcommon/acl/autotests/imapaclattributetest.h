@@ -31,6 +31,7 @@ private Q_SLOTS:
     void shouldAssignValue();
     void shouldCloneAttr();
     void shouldSerializedAttribute();
+    void shouldHaveType();
 };
 
 #endif // IMAPACLATTRIBUTETEST_H
