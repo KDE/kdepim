@@ -20,3 +20,5 @@ endmacro ()
 add_noteshared_unittest( notedisplayattributetest.cpp )
 
 add_noteshared_unittest( notealarmattributetest.cpp )
+add_noteshared_unittest( showfoldernotesattributetest.cpp )
+add_noteshared_unittest( notelockattributetest.cpp )
