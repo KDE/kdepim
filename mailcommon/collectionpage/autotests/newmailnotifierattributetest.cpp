@@ -67,4 +67,10 @@ void NewMailNotifierAttributeTest::shouldCloneAttribute()
     delete result;
 }
 
+void NewMailNotifierAttributeTest::shouldHaveType()
+{
+    MailCommon::NewMailNotifierAttribute attr;
+    QCOMPARE(attr.type(), QByteArray("newmailnotifierattribute"));
+}
+
 QTEST_KDEMAIN(NewMailNotifierAttributeTest, NoGUI)

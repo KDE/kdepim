@@ -34,6 +34,7 @@ private Q_SLOTS:
     void shouldCloneAttr();
     void shouldSerializedValue_data();
     void shouldSerializedValue();
+    void shouldHaveType();
 };
 
 #endif // EXPIRECOLLECTIONATTRIBUTETEST_H

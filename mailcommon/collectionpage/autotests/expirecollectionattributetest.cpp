@@ -171,4 +171,10 @@ void ExpireCollectionAttributeTest::shouldSerializedValue()
     QVERIFY(attr == result);
 }
 
+void ExpireCollectionAttributeTest::shouldHaveType()
+{
+    MailCommon::ExpireCollectionAttribute attr;
+    QCOMPARE(attr.type(), QByteArray("expirationcollectionattribute"));
+}
+
 QTEST_KDEMAIN(ExpireCollectionAttributeTest, NoGUI)
