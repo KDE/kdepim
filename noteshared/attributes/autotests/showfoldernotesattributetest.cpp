@@ -17,7 +17,7 @@
 
 #include "showfoldernotesattributetest.h"
 #include "../showfoldernotesattribute.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 ShowFolderNotesAttributeTest::ShowFolderNotesAttributeTest(QObject *parent)
     : QObject(parent)
@@ -36,4 +36,4 @@ void ShowFolderNotesAttributeTest::shouldHaveType()
     QCOMPARE(attr.type(), QByteArray("showfoldernotesattribute"));
 }
 
-QTEST_KDEMAIN(ShowFolderNotesAttributeTest, NoGUI)
+QTEST_MAIN(ShowFolderNotesAttributeTest)

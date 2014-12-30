@@ -17,7 +17,8 @@
 
 #include "mdnstateattributetest.h"
 #include "../misc/mdnstateattribute.h"
-#include <qtest_kde.h>
+#include <qtest.h>
+
 MDNStateAttributeTest::MDNStateAttributeTest(QObject *parent)
     : QObject(parent)
 {
@@ -41,4 +42,4 @@ void MDNStateAttributeTest::shouldHaveType()
     QCOMPARE(attr.type(), QByteArray("MDNStateAttribute"));
 }
 
-QTEST_KDEMAIN(MDNStateAttributeTest, NoGUI)
+QTEST_MAIN(MDNStateAttributeTest)

@@ -17,7 +17,7 @@
 
 #include "notelockattributetest.h"
 #include "../notelockattribute.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 NoteLockAttributeTest::NoteLockAttributeTest(QObject *parent)
     : QObject(parent)
@@ -36,4 +36,4 @@ void NoteLockAttributeTest::shouldHaveType()
     QCOMPARE(attr.type(), QByteArray("KJotsLockAttribute"));
 }
 
-QTEST_KDEMAIN(NoteLockAttributeTest, NoGUI)
+QTEST_MAIN(NoteLockAttributeTest)
