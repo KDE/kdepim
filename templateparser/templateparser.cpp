@@ -1262,7 +1262,7 @@ void TemplateParser::addProcessedBodyToMessage( const QString &plainBody,
 
     mMsg->contentType()->clear(); // to get rid of old boundary
 
-    const QByteArray boundary = KMime::multiPartBoundary();
+    //const QByteArray boundary = KMime::multiPartBoundary();
     KMime::Content *const mainTextPart =
             htmlBody.isEmpty() ?
                 createPlainPartContent( plainBody ) :
@@ -1312,7 +1312,7 @@ KMime::Content *TemplateParser::createMultipartMixed( const MessageCore::Attachm
                             QLatin1String("name"), i18nc( "@item:intext", "Attachment %1", attachmentNumber ) );
             }
         }
-        attachmentNumber++;
+        ++attachmentNumber;
     }
     return mixedPart;
 }
