@@ -184,6 +184,11 @@ void TemplateParserTester::test_processWithTemplatesForContent_data()
         QTest::newRow( file.toLatin1() ) << "%OFROMLNAME" << QString(dir.path() + QLatin1Char('/') +  file) << "Kumar";
         QTest::newRow( file.toLatin1() ) << "%OFROMNAME" << QString(dir.path() + QLatin1Char('/') +  file) << "Sudhendu Kumar";
         QTest::newRow( file.toLatin1() ) << "%OFROMADDR" << QString(dir.path() + QLatin1Char('/') +  file) << "Sudhendu Kumar <dontspamme@yoohoo.com>";
+        QTest::newRow( file.toLatin1() ) << "%OTOADDR" << QString(dir.path() + QLatin1Char('/') +  file) << "kde <foo@yoohoo.org>";
+        QTest::newRow( file.toLatin1() ) << "%OTOFNAME" << QString(dir.path() + QLatin1Char('/') +  file) << "kde";
+        QTest::newRow( file.toLatin1() ) << "%OTONAME" << QString(dir.path() + QLatin1Char('/') +  file) << "kde";
+        QTest::newRow( file.toLatin1() ) << "%OTOLNAME" << QString(dir.path() + QLatin1Char('/') +  file) << "";
+        QTest::newRow( file.toLatin1() ) << "%OTOLIST" << QString(dir.path() + QLatin1Char('/') +  file) << "kde <foo@yoohoo.org>";
     }
 }
 
