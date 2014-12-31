@@ -36,6 +36,10 @@ class QTimer;
 class KJob;
 class QWidget;
 
+namespace Sonnet {
+class DictionaryComboBox;
+}
+
 namespace SendLater {
 class SendLaterInfo;
 }
@@ -152,6 +156,9 @@ public:
     void setFccCombo( Akonadi::CollectionComboBox* fcc );
     Akonadi::CollectionComboBox* fccCombo();
     void setFcc( const Akonadi::Collection& id );
+
+    Sonnet::DictionaryComboBox *dictionary() const;
+    void setDictionary(Sonnet::DictionaryComboBox *dictionary);
 
     /**
    * Widgets for editing differ in client classes, so
@@ -309,6 +316,7 @@ private:
     KPIMIdentities::IdentityManager* m_identMan;
     MessageComposer::KMeditor* m_editor;
     MailTransport::TransportComboBox* m_transport;
+    Sonnet::DictionaryComboBox* m_dictionary;
     Akonadi::CollectionComboBox* m_fccCombo;
     Akonadi::Collection m_fccCollection;
     QWidget* m_parentWidget;
