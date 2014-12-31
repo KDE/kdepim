@@ -82,7 +82,7 @@ ContactSorter::ContactSorter(ContactFields::Field field, Qt::SortOrder sortOrder
 {
 }
 
-void ContactSorter::sort(QList<KContacts::Addressee> &contacts) const
+void ContactSorter::sort(KContacts::Addressee::List &contacts) const
 {
     qStableSort(contacts.begin(), contacts.end(), ContactSortHelper(mSortField, mSortOrder));
 }
