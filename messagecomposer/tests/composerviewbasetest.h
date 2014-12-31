@@ -26,7 +26,8 @@ class ComposerViewBaseTest : public QObject
 public:
     explicit ComposerViewBaseTest(QObject *parent = 0);
     ~ComposerViewBaseTest();
-
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
 #endif // COMPOSERVIEWBASETEST_H
