@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2014 Montel Laurent <montel@kde.org>
+  Copyright (c) 2014-2015 Montel Laurent <montel@kde.org>
   based on code from okular PageViewMessage
 
   This program is free software; you can redistribute it and/or modify it

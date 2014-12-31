@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2014 Montel Laurent <montel@kde.org>
+  Copyright (c) 2014-2015 Montel Laurent <montel@kde.org>
   based on code:
   Copyright 2009 Aurélien Gâteau <agateau@kde.org>
   Copyright 2009 Kåre Sårs <kare.sars@iki.fi>
