@@ -708,6 +708,8 @@ void removePrivateHeaderFields(const KMime::Message::Ptr &message, bool removeId
     message->removeHeader("X-KMail-UnExpanded-CC");
     message->removeHeader("X-KMail-UnExpanded-BCC");
     message->removeHeader("X-KMail-FccDisabled");
+    message->removeHeader("X-KMail-Dictionary");
+
 
     if (removeIdentityTag) {
         message->removeHeader("X-KMail-Identity");

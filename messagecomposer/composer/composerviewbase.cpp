@@ -48,6 +48,8 @@
 #include <messageviewer/utils/kcursorsaver.h>
 #endif
 
+#include <sonnet/dictionarycombobox.h>
+
 #include <messagecore/helpers/messagehelpers.h>
 #include <messagecore/utils/stringutil.h>
 #include <messagecore/attachment/attachmentcollector.h>
@@ -100,6 +102,7 @@ MessageComposer::ComposerViewBase::ComposerViewBase(QObject *parent, QWidget *pa
     , m_identMan(0)
     , m_editor(0)
     , m_transport(0)
+    , m_dictionary(0)
     , m_fccCombo(0)
     , m_parentWidget(parentGui)
     , m_sign(false)
@@ -810,6 +813,9 @@ void MessageComposer::ComposerViewBase::fillInfoPart(MessageComposer::InfoPart *
     if (m_msg->headerByType("X-KMail-FccDisabled")) {
         extras << m_msg->headerByType("X-KMail-FccDisabled");
     }
+    if( m_msg->headerByType( "X-KMail-Dictionary") ) {
+        extras << m_msg->headerByType( "X-KMail-Dictionary");
+    }
 
     infoPart->setExtraHeaders(extras);
 }
@@ -971,6 +977,16 @@ void MessageComposer::ComposerViewBase::initAutoSave()
     }
 
     updateAutoSave();
+}
+
+Sonnet::DictionaryComboBox *MessageComposer::ComposerViewBase::dictionary() const
+{
+    return m_dictionary;
+}
+
+void MessageComposer::ComposerViewBase::setDictionary(Sonnet::DictionaryComboBox *dictionary)
+{
+    m_dictionary = dictionary;
 }
 
 void MessageComposer::ComposerViewBase::updateAutoSave()

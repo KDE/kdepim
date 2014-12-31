@@ -67,7 +67,7 @@ add_messagecomposer_cryptotest( cryptocomposertest.cpp )
 add_messagecomposer_test( infoparttest.cpp )
 add_messagecomposer_test( textparttest.cpp )
 add_messagecomposer_test( globalparttest.cpp )
-
+add_messagecomposer_test( composerviewbasetest.cpp )
 
 # Crypto
 add_messagecomposer_cryptotest( signjobtest.cpp )
