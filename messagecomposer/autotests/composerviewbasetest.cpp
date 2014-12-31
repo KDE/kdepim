@@ -17,6 +17,7 @@
 
 #include "composerviewbasetest.h"
 #include <qtest.h>
+#include "../composer/composerviewbase.h"
 
 ComposerViewBaseTest::ComposerViewBaseTest(QObject *parent)
     : QObject(parent)
@@ -27,6 +28,21 @@ ComposerViewBaseTest::ComposerViewBaseTest(QObject *parent)
 ComposerViewBaseTest::~ComposerViewBaseTest()
 {
 
+}
+
+void ComposerViewBaseTest::shouldHaveDefaultValue()
+{
+    MessageComposer::ComposerViewBase composerViewBase;
+    QVERIFY(!composerViewBase.attachmentModel());
+    QVERIFY(!composerViewBase.attachmentController());
+    QVERIFY(!composerViewBase.recipientsEditor());
+    QVERIFY(!composerViewBase.signatureController());
+    QVERIFY(!composerViewBase.identityCombo());
+    QVERIFY(!composerViewBase.identityManager());
+    QVERIFY(!composerViewBase.editor());
+    QVERIFY(!composerViewBase.transportComboBox());
+    QVERIFY(!composerViewBase.fccCombo());
+    QVERIFY(!composerViewBase.dictionary());
 }
 
 QTEST_MAIN(ComposerViewBaseTest)
