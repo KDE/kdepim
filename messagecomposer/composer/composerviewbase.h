@@ -36,11 +36,12 @@ class QTimer;
 class KJob;
 class QWidget;
 
-namespace Sonnet {
+namespace Sonnet
+{
 class DictionaryComboBox;
 }
 
-namespace SendLater 
+namespace SendLater
 {
 class SendLaterInfo;
 }

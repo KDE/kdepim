@@ -813,8 +813,8 @@ void MessageComposer::ComposerViewBase::fillInfoPart(MessageComposer::InfoPart *
     if (m_msg->headerByType("X-KMail-FccDisabled")) {
         extras << m_msg->headerByType("X-KMail-FccDisabled");
     }
-    if( m_msg->headerByType( "X-KMail-Dictionary") ) {
-        extras << m_msg->headerByType( "X-KMail-Dictionary");
+    if (m_msg->headerByType("X-KMail-Dictionary")) {
+        extras << m_msg->headerByType("X-KMail-Dictionary");
     }
 
     infoPart->setExtraHeaders(extras);
