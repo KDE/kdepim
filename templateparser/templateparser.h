@@ -230,8 +230,8 @@ public:
 
     virtual QString pipe( const QString &cmd, const QString &buf );
 
-    virtual QString getFName( const QString &str );
-    virtual QString getLName( const QString &str );
+    virtual QString getFirstName( const QString &str );
+    virtual QString getLastName( const QString &str );
 
     bool cursorPositionWasSet() const;
 protected:

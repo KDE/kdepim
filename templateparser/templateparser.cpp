@@ -172,7 +172,7 @@ int TemplateParser::parseQuotes( const QString &prefix, const QString &str,
     return len;
 }
 
-QString TemplateParser::getFName( const QString &str )
+QString TemplateParser::getFirstName( const QString &str )
 {
     // simple logic:
     // if there is ',' in name, than format is 'Last, First'
@@ -218,7 +218,7 @@ QString TemplateParser::getFName( const QString &str )
     return res;
 }
 
-QString TemplateParser::getLName( const QString &str )
+QString TemplateParser::getLastName( const QString &str )
 {
     // simple logic:
     // if there is ',' in name, than format is 'Last, First'
@@ -597,8 +597,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
                 i += strlen( "CCFNAME" );
                 const QString str =
                         MessageCore::StringUtil::stripEmailAddr( mMsg->cc()->asUnicodeString( ) );
-                plainBody.append( getFName( str ) );
-                const QString body = plainToHtml( getFName( str ) );
+                plainBody.append( getFirstName( str ) );
+                const QString body = plainToHtml( getFirstName( str ) );
                 htmlBody.append( body );
 
             } else if ( cmd.startsWith( QLatin1String( "CCLNAME" ) ) ) {
@@ -606,8 +606,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
                 i += strlen( "CCLNAME" );
                 const QString str =
                         MessageCore::StringUtil::stripEmailAddr( mMsg->cc()->asUnicodeString( ) );
-                plainBody.append( getLName( str ) );
-                const QString body = plainToHtml( getLName( str ) );
+                plainBody.append( getLastName( str ) );
+                const QString body = plainToHtml( getLastName( str ) );
                 htmlBody.append( body );
 
             } else if ( cmd.startsWith( QLatin1String( "TOADDR" ) ) ) {
@@ -632,8 +632,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
                 i += strlen( "TOFNAME" );
                 const QString str =
                         MessageCore::StringUtil::stripEmailAddr( mMsg->to()->asUnicodeString( ) );
-                plainBody.append( getFName( str ) );
-                const QString body = plainToHtml( getFName( str ) );
+                plainBody.append( getFirstName( str ) );
+                const QString body = plainToHtml( getFirstName( str ) );
                 htmlBody.append( body );
 
             } else if ( cmd.startsWith( QLatin1String( "TOLNAME" ) ) ) {
@@ -641,8 +641,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
                 i += strlen( "TOLNAME" );
                 const QString str =
                         MessageCore::StringUtil::stripEmailAddr( mMsg->to()->asUnicodeString( ) );
-                plainBody.append( getLName( str ) );
-                const QString body = plainToHtml( getLName( str ) );
+                plainBody.append( getLastName( str ) );
+                const QString body = plainToHtml( getLastName( str ) );
                 htmlBody.append( body );
 
             } else if ( cmd.startsWith( QLatin1String( "TOLIST" ) ) ) {
@@ -675,8 +675,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
                 i += strlen( "FROMFNAME" );
                 const QString str =
                         MessageCore::StringUtil::stripEmailAddr( mMsg->from()->asUnicodeString( ) );
-                plainBody.append( getFName( str ) );
-                const QString body = plainToHtml( getFName( str ) );
+                plainBody.append( getFirstName( str ) );
+                const QString body = plainToHtml( getFirstName( str ) );
                 htmlBody.append( body );
 
             } else if ( cmd.startsWith( QLatin1String( "FROMLNAME" ) ) ) {
@@ -684,8 +684,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
                 i += strlen( "FROMLNAME" );
                 const QString str =
                         MessageCore::StringUtil::stripEmailAddr( mMsg->from()->asUnicodeString( ) );
-                plainBody.append( getLName( str ) );
-                const QString body = plainToHtml( getLName( str ) );
+                plainBody.append( getLastName( str ) );
+                const QString body = plainToHtml( getLastName( str ) );
                 htmlBody.append( body );
 
             } else if ( cmd.startsWith( QLatin1String( "FULLSUBJECT" ) ) || cmd.startsWith( QLatin1String( "FULLSUBJ" ) ) ) {
@@ -789,8 +789,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
                 if ( mOrigMsg ) {
                     const QString str =
                             MessageCore::StringUtil::stripEmailAddr( mOrigMsg->cc()->asUnicodeString( ) );
-                    plainBody.append( getFName( str ) );
-                    const QString body = plainToHtml( getFName( str ) );
+                    plainBody.append( getFirstName( str ) );
+                    const QString body = plainToHtml( getFirstName( str ) );
                     htmlBody.append( body );
                 }
 
@@ -800,8 +800,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
                 if ( mOrigMsg ) {
                     const QString str =
                             MessageCore::StringUtil::stripEmailAddr( mOrigMsg->cc()->asUnicodeString( ) );
-                    plainBody.append( getLName( str ) );
-                    const QString body = plainToHtml( getLName( str ) );
+                    plainBody.append( getLastName( str ) );
+                    const QString body = plainToHtml( getLastName( str ) );
                     htmlBody.append( body );
                 }
 
@@ -832,8 +832,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
                 if ( mOrigMsg ) {
                     const QString str =
                             MessageCore::StringUtil::stripEmailAddr( mOrigMsg->to()->asUnicodeString( ) );
-                    plainBody.append( getFName( str ) );
-                    const QString body = plainToHtml( getFName( str ) );
+                    plainBody.append( getFirstName( str ) );
+                    const QString body = plainToHtml( getFirstName( str ) );
                     htmlBody.append( body );
                 }
 
@@ -843,8 +843,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
                 if ( mOrigMsg ) {
                     const QString str =
                             MessageCore::StringUtil::stripEmailAddr( mOrigMsg->to()->asUnicodeString( ) );
-                    plainBody.append( getLName( str ) );
-                    const QString body = plainToHtml( getLName( str ) );
+                    plainBody.append( getLastName( str ) );
+                    const QString body = plainToHtml( getLastName( str ) );
                     htmlBody.append( body );
                 }
 
@@ -895,8 +895,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
                 if ( mOrigMsg ) {
                     const QString str =
                             MessageCore::StringUtil::stripEmailAddr( mOrigMsg->from()->asUnicodeString() );
-                    plainBody.append( getFName( str ) );
-                    const QString body = plainToHtml( getFName( str ) );
+                    plainBody.append( getFirstName( str ) );
+                    const QString body = plainToHtml( getFirstName( str ) );
                     htmlBody.append( body );
                 }
 
@@ -906,8 +906,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
                 if ( mOrigMsg ) {
                     const QString str =
                             MessageCore::StringUtil::stripEmailAddr( mOrigMsg->from()->asUnicodeString() );
-                    plainBody.append( getLName( str ) );
-                    const QString body = plainToHtml( getLName( str ) );
+                    plainBody.append( getLastName( str ) );
+                    const QString body = plainToHtml( getLastName( str ) );
                     htmlBody.append( body );
                 }
 
