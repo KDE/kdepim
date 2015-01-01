@@ -14,7 +14,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-/* Copyright (c) 2012 Montel Laurent <montel@kde.org>                      */
+/* Copyright (c) 2012-2015 Montel Laurent <montel@kde.org>                      */
 
 #ifndef MAILIMPORTER_FILTER_THEBAT_HXX
 #define MAILIMPORTER_FILTER_THEBAT_HXX
