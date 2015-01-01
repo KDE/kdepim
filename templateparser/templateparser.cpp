@@ -688,17 +688,14 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
                 const QString body = plainToHtml( getLName( str ) );
                 htmlBody.append( body );
 
-            } else if ( cmd.startsWith( QLatin1String( "FULLSUBJECT" ) ) ) {
-                kDebug() << "Command: FULLSUBJECT";
-                i += strlen( "FULLSUBJECT" );
-                const QString str = mMsg->subject()->asUnicodeString();
-                plainBody.append( str );
-                const QString body = plainToHtml( str );
-                htmlBody.append( body );
-
-            } else if ( cmd.startsWith( QLatin1String( "FULLSUBJ" ) ) ) {
-                kDebug() << "Command: FULLSUBJ";
-                i += strlen( "FULLSUBJ" );
+            } else if ( cmd.startsWith( QLatin1String( "FULLSUBJECT" ) ) || cmd.startsWith( QLatin1String( "FULLSUBJ" ) ) ) {
+                if (cmd.startsWith( QLatin1String( "FULLSUBJ" )) ) {
+                    kDebug() << "Command: FULLSUBJ";
+                    i += strlen( "FULLSUBJ" );
+                } else {
+                    kDebug() << "Command: FULLSUBJECT";
+                    i += strlen( "FULLSUBJECT" );
+                }
                 const QString str = mMsg->subject()->asUnicodeString();
                 plainBody.append( str );
                 const QString body = plainToHtml( str );
@@ -914,19 +911,14 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
                     htmlBody.append( body );
                 }
 
-            } else if ( cmd.startsWith( QLatin1String( "OFULLSUBJECT" ) ) ) {
-                kDebug() << "Command: OFULLSUBJECT";
-                i += strlen( "OFULLSUBJECT" );
-                if ( mOrigMsg ) {
-                    const QString str = mOrigMsg->subject()->asUnicodeString();
-                    plainBody.append( str );
-                    const QString body = plainToHtml( str );
-                    htmlBody.append( body );
+            } else if ( cmd.startsWith( QLatin1String( "OFULLSUBJECT" ) ) || cmd.startsWith( QLatin1String( "OFULLSUBJ" ) ) ) {
+                if (cmd.startsWith( QLatin1String( "OFULLSUBJECT" ) )) {
+                    kDebug() << "Command: OFULLSUBJECT";
+                    i += strlen( "OFULLSUBJECT" );
+                } else {
+                    kDebug() << "Command: OFULLSUBJ";
+                    i += strlen( "OFULLSUBJ" );
                 }
-
-            } else if ( cmd.startsWith( QLatin1String( "OFULLSUBJ" ) ) ) {
-                kDebug() << "Command: OFULLSUBJ";
-                i += strlen( "OFULLSUBJ" );
                 if ( mOrigMsg ) {
                     const QString str = mOrigMsg->subject()->asUnicodeString();
                     plainBody.append( str );
