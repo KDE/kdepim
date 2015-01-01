@@ -125,7 +125,6 @@ void SendLaterJob::slotJobFinished(KJob *job)
 void SendLaterJob::updateAndCleanMessageBeforeSending(const KMime::Message::Ptr &msg)
 {
     msg->date()->setDateTime(QDateTime::currentDateTime());
-    MessageCore::StringUtil::removePrivateHeaderFields(msg, true);
     MessageComposer::Util::removeNotNecessaryHeaders(msg);
     msg->assemble();
 }
