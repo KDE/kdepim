@@ -173,24 +173,24 @@ void TemplateParserTester::test_processWithTemplatesForContent_data()
 
     QDir dir(QLatin1String(MAIL_DATA_DIR));
     foreach (const QString &file, dir.entryList(QStringList(QLatin1String("plain*.mbox")), QDir::Files | QDir::Readable | QDir::NoSymLinks)) {
-        QTest::newRow(file.toLatin1()) << "%OTIME" << QString(dir.path() + QLatin1Char('/') +  file) << "11:30";
-        QTest::newRow(file.toLatin1()) << "%OTIMELONG" << QString(dir.path() + QLatin1Char('/') +  file) << "11:30:27";
-        QTest::newRow(file.toLatin1()) << "%OTIMELONGEN" << QString(dir.path() + QLatin1Char('/') +  file) << "11:30:27";
-        QTest::newRow(file.toLatin1()) << "%ODATE" << QString(dir.path() + QLatin1Char('/') +  file) << "Sunday 07 August 2011";
-        QTest::newRow(file.toLatin1()) << "%ODATESHORT" << QString(dir.path() + QLatin1Char('/') +  file) << "2011-08-07";
-        QTest::newRow(file.toLatin1()) << "%ODATEEN" << QString(dir.path() + QLatin1Char('/') +  file) << "Sunday 07 August 2011";
-        QTest::newRow(file.toLatin1()) << "%OFULLSUBJ" << QString(dir.path() + QLatin1Char('/') +  file) << "Plain Message Test";
-        QTest::newRow(file.toLatin1()) << "%OFULLSUBJECT" << QString(dir.path() + QLatin1Char('/') +  file) << "Plain Message Test";
-        QTest::newRow(file.toLatin1()) << "%OFROMFNAME" << QString(dir.path() + QLatin1Char('/') +  file) << "Sudhendu";
-        QTest::newRow(file.toLatin1()) << "%OFROMLNAME" << QString(dir.path() + QLatin1Char('/') +  file) << "Kumar";
-        QTest::newRow(file.toLatin1()) << "%OFROMNAME" << QString(dir.path() + QLatin1Char('/') +  file) << "Sudhendu Kumar";
-        QTest::newRow(file.toLatin1()) << "%OFROMADDR" << QString(dir.path() + QLatin1Char('/') +  file) << "Sudhendu Kumar <dontspamme@yoohoo.com>";
-        QTest::newRow( file.toLatin1() ) << "%OTOADDR" << QString(dir.path() + QLatin1Char('/') +  file) << "kde <foo@yoohoo.org>";
-        QTest::newRow( file.toLatin1() ) << "%OTOFNAME" << QString(dir.path() + QLatin1Char('/') +  file) << "kde";
-        QTest::newRow( file.toLatin1() ) << "%OTONAME" << QString(dir.path() + QLatin1Char('/') +  file) << "kde";
-        QTest::newRow( file.toLatin1() ) << "%OTOLNAME" << QString(dir.path() + QLatin1Char('/') +  file) << "";
-        QTest::newRow( file.toLatin1() ) << "%OTOLIST" << QString(dir.path() + QLatin1Char('/') +  file) << "kde <foo@yoohoo.org>";
-
+        const QString fileName = QString(dir.path() + QLatin1Char('/') +  file);
+        QTest::newRow( file.toLatin1() ) << "%OTIME" << fileName << "11:30";
+        QTest::newRow( file.toLatin1() ) << "%OTIMELONG" << fileName << "11:30:27";
+        QTest::newRow( file.toLatin1() ) << "%OTIMELONGEN" << fileName << "11:30:27";
+        QTest::newRow( file.toLatin1() ) << "%ODATE" << fileName << "Sunday 07 August 2011";
+        QTest::newRow( file.toLatin1() ) << "%ODATESHORT" << fileName << "2011-08-07";
+        QTest::newRow( file.toLatin1() ) << "%ODATEEN" << fileName << "Sunday 07 August 2011";
+        QTest::newRow( file.toLatin1() ) << "%OFULLSUBJ" << fileName << "Plain Message Test";
+        QTest::newRow( file.toLatin1() ) << "%OFULLSUBJECT" << fileName << "Plain Message Test";
+        QTest::newRow( file.toLatin1() ) << "%OFROMFNAME" << fileName << "Sudhendu";
+        QTest::newRow( file.toLatin1() ) << "%OFROMLNAME" << fileName  << "Kumar";
+        QTest::newRow( file.toLatin1() ) << "%OFROMNAME" << fileName << "Sudhendu Kumar";
+        QTest::newRow( file.toLatin1() ) << "%OFROMADDR" << fileName << "Sudhendu Kumar <dontspamme@yoohoo.com>";
+        QTest::newRow( file.toLatin1() ) << "%OTOADDR" << fileName << "kde <foo@yoohoo.org>";
+        QTest::newRow( file.toLatin1() ) << "%OTOFNAME" << fileName << "kde";
+        QTest::newRow( file.toLatin1() ) << "%OTONAME" << fileName << "kde";
+        QTest::newRow( file.toLatin1() ) << "%OTOLNAME" << fileName << "";
+        QTest::newRow( file.toLatin1() ) << "%OTOLIST" << fileName << "kde <foo@yoohoo.org>";
     }
 }
 
