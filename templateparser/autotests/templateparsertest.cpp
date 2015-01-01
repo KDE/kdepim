@@ -169,7 +169,7 @@ void TemplateParserTester::test_processWithTemplatesForContent_data()
 {
     QTest::addColumn<QString>("command");
     QTest::addColumn<QString>("mailFileName");
-    QTest::addColumn<QString>("expected");
+    QTest::addColumn<QString>("expectedBody");
 
     QDir dir(QLatin1String(MAIL_DATA_DIR));
     foreach (const QString &file, dir.entryList(QStringList(QLatin1String("plain*.mbox")), QDir::Files | QDir::Readable | QDir::NoSymLinks)) {
@@ -191,6 +191,9 @@ void TemplateParserTester::test_processWithTemplatesForContent_data()
         QTest::newRow( file.toLatin1() ) << "%OTONAME" << fileName << "kde";
         QTest::newRow( file.toLatin1() ) << "%OTOLNAME" << fileName << "";
         QTest::newRow( file.toLatin1() ) << "%OTOLIST" << fileName << "kde <foo@yoohoo.org>";
+        QTest::newRow( file.toLatin1() ) << "%ODOW" << fileName << "Sunday";
+        QTest::newRow( file.toLatin1() ) << "%BLANK" << fileName << "";
+        QTest::newRow( file.toLatin1() ) << "%NOP" << fileName << "";
     }
 }
 
@@ -198,7 +201,7 @@ void TemplateParserTester::test_processWithTemplatesForContent()
 {
     QFETCH(QString, command);
     QFETCH(QString, mailFileName);
-    QFETCH(QString, expected);
+    QFETCH(QString, expectedBody);
 
     QFile mailFile(mailFileName);
     QVERIFY(mailFile.open(QIODevice::ReadOnly));
@@ -216,7 +219,7 @@ void TemplateParserTester::test_processWithTemplatesForContent()
     parser.processWithTemplate(command);
 
     identMan->deleteLater();
-    QCOMPARE(QString::fromLatin1(msg->encodedBody()), expected);
+    QCOMPARE(QString::fromLatin1(msg->encodedBody()), expectedBody);
 }
 
 QTEST_MAIN(TemplateParserTester)
