@@ -864,7 +864,7 @@ QString smartQuote( const QString &msg, int maxLineLength )
             if ( !firstPart )
                 textParts.append( QString() );
             continue;
-        };
+        }
 
         if ( firstPart ) {
             oldIndent = indent;
