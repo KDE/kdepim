@@ -3,7 +3,7 @@
   Copyright (C) 2003 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
   Copyright (c) 2008 Ron Goodheart <rong.dev@gmail.com>
-  Copyright (c) 2010 Laurent Montel <montel@kde.org>
+  Copyright (c) 2010-2015 Laurent Montel <montel@kde.org>
   Copyright (c) 2012-2013 Allen Winter <winter@kde.org>
 
   This program is free software; you can redistribute it and/or modify

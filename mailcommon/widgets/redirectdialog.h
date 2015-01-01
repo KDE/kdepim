@@ -1,7 +1,7 @@
 /*  -*- mode: C++ -*-
 
   Copyright (c) 2003 Andreas Gungl <a.gungl@gmx.de>
-  Copyright (c) 2014 Laurent Montel <montel@kde.org>
+  Copyright (c) 2014-2015 Laurent Montel <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as

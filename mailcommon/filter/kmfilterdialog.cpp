@@ -3,7 +3,7 @@
   Author: Marc Mutz <mutz@kde.org>
   based upon work by Stefan Taferner <taferner@kde.org>
 
-  Copyright (c) 2011-2012-2013 Laurent Montel <montel@kde.org>
+  Copyright (c) 2011-2015 Laurent Montel <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
