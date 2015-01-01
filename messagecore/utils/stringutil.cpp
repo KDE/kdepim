@@ -681,7 +681,6 @@ void removePrivateHeaderFields( const KMime::Message::Ptr &message, bool removeI
     message->removeHeader( "X-Status" );
     message->removeHeader( "X-KMail-EncryptionState" );
     message->removeHeader( "X-KMail-SignatureState" );
-    message->removeHeader( "X-KMail-MDN-Sent" );
     message->removeHeader( "X-KMail-Transport" );
     message->removeHeader( "X-KMail-Fcc" );
     message->removeHeader( "X-KMail-Redirect-From" );
@@ -691,7 +690,6 @@ void removePrivateHeaderFields( const KMime::Message::Ptr &message, bool removeI
     message->removeHeader( "X-KMail-CursorPos" );
     message->removeHeader( "X-KMail-Templates" );
     message->removeHeader( "X-KMail-Drafts" );
-    message->removeHeader( "X-KMail-Tag" );
     message->removeHeader( "X-KMail-UnExpanded-To" );
     message->removeHeader( "X-KMail-UnExpanded-CC" );
     message->removeHeader( "X-KMail-UnExpanded-BCC" );
