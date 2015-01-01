@@ -1,7 +1,7 @@
 /*
   This file is part of KAddressBook.
 
-  Copyright (c) 2014 Laurent Montel <montel@kde.org>
+  Copyright (c) 2014-2015 Laurent Montel <montel@kde.org>
   based on code from Copyright (c) 2014 Clément Vannier <clement.vannier@free.fr>
 
   This program is free software; you can redistribute it and/or modify

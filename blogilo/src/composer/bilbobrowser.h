@@ -3,7 +3,7 @@
 
     Copyright (C) 2008-2010 Mehrdad Momeny <mehrdad.momeny@gmail.com>
     Copyright (C) 2008-2010 Golnaz Nilieh <g382nilieh@gmail.com>
-    Copyright (C) 2013 Laurent Montel <montel@kde.org> 
+    Copyright (C) 2013-2015 Laurent Montel <montel@kde.org> 
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as

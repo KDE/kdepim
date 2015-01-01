@@ -1,7 +1,7 @@
 /*
   This file is part of KAddressbook.
   Copyright (c) 2003 - 2004 Helge Deller <deller@kde.org>
-  Copyright (c) 2009 Laurent Montel <montel@kde.org>
+  Copyright (c) 2009-2015 Laurent Montel <montel@kde.org>
   Copyright (c) 2009 Urs Joss <tschenturs@gmx.ch>
 
   This program is free software; you can redistribute it and/or modify
