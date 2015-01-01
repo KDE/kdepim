@@ -312,11 +312,18 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
                 int len = parseQuotes( QLatin1String("REM="), cmd, q );
                 i += len;
 
-            } else if ( cmd.startsWith( QLatin1String( "INSERT=" ) ) ) {
-                // insert content of specified file as is
-                kDebug() << "Command: INSERT=";
+            } else if ( cmd.startsWith( QLatin1String( "INSERT=" ) ) || cmd.startsWith( QLatin1String( "PUT=" ) ) ) {
                 QString q;
-                int len = parseQuotes( QLatin1String("INSERT="), cmd, q );
+                int len = 0;
+                if (cmd.startsWith( QLatin1String( "INSERT=" ) ) ) {
+                    // insert content of specified file as is
+                    kDebug() << "Command: INSERT=";
+                    len = parseQuotes( QLatin1String("INSERT="), cmd, q );
+                } else {
+                    // insert content of specified file as is
+                    kDebug() << "Command: PUT=";
+                    len = parseQuotes( QLatin1String("PUT="), cmd, q );
+                }
                 i += len;
                 QString path = KShell::tildeExpand( q );
                 QFileInfo finfo( path );
@@ -350,33 +357,6 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
                 plainBody.append( str );
                 const QString body = plainToHtml( str );
                 htmlBody.append( body );
-
-            } else if ( cmd.startsWith( QLatin1String( "PUT=" ) ) ) {
-                // insert content of specified file as is
-                kDebug() << "Command: PUT=";
-                QString q;
-                int len = parseQuotes( QLatin1String("PUT="), cmd, q );
-                i += len;
-                QString path = KShell::tildeExpand( q );
-                QFileInfo finfo( path );
-                if ( finfo.isRelative() ) {
-                    path = QDir::homePath();
-                    path += QLatin1Char('/');
-                    path += q;
-                }
-                QFile file( path );
-                if ( file.open( QIODevice::ReadOnly ) ) {
-                    const QByteArray content = file.readAll();
-                    plainBody.append( QString::fromLocal8Bit( content, content.size() ) );
-
-                    const QString body = plainToHtml( QString::fromLocal8Bit( content, content.size() ) );
-                    htmlBody.append( body );
-                } else if ( mDebug ) {
-                    KMessageBox::error(
-                                0,
-                                i18nc( "@info",
-                                       "Cannot insert content from file %1: %2", path, file.errorString() ) );
-                }
 
             } else if ( cmd.startsWith( QLatin1String( "QUOTEPIPE=" ) ) ) {
                 // pipe message body through command and insert it as quotation
