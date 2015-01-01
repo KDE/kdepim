@@ -14,7 +14,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-/* Copyright (c) 2012 Montel Laurent <montel@kde.org>                      */
+/* Copyright (c) 2012-2015 Montel Laurent <montel@kde.org>                      */
 
 
 #include "filter_kmail_maildir.h"
