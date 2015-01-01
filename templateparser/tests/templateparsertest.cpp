@@ -190,6 +190,9 @@ void TemplateParserTester::test_processWithTemplatesForContent_data()
         QTest::newRow( file.toLatin1() ) << "%OTONAME" << fileName << "kde";
         QTest::newRow( file.toLatin1() ) << "%OTOLNAME" << fileName << "";
         QTest::newRow( file.toLatin1() ) << "%OTOLIST" << fileName << "kde <foo@yoohoo.org>";
+        QTest::newRow( file.toLatin1() ) << "%ODOW" << fileName << "Sunday";
+        QTest::newRow( file.toLatin1() ) << "%BLANK" << fileName << "";
+        QTest::newRow( file.toLatin1() ) << "%NOP" << fileName << "";
     }
 }
 
