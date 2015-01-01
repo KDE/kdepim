@@ -43,7 +43,7 @@ int main(int argc, char **argv)
                          QStringLiteral(KDEPIM_VERSION),
                          i18n("Storage Service Manager"),
                          KAboutLicense::GPL_V2,
-                         i18n("Copyright © 2013, 2014 storageservicemanager authors"));
+                         i18n("Copyright © 2013-2015 storageservicemanager authors"));
     aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QLatin1String("montel@kde.org"));
 
     QApplication::setWindowIcon(QIcon::fromTheme(QLatin1String("kmail")));

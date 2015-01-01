@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 
     KAboutData aboutData(QStringLiteral("kmailcvt"), i18n("KMailCVT"),
                          QStringLiteral(KDEPIM_VERSION), i18n("Mail Import Tool"), KAboutLicense::GPL_V2,
-                         i18n("Copyright © 2000–2014 KMailCVT authors"));
+                         i18n("Copyright © 2000–2015 KMailCVT authors"));
 
     aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer & New filter & cleanups"), QStringLiteral("montel@kde.org"));
     aboutData.addAuthor(i18n("Hans Dijkema"), i18n("Original author"), QStringLiteral("kmailcvt@hum.org"));
