@@ -49,7 +49,8 @@ QStringList TemplateParser::Util::keywordsWithArgs()
             << QLatin1String( "%CLEARPIPE=\".*\"" )
             << QLatin1String( "%TEXTPIPE=\".*\"" )
             << QLatin1String( "%OHEADER=\".*\"" )
-            << QLatin1String( "%HEADER=\".*\"" );
+            << QLatin1String( "%HEADER=\".*\"" )
+            << QLatin1String( "%LANGUAGE=\".*\"" );
 
     return keywordsWithArgs;
 }
