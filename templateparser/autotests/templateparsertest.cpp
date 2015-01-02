@@ -170,31 +170,38 @@ void TemplateParserTester::test_processWithTemplatesForContent_data()
     QTest::addColumn<QString>("command");
     QTest::addColumn<QString>("mailFileName");
     QTest::addColumn<QString>("expectedBody");
+    QTest::addColumn<bool>( "hasDictionary" );
 
-    QDir dir(QLatin1String(MAIL_DATA_DIR));
-    foreach (const QString &file, dir.entryList(QStringList(QLatin1String("plain*.mbox")), QDir::Files | QDir::Readable | QDir::NoSymLinks)) {
-        const QString fileName = QString(dir.path() + QLatin1Char('/') +  file);
-        QTest::newRow(file.toLatin1()) << "%OTIME" << fileName << "11:30";
-        QTest::newRow(file.toLatin1()) << "%OTIMELONG" << fileName << "11:30:27";
-        QTest::newRow(file.toLatin1()) << "%OTIMELONGEN" << fileName << "11:30:27";
-        QTest::newRow(file.toLatin1()) << "%ODATE" << fileName << "Sunday 07 August 2011";
-        QTest::newRow(file.toLatin1()) << "%ODATESHORT" << fileName << "2011-08-07";
-        QTest::newRow(file.toLatin1()) << "%ODATEEN" << fileName << "Sunday 07 August 2011";
-        QTest::newRow(file.toLatin1()) << "%OFULLSUBJ" << fileName << "Plain Message Test";
-        QTest::newRow(file.toLatin1()) << "%OFULLSUBJECT" << fileName << "Plain Message Test";
-        QTest::newRow(file.toLatin1()) << "%OFROMFNAME" << fileName << "Sudhendu";
-        QTest::newRow(file.toLatin1()) << "%OFROMLNAME" << fileName  << "Kumar";
-        QTest::newRow(file.toLatin1()) << "%OFROMNAME" << fileName << "Sudhendu Kumar";
-        QTest::newRow(file.toLatin1()) << "%OFROMADDR" << fileName << "Sudhendu Kumar <dontspamme@yoohoo.com>";
-        QTest::newRow(file.toLatin1()) << "%OTOADDR" << fileName << "kde <foo@yoohoo.org>";
-        QTest::newRow(file.toLatin1()) << "%OTOFNAME" << fileName << "kde";
-        QTest::newRow(file.toLatin1()) << "%OTONAME" << fileName << "kde";
-        QTest::newRow(file.toLatin1()) << "%OTOLNAME" << fileName << "";
-        QTest::newRow(file.toLatin1()) << "%OTOLIST" << fileName << "kde <foo@yoohoo.org>";
-        QTest::newRow(file.toLatin1()) << "%ODOW" << fileName << "Sunday";
-        QTest::newRow(file.toLatin1()) << "%BLANK" << fileName << "";
-        QTest::newRow(file.toLatin1()) << "%NOP" << fileName << "";
-    }
+    QDir dir( QLatin1String(MAIL_DATA_DIR) );
+    const QString file = QLatin1String("plain-message.mbox");
+    const QString fileName = QString(dir.path() + QLatin1Char('/') +  file);
+    QTest::newRow( file.toLatin1() ) << "%OTIME" << fileName << "11:30" << false;
+    QTest::newRow( file.toLatin1() ) << "%OTIMELONG" << fileName << "11:30:27" << false;
+    QTest::newRow( file.toLatin1() ) << "%OTIMELONGEN" << fileName << "11:30:27" << false;
+    QTest::newRow( file.toLatin1() ) << "%ODATE" << fileName << "Sunday 07 August 2011" << false;
+    QTest::newRow( file.toLatin1() ) << "%ODATESHORT" << fileName << "2011-08-07" << false;
+    QTest::newRow( file.toLatin1() ) << "%ODATEEN" << fileName << "Sunday 07 August 2011" << false;
+    QTest::newRow( file.toLatin1() ) << "%OFULLSUBJ" << fileName << "Plain Message Test" << false;
+    QTest::newRow( file.toLatin1() ) << "%OFULLSUBJECT" << fileName << "Plain Message Test" << false;
+    QTest::newRow( file.toLatin1() ) << "%OFROMFNAME" << fileName << "Sudhendu" << false;
+    QTest::newRow( file.toLatin1() ) << "%OFROMLNAME" << fileName  << "Kumar" << false;
+    QTest::newRow( file.toLatin1() ) << "%OFROMNAME" << fileName << "Sudhendu Kumar" << false;
+    QTest::newRow( file.toLatin1() ) << "%OFROMADDR" << fileName << "Sudhendu Kumar <dontspamme@yoohoo.com>" << false;
+    QTest::newRow( file.toLatin1() ) << "%OTOADDR" << fileName << "kde <foo@yoohoo.org>" << false;
+    QTest::newRow( file.toLatin1() ) << "%OTOFNAME" << fileName << "kde" << false;
+    QTest::newRow( file.toLatin1() ) << "%OTONAME" << fileName << "kde" << false;
+    QTest::newRow( file.toLatin1() ) << "%OTOLNAME" << fileName << "" << false;
+    QTest::newRow( file.toLatin1() ) << "%OTOLIST" << fileName << "kde <foo@yoohoo.org>" << false;
+    QTest::newRow( file.toLatin1() ) << "%ODOW" << fileName << "Sunday" << false;
+    QTest::newRow( file.toLatin1() ) << "%BLANK" << fileName << "" << false;
+    QTest::newRow( file.toLatin1() ) << "%NOP" << fileName << "" << false;
+    QTest::newRow( file.toLatin1() ) << "%DICTIONARYLANGUAGE=\"en\"" << fileName << "" << true;
+    QTest::newRow( file.toLatin1() ) << "%DICTIONARYLANGUAGE=\"\"" << fileName << "" << false;
+    QTest::newRow( file.toLatin1() ) << "%OTIMELONG %OFULLSUBJECT" << fileName << "11:30:27 Plain Message Test" << false;
+    QTest::newRow( file.toLatin1() ) << "%OTIMELONG\n%OFULLSUBJECT" << fileName << "11:30:27\nPlain Message Test" << false;
+    const QString insertFileName = QString(dir.path() + QLatin1Char('/') +  QLatin1String("insert-file.txt"));
+    const QString insertFileNameCommand = QString::fromLatin1("%INSERT=\"%1\"").arg(insertFileName);
+    QTest::newRow( file.toLatin1() ) << insertFileNameCommand << fileName << "test insert file!\n" << false;
 }
 
 void TemplateParserTester::test_processWithTemplatesForContent()
@@ -202,6 +209,7 @@ void TemplateParserTester::test_processWithTemplatesForContent()
     QFETCH(QString, command);
     QFETCH(QString, mailFileName);
     QFETCH(QString, expectedBody);
+    QFETCH( bool, hasDictionary );
 
     QFile mailFile(mailFileName);
     QVERIFY(mailFile.open(QIODevice::ReadOnly));
@@ -217,6 +225,8 @@ void TemplateParserTester::test_processWithTemplatesForContent()
     parser.setAllowDecryption(false);
     parser.mOrigMsg = msg;
     parser.processWithTemplate(command);
+    QCOMPARE(msg->hasHeader("X-KMail-Dictionary"), hasDictionary);
+
 
     identMan->deleteLater();
     QCOMPARE(QString::fromLatin1(msg->encodedBody()), expectedBody);
