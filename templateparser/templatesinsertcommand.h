@@ -103,7 +103,8 @@ public:
         COAddresseesAddr,
         CSignature,
         CQuotePlain,
-        CQuoteHtml
+        CQuoteHtml,
+        CDictionaryLanguage
     };
 
 Q_SIGNALS:
