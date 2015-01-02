@@ -687,30 +687,29 @@ QString quoteHtmlChars(const QString &str, bool removeLineBreaks)
     return result;
 }
 
-void removePrivateHeaderFields( const KMime::Message::Ptr &message, bool cleanUpHeader )
+void removePrivateHeaderFields(const KMime::Message::Ptr &message, bool cleanUpHeader)
 {
-    message->removeHeader( "Status" );
-    message->removeHeader( "X-Status" );
-    message->removeHeader( "X-KMail-EncryptionState" );
-    message->removeHeader( "X-KMail-SignatureState" );
-    message->removeHeader( "X-KMail-Transport" );
-    message->removeHeader( "X-KMail-Fcc" );
-    message->removeHeader( "X-KMail-Redirect-From" );
-    message->removeHeader( "X-KMail-Link-Message" );
-    message->removeHeader( "X-KMail-Link-Type" );
-    message->removeHeader( "X-KMail-QuotePrefix" );
-    message->removeHeader( "X-KMail-CursorPos" );
-    message->removeHeader( "X-KMail-Templates" );
-    message->removeHeader( "X-KMail-Drafts" );
-    message->removeHeader( "X-KMail-UnExpanded-To" );
-    message->removeHeader( "X-KMail-UnExpanded-CC" );
-    message->removeHeader( "X-KMail-UnExpanded-BCC" );
-    message->removeHeader( "X-KMail-FccDisabled" );
+    message->removeHeader("Status");
+    message->removeHeader("X-Status");
+    message->removeHeader("X-KMail-EncryptionState");
+    message->removeHeader("X-KMail-SignatureState");
+    message->removeHeader("X-KMail-Transport");
+    message->removeHeader("X-KMail-Fcc");
+    message->removeHeader("X-KMail-Redirect-From");
+    message->removeHeader("X-KMail-Link-Message");
+    message->removeHeader("X-KMail-Link-Type");
+    message->removeHeader("X-KMail-QuotePrefix");
+    message->removeHeader("X-KMail-CursorPos");
+    message->removeHeader("X-KMail-Templates");
+    message->removeHeader("X-KMail-Drafts");
+    message->removeHeader("X-KMail-UnExpanded-To");
+    message->removeHeader("X-KMail-UnExpanded-CC");
+    message->removeHeader("X-KMail-UnExpanded-BCC");
+    message->removeHeader("X-KMail-FccDisabled");
 
-
-    if(cleanUpHeader) {
-        message->removeHeader( "X-KMail-Identity" );
-        message->removeHeader( "X-KMail-Dictionary" );
+    if (cleanUpHeader) {
+        message->removeHeader("X-KMail-Identity");
+        message->removeHeader("X-KMail-Dictionary");
     }
 }
 

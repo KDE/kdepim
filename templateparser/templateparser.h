@@ -234,8 +234,8 @@ public:
 
     virtual QString pipe(const QString &cmd, const QString &buf);
 
-    virtual QString getFirstName( const QString &str );
-    virtual QString getLastName( const QString &str );
+    virtual QString getFirstName(const QString &str);
+    virtual QString getLastName(const QString &str);
 
     bool cursorPositionWasSet() const;
 protected:

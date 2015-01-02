@@ -28,10 +28,12 @@ class QLineEdit;
 class KIconButton;
 class QCheckBox;
 
-namespace MailCommon {
+namespace MailCommon
+{
 class IncidencesForWidget;
 }
-namespace CalendarSupport {
+namespace CalendarSupport
+{
 
 class CALENDARSUPPORTCOLLECTIONPAGE_EXPORT CollectionGeneralPage : public Akonadi::CollectionPropertiesPage
 {

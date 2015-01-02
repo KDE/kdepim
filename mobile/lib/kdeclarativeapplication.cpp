@@ -27,7 +27,6 @@
 #include <qplatformdefs.h>
 #include <QFontDatabase>
 
-
 static inline bool runPreApplicationSetup(const KCmdLineOptions &opts)
 {
 

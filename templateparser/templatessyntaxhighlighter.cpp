@@ -46,7 +46,7 @@ void TemplatesSyntaxHighlighter::init()
     }
 
     QTextCharFormat keywordWithArgsFormat;
-    keywordWithArgsFormat.setForeground( palette.link() );
+    keywordWithArgsFormat.setForeground(palette.link());
     const QStringList keywordsWithArgs = QStringList() << Util::keywordsWithArgs();
 
     Q_FOREACH (const QString &s, keywordsWithArgs) {

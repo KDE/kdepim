@@ -113,7 +113,7 @@ void SendLater::SendLaterUtil::reload()
     if (interface.isValid()) {
         interface.call(QStringLiteral("reload"));
     } else {
-        qDebug()<<" Can not reload list";
+        qDebug() << " Can not reload list";
     }
 }
 
