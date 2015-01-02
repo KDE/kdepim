@@ -675,7 +675,7 @@ QString quoteHtmlChars( const QString& str, bool removeLineBreaks )
     return result;
 }
 
-void removePrivateHeaderFields( const KMime::Message::Ptr &message, bool removeIdentityTag )
+void removePrivateHeaderFields( const KMime::Message::Ptr &message, bool cleanUpHeader )
 {
     message->removeHeader( "Status" );
     message->removeHeader( "X-Status" );
@@ -694,10 +694,12 @@ void removePrivateHeaderFields( const KMime::Message::Ptr &message, bool removeI
     message->removeHeader( "X-KMail-UnExpanded-CC" );
     message->removeHeader( "X-KMail-UnExpanded-BCC" );
     message->removeHeader( "X-KMail-FccDisabled" );
-    message->removeHeader( "X-KMail-Dictionary" );
 
-    if(removeIdentityTag)
+
+    if(cleanUpHeader) {
         message->removeHeader( "X-KMail-Identity" );
+        message->removeHeader( "X-KMail-Dictionary" );
+    }
 }
 
 QByteArray asSendableString( const KMime::Message::Ptr &originalMessage )
