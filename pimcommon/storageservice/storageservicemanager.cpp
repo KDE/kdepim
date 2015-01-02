@@ -344,6 +344,7 @@ void StorageServiceManager::readConfig()
             }
         } else if (service == serviceName(WebDav)) {
             if (!mListService.contains(serviceName(WebDav))) {
+#pragma "port QT5"
                 //QT5 storageService = new WebDavStorageService();
             }
         } else if (service == serviceName(Box)) {

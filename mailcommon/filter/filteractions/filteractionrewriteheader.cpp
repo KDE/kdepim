@@ -122,6 +122,7 @@ QWidget *FilterActionRewriteHeader::createParamWidget(QWidget *parent) const
     QLineEdit *lineEdit = new QLineEdit(widget);
     lineEdit->setObjectName(QLatin1String("replace"));
     lineEdit->setClearButtonEnabled(true);
+#pragma "port QT5"
     //QT5 lineEdit->setTrapReturnKey(true);
     layout->addWidget(lineEdit, 1);
 

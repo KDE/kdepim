@@ -38,5 +38,5 @@ void MailPlugin::registerTypes(const char *uri)
     qmlRegisterType<ReceiverModel>(uri, 0, 1, "ReceiverModel");
     qmlRegisterType<MailList>(uri, 0, 1, "MailList");
 }
-
+#pragma "port QT5"
 //QT5 Q_EXPORT_PLUGIN2(mailplugin, MailPlugin)

@@ -337,7 +337,6 @@ KeySelectionDialog::KeySelectionDialog(const KeyList &keyList,
     QFrame *page = new QFrame(this);
     mainLayout->addWidget(page);
     QVBoxLayout *topLayout = new QVBoxLayout(page);
-    //QT5 topLayout->setSpacing( spacingHint() );
     topLayout->setMargin(0);
 
     if (!text.isEmpty()) {
@@ -1655,7 +1654,6 @@ CipherTextDialog::CipherTextDialog(const QByteArray &text,
     mainLayout->addWidget(page);
     mainLayout->addWidget(buttonBox);
     QVBoxLayout *topLayout = new QVBoxLayout(page);
-    //QT5 topLayout->setSpacing( spacingHint() );
     topLayout->setMargin(0);
 
     QLabel *label = new QLabel(page);

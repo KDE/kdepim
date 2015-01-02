@@ -410,6 +410,7 @@ void MessageBox::make(QWidget *parent, QMessageBox::Icon icon, const QString &te
     }
 
     if (options & KMessageBox::PlainCaption) {
+#pragma "port QT5"
         //QT5 dialog->setPlainCaption(caption);
     }
 

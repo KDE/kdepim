@@ -151,6 +151,7 @@ TransactionItem::TransactionItem(QWidget *parent,
     mFrame->setFrameShape(QFrame::HLine);
     mFrame->setFrameShadow(QFrame::Raised);
     mFrame->show();
+#pragma "port QT5"
     //QT5 setStretchFactor( mFrame, 3 );
     layout()->addWidget(mFrame);
 

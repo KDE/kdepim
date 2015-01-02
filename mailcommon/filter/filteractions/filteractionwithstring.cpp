@@ -39,6 +39,7 @@ QWidget *FilterActionWithString::createParamWidget(QWidget *parent) const
 {
     QLineEdit *lineEdit = new QLineEdit(parent);
     lineEdit->setClearButtonEnabled(true);
+#pragma "port QT5"
     //QT5 lineEdit->setTrapReturnKey(true);
     lineEdit->setText(mParameter);
 

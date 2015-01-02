@@ -65,6 +65,7 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTe
 
     mTemplateNameEdit = new QLineEdit;
     mTemplateNameEdit->setEnabled(!defaultTemplate);
+#pragma "port QT5"
     //QT5 mTemplateNameEdit->setTrapReturnKey(true);
     mTemplateNameEdit->setClearButtonEnabled(true);
     hbox->addWidget(mTemplateNameEdit);

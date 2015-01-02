@@ -52,6 +52,7 @@ ManageAccountWidget::ManageAccountWidget(QWidget *parent)
     mWidget->mAccountList->view()->setSelectionMode(QAbstractItemView::SingleSelection);
 
     mWidget->mFilterAccount->setProxy(mWidget->mAccountList->agentFilterProxyModel());
+#pragma "port QT5"
     //QT5 mWidget->mFilterAccount->lineEdit()->setTrapReturnKey( true );
     slotAccountSelected(mWidget->mAccountList->currentAgentInstance());
 }
