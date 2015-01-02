@@ -47,7 +47,7 @@ void TemplatesSyntaxHighlighter::init()
 
     QTextCharFormat keywordWithArgsFormat;
     keywordWithArgsFormat.setForeground( palette.link() );
-    const QStringList keywordsWithArgs = QStringList() << Util::keywordsWithArgs();
+    const QStringList keywordsWithArgs = QStringList() << Util::keywordsWithArgsForCompleter();
 
     Q_FOREACH ( const QString & s, keywordsWithArgs ) {
         const QRegExp regex( s, Qt::CaseInsensitive );

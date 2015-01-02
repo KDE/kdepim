@@ -30,7 +30,7 @@ TEMPLATEPARSER_EXPORT void deleteTemplate( const QString &id );
 
 TEMPLATEPARSER_EXPORT QStringList keywords();
 TEMPLATEPARSER_EXPORT QStringList keywordsWithArgs();
-
+TEMPLATEPARSER_EXPORT QStringList keywordsWithArgsForCompleter();
 }
 }
 
