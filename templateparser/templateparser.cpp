@@ -315,8 +315,17 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 QString q;
                 int len = parseQuotes(QLatin1String("REM="), cmd, q);
                 i += len;
-
-            } else if (cmd.startsWith(QLatin1String("INSERT=")) || cmd.startsWith(QLatin1String("PUT="))) {
+            } else if ( cmd.startsWith( QLatin1String( "LANGUAGE=" ) ) ) {
+                QString q;
+                const int len = parseQuotes( QLatin1String("LANGUAGE="), cmd, q );
+                i += len;
+                if (!q.isEmpty()) {
+                    KMime::Headers::Generic *header =
+                            new KMime::Headers::Generic( "X-KMail-Dictionary", mMsg.get(),
+                                                         q, "utf-8" );
+                    mMsg->setHeader( header );
+                }
+            } else if ( cmd.startsWith( QLatin1String( "INSERT=" ) ) || cmd.startsWith( QLatin1String( "PUT=" ) ) ) {
                 QString q;
                 int len = 0;
                 if (cmd.startsWith(QLatin1String("INSERT="))) {
