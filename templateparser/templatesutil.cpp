@@ -50,7 +50,7 @@ QStringList TemplateParser::Util::keywordsWithArgs()
             << QLatin1String( "%TEXTPIPE=\"\"" )
             << QLatin1String( "%OHEADER=\"\"" )
             << QLatin1String( "%HEADER=\"\"" )
-            << QLatin1String( "%LANGUAGE=\"\"" );
+            << QLatin1String( "%DICTIONARYLANGUAGE=\"\"" );
 
     return keywordsWithArgs;
 }
@@ -70,7 +70,7 @@ QStringList TemplateParser::Util::keywordsWithArgsForCompleter()
             << QLatin1String( "%TEXTPIPE=\".*\"" )
             << QLatin1String( "%OHEADER=\".*\"" )
             << QLatin1String( "%HEADER=\".*\"" )
-            << QLatin1String( "%LANGUAGE=\".*\"" );
+            << QLatin1String( "%DICTIONARYLANGUAGE=\".*\"" );
 
     return keywordsWithArgs;
 }
