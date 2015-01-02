@@ -409,11 +409,6 @@ void MessageBox::make(QWidget *parent, QMessageBox::Icon icon, const QString &te
         KGuiItem::assign(box->button(QDialogButtonBox::No), KGuiItem_showAuditLog());
     }
 
-    if (options & KMessageBox::PlainCaption) {
-#pragma "port QT5"
-        //QT5 dialog->setPlainCaption(caption);
-    }
-
     if (QDialogButtonBox::No == KMessageBox::createKMessageBox(dialog, box, icon, text, QStringList(), QString(), 0, options)) {
         auditLog(0, job);
     }

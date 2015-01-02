@@ -413,8 +413,6 @@ void Kleo::KeySelectionDialog::init(bool rememberChoice, bool extendedSelection,
 
     mTopLayout = new QVBoxLayout(page);
     mTopLayout->setMargin(0);
-#pragma "port QT5"
-    //QT5 mTopLayout->setSpacing( spacingHint() );
 
     if (!text.isEmpty()) {
 #ifndef KDEPIM_MOBILE_UI
