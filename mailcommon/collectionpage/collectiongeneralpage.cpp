@@ -33,6 +33,7 @@
 #include <EntityDisplayAttribute>
 #include <AkonadiCore/NewMailNotifierAttribute>
 #include <KIdentityManagement/IdentityCombo>
+#include "pimcommon/util/imapresourcemanager.h"
 
 #include <KColorScheme>
 #include <KComboBox>
@@ -168,7 +169,8 @@ void CollectionGeneralPage::init(const Akonadi::Collection &collection)
 
     // Only do make this settable, if the IMAP resource is enabled
     // and it's not the personal folders (those must not be changed)
-    if (PimCommon::Util::isImapResource(collection.resource())) {
+    const QString collectionResource = collection.resource();
+    if (CommonKernel->imapResourceManager()->hasAnnotationSupport(collectionResource)) {
         CollectionTypeUtil::FolderContentsType contentsType = CollectionTypeUtil::ContentsTypeMail;
 
         const CollectionAnnotationsAttribute *annotationAttribute =

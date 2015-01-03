@@ -38,34 +38,41 @@ ImapResourceManager::~ImapResourceManager()
 
 void ImapResourceManager::slotInstanceAdded(const Akonadi::AgentInstance &instance)
 {
-    searchCapabilities(instance.type().identifier());
+    searchCapabilities(instance.identifier());
 }
 
 void ImapResourceManager::slotInstanceRemoved(const Akonadi::AgentInstance &instance)
 {
-    mImapResource.remove(instance.type().identifier());
+    mImapResource.remove(instance.identifier());
 }
 
 void ImapResourceManager::searchCapabilities(const QString &identifier)
 {
+    qDebug() << " void ImapResourceManager::searchCapabilities(const QString &identifier)" << identifier;
     //By default makes it as true.
     mImapResource.insert(identifier, true);
     QDBusInterface iface(
-                QLatin1String( "org.freedesktop.Akonadi.Resource.")+ identifier,
-                QLatin1String( "/" ), QLatin1String( "org.kde.Akonadi.ImapResourceBase" ),
-                KDBusConnectionPool::threadConnection(), this );
-    QDBusPendingCall call = iface.asyncCall( QLatin1String( "serverCapabilities" ) );
-    QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(call, this);
-    watcher->setProperty("identifier", identifier);
-    connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)), this, SLOT(slotCapabilities(QDBusPendingCallWatcher*)));
+        QLatin1String("org.freedesktop.Akonadi.Resource.") + identifier,
+        QLatin1String("/"), QLatin1String("org.kde.Akonadi.ImapResourceBase"),
+        KDBusConnectionPool::threadConnection(), this);
+
+    if (iface.isValid()) {
+        QDBusPendingCall call = iface.asyncCall(QLatin1String("serverCapabilities"));
+        QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(call, this);
+        watcher->setProperty("identifier", identifier);
+        connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)), this, SLOT(slotCapabilities(QDBusPendingCallWatcher*)));
+    } else {
+        qDebug() << "interface not valid";
+    }
 }
 
-void ImapResourceManager::slotCapabilities(QDBusPendingCallWatcher* watcher)
+void ImapResourceManager::slotCapabilities(QDBusPendingCallWatcher *watcher)
 {
     QDBusPendingReply<QStringList> reply = *watcher;
-    if ( reply.isValid() ) {
+    if (reply.isValid()) {
         if (watcher->property("identifier").isValid()) {
             const QStringList capabilities = reply.value();
+            qDebug() << " capabilities" << capabilities << " for identifier" << watcher->property("identifier").toString();
             mImapResource.insert(watcher->property("identifier").toString(), capabilities.contains(QLatin1String("ANNOTATEMORE")));
         }
     }
@@ -75,14 +82,14 @@ void ImapResourceManager::slotCapabilities(QDBusPendingCallWatcher* watcher)
 
 void ImapResourceManager::init()
 {
-    Q_FOREACH ( const Akonadi::AgentInstance &instance, Akonadi::AgentManager::self()->instances() ) {
-        const QString identifier = instance.type().identifier();
+    Q_FOREACH (const Akonadi::AgentInstance &instance, Akonadi::AgentManager::self()->instances()) {
+        const QString identifier = instance.identifier();
         if (PimCommon::Util::isImapResource(identifier)) {
             searchCapabilities(identifier);
         }
     }
-    connect( Akonadi::AgentManager::self(), SIGNAL(instanceAdded(Akonadi::AgentInstance)), SLOT(slotInstanceAdded(Akonadi::AgentInstance)) );
-    connect( Akonadi::AgentManager::self(), SIGNAL(instanceRemoved(Akonadi::AgentInstance)), SLOT(slotInstanceRemoved(Akonadi::AgentInstance)) );
+    connect(Akonadi::AgentManager::self(), SIGNAL(instanceAdded(Akonadi::AgentInstance)), SLOT(slotInstanceAdded(Akonadi::AgentInstance)));
+    connect(Akonadi::AgentManager::self(), SIGNAL(instanceRemoved(Akonadi::AgentInstance)), SLOT(slotInstanceRemoved(Akonadi::AgentInstance)));
 }
 
 bool ImapResourceManager::hasAnnotationSupport(const QString &identifier) const

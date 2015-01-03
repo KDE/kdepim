@@ -23,18 +23,18 @@
 
 #include "pimcommon_export.h"
 class QDBusPendingCallWatcher;
-namespace Akonadi {
+namespace Akonadi
+{
 class AgentInstance;
 }
-namespace PimCommon {
+namespace PimCommon
+{
 class PIMCOMMON_EXPORT ImapResourceManager : public QObject
 {
     Q_OBJECT
 public:
     explicit ImapResourceManager(QObject *parent = 0);
     ~ImapResourceManager();
-
-    bool hasAnnotationSupport() const;
 
     bool hasAnnotationSupport(const QString &identifier) const;
 private Q_SLOTS:
