@@ -22,6 +22,7 @@
 #include "pop3settings.h"
 
 #include "pimcommon/util/pimutil.h"
+#include "pimcommon/util/imapresourcemanager.h"
 
 #include <Akonadi/AgentInstance>
 #include <Akonadi/AgentManager>
@@ -61,6 +62,7 @@ Kernel::Kernel( QObject *parent ) : QObject( parent )
     mKernelIf = 0;
     mSettingsIf = 0;
     mFilterIf = 0;
+    mImapResourceManager = new PimCommon::ImapResourceManager(this);
 }
 
 Kernel::~Kernel()
@@ -71,6 +73,11 @@ Kernel::~Kernel()
 Kernel *Kernel::self()
 {
     return sInstance->kernel; //will create it
+}
+
+PimCommon::ImapResourceManager *Kernel::imapResourceManager() const
+{
+    return mImapResourceManager;
 }
 
 Akonadi::Collection Kernel::collectionFromId( const Akonadi::Collection::Id &id ) const
