@@ -3,7 +3,7 @@ project(kdepim)
 cmake_minimum_required(VERSION 2.8.12)
 
 # we need some parts of the ECM CMake helpers
-find_package(ECM 1.3.0 REQUIRED NO_MODULE)
+find_package(ECM 1.6.0 REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${kdepim_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
 include(ECMOptionalAddSubdirectory)
 include(ECMInstallIcons)
@@ -73,7 +73,7 @@ set(KDEPIM_LIB_VERSION "${KDEPIM_VERSION_NUMBER}.0")
 set(KDEPIM_LIB_SOVERSION "5")
 
 set(QT_REQUIRED_VERSION "5.3.0")
-set(KF5_VERSION "5.5.0")
+set(KF5_VERSION "5.6.0")
 
 option(KDEPIM_BUILD_EXAMPLES "Build the kdepim example applications." FALSE)
 option(KDEPIM_BUILD_MOBILE "Build the mobile applications. Note that you have to enable KDEPIM_MOBILE_UI if you want to run these applications on a mobile device." FALSE)
