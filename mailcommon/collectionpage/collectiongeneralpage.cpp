@@ -27,6 +27,7 @@
 #include "util/mailutil.h"
 
 #include "pimcommon/util/pimutil.h"
+#include "pimcommon/util/imapresourcemanager.h"
 #include <Akonadi/AgentManager>
 #include <Akonadi/AttributeFactory>
 #include <Akonadi/Collection>
@@ -183,7 +184,8 @@ void CollectionGeneralPage::init( const Akonadi::Collection &collection )
 
     // Only do make this settable, if the IMAP resource is enabled
     // and it's not the personal folders (those must not be changed)
-    if ( PimCommon::Util::isImapResource(collection.resource()) ) {
+    const QString collectionResource = collection.resource();
+    if ( CommonKernel->imapResourceManager()->hasAnnotationSupport(collectionResource) ) {
         CollectionTypeUtil::FolderContentsType contentsType = CollectionTypeUtil::ContentsTypeMail;
 
         const CollectionAnnotationsAttribute *annotationAttribute =
