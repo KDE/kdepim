@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "imapresourcemanager.h"
+#include "imapresourcecapabilitiesmanager.h"
 #include "util/pimutil.h"
 #include <AkonadiCore/AgentManager>
 #include <KDBusConnectionPool>
@@ -25,30 +25,29 @@
 #include <QDebug>
 
 using namespace PimCommon;
-ImapResourceManager::ImapResourceManager(QObject *parent)
+ImapResourceCapabilitiesManager::ImapResourceCapabilitiesManager(QObject *parent)
     : QObject(parent)
 {
     init();
 }
 
-ImapResourceManager::~ImapResourceManager()
+ImapResourceCapabilitiesManager::~ImapResourceCapabilitiesManager()
 {
 
 }
 
-void ImapResourceManager::slotInstanceAdded(const Akonadi::AgentInstance &instance)
+void ImapResourceCapabilitiesManager::slotInstanceAdded(const Akonadi::AgentInstance &instance)
 {
     searchCapabilities(instance.identifier());
 }
 
-void ImapResourceManager::slotInstanceRemoved(const Akonadi::AgentInstance &instance)
+void ImapResourceCapabilitiesManager::slotInstanceRemoved(const Akonadi::AgentInstance &instance)
 {
     mImapResource.remove(instance.identifier());
 }
 
-void ImapResourceManager::searchCapabilities(const QString &identifier)
+void ImapResourceCapabilitiesManager::searchCapabilities(const QString &identifier)
 {
-    qDebug() << " void ImapResourceManager::searchCapabilities(const QString &identifier)" << identifier;
     //By default makes it as true.
     mImapResource.insert(identifier, true);
     QDBusInterface iface(
@@ -66,7 +65,7 @@ void ImapResourceManager::searchCapabilities(const QString &identifier)
     }
 }
 
-void ImapResourceManager::slotCapabilities(QDBusPendingCallWatcher *watcher)
+void ImapResourceCapabilitiesManager::slotCapabilities(QDBusPendingCallWatcher *watcher)
 {
     QDBusPendingReply<QStringList> reply = *watcher;
     if (reply.isValid()) {
@@ -80,7 +79,7 @@ void ImapResourceManager::slotCapabilities(QDBusPendingCallWatcher *watcher)
     watcher = 0;
 }
 
-void ImapResourceManager::init()
+void ImapResourceCapabilitiesManager::init()
 {
     Q_FOREACH (const Akonadi::AgentInstance &instance, Akonadi::AgentManager::self()->instances()) {
         const QString identifier = instance.identifier();
@@ -92,7 +91,7 @@ void ImapResourceManager::init()
     connect(Akonadi::AgentManager::self(), SIGNAL(instanceRemoved(Akonadi::AgentInstance)), SLOT(slotInstanceRemoved(Akonadi::AgentInstance)));
 }
 
-bool ImapResourceManager::hasAnnotationSupport(const QString &identifier) const
+bool ImapResourceCapabilitiesManager::hasAnnotationSupport(const QString &identifier) const
 {
     if (!PimCommon::Util::isImapResource(identifier)) {
         return false;

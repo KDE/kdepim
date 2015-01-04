@@ -29,12 +29,12 @@ class AgentInstance;
 }
 namespace PimCommon
 {
-class PIMCOMMON_EXPORT ImapResourceManager : public QObject
+class PIMCOMMON_EXPORT ImapResourceCapabilitiesManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit ImapResourceManager(QObject *parent = 0);
-    ~ImapResourceManager();
+    explicit ImapResourceCapabilitiesManager(QObject *parent = 0);
+    ~ImapResourceCapabilitiesManager();
 
     bool hasAnnotationSupport(const QString &identifier) const;
 private Q_SLOTS:

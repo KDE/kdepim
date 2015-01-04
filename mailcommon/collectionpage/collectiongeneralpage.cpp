@@ -33,7 +33,7 @@
 #include <EntityDisplayAttribute>
 #include <AkonadiCore/NewMailNotifierAttribute>
 #include <KIdentityManagement/IdentityCombo>
-#include "pimcommon/util/imapresourcemanager.h"
+#include "pimcommon/util/imapresourcecapabilitiesmanager.h"
 
 #include <KColorScheme>
 #include <KComboBox>
