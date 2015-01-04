@@ -180,12 +180,17 @@ set(libpimcommon_syntaxhighlighter_SRCS
   syntaxhighlighter/syntaxhighlighterbase.cpp
 )
 
-set(libpimcommon_SRCS
+set(libpimcommon_util_SRCS
   util/createresource.cpp
   util/pimutil.cpp
   util/editorutil.cpp
   util/imapresourcecapabilitiesmanager.cpp
+)
+
+
+set(libpimcommon_SRCS
   settings/pimcommonsettings.cpp
+  ${libpimcommon_util_SRCS}
   ${libpimcommon_texteditor_SRCS}
   ${libpimcommon_shorturl_SRCS}
   ${libpimcommon_storageservice_SRCS}
