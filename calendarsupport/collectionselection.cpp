@@ -41,8 +41,8 @@ public:
 CollectionSelection::CollectionSelection(QItemSelectionModel *selectionModel, QObject *parent)
     : QObject(parent), d(new Private(selectionModel))
 {
-    connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            this, SLOT(slotSelectionChanged(QItemSelection,QItemSelection)));
+    connect(selectionModel, &QItemSelectionModel::selectionChanged,
+            this, &CollectionSelection::slotSelectionChanged);
 }
 
 CollectionSelection::~CollectionSelection()

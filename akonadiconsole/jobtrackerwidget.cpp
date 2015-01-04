@@ -53,7 +53,7 @@ JobTrackerWidget::JobTrackerWidget(const char *name, QWidget *parent, const QStr
 
     QCheckBox *enableCB = new QCheckBox(this);
     enableCB->setText(checkboxText);
-    connect(enableCB, SIGNAL(toggled(bool)), d->model, SLOT(setEnabled(bool)));
+    connect(enableCB, &QAbstractButton::toggled, d->model, &JobTrackerModel::setEnabled);
     layout->addWidget(enableCB);
 
     QTreeView *tv = new QTreeView(this);

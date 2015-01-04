@@ -41,8 +41,8 @@ ConfigureDialog::ConfigureDialog(PimCommon::StorageServiceManager *storageManage
 
     BlogSettings *blogSettingsDlg = new BlogSettings;
     blogSettingsDlg->setAttribute(Qt::WA_DeleteOnClose);
-    connect(blogSettingsDlg, SIGNAL(blogAdded(BilboBlog)),
-            this, SIGNAL(blogAdded(BilboBlog)));
+    connect(blogSettingsDlg, &BlogSettings::blogAdded,
+            this, &ConfigureDialog::blogAdded);
     connect(blogSettingsDlg, SIGNAL(blogEdited(BilboBlog)),
             this, SIGNAL(blogEdited(BilboBlog)));
     connect(blogSettingsDlg, &BlogSettings::blogRemoved, this, &ConfigureDialog::blogRemoved);

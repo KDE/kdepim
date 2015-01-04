@@ -69,10 +69,10 @@ JobTrackerModel::JobTrackerModel(const char *name, QObject *parent)
 {
     connect(&d->tracker, SIGNAL(reset()),
             this, SIGNAL(modelReset()));
-    connect(&d->tracker, SIGNAL(added(QList<QPair<int,int> >)),
-            this, SLOT(jobsAdded(QList<QPair<int,int> >)));
-    connect(&d->tracker, SIGNAL(updated(QList<QPair<int,int> >)),
-            this, SLOT(jobsUpdated(QList<QPair<int,int> >)));
+    connect(&d->tracker, &JobTracker::added,
+            this, &JobTrackerModel::jobsAdded);
+    connect(&d->tracker, &JobTracker::updated,
+            this, &JobTrackerModel::jobsUpdated);
 }
 
 JobTrackerModel::~JobTrackerModel()
