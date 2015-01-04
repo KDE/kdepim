@@ -71,13 +71,11 @@ Toolbox::Toolbox(QWidget *parent)
     connect(btnEntriesUpdate, &QPushButton::clicked, this, &Toolbox::slotUpdateEntries);
     connect(btnEntriesClear, &QPushButton::clicked, this, &Toolbox::clearEntries);
 
-    connect(lstEntriesList, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
-            this, SLOT(slotEntrySelected(QListWidgetItem*)));
+    connect(lstEntriesList, &QListWidget::itemDoubleClicked, this, &Toolbox::slotEntrySelected);
     connect(btnEntriesRemove, &QPushButton::clicked, this, &Toolbox::slotRemoveSelectedEntryFromServer);
 
     connect(btnOptionsNow, &QPushButton::clicked, this, &Toolbox::setDateTimeNow);
-    connect(localEntries, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
-            this, SLOT(slotLocalEntrySelected(QTreeWidgetItem*,int)));
+    connect(localEntries, &QTreeWidget::itemDoubleClicked, this, &Toolbox::slotLocalEntrySelected);
     connect(btnLocalRemove, &QPushButton::clicked, this, &Toolbox::slotRemoveLocalEntry);
 
     lblOptionsTrackBack->setVisible(false);
@@ -85,8 +83,7 @@ Toolbox::Toolbox(QWidget *parent)
     btnCatAdd->setVisible(false);
 
     lstEntriesList->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(lstEntriesList, SIGNAL(customContextMenuRequested(QPoint)),
-            this, SLOT(requestEntriesListContextMenu(QPoint)));
+    connect(lstEntriesList, &QListWidget::customContextMenuRequested, this, &Toolbox::requestEntriesListContextMenu);
 
     QTimer::singleShot(1000, this, SLOT(reloadLocalPosts()));
 }

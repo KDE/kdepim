@@ -71,8 +71,7 @@ CheckedCollectionWidget::CheckedCollectionWidget(const QString &mimetype, QWidge
     QLineEdit *searchLine = new QLineEdit(this);
     searchLine->setPlaceholderText(i18n("Search..."));
     searchLine->setClearButtonEnabled(true);
-    connect(searchLine, &QLineEdit::textChanged,
-            this, &CheckedCollectionWidget::slotSetCollectionFilter);
+    connect(searchLine, &QLineEdit::textChanged, this, &CheckedCollectionWidget::slotSetCollectionFilter);
 
     vbox->addWidget(searchLine);
 

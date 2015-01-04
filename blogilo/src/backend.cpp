@@ -33,6 +33,7 @@
 #include <kblog/movabletype.h>
 #include <kblog/wordpressbuggy.h>
 #include <kblog/blogmedia.h>
+#include <kblog/blogcomment.h>
 #include "blogger.h"
 #include "blogilo_debug.h"
 #include <KLocalizedString>
@@ -71,9 +72,7 @@ Backend::Backend(int blog_id, QObject *parent)
 
     connect(d->kBlog, &KBlog::Blog::error, this, &Backend::error);
     connect(d->kBlog, &KBlog::Blog::errorPost, this, &Backend::error);
-    connect(d->kBlog, SIGNAL(errorComment(KBlog::Blog::ErrorType, const QString &, KBlog::BlogPost *,
-                                          KBlog::BlogComment *)),
-            this, SLOT(error(KBlog::Blog::ErrorType,QString)));
+    connect(d->kBlog, &KBlog::Blog::errorComment, this, &Backend::error);
 
     connect(d->kBlog, &KBlog::Blog::errorMedia, this, &Backend::error);
 }

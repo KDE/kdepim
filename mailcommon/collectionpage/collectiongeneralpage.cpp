@@ -194,8 +194,7 @@ void CollectionGeneralPage::init(const Akonadi::Collection &collection)
         gl->addWidget(mContentsComboBox, row, 0, 1, 2);
         mContentsComboBox->setCurrentIndex(contentsType);
 
-        connect(mContentsComboBox, SIGNAL(activated(int)),
-                this, SLOT(slotFolderContentsSelectionChanged(int)));
+        connect(mContentsComboBox, &ContentTypeWidget::activated, this, &CollectionGeneralPage::slotFolderContentsSelectionChanged);
 
         if (mFolderCollection->isReadOnly() || mIsResourceFolder) {
             mContentsComboBox->setEnabled(false);

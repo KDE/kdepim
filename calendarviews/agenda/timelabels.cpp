@@ -164,12 +164,10 @@ void TimeLabels::setAgenda(Agenda *agenda)
     mAgenda = agenda;
 
     if (mAgenda) {
-        connect(mAgenda, SIGNAL(mousePosSignal(QPoint)),
-                SLOT(mousePosChanged(QPoint)));
+        connect(mAgenda, &Agenda::mousePosSignal, this, &TimeLabels::mousePosChanged);
         connect(mAgenda, &Agenda::enterAgenda, this, &TimeLabels::showMousePos);
         connect(mAgenda, &Agenda::leaveAgenda, this, &TimeLabels::hideMousePos);
-        connect(mAgenda, SIGNAL(gridSpacingYChanged(double)),
-                SLOT(setCellHeight(double)));
+        connect(mAgenda, &Agenda::gridSpacingYChanged, this, &TimeLabels::setCellHeight);
     }
 }
 

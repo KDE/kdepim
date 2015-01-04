@@ -124,8 +124,7 @@ KMFilterListBox::KMFilterListBox(const QString &title, QWidget *parent)
     mListWidget->setWhatsThis(i18n(_wt_filterlist));
     mListWidget->setDragDropMode(QAbstractItemView::InternalMove);
     mListWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    connect(mListWidget->model(),
-            SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
+    connect(mListWidget->model(), SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
             SLOT(slotRowsMoved(QModelIndex,int,int,QModelIndex,int)));
 
     KListWidgetSearchLine *mSearchListWidget = new KListWidgetSearchLine(this, mListWidget);
@@ -218,33 +217,21 @@ KMFilterListBox::KMFilterListBox(const QString &title, QWidget *parent)
     connect(shortcut, &QShortcut::activated, this, &KMFilterListBox::slotDelete);
 
     //----------- now connect everything
-    connect(mListWidget, SIGNAL(currentRowChanged(int)),
-            this, SLOT(slotSelected(int)));
-    connect(mListWidget, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
-            this, SLOT(slotRename()));
-    connect(mListWidget, SIGNAL(itemChanged(QListWidgetItem*)),
-            this, SLOT(slotFilterEnabledChanged(QListWidgetItem*)));
+    connect(mListWidget, &QListWidget::currentRowChanged, this, &KMFilterListBox::slotSelected);
+    connect(mListWidget, &QListWidget::itemDoubleClicked, this, &KMFilterListBox::slotRename);
+    connect(mListWidget, &QListWidget::itemChanged, this, &KMFilterListBox::slotFilterEnabledChanged);
 
-    connect(mListWidget, SIGNAL(itemSelectionChanged()),
-            this, SLOT(slotSelectionChanged()));
+    connect(mListWidget, &QListWidget::itemSelectionChanged, this, &KMFilterListBox::slotSelectionChanged);
 
-    connect(mBtnUp, SIGNAL(clicked()),
-            this, SLOT(slotUp()));
-    connect(mBtnDown, SIGNAL(clicked()),
-            this, SLOT(slotDown()));
-    connect(mBtnTop, SIGNAL(clicked()),
-            this, SLOT(slotTop()));
-    connect(mBtnBottom, SIGNAL(clicked()),
-            this, SLOT(slotBottom()));
+    connect(mBtnUp, &QPushButton::clicked, this, &KMFilterListBox::slotUp);
+    connect(mBtnDown, &QPushButton::clicked, this, &KMFilterListBox::slotDown);
+    connect(mBtnTop, &QPushButton::clicked, this, &KMFilterListBox::slotTop);
+    connect(mBtnBottom, &QPushButton::clicked, this, &KMFilterListBox::slotBottom);
 
-    connect(mBtnNew, SIGNAL(clicked()),
-            this, SLOT(slotNew()));
-    connect(mBtnCopy, SIGNAL(clicked()),
-            this, SLOT(slotCopy()));
-    connect(mBtnDelete, SIGNAL(clicked()),
-            this, SLOT(slotDelete()));
-    connect(mBtnRename, SIGNAL(clicked()),
-            this, SLOT(slotRename()));
+    connect(mBtnNew, &QPushButton::clicked, this, &KMFilterListBox::slotNew);
+    connect(mBtnCopy, &QPushButton::clicked, this, &KMFilterListBox::slotCopy);
+    connect(mBtnDelete, &QPushButton::clicked, this, &KMFilterListBox::slotDelete);
+    connect(mBtnRename, &QPushButton::clicked, this, &KMFilterListBox::slotRename);
 
     // the dialog should call loadFilterList()
     // when all signals are connected.

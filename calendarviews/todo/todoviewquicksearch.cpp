@@ -59,8 +59,7 @@ TodoViewQuickSearch::TodoViewQuickSearch(const Akonadi::ETMCalendar::Ptr &calend
               "Enter text here to filter the to-dos that are shown by matching summaries."));
     mSearchLine->setPlaceholderText(i18nc("@label in QuickSearchLine", "Search Summaries"));
     mSearchLine->setClearButtonEnabled(true);
-    connect(mSearchLine, SIGNAL(textChanged(QString)),
-            this, SIGNAL(searchTextChanged(QString)));
+    connect(mSearchLine, &QLineEdit::textChanged, this, &TodoViewQuickSearch::searchTextChanged);
 
     layout->addWidget(mSearchLine, 3);
 
@@ -75,8 +74,7 @@ TodoViewQuickSearch::TodoViewQuickSearch(const Akonadi::ETMCalendar::Ptr &calend
     mCategoryCombo->setDefaultText(defaultText);
     mCategoryCombo->setSeparator(i18nc("@item:intext delimiter for joining category names", ","));
 
-    connect(mCategoryCombo, SIGNAL(checkedItemsChanged(QStringList)),
-            SLOT(emitFilterCategoryChanged()));
+    connect(mCategoryCombo, &KPIM::TagSelectionCombo::checkedItemsChanged, this, &TodoViewQuickSearch::emitFilterCategoryChanged);
 
     layout->addWidget(mCategoryCombo, 1);
 
@@ -104,8 +102,7 @@ TodoViewQuickSearch::TodoViewQuickSearch(const Akonadi::ETMCalendar::Ptr &calend
               "Use this combobox to filter the to-dos that are shown by "
               "a list of selected priorities."));
     mPriorityCombo->setDefaultText(i18nc("@item:inlistbox", "Select Priority"));
-    connect(mPriorityCombo, SIGNAL(checkedItemsChanged(QStringList)),
-            SLOT(emitFilterPriorityChanged()));
+    connect(mPriorityCombo, &KPIM::KCheckComboBox::checkedItemsChanged, this, &TodoViewQuickSearch::emitFilterPriorityChanged);
 
     layout->addWidget(mPriorityCombo, 1);
     fillPriorities();

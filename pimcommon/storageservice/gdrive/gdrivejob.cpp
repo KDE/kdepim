@@ -146,8 +146,7 @@ void GDriveJob::requestTokenAccess()
         mAccount,
         mClientId,
         mClientSecret);
-    connect(authJob, SIGNAL(finished(KGAPI2::Job*)),
-            this, SLOT(slotAuthJobFinished(KGAPI2::Job*)));
+    connect(authJob, &KGAPI2::AuthJob::finished, this, &GDriveJob::slotAuthJobFinished);
 }
 
 void GDriveJob::slotAuthJobFinished(KGAPI2::Job *job)

@@ -68,8 +68,7 @@ bool TodoViewView::eventFilter(QObject *watched, QEvent *event)
                 mColumnActions << tmp;
             }
 
-            connect(mHeaderPopup, SIGNAL(triggered(QAction*)),
-                    this, SLOT(toggleColumnHidden(QAction*)));
+            connect(mHeaderPopup, &QMenu::triggered, this, &TodoViewView::toggleColumnHidden);
         }
 
         foreach (QAction *action, mColumnActions) {

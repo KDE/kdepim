@@ -53,7 +53,7 @@ void SieveEditorPageWidget::slotCheckSyntaxClicked()
 {
     KManageSieve::SieveJob *job = KManageSieve::SieveJob::put(mCurrentURL, mSieveEditorWidget->script(), mWasActive, mWasActive);
     job->setInteractive(false);
-    connect(job, SIGNAL(errorMessage(KManageSieve::SieveJob*,bool,QString)), this, SLOT(slotPutResultDebug(KManageSieve::SieveJob*,bool,QString)));
+    connect(job, &KManageSieve::SieveJob::errorMessage, this, &SieveEditorPageWidget::slotPutResultDebug);
 }
 
 void SieveEditorPageWidget::slotPutResultDebug(KManageSieve::SieveJob *, bool success , const QString &errorMsg)
@@ -83,7 +83,7 @@ void SieveEditorPageWidget::loadScript(const QUrl &url, const QStringList &capab
     mCurrentURL = url;
     mSieveEditorWidget->setSieveCapabilities(capabilities);
     KManageSieve::SieveJob *job = KManageSieve::SieveJob::get(url);
-    connect(job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)), this, SLOT(slotGetResult(KManageSieve::SieveJob*,bool,QString,bool)));
+    connect(job, &KManageSieve::SieveJob::result, this, &SieveEditorPageWidget::slotGetResult);
 }
 
 QUrl SieveEditorPageWidget::currentUrl() const
@@ -107,7 +107,7 @@ void SieveEditorPageWidget::saveScript(bool showInformation, bool forceSave)
     if (mSieveEditorWidget->isModified() || forceSave) {
         KManageSieve::SieveJob *job = KManageSieve::SieveJob::put(mCurrentURL, mSieveEditorWidget->script(), mWasActive, mWasActive);
         job->setProperty("showuploadinformation", showInformation);
-        connect(job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)), this, SLOT(slotPutResult(KManageSieve::SieveJob*,bool)));
+        connect(job, &KManageSieve::SieveJob::result, this, &SieveEditorPageWidget::slotPutResult);
     }
 }
 

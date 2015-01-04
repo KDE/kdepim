@@ -50,7 +50,7 @@ ContentTypeWidget::ContentTypeWidget(QWidget *parent)
     mContentsComboBox->addItem(collectionUtil.folderContentDescription(CollectionTypeUtil::ContentsTypeFreebusy));
     mContentsComboBox->addItem(collectionUtil.folderContentDescription(CollectionTypeUtil::ContentsTypeFile));
 
-    connect(mContentsComboBox, SIGNAL(activated(int)), SIGNAL(activated(int)));
+    connect(mContentsComboBox, static_cast<void (KComboBox::*)(int)>(&KComboBox::activated), this, &ContentTypeWidget::activated);
 }
 
 ContentTypeWidget::~ContentTypeWidget()

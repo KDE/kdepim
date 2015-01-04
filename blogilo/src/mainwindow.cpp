@@ -121,7 +121,7 @@ MainWindow::MainWindow()
 
     setupSystemTray();
 
-    connect(tabPosts, SIGNAL(currentChanged(int)), this, SLOT(slotActivePostChanged(int)));
+    connect(tabPosts, &PostsTabWidget::currentChanged, this, &MainWindow::slotActivePostChanged);
     connect(toolbox, &Toolbox::sigEntrySelected, this, &MainWindow::slotNewPostOpened);
     connect(toolbox, &Toolbox::sigError, this, &MainWindow::slotError);
     connect(toolbox, &Toolbox::sigBusy, this, &MainWindow::slotBusy);
@@ -237,10 +237,8 @@ void MainWindow::setupActions()
     KToggleAction *actToggleToolboxVisible = new KToggleAction(i18n("Show Toolbox"), this);
     actionCollection()->addAction(QLatin1String("toggle_toolbox"), actToggleToolboxVisible);
     actionCollection()->setDefaultShortcut(actToggleToolboxVisible, QKeySequence(Qt::CTRL + Qt::Key_T));
-    connect(actToggleToolboxVisible, SIGNAL(toggled(bool)),
-            this, SLOT(slotToggleToolboxVisible(bool)));
-    connect(toolboxDock, SIGNAL(visibilityChanged(bool)),
-            this, SLOT(slotToolboxVisibilityChanged(bool)));
+    connect(actToggleToolboxVisible, &KToggleAction::toggled, this, &MainWindow::slotToggleToolboxVisible);
+    connect(toolboxDock, &QDockWidget::visibilityChanged, this, &MainWindow::slotToolboxVisibilityChanged);
 
     blogs = new KSelectAction(this);
     actionCollection()->addAction(QLatin1String("blogs_list"), blogs);
@@ -346,10 +344,8 @@ void MainWindow::optionsPreferences()
         return;
     }
     ConfigureDialog *dialog = new ConfigureDialog(mStorageManager, this, QLatin1String("settings"), Settings::self());
-    connect(dialog, SIGNAL(blogAdded(BilboBlog)),
-            this, SLOT(slotBlogAdded(BilboBlog)));
-    connect(dialog, SIGNAL(blogEdited(BilboBlog)),
-            this, SLOT(slotBlogEdited(BilboBlog)));
+    connect(dialog, &ConfigureDialog::blogAdded, this, &MainWindow::slotBlogAdded);
+    connect(dialog, &ConfigureDialog::blogEdited, this, &MainWindow::slotBlogEdited);
     connect(dialog, &ConfigureDialog::blogRemoved, this, &MainWindow::slotBlogRemoved);
     connect(dialog, &ConfigureDialog::settingsChanged, this, &MainWindow::settingsChanged);
     connect(dialog, &ConfigureDialog::settingsChanged, this, &MainWindow::slotSettingsChanged);
@@ -378,8 +374,7 @@ void MainWindow::addBlog()
     AddEditBlog *addEditBlogWindow = new AddEditBlog(-1, this);
     addEditBlogWindow->setWindowModality(Qt::ApplicationModal);
     addEditBlogWindow->setAttribute(Qt::WA_DeleteOnClose);
-    connect(addEditBlogWindow, SIGNAL(sigBlogAdded(BilboBlog)),
-            this, SLOT(slotBlogAdded(BilboBlog)));
+    connect(addEditBlogWindow, &AddEditBlog::sigBlogAdded, this, &MainWindow::slotBlogAdded);
     addEditBlogWindow->show();
 }
 
@@ -670,13 +665,10 @@ QWidget *MainWindow::createPostEntry(int blog_id, const BilboPost &post)
     temp->setCurrentPost(post);
     temp->setCurrentPostBlogId(blog_id);
 
-    connect(temp, SIGNAL(postTitleChanged(QString)),
-            this, SLOT(slotPostTitleChanged(QString)));
-    connect(temp, SIGNAL(postPublishingDone(bool,QString)),
-            this, SLOT(postManipulationDone(bool,QString)));
+    connect(temp, &PostEntry::postTitleChanged, this, &MainWindow::slotPostTitleChanged);
+    connect(temp, &PostEntry::postPublishingDone, this, &MainWindow::postManipulationDone);
     connect(this, &MainWindow::settingsChanged, temp, &PostEntry::settingsChanged);
-    connect(temp, SIGNAL(showStatusMessage(QString,bool)),
-            this, SLOT(slotShowStatusMessage(QString,bool)));
+    connect(temp, &PostEntry::showStatusMessage, this, &MainWindow::slotShowStatusMessage);
 
     connect(temp, &PostEntry::sigBusy, this, &MainWindow::slotBusy);
 

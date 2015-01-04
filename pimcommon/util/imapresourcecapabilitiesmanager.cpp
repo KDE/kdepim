@@ -59,7 +59,7 @@ void ImapResourceCapabilitiesManager::searchCapabilities(const QString &identifi
         QDBusPendingCall call = iface.asyncCall(QLatin1String("serverCapabilities"));
         QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(call, this);
         watcher->setProperty("identifier", identifier);
-        connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)), this, SLOT(slotCapabilities(QDBusPendingCallWatcher*)));
+        connect(watcher, &QDBusPendingCallWatcher::finished, this, &ImapResourceCapabilitiesManager::slotCapabilities);
     } else {
         qDebug() << "interface not valid";
     }
@@ -87,8 +87,8 @@ void ImapResourceCapabilitiesManager::init()
             searchCapabilities(identifier);
         }
     }
-    connect(Akonadi::AgentManager::self(), SIGNAL(instanceAdded(Akonadi::AgentInstance)), SLOT(slotInstanceAdded(Akonadi::AgentInstance)));
-    connect(Akonadi::AgentManager::self(), SIGNAL(instanceRemoved(Akonadi::AgentInstance)), SLOT(slotInstanceRemoved(Akonadi::AgentInstance)));
+    connect(Akonadi::AgentManager::self(), &Akonadi::AgentManager::instanceAdded, this, &ImapResourceCapabilitiesManager::slotInstanceAdded);
+    connect(Akonadi::AgentManager::self(), &Akonadi::AgentManager::instanceRemoved, this, &ImapResourceCapabilitiesManager::slotInstanceRemoved);
 }
 
 bool ImapResourceCapabilitiesManager::hasAnnotationSupport(const QString &identifier) const

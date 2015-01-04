@@ -44,9 +44,9 @@ SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
     addWidget(mTabWidget);
     mScriptManagerWidget = new SieveEditorScriptManagerWidget;
     connect(mScriptManagerWidget, &SieveEditorScriptManagerWidget::createScriptPage, this, &SieveEditorMainWidget::slotCreateScriptPage);
-    connect(mScriptManagerWidget, SIGNAL(updateButtons(bool,bool,bool,bool)), SIGNAL(updateButtons(bool,bool,bool,bool)));
+    connect(mScriptManagerWidget, &SieveEditorScriptManagerWidget::updateButtons, this, &SieveEditorMainWidget::updateButtons);
     connect(mScriptManagerWidget, &SieveEditorScriptManagerWidget::scriptDeleted, this, &SieveEditorMainWidget::slotScriptDeleted);
-    connect(mScriptManagerWidget, SIGNAL(serverSieveFound(bool)), this, SIGNAL(serverSieveFound(bool)));
+    connect(mScriptManagerWidget, &SieveEditorScriptManagerWidget::serverSieveFound, this, &SieveEditorMainWidget::serverSieveFound);
     connect(this, &SieveEditorMainWidget::updateScriptList, mScriptManagerWidget, &SieveEditorScriptManagerWidget::slotRefreshList);
     addWidget(mScriptManagerWidget);
     setChildrenCollapsible(false);
@@ -93,9 +93,9 @@ void SieveEditorMainWidget::slotCreateScriptPage(const QUrl &url, const QStringL
         mTabWidget->setCurrentWidget(page);
     } else {
         SieveEditorPageWidget *editor = new SieveEditorPageWidget;
-        connect(editor, SIGNAL(refreshList()), this, SIGNAL(updateScriptList()));
+        connect(editor, &SieveEditorPageWidget::refreshList, this, &SieveEditorMainWidget::updateScriptList);
         connect(editor, &SieveEditorPageWidget::scriptModified, this, &SieveEditorMainWidget::slotScriptModified);
-        connect(editor, SIGNAL(modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode)), SIGNAL(modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode)));
+        connect(editor, &SieveEditorPageWidget::modeEditorChanged, this, &SieveEditorMainWidget::modeEditorChanged);
         editor->setIsNewScript(isNewScript);
         editor->loadScript(url, capabilities);
         mTabWidget->addTab(editor, url.fileName());

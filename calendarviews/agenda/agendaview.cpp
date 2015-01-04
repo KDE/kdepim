@@ -789,14 +789,11 @@ void AgendaView::init(const QDate &start, const QDate &end)
     timeLabelsZoneLayout->addSpacing(scrollArea->frameWidth());
 
     // Scrolling
-    connect(d->mAgenda, SIGNAL(zoomView(int,QPoint,Qt::Orientation)),
-            SLOT(zoomView(int,QPoint,Qt::Orientation)));
+    connect(d->mAgenda, &Agenda::zoomView, this, &AgendaView::zoomView);
 
     // Event indicator updates
-    connect(d->mAgenda, SIGNAL(lowerYChanged(int)),
-            SLOT(updateEventIndicatorTop(int)));
-    connect(d->mAgenda, SIGNAL(upperYChanged(int)),
-            SLOT(updateEventIndicatorBottom(int)));
+    connect(d->mAgenda, &Agenda::lowerYChanged, this, &AgendaView::updateEventIndicatorTop);
+    connect(d->mAgenda, &Agenda::upperYChanged, this, &AgendaView::updateEventIndicatorBottom);
 
     if (d->mIsSideBySide) {
         d->mTimeLabelsZone->hide();
@@ -829,13 +826,9 @@ void AgendaView::init(const QDate &start, const QDate &end)
 
     /* Connect the agendas */
 
-    connect(d->mAllDayAgenda,
-            SIGNAL(newTimeSpanSignal(QPoint,QPoint)),
-            SLOT(newTimeSpanSelectedAllDay(QPoint,QPoint)));
+    connect(d->mAllDayAgenda, &Agenda::newTimeSpanSignal, this, &AgendaView::newTimeSpanSelectedAllDay);
 
-    connect(d->mAgenda,
-            SIGNAL(newTimeSpanSignal(QPoint,QPoint)),
-            SLOT(newTimeSpanSelected(QPoint,QPoint)));
+    connect(d->mAgenda, &Agenda::newTimeSpanSignal, this, &AgendaView::newTimeSpanSelected);
 
     connectAgenda(d->mAgenda, d->mAllDayAgenda);
     connectAgenda(d->mAllDayAgenda, d->mAgenda);
