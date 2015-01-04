@@ -216,13 +216,13 @@ public:
     ~FakeItem();
 
     /// Reimplemented to return the fake tag list
-    virtual QList< Tag * > tagList() const;
+    QList< Tag * > tagList() const Q_DECL_OVERRIDE;
 
     /// Sets a list of fake tags for this item
     void setFakeTags(const QList< Tag * > &tagList);
 
     /// Reimplemented to always return true
-    virtual bool hasAnnotation() const;
+    bool hasAnnotation() const Q_DECL_OVERRIDE;
 
 private:
     Q_DECLARE_PRIVATE(FakeItem)

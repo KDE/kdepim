@@ -98,7 +98,7 @@ protected Q_SLOTS:
     virtual void process() = 0;
 
     /* reimpl */
-    virtual void slotResult(KJob *job);
+    void slotResult(KJob *job) Q_DECL_OVERRIDE;
 
 private:
     Q_DECLARE_PRIVATE(ContentJobBase)
