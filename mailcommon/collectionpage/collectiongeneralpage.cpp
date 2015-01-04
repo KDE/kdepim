@@ -27,7 +27,7 @@
 #include "util/mailutil.h"
 
 #include "pimcommon/util/pimutil.h"
-#include "pimcommon/util/imapresourcemanager.h"
+#include "pimcommon/util/imapresourcecapabilitiesmanager.h"
 #include <Akonadi/AgentManager>
 #include <Akonadi/AttributeFactory>
 #include <Akonadi/Collection>

@@ -29,7 +29,7 @@
 
 #include <QObject>
 namespace PimCommon {
-class ImapResourceManager;
+class ImapResourceCapabilitiesManager;
 }
 namespace MailCommon {
 
@@ -163,7 +163,7 @@ public:
 
     void emergencyExit( const QString &reason );
 
-    PimCommon::ImapResourceManager *imapResourceManager() const;
+    PimCommon::ImapResourceCapabilitiesManager *imapResourceManager() const;
 
 private:
     void findCreateDefaultCollection( Akonadi::SpecialMailCollections::Type );
@@ -183,7 +183,7 @@ private:
     IKernel *mKernelIf;
     IFilter *mFilterIf;
     ISettings *mSettingsIf;
-    PimCommon::ImapResourceManager *mImapResourceManager;
+    PimCommon::ImapResourceCapabilitiesManager *mImapResourceManager;
 };
 
 }
