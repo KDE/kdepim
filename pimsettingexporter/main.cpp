@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
     aboutData.processCommandLine(&parser);
 
     KDBusService service(KDBusService::Unique);
-#pragma "port QT5"
+#pragma message("port QT5")
     //QT5 TODO connect service to load file when necessary
 
     PimSettingExporterWindow *backupMailWin = new PimSettingExporterWindow();

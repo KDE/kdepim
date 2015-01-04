@@ -59,7 +59,7 @@ FolderRequester::FolderRequester(QWidget *parent)
 
     mEdit = new QLineEdit(this);
     mEdit->setPlaceholderText(i18n("Select Folder"));
-#pragma "port QT5"
+#pragma message("port QT5")
     //QT5 mEdit->setTrapReturnKey(true);
     mEdit->setReadOnly(true);
     hlay->addWidget(mEdit);

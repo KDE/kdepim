@@ -62,7 +62,7 @@ SelectHeadersDialog::SelectHeadersDialog(QWidget *parent)
 
     mNewHeader = new QLineEdit;
     mNewHeader->setClearButtonEnabled(true);
-#pragma "port QT5"
+#pragma message("port QT5")
     //QT5 mNewHeader->setTrapReturnKey(true);
     connect(mNewHeader, &QLineEdit::returnPressed, this, &SelectHeadersDialog::slotAddNewHeader);
     mNewHeader->setClearButtonEnabled(true);

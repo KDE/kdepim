@@ -68,7 +68,7 @@ void RegExpLineEdit::initWidget(const QString &str)
 
     mLineEdit = new QLineEdit(str, this);
     mLineEdit->setClearButtonEnabled(true);
-#pragma "port QT5"
+#pragma message("port QT5")
     //QT5 mLineEdit->setTrapReturnKey(true);
     setFocusProxy(mLineEdit);
     hlay->addWidget(mLineEdit);

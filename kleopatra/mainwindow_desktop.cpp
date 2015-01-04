@@ -239,7 +239,7 @@ public:
 
     void aboutGpg4Win()
     {
-#pragma "port QT5"
+#pragma message("port QT5")
 
         //QT5 ( new KAboutApplicationDialog( aboutGpg4WinData(), KAboutApplicationDialog::HideKdeVersion|KAboutApplicationDialog::HideTranslators, q ) )->show();
     }

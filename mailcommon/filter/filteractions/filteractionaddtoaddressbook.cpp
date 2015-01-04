@@ -108,7 +108,7 @@ QWidget *FilterActionAddToAddressBook::createParamWidget(QWidget *parent) const
 
     QLineEdit *categoryEdit = new QLineEdit(widget);
     categoryEdit->setObjectName(QLatin1String("CategoryEdit"));
-#pragma "port QT5"
+#pragma message("port QT5")
     //QT5 categoryEdit->setTrapReturnKey(true);
     layout->addWidget(categoryEdit, 0, 2);
 

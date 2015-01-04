@@ -1417,7 +1417,7 @@ Module::checkForPGP(void)
     havePgp = false;
 
     path = QString::fromLocal8Bit(getenv("PATH"));
-#pragma "port QT5"
+#pragma message("port QT5")
     //QT5 pSearchPaths = path.split( QLatin1Char(KPATH_SEPARATOR), QString::SkipEmptyParts );
 
     haveGpg = false;

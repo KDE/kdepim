@@ -46,7 +46,7 @@ TagWidget::TagWidget(const QList<KActionCollection *> &actionCollections, QWidge
     //First row for renaming
     mTagNameLineEdit = new QLineEdit(this);
     mTagNameLineEdit->setClearButtonEnabled(true);
-#pragma "port QT5"
+#pragma message("port QT5")
     //QT5 mTagNameLineEdit->setTrapReturnKey( true );
     settings->addWidget(mTagNameLineEdit, 1, 1);
 

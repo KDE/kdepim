@@ -61,7 +61,7 @@ namespace
 KDPipeIODevice::DebugLevel s_debugLevel = KDPipeIODevice::NoDebug;
 }
 
-#pragma "port QT5"
+#pragma message("port QT5")
 
 //QT5 #define qDebug if( s_debugLevel == KDPipeIODevice::NoDebug ){}else qDebug
 

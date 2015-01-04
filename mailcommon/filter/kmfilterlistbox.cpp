@@ -129,7 +129,7 @@ KMFilterListBox::KMFilterListBox(const QString &title, QWidget *parent)
             SLOT(slotRowsMoved(QModelIndex,int,int,QModelIndex,int)));
 
     KListWidgetSearchLine *mSearchListWidget = new KListWidgetSearchLine(this, mListWidget);
-#pragma "port QT5"
+#pragma message("port QT5")
     //QT5 mSearchListWidget->setTrapReturnKey( true );
     mSearchListWidget->setPlaceholderText(
         i18nc("@info Displayed grayed-out inside the textbox, verb to search",

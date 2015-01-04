@@ -21,7 +21,7 @@
 
 #include <AkonadiCore/agentmanager.h>
 #include <AkonadiCore/agentinstancecreatejob.h>
-#pragma "port QT5"
+#pragma message("port QT5")
 
 //QT5 #include "maildirsettings.h"
 

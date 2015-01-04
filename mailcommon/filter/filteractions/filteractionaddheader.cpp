@@ -92,7 +92,7 @@ QWidget *FilterActionAddHeader::createParamWidget(QWidget *parent) const
 
     QLineEdit *lineEdit = new QLineEdit(widget);
     lineEdit->setObjectName(QLatin1String("ledit"));
-#pragma "port QT5"
+#pragma message("port QT5")
     //QT5 lineEdit->setTrapReturnKey(true);
     lineEdit->setClearButtonEnabled(true);
     layout->addWidget(lineEdit, 1);

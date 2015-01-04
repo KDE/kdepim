@@ -127,7 +127,7 @@ void VCardViewer::slotUser2()
 {
     // next vcard
     mContactViewer->setRawContact(*(++itAddresseeList));
-#pragma "port QT5"
+#pragma message("port QT5")
 #if 0 //PORT QT5    
     if (itAddresseeList == --(mAddresseeList.constEnd())) {
         mUser2Button->setEnabled(false);

@@ -616,7 +616,7 @@ void GDriveStorageService::storageServicecreateServiceFolder()
 
 QString GDriveStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QVariant &data, const QString &currentFolder)
 {
-#pragma "port QT5"
+#pragma message("port QT5")
 
 #if 0 //QT5 port to QJSonDocument
     listWidget->clear();
