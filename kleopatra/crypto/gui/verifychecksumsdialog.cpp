@@ -77,7 +77,7 @@ class ColorizedFileSystemModel : public QDirModel
 {
     Q_OBJECT
 public:
-    explicit ColorizedFileSystemModel(QObject *parent = 0)
+    explicit ColorizedFileSystemModel(QObject *parent = Q_NULLPTR)
         : QDirModel(parent),
           statusMap()
     {

@@ -67,7 +67,7 @@ namespace
 class Process : public QProcess
 {
 public:
-    explicit Process(QObject *parent = 0)
+    explicit Process(QObject *parent = Q_NULLPTR)
         : QProcess(parent) {}
     /* reimp */ void close()
     {

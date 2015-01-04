@@ -41,7 +41,7 @@
 class NullNetworkReply : public QNetworkReply
 {
 public:
-    NullNetworkReply(const QNetworkRequest &req, QObject *parent = 0)
+    NullNetworkReply(const QNetworkRequest &req, QObject *parent = Q_NULLPTR)
         : QNetworkReply(parent)
     {
         setRequest(req);

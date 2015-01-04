@@ -79,7 +79,7 @@ class ImportResultProxyModel : public AbstractKeyListSortFilterProxyModel
 {
     Q_OBJECT
 public:
-    ImportResultProxyModel(const std::vector<ImportResult> &results, const QStringList &ids, QObject *parent = 0)
+    ImportResultProxyModel(const std::vector<ImportResult> &results, const QStringList &ids, QObject *parent = Q_NULLPTR)
         : AbstractKeyListSortFilterProxyModel(parent)
     {
         updateFindCache(results, ids);

@@ -40,7 +40,7 @@ class FillTagComboJob : public KJob
 {
     Q_OBJECT
 public:
-    explicit FillTagComboJob(KComboBox *combo, QObject *parent = 0);
+    explicit FillTagComboJob(KComboBox *combo, QObject *parent = Q_NULLPTR);
     virtual void start();
 private Q_SLOTS:
     void onDestroyed();

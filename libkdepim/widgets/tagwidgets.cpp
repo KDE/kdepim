@@ -120,7 +120,7 @@ QStringList TagSelectionDialog::selection() const
 class MatchingCheckableProxyModel : public KCheckableProxyModel
 {
 public:
-    MatchingCheckableProxyModel(QObject *parent = 0): KCheckableProxyModel(parent) {}
+    MatchingCheckableProxyModel(QObject *parent = Q_NULLPTR): KCheckableProxyModel(parent) {}
     QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1, Qt::MatchFlags flags = Qt::MatchExactly) const  Q_DECL_OVERRIDE
     {
         if (role == Qt::CheckStateRole) {

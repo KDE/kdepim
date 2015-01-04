@@ -24,7 +24,7 @@ class ShowFolderNotesAttributeTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit ShowFolderNotesAttributeTest(QObject *parent = 0);
+    explicit ShowFolderNotesAttributeTest(QObject *parent = Q_NULLPTR);
     ~ShowFolderNotesAttributeTest();
 private Q_SLOTS:
     void shouldHaveType();

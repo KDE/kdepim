@@ -457,7 +457,7 @@ class ReaderStatusThread : public QThread
 {
     Q_OBJECT
 public:
-    explicit ReaderStatusThread(QObject *parent = 0)
+    explicit ReaderStatusThread(QObject *parent = Q_NULLPTR)
         : QThread(parent),
           m_gnupgHomePath(Kleo::gnupgHomeDirectory()),
           m_transactions(1, updateTransaction)   // force initial scan

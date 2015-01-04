@@ -33,22 +33,22 @@
 #ifndef __KLEOPATRA_UTILS_VALIDATION_H__
 #define __KLEOPATRA_UTILS_VALIDATION_H__
 
+#include <QObject>
 class QValidator;
 class QRegExp;
-class QObject;
 
 namespace Kleo
 {
 namespace Validation
 {
 
-QValidator *email(QObject *parent = 0);
-QValidator *pgpName(QObject *parent = 0);
-QValidator *pgpComment(QObject *parent = 0);
+QValidator *email(QObject *parent = Q_NULLPTR);
+QValidator *pgpName(QObject *parent = Q_NULLPTR);
+QValidator *pgpComment(QObject *parent = Q_NULLPTR);
 
-QValidator *email(const QRegExp &additionalRegExp, QObject *parent = 0);
-QValidator *pgpName(const QRegExp &additionalRegExp, QObject *parent = 0);
-QValidator *pgpComment(const QRegExp &additionalRegExp, QObject *parent = 0);
+QValidator *email(const QRegExp &additionalRegExp, QObject *parent = Q_NULLPTR);
+QValidator *pgpName(const QRegExp &additionalRegExp, QObject *parent = Q_NULLPTR);
+QValidator *pgpComment(const QRegExp &additionalRegExp, QObject *parent = Q_NULLPTR);
 
 }
 }

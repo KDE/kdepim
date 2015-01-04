@@ -54,7 +54,7 @@ static DisplayNameEditWidget::DisplayType guessedDisplayType(const KContacts::Ad
 class DisplayNameDelegate : public QStyledItemDelegate
 {
 public:
-    DisplayNameDelegate(QAbstractItemView *view, QObject *parent = 0)
+    DisplayNameDelegate(QAbstractItemView *view, QObject *parent = Q_NULLPTR)
         : QStyledItemDelegate(parent), mMaxDescriptionWidth(0)
     {
         mDescriptions.append(i18n("Short Name"));

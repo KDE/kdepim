@@ -47,7 +47,7 @@ typedef struct {
 class TemplatesModel : public QAbstractTableModel
 {
 public:
-    TemplatesModel(QObject *parent = 0)
+    TemplatesModel(QObject *parent = Q_NULLPTR)
         : QAbstractTableModel(parent)
     {
         update();
@@ -149,7 +149,7 @@ private:
 class TemplateSelectionDelegate : public QStyledItemDelegate
 {
 public:
-    explicit TemplateSelectionDelegate(QObject *parent = 0)
+    explicit TemplateSelectionDelegate(QObject *parent = Q_NULLPTR)
         : QStyledItemDelegate(parent), mIcon(QLatin1String("list-remove"))
     {
     }

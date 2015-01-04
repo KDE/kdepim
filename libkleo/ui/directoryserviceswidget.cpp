@@ -163,7 +163,7 @@ class Model : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit Model(QObject *parent = 0)
+    explicit Model(QObject *parent = Q_NULLPTR)
         : QAbstractTableModel(parent),
           m_items(),
           m_openPGPReadOnly(false),
@@ -347,7 +347,7 @@ class Delegate : public QItemDelegate
 {
     Q_OBJECT
 public:
-    explicit Delegate(QObject *parent = 0)
+    explicit Delegate(QObject *parent = Q_NULLPTR)
         : QItemDelegate(parent),
           m_schemes(DirectoryServicesWidget::AllSchemes)
     {

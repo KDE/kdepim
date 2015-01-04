@@ -119,7 +119,7 @@ QMap<QString, ContactFields::Field> ContactFieldComboBox::mFieldMap;
 class ContactFieldDelegate : public QStyledItemDelegate
 {
 public:
-    ContactFieldDelegate(QObject *parent = 0)
+    ContactFieldDelegate(QObject *parent = Q_NULLPTR)
         : QStyledItemDelegate(parent)
     {
     }

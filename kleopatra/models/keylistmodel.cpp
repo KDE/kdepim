@@ -393,7 +393,7 @@ class FlatKeyListModel
 {
     Q_OBJECT
 public:
-    explicit FlatKeyListModel(QObject *parent = 0);
+    explicit FlatKeyListModel(QObject *parent = Q_NULLPTR);
     ~FlatKeyListModel();
 
     /* reimp */ int rowCount(const QModelIndex &pidx) const
@@ -419,7 +419,7 @@ class HierarchicalKeyListModel : public AbstractKeyListModel
 {
     Q_OBJECT
 public:
-    explicit HierarchicalKeyListModel(QObject *parent = 0);
+    explicit HierarchicalKeyListModel(QObject *parent = Q_NULLPTR);
     ~HierarchicalKeyListModel();
 
     /* reimp */ int rowCount(const QModelIndex &pidx) const;

@@ -57,7 +57,7 @@ class EMailValidator : public QValidator
 {
     QRegExp rx;
 public:
-    explicit EMailValidator(QObject *parent = 0) : QValidator(parent), rx(QRegExp(email_rx)) {}
+    explicit EMailValidator(QObject *parent = Q_NULLPTR) : QValidator(parent), rx(QRegExp(email_rx)) {}
 
     /* reimp */ void fixup(QString &) const {}
 

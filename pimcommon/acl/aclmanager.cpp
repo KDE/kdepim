@@ -51,7 +51,7 @@ public:
         PermissionsTextRole
     };
 
-    AclModel(QObject *parent = 0)
+    AclModel(QObject *parent = Q_NULLPTR)
         : QAbstractListModel(parent)
     {
     }

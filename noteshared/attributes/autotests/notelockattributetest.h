@@ -24,7 +24,7 @@ class NoteLockAttributeTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit NoteLockAttributeTest(QObject *parent = 0);
+    explicit NoteLockAttributeTest(QObject *parent = Q_NULLPTR);
     ~NoteLockAttributeTest();
 private Q_SLOTS:
     void shouldHaveType();
