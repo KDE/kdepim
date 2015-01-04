@@ -54,7 +54,7 @@
 class TextDialog : public QDialog
 {
 public:
-    TextDialog(QWidget *parent = 0)
+    TextDialog(QWidget *parent = Q_NULLPTR)
         : QDialog(parent)
     {
         QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok);

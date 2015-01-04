@@ -65,7 +65,7 @@ class OutputDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit OutputDialog(QWidget *parent = 0)
+    explicit OutputDialog(QWidget *parent = Q_NULLPTR)
         : QDialog(parent),
           vlay(this),
           logTextWidget(this),

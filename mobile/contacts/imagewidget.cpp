@@ -44,7 +44,7 @@
 class ImageLoader
 {
 public:
-    ImageLoader(QWidget *parent = 0);
+    ImageLoader(QWidget *parent = Q_NULLPTR);
 
     QImage loadImage(const KUrl &url, bool *ok);
 

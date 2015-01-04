@@ -35,7 +35,7 @@
 class AddressTypeDialog : public KDialog
 {
 public:
-    AddressTypeDialog(QWidget *parent = 0)
+    AddressTypeDialog(QWidget *parent = Q_NULLPTR)
         : KDialog(parent)
     {
         setWindowTitle(i18nc("street/postal", "New Address"));

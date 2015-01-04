@@ -133,7 +133,7 @@ class ListDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit ListDialog(const QStringList &files, QWidget *parent = 0)
+    explicit ListDialog(const QStringList &files, QWidget *parent = Q_NULLPTR)
         : QDialog(parent),
           listWidget(this),
           buttonBox(QDialogButtonBox::Close, Qt::Vertical, this),
@@ -171,7 +171,7 @@ class ObjectsLabel : public QLabel
 public:
     static const int MaxLinesShownInline = 5;
 
-    explicit ObjectsLabel(QWidget *parent = 0, Qt::WindowFlags f = 0)
+    explicit ObjectsLabel(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = 0)
         : QLabel(parent, f), m_dialog(), m_files(dummyFiles())
     {
         connect(this, SIGNAL(linkActivated(QString)),
@@ -182,7 +182,7 @@ public:
         // does... Go figure
         m_files.clear();
     }
-    explicit ObjectsLabel(const QStringList &files, QWidget *parent = 0, Qt::WindowFlags f = 0)
+    explicit ObjectsLabel(const QStringList &files, QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = 0)
         : QLabel(parent, f), m_dialog(), m_files(files)
     {
         connect(this, SIGNAL(linkActivated(QString)),
@@ -256,7 +256,7 @@ class ArchiveFileNameRequester : public Kleo::FileNameRequester
 {
     Q_OBJECT
 public:
-    explicit ArchiveFileNameRequester(Protocol protocol, QWidget *parent = 0)
+    explicit ArchiveFileNameRequester(Protocol protocol, QWidget *parent = Q_NULLPTR)
         : FileNameRequester(QDir::Files, parent), m_protocol(protocol), m_archiveDefinition()
     {
         setExistingOnly(false);
@@ -298,7 +298,7 @@ class WizardPage : public QWizardPage
 {
     Q_OBJECT
 public:
-    explicit WizardPage(QWidget *parent = 0)
+    explicit WizardPage(QWidget *parent = Q_NULLPTR)
         : QWizardPage(parent),
           m_presetProtocol(UnknownProtocol)
     {
@@ -385,7 +385,7 @@ class OperationPage : public WizardPage
     Q_PROPERTY(bool encryptionUserMutable READ isEncryptionUserMutable WRITE setEncryptionUserMutable)
     Q_PROPERTY(bool archiveUserMutable READ isArchiveUserMutable WRITE setArchiveUserMutable)
 public:
-    explicit OperationPage(QWidget *parent = 0)
+    explicit OperationPage(QWidget *parent = Q_NULLPTR)
         : WizardPage(parent),
           m_objectsLabel(this),
           m_archiveCB(i18n("Archive files with:"), this),
@@ -692,7 +692,7 @@ class RecipientsPage : public WizardPage
 {
     Q_OBJECT
 public:
-    explicit RecipientsPage(QWidget *parent = 0)
+    explicit RecipientsPage(QWidget *parent = Q_NULLPTR)
         : WizardPage(parent),
           m_lastEffectiveProtocol(static_cast<Protocol>(-1)),   // dummy start
           m_searchbar(this),
@@ -873,7 +873,7 @@ class SignerPage : public WizardPage
 {
     Q_OBJECT
 public:
-    explicit SignerPage(QWidget *parent = 0)
+    explicit SignerPage(QWidget *parent = Q_NULLPTR)
         : WizardPage(parent),
           signPref(),
           pgpCB(i18n("Sign with OpenPGP"), this),
@@ -1027,7 +1027,7 @@ class ResultPage : public NewResultPage
 {
     Q_OBJECT
 public:
-    explicit ResultPage(QWidget *parent = 0)
+    explicit ResultPage(QWidget *parent = Q_NULLPTR)
         : NewResultPage(parent)
     {
         setTitle(i18nc("@title", "Results"));

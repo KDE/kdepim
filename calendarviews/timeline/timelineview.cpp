@@ -139,7 +139,7 @@ private:
 class GanttHeaderView : public QHeaderView
 {
 public:
-    explicit GanttHeaderView(QWidget *parent = 0) : QHeaderView(Qt::Horizontal, parent)
+    explicit GanttHeaderView(QWidget *parent = Q_NULLPTR) : QHeaderView(Qt::Horizontal, parent)
     {
     }
 

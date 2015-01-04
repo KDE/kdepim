@@ -82,7 +82,7 @@ class ResultDialog : public QDialog
 {
     Q_OBJECT
 public:
-    ResultDialog(const QStringList &created, const QStringList &errors, QWidget *parent = 0, Qt::WindowFlags f = 0)
+    ResultDialog(const QStringList &created, const QStringList &errors, QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = 0)
         : QDialog(parent, f),
           createdLB(created.empty()
                     ? i18nc("@info", "No checksum files have been created.")

@@ -57,7 +57,7 @@ class KDGANTT_EXPORT View : public QWidget
 
 public:
 
-    explicit View(QWidget *parent = 0);
+    explicit View(QWidget *parent = Q_NULLPTR);
     virtual ~View();
 
     QAbstractItemModel *model() const;

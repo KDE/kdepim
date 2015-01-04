@@ -76,8 +76,8 @@ class Page : public Kleo::KeyTreeView
     Q_OBJECT
     Page(const Page &other);
 public:
-    Page(const QString &title, const QString &id, const QString &text, AbstractKeyListSortFilterProxyModel *proxy = 0, const QString &toolTip = QString(), QWidget *parent = 0);
-    Page(const KConfigGroup &group, QWidget *parent = 0);
+    Page(const QString &title, const QString &id, const QString &text, AbstractKeyListSortFilterProxyModel *proxy = 0, const QString &toolTip = QString(), QWidget *parent = Q_NULLPTR);
+    Page(const KConfigGroup &group, QWidget *parent = Q_NULLPTR);
     ~Page();
 
     void setTemporary(bool temporary);

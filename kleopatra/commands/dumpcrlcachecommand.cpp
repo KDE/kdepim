@@ -62,7 +62,7 @@ class DumpCrlCacheDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit DumpCrlCacheDialog(QWidget *parent = 0)
+    explicit DumpCrlCacheDialog(QWidget *parent = Q_NULLPTR)
         : QDialog(parent), ui(this)
     {
         readConfig();

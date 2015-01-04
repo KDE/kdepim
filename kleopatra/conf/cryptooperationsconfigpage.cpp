@@ -72,7 +72,7 @@ void CryptoOperationsConfigurationPage::defaults()
 
 extern "C"
 {
-    Q_DECL_EXPORT KCModule *create_kleopatra_config_cryptooperations(QWidget *parent = 0, const QVariantList &args = QVariantList())
+    Q_DECL_EXPORT KCModule *create_kleopatra_config_cryptooperations(QWidget *parent = Q_NULLPTR, const QVariantList &args = QVariantList())
     {
         CryptoOperationsConfigurationPage *page =
             new CryptoOperationsConfigurationPage(parent, args);

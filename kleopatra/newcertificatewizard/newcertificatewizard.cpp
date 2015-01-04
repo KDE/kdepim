@@ -182,7 +182,7 @@ class WizardPage : public QWizardPage
 {
     Q_OBJECT
 protected:
-    explicit WizardPage(QWidget *parent = 0)
+    explicit WizardPage(QWidget *parent = Q_NULLPTR)
         : QWizardPage(parent) {}
 
     NewCertificateWizard *wizard() const
@@ -272,7 +272,7 @@ class AdvancedSettingsDialog : public QDialog
     Q_PROPERTY(bool authenticationAllowed READ authenticationAllowed WRITE setAuthenticationAllowed)
     Q_PROPERTY(QDate expiryDate READ expiryDate WRITE setExpiryDate)
 public:
-    explicit AdvancedSettingsDialog(QWidget *parent = 0)
+    explicit AdvancedSettingsDialog(QWidget *parent = Q_NULLPTR)
         : QDialog(parent),
           protocol(UnknownProtocol),
           pgpDefaultAlgorithm(GPGME_PK_ELG_E),

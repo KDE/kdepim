@@ -74,7 +74,7 @@ void AppearanceConfigurationPage::defaults()
 
 extern "C"
 {
-    Q_DECL_EXPORT KCModule *create_kleopatra_config_appear(QWidget *parent = 0, const QVariantList &args = QVariantList())
+    Q_DECL_EXPORT KCModule *create_kleopatra_config_appear(QWidget *parent = Q_NULLPTR, const QVariantList &args = QVariantList())
     {
         AppearanceConfigurationPage *page =
             new AppearanceConfigurationPage(parent, args);

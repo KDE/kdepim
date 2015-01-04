@@ -62,7 +62,7 @@ class ContactFieldComboBox : public KComboBox
 {
 public:
 
-    ContactFieldComboBox(QWidget *parent = 0)
+    ContactFieldComboBox(QWidget *parent = Q_NULLPTR)
         : KComboBox(parent)
     {
         fillFieldMap();

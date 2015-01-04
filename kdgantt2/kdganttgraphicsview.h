@@ -66,7 +66,7 @@ class KDGANTT_EXPORT GraphicsView : public QGraphicsView
     Q_PRIVATE_SLOT(d, void slotItemDoubleClicked(const QModelIndex &idx))
 public:
 
-    explicit GraphicsView(QWidget *parent = 0);
+    explicit GraphicsView(QWidget *parent = Q_NULLPTR);
     virtual ~GraphicsView();
 
     QAbstractItemModel *model() const;

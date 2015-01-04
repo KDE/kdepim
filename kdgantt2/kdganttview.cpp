@@ -51,7 +51,7 @@ namespace
 class HeaderView : public QHeaderView
 {
 public:
-    explicit HeaderView(QWidget *parent = 0) : QHeaderView(Qt::Horizontal, parent)
+    explicit HeaderView(QWidget *parent = Q_NULLPTR) : QHeaderView(Qt::Horizontal, parent)
     {
     }
 

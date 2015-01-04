@@ -97,7 +97,7 @@ class ComboBox : public QComboBox
     Q_PROPERTY(QString initialText READ initialText WRITE setInitialText)
     Q_PROPERTY(QIcon initialIcon READ initialIcon WRITE setInitialIcon)
 public:
-    explicit ComboBox(QWidget *parent = 0)
+    explicit ComboBox(QWidget *parent = Q_NULLPTR)
         : QComboBox(parent),
           m_initialText(),
           m_initialIcon()
@@ -105,7 +105,7 @@ public:
 
     }
 
-    explicit ComboBox(const QString &initialText, QWidget *parent = 0)
+    explicit ComboBox(const QString &initialText, QWidget *parent = Q_NULLPTR)
         : QComboBox(parent),
           m_initialText(initialText),
           m_initialIcon()
@@ -113,7 +113,7 @@ public:
 
     }
 
-    explicit ComboBox(const QIcon &initialIcon, const QString &initialText, QWidget *parent = 0)
+    explicit ComboBox(const QIcon &initialIcon, const QString &initialText, QWidget *parent = Q_NULLPTR)
         : QComboBox(parent),
           m_initialText(initialText),
           m_initialIcon(initialIcon)
@@ -186,11 +186,11 @@ class KeysComboBox : public ComboBox
 {
     Q_OBJECT
 public:
-    explicit KeysComboBox(QWidget *parent = 0)
+    explicit KeysComboBox(QWidget *parent = Q_NULLPTR)
         : ComboBox(parent) {}
-    explicit KeysComboBox(const QString &initialText, QWidget *parent = 0)
+    explicit KeysComboBox(const QString &initialText, QWidget *parent = Q_NULLPTR)
         : ComboBox(initialText, parent) {}
-    explicit KeysComboBox(const std::vector<Key> &keys, QWidget *parent = 0)
+    explicit KeysComboBox(const std::vector<Key> &keys, QWidget *parent = Q_NULLPTR)
         : ComboBox(make_initial_text(keys), parent)
     {
         setKeys(keys);

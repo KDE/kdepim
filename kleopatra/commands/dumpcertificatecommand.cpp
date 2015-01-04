@@ -63,7 +63,7 @@ class DumpCertificateDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit DumpCertificateDialog(QWidget *parent = 0)
+    explicit DumpCertificateDialog(QWidget *parent = Q_NULLPTR)
         : QDialog(parent), ui(this)
     {
 

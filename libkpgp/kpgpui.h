@@ -211,7 +211,7 @@ class LIBKPGP_EXPORT KeyRequester: public QWidget
     Q_OBJECT
 
 public:
-    explicit KeyRequester(QWidget *parent = 0, bool multipleKeys = false,
+    explicit KeyRequester(QWidget *parent = Q_NULLPTR, bool multipleKeys = false,
                           unsigned int allowedKeys = AllKeys, const char *name = 0);
     virtual ~KeyRequester();
 
@@ -267,7 +267,7 @@ class LIBKPGP_EXPORT PublicKeyRequester : public KeyRequester
 {
     Q_OBJECT
 public:
-    explicit PublicKeyRequester(QWidget *parent = 0, bool multipleKeys = false,
+    explicit PublicKeyRequester(QWidget *parent = Q_NULLPTR, bool multipleKeys = false,
                                 unsigned int allowedKeys = PublicKeys,
                                 const char *name = 0);
     virtual ~PublicKeyRequester();
@@ -287,7 +287,7 @@ class LIBKPGP_EXPORT SecretKeyRequester : public KeyRequester
 {
     Q_OBJECT
 public:
-    explicit SecretKeyRequester(QWidget *parent = 0, bool multipleKeys = false,
+    explicit SecretKeyRequester(QWidget *parent = Q_NULLPTR, bool multipleKeys = false,
                                 unsigned int allowedKeys = SecretKeys,
                                 const char *name = 0);
     virtual ~SecretKeyRequester();

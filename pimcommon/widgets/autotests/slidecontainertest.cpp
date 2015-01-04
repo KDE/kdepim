@@ -31,7 +31,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Cambridge, MA 02110-1301, USA
 using namespace PimCommon;
 
 struct TestWindow : public QWidget {
-    explicit TestWindow(QWidget *parent = 0)
+    explicit TestWindow(QWidget *parent = Q_NULLPTR)
         : QWidget(parent)
         , mContainer(new SlideContainer)
         , mContent(0)

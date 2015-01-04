@@ -62,7 +62,7 @@ namespace
 class TreeView : public QTreeView
 {
 public:
-    explicit TreeView(QWidget *parent = 0) : QTreeView(parent) {}
+    explicit TreeView(QWidget *parent = Q_NULLPTR) : QTreeView(parent) {}
 
     /* reimp */ QSize minimumSizeHint() const
     {

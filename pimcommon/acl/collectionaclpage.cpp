@@ -53,7 +53,7 @@ using namespace PimCommon;
 class ActionButton : public QPushButton
 {
 public:
-    ActionButton(QWidget *parent = 0)
+    ActionButton(QWidget *parent = Q_NULLPTR)
         : QPushButton(parent),
           mDefaultAction(0)
     {
