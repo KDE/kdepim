@@ -54,7 +54,7 @@ public:
         mActionList.clear();
     }
 
-    void setFilterAction(QWidget *widget = 0);
+    void setFilterAction(QWidget *widget = Q_NULLPTR);
 
     void slotFilterTypeChanged(int index);
     void slotAddWidget();

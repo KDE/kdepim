@@ -496,7 +496,7 @@ class ChooseProtocolPage : public WizardPage
 {
     Q_OBJECT
 public:
-    explicit ChooseProtocolPage(QWidget *p = 0)
+    explicit ChooseProtocolPage(QWidget *p = Q_NULLPTR)
         : WizardPage(p),
           initialized(false),
           ui()
@@ -554,7 +554,7 @@ class EnterDetailsPage : public WizardPage
 {
     Q_OBJECT
 public:
-    explicit EnterDetailsPage(QWidget *p = 0)
+    explicit EnterDetailsPage(QWidget *p = Q_NULLPTR)
         : WizardPage(p), dialog(this), ui()
     {
         ui.setupUi(this);
@@ -619,7 +619,7 @@ class OverviewPage : public WizardPage
 {
     Q_OBJECT
 public:
-    explicit OverviewPage(QWidget *p = 0)
+    explicit OverviewPage(QWidget *p = Q_NULLPTR)
         : WizardPage(p), ui()
     {
         ui.setupUi(this);
@@ -652,7 +652,7 @@ class KeyCreationPage : public WizardPage
 {
     Q_OBJECT
 public:
-    explicit KeyCreationPage(QWidget *p = 0)
+    explicit KeyCreationPage(QWidget *p = Q_NULLPTR)
         : WizardPage(p),
           ui()
     {
@@ -739,7 +739,7 @@ class ResultPage : public WizardPage
 {
     Q_OBJECT
 public:
-    explicit ResultPage(QWidget *p = 0)
+    explicit ResultPage(QWidget *p = Q_NULLPTR)
         : WizardPage(p),
           initialized(false),
           successfullyCreatedSigningCertificate(false),

@@ -116,23 +116,23 @@ public:
     /*reimp*/ void paintGrid(QPainter *painter,
                              const QRectF &sceneRect, const QRectF &exposedRect,
                              AbstractRowController *rowController = 0,
-                             QWidget *widget = 0);
+                             QWidget *widget = Q_NULLPTR);
     /*reimp*/ void paintHeader(QPainter *painter,
                                const QRectF &headerRect, const QRectF &exposedRect,
-                               qreal offset, QWidget *widget = 0);
+                               qreal offset, QWidget *widget = Q_NULLPTR);
 
 protected:
     virtual void paintHourScaleHeader(QPainter *painter,
                                       const QRectF &headerRect, const QRectF &exposedRect,
-                                      qreal offset, QWidget *widget = 0);
+                                      qreal offset, QWidget *widget = Q_NULLPTR);
     virtual void paintDayScaleHeader(QPainter *painter,
                                      const QRectF &headerRect, const QRectF &exposedRect,
-                                     qreal offset, QWidget *widget = 0);
+                                     qreal offset, QWidget *widget = Q_NULLPTR);
 
     virtual void paintUserDefinedHeader(QPainter *painter,
                                         const QRectF &headerRect, const QRectF &exposedRect,
                                         qreal offset, const DateTimeScaleFormatter *formatter,
-                                        QWidget *widget = 0);
+                                        QWidget *widget = Q_NULLPTR);
 };
 }
 

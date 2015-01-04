@@ -74,7 +74,7 @@ class HLine : public QFrame
 {
     Q_OBJECT
 public:
-    explicit HLine(QWidget *p = 0, Qt::WindowFlags f = 0)
+    explicit HLine(QWidget *p = Q_NULLPTR, Qt::WindowFlags f = 0)
         : QFrame(p, f)
     {
         setFrameStyle(QFrame::HLine | QFrame::Sunken);
@@ -85,7 +85,7 @@ class OperationsWidget : public WizardPage
 {
     Q_OBJECT
 public:
-    explicit OperationsWidget(QWidget *p = 0);
+    explicit OperationsWidget(QWidget *p = Q_NULLPTR);
     ~OperationsWidget();
 
     void setOutputDirectory(const QString &dir)

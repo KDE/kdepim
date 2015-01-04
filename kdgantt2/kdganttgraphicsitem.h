@@ -95,7 +95,7 @@ public:
 
     /*reimp*/ QRectF boundingRect() const;
     /*reimp*/ void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-                         QWidget *widget = 0);
+                         QWidget *widget = Q_NULLPTR);
 
     /*reimp*/ QVariant itemChange(GraphicsItemChange, const QVariant &value);
 protected:

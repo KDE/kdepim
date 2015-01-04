@@ -57,9 +57,9 @@ public:
     bool isSatisfiedConstraint(const Constraint &c) const;
 
     virtual void paintGrid(QPainter *painter, const QRectF &sceneRect, const QRectF &exposedRect,
-                           AbstractRowController *rowController = 0, QWidget *widget = 0) = 0;
+                           AbstractRowController *rowController = 0, QWidget *widget = Q_NULLPTR) = 0;
     virtual void paintHeader(QPainter *painter, const QRectF &headerRect, const QRectF &exposedRect,
-                             qreal offset, QWidget *widget = 0) = 0;
+                             qreal offset, QWidget *widget = Q_NULLPTR) = 0;
 public Q_SLOTS:
     /*internal*/ virtual void setModel(QAbstractItemModel *model);
     /*internal*/ virtual void setRootIndex(const QModelIndex &idx);
