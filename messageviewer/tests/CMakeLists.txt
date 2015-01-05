@@ -48,6 +48,11 @@ kde4_add_unit_test( messageviewer_attachmentdirstest ${messageviewer_attachmentd
 target_link_libraries( messageviewer_attachmentdirstest ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS})
 
 
+set( messageviewer_converthtmltoplaintext_SRCS converthtmltoplaintexttest.cpp ../viewer/converthtmltoplaintext.cpp)
+kde4_add_unit_test( messageviewer_converthtmltoplaintext ${messageviewer_converthtmltoplaintext_SRCS})
+target_link_libraries( messageviewer_converthtmltoplaintext ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS} ${Grantlee_GUI_LIBRARIES})
+
+
 ########### viewertest_gui ###############
 
 

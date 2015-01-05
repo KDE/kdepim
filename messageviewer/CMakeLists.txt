@@ -88,6 +88,7 @@ set(libmessageviewer_viewer_SRCS
   viewer/messagedisplayformatattribute.cpp
   viewer/urlhandlermanager.cpp
   viewer/mimeparttreeview.cpp
+  viewer/converthtmltoplaintext.cpp
   viewer/memento/cryptobodypartmemento.cpp
   viewer/memento/decryptverifybodypartmemento.cpp
   viewer/memento/verifydetachedbodypartmemento.cpp
@@ -215,6 +216,7 @@ target_link_libraries(messageviewer messagecore kdepim kpgp kleo
   grantleetheme
   kaddressbookgrantlee
   incidenceeditorsng
+  ${Grantlee_GUI_LIBRARIES}
 )
 
 include_directories(
