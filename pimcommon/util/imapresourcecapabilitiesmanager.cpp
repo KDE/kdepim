@@ -71,7 +71,6 @@ void ImapResourceCapabilitiesManager::slotCapabilities(QDBusPendingCallWatcher *
     if (reply.isValid()) {
         if (watcher->property("identifier").isValid()) {
             const QStringList capabilities = reply.value();
-            qDebug() << " capabilities" << capabilities << " for identifier" << watcher->property("identifier").toString();
             mImapResource.insert(watcher->property("identifier").toString(), capabilities.contains(QLatin1String("ANNOTATEMORE")));
         }
     }

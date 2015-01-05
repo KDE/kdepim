@@ -30,6 +30,7 @@
 #include <EntityDisplayAttribute>
 #include <EntityTreeModel>
 #include <Item>
+#include <AkonadiCore/AgentManager>
 #include <Akonadi/Calendar/ETMCalendar>
 #include <Akonadi/Calendar/PublishDialog>
 #include <akonadi/calendar/calendarsettings.h>
@@ -574,8 +575,9 @@ QString CalendarSupport::displayName(Akonadi::ETMCalendar *calendar, const Akona
     } //end kolab section
 
     // Dav Groupware
-    if (resourceName.contains(QLatin1String("davgroupware"))) {
-        return i18nc("%1 is the folder name", "%1 CalDav Calendar", cName);
+    if ( resourceName.contains( QLatin1String( "davgroupware" ) ) ) {
+        const QString resourceDisplayName = Akonadi::AgentManager::self()->instance(resourceName).name();
+        return i18nc( "%1 is the folder name", "%1 in %2", fullCollection.displayName(), resourceDisplayName );
     } //end caldav section
 
     // Google
