@@ -22,7 +22,6 @@
 #include <KLocalizedString>
 #include <KTemporaryFile>
 #include <KUrl>
-#include <KDebug>
 #include <AkonadiCore/ItemModifyJob>
 #include <KMime/Content>
 
@@ -54,7 +53,7 @@ bool AttachmentEditJob::addAttachment(KMime::Content *node, bool showWarning)
     KTemporaryFile file;
     file.setAutoRemove(false);
     if (!file.open()) {
-        kWarning() << "Edit Attachment: Unable to open temp file.";
+        qCWarning(MESSAGEVIEWER_LOG) << "Edit Attachment: Unable to open temp file.";
         return true;
     }
     file.write(node->decodedContent());
@@ -107,7 +106,7 @@ void AttachmentEditJob::setMessageItem(const Akonadi::Item &messageItem)
 void AttachmentEditJob::slotItemModifiedResult(KJob *job)
 {
     if (job->error()) {
-        kDebug() << "Item update failed:" << job->errorString();
+        qCDebug(MESSAGEVIEWER_LOG) << "Item update failed:" << job->errorString();
     } else {
         Q_EMIT refreshMessage(mMessageItem);
     }
