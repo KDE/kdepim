@@ -23,7 +23,7 @@
 
 #include "cellitem.h"
 
-#include <KDebug>
+#include "calendarsupport_debug.h"
 #include <KLocalizedString>
 
 using namespace CalendarSupport;
@@ -48,7 +48,7 @@ QList<CellItem *> CellItem::placeItem(QList<CellItem *> cells, CellItem *placeIt
         }
 
         if (item->overlaps(placeItem)) {
-            kDebug(5855) << "  Overlaps:" << item->label();
+            qCDebug(CALENDARSUPPORT_LOG) << "  Overlaps:" << item->label();
 
             conflictItems.append(item);
             if (item->subCells() > maxSubCells) {
@@ -62,20 +62,20 @@ QList<CellItem *> CellItem::placeItem(QList<CellItem *> cells, CellItem *placeIt
         // Look for unused sub cell and insert item
         int i;
         for (i = 0; i < maxSubCells; ++i) {
-            kDebug(5855) << "  Trying subcell" << i;
+            qCDebug(CALENDARSUPPORT_LOG) << "  Trying subcell" << i;
             if (!subCellDict.contains(i)) {
-                kDebug(5855) << "  Use subcell" << i;
+                qCDebug(CALENDARSUPPORT_LOG) << "  Use subcell" << i;
                 placeItem->setSubCell(i);
                 break;
             }
         }
         if (i == maxSubCells) {
-            kDebug(5855) << "  New subcell" << i;
+            qCDebug(CALENDARSUPPORT_LOG) << "  New subcell" << i;
             placeItem->setSubCell(maxSubCells);
             maxSubCells++;  // add new item to number of sub cells
         }
 
-        kDebug(5855) << "  Sub cells:" << maxSubCells;
+        qCDebug(CALENDARSUPPORT_LOG) << "  Sub cells:" << maxSubCells;
 
         // Write results to item to be placed
         conflictItems.append(placeItem);
