@@ -59,6 +59,7 @@
 #include "viewer/htmlquotecolorer.h"
 #include "chiasmuskeyselector.h"
 #include "messageviewer_debug.h"
+#include "converthtmltoplaintext.h"
 
 // KDEPIM includes
 #include <messagecore/utils/stringutil.h>
@@ -1249,9 +1250,9 @@ bool ObjectTreeParser::processTextHtmlSubtype(KMime::Content *curNode, ProcessRe
     QString bodyText;
     if (mSource->htmlMail()) {
         bodyText = bodyHTML;
-    } else {
-        bodyText = QLatin1String(StringUtil::convertAngleBracketsToHtml(partBody));
-    }
+    }/* else {
+        bodyText = QLatin1String(StringUtil::convertAngleBracketsToHtml( partBody ));
+    }*/
 
     if (curNode->topLevel()->textContent() == curNode  || attachmentStrategy()->defaultDisplay(curNode) == AttachmentStrategy::Inline ||
             showOnlyOneMimePart()) {
@@ -1284,22 +1285,30 @@ bool ObjectTreeParser::processTextHtmlSubtype(KMime::Content *curNode, ProcessRe
                                          "<a href=\"kmail:loadExternal\">by clicking here</a>."));
                 htmlWriter()->queue(QLatin1String("</div><br/><br/>"));
             }
+            htmlWriter()->queue( QLatin1String("<div style=\"position: relative\">\n") );
+            // Make sure the body is relative, so that nothing is painted over above "Note: ..."
+            // if a malicious message uses absolute positioning. #137643
+            htmlWriter()->queue( bodyText );
         } else {
-            htmlWriter()->queue(QLatin1String("<div class=\"htmlWarn\">\n"));
-            htmlWriter()->queue(i18n("<b>Note:</b> This is an HTML message. For "
-                                     "security reasons, only the raw HTML code "
-                                     "is shown. If you trust the sender of this "
-                                     "message then you can activate formatted "
-                                     "HTML display for this message "
-                                     "<a href=\"kmail:showHTML\">by clicking here</a>."));
-            htmlWriter()->queue(QLatin1String("</div><br/><br/>"));
+            htmlWriter()->queue( QLatin1String("<div class=\"htmlWarn\">\n") );
+            htmlWriter()->queue( i18n("<b>Note:</b> This is an HTML message. For "
+                                      "security reasons, only the raw HTML code "
+                                      "is shown. If you trust the sender of this "
+                                      "message then you can activate formatted "
+                                      "HTML display for this message "
+                                      "<a href=\"kmail:showHTML\">by clicking here</a>.") );
+            htmlWriter()->queue( QLatin1String("</div><br/><br/>") );
+            htmlWriter()->queue( QLatin1String("<div style=\"position: relative\">\n") );
+            // Make sure the body is relative, so that nothing is painted over above "Note: ..."
+            // if a malicious message uses absolute positioning. #137643
+            ConvertHtmlToPlainText convert;
+            convert.setHtmlString(QString::fromUtf8(partBody));
+            QString result = convert.generatePlainText();
+            result.replace(QLatin1String("\n"), QLatin1String("<br>"));
+            htmlWriter()->queue( result );
         }
-        // Make sure the body is relative, so that nothing is painted over above "Note: ..."
-        // if a malicious message uses absolute positioning. #137643
-        htmlWriter()->queue(QLatin1String("<div style=\"position: relative\">\n"));
-        htmlWriter()->queue(bodyText);
-        htmlWriter()->queue(QLatin1String("</div>\n"));
-        mSource->setHtmlMode(Util::Html);
+        htmlWriter()->queue( QLatin1String("</div>\n" ));
+        mSource->setHtmlMode( Util::Html );
         return true;
     }
     return false;

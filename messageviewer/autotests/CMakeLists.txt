@@ -75,6 +75,13 @@ add_test(messageviewer_attachmentdirstest messageviewer_attachmentdirstest)
 ecm_mark_as_test(messageviewer_attachmentdirstest)
 target_link_libraries( messageviewer_attachmentdirstest Qt5::Test )
 
+set( messageviewer_converthtmltoplaintext_SRCS converthtmltoplaintexttest.cpp ../viewer/converthtmltoplaintext.cpp)
+add_executable( messageviewer_converthtmltoplaintext ${messageviewer_converthtmltoplaintext_SRCS})
+add_test(messageviewer_converthtmltoplaintext messageviewer_converthtmltoplaintext)
+ecm_mark_as_test(messageviewer_converthtmltoplaintext)
+target_link_libraries( messageviewer_converthtmltoplaintext Qt5::Test Grantlee5::TextDocument)
+
+
 
 set(KDEPIMLIBS_RUN_ISOLATED_TESTS TRUE)
 set(KDEPIMLIBS_RUN_SQLITE_ISOLATED_TESTS TRUE)

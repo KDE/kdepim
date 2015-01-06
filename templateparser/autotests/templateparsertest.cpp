@@ -199,8 +199,13 @@ void TemplateParserTester::test_processWithTemplatesForContent_data()
     QTest::newRow( file.toLatin1() ) << "%DICTIONARYLANGUAGE=\"\"" << fileName << "" << false;
     QTest::newRow( file.toLatin1() ) << "%OTIMELONG %OFULLSUBJECT" << fileName << "11:30:27 Plain Message Test" << false;
     QTest::newRow( file.toLatin1() ) << "%OTIMELONG\n%OFULLSUBJECT" << fileName << "11:30:27\nPlain Message Test" << false;
+    QTest::newRow( file.toLatin1() ) << "%REM=\"sdfsfsdsdfsdf\"" << fileName << "" << false;
+    QTest::newRow( file.toLatin1() ) << "%CLEAR" << fileName << "" << false;
+    QTest::newRow( file.toLatin1() ) << "FOO foo" << fileName << "FOO foo" << false;
     const QString insertFileName = QString(dir.path() + QLatin1Char('/') +  QLatin1String("insert-file.txt"));
-    const QString insertFileNameCommand = QString::fromLatin1("%INSERT=\"%1\"").arg(insertFileName);
+    QString insertFileNameCommand = QString::fromLatin1("%INSERT=\"%1\"").arg(insertFileName);
+    QTest::newRow( file.toLatin1() ) << insertFileNameCommand << fileName << "test insert file!\n" << false;
+    insertFileNameCommand = QString::fromLatin1("%PUT=\"%1\"").arg(insertFileName);
     QTest::newRow( file.toLatin1() ) << insertFileNameCommand << fileName << "test insert file!\n" << false;
 }
 
