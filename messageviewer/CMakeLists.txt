@@ -72,7 +72,6 @@ set(libmessageviewer_viewer_SRCS
   viewer/csshelper.cpp
   viewer/csshelperbase.cpp
   viewer/editorwatcher.cpp
-  viewer/kleojobexecutor.cpp
   viewer/mailsourceviewer.cpp
   viewer/htmlquotecolorer.cpp
   viewer/mimetreemodel.cpp
@@ -165,6 +164,7 @@ set(libmessageviewer_job_SRCS
   job/attachmentencryptwithchiasmusjob.cpp
   job/attachmenteditjob.cpp
   job/modifymessagedisplayformatjob.cpp
+  job/kleojobexecutor.cpp
 )
 
 set(libmessageviewer_SRCS
