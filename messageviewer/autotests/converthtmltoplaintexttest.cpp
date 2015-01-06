@@ -58,19 +58,19 @@ void ConvertHtmlToPlainTextTest::shouldReturnNotEmptyStringIfInputTextIsNotEmpty
 
 void ConvertHtmlToPlainTextTest::shouldConvertToPlainText_data()
 {
-    QTest::addColumn<QString>( "inputText" );
-    QTest::addColumn<QString>( "convertedText" );
-    QTest::newRow( "plainText" ) << "foo" << "foo\n";
-    QTest::newRow( "htmlText" ) << "<html><body>Hi! This is a KDE test</body></html>" << "Hi! This is a KDE test\n";
-    QTest::newRow( "htmlTextWithBold" ) << "<html><body><b>Hi!</b> This is a KDE test</body></html>" << "*Hi!* This is a KDE test\n";
-    QTest::newRow( "htmlTextWithH1" ) << "<html><body><h1>Hi!</h1> This is a KDE test</body></html>" << "*Hi!*\nThis is a KDE test\n";
-    QTest::newRow( "htmlTextWithUnderLine" ) << "<html><body><u>Hi!</u> This is a KDE test</body></html>" << "_Hi!_ This is a KDE test\n";
+    QTest::addColumn<QString>("inputText");
+    QTest::addColumn<QString>("convertedText");
+    QTest::newRow("plainText") << "foo" << "foo\n";
+    QTest::newRow("htmlText") << "<html><body>Hi! This is a KDE test</body></html>" << "Hi! This is a KDE test\n";
+    QTest::newRow("htmlTextWithBold") << "<html><body><b>Hi!</b> This is a KDE test</body></html>" << "*Hi!* This is a KDE test\n";
+    QTest::newRow("htmlTextWithH1") << "<html><body><h1>Hi!</h1> This is a KDE test</body></html>" << "*Hi!*\nThis is a KDE test\n";
+    QTest::newRow("htmlTextWithUnderLine") << "<html><body><u>Hi!</u> This is a KDE test</body></html>" << "_Hi!_ This is a KDE test\n";
 }
 
 void ConvertHtmlToPlainTextTest::shouldConvertToPlainText()
 {
-    QFETCH( QString, inputText );
-    QFETCH( QString, convertedText );
+    QFETCH(QString, inputText);
+    QFETCH(QString, convertedText);
 
     MessageViewer::ConvertHtmlToPlainText convert;
     convert.setHtmlString(inputText);

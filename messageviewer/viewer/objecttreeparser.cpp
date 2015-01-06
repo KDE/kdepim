@@ -1285,30 +1285,30 @@ bool ObjectTreeParser::processTextHtmlSubtype(KMime::Content *curNode, ProcessRe
                                          "<a href=\"kmail:loadExternal\">by clicking here</a>."));
                 htmlWriter()->queue(QLatin1String("</div><br/><br/>"));
             }
-            htmlWriter()->queue( QLatin1String("<div style=\"position: relative\">\n") );
+            htmlWriter()->queue(QLatin1String("<div style=\"position: relative\">\n"));
             // Make sure the body is relative, so that nothing is painted over above "Note: ..."
             // if a malicious message uses absolute positioning. #137643
-            htmlWriter()->queue( bodyText );
+            htmlWriter()->queue(bodyText);
         } else {
-            htmlWriter()->queue( QLatin1String("<div class=\"htmlWarn\">\n") );
-            htmlWriter()->queue( i18n("<b>Note:</b> This is an HTML message. For "
-                                      "security reasons, only the raw HTML code "
-                                      "is shown. If you trust the sender of this "
-                                      "message then you can activate formatted "
-                                      "HTML display for this message "
-                                      "<a href=\"kmail:showHTML\">by clicking here</a>.") );
-            htmlWriter()->queue( QLatin1String("</div><br/><br/>") );
-            htmlWriter()->queue( QLatin1String("<div style=\"position: relative\">\n") );
+            htmlWriter()->queue(QLatin1String("<div class=\"htmlWarn\">\n"));
+            htmlWriter()->queue(i18n("<b>Note:</b> This is an HTML message. For "
+                                     "security reasons, only the raw HTML code "
+                                     "is shown. If you trust the sender of this "
+                                     "message then you can activate formatted "
+                                     "HTML display for this message "
+                                     "<a href=\"kmail:showHTML\">by clicking here</a>."));
+            htmlWriter()->queue(QLatin1String("</div><br/><br/>"));
+            htmlWriter()->queue(QLatin1String("<div style=\"position: relative\">\n"));
             // Make sure the body is relative, so that nothing is painted over above "Note: ..."
             // if a malicious message uses absolute positioning. #137643
             ConvertHtmlToPlainText convert;
             convert.setHtmlString(QString::fromUtf8(partBody));
             QString result = convert.generatePlainText();
             result.replace(QLatin1String("\n"), QLatin1String("<br>"));
-            htmlWriter()->queue( result );
+            htmlWriter()->queue(result);
         }
-        htmlWriter()->queue( QLatin1String("</div>\n" ));
-        mSource->setHtmlMode( Util::Html );
+        htmlWriter()->queue(QLatin1String("</div>\n"));
+        mSource->setHtmlMode(Util::Html);
         return true;
     }
     return false;

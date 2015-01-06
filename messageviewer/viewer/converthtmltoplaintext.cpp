@@ -41,15 +41,16 @@ void ConvertHtmlToPlainText::setHtmlString(const QString &htmlString)
 
 QString ConvertHtmlToPlainText::generatePlainText()
 {
-    if (mHtmlString.isEmpty())
+    if (mHtmlString.isEmpty()) {
         return QString();
+    }
     Grantlee::PlainTextMarkupBuilder *pb = new Grantlee::PlainTextMarkupBuilder();
 
-    Grantlee::MarkupDirector *pmd = new Grantlee::MarkupDirector( pb );
+    Grantlee::MarkupDirector *pmd = new Grantlee::MarkupDirector(pb);
     QTextDocument *doc = new QTextDocument;
     doc->setHtml(mHtmlString);
 
-    pmd->processDocument( doc );
+    pmd->processDocument(doc);
     QString plainText = pb->getResult();
 
     delete doc;
@@ -68,12 +69,12 @@ QString ConvertHtmlToPlainText::htmlString() const
 void ConvertHtmlToPlainText::toCleanPlainText(QString &text)
 {
     // Remove line separators. Normal \n chars are still there, so no linebreaks get lost here
-    text.remove( QChar::LineSeparator );
+    text.remove(QChar::LineSeparator);
 
     // Get rid of embedded images, see QTextImageFormat documentation:
     // "Inline images are represented by an object replacement character (0xFFFC in Unicode) "
-    text.remove( 0xFFFC );
+    text.remove(0xFFFC);
 
     // In plaintext mode, each space is non-breaking.
-    text.replace( QChar::Nbsp, QChar::fromLatin1( ' ' ) );
+    text.replace(QChar::Nbsp, QChar::fromLatin1(' '));
 }

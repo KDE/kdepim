@@ -202,8 +202,8 @@ void CustomTemplates::load()
         iconFromType(type, item);
     }
     const bool enabled = mUi->mList->topLevelItemCount() > 0 && mUi->mList->currentItem();
-    mUi->mRemove->setEnabled( enabled );
-    mUi->mDuplicate->setEnabled( enabled );
+    mUi->mRemove->setEnabled(enabled);
+    mUi->mDuplicate->setEnabled(enabled);
 }
 
 void CustomTemplates::save()

@@ -39,18 +39,18 @@ QStringList TemplateParser::Util::keywordsWithArgs()
 {
     QStringList keywordsWithArgs;
     keywordsWithArgs
-            << QLatin1String( "%REM=\"\"%-" )
-            << QLatin1String( "%INSERT=\"\"" )
-            << QLatin1String( "%SYSTEM=\"\"" )
-            << QLatin1String( "%PUT=\"\"" )
-            << QLatin1String( "%QUOTEPIPE=\"\"" )
-            << QLatin1String( "%MSGPIPE=\"\"" )
-            << QLatin1String( "%BODYPIPE=\"\"" )
-            << QLatin1String( "%CLEARPIPE=\"\"" )
-            << QLatin1String( "%TEXTPIPE=\"\"" )
-            << QLatin1String( "%OHEADER=\"\"" )
-            << QLatin1String( "%HEADER=\"\"" )
-            << QLatin1String( "%DICTIONARYLANGUAGE=\"\"" );
+            << QLatin1String("%REM=\"\"%-")
+            << QLatin1String("%INSERT=\"\"")
+            << QLatin1String("%SYSTEM=\"\"")
+            << QLatin1String("%PUT=\"\"")
+            << QLatin1String("%QUOTEPIPE=\"\"")
+            << QLatin1String("%MSGPIPE=\"\"")
+            << QLatin1String("%BODYPIPE=\"\"")
+            << QLatin1String("%CLEARPIPE=\"\"")
+            << QLatin1String("%TEXTPIPE=\"\"")
+            << QLatin1String("%OHEADER=\"\"")
+            << QLatin1String("%HEADER=\"\"")
+            << QLatin1String("%DICTIONARYLANGUAGE=\"\"");
 
     return keywordsWithArgs;
 }
@@ -59,18 +59,18 @@ QStringList TemplateParser::Util::keywordsWithArgsForCompleter()
 {
     QStringList keywordsWithArgs;
     keywordsWithArgs
-            << QLatin1String( "%REM=\".*\"%-" )
-            << QLatin1String( "%INSERT=\".*\"" )
-            << QLatin1String( "%SYSTEM=\".*\"" )
-            << QLatin1String( "%PUT=\".*\"" )
-            << QLatin1String( "%QUOTEPIPE=\".*\"" )
-            << QLatin1String( "%MSGPIPE=\".*\"" )
-            << QLatin1String( "%BODYPIPE=\".*\"" )
-            << QLatin1String( "%CLEARPIPE=\".*\"" )
-            << QLatin1String( "%TEXTPIPE=\".*\"" )
-            << QLatin1String( "%OHEADER=\".*\"" )
-            << QLatin1String( "%HEADER=\".*\"" )
-            << QLatin1String( "%DICTIONARYLANGUAGE=\".*\"" );
+            << QLatin1String("%REM=\".*\"%-")
+            << QLatin1String("%INSERT=\".*\"")
+            << QLatin1String("%SYSTEM=\".*\"")
+            << QLatin1String("%PUT=\".*\"")
+            << QLatin1String("%QUOTEPIPE=\".*\"")
+            << QLatin1String("%MSGPIPE=\".*\"")
+            << QLatin1String("%BODYPIPE=\".*\"")
+            << QLatin1String("%CLEARPIPE=\".*\"")
+            << QLatin1String("%TEXTPIPE=\".*\"")
+            << QLatin1String("%OHEADER=\".*\"")
+            << QLatin1String("%HEADER=\".*\"")
+            << QLatin1String("%DICTIONARYLANGUAGE=\".*\"");
 
     return keywordsWithArgs;
 }

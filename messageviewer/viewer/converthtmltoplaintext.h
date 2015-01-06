@@ -22,7 +22,8 @@
 #define CONVERTHTMLTOPLAINTEXT_H
 
 #include <QString>
-namespace MessageViewer {
+namespace MessageViewer
+{
 class ConvertHtmlToPlainText
 {
 public:

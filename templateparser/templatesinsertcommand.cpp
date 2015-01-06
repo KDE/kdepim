@@ -485,7 +485,7 @@ void TemplatesInsertCommand::slotMapped(int cmd)
 
     switch (cmd) {
     case TemplatesInsertCommand::CBlank:
-        emit insertCommand( QLatin1String("%BLANK") );
+        emit insertCommand(QLatin1String("%BLANK"));
         break;
     case TemplatesInsertCommand::CQuote:
         emit insertCommand(QStringLiteral("%QUOTE"));
