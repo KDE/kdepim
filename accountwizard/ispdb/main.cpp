@@ -23,6 +23,7 @@
 
 #include <KLocalizedString>
 #include <QDebug>
+#include <QIcon>
 #include <QApplication>
 #include <KAboutData>
 #include <QCommandLineParser>
@@ -73,10 +74,10 @@ int main(int argc, char **argv)
                          KAboutLicense::LGPL,
                          i18n("(c) 2010 Omat Holding B.V."),
                          QStringLiteral("http://pim.kde.org/akonadi/"));
-    aboutData.setProgramIconName(QStringLiteral("akonadi"));
     aboutData.addAuthor(i18n("Tom Albers"),  i18n("Author"), QStringLiteral("toma@kde.org"));
 
     QApplication app(argc, argv);
+    app.setWindowIcon(QIcon::fromTheme(QStringLiteral("akonadi")));
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
     parser.addVersionOption();
