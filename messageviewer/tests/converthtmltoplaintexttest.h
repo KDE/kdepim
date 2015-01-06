@@ -34,6 +34,8 @@ private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldReturnEmptyStringIfInputTextIsEmpty();
     void shouldReturnNotEmptyStringIfInputTextIsNotEmpty();
+    void shouldConvertToPlainText_data();
+    void shouldConvertToPlainText();
 };
 
 #endif // CONVERTHTMLTOPLAINTEXTTEST_H

@@ -22,6 +22,7 @@
 
 #include <grantlee/plaintextmarkupbuilder.h>
 #include <QTextDocument>
+#include <QDebug>
 using namespace MessageViewer;
 ConvertHtmlToPlainText::ConvertHtmlToPlainText()
 {
@@ -45,7 +46,8 @@ QString ConvertHtmlToPlainText::generatePlainText()
     Grantlee::PlainTextMarkupBuilder *pb = new Grantlee::PlainTextMarkupBuilder();
 
     Grantlee::MarkupDirector *pmd = new Grantlee::MarkupDirector( pb );
-    QTextDocument *doc = new QTextDocument(mHtmlString);
+    QTextDocument *doc = new QTextDocument;
+    doc->setHtml(mHtmlString);
 
     pmd->processDocument( doc );
     QString plainText = pb->getResult();
