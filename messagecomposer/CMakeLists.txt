@@ -74,20 +74,30 @@ set( messagecomposer_part_src
      part/textpart.cpp
 )
 
+set( messagecomposer_attachment_src
+     attachment/attachmentcontrollerbase.cpp
+     attachment/attachmentmodel.cpp
+)
+
+set( messagecomposer_helper_src
+     helper/messagehelper.cpp
+     helper/messagefactory.cpp
+)
+
+set( messagecomposer_sender_src
+     sender/akonadisender.cpp
+)
+
 set( messagecomposer_src
      ${messagecomposer_part_src}
      ${messagecomposer_imagescaling_src}
      ${messagecomposer_job_src}
      ${messagecomposer_composer_src}
      ${messagecomposer_recipient_src}
+     ${messagecomposer_attachment_src}
+     ${messagecomposer_helper_src}
+     ${messagecomposer_sender_src}
      utils/util.cpp
-
-     attachment/attachmentcontrollerbase.cpp
-     attachment/attachmentmodel.cpp
-
-     sender/akonadisender.cpp
-     helper/messagehelper.cpp
-     helper/messagefactory.cpp
      settings/messagecomposersettings.cpp
 )
 
