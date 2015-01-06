@@ -17,15 +17,13 @@
 
 #include "messagevieweraccessiblewidgetfactory.h"
 
-#include <QtCore/qplugin.h>
 #include "accessiblemailwebview.h"
-
-Q_EXPORT_PLUGIN(MessageViewerAccessibleWidgetFactory)
 
 QAccessibleInterface *MessageViewerAccessibleWidgetFactory::create(const QString &key, QObject *object)
 {
-    if (key == QLatin1String("MessageViewer::MailWebView")) {
-        return new AccessibleMailWebView(reinterpret_cast< MessageViewer::MailWebView * >(object));
+    Q_UNUSED(key)
+    if (MessageViewer::MailWebView *view = qobject_cast<MessageViewer::MailWebView *>(object)) {
+        return new AccessibleMailWebView(view);
     }
     return 0;
 }
