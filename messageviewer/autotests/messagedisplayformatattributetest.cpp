@@ -87,4 +87,10 @@ void MessageDisplayFormatAttributeTest::shouldCloneAttribute()
     delete result;
 }
 
+void MessageDisplayFormatAttributeTest::shouldDefineType()
+{
+    MessageViewer::MessageDisplayFormatAttribute attr;
+    QCOMPARE(attr.type(), QByteArray("MessageDisplayFormatAttribute"));
+}
+
 QTEST_MAIN(MessageDisplayFormatAttributeTest)
