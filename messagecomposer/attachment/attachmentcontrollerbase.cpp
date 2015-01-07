@@ -941,6 +941,11 @@ void AttachmentControllerBase::showAttachPublicKeyDialog()
     delete dialog;
 }
 
+void AttachmentControllerBase::attachMyPublicKey()
+{
+
+}
+
 void AttachmentControllerBase::enableAttachPublicKey( bool enable )
 {
     d->attachPublicKeyAction->setEnabled( enable );
