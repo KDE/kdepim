@@ -300,7 +300,7 @@ private:
      * smart quoting is turned on. Signed or encrypted texts
      * get converted to plain text when allowDecryption is true.
      */
-    QString quotedPlainText( const QString & election=QString() ) const;
+    QString quotedPlainText( const QString & selection=QString() ) const;
 
     /**
      * Returns HTML message body.
