@@ -220,6 +220,7 @@ install(TARGETS mailcommon ${INSTALL_TARGETS_DEFAULT_ARGS})
 add_subdirectory(filter/filterimporter/autotests)
 add_subdirectory(collectionpage/autotests)
 add_subdirectory(filter/autotests)
+add_subdirectory(snippets/autotests)
 #install(FILES viewer/viewer.h viewer/attachmentstrategy.h header/headerstrategy.h messageviewer_export.h DESTINATION ${INCLUDE_INSTALL_DIR}/messageviewer COMPONENT devel)
 
 
