@@ -208,6 +208,7 @@ void TemplateParserTester::test_processWithTemplatesForContent_data()
     QTest::newRow( file.toLatin1() ) << insertFileNameCommand << fileName << "test insert file!\n" << false;
 
     QTest::newRow( file.toLatin1() ) << "%MSGID" << fileName << "<20150@foo.kde.org>" << false;
+    QTest::newRow( file.toLatin1() ) << "%SYSTEM=\"echo foo\"" << fileName << "foo\n" << false;
 }
 
 void TemplateParserTester::test_processWithTemplatesForContent()
