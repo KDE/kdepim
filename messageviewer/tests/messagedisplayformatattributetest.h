@@ -35,6 +35,7 @@ private Q_SLOTS:
     void shouldChangeMessageFormat();
     void shouldDeserializeValue();
     void shouldCloneAttribute();
+    void shouldDefineType();
 };
 
 #endif // MESSAGEDISPLAYFORMATATTRIBUTETEST_H
