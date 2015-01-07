@@ -1,4 +1,4 @@
-/* -*- mode: C++; c-file-style: "gnu" -*-
+/* 
   Copyright (c) 2010 Volker Krause <vkrause@kde.org>
 
   Based on kmail/kmlineeditspell.h/cpp

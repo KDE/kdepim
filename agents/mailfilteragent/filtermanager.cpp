@@ -1,4 +1,4 @@
-// -*- mode: C++; c-file-style: "gnu" -*-
+// 
 /* Copyright: before 2012: missing, see KMail copyrights
  * Copyright (C) 2012 Andras Mantia <amantia@kde.org> *
  *

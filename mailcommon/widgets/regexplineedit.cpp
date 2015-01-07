@@ -1,4 +1,4 @@
-/*  -*- mode: C++; c-file-style: "gnu" -*-
+/*  
 
   Copyright (c) 2004 Ingo Kloecker <kloecker@kde.org>
 

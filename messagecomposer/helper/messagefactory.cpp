@@ -1,4 +1,4 @@
-/* -*- mode: C++; c-file-style: "gnu" -*-
+/* 
   Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Copyright (c) 2010 Leo Franchi <lfranchi@kde.org>
 

@@ -1,4 +1,4 @@
-/* -*- mode: C++; c-file-style: "gnu" -*-
+/* 
   This file is part of KMail, the KDE mail client.
   Copyright (c) 1997 Markus Wuebben <markus.wuebben@kde.org>
   Copyright (C) 2009 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
