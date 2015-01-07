@@ -66,7 +66,6 @@ set(libmailcommon_filter_SRCS
   filter/filteractions/filteractionwithtest.cpp
   filter/filteractions/filteractionwithuoid.cpp
   filter/filteractions/filteractionwithurl.cpp
-  filter/filtercontroller.cpp
   filter/filtereditdialog.cpp
   filter/filterimporterexporter.cpp
   filter/filterimporter/filterimporterabstract.cpp
@@ -78,7 +77,6 @@ set(libmailcommon_filter_SRCS
   filter/filterimporter/filterimporterclawsmail.cpp
   filter/filterlog.cpp
   filter/filtermanager.cpp
-  filter/filtermodel.cpp
   filter/itemcontext.cpp
   filter/kmfilterdialog.cpp
   filter/mailfilter.cpp
@@ -86,6 +84,12 @@ set(libmailcommon_filter_SRCS
   filter/dialog/selectthunderbirdfilterfileswidget.cpp
   filter/mdnadvicedialog.cpp
 )
+
+set(libmailcommon_filter_for_mobile_SRCS
+  filter/filtermodel.cpp
+  filter/filtercontroller.cpp
+)
+
 
 set(libmailcommon_collection_SRCS
   collectionpage/collectiontypeutil.cpp
@@ -150,11 +154,19 @@ set(libmailcommon_widget_SRCS
   widgets/favoritecollectionwidget.cpp
 )
 
+set(libmailcommon_mdn_SRCS
+  mdn/sendmdnhandler.cpp
+)
+
+set(libmailcommon_util_SRCS
+  util/mailutil.cpp
+)
+
 set(libmailcommon_SRCS
   kernel/mailkernel.cpp
-  util/mailutil.cpp
-  mdn/sendmdnhandler.cpp
   mailcommon_debug.cpp
+  ${libmailcommon_util_SRCS}
+  ${libmailcommon_mdn_SRCS}
   ${libmailcommon_widget_SRCS}
   ${libmailcommon_tag_SRCS}
   ${libmailcommon_snippets_SRCS}
@@ -164,6 +176,9 @@ set(libmailcommon_SRCS
   ${libmailcommon_folder_SRCS}   
   ${libmailcommon_filter_SRCS}
 )
+if (KDEPIM_BUILD_MOBILE)
+set(libmailcommon_SRCS ${libmailcommon_SRCS} ${libmailcommon_filter_for_mobile_SRCS})
+endif()
 
 kconfig_add_kcfg_files(libmailcommon_SRCS
     settings/mailcommonsettings_base.kcfgc
