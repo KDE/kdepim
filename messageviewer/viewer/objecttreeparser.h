@@ -422,7 +422,7 @@ private:
 
     /** Standard children handling a.k.a. multipart/mixed (w/o
       kroupware hacks) */
-    void stdChildHandling( KMime::Content * child );
+    void standardChildHandling( KMime::Content * child );
 
     void defaultHandling( KMime::Content * node, ProcessResult & result );
 

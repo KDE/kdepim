@@ -1220,18 +1220,11 @@ bool ObjectTreeParser::processTextHtmlSubtype( KMime::Content * curNode, Process
     if ( !htmlWriter() )
         return true;
 
-    QString bodyText;
-    if ( mSource->htmlMail() ) {
-        bodyText = bodyHTML;
-    }/* else {
-        bodyText = QLatin1String(StringUtil::convertAngleBracketsToHtml( partBody ));
-    }*/
-
     if ( curNode->topLevel()->textContent() == curNode  || attachmentStrategy()->defaultDisplay( curNode ) == AttachmentStrategy::Inline ||
          showOnlyOneMimePart() )
     {
         if ( mSource->htmlMail() ) {
-
+            QString bodyText = bodyHTML;
             HTMLQuoteColorer colorer;
             colorer.setEnableHtmlQuoteColorer(GlobalSettings::self()->htmlQuoteColorerEnabled());
             QString extraHead;
@@ -1472,7 +1465,7 @@ bool ObjectTreeParser::processTextPlainSubtype( KMime::Content *curNode, Process
     return true;
 }
 
-void ObjectTreeParser::stdChildHandling( KMime::Content * child ) {
+void ObjectTreeParser::standardChildHandling( KMime::Content * child ) {
     if ( !child )
         return;
 
@@ -1511,7 +1504,7 @@ bool ObjectTreeParser::processMultiPartMixedSubtype( KMime::Content * node, Proc
         return false;
 
     // normal treatment of the parts in the mp/mixed container
-    stdChildHandling( child );
+    standardChildHandling( child );
     return true;
 }
 
@@ -1545,10 +1538,10 @@ bool ObjectTreeParser::processMultiPartAlternativeSubtype( KMime::Content * node
     // the plainTextContent and the htmlContent
     if ( !htmlWriter() ) {
         if ( dataPlain ) {
-            stdChildHandling( dataPlain );
+            standardChildHandling( dataPlain );
         }
         if ( dataHtml ) {
-            stdChildHandling( dataHtml );
+            standardChildHandling( dataHtml );
         }
         return true;
     }
@@ -1557,19 +1550,19 @@ bool ObjectTreeParser::processMultiPartAlternativeSubtype( KMime::Content * node
          (dataHtml && dataPlain && dataPlain->body().isEmpty()) ) {
         if ( dataPlain )
             mNodeHelper->setNodeProcessed( dataPlain, false);
-        stdChildHandling( dataHtml );
+        standardChildHandling( dataHtml );
         mSource->setHtmlMode( Util::MultipartHtml );
         return true;
     }
 
     if ( !htmlWriter() || (!mSource->htmlMail() && dataPlain) ) {
         mNodeHelper->setNodeProcessed( dataHtml, false );
-        stdChildHandling( dataPlain );
+        standardChildHandling( dataPlain );
         mSource->setHtmlMode( Util::MultipartPlain );
         return true;
     }
 
-    stdChildHandling( child );
+    standardChildHandling( child );
     return true;
 }
 
@@ -1588,7 +1581,7 @@ bool ObjectTreeParser::processMultiPartSignedSubtype( KMime::Content * node, Pro
         kDebug() << "mulitpart/signed must have exactly two child parts!" << endl
                  << "processing as multipart/mixed";
         if ( child )
-            stdChildHandling( child );
+            standardChildHandling( child );
         return child;
     }
 
@@ -1601,7 +1594,7 @@ bool ObjectTreeParser::processMultiPartSignedSubtype( KMime::Content * node, Pro
     mNodeHelper->setNodeProcessed( signature, true);
 
     if ( !includeSignatures() ) {
-        stdChildHandling( signedData );
+        standardChildHandling( signedData );
         return true;
     }
 
@@ -1623,7 +1616,7 @@ bool ObjectTreeParser::processMultiPartSignedSubtype( KMime::Content * node, Pro
 
     if ( !protocol ) {
         mNodeHelper->setNodeProcessed( signature, true );
-        stdChildHandling( signedData );
+        standardChildHandling( signedData );
         return true;
     }
 
@@ -1672,7 +1665,7 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( KMime::Content * node, 
   */
 
     if ( !data ) {
-        stdChildHandling( child );
+        standardChildHandling( child );
         return true;
     }
 
@@ -1680,7 +1673,7 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( KMime::Content * node, 
 
     KMime::Content * dataChild = MessageCore::NodeHelper::firstChild( data );
     if ( dataChild ) {
-        stdChildHandling( dataChild );
+        standardChildHandling( dataChild );
         return true;
     }
 
@@ -3235,7 +3228,7 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
     unsigned int pos, beg;
 
     // skip leading empty lines
-    for ( pos = 0; pos < length && s[pos] <= QLatin1Char(' '); pos++ )
+    for ( pos = 0; pos < length && s[pos] <= QLatin1Char(' '); ++pos )
         ;
     while (pos > 0 && (s[pos-1] == QLatin1Char(' ') || s[pos-1] == QLatin1Char('\t'))) pos--;
     beg = pos;
