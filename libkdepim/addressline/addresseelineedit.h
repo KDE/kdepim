@@ -79,6 +79,9 @@ public:
      * Reimplemented for setting the @p font for line edit and completion box.
      */
     void setFont( const QFont &font );
+
+    void setEnableBalooSearch(bool enable);
+
 Q_SIGNALS:
     void textCompleted();
 
