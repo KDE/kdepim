@@ -43,7 +43,8 @@
 //#define DEBUG_SENDLATERAGENT 1
 
 SendLaterAgent::SendLaterAgent(const QString &id)
-    : Akonadi::AgentBase(id)
+    : Akonadi::AgentBase(id),
+      mAgentInitialized(false)
 {
     Kdelibs4ConfigMigrator migrate(QStringLiteral("sendlateragent"));
     migrate.setConfigFiles(QStringList() << QStringLiteral("akonadi_sendlater_agentrc") << QStringLiteral("akonadi_sendlater_agent.notifyrc"));
@@ -64,9 +65,9 @@ SendLaterAgent::SendLaterAgent(const QString &id)
 
     if (SendLaterAgentSettings::enabled()) {
 #ifdef DEBUG_SENDLATERAGENT
-        QTimer::singleShot(1000, mManager, SLOT(load()));
+        QTimer::singleShot(1000, this, SLOT(slotStartAgent()));
 #else
-        QTimer::singleShot(1000 * 60 * 4, mManager, SLOT(load()));
+        QTimer::singleShot(1000*60*4, this, SLOT(slotStartAgent()));
 #endif
     }
 }
@@ -75,12 +76,21 @@ SendLaterAgent::~SendLaterAgent()
 {
 }
 
-void SendLaterAgent::doSetOnline(bool online)
+void SendLaterAgent::slotStartAgent()
 {
-    if (online) {
-        reload();
-    } else {
-        mManager->stopAll();
+    mAgentInitialized = true;
+    if (isOnline())
+        mManager->load();
+}
+
+void SendLaterAgent::doSetOnline( bool online )
+{
+    if (mAgentInitialized) {
+        if (online) {
+            reload();
+        } else {
+            mManager->stopAll();
+        }
     }
 }
 

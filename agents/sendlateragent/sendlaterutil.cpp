@@ -58,7 +58,7 @@ void SendLater::SendLaterUtil::changeRecurrentDate(SendLater::SendLaterInfo *inf
         }
         info->setDateTime(newInfoDateTime);
         qDebug() << "AFTER SendLater::SendLaterUtil::changeRecurrentDate " << info->dateTime().toString() << " info" << info;
-        writeSendLaterInfo(defaultConfig(), info, false);
+        writeSendLaterInfo(defaultConfig(), info, true);
     }
 }
 
