@@ -206,8 +206,8 @@ void ItemEditorPrivate::onCreateFinished( int,
 {
   Q_Q( EditorItemManager );
   if ( resultCode == Akonadi::IncidenceChanger::ResultCodeSuccess ) {
+    currentAction = EditorItemManager::Create;
     q->load( item );
-    emit q->itemSaveFinished( EditorItemManager::Create );
     setupMonitor();
   } else {
     kError() << "Creation failed " << errorString;
