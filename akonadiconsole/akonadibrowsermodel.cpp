@@ -302,7 +302,7 @@ void AkonadiBrowserModel::setItemDisplayMode(AkonadiBrowserModel::ItemDisplayMod
     }
     const int newColumnCount = qMax(newState->m_collectionHeaders.count(), newState->m_itemHeaders.count());
 
-    //kDebug() << "column count changed from" << oldColumnCount << "to" << newColumnCount;
+    //qDebug() << "column count changed from" << oldColumnCount << "to" << newColumnCount;
     if (newColumnCount > oldColumnCount) {
         beginInsertColumns(QModelIndex(), oldColumnCount, newColumnCount - 1);
         m_currentState = newState;

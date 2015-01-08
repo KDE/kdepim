@@ -284,7 +284,7 @@ void IncidenceDefaults::setAttachments(const QStringList &attachments,
                     }
                 } else {
                     qCritical() << "Error downloading uri " << *it
-                                << KIO::NetAccess::lastErrorString(); //krazy:exclude=kdebug
+                                << KIO::NetAccess::lastErrorString();
                 }
                 // TODO, this method needs better error reporting.
                 KIO::NetAccess::removeTempFile(tmpFile);
