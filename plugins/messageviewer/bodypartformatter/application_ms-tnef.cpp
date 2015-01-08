@@ -151,11 +151,17 @@ namespace {
 
         const QString dir = bodyPart->nodeHelper()->createTempDir( QLatin1String("ktnef-") + QString::number( i ) );
         parser.extractFileTo( att->name(), dir );
-        bodyPart->nodeHelper()->addTempFile( dir + QDir::separator() + att->name() );
-        const QString href = QLatin1String("file:") + QString::fromLatin1(KUrl::toPercentEncoding( dir + QDir::separator() + att->name() ));
 
+        // falling back to internal TNEF attachement name if no filename is given for the attached file
+        // this follows the logic of KTNEFParser::extractFileTo(...)
+        QString attFileName = att->fileName();
+        if ( attFileName.isEmpty() ) {
+          attFileName = att->name();
+        }
+        bodyPart->nodeHelper()->addTempFile( dir + QDir::separator() + attFileName );
+        const QString href = QLatin1String("file:") + QString::fromLatin1(KUrl::toPercentEncoding( dir + QDir::separator() + attFileName ));
         const QString iconName = MessageViewer::Util::fileNameForMimetype( att->mimeTag(),
-                                                            KIconLoader::Desktop, att->name() );
+                                                            KIconLoader::Desktop, attFileName );
 
         writer->queue( QLatin1String("<div><a href=\"") + href + QLatin1String("\"><img src=\"file:///") +
                               iconName + QLatin1String("\" border=\"0\" style=\"max-width: 100%\"/>") + label +

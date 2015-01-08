@@ -271,7 +271,13 @@ QString KTNEFMain::extractTemp( KTNEFAttach *att )
 {
   QString dir = KGlobal::dirs()->localkdedir() + QLatin1String("/share/apps/ktnef/tmp/");
   mParser->extractFileTo( att->name(), dir );
-  dir.append( att->name() );
+  QString filename = att->fileName();
+  // falling back to internal TNEF attachement name if no filename is given for the attached file
+  // this follows the logic of KTNEFParser::extractFileTo(...)
+  if ( filename.isEmpty() ) {
+    filename = att->name();
+  }
+  dir.append( filename );
   return dir;
 }
 
