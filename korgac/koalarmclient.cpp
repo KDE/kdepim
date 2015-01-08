@@ -48,7 +48,6 @@
 #include <QStandardPaths>
 #endif
 
-#include <QDebug>
 #include "koalarmclient_debug.h"
 
 using namespace KCalCore;
@@ -58,7 +57,7 @@ KOAlarmClient::KOAlarmClient(QObject *parent)
 {
     new KOrgacAdaptor(this);
     KDBusConnectionPool::threadConnection().registerObject(QLatin1String("/ac"), this);
-    qDebug();
+    qCDebug(KOALARMCLIENT_LOG);
 
     if (dockerEnabled()) {
         mDocker = new AlarmDockWindow;
@@ -77,7 +76,7 @@ KOAlarmClient::KOAlarmClient(QObject *parent)
 
     KConfigGroup alarmGroup(KSharedConfig::openConfig(), "Alarms");
     const int interval = alarmGroup.readEntry("Interval", 60);
-    qDebug() << "KOAlarmClient check interval:" << interval << "seconds.";
+    qCDebug(KOALARMCLIENT_LOG) << "KOAlarmClient check interval:" << interval << "seconds.";
     mLastChecked = alarmGroup.readEntry("CalendarsLastChecked", QDateTime());
 
     checkAlarms();
@@ -252,7 +251,7 @@ void KOAlarmClient::saveLastCheckTime()
 
 void KOAlarmClient::quit()
 {
-    qDebug();
+    qCDebug(KOALARMCLIENT_LOG);
     kapp->quit();
 }
 

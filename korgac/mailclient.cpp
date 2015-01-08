@@ -26,6 +26,7 @@
 
 #include "mailclient.h"
 #include "kdepim-version.h"
+#include "koalarmclient_debug.h"
 
 #include <AkonadiCore/Collection>
 
@@ -45,7 +46,6 @@
 #include <MailTransport/Transport>
 #include <MailTransport/TransportManager>
 
-#include <QDebug>
 #include <KLocalizedString>
 #include <KProtocolManager>
 #include <KSystemTimeZone>
@@ -212,7 +212,7 @@ bool MailClient::send(const KIdentityManagement::Identity &identity,
     if (to.isEmpty()) {
         to = from;
     }
-    qDebug() << "\nFrom:" << from
+    qCDebug(KOALARMCLIENT_LOG) << "\nFrom:" << from
              << "\nTo:" << to
              << "\nCC:" << cc
              << "\nSubject:" << subject << "\nBody: \n" << body
@@ -371,6 +371,6 @@ bool MailClient::send(const KIdentityManagement::Identity &identity,
     }
 
     // Everything done successful now.
-    qDebug() << "Send mail finished. Time elapsed in ms:" << timer.elapsed();
+    qCDebug(KOALARMCLIENT_LOG) << "Send mail finished. Time elapsed in ms:" << timer.elapsed();
     return true;
 }

@@ -29,7 +29,6 @@
 #include <QAction>
 #include <KActionCollection>
 #include <KConfigGroup>
-#include <QDebug>
 #include <KIconEffect>
 #include <KIconLoader>
 #include <KLocalizedString>
@@ -39,6 +38,7 @@
 #include <KSharedConfig>
 
 #include <QMenu>
+#include "koalarmclient_debug.h"
 
 AlarmDockWindow::AlarmDockWindow()
     : KStatusNotifierItem(0)
@@ -102,7 +102,7 @@ AlarmDockWindow::AlarmDockWindow()
     const char *quitName = KStandardAction::name(KStandardAction::Quit);
     QAction *quit = ac->action(QStringLiteral(quitName));
     if (!quit) {
-        qDebug() << "No Quit standard action.";
+        qCDebug(KOALARMCLIENT_LOG) << "No Quit standard action.";
     } else {
         quit->disconnect(SIGNAL(triggered(bool)), this, SLOT(maybeQuit()));
         connect(quit, &QAction::activated, this, &AlarmDockWindow::slotQuit);
@@ -140,7 +140,7 @@ void AlarmDockWindow::toggleAlarmsEnabled(bool checked)
 
 void AlarmDockWindow::toggleAutostart(bool checked)
 {
-    qDebug();
+    qCDebug(KOALARMCLIENT_LOG);
     mAutostartSet = true;
     enableAutostart(checked);
 }

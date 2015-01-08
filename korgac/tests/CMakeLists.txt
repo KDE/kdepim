@@ -9,7 +9,7 @@ set(korganizer_xml ${CMAKE_SOURCE_DIR}/korganizer/org.kde.korganizer.Korganizer.
 
 ########### next target ###############
 
-set(testalarmdlg_SRCS testalarmdlg.cpp ${CMAKE_CURRENT_SOURCE_DIR}/../alarmdialog.cpp ../mailclient.cpp)
+set(testalarmdlg_SRCS testalarmdlg.cpp ${CMAKE_CURRENT_SOURCE_DIR}/../alarmdialog.cpp ../mailclient.cpp ../koalarmclient_debug.cpp)
 
 qt5_add_dbus_interface(testalarmdlg_SRCS ${korganizer_xml}
   korganizer_interface

@@ -28,6 +28,7 @@
 #include "alarmdialog.h"
 #include "korganizer_interface.h"
 #include "mailclient.h"
+#include "koalarmclient_debug.h"
 
 #include <calendarsupport/next/incidenceviewer.h>
 #include <calendarsupport/kcalprefs.h>
@@ -51,7 +52,6 @@
 
 #include <KLocale>
 #include <KComboBox>
-#include <QDebug>
 #include <QHBoxLayout>
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -429,7 +429,7 @@ void AlarmDialog::dismiss(ReminderList selections)
 {
     QList<Akonadi::Item::Id> ids;
     for (ReminderList::Iterator it = selections.begin(); it != selections.end(); ++it) {
-        qDebug() << "removing " << CalendarSupport::incidence((*it)->mIncidence)->summary();
+        qCDebug(KOALARMCLIENT_LOG) << "removing " << CalendarSupport::incidence((*it)->mIncidence)->summary();
         if (mIncidenceTree->itemBelow(*it)) {
             mIncidenceTree->setCurrentItem(mIncidenceTree->itemBelow(*it));
         } else if (mIncidenceTree->itemAbove(*it)) {
@@ -622,7 +622,7 @@ void AlarmDialog::eventNotification()
             // FIXME: Check whether this should be done for all multiple alarms
             if (alarm->type() == Alarm::Procedure) {
                 // FIXME: Add a message box asking whether the procedure should really be executed
-                qDebug() << "Starting program: '" << alarm->programFile() << "'";
+                qCDebug(KOALARMCLIENT_LOG) << "Starting program: '" << alarm->programFile() << "'";
 
                 QString program = alarm->programFile();
 
@@ -773,7 +773,7 @@ int AlarmDialog::activeCount()
         }
         ++it;
     }
-    qDebug() << "computed " << count << " active reminders";
+    qCDebug(KOALARMCLIENT_LOG) << "computed " << count << " active reminders";
     return count;
 }
 
@@ -788,7 +788,7 @@ void AlarmDialog::updateButtons()
     const ReminderList selection = selectedItems();
     const int count = selection.count();
     const bool enabled = (count > 0);
-    qDebug() << "selected items=" << count;
+    qCDebug(KOALARMCLIENT_LOG) << "selected items=" << count;
     mUser3Button->setEnabled(enabled);
     mOkButton->setEnabled(enabled);
     if (count == 1) {
@@ -947,7 +947,7 @@ bool AlarmDialog::openIncidenceEditorThroughKOrganizer(const Incidence::Ptr &inc
     org::kde::korganizer::Korganizer korganizer(
         QLatin1String("org.kde.korganizer"), QLatin1String("/Korganizer"), QDBusConnection::sessionBus());
 
-    qDebug() << "editing incidence " << incidence->summary();
+    qCDebug(KOALARMCLIENT_LOG) << "editing incidence " << incidence->summary();
     if (!korganizer.editIncidence(incidence->uid())) {
         KMessageBox::error(
             this,
