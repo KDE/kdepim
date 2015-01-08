@@ -18,11 +18,11 @@
 */
 
 #include "ispdb.h"
+#include "../accountwizard_debug.h"
 
 #include <kaboutdata.h>
 
 #include <KLocalizedString>
-#include <QDebug>
 #include <QIcon>
 #include <QApplication>
 #include <KAboutData>
@@ -101,27 +101,27 @@ int main(int argc, char **argv)
     ispdb.start();
 
     loop.exec();
-    qDebug() << "Domains" << ispdb.relevantDomains();
-    qDebug() << "Name" << ispdb.name(Ispdb::Long) << "(" << ispdb.name(Ispdb::Short) << ")";
-    qDebug() << "Imap servers:";
+    qCDebug(ACCOUNTWIZARD_LOG) << "Domains" << ispdb.relevantDomains();
+    qCDebug(ACCOUNTWIZARD_LOG) << "Name" << ispdb.name(Ispdb::Long) << "(" << ispdb.name(Ispdb::Short) << ")";
+    qCDebug(ACCOUNTWIZARD_LOG) << "Imap servers:";
     foreach (const server &s, ispdb.imapServers()) {
-        qDebug() << "\thostname:" << s.hostname
+        qCDebug(ACCOUNTWIZARD_LOG) << "\thostname:" << s.hostname
                  << "- port:" << s.port
                  << "- encryption:" << socketTypeToStr(s.socketType)
                  << "- username:" << s.username
                  << "- authentication:" << authTypeToStr(s.authentication);
     }
-    qDebug() << "pop3 servers:";
+    qCDebug(ACCOUNTWIZARD_LOG) << "pop3 servers:";
     foreach (const server &s, ispdb.pop3Servers()) {
-        qDebug() << "\thostname:" << s.hostname
+        qCDebug(ACCOUNTWIZARD_LOG) << "\thostname:" << s.hostname
                  << "- port:" << s.port
                  << "- encryption:" << socketTypeToStr(s.socketType)
                  << "- username:" << s.username
                  << "- authentication:" << authTypeToStr(s.authentication);
     }
-    qDebug() << "smtp servers:";
+    qCDebug(ACCOUNTWIZARD_LOG) << "smtp servers:";
     foreach (const server &s, ispdb.smtpServers()) {
-        qDebug() << "\thostname:" << s.hostname
+        qCDebug(ACCOUNTWIZARD_LOG) << "\thostname:" << s.hostname
                  << "- port:" << s.port
                  << "- encryption:" << socketTypeToStr(s.socketType)
                  << "- username:" << s.username

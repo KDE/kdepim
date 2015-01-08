@@ -18,7 +18,7 @@
 */
 
 #include "ispdb.h"
-#include <qdebug.h>
+#include "../accountwizard_debug.h"
 #include <kio/job.h>
 #include <kio/jobclasses.h>
 #include <KLocalizedString>
@@ -44,7 +44,7 @@ void Ispdb::setEmail(const QString &address)
 
 void Ispdb::start()
 {
-    qDebug() << mAddr.asString();
+    qCDebug(ACCOUNTWIZARD_LOG) << mAddr.asString();
     // we should do different things in here. But lets focus in the db first.
     lookupInDb();
 }
@@ -86,7 +86,7 @@ void Ispdb::lookupInDb()
 void Ispdb::slotResult(KJob *job)
 {
     if (job->error()) {
-        qDebug() << "Fetching failed" << job->errorString();
+        qCDebug(ACCOUNTWIZARD_LOG) << "Fetching failed" << job->errorString();
         bool lookupFinished = false;
 
         switch (mServerType) {
@@ -112,11 +112,11 @@ void Ispdb::slotResult(KJob *job)
         return;
     }
 
-    //qDebug() << mData;
+    //qCDebug(ACCOUNTWIZARD_LOG) << mData;
     QDomDocument document;
     bool ok = document.setContent(mData);
     if (!ok) {
-        qDebug() << "Could not parse xml" << mData;
+        qCDebug(ACCOUNTWIZARD_LOG) << "Could not parse xml" << mData;
         emit finished(false);
         return;
     }
@@ -128,7 +128,7 @@ void Ispdb::slotResult(KJob *job)
     while (!n.isNull()) {
         QDomElement e = n.toElement();
         if (!e.isNull()) {
-            //qDebug()  << qPrintable( e.tagName() );
+            //qCDebug(ACCOUNTWIZARD_LOG)  << qPrintable( e.tagName() );
             const QString tagName(e.tagName());
             if (tagName == QLatin1String("domain")) {
                 mDomains << e.text();
@@ -160,20 +160,20 @@ void Ispdb::slotResult(KJob *job)
     }
 
     // comment this section out when you are tired of it...
-    qDebug() << "------------------ summary --------------";
-    qDebug() << "Domains" << mDomains;
-    qDebug() << "Name" << mDisplayName << "(" << mDisplayShortName << ")";
-    qDebug() << "Imap servers:";
+    qCDebug(ACCOUNTWIZARD_LOG) << "------------------ summary --------------";
+    qCDebug(ACCOUNTWIZARD_LOG) << "Domains" << mDomains;
+    qCDebug(ACCOUNTWIZARD_LOG) << "Name" << mDisplayName << "(" << mDisplayShortName << ")";
+    qCDebug(ACCOUNTWIZARD_LOG) << "Imap servers:";
     foreach (const server &s, mImapServers) {
-        qDebug() << s.hostname << s.port << s.socketType << s.username << s.authentication;
+        qCDebug(ACCOUNTWIZARD_LOG) << s.hostname << s.port << s.socketType << s.username << s.authentication;
     }
-    qDebug() << "pop3 servers:";
+    qCDebug(ACCOUNTWIZARD_LOG) << "pop3 servers:";
     foreach (const server &s, mPop3Servers) {
-        qDebug() << s.hostname << s.port << s.socketType << s.username << s.authentication;
+        qCDebug(ACCOUNTWIZARD_LOG) << s.hostname << s.port << s.socketType << s.username << s.authentication;
     }
-    qDebug() << "smtp servers:";
+    qCDebug(ACCOUNTWIZARD_LOG) << "smtp servers:";
     foreach (const server &s, mSmtpServers) {
-        qDebug() << s.hostname << s.port << s.socketType << s.username << s.authentication;
+        qCDebug(ACCOUNTWIZARD_LOG) << s.hostname << s.port << s.socketType << s.username << s.authentication;
     }
     // end section.
 

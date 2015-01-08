@@ -2,6 +2,7 @@
 set(ispdb_srcs
   main.cpp
   ispdb.cpp
+  ../accountwizard_debug.cpp
 )
 
 add_executable(ispdb ${ispdb_srcs})
