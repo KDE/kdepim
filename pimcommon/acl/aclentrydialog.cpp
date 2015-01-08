@@ -59,7 +59,7 @@ public:
 
 void AclEntryDialog::Private::slotChanged()
 {
-    q->enableButtonOk( !mUserIdLineEdit->text().isEmpty() && mButtonGroup->checkedButton() != 0 );
+    q->enableButtonOk( !mUserIdLineEdit->text().trimmed().isEmpty() && mButtonGroup->checkedButton() != 0 );
 }
 
 void AclEntryDialog::Private::slotSelectAddresses()
