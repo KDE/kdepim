@@ -293,6 +293,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
     QString plainBody, htmlBody;
 
     bool dnl = false;
+    KLocale *definedLocale = KGlobal::locale();
+    bool needToDeleteLocale = false;
     for ( int i = 0; i < tmpl_len; ++i ) {
         QChar c = tmpl[i];
         // kDebug() << "Next char: " << c;
@@ -316,7 +318,12 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
                 const int len = parseQuotes( QLatin1String("LANGUAGE="), cmd, q );
                 i += len;
                 if (!q.isEmpty()) {
-                    //TODO
+                    if (KGlobal::locale()->installedLanguages().contains(q)) {
+                        if (needToDeleteLocale)
+                            delete definedLocale;
+                        definedLocale = new KLocale(q);
+                        needToDeleteLocale = true;
+                    }
                 }
             } else if ( cmd.startsWith( QLatin1String( "DICTIONARYLANGUAGE=" ) ) ) {
                 QString q;
@@ -946,7 +953,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
                 kDebug() << "Command: DATESHORT";
                 i += strlen( "DATESHORT" );
                 const QDateTime date = QDateTime::currentDateTime();
-                const QString str = KGlobal::locale()->formatDate( date.date(), KLocale::ShortDate );
+                const QString str = definedLocale->formatDate( date.date(), KLocale::ShortDate );
                 plainBody.append( str );
                 const QString body = plainToHtml( str );
                 htmlBody.append( body );
@@ -955,7 +962,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
                 kDebug() << "Command: DATE";
                 i += strlen( "DATE" );
                 const QDateTime date = QDateTime::currentDateTime();
-                const QString str = KGlobal::locale()->formatDate( date.date(), KLocale::LongDate );
+                const QString str = definedLocale->formatDate( date.date(), KLocale::LongDate );
                 plainBody.append( str );
                 const QString body = plainToHtml( str );
                 htmlBody.append( body );
@@ -964,7 +971,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
                 kDebug() << "Command: DOW";
                 i += strlen( "DOW" );
                 const QDateTime date = QDateTime::currentDateTime();
-                const QString str = KGlobal::locale()->calendar()->weekDayName( date.date(),
+                const QString str = definedLocale->calendar()->weekDayName( date.date(),
                                                                                 KCalendarSystem::LongDayName );
                 plainBody.append( str );
                 const QString body = plainToHtml( str );
@@ -984,7 +991,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
                 kDebug() << "Command: TIMELONG";
                 i += strlen( "TIMELONG" );
                 const QDateTime date = QDateTime::currentDateTime();
-                const QString str = KGlobal::locale()->formatTime( date.time(), true );
+                const QString str = definedLocale->formatTime( date.time(), true );
                 plainBody.append( str );
                 const QString body = plainToHtml( str );
                 htmlBody.append( body );
@@ -993,7 +1000,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
                 kDebug() << "Command: TIME";
                 i += strlen( "TIME" );
                 const QDateTime date = QDateTime::currentDateTime();
-                const QString str = KGlobal::locale()->formatTime( date.time(), false );
+                const QString str = definedLocale->formatTime( date.time(), false );
                 plainBody.append( str );
                 const QString body = plainToHtml( str );
                 htmlBody.append( body );
@@ -1015,7 +1022,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
                 i += strlen( "ODATESHORT" );
                 if ( mOrigMsg ) {
                     const QDateTime date = mOrigMsg->date()->dateTime().dateTime();
-                    const QString str = KGlobal::locale()->formatDate( date.date(), KLocale::ShortDate );
+                    const QString str = definedLocale->formatDate( date.date(), KLocale::ShortDate );
                     plainBody.append( str );
                     const QString body = plainToHtml( str );
                     htmlBody.append( body );
@@ -1026,7 +1033,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
                 i += strlen( "ODATE" );
                 if ( mOrigMsg ) {
                     const QDateTime date = mOrigMsg->date()->dateTime().dateTime();
-                    const QString str = KGlobal::locale()->formatDate( date.date(), KLocale::LongDate );
+                    const QString str = definedLocale->formatDate( date.date(), KLocale::LongDate );
                     plainBody.append( str );
                     const QString body = plainToHtml( str );
                     htmlBody.append( body );
@@ -1038,7 +1045,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
                 if ( mOrigMsg ) {
                     const QDateTime date = mOrigMsg->date()->dateTime().dateTime();
                     const QString str =
-                            KGlobal::locale()->calendar()->weekDayName( date.date(), KCalendarSystem::LongDayName );
+                            definedLocale->calendar()->weekDayName( date.date(), KCalendarSystem::LongDayName );
                     plainBody.append( str );
                     const QString body = plainToHtml( str );
                     htmlBody.append( body );
@@ -1061,7 +1068,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
                 i += strlen( "OTIMELONG" );
                 if ( mOrigMsg ) {
                     const QDateTime date = mOrigMsg->date()->dateTime().dateTime();
-                    const QString str = KGlobal::locale()->formatTime( date.time(), true );
+                    const QString str = definedLocale->formatTime( date.time(), true );
                     plainBody.append( str );
                     const QString body = plainToHtml( str );
                     htmlBody.append( body );
@@ -1072,7 +1079,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
                 i += strlen( "OTIME" );
                 if ( mOrigMsg ) {
                     const QDateTime date = mOrigMsg->date()->dateTime().dateTime();
-                    const QString str = KGlobal::locale()->formatTime( date.time(), false );
+                    const QString str = definedLocale->formatTime( date.time(), false );
                     plainBody.append( str );
                     const QString body = plainToHtml( str );
                     htmlBody.append( body );
@@ -1180,6 +1187,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         makeValidHtml( htmlBody );
     }
     addProcessedBodyToMessage( plainBody, htmlBody );
+    if (needToDeleteLocale)
+        delete definedLocale;
 }
 
 QString TemplateParser::getPlainSignature() const
