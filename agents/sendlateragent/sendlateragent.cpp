@@ -86,9 +86,9 @@ void SendLaterAgent::doSetOnline(bool online)
 
 void SendLaterAgent::reload()
 {
-    if (SendLaterAgentSettings::enabled()) {
+    qDebug()<<" void SendLaterAgent::reload()";
+    if (SendLaterAgentSettings::enabled())
         mManager->load(true);
-    }
 }
 
 void SendLaterAgent::setEnableAgent(bool enabled)

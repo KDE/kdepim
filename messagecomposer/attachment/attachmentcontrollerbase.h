@@ -83,7 +83,7 @@ public Q_SLOTS:
     void addAttachmentUrlSync(const QUrl &url);
     void addAttachments(const QList<QUrl> &urls);
     void showAttachPublicKeyDialog();
-    virtual void attachMyPublicKey() {}
+    virtual void attachMyPublicKey();
 
 Q_SIGNALS:
     void actionsCreated();

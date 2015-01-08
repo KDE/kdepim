@@ -33,5 +33,6 @@ macro(add_templateparser_unittest _source)
 endmacro()
 
 add_templateparser_unittest(templateparsertest.cpp)
+add_templateparser_unittest(customtemplatesmenutest.cpp)
 #kde4_handle_crypto_rpath_for_executable( templateparsertest )
 
