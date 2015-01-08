@@ -16,6 +16,7 @@
 */
 
 #include "modifymessagedisplayformatjob.h"
+#include "messageviewer_debug.h"
 
 #include <AkonadiCore/ItemModifyJob>
 
@@ -60,7 +61,7 @@ void ModifyMessageDisplayFormatJob::start()
             modifyDisplayFormat();
         }
     } else {
-        qDebug() << " messageItem doesn't exist";
+        qCDebug(MESSAGEVIEWER_LOG) << " messageItem doesn't exist";
         deleteLater();
     }
 }
