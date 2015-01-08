@@ -54,7 +54,11 @@ public Q_SLOTS:
 protected:
     void doSetOnline(bool online);
 
+private slots:
+    void slotStartAgent();
+
 private:
+    bool mAgentInitialized;
     NotesManager *mNotesManager;
 };
 

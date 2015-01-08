@@ -87,24 +87,16 @@ void FollowUpReminderManager::checkFollowUp(const Akonadi::Item &item, const Ako
         return;
     }
 
-    //If we move to trash directly => exclude it.
-    Akonadi::SpecialMailCollections::Type type = Akonadi::SpecialMailCollections::self()->specialCollectionType(col);
-    if (type == Akonadi::SpecialMailCollections::Trash) {
+    const Akonadi::SpecialMailCollections::Type type = Akonadi::SpecialMailCollections::self()->specialCollectionType(col);
+    switch(type) {
+    case Akonadi::SpecialMailCollections::Trash:
+    case Akonadi::SpecialMailCollections::Outbox:
+    case Akonadi::SpecialMailCollections::Drafts:
+    case Akonadi::SpecialMailCollections::Templates:
+    case Akonadi::SpecialMailCollections::SentMail:
         return;
-    }
-
-    //Exclude outbox too
-    if (type == Akonadi::SpecialMailCollections::Outbox) {
-        return;
-    }
-    if (type == Akonadi::SpecialMailCollections::Drafts) {
-        return;
-    }
-    if (type == Akonadi::SpecialMailCollections::Templates) {
-        return;
-    }
-    if (type == Akonadi::SpecialMailCollections::SentMail) {
-        return;
+    default:
+        break;
     }
 
     FollowUpReminderJob *job = new FollowUpReminderJob(this);
