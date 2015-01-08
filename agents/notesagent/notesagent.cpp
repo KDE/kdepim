@@ -39,7 +39,8 @@
 #include <QPointer>
 
 NotesAgent::NotesAgent(const QString &id)
-    : Akonadi::AgentBase( id )
+    : Akonadi::AgentBase( id ),
+      mAgentInitialized(false)
 {
     mNotesManager = new NotesManager(this);
     KGlobal::locale()->insertCatalog( QLatin1String("akonadi_notes_agent") );
@@ -50,7 +51,7 @@ NotesAgent::NotesAgent(const QString &id)
     setNeedsNetwork(true);
 
     if (NotesAgentSettings::enabled()) {
-        QTimer::singleShot(60 * 1000, mNotesManager, SLOT(load()));
+        QTimer::singleShot(60 * 1000, this, SLOT(slotStartAgent()));
     }
 }
 
@@ -60,11 +61,20 @@ NotesAgent::~NotesAgent()
 
 void NotesAgent::doSetOnline( bool online )
 {
-    if (online) {
-        reload();
-    } else {
-        mNotesManager->stopAll();
+    if (mAgentInitialized) {
+        if (online) {
+            reload();
+        } else {
+            mNotesManager->stopAll();
+        }
     }
+}
+
+void NotesAgent::slotStartAgent()
+{
+    mAgentInitialized = true;
+    if (isOnline())
+        mNotesManager->load();
 }
 
 void NotesAgent::reload()
