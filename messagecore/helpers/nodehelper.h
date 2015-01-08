@@ -1,4 +1,4 @@
-/* 
+/*
   Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Copyright (c) 2009 Andras Mantia <andras@kdab.net>
   Copyright (c) 2010 Leo Franchi <lfranchi@kde.org>

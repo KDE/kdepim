@@ -1,4 +1,4 @@
-/*  
+/*
 
   Copyright (c) 2004 Ingo Kloecker <kloecker@kde.org>
 

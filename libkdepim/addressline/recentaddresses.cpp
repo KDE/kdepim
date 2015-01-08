@@ -1,4 +1,4 @@
-/*  
+/*
  *
  *  Copyright (c) 2001-2003 Carsten Pfeiffer <pfeiffer@kde.org>
  *  Copyright (c) 2003 Zack Rusin <zack@kde.org>

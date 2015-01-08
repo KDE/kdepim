@@ -1,4 +1,4 @@
-/* 
+/*
   Copyright (c) 2010 Volker Krause <vkrause@kde.org>
 
   Based on kmail/kmlineeditspell.h/cpp

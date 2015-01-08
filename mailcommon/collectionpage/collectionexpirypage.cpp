@@ -1,4 +1,4 @@
-/* 
+/*
   Copyright (c) 2009-2015 Montel Laurent <montel@kde.org>
   Copyright (c) 2013 Jonathan Marten <jjm@keelhaul.me.uk>
 

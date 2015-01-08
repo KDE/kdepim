@@ -315,14 +315,14 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 QString q;
                 int len = parseQuotes(QLatin1String("REM="), cmd, q);
                 i += len;
-            } else if ( cmd.startsWith( QLatin1String( "LANGUAGE=" ) ) ) {
+            } else if (cmd.startsWith(QLatin1String("LANGUAGE="))) {
                 QString q;
-                const int len = parseQuotes( QLatin1String("LANGUAGE="), cmd, q );
+                const int len = parseQuotes(QLatin1String("LANGUAGE="), cmd, q);
                 i += len;
                 if (!q.isEmpty()) {
                     //TODO
                 }
-            } else if ( cmd.startsWith( QLatin1String( "DICTIONARYLANGUAGE=" ) ) ) {
+            } else if (cmd.startsWith(QLatin1String("DICTIONARYLANGUAGE="))) {
                 QString q;
                 const int len = parseQuotes(QLatin1String("DICTIONARYLANGUAGE="), cmd, q);
                 i += len;

@@ -1,4 +1,4 @@
-/*  
+/*
     obtainkeysjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library

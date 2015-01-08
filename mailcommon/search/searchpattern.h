@@ -1,4 +1,4 @@
-/* 
+/*
 
   Author: Marc Mutz <mutz@kde.org>
 

@@ -1,4 +1,4 @@
-/* 
+/*
 
   Copyright (c) 2011-2015 Montel Laurent <montel@kde.org>
 

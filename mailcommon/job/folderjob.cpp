@@ -1,4 +1,4 @@
-/*  
+/*
  *
  *  Copyright (c) 2003 Zack Rusin <zack@kde.org>
  *

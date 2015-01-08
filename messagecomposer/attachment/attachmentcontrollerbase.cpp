@@ -969,7 +969,7 @@ void AttachmentControllerBase::attachMyPublicKey()
 
 }
 
-void AttachmentControllerBase::enableAttachPublicKey( bool enable )
+void AttachmentControllerBase::enableAttachPublicKey(bool enable)
 {
     d->attachPublicKeyAction->setEnabled(enable);
 }

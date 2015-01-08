@@ -1,4 +1,4 @@
-/*  
+/*
     kpgp.cpp
 
     Copyright (C) 2001,2002 the KPGP authors
