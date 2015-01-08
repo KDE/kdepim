@@ -47,12 +47,14 @@ public Q_SLOTS:
 private Q_SLOTS:
     void slotSendNow(Akonadi::Item::Id id);
 
+    void slotStartAgent();
 protected:
     void itemsRemoved( const Akonadi::Item::List &item );
     void itemsMoved(const Akonadi::Item::List &items, const Akonadi::Collection &sourceCollection, const Akonadi::Collection &destinationCollection);
     void doSetOnline( bool online );
 
 private:
+    bool mAgentInitialized;
     SendLaterManager *mManager;
 };
 
