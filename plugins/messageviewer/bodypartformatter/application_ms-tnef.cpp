@@ -137,7 +137,7 @@ namespace {
         htmlStr += endRow;
       }
 
-      if ( tnefatts.count() > 0 ) {
+      if ( !tnefatts.isEmpty() ) {
         htmlStr += startRow;
       }
       writer->queue( htmlStr );
@@ -162,7 +162,7 @@ namespace {
                               QLatin1String("</a></div><br/>") );
       }
 
-      if ( tnefatts.count() > 0 ) {
+      if ( !tnefatts.isEmpty() ) {
         writer->queue( endRow );
       }
       writer->queue( QLatin1String("</table>") );
