@@ -98,7 +98,7 @@ PostEntry::PostEntry(QWidget *parent)
     d->mTimer = new QTimer(this);
     d->mTimer->start(Settings::autosaveInterval() * MINUTE);
     connect(d->mTimer, &QTimer::timeout, this, &PostEntry::saveTemporary);
-    d->progress = 0L;
+    d->progress = Q_NULLPTR;
     d->mCurrentPostBlogId = -1;
     d->mNumOfFilesToBeUploaded = 0;
     d->isPostContentModified = false;
@@ -474,7 +474,7 @@ void PostEntry::deleteProgressBar()
     if (d->progress) {
         this->layout()->removeWidget(d->progress);
         d->progress->deleteLater();
-        d->progress = 0L;
+        d->progress = Q_NULLPTR;
     }
 }
 

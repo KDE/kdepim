@@ -106,7 +106,7 @@ void RichTextEditor::defaultPopupMenu(const QPoint &pos)
         if (!isReadOnly()) {
             QList<QAction *> actionList = popup->actions();
             enum { UndoAct, RedoAct, CutAct, CopyAct, PasteAct, ClearAct, SelectAllAct, NCountActs };
-            QAction *separatorAction = 0L;
+            QAction *separatorAction = Q_NULLPTR;
             const int idx = actionList.indexOf(actionList[SelectAllAct]) + 1;
             if (idx < actionList.count()) {
                 separatorAction = actionList.at(idx);

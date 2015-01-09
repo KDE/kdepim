@@ -102,7 +102,7 @@ DBMan::~DBMan()
         d->mWallet = 0;
     }
     delete d;
-    mSelf = 0L;
+    mSelf = Q_NULLPTR;
 }
 
 QString DBMan::lastErrorText() const
@@ -110,7 +110,7 @@ QString DBMan::lastErrorText() const
     return d->mLastErrorText;
 }
 
-DBMan *DBMan::mSelf = 0L;
+DBMan *DBMan::mSelf = Q_NULLPTR;
 
 DBMan *DBMan::self()
 {
