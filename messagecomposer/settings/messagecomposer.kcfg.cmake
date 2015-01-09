@@ -59,6 +59,12 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <default>true</default>
     </entry>
 
+    <entry name="ShowBalooSearchInComposer" type="Bool" key="showBalooSearchInComposer">
+      <label>Use Baloo search for autocompletion</label>
+      <whatsthis>Disable this option if you do not want baloo search addresses to appear in the autocompletion list in the composer's address fields.</whatsthis>
+      <default>true</default>
+    </entry>
+
     <entry name="AllowSemicolonAsAddressSeparator" type="Bool">
       <default>${ALLOW_SEMICOLON_AS_ADDRESS_SEPARATOR_DEFAULT}</default>
       <label>Allow the semicolon character (';') to be used as separator in the message composer</label>

@@ -57,6 +57,7 @@ ComposerLineEdit::ComposerLineEdit(bool useCompletion, QWidget *parent)
 {
     allowSemicolonAsSeparator(MessageComposerSettings::allowSemicolonAsAddressSeparator());
     loadContacts();
+    setEnableBalooSearch( MessageComposerSettings::showBalooSearchInComposer() );
 }
 
 //-----------------------------------------------------------------------------
@@ -229,8 +230,6 @@ void ComposerLineEdit::editRecentAddresses()
 //-----------------------------------------------------------------------------
 void ComposerLineEdit::loadContacts()
 {
-    //AddresseeLineEdit::loadContacts();
-
     const QString recentAddressGroupName = i18n("Recent Addresses");
     if (MessageComposerSettings::self()->showRecentAddressesInComposer()) {
         const QStringList recent =

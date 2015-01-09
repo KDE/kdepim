@@ -337,8 +337,6 @@ void AddresseeLineEdit::Private::init()
 
         KConfigGroup group(KSharedConfig::openConfig(), "AddressLineEdit");
         m_showOU = group.readEntry("ShowOU", false);
-        m_enableBalooSearch = group.readEntry("EnabledBalooSearch", true);
-
     }
 }
 
@@ -1038,7 +1036,12 @@ void AddresseeLineEdit::setFont(const QFont &font)
     }
 }
 
-void AddresseeLineEdit::allowSemicolonAsSeparator(bool useSemicolonAsSeparator)
+void AddresseeLineEdit::setEnableBalooSearch(bool enable)
+{
+    d->m_enableBalooSearch = enable;
+}
+
+void AddresseeLineEdit::allowSemicolonAsSeparator( bool useSemicolonAsSeparator )
 {
     d->m_useSemicolonAsSeparator = useSemicolonAsSeparator;
 }
