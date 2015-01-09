@@ -171,7 +171,7 @@ int main( int argc, char *argv[] )
   options.add( "",
                ki18n( "Examples:\n"
                       "  konsolekalendar --view\n"
-                      "  konsolekalendar --list-collections\n"
+                      "  konsolekalendar --list-calendars\n"
                       "  konsolekalendar --add --collection 42 --date 2003-06-04 "
                       "--time 10:00 --end-time 12:00 \\\n"
                       "                  --summary \"Doctor Visit\" "
