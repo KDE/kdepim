@@ -108,7 +108,8 @@ void AttachPropertyDialog::slotSave()
 void AttachPropertyDialog::formatProperties( const QMap<int,KTNEFProperty*>& props, QTreeWidget *lv,
                        QTreeWidgetItem *item, const QString &prefix )
 {
-  for ( QMap<int,KTNEFProperty*>::ConstIterator it = props.begin(); it != props.end(); ++it ) {
+  QMap<int,KTNEFProperty*>::ConstIterator end(props.constEnd());
+  for ( QMap<int,KTNEFProperty*>::ConstIterator it = props.constBegin(); it != end; ++it ) {
     QTreeWidgetItem *newItem = 0;
     if ( lv ) {
       newItem = new QTreeWidgetItem( lv, QStringList( ( *it )->keyString() ) );
