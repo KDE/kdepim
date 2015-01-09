@@ -1041,7 +1041,7 @@ void AddresseeLineEdit::setEnableBalooSearch(bool enable)
     d->m_enableBalooSearch = enable;
 }
 
-void AddresseeLineEdit::allowSemicolonAsSeparator( bool useSemicolonAsSeparator )
+void AddresseeLineEdit::allowSemicolonAsSeparator(bool useSemicolonAsSeparator)
 {
     d->m_useSemicolonAsSeparator = useSemicolonAsSeparator;
 }

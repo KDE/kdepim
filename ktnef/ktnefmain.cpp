@@ -346,8 +346,8 @@ void KTNEFMain::viewSelectionChanged()
 {
     const QList<KTNEFAttach *> list = mView->getSelection();
     const int nbItem = list.count();
-    const bool on1 = ( nbItem == 1 );
-    const bool on2 = ( nbItem > 0 );
+    const bool on1 = (nbItem == 1);
+    const bool on2 = (nbItem > 0);
 
     actionCollection()->action(QLatin1String("view_file"))->setEnabled(on1);
     actionCollection()->action(QLatin1String("view_file_as"))->setEnabled(on1);

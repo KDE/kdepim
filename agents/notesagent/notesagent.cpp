@@ -75,8 +75,9 @@ void NotesAgent::doSetOnline(bool online)
 void NotesAgent::slotStartAgent()
 {
     mAgentInitialized = true;
-    if (isOnline())
+    if (isOnline()) {
         mNotesManager->load();
+    }
 }
 
 void NotesAgent::reload()

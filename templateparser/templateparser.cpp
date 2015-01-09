@@ -299,7 +299,7 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
     bool dnl = false;
     KLocale *definedLocale = KGlobal::locale();
     bool needToDeleteLocale = false;
-    for ( int i = 0; i < tmpl_len; ++i ) {
+    for (int i = 0; i < tmpl_len; ++i) {
         QChar c = tmpl[i];
         // qCDebug(TEMPLATEPARSER_LOG) << "Next char: " << c;
         if (c == QLatin1Char('%')) {
@@ -323,8 +323,9 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 i += len;
                 if (!q.isEmpty()) {
                     if (KGlobal::locale()->installedLanguages().contains(q)) {
-                        if (needToDeleteLocale)
+                        if (needToDeleteLocale) {
                             delete definedLocale;
+                        }
                         definedLocale = new KLocale(q);
                         needToDeleteLocale = true;
                     }
@@ -957,33 +958,33 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 qCDebug(TEMPLATEPARSER_LOG) << "Command: DATESHORT";
                 i += strlen("DATESHORT");
                 const QDateTime date = QDateTime::currentDateTime();
-                const QString str = definedLocale->formatDate( date.date(), KLocale::ShortDate );
-                plainBody.append( str );
-                const QString body = plainToHtml( str );
-                htmlBody.append( body );
+                const QString str = definedLocale->formatDate(date.date(), KLocale::ShortDate);
+                plainBody.append(str);
+                const QString body = plainToHtml(str);
+                htmlBody.append(body);
 
-            } else if ( cmd.startsWith( QLatin1String( "DATE" ) ) ) {
+            } else if (cmd.startsWith(QLatin1String("DATE"))) {
                 qCDebug(TEMPLATEPARSER_LOG) << "Command: DATE";
-                i += strlen( "DATE" );
+                i += strlen("DATE");
                 const QDateTime date = QDateTime::currentDateTime();
-                const QString str = definedLocale->formatDate( date.date(), KLocale::LongDate );
-                plainBody.append( str );
-                const QString body = plainToHtml( str );
-                htmlBody.append( body );
+                const QString str = definedLocale->formatDate(date.date(), KLocale::LongDate);
+                plainBody.append(str);
+                const QString body = plainToHtml(str);
+                htmlBody.append(body);
 
-            } else if ( cmd.startsWith( QLatin1String( "DOW" ) ) ) {
+            } else if (cmd.startsWith(QLatin1String("DOW"))) {
                 qCDebug(TEMPLATEPARSER_LOG) << "Command: DOW";
-                i += strlen( "DOW" );
+                i += strlen("DOW");
                 const QDateTime date = QDateTime::currentDateTime();
-                const QString str = definedLocale->calendar()->weekDayName( date.date(),
-                                                                                KCalendarSystem::LongDayName );
-                plainBody.append( str );
-                const QString body = plainToHtml( str );
-                htmlBody.append( body );
+                const QString str = definedLocale->calendar()->weekDayName(date.date(),
+                                    KCalendarSystem::LongDayName);
+                plainBody.append(str);
+                const QString body = plainToHtml(str);
+                htmlBody.append(body);
 
-            } else if ( cmd.startsWith( QLatin1String( "TIMELONGEN" ) ) ) {
+            } else if (cmd.startsWith(QLatin1String("TIMELONGEN"))) {
                 qCDebug(TEMPLATEPARSER_LOG) << "Command: TIMELONGEN";
-                i += strlen( "TIMELONGEN" );
+                i += strlen("TIMELONGEN");
                 const QDateTime date = QDateTime::currentDateTime();
                 KLocale locale(QLatin1String("C"));
                 const QString str = locale.formatTime(date.time(), true);
@@ -995,52 +996,52 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 qCDebug(TEMPLATEPARSER_LOG) << "Command: TIMELONG";
                 i += strlen("TIMELONG");
                 const QDateTime date = QDateTime::currentDateTime();
-                const QString str = definedLocale->formatTime( date.time(), true );
-                plainBody.append( str );
-                const QString body = plainToHtml( str );
-                htmlBody.append( body );
+                const QString str = definedLocale->formatTime(date.time(), true);
+                plainBody.append(str);
+                const QString body = plainToHtml(str);
+                htmlBody.append(body);
 
-            } else if ( cmd.startsWith( QLatin1String( "TIME" ) ) ) {
+            } else if (cmd.startsWith(QLatin1String("TIME"))) {
                 qCDebug(TEMPLATEPARSER_LOG) << "Command: TIME";
-                i += strlen( "TIME" );
+                i += strlen("TIME");
                 const QDateTime date = QDateTime::currentDateTime();
-                const QString str = definedLocale->formatTime( date.time(), false );
-                plainBody.append( str );
-                const QString body = plainToHtml( str );
-                htmlBody.append( body );
+                const QString str = definedLocale->formatTime(date.time(), false);
+                plainBody.append(str);
+                const QString body = plainToHtml(str);
+                htmlBody.append(body);
 
-            } else if ( cmd.startsWith( QLatin1String( "ODATEEN" ) ) ) {
+            } else if (cmd.startsWith(QLatin1String("ODATEEN"))) {
                 qCDebug(TEMPLATEPARSER_LOG) << "Command: ODATEEN";
-                i += strlen( "ODATEEN" );
-                if ( mOrigMsg ) {
+                i += strlen("ODATEEN");
+                if (mOrigMsg) {
                     const QDateTime date = mOrigMsg->date()->dateTime();
-                    KLocale locale( QLatin1String("C") );
-                    const QString str = locale.formatDate( date.date(), KLocale::LongDate );
-                    plainBody.append( str );
-                    const QString body = plainToHtml( str );
-                    htmlBody.append( body );
+                    KLocale locale(QLatin1String("C"));
+                    const QString str = locale.formatDate(date.date(), KLocale::LongDate);
+                    plainBody.append(str);
+                    const QString body = plainToHtml(str);
+                    htmlBody.append(body);
                 }
 
-            } else if ( cmd.startsWith( QLatin1String( "ODATESHORT" ) ) ) {
+            } else if (cmd.startsWith(QLatin1String("ODATESHORT"))) {
                 qCDebug(TEMPLATEPARSER_LOG) << "Command: ODATESHORT";
-                i += strlen( "ODATESHORT" );
-                if ( mOrigMsg ) {
+                i += strlen("ODATESHORT");
+                if (mOrigMsg) {
                     const QDateTime date = mOrigMsg->date()->dateTime();
-                    const QString str = definedLocale->formatDate( date.date(), KLocale::ShortDate );
-                    plainBody.append( str );
-                    const QString body = plainToHtml( str );
-                    htmlBody.append( body );
+                    const QString str = definedLocale->formatDate(date.date(), KLocale::ShortDate);
+                    plainBody.append(str);
+                    const QString body = plainToHtml(str);
+                    htmlBody.append(body);
                 }
 
-            } else if ( cmd.startsWith( QLatin1String( "ODATE" ) ) ) {
+            } else if (cmd.startsWith(QLatin1String("ODATE"))) {
                 qCDebug(TEMPLATEPARSER_LOG) << "Command: ODATE";
-                i += strlen( "ODATE" );
-                if ( mOrigMsg ) {
+                i += strlen("ODATE");
+                if (mOrigMsg) {
                     const QDateTime date = mOrigMsg->date()->dateTime();
-                    const QString str = definedLocale->formatDate( date.date(), KLocale::LongDate );
-                    plainBody.append( str );
-                    const QString body = plainToHtml( str );
-                    htmlBody.append( body );
+                    const QString str = definedLocale->formatDate(date.date(), KLocale::LongDate);
+                    plainBody.append(str);
+                    const QString body = plainToHtml(str);
+                    htmlBody.append(body);
                 }
 
             } else if (cmd.startsWith(QLatin1String("ODOW"))) {
@@ -1049,10 +1050,10 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 if (mOrigMsg) {
                     const QDateTime date = mOrigMsg->date()->dateTime();
                     const QString str =
-                            definedLocale->calendar()->weekDayName( date.date(), KCalendarSystem::LongDayName );
-                    plainBody.append( str );
-                    const QString body = plainToHtml( str );
-                    htmlBody.append( body );
+                        definedLocale->calendar()->weekDayName(date.date(), KCalendarSystem::LongDayName);
+                    plainBody.append(str);
+                    const QString body = plainToHtml(str);
+                    htmlBody.append(body);
                 }
 
             } else if (cmd.startsWith(QLatin1String("OTIMELONGEN"))) {
@@ -1066,26 +1067,26 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                     const QString body = plainToHtml(str);
                     htmlBody.append(body);
                 }
-            } else if ( cmd.startsWith( QLatin1String( "OTIMELONG" ) ) ) {
+            } else if (cmd.startsWith(QLatin1String("OTIMELONG"))) {
                 qCDebug(TEMPLATEPARSER_LOG) << "Command: OTIMELONG";
-                i += strlen( "OTIMELONG" );
-                if ( mOrigMsg ) {
+                i += strlen("OTIMELONG");
+                if (mOrigMsg) {
                     const QDateTime date = mOrigMsg->date()->dateTime();
-                    const QString str = definedLocale->formatTime( date.time(), true );
-                    plainBody.append( str );
-                    const QString body = plainToHtml( str );
-                    htmlBody.append( body );
+                    const QString str = definedLocale->formatTime(date.time(), true);
+                    plainBody.append(str);
+                    const QString body = plainToHtml(str);
+                    htmlBody.append(body);
                 }
 
-            } else if ( cmd.startsWith( QLatin1String( "OTIME" ) ) ) {
+            } else if (cmd.startsWith(QLatin1String("OTIME"))) {
                 qCDebug(TEMPLATEPARSER_LOG) << "Command: OTIME";
-                i += strlen( "OTIME" );
-                if ( mOrigMsg ) {
+                i += strlen("OTIME");
+                if (mOrigMsg) {
                     const QDateTime date = mOrigMsg->date()->dateTime();
-                    const QString str = definedLocale->formatTime( date.time(), false );
-                    plainBody.append( str );
-                    const QString body = plainToHtml( str );
-                    htmlBody.append( body );
+                    const QString str = definedLocale->formatTime(date.time(), false);
+                    plainBody.append(str);
+                    const QString body = plainToHtml(str);
+                    htmlBody.append(body);
                 }
 
             } else if (cmd.startsWith(QLatin1String("BLANK"))) {
@@ -1189,9 +1190,10 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
     } else {
         makeValidHtml(htmlBody);
     }
-    addProcessedBodyToMessage( plainBody, htmlBody );
-    if (needToDeleteLocale)
+    addProcessedBodyToMessage(plainBody, htmlBody);
+    if (needToDeleteLocale) {
         delete definedLocale;
+    }
 }
 
 QString TemplateParser::getPlainSignature() const

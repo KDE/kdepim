@@ -57,7 +57,7 @@ ComposerLineEdit::ComposerLineEdit(bool useCompletion, QWidget *parent)
 {
     allowSemicolonAsSeparator(MessageComposerSettings::allowSemicolonAsAddressSeparator());
     loadContacts();
-    setEnableBalooSearch( MessageComposerSettings::showBalooSearchInComposer() );
+    setEnableBalooSearch(MessageComposerSettings::showBalooSearchInComposer());
 }
 
 //-----------------------------------------------------------------------------

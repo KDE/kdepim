@@ -213,11 +213,11 @@ bool MailClient::send(const KIdentityManagement::Identity &identity,
         to = from;
     }
     qCDebug(KOALARMCLIENT_LOG) << "\nFrom:" << from
-             << "\nTo:" << to
-             << "\nCC:" << cc
-             << "\nSubject:" << subject << "\nBody: \n" << body
-             << "\nAttachment:\n" << attachment
-             << "\nmailTransport: " << mailTransport;
+                               << "\nTo:" << to
+                               << "\nCC:" << cc
+                               << "\nSubject:" << subject << "\nBody: \n" << body
+                               << "\nAttachment:\n" << attachment
+                               << "\nmailTransport: " << mailTransport;
 
     QTime timer;
     timer.start();

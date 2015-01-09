@@ -88,7 +88,7 @@ void FollowUpReminderManager::checkFollowUp(const Akonadi::Item &item, const Ako
     }
 
     const Akonadi::SpecialMailCollections::Type type = Akonadi::SpecialMailCollections::self()->specialCollectionType(col);
-    switch(type) {
+    switch (type) {
     case Akonadi::SpecialMailCollections::Trash:
     case Akonadi::SpecialMailCollections::Outbox:
     case Akonadi::SpecialMailCollections::Drafts:

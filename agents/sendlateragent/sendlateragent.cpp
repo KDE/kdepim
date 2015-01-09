@@ -67,7 +67,7 @@ SendLaterAgent::SendLaterAgent(const QString &id)
 #ifdef DEBUG_SENDLATERAGENT
         QTimer::singleShot(1000, this, SLOT(slotStartAgent()));
 #else
-        QTimer::singleShot(1000*60*4, this, SLOT(slotStartAgent()));
+        QTimer::singleShot(1000 * 60 * 4, this, SLOT(slotStartAgent()));
 #endif
     }
 }
@@ -79,11 +79,12 @@ SendLaterAgent::~SendLaterAgent()
 void SendLaterAgent::slotStartAgent()
 {
     mAgentInitialized = true;
-    if (isOnline())
+    if (isOnline()) {
         mManager->load();
+    }
 }
 
-void SendLaterAgent::doSetOnline( bool online )
+void SendLaterAgent::doSetOnline(bool online)
 {
     if (mAgentInitialized) {
         if (online) {

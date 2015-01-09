@@ -154,7 +154,7 @@ void Backend::publishPost(BilboPost *post)
 //     BilboPost tmpPost = post;
     if (Settings::addPoweredBy()) {
         QString poweredStr = QStringLiteral("<p>=-=-=-=-=<br/>"
-                                           "<i>Powered by <b><a href='http://blogilo.gnufolks.org/'>Blogilo</a></b></i></p>");
+                                            "<i>Powered by <b><a href='http://blogilo.gnufolks.org/'>Blogilo</a></b></i></p>");
         post->setContent(post->content() + poweredStr);
     }
     preparePost(post);

@@ -113,14 +113,15 @@ void AttachPropertyDialog::setAttachment(KTNEFAttach *attach)
 
 void AttachPropertyDialog::slotSave()
 {
-  if (saveProperty( mUI.mProperties, mAttach, this ))
-      accept();
+    if (saveProperty(mUI.mProperties, mAttach, this)) {
+        accept();
+    }
 }
 
 void AttachPropertyDialog::formatProperties(const QMap<int, KTNEFProperty *> &props, QTreeWidget *lv,
         QTreeWidgetItem *item, const QString &prefix)
 {
-    QMap<int,KTNEFProperty*>::ConstIterator end(props.constEnd());
+    QMap<int, KTNEFProperty *>::ConstIterator end(props.constEnd());
     for (QMap<int, KTNEFProperty *>::ConstIterator it = props.begin(); it != end; ++it) {
         QTreeWidgetItem *newItem = 0;
         if (lv) {

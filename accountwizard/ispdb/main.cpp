@@ -106,26 +106,26 @@ int main(int argc, char **argv)
     qCDebug(ACCOUNTWIZARD_LOG) << "Imap servers:";
     foreach (const server &s, ispdb.imapServers()) {
         qCDebug(ACCOUNTWIZARD_LOG) << "\thostname:" << s.hostname
-                 << "- port:" << s.port
-                 << "- encryption:" << socketTypeToStr(s.socketType)
-                 << "- username:" << s.username
-                 << "- authentication:" << authTypeToStr(s.authentication);
+                                   << "- port:" << s.port
+                                   << "- encryption:" << socketTypeToStr(s.socketType)
+                                   << "- username:" << s.username
+                                   << "- authentication:" << authTypeToStr(s.authentication);
     }
     qCDebug(ACCOUNTWIZARD_LOG) << "pop3 servers:";
     foreach (const server &s, ispdb.pop3Servers()) {
         qCDebug(ACCOUNTWIZARD_LOG) << "\thostname:" << s.hostname
-                 << "- port:" << s.port
-                 << "- encryption:" << socketTypeToStr(s.socketType)
-                 << "- username:" << s.username
-                 << "- authentication:" << authTypeToStr(s.authentication);
+                                   << "- port:" << s.port
+                                   << "- encryption:" << socketTypeToStr(s.socketType)
+                                   << "- username:" << s.username
+                                   << "- authentication:" << authTypeToStr(s.authentication);
     }
     qCDebug(ACCOUNTWIZARD_LOG) << "smtp servers:";
     foreach (const server &s, ispdb.smtpServers()) {
         qCDebug(ACCOUNTWIZARD_LOG) << "\thostname:" << s.hostname
-                 << "- port:" << s.port
-                 << "- encryption:" << socketTypeToStr(s.socketType)
-                 << "- username:" << s.username
-                 << "- authentication:" << authTypeToStr(s.authentication);
+                                   << "- port:" << s.port
+                                   << "- encryption:" << socketTypeToStr(s.socketType)
+                                   << "- username:" << s.username
+                                   << "- authentication:" << authTypeToStr(s.authentication);
     }
 
     return true;
