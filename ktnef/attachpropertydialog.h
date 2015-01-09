@@ -48,7 +48,7 @@ public:
     static void formatProperties(const QMap<int, KTNEFProperty *> &, QTreeWidget *,
                                  QTreeWidgetItem *, const QString & = QLatin1String("prop"));
     static void formatPropertySet(KTNEFPropertySet *, QTreeWidget *);
-    static void saveProperty(QTreeWidget *, KTNEFPropertySet *, QWidget *);
+    static bool saveProperty(QTreeWidget *, KTNEFPropertySet *, QWidget *);
 
 private Q_SLOTS:
     void slotSave();
