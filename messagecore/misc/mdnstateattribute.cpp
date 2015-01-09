@@ -124,6 +124,11 @@ MDNStateAttribute::MDNSentState MDNStateAttribute::mdnState() const
     return d->dataToState(d->mSentState);
 }
 
+bool MDNStateAttribute::operator==(const MDNStateAttribute &other) const
+{
+    return mdnState() == other.mdnState();
+}
+
 // Register the attribute when the library is loaded.
 namespace
 {

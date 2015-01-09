@@ -42,4 +42,26 @@ void MDNStateAttributeTest::shouldHaveType()
     QCOMPARE(attr.type(), QByteArray("MDNStateAttribute"));
 }
 
+void MDNStateAttributeTest::shouldSerializedAttribute()
+{
+    MessageCore::MDNStateAttribute attr;
+
+    attr.setMDNState(MessageCore::MDNStateAttribute::MDNDenied);
+    QCOMPARE(attr.mdnState(), MessageCore::MDNStateAttribute::MDNDenied);
+    const QByteArray ba = attr.serialized();
+    MessageCore::MDNStateAttribute result;
+    result.deserialize(ba);
+    QVERIFY(attr == result);
+}
+
+void MDNStateAttributeTest::shouldCloneAttribute()
+{
+    MessageCore::MDNStateAttribute attr;
+    attr.setMDNState(MessageCore::MDNStateAttribute::MDNDenied);
+
+    MessageCore::MDNStateAttribute *result = attr.clone();
+    QVERIFY(attr == *result);
+    delete result;
+}
+
 QTEST_MAIN(MDNStateAttributeTest)
