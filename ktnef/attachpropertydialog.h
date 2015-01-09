@@ -47,7 +47,7 @@ class AttachPropertyDialog : public KDialog
     static void formatProperties( const QMap<int,KTNEFProperty*> &, QTreeWidget *,
                            QTreeWidgetItem *, const QString & = QLatin1String("prop") );
     static void formatPropertySet( KTNEFPropertySet *, QTreeWidget * );
-    static void saveProperty( QTreeWidget *, KTNEFPropertySet *, QWidget * );
+    static bool saveProperty( QTreeWidget *, KTNEFPropertySet *, QWidget * );
 
   private slots:
     void slotSave();

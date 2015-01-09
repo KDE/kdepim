@@ -101,8 +101,8 @@ void AttachPropertyDialog::setAttachment( KTNEFAttach *attach )
 
 void AttachPropertyDialog::slotSave()
 {
-  saveProperty( mUI.mProperties, mAttach, this );
-  accept();
+  if (saveProperty( mUI.mProperties, mAttach, this ))
+      accept();
 }
 
 void AttachPropertyDialog::formatProperties( const QMap<int,KTNEFProperty*>& props, QTreeWidget *lv,
@@ -152,7 +152,7 @@ void AttachPropertyDialog::formatPropertySet( KTNEFPropertySet *pSet, QTreeWidge
   formatProperties( pSet->attributes(), 0, item, QLatin1String("attr") );
 }
 
-void AttachPropertyDialog::saveProperty( QTreeWidget *lv, KTNEFPropertySet *pSet, QWidget *parent )
+bool AttachPropertyDialog::saveProperty( QTreeWidget *lv, KTNEFPropertySet *pSet, QWidget *parent )
 {
   QList<QTreeWidgetItem *> list = lv->selectedItems();
   if ( list.isEmpty() || !list.first() ) {
@@ -160,7 +160,7 @@ void AttachPropertyDialog::saveProperty( QTreeWidget *lv, KTNEFPropertySet *pSet
       parent,
       i18nc( "@info",
              "Must select an item first." ) );
-    return;
+    return false;
   }
 
   QTreeWidgetItem *item = list.first();
@@ -199,6 +199,7 @@ void AttachPropertyDialog::saveProperty( QTreeWidget *lv, KTNEFPropertySet *pSet
       }
     }
   }
+  return true;
 }
 
 QPixmap AttachPropertyDialog::loadRenderingPixmap( KTNEFPropertySet *pSet, const QColor &bgColor )
