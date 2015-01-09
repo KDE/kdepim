@@ -29,6 +29,8 @@ public:
 private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldHaveType();
+    void shouldSerializedAttribute();
+    void shouldCloneAttribute();
 };
 
 #endif // MDNSTATEATTRIBUTETEST_H

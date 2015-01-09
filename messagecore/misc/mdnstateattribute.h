@@ -106,7 +106,9 @@ public:
      * Returns the MDN state.
      */
     MDNStateAttribute::MDNSentState mdnState() const;
-    
+
+    bool operator==(const MDNStateAttribute &other) const;
+
 private:
     //@cond PRIVATE
     class Private;
