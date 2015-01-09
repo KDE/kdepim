@@ -328,4 +328,5 @@ void CalPrintDialog::slotOk()
             it.value()->readSettingsWidget();
         }
     }
+    accept();
 }
