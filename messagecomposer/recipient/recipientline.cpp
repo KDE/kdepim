@@ -47,6 +47,7 @@ void RecipientComboBox::keyPressEvent(QKeyEvent *ev)
 
 RecipientLineEdit::RecipientLineEdit(QWidget *parent) : ComposerLineEdit(parent)
 {
+    setExpandIntern(false);
 }
 
 void RecipientLineEdit::keyPressEvent(QKeyEvent *ev)
@@ -101,6 +102,8 @@ RecipientLineNG::RecipientLineNG(QWidget *parent)
 
     connect(mCombo, SIGNAL(activated(int)),
             this, SLOT(slotTypeModified()));
+
+    connect(mEdit, &RecipientLineEdit::addAddress, this, &RecipientLineNG::slotAddRecipient);
 }
 
 void RecipientLineNG::slotEditingFinished()
@@ -108,6 +111,12 @@ void RecipientLineNG::slotEditingFinished()
     if (mEdit->text().isEmpty()) {
         emit deleteLine(this);
     }
+}
+
+void RecipientLineNG::slotAddRecipient(const QString &email)
+{
+    Q_EMIT addRecipient(this, email);
+    slotReturnPressed();
 }
 
 void RecipientLineNG::slotTypeModified()

@@ -46,6 +46,7 @@
 #include <QDropEvent>
 #include <kcontacts/contactgrouptool.h>
 #include <Akonadi/Contact/ContactGroupExpandJob>
+#include <Akonadi/Contact/ContactGroupSearchJob>
 #include <QtCore/QBuffer>
 
 using namespace MessageComposer;
@@ -53,10 +54,17 @@ using namespace MessageComposer;
 ComposerLineEdit::ComposerLineEdit(bool useCompletion, QWidget *parent)
     : KPIM::AddresseeLineEdit(parent, useCompletion),
       m_recentAddressConfig(MessageComposerSettings::self()->config())
+      , mAutoGroupExpand(false)
+      , mExpandIntern(true)
 {
     allowSemicolonAsSeparator(MessageComposerSettings::allowSemicolonAsAddressSeparator());
     loadContacts();
     setEnableBalooSearch(MessageComposerSettings::showBalooSearchInComposer());
+    connect(this, &ComposerLineEdit::editingFinished, this, &ComposerLineEdit::slotEditingFinished);
+    connect(this, &ComposerLineEdit::textCompleted, this, &ComposerLineEdit::slotEditingFinished);
+
+    KConfigGroup group( KSharedConfig::openConfig(), "AddressLineEdit" );
+    mAutoGroupExpand = group.readEntry( "AutoGroupExpand", false );
 }
 
 //-----------------------------------------------------------------------------
@@ -160,7 +168,7 @@ void ComposerLineEdit::dropEvent(QDropEvent *event)
                             QString error;
                             if (KContacts::ContactGroupTool::convertFromXml(&dataStream, group, &error)) {
                                 Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob(group);
-                                connect(expandJob, &Akonadi::ContactGroupExpandJob::result, this, &ComposerLineEdit::groupDropExpandResult);
+                                connect(expandJob, &Akonadi::ContactGroupExpandJob::result, this, &ComposerLineEdit::groupExpandResult);
                                 expandJob->start();
                             }
                         }
@@ -186,7 +194,7 @@ void ComposerLineEdit::dropEvent(QDropEvent *event)
 }
 #endif
 
-void ComposerLineEdit::groupDropExpandResult(KJob *job)
+void ComposerLineEdit::groupExpandResult(KJob *job)
 {
     Akonadi::ContactGroupExpandJob *expandJob = qobject_cast<Akonadi::ContactGroupExpandJob *>(job);
 
@@ -196,10 +204,76 @@ void ComposerLineEdit::groupDropExpandResult(KJob *job)
 
     const KContacts::Addressee::List contacts = expandJob->contacts();
     foreach (const KContacts::Addressee &addressee, contacts) {
-        insertEmails(addressee.emails());
+        if (mExpandIntern || text().isEmpty()) {
+            insertEmails(QStringList() << addressee.fullEmail());
+        } else {
+            emit addAddress(addressee.fullEmail());
+        }
     }
 
     job->deleteLater();
+}
+
+void ComposerLineEdit::slotEditingFinished()
+{
+    foreach(KJob *job, mMightBeGroupJobs) {
+        disconnect(job);
+        job->deleteLater();
+    }
+
+    mMightBeGroupJobs.clear();
+    mGroups.clear();
+
+    if (!text().isEmpty()) {
+        QStringList addresses = KEmailAddress::splitAddressList(text());
+        foreach(const QString &address, addresses) {
+            Akonadi::ContactGroupSearchJob *job = new Akonadi::ContactGroupSearchJob();
+            job->setQuery( Akonadi::ContactGroupSearchJob::Name, address);
+            connect(job, &Akonadi::ContactGroupSearchJob::result, this, &ComposerLineEdit::slotGroupSearchResult);
+            mMightBeGroupJobs.append(job);
+        }
+    }
+}
+
+void ComposerLineEdit::slotGroupSearchResult(KJob *job)
+{
+    Akonadi::ContactGroupSearchJob *searchJob = qobject_cast<Akonadi::ContactGroupSearchJob*>( job );
+
+    Q_ASSERT(mMightBeGroupJobs.contains(searchJob));
+    mMightBeGroupJobs.removeOne(searchJob);
+
+    const KContacts::ContactGroup::List contactGroups = searchJob->contactGroups();
+    if ( contactGroups.isEmpty() ) {
+        return; // Nothing todo, probably a normal email address was entered
+    }
+
+    mGroups.append(contactGroups);
+    searchJob->deleteLater();
+
+    if (mAutoGroupExpand) {
+        expandGroups();
+    }
+}
+
+void ComposerLineEdit::expandGroups()
+{
+    QStringList addresses = KEmailAddress::splitAddressList(text());
+
+    foreach(const KContacts::ContactGroup &group, mGroups) {
+        Akonadi::ContactGroupExpandJob* expandJob = new Akonadi::ContactGroupExpandJob( group );
+        connect(expandJob, &Akonadi::ContactGroupExpandJob::result, this, &ComposerLineEdit::groupExpandResult);
+        addresses.removeAll(group.name());
+        expandJob->start();
+    }
+    setText(addresses.join(QStringLiteral(", ")));
+    mGroups.clear();
+}
+
+void ComposerLineEdit::slotToggleExpandGroups()
+{
+    mAutoGroupExpand = !mAutoGroupExpand;
+    KConfigGroup group( KSharedConfig::openConfig(), "AddressLineEdit" );
+    group.writeEntry( "AutoGroupExpand", mAutoGroupExpand );
 }
 
 #ifndef QT_NO_CONTEXTMENU
@@ -211,6 +285,16 @@ void ComposerLineEdit::contextMenuEvent(QContextMenuEvent *e)
             popup->addSeparator();
             QAction *act = popup->addAction(i18n("Edit Recent Addresses..."));
             connect(act, &QAction::triggered, this, &ComposerLineEdit::editRecentAddresses);
+        }
+        popup->addSeparator();
+        QAction *act = popup->addAction( i18n( "Automatically expand groups" ));
+        act->setCheckable(true);
+        act->setChecked(mAutoGroupExpand);
+        connect(act, &QAction::triggered, this, &ComposerLineEdit::slotToggleExpandGroups);
+
+        if (!mGroups.isEmpty()) {
+            act = popup->addAction( i18n( "Expand Groups..." ));
+            connect(act, &QAction::triggered, this, &ComposerLineEdit::expandGroups);
         }
         popup->exec(e->globalPos());
         delete popup;
@@ -270,3 +354,12 @@ void ComposerLineEdit::setRecentAddressConfig(KConfig *config)
     m_recentAddressConfig = config;
 }
 
+bool ComposerLineEdit::expandIntern() const
+{
+    return mExpandIntern;
+}
+
+void ComposerLineEdit::setExpandIntern(bool expand)
+{
+    mExpandIntern = expand;
+}

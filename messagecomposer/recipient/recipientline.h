@@ -102,6 +102,7 @@ public:
 
 Q_SIGNALS:
     void typeModified(RecipientLineNG *);
+    void addRecipient( RecipientLineNG*, const QString &);
     void countChanged();
 
 protected Q_SLOTS:
@@ -118,6 +119,8 @@ private:
     bool mModified;
     QSharedPointer<Recipient> mData;
 
+private Q_SLOTS:
+    void slotAddRecipient(const QString &);
 };
 
 }
