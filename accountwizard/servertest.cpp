@@ -43,6 +43,11 @@ void ServerTest::test( const QString server, const QString protocol )
   kDebug() << server << protocol;
   m_serverTest->setServer( server );
   m_serverTest->setProtocol( protocol );
+  if (protocol == QLatin1String("submission")) {
+    m_serverTest->setProtocol( QLatin1String("smtp") );
+    m_serverTest->setPort(MailTransport::Transport::EnumEncryption::None, 587);
+    m_serverTest->setPort(MailTransport::Transport::EnumEncryption::SSL, 0);        //No ssl port for submission
+  }
   m_serverTest->start();
 }
 
