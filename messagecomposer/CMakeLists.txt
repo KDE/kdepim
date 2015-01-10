@@ -21,7 +21,6 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 add_subdirectory( tests )
 add_subdirectory( autotests )
-include_directories(${Grantlee_INCLUDE_DIRS})
 
 
 set( messagecomposer_job_src
