@@ -43,10 +43,10 @@ target_link_libraries(konsolekalendar
                       calendarsupport
                       KF5::AkonadiCalendar)
 
-install(TARGETS konsolekalendar  ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS konsolekalendar  ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 ########### install files ###############
 
-install( PROGRAMS konsolekalendar.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
+install( PROGRAMS konsolekalendar.desktop  DESTINATION ${KDE_INSTALL_APPDIR})
 

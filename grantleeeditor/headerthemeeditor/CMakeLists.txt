@@ -31,9 +31,9 @@ set(headerthemeeditor_SRCS
 add_executable(headerthemeeditor ${headerthemeeditor_SRCS} )
 TARGET_LINK_LIBRARIES(headerthemeeditor KF5::Mime  KF5::PimTextEdit KF5::KIOCore KF5::NewStuff pimcommon messageviewer grantleethemeeditor KF5::DBusAddons)
 
-install(TARGETS headerthemeeditor ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS headerthemeeditor ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES
   headerthemeeditorui.rc
-  DESTINATION  ${KXMLGUI_INSTALL_DIR}/headerthemeeditor)
+  DESTINATION  ${KDE_INSTALL_KXMLGUI5DIR}/headerthemeeditor)
 
-install(PROGRAMS org.kde.headerthemeeditor.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(PROGRAMS org.kde.headerthemeeditor.desktop DESTINATION ${KDE_INSTALL_APPDIR})

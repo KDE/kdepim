@@ -11,4 +11,4 @@ key_ok.png
 key_bad.png
 key_unknown.png
 smartcard.xpm
-DESTINATION ${DATA_INSTALL_DIR}/libkleopatra/pics)
+DESTINATION ${KDE_INSTALL_DATADIR}/libkleopatra/pics)

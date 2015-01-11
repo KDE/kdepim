@@ -48,9 +48,9 @@ if (Q_WS_MAC)
   set_target_properties(akonadi_archivemail_agent PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "KDE Akonadi Email Archiver")
 endif ()
 
-install(TARGETS akonadi_archivemail_agent ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS akonadi_archivemail_agent ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
 
 install(FILES archivemailagent.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/akonadi/agents")
-install(FILES akonadi_archivemail_agent.notifyrc DESTINATION ${KNOTIFYRC_INSTALL_DIR} )
+install(FILES akonadi_archivemail_agent.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFY5RCDIR} )
 
 add_subdirectory(autotests)

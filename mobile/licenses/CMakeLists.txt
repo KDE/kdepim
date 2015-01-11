@@ -11,4 +11,4 @@ if(DBLATEX_EXECUTABLE)
   add_custom_target(licences_pdf DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/licenses.pdf)
 endif()
 
-install(FILES licenses.pdf DESTINATION ${DATA_INSTALL_DIR}/kontact-touch/)
+install(FILES licenses.pdf DESTINATION ${KDE_INSTALL_DATADIR}/kontact-touch/)

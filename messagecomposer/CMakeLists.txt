@@ -146,7 +146,7 @@ target_link_libraries(messagecomposer
 
 set_target_properties( messagecomposer PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
 
-install( TARGETS messagecomposer ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install( TARGETS messagecomposer ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
 
 add_subdirectory(imagescaling/tests)
 

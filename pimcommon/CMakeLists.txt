@@ -270,7 +270,7 @@ target_link_libraries(pimcommon
 )
 
 set_target_properties(pimcommon PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
-install(TARGETS pimcommon ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS pimcommon ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory(translator/tests)
 add_subdirectory(translator/autotests)
@@ -321,7 +321,7 @@ if (Qt5Designer_FOUND)
 
     install(TARGETS
         pimcommonwidgets
-        DESTINATION ${QT_PLUGIN_INSTALL_DIR}/designer
+        DESTINATION ${KDE_INSTALL_QTPLUGINDIR}/designer
     )
 endif()
 

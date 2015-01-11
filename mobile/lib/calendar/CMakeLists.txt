@@ -38,9 +38,9 @@ target_link_libraries(kdepimmobileuicalendar
   Qt5::Declarative
 )
 
-install(FILES incidence-editor.qml DESTINATION ${DATA_INSTALL_DIR}/mobileui)
+install(FILES incidence-editor.qml DESTINATION ${KDE_INSTALL_DATADIR}/mobileui)
 install(FILES
   CalendarDialog.qml
   ClockDialog.qml
   MorePanel.qml
-  DESTINATION ${PLUGIN_INSTALL_DIR}/imports/org/kde/pim/mobileui)
+  DESTINATION ${KDE_INSTALL_PLUGINDIR}/imports/org/kde/pim/mobileui)

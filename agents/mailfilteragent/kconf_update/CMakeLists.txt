@@ -1,2 +1,2 @@
-install(FILES mailfilteragent.upd  DESTINATION ${KCONF_UPDATE_INSTALL_DIR})
-install(PROGRAMS migrate-kmail-filters.pl DESTINATION ${KCONF_UPDATE_INSTALL_DIR})
+install(FILES mailfilteragent.upd  DESTINATION ${KDE_INSTALL_KCONFUPDATEDIR})
+install(PROGRAMS migrate-kmail-filters.pl DESTINATION ${KDE_INSTALL_KCONFUPDATEDIR})

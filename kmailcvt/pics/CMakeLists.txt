@@ -1,1 +1,1 @@
-install( FILES step1.png  DESTINATION ${DATA_INSTALL_DIR}/kmailcvt/pics)
+install( FILES step1.png  DESTINATION ${KDE_INSTALL_DATADIR}/kmailcvt/pics)

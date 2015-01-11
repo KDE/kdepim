@@ -48,5 +48,5 @@ target_link_libraries(mailimporter
 )
 
 set_target_properties(mailimporter PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
-install(TARGETS mailimporter ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS mailimporter ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 

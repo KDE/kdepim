@@ -30,8 +30,8 @@ target_link_libraries(coisceim-mobile
   messageviewer
 )
 
-install(TARGETS coisceim-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
-# install(PROGRAMS coisceim-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(TARGETS coisceim-mobile ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+# install(PROGRAMS coisceim-mobile.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 install(FILES
   main.qml
   CreateTrip.qml
@@ -43,5 +43,5 @@ install(FILES
   ItemViewer.qml
   NoteView.qml
   notes-mobile-background.png
-  DESTINATION ${DATA_INSTALL_DIR}/coisceim-mobile
+  DESTINATION ${KDE_INSTALL_DATADIR}/coisceim-mobile
 )

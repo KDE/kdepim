@@ -62,12 +62,12 @@ set_target_properties(templateparser PROPERTIES
   SOVERSION ${KDEPIM_LIB_SOVERSION}
 )
 
-install(TARGETS templateparser ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS templateparser ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES
   settings/customtemplates_kfg.kcfg
   settings/templatesconfiguration_kfg.kcfg
-  DESTINATION ${KCFG_INSTALL_DIR}
+  DESTINATION ${KDE_INSTALL_KCFGDIR}
 )
 
 add_subdirectory(tests)

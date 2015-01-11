@@ -67,11 +67,11 @@ target_link_libraries(composereditorng
 
 
 set_target_properties( composereditorng PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
-install(TARGETS composereditorng ${INSTALL_TARGETS_DEFAULT_ARGS} )
-install( FILES data/composereditorinitialhtml DESTINATION  ${DATA_INSTALL_DIR}/composereditor )
+install(TARGETS composereditorng ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
+install( FILES data/composereditorinitialhtml DESTINATION  ${KDE_INSTALL_DATADIR}/composereditor )
 
 #install( FILES
 #         composereditorng_export.h
 #         composereditor.h
-#         DESTINATION ${INCLUDE_INSTALL_DIR}/composereditorng COMPONENT Devel )
+#         DESTINATION ${KDE_INSTALL_INCLUDEDIR}/composereditorng COMPONENT Devel )
 

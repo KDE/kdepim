@@ -15,4 +15,4 @@ target_link_libraries(ispdb
   Qt5::Xml
 )
 
-install(TARGETS ispdb ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS ispdb ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

@@ -128,7 +128,7 @@ if(MINGW)
 endif()
 
 set_target_properties(kdepim PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
-install(TARGETS kdepim ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kdepim ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 ########### next target ###############
@@ -151,7 +151,7 @@ if (Qt5Designer_FOUND)
 
     install(TARGETS
         kdepimwidgets
-        DESTINATION ${QT_PLUGIN_INSTALL_DIR}/designer
+        DESTINATION ${KDE_INSTALL_QTPLUGINDIR}/designer
     )
 endif()
 
@@ -167,9 +167,9 @@ add_library(kcm_ldap MODULE ${kcm_ldap_SRCS})
 
 target_link_libraries(kcm_ldap   kdepim)
 
-install(TARGETS kcm_ldap DESTINATION ${PLUGIN_INSTALL_DIR})
-install(FILES ldap/kcmldap.desktop DESTINATION ${SERVICES_INSTALL_DIR})
+install(TARGETS kcm_ldap DESTINATION ${KDE_INSTALL_PLUGINDIR})
+install(FILES ldap/kcmldap.desktop DESTINATION ${KDE_INSTALL_KSERVICES5DIR})
 
 ########### install files ###############
 
-install(FILES interfaces/org.kde.addressbook.service.xml interfaces/org.kde.mailtransport.service.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR})
+install(FILES interfaces/org.kde.addressbook.service.xml interfaces/org.kde.mailtransport.service.xml DESTINATION ${KDE_INSTALL_DBUSINTERFACEDIR})

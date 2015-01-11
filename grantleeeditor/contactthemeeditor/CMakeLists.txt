@@ -42,10 +42,10 @@ TARGET_LINK_LIBRARIES(contactthemeeditor
                        kaddressbookgrantlee
 )
 
-install(TARGETS contactthemeeditor ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS contactthemeeditor ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES
   contactthemeeditorui.rc
-  DESTINATION  ${KXMLGUI_INSTALL_DIR}/contactthemeeditor)
+  DESTINATION  ${KDE_INSTALL_KXMLGUI5DIR}/contactthemeeditor)
 
-install(PROGRAMS org.kde.contactthemeeditor.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(PROGRAMS org.kde.contactthemeeditor.desktop DESTINATION ${KDE_INSTALL_APPDIR})

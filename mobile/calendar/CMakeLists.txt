@@ -63,8 +63,8 @@ if (RUNTIME_PLUGINS_STATIC)
   target_link_libraries(korganizer-mobile akonadi_serializer_addressee akonadi_serializer_contactgroup akonadi_serializer_kcalcore akonadi_serializer_mail)
 endif ()
 
-install(TARGETS korganizer-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
-install(PROGRAMS korganizer-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(TARGETS korganizer-mobile ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(PROGRAMS korganizer-mobile.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 install(FILES
   BulkActionComponent.qml
   ConfigDialog.qml
@@ -75,7 +75,7 @@ install(FILES
   EventListComponent.qml
   MonthViewComponent.qml
   TimelineView.qml
-  DESTINATION ${DATA_INSTALL_DIR}/korganizer-mobile
+  DESTINATION ${KDE_INSTALL_DATADIR}/korganizer-mobile
 )
-ecm_install_icons( ICONS hi48-apps-korganizer-mobile.png  hi64-apps-korganizer-mobile.png  hi80-apps-korganizer-mobile-harmattan.png DESTINATION ${ICON_INSTALL_DIR} )
+ecm_install_icons( ICONS hi48-apps-korganizer-mobile.png  hi64-apps-korganizer-mobile.png  hi80-apps-korganizer-mobile-harmattan.png DESTINATION ${KDE_INSTALL_ICONDIR} )
 

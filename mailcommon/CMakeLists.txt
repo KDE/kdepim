@@ -230,13 +230,13 @@ target_link_libraries(mailcommon messageviewer messagecore messagecomposer maili
 
 set_target_properties(mailcommon PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 
-install(TARGETS mailcommon ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS mailcommon ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory(filter/filterimporter/autotests)
 add_subdirectory(collectionpage/autotests)
 add_subdirectory(filter/autotests)
 add_subdirectory(snippets/autotests)
-#install(FILES viewer/viewer.h viewer/attachmentstrategy.h header/headerstrategy.h messageviewer_export.h DESTINATION ${INCLUDE_INSTALL_DIR}/messageviewer COMPONENT devel)
+#install(FILES viewer/viewer.h viewer/attachmentstrategy.h header/headerstrategy.h messageviewer_export.h DESTINATION ${KDE_INSTALL_INCLUDEDIR}/messageviewer COMPONENT devel)
 
 
 if (Qt5Designer_FOUND)
@@ -257,7 +257,7 @@ if (Qt5Designer_FOUND)
 
     install(TARGETS
         mailcommonwidgets
-        DESTINATION ${QT_PLUGIN_INSTALL_DIR}/designer
+        DESTINATION ${KDE_INSTALL_QTPLUGINDIR}/designer
     )
 endif()
 

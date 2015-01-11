@@ -20,6 +20,6 @@ target_link_libraries(messageviewer_bodypartformatter_application_mstnef
   messagecore
   messageviewer
 )
-install(TARGETS messageviewer_bodypartformatter_application_mstnef DESTINATION ${PLUGIN_INSTALL_DIR})
+install(TARGETS messageviewer_bodypartformatter_application_mstnef DESTINATION ${KDE_INSTALL_PLUGINDIR})
 
-install(FILES application_ms-tnef.desktop DESTINATION ${DATA_INSTALL_DIR}/messageviewer/plugins/bodypartformatter)
+install(FILES application_ms-tnef.desktop DESTINATION ${KDE_INSTALL_DATADIR}/messageviewer/plugins/bodypartformatter)

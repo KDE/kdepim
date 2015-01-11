@@ -43,10 +43,10 @@ if (Q_WS_MAC)
   set_target_properties(akonadi_notes_agent PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "KDE Akonadi Notes")
 endif ()
 
-install(TARGETS akonadi_notes_agent ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS akonadi_notes_agent ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
 
 install(FILES notesagent.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/akonadi/agents")
-install(FILES akonadi_notes_agent.notifyrc DESTINATION ${KNOTIFYRC_INSTALL_DIR} )
+install(FILES akonadi_notes_agent.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFY5RCDIR} )
 
 
 add_subdirectory(kconf_update)

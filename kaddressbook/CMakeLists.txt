@@ -140,7 +140,7 @@ if(KF5Prison_FOUND)
 endif()
 
 set_target_properties(kaddressbookprivate PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
-install(TARGETS kaddressbookprivate ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
+install(TARGETS kaddressbookprivate ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
 
 ########### next target ###############
 
@@ -168,16 +168,16 @@ if(QGPGME_FOUND)
   target_link_libraries(kaddressbook KF5::QGpgme)
 endif()
 
-install(TARGETS kaddressbook ${INSTALL_TARGETS_DEFAULT_ARGS})
-install(PROGRAMS data/org.kde.kaddressbook.desktop data/kaddressbook-importer.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
-install(FILES data/kaddressbook.appdata.xml DESTINATION ${CMAKE_INSTALL_METAINFODIR})
-install(FILES kaddressbookui.rc DESTINATION ${KXMLGUI_INSTALL_DIR}/kaddressbook)
+install(TARGETS kaddressbook ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(PROGRAMS data/org.kde.kaddressbook.desktop data/kaddressbook-importer.desktop DESTINATION ${KDE_INSTALL_APPDIR})
+install(FILES data/kaddressbook.appdata.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
+install(FILES kaddressbookui.rc DESTINATION ${KDE_INSTALL_KXMLGUI5DIR}/kaddressbook)
 
 set(kaddressbook_PART_SRCS kaddressbookpart.cpp kaddressbook_debug.cpp)
 add_library(kaddressbookpart MODULE ${kaddressbook_PART_SRCS})
 target_link_libraries(kaddressbookpart  kaddressbookprivate)
-install(TARGETS kaddressbookpart DESTINATION ${PLUGIN_INSTALL_DIR})
-install(FILES data/kaddressbookpart.desktop DESTINATION ${SERVICES_INSTALL_DIR})
+install(TARGETS kaddressbookpart DESTINATION ${KDE_INSTALL_PLUGINDIR})
+install(FILES data/kaddressbookpart.desktop DESTINATION ${KDE_INSTALL_KSERVICES5DIR})
 
 install(FILES
   viewertemplates/contact.html
@@ -188,9 +188,9 @@ install(FILES
   viewertemplates/contactgroup_additionalfieldrow.html
   viewertemplates/contactgroup_memberrow.html
   viewertemplates/theme.desktop
-  DESTINATION ${DATA_INSTALL_DIR}/kaddressbook/viewertemplates/default/
+  DESTINATION ${KDE_INSTALL_DATADIR}/kaddressbook/viewertemplates/default/
 )
 
-install(FILES data/kaddressbook_themes.knsrc DESTINATION ${CONFIG_INSTALL_DIR} )
+install(FILES data/kaddressbook_themes.knsrc DESTINATION ${KDE_INSTALL_CONFDIR} )
 
-install(DIRECTORY printing/grantlee/themes/ DESTINATION ${DATA_INSTALL_DIR}/kaddressbook/printing/themes/ )
+install(DIRECTORY printing/grantlee/themes/ DESTINATION ${KDE_INSTALL_DATADIR}/kaddressbook/printing/themes/ )

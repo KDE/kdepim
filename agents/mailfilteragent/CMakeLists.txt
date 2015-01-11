@@ -45,7 +45,7 @@ target_link_libraries(akonadi_mailfilter_agent
   KF5::IdentityManagement
 )
 
-install(TARGETS akonadi_mailfilter_agent ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS akonadi_mailfilter_agent ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES mailfilteragent.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/akonadi/agents")
-install(FILES akonadi_mailfilter_agent.notifyrc DESTINATION ${KNOTIFYRC_INSTALL_DIR} )
+install(FILES akonadi_mailfilter_agent.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFY5RCDIR} )
 

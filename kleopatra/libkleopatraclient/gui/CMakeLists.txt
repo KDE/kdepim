@@ -16,4 +16,4 @@ set_target_properties(kleopatraclientgui PROPERTIES
   SOVERSION ${libkleopatraclient_soversion}
 )
 
-install(TARGETS kleopatraclientgui ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kleopatraclientgui ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

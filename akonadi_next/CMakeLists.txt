@@ -28,5 +28,5 @@ target_link_libraries(akonadi_next
 
 set_target_properties(akonadi_next PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 
-install(TARGETS akonadi_next ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS akonadi_next ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 

@@ -5,5 +5,5 @@ install(FILES
   kleopatra_splashscreen.svgz
   gpg4win.png
   gpg4win-compact.png
-  DESTINATION ${DATA_INSTALL_DIR}/kleopatra/pics
+  DESTINATION ${KDE_INSTALL_DATADIR}/kleopatra/pics
 )

@@ -114,7 +114,7 @@ set_target_properties(incidenceeditorsng
   SOVERSION ${KDEPIM_LIB_SOVERSION}
 )
 
-install(TARGETS incidenceeditorsng ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS incidenceeditorsng ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 ### Build the mobile version if needed
@@ -158,7 +158,7 @@ install(TARGETS incidenceeditorsng ${INSTALL_TARGETS_DEFAULT_ARGS})
     SOVERSION ${KDEPIM_LIB_SOVERSION}
   )
 
-  install(TARGETS incidenceeditorsngmobile ${INSTALL_TARGETS_DEFAULT_ARGS})
+  install(TARGETS incidenceeditorsngmobile ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 #endif(KDEPIM_MOBILE_UI)
 
 ### Build the test app TODO: Make optional
@@ -177,6 +177,6 @@ target_link_libraries(kincidenceeditor
   kdepimdbusinterfaces
 )
 
-install(TARGETS kincidenceeditor ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kincidenceeditor ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory(autotests)

@@ -11,8 +11,8 @@ set(composerhtmlSources
 add_executable(composerhtmleditor ${composerhtmlSources} )
 TARGET_LINK_LIBRARIES(composerhtmleditor Qt5::WebKitWidgets  KF5::KIOCore composereditorng )
 
-install(TARGETS composerhtmleditor ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS composerhtmleditor ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES
   composerhtmleditorui.rc
-  DESTINATION  ${KXMLGUI_INSTALL_DIR}/composerhtmleditor)
+  DESTINATION  ${KDE_INSTALL_KXMLGUI5DIR}/composerhtmleditor)
 

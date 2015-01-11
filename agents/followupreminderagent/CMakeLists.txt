@@ -25,7 +25,7 @@ target_link_libraries( followupreminder KF5::AkonadiCore )
 set_target_properties( followupreminder PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
 
 
-install( TARGETS followupreminder ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install( TARGETS followupreminder ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
 
 
 set(followupreminderagent_job_SRCS
@@ -63,10 +63,10 @@ if (Q_WS_MAC)
   set_target_properties(akonadi_followupreminder_agent PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "KDE Akonadi Followup Reminder Agent")
 endif ()
 
-install(TARGETS akonadi_followupreminder_agent ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS akonadi_followupreminder_agent ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
 
 install(FILES followupreminder.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/akonadi/agents")
 
 add_subdirectory(autotests)
 
-install(FILES akonadi_followupreminder_agent.notifyrc DESTINATION ${KNOTIFYRC_INSTALL_DIR} )
+install(FILES akonadi_followupreminder_agent.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFY5RCDIR} )

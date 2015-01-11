@@ -366,27 +366,27 @@ if(USABLE_ASSUAN_FOUND)
   target_link_libraries(kleopatra_bin )
 endif()
 
-install(TARGETS kleopatra_bin ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kleopatra_bin ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(
   PROGRAMS data/org.kde.kleopatra.desktop data/kleopatra_import.desktop
-  DESTINATION ${XDG_APPS_INSTALL_DIR}
+  DESTINATION ${KDE_INSTALL_APPDIR}
 )
-install(FILES data/kleopatra.appdata.xml DESTINATION ${CMAKE_INSTALL_METAINFODIR})
+install(FILES data/kleopatra.appdata.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
 install(
   FILES data/kleopatra_signencryptfiles.desktop
         data/kleopatra_signencryptfolders.desktop
         data/kleopatra_decryptverifyfiles.desktop
         data/kleopatra_decryptverifyfolders.desktop
-  DESTINATION ${SERVICES_INSTALL_DIR}
+  DESTINATION ${KDE_INSTALL_KSERVICES5DIR}
 )
 
-install(FILES kleopatra.rc DESTINATION ${KXMLGUI_INSTALL_DIR}/kleopatra)
+install(FILES kleopatra.rc DESTINATION ${KDE_INSTALL_KXMLGUI5DIR}/kleopatra)
 
 if(KDEPIM_MOBILE_UI)
   install(
     FILES qml/kleopatra-mobile.qml qml/KleopatraActions.qml
-    DESTINATION ${DATA_INSTALL_DIR}/kleopatra
+    DESTINATION ${KDE_INSTALL_DATADIR}/kleopatra
   )
 endif()
 add_subdirectory(icons)

@@ -30,12 +30,12 @@ generate_export_header(kpgp BASE_NAME libkpgp)
 target_link_libraries(kpgp  KF5::I18n Qt5::Widgets KF5::WidgetsAddons KF5::ConfigCore KF5::Codecs KF5::IconThemes KF5::WindowSystem KF5::Completion KF5::CoreAddons) 
 
 set_target_properties(kpgp PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
-install(TARGETS kpgp ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kpgp ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory( tests )
 
 ########### install files ###############
 
-install(FILES kconf_update/kpgp.upd  DESTINATION ${KCONF_UPDATE_INSTALL_DIR})
-install(PROGRAMS kconf_update/kpgp-3.1-upgrade-address-data.pl DESTINATION ${KCONF_UPDATE_INSTALL_DIR})
+install(FILES kconf_update/kpgp.upd  DESTINATION ${KDE_INSTALL_KCONFUPDATEDIR})
+install(PROGRAMS kconf_update/kpgp-3.1-upgrade-address-data.pl DESTINATION ${KDE_INSTALL_KCONFUPDATEDIR})
 

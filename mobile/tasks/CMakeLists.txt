@@ -47,8 +47,8 @@ if (RUNTIME_PLUGINS_STATIC)
   target_link_libraries(tasks-mobile akonadi_serializer_addressee akonadi_serializer_contactgroup akonadi_serializer_kcalcore akonadi_serializer_mail)
 endif ()
 
-install(TARGETS tasks-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
-install(PROGRAMS tasks-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(TARGETS tasks-mobile ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(PROGRAMS tasks-mobile.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 install(FILES
   BulkActionComponent.qml
   ConfigDialog.qml
@@ -56,6 +56,6 @@ install(FILES
   tasks-mobile-background.png
   TaskActions.qml
   TaskListView.qml
-  DESTINATION ${DATA_INSTALL_DIR}/tasks-mobile
+  DESTINATION ${KDE_INSTALL_DATADIR}/tasks-mobile
 )
-ecm_install_icons(ICONS hi48-apps-tasks-mobile.png  hi64-apps-tasks-mobile.png  hi80-apps-tasks-mobile-harmattan.png DESTINATION ${ICON_INSTALL_DIR} )
+ecm_install_icons(ICONS hi48-apps-tasks-mobile.png  hi64-apps-tasks-mobile.png  hi80-apps-tasks-mobile-harmattan.png DESTINATION ${KDE_INSTALL_ICONDIR} )

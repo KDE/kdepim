@@ -106,8 +106,8 @@ if(RUNTIME_PLUGINS_STATIC)
   )
 endif()
 
-install(TARGETS kmail-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
-install(PROGRAMS kmail-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(TARGETS kmail-mobile ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(PROGRAMS kmail-mobile.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 install(FILES
   AboutPage.qml
   AccountSettingsPage.qml
@@ -133,8 +133,8 @@ install(FILES
   remove-attachment-button.png
   toggle-signature-button.png
   toggle-encryption-button.png
-  DESTINATION ${DATA_INSTALL_DIR}/kmail-mobile
+  DESTINATION ${KDE_INSTALL_DATADIR}/kmail-mobile
 )
 
-ecm_install_icons(ICONS hi48-apps-kmail-mobile.png  hi64-apps-kmail-mobile.png  hi80-apps-kmail-mobile-harmattan.png DESTINATION ${ICON_INSTALL_DIR})
+ecm_install_icons(ICONS hi48-apps-kmail-mobile.png  hi64-apps-kmail-mobile.png  hi80-apps-kmail-mobile-harmattan.png DESTINATION ${KDE_INSTALL_ICONDIR})
 

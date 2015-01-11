@@ -83,7 +83,7 @@ set_target_properties(calendarsupport
   SOVERSION ${KDEPIM_LIB_SOVERSION}
 )
 
-install(TARGETS calendarsupport ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS calendarsupport ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 set(calendarsupportcollectionpage_LIB_SRCS
     collectiongeneralpage.cpp
@@ -107,7 +107,7 @@ set_target_properties(calendarsupportcollectionpage
   SOVERSION ${KDEPIM_LIB_VERSION}
 )
 
-install(TARGETS calendarsupportcollectionpage ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS calendarsupportcollectionpage ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 
-install(FILES calendarplugin.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
+install(FILES calendarplugin.desktop DESTINATION ${KDE_INSTALL_KSERVICETYPES5DIR})

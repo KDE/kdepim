@@ -53,5 +53,5 @@ target_link_libraries(etm_usage
   messageviewer
 )
 
-install(TARGETS etm_usage ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS etm_usage ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 

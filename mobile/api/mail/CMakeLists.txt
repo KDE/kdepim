@@ -30,5 +30,5 @@ target_link_libraries(mailplugin
     kdepim
 )
 
-install(TARGETS mailplugin DESTINATION ${QML_INSTALL_DIR}/org/kde/pim/mail)
-install(FILES qmldir DESTINATION ${QML_INSTALL_DIR}/org/kde/pim/mail)
+install(TARGETS mailplugin DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/pim/mail)
+install(FILES qmldir DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/pim/mail)

@@ -116,7 +116,7 @@ target_link_libraries(eventviews
 )
 
 set_target_properties(eventviews PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
-install(TARGETS eventviews ${INSTALL_TARGETS_DEFAULT_ARGS})
-install(FILES agenda/calendardecoration.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
+install(TARGETS eventviews ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(FILES agenda/calendardecoration.desktop DESTINATION ${KDE_INSTALL_KSERVICETYPES5DIR})
 
 add_subdirectory(tests)

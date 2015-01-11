@@ -40,16 +40,16 @@ TARGET_LINK_LIBRARIES(storageservicemanager
                        KF5::DBusAddons
 )
 
-install(TARGETS storageservicemanager ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS storageservicemanager ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES
   storageservicemanagerui.rc
-  DESTINATION  ${KXMLGUI_INSTALL_DIR}/storageservicemanager)
+  DESTINATION  ${KDE_INSTALL_KXMLGUI5DIR}/storageservicemanager)
 
-install(PROGRAMS org.kde.storageservicemanager.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(PROGRAMS org.kde.storageservicemanager.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 
 install(FILES data/storageservicemanager.notifyrc
-    DESTINATION ${KNOTIFYRC_INSTALL_DIR}
+    DESTINATION ${KDE_INSTALL_KNOTIFY5RCDIR}
   )
 
 add_subdirectory(autotests)

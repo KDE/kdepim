@@ -69,10 +69,10 @@ target_link_libraries(coisceimpart
   
 )
 
-install(TARGETS coisceim ${INSTALL_TARGETS_DEFAULT_ARGS} )
-install(TARGETS coisceim_widget ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
-install(FILES coisceimpart.desktop  DESTINATION ${SERVICES_INSTALL_DIR} )
-install(TARGETS coisceimpart  DESTINATION ${PLUGIN_INSTALL_DIR} )
+install(TARGETS coisceim ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS coisceim_widget ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
+install(FILES coisceimpart.desktop  DESTINATION ${KDE_INSTALL_KSERVICES5DIR} )
+install(TARGETS coisceimpart  DESTINATION ${KDE_INSTALL_PLUGINDIR} )
 
 # add_subdirectory(kontact-plugin)
 add_subdirectory(coisceim-mobile)

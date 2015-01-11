@@ -34,7 +34,7 @@ target_link_libraries(kmailcvt
   kdepim
 )
 
-install(TARGETS kmailcvt  ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS kmailcvt  ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
 
 ########### install files ###############
 

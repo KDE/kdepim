@@ -1,5 +1,5 @@
 ########### install files ###############
-kdoctools_create_handbook(index.docbook INSTALL_DESTINATION ${HTML_INSTALL_DIR}/en SUBDIR kontact-admin)
+kdoctools_create_handbook(index.docbook INSTALL_DESTINATION ${KDE_INSTALL_DOCBUNDLEDIR}/en SUBDIR kontact-admin)
 
-install( PROGRAMS kontact-admin.desktop  DESTINATION  ${XDG_APPS_INSTALL_DIR} )
+install( PROGRAMS kontact-admin.desktop  DESTINATION  ${KDE_INSTALL_APPDIR} )
 

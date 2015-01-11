@@ -55,4 +55,4 @@ generate_export_header(kdgantt2 BASE_NAME kdgantt)
 target_link_libraries(kdgantt2  Qt5::Widgets Qt5::PrintSupport )
 
 set_target_properties( kdgantt2 PROPERTIES VERSION 1.0.0 SOVERSION 1)
-install(TARGETS kdgantt2 ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS kdgantt2 ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )

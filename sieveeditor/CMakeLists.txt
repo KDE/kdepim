@@ -51,12 +51,12 @@ TARGET_LINK_LIBRARIES(sieveeditor
                        kmanagesieve
 )
 
-install(TARGETS sieveeditor ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS sieveeditor ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES
   sieveeditorui.rc
-  DESTINATION  ${KXMLGUI_INSTALL_DIR}/sieveeditor)
+  DESTINATION  ${KDE_INSTALL_KXMLGUI5DIR}/sieveeditor)
 
-install(PROGRAMS org.kde.sieveeditor.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(PROGRAMS org.kde.sieveeditor.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 
 add_subdirectory(autotests)

@@ -231,19 +231,19 @@ include_directories(
 )
 
 set_target_properties( messageviewer PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
-install(TARGETS messageviewer ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS messageviewer ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
 
-#install( FILES viewer/viewer.h viewer/attachmentstrategy.h header/headerstrategy.h messageviewer_export.h DESTINATION  ${INCLUDE_INSTALL_DIR}/messageviewer COMPONENT devel)
+#install( FILES viewer/viewer.h viewer/attachmentstrategy.h header/headerstrategy.h messageviewer_export.h DESTINATION  ${KDE_INSTALL_INCLUDEDIR}/messageviewer COMPONENT devel)
 
 
-install(DIRECTORY themes DESTINATION ${DATA_INSTALL_DIR}/messageviewer )
+install(DIRECTORY themes DESTINATION ${KDE_INSTALL_DATADIR}/messageviewer )
 
-install(FILES header/data/messageviewer_header_themes.knsrc DESTINATION ${CONFIG_INSTALL_DIR} )
+install(FILES header/data/messageviewer_header_themes.knsrc DESTINATION ${KDE_INSTALL_CONFDIR} )
 
 add_subdirectory(grantleefilters)
 add_subdirectory(scamdetection/autotests)
 add_subdirectory(scamdetection/tests)
 add_subdirectory(adblock/tests/)
 add_subdirectory(findbar/autotests)
-install(FILES notify/messageviewer.notifyrc DESTINATION ${KNOTIFYRC_INSTALL_DIR} )
-install(FILES scamdetection/data/longurlServices.json DESTINATION ${DATA_INSTALL_DIR}/messageviewer )
+install(FILES notify/messageviewer.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFY5RCDIR} )
+install(FILES scamdetection/data/longurlServices.json DESTINATION ${KDE_INSTALL_DATADIR}/messageviewer )

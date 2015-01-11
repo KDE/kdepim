@@ -112,16 +112,16 @@ target_link_libraries(pimsettingexporter
   messagecomposer
 )
 
-install(TARGETS pimsettingexporter ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS pimsettingexporter ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
 
 install(FILES
     pimsettingexporter.rc
-    DESTINATION ${KXMLGUI_INSTALL_DIR}/pimsettingexporter
+    DESTINATION ${KDE_INSTALL_KXMLGUI5DIR}/pimsettingexporter
 )
 
-install(FILES backup-structure.txt DESTINATION ${DATA_INSTALL_DIR}/pimsettingexporter)
+install(FILES backup-structure.txt DESTINATION ${KDE_INSTALL_DATADIR}/pimsettingexporter)
 
-install(PROGRAMS org.kde.pimsettingexporter.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(PROGRAMS org.kde.pimsettingexporter.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 
 
 ########### install files ###############

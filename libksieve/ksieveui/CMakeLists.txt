@@ -191,9 +191,9 @@ set_target_properties(
   SOVERSION ${KDEPIM_LIB_SOVERSION}
 )
 
-install(TARGETS ksieveui ${INSTALL_TARGETS_DEFAULT_ARGS})
-install(FILES data/ksieve_script.knsrc DESTINATION ${CONFIG_INSTALL_DIR} )
-install(DIRECTORY data/scripts/ DESTINATION ${DATA_INSTALL_DIR}/sieve/scripts/ )
+install(TARGETS ksieveui ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(FILES data/ksieve_script.knsrc DESTINATION ${KDE_INSTALL_CONFDIR} )
+install(DIRECTORY data/scripts/ DESTINATION ${KDE_INSTALL_DATADIR}/sieve/scripts/ )
 
 add_subdirectory(autocreatescripts/tests)
 add_subdirectory(scriptsparsing/tests)

@@ -25,4 +25,4 @@ set_target_properties(
   SOVERSION ${KDEPIM_LIB_SOVERSION}
 )
 
-install(TARGETS kmanagesieve ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kmanagesieve ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

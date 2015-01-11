@@ -15,7 +15,7 @@ set_target_properties(kabcviewer_bin PROPERTIES OUTPUT_NAME kabcviewer)
 
 target_link_libraries( kabcviewer_bin KF5::AkonadiCore KF5::AkonadiContact  )
 
-#install(TARGETS kabcviewer_bin ${INSTALL_TARGETS_DEFAULT_ARGS} )
+#install(TARGETS kabcviewer_bin ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
 
 ########## next target #######################
 
@@ -31,4 +31,4 @@ set_target_properties(kabceditor_bin PROPERTIES OUTPUT_NAME kabceditor)
 
 target_link_libraries( kabceditor_bin KF5::AkonadiCore KF5::AkonadiContact  )
 
-#install(TARGETS kabceditor_bin ${INSTALL_TARGETS_DEFAULT_ARGS} )
+#install(TARGETS kabceditor_bin ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )

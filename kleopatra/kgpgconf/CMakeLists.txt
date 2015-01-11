@@ -23,4 +23,4 @@ add_executable(kgpgconf ${_kgpgconf_SRCS})
 
 target_link_libraries(kgpgconf KF5::QGpgme Qt5::Core KF5::Gpgmepp KF5::I18n Qt5::Widgets)
 
-install(TARGETS kgpgconf ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kgpgconf ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

@@ -80,17 +80,17 @@ if(RUNTIME_PLUGINS_STATIC)
 endif()
 
 install(TARGETS
-    korgac ${INSTALL_TARGETS_DEFAULT_ARGS}
+    korgac ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
 ########### install files ###############
 
 install(PROGRAMS
   org.kde.korgac.desktop
-  DESTINATION ${AUTOSTART_INSTALL_DIR}
+  DESTINATION ${KDE_INSTALL_AUTOSTARTDIR}
 )
 
 install(FILES
   org.kde.korganizer.KOrgac.xml
-  DESTINATION ${DBUS_INTERFACES_INSTALL_DIR}
+  DESTINATION ${KDE_INSTALL_DBUSINTERFACEDIR}
 )

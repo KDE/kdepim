@@ -80,4 +80,4 @@ target_link_libraries(messagecore LINK_INTERFACE_LIBRARIES
 )
 
 set_target_properties(messagecore PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
-install(TARGETS messagecore ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS messagecore ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

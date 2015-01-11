@@ -39,4 +39,4 @@ target_link_libraries(grantleethemeeditor    KF5::KIOCore KF5::PimTextEdit pimco
 )
 
 set_target_properties(grantleethemeeditor PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
-install(TARGETS grantleethemeeditor ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS grantleethemeeditor ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

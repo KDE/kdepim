@@ -77,7 +77,7 @@ target_link_libraries(kcm_kleopatra
 )
 
 if(NOT KLEO_STATIC_KCMODULES)
-  install(TARGETS kcm_kleopatra DESTINATION ${PLUGIN_INSTALL_DIR})
+  install(TARGETS kcm_kleopatra DESTINATION ${KDE_INSTALL_PLUGINDIR})
 endif()
 
 ########### install files ###############
@@ -87,6 +87,6 @@ install(FILES
   kleopatra_config_appear.desktop
   kleopatra_config_gnupgsystem.desktop
   ${_kcm_kleopatra_libkleopatraclient_extra_install_FILES}
-  DESTINATION ${SERVICES_INSTALL_DIR}
+  DESTINATION ${KDE_INSTALL_KSERVICES5DIR}
 )
 

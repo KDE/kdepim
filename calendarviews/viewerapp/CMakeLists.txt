@@ -29,5 +29,5 @@ target_link_libraries(viewerapp
 
 ########### install files ###############
 
-#install(TARGETS viewerapp ${INSTALL_TARGETS_DEFAULT_ARGS})
-#install(PROGRAMS viewerapp.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
+#install(TARGETS viewerapp ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+#install(PROGRAMS viewerapp.desktop  DESTINATION ${KDE_INSTALL_APPDIR})

@@ -1,1 +1,1 @@
-install( FILES grantleetheme.upd DESTINATION ${KCONF_UPDATE_INSTALL_DIR})
+install( FILES grantleetheme.upd DESTINATION ${KDE_INSTALL_KCONFUPDATEDIR})

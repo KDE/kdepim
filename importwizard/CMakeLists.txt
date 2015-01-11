@@ -95,5 +95,5 @@ target_link_libraries(importwizard
   messageviewer
 )
 
-install(TARGETS importwizard  ${INSTALL_TARGETS_DEFAULT_ARGS})
-install(PROGRAMS org.kde.importwizard.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(TARGETS importwizard  ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(PROGRAMS org.kde.importwizard.desktop DESTINATION ${KDE_INSTALL_APPDIR})

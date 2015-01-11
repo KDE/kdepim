@@ -25,8 +25,8 @@ target_link_libraries(kwatchgnupg
   KF5::QGpgme
 )
 
-install(TARGETS kwatchgnupg ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kwatchgnupg ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
-install(FILES images/kwatchgnupg.png images/kwatchgnupg2.png DESTINATION ${DATA_INSTALL_DIR}/kwatchgnupg/pics)
+install(FILES images/kwatchgnupg.png images/kwatchgnupg2.png DESTINATION ${KDE_INSTALL_DATADIR}/kwatchgnupg/pics)
 
-install(FILES kwatchgnupgui.rc DESTINATION ${KXMLGUI_INSTALL_DIR}/kwatchgnupg)
+install(FILES kwatchgnupgui.rc DESTINATION ${KDE_INSTALL_KXMLGUI5DIR}/kwatchgnupg)

@@ -65,12 +65,12 @@ add_executable( blogilo ${blogilo_SRCS})
 target_link_libraries( blogilo kdepim  KF5::TextEditor  KF5::WebKit KF5::Blog composereditorng  pimcommon KF5::Wallet Qt5::Sql KF5::GAPICore KF5::XmlRpcClient KF5::GAPIBlogger KF5::DBusAddons)
 
 
-install( TARGETS blogilo ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install( TARGETS blogilo ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
 
 
 ########### install files ###############
 
-install( PROGRAMS ../org.kde.blogilo.desktop  DESTINATION  ${XDG_APPS_INSTALL_DIR} )
-install( FILES ../blogilo.appdata.xml DESTINATION ${CMAKE_INSTALL_METAINFODIR})
-install( FILES blogilo.kcfg  DESTINATION  ${KCFG_INSTALL_DIR} )
-install( FILES blogiloui.rc DESTINATION  ${KXMLGUI_INSTALL_DIR}/blogilo )
+install( PROGRAMS ../org.kde.blogilo.desktop  DESTINATION  ${KDE_INSTALL_APPDIR} )
+install( FILES ../blogilo.appdata.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
+install( FILES blogilo.kcfg  DESTINATION  ${KDE_INSTALL_KCFGDIR} )
+install( FILES blogiloui.rc DESTINATION  ${KDE_INSTALL_KXMLGUI5DIR}/blogilo )

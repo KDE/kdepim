@@ -39,6 +39,6 @@ target_link_libraries(messageviewer_bodypartformatter_text_calendar
 
 target_link_libraries(messageviewer_bodypartformatter_text_calendar incidenceeditorsng)
 
-install(TARGETS messageviewer_bodypartformatter_text_calendar  DESTINATION ${PLUGIN_INSTALL_DIR})
+install(TARGETS messageviewer_bodypartformatter_text_calendar  DESTINATION ${KDE_INSTALL_PLUGINDIR})
 
-install(FILES text_calendar.desktop DESTINATION ${DATA_INSTALL_DIR}/messageviewer/plugins/bodypartformatter)
+install(FILES text_calendar.desktop DESTINATION ${KDE_INSTALL_DATADIR}/messageviewer/plugins/bodypartformatter)

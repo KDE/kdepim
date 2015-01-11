@@ -17,6 +17,6 @@ target_link_libraries(messagevieweraccessiblewidgetfactory
     Qt5::WebKitWidgets
 )
 
-install(TARGETS messagevieweraccessiblewidgetfactory DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/accessible)
+install(TARGETS messagevieweraccessiblewidgetfactory DESTINATION ${KDE_INSTALL_PLUGINDIR}/plugins/accessible)
 
 add_subdirectory(autotests)

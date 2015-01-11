@@ -113,9 +113,9 @@ target_link_libraries(akonadiconsole_bin
   Qt5::Sql
 )
 
-install(TARGETS akonadiconsole_bin ${INSTALL_TARGETS_DEFAULT_ARGS})
-install(PROGRAMS org.kde.akonadiconsole.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
-install(FILES akonadiconsoleui.rc DESTINATION ${KXMLGUI_INSTALL_DIR}/akonadiconsole)
+install(TARGETS akonadiconsole_bin ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(PROGRAMS org.kde.akonadiconsole.desktop DESTINATION ${KDE_INSTALL_APPDIR})
+install(FILES akonadiconsoleui.rc DESTINATION ${KDE_INSTALL_KXMLGUI5DIR}/akonadiconsole)
 
 add_subdirectory(icons)
 

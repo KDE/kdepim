@@ -12,4 +12,4 @@ set_target_properties(akonalendar_bin PROPERTIES OUTPUT_NAME akonalendar)
 
 target_link_libraries(akonalendar_bin KF5::AkonadiCore  KF5::KCMUtils calendarsupport)
 
-#install(TARGETS akonalendar_bin ${INSTALL_TARGETS_DEFAULT_ARGS})
+#install(TARGETS akonalendar_bin ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

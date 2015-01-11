@@ -65,4 +65,4 @@ endif()
 
 target_link_libraries(kleopatraclientcore Qt5::Widgets)
 
-install(TARGETS kleopatraclientcore ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kleopatraclientcore ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

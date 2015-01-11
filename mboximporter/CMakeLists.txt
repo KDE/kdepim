@@ -27,6 +27,6 @@ target_link_libraries(mboximporter
   mailcommon
 )
 
-install(TARGETS mboximporter  ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS mboximporter  ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
 
-install(PROGRAMS org.kde.mboximporter.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(PROGRAMS org.kde.mboximporter.desktop DESTINATION ${KDE_INSTALL_APPDIR})

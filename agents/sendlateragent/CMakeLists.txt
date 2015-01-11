@@ -34,7 +34,7 @@ target_link_libraries( sendlater KF5::AkonadiCore )
 
 set_target_properties( sendlater PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
 
-install( TARGETS sendlater ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install( TARGETS sendlater ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
 
 
 set(sendlateragent_SRCS
@@ -71,8 +71,8 @@ if (Q_WS_MAC)
   set_target_properties(akonadi_sendlater_agent PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "KDE Akonadi Send Later")
 endif ()
 
-install(TARGETS akonadi_sendlater_agent ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS akonadi_sendlater_agent ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
 
 install(FILES sendlateragent.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/akonadi/agents")
-install(FILES akonadi_sendlater_agent.notifyrc DESTINATION ${KNOTIFYRC_INSTALL_DIR} )
+install(FILES akonadi_sendlater_agent.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFY5RCDIR} )
 

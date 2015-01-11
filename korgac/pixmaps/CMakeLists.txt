@@ -1,1 +1,1 @@
-ecm_install_icons(ICONS hi128-apps-korgac.png  hi16-apps-korgac.png  hi22-apps-korgac.png  hi256-apps-korgac.png  hi32-apps-korgac.png  hi64-apps-korgac.png DESTINATION ${DATA_INSTALL_DIR}/korgac/icons)
+ecm_install_icons(ICONS hi128-apps-korgac.png  hi16-apps-korgac.png  hi22-apps-korgac.png  hi256-apps-korgac.png  hi32-apps-korgac.png  hi64-apps-korgac.png DESTINATION ${KDE_INSTALL_DATADIR}/korgac/icons)

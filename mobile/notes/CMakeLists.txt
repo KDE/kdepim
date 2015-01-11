@@ -42,8 +42,8 @@ if(RUNTIME_PLUGINS_STATIC)
   target_link_libraries(notes-mobile akonadi_serializer_mail)
 endif()
 
-install(TARGETS notes-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
-install(PROGRAMS notes-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(TARGETS notes-mobile ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(PROGRAMS notes-mobile.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 install(FILES
   BulkActionComponent.qml
   notes.qml
@@ -51,7 +51,7 @@ install(FILES
   NoteView.qml
   NotesListView.qml
   notes-mobile-background.png
-  DESTINATION ${DATA_INSTALL_DIR}/notes-mobile
+  DESTINATION ${KDE_INSTALL_DATADIR}/notes-mobile
 )
 
-ecm_install_icons(ICONS hi48-apps-notes-mobile.png  hi64-apps-notes-mobile.png  hi80-apps-notes-mobile-harmattan.png DESTINATION ${ICON_INSTALL_DIR})
+ecm_install_icons(ICONS hi48-apps-notes-mobile.png  hi64-apps-notes-mobile.png  hi80-apps-notes-mobile-harmattan.png DESTINATION ${KDE_INSTALL_ICONDIR})

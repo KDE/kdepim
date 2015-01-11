@@ -107,15 +107,15 @@ set_target_properties(messagelist PROPERTIES
   SOVERSION ${KDEPIM_LIB_SOVERSION}
 )
 
-install(TARGETS messagelist ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS messagelist ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 #install( FILES ${libmessagelist_HEADERS}
-#         DESTINATION ${INCLUDE_INSTALL_DIR}/messagelist
+#         DESTINATION ${KDE_INSTALL_INCLUDEDIR}/messagelist
 #         COMPONENT devel)
 #install( FILES ${libmessagelist_core_HEADERS}
-#         DESTINATION ${INCLUDE_INSTALL_DIR}/messagelist/core
+#         DESTINATION ${KDE_INSTALL_INCLUDEDIR}/messagelist/core
 #         COMPONENT devel)
 #install( FILES ${libmessagelist_utils_HEADERS}
-#         DESTINATION ${INCLUDE_INSTALL_DIR}/messagelist/utils
+#         DESTINATION ${KDE_INSTALL_INCLUDEDIR}/messagelist/utils
 #         COMPONENT devel)
 

@@ -36,4 +36,4 @@ target_link_libraries(calendarjanitor
                       calendarsupport
                       KF5::AkonadiCalendar)
 
-install(TARGETS calendarjanitor  ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS calendarjanitor  ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

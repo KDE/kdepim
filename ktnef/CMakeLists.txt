@@ -26,9 +26,9 @@ add_executable(ktnef ${ktnef_SRCS})
 target_link_libraries(ktnef KF5::Tnef KF5::KIOCore ) 
 
 
-install(TARGETS ktnef ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS ktnef ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
-install(PROGRAMS org.kde.ktnef.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(PROGRAMS org.kde.ktnef.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 
-install(FILES ktnefui.rc DESTINATION ${KXMLGUI_INSTALL_DIR}/ktnef)
+install(FILES ktnefui.rc DESTINATION ${KDE_INSTALL_KXMLGUI5DIR}/ktnef)
 

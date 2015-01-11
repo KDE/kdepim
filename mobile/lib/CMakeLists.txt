@@ -69,13 +69,13 @@ if (X11_FOUND)
   target_link_libraries(kdepimmobileui ${X11_LIBRARIES})
 endif()
 
-set( STYLE_IMAGE_PATH ${PLUGIN_INSTALL_DIR}/imports/org/kde/pim/mobileui/images )
+set( STYLE_IMAGE_PATH ${KDE_INSTALL_PLUGINDIR}/imports/org/kde/pim/mobileui/images )
 
 configure_file( stylesheet.css.cmake ${CMAKE_CURRENT_BINARY_DIR}/stylesheet.css )
 
 add_subdirectory(images)
 
-install(TARGETS kdepimmobileui ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kdepimmobileui ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES
   qmldir
   Action.qml
@@ -119,11 +119,11 @@ install(FILES
   SearchResultScreen.qml
   ItemEditButton.qml
   Switch.qml
-  DESTINATION ${PLUGIN_INSTALL_DIR}/imports/org/kde/pim/mobileui)
+  DESTINATION ${KDE_INSTALL_PLUGINDIR}/imports/org/kde/pim/mobileui)
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/stylesheet.css
   ScreenFunctions.js
-  DESTINATION ${DATA_INSTALL_DIR}/mobileui)
+  DESTINATION ${KDE_INSTALL_DATADIR}/mobileui)
 
 add_subdirectory( tests )
 add_subdirectory( autotests )

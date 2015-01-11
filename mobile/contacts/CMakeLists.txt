@@ -84,8 +84,8 @@ if (RUNTIME_PLUGINS_STATIC)
   target_link_libraries(kaddressbook-mobile akonadi_serializer_addressee akonadi_serializer_contactgroup)
 endif ()
 
-install(TARGETS kaddressbook-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
-install(PROGRAMS kaddressbook-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(TARGETS kaddressbook-mobile ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(PROGRAMS kaddressbook-mobile.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 install(FILES
   BulkActionComponent.qml
   ConfigDialog.qml
@@ -95,6 +95,6 @@ install(FILES
   KAddressBookActions.qml
   kaddressbook-mobile-background.png
   ContactListView.qml
-  DESTINATION ${DATA_INSTALL_DIR}/kaddressbook-mobile
+  DESTINATION ${KDE_INSTALL_DATADIR}/kaddressbook-mobile
 )
-ecm_install_icons(ICONS  hi48-apps-kaddressbook-mobile.png  hi64-apps-kaddressbook-mobile.png  hi80-apps-kaddressbook-mobile-harmattan.png DESTINATION  ${ICON_INSTALL_DIR} )
+ecm_install_icons(ICONS  hi48-apps-kaddressbook-mobile.png  hi64-apps-kaddressbook-mobile.png  hi80-apps-kaddressbook-mobile-harmattan.png DESTINATION  ${KDE_INSTALL_ICONDIR} )

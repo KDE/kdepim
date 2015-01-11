@@ -28,4 +28,4 @@ mobile_status_replied.png
 mobile_status_signed.png
 )
 
-install( FILES ${pics} DESTINATION ${DATA_INSTALL_DIR}/libmessageviewer/pics)
+install( FILES ${pics} DESTINATION ${KDE_INSTALL_DATADIR}/libmessageviewer/pics)
