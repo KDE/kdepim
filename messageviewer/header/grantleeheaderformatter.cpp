@@ -156,12 +156,12 @@ QString GrantleeHeaderFormatter::format(const QString &absolutePath, Grantlee::T
 
     if (message->headerByType("Resent-From")) {
         headerObject.insert(QLatin1String("resentfromi18n"), i18n("resent from"));
-        const QList<KMime::Types::Mailbox> resentFrom = MessageViewer::HeaderStyleUtil::resentFromList(message);
+        const QVector<KMime::Types::Mailbox> resentFrom = MessageViewer::HeaderStyleUtil::resentFromList(message);
         headerObject.insert(QLatin1String("resentfrom"), StringUtil::emailAddrAsAnchor(resentFrom, StringUtil::DisplayFullAddress));
     }
 
     if (message->headerByType("Resent-To")) {
-        const QList<KMime::Types::Mailbox> resentTo = MessageViewer::HeaderStyleUtil::resentToList(message);
+        const QVector<KMime::Types::Mailbox> resentTo = MessageViewer::HeaderStyleUtil::resentToList(message);
         headerObject.insert(QLatin1String("resenttoi18n"), i18np("receiver was", "receivers were", resentTo.count()));
         headerObject.insert(QLatin1String("resentto"), StringUtil::emailAddrAsAnchor(resentTo, StringUtil::DisplayFullAddress));
     }

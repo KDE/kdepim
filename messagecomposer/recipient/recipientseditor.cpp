@@ -90,7 +90,7 @@ bool RecipientsEditor::addRecipient(const QString &recipient, Recipient::Type ty
     return addData(Recipient::Ptr(new Recipient(recipient, type)));
 }
 
-void RecipientsEditor::setRecipientString(const QList< KMime::Types::Mailbox > &mailboxes, Recipient::Type type)
+void RecipientsEditor::setRecipientString(const QVector< KMime::Types::Mailbox > &mailboxes, Recipient::Type type)
 {
     int count = 1;
 

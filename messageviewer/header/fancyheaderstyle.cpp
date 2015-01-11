@@ -110,7 +110,7 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
     // QString::arg is not possible
     if (strategy->showHeader(QLatin1String("from"))) {
 
-        const QList<KMime::Types::Mailbox> resentFrom = MessageViewer::HeaderStyleUtil::resentFromList(message);
+        const QVector<KMime::Types::Mailbox> resentFrom = MessageViewer::HeaderStyleUtil::resentFromList(message);
         headerStr += QString::fromLatin1("<tr><th>%1</th>\n"
                                          "<td>")
                      .arg(i18n("From: "))
@@ -132,7 +132,7 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
     }
     // to line
     if (strategy->showHeader(QLatin1String("to"))) {
-        const QList<KMime::Types::Mailbox> resentTo = MessageViewer::HeaderStyleUtil::resentToList(message);
+        const QVector<KMime::Types::Mailbox> resentTo = MessageViewer::HeaderStyleUtil::resentToList(message);
 
         QString to;
         if (message->headerByType("Resent-To")) {

@@ -32,7 +32,7 @@ namespace KMime
 namespace Types
 {
 struct Address;
-typedef QList<Address> AddressList;
+typedef QVector<Address> AddressList;
 class Mailbox;
 }
 namespace Headers
@@ -177,7 +177,7 @@ MESSAGECORE_EXPORT QString emailAddrAsAnchor(KMime::Headers::Generics::AddressLi
 /**
    * Same as the above, only for Mailbox::List types.
    */
-MESSAGECORE_EXPORT QString emailAddrAsAnchor(const QList<KMime::Types::Mailbox> &mailboxList,
+MESSAGECORE_EXPORT QString emailAddrAsAnchor(const QVector<KMime::Types::Mailbox> &mailboxList,
         Display display = DisplayNameOnly,
         const QString &cssStyle = QString(),
         Link link = ShowLink,

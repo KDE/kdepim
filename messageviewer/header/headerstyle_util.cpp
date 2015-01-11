@@ -228,10 +228,10 @@ QString dateShortStr(const QDateTime &dateTime)
     return KLocale::global()->formatDateTime(dateTime, KLocale::FancyShortDate);
 }
 
-QList<KMime::Types::Mailbox> resentFromList(KMime::Message *message)
+QVector<KMime::Types::Mailbox> resentFromList(KMime::Message *message)
 {
     // Get the resent-from header into a Mailbox
-    QList<KMime::Types::Mailbox> resentFrom;
+    QVector<KMime::Types::Mailbox> resentFrom;
     if (message->headerByType("Resent-From")) {
         const QByteArray data = message->headerByType("Resent-From")->as7BitString(false);
         const char *start = data.data();
@@ -247,10 +247,10 @@ QList<KMime::Types::Mailbox> resentFromList(KMime::Message *message)
     return resentFrom;
 }
 
-QList<KMime::Types::Mailbox> resentToList(KMime::Message *message)
+QVector<KMime::Types::Mailbox> resentToList(KMime::Message *message)
 {
     // Get the resent-from header into a Mailbox
-    QList<KMime::Types::Mailbox> resentTo;
+    QVector<KMime::Types::Mailbox> resentTo;
     if (message->headerByType("Resent-To")) {
         const QByteArray data = message->headerByType("Resent-To")->as7BitString(false);
         const char *start = data.data();

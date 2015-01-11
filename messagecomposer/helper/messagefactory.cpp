@@ -184,7 +184,11 @@ MessageFactory::MessageReply MessageFactory::createReply()
             foreach (const KMime::Types::Mailbox &mailbox, m_mailingListAddresses) {
                 foreach (const KMime::Types::Mailbox &recipient, recipients) {
                     if (mailbox == recipient) {
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
                         recipients.removeAll(recipient);
+#else
+    #pragma message("Fix remove all")
+#endif
                     }
                 }
             }
@@ -264,7 +268,11 @@ MessageFactory::MessageReply MessageFactory::createReply()
             foreach (const KMime::Types::Mailbox &mailbox, m_mailingListAddresses) {
                 foreach (const KMime::Types::Mailbox &recipient, recipients) {
                     if (mailbox == recipient) {
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
                         recipients.removeAll(recipient);
+#else
+   #pragma message("Fix remove all")
+#endif
                     }
                 }
             }

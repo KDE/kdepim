@@ -64,7 +64,7 @@ public:
 
     MessageComposer::RecipientsPicker *picker() const;
 
-    void setRecipientString(const QList<KMime::Types::Mailbox> &mailboxes, Recipient::Type);
+    void setRecipientString(const QVector<KMime::Types::Mailbox> &mailboxes, Recipient::Type);
     QString recipientString(Recipient::Type) const;
     QStringList recipientStringList(Recipient::Type) const;
 

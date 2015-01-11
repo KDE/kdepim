@@ -55,8 +55,8 @@ QString dateStr(const QDateTime &dateTime);
 
 QString dateShortStr(const QDateTime &dateTime);
 
-QList<KMime::Types::Mailbox> resentFromList(KMime::Message *message);
-QList<KMime::Types::Mailbox> resentToList(KMime::Message *message);
+QVector<KMime::Types::Mailbox> resentFromList(KMime::Message *message);
+QVector<KMime::Types::Mailbox> resentToList(KMime::Message *message);
 
 struct xfaceSettings {
     xfaceSettings()
