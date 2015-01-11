@@ -2,7 +2,7 @@ set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
 add_subdirectory(gnupg_home)
 
-include_directories( ${Boost_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/messagecore )
+include_directories( ${Boost_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/messagecore ${CMAKE_BINARY_DIR}/messagecore)
 include ( ${CMAKE_SOURCE_DIR}/cmake/modules/kde4_handle_crypto_rpath_for_executable.cmake )
 
 # Convenience macro to add unit tests.
@@ -30,6 +30,8 @@ add_messagecore_test( mailinglisttest.cpp )
 
 
 set( mdnstateattributetest_source mdnstateattributetest.cpp ../misc/mdnstateattribute.cpp)
-kde4_add_unit_test(  mdnstateattributetest ${mdnstateattributetest_source})
-target_link_libraries( mdnstateattributetest ${QT_QTTEST_LIBRARY} ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY} ${KDEPIMLIBS_AKONADI_LIBS})
+add_executable(  mdnstateattributetest ${mdnstateattributetest_source})
+add_test(mdnstateattributetest mdnstateattributetest)
+ecm_mark_as_test(mdnstateattributetest)
+target_link_libraries( mdnstateattributetest Qt5::Test KF5::KDELibs4Support Qt5::Gui KF5::AkonadiCore)
 

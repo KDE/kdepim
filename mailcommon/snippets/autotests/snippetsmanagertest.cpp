@@ -18,7 +18,7 @@
 #include "snippetsmanagertest.h"
 #include "../snippetsmanager.h"
 #include <KActionCollection>
-#include <qtest_kde.h>
+#include <qtest.h>
 
 SnippetsManagerTest::SnippetsManagerTest(QObject *parent)
     : QObject(parent)
@@ -47,4 +47,4 @@ void SnippetsManagerTest::shouldHaveDefaultValue()
     QVERIFY(snippetManager.insertSnippetAction());
 }
 
-QTEST_KDEMAIN(SnippetsManagerTest, GUI)
+QTEST_MAIN(SnippetsManagerTest)

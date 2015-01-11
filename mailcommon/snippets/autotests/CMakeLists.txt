@@ -3,5 +3,7 @@ include_directories(
 )
 
 set( mailcommon_snippsettest_source snippetsmanagertest.cpp )
-kde4_add_unit_test( snippsettest ${mailcommon_snippsettest_source})
-target_link_libraries( snippsettest ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY} mailcommon)
+add_executable( snippsettest ${mailcommon_snippsettest_source})
+add_test(snippsettest snippsettest)
+ecm_mark_as_test(snippsettest)
+target_link_libraries( snippsettest Qt5::Test  Qt5::Gui mailcommon)

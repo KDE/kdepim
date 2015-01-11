@@ -56,7 +56,7 @@ add_subdirectory(pics)
 add_subdirectory(conf)
 
 if(USABLE_ASSUAN_FOUND)
-  # can't use macro_optional_add_subdirectory here, since it's split
+  # can't use ecm_optional_add_subdirectory here, since it's split
   # off into ConfigureChecks.cmake..
   add_subdirectory(libkleopatraclient)
 endif()

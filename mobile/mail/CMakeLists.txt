@@ -124,7 +124,6 @@ install(FILES
   kmail-composer.qml
   kmail-mobile.qml
   KMailComposerActions.qml
-  kmail-mobile.notifyrc
   SettingsPage.qml
   SnippetsEditor.qml
   SnippetsList.qml
@@ -135,6 +134,8 @@ install(FILES
   toggle-encryption-button.png
   DESTINATION ${KDE_INSTALL_DATADIR}/kmail-mobile
 )
+
+install(FILES kmail-mobile.notifyrc ${KDE_INSTALL_KNOTIFY5RCDIR} )
 
 ecm_install_icons(ICONS hi48-apps-kmail-mobile.png  hi64-apps-kmail-mobile.png  hi80-apps-kmail-mobile-harmattan.png DESTINATION ${KDE_INSTALL_ICONDIR})
 
