@@ -19,7 +19,7 @@ include_directories(
 
   ${AKONADI_INCLUDE_DIR}
   ${Boost_INCLUDE_DIRS}
-  ${QT_INCLUDES}
+  
   ${ZLIB_INCLUDE_DIRS}
 )
    

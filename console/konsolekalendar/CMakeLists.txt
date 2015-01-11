@@ -26,7 +26,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/calendarviews
   ${AKONADI_INCLUDE_DIR}
   ${Boost_INCLUDE_DIRS}
-  ${QT_INCLUDES}
+  
   ${ZLIB_INCLUDE_DIRS}
 )
    
