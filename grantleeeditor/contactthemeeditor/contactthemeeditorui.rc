@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="contactthemeeditor" version="1">
+<kpartgui name="contactthemeeditor" version="2">
  <MenuBar>
   <Menu name="file" >
    <Action name="new_theme" />
@@ -23,5 +23,8 @@
    <Action name="update_view" />
   </Menu>
  </MenuBar>
+ <ToolBar name="mainToolBar" fullWidth="true" >
+   <Action name="update_view" />
+ </ToolBar>
 </kpartgui>
 

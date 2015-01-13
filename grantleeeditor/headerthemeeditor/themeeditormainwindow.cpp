@@ -137,7 +137,7 @@ void ThemeEditorMainWindow::setupActions()
     connect(mManageTheme, SIGNAL(triggered(bool)),SLOT(slotManageTheme()));
     actionCollection()->addAction( QLatin1String( "manage_themes" ), mManageTheme );
 
-    mUpdateView = new KAction(i18n("Update view"), this);
+    mUpdateView = new KAction(KIcon(QLatin1String("view-refresh")), i18n("Update view"), this);
     mUpdateView->setShortcut(QKeySequence( Qt::Key_F5 ));
     connect(mUpdateView, SIGNAL(triggered(bool)),SLOT(slotUpdateView()));
     actionCollection()->addAction( QLatin1String( "update_view" ), mUpdateView );
