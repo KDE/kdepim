@@ -1373,6 +1373,10 @@ void ViewerPrivate::setMessagePart( KMime::Content * node )
 void ViewerPrivate::showHideMimeTree( )
 {
 #ifndef QT_NO_TREEVIEW
+    if (mMimePartTree->model()->rowCount() == 0) {
+        mMimePartTree->hide();
+        return;
+    }
     bool showMimeTree = false;
     if ( GlobalSettings::self()->mimeTreeMode() == GlobalSettings::EnumMimeTreeMode::Always )
     {
@@ -2525,6 +2529,11 @@ void ViewerPrivate::showOpenAttachmentFolderWidget(const KUrl &url)
 {
     mOpenAttachmentFolderWidget->setFolder(url);
     mOpenAttachmentFolderWidget->slotShowWarning();
+}
+
+bool ViewerPrivate::mimePartTreeIsEmpty() const
+{
+    return (mMimePartTree->model()->rowCount() == 0);
 }
 
 void ViewerPrivate::slotAttachmentSaveAs()

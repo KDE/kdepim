@@ -388,6 +388,12 @@ KToggleAction *Viewer::toggleFixFontAction()
     return d->mToggleFixFontAction;
 }
 
+bool Viewer::mimePartTreeIsEmpty() const
+{
+    Q_D( const Viewer );
+    return d->mimePartTreeIsEmpty();
+}
+
 KToggleAction *Viewer::toggleMimePartTreeAction()
 {
     Q_D( Viewer );

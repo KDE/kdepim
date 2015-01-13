@@ -345,6 +345,7 @@ public:
     bool isAShortUrl(const KUrl &url) const;
 
     void showOpenAttachmentFolderWidget(const KUrl &url);
+    bool mimePartTreeIsEmpty() const;
 signals:
     void moveMessageToTrash();
 
