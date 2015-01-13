@@ -483,6 +483,8 @@ public:
 
     void showOpenAttachmentFolderWidget(const KUrl &url);
 
+    bool mimePartTreeIsEmpty() const;
+
 private Q_SLOTS:
     void slotModifyItemDone(KJob *job);
     void slotMessageMayBeAScam();

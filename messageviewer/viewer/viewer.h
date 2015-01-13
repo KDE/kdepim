@@ -344,6 +344,8 @@ public:
     bool adblockEnabled() const;
     bool isAShortUrl(const QUrl &url) const;
 
+    bool mimePartTreeIsEmpty() const;
+
     void showOpenAttachmentFolderWidget(const QUrl &url);
 Q_SIGNALS:
     void moveMessageToTrash();
