@@ -541,6 +541,7 @@ void MainWidget::setupGui()
 
     // the quick search widget which is embedded in the toolbar action
     mQuickSearchWidget = new QuickSearchWidget;
+    mQuickSearchWidget->setMaximumWidth(500);
 
     // the category filter widget which is embedded in the toolbar action
     mCategorySelectWidget = new CategorySelectWidget;
