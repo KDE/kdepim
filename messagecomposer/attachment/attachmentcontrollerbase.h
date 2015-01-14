@@ -81,6 +81,7 @@ public slots:
     void addAttachmentUrlSync(const KUrl &url);
     void addAttachments( const KUrl::List &urls );
     void showAttachPublicKeyDialog();
+    void showAttachVcard();
     virtual void attachMyPublicKey();
 
 signals:

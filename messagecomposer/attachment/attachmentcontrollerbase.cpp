@@ -126,6 +126,7 @@ public:
     KActionMenu *attachmentMenu;
     QAction *addOwnVcardAction;
     QAction *reloadAttachmentAction;
+    QAction *attachVCardsAction;
 
     // If part p is compressed, uncompressedParts[p] is the uncompressed part.
     QHash<AttachmentPart::Ptr, AttachmentPart::Ptr> uncompressedParts;
@@ -155,6 +156,7 @@ AttachmentControllerBase::Private::Private( AttachmentControllerBase *qq )
     , selectAllAction( 0 )
     , attachmentMenu( 0 )
     , addOwnVcardAction( 0 )
+    , attachVCardsAction( 0 )
 {
 }
 
@@ -529,6 +531,9 @@ void AttachmentControllerBase::createActions()
     connect( d->reloadAttachmentAction, SIGNAL(triggered(bool)),
              this, SLOT(reloadAttachment()) );
 
+    d->attachVCardsAction = new KAction( KIcon( QLatin1String( "mail-attachment" ) ), i18n( "&Attach Vcards..." ), this );
+    d->attachVCardsAction->setIconText( i18n( "Attach" ) );
+    connect( d->attachVCardsAction, SIGNAL(triggered(bool)), this, SLOT(showAttachVcard()) );
 
     // Insert the actions into the composer window's menu.
     KActionCollection *collection = d->mActionCollection;
@@ -542,6 +547,7 @@ void AttachmentControllerBase::createActions()
     collection->addAction( QLatin1String( "select_all_attachment"), d->selectAllAction);
     collection->addAction( QLatin1String( "attach_menu"), d->attachmentMenu );
     collection->addAction( QLatin1String( "attach_own_vcard"), d->addOwnVcardAction );
+    collection->addAction( QLatin1String( "attach_vcards"), d->attachVCardsAction );
 
     setSelectedParts( AttachmentPart::List());
     emit actionsCreated();
@@ -835,6 +841,11 @@ void AttachmentControllerBase::attachFileDirectory(const KUrl::List &urls, const
             addAttachment( urlWithEncoding );
         }
     }
+}
+
+void AttachmentControllerBase::showAttachVcard()
+{
+    //TODO
 }
 
 void AttachmentControllerBase::showAddAttachmentCompressedDirectoryDialog()
