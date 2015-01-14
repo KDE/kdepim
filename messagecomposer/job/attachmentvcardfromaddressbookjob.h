@@ -21,7 +21,8 @@
 #include "messagecore/attachment/attachmentloadjob.h"
 #include <Akonadi/Item>
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 class AttachmentVcardFromAddressBookJob : public MessageCore::AttachmentLoadJob
 {
     Q_OBJECT

@@ -187,7 +187,7 @@ MessageFactory::MessageReply MessageFactory::createReply()
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
                         recipients.removeAll(recipient);
 #else
-    #pragma message("Fix remove all")
+#pragma message("Fix remove all")
 #endif
                     }
                 }
@@ -271,7 +271,7 @@ MessageFactory::MessageReply MessageFactory::createReply()
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
                         recipients.removeAll(recipient);
 #else
-   #pragma message("Fix remove all")
+#pragma message("Fix remove all")
 #endif
                     }
                 }

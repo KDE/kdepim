@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "attachmentvcardfromaddressbookjob.h"
 #include <KLocalizedString>
 
@@ -40,7 +39,7 @@ void AttachmentVcardFromAddressBookJob::doStart()
 
     } else {
         //TODO define error message
-        q->setError( KJob::UserDefinedError );
+        q->setError(KJob::UserDefinedError);
         //q->setErrorText( msg );
         q->emitResult();
     }
