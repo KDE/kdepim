@@ -17,11 +17,13 @@
 
 
 #include "attachmentvcardfromaddressbookjob.h"
+#include <KLocalizedString>
 
 using namespace MessageComposer;
 
-AttachmentVcardFromAddressBookJob::AttachmentVcardFromAddressBookJob(QObject *parent)
-    : MessageCore::AttachmentLoadJob(parent)
+AttachmentVcardFromAddressBookJob::AttachmentVcardFromAddressBookJob(Akonadi::Item::Id id, QObject *parent)
+    : MessageCore::AttachmentLoadJob(parent),
+      mId(id)
 {
 
 }
@@ -29,5 +31,18 @@ AttachmentVcardFromAddressBookJob::AttachmentVcardFromAddressBookJob(QObject *pa
 AttachmentVcardFromAddressBookJob::~AttachmentVcardFromAddressBookJob()
 {
 
+}
+
+void AttachmentVcardFromAddressBookJob::doStart()
+{
+    Akonadi::Item item(id);
+    if (item.isValid()) {
+
+    } else {
+        //TODO define error message
+        q->setError( KJob::UserDefinedError );
+        //q->setErrorText( msg );
+        q->emitResult();
+    }
 }
 

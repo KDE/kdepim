@@ -19,14 +19,21 @@
 #define ATTACHMENTVCARDFROMADDRESSBOOKJOB_H
 
 #include "messagecore/attachment/attachmentloadjob.h"
+#include <Akonadi/Item>
 
 namespace MessageComposer {
 class AttachmentVcardFromAddressBookJob : public MessageCore::AttachmentLoadJob
 {
     Q_OBJECT
 public:
-    explicit AttachmentVcardFromAddressBookJob(QObject *parent = 0);
+    explicit AttachmentVcardFromAddressBookJob(Akonadi::Item::Id id, QObject *parent = 0);
     ~AttachmentVcardFromAddressBookJob();
+
+protected slots:
+    virtual void doStart();
+
+private:
+    Akonadi::Item::Id mId;
 };
 }
 #endif // ATTACHMENTVCARDFROMADDRESSBOOKJOB_H
