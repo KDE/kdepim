@@ -26,14 +26,18 @@ class AttachmentVcardFromAddressBookJob : public MessageCore::AttachmentLoadJob
 {
     Q_OBJECT
 public:
-    explicit AttachmentVcardFromAddressBookJob(Akonadi::Item::Id id, QObject *parent = 0);
+    explicit AttachmentVcardFromAddressBookJob(const Akonadi::Item &item, QObject *parent = 0);
     ~AttachmentVcardFromAddressBookJob();
 
 protected slots:
     virtual void doStart();
 
+private Q_SLOTS:
+    void slotExpandGroupResult(KJob *job);
+
 private:
-    Akonadi::Item::Id mId;
+    void addAttachment(const QByteArray &data, const QString &attachmentName);
+    Akonadi::Item mItem;
 };
 }
 #endif // ATTACHMENTVCARDFROMADDRESSBOOKJOB_H

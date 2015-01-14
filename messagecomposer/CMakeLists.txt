@@ -39,6 +39,7 @@ set( messagecomposer_job_src
      job/attachmentfrompublickeyjob.cpp
      job/distributionlistexpandjob.cpp
      job/savecontactpreferencejob.cpp
+     job/attachmentvcardfromaddressbookjob.cpp
 )
 
 set( messagecomposer_composer_src
