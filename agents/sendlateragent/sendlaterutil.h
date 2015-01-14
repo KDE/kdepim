@@ -40,6 +40,7 @@ namespace SendLaterUtil
     SENDLATER_EXPORT void changeRecurrentDate(SendLater::SendLaterInfo *info);
     SENDLATER_EXPORT void forceReparseConfiguration();
 
+    QDateTime updateRecurence(SendLater::SendLaterInfo *info, QDateTime dateTime);
     static QString sendLaterPattern = QLatin1String("SendLaterItem %1");
 }
 }
