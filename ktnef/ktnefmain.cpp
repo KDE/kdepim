@@ -24,6 +24,8 @@
 #include <KTNEF/KTNEFParser>
 #include <KTNEF/KTNEFProperty>
 
+#include <KFileItemActions>
+#include <kservice.h>
 #include <QAction>
 #include <KActionCollection>
 #include <QDebug>
@@ -414,14 +416,10 @@ void KTNEFMain::contextMenuEvent(QContextMenuEvent *event)
         return;
     }
 
-    QAction *view = 0;
-    QAction *viewWith = 0;
     QAction *prop = 0;
     QMenu *menu = new QMenu();
     if (list.count() == 1) {
-        view = menu->addAction(QIcon::fromTheme(QLatin1String("document-open")),
-                               i18nc("@action:inmenu", "View"));
-        viewWith = menu->addAction(i18nc("@action:inmenu", "View With..."));
+        createOpenWithMenu(menu);
         menu->addSeparator();
     }
     QAction *extract = menu->addAction(i18nc("@action:inmenu", "Extract"));
@@ -435,11 +433,7 @@ void KTNEFMain::contextMenuEvent(QContextMenuEvent *event)
 
     QAction *a = menu->exec(event->globalPos(), 0);
     if (a) {
-        if (a == view) {
-            viewFile();
-        } else if (a == viewWith) {
-            viewFileAs();
-        } else if (a == extract) {
+        if (a == extract) {
             extractFile();
         } else if (a == extractTo) {
             extractFileTo();
@@ -543,3 +537,91 @@ void KTNEFMain::slotSaveMessageText()
     }
 }
 
+void KTNEFMain::openWith(KService::Ptr offer)
+{
+    if ( !mView->getSelection().isEmpty() ) {
+        KTNEFAttach *attach = mView->getSelection().first();
+        QUrl url = QUrl::fromLocalFile( QLatin1String("file:") + extractTemp( attach ) );
+        QList<QUrl> lst;
+        lst.append( url );
+        bool result = false;
+        if(offer) {
+            result = KRun::run( *offer, lst, this, false );
+        } else {
+            result = KRun::displayOpenWithDialog( lst, this, false );
+        }
+    }
+}
+
+QAction* KTNEFMain::createAppAction(const KService::Ptr& service, bool singleOffer, QActionGroup *actionGroup, QObject *parent )
+{
+    QString actionName(service->name().replace(QLatin1Char('&'), QLatin1String("&&")));
+    if (singleOffer) {
+        actionName = i18n("Open &with %1", actionName);
+    } else {
+        actionName = i18nc("@item:inmenu Open With, %1 is application name", "%1", actionName);
+    }
+
+    QAction *act = new QAction(parent);
+    act->setIcon(QIcon::fromTheme(service->icon()));
+    act->setText(actionName);
+    actionGroup->addAction( act );
+    act->setData(QVariant::fromValue(service));
+    return act;
+}
+
+void KTNEFMain::createOpenWithMenu( QMenu *topMenu )
+{
+    if (mView->getSelection().isEmpty())
+        return;
+    KTNEFAttach *attach = mView->getSelection().first();
+    QString mimename( attach->mimeTag() );
+
+    const KService::List offers = KFileItemActions::associatedApplications(QStringList()<<mimename, QString() );
+    if (!offers.isEmpty()) {
+        QMenu* menu = topMenu;
+        QActionGroup *actionGroup = new QActionGroup( menu );
+        connect( actionGroup, SIGNAL(triggered(QAction*)), this, SLOT(slotOpenWithAction(QAction*)) );
+
+        if (offers.count() > 1) { // submenu 'open with'
+            menu = new QMenu(i18nc("@title:menu", "&Open With"), topMenu);
+            menu->menuAction()->setObjectName(QLatin1String("openWith_submenu")); // for the unittest
+            topMenu->addMenu(menu);
+        }
+        //kDebug() << offers.count() << "offers" << topMenu << menu;
+
+        KService::List::ConstIterator it = offers.constBegin();
+        KService::List::ConstIterator end = offers.constEnd();
+        for(; it != end; ++it) {
+            QAction* act = createAppAction(*it,
+                                           // no submenu -> prefix single offer
+                                           menu == topMenu, actionGroup,menu);
+            menu->addAction(act);
+        }
+
+        QString openWithActionName;
+        if (menu != topMenu) { // submenu
+            menu->addSeparator();
+            openWithActionName = i18nc("@action:inmenu Open With", "&Other...");
+        } else {
+            openWithActionName = i18nc("@title:menu", "&Open With...");
+        }
+        QAction *openWithAct = new QAction(menu);
+        openWithAct->setText(openWithActionName);
+        connect(openWithAct, SIGNAL(triggered()), this, SLOT(viewFileAs()));
+        menu->addAction(openWithAct);
+    }
+    else { // no app offers -> Open With...
+        QAction *act = new QAction(topMenu);
+        act->setText(i18nc("@title:menu", "&Open With..."));
+        connect(act, SIGNAL(triggered()), this, SLOT(viewFileAs()));
+        topMenu->addAction(act);
+    }
+}
+
+void KTNEFMain::slotOpenWithAction(QAction*act)
+{
+    KService::Ptr app = act->data().value<KService::Ptr>();
+
+    openWith(app);
+}

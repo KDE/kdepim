@@ -18,7 +18,9 @@
 #define KTNEFMAIN_H
 
 #include <KXmlGuiWindow>
-
+#include <KService>
+class QActionGroup;
+class QAction;
 class QContextMenuEvent;
 class QTreeWidgetItem;
 class KRecentFilesAction;
@@ -71,6 +73,9 @@ protected Q_SLOTS:
 //  protected:
 //    void closeEvent( QCloseEvent *e );
 
+private slots:
+    void slotOpenWithAction(QAction *act);
+
 private:
     void addRecentFile(const QUrl &url);
     void setupStatusbar();
@@ -83,6 +88,10 @@ private:
     void extractTo(const QString &dirname);
     QString extractTemp(KTNEFAttach *att);
 
+    void openWith(KService::Ptr offer);
+    void createOpenWithMenu(QMenu *topMenu);
+    QAction *createAppAction(const KService::Ptr &service, bool singleOffer, QActionGroup *actionGroup, QObject *parent);
+
 private:
     KTNEFView *mView;
     KTNEFParser *mParser;
@@ -91,5 +100,5 @@ private:
     QString mLastDir;
     KRecentFilesAction *mOpenRecentFileAction;
 };
-
+Q_DECLARE_METATYPE(KService::Ptr)
 #endif
