@@ -82,6 +82,7 @@ MESSAGECOMPOSER_EXPORT bool sendMailDispatcherIsOnline(QWidget *parent = Q_NULLP
 MESSAGECOMPOSER_EXPORT QString rot13(const QString &s);
 MESSAGECOMPOSER_EXPORT void addTextBox(QTextEdit *edit);
 MESSAGECOMPOSER_EXPORT void removeNotNecessaryHeaders(const KMime::Message::Ptr &msg);
+MESSAGECOMPOSER_EXPORT void adaptVcard(QByteArray &data);
 }
 
 }
