@@ -22,6 +22,7 @@ set(libmailimporter_SRCS
   filter_lnotes.cpp
   filter_kmail_archive.cpp
   filter_mailmangzip.cpp
+  filtericedove.cpp
   filterbalsa.cpp 
   selectthunderbirdprofilewidget.cpp 
   othermailerutil.cpp

@@ -105,14 +105,18 @@ QMap<QString,QString> FilterThunderbird::listProfile(QString&currentProfile)
 
 }
 
-/** Recursive import of Evolution's mboxes. */
+QString FilterThunderbird::settingsPath()
+{
+    return FilterThunderbird::defaultSettingsPath();
+}
+
 void FilterThunderbird::import()
 {
     /**
    * We ask the user to choose Thunderbird's root directory.
    * This should be usually ~/.thunderbird/xxxx.default/Mail/Local Folders/
    */
-    QString thunderDir = defaultSettingsPath();
+    QString thunderDir = settingsPath();
     QDir d( thunderDir );
     if ( !d.exists() ) {
         thunderDir = QDir::homePath();

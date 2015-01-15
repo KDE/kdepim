@@ -39,6 +39,8 @@ public:
     static QString defaultProfile(QWidget *parent = 0);
     static QMap<QString, QString> listProfile(QString&currentProfile);
 
+protected:
+    virtual QString settingsPath();
 private:
     void importDirContents(const QString&, const QString&, const QString&);
     void importMBox(const QString&, const QString&, const QString&);
