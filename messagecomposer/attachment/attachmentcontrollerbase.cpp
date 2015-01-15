@@ -25,6 +25,7 @@
 #include "messagecomposer/attachment/attachmentmodel.h"
 #include "messagecomposer/job/attachmentjob.h"
 #include "messagecomposer/job/attachmentfrompublickeyjob.h"
+#include "messagecomposer/job/attachmentvcardfromaddressbookjob.h"
 #include "messagecomposer/composer/composer.h"
 
 #include "messagecomposer/part/globalpart.h"
@@ -37,6 +38,7 @@
 
 #include <QMenu>
 #include <QPointer>
+#include <QTreeView>
 
 #include <KAction>
 #include <KActionCollection>
@@ -66,6 +68,8 @@
 #include <messagecore/attachment/attachmentfromurlutils.h>
 #include <settings/messagecomposersettings.h>
 #include <KIO/Job>
+#include <Akonadi/Contact/EmailAddressSelectionDialog>
+#include <Akonadi/Contact/EmailAddressSelectionWidget>
 
 #include <KMime/Content>
 
@@ -91,6 +95,7 @@ public:
     void editDone( MessageViewer::EditorWatcher *watcher ); // slot
     void attachPublicKeyJobResult( KJob *job ); // slot
     void slotAttachmentContentCreated( KJob *job ); // slot
+    void attachVcardFromAddressBook( KJob *job ); //slot
     void addAttachmentPart( AttachmentPart::Ptr part );
     void selectedAllAttachment();
     void createOpenWithMenu( QMenu *topMenu, AttachmentPart::Ptr part );
@@ -411,6 +416,18 @@ void AttachmentControllerBase::Private::attachPublicKeyJobResult( KJob *job )
     q->addAttachment( part );
 }
 
+void AttachmentControllerBase::Private::attachVcardFromAddressBook( KJob *job )
+{
+    if( job->error() ) {
+        qDebug()<<" Error during when get vcard";
+        return;
+    }
+
+    MessageComposer::AttachmentVcardFromAddressBookJob *ajob = static_cast<MessageComposer::AttachmentVcardFromAddressBookJob*>( job );
+    AttachmentPart::Ptr part = ajob->attachmentPart();
+    q->addAttachment( part );
+}
+
 
 static KTemporaryFile *dumpAttachmentToTempFile( const AttachmentPart::Ptr part ) // local
 {
@@ -485,10 +502,17 @@ void AttachmentControllerBase::createActions()
     d->addOwnVcardAction->setCheckable(true);
     connect(d->addOwnVcardAction, SIGNAL(triggered(bool)), this, SIGNAL(addOwnVcard(bool)));
 
+    d->attachVCardsAction = new KAction( KIcon( QLatin1String( "mail-attachment" ) ), i18n( "&Attach Vcards..." ), this );
+    d->attachVCardsAction->setIconText( i18n( "Attach" ) );
+    connect( d->attachVCardsAction, SIGNAL(triggered(bool)), this, SLOT(showAttachVcard()) );
+
+
     d->attachmentMenu->addAction(d->addAttachmentFileAction);
     d->attachmentMenu->addAction(d->addAttachmentDirectoryAction);
     d->attachmentMenu->addSeparator();
     d->attachmentMenu->addAction(d->addOwnVcardAction);
+    d->attachmentMenu->addSeparator();
+    d->attachmentMenu->addAction(d->attachVCardsAction);
 
     d->removeAction = new KAction( KIcon(QLatin1String("edit-delete")), i18n( "&Remove Attachment" ), this );
     d->removeContextAction = new KAction( KIcon(QLatin1String("edit-delete")), i18n( "Remove" ), this ); // FIXME need two texts. is there a better way?
@@ -531,9 +555,6 @@ void AttachmentControllerBase::createActions()
     connect( d->reloadAttachmentAction, SIGNAL(triggered(bool)),
              this, SLOT(reloadAttachment()) );
 
-    d->attachVCardsAction = new KAction( KIcon( QLatin1String( "mail-attachment" ) ), i18n( "&Attach Vcards..." ), this );
-    d->attachVCardsAction->setIconText( i18n( "Attach" ) );
-    connect( d->attachVCardsAction, SIGNAL(triggered(bool)), this, SLOT(showAttachVcard()) );
 
     // Insert the actions into the composer window's menu.
     KActionCollection *collection = d->mActionCollection;
@@ -845,7 +866,17 @@ void AttachmentControllerBase::attachFileDirectory(const KUrl::List &urls, const
 
 void AttachmentControllerBase::showAttachVcard()
 {
-    //TODO
+    QPointer<Akonadi::EmailAddressSelectionDialog> dlg = new Akonadi::EmailAddressSelectionDialog(d->wParent);
+    dlg->view()->view()->setSelectionMode( QAbstractItemView::MultiSelection );
+    if (dlg->exec()) {
+        const Akonadi::EmailAddressSelection::List selectedEmail = dlg->selectedAddresses();
+        Q_FOREACH (const Akonadi::EmailAddressSelection& selected, selectedEmail) {
+            MessageComposer::AttachmentVcardFromAddressBookJob *ajob = new MessageComposer::AttachmentVcardFromAddressBookJob( selected.item(), this);
+            connect( ajob, SIGNAL(result(KJob*)), this, SLOT(attachVcardFromAddressBook(KJob*)) );
+            ajob->start();
+        }
+    }
+    delete dlg;
 }
 
 void AttachmentControllerBase::showAddAttachmentCompressedDirectoryDialog()
