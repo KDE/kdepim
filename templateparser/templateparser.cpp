@@ -297,7 +297,7 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
     QString plainBody, htmlBody;
 
     bool dnl = false;
-    KLocale *definedLocale = KGlobal::locale();
+    KLocale *definedLocale = KLocale::global();
     bool needToDeleteLocale = false;
     for (int i = 0; i < tmpl_len; ++i) {
         QChar c = tmpl[i];
@@ -322,7 +322,7 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 const int len = parseQuotes(QLatin1String("LANGUAGE="), cmd, q);
                 i += len;
                 if (!q.isEmpty()) {
-                    if (KGlobal::locale()->installedLanguages().contains(q)) {
+                    if (KLocale::global()->installedLanguages().contains(q)) {
                         if (needToDeleteLocale) {
                             delete definedLocale;
                         }

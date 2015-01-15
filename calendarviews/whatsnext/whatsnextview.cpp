@@ -98,12 +98,12 @@ void WhatsNextView::updateView()
 
     mText += QLatin1String("<h2>");
     if (mStartDate.daysTo(mEndDate) < 1) {
-        mText += KGlobal::locale()->formatDate(mStartDate);
+        mText += KLocale::global()->formatDate(mStartDate);
     } else {
         mText += i18nc(
                      "date from - to", "%1 - %2",
-                     KGlobal::locale()->formatDate(mStartDate),
-                     KGlobal::locale()->formatDate(mEndDate));
+                     KLocale::global()->formatDate(mStartDate),
+                     KLocale::global()->formatDate(mEndDate));
     }
     mText += QLatin1String("</h2>\n");
 
