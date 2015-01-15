@@ -27,6 +27,7 @@
 #include <KGuiItem>
 #include <QDialogButtonBox>
 #include <QPushButton>
+#include <KSharedConfig>
 
 MessagePropertyDialog::MessagePropertyDialog(QWidget *parent, KTNEFMessage *msg)
     : QDialog(parent)
@@ -60,7 +61,13 @@ MessagePropertyDialog::MessagePropertyDialog(QWidget *parent, KTNEFMessage *msg)
 
     KGuiItem::assign(user1Button, KStandardGuiItem::save());
     AttachPropertyDialog::formatPropertySet(mMessage, mListView);
+    readConfig();
 
+}
+
+MessagePropertyDialog::~MessagePropertyDialog()
+{
+    writeConfig();
 }
 
 void MessagePropertyDialog::slotSaveProperty()
@@ -68,3 +75,18 @@ void MessagePropertyDialog::slotSaveProperty()
     AttachPropertyDialog::saveProperty(mListView, mMessage, this);
 }
 
+void MessagePropertyDialog::readConfig()
+{
+    KConfigGroup group( KSharedConfig::openConfig(), "MessagePropertyDialog" );
+    const QSize size = group.readEntry( "Size", QSize(600, 400) );
+    if ( size.isValid() ) {
+        resize( size );
+    }
+}
+
+void MessagePropertyDialog::writeConfig()
+{
+    KConfigGroup group( KSharedConfig::openConfig(), "MessagePropertyDialog" );
+    group.writeEntry( "Size", size() );
+    group.sync();
+}

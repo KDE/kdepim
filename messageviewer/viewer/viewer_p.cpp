@@ -1415,7 +1415,7 @@ void ViewerPrivate::setMessagePart(KMime::Content *node)
 void ViewerPrivate::showHideMimeTree()
 {
 #ifndef QT_NO_TREEVIEW
-    if (mimePartTreeIsEmpty() && !mMimePartTree->isHidden()) {
+    if (mimePartTreeIsEmpty()) {
         mMimePartTree->hide();
         return;
     }

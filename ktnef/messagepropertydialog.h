@@ -32,11 +32,13 @@ class MessagePropertyDialog : public QDialog
     Q_OBJECT
 public:
     explicit MessagePropertyDialog(QWidget *parent, KTNEFMessage *msg);
-
+    ~MessagePropertyDialog();
 private Q_SLOTS:
     void slotSaveProperty();
 
 private:
+    void readConfig();
+    void writeConfig();
     KTNEFMessage *mMessage;
     QTreeWidget *mListView;
 };
