@@ -31,11 +31,13 @@ class MessagePropertyDialog : public KDialog
   Q_OBJECT
   public:
     explicit MessagePropertyDialog( QWidget *parent, KTNEFMessage *msg );
-
+    ~MessagePropertyDialog();
   private slots:
     void slotUser1();
 
   private:
+    void readConfig();
+    void writeConfig();
     KTNEFMessage *mMessage;
     QTreeWidget *mListView;
 };

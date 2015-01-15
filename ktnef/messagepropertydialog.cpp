@@ -42,6 +42,12 @@ MessagePropertyDialog::MessagePropertyDialog( QWidget *parent, KTNEFMessage *msg
   setMainWidget( mListView );
   setButtonGuiItem(KDialog::User1,KStandardGuiItem::save());
   AttachPropertyDialog::formatPropertySet( mMessage, mListView );
+  readConfig();
+}
+
+MessagePropertyDialog::~MessagePropertyDialog()
+{
+    writeConfig();
 }
 
 void MessagePropertyDialog::slotUser1()
@@ -49,3 +55,18 @@ void MessagePropertyDialog::slotUser1()
   AttachPropertyDialog::saveProperty( mListView, mMessage, this );
 }
 
+void MessagePropertyDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "MessagePropertyDialog" );
+    const QSize size = group.readEntry( "Size", QSize(600, 400) );
+    if ( size.isValid() ) {
+        resize( size );
+    }
+}
+
+void MessagePropertyDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "MessagePropertyDialog" );
+    group.writeEntry( "Size", size() );
+    group.sync();
+}
