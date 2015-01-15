@@ -1382,7 +1382,7 @@ void ViewerPrivate::setMessagePart( KMime::Content * node )
 void ViewerPrivate::showHideMimeTree( )
 {
 #ifndef QT_NO_TREEVIEW
-    if (mimePartTreeIsEmpty() && !mMimePartTree->isHidden()) {
+    if (mimePartTreeIsEmpty()) {
         mMimePartTree->hide();
         return;
     }
@@ -1426,7 +1426,6 @@ void ViewerPrivate::adjustLayout()
     else
         mSplitter->insertWidget( 0, mMimePartTree );
     mSplitter->setSizes( splitterSizes );
-
     if ( GlobalSettings::self()->mimeTreeMode() == GlobalSettings::EnumMimeTreeMode::Always &&
          mMsgDisplay )
         mMimePartTree->show();
