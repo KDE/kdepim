@@ -23,6 +23,7 @@
 #include <KStandardGuiItem>
 
 #include <QTreeWidget>
+#include <QHeaderView>
 
 MessagePropertyDialog::MessagePropertyDialog( QWidget *parent, KTNEFMessage *msg )
   : KDialog( parent )
@@ -62,11 +63,16 @@ void MessagePropertyDialog::readConfig()
     if ( size.isValid() ) {
         resize( size );
     }
+    const QByteArray headerState = group.readEntry( "HeaderState" , QByteArray());
+    if (!headerState.isEmpty()) {
+        mListView->header()->restoreState(headerState);
+    }
 }
 
 void MessagePropertyDialog::writeConfig()
 {
     KConfigGroup group( KGlobal::config(), "MessagePropertyDialog" );
     group.writeEntry( "Size", size() );
+    group.writeEntry( "HeaderState" , mListView->header()->saveState());
     group.sync();
 }
