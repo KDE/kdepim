@@ -42,8 +42,8 @@ public:
     explicit IncidenceCategories(Ui::EventOrTodoDesktop *ui);
 #endif
 
-    virtual void load(const KCalCore::Incidence::Ptr &incidence);
-    virtual void save(const KCalCore::Incidence::Ptr &incidence);
+    void load(const KCalCore::Incidence::Ptr &incidence) Q_DECL_OVERRIDE;
+    void save(const KCalCore::Incidence::Ptr &incidence) Q_DECL_OVERRIDE;
 
     /**
      * Sets the currently selected categories.
@@ -55,9 +55,9 @@ public:
      */
     QStringList categories() const;
 
-    virtual bool isDirty() const;
+    bool isDirty() const Q_DECL_OVERRIDE;
     /**reimp*/
-    void printDebugInfo() const;
+    void printDebugInfo() const Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void selectCategories();

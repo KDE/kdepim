@@ -43,8 +43,8 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-    virtual QVariant headerData(int section, Qt::Orientation orientation,
-                                int role = Qt::DisplayRole) const;
+    QVariant headerData(int section, Qt::Orientation orientation,
+                                int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     /**
       Reimplemented from QAbstractItemModel.
     */

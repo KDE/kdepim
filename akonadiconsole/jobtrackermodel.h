@@ -32,7 +32,7 @@ public:
     virtual ~JobTrackerModel();
 
     /* QAIM API */
-    virtual QModelIndex index(int, int, const QModelIndex &) const;
+    QModelIndex index(int, int, const QModelIndex &) const Q_DECL_OVERRIDE;
     QModelIndex parent(const QModelIndex &) const Q_DECL_OVERRIDE;
     int rowCount(const QModelIndex &) const Q_DECL_OVERRIDE;
     int columnCount(const QModelIndex &) const Q_DECL_OVERRIDE;
