@@ -15,22 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FILTERICEDOVE_H
-#define FILTERICEDOVE_H
+#ifndef FILTERICEDOVETEST_H
+#define FILTERICEDOVETEST_H
 
-#include "filter_thunderbird.h"
-namespace MailImporter {
-class MAILIMPORTER_EXPORT FilterIcedove : public FilterThunderbird
+#include <QObject>
+
+class FilterIcedoveTest : public QObject
 {
+    Q_OBJECT
 public:
-    FilterIcedove();
-    ~FilterIcedove();
-
-    static QString defaultSettingsPath();
-protected:
-    QString defaultInstallFolder() const;
-    QString settingsPath();
+    explicit FilterIcedoveTest(QObject *parent = 0);
+    ~FilterIcedoveTest();
+private slots:
+    void shouldHaveDefaultSettingsPath();
 };
-}
 
-#endif // FILTERICEDOVE_H
+#endif // FILTERICEDOVETEST_H

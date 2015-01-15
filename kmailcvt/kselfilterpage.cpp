@@ -34,6 +34,7 @@
 #include <filter_thebat.h>
 #include <filter_lnotes.h>
 #include <filter_mailmangzip.h>
+#include <filtericedove.h>
 
 #include <filters.h>
 
@@ -76,6 +77,7 @@ KSelFilterPage::KSelFilterPage(QWidget *parent )
     addFilter(new MailImporter::FilterOpera);
     addFilter(new MailImporter::FilterSylpheed);
     addFilter(new MailImporter::FilterThunderbird);
+    addFilter(new MailImporter::FilterIcedove);
     addFilter(new MailImporter::FilterTheBat);
     addFilter(new MailImporter::FilterOE);
     addFilter(new MailImporter::FilterPMail);

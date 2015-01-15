@@ -105,6 +105,11 @@ QMap<QString,QString> FilterThunderbird::listProfile(QString&currentProfile)
 
 }
 
+QString FilterThunderbird::defaultInstallFolder() const
+{
+    return QLatin1String("Thunderbird-Import/");
+}
+
 QString FilterThunderbird::settingsPath()
 {
     return FilterThunderbird::defaultSettingsPath();
@@ -299,9 +304,9 @@ void FilterThunderbird::importMBox(const QString &mboxName, const QString &rootD
             if(!targetDir.isNull()) {
                 if(_targetDir.contains(".sbd"))
                     _targetDir.remove(".sbd");
-                destFolder += "Thunderbird-Import/" + _targetDir + '/' + filenameInfo.completeBaseName();// mboxName;
+                destFolder += defaultInstallFolder() + _targetDir + '/' + filenameInfo.completeBaseName();// mboxName;
             } else {
-                destFolder = "Thunderbird-Import/" + rootDir;
+                destFolder = defaultInstallFolder() + rootDir;
                 if(destFolder.contains(".sbd"))
                     destFolder.remove(".sbd");
             }

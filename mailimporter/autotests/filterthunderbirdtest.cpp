@@ -15,22 +15,36 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FILTERICEDOVE_H
-#define FILTERICEDOVE_H
+#include "filterthunderbirdtest.h"
+#include "mailimporter/filter_thunderbird.h"
+#include <qtest_kde.h>
 
-#include "filter_thunderbird.h"
-namespace MailImporter {
-class MAILIMPORTER_EXPORT FilterIcedove : public FilterThunderbird
+class FilterThunderBirdAbstract : public MailImporter::FilterThunderbird
 {
 public:
-    FilterIcedove();
-    ~FilterIcedove();
+    FilterThunderBirdAbstract() {
 
-    static QString defaultSettingsPath();
-protected:
-    QString defaultInstallFolder() const;
-    QString settingsPath();
+    }
+    QString settingsPath() {
+        return MailImporter::FilterThunderbird::settingsPath();
+    }
 };
+
+FilterThunderBirdTest::FilterThunderBirdTest(QObject *parent)
+    : QObject(parent)
+{
+
 }
 
-#endif // FILTERICEDOVE_H
+FilterThunderBirdTest::~FilterThunderBirdTest()
+{
+
+}
+
+void FilterThunderBirdTest::shouldHaveDefaultSettingsPath()
+{
+    FilterThunderBirdAbstract filter;
+    QCOMPARE(filter.settingsPath(), MailImporter::FilterThunderbird::defaultSettingsPath() );
+}
+
+QTEST_KDEMAIN(FilterThunderBirdTest, GUI)

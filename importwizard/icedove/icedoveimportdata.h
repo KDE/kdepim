@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2015 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2015 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -14,23 +14,31 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
+#ifndef IcedoveImportData_H
+#define IcedoveImportData_H
 
-#ifndef FILTERICEDOVE_H
-#define FILTERICEDOVE_H
+#include "abstractimporter.h"
+class ImportWizard;
 
-#include "filter_thunderbird.h"
-namespace MailImporter {
-class MAILIMPORTER_EXPORT FilterIcedove : public FilterThunderbird
+class IcedoveImportData : public AbstractImporter
 {
 public:
-    FilterIcedove();
-    ~FilterIcedove();
+    explicit IcedoveImportData(ImportWizard *parent);
+    ~IcedoveImportData();
+    
+    TypeSupportedOptions supportedOption();
+    bool foundMailer() const;
 
-    static QString defaultSettingsPath();
-protected:
-    QString defaultInstallFolder() const;
-    QString settingsPath();
+    bool importSettings();
+    bool importMails();
+    bool importFilters();
+    bool importAddressBook();
+    QString name() const;
+private:
+    QString defaultProfile();
+
+    QString mDefaultProfile;
 };
-}
 
-#endif // FILTERICEDOVE_H
+#endif /* IcedoveImportData_H */
+

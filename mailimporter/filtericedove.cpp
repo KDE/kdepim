@@ -16,11 +16,21 @@
 */
 
 #include "filtericedove.h"
+#include <KLocalizedString>
 using namespace MailImporter;
 
 FilterIcedove::FilterIcedove()
     : FilterThunderbird()
 {
+    setName(i18n( "Import Icedove Mails and Folder Structure" ));
+    setAuthor("Laurent Montel");
+    setInfo(i18n("<p><b>Icedove import filter</b></p>"
+                 "<p>Select your base Icedove mailfolder"
+                 " (usually ~/.icedove/*.default/Mail/Local Folders/).</p>"
+                 "<p><b>Note:</b> Never choose a Folder which <u>does not</u> contain mbox-files (for example,"
+                 " a maildir): if you do, you will get many new folders.</p>"
+                 "<p>Since it is possible to recreate the folder structure, the folders "
+                 "will be stored under: \"Icedove-Import\".</p>"));
 
 }
 
@@ -37,4 +47,9 @@ QString FilterIcedove::settingsPath()
 QString FilterIcedove::defaultSettingsPath()
 {
     return QDir::homePath() + QLatin1String( "/.icedove/" );
+}
+
+QString FilterIcedove::defaultInstallFolder() const
+{
+    return QLatin1String("Icedove-Import/");
 }

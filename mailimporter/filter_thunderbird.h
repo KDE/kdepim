@@ -22,7 +22,7 @@
 #include "filters.h"
 
 /**
- * Imports Thinderbird mail folder recursively, keeping the folder structure.
+ * Imports Thunderbird mail folder recursively, keeping the folder structure.
  * @author Danny Kukawka
  */
 namespace MailImporter {
@@ -40,6 +40,7 @@ public:
     static QMap<QString, QString> listProfile(QString&currentProfile);
 
 protected:
+    virtual QString defaultInstallFolder() const;
     virtual QString settingsPath();
 private:
     void importDirContents(const QString&, const QString&, const QString&);

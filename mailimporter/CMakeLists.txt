@@ -47,3 +47,4 @@ target_link_libraries(mailimporter
 set_target_properties(mailimporter PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS mailimporter ${INSTALL_TARGETS_DEFAULT_ARGS})
 
+add_subdirectory(autotests)

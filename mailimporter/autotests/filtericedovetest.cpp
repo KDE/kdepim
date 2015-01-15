@@ -15,22 +15,37 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FILTERICEDOVE_H
-#define FILTERICEDOVE_H
+#include "filtericedovetest.h"
+#include "mailimporter/filtericedove.h"
+#include <qtest_kde.h>
 
-#include "filter_thunderbird.h"
-namespace MailImporter {
-class MAILIMPORTER_EXPORT FilterIcedove : public FilterThunderbird
+class FilterIcecoveAbstract : public MailImporter::FilterIcedove
 {
 public:
-    FilterIcedove();
-    ~FilterIcedove();
+    FilterIcecoveAbstract() {
 
-    static QString defaultSettingsPath();
-protected:
-    QString defaultInstallFolder() const;
-    QString settingsPath();
+    }
+    QString settingsPath() {
+        return MailImporter::FilterIcedove::settingsPath();
+    }
 };
+
+FilterIcedoveTest::FilterIcedoveTest(QObject *parent)
+    : QObject(parent)
+{
+
 }
 
-#endif // FILTERICEDOVE_H
+FilterIcedoveTest::~FilterIcedoveTest()
+{
+
+}
+
+void FilterIcedoveTest::shouldHaveDefaultSettingsPath()
+{
+    FilterIcecoveAbstract filter;
+    QCOMPARE(filter.settingsPath(), MailImporter::FilterIcedove::defaultSettingsPath() );
+}
+
+
+QTEST_KDEMAIN(FilterIcedoveTest, GUI)
