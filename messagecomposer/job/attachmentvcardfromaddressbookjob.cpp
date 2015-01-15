@@ -70,15 +70,13 @@ void AttachmentVcardFromAddressBookJob::doStart()
             connect( expandJob, SIGNAL(result(KJob*)), this, SLOT(slotExpandGroupResult(KJob*)) );
             expandJob->start();
         } else {
-            //TODO define error message
             setError( KJob::UserDefinedError );
-            //q->setErrorText( msg );
+            setErrorText( i18n("Unknow Contact Type") );
             emitResult();
         }
     } else {
-        //TODO define error message
         setError( KJob::UserDefinedError );
-        //q->setErrorText( msg );
+        setErrorText( i18n("Invalid Contact") );
         emitResult();
     }
 }
@@ -95,7 +93,7 @@ void AttachmentVcardFromAddressBookJob::slotExpandGroupResult(KJob* job)
         addAttachment( groupData, attachmentName );
     } else {
         setError( KJob::UserDefinedError );
-        //q->setErrorText( msg );
+        setErrorText( i18n("Impossible to generate vcard.") );
         emitResult();
     }
 }
