@@ -29,6 +29,8 @@
 
 int main(int argc, char *argv[])
 {
+    QApplication app(argc, argv);
+
     Kdelibs4ConfigMigrator migrate(QLatin1String("importwizard"));
     migrate.setConfigFiles(QStringList() << QLatin1String("importwizardrc"));
     migrate.migrate();
@@ -48,8 +50,6 @@ int main(int argc, char *argv[])
     aboutData.setProductName(QByteArray("importwizard"));
 
     KAboutData::setApplicationData(aboutData);
-
-    QApplication app(argc, argv);
 
     KDBusService service();
 

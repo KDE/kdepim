@@ -34,6 +34,8 @@
 
 int main(int argc, char *argv[])
 {
+    QApplication app(argc, argv);
+
     Kdelibs4ConfigMigrator migrate(QLatin1String("blogilo"));
     migrate.setConfigFiles(QStringList() << QLatin1String("blogilorc"));
     migrate.setUiFiles(QStringList() << QLatin1String("blogiloui.rc"));
@@ -52,7 +54,6 @@ int main(int argc, char *argv[])
 
     about.setTranslator(i18nc("NAME OF TRANSLATORS", "Your names"),
                         i18nc("EMAIL OF TRANSLATORS", "Your emails"));
-    QApplication app(argc, argv);
     QCommandLineParser parser;
     KAboutData::setApplicationData(about);
     parser.addVersionOption();

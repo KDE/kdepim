@@ -34,6 +34,8 @@
 
 int main(int argc, char **argv)
 {
+    QApplication app(argc, argv);
+
     KLocalizedString::setApplicationDomain("accountwizard");
     KAboutData aboutData(QLatin1String("accountwizard"),
                          i18n("Account Assistant"),
@@ -46,7 +48,6 @@ int main(int argc, char **argv)
     aboutData.addAuthor(i18n("Volker Krause"),  i18n("Author"), QLatin1String("vkrause@kde.org"));
     aboutData.addAuthor(i18n("Laurent Montel"), QString() , QLatin1String("montel@kde.org"));
 
-    QApplication app(argc, argv);
     app.setOrganizationDomain(QStringLiteral("kde.org"));
 
     QCommandLineParser parser;
