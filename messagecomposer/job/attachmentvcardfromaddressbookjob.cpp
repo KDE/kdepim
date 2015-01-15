@@ -16,13 +16,18 @@
 */
 
 #include "attachmentvcardfromaddressbookjob.h"
+#include "messagecomposer/utils/util.h"
 #include <KLocalizedString>
+#include <KContacts/Addressee>
+#include <KContacts/ContactGroup>
+#include <KContacts/VCardConverter>
+#include <akonadi/contact/contactgroupexpandjob.h>
 
 using namespace MessageComposer;
 
-AttachmentVcardFromAddressBookJob::AttachmentVcardFromAddressBookJob(Akonadi::Item::Id id, QObject *parent)
+AttachmentVcardFromAddressBookJob::AttachmentVcardFromAddressBookJob(const Akonadi::Item &item, QObject *parent)
     : MessageCore::AttachmentLoadJob(parent),
-      mId(id)
+      mItem(item)
 {
 
 }
@@ -32,16 +37,64 @@ AttachmentVcardFromAddressBookJob::~AttachmentVcardFromAddressBookJob()
 
 }
 
+void AttachmentVcardFromAddressBookJob::addAttachment(const QByteArray &data, const QString &attachmentName)
+{
+    MessageCore::AttachmentPart::Ptr attachment = MessageCore::AttachmentPart::Ptr( new MessageCore::AttachmentPart() );
+    if( !data.isEmpty() ) {
+        attachment->setName( attachmentName );
+        attachment->setFileName( attachmentName );
+        attachment->setData( data );
+        attachment->setMimeType( "text/x-vcard" );
+        // TODO what about the other fields?
+    }
+    setAttachmentPart( attachment );
+    emitResult(); // Success.
+}
+
 void AttachmentVcardFromAddressBookJob::doStart()
 {
-    Akonadi::Item item(id);
-    if (item.isValid()) {
-
+    if (mItem.isValid()) {
+        if ( mItem.hasPayload<KContacts::Addressee>() ) {
+            const KContacts::Addressee contact = mItem.payload<KContacts::Addressee>();
+            QString attachmentName = contact.realName() + QLatin1String( ".vcf" );
+            //Workaround about broken kaddressbook fields.
+            QByteArray data = mItem.payloadData();
+            MessageComposer::Util::adaptVcard(data);
+            addAttachment( data, attachmentName );
+        } else if ( mItem.hasPayload<KContacts::ContactGroup>() ) {
+            const KContacts::ContactGroup group = mItem.payload<KContacts::ContactGroup>();
+            QString attachmentName = group.name() + QLatin1String( ".vcf" );
+            Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob( group, this );
+            expandJob->setProperty("groupName", attachmentName);
+            connect( expandJob, SIGNAL(result(KJob*)), this, SLOT(slotExpandGroupResult(KJob*)) );
+            expandJob->start();
+        } else {
+            //TODO define error message
+            setError( KJob::UserDefinedError );
+            //q->setErrorText( msg );
+            emitResult();
+        }
     } else {
         //TODO define error message
-        q->setError(KJob::UserDefinedError);
+        setError(KJob::UserDefinedError);
         //q->setErrorText( msg );
-        q->emitResult();
+        emitResult();
     }
 }
 
+void AttachmentVcardFromAddressBookJob::slotExpandGroupResult(KJob* job)
+{
+    Akonadi::ContactGroupExpandJob *expandJob = qobject_cast<Akonadi::ContactGroupExpandJob*>( job );
+    Q_ASSERT( expandJob );
+
+    const QString attachmentName = expandJob->property("groupName").toString();
+    KContacts::VCardConverter converter;
+    const QByteArray groupData = converter.exportVCards(expandJob->contacts(), KContacts::VCardConverter::v3_0);
+    if (!groupData.isEmpty()) {
+        addAttachment( groupData, attachmentName );
+    } else {
+        setError( KJob::UserDefinedError );
+        //q->setErrorText( msg );
+        emitResult();
+    }
+}

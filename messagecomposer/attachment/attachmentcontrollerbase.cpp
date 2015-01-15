@@ -127,6 +127,7 @@ public:
     KActionMenu *attachmentMenu;
     QAction *addOwnVcardAction;
     QAction *reloadAttachmentAction;
+    QAction *attachVCardsAction;
 
     // If part p is compressed, uncompressedParts[p] is the uncompressed part.
     QHash<AttachmentPart::Ptr, AttachmentPart::Ptr> uncompressedParts;
@@ -156,6 +157,7 @@ AttachmentControllerBase::Private::Private(AttachmentControllerBase *qq)
     , selectAllAction(0)
     , attachmentMenu(0)
     , addOwnVcardAction(0)
+    , attachVCardsAction(0)
 {
 }
 
@@ -535,6 +537,8 @@ void AttachmentControllerBase::createActions()
     collection->addAction(QLatin1String("select_all_attachment"), d->selectAllAction);
     collection->addAction(QLatin1String("attach_menu"), d->attachmentMenu);
     collection->addAction(QLatin1String("attach_own_vcard"), d->addOwnVcardAction);
+    collection->addAction( QLatin1String( "attach_vcards"), d->attachVCardsAction);
+
 
     setSelectedParts(AttachmentPart::List());
     emit actionsCreated();
@@ -829,6 +833,11 @@ void AttachmentControllerBase::attachFileDirectory(const QList<QUrl> &urls, cons
         }
     }
 #endif
+}
+
+void AttachmentControllerBase::showAttachVcard()
+{
+    //TODO
 }
 
 void AttachmentControllerBase::showAddAttachmentCompressedDirectoryDialog()
