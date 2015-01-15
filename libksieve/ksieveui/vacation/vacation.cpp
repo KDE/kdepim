@@ -108,6 +108,7 @@ void Vacation::slotGetResult(KManageSieve::SieveJob *job, bool success,
     }
 
     QString messageText = VacationUtils::defaultMessageText();
+    QString subject = VacationUtils::defaultSubject();
     int notificationInterval = VacationUtils::defaultNotificationInterval();
     QStringList aliases = VacationUtils::defaultMailAliases();
     bool sendForSpam = VacationUtils::defaultSendForSpam();
@@ -118,7 +119,7 @@ void Vacation::slotGetResult(KManageSieve::SieveJob *job, bool success,
         active = false;    // default to inactive
     }
 
-    if (!mCheckOnly && (!success || !KSieveUi::VacationUtils::parseScript(script, messageText, notificationInterval, aliases, sendForSpam, domainName, startDate, endDate)))
+    if (!mCheckOnly && (!success || !KSieveUi::VacationUtils::parseScript(script, messageText, subject, notificationInterval, aliases, sendForSpam, domainName, startDate, endDate)))
         KMessageBox::information(Q_NULLPTR, i18n("Someone (probably you) changed the "
                                  "vacation script on the server.\n"
                                  "KMail is no longer able to determine "
@@ -128,6 +129,7 @@ void Vacation::slotGetResult(KManageSieve::SieveJob *job, bool success,
     mWasActive = active;
     if (mDialog) {
         mDialog->setActivateVacation(active);
+        mDialog->setSubject(subject);
         mDialog->setMessageText(messageText);
         mDialog->setNotificationInterval(notificationInterval);
         mDialog->setMailAliases(aliases.join(QStringLiteral(", ")));
@@ -160,6 +162,7 @@ void Vacation::slotDialogOk()
     qCDebug(LIBKSIEVE_LOG);
     // compose a new script:
     const QString script = VacationUtils::composeScript(mDialog->messageText(),
+                           mDialog->subject(),
                            mDialog->notificationInterval(),
                            mDialog->mailAliases(),
                            mDialog->sendForSpam(),

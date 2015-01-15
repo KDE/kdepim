@@ -57,7 +57,7 @@ void VacationCheckJob::slotGetResult(KManageSieve::SieveJob */*job*/, bool succe
 
     // If the script is active then parse it, and verify whether it has date range set
     if (active) {
-        bool valid = VacationUtils::parseScript(script, dummyStr, dummyInt, dummyStrList, dummyBool, dummyStr, startDate, endDate);
+        bool valid = VacationUtils::parseScript(script, dummyStr, dummyStr, dummyInt, dummyStrList, dummyBool, dummyStr, startDate, endDate);
         // If the date range is set, mark the script as active only if the date range
         // includes now/today
         if (valid && startDate.isValid() && endDate.isValid()) {

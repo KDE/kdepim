@@ -17,6 +17,8 @@
 
 #include "vacationscriptextractor.h"
 
+//TODO: add unittests for VacationDataExtractor
+
 using namespace KSieveUi;
 VacationDataExtractor::VacationDataExtractor()
     : KSieve::ScriptBuilder(),
@@ -67,6 +69,8 @@ void VacationDataExtractor::taggedArgument(const QString &tag)
         mContext = Days;
     } else if (tag == QLatin1String("addresses")) {
         mContext = Addresses;
+    } else if (tag == QStringLiteral("subject")) {
+        mContext = Subject;
     }
 }
 
@@ -75,6 +79,9 @@ void VacationDataExtractor::stringArgument(const QString &string, bool, const QS
     qCDebug(LIBKSIEVE_LOG) << "( \"" << string << "\" )";
     if (mContext == Addresses) {
         mAliases.push_back(string);
+        mContext = VacationCommand;
+    } else if (mContext == Subject) {
+        mSubject = string;
         mContext = VacationCommand;
     } else if (mContext == VacationCommand) {
         mMessageText = string;

@@ -75,6 +75,9 @@ public:
     QString domainName() const;
     void setDomainName(const QString &domain);
 
+    QString subject() const;
+    void setSubject(const QString &subject);
+
     bool sendForSpam() const;
     void setSendForSpam(bool enable);
 
@@ -97,6 +100,7 @@ protected:
     QCheckBox *mSpamCheck;
     QCheckBox *mDomainCheck;
     QLineEdit *mDomainEdit;
+    QLineEdit *mSubject;
     KDateComboBox *mStartDate;
     QLabel *mStartDateLabel;
     KDateComboBox *mEndDate;

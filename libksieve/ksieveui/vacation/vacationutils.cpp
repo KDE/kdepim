@@ -36,6 +36,17 @@ static inline QString dotstuff(QString s)     // krazy:exclude=passbyvalue
     }
 }
 
+static inline QString stringReplace(QString s)
+{
+    s = s.replace(QRegExp(QStringLiteral("[\n\t]+")),QStringLiteral(" "));
+    return s.replace(QLatin1Char('\"'),QStringLiteral("\\\""));
+}
+
+QString KSieveUi::VacationUtils::defaultSubject()
+{
+    return i18n("Out of office till %1", QLocale().toString(QDate::currentDate().addDays(1)));
+}
+
 QString KSieveUi::VacationUtils::defaultMessageText()
 {
     return i18n("I am out of office till %1.\n"
@@ -91,12 +102,14 @@ QDate KSieveUi::VacationUtils::defaultEndDate()
 }
 
 bool KSieveUi::VacationUtils::parseScript(const QString &script, QString &messageText,
+        QString &subject,
         int &notificationInterval, QStringList &aliases,
         bool &sendForSpam, QString &domainName,
         QDate &startDate, QDate &endDate)
 {
     if (script.trimmed().isEmpty()) {
         messageText = VacationUtils::defaultMessageText();
+        subject = VacationUtils::defaultSubject();
         notificationInterval = VacationUtils::defaultNotificationInterval();
         aliases = VacationUtils::defaultMailAliases();
         sendForSpam = VacationUtils::defaultSendForSpam();
@@ -121,6 +134,9 @@ bool KSieveUi::VacationUtils::parseScript(const QString &script, QString &messag
         return false;
     }
     messageText = vdx.messageText().trimmed();
+    if (!vdx.subject().isEmpty()) {
+        subject = vdx.subject().trimmed();
+    }
     notificationInterval = vdx.notificationInterval();
     aliases = vdx.aliases();
     if (!VacationSettings::allowOutOfOfficeUploadButNoSettings()) {
@@ -133,6 +149,7 @@ bool KSieveUi::VacationUtils::parseScript(const QString &script, QString &messag
 }
 
 QString KSieveUi::VacationUtils::composeScript(const QString &messageText,
+        const QString &subject,
         int notificationInterval,
         const AddrSpecList &addrSpecs,
         bool sendForSpam, const QString &domain,
@@ -179,6 +196,11 @@ QString KSieveUi::VacationUtils::composeScript(const QString &messageText,
     if (notificationInterval > 0) {
         script += QStringLiteral(":days %1 ").arg(notificationInterval);
     }
+
+    if (!subject.trimmed().isEmpty()) {
+        script += QStringLiteral(":subject \"%1\" ").arg(stringReplace(subject).trimmed());
+    }
+
     script += QStringLiteral("text:\n");
     script += dotstuff(messageText.isEmpty() ? VacationUtils::defaultMessageText() : messageText);
     script += QStringLiteral("\n.\n;\n");

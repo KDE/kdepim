@@ -115,6 +115,7 @@ void VacationPageWidget::slotGetResult(KManageSieve::SieveJob *job, bool success
 
     mVacationEditWidget->setEnabled(true);
     QString messageText = VacationUtils::defaultMessageText();
+    QString subject = VacationUtils::defaultSubject();
     int notificationInterval = VacationUtils::defaultNotificationInterval();
     QStringList aliases = VacationUtils::defaultMailAliases();
     bool sendForSpam = VacationUtils::defaultSendForSpam();
@@ -125,13 +126,14 @@ void VacationPageWidget::slotGetResult(KManageSieve::SieveJob *job, bool success
         active = false;    // default to inactive
     }
 
-    if ((!success || !KSieveUi::VacationUtils::parseScript(script, messageText, notificationInterval, aliases, sendForSpam, domainName, startDate, endDate))) {
+    if ((!success || !KSieveUi::VacationUtils::parseScript(script, messageText, subject, notificationInterval, aliases, sendForSpam, domainName, startDate, endDate))) {
         mVacationWarningWidget->setVisible(true);
     }
 
     mWasActive = active;
     mVacationEditWidget->setActivateVacation(active);
     mVacationEditWidget->setMessageText(messageText);
+    mVacationEditWidget->setSubject(subject);
     mVacationEditWidget->setNotificationInterval(notificationInterval);
     mVacationEditWidget->setMailAliases(aliases.join(QLatin1String(", ")));
     mVacationEditWidget->setSendForSpam(sendForSpam);
@@ -152,6 +154,7 @@ KSieveUi::VacationCreateScriptJob *VacationPageWidget::writeScript()
         createJob->setServerUrl(mUrl);
         createJob->setServerName(mServerName);
         const QString script = VacationUtils::composeScript(mVacationEditWidget->messageText(),
+                               mVacationEditWidget->subject(),
                                mVacationEditWidget->notificationInterval(),
                                mVacationEditWidget->mailAliases(),
                                mVacationEditWidget->sendForSpam(),

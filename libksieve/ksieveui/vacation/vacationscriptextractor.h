@@ -494,7 +494,7 @@ class VacationDataExtractor : public KSieve::ScriptBuilder
         // command itself:
         VacationCommand,
         // tagged args:
-        Days, Addresses
+        Days, Addresses, Subject
     };
 public:
     VacationDataExtractor();
@@ -511,6 +511,11 @@ public:
     const QStringList &aliases() const
     {
         return mAliases;
+    }
+
+    const QString &subject() const
+    {
+        return mSubject;
     }
 
 private:
@@ -544,6 +549,7 @@ private:
     Context mContext;
     int mNotificationInterval;
     QString mMessageText;
+    QString mSubject;
     QStringList mAliases;
 
     void reset();
