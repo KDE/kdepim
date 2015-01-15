@@ -135,7 +135,7 @@ install(FILES
   DESTINATION ${KDE_INSTALL_DATADIR}/kmail-mobile
 )
 
-install(FILES kmail-mobile.notifyrc ${KDE_INSTALL_KNOTIFY5RCDIR} )
+install(FILES kmail-mobile.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFY5RCDIR} )
 
 ecm_install_icons(ICONS hi48-apps-kmail-mobile.png  hi64-apps-kmail-mobile.png  hi80-apps-kmail-mobile-harmattan.png DESTINATION ${KDE_INSTALL_ICONDIR})
 
