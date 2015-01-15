@@ -34,7 +34,7 @@ class MESSAGECOMPOSER_EXPORT MainTextJob : public ContentJobBase
     Q_OBJECT
 
 public:
-    explicit MainTextJob(TextPart *textPart = 0, QObject *parent = Q_NULLPTR);
+    explicit MainTextJob(TextPart *textPart = Q_NULLPTR, QObject *parent = Q_NULLPTR);
     virtual ~MainTextJob();
 
     TextPart *textPart() const;

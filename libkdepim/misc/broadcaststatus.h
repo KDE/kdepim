@@ -64,14 +64,14 @@ public:
                                            int numBytesRead = -1,
                                            int numBytesToRead = -1,
                                            bool mLeaveOnServer = false,
-                                           KPIM::ProgressItem *progressItem = 0);
+                                           KPIM::ProgressItem *progressItem = Q_NULLPTR);
     void setStatusMsgTransmissionCompleted(const QString &account,
                                            int numMessages,
                                            int numBytes = -1,
                                            int numBytesRead = -1,
                                            int numBytesToRead = -1,
                                            bool mLeaveOnServer = false,
-                                           KPIM::ProgressItem *progressItem = 0);
+                                           KPIM::ProgressItem *progressItem = Q_NULLPTR);
 
 public Q_SLOTS:
     /**

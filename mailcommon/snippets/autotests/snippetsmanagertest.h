@@ -24,7 +24,7 @@ class SnippetsManagerTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit SnippetsManagerTest(QObject *parent = 0);
+    explicit SnippetsManagerTest(QObject *parent = Q_NULLPTR);
     ~SnippetsManagerTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();

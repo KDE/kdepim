@@ -45,7 +45,7 @@ public:
     * @param themeComboBox Optional ThemeComboBox to be kept in sync
     * with changes made by the configure dialog.
     */
-    explicit ThemeConfigButton(QWidget *parent, const ThemeComboBox *themeComboBox = 0);
+    explicit ThemeConfigButton(QWidget *parent, const ThemeComboBox *themeComboBox = Q_NULLPTR);
     ~ThemeConfigButton();
 
 Q_SIGNALS:

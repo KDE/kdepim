@@ -63,7 +63,7 @@ private Q_SLOTS:
     void customContextMenuRequested(const QPoint &pos);
 
 private:
-    void createOrUpdateItem(FollowUpReminder::FollowUpReminderInfo *info, FollowUpReminderInfoItem *item = 0);
+    void createOrUpdateItem(FollowUpReminder::FollowUpReminderInfo *info, FollowUpReminderInfoItem *item = Q_NULLPTR);
     void removeItem(FollowUpReminderInfoItem *mailItem);
     void openShowMessage(Akonadi::Item::Id id);
     enum ItemData {

@@ -45,8 +45,8 @@ class GraphicsItem : public QGraphicsItem
 public:
     enum { Type = UserType + 42 };
 
-    explicit GraphicsItem(QGraphicsItem *parent = Q_NULLPTR, GraphicsScene *scene = 0);
-    explicit GraphicsItem(const QModelIndex &idx, QGraphicsItem *parent = Q_NULLPTR, GraphicsScene *scene = 0);
+    explicit GraphicsItem(QGraphicsItem *parent = Q_NULLPTR, GraphicsScene *scene = Q_NULLPTR);
+    explicit GraphicsItem(const QModelIndex &idx, QGraphicsItem *parent = Q_NULLPTR, GraphicsScene *scene = Q_NULLPTR);
     virtual ~GraphicsItem();
 
     /*reimp*/int type() const;

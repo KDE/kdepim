@@ -61,7 +61,7 @@ Q_SIGNALS:
 
 private:
     void load();
-    void createOrUpdateItem(ArchiveMailInfo *info, ArchiveMailItem *item = 0);
+    void createOrUpdateItem(ArchiveMailInfo *info, ArchiveMailItem *item = Q_NULLPTR);
     bool verifyExistingArchive(ArchiveMailInfo *info) const;
     void updateDiffDate(ArchiveMailItem *item, ArchiveMailInfo *info);
 

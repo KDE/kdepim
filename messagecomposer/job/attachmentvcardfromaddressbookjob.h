@@ -27,7 +27,7 @@ class AttachmentVcardFromAddressBookJob : public MessageCore::AttachmentLoadJob
 {
     Q_OBJECT
 public:
-    explicit AttachmentVcardFromAddressBookJob(const Akonadi::Item &item, QObject *parent = 0);
+    explicit AttachmentVcardFromAddressBookJob(const Akonadi::Item &item, QObject *parent = Q_NULLPTR);
     ~AttachmentVcardFromAddressBookJob();
 
 protected slots:

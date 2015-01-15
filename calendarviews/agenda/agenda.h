@@ -51,7 +51,7 @@ class EVENTVIEWS_EXPORT MarcusBains : public QFrame
 {
     Q_OBJECT
 public:
-    explicit MarcusBains(EventView *eventView, Agenda *agenda = 0);
+    explicit MarcusBains(EventView *eventView, Agenda *agenda = Q_NULLPTR);
     void updateLocationRecalc(bool recalculate = false);
     virtual ~MarcusBains();
 
