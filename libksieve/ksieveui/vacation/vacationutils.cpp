@@ -35,6 +35,17 @@ static inline QString dotstuff( QString s ) { // krazy:exclude=passbyvalue
         return s.replace( QLatin1String("\n."), QLatin1String("\n..") );
 }
 
+static inline QString stringReplace(QString s)
+{
+    s = s.replace(QRegExp(QLatin1String("[\n\t]+")),QLatin1String(" "));
+    return s.replace(QLatin1Char('\"'),QLatin1String("\\\""));
+}
+
+QString KSieveUi::VacationUtils::defaultSubject()
+{
+  return i18n("Out of office till %1", QLocale().toString(QDate::currentDate().addDays(1)));
+}
+
 QString KSieveUi::VacationUtils::defaultMessageText() {
     return i18n( "I am out of office till %1.\n"
                  "\n"
@@ -88,12 +99,14 @@ QDate KSieveUi::VacationUtils::defaultEndDate()
 
 
 bool KSieveUi::VacationUtils::parseScript( const QString &script, QString &messageText,
+                            QString &subject,
                             int & notificationInterval, QStringList &aliases,
                             bool & sendForSpam, QString &domainName,
                             QDate & startDate, QDate & endDate )
 {
     if ( script.trimmed().isEmpty() ) {
         messageText = VacationUtils::defaultMessageText();
+        subject = VacationUtils::defaultSubject();
         notificationInterval = VacationUtils::defaultNotificationInterval();
         aliases = VacationUtils::defaultMailAliases();
         sendForSpam = VacationUtils::defaultSendForSpam();
@@ -117,6 +130,9 @@ bool KSieveUi::VacationUtils::parseScript( const QString &script, QString &messa
     if ( !parser.parse() )
         return false;
     messageText = vdx.messageText().trimmed();
+    if (!vdx.subject().isEmpty()) {
+        subject = vdx.subject().trimmed();
+    }
     notificationInterval = vdx.notificationInterval();
     aliases = vdx.aliases();
     if ( !VacationSettings::allowOutOfOfficeUploadButNoSettings() ) {
@@ -129,6 +145,7 @@ bool KSieveUi::VacationUtils::parseScript( const QString &script, QString &messa
 }
 
 QString KSieveUi::VacationUtils::composeScript( const QString & messageText,
+                                 const QString &subject,
                                  int notificationInterval,
                                  const AddrSpecList & addrSpecs,
                                  bool sendForSpam, const QString & domain,
@@ -171,6 +188,11 @@ QString KSieveUi::VacationUtils::composeScript( const QString & messageText,
     script += addressesArgument;
     if ( notificationInterval > 0 )
         script += QString::fromLatin1(":days %1 ").arg( notificationInterval );
+
+    if (!subject.trimmed().isEmpty()) {
+        script += QString::fromLatin1(":subject \"%1\" ").arg(stringReplace(subject).trimmed());
+    }
+
     script += QString::fromLatin1("text:\n");
     script += dotstuff( messageText.isEmpty() ? VacationUtils::defaultMessageText() : messageText );
     script += QString::fromLatin1( "\n.\n;\n" );

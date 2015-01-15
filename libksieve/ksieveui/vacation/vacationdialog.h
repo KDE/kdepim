@@ -49,6 +49,9 @@ public:
     QString messageText() const;
     void setMessageText( const QString &text );
 
+    QString subject() const;
+    void setSubject( const QString &subject );
+
     int notificationInterval() const;
     void setNotificationInterval( int days );
 

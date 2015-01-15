@@ -99,6 +99,16 @@ void VacationDialog::setMessageText( const QString &text )
     mVacationEditWidget->setMessageText(text);
 }
 
+QString VacationDialog::subject() const
+{
+    return mVacationEditWidget->subject();
+}
+
+void VacationDialog::setSubject(const QString &subject)
+{
+    return mVacationEditWidget->setSubject(subject);
+}
+
 int VacationDialog::notificationInterval() const
 {
     return mVacationEditWidget->notificationInterval();

@@ -63,6 +63,9 @@ void VacationDataExtractor::taggedArgument( const QString & tag )
         mContext = Days;
     else if ( tag == QLatin1String("addresses") )
         mContext = Addresses;
+    else if (tag == QLatin1String("subject")) {
+        mContext = Subject;
+    }
 }
 
 void VacationDataExtractor::stringArgument( const QString & string, bool, const QString & )
@@ -70,6 +73,9 @@ void VacationDataExtractor::stringArgument( const QString & string, bool, const 
     kDebug() << "( \"" << string <<"\" )";
     if ( mContext == Addresses ) {
         mAliases.push_back( string );
+        mContext = VacationCommand;
+    } else if (mContext == Subject) {
+        mSubject = string;
         mContext = VacationCommand;
     } else if ( mContext == VacationCommand ) {
         mMessageText = string;

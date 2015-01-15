@@ -72,6 +72,16 @@ VacationEditWidget::VacationEditWidget(QWidget *parent)
     mTextEdit->setAcceptRichText( false );
     glay->addWidget( mTextEdit, row, 0, 1, 2 );
 
+    // Subject
+    ++row;
+    mSubject = new KLineEdit(this);
+    mSubject->setObjectName(QLatin1String("mSubject"));
+    mSubject->setClearButtonShown(true);
+    QLabel *tmpLabel = new QLabel(i18n("&Subject of the vacation mail:"), this);
+    tmpLabel->setBuddy(mSubject);
+    glay->addWidget(tmpLabel, row, 0);
+    glay->addWidget(mSubject, row, 1);
+
     // From date
     ++row;
     mStartDate = new KDateComboBox( this );
@@ -111,7 +121,7 @@ VacationEditWidget::VacationEditWidget(QWidget *parent)
     mMailAliasesEdit = new KLineEdit( this );
     mMailAliasesEdit->setObjectName( QLatin1String("mMailAliasesEdit") );
     mMailAliasesEdit->setClearButtonShown( true );
-    QLabel *tmpLabel = new QLabel( i18n("&Send responses for these addresses:"), this );
+    tmpLabel = new QLabel( i18n("&Send responses for these addresses:"), this );
     tmpLabel->setBuddy( mMailAliasesEdit );
     glay->addWidget( tmpLabel, row, 0 );
     glay->addWidget( mMailAliasesEdit, row, 1 );
@@ -273,6 +283,19 @@ void VacationEditWidget::setStartDate( const QDate &startDate )
     mStartDate->setDate( startDate );
 }
 
+void VacationEditWidget::setSubject(const QString &subject)
+{
+    mSubject->setText(subject);
+}
+
+QString VacationEditWidget::subject() const
+{
+    if (mSubject->isEnabled()) {
+        return mSubject->text();
+    } else {
+        return QString();
+    }
+}
 
 void VacationEditWidget::enableDates( bool enable )
 {
@@ -291,6 +314,7 @@ void VacationEditWidget::setDefault()
 {
     setActivateVacation( true );
     setMessageText( VacationUtils::defaultMessageText() );
+    setSubject(VacationUtils::defaultSubject());
     setNotificationInterval( VacationUtils::defaultNotificationInterval() );
     setMailAliases( VacationUtils::defaultMailAliases().join(QLatin1String(", ")) );
     setSendForSpam( VacationUtils::defaultSendForSpam() );
