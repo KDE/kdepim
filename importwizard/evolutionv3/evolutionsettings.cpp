@@ -411,7 +411,7 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
                         kDebug()<<" unknown scheme "<<scheme;
                     }
                 } else {
-                    kDebug()<<" server tag unknow :"<<serverTag;
+                    kDebug()<<" server tag unknown :"<<serverTag;
                 }
             }
         }
@@ -482,7 +482,7 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
                         }
                     }
                 } else {
-                    kDebug()<<" smtp tag unknow :"<<smtpTag;
+                    kDebug()<<" smtp tag unknown :"<<smtpTag;
                 }
             }
             storeTransport(transport, true );

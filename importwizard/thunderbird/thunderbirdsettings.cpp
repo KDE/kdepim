@@ -183,7 +183,7 @@ void ThunderbirdSettings::readExtensionsSettings()
             addKmailConfig(QLatin1String("AutoResizeImage"), QLatin1String("FilterRecipientType"), QLatin1String("DontResizeOneEmailContainsPattern") );
             break;
         default:
-            qDebug()<<" unknow FilterRecipientType: "<<filterRecipients;
+            qDebug()<<" unknown FilterRecipientType: "<<filterRecipients;
             break;
         }
     }

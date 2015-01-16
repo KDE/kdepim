@@ -71,7 +71,7 @@ void AttachmentVcardFromAddressBookJob::doStart()
             expandJob->start();
         } else {
             setError( KJob::UserDefinedError );
-            setErrorText( i18n("Unknow Contact Type") );
+            setErrorText( i18n("Unknown Contact Type") );
             emitResult();
         }
     } else {

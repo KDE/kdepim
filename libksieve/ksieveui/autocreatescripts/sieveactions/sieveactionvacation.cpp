@@ -127,7 +127,7 @@ bool SieveActionVacation::setParamWidgetValue(const QDomElement &element, QWidge
                     subject->setText(AutoCreateScriptUtil::strValue(e));
                 } else {
                     unknowTagValue(tagValue, error);
-                    qDebug()<<"SieveActionVacation::setParamWidgetValue unknow tagValue :"<<tagValue;
+                    qDebug()<<"SieveActionVacation::setParamWidgetValue unknown tagValue :"<<tagValue;
                 }
             } else if (tagName == QLatin1String("num"))  {
                 QSpinBox *day = w->findChild<QSpinBox*>( QLatin1String("day") );

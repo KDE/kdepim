@@ -275,7 +275,7 @@ void SylpheedSettings::readSignature( const KConfigGroup& accountConfig, KPIMIde
         signature.setText( accountConfig.readEntry("signature_text" ) );
         break;
     default:
-        kDebug()<<" signature type unknow :"<<signatureType;
+        kDebug()<<" signature type unknown :"<<signatureType;
     }
     const int signatureEnabled = accountConfig.readEntry("auto_signature", -1 );
     switch(signatureEnabled) {

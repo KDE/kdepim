@@ -142,7 +142,7 @@ CustomToolsWidget::ToolType CustomToolsWidget::toolType() const
     else if (mStackedWidget->currentWidget() == mShortUrlWidget)
         return ShortUrlTool;
     else {
-        qDebug()<<" unknow tool";
+        qDebug()<<" unknown tool";
         return TranslatorTool;
     }
 }
