@@ -38,27 +38,27 @@ bool SendLater::SendLaterUtil::compareSendLaterInfo(SendLater::SendLaterInfo *le
 void SendLater::SendLaterUtil::changeRecurrentDate(SendLater::SendLaterInfo *info)
 {
     if (info && info->isRecurrence()) {
-        qDebug()<<"BEFORE SendLater::SendLaterUtil::changeRecurrentDate "<<info->dateTime().toString();
+        qDebug() << "BEFORE SendLater::SendLaterUtil::changeRecurrentDate " << info->dateTime().toString();
         QDateTime newInfoDateTime = info->dateTime();
         newInfoDateTime = updateRecurence(info, newInfoDateTime);
-        qDebug()<<" QDateTime::currentDateTime()"<<QDateTime::currentDateTime().toString();
+        qDebug() << " QDateTime::currentDateTime()" << QDateTime::currentDateTime().toString();
         while (newInfoDateTime <= QDateTime::currentDateTime()) {
             newInfoDateTime = updateRecurence(info, newInfoDateTime);
         }
         info->setDateTime(newInfoDateTime);
-        qDebug()<<"AFTER SendLater::SendLaterUtil::changeRecurrentDate "<<info->dateTime().toString()<<" info"<<info << "New date"<<newInfoDateTime;
+        qDebug() << "AFTER SendLater::SendLaterUtil::changeRecurrentDate " << info->dateTime().toString() << " info" << info << "New date" << newInfoDateTime;
         writeSendLaterInfo(defaultConfig(), info, true);
     }
 }
 
 QDateTime SendLater::SendLaterUtil::updateRecurence(SendLater::SendLaterInfo *info, QDateTime dateTime)
 {
-    switch(info->recurrenceUnit()) {
+    switch (info->recurrenceUnit()) {
     case SendLater::SendLaterInfo::Days:
         dateTime = dateTime.addDays(info->recurrenceEachValue());
         break;
     case SendLater::SendLaterInfo::Weeks:
-        dateTime = dateTime.addDays(info->recurrenceEachValue()*7);
+        dateTime = dateTime.addDays(info->recurrenceEachValue() * 7);
         break;
     case SendLater::SendLaterInfo::Months:
         dateTime = dateTime.addMonths(info->recurrenceEachValue());

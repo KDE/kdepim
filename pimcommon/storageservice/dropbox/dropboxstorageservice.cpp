@@ -553,12 +553,12 @@ QIcon DropBoxStorageService::icon() const
 
 QRegExp DropBoxStorageService::disallowedSymbols() const
 {
-    return QRegExp(QLatin1String("[/:?*<>\"|]"));
+    return QRegExp(QStringLiteral("[/:?*<>\"|]"));
 }
 
 QString DropBoxStorageService::disallowedSymbolsStr() const
 {
-    return QLatin1String("\\ / : ? * < > \" |");
+    return QStringLiteral("\\ / : ? * < > \" |");
 }
 
 qlonglong DropBoxStorageService::maximumUploadFileSize() const

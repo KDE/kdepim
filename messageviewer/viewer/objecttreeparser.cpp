@@ -3629,9 +3629,9 @@ QString ObjectTreeParser::convertedHtmlContent() const
     QString htmlContent = mHtmlContent;
     if (htmlContent.isEmpty()) {
         QString convertedHtml = mPlainTextContent.toHtmlEscaped();
-        convertedHtml.append(QLatin1String("</body></html>"));
-        convertedHtml.prepend(QLatin1String("<html><head></head><body>"));
-        htmlContent = convertedHtml.replace(QRegExp(QLatin1String("\n")), QLatin1String("<br />"));
+        convertedHtml.append(QStringLiteral("</body></html>"));
+        convertedHtml.prepend(QStringLiteral("<html><head></head><body>"));
+        htmlContent = convertedHtml.replace(QRegExp(QStringLiteral("\n")), QStringLiteral("<br />"));
     }
     return htmlContent.append(QLatin1Char('\n'));
 }

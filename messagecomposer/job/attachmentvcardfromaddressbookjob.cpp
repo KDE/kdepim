@@ -39,60 +39,60 @@ AttachmentVcardFromAddressBookJob::~AttachmentVcardFromAddressBookJob()
 
 void AttachmentVcardFromAddressBookJob::addAttachment(const QByteArray &data, const QString &attachmentName)
 {
-    MessageCore::AttachmentPart::Ptr attachment = MessageCore::AttachmentPart::Ptr( new MessageCore::AttachmentPart() );
-    if( !data.isEmpty() ) {
-        attachment->setName( attachmentName );
-        attachment->setFileName( attachmentName );
-        attachment->setData( data );
-        attachment->setMimeType( "text/x-vcard" );
+    MessageCore::AttachmentPart::Ptr attachment = MessageCore::AttachmentPart::Ptr(new MessageCore::AttachmentPart());
+    if (!data.isEmpty()) {
+        attachment->setName(attachmentName);
+        attachment->setFileName(attachmentName);
+        attachment->setData(data);
+        attachment->setMimeType("text/x-vcard");
         // TODO what about the other fields?
     }
-    setAttachmentPart( attachment );
+    setAttachmentPart(attachment);
     emitResult(); // Success.
 }
 
 void AttachmentVcardFromAddressBookJob::doStart()
 {
     if (mItem.isValid()) {
-        if ( mItem.hasPayload<KContacts::Addressee>() ) {
+        if (mItem.hasPayload<KContacts::Addressee>()) {
             const KContacts::Addressee contact = mItem.payload<KContacts::Addressee>();
-            QString attachmentName = contact.realName() + QLatin1String( ".vcf" );
+            QString attachmentName = contact.realName() + QLatin1String(".vcf");
             //Workaround about broken kaddressbook fields.
             QByteArray data = mItem.payloadData();
             MessageComposer::Util::adaptVcard(data);
-            addAttachment( data, attachmentName );
-        } else if ( mItem.hasPayload<KContacts::ContactGroup>() ) {
+            addAttachment(data, attachmentName);
+        } else if (mItem.hasPayload<KContacts::ContactGroup>()) {
             const KContacts::ContactGroup group = mItem.payload<KContacts::ContactGroup>();
-            QString attachmentName = group.name() + QLatin1String( ".vcf" );
-            Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob( group, this );
+            QString attachmentName = group.name() + QLatin1String(".vcf");
+            Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob(group, this);
             expandJob->setProperty("groupName", attachmentName);
-            connect( expandJob, SIGNAL(result(KJob*)), this, SLOT(slotExpandGroupResult(KJob*)) );
+            connect(expandJob, SIGNAL(result(KJob*)), this, SLOT(slotExpandGroupResult(KJob*)));
             expandJob->start();
         } else {
-            setError( KJob::UserDefinedError );
-            setErrorText( i18n("Unknow Contact Type") );
+            setError(KJob::UserDefinedError);
+            setErrorText(i18n("Unknow Contact Type"));
             emitResult();
         }
     } else {
         setError(KJob::UserDefinedError);
-        setErrorText( i18n("Invalid Contact") );
+        setErrorText(i18n("Invalid Contact"));
         emitResult();
     }
 }
 
-void AttachmentVcardFromAddressBookJob::slotExpandGroupResult(KJob* job)
+void AttachmentVcardFromAddressBookJob::slotExpandGroupResult(KJob *job)
 {
-    Akonadi::ContactGroupExpandJob *expandJob = qobject_cast<Akonadi::ContactGroupExpandJob*>( job );
-    Q_ASSERT( expandJob );
+    Akonadi::ContactGroupExpandJob *expandJob = qobject_cast<Akonadi::ContactGroupExpandJob *>(job);
+    Q_ASSERT(expandJob);
 
     const QString attachmentName = expandJob->property("groupName").toString();
     KContacts::VCardConverter converter;
     const QByteArray groupData = converter.exportVCards(expandJob->contacts(), KContacts::VCardConverter::v3_0);
     if (!groupData.isEmpty()) {
-        addAttachment( groupData, attachmentName );
+        addAttachment(groupData, attachmentName);
     } else {
-        setError( KJob::UserDefinedError );
-        setErrorText( i18n("Impossible to generate vcard.") );
+        setError(KJob::UserDefinedError);
+        setErrorText(i18n("Impossible to generate vcard."));
         emitResult();
     }
 }

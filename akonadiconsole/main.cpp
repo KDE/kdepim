@@ -57,9 +57,8 @@ int main(int argc, char **argv)
     parser.process(app);
     aboutData.processCommandLine(&parser);
     parser.addOption(QCommandLineOption(QStringList() << QLatin1String("remote"), i18n("Connect to an Akonadi remote debugging server"), "server"));
-   
+
     KDBusService service;
- 
 
     if (parser.isSet("remote")) {
         const QString akonadiAddr = QStringLiteral("tcp:host=%1,port=31415").arg(parser.value("remote"));

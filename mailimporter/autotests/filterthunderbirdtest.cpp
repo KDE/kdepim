@@ -22,10 +22,12 @@
 class FilterThunderBirdAbstract : public MailImporter::FilterThunderbird
 {
 public:
-    FilterThunderBirdAbstract() {
+    FilterThunderBirdAbstract()
+    {
 
     }
-    QString settingsPath() {
+    QString settingsPath()
+    {
         return MailImporter::FilterThunderbird::settingsPath();
     }
 };
@@ -44,7 +46,7 @@ FilterThunderBirdTest::~FilterThunderBirdTest()
 void FilterThunderBirdTest::shouldHaveDefaultSettingsPath()
 {
     FilterThunderBirdAbstract filter;
-    QCOMPARE(filter.settingsPath(), MailImporter::FilterThunderbird::defaultSettingsPath() );
+    QCOMPARE(filter.settingsPath(), MailImporter::FilterThunderbird::defaultSettingsPath());
 }
 
 QTEST_MAIN(FilterThunderBirdTest)

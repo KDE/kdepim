@@ -22,7 +22,7 @@ using namespace MailImporter;
 FilterIcedove::FilterIcedove()
     : FilterThunderbird()
 {
-    setName(i18n( "Import Icedove Mails and Folder Structure" ));
+    setName(i18n("Import Icedove Mails and Folder Structure"));
     setAuthor("Laurent Montel");
     setInfo(i18n("<p><b>Icedove import filter</b></p>"
                  "<p>Select your base Icedove mailfolder"
@@ -46,7 +46,7 @@ QString FilterIcedove::settingsPath()
 
 QString FilterIcedove::defaultSettingsPath()
 {
-    return QDir::homePath() + QLatin1String( "/.icedove/" );
+    return QDir::homePath() + QLatin1String("/.icedove/");
 }
 
 QString FilterIcedove::defaultInstallFolder() const

@@ -97,7 +97,7 @@ public:
     void attachPublicKeyJobResult(KJob *job);   // slot
     void slotAttachmentContentCreated(KJob *job);   // slot
     void addAttachmentPart(AttachmentPart::Ptr part);
-    void attachVcardFromAddressBook( KJob *job ); //slot
+    void attachVcardFromAddressBook(KJob *job);   //slot
     void selectedAllAttachment();
     void createOpenWithMenu(QMenu *topMenu, AttachmentPart::Ptr part);
     void reloadAttachment();
@@ -413,20 +413,19 @@ void AttachmentControllerBase::Private::attachPublicKeyJobResult(KJob *job)
     q->addAttachment(part);
 }
 
-void AttachmentControllerBase::Private::attachVcardFromAddressBook( KJob *job )
+void AttachmentControllerBase::Private::attachVcardFromAddressBook(KJob *job)
 {
-    if( job->error() ) {
-        qDebug()<<" Error during when get vcard";
+    if (job->error()) {
+        qDebug() << " Error during when get vcard";
         return;
     }
 
-    MessageComposer::AttachmentVcardFromAddressBookJob *ajob = static_cast<MessageComposer::AttachmentVcardFromAddressBookJob*>( job );
+    MessageComposer::AttachmentVcardFromAddressBookJob *ajob = static_cast<MessageComposer::AttachmentVcardFromAddressBookJob *>(job);
     AttachmentPart::Ptr part = ajob->attachmentPart();
-    q->addAttachment( part );
+    q->addAttachment(part);
 }
 
-
-static QTemporaryFile *dumpAttachmentToTempFile( const AttachmentPart::Ptr part ) // local
+static QTemporaryFile *dumpAttachmentToTempFile(const AttachmentPart::Ptr part)   // local
 {
     QTemporaryFile *file = new QTemporaryFile;
     if (!file->open()) {
@@ -496,10 +495,9 @@ void AttachmentControllerBase::createActions()
     d->addOwnVcardAction->setCheckable(true);
     connect(d->addOwnVcardAction, &QAction::triggered, this, &AttachmentControllerBase::addOwnVcard);
 
-    d->attachVCardsAction = new QAction( QIcon::fromTheme( QLatin1String( "mail-attachment" ) ), i18n( "&Attach Vcards..." ), this );
-    d->attachVCardsAction->setIconText( i18n( "Attach" ) );
-    connect( d->attachVCardsAction, &QAction::triggered, this, &AttachmentControllerBase::showAttachVcard );
-
+    d->attachVCardsAction = new QAction(QIcon::fromTheme(QLatin1String("mail-attachment")), i18n("&Attach Vcards..."), this);
+    d->attachVCardsAction->setIconText(i18n("Attach"));
+    connect(d->attachVCardsAction, &QAction::triggered, this, &AttachmentControllerBase::showAttachVcard);
 
     d->attachmentMenu->addAction(d->addAttachmentFileAction);
     d->attachmentMenu->addAction(d->addAttachmentDirectoryAction);
@@ -562,8 +560,7 @@ void AttachmentControllerBase::createActions()
     collection->addAction(QLatin1String("select_all_attachment"), d->selectAllAction);
     collection->addAction(QLatin1String("attach_menu"), d->attachmentMenu);
     collection->addAction(QLatin1String("attach_own_vcard"), d->addOwnVcardAction);
-    collection->addAction( QLatin1String( "attach_vcards"), d->attachVCardsAction);
-
+    collection->addAction(QLatin1String("attach_vcards"), d->attachVCardsAction);
 
     setSelectedParts(AttachmentPart::List());
     emit actionsCreated();
@@ -863,12 +860,12 @@ void AttachmentControllerBase::attachFileDirectory(const QList<QUrl> &urls, cons
 void AttachmentControllerBase::showAttachVcard()
 {
     QPointer<Akonadi::EmailAddressSelectionDialog> dlg = new Akonadi::EmailAddressSelectionDialog(d->wParent);
-    dlg->view()->view()->setSelectionMode( QAbstractItemView::MultiSelection );
+    dlg->view()->view()->setSelectionMode(QAbstractItemView::MultiSelection);
     if (dlg->exec()) {
         const Akonadi::EmailAddressSelection::List selectedEmail = dlg->selectedAddresses();
-        Q_FOREACH (const Akonadi::EmailAddressSelection& selected, selectedEmail) {
-            MessageComposer::AttachmentVcardFromAddressBookJob *ajob = new MessageComposer::AttachmentVcardFromAddressBookJob( selected.item(), this);
-            connect( ajob, SIGNAL(result(KJob*)), this, SLOT(attachVcardFromAddressBook(KJob*)) );
+        Q_FOREACH (const Akonadi::EmailAddressSelection &selected, selectedEmail) {
+            MessageComposer::AttachmentVcardFromAddressBookJob *ajob = new MessageComposer::AttachmentVcardFromAddressBookJob(selected.item(), this);
+            connect(ajob, SIGNAL(result(KJob*)), this, SLOT(attachVcardFromAddressBook(KJob*)));
             ajob->start();
         }
     }

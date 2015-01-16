@@ -22,10 +22,12 @@
 class FilterIcecoveAbstract : public MailImporter::FilterIcedove
 {
 public:
-    FilterIcecoveAbstract() {
+    FilterIcecoveAbstract()
+    {
 
     }
-    QString settingsPath() {
+    QString settingsPath()
+    {
         return MailImporter::FilterIcedove::settingsPath();
     }
 };
@@ -44,8 +46,7 @@ FilterIcedoveTest::~FilterIcedoveTest()
 void FilterIcedoveTest::shouldHaveDefaultSettingsPath()
 {
     FilterIcecoveAbstract filter;
-    QCOMPARE(filter.settingsPath(), MailImporter::FilterIcedove::defaultSettingsPath() );
+    QCOMPARE(filter.settingsPath(), MailImporter::FilterIcedove::defaultSettingsPath());
 }
-
 
 QTEST_MAIN(FilterIcedoveTest)

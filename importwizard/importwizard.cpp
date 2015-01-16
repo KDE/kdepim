@@ -222,11 +222,11 @@ void ImportWizard::slotAtLeastOneComponentSelected(bool result)
 
 void ImportWizard::setAppropriatePage(AbstractImporter::TypeSupportedOptions options)
 {
-    setAppropriate(mPage3,(options & AbstractImporter::Mails));
-    setAppropriate(mPage4,(options & AbstractImporter::Filters));
-    setAppropriate(mPage5,(options & AbstractImporter::Settings));
-    setAppropriate(mPage6,(options & AbstractImporter::AddressBooks));
-    setAppropriate(mPage7,(options & AbstractImporter::Calendars));
+    setAppropriate(mPage3, (options & AbstractImporter::Mails));
+    setAppropriate(mPage4, (options & AbstractImporter::Filters));
+    setAppropriate(mPage5, (options & AbstractImporter::Settings));
+    setAppropriate(mPage6, (options & AbstractImporter::AddressBooks));
+    setAppropriate(mPage7, (options & AbstractImporter::Calendars));
 }
 
 void ImportWizard::next()

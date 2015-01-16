@@ -25,7 +25,7 @@ class IcedoveImportData : public AbstractImporter
 public:
     explicit IcedoveImportData(ImportWizard *parent);
     ~IcedoveImportData();
-    
+
     TypeSupportedOptions supportedOption();
     bool foundMailer() const;
 

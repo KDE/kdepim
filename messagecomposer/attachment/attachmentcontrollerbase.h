@@ -128,7 +128,7 @@ private:
     Q_PRIVATE_SLOT(d, void slotAttachmentContentCreated(KJob *))
     Q_PRIVATE_SLOT(d, void reloadAttachment())
     Q_PRIVATE_SLOT(d, void updateJobResult(KJob *))
-    Q_PRIVATE_SLOT( d, void attachVcardFromAddressBook( KJob * ) )
+    Q_PRIVATE_SLOT(d, void attachVcardFromAddressBook(KJob *))
 };
 
 } //

@@ -209,14 +209,14 @@ void TemplateParserTester::test_processWithTemplatesForContent_data()
     QTest::newRow(file.toLatin1()) << insertFileNameCommand << fileName << "test insert file!\n" << false;
     QTest::newRow(file.toLatin1()) << "%MSGID" << fileName << "<20150@foo.kde.org>" << false;
     QTest::newRow(file.toLatin1()) << "%SYSTEM=\"echo foo\"" << fileName << "foo\n" << false;
-    QTest::newRow( file.toLatin1() ) << "%DEBUG" << fileName << "" << false;
-    QTest::newRow( file.toLatin1() ) << "%DEBUGOFF" << fileName << "" << false;
-    QTest::newRow( file.toLatin1() ) << "%HEADER=\"Reply-To\"" << fileName << "bla@yoohoo.org" << false;
+    QTest::newRow(file.toLatin1()) << "%DEBUG" << fileName << "" << false;
+    QTest::newRow(file.toLatin1()) << "%DEBUGOFF" << fileName << "" << false;
+    QTest::newRow(file.toLatin1()) << "%HEADER=\"Reply-To\"" << fileName << "bla@yoohoo.org" << false;
     //Header doesn't exist => don't add value
-    QTest::newRow( file.toLatin1() ) << "%HEADER=\"SSS\"" << fileName << "" << false;
-    QTest::newRow( file.toLatin1() ) << "%OHEADER=\"To\"" << fileName << "kde <foo@yoohoo.org>" << false;
+    QTest::newRow(file.toLatin1()) << "%HEADER=\"SSS\"" << fileName << "" << false;
+    QTest::newRow(file.toLatin1()) << "%OHEADER=\"To\"" << fileName << "kde <foo@yoohoo.org>" << false;
     //Unknown command
-    QTest::newRow( file.toLatin1() ) << "%GGGGG" << fileName << "%GGGGG" << false;
+    QTest::newRow(file.toLatin1()) << "%GGGGG" << fileName << "%GGGGG" << false;
 }
 
 void TemplateParserTester::test_processWithTemplatesForContent()

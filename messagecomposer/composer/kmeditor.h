@@ -178,7 +178,7 @@ public:
      * Fill the given composer MessageComposer::TextPart with what's in the editor currently.
      * @param textPart The MessageComposer::TextPart to fill.
      */
-    void fillComposerTextPart( MessageComposer::TextPart* textPart );
+    void fillComposerTextPart(MessageComposer::TextPart *textPart);
 
     PimCommon::AutoCorrection *autocorrection() const;
 

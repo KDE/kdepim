@@ -78,12 +78,12 @@ void MessagePropertyDialog::slotSaveProperty()
 
 void MessagePropertyDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "MessagePropertyDialog" );
-    const QSize size = group.readEntry( "Size", QSize(600, 400) );
-    if ( size.isValid() ) {
-        resize( size );
+    KConfigGroup group(KSharedConfig::openConfig(), "MessagePropertyDialog");
+    const QSize size = group.readEntry("Size", QSize(600, 400));
+    if (size.isValid()) {
+        resize(size);
     }
-    const QByteArray headerState = group.readEntry( "HeaderState" , QByteArray());
+    const QByteArray headerState = group.readEntry("HeaderState" , QByteArray());
     if (!headerState.isEmpty()) {
         mListView->header()->restoreState(headerState);
     }
@@ -91,8 +91,8 @@ void MessagePropertyDialog::readConfig()
 
 void MessagePropertyDialog::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "MessagePropertyDialog" );
-    group.writeEntry( "Size", size() );
-    group.writeEntry( "HeaderState" , mListView->header()->saveState());
+    KConfigGroup group(KSharedConfig::openConfig(), "MessagePropertyDialog");
+    group.writeEntry("Size", size());
+    group.writeEntry("HeaderState" , mListView->header()->saveState());
     group.sync();
 }

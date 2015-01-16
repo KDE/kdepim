@@ -63,7 +63,7 @@ CustomFieldEditorDialog::CustomFieldEditorDialog(QWidget *parent)
     mType->addItem(i18n("Time"), CustomField::TimeType);
     mType->addItem(i18n("DateTime"), CustomField::DateTimeType);
 
-    mKey->setValidator(new QRegExpValidator(QRegExp(QLatin1String("[a-zA-Z0-9\\-]+")), this));
+    mKey->setValidator(new QRegExpValidator(QRegExp(QStringLiteral("[a-zA-Z0-9\\-]+")), this));
 }
 
 void CustomFieldEditorDialog::setCustomField(const CustomField &field)
