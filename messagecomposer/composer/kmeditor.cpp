@@ -770,7 +770,7 @@ bool KMeditor::replaceSignature( const KPIMIdentities::Signature &oldSig,
     return found;
 }
 
-void KMeditor::fillComposerTextPart ( MessageComposer::TextPart* textPart ) const
+void KMeditor::fillComposerTextPart ( MessageComposer::TextPart* textPart )
 {
     if( isFormattingUsed() && MessageComposer::MessageComposerSettings::self()->improvePlainTextOfHtmlMessage() ) {
         Grantlee::PlainTextMarkupBuilder *pb = new Grantlee::PlainTextMarkupBuilder();
@@ -792,8 +792,35 @@ void KMeditor::fillComposerTextPart ( MessageComposer::TextPart* textPart ) cons
     }
     textPart->setWordWrappingEnabled( lineWrapMode() == QTextEdit::FixedColumnWidth );
     if( isFormattingUsed() ) {
-        textPart->setCleanHtml( toCleanHtml() );
+        QString cleanHtml = toCleanHtml();
+        fixHtmlFontSize(cleanHtml);
+        textPart->setCleanHtml( cleanHtml );
         textPart->setEmbeddedImages( embeddedImages() );
+    }
+}
+
+
+void KMeditor::fixHtmlFontSize(QString &cleanHtml)
+{
+    static const QString FONTSTYLEREGEX = QLatin1String("<span style=\".*font-size:(.*)pt;.*</span>" );
+    QRegExp styleRegex( FONTSTYLEREGEX );
+    styleRegex.setMinimal( true );
+
+    int offset = styleRegex.indexIn( cleanHtml, 0 );
+    while (offset != -1) {
+      // replace all the matching text with the new line text
+        bool ok = false;
+        const QString fontSizeStr = styleRegex.cap(1);
+        const int ptValue = fontSizeStr.toInt(&ok);
+        if (ok) {
+            double emValue = (double)ptValue/12;
+            const QString emValueStr = QString::number(emValue, 'g', 2);
+            cleanHtml.replace(styleRegex.pos(1), QString(fontSizeStr + QLatin1String("px")).length(), emValueStr + QLatin1String("em"));
+        }
+        // advance the search offset to just beyond the last replace
+        offset += styleRegex.matchedLength();
+        // find the next occurance
+        offset = styleRegex.indexIn( cleanHtml, offset );
     }
 }
 
