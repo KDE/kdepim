@@ -178,7 +178,7 @@ public:
      * Fill the given composer MessageComposer::TextPart with what's in the editor currently.
      * @param textPart The MessageComposer::TextPart to fill.
      */
-    void fillComposerTextPart(MessageComposer::TextPart *textPart) const;
+    void fillComposerTextPart( MessageComposer::TextPart* textPart );
 
     PimCommon::AutoCorrection *autocorrection() const;
 
@@ -227,6 +227,8 @@ protected:
     void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
 
 private:
+    void fixHtmlFontSize(QString &cleanHtml);
+
     KMeditorPrivate *const d;
     friend class KMeditorPrivate;
     Q_PRIVATE_SLOT(d, void ensureCursorVisibleDelayed())
