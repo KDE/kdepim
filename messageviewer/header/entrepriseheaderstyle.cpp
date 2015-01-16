@@ -107,7 +107,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
     if ( strategy->showHeader( QLatin1String("subject") ) ) {
         headerStr +=
                 QLatin1String("     <tr> \n"
-                "      <td style=\"font-size: 6px; text-align: right; padding-left: 5px; padding-right: 24px; ")+borderSettings+QLatin1String("\"></td> \n"
+                "      <td style=\"font-size: 0.5em; text-align: right; padding-left: 5px; padding-right: 24px; ")+borderSettings+QLatin1String("\"></td> \n"
                 "      <td style=\"font-weight: bolder; font-size: 120%; padding-right: 91px; ")+borderSettings+QLatin1String("\">");
         headerStr += MessageViewer::HeaderStyleUtil::subjectString( message )+ QLatin1String("</td> \n"
                 "     </tr> \n");
