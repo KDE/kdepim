@@ -273,7 +273,7 @@ void SylpheedSettings::readSignature(const KConfigGroup &accountConfig, KIdentit
         signature.setText(accountConfig.readEntry("signature_text"));
         break;
     default:
-        qCDebug(IMPORTWIZARD_LOG) << " signature type unknow :" << signatureType;
+        qCDebug(IMPORTWIZARD_LOG) << " signature type unknown :" << signatureType;
     }
     const int signatureEnabled = accountConfig.readEntry("auto_signature", -1);
     switch (signatureEnabled) {

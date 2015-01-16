@@ -134,7 +134,7 @@ bool SieveConditionVirusTest::setParamWidgetValue(const QDomElement &element, QW
                     }
                 } else {
                     unknowTagValue(tagValue, error);
-                    qCDebug(LIBKSIEVE_LOG) << " SieveConditionVirusTest::setParamWidgetValue unknow tagValue " << tagValue;
+                    qCDebug(LIBKSIEVE_LOG) << " SieveConditionVirusTest::setParamWidgetValue unknown tagValue " << tagValue;
                 }
             } else if (tagName == QLatin1String("str")) {
                 QSpinBox *spinbox = w->findChild<QSpinBox *>(QLatin1String("value"));

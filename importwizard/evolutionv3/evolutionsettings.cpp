@@ -402,7 +402,7 @@ void EvolutionSettings::extractAccountInfo(const QString &info)
                         qCDebug(IMPORTWIZARD_LOG) << " unknown scheme " << scheme;
                     }
                 } else {
-                    qCDebug(IMPORTWIZARD_LOG) << " server tag unknow :" << serverTag;
+                    qCDebug(IMPORTWIZARD_LOG) << " server tag unknown :" << serverTag;
                 }
             }
         } else if (tag == QLatin1String("transport")) {
@@ -471,7 +471,7 @@ void EvolutionSettings::extractAccountInfo(const QString &info)
                         }
                     }
                 } else {
-                    qCDebug(IMPORTWIZARD_LOG) << " smtp tag unknow :" << smtpTag;
+                    qCDebug(IMPORTWIZARD_LOG) << " smtp tag unknown :" << smtpTag;
                 }
             }
             storeTransport(transport, true);

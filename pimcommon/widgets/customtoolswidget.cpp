@@ -141,7 +141,7 @@ CustomToolsWidget::ToolType CustomToolsWidget::toolType() const
     } else if (mStackedWidget->currentWidget() == mShortUrlWidget) {
         return ShortUrlTool;
     } else {
-        qCDebug(PIMCOMMON_LOG) << " unknow tool";
+        qCDebug(PIMCOMMON_LOG) << " unknown tool";
         return TranslatorTool;
     }
 }
