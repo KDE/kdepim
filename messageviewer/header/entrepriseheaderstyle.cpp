@@ -85,7 +85,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
                 "width: 10px; min-height: 100%;\">&nbsp;</div>");
 
     headerStr +=
-            QLatin1String("<div style=\"margin-left: 10px; top: 0px;\"><span style=\"font-size: 10px; font-weight: bold;\">")
+            QLatin1String("<div style=\"margin-left: 10px; top: 0px;\"><span style=\"font-size: 0.8em; font-weight: bold;\">")
             + MessageViewer::HeaderStyleUtil::dateString( message, isPrinting(), /* shortDate */ false ) + QLatin1String("</span></div>"
             // #0057ae
             "<table style=\"background: ")+activeColorDark.name()+QLatin1String("; border-collapse:collapse; top: 14px; min-width: 200px; \" cellpadding=0> \n"
@@ -124,7 +124,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
         //if ( strategy->showHeader( "date" ) )
         headerStr +=
                 QLatin1String("     <tr> \n"
-                "      <td style=\"font-size: 10px; padding-left: 5px; padding-right: 24px; text-align: right; vertical-align:top; ")+borderSettings+QLatin1String("\">")+i18n("From: ")+QLatin1String("</td> \n"
+                "      <td style=\"font-size: 0.8em; padding-left: 5px; padding-right: 24px; text-align: right; vertical-align:top; ")+borderSettings+QLatin1String("\">")+i18n("From: ")+QLatin1String("</td> \n"
                 "      <td style=\"")+borderSettings+QLatin1String("\">")+ fromPart +QLatin1String("</td> "
                 "     </tr> ");
     }
@@ -133,7 +133,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
     if ( strategy->showHeader( QLatin1String("to") ) ) {
         headerStr +=
                 QLatin1String("     <tr> "
-                "      <td style=\"font-size: 10px; text-align: right; vertical-align:top; padding-left: 5px; padding-right: 24px; ") + borderSettings + QLatin1String("\">") + i18n("To: ") + QLatin1String("</td> "
+                "      <td style=\"font-size: 0.8em; text-align: right; vertical-align:top; padding-left: 5px; padding-right: 24px; ") + borderSettings + QLatin1String("\">") + i18n("To: ") + QLatin1String("</td> "
                 "      <td style=\"") + borderSettings + QLatin1String("\">") +
                 StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayFullAddress, linkColor ) +
                 QLatin1String("      </td> "
@@ -144,7 +144,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
     if ( strategy->showHeader( QLatin1String("cc") ) && message->cc( false ) ) {
         headerStr +=
                 QLatin1String("     <tr> "
-                "      <td style=\"font-size: 10px; text-align: right; vertical-align:top; padding-left: 5px; padding-right: 24px; ") + borderSettings + QLatin1String("\">") + i18n("CC: ") + QLatin1String("</td> "
+                "      <td style=\"font-size: 0.8em; text-align: right; vertical-align:top; padding-left: 5px; padding-right: 24px; ") + borderSettings + QLatin1String("\">") + i18n("CC: ") + QLatin1String("</td> "
                 "      <td style=\"") + borderSettings + QLatin1String("\">") +
                 StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayFullAddress, linkColor ) +
                 QLatin1String("      </td> "
@@ -155,7 +155,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
     if ( strategy->showHeader( QLatin1String("bcc") ) && message->bcc( false ) ) {
         headerStr +=
                 QLatin1String("     <tr> "
-                "      <td style=\"font-size: 10px; text-align: right; vertical-align:top; padding-left: 5px; padding-right: 24px; ") + borderSettings + QLatin1String("\">") + i18n("BCC: ") + QLatin1String("</td> "
+                "      <td style=\"font-size: 0.8em; text-align: right; vertical-align:top; padding-left: 5px; padding-right: 24px; ") + borderSettings + QLatin1String("\">") + i18n("BCC: ") + QLatin1String("</td> "
                 "      <td style=\"") + borderSettings + QLatin1String("\">") +
                 StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayFullAddress, linkColor ) +
                 QLatin1String("      </td> "
