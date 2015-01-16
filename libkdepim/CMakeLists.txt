@@ -37,6 +37,7 @@ set(kdepim_job_LIB_SRCS
    job/openemailaddressjob.cpp
    job/addemaildisplayjob.cpp
    job/collectionsearchjob.cpp
+   job/personsearchjob.cpp
 )
 
 set(kdepim_widgets_LIB_SRCS
