@@ -78,6 +78,7 @@ KTNEFView::KTNEFView( QWidget *parent )
   setHeaderLabels( headerLabels );
   setSelectionMode( QAbstractItemView::ExtendedSelection );
   setDragEnabled( true );
+  setSortingEnabled(true);
   QTimer::singleShot( 0, this, SLOT(adjustColumnWidth()) );
 }
 
