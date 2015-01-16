@@ -31,6 +31,7 @@
 #include "evolutionv3/evolutionv3importdata.h"
 #include "evolutionv2/evolutionv2importdata.h"
 #include "evolutionv1/evolutionv1importdata.h"
+#include "icedove/icedoveimportdata.h"
 #include "opera/operaimportdata.h"
 #include "oe/oeimportdata.h"
 #include "mailapp/mailappimportdata.h"
@@ -95,6 +96,7 @@ ImportWizard::ImportWizard(QWidget *parent)
 
     //Import module
     addImportModule(new ThunderbirdImportData(this));
+    addImportModule(new IcedoveImportData(this));
     addImportModule(new SylpheedImportData(this));
     addImportModule(new Evolutionv3ImportData(this));
     addImportModule(new Evolutionv2ImportData(this));
@@ -220,12 +222,11 @@ void ImportWizard::slotAtLeastOneComponentSelected(bool result)
 
 void ImportWizard::setAppropriatePage(AbstractImporter::TypeSupportedOptions options)
 {
-    setAppropriate(mPage3, (options & AbstractImporter::Mails));
-    setAppropriate(mPage4, (options & AbstractImporter::Filters));
-    setAppropriate(mPage5, (options & AbstractImporter::Settings));
-    setAppropriate(mPage6, (options & AbstractImporter::AddressBooks));
-    setAppropriate(mPage7, (options & AbstractImporter::Calendars));
-
+    setAppropriate(mPage3,(options & AbstractImporter::Mails));
+    setAppropriate(mPage4,(options & AbstractImporter::Filters));
+    setAppropriate(mPage5,(options & AbstractImporter::Settings));
+    setAppropriate(mPage6,(options & AbstractImporter::AddressBooks));
+    setAppropriate(mPage7,(options & AbstractImporter::Calendars));
 }
 
 void ImportWizard::next()

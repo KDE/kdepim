@@ -28,6 +28,7 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <KSharedConfig>
+#include <QHeaderView>
 
 MessagePropertyDialog::MessagePropertyDialog(QWidget *parent, KTNEFMessage *msg)
     : QDialog(parent)
@@ -82,11 +83,16 @@ void MessagePropertyDialog::readConfig()
     if ( size.isValid() ) {
         resize( size );
     }
+    const QByteArray headerState = group.readEntry( "HeaderState" , QByteArray());
+    if (!headerState.isEmpty()) {
+        mListView->header()->restoreState(headerState);
+    }
 }
 
 void MessagePropertyDialog::writeConfig()
 {
     KConfigGroup group( KSharedConfig::openConfig(), "MessagePropertyDialog" );
     group.writeEntry( "Size", size() );
+    group.writeEntry( "HeaderState" , mListView->header()->saveState());
     group.sync();
 }

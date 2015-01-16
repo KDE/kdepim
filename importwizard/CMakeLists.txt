@@ -55,6 +55,7 @@ claws-mail/clawsmailaddressbook.cpp
 trojita/trojitasettings.cpp
 trojita/trojitaimportdata.cpp
 trojita/trojitaaddressbook.cpp
+icedove/icedoveimportdata.cpp
 )
 
 include_directories(${CMAKE_SOURCE_DIR}/mailimporter 

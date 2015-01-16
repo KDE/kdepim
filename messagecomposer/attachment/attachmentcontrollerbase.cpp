@@ -25,6 +25,7 @@
 #include "messagecomposer/attachment/attachmentmodel.h"
 #include "messagecomposer/job/attachmentjob.h"
 #include "messagecomposer/job/attachmentfrompublickeyjob.h"
+#include "messagecomposer/job/attachmentvcardfromaddressbookjob.h"
 #include "messagecomposer/composer/composer.h"
 
 #include "messagecomposer/part/globalpart.h"
@@ -39,6 +40,7 @@
 
 #include <QMenu>
 #include <QPointer>
+#include <QTreeView>
 
 #include <QAction>
 #include <KActionCollection>
@@ -66,6 +68,8 @@
 #include <messagecore/attachment/attachmentfromurlutils.h>
 #include <settings/messagecomposersettings.h>
 #include <KIO/Job>
+#include <Akonadi/Contact/EmailAddressSelectionDialog>
+#include <Akonadi/Contact/EmailAddressSelectionWidget>
 
 #include <KMime/Content>
 #include <QFileDialog>
@@ -93,6 +97,7 @@ public:
     void attachPublicKeyJobResult(KJob *job);   // slot
     void slotAttachmentContentCreated(KJob *job);   // slot
     void addAttachmentPart(AttachmentPart::Ptr part);
+    void attachVcardFromAddressBook( KJob *job ); //slot
     void selectedAllAttachment();
     void createOpenWithMenu(QMenu *topMenu, AttachmentPart::Ptr part);
     void reloadAttachment();
@@ -408,7 +413,20 @@ void AttachmentControllerBase::Private::attachPublicKeyJobResult(KJob *job)
     q->addAttachment(part);
 }
 
-static QTemporaryFile *dumpAttachmentToTempFile(const AttachmentPart::Ptr part)   // local
+void AttachmentControllerBase::Private::attachVcardFromAddressBook( KJob *job )
+{
+    if( job->error() ) {
+        qDebug()<<" Error during when get vcard";
+        return;
+    }
+
+    MessageComposer::AttachmentVcardFromAddressBookJob *ajob = static_cast<MessageComposer::AttachmentVcardFromAddressBookJob*>( job );
+    AttachmentPart::Ptr part = ajob->attachmentPart();
+    q->addAttachment( part );
+}
+
+
+static QTemporaryFile *dumpAttachmentToTempFile( const AttachmentPart::Ptr part ) // local
 {
     QTemporaryFile *file = new QTemporaryFile;
     if (!file->open()) {
@@ -478,10 +496,17 @@ void AttachmentControllerBase::createActions()
     d->addOwnVcardAction->setCheckable(true);
     connect(d->addOwnVcardAction, &QAction::triggered, this, &AttachmentControllerBase::addOwnVcard);
 
+    d->attachVCardsAction = new QAction( QIcon::fromTheme( QLatin1String( "mail-attachment" ) ), i18n( "&Attach Vcards..." ), this );
+    d->attachVCardsAction->setIconText( i18n( "Attach" ) );
+    connect( d->attachVCardsAction, &QAction::triggered, this, &AttachmentControllerBase::showAttachVcard );
+
+
     d->attachmentMenu->addAction(d->addAttachmentFileAction);
     d->attachmentMenu->addAction(d->addAttachmentDirectoryAction);
     d->attachmentMenu->addSeparator();
     d->attachmentMenu->addAction(d->addOwnVcardAction);
+    d->attachmentMenu->addSeparator();
+    d->attachmentMenu->addAction(d->attachVCardsAction);
 
     d->removeAction = new QAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("&Remove Attachment"), this);
     d->removeContextAction = new QAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Remove"), this);     // FIXME need two texts. is there a better way?
@@ -837,7 +862,17 @@ void AttachmentControllerBase::attachFileDirectory(const QList<QUrl> &urls, cons
 
 void AttachmentControllerBase::showAttachVcard()
 {
-    //TODO
+    QPointer<Akonadi::EmailAddressSelectionDialog> dlg = new Akonadi::EmailAddressSelectionDialog(d->wParent);
+    dlg->view()->view()->setSelectionMode( QAbstractItemView::MultiSelection );
+    if (dlg->exec()) {
+        const Akonadi::EmailAddressSelection::List selectedEmail = dlg->selectedAddresses();
+        Q_FOREACH (const Akonadi::EmailAddressSelection& selected, selectedEmail) {
+            MessageComposer::AttachmentVcardFromAddressBookJob *ajob = new MessageComposer::AttachmentVcardFromAddressBookJob( selected.item(), this);
+            connect( ajob, SIGNAL(result(KJob*)), this, SLOT(attachVcardFromAddressBook(KJob*)) );
+            ajob->start();
+        }
+    }
+    delete dlg;
 }
 
 void AttachmentControllerBase::showAddAttachmentCompressedDirectoryDialog()
