@@ -14,4 +14,6 @@ endmacro ()
 
 mailimporter_unittest(filterthunderbirdtest.cpp)
 mailimporter_unittest(filtericedovetest.cpp)
+mailimporter_unittest(filterclawsmailtest.cpp)
+mailimporter_unittest(filtersylpheedtest.cpp)
 
