@@ -26,7 +26,7 @@ namespace MailCommon {
 class SelectThunderbirdFilterFilesDialog : public KDialog
 {
 public:
-    explicit SelectThunderbirdFilterFilesDialog(QWidget *parent);
+    explicit SelectThunderbirdFilterFilesDialog(const QString &defaultSettingPath, QWidget *parent);
     ~SelectThunderbirdFilterFilesDialog();
 
     QStringList selectedFiles() const;

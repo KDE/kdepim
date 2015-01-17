@@ -21,7 +21,7 @@
 #include <QAbstractButton>
 #include <QListWidgetItem>
 
-SelectThunderbirdFilterFilesWidget::SelectThunderbirdFilterFilesWidget(QWidget *parent) :
+SelectThunderbirdFilterFilesWidget::SelectThunderbirdFilterFilesWidget(const QString &defaultSettingPath, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SelectThunderbirdFilterFilesWidget)
 {
@@ -31,7 +31,7 @@ SelectThunderbirdFilterFilesWidget::SelectThunderbirdFilterFilesWidget(QWidget *
 
     ui->listFiles->setSelectionMode(QAbstractItemView::MultiSelection);
     QString defaultProfile;
-    QMap<QString,QString> listProfile = MailImporter::FilterThunderbird::listProfile(defaultProfile);
+    QMap<QString,QString> listProfile = MailImporter::FilterThunderbird::listProfile(defaultProfile, defaultSettingPath);
     QMap<QString, QString>::const_iterator i = listProfile.constBegin();
     while (i != listProfile.constEnd()) {
         QString name = i.key();

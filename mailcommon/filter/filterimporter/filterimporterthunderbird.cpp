@@ -54,7 +54,12 @@ void FilterImporterThunderbird::readStream(QTextStream &stream)
     appendFilter(filter);
 }
 
-QString FilterImporterThunderbird::defaultFiltersSettingsPath()
+QString FilterImporterThunderbird::defaultIcedoveFiltersSettingsPath()
+{
+    return QString::fromLatin1( "%1/.icedove/" ).arg( QDir::homePath() );
+}
+
+QString FilterImporterThunderbird::defaultThunderbirdFiltersSettingsPath()
 {
     return QString::fromLatin1( "%1/.thunderbird/" ).arg( QDir::homePath() );
 }

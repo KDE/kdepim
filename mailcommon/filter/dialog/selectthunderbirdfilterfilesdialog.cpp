@@ -24,7 +24,7 @@
 
 using namespace MailCommon;
 
-SelectThunderbirdFilterFilesDialog::SelectThunderbirdFilterFilesDialog(QWidget *parent)
+SelectThunderbirdFilterFilesDialog::SelectThunderbirdFilterFilesDialog(const QString &defaultSettingPath, QWidget *parent)
     :KDialog(parent)
 {
     setCaption( i18n( "Select thunderbird filter files" ) );
@@ -37,7 +37,7 @@ SelectThunderbirdFilterFilesDialog::SelectThunderbirdFilterFilesDialog(QWidget *
     mainLayout->setMargin( KDialog::marginHint() );
     setMainWidget( mainWidget );
 
-    mSelectFilterFilesWidget = new SelectThunderbirdFilterFilesWidget(mainWidget);
+    mSelectFilterFilesWidget = new SelectThunderbirdFilterFilesWidget(defaultSettingPath, mainWidget);
     connect(mSelectFilterFilesWidget, SIGNAL(enableOkButton(bool)), this, SLOT(enableButtonOk(bool)));
     mainLayout->addWidget(mSelectFilterFilesWidget);
     readConfig();
