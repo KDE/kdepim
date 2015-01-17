@@ -67,6 +67,8 @@ install(TARGETS akonadi_followupreminder_agent ${KDE_INSTALL_TARGETS_DEFAULT_ARG
 
 install(FILES followupreminder.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/akonadi/agents")
 
-add_subdirectory(autotests)
+if (BUILD_TESTING)
+   add_subdirectory(autotests)
+endif()
 
 install(FILES akonadi_followupreminder_agent.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFY5RCDIR} )

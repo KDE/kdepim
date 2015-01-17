@@ -232,10 +232,12 @@ set_target_properties(mailcommon PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERS
 
 install(TARGETS mailcommon ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
-add_subdirectory(filter/filterimporter/autotests)
-add_subdirectory(collectionpage/autotests)
-add_subdirectory(filter/autotests)
-add_subdirectory(snippets/autotests)
+if (BUILD_TESTING)
+   add_subdirectory(filter/filterimporter/autotests)
+   add_subdirectory(collectionpage/autotests)
+   add_subdirectory(filter/autotests)
+   add_subdirectory(snippets/autotests)
+endif()
 #install(FILES viewer/viewer.h viewer/attachmentstrategy.h header/headerstrategy.h messageviewer_export.h DESTINATION ${KDE_INSTALL_INCLUDEDIR}/messageviewer COMPONENT devel)
 
 

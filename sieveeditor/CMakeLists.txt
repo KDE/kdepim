@@ -59,4 +59,6 @@ install(FILES
 
 install(PROGRAMS org.kde.sieveeditor.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 
-add_subdirectory(autotests)
+if (BUILD_TESTING)
+    add_subdirectory(autotests)
+endif()

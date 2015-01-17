@@ -50,4 +50,6 @@ install(PROGRAMS org.kde.storageservicemanager.desktop DESTINATION ${KDE_INSTALL
 
 install(FILES data/storageservicemanager.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFY5RCDIR})
 
-add_subdirectory(autotests)
+if (BUILD_TESTING)
+   add_subdirectory(autotests)
+endif()

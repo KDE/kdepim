@@ -24,7 +24,10 @@ endif()
 
 add_subdirectory(icons)
 add_subdirectory(printing)
-add_subdirectory(autotests)
+if (BUILD_TESTING)
+   add_subdirectory(autotests)
+endif()
+
 if(QGPGME_FOUND)
   add_definitions(-DQGPGME_FOUND)
 endif()
@@ -128,8 +131,10 @@ target_link_libraries(kaddressbookprivate
   grantleetheme
   kleo
 )
-add_subdirectory(merge/autotests)
-add_subdirectory(sendmail/autotests)
+if (BUILD_TESTING)
+   add_subdirectory(merge/autotests)
+   add_subdirectory(sendmail/autotests)
+endif()
 
 if(QGPGME_FOUND)
   target_link_libraries(kaddressbookprivate KF5::QGpgme)

@@ -17,7 +17,9 @@ include_directories(
 add_definitions(-DTRANSLATION_DOMAIN=\"libmessagelist\")
 
 add_subdirectory(pics)
-add_subdirectory(autotests)
+if (BUILD_TESTING)
+   add_subdirectory(autotests)
+endif()
 
 set(libmessagelist_SRCS
   core/aggregation.cpp
