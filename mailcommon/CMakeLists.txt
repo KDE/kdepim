@@ -201,6 +201,7 @@ target_link_libraries(mailcommon messageviewer messagecore messagecomposer maili
   kdepim
   akonadi_next
   pimcommon
+  incidenceeditorsng
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
@@ -208,10 +209,6 @@ target_link_libraries(mailcommon messageviewer messagecore messagecomposer maili
   ${KDEPIMLIBS_KIMAP_LIBS}
   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
   ${KDE4_KDEUI_LIBS}
-)
-
-target_link_libraries(mailcommon
-  incidenceeditorsng
 )
 
 
