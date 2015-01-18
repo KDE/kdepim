@@ -41,7 +41,7 @@ public:
     bool finished() const;
     KCalCore::MemoryCalendar::Ptr calendar() const;
 
-    virtual void detach();
+    void detach() Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     // TODO: Factor our update and detach into base class

@@ -25,12 +25,12 @@
 class TasksExportHandler : public ExportHandlerBase
 {
 protected:
-    virtual QString dialogText() const;
-    virtual QString dialogAllText() const;
-    virtual QString dialogLocalOnlyText() const;
+    QString dialogText() const Q_DECL_OVERRIDE;
+    QString dialogAllText() const Q_DECL_OVERRIDE;
+    QString dialogLocalOnlyText() const Q_DECL_OVERRIDE;
 
-    virtual QStringList mimeTypes() const;
-    virtual bool exportItems(const Akonadi::Item::List &items);
+    QStringList mimeTypes() const Q_DECL_OVERRIDE;
+    bool exportItems(const Akonadi::Item::List &items) Q_DECL_OVERRIDE;
 };
 
 #endif

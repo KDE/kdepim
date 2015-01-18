@@ -50,7 +50,7 @@ public:
 
     bool finished() const;
 
-    virtual void detach();
+    void detach() Q_DECL_OVERRIDE;
 
     bool vcardExist(int index) const;
 

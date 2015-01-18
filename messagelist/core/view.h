@@ -386,12 +386,12 @@ protected:
     /**
     * Reimplemented in order to catch palette, font and style changes
     */
-    virtual void changeEvent(QEvent *e);
+    void changeEvent(QEvent *e) Q_DECL_OVERRIDE;
 
     /**
     * Reimplemented in order to apply theme column widths on the first show
     */
-    virtual void showEvent(QShowEvent *e);
+    void showEvent(QShowEvent *e) Q_DECL_OVERRIDE;
 
     /**
     * Reimplemented in order to handle clicks with sub-item precision.
