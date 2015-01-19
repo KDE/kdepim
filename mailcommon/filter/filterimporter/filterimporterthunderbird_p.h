@@ -35,8 +35,9 @@ public:
     explicit FilterImporterThunderbird(QFile *file, bool interactive = true);
     FilterImporterThunderbird(QString string, bool interactive = true);
     ~FilterImporterThunderbird();
-    static QString defaultFiltersSettingsPath();
+    static QString defaultThunderbirdFiltersSettingsPath();
 
+    static QString defaultIcedoveFiltersSettingsPath();
 private:
     void readStream(QTextStream &stream);
     static QString cleanArgument(const QString &line, const QString &removeStr);

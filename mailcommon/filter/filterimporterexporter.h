@@ -60,7 +60,8 @@ public:
         SylpheedFilter = 3,
         ProcmailFilter = 4,
         BalsaFilter = 5,
-        ClawsMailFilter = 6
+        ClawsMailFilter = 6,
+        IcedoveFilter = 7
     };
 
     /**

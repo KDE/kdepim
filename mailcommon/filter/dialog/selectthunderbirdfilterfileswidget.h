@@ -32,7 +32,7 @@ class SelectThunderbirdFilterFilesWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit SelectThunderbirdFilterFilesWidget(QWidget *parent = Q_NULLPTR);
+    explicit SelectThunderbirdFilterFilesWidget(const QString &defaultSettingPath, QWidget *parent = Q_NULLPTR);
     ~SelectThunderbirdFilterFilesWidget();
     QStringList selectedFiles() const;
 

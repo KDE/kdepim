@@ -226,6 +226,7 @@ target_link_libraries(mailcommon messageviewer messagecore messagecomposer maili
   KF5::Imap
   KF5::MailTransport
   Phonon::phonon4qt5 
+  incidenceeditorsng
 )
 
 set_target_properties(mailcommon PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})

@@ -28,7 +28,7 @@
 
 using namespace MailCommon;
 
-SelectThunderbirdFilterFilesDialog::SelectThunderbirdFilterFilesDialog(QWidget *parent)
+SelectThunderbirdFilterFilesDialog::SelectThunderbirdFilterFilesDialog(const QString &defaultSettingPath, QWidget *parent)
     : QDialog(parent)
 {
     setWindowTitle(i18n("Select thunderbird filter files"));
@@ -42,7 +42,7 @@ SelectThunderbirdFilterFilesDialog::SelectThunderbirdFilterFilesDialog(QWidget *
     connect(buttonBox, &QDialogButtonBox::rejected, this, &SelectThunderbirdFilterFilesDialog::reject);
     okButton->setDefault(true);
     setModal(true);
-    mSelectFilterFilesWidget = new SelectThunderbirdFilterFilesWidget(this);
+    mSelectFilterFilesWidget = new SelectThunderbirdFilterFilesWidget(defaultSettingPath, this);
     connect(mSelectFilterFilesWidget, &SelectThunderbirdFilterFilesWidget::enableOkButton, okButton, &QPushButton::setEnabled);
     mainLayout->addWidget(mSelectFilterFilesWidget);
     mainLayout->addWidget(buttonBox);

@@ -38,6 +38,7 @@
 #include "filterimporter/filterimporterprocmail_p.h"
 #include "filterimporter/filterimporterbalsa_p.h"
 #include "filterimporter/filterimporterclawsmail_p.h"
+
 #include "dialog/selectthunderbirdfilterfilesdialog.h"
 
 #include <messageviewer/utils/autoqpointer.h>
@@ -175,8 +176,8 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
                 defaultPath = QDir::homePath();
                 break;
             case ThunderBirdFilter:
-                title = i18n("Import Thunderbird Filters");
-                defaultPath = MailCommon::FilterImporterThunderbird::defaultFiltersSettingsPath();
+                title = i18n( "Import Thunderbird Filters" );
+                defaultPath = MailCommon::FilterImporterThunderbird::defaultThunderbirdFiltersSettingsPath();
                 break;
             case EvolutionFilter:
                 title = i18n("Import Evolution Filters");
@@ -197,6 +198,10 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
             case ClawsMailFilter:
                 title = i18n("Import Claws Mail Filters");
                 defaultPath = MailCommon::FilterImporterClawsMails::defaultFiltersSettingsPath();
+                break;
+            case IcedoveFilter:
+                title = i18n( "Import Icedove Filters" );
+                defaultPath = MailCommon::FilterImporterThunderbird::defaultIcedoveFiltersSettingsPath();
                 break;
             }
 
@@ -225,10 +230,14 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
         imported = readFiltersFromConfig(config, emptyFilter);
         break;
     }
-    case ThunderBirdFilter: {
+    case IcedoveFilter:
+    case ThunderBirdFilter:
+    {
         if (fileName.isEmpty()) {
-            SelectThunderbirdFilterFilesDialog *selectThunderBirdFileDialog = new SelectThunderbirdFilterFilesDialog(d->mParent);
-            selectThunderBirdFileDialog->setStartDir(QUrl::fromLocalFile(MailCommon::FilterImporterThunderbird::defaultFiltersSettingsPath()));
+            const QString defaultPath = ( type == ThunderBirdFilter ) ? MailCommon::FilterImporterThunderbird::defaultThunderbirdFiltersSettingsPath() : MailCommon::FilterImporterThunderbird::defaultIcedoveFiltersSettingsPath();
+
+            SelectThunderbirdFilterFilesDialog * selectThunderBirdFileDialog = new SelectThunderbirdFilterFilesDialog(defaultPath, d->mParent);
+            selectThunderBirdFileDialog->setStartDir(QUrl::fromLocalFile(defaultPath));
             if (selectThunderBirdFileDialog->exec()) {
                 Q_FOREACH (const QString &url, selectThunderBirdFileDialog->selectedFiles()) {
                     QFile fileThunderbird(url);

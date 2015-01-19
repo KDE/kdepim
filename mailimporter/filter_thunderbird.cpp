@@ -51,11 +51,12 @@ QString FilterThunderbird::defaultSettingsPath()
     return QDir::homePath() + QLatin1String("/.thunderbird/");
 }
 
-QString FilterThunderbird::defaultProfile(QWidget *parent)
+
+QString FilterThunderbird::defaultProfile(const QString defaultSettingPath, QWidget * parent)
 {
     QString currentProfile;
-    QMap<QString, QString> listProfile = FilterThunderbird::listProfile(currentProfile);
-    if (listProfile.isEmpty()) {
+    QMap<QString,QString> listProfile = FilterThunderbird::listProfile(currentProfile, defaultSettingPath);
+    if(listProfile.isEmpty()) {
         return QString();
     } else if (listProfile.count() == 1) {
         return currentProfile;
@@ -69,12 +70,12 @@ QString FilterThunderbird::defaultProfile(QWidget *parent)
     return currentProfile;
 }
 
-QMap<QString, QString> FilterThunderbird::listProfile(QString &currentProfile)
+QMap<QString,QString> FilterThunderbird::listProfile(QString&currentProfile, const QString &defaultSettingPath)
 {
-    const QString thunderbirdPath = defaultSettingsPath() + QLatin1String("/profiles.ini");
-    QMap<QString, QString> lstProfile;
-    QFile profiles(thunderbirdPath);
-    if (profiles.exists()) {
+    const QString thunderbirdPath = defaultSettingPath + QLatin1String( "/profiles.ini" );
+    QMap<QString,QString> lstProfile;
+    QFile profiles( thunderbirdPath );
+    if ( profiles.exists() ) {
         //ini file.
         KConfig config(thunderbirdPath);
         const QStringList profileList = config.groupList().filter(QRegExp("Profile\\d+"));
