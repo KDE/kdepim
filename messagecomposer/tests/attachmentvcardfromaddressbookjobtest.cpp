@@ -46,7 +46,8 @@ void AttachmentVcardFromAddressBookJobTest::testAttachmentVCardWithValidItem()
     Akonadi::Item item(42);
     item.setMimeType( KABC::Addressee::mimeType() );
     KABC::Addressee address;
-    address.setName(QLatin1String("foo1"));
+    const QString name = QLatin1String("foo1");
+    address.setName(name);
     item.setPayload<KABC::Addressee>( address );
     MessageComposer::AttachmentVcardFromAddressBookJob *job = new MessageComposer::AttachmentVcardFromAddressBookJob(item);
     QVERIFY(job->exec());
@@ -56,17 +57,30 @@ void AttachmentVcardFromAddressBookJobTest::testAttachmentVCardWithValidItem()
     job = 0;
 
     QVERIFY( !part->data().isEmpty() );
+    QCOMPARE( part->mimeType(), QByteArray("text/x-vcard") );
+    const QString newName = name + QLatin1String(".vcf");
+    QCOMPARE( part->name(), newName );
+    QVERIFY( part->description().isEmpty() );
+    QVERIFY( !part->isInline() );
+    QVERIFY( !part->fileName().isEmpty() );
+}
 
-#if 0 //TODO
-    QCOMPARE( part->mimeType(), mimeType );
-    QCOMPARE( part->name(), name );
-    QCOMPARE( part->description(), description );
-    //QCOMPARE( part->charset(), charset ); // TODO will probably need charsets in AttachmentPart :(
-    QCOMPARE( part->fileName(), fileName );
-    QVERIFY( part->encoding() == encoding );
-    QVERIFY( part->isInline() );
-    QCOMPARE( part->data(), data );
-#endif
+void AttachmentVcardFromAddressBookJobTest::testAttachmentVCardWithInvalidVCard()
+{
+    Akonadi::Item item(42);
+    MessageComposer::AttachmentVcardFromAddressBookJob *job = new MessageComposer::AttachmentVcardFromAddressBookJob(item);
+    QVERIFY(!job->exec());
+}
+
+void AttachmentVcardFromAddressBookJobTest::testAttachmentVCardWithEmptyVCard()
+{
+    Akonadi::Item item(42);
+    item.setMimeType( KABC::Addressee::mimeType() );
+    KABC::Addressee address;
+    item.setPayload<KABC::Addressee>( address );
+    MessageComposer::AttachmentVcardFromAddressBookJob *job = new MessageComposer::AttachmentVcardFromAddressBookJob(item);
+    QVERIFY(job->exec());
+    //TODO
 }
 
 QTEST_KDEMAIN(AttachmentVcardFromAddressBookJobTest, GUI)

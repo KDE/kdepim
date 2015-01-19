@@ -32,6 +32,8 @@ public:
 private Q_SLOTS:
     void testAttachmentVCardWithInvalidItem();
     void testAttachmentVCardWithValidItem();
+    void testAttachmentVCardWithInvalidVCard();
+    void testAttachmentVCardWithEmptyVCard();
 };
 
 #endif // ATTACHMENTVCARDFROMADDRESSBOOKJOBTEST_H
