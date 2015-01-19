@@ -37,6 +37,7 @@ private Q_SLOTS:
     void slotExpandGroupResult(KJob *job);
 
 private:
+    void invalidContact();
     void addAttachment(const QByteArray &data, const QString &attachmentName);
     Akonadi::Item mItem;
 };

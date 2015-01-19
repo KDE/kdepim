@@ -39,6 +39,8 @@ void AttachmentVcardFromAddressBookJobTest::testAttachmentVCardWithInvalidItem()
     Akonadi::Item item;
     MessageComposer::AttachmentVcardFromAddressBookJob *job = new MessageComposer::AttachmentVcardFromAddressBookJob(item);
     QVERIFY(!job->exec());
+    delete job;
+    job = 0;
 }
 
 void AttachmentVcardFromAddressBookJobTest::testAttachmentVCardWithValidItem()
@@ -70,6 +72,8 @@ void AttachmentVcardFromAddressBookJobTest::testAttachmentVCardWithInvalidVCard(
     Akonadi::Item item(42);
     MessageComposer::AttachmentVcardFromAddressBookJob *job = new MessageComposer::AttachmentVcardFromAddressBookJob(item);
     QVERIFY(!job->exec());
+    delete job;
+    job = 0;
 }
 
 void AttachmentVcardFromAddressBookJobTest::testAttachmentVCardWithEmptyVCard()
@@ -79,8 +83,9 @@ void AttachmentVcardFromAddressBookJobTest::testAttachmentVCardWithEmptyVCard()
     KABC::Addressee address;
     item.setPayload<KABC::Addressee>( address );
     MessageComposer::AttachmentVcardFromAddressBookJob *job = new MessageComposer::AttachmentVcardFromAddressBookJob(item);
-    QVERIFY(job->exec());
-    //TODO
+    QVERIFY(!job->exec());
+    delete job;
+    job = 0;
 }
 
 QTEST_KDEMAIN(AttachmentVcardFromAddressBookJobTest, GUI)

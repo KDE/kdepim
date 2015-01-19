@@ -57,13 +57,17 @@ void AttachmentVcardFromAddressBookJob::doStart()
     if (mItem.isValid()) {
         if ( mItem.hasPayload<KABC::Addressee>() ) {
             const KABC::Addressee contact = mItem.payload<KABC::Addressee>();
-            const QString contactRealName(contact.realName());
-            const QString attachmentName = (contactRealName.isEmpty() ? QLatin1String("vcard") : contactRealName ) + QLatin1String( ".vcf" );
+            if (contact.isEmpty()) {
+                invalidContact();
+            } else {
+                const QString contactRealName(contact.realName());
+                const QString attachmentName = (contactRealName.isEmpty() ? QLatin1String("vcard") : contactRealName ) + QLatin1String( ".vcf" );
 
-            QByteArray data = mItem.payloadData();
-            //Workaround about broken kaddressbook fields.
-            MessageComposer::Util::adaptVcard(data);
-            addAttachment( data, attachmentName );
+                QByteArray data = mItem.payloadData();
+                //Workaround about broken kaddressbook fields.
+                MessageComposer::Util::adaptVcard(data);
+                addAttachment( data, attachmentName );
+            }
         } else if ( mItem.hasPayload<KABC::ContactGroup>() ) {
             const KABC::ContactGroup group = mItem.payload<KABC::ContactGroup>();
             const QString groupName(group.name());
@@ -78,10 +82,15 @@ void AttachmentVcardFromAddressBookJob::doStart()
             emitResult();
         }
     } else {
-        setError( KJob::UserDefinedError );
-        setErrorText( i18n("Invalid Contact") );
-        emitResult();
+        invalidContact();
     }
+}
+
+void AttachmentVcardFromAddressBookJob::invalidContact()
+{
+    setError( KJob::UserDefinedError );
+    setErrorText( i18n("Invalid Contact") );
+    emitResult();
 }
 
 void AttachmentVcardFromAddressBookJob::slotExpandGroupResult(KJob* job)
