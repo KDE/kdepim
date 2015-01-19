@@ -29,6 +29,9 @@ class AttachmentVcardFromAddressBookJobTest : public QObject
 public:
     explicit AttachmentVcardFromAddressBookJobTest(QObject *parent = 0);
     ~AttachmentVcardFromAddressBookJobTest();
+private Q_SLOTS:
+    void testAttachmentVCardWithInvalidItem();
+    void testAttachmentVCardWithValidItem();
 };
 
 #endif // ATTACHMENTVCARDFROMADDRESSBOOKJOBTEST_H
