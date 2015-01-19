@@ -55,6 +55,8 @@ add_messagecomposer_test( skeletonmessagejobtest.cpp )
 add_messagecomposer_test( singlepartjobtest.cpp )
 add_messagecomposer_test( multipartjobtest.cpp )
 
+add_messagecomposer_test( attachmentvcardfromaddressbookjobtest.cpp ) 
+
 # More complex content jobs.
 add_messagecomposer_test( attachmentjobtest.cpp )
 add_messagecomposer_test( maintextjobtest.cpp )
@@ -65,6 +67,7 @@ add_messagecomposer_cryptotest( cryptocomposertest.cpp )
 add_messagecomposer_test( infoparttest.cpp )
 add_messagecomposer_test( textparttest.cpp )
 add_messagecomposer_test( globalparttest.cpp )
+
 
 add_messagecomposer_test( composerviewbasetest.cpp )
 
