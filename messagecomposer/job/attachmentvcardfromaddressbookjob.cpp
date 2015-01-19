@@ -56,13 +56,17 @@ void AttachmentVcardFromAddressBookJob::doStart()
     if (mItem.isValid()) {
         if ( mItem.hasPayload<KContacts::Addressee>() ) {
             const KContacts::Addressee contact = mItem.payload<KContacts::Addressee>();
-            const QString contactRealName(contact.realName());
-            const QString attachmentName = (contactRealName.isEmpty() ? QLatin1String("vcard") : contactRealName ) + QLatin1String( ".vcf" );
+            if (contact.isEmpty()) {
+                invalidContact();
+            } else {
+                const QString contactRealName(contact.realName());
+                const QString attachmentName = (contactRealName.isEmpty() ? QLatin1String("vcard") : contactRealName ) + QLatin1String( ".vcf" );
 
-            QByteArray data = mItem.payloadData();
-            //Workaround about broken kaddressbook fields.
-            MessageComposer::Util::adaptVcard(data);
-            addAttachment( data, attachmentName );
+                QByteArray data = mItem.payloadData();
+                //Workaround about broken kaddressbook fields.
+                MessageComposer::Util::adaptVcard(data);
+                addAttachment( data, attachmentName );
+            }
         } else if ( mItem.hasPayload<KContacts::ContactGroup>() ) {
             const KContacts::ContactGroup group = mItem.payload<KContacts::ContactGroup>();
             const QString groupName(group.name());
@@ -77,13 +81,18 @@ void AttachmentVcardFromAddressBookJob::doStart()
             emitResult();
         }
     } else {
-        setError(KJob::UserDefinedError);
-        setErrorText(i18n("Invalid Contact"));
-        emitResult();
+        invalidContact();
     }
 }
 
-void AttachmentVcardFromAddressBookJob::slotExpandGroupResult(KJob *job)
+void AttachmentVcardFromAddressBookJob::invalidContact()
+{
+    setError( KJob::UserDefinedError );
+    setErrorText( i18n("Invalid Contact") );
+    emitResult();
+}
+
+void AttachmentVcardFromAddressBookJob::slotExpandGroupResult(KJob* job)
 {
     Akonadi::ContactGroupExpandJob *expandJob = qobject_cast<Akonadi::ContactGroupExpandJob *>(job);
     Q_ASSERT(expandJob);
