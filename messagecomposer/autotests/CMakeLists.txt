@@ -19,7 +19,7 @@ macro( add_messagecomposer_test _source )
   add_executable( ${_name} ${_test} )
   add_test( ${_name} ${_name} )
   ecm_mark_as_test(messagecomposer-${_name})
-  target_link_libraries( ${_name} KF5::Mime messagecomposer messageviewer messagecore templateparser KF5::PimTextEdit Qt5::Test    KF5::IdentityManagement
+  target_link_libraries( ${_name} KF5::Mime messagecomposer messageviewer messagecore templateparser KF5::PimTextEdit Qt5::Test    KF5::IdentityManagement KF5::KContacts 
   KF5::AkonadiCore
 )
 endmacro()
@@ -60,6 +60,8 @@ add_messagecomposer_test( multipartjobtest.cpp )
 # More complex content jobs.
 add_messagecomposer_test( attachmentjobtest.cpp )
 add_messagecomposer_test( maintextjobtest.cpp )
+
+add_messagecomposer_test( attachmentvcardfromaddressbookjobtest.cpp )
 
 # Composer.
 add_messagecomposer_test( composertest.cpp )

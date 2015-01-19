@@ -54,17 +54,20 @@ void AttachmentVcardFromAddressBookJob::addAttachment(const QByteArray &data, co
 void AttachmentVcardFromAddressBookJob::doStart()
 {
     if (mItem.isValid()) {
-        if (mItem.hasPayload<KContacts::Addressee>()) {
+        if ( mItem.hasPayload<KContacts::Addressee>() ) {
             const KContacts::Addressee contact = mItem.payload<KContacts::Addressee>();
-            QString attachmentName = contact.realName() + QLatin1String(".vcf");
-            //Workaround about broken kaddressbook fields.
+            const QString contactRealName(contact.realName());
+            const QString attachmentName = (contactRealName.isEmpty() ? QLatin1String("vcard") : contactRealName ) + QLatin1String( ".vcf" );
+
             QByteArray data = mItem.payloadData();
+            //Workaround about broken kaddressbook fields.
             MessageComposer::Util::adaptVcard(data);
-            addAttachment(data, attachmentName);
-        } else if (mItem.hasPayload<KContacts::ContactGroup>()) {
+            addAttachment( data, attachmentName );
+        } else if ( mItem.hasPayload<KContacts::ContactGroup>() ) {
             const KContacts::ContactGroup group = mItem.payload<KContacts::ContactGroup>();
-            QString attachmentName = group.name() + QLatin1String(".vcf");
-            Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob(group, this);
+            const QString groupName(group.name());
+            const QString attachmentName = ( groupName.isEmpty() ? QLatin1String("vcard") : groupName ) + QLatin1String( ".vcf" );
+            Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob( group, this );
             expandJob->setProperty("groupName", attachmentName);
             connect(expandJob, SIGNAL(result(KJob*)), this, SLOT(slotExpandGroupResult(KJob*)));
             expandJob->start();

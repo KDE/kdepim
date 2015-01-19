@@ -20,10 +20,10 @@
 
 #include "messagecore/attachment/attachmentloadjob.h"
 #include <AkonadiCore/Item>
-
+#include "messagecomposer_export.h"
 namespace MessageComposer
 {
-class AttachmentVcardFromAddressBookJob : public MessageCore::AttachmentLoadJob
+class MESSAGECOMPOSER_EXPORT AttachmentVcardFromAddressBookJob : public MessageCore::AttachmentLoadJob
 {
     Q_OBJECT
 public:
