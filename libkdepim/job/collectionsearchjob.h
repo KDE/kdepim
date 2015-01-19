@@ -23,11 +23,13 @@
 #ifndef KORG_COLLECTIONSEARCHJOB_H
 #define KORG_COLLECTIONSEARCHJOB_H
 
+#include "kdepim_export.h"
+
 #include <KJob>
 #include <Akonadi/Collection>
 #include <QStringList>
 
-class CollectionSearchJob : public KJob
+class KDEPIM_EXPORT CollectionSearchJob : public KJob
 {
     Q_OBJECT
 public:

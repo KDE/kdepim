@@ -23,12 +23,14 @@
 #ifndef KORG_PERSONSEARCHJOB_H
 #define KORG_PERSONSEARCHJOB_H
 
+#include "kdepim_export.h"
+
 #include <KJob>
 #include <Akonadi/Collection>
 #include <libkdepim/ldap/ldapclientsearch.h>
 #include "person.h"
 
-class PersonSearchJob : public KJob
+class KDEPIM_EXPORT PersonSearchJob : public KJob
 {
     Q_OBJECT
 public:

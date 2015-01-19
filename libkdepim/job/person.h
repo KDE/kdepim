@@ -23,10 +23,12 @@
 #ifndef KORG_PERSON_H
 #define KORG_PERSON_H
 
+#include "kdepim_export.h"
+
 #include <QStringList>
 #include <Akonadi/Collection>
 
-struct Person
+struct KDEPIM_EXPORT Person
 {
     Person(): rootCollection(-1), updateDisplayName(false) {};
     QString name;
