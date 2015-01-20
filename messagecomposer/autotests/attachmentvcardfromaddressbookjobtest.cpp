@@ -20,8 +20,8 @@
 
 #include "attachmentvcardfromaddressbookjobtest.h"
 #include "messagecomposer/job/attachmentvcardfromaddressbookjob.h"
-#include <qtest_kde.h>
-#include <KABC/Addressee>
+#include <qtest.h>
+#include <KContacts/Addressee>
 
 AttachmentVcardFromAddressBookJobTest::AttachmentVcardFromAddressBookJobTest(QObject *parent)
     : QObject(parent)
@@ -46,11 +46,11 @@ void AttachmentVcardFromAddressBookJobTest::testAttachmentVCardWithInvalidItem()
 void AttachmentVcardFromAddressBookJobTest::testAttachmentVCardWithValidItem()
 {
     Akonadi::Item item(42);
-    item.setMimeType( KABC::Addressee::mimeType() );
-    KABC::Addressee address;
+    item.setMimeType( KContacts::Addressee::mimeType() );
+    KContacts::Addressee address;
     const QString name = QLatin1String("foo1");
     address.setName(name);
-    item.setPayload<KABC::Addressee>( address );
+    item.setPayload<KContacts::Addressee>( address );
     MessageComposer::AttachmentVcardFromAddressBookJob *job = new MessageComposer::AttachmentVcardFromAddressBookJob(item);
     QVERIFY(job->exec());
 
@@ -79,13 +79,13 @@ void AttachmentVcardFromAddressBookJobTest::testAttachmentVCardWithInvalidVCard(
 void AttachmentVcardFromAddressBookJobTest::testAttachmentVCardWithEmptyVCard()
 {
     Akonadi::Item item(42);
-    item.setMimeType( KABC::Addressee::mimeType() );
-    KABC::Addressee address;
-    item.setPayload<KABC::Addressee>( address );
+    item.setMimeType( KContacts::Addressee::mimeType() );
+    KContacts::Addressee address;
+    item.setPayload<KContacts::Addressee>( address );
     MessageComposer::AttachmentVcardFromAddressBookJob *job = new MessageComposer::AttachmentVcardFromAddressBookJob(item);
     QVERIFY(!job->exec());
     delete job;
     job = 0;
 }
 
-QTEST_KDEMAIN(AttachmentVcardFromAddressBookJobTest, GUI)
+QTEST_MAIN(AttachmentVcardFromAddressBookJobTest)
