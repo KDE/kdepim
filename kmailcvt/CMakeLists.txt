@@ -26,6 +26,7 @@ add_executable(kmailcvt ${kmailcvt_SRCS})
 
 target_link_libraries(kmailcvt
   KF5::KIOCore
+  KF5::DBusAddons
   KF5::AkonadiCore
   KF5::AkonadiMime
   KF5::Mime

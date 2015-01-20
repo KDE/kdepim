@@ -22,16 +22,18 @@
 #include <KLocalizedString>
 #include <QCommandLineParser>
 #include <QApplication>
+#include <KDBusService>
 
 int main(int argc, char *argv[])
 {
+    QApplication app(argc, argv);
+
     Kdelibs4ConfigMigrator migrate(QLatin1String("ktnef"));
     migrate.setConfigFiles(QStringList() << QLatin1String("ktnefrc"));
     migrate.setUiFiles(QStringList() << QLatin1String("ktnefui.rc"));
     migrate.migrate();
 
     KLocalizedString::setApplicationDomain("ktnef");
-    QApplication app(argc, argv);
 
     KAboutData aboutData(QStringLiteral("ktnef"),
                          i18n("KTnef"),
@@ -62,10 +64,13 @@ int main(int argc, char *argv[])
     parser.process(app);
     aboutData.processCommandLine(&parser);
 
+    KDBusService service;
+
     KTNEFMain *tnef = new KTNEFMain();
     tnef->show();
     const QStringList &args = parser.positionalArguments();
 
+   
     if (!args.isEmpty()) {
         tnef->loadFile(args.first());
     }

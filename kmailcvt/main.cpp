@@ -22,6 +22,7 @@
 #include <QApplication>
 #include "kmailcvt.h"
 #include "kdepim-version.h"
+#include <KDBusService>
 
 int main(int argc, char *argv[])
 {
@@ -51,6 +52,8 @@ int main(int argc, char *argv[])
     aboutData.setupCommandLine(&parser);
     parser.process(app);
     aboutData.processCommandLine(&parser);
+
+    KDBusService service;
 
     KMailCVT *kmailcvt = new KMailCVT();
     kmailcvt->show();
