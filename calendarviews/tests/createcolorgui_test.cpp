@@ -17,11 +17,14 @@
 
 #include "createcolorgui_test.h"
 #include "prefs.h"
-#include <kapplication.h>
-#include <KCmdLineArgs>
+
+
 #include <KLocalizedString>
 #include <QVBoxLayout>
 #include <QListWidget>
+#include <QApplication>
+#include <KAboutData>
+#include <QCommandLineParser>
 #include "calendarview_debug.h"
 
 CreateColorGui_test::CreateColorGui_test(QWidget *parent)
@@ -54,10 +57,17 @@ void CreateColorGui_test::createListWidgetItem()
 
 int main(int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "CreateColorGui_test", 0, ki18n("CreateColorGui_test"),
-                       "1.0", ki18n("Test creating color"));
+    KAboutData aboutData( QLatin1String("CreateColorGui_test"), i18n("CreateColorGui_test"), QLatin1String("1.0"));
+    aboutData.setShortDescription(i18n("Test creating color"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-    KApplication app;
 
     CreateColorGui_test *createColor = new CreateColorGui_test;
     createColor->resize(800, 600);
