@@ -114,6 +114,7 @@ set(kaddressbook_LIB_SRCS
   ${kaddressbook_printing_SRCS}
   ${kaddressbook_xxport_SRCS}
   ${kaddressbook_sendmail_SRCS}
+  ${kaddressbook_sendvcards_SRCS}
 )
 
 qt4_add_dbus_adaptor( kaddressbook_LIB_SRCS org.kde.kaddressbook.xml mainwidget.h MainWidget)
@@ -137,7 +138,7 @@ target_link_libraries(kaddressbookprivate
 )
 add_subdirectory(merge/tests)
 add_subdirectory(sendmail/tests)
-
+add_subdirectory(sendvcards/autotests)
 if(QGPGME_FOUND)
   target_link_libraries(kaddressbookprivate ${QGPGME_LIBRARIES})
 endif()
