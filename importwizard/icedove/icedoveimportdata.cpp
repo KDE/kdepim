@@ -25,7 +25,7 @@
 #include "mailcommon/filter/filterimporterexporter.h"
 #include "importwizard.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KConfig>
 
 #include <QDir>
