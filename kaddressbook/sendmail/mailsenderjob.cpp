@@ -31,7 +31,6 @@
 
 #include <KABC/Addressee>
 #include <KABC/ContactGroup>
-#include <KToolInvocation>
 
 #include <QDebug>
 #include <QItemSelectionModel>
