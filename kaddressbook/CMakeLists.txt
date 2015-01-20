@@ -28,7 +28,7 @@ if (BUILD_TESTING)
    add_subdirectory(autotests)
 endif()
 
-if(QGPGME_FOUND)
+if(KF5Gpgmepp_FOUND)
   add_definitions(-DQGPGME_FOUND)
 endif()
 
@@ -142,10 +142,9 @@ if (BUILD_TESTING)
    add_subdirectory(sendvcards/autotests)
 endif()
 
-if(QGPGME_FOUND)
-  target_link_libraries(kaddressbookprivate KF5::QGpgme)
+if(KF5Gpgmepp_FOUND)
+   target_link_libraries(kaddressbookprivate KF5::QGpgme)
 endif()
-
 if(KF5Prison_FOUND)
   target_link_libraries(kaddressbookprivate KF5::Prison)
 endif()
@@ -175,7 +174,7 @@ target_link_libraries(kaddressbook
   grantleetheme
 )
 
-if(QGPGME_FOUND)
+if(KF5Gpgmepp_FOUND)
   target_link_libraries(kaddressbook KF5::QGpgme)
 endif()
 
