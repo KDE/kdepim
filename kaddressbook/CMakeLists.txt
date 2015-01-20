@@ -36,6 +36,10 @@ set(kaddressbook_sendmail_SRCS
   sendmail/mailsenderjob.cpp
 )
 
+set(kaddressbook_sendvcards_SRCS
+  sendvcards/sendvcardsjob.cpp
+)
+
 set(kaddressbook_printing_SRCS
   printing/detailled/detailledstyle.cpp
   printing/mike/mikesstyle.cpp
