@@ -17,7 +17,7 @@
 
 
 #include "attachmentvcardfromaddressbookjob.h"
-#include "messagecomposer/utils/util.h"
+#include "pimcommon/util/vcardutil.h"
 #include <KLocalizedString>
 #include <KABC/Addressee>
 #include <KABC/ContactGroup>
@@ -65,7 +65,8 @@ void AttachmentVcardFromAddressBookJob::doStart()
 
                 QByteArray data = mItem.payloadData();
                 //Workaround about broken kaddressbook fields.
-                MessageComposer::Util::adaptVcard(data);
+                PimCommon::VCardUtil vcardUtil;
+                vcardUtil.adaptVcard(data);
                 addAttachment( data, attachmentName );
             }
         } else if ( mItem.hasPayload<KABC::ContactGroup>() ) {
