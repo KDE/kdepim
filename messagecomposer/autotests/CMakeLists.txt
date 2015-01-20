@@ -19,7 +19,7 @@ macro( add_messagecomposer_test _source )
   add_executable( ${_name} ${_test} )
   add_test( ${_name} ${_name} )
   ecm_mark_as_test(messagecomposer-${_name})
-  target_link_libraries( ${_name} KF5::Mime messagecomposer messageviewer messagecore templateparser KF5::PimTextEdit Qt5::Test    KF5::IdentityManagement KF5::KContacts 
+  target_link_libraries( ${_name} KF5::Mime messagecomposer messageviewer messagecore templateparser KF5::PimTextEdit Qt5::Test    KF5::IdentityManagement KF5::Contacts 
   KF5::AkonadiCore
 )
 endmacro()
