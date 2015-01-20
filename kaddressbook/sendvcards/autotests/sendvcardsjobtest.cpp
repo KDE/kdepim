@@ -19,6 +19,7 @@
 */
 
 #include "sendvcardsjobtest.h"
+#include "sendvcards/sendvcardsjob.h"
 #include <qtest_kde.h>
 SendVcardsJobTest::SendVcardsJobTest(QObject *parent)
     : QObject(parent)
