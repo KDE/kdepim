@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Contact Print Theme Editor
+Type=Application
+Exec=contactprintthemeeditor
+Icon=kaddressbook
+X-DocPath=contactprintthemeeditor/index.html
+GenericName=Contact Print Theme Editor
+Terminal=false
+Categories=Qt;KDE;Office;Network;ContactManagement;
+InitialPreference=10
+X-DBUS-ServiceName=org.kde.contactprintthemeeditor
