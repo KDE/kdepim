@@ -49,7 +49,11 @@ float ContactGrantleePrintGeoObject::longitude() const
 
 QString ContactGrantleePrintGeoObject::toString() const
 {
-    return mGeo.toString();
+    QString result;
+    if (mGeo.isValid()) {
+        result = QString::fromLatin1("%1 %2, %3 %2").arg(mGeo.latitude()).arg(QChar(176)).arg(mGeo.longitude());
+    }
+    return result;
 }
 
 bool ContactGrantleePrintGeoObject::isValid() const

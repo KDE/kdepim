@@ -24,6 +24,7 @@
 
 #include <KContacts/Address>
 #include <KContacts/PhoneNumber>
+#include <KContacts/Lang>
 
 #include <QBuffer>
 
@@ -110,6 +111,19 @@ QString ContactGrantleePrintObject::nickName() const
 QString ContactGrantleePrintObject::name() const
 {
     return mAddress.name();
+}
+
+QString ContactGrantleePrintObject::languages() const
+{
+    QString result;
+    QStringList langList;
+    Q_FOREACH ( const KContacts::Lang &lang, mAddress.langs() ) {
+        langList.append(lang.language());
+    }
+    if (!langList.isEmpty()) {
+        result = langList.join(QLatin1String(","));
+    }
+    return result;
 }
 
 QStringList ContactGrantleePrintObject::emails() const
