@@ -25,6 +25,7 @@
 #include <Akonadi/ItemFetchJob>
 #include <Akonadi/ItemFetchScope>
 #include <QDebug>
+#include <util/vcardutil.h>
 
 using namespace KABSendVCards;
 
@@ -51,7 +52,11 @@ void SendVcardsJob::start()
 
     Q_FOREACH (const Akonadi::Item &item, mListItem) {
         if (item.hasPayload<KABC::Addressee>()) {
-            const KABC::Addressee contact = item.payload<KABC::Addressee>();
+            QByteArray data = item.payloadData();
+            //Workaround about broken kaddressbook fields.
+            PimCommon::VCardUtil vcardUtil;
+            vcardUtil.adaptVcard(data);
+
             //TODO
         } else if (item.hasPayload<KABC::ContactGroup>()) {
             const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
