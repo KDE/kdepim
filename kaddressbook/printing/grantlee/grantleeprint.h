@@ -18,6 +18,7 @@
 #ifndef GRANTLEEPRINT_H
 #define GRANTLEEPRINT_H
 
+#include "kaddressbook_export.h"
 #include <QObject>
 #include <grantlee/templateloader.h>
 #include <KABC/Addressee>
@@ -27,19 +28,23 @@ class Engine;
 }
 
 namespace KABPrinting {
-class GrantleePrint : public QObject
+class KADDRESSBOOK_EXPORT GrantleePrint : public QObject
 {
     Q_OBJECT
 public:
+    explicit GrantleePrint(QObject *parent = 0);
     explicit GrantleePrint(const QString &themePath, QObject *parent = 0);
     ~GrantleePrint();
+
+    void setContent(const QString &content);
+
     QString contactsToHtml( const KABC::Addressee::List &contacts );
 
 private:
-    QString mErrorMessage;
-    Grantlee::Engine *mEngine;
     Grantlee::FileSystemTemplateLoader::Ptr mTemplateLoader;
     Grantlee::Template mSelfcontainedTemplate;
+    QString mErrorMessage;
+    Grantlee::Engine *mEngine;
 };
 }
 #endif // GRANTLEEPRINT_H

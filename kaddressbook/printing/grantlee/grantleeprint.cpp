@@ -27,6 +27,12 @@
 
 using namespace KABPrinting;
 
+GrantleePrint::GrantleePrint(QObject *parent)
+    : QObject(parent)
+{
+    mEngine = new Grantlee::Engine;
+}
+
 GrantleePrint::GrantleePrint(const QString &themePath, QObject *parent)
     : QObject(parent)
 {
@@ -45,6 +51,14 @@ GrantleePrint::GrantleePrint(const QString &themePath, QObject *parent)
 GrantleePrint::~GrantleePrint()
 {
     delete mEngine;
+}
+
+void GrantleePrint::setContent(const QString &content)
+{
+    mSelfcontainedTemplate = mEngine->newTemplate(content, QLatin1String("content"));
+    if ( mSelfcontainedTemplate->error() ) {
+        mErrorMessage = mSelfcontainedTemplate->errorString() + QLatin1String("<br>");
+    }
 }
 
 QString GrantleePrint::contactsToHtml( const KABC::Addressee::List &contacts )
