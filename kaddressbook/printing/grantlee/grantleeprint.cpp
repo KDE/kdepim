@@ -52,6 +52,9 @@ QString GrantleePrint::contactsToHtml( const KABC::Addressee::List &contacts )
     if (!mErrorMessage.isEmpty())
         return mErrorMessage;
 
+    if (contacts.isEmpty()) {
+        return QString();
+    }
     QVariantList contactsList;
     QList<ContactGrantleePrintObject*> lst;
     Q_FOREACH (const KABC::Addressee &address, contacts) {
