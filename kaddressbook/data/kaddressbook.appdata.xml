@@ -137,6 +137,13 @@
       <li xml:lang="x-test">xxReads .vcf format files, and can import and export vCards and csv format filesxx</li>
       <li xml:lang="zh-TW">讀取 .vcf 格式檔案，並可匯入與匯出 vCards 與 csv 格式檔案。</li>
       <li>Can use multiple LDAP servers</li>
+      <li xml:lang="nl">Kan meerdere LDAP-servers gebruiken</li>
+      <li xml:lang="pt">Poderá usar diversos servidores de LDAP</li>
+      <li xml:lang="pt-BR">Pode usar diversos servidores LDAP</li>
+      <li xml:lang="sk">Vie použiť viac LDAP serverov</li>
+      <li xml:lang="sv">Kan använda flera LDAP-servrar</li>
+      <li xml:lang="uk">можливість використання декількох серверів LDAP;</li>
+      <li xml:lang="x-test">xxCan use multiple LDAP serversxx</li>
       <li>Configurable filters and powerful search capabilities</li>
       <li xml:lang="ar">مرشّحات يمكن ضبطها وإمكانيّات بحث قويّة</li>
       <li xml:lang="ca">Filtres configurables i potents capacitats de cerca</li>
