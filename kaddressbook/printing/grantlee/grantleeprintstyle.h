@@ -19,15 +19,12 @@
 #define GRANTLEEPRINTSTYLE_H
 
 #include "printstyle.h"
-#include <grantlee/templateloader.h>
 
-namespace Grantlee {
-class Engine;
-}
 
 namespace KABPrinting {
 
 class PrintProgress;
+class GrantleePrint;
 
 class GrantleePrintStyle : public PrintStyle
 {
@@ -39,11 +36,7 @@ public:
 
     void print( const KABC::Addressee::List &, PrintProgress * );
 private:
-    QString contactsToHtml( const KABC::Addressee::List &contacts );
-    QString mErrorMessage;
-    Grantlee::Engine *mEngine;
-    Grantlee::FileSystemTemplateLoader::Ptr mTemplateLoader;
-    Grantlee::Template mSelfcontainedTemplate;
+    GrantleePrint *mGrantleePrint;
 };
 
 class GrantleeStyleFactory : public PrintStyleFactory
