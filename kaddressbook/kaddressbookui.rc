@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kaddressbook" version="23">
+<kpartgui name="kaddressbook" version="24">
 
   <MenuBar>
     <Menu name="file"><text>&amp;File</text>
@@ -88,6 +88,16 @@
     <Action name="akonadi_contact_create"/>
     <Action name="akonadi_contact_group_create"/>
     <Action name="akonadi_contact_item_edit"/>
+    <Separator/>
+      <Menu name="file_export">
+        <text>&amp;Export</text>
+        <Action name="file_export_vcard40"/>
+        <Action name="file_export_vcard30"/>
+        <Action name="file_export_vcard21"/>
+        <Action name="file_export_csv"/>
+        <Action name="file_export_ldif"/>
+        <Action name="file_export_gmx"/>
+      </Menu>
     <Separator/>
     <Action name="send_mail"/>
     <Separator/>
