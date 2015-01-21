@@ -99,6 +99,7 @@ public:
     QString manager() const;
     QString assistant() const;
     QString spouse() const;
+    QString languages() const;
 private:
     QString imgToDataUrl( const QImage &image ) const;
     QList<QObject*> mListAddress;

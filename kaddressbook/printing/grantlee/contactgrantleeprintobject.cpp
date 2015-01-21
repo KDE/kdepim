@@ -24,6 +24,7 @@
 
 #include <KABC/Address>
 #include <KABC/PhoneNumber>
+#include <kabc/lang.h>
 #include <KLocalizedString>
 #include <KGlobal>
 #include <KLocale>
@@ -115,6 +116,19 @@ QString ContactGrantleePrintObject::nickName() const
 QString ContactGrantleePrintObject::name() const
 {
     return mAddress.name();
+}
+
+QString ContactGrantleePrintObject::languages() const
+{
+    QString result;
+    QStringList langList;
+    Q_FOREACH ( const KABC::Lang &lang, mAddress.langs() ) {
+        langList.append(lang.language());
+    }
+    if (!langList.isEmpty()) {
+        result = langList.join(QLatin1String(","));
+    }
+    return result;
 }
 
 QStringList ContactGrantleePrintObject::emails() const
