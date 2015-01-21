@@ -198,6 +198,7 @@ set(libpimcommon_util_SRCS
   util/pimutil.cpp
   util/editorutil.cpp
   util/imapresourcecapabilitiesmanager.cpp
+  util/vcardutil.cpp
 )
 
 

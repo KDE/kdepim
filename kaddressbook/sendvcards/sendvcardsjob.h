@@ -22,14 +22,27 @@
 #define SENDVCARDSJOB_H
 
 #include <QObject>
+#include <AkonadiCore/Item>
 namespace KABSendVCards {
 class SendVcardsJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit SendVcardsJob(QObject *parent = 0);
+    explicit SendVcardsJob(const Akonadi::Item::List &listItem, QObject *parent = 0);
     ~SendVcardsJob();
 
+    void start();
+
+private slots:
+    void fetchJobFinished(KJob *job);
+
+private:
+    void fetchNextItem();
+    void fetchItem(const Akonadi::Item &item);
+    void finishJob();
+    Akonadi::Item::List mListItem;
+    Akonadi::Item::List mItemToFetch;
+    int mFetchJobCount;
 };
 }
 

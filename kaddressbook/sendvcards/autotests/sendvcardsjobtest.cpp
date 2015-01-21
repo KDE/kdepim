@@ -19,7 +19,8 @@
 */
 
 #include "sendvcardsjobtest.h"
-#include <qtest_kde.h>
+#include "sendvcards/sendvcardsjob.h"
+#include <qtest.h>
 SendVcardsJobTest::SendVcardsJobTest(QObject *parent)
     : QObject(parent)
 {
@@ -31,4 +32,4 @@ SendVcardsJobTest::~SendVcardsJobTest()
 
 }
 
-QTEST_KDEMAIN(SendVcardsJobTest, NoGUI)
+QTEST_MAIN(SendVcardsJobTest)

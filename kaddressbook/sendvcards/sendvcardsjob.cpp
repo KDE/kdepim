@@ -19,11 +19,18 @@
 */
 
 #include "sendvcardsjob.h"
+#include <KContacts/Addressee>
+#include <KContacts/ContactGroup>
+#include <AkonadiCore/ItemFetchJob>
+#include <AkonadiCore/ItemFetchScope>
+#include <QDebug>
 
 using namespace KABSendVCards;
 
-SendVcardsJob::SendVcardsJob(QObject *parent)
-    : QObject(parent)
+SendVcardsJob::SendVcardsJob(const Akonadi::Item::List &listItem, QObject *parent)
+    : QObject(parent),
+      mListItem(listItem),
+      mFetchJobCount(0)
 {
 
 }
@@ -31,5 +38,95 @@ SendVcardsJob::SendVcardsJob(QObject *parent)
 SendVcardsJob::~SendVcardsJob()
 {
 
+}
+
+void SendVcardsJob::start()
+{
+    if (mListItem.isEmpty()) {
+        qDebug()<<" No Item found";
+        deleteLater();
+        return;
+    }
+
+    Q_FOREACH (const Akonadi::Item &item, mListItem) {
+        if (item.hasPayload<KContacts::Addressee>()) {
+            const KContacts::Addressee contact = item.payload<KContacts::Addressee>();
+            //TODO
+        } else if (item.hasPayload<KContacts::ContactGroup>()) {
+            const KContacts::ContactGroup group = item.payload<KContacts::ContactGroup>();
+            unsigned int nbDataCount(group.dataCount());
+            for(unsigned int i=0; i<nbDataCount; ++i) {
+                const QString currentEmail(group.data(i).email());
+                //TODO
+            }
+            const unsigned int nbContactReference(group.contactReferenceCount());
+            for(unsigned int i=0; i<nbContactReference; ++i){
+                KContacts::ContactGroup::ContactReference reference = group.contactReference(i);
+
+                Akonadi::Item item;
+                if (reference.gid().isEmpty()) {
+                    item.setId( reference.uid().toLongLong() );
+                } else {
+                    item.setGid( reference.gid() );
+                }
+                mItemToFetch << item;
+            }
+        }
+    }
+
+    if(mItemToFetch.isEmpty()) {
+        finishJob();
+    } else {
+        fetchNextItem();
+    }
+}
+
+void SendVcardsJob::fetchNextItem()
+{
+    if (mFetchJobCount < mItemToFetch.count()) {
+        fetchItem(mItemToFetch.at(mFetchJobCount));
+        ++mFetchJobCount;
+    } else {
+        finishJob();
+    }
+}
+
+void SendVcardsJob::fetchItem(const Akonadi::Item &item)
+{
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
+    job->fetchScope().fetchFullPayload();
+
+    connect( job, SIGNAL(result(KJob*)), SLOT(fetchJobFinished(KJob*)) );
+}
+
+void SendVcardsJob::fetchJobFinished(KJob *job)
+{
+    if ( job->error() ) {
+        qDebug()<<" error during fetching "<<job->errorString();
+        fetchNextItem();
+        return;
+    }
+
+    Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob*>( job );
+
+    if ( fetchJob->items().count() != 1 ) {
+        fetchNextItem();
+        return;
+    }
+
+    const Akonadi::Item item = fetchJob->items().first();
+    const KContacts::Addressee contact = item.payload<KContacts::Addressee>();
+    //TODO
+    fetchNextItem();
+}
+
+void SendVcardsJob::finishJob()
+{
+#if 0
+    if (!mEmailAddresses.isEmpty()) {
+        //emit sendMails(mEmailAddresses);
+    }
+#endif
+    deleteLater();
 }
 
