@@ -29,12 +29,13 @@
 
 int main(int argc, char **argv)
 {
+    QApplication app(argc, argv);
+
     Kdelibs4ConfigMigrator migrate(QStringLiteral("contactthemeeditor"));
     migrate.setConfigFiles(QStringList() << QStringLiteral("contactthemeeditorrc"));
     migrate.setUiFiles(QStringList() << QStringLiteral("contactthemeeditorui.rc"));
     migrate.migrate();
     KLocalizedString::setApplicationDomain("contactthemeeditor");
-    QApplication app(argc, argv);
     KAboutData aboutData(QStringLiteral("contactthemeeditor"),
                          i18n("Contact Theme Editor"),
                          QStringLiteral(KDEPIM_VERSION),
