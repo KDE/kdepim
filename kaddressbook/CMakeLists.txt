@@ -140,6 +140,8 @@ target_link_libraries(kaddressbookprivate
 add_subdirectory(merge/tests)
 add_subdirectory(sendmail/tests)
 add_subdirectory(sendvcards/autotests)
+add_subdirectory(printing/grantlee/autotests)
+
 if(QGPGME_FOUND)
   target_link_libraries(kaddressbookprivate ${QGPGME_LIBRARIES})
 endif()
