@@ -20,9 +20,11 @@
 
 #include <QString>
 
-namespace themeeditorutil
+class ContactPrintThemeEditorutil
 {
-QString defaultContact();
-}
+public:
+    ContactPrintThemeEditorutil();
+    QString defaultContact();
+};
 
 #endif // THEMEEDITORUTIL_H

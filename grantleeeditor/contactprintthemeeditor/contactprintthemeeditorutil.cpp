@@ -15,9 +15,14 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "themeeditorutil.h"
+#include "contactprintthemeeditorutil.h"
 
-QString themeeditorutil::defaultContact()
+ContactPrintThemeEditorutil::ContactPrintThemeEditorutil()
+{
+
+}
+
+QString ContactPrintThemeEditorutil::defaultContact()
 {
     const QString contact = QStringLiteral("BEGIN:VCARD\n"
                                            "ADR;TYPE=home:;;10 street Eiffel Tower\n;Paris;;75016;France\n"
@@ -32,4 +37,3 @@ QString themeeditorutil::defaultContact()
                                            "END:VCARD");
     return contact;
 }
-

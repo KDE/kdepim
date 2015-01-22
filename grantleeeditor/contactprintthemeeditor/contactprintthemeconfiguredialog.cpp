@@ -15,12 +15,16 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+
 #include "contactprintthemeconfiguredialog.h"
-#include "themeeditorutil.h"
+#include "contactprintthemeeditorutil.h"
 #include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
-#include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
 
 #include "configurewidget.h"
+
+#include <Akonadi/Contact/ContactEditor>
+
+#include <KContacts/VCardConverter>
 
 #include <KLocalizedString>
 #include <KConfig>
@@ -38,22 +42,22 @@ ContactPrintThemeConfigureDialog::ContactPrintThemeConfigureDialog(QWidget *pare
     : QDialog(parent)
 {
     setWindowTitle(i18n("Configure"));
+
     QTabWidget *tab = new QTabWidget;
 
     QWidget *w = new QWidget;
-
     QVBoxLayout *lay = new QVBoxLayout;
     w->setLayout(lay);
 
     mConfigureWidget = new GrantleeThemeEditor::ConfigureWidget;
     lay->addWidget(mConfigureWidget);
 
-    QLabel *lab = new QLabel(i18n("Default email:"));
+    QLabel *lab = new QLabel(i18n("Default contact:"));
     lay->addWidget(lab);
 
-    mDefaultEmail = new PimCommon::RichTextEditorWidget;
-    mDefaultEmail->setAcceptRichText(false);
-    lay->addWidget(mDefaultEmail);
+    mDefaultContact = new Akonadi::ContactEditor(Akonadi::ContactEditor::CreateMode, Akonadi::ContactEditor::VCardMode);
+    lay->addWidget(mDefaultContact);
+
     tab->addTab(w, i18n("General"));
 
     mDefaultTemplate = new PimCommon::RichTextEditorWidget;
@@ -63,7 +67,6 @@ ContactPrintThemeConfigureDialog::ContactPrintThemeConfigureDialog(QWidget *pare
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     mainLayout->addWidget(tab);
-
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::RestoreDefaults);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
@@ -71,7 +74,7 @@ ContactPrintThemeConfigureDialog::ContactPrintThemeConfigureDialog(QWidget *pare
     connect(buttonBox, &QDialogButtonBox::accepted, this, &ContactPrintThemeConfigureDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &ContactPrintThemeConfigureDialog::reject);
     mainLayout->addWidget(buttonBox);
-    buttonBox->button(QDialogButtonBox::Ok)->setFocus();
+    okButton->setFocus();
 
     connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, this, &ContactPrintThemeConfigureDialog::slotDefaultClicked);
     connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &ContactPrintThemeConfigureDialog::slotOkClicked);
@@ -82,15 +85,23 @@ ContactPrintThemeConfigureDialog::~ContactPrintThemeConfigureDialog()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
-    KConfigGroup group = config->group(QStringLiteral("ThemeConfigureDialog"));
+    KConfigGroup group = config->group(QStringLiteral("ContactPrintThemeConfigureDialog"));
     group.writeEntry("Size", size());
 }
 
 void ContactPrintThemeConfigureDialog::slotDefaultClicked()
 {
     mConfigureWidget->setDefault();
-    mDefaultEmail->setPlainText(themeeditorutil::defaultContact());
-    mDefaultTemplate->editor()->clear();
+
+    ContactPrintThemeEditorutil contactUtil;
+    if (!contactUtil.defaultContact().isEmpty()) {
+        KContacts::VCardConverter converter;
+        KContacts::Addressee addr = converter.parseVCard(contactUtil.defaultContact().toUtf8());
+        mDefaultContact->setContactTemplate(addr);
+    } else {
+        mDefaultContact->setContactTemplate(KContacts::Addressee());
+    }
+    mDefaultTemplate->clear();
 }
 
 void ContactPrintThemeConfigureDialog::slotOkClicked()
@@ -101,16 +112,34 @@ void ContactPrintThemeConfigureDialog::slotOkClicked()
 void ContactPrintThemeConfigureDialog::readConfig()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
+
+    ContactPrintThemeEditorutil contactUtil;
     if (config->hasGroup(QStringLiteral("Global"))) {
         KConfigGroup group = config->group(QStringLiteral("Global"));
-        mConfigureWidget->readConfig();
-        mDefaultEmail->setPlainText(group.readEntry("defaultContact", themeeditorutil::defaultContact()));
+
+        const QString defaultContact = group.readEntry("defaultContact", contactUtil.defaultContact());
+        if (!defaultContact.isEmpty()) {
+            KContacts::VCardConverter converter;
+            KContacts::Addressee addr = converter.parseVCard(defaultContact.toUtf8());
+            mDefaultContact->setContactTemplate(addr);
+        } else {
+            mDefaultContact->setContactTemplate(KContacts::Addressee());
+        }
         mDefaultTemplate->setPlainText(group.readEntry("defaultTemplate", QString()));
     } else {
-        mDefaultEmail->setPlainText(themeeditorutil::defaultContact());
+        if (!contactUtil.defaultContact().isEmpty()) {
+            KContacts::VCardConverter converter;
+            KContacts::Addressee addr = converter.parseVCard(contactUtil.defaultContact().toUtf8());
+            mDefaultContact->setContactTemplate(addr);
+        } else {
+            mDefaultContact->setContactTemplate(KContacts::Addressee());
+        }
+        mDefaultTemplate->setPlainText(QString());
     }
 
-    KConfigGroup group = KConfigGroup(config, "ThemeConfigureDialog");
+    mConfigureWidget->readConfig();
+
+    KConfigGroup group = KConfigGroup(config, "ContactPrintThemeConfigureDialog");
     const QSize sizeDialog = group.readEntry("Size", QSize(600, 400));
     if (sizeDialog.isValid()) {
         resize(sizeDialog);
@@ -121,7 +150,11 @@ void ContactPrintThemeConfigureDialog::writeConfig()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
     KConfigGroup group = config->group(QStringLiteral("Global"));
-    group.writeEntry("defaultContact", mDefaultEmail->toPlainText());
+    const KContacts::Addressee addr = mDefaultContact->contact();
+    KContacts::VCardConverter converter;
+    const QByteArray data = converter.exportVCard(addr, KContacts::VCardConverter::v3_0);
+    group.writeEntry("defaultContact", data);
+
     group.writeEntry("defaultTemplate", mDefaultTemplate->toPlainText());
     mConfigureWidget->writeConfig();
 }

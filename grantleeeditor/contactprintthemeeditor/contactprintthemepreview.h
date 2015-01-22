@@ -19,6 +19,8 @@
 
 #include <QWidget>
 
+#include <KContacts/Addressee>
+
 class ContactPrintThemePreview : public QWidget
 {
     Q_OBJECT
@@ -33,6 +35,9 @@ public:
 
 Q_SIGNALS:
     void needUpdateViewer();
+
+private:
+    KContacts::Addressee mContact;
 };
 
 #endif // CONTACTPRINTTHEMEPREVIEW_H

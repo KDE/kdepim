@@ -20,15 +20,20 @@
 
 #include <QDialog>
 
-namespace PimCommon
-{
-class RichTextEditorWidget;
-}
 namespace GrantleeThemeEditor
 {
 class ConfigureWidget;
 }
 
+namespace Akonadi
+{
+class ContactEditor;
+}
+
+namespace PimCommon
+{
+class RichTextEditorWidget;
+}
 class ContactPrintThemeConfigureDialog : public QDialog
 {
     Q_OBJECT
@@ -46,7 +51,8 @@ private Q_SLOTS:
 private:
     GrantleeThemeEditor::ConfigureWidget *mConfigureWidget;
     PimCommon::RichTextEditorWidget *mDefaultTemplate;
-    PimCommon::RichTextEditorWidget *mDefaultEmail;
+    Akonadi::ContactEditor *mDefaultContact;
 };
+
 
 #endif

@@ -21,7 +21,7 @@ set(contactprintthemeeditor_SRCS
   themedefaulttemplate.cpp
   themeeditormainwindow.cpp
   themeeditorpage.cpp
-  themeeditorutil.cpp
+  contactprintthemeeditorutil.cpp
   themeeditorwidget.cpp
   themetemplatewidget.cpp
   contactprintthemepreview.cpp

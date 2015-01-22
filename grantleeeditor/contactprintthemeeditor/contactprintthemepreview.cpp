@@ -16,11 +16,14 @@
 */
 
 #include "contactprintthemepreview.h"
+#include <KSharedConfig>
+#include <KConfigGroup>
+#include <KContacts/VCardConverter>
 
 ContactPrintThemePreview::ContactPrintThemePreview(const QString &projectDirectory, QWidget *parent)
     : QWidget(parent)
 {
-
+    loadConfig();
 }
 
 ContactPrintThemePreview::~ContactPrintThemePreview()
@@ -45,6 +48,26 @@ void ContactPrintThemePreview::setThemePath(const QString &projectDirectory)
 
 void ContactPrintThemePreview::loadConfig()
 {
+#if 0
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
+    if (config->hasGroup(QStringLiteral("Global"))) {
+        KConfigGroup group = config->group(QStringLiteral("Global"));
+        const QString defaultContact = group.readEntry("defaultContact", contacteditorutil::defaultContact());
+        if (!defaultContact.isEmpty()) {
+            KContacts::VCardConverter converter;
+            mContact = converter.parseVCard(defaultContact.toUtf8());
+        } else {
+            mContact = KContacts::Addressee();
+        }
+    } else {
+        if (!contacteditorutil::defaultContact().isEmpty()) {
+            KContacts::VCardConverter converter;
+            mContact = converter.parseVCard(contacteditorutil::defaultContact().toUtf8());
+        } else {
+            mContact = KContacts::Addressee();
+        }
+    }
+#endif
 }
 
