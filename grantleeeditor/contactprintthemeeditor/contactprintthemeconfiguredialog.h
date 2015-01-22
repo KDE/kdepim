@@ -15,8 +15,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef THEMECONFIGUREDIALOG_H
-#define THEMECONFIGUREDIALOG_H
+#ifndef CONTACTPRINTTHEMECONFIGUREDIALOG_H
+#define CONTACTPRINTTHEMECONFIGUREDIALOG_H
 
 #include <QDialog>
 
@@ -29,12 +29,12 @@ namespace GrantleeThemeEditor
 class ConfigureWidget;
 }
 
-class ThemeConfigureDialog : public QDialog
+class ContactPrintThemeConfigureDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit ThemeConfigureDialog(QWidget *parent = Q_NULLPTR);
-    ~ThemeConfigureDialog();
+    explicit ContactPrintThemeConfigureDialog(QWidget *parent = Q_NULLPTR);
+    ~ContactPrintThemeConfigureDialog();
 
     void readConfig();
     void writeConfig();
@@ -49,4 +49,4 @@ private:
     PimCommon::RichTextEditorWidget *mDefaultEmail;
 };
 
-#endif // THEMECONFIGUREDIALOG_H
+#endif

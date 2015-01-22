@@ -18,7 +18,7 @@
 #include "themeeditormainwindow.h"
 #include "themeeditorpage.h"
 #include "newthemedialog.h"
-#include "themeconfiguredialog.h"
+#include "contactprintthemeconfiguredialog.h"
 #include "managethemes.h"
 
 #include <KStandardAction>
@@ -144,7 +144,7 @@ void ThemeEditorMainWindow::slotInsertFile()
 
 void ThemeEditorMainWindow::slotConfigure()
 {
-    QPointer<ThemeConfigureDialog> dialog = new ThemeConfigureDialog(this);
+    QPointer<ContactPrintThemeConfigureDialog> dialog = new ContactPrintThemeConfigureDialog(this);
     if (dialog->exec()) {
         if (mThemeEditor) {
             mThemeEditor->reloadConfig();

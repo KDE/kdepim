@@ -17,7 +17,7 @@ set(contactprintthemeeditor_SRCS
   main.cpp
   defaultcompletion.cpp
   editorpage.cpp
-  themeconfiguredialog.cpp
+  contactprintthemeconfiguredialog.cpp
   themedefaulttemplate.cpp
   themeeditormainwindow.cpp
   themeeditorpage.cpp

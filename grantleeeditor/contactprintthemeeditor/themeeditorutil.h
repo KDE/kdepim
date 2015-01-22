@@ -22,8 +22,7 @@
 
 namespace themeeditorutil
 {
-//TODO rename it.
-QString defaultMail();
+QString defaultContact();
 }
 
 #endif // THEMEEDITORUTIL_H

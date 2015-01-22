@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "themeconfiguredialog.h"
+#include "contactprintthemeconfiguredialog.h"
 #include "themeeditorutil.h"
 #include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
 #include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
@@ -34,7 +34,7 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 
-ThemeConfigureDialog::ThemeConfigureDialog(QWidget *parent)
+ContactPrintThemeConfigureDialog::ContactPrintThemeConfigureDialog(QWidget *parent)
     : QDialog(parent)
 {
     setWindowTitle(i18n("Configure"));
@@ -68,17 +68,17 @@ ThemeConfigureDialog::ThemeConfigureDialog(QWidget *parent)
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &ThemeConfigureDialog::accept);
-    connect(buttonBox, &QDialogButtonBox::rejected, this, &ThemeConfigureDialog::reject);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &ContactPrintThemeConfigureDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &ContactPrintThemeConfigureDialog::reject);
     mainLayout->addWidget(buttonBox);
     buttonBox->button(QDialogButtonBox::Ok)->setFocus();
 
-    connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, this, &ThemeConfigureDialog::slotDefaultClicked);
-    connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &ThemeConfigureDialog::slotOkClicked);
+    connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, this, &ContactPrintThemeConfigureDialog::slotDefaultClicked);
+    connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &ContactPrintThemeConfigureDialog::slotOkClicked);
     readConfig();
 }
 
-ThemeConfigureDialog::~ThemeConfigureDialog()
+ContactPrintThemeConfigureDialog::~ContactPrintThemeConfigureDialog()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
@@ -86,28 +86,28 @@ ThemeConfigureDialog::~ThemeConfigureDialog()
     group.writeEntry("Size", size());
 }
 
-void ThemeConfigureDialog::slotDefaultClicked()
+void ContactPrintThemeConfigureDialog::slotDefaultClicked()
 {
     mConfigureWidget->setDefault();
-    mDefaultEmail->setPlainText(themeeditorutil::defaultMail());
+    mDefaultEmail->setPlainText(themeeditorutil::defaultContact());
     mDefaultTemplate->editor()->clear();
 }
 
-void ThemeConfigureDialog::slotOkClicked()
+void ContactPrintThemeConfigureDialog::slotOkClicked()
 {
     writeConfig();
 }
 
-void ThemeConfigureDialog::readConfig()
+void ContactPrintThemeConfigureDialog::readConfig()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
     if (config->hasGroup(QStringLiteral("Global"))) {
         KConfigGroup group = config->group(QStringLiteral("Global"));
         mConfigureWidget->readConfig();
-        mDefaultEmail->setPlainText(group.readEntry("defaultEmail", themeeditorutil::defaultMail()));
+        mDefaultEmail->setPlainText(group.readEntry("defaultContact", themeeditorutil::defaultContact()));
         mDefaultTemplate->setPlainText(group.readEntry("defaultTemplate", QString()));
     } else {
-        mDefaultEmail->setPlainText(themeeditorutil::defaultMail());
+        mDefaultEmail->setPlainText(themeeditorutil::defaultContact());
     }
 
     KConfigGroup group = KConfigGroup(config, "ThemeConfigureDialog");
@@ -117,11 +117,11 @@ void ThemeConfigureDialog::readConfig()
     }
 }
 
-void ThemeConfigureDialog::writeConfig()
+void ContactPrintThemeConfigureDialog::writeConfig()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
     KConfigGroup group = config->group(QStringLiteral("Global"));
-    group.writeEntry("defaultEmail", mDefaultEmail->toPlainText());
+    group.writeEntry("defaultContact", mDefaultEmail->toPlainText());
     group.writeEntry("defaultTemplate", mDefaultTemplate->toPlainText());
     mConfigureWidget->writeConfig();
 }
