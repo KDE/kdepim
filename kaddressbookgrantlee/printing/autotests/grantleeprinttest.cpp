@@ -100,19 +100,21 @@ void GrantleePrintTest::shouldDisplayContactInfo_data()
     QTest::newRow("title") << QString(QLatin1String("title")) << QString(QLatin1String("foo-title"));
     QTest::newRow("nickName") << QString(QLatin1String("nickName")) << QString(QLatin1String("foo-nickname"));
     QTest::newRow("familyName") << QString(QLatin1String("familyName")) << QString(QLatin1String("foo-familyname"));
+    QTest::newRow("role") << QString(QLatin1String("role")) << QString(QLatin1String("foo-role"));
+    QTest::newRow("suffix") << QString(QLatin1String("suffix")) << QString(QLatin1String("foo-suffix"));
+    QTest::newRow("prefix") << QString(QLatin1String("prefix")) << QString(QLatin1String("foo-prefix"));
+    QTest::newRow("department") << QString(QLatin1String("department")) << QString(QLatin1String("foo-department"));
+    QTest::newRow("office") << QString(QLatin1String("office")) << QString(QLatin1String("foo-office"));
+    QTest::newRow("profesion") << QString(QLatin1String("profession")) << QString(QLatin1String("foo-profession"));
 #if 0
     QString realName() const;
     QString formattedName() const;
-    QString prefix() const;
     QString givenName() const;
     QString additionalName() const;
-    QString suffix() const;
     QStringList emails() const;
     QString webPage() const;
     QString preferredEmail() const;
-    QString role() const;
     QString birthday() const;
-    QString department() const;
     QVariant addresses() const;
     QVariant phones() const;
     QString addressBookName() const;
@@ -122,8 +124,6 @@ void GrantleePrintTest::shouldDisplayContactInfo_data()
     QString logo() const;
     QVariant crypto() const;
     QString anniversary() const;
-    QString profession() const;
-    QString office() const;
     QString manager() const;
     QString assistant() const;
     QString spouse() const;
@@ -147,6 +147,13 @@ void GrantleePrintTest::shouldDisplayContactInfo()
     address.setTitle(QLatin1String("foo-title"));
     address.setNickName(QLatin1String("foo-nickname"));
     address.setFamilyName(QLatin1String("foo-familyname"));
+    address.setRole(QLatin1String("foo-role"));
+    address.setSuffix(QLatin1String("foo-suffix"));
+    address.setPrefix(QLatin1String("foo-prefix"));
+    address.setDepartment(QLatin1String("foo-department"));
+    address.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-Office" ), QString(QLatin1String("foo-office")));
+    address.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-Profession" ) , QString(QLatin1String("foo-profession")));
+
 
     lst << address;
     grantleePrint->setContent(QString::fromLatin1("{% if contacts %}{% for contact in contacts %}{% if contact.%1 %}{{ contact.%1 }}{% endif %}{% endfor %}{% endif %}").arg(variable));
