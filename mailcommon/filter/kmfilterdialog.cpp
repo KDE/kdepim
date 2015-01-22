@@ -146,9 +146,9 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection *> &actionCollectio
     act->setData(QVariant::fromValue(MailCommon::FilterImporterExporter::ClawsMailFilter));
     menu->addAction(act);
 
-    act = new QAction( i18n( "Icedove Mail filters" ), this );
-    act->setData( QVariant::fromValue(MailCommon::FilterImporterExporter::IcedoveFilter) );
-    menu->addAction( act );
+    act = new QAction(i18n("Icedove Mail filters"), this);
+    act->setData(QVariant::fromValue(MailCommon::FilterImporterExporter::IcedoveFilter));
+    menu->addAction(act);
 
     connect(menu, &QMenu::triggered, this, &KMFilterDialog::slotImportFilter);
 

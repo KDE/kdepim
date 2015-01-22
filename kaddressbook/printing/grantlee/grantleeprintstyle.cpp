@@ -33,15 +33,15 @@
 
 using namespace KABPrinting;
 
-GrantleePrintStyle::GrantleePrintStyle( const QString &themePath, PrintingWizard *parent )
-    : PrintStyle( parent )
+GrantleePrintStyle::GrantleePrintStyle(const QString &themePath, PrintingWizard *parent)
+    : PrintStyle(parent)
 {
     mGrantleePrint = new KAddressBookGrantlee::GrantleePrint(themePath, this);
     QFile previewFile(QString(themePath + QDir::separator() + QLatin1String("preview.png")));
     if (previewFile.exists()) {
         setPreview(previewFile.fileName());
     }
-    setPreferredSortOptions( ContactFields::FormattedName, Qt::AscendingOrder );
+    setPreferredSortOptions(ContactFields::FormattedName, Qt::AscendingOrder);
 }
 
 GrantleePrintStyle::~GrantleePrintStyle()
@@ -55,7 +55,7 @@ void GrantleePrintStyle::print(const KContacts::Addressee::List &contacts, Print
 
     progress->addMessage(i18n("Setting up document"));
 
-    const QString html = mGrantleePrint->contactsToHtml( contacts );
+    const QString html = mGrantleePrint->contactsToHtml(contacts);
 
     QTextDocument document;
     document.setHtml(html);

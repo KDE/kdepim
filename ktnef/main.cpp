@@ -70,7 +70,6 @@ int main(int argc, char *argv[])
     tnef->show();
     const QStringList &args = parser.positionalArguments();
 
-   
     if (!args.isEmpty()) {
         tnef->loadFile(args.first());
     }

@@ -33,7 +33,7 @@ SelectThunderbirdFilterFilesWidget::SelectThunderbirdFilterFilesWidget(const QSt
 
     ui->listFiles->setSelectionMode(QAbstractItemView::MultiSelection);
     QString defaultProfile;
-    QMap<QString,QString> listProfile = MailImporter::FilterThunderbird::listProfile(defaultProfile, defaultSettingPath);
+    QMap<QString, QString> listProfile = MailImporter::FilterThunderbird::listProfile(defaultProfile, defaultSettingPath);
     QMap<QString, QString>::const_iterator i = listProfile.constBegin();
     while (i != listProfile.constEnd()) {
         QString name = i.key();

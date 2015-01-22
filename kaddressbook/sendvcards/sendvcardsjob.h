@@ -23,7 +23,8 @@
 
 #include <QObject>
 #include <AkonadiCore/Item>
-namespace KABSendVCards {
+namespace KABSendVCards
+{
 class SendVcardsJob : public QObject
 {
     Q_OBJECT

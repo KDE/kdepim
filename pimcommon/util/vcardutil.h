@@ -20,7 +20,8 @@
 
 #include "pimcommon_export.h"
 #include <QByteArray>
-namespace PimCommon {
+namespace PimCommon
+{
 class PIMCOMMON_EXPORT VCardUtil
 {
 public:

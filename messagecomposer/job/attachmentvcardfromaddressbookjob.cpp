@@ -54,25 +54,25 @@ void AttachmentVcardFromAddressBookJob::addAttachment(const QByteArray &data, co
 void AttachmentVcardFromAddressBookJob::doStart()
 {
     if (mItem.isValid()) {
-        if ( mItem.hasPayload<KContacts::Addressee>() ) {
+        if (mItem.hasPayload<KContacts::Addressee>()) {
             const KContacts::Addressee contact = mItem.payload<KContacts::Addressee>();
             if (contact.isEmpty()) {
                 invalidContact();
             } else {
                 const QString contactRealName(contact.realName());
-                const QString attachmentName = (contactRealName.isEmpty() ? QLatin1String("vcard") : contactRealName ) + QLatin1String( ".vcf" );
+                const QString attachmentName = (contactRealName.isEmpty() ? QLatin1String("vcard") : contactRealName) + QLatin1String(".vcf");
 
                 QByteArray data = mItem.payloadData();
                 //Workaround about broken kaddressbook fields.
                 PimCommon::VCardUtil vcardUtil;
                 vcardUtil.adaptVcard(data);
-                addAttachment( data, attachmentName );
+                addAttachment(data, attachmentName);
             }
-        } else if ( mItem.hasPayload<KContacts::ContactGroup>() ) {
+        } else if (mItem.hasPayload<KContacts::ContactGroup>()) {
             const KContacts::ContactGroup group = mItem.payload<KContacts::ContactGroup>();
             const QString groupName(group.name());
-            const QString attachmentName = ( groupName.isEmpty() ? QLatin1String("vcard") : groupName ) + QLatin1String( ".vcf" );
-            Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob( group, this );
+            const QString attachmentName = (groupName.isEmpty() ? QLatin1String("vcard") : groupName) + QLatin1String(".vcf");
+            Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob(group, this);
             expandJob->setProperty("groupName", attachmentName);
             connect(expandJob, SIGNAL(result(KJob*)), this, SLOT(slotExpandGroupResult(KJob*)));
             expandJob->start();
@@ -88,12 +88,12 @@ void AttachmentVcardFromAddressBookJob::doStart()
 
 void AttachmentVcardFromAddressBookJob::invalidContact()
 {
-    setError( KJob::UserDefinedError );
-    setErrorText( i18n("Invalid Contact") );
+    setError(KJob::UserDefinedError);
+    setErrorText(i18n("Invalid Contact"));
     emitResult();
 }
 
-void AttachmentVcardFromAddressBookJob::slotExpandGroupResult(KJob* job)
+void AttachmentVcardFromAddressBookJob::slotExpandGroupResult(KJob *job)
 {
     Akonadi::ContactGroupExpandJob *expandJob = qobject_cast<Akonadi::ContactGroupExpandJob *>(job);
     Q_ASSERT(expandJob);

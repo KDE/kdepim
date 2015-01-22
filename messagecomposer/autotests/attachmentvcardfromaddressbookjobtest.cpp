@@ -46,11 +46,11 @@ void AttachmentVcardFromAddressBookJobTest::testAttachmentVCardWithInvalidItem()
 void AttachmentVcardFromAddressBookJobTest::testAttachmentVCardWithValidItem()
 {
     Akonadi::Item item(42);
-    item.setMimeType( KContacts::Addressee::mimeType() );
+    item.setMimeType(KContacts::Addressee::mimeType());
     KContacts::Addressee address;
     const QString name = QLatin1String("foo1");
     address.setName(name);
-    item.setPayload<KContacts::Addressee>( address );
+    item.setPayload<KContacts::Addressee>(address);
     MessageComposer::AttachmentVcardFromAddressBookJob *job = new MessageComposer::AttachmentVcardFromAddressBookJob(item);
     QVERIFY(job->exec());
 
@@ -58,13 +58,13 @@ void AttachmentVcardFromAddressBookJobTest::testAttachmentVCardWithValidItem()
     delete job;
     job = 0;
 
-    QVERIFY( !part->data().isEmpty() );
-    QCOMPARE( part->mimeType(), QByteArray("text/x-vcard") );
+    QVERIFY(!part->data().isEmpty());
+    QCOMPARE(part->mimeType(), QByteArray("text/x-vcard"));
     const QString newName = name + QLatin1String(".vcf");
-    QCOMPARE( part->name(), newName );
-    QVERIFY( part->description().isEmpty() );
-    QVERIFY( !part->isInline() );
-    QVERIFY( !part->fileName().isEmpty() );
+    QCOMPARE(part->name(), newName);
+    QVERIFY(part->description().isEmpty());
+    QVERIFY(!part->isInline());
+    QVERIFY(!part->fileName().isEmpty());
 }
 
 void AttachmentVcardFromAddressBookJobTest::testAttachmentVCardWithInvalidVCard()
@@ -79,9 +79,9 @@ void AttachmentVcardFromAddressBookJobTest::testAttachmentVCardWithInvalidVCard(
 void AttachmentVcardFromAddressBookJobTest::testAttachmentVCardWithEmptyVCard()
 {
     Akonadi::Item item(42);
-    item.setMimeType( KContacts::Addressee::mimeType() );
+    item.setMimeType(KContacts::Addressee::mimeType());
     KContacts::Addressee address;
-    item.setPayload<KContacts::Addressee>( address );
+    item.setPayload<KContacts::Addressee>(address);
     MessageComposer::AttachmentVcardFromAddressBookJob *job = new MessageComposer::AttachmentVcardFromAddressBookJob(item);
     QVERIFY(!job->exec());
     delete job;

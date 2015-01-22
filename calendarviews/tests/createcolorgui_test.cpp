@@ -18,7 +18,6 @@
 #include "createcolorgui_test.h"
 #include "prefs.h"
 
-
 #include <KLocalizedString>
 #include <QVBoxLayout>
 #include <QListWidget>
@@ -57,7 +56,7 @@ void CreateColorGui_test::createListWidgetItem()
 
 int main(int argc, char **argv)
 {
-    KAboutData aboutData( QLatin1String("CreateColorGui_test"), i18n("CreateColorGui_test"), QLatin1String("1.0"));
+    KAboutData aboutData(QLatin1String("CreateColorGui_test"), i18n("CreateColorGui_test"), QLatin1String("1.0"));
     aboutData.setShortDescription(i18n("Test creating color"));
     QApplication app(argc, argv);
     QCommandLineParser parser;
@@ -67,7 +66,6 @@ int main(int argc, char **argv)
     aboutData.setupCommandLine(&parser);
     parser.process(app);
     aboutData.processCommandLine(&parser);
-
 
     CreateColorGui_test *createColor = new CreateColorGui_test;
     createColor->resize(800, 600);

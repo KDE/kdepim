@@ -176,7 +176,7 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
                 defaultPath = QDir::homePath();
                 break;
             case ThunderBirdFilter:
-                title = i18n( "Import Thunderbird Filters" );
+                title = i18n("Import Thunderbird Filters");
                 defaultPath = MailCommon::FilterImporterThunderbird::defaultThunderbirdFiltersSettingsPath();
                 break;
             case EvolutionFilter:
@@ -200,7 +200,7 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
                 defaultPath = MailCommon::FilterImporterClawsMails::defaultFiltersSettingsPath();
                 break;
             case IcedoveFilter:
-                title = i18n( "Import Icedove Filters" );
+                title = i18n("Import Icedove Filters");
                 defaultPath = MailCommon::FilterImporterThunderbird::defaultIcedoveFiltersSettingsPath();
                 break;
             }
@@ -231,12 +231,11 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
         break;
     }
     case IcedoveFilter:
-    case ThunderBirdFilter:
-    {
+    case ThunderBirdFilter: {
         if (fileName.isEmpty()) {
-            const QString defaultPath = ( type == ThunderBirdFilter ) ? MailCommon::FilterImporterThunderbird::defaultThunderbirdFiltersSettingsPath() : MailCommon::FilterImporterThunderbird::defaultIcedoveFiltersSettingsPath();
+            const QString defaultPath = (type == ThunderBirdFilter) ? MailCommon::FilterImporterThunderbird::defaultThunderbirdFiltersSettingsPath() : MailCommon::FilterImporterThunderbird::defaultIcedoveFiltersSettingsPath();
 
-            SelectThunderbirdFilterFilesDialog * selectThunderBirdFileDialog = new SelectThunderbirdFilterFilesDialog(defaultPath, d->mParent);
+            SelectThunderbirdFilterFilesDialog *selectThunderBirdFileDialog = new SelectThunderbirdFilterFilesDialog(defaultPath, d->mParent);
             selectThunderBirdFileDialog->setStartDir(QUrl::fromLocalFile(defaultPath));
             if (selectThunderBirdFileDialog->exec()) {
                 Q_FOREACH (const QString &url, selectThunderBirdFileDialog->selectedFiles()) {

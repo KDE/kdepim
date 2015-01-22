@@ -23,11 +23,13 @@
 #include <grantlee/templateloader.h>
 #include <KContacts/Addressee>
 
-namespace Grantlee {
+namespace Grantlee
+{
 class Engine;
 }
 
-namespace KAddressBookGrantlee {
+namespace KAddressBookGrantlee
+{
 class KADDRESSBOOK_GRANTLEE_EXPORT GrantleePrint : public QObject
 {
     Q_OBJECT
@@ -35,7 +37,7 @@ public:
     explicit GrantleePrint(QObject *parent = 0);
     explicit GrantleePrint(const QString &themePath, QObject *parent = 0);
     ~GrantleePrint();
-    QString contactsToHtml( const KContacts::Addressee::List &contacts );
+    QString contactsToHtml(const KContacts::Addressee::List &contacts);
     void setContent(const QString &content);
 private:
     QString mErrorMessage;

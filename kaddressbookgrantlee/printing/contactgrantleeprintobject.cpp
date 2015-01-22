@@ -117,7 +117,7 @@ QString ContactGrantleePrintObject::languages() const
 {
     QString result;
     QStringList langList;
-    Q_FOREACH ( const KContacts::Lang &lang, mAddress.langs() ) {
+    Q_FOREACH (const KContacts::Lang &lang, mAddress.langs()) {
         langList.append(lang.language());
     }
     if (!langList.isEmpty()) {

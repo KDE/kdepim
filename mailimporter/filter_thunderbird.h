@@ -38,7 +38,7 @@ public:
 
     static QString defaultSettingsPath();
     static QString defaultProfile(const QString defaultSettingPath, QWidget *parent = Q_NULLPTR);
-    static QMap<QString, QString> listProfile(QString&currentProfile, const QString &defaultSettingPath);
+    static QMap<QString, QString> listProfile(QString &currentProfile, const QString &defaultSettingPath);
 
 protected:
     virtual QString defaultInstallFolder() const;

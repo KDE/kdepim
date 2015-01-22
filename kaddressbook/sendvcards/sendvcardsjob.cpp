@@ -44,7 +44,7 @@ SendVcardsJob::~SendVcardsJob()
 void SendVcardsJob::start()
 {
     if (mListItem.isEmpty()) {
-        qDebug()<<" No Item found";
+        qDebug() << " No Item found";
         deleteLater();
         return;
     }
@@ -60,26 +60,26 @@ void SendVcardsJob::start()
         } else if (item.hasPayload<KContacts::ContactGroup>()) {
             const KContacts::ContactGroup group = item.payload<KContacts::ContactGroup>();
             unsigned int nbDataCount(group.dataCount());
-            for(unsigned int i=0; i<nbDataCount; ++i) {
+            for (unsigned int i = 0; i < nbDataCount; ++i) {
                 const QString currentEmail(group.data(i).email());
                 //TODO
             }
             const unsigned int nbContactReference(group.contactReferenceCount());
-            for(unsigned int i=0; i<nbContactReference; ++i){
+            for (unsigned int i = 0; i < nbContactReference; ++i) {
                 KContacts::ContactGroup::ContactReference reference = group.contactReference(i);
 
                 Akonadi::Item item;
                 if (reference.gid().isEmpty()) {
-                    item.setId( reference.uid().toLongLong() );
+                    item.setId(reference.uid().toLongLong());
                 } else {
-                    item.setGid( reference.gid() );
+                    item.setGid(reference.gid());
                 }
                 mItemToFetch << item;
             }
         }
     }
 
-    if(mItemToFetch.isEmpty()) {
+    if (mItemToFetch.isEmpty()) {
         finishJob();
     } else {
         fetchNextItem();
@@ -98,23 +98,23 @@ void SendVcardsJob::fetchNextItem()
 
 void SendVcardsJob::fetchItem(const Akonadi::Item &item)
 {
-    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(item, this);
     job->fetchScope().fetchFullPayload();
 
-    connect( job, SIGNAL(result(KJob*)), SLOT(fetchJobFinished(KJob*)) );
+    connect(job, SIGNAL(result(KJob*)), SLOT(fetchJobFinished(KJob*)));
 }
 
 void SendVcardsJob::fetchJobFinished(KJob *job)
 {
-    if ( job->error() ) {
-        qDebug()<<" error during fetching "<<job->errorString();
+    if (job->error()) {
+        qDebug() << " error during fetching " << job->errorString();
         fetchNextItem();
         return;
     }
 
-    Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob*>( job );
+    Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob *>(job);
 
-    if ( fetchJob->items().count() != 1 ) {
+    if (fetchJob->items().count() != 1) {
         fetchNextItem();
         return;
     }

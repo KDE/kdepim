@@ -133,8 +133,8 @@ void GrantleePrintTest::shouldDisplayContactInfo_data()
 
 void GrantleePrintTest::shouldDisplayContactInfo()
 {
-    QFETCH( QString, variable );
-    QFETCH( QString, result );
+    QFETCH(QString, variable);
+    QFETCH(QString, result);
 
     KAddressBookGrantlee::GrantleePrint *grantleePrint = new KAddressBookGrantlee::GrantleePrint;
     KContacts::Addressee::List lst;
