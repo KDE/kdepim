@@ -17,8 +17,8 @@
 
 #include "grantleeprinttest.h"
 #include "../grantleeprint.h"
-#include <qtest_kde.h>
-#include <KABC/Addressee>
+#include <qtest.h>
+#include <KContacts/Addressee>
 
 GrantleePrintTest::GrantleePrintTest(QObject *parent)
     : QObject(parent)
@@ -42,7 +42,7 @@ void GrantleePrintTest::shouldHaveDefaultValue()
 void GrantleePrintTest::shouldReturnEmptyStringWhenNotContentAndNoContacts()
 {
     KABPrinting::GrantleePrint *grantleePrint = new KABPrinting::GrantleePrint;
-    KABC::Addressee::List lst;
+    KContacts::Addressee::List lst;
     QVERIFY(grantleePrint->contactsToHtml(lst).isEmpty());
     grantleePrint->deleteLater();
     grantleePrint = 0;
@@ -52,7 +52,7 @@ void GrantleePrintTest::shouldReturnEmptyStringWhenAddContentWithoutContacts()
 {
     KABPrinting::GrantleePrint *grantleePrint = new KABPrinting::GrantleePrint;
     grantleePrint->setContent(QLatin1String("foo"));
-    KABC::Addressee::List lst;
+    KContacts::Addressee::List lst;
 
     QVERIFY(grantleePrint->contactsToHtml(lst).isEmpty());
     grantleePrint->deleteLater();
@@ -63,8 +63,8 @@ void GrantleePrintTest::shouldReturnStringWhenAddContentAndContacts()
 {
     KABPrinting::GrantleePrint *grantleePrint = new KABPrinting::GrantleePrint;
     grantleePrint->setContent(QLatin1String("foo"));
-    KABC::Addressee::List lst;
-    KABC::Addressee address;
+    KContacts::Addressee::List lst;
+    KContacts::Addressee address;
     address.setName(QLatin1String("foo1"));
     address.insertEmail(QLatin1String("foo@kde.org"), true);
     lst << address;
@@ -77,8 +77,8 @@ void GrantleePrintTest::shouldReturnStringWhenAddContentAndContacts()
 void GrantleePrintTest::shouldReturnEmails()
 {
     KABPrinting::GrantleePrint *grantleePrint = new KABPrinting::GrantleePrint;
-    KABC::Addressee::List lst;
-    KABC::Addressee address;
+    KContacts::Addressee::List lst;
+    KContacts::Addressee address;
     address.setName(QLatin1String("foo1"));
     address.insertEmail(QLatin1String("foo@kde.org"), true);
     lst << address;
@@ -137,12 +137,12 @@ void GrantleePrintTest::shouldDisplayContactInfo()
     QFETCH( QString, result );
 
     KABPrinting::GrantleePrint *grantleePrint = new KABPrinting::GrantleePrint;
-    KABC::Addressee::List lst;
-    KABC::Addressee address;
+    KContacts::Addressee::List lst;
+    KContacts::Addressee address;
     address.setName(QLatin1String("foo1"));
     address.insertEmail(QLatin1String("foo@kde.org"), true);
     address.setOrganization(QLatin1String("kde"));
-    address.insertLang(KABC::Lang(QLatin1String("fr")));
+    address.insertLang(KContacts::Lang(QLatin1String("fr")));
     address.setNote(QLatin1String("foo-note"));
     address.setTitle(QLatin1String("foo-title"));
     address.setNickName(QLatin1String("foo-nickname"));
@@ -156,4 +156,4 @@ void GrantleePrintTest::shouldDisplayContactInfo()
     grantleePrint = 0;
 }
 
-QTEST_KDEMAIN(GrantleePrintTest, NoGUI)
+QTEST_MAIN(GrantleePrintTest)
