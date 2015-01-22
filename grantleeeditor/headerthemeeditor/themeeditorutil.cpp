@@ -17,7 +17,12 @@
 
 #include "themeeditorutil.h"
 
-QString themeeditorutil::defaultMail()
+
+ThemeEditorUtil::ThemeEditorUtil()
+{
+}
+
+QString ThemeEditorUtil::defaultMail() const
 {
     const QString mail = QString::fromLatin1("From: montel@example.com\n"
                                              "To: kde@example.com\n"

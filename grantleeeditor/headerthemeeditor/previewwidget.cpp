@@ -66,11 +66,12 @@ void PreviewWidget::slotMainFileNameChanged(const QString &filename)
 void PreviewWidget::loadConfig()
 {
     KSharedConfig::Ptr config = KGlobal::config();
+    ThemeEditorUtil themeutil;
     if (config->hasGroup(QLatin1String("Global"))) {
         KConfigGroup group = config->group(QLatin1String("Global"));
-        mDefaultEmail = group.readEntry("defaultEmail", themeeditorutil::defaultMail()).toLatin1();
+        mDefaultEmail = group.readEntry("defaultEmail", themeutil.defaultMail()).toLatin1();
     } else {
-        mDefaultEmail = themeeditorutil::defaultMail().toLatin1();
+        mDefaultEmail = themeutil.defaultMail().toLatin1();
     }
     updateViewer();
 }
