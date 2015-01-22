@@ -19,8 +19,8 @@
 #define CONTACTGRANTLEEPRINTOBJECT_H
 #include <QObject>
 #include <KContacts/Addressee>
-
-namespace KABPrinting
+#include <QVariant>
+namespace KAddressBookGrantlee
 {
 class ContactGrantleePrintAddressObject;
 class ContactGrantleePrintPhoneObject;
@@ -111,11 +111,11 @@ private:
     KContacts::Addressee mAddress;
 };
 }
-//Q_DECLARE_METATYPE(KABPrinting::ContactGrantleePrintObject*)
-//Q_DECLARE_METATYPE(KABPrinting::ContactGrantleePrintAddressObject*)
-//Q_DECLARE_METATYPE(KABPrinting::ContactGrantleePrintPhoneObject*)
-//Q_DECLARE_METATYPE(KABPrinting::ContactGrantleePrintImObject*)
-//Q_DECLARE_METATYPE(KABPrinting::ContactGrantleePrintGeoObject*)
-//Q_DECLARE_METATYPE(KABPrinting::ContactGrantleePrintCryptoObject*)
+//Q_DECLARE_METATYPE(KAddressBookGrantlee::ContactGrantleePrintObject*)
+//Q_DECLARE_METATYPE(KAddressBookGrantlee::ContactGrantleePrintAddressObject*)
+//Q_DECLARE_METATYPE(KAddressBookGrantlee::ContactGrantleePrintPhoneObject*)
+//Q_DECLARE_METATYPE(KAddressBookGrantlee::ContactGrantleePrintImObject*)
+//Q_DECLARE_METATYPE(KAddressBookGrantlee::ContactGrantleePrintGeoObject*)
+//Q_DECLARE_METATYPE(KAddressBookGrantlee::ContactGrantleePrintCryptoObject*)
 Q_DECLARE_METATYPE(QList<QObject *>)
 #endif // CONTACTGRANTLEEPRINTOBJECT_H

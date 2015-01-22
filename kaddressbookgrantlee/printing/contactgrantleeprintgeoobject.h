@@ -21,7 +21,7 @@
 #include <QObject>
 #include <kcontacts/geo.h>
 
-namespace KABPrinting
+namespace KAddressBookGrantlee
 {
 
 class ContactGrantleePrintGeoObject : public QObject

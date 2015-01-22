@@ -25,7 +25,7 @@
 #include <grantlee/templateloader.h>
 
 
-using namespace KABPrinting;
+using namespace KAddressBookGrantlee;
 
 GrantleePrint::GrantleePrint(QObject *parent)
     : QObject(parent)

@@ -20,11 +20,15 @@
 
 #include "printstyle.h"
 
+namespace KAddressBookGrantlee
+{
+class GrantleePrint;
+}
+
 namespace KABPrinting
 {
 
 class PrintProgress;
-class GrantleePrint;
 
 class GrantleePrintStyle : public PrintStyle
 {
@@ -36,7 +40,7 @@ public:
 
     void print(const KContacts::Addressee::List &, PrintProgress *);
 private:
-    GrantleePrint *mGrantleePrint;
+    KAddressBookGrantlee::GrantleePrint *mGrantleePrint;
 };
 
 class GrantleeStyleFactory : public PrintStyleFactory

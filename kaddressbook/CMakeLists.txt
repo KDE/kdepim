@@ -49,13 +49,6 @@ set(kaddressbook_printing_SRCS
   printing/ringbinder/ringbinderstyle.cpp
   printing/compact/compactstyle.cpp
   printing/grantlee/grantleeprintstyle.cpp
-  printing/grantlee/contactgrantleeprintobject.cpp
-  printing/grantlee/contactgrantleeprintaddressobject.cpp
-  printing/grantlee/contactgrantleeprintphoneobject.cpp
-  printing/grantlee/contactgrantleeprintimobject.cpp
-  printing/grantlee/contactgrantleeprintgeoobject.cpp
-  printing/grantlee/contactgrantleeprintcryptoobject.cpp
-  printing/grantlee/grantleeprint.cpp
   printing/stylepage.cpp
 )
 
@@ -141,7 +134,6 @@ if (BUILD_TESTING)
    add_subdirectory(merge/autotests)
    add_subdirectory(sendmail/autotests)
    add_subdirectory(sendvcards/autotests)
-   add_subdirectory(printing/grantlee/autotests)
 endif()
 
 if(KF5Gpgmepp_FOUND)

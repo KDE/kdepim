@@ -18,7 +18,7 @@
 #ifndef GRANTLEEPRINT_H
 #define GRANTLEEPRINT_H
 
-#include "kaddressbook_export.h"
+#include "kaddressbook_grantlee_export.h"
 #include <QObject>
 #include <grantlee/templateloader.h>
 #include <KContacts/Addressee>
@@ -27,8 +27,8 @@ namespace Grantlee {
 class Engine;
 }
 
-namespace KABPrinting {
-class KADDRESSBOOK_EXPORT GrantleePrint : public QObject
+namespace KAddressBookGrantlee {
+class KADDRESSBOOK_GRANTLEE_EXPORT GrantleePrint : public QObject
 {
     Q_OBJECT
 public:

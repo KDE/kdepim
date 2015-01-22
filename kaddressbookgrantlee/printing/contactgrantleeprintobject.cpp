@@ -27,11 +27,11 @@
 #include <KContacts/Lang>
 
 #include <QBuffer>
-
+#include <QVariant>
 #include <grantlee/metatype.h>
 #include <QLocale>
 
-using namespace KABPrinting;
+using namespace KAddressBookGrantlee;
 
 ContactGrantleePrintObject::ContactGrantleePrintObject(const KContacts::Addressee &address, QObject *parent)
     : QObject(parent),

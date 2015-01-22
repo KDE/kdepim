@@ -20,7 +20,7 @@
 #include "printingwizard.h"
 #include "printprogress.h"
 #include "printstyle.h"
-#include "grantleeprint.h"
+#include "kaddressbookgrantlee/printing/grantleeprint.h"
 
 #include <KContacts/Addressee>
 
@@ -36,7 +36,7 @@ using namespace KABPrinting;
 GrantleePrintStyle::GrantleePrintStyle( const QString &themePath, PrintingWizard *parent )
     : PrintStyle( parent )
 {
-    mGrantleePrint = new GrantleePrint(themePath, this);
+    mGrantleePrint = new KAddressBookGrantlee::GrantleePrint(themePath, this);
     QFile previewFile(QString(themePath + QDir::separator() + QLatin1String("preview.png")));
     if (previewFile.exists()) {
         setPreview(previewFile.fileName());

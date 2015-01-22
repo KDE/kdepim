@@ -22,7 +22,18 @@ set(kaddressbook_grantlee_LIB_SRCS
   grantleeutil.cpp
 )
 
-add_library(kaddressbookgrantlee ${LIBRARY_TYPE} ${kaddressbook_grantlee_LIB_SRCS})
+set(kaddressbook_grantlee_printing_LIB_SRCS
+   printing/contactgrantleeprintaddressobject.cpp
+   printing/contactgrantleeprintcryptoobject.cpp
+   printing/contactgrantleeprintgeoobject.cpp
+   printing/contactgrantleeprintimobject.cpp
+   printing/contactgrantleeprintobject.cpp
+   printing/contactgrantleeprintphoneobject.cpp
+   printing/grantleeprint.cpp
+)
+
+
+add_library(kaddressbookgrantlee ${LIBRARY_TYPE} ${kaddressbook_grantlee_LIB_SRCS} ${kaddressbook_grantlee_printing_LIB_SRCS})
 generate_export_header(kaddressbookgrantlee BASE_NAME kaddressbook_grantlee)
 target_link_libraries(kaddressbookgrantlee
   Grantlee5::Templates
@@ -30,8 +41,13 @@ target_link_libraries(kaddressbookgrantlee
   KF5::AkonadiCore
   KF5::Contacts
   KF5::AkonadiContact
+  kleo
 )
 
 set_target_properties(kaddressbookgrantlee PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 install(TARGETS kaddressbookgrantlee ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
+
+if (BUILD_TESTING)
+   add_subdirectory(printing/autotests)
+endif()
 

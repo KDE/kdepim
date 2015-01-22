@@ -19,7 +19,7 @@
 #define CONTACTGRANTLEEPRINTADDRESSOBJECT_H
 #include <QObject>
 #include <KContacts/Addressee>
-namespace KABPrinting
+namespace KAddressBookGrantlee
 {
 class ContactGrantleePrintAddressObject : public QObject
 {

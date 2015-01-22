@@ -17,7 +17,7 @@
 
 #include "contactgrantleeprintaddressobject.h"
 
-using namespace KABPrinting;
+using namespace KAddressBookGrantlee;
 ContactGrantleePrintAddressObject::ContactGrantleePrintAddressObject(const KContacts::Address &address, QObject *parent)
     : QObject(parent),
       mAddress(address)

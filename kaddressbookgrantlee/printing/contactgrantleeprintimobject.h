@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2014-2014 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013-2015 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,27 +15,27 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef CONTACTGRANTLEEPRINTCRYPTOOBJECT_H
-#define CONTACTGRANTLEEPRINTCRYPTOOBJECT_H
+#ifndef CONTACTGRANTLEEPRINTIMOBJECT_H
+#define CONTACTGRANTLEEPRINTIMOBJECT_H
 #include <QObject>
-#include <KContacts/Addressee>
-namespace KABPrinting
+namespace KAddressBookGrantlee
 {
-class ContactGrantleePrintCryptoObject : public QObject
+class ContactGrantleePrintImObject : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString signaturePreference READ signaturePreference)
-    Q_PROPERTY(QString cryptoPreference READ cryptoPreference)
-public:
-    explicit ContactGrantleePrintCryptoObject(const KContacts::Addressee &address, QObject *parent = Q_NULLPTR);
-    ~ContactGrantleePrintCryptoObject();
+    Q_PROPERTY(QString type READ type)
+    Q_PROPERTY(QString address READ address)
 
-    QString signaturePreference() const;
-    QString cryptoPreference() const;
+public:
+    explicit ContactGrantleePrintImObject(const QString &type, const QString &address, QObject *parent = Q_NULLPTR);
+    ~ContactGrantleePrintImObject();
+
+    QString type() const;
+    QString address() const;
 
 private:
-    KContacts::Addressee mAddress;
+    QString mType;
+    QString mAddress;
 };
 }
-
-#endif // CONTACTGRANTLEEPRINTCRYPTOOBJECT_H
+#endif // CONTACTGRANTLEEPRINTIMOBJECT_H

@@ -15,25 +15,28 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "contactgrantleeprintphoneobject.h"
+#include "contactgrantleeprintimobject.h"
+#include "akonadi/contact/improtocols.h"
 
-using namespace KABPrinting;
-ContactGrantleePrintPhoneObject::ContactGrantleePrintPhoneObject(const KContacts::PhoneNumber &phone, QObject *parent)
+using namespace KAddressBookGrantlee;
+ContactGrantleePrintImObject::ContactGrantleePrintImObject(const QString &type, const QString &address, QObject *parent)
     : QObject(parent),
-      mPhoneNumber(phone)
+      mType(type),
+      mAddress(address)
 {
 }
 
-ContactGrantleePrintPhoneObject::~ContactGrantleePrintPhoneObject()
+ContactGrantleePrintImObject::~ContactGrantleePrintImObject()
 {
+
 }
 
-QString ContactGrantleePrintPhoneObject::type() const
+QString ContactGrantleePrintImObject::type() const
 {
-    return mPhoneNumber.typeLabel();
+    return IMProtocols::self()->name(mType);
 }
 
-QString ContactGrantleePrintPhoneObject::number() const
+QString ContactGrantleePrintImObject::address() const
 {
-    return mPhoneNumber.number();
+    return mAddress;
 }

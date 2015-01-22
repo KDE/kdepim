@@ -33,7 +33,7 @@ GrantleePrintTest::~GrantleePrintTest()
 
 void GrantleePrintTest::shouldHaveDefaultValue()
 {
-    KABPrinting::GrantleePrint *grantleePrint = new KABPrinting::GrantleePrint;
+    KAddressBookGrantlee::GrantleePrint *grantleePrint = new KAddressBookGrantlee::GrantleePrint;
     QVERIFY(grantleePrint);
     grantleePrint->deleteLater();
     grantleePrint = 0;
@@ -41,7 +41,7 @@ void GrantleePrintTest::shouldHaveDefaultValue()
 
 void GrantleePrintTest::shouldReturnEmptyStringWhenNotContentAndNoContacts()
 {
-    KABPrinting::GrantleePrint *grantleePrint = new KABPrinting::GrantleePrint;
+    KAddressBookGrantlee::GrantleePrint *grantleePrint = new KAddressBookGrantlee::GrantleePrint;
     KContacts::Addressee::List lst;
     QVERIFY(grantleePrint->contactsToHtml(lst).isEmpty());
     grantleePrint->deleteLater();
@@ -50,7 +50,7 @@ void GrantleePrintTest::shouldReturnEmptyStringWhenNotContentAndNoContacts()
 
 void GrantleePrintTest::shouldReturnEmptyStringWhenAddContentWithoutContacts()
 {
-    KABPrinting::GrantleePrint *grantleePrint = new KABPrinting::GrantleePrint;
+    KAddressBookGrantlee::GrantleePrint *grantleePrint = new KAddressBookGrantlee::GrantleePrint;
     grantleePrint->setContent(QLatin1String("foo"));
     KContacts::Addressee::List lst;
 
@@ -61,7 +61,7 @@ void GrantleePrintTest::shouldReturnEmptyStringWhenAddContentWithoutContacts()
 
 void GrantleePrintTest::shouldReturnStringWhenAddContentAndContacts()
 {
-    KABPrinting::GrantleePrint *grantleePrint = new KABPrinting::GrantleePrint;
+    KAddressBookGrantlee::GrantleePrint *grantleePrint = new KAddressBookGrantlee::GrantleePrint;
     grantleePrint->setContent(QLatin1String("foo"));
     KContacts::Addressee::List lst;
     KContacts::Addressee address;
@@ -76,7 +76,7 @@ void GrantleePrintTest::shouldReturnStringWhenAddContentAndContacts()
 
 void GrantleePrintTest::shouldReturnEmails()
 {
-    KABPrinting::GrantleePrint *grantleePrint = new KABPrinting::GrantleePrint;
+    KAddressBookGrantlee::GrantleePrint *grantleePrint = new KAddressBookGrantlee::GrantleePrint;
     KContacts::Addressee::List lst;
     KContacts::Addressee address;
     address.setName(QLatin1String("foo1"));
@@ -136,7 +136,7 @@ void GrantleePrintTest::shouldDisplayContactInfo()
     QFETCH( QString, variable );
     QFETCH( QString, result );
 
-    KABPrinting::GrantleePrint *grantleePrint = new KABPrinting::GrantleePrint;
+    KAddressBookGrantlee::GrantleePrint *grantleePrint = new KAddressBookGrantlee::GrantleePrint;
     KContacts::Addressee::List lst;
     KContacts::Addressee address;
     address.setName(QLatin1String("foo1"));

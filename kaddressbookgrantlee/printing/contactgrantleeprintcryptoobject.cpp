@@ -18,7 +18,7 @@
 #include "contactgrantleeprintcryptoobject.h"
 #include "libkleo/kleo/enum.h"
 
-using namespace KABPrinting;
+using namespace KAddressBookGrantlee;
 static QString loadCustom(const KContacts::Addressee &contact, const QString &key)
 {
     return contact.custom(QLatin1String("KADDRESSBOOK"), key);

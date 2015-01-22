@@ -15,27 +15,25 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef CONTACTGRANTLEEPRINTPHONEOBJECT_H
-#define CONTACTGRANTLEEPRINTPHONEOBJECT_H
-#include <QObject>
-#include <KContacts/PhoneNumber>
-namespace KABPrinting
-{
-class ContactGrantleePrintPhoneObject : public QObject
-{
-    Q_OBJECT
-    Q_PROPERTY(QString type READ type)
-    Q_PROPERTY(QString number READ number)
+#include "contactgrantleeprintphoneobject.h"
 
-public:
-    explicit ContactGrantleePrintPhoneObject(const KContacts::PhoneNumber &phone, QObject *parent = Q_NULLPTR);
-    ~ContactGrantleePrintPhoneObject();
-
-    QString type() const;
-    QString number() const;
-private:
-    KContacts::PhoneNumber mPhoneNumber;
-};
+using namespace KAddressBookGrantlee;
+ContactGrantleePrintPhoneObject::ContactGrantleePrintPhoneObject(const KContacts::PhoneNumber &phone, QObject *parent)
+    : QObject(parent),
+      mPhoneNumber(phone)
+{
 }
 
-#endif // CONTACTGRANTLEEPRINTPHONEOBJECT_H
+ContactGrantleePrintPhoneObject::~ContactGrantleePrintPhoneObject()
+{
+}
+
+QString ContactGrantleePrintPhoneObject::type() const
+{
+    return mPhoneNumber.typeLabel();
+}
+
+QString ContactGrantleePrintPhoneObject::number() const
+{
+    return mPhoneNumber.number();
+}

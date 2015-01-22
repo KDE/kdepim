@@ -17,7 +17,7 @@
 
 #include "contactgrantleeprintgeoobject.h"
 
-using namespace KABPrinting;
+using namespace KAddressBookGrantlee;
 
 ContactGrantleePrintGeoObject::ContactGrantleePrintGeoObject(const KContacts::Geo &geo, QObject *parent)
     : QObject(parent),
