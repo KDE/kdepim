@@ -61,6 +61,7 @@ class ContactGrantleePrintObject : public QObject
     Q_PROPERTY(QString manager READ manager)
     Q_PROPERTY(QString assistant READ assistant)
     Q_PROPERTY(QString spouse READ spouse)
+    Q_PROPERTY(QString languages READ languages)
 
     //Add more functions
 public:

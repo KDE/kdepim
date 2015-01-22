@@ -15,33 +15,27 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef GRANTLEEPRINT_H
-#define GRANTLEEPRINT_H
+#ifndef GRANTLEEPRINTTEST_H
+#define GRANTLEEPRINTTEST_H
 
-#include "kaddressbook_export.h"
 #include <QObject>
-#include <grantlee/templateloader.h>
-#include <KContacts/Addressee>
 
-namespace Grantlee {
-class Engine;
-}
-
-namespace KABPrinting {
-class KADDRESSBOOK_EXPORT GrantleePrint : public QObject
+class GrantleePrintTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit GrantleePrint(QObject *parent = 0);
-    explicit GrantleePrint(const QString &themePath, QObject *parent = 0);
-    ~GrantleePrint();
-    QString contactsToHtml( const KContacts::Addressee::List &contacts );
-    void setContent(const QString &content);
-private:
-    QString mErrorMessage;
-    Grantlee::Engine *mEngine;
-    QSharedPointer<Grantlee::FileSystemTemplateLoader> mTemplateLoader;
-    Grantlee::Template mSelfcontainedTemplate;
+    explicit GrantleePrintTest(QObject *parent = 0);
+    ~GrantleePrintTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
+    void shouldReturnEmptyStringWhenNotContentAndNoContacts();
+    void shouldReturnEmptyStringWhenAddContentWithoutContacts();
+    void shouldReturnStringWhenAddContentAndContacts();
+    void shouldReturnEmails();
+
+    void shouldDisplayContactInfo_data();
+    void shouldDisplayContactInfo();
+
 };
-}
-#endif // GRANTLEEPRINT_H
+
+#endif // GRANTLEEPRINTTEST_H

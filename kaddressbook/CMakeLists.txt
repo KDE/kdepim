@@ -141,6 +141,7 @@ if (BUILD_TESTING)
    add_subdirectory(merge/autotests)
    add_subdirectory(sendmail/autotests)
    add_subdirectory(sendvcards/autotests)
+   add_subdirectory(printing/grantlee/autotests)
 endif()
 
 if(KF5Gpgmepp_FOUND)
