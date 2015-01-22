@@ -19,6 +19,7 @@
 */
 
 #include "kdepim-version.h"
+#include "themeeditormainwindow.h"
 #include <qapplication.h>
 #include <kaboutdata.h>
 #include <KDBusService>
@@ -54,7 +55,7 @@ int main(int argc, char **argv)
 
     KDBusService service;
 
-    //ContactEditorMainWindow *mw = new ContactEditorMainWindow();
-    //mw->show();
+    ThemeEditorMainWindow *mw = new ThemeEditorMainWindow;
+    mw->show();
     return app.exec();
 }

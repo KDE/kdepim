@@ -15,6 +15,15 @@ include_directories(
 
 set(contactprintthemeeditor_SRCS
   main.cpp
+  defaultcompletion.cpp
+  editorpage.cpp
+  themeconfiguredialog.cpp
+  themedefaulttemplate.cpp
+  themeeditormainwindow.cpp
+  themeeditorpage.cpp
+  themeeditorutil.cpp
+  themeeditorwidget.cpp
+  themetemplatewidget.cpp
 )
 
 
