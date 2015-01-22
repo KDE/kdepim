@@ -24,6 +24,7 @@ set(contactprintthemeeditor_SRCS
   themeeditorutil.cpp
   themeeditorwidget.cpp
   themetemplatewidget.cpp
+  contactprintthemepreview.cpp
 )
 
 

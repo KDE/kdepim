@@ -51,8 +51,6 @@ public:
 
     void insertFile();
 
-    void setPrinting(bool print);
-
     void updatePreview();
 
 Q_SIGNALS:
@@ -63,7 +61,6 @@ private Q_SLOTS:
     void slotUpdateViewer();
     void slotCloseTab(int);
     void slotChanged();
-    void slotExtraHeaderDisplayChanged(const QStringList &extraHeaders);
     void slotCurrentWidgetChanged(int);
 
 private:

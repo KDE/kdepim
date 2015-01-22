@@ -20,6 +20,7 @@
 #include "previewwidget.h"
 #include "themeeditorwidget.h"
 #include "themetemplatewidget.h"
+#include "contactprintthemepreview.h"
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 #include "KSplitterCollapserButton"
 
@@ -46,12 +47,9 @@ EditorPage::EditorPage(GrantleeThemeEditor::EditorPage::PageType type, const QSt
 
         mWidgetSplitter->addWidget(mMainSplitter);
 
-        /*
-
-        mPreview = new PreviewWidget(projectDirectory);
+        mPreview = new ContactPrintThemePreview(projectDirectory);
         mWidgetSplitter->addWidget(mPreview);
-        connect(mPreview, &PreviewWidget::needUpdateViewer, this, &EditorPage::needUpdateViewer);
-        */
+        connect(mPreview, &ContactPrintThemePreview::needUpdateViewer, this, &EditorPage::needUpdateViewer);
     } else {
         lay->addWidget(mMainSplitter);
     }
@@ -90,7 +88,7 @@ EditorPage::~EditorPage()
     }
 }
 
-GrantleeThemeEditor::PreviewWidget *EditorPage::preview() const
+ContactPrintThemePreview *EditorPage::preview() const
 {
     return mPreview;
 }

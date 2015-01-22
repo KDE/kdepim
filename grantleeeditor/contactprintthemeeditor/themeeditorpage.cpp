@@ -19,9 +19,9 @@
 #include "desktopfilepage.h"
 #include "editorpage.h"
 #include "themeeditorwidget.h"
-#include "previewwidget.h"
 #include "themesession.h"
 #include "themeeditortabwidget.h"
+#include "contactprintthemepreview.h"
 
 #include <kns3/uploaddialog.h>
 
@@ -64,7 +64,6 @@ ThemeEditorPage::ThemeEditorPage(const QString &projectDir, const QString &theme
 
     connect(mDesktopPage, SIGNAL(mainFileNameChanged(QString)), mEditorPage->preview(), SLOT(slotMainFileNameChanged(QString)));
     connect(mDesktopPage, &GrantleeThemeEditor::DesktopFilePage::mainFileNameChanged, mTabWidget, &GrantleeThemeEditor::ThemeEditorTabWidget::slotMainFileNameChanged);
-    connect(mDesktopPage, &GrantleeThemeEditor::DesktopFilePage::extraDisplayHeaderChanged, this, &ThemeEditorPage::slotExtraHeaderDisplayChanged);
     connect(mDesktopPage, &GrantleeThemeEditor::DesktopFilePage::changed, this, &ThemeEditorPage::slotChanged);
     connect(mTabWidget, &GrantleeThemeEditor::ThemeEditorTabWidget::tabCloseRequested, this, &ThemeEditorPage::slotCloseTab);
     setLayout(lay);
@@ -89,27 +88,6 @@ void ThemeEditorPage::slotCurrentWidgetChanged(int index)
 void ThemeEditorPage::updatePreview()
 {
     mEditorPage->preview()->updateViewer();
-}
-
-void ThemeEditorPage::setPrinting(bool print)
-{
-    mEditorPage->preview()->setPrinting(print);
-}
-
-void ThemeEditorPage::slotExtraHeaderDisplayChanged(const QStringList &extraHeaders)
-{
-    mEditorPage->preview()->slotExtraHeaderDisplayChanged(extraHeaders);
-
-    QStringList result;
-    Q_FOREACH (QString var, extraHeaders) {
-        var = QLatin1String("header.") + var.remove(QLatin1Char('-'));
-        result << var;
-    }
-
-    mEditorPage->editor()->createCompleterList(result);
-    Q_FOREACH (EditorPage *page, mExtraPage) {
-        page->editor()->createCompleterList(result);
-    }
 }
 
 void ThemeEditorPage::slotChanged()
@@ -298,7 +276,7 @@ void ThemeEditorPage::loadTheme(const QString &filename)
     if (mThemeSession->loadSession(filename)) {
         mDesktopPage->loadTheme(mThemeSession->projectDirectory());
         mEditorPage->loadTheme(mThemeSession->projectDirectory() + QDir::separator() + mThemeSession->mainPageFileName());
-        mEditorPage->preview()->setThemePath(mThemeSession->projectDirectory(), mThemeSession->mainPageFileName());
+        //FIXME mEditorPage->preview()->setThemePath(mThemeSession->projectDirectory(), mThemeSession->mainPageFileName());
 
         const QStringList lstExtraPages = mThemeSession->extraPages();
         Q_FOREACH (const QString &page, lstExtraPages) {

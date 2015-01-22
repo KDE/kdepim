@@ -77,8 +77,6 @@ void ThemeEditorMainWindow::updateActions()
     mSaveAction->setEnabled(projectDirectoryIsEmpty);
     mInstallTheme->setEnabled(projectDirectoryIsEmpty);
     mInsertFile->setEnabled(projectDirectoryIsEmpty);
-    mPrintingMode->setEnabled(projectDirectoryIsEmpty);
-    mNormalMode->setEnabled(projectDirectoryIsEmpty);
     mUpdateView->setEnabled(projectDirectoryIsEmpty);
     mSaveAsAction->setEnabled(projectDirectoryIsEmpty);
 }
@@ -121,19 +119,6 @@ void ThemeEditorMainWindow::setupActions()
     actionCollection()->addAction(QStringLiteral("insert_file"), mInsertFile);
     connect(mInsertFile, &QAction::triggered, this, &ThemeEditorMainWindow::slotInsertFile);
 
-    QActionGroup *group = new QActionGroup(this);
-
-    mPrintingMode  = new KToggleAction(i18n("Printing mode"), this);
-    actionCollection()->addAction(QStringLiteral("printing_mode"), mPrintingMode);
-    connect(mPrintingMode, &KToggleAction::triggered, this, &ThemeEditorMainWindow::slotPrintingMode);
-    group->addAction(mPrintingMode);
-
-    mNormalMode  = new KToggleAction(i18n("Normal mode"), this);
-    mNormalMode->setChecked(true);
-    actionCollection()->addAction(QStringLiteral("normal_mode"), mNormalMode);
-    connect(mNormalMode, &KToggleAction::triggered, this, &ThemeEditorMainWindow::slotNormalMode);
-    group->addAction(mNormalMode);
-
     mManageTheme = new QAction(i18n("Manage themes..."), this);
     connect(mManageTheme, &QAction::triggered, this, &ThemeEditorMainWindow::slotManageTheme);
     actionCollection()->addAction(QStringLiteral("manage_themes"), mManageTheme);
@@ -150,16 +135,6 @@ void ThemeEditorMainWindow::slotManageTheme()
     QPointer<GrantleeThemeEditor::ManageThemes> dialog = new GrantleeThemeEditor::ManageThemes(QStringLiteral("messageviewer/themes/"), this);
     dialog->exec();
     delete dialog;
-}
-
-void ThemeEditorMainWindow::slotNormalMode()
-{
-    mThemeEditor->setPrinting(false);
-}
-
-void ThemeEditorMainWindow::slotPrintingMode()
-{
-    mThemeEditor->setPrinting(true);
 }
 
 void ThemeEditorMainWindow::slotInsertFile()

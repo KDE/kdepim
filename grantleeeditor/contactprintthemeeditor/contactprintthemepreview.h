@@ -14,36 +14,25 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
+#ifndef CONTACTPRINTTHEMEPREVIEW_H
+#define CONTACTPRINTTHEMEPREVIEW_H
 
-#ifndef EDITORPAGE_H
-#define EDITORPAGE_H
+#include <QWidget>
 
-#include "grantleethemeeditor/editorpage.h"
-
-class ThemeTemplateWidget;
-class EditorWidget;
-class QSplitter;
-class ContactPrintThemePreview;
-namespace GrantleeThemeEditor
-{
-class EditorWidget;
-class PreviewWidget;
-}
-
-class EditorPage : public GrantleeThemeEditor::EditorPage
+class ContactPrintThemePreview : public QWidget
 {
     Q_OBJECT
 public:
-    explicit EditorPage(GrantleeThemeEditor::EditorPage::PageType type, const QString &projectDirectory, QWidget *parent = Q_NULLPTR);
-    ~EditorPage();
+    explicit ContactPrintThemePreview(const QString &projectDirectory, QWidget *parent = 0);
+    ~ContactPrintThemePreview();
 
-    ContactPrintThemePreview *preview() const;
+    void updateViewer();
+    void createScreenShot(const QStringList &fileName);
+    void setThemePath(const QString &projectDirectory);
+    void loadConfig();
 
-private:
-    ContactPrintThemePreview *mPreview;
-    ThemeTemplateWidget *mThemeTemplate;
-    QSplitter *mMainSplitter;
-    QSplitter *mWidgetSplitter;
+Q_SIGNALS:
+    void needUpdateViewer();
 };
 
-#endif // EDITORPAGE_H
+#endif // CONTACTPRINTTHEMEPREVIEW_H

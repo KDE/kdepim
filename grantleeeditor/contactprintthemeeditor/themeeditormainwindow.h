@@ -47,8 +47,6 @@ private Q_SLOTS:
     void slotConfigure();
     void slotInstallTheme();
     void slotInsertFile();
-    void slotPrintingMode();
-    void slotNormalMode();
     void slotManageTheme();
     void slotUpdateView();
     void slotCanInsertFile(bool b);
@@ -81,8 +79,6 @@ private:
     QAction *mManageTheme;
     QAction *mUpdateView;
     QAction *mSaveAsAction;
-    KToggleAction *mPrintingMode;
-    KToggleAction *mNormalMode;
     KRecentFilesAction *mRecentFileAction;
 };
 

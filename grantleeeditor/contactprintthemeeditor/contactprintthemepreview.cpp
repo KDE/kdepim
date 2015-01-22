@@ -15,18 +15,36 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "defaultcompletion.h"
+#include "contactprintthemepreview.h"
 
-QStringList DefaultCompletion::defaultCompetion()
+ContactPrintThemePreview::ContactPrintThemePreview(const QString &projectDirectory, QWidget *parent)
+    : QWidget(parent)
 {
-    //TODO add to highlighter
-    QStringList lst;
-    return lst;
+
 }
 
-QStringList DefaultCompletion::defaultOptions()
+ContactPrintThemePreview::~ContactPrintThemePreview()
 {
-    QStringList lst;
-    lst << QStringLiteral("Safe");
-    return lst;
+
 }
+
+void ContactPrintThemePreview::updateViewer()
+{
+
+}
+
+void ContactPrintThemePreview::createScreenShot(const QStringList &fileName)
+{
+
+}
+
+void ContactPrintThemePreview::setThemePath(const QString &projectDirectory)
+{
+
+}
+
+void ContactPrintThemePreview::loadConfig()
+{
+
+}
+
