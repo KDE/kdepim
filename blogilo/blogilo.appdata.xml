@@ -29,6 +29,7 @@
   <name xml:lang="sv">Blogilo</name>
   <name xml:lang="uk">Blogilo</name>
   <name xml:lang="x-test">xxBlogiloxx</name>
+  <name xml:lang="zh-CN">Blogilo</name>
   <name xml:lang="zh-TW">Blogilo</name>
   <summary>A KDE Blogging Client</summary>
   <summary xml:lang="ar">عميل تدوين لكدي</summary>
@@ -55,6 +56,7 @@
   <summary xml:lang="sv">En bloggklient för KDE</summary>
   <summary xml:lang="uk">Клієнт для ведення блогів у KDE</summary>
   <summary xml:lang="x-test">xxA KDE Blogging Clientxx</summary>
+  <summary xml:lang="zh-CN">KDE 的博客客户端</summary>
   <summary xml:lang="zh-TW">KDE 部落格客戶端程式</summary>
   <description>
     <p>Blogilo is a blogging client for KDE, which supports various blogging APIs.</p>
@@ -108,6 +110,7 @@
     <p xml:lang="sv">Funktioner:</p>
     <p xml:lang="uk">Можливості:</p>
     <p xml:lang="x-test">xxFeatures:xx</p>
+    <p xml:lang="zh-CN">功能：</p>
     <p xml:lang="zh-TW">功能：</p>
     <ul>
       <li>A full featured WYSIWYG editor + An HTML editor</li>
