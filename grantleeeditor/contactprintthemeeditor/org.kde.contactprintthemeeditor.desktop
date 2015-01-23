@@ -1,10 +1,22 @@
 [Desktop Entry]
 Name=Contact Print Theme Editor
+Name[ca]=Editor de temes per imprimir els contactes
+Name[nl]=Themabewerker van afdrukken van contactpersoon
+Name[pt]=Editor de Temas de Impressão dos Contactos
+Name[sv]=Temaeditor för utskrift av kontakter
+Name[uk]=Редактор тем для друку записів контактів
+Name[x-test]=xxContact Print Theme Editorxx
 Type=Application
 Exec=contactprintthemeeditor
 Icon=kaddressbook
 X-DocPath=contactprintthemeeditor/index.html
 GenericName=Contact Print Theme Editor
+GenericName[ca]=Editor de temes per imprimir els contactes
+GenericName[nl]=Themabewerker van afdrukken van contactpersoon
+GenericName[pt]=Editor de Temas de Impressão dos Contactos
+GenericName[sv]=Temaeditor för utskrift av kontakter
+GenericName[uk]=Редактор тем для друку записів контактів
+GenericName[x-test]=xxContact Print Theme Editorxx
 Terminal=false
 Categories=Qt;KDE;Office;Network;ContactManagement;
 InitialPreference=10
