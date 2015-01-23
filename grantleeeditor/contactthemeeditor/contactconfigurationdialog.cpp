@@ -92,9 +92,10 @@ void ContactConfigureDialog::slotDefaultClicked()
 {
     mConfigureWidget->setDefault();
 
-    if (!contacteditorutil::defaultContact().isEmpty()) {
+    ContactEditorUtil contactUtil;
+    if (!contactUtil.defaultContact().isEmpty()) {
         KContacts::VCardConverter converter;
-        KContacts::Addressee addr = converter.parseVCard(contacteditorutil::defaultContact().toUtf8());
+        KContacts::Addressee addr = converter.parseVCard(contactUtil.defaultContact().toUtf8());
         mDefaultContact->setContactTemplate(addr);
     } else {
         mDefaultContact->setContactTemplate(KContacts::Addressee());
@@ -111,9 +112,10 @@ void ContactConfigureDialog::readConfig()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
+    ContactEditorUtil contactUtil;
     if (config->hasGroup(QStringLiteral("Global"))) {
         KConfigGroup group = config->group(QStringLiteral("Global"));
-        const QString defaultContact = group.readEntry("defaultContact", contacteditorutil::defaultContact());
+        const QString defaultContact = group.readEntry("defaultContact", contactUtil.defaultContact());
         if (!defaultContact.isEmpty()) {
             KContacts::VCardConverter converter;
             KContacts::Addressee addr = converter.parseVCard(defaultContact.toUtf8());
@@ -123,9 +125,9 @@ void ContactConfigureDialog::readConfig()
         }
         mDefaultTemplate->setPlainText(group.readEntry("defaultTemplate", QString()));
     } else {
-        if (!contacteditorutil::defaultContact().isEmpty()) {
+        if (!contactUtil.defaultContact().isEmpty()) {
             KContacts::VCardConverter converter;
-            KContacts::Addressee addr = converter.parseVCard(contacteditorutil::defaultContact().toUtf8());
+            KContacts::Addressee addr = converter.parseVCard(contactUtil.defaultContact().toUtf8());
             mDefaultContact->setContactTemplate(addr);
         } else {
             mDefaultContact->setContactTemplate(KContacts::Addressee());

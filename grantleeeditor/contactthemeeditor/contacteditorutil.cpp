@@ -17,7 +17,13 @@
 
 #include "contacteditorutil.h"
 
-QString contacteditorutil::defaultContact()
+
+ContactEditorUtil::ContactEditorUtil()
+{
+
+}
+
+QString ContactEditorUtil::defaultContact() const
 {
 
     const QString contact = QStringLiteral("BEGIN:VCARD\n"
@@ -33,3 +39,4 @@ QString contacteditorutil::defaultContact()
                                            "END:VCARD");
     return contact;
 }
+
