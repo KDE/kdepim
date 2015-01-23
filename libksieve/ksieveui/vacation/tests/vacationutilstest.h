@@ -33,6 +33,8 @@ private Q_SLOTS:
     void testParseScript();
     void testParseScriptComplex();
     void testParseScriptComplexTime();
+    void testMailAction_data();
+    void testMailAction();
     void testWriteScript();
     void testWriteSimpleScript();
     void testUpdateVacationBlock();

@@ -109,6 +109,21 @@ void VacationDialog::setSubject(const QString &subject)
     return mVacationEditWidget->setSubject(subject);
 }
 
+VacationUtils::MailAction VacationDialog::mailAction() const
+{
+    return mVacationEditWidget->mailAction();
+}
+
+QString VacationDialog::mailActionRecipient() const
+{
+    return mVacationEditWidget->mailActionRecipient();
+}
+
+void VacationDialog::setMailAction(VacationUtils::MailAction action, const QString& recipient)
+{
+    mVacationEditWidget->setMailAction(action, recipient);
+}
+
 int VacationDialog::notificationInterval() const
 {
     return mVacationEditWidget->notificationInterval();

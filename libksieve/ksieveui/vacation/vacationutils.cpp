@@ -41,6 +41,28 @@ static inline QString stringReplace(QString s)
     return s.replace(QLatin1Char('\"'),QLatin1String("\\\""));
 }
 
+QString KSieveUi::VacationUtils::mailAction(KSieveUi::VacationUtils::MailAction action)
+{
+    switch (action) {
+    case Keep:
+        return i18n("Keep");
+    case Discard:
+        return i18n("Discard");
+    case Sendto:
+        return i18n("Redirect to");
+    case CopyTo:
+        return i18n("Copy to");
+    default:
+        kWarning() << "Unknown mail action" << action;
+        return i18n("Unkown action");
+    }
+}
+
+KSieveUi::VacationUtils::MailAction KSieveUi::VacationUtils::defaultMailAction()
+{
+    return KSieveUi::VacationUtils::Keep;
+}
+
 QString KSieveUi::VacationUtils::defaultSubject()
 {
   return i18n("Out of office till %1", QLocale().toString(QDate::currentDate().addDays(1)));
@@ -111,6 +133,7 @@ KSieveUi::VacationUtils::Vacation KSieveUi::VacationUtils::parseScript(const QSt
     if ( script.trimmed().isEmpty() ) {
         vacation.valid = false;
         vacation.active = false;
+        vacation.mailAction = VacationUtils::defaultMailAction();
         vacation.messageText = VacationUtils::defaultMessageText();
         vacation.subject = VacationUtils::defaultSubject();
         vacation.notificationInterval = VacationUtils::defaultNotificationInterval();
@@ -141,6 +164,8 @@ KSieveUi::VacationUtils::Vacation KSieveUi::VacationUtils::parseScript(const QSt
     }
     vacation.valid = true;
     vacation.active = vdx.active();
+    vacation.mailAction = vdx.mailAction();
+    vacation.mailActionRecipient = vdx.mailActionRecipient();
     vacation.messageText = vdx.messageText().trimmed();
     if (!vdx.subject().isEmpty()) {
         vacation.subject = vdx.subject().trimmed();
@@ -232,6 +257,14 @@ QString composeOldScript( const QString & messageText,
 QString KSieveUi::VacationUtils::composeScript(const Vacation &vacation)
 {
     QStringList condition;
+    QStringList require;
+
+    require << QLatin1String("vacation");
+
+    if (vacation.startDate.isValid() || vacation.endDate.isValid()) {
+        require << QLatin1String("date");
+        require << QLatin1String("relational");
+    }
 
     if (vacation.startDate.isValid()) {
         if (vacation.startTime.isValid()) {
@@ -289,13 +322,25 @@ QString KSieveUi::VacationUtils::composeScript(const Vacation &vacation)
     sVacation += dotstuff( vacation.messageText.isEmpty() ? VacationUtils::defaultMessageText() : vacation.messageText );
     sVacation += QString::fromLatin1( "\n.\n;" );
 
+    switch (vacation.mailAction) {
+    case VacationUtils::Keep:
+        break;
+    case VacationUtils::Discard:
+        sVacation += QLatin1String("\ndiscard;");
+        break;
+    case VacationUtils::Sendto:
+        sVacation += QLatin1String("\nredirect \"") + vacation.mailActionRecipient + QLatin1String("\";");
+        break;
+    case VacationUtils::CopyTo:
+        require << QLatin1String("copy");
+        sVacation += QLatin1String("\nredirect :copy \"") + vacation.mailActionRecipient + QLatin1String("\";");
+        break;
+    }
+
     QString script;
 
-    if ( vacation.startDate.isValid() || vacation.endDate.isValid() ) {
-        script = QString::fromLatin1("require [\"vacation\", \"relational\", \"date\"];\n\n" );
-    } else {
-        script = QString::fromLatin1("require \"vacation\";\n\n" );
-    }
+    script = QLatin1String("require [\"%1\"];\n\n");
+    script = script.arg(require.join(QLatin1String("\", \"")));
 
     if (condition.count() == 0) {
         if (vacation.active) {

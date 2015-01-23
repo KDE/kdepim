@@ -15,6 +15,7 @@
 #define KSIEVE_KSIEVEUI_VACATIONDIALOG_H
 
 #include <kdialog.h>
+#include "vacationutils.h"
 
 template <typename T> class QList;
 
@@ -51,6 +52,10 @@ public:
 
     QString subject() const;
     void setSubject( const QString &subject );
+
+    VacationUtils::MailAction mailAction() const;
+    QString mailActionRecipient() const;
+    void setMailAction (KSieveUi::VacationUtils::MailAction action, const QString &recipient);
 
     int notificationInterval() const;
     void setNotificationInterval( int days );

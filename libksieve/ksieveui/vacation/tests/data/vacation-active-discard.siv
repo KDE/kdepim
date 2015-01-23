@@ -1,0 +1,9 @@
+require ["date","relational","vacation"];
+# EDITOR Roundcube (Managesieve)
+# EDITOR_VERSION 8.2
+# rule:[Urlaub]
+if allof (not header :contains "X-Spam-Flag" "YES")
+{
+        vacation :days 7 :addresses "test@test.de" :subject "XXX" "dsfgsdfgsdfg";
+        discard;
+}

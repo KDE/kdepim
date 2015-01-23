@@ -123,6 +123,7 @@ void Vacation::slotGetResult( KManageSieve::SieveJob * job, bool success,
     mWasActive = active;
     if ( mDialog ) {
         mDialog->setActivateVacation( active && vacation.active );
+        mDialog->setMailAction(vacation.mailAction, vacation.mailActionRecipient);
         mDialog->setSubject(vacation.subject);
         mDialog->setMessageText( vacation.messageText );
         mDialog->setNotificationInterval( vacation.notificationInterval );
@@ -165,6 +166,8 @@ void Vacation::slotDialogOk() {
     vacation.active = active;
     vacation.messageText = mDialog->messageText();
     vacation.subject = mDialog->subject();
+    vacation.mailAction = mDialog->mailAction();
+    vacation.mailActionRecipient = mDialog->mailActionRecipient();
     vacation.notificationInterval = mDialog->notificationInterval();
     vacation.aliases = mDialog->mailAliases();
     vacation.sendForSpam = mDialog->sendForSpam();

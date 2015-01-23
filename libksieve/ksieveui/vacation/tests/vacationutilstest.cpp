@@ -125,6 +125,38 @@ void VacationUtilsTest::testParseScript()
     QCOMPARE(vacationD.endTime, QTime());
 }
 
+void VacationUtilsTest::testMailAction_data()
+{
+    QTest::addColumn<QString>("filename");
+    QTest::addColumn<int>("action");
+    QTest::addColumn<QString>("recipient");
+
+    QTest::newRow("keep")    << QString::fromLatin1("vacation-complex.siv")        << (int)VacationUtils::Keep << QString();
+    QTest::newRow("discard") << QString::fromLatin1("vacation-active-discard.siv") << (int)VacationUtils::Discard << QString();
+    QTest::newRow("send")    << QString::fromLatin1("vacation-deactive-send.siv")  << (int)VacationUtils::Sendto << QString::fromLatin1("redirect@example.org");
+    QTest::newRow("copy")    << QString::fromLatin1("vacation-deactive-copy.siv")  << (int)VacationUtils::CopyTo << QString::fromLatin1("copy@example.org");
+}
+
+void VacationUtilsTest::testMailAction()
+{
+    QFETCH(QString, filename);
+    QFETCH(int, action);
+    QFETCH(QString, recipient);
+
+    QFile file(QLatin1String(VACATIONTESTDATADIR) + filename);
+    QVERIFY(file.open(QIODevice::ReadOnly));
+    QString script = QString::fromUtf8(file.readAll());
+
+    VacationUtils::Vacation vacation = VacationUtils::parseScript(script);
+    QCOMPARE((int)vacation.mailAction, action);
+    QCOMPARE(vacation.mailActionRecipient, recipient);
+
+    const QString composedScript = VacationUtils::composeScript(vacation);
+    vacation = VacationUtils::parseScript(composedScript);
+    QCOMPARE((int)vacation.mailAction, action);
+    QCOMPARE(vacation.mailActionRecipient, recipient);
+}
+
 void VacationUtilsTest::testParseScriptComplex()
 {
     QFile file(QLatin1String(VACATIONTESTDATADIR "vacation-complex.siv"));

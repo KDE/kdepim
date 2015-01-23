@@ -24,8 +24,17 @@
 
 namespace KSieveUi {
 namespace VacationUtils {
+
+enum MailAction {
+    Keep,
+    Discard,
+    Sendto,
+    CopyTo,
+};
+
 QString defaultMessageText();
 QString defaultSubject();
+MailAction defaultMailAction();
 int defaultNotificationInterval();
 KMime::Types::AddrSpecList defaultMailAliases();
 bool defaultSendForSpam();
@@ -34,9 +43,11 @@ QDate defaultStartDate();
 QDate defaultEndDate();
 
 struct Vacation {
-    Vacation():valid(false), active(false), notificationInterval(1), sendForSpam(true) {}
+    Vacation():valid(false), active(false), notificationInterval(1), sendForSpam(true), mailAction(Keep) {}
     bool isValid() const {return valid;}
 
+    MailAction mailAction;
+    QString mailActionRecipient;
     bool valid;
     QString messageText;
     QString subject;
@@ -58,6 +69,8 @@ KSieveUi::VacationUtils::Vacation parseScript(const QString &script);
 QString mergeRequireLine(const QString &script1, const QString script2);
 
 QString updateVacationBlock(const QString &oldScript, const QString &newScript);
+
+QString mailAction(MailAction action);
 
 }
 }

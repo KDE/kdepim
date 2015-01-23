@@ -159,6 +159,30 @@ VacationEditWidget::VacationEditWidget(QWidget *parent)
     glay->addWidget( tmpLabel, row, 0 );
     glay->addWidget( mMailAliasesEdit, row, 1 );
 
+    // Action for incomming mails
+    mMailAction = new QComboBox(this);
+    for (int i=0; i<4; i++) {
+        mMailAction->addItem(VacationUtils::mailAction((VacationUtils::MailAction) i));
+    }
+    mMailAction->setObjectName(QLatin1String("mMailAction"));
+    connect(mMailAction, SIGNAL(currentIndexChanged(int)), SLOT(mailActionChanged(int)));
+
+    mMailActionRecipient = new KLineEdit(this);
+    mMailActionRecipient->setObjectName(QLatin1String("mMailActionRecipient"));
+    mMailActionRecipient->setClearButtonShown(true);
+    mMailActionRecipient->setEnabled(false);
+
+    QHBoxLayout *hLayout = new QHBoxLayout(this);
+
+    hLayout->addWidget(mMailAction);
+    hLayout->addWidget(mMailActionRecipient);
+
+    ++row;
+    tmpLabel = new QLabel(i18n("&Action for incomming mails:"), this);
+    tmpLabel->setBuddy(mMailAction);
+    glay->addWidget(tmpLabel, row, 0);
+    glay->addLayout(hLayout, row, 1);
+
     // "Send responses also to SPAM mail" checkbox:
     ++row;
     mSpamCheck = new QCheckBox( i18n("Do not send vacation replies to spam messages"), this );
@@ -362,6 +386,30 @@ QString VacationEditWidget::subject() const
     }
 }
 
+void VacationEditWidget::mailActionChanged(int action)
+{
+    bool enable = (action == VacationUtils::CopyTo || action == VacationUtils::Sendto);
+    mMailActionRecipient->setEnabled(enable);
+}
+
+
+void VacationEditWidget::setMailAction(VacationUtils::MailAction action, const QString &recipient)
+{
+    mMailAction->setCurrentIndex(action);
+    mMailActionRecipient->setText(recipient);
+}
+
+VacationUtils::MailAction VacationEditWidget::mailAction() const
+{
+    return (VacationUtils::MailAction) mMailAction->currentIndex();
+}
+
+QString VacationEditWidget::mailActionRecipient() const
+{
+    return mMailActionRecipient->text();
+}
+
+
 void VacationEditWidget::enableDates( bool enable )
 {
     mStartDate->setEnabled( enable );
@@ -384,5 +432,6 @@ void VacationEditWidget::setDefault()
     setMailAliases( VacationUtils::defaultMailAliases() );
     setSendForSpam( VacationUtils::defaultSendForSpam() );
     setDomainName( VacationUtils::defaultDomainName() );
+    setMailAction(VacationUtils::defaultMailAction(), QString());
     setDomainCheck( false );
 }

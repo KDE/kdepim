@@ -134,6 +134,7 @@ void VacationPageWidget::slotGetResult(const QString &serverName, const QStringL
     mVacationEditWidget->setActivateVacation( active && vacation.active );
     mVacationEditWidget->setMessageText( vacation.messageText );
     mVacationEditWidget->setSubject( vacation.subject );
+    mVacationEditWidget->setMailAction(vacation.mailAction, vacation.mailActionRecipient);
     mVacationEditWidget->setNotificationInterval( vacation.notificationInterval );
     mVacationEditWidget->setMailAliases( vacation.aliases );
     mVacationEditWidget->setSendForSpam( vacation.sendForSpam );
@@ -165,6 +166,8 @@ KSieveUi::VacationCreateScriptJob *VacationPageWidget::writeScript()
         vacation.active = active;
         vacation.messageText = mVacationEditWidget->messageText();
         vacation.subject = mVacationEditWidget->subject();
+        vacation.mailAction = mVacationEditWidget->mailAction();
+        vacation.mailActionRecipient = mVacationEditWidget->mailActionRecipient();
         vacation.notificationInterval = mVacationEditWidget->notificationInterval();
         vacation.aliases = mVacationEditWidget->mailAliases();
         vacation.sendForSpam = mVacationEditWidget->sendForSpam();

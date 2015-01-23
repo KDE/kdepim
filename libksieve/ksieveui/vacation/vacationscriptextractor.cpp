@@ -24,9 +24,12 @@ VacationDataExtractor::VacationDataExtractor()
       mNotificationInterval( 0 )
     , mActive(true)
     , mInIfBlock(false)
+    , mFoundInBlock(false)
     , mBlockLevel(0)
     , mLineStart(0)
     , mLineEnd(0)
+    , mMailAction(VacationUtils::Keep)
+    , mMailActionContext(None)
 {
 }
 
@@ -41,6 +44,16 @@ void VacationDataExtractor::commandStart( const QString & identifier, int lineNu
         mLineStart = lineNumber;
         mInIfBlock = true;
     }
+
+    if (commandFound() && (!mFoundInBlock || mBlockLevel > 0 )) {
+        if (identifier == QLatin1String("discard")) {
+            mMailAction = VacationUtils::Discard;
+        } else if (identifier == QLatin1String("redirect")) {
+            mMailAction = VacationUtils::Sendto;
+            mMailActionContext = RedirectCommand;
+        }
+    }
+
     if ( identifier != QLatin1String("vacation") )
         return;
 
@@ -50,6 +63,7 @@ void VacationDataExtractor::commandStart( const QString & identifier, int lineNu
 
     reset();
     mContext = VacationCommand;
+    mFoundInBlock = (mBlockLevel > 0);
 }
 
 void VacationDataExtractor::commandEnd(int lineNumber) {
@@ -57,6 +71,7 @@ void VacationDataExtractor::commandEnd(int lineNumber) {
         mContext = VacationEnd;
         mLineEnd = lineNumber;
     }
+    mMailActionContext = None;
 }
 
 void VacationDataExtractor::error( const KSieve::Error & e )
@@ -106,6 +121,11 @@ void VacationDataExtractor::blockEnd(int lineNumber)
 
 void VacationDataExtractor::taggedArgument( const QString & tag )
 {
+    if (mMailActionContext == RedirectCommand) {
+        if (tag == QLatin1String("copy")) {
+            mMailAction = VacationUtils::CopyTo;
+        }
+    }
     if ( mContext != VacationCommand )
         return;
     if ( tag == QLatin1String("days") )
@@ -119,6 +139,9 @@ void VacationDataExtractor::taggedArgument( const QString & tag )
 
 void VacationDataExtractor::stringArgument( const QString & string, bool, const QString & )
 {
+    if (mMailActionContext == RedirectCommand) {
+        mMailActionRecipient = string;
+    }
     if ( mContext == Addresses ) {
         mAliases.push_back( string );
         mContext = VacationCommand;
@@ -163,6 +186,8 @@ void VacationDataExtractor::stringListArgumentEnd()
 void VacationDataExtractor::reset()
 {
     mContext = None;
+    mMailAction = VacationUtils::Keep;
+    mMailActionRecipient = QString();
     mNotificationInterval = 0;
     mAliases.clear();
     mMessageText.clear();

@@ -20,6 +20,7 @@
 
 #include "sieve-vacation.h"
 #include "util/util.h"
+#include "vacationutils.h"
 
 #include <kmime/kmime_header_parsing.h>
 #include <ksieve/error.h>
@@ -432,7 +433,8 @@ class VacationDataExtractor : public KSieve::ScriptBuilder {
         // tagged args:
         Days, Addresses, Subject,
         VacationEnd,
-        IfBlock
+        IfBlock,
+        RedirectCommand
     };
 public:
     VacationDataExtractor();
@@ -444,6 +446,8 @@ public:
     const QString & messageText() const { return mMessageText; }
     const QStringList & aliases() const { return mAliases; }
     const QString &ifComment() const { return mIfComment; }
+    VacationUtils::MailAction mailAction() const {return mMailAction;}
+    const QString &mailActionRecipient() const {return mMailActionRecipient;}
 
     const QString &subject() const
     {
@@ -488,10 +492,15 @@ private:
     QStringList mAliases;
     bool mActive;
     bool mInIfBlock;
+    bool mFoundInBlock;
     int mBlockLevel;
     QString mIfComment;
     int mLineStart;
     int mLineEnd;
+
+    Context mMailActionContext;
+    VacationUtils::MailAction mMailAction;
+    QString mMailActionRecipient;
 
     void reset();
 };
