@@ -25,7 +25,7 @@
 #include <QTimer>
 #include <QDebug>
 
-using namespace MessageViewer;
+using namespace PimCommon;
 
 //10 secondes
 static int DELETEAFTER = 10000;

@@ -76,7 +76,6 @@ set(libmessageviewer_viewer_SRCS
   viewer/htmlquotecolorer.cpp
   viewer/mimetreemodel.cpp
   viewer/nodehelper.cpp
-  viewer/attachmenttemporaryfilesdirs.cpp
   viewer/objecttreeemptysource.cpp
   viewer/objecttreeparser.cpp
   viewer/objecttreeviewersource.cpp

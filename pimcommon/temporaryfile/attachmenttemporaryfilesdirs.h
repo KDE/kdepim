@@ -23,10 +23,11 @@
 
 #include <QObject>
 #include <QStringList>
+#include "pimcommon_export.h"
 
-namespace MessageViewer {
+namespace PimCommon {
 
-class AttachmentTemporaryFilesDirs : public QObject
+class PIMCOMMON_EXPORT AttachmentTemporaryFilesDirs : public QObject
 {
     Q_OBJECT
 public:
