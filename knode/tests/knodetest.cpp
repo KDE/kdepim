@@ -42,6 +42,7 @@ void KNodeTest::testUtilitiesLocale()
   QMap<QString, QString> kcharsetVsMime;
   kcharsetVsMime.insert( "Big5", "BIG5" );
   kcharsetVsMime.insert( "Big5-HKSCS", "BIG5-HKSCS" );
+  kcharsetVsMime.insert( "cp 949", "CP949" ); // Not IANA but present in KDE's CI machine
   kcharsetVsMime.insert( "cp 1250", "WINDOWS-1250" );
   kcharsetVsMime.insert( "cp 1251", "WINDOWS-1251" );
   kcharsetVsMime.insert( "cp 1252", "WINDOWS-1252" );
