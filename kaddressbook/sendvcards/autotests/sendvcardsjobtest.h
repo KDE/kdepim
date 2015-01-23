@@ -29,6 +29,8 @@ class SendVcardsJobTest : public QObject
 public:
     explicit SendVcardsJobTest(QObject *parent = 0);
     ~SendVcardsJobTest();
+private Q_SLOTS:
+    void shouldNotStartWhenListAddressIsEmpty();
 };
 
 #endif // SENDVCARDSJOBTEST_H
