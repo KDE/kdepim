@@ -386,7 +386,12 @@ static const InsertCommand miscCommands[] = {
     {
         I18N_NOOP("Dictionary Language"),
         TemplatesInsertCommand::CDictionaryLanguage
-    }
+    },
+    {
+        I18N_NOOP("Language"),
+        TemplatesInsertCommand::CLanguage
+    },
+
 };
 static const int miscCommandsCount = sizeof(miscCommands) / sizeof(*miscCommands);
 
@@ -687,6 +692,9 @@ void TemplatesInsertCommand::slotMapped(int cmd)
         break;
     case TemplatesInsertCommand::CDictionaryLanguage:
         emit insertCommand(QStringLiteral("%DICTIONARYLANGUAGE=\"\""), -1);
+        break;
+    case TemplatesInsertCommand::CLanguage:
+        emit insertCommand(QStringLiteral("%LANGUAGE=\"\""), -1);
         break;
     default:
         qCDebug(TEMPLATEPARSER_LOG) << "Unknown template command index:" << cmd;

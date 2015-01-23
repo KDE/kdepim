@@ -104,7 +104,8 @@ public:
         CSignature,
         CQuotePlain,
         CQuoteHtml,
-        CDictionaryLanguage
+        CDictionaryLanguage,
+        CLanguage
     };
 
 Q_SIGNALS:
