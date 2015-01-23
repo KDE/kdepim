@@ -16,14 +16,29 @@
 */
 
 #include "contactprintthemepreview.h"
+#include "contactprintthemeeditorutil.h"
 #include <KSharedConfig>
 #include <KConfigGroup>
+#include <QHBoxLayout>
+#include <QWebView>
 #include <KContacts/VCardConverter>
+#include <printing/grantleeprint.h>
+#include <QDebug>
 
 ContactPrintThemePreview::ContactPrintThemePreview(const QString &projectDirectory, QWidget *parent)
-    : QWidget(parent)
+    : GrantleeThemeEditor::PreviewWidget(parent)
 {
+    QHBoxLayout *hbox = new QHBoxLayout;
+    mViewer = new QWebView;
+    hbox->addWidget(mViewer);
+    setLayout(hbox);
+    mGrantleePrint = new KAddressBookGrantlee::GrantleePrint(this);
     loadConfig();
+    qDebug()<<" ssssssssssssssssssssssss"<<projectDirectory;
+    if (!projectDirectory.isEmpty()) {
+        qDebug()<<" projectDirectory"<<projectDirectory;
+        mGrantleePrint->changeGrantleePath(projectDirectory);
+    }
 }
 
 ContactPrintThemePreview::~ContactPrintThemePreview()
@@ -33,27 +48,32 @@ ContactPrintThemePreview::~ContactPrintThemePreview()
 
 void ContactPrintThemePreview::updateViewer()
 {
-
+    KContacts::AddresseeList lst;
+    lst << mContact;
+    mGrantleePrint->refreshTemplate();
+    const QString html = mGrantleePrint->contactsToHtml(lst);
+    mViewer->setHtml(html);
 }
 
 void ContactPrintThemePreview::createScreenShot(const QStringList &fileName)
 {
-
+    //TODO
 }
 
-void ContactPrintThemePreview::setThemePath(const QString &projectDirectory)
+void ContactPrintThemePreview::setThemePath(const QString &projectDirectory, const QString &mainPageFileName)
 {
-
+    Q_UNUSED(mainPageFileName);
+    mGrantleePrint->changeGrantleePath(projectDirectory);
 }
 
 void ContactPrintThemePreview::loadConfig()
 {
-#if 0
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
     if (config->hasGroup(QStringLiteral("Global"))) {
         KConfigGroup group = config->group(QStringLiteral("Global"));
-        const QString defaultContact = group.readEntry("defaultContact", contacteditorutil::defaultContact());
+        ContactPrintThemeEditorutil contactEditorUtil;
+        const QString defaultContact = group.readEntry("defaultContact", contactEditorUtil.defaultContact());
         if (!defaultContact.isEmpty()) {
             KContacts::VCardConverter converter;
             mContact = converter.parseVCard(defaultContact.toUtf8());
@@ -61,13 +81,13 @@ void ContactPrintThemePreview::loadConfig()
             mContact = KContacts::Addressee();
         }
     } else {
-        if (!contacteditorutil::defaultContact().isEmpty()) {
+        ContactPrintThemeEditorutil contactEditorUtil;
+        if (!contactEditorUtil.defaultContact().isEmpty()) {
             KContacts::VCardConverter converter;
-            mContact = converter.parseVCard(contacteditorutil::defaultContact().toUtf8());
+            mContact = converter.parseVCard(contactEditorUtil.defaultContact().toUtf8());
         } else {
             mContact = KContacts::Addressee();
         }
     }
-#endif
 }
 

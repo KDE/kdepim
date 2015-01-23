@@ -20,24 +20,32 @@
 #include <QWidget>
 
 #include <KContacts/Addressee>
+#include "grantleethemeeditor/previewwidget.h"
 
-class ContactPrintThemePreview : public QWidget
+namespace KAddressBookGrantlee
+{
+class GrantleePrint;
+}
+class QWebView;
+class ContactPrintThemePreview : public GrantleeThemeEditor::PreviewWidget
 {
     Q_OBJECT
 public:
     explicit ContactPrintThemePreview(const QString &projectDirectory, QWidget *parent = 0);
     ~ContactPrintThemePreview();
 
-    void updateViewer();
-    void createScreenShot(const QStringList &fileName);
-    void setThemePath(const QString &projectDirectory);
-    void loadConfig();
+    void updateViewer() Q_DECL_OVERRIDE;
+    void createScreenShot(const QStringList &fileName) Q_DECL_OVERRIDE;
+    void setThemePath(const QString &projectDirectory, const QString &mainPageFileName) Q_DECL_OVERRIDE;
+    void loadConfig() Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     void needUpdateViewer();
 
 private:
     KContacts::Addressee mContact;
+    KAddressBookGrantlee::GrantleePrint *mGrantleePrint;
+    QWebView *mViewer;
 };
 
 #endif // CONTACTPRINTTHEMEPREVIEW_H

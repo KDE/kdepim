@@ -37,8 +37,13 @@ public:
     explicit GrantleePrint(QObject *parent = 0);
     explicit GrantleePrint(const QString &themePath, QObject *parent = 0);
     ~GrantleePrint();
+
     QString contactsToHtml(const KContacts::Addressee::List &contacts);
     void setContent(const QString &content);
+
+    void changeGrantleePath(const QString &path);
+
+    void refreshTemplate();
 private:
     QString mErrorMessage;
     Grantlee::Engine *mEngine;

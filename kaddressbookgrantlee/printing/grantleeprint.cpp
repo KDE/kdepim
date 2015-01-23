@@ -38,18 +38,31 @@ GrantleePrint::GrantleePrint(const QString &themePath, QObject *parent)
     mEngine = new Grantlee::Engine;
     mTemplateLoader = QSharedPointer<Grantlee::FileSystemTemplateLoader>(new Grantlee::FileSystemTemplateLoader);
 
-    mTemplateLoader->setTemplateDirs(QStringList() << themePath);
-    mEngine->addTemplateLoader(mTemplateLoader);
-
-    mSelfcontainedTemplate = mEngine->loadByName(QLatin1String("theme.html"));
-    if (mSelfcontainedTemplate->error()) {
-        mErrorMessage = mSelfcontainedTemplate->errorString() + QLatin1String("<br>");
-    }
+    changeGrantleePath(themePath);
 }
 
 GrantleePrint::~GrantleePrint()
 {
     delete mEngine;
+}
+
+void GrantleePrint::refreshTemplate()
+{
+    mSelfcontainedTemplate = mEngine->loadByName(QLatin1String("theme.html"));
+    if (mSelfcontainedTemplate->error()) {
+        mErrorMessage += mSelfcontainedTemplate->errorString() + QLatin1String("<br>");
+    }
+}
+
+void GrantleePrint::changeGrantleePath(const QString &path)
+{
+    if (!mTemplateLoader) {
+        mTemplateLoader = QSharedPointer<Grantlee::FileSystemTemplateLoader>(new Grantlee::FileSystemTemplateLoader);
+    }
+    mTemplateLoader->setTemplateDirs(QStringList() << path);
+    mEngine->addTemplateLoader(mTemplateLoader);
+
+    refreshTemplate();
 }
 
 void GrantleePrint::setContent(const QString &content)

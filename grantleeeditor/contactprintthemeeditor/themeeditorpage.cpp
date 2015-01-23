@@ -54,13 +54,11 @@ ThemeEditorPage::ThemeEditorPage(const QString &projectDir, const QString &theme
     mTabWidget->addTab(mEditorPage, i18n("Editor") + QLatin1String(" (header.html)"));
 
     GrantleeThemeEditor::DesktopFilePage::DesktopFileOptions opt;
-    opt |= GrantleeThemeEditor::DesktopFilePage::ExtraDisplayVariables;
-    opt |= GrantleeThemeEditor::DesktopFilePage::SpecifyFileName;
-
-    mDesktopPage = new GrantleeThemeEditor::DesktopFilePage(QLatin1String("header.html"), opt);
-    mDesktopPage->setDefaultDesktopName(QLatin1String("header.desktop"));
+    mDesktopPage = new GrantleeThemeEditor::DesktopFilePage(QStringLiteral("theme.html"), opt);
+    mDesktopPage->setDefaultDesktopName(QStringLiteral("theme.desktop"));
     mDesktopPage->setThemeName(themeName);
     mTabWidget->addTab(mDesktopPage, i18n("Desktop File"));
+
 
     connect(mDesktopPage, SIGNAL(mainFileNameChanged(QString)), mEditorPage->preview(), SLOT(slotMainFileNameChanged(QString)));
     connect(mDesktopPage, &GrantleeThemeEditor::DesktopFilePage::mainFileNameChanged, mTabWidget, &GrantleeThemeEditor::ThemeEditorTabWidget::slotMainFileNameChanged);
@@ -276,7 +274,7 @@ void ThemeEditorPage::loadTheme(const QString &filename)
     if (mThemeSession->loadSession(filename)) {
         mDesktopPage->loadTheme(mThemeSession->projectDirectory());
         mEditorPage->loadTheme(mThemeSession->projectDirectory() + QDir::separator() + mThemeSession->mainPageFileName());
-        //FIXME mEditorPage->preview()->setThemePath(mThemeSession->projectDirectory(), mThemeSession->mainPageFileName());
+        mEditorPage->preview()->setThemePath(mThemeSession->projectDirectory(), mThemeSession->mainPageFileName());
 
         const QStringList lstExtraPages = mThemeSession->extraPages();
         Q_FOREACH (const QString &page, lstExtraPages) {
