@@ -87,12 +87,11 @@ void KNodeTest::testUtilitiesLocale()
   kcharsetVsMime.insert( "windows-1258", "WINDOWS-1258" );
   kcharsetVsMime.insert( "winsami2", "WINSAMI2" );
 
-
   // Check that every name from "KCharsets::availableEncodingNames()" will be taken into account
   QStringList kcharsetNames = kcharsetVsMime.keys();
   foreach( const QString &encName, KGlobal::charsets()->availableEncodingNames() ) {
     if ( !kcharsetNames.contains( encName ) ) {
-      qWarning() << "Failing charset is: " << encName;
+      qWarning() << "Failing charset is: " << encName << "; mime charset=" << Locale::toMimeCharset( encName );
       QVERIFY( false );
     }
   }
