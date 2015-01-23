@@ -34,9 +34,7 @@ ContactPrintThemePreview::ContactPrintThemePreview(const QString &projectDirecto
     setLayout(hbox);
     mGrantleePrint = new KAddressBookGrantlee::GrantleePrint(this);
     loadConfig();
-    qDebug()<<" ssssssssssssssssssssssss"<<projectDirectory;
     if (!projectDirectory.isEmpty()) {
-        qDebug()<<" projectDirectory"<<projectDirectory;
         mGrantleePrint->changeGrantleePath(projectDirectory);
     }
 }

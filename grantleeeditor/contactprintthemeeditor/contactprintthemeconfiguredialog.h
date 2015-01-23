@@ -54,5 +54,4 @@ private:
     Akonadi::ContactEditor *mDefaultContact;
 };
 
-
 #endif

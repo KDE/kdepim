@@ -17,7 +17,6 @@
 
 #include "contacteditorutil.h"
 
-
 ContactEditorUtil::ContactEditorUtil()
 {
 

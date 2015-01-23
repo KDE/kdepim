@@ -123,7 +123,7 @@ void ContactPreviewWidget::loadConfig()
     } else {
         if (!contactUtil.defaultContact().isEmpty()) {
             KContacts::VCardConverter converter;
-            mContact = converter.parseVCard( contactUtil.defaultContact().toUtf8() );
+            mContact = converter.parseVCard(contactUtil.defaultContact().toUtf8());
         } else {
             mContact = KContacts::Addressee();
         }

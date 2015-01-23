@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "contactprintthemeconfiguredialog.h"
 #include "contactprintthemeeditorutil.h"
 #include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"

@@ -17,7 +17,6 @@
 
 #include "themeeditorutil.h"
 
-
 ThemeEditorUtil::ThemeEditorUtil()
 {
 }
