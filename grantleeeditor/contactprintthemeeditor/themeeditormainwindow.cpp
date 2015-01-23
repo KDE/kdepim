@@ -132,7 +132,7 @@ void ThemeEditorMainWindow::setupActions()
 
 void ThemeEditorMainWindow::slotManageTheme()
 {
-    QPointer<GrantleeThemeEditor::ManageThemes> dialog = new GrantleeThemeEditor::ManageThemes(QStringLiteral("messageviewer/themes/"), this);
+    QPointer<GrantleeThemeEditor::ManageThemes> dialog = new GrantleeThemeEditor::ManageThemes(QStringLiteral("kaddressbook/printing/themes/"), this);
     dialog->exec();
     delete dialog;
 }
@@ -157,9 +157,10 @@ void ThemeEditorMainWindow::slotInstallTheme()
 {
     //Save before installing :)
     if (slotSaveTheme()) {
-        const QString localThemePath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/messageviewer/themes/");
-        QDir().mkpath(localThemePath);
-        mThemeEditor->installTheme(localThemePath);
+        const QString localThemePath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kaddressbook/printing/themes");
+        if (QDir().mkpath(localThemePath)) {
+            mThemeEditor->installTheme(localThemePath);
+        }
     }
 }
 

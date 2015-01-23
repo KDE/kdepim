@@ -49,9 +49,10 @@ ThemeEditorPage::ThemeEditorPage(const QString &projectDir, const QString &theme
     connect(mTabWidget, &GrantleeThemeEditor::ThemeEditorTabWidget::currentChanged, this, &ThemeEditorPage::slotCurrentWidgetChanged);
     lay->addWidget(mTabWidget);
     mEditorPage = new EditorPage(EditorPage::MainPage, projectDir);
+    mEditorPage->setPageFileName(QStringLiteral("theme.html"));
     connect(mEditorPage, &EditorPage::needUpdateViewer, this, &ThemeEditorPage::slotUpdateViewer);
     connect(mEditorPage, &EditorPage::changed, this, &ThemeEditorPage::slotChanged);
-    mTabWidget->addTab(mEditorPage, i18n("Editor") + QLatin1String(" (header.html)"));
+    mTabWidget->addTab(mEditorPage, i18n("Editor") + QLatin1String(" (theme.html)"));
 
     GrantleeThemeEditor::DesktopFilePage::DesktopFileOptions opt;
     mDesktopPage = new GrantleeThemeEditor::DesktopFilePage(QStringLiteral("theme.html"), opt);
@@ -149,7 +150,6 @@ void ThemeEditorPage::installTheme(const QString &themePath)
         }
     }
     const QString newPath = themePath + QDir::separator() + mDesktopPage->themeName();
-    mEditorPage->setPageFileName(mDesktopPage->filename());
     mEditorPage->installTheme(newPath);
     Q_FOREACH (EditorPage *page, mExtraPage) {
         page->installTheme(newPath);
@@ -235,8 +235,6 @@ EditorPage *ThemeEditorPage::createExtraPage(const QString &filename)
 void ThemeEditorPage::storeTheme(const QString &directory)
 {
     const QString themeDirectory = directory.isEmpty() ? projectDirectory() : directory;
-    //set default page filename before saving
-    mEditorPage->setPageFileName(mDesktopPage->filename());
     mEditorPage->saveTheme(themeDirectory);
 
     Q_FOREACH (EditorPage *page, mExtraPage) {
