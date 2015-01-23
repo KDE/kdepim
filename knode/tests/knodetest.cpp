@@ -91,7 +91,10 @@ void KNodeTest::testUtilitiesLocale()
   // Check that every name from "KCharsets::availableEncodingNames()" will be taken into account
   QStringList kcharsetNames = kcharsetVsMime.keys();
   foreach( const QString &encName, KGlobal::charsets()->availableEncodingNames() ) {
-    QVERIFY( kcharsetNames.contains( encName ) );
+    if ( !kcharsetNames.contains( encName ) ) {
+      qWarning() << "Failing charset is: " << encName;
+      QVERIFY( false );
+    }
   }
 
   // Check that the convertion in Locale::toMimeCharset() is correct for these
