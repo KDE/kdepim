@@ -32,14 +32,14 @@ public:
     explicit PreviewWidget(const QString &projectDirectory, QWidget *parent = Q_NULLPTR);
     ~PreviewWidget();
 
-    void createScreenShot(const QStringList &fileList);
-    void loadConfig();
-    void setThemePath(const QString &projectDirectory, const QString &mainPageFileName);
-    void updateViewer();
+    void createScreenShot(const QStringList &fileList) Q_DECL_OVERRIDE;
+    void loadConfig() Q_DECL_OVERRIDE;
+    void setThemePath(const QString &projectDirectory, const QString &mainPageFileName) Q_DECL_OVERRIDE;
+    void updateViewer() Q_DECL_OVERRIDE;
 
 public Q_SLOTS:
-    void slotMainFileNameChanged(const QString &);
-    void slotExtraHeaderDisplayChanged(const QStringList &headers);
+    void slotMainFileNameChanged(const QString &) Q_DECL_OVERRIDE;
+    void slotExtraHeaderDisplayChanged(const QStringList &headers) Q_DECL_OVERRIDE;
 
 private:
     QByteArray mDefaultEmail;

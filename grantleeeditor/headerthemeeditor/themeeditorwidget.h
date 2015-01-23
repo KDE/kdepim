@@ -27,7 +27,7 @@ public:
     ~ThemeEditorWidget();
 
 public Q_SLOTS:
-    void createCompleterList(const QStringList &extraCompletion = QStringList());
+    void createCompleterList(const QStringList &extraCompletion = QStringList()) Q_DECL_OVERRIDE;
 };
 
 #endif // THEMEEDITORWIDGET_H
