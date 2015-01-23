@@ -89,7 +89,8 @@ ThemeConfigureDialog::~ThemeConfigureDialog()
 void ThemeConfigureDialog::slotDefaultClicked()
 {
     mConfigureWidget->setDefault();
-    mDefaultEmail->setPlainText(themeeditorutil::defaultMail());
+    ThemeEditorUtil themeutil;
+    mDefaultEmail->setPlainText(themeutil.defaultMail());
     mDefaultTemplate->editor()->clear();
 }
 
@@ -101,13 +102,14 @@ void ThemeConfigureDialog::slotOkClicked()
 void ThemeConfigureDialog::readConfig()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
+    ThemeEditorUtil themeutil;
     if (config->hasGroup(QStringLiteral("Global"))) {
         KConfigGroup group = config->group(QStringLiteral("Global"));
         mConfigureWidget->readConfig();
-        mDefaultEmail->setPlainText(group.readEntry("defaultEmail", themeeditorutil::defaultMail()));
+        mDefaultEmail->setPlainText(group.readEntry("defaultEmail", themeutil.defaultMail()));
         mDefaultTemplate->setPlainText(group.readEntry("defaultTemplate", QString()));
     } else {
-        mDefaultEmail->setPlainText(themeeditorutil::defaultMail());
+        mDefaultEmail->setPlainText(themeutil.defaultMail());
     }
 
     KConfigGroup group = KConfigGroup(config, "ThemeConfigureDialog");

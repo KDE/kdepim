@@ -20,9 +20,11 @@
 
 #include <QString>
 
-namespace themeeditorutil
+class ThemeEditorUtil
 {
-QString defaultMail();
-}
+public:
+    ThemeEditorUtil();
+    QString defaultMail() const;
+};
 
 #endif // THEMEEDITORUTIL_H

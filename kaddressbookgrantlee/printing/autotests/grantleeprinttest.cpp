@@ -106,6 +106,9 @@ void GrantleePrintTest::shouldDisplayContactInfo_data()
     QTest::newRow("department") << QString(QLatin1String("department")) << QString(QLatin1String("foo-department"));
     QTest::newRow("office") << QString(QLatin1String("office")) << QString(QLatin1String("foo-office"));
     QTest::newRow("profesion") << QString(QLatin1String("profession")) << QString(QLatin1String("foo-profession"));
+    QTest::newRow("manager") << QString(QLatin1String("manager")) << QString(QLatin1String("foo-managersname"));
+    QTest::newRow("assistant") << QString(QLatin1String("assistant")) << QString(QLatin1String("foo-assistantsname"));
+    QTest::newRow("spouse") << QString(QLatin1String("spouse")) << QString(QLatin1String("foo-spousesname"));
 #if 0
     QString realName() const;
     QString formattedName() const;
@@ -123,11 +126,6 @@ void GrantleePrintTest::shouldDisplayContactInfo_data()
     QString photo() const;
     QString logo() const;
     QVariant crypto() const;
-    QString anniversary() const;
-    QString manager() const;
-    QString assistant() const;
-    QString spouse() const;
-
 #endif
 }
 
@@ -153,7 +151,10 @@ void GrantleePrintTest::shouldDisplayContactInfo()
     address.setDepartment(QLatin1String("foo-department"));
     address.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-Office" ), QString(QLatin1String("foo-office")));
     address.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-Profession" ) , QString(QLatin1String("foo-profession")));
-
+    address.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-Office" ) , QString(QLatin1String("foo-office")));
+    address.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-ManagersName" ) , QString(QLatin1String("foo-managersname")));
+    address.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-AssistantsName" ) , QString(QLatin1String("foo-assistantsname")));
+    address.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-SpousesName" ) , QString(QLatin1String("foo-spousesname")));
 
     lst << address;
     grantleePrint->setContent(QString::fromLatin1("{% if contacts %}{% for contact in contacts %}{% if contact.%1 %}{{ contact.%1 }}{% endif %}{% endfor %}{% endif %}").arg(variable));
