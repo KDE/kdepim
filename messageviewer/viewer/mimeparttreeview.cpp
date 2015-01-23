@@ -44,6 +44,7 @@ MimePartTreeView::MimePartTreeView(QWidget *parent)
 
 MimePartTreeView::~MimePartTreeView()
 {
+    disconnect(mMimePartModel, &MimeTreeModel::modelReset, this, &MimePartTreeView::expandAll);
     saveMimePartTreeConfig();
 }
 
