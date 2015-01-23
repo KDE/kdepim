@@ -110,9 +110,10 @@ void ContactPreviewWidget::loadConfig()
 {
     KSharedConfig::Ptr config = KGlobal::config();
 
+    ContactEditorUtil contactUtil;
     if (config->hasGroup(QLatin1String("Global"))) {
         KConfigGroup group = config->group(QLatin1String("Global"));
-        const QString defaultContact = group.readEntry("defaultContact",contacteditorutil::defaultContact());
+        const QString defaultContact = group.readEntry("defaultContact", contactUtil.defaultContact());
         if (!defaultContact.isEmpty()) {
             KABC::VCardConverter converter;
             mContact = converter.parseVCard( defaultContact.toUtf8() );
@@ -120,9 +121,9 @@ void ContactPreviewWidget::loadConfig()
             mContact = KABC::Addressee();
         }
     } else {
-        if (!contacteditorutil::defaultContact().isEmpty()) {
+        if (!contactUtil.defaultContact().isEmpty()) {
             KABC::VCardConverter converter;
-            mContact = converter.parseVCard( contacteditorutil::defaultContact().toUtf8() );
+            mContact = converter.parseVCard( contactUtil.defaultContact().toUtf8() );
         } else {
             mContact = KABC::Addressee();
         }

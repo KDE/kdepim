@@ -21,9 +21,11 @@
 
 #include <QString>
 
-namespace contacteditorutil
+class ContactEditorUtil
 {
-    QString defaultContact();
-}
+public:
+    ContactEditorUtil();
+    QString defaultContact() const;
+};
 
 #endif
