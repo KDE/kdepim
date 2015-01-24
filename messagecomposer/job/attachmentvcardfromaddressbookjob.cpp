@@ -106,7 +106,7 @@ void AttachmentVcardFromAddressBookJob::slotExpandGroupResult(KJob* job)
         addAttachment( groupData, attachmentName );
     } else {
         setError( KJob::UserDefinedError );
-        setErrorText( i18n("Impossible to generate vcard.") );
+        setErrorText( i18n("Impossible to generate vCard.") );
         emitResult();
     }
 }
