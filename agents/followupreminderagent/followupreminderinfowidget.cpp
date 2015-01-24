@@ -182,13 +182,17 @@ void FollowUpReminderInfoWidget::customContextMenuRequested(const QPoint &pos)
 {
     Q_UNUSED(pos);
     const QList<QTreeWidgetItem *> listItems = mTreeWidget->selectedItems();
-    if (!listItems.isEmpty()) {
-        FollowUpReminderInfoItem *mailItem = static_cast<FollowUpReminderInfoItem *>(listItems.at(0));
+    const int nbElementSelected = listItems.count();
+    if ( nbElementSelected > 0 ) {
         QMenu menu;
         QAction *showMessage = 0;
-        if (mailItem && mailItem->data(0, AnswerItemFound).toBool()) {
-            showMessage = menu.addAction(i18n("Show Message"));
-            menu.addSeparator();
+        FollowUpReminderInfoItem *mailItem = 0;
+        if ( (nbElementSelected == 1) ) {
+            mailItem = static_cast<FollowUpReminderInfoItem *>(listItems.at(0));
+            if (mailItem->data(0, AnswerItemFound).toBool()) {
+                showMessage = menu.addAction(i18n("Show Message"));
+                menu.addSeparator();
+            }
         }
         QAction *deleteItem = menu.addAction(QIcon::fromTheme(QStringLiteral("edit-delete")), i18n("Delete"));
         QAction *result = menu.exec(QCursor::pos());
@@ -196,7 +200,7 @@ void FollowUpReminderInfoWidget::customContextMenuRequested(const QPoint &pos)
             if (result == showMessage) {
                 openShowMessage(mailItem->info()->answerMessageItemId());
             } else if (result == deleteItem) {
-                removeItem(mailItem);
+                removeItem(listItems);
             }
         }
     }
@@ -208,14 +212,17 @@ void FollowUpReminderInfoWidget::openShowMessage(Akonadi::Item::Id id)
     job->start();
 }
 
-void FollowUpReminderInfoWidget::removeItem(FollowUpReminderInfoItem *mailItem)
+void FollowUpReminderInfoWidget::removeItem(const QList<QTreeWidgetItem *> &mailItemLst)
 {
-    if (mailItem) {
-        mListRemoveId << mailItem->info()->uniqueIdentifier();
-        delete mailItem;
-        mChanged = true;
-    } else {
+    if (mailItemLst.isEmpty()) {
         qCDebug(FOLLOWUPREMINDERAGENT_LOG) << "Not item selected";
+    } else {
+        Q_FOREACH (QTreeWidgetItem *item, mailItemLst) {
+            FollowUpReminderInfoItem *mailItem = static_cast<FollowUpReminderInfoItem *>(item);
+            mListRemoveId << mailItem->info()->uniqueIdentifier();
+            delete mailItem;
+        }
+        mChanged = true;
     }
 }
 

@@ -21,6 +21,7 @@
 #include "sendvcardsjobtest.h"
 #include "sendvcards/sendvcardsjob.h"
 #include <qtest.h>
+#include <AkonadiCore/Item>
 SendVcardsJobTest::SendVcardsJobTest(QObject *parent)
     : QObject(parent)
 {
@@ -30,6 +31,13 @@ SendVcardsJobTest::SendVcardsJobTest(QObject *parent)
 SendVcardsJobTest::~SendVcardsJobTest()
 {
 
+}
+
+void SendVcardsJobTest::shouldNotStartWhenListAddressIsEmpty()
+{
+    Akonadi::Item::List lst;
+    KABSendVCards::SendVcardsJob *job = new KABSendVCards::SendVcardsJob(lst);
+    QVERIFY(!job->start());
 }
 
 QTEST_MAIN(SendVcardsJobTest)

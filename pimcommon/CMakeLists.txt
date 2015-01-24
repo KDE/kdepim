@@ -202,6 +202,10 @@ set(libpimcommon_util_SRCS
 )
 
 
+set(libpimcommon_temporary_SRCS
+   temporaryfile/attachmenttemporaryfilesdirs.cpp
+)
+
 set(libpimcommon_SRCS
   pimcommon_debug.cpp
   settings/pimcommonsettings.cpp
@@ -219,6 +223,7 @@ set(libpimcommon_SRCS
   ${libtexttospeech_SRCS}
   ${libpimcommon_baloodebug_SRCS}
   ${libpimcommon_syntaxhighlighter_SRCS}
+  ${libpimcommon_temporary_SRCS}
 )
 
 ki18n_wrap_ui(libpimcommon_SRCS

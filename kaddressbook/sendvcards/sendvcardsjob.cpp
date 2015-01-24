@@ -21,10 +21,14 @@
 #include "sendvcardsjob.h"
 #include <KContacts/Addressee>
 #include <KContacts/ContactGroup>
+#include <AkonadiCore/Item>
 #include <AkonadiCore/ItemFetchJob>
 #include <AkonadiCore/ItemFetchScope>
+#include <KContacts/VCardConverter>
 #include <QDebug>
 #include <util/vcardutil.h>
+#include <Akonadi/Contact/ContactGroupExpandJob>
+#include "pimcommon/temporaryfile/attachmenttemporaryfilesdirs.h"
 
 using namespace KABSendVCards;
 
@@ -33,20 +37,21 @@ SendVcardsJob::SendVcardsJob(const Akonadi::Item::List &listItem, QObject *paren
       mListItem(listItem),
       mFetchJobCount(0)
 {
-
+    //Don't delete it.
+    mAttachmentTemporary = new PimCommon::AttachmentTemporaryFilesDirs();
 }
 
 SendVcardsJob::~SendVcardsJob()
 {
-
+    mAttachmentTemporary = 0;
 }
 
-void SendVcardsJob::start()
+bool SendVcardsJob::start()
 {
     if (mListItem.isEmpty()) {
         qDebug() << " No Item found";
         deleteLater();
-        return;
+        return false;
     }
 
     Q_FOREACH (const Akonadi::Item &item, mListItem) {
@@ -55,83 +60,44 @@ void SendVcardsJob::start()
             //Workaround about broken kaddressbook fields.
             PimCommon::VCardUtil vcardUtil;
             vcardUtil.adaptVcard(data);
-
-            //TODO
         } else if (item.hasPayload<KContacts::ContactGroup>()) {
+            ++mFetchJobCount;
             const KContacts::ContactGroup group = item.payload<KContacts::ContactGroup>();
-            unsigned int nbDataCount(group.dataCount());
-            for (unsigned int i = 0; i < nbDataCount; ++i) {
-                const QString currentEmail(group.data(i).email());
-                //TODO
-            }
-            const unsigned int nbContactReference(group.contactReferenceCount());
-            for (unsigned int i = 0; i < nbContactReference; ++i) {
-                KContacts::ContactGroup::ContactReference reference = group.contactReference(i);
-
-                Akonadi::Item item;
-                if (reference.gid().isEmpty()) {
-                    item.setId(reference.uid().toLongLong());
-                } else {
-                    item.setGid(reference.gid());
-                }
-                mItemToFetch << item;
-            }
+            const QString groupName(group.name());
+            const QString attachmentName = ( groupName.isEmpty() ? QLatin1String("vcard") : groupName ) + QLatin1String( ".vcf" );
+            Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob( group, this );
+            expandJob->setProperty("groupName", attachmentName);
+            connect( expandJob, SIGNAL(result(KJob*)), this, SLOT(slotExpandGroupResult(KJob*)) );
+            expandJob->start();
         }
     }
 
-    if (mItemToFetch.isEmpty()) {
-        finishJob();
-    } else {
-        fetchNextItem();
+    if (mFetchJobCount == 0) {
+        jobFinished();
     }
+    return true;
 }
 
-void SendVcardsJob::fetchNextItem()
+void SendVcardsJob::jobFinished()
 {
-    if (mFetchJobCount < mItemToFetch.count()) {
-        fetchItem(mItemToFetch.at(mFetchJobCount));
-        ++mFetchJobCount;
-    } else {
-        finishJob();
+    if (!mPath.isEmpty()) {
+        //TODO
     }
-}
-
-void SendVcardsJob::fetchItem(const Akonadi::Item &item)
-{
-    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(item, this);
-    job->fetchScope().fetchFullPayload();
-
-    connect(job, SIGNAL(result(KJob*)), SLOT(fetchJobFinished(KJob*)));
-}
-
-void SendVcardsJob::fetchJobFinished(KJob *job)
-{
-    if (job->error()) {
-        qDebug() << " error during fetching " << job->errorString();
-        fetchNextItem();
-        return;
-    }
-
-    Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob *>(job);
-
-    if (fetchJob->items().count() != 1) {
-        fetchNextItem();
-        return;
-    }
-
-    const Akonadi::Item item = fetchJob->items().first();
-    const KContacts::Addressee contact = item.payload<KContacts::Addressee>();
-    //TODO
-    fetchNextItem();
-}
-
-void SendVcardsJob::finishJob()
-{
-#if 0
-    if (!mEmailAddresses.isEmpty()) {
-        //emit sendMails(mEmailAddresses);
-    }
-#endif
     deleteLater();
+}
+
+void SendVcardsJob::slotExpandGroupResult(KJob* job)
+{
+    Akonadi::ContactGroupExpandJob *expandJob = qobject_cast<Akonadi::ContactGroupExpandJob*>( job );
+    Q_ASSERT( expandJob );
+
+    const QString attachmentName = expandJob->property("groupName").toString();
+    KContacts::VCardConverter converter;
+    const QByteArray groupData = converter.exportVCards(expandJob->contacts(), KContacts::VCardConverter::v3_0);
+    //TODO
+    --mFetchJobCount;
+    if (mFetchJobCount == 0) {
+        jobFinished();
+    }
 }
 

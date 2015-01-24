@@ -64,7 +64,7 @@ private Q_SLOTS:
 
 private:
     void createOrUpdateItem(FollowUpReminder::FollowUpReminderInfo *info, FollowUpReminderInfoItem *item = Q_NULLPTR);
-    void removeItem(FollowUpReminderInfoItem *mailItem);
+    void removeItem(const QList<QTreeWidgetItem *> &mailItem);
     void openShowMessage(Akonadi::Item::Id id);
     enum ItemData {
         AnswerItemId = Qt::UserRole + 1,

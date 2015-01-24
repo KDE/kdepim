@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2014-2015 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013-2015 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -18,23 +18,37 @@
 
 */
 
-#ifndef ATTACHMENTTEMPORARYFILESDIRSTEST_H
-#define ATTACHMENTTEMPORARYFILESDIRSTEST_H
+#ifndef ATTACHMENTTEMPORARYFILESDIRS_H
+#define ATTACHMENTTEMPORARYFILESDIRS_H
 
 #include <QObject>
+#include <QStringList>
+#include "pimcommon_export.h"
 
-class AttachmentTemporaryFilesDirsTest : public QObject
+namespace PimCommon {
+
+class PIMCOMMON_EXPORT AttachmentTemporaryFilesDirs : public QObject
 {
     Q_OBJECT
 public:
-    explicit AttachmentTemporaryFilesDirsTest(QObject *parent = Q_NULLPTR);
-    ~AttachmentTemporaryFilesDirsTest();
+    explicit AttachmentTemporaryFilesDirs(QObject *parent = Q_NULLPTR);
+    ~AttachmentTemporaryFilesDirs();
+
+    void addTempFile(const QString &file);
+    void addTempDir(const QString &dir);
+    QStringList temporaryFiles() const;
+    void removeTempFiles();
+    void forceCleanTempFiles();
+
+    QStringList temporaryDirs() const;
 private Q_SLOTS:
-    void shouldHaveDefaultValue();
-    void shouldAddTemporaryFiles();
-    void shouldAddTemporaryDirs();
-    void shouldNotAddSameFiles();
-    void shouldNotAddSameDirs();
+    void slotRemoveTempFiles();
+
+private:
+    QStringList mTempFiles;
+    QStringList mTempDirs;
 };
 
-#endif // ATTACHMENTTEMPORARYFILESDIRSTEST_H
+}
+
+#endif // ATTACHMENTTEMPORARYFILESDIRS_H

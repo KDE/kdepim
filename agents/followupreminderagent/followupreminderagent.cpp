@@ -106,7 +106,7 @@ void FollowUpReminderAgent::showConfigureDialog(qlonglong windowId)
     }
     if (dialog->exec()) {
         const QList<qint32> lstRemoveItem = dialog->listRemoveId();
-        if (FollowUpReminder::FollowUpReminderUtil::removeFollowupReminderInfo(FollowUpReminder::FollowUpReminderUtil::defaultConfig(), lstRemoveItem)) {
+        if (FollowUpReminder::FollowUpReminderUtil::removeFollowupReminderInfo(FollowUpReminder::FollowUpReminderUtil::defaultConfig(), lstRemoveItem, true)) {
             mManager->load();
         }
     }

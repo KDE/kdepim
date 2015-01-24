@@ -19,8 +19,10 @@
 */
 
 #include "attachmenttemporaryfilesdirstest.h"
-#include "../viewer/attachmenttemporaryfilesdirs.h"
-#include <qtest.h>
+#include "../attachmenttemporaryfilesdirs.h"
+#include <qtest_kde.h>
+
+using PimCommon;
 
 AttachmentTemporaryFilesDirsTest::AttachmentTemporaryFilesDirsTest(QObject *parent)
     : QObject(parent)
@@ -35,14 +37,14 @@ AttachmentTemporaryFilesDirsTest::~AttachmentTemporaryFilesDirsTest()
 
 void AttachmentTemporaryFilesDirsTest::shouldHaveDefaultValue()
 {
-    MessageViewer::AttachmentTemporaryFilesDirs attachmentDir;
+    AttachmentTemporaryFilesDirs attachmentDir;
     QVERIFY(attachmentDir.temporaryFiles().isEmpty());
     QVERIFY(attachmentDir.temporaryDirs().isEmpty());
 }
 
 void AttachmentTemporaryFilesDirsTest::shouldAddTemporaryFiles()
 {
-    MessageViewer::AttachmentTemporaryFilesDirs attachmentDir;
+    AttachmentTemporaryFilesDirs attachmentDir;
     attachmentDir.addTempFile(QLatin1String("foo"));
     QCOMPARE(attachmentDir.temporaryFiles().count(), 1);
     attachmentDir.addTempFile(QLatin1String("foo1"));
@@ -51,7 +53,7 @@ void AttachmentTemporaryFilesDirsTest::shouldAddTemporaryFiles()
 
 void AttachmentTemporaryFilesDirsTest::shouldAddTemporaryDirs()
 {
-    MessageViewer::AttachmentTemporaryFilesDirs attachmentDir;
+    AttachmentTemporaryFilesDirs attachmentDir;
     attachmentDir.addTempDir(QLatin1String("foo"));
     QCOMPARE(attachmentDir.temporaryDirs().count(), 1);
     attachmentDir.addTempDir(QLatin1String("foo1"));
@@ -60,7 +62,7 @@ void AttachmentTemporaryFilesDirsTest::shouldAddTemporaryDirs()
 
 void AttachmentTemporaryFilesDirsTest::shouldNotAddSameFiles()
 {
-    MessageViewer::AttachmentTemporaryFilesDirs attachmentDir;
+    AttachmentTemporaryFilesDirs attachmentDir;
     attachmentDir.addTempFile(QLatin1String("foo"));
     QCOMPARE(attachmentDir.temporaryFiles().count(), 1);
     attachmentDir.addTempFile(QLatin1String("foo"));
@@ -69,11 +71,11 @@ void AttachmentTemporaryFilesDirsTest::shouldNotAddSameFiles()
 
 void AttachmentTemporaryFilesDirsTest::shouldNotAddSameDirs()
 {
-    MessageViewer::AttachmentTemporaryFilesDirs attachmentDir;
+    AttachmentTemporaryFilesDirs attachmentDir;
     attachmentDir.addTempDir(QLatin1String("foo"));
     QCOMPARE(attachmentDir.temporaryDirs().count(), 1);
     attachmentDir.addTempDir(QLatin1String("foo"));
     QCOMPARE(attachmentDir.temporaryDirs().count(), 1);
 }
 
-QTEST_MAIN(AttachmentTemporaryFilesDirsTest)
+QTEST_KDEMAIN(AttachmentTemporaryFilesDirsTest, NoGUI)
