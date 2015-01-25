@@ -25,7 +25,8 @@
 #include <AkonadiCore/Item>
 #include <QStringList>
 class QTemporaryDir;
-namespace PimCommon {
+namespace PimCommon
+{
 class AttachmentTemporaryFilesDirs;
 }
 namespace KABSendVCards

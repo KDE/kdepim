@@ -25,7 +25,8 @@
 #include <QStringList>
 #include "pimcommon_export.h"
 
-namespace PimCommon {
+namespace PimCommon
+{
 
 class PIMCOMMON_EXPORT AttachmentTemporaryFilesDirs : public QObject
 {

@@ -71,16 +71,16 @@ bool SendVcardsJob::start()
             vcardUtil.adaptVcard(data);
             createTemporaryDir();
             const QString contactRealName(contact.realName());
-            const QString attachmentName = (contactRealName.isEmpty() ? QLatin1String("vcard") : contactRealName ) + QLatin1String( ".vcf" );
+            const QString attachmentName = (contactRealName.isEmpty() ? QLatin1String("vcard") : contactRealName) + QLatin1String(".vcf");
             createTemporaryFile(data, attachmentName);
         } else if (item.hasPayload<KContacts::ContactGroup>()) {
             ++mExpandGroupJobCount;
             const KContacts::ContactGroup group = item.payload<KContacts::ContactGroup>();
             const QString groupName(group.name());
-            const QString attachmentName = ( groupName.isEmpty() ? QLatin1String("vcard") : groupName ) + QLatin1String( ".vcf" );
-            Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob( group, this );
+            const QString attachmentName = (groupName.isEmpty() ? QLatin1String("vcard") : groupName) + QLatin1String(".vcf");
+            Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob(group, this);
             expandJob->setProperty("groupName", attachmentName);
-            connect( expandJob, SIGNAL(result(KJob*)), this, SLOT(slotExpandGroupResult(KJob*)) );
+            connect(expandJob, SIGNAL(result(KJob*)), this, SLOT(slotExpandGroupResult(KJob*)));
             expandJob->start();
         }
     }
@@ -94,7 +94,7 @@ bool SendVcardsJob::start()
 void SendVcardsJob::createTemporaryDir()
 {
     if (!mTempDir) {
-        mTempDir = new QTemporaryDir( KStandardDirs::locateLocal( "tmp", QLatin1String("sendvcards") ) );
+        mTempDir = new QTemporaryDir(KStandardDirs::locateLocal("tmp", QLatin1String("sendvcards")));
         mTempDir->setAutoRemove(false);
         mAttachmentTemporary->addTempDir(mTempDir->path());
     }
@@ -104,15 +104,15 @@ void SendVcardsJob::jobFinished()
 {
     const QStringList lstAttachment = mAttachmentTemporary->temporaryFiles();
     if (!lstAttachment.isEmpty()) {
-        KToolInvocation::invokeMailer( QString(), QString(), QString(), QString(), QString(), QString(), lstAttachment );
+        KToolInvocation::invokeMailer(QString(), QString(), QString(), QString(), QString(), QString(), lstAttachment);
     }
     deleteLater();
 }
 
-void SendVcardsJob::slotExpandGroupResult(KJob* job)
+void SendVcardsJob::slotExpandGroupResult(KJob *job)
 {
-    Akonadi::ContactGroupExpandJob *expandJob = qobject_cast<Akonadi::ContactGroupExpandJob*>( job );
-    Q_ASSERT( expandJob );
+    Akonadi::ContactGroupExpandJob *expandJob = qobject_cast<Akonadi::ContactGroupExpandJob *>(job);
+    Q_ASSERT(expandJob);
 
     const QString attachmentName = expandJob->property("groupName").toString();
     KContacts::VCardConverter converter;
@@ -130,7 +130,7 @@ void SendVcardsJob::createTemporaryFile(const QByteArray &data, const QString &f
 {
     QFile file(mTempDir->path() + QLatin1Char('/') + filename);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        qDebug()<<"Can not write vcard filename :"<<filename;
+        qDebug() << "Can not write vcard filename :" << filename;
         return;
     }
 
