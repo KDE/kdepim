@@ -100,7 +100,7 @@ void ContactPrintThemeConfigureDialog::slotDefaultClicked()
     } else {
         mDefaultContact->setContactTemplate(KContacts::Addressee());
     }
-    mDefaultTemplate->clear();
+    mDefaultTemplate->setPlainText(contactUtil.defaultTemplate());
 }
 
 void ContactPrintThemeConfigureDialog::slotOkClicked()
@@ -124,7 +124,7 @@ void ContactPrintThemeConfigureDialog::readConfig()
         } else {
             mDefaultContact->setContactTemplate(KContacts::Addressee());
         }
-        mDefaultTemplate->setPlainText(group.readEntry("defaultTemplate", QString()));
+        mDefaultTemplate->setPlainText(group.readEntry("defaultTemplate", contactUtil.defaultTemplate()));
     } else {
         if (!contactUtil.defaultContact().isEmpty()) {
             KContacts::VCardConverter converter;
@@ -133,7 +133,7 @@ void ContactPrintThemeConfigureDialog::readConfig()
         } else {
             mDefaultContact->setContactTemplate(KContacts::Addressee());
         }
-        mDefaultTemplate->setPlainText(QString());
+        mDefaultTemplate->setPlainText(contactUtil.defaultTemplate());
     }
 
     mConfigureWidget->readConfig();

@@ -21,6 +21,7 @@
 #include "themeeditorwidget.h"
 #include "themetemplatewidget.h"
 #include "contactprintthemepreview.h"
+#include "contactprintthemeeditorutil.h"
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 #include "KSplitterCollapserButton"
 
@@ -57,8 +58,9 @@ EditorPage::EditorPage(GrantleeThemeEditor::EditorPage::PageType type, const QSt
     mEditor = new ThemeEditorWidget;
 
     if (mType == MainPage) {
+        ContactPrintThemeEditorutil contactUtil;
         KConfigGroup group(KSharedConfig::openConfig(), QStringLiteral("Global"));
-        mEditor->setPlainText(group.readEntry("defaultTemplate", QString()));
+        mEditor->setPlainText(group.readEntry("defaultTemplate", contactUtil.defaultTemplate()));
     }
     mMainSplitter->addWidget(mEditor);
     mThemeTemplate = new ThemeTemplateWidget(i18n("Theme Templates:"));

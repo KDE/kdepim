@@ -24,7 +24,8 @@ class ContactPrintThemeEditorutil
 {
 public:
     ContactPrintThemeEditorutil();
-    QString defaultContact();
+    QString defaultContact() const;
+    QString defaultTemplate() const;
 };
 
 #endif // THEMEEDITORUTIL_H

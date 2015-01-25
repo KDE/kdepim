@@ -22,7 +22,7 @@ ContactPrintThemeEditorutil::ContactPrintThemeEditorutil()
 
 }
 
-QString ContactPrintThemeEditorutil::defaultContact()
+QString ContactPrintThemeEditorutil::defaultContact() const
 {
     const QString contact = QStringLiteral("BEGIN:VCARD\n"
                                            "ADR;TYPE=home:;;10 street Eiffel Tower\n;Paris;;75016;France\n"
@@ -36,4 +36,21 @@ QString ContactPrintThemeEditorutil::defaultContact()
                                            "VERSION:3.0\n"
                                            "END:VCARD");
     return contact;
+}
+
+QString ContactPrintThemeEditorutil::defaultTemplate() const
+{
+    const QString templateStr = QStringLiteral("<html>\n"
+                                               "{% if contacts %}\n"
+                                               "{% for contact in contacts %}\n"
+                                               "<h1>{{ contact.realName|safe }}</h1>\n"
+                                               "<p>{{ contact.emails|safe }}</p>\n"
+                                               "<p>{{ contact.note|safe }}</p>\n"
+                                               "<br>\n"
+                                               "<br>\n"
+                                               "{% endfor %}\n"
+                                               "{% endif %}\n"
+                                               "</html>");
+
+    return templateStr;
 }
