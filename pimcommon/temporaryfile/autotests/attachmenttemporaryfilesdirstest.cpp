@@ -88,6 +88,7 @@ void AttachmentTemporaryFilesDirsTest::shouldForceRemoveTemporaryDirs()
     QCOMPARE(attachmentDir.temporaryDirs().count(), 2);
     attachmentDir.forceCleanTempFiles();
     QCOMPARE(attachmentDir.temporaryDirs().count(), 0);
+    QCOMPARE(attachmentDir.temporaryFiles().count(), 0);
 }
 
 void AttachmentTemporaryFilesDirsTest::shouldForceRemoveTemporaryFiles()
@@ -98,6 +99,7 @@ void AttachmentTemporaryFilesDirsTest::shouldForceRemoveTemporaryFiles()
     QCOMPARE(attachmentDir.temporaryFiles().count(), 2);
     attachmentDir.forceCleanTempFiles();
     QCOMPARE(attachmentDir.temporaryFiles().count(), 0);
+    QCOMPARE(attachmentDir.temporaryDirs().count(), 0);
 }
 
 void AttachmentTemporaryFilesDirsTest::shouldCreateDeleteTemporaryFiles()
@@ -109,14 +111,19 @@ void AttachmentTemporaryFilesDirsTest::shouldCreateDeleteTemporaryFiles()
         kDebug()<<"Can open file";
         return;
     }
+    tmpDir.setAutoRemove(false);
     file.close();
     QVERIFY(file.exists());
     AttachmentTemporaryFilesDirs attachmentDir;
+    attachmentDir.addTempDir(tmpDir.name());
     attachmentDir.addTempFile(file.fileName());
     QVERIFY(!attachmentDir.temporaryFiles().isEmpty());
     QCOMPARE(attachmentDir.temporaryFiles().first(), file.fileName());
+    const QString path = tmpDir.name();
     attachmentDir.forceCleanTempFiles();
     QCOMPARE(attachmentDir.temporaryFiles().count(), 0);
+    QCOMPARE(attachmentDir.temporaryDirs().count(), 0);
+    QVERIFY(!QDir(path).exists());
 }
 
 QTEST_KDEMAIN(AttachmentTemporaryFilesDirsTest, NoGUI)
