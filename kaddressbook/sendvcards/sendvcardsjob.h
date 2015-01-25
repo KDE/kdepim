@@ -24,6 +24,7 @@
 #include <QObject>
 #include <AkonadiCore/Item>
 #include <QStringList>
+class KTempDir;
 namespace PimCommon {
 class AttachmentTemporaryFilesDirs;
 }
@@ -45,10 +46,11 @@ private Q_SLOTS:
     void slotExpandGroupResult(KJob *job);
 
 private:
+    void createTemporaryDir();
     void jobFinished();
     Akonadi::Item::List mListItem;
-    QStringList mPath;
     PimCommon::AttachmentTemporaryFilesDirs *mAttachmentTemporary;
+    KTempDir *mTempDir;
     int mFetchJobCount;
 };
 }
