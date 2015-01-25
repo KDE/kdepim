@@ -22,7 +22,7 @@
 #include "../attachmenttemporaryfilesdirs.h"
 #include <qtest_kde.h>
 
-using PimCommon;
+using namespace PimCommon;
 
 AttachmentTemporaryFilesDirsTest::AttachmentTemporaryFilesDirsTest(QObject *parent)
     : QObject(parent)
