@@ -276,6 +276,7 @@ add_subdirectory(baloodebug/autotests)
 add_subdirectory(baloodebug/tests)
 add_subdirectory(shorturl/autotests)
 add_subdirectory(acl/autotests)
+add_subdirectory(temporaryfile/autotests)
 
 if( LibKGAPI2_FOUND )
 add_subdirectory(storageservice/gdrive/tests/)
