@@ -20,9 +20,9 @@
 
 #include "attachmenttemporaryfilesdirstest.h"
 #include "../attachmenttemporaryfilesdirs.h"
-#include <KTempDir>
-#include <qtest_kde.h>
-#include <KDebug>
+#include <QTemporaryDir>
+#include <qtest.h>
+#include <QDebug>
 
 using namespace PimCommon;
 
@@ -104,26 +104,26 @@ void AttachmentTemporaryFilesDirsTest::shouldForceRemoveTemporaryFiles()
 
 void AttachmentTemporaryFilesDirsTest::shouldCreateDeleteTemporaryFiles()
 {
-    KTempDir tmpDir;
-    QVERIFY(tmpDir.exists());
-    QFile file(tmpDir.name() + QLatin1String("/foo"));
+    QTemporaryDir tmpDir;
+    QVERIFY(tmpDir.isValid());
+    QFile file(tmpDir.path() + QLatin1String("/foo"));
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        kDebug()<<"Can open file";
+        qDebug()<<"Can open file";
         return;
     }
     tmpDir.setAutoRemove(false);
     file.close();
     QVERIFY(file.exists());
     AttachmentTemporaryFilesDirs attachmentDir;
-    attachmentDir.addTempDir(tmpDir.name());
+    attachmentDir.addTempDir(tmpDir.path());
     attachmentDir.addTempFile(file.fileName());
     QVERIFY(!attachmentDir.temporaryFiles().isEmpty());
     QCOMPARE(attachmentDir.temporaryFiles().first(), file.fileName());
-    const QString path = tmpDir.name();
+    const QString path = tmpDir.path();
     attachmentDir.forceCleanTempFiles();
     QCOMPARE(attachmentDir.temporaryFiles().count(), 0);
     QCOMPARE(attachmentDir.temporaryDirs().count(), 0);
     QVERIFY(!QDir(path).exists());
 }
 
-QTEST_KDEMAIN(AttachmentTemporaryFilesDirsTest, NoGUI)
+QTEST_MAIN(AttachmentTemporaryFilesDirsTest)
