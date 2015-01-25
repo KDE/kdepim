@@ -242,7 +242,7 @@ QString GrantleeContactFormatter::toHtml(HtmlForm form) const
     }
 
     QVariantHash contactObject;
-
+    GrantleeContactUtils grantleeContactUtil;
     // Name parts
     setHashField(contactObject, QLatin1String("name"), rawContact.realName());
     setHashField(contactObject, QLatin1String("formattedName"), rawContact.formattedName());
@@ -255,8 +255,8 @@ QString GrantleeContactFormatter::toHtml(HtmlForm form) const
 
     // Dates
     const QDate birthday = rawContact.birthday().date();
-    if (birthday.isValid()) {
-        GrantleeContactUtils::insertVariableToQVariantHash(contactObject, QLatin1String("birthdayi18n"));
+    if ( birthday.isValid() ) {
+        grantleeContactUtil.insertVariableToQVariantHash(contactObject, QLatin1String( "birthdayi18n" ));
 
         const QString formattedBirthday = QLocale().toString(birthday);
         contactObject.insert(QLatin1String("birthday"), formattedBirthday);
@@ -269,12 +269,12 @@ QString GrantleeContactFormatter::toHtml(HtmlForm form) const
     }
 
     const QDate anniversary =
-        QDate::fromString(rawContact.custom(QLatin1String("KADDRESSBOOK"),
-                                            QLatin1String("X-Anniversary")), Qt::ISODate);
-    if (anniversary.isValid()) {
-        contactObject.insert(QLatin1String("anniversary"),
-                             QLocale().toString(anniversary));
-        GrantleeContactUtils::insertVariableToQVariantHash(contactObject, QLatin1String("anniversaryi18n"));
+            QDate::fromString( rawContact.custom( QLatin1String( "KADDRESSBOOK" ),
+                                                  QLatin1String( "X-Anniversary" ) ), Qt::ISODate );
+    if ( anniversary.isValid() ) {
+        contactObject.insert( QLatin1String( "anniversary" ),
+                              KLocale::global()->formatDate( anniversary ) );
+        grantleeContactUtil.insertVariableToQVariantHash(contactObject, QLatin1String("anniversaryi18n") );
     }
 
     // Emails
@@ -286,8 +286,8 @@ QString GrantleeContactFormatter::toHtml(HtmlForm form) const
                             .arg(fullEmail, email);
         emails << url;
     }
-    GrantleeContactUtils::insertVariableToQVariantHash(contactObject, QLatin1String("emailsi18n"));
-    contactObject.insert(QLatin1String("emails"), emails);
+    grantleeContactUtil.insertVariableToQVariantHash(contactObject, QLatin1String( "emailsi18n" ) );
+    contactObject.insert( QLatin1String( "emails" ), emails );
 
     // Phone numbers
     QVariantList phoneNumbers;
@@ -325,25 +325,25 @@ QString GrantleeContactFormatter::toHtml(HtmlForm form) const
             url = QLatin1String("http://") + url;
         }
 
-        url = KStringHandler::tagUrls(url);
-        contactObject.insert(QLatin1String("website"), url);
-        GrantleeContactUtils::insertVariableToQVariantHash(contactObject, QLatin1String("websitei18n"));
+        url = KStringHandler::tagUrls( url );
+        contactObject.insert( QLatin1String( "website" ), url );
+        grantleeContactUtil.insertVariableToQVariantHash(contactObject, QLatin1String( "websitei18n" ) );
     }
 
     // Blog Feed
     const QString blog =
-        rawContact.custom(QLatin1String("KADDRESSBOOK"), QLatin1String("BlogFeed"));
-    if (!blog.isEmpty()) {
-        contactObject.insert(QLatin1String("blogUrl"), KStringHandler::tagUrls(blog));
-        GrantleeContactUtils::insertVariableToQVariantHash(contactObject, QLatin1String("blogUrli18n"));
+            rawContact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "BlogFeed" ) );
+    if ( !blog.isEmpty() ) {
+        contactObject.insert( QLatin1String( "blogUrl" ), KStringHandler::tagUrls( blog ) );
+        grantleeContactUtil.insertVariableToQVariantHash(contactObject, QLatin1String( "blogUrli18n" ) );
     }
 
     // Address Book
     const QString addressBookName =
-        rawContact.custom(QLatin1String("KADDRESSBOOK"), QLatin1String("AddressBook"));
-    if (!addressBookName.isEmpty()) {
-        contactObject.insert(QLatin1String("addressBookName"), addressBookName);
-        GrantleeContactUtils::insertVariableToQVariantHash(contactObject, QLatin1String("addressBookNamei18n"));
+            rawContact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "AddressBook" ) );
+    if ( !addressBookName.isEmpty() ) {
+        contactObject.insert( QLatin1String( "addressBookName" ), addressBookName );
+        grantleeContactUtil.insertVariableToQVariantHash(contactObject, QLatin1String( "addressBookNamei18n" ) );
     }
 
     // Addresses
@@ -354,10 +354,10 @@ QString GrantleeContactFormatter::toHtml(HtmlForm form) const
         counter++;
     }
     // Note
-    if (!rawContact.note().isEmpty()) {
-        const QString notes = QString::fromLatin1("<a>%1</a>").arg(rawContact.note().replace(QLatin1Char('\n'), QLatin1String("<br>")));
-        contactObject.insert(QLatin1String("note"), notes);
-        GrantleeContactUtils::insertVariableToQVariantHash(contactObject, QLatin1String("notei18n"));
+    if ( !rawContact.note().isEmpty() ) {
+        const QString notes = QString::fromLatin1( "<a>%1</a>" ).arg(rawContact.note().replace( QLatin1Char( '\n' ), QLatin1String( "<br>" )));
+        contactObject.insert( QLatin1String( "note" ), notes );
+        grantleeContactUtil.insertVariableToQVariantHash(contactObject, QLatin1String( "notei18n" ) );
     }
 
     contactObject.insert(QLatin1String("addresses"), addresses);
@@ -379,39 +379,39 @@ QString GrantleeContactFormatter::toHtml(HtmlForm form) const
 
     setHashField(contactObject, QLatin1String("organization"), rawContact.organization());
 
-    setHashField(contactObject, QLatin1String("department"), rawContact.department());
-    GrantleeContactUtils::insertVariableToQVariantHash(contactObject, QLatin1String("departmenti18n"));
+    setHashField( contactObject, QLatin1String( "department" ), rawContact.department() );
+    grantleeContactUtil.insertVariableToQVariantHash(contactObject, QLatin1String( "departmenti18n" ) );
 
     //setHashField( contactObject, QLatin1String( "note" ), rawContact.note() );
 
-    setHashField(contactObject, QLatin1String("profession"),
-                 rawContact.custom(QLatin1String("KADDRESSBOOK"),
-                                   QLatin1String("X-Profession")));
-    GrantleeContactUtils::insertVariableToQVariantHash(contactObject, QLatin1String("Professioni18n"));
-    setHashField(contactObject, QLatin1String("office"),
-                 rawContact.custom(QLatin1String("KADDRESSBOOK"),
-                                   QLatin1String("X-Office")));
-    GrantleeContactUtils::insertVariableToQVariantHash(contactObject, QLatin1String("officei18n"));
+    setHashField( contactObject, QLatin1String( "profession" ),
+                  rawContact.custom( QLatin1String( "KADDRESSBOOK" ),
+                                     QLatin1String( "X-Profession" ) ) );
+    grantleeContactUtil.insertVariableToQVariantHash(contactObject, QLatin1String( "Professioni18n" ) );
+    setHashField( contactObject, QLatin1String( "office" ),
+                  rawContact.custom( QLatin1String( "KADDRESSBOOK" ),
+                                     QLatin1String( "X-Office" ) ) );
+    grantleeContactUtil.insertVariableToQVariantHash(contactObject, QLatin1String( "officei18n" ) );
 
-    setHashField(contactObject, QLatin1String("manager"),
-                 rawContact.custom(QLatin1String("KADDRESSBOOK"),
-                                   QLatin1String("X-ManagersName")));
-    GrantleeContactUtils::insertVariableToQVariantHash(contactObject, QLatin1String("manageri18n"));
+    setHashField( contactObject, QLatin1String( "manager" ),
+                  rawContact.custom( QLatin1String( "KADDRESSBOOK" ),
+                                     QLatin1String( "X-ManagersName" ) ) );
+    grantleeContactUtil.insertVariableToQVariantHash(contactObject, QLatin1String( "manageri18n" ) );
 
-    setHashField(contactObject, QLatin1String("assistant"),
-                 rawContact.custom(QLatin1String("KADDRESSBOOK"),
-                                   QLatin1String("X-AssistantsName")));
-    GrantleeContactUtils::insertVariableToQVariantHash(contactObject, QLatin1String("assistanti18n"));
+    setHashField( contactObject, QLatin1String( "assistant" ),
+                  rawContact.custom( QLatin1String( "KADDRESSBOOK" ),
+                                     QLatin1String( "X-AssistantsName" ) ) );
+    grantleeContactUtil.insertVariableToQVariantHash(contactObject, QLatin1String( "assistanti18n" ) );
 
-    setHashField(contactObject, QLatin1String("spouse"),
-                 rawContact.custom(QLatin1String("KADDRESSBOOK"),
-                                   QLatin1String("X-SpousesName")));
-    GrantleeContactUtils::insertVariableToQVariantHash(contactObject, QLatin1String("spousei18n"));
+    setHashField( contactObject, QLatin1String( "spouse" ),
+                  rawContact.custom( QLatin1String( "KADDRESSBOOK" ),
+                                     QLatin1String( "X-SpousesName" ) ) );
+    grantleeContactUtil.insertVariableToQVariantHash(contactObject, QLatin1String( "spousei18n" ) );
 
-    setHashField(contactObject, QLatin1String("imAddress"),
-                 rawContact.custom(QLatin1String("KADDRESSBOOK"),
-                                   QLatin1String("X-IMAddress")));
-    GrantleeContactUtils::insertVariableToQVariantHash(contactObject, QLatin1String("imAddressi18n"));
+    setHashField( contactObject, QLatin1String( "imAddress" ),
+                  rawContact.custom( QLatin1String( "KADDRESSBOOK" ),
+                                     QLatin1String( "X-IMAddress" ) ) );
+    grantleeContactUtil.insertVariableToQVariantHash(contactObject, QLatin1String( "imAddressi18n" ));
 
     // Custom fields
 

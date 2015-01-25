@@ -29,9 +29,10 @@
 #include <util/vcardutil.h>
 #include <Akonadi/Contact/ContactGroupExpandJob>
 #include "pimcommon/temporaryfile/attachmenttemporaryfilesdirs.h"
-#include <KTempDir>
+#include <QTemporaryDir>
 #include <KStandardDirs>
 #include <KToolInvocation>
+#include <QFile>
 
 using namespace KABSendVCards;
 
@@ -39,7 +40,7 @@ SendVcardsJob::SendVcardsJob(const Akonadi::Item::List &listItem, QObject *paren
     : QObject(parent),
       mListItem(listItem),
       mTempDir(0),
-      mFetchJobCount(0)
+      mExpandGroupJobCount(0)
 {
     //Don't delete it.
     mAttachmentTemporary = new PimCommon::AttachmentTemporaryFilesDirs();
@@ -63,13 +64,14 @@ bool SendVcardsJob::start()
 
     Q_FOREACH (const Akonadi::Item &item, mListItem) {
         if (item.hasPayload<KContacts::Addressee>()) {
+            const KContacts::Addressee contact = item.payload<KContacts::Addressee>();
             QByteArray data = item.payloadData();
             //Workaround about broken kaddressbook fields.
             PimCommon::VCardUtil vcardUtil;
             vcardUtil.adaptVcard(data);
             createTemporaryDir();
         } else if (item.hasPayload<KContacts::ContactGroup>()) {
-            ++mFetchJobCount;
+            ++mExpandGroupJobCount;
             const KContacts::ContactGroup group = item.payload<KContacts::ContactGroup>();
             const QString groupName(group.name());
             const QString attachmentName = ( groupName.isEmpty() ? QLatin1String("vcard") : groupName ) + QLatin1String( ".vcf" );
@@ -80,7 +82,7 @@ bool SendVcardsJob::start()
         }
     }
 
-    if (mFetchJobCount == 0) {
+    if (mExpandGroupJobCount == 0) {
         jobFinished();
     }
     return true;
@@ -89,9 +91,9 @@ bool SendVcardsJob::start()
 void SendVcardsJob::createTemporaryDir()
 {
     if (!mTempDir) {
-        mTempDir = new KTempDir( KStandardDirs::locateLocal( "tmp", QLatin1String("sendvcards") ) );
+        mTempDir = new QTemporaryDir( KStandardDirs::locateLocal( "tmp", QLatin1String("sendvcards") ) );
         mTempDir->setAutoRemove(false);
-        mAttachmentTemporary->addTempDir(mTempDir->name());
+        mAttachmentTemporary->addTempDir(mTempDir->path());
     }
 }
 
@@ -115,9 +117,22 @@ void SendVcardsJob::slotExpandGroupResult(KJob* job)
     createTemporaryDir();
 
     //TODO
-    --mFetchJobCount;
-    if (mFetchJobCount == 0) {
+    --mExpandGroupJobCount;
+    if (mExpandGroupJobCount == 0) {
         jobFinished();
     }
 }
 
+void SendVcardsJob::createTemporaryFile(const QByteArray &data, const QString &filename)
+{
+    QFile file(mTempDir->path() + QLatin1Char('/') + filename);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qDebug()<<"Can not write vcard filename :"<<filename;
+        return;
+    }
+
+    QTextStream out(&file);
+    out << data;
+    file.close();
+    mAttachmentTemporary->addTempFile(file.fileName());
+}
