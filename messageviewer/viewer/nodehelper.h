@@ -40,9 +40,12 @@ namespace MessageViewer {
   }
 }
 
-namespace MessageViewer {
-
+namespace PimCommon
+{
 class AttachmentTemporaryFilesDirs;
+
+}
+namespace MessageViewer {
 
 /** Flags for the encryption state. */
 typedef enum
@@ -303,7 +306,7 @@ private:
     QMap<QString, QMap<QByteArray, Interface::BodyPartMemento*> > mBodyPartMementoMap;
     QMap<KMime::Content*, PartMetaData> mPartMetaDatas;
     QMap<KMime::Message::Content*, QList<KMime::Content*> > mExtraContents;
-    AttachmentTemporaryFilesDirs *mAttachmentFilesDir;
+    PimCommon::AttachmentTemporaryFilesDirs *mAttachmentFilesDir;
 };
 
 }

@@ -502,7 +502,7 @@ void AttachmentControllerBase::createActions()
     d->addOwnVcardAction->setCheckable(true);
     connect(d->addOwnVcardAction, SIGNAL(triggered(bool)), this, SIGNAL(addOwnVcard(bool)));
 
-    d->attachVCardsAction = new KAction( KIcon( QLatin1String( "mail-attachment" ) ), i18n( "&Attach Vcards..." ), this );
+    d->attachVCardsAction = new KAction( KIcon( QLatin1String( "mail-attachment" ) ), i18n( "&Attach vCards..." ), this );
     d->attachVCardsAction->setIconText( i18n( "Attach" ) );
     connect( d->attachVCardsAction, SIGNAL(triggered(bool)), this, SLOT(showAttachVcard()) );
 

@@ -20,29 +20,38 @@
 
 #ifndef SENDVCARDSJOB_H
 #define SENDVCARDSJOB_H
-
+#include "kaddressbook_export.h"
 #include <QObject>
 #include <Akonadi/Item>
+#include <QStringList>
+class KTempDir;
+namespace PimCommon {
+class AttachmentTemporaryFilesDirs;
+}
 namespace KABSendVCards {
-class SendVcardsJob : public QObject
+class KADDRESSBOOK_EXPORT SendVcardsJob : public QObject
 {
     Q_OBJECT
 public:
     explicit SendVcardsJob(const Akonadi::Item::List &listItem, QObject *parent = 0);
     ~SendVcardsJob();
 
-    void start();
+    bool start();
 
-private slots:
-    void fetchJobFinished(KJob *job);
+Q_SIGNALS:
+    void jobDone();
+
+private Q_SLOTS:
+    void slotExpandGroupResult(KJob *job);
 
 private:
-    void fetchNextItem();
-    void fetchItem(const Akonadi::Item &item);
-    void finishJob();
+    void createTemporaryFile(const QByteArray &data, const QString &filename);
+    void createTemporaryDir();
+    void jobFinished();
     Akonadi::Item::List mListItem;
-    Akonadi::Item::List mItemToFetch;
-    int mFetchJobCount;
+    PimCommon::AttachmentTemporaryFilesDirs *mAttachmentTemporary;
+    KTempDir *mTempDir;
+    int mExpandGroupJobCount;
 };
 }
 

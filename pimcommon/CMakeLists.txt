@@ -189,6 +189,10 @@ set(libpimcommon_util_SRCS
 )
 
 
+set(libpimcommon_temporary_SRCS
+   temporaryfile/attachmenttemporaryfilesdirs.cpp
+)
+
 set(libpimcommon_SRCS
   settings/pimcommonsettings.cpp
   ${libpimcommon_util_SRCS}
@@ -204,6 +208,7 @@ set(libpimcommon_SRCS
   ${libpimcommon_widgets_SRCS}
   ${libpimcommon_baloodebug_SRCS}
   ${libpimcommon_syntaxhighlighter_SRCS}
+  ${libpimcommon_temporary_SRCS}
 )
 
 
@@ -271,6 +276,7 @@ add_subdirectory(baloodebug/autotests)
 add_subdirectory(baloodebug/tests)
 add_subdirectory(shorturl/autotests)
 add_subdirectory(acl/autotests)
+add_subdirectory(temporaryfile/autotests)
 
 if( LibKGAPI2_FOUND )
 add_subdirectory(storageservice/gdrive/tests/)

@@ -19,8 +19,12 @@
 */
 
 #include "attachmenttemporaryfilesdirstest.h"
-#include "../viewer/attachmenttemporaryfilesdirs.h"
+#include "../attachmenttemporaryfilesdirs.h"
+#include <KTempDir>
 #include <qtest_kde.h>
+#include <KDebug>
+
+using namespace PimCommon;
 
 AttachmentTemporaryFilesDirsTest::AttachmentTemporaryFilesDirsTest(QObject *parent)
     : QObject(parent)
@@ -35,14 +39,14 @@ AttachmentTemporaryFilesDirsTest::~AttachmentTemporaryFilesDirsTest()
 
 void AttachmentTemporaryFilesDirsTest::shouldHaveDefaultValue()
 {
-    MessageViewer::AttachmentTemporaryFilesDirs attachmentDir;
+    AttachmentTemporaryFilesDirs attachmentDir;
     QVERIFY(attachmentDir.temporaryFiles().isEmpty());
     QVERIFY(attachmentDir.temporaryDirs().isEmpty());
 }
 
 void AttachmentTemporaryFilesDirsTest::shouldAddTemporaryFiles()
 {
-    MessageViewer::AttachmentTemporaryFilesDirs attachmentDir;
+    AttachmentTemporaryFilesDirs attachmentDir;
     attachmentDir.addTempFile(QLatin1String("foo"));
     QCOMPARE(attachmentDir.temporaryFiles().count(), 1);
     attachmentDir.addTempFile(QLatin1String("foo1"));
@@ -51,7 +55,7 @@ void AttachmentTemporaryFilesDirsTest::shouldAddTemporaryFiles()
 
 void AttachmentTemporaryFilesDirsTest::shouldAddTemporaryDirs()
 {
-    MessageViewer::AttachmentTemporaryFilesDirs attachmentDir;
+    AttachmentTemporaryFilesDirs attachmentDir;
     attachmentDir.addTempDir(QLatin1String("foo"));
     QCOMPARE(attachmentDir.temporaryDirs().count(), 1);
     attachmentDir.addTempDir(QLatin1String("foo1"));
@@ -60,7 +64,7 @@ void AttachmentTemporaryFilesDirsTest::shouldAddTemporaryDirs()
 
 void AttachmentTemporaryFilesDirsTest::shouldNotAddSameFiles()
 {
-    MessageViewer::AttachmentTemporaryFilesDirs attachmentDir;
+    AttachmentTemporaryFilesDirs attachmentDir;
     attachmentDir.addTempFile(QLatin1String("foo"));
     QCOMPARE(attachmentDir.temporaryFiles().count(), 1);
     attachmentDir.addTempFile(QLatin1String("foo"));
@@ -69,11 +73,57 @@ void AttachmentTemporaryFilesDirsTest::shouldNotAddSameFiles()
 
 void AttachmentTemporaryFilesDirsTest::shouldNotAddSameDirs()
 {
-    MessageViewer::AttachmentTemporaryFilesDirs attachmentDir;
+    AttachmentTemporaryFilesDirs attachmentDir;
     attachmentDir.addTempDir(QLatin1String("foo"));
     QCOMPARE(attachmentDir.temporaryDirs().count(), 1);
     attachmentDir.addTempDir(QLatin1String("foo"));
     QCOMPARE(attachmentDir.temporaryDirs().count(), 1);
+}
+
+void AttachmentTemporaryFilesDirsTest::shouldForceRemoveTemporaryDirs()
+{
+    AttachmentTemporaryFilesDirs attachmentDir;
+    attachmentDir.addTempDir(QLatin1String("foo"));
+    attachmentDir.addTempDir(QLatin1String("foo1"));
+    QCOMPARE(attachmentDir.temporaryDirs().count(), 2);
+    attachmentDir.forceCleanTempFiles();
+    QCOMPARE(attachmentDir.temporaryDirs().count(), 0);
+    QCOMPARE(attachmentDir.temporaryFiles().count(), 0);
+}
+
+void AttachmentTemporaryFilesDirsTest::shouldForceRemoveTemporaryFiles()
+{
+    AttachmentTemporaryFilesDirs attachmentDir;
+    attachmentDir.addTempFile(QLatin1String("foo"));
+    attachmentDir.addTempFile(QLatin1String("foo2"));
+    QCOMPARE(attachmentDir.temporaryFiles().count(), 2);
+    attachmentDir.forceCleanTempFiles();
+    QCOMPARE(attachmentDir.temporaryFiles().count(), 0);
+    QCOMPARE(attachmentDir.temporaryDirs().count(), 0);
+}
+
+void AttachmentTemporaryFilesDirsTest::shouldCreateDeleteTemporaryFiles()
+{
+    KTempDir tmpDir;
+    QVERIFY(tmpDir.exists());
+    QFile file(tmpDir.name() + QLatin1String("/foo"));
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        kDebug()<<"Can open file";
+        return;
+    }
+    tmpDir.setAutoRemove(false);
+    file.close();
+    QVERIFY(file.exists());
+    AttachmentTemporaryFilesDirs attachmentDir;
+    attachmentDir.addTempDir(tmpDir.name());
+    attachmentDir.addTempFile(file.fileName());
+    QVERIFY(!attachmentDir.temporaryFiles().isEmpty());
+    QCOMPARE(attachmentDir.temporaryFiles().first(), file.fileName());
+    const QString path = tmpDir.name();
+    attachmentDir.forceCleanTempFiles();
+    QCOMPARE(attachmentDir.temporaryFiles().count(), 0);
+    QCOMPARE(attachmentDir.temporaryDirs().count(), 0);
+    QVERIFY(!QDir(path).exists());
 }
 
 QTEST_KDEMAIN(AttachmentTemporaryFilesDirsTest, NoGUI)
