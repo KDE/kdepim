@@ -29,12 +29,16 @@
 #include <util/vcardutil.h>
 #include <Akonadi/Contact/ContactGroupExpandJob>
 #include "pimcommon/temporaryfile/attachmenttemporaryfilesdirs.h"
+#include <KTempDir>
+#include <KStandardDirs>
+#include <KToolInvocation>
 
 using namespace KABSendVCards;
 
 SendVcardsJob::SendVcardsJob(const Akonadi::Item::List &listItem, QObject *parent)
     : QObject(parent),
       mListItem(listItem),
+      mTempDir(0),
       mFetchJobCount(0)
 {
     //Don't delete it.
@@ -43,6 +47,9 @@ SendVcardsJob::SendVcardsJob(const Akonadi::Item::List &listItem, QObject *paren
 
 SendVcardsJob::~SendVcardsJob()
 {
+    delete mTempDir;
+    mTempDir = 0;
+    //Don't delete it.
     mAttachmentTemporary = 0;
 }
 
@@ -60,6 +67,7 @@ bool SendVcardsJob::start()
             //Workaround about broken kaddressbook fields.
             PimCommon::VCardUtil vcardUtil;
             vcardUtil.adaptVcard(data);
+            createTemporaryDir();
         } else if (item.hasPayload<KABC::ContactGroup>()) {
             ++mFetchJobCount;
             const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
@@ -78,10 +86,20 @@ bool SendVcardsJob::start()
     return true;
 }
 
+void SendVcardsJob::createTemporaryDir()
+{
+    if (!mTempDir) {
+        mTempDir = new KTempDir( KStandardDirs::locateLocal( "tmp", QLatin1String("sendvcards") ) );
+        mTempDir->setAutoRemove(false);
+        mAttachmentTemporary->addTempDir(mTempDir->name());
+    }
+}
+
 void SendVcardsJob::jobFinished()
 {
-    if (!mPath.isEmpty()) {
-        //TODO
+    const QStringList lstAttachment = mAttachmentTemporary->temporaryFiles();
+    if (!lstAttachment.isEmpty()) {
+        KToolInvocation::invokeMailer( QString(), QString(), QString(), QString(), QString(), QString(), lstAttachment );
     }
     deleteLater();
 }
@@ -94,6 +112,8 @@ void SendVcardsJob::slotExpandGroupResult(KJob* job)
     const QString attachmentName = expandJob->property("groupName").toString();
     KABC::VCardConverter converter;
     const QByteArray groupData = converter.exportVCards(expandJob->contacts(), KABC::VCardConverter::v3_0);
+    createTemporaryDir();
+
     //TODO
     --mFetchJobCount;
     if (mFetchJobCount == 0) {
