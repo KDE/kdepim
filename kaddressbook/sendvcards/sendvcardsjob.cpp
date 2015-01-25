@@ -70,6 +70,9 @@ bool SendVcardsJob::start()
             PimCommon::VCardUtil vcardUtil;
             vcardUtil.adaptVcard(data);
             createTemporaryDir();
+            const QString contactRealName(contact.realName());
+            const QString attachmentName = (contactRealName.isEmpty() ? QLatin1String("vcard") : contactRealName ) + QLatin1String( ".vcf" );
+            createTemporaryFile(data, attachmentName);
         } else if (item.hasPayload<KContacts::ContactGroup>()) {
             ++mExpandGroupJobCount;
             const KContacts::ContactGroup group = item.payload<KContacts::ContactGroup>();
@@ -115,8 +118,8 @@ void SendVcardsJob::slotExpandGroupResult(KJob* job)
     KContacts::VCardConverter converter;
     const QByteArray groupData = converter.exportVCards(expandJob->contacts(), KContacts::VCardConverter::v3_0);
     createTemporaryDir();
+    createTemporaryFile(groupData, attachmentName);
 
-    //TODO
     --mExpandGroupJobCount;
     if (mExpandGroupJobCount == 0) {
         jobFinished();
