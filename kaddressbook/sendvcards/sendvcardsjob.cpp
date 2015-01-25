@@ -32,6 +32,7 @@
 #include <KTempDir>
 #include <KStandardDirs>
 #include <KToolInvocation>
+#include <QFile>
 
 using namespace KABSendVCards;
 
@@ -124,3 +125,16 @@ void SendVcardsJob::slotExpandGroupResult(KJob* job)
     }
 }
 
+void SendVcardsJob::createTemporaryFile(const QByteArray &data, const QString &filename)
+{
+    QFile file(mTempDir->name() + QLatin1Char('/') + filename);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qDebug()<<"Can not write vcard filename :"<<filename;
+        return;
+    }
+
+    QTextStream out(&file);
+    out << data;
+    file.close();
+    mAttachmentTemporary->addTempFile(file.fileName());
+}

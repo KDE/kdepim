@@ -45,6 +45,7 @@ private Q_SLOTS:
     void slotExpandGroupResult(KJob *job);
 
 private:
+    void createTemporaryFile(const QByteArray &data, const QString &filename);
     void createTemporaryDir();
     void jobFinished();
     Akonadi::Item::List mListItem;
