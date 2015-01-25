@@ -72,6 +72,7 @@ bool SendVcardsJob::start()
             createTemporaryDir();
             const QString contactRealName(contact.realName());
             const QString attachmentName = (contactRealName.isEmpty() ? QLatin1String("vcard") : contactRealName ) + QLatin1String( ".vcf" );
+            createTemporaryFile(data, attachmentName);
         } else if (item.hasPayload<KABC::ContactGroup>()) {
             ++mExpandGroupJobCount;
             const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
@@ -117,8 +118,8 @@ void SendVcardsJob::slotExpandGroupResult(KJob* job)
     KABC::VCardConverter converter;
     const QByteArray groupData = converter.exportVCards(expandJob->contacts(), KABC::VCardConverter::v3_0);
     createTemporaryDir();
+    createTemporaryFile(groupData, attachmentName);
 
-    //TODO
     --mExpandGroupJobCount;
     if (mExpandGroupJobCount == 0) {
         jobFinished();
