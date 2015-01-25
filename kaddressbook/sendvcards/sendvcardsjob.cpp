@@ -39,7 +39,7 @@ SendVcardsJob::SendVcardsJob(const Akonadi::Item::List &listItem, QObject *paren
     : QObject(parent),
       mListItem(listItem),
       mTempDir(0),
-      mFetchJobCount(0)
+      mExpandGroupJobCount(0)
 {
     //Don't delete it.
     mAttachmentTemporary = new PimCommon::AttachmentTemporaryFilesDirs();
@@ -63,13 +63,16 @@ bool SendVcardsJob::start()
 
     Q_FOREACH (const Akonadi::Item &item, mListItem) {
         if (item.hasPayload<KABC::Addressee>()) {
+            const KABC::Addressee contact = item.payload<KABC::Addressee>();
             QByteArray data = item.payloadData();
             //Workaround about broken kaddressbook fields.
             PimCommon::VCardUtil vcardUtil;
             vcardUtil.adaptVcard(data);
             createTemporaryDir();
+            const QString contactRealName(contact.realName());
+            const QString attachmentName = (contactRealName.isEmpty() ? QLatin1String("vcard") : contactRealName ) + QLatin1String( ".vcf" );
         } else if (item.hasPayload<KABC::ContactGroup>()) {
-            ++mFetchJobCount;
+            ++mExpandGroupJobCount;
             const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
             const QString groupName(group.name());
             const QString attachmentName = ( groupName.isEmpty() ? QLatin1String("vcard") : groupName ) + QLatin1String( ".vcf" );
@@ -80,7 +83,7 @@ bool SendVcardsJob::start()
         }
     }
 
-    if (mFetchJobCount == 0) {
+    if (mExpandGroupJobCount == 0) {
         jobFinished();
     }
     return true;
@@ -115,8 +118,8 @@ void SendVcardsJob::slotExpandGroupResult(KJob* job)
     createTemporaryDir();
 
     //TODO
-    --mFetchJobCount;
-    if (mFetchJobCount == 0) {
+    --mExpandGroupJobCount;
+    if (mExpandGroupJobCount == 0) {
         jobFinished();
     }
 }

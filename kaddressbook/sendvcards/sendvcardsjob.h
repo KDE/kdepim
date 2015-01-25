@@ -50,7 +50,7 @@ private:
     Akonadi::Item::List mListItem;
     PimCommon::AttachmentTemporaryFilesDirs *mAttachmentTemporary;
     KTempDir *mTempDir;
-    int mFetchJobCount;
+    int mExpandGroupJobCount;
 };
 }
 
