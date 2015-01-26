@@ -53,7 +53,7 @@ public:
 
     void setInfo(const QList<FollowUpReminder::FollowUpReminderInfo *> &infoList);
 
-    void save();
+    bool save();
 
     void load();
 

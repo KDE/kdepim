@@ -32,6 +32,12 @@ public:
 
     void setInfo(const QList<FollowUpReminder::FollowUpReminderInfo *> &info);
 
+Q_SIGNALS:
+    void needToReparseConfiguration();
+
+private slots:
+    void slotSave();
+
 private:
     void readConfig();
     void writeConfig();

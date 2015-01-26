@@ -41,7 +41,6 @@ FollowUpReminderInfoDialog::FollowUpReminderInfoDialog(QWidget *parent)
     QHBoxLayout *mainLayout = new QHBoxLayout( mainWidget );
     mainLayout->setSpacing( KDialog::spacingHint() );
     mainLayout->setMargin( KDialog::marginHint() );
-    connect(this, SIGNAL(okClicked()), SLOT(slotSave()));
 
     mWidget = new FollowUpReminderInfoWidget;
     mWidget->setObjectName(QLatin1String("FollowUpReminderInfoWidget"));
@@ -92,11 +91,6 @@ void FollowUpReminderInfoDialog::writeConfig()
     KConfigGroup group( KGlobal::config(), "FollowUpReminderInfoDialog" );
     group.writeEntry( "Size", size() );
     mWidget->saveTreeWidgetHeader(group);
-}
-
-void FollowUpReminderInfoDialog::slotSave()
-{
-    mWidget->save();
 }
 
 void FollowUpReminderInfoDialog::load()

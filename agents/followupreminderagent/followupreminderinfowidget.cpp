@@ -148,10 +148,10 @@ void FollowUpReminderInfoWidget::createOrUpdateItem(FollowUpReminder::FollowUpRe
 
 
 
-void FollowUpReminderInfoWidget::save()
+bool FollowUpReminderInfoWidget::save()
 {
     if (!mChanged)
-        return;
+        return false;
     KSharedConfig::Ptr config = KGlobal::config();
 
     // first, delete all filter groups:
@@ -174,7 +174,7 @@ void FollowUpReminderInfoWidget::save()
     KConfigGroup general = config->group(QLatin1String("General"));
     general.writeEntry("Number", i);
     config->sync();
-    config->reparseConfiguration();
+    return true;
 }
 
 void FollowUpReminderInfoWidget::customContextMenuRequested(const QPoint &pos)

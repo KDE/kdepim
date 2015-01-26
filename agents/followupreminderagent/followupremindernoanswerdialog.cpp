@@ -40,7 +40,7 @@ FollowUpReminderNoAnswerDialog::FollowUpReminderNoAnswerDialog(QWidget *parent)
     QVBoxLayout *vbox = new QVBoxLayout(w);
     QLabel *lab = new QLabel(i18n("You still wait an answer about this mail:"));
     vbox->addWidget(lab);
-
+    connect(this, SIGNAL(okClicked()), SLOT(slotSave()));
     mWidget = new FollowUpReminderInfoWidget;
     mWidget->setObjectName(QLatin1String("FollowUpReminderInfoWidget"));
     vbox->addWidget(mWidget);
@@ -73,4 +73,11 @@ void FollowUpReminderNoAnswerDialog::writeConfig()
     KConfigGroup group( KGlobal::config(), "FollowUpReminderNoAnswerDialog" );
     group.writeEntry( "Size", size() );
     mWidget->saveTreeWidgetHeader(group);
+}
+
+void FollowUpReminderNoAnswerDialog::slotSave()
+{
+    if (mWidget->save()) {
+        Q_EMIT needToReparseConfiguration();
+    }
 }
