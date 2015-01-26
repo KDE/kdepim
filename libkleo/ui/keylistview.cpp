@@ -322,7 +322,7 @@ void Kleo::KeyListView::slotRefreshKey(const GpgME::Key &key)
     }
 }
 
-// slots for the emission of covariant signals:
+// slots for the emission of covariant Q_SIGNALS:
 
 void Kleo::KeyListView::slotEmitDoubleClicked(QTreeWidgetItem *item, int col)
 {

@@ -41,7 +41,7 @@ class CreateTripWidget : public QWidget
 public:
     explicit CreateTripWidget(Trip *trip, Akonadi::ChangeRecorder *monitor, QWidget *parent = 0, Qt::WindowFlags f = 0);
 
-private slots:
+private Q_SLOTS:
     void tripSelected(const Akonadi::Item &item);
     void create();
 

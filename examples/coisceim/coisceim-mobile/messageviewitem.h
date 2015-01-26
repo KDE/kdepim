@@ -63,11 +63,11 @@ public:
     virtual void scrollDown(int dist);
     virtual void scrollUp(int dist);
 
-public slots:
+public Q_SLOTS:
     void saveAllAttachments();
     void copyAllToClipboard();
 
-signals:
+Q_SIGNALS:
     /** Emitted for urls not handled by MessageViewer::Viewer. */
     void urlClicked(const Akonadi::Item &item, const KUrl &url);
     void mailRemoved();

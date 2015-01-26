@@ -51,7 +51,7 @@ public:
 
     void setProcess(Kleo::GnuPGProcessBase *process);
 
-private slots:
+private Q_SLOTS:
     void slotStdout();
     void slotStderr();
     void slotStatus(Kleo::GnuPGProcessBase *, const QString &, const QStringList &);

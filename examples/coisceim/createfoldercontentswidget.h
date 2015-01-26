@@ -38,7 +38,7 @@ public:
 
     void clear();
 
-private slots:
+private Q_SLOTS:
     void collectionSelected();
 
 private:

@@ -53,7 +53,7 @@ public:
     UnreadMailsInCollectionsWidget(QWidget *parent = 0, Qt::WindowFlags f = 0);
     virtual ~UnreadMailsInCollectionsWidget();
 
-private slots:
+private Q_SLOTS:
     void configure();
     void saveCheckState();
     void restoreCheckState();

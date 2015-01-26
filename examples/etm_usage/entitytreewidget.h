@@ -58,7 +58,7 @@ public:
     void init();
     QString dumpLevel(const QModelIndex &parent, int level);
 
-public slots:
+public Q_SLOTS:
     void mimeTypesChoiceChanged(int index);
     void mimeTypesChanged(const QString &mimetypeList);
     void dumpTree();

@@ -36,7 +36,7 @@ public:
 Q_SIGNALS:
     void needToReparseConfiguration();
 
-private slots:
+private Q_SLOTS:
     void slotSave();
 
 private:

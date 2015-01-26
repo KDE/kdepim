@@ -37,7 +37,7 @@ public:
     void setModel(QAbstractItemModel *model);
     void setSelectionModel(QItemSelectionModel *selectionModel);
 
-private slots:
+private Q_SLOTS:
     void insertRows(const QModelIndex &parent, int start, int end);
     void removeRows(const QModelIndex &parent, int start, int end);
     void refill();

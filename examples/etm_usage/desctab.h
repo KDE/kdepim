@@ -35,7 +35,7 @@ class DescTabWidget : public QWidget
 public:
     DescTabWidget(QWidget *parent = 0, Qt::WindowFlags f = 0);
 
-public slots:
+public Q_SLOTS:
     void connectProxy();
 
 private:

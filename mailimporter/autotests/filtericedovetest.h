@@ -26,7 +26,7 @@ class FilterIcedoveTest : public QObject
 public:
     explicit FilterIcedoveTest(QObject *parent = 0);
     ~FilterIcedoveTest();
-private slots:
+private Q_SLOTS:
     void shouldHaveDefaultSettingsPath();
 };
 

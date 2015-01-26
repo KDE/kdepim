@@ -44,7 +44,7 @@ public:
 protected:
     Trip *trip() const;
 
-public slots:
+public Q_SLOTS:
     void configure();
 
 private:

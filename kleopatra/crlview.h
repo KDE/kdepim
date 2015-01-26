@@ -49,10 +49,10 @@ class CRLView : public QDialog
 public:
     explicit CRLView(QWidget *parent = 0);
     ~CRLView();
-public slots:
+public Q_SLOTS:
     void slotUpdateView();
 
-protected slots:
+protected Q_SLOTS:
     void slotReadStdout();
     void slotProcessExited(int, QProcess::ExitStatus);
     void slotAppendBuffer();

@@ -35,7 +35,7 @@ public:
 
     QString publicLocation() const;
 
-private slots:
+private Q_SLOTS:
     void slotServiceLocationChanged(const QString &text);
 
 private:

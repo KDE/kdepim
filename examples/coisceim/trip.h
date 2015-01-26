@@ -81,17 +81,17 @@ public:
     QObject *todoSelection() const;
     QObject *notesSelection() const;
 
-signals:
+Q_SIGNALS:
     void eventNameChanged();
     void eventDescriptionChanged();
     void monitoredCollectionsChanged();
 
-private slots:
+private Q_SLOTS:
     void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
     void layoutChanged();
     void modelReset();
     void rowsRemoved(const QModelIndex &parent, int start, int end);
-public slots:
+public Q_SLOTS:
     void setComponentFilter(const QString &filter);
 
 private:

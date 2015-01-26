@@ -60,7 +60,7 @@ public:
     qint64 currentItemId() const;
     void setCurrentItemId(qint64 itemId);
 
-public slots:
+public Q_SLOTS:
     void clearSelection();
     void select(int row, int command);
     bool hasSelection() const;
@@ -68,7 +68,7 @@ public slots:
     bool requestNext();
     bool requestPrevious();
 
-signals:
+Q_SIGNALS:
     void selectionChanged();
 
 private:

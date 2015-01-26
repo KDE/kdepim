@@ -54,7 +54,7 @@ public Q_SLOTS:
 protected:
     void doSetOnline(bool online);
 
-private slots:
+private Q_SLOTS:
     void slotStartAgent();
 
 private:

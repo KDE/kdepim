@@ -37,7 +37,7 @@ class Tab2_5Widget : public QWidget
 public:
     Tab2_5Widget(QWidget *parent = 0, Qt::WindowFlags f = 0);
 
-private slots:
+private Q_SLOTS:
     void setMappedRootIndex(const QModelIndex &index);
 
 private:

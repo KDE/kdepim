@@ -53,7 +53,7 @@ private:
     Trip *createTrip(const QModelIndex &index, Akonadi::Item::Id id) const;
     void createWidget(const QModelIndex &index, Akonadi::Item::Id id) const;
 
-private slots:
+private Q_SLOTS:
     void thisRowsRemoved(const QModelIndex &index, int start, int end);
     void thisModelReset();
 

@@ -73,7 +73,7 @@ protected Q_SLOTS:
 //  protected:
 //    void closeEvent( QCloseEvent *e );
 
-private slots:
+private Q_SLOTS:
     void slotOpenWithAction(QAction *act);
 
 private:

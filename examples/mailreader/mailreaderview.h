@@ -56,10 +56,10 @@ private:
     Ui::mailreaderview ui_mailreaderview;
     MessageViewer::Viewer *m_readerWin;
 
-public slots:
+public Q_SLOTS:
     void slotConfigure();
 
-signals:
+Q_SIGNALS:
     /**
      * Use this signal to change the content of the statusbar
      */
@@ -70,7 +70,7 @@ signals:
      */
     void signalChangeCaption(const QString &text);
 
-private slots:
+private Q_SLOTS:
     void switchColors();
     void settingsChanged();
     void urlClicked(const Akonadi::Item &, const KUrl &);

@@ -40,7 +40,7 @@ public:
 public Q_SLOTS:
     void triggerStart();
 
-signals:
+Q_SIGNALS:
     void data(const QByteArray &data);
 
 private:

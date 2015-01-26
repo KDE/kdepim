@@ -53,7 +53,7 @@ public:
     }
     virtual bool isRunningStandalone() const;
 
-private slots:
+private Q_SLOTS:
     void createTrip();
     org::kde::coisceim::CoisceimWidget *interface();
 

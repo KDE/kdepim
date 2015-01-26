@@ -42,7 +42,7 @@ class MainWidget : public QWidget
 public:
     MainWidget(MainWindow *parent = 0);
 
-private slots:
+private Q_SLOTS:
     void collectionClicked(const Akonadi::Collection &collection);
     void itemActivated(const QModelIndex &index);
 

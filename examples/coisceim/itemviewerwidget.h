@@ -53,7 +53,7 @@ class ItemViewerWidget : public QWidget
 public:
     ItemViewerWidget(ItemSelection *selectionModel, QWidget *parent = 0, Qt::WindowFlags f = 0);
 
-private slots:
+private Q_SLOTS:
     void selectionChanged(const QModelIndex &index);
 
 private:

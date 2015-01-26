@@ -52,10 +52,10 @@ public:
 
     void clear();
 
-signals:
+Q_SIGNALS:
     void selected(const Akonadi::Item &item);
 
-private slots:
+private Q_SLOTS:
     void selectTrip();
 
 private:

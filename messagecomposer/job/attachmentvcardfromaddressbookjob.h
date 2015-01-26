@@ -30,7 +30,7 @@ public:
     explicit AttachmentVcardFromAddressBookJob(const Akonadi::Item &item, QObject *parent = Q_NULLPTR);
     ~AttachmentVcardFromAddressBookJob();
 
-protected slots:
+protected Q_SLOTS:
     virtual void doStart();
 
 private Q_SLOTS:

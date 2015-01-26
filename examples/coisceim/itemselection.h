@@ -53,11 +53,11 @@ public:
 
     Q_INVOKABLE void clear();
 
-signals:
+Q_SIGNALS:
     void selectionChanged(const QModelIndex &index);
     void idChanged();
 
-private slots:
+private Q_SLOTS:
     void modelSelectionChanged();
 
 private:

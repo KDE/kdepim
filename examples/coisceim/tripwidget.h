@@ -39,10 +39,10 @@ public:
 
     QString eventName() const;
 
-signals:
+Q_SIGNALS:
     void deleteThis(TripWidget *);
 
-private slots:
+private Q_SLOTS:
     void doDeleteThis();
     void updateName();
     void updateDescription();

@@ -34,13 +34,13 @@ public:
 
     void createFromRemoteId(const QString &remoteId);
 
-signals:
+Q_SIGNALS:
     void modelCreated(Akonadi::EntityTreeModel *model);
 
 protected:
     virtual Akonadi::EntityTreeModel *getModel(Akonadi::ChangeRecorder *changeRecorder, QObject *parent);
 
-private slots:
+private Q_SLOTS:
     void collectionsFetched(const Akonadi::Collection::List &list);
 
 private:

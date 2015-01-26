@@ -43,7 +43,7 @@ public:
 protected:
     virtual bool eventFilter(QObject *watched, QEvent *event);
 
-private slots:
+private Q_SLOTS:
     void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
     void modifyDone(KJob *job);
 

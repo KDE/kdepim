@@ -58,7 +58,7 @@ protected:
 private:
     void authenticate();
 
-private slots:
+private Q_SLOTS:
     void executeNext();
     void jobDone(KJob *job);
 

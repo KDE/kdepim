@@ -38,7 +38,7 @@ public:
 
     virtual void connectTreeToModel(QTreeView *tree, Akonadi::EntityTreeModel *model);
 
-signals:
+Q_SIGNALS:
     void initialized();
 
 };
@@ -49,7 +49,7 @@ class EntityFindingWidget : public QWidget
 public:
     EntityFindingWidget(QWidget *parent = 0, Qt::WindowFlags f = 0);
 
-private slots:
+private Q_SLOTS:
 
     void initWidget();
 

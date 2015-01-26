@@ -30,7 +30,7 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = 0);
-private slots:
+private Q_SLOTS:
     void configure();
 };
 

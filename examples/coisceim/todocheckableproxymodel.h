@@ -32,7 +32,7 @@ public:
 
     virtual void setSourceModel(QAbstractItemModel *sourceModel);
 
-private slots:
+private Q_SLOTS:
     void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
 
 private:

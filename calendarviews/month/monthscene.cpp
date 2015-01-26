@@ -708,7 +708,7 @@ void MonthScene::selectItem(MonthItem *item)
 
       I commented the above code so it's possible to selected a selected item.
       korg-mobile needs that, otherwise clicking on a selected item wont bring the editor up.
-      Another solution would be to have two signals: incidenceSelected() and incidenceClicked()
+      Another solution would be to have two Q_SIGNALS: incidenceSelected() and incidenceClicked()
     */
 
     IncidenceMonthItem *tmp = qobject_cast<IncidenceMonthItem *>(item);

@@ -45,7 +45,7 @@ public:
      */
     virtual ~mailreader();
 
-private slots:
+private Q_SLOTS:
     void slotMessageSelected(const Akonadi::Item &item);
     void slotPreviousMessage();
     void slotNextMessage();

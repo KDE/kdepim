@@ -74,7 +74,7 @@ protected:
     virtual bool removeRows(int row, int count,
                             const QModelIndex &parent = QModelIndex());
 
-signals:
+Q_SIGNALS:
     void dndDone();
 private:
     SnippetItem *mRootItem;
