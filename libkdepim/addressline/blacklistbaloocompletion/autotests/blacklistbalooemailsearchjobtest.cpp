@@ -17,35 +17,25 @@
   02110-1301, USA.
 
 */
+#include "blacklistbalooemailsearchjobtest.h"
+#include "../blacklistbalooemailsearchjob.h"
+#include <qtest_kde.h>
 
-#ifndef BLACKLISTBALOOEMAILCOMPLETIONDIALOG_H
-#define BLACKLISTBALOOEMAILCOMPLETIONDIALOG_H
-
-#include <KDialog>
-#include "kdepim_export.h"
-class KLineEdit;
-class KPushButton;
-namespace KPIM {
-class BlackListBalooEmailList;
-class KDEPIM_EXPORT BlackListBalooEmailCompletionDialog : public KDialog
+BlackListBalooEmailSearchJobTest::BlackListBalooEmailSearchJobTest(QObject *parent)
+    : QObject(parent)
 {
-    Q_OBJECT
-public:
-    explicit BlackListBalooEmailCompletionDialog(QWidget *parent=0);
-    ~BlackListBalooEmailCompletionDialog();
 
-private slots:
-    void slotSave();
-    void slotSearch();
-
-    void slotSearchLineEditChanged(const QString &text);
-private:
-    void writeConfig();
-    void readConfig();
-    KLineEdit *mSearchLineEdit;
-    BlackListBalooEmailList *mEmailList;
-    KPushButton *mSearchButton;
-};
 }
 
-#endif // BLACKLISTBALOOEMAILCOMPLETIONDIALOG_H
+BlackListBalooEmailSearchJobTest::~BlackListBalooEmailSearchJobTest()
+{
+
+}
+
+void BlackListBalooEmailSearchJobTest::shouldNotSearchWhenTextIsEmpty()
+{
+    KPIM::BlackListBalooEmailSearchJob *job = new KPIM::BlackListBalooEmailSearchJob;
+    QVERIFY(!job->start());
+}
+
+QTEST_KDEMAIN(BlackListBalooEmailSearchJobTest, NoGUI)

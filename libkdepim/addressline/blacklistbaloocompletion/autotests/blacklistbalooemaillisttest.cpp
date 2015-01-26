@@ -19,6 +19,7 @@
 */
 
 #include "blacklistbalooemaillisttest.h"
+#include "../blacklistbalooemaillist.h"
 #include <qtest_kde.h>
 
 BlackListBalooEmailListTest::BlackListBalooEmailListTest(QObject *parent)
@@ -30,6 +31,12 @@ BlackListBalooEmailListTest::BlackListBalooEmailListTest(QObject *parent)
 BlackListBalooEmailListTest::~BlackListBalooEmailListTest()
 {
 
+}
+
+void BlackListBalooEmailListTest::shouldHaveDefaultValue()
+{
+    KPIM::BlackListBalooEmailList blackList;
+    QVERIFY(blackList.count() == 0);
 }
 
 QTEST_KDEMAIN(BlackListBalooEmailListTest, GUI)

@@ -13,3 +13,8 @@ set( libkdepim_blacklistbalooemaillisttest_SRCS blacklistbalooemaillisttest.cpp 
 kde4_add_unit_test( libkdepim_blacklistbalooemaillisttest ${libkdepim_blacklistbalooemaillisttest_SRCS})
 target_link_libraries( libkdepim_blacklistbalooemaillisttest ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS} kdepim)
 
+set( libkdepim_blacklistbalooemailsearchjobtest_SRCS blacklistbalooemailsearchjobtest.cpp )
+kde4_add_unit_test( libkdepim_blacklistbalooemailsearchjobtest ${libkdepim_blacklistbalooemailsearchjobtest_SRCS})
+target_link_libraries( libkdepim_blacklistbalooemailsearchjobtest ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS} kdepim)
+
+

@@ -20,8 +20,10 @@
 
 #include "blacklistbalooemailcompletiondialogtest.h"
 #include "../blacklistbalooemailcompletiondialog.h"
+#include "../blacklistbalooemaillist.h"
 #include <QLabel>
 #include <klineedit.h>
+#include <kpushbutton.h>
 #include <qtest_kde.h>
 BlackListBalooEmailCompletionDialogTest::BlackListBalooEmailCompletionDialogTest(QObject *parent)
     : QObject(parent)
@@ -44,6 +46,32 @@ void BlackListBalooEmailCompletionDialogTest::shouldHaveDefaultValue()
     QVERIFY(searchLineEdit);
     QVERIFY(searchLineEdit->isClearButtonShown());
     QVERIFY(searchLineEdit->trapReturnKey());
+    QVERIFY(searchLineEdit->text().isEmpty());
+
+
+    KPushButton *seachButton = qFindChild<KPushButton *>(&dlg, QLatin1String("search_button"));
+    QVERIFY(seachButton);
+    QVERIFY(!seachButton->isEnabled());
+
+    KPIM::BlackListBalooEmailList *emailList = qFindChild<KPIM::BlackListBalooEmailList *>(&dlg, QLatin1String("email_list"));
+    QVERIFY(emailList);
+}
+
+void BlackListBalooEmailCompletionDialogTest::shouldEnablePushButtonWhenTestSizeSupperiorToTwo()
+{
+    KPIM::BlackListBalooEmailCompletionDialog dlg;
+    KLineEdit *searchLineEdit = qFindChild<KLineEdit *>(&dlg, QLatin1String("search_lineedit"));
+    KPushButton *seachButton = qFindChild<KPushButton *>(&dlg, QLatin1String("search_button"));
+    QVERIFY(!seachButton->isEnabled());
+    searchLineEdit->setText(QLatin1String("fo"));
+    QVERIFY(!seachButton->isEnabled());
+    searchLineEdit->setText(QLatin1String("foo"));
+    QVERIFY(seachButton->isEnabled());
+
+    searchLineEdit->setText(QLatin1String("o  "));
+    QVERIFY(!seachButton->isEnabled());
+    searchLineEdit->setText(QLatin1String(" o "));
+    QVERIFY(!seachButton->isEnabled());
 }
 
 QTEST_KDEMAIN(BlackListBalooEmailCompletionDialogTest, GUI)

@@ -25,6 +25,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <KLineEdit>
+#include <KPushButton>
 
 using namespace KPIM;
 
@@ -57,11 +58,17 @@ BlackListBalooEmailCompletionDialog::BlackListBalooEmailCompletionDialog(QWidget
     mSearchLineEdit->setObjectName(QLatin1String("search_lineedit"));
     searchLayout->addWidget(mSearchLineEdit);
 
+    //Add i18n in kf5
+    mSearchButton = new KPushButton(QLatin1String("Search"));
+    mSearchButton->setObjectName(QLatin1String("search_button"));
+    mSearchButton->setEnabled(false);
+    searchLayout->addWidget(mSearchButton);
+
     mEmailList = new BlackListBalooEmailList;
     mEmailList->setObjectName(QLatin1String("email_list"));
     mainLayout->addWidget(mEmailList);
 
-
+    connect(mSearchLineEdit, SIGNAL(textChanged(QString)), this, SLOT(slotSearchLineEditChanged(QString)));
     connect(this, SIGNAL(okClicked()), this, SLOT(slotSave()));
     readConfig();
 }
@@ -69,6 +76,11 @@ BlackListBalooEmailCompletionDialog::BlackListBalooEmailCompletionDialog(QWidget
 BlackListBalooEmailCompletionDialog::~BlackListBalooEmailCompletionDialog()
 {
     writeConfig();
+}
+
+void BlackListBalooEmailCompletionDialog::slotSearchLineEditChanged(const QString &text)
+{
+    mSearchButton->setEnabled(text.trimmed().count() > 2);
 }
 
 void BlackListBalooEmailCompletionDialog::readConfig()
@@ -87,6 +99,11 @@ void BlackListBalooEmailCompletionDialog::writeConfig()
 }
 
 void BlackListBalooEmailCompletionDialog::slotSave()
+{
+    //TODO
+}
+
+void BlackListBalooEmailCompletionDialog::slotSearch()
 {
     //TODO
 }

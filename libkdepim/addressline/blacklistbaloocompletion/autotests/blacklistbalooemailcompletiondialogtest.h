@@ -30,6 +30,7 @@ public:
     ~BlackListBalooEmailCompletionDialogTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldEnablePushButtonWhenTestSizeSupperiorToTwo();
 };
 
 #endif // BLACKLISTBALOOEMAILCOMPLETIONDIALOGTEST_H

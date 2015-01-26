@@ -18,34 +18,34 @@
 
 */
 
-#ifndef BLACKLISTBALOOEMAILCOMPLETIONDIALOG_H
-#define BLACKLISTBALOOEMAILCOMPLETIONDIALOG_H
+#include "blacklistbalooemailsearchjob.h"
 
-#include <KDialog>
-#include "kdepim_export.h"
-class KLineEdit;
-class KPushButton;
-namespace KPIM {
-class BlackListBalooEmailList;
-class KDEPIM_EXPORT BlackListBalooEmailCompletionDialog : public KDialog
+using namespace KPIM;
+
+BlackListBalooEmailSearchJob::BlackListBalooEmailSearchJob(QObject *parent)
+    : QObject(parent)
 {
-    Q_OBJECT
-public:
-    explicit BlackListBalooEmailCompletionDialog(QWidget *parent=0);
-    ~BlackListBalooEmailCompletionDialog();
 
-private slots:
-    void slotSave();
-    void slotSearch();
-
-    void slotSearchLineEditChanged(const QString &text);
-private:
-    void writeConfig();
-    void readConfig();
-    KLineEdit *mSearchLineEdit;
-    BlackListBalooEmailList *mEmailList;
-    KPushButton *mSearchButton;
-};
 }
 
-#endif // BLACKLISTBALOOEMAILCOMPLETIONDIALOG_H
+BlackListBalooEmailSearchJob::~BlackListBalooEmailSearchJob()
+{
+
+}
+
+bool BlackListBalooEmailSearchJob::start()
+{
+    if (mSearchEmail.trimmed().isEmpty()) {
+        deleteLater();
+        return false;
+    }
+    //TODO
+    return true;
+}
+
+void BlackListBalooEmailSearchJob::setSearchEmail(const QString &searchEmail)
+{
+    mSearchEmail = searchEmail;
+}
+
+
