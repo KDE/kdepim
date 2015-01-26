@@ -34,6 +34,8 @@ public:
     explicit BlackListBalooEmailCompletionDialog(QWidget *parent=0);
     ~BlackListBalooEmailCompletionDialog();
 
+    void setEmailBlackList(const QStringList &list);
+
 private slots:
     void slotSave();
     void slotSearch();

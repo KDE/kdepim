@@ -76,7 +76,7 @@ void BlackListBalooEmailListTest::shouldFillListWithAlreadyBlackListedEmail()
 void BlackListBalooEmailListTest::shouldReturnChangedItems()
 {
     KPIM::BlackListBalooEmailList blackList;
-    QStringList emails = QStringList() << QLatin1String("foo") << QLatin1String("bla") << QLatin1String("bli");
+    const QStringList emails = QStringList() << QLatin1String("foo") << QLatin1String("bla") << QLatin1String("bli");
     blackList.setEmailBlackList(emails);
     blackList.slotEmailFound(emails);
     QListWidgetItem *item = blackList.item(1);

@@ -27,7 +27,7 @@
 #include "addresseelineedit.h"
 #include "ldap/ldapclientsearch.h"
 #include "completionordereditor.h"
-
+#include "addressline/blacklistbaloocompletion/blacklistbalooemailcompletiondialog.h"
 #include "kmailcompletion.h"
 
 #include <Akonadi/Contact/ContactSearchJob>
@@ -233,7 +233,7 @@ public:
         m_delayedQueryTimer.setSingleShot(true);
         connect( &m_delayedQueryTimer, SIGNAL(timeout()), q, SLOT(slotTriggerDelayedQueries()) );
     }
-
+    void loadBalooBlackList();
     QStringList cleanupBalooContact(const QStringList &lst);
     void alternateColor();
     void init();
@@ -262,9 +262,11 @@ public:
     void searchInBaloo();
     void slotTriggerDelayedQueries();
     void slotShowOUChanged( bool );
+    void slotConfigureBalooBlackList();
     static KCompletion::CompOrder completionOrder();
 
     AddresseeLineEdit *q;
+    QStringList m_balooBlackList;
     QString m_previousAddresses;
     QString m_searchString;
     bool m_useCompletion;
@@ -336,6 +338,7 @@ void AddresseeLineEdit::Private::init()
 
         KConfigGroup group( KGlobal::config(), "AddressLineEdit" );
         m_showOU = group.readEntry( "ShowOU", false );
+        loadBalooBlackList();
     }
 }
 
@@ -363,6 +366,7 @@ void AddresseeLineEdit::Private::stopLDAPLookup()
     s_static->ldapSearch->cancelSearch();
     s_static->ldapLineEdit = 0;
 }
+
 
 QStringList AddresseeLineEdit::Private::cleanupBalooContact(const QStringList &lst)
 {
@@ -1012,6 +1016,22 @@ void AddresseeLineEdit::Private::slotShowOUChanged(bool checked)
     }
 }
 
+void AddresseeLineEdit::Private::slotConfigureBalooBlackList()
+{
+    QPointer<KPIM::BlackListBalooEmailCompletionDialog> dlg = new KPIM::BlackListBalooEmailCompletionDialog(q);
+    dlg->setEmailBlackList(m_balooBlackList);
+    if (dlg->exec()) {
+        loadBalooBlackList();
+    }
+    delete dlg;
+}
+
+void AddresseeLineEdit::Private::loadBalooBlackList()
+{
+    KConfigGroup group( KGlobal::config(), "AddressLineEdit" );
+    m_balooBlackList = group.readEntry( "Baloo Back List", QStringList() );
+}
+
 AddresseeLineEdit::AddresseeLineEdit( QWidget *parent, bool enableCompletion )
     : KLineEdit( parent ), d( new Private( this, enableCompletion ) )
 {
@@ -1368,6 +1388,12 @@ QMenu *AddresseeLineEdit::createStandardContextMenu()
         connect(showOU, SIGNAL(triggered(bool)), this, SLOT(slotShowOUChanged(bool)));
         menu->addAction(showOU);
     }
+
+    //Add i18n in kf5
+    QAction *configureBalooBlackList = new QAction(QLatin1String( "Configure Email Blacklist" ),menu);
+    connect(configureBalooBlackList, SIGNAL(triggered(bool)), this, SLOT(slotConfigureBalooBlackList(bool)));
+    menu->addAction(configureBalooBlackList);
+
     return menu;
 }
 #endif

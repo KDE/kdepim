@@ -79,6 +79,11 @@ BlackListBalooEmailCompletionDialog::~BlackListBalooEmailCompletionDialog()
     writeConfig();
 }
 
+void BlackListBalooEmailCompletionDialog::setEmailBlackList(const QStringList &list)
+{
+    mEmailList->setEmailBlackList(list);
+}
+
 void BlackListBalooEmailCompletionDialog::slotSearchLineEditChanged(const QString &text)
 {
     mSearchButton->setEnabled(text.trimmed().count() > 2);
