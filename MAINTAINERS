@@ -9,6 +9,7 @@ calendarjanitor       Sérgio Martins <iamsergio@gmail.com>
 calendarsupport       Sérgio Martins <iamsergio@gmail.com>
 calendarviews         Sérgio Martins <iamsergio@gmail.com>
 contactthemeeditor    Laurent Montel <montel@kde.org>
+contactprintthemeeditor Laurent Montel <montel@kde.org>
 composereditor-ng     Laurent Montel <montel@kde.org>
 grantleethemeeditor   Laurent Montel <montel@kde.org>
 headerthemeeditor     Laurent Montel <montel@kde.org>
@@ -34,7 +35,7 @@ libkleo               Marc Mutz <mutz@kde.org>
 libkpgp               DEPRECATED
 libksieve             Laurent Montel <montel@kde.org>
 mailcommon            Laurent Montel <montel@kde.org>
-mailfilteragent       ?
+mailfilteragent       Laurent Montel <montel@kde.org>
 mailcommon            Laurent Montel <montel@kde.org>
 mboximporter          Laurent Montel <montel@kde.org>
 notesagent            Laurent Montel <montel@kde.org>
