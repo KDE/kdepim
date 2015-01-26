@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kaddressbook" version="24">
+<kpartgui name="kaddressbook" version="25">
 
   <MenuBar>
     <Menu name="file"><text>&amp;File</text>
@@ -100,6 +100,8 @@
       </Menu>
     <Separator/>
     <Action name="send_mail"/>
+    <Separator/>
+    <Action name="send_vcards"/>
     <Separator/>
     <Action name="akonadi_item_cut"/>
     <Action name="akonadi_item_copy"/>

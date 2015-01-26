@@ -30,7 +30,8 @@ using namespace PimCommon;
 static const int DELETEAFTER = 10000;
 
 AttachmentTemporaryFilesDirs::AttachmentTemporaryFilesDirs(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      mDelayRemoveAll(10000)
 {
 
 }
@@ -39,9 +40,14 @@ AttachmentTemporaryFilesDirs::~AttachmentTemporaryFilesDirs()
 {
 }
 
+void AttachmentTemporaryFilesDirs::setDelayRemoveAllInMs(int ms)
+{
+    mDelayRemoveAll = ( ms < 0) ? 0 : ms;
+}
+
 void AttachmentTemporaryFilesDirs::removeTempFiles()
 {
-    QTimer::singleShot(DELETEAFTER, this, SLOT(slotRemoveTempFiles()));
+    QTimer::singleShot(mDelayRemoveAll, this, SLOT(slotRemoveTempFiles()));
 }
 
 void AttachmentTemporaryFilesDirs::forceCleanTempFiles()

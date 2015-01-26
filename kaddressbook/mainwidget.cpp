@@ -34,6 +34,7 @@
 #include "categoryfilterproxymodel.h"
 
 #include "sendmail/mailsenderjob.h"
+#include "sendvcards/sendvcardsjob.h"
 
 #include "kaddressbookgrantlee/formatter/grantleecontactformatter.h"
 #include "kaddressbookgrantlee/formatter/grantleecontactgroupformatter.h"
@@ -711,6 +712,12 @@ void MainWidget::setupActions(KActionCollection *collection)
     action->setIcon(KIconLoader::global()->loadIcon(QLatin1String("mail-message-new"), KIconLoader::Small));
     connect(action, &QAction::triggered, this, &MainWidget::slotSendMail);
 
+    action = collection->addAction( QLatin1String("send_vcards") );
+    action->setText( QLatin1String( "Send vCards...") );
+    action->setIcon(KIconLoader::global()->loadIcon( QLatin1String( "mail-message-new"), KIconLoader::Small ));
+    connect( action, &QAction::triggered, this, &MainWidget::slotSendVcards);
+
+
     if (!qgetenv("KDEPIM_BALOO_DEBUG").isEmpty()) {
         action = collection->addAction(QLatin1String("debug_baloo"));
         //Don't translate it. It's just for debug
@@ -1010,6 +1017,15 @@ void MainWidget::slotCheckNewCalendar(const QModelIndex &parent, int begin, int 
         if (parent.isValid()) {
             mCollectionView->setExpanded(parent, true);
         }
+    }
+}
+
+void MainWidget::slotSendVcards()
+{
+    const Akonadi::Item::List lst = Utils::collectSelectedAllContactsItem(mItemView->selectionModel());
+    if (!lst.isEmpty()) {
+        KABSendVCards::SendVcardsJob *sendVcards = new KABSendVCards::SendVcardsJob(lst, this);
+        sendVcards->start();
     }
 }
 
