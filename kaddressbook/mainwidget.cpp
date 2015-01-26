@@ -713,7 +713,7 @@ void MainWidget::setupActions(KActionCollection *collection)
     connect(action, &QAction::triggered, this, &MainWidget::slotSendMail);
 
     action = collection->addAction( QLatin1String("send_vcards") );
-    action->setText( QLatin1String( "Send vCards...") );
+    action->setText( i18n( "Send vCards...") );
     action->setIcon(KIconLoader::global()->loadIcon( QLatin1String( "mail-message-new"), KIconLoader::Small ));
     connect( action, &QAction::triggered, this, &MainWidget::slotSendVcards);
 
