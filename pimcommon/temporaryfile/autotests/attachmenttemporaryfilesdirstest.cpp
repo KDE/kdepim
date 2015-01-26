@@ -126,4 +126,31 @@ void AttachmentTemporaryFilesDirsTest::shouldCreateDeleteTemporaryFiles()
     QVERIFY(!QDir(path).exists());
 }
 
+void AttachmentTemporaryFilesDirsTest::shouldRemoveTemporaryFilesAfterTime()
+{
+    KTempDir tmpDir;
+    QVERIFY(tmpDir.exists());
+    QFile file(tmpDir.name() + QLatin1String("/foo"));
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        kDebug()<<"Can open file";
+        return;
+    }
+    tmpDir.setAutoRemove(false);
+    file.close();
+    QVERIFY(file.exists());
+    AttachmentTemporaryFilesDirs attachmentDir;
+    attachmentDir.addTempDir(tmpDir.name());
+    attachmentDir.addTempFile(file.fileName());
+    QVERIFY(!attachmentDir.temporaryFiles().isEmpty());
+    QCOMPARE(attachmentDir.temporaryFiles().first(), file.fileName());
+    attachmentDir.setDelayRemoveAllInMs(500);
+    QTest::qSleep(1000);
+    attachmentDir.removeTempFiles();
+    const QString path = tmpDir.name();
+    attachmentDir.forceCleanTempFiles();
+    QCOMPARE(attachmentDir.temporaryFiles().count(), 0);
+    QCOMPARE(attachmentDir.temporaryDirs().count(), 0);
+    QVERIFY(!QDir(path).exists());
+}
+
 QTEST_KDEMAIN(AttachmentTemporaryFilesDirsTest, NoGUI)

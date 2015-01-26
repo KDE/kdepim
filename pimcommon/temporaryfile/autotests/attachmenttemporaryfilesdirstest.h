@@ -38,6 +38,7 @@ private Q_SLOTS:
     void shouldForceRemoveTemporaryDirs();
     void shouldForceRemoveTemporaryFiles();
     void shouldCreateDeleteTemporaryFiles();
+    void shouldRemoveTemporaryFilesAfterTime();
 };
 
 #endif // ATTACHMENTTEMPORARYFILESDIRSTEST_H

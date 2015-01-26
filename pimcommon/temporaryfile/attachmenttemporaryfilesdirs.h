@@ -41,12 +41,16 @@ public:
     void forceCleanTempFiles();
 
     QStringList temporaryDirs() const;
+
+    void setDelayRemoveAllInMs(int ms);
+
 private Q_SLOTS:
     void slotRemoveTempFiles();
 
 private:
     QStringList mTempFiles;
     QStringList mTempDirs;
+    int mDelayRemoveAll;
 };
 
 }
