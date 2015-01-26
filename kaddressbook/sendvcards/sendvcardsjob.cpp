@@ -106,6 +106,7 @@ void SendVcardsJob::jobFinished()
     if (!lstAttachment.isEmpty()) {
         KToolInvocation::invokeMailer( QString(), QString(), QString(), QString(), QString(), QString(), lstAttachment );
     }
+    mAttachmentTemporary->removeTempFiles();
     deleteLater();
 }
 
