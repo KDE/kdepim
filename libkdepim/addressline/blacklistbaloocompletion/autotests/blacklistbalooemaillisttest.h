@@ -32,6 +32,9 @@ public:
 private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldFillListEmail();
+    void shouldFillListWithAlreadyBlackListedEmail();
+    void shouldReturnChangedItems();
+    void shouldNotAddDuplicateEmails();
 };
 
 #endif // BLACKLISTBALOOEMAILLISTTEST_H

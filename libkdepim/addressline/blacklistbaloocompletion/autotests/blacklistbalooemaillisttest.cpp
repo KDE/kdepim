@@ -44,6 +44,57 @@ void BlackListBalooEmailListTest::shouldFillListEmail()
     KPIM::BlackListBalooEmailList blackList;
     blackList.slotEmailFound(QStringList() << QLatin1String("foo") << QLatin1String("bla") << QLatin1String("bli"));
     QCOMPARE(blackList.count(), 3);
+    for (int i = 0; i < blackList.count(); ++i) {
+        QListWidgetItem *item = blackList.item(i);
+        QVERIFY(item);
+        KPIM::BlackListBalooEmailListItem *blackListItem = static_cast<KPIM::BlackListBalooEmailListItem *>(item);
+        QVERIFY(!blackListItem->initializeStatus());
+        QCOMPARE(blackListItem->checkState(), Qt::Unchecked);
+    }
+    QVERIFY(blackList.blackListItemChanged().isEmpty());
 }
+
+void BlackListBalooEmailListTest::shouldFillListWithAlreadyBlackListedEmail()
+{
+    KPIM::BlackListBalooEmailList blackList;
+    QStringList emails = QStringList() << QLatin1String("foo") << QLatin1String("bla") << QLatin1String("bli");
+    blackList.setEmailBlackList(emails);
+    blackList.slotEmailFound(emails);
+
+    QCOMPARE(blackList.count(), 3);
+    for (int i = 0; i < blackList.count(); ++i) {
+        QListWidgetItem *item = blackList.item(i);
+        QVERIFY(item);
+        KPIM::BlackListBalooEmailListItem *blackListItem = static_cast<KPIM::BlackListBalooEmailListItem *>(item);
+        QVERIFY(blackListItem->initializeStatus());
+        QCOMPARE(blackListItem->checkState(), Qt::Checked);
+    }
+
+    QVERIFY(blackList.blackListItemChanged().isEmpty());
+}
+
+void BlackListBalooEmailListTest::shouldReturnChangedItems()
+{
+    KPIM::BlackListBalooEmailList blackList;
+    QStringList emails = QStringList() << QLatin1String("foo") << QLatin1String("bla") << QLatin1String("bli");
+    blackList.setEmailBlackList(emails);
+    blackList.slotEmailFound(emails);
+    QListWidgetItem *item = blackList.item(1);
+    QVERIFY(item);
+    item->setCheckState(Qt::Unchecked);
+    QVERIFY(!blackList.blackListItemChanged().isEmpty());
+}
+
+void BlackListBalooEmailListTest::shouldNotAddDuplicateEmails()
+{
+    KPIM::BlackListBalooEmailList blackList;
+    QStringList emails = QStringList() << QLatin1String("foo") << QLatin1String("bli") << QLatin1String("bli");
+    blackList.setEmailBlackList(emails);
+    blackList.slotEmailFound(emails);
+
+    QCOMPARE(blackList.count(), 2);
+}
+
+
 
 QTEST_KDEMAIN(BlackListBalooEmailListTest, GUI)

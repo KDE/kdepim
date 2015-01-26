@@ -101,7 +101,11 @@ void BlackListBalooEmailCompletionDialog::writeConfig()
 
 void BlackListBalooEmailCompletionDialog::slotSave()
 {
-    //TODO
+    const QHash<QString, bool> result = mEmailList->blackListItemChanged();
+    if (result.isEmpty()) {
+
+    }
+    accept();
 }
 
 void BlackListBalooEmailCompletionDialog::slotSearch()

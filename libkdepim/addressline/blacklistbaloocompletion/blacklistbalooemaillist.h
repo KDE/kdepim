@@ -23,6 +23,7 @@
 
 #include <QListWidget>
 #include <QListWidgetItem>
+#include <QHash>
 #include "kdepim_export.h"
 
 namespace KPIM {
@@ -48,6 +49,8 @@ public:
     ~BlackListBalooEmailList();
 
     void setEmailBlackList(const QStringList &list);
+
+    QHash<QString, bool> blackListItemChanged() const;
 
 public Q_SLOTS:
     void slotEmailFound(const QStringList &);

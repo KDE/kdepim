@@ -40,12 +40,34 @@ void BlackListBalooEmailList::setEmailBlackList(const QStringList &list)
     mEmailBlackList = list;
 }
 
+QHash<QString, bool> BlackListBalooEmailList::blackListItemChanged() const
+{
+    QHash<QString, bool> result;
+    for (int i = 0; i < count(); ++i) {
+        QListWidgetItem *element = item(i);
+        KPIM::BlackListBalooEmailListItem *blackListItem = static_cast<KPIM::BlackListBalooEmailListItem *>(element);
+        bool currentStatus = (blackListItem->checkState() == Qt::Checked);
+        if (blackListItem->initializeStatus() != currentStatus) {
+            result.insert(blackListItem->text(), currentStatus);
+        }
+    }
+    return result;
+}
+
 void BlackListBalooEmailList::slotEmailFound(const QStringList &list)
 {
     clear();
+    QStringList emailsAdded;
     Q_FOREACH(const QString & mail, list) {
-        BlackListBalooEmailListItem *item = new BlackListBalooEmailListItem(this);
-        item->setText(mail);
+        if (!emailsAdded.contains(mail)) {
+            BlackListBalooEmailListItem *item = new BlackListBalooEmailListItem(this);
+            if (mEmailBlackList.contains(mail)) {
+                item->setCheckState(Qt::Checked);
+                item->setInitializeStatus(true);
+            }
+            item->setText(mail);
+            emailsAdded << mail;
+        }
     }
 }
 
