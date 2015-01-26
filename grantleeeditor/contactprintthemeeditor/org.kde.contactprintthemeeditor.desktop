@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Contact Print Theme Editor
 Name[ca]=Editor de temes per imprimir els contactes
+Name[en_GB]=Contact Print Theme Editor
 Name[nl]=Themabewerker van afdrukken van contactpersoon
 Name[pl]=Wystrój kontaktów książki adresowej
 Name[pt]=Editor de Temas de Impressão dos Contactos
@@ -15,6 +16,7 @@ Icon=kaddressbook
 X-DocPath=contactprintthemeeditor/index.html
 GenericName=Contact Print Theme Editor
 GenericName[ca]=Editor de temes per imprimir els contactes
+GenericName[en_GB]=Contact Print Theme Editor
 GenericName[nl]=Themabewerker van afdrukken van contactpersoon
 GenericName[pl]=Wystrój kontaktów książki adresowej
 GenericName[pt]=Editor de Temas de Impressão dos Contactos
