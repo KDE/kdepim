@@ -47,7 +47,7 @@ endif()
 kde4_add_app_icon(korgac_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/pixmap/hi*-apps-korganizer.png")
 
 add_executable(korgac ${korgac_SRCS})
-if(Q_OS_OSX)
+if( APPLE )
   set_target_properties(korgac PROPERTIES
     MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/Info.plist.template
   )
