@@ -26,6 +26,7 @@
   <name xml:lang="sv">Kleopatra</name>
   <name xml:lang="uk">Kleopatra</name>
   <name xml:lang="x-test">xxKleopatraxx</name>
+  <name xml:lang="zh-CN">Kleopatra</name>
   <summary>Certificate Manager and Unified Crypto GUI</summary>
   <summary xml:lang="ca">Gestor de certificats i interfície gràfica d'usuari de criptografia unificada</summary>
   <summary xml:lang="cs">Správce certifikátů a rozhraní pro šifrování</summary>
@@ -47,6 +48,7 @@
   <summary xml:lang="sv">Certifikathanterare och enhetligt grafiskt användargränssnitt för krypto</summary>
   <summary xml:lang="uk">Графічний інтерфейс до засобів керування сертифікатами та універсальних можливостей з шифрування.</summary>
   <summary xml:lang="x-test">xxCertificate Manager and Unified Crypto GUIxx</summary>
+  <summary xml:lang="zh-CN">证书管理器和统一的密钥操作界面</summary>
   <description>
     <p>
       Kleopatra is a certificate manager and a universal crypto GUI.
