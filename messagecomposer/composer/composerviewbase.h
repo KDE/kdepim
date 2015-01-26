@@ -216,6 +216,7 @@ public:
     void setSendLaterInfo( SendLater::SendLaterInfo *info);
     SendLater::SendLaterInfo *sendLaterInfo() const;
 
+    void saveMailSettings();
 public slots:
 
     void identityChanged( const KPIMIdentities::Identity &ident, const KPIMIdentities::Identity &oldIdent, bool msgCleared = false);

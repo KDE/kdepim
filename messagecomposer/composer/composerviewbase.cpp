@@ -228,23 +228,9 @@ void MessageComposer::ComposerViewBase::updateTemplate ( const KMime::Message::P
     delete msgContent;
 }
 
-void MessageComposer::ComposerViewBase::send ( MessageComposer::MessageSender::SendMethod method, MessageComposer::MessageSender::SaveIn saveIn, bool checkMailDispatcher )
+void MessageComposer::ComposerViewBase::saveMailSettings()
 {
-    mSendMethod = method;
-    mSaveIn = saveIn;
-
-#ifndef QT_NO_CURSOR
-    MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-#endif
-
     const KPIMIdentities::Identity identity = identityManager()->identityForUoid( m_identityCombo->currentIdentity() );
-
-    if(identity.attachVcard() && m_attachmentController->attachOwnVcard()) {
-        const QString vcardFileName = identity.vCardFile();
-        if(!vcardFileName.isEmpty()) {
-            m_attachmentController->addAttachmentUrlSync(KUrl(vcardFileName));
-        }
-    }
     m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-Transport", m_msg.get(), QString::number(m_transport->currentTransportId()), "utf-8" ) );
 
     m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-Fcc", m_msg.get(), QString::number( m_fccCollection.id() ) , "utf-8" ) );
@@ -265,6 +251,27 @@ void MessageComposer::ComposerViewBase::send ( MessageComposer::MessageSender::S
         m_msg->removeHeader( "X-KMail-Markup" );
         kDebug() << "Plain text";
     }
+
+}
+
+void MessageComposer::ComposerViewBase::send ( MessageComposer::MessageSender::SendMethod method, MessageComposer::MessageSender::SaveIn saveIn, bool checkMailDispatcher )
+{
+    mSendMethod = method;
+    mSaveIn = saveIn;
+
+#ifndef QT_NO_CURSOR
+    MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+#endif
+
+    const KPIMIdentities::Identity identity = identityManager()->identityForUoid( m_identityCombo->currentIdentity() );
+
+    if(identity.attachVcard() && m_attachmentController->attachOwnVcard()) {
+        const QString vcardFileName = identity.vCardFile();
+        if(!vcardFileName.isEmpty()) {
+            m_attachmentController->addAttachmentUrlSync(KUrl(vcardFileName));
+        }
+    }
+    saveMailSettings();
 
     if ( m_editor->isFormattingUsed() && inlineSigningEncryptionSelected() ) {
         const QString keepBtnText = m_encrypt ?
