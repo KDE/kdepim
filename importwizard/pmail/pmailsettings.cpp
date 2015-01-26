@@ -51,7 +51,7 @@ PMailSettings::~PMailSettings()
 void PMailSettings::readIdentity(const KConfigGroup &group)
 {
 
-    QString personalNameStr = QLatin1String("Personal name                             ");
+    QString personalNameStr = QStringLiteral("Personal name                             ");
     QString personalName;
     if (group.hasKey(personalNameStr)) {
         personalName = group.readEntry(personalNameStr);
@@ -61,13 +61,13 @@ void PMailSettings::readIdentity(const KConfigGroup &group)
     newIdentity->setFullName(personalName);
     newIdentity->setIdentityName(personalName);
 
-    const QString emailStr = QLatin1String("Internet E-mail Address                   ");
+    const QString emailStr = QStringLiteral("Internet E-mail Address                   ");
     if (group.hasKey(emailStr)) {
         QString email = group.readEntry(emailStr);
         email.remove(0, 1); //Remove first space
         newIdentity->setPrimaryEmailAddress(email);
     }
-    const QString replytoStr = QLatin1String("Default reply-to address                  ");
+    const QString replytoStr = QStringLiteral("Default reply-to address                  ");
     if (group.hasKey(replytoStr)) {
         QString reply = group.readEntry(replytoStr);
         reply.remove(0, 1); //Remove first space

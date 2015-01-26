@@ -43,22 +43,22 @@ MergeContactDuplicateContactDialog::MergeContactDuplicateContactDialog(const Ako
     connect(buttonBox, &QDialogButtonBox::accepted, this, &MergeContactDuplicateContactDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &MergeContactDuplicateContactDialog::reject);
     mStackedWidget = new QStackedWidget(this);
-    mStackedWidget->setObjectName(QLatin1String("stackedwidget"));
+    mStackedWidget->setObjectName(QStringLiteral("stackedwidget"));
 
     mMergeContact = new MergeContactShowResultTabWidget;
-    mMergeContact->setObjectName(QLatin1String("mergecontact"));
+    mMergeContact->setObjectName(QStringLiteral("mergecontact"));
     mStackedWidget->addWidget(mMergeContact);
 
     mNoContactSelected = new QLabel(i18n("No contacts selected."));
-    mNoContactSelected->setObjectName(QLatin1String("nocontactselected"));
+    mNoContactSelected->setObjectName(QStringLiteral("nocontactselected"));
     mStackedWidget->addWidget(mNoContactSelected);
 
     mNoDuplicateContactFound = new QLabel(i18n("No duplicated contact found."));
-    mNoDuplicateContactFound->setObjectName(QLatin1String("noduplicatecontactfound"));
+    mNoDuplicateContactFound->setObjectName(QStringLiteral("noduplicatecontactfound"));
     mStackedWidget->addWidget(mNoDuplicateContactFound);
 
     mNoEnoughContactSelected = new QLabel(i18n("You must select at least two elements."));
-    mNoEnoughContactSelected->setObjectName(QLatin1String("noenoughcontactselected"));
+    mNoEnoughContactSelected->setObjectName(QStringLiteral("noenoughcontactselected"));
     mStackedWidget->addWidget(mNoEnoughContactSelected);
 
     mainLayout->addWidget(mStackedWidget);

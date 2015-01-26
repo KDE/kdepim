@@ -74,10 +74,10 @@ void MergeContactWidgetTest::shouldHaveDefaultValueOnCreation()
 {
     Akonadi::Item::List lst;
     MergeContactWidget mergeWidget(lst);
-    QListWidget *listWidget = mergeWidget.findChild<QListWidget *>(QLatin1String("listcontact"));
+    QListWidget *listWidget = mergeWidget.findChild<QListWidget *>(QStringLiteral("listcontact"));
     QVERIFY(listWidget);
     QCOMPARE(listWidget->count(), 0);
-    QPushButton *button = mergeWidget.findChild<QPushButton *>(QLatin1String("mergebutton"));
+    QPushButton *button = mergeWidget.findChild<QPushButton *>(QStringLiteral("mergebutton"));
     QVERIFY(button);
     QCOMPARE(button->isEnabled(), false);
 }
@@ -85,10 +85,10 @@ void MergeContactWidgetTest::shouldHaveDefaultValueOnCreation()
 void MergeContactWidgetTest::shouldFillList()
 {
     MergeContactWidget mergeWidget(createItems());
-    QListWidget *listWidget = mergeWidget.findChild<QListWidget *>(QLatin1String("listcontact"));
+    QListWidget *listWidget = mergeWidget.findChild<QListWidget *>(QStringLiteral("listcontact"));
     QCOMPARE(listWidget->count(), 10);
     QCOMPARE(listWidget->selectedItems().count(), 0);
-    QPushButton *button = mergeWidget.findChild<QPushButton *>(QLatin1String("mergebutton"));
+    QPushButton *button = mergeWidget.findChild<QPushButton *>(QStringLiteral("mergebutton"));
     QCOMPARE(button->isEnabled(), false);
 }
 
@@ -98,15 +98,15 @@ void MergeContactWidgetTest::shouldFillListWithValidItem()
     QCOMPARE(lst.count(), 10);
     lst.append(Akonadi::Item(25));
     MergeContactWidget mergeWidget(lst);
-    QListWidget *listWidget = mergeWidget.findChild<QListWidget *>(QLatin1String("listcontact"));
+    QListWidget *listWidget = mergeWidget.findChild<QListWidget *>(QStringLiteral("listcontact"));
     QCOMPARE(listWidget->count(), 10);
 }
 
 void MergeContactWidgetTest::shouldEnableButton()
 {
     MergeContactWidget mergeWidget(createItems());
-    QListWidget *listWidget = mergeWidget.findChild<QListWidget *>(QLatin1String("listcontact"));
-    QPushButton *button = mergeWidget.findChild<QPushButton *>(QLatin1String("mergebutton"));
+    QListWidget *listWidget = mergeWidget.findChild<QListWidget *>(QStringLiteral("listcontact"));
+    QPushButton *button = mergeWidget.findChild<QPushButton *>(QStringLiteral("mergebutton"));
     mergeWidget.show();
     QTest::qWaitForWindowExposed(&mergeWidget);
     listWidget->item(0)->setCheckState(Qt::Checked);
@@ -117,8 +117,8 @@ void MergeContactWidgetTest::shouldEnableButton()
 void MergeContactWidgetTest::shouldEmitSignalsWhenThereIsElementSelected()
 {
     MergeContactWidget mergeWidget(createItems());
-    QListWidget *listWidget = mergeWidget.findChild<QListWidget *>(QLatin1String("listcontact"));
-    QPushButton *button = mergeWidget.findChild<QPushButton *>(QLatin1String("mergebutton"));
+    QListWidget *listWidget = mergeWidget.findChild<QListWidget *>(QStringLiteral("listcontact"));
+    QPushButton *button = mergeWidget.findChild<QPushButton *>(QStringLiteral("mergebutton"));
     mergeWidget.show();
     QTest::qWaitForWindowExposed(&mergeWidget);
     listWidget->item(0)->setCheckState(Qt::Checked);
@@ -134,8 +134,8 @@ void MergeContactWidgetTest::shouldEmitSignalsWhenThereIsElementSelected()
 void MergeContactWidgetTest::shouldEmitSignalsWhenThereIsTwoElementsSelected()
 {
     MergeContactWidget mergeWidget(createItems());
-    QListWidget *listWidget = mergeWidget.findChild<QListWidget *>(QLatin1String("listcontact"));
-    QPushButton *button = mergeWidget.findChild<QPushButton *>(QLatin1String("mergebutton"));
+    QListWidget *listWidget = mergeWidget.findChild<QListWidget *>(QStringLiteral("listcontact"));
+    QPushButton *button = mergeWidget.findChild<QPushButton *>(QStringLiteral("mergebutton"));
     mergeWidget.show();
     QTest::qWaitForWindowExposed(&mergeWidget);
     listWidget->item(0)->setCheckState(Qt::Checked);
@@ -150,7 +150,7 @@ void MergeContactWidgetTest::shouldEmitSignalsWhenThereIsTwoElementsSelected()
 void MergeContactWidgetTest::shouldEmitSignalsWhenSelectContact()
 {
     MergeContactWidget mergeWidget(createItems());
-    QListWidget *listWidget = mergeWidget.findChild<QListWidget *>(QLatin1String("listcontact"));
+    QListWidget *listWidget = mergeWidget.findChild<QListWidget *>(QStringLiteral("listcontact"));
     mergeWidget.show();
     QSignalSpy spy(&mergeWidget, SIGNAL(contactSelected(Akonadi::Item)));
     listWidget->item(1)->setSelected(true);

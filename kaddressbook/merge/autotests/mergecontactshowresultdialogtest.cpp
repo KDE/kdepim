@@ -32,7 +32,7 @@ void MergeContactShowResultDialogTest::shouldHaveDefaultValueOnCreation()
 {
     MergeContactShowResultDialog dlg;
     dlg.show();
-    KABMergeContacts::MergeContactShowResultTabWidget *tabWidget = dlg.findChild<KABMergeContacts::MergeContactShowResultTabWidget *>(QLatin1String("tabwidget"));
+    KABMergeContacts::MergeContactShowResultTabWidget *tabWidget = dlg.findChild<KABMergeContacts::MergeContactShowResultTabWidget *>(QStringLiteral("tabwidget"));
     QVERIFY(tabWidget);
     QCOMPARE(tabWidget->count(), 0);
     QCOMPARE(tabWidget->tabBarVisible(), false);
@@ -44,13 +44,13 @@ void MergeContactShowResultDialogTest::shouldDontShowTabBarWhenWeHaveJustOneCont
     Akonadi::Item::List lst;
     Akonadi::Item item;
     KContacts::Addressee address;
-    address.setName(QLatin1String("foo1"));
+    address.setName(QStringLiteral("foo1"));
     item.setPayload<KContacts::Addressee>(address);
 
     lst.append(item);
     dlg.setContacts(lst);
     dlg.show();
-    KABMergeContacts::MergeContactShowResultTabWidget *tabWidget = dlg.findChild<KABMergeContacts::MergeContactShowResultTabWidget *>(QLatin1String("tabwidget"));
+    KABMergeContacts::MergeContactShowResultTabWidget *tabWidget = dlg.findChild<KABMergeContacts::MergeContactShowResultTabWidget *>(QStringLiteral("tabwidget"));
     QCOMPARE(tabWidget->tabBarVisible(), false);
     QCOMPARE(tabWidget->count(), 1);
 }
@@ -60,13 +60,13 @@ void MergeContactShowResultDialogTest::shouldShowTabBarWhenWeHaveMoreThanOneCont
     MergeContactShowResultDialog dlg;
     Akonadi::Item item;
     KContacts::Addressee address;
-    address.setName(QLatin1String("foo1"));
+    address.setName(QStringLiteral("foo1"));
     item.setPayload<KContacts::Addressee>(address);
     Akonadi::Item::List lst;
     lst << item << item;
     dlg.setContacts(lst);
     dlg.show();
-    KABMergeContacts::MergeContactShowResultTabWidget *tabWidget = dlg.findChild<KABMergeContacts::MergeContactShowResultTabWidget *>(QLatin1String("tabwidget"));
+    KABMergeContacts::MergeContactShowResultTabWidget *tabWidget = dlg.findChild<KABMergeContacts::MergeContactShowResultTabWidget *>(QStringLiteral("tabwidget"));
     QCOMPARE(tabWidget->tabBarVisible(), true);
     QCOMPARE(tabWidget->count(), 2);
 }

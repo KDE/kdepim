@@ -204,19 +204,19 @@ QVariant JobTrackerModel::headerData(int section, Qt::Orientation orientation, i
         if (orientation == Qt::Horizontal) {
             switch (section) {
             case 0:
-                return QLatin1String("Job ID");
+                return QStringLiteral("Job ID");
             case 1:
-                return QLatin1String("Created");
+                return QStringLiteral("Created");
             case 2:
-                return QLatin1String("Wait time");      // duration  (time started - time created)
+                return QStringLiteral("Wait time");      // duration  (time started - time created)
             case 3:
-                return QLatin1String("Job duration");   // duration (time ended - time started)
+                return QStringLiteral("Job duration");   // duration (time ended - time started)
             case 4:
-                return QLatin1String("Job Type");
+                return QStringLiteral("Job Type");
             case 5:
-                return QLatin1String("State");
+                return QStringLiteral("State");
             case 6:
-                return QLatin1String("Info");
+                return QStringLiteral("Info");
             }
         }
     }

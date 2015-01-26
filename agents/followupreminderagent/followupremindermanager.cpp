@@ -157,7 +157,7 @@ QString FollowUpReminderManager::printDebugInfo()
 {
     QString infoStr;
     if (mFollowUpReminderInfoList.isEmpty()) {
-        infoStr = QLatin1String("No mail");
+        infoStr = QStringLiteral("No mail");
     } else {
         Q_FOREACH (FollowUpReminder::FollowUpReminderInfo *info, mFollowUpReminderInfoList) {
             if (!infoStr.isEmpty()) {
@@ -172,14 +172,14 @@ QString FollowUpReminderManager::printDebugInfo()
 QString FollowUpReminderManager::infoToStr(FollowUpReminder::FollowUpReminderInfo *info)
 {
     QString infoStr;
-    infoStr = QLatin1String("****************************************");
+    infoStr = QStringLiteral("****************************************");
     infoStr += QString::fromLatin1("Akonadi Item id :%1\n").arg(info->originalMessageItemId());
     infoStr += QString::fromLatin1("MessageId :%1\n").arg(info->messageId());
     infoStr += QString::fromLatin1("Subject :%1\n").arg(info->subject());
     infoStr += QString::fromLatin1("To :%1\n").arg(info->to());
     infoStr += QString::fromLatin1("Dead Line :%1\n").arg(info->followUpReminderDate().toString());
-    infoStr += QString::fromLatin1("Answer received :%1\n").arg(info->answerWasReceived() ? QLatin1String("true") : QLatin1String("false"));
-    infoStr += QLatin1String("****************************************\n");
+    infoStr += QString::fromLatin1("Answer received :%1\n").arg(info->answerWasReceived() ? QStringLiteral("true") : QStringLiteral("false"));
+    infoStr += QStringLiteral("****************************************\n");
     return infoStr;
 }
 

@@ -59,7 +59,7 @@ void SearchPotentialDuplicateContactJobTest::shouldReturnListWhenTwoItemsAreDupl
     Akonadi::Item::List lst;
     Akonadi::Item itemA;
     KContacts::Addressee address;
-    address.setName(QLatin1String("foo1"));
+    address.setName(QStringLiteral("foo1"));
     itemA.setPayload<KContacts::Addressee>(address);
     itemA.setMimeType(KContacts::Addressee::mimeType());
 

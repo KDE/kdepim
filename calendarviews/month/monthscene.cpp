@@ -53,13 +53,13 @@ MonthScene::MonthScene(MonthView *parent)
       mStartHeight(0),
       mCurrentIndicator(0)
 {
-    mBirthdayPixmap  = SmallIcon(QLatin1String("view-calendar-birthday"));
-    mAnniversaryPixmap = SmallIcon(QLatin1String("view-calendar-wedding-anniversary"));
-    mAlarmPixmap     = SmallIcon(QLatin1String("appointment-reminder"));
-    mRecurPixmap     = SmallIcon(QLatin1String("appointment-recurring"));
-    mReadonlyPixmap  = SmallIcon(QLatin1String("object-locked"));
-    mReplyPixmap     = SmallIcon(QLatin1String("mail-reply-sender"));
-    mHolidayPixmap   = SmallIcon(QLatin1String("view-calendar-holiday"));
+    mBirthdayPixmap  = SmallIcon(QStringLiteral("view-calendar-birthday"));
+    mAnniversaryPixmap = SmallIcon(QStringLiteral("view-calendar-wedding-anniversary"));
+    mAlarmPixmap     = SmallIcon(QStringLiteral("appointment-reminder"));
+    mRecurPixmap     = SmallIcon(QStringLiteral("appointment-recurring"));
+    mReadonlyPixmap  = SmallIcon(QStringLiteral("object-locked"));
+    mReplyPixmap     = SmallIcon(QStringLiteral("mail-reply-sender"));
+    mHolidayPixmap   = SmallIcon(QStringLiteral("view-calendar-holiday"));
 
     setSceneRect(0, 0, parent->width(), parent->height());
 }

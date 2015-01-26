@@ -49,7 +49,7 @@ bool TheBatImportData::foundMailer() const
 
 QString TheBatImportData::name() const
 {
-    return QLatin1String("TheBat");
+    return QStringLiteral("TheBat");
 }
 
 bool TheBatImportData::importMails()
