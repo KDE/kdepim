@@ -106,6 +106,7 @@ private Q_SLOTS:
     void slotSendMails(const QStringList &emails);
 
     void slotDebugBaloo();
+    void slotSendVcards();
 private:
     void initGrantleeThemeName();
     void setupGui();
