@@ -27,7 +27,7 @@ using namespace KPIM;
 BlackListBalooEmailList::BlackListBalooEmailList(QWidget *parent)
     : QListWidget(parent)
 {
-
+    setSelectionMode(QAbstractItemView::ExtendedSelection);
 }
 
 BlackListBalooEmailList::~BlackListBalooEmailList()
@@ -64,6 +64,8 @@ void BlackListBalooEmailList::slotEmailFound(const QStringList &list)
             if (mEmailBlackList.contains(mail)) {
                 item->setCheckState(Qt::Checked);
                 item->setInitializeStatus(true);
+            } else {
+                item->setCheckState(Qt::Unchecked);
             }
             item->setText(mail);
             emailsAdded << mail;

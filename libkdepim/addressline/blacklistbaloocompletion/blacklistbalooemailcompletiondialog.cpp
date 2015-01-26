@@ -21,6 +21,7 @@
 #include "blacklistbalooemailcompletiondialog.h"
 #include "blacklistbalooemailsearchjob.h"
 #include "blacklistbalooemaillist.h"
+#include "blacklistbalooemailutil.h"
 #include <KLocalizedString>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -57,11 +58,13 @@ BlackListBalooEmailCompletionDialog::BlackListBalooEmailCompletionDialog(QWidget
     mSearchLineEdit->setClearButtonShown(true);
     mSearchLineEdit->setTrapReturnKey(true);
     mSearchLineEdit->setObjectName(QLatin1String("search_lineedit"));
+    connect(mSearchLineEdit, SIGNAL(returnPressed()), this, SLOT(slotSearch()));
     searchLayout->addWidget(mSearchLineEdit);
 
     //Add i18n in kf5
     mSearchButton = new KPushButton(QLatin1String("Search"));
     mSearchButton->setObjectName(QLatin1String("search_button"));
+    connect(mSearchButton, SIGNAL(clicked()), this, SLOT(slotSearch()));
     mSearchButton->setEnabled(false);
     searchLayout->addWidget(mSearchButton);
 
@@ -107,8 +110,15 @@ void BlackListBalooEmailCompletionDialog::writeConfig()
 void BlackListBalooEmailCompletionDialog::slotSave()
 {
     const QHash<QString, bool> result = mEmailList->blackListItemChanged();
-    if (result.isEmpty()) {
-
+    if (!result.isEmpty()) {
+        KConfigGroup group( KGlobal::config(), "AddressLineEdit" );
+        QStringList blackList = group.readEntry( "BalooBackList", QStringList() );
+        KPIM::BlackListBalooEmailUtil util;
+        util.initialBlackList(blackList);
+        util.newBlackList(result);
+        blackList = util.createNewBlackList();
+        group.writeEntry( "Baloo Back List", blackList );
+        group.sync();
     }
     accept();
 }
@@ -116,7 +126,11 @@ void BlackListBalooEmailCompletionDialog::slotSave()
 void BlackListBalooEmailCompletionDialog::slotSearch()
 {
     const QString searchEmail = mSearchLineEdit->text().trimmed();
-    KPIM::BlackListBalooEmailSearchJob *job = new KPIM::BlackListBalooEmailSearchJob(this);
-    connect(job, SIGNAL(emailsFound(QStringList)), mEmailList, SLOT(slotEmailFound(QStringList)));
+    if (searchEmail.length() > 2 ) {
+        KPIM::BlackListBalooEmailSearchJob *job = new KPIM::BlackListBalooEmailSearchJob(this);
+        job->setSearchEmail(searchEmail);
+        connect(job, SIGNAL(emailsFound(QStringList)), mEmailList, SLOT(slotEmailFound(QStringList)));
+        job->start();
+    }
 }
 

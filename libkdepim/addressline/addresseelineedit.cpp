@@ -387,7 +387,9 @@ void AddresseeLineEdit::Private::searchInBaloo()
     Baloo::PIM::ContactCompleter com(trimmedString, 20);
     const QStringList listEmail = cleanupBalooContact(com.complete());
     Q_FOREACH (const QString& email, listEmail) {
-        addCompletionItem(email, 1, s_static->balooCompletionSource);
+        if (!m_balooBlackList.contains(email)) {
+            addCompletionItem(email, 1, s_static->balooCompletionSource);
+        }
     }
     doCompletion( m_lastSearchMode );
     //  if ( q->hasFocus() || q->completionBox()->hasFocus() ) {
@@ -1029,7 +1031,7 @@ void AddresseeLineEdit::Private::slotConfigureBalooBlackList()
 void AddresseeLineEdit::Private::loadBalooBlackList()
 {
     KConfigGroup group( KGlobal::config(), "AddressLineEdit" );
-    m_balooBlackList = group.readEntry( "Baloo Back List", QStringList() );
+    m_balooBlackList = group.readEntry( "BalooBackList", QStringList() );
 }
 
 AddresseeLineEdit::AddresseeLineEdit( QWidget *parent, bool enableCompletion )
@@ -1391,7 +1393,7 @@ QMenu *AddresseeLineEdit::createStandardContextMenu()
 
     //Add i18n in kf5
     QAction *configureBalooBlackList = new QAction(QLatin1String( "Configure Email Blacklist" ),menu);
-    connect(configureBalooBlackList, SIGNAL(triggered(bool)), this, SLOT(slotConfigureBalooBlackList(bool)));
+    connect(configureBalooBlackList, SIGNAL(triggered(bool)), this, SLOT(slotConfigureBalooBlackList()));
     menu->addAction(configureBalooBlackList);
 
     return menu;

@@ -77,6 +77,7 @@ set(kdepim_addressline_blacklist_baloo_LIB_SRCS
    addressline/blacklistbaloocompletion/blacklistbalooemailcompletiondialog.cpp
    addressline/blacklistbaloocompletion/blacklistbalooemaillist.cpp
    addressline/blacklistbaloocompletion/blacklistbalooemailsearchjob.cpp
+   addressline/blacklistbaloocompletion/blacklistbalooemailutil.cpp 
 ) 
 
 set(kdepim_LIB_SRCS
