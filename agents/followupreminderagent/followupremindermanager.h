@@ -43,6 +43,7 @@ private Q_SLOTS:
 
     void slotFinishTaskDone();
     void slotFinishTaskFailed();
+    void slotReparseConfiguration();
 private:
     void answerReceived(const QString &from);
     QString infoToStr(FollowUpReminder::FollowUpReminderInfo *info);

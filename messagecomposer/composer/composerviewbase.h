@@ -221,9 +221,9 @@ public:
 
     void setSendLaterInfo(SendLater::SendLaterInfo *info);
     SendLater::SendLaterInfo *sendLaterInfo() const;
+    void saveMailSettings();
 
 public Q_SLOTS:
-
     void identityChanged(const KIdentityManagement::Identity &ident, const KIdentityManagement::Identity &oldIdent, bool msgCleared = false);
 
     /**

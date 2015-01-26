@@ -41,14 +41,13 @@ FollowUpReminderNoAnswerDialog::FollowUpReminderNoAnswerDialog(QWidget *parent)
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &FollowUpReminderNoAnswerDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &FollowUpReminderNoAnswerDialog::slotSave);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &FollowUpReminderNoAnswerDialog::reject);
     setAttribute(Qt::WA_DeleteOnClose);
     QWidget *w = new QWidget(this);
     QVBoxLayout *vbox = new QVBoxLayout(w);
     QLabel *lab = new QLabel(i18n("You still wait an answer about this mail:"));
     vbox->addWidget(lab);
-
     mWidget = new FollowUpReminderInfoWidget;
     mWidget->setObjectName(QStringLiteral("FollowUpReminderInfoWidget"));
     vbox->addWidget(mWidget);
@@ -85,3 +84,10 @@ void FollowUpReminderNoAnswerDialog::writeConfig()
     mWidget->saveTreeWidgetHeader(group);
 }
 
+void FollowUpReminderNoAnswerDialog::slotSave()
+{
+    if (mWidget->save()) {
+        Q_EMIT needToReparseConfiguration();
+    }
+    accept();
+}

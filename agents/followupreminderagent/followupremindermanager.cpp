@@ -75,10 +75,16 @@ void FollowUpReminderManager::load(bool forceReloadConfig)
         mInitialize = true;
         if (!mNoAnswerDialog.data()) {
             mNoAnswerDialog = new FollowUpReminderNoAnswerDialog;
+            connect(mNoAnswerDialog, SIGNAL(needToReparseConfiguration()), this, SLOT(slotReparseConfiguration()));
         }
         mNoAnswerDialog->setInfo(noAnswerList);
         mNoAnswerDialog->show();
     }
+}
+
+void FollowUpReminderManager::slotReparseConfiguration()
+{
+    load(true);
 }
 
 void FollowUpReminderManager::checkFollowUp(const Akonadi::Item &item, const Akonadi::Collection &col)

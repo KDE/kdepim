@@ -47,7 +47,6 @@ FollowUpReminderInfoDialog::FollowUpReminderInfoDialog(QWidget *parent)
     connect(buttonBox, &QDialogButtonBox::accepted, this, &FollowUpReminderInfoDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &FollowUpReminderInfoDialog::reject);
 
-    connect(okButton, &QPushButton::clicked, this, &FollowUpReminderInfoDialog::slotSave);
 
     mWidget = new FollowUpReminderInfoWidget;
     mWidget->setObjectName(QStringLiteral("FollowUpReminderInfoWidget"));
@@ -96,11 +95,6 @@ void FollowUpReminderInfoDialog::writeConfig()
     KConfigGroup group(KSharedConfig::openConfig(), "FollowUpReminderInfoDialog");
     group.writeEntry("Size", size());
     mWidget->saveTreeWidgetHeader(group);
-}
-
-void FollowUpReminderInfoDialog::slotSave()
-{
-    mWidget->save();
 }
 
 void FollowUpReminderInfoDialog::load()

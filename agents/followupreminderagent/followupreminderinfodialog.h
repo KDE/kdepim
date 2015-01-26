@@ -38,8 +38,6 @@ public:
 
     QList<qint32> listRemoveId() const;
 
-private Q_SLOTS:
-    void slotSave();
 private:
     void readConfig();
     void writeConfig();

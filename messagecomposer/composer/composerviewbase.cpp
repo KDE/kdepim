@@ -237,24 +237,10 @@ void MessageComposer::ComposerViewBase::updateTemplate(const KMime::Message::Ptr
     delete msgContent;
 }
 
-void MessageComposer::ComposerViewBase::send(MessageComposer::MessageSender::SendMethod method, MessageComposer::MessageSender::SaveIn saveIn, bool checkMailDispatcher)
+void MessageComposer::ComposerViewBase::saveMailSettings()
 {
-    mSendMethod = method;
-    mSaveIn = saveIn;
-
-#ifndef QT_NO_CURSOR
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
-#endif
-
-    const KIdentityManagement::Identity identity = identityManager()->identityForUoid(m_identityCombo->currentIdentity());
-
-    if (identity.attachVcard() && m_attachmentController->attachOwnVcard()) {
-        const QString vcardFileName = identity.vCardFile();
-        if (!vcardFileName.isEmpty()) {
-            m_attachmentController->addAttachmentUrlSync(QUrl::fromLocalFile(vcardFileName));
-        }
-    }
-    m_msg->setHeader(new KMime::Headers::Generic("X-KMail-Transport", m_msg.get(), QString::number(m_transport->currentTransportId()), "utf-8"));
+    const KIdentityManagement::Identity identity = identityManager()->identityForUoid( m_identityCombo->currentIdentity() );
+    m_msg->setHeader( new KMime::Headers::Generic( "X-KMail-Transport", m_msg.get(), QString::number(m_transport->currentTransportId()), "utf-8" ) );
 
     m_msg->setHeader(new KMime::Headers::Generic("X-KMail-Fcc", m_msg.get(), QString::number(m_fccCollection.id()) , "utf-8"));
     m_msg->setHeader(new KMime::Headers::Generic("X-KMail-Identity", m_msg.get(), QString::number(identity.uoid()), "utf-8"));
@@ -276,7 +262,28 @@ void MessageComposer::ComposerViewBase::send(MessageComposer::MessageSender::Sen
         qCDebug(MESSAGECOMPOSER_LOG) << "Plain text";
     }
 
-    if (m_editor->isFormattingUsed() && inlineSigningEncryptionSelected()) {
+}
+
+void MessageComposer::ComposerViewBase::send ( MessageComposer::MessageSender::SendMethod method, MessageComposer::MessageSender::SaveIn saveIn, bool checkMailDispatcher )
+{
+    mSendMethod = method;
+    mSaveIn = saveIn;
+
+#ifndef QT_NO_CURSOR
+    MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+#endif
+
+    const KIdentityManagement::Identity identity = identityManager()->identityForUoid( m_identityCombo->currentIdentity() );
+
+    if(identity.attachVcard() && m_attachmentController->attachOwnVcard()) {
+        const QString vcardFileName = identity.vCardFile();
+        if(!vcardFileName.isEmpty()) {
+            m_attachmentController->addAttachmentUrlSync(QUrl::fromLocalFile(vcardFileName));
+        }
+    }
+    saveMailSettings();
+
+    if ( m_editor->isFormattingUsed() && inlineSigningEncryptionSelected() ) {
         const QString keepBtnText = m_encrypt ?
                                     m_sign ? i18n("&Keep markup, do not sign/encrypt")
                                     : i18n("&Keep markup, do not encrypt")
