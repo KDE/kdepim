@@ -88,8 +88,10 @@ NodeHelper::NodeHelper() :
 NodeHelper::~NodeHelper()
 {
     //Don't delete it it will delete in class with a deleteLater;
-    mAttachmentFilesDir->removeTempFiles();
-    mAttachmentFilesDir = 0;
+    if (mAttachmentFilesDir) {
+        mAttachmentFilesDir->removeTempFiles();
+        mAttachmentFilesDir = 0;
+    }
 }
 
 void NodeHelper::setNodeProcessed(KMime::Content* node, bool recurse )
