@@ -41,6 +41,8 @@ private slots:
     void slotSearch();
 
     void slotSearchLineEditChanged(const QString &text);
+    void slotUnselectEmails();
+    void slotSelectEmails();
 private:
     void writeConfig();
     void readConfig();

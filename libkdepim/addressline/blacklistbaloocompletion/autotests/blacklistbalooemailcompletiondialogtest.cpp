@@ -55,6 +55,13 @@ void BlackListBalooEmailCompletionDialogTest::shouldHaveDefaultValue()
 
     KPIM::BlackListBalooEmailList *emailList = qFindChild<KPIM::BlackListBalooEmailList *>(&dlg, QLatin1String("email_list"));
     QVERIFY(emailList);
+
+    KPushButton *selectButton = qFindChild<KPushButton *>(&dlg, QLatin1String("select_email"));
+    QVERIFY(selectButton);
+    KPushButton *unselectButton = qFindChild<KPushButton *>(&dlg, QLatin1String("unselect_email"));
+    QVERIFY(unselectButton);
+
+
 }
 
 void BlackListBalooEmailCompletionDialogTest::shouldEnablePushButtonWhenTestSizeSupperiorToTwo()

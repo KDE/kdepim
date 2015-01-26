@@ -55,6 +55,7 @@ BlackListBalooEmailCompletionDialog::BlackListBalooEmailCompletionDialog(QWidget
     searchLayout->addWidget(lab);
 
     mSearchLineEdit = new KLineEdit;
+    mSearchLineEdit->setFocus();
     mSearchLineEdit->setClearButtonShown(true);
     mSearchLineEdit->setTrapReturnKey(true);
     mSearchLineEdit->setObjectName(QLatin1String("search_lineedit"));
@@ -72,6 +73,23 @@ BlackListBalooEmailCompletionDialog::BlackListBalooEmailCompletionDialog(QWidget
     mEmailList->setObjectName(QLatin1String("email_list"));
     mainLayout->addWidget(mEmailList);
 
+
+    QHBoxLayout *selectElementLayout = new QHBoxLayout;
+    mainLayout->addLayout(selectElementLayout);
+    //Add i18n in kf5
+    KPushButton *button = new KPushButton(QLatin1String("&Select"), this);
+    button->setObjectName(QLatin1String("select_email"));
+    connect(button, SIGNAL(clicked(bool)), this, SLOT(slotSelectEmails()));
+    selectElementLayout->addWidget(button);
+
+    //Add i18n in kf5
+    button = new KPushButton(QLatin1String("&Unselect"), this);
+    button->setObjectName(QLatin1String("unselect_email"));
+    connect(button, SIGNAL(clicked(bool)), this, SLOT(slotUnselectEmails()));
+    selectElementLayout->addWidget(button);
+    selectElementLayout->addStretch(1);
+
+
     connect(mSearchLineEdit, SIGNAL(textChanged(QString)), this, SLOT(slotSearchLineEditChanged(QString)));
     connect(this, SIGNAL(okClicked()), this, SLOT(slotSave()));
     readConfig();
@@ -80,6 +98,20 @@ BlackListBalooEmailCompletionDialog::BlackListBalooEmailCompletionDialog(QWidget
 BlackListBalooEmailCompletionDialog::~BlackListBalooEmailCompletionDialog()
 {
     writeConfig();
+}
+
+void BlackListBalooEmailCompletionDialog::slotUnselectEmails()
+{
+    Q_FOREACH(QListWidgetItem *item, mEmailList->selectedItems()) {
+        item->setCheckState(Qt::Unchecked);
+    }
+}
+
+void BlackListBalooEmailCompletionDialog::slotSelectEmails()
+{
+    Q_FOREACH(QListWidgetItem *item, mEmailList->selectedItems()) {
+        item->setCheckState(Qt::Checked);
+    }
 }
 
 void BlackListBalooEmailCompletionDialog::setEmailBlackList(const QStringList &list)
@@ -117,7 +149,7 @@ void BlackListBalooEmailCompletionDialog::slotSave()
         util.initialBlackList(blackList);
         util.newBlackList(result);
         blackList = util.createNewBlackList();
-        group.writeEntry( "Baloo Back List", blackList );
+        group.writeEntry( "BalooBackList", blackList );
         group.sync();
     }
     accept();
