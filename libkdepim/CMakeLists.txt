@@ -73,7 +73,13 @@ set(kdepim_addressline_LIB_SRCS
    addressline/kmailcompletion.cpp
 )
 
+set(kdepim_addressline_blacklist_baloo_LIB_SRCS
+   addressline/blacklistbaloocompletion/blacklistbalooemailcompletiondialog.cpp
+   addressline/blacklistbaloocompletion/blacklistbalooemaillist.cpp
+) 
+
 set(kdepim_LIB_SRCS
+   ${kdepim_addressline_blacklist_baloo_LIB_SRCS}
    ${kdepim_progresswidget_LIB_SRCS}
    ${kdepim_job_LIB_SRCS}
    ${kdepim_widgets_LIB_SRCS}
@@ -162,3 +168,6 @@ install(FILES ldap/kcmldap.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 ########### install files ###############
 
 install(FILES interfaces/org.kde.addressbook.service.xml interfaces/org.kde.mailtransport.service.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR})
+
+
+add_subdirectory(addressline/blacklistbaloocompletion/autotests)
