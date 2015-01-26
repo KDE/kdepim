@@ -31,6 +31,7 @@ public:
     ~BlackListBalooEmailListTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldFillListEmail();
 };
 
 #endif // BLACKLISTBALOOEMAILLISTTEST_H

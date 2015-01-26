@@ -36,6 +36,9 @@ public:
 
     void setSearchEmail(const QString &searchEmail);
 
+Q_SIGNALS:
+    void emailsFound(const QStringList &list);
+
 private:
     QString mSearchEmail;
 };

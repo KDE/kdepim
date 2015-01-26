@@ -20,6 +20,8 @@
 
 #include "blacklistbalooemailsearchjob.h"
 
+#include <baloo/pim/contactcompleter.h>
+#include <QStringList>
 using namespace KPIM;
 
 BlackListBalooEmailSearchJob::BlackListBalooEmailSearchJob(QObject *parent)
@@ -35,11 +37,15 @@ BlackListBalooEmailSearchJob::~BlackListBalooEmailSearchJob()
 
 bool BlackListBalooEmailSearchJob::start()
 {
-    if (mSearchEmail.trimmed().isEmpty()) {
+    const QString trimmedString = mSearchEmail.trimmed();
+    if (trimmedString.isEmpty()) {
         deleteLater();
         return false;
     }
-    //TODO
+
+    Baloo::PIM::ContactCompleter com(trimmedString, 500);
+    Q_EMIT emailsFound(com.complete());
+    deleteLater();
     return true;
 }
 

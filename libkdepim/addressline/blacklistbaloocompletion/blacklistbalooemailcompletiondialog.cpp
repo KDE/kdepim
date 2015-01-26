@@ -19,6 +19,7 @@
 */
 
 #include "blacklistbalooemailcompletiondialog.h"
+#include "blacklistbalooemailsearchjob.h"
 #include "blacklistbalooemaillist.h"
 #include <KLocalizedString>
 #include <QHBoxLayout>
@@ -105,5 +106,8 @@ void BlackListBalooEmailCompletionDialog::slotSave()
 
 void BlackListBalooEmailCompletionDialog::slotSearch()
 {
-    //TODO
+    const QString searchEmail = mSearchLineEdit->text().trimmed();
+    KPIM::BlackListBalooEmailSearchJob *job = new KPIM::BlackListBalooEmailSearchJob(this);
+    connect(job, SIGNAL(emailsFound(QStringList)), mEmailList, SLOT(slotEmailFound(QStringList)));
 }
+

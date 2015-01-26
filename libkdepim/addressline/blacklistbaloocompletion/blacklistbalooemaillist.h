@@ -22,15 +22,38 @@
 #define BLACKLISTBALOOEMAILLIST_H
 
 #include <QListWidget>
+#include <QListWidgetItem>
 #include "kdepim_export.h"
 
 namespace KPIM {
+
+class KDEPIM_EXPORT BlackListBalooEmailListItem : public QListWidgetItem
+{
+public:
+    explicit BlackListBalooEmailListItem(QListWidget *parent = 0);
+    ~BlackListBalooEmailListItem();
+
+    bool initializeStatus() const;
+    void setInitializeStatus(bool initializeStatus);
+
+private:
+    bool mInitializeStatus;
+};
+
 class KDEPIM_EXPORT BlackListBalooEmailList : public QListWidget
 {
     Q_OBJECT
 public:
     explicit BlackListBalooEmailList(QWidget *parent = 0);
     ~BlackListBalooEmailList();
+
+    void setEmailBlackList(const QStringList &list);
+
+public Q_SLOTS:
+    void slotEmailFound(const QStringList &);
+
+private:
+    QStringList mEmailBlackList;
 };
 }
 

@@ -19,8 +19,11 @@
 */
 
 #include "blacklistbalooemaillist.h"
-
+#include <QDebug>
 using namespace KPIM;
+
+
+
 BlackListBalooEmailList::BlackListBalooEmailList(QWidget *parent)
     : QListWidget(parent)
 {
@@ -30,5 +33,42 @@ BlackListBalooEmailList::BlackListBalooEmailList(QWidget *parent)
 BlackListBalooEmailList::~BlackListBalooEmailList()
 {
 
+}
+
+void BlackListBalooEmailList::setEmailBlackList(const QStringList &list)
+{
+    mEmailBlackList = list;
+}
+
+void BlackListBalooEmailList::slotEmailFound(const QStringList &list)
+{
+    clear();
+    Q_FOREACH(const QString & mail, list) {
+        BlackListBalooEmailListItem *item = new BlackListBalooEmailListItem(this);
+        item->setText(mail);
+    }
+}
+
+
+BlackListBalooEmailListItem::BlackListBalooEmailListItem(QListWidget *parent)
+    : QListWidgetItem(parent),
+      mInitializeStatus(false)
+{
+    setFlags(Qt::ItemIsEnabled|Qt::ItemIsUserCheckable|Qt::ItemIsSelectable);
+}
+
+BlackListBalooEmailListItem::~BlackListBalooEmailListItem()
+{
+
+}
+
+bool BlackListBalooEmailListItem::initializeStatus() const
+{
+    return mInitializeStatus;
+}
+
+void BlackListBalooEmailListItem::setInitializeStatus(bool initializeStatus)
+{
+    mInitializeStatus = initializeStatus;
 }
 

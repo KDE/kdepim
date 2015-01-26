@@ -39,4 +39,11 @@ void BlackListBalooEmailListTest::shouldHaveDefaultValue()
     QVERIFY(blackList.count() == 0);
 }
 
+void BlackListBalooEmailListTest::shouldFillListEmail()
+{
+    KPIM::BlackListBalooEmailList blackList;
+    blackList.slotEmailFound(QStringList() << QLatin1String("foo") << QLatin1String("bla") << QLatin1String("bli"));
+    QCOMPARE(blackList.count(), 3);
+}
+
 QTEST_KDEMAIN(BlackListBalooEmailListTest, GUI)
