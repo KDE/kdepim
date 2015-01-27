@@ -39,8 +39,13 @@ using namespace KSieveUi;
 
 static int MINIMUMACTION = 1;
 static int MAXIMUMACTION = 8;
-static QString INDENTACTION = QLatin1String("    ");
 
+namespace {
+inline const QString indentation()
+{
+    return QLatin1String("    ");
+}
+}
 
 SieveActionWidget::SieveActionWidget(QWidget *parent)
     : QWidget(parent)
@@ -88,7 +93,7 @@ void SieveActionWidget::generatedScript(QString &script, QStringList &requires, 
         if (!comment.isEmpty()) {
             script += QLatin1Char('#') + comment.replace(QLatin1Char('\n'), QLatin1String("\n#")) + QLatin1Char('\n');
         }
-        script += (onlyActions ? QString() : INDENTACTION) + widgetAction->code(currentWidget) + QLatin1Char('\n');
+        script += (onlyActions ? QString() : indentation()) + widgetAction->code(currentWidget) + QLatin1Char('\n');
     }
 }
 
