@@ -72,7 +72,6 @@
 #include <KToggleAction>
 #include <KPrintPreview>
 #include <kdeprintdialog.h>
-
 #include <kfileitemactions.h>
 #include <KFileItemListProperties>
 
@@ -337,6 +336,13 @@ void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
     if(node->contentType(false)) {
         if (node->contentType()->mimeType() == "text/x-moz-deleted")
             return;
+        if (node->contentType()->mimeType() == "message/external-body") {
+            if (node->contentType()->hasParameter(QLatin1String("url"))) {
+                const QString url = node->contentType()->parameter(QLatin1String("url"));
+                KRun::runUrl(KUrl(url), QLatin1String("text/html"), q);
+                return;
+            }
+        }
     }
 
     const bool isEncapsulatedMessage = node->parent() && node->parent()->bodyIsMessage();
