@@ -143,7 +143,8 @@ void BlackListBalooEmailCompletionDialog::slotSave()
 {
     const QHash<QString, bool> result = mEmailList->blackListItemChanged();
     if (!result.isEmpty()) {
-        KConfigGroup group( KGlobal::config(), "AddressLineEdit" );
+        KSharedConfig::Ptr config = KSharedConfig::openConfig( QLatin1String("kpimbalooblacklist") );
+        KConfigGroup group( config, "AddressLineEdit" );
         QStringList blackList = group.readEntry( "BalooBackList", QStringList() );
         KPIM::BlackListBalooEmailUtil util;
         util.initialBlackList(blackList);
