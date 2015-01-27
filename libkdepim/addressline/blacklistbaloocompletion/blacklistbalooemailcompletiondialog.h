@@ -24,7 +24,7 @@
 #include <KDialog>
 #include "kdepim_export.h"
 class KLineEdit;
-class KPushButton;
+class QPushButton;
 namespace KPIM {
 class BlackListBalooEmailList;
 class KDEPIM_EXPORT BlackListBalooEmailCompletionDialog : public KDialog
@@ -48,7 +48,7 @@ private:
     void readConfig();
     KLineEdit *mSearchLineEdit;
     BlackListBalooEmailList *mEmailList;
-    KPushButton *mSearchButton;
+    QPushButton *mSearchButton;
 };
 }
 

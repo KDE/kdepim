@@ -20,7 +20,7 @@
 
 #include "blacklistbalooemaillisttest.h"
 #include "../blacklistbalooemaillist.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 BlackListBalooEmailListTest::BlackListBalooEmailListTest(QObject *parent)
     : QObject(parent)
@@ -97,4 +97,4 @@ void BlackListBalooEmailListTest::shouldNotAddDuplicateEmails()
 
 
 
-QTEST_KDEMAIN(BlackListBalooEmailListTest, GUI)
+QTEST_MAIN(BlackListBalooEmailListTest)

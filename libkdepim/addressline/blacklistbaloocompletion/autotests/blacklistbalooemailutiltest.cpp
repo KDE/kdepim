@@ -20,7 +20,7 @@
 
 #include "blacklistbalooemailutiltest.h"
 #include "../blacklistbalooemailutil.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 BlackListBalooEmailUtilTest::BlackListBalooEmailUtilTest(QObject *parent)
     : QObject(parent)
 {
@@ -75,5 +75,5 @@ void BlackListBalooEmailUtilTest::shouldAddNewElements()
     QCOMPARE(util.createNewBlackList().count(), 3);
 }
 
-QTEST_KDEMAIN(BlackListBalooEmailUtilTest, NoGUI)
+QTEST_MAIN(BlackListBalooEmailUtilTest)
 

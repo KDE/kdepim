@@ -27,7 +27,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <KLineEdit>
-#include <KPushButton>
+#include <QPushButton>
 #include <KSharedConfig>
 
 using namespace KPIM;
@@ -35,8 +35,7 @@ using namespace KPIM;
 BlackListBalooEmailCompletionDialog::BlackListBalooEmailCompletionDialog(QWidget *parent)
     : KDialog(parent)
 {
-    //Add i18n in kf5
-    setCaption( QLatin1String( "Blacklist Baloo Completion" ) );
+    setCaption( i18n( "Blacklist Baloo Completion" ) );
     setButtons( Ok|Cancel );
     setDefaultButton( Ok );
     setModal( true );
@@ -50,8 +49,7 @@ BlackListBalooEmailCompletionDialog::BlackListBalooEmailCompletionDialog(QWidget
     QHBoxLayout *searchLayout = new QHBoxLayout;
     mainLayout->addLayout(searchLayout);
 
-    //Add i18n in kf5
-    QLabel *lab = new QLabel(QLatin1String("Search email:"));
+    QLabel *lab = new QLabel(i18n("Search email:"));
     lab->setObjectName(QLatin1String("search_label"));
     searchLayout->addWidget(lab);
 
@@ -63,8 +61,7 @@ BlackListBalooEmailCompletionDialog::BlackListBalooEmailCompletionDialog(QWidget
     connect(mSearchLineEdit, SIGNAL(returnPressed()), this, SLOT(slotSearch()));
     searchLayout->addWidget(mSearchLineEdit);
 
-    //Add i18n in kf5
-    mSearchButton = new KPushButton(QLatin1String("Search"));
+    mSearchButton = new QPushButton(i18n("Search"));
     mSearchButton->setObjectName(QLatin1String("search_button"));
     connect(mSearchButton, SIGNAL(clicked()), this, SLOT(slotSearch()));
     mSearchButton->setEnabled(false);
@@ -77,14 +74,12 @@ BlackListBalooEmailCompletionDialog::BlackListBalooEmailCompletionDialog(QWidget
 
     QHBoxLayout *selectElementLayout = new QHBoxLayout;
     mainLayout->addLayout(selectElementLayout);
-    //Add i18n in kf5
-    KPushButton *button = new KPushButton(QLatin1String("&Select"), this);
+    QPushButton *button = new QPushButton(i18n("&Select"), this);
     button->setObjectName(QLatin1String("select_email"));
     connect(button, SIGNAL(clicked(bool)), this, SLOT(slotSelectEmails()));
     selectElementLayout->addWidget(button);
 
-    //Add i18n in kf5
-    button = new KPushButton(QLatin1String("&Unselect"), this);
+    button = new QPushButton(i18n("&Unselect"), this);
     button->setObjectName(QLatin1String("unselect_email"));
     connect(button, SIGNAL(clicked(bool)), this, SLOT(slotUnselectEmails()));
     selectElementLayout->addWidget(button);

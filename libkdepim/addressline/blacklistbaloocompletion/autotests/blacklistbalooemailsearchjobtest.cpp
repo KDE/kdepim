@@ -19,7 +19,7 @@
 */
 #include "blacklistbalooemailsearchjobtest.h"
 #include "../blacklistbalooemailsearchjob.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 BlackListBalooEmailSearchJobTest::BlackListBalooEmailSearchJobTest(QObject *parent)
     : QObject(parent)
@@ -38,4 +38,4 @@ void BlackListBalooEmailSearchJobTest::shouldNotSearchWhenTextIsEmpty()
     QVERIFY(!job->start());
 }
 
-QTEST_KDEMAIN(BlackListBalooEmailSearchJobTest, NoGUI)
+QTEST_MAIN(BlackListBalooEmailSearchJobTest)
