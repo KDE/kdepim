@@ -14,6 +14,8 @@
   <name xml:lang="fi">KAddressBook</name>
   <name xml:lang="fr">KAddressBook</name>
   <name xml:lang="hu">KAddressBook</name>
+  <name xml:lang="it">KAddressBook</name>
+  <name xml:lang="lt">KAddressBook</name>
   <name xml:lang="nb">KAddressBook</name>
   <name xml:lang="nds">KAdressbook</name>
   <name xml:lang="nl">KAddressBook</name>
@@ -42,6 +44,7 @@
     <p xml:lang="fi">KAddressBook tallentaa henkilökohtaiset tiedot perheestäsi, ystävistäsi ja muista henkilöistä.</p>
     <p xml:lang="fr">KAddressBook mémorise toutes les coordonnées de votre famille, vos amis et autres contacts.</p>
     <p xml:lang="hu">A KAddressBook tárolja a családja, barátai és más partnereinek minden személyes adatát.</p>
+    <p xml:lang="it">KAddressBook memorizza tutti i dati personali dei vostri familiari, amici e altri contatti.</p>
     <p xml:lang="nb">KAddressBook lagrer alle personlige detaljer for famile, venner og andre kontakter.</p>
     <p xml:lang="nds">KAdressbook wohrt all de persöönlichen Enkelheiten över Dien Familie, Dien Frünnen un anner Kontakten.</p>
     <p xml:lang="nl">KAddressBook slaat alle persoonlijke details op van uw familie, vrienden en andere contactpersonen.</p>
@@ -69,6 +72,8 @@
     <p xml:lang="fi">Ominaisuudet:</p>
     <p xml:lang="fr">Fonctionnalités :</p>
     <p xml:lang="hu">Szolgáltatások:</p>
+    <p xml:lang="it">Caratteristiche:</p>
+    <p xml:lang="lt">Galimybės:</p>
     <p xml:lang="nb">Egenskaper:</p>
     <p xml:lang="nds">Markmalen:</p>
     <p xml:lang="nl">Mogelijkheden:</p>
@@ -96,6 +101,7 @@
       <li xml:lang="fi">Tukee lähes minkä tahansa osoitekirjamuodon tuontia ja vientiä</li>
       <li xml:lang="fr">Import et export vers presque tous les formats standards de carnet d'adresse</li>
       <li xml:lang="hu">Importálás és exportálás közel minden címjegyzékformátumba</li>
+      <li xml:lang="it">Importazione ed esportazioni da quasi ogni formato standard di rubrica</li>
       <li xml:lang="nb">Importerer og eksporterer til nesten alle adressebok-standarder</li>
       <li xml:lang="nds">Importeren ut un Exporteren na meist all Adressbook-Standards.</li>
       <li xml:lang="nl">Importeert en exporteert naar bijna elke adresboekstandaard</li>
@@ -122,6 +128,7 @@
       <li xml:lang="fi">Lukee .vcf-muotoisia tiedostoja ja voi tuoda ja viedä vCard- ja CSC-muotoisia tiedostoja</li>
       <li xml:lang="fr">Lit les fichiers au format VCF, et importe et exporte les fichiers aux formats vCard et CSV</li>
       <li xml:lang="hu">A .vcf fájlformátum olvasása, vCard és CSV fájlok importálása és exportálása</li>
+      <li xml:lang="it">Legge file in formato .vcf, e può importare ed esportare vCard e file in formato csv</li>
       <li xml:lang="nb">Leser filer i .vcf format, og kan importere og eksportere vCards og filer i csv format</li>
       <li xml:lang="nds">Leest Dateien in't VCF-Formaat un kann Daten ut vCard- un CSV-Dateien importeren un dor ok hen exporteren.</li>
       <li xml:lang="nl">Leest .vcf-formaat bestanden en kan vCards importeren en exporteren en csv-formaat bestanden</li>
@@ -141,7 +148,9 @@
       <li>Can use multiple LDAP servers</li>
       <li xml:lang="ca">Pot usar múltiples servidors LDAP</li>
       <li xml:lang="en-GB">Can use multiple LDAP servers</li>
+      <li xml:lang="es">Usted puede usar varios servidores LDAP</li>
       <li xml:lang="fi">Osaa käyttää useampia LDAP-palvelimia</li>
+      <li xml:lang="it">Può utilizzare server LDAP multipli</li>
       <li xml:lang="nl">Kan meerdere LDAP-servers gebruiken</li>
       <li xml:lang="pl">Możliwość używania wielu serwerów LDAP</li>
       <li xml:lang="pt">Poderá usar diversos servidores de LDAP</li>
@@ -159,6 +168,7 @@
       <li xml:lang="fi">Muokattavat suodattimet ja tehokkaat hakuominaisuudet</li>
       <li xml:lang="fr">Filtres personnalisables et fonctions de recherche poussées</li>
       <li xml:lang="hu">Konfigurálható szűrők és hatékony keresési képességek</li>
+      <li xml:lang="it">Filtri configurabili e potenti funzionalità di ricerca</li>
       <li xml:lang="nb">Fleksible filtre og kraftige søkemuligheter</li>
       <li xml:lang="nds">Instellbor Filtern un en deegt Söök</li>
       <li xml:lang="nl">In te stellen filters en krachtige zoekfuncties</li>
@@ -184,6 +194,7 @@
       <li xml:lang="fi">Integroituu muihin Kontactin osiin, esim. syntymäpäivämuistutusten vienti KOrganizeriin</li>
       <li xml:lang="fr">Intégré avec les autres composants de la suite Kontact, par exemple pour exporter un rappel d'anniversaire vers KOrganizer</li>
       <li xml:lang="hu">Integráció más Kontact komponensekkel, például születésnapi emlékeztetők exportálása a KOrganizerbe</li>
+      <li xml:lang="it">Si integra con altri componenti di Kontact, ad esempioesportazione dei promemoria dei compleanni in KOrganizer</li>
       <li xml:lang="nb">Integreres med andre Kontact-komponenter, f.eks. eksportere fødselsdag-påminnelser til KOrganizer</li>
       <li xml:lang="nds">Arbeit mit anner Kontact-Komponenten tosamen, exporteert a.B. Geboortsdag-Vöranstööt na KOrganizer.</li>
       <li xml:lang="nl">Integreert met andere componenten van Kontact, bijv. exporteren van herinneringen van verjaardagen aan KOrganizer</li>
@@ -208,6 +219,7 @@
       <li xml:lang="fi">Osaa integroitua työryhmäohjelmistoihin</li>
       <li xml:lang="fr">Possibilités d'intégration en logiciel de groupe de travail</li>
       <li xml:lang="hu">Csoportmunka-integráció</li>
+      <li xml:lang="it">Supporta l'integrazione di groupware</li>
       <li xml:lang="nb">Kan integreres i gruppevare</li>
       <li xml:lang="nds">Arbeit mit Arbeitkoppelprogrammen tosamen</li>
       <li xml:lang="nl">Kan met groupware integreren</li>
@@ -232,6 +244,7 @@
       <li xml:lang="es">Basado en Akonadi</li>
       <li xml:lang="fr">Fonctionne avec Akonadi</li>
       <li xml:lang="hu">Akonadi támogatás</li>
+      <li xml:lang="it">Powered by Akonadi</li>
       <li xml:lang="nb">Drives av Akonadi</li>
       <li xml:lang="nds">Akonadi arbeidt in'n Achtergrund</li>
       <li xml:lang="nl">Powered door Akonadi</li>
