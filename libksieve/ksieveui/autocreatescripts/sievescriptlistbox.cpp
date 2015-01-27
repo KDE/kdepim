@@ -33,7 +33,12 @@
 #include <QDomElement>
 #include <QDebug>
 
-static QString defaultScriptName = QLatin1String("SCRIPTNAME: ");
+namespace {
+inline const QString defaultScriptName()
+{
+    return QLatin1String("SCRIPTNAME: ");
+}
+}
 
 using namespace KSieveUi;
 
@@ -317,7 +322,7 @@ QString SieveScriptListBox::generatedScript(QString &requires) const
         SieveScriptListItem* item = static_cast<SieveScriptListItem*>(mSieveListScript->item(i));
         if (i != 0)
             resultScript += QLatin1String("\n\n");
-        resultScript += QLatin1Char('#') + defaultScriptName + item->text() + QLatin1Char('\n');
+        resultScript += QLatin1Char('#') + defaultScriptName() + item->text() + QLatin1Char('\n');
         resultScript += item->generatedScript(lstRequires);
     }
 
@@ -419,8 +424,8 @@ void SieveScriptListBox::loadBlock(QDomNode &n, SieveScriptPage *currentPage, Pa
                 }
             } else if (tagName == QLatin1String("comment")) {
                 QString str(e.text());
-                if (str.contains(defaultScriptName)) {
-                    scriptName = str.remove(defaultScriptName);
+                if (str.contains(defaultScriptName())) {
+                    scriptName = str.remove(defaultScriptName());
                 } else {
                     if (!comment.isEmpty())
                         comment += QLatin1Char('\n');
