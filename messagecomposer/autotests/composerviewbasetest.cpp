@@ -43,6 +43,14 @@ void ComposerViewBaseTest::shouldHaveDefaultValue()
     QVERIFY(!composerViewBase.transportComboBox());
     QVERIFY(!composerViewBase.fccCombo());
     QVERIFY(!composerViewBase.dictionary());
+#if 0 //mrecipient is null
+    QVERIFY(composerViewBase.to().isEmpty());
+    QVERIFY(composerViewBase.cc().isEmpty());
+    QVERIFY(composerViewBase.bcc().isEmpty());
+#endif
+    QVERIFY(composerViewBase.from().isEmpty());
+    QVERIFY(composerViewBase.replyTo().isEmpty());
+    QVERIFY(composerViewBase.subject().isEmpty());
 }
 
 QTEST_MAIN(ComposerViewBaseTest)

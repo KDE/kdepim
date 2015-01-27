@@ -103,7 +103,6 @@ void SendVcardsJob::createTemporaryDir()
 void SendVcardsJob::jobFinished()
 {
     const QStringList lstAttachment = mAttachmentTemporary->temporaryFiles();
-    qDebug()<<" lstAttachment *************"<<lstAttachment;
     if (!lstAttachment.isEmpty()) {
         KToolInvocation::invokeMailer(QString(), QString(), QString(), QString(), QString(), QString(), lstAttachment);
     }

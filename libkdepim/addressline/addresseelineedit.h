@@ -197,6 +197,7 @@ private:
     Q_PRIVATE_SLOT(d, void slotAkonadiSearchResult(KJob *))
     Q_PRIVATE_SLOT(d, void slotAkonadiCollectionsReceived(const Akonadi::Collection::List &))
     Q_PRIVATE_SLOT(d, void slotTriggerDelayedQueries())
+    Q_PRIVATE_SLOT( d, void slotConfigureBalooBlackList() )
     //@endcond
 };
 

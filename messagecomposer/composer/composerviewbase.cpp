@@ -629,7 +629,7 @@ QList< MessageComposer::Composer * > MessageComposer::ComposerViewBase::generate
     bool canceled = false;
     signSomething = determineWhetherToSign(doSignCompletely, keyResolver, signSomething, result, canceled);
     if (!result) {
-        /// TODO handle failure
+        // TODO handle failure
         qCDebug(MESSAGECOMPOSER_LOG) << "determineWhetherToSign: failed to resolve keys! oh noes";
         if (!canceled) {
             emit failed(i18n("Failed to resolve keys. Please report a bug."));
@@ -643,7 +643,7 @@ QList< MessageComposer::Composer * > MessageComposer::ComposerViewBase::generate
     canceled = false;
     encryptSomething = determineWhetherToEncrypt(doEncryptCompletely, keyResolver, encryptSomething, signSomething, result, canceled);
     if (!result) {
-        /// TODO handle failure
+        // TODO handle failure
         qCDebug(MESSAGECOMPOSER_LOG) << "determineWhetherToEncrypt: failed to resolve keys! oh noes";
         if (!canceled) {
             emit failed(i18n("Failed to resolve keys. Please report a bug."));
