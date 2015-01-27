@@ -1028,7 +1028,8 @@ void AddresseeLineEdit::Private::slotConfigureBalooBlackList()
 
 void AddresseeLineEdit::Private::loadBalooBlackList()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "AddressLineEdit" );
+    KSharedConfig::Ptr config = KSharedConfig::openConfig( QLatin1String("kpimbalooblacklist") );
+    KConfigGroup group( config, "AddressLineEdit" );
     m_balooBlackList = group.readEntry( "BalooBackList", QStringList() );
 }
 

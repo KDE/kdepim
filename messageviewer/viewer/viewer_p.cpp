@@ -76,7 +76,6 @@
 #include <KPrintPreview>
 #include <kdeprintdialog.h>
 #include <QIcon>
-
 #include <kfileitemactions.h>
 #include <KFileItemListProperties>
 #include <KLocalizedString>
@@ -341,6 +340,13 @@ void ViewerPrivate::openAttachment(KMime::Content *node, const QString &name)
     if (node->contentType(false)) {
         if (node->contentType()->mimeType() == "text/x-moz-deleted") {
             return;
+        }
+        if (node->contentType()->mimeType() == "message/external-body") {
+            if (node->contentType()->hasParameter(QLatin1String("url"))) {
+                const QString url = node->contentType()->parameter(QLatin1String("url"));
+                KRun::runUrl(KUrl(url), QLatin1String("text/html"), q);
+                return;
+            }
         }
     }
 
