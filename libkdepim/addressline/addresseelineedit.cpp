@@ -43,6 +43,7 @@
 
 #include <KEmailAddress>
 #include <KColorScheme>
+#include <kdelibs4configmigrator.h>
 
 #include <kldap/LdapServer>
 
@@ -1036,6 +1037,10 @@ void AddresseeLineEdit::Private::loadBalooBlackList()
 AddresseeLineEdit::AddresseeLineEdit( QWidget *parent, bool enableCompletion )
     : KLineEdit( parent ), d( new Private( this, enableCompletion ) )
 {
+    Kdelibs4ConfigMigrator migrate(QStringLiteral("addressline"));
+    migrate.setConfigFiles(QStringList() << QStringLiteral("kpimbalooblacklist") << QStringLiteral("kpimcompletionorder"));
+    migrate.migrate();
+
     setObjectName(newLineEditObjectName());
     setPlaceholderText(QString());
 

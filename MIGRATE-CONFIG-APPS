@@ -22,3 +22,4 @@ Migrate configrc done:
 - korganizer (korganizer_htmlexportrc, korganizerrc, korganizer_part.rc, korganizerui.rc)
 - akregator (akregatorrc, akregator.notifyrc, akregator_shell.rc, akregator_part.rc, pageviewer.rc, articleviewer.rc, akregator_sharemicroblog_plugin.rc, akregator_onlinesync_plugin.rc
 - korgac (korgacrc)
+- libkdepim (kpimbalooblacklist, kpimcompletionorder)
