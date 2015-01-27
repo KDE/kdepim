@@ -184,62 +184,6 @@ void MailSourceHighlighter::highlightBlock ( const QString & text ) {
     }
 }
 
-const QString HTMLPrettyFormatter::reformat( const QString &src )
-{
-    const QRegExp cleanLeadingWhitespace( QLatin1String("(?:\\n)+\\w*") );
-    QStringList tmpSource;
-    QString source( src );
-    int pos = 0;
-    QString indent;
-
-    //First make sure that each tag is surrounded by newlines
-    while( (pos = htmlTagRegExp.indexIn( source, pos ) ) != -1 )
-    {
-        source.insert(pos, QLatin1Char('\n'));
-        pos += htmlTagRegExp.matchedLength() + 1;
-        source.insert(pos, QLatin1Char('\n'));
-        ++pos;
-    }
-
-    // Then split the source on newlines skiping empty parts.
-    // Now a line is either a tag or pure data.
-    tmpSource = source.split(QLatin1Char('\n'), QString::SkipEmptyParts );
-
-    // Then clean any leading whitespace
-    for( int i = 0; i != tmpSource.length(); ++i )
-    {
-        tmpSource[i] = tmpSource[i].remove( cleanLeadingWhitespace );
-    }
-
-    // Then indent as appropriate
-    for( int i = 0; i != tmpSource.length(); ++i )  {
-        if( htmlTagRegExp.indexIn( tmpSource.at(i) ) != -1 ) // A tag
-        {
-            if( htmlTagRegExp.cap( 3 ) == QLatin1String( "/" ) ||
-                    htmlTagRegExp.cap( 2 ) == QLatin1String( "img" ) ||
-                    htmlTagRegExp.cap( 2 ) == QLatin1String( "br" ) ) {
-                //Self closing tag or no closure needed
-                continue;
-            }
-            if( htmlTagRegExp.cap( 1 ) == QLatin1String( "/" ) ) {
-                // End tag
-                indent.chop( 2 );
-                tmpSource[i].prepend( indent );
-                continue;
-            }
-            // start tag
-            tmpSource[i].prepend( indent );
-            indent.append( QLatin1String("  ") );
-            continue;
-        }
-        // Data
-        tmpSource[i].prepend( indent );
-    }
-
-    // Finally reassemble and return :)
-    return tmpSource.join( QLatin1String("\n") );
-}
-
 MailSourceViewer::MailSourceViewer( QWidget *parent )
     : KDialog( parent )
 {
@@ -298,7 +242,7 @@ void MailSourceViewer::setRawSource( const QString &source )
 void MailSourceViewer::setDisplayedSource( const QString &source )
 {
 #ifndef NDEBUG
-    mHtmlBrowser->setPlainText( HTMLPrettyFormatter::reformat( source ) );
+    mHtmlBrowser->setPlainText( reformat( source ) );
 #else
     Q_UNUSED( source );
 #endif
@@ -310,6 +254,82 @@ void MailSourceViewer::setFixedFont()
 #ifndef NDEBUG
     mHtmlBrowser->setFixedFont();
 #endif
+}
+
+QString MailSourceViewer::reformat(const QString &src)
+{
+    const QRegExp cleanLeadingWhitespace( QLatin1String("(?:\\n)+\\w*") );
+    QStringList tmpSource;
+    QString source( src );
+    int pos = 0;
+    QString indent;
+    // Best to be really verbose about this one...
+    const static QRegExp htmlTagRegExp( QLatin1String("<"
+                                                      "(/)?"    //Captures the / if this is an end tag.
+                                                      "(\\w+)"    //Captures TagName
+                                                      "(?:"                //Groups tag contents
+                                                      "(?:\\s+"            //Groups attributes
+                                                      "(?:\\w+)"  //Attribute name
+                                                      "(?:"                //groups =value portion.
+                                                      "\\s*=\\s*"            // =
+                                                      "(?:"        //Groups attribute "value" portion.
+                                                      "\\\"(?:[^\\\"]*)\\\""    // attVal='double quoted'
+                                                      "|'(?:[^']*)'"        // attVal='single quoted'
+                                                      "|(?:[^'"">\\s]+)"    // attVal=urlnospaces
+                                                      ")"
+                                                      ")?"        //end optional att value portion.
+                                                      ")+\\s*"        //One or more attribute pairs
+                                                      "|\\s*"            //Some white space.
+                                                      ")"
+                                                      "(/)?>" //Captures the "/" if this is a complete tag.
+                                                      ));
+
+    //First make sure that each tag is surrounded by newlines
+    while( (pos = htmlTagRegExp.indexIn( source, pos ) ) != -1 )
+    {
+        source.insert(pos, QLatin1Char('\n'));
+        pos += htmlTagRegExp.matchedLength() + 1;
+        source.insert(pos, QLatin1Char('\n'));
+        ++pos;
+    }
+
+    // Then split the source on newlines skiping empty parts.
+    // Now a line is either a tag or pure data.
+    tmpSource = source.split(QLatin1Char('\n'), QString::SkipEmptyParts );
+
+    // Then clean any leading whitespace
+    for( int i = 0; i != tmpSource.length(); ++i )
+    {
+        tmpSource[i] = tmpSource[i].remove( cleanLeadingWhitespace );
+    }
+
+    // Then indent as appropriate
+    for( int i = 0; i != tmpSource.length(); ++i )  {
+        if( htmlTagRegExp.indexIn( tmpSource.at(i) ) != -1 ) // A tag
+        {
+            if( htmlTagRegExp.cap( 3 ) == QLatin1String( "/" ) ||
+                    htmlTagRegExp.cap( 2 ) == QLatin1String( "img" ) ||
+                    htmlTagRegExp.cap( 2 ) == QLatin1String( "br" ) ) {
+                //Self closing tag or no closure needed
+                continue;
+            }
+            if( htmlTagRegExp.cap( 1 ) == QLatin1String( "/" ) ) {
+                // End tag
+                indent.chop( 2 );
+                tmpSource[i].prepend( indent );
+                continue;
+            }
+            // start tag
+            tmpSource[i].prepend( indent );
+            indent.append( QLatin1String("  ") );
+            continue;
+        }
+        // Data
+        tmpSource[i].prepend( indent );
+    }
+
+    // Finally reassemble and return :)
+    return tmpSource.join( QLatin1String("\n") );
 }
 
 }
