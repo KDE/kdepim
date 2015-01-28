@@ -31,7 +31,7 @@ class KDEPIM_EXPORT BlackListBalooEmailCompletionDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit BlackListBalooEmailCompletionDialog(QWidget *parent=0);
+    explicit BlackListBalooEmailCompletionDialog(QWidget *parent=Q_NULLPTR);
     ~BlackListBalooEmailCompletionDialog();
 
     void setEmailBlackList(const QStringList &list);

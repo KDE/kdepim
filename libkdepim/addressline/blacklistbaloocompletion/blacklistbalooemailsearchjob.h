@@ -29,7 +29,7 @@ class KDEPIM_EXPORT BlackListBalooEmailSearchJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit BlackListBalooEmailSearchJob(QObject *parent=0);
+    explicit BlackListBalooEmailSearchJob(QObject *parent=Q_NULLPTR);
     ~BlackListBalooEmailSearchJob();
 
     bool start();

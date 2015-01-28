@@ -31,7 +31,7 @@ namespace KPIM {
 class KDEPIM_EXPORT BlackListBalooEmailListItem : public QListWidgetItem
 {
 public:
-    explicit BlackListBalooEmailListItem(QListWidget *parent = 0);
+    explicit BlackListBalooEmailListItem(QListWidget *parent = Q_NULLPTR);
     ~BlackListBalooEmailListItem();
 
     bool initializeStatus() const;
@@ -45,7 +45,7 @@ class KDEPIM_EXPORT BlackListBalooEmailList : public QListWidget
 {
     Q_OBJECT
 public:
-    explicit BlackListBalooEmailList(QWidget *parent = 0);
+    explicit BlackListBalooEmailList(QWidget *parent = Q_NULLPTR);
     ~BlackListBalooEmailList();
 
     void setEmailBlackList(const QStringList &list);
