@@ -30,9 +30,6 @@ namespace PimCommon {
 namespace TranslatorUtil {
   enum translatorType {
     GoogleTranslator = 0
-#if 0 //Babel fish is dead in may 2012
-    ,BabelFishTranslator = 1
-#endif
   };
 
 
