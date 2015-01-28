@@ -16,7 +16,7 @@
 */
 
 #include "filtersylpheedtest.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 FilterSylpheedTest::FilterSylpheedTest(QObject *parent)
     : QObject(parent)
@@ -29,4 +29,4 @@ FilterSylpheedTest::~FilterSylpheedTest()
 
 }
 
-QTEST_KDEMAIN(FilterSylpheedTest, GUI)
+QTEST_MAIN(FilterSylpheedTest)

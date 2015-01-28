@@ -30,7 +30,6 @@
 #include <Akonadi/Contact/ContactGroupExpandJob>
 #include "pimcommon/temporaryfile/attachmenttemporaryfilesdirs.h"
 #include <QTemporaryDir>
-#include <KStandardDirs>
 #include <KToolInvocation>
 #include <QFile>
 
@@ -94,7 +93,7 @@ bool SendVcardsJob::start()
 void SendVcardsJob::createTemporaryDir()
 {
     if (!mTempDir) {
-        mTempDir = new QTemporaryDir(KStandardDirs::locateLocal("tmp", QLatin1String("sendvcards")));
+        mTempDir = new QTemporaryDir(QDir::tempPath() + QLatin1Char('/') +  QLatin1String("sendvcards"));
         mTempDir->setAutoRemove(false);
         mAttachmentTemporary->addTempDir(mTempDir->path());
     }

@@ -16,7 +16,7 @@
 */
 
 #include "filterclawsmailtest.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 FilterClawsMailTest::FilterClawsMailTest(QObject *parent)
     : QObject(parent)
@@ -29,4 +29,4 @@ FilterClawsMailTest::~FilterClawsMailTest()
 
 }
 
-QTEST_KDEMAIN(FilterClawsMailTest, GUI)
+QTEST_MAIN(FilterClawsMailTest)
