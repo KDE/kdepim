@@ -139,7 +139,7 @@ EventEdit::EventEdit(QWidget *parent)
     connect(mOpenEditorButton, SIGNAL(clicked(bool)), this, SLOT(slotOpenEditor()));
     hbox->addWidget(mOpenEditorButton);
 
-    KPushButton *btn = new KPushButton(KStandardGuiItem::cancel());
+    KPushButton *btn = new KPushButton(KStandardGuiItem::close());
     btn->setObjectName(QLatin1String("close-button"));
 #ifndef QT_NO_ACCESSIBILITY
     btn->setAccessibleDescription(i18n("Close the widget for creating new events."));

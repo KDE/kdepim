@@ -104,7 +104,7 @@ NoteEdit::NoteEdit(QWidget *parent)
     connect(mSaveButton, SIGNAL(clicked(bool)), this, SLOT(slotReturnPressed()));
     hbox->addWidget(mSaveButton);
 
-    KPushButton *btn = new KPushButton(KStandardGuiItem::cancel());
+    KPushButton *btn = new KPushButton(KStandardGuiItem::close());
     btn->setObjectName(QLatin1String("close-button"));
 #ifndef QT_NO_ACCESSIBILITY
     btn->setAccessibleDescription(i18n("Close the widget for creating new notes."));
