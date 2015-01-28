@@ -43,6 +43,7 @@ class ContactGrantleePrintObject : public QObject
     Q_PROPERTY(QString organization READ organization)
     Q_PROPERTY(QString note READ note)
     Q_PROPERTY(QString webPage READ webPage)
+    Q_PROPERTY(QString webSite READ webSite)
     Q_PROPERTY(QString title READ title)
     Q_PROPERTY(QString preferredEmail READ preferredEmail)
     Q_PROPERTY(QString role READ role)
@@ -80,7 +81,9 @@ public:
     QStringList emails() const;
     QString organization() const;
     QString note() const;
+    //webPage deprecated.
     QString webPage() const;
+    QString webSite() const;
     QString title() const;
     QString preferredEmail() const;
     QString role() const;

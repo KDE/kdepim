@@ -154,6 +154,11 @@ QString ContactGrantleePrintObject::webPage() const
     return mAddress.url().toDisplayString();
 }
 
+QString ContactGrantleePrintObject::webSite() const
+{
+    return webPage();
+}
+
 QString ContactGrantleePrintObject::title() const
 {
     return mAddress.title();
