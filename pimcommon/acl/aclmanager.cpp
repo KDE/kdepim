@@ -243,23 +243,25 @@ public:
 
     void editAcl()
     {
-        const QModelIndex index = mSelectionModel->selectedIndexes().first();
-        const QString userId = index.data( AclModel::UserIdRole ).toString();
-        const KIMAP::Acl::Rights permissions =
-                static_cast<KIMAP::Acl::Rights>( index.data( AclModel::PermissionsRole ).toInt() );
+        if ( mEditAction->isEnabled() ) {
+            const QModelIndex index = mSelectionModel->selectedIndexes().first();
+            const QString userId = index.data( AclModel::UserIdRole ).toString();
+            const KIMAP::Acl::Rights permissions =
+                    static_cast<KIMAP::Acl::Rights>( index.data( AclModel::PermissionsRole ).toInt() );
 
-        AclEntryDialog dlg;
-        dlg.setCaption( i18n( "Edit ACL" ) );
-        dlg.setUserId( userId );
-        dlg.setPermissions( permissions );
+            AclEntryDialog dlg;
+            dlg.setCaption( i18n( "Edit ACL" ) );
+            dlg.setUserId( userId );
+            dlg.setPermissions( permissions );
 
-        if ( !dlg.exec() ) {
-            return;
+            if ( !dlg.exec() ) {
+                return;
+            }
+
+            mModel->setData( index, dlg.userId(), AclModel::UserIdRole );
+            mModel->setData( index, static_cast<int>( dlg.permissions() ), AclModel::PermissionsRole );
+            mChanged = true;
         }
-
-        mModel->setData( index, dlg.userId(), AclModel::UserIdRole );
-        mModel->setData( index, static_cast<int>( dlg.permissions() ), AclModel::PermissionsRole );
-        mChanged = true;
     }
 
     void deleteAcl()
