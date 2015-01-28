@@ -24,7 +24,7 @@ class FilterSylpheedTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FilterSylpheedTest(QObject *parent = 0);
+    explicit FilterSylpheedTest(QObject *parent = Q_NULLPTR);
     ~FilterSylpheedTest();
 };
 

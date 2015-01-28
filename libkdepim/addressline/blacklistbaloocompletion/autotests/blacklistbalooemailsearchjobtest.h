@@ -27,7 +27,7 @@ class BlackListBalooEmailSearchJobTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit BlackListBalooEmailSearchJobTest(QObject *parent = 0);
+    explicit BlackListBalooEmailSearchJobTest(QObject *parent = Q_NULLPTR);
     ~BlackListBalooEmailSearchJobTest();
 
 private Q_SLOTS:

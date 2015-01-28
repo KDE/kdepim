@@ -24,7 +24,7 @@ class FilterThunderBirdTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FilterThunderBirdTest(QObject *parent = 0);
+    explicit FilterThunderBirdTest(QObject *parent = Q_NULLPTR);
     ~FilterThunderBirdTest();
 private Q_SLOTS:
     void shouldHaveDefaultSettingsPath();

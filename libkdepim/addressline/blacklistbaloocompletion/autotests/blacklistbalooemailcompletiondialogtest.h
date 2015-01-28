@@ -26,7 +26,7 @@ class BlackListBalooEmailCompletionDialogTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit BlackListBalooEmailCompletionDialogTest(QObject *parent = 0);
+    explicit BlackListBalooEmailCompletionDialogTest(QObject *parent = Q_NULLPTR);
     ~BlackListBalooEmailCompletionDialogTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();

@@ -34,8 +34,8 @@ class KADDRESSBOOK_GRANTLEE_EXPORT GrantleePrint : public QObject
 {
     Q_OBJECT
 public:
-    explicit GrantleePrint(QObject *parent = 0);
-    explicit GrantleePrint(const QString &themePath, QObject *parent = 0);
+    explicit GrantleePrint(QObject *parent = Q_NULLPTR);
+    explicit GrantleePrint(const QString &themePath, QObject *parent = Q_NULLPTR);
     ~GrantleePrint();
 
     QString contactsToHtml(const KContacts::Addressee::List &contacts);

@@ -24,7 +24,7 @@ class GrantleePrintTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit GrantleePrintTest(QObject *parent = 0);
+    explicit GrantleePrintTest(QObject *parent = Q_NULLPTR);
     ~GrantleePrintTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();

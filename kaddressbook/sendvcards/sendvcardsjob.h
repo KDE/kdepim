@@ -35,7 +35,7 @@ class KADDRESSBOOK_EXPORT SendVcardsJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit SendVcardsJob(const Akonadi::Item::List &listItem, QObject *parent = 0);
+    explicit SendVcardsJob(const Akonadi::Item::List &listItem, QObject *parent = Q_NULLPTR);
     ~SendVcardsJob();
 
     bool start();

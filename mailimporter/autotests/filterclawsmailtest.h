@@ -24,7 +24,7 @@ class FilterClawsMailTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FilterClawsMailTest(QObject *parent = 0);
+    explicit FilterClawsMailTest(QObject *parent = Q_NULLPTR);
     ~FilterClawsMailTest();
 };
 
