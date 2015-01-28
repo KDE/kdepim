@@ -59,7 +59,7 @@ void TagWidget::setSelection(const QStringList &tagNames)
     mCachedTagNames = tagNames;
     foreach (const QString &name, tagNames) {
       //TODO fetch by GID instead, we don't really want to create tags here
-      Akonadi::TagCreateJob *tagCreateJob = new Akonadi::TagCreateJob(Akonadi::Tag(name), this);
+      Akonadi::TagCreateJob *tagCreateJob = new Akonadi::TagCreateJob(Akonadi::Tag::genericTag(name), this);
       tagCreateJob->setMergeIfExisting(true);
       connect(tagCreateJob, SIGNAL(result(KJob*)), this, SLOT(onTagCreated(KJob*)));
     }
@@ -93,7 +93,7 @@ void TagSelectionDialog::setSelection(const QStringList &tagNames)
     mTagList.clear();
     foreach (const QString &name, tagNames) {
       //TODO fetch by GID instead, we don't really want to create tags here
-      Akonadi::TagCreateJob *tagCreateJob = new Akonadi::TagCreateJob(Akonadi::Tag(name), this);
+      Akonadi::TagCreateJob *tagCreateJob = new Akonadi::TagCreateJob(Akonadi::Tag::genericTag(name), this);
       tagCreateJob->setMergeIfExisting(true);
       connect(tagCreateJob, SIGNAL(result(KJob*)), this, SLOT(onTagCreated(KJob*)));
     }

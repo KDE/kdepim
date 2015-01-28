@@ -103,7 +103,7 @@ void IncidenceCategories::printDebugInfo() const
 void IncidenceCategories::checkForUnknownCategories( const QStringList &categoriesToCheck )
 {
   foreach ( const QString &category, categoriesToCheck ) {
-    Akonadi::TagCreateJob *tagCreateJob = new Akonadi::TagCreateJob(Akonadi::Tag(category), this);
+    Akonadi::TagCreateJob *tagCreateJob = new Akonadi::TagCreateJob(Akonadi::Tag::genericTag(category), this);
     tagCreateJob->setMergeIfExisting(true);
     //TODO add the missing tags to the item and add them to the list of selected tags in the widget
   }
