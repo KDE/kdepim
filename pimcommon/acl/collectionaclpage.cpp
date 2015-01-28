@@ -135,6 +135,7 @@ void CollectionAclPage::init()
     QWidget *spacer = new QWidget(buttonBox);
     buttonBoxVBoxLayout->addWidget(spacer);
     spacer->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
+    connect(view,SIGNAL(doubleClicked(QModelIndex)), mAclManager->editAction(), SIGNAL(triggered()));
 }
 
 bool CollectionAclPage::canHandle(const Akonadi::Collection &collection) const
