@@ -18,7 +18,6 @@
 // This filter was created by looking at libdbx  &liboe
 
 #include <KLocalizedString>
-#include <kfiledialog.h>
 #include <QTemporaryFile>
 #include "mailimporter_debug.h"
 #include <QFileDialog>
