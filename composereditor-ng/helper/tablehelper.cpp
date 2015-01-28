@@ -23,30 +23,45 @@
 #include <QDebug>
 
 namespace ComposerEditorNG {
-static QString TBODY = QLatin1String("tbody");
-static QString TABLE = QLatin1String("table");
-static QString ROW = QLatin1String("tr");
-static QString CELL = QLatin1String("td");
+inline const QString tbodyStr()
+{
+    return QLatin1String("tbodyStr()");
+}
+
+inline const QString tableStr()
+{
+    return QLatin1String("table");
+}
+
+inline const QString trStr()
+{
+    return QLatin1String("tr");
+}
+
+inline const QString tdStr()
+{
+    return QLatin1String("td");
+}
 
 QWebElement TableHelper::tableBodyWebElement(const QWebElement &element)
 {
     const QString tagName(element.tagName().toLower());
-    if (tagName == TABLE) {
+    if (tagName == tableStr()) {
         QWebElement tableElement = element.firstChild();
         while (!tableElement.isNull()) {
-            if ( tableElement.tagName().toLower() == TBODY ) {
+            if ( tableElement.tagName().toLower() == tbodyStr() ) {
                 return tableElement;
             }
             tableElement = tableElement.nextSibling();
         }
         return QWebElement();
-    } else if (tagName == TBODY) {
+    } else if (tagName == tbodyStr()) {
         return element;
     } else {
         QWebElement e = element;
         do {
             e = e.parent();
-        } while( (e.tagName().toLower() != TBODY) && !e.isNull() );
+        } while( (e.tagName().toLower() != tbodyStr()) && !e.isNull() );
         return e;
     }
 }
@@ -54,28 +69,28 @@ QWebElement TableHelper::tableBodyWebElement(const QWebElement &element)
 QWebElement TableHelper::rowWebElement(const QWebElement &element)
 {
     const QString tagName(element.tagName().toLower());
-    if (tagName == TABLE) {
+    if (tagName == tableStr()) {
         return QWebElement();
-    } else if (tagName == ROW) {
+    } else if (tagName == trStr()) {
         return element;
     } else {
         QWebElement e = element;
         do {
             e = e.parent();
-        } while( (e.tagName().toLower() != ROW) && !e.isNull() );
+        } while( (e.tagName().toLower() != trStr()) && !e.isNull() );
         return e;
     }
 }
 
 QWebElement TableHelper::tableWebElement(const QWebElement &element)
 {
-    if (element.tagName().toLower() == TABLE) {
+    if (element.tagName().toLower() == tableStr()) {
         return element;
     } else {
         QWebElement e = element;
         do {
             e = e.parent();
-        } while(e.tagName().toLower() != TABLE);
+        } while(e.tagName().toLower() != tableStr());
         return e;
     }
 }
@@ -119,7 +134,7 @@ int TableHelper::tableRowCount(const QWebElement &element)
         //Search all TR
         QWebElement trElement = tableBodyElement.firstChild();
         while (!trElement.isNull()) {
-            if (trElement.tagName().toLower() == ROW) {
+            if (trElement.tagName().toLower() == trStr()) {
                 numberOfRow++;
             }
             trElement = trElement.nextSibling();
@@ -136,11 +151,11 @@ int TableHelper::tableColumnCount(const QWebElement &element)
         //Search all TR
         QWebElement trElement = tableBodyElement.firstChild();
         while (!trElement.isNull()) {
-            if (trElement.tagName().toLower() == ROW) {
+            if (trElement.tagName().toLower() == trStr()) {
                 QWebElement tdElement = trElement.firstChild();
                 int currentNumberColumn = 0;
                 while (!tdElement.isNull()) {
-                    if (tdElement.tagName().toLower() == CELL) {
+                    if (tdElement.tagName().toLower() == tdStr()) {
                         currentNumberColumn++;
                     }
                     tdElement = tdElement.nextSibling();
@@ -159,7 +174,7 @@ int TableHelper::currentColumn(const QWebElement &element)
     QWebElement e = element;
     do {
         e = e.parent();
-    } while( (e.tagName().toLower() != ROW) && !e.isNull() );
+    } while( (e.tagName().toLower() != trStr()) && !e.isNull() );
 
     //TODO
     return 0;
@@ -170,11 +185,11 @@ void TableHelper::removeCellContentsFromCurrentRow(const QWebElement &element)
     QWebElement e = element;
     do {
         e = e.parent();
-    } while( (e.tagName().toLower() != ROW) && !e.isNull() );
+    } while( (e.tagName().toLower() != trStr()) && !e.isNull() );
     if (!e.isNull()) {
         QWebElement cellElement = e.firstChild();
         while (!cellElement.isNull()) {
-            if (cellElement.tagName().toLower() == CELL ) {
+            if (cellElement.tagName().toLower() == tdStr() ) {
                 cellElement.setInnerXml(QString::fromLatin1("<BR>"));
             }
             cellElement = cellElement.nextSibling();
@@ -185,7 +200,7 @@ void TableHelper::removeCellContentsFromCurrentRow(const QWebElement &element)
 int TableHelper::currentCellColSpan(const QWebElement &element)
 {
     QWebElement e = element;
-    if (e.tagName().toLower() == CELL) {
+    if (e.tagName().toLower() == tdStr()) {
         if (e.hasAttribute(QLatin1String("colspan"))) {
             return e.attribute(QLatin1String("colspan")).toInt();
         }
@@ -196,7 +211,7 @@ int TableHelper::currentCellColSpan(const QWebElement &element)
 int TableHelper::currentCellRowSpan(const QWebElement &element)
 {
     QWebElement e = element;
-    if (e.tagName().toLower() == CELL) {
+    if (e.tagName().toLower() == tdStr()) {
         if (e.hasAttribute(QLatin1String("rowspan"))) {
             return e.attribute(QLatin1String("rowspan")).toInt();
         }
