@@ -58,12 +58,12 @@ BlackListBalooEmailCompletionDialog::BlackListBalooEmailCompletionDialog(QWidget
     mSearchLineEdit->setClearButtonShown(true);
     mSearchLineEdit->setTrapReturnKey(true);
     mSearchLineEdit->setObjectName(QLatin1String("search_lineedit"));
-    connect(mSearchLineEdit, SIGNAL(returnPressed()), this, SLOT(slotSearch()));
+    connect(mSearchLineEdit, &KLineEdit::returnPressed, this, &BlackListBalooEmailCompletionDialog::slotSearch);
     searchLayout->addWidget(mSearchLineEdit);
 
     mSearchButton = new QPushButton(i18n("Search"));
     mSearchButton->setObjectName(QLatin1String("search_button"));
-    connect(mSearchButton, SIGNAL(clicked()), this, SLOT(slotSearch()));
+    connect(mSearchButton, &QAbstractButton::clicked, this, &BlackListBalooEmailCompletionDialog::slotSearch);
     mSearchButton->setEnabled(false);
     searchLayout->addWidget(mSearchButton);
 
@@ -76,17 +76,17 @@ BlackListBalooEmailCompletionDialog::BlackListBalooEmailCompletionDialog(QWidget
     mainLayout->addLayout(selectElementLayout);
     QPushButton *button = new QPushButton(i18n("&Select"), this);
     button->setObjectName(QLatin1String("select_email"));
-    connect(button, SIGNAL(clicked(bool)), this, SLOT(slotSelectEmails()));
+    connect(button, &QAbstractButton::clicked, this, &BlackListBalooEmailCompletionDialog::slotSelectEmails);
     selectElementLayout->addWidget(button);
 
     button = new QPushButton(i18n("&Unselect"), this);
     button->setObjectName(QLatin1String("unselect_email"));
-    connect(button, SIGNAL(clicked(bool)), this, SLOT(slotUnselectEmails()));
+    connect(button, &QAbstractButton::clicked, this, &BlackListBalooEmailCompletionDialog::slotUnselectEmails);
     selectElementLayout->addWidget(button);
     selectElementLayout->addStretch(1);
 
 
-    connect(mSearchLineEdit, SIGNAL(textChanged(QString)), this, SLOT(slotSearchLineEditChanged(QString)));
+    connect(mSearchLineEdit, &QLineEdit::textChanged, this, &BlackListBalooEmailCompletionDialog::slotSearchLineEditChanged);
     connect(this, SIGNAL(okClicked()), this, SLOT(slotSave()));
     readConfig();
 }

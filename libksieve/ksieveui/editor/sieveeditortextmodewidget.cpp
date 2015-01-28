@@ -98,8 +98,8 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     mSliderContainer = new PimCommon::SlideContainer(this);
     mFindBar = new PimCommon::PlainTextEditFindBar(mTextEdit, textEditWidget);
     mFindBar->setHideWhenClose(false);
-    connect(mFindBar, SIGNAL(hideFindBar()), mSliderContainer, SLOT(slideOut()));
-    connect(mFindBar, SIGNAL(displayMessageIndicator(QString)), mTextEdit, SLOT(slotDisplayMessageIndicator(QString)));
+    connect(mFindBar, &PimCommon::TextEditFindBarBase::hideFindBar, mSliderContainer, &PimCommon::SlideContainer::slideOut);
+    connect(mFindBar, &PimCommon::TextEditFindBarBase::displayMessageIndicator, mTextEdit, &PimCommon::PlainTextEditor::slotDisplayMessageIndicator);
     mSliderContainer->setContent(mFindBar);
     textEditLayout->addWidget(mSliderContainer);
 

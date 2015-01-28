@@ -44,15 +44,15 @@ ScamDetectionWarningWidget::ScamDetectionWarningWidget(QWidget *parent)
 
     action = new QAction(i18n("I confirm it's not a scam"), this);
     menu->addAction(action);
-    connect(action, SIGNAL(triggered(bool)), SLOT(slotMessageIsNotAScam()));
+    connect(action, &QAction::triggered, this, &ScamDetectionWarningWidget::slotMessageIsNotAScam);
 
     action = new QAction(i18n("Add email to whitelist"), this);
     menu->addAction(action);
-    connect(action, SIGNAL(triggered(bool)), SLOT(slotAddToWhiteList()));
+    connect(action, &QAction::triggered, this, &ScamDetectionWarningWidget::slotAddToWhiteList);
 
     action = new QAction(i18n("Disable scam detection for all messages"), this);
     menu->addAction(action);
-    connect(action, SIGNAL(triggered(bool)), SLOT(slotDisableScamDetection()));
+    connect(action, &QAction::triggered, this, &ScamDetectionWarningWidget::slotDisableScamDetection);
 }
 
 ScamDetectionWarningWidget::~ScamDetectionWarningWidget()
