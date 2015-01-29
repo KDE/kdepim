@@ -52,11 +52,18 @@ public:
 
     QHash<QString, bool> blackListItemChanged() const;
 
+protected:
+    void paintEvent( QPaintEvent *event );
+
 public Q_SLOTS:
     void slotEmailFound(const QStringList &);
 
+private slots:
+    void slotGeneralPaletteChanged();
 private:
     QStringList mEmailBlackList;
+    QColor mTextColor;
+    bool mFirstResult;
 };
 }
 
