@@ -1,7 +1,7 @@
 2014-2-20:
 -----------
 
-2014-2-20: New VERSION for archive => VERSION_2 => knote-akonadi
+2015-1-29: New VERSION for archive => VERSION_2 => knote-akonadi
 
 Zip structure is :
 Root
@@ -78,6 +78,7 @@ Root
 |       |---------globalnotesettings
 |       |---------akonadi_mailfilter_agent.notifyrc
 |       |---------storageservicerc
+|       |---------kpimbalooblacklist
 |
 |-----akonadi
 |       |---------<archive akonadi>
