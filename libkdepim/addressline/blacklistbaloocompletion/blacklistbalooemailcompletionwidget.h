@@ -18,29 +18,33 @@
 
 */
 
-#ifndef BLACKLISTBALOOEMAILCOMPLETIONDIALOG_H
-#define BLACKLISTBALOOEMAILCOMPLETIONDIALOG_H
+#ifndef BLACKLISTBALOOEMAILCOMPLETIONWIDGET_H
+#define BLACKLISTBALOOEMAILCOMPLETIONWIDGET_H
 
-#include <KDialog>
-#include "kdepim_export.h"
+#include <QWidget>
+class KPushButton;
+class KLineEdit;
 namespace KPIM {
-class BlackListBalooEmailCompletionWidget;
-class KDEPIM_EXPORT BlackListBalooEmailCompletionDialog : public KDialog
+class BlackListBalooEmailList;
+class BlackListBalooEmailCompletionWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit BlackListBalooEmailCompletionDialog(QWidget *parent=0);
-    ~BlackListBalooEmailCompletionDialog();
+    explicit BlackListBalooEmailCompletionWidget(QWidget *parent=0);
+    ~BlackListBalooEmailCompletionWidget();
 
+    void save();
     void setEmailBlackList(const QStringList &list);
-
 private slots:
-    void slotSave();
+    void slotUnselectEmails();
+    void slotSelectEmails();
+    void slotSearchLineEditChanged(const QString &text);
+    void slotSearch();
 private:
-    void writeConfig();
-    void readConfig();
-    BlackListBalooEmailCompletionWidget *mBlackListWidget;
+    KLineEdit *mSearchLineEdit;
+    BlackListBalooEmailList *mEmailList;
+    KPushButton *mSearchButton;
 };
 }
 
-#endif // BLACKLISTBALOOEMAILCOMPLETIONDIALOG_H
+#endif // BLACKLISTBALOOEMAILCOMPLETIONWIDGET_H
