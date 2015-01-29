@@ -20,14 +20,18 @@
 
 #include "blacklistbalooemaillist.h"
 #include <QDebug>
+#include <QPainter>
+#include <KGlobalSettings>
 using namespace KPIM;
 
-
-
 BlackListBalooEmailList::BlackListBalooEmailList(QWidget *parent)
-    : QListWidget(parent)
+    : QListWidget(parent),
+      mFirstResult(false)
 {
     setSelectionMode(QAbstractItemView::ExtendedSelection);
+    connect( KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
+             this, SLOT(slotGeneralPaletteChanged()));
+
 }
 
 BlackListBalooEmailList::~BlackListBalooEmailList()
@@ -56,6 +60,7 @@ QHash<QString, bool> BlackListBalooEmailList::blackListItemChanged() const
 
 void BlackListBalooEmailList::slotEmailFound(const QStringList &list)
 {
+    mFirstResult = true;
     clear();
     QStringList emailsAdded;
     Q_FOREACH(const QString & mail, list) {
@@ -70,6 +75,35 @@ void BlackListBalooEmailList::slotEmailFound(const QStringList &list)
             item->setText(mail);
             emailsAdded << mail;
         }
+    }
+}
+
+void BlackListBalooEmailList::slotGeneralPaletteChanged()
+{
+    const QPalette palette = viewport()->palette();
+    QColor color = palette.text().color();
+    color.setAlpha( 128 );
+    mTextColor = color;
+}
+
+void BlackListBalooEmailList::paintEvent( QPaintEvent *event )
+{
+    if ( mFirstResult && (!model() || model()->rowCount() == 0) ) {
+        QPainter p( viewport() );
+
+        QFont font = p.font();
+        font.setItalic( true );
+        p.setFont( font );
+
+        if (!mTextColor.isValid()) {
+            slotGeneralPaletteChanged();
+        }
+        p.setPen( mTextColor );
+
+        //Add i18n
+        p.drawText( QRect( 0, 0, width(), height() ), Qt::AlignCenter, QLatin1String( "No result found" ) );
+    } else {
+        QListWidget::paintEvent( event );
     }
 }
 
