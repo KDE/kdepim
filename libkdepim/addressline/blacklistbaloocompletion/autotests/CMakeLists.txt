@@ -4,7 +4,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/libkdepim
 )
 
-set( libkdepim_blacklistbalooemailcompletiondialogtest_SRCS blacklistbalooemailcompletiondialogtest.cpp )
+set( libkdepim_blacklistbalooemailcompletiondialogtest_SRCS blacklistbalooemailcompletiondialogtest.cpp ../blacklistbalooemailcompletionwidget.cpp)
 kde4_add_unit_test( libkdepim_blacklistbalooemailcompletiondialogtest ${libkdepim_blacklistbalooemailcompletiondialogtest_SRCS})
 target_link_libraries( libkdepim_blacklistbalooemailcompletiondialogtest ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS} kdepim)
 
@@ -20,4 +20,10 @@ target_link_libraries( libkdepim_blacklistbalooemailsearchjobtest ${QT_QTTEST_LI
 set( libkdepim_blacklistbalooemailutiltest_SRCS blacklistbalooemailutiltest.cpp )
 kde4_add_unit_test( libkdepim_blacklistbalooemailutiltest ${libkdepim_blacklistbalooemailutiltest_SRCS})
 target_link_libraries( libkdepim_blacklistbalooemailutiltest ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS} kdepim)
+
+
+set( libkdepim_blacklistbalooemailcompletionwidgettest_SRCS blacklistbalooemailcompletionwidgettest.cpp ../blacklistbalooemailcompletionwidget.cpp )
+kde4_add_unit_test( libkdepim_blacklistbalooemailcompletionwidgettest ${libkdepim_blacklistbalooemailcompletionwidgettest_SRCS})
+target_link_libraries( libkdepim_blacklistbalooemailcompletionwidgettest ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS} kdepim)
+
 
