@@ -63,6 +63,15 @@ void BlackListBalooEmailCompletionWidgetTest::shouldHaveDefaultValue()
     QVERIFY(unselectButton);
 
 
+    QLabel *excludeDomainLabel = qFindChild<QLabel *>(&widget, QLatin1String("domain_label"));
+    QVERIFY(excludeDomainLabel);
+
+    KLineEdit *excludeDomainLineEdit = qFindChild<KLineEdit *>(&widget, QLatin1String("domain_lineedit"));
+    QVERIFY(excludeDomainLineEdit);
+    QVERIFY(excludeDomainLineEdit->trapReturnKey());
+    QVERIFY(excludeDomainLineEdit->text().isEmpty());
+    QVERIFY(excludeDomainLineEdit->isClearButtonShown());
+    QVERIFY(!excludeDomainLineEdit->clickMessage().isEmpty());
 }
 
 void BlackListBalooEmailCompletionWidgetTest::shouldEnablePushButtonWhenTestSizeSupperiorToTwo()

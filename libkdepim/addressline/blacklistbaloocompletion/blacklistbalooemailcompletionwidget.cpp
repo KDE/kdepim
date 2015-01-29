@@ -81,11 +81,37 @@ BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget
 
 
     connect(mSearchLineEdit, SIGNAL(textChanged(QString)), this, SLOT(slotSearchLineEditChanged(QString)));
+
+    QHBoxLayout *excludeDomainLayout = new QHBoxLayout;
+    excludeDomainLayout->setMargin(0);
+    mainLayout->addLayout(excludeDomainLayout);
+
+    //kf5 add i18n
+    QLabel *excludeDomainLabel = new QLabel(QLatin1String("Exclude domain name:"));
+    excludeDomainLabel->setObjectName(QLatin1String("domain_label"));
+    excludeDomainLayout->addWidget(excludeDomainLabel);
+
+    mExcludeDomainLineEdit = new KLineEdit;
+    excludeDomainLayout->addWidget(mExcludeDomainLineEdit);
+    mExcludeDomainLineEdit->setObjectName(QLatin1String("domain_lineedit"));
+    mExcludeDomainLineEdit->setClearButtonShown(true);
+    mExcludeDomainLineEdit->setTrapReturnKey(true);
+    //kf5 add i18n
+    mExcludeDomainLineEdit->setClickMessage(QLatin1String("Separate domain with \',\'"));
+    load();
 }
 
 BlackListBalooEmailCompletionWidget::~BlackListBalooEmailCompletionWidget()
 {
 
+}
+
+void BlackListBalooEmailCompletionWidget::load()
+{
+    KSharedConfig::Ptr config = KSharedConfig::openConfig( QLatin1String("kpimbalooblacklist") );
+    KConfigGroup group( config, "AddressLineEdit" );
+    const QStringList lst = group.readEntry("ExcludeDomain", QStringList());
+    mExcludeDomainLineEdit->setText(lst.join(QLatin1String(",")));
 }
 
 void BlackListBalooEmailCompletionWidget::slotUnselectEmails()
@@ -125,16 +151,17 @@ void BlackListBalooEmailCompletionWidget::setEmailBlackList(const QStringList &l
 
 void BlackListBalooEmailCompletionWidget::save()
 {
+    KSharedConfig::Ptr config = KSharedConfig::openConfig( QLatin1String("kpimbalooblacklist") );
+    KConfigGroup group( config, "AddressLineEdit" );
     const QHash<QString, bool> result = mEmailList->blackListItemChanged();
     if (!result.isEmpty()) {
-        KSharedConfig::Ptr config = KSharedConfig::openConfig( QLatin1String("kpimbalooblacklist") );
-        KConfigGroup group( config, "AddressLineEdit" );
         QStringList blackList = group.readEntry( "BalooBackList", QStringList() );
         KPIM::BlackListBalooEmailUtil util;
         util.initialBlackList(blackList);
         util.newBlackList(result);
         blackList = util.createNewBlackList();
         group.writeEntry( "BalooBackList", blackList );
-        group.sync();
     }
+    group.writeEntry("ExcludeDomain", mExcludeDomainLineEdit->text().split(QLatin1String(",")));
+    group.sync();
 }
