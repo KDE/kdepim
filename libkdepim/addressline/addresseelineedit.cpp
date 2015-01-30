@@ -269,6 +269,7 @@ public:
 
     AddresseeLineEdit *q;
     QStringList m_balooBlackList;
+    QStringList m_domainExcludeList;
     QString m_previousAddresses;
     QString m_searchString;
     bool m_useCompletion;
@@ -390,6 +391,12 @@ void AddresseeLineEdit::Private::searchInBaloo()
     Baloo::PIM::ContactCompleter com(trimmedString, 20);
     const QStringList listEmail = cleanupBalooContact(com.complete());
     Q_FOREACH (const QString& email, listEmail) {
+        Q_FOREACH(const QString &excludeDomain, m_domainExcludeList) {
+            if (email.endsWith(excludeDomain)) {
+                continue;
+            }
+        }
+
         if (!m_balooBlackList.contains(email)) {
             addCompletionItem(email, 1, s_static->balooCompletionSource);
         }
@@ -1032,6 +1039,7 @@ void AddresseeLineEdit::Private::loadBalooBlackList()
     KSharedConfig::Ptr config = KSharedConfig::openConfig( QLatin1String("kpimbalooblacklist") );
     KConfigGroup group( config, "AddressLineEdit" );
     m_balooBlackList = group.readEntry( "BalooBackList", QStringList() );
+    m_domainExcludeList = group.readEntry("ExcludeDomain", QStringList());
 }
 
 AddresseeLineEdit::AddresseeLineEdit( QWidget *parent, bool enableCompletion )

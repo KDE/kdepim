@@ -41,7 +41,9 @@ private slots:
     void slotSearchLineEditChanged(const QString &text);
     void slotSearch();
 private:
+    void load();
     KLineEdit *mSearchLineEdit;
+    KLineEdit *mExcludeDomainLineEdit;
     BlackListBalooEmailList *mEmailList;
     QPushButton *mSearchButton;
 };
