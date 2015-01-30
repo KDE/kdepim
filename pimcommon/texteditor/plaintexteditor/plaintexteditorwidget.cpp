@@ -108,16 +108,18 @@ void PlainTextEditorWidget::setReadOnly(bool readOnly)
 void PlainTextEditorWidget::slotReplace()
 {
     mFindBar->showReplace();
+    mSliderContainer->slideIn();
+
     mFindBar->focusAndSetCursor();
 }
 
 void PlainTextEditorWidget::slotFind()
 {
-    mSliderContainer->slideIn();
     if ( mEditor->textCursor().hasSelection() )
         mFindBar->setText( mEditor->textCursor().selectedText() );
     mEditor->moveCursor(QTextCursor::Start);
     mFindBar->showFind();
+    mSliderContainer->slideIn();
     mFindBar->focusAndSetCursor();
 }
 

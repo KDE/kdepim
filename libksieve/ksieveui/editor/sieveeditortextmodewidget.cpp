@@ -227,17 +227,18 @@ void SieveEditorTextModeWidget::autoGenerateScripts()
 
 void SieveEditorTextModeWidget::slotFind()
 {
-    mSliderContainer->slideIn();
     if ( mTextEdit->textCursor().hasSelection() )
         mFindBar->setText( mTextEdit->textCursor().selectedText() );
     mTextEdit->moveCursor(QTextCursor::Start);
     mFindBar->showFind();
+    mSliderContainer->slideIn();
     mFindBar->focusAndSetCursor();
 }
 
 void SieveEditorTextModeWidget::slotReplace()
 {
     mFindBar->showReplace();
+    mSliderContainer->slideIn();
     mFindBar->focusAndSetCursor();
 }
 
