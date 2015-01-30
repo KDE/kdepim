@@ -24,13 +24,14 @@
 #include <QWidget>
 class QPushButton;
 class KLineEdit;
-namespace KPIM {
+namespace KPIM
+{
 class BlackListBalooEmailList;
 class BlackListBalooEmailCompletionWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit BlackListBalooEmailCompletionWidget(QWidget *parent= Q_NULLPTR);
+    explicit BlackListBalooEmailCompletionWidget(QWidget *parent = Q_NULLPTR);
     ~BlackListBalooEmailCompletionWidget();
 
     void save();

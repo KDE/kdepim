@@ -26,7 +26,8 @@
 #include <QHash>
 #include "kdepim_export.h"
 
-namespace KPIM {
+namespace KPIM
+{
 
 class KDEPIM_EXPORT BlackListBalooEmailListItem : public QListWidgetItem
 {
@@ -53,7 +54,7 @@ public:
     QHash<QString, bool> blackListItemChanged() const;
 
 protected:
-    void paintEvent( QPaintEvent *event );
+    void paintEvent(QPaintEvent *event);
 
 public Q_SLOTS:
     void slotEmailFound(const QStringList &);

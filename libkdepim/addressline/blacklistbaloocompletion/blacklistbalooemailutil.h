@@ -24,14 +24,15 @@
 #include "kdepim_export.h"
 #include <QStringList>
 #include <QHash>
-namespace KPIM {
+namespace KPIM
+{
 class KDEPIM_EXPORT BlackListBalooEmailUtil
 {
 public:
     BlackListBalooEmailUtil();
     ~BlackListBalooEmailUtil();
     void initialBlackList(const QStringList &blackList);
-    void newBlackList(const QHash<QString, bool> & );
+    void newBlackList(const QHash<QString, bool> &);
     QStringList createNewBlackList();
 private:
     QStringList mInitialList;

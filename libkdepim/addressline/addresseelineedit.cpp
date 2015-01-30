@@ -370,7 +370,6 @@ void AddresseeLineEdit::Private::stopLDAPLookup()
     s_static->ldapLineEdit = 0;
 }
 
-
 QStringList AddresseeLineEdit::Private::cleanupBalooContact(const QStringList &lst)
 {
     if (lst.isEmpty()) {
@@ -390,8 +389,8 @@ void AddresseeLineEdit::Private::searchInBaloo()
     const QString trimmedString = m_searchString.trimmed();
     Baloo::PIM::ContactCompleter com(trimmedString, 20);
     const QStringList listEmail = cleanupBalooContact(com.complete());
-    Q_FOREACH (const QString& email, listEmail) {
-        Q_FOREACH(const QString &excludeDomain, m_domainExcludeList) {
+    Q_FOREACH (const QString &email, listEmail) {
+        Q_FOREACH (const QString &excludeDomain, m_domainExcludeList) {
             if (email.endsWith(excludeDomain)) {
                 continue;
             }
@@ -1036,14 +1035,14 @@ void AddresseeLineEdit::Private::slotConfigureBalooBlackList()
 
 void AddresseeLineEdit::Private::loadBalooBlackList()
 {
-    KSharedConfig::Ptr config = KSharedConfig::openConfig( QLatin1String("kpimbalooblacklist") );
-    KConfigGroup group( config, "AddressLineEdit" );
-    m_balooBlackList = group.readEntry( "BalooBackList", QStringList() );
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(QLatin1String("kpimbalooblacklist"));
+    KConfigGroup group(config, "AddressLineEdit");
+    m_balooBlackList = group.readEntry("BalooBackList", QStringList());
     m_domainExcludeList = group.readEntry("ExcludeDomain", QStringList());
 }
 
-AddresseeLineEdit::AddresseeLineEdit( QWidget *parent, bool enableCompletion )
-    : KLineEdit( parent ), d( new Private( this, enableCompletion ) )
+AddresseeLineEdit::AddresseeLineEdit(QWidget *parent, bool enableCompletion)
+    : KLineEdit(parent), d(new Private(this, enableCompletion))
 {
     Kdelibs4ConfigMigrator migrate(QStringLiteral("addressline"));
     migrate.setConfigFiles(QStringList() << QStringLiteral("kpimbalooblacklist") << QStringLiteral("kpimcompletionorder"));
@@ -1408,7 +1407,7 @@ QMenu *AddresseeLineEdit::createStandardContextMenu()
     }
 
     //Add i18n in kf5
-    QAction *configureBalooBlackList = new QAction(QLatin1String( "Configure Email Blacklist" ),menu);
+    QAction *configureBalooBlackList = new QAction(QLatin1String("Configure Email Blacklist"), menu);
     connect(configureBalooBlackList, SIGNAL(triggered(bool)), this, SLOT(slotConfigureBalooBlackList()));
     menu->addAction(configureBalooBlackList);
 

@@ -29,8 +29,8 @@ BlackListBalooEmailList::BlackListBalooEmailList(QWidget *parent)
       mFirstResult(false)
 {
     setSelectionMode(QAbstractItemView::ExtendedSelection);
-    connect( KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
-             this, SLOT(slotGeneralPaletteChanged()));
+    connect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
+            this, SLOT(slotGeneralPaletteChanged()));
 
 }
 
@@ -63,7 +63,7 @@ void BlackListBalooEmailList::slotEmailFound(const QStringList &list)
     mFirstResult = true;
     clear();
     QStringList emailsAdded;
-    Q_FOREACH(const QString & mail, list) {
+    Q_FOREACH (const QString &mail, list) {
         if (!emailsAdded.contains(mail)) {
             BlackListBalooEmailListItem *item = new BlackListBalooEmailListItem(this);
             if (mEmailBlackList.contains(mail)) {
@@ -82,37 +82,36 @@ void BlackListBalooEmailList::slotGeneralPaletteChanged()
 {
     const QPalette palette = viewport()->palette();
     QColor color = palette.text().color();
-    color.setAlpha( 128 );
+    color.setAlpha(128);
     mTextColor = color;
 }
 
-void BlackListBalooEmailList::paintEvent( QPaintEvent *event )
+void BlackListBalooEmailList::paintEvent(QPaintEvent *event)
 {
-    if ( mFirstResult && (!model() || model()->rowCount() == 0) ) {
-        QPainter p( viewport() );
+    if (mFirstResult && (!model() || model()->rowCount() == 0)) {
+        QPainter p(viewport());
 
         QFont font = p.font();
-        font.setItalic( true );
-        p.setFont( font );
+        font.setItalic(true);
+        p.setFont(font);
 
         if (!mTextColor.isValid()) {
             slotGeneralPaletteChanged();
         }
-        p.setPen( mTextColor );
+        p.setPen(mTextColor);
 
         //Add i18n
-        p.drawText( QRect( 0, 0, width(), height() ), Qt::AlignCenter, QLatin1String( "No result found" ) );
+        p.drawText(QRect(0, 0, width(), height()), Qt::AlignCenter, QLatin1String("No result found"));
     } else {
-        QListWidget::paintEvent( event );
+        QListWidget::paintEvent(event);
     }
 }
-
 
 BlackListBalooEmailListItem::BlackListBalooEmailListItem(QListWidget *parent)
     : QListWidgetItem(parent),
       mInitializeStatus(false)
 {
-    setFlags(Qt::ItemIsEnabled|Qt::ItemIsUserCheckable|Qt::ItemIsSelectable);
+    setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable | Qt::ItemIsSelectable);
 }
 
 BlackListBalooEmailListItem::~BlackListBalooEmailListItem()

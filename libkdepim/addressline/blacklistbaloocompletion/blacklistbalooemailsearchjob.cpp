@@ -54,4 +54,3 @@ void BlackListBalooEmailSearchJob::setSearchEmail(const QString &searchEmail)
     mSearchEmail = searchEmail;
 }
 
-

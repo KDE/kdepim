@@ -23,13 +23,14 @@
 
 #include <KDialog>
 #include "kdepim_export.h"
-namespace KPIM {
+namespace KPIM
+{
 class BlackListBalooEmailCompletionWidget;
 class KDEPIM_EXPORT BlackListBalooEmailCompletionDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit BlackListBalooEmailCompletionDialog(QWidget *parent=Q_NULLPTR);
+    explicit BlackListBalooEmailCompletionDialog(QWidget *parent = Q_NULLPTR);
     ~BlackListBalooEmailCompletionDialog();
 
     void setEmailBlackList(const QStringList &list);

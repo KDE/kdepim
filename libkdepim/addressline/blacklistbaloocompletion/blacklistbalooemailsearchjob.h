@@ -24,12 +24,13 @@
 #include <QObject>
 
 #include "kdepim_export.h"
-namespace KPIM {
+namespace KPIM
+{
 class KDEPIM_EXPORT BlackListBalooEmailSearchJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit BlackListBalooEmailSearchJob(QObject *parent=Q_NULLPTR);
+    explicit BlackListBalooEmailSearchJob(QObject *parent = Q_NULLPTR);
     ~BlackListBalooEmailSearchJob();
 
     bool start();

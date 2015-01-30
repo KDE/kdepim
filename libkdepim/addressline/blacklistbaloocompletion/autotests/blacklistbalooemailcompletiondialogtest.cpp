@@ -51,7 +51,6 @@ void BlackListBalooEmailCompletionDialogTest::shouldHaveDefaultValue()
     QVERIFY(searchLineEdit->trapReturnKey());
     QVERIFY(searchLineEdit->text().isEmpty());
 
-
     QPushButton *seachButton = qFindChild<QPushButton *>(&dlg, QLatin1String("search_button"));
     QVERIFY(seachButton);
     QVERIFY(!seachButton->isEnabled());
@@ -63,7 +62,6 @@ void BlackListBalooEmailCompletionDialogTest::shouldHaveDefaultValue()
     QVERIFY(selectButton);
     QPushButton *unselectButton = qFindChild<QPushButton *>(&dlg, QLatin1String("unselect_email"));
     QVERIFY(unselectButton);
-
 
 }
 

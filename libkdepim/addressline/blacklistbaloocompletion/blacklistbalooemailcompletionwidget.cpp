@@ -63,7 +63,6 @@ BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget
     mEmailList->setObjectName(QLatin1String("email_list"));
     mainLayout->addWidget(mEmailList);
 
-
     QHBoxLayout *selectElementLayout = new QHBoxLayout;
     mainLayout->addLayout(selectElementLayout);
     QPushButton *button = new QPushButton(i18n("&Select"), this);
@@ -76,7 +75,6 @@ BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget
     connect(button, SIGNAL(clicked(bool)), this, SLOT(slotUnselectEmails()));
     selectElementLayout->addWidget(button);
     selectElementLayout->addStretch(1);
-
 
     connect(mSearchLineEdit, SIGNAL(textChanged(QString)), this, SLOT(slotSearchLineEditChanged(QString)));
 
@@ -106,22 +104,22 @@ BlackListBalooEmailCompletionWidget::~BlackListBalooEmailCompletionWidget()
 
 void BlackListBalooEmailCompletionWidget::load()
 {
-    KSharedConfig::Ptr config = KSharedConfig::openConfig( QLatin1String("kpimbalooblacklist") );
-    KConfigGroup group( config, "AddressLineEdit" );
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(QLatin1String("kpimbalooblacklist"));
+    KConfigGroup group(config, "AddressLineEdit");
     const QStringList lst = group.readEntry("ExcludeDomain", QStringList());
     mExcludeDomainLineEdit->setText(lst.join(QLatin1String(",")));
 }
 
 void BlackListBalooEmailCompletionWidget::slotUnselectEmails()
 {
-    Q_FOREACH(QListWidgetItem *item, mEmailList->selectedItems()) {
+    Q_FOREACH (QListWidgetItem *item, mEmailList->selectedItems()) {
         item->setCheckState(Qt::Unchecked);
     }
 }
 
 void BlackListBalooEmailCompletionWidget::slotSelectEmails()
 {
-    Q_FOREACH(QListWidgetItem *item, mEmailList->selectedItems()) {
+    Q_FOREACH (QListWidgetItem *item, mEmailList->selectedItems()) {
         item->setCheckState(Qt::Checked);
     }
 }
@@ -134,7 +132,7 @@ void BlackListBalooEmailCompletionWidget::slotSearchLineEditChanged(const QStrin
 void BlackListBalooEmailCompletionWidget::slotSearch()
 {
     const QString searchEmail = mSearchLineEdit->text().trimmed();
-    if (searchEmail.length() > 2 ) {
+    if (searchEmail.length() > 2) {
         KPIM::BlackListBalooEmailSearchJob *job = new KPIM::BlackListBalooEmailSearchJob(this);
         job->setSearchEmail(searchEmail);
         connect(job, SIGNAL(emailsFound(QStringList)), mEmailList, SLOT(slotEmailFound(QStringList)));
@@ -149,16 +147,16 @@ void BlackListBalooEmailCompletionWidget::setEmailBlackList(const QStringList &l
 
 void BlackListBalooEmailCompletionWidget::save()
 {
-    KSharedConfig::Ptr config = KSharedConfig::openConfig( QLatin1String("kpimbalooblacklist") );
-    KConfigGroup group( config, "AddressLineEdit" );
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(QLatin1String("kpimbalooblacklist"));
+    KConfigGroup group(config, "AddressLineEdit");
     const QHash<QString, bool> result = mEmailList->blackListItemChanged();
     if (!result.isEmpty()) {
-        QStringList blackList = group.readEntry( "BalooBackList", QStringList() );
+        QStringList blackList = group.readEntry("BalooBackList", QStringList());
         KPIM::BlackListBalooEmailUtil util;
         util.initialBlackList(blackList);
         util.newBlackList(result);
         blackList = util.createNewBlackList();
-        group.writeEntry( "BalooBackList", blackList );
+        group.writeEntry("BalooBackList", blackList);
     }
     group.writeEntry("ExcludeDomain", mExcludeDomainLineEdit->text().split(QLatin1String(",")));
     group.sync();

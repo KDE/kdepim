@@ -47,7 +47,6 @@ FollowUpReminderInfoDialog::FollowUpReminderInfoDialog(QWidget *parent)
     connect(buttonBox, &QDialogButtonBox::accepted, this, &FollowUpReminderInfoDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &FollowUpReminderInfoDialog::reject);
 
-
     mWidget = new FollowUpReminderInfoWidget;
     mWidget->setObjectName(QStringLiteral("FollowUpReminderInfoWidget"));
     mainLayout->addWidget(mWidget);

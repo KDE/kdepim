@@ -32,10 +32,10 @@ using namespace KPIM;
 BlackListBalooEmailCompletionDialog::BlackListBalooEmailCompletionDialog(QWidget *parent)
     : KDialog(parent)
 {
-    setCaption( i18n( "Blacklist Baloo Completion" ) );
-    setButtons( Ok|Cancel );
-    setDefaultButton( Ok );
-    setModal( true );
+    setCaption(i18n("Blacklist Baloo Completion"));
+    setButtons(Ok | Cancel);
+    setDefaultButton(Ok);
+    setModal(true);
     mBlackListWidget = new BlackListBalooEmailCompletionWidget(this);
     mBlackListWidget->setObjectName(QLatin1String("blacklistwidget"));
     setMainWidget(mBlackListWidget);
@@ -56,17 +56,17 @@ void BlackListBalooEmailCompletionDialog::setEmailBlackList(const QStringList &l
 
 void BlackListBalooEmailCompletionDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "BlackListBalooEmailCompletionDialog" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
-    if ( sizeDialog.isValid() ) {
-        resize( sizeDialog );
+    KConfigGroup group(KSharedConfig::openConfig(), "BlackListBalooEmailCompletionDialog");
+    const QSize sizeDialog = group.readEntry("Size", QSize(800, 600));
+    if (sizeDialog.isValid()) {
+        resize(sizeDialog);
     }
 }
 
 void BlackListBalooEmailCompletionDialog::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "BlackListBalooEmailCompletionDialog" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KSharedConfig::openConfig(), "BlackListBalooEmailCompletionDialog");
+    group.writeEntry("Size", size());
 }
 
 void BlackListBalooEmailCompletionDialog::slotSave()

@@ -46,7 +46,8 @@ namespace PimCommon
 {
 class AttachmentTemporaryFilesDirs;
 }
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 /** Flags for the encryption state. */
 typedef enum {

@@ -95,6 +95,4 @@ void BlackListBalooEmailListTest::shouldNotAddDuplicateEmails()
     QCOMPARE(blackList.count(), 2);
 }
 
-
-
 QTEST_MAIN(BlackListBalooEmailListTest)
