@@ -63,6 +63,7 @@
 #include <AkonadiCore/itemcreatejob.h>
 #include <AkonadiCore/collectionfetchjob.h>
 #include <AkonadiWidgets/collectioncombobox.h>
+#include <Akonadi/KMime/MessageFlags>
 
 #include <KIdentityManagement/kidentitymanagement/identitycombo.h>
 #include <KIdentityManagement/kidentitymanagement/identitymanager.h>
@@ -1161,6 +1162,8 @@ void MessageComposer::ComposerViewBase::saveMessage(KMime::Message::Ptr message,
     Akonadi::Item item;
     item.setMimeType(QLatin1String("message/rfc822"));
     item.setPayload(message);
+    Akonadi::MessageFlags::copyMessageFlags(*message, item);
+
     if (!identity.isNull()) {   // we have a valid identity
         if (saveIn == MessageComposer::MessageSender::SaveInTemplates) {
             if (!identity.templates().isEmpty()) {   // the user has specified a custom templates collection
