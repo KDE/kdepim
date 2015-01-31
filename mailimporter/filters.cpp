@@ -31,6 +31,7 @@
 #include <Akonadi/ItemFetchScope>
 #include <Akonadi/CollectionCreateJob>
 #include <akonadi/kmime/messageparts.h>
+#include <akonadi/kmime/messageflags.h>
 
 // KDE Includes
 #include <KUrl>
@@ -146,7 +147,9 @@ bool Filter::addAkonadiMessage( const Akonadi::Collection &collection,
     } else {
         item.setFlags( status.statusFlags() );
     }
-    
+
+    Akonadi::MessageFlags::copyMessageFlags(*message, item);
+
     item.setPayload<KMime::Message::Ptr>( message );
     QScopedPointer<Akonadi::ItemCreateJob> job(new Akonadi::ItemCreateJob( item, collection ));
     job->setAutoDelete( false );

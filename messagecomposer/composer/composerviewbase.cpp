@@ -60,6 +60,7 @@
 #include <mailtransport/transportmanager.h>
 
 #include <akonadi/kmime/specialmailcollections.h>
+#include <akonadi/kmime/messageflags.h>
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectioncombobox.h>
@@ -1117,6 +1118,7 @@ void MessageComposer::ComposerViewBase::saveMessage( KMime::Message::Ptr message
     Akonadi::Item item;
     item.setMimeType( QLatin1String( "message/rfc822" ) );
     item.setPayload( message );
+    Akonadi::MessageFlags::copyMessageFlags(*message, item);
     if ( !identity.isNull() ) { // we have a valid identity
         if ( saveIn == MessageComposer::MessageSender::SaveInTemplates ) {
             if ( !identity.templates().isEmpty() ) { // the user has specified a custom templates collection
