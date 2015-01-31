@@ -22,6 +22,7 @@
 #include <QDebug>
 #include <QPainter>
 #include <KGlobalSettings>
+#include <KLocalizedString>
 using namespace KPIM;
 
 BlackListBalooEmailList::BlackListBalooEmailList(QWidget *parent)
@@ -100,8 +101,7 @@ void BlackListBalooEmailList::paintEvent(QPaintEvent *event)
         }
         p.setPen(mTextColor);
 
-        //Add i18n
-        p.drawText(QRect(0, 0, width(), height()), Qt::AlignCenter, QLatin1String("No result found"));
+        p.drawText(QRect(0, 0, width(), height()), Qt::AlignCenter, i18n("No result found"));
     } else {
         QListWidget::paintEvent(event);
     }

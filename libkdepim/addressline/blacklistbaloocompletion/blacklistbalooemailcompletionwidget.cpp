@@ -82,8 +82,7 @@ BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget
     excludeDomainLayout->setMargin(0);
     mainLayout->addLayout(excludeDomainLayout);
 
-    //kf5 add i18n
-    QLabel *excludeDomainLabel = new QLabel(QLatin1String("Exclude domain name:"));
+    QLabel *excludeDomainLabel = new QLabel(i18n("Exclude domain name:"));
     excludeDomainLabel->setObjectName(QLatin1String("domain_label"));
     excludeDomainLayout->addWidget(excludeDomainLabel);
 
@@ -92,8 +91,8 @@ BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget
     mExcludeDomainLineEdit->setObjectName(QLatin1String("domain_lineedit"));
     mExcludeDomainLineEdit->setClearButtonShown(true);
     mExcludeDomainLineEdit->setTrapReturnKey(true);
-    //kf5 add i18n
-    mExcludeDomainLineEdit->setClickMessage(QLatin1String("Separate domain with \',\'"));
+
+    mExcludeDomainLineEdit->setClickMessage(i18n("Separate domain with \',\'"));
     load();
 }
 
