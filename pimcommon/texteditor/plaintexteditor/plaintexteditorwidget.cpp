@@ -110,20 +110,20 @@ void PlainTextEditorWidget::slotReplace()
 {
     if (mEditor->searchSupport()) {
         mFindBar->showReplace();
+        mSliderContainer->slideIn();
         mFindBar->focusAndSetCursor();
     }
 }
 
 void PlainTextEditorWidget::slotFind()
 {
-    mSliderContainer->slideIn();
-
     if (mEditor->searchSupport()) {
         if (mEditor->textCursor().hasSelection()) {
             mFindBar->setText(mEditor->textCursor().selectedText());
         }
         mEditor->moveCursor(QTextCursor::Start);
         mFindBar->showFind();
+        mSliderContainer->slideIn();
         mFindBar->focusAndSetCursor();
     }
 }
