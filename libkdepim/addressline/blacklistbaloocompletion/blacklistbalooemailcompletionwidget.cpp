@@ -67,16 +67,18 @@ BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget
     QHBoxLayout *selectElementLayout = new QHBoxLayout;
     mainLayout->addLayout(selectElementLayout);
     //Add i18n in kf5
-    KPushButton *button = new KPushButton(QLatin1String("&Select"), this);
-    button->setObjectName(QLatin1String("select_email"));
-    connect(button, SIGNAL(clicked(bool)), this, SLOT(slotSelectEmails()));
-    selectElementLayout->addWidget(button);
+    mSelectButton = new KPushButton(QLatin1String("&Select"), this);
+    mSelectButton->setObjectName(QLatin1String("select_email"));
+    mSelectButton->setEnabled(false);
+    connect(mSelectButton, SIGNAL(clicked(bool)), this, SLOT(slotSelectEmails()));
+    selectElementLayout->addWidget(mSelectButton);
 
     //Add i18n in kf5
-    button = new KPushButton(QLatin1String("&Unselect"), this);
-    button->setObjectName(QLatin1String("unselect_email"));
-    connect(button, SIGNAL(clicked(bool)), this, SLOT(slotUnselectEmails()));
-    selectElementLayout->addWidget(button);
+    mUnselectButton = new KPushButton(QLatin1String("&Unselect"), this);
+    mUnselectButton->setObjectName(QLatin1String("unselect_email"));
+    mUnselectButton->setEnabled(false);
+    connect(mUnselectButton, SIGNAL(clicked(bool)), this, SLOT(slotUnselectEmails()));
+    selectElementLayout->addWidget(mUnselectButton);
     selectElementLayout->addStretch(1);
 
 
@@ -98,12 +100,19 @@ BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget
     mExcludeDomainLineEdit->setTrapReturnKey(true);
     //kf5 add i18n
     mExcludeDomainLineEdit->setClickMessage(QLatin1String("Separate domain with \',\'"));
+    connect(mEmailList, SIGNAL(itemSelectionChanged()), this, SLOT(slotSelectionChanged()));
     load();
 }
 
 BlackListBalooEmailCompletionWidget::~BlackListBalooEmailCompletionWidget()
 {
 
+}
+
+void BlackListBalooEmailCompletionWidget::slotSelectionChanged()
+{
+    mSelectButton->setEnabled(!mEmailList->selectedItems().isEmpty());
+    mUnselectButton->setEnabled(!mEmailList->selectedItems().isEmpty());
 }
 
 void BlackListBalooEmailCompletionWidget::load()

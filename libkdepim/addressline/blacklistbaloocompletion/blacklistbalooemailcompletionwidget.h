@@ -36,6 +36,7 @@ public:
     void save();
     void setEmailBlackList(const QStringList &list);
 private slots:
+    void slotSelectionChanged();
     void slotUnselectEmails();
     void slotSelectEmails();
     void slotSearchLineEditChanged(const QString &text);
@@ -46,6 +47,8 @@ private:
     KLineEdit *mExcludeDomainLineEdit;
     BlackListBalooEmailList *mEmailList;
     KPushButton *mSearchButton;
+    KPushButton *mSelectButton;
+    KPushButton *mUnselectButton;
 };
 }
 

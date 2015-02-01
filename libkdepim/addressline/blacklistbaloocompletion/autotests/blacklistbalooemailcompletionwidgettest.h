@@ -33,6 +33,7 @@ public:
 private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldEnablePushButtonWhenTestSizeSupperiorToTwo();
+    void shouldChangeEnableSelectUnSelectButton();
 };
 
 #endif // BLACKLISTBALOOEMAILCOMPLETIONWIDGETTEST_H
