@@ -156,6 +156,10 @@
       <li xml:lang="pt">Poderá usar diversos servidores de LDAP</li>
       <li xml:lang="pt-BR">Pode usar diversos servidores LDAP</li>
       <li xml:lang="sk">Vie použiť viac LDAP serverov</li>
+      <li xml:lang="sr">Коришћење вишеструких ЛДАП сервера.</li>
+      <li xml:lang="sr-Latn">Korišćenje višestrukih LDAP servera.</li>
+      <li xml:lang="sr-ijekavian">Коришћење вишеструких ЛДАП сервера.</li>
+      <li xml:lang="sr-ijekavianlatin">Korišćenje višestrukih LDAP servera.</li>
       <li xml:lang="sv">Kan använda flera LDAP-servrar</li>
       <li xml:lang="uk">можливість використання декількох серверів LDAP;</li>
       <li xml:lang="x-test">xxCan use multiple LDAP serversxx</li>
