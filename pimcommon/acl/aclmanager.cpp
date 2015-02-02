@@ -431,12 +431,14 @@ void AclManager::save()
 
     // refresh the collection, it might be outdated in the meantime
     Akonadi::CollectionFetchJob *job =
-        new Akonadi::CollectionFetchJob(d->mCollection, Akonadi::CollectionFetchJob::Base);
-    if (!job->exec()) {
+            new Akonadi::CollectionFetchJob( d->mCollection, Akonadi::CollectionFetchJob::Base );
+    if ( !job->exec() ) {
+        qDebug()<<" collection Fetch error"<<job->errorString();
         return;
     }
 
-    if (job->collections().isEmpty()) {
+    if ( job->collections().isEmpty() ) {
+        qDebug()<<" collection list Fetched is Empty ";
         return;
     }
 

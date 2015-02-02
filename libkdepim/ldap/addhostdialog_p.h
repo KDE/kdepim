@@ -47,6 +47,8 @@ private Q_SLOTS:
     void slotOk();
 
 private:
+    void writeConfig();
+    void readConfig();
     KLDAP::LdapConfigWidget *mCfg;
     KLDAP::LdapServer *mServer;
     QPushButton *mOkButton;

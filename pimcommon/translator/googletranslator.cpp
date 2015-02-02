@@ -42,76 +42,77 @@ QMap<QString, QMap<QString, QString> > GoogleTranslator::initListLanguage(KCombo
 {
     QMap<QString, QMap<QString, QString> > listLanguage;
 
-    QList<QPair<const char *, QString> > fullListLanguage;
-    fullListLanguage.append(TranslatorUtil::automatic);
-    fullListLanguage.append(TranslatorUtil::en);
-    fullListLanguage.append(TranslatorUtil::nl);
-    fullListLanguage.append(TranslatorUtil::fr);
-    fullListLanguage.append(TranslatorUtil::de);
-    fullListLanguage.append(TranslatorUtil::el);
-    fullListLanguage.append(TranslatorUtil::it);
-    fullListLanguage.append(TranslatorUtil::ja);
-    fullListLanguage.append(TranslatorUtil::ko);
-    fullListLanguage.append(TranslatorUtil::pt);
-    fullListLanguage.append(TranslatorUtil::ru);
-    fullListLanguage.append(TranslatorUtil::es);
+    TranslatorUtil translatorUtil;
+    QList<QPair<QString, QString> > fullListLanguage;
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::automatic));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::en));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::nl));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::fr));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::de));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::el));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::it));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::ja));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::ko));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::pt));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::ru));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::es));
 
-    fullListLanguage.append(TranslatorUtil::af);
-    fullListLanguage.append(TranslatorUtil::sq);
-    fullListLanguage.append(TranslatorUtil::ar);
-    fullListLanguage.append(TranslatorUtil::hy);
-    fullListLanguage.append(TranslatorUtil::az);
-    fullListLanguage.append(TranslatorUtil::eu);
-    fullListLanguage.append(TranslatorUtil::be);
-    fullListLanguage.append(TranslatorUtil::bg);
-    fullListLanguage.append(TranslatorUtil::ca);
-    fullListLanguage.append(TranslatorUtil::zh_cn_google); // For google only
-    fullListLanguage.append(TranslatorUtil::zh_tw_google); // For google only
-    fullListLanguage.append(TranslatorUtil::hr);
-    fullListLanguage.append(TranslatorUtil::cs);
-    fullListLanguage.append(TranslatorUtil::da);
-    fullListLanguage.append(TranslatorUtil::et);
-    fullListLanguage.append(TranslatorUtil::tl);
-    fullListLanguage.append(TranslatorUtil::fi);
-    fullListLanguage.append(TranslatorUtil::gl);
-    fullListLanguage.append(TranslatorUtil::ka);
-    fullListLanguage.append(TranslatorUtil::ht);
-    fullListLanguage.append(TranslatorUtil::iw);
-    fullListLanguage.append(TranslatorUtil::hi);
-    fullListLanguage.append(TranslatorUtil::hu);
-    fullListLanguage.append(TranslatorUtil::is);
-    fullListLanguage.append(TranslatorUtil::id);
-    fullListLanguage.append(TranslatorUtil::ga);
-    fullListLanguage.append(TranslatorUtil::lv);
-    fullListLanguage.append(TranslatorUtil::lt);
-    fullListLanguage.append(TranslatorUtil::mk);
-    fullListLanguage.append(TranslatorUtil::ms);
-    fullListLanguage.append(TranslatorUtil::mt);
-    fullListLanguage.append(TranslatorUtil::no);
-    fullListLanguage.append(TranslatorUtil::fa);
-    fullListLanguage.append(TranslatorUtil::pl);
-    fullListLanguage.append(TranslatorUtil::ro);
-    fullListLanguage.append(TranslatorUtil::sr);
-    fullListLanguage.append(TranslatorUtil::sk);
-    fullListLanguage.append(TranslatorUtil::sl);
-    fullListLanguage.append(TranslatorUtil::sw);
-    fullListLanguage.append(TranslatorUtil::sv);
-    fullListLanguage.append(TranslatorUtil::th);
-    fullListLanguage.append(TranslatorUtil::tr);
-    fullListLanguage.append(TranslatorUtil::uk);
-    fullListLanguage.append(TranslatorUtil::ur);
-    fullListLanguage.append(TranslatorUtil::vi);
-    fullListLanguage.append(TranslatorUtil::cy);
-    fullListLanguage.append(TranslatorUtil::yi);
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::af));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::sq));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::ar));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::hy));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::az));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::eu));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::be));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::bg));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::ca));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::zh_cn_google)); // For google only
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::zh_tw_google)); // For google only
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::hr));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::cs));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::da));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::et));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::tl));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::fi));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::gl));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::ka));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::ht));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::iw));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::hi));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::hu));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::is));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::id));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::ga));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::lv));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::lt));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::mk));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::ms));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::mt));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::no));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::fa));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::pl));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::ro));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::sr));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::sk));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::sl));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::sw));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::sv));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::th));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::tr));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::uk));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::ur));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::vi));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::cy));
+    fullListLanguage.append(translatorUtil.pair(TranslatorUtil::yi));
     const int fullListLanguageSize(fullListLanguage.count());
-    for (int i = 0; i < fullListLanguageSize; ++i) {
-        const QPair<const char *, QString> currentLanguage = fullListLanguage.at(i);
-        PimCommon::TranslatorUtil::addItemToFromComboBox(from, currentLanguage);
+    for (int i=0;i<fullListLanguageSize;++i) {
+        const QPair<QString, QString> currentLanguage = fullListLanguage.at(i);
+        translatorUtil.addItemToFromComboBox( from, currentLanguage );
 
         QMap<QString, QString> toList;
-        for (int j = 0; j < fullListLanguageSize; ++j) {
-            if (j != 0 && j != i) { //don't add auto and current language
-                PimCommon::TranslatorUtil::addPairToMap(toList, fullListLanguage.at(j));
+        for (int j=0;j<fullListLanguageSize;++j) {
+            if (j!=0 && j!=i) { //don't add auto and current language
+                translatorUtil.addPairToMap( toList, fullListLanguage.at(j) );
             }
         }
         listLanguage.insert(currentLanguage.second, toList);

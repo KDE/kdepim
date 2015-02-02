@@ -35,10 +35,8 @@
 #include <collectionpropertiespage.h>
 #include "pimcommon_export.h"
 
-namespace PimCommon
-{
-class AclManager;
-
+namespace PimCommon {
+class CollectionAclWidget;
 /**
  * "Access Control" tab in the folder dialog
  */
@@ -58,7 +56,7 @@ protected:
     void init();
 
 private:
-    PimCommon::AclManager *mAclManager;
+    CollectionAclWidget *mCollectionAclWidget;
 };
 AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(CollectionAclPageFactory, CollectionAclPage)
 }

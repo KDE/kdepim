@@ -30,73 +30,18 @@
  */
 
 #include "collectionaclpage.h"
+#include "collectionaclwidget.h"
 #include "aclmanager.h"
 #include "imapaclattribute.h"
-
 #include <collection.h>
-#include <QDialog>
 #include <KLocalizedString>
-#include <QVBoxLayout>
-
-#include <QAction>
-#include <QActionEvent>
 #include <QHBoxLayout>
-#include <QListView>
-#include <QPushButton>
-#include <KConfigGroup>
 
+#include <QHBoxLayout>
 using namespace PimCommon;
-/**
- * Unfortunately QPushButton doesn't support to plug in
- * a QAction like QToolButton does, so we have to reimplement it :(
- */
-class ActionButton : public QPushButton
-{
-public:
-    ActionButton(QWidget *parent = Q_NULLPTR)
-        : QPushButton(parent),
-          mDefaultAction(0)
-    {
-    }
 
-    void setDefaultAction(QAction *action)
-    {
-        if (!actions().contains(action)) {
-            addAction(action);
-            connect(this, &ActionButton::clicked, action, &QAction::trigger);
-        }
-
-        setText(action->text());
-        setEnabled(action->isEnabled());
-
-        mDefaultAction = action;
-    }
-
-protected:
-    virtual void actionEvent(QActionEvent *event)
-    {
-        QAction *action = event->action();
-        switch (event->type()) {
-        case QEvent::ActionChanged:
-            if (action == mDefaultAction) {
-                setDefaultAction(mDefaultAction);
-            }
-            return;
-            break;
-        default:
-            break;
-        }
-
-        QPushButton::actionEvent(event);
-    }
-
-private:
-    QAction *mDefaultAction;
-};
-
-CollectionAclPage::CollectionAclPage(QWidget *parent)
-    : CollectionPropertiesPage(parent),
-      mAclManager(new PimCommon::AclManager(this))
+CollectionAclPage::CollectionAclPage( QWidget *parent )
+    : CollectionPropertiesPage( parent )
 {
     setObjectName(QStringLiteral("PimCommon::CollectionAclPage"));
 
@@ -106,36 +51,10 @@ CollectionAclPage::CollectionAclPage(QWidget *parent)
 
 void CollectionAclPage::init()
 {
-    QHBoxLayout *layout = new QHBoxLayout(this);
-
-    QListView *view = new QListView;
-    layout->addWidget(view);
-
-    view->setAlternatingRowColors(true);
-    view->setModel(mAclManager->model());
-    view->setSelectionModel(mAclManager->selectionModel());
-
-    QWidget *buttonBox = new QWidget;
-    QVBoxLayout *buttonBoxVBoxLayout = new QVBoxLayout(buttonBox);
-    buttonBoxVBoxLayout->setMargin(0);
-    layout->addWidget(buttonBox);
-
-    ActionButton *button = new ActionButton(buttonBox);
-    buttonBoxVBoxLayout->addWidget(button);
-    button->setDefaultAction(mAclManager->addAction());
-
-    button = new ActionButton(buttonBox);
-    buttonBoxVBoxLayout->addWidget(button);
-    button->setDefaultAction(mAclManager->editAction());
-
-    button = new ActionButton(buttonBox);
-    buttonBoxVBoxLayout->addWidget(button);
-    button->setDefaultAction(mAclManager->deleteAction());
-
-    QWidget *spacer = new QWidget(buttonBox);
-    buttonBoxVBoxLayout->addWidget(spacer);
-    spacer->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
-    connect(view,SIGNAL(doubleClicked(QModelIndex)), mAclManager->editAction(), SIGNAL(triggered()));
+    QHBoxLayout *layout = new QHBoxLayout( this );
+    layout->setMargin(0);
+    mCollectionAclWidget = new CollectionAclWidget(this);
+    layout->addWidget(mCollectionAclWidget);
 }
 
 bool CollectionAclPage::canHandle(const Akonadi::Collection &collection) const
@@ -145,16 +64,16 @@ bool CollectionAclPage::canHandle(const Akonadi::Collection &collection) const
 
 void CollectionAclPage::load(const Akonadi::Collection &collection)
 {
-    mAclManager->setCollection(collection);
+    mCollectionAclWidget->aclManager()->setCollection( collection );
 }
 
 void CollectionAclPage::save(Akonadi::Collection &collection)
 {
-    mAclManager->save();
+    mCollectionAclWidget->aclManager()->save();
 
     // The collection dialog expects the changed collection to run
     // its own ItemModifyJob, so make him happy...
-    PimCommon::ImapAclAttribute *attribute = mAclManager->collection().attribute<PimCommon::ImapAclAttribute>();
-    collection.addAttribute(attribute->clone());
+    PimCommon::ImapAclAttribute *attribute = mCollectionAclWidget->aclManager()->collection().attribute<PimCommon::ImapAclAttribute>();
+    collection.addAttribute( attribute->clone() );
 }
 

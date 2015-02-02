@@ -77,7 +77,7 @@ set(libmessageviewer_viewer_SRCS
   viewer/csshelperbase.cpp
   viewer/editorwatcher.cpp
   viewer/htmlquotecolorer.cpp
-  viewer/mimetreemodel.cpp
+  viewer/mimeparttree/mimetreemodel.cpp
   viewer/nodehelper.cpp
   viewer/objecttreeemptysource.cpp
   viewer/objecttreeparser.cpp
@@ -88,7 +88,7 @@ set(libmessageviewer_viewer_SRCS
   viewer/viewer_p.cpp
   viewer/messagedisplayformatattribute.cpp
   viewer/urlhandlermanager.cpp
-  viewer/mimeparttreeview.cpp
+  viewer/mimeparttree/mimeparttreeview.cpp
   viewer/converthtmltoplaintext.cpp
   viewer/memento/cryptobodypartmemento.cpp
   viewer/memento/decryptverifybodypartmemento.cpp

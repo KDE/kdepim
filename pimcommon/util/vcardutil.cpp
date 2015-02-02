@@ -27,17 +27,17 @@ VCardUtil::VCardUtil()
 
 void VCardUtil::adaptVcard(QByteArray &data)
 {
-    data.replace("X-messaging/aim-All", ("X-AIM"));
-    data.replace("X-messaging/icq-All", ("X-ICQ"));
-    data.replace("X-messaging/xmpp-All", ("X-JABBER"));
-    data.replace("X-messaging/msn-All", ("X-MSN"));
-    data.replace("X-messaging/yahoo-All", ("X-YAHOO"));
-    data.replace("X-messaging/gadu-All", ("X-GADUGADU"));
-    data.replace("X-messaging/skype-All", ("X-SKYPE"));
-    data.replace("X-messaging/groupwise-All", ("X-GROUPWISE"));
-    data.replace(("X-messaging/sms-All"), ("X-SMS"));
-    data.replace(("X-messaging/meanwhile-All"), ("X-MEANWHILE"));
-    data.replace(("X-messaging/irc-All"), ("X-IRC"));
-    data.replace(("X-messaging/googletalk-All"), ("X-GTALK"));
+    data.replace("X-messaging/aim-All",("X-AIM"));
+    data.replace("X-messaging/icq-All",("X-ICQ"));
+    data.replace("X-messaging/xmpp-All",("X-JABBER"));
+    data.replace("X-messaging/msn-All",("X-MSN"));
+    data.replace("X-messaging/yahoo-All",("X-YAHOO"));
+    data.replace("X-messaging/gadu-All",("X-GADUGADU"));
+    data.replace("X-messaging/skype-All",("X-SKYPE"));
+    data.replace("X-messaging/groupwise-All",("X-GROUPWISE"));
+    data.replace("X-messaging/sms-All",("X-SMS"));
+    data.replace("X-messaging/meanwhile-All",("X-MEANWHILE"));
+    data.replace("X-messaging/irc-All",("X-IRC"));
+    data.replace("X-messaging/googletalk-All",("X-GTALK"));
 }
 

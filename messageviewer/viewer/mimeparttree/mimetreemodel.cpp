@@ -20,7 +20,7 @@
 #include "utils/util.h"
 #include "mimetreemodel.h"
 
-#include "nodehelper.h"
+#include "viewer/nodehelper.h"
 
 #include <kmime/kmime_content.h>
 #include <KMime/Message>

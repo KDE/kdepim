@@ -22,7 +22,7 @@
 #include "addhostdialog_p.h"
 
 #include <QHBoxLayout>
-
+#include <KSharedConfig>
 #include <kacceleratormanager.h>
 #include <kldap/ldapserver.h>
 #include <kldap/ldapconfigwidget.h>
@@ -110,16 +110,35 @@ AddHostDialog::AddHostDialog(KLDAP::LdapServer *server, QWidget *parent)
     connect(mCfg, &KLDAP::LdapConfigWidget::hostNameChanged, this, &AddHostDialog::slotHostEditChanged);
     connect(mOkButton, &QPushButton::clicked, this, &AddHostDialog::slotOk);
     mOkButton->setEnabled(!mServer->host().isEmpty());
+    readConfig();
 }
 
 AddHostDialog::~AddHostDialog()
 {
+    writeConfig();
 }
 
 void AddHostDialog::slotHostEditChanged(const QString &text)
 {
     mOkButton->setEnabled(!text.isEmpty());
 }
+
+void AddHostDialog::readConfig()
+{
+    KConfigGroup group( KSharedConfig::openConfig(), "AddHostDialog" );
+    const QSize size = group.readEntry( "Size", QSize(600, 400) );
+    if ( size.isValid() ) {
+        resize( size );
+    }
+}
+
+void AddHostDialog::writeConfig()
+{
+    KConfigGroup group( KSharedConfig::openConfig(), "AddHostDialog" );
+    group.writeEntry( "Size", size() );
+    group.sync();
+}
+
 
 void AddHostDialog::slotOk()
 {
