@@ -17,7 +17,12 @@
 
 #include "editorutil.h"
 
-void PimCommon::EditorUtil::upperCase(QTextCursor &cursor)
+using namespace PimCommon;
+EditorUtil::EditorUtil()
+{
+}
+
+void EditorUtil::upperCase( QTextCursor &cursor )
 {
     if (cursor.hasSelection()) {
         const QString newText = cursor.selectedText().toUpper();
@@ -25,7 +30,7 @@ void PimCommon::EditorUtil::upperCase(QTextCursor &cursor)
     }
 }
 
-void PimCommon::EditorUtil::lowerCase(QTextCursor &cursor)
+void EditorUtil::lowerCase( QTextCursor &cursor )
 {
     if (cursor.hasSelection()) {
         const QString newText = cursor.selectedText().toLower();
@@ -33,7 +38,7 @@ void PimCommon::EditorUtil::lowerCase(QTextCursor &cursor)
     }
 }
 
-void PimCommon::EditorUtil::sentenceCase(QTextCursor &cursor)
+void EditorUtil::sentenceCase( QTextCursor &cursor )
 {
     if (cursor.hasSelection()) {
         QString newText = cursor.selectedText();
