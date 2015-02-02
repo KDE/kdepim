@@ -48,7 +48,7 @@ ManageThemes::ManageThemes(const QString &relativeThemePath, QWidget *parent)
     lay->addWidget(lab);
 
     mListThemes = new QListWidget;
-    mListThemes->setSelectionMode(QAbstractItemView::MultiSelection);
+    mListThemes->setSelectionMode(QAbstractItemView::ExtendedSelection);
     connect(mListThemes, SIGNAL(itemSelectionChanged()), this, SLOT(slotItemSelectionChanged()));
     lay->addWidget(mListThemes);
 
