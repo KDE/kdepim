@@ -16,6 +16,9 @@
 */
 
 #include "collectionaclwidgettest.h"
+#include "../collectionaclwidget.h"
+#include <qlistview.h>
+#include <QPushButton>
 #include <qtest_kde.h>
 
 CollectionAclWidgetTest::CollectionAclWidgetTest(QObject *parent)
@@ -31,7 +34,16 @@ CollectionAclWidgetTest::~CollectionAclWidgetTest()
 
 void CollectionAclWidgetTest::shouldHaveDefaultValue()
 {
-
+    PimCommon::CollectionAclWidget w;
+    QVERIFY(w.aclManager());
+    QListView *listView = qFindChild<QListView *>(&w, QLatin1String("list_view"));
+    QVERIFY(listView);
+    QPushButton *button = qFindChild<QPushButton *>(&w, QLatin1String("add"));
+    QVERIFY(button);
+    button = qFindChild<QPushButton *>(&w, QLatin1String("edit"));
+    QVERIFY(button);
+    button = qFindChild<QPushButton *>(&w, QLatin1String("delete"));
+    QVERIFY(button);
 }
 
 QTEST_KDEMAIN(CollectionAclWidgetTest, GUI)

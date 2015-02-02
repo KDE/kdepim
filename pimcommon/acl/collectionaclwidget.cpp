@@ -95,13 +95,16 @@ CollectionAclWidget::CollectionAclWidget(QWidget *parent)
     layout->addWidget( buttonBox );
 
     ActionButton *button = new ActionButton( buttonBox );
+    button->setObjectName(QLatin1String("add"));
     button->setDefaultAction( mAclManager->addAction() );
 
     button = new ActionButton( buttonBox );
+    button->setObjectName(QLatin1String("edit"));
     button->setDefaultAction( mAclManager->editAction() );
 
     button = new ActionButton( buttonBox );
     button->setDefaultAction( mAclManager->deleteAction() );
+    button->setObjectName(QLatin1String("delete"));
 
     QWidget *spacer = new QWidget( buttonBox );
     spacer->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Expanding );
