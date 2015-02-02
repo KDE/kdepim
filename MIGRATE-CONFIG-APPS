@@ -19,7 +19,7 @@ Migrate configrc done:
 - blogilo (blogiloui.rc, blogilorc) #TODO need to migrate database
 - pimsettingexporter (pimsettingexporterrc, pimsettingexporter.rc)
 - akonadiconsole ( akonadiconsolerc, akonadiconsoleui.rc )
-- korganizer (korganizer_htmlexportrc, korganizerrc, korganizer_part.rc, korganizerui.rc)
+- korganizer (korganizer_htmlexportrc, korganizerrc, korganizer_part.rc, korganizerui.rc, freebusyurls)
 - akregator (akregatorrc, akregator.notifyrc, akregator_shell.rc, akregator_part.rc, pageviewer.rc, articleviewer.rc, akregator_sharemicroblog_plugin.rc, akregator_onlinesync_plugin.rc
 - korgac (korgacrc)
 - libkdepim (kpimbalooblacklist, kpimcompletionorder)
@@ -29,3 +29,5 @@ TODO:
 - migrate theme for kmail/kaddressbook/messageviewer
 - Blogilo: migrate database
 - knotes: migrate settings for plugins
+- kaddressbook: (kaddressbook/csv-templates/*.desktop)
+- korganizer: korganizer/templates/*, korganizer/designer/*
