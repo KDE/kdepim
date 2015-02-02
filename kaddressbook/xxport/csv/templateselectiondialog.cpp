@@ -53,7 +53,7 @@ public:
         update();
     }
 
-    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE
     {
         if (!parent.isValid()) {
             return mTemplates.count();
@@ -62,7 +62,7 @@ public:
         }
     }
 
-    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const
+    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE
     {
         if (!parent.isValid()) {
             return 2;
@@ -71,7 +71,7 @@ public:
         }
     }
 
-    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE
     {
         if (!index.isValid() || index.row() >= mTemplates.count() || index.column() >= 2) {
             return QVariant();
@@ -92,7 +92,7 @@ public:
         return QVariant();
     }
 
-    virtual bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex())
+    bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE
     {
         if (parent.isValid() || row < 0 || row >= mTemplates.count()) {
             return false;

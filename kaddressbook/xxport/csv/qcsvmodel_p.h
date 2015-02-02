@@ -53,7 +53,7 @@ Q_SIGNALS:
     void ended();
 
 protected:
-    virtual void run();
+    void run() Q_DECL_OVERRIDE;
 
 private:
     QCsvReader *mReader;
