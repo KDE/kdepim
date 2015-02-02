@@ -23,3 +23,9 @@ Migrate configrc done:
 - akregator (akregatorrc, akregator.notifyrc, akregator_shell.rc, akregator_part.rc, pageviewer.rc, articleviewer.rc, akregator_sharemicroblog_plugin.rc, akregator_onlinesync_plugin.rc
 - korgac (korgacrc)
 - libkdepim (kpimbalooblacklist, kpimcompletionorder)
+
+
+TODO:
+- migrate theme for kmail/kaddressbook/messageviewer
+- Blogilo: migrate database
+- knotes: migrate settings for plugins
