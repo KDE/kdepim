@@ -246,7 +246,7 @@ void StorageServiceSettingsWidget::slotAddService()
         if (type != PimCommon::StorageServiceManager::Unknown) {
             const QString serviceName = PimCommon::StorageServiceManager::serviceToI18n(type);
             const QString service = PimCommon::StorageServiceManager::serviceName(type);
-            StorageServiceAbstract *storage = 0;
+            StorageServiceAbstract *storage = Q_NULLPTR;
             switch (type) {
             case PimCommon::StorageServiceManager::DropBox: {
                 storage = new PimCommon::DropBoxStorageService;

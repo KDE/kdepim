@@ -93,8 +93,8 @@ void FilterManager::Private::clear()
 
 using namespace MailCommon;
 
-FilterManager *FilterManager::Private::mInstance = 0;
-FilterActionDict *FilterManager::Private::mFilterActionDict = 0;
+FilterManager *FilterManager::Private::mInstance = Q_NULLPTR;
+FilterActionDict *FilterManager::Private::mFilterActionDict = Q_NULLPTR;
 
 FilterManager *FilterManager::instance()
 {

@@ -182,7 +182,7 @@ void AutoCorrectionWidget::addAutoCorrectEntries()
 {
     ui->treeWidget->clear();
     QHash<QString, QString>::const_iterator i = m_autocorrectEntries.constBegin();
-    QTreeWidgetItem *item = 0;
+    QTreeWidgetItem *item = Q_NULLPTR;
     while (i != m_autocorrectEntries.constEnd()) {
         item = new QTreeWidgetItem(ui->treeWidget, item);
         item->setText(0, i.key());
@@ -414,7 +414,7 @@ void AutoCorrectionWidget::enableAddRemoveButton()
     const QString find = ui->find->text();
     const QString replace = ui->replace->text();
 
-    QTreeWidgetItem *item = 0;
+    QTreeWidgetItem *item = Q_NULLPTR;
     if (m_autocorrectEntries.contains(find)) {
         item = ui->treeWidget->findItems(find, Qt::MatchCaseSensitive).first();
     }

@@ -43,7 +43,7 @@ PimCommon::AbstractShortUrl *PimCommon::ShortUrlUtils::loadEngine(QObject *paren
 
 PimCommon::AbstractShortUrl *PimCommon::ShortUrlUtils::loadEngine(PimCommon::ShortUrlUtils::EngineType type, QObject *parent)
 {
-    PimCommon::AbstractShortUrl *engine = 0;
+    PimCommon::AbstractShortUrl *engine = Q_NULLPTR;
     switch (type) {
     case Google:
         engine = new PimCommon::GoogleShortUrl(parent);

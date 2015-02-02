@@ -52,7 +52,7 @@ void KMFilterAccountList::updateAccountList(MailCommon::MailFilter *filter)
 {
     clear();
 
-    QTreeWidgetItem *top = 0;
+    QTreeWidgetItem *top = Q_NULLPTR;
     // Block the signals here, otherwise we end up calling
     // slotApplicableAccountsChanged(), which will read the incomplete item
     // state and write that back to the filter
@@ -101,7 +101,7 @@ void KMFilterAccountList::applyOnAccount(const QStringList &lstAccount)
 {
     clear();
 
-    QTreeWidgetItem *top = 0;
+    QTreeWidgetItem *top = Q_NULLPTR;
     // Block the signals here, otherwise we end up calling
     // slotApplicableAccountsChanged(), which will read the incomplete item
     // state and write that back to the filter

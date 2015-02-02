@@ -546,7 +546,7 @@ QString BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, 
                 const QString type = mapEntries.value(QLatin1String("type")).toString();
                 const QString name = mapEntries.value(QLatin1String("name")).toString();
                 const QString id = mapEntries.value(QLatin1String("id")).toString();
-                StorageServiceTreeWidgetItem *item = 0;
+                StorageServiceTreeWidgetItem *item = Q_NULLPTR;
                 if (type == QLatin1String("folder")) {
                     item = listWidget->addFolder(name, id);
                 } else if (type == QLatin1String("file")) {

@@ -87,7 +87,7 @@ void FavoriteCollectionWidget::createMenu(KActionCollection *ac)
 
     QActionGroup *grp = new QActionGroup(iconSizeMenu);
     const int nbElement((int)(sizeof(icon_sizes) / sizeof(int)));
-    QAction *act = 0;
+    QAction *act = Q_NULLPTR;
     for (int i = 0; i < nbElement; ++i) {
         act = new QAction(QStringLiteral("%1x%2").arg(icon_sizes[ i ]).arg(icon_sizes[ i ]), iconSizeMenu);
         iconSizeMenu->addAction(act);

@@ -172,7 +172,6 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection *> &actionCollectio
     QHBoxLayout *topLayout = new QHBoxLayout;
     topVLayout->addLayout(topLayout);
     topLayout->setMargin(0);
-    QVBoxLayout *vbl2 = 0;
 
     QSplitter *splitter = new QSplitter;
     splitter->setChildrenCollapsible(false);
@@ -189,7 +188,7 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection *> &actionCollectio
 
     QWidget *page2 = new QWidget(tabWidget);
     tabWidget->addTab(page2, i18nc("Advanced mail filter settings.", "Advanced"));
-    vbl2 = new QVBoxLayout(page2);
+    QVBoxLayout *vbl2 = new QVBoxLayout(page2);
 
     QVBoxLayout *vbl = new QVBoxLayout();
     hbl->addLayout(vbl);

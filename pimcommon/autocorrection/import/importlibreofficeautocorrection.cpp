@@ -85,7 +85,7 @@ void ImportLibreOfficeAutocorrection::importAutoCorrectionFile()
 
 bool ImportLibreOfficeAutocorrection::importFile(Type type, const KArchiveDirectory *archiveDirectory)
 {
-    const KArchiveEntry *documentList = 0;
+    const KArchiveEntry *documentList = Q_NULLPTR;
 
     QString archiveFileName;
     switch (type) {

@@ -622,7 +622,7 @@ void KMFilterListBox::slotBottom()
         return;
     }
 
-    QListWidgetItem *item = 0;
+    QListWidgetItem *item = Q_NULLPTR;
     int j = 0;
     bool wasMoved = false;
     for (int i = numberOfItem - 1; i >= 0; --i, j++) {

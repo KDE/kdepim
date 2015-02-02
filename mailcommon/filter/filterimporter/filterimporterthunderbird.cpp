@@ -45,7 +45,7 @@ FilterImporterThunderbird::~FilterImporterThunderbird()
 
 void FilterImporterThunderbird::readStream(QTextStream &stream)
 {
-    MailFilter *filter = 0;
+    MailFilter *filter = Q_NULLPTR;
     while (!stream.atEnd()) {
         QString line = stream.readLine();
         qCDebug(MAILCOMMON_LOG) << " line :" << line << " filter " << filter;
