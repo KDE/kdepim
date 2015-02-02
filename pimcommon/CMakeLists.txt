@@ -148,6 +148,7 @@ set(libpimcommon_acl_SRCS
   acl/aclutils.cpp
   acl/collectionaclpage.cpp
   acl/imapaclattribute.cpp
+  acl/collectionaclwidget.cpp
 )
 
 set(libpimcommon_sieve_SRCS

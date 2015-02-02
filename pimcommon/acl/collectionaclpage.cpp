@@ -32,69 +32,16 @@
 #include "collectionaclpage.h"
 #include "aclmanager.h"
 #include "imapaclattribute.h"
-
+#include "collectionaclwidget.h"
+#include <KLocalizedString>
 #include <akonadi/collection.h>
-#include <kdialog.h>
-#include <klocale.h>
-#include <kvbox.h>
 
-#include <QAction>
-#include <QActionEvent>
 #include <QHBoxLayout>
-#include <QListView>
-#include <QPushButton>
 
 using namespace PimCommon;
-/**
- * Unfortunately QPushButton doesn't support to plug in
- * a QAction like QToolButton does, so we have to reimplement it :(
- */
-class ActionButton : public QPushButton
-{
-public:
-    ActionButton( QWidget *parent = 0 )
-        : QPushButton( parent ),
-          mDefaultAction( 0 )
-    {
-    }
-
-    void setDefaultAction( QAction *action )
-    {
-        if ( !actions().contains( action ) ) {
-            addAction( action );
-            connect( this, SIGNAL(clicked()), action, SLOT(trigger()) );
-        }
-
-        setText( action->text() );
-        setEnabled( action->isEnabled() );
-
-        mDefaultAction = action;
-    }
-
-protected:
-    virtual void actionEvent( QActionEvent *event )
-    {
-        QAction *action = event->action();
-        switch ( event->type() ) {
-        case QEvent::ActionChanged:
-            if ( action == mDefaultAction )
-                setDefaultAction( mDefaultAction );
-            return;
-            break;
-        default:
-            break;
-        }
-
-        QPushButton::actionEvent( event );
-    }
-
-private:
-    QAction *mDefaultAction;
-};
 
 CollectionAclPage::CollectionAclPage( QWidget *parent )
-    : CollectionPropertiesPage( parent ),
-      mAclManager( new PimCommon::AclManager( this ) )
+    : CollectionPropertiesPage( parent )
 {
     setObjectName( QLatin1String( "PimCommon::CollectionAclPage" ) );
 
@@ -105,30 +52,9 @@ CollectionAclPage::CollectionAclPage( QWidget *parent )
 void CollectionAclPage::init()
 {
     QHBoxLayout *layout = new QHBoxLayout( this );
-
-    QListView *view = new QListView;
-    layout->addWidget( view );
-
-    view->setAlternatingRowColors( true );
-    view->setModel( mAclManager->model() );
-    view->setSelectionModel( mAclManager->selectionModel() );
-
-    KVBox *buttonBox = new KVBox;
-    buttonBox->setSpacing( KDialog::spacingHint() );
-    layout->addWidget( buttonBox );
-
-    ActionButton *button = new ActionButton( buttonBox );
-    button->setDefaultAction( mAclManager->addAction() );
-
-    button = new ActionButton( buttonBox );
-    button->setDefaultAction( mAclManager->editAction() );
-
-    button = new ActionButton( buttonBox );
-    button->setDefaultAction( mAclManager->deleteAction() );
-
-    QWidget *spacer = new QWidget( buttonBox );
-    spacer->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Expanding );
-    connect(view,SIGNAL(doubleClicked(QModelIndex)), mAclManager->editAction(), SIGNAL(triggered()));
+    layout->setMargin(0);
+    mCollectionAclWidget = new CollectionAclWidget(this);
+    layout->addWidget(mCollectionAclWidget);
 }
 
 bool CollectionAclPage::canHandle( const Akonadi::Collection &collection ) const
@@ -138,16 +64,16 @@ bool CollectionAclPage::canHandle( const Akonadi::Collection &collection ) const
 
 void CollectionAclPage::load( const Akonadi::Collection &collection )
 {
-    mAclManager->setCollection( collection );
+    mCollectionAclWidget->aclManager()->setCollection( collection );
 }
 
 void CollectionAclPage::save( Akonadi::Collection &collection )
 {
-    mAclManager->save();
+    mCollectionAclWidget->aclManager()->save();
 
     // The collection dialog expects the changed collection to run
     // its own ItemModifyJob, so make him happy...
-    PimCommon::ImapAclAttribute *attribute = mAclManager->collection().attribute<PimCommon::ImapAclAttribute>();
+    PimCommon::ImapAclAttribute *attribute = mCollectionAclWidget->aclManager()->collection().attribute<PimCommon::ImapAclAttribute>();
     collection.addAttribute( attribute->clone() );
 }
 
