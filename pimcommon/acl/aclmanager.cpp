@@ -432,10 +432,12 @@ void AclManager::save()
     Akonadi::CollectionFetchJob *job =
             new Akonadi::CollectionFetchJob( d->mCollection, Akonadi::CollectionFetchJob::Base );
     if ( !job->exec() ) {
+        qDebug()<<" collection Fetch error"<<job->errorString();
         return;
     }
 
     if ( job->collections().isEmpty() ) {
+        qDebug()<<" collection list Fetched is Empty ";
         return;
     }
 
