@@ -31,8 +31,8 @@
 #include "csshelper.h"
 #include "settings/globalsettings.h"
 #include "viewer/mailwebview.h"
-#include "viewer/mimetreemodel.h"
-#include "viewer/mimeparttreeview.h"
+#include "viewer/mimeparttree/mimetreemodel.h"
+#include "viewer/mimeparttree/mimeparttreeview.h"
 #include "adblock/adblockmanager.h"
 
 #include <akonadi/kmime/messageparts.h>

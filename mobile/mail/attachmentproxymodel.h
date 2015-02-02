@@ -20,7 +20,7 @@
 #ifndef MESSAGEVIEWER_ATTACHMENTPROXYMODEL_H
 #define MESSAGEVIEWER_ATTACHMENTPROXYMODEL_H
 
-#include <messageviewer/viewer/mimetreemodel.h>
+#include <messageviewer/viewer/mimeparttree/mimetreemodel.h>
 
 #include <QSortFilterProxyModel>
 
