@@ -45,6 +45,8 @@ class AddHostDialog : public KDialog
     void slotOk();
 
   private:
+    void writeConfig();
+    void readConfig();
     KLDAP::LdapConfigWidget *mCfg;
     KLDAP::LdapServer *mServer;
 };

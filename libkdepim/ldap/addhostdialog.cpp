@@ -100,16 +100,35 @@ AddHostDialog::AddHostDialog( KLDAP::LdapServer *server, QWidget *parent )
     connect(mCfg, SIGNAL(hostNameChanged(QString)), this, SLOT(slotHostEditChanged(QString)));
     connect( this, SIGNAL(okClicked()), SLOT(slotOk()) );
     enableButtonOk(!mServer->host().isEmpty());
+    readConfig();
 }
 
 AddHostDialog::~AddHostDialog()
 {
+    writeConfig();
 }
 
 void AddHostDialog::slotHostEditChanged( const QString &text )
 {
     enableButtonOk( !text.isEmpty() );
 }
+
+void AddHostDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "AddHostDialog" );
+    const QSize size = group.readEntry( "Size", QSize(600, 400) );
+    if ( size.isValid() ) {
+        resize( size );
+    }
+}
+
+void AddHostDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "AddHostDialog" );
+    group.writeEntry( "Size", size() );
+    group.sync();
+}
+
 
 void AddHostDialog::slotOk()
 {
