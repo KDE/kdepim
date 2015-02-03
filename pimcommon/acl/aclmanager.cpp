@@ -243,11 +243,11 @@ public:
 
     void editAcl()
     {
-        if ( mEditAction->isEnabled() ) {
+        if (mEditAction->isEnabled()) {
             const QModelIndex index = mSelectionModel->selectedIndexes().first();
             const QString userId = index.data(AclModel::UserIdRole).toString();
             const KIMAP::Acl::Rights permissions =
-                    static_cast<KIMAP::Acl::Rights>(index.data(AclModel::PermissionsRole).toInt());
+                static_cast<KIMAP::Acl::Rights>(index.data(AclModel::PermissionsRole).toInt());
 
             AclEntryDialog dlg;
             dlg.setWindowTitle(i18n("Edit ACL"));
@@ -431,14 +431,14 @@ void AclManager::save()
 
     // refresh the collection, it might be outdated in the meantime
     Akonadi::CollectionFetchJob *job =
-            new Akonadi::CollectionFetchJob( d->mCollection, Akonadi::CollectionFetchJob::Base );
-    if ( !job->exec() ) {
-        qDebug()<<" collection Fetch error"<<job->errorString();
+        new Akonadi::CollectionFetchJob(d->mCollection, Akonadi::CollectionFetchJob::Base);
+    if (!job->exec()) {
+        qDebug() << " collection Fetch error" << job->errorString();
         return;
     }
 
-    if ( job->collections().isEmpty() ) {
-        qDebug()<<" collection list Fetched is Empty ";
+    if (job->collections().isEmpty()) {
+        qDebug() << " collection list Fetched is Empty ";
         return;
     }
 

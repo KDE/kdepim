@@ -42,7 +42,7 @@ AttachmentTemporaryFilesDirs::~AttachmentTemporaryFilesDirs()
 
 void AttachmentTemporaryFilesDirs::setDelayRemoveAllInMs(int ms)
 {
-    mDelayRemoveAll = ( ms < 0) ? 0 : ms;
+    mDelayRemoveAll = (ms < 0) ? 0 : ms;
 }
 
 void AttachmentTemporaryFilesDirs::removeTempFiles()

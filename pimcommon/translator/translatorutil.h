@@ -27,15 +27,16 @@ class KComboBox;
 
 namespace PimCommon
 {
-class TranslatorUtil {
+class TranslatorUtil
+{
 public:
     TranslatorUtil();
 
-    void addPairToMap(QMap<QString, QString> &map, const QPair<QString, QString> &pair );
-    void addItemToFromComboBox(KComboBox *combo, const QPair<QString, QString> &pair );
+    void addPairToMap(QMap<QString, QString> &map, const QPair<QString, QString> &pair);
+    void addItemToFromComboBox(KComboBox *combo, const QPair<QString, QString> &pair);
 
     enum translatorType {
-      GoogleTranslator = 0
+        GoogleTranslator = 0
     };
 
     enum languages {

@@ -19,7 +19,8 @@
 #define COLLECTIONACLWIDGET_H
 
 #include <QWidget>
-namespace PimCommon {
+namespace PimCommon
+{
 class AclManager;
 class CollectionAclWidget : public QWidget
 {

@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "aclmanager.h"
 #include "collectionaclwidget.h"
 
@@ -36,40 +35,41 @@ using namespace PimCommon;
 class ActionButton : public QPushButton
 {
 public:
-    ActionButton( QWidget *parent = 0 )
-        : QPushButton( parent ),
-          mDefaultAction( 0 )
+    ActionButton(QWidget *parent = 0)
+        : QPushButton(parent),
+          mDefaultAction(0)
     {
     }
 
-    void setDefaultAction( QAction *action )
+    void setDefaultAction(QAction *action)
     {
-        if ( !actions().contains( action ) ) {
-            addAction( action );
-            connect( this, SIGNAL(clicked()), action, SLOT(trigger()) );
+        if (!actions().contains(action)) {
+            addAction(action);
+            connect(this, SIGNAL(clicked()), action, SLOT(trigger()));
         }
 
-        setText( action->text() );
-        setEnabled( action->isEnabled() );
+        setText(action->text());
+        setEnabled(action->isEnabled());
 
         mDefaultAction = action;
     }
 
 protected:
-    virtual void actionEvent( QActionEvent *event )
+    virtual void actionEvent(QActionEvent *event)
     {
         QAction *action = event->action();
-        switch ( event->type() ) {
+        switch (event->type()) {
         case QEvent::ActionChanged:
-            if ( action == mDefaultAction )
-                setDefaultAction( mDefaultAction );
+            if (action == mDefaultAction) {
+                setDefaultAction(mDefaultAction);
+            }
             return;
             break;
         default:
             break;
         }
 
-        QPushButton::actionEvent( event );
+        QPushButton::actionEvent(event);
     }
 
 private:
@@ -78,37 +78,37 @@ private:
 
 CollectionAclWidget::CollectionAclWidget(QWidget *parent)
     : QWidget(parent),
-      mAclManager( new PimCommon::AclManager( this ) )
+      mAclManager(new PimCommon::AclManager(this))
 {
-    QHBoxLayout *layout = new QHBoxLayout( this );
+    QHBoxLayout *layout = new QHBoxLayout(this);
 
     QListView *view = new QListView;
     view->setObjectName(QLatin1String("list_view"));
-    layout->addWidget( view );
+    layout->addWidget(view);
 
-    view->setAlternatingRowColors( true );
-    view->setModel( mAclManager->model() );
-    view->setSelectionModel( mAclManager->selectionModel() );
+    view->setAlternatingRowColors(true);
+    view->setModel(mAclManager->model());
+    view->setSelectionModel(mAclManager->selectionModel());
 
     KVBox *buttonBox = new KVBox;
-    buttonBox->setSpacing( KDialog::spacingHint() );
-    layout->addWidget( buttonBox );
+    buttonBox->setSpacing(KDialog::spacingHint());
+    layout->addWidget(buttonBox);
 
-    ActionButton *button = new ActionButton( buttonBox );
+    ActionButton *button = new ActionButton(buttonBox);
     button->setObjectName(QLatin1String("add"));
-    button->setDefaultAction( mAclManager->addAction() );
+    button->setDefaultAction(mAclManager->addAction());
 
-    button = new ActionButton( buttonBox );
+    button = new ActionButton(buttonBox);
     button->setObjectName(QLatin1String("edit"));
-    button->setDefaultAction( mAclManager->editAction() );
+    button->setDefaultAction(mAclManager->editAction());
 
-    button = new ActionButton( buttonBox );
-    button->setDefaultAction( mAclManager->deleteAction() );
+    button = new ActionButton(buttonBox);
+    button->setDefaultAction(mAclManager->deleteAction());
     button->setObjectName(QLatin1String("delete"));
 
-    QWidget *spacer = new QWidget( buttonBox );
-    spacer->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Expanding );
-    connect(view,SIGNAL(doubleClicked(QModelIndex)), mAclManager->editAction(), SIGNAL(triggered()));
+    QWidget *spacer = new QWidget(buttonBox);
+    spacer->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
+    connect(view, SIGNAL(doubleClicked(QModelIndex)), mAclManager->editAction(), SIGNAL(triggered()));
 }
 
 CollectionAclWidget::~CollectionAclWidget()

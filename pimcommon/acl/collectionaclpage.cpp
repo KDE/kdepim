@@ -40,8 +40,8 @@
 #include <QHBoxLayout>
 using namespace PimCommon;
 
-CollectionAclPage::CollectionAclPage( QWidget *parent )
-    : CollectionPropertiesPage( parent )
+CollectionAclPage::CollectionAclPage(QWidget *parent)
+    : CollectionPropertiesPage(parent)
 {
     setObjectName(QStringLiteral("PimCommon::CollectionAclPage"));
 
@@ -51,7 +51,7 @@ CollectionAclPage::CollectionAclPage( QWidget *parent )
 
 void CollectionAclPage::init()
 {
-    QHBoxLayout *layout = new QHBoxLayout( this );
+    QHBoxLayout *layout = new QHBoxLayout(this);
     layout->setMargin(0);
     mCollectionAclWidget = new CollectionAclWidget(this);
     layout->addWidget(mCollectionAclWidget);
@@ -64,7 +64,7 @@ bool CollectionAclPage::canHandle(const Akonadi::Collection &collection) const
 
 void CollectionAclPage::load(const Akonadi::Collection &collection)
 {
-    mCollectionAclWidget->aclManager()->setCollection( collection );
+    mCollectionAclWidget->aclManager()->setCollection(collection);
 }
 
 void CollectionAclPage::save(Akonadi::Collection &collection)
@@ -74,6 +74,6 @@ void CollectionAclPage::save(Akonadi::Collection &collection)
     // The collection dialog expects the changed collection to run
     // its own ItemModifyJob, so make him happy...
     PimCommon::ImapAclAttribute *attribute = mCollectionAclWidget->aclManager()->collection().attribute<PimCommon::ImapAclAttribute>();
-    collection.addAttribute( attribute->clone() );
+    collection.addAttribute(attribute->clone());
 }
 

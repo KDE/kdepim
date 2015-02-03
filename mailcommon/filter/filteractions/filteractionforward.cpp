@@ -181,23 +181,24 @@ void FilterActionForward::clearParamWidget(QWidget *paramWidget) const
 
 // We simply place a "@$$@" between the two parameters. The template is the last
 // parameter in the string, for compatibility reasons.
-namespace {
+namespace
+{
 inline const QString forwardFilterArgsSeperator()
 {
     return QLatin1String("@$$@");
 }
 }
-void FilterActionForward::argsFromString( const QString &argsStr )
+void FilterActionForward::argsFromString(const QString &argsStr)
 {
-    const int seperatorPos = argsStr.indexOf( forwardFilterArgsSeperator() );
+    const int seperatorPos = argsStr.indexOf(forwardFilterArgsSeperator());
 
     if (seperatorPos == - 1) {
         // Old config, assume that the whole string is the addressee
         FilterActionWithAddress::argsFromString(argsStr);
     } else {
-        const QString addressee = argsStr.left( seperatorPos );
-        mTemplate = argsStr.mid( seperatorPos + forwardFilterArgsSeperator().length() );
-        FilterActionWithAddress::argsFromString( addressee );
+        const QString addressee = argsStr.left(seperatorPos);
+        mTemplate = argsStr.mid(seperatorPos + forwardFilterArgsSeperator().length());
+        FilterActionWithAddress::argsFromString(addressee);
     }
 }
 

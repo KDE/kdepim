@@ -148,7 +148,7 @@ void RichTextEditorWidget::slotFind()
             mFindBar->setText(mEditor->textCursor().selectedText());
         }
         mEditor->moveCursor(QTextCursor::Start);
-        
+
         mFindBar->showFind();
         mSliderContainer->slideIn();
         mFindBar->focusAndSetCursor();

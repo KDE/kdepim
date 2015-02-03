@@ -105,14 +105,14 @@ QMap<QString, QMap<QString, QString> > GoogleTranslator::initListLanguage(KCombo
     fullListLanguage.append(translatorUtil.pair(TranslatorUtil::cy));
     fullListLanguage.append(translatorUtil.pair(TranslatorUtil::yi));
     const int fullListLanguageSize(fullListLanguage.count());
-    for (int i=0;i<fullListLanguageSize;++i) {
+    for (int i = 0; i < fullListLanguageSize; ++i) {
         const QPair<QString, QString> currentLanguage = fullListLanguage.at(i);
-        translatorUtil.addItemToFromComboBox( from, currentLanguage );
+        translatorUtil.addItemToFromComboBox(from, currentLanguage);
 
         QMap<QString, QString> toList;
-        for (int j=0;j<fullListLanguageSize;++j) {
-            if (j!=0 && j!=i) { //don't add auto and current language
-                translatorUtil.addPairToMap( toList, fullListLanguage.at(j) );
+        for (int j = 0; j < fullListLanguageSize; ++j) {
+            if (j != 0 && j != i) { //don't add auto and current language
+                translatorUtil.addPairToMap(toList, fullListLanguage.at(j));
             }
         }
         listLanguage.insert(currentLanguage.second, toList);

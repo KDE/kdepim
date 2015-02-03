@@ -35,7 +35,8 @@
 #include <collectionpropertiespage.h>
 #include "pimcommon_export.h"
 
-namespace PimCommon {
+namespace PimCommon
+{
 class CollectionAclWidget;
 /**
  * "Access Control" tab in the folder dialog
