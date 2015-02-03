@@ -31,9 +31,9 @@
 
 int main(int argc, char **argv)
 {
-    Kdelibs4ConfigMigrator migrate(QLatin1String("storageservice"));
-    migrate.setConfigFiles(QStringList() << QLatin1String("storageservicerc") << QLatin1String("storageservicemanager.notifyrc"));
-    migrate.setUiFiles(QStringList() << QLatin1String("storageserviceui.rc"));
+    Kdelibs4ConfigMigrator migrate(QStringLiteral("storageservice"));
+    migrate.setConfigFiles(QStringList() << QStringLiteral("storageservicerc") << QStringLiteral("storageservicemanager.notifyrc"));
+    migrate.setUiFiles(QStringList() << QStringLiteral("storageserviceui.rc"));
     migrate.migrate();
 
     QApplication app(argc, argv);
@@ -44,9 +44,9 @@ int main(int argc, char **argv)
                          i18n("Storage Service Manager"),
                          KAboutLicense::GPL_V2,
                          i18n("Copyright © 2013-2015 storageservicemanager authors"));
-    aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QLatin1String("montel@kde.org"));
+    aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QStringLiteral("montel@kde.org"));
 
-    QApplication::setWindowIcon(QIcon::fromTheme(QLatin1String("kmail")));
+    QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("kmail")));
     KAboutData::setApplicationData(aboutData);
 
     QCommandLineParser parser;

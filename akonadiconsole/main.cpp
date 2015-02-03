@@ -32,9 +32,9 @@
 
 int main(int argc, char **argv)
 {
-    Kdelibs4ConfigMigrator migrate(QLatin1String("akonadiconsole"));
-    migrate.setConfigFiles(QStringList() << QLatin1String("akonadiconsolerc"));
-    migrate.setUiFiles(QStringList() << QLatin1String("akonadiconsoleui.rc"));
+    Kdelibs4ConfigMigrator migrate(QStringLiteral("akonadiconsole"));
+    migrate.setConfigFiles(QStringList() << QStringLiteral("akonadiconsolerc"));
+    migrate.setUiFiles(QStringList() << QStringLiteral("akonadiconsoleui.rc"));
     migrate.migrate();
 
     QApplication app(argc, argv);
@@ -45,7 +45,7 @@ int main(int argc, char **argv)
                          KAboutLicense::GPL,
                          i18n("(c) 2006-2014 the Akonadi developer"),
                          QStringLiteral("http://pim.kde.org/akonadi/"));
-    QApplication::setWindowIcon(QIcon::fromTheme(QLatin1String("akonadi")));
+    QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("akonadi")));
     aboutData.addAuthor(i18n("Tobias König"), i18n("Author"), QStringLiteral("tokoe@kde.org"));
     aboutData.addAuthor(i18n("Volker Krause"),  i18n("Author"), QStringLiteral("vkrause@kde.org"));
     KAboutData::setApplicationData(aboutData);
@@ -56,7 +56,7 @@ int main(int argc, char **argv)
     aboutData.setupCommandLine(&parser);
     parser.process(app);
     aboutData.processCommandLine(&parser);
-    parser.addOption(QCommandLineOption(QStringList() << QLatin1String("remote"), i18n("Connect to an Akonadi remote debugging server"), "server"));
+    parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("remote"), i18n("Connect to an Akonadi remote debugging server"), "server"));
 
     KDBusService service;
 

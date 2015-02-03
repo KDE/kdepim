@@ -79,7 +79,7 @@ void StorageServiceLogDialog::slotClearLog()
 
 void StorageServiceLogDialog::slotSaveAs()
 {
-    const QString filter = QLatin1String("*|") + i18n("all files (*)");
+    const QString filter = QStringLiteral("*|") + i18n("all files (*)");
     PimCommon::Util::saveTextAs(mLog->toPlainText(), filter, this, QUrl(), i18n("Save Log"));
 }
 
@@ -92,7 +92,7 @@ void StorageServiceLogDialog::writeConfig()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
-    KConfigGroup group = config->group(QLatin1String("StorageServiceLogDialog"));
+    KConfigGroup group = config->group(QStringLiteral("StorageServiceLogDialog"));
     group.writeEntry("Size", size());
 }
 

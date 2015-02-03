@@ -35,7 +35,7 @@ PostsTabWidget::PostsTabWidget(QWidget *parent)
     setMovable(true);
 
     mNewTabButton = new QToolButton(this);
-    mNewTabButton->setIcon(QIcon::fromTheme(QLatin1String("tab-new")));
+    mNewTabButton->setIcon(QIcon::fromTheme(QStringLiteral("tab-new")));
     mNewTabButton->adjustSize();
     mNewTabButton->setToolTip(i18nc("@info:tooltip", "Open a new tab"));
 #ifndef QT_NO_ACCESSIBILITY
@@ -45,7 +45,7 @@ PostsTabWidget::PostsTabWidget(QWidget *parent)
     connect(mNewTabButton, &QToolButton::clicked, this, &PostsTabWidget::createNewPost);
 
     mCloseTabButton = new QToolButton(this);
-    mCloseTabButton->setIcon(QIcon::fromTheme(QLatin1String("tab-close")));
+    mCloseTabButton->setIcon(QIcon::fromTheme(QStringLiteral("tab-close")));
     mCloseTabButton->adjustSize();
     mCloseTabButton->setToolTip(i18nc("@info:tooltip", "Close the current tab"));
 #ifndef QT_NO_ACCESSIBILITY
@@ -76,11 +76,11 @@ void PostsTabWidget::slotTabContextMenuRequest(const QPoint &pos)
 
     QMenu menu(this);
     QAction *closeTab = menu.addAction(i18nc("@action:inmenu", "Close Tab"));
-    closeTab->setIcon(QIcon::fromTheme(QLatin1String("tab-close")));
+    closeTab->setIcon(QIcon::fromTheme(QStringLiteral("tab-close")));
 
     QAction *allOther = menu.addAction(i18nc("@action:inmenu", "Close All Other Tabs"));
     allOther->setEnabled(count() > 1);
-    allOther->setIcon(QIcon::fromTheme(QLatin1String("tab-close-other")));
+    allOther->setIcon(QIcon::fromTheme(QStringLiteral("tab-close-other")));
 
     QAction *action = menu.exec(mapToGlobal(pos));
 

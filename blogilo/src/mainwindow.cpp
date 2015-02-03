@@ -100,8 +100,8 @@ MainWindow::MainWindow()
     toolboxDock->setFeatures(QDockWidget::AllDockWidgetFeatures);
     toolboxDock->setWidget(toolbox);
 
-    toolboxDock->setObjectName(QLatin1String("dock_toolbox"));
-    toolbox->setObjectName(QLatin1String("toolbox"));
+    toolboxDock->setObjectName(QStringLiteral("dock_toolbox"));
+    toolbox->setObjectName(QStringLiteral("toolbox"));
 
     this->addDockWidget(Qt::RightDockWidgetArea, toolboxDock);
 
@@ -117,7 +117,7 @@ MainWindow::MainWindow()
     setupGUI();
 
     toolbox->setVisible(Settings::showToolboxOnStart());
-    actionCollection()->action(QLatin1String("toggle_toolbox"))->setChecked(Settings::showToolboxOnStart());
+    actionCollection()->action(QStringLiteral("toggle_toolbox"))->setChecked(Settings::showToolboxOnStart());
 
     setupSystemTray();
 
@@ -212,44 +212,44 @@ void MainWindow::setupActions()
     KStandardAction::preferences(this, SLOT(optionsPreferences()), actionCollection());
 
     // custom menu and menu item
-    QAction *actNewPost = new QAction(QIcon::fromTheme(QLatin1String("document-new")), i18n("New Post"), this);
-    actionCollection()->addAction(QLatin1String("new_post"), actNewPost);
+    QAction *actNewPost = new QAction(QIcon::fromTheme(QStringLiteral("document-new")), i18n("New Post"), this);
+    actionCollection()->addAction(QStringLiteral("new_post"), actNewPost);
     actionCollection()->setDefaultShortcut(actNewPost, QKeySequence(Qt::CTRL + Qt::Key_N));
     connect(actNewPost, &QAction::triggered, this, &MainWindow::slotCreateNewPost);
 
-    QAction *actAddBlog = new QAction(QIcon::fromTheme(QLatin1String("list-add")), i18n("Add Blog..."), this);
-    actionCollection()->addAction(QLatin1String("add_blog"), actAddBlog);
+    QAction *actAddBlog = new QAction(QIcon::fromTheme(QStringLiteral("list-add")), i18n("Add Blog..."), this);
+    actionCollection()->addAction(QStringLiteral("add_blog"), actAddBlog);
     connect(actAddBlog, &QAction::triggered, this, &MainWindow::addBlog);
 
-    QAction *actPublish = new QAction(QIcon::fromTheme(QLatin1String("arrow-up")), i18n("Submit..."), this);
-    actionCollection()->addAction(QLatin1String("publish_post"), actPublish);
+    QAction *actPublish = new QAction(QIcon::fromTheme(QStringLiteral("arrow-up")), i18n("Submit..."), this);
+    actionCollection()->addAction(QStringLiteral("publish_post"), actPublish);
     connect(actPublish, &QAction::triggered, this, &MainWindow::slotPublishPost);
 
-    QAction *actUpload = new QAction(QIcon::fromTheme(QLatin1String("upload-media")), i18n("Upload Media..."), this);
-    actionCollection()->addAction(QLatin1String("upload_media"), actUpload);
+    QAction *actUpload = new QAction(QIcon::fromTheme(QStringLiteral("upload-media")), i18n("Upload Media..."), this);
+    actionCollection()->addAction(QStringLiteral("upload_media"), actUpload);
     connect(actUpload, &QAction::triggered, this, &MainWindow::uploadMediaObject);
 
-    QAction *actSaveLocally = new QAction(QIcon::fromTheme(QLatin1String("document-save")), i18n("Save Locally"), this);
-    actionCollection()->addAction(QLatin1String("save_locally"), actSaveLocally);
+    QAction *actSaveLocally = new QAction(QIcon::fromTheme(QStringLiteral("document-save")), i18n("Save Locally"), this);
+    actionCollection()->addAction(QStringLiteral("save_locally"), actSaveLocally);
     actionCollection()->setDefaultShortcut(actSaveLocally, QKeySequence(Qt::CTRL + Qt::Key_S));
     connect(actSaveLocally, &QAction::triggered, this, &MainWindow::slotSavePostLocally);
 
     KToggleAction *actToggleToolboxVisible = new KToggleAction(i18n("Show Toolbox"), this);
-    actionCollection()->addAction(QLatin1String("toggle_toolbox"), actToggleToolboxVisible);
+    actionCollection()->addAction(QStringLiteral("toggle_toolbox"), actToggleToolboxVisible);
     actionCollection()->setDefaultShortcut(actToggleToolboxVisible, QKeySequence(Qt::CTRL + Qt::Key_T));
     connect(actToggleToolboxVisible, &KToggleAction::toggled, this, &MainWindow::slotToggleToolboxVisible);
     connect(toolboxDock, &QDockWidget::visibilityChanged, this, &MainWindow::slotToolboxVisibilityChanged);
 
     blogs = new KSelectAction(this);
-    actionCollection()->addAction(QLatin1String("blogs_list"), blogs);
+    actionCollection()->addAction(QStringLiteral("blogs_list"), blogs);
 
-    QAction *actOpenBlog = new QAction(QIcon::fromTheme(QLatin1String("applications-internet")), i18n("Open in browser"), this);
-    actionCollection()->addAction(QLatin1String("open_blog_in_browser"), actOpenBlog);
+    QAction *actOpenBlog = new QAction(QIcon::fromTheme(QStringLiteral("applications-internet")), i18n("Open in browser"), this);
+    actionCollection()->addAction(QStringLiteral("open_blog_in_browser"), actOpenBlog);
     actOpenBlog->setToolTip(i18n("Open current blog in browser"));
     connect(actOpenBlog, &QAction::triggered, this, &MainWindow::slotOpenCurrentBlogInBrowser);
 
-    actionCollection()->addAction(QLatin1String("upload_file"), mStorageManager->menuUploadServices(this));
-    actionCollection()->addAction(QLatin1String("download_file"), mStorageManager->menuDownloadServices(this));
+    actionCollection()->addAction(QStringLiteral("upload_file"), mStorageManager->menuUploadServices(this));
+    actionCollection()->addAction(QStringLiteral("download_file"), mStorageManager->menuDownloadServices(this));
     mStorageManager->setDefaultUploadFolder(Settings::self()->downloadDirectory());
 }
 
@@ -340,10 +340,10 @@ void MainWindow::optionsPreferences()
     // compare the names of the widgets in the .ui file
     // to the names of the variables in the .kcfg file
     //avoid having 2 dialogs shown
-    if (KConfigDialog::showDialog(QLatin1String("settings")))  {
+    if (KConfigDialog::showDialog(QStringLiteral("settings")))  {
         return;
     }
-    ConfigureDialog *dialog = new ConfigureDialog(mStorageManager, this, QLatin1String("settings"), Settings::self());
+    ConfigureDialog *dialog = new ConfigureDialog(mStorageManager, this, QStringLiteral("settings"), Settings::self());
     connect(dialog, &ConfigureDialog::blogAdded, this, &MainWindow::slotBlogAdded);
     connect(dialog, &ConfigureDialog::blogEdited, this, &MainWindow::slotBlogEdited);
     connect(dialog, &ConfigureDialog::blogRemoved, this, &MainWindow::slotBlogRemoved);
@@ -424,9 +424,9 @@ void MainWindow::setupSystemTray()
     if (Settings::enableSysTrayIcon()) {
         if (!systemTray) {
             systemTray = new KStatusNotifierItem(this);
-            systemTray->setIconByName(QLatin1String("blogilo"));
-            systemTray->setToolTip(QLatin1String("blogilo"), i18n("Blogilo"), i18n("A KDE Blogging Client"));
-            systemTray->contextMenu()->addAction(actionCollection()->action(QLatin1String("new_post")));
+            systemTray->setIconByName(QStringLiteral("blogilo"));
+            systemTray->setToolTip(QStringLiteral("blogilo"), i18n("Blogilo"), i18n("A KDE Blogging Client"));
+            systemTray->contextMenu()->addAction(actionCollection()->action(QStringLiteral("new_post")));
             systemTray->setCategory(KStatusNotifierItem::ApplicationStatus);
             systemTray->setStatus(KStatusNotifierItem::Active);
         }
@@ -449,7 +449,7 @@ void MainWindow::slotToggleToolboxVisible(bool isVisible)
 
 void MainWindow::slotToolboxVisibilityChanged(bool)
 {
-    actionCollection()->action(QLatin1String("toggle_toolbox"))->setChecked(toolboxDock->isVisibleTo(this));
+    actionCollection()->action(QStringLiteral("toggle_toolbox"))->setChecked(toolboxDock->isVisibleTo(this));
 }
 
 void MainWindow::slotActivePostChanged(int index)
@@ -616,7 +616,7 @@ void MainWindow::postManipulationDone(bool isError, const QString &customMessage
         PostEntry *entry = qobject_cast<PostEntry *>(sender());
         if (entry) {
             if (KMessageBox::questionYesNo(this, i18n("%1\nDo you want to keep the post open?", customMessage),
-                                           QString(), KStandardGuiItem::yes(), KStandardGuiItem::no(), QLatin1String("KeepPostOpen")) == KMessageBox::No) {
+                                           QString(), KStandardGuiItem::yes(), KStandardGuiItem::no(), QStringLiteral("KeepPostOpen")) == KMessageBox::No) {
                 slotRemovePostEntry(tabPosts->indexOf(entry));
             } else {
                 toolbox->setFieldsValue(entry->currentPost());

@@ -254,7 +254,7 @@ void AgentWidget::showTaskList()
     }
 
     QPointer<TextDialog> dlg = new TextDialog(this);
-    dlg->setWindowTitle(QLatin1String("Resource Task List"));
+    dlg->setWindowTitle(QStringLiteral("Resource Task List"));
     dlg->setText(txt);
     dlg->exec();
     delete dlg;
@@ -279,7 +279,7 @@ void AgentWidget::showChangeNotifications()
     }
 
     QPointer<TextDialog> dlg = new TextDialog(this);
-    dlg->setWindowTitle(QLatin1String("Change Notification Log"));
+    dlg->setWindowTitle(QStringLiteral("Change Notification Log"));
     dlg->setText(txt);
 
     dlg->exec();
@@ -378,7 +378,7 @@ void AgentWidget::cloneAgent(KJob *job)
             qCritical() << "call to method" << signature << "failed: " << reply.arguments() << reply.errorMessage();
             continue;
         }
-        const QString setterName = QLatin1String("set") + methodName.at(0).toUpper() + methodName.mid(1);
+        const QString setterName = QStringLiteral("set") + methodName.at(0).toUpper() + methodName.mid(1);
         targetIface.call(setterName, reply.arguments().at(0));
     }
 
