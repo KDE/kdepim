@@ -109,11 +109,11 @@ void GrantleePrintTest::shouldDisplayContactInfo_data()
     QTest::newRow("manager") << QString(QLatin1String("manager")) << QString(QLatin1String("foo-managersname"));
     QTest::newRow("assistant") << QString(QLatin1String("assistant")) << QString(QLatin1String("foo-assistantsname"));
     QTest::newRow("spouse") << QString(QLatin1String("spouse")) << QString(QLatin1String("foo-spousesname"));
+    QTest::newRow("givenname") << QString(QLatin1String("givenName")) << QString(QLatin1String("foo-givenname"));
+    QTest::newRow("additionalname") << QString(QLatin1String("additionalName")) << QString(QLatin1String("foo-additionalname"));
 #if 0
     QString realName() const;
     QString formattedName() const;
-    QString givenName() const;
-    QString additionalName() const;
     QStringList emails() const;
     QString webPage() const;
     QString preferredEmail() const;
@@ -137,6 +137,8 @@ void GrantleePrintTest::shouldDisplayContactInfo()
     KABPrinting::GrantleePrint *grantleePrint = new KABPrinting::GrantleePrint;
     KABC::Addressee::List lst;
     KABC::Addressee address;
+    address.setGivenName(QLatin1String("foo-givenname"));
+    address.setAdditionalName(QLatin1String("foo-additionalname"));
     address.setName(QLatin1String("foo1"));
     address.insertEmail(QLatin1String("foo@kde.org"), true);
     address.setOrganization(QLatin1String("kde"));
