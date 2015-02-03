@@ -48,7 +48,8 @@ MergeContactsDialog::MergeContactsDialog(const Akonadi::Item::List &lst, QWidget
     if (lst.count() < 2) {
         setMainWidget(new QLabel(i18n("You must select at least two elements.")));
     } else {
-        if (!MergeContactUtil::hasSameNames(lst)) {
+        MergeContactUtil mergeContactUtil;
+        if (!mergeContactUtil.hasSameNames(lst)) {
             setMainWidget(new QLabel(i18n("You selected %1 and some item has not the same name", lst.count())));
         } else {
             QSplitter *mainWidget = new QSplitter;

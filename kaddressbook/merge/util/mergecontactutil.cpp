@@ -19,6 +19,12 @@
 
 #include <KABC/Addressee>
 using namespace KABMergeContacts;
+
+MergeContactUtil::MergeContactUtil()
+{
+
+}
+
 bool MergeContactUtil::hasSameNames(const Akonadi::Item::List &lst)
 {
     QStringList names;

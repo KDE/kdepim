@@ -17,7 +17,7 @@
 
 #include "mergecontactduplicatecontactdialogtest.h"
 
-#include "../mergecontactduplicatecontactdialog.h"
+#include "../searchduplicate/mergecontactduplicatecontactdialog.h"
 
 #include <qtest_kde.h>
 

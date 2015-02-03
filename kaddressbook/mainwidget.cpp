@@ -24,7 +24,7 @@
 #include "modelcolumnmanager.h"
 #include "printing/printingwizard.h"
 #include "merge/mergecontactsdialog.h"
-#include "merge/mergecontactduplicatecontactdialog.h"
+#include "merge/searchduplicate/mergecontactduplicatecontactdialog.h"
 #include "quicksearchwidget.h"
 #include "settings.h"
 #include "xxportmanager.h"

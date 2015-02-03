@@ -16,7 +16,7 @@
 */
 
 #include "mergecontactsjob.h"
-#include "merge/mergecontacts.h"
+#include "mergecontacts.h"
 #include <Akonadi/ItemCreateJob>
 #include <Akonadi/ItemDeleteJob>
 
