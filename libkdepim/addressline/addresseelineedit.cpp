@@ -1406,8 +1406,7 @@ QMenu *AddresseeLineEdit::createStandardContextMenu()
         menu->addAction(showOU);
     }
 
-    //Add i18n in kf5
-    QAction *configureBalooBlackList = new QAction(QLatin1String("Configure Email Blacklist"), menu);
+    QAction *configureBalooBlackList = new QAction(i18n("Configure Email Blacklist"), menu);
     connect(configureBalooBlackList, SIGNAL(triggered(bool)), this, SLOT(slotConfigureBalooBlackList()));
     menu->addAction(configureBalooBlackList);
 
