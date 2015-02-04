@@ -160,7 +160,17 @@ void BalooCompletionEmailTest::shouldDontDuplicateEmailWhenUseCase()
     caseEmailList << QLatin1String("FOo3");
     completion.setEmailList((QStringList() << emailList<<caseEmailList));
     QCOMPARE(completion.cleanupEmailList(), emailList);
+}
 
+void BalooCompletionEmailTest::shouldExcludeDuplicateEntryWithDisplayName()
+{
+    KPIM::BalooCompletionEmail completion;
+    QStringList emailList;
+    emailList << QLatin1String("John Doe <doe@example.com>");
+    emailList << QLatin1String("\"John Doe\" <doe@example.com>");
+    emailList << QLatin1String("\"\'John Doe\'\" <doe@example.com>");
+    completion.setEmailList(emailList);
+    QCOMPARE(completion.cleanupEmailList().count(), 1);
 }
 
 QTEST_KDEMAIN(BalooCompletionEmailTest, NoGUI)
