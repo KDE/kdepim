@@ -15,34 +15,34 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "mergecontactduplicatecontactdialogtest.h"
+#include "searchandmergecontactduplicatecontactdialogtest.h"
 
-#include "../searchduplicate/mergecontactduplicatecontactdialog.h"
+#include "../searchduplicate/searchandmergecontactduplicatecontactdialog.h"
 
 #include <qtest_kde.h>
 
 #include <QStackedWidget>
 using namespace KABMergeContacts;
 
-MergeContactDuplicateContactDialogTest::MergeContactDuplicateContactDialogTest()
+SearchAndMergeContactDuplicateContactDialogTest::SearchAndMergeContactDuplicateContactDialogTest()
 {
 }
 
-void MergeContactDuplicateContactDialogTest::shouldHaveDefaultValueOnCreation()
+void SearchAndMergeContactDuplicateContactDialogTest::shouldHaveDefaultValueOnCreation()
 {
     Akonadi::Item::List lst;
-    MergeContactDuplicateContactDialog dlg(lst);
+    SearchAndMergeContactDuplicateContactDialog dlg(lst);
     dlg.show();
     QStackedWidget *stackedWidget = qFindChild<QStackedWidget *>(&dlg, QLatin1String("stackedwidget"));
     QVERIFY(stackedWidget);
     QCOMPARE(stackedWidget->currentWidget()->objectName(), QLatin1String("nocontactselected"));
 }
 
-void MergeContactDuplicateContactDialogTest::shouldShowNoEnoughPageWhenSelectOneContact()
+void SearchAndMergeContactDuplicateContactDialogTest::shouldShowNoEnoughPageWhenSelectOneContact()
 {
     Akonadi::Item::List lst;
     lst << Akonadi::Item(42);
-    MergeContactDuplicateContactDialog dlg(lst);
+    SearchAndMergeContactDuplicateContactDialog dlg(lst);
     dlg.show();
     QStackedWidget *stackedWidget = qFindChild<QStackedWidget *>(&dlg, QLatin1String("stackedwidget"));
     QVERIFY(stackedWidget);
@@ -50,4 +50,4 @@ void MergeContactDuplicateContactDialogTest::shouldShowNoEnoughPageWhenSelectOne
 }
 
 
-QTEST_KDEMAIN(MergeContactDuplicateContactDialogTest, GUI)
+QTEST_KDEMAIN(SearchAndMergeContactDuplicateContactDialogTest, GUI)

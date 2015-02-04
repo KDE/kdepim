@@ -24,7 +24,7 @@
 #include "modelcolumnmanager.h"
 #include "printing/printingwizard.h"
 #include "merge/mergecontactsdialog.h"
-#include "merge/searchduplicate/mergecontactduplicatecontactdialog.h"
+#include "merge/searchduplicate/searchandmergecontactduplicatecontactdialog.h"
 #include "quicksearchwidget.h"
 #include "settings.h"
 #include "xxportmanager.h"
@@ -980,7 +980,7 @@ void MainWidget::mergeContacts()
 void MainWidget::slotSearchDuplicateContacts()
 {
     const Akonadi::Item::List lst = Utils::collectSelectedContactsItem(mItemView->selectionModel());
-    QPointer<KABMergeContacts::MergeContactDuplicateContactDialog> dlg = new KABMergeContacts::MergeContactDuplicateContactDialog(lst, this);
+    QPointer<KABMergeContacts::SearchAndMergeContactDuplicateContactDialog> dlg = new KABMergeContacts::SearchAndMergeContactDuplicateContactDialog(lst, this);
     dlg->exec();
     delete dlg;
 }

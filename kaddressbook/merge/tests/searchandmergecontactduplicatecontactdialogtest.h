@@ -16,20 +16,20 @@
 */
 
 
-#ifndef MERGECONTACTDUPLICATECONTACTDIALOGTEST_H
-#define MERGECONTACTDUPLICATECONTACTDIALOGTEST_H
+#ifndef SearchAndMergeContactDuplicateContactDialogTest_H
+#define SearchAndMergeContactDuplicateContactDialogTest_H
 
 #include <QObject>
 
-class MergeContactDuplicateContactDialogTest : public QObject
+class SearchAndMergeContactDuplicateContactDialogTest : public QObject
 {
     Q_OBJECT
 public:
-    MergeContactDuplicateContactDialogTest();
+    SearchAndMergeContactDuplicateContactDialogTest();
 
 private Q_SLOTS:
     void shouldHaveDefaultValueOnCreation();
     void shouldShowNoEnoughPageWhenSelectOneContact();
 };
 
-#endif // MERGECONTACTDUPLICATECONTACTDIALOGTEST_H
+#endif // SearchAndMergeContactDuplicateContactDialogTest_H

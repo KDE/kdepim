@@ -16,7 +16,7 @@
 */
 
 
-#include "mergecontactduplicatecontactdialog.h"
+#include "searchandmergecontactduplicatecontactdialog.h"
 
 #include "merge/mergecontactshowresulttabwidget.h"
 
@@ -32,7 +32,7 @@
 
 using namespace KABMergeContacts;
 
-MergeContactDuplicateContactDialog::MergeContactDuplicateContactDialog(const Akonadi::Item::List &list, QWidget *parent)
+SearchAndMergeContactDuplicateContactDialog::SearchAndMergeContactDuplicateContactDialog(const Akonadi::Item::List &list, QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n( "Select Contacts to merge" ) );
@@ -63,12 +63,12 @@ MergeContactDuplicateContactDialog::MergeContactDuplicateContactDialog(const Ako
     searchPotentialDuplicateContacts(list);
 }
 
-MergeContactDuplicateContactDialog::~MergeContactDuplicateContactDialog()
+SearchAndMergeContactDuplicateContactDialog::~SearchAndMergeContactDuplicateContactDialog()
 {
 
 }
 
-void MergeContactDuplicateContactDialog::searchPotentialDuplicateContacts(const Akonadi::Item::List &list)
+void SearchAndMergeContactDuplicateContactDialog::searchPotentialDuplicateContacts(const Akonadi::Item::List &list)
 {
     if (list.isEmpty()) {
         mStackedWidget->setCurrentWidget(mNoContactSelected);
@@ -81,7 +81,7 @@ void MergeContactDuplicateContactDialog::searchPotentialDuplicateContacts(const 
     }
 }
 
-void MergeContactDuplicateContactDialog::readConfig()
+void SearchAndMergeContactDuplicateContactDialog::readConfig()
 {
     KConfigGroup grp( KGlobal::config(), "MergeContactDuplicateContactDialog" );
     const QSize size = grp.readEntry( "Size", QSize(300, 200) );
@@ -90,14 +90,14 @@ void MergeContactDuplicateContactDialog::readConfig()
     }
 }
 
-void MergeContactDuplicateContactDialog::writeConfig()
+void SearchAndMergeContactDuplicateContactDialog::writeConfig()
 {
     KConfigGroup grp( KGlobal::config(), "MergeContactDuplicateContactDialog");
     grp.writeEntry( "Size", size() );
     grp.sync();
 }
 
-void MergeContactDuplicateContactDialog::slotDuplicateFound(const QList<Akonadi::Item::List> &duplicate)
+void SearchAndMergeContactDuplicateContactDialog::slotDuplicateFound(const QList<Akonadi::Item::List> &duplicate)
 {
     if (duplicate.isEmpty()) {
         mStackedWidget->setCurrentWidget(mNoDuplicateContactFound);
