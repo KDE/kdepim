@@ -19,8 +19,9 @@
 */
 
 #include "baloocompletionemail.h"
-
-#include <QHash>
+#include <QMap>
+#include <KEmailAddress>
+#include <QDebug>
 using namespace KPIM;
 
 BalooCompletionEmail::BalooCompletionEmail()
@@ -43,18 +44,62 @@ void BalooCompletionEmail::setBlackList(const QStringList &lst)
     mBlackList = lst;
 }
 
-QStringList BalooCompletionEmail::cleanupEmailList() const
+QStringList BalooCompletionEmail::cleanupEmailList()
 {
     if (mListEmail.isEmpty())
         return mListEmail;
-    QHash<QString, QString> hashEmail;
-    Q_FOREACH (const QString &email, mListEmail) {
+    QMap<QString, QString> hashEmail;
+    Q_FOREACH (QString email, mListEmail) {
         if (!mBlackList.contains(email)) {
-            if (!hashEmail.contains(email.toLower())) {
+            QString address;
+            email = stripEmail(email, address);
+            if (address.isEmpty()) {
+                address = email;
+            }
+            bool excludeMail = false;
+            Q_FOREACH(const QString &excludeDomain, mExcludeDomain) {
+                if (!excludeDomain.isEmpty()) {
+                    if (address.endsWith(excludeDomain)) {
+                        excludeMail = true;
+                        continue;
+                    }
+                }
+            }
+            if (!excludeMail && !hashEmail.contains(email.toLower())) {
                 hashEmail.insert(email.toLower(), email);
             }
         }
     }
     return hashEmail.values();
+}
+
+
+/* stips the name of an email address email
+ *
+ * 'a' <a@example.com> -> a <a@example.com>
+ * "a" <a@example.com> -> a <a@example.com>
+ * "\"'a'\"" <a@example.com> -> a <a@example.com>
+ *
+ * but "\"'a" <a@example.com> -> "\"'a" <a@example.com>
+ * cause the start and end is not the same.
+ */
+QString BalooCompletionEmail::stripEmail(const QString &email, QString &address)
+{
+    QString displayName, addrSpec, comment;
+    if ( KEmailAddress::AddressOk == KEmailAddress::splitAddress( email, displayName, addrSpec, comment )) {
+        address = addrSpec;
+        while ((displayName.startsWith(QLatin1Char('\'')) && displayName.endsWith(QLatin1Char('\''))) ||
+                    (displayName.startsWith(QLatin1Char('"')) && displayName.endsWith(QLatin1Char('"'))) ||
+                    (displayName.startsWith(QLatin1String("\\\"")) && displayName.endsWith(QLatin1String("\\\""))) ) {
+            if (displayName.startsWith(QLatin1String("\\\""))) {
+                displayName = displayName.mid(2, displayName.length()-4).trimmed();
+            } else {
+                displayName = displayName.mid(1, displayName.length()-2).trimmed();
+            }
+        }
+        return KEmailAddress::normalizedAddress(displayName, addrSpec, comment);
+    } else {
+        return email;
+    }
 }
 

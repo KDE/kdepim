@@ -29,6 +29,7 @@
 #include "completionordereditor.h"
 #include "addressline/blacklistbaloocompletion/blacklistbalooemailcompletiondialog.h"
 #include "kmailcompletion.h"
+#include "baloocompletionemail.h"
 
 #include <Akonadi/Contact/ContactSearchJob>
 #include <Akonadi/Contact/ContactGroupSearchJob>
@@ -236,7 +237,6 @@ public:
         connect(&m_delayedQueryTimer, SIGNAL(timeout()), q, SLOT(slotTriggerDelayedQueries()));
     }
     void loadBalooBlackList();
-    QStringList cleanupBalooContact(const QStringList &lst);
     void alternateColor();
     void init();
     void startLoadingLDAPEntries();
@@ -370,35 +370,17 @@ void AddresseeLineEdit::Private::stopLDAPLookup()
     s_static->ldapLineEdit = 0;
 }
 
-QStringList AddresseeLineEdit::Private::cleanupBalooContact(const QStringList &lst)
-{
-    if (lst.isEmpty()) {
-        return lst;
-    }
-    QHash<QString, QString> hashEmail;
-    Q_FOREACH (const QString &email, lst) {
-        if (!hashEmail.contains(email.toLower())) {
-            hashEmail.insert(email.toLower(), email);
-        }
-    }
-    return hashEmail.values();
-}
-
 void AddresseeLineEdit::Private::searchInBaloo()
 {
     const QString trimmedString = m_searchString.trimmed();
     Baloo::PIM::ContactCompleter com(trimmedString, 20);
-    const QStringList listEmail = cleanupBalooContact(com.complete());
-    Q_FOREACH (const QString &email, listEmail) {
-        Q_FOREACH (const QString &excludeDomain, m_domainExcludeList) {
-            if (email.endsWith(excludeDomain)) {
-                continue;
-            }
-        }
-
-        if (!m_balooBlackList.contains(email)) {
-            addCompletionItem(email, 1, s_static->balooCompletionSource);
-        }
+    KPIM::BalooCompletionEmail completionEmail;
+    completionEmail.setEmailList(com.complete());
+    completionEmail.setBlackList(m_balooBlackList);
+    completionEmail.setExcludeDomain(m_domainExcludeList);
+    const QStringList listEmail = completionEmail.cleanupEmailList();
+    Q_FOREACH (const QString& email, listEmail) {
+      addCompletionItem(email, 1, s_static->balooCompletionSource);
     }
     doCompletion(m_lastSearchMode);
     //  if ( q->hasFocus() || q->completionBox()->hasFocus() ) {

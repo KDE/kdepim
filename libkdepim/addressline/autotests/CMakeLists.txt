@@ -8,5 +8,5 @@ set( libkdepim_baloocompletionemailtest_SRCS baloocompletionemailtest.cpp ../bal
 add_executable( libkdepim_baloocompletionemailtest ${libkdepim_baloocompletionemailtest_SRCS})
 add_test(libkdepim_baloocompletionemailtest libkdepim_baloocompletionemailtest)
 ecm_mark_as_test(libkdepim_baloocompletionemailtest)
-target_link_libraries( libkdepim_baloocompletionemailtest Qt5::Test )
+target_link_libraries( libkdepim_baloocompletionemailtest Qt5::Test KF5::Codecs)
 

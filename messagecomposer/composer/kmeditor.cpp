@@ -117,6 +117,8 @@ public:
     KProcess *mExtEditorProcess;
     QTemporaryFile *mExtEditorTempFile;
     PimCommon::AutoCorrection *mAutoCorrection;
+private:
+    void canStartProcess(const QString &commandLine);
 };
 
 }
@@ -168,6 +170,11 @@ void KMeditorPrivate::startExternalEditor()
     if (!arg.isEmpty()) {
         command << arg;
     }
+    if (command.isEmpty()) {
+        canStartProcess(commandLine);
+        return;
+    }
+
     (*mExtEditorProcess) << command;
     if (!filenameAdded) {   // no %f in the editor command
         (*mExtEditorProcess) << mExtEditorTempFile->fileName();
@@ -177,15 +184,20 @@ void KMeditorPrivate::startExternalEditor()
                      q, SLOT(slotEditorFinished(int,QProcess::ExitStatus)));
     mExtEditorProcess->start();
     if (!mExtEditorProcess->waitForStarted()) {
-        KMessageBox::error(q->topLevelWidget(), i18n("External editor cannot be started. Please verify command \"%1\"", commandLine));
-        q->killExternalEditor();
-        q->setUseExternalEditor(false);
+        canStartProcess(commandLine);
     } else {
         emit q->externalEditorStarted();
     }
 }
 
-void KMeditorPrivate::slotEditorFinished(int codeError, QProcess::ExitStatus exitStatus)
+void KMeditorPrivate::canStartProcess(const QString &commandLine)
+{
+    KMessageBox::error(q->topLevelWidget(),i18n("External editor cannot be started. Please verify command \"%1\"",commandLine));
+    q->killExternalEditor();
+    q->setUseExternalEditor( false );
+}
+
+void KMeditorPrivate::slotEditorFinished( int codeError, QProcess::ExitStatus exitStatus )
 {
     if (exitStatus == QProcess::NormalExit) {
         // the external editor could have renamed the original file and recreated a new file
