@@ -375,6 +375,9 @@ KABC::Addressee::List VCardXXPort::filterContacts( const KABC::Addressee::List &
         addr.setSound( (*it).sound() );
         addr.setEmails( (*it).emails() );
         addr.setCategories( (*it).categories() );
+        addr.setExtraLogoList( (*it).extraLogo() );
+        addr.setExtraSoundList( (*it).extraSound() );
+        addr.setExtraPhotoList( (*it).extraPhoto() );
 
         if ( dlg->exportPrivateFields() ) {
             addr.setBirthday( (*it).birthday() );
