@@ -188,4 +188,19 @@ void BalooCompletionEmailTest::shouldExcludeDuplicateEntryWithDisplayNameAddAddr
 
 }
 
+void BalooCompletionEmailTest::shouldExcludeDuplicateEntryWithDifferentDisplayNameAddAddressWithDifferentCase()
+{
+    KPIM::BalooCompletionEmail completion;
+    QStringList emailList;
+    emailList << QLatin1String("John Doe <doe@example.com>");
+    emailList << QLatin1String("\"John Doe\" <doe@example.com>");
+    emailList << QLatin1String("\"\'John Doe\'\" <doe@example.com>");
+    emailList << QLatin1String("John Doe <doe@example.com>");
+    emailList << QLatin1String("Doe John <Doe@example.com>");
+    emailList << QLatin1String("John <DOE@example.com>");
+    emailList << QLatin1String("Doe <dOE@example.com>");
+    completion.setEmailList(emailList);
+    QCOMPARE(completion.cleanupEmailList().count(), 1);
+}
+
 QTEST_KDEMAIN(BalooCompletionEmailTest, NoGUI)
