@@ -21,6 +21,7 @@
 #include "baloocompletionemailtest.h"
 #include "../baloocompletionemail.h"
 #include <qtest_kde.h>
+#include <QDebug>
 
 BalooCompletionEmailTest::BalooCompletionEmailTest(QObject *parent)
     : QObject(parent)
@@ -140,6 +141,26 @@ void BalooCompletionEmailTest::shouldReturnEmailListWhenDomainListIsNotNull()
     completion.setEmailList(emailList);
     completion.setExcludeDomain(QStringList() << QLatin1String(""));
     QCOMPARE(completion.cleanupEmailList(), emailList);
+}
+
+void BalooCompletionEmailTest::shouldDontDuplicateEmailWhenUseCase()
+{
+    KPIM::BalooCompletionEmail completion;
+    QStringList emailList;
+    emailList << QLatin1String("foo");
+    emailList << QLatin1String("foo2");
+    emailList << QLatin1String("foo3");
+    emailList << QLatin1String("foo4");
+    emailList << QLatin1String("foo5");
+    emailList << QLatin1String("foo6");
+
+    QStringList caseEmailList;
+    caseEmailList << QLatin1String("Foo");
+    caseEmailList << QLatin1String("fOo2");
+    caseEmailList << QLatin1String("FOo3");
+    completion.setEmailList((QStringList() << emailList<<caseEmailList));
+    QCOMPARE(completion.cleanupEmailList(), emailList);
+
 }
 
 QTEST_KDEMAIN(BalooCompletionEmailTest, NoGUI)

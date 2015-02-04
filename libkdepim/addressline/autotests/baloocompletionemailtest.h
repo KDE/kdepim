@@ -38,6 +38,7 @@ private Q_SLOTS:
     void shouldReturnEmptyListWhenAllBlackListed();
     void shouldExcludeDomain();
     void shouldReturnEmailListWhenDomainListIsNotNull();
+    void shouldDontDuplicateEmailWhenUseCase();
 };
 
 #endif // BALOOCOMPLETIONEMAILTEST_H

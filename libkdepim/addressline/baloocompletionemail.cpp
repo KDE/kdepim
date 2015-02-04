@@ -66,4 +66,3 @@ QStringList BalooCompletionEmail::cleanupEmailList() const
     }
     return hashEmail.values();
 }
-
