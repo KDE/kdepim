@@ -74,7 +74,7 @@ void AttachmentVcardFromAddressBookJob::doStart()
             const QString attachmentName = (groupName.isEmpty() ? QLatin1String("vcard") : groupName) + QLatin1String(".vcf");
             Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob(group, this);
             expandJob->setProperty("groupName", attachmentName);
-            connect(expandJob, SIGNAL(result(KJob*)), this, SLOT(slotExpandGroupResult(KJob*)));
+            connect(expandJob, &KJob::result, this, &AttachmentVcardFromAddressBookJob::slotExpandGroupResult);
             expandJob->start();
         } else {
             setError(KJob::UserDefinedError);

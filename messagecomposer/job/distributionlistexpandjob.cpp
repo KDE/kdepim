@@ -40,7 +40,7 @@ void DistributionListExpandJob::start()
 {
     Akonadi::ContactGroupSearchJob *job = new Akonadi::ContactGroupSearchJob(this);
     job->setQuery(Akonadi::ContactGroupSearchJob::Name, mListName);
-    connect(job, SIGNAL(result(KJob*)), SLOT(slotSearchDone(KJob*)));
+    connect(job, &KJob::result, this, &DistributionListExpandJob::slotSearchDone);
 }
 
 QString DistributionListExpandJob::addresses() const
@@ -71,7 +71,7 @@ void DistributionListExpandJob::slotSearchDone(KJob *job)
     }
 
     Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob(groups.first());
-    connect(expandJob, SIGNAL(result(KJob*)), SLOT(slotExpansionDone(KJob*)));
+    connect(expandJob, &KJob::result, this, &DistributionListExpandJob::slotExpansionDone);
     expandJob->start();
 }
 

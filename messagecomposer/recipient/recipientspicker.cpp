@@ -60,10 +60,10 @@ RecipientsPicker::RecipientsPicker(QWidget *parent)
     mView->view()->sortByColumn(0, Qt::AscendingOrder);
     mainLayout->setStretchFactor(mView, 1);
 
-    connect(mView->view()->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            SLOT(slotSelectionChanged()));
-    connect(mView->view(), SIGNAL(doubleClicked(QModelIndex)),
-            SLOT(slotPicked()));
+    connect(mView->view()->selectionModel(), &QItemSelectionModel::selectionChanged,
+            this, &RecipientsPicker::slotSelectionChanged);
+    connect(mView->view(), &QAbstractItemView::doubleClicked,
+            this, &RecipientsPicker::slotPicked);
 
     QPushButton *searchLDAPButton = new QPushButton(i18n("Search &Directory Service"), this);
     connect(searchLDAPButton, &QPushButton::clicked, this, &RecipientsPicker::slotSearchLDAP);

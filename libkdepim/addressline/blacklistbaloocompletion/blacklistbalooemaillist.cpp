@@ -30,8 +30,8 @@ BlackListBalooEmailList::BlackListBalooEmailList(QWidget *parent)
       mFirstResult(false)
 {
     setSelectionMode(QAbstractItemView::ExtendedSelection);
-    connect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
-            this, SLOT(slotGeneralPaletteChanged()));
+    connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayPaletteChanged,
+            this, &BlackListBalooEmailList::slotGeneralPaletteChanged);
 
 }
 

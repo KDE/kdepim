@@ -79,7 +79,7 @@ TemplateEditDialog::TemplateEditDialog(QWidget *parent, bool defaultTemplate)
             mOkButton->setEnabled(false);
         }
         connect(mTemplateNameEdit, &QLineEdit::textChanged, this, &TemplateEditDialog::slotTemplateChanged);
-        connect(mTextEdit->editor(), SIGNAL(textChanged()), SLOT(slotTemplateChanged()));
+        connect(mTextEdit->editor(), &QTextEdit::textChanged, this, &TemplateEditDialog::slotTemplateChanged);
         mTemplateNameEdit->setFocus();
     }
     readConfig();

@@ -55,8 +55,8 @@ SieveEditorMainWindow::SieveEditorMainWindow()
     mNetworkConfigurationManager = new QNetworkConfigurationManager();
     connect(mNetworkConfigurationManager, &QNetworkConfigurationManager::onlineStateChanged, this, &SieveEditorMainWindow::slotSystemNetworkOnlineStateChanged);
 
-    connect(mMainWidget->sieveEditorMainWidget()->tabWidget(), SIGNAL(currentChanged(int)), SLOT(slotUpdateActions()));
-    connect(mMainWidget->sieveEditorMainWidget(), SIGNAL(modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode)), SLOT(slotUpdateActions()));
+    connect(mMainWidget->sieveEditorMainWidget()->tabWidget(), &QTabWidget::currentChanged, this, &SieveEditorMainWindow::slotUpdateActions);
+    connect(mMainWidget->sieveEditorMainWidget(), &SieveEditorMainWidget::modeEditorChanged, this, &SieveEditorMainWindow::slotUpdateActions);
     slotSystemNetworkOnlineStateChanged(mNetworkConfigurationManager->isOnline());
     slotRefreshList();
 }

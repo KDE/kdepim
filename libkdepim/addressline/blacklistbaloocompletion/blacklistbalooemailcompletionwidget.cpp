@@ -50,12 +50,12 @@ BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget
     mSearchLineEdit->setClearButtonShown(true);
     mSearchLineEdit->setTrapReturnKey(true);
     mSearchLineEdit->setObjectName(QLatin1String("search_lineedit"));
-    connect(mSearchLineEdit, SIGNAL(returnPressed()), this, SLOT(slotSearch()));
+    connect(mSearchLineEdit, &KLineEdit::returnPressed, this, &BlackListBalooEmailCompletionWidget::slotSearch);
     searchLayout->addWidget(mSearchLineEdit);
 
     mSearchButton = new QPushButton(i18n("Search"));
     mSearchButton->setObjectName(QLatin1String("search_button"));
-    connect(mSearchButton, SIGNAL(clicked()), this, SLOT(slotSearch()));
+    connect(mSearchButton, &QAbstractButton::clicked, this, &BlackListBalooEmailCompletionWidget::slotSearch);
     mSearchButton->setEnabled(false);
     searchLayout->addWidget(mSearchButton);
 
@@ -67,16 +67,16 @@ BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget
     mainLayout->addLayout(selectElementLayout);
     mSelectButton = new QPushButton(i18n("&Select"), this);
     mSelectButton->setObjectName(QLatin1String("select_email"));
-    connect(mSelectButton, SIGNAL(clicked(bool)), this, SLOT(slotSelectEmails()));
+    connect(mSelectButton, &QAbstractButton::clicked, this, &BlackListBalooEmailCompletionWidget::slotSelectEmails);
     selectElementLayout->addWidget(mSelectButton);
 
     mUnselectButton = new QPushButton(i18n("&Unselect"), this);
     mUnselectButton->setObjectName(QLatin1String("unselect_email"));
-    connect(mUnselectButton, SIGNAL(clicked(bool)), this, SLOT(slotUnselectEmails()));
+    connect(mUnselectButton, &QAbstractButton::clicked, this, &BlackListBalooEmailCompletionWidget::slotUnselectEmails);
     selectElementLayout->addWidget(mUnselectButton);
     selectElementLayout->addStretch(1);
 
-    connect(mSearchLineEdit, SIGNAL(textChanged(QString)), this, SLOT(slotSearchLineEditChanged(QString)));
+    connect(mSearchLineEdit, &QLineEdit::textChanged, this, &BlackListBalooEmailCompletionWidget::slotSearchLineEditChanged);
 
     QHBoxLayout *excludeDomainLayout = new QHBoxLayout;
     excludeDomainLayout->setMargin(0);
@@ -92,7 +92,7 @@ BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget
     mExcludeDomainLineEdit->setClearButtonShown(true);
     mExcludeDomainLineEdit->setTrapReturnKey(true);
     mExcludeDomainLineEdit->setClickMessage(i18n("Separate domain with \',\'"));
-    connect(mEmailList, SIGNAL(itemSelectionChanged()), this, SLOT(slotSelectionChanged()));
+    connect(mEmailList, &QListWidget::itemSelectionChanged, this, &BlackListBalooEmailCompletionWidget::slotSelectionChanged);
     load();
 }
 

@@ -96,7 +96,7 @@ bool EditorWatcher::start()
         mInotifyWatch = inotify_add_watch(mInotifyFd, mUrl.path().toLatin1(), IN_CLOSE | IN_OPEN | IN_MODIFY | IN_ATTRIB);
         if (mInotifyWatch >= 0) {
             QSocketNotifier *sn = new QSocketNotifier(mInotifyFd, QSocketNotifier::Read, this);
-            connect(sn, SIGNAL(activated(int)), SLOT(inotifyEvent()));
+            connect(sn, &QSocketNotifier::activated, this, &EditorWatcher::inotifyEvent);
             mHaveInotify = true;
             mFileModified = false;
         }

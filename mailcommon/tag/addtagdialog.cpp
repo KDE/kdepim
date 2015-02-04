@@ -49,7 +49,7 @@ AddTagDialog::AddTagDialog(const QList<KActionCollection *> &actions, QWidget *p
 
     mTagWidget = new MailCommon::TagWidget(actions, this);
 
-    connect(mTagWidget->tagNameLineEdit(), SIGNAL(textChanged(QString)), SLOT(slotTagNameChanged(QString)));
+    connect(mTagWidget->tagNameLineEdit(), &QLineEdit::textChanged, this, &AddTagDialog::slotTagNameChanged);
     mOkButton->setEnabled(false);
     mainLayout->addWidget(mTagWidget);
     mainLayout->addWidget(buttonBox);
