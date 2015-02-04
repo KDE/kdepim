@@ -39,4 +39,39 @@ void BalooCompletionEmailTest::returnEmptyListWhenEmailListIsEmpty()
     QVERIFY(completion.cleanupEmailList().isEmpty());
 }
 
+void BalooCompletionEmailTest::shouldReturnSameListWhenNotExclude()
+{
+    KPIM::BalooCompletionEmail completion;
+    QStringList emailList;
+    emailList << QLatin1String("foo");
+    emailList << QLatin1String("foo2");
+    emailList << QLatin1String("foo3");
+    emailList << QLatin1String("foo4");
+    emailList << QLatin1String("foo5");
+    emailList << QLatin1String("foo6");
+    completion.setEmailList(emailList);
+    QCOMPARE(completion.cleanupEmailList(), emailList);
+}
+
+void BalooCompletionEmailTest::shouldReturnSameListIfBlackListDoesntInterceptEmail()
+{
+    KPIM::BalooCompletionEmail completion;
+    QStringList emailList;
+    emailList << QLatin1String("foo");
+    emailList << QLatin1String("foo2");
+    emailList << QLatin1String("foo3");
+    emailList << QLatin1String("foo4");
+    emailList << QLatin1String("foo5");
+    emailList << QLatin1String("foo6");
+    completion.setEmailList(emailList);
+
+    QStringList blackList;
+    blackList << QLatin1String("bla");
+    blackList << QLatin1String("bla2");
+    blackList << QLatin1String("bla3");
+    blackList << QLatin1String("bla4");
+    completion.setBlackList(blackList);
+    QCOMPARE(completion.cleanupEmailList(), emailList);
+}
+
 QTEST_KDEMAIN(BalooCompletionEmailTest, NoGUI)

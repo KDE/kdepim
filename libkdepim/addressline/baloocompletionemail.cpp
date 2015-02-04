@@ -20,7 +20,7 @@
 
 #include "baloocompletionemail.h"
 
-#include <QHash>
+#include <QMap>
 using namespace KPIM;
 
 BalooCompletionEmail::BalooCompletionEmail()
@@ -47,7 +47,7 @@ QStringList BalooCompletionEmail::cleanupEmailList() const
 {
     if (mListEmail.isEmpty())
         return mListEmail;
-    QHash<QString, QString> hashEmail;
+    QMap<QString, QString> hashEmail;
     Q_FOREACH (const QString &email, mListEmail) {
         if (!mBlackList.contains(email)) {
             if (!hashEmail.contains(email.toLower())) {

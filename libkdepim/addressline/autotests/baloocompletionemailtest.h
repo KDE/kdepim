@@ -32,6 +32,8 @@ public:
 
 private Q_SLOTS:
     void returnEmptyListWhenEmailListIsEmpty();
+    void shouldReturnSameListWhenNotExclude();
+    void shouldReturnSameListIfBlackListDoesntInterceptEmail();
 };
 
 #endif // BALOOCOMPLETIONEMAILTEST_H
