@@ -74,4 +74,72 @@ void BalooCompletionEmailTest::shouldReturnSameListIfBlackListDoesntInterceptEma
     QCOMPARE(completion.cleanupEmailList(), emailList);
 }
 
+void BalooCompletionEmailTest::shouldReturnUniqueEmail()
+{
+    KPIM::BalooCompletionEmail completion;
+    QStringList emailList;
+    emailList << QLatin1String("foo");
+    emailList << QLatin1String("foo");
+    emailList << QLatin1String("foo1");
+    emailList << QLatin1String("foo");
+    emailList << QLatin1String("foo1");
+    emailList << QLatin1String("foo2");
+    completion.setEmailList(emailList);
+    QCOMPARE(completion.cleanupEmailList(), (QStringList() << QLatin1String("foo") << QLatin1String("foo1") << QLatin1String("foo2") ) );
+}
+
+void BalooCompletionEmailTest::shouldReturnEmptyListWhenAllBlackListed()
+{
+    KPIM::BalooCompletionEmail completion;
+    QStringList emailList;
+    emailList << QLatin1String("foo");
+    emailList << QLatin1String("foo2");
+    emailList << QLatin1String("foo3");
+    emailList << QLatin1String("foo4");
+    emailList << QLatin1String("foo5");
+    emailList << QLatin1String("foo6");
+    completion.setEmailList(emailList);
+    completion.setBlackList(emailList);
+    QVERIFY(completion.cleanupEmailList().isEmpty());
+}
+
+void BalooCompletionEmailTest::shouldExcludeDomain()
+{
+    KPIM::BalooCompletionEmail completion;
+    QStringList emailList;
+    emailList << QLatin1String("foo@kde.org");
+    emailList << QLatin1String("foo2@kde.org");
+    emailList << QLatin1String("foo3@kde.org");
+    emailList << QLatin1String("foo4@kde.org");
+    emailList << QLatin1String("foo5@kde.org");
+    emailList << QLatin1String("foo6@kde.org");
+    completion.setEmailList(emailList);
+    completion.setExcludeDomain(QStringList() << QLatin1String("kde.org"));
+    QVERIFY(completion.cleanupEmailList().isEmpty());
+
+    const QString newAddress = QLatin1String("foo6@linux.org");
+    emailList << newAddress;
+    completion.setEmailList(emailList);
+    QCOMPARE(completion.cleanupEmailList(), (QStringList() << newAddress) );
+
+    completion.setExcludeDomain(QStringList() << QLatin1String("kde.org") << QLatin1String("linux.org") );
+    QVERIFY(completion.cleanupEmailList().isEmpty());
+}
+
+void BalooCompletionEmailTest::shouldReturnEmailListWhenDomainListIsNotNull()
+{
+    KPIM::BalooCompletionEmail completion;
+    QStringList emailList;
+    emailList << QLatin1String("foo@kde.org");
+    emailList << QLatin1String("foo2@kde.org");
+    emailList << QLatin1String("foo3@kde.org");
+    emailList << QLatin1String("foo4@kde.org");
+    emailList << QLatin1String("foo5@kde.org");
+    emailList << QLatin1String("foo6@kde.org");
+    emailList.sort();
+    completion.setEmailList(emailList);
+    completion.setExcludeDomain(QStringList() << QLatin1String(""));
+    QCOMPARE(completion.cleanupEmailList(), emailList);
+}
+
 QTEST_KDEMAIN(BalooCompletionEmailTest, NoGUI)

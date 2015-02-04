@@ -19,8 +19,8 @@
 */
 
 #include "baloocompletionemail.h"
-
 #include <QMap>
+#include <QDebug>
 using namespace KPIM;
 
 BalooCompletionEmail::BalooCompletionEmail()
@@ -50,7 +50,16 @@ QStringList BalooCompletionEmail::cleanupEmailList() const
     QMap<QString, QString> hashEmail;
     Q_FOREACH (const QString &email, mListEmail) {
         if (!mBlackList.contains(email)) {
-            if (!hashEmail.contains(email.toLower())) {
+            bool excludeMail = false;
+            Q_FOREACH(const QString &excludeDomain, mExcludeDomain) {
+                if (!excludeDomain.isEmpty()) {
+                    if (email.endsWith(excludeDomain)) {
+                        excludeMail = true;
+                        continue;
+                    }
+                }
+            }
+            if (!excludeMail && !hashEmail.contains(email.toLower())) {
                 hashEmail.insert(email.toLower(), email);
             }
         }
