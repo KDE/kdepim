@@ -76,6 +76,7 @@ set(kaddressbook_xxport_SRCS
 set(kaddressbook_merge_SRCS
    merge/job/searchpotentialduplicatecontactjob.cpp
    merge/job/mergecontactsjob.cpp
+   merge/job/mergecontacts.cpp
    merge/mergecontactsdialog.cpp
    merge/mergecontactwidget.cpp
    merge/util/mergecontactutil.cpp
@@ -84,8 +85,7 @@ set(kaddressbook_merge_SRCS
    merge/mergecontactshowresultdialog.cpp
    merge/mergecontactselectinformationdialog.cpp
    merge/mergecontactshowresulttabwidget.cpp
-   merge/mergecontacts.cpp
-   merge/mergecontactduplicatecontactdialog.cpp
+   merge/searchduplicate/mergecontactduplicatecontactdialog.cpp
 )
 
 set(kaddressbook_LIB_SRCS

@@ -68,6 +68,7 @@ set(kdepim_addressline_LIB_SRCS
    addressline/addresseelineedit.cpp
    addressline/recentaddresses.cpp
    addressline/kmailcompletion.cpp
+   addressline/baloocompletionemail.cpp
 )
 
 set(kdepim_addressline_blacklist_baloo_LIB_SRCS
@@ -185,4 +186,5 @@ install(FILES interfaces/org.kde.addressbook.service.xml interfaces/org.kde.mail
 
 if (BUILD_TESTING)
 add_subdirectory(addressline/blacklistbaloocompletion/autotests)
+add_subdirectory(addressline/autotests/)
 endif()

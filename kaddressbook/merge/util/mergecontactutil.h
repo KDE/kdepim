@@ -19,12 +19,13 @@
 #define MERGECONTACTUTIL_H
 
 #include <AkonadiCore/Item>
-namespace KABMergeContacts
+namespace KABMergeContacts {
+class MergeContactUtil
 {
-namespace MergeContactUtil
-{
-bool hasSameNames(const Akonadi::Item::List &lst);
-}
+public:
+    MergeContactUtil();
+    bool hasSameNames(const Akonadi::Item::List &lst);
+};
 }
 
 #endif // MERGECONTACTUTIL_H

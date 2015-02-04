@@ -16,10 +16,9 @@
 */
 
 #include "mergecontactsjob.h"
-#include "merge/mergecontacts.h"
+#include "mergecontacts.h"
 #include <AkonadiCore/ItemCreateJob>
 #include <AkonadiCore/ItemDeleteJob>
-
 #include <KContacts/Address>
 #include <KContacts/Addressee>
 
