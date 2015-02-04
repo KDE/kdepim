@@ -23,13 +23,13 @@
 
 using namespace KABMergeContacts;
 MergeContactSelectInformationDialog::MergeContactSelectInformationDialog(const Akonadi::Item::List &lst, QWidget *parent)
-    : KDialog(parent),
-      mList(lst)
+    : KDialog(parent)
 {
     setCaption(i18n("Select Which Information to Use for new Contact"));
     setButtons(Ok|Cancel);
     mTabWidget = new MergeContactShowResultTabWidget(this);
     mTabWidget->setObjectName(QLatin1String("tabwidget"));
+    mTabWidget->setContacts(lst);
     setMainWidget(mTabWidget);
     updateTabWidget();
 }

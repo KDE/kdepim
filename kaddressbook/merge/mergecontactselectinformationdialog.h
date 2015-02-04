@@ -35,7 +35,6 @@ public:
 
 private:
     void updateTabWidget();
-    Akonadi::Item::List mList;
     MergeContactShowResultTabWidget *mTabWidget;
 };
 }
