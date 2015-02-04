@@ -373,11 +373,12 @@ KABC::Addressee::List VCardXXPort::filterContacts( const KABC::Addressee::List &
         addr.setUrl( (*it).url() );
         addr.setSecrecy( (*it).secrecy() );
         addr.setSound( (*it).sound() );
-        addr.setEmails( (*it).emails() );
+        addr.setEmailList( (*it).emailList() );
         addr.setCategories( (*it).categories() );
-        addr.setExtraLogoList( (*it).extraLogo() );
         addr.setExtraSoundList( (*it).extraSound() );
-        addr.setExtraPhotoList( (*it).extraPhoto() );
+        addr.setGender( (*it).gender() );
+        addr.setLangs( (*it).langs() );
+        addr.setKind( (*it).kind() );
 
         if ( dlg->exportPrivateFields() ) {
             addr.setBirthday( (*it).birthday() );
@@ -387,10 +388,12 @@ KABC::Addressee::List VCardXXPort::filterContacts( const KABC::Addressee::List &
         if ( dlg->exportPictureFields() ) {
             if ( dlg->exportPrivateFields() ) {
                 addr.setPhoto( (*it).photo() );
+                addr.setExtraPhotoList( (*it).extraPhoto() );
             }
 
             if ( dlg->exportBusinessFields() ) {
                 addr.setLogo( (*it).logo() );
+                addr.setExtraLogoList( (*it).extraLogo() );
             }
         }
 
