@@ -64,7 +64,7 @@ void MergeContactsJob::start()
 void MergeContactsJob::generateMergedContact()
 {
     MergeContacts mergeContact(mListItem);
-    KABC::Addressee newContact = mergeContact.mergedContact();
+    const KABC::Addressee newContact = mergeContact.mergedContact();
     if (newContact.isEmpty()) {
         Q_EMIT finished(mCreatedContact);
         deleteLater();
