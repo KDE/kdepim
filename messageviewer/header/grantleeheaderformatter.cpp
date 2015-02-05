@@ -44,7 +44,11 @@ public:
     Private()
     {
         engine = new Grantlee::Engine;
-        engine->setPluginPaths( QStringList() << QLatin1String(GRANTLEE_PLUGIN_PATH) << QLatin1String(MESSAGEVIEWER_GRANTLEE_PLUGIN_PATH));
+        const QStringList pluginDirs = KGlobal::dirs()->resourceDirs("qtplugins");
+        foreach(const QString & pluginDir, pluginDirs) {
+            engine->addPluginPath(pluginDir);
+        }
+        engine->addDefaultLibrary( QLatin1String("grantlee_messageheaderfilters") );
         templateLoader = Grantlee::FileSystemTemplateLoader::Ptr( new Grantlee::FileSystemTemplateLoader );
         engine->addTemplateLoader( templateLoader );
     }

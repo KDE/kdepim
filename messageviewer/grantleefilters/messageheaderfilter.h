@@ -19,6 +19,7 @@
 #ifndef MESSAGEHEADERFILTER_H
 #define MESSAGEHEADERFILTER_H
 
+#include <QObject>
 #include <grantlee/filter.h>
 
 
