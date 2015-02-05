@@ -27,6 +27,7 @@
 #include <KDE/KXMLGUIClient>
 #include <KActionMenu>
 #include <KActionCollection>
+#include <akonadi/collectionstatisticsdelegate.h>
 
 #include <QPainter>
 
@@ -54,6 +55,13 @@ FavoriteCollectionWidget::FavoriteCollectionWidget( KXMLGUIClient *xmlGuiClient,
              this, SLOT(slotGeneralFontChanged()));
     connect( KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
              this, SLOT(slotGeneralPaletteChanged()));
+
+    Akonadi::CollectionStatisticsDelegate *delegate = new Akonadi::CollectionStatisticsDelegate( this );
+    delegate->setProgressAnimationEnabled( true );
+
+    setItemDelegate(delegate);
+
+    delegate->setUnreadCountShown( true );
 
     readConfig();
 
