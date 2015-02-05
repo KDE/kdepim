@@ -39,5 +39,12 @@ public:
     bool isSafe() const;
 };
 
+class MessageHeaderEmailExpandable : public Grantlee::Filter
+{
+public:
+    QVariant doFilter(const QVariant &input, const QVariant &argument = QVariant(), bool autoescape = false) const;
+
+    bool isSafe() const;
+};
 
 #endif // MESSAGEHEADERFILTER_H

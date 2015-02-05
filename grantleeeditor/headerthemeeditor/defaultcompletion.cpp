@@ -32,12 +32,15 @@ QStringList DefaultCompletion::defaultCompetion()
         <<QLatin1String( "header.toi18n" )
         <<QLatin1String( "header.to" )
         <<QLatin1String( "header.toStr" )
+        <<QLatin1String( "header.toExpandable" )
         <<QLatin1String( "header.cci18n" )
         <<QLatin1String( "header.cc" )
         <<QLatin1String( "header.ccStr" )
+        <<QLatin1String( "header.ccExpandable" )
         <<QLatin1String( "header.bcci18n" )
         <<QLatin1String( "header.bcc" )
         <<QLatin1String( "header.bccStr" )
+        <<QLatin1String( "header.bccExpandable" )
         <<QLatin1String( "header.fromi18n" )
         <<QLatin1String( "header.from" )
         <<QLatin1String( "header.fromStr" )
@@ -72,6 +75,7 @@ QStringList DefaultCompletion::defaultOptions()
     QStringList lst;
     lst <<QLatin1String( "showlink" )
         <<QLatin1String( "nameonly" )
-        <<QLatin1String( "Safe" );
+        <<QLatin1String( "safe" )
+        <<QLatin1String( "expandable" );
     return lst;
 }
