@@ -175,6 +175,7 @@ protected:
     virtual void contextMenuEvent( QContextMenuEvent * );
 #endif
 
+    QStringList cleanupEmailList(const QStringList &inputList);
 private:
     virtual bool eventFilter( QObject *, QEvent * );
     void emitTextCompleted();

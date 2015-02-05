@@ -234,6 +234,7 @@ public:
         m_delayedQueryTimer.setSingleShot(true);
         connect( &m_delayedQueryTimer, SIGNAL(timeout()), q, SLOT(slotTriggerDelayedQueries()) );
     }
+    QStringList cleanupEmailList(const QStringList &inputList);
     void loadBalooBlackList();
     void alternateColor();
     void init();
@@ -368,15 +369,26 @@ void AddresseeLineEdit::Private::stopLDAPLookup()
     s_static->ldapLineEdit = 0;
 }
 
+QStringList AddresseeLineEdit::cleanupEmailList(const QStringList &inputList)
+{
+    return d->cleanupEmailList(inputList);
+}
+
+QStringList AddresseeLineEdit::Private::cleanupEmailList(const QStringList &inputList)
+{
+    KPIM::BalooCompletionEmail completionEmail;
+    completionEmail.setEmailList(inputList);
+    completionEmail.setBlackList(m_balooBlackList);
+    completionEmail.setExcludeDomain(m_domainExcludeList);
+    const QStringList listEmail = completionEmail.cleanupEmailList();
+    return listEmail;
+}
+
 void AddresseeLineEdit::Private::searchInBaloo()
 {
     const QString trimmedString = m_searchString.trimmed();
     Baloo::PIM::ContactCompleter com(trimmedString, 20);
-    KPIM::BalooCompletionEmail completionEmail;
-    completionEmail.setEmailList(com.complete());
-    completionEmail.setBlackList(m_balooBlackList);
-    completionEmail.setExcludeDomain(m_domainExcludeList);
-    const QStringList listEmail = completionEmail.cleanupEmailList();
+    const QStringList listEmail = cleanupEmailList(com.complete());
     Q_FOREACH (const QString& email, listEmail) {
         addCompletionItem(email, 1, s_static->balooCompletionSource);
     }
