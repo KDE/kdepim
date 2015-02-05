@@ -26,8 +26,7 @@
 
 using namespace KABMergeContacts;
 MergeContactSelectInformationDialog::MergeContactSelectInformationDialog(const Akonadi::Item::List &lst, QWidget *parent)
-    : QDialog(parent),
-      mList(lst)
+    : QDialog(parent)
 {
     setWindowTitle(i18n("Select Which Information to Use for new Contact"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
@@ -43,6 +42,7 @@ MergeContactSelectInformationDialog::MergeContactSelectInformationDialog(const A
     mainLayout->addWidget(mTabWidget);
     mainLayout->addWidget(buttonBox);
 
+    mTabWidget->setContacts(lst);
     updateTabWidget();
 }
 

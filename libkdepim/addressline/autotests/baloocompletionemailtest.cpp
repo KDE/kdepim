@@ -173,4 +173,34 @@ void BalooCompletionEmailTest::shouldExcludeDuplicateEntryWithDisplayName()
     QCOMPARE(completion.cleanupEmailList().count(), 1);
 }
 
+void BalooCompletionEmailTest::shouldExcludeDuplicateEntryWithDisplayNameAddAddressWithDifferentCase()
+{
+    KPIM::BalooCompletionEmail completion;
+    QStringList emailList;
+    emailList << QLatin1String("John Doe <doe@example.com>");
+    emailList << QLatin1String("\"John Doe\" <doe@example.com>");
+    emailList << QLatin1String("\"\'John Doe\'\" <doe@example.com>");
+    emailList << QLatin1String("John Doe <Doe@example.com>");
+    emailList << QLatin1String("John Doe <DOE@example.com>");
+    emailList << QLatin1String("John Doe <dOE@example.com>");
+    completion.setEmailList(emailList);
+    QCOMPARE(completion.cleanupEmailList().count(), 1);
+
+}
+
+void BalooCompletionEmailTest::shouldExcludeDuplicateEntryWithDifferentDisplayNameAddAddressWithDifferentCase()
+{
+    KPIM::BalooCompletionEmail completion;
+    QStringList emailList;
+    emailList << QLatin1String("John Doe <doe@example.com>");
+    emailList << QLatin1String("\"John Doe\" <doe@example.com>");
+    emailList << QLatin1String("\"\'John Doe\'\" <doe@example.com>");
+    emailList << QLatin1String("John Doe <doe@example.com>");
+    emailList << QLatin1String("Doe John <Doe@example.com>");
+    emailList << QLatin1String("John <DOE@example.com>");
+    emailList << QLatin1String("Doe <dOE@example.com>");
+    completion.setEmailList(emailList);
+    QCOMPARE(completion.cleanupEmailList().count(), 1);
+}
+
 QTEST_MAIN(BalooCompletionEmailTest)

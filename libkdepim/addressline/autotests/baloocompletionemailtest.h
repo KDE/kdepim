@@ -40,6 +40,8 @@ private Q_SLOTS:
     void shouldReturnEmailListWhenDomainListIsNotNull();
     void shouldDontDuplicateEmailWhenUseCase();
     void shouldExcludeDuplicateEntryWithDisplayName();
+    void shouldExcludeDuplicateEntryWithDisplayNameAddAddressWithDifferentCase();
+    void shouldExcludeDuplicateEntryWithDifferentDisplayNameAddAddressWithDifferentCase();
 };
 
 #endif // BALOOCOMPLETIONEMAILTEST_H

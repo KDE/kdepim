@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "mergecontactduplicatecontactdialog.h"
+#include "searchandmergecontactduplicatecontactdialog.h"
 
 #include "merge/mergecontactshowresulttabwidget.h"
 
@@ -33,15 +33,15 @@
 
 using namespace KABMergeContacts;
 
-MergeContactDuplicateContactDialog::MergeContactDuplicateContactDialog(const Akonadi::Item::List &list, QWidget *parent)
+SearchAndMergeContactDuplicateContactDialog::SearchAndMergeContactDuplicateContactDialog(const Akonadi::Item::List &list, QWidget *parent)
     : QDialog(parent)
 {
     setWindowTitle(i18n("Select Contacts to merge"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &MergeContactDuplicateContactDialog::accept);
-    connect(buttonBox, &QDialogButtonBox::rejected, this, &MergeContactDuplicateContactDialog::reject);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &SearchAndMergeContactDuplicateContactDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &SearchAndMergeContactDuplicateContactDialog::reject);
     mStackedWidget = new QStackedWidget(this);
     mStackedWidget->setObjectName(QStringLiteral("stackedwidget"));
 
@@ -68,12 +68,12 @@ MergeContactDuplicateContactDialog::MergeContactDuplicateContactDialog(const Ako
     searchPotentialDuplicateContacts(list);
 }
 
-MergeContactDuplicateContactDialog::~MergeContactDuplicateContactDialog()
+SearchAndMergeContactDuplicateContactDialog::~SearchAndMergeContactDuplicateContactDialog()
 {
 
 }
 
-void MergeContactDuplicateContactDialog::searchPotentialDuplicateContacts(const Akonadi::Item::List &list)
+void SearchAndMergeContactDuplicateContactDialog::searchPotentialDuplicateContacts(const Akonadi::Item::List &list)
 {
     if (list.isEmpty()) {
         mStackedWidget->setCurrentWidget(mNoContactSelected);
@@ -81,12 +81,12 @@ void MergeContactDuplicateContactDialog::searchPotentialDuplicateContacts(const 
         mStackedWidget->setCurrentWidget(mNoEnoughContactSelected);
     } else {
         SearchPotentialDuplicateContactJob *job = new SearchPotentialDuplicateContactJob(list, this);
-        connect(job, &SearchPotentialDuplicateContactJob::finished, this, &MergeContactDuplicateContactDialog::slotDuplicateFound);
+        connect(job, &SearchPotentialDuplicateContactJob::finished, this, &SearchAndMergeContactDuplicateContactDialog::slotDuplicateFound);
         job->start();
     }
 }
 
-void MergeContactDuplicateContactDialog::readConfig()
+void SearchAndMergeContactDuplicateContactDialog::readConfig()
 {
     KConfigGroup grp(KSharedConfig::openConfig(), "MergeContactDuplicateContactDialog");
     const QSize size = grp.readEntry("Size", QSize(300, 200));
@@ -95,14 +95,14 @@ void MergeContactDuplicateContactDialog::readConfig()
     }
 }
 
-void MergeContactDuplicateContactDialog::writeConfig()
+void SearchAndMergeContactDuplicateContactDialog::writeConfig()
 {
     KConfigGroup grp(KSharedConfig::openConfig(), "MergeContactDuplicateContactDialog");
     grp.writeEntry("Size", size());
     grp.sync();
 }
 
-void MergeContactDuplicateContactDialog::slotDuplicateFound(const QList<Akonadi::Item::List> &duplicate)
+void SearchAndMergeContactDuplicateContactDialog::slotDuplicateFound(const QList<Akonadi::Item::List> &duplicate)
 {
     if (duplicate.isEmpty()) {
         mStackedWidget->setCurrentWidget(mNoDuplicateContactFound);

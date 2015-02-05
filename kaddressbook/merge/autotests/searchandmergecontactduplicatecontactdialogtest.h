@@ -20,11 +20,11 @@
 
 #include <QObject>
 
-class MergeContactDuplicateContactDialogTest : public QObject
+class SearchAndMergeContactDuplicateContactDialogTest : public QObject
 {
     Q_OBJECT
 public:
-    MergeContactDuplicateContactDialogTest();
+    SearchAndMergeContactDuplicateContactDialogTest();
 
 private Q_SLOTS:
     void shouldHaveDefaultValueOnCreation();

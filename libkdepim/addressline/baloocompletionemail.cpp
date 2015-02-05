@@ -65,8 +65,8 @@ QStringList BalooCompletionEmail::cleanupEmailList()
                     }
                 }
             }
-            if (!excludeMail && !hashEmail.contains(email.toLower())) {
-                hashEmail.insert(email.toLower(), email);
+            if (!excludeMail && !hashEmail.contains(address.toLower())) {
+                hashEmail.insert(address.toLower(), email);
             }
         }
     }

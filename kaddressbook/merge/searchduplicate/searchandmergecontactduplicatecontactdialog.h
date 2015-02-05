@@ -15,8 +15,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MERGECONTACTDUPLICATECONTACTDIALOG_H
-#define MERGECONTACTDUPLICATECONTACTDIALOG_H
+#ifndef SEARCHANDMERGECONTACTDUPLICATECONTACTDIALOG_H
+#define SEARCHANDMERGECONTACTDUPLICATECONTACTDIALOG_H
 
 #include <QDialog>
 #include <AkonadiCore/Item>
@@ -27,12 +27,12 @@ class QLabel;
 namespace KABMergeContacts
 {
 class MergeContactShowResultTabWidget;
-class KADDRESSBOOK_EXPORT MergeContactDuplicateContactDialog : public QDialog
+class KADDRESSBOOK_EXPORT SearchAndMergeContactDuplicateContactDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit MergeContactDuplicateContactDialog(const Akonadi::Item::List &list, QWidget *parent = Q_NULLPTR);
-    ~MergeContactDuplicateContactDialog();
+    explicit SearchAndMergeContactDuplicateContactDialog(const Akonadi::Item::List &list, QWidget *parent = Q_NULLPTR);
+    ~SearchAndMergeContactDuplicateContactDialog();
 
 private Q_SLOTS:
     void slotDuplicateFound(const QList<Akonadi::Item::List> &duplicate);
@@ -49,4 +49,4 @@ private:
 };
 }
 
-#endif // MERGECONTACTDUPLICATECONTACTDIALOG_H
+#endif // SEARCHANDMERGECONTACTDUPLICATECONTACTDIALOG_H

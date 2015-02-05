@@ -376,6 +376,10 @@ KContacts::Addressee::List VCardXXPort::filterContacts(const KContacts::Addresse
         addr.setSound((*it).sound());
         addr.setEmails((*it).emails());
         addr.setCategories((*it).categories());
+        addr.setExtraSoundList( (*it).extraSound() );
+        addr.setGender( (*it).gender() );
+        addr.setLangs( (*it).langs() );
+        addr.setKind( (*it).kind() );
 
         if (dlg->exportPrivateFields()) {
             addr.setBirthday((*it).birthday());
@@ -385,10 +389,12 @@ KContacts::Addressee::List VCardXXPort::filterContacts(const KContacts::Addresse
         if (dlg->exportPictureFields()) {
             if (dlg->exportPrivateFields()) {
                 addr.setPhoto((*it).photo());
+                addr.setExtraPhotoList( (*it).extraPhoto() );
             }
 
             if (dlg->exportBusinessFields()) {
                 addr.setLogo((*it).logo());
+                addr.setExtraLogoList( (*it).extraLogo() );
             }
         }
 
