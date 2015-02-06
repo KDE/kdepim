@@ -26,6 +26,8 @@ class SearchDuplicateResultWidgetTest : public QObject
 public:
     explicit SearchDuplicateResultWidgetTest(QObject *parent = 0);
     ~SearchDuplicateResultWidgetTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
 #endif // SEARCHDUPLICATERESULTWIDGETTEST_H

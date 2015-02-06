@@ -16,7 +16,12 @@
 */
 
 #include "searchduplicateresultwidgettest.h"
+#include "../searchduplicate/searchduplicateresultwidget.h"
+#include <kaddressbookgrantlee/widget/grantleecontactviewer.h>
+#include <QSplitter>
+#include <QTreeWidget>
 #include <qtest_kde.h>
+
 SearchDuplicateResultWidgetTest::SearchDuplicateResultWidgetTest(QObject *parent)
     : QObject(parent)
 {
@@ -26,6 +31,17 @@ SearchDuplicateResultWidgetTest::SearchDuplicateResultWidgetTest(QObject *parent
 SearchDuplicateResultWidgetTest::~SearchDuplicateResultWidgetTest()
 {
 
+}
+
+void SearchDuplicateResultWidgetTest::shouldHaveDefaultValue()
+{
+    KABMergeContacts::SearchDuplicateResultWidget w;
+    QTreeWidget *tree = qFindChild<QTreeWidget *>(&w, QLatin1String("result_treewidget"));
+    QVERIFY(tree);
+    QSplitter *splitter = qFindChild<QSplitter *>(&w, QLatin1String("splitter"));
+    QVERIFY(splitter);
+    KAddressBookGrantlee::GrantleeContactViewer *viewer = qFindChild<KAddressBookGrantlee::GrantleeContactViewer *>(&w, QLatin1String("contact_viewer"));
+    QVERIFY(viewer);
 }
 
 QTEST_KDEMAIN(SearchDuplicateResultWidgetTest, GUI)

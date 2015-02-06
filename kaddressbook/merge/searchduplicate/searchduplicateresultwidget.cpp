@@ -17,12 +17,27 @@
 
 #include "searchduplicateresultwidget.h"
 #include <KLocalizedString>
+#include <QHBoxLayout>
+#include <QTreeWidget>
+#include <QSplitter>
+#include <kaddressbookgrantlee/widget/grantleecontactviewer.h>
 
 using namespace KABMergeContacts;
 SearchDuplicateResultWidget::SearchDuplicateResultWidget(QWidget *parent)
     : QWidget(parent)
 {
-    //TODO
+    QHBoxLayout *mainLayout = new QHBoxLayout;
+    setLayout(mainLayout);
+
+    QSplitter *splitter = new QSplitter;
+    splitter->setObjectName(QLatin1String("splitter"));
+    mainLayout->addWidget(splitter);
+    mResult = new QTreeWidget;
+    mResult->setObjectName(QLatin1String("result_treewidget"));
+    mContactViewer = new KAddressBookGrantlee::GrantleeContactViewer;
+    mContactViewer->setObjectName(QLatin1String("contact_viewer"));
+    splitter->addWidget(mResult);
+    splitter->addWidget(mContactViewer);
 }
 
 SearchDuplicateResultWidget::~SearchDuplicateResultWidget()

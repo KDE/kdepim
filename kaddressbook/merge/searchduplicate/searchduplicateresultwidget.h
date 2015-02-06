@@ -20,15 +20,22 @@
 
 #include <QWidget>
 #include <Akonadi/Item>
-
+#include "kaddressbook_export.h"
+class QTreeWidget;
+namespace KAddressBookGrantlee {
+class GrantleeContactViewer;
+}
 namespace KABMergeContacts {
-class SearchDuplicateResultWidget : public QWidget
+class KADDRESSBOOK_EXPORT SearchDuplicateResultWidget : public QWidget
 {
     Q_OBJECT
 public:
     explicit SearchDuplicateResultWidget(QWidget *parent=0);
     ~SearchDuplicateResultWidget();
     void setContacts(const QList<Akonadi::Item::List> &lstItem);
+private:
+    QTreeWidget *mResult;
+    KAddressBookGrantlee::GrantleeContactViewer *mContactViewer;
 };
 }
 
