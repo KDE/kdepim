@@ -15,22 +15,21 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef SEARCHDUPLICATERESULTWIDGET_H
+#define SEARCHDUPLICATERESULTWIDGET_H
 
-#ifndef SearchAndMergeContactDuplicateContactDialogTest_H
-#define SearchAndMergeContactDuplicateContactDialogTest_H
+#include <QWidget>
+#include <Akonadi/Item>
 
-#include <QObject>
-
-class SearchAndMergeContactDuplicateContactDialogTest : public QObject
+namespace KABMergeContacts {
+class SearchDuplicateResultWidget : public QWidget
 {
     Q_OBJECT
 public:
-    SearchAndMergeContactDuplicateContactDialogTest();
-
-private Q_SLOTS:
-    void shouldHaveDefaultValueOnCreation();
-    void shouldShowNoEnoughPageWhenSelectOneContact();
-    void shouldShowNoContactWhenListIsEmpty();
+    explicit SearchDuplicateResultWidget(QWidget *parent=0);
+    ~SearchDuplicateResultWidget();
+    void setContacts(const QList<Akonadi::Item::List> &lstItem);
 };
+}
 
-#endif // SearchAndMergeContactDuplicateContactDialogTest_H
+#endif // SEARCHDUPLICATERESULTWIDGET_H

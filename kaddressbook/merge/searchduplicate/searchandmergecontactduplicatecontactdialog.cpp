@@ -18,7 +18,7 @@
 
 #include "searchandmergecontactduplicatecontactdialog.h"
 
-#include "merge/mergecontactshowresulttabwidget.h"
+#include "merge/searchduplicate/searchduplicateresultwidget.h"
 
 #include "merge/job/searchpotentialduplicatecontactjob.h"
 
@@ -32,7 +32,7 @@
 
 using namespace KABMergeContacts;
 
-SearchAndMergeContactDuplicateContactDialog::SearchAndMergeContactDuplicateContactDialog(const Akonadi::Item::List &list, QWidget *parent)
+SearchAndMergeContactDuplicateContactDialog::SearchAndMergeContactDuplicateContactDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n( "Select Contacts to merge" ) );
@@ -40,9 +40,9 @@ SearchAndMergeContactDuplicateContactDialog::SearchAndMergeContactDuplicateConta
     mStackedWidget = new QStackedWidget(this);
     mStackedWidget->setObjectName(QLatin1String("stackedwidget"));
 
-    mMergeContact = new MergeContactShowResultTabWidget;
-    mMergeContact->setObjectName(QLatin1String("mergecontact"));
-    mStackedWidget->addWidget(mMergeContact);
+    mSearchResult = new SearchDuplicateResultWidget;
+    mSearchResult->setObjectName(QLatin1String("mergecontact"));
+    mStackedWidget->addWidget(mSearchResult);
 
     mNoContactSelected = new QLabel(i18n("No contacts selected."));
     mNoContactSelected->setObjectName(QLatin1String("nocontactselected"));
@@ -56,11 +56,10 @@ SearchAndMergeContactDuplicateContactDialog::SearchAndMergeContactDuplicateConta
     mNoEnoughContactSelected = new QLabel(i18n("You must select at least two elements."));
     mNoEnoughContactSelected->setObjectName(QLatin1String("noenoughcontactselected"));
     mStackedWidget->addWidget(mNoEnoughContactSelected);
-
+    mStackedWidget->setCurrentWidget(mNoContactSelected);
 
     setMainWidget(mStackedWidget);
     readConfig();
-    searchPotentialDuplicateContacts(list);
 }
 
 SearchAndMergeContactDuplicateContactDialog::~SearchAndMergeContactDuplicateContactDialog()
@@ -102,7 +101,7 @@ void SearchAndMergeContactDuplicateContactDialog::slotDuplicateFound(const QList
     if (duplicate.isEmpty()) {
         mStackedWidget->setCurrentWidget(mNoDuplicateContactFound);
     } else {
-        mStackedWidget->setCurrentWidget(mMergeContact);
-        //TODO mMergeContact->setContacts(duplicate);
+        mStackedWidget->setCurrentWidget(mSearchResult);
+        mSearchResult->setContacts(duplicate);
     }
 }

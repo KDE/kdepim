@@ -15,22 +15,23 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "searchduplicateresultwidget.h"
+#include <KLocalizedString>
 
-#ifndef SearchAndMergeContactDuplicateContactDialogTest_H
-#define SearchAndMergeContactDuplicateContactDialogTest_H
-
-#include <QObject>
-
-class SearchAndMergeContactDuplicateContactDialogTest : public QObject
+using namespace KABMergeContacts;
+SearchDuplicateResultWidget::SearchDuplicateResultWidget(QWidget *parent)
+    : QWidget(parent)
 {
-    Q_OBJECT
-public:
-    SearchAndMergeContactDuplicateContactDialogTest();
+    //TODO
+}
 
-private Q_SLOTS:
-    void shouldHaveDefaultValueOnCreation();
-    void shouldShowNoEnoughPageWhenSelectOneContact();
-    void shouldShowNoContactWhenListIsEmpty();
-};
+SearchDuplicateResultWidget::~SearchDuplicateResultWidget()
+{
 
-#endif // SearchAndMergeContactDuplicateContactDialogTest_H
+}
+
+void SearchDuplicateResultWidget::setContacts(const QList<Akonadi::Item::List> &lstItem)
+{
+
+}
+

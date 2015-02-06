@@ -980,7 +980,8 @@ void MainWidget::mergeContacts()
 void MainWidget::slotSearchDuplicateContacts()
 {
     const Akonadi::Item::List lst = Utils::collectSelectedContactsItem(mItemView->selectionModel());
-    QPointer<KABMergeContacts::SearchAndMergeContactDuplicateContactDialog> dlg = new KABMergeContacts::SearchAndMergeContactDuplicateContactDialog(lst, this);
+    QPointer<KABMergeContacts::SearchAndMergeContactDuplicateContactDialog> dlg = new KABMergeContacts::SearchAndMergeContactDuplicateContactDialog(this);
+    dlg->searchPotentialDuplicateContacts(lst);
     dlg->exec();
     delete dlg;
 }
