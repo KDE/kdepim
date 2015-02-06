@@ -27,6 +27,7 @@
 #include <KXMLGUIClient>
 #include <KActionMenu>
 #include <KActionCollection>
+#include <AkonadiWidgets/CollectionStatisticsDelegate>
 
 #include <QPainter>
 #include <QFontDatabase>
@@ -53,6 +54,13 @@ FavoriteCollectionWidget::FavoriteCollectionWidget(KXMLGUIClient *xmlGuiClient, 
 
     connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayFontChanged, this, &FavoriteCollectionWidget::slotGeneralFontChanged);
     connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayPaletteChanged, this, &FavoriteCollectionWidget::slotGeneralPaletteChanged);
+
+    Akonadi::CollectionStatisticsDelegate *delegate = new Akonadi::CollectionStatisticsDelegate( this );
+    delegate->setProgressAnimationEnabled( true );
+
+    setItemDelegate(delegate);
+
+    delegate->setUnreadCountShown( true );
 
     readConfig();
 

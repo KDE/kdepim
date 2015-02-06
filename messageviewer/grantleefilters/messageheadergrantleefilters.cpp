@@ -34,6 +34,7 @@ QHash<QString, Grantlee::Filter *> MessageHeaderGrantleeFilters::filters(const Q
     QHash<QString, Grantlee::Filter *> filters;
     filters.insert(QLatin1String("showlink"), new MessageHeaderEmailShowLink());
     filters.insert(QLatin1String("nameonly"), new MessageHeaderEmailNameOnly());
+    filters.insert(QLatin1String("expandable"), new MessageHeaderEmailExpandable());
     return filters;
 }
 

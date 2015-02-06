@@ -45,6 +45,14 @@ public:
         engine->setPluginPaths(QStringList() << QLatin1String(GRANTLEE_PLUGIN_PATH) << QLatin1String(MESSAGEVIEWER_GRANTLEE_PLUGIN_PATH));
         templateLoader = QSharedPointer<Grantlee::FileSystemTemplateLoader>(new Grantlee::FileSystemTemplateLoader);
         engine->addTemplateLoader(templateLoader);
+#if 0 //QT5 verify it
+        const QStringList pluginDirs = KGlobal::dirs()->resourceDirs("qtplugins");
+        foreach(const QString & pluginDir, pluginDirs) {
+            engine->addPluginPath(pluginDir);
+        }
+        engine->addDefaultLibrary( QLatin1String("grantlee_messageheaderfilters") );
+#endif
+        engine->addTemplateLoader( templateLoader );
     }
     ~Private()
     {
@@ -111,6 +119,12 @@ QString GrantleeHeaderFormatter::format(const QString &absolutePath, Grantlee::T
     headerObject.insert(QLatin1String("toi18n"), i18n("To:"));
     headerObject.insert(QLatin1String("to"), StringUtil::emailAddrAsAnchor(message->to(), StringUtil::DisplayFullAddress));
     headerObject.insert(QLatin1String("toStr"), message->to()->asUnicodeString());
+    const QString val = MessageCore::StringUtil::emailAddrAsAnchor( message->to(), MessageCore::StringUtil::DisplayFullAddress,
+                                                                     QString(), MessageCore::StringUtil::ShowLink,
+                                                                     MessageCore::StringUtil::ExpandableAddresses, QLatin1String("FullToAddressList"),
+                                                                     GlobalSettings::self()->numberOfAddressesToShow() );
+    headerObject.insert(QLatin1String("toExpandable"), val);
+    headerObject.insert(QLatin1String("toMailbox"), QVariant::fromValue(message->to()));
 
     if (message->replyTo(false)) {
         headerObject.insert(QLatin1String("replyToi18n"), i18n("Reply to:"));
@@ -122,12 +136,24 @@ QString GrantleeHeaderFormatter::format(const QString &absolutePath, Grantlee::T
         headerObject.insert(QLatin1String("cci18n"), i18n("CC:"));
         headerObject.insert(QLatin1String("cc"), StringUtil::emailAddrAsAnchor(message->cc(), StringUtil::DisplayFullAddress));
         headerObject.insert(QLatin1String("ccStr"), message->cc()->asUnicodeString());
+        headerObject.insert(QLatin1String("ccMailbox"), QVariant::fromValue(message->cc()));
+        const QString val = MessageCore::StringUtil::emailAddrAsAnchor( message->cc(), MessageCore::StringUtil::DisplayFullAddress,
+                                                                         QString(), MessageCore::StringUtil::ShowLink,
+                                                                         MessageCore::StringUtil::ExpandableAddresses, QLatin1String("FullToAddressList"),
+                                                                         GlobalSettings::self()->numberOfAddressesToShow() );
+        headerObject.insert(QLatin1String("ccExpandable"), val);
     }
 
     if (message->bcc(false)) {
         headerObject.insert(QLatin1String("bcci18n"), i18n("BCC:"));
         headerObject.insert(QLatin1String("bcc"), StringUtil::emailAddrAsAnchor(message->bcc(), StringUtil::DisplayFullAddress));
         headerObject.insert(QLatin1String("bccStr"), message->bcc()->asUnicodeString());
+        headerObject.insert(QLatin1String("bccMailbox"), QVariant::fromValue(message->bcc()));
+        const QString val = MessageCore::StringUtil::emailAddrAsAnchor( message->bcc(), MessageCore::StringUtil::DisplayFullAddress,
+                                                                         QString(), MessageCore::StringUtil::ShowLink,
+                                                                         MessageCore::StringUtil::ExpandableAddresses, QLatin1String("FullToAddressList"),
+                                                                         GlobalSettings::self()->numberOfAddressesToShow() );
+        headerObject.insert(QLatin1String("bccExpandable"), val);
     }
     headerObject.insert(QLatin1String("fromi18n"), i18n("From:"));
     headerObject.insert(QLatin1String("from") ,  StringUtil::emailAddrAsAnchor(message->from(), StringUtil::DisplayFullAddress));
@@ -224,3 +250,6 @@ QString GrantleeHeaderFormatter::format(const QString &absolutePath, Grantlee::T
 }
 
 }
+Q_DECLARE_METATYPE(KMime::Headers::Cc*)
+Q_DECLARE_METATYPE(KMime::Headers::To*)
+Q_DECLARE_METATYPE(KMime::Headers::Bcc*)

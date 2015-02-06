@@ -233,7 +233,7 @@ void ComposerLineEdit::loadContacts()
     const QString recentAddressGroupName = i18n("Recent Addresses");
     if (MessageComposerSettings::self()->showRecentAddressesInComposer()) {
         const QStringList recent =
-            KPIM::RecentAddresses::self(m_recentAddressConfig)->addresses();
+                cleanupEmailList(KPIM::RecentAddresses::self( m_recentAddressConfig )->addresses());
         QStringList::ConstIterator it = recent.constBegin();
         QString name, email;
 

@@ -30,20 +30,20 @@
 
     <tr>
     <th align="left" style="font-size: 10px;">{{ header.toi18n }}</th>
-    <td style="font-size: 10px;">{{ header.to|safe }}</td>
+    <td style="font-size: 10px;">{{ header.toExpandable|safe }}</td>
     </tr>
 
 {% if header.cc %}
     <tr>
     <th align="left" style="font-size: 10px;"> {{ header.cci18n }} </th>
-    <td style="font-size: 10px;">{{ header.cc|safe }}</td>
+    <td style="font-size: 10px;">{{ header.ccExpandable|safe }}</td>
     </tr>
 {% endif %}
 
 {% if header.bcc %}
     <tr>
     <th align="left" style="font-size: 10px;"> {{ header.bcci18n }} </th>
-    <td style="font-size: 10px;">{{ header.bcc|safe }}</td>
+    <td style="font-size: 10px;">{{ header.bccExpandable|safe }}</td>
     </tr>
 {% endif %}
 

@@ -16,9 +16,10 @@
 */
 
 #include "messageheaderfilter.h"
-
+#include <kmime/kmime_headers.h>
 #include <messagecore/utils/stringutil.h>
 #include <grantlee/util.h>
+#include <QDebug>
 
 QVariant MessageHeaderEmailShowLink::doFilter(const QVariant &input, const QVariant &argument, bool autoescape) const
 {
@@ -45,3 +46,36 @@ bool MessageHeaderEmailNameOnly::isSafe() const
 {
     return true;
 }
+
+QVariant MessageHeaderEmailExpandable::doFilter(const QVariant &input, const QVariant &argument, bool autoescape) const
+{
+    Q_UNUSED(autoescape);
+    Q_UNUSED(argument);
+    if (input.value<KMime::Headers::Cc *>()) {
+        const QVariant val = MessageCore::StringUtil::emailAddrAsAnchor( input.value<KMime::Headers::Cc *>(), MessageCore::StringUtil::DisplayFullAddress, QString(), MessageCore::StringUtil::ShowLink,
+                                                           MessageCore::StringUtil::ExpandableAddresses, QLatin1String("FullToAddressList")
+                                                           /*GlobalSettings::self()->numberOfAddressesToShow()*/ );
+        return val;
+    } else if (input.value<KMime::Headers::To *>()) {
+        const QVariant val = MessageCore::StringUtil::emailAddrAsAnchor( input.value<KMime::Headers::To *>(), MessageCore::StringUtil::DisplayFullAddress, QString(), MessageCore::StringUtil::ShowLink,
+                                                           MessageCore::StringUtil::ExpandableAddresses, QLatin1String("FullToAddressList")
+                                                           /*GlobalSettings::self()->numberOfAddressesToShow()*/ );
+        return val;
+    } else if (input.value<KMime::Headers::Bcc *>()) {
+        const QVariant val = MessageCore::StringUtil::emailAddrAsAnchor( input.value<KMime::Headers::Bcc *>(), MessageCore::StringUtil::DisplayFullAddress, QString(), MessageCore::StringUtil::ShowLink,
+                                                           MessageCore::StringUtil::ExpandableAddresses, QLatin1String("FullToAddressList")
+                                                           /*GlobalSettings::self()->numberOfAddressesToShow()*/ );
+        return val;
+    } else {
+        qDebug()<<" invalid pointer";
+    }
+    return QVariant();
+}
+
+bool MessageHeaderEmailExpandable::isSafe() const
+{
+    return true;
+}
+Q_DECLARE_METATYPE(KMime::Headers::Cc *)
+Q_DECLARE_METATYPE(KMime::Headers::To *)
+Q_DECLARE_METATYPE(KMime::Headers::Bcc *)

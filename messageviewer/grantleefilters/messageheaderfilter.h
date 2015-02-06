@@ -18,6 +18,7 @@
 #ifndef MESSAGEHEADERFILTER_H
 #define MESSAGEHEADERFILTER_H
 
+#include <QObject>
 #include <grantlee/filter.h>
 
 class MessageHeaderEmailShowLink : public Grantlee::Filter
@@ -29,6 +30,14 @@ public:
 };
 
 class MessageHeaderEmailNameOnly : public Grantlee::Filter
+{
+public:
+    QVariant doFilter(const QVariant &input, const QVariant &argument = QVariant(), bool autoescape = false) const;
+
+    bool isSafe() const;
+};
+
+class MessageHeaderEmailExpandable : public Grantlee::Filter
 {
 public:
     QVariant doFilter(const QVariant &input, const QVariant &argument = QVariant(), bool autoescape = false) const;

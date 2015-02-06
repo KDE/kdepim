@@ -177,6 +177,7 @@ protected:
     void contextMenuEvent(QContextMenuEvent *) Q_DECL_OVERRIDE;
 #endif
 
+    QStringList cleanupEmailList(const QStringList &inputList);
 private:
     bool eventFilter(QObject *, QEvent *) Q_DECL_OVERRIDE;
     void emitTextCompleted();
