@@ -26,6 +26,7 @@ namespace KAddressBookGrantlee {
 class GrantleeContactViewer;
 }
 namespace KABMergeContacts {
+class ResultDuplicateTreeWidget;
 class KADDRESSBOOK_EXPORT SearchDuplicateResultWidget : public QWidget
 {
     Q_OBJECT
@@ -34,7 +35,7 @@ public:
     ~SearchDuplicateResultWidget();
     void setContacts(const QList<Akonadi::Item::List> &lstItem);
 private:
-    QTreeWidget *mResult;
+    ResultDuplicateTreeWidget *mResult;
     KAddressBookGrantlee::GrantleeContactViewer *mContactViewer;
 };
 }

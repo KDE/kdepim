@@ -16,6 +16,7 @@
 */
 
 #include "searchduplicateresultwidget.h"
+#include "resultduplicatetreewidget.h"
 #include <KLocalizedString>
 #include <QHBoxLayout>
 #include <QTreeWidget>
@@ -32,7 +33,7 @@ SearchDuplicateResultWidget::SearchDuplicateResultWidget(QWidget *parent)
     QSplitter *splitter = new QSplitter;
     splitter->setObjectName(QLatin1String("splitter"));
     mainLayout->addWidget(splitter);
-    mResult = new QTreeWidget;
+    mResult = new ResultDuplicateTreeWidget;
     mResult->setObjectName(QLatin1String("result_treewidget"));
     mContactViewer = new KAddressBookGrantlee::GrantleeContactViewer;
     mContactViewer->setObjectName(QLatin1String("contact_viewer"));

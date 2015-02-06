@@ -19,13 +19,13 @@
 #define RESULTDUPLICATETREEWIDGET_H
 
 #include <QTreeWidget>
-
+#include "kaddressbook_export.h"
 namespace KABMergeContacts {
-class ResultDuplicateTreeWidget : public QTreeWidget
+class KADDRESSBOOK_EXPORT ResultDuplicateTreeWidget : public QTreeWidget
 {
     Q_OBJECT
 public:
-    explicit ResultDuplicateTreeWidget(QWidget *parent);
+    explicit ResultDuplicateTreeWidget(QWidget *parent = 0);
     ~ResultDuplicateTreeWidget();
 };
 }

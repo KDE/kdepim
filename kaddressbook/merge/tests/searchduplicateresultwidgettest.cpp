@@ -17,6 +17,7 @@
 
 #include "searchduplicateresultwidgettest.h"
 #include "../searchduplicate/searchduplicateresultwidget.h"
+#include "../searchduplicate/resultduplicatetreewidget.h"
 #include <kaddressbookgrantlee/widget/grantleecontactviewer.h>
 #include <QSplitter>
 #include <QTreeWidget>
@@ -36,7 +37,7 @@ SearchDuplicateResultWidgetTest::~SearchDuplicateResultWidgetTest()
 void SearchDuplicateResultWidgetTest::shouldHaveDefaultValue()
 {
     KABMergeContacts::SearchDuplicateResultWidget w;
-    QTreeWidget *tree = qFindChild<QTreeWidget *>(&w, QLatin1String("result_treewidget"));
+    KABMergeContacts::ResultDuplicateTreeWidget *tree = qFindChild<KABMergeContacts::ResultDuplicateTreeWidget *>(&w, QLatin1String("result_treewidget"));
     QVERIFY(tree);
     QSplitter *splitter = qFindChild<QSplitter *>(&w, QLatin1String("splitter"));
     QVERIFY(splitter);
