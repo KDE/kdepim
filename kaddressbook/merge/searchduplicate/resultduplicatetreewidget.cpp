@@ -15,28 +15,17 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SEARCHDUPLICATERESULTWIDGET_H
-#define SEARCHDUPLICATERESULTWIDGET_H
 
-#include <QWidget>
-#include <Akonadi/Item>
-#include "kaddressbook_export.h"
-class QTreeWidget;
-namespace KAddressBookGrantlee {
-class GrantleeContactViewer;
-}
-namespace KABMergeContacts {
-class KADDRESSBOOK_EXPORT SearchDuplicateResultWidget : public QWidget
+#include "resultduplicatetreewidget.h"
+
+using namespace KABMergeContacts;
+ResultDuplicateTreeWidget::ResultDuplicateTreeWidget(QWidget *parent)
+    : QTreeWidget(parent)
 {
-    Q_OBJECT
-public:
-    explicit SearchDuplicateResultWidget(QWidget *parent=0);
-    ~SearchDuplicateResultWidget();
-    void setContacts(const QList<Akonadi::Item::List> &lstItem);
-private:
-    QTreeWidget *mResult;
-    KAddressBookGrantlee::GrantleeContactViewer *mContactViewer;
-};
+
 }
 
-#endif // SEARCHDUPLICATERESULTWIDGET_H
+ResultDuplicateTreeWidget::~ResultDuplicateTreeWidget()
+{
+
+}

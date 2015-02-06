@@ -94,6 +94,7 @@ set(kaddressbook_merge_SRCS
    merge/mergecontactshowresulttabwidget.cpp
    merge/searchduplicate/searchandmergecontactduplicatecontactdialog.cpp
    merge/searchduplicate/searchduplicateresultwidget.cpp
+   merge/searchduplicate/resultduplicatetreewidget.cpp
 )
 
 set(kaddressbook_LIB_SRCS

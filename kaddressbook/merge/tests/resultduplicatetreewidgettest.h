@@ -14,29 +14,18 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
+#ifndef RESULTDUPLICATETREEWIDGETTEST_H
+#define RESULTDUPLICATETREEWIDGETTEST_H
 
-#ifndef SEARCHDUPLICATERESULTWIDGET_H
-#define SEARCHDUPLICATERESULTWIDGET_H
+#include <QObject>
 
-#include <QWidget>
-#include <Akonadi/Item>
-#include "kaddressbook_export.h"
-class QTreeWidget;
-namespace KAddressBookGrantlee {
-class GrantleeContactViewer;
-}
-namespace KABMergeContacts {
-class KADDRESSBOOK_EXPORT SearchDuplicateResultWidget : public QWidget
+class ResultDuplicateTreeWidgetTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit SearchDuplicateResultWidget(QWidget *parent=0);
-    ~SearchDuplicateResultWidget();
-    void setContacts(const QList<Akonadi::Item::List> &lstItem);
-private:
-    QTreeWidget *mResult;
-    KAddressBookGrantlee::GrantleeContactViewer *mContactViewer;
-};
-}
+    explicit ResultDuplicateTreeWidgetTest(QObject *parent = 0);
+    ~ResultDuplicateTreeWidgetTest();
 
-#endif // SEARCHDUPLICATERESULTWIDGET_H
+};
+
+#endif // RESULTDUPLICATETREEWIDGETTEST_H
