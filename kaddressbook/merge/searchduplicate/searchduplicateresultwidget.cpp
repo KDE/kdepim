@@ -16,18 +16,27 @@
 */
 
 #include "searchduplicateresultwidget.h"
+#include "merge/job/mergecontactsjob.h"
 #include "resultduplicatetreewidget.h"
 #include <KLocalizedString>
 #include <QHBoxLayout>
 #include <QTreeWidget>
 #include <QSplitter>
+#include <QLabel>
+#include <KPushButton>
 #include <kaddressbookgrantlee/widget/grantleecontactviewer.h>
+#include <akonadi/collectioncombobox.h>
+
+namespace KABMergeContacts {
+KADDRESSBOOK_EXPORT QAbstractItemModel *_k_searchDuplicateResultStubModel = 0;
+}
 
 using namespace KABMergeContacts;
 SearchDuplicateResultWidget::SearchDuplicateResultWidget(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      mIndexListContact(0)
 {
-    QHBoxLayout *mainLayout = new QHBoxLayout;
+    QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
 
     QSplitter *splitter = new QSplitter;
@@ -39,6 +48,28 @@ SearchDuplicateResultWidget::SearchDuplicateResultWidget(QWidget *parent)
     mContactViewer->setObjectName(QLatin1String("contact_viewer"));
     splitter->addWidget(mResult);
     splitter->addWidget(mContactViewer);
+
+    QHBoxLayout *mergeLayout = new QHBoxLayout;
+    mainLayout->addLayout(mergeLayout);
+    //KF5 add i18n
+    QLabel *lab = new QLabel(QLatin1String("Select AddressBook:"));
+    lab->setObjectName(QLatin1String("select_addressbook_label"));
+    mergeLayout->addWidget(lab);
+
+    mCollectionCombobox = new Akonadi::CollectionComboBox(_k_searchDuplicateResultStubModel);
+    mCollectionCombobox->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
+    mCollectionCombobox->setMinimumWidth(250);
+    //TODO mCollectionCombobox->setMimeTypeFilter( QStringList() << KCalCore::Todo::todoMimeType() );
+    mCollectionCombobox->setObjectName(QLatin1String("akonadicombobox"));
+    mergeLayout->addWidget(mCollectionCombobox);
+
+    //KF5 add i18n
+    mMergeContact = new KPushButton(QLatin1String("Merge"));
+    mMergeContact->setObjectName(QLatin1String("merge_contact_button"));
+    connect(mMergeContact, SIGNAL(clicked()), this, SLOT(slotMergeContact()));
+    mergeLayout->addWidget(mMergeContact);
+    mMergeContact->setEnabled(false);
+    //TODO make mMergeContact enable when selected item and collection valid
 }
 
 SearchDuplicateResultWidget::~SearchDuplicateResultWidget()
@@ -48,6 +79,36 @@ SearchDuplicateResultWidget::~SearchDuplicateResultWidget()
 
 void SearchDuplicateResultWidget::setContacts(const QList<Akonadi::Item::List> &lstItem)
 {
-
+    mResult->setContacts(lstItem);
 }
 
+void SearchDuplicateResultWidget::slotMergeContact()
+{
+    mIndexListContact = 0;
+    mListContactToMerge = mResult->selectedContactsToMerge();
+    if (!mListContactToMerge.isEmpty()) {
+        mMergeContact->setEnabled(false);
+        mergeContact();
+    }
+}
+
+void SearchDuplicateResultWidget::mergeContact()
+{
+    //TODO add progress indicator.
+    if (mIndexListContact < mListContactToMerge.count()) {
+        KABMergeContacts::MergeContactsJob *job = new KABMergeContacts::MergeContactsJob(this);
+        job->setListItem(mListContactToMerge.at(mIndexListContact));
+        job->setDestination(mCollectionCombobox->currentCollection());
+        connect(job, SIGNAL(finished(Akonadi::Item)), this, SLOT(slotMergeDone(Akonadi::Item)));
+        job->start();
+    } else {
+        Q_EMIT mergeDone();
+    }
+}
+
+void SearchDuplicateResultWidget::slotMergeDone(const Akonadi::Item &item)
+{
+    ++mIndexListContact;
+    Q_EMIT contactMerged(item);
+    mergeContact();
+}

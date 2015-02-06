@@ -21,12 +21,36 @@
 #include <kaddressbookgrantlee/widget/grantleecontactviewer.h>
 #include <QSplitter>
 #include <QTreeWidget>
+#include <QLabel>
 #include <qtest_kde.h>
+#include <KPushButton>
+#include <qstandarditemmodel.h>
+#include <Akonadi/CollectionComboBox>
+#include <Akonadi/EntityTreeModel>
+namespace KABMergeContacts {
+KADDRESSBOOK_EXPORT QAbstractItemModel *_k_searchDuplicateResultStubModel = 0;
+}
 
 SearchDuplicateResultWidgetTest::SearchDuplicateResultWidgetTest(QObject *parent)
     : QObject(parent)
 {
+    QStandardItemModel *model = new QStandardItemModel;
+    for (int id = 42; id < 51; ++id) {
+        Akonadi::Collection collection(id);
+        collection.setRights(Akonadi::Collection::AllRights);
+        collection.setName(QString::number(id));
+        //TODO
+        //collection.setContentMimeTypes(QStringList() << KCalCore::Todo::todoMimeType());
 
+        QStandardItem *item = new QStandardItem(collection.name());
+        item->setData(QVariant::fromValue(collection),
+                      Akonadi::EntityTreeModel::CollectionRole);
+        item->setData(QVariant::fromValue(collection.id()),
+                      Akonadi::EntityTreeModel::CollectionIdRole);
+
+        model->appendRow(item);
+    }
+    KABMergeContacts::_k_searchDuplicateResultStubModel = model;
 }
 
 SearchDuplicateResultWidgetTest::~SearchDuplicateResultWidgetTest()
@@ -39,10 +63,19 @@ void SearchDuplicateResultWidgetTest::shouldHaveDefaultValue()
     KABMergeContacts::SearchDuplicateResultWidget w;
     KABMergeContacts::ResultDuplicateTreeWidget *tree = qFindChild<KABMergeContacts::ResultDuplicateTreeWidget *>(&w, QLatin1String("result_treewidget"));
     QVERIFY(tree);
+    QCOMPARE(tree->topLevelItemCount(), 0);
     QSplitter *splitter = qFindChild<QSplitter *>(&w, QLatin1String("splitter"));
     QVERIFY(splitter);
     KAddressBookGrantlee::GrantleeContactViewer *viewer = qFindChild<KAddressBookGrantlee::GrantleeContactViewer *>(&w, QLatin1String("contact_viewer"));
     QVERIFY(viewer);
+    QLabel *lab = qFindChild<QLabel *>(&w, QLatin1String("select_addressbook_label"));
+    lab->setObjectName(QLatin1String("select_addressbook_label"));
+    KPushButton *pushButton = qFindChild<KPushButton *>(&w, QLatin1String("merge_contact_button"));
+    QVERIFY(pushButton);
+    QVERIFY(!pushButton->isEnabled());
+
+    Akonadi::CollectionComboBox *combobox = qFindChild<Akonadi::CollectionComboBox *>(&w, QLatin1String("akonadicombobox"));
+    QVERIFY(combobox);
 }
 
 QTEST_KDEMAIN(SearchDuplicateResultWidgetTest, GUI)

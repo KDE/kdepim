@@ -22,8 +22,12 @@
 #include <Akonadi/Item>
 #include "kaddressbook_export.h"
 class QTreeWidget;
+class KPushButton;
 namespace KAddressBookGrantlee {
 class GrantleeContactViewer;
+}
+namespace Akonadi {
+class CollectionComboBox;
 }
 namespace KABMergeContacts {
 class ResultDuplicateTreeWidget;
@@ -34,9 +38,23 @@ public:
     explicit SearchDuplicateResultWidget(QWidget *parent=0);
     ~SearchDuplicateResultWidget();
     void setContacts(const QList<Akonadi::Item::List> &lstItem);
+
+Q_SIGNALS:
+    void contactMerged(const Akonadi::Item &item);
+    void mergeDone();
+
+
+private slots:
+    void slotMergeContact();
+    void slotMergeDone(const Akonadi::Item &item);
 private:
+    void mergeContact();
+    QList<Akonadi::Item::List> mListContactToMerge;
     ResultDuplicateTreeWidget *mResult;
     KAddressBookGrantlee::GrantleeContactViewer *mContactViewer;
+    KPushButton *mMergeContact;
+    Akonadi::CollectionComboBox *mCollectionCombobox;
+    int mIndexListContact;
 };
 }
 

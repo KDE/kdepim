@@ -16,6 +16,7 @@
 */
 
 #include "resultduplicatetreewidgettest.h"
+#include "../searchduplicate/resultduplicatetreewidget.h"
 #include <qtest_kde.h>
 
 ResultDuplicateTreeWidgetTest::ResultDuplicateTreeWidgetTest(QObject *parent)
@@ -28,6 +29,58 @@ ResultDuplicateTreeWidgetTest::~ResultDuplicateTreeWidgetTest()
 {
 
 }
+
+void ResultDuplicateTreeWidgetTest::shouldHaveDefaultValue()
+{
+    KABMergeContacts::ResultDuplicateTreeWidget w;
+    QCOMPARE(w.topLevelItemCount(), 0);
+}
+
+void ResultDuplicateTreeWidgetTest::shouldFillList()
+{
+    KABMergeContacts::ResultDuplicateTreeWidget w;
+    Akonadi::Item::List lst;
+    lst << Akonadi::Item(42);
+    lst << Akonadi::Item(43);
+    lst << Akonadi::Item(44);
+    QList<Akonadi::Item::List> itemLst;
+    itemLst << lst;
+    w.setContacts(itemLst);
+    QCOMPARE(w.topLevelItemCount(), 4);
+}
+
+void ResultDuplicateTreeWidgetTest::shouldClearList()
+{
+    KABMergeContacts::ResultDuplicateTreeWidget w;
+    Akonadi::Item::List lst;
+    lst << Akonadi::Item(42);
+    lst << Akonadi::Item(43);
+    lst << Akonadi::Item(44);
+    QList<Akonadi::Item::List> itemLst;
+    itemLst << lst;
+    w.setContacts(itemLst);
+
+    lst << Akonadi::Item(45);
+    itemLst.clear();
+    itemLst << lst;
+    w.setContacts(itemLst);
+    QCOMPARE(w.topLevelItemCount(), 5);
+}
+
+void ResultDuplicateTreeWidgetTest::shouldEmptyListIfNotContactSelected()
+{
+    KABMergeContacts::ResultDuplicateTreeWidget w;
+    Akonadi::Item::List lst;
+    lst << Akonadi::Item(42);
+    lst << Akonadi::Item(43);
+    lst << Akonadi::Item(44);
+    QList<Akonadi::Item::List> itemLst;
+    itemLst << lst;
+    w.setContacts(itemLst);
+    QVERIFY(w.selectedContactsToMerge().isEmpty());
+}
+
+
 
 QTEST_KDEMAIN(ResultDuplicateTreeWidgetTest, GUI)
 

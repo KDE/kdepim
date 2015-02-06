@@ -19,14 +19,32 @@
 #define RESULTDUPLICATETREEWIDGET_H
 
 #include <QTreeWidget>
+#include <Akonadi/Item>
 #include "kaddressbook_export.h"
 namespace KABMergeContacts {
+
+class ResultDuplicateTreeWidgetItem : public QTreeWidgetItem
+{
+public:
+    explicit ResultDuplicateTreeWidgetItem(QTreeWidget *parent = 0, bool hasCheckableItem = true);
+    ~ResultDuplicateTreeWidgetItem();
+
+    Akonadi::Item item() const;
+    void setItem(const Akonadi::Item &item);
+
+private:
+    Akonadi::Item mItem;
+};
+
 class KADDRESSBOOK_EXPORT ResultDuplicateTreeWidget : public QTreeWidget
 {
     Q_OBJECT
 public:
     explicit ResultDuplicateTreeWidget(QWidget *parent = 0);
     ~ResultDuplicateTreeWidget();
+    void setContacts(const QList<Akonadi::Item::List> &lstItem);
+
+    QList<Akonadi::Item::List> selectedContactsToMerge() const;
 };
 }
 

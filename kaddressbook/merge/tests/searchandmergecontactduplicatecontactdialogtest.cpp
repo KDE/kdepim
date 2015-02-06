@@ -35,6 +35,17 @@ void SearchAndMergeContactDuplicateContactDialogTest::shouldHaveDefaultValueOnCr
     QStackedWidget *stackedWidget = qFindChild<QStackedWidget *>(&dlg, QLatin1String("stackedwidget"));
     QVERIFY(stackedWidget);
     QCOMPARE(stackedWidget->currentWidget()->objectName(), QLatin1String("nocontactselected"));
+
+    for(int i = 0; i < stackedWidget->count(); ++i) {
+        QWidget *w = stackedWidget->widget(i);
+        bool hasGoodNamePage = (w->objectName() == QLatin1String("mergecontact") ||
+                                w->objectName() == QLatin1String("nocontactselected") ||
+                                w->objectName() == QLatin1String("noduplicatecontactfound") ||
+                                w->objectName() == QLatin1String("noenoughcontactselected") ||
+                                w->objectName() == QLatin1String("mergecontactresult"));
+        QVERIFY(hasGoodNamePage);
+    }
+
 }
 
 void SearchAndMergeContactDuplicateContactDialogTest::shouldShowNoEnoughPageWhenSelectOneContact()

@@ -49,14 +49,22 @@ void MergeContactShowResultTabWidget::setContacts(const Akonadi::Item::List &lst
 {
     clear();
     Q_FOREACH(const Akonadi::Item &item, lstItem) {
-        if (item.hasPayload<KABC::Addressee>()) {
-            const KABC::Addressee address = item.payload<KABC::Addressee>();
-            MergeContactInfoWidget *infoWidget = new MergeContactInfoWidget;
-            infoWidget->setContact(item);
-            addTab(infoWidget, address.name());
-        } else {
-            qDebug()<<" don't have address";
-        }
+        addContact(item, false);
     }
     updateTabWidget();
 }
+
+void MergeContactShowResultTabWidget::addContact(const Akonadi::Item &item, bool updateTab)
+{
+    if (item.hasPayload<KABC::Addressee>()) {
+        const KABC::Addressee address = item.payload<KABC::Addressee>();
+        MergeContactInfoWidget *infoWidget = new MergeContactInfoWidget;
+        infoWidget->setContact(item);
+        addTab(infoWidget, address.name());
+    } else {
+        qDebug()<<" don't have address";
+    }
+    if (updateTab)
+        updateTabWidget();
+}
+

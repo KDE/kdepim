@@ -25,7 +25,11 @@ class ResultDuplicateTreeWidgetTest : public QObject
 public:
     explicit ResultDuplicateTreeWidgetTest(QObject *parent = 0);
     ~ResultDuplicateTreeWidgetTest();
-
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
+    void shouldFillList();
+    void shouldClearList();
+    void shouldEmptyListIfNotContactSelected();
 };
 
 #endif // RESULTDUPLICATETREEWIDGETTEST_H
