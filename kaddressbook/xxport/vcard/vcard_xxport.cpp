@@ -372,16 +372,16 @@ KContacts::Addressee::List VCardXXPort::filterContacts(const KContacts::Addresse
         addr.setProductId((*it).productId());
         addr.setSortString((*it).sortString());
         addr.setUrl((*it).url());
-        addr.setExtraUrlList( (*it).extraUrlList() );
+        addr.setExtraUrlList((*it).extraUrlList());
         addr.setSecrecy((*it).secrecy());
         addr.setSound((*it).sound());
         addr.setEmails((*it).emails());
         addr.setCategories((*it).categories());
-        addr.setExtraSoundList( (*it).extraSoundList() );
-        addr.setGender( (*it).gender() );
-        addr.setLangs( (*it).langs() );
-        addr.setKind( (*it).kind() );
-        addr.setMembers( (*it).members() );
+        addr.setExtraSoundList((*it).extraSoundList());
+        addr.setGender((*it).gender());
+        addr.setLangs((*it).langs());
+        addr.setKind((*it).kind());
+        addr.setMembers((*it).members());
 
         if (dlg->exportPrivateFields()) {
             addr.setBirthday((*it).birthday());
@@ -391,12 +391,12 @@ KContacts::Addressee::List VCardXXPort::filterContacts(const KContacts::Addresse
         if (dlg->exportPictureFields()) {
             if (dlg->exportPrivateFields()) {
                 addr.setPhoto((*it).photo());
-                addr.setExtraPhotoList( (*it).extraPhotoList() );
+                addr.setExtraPhotoList((*it).extraPhotoList());
             }
 
             if (dlg->exportBusinessFields()) {
                 addr.setLogo((*it).logo());
-                addr.setExtraLogoList( (*it).extraLogoList() );
+                addr.setExtraLogoList((*it).extraLogoList());
             }
         }
 

@@ -712,11 +712,10 @@ void MainWidget::setupActions(KActionCollection *collection)
     action->setIcon(KIconLoader::global()->loadIcon(QLatin1String("mail-message-new"), KIconLoader::Small));
     connect(action, &QAction::triggered, this, &MainWidget::slotSendMail);
 
-    action = collection->addAction( QLatin1String("send_vcards") );
-    action->setText( i18n( "Send vCards...") );
-    action->setIcon(KIconLoader::global()->loadIcon( QLatin1String( "mail-message-new"), KIconLoader::Small ));
-    connect( action, &QAction::triggered, this, &MainWidget::slotSendVcards);
-
+    action = collection->addAction(QLatin1String("send_vcards"));
+    action->setText(i18n("Send vCards..."));
+    action->setIcon(KIconLoader::global()->loadIcon(QLatin1String("mail-message-new"), KIconLoader::Small));
+    connect(action, &QAction::triggered, this, &MainWidget::slotSendVcards);
 
     if (!qgetenv("KDEPIM_BALOO_DEBUG").isEmpty()) {
         action = collection->addAction(QLatin1String("debug_baloo"));

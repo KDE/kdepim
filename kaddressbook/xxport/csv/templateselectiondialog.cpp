@@ -92,14 +92,15 @@ public:
         return QVariant();
     }
 
-    bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE
-    {
-        if (parent.isValid() || row < 0 || row >= mTemplates.count()) {
+    bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE {
+        if (parent.isValid() || row < 0 || row >= mTemplates.count())
+        {
             return false;
         }
 
         beginRemoveRows(parent, row, row + count - 1);
-        for (int i = 0; i < count; ++i) {
+        for (int i = 0; i < count; ++i)
+        {
             if (!QFile::remove(mTemplates[ row ].fileName)) {
                 return false;
             }
