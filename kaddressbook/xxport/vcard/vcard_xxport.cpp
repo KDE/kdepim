@@ -380,6 +380,7 @@ KABC::Addressee::List VCardXXPort::filterContacts( const KABC::Addressee::List &
         addr.setGender( (*it).gender() );
         addr.setLangs( (*it).langs() );
         addr.setKind( (*it).kind() );
+        addr.setMembers( (*it).members() );
 
         if ( dlg->exportPrivateFields() ) {
             addr.setBirthday( (*it).birthday() );
