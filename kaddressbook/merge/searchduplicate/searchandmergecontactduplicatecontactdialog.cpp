@@ -17,8 +17,8 @@
 
 #include "searchandmergecontactduplicatecontactdialog.h"
 
+#include "merge/searchduplicate/searchduplicateresultwidget.h"
 #include "merge/mergecontactshowresulttabwidget.h"
-
 #include "merge/job/searchpotentialduplicatecontactjob.h"
 
 #include <KLocalizedString>
@@ -33,7 +33,7 @@
 
 using namespace KABMergeContacts;
 
-SearchAndMergeContactDuplicateContactDialog::SearchAndMergeContactDuplicateContactDialog(const Akonadi::Item::List &list, QWidget *parent)
+SearchAndMergeContactDuplicateContactDialog::SearchAndMergeContactDuplicateContactDialog(QWidget *parent)
     : QDialog(parent)
 {
     setWindowTitle(i18n("Select Contacts to merge"));
@@ -45,9 +45,11 @@ SearchAndMergeContactDuplicateContactDialog::SearchAndMergeContactDuplicateConta
     mStackedWidget = new QStackedWidget(this);
     mStackedWidget->setObjectName(QStringLiteral("stackedwidget"));
 
-    mMergeContact = new MergeContactShowResultTabWidget;
-    mMergeContact->setObjectName(QStringLiteral("mergecontact"));
-    mStackedWidget->addWidget(mMergeContact);
+    mSearchResult = new SearchDuplicateResultWidget;
+    mSearchResult->setObjectName(QStringLiteral("mergecontact"));
+    mStackedWidget->addWidget(mSearchResult);
+    connect(mSearchResult, SIGNAL(contactMerged(Akonadi::Item)), this, SLOT(slotContactMerged(Akonadi::Item)));
+    connect(mSearchResult, SIGNAL(mergeDone()), this, SLOT(slotMergeDone()));
 
     mNoContactSelected = new QLabel(i18n("No contacts selected."));
     mNoContactSelected->setObjectName(QStringLiteral("nocontactselected"));
@@ -57,15 +59,19 @@ SearchAndMergeContactDuplicateContactDialog::SearchAndMergeContactDuplicateConta
     mNoDuplicateContactFound->setObjectName(QStringLiteral("noduplicatecontactfound"));
     mStackedWidget->addWidget(mNoDuplicateContactFound);
 
+    mMergeContactResult = new MergeContactShowResultTabWidget(this);
+    mMergeContactResult->setObjectName(QLatin1String("mergecontactresult"));
+    mStackedWidget->addWidget(mMergeContactResult);
+
     mNoEnoughContactSelected = new QLabel(i18n("You must select at least two elements."));
     mNoEnoughContactSelected->setObjectName(QStringLiteral("noenoughcontactselected"));
     mStackedWidget->addWidget(mNoEnoughContactSelected);
+    mStackedWidget->setCurrentWidget(mNoContactSelected);
 
     mainLayout->addWidget(mStackedWidget);
     mainLayout->addWidget(buttonBox);
 
     readConfig();
-    searchPotentialDuplicateContacts(list);
 }
 
 SearchAndMergeContactDuplicateContactDialog::~SearchAndMergeContactDuplicateContactDialog()
@@ -107,7 +113,17 @@ void SearchAndMergeContactDuplicateContactDialog::slotDuplicateFound(const QList
     if (duplicate.isEmpty()) {
         mStackedWidget->setCurrentWidget(mNoDuplicateContactFound);
     } else {
-        mStackedWidget->setCurrentWidget(mMergeContact);
-        //TODO mMergeContact->setContacts(duplicate);
+        mStackedWidget->setCurrentWidget(mSearchResult);
+        mSearchResult->setContacts(duplicate);
     }
+}
+
+void SearchAndMergeContactDuplicateContactDialog::slotContactMerged(const Akonadi::Item &item)
+{
+    mMergeContactResult->addContact(item, true);
+}
+
+void SearchAndMergeContactDuplicateContactDialog::slotMergeDone()
+{
+    mStackedWidget->setCurrentWidget(mMergeContactResult);
 }

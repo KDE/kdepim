@@ -15,21 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MERGECONTACTDUPLICATECONTACTDIALOGTEST_H
-#define MERGECONTACTDUPLICATECONTACTDIALOGTEST_H
+#ifndef SEARCHDUPLICATERESULTWIDGETTEST_H
+#define SEARCHDUPLICATERESULTWIDGETTEST_H
 
 #include <QObject>
 
-class SearchAndMergeContactDuplicateContactDialogTest : public QObject
+class SearchDuplicateResultWidgetTest : public QObject
 {
     Q_OBJECT
 public:
-    SearchAndMergeContactDuplicateContactDialogTest();
-
+    explicit SearchDuplicateResultWidgetTest(QObject *parent = 0);
+    ~SearchDuplicateResultWidgetTest();
 private Q_SLOTS:
-    void shouldHaveDefaultValueOnCreation();
-    void shouldShowNoEnoughPageWhenSelectOneContact();
-    void shouldShowNoContactWhenListIsEmpty();
+    void shouldHaveDefaultValue();
 };
 
-#endif // MERGECONTACTDUPLICATECONTACTDIALOGTEST_H
+#endif // SEARCHDUPLICATERESULTWIDGETTEST_H

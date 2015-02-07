@@ -37,6 +37,7 @@ public:
     bool tabBarVisible() const;
 
     void setContacts(const Akonadi::Item::List &lstItem);
+    void addContact(const Akonadi::Item &item, bool updateTab = false);
 };
 }
 #endif // MERGECONTACTSHOWRESULTTABWIDGET_H

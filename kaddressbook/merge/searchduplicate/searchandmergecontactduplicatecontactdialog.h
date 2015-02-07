@@ -24,24 +24,27 @@
 #include "kaddressbook_export.h"
 class QStackedWidget;
 class QLabel;
-namespace KABMergeContacts
-{
+namespace KABMergeContacts {
+class SearchDuplicateResultWidget;
 class MergeContactShowResultTabWidget;
 class KADDRESSBOOK_EXPORT SearchAndMergeContactDuplicateContactDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit SearchAndMergeContactDuplicateContactDialog(const Akonadi::Item::List &list, QWidget *parent = Q_NULLPTR);
+    explicit SearchAndMergeContactDuplicateContactDialog(QWidget *parent=Q_NULLPTR);
     ~SearchAndMergeContactDuplicateContactDialog();
 
-private Q_SLOTS:
-    void slotDuplicateFound(const QList<Akonadi::Item::List> &duplicate);
-
-private:
     void searchPotentialDuplicateContacts(const Akonadi::Item::List &list);
+
+private slots:
+    void slotDuplicateFound(const QList<Akonadi::Item::List> &duplicate);
+    void slotMergeDone();
+    void slotContactMerged(const Akonadi::Item &item);
+private:
     void readConfig();
     void writeConfig();
-    MergeContactShowResultTabWidget *mMergeContact;
+    SearchDuplicateResultWidget *mSearchResult;
+    MergeContactShowResultTabWidget *mMergeContactResult;
     QLabel *mNoContactSelected;
     QLabel *mNoDuplicateContactFound;
     QLabel *mNoEnoughContactSelected;
