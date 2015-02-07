@@ -28,6 +28,7 @@ public:
     ~SearchDuplicateResultWidgetTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldHaveMergeButtonEnabled();
 };
 
 #endif // SEARCHDUPLICATERESULTWIDGETTEST_H

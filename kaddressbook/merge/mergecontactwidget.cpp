@@ -61,6 +61,9 @@ MergeContactWidget::MergeContactWidget(const Akonadi::Item::List &items, QWidget
     mCollectionCombobox->setMinimumWidth(250);
     mCollectionCombobox->setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
     mCollectionCombobox->setObjectName(QLatin1String("akonadicombobox"));
+    connect(mCollectionCombobox, SIGNAL(currentIndexChanged(int)), SLOT(slotUpdateMergeButton()));
+    connect(mCollectionCombobox, SIGNAL(activated(int)), SLOT(slotUpdateMergeButton()));
+
     hbox->addWidget(mCollectionCombobox);
 
     lay->addLayout(hbox);
@@ -109,7 +112,7 @@ void MergeContactWidget::slotUpdateMergeButton()
     const Akonadi::Item::List listCheckedItems = listSelectedContacts();
     Akonadi::Item item = currentItem();
     Q_EMIT contactSelected(item);
-    mMergeButton->setEnabled(listCheckedItems.count()>=2);
+    mMergeButton->setEnabled((listCheckedItems.count()>=2) && mCollectionCombobox->currentCollection().isValid());
 }
 
 void MergeContactWidget::slotMergeContacts()
@@ -122,3 +125,4 @@ void MergeContactWidget::slotMergeContacts()
         }
     }
 }
+

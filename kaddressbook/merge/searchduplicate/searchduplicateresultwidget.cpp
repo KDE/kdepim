@@ -61,6 +61,8 @@ SearchDuplicateResultWidget::SearchDuplicateResultWidget(QWidget *parent)
     mCollectionCombobox->setMinimumWidth(250);
     mCollectionCombobox->setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
     mCollectionCombobox->setObjectName(QLatin1String("akonadicombobox"));
+    connect(mCollectionCombobox, SIGNAL(currentIndexChanged(int)), SLOT(slotUpdateMergeButton()));
+    connect(mCollectionCombobox, SIGNAL(activated(int)), SLOT(slotUpdateMergeButton()));
     mergeLayout->addWidget(mCollectionCombobox);
 
     //KF5 add i18n
@@ -111,4 +113,9 @@ void SearchDuplicateResultWidget::slotMergeDone(const Akonadi::Item &item)
     ++mIndexListContact;
     Q_EMIT contactMerged(item);
     mergeContact();
+}
+
+void SearchDuplicateResultWidget::slotUpdateMergeButton()
+{
+    mMergeContact->setEnabled(mCollectionCombobox->currentCollection().isValid());
 }

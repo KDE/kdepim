@@ -78,4 +78,28 @@ void SearchDuplicateResultWidgetTest::shouldHaveDefaultValue()
     QVERIFY(combobox);
 }
 
+void SearchDuplicateResultWidgetTest::shouldHaveMergeButtonEnabled()
+{
+    KABMergeContacts::SearchDuplicateResultWidget w;
+    KABMergeContacts::ResultDuplicateTreeWidget *tree = qFindChild<KABMergeContacts::ResultDuplicateTreeWidget *>(&w, QLatin1String("result_treewidget"));
+    QVERIFY(tree);
+    QCOMPARE(tree->topLevelItemCount(), 0);
+    Akonadi::Item::List lst;
+    lst << Akonadi::Item(42);
+    lst << Akonadi::Item(43);
+    lst << Akonadi::Item(44);
+    QList<Akonadi::Item::List> itemLst;
+#if 0 //FIXME
+    tree->setContacts(itemLst);
+    QVERIFY(tree->topLevelItemCount()>0);
+
+    KPushButton *pushButton = qFindChild<KPushButton *>(&w, QLatin1String("merge_contact_button"));
+    QVERIFY(pushButton);
+    QVERIFY(!pushButton->isEnabled());
+
+    Akonadi::CollectionComboBox *combobox = qFindChild<Akonadi::CollectionComboBox *>(&w, QLatin1String("akonadicombobox"));
+    QVERIFY(combobox);
+#endif
+}
+
 QTEST_KDEMAIN(SearchDuplicateResultWidgetTest, GUI)
