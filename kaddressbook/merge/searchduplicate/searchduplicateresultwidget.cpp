@@ -59,7 +59,7 @@ SearchDuplicateResultWidget::SearchDuplicateResultWidget(QWidget *parent)
     mCollectionCombobox = new Akonadi::CollectionComboBox(_k_searchDuplicateResultStubModel);
     mCollectionCombobox->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
     mCollectionCombobox->setMinimumWidth(250);
-    //TODO mCollectionCombobox->setMimeTypeFilter( QStringList() << KCalCore::Todo::todoMimeType() );
+    mCollectionCombobox->setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
     mCollectionCombobox->setObjectName(QLatin1String("akonadicombobox"));
     mergeLayout->addWidget(mCollectionCombobox);
 

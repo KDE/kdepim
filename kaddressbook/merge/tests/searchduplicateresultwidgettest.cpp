@@ -27,6 +27,7 @@
 #include <qstandarditemmodel.h>
 #include <Akonadi/CollectionComboBox>
 #include <Akonadi/EntityTreeModel>
+#include <KABC/Addressee>
 namespace KABMergeContacts {
 KADDRESSBOOK_EXPORT QAbstractItemModel *_k_searchDuplicateResultStubModel = 0;
 }
@@ -39,8 +40,7 @@ SearchDuplicateResultWidgetTest::SearchDuplicateResultWidgetTest(QObject *parent
         Akonadi::Collection collection(id);
         collection.setRights(Akonadi::Collection::AllRights);
         collection.setName(QString::number(id));
-        //TODO
-        //collection.setContentMimeTypes(QStringList() << KCalCore::Todo::todoMimeType());
+        collection.setContentMimeTypes(QStringList() << KABC::Addressee::mimeType());
 
         QStandardItem *item = new QStandardItem(collection.name());
         item->setData(QVariant::fromValue(collection),
