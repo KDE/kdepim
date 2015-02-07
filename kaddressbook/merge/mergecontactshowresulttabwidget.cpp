@@ -47,7 +47,7 @@ bool MergeContactShowResultTabWidget::tabBarVisible() const
 void MergeContactShowResultTabWidget::setContacts(const Akonadi::Item::List &lstItem)
 {
     clear();
-    Q_FOREACH(const Akonadi::Item &item, lstItem) {
+    Q_FOREACH (const Akonadi::Item &item, lstItem) {
         addContact(item, false);
     }
     updateTabWidget();
@@ -61,9 +61,10 @@ void MergeContactShowResultTabWidget::addContact(const Akonadi::Item &item, bool
         infoWidget->setContact(item);
         addTab(infoWidget, address.name());
     } else {
-        qCDebug(KADDRESSBOOK_LOG) <<" don't have address";
+        qCDebug(KADDRESSBOOK_LOG) << " don't have address";
     }
-    if (updateTab)
+    if (updateTab) {
         updateTabWidget();
+    }
 }
 

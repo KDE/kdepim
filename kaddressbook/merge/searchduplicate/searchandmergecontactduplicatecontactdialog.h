@@ -24,14 +24,15 @@
 #include "kaddressbook_export.h"
 class QStackedWidget;
 class QLabel;
-namespace KABMergeContacts {
+namespace KABMergeContacts
+{
 class SearchDuplicateResultWidget;
 class MergeContactShowResultTabWidget;
 class KADDRESSBOOK_EXPORT SearchAndMergeContactDuplicateContactDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit SearchAndMergeContactDuplicateContactDialog(QWidget *parent=Q_NULLPTR);
+    explicit SearchAndMergeContactDuplicateContactDialog(QWidget *parent = Q_NULLPTR);
     ~SearchAndMergeContactDuplicateContactDialog();
 
     void searchPotentialDuplicateContacts(const Akonadi::Item::List &list);

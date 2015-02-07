@@ -80,7 +80,5 @@ void ResultDuplicateTreeWidgetTest::shouldEmptyListIfNotContactSelected()
     QVERIFY(w.selectedContactsToMerge().isEmpty());
 }
 
-
-
 QTEST_MAIN(ResultDuplicateTreeWidgetTest)
 

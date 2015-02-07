@@ -27,7 +27,8 @@
 #include <kaddressbookgrantlee/widget/grantleecontactviewer.h>
 #include <AkonadiWidgets/CollectionComboBox>
 
-namespace KABMergeContacts {
+namespace KABMergeContacts
+{
 KADDRESSBOOK_EXPORT QAbstractItemModel *_k_searchDuplicateResultStubModel = 0;
 }
 

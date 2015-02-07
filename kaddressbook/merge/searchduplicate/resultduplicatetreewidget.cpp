@@ -15,12 +15,9 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "resultduplicatetreewidget.h"
 
 using namespace KABMergeContacts;
-
-
 
 ResultDuplicateTreeWidget::ResultDuplicateTreeWidget(QWidget *parent)
     : QTreeWidget(parent)
@@ -36,11 +33,11 @@ void ResultDuplicateTreeWidget::setContacts(const QList<Akonadi::Item::List> &ls
 {
     clear();
     int i = 1;
-    Q_FOREACH(const Akonadi::Item::List &lst, lstItem) {
+    Q_FOREACH (const Akonadi::Item::List &lst, lstItem) {
         ResultDuplicateTreeWidgetItem *topLevelItem = new ResultDuplicateTreeWidgetItem(this, false);
         //KF5 add i18n
         topLevelItem->setText(0, QString::fromLatin1("Duplicate contact %1").arg(i));
-        Q_FOREACH(const Akonadi::Item &item, lst) {
+        Q_FOREACH (const Akonadi::Item &item, lst) {
             ResultDuplicateTreeWidgetItem *childItem = new ResultDuplicateTreeWidgetItem(this);
             topLevelItem->addChild(childItem);
             topLevelItem->setItem(item);
@@ -55,13 +52,13 @@ QList<Akonadi::Item::List> ResultDuplicateTreeWidget::selectedContactsToMerge() 
     return QList<Akonadi::Item::List>();
 }
 
-
 ResultDuplicateTreeWidgetItem::ResultDuplicateTreeWidgetItem(QTreeWidget *parent, bool hasCheckableItem)
     : QTreeWidgetItem(parent)
 {
-    setFlags( hasCheckableItem ? Qt::ItemIsSelectable | Qt::ItemIsUserCheckable | Qt::ItemIsEnabled : Qt::ItemIsEnabled);
-    if (hasCheckableItem)
+    setFlags(hasCheckableItem ? Qt::ItemIsSelectable | Qt::ItemIsUserCheckable | Qt::ItemIsEnabled : Qt::ItemIsEnabled);
+    if (hasCheckableItem) {
         setCheckState(0, Qt::Unchecked);
+    }
 }
 
 ResultDuplicateTreeWidgetItem::~ResultDuplicateTreeWidgetItem()

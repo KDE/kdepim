@@ -28,7 +28,8 @@
 #include <AkonadiWidgets/CollectionComboBox>
 #include <AkonadiCore/EntityTreeModel>
 
-namespace KABMergeContacts {
+namespace KABMergeContacts
+{
 KADDRESSBOOK_EXPORT QAbstractItemModel *_k_searchDuplicateResultStubModel = 0;
 }
 

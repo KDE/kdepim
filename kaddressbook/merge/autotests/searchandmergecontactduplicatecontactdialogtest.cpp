@@ -36,7 +36,7 @@ void SearchAndMergeContactDuplicateContactDialogTest::shouldHaveDefaultValueOnCr
     QVERIFY(stackedWidget);
     QCOMPARE(stackedWidget->currentWidget()->objectName(), QStringLiteral("nocontactselected"));
 
-    for(int i = 0; i < stackedWidget->count(); ++i) {
+    for (int i = 0; i < stackedWidget->count(); ++i) {
         QWidget *w = stackedWidget->widget(i);
         bool hasGoodNamePage = (w->objectName() == QLatin1String("mergecontact") ||
                                 w->objectName() == QLatin1String("nocontactselected") ||
@@ -70,6 +70,5 @@ void SearchAndMergeContactDuplicateContactDialogTest::shouldShowNoContactWhenLis
     QVERIFY(stackedWidget);
     QCOMPARE(stackedWidget->currentWidget()->objectName(), QLatin1String("nocontactselected"));
 }
-
 
 QTEST_MAIN(SearchAndMergeContactDuplicateContactDialogTest)
