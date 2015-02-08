@@ -52,8 +52,8 @@ SearchDuplicateResultWidget::SearchDuplicateResultWidget(QWidget *parent)
 
     QHBoxLayout *mergeLayout = new QHBoxLayout;
     mainLayout->addLayout(mergeLayout);
-    //KF5 add i18n
-    QLabel *lab = new QLabel(QLatin1String("Select AddressBook:"));
+
+    QLabel *lab = new QLabel(i18n("Select AddressBook:"));
     lab->setObjectName(QLatin1String("select_addressbook_label"));
     mergeLayout->addWidget(lab);
 
@@ -64,8 +64,7 @@ SearchDuplicateResultWidget::SearchDuplicateResultWidget(QWidget *parent)
     mCollectionCombobox->setObjectName(QLatin1String("akonadicombobox"));
     mergeLayout->addWidget(mCollectionCombobox);
 
-    //KF5 add i18n
-    mMergeContact = new QPushButton(QLatin1String("Merge"));
+    mMergeContact = new QPushButton(i18n("Merge"));
     mMergeContact->setObjectName(QLatin1String("merge_contact_button"));
     connect(mMergeContact, SIGNAL(clicked()), this, SLOT(slotMergeContact()));
     mergeLayout->addWidget(mMergeContact);

@@ -16,6 +16,7 @@
 */
 
 #include "resultduplicatetreewidget.h"
+#include <KLocalizedString>
 
 using namespace KABMergeContacts;
 
@@ -35,8 +36,7 @@ void ResultDuplicateTreeWidget::setContacts(const QList<Akonadi::Item::List> &ls
     int i = 1;
     Q_FOREACH (const Akonadi::Item::List &lst, lstItem) {
         ResultDuplicateTreeWidgetItem *topLevelItem = new ResultDuplicateTreeWidgetItem(this, false);
-        //KF5 add i18n
-        topLevelItem->setText(0, QString::fromLatin1("Duplicate contact %1").arg(i));
+        topLevelItem->setText(0, i18n("Duplicate contact %1", i));
         Q_FOREACH (const Akonadi::Item &item, lst) {
             ResultDuplicateTreeWidgetItem *childItem = new ResultDuplicateTreeWidgetItem(this);
             topLevelItem->addChild(childItem);
