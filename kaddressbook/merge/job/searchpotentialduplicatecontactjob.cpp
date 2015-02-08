@@ -51,7 +51,6 @@ QList<Akonadi::Item::List > SearchPotentialDuplicateContactJob::potentialDuplica
 
 Akonadi::Item::List SearchPotentialDuplicateContactJob::checkList(const Akonadi::Item::List &lstItem)
 {
-    qDebug()<<" Akonadi::Item::List SearchPotentialDuplicateContactJob::checkList(const Akonadi::Item::List &lstItem)"<<lstItem.count();
     QList<Akonadi::Item> notDuplicate;
     QList<Akonadi::Item> lst;
     if (!lstItem.isEmpty()) {
@@ -61,7 +60,6 @@ Akonadi::Item::List SearchPotentialDuplicateContactJob::checkList(const Akonadi:
             const Akonadi::Item nextItem = lstItem.at(j);
             if (isDuplicate(firstItem, nextItem)) {
                 lst.append(nextItem);
-                qDebug()<<" is Duplicate";
             } else {
                 notDuplicate.append(nextItem);
             }
@@ -69,9 +67,7 @@ Akonadi::Item::List SearchPotentialDuplicateContactJob::checkList(const Akonadi:
         if (!lst.isEmpty()) {
             lst.append(firstItem);
             mListDuplicate.append(lst);
-            qDebug()<<" mListDuplicate"<<mListDuplicate.count();
         }
-        qDebug()<<" duplicate number "<<lst.count();
     }
     return notDuplicate;
 }
