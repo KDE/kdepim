@@ -117,4 +117,25 @@ void SearchPotentialDuplicateContactJobTest::shouldReturnTwoList()
     QCOMPARE(lstResult.count(), 2);
 }
 
+void SearchPotentialDuplicateContactJobTest::shouldReturnList_data()
+{
+    QTest::addColumn<Akonadi::Item::List>("listItem");
+    QTest::addColumn<int>("numberOfList");
+    QTest::newRow("noList") <<  Akonadi::Item::List() << 0;
+}
+
+void SearchPotentialDuplicateContactJobTest::shouldReturnList()
+{
+    QFETCH( Akonadi::Item::List, listItem );
+    QFETCH( int, numberOfList );
+
+    SearchPotentialDuplicateContactJob job(listItem);
+    QSignalSpy spy(&job, SIGNAL(finished(QList<Akonadi::Item::List>)));
+    job.start();
+    QCOMPARE(spy.count(), 1);
+    QList<Akonadi::Item::List> lstResult = spy.at(0).at(0).value< QList<Akonadi::Item::List> >();
+    QCOMPARE(lstResult.count(), numberOfList);
+
+}
+
 QTEST_KDEMAIN(SearchPotentialDuplicateContactJobTest, NoGUI)
