@@ -23,7 +23,7 @@
 #include "kaddressbook_export.h"
 namespace KABMergeContacts {
 
-class ResultDuplicateTreeWidgetItem : public QTreeWidgetItem
+class KADDRESSBOOK_EXPORT ResultDuplicateTreeWidgetItem : public QTreeWidgetItem
 {
 public:
     explicit ResultDuplicateTreeWidgetItem(QTreeWidget *parent = 0, bool hasCheckableItem = true);
