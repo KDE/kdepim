@@ -53,6 +53,7 @@ SearchDuplicateResultWidget::SearchDuplicateResultWidget(QWidget *parent)
 
     QHBoxLayout *mergeLayout = new QHBoxLayout;
     mainLayout->addLayout(mergeLayout);
+    mergeLayout->addStretch();
     //KF5 add i18n
     QLabel *lab = new QLabel(QLatin1String("Select AddressBook:"));
     lab->setObjectName(QLatin1String("select_addressbook_label"));
