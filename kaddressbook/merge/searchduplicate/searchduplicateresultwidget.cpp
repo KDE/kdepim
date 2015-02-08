@@ -48,6 +48,7 @@ SearchDuplicateResultWidget::SearchDuplicateResultWidget(QWidget *parent)
     mContactViewer->setObjectName(QLatin1String("contact_viewer"));
     splitter->addWidget(mResult);
     splitter->addWidget(mContactViewer);
+    connect(mResult, SIGNAL(showContactPreview(Akonadi::Item)), mContactViewer, SLOT(setContact(Akonadi::Item)));
 
     QHBoxLayout *mergeLayout = new QHBoxLayout;
     mainLayout->addLayout(mergeLayout);

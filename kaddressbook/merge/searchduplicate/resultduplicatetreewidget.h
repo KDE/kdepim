@@ -45,6 +45,11 @@ public:
     void setContacts(const QList<Akonadi::Item::List> &lstItem);
 
     QList<Akonadi::Item::List> selectedContactsToMerge() const;
+
+Q_SIGNALS:
+    void showContactPreview(const Akonadi::Item &item);
+private slots:
+    void slotItemActivated(QTreeWidgetItem *item, int column);
 };
 }
 

@@ -27,11 +27,21 @@ ResultDuplicateTreeWidget::ResultDuplicateTreeWidget(QWidget *parent)
 {
     //kf5 add i18n
     setHeaderLabel(QLatin1String("Contacts"));
+    connect(this, SIGNAL(itemActivated(QTreeWidgetItem*,int)), this, SLOT(slotItemActivated(QTreeWidgetItem*,int)));
 }
 
 ResultDuplicateTreeWidget::~ResultDuplicateTreeWidget()
 {
 
+}
+
+void ResultDuplicateTreeWidget::slotItemActivated(QTreeWidgetItem* item, int column)
+{
+    Q_UNUSED(column);
+    ResultDuplicateTreeWidgetItem *resultItem = dynamic_cast<ResultDuplicateTreeWidgetItem *>(item);
+    if (resultItem) {
+        Q_EMIT showContactPreview(resultItem->item());
+    }
 }
 
 void ResultDuplicateTreeWidget::setContacts(const QList<Akonadi::Item::List> &lstItem)
