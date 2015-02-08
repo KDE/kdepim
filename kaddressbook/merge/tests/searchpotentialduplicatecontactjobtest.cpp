@@ -122,6 +122,54 @@ void SearchPotentialDuplicateContactJobTest::shouldReturnList_data()
     QTest::addColumn<Akonadi::Item::List>("listItem");
     QTest::addColumn<int>("numberOfList");
     QTest::newRow("noList") <<  Akonadi::Item::List() << 0;
+    Akonadi::Item itemA;
+    KABC::Addressee addressA;
+    addressA.setName(QLatin1String("foo1"));
+    itemA.setPayload<KABC::Addressee>( addressA );
+    itemA.setMimeType( KABC::Addressee::mimeType() );
+
+    Akonadi::Item itemB;
+
+    KABC::Addressee addressB;
+    addressB.setName(QLatin1String("foo2"));
+    itemB.setPayload<KABC::Addressee>( addressB );
+    itemB.setMimeType( KABC::Addressee::mimeType() );
+
+    Akonadi::Item::List lst;
+    lst << itemA;
+    QTest::newRow("oneItem") <<  lst << 0;
+
+    lst.clear();
+    lst << itemA << itemA;
+    QTest::newRow("oneDuplicate") <<  lst << 1;
+
+    lst.clear();
+    lst << itemB << itemA;
+    QTest::newRow("twoDifferentItem") <<  lst << 0;
+
+    lst.clear();
+    lst << itemB << itemA << itemA << itemA;
+    QTest::newRow("onDuplicate") <<  lst << 1;
+
+    lst.clear();
+    lst << itemB << itemA << itemA << itemB;
+    QTest::newRow("twoDuplicate") <<  lst << 2;
+
+    Akonadi::Item itemC;
+
+    KABC::Addressee addressC;
+    addressC.setName(QLatin1String("foo3"));
+    itemC.setPayload<KABC::Addressee>( addressC );
+    itemC.setMimeType( KABC::Addressee::mimeType() );
+
+    lst.clear();
+    lst << itemB << itemC <<itemA << itemA << itemB << itemC;
+    QTest::newRow("threeDuplicate") <<  lst << 3;
+
+    lst.clear();
+    lst << itemB << itemC <<itemA;
+    QTest::newRow("threeDifferent") <<  lst << 0;
+
 }
 
 void SearchPotentialDuplicateContactJobTest::shouldReturnList()
