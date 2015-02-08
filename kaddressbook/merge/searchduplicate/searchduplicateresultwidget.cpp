@@ -41,6 +41,7 @@ SearchDuplicateResultWidget::SearchDuplicateResultWidget(QWidget *parent)
 
     QSplitter *splitter = new QSplitter;
     splitter->setObjectName(QLatin1String("splitter"));
+    splitter->setChildrenCollapsible(false);
     mainLayout->addWidget(splitter);
     mResult = new ResultDuplicateTreeWidget;
     mResult->setObjectName(QLatin1String("result_treewidget"));

@@ -66,6 +66,7 @@ void SearchDuplicateResultWidgetTest::shouldHaveDefaultValue()
     QCOMPARE(tree->topLevelItemCount(), 0);
     QSplitter *splitter = qFindChild<QSplitter *>(&w, QLatin1String("splitter"));
     QVERIFY(splitter);
+    QVERIFY(!splitter->childrenCollapsible());
     KAddressBookGrantlee::GrantleeContactViewer *viewer = qFindChild<KAddressBookGrantlee::GrantleeContactViewer *>(&w, QLatin1String("contact_viewer"));
     QVERIFY(viewer);
     QLabel *lab = qFindChild<QLabel *>(&w, QLatin1String("select_addressbook_label"));
