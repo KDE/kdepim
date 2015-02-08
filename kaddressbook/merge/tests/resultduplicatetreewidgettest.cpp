@@ -46,7 +46,7 @@ void ResultDuplicateTreeWidgetTest::shouldFillList()
     QList<Akonadi::Item::List> itemLst;
     itemLst << lst;
     w.setContacts(itemLst);
-    QCOMPARE(w.topLevelItemCount(), 4);
+    QCOMPARE(w.topLevelItemCount(), 1);
 }
 
 void ResultDuplicateTreeWidgetTest::shouldClearList()
@@ -64,7 +64,7 @@ void ResultDuplicateTreeWidgetTest::shouldClearList()
     itemLst.clear();
     itemLst << lst;
     w.setContacts(itemLst);
-    QCOMPARE(w.topLevelItemCount(), 5);
+    QCOMPARE(w.topLevelItemCount(), 1);
 }
 
 void ResultDuplicateTreeWidgetTest::shouldEmptyListIfNotContactSelected()
@@ -78,6 +78,30 @@ void ResultDuplicateTreeWidgetTest::shouldEmptyListIfNotContactSelected()
     itemLst << lst;
     w.setContacts(itemLst);
     QVERIFY(w.selectedContactsToMerge().isEmpty());
+}
+
+void ResultDuplicateTreeWidgetTest::shouldReturnNotEmptyContactList()
+{
+    KABMergeContacts::ResultDuplicateTreeWidget w;
+    Akonadi::Item::List lst;
+    lst << Akonadi::Item(42);
+    lst << Akonadi::Item(43);
+    lst << Akonadi::Item(44);
+    QList<Akonadi::Item::List> itemLst;
+    itemLst << lst;
+    w.setContacts(itemLst);
+
+    for(int i=0; i < w.topLevelItemCount(); ++i) {
+        QTreeWidgetItem *item = w.topLevelItem(i);
+        const int childCount = item->childCount();
+        if (childCount > 0) {
+            for (int child = 0; child < childCount; ++child) {
+                KABMergeContacts::ResultDuplicateTreeWidgetItem *childItem = static_cast<KABMergeContacts::ResultDuplicateTreeWidgetItem *> (item->child(child));
+                childItem->setCheckState(0, Qt::Checked);
+            }
+        }
+    }
+    QVERIFY(!w.selectedContactsToMerge().isEmpty());
 }
 
 

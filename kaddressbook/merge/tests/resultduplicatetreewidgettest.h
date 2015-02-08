@@ -30,6 +30,7 @@ private Q_SLOTS:
     void shouldFillList();
     void shouldClearList();
     void shouldEmptyListIfNotContactSelected();
+    void shouldReturnNotEmptyContactList();
 };
 
 #endif // RESULTDUPLICATETREEWIDGETTEST_H
