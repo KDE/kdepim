@@ -21,6 +21,9 @@
 #include <QTreeWidget>
 #include <Akonadi/Item>
 #include "kaddressbook_export.h"
+namespace KABC {
+class Addressee;
+}
 namespace KABMergeContacts {
 
 class KADDRESSBOOK_EXPORT ResultDuplicateTreeWidgetItem : public QTreeWidgetItem
@@ -33,6 +36,8 @@ public:
     void setItem(const Akonadi::Item &item);
 
 private:
+    void setDisplayName();
+    QString contactName(const KABC::Addressee &address);
     Akonadi::Item mItem;
 };
 

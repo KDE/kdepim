@@ -18,6 +18,8 @@
 
 #include "resultduplicatetreewidget.h"
 
+#include <KABC/Addressee>
+
 using namespace KABMergeContacts;
 
 
@@ -55,7 +57,7 @@ void ResultDuplicateTreeWidget::setContacts(const QList<Akonadi::Item::List> &ls
         Q_FOREACH(const Akonadi::Item &item, lst) {
             ResultDuplicateTreeWidgetItem *childItem = new ResultDuplicateTreeWidgetItem;
             topLevelItem->addChild(childItem);
-            topLevelItem->setItem(item);
+            childItem->setItem(item);
         }
         ++i;
     }
@@ -106,5 +108,26 @@ Akonadi::Item ResultDuplicateTreeWidgetItem::item() const
 void ResultDuplicateTreeWidgetItem::setItem(const Akonadi::Item &item)
 {
     mItem = item;
+    setDisplayName();
 }
 
+QString ResultDuplicateTreeWidgetItem::contactName(const KABC::Addressee &address)
+{
+    const QString realName = address.realName();
+    if (!realName.isEmpty()) {
+        return realName;
+    }
+    const QString name = address.name();
+    if (!name.isEmpty()) {
+        return name;
+    }
+    return address.fullEmail();
+}
+
+void ResultDuplicateTreeWidgetItem::setDisplayName()
+{
+    if (mItem.isValid()) {
+        const KABC::Addressee address = mItem.payload<KABC::Addressee>();
+        setText(0, contactName(address));
+    }
+}
