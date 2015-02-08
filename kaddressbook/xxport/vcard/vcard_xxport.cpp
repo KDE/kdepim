@@ -381,6 +381,7 @@ KABC::Addressee::List VCardXXPort::filterContacts( const KABC::Addressee::List &
         addr.setLangs( (*it).langs() );
         addr.setKind( (*it).kind() );
         addr.setMembers( (*it).members() );
+        addr.setRelationShips( (*it).relationShips() );
 
         if ( dlg->exportPrivateFields() ) {
             addr.setBirthday( (*it).birthday() );
