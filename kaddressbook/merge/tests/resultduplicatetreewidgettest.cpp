@@ -101,7 +101,84 @@ void ResultDuplicateTreeWidgetTest::shouldReturnNotEmptyContactList()
             }
         }
     }
-    QVERIFY(!w.selectedContactsToMerge().isEmpty());
+    QCOMPARE(w.selectedContactsToMerge().count(), 1);
+}
+
+void ResultDuplicateTreeWidgetTest::shouldNotReturnListWhenJustOneChildSelected()
+{
+    KABMergeContacts::ResultDuplicateTreeWidget w;
+    Akonadi::Item::List lst;
+    lst << Akonadi::Item(42);
+    lst << Akonadi::Item(43);
+    lst << Akonadi::Item(44);
+    QList<Akonadi::Item::List> itemLst;
+    itemLst << lst;
+    w.setContacts(itemLst);
+
+    for(int i=0; i < w.topLevelItemCount(); ++i) {
+        QTreeWidgetItem *item = w.topLevelItem(i);
+        const int childCount = item->childCount();
+        if (childCount > 0) {
+            for (int child = 0; child < childCount; ++child) {
+                KABMergeContacts::ResultDuplicateTreeWidgetItem *childItem = static_cast<KABMergeContacts::ResultDuplicateTreeWidgetItem *> (item->child(child));
+                childItem->setCheckState(0, child == 0 ? Qt::Checked : Qt::Unchecked);
+            }
+        }
+    }
+    QCOMPARE(w.selectedContactsToMerge().count(), 0);
+
+}
+
+void ResultDuplicateTreeWidgetTest::shouldReturnTwoLists()
+{
+    KABMergeContacts::ResultDuplicateTreeWidget w;
+    Akonadi::Item::List lst;
+    lst << Akonadi::Item(42);
+    lst << Akonadi::Item(43);
+    lst << Akonadi::Item(44);
+    QList<Akonadi::Item::List> itemLst;
+    itemLst << lst;
+    itemLst << lst;
+    w.setContacts(itemLst);
+
+    for(int i=0; i < w.topLevelItemCount(); ++i) {
+        QTreeWidgetItem *item = w.topLevelItem(i);
+        const int childCount = item->childCount();
+        if (childCount > 0) {
+            for (int child = 0; child < childCount; ++child) {
+                KABMergeContacts::ResultDuplicateTreeWidgetItem *childItem = static_cast<KABMergeContacts::ResultDuplicateTreeWidgetItem *> (item->child(child));
+                childItem->setCheckState(0, Qt::Checked);
+            }
+        }
+    }
+    QCOMPARE(w.selectedContactsToMerge().count(), 2);
+}
+
+void ResultDuplicateTreeWidgetTest::shouldReturnJustOnList()
+{
+    KABMergeContacts::ResultDuplicateTreeWidget w;
+    Akonadi::Item::List lst;
+    lst << Akonadi::Item(42);
+    lst << Akonadi::Item(43);
+    lst << Akonadi::Item(44);
+    QList<Akonadi::Item::List> itemLst;
+    itemLst << lst;
+    itemLst << lst;
+    w.setContacts(itemLst);
+
+    bool firstList = true;
+    for(int i=0; i < w.topLevelItemCount(); ++i) {
+        QTreeWidgetItem *item = w.topLevelItem(i);
+        const int childCount = item->childCount();
+        if (childCount > 0) {
+            for (int child = 0; child < childCount; ++child) {
+                KABMergeContacts::ResultDuplicateTreeWidgetItem *childItem = static_cast<KABMergeContacts::ResultDuplicateTreeWidgetItem *> (item->child(child));
+                childItem->setCheckState(0, firstList ? Qt::Checked : Qt::Unchecked);
+            }
+        }
+        firstList = false;
+    }
+    QCOMPARE(w.selectedContactsToMerge().count(), 1);
 }
 
 

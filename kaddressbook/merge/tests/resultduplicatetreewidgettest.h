@@ -31,6 +31,9 @@ private Q_SLOTS:
     void shouldClearList();
     void shouldEmptyListIfNotContactSelected();
     void shouldReturnNotEmptyContactList();
+    void shouldNotReturnListWhenJustOneChildSelected();
+    void shouldReturnTwoLists();
+    void shouldReturnJustOnList();
 };
 
 #endif // RESULTDUPLICATETREEWIDGETTEST_H
