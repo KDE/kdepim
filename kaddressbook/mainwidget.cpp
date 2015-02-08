@@ -27,7 +27,7 @@
 #include "merge/searchduplicate/searchandmergecontactduplicatecontactdialog.h"
 #include "quicksearchwidget.h"
 #include "settings.h"
-#include "xxportmanager.h"
+#include "xxport/xxportmanager.h"
 #include "utils.h"
 #include "kaddressbookadaptor.h"
 #include "categoryselectwidget.h"

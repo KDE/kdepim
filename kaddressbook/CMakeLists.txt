@@ -78,6 +78,7 @@ set(kaddressbook_xxport_SRCS
   xxport/shared/xxport.cpp
   xxport/vcard/vcard_xxport.cpp
   xxport/xxportfactory.cpp
+  xxport/xxportmanager.cpp
 )
 
 set(kaddressbook_merge_SRCS
@@ -111,7 +112,6 @@ set(kaddressbook_LIB_SRCS
   mainwidget.cpp
   modelcolumnmanager.cpp
   quicksearchwidget.cpp
-  xxportmanager.cpp
   utils.cpp
   ${kaddressbook_merge_SRCS}
   ${kaddressbook_printing_SRCS}
