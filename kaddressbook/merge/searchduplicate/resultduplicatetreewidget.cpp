@@ -25,6 +25,8 @@ using namespace KABMergeContacts;
 ResultDuplicateTreeWidget::ResultDuplicateTreeWidget(QWidget *parent)
     : QTreeWidget(parent)
 {
+    //kf5 add i18n
+    setHeaderLabel(QLatin1String("Contacts"));
 }
 
 ResultDuplicateTreeWidget::~ResultDuplicateTreeWidget()
@@ -47,6 +49,7 @@ void ResultDuplicateTreeWidget::setContacts(const QList<Akonadi::Item::List> &ls
         }
         ++i;
     }
+    expandAll();
 }
 
 QList<Akonadi::Item::List> ResultDuplicateTreeWidget::selectedContactsToMerge() const
