@@ -72,4 +72,49 @@ void SearchPotentialDuplicateContactJobTest::shouldReturnListWhenTwoItemsAreDupl
     QCOMPARE(lstResult.count(), 1);
 }
 
+void SearchPotentialDuplicateContactJobTest::shouldReturnListWhenThreeItemsAreDuplicated()
+{
+    Akonadi::Item::List lst;
+    Akonadi::Item itemA;
+    KABC::Addressee address;
+    address.setName(QLatin1String("foo1"));
+    itemA.setPayload<KABC::Addressee>( address );
+    itemA.setMimeType( KABC::Addressee::mimeType() );
+
+    lst << itemA << itemA << itemA;
+
+    SearchPotentialDuplicateContactJob job(lst);
+    QSignalSpy spy(&job, SIGNAL(finished(QList<Akonadi::Item::List>)));
+    job.start();
+    QCOMPARE(spy.count(), 1);
+    QList<Akonadi::Item::List> lstResult = spy.at(0).at(0).value< QList<Akonadi::Item::List> >();
+    QCOMPARE(lstResult.count(), 1);
+}
+
+void SearchPotentialDuplicateContactJobTest::shouldReturnTwoList()
+{
+    Akonadi::Item::List lst;
+    Akonadi::Item item;
+    KABC::Addressee addressA;
+    addressA.setName(QLatin1String("foo1"));
+    item.setPayload<KABC::Addressee>( addressA );
+    item.setMimeType( KABC::Addressee::mimeType() );
+
+    lst << item << item << item;
+
+    KABC::Addressee addressB;
+    addressB.setName(QLatin1String("foo2"));
+    item.setPayload<KABC::Addressee>( addressB );
+    item.setMimeType( KABC::Addressee::mimeType() );
+
+    lst << item << item << item;
+
+    SearchPotentialDuplicateContactJob job(lst);
+    QSignalSpy spy(&job, SIGNAL(finished(QList<Akonadi::Item::List>)));
+    job.start();
+    QCOMPARE(spy.count(), 1);
+    QList<Akonadi::Item::List> lstResult = spy.at(0).at(0).value< QList<Akonadi::Item::List> >();
+    QCOMPARE(lstResult.count(), 2);
+}
+
 QTEST_KDEMAIN(SearchPotentialDuplicateContactJobTest, NoGUI)

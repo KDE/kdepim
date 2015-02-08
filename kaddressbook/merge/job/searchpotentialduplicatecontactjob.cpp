@@ -51,21 +51,25 @@ QList<Akonadi::Item::List > SearchPotentialDuplicateContactJob::potentialDuplica
 
 Akonadi::Item::List SearchPotentialDuplicateContactJob::checkList(const Akonadi::Item::List &lstItem)
 {
+    qDebug()<<" Akonadi::Item::List SearchPotentialDuplicateContactJob::checkList(const Akonadi::Item::List &lstItem)"<<lstItem.count();
     QList<Akonadi::Item> notDuplicate;
     QList<Akonadi::Item> lst;
     if (!lstItem.isEmpty()) {
         Akonadi::Item firstItem = lstItem.at(0);
         const int numberOfItems(lstItem.count());
         for (int j = 1; j < numberOfItems; ++j) {
-            if (isDuplicate(firstItem, mListItem.at(j))) {
-                lst.append(lstItem.at(j));
+            const Akonadi::Item nextItem = lstItem.at(j);
+            if (isDuplicate(firstItem, nextItem)) {
+                lst.append(nextItem);
+                qDebug()<<" is Duplicate";
             } else {
-                notDuplicate.append(lstItem.at(j));
+                notDuplicate.append(nextItem);
             }
         }
         if (!lst.isEmpty()) {
             lst.append(firstItem);
             mListDuplicate.append(lst);
+            qDebug()<<" mListDuplicate"<<mListDuplicate.count();
         }
         qDebug()<<" duplicate number "<<lst.count();
     }

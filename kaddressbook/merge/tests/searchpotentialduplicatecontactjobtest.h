@@ -29,6 +29,8 @@ private slots:
     void shouldReturnEmptyListWhenNoItem();
     void shouldReturnEmptyListWhenOneItem();
     void shouldReturnListWhenTwoItemsAreDuplicated();
+    void shouldReturnListWhenThreeItemsAreDuplicated();
+    void shouldReturnTwoList();
 };
 
 #endif // SEARCHPOTENTIALDUPLICATECONTACTJOBTEST_H
