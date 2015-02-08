@@ -44,11 +44,11 @@ void ResultDuplicateTreeWidgetTest::shouldFillList()
     KABMergeContacts::ResultDuplicateTreeWidget w;
     Akonadi::Item::List lst;
     for (int i = 0; i < 5; ++i) {
-        Akonadi::Item item(42+i);
+        Akonadi::Item item(42 + i);
         Addressee address;
         address.setName(QLatin1String("foo1"));
-        item.setPayload<Addressee>( address );
-        lst<< item;
+        item.setPayload<Addressee>(address);
+        lst << item;
     }
     QList<Akonadi::Item::List> itemLst;
     itemLst << lst;
@@ -61,11 +61,11 @@ void ResultDuplicateTreeWidgetTest::shouldClearList()
     KABMergeContacts::ResultDuplicateTreeWidget w;
     Akonadi::Item::List lst;
     for (int i = 0; i < 5; ++i) {
-        Akonadi::Item item(42+i);
+        Akonadi::Item item(42 + i);
         Addressee address;
         address.setName(QLatin1String("foo1"));
-        item.setPayload<Addressee>( address );
-        lst<< item;
+        item.setPayload<Addressee>(address);
+        lst << item;
     }
     QList<Akonadi::Item::List> itemLst;
     itemLst << lst;
@@ -74,8 +74,8 @@ void ResultDuplicateTreeWidgetTest::shouldClearList()
     Akonadi::Item item(45);
     Addressee address;
     address.setName(QLatin1String("foo1"));
-    item.setPayload<Addressee>( address );
-    lst<< item;
+    item.setPayload<Addressee>(address);
+    lst << item;
     itemLst.clear();
     itemLst << lst;
     w.setContacts(itemLst);
@@ -87,18 +87,18 @@ void ResultDuplicateTreeWidgetTest::shouldEmptyListIfNotContactSelected()
     KABMergeContacts::ResultDuplicateTreeWidget w;
     Akonadi::Item::List lst;
     for (int i = 0; i < 5; ++i) {
-        Akonadi::Item item(42+i);
+        Akonadi::Item item(42 + i);
         Addressee address;
         address.setName(QLatin1String("foo1"));
-        item.setPayload<Addressee>( address );
-        lst<< item;
+        item.setPayload<Addressee>(address);
+        lst << item;
     }
     QList<Akonadi::Item::List> itemLst;
     Akonadi::Item item(45);
     Addressee address;
     address.setName(QLatin1String("foo1"));
-    item.setPayload<Addressee>( address );
-    lst<< item;
+    item.setPayload<Addressee>(address);
+    lst << item;
     itemLst << lst;
     w.setContacts(itemLst);
     QVERIFY(w.selectedContactsToMerge().isEmpty());
@@ -109,22 +109,22 @@ void ResultDuplicateTreeWidgetTest::shouldReturnNotEmptyContactList()
     KABMergeContacts::ResultDuplicateTreeWidget w;
     Akonadi::Item::List lst;
     for (int i = 0; i < 5; ++i) {
-        Akonadi::Item item(42+i);
+        Akonadi::Item item(42 + i);
         Addressee address;
         address.setName(QLatin1String("foo1"));
-        item.setPayload<Addressee>( address );
-        lst<< item;
+        item.setPayload<Addressee>(address);
+        lst << item;
     }
     QList<Akonadi::Item::List> itemLst;
     itemLst << lst;
     w.setContacts(itemLst);
 
-    for(int i=0; i < w.topLevelItemCount(); ++i) {
+    for (int i = 0; i < w.topLevelItemCount(); ++i) {
         QTreeWidgetItem *item = w.topLevelItem(i);
         const int childCount = item->childCount();
         if (childCount > 0) {
             for (int child = 0; child < childCount; ++child) {
-                KABMergeContacts::ResultDuplicateTreeWidgetItem *childItem = static_cast<KABMergeContacts::ResultDuplicateTreeWidgetItem *> (item->child(child));
+                KABMergeContacts::ResultDuplicateTreeWidgetItem *childItem = static_cast<KABMergeContacts::ResultDuplicateTreeWidgetItem *>(item->child(child));
                 childItem->setCheckState(0, Qt::Checked);
             }
         }
@@ -137,22 +137,22 @@ void ResultDuplicateTreeWidgetTest::shouldNotReturnListWhenJustOneChildSelected(
     KABMergeContacts::ResultDuplicateTreeWidget w;
     Akonadi::Item::List lst;
     for (int i = 0; i < 5; ++i) {
-        Akonadi::Item item(42+i);
+        Akonadi::Item item(42 + i);
         Addressee address;
         address.setName(QLatin1String("foo1"));
-        item.setPayload<Addressee>( address );
-        lst<< item;
+        item.setPayload<Addressee>(address);
+        lst << item;
     }
     QList<Akonadi::Item::List> itemLst;
     itemLst << lst;
     w.setContacts(itemLst);
 
-    for(int i=0; i < w.topLevelItemCount(); ++i) {
+    for (int i = 0; i < w.topLevelItemCount(); ++i) {
         QTreeWidgetItem *item = w.topLevelItem(i);
         const int childCount = item->childCount();
         if (childCount > 0) {
             for (int child = 0; child < childCount; ++child) {
-                KABMergeContacts::ResultDuplicateTreeWidgetItem *childItem = static_cast<KABMergeContacts::ResultDuplicateTreeWidgetItem *> (item->child(child));
+                KABMergeContacts::ResultDuplicateTreeWidgetItem *childItem = static_cast<KABMergeContacts::ResultDuplicateTreeWidgetItem *>(item->child(child));
                 childItem->setCheckState(0, child == 0 ? Qt::Checked : Qt::Unchecked);
             }
         }
@@ -166,23 +166,23 @@ void ResultDuplicateTreeWidgetTest::shouldReturnTwoLists()
     KABMergeContacts::ResultDuplicateTreeWidget w;
     Akonadi::Item::List lst;
     for (int i = 0; i < 5; ++i) {
-        Akonadi::Item item(42+i);
+        Akonadi::Item item(42 + i);
         Addressee address;
         address.setName(QLatin1String("foo1"));
-        item.setPayload<Addressee>( address );
-        lst<< item;
+        item.setPayload<Addressee>(address);
+        lst << item;
     }
     QList<Akonadi::Item::List> itemLst;
     itemLst << lst;
     itemLst << lst;
     w.setContacts(itemLst);
 
-    for(int i=0; i < w.topLevelItemCount(); ++i) {
+    for (int i = 0; i < w.topLevelItemCount(); ++i) {
         QTreeWidgetItem *item = w.topLevelItem(i);
         const int childCount = item->childCount();
         if (childCount > 0) {
             for (int child = 0; child < childCount; ++child) {
-                KABMergeContacts::ResultDuplicateTreeWidgetItem *childItem = static_cast<KABMergeContacts::ResultDuplicateTreeWidgetItem *> (item->child(child));
+                KABMergeContacts::ResultDuplicateTreeWidgetItem *childItem = static_cast<KABMergeContacts::ResultDuplicateTreeWidgetItem *>(item->child(child));
                 childItem->setCheckState(0, Qt::Checked);
                 QVERIFY(childItem->item().isValid());
             }
@@ -196,11 +196,11 @@ void ResultDuplicateTreeWidgetTest::shouldReturnJustOnList()
     KABMergeContacts::ResultDuplicateTreeWidget w;
     Akonadi::Item::List lst;
     for (int i = 0; i < 5; ++i) {
-        Akonadi::Item item(42+i);
+        Akonadi::Item item(42 + i);
         Addressee address;
         address.setName(QLatin1String("foo1"));
-        item.setPayload<Addressee>( address );
-        lst<< item;
+        item.setPayload<Addressee>(address);
+        lst << item;
     }
     QList<Akonadi::Item::List> itemLst;
     itemLst << lst;
@@ -208,12 +208,12 @@ void ResultDuplicateTreeWidgetTest::shouldReturnJustOnList()
     w.setContacts(itemLst);
 
     bool firstList = true;
-    for(int i=0; i < w.topLevelItemCount(); ++i) {
+    for (int i = 0; i < w.topLevelItemCount(); ++i) {
         QTreeWidgetItem *item = w.topLevelItem(i);
         const int childCount = item->childCount();
         if (childCount > 0) {
             for (int child = 0; child < childCount; ++child) {
-                KABMergeContacts::ResultDuplicateTreeWidgetItem *childItem = static_cast<KABMergeContacts::ResultDuplicateTreeWidgetItem *> (item->child(child));
+                KABMergeContacts::ResultDuplicateTreeWidgetItem *childItem = static_cast<KABMergeContacts::ResultDuplicateTreeWidgetItem *>(item->child(child));
                 childItem->setCheckState(0, firstList ? Qt::Checked : Qt::Unchecked);
             }
         }
@@ -221,8 +221,6 @@ void ResultDuplicateTreeWidgetTest::shouldReturnJustOnList()
     }
     QCOMPARE(w.selectedContactsToMerge().count(), 1);
 }
-
-
 
 QTEST_MAIN(ResultDuplicateTreeWidgetTest)
 

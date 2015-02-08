@@ -21,10 +21,12 @@
 #include <QTreeWidget>
 #include <AkonadiCore/Item>
 #include "kaddressbook_export.h"
-namespace KContacts {
+namespace KContacts
+{
 class Addressee;
 }
-namespace KABMergeContacts {
+namespace KABMergeContacts
+{
 
 class KADDRESSBOOK_EXPORT ResultDuplicateTreeWidgetItem : public QTreeWidgetItem
 {

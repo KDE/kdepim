@@ -111,7 +111,7 @@ void MergeContactWidget::slotUpdateMergeButton()
     const Akonadi::Item::List listCheckedItems = listSelectedContacts();
     Akonadi::Item item = currentItem();
     Q_EMIT contactSelected(item);
-    mMergeButton->setEnabled((listCheckedItems.count()>=2) && mCollectionCombobox->currentCollection().isValid());
+    mMergeButton->setEnabled((listCheckedItems.count() >= 2) && mCollectionCombobox->currentCollection().isValid());
 }
 
 void MergeContactWidget::slotMergeContacts()

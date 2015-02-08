@@ -35,7 +35,7 @@ ResultDuplicateTreeWidget::~ResultDuplicateTreeWidget()
 
 }
 
-void ResultDuplicateTreeWidget::slotItemActivated(QTreeWidgetItem* item, int column)
+void ResultDuplicateTreeWidget::slotItemActivated(QTreeWidgetItem *item, int column)
 {
     Q_UNUSED(column);
     ResultDuplicateTreeWidgetItem *resultItem = dynamic_cast<ResultDuplicateTreeWidgetItem *>(item);
@@ -52,7 +52,7 @@ void ResultDuplicateTreeWidget::setContacts(const QList<Akonadi::Item::List> &ls
         ResultDuplicateTreeWidgetItem *topLevelItem = new ResultDuplicateTreeWidgetItem(this, false);
         topLevelItem->setText(0, i18n("Duplicate contact %1", i));
         topLevelItem->setText(0, QString::fromLatin1("Duplicate contact %1").arg(i));
-        Q_FOREACH(const Akonadi::Item &item, lst) {
+        Q_FOREACH (const Akonadi::Item &item, lst) {
             ResultDuplicateTreeWidgetItem *childItem = new ResultDuplicateTreeWidgetItem;
             topLevelItem->addChild(childItem);
             childItem->setItem(item);
@@ -65,13 +65,13 @@ void ResultDuplicateTreeWidget::setContacts(const QList<Akonadi::Item::List> &ls
 QList<Akonadi::Item::List> ResultDuplicateTreeWidget::selectedContactsToMerge() const
 {
     QList<Akonadi::Item::List> listItems;
-    for(int i=0; i < topLevelItemCount(); ++i) {
+    for (int i = 0; i < topLevelItemCount(); ++i) {
         QTreeWidgetItem *item = topLevelItem(i);
         const int childCount = item->childCount();
         if (childCount > 0) {
             Akonadi::Item::List items;
             for (int child = 0; child < childCount; ++child) {
-                ResultDuplicateTreeWidgetItem *childItem = static_cast<ResultDuplicateTreeWidgetItem *> (item->child(child));
+                ResultDuplicateTreeWidgetItem *childItem = static_cast<ResultDuplicateTreeWidgetItem *>(item->child(child));
                 if (childItem->checkState(0) == Qt::Checked) {
                     items << childItem->item();
                 }

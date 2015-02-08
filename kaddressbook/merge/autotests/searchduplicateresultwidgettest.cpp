@@ -95,7 +95,7 @@ void SearchDuplicateResultWidgetTest::shouldHaveMergeButtonEnabled()
     QList<Akonadi::Item::List> itemLst;
 #if 0 //FIXME
     tree->setContacts(itemLst);
-    QVERIFY(tree->topLevelItemCount()>0);
+    QVERIFY(tree->topLevelItemCount() > 0);
 
     KPushButton *pushButton = qFindChild<KPushButton *>(&w, QLatin1String("merge_contact_button"));
     QVERIFY(pushButton);
