@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2014-2015 Montel Laurent <montel@kde.org>
+  Copyright (c) 2015 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,20 +15,28 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SEARCHDUPLICATERESULTWIDGETTEST_H
-#define SEARCHDUPLICATERESULTWIDGETTEST_H
+
+#ifndef KMCOMPOSERGLOBALACTION_H
+#define KMCOMPOSERGLOBALACTION_H
 
 #include <QObject>
-
-class SearchDuplicateResultWidgetTest : public QObject
+class KMComposeWin;
+class KMComposerGlobalAction : public QObject
 {
     Q_OBJECT
 public:
-    explicit SearchDuplicateResultWidgetTest(QObject *parent = 0);
-    ~SearchDuplicateResultWidgetTest();
-private Q_SLOTS:
-    void shouldHaveDefaultValue();
-    void shouldHaveMergeButtonEnabled();
+    explicit KMComposerGlobalAction(KMComposeWin *composerWin, QObject *parent = 0);
+    ~KMComposerGlobalAction();
+
+public slots:
+    void slotUndo();
+    void slotRedo();
+    void slotCut();
+    void slotCopy();
+    void slotPaste();
+    void slotMarkAll();
+private:
+    KMComposeWin *mComposerWin;
 };
 
-#endif // SEARCHDUPLICATERESULTWIDGETTEST_H
+#endif // KMCOMPOSERGLOBALACTION_H

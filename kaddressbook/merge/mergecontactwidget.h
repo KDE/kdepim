@@ -47,7 +47,6 @@ Q_SIGNALS:
 private Q_SLOTS:
     void slotUpdateMergeButton();
     void slotMergeContacts();
-
 private:
     Akonadi::Item::List listSelectedContacts() const;
     Akonadi::Item currentItem() const;

@@ -21,10 +21,12 @@
 #include <QTreeWidget>
 #include <AkonadiCore/Item>
 #include "kaddressbook_export.h"
-namespace KABMergeContacts
-{
+namespace KContacts {
+class Addressee;
+}
+namespace KABMergeContacts {
 
-class ResultDuplicateTreeWidgetItem : public QTreeWidgetItem
+class KADDRESSBOOK_EXPORT ResultDuplicateTreeWidgetItem : public QTreeWidgetItem
 {
 public:
     explicit ResultDuplicateTreeWidgetItem(QTreeWidget *parent = 0, bool hasCheckableItem = true);
@@ -34,6 +36,8 @@ public:
     void setItem(const Akonadi::Item &item);
 
 private:
+    void setDisplayName();
+    QString contactName(const KContacts::Addressee &address);
     Akonadi::Item mItem;
 };
 
@@ -46,6 +50,11 @@ public:
     void setContacts(const QList<Akonadi::Item::List> &lstItem);
 
     QList<Akonadi::Item::List> selectedContactsToMerge() const;
+
+Q_SIGNALS:
+    void showContactPreview(const Akonadi::Item &item);
+private slots:
+    void slotItemActivated(QTreeWidgetItem *item, int column);
 };
 }
 

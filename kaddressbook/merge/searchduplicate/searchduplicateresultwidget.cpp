@@ -42,6 +42,7 @@ SearchDuplicateResultWidget::SearchDuplicateResultWidget(QWidget *parent)
 
     QSplitter *splitter = new QSplitter;
     splitter->setObjectName(QLatin1String("splitter"));
+    splitter->setChildrenCollapsible(false);
     mainLayout->addWidget(splitter);
     mResult = new ResultDuplicateTreeWidget;
     mResult->setObjectName(QLatin1String("result_treewidget"));
@@ -49,6 +50,7 @@ SearchDuplicateResultWidget::SearchDuplicateResultWidget(QWidget *parent)
     mContactViewer->setObjectName(QLatin1String("contact_viewer"));
     splitter->addWidget(mResult);
     splitter->addWidget(mContactViewer);
+    connect(mResult, SIGNAL(showContactPreview(Akonadi::Item)), mContactViewer, SLOT(setContact(Akonadi::Item)));
 
     QHBoxLayout *mergeLayout = new QHBoxLayout;
     mainLayout->addLayout(mergeLayout);
@@ -60,8 +62,10 @@ SearchDuplicateResultWidget::SearchDuplicateResultWidget(QWidget *parent)
     mCollectionCombobox = new Akonadi::CollectionComboBox(_k_searchDuplicateResultStubModel);
     mCollectionCombobox->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
     mCollectionCombobox->setMinimumWidth(250);
-    //TODO mCollectionCombobox->setMimeTypeFilter( QStringList() << KCalCore::Todo::todoMimeType() );
+    mCollectionCombobox->setMimeTypeFilter( QStringList() << KContacts::Addressee::mimeType() );
     mCollectionCombobox->setObjectName(QLatin1String("akonadicombobox"));
+    connect(mCollectionCombobox, SIGNAL(currentIndexChanged(int)), SLOT(slotUpdateMergeButton()));
+    connect(mCollectionCombobox, SIGNAL(activated(int)), SLOT(slotUpdateMergeButton()));
     mergeLayout->addWidget(mCollectionCombobox);
 
     mMergeContact = new QPushButton(i18n("Merge"));
@@ -111,4 +115,9 @@ void SearchDuplicateResultWidget::slotMergeDone(const Akonadi::Item &item)
     ++mIndexListContact;
     Q_EMIT contactMerged(item);
     mergeContact();
+}
+
+void SearchDuplicateResultWidget::slotUpdateMergeButton()
+{
+    mMergeContact->setEnabled(mCollectionCombobox->currentCollection().isValid());
 }

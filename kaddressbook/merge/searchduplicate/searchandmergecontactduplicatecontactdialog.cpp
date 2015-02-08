@@ -76,7 +76,7 @@ SearchAndMergeContactDuplicateContactDialog::SearchAndMergeContactDuplicateConta
 
 SearchAndMergeContactDuplicateContactDialog::~SearchAndMergeContactDuplicateContactDialog()
 {
-
+    writeConfig();
 }
 
 void SearchAndMergeContactDuplicateContactDialog::searchPotentialDuplicateContacts(const Akonadi::Item::List &list)

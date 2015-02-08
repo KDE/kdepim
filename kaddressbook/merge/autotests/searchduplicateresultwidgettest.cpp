@@ -27,7 +27,9 @@
 #include <qstandarditemmodel.h>
 #include <AkonadiWidgets/CollectionComboBox>
 #include <AkonadiCore/EntityTreeModel>
+#include <KContacts/Addressee>
 
+using namespace KContacts;
 namespace KABMergeContacts
 {
 KADDRESSBOOK_EXPORT QAbstractItemModel *_k_searchDuplicateResultStubModel = 0;
@@ -41,8 +43,7 @@ SearchDuplicateResultWidgetTest::SearchDuplicateResultWidgetTest(QObject *parent
         Akonadi::Collection collection(id);
         collection.setRights(Akonadi::Collection::AllRights);
         collection.setName(QString::number(id));
-        //TODO
-        //collection.setContentMimeTypes(QStringList() << KCalCore::Todo::todoMimeType());
+        collection.setContentMimeTypes(QStringList() << Addressee::mimeType());
 
         QStandardItem *item = new QStandardItem(collection.name());
         item->setData(QVariant::fromValue(collection),
@@ -68,6 +69,7 @@ void SearchDuplicateResultWidgetTest::shouldHaveDefaultValue()
     QCOMPARE(tree->topLevelItemCount(), 0);
     QSplitter *splitter = qFindChild<QSplitter *>(&w, QLatin1String("splitter"));
     QVERIFY(splitter);
+    QVERIFY(!splitter->childrenCollapsible());
     KAddressBookGrantlee::GrantleeContactViewer *viewer = qFindChild<KAddressBookGrantlee::GrantleeContactViewer *>(&w, QLatin1String("contact_viewer"));
     QVERIFY(viewer);
     QLabel *lab = qFindChild<QLabel *>(&w, QLatin1String("select_addressbook_label"));
@@ -78,6 +80,30 @@ void SearchDuplicateResultWidgetTest::shouldHaveDefaultValue()
 
     Akonadi::CollectionComboBox *combobox = qFindChild<Akonadi::CollectionComboBox *>(&w, QLatin1String("akonadicombobox"));
     QVERIFY(combobox);
+}
+
+void SearchDuplicateResultWidgetTest::shouldHaveMergeButtonEnabled()
+{
+    KABMergeContacts::SearchDuplicateResultWidget w;
+    KABMergeContacts::ResultDuplicateTreeWidget *tree = qFindChild<KABMergeContacts::ResultDuplicateTreeWidget *>(&w, QLatin1String("result_treewidget"));
+    QVERIFY(tree);
+    QCOMPARE(tree->topLevelItemCount(), 0);
+    Akonadi::Item::List lst;
+    lst << Akonadi::Item(42);
+    lst << Akonadi::Item(43);
+    lst << Akonadi::Item(44);
+    QList<Akonadi::Item::List> itemLst;
+#if 0 //FIXME
+    tree->setContacts(itemLst);
+    QVERIFY(tree->topLevelItemCount()>0);
+
+    KPushButton *pushButton = qFindChild<KPushButton *>(&w, QLatin1String("merge_contact_button"));
+    QVERIFY(pushButton);
+    QVERIFY(!pushButton->isEnabled());
+
+    Akonadi::CollectionComboBox *combobox = qFindChild<Akonadi::CollectionComboBox *>(&w, QLatin1String("akonadicombobox"));
+    QVERIFY(combobox);
+#endif
 }
 
 QTEST_MAIN(SearchDuplicateResultWidgetTest)
