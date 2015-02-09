@@ -15,18 +15,18 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef VCARDEXPORTSELECTIONDIALOG_H
-#define VCARDEXPORTSELECTIONDIALOG_H
+#ifndef VCARDEXPORTSELECTIONWIDGET_H
+#define VCARDEXPORTSELECTIONWIDGET_H
 
-#include <KDialog>
+#include <QWidget>
+
 class QCheckBox;
-
-class VCardExportSelectionDialog : public KDialog
+class VCardExportSelectionWidget : public QWidget
 {
+    Q_OBJECT
 public:
-    VCardExportSelectionDialog( QWidget *parent );
-    ~VCardExportSelectionDialog();
-
+    explicit VCardExportSelectionWidget(QWidget *parent=0);
+    ~VCardExportSelectionWidget();
     enum ExportField {
         None = 0,
         Private = 1,
@@ -40,7 +40,6 @@ public:
     Q_DECLARE_FLAGS(ExportFields, ExportField)
 
     ExportFields exportType() const;
-
 private:
     QCheckBox *mPrivateBox;
     QCheckBox *mBusinessBox;
@@ -50,4 +49,4 @@ private:
     QCheckBox *mDisplayNameBox;
 };
 
-#endif // VCARDEXPORTSELECTIONDIALOG_H
+#endif // VCARDEXPORTSELECTIONWIDGET_H

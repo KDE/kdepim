@@ -20,7 +20,7 @@
 #include "vcard_xxport.h"
 
 #include "vcardviewerdialog.h"
-#include "vcardexportselectiondialog.h"
+#include "vcardexportselectionwidget.h"
 
 #include "pimcommon/widgets/renamefiledialog.h"
 
@@ -56,12 +56,12 @@ VCardXXPort::VCardXXPort( QWidget *parent )
 {
 }
 
-bool VCardXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
+bool VCardXXPort::exportContacts( const KABC::Addressee::List &contacts, VCardExportSelectionWidget::ExportFields exportFields) const
 {
     KABC::VCardConverter converter;
     KUrl url;
 
-    const KABC::Addressee::List list = filterContacts( contacts );
+    const KABC::Addressee::List list = filterContacts( contacts, exportFields );
     if ( list.isEmpty() ) { // no contact selected
         return true;
     }
@@ -268,7 +268,7 @@ bool VCardXXPort::doExport( const KUrl &url, const QByteArray &data ) const
     return KIO::NetAccess::upload( tmpFile.fileName(), newUrl, parentWidget() );
 }
 
-KABC::Addressee::List VCardXXPort::filterContacts( const KABC::Addressee::List &addrList ) const
+KABC::Addressee::List VCardXXPort::filterContacts( const KABC::Addressee::List &addrList, VCardExportSelectionWidget::ExportFields exportFieldType ) const
 {
     KABC::Addressee::List list;
 
@@ -276,12 +276,6 @@ KABC::Addressee::List VCardXXPort::filterContacts( const KABC::Addressee::List &
         return addrList;
     }
 
-    QPointer<VCardExportSelectionDialog> dlg = new VCardExportSelectionDialog( parentWidget() );
-    if ( !dlg->exec() || !dlg ) {
-        delete dlg;
-        return list;
-    }
-    VCardExportSelectionDialog::ExportFields exportFieldType = dlg->exportType();
     KABC::Addressee::List::ConstIterator it;
     KABC::Addressee::List::ConstIterator end( addrList.end() );
     for ( it = addrList.begin(); it != end; ++it ) {
@@ -291,7 +285,7 @@ KABC::Addressee::List VCardXXPort::filterContacts( const KABC::Addressee::List &
         addr.setFormattedName( (*it).formattedName() );
 
         bool addrDone = false;
-        if ( exportFieldType & VCardExportSelectionDialog::DiplayName ) {                // output display name as N field
+        if ( exportFieldType & VCardExportSelectionWidget::DiplayName ) {                // output display name as N field
             QString fmtName = (*it).formattedName();
             QStringList splitNames = fmtName.split( QLatin1Char(' '), QString::SkipEmptyParts );
             if ( splitNames.count() >= 2 ) {
@@ -331,24 +325,24 @@ KABC::Addressee::List VCardXXPort::filterContacts( const KABC::Addressee::List &
         addr.setMembers( (*it).members() );
         addr.setRelationShips( (*it).relationShips() );
 
-        if ( exportFieldType & VCardExportSelectionDialog::Private ) {
+        if ( exportFieldType & VCardExportSelectionWidget::Private ) {
             addr.setBirthday( (*it).birthday() );
             addr.setNote( (*it).note() );
         }
 
-        if ( exportFieldType & VCardExportSelectionDialog::Picture ) {
-            if ( exportFieldType & VCardExportSelectionDialog::Private ) {
+        if ( exportFieldType & VCardExportSelectionWidget::Picture ) {
+            if ( exportFieldType & VCardExportSelectionWidget::Private ) {
                 addr.setPhoto( (*it).photo() );
                 addr.setExtraPhotoList( (*it).extraPhotoList() );
             }
 
-            if ( exportFieldType & VCardExportSelectionDialog::Business ) {
+            if ( exportFieldType & VCardExportSelectionWidget::Business ) {
                 addr.setLogo( (*it).logo() );
                 addr.setExtraLogoList( (*it).extraLogoList() );
             }
         }
 
-        if ( exportFieldType & VCardExportSelectionDialog::Business ) {
+        if ( exportFieldType & VCardExportSelectionWidget::Business ) {
             addr.setTitle( (*it).title() );
             addr.setRole( (*it).role() );
             addr.setOrganization( (*it).organization() );
@@ -372,11 +366,11 @@ KABC::Addressee::List VCardXXPort::filterContacts( const KABC::Addressee::List &
         for ( phoneIt = phones.begin(); phoneIt != phones.end(); ++phoneIt ) {
             int phoneType = (*phoneIt).type();
 
-            if ( (phoneType & KABC::PhoneNumber::Home) && (exportFieldType & VCardExportSelectionDialog::Private) ) {
+            if ( (phoneType & KABC::PhoneNumber::Home) && (exportFieldType & VCardExportSelectionWidget::Private) ) {
                 addr.insertPhoneNumber( *phoneIt );
-            } else if ( (phoneType & KABC::PhoneNumber::Work) && (exportFieldType & VCardExportSelectionDialog::Business) ) {
+            } else if ( (phoneType & KABC::PhoneNumber::Work) && (exportFieldType & VCardExportSelectionWidget::Business) ) {
                 addr.insertPhoneNumber( *phoneIt );
-            } else if ( (exportFieldType & VCardExportSelectionDialog::Other) ) {
+            } else if ( (exportFieldType & VCardExportSelectionWidget::Other) ) {
                 addr.insertPhoneNumber( *phoneIt );
             }
         }
@@ -386,28 +380,26 @@ KABC::Addressee::List VCardXXPort::filterContacts( const KABC::Addressee::List &
         for ( addrIt = addresses.begin(); addrIt != addresses.end(); ++addrIt ) {
             int addressType = (*addrIt).type();
 
-            if ( (addressType & KABC::Address::Home) && exportFieldType & VCardExportSelectionDialog::Private ) {
+            if ( (addressType & KABC::Address::Home) && exportFieldType & VCardExportSelectionWidget::Private ) {
                 addr.insertAddress( *addrIt );
-            } else if ( (addressType & KABC::Address::Work) && (exportFieldType & VCardExportSelectionDialog::Business) ) {
+            } else if ( (addressType & KABC::Address::Work) && (exportFieldType & VCardExportSelectionWidget::Business) ) {
                 addr.insertAddress( *addrIt );
-            } else if ( exportFieldType & VCardExportSelectionDialog::Other ) {
+            } else if ( exportFieldType & VCardExportSelectionWidget::Other ) {
                 addr.insertAddress( *addrIt );
             }
         }
 
-        if ( exportFieldType & VCardExportSelectionDialog::Other ) {
+        if ( exportFieldType & VCardExportSelectionWidget::Other ) {
             addr.setCustoms( (*it).customs() );
         }
 
-        if ( exportFieldType & VCardExportSelectionDialog::Encryption ) {
+        if ( exportFieldType & VCardExportSelectionWidget::Encryption ) {
             addKey( addr, KABC::Key::PGP );
             addKey( addr, KABC::Key::X509 );
         }
 
         list.append( addr );
     }
-
-    delete dlg;
 
     return list;
 }

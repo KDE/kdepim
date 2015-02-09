@@ -39,7 +39,7 @@ CsvXXPort::CsvXXPort( QWidget *parent )
 {
 }
 
-bool CsvXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
+bool CsvXXPort::exportContacts(const KABC::Addressee::List &contacts , VCardExportSelectionWidget::ExportFields ) const
 {
     KUrl url = KFileDialog::getSaveUrl( KUrl( QLatin1String("addressbook.csv") ) );
     if ( url.isEmpty() ) {

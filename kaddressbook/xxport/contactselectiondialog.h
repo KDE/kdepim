@@ -22,11 +22,10 @@
 
 #include <KABC/Addressee>
 #include <KDialog>
-
-class ContactSelectionWidget;
+#include <xxport/vcard/vcardexportselectionwidget.h>
 
 class QItemSelectionModel;
-
+class ContactSelectionWidget;
 namespace Akonadi
 {
 class Collection;
@@ -48,7 +47,7 @@ public:
      * @param selectionModel The model that contains the currently selected contacts.
      * @param parent The parent widget.
      */
-    explicit ContactSelectionDialog( QItemSelectionModel *selectionModel, QWidget *parent = 0 );
+    explicit ContactSelectionDialog(QItemSelectionModel *selectionModel, bool allowToSelectTypeToExport, QWidget *parent = 0 );
 
     /**
      * Sets the @p message text.
@@ -65,8 +64,10 @@ public:
      */
     KABC::Addressee::List selectedContacts() const;
 
+    VCardExportSelectionWidget::ExportFields exportType() const;
 private:
     ContactSelectionWidget *mSelectionWidget;
+    VCardExportSelectionWidget *mVCardExport;
 };
 
 #endif

@@ -80,7 +80,8 @@ set(kaddressbook_xxport_SRCS
   xxport/xxportfactory.cpp
   xxport/xxportmanager.cpp
   xxport/vcard/vcardviewerdialog.cpp
-  xxport/vcard/vcardexportselectiondialog.cpp
+  xxport/vcard/vcardexportselectionwidget.cpp
+  xxport/contactselectiondialog.cpp
 )
 
 set(kaddressbook_merge_SRCS
@@ -106,7 +107,6 @@ set(kaddressbook_LIB_SRCS
   categoryfilterproxymodel.cpp
   categoryselectwidget.cpp
   contactfields.cpp
-  contactselectiondialog.cpp
   contactselectionwidget.cpp
   contactsorter.cpp
   contactswitcher.cpp

@@ -92,7 +92,7 @@ KABC::Addressee::List LDIFXXPort::importContacts() const
     return contacts;
 }
 
-bool LDIFXXPort::exportContacts( const KABC::Addressee::List &list ) const
+bool LDIFXXPort::exportContacts( const KABC::Addressee::List &list, VCardExportSelectionWidget::ExportFields ) const
 {
     const KUrl url =
             KFileDialog::getSaveUrl( KUrl( QDir::homePath() + QLatin1String("/addressbook.ldif") ), QLatin1String("text/x-ldif") );

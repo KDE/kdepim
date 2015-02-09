@@ -20,17 +20,31 @@
 #include "contactselectiondialog.h"
 #include "contactselectionwidget.h"
 
+#include <QVBoxLayout>
 #include <KLocalizedString>
 
-ContactSelectionDialog::ContactSelectionDialog( QItemSelectionModel *selectionModel,
+
+ContactSelectionDialog::ContactSelectionDialog( QItemSelectionModel *selectionModel, bool allowToSelectTypeToExport,
                                                 QWidget *parent )
-    : KDialog( parent )
+    : KDialog( parent ),
+      mVCardExport(0)
 {
     setCaption( i18n( "Select Contacts" ) );
     setButtons( Ok | Cancel );
 
+
     mSelectionWidget = new ContactSelectionWidget( selectionModel, this );
-    setMainWidget( mSelectionWidget );
+    if (allowToSelectTypeToExport) {
+        QWidget *mainWidget = new QWidget(this);
+        QVBoxLayout *mainLayout = new QVBoxLayout;
+        mainWidget->setLayout(mainLayout);
+        mainLayout->addWidget(mSelectionWidget);
+        mVCardExport = new VCardExportSelectionWidget;
+        mainLayout->addWidget(mVCardExport);
+        setMainWidget(mainWidget);
+    } else {
+        setMainWidget( mSelectionWidget );
+    }
 
     setInitialSize( QSize( 450, 220 ) );
 }
@@ -48,5 +62,14 @@ void ContactSelectionDialog::setDefaultAddressBook( const Akonadi::Collection &a
 KABC::Addressee::List ContactSelectionDialog::selectedContacts() const
 {
     return mSelectionWidget->selectedContacts();
+}
+
+VCardExportSelectionWidget::ExportFields ContactSelectionDialog::exportType() const
+{
+    if (mVCardExport) {
+        return mVCardExport->exportType();
+    } else {
+        return VCardExportSelectionWidget::None;
+    }
 }
 

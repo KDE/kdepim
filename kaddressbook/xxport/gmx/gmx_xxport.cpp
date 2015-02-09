@@ -341,7 +341,7 @@ KABC::Addressee::List GMXXXPort::importContacts() const
 
 /* export */
 
-bool GMXXXPort::exportContacts( const KABC::AddresseeList &list ) const
+bool GMXXXPort::exportContacts( const KABC::AddresseeList &list, VCardExportSelectionWidget::ExportFields ) const
 {
     KUrl url = KFileDialog::getSaveUrl(
                 KUrl( QDir::homePath() + QLatin1String("/addressbook.gmx") ), GMX_FILESELECTION_STRING );

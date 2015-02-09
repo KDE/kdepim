@@ -49,7 +49,7 @@ KABC::Addressee::List LDAPXXPort::importContacts() const
     return contacts;
 }
 
-bool LDAPXXPort::exportContacts( const KABC::Addressee::List & ) const
+bool LDAPXXPort::exportContacts( const KABC::Addressee::List &, VCardExportSelectionWidget::ExportFields ) const
 {
     return false;
 }

@@ -33,7 +33,7 @@ KABC::Addressee::List XXPort::importContacts() const
     return KABC::Addressee::List();
 }
 
-bool XXPort::exportContacts( const KABC::Addressee::List & ) const
+bool XXPort::exportContacts(const KABC::Addressee::List & , VCardExportSelectionWidget::ExportFields) const
 {
     return false;
 }
