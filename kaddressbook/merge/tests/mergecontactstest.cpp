@@ -16,24 +16,24 @@
 */
 
 
-#include "mergecontacttest.h"
+#include "mergecontactstest.h"
 #include "../job/mergecontacts.h"
 #include <qtest_kde.h>
 
 using namespace KABMergeContacts;
 
-MergeContactTest::MergeContactTest()
+MergeContactsTest::MergeContactsTest()
 {
 }
 
-void MergeContactTest::shouldReturnDefaultAddressWhenNoListItem()
+void MergeContactsTest::shouldReturnDefaultAddressWhenNoListItem()
 {
     MergeContacts contacts;
     KABC::Addressee result = contacts.mergedContact();
     QCOMPARE(result.isEmpty(), true);
 }
 
-void MergeContactTest::shouldReturnDefaultAddressWhenOneItem()
+void MergeContactsTest::shouldReturnDefaultAddressWhenOneItem()
 {
     Akonadi::Item::List lst;
     Akonadi::Item item;
@@ -47,14 +47,14 @@ void MergeContactTest::shouldReturnDefaultAddressWhenOneItem()
     QCOMPARE(result.isEmpty(), true);
 }
 
-void MergeContactTest::noNneedManualSelectionCheckWhenEmptyList()
+void MergeContactsTest::noNneedManualSelectionCheckWhenEmptyList()
 {
     MergeContacts contacts;
     const bool result = contacts.needManualSelectInformations();
     QCOMPARE(result, false);
 }
 
-void MergeContactTest::noNneedManualSelectionCheckWhenOneItem()
+void MergeContactsTest::noNneedManualSelectionCheckWhenOneItem()
 {
     Akonadi::Item::List lst;
     KABC::Addressee address;
@@ -68,4 +68,4 @@ void MergeContactTest::noNneedManualSelectionCheckWhenOneItem()
 }
 
 
-QTEST_KDEMAIN(MergeContactTest, NoGUI)
+QTEST_KDEMAIN(MergeContactsTest, NoGUI)

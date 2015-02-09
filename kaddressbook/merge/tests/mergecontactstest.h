@@ -16,16 +16,16 @@
 */
 
 
-#ifndef MERGECONTACTTEST_H
-#define MERGECONTACTTEST_H
+#ifndef MERGECONTACTSTEST_H
+#define MERGECONTACTSTEST_H
 
 #include <QObject>
 
-class MergeContactTest : public QObject
+class MergeContactsTest : public QObject
 {
     Q_OBJECT
 public:
-    MergeContactTest();
+    MergeContactsTest();
 
 private Q_SLOTS:
     void shouldReturnDefaultAddressWhenNoListItem();
@@ -34,4 +34,4 @@ private Q_SLOTS:
     void noNneedManualSelectionCheckWhenOneItem();
 };
 
-#endif // MERGECONTACTTEST_H
+#endif // MERGECONTACTSTEST_H
