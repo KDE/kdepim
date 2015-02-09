@@ -20,11 +20,11 @@
 
 #include <QObject>
 
-class MergeContactTest : public QObject
+class MergeContactsTest : public QObject
 {
     Q_OBJECT
 public:
-    MergeContactTest();
+    MergeContactsTest();
 
 private Q_SLOTS:
     void shouldReturnDefaultAddressWhenNoListItem();

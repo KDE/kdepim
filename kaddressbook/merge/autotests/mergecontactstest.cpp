@@ -15,24 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "mergecontacttest.h"
+#include "mergecontactstest.h"
 #include <qtest.h>
 #include "../job/mergecontacts.h"
 
 using namespace KABMergeContacts;
 
-MergeContactTest::MergeContactTest()
+MergeContactsTest::MergeContactsTest()
 {
 }
 
-void MergeContactTest::shouldReturnDefaultAddressWhenNoListItem()
+void MergeContactsTest::shouldReturnDefaultAddressWhenNoListItem()
 {
     MergeContacts contacts;
     KContacts::Addressee result = contacts.mergedContact();
     QCOMPARE(result.isEmpty(), true);
 }
 
-void MergeContactTest::shouldReturnDefaultAddressWhenOneItem()
+void MergeContactsTest::shouldReturnDefaultAddressWhenOneItem()
 {
     Akonadi::Item::List lst;
     Akonadi::Item item;
@@ -46,14 +46,14 @@ void MergeContactTest::shouldReturnDefaultAddressWhenOneItem()
     QCOMPARE(result.isEmpty(), true);
 }
 
-void MergeContactTest::noNneedManualSelectionCheckWhenEmptyList()
+void MergeContactsTest::noNneedManualSelectionCheckWhenEmptyList()
 {
     MergeContacts contacts;
     const bool result = contacts.needManualSelectInformations();
     QCOMPARE(result, false);
 }
 
-void MergeContactTest::noNneedManualSelectionCheckWhenOneItem()
+void MergeContactsTest::noNneedManualSelectionCheckWhenOneItem()
 {
     Akonadi::Item::List lst;
     KContacts::Addressee address;
@@ -66,4 +66,4 @@ void MergeContactTest::noNneedManualSelectionCheckWhenOneItem()
     QCOMPARE(result, false);
 }
 
-QTEST_MAIN(MergeContactTest)
+QTEST_MAIN(MergeContactsTest)
