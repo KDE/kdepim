@@ -68,7 +68,7 @@ public:
     void readConfig();
 
 protected:
-    virtual bool acceptRow(int sourceRow, const QModelIndex &sourceParent) const;
+    bool acceptRow(int sourceRow, const QModelIndex &sourceParent) const Q_DECL_OVERRIDE;
 
 private:
     class Private;

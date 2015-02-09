@@ -156,7 +156,7 @@ public:
     KMInvitationFormatterHelper(Interface::BodyPart *bodyPart,
                                 const KCalCore::MemoryCalendar::Ptr &calendar)
         : mBodyPart(bodyPart), mCalendar(calendar) {}
-    virtual QString generateLinkURL(const QString &id)
+    QString generateLinkURL(const QString &id) Q_DECL_OVERRIDE
     {
         return mBodyPart->makeLink(id);
     }

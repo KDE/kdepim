@@ -43,7 +43,7 @@ public:
     virtual ~CustomManageSieveWidget();
 
 protected:
-    virtual bool refreshList();
+    bool refreshList() Q_DECL_OVERRIDE;
 };
 
 class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public QDialog
