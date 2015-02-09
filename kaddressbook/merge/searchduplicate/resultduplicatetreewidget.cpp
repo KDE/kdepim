@@ -27,7 +27,7 @@ ResultDuplicateTreeWidget::ResultDuplicateTreeWidget(QWidget *parent)
 {
     //kf5 add i18n
     setHeaderLabel(QLatin1String("Contacts"));
-    connect(this, SIGNAL(itemActivated(QTreeWidgetItem*,int)), this, SLOT(slotItemActivated(QTreeWidgetItem*,int)));
+    connect(this, &QTreeWidget::itemActivated, this, &ResultDuplicateTreeWidget::slotItemActivated);
 }
 
 ResultDuplicateTreeWidget::~ResultDuplicateTreeWidget()

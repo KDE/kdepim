@@ -48,8 +48,8 @@ SearchAndMergeContactDuplicateContactDialog::SearchAndMergeContactDuplicateConta
     mSearchResult = new SearchDuplicateResultWidget;
     mSearchResult->setObjectName(QStringLiteral("mergecontact"));
     mStackedWidget->addWidget(mSearchResult);
-    connect(mSearchResult, SIGNAL(contactMerged(Akonadi::Item)), this, SLOT(slotContactMerged(Akonadi::Item)));
-    connect(mSearchResult, SIGNAL(mergeDone()), this, SLOT(slotMergeDone()));
+    connect(mSearchResult, &SearchDuplicateResultWidget::contactMerged, this, &SearchAndMergeContactDuplicateContactDialog::slotContactMerged);
+    connect(mSearchResult, &SearchDuplicateResultWidget::mergeDone, this, &SearchAndMergeContactDuplicateContactDialog::slotMergeDone);
 
     mNoContactSelected = new QLabel(i18n("No contacts selected."));
     mNoContactSelected->setObjectName(QStringLiteral("nocontactselected"));

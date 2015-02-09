@@ -140,7 +140,7 @@ void BlackListBalooEmailCompletionWidget::slotSearch()
     if (searchEmail.length() > 2) {
         KPIM::BlackListBalooEmailSearchJob *job = new KPIM::BlackListBalooEmailSearchJob(this);
         job->setSearchEmail(searchEmail);
-        connect(job, SIGNAL(emailsFound(QStringList)), mEmailList, SLOT(slotEmailFound(QStringList)));
+        connect(job, &BlackListBalooEmailSearchJob::emailsFound, mEmailList, &BlackListBalooEmailList::slotEmailFound);
         job->start();
     }
 }

@@ -88,20 +88,20 @@ void CategorySelectWidgetPrivate::init()
     checkCombo = new KPIM::KCheckComboBox;
     checkCombo->setMinimumWidth(150);
     checkCombo->setSqueezeText(true);
-    connect(checkCombo, SIGNAL(checkedItemsChanged(QStringList)),
-            SLOT(slotCheckedItemsChanged()));
+    connect(checkCombo, &KPIM::KCheckComboBox::checkedItemsChanged,
+            this, &CategorySelectWidgetPrivate::slotCheckedItemsChanged);
     hbox->addWidget(checkCombo);
 
     Monitor *monitor = new Monitor(this);
     monitor->setTypeMonitored(Monitor::Tags);
     tagModel = new Akonadi::TagModel(monitor, this);
 
-    connect(tagModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
-            SLOT(slotTagsInserted(QModelIndex,int,int)));
-    connect(tagModel, SIGNAL(rowsRemoved(QModelIndex,int,int)),
-            SLOT(slotTagsRemoved(QModelIndex,int,int)));
-    connect(tagModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-            SLOT(slotTagsChanged(QModelIndex,QModelIndex)));
+    connect(tagModel, &QAbstractItemModel::rowsInserted,
+            this, &CategorySelectWidgetPrivate::slotTagsInserted);
+    connect(tagModel, &QAbstractItemModel::rowsRemoved,
+            this, &CategorySelectWidgetPrivate::slotTagsRemoved);
+    connect(tagModel, &QAbstractItemModel::dataChanged,
+            this, &CategorySelectWidgetPrivate::slotTagsChanged);
 
     updateTimer = new QTimer(this);
     updateTimer->setSingleShot(true);

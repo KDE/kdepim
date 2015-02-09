@@ -62,10 +62,10 @@ void ContactSwitcher::setView(QAbstractItemView *view)
 
     Q_ASSERT_X(mView->model(), "ContactSwitcher::setView", "The view has no model set!");
 
-    connect(mView->model(), SIGNAL(layoutChanged()), SLOT(updateStatus()));
-    connect(mView->model(), SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(updateStatus()));
-    connect(mView->model(), SIGNAL(rowsRemoved(QModelIndex,int,int)), SLOT(updateStatus()));
-    connect(mView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(updateStatus()));
+    connect(mView->model(), &QAbstractItemModel::layoutChanged, this, &ContactSwitcher::updateStatus);
+    connect(mView->model(), &QAbstractItemModel::rowsInserted, this, &ContactSwitcher::updateStatus);
+    connect(mView->model(), &QAbstractItemModel::rowsRemoved, this, &ContactSwitcher::updateStatus);
+    connect(mView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &ContactSwitcher::updateStatus);
 
     updateStatus();
 }

@@ -176,8 +176,8 @@ void MailFilterAgent::itemAdded(const Akonadi::Item &item, const Akonadi::Collec
     MailCommon::SearchRule::RequiredPart requiredPart = m_filterManager->requiredPart(collection.resource());
 
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(item);
-    connect(job, SIGNAL(itemsReceived(Akonadi::Item::List)),
-            this, SLOT(itemsReceiviedForFiltering(Akonadi::Item::List)));
+    connect(job, &Akonadi::ItemFetchJob::itemsReceived,
+            this, &MailFilterAgent::itemsReceiviedForFiltering);
     if (requiredPart == MailCommon::SearchRule::CompleteMessage) {
         job->fetchScope().fetchFullPayload();
     } else if (requiredPart == MailCommon::SearchRule::Header) {

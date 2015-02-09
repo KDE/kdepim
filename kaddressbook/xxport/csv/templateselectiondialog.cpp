@@ -231,8 +231,8 @@ TemplateSelectionDialog::TemplateSelectionDialog(QWidget *parent)
     mOkButton->setEnabled(false);
     mainLayout->addWidget(wdg);
     mainLayout->addWidget(buttonBox);
-    connect(mView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            this, SLOT(updateButtons()));
+    connect(mView->selectionModel(), &QItemSelectionModel::selectionChanged,
+            this, &TemplateSelectionDialog::updateButtons);
 }
 
 bool TemplateSelectionDialog::templatesAvailable() const

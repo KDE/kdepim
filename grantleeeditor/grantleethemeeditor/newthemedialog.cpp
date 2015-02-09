@@ -50,7 +50,7 @@ NewThemeDialog::NewThemeDialog(QWidget *parent)
 
     mUrlRequester = new KUrlRequester;
     mUrlRequester->setMode(KFile::Directory | KFile::LocalOnly);
-    connect(mUrlRequester->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(slotUpdateOkButton()));
+    connect(mUrlRequester->lineEdit(), &QLineEdit::textChanged, this, &NewThemeDialog::slotUpdateOkButton);
     lay->addWidget(mUrlRequester);
 
     w->setLayout(lay);
