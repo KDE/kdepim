@@ -21,8 +21,8 @@
 #include "autocreatescripts/autocreatescriptdialog.h"
 #include "editor/sieveinfowidget.h"
 #include "editor/sievetextedit.h"
-#include "editor/sieveeditorwarning.h"
-#include "editor/sieveeditorparsingmissingfeaturewarning.h"
+#include "editor/warningwidget/sieveeditorwarning.h"
+#include "editor/warningwidget/sieveeditorparsingmissingfeaturewarning.h"
 #include "editor/sieveeditortabwidget.h"
 
 #include "scriptsparsing/xmlprintingscriptbuilder.h"
