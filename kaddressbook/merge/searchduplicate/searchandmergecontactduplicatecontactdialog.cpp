@@ -47,11 +47,17 @@ SearchAndMergeContactDuplicateContactDialog::SearchAndMergeContactDuplicateConta
     connect(mSearchResult, SIGNAL(mergeDone()), this, SLOT(slotMergeDone()));
 
     mNoContactSelected = new QLabel(i18n("No contacts selected."));
+    mNoContactSelected->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
     mNoContactSelected->setObjectName(QLatin1String("nocontactselected"));
+    QFont font;
+    font.setBold(true);
+    mNoContactSelected->setFont(font);
     mStackedWidget->addWidget(mNoContactSelected);
 
     mNoDuplicateContactFound = new QLabel(i18n("No contact duplicated found."));
+    mNoDuplicateContactFound->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
     mNoDuplicateContactFound->setObjectName(QLatin1String("noduplicatecontactfound"));
+    mNoDuplicateContactFound->setFont(font);
     mStackedWidget->addWidget(mNoDuplicateContactFound);
 
     mMergeContactResult = new MergeContactShowResultTabWidget(this);
@@ -60,6 +66,8 @@ SearchAndMergeContactDuplicateContactDialog::SearchAndMergeContactDuplicateConta
 
     mNoEnoughContactSelected = new QLabel(i18n("You must select at least two elements."));
     mNoEnoughContactSelected->setObjectName(QLatin1String("noenoughcontactselected"));
+    mNoEnoughContactSelected->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+    mNoEnoughContactSelected->setFont(font);
     mStackedWidget->addWidget(mNoEnoughContactSelected);
     mStackedWidget->setCurrentWidget(mNoContactSelected);
 
