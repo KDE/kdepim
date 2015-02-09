@@ -157,32 +157,3 @@ VCardExportSelectionDialog::ExportFields VCardExportSelectionDialog::exportType(
     return type;
 }
 
-bool VCardExportSelectionDialog::exportPrivateFields() const
-{
-    return mPrivateBox->isChecked();
-}
-
-bool VCardExportSelectionDialog::exportBusinessFields() const
-{
-    return mBusinessBox->isChecked();
-}
-
-bool VCardExportSelectionDialog::exportOtherFields() const
-{
-    return mOtherBox->isChecked();
-}
-
-bool VCardExportSelectionDialog::exportEncryptionKeys() const
-{
-    return mEncryptionKeys->isChecked();
-}
-
-bool VCardExportSelectionDialog::exportPictureFields() const
-{
-    return mPictureBox->isChecked();
-}
-
-bool VCardExportSelectionDialog::exportDisplayName() const
-{
-    return mDisplayNameBox->isChecked();
-}

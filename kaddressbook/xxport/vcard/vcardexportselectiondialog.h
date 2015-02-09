@@ -41,13 +41,6 @@ public:
 
     ExportFields exportType() const;
 
-    bool exportPrivateFields() const;
-    bool exportBusinessFields() const;
-    bool exportOtherFields() const;
-    bool exportEncryptionKeys() const;
-    bool exportPictureFields() const;
-    bool exportDisplayName() const;
-
 private:
     QCheckBox *mPrivateBox;
     QCheckBox *mBusinessBox;
