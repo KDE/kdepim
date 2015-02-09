@@ -18,7 +18,7 @@
 #include "mergecontactsdialog.h"
 #include "utils.h"
 #include "merge/util/mergecontactutil.h"
-#include "merge/mergecontactwidget.h"
+#include "merge/manualmerge/mergecontactwidget.h"
 #include "merge/mergecontactinfowidget.h"
 #include "merge/job/mergecontactsjob.h"
 #include "merge/mergecontactshowresultdialog.h"

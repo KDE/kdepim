@@ -17,7 +17,7 @@
 
 #include "mergecontactwidgettest.h"
 #include <Akonadi/Item>
-#include "../mergecontactwidget.h"
+#include "../manualmerge/mergecontactwidget.h"
 #include <KABC/Addressee>
 #include <Akonadi/EntityTreeModel>
 
