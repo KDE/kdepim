@@ -20,7 +20,6 @@
 
 #include <KLocalizedString>
 #include <KVBox>
-#include <KDialog>
 #include <QAction>
 #include <QActionEvent>
 #include <QHBoxLayout>
@@ -91,7 +90,6 @@ CollectionAclWidget::CollectionAclWidget(QWidget *parent)
     view->setSelectionModel(mAclManager->selectionModel());
 
     KVBox *buttonBox = new KVBox;
-    buttonBox->setSpacing(KDialog::spacingHint());
     layout->addWidget(buttonBox);
 
     ActionButton *button = new ActionButton(buttonBox);

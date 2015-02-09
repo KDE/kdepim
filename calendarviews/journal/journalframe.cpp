@@ -35,7 +35,6 @@
 #include <KCalUtils/IncidenceFormatter>
 #include <Akonadi/Calendar/ETMCalendar>
 
-#include <KDialog>
 #include <QTextBrowser>
 #include <KLocalizedString>
 #include <KIconLoader>
@@ -154,8 +153,6 @@ JournalFrame::JournalFrame(const Akonadi::Item &j,
     mChanger = 0;
 
     QVBoxLayout *verticalLayout = new QVBoxLayout(this);
-    verticalLayout->setSpacing(KDialog::spacingHint());
-    verticalLayout->setMargin(KDialog::marginHint());
 
     mBrowser = new QTextBrowser(this);
     mBrowser->viewport()->installEventFilter(this);
