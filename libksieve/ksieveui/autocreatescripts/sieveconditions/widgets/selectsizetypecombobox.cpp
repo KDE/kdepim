@@ -23,7 +23,7 @@
 using namespace KSieveUi;
 
 SelectSizeTypeComboBox::SelectSizeTypeComboBox(QWidget *parent)
-    : KComboBox(parent)
+    : QComboBox(parent)
 {
     initialize();
     connect(this, static_cast<void (SelectSizeTypeComboBox::*)(int)>(&SelectSizeTypeComboBox::activated), this, &SelectSizeTypeComboBox::valueChanged);

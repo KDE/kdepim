@@ -23,7 +23,7 @@
 using namespace KSieveUi;
 
 SelectMimeComboBox::SelectMimeComboBox(QWidget *parent)
-    : KComboBox(parent)
+    : QComboBox(parent)
 {
     initialize();
     connect(this, static_cast<void (SelectMimeComboBox::*)(int)>(&SelectMimeComboBox::activated), this, &SelectMimeComboBox::valueChanged);

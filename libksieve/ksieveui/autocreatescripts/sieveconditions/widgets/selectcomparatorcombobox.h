@@ -18,9 +18,9 @@
 #ifndef SELECTCOMPARATORCOMBOBOX_H
 #define SELECTCOMPARATORCOMBOBOX_H
 
-#include <KComboBox>
+#include <QComboBox>
 
-class SelectComparatorComboBox : public KComboBox
+class SelectComparatorComboBox : public QComboBox
 {
     Q_OBJECT
 public:

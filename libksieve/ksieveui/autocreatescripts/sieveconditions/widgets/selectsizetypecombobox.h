@@ -17,11 +17,11 @@
 #ifndef SELECTSIZETYPECOMBOBOX_H
 #define SELECTSIZETYPECOMBOBOX_H
 
-#include <KComboBox>
+#include <QComboBox>
 
 namespace KSieveUi
 {
-class SelectSizeTypeComboBox : public KComboBox
+class SelectSizeTypeComboBox : public QComboBox
 {
     Q_OBJECT
 public:

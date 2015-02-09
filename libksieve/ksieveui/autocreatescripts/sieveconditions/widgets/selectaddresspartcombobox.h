@@ -18,11 +18,11 @@
 #ifndef SELECTADDRESSPARTCOMBOBOX_H
 #define SELECTADDRESSPARTCOMBOBOX_H
 
-#include <KComboBox>
+#include <QComboBox>
 
 namespace KSieveUi
 {
-class SelectAddressPartComboBox : public KComboBox
+class SelectAddressPartComboBox : public QComboBox
 {
     Q_OBJECT
 public:

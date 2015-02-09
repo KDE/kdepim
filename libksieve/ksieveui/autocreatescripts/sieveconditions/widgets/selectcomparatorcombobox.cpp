@@ -20,7 +20,7 @@
 #include "autocreatescripts/autocreatescriptutil_p.h"
 
 SelectComparatorComboBox::SelectComparatorComboBox(QWidget *parent)
-    : KComboBox(parent)
+    : QComboBox(parent)
 {
     connect(this, static_cast<void (SelectComparatorComboBox::*)(int)>(&SelectComparatorComboBox::activated), this, &SelectComparatorComboBox::valueChanged);
     initialize();
