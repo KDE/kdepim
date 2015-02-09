@@ -91,7 +91,7 @@ KContacts::Addressee::List LDIFXXPort::importContacts() const
     return contacts;
 }
 
-bool LDIFXXPort::exportContacts(const KContacts::Addressee::List &list) const
+bool LDIFXXPort::exportContacts( const KContacts::Addressee::List &list, VCardExportSelectionWidget::ExportFields ) const
 {
     const QUrl url =
         QFileDialog::getSaveFileUrl(parentWidget(), QString(), QUrl::fromLocalFile(QDir::homePath() + QLatin1String("/addressbook.ldif")), QLatin1String("text/x-ldif"));

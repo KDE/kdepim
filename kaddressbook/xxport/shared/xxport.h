@@ -21,6 +21,7 @@
 #define XXPORT_H
 
 #include <KContacts/Addressee>
+#include "xxport/vcard/vcardexportselectionwidget.h"
 
 #include <QtCore/QHash>
 
@@ -53,7 +54,7 @@ public:
     /**
      * Exports the list of @p contacts.
      */
-    virtual bool exportContacts(const KContacts::Addressee::List &contacts) const = 0;
+    virtual bool exportContacts( const KContacts::Addressee::List &contacts, VCardExportSelectionWidget::ExportFields ) const = 0;
 
     /**
      * Sets module specific options.

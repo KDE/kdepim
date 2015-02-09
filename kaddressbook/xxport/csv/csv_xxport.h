@@ -29,8 +29,8 @@ class CsvXXPort : public XXPort
 public:
     explicit CsvXXPort(QWidget *parent = Q_NULLPTR);
 
-    bool exportContacts(const KContacts::Addressee::List &contacts) const;
     KContacts::Addressee::List importContacts() const;
+    bool exportContacts( const KContacts::Addressee::List &contacts, VCardExportSelectionWidget::ExportFields ) const;
 
 private:
     void exportToFile(QFile *, const KContacts::Addressee::List &) const;

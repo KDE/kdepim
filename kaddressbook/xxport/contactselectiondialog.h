@@ -21,12 +21,11 @@
 #define CONTACTSELECTIONDIALOG_H
 
 #include <KContacts/Addressee>
-#include <QDialog>
-
-class ContactSelectionWidget;
+#include <KDialog>
+#include <xxport/vcard/vcardexportselectionwidget.h>
 
 class QItemSelectionModel;
-
+class ContactSelectionWidget;
 namespace Akonadi
 {
 class Collection;
@@ -48,7 +47,7 @@ public:
      * @param selectionModel The model that contains the currently selected contacts.
      * @param parent The parent widget.
      */
-    explicit ContactSelectionDialog(QItemSelectionModel *selectionModel, QWidget *parent = Q_NULLPTR);
+    explicit ContactSelectionDialog(QItemSelectionModel *selectionModel, bool allowToSelectTypeToExport, QWidget *parent = 0 );
 
     /**
      * Sets the @p message text.
@@ -65,8 +64,10 @@ public:
      */
     KContacts::Addressee::List selectedContacts() const;
 
+    VCardExportSelectionWidget::ExportFields exportType() const;
 private:
     ContactSelectionWidget *mSelectionWidget;
+    VCardExportSelectionWidget *mVCardExport;
 };
 
 #endif

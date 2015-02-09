@@ -179,16 +179,18 @@ void XXPortManager::slotExport(const QString &identifier)
         return;
     }
 
+    const bool selectExportType = (identifier == QLatin1String("vcard21") || identifier == QLatin1String("vcard30") || identifier == QLatin1String("vcard40"));
     QPointer<ContactSelectionDialog> dlg =
-        new ContactSelectionDialog(mSelectionModel, mParentWidget);
-    dlg->setMessageText(i18n("Which contact do you want to export?"));
-    dlg->setDefaultAddressBook(mDefaultAddressBook);
-    if (!dlg->exec() || !dlg) {
+            new ContactSelectionDialog( mSelectionModel, selectExportType, mParentWidget );
+    dlg->setMessageText( i18n( "Which contact do you want to export?" ) );
+    dlg->setDefaultAddressBook( mDefaultAddressBook );
+    if ( !dlg->exec() || !dlg ) {
         delete dlg;
         return;
     }
 
     const KContacts::AddresseeList contacts = dlg->selectedContacts();
+    const VCardExportSelectionWidget::ExportFields exportFields = dlg->exportType();
     delete dlg;
 
     if (contacts.isEmpty()) {
@@ -201,7 +203,7 @@ void XXPortManager::slotExport(const QString &identifier)
         return;
     }
 
-    xxport->exportContacts(contacts);
+    xxport->exportContacts( contacts, exportFields );
 
     delete xxport;
 }

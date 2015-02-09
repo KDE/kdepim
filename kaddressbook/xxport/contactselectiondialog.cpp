@@ -20,14 +20,16 @@
 #include "contactselectiondialog.h"
 #include "contactselectionwidget.h"
 
+#include <QVBoxLayout>
 #include <KLocalizedString>
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QVBoxLayout>
 
-ContactSelectionDialog::ContactSelectionDialog(QItemSelectionModel *selectionModel,
+ContactSelectionDialog::ContactSelectionDialog(QItemSelectionModel *selectionModel, bool allowToSelectTypeToExport,
         QWidget *parent)
-    : QDialog(parent)
+    : QDialog(parent),
+      mVCardExport(0)
 {
     setWindowTitle(i18n("Select Contacts"));
     //PORTING SCRIPT: Move QDialogButtonBox at the end of init of widget to add it in layout.
@@ -36,14 +38,24 @@ ContactSelectionDialog::ContactSelectionDialog(QItemSelectionModel *selectionMod
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     mainLayout->addWidget(mainWidget);
+
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &ContactSelectionDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &ContactSelectionDialog::reject);
 
-    mSelectionWidget = new ContactSelectionWidget(selectionModel, this);
-    mainLayout->addWidget(mSelectionWidget);
+    QVBoxLayout *layout = new QVBoxLayout;
+    mainWidget->setLayout(layout);
+
+    mSelectionWidget = new ContactSelectionWidget( selectionModel, this );
+    if (allowToSelectTypeToExport) {
+        layout->addWidget(mSelectionWidget);
+        mVCardExport = new VCardExportSelectionWidget;
+        layout->addWidget(mVCardExport);
+    } else {
+        layout->addWidget(mSelectionWidget);
+    }
     mainLayout->addWidget(buttonBox);
 
     resize(QSize(450, 220));
@@ -62,5 +74,14 @@ void ContactSelectionDialog::setDefaultAddressBook(const Akonadi::Collection &ad
 KContacts::Addressee::List ContactSelectionDialog::selectedContacts() const
 {
     return mSelectionWidget->selectedContacts();
+}
+
+VCardExportSelectionWidget::ExportFields ContactSelectionDialog::exportType() const
+{
+    if (mVCardExport) {
+        return mVCardExport->exportType();
+    } else {
+        return VCardExportSelectionWidget::None;
+    }
 }
 

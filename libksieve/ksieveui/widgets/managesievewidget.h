@@ -67,6 +67,7 @@ private Q_SLOTS:
     void slotSystemNetworkOnlineStateChanged(bool state);
     void slotCheckNetworkStatus();
 
+    void slotCancelFetch();
 public Q_SLOTS:
     void slotGotList(KManageSieve::SieveJob *job, bool success, const QStringList &listScript, const QString &activeScript);
     void slotNewScript();

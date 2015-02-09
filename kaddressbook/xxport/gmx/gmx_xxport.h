@@ -35,8 +35,8 @@ class GMXXXPort : public XXPort
 public:
     explicit GMXXXPort(QWidget *parent = Q_NULLPTR);
 
-    bool exportContacts(const KContacts::AddresseeList &list) const;
     KContacts::Addressee::List importContacts() const;
+    bool exportContacts(const KContacts::AddresseeList &list , VCardExportSelectionWidget::ExportFields) const;
 
 private:
     void doExport(QFile *fp, const KContacts::AddresseeList &list) const;
