@@ -25,7 +25,7 @@ class VCardExportSelectionWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit VCardExportSelectionWidget(QWidget *parent=0);
+    explicit VCardExportSelectionWidget(QWidget *parent = 0);
     ~VCardExportSelectionWidget();
     enum ExportField {
         None = 0,

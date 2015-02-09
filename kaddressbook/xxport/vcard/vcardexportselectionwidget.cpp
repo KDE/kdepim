@@ -28,14 +28,14 @@
 VCardExportSelectionWidget::VCardExportSelectionWidget(QWidget *parent)
     : QWidget(parent)
 {
-    QGridLayout *layout = new QGridLayout( this );
+    QGridLayout *layout = new QGridLayout(this);
 
     QGroupBox *gbox = new QGroupBox(
-                i18nc( "@title:group", "Fields to be exported" ), this );
-    gbox->setFlat( true );
-    layout->addWidget( gbox, 0, 0, 1, 2 );
+        i18nc("@title:group", "Fields to be exported"), this);
+    gbox->setFlat(true);
+    layout->addWidget(gbox, 0, 0, 1, 2);
 
-    mPrivateBox = new QCheckBox( i18nc( "@option:check", "Private fields" ), this );
+    mPrivateBox = new QCheckBox(i18nc("@option:check", "Private fields"), this);
     mPrivateBox->setToolTip(
         i18nc("@info:tooltip", "Export private fields"));
     mPrivateBox->setWhatsThis(
@@ -44,7 +44,7 @@ VCardExportSelectionWidget::VCardExportSelectionWidget(QWidget *parent)
               "private fields to the vCard output file."));
     layout->addWidget(mPrivateBox, 1, 0);
 
-    mBusinessBox = new QCheckBox( i18nc( "@option:check", "Business fields" ), this );
+    mBusinessBox = new QCheckBox(i18nc("@option:check", "Business fields"), this);
     mBusinessBox->setToolTip(
         i18nc("@info:tooltip", "Export business fields"));
     mBusinessBox->setWhatsThis(
@@ -53,7 +53,7 @@ VCardExportSelectionWidget::VCardExportSelectionWidget(QWidget *parent)
               "business fields to the vCard output file."));
     layout->addWidget(mBusinessBox, 2, 0);
 
-    mOtherBox = new QCheckBox( i18nc( "@option:check", "Other fields" ), this );
+    mOtherBox = new QCheckBox(i18nc("@option:check", "Other fields"), this);
     mOtherBox->setToolTip(
         i18nc("@info:tooltip", "Export other fields"));
     mOtherBox->setWhatsThis(
@@ -62,7 +62,7 @@ VCardExportSelectionWidget::VCardExportSelectionWidget(QWidget *parent)
               "other fields to the vCard output file."));
     layout->addWidget(mOtherBox, 3, 0);
 
-    mEncryptionKeys = new QCheckBox( i18nc( "@option:check", "Encryption keys" ), this );
+    mEncryptionKeys = new QCheckBox(i18nc("@option:check", "Encryption keys"), this);
     mEncryptionKeys->setToolTip(
         i18nc("@info:tooltip", "Export encryption keys"));
     mEncryptionKeys->setWhatsThis(
@@ -71,7 +71,7 @@ VCardExportSelectionWidget::VCardExportSelectionWidget(QWidget *parent)
               "encryption keys to the vCard output file."));
     layout->addWidget(mEncryptionKeys, 1, 1);
 
-    mPictureBox = new QCheckBox( i18nc( "@option:check", "Pictures" ), this );
+    mPictureBox = new QCheckBox(i18nc("@option:check", "Pictures"), this);
     mPictureBox->setToolTip(
         i18nc("@info:tooltip", "Export pictures"));
     mPictureBox->setWhatsThis(
@@ -81,43 +81,43 @@ VCardExportSelectionWidget::VCardExportSelectionWidget(QWidget *parent)
     layout->addWidget(mPictureBox, 2, 1);
 
     gbox = new QGroupBox(
-                i18nc( "@title:group", "Export options" ), this );
-    gbox->setFlat( true );
-    layout->addWidget( gbox, 4, 0, 1, 2 );
+        i18nc("@title:group", "Export options"), this);
+    gbox->setFlat(true);
+    layout->addWidget(gbox, 4, 0, 1, 2);
 
-    mDisplayNameBox = new QCheckBox( i18nc( "@option:check", "Display name as full name" ), this );
+    mDisplayNameBox = new QCheckBox(i18nc("@option:check", "Display name as full name"), this);
     mDisplayNameBox->setToolTip(
         i18nc("@info:tooltip", "Export display name as full name"));
     mDisplayNameBox->setWhatsThis(
-                i18nc( "@info:whatsthis",
-                       "Check this box if you want to export the contact's display name "
-                       "in the vCard's full name field.  This may be required to get the "
-                       "name shown correctly in GMail or Android." ) );
-    layout->addWidget( mDisplayNameBox, 5, 0, 1, 2 );
+        i18nc("@info:whatsthis",
+              "Check this box if you want to export the contact's display name "
+              "in the vCard's full name field.  This may be required to get the "
+              "name shown correctly in GMail or Android."));
+    layout->addWidget(mDisplayNameBox, 5, 0, 1, 2);
 
-    KConfig config( QLatin1String("kaddressbookrc") );
-    const KConfigGroup group( &config, "XXPortVCard" );
+    KConfig config(QLatin1String("kaddressbookrc"));
+    const KConfigGroup group(&config, "XXPortVCard");
 
-    mPrivateBox->setChecked( group.readEntry( "ExportPrivateFields", true ) );
-    mBusinessBox->setChecked( group.readEntry( "ExportBusinessFields", true ) );
-    mOtherBox->setChecked( group.readEntry( "ExportOtherFields", true ) );
-    mEncryptionKeys->setChecked( group.readEntry( "ExportEncryptionKeys", true ) );
-    mPictureBox->setChecked( group.readEntry( "ExportPictureFields", true ) );
-    mDisplayNameBox->setChecked( group.readEntry( "ExportDisplayName", false ) );
+    mPrivateBox->setChecked(group.readEntry("ExportPrivateFields", true));
+    mBusinessBox->setChecked(group.readEntry("ExportBusinessFields", true));
+    mOtherBox->setChecked(group.readEntry("ExportOtherFields", true));
+    mEncryptionKeys->setChecked(group.readEntry("ExportEncryptionKeys", true));
+    mPictureBox->setChecked(group.readEntry("ExportPictureFields", true));
+    mDisplayNameBox->setChecked(group.readEntry("ExportDisplayName", false));
 
 }
 
 VCardExportSelectionWidget::~VCardExportSelectionWidget()
 {
-    KConfig config( QLatin1String("kaddressbookrc") );
-    KConfigGroup group( &config, "XXPortVCard" );
+    KConfig config(QLatin1String("kaddressbookrc"));
+    KConfigGroup group(&config, "XXPortVCard");
 
-    group.writeEntry( "ExportPrivateFields", mPrivateBox->isChecked() );
-    group.writeEntry( "ExportBusinessFields", mBusinessBox->isChecked() );
-    group.writeEntry( "ExportOtherFields", mOtherBox->isChecked() );
-    group.writeEntry( "ExportEncryptionKeys", mEncryptionKeys->isChecked() );
-    group.writeEntry( "ExportPictureFields", mPictureBox->isChecked() );
-    group.writeEntry( "ExportDisplayName", mDisplayNameBox->isChecked() );
+    group.writeEntry("ExportPrivateFields", mPrivateBox->isChecked());
+    group.writeEntry("ExportBusinessFields", mBusinessBox->isChecked());
+    group.writeEntry("ExportOtherFields", mOtherBox->isChecked());
+    group.writeEntry("ExportEncryptionKeys", mEncryptionKeys->isChecked());
+    group.writeEntry("ExportPictureFields", mPictureBox->isChecked());
+    group.writeEntry("ExportDisplayName", mDisplayNameBox->isChecked());
 }
 
 VCardExportSelectionWidget::ExportFields VCardExportSelectionWidget::exportType() const

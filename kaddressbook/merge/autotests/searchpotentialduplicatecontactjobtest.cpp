@@ -79,8 +79,8 @@ void SearchPotentialDuplicateContactJobTest::shouldReturnListWhenThreeItemsAreDu
     Akonadi::Item itemA;
     KContacts::Addressee address;
     address.setName(QLatin1String("foo1"));
-    itemA.setPayload<KContacts::Addressee>( address );
-    itemA.setMimeType( KContacts::Addressee::mimeType() );
+    itemA.setPayload<KContacts::Addressee>(address);
+    itemA.setMimeType(KContacts::Addressee::mimeType());
 
     lst << itemA << itemA << itemA;
 
@@ -98,15 +98,15 @@ void SearchPotentialDuplicateContactJobTest::shouldReturnTwoList()
     Akonadi::Item item;
     KContacts::Addressee addressA;
     addressA.setName(QLatin1String("foo1"));
-    item.setPayload<KContacts::Addressee>( addressA );
-    item.setMimeType( KContacts::Addressee::mimeType() );
+    item.setPayload<KContacts::Addressee>(addressA);
+    item.setMimeType(KContacts::Addressee::mimeType());
 
     lst << item << item << item;
 
     KContacts::Addressee addressB;
     addressB.setName(QLatin1String("foo2"));
-    item.setPayload<KContacts::Addressee>( addressB );
-    item.setMimeType( KContacts::Addressee::mimeType() );
+    item.setPayload<KContacts::Addressee>(addressB);
+    item.setMimeType(KContacts::Addressee::mimeType());
 
     lst << item << item << item;
 
@@ -126,15 +126,15 @@ void SearchPotentialDuplicateContactJobTest::shouldReturnList_data()
     Akonadi::Item itemA;
     KContacts::Addressee addressA;
     addressA.setName(QLatin1String("foo1"));
-    itemA.setPayload<KContacts::Addressee>( addressA );
-    itemA.setMimeType( KContacts::Addressee::mimeType() );
+    itemA.setPayload<KContacts::Addressee>(addressA);
+    itemA.setMimeType(KContacts::Addressee::mimeType());
 
     Akonadi::Item itemB;
 
     KContacts::Addressee addressB;
     addressB.setName(QLatin1String("foo2"));
-    itemB.setPayload<KContacts::Addressee>( addressB );
-    itemB.setMimeType( KContacts::Addressee::mimeType() );
+    itemB.setPayload<KContacts::Addressee>(addressB);
+    itemB.setMimeType(KContacts::Addressee::mimeType());
 
     Akonadi::Item::List lst;
     lst << itemA;
@@ -160,23 +160,23 @@ void SearchPotentialDuplicateContactJobTest::shouldReturnList_data()
 
     KContacts::Addressee addressC;
     addressC.setName(QLatin1String("foo3"));
-    itemC.setPayload<KContacts::Addressee>( addressC );
-    itemC.setMimeType( KContacts::Addressee::mimeType() );
+    itemC.setPayload<KContacts::Addressee>(addressC);
+    itemC.setMimeType(KContacts::Addressee::mimeType());
 
     lst.clear();
-    lst << itemB << itemC <<itemA << itemA << itemB << itemC;
+    lst << itemB << itemC << itemA << itemA << itemB << itemC;
     QTest::newRow("threeDuplicate") <<  lst << 3;
 
     lst.clear();
-    lst << itemB << itemC <<itemA;
+    lst << itemB << itemC << itemA;
     QTest::newRow("threeDifferent") <<  lst << 0;
 
 }
 
 void SearchPotentialDuplicateContactJobTest::shouldReturnList()
 {
-    QFETCH( Akonadi::Item::List, listItem );
-    QFETCH( int, numberOfList );
+    QFETCH(Akonadi::Item::List, listItem);
+    QFETCH(int, numberOfList);
 
     SearchPotentialDuplicateContactJob job(listItem);
     QSignalSpy spy(&job, SIGNAL(finished(QList<Akonadi::Item::List>)));

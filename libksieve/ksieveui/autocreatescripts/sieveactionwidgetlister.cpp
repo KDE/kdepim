@@ -41,7 +41,8 @@ using namespace KSieveUi;
 static int MINIMUMACTION = 1;
 static int MAXIMUMACTION = 8;
 
-namespace {
+namespace
+{
 inline const QString indentation()
 {
     return QLatin1String("    ");

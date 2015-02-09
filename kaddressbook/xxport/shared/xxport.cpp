@@ -33,7 +33,7 @@ KContacts::Addressee::List XXPort::importContacts() const
     return KContacts::Addressee::List();
 }
 
-bool XXPort::exportContacts(const KContacts::Addressee::List & , VCardExportSelectionWidget::ExportFields) const
+bool XXPort::exportContacts(const KContacts::Addressee::List &, VCardExportSelectionWidget::ExportFields) const
 {
     return false;
 }

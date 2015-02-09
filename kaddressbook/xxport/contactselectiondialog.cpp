@@ -48,7 +48,7 @@ ContactSelectionDialog::ContactSelectionDialog(QItemSelectionModel *selectionMod
     QVBoxLayout *layout = new QVBoxLayout;
     mainWidget->setLayout(layout);
 
-    mSelectionWidget = new ContactSelectionWidget( selectionModel, this );
+    mSelectionWidget = new ContactSelectionWidget(selectionModel, this);
     if (allowToSelectTypeToExport) {
         layout->addWidget(mSelectionWidget);
         mVCardExport = new VCardExportSelectionWidget;

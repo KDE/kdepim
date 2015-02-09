@@ -54,7 +54,7 @@ public:
     /**
      * Exports the list of @p contacts.
      */
-    virtual bool exportContacts( const KContacts::Addressee::List &contacts, VCardExportSelectionWidget::ExportFields ) const = 0;
+    virtual bool exportContacts(const KContacts::Addressee::List &contacts, VCardExportSelectionWidget::ExportFields) const = 0;
 
     /**
      * Sets module specific options.

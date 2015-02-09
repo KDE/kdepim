@@ -35,7 +35,8 @@
 #include <QDomElement>
 #include "libksieve_debug.h"
 
-namespace {
+namespace
+{
 inline const QString defaultScriptName()
 {
     return QLatin1String("SCRIPTNAME: ");

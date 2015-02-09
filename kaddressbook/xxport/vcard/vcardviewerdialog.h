@@ -20,7 +20,8 @@
 #include <QDialog>
 #include <KContacts/Addressee>
 
-namespace KAddressBookGrantlee {
+namespace KAddressBookGrantlee
+{
 class GrantleeContactViewer;
 }
 class QPushButton;

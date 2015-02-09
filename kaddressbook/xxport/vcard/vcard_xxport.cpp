@@ -55,13 +55,13 @@ VCardXXPort::VCardXXPort(QWidget *parent)
 {
 }
 
-bool VCardXXPort::exportContacts( const KContacts::Addressee::List &contacts, VCardExportSelectionWidget::ExportFields exportFields) const
+bool VCardXXPort::exportContacts(const KContacts::Addressee::List &contacts, VCardExportSelectionWidget::ExportFields exportFields) const
 {
     KContacts::VCardConverter converter;
     QUrl url;
 
-    const KContacts::Addressee::List list = filterContacts( contacts, exportFields );
-    if ( list.isEmpty() ) { // no contact selected
+    const KContacts::Addressee::List list = filterContacts(contacts, exportFields);
+    if (list.isEmpty()) {   // no contact selected
         return true;
     }
 
@@ -265,7 +265,7 @@ bool VCardXXPort::doExport(const QUrl &url, const QByteArray &data) const
     return KIO::NetAccess::upload(tmpFile.fileName(), newUrl, parentWidget());
 }
 
-KContacts::Addressee::List VCardXXPort::filterContacts( const KContacts::Addressee::List &addrList, VCardExportSelectionWidget::ExportFields exportFieldType ) const
+KContacts::Addressee::List VCardXXPort::filterContacts(const KContacts::Addressee::List &addrList, VCardExportSelectionWidget::ExportFields exportFieldType) const
 {
     KContacts::Addressee::List list;
 
@@ -274,15 +274,15 @@ KContacts::Addressee::List VCardXXPort::filterContacts( const KContacts::Address
     }
 
     KContacts::Addressee::List::ConstIterator it;
-    KContacts::Addressee::List::ConstIterator end( addrList.end() );
-    for ( it = addrList.begin(); it != end; ++it ) {
+    KContacts::Addressee::List::ConstIterator end(addrList.end());
+    for (it = addrList.begin(); it != end; ++it) {
         KContacts::Addressee addr;
 
         addr.setUid((*it).uid());
         addr.setFormattedName((*it).formattedName());
 
         bool addrDone = false;
-        if ( exportFieldType & VCardExportSelectionWidget::DiplayName ) {                // output display name as N field
+        if (exportFieldType & VCardExportSelectionWidget::DiplayName) {                  // output display name as N field
             QString fmtName = (*it).formattedName();
             QStringList splitNames = fmtName.split(QLatin1Char(' '), QString::SkipEmptyParts);
             if (splitNames.count() >= 2) {
@@ -303,47 +303,47 @@ KContacts::Addressee::List VCardXXPort::filterContacts( const KContacts::Address
             addr.setSuffix((*it).suffix());
         }
 
-        addr.setNickName( (*it).nickName() );
-        addr.setMailer( (*it).mailer() );
-        addr.setTimeZone( (*it).timeZone() );
-        addr.setGeo( (*it).geo() );
-        addr.setProductId( (*it).productId() );
-        addr.setSortString( (*it).sortString() );
-        addr.setUrl( (*it).url() );
-        addr.setExtraUrlList( (*it).extraUrlList() );
-        addr.setSecrecy( (*it).secrecy() );
-        addr.setSound( (*it).sound() );
-        addr.setEmailList( (*it).emailList() );
-        addr.setCategories( (*it).categories() );
-        addr.setExtraSoundList( (*it).extraSoundList() );
-        addr.setGender( (*it).gender() );
-        addr.setLangs( (*it).langs() );
-        addr.setKind( (*it).kind() );
-        addr.setMembers( (*it).members() );
-        addr.setRelationShips( (*it).relationShips() );
+        addr.setNickName((*it).nickName());
+        addr.setMailer((*it).mailer());
+        addr.setTimeZone((*it).timeZone());
+        addr.setGeo((*it).geo());
+        addr.setProductId((*it).productId());
+        addr.setSortString((*it).sortString());
+        addr.setUrl((*it).url());
+        addr.setExtraUrlList((*it).extraUrlList());
+        addr.setSecrecy((*it).secrecy());
+        addr.setSound((*it).sound());
+        addr.setEmailList((*it).emailList());
+        addr.setCategories((*it).categories());
+        addr.setExtraSoundList((*it).extraSoundList());
+        addr.setGender((*it).gender());
+        addr.setLangs((*it).langs());
+        addr.setKind((*it).kind());
+        addr.setMembers((*it).members());
+        addr.setRelationShips((*it).relationShips());
 
-        if ( exportFieldType & VCardExportSelectionWidget::Private ) {
-            addr.setBirthday( (*it).birthday() );
-            addr.setNote( (*it).note() );
+        if (exportFieldType & VCardExportSelectionWidget::Private) {
+            addr.setBirthday((*it).birthday());
+            addr.setNote((*it).note());
         }
 
-        if ( exportFieldType & VCardExportSelectionWidget::Picture ) {
-            if ( exportFieldType & VCardExportSelectionWidget::Private ) {
-                addr.setPhoto( (*it).photo() );
-                addr.setExtraPhotoList( (*it).extraPhotoList() );
+        if (exportFieldType & VCardExportSelectionWidget::Picture) {
+            if (exportFieldType & VCardExportSelectionWidget::Private) {
+                addr.setPhoto((*it).photo());
+                addr.setExtraPhotoList((*it).extraPhotoList());
             }
 
-            if ( exportFieldType & VCardExportSelectionWidget::Business ) {
-                addr.setLogo( (*it).logo() );
-                addr.setExtraLogoList( (*it).extraLogoList() );
+            if (exportFieldType & VCardExportSelectionWidget::Business) {
+                addr.setLogo((*it).logo());
+                addr.setExtraLogoList((*it).extraLogoList());
             }
         }
 
-        if ( exportFieldType & VCardExportSelectionWidget::Business ) {
-            addr.setTitle( (*it).title() );
-            addr.setRole( (*it).role() );
-            addr.setOrganization( (*it).organization() );
-            addr.setDepartment( (*it).department() );
+        if (exportFieldType & VCardExportSelectionWidget::Business) {
+            addr.setTitle((*it).title());
+            addr.setRole((*it).role());
+            addr.setOrganization((*it).organization());
+            addr.setDepartment((*it).department());
 
             KContacts::PhoneNumber::List phones = (*it).phoneNumbers(KContacts::PhoneNumber::Work);
             KContacts::PhoneNumber::List::Iterator phoneIt;
@@ -360,39 +360,39 @@ KContacts::Addressee::List VCardXXPort::filterContacts( const KContacts::Address
 
         KContacts::PhoneNumber::List phones = (*it).phoneNumbers();
         KContacts::PhoneNumber::List::Iterator phoneIt;
-        for ( phoneIt = phones.begin(); phoneIt != phones.end(); ++phoneIt ) {
+        for (phoneIt = phones.begin(); phoneIt != phones.end(); ++phoneIt) {
             int phoneType = (*phoneIt).type();
 
-            if ( (phoneType & KContacts::PhoneNumber::Home) && (exportFieldType & VCardExportSelectionWidget::Private) ) {
-                addr.insertPhoneNumber( *phoneIt );
-            } else if ( (phoneType & KContacts::PhoneNumber::Work) && (exportFieldType & VCardExportSelectionWidget::Business) ) {
-                addr.insertPhoneNumber( *phoneIt );
-            } else if ( (exportFieldType & VCardExportSelectionWidget::Other) ) {
-                addr.insertPhoneNumber( *phoneIt );
+            if ((phoneType & KContacts::PhoneNumber::Home) && (exportFieldType & VCardExportSelectionWidget::Private)) {
+                addr.insertPhoneNumber(*phoneIt);
+            } else if ((phoneType & KContacts::PhoneNumber::Work) && (exportFieldType & VCardExportSelectionWidget::Business)) {
+                addr.insertPhoneNumber(*phoneIt);
+            } else if ((exportFieldType & VCardExportSelectionWidget::Other)) {
+                addr.insertPhoneNumber(*phoneIt);
             }
         }
 
         KContacts::Address::List addresses = (*it).addresses();
         KContacts::Address::List::Iterator addrIt;
-        for ( addrIt = addresses.begin(); addrIt != addresses.end(); ++addrIt ) {
+        for (addrIt = addresses.begin(); addrIt != addresses.end(); ++addrIt) {
             int addressType = (*addrIt).type();
 
-            if ( (addressType & KContacts::Address::Home) && exportFieldType & VCardExportSelectionWidget::Private ) {
-                addr.insertAddress( *addrIt );
-            } else if ( (addressType & KContacts::Address::Work) && (exportFieldType & VCardExportSelectionWidget::Business) ) {
-                addr.insertAddress( *addrIt );
-            } else if ( exportFieldType & VCardExportSelectionWidget::Other ) {
-                addr.insertAddress( *addrIt );
+            if ((addressType & KContacts::Address::Home) && exportFieldType & VCardExportSelectionWidget::Private) {
+                addr.insertAddress(*addrIt);
+            } else if ((addressType & KContacts::Address::Work) && (exportFieldType & VCardExportSelectionWidget::Business)) {
+                addr.insertAddress(*addrIt);
+            } else if (exportFieldType & VCardExportSelectionWidget::Other) {
+                addr.insertAddress(*addrIt);
             }
         }
 
-        if ( exportFieldType & VCardExportSelectionWidget::Other ) {
-            addr.setCustoms( (*it).customs() );
+        if (exportFieldType & VCardExportSelectionWidget::Other) {
+            addr.setCustoms((*it).customs());
         }
 
-        if ( exportFieldType & VCardExportSelectionWidget::Encryption ) {
-            addKey( addr, KContacts::Key::PGP );
-            addKey( addr, KContacts::Key::X509 );
+        if (exportFieldType & VCardExportSelectionWidget::Encryption) {
+            addKey(addr, KContacts::Key::PGP);
+            addKey(addr, KContacts::Key::X509);
         }
 
         list.append(addr);

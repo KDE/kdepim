@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "vcardviewerdialog.h"
 #include <KLocalizedString>
 #include <KStandardGuiItem>

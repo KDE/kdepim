@@ -341,7 +341,7 @@ KContacts::Addressee::List GMXXXPort::importContacts() const
 
 /* export */
 
-bool GMXXXPort::exportContacts( const KContacts::AddresseeList &list, VCardExportSelectionWidget::ExportFields ) const
+bool GMXXXPort::exportContacts(const KContacts::AddresseeList &list, VCardExportSelectionWidget::ExportFields) const
 {
     QUrl url = KFileDialog::getSaveUrl(QUrl::fromLocalFile(QDir::homePath() + QLatin1String("/addressbook.gmx")), GMX_FILESELECTION_STRING);
     if (url.isEmpty()) {
