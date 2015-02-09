@@ -23,7 +23,7 @@
 #include "globalcontactmodel.h"
 #include "modelcolumnmanager.h"
 #include "printing/printingwizard.h"
-#include "merge/mergecontactsdialog.h"
+#include "merge/manualmerge/mergecontactsdialog.h"
 #include "merge/searchduplicate/searchandmergecontactduplicatecontactdialog.h"
 #include "quicksearchwidget.h"
 #include "settings.h"

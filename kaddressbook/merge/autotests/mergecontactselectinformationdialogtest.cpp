@@ -17,8 +17,10 @@
 
 #include "mergecontactselectinformationdialogtest.h"
 #include "mergecontactselectinformationdialog.h"
-#include "mergecontactshowresulttabwidget.h"
 #include <qtest.h>
+#include "widgets/mergecontactshowresulttabwidget.h"
+
+#include <QTabWidget>
 
 using namespace KABMergeContacts;
 

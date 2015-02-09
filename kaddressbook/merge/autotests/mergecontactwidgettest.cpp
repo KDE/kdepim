@@ -17,9 +17,9 @@
 
 #include "mergecontactwidgettest.h"
 #include <AkonadiCore/Item>
-#include "../mergecontactwidget.h"
 #include <KContacts/Addressee>
 #include <AkonadiCore/EntityTreeModel>
+#include "../manualmerge/mergecontactwidget.h"
 
 #include <qtest.h>
 #include <qtestmouse.h>

@@ -16,7 +16,7 @@
 */
 
 #include "mergecontactselectinformationdialog.h"
-#include "mergecontactshowresulttabwidget.h"
+#include "widgets/mergecontactshowresulttabwidget.h"
 
 #include <KLocalizedString>
 #include <QDialogButtonBox>

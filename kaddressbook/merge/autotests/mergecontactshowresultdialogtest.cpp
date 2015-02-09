@@ -17,10 +17,10 @@
 
 #include "mergecontactshowresultdialogtest.h"
 #include "mergecontactshowresultdialog.h"
-#include "mergecontactshowresulttabwidget.h"
 #include <qtest.h>
 #include <AkonadiCore/Item>
 #include <KContacts/Addressee>
+#include "../widgets/mergecontactshowresulttabwidget.h"
 
 using namespace KABMergeContacts;
 

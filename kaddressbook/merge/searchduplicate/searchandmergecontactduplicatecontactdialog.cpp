@@ -18,7 +18,7 @@
 #include "searchandmergecontactduplicatecontactdialog.h"
 
 #include "merge/searchduplicate/searchduplicateresultwidget.h"
-#include "merge/mergecontactshowresulttabwidget.h"
+#include "merge/widgets/mergecontactshowresulttabwidget.h"
 #include "merge/job/searchpotentialduplicatecontactjob.h"
 
 #include <KLocalizedString>
