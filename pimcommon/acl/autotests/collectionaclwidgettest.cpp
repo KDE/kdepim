@@ -19,7 +19,7 @@
 #include "../collectionaclwidget.h"
 #include <qlistview.h>
 #include <QPushButton>
-#include <qtest_kde.h>
+#include <qtest.h>
 
 CollectionAclWidgetTest::CollectionAclWidgetTest(QObject *parent)
     : QObject(parent)
@@ -46,4 +46,4 @@ void CollectionAclWidgetTest::shouldHaveDefaultValue()
     QVERIFY(button);
 }
 
-QTEST_KDEMAIN(CollectionAclWidgetTest, GUI)
+QTEST_MAIN(CollectionAclWidgetTest)

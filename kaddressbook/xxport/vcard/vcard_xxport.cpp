@@ -37,6 +37,7 @@
 
 #include "kaddressbook_debug.h"
 #include <QDialog>
+#include <QFileDialog>
 #include <KFileDialog>
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -95,7 +96,7 @@ bool VCardXXPort::exportContacts(const KContacts::Addressee::List &contacts) con
 
         switch (answer) {
         case KMessageBox::No: {
-            const QUrl baseUrl = KFileDialog::getExistingDirectoryUrl();
+            const QUrl baseUrl = QFileDialog::getExistingDirectoryUrl();
             if (baseUrl.isEmpty()) {
                 return true; // user canceled export
             }
