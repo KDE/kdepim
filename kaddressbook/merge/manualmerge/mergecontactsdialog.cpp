@@ -17,11 +17,11 @@
 
 #include "mergecontactsdialog.h"
 #include "utils.h"
-#include "util/mergecontactutil.h"
-#include "mergecontactwidget.h"
-#include "mergecontactinfowidget.h"
+#include "merge/util/mergecontactutil.h"
+#include "merge/mergecontactwidget.h"
+#include "merge/mergecontactinfowidget.h"
 #include "merge/job/mergecontactsjob.h"
-#include "mergecontactshowresultdialog.h"
+#include "merge/mergecontactshowresultdialog.h"
 
 #include <Akonadi/Item>
 

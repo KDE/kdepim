@@ -87,7 +87,7 @@ set(kaddressbook_merge_SRCS
    merge/job/searchpotentialduplicatecontactjob.cpp
    merge/job/mergecontactsjob.cpp
    merge/job/mergecontacts.cpp
-   merge/mergecontactsdialog.cpp
+   merge/manualmerge/mergecontactsdialog.cpp
    merge/mergecontactwidget.cpp
    merge/util/mergecontactutil.cpp
    merge/mergecontactinfowidget.cpp
