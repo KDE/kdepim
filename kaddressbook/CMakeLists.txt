@@ -80,6 +80,7 @@ set(kaddressbook_xxport_SRCS
   xxport/xxportfactory.cpp
   xxport/xxportmanager.cpp
   xxport/vcard/vcardviewerdialog.cpp
+  xxport/vcard/vcardexportselectiondialog.cpp
 )
 
 set(kaddressbook_merge_SRCS
