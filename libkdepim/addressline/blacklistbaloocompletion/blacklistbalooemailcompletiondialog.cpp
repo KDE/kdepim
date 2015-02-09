@@ -26,21 +26,33 @@
 #include <QLabel>
 #include <QPushButton>
 #include <KSharedConfig>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
 
 using namespace KPIM;
 
 BlackListBalooEmailCompletionDialog::BlackListBalooEmailCompletionDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption(i18n("Blacklist Baloo Completion"));
-    setButtons(Ok | Cancel);
-    setDefaultButton(Ok);
-    setModal(true);
+    setWindowTitle(i18n("Blacklist Baloo Completion"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+    okButton->setDefault(true);
     mBlackListWidget = new BlackListBalooEmailCompletionWidget(this);
     mBlackListWidget->setObjectName(QLatin1String("blacklistwidget"));
-    setMainWidget(mBlackListWidget);
+    mainLayout->addWidget(mBlackListWidget);
 
-    connect(this, SIGNAL(okClicked()), this, SLOT(slotSave()));
+    mainLayout->addWidget(buttonBox);
+
+    setModal(true);
+    connect(okButton, &QAbstractButton::clicked, this, &BlackListBalooEmailCompletionDialog::slotSave);
     readConfig();
 }
 

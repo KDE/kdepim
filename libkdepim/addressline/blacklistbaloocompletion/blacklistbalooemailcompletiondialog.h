@@ -21,12 +21,12 @@
 #ifndef BLACKLISTBALOOEMAILCOMPLETIONDIALOG_H
 #define BLACKLISTBALOOEMAILCOMPLETIONDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 #include "kdepim_export.h"
 namespace KPIM
 {
 class BlackListBalooEmailCompletionWidget;
-class KDEPIM_EXPORT BlackListBalooEmailCompletionDialog : public KDialog
+class KDEPIM_EXPORT BlackListBalooEmailCompletionDialog : public QDialog
 {
     Q_OBJECT
 public:
