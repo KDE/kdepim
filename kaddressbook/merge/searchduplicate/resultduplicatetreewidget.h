@@ -47,7 +47,7 @@ class KADDRESSBOOK_EXPORT ResultDuplicateTreeWidget : public QTreeWidget
 {
     Q_OBJECT
 public:
-    explicit ResultDuplicateTreeWidget(QWidget *parent = 0);
+    explicit ResultDuplicateTreeWidget(QWidget *parent = Q_NULLPTR);
     ~ResultDuplicateTreeWidget();
     void setContacts(const QList<Akonadi::Item::List> &lstItem);
 

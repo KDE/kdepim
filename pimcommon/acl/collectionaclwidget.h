@@ -26,7 +26,7 @@ class CollectionAclWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit CollectionAclWidget(QWidget *parent = 0);
+    explicit CollectionAclWidget(QWidget *parent = Q_NULLPTR);
     ~CollectionAclWidget();
 
     PimCommon::AclManager *aclManager() const;

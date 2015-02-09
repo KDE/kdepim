@@ -47,7 +47,7 @@ public:
      * @param selectionModel The model that contains the currently selected contacts.
      * @param parent The parent widget.
      */
-    explicit ContactSelectionDialog(QItemSelectionModel *selectionModel, bool allowToSelectTypeToExport, QWidget *parent = 0);
+    explicit ContactSelectionDialog(QItemSelectionModel *selectionModel, bool allowToSelectTypeToExport, QWidget *parent = Q_NULLPTR);
 
     /**
      * Sets the @p message text.

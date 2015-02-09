@@ -38,7 +38,7 @@ class KADDRESSBOOK_EXPORT SearchDuplicateResultWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SearchDuplicateResultWidget(QWidget *parent = 0);
+    explicit SearchDuplicateResultWidget(QWidget *parent = Q_NULLPTR);
     ~SearchDuplicateResultWidget();
     void setContacts(const QList<Akonadi::Item::List> &lstItem);
 
