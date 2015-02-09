@@ -18,10 +18,10 @@
 #ifndef VCARDEXPORTSELECTIONDIALOG_H
 #define VCARDEXPORTSELECTIONDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 class QCheckBox;
 
-class VCardExportSelectionDialog : public KDialog
+class VCardExportSelectionDialog : public QDialog
 {
 public:
     VCardExportSelectionDialog( QWidget *parent );
