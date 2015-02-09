@@ -16,7 +16,7 @@
 */
 
 #include "mergecontactshowresultdialog.h"
-#include "mergecontactshowresulttabwidget.h"
+#include "widgets/mergecontactshowresulttabwidget.h"
 #include "mergecontactinfowidget.h"
 
 #include <KABC/Addressee>

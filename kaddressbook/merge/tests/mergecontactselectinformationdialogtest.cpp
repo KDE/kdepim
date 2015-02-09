@@ -17,7 +17,7 @@
 
 #include "mergecontactselectinformationdialogtest.h"
 #include "mergecontactselectinformationdialog.h"
-#include "mergecontactshowresulttabwidget.h"
+#include "widgets/mergecontactshowresulttabwidget.h"
 #include <qtest_kde.h>
 
 #include <QTabWidget>
