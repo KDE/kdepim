@@ -143,11 +143,25 @@ void ManageSieveWidget::slotContextMenuRequested( const QPoint& p )
         }
     } else if ( !item->parent() ) {
         // top-levels:
-        if ( !serverHasError(item) && mJobs.keys(item).isEmpty())
+        if ( !serverHasError(item) && mJobs.keys(item).isEmpty()) {
             menu.addAction( i18n( "New Script..." ), this, SLOT(slotNewScript()) );
+        } else if (!mJobs.keys(item).isEmpty()) { //In Progress
+            menu.addAction( KStandardGuiItem::cancel().text(), this, SLOT(slotCancelFetch()) );
+        }
     }
     if ( !menu.actions().isEmpty() )
         menu.exec( mTreeView->viewport()->mapToGlobal(p) );
+}
+
+void ManageSieveWidget::slotCancelFetch()
+{
+    QTreeWidgetItem * item = mTreeView->currentItem();
+    if (item) {
+        const QList<KManageSieve::SieveJob *>jobs = mJobs.keys(item);
+        Q_FOREACH(KManageSieve::SieveJob *job, jobs ) {
+            job->kill();
+        }
+    }
 }
 
 void ManageSieveWidget::slotNewScript()

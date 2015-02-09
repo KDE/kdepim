@@ -67,6 +67,7 @@ private Q_SLOTS:
     void slotSystemNetworkStatusChanged(Solid::Networking::Status status);
     void slotCheckNetworkStatus();
 
+    void slotCancelFetch();
 public Q_SLOTS:
     void slotGotList(KManageSieve::SieveJob *job, bool success, const QStringList &listScript, const QString &activeScript);
     void slotNewScript();
