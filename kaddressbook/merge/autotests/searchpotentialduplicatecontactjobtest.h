@@ -29,6 +29,10 @@ private Q_SLOTS:
     void shouldReturnEmptyListWhenNoItem();
     void shouldReturnEmptyListWhenOneItem();
     void shouldReturnListWhenTwoItemsAreDuplicated();
+    void shouldReturnListWhenThreeItemsAreDuplicated();
+    void shouldReturnTwoList();
+    void shouldReturnList_data();
+    void shouldReturnList();
 };
 
 #endif // SEARCHPOTENTIALDUPLICATECONTACTJOBTEST_H

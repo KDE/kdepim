@@ -56,10 +56,11 @@ Akonadi::Item::List SearchPotentialDuplicateContactJob::checkList(const Akonadi:
         Akonadi::Item firstItem = lstItem.at(0);
         const int numberOfItems(lstItem.count());
         for (int j = 1; j < numberOfItems; ++j) {
-            if (isDuplicate(firstItem, mListItem.at(j))) {
-                lst.append(lstItem.at(j));
+            const Akonadi::Item nextItem = lstItem.at(j);
+            if (isDuplicate(firstItem, nextItem)) {
+                lst.append(nextItem);
             } else {
-                notDuplicate.append(lstItem.at(j));
+                notDuplicate.append(nextItem);
             }
         }
         if (!lst.isEmpty()) {

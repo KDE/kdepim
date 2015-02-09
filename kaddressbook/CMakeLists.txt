@@ -72,6 +72,7 @@ set(kaddressbook_xxport_SRCS
   xxport/vcard/vcard_xxport.cpp
   xxport/xxportfactory.cpp
   xxport/xxportmanager.cpp
+  xxport/vcard/vcardviewerdialog.cpp
 )
 
 set(kaddressbook_merge_SRCS
