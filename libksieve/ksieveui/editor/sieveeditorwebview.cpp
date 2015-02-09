@@ -17,13 +17,13 @@
 
 #include "sieveeditorwebview.h"
 #include <QMenu>
-#include <QWebPage>
+#include <QWebEnginePage>
 #include <QContextMenuEvent>
 
 using namespace KSieveUi;
 
 SieveEditorWebView::SieveEditorWebView(QWidget *parent)
-    : QWebView(parent)
+    : QWebEngineView(parent)
 {
 }
 
@@ -34,22 +34,11 @@ SieveEditorWebView::~SieveEditorWebView()
 void SieveEditorWebView::contextMenuEvent(QContextMenuEvent *ev)
 {
     QMenu menu;
-    QAction *act = pageAction(QWebPage::Back);
+    QAction *act = pageAction(QWebEnginePage::Back);
     if (act->isEnabled()) {
         menu.addAction(act);
     }
-    act = pageAction(QWebPage::Forward);
-    if (act->isEnabled()) {
-        menu.addAction(act);
-    }
-
-    if (menu.actions().count() > 0) {
-        QAction *separator = new QAction(&menu);
-        separator->setSeparator(true);
-        menu.addAction(separator);
-    }
-
-    act = pageAction(QWebPage::CopyLinkToClipboard);
+    act = pageAction(QWebEnginePage::Forward);
     if (act->isEnabled()) {
         menu.addAction(act);
     }
@@ -59,7 +48,18 @@ void SieveEditorWebView::contextMenuEvent(QContextMenuEvent *ev)
         separator->setSeparator(true);
         menu.addAction(separator);
     }
-    act = pageAction(QWebPage::Reload);
+
+    act = pageAction(QWebEnginePage::Copy);
+    if (act->isEnabled()) {
+        menu.addAction(act);
+    }
+
+    if (menu.actions().count() > 0) {
+        QAction *separator = new QAction(&menu);
+        separator->setSeparator(true);
+        menu.addAction(separator);
+    }
+    act = pageAction(QWebEnginePage::Reload);
     if (act->isEnabled()) {
         menu.addAction(act);
     }

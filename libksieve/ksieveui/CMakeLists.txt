@@ -185,6 +185,7 @@ target_link_libraries(ksieveui
   KF5::KIOCore
   KF5::MailTransport
   KF5::NewStuff
+  Qt5::WebEngineWidgets
 )
 
 set_target_properties(
