@@ -40,6 +40,7 @@ void SieveEditorUtilTest::shouldHaveDefaultValue()
     QVERIFY(config.serverName.isEmpty());
     QCOMPARE(config.authenticationType, MailTransport::Transport::EnumAuthenticationType::PLAIN);
     QCOMPARE(config.port, -1);
+    QVERIFY(config.enabled);
 }
 
 QTEST_KDEMAIN(SieveEditorUtilTest, NoGUI)

@@ -25,11 +25,15 @@
 #include <KUrl>
 #include <mailtransport/transport.h>
 
+namespace KWallet {
+class Wallet;
+}
 namespace SieveEditorUtil {
 struct SieveServerConfig {
     SieveServerConfig()
         : authenticationType(MailTransport::Transport::EnumAuthenticationType::PLAIN),
-          port(-1)
+          port(-1),
+          enabled(true)
     {
 
     }
@@ -41,11 +45,13 @@ struct SieveServerConfig {
     QString serverName;
     MailTransport::Transport::EnumAuthenticationType::type authenticationType;
     int port;
+    bool enabled;
 };
 
 QList<SieveServerConfig> readServerSieveConfig();
 void writeServerSieveConfig(const QList<SieveEditorUtil::SieveServerConfig> &lstConfig);
 void addServerSieveConfig(const SieveEditorUtil::SieveServerConfig &conf);
+void writeSieveSettings(KWallet::Wallet *wallet, KSharedConfigPtr cfg, const SieveEditorUtil::SieveServerConfig &conf, int index);
 }
 
 #endif // SIEVEEDITORUTIL_H

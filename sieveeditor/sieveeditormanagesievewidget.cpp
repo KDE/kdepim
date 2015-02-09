@@ -57,6 +57,10 @@ bool SieveEditorManageSieveWidget::refreshList()
             item->setText( 0, i18n( "No Sieve URL configured" ) );
             item->setFlags( item->flags() & ~Qt::ItemIsEnabled );
             treeView()->expandItem( last );
+        } else if (!conf.enabled) {
+            last->setFlags( last->flags() & ~Qt::ItemIsEnabled );
+            // kf5 add i18n
+            last->setText(0, QLatin1String("(Disabled) ")  + last->text(0) );
         } else {
             KManageSieve::SieveJob * job = KManageSieve::SieveJob::list( u );
             connect( job, SIGNAL(gotList(KManageSieve::SieveJob*,bool,QStringList,QString)),
