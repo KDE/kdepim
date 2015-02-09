@@ -30,6 +30,11 @@ public:
     MergeContacts(const Akonadi::Item::List &items = Akonadi::Item::List());
     ~MergeContacts();
 
+    enum ManualInformation {
+        None = 0,
+        Birthday = 1
+    };
+
     KABC::Addressee mergedContact();
 
     bool needManualSelectInformations();

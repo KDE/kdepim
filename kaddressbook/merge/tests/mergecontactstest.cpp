@@ -21,7 +21,7 @@
 #include <qtest_kde.h>
 
 using namespace KABMergeContacts;
-
+using namespace KABC;
 MergeContactsTest::MergeContactsTest()
 {
 }
@@ -47,14 +47,14 @@ void MergeContactsTest::shouldReturnDefaultAddressWhenOneItem()
     QCOMPARE(result.isEmpty(), true);
 }
 
-void MergeContactsTest::noNneedManualSelectionCheckWhenEmptyList()
+void MergeContactsTest::noNeedManualSelectionCheckWhenEmptyList()
 {
     MergeContacts contacts;
     const bool result = contacts.needManualSelectInformations();
     QCOMPARE(result, false);
 }
 
-void MergeContactsTest::noNneedManualSelectionCheckWhenOneItem()
+void MergeContactsTest::noNeedManualSelectionCheckWhenOneItem()
 {
     Akonadi::Item::List lst;
     KABC::Addressee address;
@@ -65,6 +65,55 @@ void MergeContactsTest::noNneedManualSelectionCheckWhenOneItem()
     MergeContacts contacts(lst);
     const bool result = contacts.needManualSelectInformations();
     QCOMPARE(result, false);
+}
+
+void MergeContactsTest::shouldMergeNotes_data()
+{
+    QTest::addColumn<QString>("noteItemA");
+    QTest::addColumn<QString>("noteItemB");
+    QTest::addColumn<QString>("noteItemC");
+    QTest::addColumn<QString>("note");
+    QTest::newRow("noNotes") <<  QString() << QString() << QString() << QString();
+    QTest::newRow("oneNotes") <<  QString(QLatin1String("one")) << QString() << QString() << QString(QLatin1String("one"));
+    QTest::newRow("twoNotes") <<  QString() << QString(QLatin1String("one")) << QString(QLatin1String("one")) << QString(QLatin1String("one\none"));
+    QTest::newRow("threeNotes") <<  QString(QLatin1String("one")) << QString(QLatin1String("one")) << QString(QLatin1String("one")) << QString(QLatin1String("one\none\none"));
+}
+
+void MergeContactsTest::shouldMergeNotes()
+{
+    QFETCH( QString, noteItemA );
+    QFETCH( QString, noteItemB );
+    QFETCH( QString, noteItemC );
+    QFETCH( QString, note );
+
+    Akonadi::Item::List lst;
+    Addressee addressA;
+    Akonadi::Item itemA;
+    addressA.setName(QLatin1String("foo1"));
+    addressA.setNote(noteItemA);
+    itemA.setPayload<KABC::Addressee>( addressA );
+    lst<<itemA;
+
+    Addressee addressB;
+    Akonadi::Item itemB;
+    addressB.setName(QLatin1String("foo1"));
+    addressB.setNote(noteItemB);
+    itemB.setPayload<KABC::Addressee>( addressB );
+    lst<<itemB;
+
+    Addressee addressC;
+    Akonadi::Item itemC;
+    addressC.setName(QLatin1String("foo1"));
+    addressC.setNote(noteItemC);
+    itemC.setPayload<KABC::Addressee>( addressC );
+    lst<<itemC;
+
+
+    MergeContacts contacts(lst);
+
+    const Addressee result = contacts.mergedContact();
+    QCOMPARE(result.note(), note);
+
 }
 
 
