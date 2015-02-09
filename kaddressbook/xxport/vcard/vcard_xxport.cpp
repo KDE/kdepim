@@ -20,6 +20,7 @@
 #include "vcard_xxport.h"
 
 #include "vcardviewerdialog.h"
+#include "vcardexportselectiondialog.h"
 
 #include "pimcommon/widgets/renamefiledialog.h"
 
@@ -47,39 +48,6 @@
 
 #include <QtCore/QFile>
 #include <QtCore/QPointer>
-#include <QCheckBox>
-#include <QFont>
-#include <QFrame>
-#include <QLabel>
-#include <QVBoxLayout>
-#include <QGroupBox>
-#include <KConfigGroup>
-#include <QDialogButtonBox>
-#include <QPushButton>
-#include <KGuiItem>
-
-
-class VCardExportSelectionDialog : public QDialog
-{
-public:
-    VCardExportSelectionDialog(QWidget *parent);
-    ~VCardExportSelectionDialog();
-
-    bool exportPrivateFields() const;
-    bool exportBusinessFields() const;
-    bool exportOtherFields() const;
-    bool exportEncryptionKeys() const;
-    bool exportPictureFields() const;
-    bool exportDisplayName() const;
-
-private:
-    QCheckBox *mPrivateBox;
-    QCheckBox *mBusinessBox;
-    QCheckBox *mOtherBox;
-    QCheckBox *mEncryptionKeys;
-    QCheckBox *mPictureBox;
-    QCheckBox *mDisplayNameBox;
-};
 
 VCardXXPort::VCardXXPort(QWidget *parent)
     : XXPort(parent)
@@ -309,17 +277,17 @@ KContacts::Addressee::List VCardXXPort::filterContacts(const KContacts::Addresse
         delete dlg;
         return list;
     }
-
+    VCardExportSelectionDialog::ExportFields exportFieldType = dlg->exportType();
     KContacts::Addressee::List::ConstIterator it;
-    KContacts::Addressee::List::ConstIterator end(addrList.end());
-    for (it = addrList.begin(); it != end; ++it) {
+    KContacts::Addressee::List::ConstIterator end( addrList.end() );
+    for ( it = addrList.begin(); it != end; ++it ) {
         KContacts::Addressee addr;
 
         addr.setUid((*it).uid());
         addr.setFormattedName((*it).formattedName());
 
         bool addrDone = false;
-        if (dlg->exportDisplayName()) {                  // output display name as N field
+        if ( exportFieldType & VCardExportSelectionDialog::DiplayName ) {                // output display name as N field
             QString fmtName = (*it).formattedName();
             QStringList splitNames = fmtName.split(QLatin1Char(' '), QString::SkipEmptyParts);
             if (splitNames.count() >= 2) {
@@ -340,47 +308,47 @@ KContacts::Addressee::List VCardXXPort::filterContacts(const KContacts::Addresse
             addr.setSuffix((*it).suffix());
         }
 
-        addr.setNickName((*it).nickName());
-        addr.setMailer((*it).mailer());
-        addr.setTimeZone((*it).timeZone());
-        addr.setGeo((*it).geo());
-        addr.setProductId((*it).productId());
-        addr.setSortString((*it).sortString());
-        addr.setUrl((*it).url());
-        addr.setExtraUrlList((*it).extraUrlList());
-        addr.setSecrecy((*it).secrecy());
-        addr.setSound((*it).sound());
-        addr.setEmails((*it).emails());
-        addr.setCategories((*it).categories());
-        addr.setExtraSoundList((*it).extraSoundList());
-        addr.setGender((*it).gender());
-        addr.setLangs((*it).langs());
-        addr.setKind((*it).kind());
-        addr.setMembers((*it).members());
-        addr.setRelationShips((*it).relationShips());
+        addr.setNickName( (*it).nickName() );
+        addr.setMailer( (*it).mailer() );
+        addr.setTimeZone( (*it).timeZone() );
+        addr.setGeo( (*it).geo() );
+        addr.setProductId( (*it).productId() );
+        addr.setSortString( (*it).sortString() );
+        addr.setUrl( (*it).url() );
+        addr.setExtraUrlList( (*it).extraUrlList() );
+        addr.setSecrecy( (*it).secrecy() );
+        addr.setSound( (*it).sound() );
+        addr.setEmailList( (*it).emailList() );
+        addr.setCategories( (*it).categories() );
+        addr.setExtraSoundList( (*it).extraSoundList() );
+        addr.setGender( (*it).gender() );
+        addr.setLangs( (*it).langs() );
+        addr.setKind( (*it).kind() );
+        addr.setMembers( (*it).members() );
+        addr.setRelationShips( (*it).relationShips() );
 
-        if (dlg->exportPrivateFields()) {
-            addr.setBirthday((*it).birthday());
-            addr.setNote((*it).note());
+        if ( exportFieldType & VCardExportSelectionDialog::Private ) {
+            addr.setBirthday( (*it).birthday() );
+            addr.setNote( (*it).note() );
         }
 
-        if (dlg->exportPictureFields()) {
-            if (dlg->exportPrivateFields()) {
-                addr.setPhoto((*it).photo());
-                addr.setExtraPhotoList((*it).extraPhotoList());
+        if ( exportFieldType & VCardExportSelectionDialog::Picture ) {
+            if ( exportFieldType & VCardExportSelectionDialog::Private ) {
+                addr.setPhoto( (*it).photo() );
+                addr.setExtraPhotoList( (*it).extraPhotoList() );
             }
 
-            if (dlg->exportBusinessFields()) {
-                addr.setLogo((*it).logo());
-                addr.setExtraLogoList((*it).extraLogoList());
+            if ( exportFieldType & VCardExportSelectionDialog::Business ) {
+                addr.setLogo( (*it).logo() );
+                addr.setExtraLogoList( (*it).extraLogoList() );
             }
         }
 
-        if (dlg->exportBusinessFields()) {
-            addr.setTitle((*it).title());
-            addr.setRole((*it).role());
-            addr.setOrganization((*it).organization());
-            addr.setDepartment((*it).department());
+        if ( exportFieldType & VCardExportSelectionDialog::Business ) {
+            addr.setTitle( (*it).title() );
+            addr.setRole( (*it).role() );
+            addr.setOrganization( (*it).organization() );
+            addr.setDepartment( (*it).department() );
 
             KContacts::PhoneNumber::List phones = (*it).phoneNumbers(KContacts::PhoneNumber::Work);
             KContacts::PhoneNumber::List::Iterator phoneIt;
@@ -397,39 +365,39 @@ KContacts::Addressee::List VCardXXPort::filterContacts(const KContacts::Addresse
 
         KContacts::PhoneNumber::List phones = (*it).phoneNumbers();
         KContacts::PhoneNumber::List::Iterator phoneIt;
-        for (phoneIt = phones.begin(); phoneIt != phones.end(); ++phoneIt) {
-            int type = (*phoneIt).type();
+        for ( phoneIt = phones.begin(); phoneIt != phones.end(); ++phoneIt ) {
+            int phoneType = (*phoneIt).type();
 
-            if (type & KContacts::PhoneNumber::Home && dlg->exportPrivateFields()) {
-                addr.insertPhoneNumber(*phoneIt);
-            } else if (type & KContacts::PhoneNumber::Work && dlg->exportBusinessFields()) {
-                addr.insertPhoneNumber(*phoneIt);
-            } else if (dlg->exportOtherFields()) {
-                addr.insertPhoneNumber(*phoneIt);
+            if ( (phoneType & KContacts::PhoneNumber::Home) && (exportFieldType & VCardExportSelectionDialog::Private) ) {
+                addr.insertPhoneNumber( *phoneIt );
+            } else if ( (phoneType & KContacts::PhoneNumber::Work) && (exportFieldType & VCardExportSelectionDialog::Business) ) {
+                addr.insertPhoneNumber( *phoneIt );
+            } else if ( (exportFieldType & VCardExportSelectionDialog::Other) ) {
+                addr.insertPhoneNumber( *phoneIt );
             }
         }
 
         KContacts::Address::List addresses = (*it).addresses();
         KContacts::Address::List::Iterator addrIt;
-        for (addrIt = addresses.begin(); addrIt != addresses.end(); ++addrIt) {
-            int type = (*addrIt).type();
+        for ( addrIt = addresses.begin(); addrIt != addresses.end(); ++addrIt ) {
+            int addressType = (*addrIt).type();
 
-            if (type & KContacts::Address::Home && dlg->exportPrivateFields()) {
-                addr.insertAddress(*addrIt);
-            } else if (type & KContacts::Address::Work && dlg->exportBusinessFields()) {
-                addr.insertAddress(*addrIt);
-            } else if (dlg->exportOtherFields()) {
-                addr.insertAddress(*addrIt);
+            if ( (addressType & KContacts::Address::Home) && exportFieldType & VCardExportSelectionDialog::Private ) {
+                addr.insertAddress( *addrIt );
+            } else if ( (addressType & KContacts::Address::Work) && (exportFieldType & VCardExportSelectionDialog::Business) ) {
+                addr.insertAddress( *addrIt );
+            } else if ( exportFieldType & VCardExportSelectionDialog::Other ) {
+                addr.insertAddress( *addrIt );
             }
         }
 
-        if (dlg->exportOtherFields()) {
-            addr.setCustoms((*it).customs());
+        if ( exportFieldType & VCardExportSelectionDialog::Other ) {
+            addr.setCustoms( (*it).customs() );
         }
 
-        if (dlg->exportEncryptionKeys()) {
-            addKey(addr, KContacts::Key::PGP);
-            addKey(addr, KContacts::Key::X509);
+        if ( exportFieldType & VCardExportSelectionDialog::Encryption ) {
+            addKey( addr, KContacts::Key::PGP );
+            addKey( addr, KContacts::Key::X509 );
         }
 
         list.append(addr);
@@ -478,150 +446,3 @@ void VCardXXPort::addKey(KContacts::Addressee &addr, KContacts::Key::Type type) 
 #endif
 }
 
-// ---------- VCardExportSelection Dialog ---------------- //
-
-VCardExportSelectionDialog::VCardExportSelectionDialog(QWidget *parent)
-    : QDialog(parent)
-{
-    setWindowTitle(i18nc("@title:window", "Select vCard Fields"));
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    setLayout(mainLayout);
-
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
-    okButton->setDefault(true);
-    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    QPushButton *user1Button = new QPushButton;
-    buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
-    QPushButton *user2Button = new QPushButton;
-    buttonBox->addButton(user2Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &VCardExportSelectionDialog::accept);
-    connect(buttonBox, &QDialogButtonBox::rejected, this, &VCardExportSelectionDialog::reject);
-    okButton->setDefault(true);
-    setModal(true);
-
-    QFrame *page = new QFrame(this);
-    mainLayout->addWidget(page);
-    mainLayout->addWidget(buttonBox);
-
-    QGridLayout *layout = new QGridLayout(page);
-
-    QGroupBox *gbox = new QGroupBox(
-        i18nc("@title:group", "Fields to be exported"), page);
-    gbox->setFlat(true);
-    layout->addWidget(gbox, 0, 0, 1, 2);
-
-    mPrivateBox = new QCheckBox(i18nc("@option:check", "Private fields"), page);
-    mPrivateBox->setToolTip(
-        i18nc("@info:tooltip", "Export private fields"));
-    mPrivateBox->setWhatsThis(
-        i18nc("@info:whatsthis",
-              "Check this box if you want to export the contact's "
-              "private fields to the vCard output file."));
-    layout->addWidget(mPrivateBox, 1, 0);
-
-    mBusinessBox = new QCheckBox(i18nc("@option:check", "Business fields"), page);
-    mBusinessBox->setToolTip(
-        i18nc("@info:tooltip", "Export business fields"));
-    mBusinessBox->setWhatsThis(
-        i18nc("@info:whatsthis",
-              "Check this box if you want to export the contact's "
-              "business fields to the vCard output file."));
-    layout->addWidget(mBusinessBox, 2, 0);
-
-    mOtherBox = new QCheckBox(i18nc("@option:check", "Other fields"), page);
-    mOtherBox->setToolTip(
-        i18nc("@info:tooltip", "Export other fields"));
-    mOtherBox->setWhatsThis(
-        i18nc("@info:whatsthis",
-              "Check this box if you want to export the contact's "
-              "other fields to the vCard output file."));
-    layout->addWidget(mOtherBox, 3, 0);
-
-    mEncryptionKeys = new QCheckBox(i18nc("@option:check", "Encryption keys"), page);
-    mEncryptionKeys->setToolTip(
-        i18nc("@info:tooltip", "Export encryption keys"));
-    mEncryptionKeys->setWhatsThis(
-        i18nc("@info:whatsthis",
-              "Check this box if you want to export the contact's "
-              "encryption keys to the vCard output file."));
-    layout->addWidget(mEncryptionKeys, 1, 1);
-
-    mPictureBox = new QCheckBox(i18nc("@option:check", "Pictures"), page);
-    mPictureBox->setToolTip(
-        i18nc("@info:tooltip", "Export pictures"));
-    mPictureBox->setWhatsThis(
-        i18nc("@info:whatsthis",
-              "Check this box if you want to export the contact's "
-              "picture to the vCard output file."));
-    layout->addWidget(mPictureBox, 2, 1);
-
-    gbox = new QGroupBox(
-        i18nc("@title:group", "Export options"), page);
-    gbox->setFlat(true);
-    layout->addWidget(gbox, 4, 0, 1, 2);
-
-    mDisplayNameBox = new QCheckBox(i18nc("@option:check", "Display name as full name"), page);
-    mDisplayNameBox->setToolTip(
-        i18nc("@info:tooltip", "Export display name as full name"));
-    mDisplayNameBox->setWhatsThis(
-        i18nc("@info:whatsthis",
-              "Check this box if you want to export the contact's display name "
-              "in the vCard's full name field.  This may be required to get the "
-              "name shown correctly in GMail or Android."));
-    layout->addWidget(mDisplayNameBox, 5, 0, 1, 2);
-
-    KConfig config(QLatin1String("kaddressbookrc"));
-    const KConfigGroup group(&config, "XXPortVCard");
-
-    mPrivateBox->setChecked(group.readEntry("ExportPrivateFields", true));
-    mBusinessBox->setChecked(group.readEntry("ExportBusinessFields", true));
-    mOtherBox->setChecked(group.readEntry("ExportOtherFields", true));
-    mEncryptionKeys->setChecked(group.readEntry("ExportEncryptionKeys", true));
-    mPictureBox->setChecked(group.readEntry("ExportPictureFields", true));
-    mDisplayNameBox->setChecked(group.readEntry("ExportDisplayName", false));
-}
-
-VCardExportSelectionDialog::~VCardExportSelectionDialog()
-{
-    KConfig config(QLatin1String("kaddressbookrc"));
-    KConfigGroup group(&config, "XXPortVCard");
-
-    group.writeEntry("ExportPrivateFields", mPrivateBox->isChecked());
-    group.writeEntry("ExportBusinessFields", mBusinessBox->isChecked());
-    group.writeEntry("ExportOtherFields", mOtherBox->isChecked());
-    group.writeEntry("ExportEncryptionKeys", mEncryptionKeys->isChecked());
-    group.writeEntry("ExportPictureFields", mPictureBox->isChecked());
-    group.writeEntry("ExportDisplayName", mDisplayNameBox->isChecked());
-}
-
-bool VCardExportSelectionDialog::exportPrivateFields() const
-{
-    return mPrivateBox->isChecked();
-}
-
-bool VCardExportSelectionDialog::exportBusinessFields() const
-{
-    return mBusinessBox->isChecked();
-}
-
-bool VCardExportSelectionDialog::exportOtherFields() const
-{
-    return mOtherBox->isChecked();
-}
-
-bool VCardExportSelectionDialog::exportEncryptionKeys() const
-{
-    return mEncryptionKeys->isChecked();
-}
-
-bool VCardExportSelectionDialog::exportPictureFields() const
-{
-    return mPictureBox->isChecked();
-}
-
-bool VCardExportSelectionDialog::exportDisplayName() const
-{
-    return mDisplayNameBox->isChecked();
-}
-#include "vcard_xxport.moc"
