@@ -32,35 +32,31 @@
 #include <QListWidget>
 #include <QLabel>
 #include <QCheckBox>
+#include <QGroupBox>
 
 SieveEditorConfigureDialog::SieveEditorConfigureDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n( "Configure" ) );
     setButtons( Cancel | Ok  );
-    mTabWidget = new QTabWidget;
-    setMainWidget(mTabWidget);
-    initializeServerSieveSettings();
+
+    QGroupBox *w = new QGroupBox(i18n("Server Sieve"));
+    setMainWidget(w);
+
+    QVBoxLayout *layout = new QVBoxLayout;
+    w->setLayout(layout);
+    mServerWidget = new SieveEditorConfigureServerWidget;
+    layout->addWidget(mServerWidget);
+
+    mCloseWallet = new QCheckBox(i18n("Close wallet when close application"));
+    layout->addWidget(mCloseWallet);
+    loadServerSieveConfig();
     readConfig();
 }
 
 SieveEditorConfigureDialog::~SieveEditorConfigureDialog()
 {
     writeConfig();
-}
-
-void SieveEditorConfigureDialog::initializeServerSieveSettings()
-{
-    QWidget *w = new QWidget;
-    QVBoxLayout *vbox = new QVBoxLayout;
-    w->setLayout(vbox);
-    mTabWidget->addTab(w, i18n("Server Sieve"));
-    mServerWidget = new SieveEditorConfigureServerWidget;
-    vbox->addWidget(mServerWidget);
-
-    mCloseWallet = new QCheckBox(i18n("Close wallet when close application"));
-    vbox->addWidget(mCloseWallet);
-    loadServerSieveConfig();
 }
 
 void SieveEditorConfigureDialog::loadServerSieveConfig()
