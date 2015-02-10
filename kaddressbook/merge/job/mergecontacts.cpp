@@ -52,6 +52,17 @@ KContacts::Addressee MergeContacts::mergedContact()
 
 void MergeContacts::mergeToContact(KContacts::Addressee &newContact, const KContacts::Addressee &fromContact)
 {
+    // Duplicate notes.
+    const QString fromContactNote = fromContact.note();
+    if (!fromContactNote.isEmpty()) {
+        QString newContactNote = newContact.note();
+        if (!newContactNote.isEmpty()) {
+            newContactNote += QLatin1Char('\n');
+        }
+        newContactNote += fromContactNote;
+        newContact.setNote(newContactNote);
+    }
+    // Duplicate emails
 #if 0
     //TODO
     newContact.setName(fromContact.name());

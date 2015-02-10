@@ -50,7 +50,7 @@ bool SieveEditorManageSieveWidget::refreshList()
     Q_FOREACH (const SieveEditorUtil::SieveServerConfig &conf, listConfig) {
         last = new SieveTreeWidgetItem(treeView(), last);
         last->setText(0, conf.serverName + QString::fromLatin1(" (%1)").arg(conf.userName));
-        last->setIcon(0, SmallIcon(QStringLiteral("network-server")));
+        last->setIcon(0, SmallIcon(QLatin1String("network-server")));
 
         const QUrl u = conf.url();
         if (u.isEmpty()) {
@@ -58,6 +58,10 @@ bool SieveEditorManageSieveWidget::refreshList()
             item->setText(0, i18n("No Sieve URL configured"));
             item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
             treeView()->expandItem(last);
+        } else if (!conf.enabled) {
+            last->setFlags(last->flags() & ~Qt::ItemIsEnabled);
+            // kf5 add i18n
+            last->setText(0, i18n("(Disabled) %1", last->text(0)));
         } else {
             KManageSieve::SieveJob *job = KManageSieve::SieveJob::list(u);
             connect(job, &KManageSieve::SieveJob::gotList, this, &SieveEditorManageSieveWidget::slotGotList);

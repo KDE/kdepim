@@ -32,6 +32,12 @@ public:
     ~MergeContacts();
 
     KContacts::Addressee mergedContact();
+    enum ManualInformation {
+        None = 0,
+        Birthday = 1
+    };
+
+    KABC::Addressee mergedContact();
 
     bool needManualSelectInformations();
 

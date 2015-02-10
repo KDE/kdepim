@@ -18,7 +18,7 @@
 
 #include "sieveeditorgraphicalmodewidget.h"
 #include "autocreatescripts/sievescriptparsingerrordialog.h"
-#include "ksieveui/editor/sieveeditorparsingmissingfeaturewarning.h"
+#include "ksieveui/editor/warningwidget/sieveeditorparsingmissingfeaturewarning.h"
 #include "sievescriptlistbox.h"
 #include "scriptsparsing/parsingutil.h"
 #include "sievescriptpage.h"

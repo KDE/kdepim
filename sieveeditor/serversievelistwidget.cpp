@@ -53,7 +53,9 @@ void ServerSieveListWidget::writeConfig()
     for (int i = 0; i < count(); ++i) {
         ServerSieveListWidgetItem *serverSieveItem = static_cast<ServerSieveListWidgetItem *>(item(i));
         if (serverSieveItem) {
-            lstServerConfig.append(serverSieveItem->serverConfig());
+            SieveEditorUtil::SieveServerConfig config = serverSieveItem->serverConfig();
+            config.enabled = (serverSieveItem->checkState() == Qt::Checked);
+            lstServerConfig.append(config);
         }
     }
     SieveEditorUtil::writeServerSieveConfig(lstServerConfig);
@@ -105,6 +107,7 @@ SieveEditorUtil::SieveServerConfig ServerSieveListWidgetItem::serverConfig() con
 
 void ServerSieveListWidgetItem::setServerConfig(const SieveEditorUtil::SieveServerConfig &conf)
 {
+    setCheckState(conf.enabled ? Qt::Checked : Qt::Unchecked);
     setText(conf.serverName);
     mServerConfig = conf;
 }
