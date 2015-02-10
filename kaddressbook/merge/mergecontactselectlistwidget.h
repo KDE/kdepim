@@ -15,21 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "mergecontactselectinformationwidget.h"
-#include <KLocalizedString>
-#include <QHBoxLayout>
-#include <QLabel>
+#ifndef MERGECONTACTSELECTLISTWIDGET_H
+#define MERGECONTACTSELECTLISTWIDGET_H
+
 #include <QTreeWidget>
-
-using namespace KABMergeContacts;
-MergeContactSelectInformationWidget::MergeContactSelectInformationWidget(const Akonadi::Item::List &mListItem, QWidget *parent)
-    : QWidget(parent)
+#include <Akonadi/Item>
+#include "kaddressbook_export.h"
+namespace KABMergeContacts {
+class KADDRESSBOOK_EXPORT MergeContactSelectListWidget : public QTreeWidget
 {
+    Q_OBJECT
+public:
+    explicit MergeContactSelectListWidget(QWidget *parent=0);
+    ~MergeContactSelectListWidget();
+    void setContacts(const Akonadi::Item::List &lst);
+
+private:
+    void fillList();
+};
 }
 
-
-
-MergeContactSelectInformationWidget::~MergeContactSelectInformationWidget()
-{
-
-}
+#endif // MERGECONTACTSELECTLISTWIDGET_H
