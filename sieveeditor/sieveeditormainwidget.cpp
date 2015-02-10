@@ -74,7 +74,7 @@ QWidget *SieveEditorMainWidget::hasExistingPage(const QUrl &url)
             }
         }
     }
-    return 0;
+    return Q_NULLPTR;
 }
 
 void SieveEditorMainWidget::slotScriptDeleted(const QUrl &url)

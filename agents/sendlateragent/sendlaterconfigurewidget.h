@@ -74,7 +74,7 @@ Q_SIGNALS:
     void sendNow(Akonadi::Item::Id);
 
 private:
-    void createOrUpdateItem(SendLater::SendLaterInfo *info, SendLaterItem *item = 0);
+    void createOrUpdateItem(SendLater::SendLaterInfo *info, SendLaterItem *item = Q_NULLPTR);
     void load();
     QList<Akonadi::Item::Id> mListMessagesToRemove;
     bool mChanged;

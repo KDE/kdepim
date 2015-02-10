@@ -55,7 +55,7 @@ KIdentityManagement::IdentityManager *ArchiveMailKernel::identityManager()
 
 MessageComposer::MessageSender *ArchiveMailKernel::msgSender()
 {
-    return 0;
+    return Q_NULLPTR;
 }
 
 Akonadi::EntityMimeTypeFilterModel *ArchiveMailKernel::collectionModel() const

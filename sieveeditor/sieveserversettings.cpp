@@ -75,5 +75,5 @@ void SieveServerSettings::closeWallet()
 void SieveServerSettings::slotWalletClosed()
 {
     delete mWallet;
-    mWallet = 0;
+    mWallet = Q_NULLPTR;
 }

@@ -175,7 +175,7 @@ void FilterManager::Private::itemFetchJobForFilterDone(KJob *job)
         const QString filterId = job->property("filterId").toString();
 
         // find correct filter object
-        MailCommon::MailFilter *wantedFilter = 0;
+        MailCommon::MailFilter *wantedFilter = Q_NULLPTR;
         foreach (MailCommon::MailFilter *filter, mFilters) {
             if (filter->identifier() == filterId) {
                 wantedFilter = filter;

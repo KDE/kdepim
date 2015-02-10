@@ -73,7 +73,7 @@ void ArchiveMailManager::load()
                 if (oldInfo->saveCollectionId() == info->saveCollectionId()) {
                     //already in jobscheduler
                     delete info;
-                    info = 0;
+                    info = Q_NULLPTR;
                     break;
                 }
             }

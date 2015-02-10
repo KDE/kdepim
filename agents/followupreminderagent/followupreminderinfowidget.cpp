@@ -185,8 +185,8 @@ void FollowUpReminderInfoWidget::customContextMenuRequested(const QPoint &pos)
     const int nbElementSelected = listItems.count();
     if (nbElementSelected > 0) {
         QMenu menu;
-        QAction *showMessage = 0;
-        FollowUpReminderInfoItem *mailItem = 0;
+        QAction *showMessage = Q_NULLPTR;
+        FollowUpReminderInfoItem *mailItem = Q_NULLPTR;
         if ((nbElementSelected == 1)) {
             mailItem = static_cast<FollowUpReminderInfoItem *>(listItems.at(0));
             if (mailItem->data(0, AnswerItemFound).toBool()) {

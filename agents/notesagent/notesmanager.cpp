@@ -64,7 +64,7 @@ NotesManager::~NotesManager()
 void NotesManager::clear()
 {
     delete mListener;
-    mListener = 0;
+    mListener = Q_NULLPTR;
     if (mCheckAlarm && mCheckAlarm->isActive()) {
         mCheckAlarm->stop();
     }
@@ -173,10 +173,10 @@ void NotesManager::slotNewNote(const QString &name, const QString &text)
     KNotification::event(QStringLiteral("receivednotes"),
                          i18n("Note Received"),
                          pixmap,
-                         0,
+                         Q_NULLPTR,
                          KNotification::CloseOnTimeout,
                          QStringLiteral("akonadi_notes_agent"));
-    NoteShared::CreateNewNoteJob *job = new NoteShared::CreateNewNoteJob(this, 0);
+    NoteShared::CreateNewNoteJob *job = new NoteShared::CreateNewNoteJob(this, Q_NULLPTR);
     //For the moment it doesn't support richtext.
     job->setRichText(false);
     job->setNote(name, text);
@@ -186,7 +186,7 @@ void NotesManager::slotNewNote(const QString &name, const QString &text)
 void NotesManager::updateNetworkListener()
 {
     delete mListener;
-    mListener = 0;
+    mListener = Q_NULLPTR;
 
     if (NoteShared::NoteSharedGlobalConfig::receiveNotes()) {
         // create the socket and start listening for connections

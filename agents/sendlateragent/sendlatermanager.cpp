@@ -54,7 +54,7 @@ void SendLaterManager::stopAll()
     stopTimer();
     qDeleteAll(mListSendLaterInfo);
     mListSendLaterInfo.clear();
-    mCurrentJob = 0;
+    mCurrentJob = Q_NULLPTR;
 }
 
 void SendLaterManager::load(bool forcereload)
@@ -82,7 +82,7 @@ void SendLaterManager::load(bool forcereload)
 
 void SendLaterManager::createSendInfoList()
 {
-    mCurrentInfo = 0;
+    mCurrentInfo = Q_NULLPTR;
     qSort(mListSendLaterInfo.begin(), mListSendLaterInfo.end(), SendLater::SendLaterUtil::compareSendLaterInfo);
 
     //Look at QQueue
@@ -127,7 +127,7 @@ SendLater::SendLaterInfo *SendLaterManager::searchInfo(Akonadi::Item::Id id)
             return info;
         }
     }
-    return 0;
+    return Q_NULLPTR;
 }
 
 void SendLaterManager::sendNow(Akonadi::Item::Id id)
@@ -185,14 +185,14 @@ void SendLaterManager::sendError(SendLater::SendLaterInfo *info, ErrorType type)
         case MailDispatchDoesntWork:
             //Force to make online maildispatcher
             //Don't remove it.
-            MessageComposer::Util::sendMailDispatcherIsOnline(0);
+            MessageComposer::Util::sendMailDispatcherIsOnline(Q_NULLPTR);
             //Remove item which create error ?
             if (!info->isRecurrence()) {
                 removeLaterInfo(info);
             }
             break;
         default:
-            if (KMessageBox::No == KMessageBox::questionYesNo(0, i18n("An error was found. Do you want to resend it?"), i18n("Error found"))) {
+            if (KMessageBox::No == KMessageBox::questionYesNo(Q_NULLPTR, i18n("An error was found. Do you want to resend it?"), i18n("Error found"))) {
                 removeLaterInfo(info);
             }
             break;
@@ -203,7 +203,7 @@ void SendLaterManager::sendError(SendLater::SendLaterInfo *info, ErrorType type)
 
 void SendLaterManager::recreateSendList()
 {
-    mCurrentJob = 0;
+    mCurrentJob = Q_NULLPTR;
     Q_EMIT needUpdateConfigDialogBox();
     QTimer::singleShot(1000 * 60, this, SLOT(createSendInfoList()));
 }

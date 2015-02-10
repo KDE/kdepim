@@ -39,7 +39,7 @@ public Q_SLOTS:
     void reload();
 
 protected:
-    void itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection);
+    void itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection) Q_DECL_OVERRIDE;
 
 private:
     FollowUpReminderManager *mManager;

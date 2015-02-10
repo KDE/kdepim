@@ -50,9 +50,9 @@ private Q_SLOTS:
 
     void slotStartAgent();
 protected:
-    void itemsRemoved(const Akonadi::Item::List &item);
-    void itemsMoved(const Akonadi::Item::List &items, const Akonadi::Collection &sourceCollection, const Akonadi::Collection &destinationCollection);
-    void doSetOnline(bool online);
+    void itemsRemoved(const Akonadi::Item::List &item) Q_DECL_OVERRIDE;
+    void itemsMoved(const Akonadi::Item::List &items, const Akonadi::Collection &sourceCollection, const Akonadi::Collection &destinationCollection) Q_DECL_OVERRIDE;
+    void doSetOnline(bool online) Q_DECL_OVERRIDE;
 
 private:
     bool mAgentInitialized;

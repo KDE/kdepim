@@ -129,7 +129,7 @@ void ArchiveMailDialog::slotSave()
 }
 
 ArchiveMailItem::ArchiveMailItem(QTreeWidget *parent)
-    : QTreeWidgetItem(parent), mInfo(0)
+    : QTreeWidgetItem(parent), mInfo(Q_NULLPTR)
 {
 }
 
@@ -339,7 +339,7 @@ void ArchiveMailWidget::slotModifyItem()
 
 void ArchiveMailWidget::slotAddItem()
 {
-    QPointer<AddArchiveMailDialog> dialog = new AddArchiveMailDialog(0, this);
+    QPointer<AddArchiveMailDialog> dialog = new AddArchiveMailDialog(Q_NULLPTR, this);
     if (dialog->exec()) {
         ArchiveMailInfo *info = dialog->info();
         if (verifyExistingArchive(info)) {

@@ -51,7 +51,7 @@ public:
     QString printCollectionMonitored();
 
 protected:
-    void itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection);
+    void itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection) Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void initializeCollections();

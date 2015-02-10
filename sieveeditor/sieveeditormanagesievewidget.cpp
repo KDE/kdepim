@@ -44,7 +44,7 @@ SieveEditorManageSieveWidget::~SieveEditorManageSieveWidget()
 bool SieveEditorManageSieveWidget::refreshList()
 {
     bool noImapFound = true;
-    SieveTreeWidgetItem *last = 0;
+    SieveTreeWidgetItem *last = Q_NULLPTR;
 
     const QList<SieveEditorUtil::SieveServerConfig> listConfig = SieveEditorUtil::readServerSieveConfig();
     Q_FOREACH (const SieveEditorUtil::SieveServerConfig &conf, listConfig) {

@@ -52,7 +52,7 @@ public Q_SLOTS:
     void configure(WId windowId) Q_DECL_OVERRIDE;
 
 protected:
-    void doSetOnline(bool online);
+    void doSetOnline(bool online) Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void slotStartAgent();
