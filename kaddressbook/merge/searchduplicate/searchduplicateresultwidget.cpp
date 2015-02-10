@@ -16,6 +16,7 @@
 */
 
 #include "searchduplicateresultwidget.h"
+#include "merge/widgets/mergecontactloseinformationwarning.h"
 #include "merge/job/mergecontactsjob.h"
 #include "resultduplicatetreewidget.h"
 #include <KLocalizedString>
@@ -26,6 +27,7 @@
 #include <KPushButton>
 #include <kaddressbookgrantlee/widget/grantleecontactviewer.h>
 #include <akonadi/collectioncombobox.h>
+
 
 namespace KABMergeContacts {
 KADDRESSBOOK_EXPORT QAbstractItemModel *_k_searchDuplicateResultStubModel = 0;
@@ -50,6 +52,10 @@ SearchDuplicateResultWidget::SearchDuplicateResultWidget(QWidget *parent)
     splitter->addWidget(mResult);
     splitter->addWidget(mContactViewer);
     connect(mResult, SIGNAL(showContactPreview(Akonadi::Item)), mContactViewer, SLOT(setContact(Akonadi::Item)));
+
+    mMergeContactWarning = new MergeContactLoseInformationWarning;
+    mMergeContactWarning->setObjectName(QLatin1String("mergecontactwarning"));
+    mainLayout->addWidget(mMergeContactWarning);
 
     QHBoxLayout *mergeLayout = new QHBoxLayout;
     mainLayout->addLayout(mergeLayout);
