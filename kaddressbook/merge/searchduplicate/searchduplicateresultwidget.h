@@ -46,7 +46,7 @@ Q_SIGNALS:
     void contactMerged(const Akonadi::Item &item);
     void mergeDone();
 
-private slots:
+private Q_SLOTS:
     void slotMergeContact();
     void slotMergeDone(const Akonadi::Item &item);
     void slotUpdateMergeButton();

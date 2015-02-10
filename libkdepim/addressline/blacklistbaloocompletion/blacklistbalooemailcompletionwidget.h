@@ -36,7 +36,7 @@ public:
 
     void save();
     void setEmailBlackList(const QStringList &list);
-private slots:
+private Q_SLOTS:
     void slotSelectionChanged();
     void slotUnselectEmails();
     void slotSelectEmails();

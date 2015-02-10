@@ -55,7 +55,7 @@ public:
 
 Q_SIGNALS:
     void showContactPreview(const Akonadi::Item &item);
-private slots:
+private Q_SLOTS:
     void slotItemActivated(QTreeWidgetItem *item, int column);
 };
 }

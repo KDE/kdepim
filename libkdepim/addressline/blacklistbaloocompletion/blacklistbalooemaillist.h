@@ -59,7 +59,7 @@ protected:
 public Q_SLOTS:
     void slotEmailFound(const QStringList &);
 
-private slots:
+private Q_SLOTS:
     void slotGeneralPaletteChanged();
 private:
     QStringList mEmailBlackList;

@@ -37,7 +37,7 @@ public:
 
     void searchPotentialDuplicateContacts(const Akonadi::Item::List &list);
 
-private slots:
+private Q_SLOTS:
     void slotDuplicateFound(const QList<Akonadi::Item::List> &duplicate);
     void slotMergeDone();
     void slotContactMerged(const Akonadi::Item &item);
