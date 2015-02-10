@@ -37,8 +37,6 @@ public:
         Birthday = 1
     };
 
-    KABC::Addressee mergedContact();
-
     bool needManualSelectInformations();
 
 private:

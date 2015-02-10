@@ -90,21 +90,21 @@ void MergeContactsTest::shouldMergeNotes()
     Akonadi::Item itemA;
     addressA.setName(QLatin1String("foo1"));
     addressA.setNote(noteItemA);
-    itemA.setPayload<KABC::Addressee>( addressA );
+    itemA.setPayload<Addressee>( addressA );
     lst<<itemA;
 
     Addressee addressB;
     Akonadi::Item itemB;
     addressB.setName(QLatin1String("foo1"));
     addressB.setNote(noteItemB);
-    itemB.setPayload<KABC::Addressee>( addressB );
+    itemB.setPayload<Addressee>( addressB );
     lst<<itemB;
 
     Addressee addressC;
     Akonadi::Item itemC;
     addressC.setName(QLatin1String("foo1"));
     addressC.setNote(noteItemC);
-    itemC.setPayload<KABC::Addressee>( addressC );
+    itemC.setPayload<Addressee>( addressC );
     lst<<itemC;
 
 
