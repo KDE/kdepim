@@ -28,6 +28,7 @@ public:
 
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldHaveEmptyListIfContactListIsEmpty();
 };
 
 #endif // MERGECONTACTSELECTINFORMATIONWIDGETTEST_H

@@ -37,6 +37,9 @@ public:
     void setDestination(const Akonadi::Collection &collection);
 
     bool canStart();
+
+    void setNewContact(const KABC::Addressee &addr);
+
 Q_SIGNALS:
     void finished(const Akonadi::Item &item);
 
@@ -51,6 +54,7 @@ private:
     Akonadi::Collection mCollection;
     Akonadi::Item::List mListItem;
     Akonadi::Item mCreatedContact;
+    KABC::Addressee mNewContact;
 };
 }
 #endif // MERGECONTACTSJOB_H

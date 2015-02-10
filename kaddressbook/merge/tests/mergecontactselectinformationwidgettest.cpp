@@ -38,4 +38,13 @@ void MergeContactSelectInformationWidgetTest::shouldHaveDefaultValue()
     QCOMPARE(listWidget->topLevelItemCount(), 0);
 }
 
+void MergeContactSelectInformationWidgetTest::shouldHaveEmptyListIfContactListIsEmpty()
+{
+    KABMergeContacts::MergeContactSelectInformationWidget w;
+    KABMergeContacts::MergeContactSelectListWidget *listWidget = qFindChild<KABMergeContacts::MergeContactSelectListWidget *>(&w, QLatin1String("list_information"));
+    w.setContacts(Akonadi::Item::List());
+    QCOMPARE(listWidget->topLevelItemCount(), 0);
+}
+
+
 QTEST_KDEMAIN(MergeContactSelectInformationWidgetTest, GUI)

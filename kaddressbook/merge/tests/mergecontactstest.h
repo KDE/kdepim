@@ -34,6 +34,8 @@ private Q_SLOTS:
     void noNeedManualSelectionCheckWhenOneItem();
     void shouldMergeNotes_data();
     void shouldMergeNotes();
+    void shouldMergeEmails_data();
+    void shouldMergeEmails();
 };
 
 #endif // MERGECONTACTSTEST_H

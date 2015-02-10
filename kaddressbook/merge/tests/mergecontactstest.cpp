@@ -116,5 +116,50 @@ void MergeContactsTest::shouldMergeNotes()
 
 }
 
+void MergeContactsTest::shouldMergeEmails_data()
+{
+    QTest::addColumn<QStringList>("emailsItemA");
+    QTest::addColumn<QStringList>("emailsItemB");
+    QTest::addColumn<QStringList>("emailsItemC");
+    QTest::addColumn<QStringList>("emails");
+    QTest::newRow("noEmailss") <<  QStringList() << QStringList() << QStringList() << QStringList();
+}
+
+void MergeContactsTest::shouldMergeEmails()
+{
+    QFETCH( QStringList, emailsItemA );
+    QFETCH( QStringList, emailsItemB );
+    QFETCH( QStringList, emailsItemC );
+    QFETCH( QStringList, emails );
+
+    Akonadi::Item::List lst;
+    Addressee addressA;
+    Akonadi::Item itemA;
+    addressA.setName(QLatin1String("foo1"));
+    addressA.setEmails(emailsItemA);
+    itemA.setPayload<KABC::Addressee>( addressA );
+    lst<<itemA;
+
+    Addressee addressB;
+    Akonadi::Item itemB;
+    addressB.setName(QLatin1String("foo1"));
+    addressB.setEmails(emailsItemB);
+    itemB.setPayload<KABC::Addressee>( addressB );
+    lst<<itemB;
+
+    Addressee addressC;
+    Akonadi::Item itemC;
+    addressC.setName(QLatin1String("foo1"));
+    addressC.setEmails(emailsItemC);
+    itemC.setPayload<KABC::Addressee>( addressC );
+    lst<<itemC;
+
+
+    MergeContacts contacts(lst);
+
+    const Addressee result = contacts.mergedContact();
+    QCOMPARE(result.emails(), emails);
+}
+
 
 QTEST_KDEMAIN(MergeContactsTest, NoGUI)

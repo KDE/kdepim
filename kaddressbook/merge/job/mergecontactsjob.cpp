@@ -63,14 +63,23 @@ void MergeContactsJob::start()
 
 void MergeContactsJob::generateMergedContact()
 {
-    MergeContacts mergeContact(mListItem);
-    const KABC::Addressee newContact = mergeContact.mergedContact();
-    if (newContact.isEmpty()) {
-        Q_EMIT finished(mCreatedContact);
-        deleteLater();
-        return;
+    if (mNewContact.isEmpty()) {
+        MergeContacts mergeContact(mListItem);
+        const KABC::Addressee newContact = mergeContact.mergedContact();
+        if (newContact.isEmpty()) {
+            Q_EMIT finished(mCreatedContact);
+            deleteLater();
+            return;
+        }
+        createMergedContact(newContact);
+    } else {
+        createMergedContact(mNewContact);
     }
-    createMergedContact(newContact);
+}
+
+void MergeContactsJob::setNewContact(const KABC::Addressee & addr)
+{
+    mNewContact = addr;
 }
 
 void MergeContactsJob::setListItem(const Akonadi::Item::List &lstItem)

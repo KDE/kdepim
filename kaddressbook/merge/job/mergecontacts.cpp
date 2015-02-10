@@ -62,6 +62,17 @@ void MergeContacts::mergeToContact(KABC::Addressee &newContact, const KABC::Addr
         newContact.setNote(newContactNote);
     }
     // Duplicate emails
+    const QStringList emails = fromContact.emails();
+    if (!emails.isEmpty()) {
+        QStringList newContactsEmail = newContact.emails();
+        Q_FOREACH(const QString &email, emails) {
+            if (!newContactsEmail.contains(email)) {
+                newContactsEmail.append(email);
+            }
+        }
+        newContact.setEmails(newContactsEmail);
+    }
+
 #if 0
     //TODO
     newContact.setName(fromContact.name());

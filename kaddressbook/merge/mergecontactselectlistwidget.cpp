@@ -16,8 +16,10 @@
 */
 
 #include "mergecontactselectlistwidget.h"
+#include <KABC/Addressee>
 
 using namespace KABMergeContacts;
+using namespace KABC;
 
 MergeContactSelectListWidget::MergeContactSelectListWidget(QWidget *parent)
     : QTreeWidget(parent)
@@ -34,7 +36,11 @@ MergeContactSelectListWidget::~MergeContactSelectListWidget()
 
 void MergeContactSelectListWidget::setContacts(const Akonadi::Item::List &lst)
 {
-
+    //TODO fillContact ?
+    clear();
+    if (lst.isEmpty()) {
+        return;
+    }
 }
 
 void MergeContactSelectListWidget::fillList()
