@@ -39,7 +39,6 @@ class ContactsFilterProxyModel;
 class EntityMimeTypeFilterModel;
 class EntityTreeView;
 class Item;
-class ItemView;
 class StandardContactActionManager;
 class EntityTreeModel;
 }

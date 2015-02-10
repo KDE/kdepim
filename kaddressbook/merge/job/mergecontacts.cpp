@@ -63,12 +63,26 @@ void MergeContacts::mergeToContact(KContacts::Addressee &newContact, const KCont
         newContact.setNote(newContactNote);
     }
     // Duplicate emails
+    const QStringList emails = fromContact.emails();
+    if (!emails.isEmpty()) {
+        QStringList newContactsEmail = newContact.emails();
+        Q_FOREACH(const QString &email, emails) {
+            if (!newContactsEmail.contains(email)) {
+                newContactsEmail.append(email);
+            }
+        }
+        newContact.setEmails(newContactsEmail);
+    }
+    // Merge Phone
+
+    // Merge blog
+
+    // Merge HomePage
 #if 0
     //TODO
     newContact.setName(fromContact.name());
     newContact.setFamilyName(fromContact.familyName());
     newContact.setFormattedName(fromContact.formattedName());
-    newContact.setEmails(fromContact.emails());
 #endif
 }
 

@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2014-2015 Montel Laurent <montel@kde.org>
+  Copyright (c) 2015 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -14,27 +14,21 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-
-#ifndef MERGECONTACTTEST_H
-#define MERGECONTACTTEST_H
+#ifndef MERGECONTACTSELECTINFORMATIONWIDGETTEST_H
+#define MERGECONTACTSELECTINFORMATIONWIDGETTEST_H
 
 #include <QObject>
 
-class MergeContactsTest : public QObject
+class MergeContactSelectInformationWidgetTest : public QObject
 {
     Q_OBJECT
 public:
-    MergeContactsTest();
+    explicit MergeContactSelectInformationWidgetTest(QObject *parent = 0);
+    ~MergeContactSelectInformationWidgetTest();
 
 private Q_SLOTS:
-    void shouldReturnDefaultAddressWhenNoListItem();
-    void shouldReturnDefaultAddressWhenOneItem();
-    void noNeedManualSelectionCheckWhenEmptyList();
-    void noNeedManualSelectionCheckWhenOneItem();
-    void shouldMergeNotes_data();
-    void shouldMergeNotes();
-    void shouldMergeEmails_data();
-    void shouldMergeEmails();
+    void shouldHaveDefaultValue();
+    void shouldHaveEmptyListIfContactListIsEmpty();
 };
 
-#endif // MERGECONTACTTEST_H
+#endif // MERGECONTACTSELECTINFORMATIONWIDGETTEST_H

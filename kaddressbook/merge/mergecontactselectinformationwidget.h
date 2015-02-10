@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2014-2015 Montel Laurent <montel@kde.org>
+  Copyright (c) 2015 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,26 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MERGECONTACTTEST_H
-#define MERGECONTACTTEST_H
+#ifndef MERGECONTACTSELECTINFORMATIONWIDGET_H
+#define MERGECONTACTSELECTINFORMATIONWIDGET_H
 
-#include <QObject>
-
-class MergeContactsTest : public QObject
+#include <QWidget>
+#include "kaddressbook_export.h"
+#include <AkonadiCore/Item>
+namespace KABMergeContacts {
+class MergeContactSelectListWidget;
+class KADDRESSBOOK_EXPORT MergeContactSelectInformationWidget : public QWidget
 {
     Q_OBJECT
 public:
-    MergeContactsTest();
-
-private Q_SLOTS:
-    void shouldReturnDefaultAddressWhenNoListItem();
-    void shouldReturnDefaultAddressWhenOneItem();
-    void noNeedManualSelectionCheckWhenEmptyList();
-    void noNeedManualSelectionCheckWhenOneItem();
-    void shouldMergeNotes_data();
-    void shouldMergeNotes();
-    void shouldMergeEmails_data();
-    void shouldMergeEmails();
+    explicit MergeContactSelectInformationWidget(QWidget *parent=0);
+    ~MergeContactSelectInformationWidget();
+    void setContacts(const Akonadi::Item::List &listItem);
+private:
+    MergeContactSelectListWidget *mMergeSelectListInformation;
 };
+}
 
-#endif // MERGECONTACTTEST_H
+#endif // MERGECONTACTSELECTINFORMATIONWIDGET_H

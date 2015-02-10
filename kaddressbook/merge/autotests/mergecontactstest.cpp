@@ -115,5 +115,67 @@ void MergeContactsTest::shouldMergeNotes()
 
 }
 
+void MergeContactsTest::shouldMergeEmails_data()
+{
+    QTest::addColumn<QStringList>("emailsItemA");
+    QTest::addColumn<QStringList>("emailsItemB");
+    QTest::addColumn<QStringList>("emailsItemC");
+    QTest::addColumn<QStringList>("emails");
+    QTest::newRow("noEmails") <<  QStringList() << QStringList() << QStringList() << QStringList();
+    QStringList lst;
+    lst << QLatin1String("foo");
+    lst << QLatin1String("foo1");
+    lst << QLatin1String("foo2");
+    QTest::newRow("copyFromOnContact") << lst << QStringList() << QStringList() << lst;
+    QTest::newRow("copyFromTwoIdenticContact") << lst << lst << QStringList() << lst;
+    QStringList lst2;
+    lst2 << QLatin1String("foo5");
+    lst2 << QLatin1String("foo6");
+    lst2 << QLatin1String("foo7");
+
+    QTest::newRow("copyFromTwoDifferentContact") << lst << lst2 << QStringList() << (QStringList() << lst << lst2);
+    QStringList lst3;
+    lst3 << QLatin1String("foo2");
+    lst3 << lst2;
+    //Identic => we will return merge between lst and lst2
+    QTest::newRow("copyWithSomeIdenticEmail") << lst << lst3 << QStringList() << (QStringList() << lst << lst2);
+}
+
+void MergeContactsTest::shouldMergeEmails()
+{
+    QFETCH( QStringList, emailsItemA );
+    QFETCH( QStringList, emailsItemB );
+    QFETCH( QStringList, emailsItemC );
+    QFETCH( QStringList, emails );
+
+    Akonadi::Item::List lst;
+    Addressee addressA;
+    Akonadi::Item itemA;
+    addressA.setName(QLatin1String("foo1"));
+    addressA.setEmails(emailsItemA);
+    itemA.setPayload<Addressee>( addressA );
+    lst<<itemA;
+
+    Addressee addressB;
+    Akonadi::Item itemB;
+    addressB.setName(QLatin1String("foo1"));
+    addressB.setEmails(emailsItemB);
+    itemB.setPayload<Addressee>( addressB );
+    lst<<itemB;
+
+    Addressee addressC;
+    Akonadi::Item itemC;
+    addressC.setName(QLatin1String("foo1"));
+    addressC.setEmails(emailsItemC);
+    itemC.setPayload<Addressee>( addressC );
+    lst<<itemC;
+
+
+    MergeContacts contacts(lst);
+
+    const Addressee result = contacts.mergedContact();
+    QCOMPARE(result.emails(), emails);
+}
+
 
 QTEST_MAIN(MergeContactsTest)

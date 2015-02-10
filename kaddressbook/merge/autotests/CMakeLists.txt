@@ -25,3 +25,5 @@ add_akonadi_isolated_test_advanced( searchandmergecontactduplicatecontactdialogt
 add_akonadi_isolated_test_advanced( searchpotentialduplicatecontactjobtest.cpp "" "kaddressbookprivate;KF5::Contacts")
 add_akonadi_isolated_test_advanced( searchduplicateresultwidgettest.cpp "" "kaddressbookprivate;kaddressbookgrantlee;KF5::Contacts")
 add_akonadi_isolated_test_advanced( resultduplicatetreewidgettest.cpp "" "kaddressbookprivate;KF5::Contacts")
+add_akonadi_isolated_test_advanced( mergecontactselectinformationwidgettest.cpp "" "kaddressbookprivate;KF5::Contacts")
+add_akonadi_isolated_test_advanced( mergecontactselectlistwidgettest.cpp "" "kaddressbookprivate;KF5::Contacts")
