@@ -16,11 +16,26 @@
 */
 
 #include "mergecontactselectinformationwidgettest.h"
+#include "merge/mergecontactselectinformationwidget.h"
+#include "merge/mergecontactselectlistwidget.h"
 #include <qtest_kde.h>
 MergeContactSelectInformationWidgetTest::MergeContactSelectInformationWidgetTest(QObject *parent)
     : QObject(parent)
 {
 
+}
+
+MergeContactSelectInformationWidgetTest::~MergeContactSelectInformationWidgetTest()
+{
+
+}
+
+void MergeContactSelectInformationWidgetTest::shouldHaveDefaultValue()
+{
+    KABMergeContacts::MergeContactSelectInformationWidget w;
+    KABMergeContacts::MergeContactSelectListWidget *listWidget = qFindChild<KABMergeContacts::MergeContactSelectListWidget *>(&w, QLatin1String("list_information"));
+    QVERIFY(listWidget);
+    QCOMPARE(listWidget->topLevelItemCount(), 0);
 }
 
 QTEST_KDEMAIN(MergeContactSelectInformationWidgetTest, GUI)

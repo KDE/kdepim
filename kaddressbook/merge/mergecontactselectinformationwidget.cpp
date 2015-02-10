@@ -16,20 +16,29 @@
 */
 
 #include "mergecontactselectinformationwidget.h"
+#include "mergecontactselectlistwidget.h"
 #include <KLocalizedString>
-#include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <QLabel>
 #include <QTreeWidget>
 
 using namespace KABMergeContacts;
-MergeContactSelectInformationWidget::MergeContactSelectInformationWidget(const Akonadi::Item::List &mListItem, QWidget *parent)
+MergeContactSelectInformationWidget::MergeContactSelectInformationWidget(QWidget *parent)
     : QWidget(parent)
 {
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mMergeSelectListInformation = new MergeContactSelectListWidget;
+    mMergeSelectListInformation->setObjectName(QLatin1String("list_information"));
+    mainLayout->addWidget(mMergeSelectListInformation);
 }
-
-
 
 MergeContactSelectInformationWidget::~MergeContactSelectInformationWidget()
 {
 
+}
+
+void MergeContactSelectInformationWidget::setContacts(const Akonadi::Item::List &listItem)
+{
+    mMergeSelectListInformation->setContacts(listItem);
 }

@@ -22,12 +22,16 @@
 #include "kaddressbook_export.h"
 #include <Akonadi/Item>
 namespace KABMergeContacts {
+class MergeContactSelectListWidget;
 class KADDRESSBOOK_EXPORT MergeContactSelectInformationWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MergeContactSelectInformationWidget(const Akonadi::Item::List &mListItem, QWidget *parent=0);
+    explicit MergeContactSelectInformationWidget(QWidget *parent=0);
     ~MergeContactSelectInformationWidget();
+    void setContacts(const Akonadi::Item::List &listItem);
+private:
+    MergeContactSelectListWidget *mMergeSelectListInformation;
 };
 }
 
