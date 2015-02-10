@@ -17,7 +17,7 @@
 
 #include "texttospeech.h"
 #include "settings/pimcommonsettings.h"
-#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+#if KDEPIM_HAVE_TEXTTOSPEECH
 #include <QtTextToSpeech/QTextToSpeech>
 #endif
 
@@ -44,7 +44,7 @@ Q_GLOBAL_STATIC(TextToSpeechPrivate, sInstance)
 
 TextToSpeech::TextToSpeech(QObject *parent)
     : QObject(parent)
-#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+#if KDEPIM_HAVE_TEXTTOSPEECH
     , mTextToSpeech(new QTextToSpeech(this))
 #endif
 {
@@ -58,7 +58,7 @@ TextToSpeech::~TextToSpeech()
 
 void TextToSpeech::init()
 {
-#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+#if KDEPIM_HAVE_TEXTTOSPEECH
     mTextToSpeech->setRate(PimCommon::PimCommonSettings::self()->rate());
     mTextToSpeech->setPitch(PimCommon::PimCommonSettings::self()->pitch());
     mTextToSpeech->setVolume(PimCommon::PimCommonSettings::self()->volume());
@@ -74,7 +74,7 @@ TextToSpeech *TextToSpeech::self()
 
 void TextToSpeech::slotStateChanged()
 {
-#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+#if KDEPIM_HAVE_TEXTTOSPEECH
     TextToSpeech::State state;
     switch (mTextToSpeech->state()) {
     case QTextToSpeech::Ready:
@@ -96,7 +96,7 @@ void TextToSpeech::slotStateChanged()
 
 bool TextToSpeech::isReady() const
 {
-#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+#if KDEPIM_HAVE_TEXTTOSPEECH
     return (mTextToSpeech->state() != QTextToSpeech::BackendError);
 #else
     return false;
@@ -105,7 +105,7 @@ bool TextToSpeech::isReady() const
 
 void TextToSpeech::say(const QString &text)
 {
-#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+#if KDEPIM_HAVE_TEXTTOSPEECH
     mTextToSpeech->say(text);
 #else
     Q_UNUSED(text);
@@ -115,28 +115,28 @@ void TextToSpeech::say(const QString &text)
 
 void TextToSpeech::stop()
 {
-#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+#if KDEPIM_HAVE_TEXTTOSPEECH
     mTextToSpeech->stop();
 #endif
 }
 
 void TextToSpeech::pause()
 {
-#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+#if KDEPIM_HAVE_TEXTTOSPEECH
     mTextToSpeech->pause();
 #endif
 }
 
 void TextToSpeech::resume()
 {
-#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+#if KDEPIM_HAVE_TEXTTOSPEECH
     mTextToSpeech->resume();
 #endif
 }
 
 void TextToSpeech::setRate(double rate)
 {
-#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+#if KDEPIM_HAVE_TEXTTOSPEECH
     mTextToSpeech->setRate(rate);
 #else
     Q_UNUSED(rate);
@@ -145,7 +145,7 @@ void TextToSpeech::setRate(double rate)
 
 void TextToSpeech::setPitch(double pitch)
 {
-#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+#if KDEPIM_HAVE_TEXTTOSPEECH
     mTextToSpeech->setPitch(pitch);
 #else
     Q_UNUSED(pitch);
@@ -154,7 +154,7 @@ void TextToSpeech::setPitch(double pitch)
 
 void TextToSpeech::setVolume(int volume)
 {
-#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+#if KDEPIM_HAVE_TEXTTOSPEECH
     mTextToSpeech->setVolume(volume);
 #else
     Q_UNUSED(volume);
@@ -163,7 +163,7 @@ void TextToSpeech::setVolume(int volume)
 
 int TextToSpeech::volume() const
 {
-#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+#if KDEPIM_HAVE_TEXTTOSPEECH
     return PimCommon::PimCommonSettings::self()->volume();
 #else
     return 0;
@@ -172,7 +172,7 @@ int TextToSpeech::volume() const
 
 QVector<QLocale> TextToSpeech::availableLocales() const
 {
-#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+#if KDEPIM_HAVE_TEXTTOSPEECH
     return mTextToSpeech->availableLocales();
 #else
     return QVector<QLocale>();
@@ -181,7 +181,7 @@ QVector<QLocale> TextToSpeech::availableLocales() const
 
 void TextToSpeech::setLocale(const QLocale &locale) const
 {
-#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+#if KDEPIM_HAVE_TEXTTOSPEECH
     mTextToSpeech->setLocale(locale);
 #else
     Q_UNUSED(locale);
@@ -190,7 +190,7 @@ void TextToSpeech::setLocale(const QLocale &locale) const
 
 QLocale TextToSpeech::locale() const
 {
-#ifdef KDEPIM_HAVE_TEXTTOSPEECH
+#if KDEPIM_HAVE_TEXTTOSPEECH
     return mTextToSpeech->locale();
 #else
     return QLocale();
