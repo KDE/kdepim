@@ -72,13 +72,16 @@ void MergeContacts::mergeToContact(KABC::Addressee &newContact, const KABC::Addr
         }
         newContact.setEmails(newContactsEmail);
     }
+    // Merge Phone
 
+    // Merge blog
+
+    // Merge HomePage
 #if 0
     //TODO
     newContact.setName(fromContact.name());
     newContact.setFamilyName(fromContact.familyName());
     newContact.setFormattedName(fromContact.formattedName());
-    newContact.setEmails(fromContact.emails());
 #endif
 }
 

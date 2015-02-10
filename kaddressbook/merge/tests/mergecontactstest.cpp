@@ -122,7 +122,24 @@ void MergeContactsTest::shouldMergeEmails_data()
     QTest::addColumn<QStringList>("emailsItemB");
     QTest::addColumn<QStringList>("emailsItemC");
     QTest::addColumn<QStringList>("emails");
-    QTest::newRow("noEmailss") <<  QStringList() << QStringList() << QStringList() << QStringList();
+    QTest::newRow("noEmails") <<  QStringList() << QStringList() << QStringList() << QStringList();
+    QStringList lst;
+    lst << QLatin1String("foo");
+    lst << QLatin1String("foo1");
+    lst << QLatin1String("foo2");
+    QTest::newRow("copyFromOnContact") << lst << QStringList() << QStringList() << lst;
+    QTest::newRow("copyFromTwoIdenticContact") << lst << lst << QStringList() << lst;
+    QStringList lst2;
+    lst2 << QLatin1String("foo5");
+    lst2 << QLatin1String("foo6");
+    lst2 << QLatin1String("foo7");
+
+    QTest::newRow("copyFromTwoDifferentContact") << lst << lst2 << QStringList() << (QStringList() << lst << lst2);
+    QStringList lst3;
+    lst3 << QLatin1String("foo2");
+    lst3 << lst2;
+    //Identic => we will return merge between lst and lst2
+    QTest::newRow("copyWithSomeIdenticEmail") << lst << lst3 << QStringList() << (QStringList() << lst << lst2);
 }
 
 void MergeContactsTest::shouldMergeEmails()
