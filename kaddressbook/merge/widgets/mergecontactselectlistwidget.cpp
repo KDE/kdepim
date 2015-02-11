@@ -41,11 +41,48 @@ MergeContactSelectListWidget::~MergeContactSelectListWidget()
 
 }
 
-void MergeContactSelectListWidget::setContacts(const Akonadi::Item::List &lst)
+void MergeContactSelectListWidget::setContacts(MergeContacts::ConflictInformation conflictType, const Akonadi::Item::List &lst)
 {
-    //TODO fillContact ?
-    if (lst.isEmpty()) {
+    mConflictType = conflictType;
+    if (lst.isEmpty() || ( conflictType == MergeContacts::None) ) {
         return;
+    }
+    updateTitle();
+    fillList(lst);
+}
+
+void MergeContactSelectListWidget::updateTitle()
+{
+    QString title;
+    //TODO
+    switch(mConflictType) {
+    case MergeContacts::None:
+        break;
+    case MergeContacts::Birthday:
+        break;
+    case MergeContacts::Geo:
+        break;
+    case MergeContacts::Photo:
+        break;
+    case MergeContacts::Logo:
+        break;
+    }
+    mTitle->setText(title);
+}
+
+void MergeContactSelectListWidget::fillList(const Akonadi::Item::List &lst)
+{
+    switch(mConflictType) {
+    case MergeContacts::None:
+        break;
+    case MergeContacts::Birthday:
+        break;
+    case MergeContacts::Geo:
+        break;
+    case MergeContacts::Photo:
+        break;
+    case MergeContacts::Logo:
+        break;
     }
 }
 

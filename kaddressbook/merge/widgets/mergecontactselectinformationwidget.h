@@ -20,6 +20,7 @@
 
 #include <QWidget>
 #include "kaddressbook_export.h"
+#include "merge/job/mergecontacts.h"
 #include <Akonadi/Item>
 namespace KABMergeContacts {
 class MergeContactSelectListWidget;
@@ -29,9 +30,13 @@ class KADDRESSBOOK_EXPORT MergeContactSelectInformationWidget : public QWidget
 public:
     explicit MergeContactSelectInformationWidget(QWidget *parent=0);
     ~MergeContactSelectInformationWidget();
-    void setContacts(const Akonadi::Item::List &listItem);
+
+    void setContacts(MergeContacts::ConflictInformations conflictTypes, const Akonadi::Item::List &listItem);
+    KABC::Addressee createContact();
+
 private:
-    MergeContactSelectListWidget *mMergeSelectListInformation;
+    void addInformationWidget(MergeContacts::ConflictInformation conflictType, const Akonadi::Item::List &listItem);
+    QList<MergeContactSelectListWidget *> mListMergeSelectInformation;
 };
 }
 

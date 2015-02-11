@@ -129,6 +129,28 @@ MergeContacts::ConflictInformations MergeContacts::needManualSelectInformations(
                     newContact.setGeo(address.geo());
                 }
             }
+            // Test Photo
+            const KABC::Picture photo = address.photo();
+            if (!photo.isEmpty()) {
+                if (!newContact.photo().isEmpty()) {
+                    if (newContact.photo() != photo) {
+                        result |= Photo;
+                    }
+                } else {
+                    newContact.setPhoto(address.photo());
+                }
+            }
+            //Test Logo
+            const KABC::Picture logo = address.logo();
+            if (!logo.isEmpty()) {
+                if (!newContact.logo().isEmpty()) {
+                    if (newContact.logo() != logo) {
+                        result |= Logo;
+                    }
+                } else {
+                    newContact.setLogo(address.logo());
+                }
+            }
         }
     }
     return result;

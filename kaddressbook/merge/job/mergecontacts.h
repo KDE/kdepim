@@ -33,7 +33,9 @@ public:
     enum ConflictInformation {
         None = 0,
         Birthday = 1,
-        Geo = 2
+        Geo = 2,
+        Photo = 4,
+        Logo = 8
     };
     Q_ENUMS(ConflictInformation)
     Q_DECLARE_FLAGS(ConflictInformations, ConflictInformation)
