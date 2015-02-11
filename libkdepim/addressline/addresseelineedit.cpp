@@ -104,7 +104,13 @@ public:
         CompletionOrderEditor editor( ldapSearch, 0 );
         if( editor.exec() ) {
             updateLDAPWeights();
+            updateCollectionWeights();
         }
+    }
+
+    void updateCollectionWeights()
+    {
+        akonadiCollectionToCompletionSourceMap.clear();
     }
 
     void updateLDAPWeights()
