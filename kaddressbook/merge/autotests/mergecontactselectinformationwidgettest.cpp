@@ -16,8 +16,8 @@
 */
 
 #include "mergecontactselectinformationwidgettest.h"
-#include "merge/mergecontactselectinformationwidget.h"
-#include "merge/mergecontactselectlistwidget.h"
+#include "merge/widgets/mergecontactselectinformationwidget.h"
+#include "merge/widgets/mergecontactselectlistwidget.h"
 #include <qtest_kde.h>
 MergeContactSelectInformationWidgetTest::MergeContactSelectInformationWidgetTest(QObject *parent)
     : QObject(parent)

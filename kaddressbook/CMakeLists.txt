@@ -92,9 +92,10 @@ set(kaddressbook_merge_SRCS
    merge/searchduplicate/searchandmergecontactduplicatecontactdialog.cpp
    merge/searchduplicate/searchduplicateresultwidget.cpp
    merge/searchduplicate/resultduplicatetreewidget.cpp
-   merge/mergecontactselectinformationwidget.cpp
-   merge/mergecontactselectlistwidget.cpp
+   merge/widgets/mergecontactselectinformationwidget.cpp
+   merge/widgets/mergecontactselectlistwidget.cpp
    merge/widgets/mergecontactloseinformationwarning.cpp
+   merge/widgets/mergecontactselectinformationscrollarea.cpp
 )
 
 set(kaddressbook_LIB_SRCS
