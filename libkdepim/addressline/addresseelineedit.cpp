@@ -547,8 +547,8 @@ const QStringList KPIM::AddresseeLineEdit::Private::adjustedCompletionItems( boo
             sww.index = i;
             sourcesAndWeights.append( sww );
         }
-        qSort( sourcesAndWeights.begin(), sourcesAndWeights.end() );
 
+        qSort( sourcesAndWeights.begin(), sourcesAndWeights.end() );
         // Add the sections and their items to the final sortedItems result list
         const int numberOfSources(sourcesAndWeights.size());
         for ( int i = 0; i < numberOfSources; ++i ) {
@@ -977,10 +977,13 @@ void AddresseeLineEdit::Private::slotAkonadiSearchResult( KJob *job )
 void AddresseeLineEdit::Private::slotAkonadiCollectionsReceived(
         const Akonadi::Collection::List &collections )
 {
+    KSharedConfig::Ptr config = KSharedConfig::openConfig( QLatin1String("kpimcompletionorder") );
+    KConfigGroup group( config, "CompletionWeights" );
     foreach ( const Akonadi::Collection &collection, collections ) {
         if ( collection.isValid() ) {
             const QString sourceString = collection.displayName();
-            const int index = q->addCompletionSource( sourceString, 1 );
+            const int weight = group.readEntry( QString::number(collection.id()), 1 );
+            const int index = q->addCompletionSource( sourceString, weight );
             kDebug() << "\treceived: " << sourceString << "index: " << index;
             s_static->akonadiCollectionToCompletionSourceMap.insert( collection.id(), index );
         }
