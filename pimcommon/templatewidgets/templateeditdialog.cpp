@@ -33,12 +33,12 @@
 using namespace PimCommon;
 
 TemplateEditDialog::TemplateEditDialog(QWidget *parent, bool defaultTemplate)
-    : QDialog(parent), mOkButton(0)
+    : QDialog(parent), mOkButton(Q_NULLPTR)
 {
     setWindowTitle(defaultTemplate ? i18n("Default template") : i18n("Template"));
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
-    QDialogButtonBox *buttonBox = 0;
+    QDialogButtonBox *buttonBox = Q_NULLPTR;
     if (defaultTemplate) {
         buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
         connect(buttonBox, &QDialogButtonBox::accepted, this, &TemplateEditDialog::accept);

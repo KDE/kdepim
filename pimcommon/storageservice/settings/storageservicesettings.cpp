@@ -44,7 +44,7 @@ Q_GLOBAL_STATIC(StorageServiceSettingsPrivate, sInstance)
 
 StorageServiceSettings::StorageServiceSettings(QObject *parent)
     : QObject(parent),
-      mWallet(0)
+      mWallet(Q_NULLPTR)
 {
 }
 
@@ -92,7 +92,7 @@ bool StorageServiceSettings::createDefaultFolder()
 void StorageServiceSettings::slotWalletClosed()
 {
     delete mWallet;
-    mWallet = 0;
+    mWallet = Q_NULLPTR;
 }
 
 }

@@ -30,25 +30,25 @@ public:
     explicit BoxJob(QObject *parent = Q_NULLPTR);
     ~BoxJob();
 
-    void deleteFile(const QString &filename);
-    void deleteFolder(const QString &foldername);
+    void deleteFile(const QString &filename) Q_DECL_OVERRIDE;
+    void deleteFolder(const QString &foldername) Q_DECL_OVERRIDE;
 
-    void renameFolder(const QString &source, const QString &destination);
-    void renameFile(const QString &oldName, const QString &newName);
-    void moveFolder(const QString &source, const QString &destination);
-    void moveFile(const QString &source, const QString &destination);
-    QNetworkReply *uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination);
-    void listFolder(const QString &folder);
-    void accountInfo();
-    void createFolder(const QString &foldername, const QString &destination);
-    void shareLink(const QString &root, const QString &fileId);
-    void copyFile(const QString &source, const QString &destination);
-    void copyFolder(const QString &source, const QString &destination);
+    void renameFolder(const QString &source, const QString &destination) Q_DECL_OVERRIDE;
+    void renameFile(const QString &oldName, const QString &newName) Q_DECL_OVERRIDE;
+    void moveFolder(const QString &source, const QString &destination) Q_DECL_OVERRIDE;
+    void moveFile(const QString &source, const QString &destination) Q_DECL_OVERRIDE;
+    QNetworkReply *uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination) Q_DECL_OVERRIDE;
+    void listFolder(const QString &folder) Q_DECL_OVERRIDE;
+    void accountInfo() Q_DECL_OVERRIDE;
+    void createFolder(const QString &foldername, const QString &destination) Q_DECL_OVERRIDE;
+    void shareLink(const QString &root, const QString &fileId) Q_DECL_OVERRIDE;
+    void copyFile(const QString &source, const QString &destination) Q_DECL_OVERRIDE;
+    void copyFolder(const QString &source, const QString &destination) Q_DECL_OVERRIDE;
     void refreshToken();
-    QNetworkReply *downloadFile(const QString &name, const QString &fileId, const QString &destination);
-    void requestTokenAccess();
+    QNetworkReply *downloadFile(const QString &name, const QString &fileId, const QString &destination) Q_DECL_OVERRIDE;
+    void requestTokenAccess() Q_DECL_OVERRIDE;
     void initializeToken(const QString &refreshToken, const QString &token);
-    void createServiceFolder();
+    void createServiceFolder() Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     void authorizationDone(const QString &refreshToken, const QString &token, qint64 expireTime);

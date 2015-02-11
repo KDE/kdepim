@@ -80,7 +80,7 @@ QNetworkReply *YouSendItJob::downloadFile(const QString &name, const QString &fi
     qCDebug(PIMCOMMON_LOG) << " not implemented";
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
-    return 0;
+    return Q_NULLPTR;
 }
 
 QNetworkRequest YouSendItJob::setDefaultHeader(const QUrl &url)

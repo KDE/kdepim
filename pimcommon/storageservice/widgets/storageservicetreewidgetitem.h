@@ -32,7 +32,7 @@ class PIMCOMMON_EXPORT StorageServiceTreeWidgetItem : public QTreeWidgetItem
 {
 public:
     StorageServiceTreeWidgetItem(StorageServiceTreeWidget *parent);
-    bool operator<(const QTreeWidgetItem &other) const;
+    bool operator<(const QTreeWidgetItem &other) const Q_DECL_OVERRIDE;
     void setSize(qulonglong size);
     void setDateCreated(const QDateTime &date);
     void setLastModification(const QDateTime &date);

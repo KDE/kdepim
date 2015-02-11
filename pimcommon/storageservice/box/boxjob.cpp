@@ -455,7 +455,7 @@ QNetworkReply *BoxJob::uploadFile(const QString &filename, const QString &upload
         }
     }
     delete file;
-    return 0;
+    return Q_NULLPTR;
 }
 
 void BoxJob::listFolder(const QString &folder)
@@ -689,7 +689,7 @@ QNetworkReply *BoxJob::downloadFile(const QString &name, const QString &fileId, 
     } else {
         delete mDownloadFile;
     }
-    return 0;
+    return Q_NULLPTR;
 }
 
 void BoxJob::parseAccessToken(const QString &data)

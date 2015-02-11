@@ -38,7 +38,7 @@ ShortUrlEnginesTest::~ShortUrlEnginesTest()
 void ShortUrlEnginesTest::shouldCreateEngine()
 {
     for (int i = 0; i < PimCommon::ShortUrlUtils::EndListEngine; ++i) {
-        PimCommon::AbstractShortUrl *abstrShortUrl = PimCommon::ShortUrlUtils::loadEngine(static_cast<PimCommon::ShortUrlUtils::EngineType>(i), 0);
+        PimCommon::AbstractShortUrl *abstrShortUrl = PimCommon::ShortUrlUtils::loadEngine(static_cast<PimCommon::ShortUrlUtils::EngineType>(i), Q_NULLPTR);
         QVERIFY(abstrShortUrl);
         delete abstrShortUrl;
     }
@@ -63,7 +63,7 @@ void ShortUrlEnginesTest::shouldTestEngines()
     QFETCH(PimCommon::ShortUrlUtils::EngineType, engine);
     QFETCH(QString, longurl);
     QFETCH(QString, shorturl);
-    PimCommon::AbstractShortUrl *abstrShortUrl = PimCommon::ShortUrlUtils::loadEngine(engine, 0);
+    PimCommon::AbstractShortUrl *abstrShortUrl = PimCommon::ShortUrlUtils::loadEngine(engine, Q_NULLPTR);
     QSignalSpy spy(abstrShortUrl, SIGNAL(shortUrlDone(QString)));
     abstrShortUrl->shortUrl(longurl);
     abstrShortUrl->start();

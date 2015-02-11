@@ -56,7 +56,7 @@ public:
     {
     }
 
-    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE
     {
         if (index.row() < 0 || index.row() >= mRights.count()) {
             return QVariant();
@@ -80,7 +80,7 @@ public:
 
     }
 
-    virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole)
+    virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE
     {
         if (index.row() < 0 || index.row() >= mRights.count()) {
             return false;
@@ -106,7 +106,7 @@ public:
         return false;
     }
 
-    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE
     {
         if (parent.isValid()) {
             return 0;
@@ -141,7 +141,7 @@ public:
     }
 
 protected:
-    virtual bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex())
+    virtual bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE
     {
         beginInsertRows(parent, row, row + count - 1);
         for (int i = 0; i < count; ++i) {
@@ -152,7 +152,7 @@ protected:
         return true;
     }
 
-    virtual bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex())
+    virtual bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE
     {
         beginRemoveRows(parent, row, row + count - 1);
         for (int i = 0; i < count; ++i) {
@@ -271,7 +271,7 @@ public:
 
         if (mImapUserName == userId) {
             if (KMessageBox::Cancel == KMessageBox::warningContinueCancel(
-                        0,
+                        Q_NULLPTR,
                         i18n("Do you really want to remove your own permissions for this folder? "
                              "You will not be able to access it afterwards."),
                         i18n("Remove"))) {

@@ -270,7 +270,7 @@ void RichTextEditor::setReadOnly(bool readOnly)
 
     if (readOnly) {
         delete d->highLighter;
-        d->highLighter = 0;
+        d->highLighter = Q_NULLPTR;
 
         d->customPalette = testAttribute(Qt::WA_SetPalette);
         QPalette p = palette();
@@ -303,7 +303,7 @@ void RichTextEditor::slotCheckSpelling()
     if (!d->spellCheckingLanguage.isEmpty()) {
         backgroundSpellCheck->changeLanguage(d->spellCheckingLanguage);
     }
-    Sonnet::Dialog *spellDialog = new Sonnet::Dialog(backgroundSpellCheck, 0);
+    Sonnet::Dialog *spellDialog = new Sonnet::Dialog(backgroundSpellCheck, Q_NULLPTR);
     backgroundSpellCheck->setParent(spellDialog);
     spellDialog->setAttribute(Qt::WA_DeleteOnClose, true);
     connect(spellDialog, &Sonnet::Dialog::replace, this, &RichTextEditor::slotSpellCheckerCorrected);
@@ -416,7 +416,7 @@ void RichTextEditor::setCheckSpellingEnabled(bool check)
         }
     } else {
         delete d->highLighter;
-        d->highLighter = 0;
+        d->highLighter = Q_NULLPTR;
     }
 }
 

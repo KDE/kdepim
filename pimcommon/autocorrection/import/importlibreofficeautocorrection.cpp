@@ -44,11 +44,11 @@ void ImportLibreOfficeAutocorrection::closeArchive()
             mArchive->close();
         }
         delete mArchive;
-        mArchive = 0;
+        mArchive = Q_NULLPTR;
     }
 
     delete mTempDir;
-    mTempDir = 0;
+    mTempDir = Q_NULLPTR;
 }
 
 bool ImportLibreOfficeAutocorrection::import(const QString &fileName, LoadAttribute loadAttribute)

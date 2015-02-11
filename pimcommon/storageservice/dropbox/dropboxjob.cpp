@@ -422,7 +422,7 @@ QNetworkReply *DropBoxJob::uploadFile(const QString &filename, const QString &up
         }
     }
     delete file;
-    return 0;
+    return Q_NULLPTR;
 }
 
 void DropBoxJob::accountInfo()
@@ -521,7 +521,7 @@ QNetworkReply *DropBoxJob::downloadFile(const QString &name, const QString &file
     } else {
         delete mDownloadFile;
     }
-    return 0;
+    return Q_NULLPTR;
 }
 
 void DropBoxJob::deleteFile(const QString &filename)

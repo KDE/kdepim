@@ -24,7 +24,7 @@ class CollectionAclWidgetTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit CollectionAclWidgetTest(QObject *parent = 0);
+    explicit CollectionAclWidgetTest(QObject *parent = Q_NULLPTR);
     ~CollectionAclWidgetTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();

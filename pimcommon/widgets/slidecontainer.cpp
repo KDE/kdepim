@@ -46,7 +46,7 @@ QWidget *SlideContainer::content() const
 void SlideContainer::setContent(QWidget *content)
 {
     if (mContent) {
-        mContent->setParent(0);
+        mContent->setParent(Q_NULLPTR);
         mContent->removeEventFilter(this);
     }
     mContent = content;

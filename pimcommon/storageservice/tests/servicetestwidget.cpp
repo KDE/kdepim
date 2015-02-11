@@ -34,7 +34,7 @@
 
 ServiceTestWidget::ServiceTestWidget(QWidget *parent)
     : QWidget(parent),
-      mStorageService(0)
+      mStorageService(Q_NULLPTR)
 {
     PimCommon::TestSettingsJob *settingsJob = new PimCommon::TestSettingsJob;
     PimCommon::StorageServiceJobConfig *configJob = PimCommon::StorageServiceJobConfig::self();
@@ -188,7 +188,7 @@ void ServiceTestWidget::slotListFolder()
 
 void ServiceTestWidget::slotUploadFile()
 {
-    const QString filename = QFileDialog::getOpenFileName(0, QString(), QString());
+    const QString filename = QFileDialog::getOpenFileName(Q_NULLPTR, QString(), QString());
     if (!filename.isEmpty()) {
         mStorageService->uploadFile(filename, QString(), QString()); //TODO
     }

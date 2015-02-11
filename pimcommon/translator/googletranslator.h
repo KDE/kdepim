@@ -33,10 +33,10 @@ public:
     explicit GoogleTranslator();
     ~GoogleTranslator();
 
-    QMap<QString, QMap<QString, QString> > initListLanguage(KComboBox *from);
-    void translate();
-    void debug();
-    void clear();
+    QMap<QString, QMap<QString, QString> > initListLanguage(KComboBox *from) Q_DECL_OVERRIDE;
+    void translate() Q_DECL_OVERRIDE;
+    void debug() Q_DECL_OVERRIDE;
+    void clear() Q_DECL_OVERRIDE;
 protected Q_SLOTS:
     void slotTranslateFinished(QNetworkReply *);
     void slotError(QNetworkReply::NetworkError /*error*/);

@@ -48,10 +48,10 @@ class PimCommon::RenameFileDialog::RenameFileDialogPrivate
 public:
     RenameFileDialogPrivate(const KUrl &_url, RenameFileDialog *qq)
         : url(_url),
-          applyAll(0),
-          rename(0),
-          suggestNewName(0),
-          nameEdit(0),
+          applyAll(Q_NULLPTR),
+          rename(Q_NULLPTR),
+          suggestNewName(Q_NULLPTR),
+          nameEdit(Q_NULLPTR),
           q(qq)
     {
 

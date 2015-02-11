@@ -81,7 +81,7 @@ Q_SIGNALS:
     void downloadFile();
 
 protected:
-    virtual void createMenuActions(QMenu *menu);
+    virtual void createMenuActions(QMenu *menu) Q_DECL_OVERRIDE;
 };
 
 }

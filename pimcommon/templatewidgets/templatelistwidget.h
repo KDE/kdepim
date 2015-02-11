@@ -49,8 +49,8 @@ public:
     void addDefaultTemplate(const QString &templateName, const QString &templateScript);
 
 protected:
-    QStringList mimeTypes() const;
-    QMimeData *mimeData(const QList<QListWidgetItem *> items) const;
+    QStringList mimeTypes() const Q_DECL_OVERRIDE;
+    QMimeData *mimeData(const QList<QListWidgetItem *> items) const Q_DECL_OVERRIDE;
 
     void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
 

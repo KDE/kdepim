@@ -52,8 +52,8 @@ class TranslatorWidget::TranslatorWidgetPrivate
 {
 public:
     TranslatorWidgetPrivate()
-        : abstractTranslator(0),
-          action(0),
+        : abstractTranslator(Q_NULLPTR),
+          action(Q_NULLPTR),
           languageSettingsChanged(false),
           standalone(true)
     {

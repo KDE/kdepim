@@ -373,12 +373,12 @@ QNetworkReply *HubicJob::uploadFile(const QString &filename, const QString &uplo
             connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &HubicJob::slotError);
             return reply;
 #else
-            return 0;
+            return Q_NULLPTR;
 #endif
         }
     }
     delete file;
-    return 0;
+    return Q_NULLPTR;
 }
 
 void HubicJob::listFolder(const QString &folder)
@@ -602,7 +602,7 @@ QNetworkReply *HubicJob::downloadFile(const QString &name, const QString &fileId
         delete mDownloadFile;
     }
 #endif
-    return 0;
+    return Q_NULLPTR;
 }
 
 void HubicJob::parseAccessToken(const QString &data)

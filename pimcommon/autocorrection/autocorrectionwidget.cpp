@@ -43,7 +43,7 @@ Q_DECLARE_METATYPE(AutoCorrectionWidget::ImportFileType)
 AutoCorrectionWidget::AutoCorrectionWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::AutoCorrectionWidget),
-    mAutoCorrection(0),
+    mAutoCorrection(Q_NULLPTR),
     mWasChanged(false)
 {
     ui->setupUi(this);
@@ -388,11 +388,11 @@ void AutoCorrectionWidget::removeAutocorrectEntry()
             //qCDebug(PIMCOMMON_LOG) << "below";
             findStr = item->text(0);
             delete item;
-            item = 0;
+            item = Q_NULLPTR;
         } else if (ui->treeWidget->topLevelItemCount() > 0) {
             findStr = item->text(0);
             delete item;
-            item = 0;
+            item = Q_NULLPTR;
         }
         if (!findStr.isEmpty()) {
             m_autocorrectEntries.remove(findStr);
@@ -548,7 +548,7 @@ void AutoCorrectionWidget::slotImportAutoCorrection(QAction *act)
         }
         const QString fileName = QFileDialog::getOpenFileName(this, title ,  QString(), filter);
         if (!fileName.isEmpty()) {
-            PimCommon::ImportAbstractAutocorrection *importAutoCorrection = 0;
+            PimCommon::ImportAbstractAutocorrection *importAutoCorrection = Q_NULLPTR;
             switch (type) {
             case AutoCorrectionWidget::LibreOffice:
                 importAutoCorrection = new PimCommon::ImportLibreOfficeAutocorrection(this);

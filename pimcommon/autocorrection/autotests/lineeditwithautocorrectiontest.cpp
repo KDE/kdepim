@@ -27,7 +27,7 @@ LineEditWithAutocorrectionTest::LineEditWithAutocorrectionTest()
 
 void LineEditWithAutocorrectionTest::shouldNotAutocorrectWhenDisabled()
 {
-    PimCommon::LineEditWithAutoCorrection lineedit(0, QLatin1String("lineeditwithautocorrecttestrc"));
+    PimCommon::LineEditWithAutoCorrection lineedit(Q_NULLPTR, QLatin1String("lineeditwithautocorrecttestrc"));
     QHash<QString, QString> entries;
     const QString originalWord = QLatin1String("FOOFOO");
     const QString replaceWord = QLatin1String("BLABLA");
@@ -42,7 +42,7 @@ void LineEditWithAutocorrectionTest::shouldNotAutocorrectWhenDisabled()
 
 void LineEditWithAutocorrectionTest::shouldReplaceWordWhenExactText()
 {
-    PimCommon::LineEditWithAutoCorrection lineedit(0, QLatin1String("lineeditwithautocorrecttestrc"));
+    PimCommon::LineEditWithAutoCorrection lineedit(Q_NULLPTR, QLatin1String("lineeditwithautocorrecttestrc"));
     const QString originalWord = QLatin1String("FOOFOO");
     const QString replaceWord = QLatin1String("BLABLA");
     QHash<QString, QString> entries;
@@ -60,7 +60,7 @@ void LineEditWithAutocorrectionTest::shouldReplaceWordWhenExactText()
 
 void LineEditWithAutocorrectionTest::shouldNotReplaceWordWhenInexactText()
 {
-    PimCommon::LineEditWithAutoCorrection lineedit(0, QLatin1String("lineeditwithautocorrecttestrc"));
+    PimCommon::LineEditWithAutoCorrection lineedit(Q_NULLPTR, QLatin1String("lineeditwithautocorrecttestrc"));
     const QString originalWord = QLatin1String("FOOFOO");
     const QString replaceWord = QLatin1String("BLABLA");
     QHash<QString, QString> entries;
@@ -78,7 +78,7 @@ void LineEditWithAutocorrectionTest::shouldNotReplaceWordWhenInexactText()
 
 void LineEditWithAutocorrectionTest::shouldNotAddTwoSpace()
 {
-    PimCommon::LineEditWithAutoCorrection lineedit(0, QLatin1String("lineeditwithautocorrecttestrc"));
+    PimCommon::LineEditWithAutoCorrection lineedit(Q_NULLPTR, QLatin1String("lineeditwithautocorrecttestrc"));
     const QString originalWord = QLatin1String("FOOFOO ");
     lineedit.autocorrection()->setSingleSpaces(true);
     lineedit.autocorrection()->setEnabledAutoCorrection(true);

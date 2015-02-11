@@ -49,7 +49,7 @@ private Q_SLOTS:
     void slotReplace();
 
 private:
-    void init(PlainTextEditor *customEditor = 0);
+    void init(PlainTextEditor *customEditor = Q_NULLPTR);
     PimCommon::PlainTextEditFindBar *mFindBar;
     PlainTextEditor *mEditor;
     PimCommon::TextToSpeechWidget *mTextToSpeechWidget;

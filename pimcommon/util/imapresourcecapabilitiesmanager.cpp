@@ -75,7 +75,7 @@ void ImapResourceCapabilitiesManager::slotCapabilities(QDBusPendingCallWatcher *
         }
     }
     watcher->deleteLater();
-    watcher = 0;
+    watcher = Q_NULLPTR;
 }
 
 void ImapResourceCapabilitiesManager::init()

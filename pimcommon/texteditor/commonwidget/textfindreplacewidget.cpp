@@ -173,7 +173,7 @@ QLineEdit *TextFindWidget::search() const
 
 QTextDocument::FindFlags TextFindWidget::searchOptions() const
 {
-    QTextDocument::FindFlags opt = 0;
+    QTextDocument::FindFlags opt = Q_NULLPTR;
     if (mCaseSensitiveAct->isChecked()) {
         opt |= QTextDocument::FindCaseSensitively;
     }

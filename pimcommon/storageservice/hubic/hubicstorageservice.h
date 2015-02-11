@@ -63,7 +63,7 @@ public:
     QMap<QString, QString> itemInformation(const QVariantMap &variantMap) Q_DECL_OVERRIDE;
     QString fileIdentifier(const QVariantMap &variantMap) Q_DECL_OVERRIDE;
     QString fileShareRoot(const QVariantMap &variantMap) Q_DECL_OVERRIDE;
-    QIcon icon() const;
+    QIcon icon() const Q_DECL_OVERRIDE;
 
     void shutdownService() Q_DECL_OVERRIDE;
     bool hasValidSettings() const Q_DECL_OVERRIDE;

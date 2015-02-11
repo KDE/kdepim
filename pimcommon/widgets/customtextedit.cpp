@@ -30,7 +30,7 @@ class CustomTextEdit::Private
 public:
     Private(const QString &_configFile)
         : configFile(_configFile),
-          speller(0)
+          speller(Q_NULLPTR)
     {
     }
     ~Private()
@@ -91,7 +91,7 @@ void CustomTextEdit::insertLanguageMenu(QMenu *contextMenu)
     if (!checkSpellingEnabled()) {
         return;
     }
-    QAction *spellCheckAction = 0;
+    QAction *spellCheckAction = Q_NULLPTR;
 
     foreach (QAction *action, contextMenu->actions()) {
         if (action->text() == i18n_kdelibs4("Auto Spell Check")) {

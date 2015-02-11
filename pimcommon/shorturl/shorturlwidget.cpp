@@ -41,9 +41,9 @@ using namespace PimCommon;
 
 ShortUrlWidget::ShortUrlWidget(QWidget *parent)
     : QWidget(parent),
-      mShorturlServiceName(0),
-      mEngine(0),
-      mToggleAction(0),
+      mShorturlServiceName(Q_NULLPTR),
+      mEngine(Q_NULLPTR),
+      mToggleAction(Q_NULLPTR),
       mStandalone(false)
 {
     loadEngine();

@@ -101,7 +101,7 @@ TranslatorWidget *CustomToolsWidget::translatorWidget() const
 
 KToggleAction *CustomToolsWidget::action(CustomToolsWidget::ToolType type)
 {
-    KToggleAction *act = 0;
+    KToggleAction *act = Q_NULLPTR;
     switch (type) {
     case TranslatorTool:
         act = mTranslatorWidget->toggleAction();

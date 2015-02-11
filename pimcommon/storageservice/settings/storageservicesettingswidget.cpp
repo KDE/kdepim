@@ -299,7 +299,7 @@ void StorageServiceSettingsWidget::defaultConnection(StorageServiceAbstract *sto
 
 void StorageServiceSettingsWidget::slotAuthenticationFailed(const QString &serviceName, const QString &error)
 {
-    PimCommon::StorageListWidgetItem *item = 0;
+    PimCommon::StorageListWidgetItem *item = Q_NULLPTR;
     for (int i = 0; i < mListService->count(); ++i) {
         if (mListService->item(i)->data(Name).toString() == serviceName) {
             item = static_cast<PimCommon::StorageListWidgetItem *>(mListService->item(i));

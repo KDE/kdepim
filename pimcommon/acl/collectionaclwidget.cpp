@@ -36,7 +36,7 @@ class ActionButton : public QPushButton
 public:
     ActionButton(QWidget *parent = Q_NULLPTR)
         : QPushButton(parent),
-          mDefaultAction(0)
+          mDefaultAction(Q_NULLPTR)
     {
     }
 
@@ -54,7 +54,7 @@ public:
     }
 
 protected:
-    virtual void actionEvent(QActionEvent *event)
+    virtual void actionEvent(QActionEvent *event) Q_DECL_OVERRIDE
     {
         QAction *action = event->action();
         switch (event->type()) {
