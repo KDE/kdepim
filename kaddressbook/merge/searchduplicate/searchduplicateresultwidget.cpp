@@ -55,6 +55,8 @@ SearchDuplicateResultWidget::SearchDuplicateResultWidget(QWidget *parent)
 
     mMergeContactWarning = new MergeContactLoseInformationWarning;
     mMergeContactWarning->setObjectName(QLatin1String("mergecontactwarning"));
+    connect(mMergeContactWarning, SIGNAL(continueMerging()), this, SLOT(slotAutomaticMerging()));
+    connect(mMergeContactWarning, SIGNAL(customizeMergingContacts()), this, SLOT(slotCustomizeMergingContacts()));
     mainLayout->addWidget(mMergeContactWarning);
 
     QHBoxLayout *mergeLayout = new QHBoxLayout;
@@ -98,6 +100,7 @@ void SearchDuplicateResultWidget::slotMergeContact()
     mListContactToMerge = mResult->selectedContactsToMerge();
     if (!mListContactToMerge.isEmpty()) {
         mMergeContact->setEnabled(false);
+        //Detect if conflict.
         mergeContact();
     }
 }
@@ -126,4 +129,14 @@ void SearchDuplicateResultWidget::slotMergeDone(const Akonadi::Item &item)
 void SearchDuplicateResultWidget::slotUpdateMergeButton()
 {
     mMergeContact->setEnabled(mCollectionCombobox->currentCollection().isValid());
+}
+
+void SearchDuplicateResultWidget::slotAutomaticMerging()
+{
+    //TODO
+}
+
+void SearchDuplicateResultWidget::slotCustomizeMergingContacts()
+{
+    //TODO
 }

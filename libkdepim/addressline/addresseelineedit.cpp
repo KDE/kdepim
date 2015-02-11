@@ -266,7 +266,6 @@ public:
     void slotTriggerDelayedQueries();
     void slotShowOUChanged(bool);
     void slotConfigureBalooBlackList();
-    static KCompletion::CompOrder completionOrder();
 
     AddresseeLineEdit *q;
     QStringList m_balooBlackList;
@@ -289,8 +288,8 @@ public:
 void AddresseeLineEdit::Private::init()
 {
     if (!s_static.exists()) {
-        s_static->completion->setOrder(completionOrder());
-        s_static->completion->setIgnoreCase(true);
+        s_static->completion->setOrder( KCompletion::Weighted );
+        s_static->completion->setIgnoreCase( true );
     }
 
     if (m_useCompletion) {
@@ -549,8 +548,7 @@ const QStringList KPIM::AddresseeLineEdit::Private::adjustedCompletionItems(bool
             sww.index = i;
             sourcesAndWeights.append(sww);
         }
-        qSort(sourcesAndWeights.begin(), sourcesAndWeights.end());
-
+        qSort( sourcesAndWeights.begin(), sourcesAndWeights.end() );
         // Add the sections and their items to the final sortedItems result list
         const int numberOfSources(sourcesAndWeights.size());
         for (int i = 0; i < numberOfSources; ++i) {
@@ -703,7 +701,7 @@ void AddresseeLineEdit::Private::doCompletion(bool ctrlT)
         return;
     }
 
-    s_static->completion->setOrder(completionOrder());
+    s_static->completion->setOrder( KCompletion::Weighted );
 
     // cursor at end of string - or Ctrl+T pressed for substring completion?
     if (ctrlT) {
@@ -975,12 +973,15 @@ void AddresseeLineEdit::Private::slotAkonadiSearchResult(KJob *job)
 void AddresseeLineEdit::Private::slotAkonadiCollectionsReceived(
     const Akonadi::Collection::List &collections)
 {
-    foreach (const Akonadi::Collection &collection, collections) {
-        if (collection.isValid()) {
+    KSharedConfig::Ptr config = KSharedConfig::openConfig( QLatin1String("kpimcompletionorder") );
+    KConfigGroup group( config, "CompletionWeights" );
+    foreach ( const Akonadi::Collection &collection, collections ) {
+        if ( collection.isValid() ) {
             const QString sourceString = collection.displayName();
-            const int index = q->addCompletionSource(sourceString, 1);
+            const int weight = group.readEntry( QString::number(collection.id()), 1 );
+            const int index = q->addCompletionSource( sourceString, weight );
             qDebug() << "\treceived: " << sourceString << "index: " << index;
-            s_static->akonadiCollectionToCompletionSourceMap.insert(collection.id(), index);
+            s_static->akonadiCollectionToCompletionSourceMap.insert( collection.id(), index );
         }
     }
 
@@ -990,21 +991,6 @@ void AddresseeLineEdit::Private::slotAkonadiCollectionsReceived(
     const QListWidgetItem *current = q->completionBox()->currentItem();
     if (!current || m_searchString.trimmed() != current->text().trimmed()) {
         doCompletion(m_lastSearchMode);
-    }
-}
-
-// not cached, to make sure we get an up-to-date value when it changes
-KCompletion::CompOrder AddresseeLineEdit::Private::completionOrder()
-{
-    KConfig _config(QLatin1String("kpimcompletionorder"));
-    const KConfigGroup config(&_config, QLatin1String("General"));
-    const QString order =
-        config.readEntry(QLatin1String("CompletionOrder"), QString::fromLatin1("Weighted"));
-
-    if (order == QLatin1String("Weighted")) {
-        return KCompletion::Weighted;
-    } else {
-        return KCompletion::Sorted;
     }
 }
 

@@ -90,7 +90,8 @@ private:
     void readConfig();
     void writeConfig();
     void loadCompletionItems();
-    void addCompletionItemForIndex(const QModelIndex &);
+    void addRecentAddressItem();
+    void addCompletionItemForIndex( const QModelIndex& );
 
     KConfig mConfig;
     QTreeWidget *mListView;

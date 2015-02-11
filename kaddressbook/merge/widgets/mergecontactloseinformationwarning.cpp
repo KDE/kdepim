@@ -48,10 +48,12 @@ MergeContactLoseInformationWarning::~MergeContactLoseInformationWarning()
 
 void MergeContactLoseInformationWarning::slotCustomizeMerge()
 {
-    //TODO
+    animatedHide();
+    Q_EMIT customizeMergingContacts();
 }
 
 void MergeContactLoseInformationWarning::slotAutomaticMerging()
 {
-    //TODO
+    animatedHide();
+    Q_EMIT continueMerging();
 }

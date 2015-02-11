@@ -279,7 +279,15 @@ void CompletionOrderEditor::writeConfig()
     group.sync();
 }
 
-void CompletionOrderEditor::addCompletionItemForIndex(const QModelIndex &index)
+void CompletionOrderEditor::addRecentAddressItem()
+{
+    //Be default it's the first.
+    SimpleCompletionItem *item = new SimpleCompletionItem( this, i18n( "Recent Addresses" ), QLatin1String("Recent Addresses"), 10 );
+    item->setIcon( QIcon::fromTheme(QLatin1String("kmail")) );
+    new CompletionViewItem( mListView, item, 0 );
+}
+
+void CompletionOrderEditor::addCompletionItemForIndex( const QModelIndex &index )
 {
     const Akonadi::Collection collection = index.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
     if (!collection.isValid()) {
@@ -326,7 +334,9 @@ void CompletionOrderEditor::loadCompletionItems()
         addCompletionItemForIndex(mCollectionModel->index(row, 0));
     }
 
-    mListView->sortItems(0, Qt::AscendingOrder);
+    addRecentAddressItem();
+
+    mListView->sortItems( 0, Qt::AscendingOrder );
 }
 
 void CompletionOrderEditor::rowsInserted(const QModelIndex &parent, int start, int end)
@@ -395,7 +405,11 @@ void CompletionOrderEditor::slotOk()
 {
     if (mDirty) {
         int w = 100;
-        for (int itemIndex = 0; itemIndex < mListView->topLevelItemCount(); ++itemIndex) {
+        //Clean up order
+        KConfigGroup group( configFile(), "CompletionWeights" );
+        group.deleteGroup();
+
+        for ( int itemIndex = 0; itemIndex < mListView->topLevelItemCount(); ++itemIndex ) {
             CompletionViewItem *item =
                 static_cast<CompletionViewItem *>(mListView->topLevelItem(itemIndex));
             item->item()->setCompletionWeight(w);
