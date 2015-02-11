@@ -50,8 +50,8 @@ void MergeContactsTest::shouldReturnDefaultAddressWhenOneItem()
 void MergeContactsTest::noNeedManualSelectionCheckWhenEmptyList()
 {
     MergeContacts contacts;
-    const bool result = contacts.needManualSelectInformations();
-    QCOMPARE(result, false);
+    const MergeContacts::ConflictInformations result = contacts.needManualSelectInformations();
+    QCOMPARE(result, MergeContacts::None);
 }
 
 void MergeContactsTest::noNeedManualSelectionCheckWhenOneItem()
@@ -63,8 +63,8 @@ void MergeContactsTest::noNeedManualSelectionCheckWhenOneItem()
     item.setPayload<KABC::Addressee>( address );
     lst<<item;
     MergeContacts contacts(lst);
-    const bool result = contacts.needManualSelectInformations();
-    QCOMPARE(result, false);
+    const MergeContacts::ConflictInformations result = contacts.needManualSelectInformations();
+    QCOMPARE(result, MergeContacts::None);
 }
 
 void MergeContactsTest::shouldMergeNotes_data()

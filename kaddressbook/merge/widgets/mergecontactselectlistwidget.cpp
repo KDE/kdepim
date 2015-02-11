@@ -17,17 +17,24 @@
 
 #include "mergecontactselectlistwidget.h"
 #include <KABC/Addressee>
-
+#include <QLabel>
+#include <QListWidget>
+#include <QVBoxLayout>
 using namespace KABMergeContacts;
 using namespace KABC;
 
 MergeContactSelectListWidget::MergeContactSelectListWidget(QWidget *parent)
-    : QTreeWidget(parent)
+    : QWidget(parent)
 {
-
+    QVBoxLayout *vbox = new QVBoxLayout;
+    setLayout(vbox);
+    mTitle = new QLabel;
+    mTitle->setObjectName(QLatin1String("title"));
+    vbox->addWidget(mTitle);
+    mSelectListWidget = new QListWidget;
+    mSelectListWidget->setObjectName(QLatin1String("listwidget"));
+    vbox->addWidget(mSelectListWidget);
 }
-
-
 
 MergeContactSelectListWidget::~MergeContactSelectListWidget()
 {
@@ -37,13 +44,12 @@ MergeContactSelectListWidget::~MergeContactSelectListWidget()
 void MergeContactSelectListWidget::setContacts(const Akonadi::Item::List &lst)
 {
     //TODO fillContact ?
-    clear();
     if (lst.isEmpty()) {
         return;
     }
 }
 
-void MergeContactSelectListWidget::fillList()
+void MergeContactSelectListWidget::createContact(KABC::Addressee &addr)
 {
-
+    //TODO
 }

@@ -26,6 +26,8 @@ class MergeContactSelectListWidgetTest : public QObject
 public:
     explicit MergeContactSelectListWidgetTest(QObject *parent = 0);
     ~MergeContactSelectListWidgetTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
 #endif // MERGECONTACTSELECTLISTWIDGETTEST_H

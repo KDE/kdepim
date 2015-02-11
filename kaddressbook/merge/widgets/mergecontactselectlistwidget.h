@@ -18,20 +18,27 @@
 #ifndef MERGECONTACTSELECTLISTWIDGET_H
 #define MERGECONTACTSELECTLISTWIDGET_H
 
-#include <QTreeWidget>
 #include <Akonadi/Item>
 #include "kaddressbook_export.h"
+#include <QWidget>
+class QLabel;
+class QListWidget;
+namespace KABC {
+class Addressee;
+}
 namespace KABMergeContacts {
-class KADDRESSBOOK_EXPORT MergeContactSelectListWidget : public QTreeWidget
+class KADDRESSBOOK_EXPORT MergeContactSelectListWidget : public QWidget
 {
     Q_OBJECT
 public:
     explicit MergeContactSelectListWidget(QWidget *parent=0);
     ~MergeContactSelectListWidget();
-    void setContacts(const Akonadi::Item::List &lst);
 
+    void setContacts(const Akonadi::Item::List &lst);
+    void createContact(KABC::Addressee &addr);
 private:
-    void fillList();
+    QLabel *mTitle;
+    QListWidget *mSelectListWidget;
 };
 }
 

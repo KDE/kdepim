@@ -99,9 +99,9 @@ void MergeContacts::mergeToContact(KABC::Addressee &newContact, const KABC::Addr
 #endif
 }
 
-bool MergeContacts::needManualSelectInformations()
+MergeContacts::ConflictInformations MergeContacts::needManualSelectInformations()
 {
-    bool result = false;
+    MergeContacts::ConflictInformations result = None;
     if (mListItem.count() < 2)
         return result;
     KABC::Addressee newContact;
@@ -112,18 +112,18 @@ bool MergeContacts::needManualSelectInformations()
             if (address.birthday().isValid()) {
                 if (newContact.birthday().isValid()) {
                     if (newContact.birthday() != address.birthday()) {
-                        return true;
+                        result |= Birthday;
                     }
                 } else {
                     newContact.setBirthday(address.birthday());
                 }
             }
             //Test Geo
-            const Geo geo = address.geo();
+            const KABC::Geo geo = address.geo();
             if (geo.isValid()) {
                 if (newContact.geo().isValid()) {
                     if (newContact.geo() != geo) {
-                        return true;
+                        result |= Geo;
                     }
                 } else {
                     newContact.setGeo(address.geo());
@@ -131,6 +131,5 @@ bool MergeContacts::needManualSelectInformations()
             }
         }
     }
-
     return result;
 }

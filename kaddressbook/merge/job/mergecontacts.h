@@ -30,14 +30,17 @@ public:
     MergeContacts(const Akonadi::Item::List &items = Akonadi::Item::List());
     ~MergeContacts();
 
-    enum ManualInformation {
+    enum ConflictInformation {
         None = 0,
-        Birthday = 1
+        Birthday = 1,
+        Geo = 2
     };
+    Q_ENUMS(ConflictInformation)
+    Q_DECLARE_FLAGS(ConflictInformations, ConflictInformation)
 
     KABC::Addressee mergedContact();
 
-    bool needManualSelectInformations();
+    MergeContacts::ConflictInformations needManualSelectInformations();
 
 private:
     void mergeToContact(KABC::Addressee &newAddress, const KABC::Addressee &fromContact);
