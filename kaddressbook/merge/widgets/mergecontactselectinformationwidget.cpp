@@ -16,7 +16,7 @@
 */
 
 #include "mergecontactselectinformationwidget.h"
-#include "mergecontactselectlistwidget.h"
+#include "merge/widgets/mergecontactselectlistwidget.h"
 #include <KLocalizedString>
 #include <QVBoxLayout>
 #include <QLabel>
