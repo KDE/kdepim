@@ -31,7 +31,7 @@ namespace KABMergeContacts
 class KADDRESSBOOK_EXPORT ResultDuplicateTreeWidgetItem : public QTreeWidgetItem
 {
 public:
-    explicit ResultDuplicateTreeWidgetItem(QTreeWidget *parent = 0, bool hasCheckableItem = true);
+    explicit ResultDuplicateTreeWidgetItem(QTreeWidget *parent = Q_NULLPTR, bool hasCheckableItem = true);
     ~ResultDuplicateTreeWidgetItem();
 
     Akonadi::Item item() const;

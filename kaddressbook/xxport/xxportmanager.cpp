@@ -38,8 +38,8 @@
 #include <QWidget>
 
 XXPortManager::XXPortManager(QWidget *parent)
-    : QObject(parent), mSelectionModel(0),
-      mParentWidget(parent), mImportProgressDialog(0)
+    : QObject(parent), mSelectionModel(Q_NULLPTR),
+      mParentWidget(parent), mImportProgressDialog(Q_NULLPTR)
 {
     mImportMapper = new QSignalMapper(this);
     mExportMapper = new QSignalMapper(this);
@@ -141,7 +141,7 @@ void XXPortManager::import(const KContacts::Addressee::List &contacts)
         mImportProgressDialog->setLabelText(
             i18np("Importing one contact to %2", "Importing %1 contacts to %2",
                   contacts.count(), collection.name()));
-        mImportProgressDialog->setCancelButton(0);
+        mImportProgressDialog->setCancelButton(Q_NULLPTR);
         mImportProgressDialog->setAutoClose(true);
         mImportProgressDialog->setRange(1, contacts.count());
     }
@@ -169,7 +169,7 @@ void XXPortManager::slotImportJobDone(KJob *)
     // cleanup on last step
     if (mImportProgressDialog->value() == mImportProgressDialog->maximum()) {
         mImportProgressDialog->deleteLater();
-        mImportProgressDialog = 0;
+        mImportProgressDialog = Q_NULLPTR;
     }
 }
 
@@ -194,7 +194,7 @@ void XXPortManager::slotExport(const QString &identifier)
     delete dlg;
 
     if (contacts.isEmpty()) {
-        KMessageBox::sorry(0, i18n("You have not selected any contacts to export."));
+        KMessageBox::sorry(Q_NULLPTR, i18n("You have not selected any contacts to export."));
         return;
     }
 

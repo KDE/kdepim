@@ -27,7 +27,7 @@
 #include <QtCore/QVector>
 
 CsvParser::CsvParser(QObject *parent)
-    : QThread(parent), mDevice(0), mRowCount(0), mColumnCount(0), mCacheCounter(0)
+    : QThread(parent), mDevice(Q_NULLPTR), mRowCount(0), mColumnCount(0), mCacheCounter(0)
 {
     mReader = new QCsvReader(this);
 }
@@ -100,8 +100,8 @@ class QCsvModel::Private
 {
 public:
     Private(QCsvModel *model)
-        : mParent(model), mParser(0),
-          mDevice(0), mRowCount(0), mColumnCount(0)
+        : mParent(model), mParser(Q_NULLPTR),
+          mDevice(Q_NULLPTR), mRowCount(0), mColumnCount(0)
     {
     }
 

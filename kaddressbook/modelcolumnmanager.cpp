@@ -33,7 +33,7 @@
 #include <QWidget>
 
 ModelColumnManager::ModelColumnManager(Akonadi::ContactsTreeModel *model, QObject *parent)
-    : QObject(parent), mModel(model), mWidget(0)
+    : QObject(parent), mModel(model), mWidget(Q_NULLPTR)
 {
 }
 

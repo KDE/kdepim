@@ -29,7 +29,7 @@
 ContactSelectionDialog::ContactSelectionDialog(QItemSelectionModel *selectionModel, bool allowToSelectTypeToExport,
         QWidget *parent)
     : QDialog(parent),
-      mVCardExport(0)
+      mVCardExport(Q_NULLPTR)
 {
     setWindowTitle(i18n("Select Contacts"));
     //PORTING SCRIPT: Move QDialogButtonBox at the end of init of widget to add it in layout.

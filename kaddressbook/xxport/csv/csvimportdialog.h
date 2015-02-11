@@ -48,7 +48,7 @@ public:
     KContacts::AddresseeList contacts() const;
 
 protected Q_SLOTS:
-    virtual void slotButtonClicked(int);
+    virtual void slotButtonClicked(int) Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void setFile(const QString &);

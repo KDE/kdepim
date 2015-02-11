@@ -41,7 +41,7 @@ public:
     explicit DetailledPrintStyle(PrintingWizard *parent);
     ~DetailledPrintStyle();
 
-    void print(const KContacts::Addressee::List &contacts, PrintProgress *);
+    void print(const KContacts::Addressee::List &contacts, PrintProgress *) Q_DECL_OVERRIDE;
 
 private:
     AppearancePage *mPageAppearance;
@@ -52,8 +52,8 @@ class DetailledPrintStyleFactory : public PrintStyleFactory
 public:
     explicit DetailledPrintStyleFactory(PrintingWizard *parent);
 
-    PrintStyle *create() const;
-    QString description() const;
+    PrintStyle *create() const Q_DECL_OVERRIDE;
+    QString description() const Q_DECL_OVERRIDE;
 };
 
 }

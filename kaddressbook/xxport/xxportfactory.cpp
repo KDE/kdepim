@@ -46,6 +46,6 @@ XXPort *XXPortFactory::createXXPort(const QString &identifier, QWidget *parentWi
     } else if (identifier == QLatin1String("gmx")) {
         return new GMXXXPort(parentWidget);
     } else {
-        return 0;
+        return Q_NULLPTR;
     }
 }

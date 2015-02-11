@@ -23,7 +23,7 @@ class ResultDuplicateTreeWidgetTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit ResultDuplicateTreeWidgetTest(QObject *parent = 0);
+    explicit ResultDuplicateTreeWidgetTest(QObject *parent = Q_NULLPTR);
     ~ResultDuplicateTreeWidgetTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();

@@ -30,7 +30,7 @@
 
 namespace KABMergeContacts
 {
-KADDRESSBOOK_EXPORT QAbstractItemModel *_k_mergeStubModel = 0;
+KADDRESSBOOK_EXPORT QAbstractItemModel *_k_mergeStubModel = Q_NULLPTR;
 }
 
 using namespace KABMergeContacts;

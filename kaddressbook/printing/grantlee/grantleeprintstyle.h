@@ -38,7 +38,7 @@ public:
     explicit GrantleePrintStyle(const QString &themePath, PrintingWizard *parent);
     ~GrantleePrintStyle();
 
-    void print(const KContacts::Addressee::List &, PrintProgress *);
+    void print(const KContacts::Addressee::List &, PrintProgress *) Q_DECL_OVERRIDE;
 private:
     KAddressBookGrantlee::GrantleePrint *mGrantleePrint;
 };
@@ -48,8 +48,8 @@ class GrantleeStyleFactory : public PrintStyleFactory
 public:
     explicit GrantleeStyleFactory(const QString &name, const QString &themePath, PrintingWizard *parent);
 
-    PrintStyle *create() const;
-    QString description() const;
+    PrintStyle *create() const Q_DECL_OVERRIDE;
+    QString description() const Q_DECL_OVERRIDE;
 private:
     QString mThemePath;
     QString mName;

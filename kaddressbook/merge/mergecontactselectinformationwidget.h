@@ -27,7 +27,7 @@ class KADDRESSBOOK_EXPORT MergeContactSelectInformationWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MergeContactSelectInformationWidget(QWidget *parent=0);
+    explicit MergeContactSelectInformationWidget(QWidget *parent=Q_NULLPTR);
     ~MergeContactSelectInformationWidget();
     void setContacts(const Akonadi::Item::List &listItem);
 private:

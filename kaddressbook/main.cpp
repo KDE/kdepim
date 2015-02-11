@@ -34,10 +34,10 @@ class KAddressBookApplication : public KontactInterface::PimUniqueApplication
 public:
     KAddressBookApplication()
         : KontactInterface::PimUniqueApplication(),
-          mMainWindow(0)
+          mMainWindow(Q_NULLPTR)
     {
     }
-    virtual int newInstance();
+    virtual int newInstance() Q_DECL_OVERRIDE;
 
 private:
     MainWindow *mMainWindow;

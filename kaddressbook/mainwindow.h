@@ -35,7 +35,7 @@ public:
 private Q_SLOTS:
     void configure();
     void configureKeyBindings();
-    void configureToolbars();
+    void configureToolbars() Q_DECL_OVERRIDE;
     void newToolbarConfig();
 
 private:

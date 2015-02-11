@@ -124,20 +124,20 @@ public:
     {
     }
 
-    QString displayText(const QVariant &value, const QLocale &) const
+    QString displayText(const QVariant &value, const QLocale &) const Q_DECL_OVERRIDE
     {
         return ContactFields::label((ContactFields::Field)value.toUInt());
     }
 
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &,
-                          const QModelIndex &) const
+                          const QModelIndex &) const Q_DECL_OVERRIDE
     {
         ContactFieldComboBox *editor = new ContactFieldComboBox(parent);
 
         return editor;
     }
 
-    void setEditorData(QWidget *editor, const QModelIndex &index) const
+    void setEditorData(QWidget *editor, const QModelIndex &index) const Q_DECL_OVERRIDE
     {
         const unsigned int value = index.model()->data(index, Qt::EditRole).toUInt();
 
@@ -145,7 +145,7 @@ public:
         fieldCombo->setCurrentField((ContactFields::Field)value);
     }
 
-    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const Q_DECL_OVERRIDE
     {
         ContactFieldComboBox *fieldCombo = static_cast<ContactFieldComboBox *>(editor);
 
@@ -153,13 +153,13 @@ public:
     }
 
     void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option,
-                              const QModelIndex &) const
+                              const QModelIndex &) const Q_DECL_OVERRIDE
     {
         editor->setGeometry(option.rect);
     }
 
     void paint(QPainter *painter, const QStyleOptionViewItem &option,
-               const QModelIndex &index) const
+               const QModelIndex &index) const Q_DECL_OVERRIDE
     {
         if (index.row() == 0) {
             QStyleOptionViewItem headerOption(option);
@@ -173,7 +173,7 @@ public:
 };
 
 CSVImportDialog::CSVImportDialog(QWidget *parent)
-    : KDialog(parent), mDevice(0)
+    : KDialog(parent), mDevice(Q_NULLPTR)
 {
     setCaption(i18nc("@title:window", "CSV Import Dialog"));
     setButtons(Ok | Cancel | User1 | User2);

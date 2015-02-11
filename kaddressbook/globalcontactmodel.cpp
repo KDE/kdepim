@@ -29,7 +29,7 @@
 #include <KContacts/Addressee>
 #include <KContacts/ContactGroup>
 
-GlobalContactModel *GlobalContactModel::mInstance = 0;
+GlobalContactModel *GlobalContactModel::mInstance = Q_NULLPTR;
 
 GlobalContactModel::GlobalContactModel()
 {

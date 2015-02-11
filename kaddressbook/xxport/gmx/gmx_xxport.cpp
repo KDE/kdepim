@@ -126,7 +126,7 @@ KContacts::Addressee::List GMXXXPort::importContacts() const
     KContacts::Addressee::List addresseeList;
 
     QString fileName =
-        KFileDialog::getOpenFileName(QDir::homePath(), GMX_FILESELECTION_STRING, 0);
+        KFileDialog::getOpenFileName(QDir::homePath(), GMX_FILESELECTION_STRING, Q_NULLPTR);
 
     if (fileName.isEmpty()) {
         return addresseeList;
@@ -494,7 +494,7 @@ void GMXXXPort::doExport(QFile *fp, const KContacts::AddresseeList &list) const
       "Company,Department,Change_date,Preferred,Status\n";
 
     addresseeId = 1;
-    while ((addressee = addresseeMap[ addresseeId ]) != 0) {
+    while ((addressee = addresseeMap[ addresseeId ]) != Q_NULLPTR) {
 
         const KContacts::PhoneNumber::List cellPhones =
             addressee->phoneNumbers(KContacts::PhoneNumber::Cell);

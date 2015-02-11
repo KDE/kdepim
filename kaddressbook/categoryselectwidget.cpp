@@ -70,10 +70,10 @@ private:
 
 CategorySelectWidgetPrivate::CategorySelectWidgetPrivate(CategorySelectWidget *parent)
     : QObject(),
-      tagModel(0),
+      tagModel(Q_NULLPTR),
       rowOffset(0),
-      updateTimer(0),
-      checkCombo(0),
+      updateTimer(Q_NULLPTR),
+      checkCombo(Q_NULLPTR),
       q_ptr(parent)
 {
 }

@@ -38,7 +38,7 @@ using namespace KABSendVCards;
 SendVcardsJob::SendVcardsJob(const Akonadi::Item::List &listItem, QObject *parent)
     : QObject(parent),
       mListItem(listItem),
-      mTempDir(0),
+      mTempDir(Q_NULLPTR),
       mExpandGroupJobCount(0)
 {
     //Don't delete it.
@@ -48,9 +48,9 @@ SendVcardsJob::SendVcardsJob(const Akonadi::Item::List &listItem, QObject *paren
 SendVcardsJob::~SendVcardsJob()
 {
     delete mTempDir;
-    mTempDir = 0;
+    mTempDir = Q_NULLPTR;
     //Don't delete it.
-    mAttachmentTemporary = 0;
+    mAttachmentTemporary = Q_NULLPTR;
 }
 
 bool SendVcardsJob::start()

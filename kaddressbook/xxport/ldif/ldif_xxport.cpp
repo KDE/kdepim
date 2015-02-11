@@ -67,7 +67,7 @@ KContacts::Addressee::List LDIFXXPort::importContacts() const
 {
     KContacts::Addressee::List contacts;
 
-    const QString fileName = QFileDialog::getOpenFileName(0 , QString(),  QDir::homePath(), QLatin1String("text/x-ldif"));
+    const QString fileName = QFileDialog::getOpenFileName(Q_NULLPTR , QString(),  QDir::homePath(), QLatin1String("text/x-ldif"));
     if (fileName.isEmpty()) {
         return contacts;
     }

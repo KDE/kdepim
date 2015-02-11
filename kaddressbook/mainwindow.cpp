@@ -33,7 +33,7 @@
 #include <KSharedConfig>
 
 MainWindow::MainWindow()
-    : KXmlGuiWindow(0)
+    : KXmlGuiWindow(Q_NULLPTR)
 {
     mMainWidget = new MainWidget(this, this);
 

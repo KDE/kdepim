@@ -25,7 +25,7 @@ class KADDRESSBOOK_EXPORT MergeContactLoseInformationWarning : public KMessageWi
 {
     Q_OBJECT
 public:
-    explicit MergeContactLoseInformationWarning(QWidget *parent=0);
+    explicit MergeContactLoseInformationWarning(QWidget *parent=Q_NULLPTR);
     ~MergeContactLoseInformationWarning();
 private slots:
     void slotCustomizeMerge();

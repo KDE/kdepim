@@ -40,7 +40,7 @@ public:
     explicit MikesStyle(PrintingWizard *parent);
     ~MikesStyle();
 
-    void print(const KContacts::Addressee::List &, PrintProgress *);
+    void print(const KContacts::Addressee::List &, PrintProgress *) Q_DECL_OVERRIDE;
 };
 
 class MikesStyleFactory : public PrintStyleFactory
@@ -48,8 +48,8 @@ class MikesStyleFactory : public PrintStyleFactory
 public:
     explicit MikesStyleFactory(PrintingWizard *parent);
 
-    PrintStyle *create() const;
-    QString description() const;
+    PrintStyle *create() const Q_DECL_OVERRIDE;
+    QString description() const Q_DECL_OVERRIDE;
 };
 
 }

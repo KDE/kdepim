@@ -40,7 +40,7 @@
 using namespace KABMergeContacts;
 MergeContactsDialog::MergeContactsDialog(const Akonadi::Item::List &lst, QWidget *parent)
     : QDialog(parent),
-      mContactWidget(0)
+      mContactWidget(Q_NULLPTR)
 {
     setWindowTitle(i18n("Select Contacts to merge"));
     mButtonBox = new QDialogButtonBox(QDialogButtonBox::Close);

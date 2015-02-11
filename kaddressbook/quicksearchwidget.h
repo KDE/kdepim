@@ -56,7 +56,7 @@ public:
     /**
      * Returns the size hint of the quick search widget.
      */
-    virtual QSize sizeHint() const;
+    virtual QSize sizeHint() const Q_DECL_OVERRIDE;
 
     void updateQuickSearchText(const QString &text);
 

@@ -41,8 +41,8 @@ public Q_SLOTS:
     void updateQuickSearchText();
 
 protected:
-    virtual bool openFile();
-    virtual void guiActivateEvent(KParts::GUIActivateEvent *);
+    virtual bool openFile() Q_DECL_OVERRIDE;
+    virtual void guiActivateEvent(KParts::GUIActivateEvent *) Q_DECL_OVERRIDE;
     void initAction();
 private:
     MainWidget *mMainWidget;
