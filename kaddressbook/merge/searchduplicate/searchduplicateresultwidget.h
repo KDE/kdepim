@@ -50,6 +50,8 @@ private slots:
     void slotMergeDone(const Akonadi::Item &item);
     void slotUpdateMergeButton();
 
+    void slotAutomaticMerging();
+    void slotCustomizeMergingContacts();
 private:
     void mergeContact();
     QList<Akonadi::Item::List> mListContactToMerge;

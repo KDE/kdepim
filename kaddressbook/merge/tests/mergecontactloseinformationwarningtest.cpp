@@ -18,7 +18,9 @@
 #include "mergecontactloseinformationwarningtest.h"
 #include "../widgets/mergecontactloseinformationwarning.h"
 #include <QAction>
+#include <QSignalSpy>
 #include <qtest_kde.h>
+#include <qtestmouse.h>
 
 MergeContactLoseInformationWarningTest::MergeContactLoseInformationWarningTest(QObject *parent)
     : QObject(parent)
@@ -35,6 +37,24 @@ void MergeContactLoseInformationWarningTest::shouldHaveDefaultValue()
     QVERIFY(customize);
     QAction *automatic = qFindChild<QAction *>(&w, QLatin1String("automatic"));
     QVERIFY(automatic);
+}
+
+void MergeContactLoseInformationWarningTest::shouldEmitSignals()
+{
+    KABMergeContacts::MergeContactLoseInformationWarning w;
+    w.show();
+    QTest::qWaitForWindowShown(&w);
+    QVERIFY(w.isVisible());
+    QAction *customize = qFindChild<QAction *>(&w, QLatin1String("customize"));
+    QAction *automatic = qFindChild<QAction *>(&w, QLatin1String("automatic"));
+    QSignalSpy spy1(&w, SIGNAL(continueMerging()));
+    QSignalSpy spy2(&w, SIGNAL(customizeMergingContacts()));
+    customize->trigger();
+    QCOMPARE(spy1.count(), 0);
+    QCOMPARE(spy2.count(), 1);
+    automatic->trigger();
+    QCOMPARE(spy2.count(), 1);
+    QCOMPARE(spy1.count(), 1);
 }
 
 QTEST_KDEMAIN(MergeContactLoseInformationWarningTest, GUI)

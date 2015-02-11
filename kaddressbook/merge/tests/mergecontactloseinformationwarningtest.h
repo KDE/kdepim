@@ -27,6 +27,7 @@ public:
     explicit MergeContactLoseInformationWarningTest(QObject *parent = 0);
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldEmitSignals();
 };
 
 #endif // MERGECONTACTLOSEINFORMATIONWARNINGTEST_H
