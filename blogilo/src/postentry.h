@@ -61,7 +61,7 @@ public:
      * @param backend A Backend instant to use! will create one if NULL
      * @return true on success and false on failure.
      */
-    bool uploadMediaFiles(Backend *backend = 0);
+    bool uploadMediaFiles(Backend *backend = Q_NULLPTR);
 
     void submitPost(int blogId, const BilboPost &postData);
 

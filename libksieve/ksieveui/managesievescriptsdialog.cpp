@@ -57,7 +57,7 @@ CustomManageSieveWidget::~CustomManageSieveWidget()
 bool CustomManageSieveWidget::refreshList()
 {
     bool noImapFound = true;
-    SieveTreeWidgetItem *last = 0;
+    SieveTreeWidgetItem *last = Q_NULLPTR;
     Akonadi::AgentInstance::List lst = KSieveUi::Util::imapAgentInstances();
     foreach (const Akonadi::AgentInstance &type, lst) {
         if (type.status() == Akonadi::AgentInstance::Broken) {
@@ -90,7 +90,7 @@ bool CustomManageSieveWidget::refreshList()
 
 ManageSieveScriptsDialog::ManageSieveScriptsDialog(QWidget *parent)
     : QDialog(parent),
-      mSieveEditor(0),
+      mSieveEditor(Q_NULLPTR),
       mIsNewScript(false),
       mWasActive(false)
 {
@@ -181,7 +181,7 @@ void ManageSieveScriptsDialog::slotNewScript(const QUrl &url, const QStringList 
     mCurrentCapabilities = capabilities;
     mCurrentURL = url;
     mIsNewScript = true;
-    slotGetResult(0, true, QString(), false);
+    slotGetResult(Q_NULLPTR, true, QString(), false);
 }
 
 void ManageSieveScriptsDialog::slotGetResult(KManageSieve::SieveJob *, bool success, const QString &script, bool isActive)
@@ -230,7 +230,7 @@ void ManageSieveScriptsDialog::slotSieveEditorCancelClicked()
 {
     disableManagerScriptsDialog(false);
     mSieveEditor->deleteLater();
-    mSieveEditor = 0;
+    mSieveEditor = Q_NULLPTR;
     mCurrentURL = QUrl();
     if (mIsNewScript) {
         mTreeView->slotRefresh();
@@ -260,7 +260,7 @@ void ManageSieveScriptsDialog::slotPutResult(KManageSieve::SieveJob *, bool succ
         KMessageBox::information(this, i18n("The Sieve script was successfully uploaded."),
                                  i18n("Sieve Script Upload"));
         mSieveEditor->deleteLater();
-        mSieveEditor = 0;
+        mSieveEditor = Q_NULLPTR;
         mCurrentURL = QUrl();
     } else {
         mSieveEditor->show();

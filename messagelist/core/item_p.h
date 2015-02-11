@@ -43,8 +43,8 @@ class ItemPrivate
 public:
     explicit ItemPrivate(Item *owner)
         : q(owner),
-          mChildItems(0),
-          mParent(0),
+          mChildItems(nullptr),
+          mParent(nullptr),
           mThisItemIndexGuess(0),
           mInitialExpandStatus(Item::NoExpandNeeded),
           mIsViewable(false),

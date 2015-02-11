@@ -1067,7 +1067,7 @@ public:
     */
     Column *column(int idx) const
     {
-        return mColumns.count() > idx ? mColumns.at(idx) : 0;
+        return mColumns.count() > idx ? mColumns.at(idx) : Q_NULLPTR;
     }
 
     void moveColumn(int idx, int newPosition);

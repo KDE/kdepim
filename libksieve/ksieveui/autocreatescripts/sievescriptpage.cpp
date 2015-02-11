@@ -34,10 +34,10 @@ namespace KSieveUi
 {
 SieveScriptPage::SieveScriptPage(QWidget *parent)
     : QWidget(parent),
-      mIncludeWidget(0),
-      mForEveryPartWidget(0),
-      mGlobalVariableWidget(0),
-      mBlockIfWidget(0)
+      mIncludeWidget(Q_NULLPTR),
+      mForEveryPartWidget(Q_NULLPTR),
+      mGlobalVariableWidget(Q_NULLPTR),
+      mBlockIfWidget(Q_NULLPTR)
 {
     QVBoxLayout *topLayout = new QVBoxLayout;
     mTabWidget = new SieveScriptTabWidget;

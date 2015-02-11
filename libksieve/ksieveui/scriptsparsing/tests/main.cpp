@@ -54,7 +54,7 @@ int main(int argc, char **argv)
     if (parser.positionalArguments().count()) {
         fileName = parser.positionalArguments().at(0);
     } else {
-        fileName = QFileDialog::getOpenFileName(0, QString(), QString(), QLatin1String("*.siv"));
+        fileName = QFileDialog::getOpenFileName(Q_NULLPTR, QString(), QString(), QLatin1String("*.siv"));
     }
     if (!fileName.isEmpty()) {
         QFile file(fileName);

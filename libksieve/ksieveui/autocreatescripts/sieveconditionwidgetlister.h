@@ -86,8 +86,8 @@ public Q_SLOTS:
     void slotRemoveWidget(QWidget *w);
 
 protected:
-    void clearWidget(QWidget *aWidget);
-    QWidget *createWidget(QWidget *parent);
+    void clearWidget(QWidget *aWidget) Q_DECL_OVERRIDE;
+    QWidget *createWidget(QWidget *parent) Q_DECL_OVERRIDE;
 
 private:
     void loadTest(const QDomElement &e, bool notCondition, QString &error);

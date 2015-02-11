@@ -29,7 +29,7 @@
 
 BlogiloComposerView::BlogiloComposerView(QWidget *parent)
     : ComposerEditorNG::ComposerView(parent),
-      mCustomTools(0)
+      mCustomTools(Q_NULLPTR)
 {
     settings()->setFontSize(QWebSettings::DefaultFontSize, 14);
 }

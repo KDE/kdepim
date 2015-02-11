@@ -28,7 +28,7 @@ using namespace MessageList::Core;
 ModelInvariantIndex::ModelInvariantIndex()
     : d(new Private)
 {
-    d->mRowMapper = 0;
+    d->mRowMapper = Q_NULLPTR;
 }
 
 ModelInvariantIndex::~ModelInvariantIndex()
@@ -42,7 +42,7 @@ ModelInvariantIndex::~ModelInvariantIndex()
 
 bool ModelInvariantIndex::isValid() const
 {
-    return d->mRowMapper != 0;
+    return d->mRowMapper != Q_NULLPTR;
 }
 
 int ModelInvariantIndex::currentModelIndexRow()

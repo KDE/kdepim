@@ -86,27 +86,27 @@ struct TestCase {
 
     {
         "Null script",
-        0,
-        { { Finished, 0, false } }
+        Q_NULLPTR,
+        { { Finished, Q_NULLPTR, false } }
     },
 
     {
         "Empty script",
         "",
-        { { Finished, 0, false } }
+        { { Finished, Q_NULLPTR, false } }
     },
 
     {
         "WS-only script",
         " \t\n\r\n",
-        { { Finished, 0, false } }
+        { { Finished, Q_NULLPTR, false } }
     },
 
     {
         "Bare hash comment",
         "#comment",
         {   { HashComment, "comment", false },
-            { Finished, 0, false }
+            { Finished, Q_NULLPTR, false }
         }
     },
 
@@ -114,7 +114,7 @@ struct TestCase {
         "Bare bracket comment",
         "/*comment*/",
         {   { BracketComment, "comment", false },
-            { Finished, 0, false }
+            { Finished, Q_NULLPTR, false }
         }
     },
 
@@ -122,8 +122,8 @@ struct TestCase {
         "Bare command",
         "command;",
         {   { CommandStart, "command", false },
-            { CommandEnd, 0, false },
-            { Finished, 0, false }
+            { CommandEnd, Q_NULLPTR, false },
+            { Finished, Q_NULLPTR, false }
         }
     },
 
@@ -141,9 +141,9 @@ struct TestCase {
         {   { BracketComment, "comment", false },
             { CommandStart, "command", false },
             { BracketComment, "comment", false },
-            { CommandEnd, 0, false },
+            { CommandEnd, Q_NULLPTR, false },
             { BracketComment, "comment", false },
-            { Finished, 0, false }
+            { Finished, Q_NULLPTR, false }
         }
     },
 
@@ -153,9 +153,9 @@ struct TestCase {
         {   { HashComment, "comment", false },
             { CommandStart, "command", false },
             { HashComment, "comment", false },
-            { CommandEnd, 0, false },
+            { CommandEnd, Q_NULLPTR, false },
             { HashComment, "comment", false },
-            { Finished, 0, false }
+            { Finished, Q_NULLPTR, false }
         }
     },
 
@@ -164,8 +164,8 @@ struct TestCase {
         "command :tag;",
         {   { CommandStart, "command", false },
             { TaggedArgument, "tag", false },
-            { CommandEnd, 0, false },
-            { Finished, 0, false }
+            { CommandEnd, Q_NULLPTR, false },
+            { Finished, Q_NULLPTR, false }
         }
     },
 
@@ -183,8 +183,8 @@ struct TestCase {
         "command \"string\";",
         {   { CommandStart, "command", false },
             { StringArgument, "string", false /*quoted*/ },
-            { CommandEnd, 0, false },
-            { Finished, 0, false }
+            { CommandEnd, Q_NULLPTR, false },
+            { Finished, Q_NULLPTR, false }
         }
     },
 
@@ -193,8 +193,8 @@ struct TestCase {
         "command text:\nstring\n.\n;",
         {   { CommandStart, "command", false },
             { StringArgument, "string", true /*multiline*/ },
-            { CommandEnd, 0, false },
-            { Finished, 0, false }
+            { CommandEnd, Q_NULLPTR, false },
+            { Finished, Q_NULLPTR, false }
         }
     },
 
@@ -203,8 +203,8 @@ struct TestCase {
         "command 100;",
         {   { CommandStart, "command", false },
             { NumberArgument, "100 ", false },
-            { CommandEnd, 0, false },
-            { Finished, 0, false }
+            { CommandEnd, Q_NULLPTR, false },
+            { Finished, Q_NULLPTR, false }
         }
     },
 
@@ -213,8 +213,8 @@ struct TestCase {
         "command 100k;",
         {   { CommandStart, "command", false },
             { NumberArgument, "102400k", false },
-            { CommandEnd, 0, false },
-            { Finished, 0, false }
+            { CommandEnd, Q_NULLPTR, false },
+            { Finished, Q_NULLPTR, false }
         }
     },
 
@@ -223,8 +223,8 @@ struct TestCase {
         "command 100M;",
         {   { CommandStart, "command", false },
             { NumberArgument, "104857600M", false },
-            { CommandEnd, 0, false },
-            { Finished, 0, false }
+            { CommandEnd, Q_NULLPTR, false },
+            { Finished, Q_NULLPTR, false }
         }
     },
 
@@ -233,8 +233,8 @@ struct TestCase {
         "command 2G;",
         {   { CommandStart, "command", false },
             { NumberArgument, "2147483648G", false },
-            { CommandEnd, 0, false },
-            { Finished, 0, false }
+            { CommandEnd, Q_NULLPTR, false },
+            { Finished, Q_NULLPTR, false }
         }
     },
 
@@ -261,8 +261,8 @@ struct TestCase {
         "command " ULONG_MAX_STRING ";",
         {   { CommandStart, "command", false },
             { NumberArgument, ULONG_MAX_STRING " ", false },
-            { CommandEnd, 0, false },
-            { Finished, 0, false }
+            { CommandEnd, Q_NULLPTR, false },
+            { Finished, Q_NULLPTR, false }
         }
     },
 
@@ -270,11 +270,11 @@ struct TestCase {
         "single one-element string list argument - quoted string",
         "command [\"string\"];",
         {   { CommandStart, "command", false },
-            { StringListArgumentStart, 0, false },
+            { StringListArgumentStart, Q_NULLPTR, false },
             { StringListEntry, "string", false /*quoted*/ },
-            { StringListArgumentEnd, 0, false },
-            { CommandEnd, 0, false },
-            { Finished, 0, false }
+            { StringListArgumentEnd, Q_NULLPTR, false },
+            { CommandEnd, Q_NULLPTR, false },
+            { Finished, Q_NULLPTR, false }
         }
     },
 
@@ -282,11 +282,11 @@ struct TestCase {
         "single one-element string list argument - multi-line string",
         "command [text:\nstring\n.\n];",
         {   { CommandStart, "command", false },
-            { StringListArgumentStart, 0, false },
+            { StringListArgumentStart, Q_NULLPTR, false },
             { StringListEntry, "string", true /*multiline*/ },
-            { StringListArgumentEnd, 0, false },
-            { CommandEnd, 0, false },
-            { Finished, 0, false }
+            { StringListArgumentEnd, Q_NULLPTR, false },
+            { CommandEnd, Q_NULLPTR, false },
+            { Finished, Q_NULLPTR, false }
         }
     },
 
@@ -294,12 +294,12 @@ struct TestCase {
         "single two-element string list argument - quoted strings",
         "command [\"string\",\"string\"];",
         {   { CommandStart, "command", false },
-            { StringListArgumentStart, 0, false },
+            { StringListArgumentStart, Q_NULLPTR, false },
             { StringListEntry, "string", false /*quoted*/ },
             { StringListEntry, "string", false /*quoted*/ },
-            { StringListArgumentEnd, 0, false },
-            { CommandEnd, 0, false },
-            { Finished, 0, false }
+            { StringListArgumentEnd, Q_NULLPTR, false },
+            { CommandEnd, Q_NULLPTR, false },
+            { Finished, Q_NULLPTR, false }
         }
     },
 
@@ -307,12 +307,12 @@ struct TestCase {
         "single two-element string list argument - multi-line strings",
         "command [text:\nstring\n.\n,text:\nstring\n.\n];",
         {   { CommandStart, "command", false },
-            { StringListArgumentStart, 0, false },
+            { StringListArgumentStart, Q_NULLPTR, false },
             { StringListEntry, "string", true /*multiline*/ },
             { StringListEntry, "string", true /*multiline*/ },
-            { StringListArgumentEnd, 0, false },
-            { CommandEnd, 0, false },
-            { Finished, 0, false }
+            { StringListArgumentEnd, Q_NULLPTR, false },
+            { CommandEnd, Q_NULLPTR, false },
+            { Finished, Q_NULLPTR, false }
         }
     },
 
@@ -320,12 +320,12 @@ struct TestCase {
         "single two-element string list argument - quoted + multi-line strings",
         "command [\"string\",text:\nstring\n.\n];",
         {   { CommandStart, "command", false },
-            { StringListArgumentStart, 0, false },
+            { StringListArgumentStart, Q_NULLPTR, false },
             { StringListEntry, "string", false /*quoted*/ },
             { StringListEntry, "string", true /*multiline*/ },
-            { StringListArgumentEnd, 0, false },
-            { CommandEnd, 0, false },
-            { Finished, 0, false }
+            { StringListArgumentEnd, Q_NULLPTR, false },
+            { CommandEnd, Q_NULLPTR, false },
+            { Finished, Q_NULLPTR, false }
         }
     },
 
@@ -333,12 +333,12 @@ struct TestCase {
         "single two-element string list argument - multi-line + quoted strings",
         "command [text:\nstring\n.\n,\"string\"];",
         {   { CommandStart, "command", false },
-            { StringListArgumentStart, 0, false },
+            { StringListArgumentStart, Q_NULLPTR, false },
             { StringListEntry, "string", true /*multiline*/ },
             { StringListEntry, "string", false /*quoted*/ },
-            { StringListArgumentEnd, 0, false },
-            { CommandEnd, 0, false },
-            { Finished, 0, false }
+            { StringListArgumentEnd, Q_NULLPTR, false },
+            { CommandEnd, Q_NULLPTR, false },
+            { Finished, Q_NULLPTR, false }
         }
     },
 
@@ -347,9 +347,9 @@ struct TestCase {
         "command test;",
         {   { CommandStart, "command", false },
             { TestStart, "test", false },
-            { TestEnd, 0, false },
-            { CommandEnd, 0, false },
-            { Finished, 0, false }
+            { TestEnd, Q_NULLPTR, false },
+            { CommandEnd, Q_NULLPTR, false },
+            { Finished, Q_NULLPTR, false }
         }
     },
 
@@ -357,12 +357,12 @@ struct TestCase {
         "one-element test list argument",
         "command(test);",
         {   { CommandStart, "command", false },
-            { TestListStart, 0, false },
+            { TestListStart, Q_NULLPTR, false },
             { TestStart, "test", false },
-            { TestEnd, 0, false },
-            { TestListEnd, 0, false },
-            { CommandEnd, 0, false },
-            { Finished, 0, false }
+            { TestEnd, Q_NULLPTR, false },
+            { TestListEnd, Q_NULLPTR, false },
+            { CommandEnd, Q_NULLPTR, false },
+            { Finished, Q_NULLPTR, false }
         }
     },
 
@@ -370,14 +370,14 @@ struct TestCase {
         "two-element test list argument",
         "command(test,test);",
         {   { CommandStart, "command", false },
-            { TestListStart, 0, false },
+            { TestListStart, Q_NULLPTR, false },
             { TestStart, "test", false },
-            { TestEnd, 0, false },
+            { TestEnd, Q_NULLPTR, false },
             { TestStart, "test", false },
-            { TestEnd, 0, false },
-            { TestListEnd, 0, false },
-            { CommandEnd, 0, false },
-            { Finished, 0, false }
+            { TestEnd, Q_NULLPTR, false },
+            { TestListEnd, Q_NULLPTR, false },
+            { CommandEnd, Q_NULLPTR, false },
+            { Finished, Q_NULLPTR, false }
         }
     },
 
@@ -385,10 +385,10 @@ struct TestCase {
         "zero-element block",
         "command{}",
         {   { CommandStart, "command", false },
-            { BlockStart, 0, false },
-            { BlockEnd, 0, false },
-            { CommandEnd, 0, false },
-            { Finished, 0, false }
+            { BlockStart, Q_NULLPTR, false },
+            { BlockEnd, Q_NULLPTR, false },
+            { CommandEnd, Q_NULLPTR, false },
+            { Finished, Q_NULLPTR, false }
         }
     },
 
@@ -396,12 +396,12 @@ struct TestCase {
         "one-element block",
         "command{command;}",
         {   { CommandStart, "command", false },
-            { BlockStart, 0, false },
+            { BlockStart, Q_NULLPTR, false },
             { CommandStart, "command", false },
-            { CommandEnd, 0, false },
-            { BlockEnd, 0, false },
-            { CommandEnd, 0, false },
-            { Finished, 0, false }
+            { CommandEnd, Q_NULLPTR, false },
+            { BlockEnd, Q_NULLPTR, false },
+            { CommandEnd, Q_NULLPTR, false },
+            { Finished, Q_NULLPTR, false }
         }
     },
 
@@ -409,14 +409,14 @@ struct TestCase {
         "two-element block",
         "command{command;command;}",
         {   { CommandStart, "command", false },
-            { BlockStart, 0, false },
+            { BlockStart, Q_NULLPTR, false },
             { CommandStart, "command", false },
-            { CommandEnd, 0, false },
+            { CommandEnd, Q_NULLPTR, false },
             { CommandStart, "command", false },
-            { CommandEnd, 0, false },
-            { BlockEnd, 0, false },
-            { CommandEnd, 0, false },
-            { Finished, 0, false }
+            { CommandEnd, Q_NULLPTR, false },
+            { BlockEnd, Q_NULLPTR, false },
+            { CommandEnd, Q_NULLPTR, false },
+            { Finished, Q_NULLPTR, false }
         }
     },
 
@@ -427,11 +427,11 @@ struct TestCase {
             { TestStart, "test", false },
             { TestStart, "test", false },
             { TestStart, "test", false },
-            { TestEnd, 0, false },
-            { TestEnd, 0, false },
-            { TestEnd, 0, false },
-            { CommandEnd, 0, false },
-            { Finished, 0, false }
+            { TestEnd, Q_NULLPTR, false },
+            { TestEnd, Q_NULLPTR, false },
+            { TestEnd, Q_NULLPTR, false },
+            { CommandEnd, Q_NULLPTR, false },
+            { Finished, Q_NULLPTR, false }
         }
     },
 
@@ -452,95 +452,95 @@ public:
     }
     virtual ~PrintingScriptBuilder() {}
 
-    void taggedArgument(const QString &tag)
+    void taggedArgument(const QString &tag) Q_DECL_OVERRIDE
     {
         write("tag", tag);
     }
-    void stringArgument(const QString &string, bool multiLine, const QString & /*fixme*/)
+    void stringArgument(const QString &string, bool multiLine, const QString & /*fixme*/) Q_DECL_OVERRIDE
     {
         write(multiLine ? "string type=\"multiline\"" : "string type=\"quoted\"", string);
     }
-    void numberArgument(unsigned long number, char quantifier)
+    void numberArgument(unsigned long number, char quantifier) Q_DECL_OVERRIDE
     {
         const QString txt = "number" + (quantifier ? QString(" quantifier=\"%1\"").arg(quantifier) : QString()) ;
         write(txt.toLatin1(), QString::number(number));
     }
-    void commandStart(const QString &identifier)
+    void commandStart(const QString &identifier) Q_DECL_OVERRIDE
     {
         write("<command>");
         ++indent;
         write("identifier", identifier);
     }
-    void commandEnd()
+    void commandEnd() Q_DECL_OVERRIDE
     {
         --indent;
         write("</command>");
     }
-    void testStart(const QString &identifier)
+    void testStart(const QString &identifier) Q_DECL_OVERRIDE
     {
         write("<test>");
         ++indent;
         write("identifier", identifier);
     }
-    void testEnd()
+    void testEnd() Q_DECL_OVERRIDE
     {
         --indent;
         write("</test>");
     }
-    void testListStart()
+    void testListStart() Q_DECL_OVERRIDE
     {
         write("<testlist>");
         ++indent;
     }
-    void testListEnd()
+    void testListEnd() Q_DECL_OVERRIDE
     {
         --indent;
         write("</testlist>");
     }
-    void blockStart()
+    void blockStart() Q_DECL_OVERRIDE
     {
         write("<block>");
         ++indent;
     }
-    void blockEnd()
+    void blockEnd() Q_DECL_OVERRIDE
     {
         --indent;
         write("</block>");
     }
-    void stringListArgumentStart()
+    void stringListArgumentStart() Q_DECL_OVERRIDE
     {
         write("<stringlist>");
         ++indent;
     }
-    void stringListArgumentEnd()
+    void stringListArgumentEnd() Q_DECL_OVERRIDE
     {
         --indent;
         write("</stringlist>");
     }
-    void stringListEntry(const QString &string, bool multiline, const QString &hashComment)
+    void stringListEntry(const QString &string, bool multiline, const QString &hashComment) Q_DECL_OVERRIDE
     {
         stringArgument(string, multiline, hashComment);
     }
-    void hashComment(const QString &comment)
+    void hashComment(const QString &comment) Q_DECL_OVERRIDE
     {
         write("comment type=\"hash\"", comment);
     }
-    void bracketComment(const QString &comment)
+    void bracketComment(const QString &comment) Q_DECL_OVERRIDE
     {
         write("comment type=\"bracket\"", comment);
     }
 
-    void lineFeed()
+    void lineFeed() Q_DECL_OVERRIDE
     {
         write("<crlf/>");
     }
 
-    void error(const KSieve::Error &error)
+    void error(const KSieve::Error &error) Q_DECL_OVERRIDE
     {
         indent = 0;
         write(("Error: " + error.asString()).toLatin1());
     }
-    void finished()
+    void finished() Q_DECL_OVERRIDE
     {
         --indent;
         write("</script>");
@@ -586,107 +586,107 @@ public:
         return mOk;
     }
 
-    void taggedArgument(const QString &tag)
+    void taggedArgument(const QString &tag) Q_DECL_OVERRIDE
     {
         checkIs(TaggedArgument);
         checkEquals(tag);
         ++mNextResponse;
     }
-    void stringArgument(const QString &string, bool multiline, const QString & /*fixme*/)
+    void stringArgument(const QString &string, bool multiline, const QString & /*fixme*/) Q_DECL_OVERRIDE
     {
         checkIs(StringArgument);
         checkEquals(string);
         checkEquals(multiline);
         ++mNextResponse;
     }
-    void numberArgument(unsigned long number, char quantifier)
+    void numberArgument(unsigned long number, char quantifier) Q_DECL_OVERRIDE
     {
         checkIs(NumberArgument);
         checkEquals(QString::number(number) + (quantifier ? quantifier : ' '));
         ++mNextResponse;
     }
-    void commandStart(const QString &identifier)
+    void commandStart(const QString &identifier) Q_DECL_OVERRIDE
     {
         checkIs(CommandStart);
         checkEquals(identifier);
         ++mNextResponse;
     }
-    void commandEnd()
+    void commandEnd() Q_DECL_OVERRIDE
     {
         checkIs(CommandEnd);
         ++mNextResponse;
     }
-    void testStart(const QString &identifier)
+    void testStart(const QString &identifier) Q_DECL_OVERRIDE
     {
         checkIs(TestStart);
         checkEquals(identifier);
         ++mNextResponse;
     }
-    void testEnd()
+    void testEnd() Q_DECL_OVERRIDE
     {
         checkIs(TestEnd);
         ++mNextResponse;
     }
-    void testListStart()
+    void testListStart() Q_DECL_OVERRIDE
     {
         checkIs(TestListStart);
         ++mNextResponse;
     }
-    void testListEnd()
+    void testListEnd() Q_DECL_OVERRIDE
     {
         checkIs(TestListEnd);
         ++mNextResponse;
     }
-    void blockStart()
+    void blockStart() Q_DECL_OVERRIDE
     {
         checkIs(BlockStart);
         ++mNextResponse;
     }
-    void blockEnd()
+    void blockEnd() Q_DECL_OVERRIDE
     {
         checkIs(BlockEnd);
         ++mNextResponse;
     }
-    void stringListArgumentStart()
+    void stringListArgumentStart() Q_DECL_OVERRIDE
     {
         checkIs(StringListArgumentStart);
         ++mNextResponse;
     }
-    void stringListEntry(const QString &string, bool multiLine, const QString & /*fixme*/)
+    void stringListEntry(const QString &string, bool multiLine, const QString & /*fixme*/) Q_DECL_OVERRIDE
     {
         checkIs(StringListEntry);
         checkEquals(string);
         checkEquals(multiLine);
         ++mNextResponse;
     }
-    void stringListArgumentEnd()
+    void stringListArgumentEnd() Q_DECL_OVERRIDE
     {
         checkIs(StringListArgumentEnd);
         ++mNextResponse;
     }
-    void hashComment(const QString &comment)
+    void hashComment(const QString &comment) Q_DECL_OVERRIDE
     {
         checkIs(HashComment);
         checkEquals(comment);
         ++mNextResponse;
     }
-    void bracketComment(const QString &comment)
+    void bracketComment(const QString &comment) Q_DECL_OVERRIDE
     {
         checkIs(BracketComment);
         checkEquals(comment);
         ++mNextResponse;
     }
-    void lineFeed()
+    void lineFeed() Q_DECL_OVERRIDE
     {
         // FIXME
     }
-    void error(const KSieve::Error &error)
+    void error(const KSieve::Error &error) Q_DECL_OVERRIDE
     {
         checkIs(Error);
         checkEquals(QString(KSieve::Error::typeToString(error.type())));
         ++mNextResponse;
     }
-    void finished()
+    void finished() Q_DECL_OVERRIDE
     {
         checkIs(Finished);
         //++mNextResponse (no!)

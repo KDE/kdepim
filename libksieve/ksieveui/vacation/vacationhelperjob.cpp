@@ -24,7 +24,7 @@ using namespace KSieveUi;
 VacationHelperJob::VacationHelperJob(const QUrl &url, QObject *parent)
     : QObject(parent),
       mUrl(url),
-      mSieveJob(0)
+      mSieveJob(Q_NULLPTR)
 {
 }
 
@@ -37,7 +37,7 @@ void VacationHelperJob::killJob()
 {
     if (mSieveJob) {
         mSieveJob->kill();
-        mSieveJob = 0;
+        mSieveJob = Q_NULLPTR;
     }
 }
 
@@ -56,7 +56,7 @@ void VacationHelperJob::searchActiveJob()
 
 void VacationHelperJob::slotGetScriptList(KManageSieve::SieveJob *job, bool success, const QStringList &scriptList, const QString &activeScript)
 {
-    mSieveJob = 0;
+    mSieveJob = Q_NULLPTR;
     if (success) {
         const QStringList caps = job->sieveCapabilities();
         Q_EMIT scriptListResult(scriptList, activeScript, caps.contains(QLatin1String("include")));

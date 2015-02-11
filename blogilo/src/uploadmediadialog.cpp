@@ -45,7 +45,7 @@
 #include <QPushButton>
 
 UploadMediaDialog::UploadMediaDialog(QWidget *parent)
-    : QDialog(parent), mCurrentBlog(0)
+    : QDialog(parent), mCurrentBlog(Q_NULLPTR)
 {
     QWidget *widget = new QWidget;
     ui.setupUi(widget);

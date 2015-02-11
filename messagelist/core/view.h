@@ -436,14 +436,14 @@ protected:
     /**
     * Reimplemented in order to kill the QTreeView column auto-resizing
     */
-    virtual int sizeHintForColumn(int logicalColumnIndex) const;
+    int sizeHintForColumn(int logicalColumnIndex) const Q_DECL_OVERRIDE;
 
     /**
     * Reimplemented in order to disable update of the geometries
     * while a job step is running (as it takes a very long time and it's called for every item insertion...)
     * TODO: not true anymore, it's called after a delay.
     */
-    virtual void updateGeometries();
+    void updateGeometries() Q_DECL_OVERRIDE;
 
     /**
     * Returns true if the vertical scrollbar should keep to the top or bottom
@@ -516,7 +516,7 @@ protected:
     */
     Item *firstMessageItem(MessageTypeFilter messageTypeFilter)
     {
-        return messageItemAfter(0, messageTypeFilter, false);
+        return messageItemAfter(Q_NULLPTR, messageTypeFilter, false);
     }
 
     /**
@@ -559,7 +559,7 @@ protected:
     */
     Item *lastMessageItem(MessageTypeFilter messageTypeFilter)
     {
-        return messageItemBefore(0, messageTypeFilter, false);
+        return messageItemBefore(Q_NULLPTR, messageTypeFilter, false);
     }
 
     /**

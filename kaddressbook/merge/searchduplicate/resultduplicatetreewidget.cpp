@@ -25,8 +25,7 @@ using namespace KABMergeContacts;
 ResultDuplicateTreeWidget::ResultDuplicateTreeWidget(QWidget *parent)
     : QTreeWidget(parent)
 {
-    //kf5 add i18n
-    setHeaderLabel(QLatin1String("Contacts"));
+    setHeaderLabel(i18n("Contacts"));
     connect(this, &QTreeWidget::itemActivated, this, &ResultDuplicateTreeWidget::slotItemActivated);
 }
 

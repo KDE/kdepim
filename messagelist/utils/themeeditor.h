@@ -84,7 +84,7 @@ private:
     Core::FakeItem *mSampleMessageItem;
     Core::ModelInvariantRowMapper *mRowMapper;  // needed for the MessageItem above to be valid
 public:
-    virtual Core::Item *itemFromIndex(const QModelIndex &index) const;
+    Core::Item *itemFromIndex(const QModelIndex &index) const Q_DECL_OVERRIDE;
 };
 
 class ThemePreviewWidget : public QTreeWidget
@@ -189,7 +189,7 @@ public:
 
 protected:
     void mousePressEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
-    void mouseMoveEvent(QMouseEvent *e);
+    void mouseMoveEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
 
 private:
     Core::Theme::ContentItem::Type mType;
@@ -221,7 +221,7 @@ private:
     void fillViewHeaderPolicyCombo();
 
 protected Q_SLOTS:
-    void slotNameEditTextEdited(const QString &newName);
+    void slotNameEditTextEdited(const QString &newName) Q_DECL_OVERRIDE;
     void slotIconSizeSpinBoxValueChanged(int val);
 
 private:

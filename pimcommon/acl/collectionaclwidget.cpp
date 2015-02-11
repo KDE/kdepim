@@ -54,7 +54,7 @@ public:
     }
 
 protected:
-    virtual void actionEvent(QActionEvent *event) Q_DECL_OVERRIDE
+    void actionEvent(QActionEvent *event) Q_DECL_OVERRIDE
     {
         QAction *action = event->action();
         switch (event->type()) {

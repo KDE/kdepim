@@ -47,7 +47,7 @@ using namespace KSieveUi;
 
 SieveScriptListItem::SieveScriptListItem(const QString &text, QListWidget *parent)
     : QListWidgetItem(text, parent),
-      mScriptPage(0)
+      mScriptPage(Q_NULLPTR)
 {
 }
 
@@ -365,7 +365,7 @@ void SieveScriptListBox::loadScript(const QDomDocument &doc, QString &error)
     clear();
     QDomElement docElem = doc.documentElement();
     QDomNode n = docElem.firstChild();
-    SieveScriptPage *currentPage = 0;
+    SieveScriptPage *currentPage = Q_NULLPTR;
     ParseSieveScriptTypeBlock typeBlock = TypeUnknown;
     loadBlock(n, currentPage, typeBlock, error);
 }
@@ -383,7 +383,7 @@ void SieveScriptListBox::loadBlock(QDomNode &n, SieveScriptPage *currentPage, Pa
             if (tagName == QLatin1String("control")) {
                 //Create a new page when before it was "onlyactions"
                 if (typeBlock == TypeBlockAction) {
-                    currentPage = 0;
+                    currentPage = Q_NULLPTR;
                 }
                 if (e.hasAttribute(QLatin1String("name"))) {
                     const QString controlType = e.attribute(QLatin1String("name"));
@@ -417,7 +417,7 @@ void SieveScriptListBox::loadBlock(QDomNode &n, SieveScriptPage *currentPage, Pa
                             blockWidget->loadScript(e, false, error);
                         }
                         //We are sure that we can't have another elsif
-                        currentPage = 0;
+                        currentPage = Q_NULLPTR;
                     } else if (controlType == QLatin1String("foreverypart")) {
                         typeBlock = TypeBlockForeachBlock;
                         if (!currentPage) {

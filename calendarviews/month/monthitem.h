@@ -359,24 +359,24 @@ public:
 
     bool greaterThanFallback(const MonthItem *other) const Q_DECL_OVERRIDE;
 
-    virtual QDate realStartDate() const Q_DECL_OVERRIDE
+    QDate realStartDate() const Q_DECL_OVERRIDE
     {
         return mDate;
     }
-    virtual QDate realEndDate() const Q_DECL_OVERRIDE
+    QDate realEndDate() const Q_DECL_OVERRIDE
     {
         return mDate;
     }
-    virtual bool allDay() const Q_DECL_OVERRIDE
+    bool allDay() const Q_DECL_OVERRIDE
     {
         return true;
     }
 
-    virtual bool isMoveable() const Q_DECL_OVERRIDE
+    bool isMoveable() const Q_DECL_OVERRIDE
     {
         return false;
     }
-    virtual bool isResizable() const Q_DECL_OVERRIDE
+    bool isResizable() const Q_DECL_OVERRIDE
     {
         return false;
     }

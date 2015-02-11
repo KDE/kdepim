@@ -47,8 +47,8 @@ public:
         : q(owner) { }
 
     void fillThemeList();
-    QString uniqueNameForTheme(const QString &baseName, Core::Theme *skipTheme = 0);
-    ThemeListWidgetItem *findThemeItemByName(const QString &name, Core::Theme *skipTheme = 0);
+    QString uniqueNameForTheme(const QString &baseName, Core::Theme *skipTheme = nullptr);
+    ThemeListWidgetItem *findThemeItemByName(const QString &name, Core::Theme *skipTheme = nullptr);
     ThemeListWidgetItem *findThemeItemByTheme(Core::Theme *set);
     ThemeListWidgetItem *findThemeItemById(const QString &themeId);
     void commitEditor();

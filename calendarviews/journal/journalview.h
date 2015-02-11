@@ -68,7 +68,7 @@ public:
 
 public Q_SLOTS:
     // Don't update the view when midnight passed, otherwise we'll have data loss (bug 79145)
-    virtual void dayPassed(const QDate &) Q_DECL_OVERRIDE {}
+    void dayPassed(const QDate &) Q_DECL_OVERRIDE {}
     void updateView() Q_DECL_OVERRIDE;
     void flushView() Q_DECL_OVERRIDE;
 

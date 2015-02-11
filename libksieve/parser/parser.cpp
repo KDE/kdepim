@@ -52,14 +52,14 @@ namespace KSieve
 //
 
 Parser::Parser(const char *scursor, const char *const send, int options)
-    : i(0)
+    : i(Q_NULLPTR)
 {
     i = new Impl(scursor, send, options);
 }
 
 Parser::~Parser()
 {
-    delete i; i = 0;
+    delete i; i = Q_NULLPTR;
 }
 
 void Parser::setScriptBuilder(ScriptBuilder *builder)
@@ -124,7 +124,7 @@ namespace KSieve
 Parser::Impl::Impl(const char *scursor, const char *const send, int options)
     : mToken(Lexer::None),
       lexer(scursor, send, options),
-      mBuilder(0)
+      mBuilder(Q_NULLPTR)
 {
 
 }

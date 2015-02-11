@@ -234,7 +234,7 @@ void StyleGetter::slotTempPostRemoved(int blog_id, const BilboPost &post)
 void StyleGetter::generateRandomPostStrings()
 {
     qCDebug(BLOGILO_LOG);
-    srand(time(0));
+    srand(time(Q_NULLPTR));
     int postRandomNumber = rand();
     mPostTitle = QStringLiteral("%1%2").arg(QLatin1String(POST_TITLE)).arg(postRandomNumber);
     mPostContent = QStringLiteral("%1%2").arg(QLatin1String(POST_CONTENT)).arg(postRandomNumber);

@@ -32,7 +32,7 @@ class BilboBlog::Private
 {
 public:
     Private()
-        : kblog(0)
+        : kblog(Q_NULLPTR)
     {}
     QUrl mUrl;
     QString mBlogUrl;

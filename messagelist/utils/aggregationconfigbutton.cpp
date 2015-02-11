@@ -32,7 +32,7 @@ class MessageList::Utils::AggregationConfigButtonPrivate
 {
 public:
     AggregationConfigButtonPrivate(AggregationConfigButton *owner)
-        : q(owner), mAggregationComboBox(0)  { }
+        : q(owner), mAggregationComboBox(Q_NULLPTR)  { }
 
     AggregationConfigButton *const q;
 
@@ -49,7 +49,7 @@ AggregationConfigButton::AggregationConfigButton(QWidget *parent, const Aggregat
             this, SLOT(slotConfigureAggregations()));
 
     // Keep aggregation combo up-to-date with any changes made in the configure dialog.
-    if (d->mAggregationComboBox != 0)
+    if (d->mAggregationComboBox != Q_NULLPTR)
         connect(this, SIGNAL(configureDialogCompleted()),
                 d->mAggregationComboBox, SLOT(slotLoadAggregations()));
     setEnabled(Manager::instance());

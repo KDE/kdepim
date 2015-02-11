@@ -57,7 +57,7 @@ public:
     /**
      * Returns the contact group formatted as HTML
      */
-    virtual QString toHtml(HtmlForm form = SelfcontainedForm) const;
+    QString toHtml(HtmlForm form = SelfcontainedForm) const Q_DECL_OVERRIDE;
 
 private:
     //@cond PRIVATE

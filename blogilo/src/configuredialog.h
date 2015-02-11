@@ -42,7 +42,7 @@ Q_SIGNALS:
     void settingsChanged();
 
 protected:
-    bool hasChanged();
+    bool hasChanged() Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void slotApplySettingsClicked();

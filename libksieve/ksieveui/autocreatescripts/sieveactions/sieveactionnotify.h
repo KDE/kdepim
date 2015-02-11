@@ -28,14 +28,14 @@ public:
     SieveActionNotify(QObject *parent = Q_NULLPTR);
     static SieveAction *newAction();
 
-    QWidget *createParamWidget(QWidget *parent) const;
-    QString code(QWidget *) const;
-    QString serverNeedsCapability() const;
-    bool needCheckIfServerHasCapability() const;
-    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error);
-    QString help() const;
-    QStringList needRequires(QWidget *) const;
-    QString href() const;
+    QWidget *createParamWidget(QWidget *parent) const Q_DECL_OVERRIDE;
+    QString code(QWidget *) const Q_DECL_OVERRIDE;
+    QString serverNeedsCapability() const Q_DECL_OVERRIDE;
+    bool needCheckIfServerHasCapability() const Q_DECL_OVERRIDE;
+    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error) Q_DECL_OVERRIDE;
+    QString help() const Q_DECL_OVERRIDE;
+    QStringList needRequires(QWidget *) const Q_DECL_OVERRIDE;
+    QString href() const Q_DECL_OVERRIDE;
 };
 }
 

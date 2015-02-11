@@ -44,7 +44,7 @@ QString SieveAction::label() const
 
 SieveAction *SieveAction::newAction()
 {
-    return 0;
+    return Q_NULLPTR;
 }
 
 QWidget *SieveAction::createParamWidget(QWidget *parent) const

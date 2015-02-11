@@ -65,7 +65,7 @@ public:
     }
     void forgetTheme()
     {
-        mTheme = 0;
+        mTheme = Q_NULLPTR;
     }
 private:
     Core::Theme *mTheme;
@@ -79,7 +79,7 @@ public:
     {}
 public:
     // need a larger but shorter QListWidget
-    QSize sizeHint() const
+    QSize sizeHint() const Q_DECL_OVERRIDE
     {
         return QSize(450, 128);
     }
@@ -271,10 +271,10 @@ void ConfigureThemesDialog::Private::themeListItemClicked(QListWidgetItem *cur)
 
     const int numberOfSelectedItem(mThemeList->selectedItems().count());
 
-    ThemeListWidgetItem *item = cur ? dynamic_cast< ThemeListWidgetItem * >(cur) : 0;
+    ThemeListWidgetItem *item = cur ? dynamic_cast< ThemeListWidgetItem * >(cur) : Q_NULLPTR;
     mDeleteThemeButton->setEnabled(item && !item->theme()->readOnly());
     mCloneThemeButton->setEnabled(numberOfSelectedItem == 1);
-    mEditor->editTheme(item ? item->theme() : 0);
+    mEditor->editTheme(item ? item->theme() : Q_NULLPTR);
     mExportThemeButton->setEnabled(numberOfSelectedItem > 0);
 
     if (item && !item->isSelected()) {
@@ -295,7 +295,7 @@ ThemeListWidgetItem *ConfigureThemesDialog::Private::findThemeItemById(const QSt
         }
         ++i;
     }
-    return 0;
+    return Q_NULLPTR;
 }
 
 ThemeListWidgetItem *ConfigureThemesDialog::Private::findThemeItemByName(const QString &name, Theme *skipTheme)
@@ -313,7 +313,7 @@ ThemeListWidgetItem *ConfigureThemesDialog::Private::findThemeItemByName(const Q
         }
         ++i;
     }
-    return 0;
+    return Q_NULLPTR;
 }
 
 ThemeListWidgetItem *ConfigureThemesDialog::Private::findThemeItemByTheme(Theme *set)
@@ -329,7 +329,7 @@ ThemeListWidgetItem *ConfigureThemesDialog::Private::findThemeItemByTheme(Theme 
         }
         ++i;
     }
-    return 0;
+    return Q_NULLPTR;
 }
 
 QString ConfigureThemesDialog::Private::uniqueNameForTheme(const QString &baseName, Theme *skipTheme)
@@ -402,7 +402,7 @@ void ConfigureThemesDialog::Private::deleteThemeButtonClicked()
         return;
     }
 
-    mEditor->editTheme(0);   // forget it
+    mEditor->editTheme(Q_NULLPTR);   // forget it
     Q_FOREACH (QListWidgetItem *it, list) {
         ThemeListWidgetItem *item = dynamic_cast< ThemeListWidgetItem * >(it);
         if (!item) {

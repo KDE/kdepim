@@ -48,11 +48,11 @@ public:
      * @param blog_id id of blog we will edit it, for adding a blog this should be "-1"
      * @param parent Parent
      */
-    explicit AddEditBlog(int blog_id, QWidget *parent = Q_NULLPTR, Qt::WindowFlags flags = 0);
+    explicit AddEditBlog(int blog_id, QWidget *parent = Q_NULLPTR, Qt::WindowFlags flags = Q_NULLPTR);
     ~AddEditBlog();
 
 protected Q_SLOTS:
-    virtual void slotButtonClicked(int button);
+    void slotButtonClicked(int button) Q_DECL_OVERRIDE;
     void enableAutoConfBtn();
     void enableOkButton(const QString &);
     void autoConfigure();

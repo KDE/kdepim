@@ -37,7 +37,7 @@ using namespace KSieveUi;
 VacationPageWidget::VacationPageWidget(QWidget *parent)
     : QWidget(parent),
       mPageScript(Script),
-      mSieveJob(0),
+      mSieveJob(Q_NULLPTR),
       mWasActive(false),
       mHasDateSupport(false)
 {
@@ -80,7 +80,7 @@ VacationPageWidget::~VacationPageWidget()
     if (mSieveJob) {
         mSieveJob->kill();
     }
-    mSieveJob = 0;
+    mSieveJob = Q_NULLPTR;
 }
 
 void VacationPageWidget::setServerUrl(const QUrl &url)
@@ -102,7 +102,7 @@ void VacationPageWidget::slotGetResult(KManageSieve::SieveJob *job, bool success
                            << ", ?," << active << ")" << endl
                            << "script:" << endl
                            << script;
-    mSieveJob = 0; // job deletes itself after returning from this slot!
+    mSieveJob = Q_NULLPTR; // job deletes itself after returning from this slot!
 
     if (mUrl.scheme() == QLatin1String("sieve") &&
             !job->sieveCapabilities().contains(QLatin1String("vacation"))) {
@@ -161,7 +161,7 @@ KSieveUi::VacationCreateScriptJob *VacationPageWidget::writeScript()
         createJob->setScript(script);
         return createJob;
     }
-    return 0;
+    return Q_NULLPTR;
 }
 
 void VacationPageWidget::setDefault()

@@ -24,7 +24,7 @@
 using namespace KSieveUi;
 ParseUserScriptJob::ParseUserScriptJob(QObject *parent)
     : QObject(parent),
-      mSieveJob(0)
+      mSieveJob(Q_NULLPTR)
 {
 }
 
@@ -33,7 +33,7 @@ ParseUserScriptJob::~ParseUserScriptJob()
     if (mSieveJob) {
         mSieveJob->kill();
     }
-    mSieveJob = 0;
+    mSieveJob = Q_NULLPTR;
 }
 
 void ParseUserScriptJob::scriptUrl(const QUrl &url)
@@ -56,7 +56,7 @@ void ParseUserScriptJob::start()
 
 void ParseUserScriptJob::slotGetResult(KManageSieve::SieveJob *, bool, const QString &script, bool)
 {
-    mSieveJob = 0;
+    mSieveJob = Q_NULLPTR;
     if (script.isEmpty()) {
         Q_EMIT error(i18n("Script is empty."));
         return;

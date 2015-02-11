@@ -28,7 +28,7 @@ VacationCreateScriptJob::VacationCreateScriptJob(QObject *parent)
     : QObject(parent),
       mActivate(false),
       mWasActive(false),
-      mSieveJob(0)
+      mSieveJob(Q_NULLPTR)
 {
 
 }
@@ -87,14 +87,14 @@ void VacationCreateScriptJob::slotPutInactiveResult(KManageSieve::SieveJob *job,
 void VacationCreateScriptJob::handlePutResult(KManageSieve::SieveJob *, bool success, bool activated)
 {
     if (success)
-        KMessageBox::information(0, activated
+        KMessageBox::information(Q_NULLPTR, activated
                                  ? i18n("Sieve script installed successfully on the server \'%1\'.\n"
                                         "Out of Office reply is now active.", mServerName)
                                  : i18n("Sieve script installed successfully on the server \'%1\'.\n"
                                         "Out of Office reply has been deactivated.", mServerName));
 
     qCDebug(LIBKSIEVE_LOG) << "( ???," << success << ", ? )";
-    mSieveJob = 0; // job deletes itself after returning from this slot!
+    mSieveJob = Q_NULLPTR; // job deletes itself after returning from this slot!
     Q_EMIT result(success);
     Q_EMIT scriptActive(activated, mServerName);
     deleteLater();

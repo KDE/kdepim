@@ -27,12 +27,12 @@ class SieveActionReturn : public SieveAction
 public:
     SieveActionReturn(QObject *parent = Q_NULLPTR);
     static SieveAction *newAction();
-    QString help() const;
-    QStringList needRequires(QWidget *parent) const;
-    bool needCheckIfServerHasCapability() const;
-    QString serverNeedsCapability() const;
-    QString code(QWidget *) const;
-    QString href() const;
+    QString help() const Q_DECL_OVERRIDE;
+    QStringList needRequires(QWidget *parent) const Q_DECL_OVERRIDE;
+    bool needCheckIfServerHasCapability() const Q_DECL_OVERRIDE;
+    QString serverNeedsCapability() const Q_DECL_OVERRIDE;
+    QString code(QWidget *) const Q_DECL_OVERRIDE;
+    QString href() const Q_DECL_OVERRIDE;
 };
 }
 

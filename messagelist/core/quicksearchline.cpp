@@ -42,7 +42,7 @@ using namespace MessageList::Core;
 QuickSearchLine::QuickSearchLine(QWidget *parent)
     : QWidget(parent),
       mContainsOutboundMessages(false),
-      mFilterStatusMapper(0)
+      mFilterStatusMapper(Q_NULLPTR)
 {
     QVBoxLayout *vbox = new QVBoxLayout;
     vbox->setMargin(0);

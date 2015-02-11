@@ -45,14 +45,14 @@ class AddEditBlog::Private
 {
 public:
     Private()
-        : mainW(0),
+        : mainW(Q_NULLPTR),
           isNewBlog(false),
-          bBlog(0),
-          mBlog(0),
-          mFetchProfileIdTimer(0),
-          mFetchBlogIdTimer(0),
-          mFetchAPITimer(0),
-          wait(0)
+          bBlog(Q_NULLPTR),
+          mBlog(Q_NULLPTR),
+          mFetchProfileIdTimer(Q_NULLPTR),
+          mFetchBlogIdTimer(Q_NULLPTR),
+          mFetchAPITimer(Q_NULLPTR),
+          wait(Q_NULLPTR)
     {}
     Ui::AddEditBlogBase ui;
     QTabWidget *mainW;
@@ -75,7 +75,7 @@ AddEditBlog::AddEditBlog(int blog_id, QWidget *parent, Qt::WindowFlags flags)
     setMainWidget(d->mainW);
 
     d->isNewBlog = true;
-    d->mFetchAPITimer = d->mFetchBlogIdTimer = d->mFetchProfileIdTimer = 0;
+    d->mFetchAPITimer = d->mFetchBlogIdTimer = d->mFetchProfileIdTimer = Q_NULLPTR;
 
     connect(d->ui.txtId, &KLineEdit::textChanged, this, &AddEditBlog::enableOkButton);
     connect(d->ui.txtUrl, &KLineEdit::textChanged, this, &AddEditBlog::enableAutoConfBtn);
@@ -330,7 +330,7 @@ void AddEditBlog::handleFetchAPITimeout()
 {
     qCDebug(BLOGILO_LOG);
     d->mFetchAPITimer->deleteLater();
-    d->mFetchAPITimer = 0;
+    d->mFetchAPITimer = Q_NULLPTR;
     hideWaitWidget();
     d->ui.txtId->setEnabled(true);
     d->ui.txtId->setText(QString());
@@ -352,7 +352,7 @@ void AddEditBlog::fetchedBlogId(const QList< QMap < QString , QString > > &list)
 {
     if (d->mFetchBlogIdTimer) {
         d->mFetchBlogIdTimer->deleteLater();
-        d->mFetchBlogIdTimer = 0;
+        d->mFetchBlogIdTimer = Q_NULLPTR;
     }
     hideWaitWidget();
     QString blogId, blogName, blogUrl, apiUrl;
@@ -611,7 +611,7 @@ void AddEditBlog::hideWaitWidget()
     if (d->wait) {
         d->wait->deleteLater();
     }
-    d->wait = 0;
+    d->wait = Q_NULLPTR;
 }
 
 void AddEditBlog::bloggerAuthenticated(const QMap< QString, QString > &authData)

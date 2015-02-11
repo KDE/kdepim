@@ -104,7 +104,7 @@ public:
         return QVariant();
     }
 
-    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE
     {
         if (role != Qt::DisplayRole && role != Qt::ToolTipRole) {
             return QVariant();

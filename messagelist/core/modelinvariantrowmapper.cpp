@@ -50,7 +50,7 @@ public:
     {
         QHash< int, ModelInvariantIndex * >::ConstIterator end(mInvariantHash->constEnd());
         for (QHash< int, ModelInvariantIndex * >::ConstIterator it = mInvariantHash->constBegin(); it != end; ++it) {
-            (*it)->d->setRowMapper(0);
+            (*it)->d->setRowMapper(Q_NULLPTR);
         }
         delete mInvariantHash;
     }
@@ -86,7 +86,7 @@ ModelInvariantRowMapper::~ModelInvariantRowMapper()
     // FIXME: optimize this (it CAN be optimized)
     QHash< int, ModelInvariantIndex * >::ConstIterator end(d->mCurrentInvariantHash->constEnd());
     for (QHash< int, ModelInvariantIndex * >::ConstIterator it = d->mCurrentInvariantHash->constBegin(); it != end; ++it) {
-        (*it)->d->setRowMapper(0);
+        (*it)->d->setRowMapper(Q_NULLPTR);
     }
     delete d->mCurrentInvariantHash;
 
@@ -112,7 +112,7 @@ void ModelInvariantRowMapperPrivate::killFirstRowShift()
     mRemovedShiftCount++;
     if (mRowShiftList->isEmpty()) {
         delete mRowShiftList;
-        mRowShiftList = 0;
+        mRowShiftList = Q_NULLPTR;
     }
 }
 
@@ -181,20 +181,20 @@ void ModelInvariantRowMapperPrivate::updateModelInvariantIndex(int modelIndexRow
 ModelInvariantIndex *ModelInvariantRowMapperPrivate::modelIndexRowToModelInvariantIndexInternal(int modelIndexRow, bool updateIfNeeded)
 {
     // First of all look it up in the current hash
-    ModelInvariantIndex *invariant = mCurrentInvariantHash->value(modelIndexRow, 0);
+    ModelInvariantIndex *invariant = mCurrentInvariantHash->value(modelIndexRow, Q_NULLPTR);
     if (invariant) {
         return invariant;    // found: was up to date
     }
 
     // Go backward in history by unapplying changes
     if (!mRowShiftList) {
-        return 0;    // not found (not requested yet or invalid index at all)
+        return Q_NULLPTR;    // not found (not requested yet or invalid index at all)
     }
 
     int idx = mRowShiftList->count();
     if (idx == 0) {
         Q_ASSERT(false);
-        return 0; // should never happen (mRowShiftList should have been 0), but well...
+        return Q_NULLPTR; // should never happen (mRowShiftList should have been 0), but well...
     }
     idx--;
 
@@ -222,7 +222,7 @@ ModelInvariantIndex *ModelInvariantRowMapperPrivate::modelIndexRowToModelInvaria
             previousIndexRow = potentialPreviousModelIndexRow;
         }
 
-        invariant = shift->mInvariantHash->value(previousIndexRow, 0);
+        invariant = shift->mInvariantHash->value(previousIndexRow, Q_NULLPTR);
         if (invariant) {
             // found at this level in history
             if (updateIfNeeded) { // update it too
@@ -236,7 +236,7 @@ ModelInvariantIndex *ModelInvariantRowMapperPrivate::modelIndexRowToModelInvaria
 
     qCWarning(MESSAGELIST_LOG) << "Requested invariant for storage row index "
                                << modelIndexRow << " not found in history";
-    return 0; // not found in history
+    return Q_NULLPTR; // not found in history
 }
 
 void ModelInvariantRowMapper::setLazyUpdateChunkInterval(int chunkInterval)
@@ -364,7 +364,7 @@ QList< ModelInvariantIndex * > *ModelInvariantRowMapper::modelIndexRowRangeToMod
 {
     if (!d->mRowShiftList) {
         if (d->mCurrentInvariantHash->isEmpty()) {
-            return 0;    // no invariants emitted, even if rows are changed, no invariant is affected.
+            return Q_NULLPTR;    // no invariants emitted, even if rows are changed, no invariant is affected.
         }
     }
 
@@ -383,7 +383,7 @@ QList< ModelInvariantIndex * > *ModelInvariantRowMapper::modelIndexRowRangeToMod
 
     if (invariantList->isEmpty()) {
         delete invariantList;
-        return 0;
+        return Q_NULLPTR;
     }
 
     return invariantList;
@@ -464,7 +464,7 @@ QList< ModelInvariantIndex * > *ModelInvariantRowMapper::modelRowsRemoved(int mo
 
     if (!d->mRowShiftList) {
         if (d->mCurrentInvariantHash->isEmpty()) {
-            return 0;    // no invariants emitted, even if rows are changed, no invariant is affected.
+            return Q_NULLPTR;    // no invariants emitted, even if rows are changed, no invariant is affected.
         }
         // some invariants might be affected
     }
@@ -507,7 +507,7 @@ QList< ModelInvariantIndex * > *ModelInvariantRowMapper::modelRowsRemoved(int mo
         ModelInvariantIndex *dyingInvariant = d->modelIndexRowToModelInvariantIndexInternal(idx, false);
         if (dyingInvariant) {
             d->indexDead(dyingInvariant);   // will remove from this mapper hashes
-            dyingInvariant->d->setRowMapper(0);   // invalidate!
+            dyingInvariant->d->setRowMapper(Q_NULLPTR);   // invalidate!
             deadInvariants->append(dyingInvariant);
         } else {
             // got no dying invariant
@@ -522,7 +522,7 @@ QList< ModelInvariantIndex * > *ModelInvariantRowMapper::modelRowsRemoved(int mo
             if (deadInvariants->isEmpty()) {
                 // should never happen, but well...
                 delete deadInvariants;
-                return 0;
+                return Q_NULLPTR;
             }
             return deadInvariants;
         }
@@ -558,7 +558,7 @@ QList< ModelInvariantIndex * > *ModelInvariantRowMapper::modelRowsRemoved(int mo
     if (deadInvariants->isEmpty()) {
         // should never happen, but well...
         delete deadInvariants;
-        return 0;
+        return Q_NULLPTR;
     }
 
     return deadInvariants;
@@ -570,7 +570,7 @@ void ModelInvariantRowMapper::modelReset()
     QHash< int, ModelInvariantIndex * >::ConstIterator end(d->mCurrentInvariantHash->constEnd());
 
     for (QHash< int, ModelInvariantIndex * >::ConstIterator it = d->mCurrentInvariantHash->constBegin(); it != end; ++it) {
-        (*it)->d->setRowMapper(0);
+        (*it)->d->setRowMapper(Q_NULLPTR);
     }
     d->mCurrentInvariantHash->clear();
 
@@ -580,7 +580,7 @@ void ModelInvariantRowMapper::modelReset()
         }
 
         delete d->mRowShiftList;
-        d->mRowShiftList = 0;
+        d->mRowShiftList = Q_NULLPTR;
     }
 
     d->mCurrentShiftSerial = 0;

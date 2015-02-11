@@ -116,7 +116,7 @@ void CustomTemplates::slotHelpLinkClicked(const QString &)
 CustomTemplates::~CustomTemplates()
 {
     delete mUi;
-    mUi = 0;
+    mUi = Q_NULLPTR;
 }
 
 void CustomTemplates::slotNameChanged(const QString &text)
@@ -500,7 +500,7 @@ QWidget *CustomTemplateItemDelegate::createEditor(QWidget *parent,
     if (index.column() == 1) {
         return QStyledItemDelegate::createEditor(parent, option, index);
     }
-    return 0;
+    return Q_NULLPTR;
 }
 
 CustomTemplateItem::CustomTemplateItem(QTreeWidget *parent,

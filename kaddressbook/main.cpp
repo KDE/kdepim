@@ -37,7 +37,7 @@ public:
           mMainWindow(Q_NULLPTR)
     {
     }
-    virtual int newInstance() Q_DECL_OVERRIDE;
+    int newInstance() Q_DECL_OVERRIDE;
 
 private:
     MainWindow *mMainWindow;

@@ -71,7 +71,7 @@ private Q_SLOTS:
     void slotDuplicateClicked();
 
 private:
-    bool nameAlreadyExists(const QString &str, QTreeWidgetItem *item = 0);
+    bool nameAlreadyExists(const QString &str, QTreeWidgetItem *item = Q_NULLPTR);
     QString indexToType(int index);
     QString createUniqueName(const QString &name) const;
     void iconFromType(CustomTemplates::Type type, CustomTemplateItem *item);

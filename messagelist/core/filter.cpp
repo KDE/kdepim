@@ -73,7 +73,7 @@ bool Filter::match(const MessageItem *item) const
 
     if (!mTagId.isEmpty()) {
         //mTagId is a Akonadi::Tag::url
-        const bool tagMatches = item->findTag(mTagId) != 0;
+        const bool tagMatches = item->findTag(mTagId) != Q_NULLPTR;
         if (!tagMatches) {
             return false;
         }

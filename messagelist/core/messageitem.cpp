@@ -148,7 +148,7 @@ MessageItemPrivate::MessageItemPrivate(MessageItem *qq)
       mSignatureState(MessageItem::NotSigned),
       mAboutToBeRemoved(false),
       mSubjectIsPrefixed(false),
-      mTagList(0)
+      mTagList(Q_NULLPTR)
 {
 }
 
@@ -163,7 +163,7 @@ void MessageItemPrivate::invalidateTagCache()
     if (mTagList) {
         qDeleteAll(*mTagList);
         delete mTagList;
-        mTagList = 0;
+        mTagList = Q_NULLPTR;
     }
 }
 
@@ -173,7 +173,7 @@ void MessageItemPrivate::invalidateAnnotationCache()
 
 const MessageItem::Tag *MessageItemPrivate::bestTag() const
 {
-    const MessageItem::Tag *best = 0;
+    const MessageItem::Tag *best = Q_NULLPTR;
     foreach (const MessageItem::Tag *tag, getTagList()) {
         if (!best || tag->priority() < best->priority()) {
             best = tag;
@@ -235,7 +235,7 @@ QList<MessageItem::Tag *> MessageItemPrivate::getTagList() const
 
 bool MessageItemPrivate::tagListInitialized() const
 {
-    return mTagList != 0;
+    return mTagList != Q_NULLPTR;
 }
 
 MessageItem::MessageItem()
@@ -302,7 +302,7 @@ const MessageItem::Tag *MessageItemPrivate::findTagInternal(const QString &szTag
             return tag;
         }
     }
-    return 0;
+    return Q_NULLPTR;
 }
 
 const MessageItem::Tag *MessageItem::findTag(const QString &szTagId) const
@@ -341,7 +341,7 @@ QColor MessageItem::textColor() const
 {
     Q_D(const MessageItem);
     const Tag *bestTag = d->bestTag();
-    if (bestTag != 0 && bestTag->textColor().isValid()) {
+    if (bestTag != Q_NULLPTR && bestTag->textColor().isValid()) {
         return bestTag->textColor();
     }
     QColor clr;

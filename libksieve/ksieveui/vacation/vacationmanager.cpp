@@ -73,7 +73,7 @@ void VacationManager::slotDialogCanceled()
     }
 
     mMultiImapVacationDialog->deleteLater();
-    mMultiImapVacationDialog = 0;
+    mMultiImapVacationDialog = Q_NULLPTR;
 }
 
 void VacationManager::slotDialogOk()
@@ -89,5 +89,5 @@ void VacationManager::slotDialogOk()
 
     mMultiImapVacationDialog->deleteLater();
 
-    mMultiImapVacationDialog = 0;
+    mMultiImapVacationDialog = Q_NULLPTR;
 }

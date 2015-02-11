@@ -44,7 +44,7 @@ class DBMan::Private
 {
 public:
     Private()
-        : mWallet(0),
+        : mWallet(Q_NULLPTR),
           useWallet(false)
     {
     }
@@ -75,7 +75,7 @@ DBMan::DBMan()
 
     if (!QFile::exists(CONF_DB)) {
         if (!this->createDB()) {
-            KMessageBox::detailedError(0, i18n("Cannot create database"),
+            KMessageBox::detailedError(Q_NULLPTR, i18n("Cannot create database"),
                                        i18n(d->db.lastError().text().toUtf8().data()));
             qCDebug(BLOGILO_LOG) << "Cannot create database, SQL error: " << d->db.lastError().text() << endl;
             exit(1);
@@ -99,7 +99,7 @@ DBMan::~DBMan()
     d->db.close();
     if (d->useWallet) {
         d->mWallet->deleteLater();
-        d->mWallet = 0;
+        d->mWallet = Q_NULLPTR;
     }
     delete d;
     mSelf = Q_NULLPTR;
@@ -145,7 +145,7 @@ bool DBMan::connectDB()
     d->db.setDatabaseName(QString(CONF_DB));
 
     if (!d->db.open()) {
-        KMessageBox::detailedError(0, i18n("Cannot connect to database"),
+        KMessageBox::detailedError(Q_NULLPTR, i18n("Cannot connect to database"),
                                    i18n(d->db.lastError().text().toUtf8().data()));
         qCDebug(BLOGILO_LOG) << "Cannot connect to database, SQL error: " << d->db.lastError().text();
         return false;

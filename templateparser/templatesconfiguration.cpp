@@ -97,7 +97,7 @@ void TemplatesConfiguration::resetToDefault()
 {
     const int choice =
         KMessageBox::questionYesNoCancel(
-            0,
+            Q_NULLPTR,
             i18n("Do you want to reset current template or all templates to default?"),
             i18n("Reset to default"),
             KGuiItem(i18n("Reset Current Template")),
@@ -244,7 +244,7 @@ void TemplatesConfiguration::saveToIdentity(uint id)
 void TemplatesConfiguration::loadFromFolder(const QString &id, uint identity)
 {
     Templates t(id);
-    Templates *tid = 0;
+    Templates *tid = Q_NULLPTR;
 
     if (identity) {
         tid = new Templates(configIdString(identity));
@@ -342,7 +342,7 @@ QTextEdit *TemplatesConfiguration::currentTextEdit() const
         edit = textEdit_forward->editor();
     } else {
         qCDebug(TEMPLATEPARSER_LOG) << "Unknown current page in TemplatesConfiguration!";
-        edit = 0;
+        edit = Q_NULLPTR;
     }
     return edit;
 }

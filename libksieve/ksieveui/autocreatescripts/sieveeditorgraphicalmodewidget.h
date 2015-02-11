@@ -44,8 +44,8 @@ public:
 
     void loadScript(const QDomDocument &doc, QString &error);
 
-    QString currentscript();
-    void setImportScript(const QString &);
+    QString currentscript() Q_DECL_OVERRIDE;
+    void setImportScript(const QString &) Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     void enableButtonOk(bool);

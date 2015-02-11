@@ -97,8 +97,8 @@ public Q_SLOTS:
     void slotRemoveWidget(QWidget *w);
 
 protected:
-    void clearWidget(QWidget *aWidget);
-    QWidget *createWidget(QWidget *parent);
+    void clearWidget(QWidget *aWidget) Q_DECL_OVERRIDE;
+    QWidget *createWidget(QWidget *parent) Q_DECL_OVERRIDE;
 private:
     void reconnectWidget(SieveIncludeActionWidget *w);
     void updateAddRemoveButton();
@@ -111,7 +111,7 @@ public:
     explicit SieveIncludeWidget(QWidget *parent = Q_NULLPTR);
     ~SieveIncludeWidget();
 
-    void generatedScript(QString &script, QStringList &requires);
+    void generatedScript(QString &script, QStringList &requires) Q_DECL_OVERRIDE;
 
     void loadScript(const QDomElement &element, QString &error);
 

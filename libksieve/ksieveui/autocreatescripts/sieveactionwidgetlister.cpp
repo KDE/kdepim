@@ -175,7 +175,7 @@ void SieveActionWidget::initWidget()
 
     connect(mAdd, &QPushButton::clicked, this, &SieveActionWidget::slotAddWidget);
     connect(mRemove, &QPushButton::clicked, this, &SieveActionWidget::slotRemoveWidget);
-    setFilterAction(0);
+    setFilterAction(Q_NULLPTR);
 }
 
 void SieveActionWidget::slotHelp()
@@ -219,7 +219,7 @@ void SieveActionWidget::slotActionChanged(int index)
     } else {
         mAdd->setEnabled(true);
         mCommentButton->setEnabled(false);
-        setFilterAction(0);
+        setFilterAction(Q_NULLPTR);
         mHelpButton->setEnabled(false);
     }
     Q_EMIT valueChanged();

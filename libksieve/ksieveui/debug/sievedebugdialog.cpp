@@ -33,7 +33,7 @@ using namespace KSieveUi;
 
 SieveDebugDialog::SieveDebugDialog(QWidget *parent)
     : QDialog(parent),
-      mSieveJob(0)
+      mSieveJob(Q_NULLPTR)
 {
     setWindowTitle(i18n("Sieve Diagnostics"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
@@ -66,7 +66,7 @@ SieveDebugDialog::~SieveDebugDialog()
 {
     if (mSieveJob) {
         mSieveJob->kill();
-        mSieveJob = 0;
+        mSieveJob = Q_NULLPTR;
     }
     qCDebug(LIBKSIEVE_LOG);
     writeConfig();
@@ -149,7 +149,7 @@ void SieveDebugDialog::slotGetScript(KManageSieve::SieveJob * /* job */, bool su
                            << ", ?," << active << ")" << endl
                            << "script:" << endl
                            << script;
-    mSieveJob = 0; // job deletes itself after returning from this slot!
+    mSieveJob = Q_NULLPTR; // job deletes itself after returning from this slot!
 
     if (script.isEmpty()) {
         mEdit->editor()->appendPlainText(i18n("(This script is empty.)\n\n"));
@@ -169,7 +169,7 @@ void SieveDebugDialog::slotGetScriptList(KManageSieve::SieveJob *job, bool succe
 {
     qCDebug(LIBKSIEVE_LOG) << "Success:" << success << ", List:" << scriptList.join(QLatin1String(",")) <<
                            ", active:" << activeScript;
-    mSieveJob = 0; // job deletes itself after returning from this slot!
+    mSieveJob = Q_NULLPTR; // job deletes itself after returning from this slot!
 
     mEdit->editor()->appendPlainText(i18n("Sieve capabilities:\n"));
     const QStringList caps = job->sieveCapabilities();

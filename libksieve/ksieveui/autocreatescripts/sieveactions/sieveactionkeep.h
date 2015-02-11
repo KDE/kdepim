@@ -27,12 +27,12 @@ public:
     SieveActionKeep(QObject *parent = Q_NULLPTR);
     static SieveAction *newAction();
 
-    QString code(QWidget *) const;
-    QString help() const;
-    QWidget *createParamWidget(QWidget *parent) const;
-    bool setParamWidgetValue(const QDomElement &element, QWidget *w, QString &error);
-    QStringList needRequires(QWidget *) const;
-    QString href() const;
+    QString code(QWidget *) const Q_DECL_OVERRIDE;
+    QString help() const Q_DECL_OVERRIDE;
+    QWidget *createParamWidget(QWidget *parent) const Q_DECL_OVERRIDE;
+    bool setParamWidgetValue(const QDomElement &element, QWidget *w, QString &error) Q_DECL_OVERRIDE;
+    QStringList needRequires(QWidget *) const Q_DECL_OVERRIDE;
+    QString href() const Q_DECL_OVERRIDE;
 
 private:
     bool mHasFlagSupport;

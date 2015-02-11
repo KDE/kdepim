@@ -31,26 +31,26 @@ public:
     explicit XMLPrintingScriptBuilder();
     ~XMLPrintingScriptBuilder();
 
-    void taggedArgument(const QString &tag);
-    void stringArgument(const QString &string, bool multiLine, const QString & /*fixme*/);
-    void numberArgument(unsigned long number, char quantifier);
-    void commandStart(const QString &identifier);
-    void commandEnd();
-    void testStart(const QString &identifier);
-    void testEnd();
-    void testListStart();
-    void testListEnd();
-    void blockStart();
-    void blockEnd();
-    void stringListArgumentStart();
-    void stringListArgumentEnd();
-    void stringListEntry(const QString &string, bool multiline, const QString &hashComment);
-    void hashComment(const QString &comment);
-    void bracketComment(const QString &comment);
+    void taggedArgument(const QString &tag) Q_DECL_OVERRIDE;
+    void stringArgument(const QString &string, bool multiLine, const QString & /*fixme*/) Q_DECL_OVERRIDE;
+    void numberArgument(unsigned long number, char quantifier) Q_DECL_OVERRIDE;
+    void commandStart(const QString &identifier) Q_DECL_OVERRIDE;
+    void commandEnd() Q_DECL_OVERRIDE;
+    void testStart(const QString &identifier) Q_DECL_OVERRIDE;
+    void testEnd() Q_DECL_OVERRIDE;
+    void testListStart() Q_DECL_OVERRIDE;
+    void testListEnd() Q_DECL_OVERRIDE;
+    void blockStart() Q_DECL_OVERRIDE;
+    void blockEnd() Q_DECL_OVERRIDE;
+    void stringListArgumentStart() Q_DECL_OVERRIDE;
+    void stringListArgumentEnd() Q_DECL_OVERRIDE;
+    void stringListEntry(const QString &string, bool multiline, const QString &hashComment) Q_DECL_OVERRIDE;
+    void hashComment(const QString &comment) Q_DECL_OVERRIDE;
+    void bracketComment(const QString &comment) Q_DECL_OVERRIDE;
 
-    void lineFeed();
-    void error(const KSieve::Error &error);
-    void finished();
+    void lineFeed() Q_DECL_OVERRIDE;
+    void error(const KSieve::Error &error) Q_DECL_OVERRIDE;
+    void finished() Q_DECL_OVERRIDE;
 
     QString result() const;
     QString error() const;

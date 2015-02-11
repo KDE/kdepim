@@ -154,7 +154,7 @@ public Q_SLOTS:
 protected:
     /**
     * Called when the "Message Status/Tag" filter menu is opened by the user.
-    * You may override this function in order to add some "custom tag" entries
+    * You may Q_DECL_OVERRIDE this function in order to add some "custom tag" entries
     * to the menu. The entries should be placed in a QActionGroup which should be returned
     * to the caller. The QAction objects associated to the entries should have
     * the string id of the tag set as data() and the tag icon set as icon().

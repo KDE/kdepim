@@ -209,7 +209,7 @@ public:
     */
     ViewItemJob(int startIndex, int endIndex, int chunkTimeout, int idleInterval, int messageCheckCount, bool disconnectUI = false)
         : mStartIndex(startIndex), mCurrentIndex(startIndex), mEndIndex(endIndex),
-          mInvariantIndexList(0),
+          mInvariantIndexList(Q_NULLPTR),
           mChunkTimeout(chunkTimeout), mIdleInterval(idleInterval),
           mMessageCheckCount(messageCheckCount), mCurrentPass(Pass1Fill),
           mDisconnectUI(disconnectUI) {}
@@ -294,19 +294,19 @@ Model::Model(View *pParent)
     : QAbstractItemModel(pParent), d(new ModelPrivate(this))
 {
     d->mRecursionCounterForReset = 0;
-    d->mStorageModel = 0;
+    d->mStorageModel = Q_NULLPTR;
     d->mView = pParent;
-    d->mAggregation = 0;
-    d->mTheme = 0;
-    d->mSortOrder = 0;
-    d->mFilter = 0;
-    d->mPersistentSetManager = 0;
+    d->mAggregation = Q_NULLPTR;
+    d->mTheme = Q_NULLPTR;
+    d->mSortOrder = Q_NULLPTR;
+    d->mFilter = Q_NULLPTR;
+    d->mPersistentSetManager = Q_NULLPTR;
     d->mInLengthyJobBatch = false;
-    d->mLastSelectedMessageInFolder = 0;
+    d->mLastSelectedMessageInFolder = Q_NULLPTR;
     d->mLoading = false;
 
     d->mRootItem = new Item(Item::InvisibleRoot);
-    d->mRootItem->setViewable(0, true);
+    d->mRootItem->setViewable(Q_NULLPTR, true);
 
     d->mFillStepTimer.setSingleShot(true);
     d->mInvariantRowMapper = new ModelInvariantRowMapper();
@@ -336,11 +336,11 @@ Model::Model(View *pParent)
 
 Model::~Model()
 {
-    setStorageModel(0);
+    setStorageModel(Q_NULLPTR);
 
     d->clearJobList();
-    d->mOldestItem = 0;
-    d->mNewestItem = 0;
+    d->mOldestItem = Q_NULLPTR;
+    d->mNewestItem = Q_NULLPTR;
     d->clearUnassignedMessageLists();
     d->clearOrphanChildrenHash();
     d->clearThreadingCacheMessageSubjectMD5ToMessageItem();
@@ -688,9 +688,9 @@ void ModelPrivate::clear()
 
     // Kill pre-selection at this stage
     mPreSelectionMode = PreSelectNone;
-    mLastSelectedMessageInFolder = 0;
-    mOldestItem = 0;
-    mNewestItem = 0;
+    mLastSelectedMessageInFolder = Q_NULLPTR;
+    mOldestItem = Q_NULLPTR;
+    mNewestItem = Q_NULLPTR;
 
     // Reset the row mapper before removing items
     // This is faster since the items don't need to access the mapper.
@@ -708,8 +708,8 @@ void ModelPrivate::clear()
     mViewItemJobStepIdleInterval = 10;
     mViewItemJobStepMessageCheckCount = 10;
     delete mPersistentSetManager;
-    mPersistentSetManager = 0;
-    mCurrentItemToRestoreAfterViewItemJobStep = 0;
+    mPersistentSetManager = Q_NULLPTR;
+    mCurrentItemToRestoreAfterViewItemJobStep = Q_NULLPTR;
 
     mTodayDate = QDate::currentDate();
 
@@ -959,7 +959,7 @@ void ModelPrivate::checkIfDateChanged()
 void Model::setPreSelectionMode(PreSelectionMode preSelect)
 {
     d->mPreSelectionMode = preSelect;
-    d->mLastSelectedMessageInFolder = 0;
+    d->mLastSelectedMessageInFolder = Q_NULLPTR;
 }
 
 //
@@ -1366,7 +1366,7 @@ void ModelPrivate::attachMessageToGroupHeader(MessageItem *mi)
 
     GroupHeaderItem *ghi;
 
-    ghi = mGroupHeaderItemHash.value(groupLabel, 0);
+    ghi = mGroupHeaderItemHash.value(groupLabel, Q_NULLPTR);
     if (!ghi) {
         // not found
 
@@ -1447,7 +1447,7 @@ MessageItem *ModelPrivate::findMessageParent(MessageItem *mi)
     QByteArray md5 = mi->inReplyToIdMD5();
     if (!md5.isEmpty()) {
         // have an In-Reply-To field MD5
-        pParent = mThreadingCacheMessageIdMD5ToMessageItem.value(md5, 0);
+        pParent = mThreadingCacheMessageIdMD5ToMessageItem.value(md5, Q_NULLPTR);
         if (pParent) {
             // Take care of circular references
             if (
@@ -1459,7 +1459,7 @@ MessageItem *ModelPrivate::findMessageParent(MessageItem *mi)
             ) {
                 qCWarning(MESSAGELIST_LOG) << "Circular In-Reply-To reference loop detected in the message tree";
                 mi->setThreadingStatus(MessageItem::NonThreadable);
-                return 0; // broken message: throw it away
+                return Q_NULLPTR; // broken message: throw it away
             }
             mi->setThreadingStatus(MessageItem::PerfectParentFound);
             return pParent; // got a perfect parent for this message
@@ -1471,7 +1471,7 @@ MessageItem *ModelPrivate::findMessageParent(MessageItem *mi)
 
     if (mAggregation->threading() == Aggregation::PerfectOnly) {
         mi->setThreadingStatus(bMessageWasThreadable ? MessageItem::ParentMissing : MessageItem::NonThreadable);
-        return 0; // we're doing only perfect parent matches
+        return Q_NULLPTR; // we're doing only perfect parent matches
     }
 
     // Try to use the "References" field. In fact we have the MD5 of the
@@ -1488,7 +1488,7 @@ MessageItem *ModelPrivate::findMessageParent(MessageItem *mi)
 
     md5 = mi->referencesIdMD5();
     if (!md5.isEmpty()) {
-        pParent = mThreadingCacheMessageIdMD5ToMessageItem.value(md5, 0);
+        pParent = mThreadingCacheMessageIdMD5ToMessageItem.value(md5, Q_NULLPTR);
         if (pParent) {
             // Take care of circular references
             if (
@@ -1500,7 +1500,7 @@ MessageItem *ModelPrivate::findMessageParent(MessageItem *mi)
             ) {
                 qCWarning(MESSAGELIST_LOG) << "Circular reference loop detected in the message tree";
                 mi->setThreadingStatus(MessageItem::NonThreadable);
-                return 0; // broken message: throw it away
+                return Q_NULLPTR; // broken message: throw it away
             }
             mi->setThreadingStatus(MessageItem::ImperfectParentFound);
             return pParent; // got an imperfect parent for this message
@@ -1512,7 +1512,7 @@ MessageItem *ModelPrivate::findMessageParent(MessageItem *mi)
 
     if (mAggregation->threading() == Aggregation::PerfectAndReferences) {
         mi->setThreadingStatus(bMessageWasThreadable ? MessageItem::ParentMissing : MessageItem::NonThreadable);
-        return 0; // we're doing only perfect parent matches
+        return Q_NULLPTR; // we're doing only perfect parent matches
     }
 
     Q_ASSERT(mAggregation->threading() == Aggregation::PerfectReferencesAndSubject);
@@ -1524,7 +1524,7 @@ MessageItem *ModelPrivate::findMessageParent(MessageItem *mi)
     // and then run subject based threading only on the remaining ones.
 
     mi->setThreadingStatus((bMessageWasThreadable || mi->subjectIsPrefixed()) ? MessageItem::ParentMissing : MessageItem::NonThreadable);
-    return 0;
+    return Q_NULLPTR;
 }
 
 // Subject threading cache stuff
@@ -1587,7 +1587,7 @@ void ModelPrivate::addMessageToSubjectBasedThreadingCache(MessageItem *mi)
 
     // Lookup the list of messages with the same stripped subject
     QList< MessageItem * > *messagesWithTheSameStrippedSubject =
-        mThreadingCacheMessageSubjectMD5ToMessageItem.value(mi->strippedSubjectMD5(), 0);
+        mThreadingCacheMessageSubjectMD5ToMessageItem.value(mi->strippedSubjectMD5(), Q_NULLPTR);
 
     if (!messagesWithTheSameStrippedSubject) {
         // Not there yet: create it and append.
@@ -1613,7 +1613,7 @@ void ModelPrivate::removeMessageFromSubjectBasedThreadingCache(MessageItem *mi)
     // The game is called "performance"
 
     // Grab the list of all the messages with the same stripped subject (all potential parents)
-    QList< MessageItem * > *messagesWithTheSameStrippedSubject = mThreadingCacheMessageSubjectMD5ToMessageItem.value(mi->strippedSubjectMD5(), 0);
+    QList< MessageItem * > *messagesWithTheSameStrippedSubject = mThreadingCacheMessageSubjectMD5ToMessageItem.value(mi->strippedSubjectMD5(), Q_NULLPTR);
 
     // We assume that the message is there so the list must be non null.
     Q_ASSERT(messagesWithTheSameStrippedSubject);
@@ -1654,7 +1654,7 @@ MessageItem *ModelPrivate::guessMessageParent(MessageItem *mi)
     const QByteArray md5 = mi->strippedSubjectMD5();
     if (!md5.isEmpty()) {
         QList< MessageItem * > *messagesWithTheSameStrippedSubject =
-            mThreadingCacheMessageSubjectMD5ToMessageItem.value(md5, 0);
+            mThreadingCacheMessageSubjectMD5ToMessageItem.value(md5, Q_NULLPTR);
 
         if (messagesWithTheSameStrippedSubject) {
             Q_ASSERT(messagesWithTheSameStrippedSubject->count() > 0);
@@ -1662,7 +1662,7 @@ MessageItem *ModelPrivate::guessMessageParent(MessageItem *mi)
             // Need to find the message with the maximum date lower than the one of this message
 
             time_t maxTime = (time_t)0;
-            MessageItem *pParent = 0;
+            MessageItem *pParent = Q_NULLPTR;
 
             // Here'we re really guessing so circular references are possible
             // even on perfectly valid trees. This is why we don't consider it
@@ -1718,7 +1718,7 @@ MessageItem *ModelPrivate::guessMessageParent(MessageItem *mi)
         }
     }
 
-    return 0;
+    return Q_NULLPTR;
 }
 
 //
@@ -2343,7 +2343,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass5
 
             // If we were going to restore its position after the job step, well.. we can't do it anymore.
             if (mCurrentItemToRestoreAfterViewItemJobStep == (*it)) {
-                mCurrentItemToRestoreAfterViewItemJobStep = 0;
+                mCurrentItemToRestoreAfterViewItemJobStep = Q_NULLPTR;
             }
 
             // bye bye
@@ -2676,7 +2676,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1
 
     unsigned long msgToSelect = mPreSelectionMode == PreSelectLastSelected ? mStorageModel->preSelectedMessage() : 0;
 
-    MessageItem *mi = 0;
+    MessageItem *mi = Q_NULLPTR;
 
     while (curIndex <= endIndex) {
         // Create the message item with no parent: we'll set it later
@@ -2795,7 +2795,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1
             if (!md5.isEmpty()) {
                 // Have an In-Reply-To field MD5.
                 // In well behaved mailing lists 70% of the threadable messages get a parent here :)
-                pParent = mThreadingCacheMessageIdMD5ToMessageItem.value(md5, 0);
+                pParent = mThreadingCacheMessageIdMD5ToMessageItem.value(md5, Q_NULLPTR);
 
                 if (pParent) { // very likely
                     // Take care of self-referencing (which is always possible)
@@ -2897,7 +2897,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1
             // we're done with this message (also for Pass2)
         }
 
-        mi = 0; // this item was pushed somewhere, create a new one at next iteration
+        mi = Q_NULLPTR; // this item was pushed somewhere, create a new one at next iteration
         curIndex++;
 
         if ((curIndex % mViewItemJobStepMessageCheckCount) == 0) {
@@ -2951,7 +2951,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1
         // *before* it was actually made viewable, we just clear the pre-selection pointer
         // and unique id (abort pre-selection).
         if (dyingMessage == mLastSelectedMessageInFolder) {
-            mLastSelectedMessageInFolder = 0;
+            mLastSelectedMessageInFolder = Q_NULLPTR;
             mPreSelectionMode = PreSelectNone;
         }
 
@@ -2960,7 +2960,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1
             mPersistentSetManager->removeMessageItemFromAllSets(dyingMessage);
             if (mPersistentSetManager->setCount() < 1) {
                 delete mPersistentSetManager;
-                mPersistentSetManager = 0;
+                mPersistentSetManager = Q_NULLPTR;
             }
         }
 
@@ -3091,10 +3091,10 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1
         }
 
         if (mNewestItem == dyingMessage) {
-            mNewestItem = 0;
+            mNewestItem = Q_NULLPTR;
         }
         if (mOldestItem == dyingMessage) {
-            mOldestItem = 0;
+            mOldestItem = Q_NULLPTR;
         }
 
         delete dyingMessage;
@@ -3667,7 +3667,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternal()
         mViewItemJobStepMessageCheckCount = job->messageCheckCount();
 
         if (job->disconnectUI()) {
-            mModelForItemFunctions = 0; // disconnect the UI for this job
+            mModelForItemFunctions = Q_NULLPTR; // disconnect the UI for this job
             Q_ASSERT(mLoading);   // this must be true in the first job
             // FIXME: Should assert yet more that this is the very first job for this StorageModel
             //        Asserting only mLoading is not enough as we could be using a two-jobs loading strategy
@@ -3830,7 +3830,7 @@ void ModelPrivate::viewItemJobStep()
     // If the job is stopped then we start a zero-msecs timer to call us
     // back and resume the job. Otherwise we're just done.
 
-    mViewItemJobStepStartTime = ::time(0);
+    mViewItemJobStepStartTime = ::time(Q_NULLPTR);
 
     if (mFillStepTimer.isActive()) {
         mFillStepTimer.stop();
@@ -3847,7 +3847,7 @@ void ModelPrivate::viewItemJobStep()
 
     QModelIndex currentIndexBeforeStep = mView->currentIndex();
     Item *currentItemBeforeStep = currentIndexBeforeStep.isValid() ?
-                                  static_cast< Item * >(currentIndexBeforeStep.internalPointer()) : 0;
+                                  static_cast< Item * >(currentIndexBeforeStep.internalPointer()) : Q_NULLPTR;
 
     // mCurrentItemToRestoreAfterViewItemJobStep will be zeroed out if it's killed
     mCurrentItemToRestoreAfterViewItemJobStep = currentItemBeforeStep;
@@ -3934,7 +3934,7 @@ void ModelPrivate::viewItemJobStep()
             }
 
             if (bSelectionDone) {
-                mLastSelectedMessageInFolder = 0;
+                mLastSelectedMessageInFolder = Q_NULLPTR;
                 mPreSelectionMode = PreSelectNone;
                 return; // already taken care of current / selection
             }
@@ -3969,7 +3969,7 @@ void ModelPrivate::viewItemJobStep()
         // Check if the current item changed
         QModelIndex currentIndexAfterStep = mView->currentIndex();
         Item *currentAfterStep = currentIndexAfterStep.isValid() ?
-                                 static_cast< Item * >(currentIndexAfterStep.internalPointer()) : 0;
+                                 static_cast< Item * >(currentIndexAfterStep.internalPointer()) : Q_NULLPTR;
 
         if (mCurrentItemToRestoreAfterViewItemJobStep != currentAfterStep) {
             // QTreeView lost the current item...
@@ -4308,7 +4308,7 @@ void ModelPrivate::slotStorageModelRowsRemoved(const QModelIndex &parent, int fr
                     *(job->invariantIndexList()) += *invalidatedIndexes;
                     job->setEndIndex(job->endIndex() + invalidatedIndexes->count());
                     delete invalidatedIndexes;
-                    invalidatedIndexes = 0;
+                    invalidatedIndexes = Q_NULLPTR;
                 }
             }
         }
@@ -4367,7 +4367,7 @@ void ModelPrivate::slotStorageModelDataChanged(const QModelIndex &fromIndex, con
                     *(job->invariantIndexList()) += *indexesThatNeedUpdate;
                     job->setEndIndex(job->endIndex() + indexesThatNeedUpdate->count());
                     delete indexesThatNeedUpdate;
-                    indexesThatNeedUpdate = 0;
+                    indexesThatNeedUpdate = Q_NULLPTR;
                 }
             }
         }
@@ -4454,11 +4454,11 @@ bool Model::isLoading() const
 MessageItem *Model::messageItemByStorageRow(int row) const
 {
     if (!d->mStorageModel) {
-        return 0;
+        return Q_NULLPTR;
     }
     ModelInvariantIndex *idx = d->mInvariantRowMapper->modelIndexRowToModelInvariantIndex(row);
     if (!idx) {
-        return 0;
+        return Q_NULLPTR;
     }
 
     return static_cast< MessageItem * >(idx);
@@ -4498,7 +4498,7 @@ void Model::deletePersistentSet(MessageItemSetReference ref)
 
     if (d->mPersistentSetManager->setCount() < 1) {
         delete d->mPersistentSetManager;
-        d->mPersistentSetManager = 0;
+        d->mPersistentSetManager = Q_NULLPTR;
     }
 }
 

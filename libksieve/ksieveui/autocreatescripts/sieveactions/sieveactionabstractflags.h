@@ -27,16 +27,16 @@ class SieveActionAbstractFlags : public SieveAction
 public:
     SieveActionAbstractFlags(const QString &name, const QString &label, QObject *parent = Q_NULLPTR);
 
-    QWidget *createParamWidget(QWidget *parent) const;
-    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error);
-    QString code(QWidget *) const;
-    QStringList needRequires(QWidget *parent) const;
+    QWidget *createParamWidget(QWidget *parent) const Q_DECL_OVERRIDE;
+    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error) Q_DECL_OVERRIDE;
+    QString code(QWidget *) const Q_DECL_OVERRIDE;
+    QStringList needRequires(QWidget *parent) const Q_DECL_OVERRIDE;
 
     virtual QString flagsCode() const = 0;
 
-    bool needCheckIfServerHasCapability() const;
+    bool needCheckIfServerHasCapability() const Q_DECL_OVERRIDE;
 
-    QString serverNeedsCapability() const;
+    QString serverNeedsCapability() const Q_DECL_OVERRIDE;
 };
 }
 

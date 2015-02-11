@@ -55,16 +55,16 @@ public:
 
     Akonadi::Collection::List displayedCollections() const;
 
-    virtual QString id() const;
-    virtual bool containsOutboundMessages() const;
+    QString id() const Q_DECL_OVERRIDE;
+    bool containsOutboundMessages() const Q_DECL_OVERRIDE;
 
     virtual bool isOutBoundFolder(const Akonadi::Collection &c) const;
 
-    virtual int initialUnreadRowCountGuess() const;
-    virtual bool initializeMessageItem(MessageList::Core::MessageItem *mi, int row, bool bUseReceiver) const;
-    virtual void fillMessageItemThreadingData(MessageList::Core::MessageItem *mi, int row, ThreadingDataSubset subset) const;
-    virtual void updateMessageItemData(MessageList::Core::MessageItem *mi, int row) const;
-    virtual void setMessageItemStatus(MessageList::Core::MessageItem *mi, int row, const Akonadi::MessageStatus &status);
+    int initialUnreadRowCountGuess() const Q_DECL_OVERRIDE;
+    bool initializeMessageItem(MessageList::Core::MessageItem *mi, int row, bool bUseReceiver) const Q_DECL_OVERRIDE;
+    void fillMessageItemThreadingData(MessageList::Core::MessageItem *mi, int row, ThreadingDataSubset subset) const Q_DECL_OVERRIDE;
+    void updateMessageItemData(MessageList::Core::MessageItem *mi, int row) const Q_DECL_OVERRIDE;
+    void setMessageItemStatus(MessageList::Core::MessageItem *mi, int row, const Akonadi::MessageStatus &status) Q_DECL_OVERRIDE;
 
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
@@ -72,10 +72,10 @@ public:
     QModelIndex parent(const QModelIndex &index) const Q_DECL_OVERRIDE;
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
-    virtual QMimeData *mimeData(const QList< MessageList::Core::MessageItem * > &) const;
+    QMimeData *mimeData(const QList< MessageList::Core::MessageItem * > &) const Q_DECL_OVERRIDE;
     using MessageList::Core::StorageModel::mimeData;
 
-    virtual void prepareForScan();
+    void prepareForScan() Q_DECL_OVERRIDE;
 
     Akonadi::Item itemForRow(int row) const;
     Akonadi::Collection parentCollectionForRow(int row) const;

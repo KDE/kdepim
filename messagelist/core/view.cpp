@@ -56,10 +56,10 @@ class View::Private
 {
 public:
     Private(View *owner, Widget *parent)
-        : q(owner), mWidget(parent), mModel(0), mDelegate(new Delegate(owner)),
-          mAggregation(0), mTheme(0), mNeedToApplyThemeColumns(false),
-          mLastCurrentItem(0), mFirstShow(true), mSaveThemeColumnStateOnSectionResize(true),
-          mSaveThemeColumnStateTimer(0), mApplyThemeColumnsTimer(0),
+        : q(owner), mWidget(parent), mModel(Q_NULLPTR), mDelegate(new Delegate(owner)),
+          mAggregation(Q_NULLPTR), mTheme(Q_NULLPTR), mNeedToApplyThemeColumns(false),
+          mLastCurrentItem(Q_NULLPTR), mFirstShow(true), mSaveThemeColumnStateOnSectionResize(true),
+          mSaveThemeColumnStateTimer(Q_NULLPTR), mApplyThemeColumnsTimer(Q_NULLPTR),
           mIgnoreUpdateGeometries(false) { }
 
     void expandFullThread(const QModelIndex &index);
@@ -138,12 +138,12 @@ View::~View()
     delete d->mApplyThemeColumnsTimer;
 
     // Zero out the theme, aggregation and ApplyThemeColumnsTimer so Model will not cause accesses to them in its destruction process
-    d->mApplyThemeColumnsTimer = 0;
+    d->mApplyThemeColumnsTimer = Q_NULLPTR;
 
-    d->mTheme = 0;
-    d->mAggregation = 0;
+    d->mTheme = Q_NULLPTR;
+    d->mAggregation = Q_NULLPTR;
 
-    delete d; d = 0;
+    delete d; d = Q_NULLPTR;
 }
 
 Model *View::model() const
@@ -860,7 +860,7 @@ Item *View::currentItem() const
 {
     QModelIndex idx = currentIndex();
     if (!idx.isValid()) {
-        return 0;
+        return Q_NULLPTR;
     }
     Item *it = static_cast< Item * >(idx.internalPointer());
     Q_ASSERT(it);
@@ -871,7 +871,7 @@ MessageItem *View::currentMessageItem(bool selectIfNeeded) const
 {
     Item *it = currentItem();
     if (!it || (it->type() != Item::Message)) {
-        return 0;
+        return Q_NULLPTR;
     }
 
     if (selectIfNeeded) {
@@ -1136,7 +1136,7 @@ static inline bool message_type_matches(Item *item, MessageTypeFilter messageTyp
 Item *View::messageItemAfter(Item *referenceItem, MessageTypeFilter messageTypeFilter, bool loop)
 {
     if (!storageModel()) {
-        return 0;    // no folder
+        return Q_NULLPTR;    // no folder
     }
 
     // find the item to start with
@@ -1169,11 +1169,11 @@ Item *View::messageItemAfter(Item *referenceItem, MessageTypeFilter messageTypeF
                 Q_ASSERT(below);   // must exist (we had a current item)
 
                 if (below == referenceItem) {
-                    return 0;    // only one item in folder: loop complete
+                    return Q_NULLPTR;    // only one item in folder: loop complete
                 }
             } else {
                 // looping not requested
-                return 0;
+                return Q_NULLPTR;
             }
         }
 
@@ -1182,7 +1182,7 @@ Item *View::messageItemAfter(Item *referenceItem, MessageTypeFilter messageTypeF
         below = d->mModel->rootItem()->itemBelow();
 
         if (!below) {
-            return 0;    // folder empty
+            return Q_NULLPTR;    // folder empty
         }
     }
 
@@ -1224,13 +1224,13 @@ Item *View::messageItemAfter(Item *referenceItem, MessageTypeFilter messageTypeF
                 // else mi == 0 and below == 0: we have started from the beginning and reached the end (it will fail the test below and exit)
             } else {
                 // looping not requested: nothing more to do
-                return 0;
+                return Q_NULLPTR;
             }
         }
 
         if (below == referenceItem) {
             Q_ASSERT(loop);
-            return 0; // looped and returned back to the first message
+            return Q_NULLPTR; // looped and returned back to the first message
         }
 
         parentIndex = d->mModel->index(below->parent(), 0);
@@ -1261,7 +1261,7 @@ Item *View::deepestExpandedChild(Item *referenceItem) const
 Item *View::messageItemBefore(Item *referenceItem, MessageTypeFilter messageTypeFilter, bool loop)
 {
     if (!storageModel()) {
-        return 0;    // no folder
+        return Q_NULLPTR;    // no folder
     }
 
     // find the item to start with
@@ -1270,7 +1270,7 @@ Item *View::messageItemBefore(Item *referenceItem, MessageTypeFilter messageType
     if (referenceItem) {
         Item *parent = referenceItem->parent();
         Item *siblingAbove = parent ?
-                             parent->itemAboveChild(referenceItem) : 0;
+                             parent->itemAboveChild(referenceItem) : Q_NULLPTR;
         // there was a current item: we start just above it
         if ((siblingAbove && siblingAbove != referenceItem && siblingAbove != parent) &&
                 (siblingAbove->childItemCount() > 0) &&
@@ -1296,11 +1296,11 @@ Item *View::messageItemBefore(Item *referenceItem, MessageTypeFilter messageType
                 Q_ASSERT(above != d->mModel->rootItem());
 
                 if (above == referenceItem) {
-                    return 0;    // only one item in folder: loop complete
+                    return Q_NULLPTR;    // only one item in folder: loop complete
                 }
             } else {
                 // looping not requested
-                return 0;
+                return Q_NULLPTR;
             }
 
         }
@@ -1309,7 +1309,7 @@ Item *View::messageItemBefore(Item *referenceItem, MessageTypeFilter messageType
         above = d->mModel->rootItem()->deepestItem();
 
         if (!above || !above->parent() || (above == d->mModel->rootItem())) {
-            return 0;    // folder empty
+            return Q_NULLPTR;    // folder empty
         }
     }
 
@@ -1351,17 +1351,17 @@ Item *View::messageItemBefore(Item *referenceItem, MessageTypeFilter messageType
                 // else mi == 0 and above == 0: we have started from the end and reached the beginning (it will fail the test below and exit)
             } else {
                 // looping not requested: nothing more to do
-                return 0;
+                return Q_NULLPTR;
             }
         }
 
         if (above == referenceItem) {
             Q_ASSERT(loop);
-            return 0; // looped and returned back to the first message
+            return Q_NULLPTR; // looped and returned back to the first message
         }
 
         if (!above->parent()) {
-            return 0;
+            return Q_NULLPTR;
         }
 
         parentIndex = d->mModel->index(above->parent(), 0);
@@ -1796,7 +1796,7 @@ void View::markMessageItemsAsAboutToBeRemoved(QList< MessageItem * > &items, boo
             Item *next = messageItemAfter(aMessage, MessageTypeAny, false);
             if (!next) {
                 // no way
-                aMessage = 0;
+                aMessage = Q_NULLPTR;
                 break;
             }
             Q_ASSERT(next->type() == Item::Message);
@@ -1814,7 +1814,7 @@ void View::markMessageItemsAsAboutToBeRemoved(QList< MessageItem * > &items, boo
                 Item *prev = messageItemBefore(aMessage, MessageTypeAny, false);
                 if (!prev) {
                     // no way
-                    aMessage = 0;
+                    aMessage = Q_NULLPTR;
                     break;
                 }
                 Q_ASSERT(prev->type() == Item::Message);
@@ -1940,10 +1940,10 @@ void View::slotSelectionChanged(const QItemSelection &, const QItemSelection &)
 
     if (!current.isValid()) {
         if (d->mLastCurrentItem) {
-            d->mWidget->viewMessageSelected(0);
-            d->mLastCurrentItem = 0;
+            d->mWidget->viewMessageSelected(Q_NULLPTR);
+            d->mLastCurrentItem = Q_NULLPTR;
         }
-        d->mWidget->viewMessageSelected(0);
+        d->mWidget->viewMessageSelected(Q_NULLPTR);
         d->mWidget->viewSelectionChanged();
         return;
     }
@@ -1977,8 +1977,8 @@ void View::slotSelectionChanged(const QItemSelection &, const QItemSelection &)
     break;
     case Item::GroupHeader:
         if (d->mLastCurrentItem) {
-            d->mWidget->viewMessageSelected(0);
-            d->mLastCurrentItem = 0;
+            d->mWidget->viewMessageSelected(Q_NULLPTR);
+            d->mLastCurrentItem = Q_NULLPTR;
         }
         break;
     default:

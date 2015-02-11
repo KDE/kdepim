@@ -327,57 +327,57 @@ protected:
     /**
     * Reimplemented from MessageList::Core::Widget
     */
-    virtual void fillMessageTagCombo();
+    void fillMessageTagCombo() Q_DECL_OVERRIDE;
 
     /**
     * Reimplemented from MessageList::Core::Widget
     */
-    virtual void viewMessageSelected(MessageList::Core::MessageItem *msg);
+    void viewMessageSelected(MessageList::Core::MessageItem *msg) Q_DECL_OVERRIDE;
 
     /**
     * Reimplemented from MessageList::Core::Widget
     */
-    virtual void viewMessageActivated(MessageList::Core::MessageItem *msg);
+    void viewMessageActivated(MessageList::Core::MessageItem *msg) Q_DECL_OVERRIDE;
 
     /**
     * Reimplemented from MessageList::Core::Widget
     */
-    virtual void viewSelectionChanged();
+    void viewSelectionChanged() Q_DECL_OVERRIDE;
 
     /**
     * Reimplemented from MessageList::Core::Widget
     */
-    virtual void viewMessageListContextPopupRequest(const QList< MessageList::Core::MessageItem * > &selectedItems, const QPoint &globalPos);
+    void viewMessageListContextPopupRequest(const QList< MessageList::Core::MessageItem * > &selectedItems, const QPoint &globalPos) Q_DECL_OVERRIDE;
 
     /**
     * Reimplemented from MessageList::Core::Widget
     */
-    virtual void viewGroupHeaderContextPopupRequest(MessageList::Core::GroupHeaderItem *group, const QPoint &globalPos);
+    void viewGroupHeaderContextPopupRequest(MessageList::Core::GroupHeaderItem *group, const QPoint &globalPos) Q_DECL_OVERRIDE;
 
     /**
     * Reimplemented from MessageList::Core::Widget
     */
-    virtual void viewDragEnterEvent(QDragEnterEvent *e);
+    void viewDragEnterEvent(QDragEnterEvent *e) Q_DECL_OVERRIDE;
 
     /**
     * Reimplemented from MessageList::Core::Widget
     */
-    virtual void viewDragMoveEvent(QDragMoveEvent *e);
+    void viewDragMoveEvent(QDragMoveEvent *e) Q_DECL_OVERRIDE;
 
     /**
     * Reimplemented from MessageList::Core::Widget
     */
-    virtual void viewDropEvent(QDropEvent *e);
+    void viewDropEvent(QDropEvent *e) Q_DECL_OVERRIDE;
 
     /**
     * Reimplemented from MessageList::Core::Widget
     */
-    virtual void viewStartDragRequest();
+    void viewStartDragRequest() Q_DECL_OVERRIDE;
 
     /**
     * Reimplemented from MessageList::Core::Widget
     */
-    virtual void viewMessageStatusChangeRequest(MessageList::Core::MessageItem *msg, const Akonadi::MessageStatus &set, const Akonadi::MessageStatus &clear);
+    void viewMessageStatusChangeRequest(MessageList::Core::MessageItem *msg, const Akonadi::MessageStatus &set, const Akonadi::MessageStatus &clear) Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void slotCollapseItem();

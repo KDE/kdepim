@@ -60,7 +60,7 @@ class Widget::Private
 {
 public:
     Private(Widget *owner)
-        : q(owner), mLastSelectedMessage(-1), mXmlGuiClient(0), mMonitor(0) { }
+        : q(owner), mLastSelectedMessage(-1), mXmlGuiClient(Q_NULLPTR), mMonitor(Q_NULLPTR) { }
 
     Akonadi::Item::List selectionAsItems() const;
     Akonadi::Item itemForRow(int row) const;
@@ -551,7 +551,7 @@ Item Widget::currentItem() const
 {
     Core::MessageItem *mi = view()->currentMessageItem();
 
-    if (mi == 0) {
+    if (mi == Q_NULLPTR) {
         return Item();
     }
 
@@ -562,7 +562,7 @@ KMime::Message::Ptr Widget::currentMessage() const
 {
     Core::MessageItem *mi = view()->currentMessageItem();
 
-    if (mi == 0) {
+    if (mi == Q_NULLPTR) {
         return KMime::Message::Ptr();
     }
 
@@ -669,7 +669,7 @@ bool Widget::getSelectionStats(
 
     QList< Core::MessageItem * > selected = view()->selectionAsMessageItemList(includeCollapsedChildren);
 
-    Core::MessageItem *topmost = 0;
+    Core::MessageItem *topmost = Q_NULLPTR;
 
     *allSelectedBelongToSameThread = true;
 
@@ -679,7 +679,7 @@ bool Widget::getSelectionStats(
         if (view()->isDisplayedWithParentsExpanded(it)) {
             selectedVisibleItems.append(item);
         }
-        if (topmost == 0) {
+        if (topmost == Q_NULLPTR) {
             topmost = (*it).topmostMessage();
         } else {
             if (topmost != (*it).topmostMessage()) {

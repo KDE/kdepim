@@ -284,7 +284,7 @@ public:
         reset();
     }
 
-    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE
     {
         if (!parent.isValid()) {
             return mContactList.count();
@@ -293,7 +293,7 @@ public:
         }
     }
 
-    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE
+    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE
     {
         if (!parent.isValid()) {
             return 18;
@@ -373,7 +373,7 @@ public:
         return QVariant();
     }
 
-    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE
     {
         if (!index.isValid()) {
             return QVariant();

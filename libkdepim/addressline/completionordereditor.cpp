@@ -74,22 +74,22 @@ public:
         mWeight = mLdapClient->completionWeight();
     }
 
-    virtual QString label() const Q_DECL_OVERRIDE
+    QString label() const Q_DECL_OVERRIDE
     {
         return i18n("LDAP server %1", mLdapClient->server().host());
     }
 
-    virtual QIcon icon() const Q_DECL_OVERRIDE
+    QIcon icon() const Q_DECL_OVERRIDE
     {
         return QIcon::fromTheme(QStringLiteral("view-ldap-resource"));
     }
 
-    virtual int completionWeight() const Q_DECL_OVERRIDE
+    int completionWeight() const Q_DECL_OVERRIDE
     {
         return mWeight;
     }
 
-    virtual void save(CompletionOrderEditor *) Q_DECL_OVERRIDE
+    void save(CompletionOrderEditor *) Q_DECL_OVERRIDE
     {
         KConfig *config = KLDAP::LdapClientSearchConfig::config();
         KConfigGroup group(config, "LDAP");
@@ -99,7 +99,7 @@ public:
     }
 
 protected:
-    virtual void setCompletionWeight(int weight) Q_DECL_OVERRIDE
+    void setCompletionWeight(int weight) Q_DECL_OVERRIDE
     {
         mWeight = weight;
     }
@@ -124,29 +124,29 @@ public:
         mIcon = icon;
     }
 
-    virtual QString label() const Q_DECL_OVERRIDE
+    QString label() const Q_DECL_OVERRIDE
     {
         return mLabel;
     }
 
-    virtual QIcon icon() const Q_DECL_OVERRIDE
+    QIcon icon() const Q_DECL_OVERRIDE
     {
         return mIcon;
     }
 
-    virtual int completionWeight() const Q_DECL_OVERRIDE
+    int completionWeight() const Q_DECL_OVERRIDE
     {
         return mWeight;
     }
 
-    virtual void save(CompletionOrderEditor *editor) Q_DECL_OVERRIDE
+    void save(CompletionOrderEditor *editor) Q_DECL_OVERRIDE
     {
         KConfigGroup group(editor->configFile(), "CompletionWeights");
         group.writeEntry(mIdentifier, mWeight);
     }
 
 protected:
-    virtual void setCompletionWeight(int weight) Q_DECL_OVERRIDE
+    void setCompletionWeight(int weight) Q_DECL_OVERRIDE
     {
         mWeight = weight;
     }

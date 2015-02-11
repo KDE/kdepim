@@ -143,7 +143,7 @@ void SieveConditionWidget::initWidget()
 
     connect(mAdd, &QPushButton::clicked, this, &SieveConditionWidget::slotAddWidget);
     connect(mRemove, &QPushButton::clicked, this, &SieveConditionWidget::slotRemoveWidget);
-    setFilterCondition(0);
+    setFilterCondition(Q_NULLPTR);
 }
 
 void SieveConditionWidget::slotHelp()
@@ -165,7 +165,7 @@ void SieveConditionWidget::slotConditionChanged(int index)
         mHelpButton->setEnabled(!condition->help().isEmpty());
         setFilterCondition(condition->createParamWidget(this));
     } else {
-        setFilterCondition(0);
+        setFilterCondition(Q_NULLPTR);
         mHelpButton->setEnabled(false);
     }
     Q_EMIT valueChanged();

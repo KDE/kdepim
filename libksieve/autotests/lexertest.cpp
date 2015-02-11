@@ -80,38 +80,38 @@ static const TestCase testcases[] = {
     //
 
     {
-        "Null script", 0,
-        { { Lexer::None, 0 } },
+        "Null script", nullptr,
+        { { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
 
     {
         "Empty script", "",
-        { { Lexer::None, 0 } },
+        { { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
 
     {
         "Whitespace-only script", " \t\n\t \n",
-        { { Lexer::LineFeeds, "2" }, { Lexer::None, 0 } },
+        { { Lexer::LineFeeds, "2" }, { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
 
     {
         "Lone CR", "\r",
-        { { Lexer::None, 0 } },
+        { { Lexer::None, nullptr } },
         Error::CRWithoutLF, 0, 1
     },
 
     {
         "CR+Space", "\r ",
-        { { Lexer::None, 0 } },
+        { { Lexer::None, nullptr } },
         Error::CRWithoutLF, 0, 1
     },
 
     {
         "CRLF alone", "\r\n",
-        { { Lexer::LineFeeds, "1" }, { Lexer::None, 0 } },
+        { { Lexer::LineFeeds, "1" }, { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
 
@@ -121,31 +121,31 @@ static const TestCase testcases[] = {
 
     {
         "Basic hash comment (no newline)", "#comment",
-        { { Lexer::HashComment, "comment" }, { Lexer::None, 0 } },
+        { { Lexer::HashComment, "comment" }, { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
 
     {
         "Basic hash comment (LF)", "#comment\n",
-        { { Lexer::HashComment, "comment" }, { Lexer::None, 0 } },
+        { { Lexer::HashComment, "comment" }, { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
 
     {
         "Basic hash comment (CRLF)", "#comment\r\n",
-        { { Lexer::HashComment, "comment" }, { Lexer::None, 0 } },
+        { { Lexer::HashComment, "comment" }, { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
 
     {
         "Basic hash comment (CR)", "#comment\r",
-        { { Lexer::HashComment, 0 } },
+        { { Lexer::HashComment, nullptr } },
         Error::CRWithoutLF, 0, 9
     },
 
     {
         "Non-UTF-8 in hash comment", "#\xA9 copyright",
-        { { Lexer::HashComment, 0 } },
+        { { Lexer::HashComment, nullptr } },
         Error::InvalidUTF8, 0, 12
     },
 
@@ -155,55 +155,55 @@ static const TestCase testcases[] = {
 
     {
         "Basic bracket comment", "/* comment */",
-        { { Lexer::BracketComment, " comment " }, { Lexer::None, 0 } },
+        { { Lexer::BracketComment, " comment " }, { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
 
     {
         "Basic bracket comment - missing trailing slash", "/* comment *",
-        { { Lexer::BracketComment, 0 } },
+        { { Lexer::BracketComment, nullptr } },
         Error::UnfinishedBracketComment, 0, 0
     },
 
     {
         "Basic bracket comment - missing trailing asterisk + slash", "/* comment ",
-        { { Lexer::BracketComment, 0 } },
+        { { Lexer::BracketComment, nullptr } },
         Error::UnfinishedBracketComment, 0, 0
     },
 
     {
         "Basic bracket comment - missing leading slash", "* comment */",
-        { { Lexer::None, 0 } },
+        { { Lexer::None, nullptr } },
         Error::IllegalCharacter, 0, 0
     },
 
     {
         "Basic bracket comment - missing leading asterisk + slash", "comment */",
-        { { Lexer::Identifier, "comment" }, { Lexer::None, 0 } },
+        { { Lexer::Identifier, "comment" }, { Lexer::None, nullptr } },
         Error::IllegalCharacter, 0, 8
     },
 
     {
         "Basic multiline bracket comment (LF)", "/* comment\ncomment */",
-        { { Lexer::BracketComment, " comment\ncomment " }, { Lexer::None, 0 } },
+        { { Lexer::BracketComment, " comment\ncomment " }, { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
 
     {
         "Basic multiline bracket comment (CRLF)", "/* comment\r\ncomment */",
-        { { Lexer::BracketComment, " comment\ncomment " }, { Lexer::None, 0 } },
+        { { Lexer::BracketComment, " comment\ncomment " }, { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
 
     {
         "Basic multiline bracket comment (CR)", "/* comment\rcomment */",
-        { { Lexer::BracketComment, 0 } },
+        { { Lexer::BracketComment, nullptr } },
         Error::CRWithoutLF, 0, 11
     },
 
     {
         "Non-UTF-8 in bracket comment", "/*\xA9 copyright*/",
-        { { Lexer::BracketComment, 0 } },
+        { { Lexer::BracketComment, nullptr } },
         Error::InvalidUTF8, 0, 14
     },
 
@@ -212,27 +212,27 @@ static const TestCase testcases[] = {
     //
     {
         "Basic number 1", "1",
-        { { Lexer::Number, "1" }, { Lexer::None, 0 } },
+        { { Lexer::Number, "1" }, { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
     {
         "Basic number 01", "01",
-        { { Lexer::Number, "01" }, { Lexer::None, 0 } },
+        { { Lexer::Number, "01" }, { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
     {
         "Qualified number 1k", "1k",
-        { { Lexer::Number, "1k" }, { Lexer::None, 0 } },
+        { { Lexer::Number, "1k" }, { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
     {
         "Qualified number 1M", "1M",
-        { { Lexer::Number, "1M" }, { Lexer::None, 0 } },
+        { { Lexer::Number, "1M" }, { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
     {
         "Qualified number 1G", "1G",
-        { { Lexer::Number, "1G" }, { Lexer::None, 0 } },
+        { { Lexer::Number, "1G" }, { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
     //
@@ -240,12 +240,12 @@ static const TestCase testcases[] = {
     //
     {
         "Basic identifier \"id\"", "id",
-        { { Lexer::Identifier, "id" }, { Lexer::None, 0 } },
+        { { Lexer::Identifier, "id" }, { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
     {
         "Basic identifier \"_id\"", "_id",
-        { { Lexer::Identifier, "_id" }, { Lexer::None, 0 } },
+        { { Lexer::Identifier, "_id" }, { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
     //
@@ -253,12 +253,12 @@ static const TestCase testcases[] = {
     //
     {
         "Basic tag \":tag\"", ":tag",
-        { { Lexer::Tag, "tag" }, { Lexer::None, 0 } },
+        { { Lexer::Tag, "tag" }, { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
     {
         "Basic tag \":_tag\"", ":_tag",
-        { { Lexer::Tag, "_tag" }, { Lexer::None, 0 } },
+        { { Lexer::Tag, "_tag" }, { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
     //
@@ -269,7 +269,7 @@ static const TestCase testcases[] = {
         {   { Lexer::Special, "{" }, { Lexer::Special, "}" },
             { Lexer::Special, "[" }, { Lexer::Special, "]" },
             { Lexer::Special, "(" }, { Lexer::Special, ")" },
-            { Lexer::Special, ";" }, { Lexer::Special, "," }, { Lexer::None, 0 }
+            { Lexer::Special, ";" }, { Lexer::Special, "," }, { Lexer::None, nullptr }
         },
         Error::None, 0, 0
     },
@@ -278,37 +278,37 @@ static const TestCase testcases[] = {
     //
     {
         "Basic quoted string \"foo\"", "\"foo\"",
-        { { Lexer::QuotedString, "foo" }, { Lexer::None, 0 } },
+        { { Lexer::QuotedString, "foo" }, { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
     {
         "Basic quoted string, UTF-8", "\"foo\xC3\xB1" "foo\"", // fooäfoo
-        { { Lexer::QuotedString, "foo\xC3\xB1" "foo" }, { Lexer::None, 0 } },
+        { { Lexer::QuotedString, "foo\xC3\xB1" "foo" }, { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
     {
         "Quoted string, escaped '\"'", "\"foo\\\"bar\"",
-        { { Lexer::QuotedString, "foo\"bar" }, { Lexer::None, 0 } },
+        { { Lexer::QuotedString, "foo\"bar" }, { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
     {
         "Quoted string, escaped '\\'", "\"foo\\\\bar\"",
-        { { Lexer::QuotedString, "foo\\bar" }, { Lexer::None, 0 } },
+        { { Lexer::QuotedString, "foo\\bar" }, { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
     {
         "Quoted string, excessive escapes", "\"\\fo\\o\"",
-        { { Lexer::QuotedString, "foo" }, { Lexer::None, 0 } },
+        { { Lexer::QuotedString, "foo" }, { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
     {
         "Quoted string across lines (LF)", "\"foo\nbar\"",
-        { { Lexer::QuotedString, "foo\nbar" }, { Lexer::None, 0 } },
+        { { Lexer::QuotedString, "foo\nbar" }, { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
     {
         "Quoted string across lines (CRLF)", "\"foo\r\nbar\"",
-        { { Lexer::QuotedString, "foo\nbar" }, { Lexer::None, 0 } },
+        { { Lexer::QuotedString, "foo\nbar" }, { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
     //
@@ -316,47 +316,47 @@ static const TestCase testcases[] = {
     //
     {
         "Basic multiline string I (LF)", "text:\nfoo\n.",
-        { { Lexer::MultiLineString, "foo" /* "foo\n" ? */ }, { Lexer::None, 0 } },
+        { { Lexer::MultiLineString, "foo" /* "foo\n" ? */ }, { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
     {
         "Basic multiline string I (CRLF)", "text:\r\nfoo\r\n.",
-        { { Lexer::MultiLineString, "foo" /* "foo\n" ? */ }, { Lexer::None, 0 } },
+        { { Lexer::MultiLineString, "foo" /* "foo\n" ? */ }, { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
     {
         "Basic multiline string II (LF)", "text:\nfoo\n.\n",
-        { { Lexer::MultiLineString, "foo" /* "foo\n" ? */ }, { Lexer::None, 0 } },
+        { { Lexer::MultiLineString, "foo" /* "foo\n" ? */ }, { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
     {
         "Basic multiline string II (CRLF)", "text:\r\nfoo\r\n.\r\n",
-        { { Lexer::MultiLineString, "foo" /* "foo\n" ? */ }, { Lexer::None, 0 } },
+        { { Lexer::MultiLineString, "foo" /* "foo\n" ? */ }, { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
     {
         "Dotstuffed multiline string (LF)", "text:\n..foo\n.",
-        { { Lexer::MultiLineString, ".foo" /* ".foo\n" ? */ }, { Lexer::None, 0 } },
+        { { Lexer::MultiLineString, ".foo" /* ".foo\n" ? */ }, { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
     {
         "Dotstuffed multiline string (CRLF)", "text:\r\n..foo\r\n.",
-        { { Lexer::MultiLineString, ".foo" /* ".foo\n" ? */ }, { Lexer::None, 0 } },
+        { { Lexer::MultiLineString, ".foo" /* ".foo\n" ? */ }, { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
     {
         "Incompletely dotstuffed multiline string (LF)", "text:\n.foo\n.",
-        { { Lexer::MultiLineString, ".foo" /* ".foo\n" ? */ }, { Lexer::None, 0 } },
+        { { Lexer::MultiLineString, ".foo" /* ".foo\n" ? */ }, { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
     {
         "Incompletely dotstuffed multiline string (CRLF)", "text:\r\n.foo\r\n.",
-        { { Lexer::MultiLineString, ".foo" /* ".foo\n" ? */ }, { Lexer::None, 0 } },
+        { { Lexer::MultiLineString, ".foo" /* ".foo\n" ? */ }, { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
     {
         "Mutiline with a line with only one '.'", "text:\r\nfoo\r\n..\r\nbar\r\n.",
-        { { Lexer::MultiLineString, "foo\n.\nbar" }, { Lexer::None, 0 } },
+        { { Lexer::MultiLineString, "foo\n.\nbar" }, { Lexer::None, nullptr } },
         Error::None, 0, 0
     },
 
@@ -374,7 +374,7 @@ static const TestCase testcases[] = {
     },
     {
         "Negative number", "-100",
-        { { Lexer::None, 0 } },
+        { { Lexer::None, nullptr } },
         Error::IllegalCharacter, 0, 0
     },
     //
@@ -395,17 +395,17 @@ static const TestCase testcases[] = {
     //
     {
         "Lone ':' (at end)", ":",
-        { { Lexer::Tag, 0 } },
+        { { Lexer::Tag, nullptr } },
         Error::UnexpectedCharacter, 0, 0
     },
     {
         "Lone ':' (in stream)", ": ",
-        { { Lexer::Tag, 0 } },
+        { { Lexer::Tag, nullptr } },
         Error::UnexpectedCharacter, 0, 1
     },
     {
         "Tag, leading digits", ":0tag",
-        { { Lexer::Tag, 0 } },
+        { { Lexer::Tag, nullptr } },
         Error::NoLeadingDigits, 0, 1
     },
     {
@@ -438,7 +438,7 @@ static const TestCase testcases[] = {
             { Lexer::LineFeeds, "1" },
             { Lexer::Identifier, "bar" },
             { Lexer::LineFeeds, "1" },
-            { Lexer::None, 0 }
+            { Lexer::None, nullptr }
         },
         Error::None, 0, 0
     },
@@ -522,7 +522,7 @@ int main(int argc, char *argv[])
                     goto ErrorOut;
                 }
                 if (t.expected[j].token == Lexer::None &&
-                        t.expected[j].result == 0) {
+                        t.expected[j].result == nullptr) {
                     break;
                 }
             }

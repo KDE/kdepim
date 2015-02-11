@@ -33,8 +33,8 @@ using namespace KSieveUi;
 
 Vacation::Vacation(QObject *parent, bool checkOnly, const QUrl &url)
     : QObject(parent),
-      mSieveJob(0),
-      mDialog(0),
+      mSieveJob(Q_NULLPTR),
+      mDialog(Q_NULLPTR),
       mWasActive(false),
       mCheckOnly(checkOnly)
 {
@@ -59,9 +59,9 @@ Vacation::~Vacation()
     if (mSieveJob) {
         mSieveJob->kill();
     }
-    mSieveJob = 0;
+    mSieveJob = Q_NULLPTR;
     delete mDialog;
-    mDialog = 0;
+    mDialog = Q_NULLPTR;
     qCDebug(LIBKSIEVE_LOG) << "~Vacation()";
 }
 
@@ -90,11 +90,11 @@ void Vacation::slotGetResult(KManageSieve::SieveJob *job, bool success,
                            << ", ?," << active << ")" << endl
                            << "script:" << endl
                            << script;
-    mSieveJob = 0; // job deletes itself after returning from this slot!
+    mSieveJob = Q_NULLPTR; // job deletes itself after returning from this slot!
 
     if (!mCheckOnly && mUrl.scheme() == QLatin1String("sieve") &&
             !job->sieveCapabilities().contains(QLatin1String("vacation"))) {
-        KMessageBox::sorry(0, i18n("Your server did not list \"vacation\" in "
+        KMessageBox::sorry(Q_NULLPTR, i18n("Your server did not list \"vacation\" in "
                                    "its list of supported Sieve extensions;\n"
                                    "without it, KMail cannot install out-of-"
                                    "office replies for you.\n"
@@ -104,7 +104,7 @@ void Vacation::slotGetResult(KManageSieve::SieveJob *job, bool success,
     }
 
     if (!mDialog && !mCheckOnly) {
-        mDialog = new VacationDialog(i18n("Configure \"Out of Office\" Replies"), 0, false);
+        mDialog = new VacationDialog(i18n("Configure \"Out of Office\" Replies"), Q_NULLPTR, false);
     }
 
     QString messageText = VacationUtils::defaultMessageText();
@@ -119,7 +119,7 @@ void Vacation::slotGetResult(KManageSieve::SieveJob *job, bool success,
     }
 
     if (!mCheckOnly && (!success || !KSieveUi::VacationUtils::parseScript(script, messageText, notificationInterval, aliases, sendForSpam, domainName, startDate, endDate)))
-        KMessageBox::information(0, i18n("Someone (probably you) changed the "
+        KMessageBox::information(Q_NULLPTR, i18n("Someone (probably you) changed the "
                                          "vacation script on the server.\n"
                                          "KMail is no longer able to determine "
                                          "the parameters for the autoreplies.\n"
@@ -145,7 +145,7 @@ void Vacation::slotGetResult(KManageSieve::SieveJob *job, bool success,
 
     emit scriptActive(mWasActive, mServerName);
     if (mCheckOnly && mWasActive) {
-        if (KMessageBox::questionYesNo(0, i18n("There is still an active out-of-office reply configured.\n"
+        if (KMessageBox::questionYesNo(Q_NULLPTR, i18n("There is still an active out-of-office reply configured.\n"
                                                "Do you want to edit it?"), i18n("Out-of-office reply still active"),
                                        KGuiItem(i18n("Edit"), QLatin1String("document-properties")),
                                        KGuiItem(i18n("Ignore"), QLatin1String("dialog-cancel")))
@@ -183,7 +183,7 @@ void Vacation::slotDialogOk()
     //mDialog->delayedDestruct();
     mDialog->hide();
     mDialog->deleteLater();
-    mDialog = 0;
+    mDialog = Q_NULLPTR;
 }
 
 void Vacation::slotDialogCancel()
@@ -191,7 +191,7 @@ void Vacation::slotDialogCancel()
     qCDebug(LIBKSIEVE_LOG);
     mDialog->hide();
     mDialog->deleteLater();
-    mDialog = 0;
+    mDialog = Q_NULLPTR;
     emit result(false);
 }
 
@@ -208,14 +208,14 @@ void Vacation::slotPutInactiveResult(KManageSieve::SieveJob *job, bool success)
 void Vacation::handlePutResult(KManageSieve::SieveJob *, bool success, bool activated)
 {
     if (success)
-        KMessageBox::information(0, activated
+        KMessageBox::information(Q_NULLPTR, activated
                                  ? i18n("Sieve script installed successfully on the server.\n"
                                         "Out of Office reply is now active.")
                                  : i18n("Sieve script installed successfully on the server.\n"
                                         "Out of Office reply has been deactivated."));
 
     qCDebug(LIBKSIEVE_LOG) << "( ???," << success << ", ? )";
-    mSieveJob = 0; // job deletes itself after returning from this slot!
+    mSieveJob = Q_NULLPTR; // job deletes itself after returning from this slot!
     emit result(success);
     emit scriptActive(activated, mServerName);
 }

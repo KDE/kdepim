@@ -83,79 +83,79 @@ private:
 #undef FOREACH
 #endif
 #define FOREACH for ( std::vector<KSieve::ScriptBuilder*>::const_iterator it = mBuilders.begin(), end = mBuilders.end() ; it != end ; ++it ) (*it)->
-    void commandStart(const QString &identifier)
+    void commandStart(const QString &identifier) Q_DECL_OVERRIDE
     {
         FOREACH commandStart(identifier);
     }
-    void commandEnd()
+    void commandEnd() Q_DECL_OVERRIDE
     {
         FOREACH commandEnd();
     }
-    void testStart(const QString &identifier)
+    void testStart(const QString &identifier) Q_DECL_OVERRIDE
     {
         FOREACH testStart(identifier);
     }
-    void testEnd()
+    void testEnd() Q_DECL_OVERRIDE
     {
         FOREACH testEnd();
     }
-    void testListStart()
+    void testListStart() Q_DECL_OVERRIDE
     {
         FOREACH testListStart();
     }
-    void testListEnd()
+    void testListEnd() Q_DECL_OVERRIDE
     {
         FOREACH testListEnd();
     }
-    void blockStart()
+    void blockStart() Q_DECL_OVERRIDE
     {
         FOREACH blockStart();
     }
-    void blockEnd()
+    void blockEnd() Q_DECL_OVERRIDE
     {
         FOREACH blockEnd();
     }
-    void hashComment(const QString &comment)
+    void hashComment(const QString &comment) Q_DECL_OVERRIDE
     {
         FOREACH hashComment(comment);
     }
-    void bracketComment(const QString &comment)
+    void bracketComment(const QString &comment) Q_DECL_OVERRIDE
     {
         FOREACH bracketComment(comment);
     }
-    void lineFeed()
+    void lineFeed() Q_DECL_OVERRIDE
     {
         FOREACH lineFeed();
     }
-    void error(const KSieve::Error &e)
+    void error(const KSieve::Error &e) Q_DECL_OVERRIDE
     {
         FOREACH error(e);
     }
-    void finished()
+    void finished() Q_DECL_OVERRIDE
     {
         FOREACH finished();
     }
-    void taggedArgument(const QString &tag)
+    void taggedArgument(const QString &tag) Q_DECL_OVERRIDE
     {
         FOREACH taggedArgument(tag);
     }
-    void stringArgument(const QString &string, bool multiline, const QString &fixme)
+    void stringArgument(const QString &string, bool multiline, const QString &fixme) Q_DECL_OVERRIDE
     {
         FOREACH stringArgument(string, multiline, fixme);
     }
-    void numberArgument(unsigned long number, char quantifier)
+    void numberArgument(unsigned long number, char quantifier) Q_DECL_OVERRIDE
     {
         FOREACH numberArgument(number, quantifier);
     }
-    void stringListArgumentStart()
+    void stringListArgumentStart() Q_DECL_OVERRIDE
     {
         FOREACH stringListArgumentStart();
     }
-    void stringListEntry(const QString &string, bool multiline, const QString &fixme)
+    void stringListEntry(const QString &string, bool multiline, const QString &fixme) Q_DECL_OVERRIDE
     {
         FOREACH stringListEntry(string, multiline, fixme);
     }
-    void stringListArgumentEnd()
+    void stringListArgumentEnd() Q_DECL_OVERRIDE
     {
         FOREACH stringListArgumentEnd();
     }
@@ -248,96 +248,96 @@ private:
             doProcess(method, string);
         }
     }
-    void commandStart(const QString &identifier)
+    void commandStart(const QString &identifier) Q_DECL_OVERRIDE
     {
         qCDebug(LIBKSIEVE_LOG) ;
         process(CommandStart, identifier);
     }
-    void commandEnd()
+    void commandEnd() Q_DECL_OVERRIDE
     {
         qCDebug(LIBKSIEVE_LOG) ;
         process(CommandEnd);
     }
-    void testStart(const QString &identifier)
+    void testStart(const QString &identifier) Q_DECL_OVERRIDE
     {
         qCDebug(LIBKSIEVE_LOG) ;
         process(TestStart, identifier);
     }
-    void testEnd()
+    void testEnd() Q_DECL_OVERRIDE
     {
         qCDebug(LIBKSIEVE_LOG) ;
         process(TestEnd);
     }
-    void testListStart()
+    void testListStart() Q_DECL_OVERRIDE
     {
         qCDebug(LIBKSIEVE_LOG) ;
         process(TestListStart);
     }
-    void testListEnd()
+    void testListEnd() Q_DECL_OVERRIDE
     {
         qCDebug(LIBKSIEVE_LOG) ;
         process(TestListEnd);
     }
-    void blockStart()
+    void blockStart() Q_DECL_OVERRIDE
     {
         qCDebug(LIBKSIEVE_LOG) ;
         process(BlockStart);
         ++mNestingDepth;
     }
-    void blockEnd()
+    void blockEnd() Q_DECL_OVERRIDE
     {
         qCDebug(LIBKSIEVE_LOG) ;
         --mNestingDepth;
         process(BlockEnd);
     }
-    void hashComment(const QString &)
+    void hashComment(const QString &) Q_DECL_OVERRIDE
     {
         qCDebug(LIBKSIEVE_LOG) ;
     }
-    void bracketComment(const QString &)
+    void bracketComment(const QString &) Q_DECL_OVERRIDE
     {
         qCDebug(LIBKSIEVE_LOG) ;
     }
-    void lineFeed()
+    void lineFeed() Q_DECL_OVERRIDE
     {
         qCDebug(LIBKSIEVE_LOG) ;
     }
-    void error(const KSieve::Error &)
+    void error(const KSieve::Error &) Q_DECL_OVERRIDE
     {
         qCDebug(LIBKSIEVE_LOG) ;
         mState = 0;
     }
-    void finished()
+    void finished() Q_DECL_OVERRIDE
     {
         qCDebug(LIBKSIEVE_LOG) ;
     }
 
-    void taggedArgument(const QString &tag)
+    void taggedArgument(const QString &tag) Q_DECL_OVERRIDE
     {
         qCDebug(LIBKSIEVE_LOG) ;
         process(TaggedArgument, tag);
     }
-    void stringArgument(const QString &string, bool, const QString &)
+    void stringArgument(const QString &string, bool, const QString &) Q_DECL_OVERRIDE
     {
         qCDebug(LIBKSIEVE_LOG) ;
         process(StringArgument, string);
     }
-    void numberArgument(unsigned long number, char)
+    void numberArgument(unsigned long number, char) Q_DECL_OVERRIDE
     {
         qCDebug(LIBKSIEVE_LOG);
         process(NumberArgument, QString::number(number));
     }
-    void stringListArgumentStart()
+    void stringListArgumentStart() Q_DECL_OVERRIDE
     {
         qCDebug(LIBKSIEVE_LOG) ;
         process(StringListArgumentStart);
     }
-    void stringListEntry(const QString &string, bool, const QString &)
+    void stringListEntry(const QString &string, bool, const QString &) Q_DECL_OVERRIDE
     {
         qCDebug(LIBKSIEVE_LOG) ;
         process(StringListEntry, string);
     }
-    void stringListArgumentEnd()
+    void stringListArgumentEnd() Q_DECL_OVERRIDE
     {
         qCDebug(LIBKSIEVE_LOG) ;
         process(StringListArgumentEnd);
@@ -346,35 +346,35 @@ private:
 
 typedef GenericInformationExtractor GIE;
 static const GenericInformationExtractor::StateNode spamNodes[] = {
-    { 0, GIE::CommandStart, "if",  1, 0, 0 },              // 0
-    { 0,   GIE::TestStart, "header", 2, 0, 0 },            // 1
-    { 0,     GIE::TaggedArgument, "contains", 3, 0, 0 },   // 2
+    { 0, GIE::CommandStart, "if",  1, 0, Q_NULLPTR },              // 0
+    { 0,   GIE::TestStart, "header", 2, 0, Q_NULLPTR },            // 1
+    { 0,     GIE::TaggedArgument, "contains", 3, 0, Q_NULLPTR },   // 2
 
     // accept both string and string-list:
     { 0,     GIE::StringArgument, "x-spam-flag", 9, 4, "x-spam-flag" },    // 3
-    { 0,     GIE::StringListArgumentStart, 0, 5, 0, 0 },                   // 4
+    { 0,     GIE::StringListArgumentStart, Q_NULLPTR, 5, 0, Q_NULLPTR },                   // 4
     { 0,       GIE::StringListEntry, "x-spam-flag", 6, 7, "x-spam-flag" }, // 5
-    { 0,       GIE::StringListEntry, 0, 6, 8, 0 },                         // 6
-    { 0,     GIE::StringListArgumentEnd, 0, 0, 5, 0 },                     // 7
-    { 0,     GIE::StringListArgumentEnd, 0, 9, 0, 0 },                     // 8
+    { 0,       GIE::StringListEntry, Q_NULLPTR, 6, 8, Q_NULLPTR },                         // 6
+    { 0,     GIE::StringListArgumentEnd, Q_NULLPTR, 0, 5, Q_NULLPTR },                     // 7
+    { 0,     GIE::StringListArgumentEnd, Q_NULLPTR, 9, 0, Q_NULLPTR },                     // 8
 
     // accept both string and string-list:
     { 0,     GIE::StringArgument, "yes", 15, 10, "spam-flag-yes" },    // 9
-    { 0,     GIE::StringListArgumentStart, 0, 11, 0, 0 },              // 10
+    { 0,     GIE::StringListArgumentStart, Q_NULLPTR, 11, 0, Q_NULLPTR },              // 10
     { 0,       GIE::StringListEntry, "yes", 12, 13, "spam-flag-yes" }, // 11
-    { 0,       GIE::StringListEntry, 0, 12, 14, 0 },                   // 12
-    { 0,     GIE::StringListArgumentEnd, 0, 0, 11, 0 },                // 13
-    { 0,     GIE::StringListArgumentEnd, 0, 15, 0, 0 },                // 14
+    { 0,       GIE::StringListEntry, Q_NULLPTR, 12, 14, Q_NULLPTR },                   // 12
+    { 0,     GIE::StringListArgumentEnd, Q_NULLPTR, 0, 11, Q_NULLPTR },                // 13
+    { 0,     GIE::StringListArgumentEnd, Q_NULLPTR, 15, 0, Q_NULLPTR },                // 14
 
-    { 0,   GIE::TestEnd, 0, 16, 0, 0 }, // 15
+    { 0,   GIE::TestEnd, Q_NULLPTR, 16, 0, Q_NULLPTR }, // 15
 
     // block of command, find "stop", take nested if's into account:
-    { 0,   GIE::BlockStart, 0, 17, 0, 0 },                // 16
+    { 0,   GIE::BlockStart, Q_NULLPTR, 17, 0, Q_NULLPTR },                // 16
     { 1,     GIE::CommandStart, "stop", 20, 19, "stop" }, // 17
-    { -1,    GIE::Any, 0, 17, 0, 0 },                     // 18
-    { 0,   GIE::BlockEnd, 0, 0, 18, 0 },                  // 19
+    { -1,    GIE::Any, Q_NULLPTR, 17, 0, Q_NULLPTR },                     // 18
+    { 0,   GIE::BlockEnd, Q_NULLPTR, 0, 18, Q_NULLPTR },                  // 19
 
-    { -1, GIE::Any, 0, 20, 20, 0 }, // 20 end state
+    { -1, GIE::Any, Q_NULLPTR, 20, 20, Q_NULLPTR }, // 20 end state
 };
 static const unsigned int numSpamNodes = sizeof spamNodes / sizeof *spamNodes ;
 
@@ -399,40 +399,40 @@ public:
 // libksieve/tests/parsertest
 //   'if not address :domain :contains ["from"] ["mydomain.org"] { keep; stop; }'
 static const GenericInformationExtractor::StateNode domainNodes[] = {
-    { 0, GIE::CommandStart, "if", 1, 0, 0 },       // 0
-    { 0,   GIE::TestStart, "not", 2, 0, 0, },      // 1
-    { 0,     GIE::TestStart, "address", 3, 0, 0 }, // 2
+    { 0, GIE::CommandStart, "if", 1, 0, Q_NULLPTR },       // 0
+    { 0,   GIE::TestStart, "not", 2, 0, Q_NULLPTR, },      // 1
+    { 0,     GIE::TestStart, "address", 3, 0, Q_NULLPTR }, // 2
 
     // :domain and :contains in arbitrary order:
-    { 0,       GIE::TaggedArgument, "domain", 4, 5, 0 },     // 3
-    { 0,       GIE::TaggedArgument, "contains", 7, 0, 0 },   // 4
-    { 0,       GIE::TaggedArgument, "contains", 6, 0, 0 },   // 5
-    { 0,       GIE::TaggedArgument, "domain", 7, 0, 0 },     // 6
+    { 0,       GIE::TaggedArgument, "domain", 4, 5, Q_NULLPTR },     // 3
+    { 0,       GIE::TaggedArgument, "contains", 7, 0, Q_NULLPTR },   // 4
+    { 0,       GIE::TaggedArgument, "contains", 6, 0, Q_NULLPTR },   // 5
+    { 0,       GIE::TaggedArgument, "domain", 7, 0, Q_NULLPTR },     // 6
 
     // accept both string and string-list:
     { 0,       GIE::StringArgument, "from", 13, 8, "from" },     // 7
-    { 0,       GIE::StringListArgumentStart, 0, 9, 0, 0 },       // 8
+    { 0,       GIE::StringListArgumentStart, Q_NULLPTR, 9, 0, Q_NULLPTR },       // 8
     { 0,         GIE::StringListEntry, "from", 10, 11, "from" }, // 9
-    { 0,         GIE::StringListEntry, 0, 10, 12, 0 },           // 10
-    { 0,       GIE::StringListArgumentEnd, 0, 0, 9, 0 },         // 11
-    { 0,       GIE::StringListArgumentEnd, 0, 13, 0, 0 },        // 12
+    { 0,         GIE::StringListEntry, Q_NULLPTR, 10, 12, Q_NULLPTR },           // 10
+    { 0,       GIE::StringListArgumentEnd, Q_NULLPTR, 0, 9, Q_NULLPTR },         // 11
+    { 0,       GIE::StringListArgumentEnd, Q_NULLPTR, 13, 0, Q_NULLPTR },        // 12
 
     // string: save, string-list: save last
-    { 0,       GIE::StringArgument, 0, 17, 14, "domainName" },    // 13
-    { 0,       GIE::StringListArgumentStart, 0, 15, 0, 0 },       // 14
-    { 0,         GIE::StringListEntry, 0, 15, 16, "domainName" }, // 15
-    { 0,       GIE::StringListArgumentEnd, 0, 17, 0, 0 },         // 16
+    { 0,       GIE::StringArgument, Q_NULLPTR, 17, 14, "domainName" },    // 13
+    { 0,       GIE::StringListArgumentStart, Q_NULLPTR, 15, 0, Q_NULLPTR },       // 14
+    { 0,         GIE::StringListEntry, Q_NULLPTR, 15, 16, "domainName" }, // 15
+    { 0,       GIE::StringListArgumentEnd, Q_NULLPTR, 17, 0, Q_NULLPTR },         // 16
 
-    { 0,     GIE::TestEnd, 0, 18, 0, 0 },  // 17
-    { 0,   GIE::TestEnd, 0, 19, 0, 0 },    // 18
+    { 0,     GIE::TestEnd, Q_NULLPTR, 18, 0, Q_NULLPTR },  // 17
+    { 0,   GIE::TestEnd, Q_NULLPTR, 19, 0, Q_NULLPTR },    // 18
 
     // block of commands, find "stop", take nested if's into account:
-    { 0,   GIE::BlockStart, 0, 20, 0, 0 },                 // 19
+    { 0,   GIE::BlockStart, Q_NULLPTR, 20, 0, Q_NULLPTR },                 // 19
     { 1,     GIE::CommandStart, "stop", 23, 22, "stop" },  // 20
-    { -1,    GIE::Any, 0, 20, 0, 0 },                      // 21
-    { 0,   GIE::BlockEnd, 0, 0, 21, 0 },                   // 22
+    { -1,    GIE::Any, Q_NULLPTR, 20, 0, Q_NULLPTR },                      // 21
+    { 0,   GIE::BlockEnd, Q_NULLPTR, 0, 21, Q_NULLPTR },                   // 22
 
-    { -1, GIE::Any, 0, 23, 23, 0 }  // 23 end state
+    { -1, GIE::Any, Q_NULLPTR, 23, 23, Q_NULLPTR }  // 23 end state
 };
 static const unsigned int numDomainNodes = sizeof domainNodes / sizeof *domainNodes ;
 
@@ -455,43 +455,43 @@ public:
 // if not allof (currentDate :value "ge" date "YYYY-MM-DD",
 //               currentDate :value "le" date "YYYY-MM-DD") { keep; stop; }
 static const GenericInformationExtractor::StateNode datesNodes[] = {
-    { 0, GIE::CommandStart, "if", 1, 0, 0 },          // 0
-    { 0,   GIE::TestStart, "not", 2, 0, 0 },            // 1
-    { 0,     GIE::TestStart, "allof", 3, 0, 0 },        // 2
+    { 0, GIE::CommandStart, "if", 1, 0, Q_NULLPTR },          // 0
+    { 0,   GIE::TestStart, "not", 2, 0, Q_NULLPTR },            // 1
+    { 0,     GIE::TestStart, "allof", 3, 0, Q_NULLPTR },        // 2
 
     // handle startDate and endDate in arbitrary order
-    { 0,       GIE::TestListStart, 0, 4, 0, 0 },                 // 3
-    { 0,         GIE::TestStart, "currentdate", 5, 0, 0 },         // 4
-    { 0,           GIE::TaggedArgument, "value", 6, 0, 0 },          // 5
-    { 0,           GIE::StringArgument, "ge", 7, 9, 0 },             // 6
-    { 0,           GIE::StringArgument, "date", 8, 0, 0 },           // 7
-    { 0,           GIE::StringArgument, 0, 12, 0, "startDate" },      // 8
-    { 0,           GIE::StringArgument, "le", 10, 0, 0 },             // 9
-    { 0,           GIE::StringArgument, "date", 11, 0, 0 },          // 10
-    { 0,           GIE::StringArgument, 0, 12, 0, "endDate" },       // 11
-    { 0,         GIE::TestEnd, 0, 13, 0, 0 },                      // 12
+    { 0,       GIE::TestListStart, Q_NULLPTR, 4, 0, Q_NULLPTR },                 // 3
+    { 0,         GIE::TestStart, "currentdate", 5, 0, Q_NULLPTR },         // 4
+    { 0,           GIE::TaggedArgument, "value", 6, 0, Q_NULLPTR },          // 5
+    { 0,           GIE::StringArgument, "ge", 7, 9, Q_NULLPTR },             // 6
+    { 0,           GIE::StringArgument, "date", 8, 0, Q_NULLPTR },           // 7
+    { 0,           GIE::StringArgument, Q_NULLPTR, 12, 0, "startDate" },      // 8
+    { 0,           GIE::StringArgument, "le", 10, 0, Q_NULLPTR },             // 9
+    { 0,           GIE::StringArgument, "date", 11, 0, Q_NULLPTR },          // 10
+    { 0,           GIE::StringArgument, Q_NULLPTR, 12, 0, "endDate" },       // 11
+    { 0,         GIE::TestEnd, Q_NULLPTR, 13, 0, Q_NULLPTR },                      // 12
 
-    { 0,         GIE::TestStart, "currentdate", 14, 0, 0 },        // 13
-    { 0,           GIE::TaggedArgument, "value", 15, 0, 0 },         // 14
-    { 0,           GIE::StringArgument, "le", 16, 18, 0 },           // 15
-    { 0,           GIE::StringArgument, "date", 17, 0, 0 },          // 16
-    { 0,           GIE::StringArgument, 0, 21, 0, "endDate" },       // 17
-    { 0,           GIE::StringArgument, "ge", 19, 0, 0 },            // 18
-    { 0,           GIE::StringArgument, "date", 20, 0, 0 },          // 19
-    { 0,           GIE::StringArgument, 0, 21, 0, "startDate" },     // 20
-    { 0,         GIE::TestEnd, 0, 22, 0, 0 },                      // 21
-    { 0,      GIE::TestListEnd, 0, 23, 0, 0 },                   // 22
+    { 0,         GIE::TestStart, "currentdate", 14, 0, Q_NULLPTR },        // 13
+    { 0,           GIE::TaggedArgument, "value", 15, 0, Q_NULLPTR },         // 14
+    { 0,           GIE::StringArgument, "le", 16, 18, Q_NULLPTR },           // 15
+    { 0,           GIE::StringArgument, "date", 17, 0, Q_NULLPTR },          // 16
+    { 0,           GIE::StringArgument, Q_NULLPTR, 21, 0, "endDate" },       // 17
+    { 0,           GIE::StringArgument, "ge", 19, 0, Q_NULLPTR },            // 18
+    { 0,           GIE::StringArgument, "date", 20, 0, Q_NULLPTR },          // 19
+    { 0,           GIE::StringArgument, Q_NULLPTR, 21, 0, "startDate" },     // 20
+    { 0,         GIE::TestEnd, Q_NULLPTR, 22, 0, Q_NULLPTR },                      // 21
+    { 0,      GIE::TestListEnd, Q_NULLPTR, 23, 0, Q_NULLPTR },                   // 22
 
-    { 0,     GIE::TestEnd, 0, 24, 0, 0 },               // 23
-    { 0,   GIE::TestEnd, 0, 25, 0, 0 },                 // 24
+    { 0,     GIE::TestEnd, Q_NULLPTR, 24, 0, Q_NULLPTR },               // 23
+    { 0,   GIE::TestEnd, Q_NULLPTR, 25, 0, Q_NULLPTR },                 // 24
 
     // block of commands, find "stop", take nested if's into account:
-    { 0,   GIE::BlockStart, 0, 26, 0, 0 },              // 25
+    { 0,   GIE::BlockStart, Q_NULLPTR, 26, 0, Q_NULLPTR },              // 25
     { 1,     GIE::CommandStart, "stop", 29, 28, "stop" },  // 26
-    { -1,    GIE::Any, 0, 26, 0, 0 },                      // 27
-    { 0,   GIE::BlockEnd, 0, 0, 27, 0 },                // 28
+    { -1,    GIE::Any, Q_NULLPTR, 26, 0, Q_NULLPTR },                      // 27
+    { 0,   GIE::BlockEnd, Q_NULLPTR, 0, 27, Q_NULLPTR },                // 28
 
-    { -1, GIE::Any, 0, 27, 27, 0 }                   // 29 end state
+    { -1, GIE::Any, Q_NULLPTR, 27, 27, Q_NULLPTR }                   // 29 end state
 };
 
 static const unsigned int numDatesNodes = sizeof datesNodes / sizeof *datesNodes;
@@ -552,31 +552,31 @@ public:
     }
 
 private:
-    void commandStart(const QString &identifier);
+    void commandStart(const QString &identifier) Q_DECL_OVERRIDE;
 
-    void commandEnd();
+    void commandEnd() Q_DECL_OVERRIDE;
 
-    void testStart(const QString &) {}
-    void testEnd() {}
-    void testListStart() {}
-    void testListEnd() {}
-    void blockStart() {}
-    void blockEnd() {}
-    void hashComment(const QString &) {}
-    void bracketComment(const QString &) {}
-    void lineFeed() {}
-    void error(const KSieve::Error &e);
-    void finished();
+    void testStart(const QString &) Q_DECL_OVERRIDE {}
+    void testEnd() Q_DECL_OVERRIDE {}
+    void testListStart() Q_DECL_OVERRIDE {}
+    void testListEnd() Q_DECL_OVERRIDE {}
+    void blockStart() Q_DECL_OVERRIDE {}
+    void blockEnd() Q_DECL_OVERRIDE {}
+    void hashComment(const QString &) Q_DECL_OVERRIDE {}
+    void bracketComment(const QString &) Q_DECL_OVERRIDE {}
+    void lineFeed() Q_DECL_OVERRIDE {}
+    void error(const KSieve::Error &e) Q_DECL_OVERRIDE;
+    void finished() Q_DECL_OVERRIDE;
 
-    void taggedArgument(const QString &tag);
+    void taggedArgument(const QString &tag) Q_DECL_OVERRIDE;
 
-    void stringArgument(const QString &string, bool, const QString &);
+    void stringArgument(const QString &string, bool, const QString &) Q_DECL_OVERRIDE;
 
-    void numberArgument(unsigned long number, char);
+    void numberArgument(unsigned long number, char) Q_DECL_OVERRIDE;
 
-    void stringListArgumentStart();
-    void stringListEntry(const QString &string, bool, const QString &);
-    void stringListArgumentEnd();
+    void stringListArgumentStart() Q_DECL_OVERRIDE;
+    void stringListEntry(const QString &string, bool, const QString &) Q_DECL_OVERRIDE;
+    void stringListArgumentEnd() Q_DECL_OVERRIDE;
 
 private:
     Context mContext;

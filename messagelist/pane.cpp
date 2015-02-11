@@ -838,7 +838,7 @@ Item Pane::currentItem() const
 {
     Widget *w = static_cast<Widget *>(currentWidget());
 
-    if (w == 0) {
+    if (w == Q_NULLPTR) {
         return Item();
     }
 
@@ -849,7 +849,7 @@ KMime::Message::Ptr Pane::currentMessage() const
 {
     Widget *w = static_cast<Widget *>(currentWidget());
 
-    if (w == 0) {
+    if (w == Q_NULLPTR) {
         return KMime::Message::Ptr();
     }
 
@@ -859,7 +859,7 @@ KMime::Message::Ptr Pane::currentMessage() const
 QList<KMime::Message::Ptr > Pane::selectionAsMessageList(bool includeCollapsedChildren) const
 {
     Widget *w = static_cast<Widget *>(currentWidget());
-    if (w == 0) {
+    if (w == Q_NULLPTR) {
         return QList<KMime::Message::Ptr>();
     }
     return w->selectionAsMessageList(includeCollapsedChildren);
@@ -868,7 +868,7 @@ QList<KMime::Message::Ptr > Pane::selectionAsMessageList(bool includeCollapsedCh
 QList<Akonadi::Item> Pane::selectionAsMessageItemList(bool includeCollapsedChildren) const
 {
     Widget *w = static_cast<Widget *>(currentWidget());
-    if (w == 0) {
+    if (w == Q_NULLPTR) {
         return QList<Akonadi::Item>();
     }
     return w->selectionAsMessageItemList(includeCollapsedChildren);
@@ -877,7 +877,7 @@ QList<Akonadi::Item> Pane::selectionAsMessageItemList(bool includeCollapsedChild
 QList<Akonadi::Item::Id> Pane::selectionAsListMessageId(bool includeCollapsedChildren) const
 {
     Widget *w = static_cast<Widget *>(currentWidget());
-    if (w == 0) {
+    if (w == Q_NULLPTR) {
         return QList<Akonadi::Item::Id>();
     }
     return w->selectionAsListMessageId(includeCollapsedChildren);
@@ -886,7 +886,7 @@ QList<Akonadi::Item::Id> Pane::selectionAsListMessageId(bool includeCollapsedChi
 QVector<qlonglong> Pane::selectionAsMessageItemListId(bool includeCollapsedChildren) const
 {
     Widget *w = static_cast<Widget *>(currentWidget());
-    if (w == 0) {
+    if (w == Q_NULLPTR) {
         return QVector<qlonglong>();
     }
     return w->selectionAsMessageItemListId(includeCollapsedChildren);
@@ -895,7 +895,7 @@ QVector<qlonglong> Pane::selectionAsMessageItemListId(bool includeCollapsedChild
 QList<Akonadi::Item> Pane::currentThreadAsMessageList() const
 {
     Widget *w = static_cast<Widget *>(currentWidget());
-    if (w == 0) {
+    if (w == Q_NULLPTR) {
         return QList<Akonadi::Item>();
     }
     return w->currentThreadAsMessageList();
@@ -929,7 +929,7 @@ void Pane::markMessageItemsAsAboutToBeRemoved(MessageList::Core::MessageItemSetR
 QList<Akonadi::MessageStatus> Pane::currentFilterStatus() const
 {
     Widget *w = static_cast<Widget *>(currentWidget());
-    if (w == 0) {
+    if (w == Q_NULLPTR) {
         return QList<Akonadi::MessageStatus>();
     }
     return w->currentFilterStatus();
@@ -968,7 +968,7 @@ bool Pane::getSelectionStats(Akonadi::Item::List &selectedItems,
                              bool includeCollapsedChildren) const
 {
     Widget *w = static_cast<Widget *>(currentWidget());
-    if (w == 0) {
+    if (w == Q_NULLPTR) {
         return false;
     }
 
@@ -1018,7 +1018,7 @@ QItemSelectionModel *Pane::currentItemSelectionModel()
     if (w) {
         return w->view()->selectionModel();
     }
-    return 0;
+    return Q_NULLPTR;
 }
 
 void Pane::resetModelStorage()

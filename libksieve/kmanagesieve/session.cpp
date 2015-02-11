@@ -35,14 +35,14 @@
 #include <QTimer>
 
 static const sasl_callback_t callbacks[] = {
-    { SASL_CB_ECHOPROMPT, NULL, NULL },
-    { SASL_CB_NOECHOPROMPT, NULL, NULL },
-    { SASL_CB_GETREALM, NULL, NULL },
-    { SASL_CB_USER, NULL, NULL },
-    { SASL_CB_AUTHNAME, NULL, NULL },
-    { SASL_CB_PASS, NULL, NULL },
-    { SASL_CB_CANON_USER, NULL, NULL },
-    { SASL_CB_LIST_END, NULL, NULL }
+    { SASL_CB_ECHOPROMPT, Q_NULLPTR, Q_NULLPTR },
+    { SASL_CB_NOECHOPROMPT, Q_NULLPTR, Q_NULLPTR },
+    { SASL_CB_GETREALM, Q_NULLPTR, Q_NULLPTR },
+    { SASL_CB_USER, Q_NULLPTR, Q_NULLPTR },
+    { SASL_CB_AUTHNAME, Q_NULLPTR, Q_NULLPTR },
+    { SASL_CB_PASS, Q_NULLPTR, Q_NULLPTR },
+    { SASL_CB_CANON_USER, Q_NULLPTR, Q_NULLPTR },
+    { SASL_CB_LIST_END, Q_NULLPTR, Q_NULLPTR }
 };
 
 using namespace KManageSieve;
@@ -50,10 +50,10 @@ using namespace KManageSieve;
 Session::Session(QObject *parent) :
     QObject(parent),
     m_socket(new KTcpSocket(this)),
-    m_sasl_conn(0),
-    m_sasl_client_interact(0),
-    m_currentJob(0),
-    m_sslCheck(0),
+    m_sasl_conn(Q_NULLPTR),
+    m_sasl_client_interact(Q_NULLPTR),
+    m_currentJob(Q_NULLPTR),
+    m_sslCheck(Q_NULLPTR),
     m_state(None),
     m_pendingQuantity(-1),
     m_supportsStartTls(false)
@@ -183,7 +183,7 @@ void Session::processResponse(const KManageSieve::Response &response, const QByt
                         return;
                     }
                     if (!allowUnencrypted() && QSslSocket::supportsSsl() && !m_supportsStartTls &&
-                            KMessageBox::warningContinueCancel(0,
+                            KMessageBox::warningContinueCancel(Q_NULLPTR,
                                     i18n("TLS encryption was requested, but your Sieve server does not advertise TLS in its capabilities.\n"
                                          "You can choose to try to initiate TLS negotiations nonetheless, or cancel the operation."),
                                     i18n("Server Does Not Advertise TLS"), KGuiItem(i18n("&Start TLS nonetheless")), KStandardGuiItem::cancel(),
@@ -256,7 +256,7 @@ void Session::processResponse(const KManageSieve::Response &response, const QByt
     default:
         if (m_currentJob) {
             if (m_currentJob->d->handleResponse(response, data)) {
-                m_currentJob = 0;
+                m_currentJob = Q_NULLPTR;
                 QMetaObject::invokeMethod(this, "executeNextJob", Qt::QueuedConnection);
             }
             break;
@@ -289,7 +289,7 @@ void Session::killJob(SieveJob *job)
     qDebug() << job;
     if (m_currentJob == job) {
         m_currentJob->d->killed();
-        m_currentJob = 0;
+        m_currentJob = Q_NULLPTR;
     } else {
         m_jobs.removeAll(job);
         job->d->killed();
@@ -389,13 +389,13 @@ void Session::sendData(const QByteArray &data)
 void Session::startAuthentication()
 {
     int result;
-    m_sasl_conn = NULL;
-    m_sasl_client_interact = NULL;
-    const char *out = NULL;
+    m_sasl_conn = Q_NULLPTR;
+    m_sasl_client_interact = Q_NULLPTR;
+    const char *out = Q_NULLPTR;
     uint outlen;
-    const char *mechusing = NULL;
+    const char *mechusing = Q_NULLPTR;
 
-    result = sasl_client_new("sieve", m_url.host().toLatin1(), 0, 0, callbacks, 0, &m_sasl_conn);
+    result = sasl_client_new("sieve", m_url.host().toLatin1(), Q_NULLPTR, Q_NULLPTR, callbacks, 0, &m_sasl_conn);
     if (result != SASL_OK) {
         m_errorMsg = KIO::buildErrorString(KIO::ERR_COULD_NOT_AUTHENTICATE, QString::fromUtf8(sasl_errdetail(m_sasl_conn)));
         disconnectFromHost();
@@ -464,7 +464,7 @@ bool Session::saslInteract(void *in)
 
                 QPointer<KPasswordDialog> dlg =
                     new KPasswordDialog(
-                    0,
+                    Q_NULLPTR,
                     KPasswordDialog::ShowUsernameLine | KPasswordDialog::ShowKeepPassword
                 );
                 dlg->setUsername(ai.username);
@@ -514,7 +514,7 @@ bool Session::saslInteract(void *in)
             }
             break;
         default:
-            interact->result = NULL;
+            interact->result = Q_NULLPTR;
             interact->len = 0;
             break;
         }
@@ -526,14 +526,14 @@ bool Session::saslInteract(void *in)
 bool Session::saslClientStep(const QByteArray &challenge)
 {
     int result;
-    const char *out = NULL;
+    const char *out = Q_NULLPTR;
     uint outlen;
 
     const QByteArray challenge_decoded = QByteArray::fromBase64(challenge);
     do {
         result =
             sasl_client_step(m_sasl_conn,
-                             challenge_decoded.isEmpty() ? 0 : challenge_decoded.data(),
+                             challenge_decoded.isEmpty() ? Q_NULLPTR : challenge_decoded.data(),
                              challenge_decoded.size(),
                              &m_sasl_client_interact,
                              &out, &outlen);

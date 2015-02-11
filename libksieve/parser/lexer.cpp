@@ -60,14 +60,14 @@ namespace KSieve
 //
 
 Lexer::Lexer(const char *scursor, const char *send, int options)
-    : i(0)
+    : i(Q_NULLPTR)
 {
     i = new Impl(scursor, send, options);
 }
 
 Lexer::~Lexer()
 {
-    delete i; i = 0;
+    delete i; i = Q_NULLPTR;
 }
 
 bool Lexer::ignoreComments() const

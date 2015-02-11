@@ -29,21 +29,21 @@ public:
     SieveConditionBody(QObject *parent = Q_NULLPTR);
     static SieveCondition *newAction();
 
-    QWidget *createParamWidget(QWidget *parent) const;
+    QWidget *createParamWidget(QWidget *parent) const Q_DECL_OVERRIDE;
 
-    QString code(QWidget *parent) const;
+    QString code(QWidget *parent) const Q_DECL_OVERRIDE;
 
-    QStringList needRequires(QWidget *parent) const;
+    QStringList needRequires(QWidget *parent) const Q_DECL_OVERRIDE;
 
-    bool needCheckIfServerHasCapability() const;
+    bool needCheckIfServerHasCapability() const Q_DECL_OVERRIDE;
 
-    QString serverNeedsCapability() const;
+    QString serverNeedsCapability() const Q_DECL_OVERRIDE;
 
-    QString help() const;
+    QString help() const Q_DECL_OVERRIDE;
 
-    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, bool notCondition, QString &error);
+    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, bool notCondition, QString &error) Q_DECL_OVERRIDE;
 
-    QString href() const;
+    QString href() const Q_DECL_OVERRIDE;
 };
 }
 

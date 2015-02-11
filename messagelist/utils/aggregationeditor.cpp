@@ -38,7 +38,7 @@ using namespace MessageList::Core;
 AggregationEditor::AggregationEditor(QWidget *parent)
     : OptionSetEditor(parent)
 {
-    mCurrentAggregation = 0;
+    mCurrentAggregation = Q_NULLPTR;
 
     // Grouping and Threading tab
     QWidget *tab = new QWidget(this);

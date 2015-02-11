@@ -32,7 +32,7 @@ class BlogPrivate
 {
 public:
     BlogPrivate():
-        q_ptr(0)
+        q_ptr(nullptr)
     {
     }
 

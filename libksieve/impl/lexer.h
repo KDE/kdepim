@@ -127,7 +127,7 @@ private:
     bool parseQuotedString(QString &result);
 
     struct State {
-        State(const char *s = 0)
+        State(const char *s = nullptr)
             : cursor(s), line(0), beginOfLine(s), error() {}
         const char *cursor;
         int line;

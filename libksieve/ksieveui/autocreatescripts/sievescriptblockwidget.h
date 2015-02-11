@@ -45,9 +45,9 @@ public:
     explicit SieveScriptBlockWidget(QWidget *parent = Q_NULLPTR);
     ~SieveScriptBlockWidget();
 
-    void setPageType(PageType type);
+    void setPageType(PageType type) Q_DECL_OVERRIDE;
 
-    void generatedScript(QString &script, QStringList &requires);
+    void generatedScript(QString &script, QStringList &requires) Q_DECL_OVERRIDE;
 
     MatchCondition matchCondition() const;
 

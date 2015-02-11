@@ -73,7 +73,7 @@ public:
 
     Akonadi::Item::List selectedIncidences() const Q_DECL_OVERRIDE;
     KCalCore::DateList selectedIncidenceDates() const Q_DECL_OVERRIDE;
-    virtual int currentDateCount() const Q_DECL_OVERRIDE
+    int currentDateCount() const Q_DECL_OVERRIDE
     {
         return 0;
     }

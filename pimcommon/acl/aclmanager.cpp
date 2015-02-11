@@ -56,7 +56,7 @@ public:
     {
     }
 
-    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE
     {
         if (index.row() < 0 || index.row() >= mRights.count()) {
             return QVariant();
@@ -80,7 +80,7 @@ public:
 
     }
 
-    virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE
     {
         if (index.row() < 0 || index.row() >= mRights.count()) {
             return false;
@@ -106,7 +106,7 @@ public:
         return false;
     }
 
-    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE
     {
         if (parent.isValid()) {
             return 0;
@@ -141,7 +141,7 @@ public:
     }
 
 protected:
-    virtual bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE
+    bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE
     {
         beginInsertRows(parent, row, row + count - 1);
         for (int i = 0; i < count; ++i) {
@@ -152,7 +152,7 @@ protected:
         return true;
     }
 
-    virtual bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE
+    bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE
     {
         beginRemoveRows(parent, row, row + count - 1);
         for (int i = 0; i < count; ++i) {

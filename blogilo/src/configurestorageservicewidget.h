@@ -28,8 +28,8 @@ class StorageServiceConfigureWidget : public PimCommon::StorageServiceConfigureW
 public:
     explicit StorageServiceConfigureWidget(QWidget *parent = Q_NULLPTR);
     ~StorageServiceConfigureWidget();
-    virtual void loadSettings();
-    virtual void writeSettings();
+    void loadSettings() Q_DECL_OVERRIDE;
+    void writeSettings() Q_DECL_OVERRIDE;
 };
 
 namespace PimCommon

@@ -38,12 +38,12 @@ VacationCheckJob::~VacationCheckJob()
     if (mSieveJob) {
         mSieveJob->kill();
     }
-    mSieveJob = 0;
+    mSieveJob = Q_NULLPTR;
 }
 
 void VacationCheckJob::slotGetResult(KManageSieve::SieveJob */*job*/, bool success, const QString &script, bool active)
 {
-    mSieveJob = 0;
+    mSieveJob = Q_NULLPTR;
     if (!success) {
         active = false;    // default to inactive
     }

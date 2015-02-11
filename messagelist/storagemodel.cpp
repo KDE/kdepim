@@ -65,8 +65,8 @@ public:
 
     Private(StorageModel *owner)
         : q(owner),
-          mModel(0),
-          mSelectionModel(0)
+          mModel(Q_NULLPTR),
+          mSelectionModel(Q_NULLPTR)
     {}
 };
 
@@ -368,7 +368,7 @@ int StorageModel::columnCount(const QModelIndex &parent) const
 QModelIndex StorageModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (!parent.isValid()) {
-        return createIndex(row, column, (void *)0);
+        return createIndex(row, column, (void *)Q_NULLPTR);
     }
     return QModelIndex(); // this model is flat.
 }

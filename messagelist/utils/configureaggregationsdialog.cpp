@@ -69,14 +69,14 @@ public:
     }
     void forgetAggregation()
     {
-        mAggregation = 0;
+        mAggregation = Q_NULLPTR;
     }
 };
 
 /**
  * The widget that lists the available Aggregations.
  *
- * At the moment of writing, derived from QListWidget only to override sizeHint().
+ * At the moment of writing, derived from QListWidget only to Q_DECL_OVERRIDE sizeHint().
  */
 class AggregationListWidget : public QListWidget
 {
@@ -88,7 +88,7 @@ public:
 public:
 
     // need a larger but shorter QListWidget
-    QSize sizeHint() const
+    QSize sizeHint() const Q_DECL_OVERRIDE
     {
         return QSize(450, 128);
     }
@@ -284,12 +284,12 @@ void ConfigureAggregationsDialog::Private::updateButton(QListWidgetItem *cur)
 {
     const int numberOfSelectedItem(mAggregationList->selectedItems().count());
 
-    AggregationListWidgetItem *item = cur ? dynamic_cast< AggregationListWidgetItem * >(cur) : 0;
+    AggregationListWidgetItem *item = cur ? dynamic_cast< AggregationListWidgetItem * >(cur) : Q_NULLPTR;
     mDeleteAggregationButton->setEnabled(item && !item->aggregation()->readOnly() && (mAggregationList->count() > 1));
 
     mCloneAggregationButton->setEnabled(numberOfSelectedItem == 1);
     mExportAggregationButton->setEnabled(numberOfSelectedItem > 0);
-    mEditor->editAggregation(item ? item->aggregation() : 0);
+    mEditor->editAggregation(item ? item->aggregation() : Q_NULLPTR);
     if (item && !item->isSelected()) {
         item->setSelected(true);    // make sure it's true
     }
@@ -310,7 +310,7 @@ AggregationListWidgetItem *ConfigureAggregationsDialog::Private::findAggregation
         }
         ++i;
     }
-    return 0;
+    return Q_NULLPTR;
 }
 
 AggregationListWidgetItem *ConfigureAggregationsDialog::Private::findAggregationItemById(const QString &aggregationId)
@@ -326,7 +326,7 @@ AggregationListWidgetItem *ConfigureAggregationsDialog::Private::findAggregation
         }
         ++i;
     }
-    return 0;
+    return Q_NULLPTR;
 }
 
 AggregationListWidgetItem *ConfigureAggregationsDialog::Private::findAggregationItemByAggregation(Aggregation *set)
@@ -342,7 +342,7 @@ AggregationListWidgetItem *ConfigureAggregationsDialog::Private::findAggregation
         }
         ++i;
     }
-    return 0;
+    return Q_NULLPTR;
 }
 
 QString ConfigureAggregationsDialog::Private::uniqueNameForAggregation(const QString &baseName, Aggregation *skipAggregation)
@@ -398,7 +398,7 @@ void ConfigureAggregationsDialog::Private::deleteAggregationButtonClicked()
         return;
     }
 
-    mEditor->editAggregation(0);   // forget it
+    mEditor->editAggregation(Q_NULLPTR);   // forget it
     Q_FOREACH (QListWidgetItem *it, list) {
         AggregationListWidgetItem *item = dynamic_cast< AggregationListWidgetItem * >(it);
         if (!item) {

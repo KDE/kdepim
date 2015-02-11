@@ -77,7 +77,7 @@ SieveEditorWidget::SieveEditorWidget(QWidget *parent)
 
     QStringList overlays;
     overlays << QLatin1String("list-add");
-    mUpload = new QAction(QIcon(new KIconEngine(QLatin1String("get-hot-new-stuff"), 0, overlays)), i18n("Upload..."), this);
+    mUpload = new QAction(QIcon(new KIconEngine(QLatin1String("get-hot-new-stuff"), Q_NULLPTR, overlays)), i18n("Upload..."), this);
     connect(mUpload, &QAction::triggered, this, &SieveEditorWidget::slotUploadScripts);
     bar->addAction(mUpload);
 

@@ -47,7 +47,7 @@ class Backend::Private
 {
 public:
     Private()
-        : kBlog(0), bBlog(0), categoryListNotSet(false)
+        : kBlog(Q_NULLPTR), bBlog(Q_NULLPTR), categoryListNotSet(false)
     {}
     KBlog::Blog *kBlog;
     BilboBlog *bBlog;
@@ -200,7 +200,7 @@ void Backend::uploadMedia(BilboMedia *media)
 
         QByteArray data;
         KIO::TransferJob *job = KIO::get(media->localUrl(), KIO::Reload, KIO::HideProgressInfo);
-        if (!KIO::NetAccess::synchronousRun(job, 0, &data)) {
+        if (!KIO::NetAccess::synchronousRun(job, Q_NULLPTR, &data)) {
             qCritical() << "Job error: " << job->errorString();
             tmp = i18n("Uploading media failed: Cannot read the media file, please check if it exists. Path: %1", media->localUrl().toDisplayString());
             qCDebug(BLOGILO_LOG) << "Emitting sigError...";
