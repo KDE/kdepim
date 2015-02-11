@@ -18,6 +18,7 @@
 #include "searchduplicateresultwidgettest.h"
 #include "../searchduplicate/searchduplicateresultwidget.h"
 #include "../searchduplicate/resultduplicatetreewidget.h"
+#include "../widgets/mergecontactloseinformationwarning.h"
 #include <kaddressbookgrantlee/widget/grantleecontactviewer.h>
 #include <QSplitter>
 #include <QTreeWidget>
@@ -77,6 +78,9 @@ void SearchDuplicateResultWidgetTest::shouldHaveDefaultValue()
     QPushButton *pushButton = qFindChild<QPushButton *>(&w, QLatin1String("merge_contact_button"));
     QVERIFY(pushButton);
     QVERIFY(!pushButton->isEnabled());
+
+    KABMergeContacts::MergeContactLoseInformationWarning *warning = qFindChild<KABMergeContacts::MergeContactLoseInformationWarning *>(&w, QLatin1String("mergecontactwarning"));
+    QVERIFY(warning);
 
     Akonadi::CollectionComboBox *combobox = qFindChild<Akonadi::CollectionComboBox *>(&w, QLatin1String("akonadicombobox"));
     QVERIFY(combobox);

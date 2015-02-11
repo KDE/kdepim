@@ -18,7 +18,7 @@
 #include "mergecontacts.h"
 
 using namespace KABMergeContacts;
-
+using namespace KContacts;
 MergeContacts::MergeContacts(const Akonadi::Item::List &items)
     : mListItem(items)
 {
@@ -78,6 +78,8 @@ void MergeContacts::mergeToContact(KContacts::Addressee &newContact, const KCont
     // Merge blog
 
     // Merge HomePage
+
+    // Merge geo
 #if 0
     //TODO
     newContact.setName(fromContact.name());
@@ -92,12 +94,30 @@ bool MergeContacts::needManualSelectInformations()
     if (mListItem.count() < 2) {
         return result;
     }
-    //TODO
+    KContacts::Addressee newContact;
     Q_FOREACH (const Akonadi::Item &item, mListItem) {
         if (item.hasPayload<KContacts::Addressee>()) {
+            //Test anniversary
             const KContacts::Addressee address = item.payload<KContacts::Addressee>();
             if (address.birthday().isValid()) {
-                result = true;
+                if (newContact.birthday().isValid()) {
+                    if (newContact.birthday() != address.birthday()) {
+                        return true;
+                    }
+                } else {
+                    newContact.setBirthday(address.birthday());
+                }
+            }
+            //Test Geo
+            const Geo geo = address.geo();
+            if (geo.isValid()) {
+                if (newContact.geo().isValid()) {
+                    if (newContact.geo() != geo) {
+                        return true;
+                    }
+                } else {
+                    newContact.setGeo(address.geo());
+                }
             }
         }
     }

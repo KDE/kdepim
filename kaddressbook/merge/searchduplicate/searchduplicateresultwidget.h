@@ -34,6 +34,7 @@ class CollectionComboBox;
 namespace KABMergeContacts
 {
 class ResultDuplicateTreeWidget;
+class MergeContactLoseInformationWarning;
 class KADDRESSBOOK_EXPORT SearchDuplicateResultWidget : public QWidget
 {
     Q_OBJECT
@@ -58,6 +59,7 @@ private:
     KAddressBookGrantlee::GrantleeContactViewer *mContactViewer;
     QPushButton *mMergeContact;
     Akonadi::CollectionComboBox *mCollectionCombobox;
+    MergeContactLoseInformationWarning *mMergeContactWarning;
     int mIndexListContact;
 };
 }

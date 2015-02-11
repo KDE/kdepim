@@ -27,12 +27,12 @@
 #include <KLocalizedString>
 #include <KSharedConfig>
 
-#include <QTabWidget>
 #include <QVBoxLayout>
 #include <QCheckBox>
 #include <KConfigGroup>
 #include <QDialogButtonBox>
 #include <QPushButton>
+#include <QGroupBox>
 
 SieveEditorConfigureDialog::SieveEditorConfigureDialog(QWidget *parent)
     : QDialog(parent)
@@ -46,30 +46,25 @@ SieveEditorConfigureDialog::SieveEditorConfigureDialog(QWidget *parent)
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &SieveEditorConfigureDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &SieveEditorConfigureDialog::reject);
-    mTabWidget = new QTabWidget;
-    mainLayout->addWidget(mTabWidget);
+    QGroupBox *w = new QGroupBox(i18n("Server Sieve"));
+
+    QVBoxLayout *layout = new QVBoxLayout;
+    w->setLayout(layout);
+    mServerWidget = new SieveEditorConfigureServerWidget;
+    layout->addWidget(mServerWidget);
+
+    mCloseWallet = new QCheckBox(i18n("Close wallet when close application"));
+    layout->addWidget(mCloseWallet);
+
+    mainLayout->addWidget(w);
     mainLayout->addWidget(buttonBox);
-    initializeServerSieveSettings();
+    loadServerSieveConfig();
     readConfig();
 }
 
 SieveEditorConfigureDialog::~SieveEditorConfigureDialog()
 {
     writeConfig();
-}
-
-void SieveEditorConfigureDialog::initializeServerSieveSettings()
-{
-    QWidget *w = new QWidget;
-    QVBoxLayout *vbox = new QVBoxLayout;
-    w->setLayout(vbox);
-    mTabWidget->addTab(w, i18n("Server Sieve"));
-    mServerWidget = new SieveEditorConfigureServerWidget;
-    vbox->addWidget(mServerWidget);
-
-    mCloseWallet = new QCheckBox(i18n("Close wallet when close application"));
-    vbox->addWidget(mCloseWallet);
-    loadServerSieveConfig();
 }
 
 void SieveEditorConfigureDialog::loadServerSieveConfig()

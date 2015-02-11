@@ -27,3 +27,10 @@ add_akonadi_isolated_test_advanced( searchduplicateresultwidgettest.cpp "" "kadd
 add_akonadi_isolated_test_advanced( resultduplicatetreewidgettest.cpp "" "kaddressbookprivate;KF5::Contacts")
 add_akonadi_isolated_test_advanced( mergecontactselectinformationwidgettest.cpp "" "kaddressbookprivate;KF5::Contacts")
 add_akonadi_isolated_test_advanced( mergecontactselectlistwidgettest.cpp "" "kaddressbookprivate;KF5::Contacts")
+
+set( kaddressbook_merge_mergecontactloseinformationwarning_source mergecontactloseinformationwarningtest.cpp ../widgets/mergecontactloseinformationwarning.cpp )
+add_executable( mergecontactloseinformationwarningtest ${kaddressbook_merge_mergecontactloseinformationwarning_source})
+add_test(mergecontactloseinformationwarningtest mergecontactloseinformationwarningtest)
+ecm_mark_as_test(mergecontactloseinformationwarningtest)
+target_link_libraries( mergecontactloseinformationwarningtest Qt5::Test  Qt5::Gui kaddressbookprivate)
+

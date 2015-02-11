@@ -116,6 +116,9 @@ void MergeContactWidget::slotUpdateMergeButton()
 
 void MergeContactWidget::slotMergeContacts()
 {
+    mMergeButton->setEnabled(false);
+    mCollectionCombobox->setEnabled(false);
+
     const Akonadi::Item::List lstItems = listSelectedContacts();
     const Akonadi::Collection col = mCollectionCombobox->currentCollection();
     if (col.isValid()) {
