@@ -31,7 +31,7 @@ public:
     ~AttachmentVcardFromAddressBookJob();
 
 protected Q_SLOTS:
-    virtual void doStart() Q_DECL_OVERRIDE;
+    void doStart() Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void slotExpandGroupResult(KJob *job);

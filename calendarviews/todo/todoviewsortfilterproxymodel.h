@@ -38,7 +38,7 @@ public:
     explicit TodoViewSortFilterProxyModel(const EventViews::PrefsPtr &prefs,
                                           QObject *parent = Q_NULLPTR);
 
-    void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
+    void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) Q_DECL_OVERRIDE;
 
     const QStringList &categories() const
     {

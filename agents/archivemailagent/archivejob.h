@@ -62,7 +62,7 @@ public:
 
     MailCommon::ScheduledJob *run() Q_DECL_OVERRIDE;
 
-    int taskTypeId() const override
+    int taskTypeId() const Q_DECL_OVERRIDE
     {
         return 2;
     }

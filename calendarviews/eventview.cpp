@@ -61,7 +61,7 @@ using namespace KCalCore;
 using namespace EventViews;
 using namespace Akonadi;
 
-CalendarSupport::CollectionSelection *EventViewPrivate::sGlobalCollectionSelection = 0;
+CalendarSupport::CollectionSelection *EventViewPrivate::sGlobalCollectionSelection = Q_NULLPTR;
 
 /* static */
 void EventView::setGlobalCollectionSelection(CalendarSupport::CollectionSelection *s)
@@ -429,7 +429,7 @@ KCheckableProxyModel *EventView::takeCustomCollectionSelectionProxyModel()
 {
     Q_D(EventView);
     KCheckableProxyModel *m = d->collectionSelectionModel;
-    d->collectionSelectionModel = 0;
+    d->collectionSelectionModel = Q_NULLPTR;
     d->setUpModels();
     return m;
 }
@@ -537,7 +537,7 @@ void EventView::restoreConfig(const KConfigGroup &configGroup)
     const bool useCustom = configGroup.readEntry("UseCustomCollectionSelection", false);
     if (!d->collectionSelectionModel && !useCustom) {
         delete d->collectionSelectionModel;
-        d->collectionSelectionModel = 0;
+        d->collectionSelectionModel = Q_NULLPTR;
         d->setUpModels();
     } else if (useCustom) {
 
@@ -576,7 +576,7 @@ void EventView::restoreConfig(const KConfigGroup &configGroup)
 void EventView::saveConfig(KConfigGroup &configGroup)
 {
     Q_D(EventView);
-    configGroup.writeEntry("UseCustomCollectionSelection", d->collectionSelectionModel != 0);
+    configGroup.writeEntry("UseCustomCollectionSelection", d->collectionSelectionModel != Q_NULLPTR);
 
     if (d->collectionSelectionModel) {
         KConfigGroup selectionGroup =

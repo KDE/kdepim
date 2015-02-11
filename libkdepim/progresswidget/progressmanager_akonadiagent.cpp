@@ -42,7 +42,7 @@ ProgressItem *ProgressManager::createProgressItemForAgent(ProgressItem *parent,
         ProgressItem::CryptoStatus cryptoStatus,
         unsigned int progressType)
 {
-    const bool itemAlreadyExists = (mTransactions.value(id) != 0);
+    const bool itemAlreadyExists = (mTransactions.value(id) != Q_NULLPTR);
     ProgressItem *t = createProgressItemImpl(parent, id, label, status, cancellable, cryptoStatus);
     t->setTypeProgressItem(progressType);
     // TODO ^ emits progressItemAdded() before I'm done connecting the signals.

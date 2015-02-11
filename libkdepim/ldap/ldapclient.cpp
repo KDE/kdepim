@@ -46,9 +46,9 @@ class LdapClient::Private
 public:
     Private(LdapClient *qq)
         : q(qq),
-          mJob(0),
+          mJob(Q_NULLPTR),
           mActive(false),
-          mSession(0)
+          mSession(Q_NULLPTR)
     {
     }
 
@@ -174,7 +174,7 @@ void LdapClient::cancelQuery()
 {
     if (d->mJob) {
         d->mJob->kill();
-        d->mJob = 0;
+        d->mJob = Q_NULLPTR;
     }
 
     d->mActive = false;

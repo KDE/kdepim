@@ -68,25 +68,25 @@ public:
     explicit RecipientLineNG(QWidget *parent);
     virtual ~RecipientLineNG() {}
 
-    virtual void activate() Q_DECL_OVERRIDE;
-    virtual bool isActive() const Q_DECL_OVERRIDE;
+    void activate() Q_DECL_OVERRIDE;
+    bool isActive() const Q_DECL_OVERRIDE;
 
-    virtual bool isEmpty() const Q_DECL_OVERRIDE;
-    virtual void clear() Q_DECL_OVERRIDE;
+    bool isEmpty() const Q_DECL_OVERRIDE;
+    void clear() Q_DECL_OVERRIDE;
 
-    virtual bool isModified() const Q_DECL_OVERRIDE;
-    virtual void clearModified() Q_DECL_OVERRIDE;
+    bool isModified() const Q_DECL_OVERRIDE;
+    void clearModified() Q_DECL_OVERRIDE;
 
-    virtual KPIM::MultiplyingLineData::Ptr data() const Q_DECL_OVERRIDE;
-    virtual void setData(const KPIM::MultiplyingLineData::Ptr &data) Q_DECL_OVERRIDE;
+    KPIM::MultiplyingLineData::Ptr data() const Q_DECL_OVERRIDE;
+    void setData(const KPIM::MultiplyingLineData::Ptr &data) Q_DECL_OVERRIDE;
 
-    virtual void fixTabOrder(QWidget *previous) Q_DECL_OVERRIDE;
-    virtual QWidget *tabOut() const Q_DECL_OVERRIDE;
+    void fixTabOrder(QWidget *previous) Q_DECL_OVERRIDE;
+    QWidget *tabOut() const Q_DECL_OVERRIDE;
 
-    virtual void moveCompletionPopup() Q_DECL_OVERRIDE;
-    virtual void setCompletionMode(KCompletion::CompletionMode mode) Q_DECL_OVERRIDE;
+    void moveCompletionPopup() Q_DECL_OVERRIDE;
+    void setCompletionMode(KCompletion::CompletionMode mode) Q_DECL_OVERRIDE;
 
-    virtual int setColumnWidth(int w) Q_DECL_OVERRIDE;
+    int setColumnWidth(int w) Q_DECL_OVERRIDE;
 
     // recipient specific methods
     int recipientsCount() const;

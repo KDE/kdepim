@@ -284,7 +284,7 @@ public:
         reset();
     }
 
-    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE
     {
         if (!parent.isValid()) {
             return mContactList.count();
@@ -303,7 +303,7 @@ public:
     }
 
     virtual QVariant headerData(int section, Qt::Orientation orientation,
-                                int role = Qt::DisplayRole) const
+                                int role = Qt::DisplayRole) const Q_DECL_OVERRIDE
     {
         if (orientation == Qt::Vertical || role != Qt::DisplayRole || section < 0 || section > 17) {
             return QVariant();
@@ -373,7 +373,7 @@ public:
         return QVariant();
     }
 
-    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE
     {
         if (!index.isValid()) {
             return QVariant();
@@ -469,7 +469,7 @@ public:
         : q(qq),
           mNumHosts(0),
           mIsConfigured(false),
-          mModel(0)
+          mModel(Q_NULLPTR)
     {
     }
 

@@ -163,12 +163,12 @@ public:
 
     AgendaItem::QPtr prevMoveItem() const
     {
-        return (mStartMoveInfo) ? (mStartMoveInfo->mPrevMultiItem) : 0;
+        return (mStartMoveInfo) ? (mStartMoveInfo->mPrevMultiItem) : Q_NULLPTR;
     }
 
     AgendaItem::QPtr nextMoveItem() const
     {
-        return (mStartMoveInfo) ? (mStartMoveInfo->mNextMultiItem) : 0;
+        return (mStartMoveInfo) ? (mStartMoveInfo->mNextMultiItem) : Q_NULLPTR;
     }
 
     MultiItemInfo *moveInfo() const
@@ -187,22 +187,22 @@ public:
 
     AgendaItem::QPtr firstMultiItem() const
     {
-        return (mMultiItemInfo) ? (mMultiItemInfo->mFirstMultiItem) : 0;
+        return (mMultiItemInfo) ? (mMultiItemInfo->mFirstMultiItem) : Q_NULLPTR;
     }
 
     AgendaItem::QPtr prevMultiItem() const
     {
-        return (mMultiItemInfo) ? (mMultiItemInfo->mPrevMultiItem) : 0;
+        return (mMultiItemInfo) ? (mMultiItemInfo->mPrevMultiItem) : Q_NULLPTR;
     }
 
     AgendaItem::QPtr nextMultiItem() const
     {
-        return (mMultiItemInfo) ? (mMultiItemInfo->mNextMultiItem) : 0;
+        return (mMultiItemInfo) ? (mMultiItemInfo->mNextMultiItem) : Q_NULLPTR;
     }
 
     AgendaItem::QPtr lastMultiItem() const
     {
-        return (mMultiItemInfo) ? (mMultiItemInfo->mLastMultiItem) : 0;
+        return (mMultiItemInfo) ? (mMultiItemInfo->mLastMultiItem) : Q_NULLPTR;
     }
 
     bool dissociateFromMultiItem();
@@ -238,10 +238,10 @@ public:
     void setConflictItems(QList<AgendaItem::QPtr>);
     void addConflictItem(AgendaItem::QPtr ci);
 
-    QString label() const;
+    QString label() const Q_DECL_OVERRIDE;
 
     /** Tells whether this item overlaps item @p o */
-    bool overlaps(CellItem *o) const;
+    bool overlaps(CellItem *o) const Q_DECL_OVERRIDE;
 
     void setResourceColor(const QColor &color)
     {

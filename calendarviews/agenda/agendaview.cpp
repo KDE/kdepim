@@ -181,20 +181,20 @@ class AgendaView::Private : public Akonadi::ETMCalendar::CalendarObserver
 public:
     explicit Private(AgendaView *parent, bool isInteractive, bool isSideBySide)
         : q(parent),
-          mTopDayLabels(0),
-          mLayoutTopDayLabels(0),
-          mTopDayLabelsFrame(0),
-          mLayoutBottomDayLabels(0),
-          mBottomDayLabels(0),
-          mBottomDayLabelsFrame(0),
-          mTimeBarHeaderFrame(0),
-          mAllDayAgenda(0),
-          mAgenda(0),
-          mTimeLabelsZone(0),
+          mTopDayLabels(Q_NULLPTR),
+          mLayoutTopDayLabels(Q_NULLPTR),
+          mTopDayLabelsFrame(Q_NULLPTR),
+          mLayoutBottomDayLabels(Q_NULLPTR),
+          mBottomDayLabels(Q_NULLPTR),
+          mBottomDayLabelsFrame(Q_NULLPTR),
+          mTimeBarHeaderFrame(Q_NULLPTR),
+          mAllDayAgenda(Q_NULLPTR),
+          mAgenda(Q_NULLPTR),
+          mTimeLabelsZone(Q_NULLPTR),
           mAllowAgendaUpdate(true),
           mUpdateItem(0),
           mIsSideBySide(isSideBySide),
-          mDummyAllDayLeft(0),
+          mDummyAllDayLeft(Q_NULLPTR),
           mUpdateAllDayAgenda(true),
           mUpdateAgenda(true),
           mIsInteractive(isInteractive),
@@ -1614,7 +1614,7 @@ void AgendaView::showIncidences(const Akonadi::Item::List &incidences, const QDa
     }
 
     if (!wehaveall) {
-        calendar()->setFilter(0);
+        calendar()->setFilter(Q_NULLPTR);
     }
 
     const KDateTime::Spec timeSpec = preferences()->timeSpec();
@@ -2210,7 +2210,7 @@ CalendarDecoration::Decoration *AgendaView::Private::loadCalendarDecoration(cons
 
             if (!factory) {
                 qCDebug(CALENDARVIEW_LOG) << "Factory creation failed";
-                return 0;
+                return Q_NULLPTR;
             }
 
             CalendarDecoration::DecorationFactory *pluginFactory =
@@ -2218,14 +2218,14 @@ CalendarDecoration::Decoration *AgendaView::Private::loadCalendarDecoration(cons
 
             if (!pluginFactory) {
                 qCDebug(CALENDARVIEW_LOG) << "Cast failed";
-                return 0;
+                return Q_NULLPTR;
             }
 
             return pluginFactory->createPluginFactory();
         }
     }
 
-    return 0;
+    return Q_NULLPTR;
 }
 
 void AgendaView::setChanges(EventView::Changes changes)

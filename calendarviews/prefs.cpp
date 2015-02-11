@@ -112,9 +112,9 @@ public:
     QSet<EventViews::EventView::ItemIcon> mMonthViewIcons;
 
 protected:
-    void usrSetDefaults();
-    void usrRead();
-    bool usrSave();
+    void usrSetDefaults() Q_DECL_OVERRIDE;
+    void usrRead() Q_DECL_OVERRIDE;
+    bool usrSave() Q_DECL_OVERRIDE;
 
     void setTimeZoneDefault();
 };
@@ -261,7 +261,7 @@ void BaseConfig::setTimeZoneDefault()
 class Prefs::Private
 {
 public:
-    Private(Prefs *parent) : mAppConfig(0), q(parent) {}
+    Private(Prefs *parent) : mAppConfig(Q_NULLPTR), q(parent) {}
     Private(Prefs *parent, KCoreConfigSkeleton *appConfig)
         : mAppConfig(appConfig), q(parent) {}
 
@@ -308,7 +308,7 @@ KConfigSkeletonItem *Prefs::Private::appConfigItem(
         return mAppConfig->findItem(baseConfigItem->name());
     }
 
-    return 0;
+    return Q_NULLPTR;
 }
 
 void Prefs::Private::setBool(KCoreConfigSkeleton::ItemBool *baseConfigItem, bool value)
@@ -1011,7 +1011,7 @@ void Prefs::setTimeScaleTimezones(const QStringList &list)
 
 KConfigSkeleton::ItemFont *Prefs::fontItem(const QString &name) const
 {
-    KConfigSkeletonItem *item = d->mAppConfig ? d->mAppConfig->findItem(name) : 0;
+    KConfigSkeletonItem *item = d->mAppConfig ? d->mAppConfig->findItem(name) : Q_NULLPTR;
 
     if (!item) {
         item = d->mBaseConfig.findItem(name);

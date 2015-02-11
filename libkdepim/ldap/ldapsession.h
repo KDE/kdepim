@@ -38,7 +38,7 @@ class LdapSession : public QThread
 {
     Q_OBJECT
 public:
-    explicit LdapSession(QObject *parent = 0);
+    explicit LdapSession(QObject *parent = nullptr);
 
     /// call this instead of start()
     void connectToServer(const LdapServer &server);
@@ -53,7 +53,7 @@ public:
 protected:
     void connectToServerInternal();
     void disconnectFromServerInternal();
-    void run();
+    void run() override;
 
 private:
     void authenticate();

@@ -193,7 +193,7 @@ void WhatsNextView::updateView()
     events = calendar()->events(QDate::currentDate(), QDate(2975, 12, 6), timeSpec);
     Q_FOREACH (const KCalCore::Event::Ptr &ev, events) {
         KCalCore::Attendee::Ptr me = ev->attendeeByMails(myEmails);
-        if (me != 0) {
+        if (me != Q_NULLPTR) {
             if (me->status() == KCalCore::Attendee::NeedsAction && me->RSVP()) {
                 if (replies == 0) {
                     mText += QLatin1String("<p></p>");
@@ -213,7 +213,7 @@ void WhatsNextView::updateView()
     todos = calendar()->todos();
     Q_FOREACH (const KCalCore::Todo::Ptr &to, todos) {
         KCalCore::Attendee::Ptr me = to->attendeeByMails(myEmails);
-        if (me != 0) {
+        if (me != Q_NULLPTR) {
             if (me->status() == KCalCore::Attendee::NeedsAction && me->RSVP()) {
                 if (replies == 0) {
                     mText += QLatin1String("<p></p>");

@@ -65,7 +65,7 @@ public:
     /**
      * Hides the popup list if it is currently shown.
      */
-    virtual void hidePopup();
+    void hidePopup() Q_DECL_OVERRIDE;
 
     /**
      * Returns the default text that is shown when no items are selected.

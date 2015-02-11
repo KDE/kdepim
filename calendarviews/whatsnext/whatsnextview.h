@@ -40,7 +40,7 @@ class WhatsNextTextBrowser : public QTextBrowser
 public:
     explicit WhatsNextTextBrowser(QWidget *parent) : QTextBrowser(parent) {}
     /** Reimplemented from QTextBrowser to handle links. */
-    void setSource(const QUrl &name);
+    void setSource(const QUrl &name) Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     void showIncidence(const QString &uid);
@@ -56,12 +56,12 @@ public:
     explicit WhatsNextView(QWidget *parent = Q_NULLPTR);
     ~WhatsNextView();
 
-    /**reimp*/ int currentDateCount() const;
-    /**reimp*/ Akonadi::Item::List selectedIncidences() const
+    /**reimp*/ int currentDateCount() const Q_DECL_OVERRIDE;
+    /**reimp*/ Akonadi::Item::List selectedIncidences() const Q_DECL_OVERRIDE
     {
         return Akonadi::Item::List();
     }
-    /**reimp*/ KCalCore::DateList selectedIncidenceDates() const
+    /**reimp*/ KCalCore::DateList selectedIncidenceDates() const Q_DECL_OVERRIDE
     {
         return KCalCore::DateList();
     }
@@ -72,9 +72,9 @@ public:
     }
 
 public Q_SLOTS:
-    /**reimp*/ void updateView();
-    /**reimp*/ void showDates(const QDate &start, const QDate &end, const QDate &preferredMonth);
-    /**reimp*/ void showIncidences(const Akonadi::Item::List &incidenceList, const QDate &date);
+    /**reimp*/ void updateView() Q_DECL_OVERRIDE;
+    /**reimp*/ void showDates(const QDate &start, const QDate &end, const QDate &preferredMonth) Q_DECL_OVERRIDE;
+    /**reimp*/ void showIncidences(const Akonadi::Item::List &incidenceList, const QDate &date) Q_DECL_OVERRIDE;
 
     /**reimp*/ void changeIncidenceDisplay(const Akonadi::Item &, Akonadi::IncidenceChanger::ChangeType);
 

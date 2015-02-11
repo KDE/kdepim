@@ -96,7 +96,7 @@ bool MonthCell::hasEventBelow(int height)
     }
 
     for (int i = 0; i < height; ++i) {
-        if (mHeightHash.value(i) != 0) {
+        if (mHeightHash.value(i) != Q_NULLPTR) {
             return true;
         }
     }
@@ -116,11 +116,11 @@ void MonthCell::addMonthItem(MonthItem *manager, int height)
 
 int MonthCell::firstFreeSpace()
 {
-    MonthItem *manager = 0;
+    MonthItem *manager = Q_NULLPTR;
     int i = 0;
     while (true) {
         manager = mHeightHash[ i ];
-        if (manager == 0) {
+        if (manager == Q_NULLPTR) {
             return i;
         }
         i++;
@@ -133,7 +133,7 @@ static const int ft = 2; // frame thickness
 
 //QT5
 MonthGraphicsItem::MonthGraphicsItem(MonthItem *manager)
-    : QGraphicsItem(0/*, manager->monthScene()*/),
+    : QGraphicsItem(Q_NULLPTR/*, manager->monthScene()*/),
       mMonthItem(manager), mToolTipNeedsUpdate(false)
 {
     QTransform transform;

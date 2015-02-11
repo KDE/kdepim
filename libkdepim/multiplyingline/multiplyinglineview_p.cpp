@@ -35,7 +35,7 @@
 using namespace KPIM;
 
 MultiplyingLineView::MultiplyingLineView(MultiplyingLineFactory *factory, MultiplyingLineEditor *parent)
-    : QScrollArea(parent), mCurDelLine(0),
+    : QScrollArea(parent), mCurDelLine(Q_NULLPTR),
       mLineHeight(0), mFirstColumnWidth(0),
       mModified(false),
       mPage(new QWidget(this)), mTopLayout(new QVBoxLayout(this)),
@@ -64,7 +64,7 @@ MultiplyingLine *MultiplyingLineView::emptyLine() const
             return line;
         }
     }
-    return 0;
+    return Q_NULLPTR;
 }
 
 MultiplyingLine *MultiplyingLineView::addLine()
@@ -76,7 +76,7 @@ MultiplyingLine *MultiplyingLineView::addLine()
             KMessageBox::sorry(this,
                                i18n("We can not add more recipients. We have reached maximum recipients"));
 
-            return 0;
+            return Q_NULLPTR;
         }
     }
     MultiplyingLine *line = mMultiplyingLineFactory->newLine(widget());
@@ -188,7 +188,7 @@ void MultiplyingLineView::slotDeleteLine()
 
     mLines.removeAll(line);
     line->hide();
-    line->setParent(0);
+    line->setParent(Q_NULLPTR);
     line->deleteLater();
 
     if (pos > 0) {
@@ -295,7 +295,7 @@ void MultiplyingLineView::removeData(const MultiplyingLineData::Ptr &data)
 {
     // search a line which matches recipient and type
     QListIterator<MultiplyingLine *> it(mLines);
-    MultiplyingLine *line = 0;
+    MultiplyingLine *line = Q_NULLPTR;
     while (it.hasNext()) {
         line = it.next();
         if (line->data() == data) {

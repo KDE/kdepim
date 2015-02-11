@@ -35,7 +35,7 @@ class LdapQueryJob : public KJob
 public:
     LdapQueryJob(const LdapUrl &url, LdapSession *session);
 
-    void start();
+    void start() override;
 
 public Q_SLOTS:
     void triggerStart();

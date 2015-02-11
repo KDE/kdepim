@@ -68,7 +68,7 @@ static bool isDueToday(const KCalCore::Todo::Ptr &todo)
 }
 
 TodoModel::Private::Private(const EventViews::PrefsPtr &preferences,
-                            TodoModel *qq) : QObject(), m_changer(0)
+                            TodoModel *qq) : QObject(), m_changer(Q_NULLPTR)
     , m_preferences(preferences)
     , q(qq)
 {
@@ -730,7 +730,7 @@ bool TodoModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
             while (tmp) {
                 if (tmp->uid() == todo->uid()) {   //correct, don't use instanceIdentifier() here
                     KMessageBox::information(
-                        0,
+                        Q_NULLPTR,
                         i18n("Cannot move to-do to itself or a child of itself."),
                         i18n("Drop To-do"), QStringLiteral("NoDropTodoOntoItself"));
                     return false;
@@ -796,7 +796,7 @@ bool TodoModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
 Qt::ItemFlags TodoModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid()) {
-        return 0;
+        return Q_NULLPTR;
     }
 
     Qt::ItemFlags ret = QAbstractItemModel::flags(index);
@@ -808,7 +808,7 @@ Qt::ItemFlags TodoModel::flags(const QModelIndex &index) const
         Q_ASSERT(mapToSource(index).isValid());
         qCWarning(CALENDARVIEW_LOG) << "Item is invalid " << index;
         Q_ASSERT(false);
-        return 0;
+        return Q_NULLPTR;
     }
 
     ret |= Qt::ItemIsDragEnabled;

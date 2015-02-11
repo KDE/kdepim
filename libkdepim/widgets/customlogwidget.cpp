@@ -36,9 +36,9 @@ LogItemDelegate::~LogItemDelegate()
 QTextDocument *LogItemDelegate::document(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     if (!index.isValid()) {
-        return 0;
+        return Q_NULLPTR;
     }
-    QTextDocument *document = new QTextDocument(0);
+    QTextDocument *document = new QTextDocument(Q_NULLPTR);
     document->setDocumentMargin(1);
     const QColor textColor = index.data(Qt::ForegroundRole).value<QColor>();
     QStyleOptionViewItemV4 option4 = option;
@@ -103,7 +103,7 @@ QSize LogItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModel
 
 QWidget  *LogItemDelegate::createEditor(QWidget *, const QStyleOptionViewItem &, const QModelIndex &) const
 {
-    return 0;
+    return Q_NULLPTR;
 }
 
 CustomLogWidget::CustomLogWidget(QWidget *parent)

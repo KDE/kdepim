@@ -54,7 +54,7 @@ public:
     QHash<QString, bool> blackListItemChanged() const;
 
 protected:
-    void paintEvent(QPaintEvent *event);
+    void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
 public Q_SLOTS:
     void slotEmailFound(const QStringList &);

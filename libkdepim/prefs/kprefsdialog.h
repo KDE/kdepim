@@ -107,10 +107,10 @@ public:
     */
     QCheckBox *checkBox();
 
-    void readConfig();
-    void writeConfig();
+    void readConfig() Q_DECL_OVERRIDE;
+    void writeConfig() Q_DECL_OVERRIDE;
 
-    QList<QWidget *> widgets() const;
+    QList<QWidget *> widgets() const Q_DECL_OVERRIDE;
 
 private:
     KConfigSkeleton::ItemBool *mItem;
@@ -147,10 +147,10 @@ public:
     */
     QSpinBox *spinBox();
 
-    void readConfig();
-    void writeConfig();
+    void readConfig() Q_DECL_OVERRIDE;
+    void writeConfig() Q_DECL_OVERRIDE;
 
-    QList<QWidget *> widgets() const;
+    QList<QWidget *> widgets() const Q_DECL_OVERRIDE;
 
 private:
     KConfigSkeleton::ItemInt *mItem;
@@ -187,8 +187,8 @@ public:
     */
     KTimeComboBox *timeEdit();
 
-    void readConfig();
-    void writeConfig();
+    void readConfig() Q_DECL_OVERRIDE;
+    void writeConfig() Q_DECL_OVERRIDE;
 
 private:
     KConfigSkeleton::ItemDateTime *mItem;
@@ -226,8 +226,8 @@ public:
     */
     QTimeEdit *timeEdit();
 
-    void readConfig();
-    void writeConfig();
+    void readConfig() Q_DECL_OVERRIDE;
+    void writeConfig() Q_DECL_OVERRIDE;
 
 private:
     KConfigSkeleton::ItemDateTime *mItem;
@@ -264,8 +264,8 @@ public:
     */
     KDateComboBox *dateEdit();
 
-    void readConfig();
-    void writeConfig();
+    void readConfig() Q_DECL_OVERRIDE;
+    void writeConfig() Q_DECL_OVERRIDE;
 
 private:
     KConfigSkeleton::ItemDateTime *mItem;
@@ -308,8 +308,8 @@ public:
     */
     KColorButton *button();
 
-    void readConfig();
-    void writeConfig();
+    void readConfig() Q_DECL_OVERRIDE;
+    void writeConfig() Q_DECL_OVERRIDE;
 
 private:
     KConfigSkeleton::ItemColor *mItem;
@@ -358,8 +358,8 @@ public:
     */
     QPushButton *button();
 
-    void readConfig();
-    void writeConfig();
+    void readConfig() Q_DECL_OVERRIDE;
+    void writeConfig() Q_DECL_OVERRIDE;
 
 protected Q_SLOTS:
     void selectFont();
@@ -414,10 +414,10 @@ public:
     */
     QGroupBox *groupBox() const;
 
-    void readConfig();
-    void writeConfig();
+    void readConfig() Q_DECL_OVERRIDE;
+    void writeConfig() Q_DECL_OVERRIDE;
 
-    QList<QWidget *> widgets() const;
+    QList<QWidget *> widgets() const Q_DECL_OVERRIDE;
 
 private:
     KConfigSkeleton::ItemEnum *mItem;
@@ -449,11 +449,11 @@ public:
     explicit KPrefsWidCombo(KConfigSkeleton::ItemEnum *item, QWidget *parent);
     virtual ~KPrefsWidCombo();
 
-    void readConfig();
-    void writeConfig();
+    void readConfig() Q_DECL_OVERRIDE;
+    void writeConfig() Q_DECL_OVERRIDE;
 
     KComboBox *comboBox();
-    QList<QWidget *> widgets() const;
+    QList<QWidget *> widgets() const Q_DECL_OVERRIDE;
 
 private:
     KConfigSkeleton::ItemEnum *mItem;
@@ -495,10 +495,10 @@ public:
     */
     KLineEdit *lineEdit();
 
-    void readConfig();
-    void writeConfig();
+    void readConfig() Q_DECL_OVERRIDE;
+    void writeConfig() Q_DECL_OVERRIDE;
 
-    QList<QWidget *> widgets() const;
+    QList<QWidget *> widgets() const Q_DECL_OVERRIDE;
 
 private:
     KConfigSkeleton::ItemString *mItem;
@@ -546,10 +546,10 @@ public:
     */
     KUrlRequester *urlRequester();
 
-    void readConfig();
-    void writeConfig();
+    void readConfig() Q_DECL_OVERRIDE;
+    void writeConfig() Q_DECL_OVERRIDE;
 
-    QList<QWidget *> widgets() const;
+    QList<QWidget *> widgets() const Q_DECL_OVERRIDE;
 
 private:
     KConfigSkeleton::ItemPath *mItem;
@@ -797,11 +797,11 @@ public:
     KPrefsModule(KConfigSkeleton *,
                  QWidget *parent = Q_NULLPTR, const QVariantList &args = QVariantList());
 
-    virtual void addWid(KPrefsWid *);
+    void addWid(KPrefsWid *) Q_DECL_OVERRIDE;
 
-    void load();
-    void save();
-    void defaults();
+    void load() Q_DECL_OVERRIDE;
+    void save() Q_DECL_OVERRIDE;
+    void defaults() Q_DECL_OVERRIDE;
 
 public Q_SLOTS:
     void slotWidChanged();

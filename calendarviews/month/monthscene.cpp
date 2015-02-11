@@ -43,15 +43,15 @@ MonthScene::MonthScene(MonthView *parent)
     : QGraphicsScene(parent),
       mMonthView(parent),
       mInitialized(false),
-      mClickedItem(0),
-      mActionItem(0),
+      mClickedItem(Q_NULLPTR),
+      mActionItem(Q_NULLPTR),
       mActionInitiated(false),
-      mSelectedItem(0),
-      mStartCell(0),
-      mPreviousCell(0),
+      mSelectedItem(Q_NULLPTR),
+      mStartCell(Q_NULLPTR),
+      mPreviousCell(Q_NULLPTR),
       mActionType(None),
       mStartHeight(0),
-      mCurrentIndicator(0)
+      mCurrentIndicator(Q_NULLPTR)
 {
     mBirthdayPixmap  = SmallIcon(QStringLiteral("view-calendar-birthday"));
     mAnniversaryPixmap = SmallIcon(QStringLiteral("view-calendar-wedding-anniversary"));
@@ -124,7 +124,7 @@ MonthCell *MonthScene::firstCellForMonthItem(MonthItem *manager)
         }
     }
 
-    return 0;
+    return Q_NULLPTR;
 }
 
 void MonthScene::updateGeometry()
@@ -374,9 +374,9 @@ void MonthScene::resetAll()
     qDeleteAll(mManagerList);
     mManagerList.clear();
 
-    mSelectedItem = 0;
-    mActionItem = 0;
-    mClickedItem = 0;
+    mSelectedItem = Q_NULLPTR;
+    mActionItem = Q_NULLPTR;
+    mClickedItem = Q_NULLPTR;
 }
 
 Akonadi::IncidenceChanger *MonthScene::incidenceChanger() const
@@ -578,8 +578,8 @@ void MonthScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
     QPointF pos = mouseEvent->scenePos();
 
-    mClickedItem = 0;
-    mCurrentIndicator = 0;
+    mClickedItem = Q_NULLPTR;
+    mCurrentIndicator = Q_NULLPTR;
 
     MonthGraphicsItem *iItem = dynamic_cast<MonthGraphicsItem *>(itemAt(pos));
     if (iItem) {
@@ -621,7 +621,7 @@ void MonthScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         repeatTimer.start(AUTO_REPEAT_DELAY, this);
     } else {
         // unselect items when clicking somewhere else
-        selectItem(0);
+        selectItem(Q_NULLPTR);
 
         MonthCell *cell = getCellFromPos(pos);
         if (cell) {
@@ -642,7 +642,7 @@ void MonthScene::timerEvent(QTimerEvent *e)
             clickOnScrollIndicator(mCurrentIndicator);
             repeatTimer.start(AUTO_REPEAT_DELAY, this);
         } else {
-            mCurrentIndicator = 0;
+            mCurrentIndicator = Q_NULLPTR;
             repeatTimer.stop();
         }
     }
@@ -655,7 +655,7 @@ void MonthScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
     static_cast<MonthGraphicsView *>(views().first())->setActionCursor(None);
 
     repeatTimer.stop();
-    mCurrentIndicator = 0;
+    mCurrentIndicator = Q_NULLPTR;
 
     if (mActionItem) {
         MonthCell *currentCell = getCellFromPos(pos);
@@ -670,9 +670,9 @@ void MonthScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
             }
         }
 
-        mActionItem = 0;
+        mActionItem = Q_NULLPTR;
         mActionType = None;
-        mStartCell = 0;
+        mStartCell = Q_NULLPTR;
 
         mouseEvent->accept();
     }
@@ -692,7 +692,7 @@ MonthCell *MonthScene::getCellFromPos(const QPointF &pos)
     int y = sceneYToMonthGridY(static_cast<int>(pos.y()));
     int x = sceneXToMonthGridX(static_cast<int>(pos.x()));
     if (!isInMonthGrid(x, y)) {
-        return 0;
+        return Q_NULLPTR;
     }
     int id = (int)(y / rowHeight()) * 7 + (int)(x / columnWidth());
 
@@ -714,7 +714,7 @@ void MonthScene::selectItem(MonthItem *item)
     IncidenceMonthItem *tmp = qobject_cast<IncidenceMonthItem *>(item);
 
     if (!tmp) {
-        mSelectedItem = 0;
+        mSelectedItem = Q_NULLPTR;
         emit incidenceSelected(Akonadi::Item(), QDate());
         return;
     }

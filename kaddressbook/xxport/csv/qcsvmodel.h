@@ -109,7 +109,7 @@ public:
     /**
      * Inherited from QAbstractTableModel.
      */
-    virtual bool setData(const QModelIndex &index, const QVariant &data, int role = Qt::EditRole) Q_DECL_OVERRIDE;
+    bool setData(const QModelIndex &index, const QVariant &data, int role = Qt::EditRole) Q_DECL_OVERRIDE;
 
     /**
      * Inherited from QAbstractTableModel.

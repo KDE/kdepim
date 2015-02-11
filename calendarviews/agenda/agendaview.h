@@ -107,24 +107,24 @@ public:
     };
 
     /** Returns number of currently shown dates. */
-    virtual int currentDateCount() const;
+    int currentDateCount() const Q_DECL_OVERRIDE;
 
     /** returns the currently selected events */
-    virtual Akonadi::Item::List selectedIncidences() const;
+    Akonadi::Item::List selectedIncidences() const Q_DECL_OVERRIDE;
 
     /** returns the currently selected incidence's dates */
-    virtual KCalCore::DateList selectedIncidenceDates() const;
+    KCalCore::DateList selectedIncidenceDates() const Q_DECL_OVERRIDE;
 
     /** return the default start/end date/time for new events   */
     virtual bool eventDurationHint(QDateTime &startDt,
                                    QDateTime &endDt,
-                                   bool &allDay) const;
+                                   bool &allDay) const Q_DECL_OVERRIDE;
 
     /** start-datetime of selection */
-    virtual QDateTime selectionStart() const;
+    QDateTime selectionStart() const Q_DECL_OVERRIDE;
 
     /** end-datetime of selection */
-    virtual QDateTime selectionEnd() const;
+    QDateTime selectionEnd() const Q_DECL_OVERRIDE;
 
     /** returns true if selection is for whole day */
     bool selectedIsAllDay() const;
@@ -136,7 +136,7 @@ public:
     bool selectedIsSingleCell() const;
 
     /* reimp from EventView */
-    virtual void setCalendar(const Akonadi::ETMCalendar::Ptr &cal);
+    void setCalendar(const Akonadi::ETMCalendar::Ptr &cal) Q_DECL_OVERRIDE;
 
     QSplitter *splitter() const;
 
@@ -156,15 +156,15 @@ public:
     QVector<bool> busyDayMask() const;
 
 public Q_SLOTS:
-    virtual void updateView();
-    virtual void updateConfig();
+    void updateView() Q_DECL_OVERRIDE;
+    void updateConfig() Q_DECL_OVERRIDE;
 
     virtual void showDates(const QDate &start, const QDate &end,
-                           const QDate &preferredMonth = QDate());
+                           const QDate &preferredMonth = QDate()) Q_DECL_OVERRIDE;
 
-    virtual void showIncidences(const Akonadi::Item::List &incidenceList, const QDate &date);
+    void showIncidences(const Akonadi::Item::List &incidenceList, const QDate &date) Q_DECL_OVERRIDE;
 
-    void clearSelection();
+    void clearSelection() Q_DECL_OVERRIDE;
 
     void startDrag(const Akonadi::Item &);
 
@@ -179,7 +179,7 @@ public Q_SLOTS:
     void slotIncidencesDropped(const QList<QUrl> &incidences, const QPoint &, bool);
 
     void enableAgendaUpdate(bool enable);
-    void setIncidenceChanger(Akonadi::IncidenceChanger *changer);
+    void setIncidenceChanger(Akonadi::IncidenceChanger *changer) Q_DECL_OVERRIDE;
 
     void zoomInHorizontally(const QDate &date = QDate());
     void zoomOutHorizontally(const QDate &date = QDate());
@@ -199,7 +199,7 @@ public Q_SLOTS:
 
     void createTimeBarHeaders();
 
-    void setChanges(EventView::Changes);
+    void setChanges(EventView::Changes) Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     void showNewEventPopupSignal();

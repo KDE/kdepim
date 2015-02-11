@@ -47,7 +47,7 @@ public:
         : QWidget(parent), mTimeSpentView(parent) {}
     ~TimeSpentWidget() {}
 
-    void paintEvent(QPaintEvent *e)
+    void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE
     {
         QPainter p(this);
         p.fillRect(e->rect(), Qt::white);

@@ -45,21 +45,21 @@ public:
 
     int currentDateCount() const Q_DECL_OVERRIDE;
 
-    Akonadi::Item::List selectedIncidences() const
+    Akonadi::Item::List selectedIncidences() const Q_DECL_OVERRIDE
     {
         return Akonadi::Item::List();
     }
 
-    KCalCore::DateList selectedIncidenceDates() const
+    KCalCore::DateList selectedIncidenceDates() const Q_DECL_OVERRIDE
     {
         return KCalCore::DateList();
     }
 
 public Q_SLOTS:
-    virtual void updateView();
+    void updateView() Q_DECL_OVERRIDE;
     virtual void showDates(const QDate &start, const QDate &end,
-                           const QDate &preferredMonth = QDate());
-    virtual void showIncidences(const Akonadi::Item::List &incidenceList, const QDate &date);
+                           const QDate &preferredMonth = QDate()) Q_DECL_OVERRIDE;
+    void showIncidences(const Akonadi::Item::List &incidenceList, const QDate &date) Q_DECL_OVERRIDE;
 
     void changeIncidenceDisplay(const Akonadi::Item &, Akonadi::IncidenceChanger::ChangeType);
 

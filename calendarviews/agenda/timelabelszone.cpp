@@ -145,7 +145,7 @@ QList<QScrollArea *> TimeLabelsZone::timeLabels() const
 void TimeLabelsZone::setAgendaView(AgendaView *agendaView)
 {
     mParent = agendaView;
-    mAgenda = agendaView ? agendaView->agenda() : 0;
+    mAgenda = agendaView ? agendaView->agenda() : Q_NULLPTR;
 
     foreach (QScrollArea *timeLabel, mTimeLabelsList) {
         setupTimeLabel(timeLabel);

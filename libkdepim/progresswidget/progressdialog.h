@@ -56,7 +56,7 @@ class TransactionItemView : public QScrollArea
 {
     Q_OBJECT
 public:
-    explicit TransactionItemView(QWidget *parent = Q_NULLPTR, const char *name = 0);
+    explicit TransactionItemView(QWidget *parent = Q_NULLPTR, const char *name = Q_NULLPTR);
 
     virtual ~TransactionItemView() {}
     TransactionItem *addTransactionItem(ProgressItem *item, bool first);
@@ -105,7 +105,7 @@ public:
     // so better not use mItem during this time.
     void setItemComplete()
     {
-        mItem = 0;
+        mItem = Q_NULLPTR;
     }
 
 public Q_SLOTS:
@@ -127,7 +127,7 @@ class KDEPIM_EXPORT ProgressDialog : public OverlayWidget
 public:
     ProgressDialog(QWidget *alignWidget, QWidget *parent);
     ~ProgressDialog();
-    void setVisible(bool b);
+    void setVisible(bool b) Q_DECL_OVERRIDE;
 
     void setShowTypeProgressItem(unsigned int type);
 

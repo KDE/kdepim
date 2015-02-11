@@ -54,14 +54,14 @@ using namespace EventViews;
 
 //-----------------------------------------------------------------------------
 
-QPixmap *AgendaItem::alarmPxmp = 0;
-QPixmap *AgendaItem::recurPxmp = 0;
-QPixmap *AgendaItem::readonlyPxmp = 0;
-QPixmap *AgendaItem::replyPxmp = 0;
-QPixmap *AgendaItem::groupPxmp = 0;
-QPixmap *AgendaItem::groupPxmpTent = 0;
-QPixmap *AgendaItem::organizerPxmp = 0;
-QPixmap *AgendaItem::eventPxmp = 0;
+QPixmap *AgendaItem::alarmPxmp = Q_NULLPTR;
+QPixmap *AgendaItem::recurPxmp = Q_NULLPTR;
+QPixmap *AgendaItem::readonlyPxmp = Q_NULLPTR;
+QPixmap *AgendaItem::replyPxmp = Q_NULLPTR;
+QPixmap *AgendaItem::groupPxmp = Q_NULLPTR;
+QPixmap *AgendaItem::groupPxmpTent = Q_NULLPTR;
+QPixmap *AgendaItem::organizerPxmp = Q_NULLPTR;
+QPixmap *AgendaItem::eventPxmp = Q_NULLPTR;
 
 //-----------------------------------------------------------------------------
 
@@ -101,8 +101,8 @@ AgendaItem::AgendaItem(EventView *eventView, const Akonadi::ETMCalendar::Ptr &ca
     mIconGroup = false;
     mIconGroupTent = false;
     mIconOrganizer = false;
-    mMultiItemInfo = 0;
-    mStartMoveInfo = 0;
+    mMultiItemInfo = Q_NULLPTR;
+    mStartMoveInfo = Q_NULLPTR;
 
     mItemPos = itemPos;
     mItemCount = itemCount;
@@ -206,7 +206,7 @@ bool AgendaItem::dissociateFromMultiItem()
         nextItem->setMultiItem(firstItem, prevItem, nextItem->prevMultiItem(), lastItem);
     }
     delete mMultiItemInfo;
-    mMultiItemInfo = 0;
+    mMultiItemInfo = Q_NULLPTR;
     return true;
 }
 
@@ -291,10 +291,10 @@ bool AgendaItem::isMultiItem() const
 AgendaItem::QPtr AgendaItem::prependMoveItem(AgendaItem::QPtr e)
 {
     if (!e) {
-        return 0;
+        return Q_NULLPTR;
     }
 
-    AgendaItem::QPtr first = 0, last = 0;
+    AgendaItem::QPtr first = Q_NULLPTR, last = Q_NULLPTR;
     if (isMultiItem()) {
         first = mMultiItemInfo->mFirstMultiItem;
         last = mMultiItemInfo->mLastMultiItem;
@@ -306,7 +306,7 @@ AgendaItem::QPtr AgendaItem::prependMoveItem(AgendaItem::QPtr e)
         last = this;
     }
 
-    e->setMultiItem(0, 0, first, last);
+    e->setMultiItem(Q_NULLPTR, Q_NULLPTR, first, last);
     first->setMultiItem(e, e, first->nextMultiItem(), first->lastMultiItem());
 
     AgendaItem::QPtr tmp = first->nextMultiItem();
@@ -319,7 +319,7 @@ AgendaItem::QPtr AgendaItem::prependMoveItem(AgendaItem::QPtr e)
         e->mStartMoveInfo = new MultiItemInfo(*mStartMoveInfo);
 //    e->moveInfo()->mFirstMultiItem = moveInfo()->mFirstMultiItem;
 //    e->moveInfo()->mLastMultiItem = moveInfo()->mLastMultiItem;
-        e->moveInfo()->mPrevMultiItem = 0;
+        e->moveInfo()->mPrevMultiItem = Q_NULLPTR;
         e->moveInfo()->mNextMultiItem = first;
     }
 
@@ -332,10 +332,10 @@ AgendaItem::QPtr AgendaItem::prependMoveItem(AgendaItem::QPtr e)
 AgendaItem::QPtr AgendaItem::appendMoveItem(AgendaItem::QPtr e)
 {
     if (!e) {
-        return 0;
+        return Q_NULLPTR;
     }
 
-    AgendaItem::QPtr first = 0, last = 0;
+    AgendaItem::QPtr first = Q_NULLPTR, last = Q_NULLPTR;
     if (isMultiItem()) {
         first = mMultiItemInfo->mFirstMultiItem;
         last = mMultiItemInfo->mLastMultiItem;
@@ -347,7 +347,7 @@ AgendaItem::QPtr AgendaItem::appendMoveItem(AgendaItem::QPtr e)
         last = this;
     }
 
-    e->setMultiItem(first, last, 0, 0);
+    e->setMultiItem(first, last, Q_NULLPTR, Q_NULLPTR);
     AgendaItem::QPtr tmp = first;
 
     while (tmp) {
@@ -361,7 +361,7 @@ AgendaItem::QPtr AgendaItem::appendMoveItem(AgendaItem::QPtr e)
 //    e->moveInfo()->mFirstMultiItem = moveInfo()->mFirstMultiItem;
 //    e->moveInfo()->mLastMultiItem = moveInfo()->mLastMultiItem;
         e->moveInfo()->mPrevMultiItem = last;
-        e->moveInfo()->mNextMultiItem = 0;
+        e->moveInfo()->mNextMultiItem = Q_NULLPTR;
     }
     if (last && last->moveInfo()) {
         last->moveInfo()->mNextMultiItem = e;
@@ -383,18 +383,18 @@ AgendaItem::QPtr AgendaItem::removeMoveItem(AgendaItem::QPtr e)
         }
         if (first == e) {
             first = first->nextMultiItem();
-            first->setMultiItem(0, 0, first->nextMultiItem(), first->lastMultiItem());
+            first->setMultiItem(Q_NULLPTR, Q_NULLPTR, first->nextMultiItem(), first->lastMultiItem());
         }
         if (last == e) {
             last = last->prevMultiItem();
-            last->setMultiItem(last->firstMultiItem(), last->prevMultiItem(), 0, 0);
+            last->setMultiItem(last->firstMultiItem(), last->prevMultiItem(), Q_NULLPTR, Q_NULLPTR);
         }
 
         AgendaItem::QPtr tmp =  first;
         if (first == last) {
             delete mMultiItemInfo;
-            tmp = 0;
-            mMultiItemInfo = 0;
+            tmp = Q_NULLPTR;
+            mMultiItemInfo = Q_NULLPTR;
         }
         while (tmp) {
             next = tmp->nextMultiItem();
@@ -405,10 +405,10 @@ AgendaItem::QPtr AgendaItem::removeMoveItem(AgendaItem::QPtr e)
             if (e == prev) {
                 prev = prev->prevMultiItem();
             }
-            tmp->setMultiItem((tmp == first) ? 0 : first,
-                              (tmp == prev) ? 0 : prev,
-                              (tmp == next) ? 0 : next,
-                              (tmp == last) ? 0 : last);
+            tmp->setMultiItem((tmp == first) ? Q_NULLPTR : first,
+                              (tmp == prev) ? Q_NULLPTR : prev,
+                              (tmp == next) ? Q_NULLPTR : next,
+                              (tmp == last) ? Q_NULLPTR : last);
             tmp = tmp->nextMultiItem();
         }
     }
@@ -438,10 +438,10 @@ void AgendaItem::startMovePrivate()
         mStartMoveInfo->mPrevMultiItem = mMultiItemInfo->mPrevMultiItem;
         mStartMoveInfo->mNextMultiItem = mMultiItemInfo->mNextMultiItem;
     } else {
-        mStartMoveInfo->mFirstMultiItem = 0;
-        mStartMoveInfo->mLastMultiItem = 0;
-        mStartMoveInfo->mPrevMultiItem = 0;
-        mStartMoveInfo->mNextMultiItem = 0;
+        mStartMoveInfo->mFirstMultiItem = Q_NULLPTR;
+        mStartMoveInfo->mLastMultiItem = Q_NULLPTR;
+        mStartMoveInfo->mPrevMultiItem = Q_NULLPTR;
+        mStartMoveInfo->mNextMultiItem = Q_NULLPTR;
     }
     if (isMultiItem() && mMultiItemInfo->mNextMultiItem) {
         mMultiItemInfo->mNextMultiItem->startMovePrivate();
@@ -480,7 +480,7 @@ void AgendaItem::resetMovePrivate()
             if (!mStartMoveInfo->mFirstMultiItem) {
                 // This was the first multi-item when the move started, delete all previous
                 AgendaItem::QPtr toDel = mStartMoveInfo->mPrevMultiItem;
-                AgendaItem::QPtr nowDel = 0;
+                AgendaItem::QPtr nowDel = Q_NULLPTR;
                 while (toDel) {
                     nowDel = toDel;
                     if (nowDel->moveInfo()) {
@@ -488,13 +488,13 @@ void AgendaItem::resetMovePrivate()
                     }
                     emit removeAgendaItem(nowDel);
                 }
-                mMultiItemInfo->mFirstMultiItem = 0;
-                mMultiItemInfo->mPrevMultiItem = 0;
+                mMultiItemInfo->mFirstMultiItem = Q_NULLPTR;
+                mMultiItemInfo->mPrevMultiItem = Q_NULLPTR;
             }
             if (!mStartMoveInfo->mLastMultiItem) {
                 // This was the last multi-item when the move started, delete all next
                 AgendaItem::QPtr toDel = mStartMoveInfo->mNextMultiItem;
-                AgendaItem::QPtr nowDel = 0;
+                AgendaItem::QPtr nowDel = Q_NULLPTR;
                 while (toDel) {
                     nowDel = toDel;
                     if (nowDel->moveInfo()) {
@@ -502,18 +502,18 @@ void AgendaItem::resetMovePrivate()
                     }
                     emit removeAgendaItem(nowDel);
                 }
-                mMultiItemInfo->mLastMultiItem = 0;
-                mMultiItemInfo->mNextMultiItem = 0;
+                mMultiItemInfo->mLastMultiItem = Q_NULLPTR;
+                mMultiItemInfo->mNextMultiItem = Q_NULLPTR;
             }
 
-            if (mStartMoveInfo->mFirstMultiItem == 0 && mStartMoveInfo->mLastMultiItem == 0) {
+            if (mStartMoveInfo->mFirstMultiItem == Q_NULLPTR && mStartMoveInfo->mLastMultiItem == Q_NULLPTR) {
                 // it was a single-day event before we started the move.
                 delete mMultiItemInfo;
-                mMultiItemInfo = 0;
+                mMultiItemInfo = Q_NULLPTR;
             }
         }
         delete mStartMoveInfo;
-        mStartMoveInfo = 0;
+        mStartMoveInfo = Q_NULLPTR;
     }
     emit showAgendaItem(this);
     if (nextMultiItem()) {
@@ -536,7 +536,7 @@ void AgendaItem::endMovePrivate()
         // if first, delete all previous
         if (!firstMultiItem() || firstMultiItem() == this) {
             AgendaItem::QPtr toDel = mStartMoveInfo->mPrevMultiItem;
-            AgendaItem::QPtr nowDel = 0;
+            AgendaItem::QPtr nowDel = Q_NULLPTR;
             while (toDel) {
                 nowDel = toDel;
                 if (nowDel->moveInfo()) {
@@ -548,7 +548,7 @@ void AgendaItem::endMovePrivate()
         // if last, delete all next
         if (!lastMultiItem() || lastMultiItem() == this) {
             AgendaItem::QPtr toDel = mStartMoveInfo->mNextMultiItem;
-            AgendaItem::QPtr nowDel = 0;
+            AgendaItem::QPtr nowDel = Q_NULLPTR;
             while (toDel) {
                 nowDel = toDel;
                 if (nowDel->moveInfo()) {
@@ -559,7 +559,7 @@ void AgendaItem::endMovePrivate()
         }
         // also delete the moving info
         delete mStartMoveInfo;
-        mStartMoveInfo = 0;
+        mStartMoveInfo = Q_NULLPTR;
         if (nextMultiItem()) {
             nextMultiItem()->endMovePrivate();
         }

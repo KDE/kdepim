@@ -61,11 +61,11 @@ using namespace KPIM;
 StatusbarProgressWidget::StatusbarProgressWidget(ProgressDialog *progressDialog, QWidget *parent, bool button)
     : QFrame(parent),
       mShowTypeProgressItem(0),
-      mCurrentItem(0),
+      mCurrentItem(Q_NULLPTR),
       mProgressDialog(progressDialog),
-      mDelayTimer(0),
-      mBusyTimer(0),
-      mCleanTimer(0)
+      mDelayTimer(Q_NULLPTR),
+      mBusyTimer(Q_NULLPTR),
+      mCleanTimer(Q_NULLPTR)
 {
     m_bShowButton = button;
     int w = fontMetrics().width(QLatin1String(" 999.9 kB/s 00:00:01 ")) + 8;
@@ -145,7 +145,7 @@ void StatusbarProgressWidget::updateBusyMode(KPIM::ProgressItem *item)
         connectSingleItem(); // if going to 1 item
         if (mCurrentItem) {   // Exactly one item
             delete mBusyTimer;
-            mBusyTimer = 0;
+            mBusyTimer = Q_NULLPTR;
             mDelayTimer->start(1000);
         } else { // N items
             if (!mBusyTimer) {
@@ -171,18 +171,18 @@ void StatusbarProgressWidget::slotProgressItemCompleted(ProgressItem *item)
 {
     if (item->parent()) {
         item->deleteLater();
-        item = 0;
+        item = Q_NULLPTR;
         return; // we are only interested in top level items
     }
     item->deleteLater();
-    item = 0;
+    item = Q_NULLPTR;
     connectSingleItem(); // if going back to 1 item
     if (ProgressManager::instance()->isEmpty()) {   // No item
         // Done. In 5s the progress-widget will close, then we can clean up the statusbar
         mCleanTimer->start(5000);
     } else if (mCurrentItem) {   // Exactly one item
         delete mBusyTimer;
-        mBusyTimer = 0;
+        mBusyTimer = Q_NULLPTR;
         activateSingleItemMode();
     }
 }
@@ -192,7 +192,7 @@ void StatusbarProgressWidget::connectSingleItem()
     if (mCurrentItem) {
         disconnect(mCurrentItem, SIGNAL(progressItemProgress(KPIM::ProgressItem*,uint)),
                    this, SLOT(slotProgressItemProgress(KPIM::ProgressItem*,uint)));
-        mCurrentItem = 0;
+        mCurrentItem = Q_NULLPTR;
     }
     mCurrentItem = ProgressManager::instance()->singleItem();
     if (mCurrentItem) {

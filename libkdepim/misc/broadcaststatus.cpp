@@ -35,7 +35,7 @@ static KPIM::BroadcastStatus *instance_;
 static void deleteGlobalStaticBroadcastStatus()
 {
     delete instance_;
-    instance_ = 0;
+    instance_ = Q_NULLPTR;
 }
 
 namespace KPIM
@@ -57,7 +57,7 @@ BroadcastStatus::BroadcastStatus()
 
 BroadcastStatus::~BroadcastStatus()
 {
-    instance_ = 0;
+    instance_ = Q_NULLPTR;
 }
 
 void BroadcastStatus::setStatusMsg(const QString &message)

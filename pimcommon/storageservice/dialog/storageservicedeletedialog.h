@@ -89,7 +89,7 @@ Q_SIGNALS:
     void deleteFileFolder();
 
 protected:
-    virtual void createMenuActions(QMenu *menu) Q_DECL_OVERRIDE;
+    void createMenuActions(QMenu *menu) Q_DECL_OVERRIDE;
 
 private:
     PimCommon::StorageServiceDeleteDialog::DeleteType mDeleteType;

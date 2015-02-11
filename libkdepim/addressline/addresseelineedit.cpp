@@ -86,9 +86,9 @@ public:
 
     AddresseeLineEditStatic()
         : completion(new KMailCompletion),
-          ldapTimer(0),
-          ldapSearch(0),
-          ldapLineEdit(0),
+          ldapTimer(Q_NULLPTR),
+          ldapSearch(Q_NULLPTR),
+          ldapLineEdit(Q_NULLPTR),
           akonadiSession(new Akonadi::Session("contactsCompletionSession")),
           balooCompletionSource(0)
     {
@@ -103,7 +103,7 @@ public:
 
     void slotEditCompletionOrder()
     {
-        CompletionOrderEditor editor(ldapSearch, 0);
+        CompletionOrderEditor editor(ldapSearch, Q_NULLPTR);
         if (editor.exec()) {
             updateLDAPWeights();
         }
@@ -244,7 +244,7 @@ public:
     void stopLDAPLookup();
     void setCompletedItems(const QStringList &items, bool autoSuggest);
     void addCompletionItem(const QString &string, int weight, int source,
-                           const QStringList *keyWords = 0);
+                           const QStringList *keyWords = Q_NULLPTR);
     const QStringList adjustedCompletionItems(bool fullSearch);
     void updateSearchString();
     void startSearches();
@@ -368,7 +368,7 @@ void AddresseeLineEdit::Private::startLoadingLDAPEntries()
 void AddresseeLineEdit::Private::stopLDAPLookup()
 {
     s_static->ldapSearch->cancelSearch();
-    s_static->ldapLineEdit = 0;
+    s_static->ldapLineEdit = Q_NULLPTR;
 }
 
 QStringList AddresseeLineEdit::cleanupEmailList(const QStringList &inputList)
@@ -1385,7 +1385,7 @@ QMenu *AddresseeLineEdit::createStandardContextMenu()
 
     QMenu *menu = KLineEdit::createStandardContextMenu();
     if (!menu) {
-        return 0;
+        return Q_NULLPTR;
     }
 
     if (d->m_useCompletion) {
@@ -1538,7 +1538,7 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *object, QEvent *event)
         } else if (event->type() == QEvent::KeyRelease &&
                    (keyEvent->key() == Qt::Key_Tab || keyEvent->key() == Qt::Key_Backtab)) {
             /// first, find the header of the current section
-            QListWidgetItem *myHeader = 0;
+            QListWidgetItem *myHeader = Q_NULLPTR;
             int myHeaderIndex = -1;
             const int iterationStep = keyEvent->key() == Qt::Key_Tab ?  1 : -1;
             int index = qMin(qMax(currentIndex - iterationStep, 0), completionBox()->count() - 1);
@@ -1554,7 +1554,7 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *object, QEvent *event)
             Q_ASSERT(myHeader);   // we should always be able to find a header
 
             // find the next header (searching backwards, for Qt::Key_Backtab)
-            QListWidgetItem *nextHeader = 0;
+            QListWidgetItem *nextHeader = Q_NULLPTR;
 
             // when iterating forward, start at the currentindex, when backwards,
             // one up from our header, or at the end

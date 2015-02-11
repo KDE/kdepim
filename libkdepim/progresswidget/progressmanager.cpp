@@ -199,7 +199,7 @@ ProgressManager::~ProgressManager()
 
 ProgressManager *ProgressManager::instance()
 {
-    return progressManagerPrivate.isDestroyed() ? 0 : &progressManagerPrivate->instance ;
+    return progressManagerPrivate.isDestroyed() ? Q_NULLPTR : &progressManagerPrivate->instance ;
 }
 
 QString ProgressManager::getUniqueID()
@@ -214,7 +214,7 @@ bool ProgressManager::isEmpty() const
 
 ProgressItem *ProgressManager::createProgressItem(const QString &id, const QString &label, const QString &status, bool canBeCanceled, ProgressItem::CryptoStatus cryptoStatus)
 {
-    return instance()->createProgressItemImpl(0, id, label, status,
+    return instance()->createProgressItemImpl(Q_NULLPTR, id, label, status,
             canBeCanceled, cryptoStatus);
 }
 
@@ -232,13 +232,13 @@ ProgressItem *ProgressManager::createProgressItem(ProgressItem *parent, const QS
 
 ProgressItem *ProgressManager::createProgressItem(const QString &label)
 {
-    return instance()->createProgressItemImpl(0, getUniqueID(), label,
+    return instance()->createProgressItemImpl(Q_NULLPTR, getUniqueID(), label,
             QString(), true, KPIM::ProgressItem::Unencrypted);
 }
 
 ProgressItem *ProgressManager::createProgressItem(unsigned int progressType, const QString &label)
 {
-    return instance()->createProgressItemImpl(0, getUniqueID(), label,
+    return instance()->createProgressItemImpl(Q_NULLPTR, getUniqueID(), label,
             QString(), true, KPIM::ProgressItem::Unencrypted, progressType);
 }
 
@@ -250,7 +250,7 @@ ProgressItem *ProgressManager::createProgressItemImpl(ProgressItem *parent,
         ProgressItem::CryptoStatus cryptoStatus,
         unsigned int progressType)
 {
-    ProgressItem *t = 0;
+    ProgressItem *t = Q_NULLPTR;
     if (!mTransactions.value(id)) {
         t = new ProgressItem(parent, id, label, status, cancellable, cryptoStatus);
         t->setTypeProgressItem(progressType);
@@ -319,19 +319,19 @@ void ProgressManager::slotStandardCancelHandler(ProgressItem *item)
 
 ProgressItem *ProgressManager::singleItem() const
 {
-    ProgressItem *item = 0;
+    ProgressItem *item = Q_NULLPTR;
     QHash< QString, ProgressItem * >::const_iterator it = mTransactions.constBegin();
     QHash< QString, ProgressItem * >::const_iterator end = mTransactions.constEnd();
     while (it != end) {
 
         // No single item for progress possible, as one of them is a busy indicator one.
         if ((*it)->usesBusyIndicator()) {
-            return 0;
+            return Q_NULLPTR;
         }
 
         if (!(*it)->parent()) {               // if it's a top level one, only those count
             if (item) {
-                return 0; // we found more than one
+                return Q_NULLPTR; // we found more than one
             } else {
                 item = (*it);
             }

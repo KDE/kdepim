@@ -85,7 +85,7 @@ public:
     /**
      * @returns the only possible instance of this class.
      */
-    static RecentAddresses *self(KConfig *config = 0);
+    static RecentAddresses *self(KConfig *config = Q_NULLPTR);
 
     /*
      * @return true if self() was called, i.e. a RecentAddresses instance exists
@@ -142,7 +142,7 @@ public:
     void clear();
 
 private:
-    explicit RecentAddresses(KConfig *config = 0);
+    explicit RecentAddresses(KConfig *config = Q_NULLPTR);
 
     KContacts::Addressee::List m_addresseeList;
 

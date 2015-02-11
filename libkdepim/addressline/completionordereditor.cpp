@@ -74,22 +74,22 @@ public:
         mWeight = mLdapClient->completionWeight();
     }
 
-    virtual QString label() const
+    virtual QString label() const Q_DECL_OVERRIDE
     {
         return i18n("LDAP server %1", mLdapClient->server().host());
     }
 
-    virtual QIcon icon() const
+    virtual QIcon icon() const Q_DECL_OVERRIDE
     {
         return QIcon::fromTheme(QStringLiteral("view-ldap-resource"));
     }
 
-    virtual int completionWeight() const
+    virtual int completionWeight() const Q_DECL_OVERRIDE
     {
         return mWeight;
     }
 
-    virtual void save(CompletionOrderEditor *)
+    virtual void save(CompletionOrderEditor *) Q_DECL_OVERRIDE
     {
         KConfig *config = KLDAP::LdapClientSearchConfig::config();
         KConfigGroup group(config, "LDAP");
@@ -99,7 +99,7 @@ public:
     }
 
 protected:
-    virtual void setCompletionWeight(int weight)
+    virtual void setCompletionWeight(int weight) Q_DECL_OVERRIDE
     {
         mWeight = weight;
     }
@@ -124,29 +124,29 @@ public:
         mIcon = icon;
     }
 
-    virtual QString label() const
+    virtual QString label() const Q_DECL_OVERRIDE
     {
         return mLabel;
     }
 
-    virtual QIcon icon() const
+    virtual QIcon icon() const Q_DECL_OVERRIDE
     {
         return mIcon;
     }
 
-    virtual int completionWeight() const
+    virtual int completionWeight() const Q_DECL_OVERRIDE
     {
         return mWeight;
     }
 
-    virtual void save(CompletionOrderEditor *editor)
+    virtual void save(CompletionOrderEditor *editor) Q_DECL_OVERRIDE
     {
         KConfigGroup group(editor->configFile(), "CompletionWeights");
         group.writeEntry(mIdentifier, mWeight);
     }
 
 protected:
-    virtual void setCompletionWeight(int weight)
+    virtual void setCompletionWeight(int weight) Q_DECL_OVERRIDE
     {
         mWeight = weight;
     }
@@ -181,7 +181,7 @@ public:
         return mItem;
     }
 
-    bool operator<(const QTreeWidgetItem &other) const
+    bool operator<(const QTreeWidgetItem &other) const Q_DECL_OVERRIDE
     {
         const QTreeWidgetItem *otherItem = &other;
         const CompletionViewItem *completionItem = static_cast<const CompletionViewItem *>(otherItem);
@@ -289,14 +289,14 @@ void CompletionOrderEditor::addCompletionItemForIndex(const QModelIndex &index)
     SimpleCompletionItem *item = new SimpleCompletionItem(this, index.data().toString(), QString::number(collection.id()), 60);
     item->setIcon(index.data(Qt::DecorationRole).value<QIcon>());
 
-    new CompletionViewItem(mListView, item, 0);
+    new CompletionViewItem(mListView, item, Q_NULLPTR);
 }
 
 void CompletionOrderEditor::loadCompletionItems()
 {
     // The first step is to gather all the data, creating CompletionItem objects
     foreach (KLDAP::LdapClient *client, mLdapSearch->clients()) {
-        new CompletionViewItem(mListView, new LDAPCompletionItem(client), 0);
+        new CompletionViewItem(mListView, new LDAPCompletionItem(client), Q_NULLPTR);
     }
 
     Akonadi::ChangeRecorder *monitor = new Akonadi::ChangeRecorder(this);

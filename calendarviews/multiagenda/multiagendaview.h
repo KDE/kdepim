@@ -40,12 +40,12 @@ public:
     explicit MultiAgendaView(QWidget *parent = Q_NULLPTR);
     ~MultiAgendaView();
 
-    Akonadi::Item::List selectedIncidences() const;
-    KCalCore::DateList selectedIncidenceDates() const;
-    int currentDateCount() const;
+    Akonadi::Item::List selectedIncidences() const Q_DECL_OVERRIDE;
+    KCalCore::DateList selectedIncidenceDates() const Q_DECL_OVERRIDE;
+    int currentDateCount() const Q_DECL_OVERRIDE;
     int maxDatesHint() const;
 
-    bool eventDurationHint(QDateTime &startDt, QDateTime &endDt, bool &allDay) const;
+    bool eventDurationHint(QDateTime &startDt, QDateTime &endDt, bool &allDay) const Q_DECL_OVERRIDE;
 
     /* reimp */
     void setCalendar(const Akonadi::ETMCalendar::Ptr &cal) Q_DECL_OVERRIDE;
@@ -60,7 +60,7 @@ public:
     QVector<QString> customColumnTitles() const;
     QVector<KCheckableProxyModel *>collectionSelectionModels() const;
 
-    void setPreferences(const PrefsPtr &prefs);
+    void setPreferences(const PrefsPtr &prefs) Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     void showNewEventPopupSignal();
@@ -70,12 +70,12 @@ public Q_SLOTS:
 
     void customCollectionsChanged(ConfigDialogInterface *dlg);
 
-    void showDates(const QDate &start, const QDate &end, const QDate &preferredMonth = QDate());
-    void showIncidences(const Akonadi::Item::List &incidenceList, const QDate &date);
-    void updateView();
-    void updateConfig();
+    void showDates(const QDate &start, const QDate &end, const QDate &preferredMonth = QDate()) Q_DECL_OVERRIDE;
+    void showIncidences(const Akonadi::Item::List &incidenceList, const QDate &date) Q_DECL_OVERRIDE;
+    void updateView() Q_DECL_OVERRIDE;
+    void updateConfig() Q_DECL_OVERRIDE;
 
-    void setIncidenceChanger(Akonadi::IncidenceChanger *changer);
+    void setIncidenceChanger(Akonadi::IncidenceChanger *changer) Q_DECL_OVERRIDE;
 
 protected:
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;

@@ -86,7 +86,7 @@ MonthViewPrivate::MonthViewPrivate(MonthView *qq)
       scene(new MonthScene(qq)),
       selectedItemId(-1),
       view(new MonthGraphicsView(qq)),
-      fullView(0)
+      fullView(Q_NULLPTR)
 {
     reloadTimer.setSingleShot(true);
     view->setScene(scene);
@@ -484,7 +484,7 @@ void MonthView::reloadIncidences()
     // keep selection if it exists
     Akonadi::Item incidenceSelected;
 
-    MonthItem *itemToReselect = 0;
+    MonthItem *itemToReselect = Q_NULLPTR;
 
     if (IncidenceMonthItem *tmp = qobject_cast<IncidenceMonthItem *>(d->scene->selectedItem())) {
         d->selectedItemId = tmp->akonadiItem().id();

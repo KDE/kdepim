@@ -83,10 +83,10 @@ public:
     bool finished() const;
 
 public Q_SLOTS:
-    virtual void start() Q_DECL_OVERRIDE;
+    void start() Q_DECL_OVERRIDE;
 
 protected Q_SLOTS:
-    virtual void slotResult(KJob *job) Q_DECL_OVERRIDE;
+    void slotResult(KJob *job) Q_DECL_OVERRIDE;
 
 private:
     Q_DECLARE_PRIVATE(Composer)

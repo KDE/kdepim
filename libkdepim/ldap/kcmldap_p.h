@@ -43,9 +43,9 @@ public:
     explicit KCMLdap(QWidget *parent, const QVariantList &args);
     ~KCMLdap();
 
-    void load();
-    void save();
-    void defaults();
+    void load() override;
+    void save() override;
+    void defaults() override;
 
 private Q_SLOTS:
     void slotAddHost();

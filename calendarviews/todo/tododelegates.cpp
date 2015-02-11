@@ -290,7 +290,7 @@ void TodoDueDateDelegate::updateEditorGeometry(QWidget *editor,
 // ---------------------------------------------------------------
 
 TodoCategoriesDelegate::TodoCategoriesDelegate(QObject *parent)
-    : QStyledItemDelegate(parent), mCalendar(0)
+    : QStyledItemDelegate(parent), mCalendar(Q_NULLPTR)
 {
 }
 

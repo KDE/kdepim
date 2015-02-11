@@ -51,22 +51,22 @@ public:
     explicit MonthView(NavButtonsVisibility visibility = Visible, QWidget *parent = Q_NULLPTR);
     ~MonthView();
 
-    virtual int currentDateCount() const;
+    int currentDateCount() const Q_DECL_OVERRIDE;
     int currentMonth() const;
 
-    virtual Akonadi::Item::List selectedIncidences() const;
+    Akonadi::Item::List selectedIncidences() const Q_DECL_OVERRIDE;
 
     /** Returns dates of the currently selected events */
-    virtual KCalCore::DateList selectedIncidenceDates() const;
+    KCalCore::DateList selectedIncidenceDates() const Q_DECL_OVERRIDE;
 
-    virtual QDateTime selectionStart() const;
+    QDateTime selectionStart() const Q_DECL_OVERRIDE;
 
-    virtual QDateTime selectionEnd() const;
+    QDateTime selectionEnd() const Q_DECL_OVERRIDE;
 
     virtual void setDateRange(const KDateTime &start, const KDateTime &end,
-                              const QDate &preferredMonth = QDate());
+                              const QDate &preferredMonth = QDate()) Q_DECL_OVERRIDE;
 
-    virtual bool eventDurationHint(QDateTime &startDt, QDateTime &endDt, bool &allDay) const;
+    bool eventDurationHint(QDateTime &startDt, QDateTime &endDt, bool &allDay) const Q_DECL_OVERRIDE;
 
     /**
      * Returns the average date in the view
@@ -82,7 +82,7 @@ public:
 
     bool isBusyDay(const QDate &day) const;
 
-    void setCalendar(const Akonadi::ETMCalendar::Ptr &cal);
+    void setCalendar(const Akonadi::ETMCalendar::Ptr &cal) Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     void showIncidencePopupSignal(const Akonadi::Item &item, const QDate &date);
@@ -91,9 +91,9 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     // virtual slots
-    virtual void updateConfig();
-    virtual void updateView();
-    virtual void showIncidences(const Akonadi::Item::List &incidenceList, const QDate &date);
+    void updateConfig() Q_DECL_OVERRIDE;
+    void updateView() Q_DECL_OVERRIDE;
+    void showIncidences(const Akonadi::Item::List &incidenceList, const QDate &date) Q_DECL_OVERRIDE;
 
     // non-virtual slots
     void changeIncidenceDisplay(const Akonadi::Item &, int);
@@ -104,7 +104,7 @@ public Q_SLOTS:
     void moveFwdMonth();   /// Shift the view one month forward
 
 protected Q_SLOTS:
-    virtual void calendarReset();
+    void calendarReset() Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     // void dataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight );
@@ -121,7 +121,7 @@ private Q_SLOTS:
     ///* reimp */void incidencesAboutToBeRemoved( const Akonadi::Item::List &incidences );
     ///* reimp */void incidencesChanged( const Akonadi::Item::List &incidences );
     /* reimp */QPair<KDateTime, KDateTime> actualDateRange(
-        const KDateTime &start, const KDateTime &end, const QDate &preferredMonth = QDate()) const;
+        const KDateTime &start, const KDateTime &end, const QDate &preferredMonth = QDate()) const Q_DECL_OVERRIDE;
 
     // Compute and update the whole view
     void reloadIncidences();
@@ -130,7 +130,7 @@ protected:
     /**
      * @deprecated
      */
-    void showDates(const QDate &start, const QDate &end, const QDate &preferedMonth = QDate());
+    void showDates(const QDate &start, const QDate &end, const QDate &preferedMonth = QDate()) Q_DECL_OVERRIDE;
 
 private:
     MonthViewPrivate *const d;

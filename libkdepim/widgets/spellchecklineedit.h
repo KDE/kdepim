@@ -55,7 +55,7 @@ public:
     bool activateLanguageMenu() const;
     void setActivateLanguageMenu(bool activate);
 protected:
-    void createHighlighter();
+    void createHighlighter() Q_DECL_OVERRIDE;
 
     QSize sizeHint() const Q_DECL_OVERRIDE;
     QSize minimumSizeHint() const Q_DECL_OVERRIDE;

@@ -52,7 +52,7 @@ public:
 
     /**reimp*/ int currentDateCount() const Q_DECL_OVERRIDE;
     /**reimp*/ Akonadi::Item::List selectedIncidences() const Q_DECL_OVERRIDE;
-    KCalCore::DateList selectedIncidenceDates() const
+    KCalCore::DateList selectedIncidenceDates() const Q_DECL_OVERRIDE
     {
         return KCalCore::DateList();
     }
@@ -68,7 +68,7 @@ public:
 
 public Q_SLOTS:
     // Don't update the view when midnight passed, otherwise we'll have data loss (bug 79145)
-    virtual void dayPassed(const QDate &) {}
+    virtual void dayPassed(const QDate &) Q_DECL_OVERRIDE {}
     void updateView() Q_DECL_OVERRIDE;
     void flushView() Q_DECL_OVERRIDE;
 

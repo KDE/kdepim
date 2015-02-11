@@ -48,7 +48,7 @@ public:
     Prefs();
 
     /**
-      Creates an instance of Prefs with base config and application override config
+      Creates an instance of Prefs with base config and application Q_DECL_OVERRIDE config
 
       The passed @p appConfig will be queried for matching items whenever one of the
       accessors is called. If one is found it is used for setting/getting the value

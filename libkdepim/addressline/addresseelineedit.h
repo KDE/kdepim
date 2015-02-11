@@ -102,7 +102,7 @@ public Q_SLOTS:
      * Reimplemented for stripping whitespace after completion
      * Danger: This is _not_ virtual in the base class!
      */
-    virtual void setText(const QString &text);
+    void setText(const QString &text) Q_DECL_OVERRIDE;
 
 protected:
     /**

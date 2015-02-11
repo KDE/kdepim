@@ -301,27 +301,27 @@ public:
     Akonadi::Item akonadiItem() const;
     Akonadi::Item::Id akonadiItemId() const;
 
-    virtual bool greaterThanFallback(const MonthItem *other) const;
+    bool greaterThanFallback(const MonthItem *other) const Q_DECL_OVERRIDE;
 
-    virtual QDate realStartDate() const;
-    virtual QDate realEndDate() const;
-    virtual bool allDay() const;
+    QDate realStartDate() const Q_DECL_OVERRIDE;
+    QDate realEndDate() const Q_DECL_OVERRIDE;
+    bool allDay() const Q_DECL_OVERRIDE;
 
-    virtual bool isMoveable() const;
-    virtual bool isResizable() const;
+    bool isMoveable() const Q_DECL_OVERRIDE;
+    bool isResizable() const Q_DECL_OVERRIDE;
 
-    QString text(bool end) const;
-    QString toolTipText(const QDate &date) const;
+    QString text(bool end) const Q_DECL_OVERRIDE;
+    QString toolTipText(const QDate &date) const Q_DECL_OVERRIDE;
 
-    QColor bgColor() const;
-    QColor frameColor() const;
+    QColor bgColor() const Q_DECL_OVERRIDE;
+    QColor frameColor() const Q_DECL_OVERRIDE;
 
-    QList<QPixmap> icons() const;
+    QList<QPixmap> icons() const Q_DECL_OVERRIDE;
 
 protected:
-    virtual void finalizeMove(const QDate &newStartDate);
+    void finalizeMove(const QDate &newStartDate) Q_DECL_OVERRIDE;
     virtual void finalizeResize(const QDate &newStartDate,
-                                const QDate &newEndDate);
+                                const QDate &newEndDate) Q_DECL_OVERRIDE;
 
 protected Q_SLOTS:
     /**
@@ -357,49 +357,49 @@ public:
     HolidayMonthItem(MonthScene *monthScene, const QDate &date, const QString &name);
     virtual ~HolidayMonthItem();
 
-    virtual bool greaterThanFallback(const MonthItem *other) const;
+    bool greaterThanFallback(const MonthItem *other) const Q_DECL_OVERRIDE;
 
-    virtual QDate realStartDate() const
+    virtual QDate realStartDate() const Q_DECL_OVERRIDE
     {
         return mDate;
     }
-    virtual QDate realEndDate() const
+    virtual QDate realEndDate() const Q_DECL_OVERRIDE
     {
         return mDate;
     }
-    virtual bool allDay() const
+    virtual bool allDay() const Q_DECL_OVERRIDE
     {
         return true;
     }
 
-    virtual bool isMoveable() const
+    virtual bool isMoveable() const Q_DECL_OVERRIDE
     {
         return false;
     }
-    virtual bool isResizable() const
+    virtual bool isResizable() const Q_DECL_OVERRIDE
     {
         return false;
     }
 
-    QString text(bool end) const
+    QString text(bool end) const Q_DECL_OVERRIDE
     {
         Q_UNUSED(end);
         return mName;
     }
-    QString toolTipText(const QDate &) const
+    QString toolTipText(const QDate &) const Q_DECL_OVERRIDE
     {
         return mName;
     }
 
-    QColor bgColor() const;
-    QColor frameColor() const;
+    QColor bgColor() const Q_DECL_OVERRIDE;
+    QColor frameColor() const Q_DECL_OVERRIDE;
 
-    QList<QPixmap> icons() const;
+    QList<QPixmap> icons() const Q_DECL_OVERRIDE;
 
 protected:
-    virtual void finalizeMove(const QDate &newStartDate);
+    void finalizeMove(const QDate &newStartDate) Q_DECL_OVERRIDE;
     virtual void finalizeResize(const QDate &newStartDate,
-                                const QDate &newEndDate);
+                                const QDate &newEndDate) Q_DECL_OVERRIDE;
 
 private:
     QDate mDate;

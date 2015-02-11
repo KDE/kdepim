@@ -138,7 +138,7 @@ void TransactionItemView::slotLayoutFirstItem()
 
 TransactionItem::TransactionItem(QWidget *parent,
                                  ProgressItem *item, bool first)
-    : QWidget(parent), mCancelButton(0), mItem(item)
+    : QWidget(parent), mCancelButton(Q_NULLPTR), mItem(item)
 
 {
     QVBoxLayout *vboxLayout = new QVBoxLayout;

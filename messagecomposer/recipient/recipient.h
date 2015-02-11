@@ -54,8 +54,8 @@ public:
     void setName(const QString &name);
     QString name() const;
 
-    virtual bool isEmpty() const Q_DECL_OVERRIDE;
-    virtual void clear() Q_DECL_OVERRIDE;
+    bool isEmpty() const Q_DECL_OVERRIDE;
+    void clear() Q_DECL_OVERRIDE;
 
     static int typeToId(Type type);
     static Type idToType(int id);

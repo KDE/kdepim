@@ -204,7 +204,7 @@ void SpellCheckLineEdit::insertLanguageMenu(QMenu *contextMenu)
         return;
     }
 
-    QAction *spellCheckAction = 0;
+    QAction *spellCheckAction = Q_NULLPTR;
 
     foreach (QAction *action, contextMenu->actions()) {
         if (action->text() == i18n_kdelibs4("Auto Spell Check")) {
@@ -223,7 +223,7 @@ void SpellCheckLineEdit::insertLanguageMenu(QMenu *contextMenu)
         }
 
         QMapIterator<QString, QString> i(d->speller->availableDictionaries());
-        QAction *languageAction = 0;
+        QAction *languageAction = Q_NULLPTR;
 
         while (i.hasNext()) {
             i.next();

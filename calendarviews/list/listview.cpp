@@ -82,7 +82,7 @@ public:
     {
     }
 
-    bool operator<(const QTreeWidgetItem &other) const;
+    bool operator<(const QTreeWidgetItem &other) const Q_DECL_OVERRIDE;
 
     const QTreeWidget *mTreeWidget;
     const Akonadi::Item mIncidence;
@@ -161,10 +161,10 @@ public:
     {
     }
 
-    bool visit(Event::Ptr);
-    bool visit(Todo::Ptr);
-    bool visit(Journal::Ptr);
-    bool visit(FreeBusy::Ptr)
+    bool visit(Event::Ptr) Q_DECL_OVERRIDE;
+    bool visit(Todo::Ptr) Q_DECL_OVERRIDE;
+    bool visit(Journal::Ptr) Q_DECL_OVERRIDE;
+    bool visit(FreeBusy::Ptr) Q_DECL_OVERRIDE
     {
         // to inhibit hidden virtual compile warning
         return true;
@@ -265,7 +265,7 @@ ListView::ListView(const Akonadi::ETMCalendar::Ptr &calendar,
     : EventView(parent), d(new Private())
 {
     setCalendar(calendar);
-    d->mActiveItem = 0;
+    d->mActiveItem = Q_NULLPTR;
     d->mIsNonInteractive = nonInteractive;
 
     d->mTreeWidget = new QTreeWidget(this);
@@ -313,7 +313,7 @@ int ListView::currentDateCount() const
 Akonadi::Item::List ListView::selectedIncidences() const
 {
     Akonadi::Item::List eventList;
-    QTreeWidgetItem *item = d->mTreeWidget->selectedItems().isEmpty() ? 0 :
+    QTreeWidgetItem *item = d->mTreeWidget->selectedItems().isEmpty() ? Q_NULLPTR :
                             d->mTreeWidget->selectedItems().first() ;
     if (item) {
         ListViewItem *i = static_cast<ListViewItem *>(item);
@@ -515,7 +515,7 @@ ListViewItem *ListView::Private::getItemForIncidence(const Akonadi::Item &aitem)
         ++index;
     }
 
-    return 0;
+    return Q_NULLPTR;
 }
 
 void ListView::defaultItemAction(const QModelIndex &index)
@@ -571,7 +571,7 @@ void ListView::processSelectionChange()
     if (!d->mIsNonInteractive) {
         ListViewItem *item;
         if (d->mTreeWidget->selectedItems().isEmpty()) {
-            item = 0;
+            item = Q_NULLPTR;
         } else {
             item = static_cast<ListViewItem *>(d->mTreeWidget->selectedItems().first());
         }

@@ -60,7 +60,7 @@ TimeLabels::TimeLabels(const KDateTime::Spec &spec, int rows,
     mMousePos->hide();
 #endif
     colorMousePos();
-    mAgenda = 0;
+    mAgenda = Q_NULLPTR;
 
     if (mSpec.isValid()) {
         setToolTip(i18n("Timezone:") + i18n(mSpec.timeZone().name().toUtf8()));

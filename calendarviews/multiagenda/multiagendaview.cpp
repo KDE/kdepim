@@ -235,7 +235,7 @@ void MultiAgendaView::setCalendar(const Akonadi::ETMCalendar::Ptr &calendar)
         proxy->setSourceModel(calendar->entityTreeModel());
     }
 
-    disconnect(0, SIGNAL(selectionChanged(Akonadi::Collection::List,Akonadi::Collection::List)),
+    disconnect(Q_NULLPTR, SIGNAL(selectionChanged(Akonadi::Collection::List,Akonadi::Collection::List)),
                this, SLOT(forceRecreateViews()));
 
     connect(collectionSelection(), SIGNAL(selectionChanged(Akonadi::Collection::List,Akonadi::Collection::List)),
@@ -304,7 +304,7 @@ void MultiAgendaView::Private::deleteViews()
     }
 
     mAgendaViews.clear();
-    mTimeLabelsZone->setAgendaView(0);
+    mTimeLabelsZone->setAgendaView(Q_NULLPTR);
     qDeleteAll(mAgendaWidgets);
     mAgendaWidgets.clear();
 }
@@ -354,7 +354,7 @@ void MultiAgendaView::Private::setupViews()
 
         q->disconnect(agenda->agenda(),
                       SIGNAL(zoomView(int,QPoint,Qt::Orientation)),
-                      agenda, 0);
+                      agenda, Q_NULLPTR);
         q->connect(agenda->agenda(),
                    SIGNAL(zoomView(int,QPoint,Qt::Orientation)),
                    q, SLOT(zoomView(int,QPoint,Qt::Orientation)));
