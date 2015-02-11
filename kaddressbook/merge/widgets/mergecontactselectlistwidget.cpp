@@ -89,4 +89,16 @@ void MergeContactSelectListWidget::fillList(const Akonadi::Item::List &lst)
 void MergeContactSelectListWidget::createContact(KABC::Addressee &addr)
 {
     //TODO
+    switch(mConflictType) {
+    case MergeContacts::None:
+        break;
+    case MergeContacts::Birthday:
+        break;
+    case MergeContacts::Geo:
+        break;
+    case MergeContacts::Photo:
+        break;
+    case MergeContacts::Logo:
+        break;
+    }
 }
