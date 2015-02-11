@@ -101,6 +101,7 @@ void SearchDuplicateResultWidget::slotMergeContact()
     mListContactToMerge = mResult->selectedContactsToMerge();
     if (!mListContactToMerge.isEmpty()) {
         mMergeContact->setEnabled(false);
+        //Detect if conflict.
         mergeContact();
     }
 }

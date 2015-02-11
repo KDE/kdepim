@@ -72,6 +72,18 @@ void MergeContacts::mergeToContact(KABC::Addressee &newContact, const KABC::Addr
         }
         newContact.setEmails(newContactsEmail);
     }
+    // Merge Categories
+    const QStringList categories = fromContact.categories();
+    if (!categories.isEmpty()) {
+        QStringList newContactsCategories = newContact.categories();
+        Q_FOREACH(const QString &category, categories) {
+            if (!newContactsCategories.contains(category)) {
+                newContactsCategories.append(category);
+            }
+        }
+        newContact.setCategories(newContactsCategories);
+    }
+
     // Merge Phone
 
     // Merge blog
