@@ -27,9 +27,6 @@
 
 using namespace PimCommon;
 
-//10 secondes
-static int DELETEAFTER = 10000;
-
 AttachmentTemporaryFilesDirs::AttachmentTemporaryFilesDirs(QObject *parent)
     : QObject(parent),
       mDelayRemoveAll(10000)
