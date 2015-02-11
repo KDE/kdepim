@@ -264,7 +264,6 @@ public:
     void slotTriggerDelayedQueries();
     void slotShowOUChanged( bool );
     void slotConfigureBalooBlackList();
-    static KCompletion::CompOrder completionOrder();
 
     AddresseeLineEdit *q;
     QStringList m_balooBlackList;
@@ -287,7 +286,7 @@ public:
 void AddresseeLineEdit::Private::init()
 {
     if ( !s_static.exists() ) {
-        s_static->completion->setOrder( completionOrder() );
+        s_static->completion->setOrder( KCompletion::Weighted );
         s_static->completion->setIgnoreCase( true );
     }
 
@@ -700,7 +699,7 @@ void AddresseeLineEdit::Private::doCompletion( bool ctrlT )
         return;
     }
 
-    s_static->completion->setOrder( completionOrder() );
+    s_static->completion->setOrder( KCompletion::Weighted );
 
     // cursor at end of string - or Ctrl+T pressed for substring completion?
     if ( ctrlT ) {
@@ -995,21 +994,6 @@ void AddresseeLineEdit::Private::slotAkonadiCollectionsReceived(
     const QListWidgetItem *current = q->completionBox()->currentItem();
     if ( !current || m_searchString.trimmed() != current->text().trimmed() ) {
         doCompletion( m_lastSearchMode );
-    }
-}
-
-// not cached, to make sure we get an up-to-date value when it changes
-KCompletion::CompOrder AddresseeLineEdit::Private::completionOrder()
-{
-    KConfig _config( QLatin1String( "kpimcompletionorder" ) );
-    const KConfigGroup config( &_config, QLatin1String( "General" ) );
-    const QString order =
-            config.readEntry( QLatin1String( "CompletionOrder" ), QString::fromLatin1( "Weighted" ) );
-
-    if ( order == QLatin1String( "Weighted" ) ) {
-        return KCompletion::Weighted;
-    } else {
-        return KCompletion::Sorted;
     }
 }
 
