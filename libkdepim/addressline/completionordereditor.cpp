@@ -265,6 +265,13 @@ void CompletionOrderEditor::writeConfig()
     group.sync();
 }
 
+void CompletionOrderEditor::addRecentAddressItem()
+{
+    //Be default it's the first.
+    SimpleCompletionItem *item = new SimpleCompletionItem( this, i18n( "Recent Addresses" ), QLatin1String("Recent Addresses"), 10 );
+    item->setIcon( KIcon(QLatin1String("kmail")) );
+    new CompletionViewItem( mListView, item, 0 );
+}
 
 void CompletionOrderEditor::addCompletionItemForIndex( const QModelIndex &index )
 {
@@ -311,6 +318,8 @@ void CompletionOrderEditor::loadCompletionItems()
 
     for ( int row = 0; row < mCollectionModel->rowCount(); ++row )
         addCompletionItemForIndex( mCollectionModel->index( row, 0 ) );
+
+    addRecentAddressItem();
 
     mListView->sortItems( 0, Qt::AscendingOrder );
 }

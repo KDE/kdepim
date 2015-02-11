@@ -86,6 +86,7 @@ private:
     void readConfig();
     void writeConfig();
     void loadCompletionItems();
+    void addRecentAddressItem();
     void addCompletionItemForIndex( const QModelIndex& );
 
     KConfig mConfig;
