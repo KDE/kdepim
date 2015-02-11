@@ -59,7 +59,7 @@ void SaveContactPreferenceJob::slotSearchContact(KJob *job)
 
     if (items.isEmpty()) {
         bool ok = true;
-        const QString fullName = QInputDialog::getText(0, i18n("Name Selection"), i18n("Which name shall the contact '%1' have in your address book?", mEmail), QLineEdit::Normal, QString(), &ok);
+        const QString fullName = QInputDialog::getText(Q_NULLPTR, i18n("Name Selection"), i18n("Which name shall the contact '%1' have in your address book?", mEmail), QLineEdit::Normal, QString(), &ok);
         if (!ok) {
             deleteLater();
             return;

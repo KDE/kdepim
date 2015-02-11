@@ -31,14 +31,14 @@ public:
     explicit TestHtmlWriter() {}
     virtual ~TestHtmlWriter() {}
 
-    virtual void begin(const QString &) {}
-    virtual void write(const QString &) {}
-    virtual void end() {}
-    virtual void reset() {}
-    virtual void queue(const QString &) {}
-    virtual void flush() {}
-    virtual void embedPart(const QByteArray &, const QString &) {}
-    virtual void extraHead(const QString &) {}
+    virtual void begin(const QString &) Q_DECL_OVERRIDE {}
+    virtual void write(const QString &) Q_DECL_OVERRIDE {}
+    virtual void end() Q_DECL_OVERRIDE {}
+    virtual void reset() Q_DECL_OVERRIDE {}
+    virtual void queue(const QString &) Q_DECL_OVERRIDE {}
+    virtual void flush() Q_DECL_OVERRIDE {}
+    virtual void embedPart(const QByteArray &, const QString &) Q_DECL_OVERRIDE {}
+    virtual void extraHead(const QString &) Q_DECL_OVERRIDE {}
 
 };
 

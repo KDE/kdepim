@@ -45,7 +45,7 @@ JobBase::~JobBase()
 
 GlobalPart *JobBase::globalPart()
 {
-    for (QObject *obj = this; obj != 0; obj = obj->parent()) {
+    for (QObject *obj = this; obj != Q_NULLPTR; obj = obj->parent()) {
         Composer *composer = qobject_cast<Composer *>(obj);
         if (composer) {
             return composer->globalPart();
@@ -53,6 +53,6 @@ GlobalPart *JobBase::globalPart()
     }
 
     qCritical() << "Job is not part of a Composer.";
-    return 0;
+    return Q_NULLPTR;
 }
 

@@ -54,11 +54,11 @@ public:
         , encrypt(false)
         , noCrypto(false)
         , autoSaving(false)
-        , globalPart(0)
-        , infoPart(0)
-        , textPart(0)
-        , skeletonMessage(0)
-        , resultContent(0)
+        , globalPart(Q_NULLPTR)
+        , infoPart(Q_NULLPTR)
+        , textPart(Q_NULLPTR)
+        , skeletonMessage(Q_NULLPTR)
+        , resultContent(Q_NULLPTR)
     {
     }
 
@@ -152,7 +152,7 @@ void ComposerPrivate::composeStep2()
 {
     Q_Q(Composer);
 
-    ContentJobBase *mainJob = 0;
+    ContentJobBase *mainJob = Q_NULLPTR;
     MainTextJob *mainTextJob = new MainTextJob(textPart, q);
 
     if ((sign || encrypt) && format & Kleo::InlineOpenPGPFormat) {    // needs custom handling --- one SignEncryptJob by itself
@@ -276,7 +276,7 @@ QList<ContentJobBase *> ComposerPrivate::createEncryptJobs(ContentJobBase *conte
     for (int i = 0; i < encData.size(); ++i) {
         QPair<QStringList, std::vector<GpgME::Key> > recipients = encData[ i ];
         qCDebug(MESSAGECOMPOSER_LOG) << "got first list of recipients:" << recipients.first;
-        ContentJobBase *subJob = 0;
+        ContentJobBase *subJob = Q_NULLPTR;
         if (sign) {
             SignEncryptJob *seJob = new SignEncryptJob(q);
 
@@ -384,7 +384,7 @@ void ComposerPrivate::composeWithLateAttachments(KMime::Message *headers, KMime:
         if (attachment->isSigned()) {
             qCDebug(MESSAGECOMPOSER_LOG) << "adding signjob for late attachment";
             SignJob *sJob = new SignJob(q);
-            sJob->setContent(0);
+            sJob->setContent(Q_NULLPTR);
             sJob->setCryptoMessageFormat(format);
             sJob->setSigningKeys(signers);
 

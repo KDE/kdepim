@@ -94,7 +94,7 @@ void CryptoComposerTest::testOpenPGPMime()
 
     KMime::Message::Ptr message = composer->resultMessages().first();
     delete composer;
-    composer = 0;
+    composer = Q_NULLPTR;
 
     //qDebug()<< "message:" << message.get()->encodedContent();
     ComposerTestUtil::verify(sign, encrypt, message.get(), data.toUtf8(),
@@ -138,7 +138,7 @@ void CryptoComposerTest::testEncryptSameAttachments()
 
     KMime::Message::Ptr message = composer->resultMessages().first();
     delete composer;
-    composer = 0;
+    composer = Q_NULLPTR;
 
     //qDebug()<< "message:" << message.get()->encodedContent();
     ComposerTestUtil::verifyEncryption(message.get(), data.toUtf8(),
@@ -197,7 +197,7 @@ void CryptoComposerTest::testSignEncryptLateAttachments()
 
     KMime::Message::Ptr message = composer->resultMessages().first();
     delete composer;
-    composer = 0;
+    composer = Q_NULLPTR;
 
     // as we have an additional attachment, just ignore it when checking for sign/encrypt
     KMime::Content *b = MessageCore::NodeHelper::firstChild(message.get());
@@ -258,7 +258,7 @@ void CryptoComposerTest::testBCCEncrypt()
     KMime::Message::Ptr primMessage = composer->resultMessages().first();
     KMime::Message::Ptr secMessage = composer->resultMessages()[1];
     delete composer;
-    composer = 0;
+    composer = Q_NULLPTR;
 
     ComposerTestUtil::verifySignatureAndEncryption(primMessage.get(), data.toUtf8(),
             (Kleo::CryptoMessageFormat) format);
@@ -308,7 +308,7 @@ void CryptoComposerTest::testOpenPGPInline()
 
     KMime::Message::Ptr message = composer->resultMessages().first();
     delete composer;
-    composer = 0;
+    composer = Q_NULLPTR;
 
     if (sign && !encrypt) {
         data += QString::fromLatin1("\n");
@@ -472,7 +472,7 @@ void CryptoComposerTest::runSMIMETest(bool sign, bool enc, bool opaque)
         QCOMPARE(composer->resultMessages().size(), 1);
         KMime::Message::Ptr message = composer->resultMessages().first();
         delete composer;
-        composer = 0;
+        composer = Q_NULLPTR;
 
         qDebug() << "message:" << message->encodedContent();
 

@@ -43,9 +43,9 @@ class MessageComposer::SkeletonMessageJobPrivate : public JobBasePrivate
 public:
     SkeletonMessageJobPrivate(SkeletonMessageJob *qq)
         : JobBasePrivate(qq)
-        , infoPart(0)
-        , globalPart(0)
-        , message(0)
+        , infoPart(Q_NULLPTR)
+        , globalPart(Q_NULLPTR)
+        , message(Q_NULLPTR)
     {
     }
 

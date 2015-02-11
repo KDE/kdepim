@@ -51,13 +51,13 @@ protected:
 
     TODO cberzan: update docu...
     */
-    virtual bool doSend(const KMime::Message::Ptr &msg, short sendNow);
+    virtual bool doSend(const KMime::Message::Ptr &msg, short sendNow) Q_DECL_OVERRIDE;
 
     /**
     Send queued messages, using the specified transport or the
     default, if none is given.
     */
-    virtual bool doSendQueued(const QString &transport = QString());
+    virtual bool doSendQueued(const QString &transport = QString()) Q_DECL_OVERRIDE;
 
 private:
     /**

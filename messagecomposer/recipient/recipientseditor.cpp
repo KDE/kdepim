@@ -58,7 +58,7 @@ int RecipientLineFactory::maximumRecipients()
 }
 
 RecipientsEditor::RecipientsEditor(QWidget *parent)
-    : MultiplyingLineEditor(new RecipientLineFactory(0), parent), mRecentAddressConfig(0)
+    : MultiplyingLineEditor(new RecipientLineFactory(Q_NULLPTR), parent), mRecentAddressConfig(Q_NULLPTR)
 {
     factory()->setParent(this);   // HACK: can't use 'this' above since it's not yet constructed at that point
     mSideWidget = new RecipientsEditorSideWidget(this, this);
@@ -147,7 +147,7 @@ void RecipientsEditor::removeRecipient(const QString &recipient, Recipient::Type
 {
     // search a line which matches recipient and type
     QListIterator<MultiplyingLine *> it(lines());
-    MultiplyingLine *line = 0;
+    MultiplyingLine *line = Q_NULLPTR;
     while (it.hasNext()) {
         line = it.next();
         RecipientLineNG *rec = qobject_cast< RecipientLineNG * >(line);

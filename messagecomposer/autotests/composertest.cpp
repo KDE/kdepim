@@ -54,7 +54,7 @@ void ComposerTest::testAttachments()
     KMime::Message::Ptr message = composer->resultMessages().first();
     qDebug() << message->encodedContent();
     delete composer;
-    composer = 0;
+    composer = Q_NULLPTR;
 
     // multipart/mixed
     {
@@ -92,7 +92,7 @@ void ComposerTest::testAutoSave()
     QVERIFY(composer->finished());
     QCOMPARE(composer->resultMessages().size(), 1);
     delete composer;
-    composer = 0;
+    composer = Q_NULLPTR;
 
 }
 
@@ -136,7 +136,7 @@ void ComposerTest::testNonAsciiHeaders()
     QCOMPARE(message->bcc()->displayNames().first().toUtf8(), bccDisplayName.toUtf8());
     QCOMPARE(message->replyTo()->displayNames().first().toUtf8(), replyToDisplayName.toUtf8());
     delete composer;
-    composer = 0;
+    composer = Q_NULLPTR;
 }
 
 void ComposerTest::testBug271192()
@@ -152,7 +152,7 @@ void ComposerTest::testBug271192()
     QCOMPARE(message->to()->displayNames().size(), 1);
     QCOMPARE(message->to()->displayNames().first().toUtf8(), displayName.toUtf8());
     delete composer;
-    composer = 0;
+    composer = Q_NULLPTR;
 }
 
 void ComposerTest::fillComposerData(Composer *composer)

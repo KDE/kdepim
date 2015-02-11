@@ -34,8 +34,8 @@ using namespace MessageComposer;
 
 SignatureController::SignatureController(QObject *parent) :
     QObject(parent),
-    m_editor(0),
-    m_identityCombo(0),
+    m_editor(Q_NULLPTR),
+    m_identityCombo(Q_NULLPTR),
     m_currentIdentityId(0)
 {
 }

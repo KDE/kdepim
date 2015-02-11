@@ -155,7 +155,7 @@ void EncryptJob::process()
 
     //d->resultContent = new KMime::Content;
 
-    const Kleo::CryptoBackend::Protocol *proto = 0;
+    const Kleo::CryptoBackend::Protocol *proto = Q_NULLPTR;
     if (d->format & Kleo::AnyOpenPGP) {
         proto = Kleo::CryptoBackendFactory::instance()->openpgp();
     } else if (d->format & Kleo::AnySMIME) {

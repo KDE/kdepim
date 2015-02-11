@@ -80,7 +80,7 @@ protected:
     ContentJobBase(ContentJobBasePrivate &dd, QObject *parent);
 
     /** Use appendSubjob() instead. */
-    virtual bool addSubjob(KJob *job);
+    virtual bool addSubjob(KJob *job) Q_DECL_OVERRIDE;
 
 protected Q_SLOTS:
     /**

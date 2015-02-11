@@ -44,7 +44,7 @@ using namespace MessageComposer;
 
 RecipientsPicker::RecipientsPicker(QWidget *parent)
     : QDialog(parent),
-      mLdapSearchDialog(0)
+      mLdapSearchDialog(Q_NULLPTR)
 {
     setObjectName(QLatin1String("RecipientsPicker"));
     setWindowTitle(i18n("Select Recipient"));

@@ -145,7 +145,7 @@ void KMeditorPrivate::startExternalEditor()
     mExtEditorTempFile = new QTemporaryFile();
     if (!mExtEditorTempFile->open()) {
         delete mExtEditorTempFile;
-        mExtEditorTempFile = 0;
+        mExtEditorTempFile = Q_NULLPTR;
         q->setUseExternalEditor(false);
         return;
     }
@@ -543,9 +543,9 @@ void KMeditor::killExternalEditor()
     if (d->mExtEditorProcess) {
         d->mExtEditorProcess->deleteLater();
     }
-    d->mExtEditorProcess = 0;
+    d->mExtEditorProcess = Q_NULLPTR;
     delete d->mExtEditorTempFile;
-    d->mExtEditorTempFile = 0;
+    d->mExtEditorTempFile = Q_NULLPTR;
 }
 
 void KMeditor::setCursorPositionFromStart(unsigned int pos)

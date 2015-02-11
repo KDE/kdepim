@@ -26,7 +26,7 @@ class GlobalPart::Private
 public:
     Private()
         : guiEnabled(true),
-          parentWidgetForGui(0),
+          parentWidgetForGui(Q_NULLPTR),
           fallbackCharsetEnabled(false),
           allow8Bit(false),
           MDNRequested(false)

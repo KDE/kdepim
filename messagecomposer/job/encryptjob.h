@@ -55,11 +55,11 @@ public:
 
     void setContent(KMime::Content *content);
     void setCryptoMessageFormat(Kleo::CryptoMessageFormat format);
-    void setEncryptionKeys(const std::vector<GpgME::Key> &keys);
-    void setRecipients(const QStringList &rec);
+    void setEncryptionKeys(const std::vector<GpgME::Key> &keys) Q_DECL_OVERRIDE;
+    void setRecipients(const QStringList &rec) Q_DECL_OVERRIDE;
 
-    std::vector<GpgME::Key> encryptionKeys() const;
-    QStringList recipients() const;
+    std::vector<GpgME::Key> encryptionKeys() const Q_DECL_OVERRIDE;
+    QStringList recipients() const Q_DECL_OVERRIDE;
 
 protected Q_SLOTS:
     //virtual void doStart();

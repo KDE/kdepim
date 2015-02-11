@@ -105,7 +105,7 @@ int main(int argc, char **argv)
 
     QObject::connect(&app, &QApplication::lastWindowClosed, &app, &QApplication::quit);
 
-    QWidget *wid = new Composer(0);
+    QWidget *wid = new Composer(Q_NULLPTR);
 
     wid->show();
 

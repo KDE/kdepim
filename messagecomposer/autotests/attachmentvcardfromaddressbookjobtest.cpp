@@ -40,7 +40,7 @@ void AttachmentVcardFromAddressBookJobTest::testAttachmentVCardWithInvalidItem()
     MessageComposer::AttachmentVcardFromAddressBookJob *job = new MessageComposer::AttachmentVcardFromAddressBookJob(item);
     QVERIFY(!job->exec());
     delete job;
-    job = 0;
+    job = Q_NULLPTR;
 }
 
 void AttachmentVcardFromAddressBookJobTest::testAttachmentVCardWithValidItem()
@@ -56,7 +56,7 @@ void AttachmentVcardFromAddressBookJobTest::testAttachmentVCardWithValidItem()
 
     MessageCore::AttachmentPart::Ptr part = job->attachmentPart();
     delete job;
-    job = 0;
+    job = Q_NULLPTR;
 
     QVERIFY(!part->data().isEmpty());
     QCOMPARE(part->mimeType(), QByteArray("text/x-vcard"));
@@ -73,7 +73,7 @@ void AttachmentVcardFromAddressBookJobTest::testAttachmentVCardWithInvalidVCard(
     MessageComposer::AttachmentVcardFromAddressBookJob *job = new MessageComposer::AttachmentVcardFromAddressBookJob(item);
     QVERIFY(!job->exec());
     delete job;
-    job = 0;
+    job = Q_NULLPTR;
 }
 
 void AttachmentVcardFromAddressBookJobTest::testAttachmentVCardWithEmptyVCard()
@@ -85,7 +85,7 @@ void AttachmentVcardFromAddressBookJobTest::testAttachmentVCardWithEmptyVCard()
     MessageComposer::AttachmentVcardFromAddressBookJob *job = new MessageComposer::AttachmentVcardFromAddressBookJob(item);
     QVERIFY(!job->exec());
     delete job;
-    job = 0;
+    job = Q_NULLPTR;
 }
 
 QTEST_MAIN(AttachmentVcardFromAddressBookJobTest)
