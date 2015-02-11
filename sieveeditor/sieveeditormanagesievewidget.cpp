@@ -60,7 +60,6 @@ bool SieveEditorManageSieveWidget::refreshList()
             treeView()->expandItem(last);
         } else if (!conf.enabled) {
             last->setFlags(last->flags() & ~Qt::ItemIsEnabled);
-            // kf5 add i18n
             last->setText(0, i18n("(Disabled) %1", last->text(0)));
         } else {
             KManageSieve::SieveJob *job = KManageSieve::SieveJob::list(u);
