@@ -51,7 +51,7 @@ public:
     void setAddresses( const QStringList &addrs );
     QStringList addresses() const;
     void addAddresses(KConfig *config);
-
+    bool wasChanged() const;
 private slots:
     void slotAddItem();
     void slotRemoveItem();
@@ -68,6 +68,7 @@ private:
     KPushButton* mNewButton, *mRemoveButton;
     QListWidget *mListView;
     KLineEdit *mLineEdit;
+    bool mDirty;
 };
 
 /**

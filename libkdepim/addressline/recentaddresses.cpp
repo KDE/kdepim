@@ -180,7 +180,8 @@ QStringList RecentAddresses::addresses() const
 }
 
 RecentAddressDialog::RecentAddressDialog( QWidget *parent )
-    : KDialog( parent )
+    : KDialog( parent ),
+      mDirty(false)
 {
     setCaption( i18n( "Edit Recent Addresses" ) );
     setButtons( Ok|Cancel );
@@ -247,6 +248,7 @@ void RecentAddressDialog::slotTypedSomething(const QString& text)
             QListWidgetItem *currentIndex = mListView->currentItem();
             if ( currentIndex ) {
                 currentIndex->setText(text);
+                mDirty = true;
             }
             mListView->blockSignals( block );
         }
@@ -260,6 +262,7 @@ void RecentAddressDialog::slotAddItem()
     mListView->blockSignals(false);
     mListView->setCurrentRow(0, QItemSelectionModel::ClearAndSelect);
     mLineEdit->setFocus();
+    mDirty = true;
     updateButtonState();
 }
 
@@ -272,6 +275,7 @@ void RecentAddressDialog::slotRemoveItem()
         Q_FOREACH(QListWidgetItem *item, selectedItems) {
             delete mListView->takeItem(mListView->row(item));
         }
+        mDirty = true;
         updateButtonState();
     }
 }
@@ -333,6 +337,11 @@ void RecentAddressDialog::addAddresses(KConfig *config)
     for (int i = 0; i < numberOfItem; ++i) {
         KPIM::RecentAddresses::self( config )->add( mListView->item(i)->text() );
     }
+}
+
+bool RecentAddressDialog::wasChanged() const
+{
+    return mDirty;
 }
 
 void RecentAddressDialog::readConfig()
