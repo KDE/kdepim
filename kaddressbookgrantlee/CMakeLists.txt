@@ -21,7 +21,6 @@ set(kaddressbook_grantlee_LIB_SRCS
   formatter/grantleecontactformatter.cpp
   formatter/grantleecontactgroupformatter.cpp
   formatter/grantleecontactutils.cpp
-  grantleeutil.cpp
 )
 
 kde4_add_library(kaddressbookgrantlee ${LIBRARY_TYPE} ${kaddressbook_grantlee_LIB_SRCS})

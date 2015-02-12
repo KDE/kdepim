@@ -33,6 +33,7 @@ public:
     void setForceDisableQRCode(bool b);
 
 private:
+    QString kaddressBookAbsoluteThemePath();
     KAddressBookGrantlee::GrantleeContactFormatter *mFormatter;
 };
 }
