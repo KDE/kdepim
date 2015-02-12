@@ -37,24 +37,30 @@ MergeContactSelectInformationWidget::~MergeContactSelectInformationWidget()
 
 void MergeContactSelectInformationWidget::setContacts(MergeContacts::ConflictInformations conflictTypes, const Akonadi::Item::List &listItem)
 {
+    Q_FOREACH(const Akonadi::Item &item, listItem) {
+        if (item.hasPayload<KABC::Addressee>()) {
+            const KABC::Addressee address = item.payload<KABC::Addressee>();
+            mAddressList.append(address);
+        }
+    }
     if (conflictTypes & MergeContacts::Birthday) {
-        addInformationWidget(MergeContacts::Birthday, listItem);
+        addInformationWidget(MergeContacts::Birthday);
     }
     if (conflictTypes & MergeContacts::Geo) {
-        addInformationWidget(MergeContacts::Geo, listItem);
+        addInformationWidget(MergeContacts::Geo);
     }
     if (conflictTypes & MergeContacts::Photo) {
-        addInformationWidget(MergeContacts::Photo, listItem);
+        addInformationWidget(MergeContacts::Photo);
     }
     if (conflictTypes & MergeContacts::Logo) {
-        addInformationWidget(MergeContacts::Logo, listItem);
+        addInformationWidget(MergeContacts::Logo);
     }
 }
 
-void MergeContactSelectInformationWidget::addInformationWidget(MergeContacts::ConflictInformation conflictType, const Akonadi::Item::List &listItem)
+void MergeContactSelectInformationWidget::addInformationWidget(MergeContacts::ConflictInformation conflictType)
 {
     MergeContactSelectListWidget *widget = new MergeContactSelectListWidget;
-    widget->setContacts(conflictType, listItem);
+    widget->setContacts(conflictType, mAddressList);
     layout()->addWidget(widget);
     mListMergeSelectInformation.append(widget);
 }

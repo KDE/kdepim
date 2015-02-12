@@ -35,7 +35,8 @@ public:
     KABC::Addressee createContact();
 
 private:
-    void addInformationWidget(MergeContacts::ConflictInformation conflictType, const Akonadi::Item::List &listItem);
+    void addInformationWidget(MergeContacts::ConflictInformation conflictType);
+    KABC::Addressee::List mAddressList;
     QList<MergeContactSelectListWidget *> mListMergeSelectInformation;
 };
 }

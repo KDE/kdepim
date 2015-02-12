@@ -35,11 +35,11 @@ public:
     explicit MergeContactSelectListWidget(QWidget *parent=0);
     ~MergeContactSelectListWidget();
 
-    void setContacts(MergeContacts::ConflictInformation conflictType, const Akonadi::Item::List &lst);
+    void setContacts(MergeContacts::ConflictInformation conflictType, const KABC::Addressee::List &lst);
     void createContact(KABC::Addressee &addr);
 
 private:
-    void fillList(const Akonadi::Item::List &lst);
+    void fillList(const KABC::Addressee::List &lst);
     void updateTitle();
     QLabel *mTitle;
     QListWidget *mSelectListWidget;

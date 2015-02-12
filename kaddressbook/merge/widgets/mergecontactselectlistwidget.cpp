@@ -41,7 +41,7 @@ MergeContactSelectListWidget::~MergeContactSelectListWidget()
 
 }
 
-void MergeContactSelectListWidget::setContacts(MergeContacts::ConflictInformation conflictType, const Akonadi::Item::List &lst)
+void MergeContactSelectListWidget::setContacts(MergeContacts::ConflictInformation conflictType, const KABC::Addressee::List &lst)
 {
     mConflictType = conflictType;
     if (lst.isEmpty() || ( conflictType == MergeContacts::None) ) {
@@ -70,7 +70,7 @@ void MergeContactSelectListWidget::updateTitle()
     mTitle->setText(title);
 }
 
-void MergeContactSelectListWidget::fillList(const Akonadi::Item::List &lst)
+void MergeContactSelectListWidget::fillList(const KABC::Addressee::List &lst)
 {
     switch(mConflictType) {
     case MergeContacts::None:
