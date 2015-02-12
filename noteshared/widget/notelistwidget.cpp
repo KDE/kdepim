@@ -74,7 +74,8 @@ void NoteListWidget::createItem(const Akonadi::Item &note)
     if (subject)
         item->setText(subject->asUnicodeString());
 
-    item->setToolTip(NoteShared::NoteUtils::createToolTip(note));
+    NoteShared::NoteUtils noteUtils;
+    item->setToolTip(noteUtils.createToolTip(note));
     item->setData(AkonadiId, note.id());
 }
 
