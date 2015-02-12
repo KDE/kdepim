@@ -17,15 +17,27 @@
 
 #include "mergecontactselectinformationscrollarea.h"
 #include "mergecontactselectinformationwidget.h"
-
+#include "merge/job/mergecontactsjob.h"
+#include <QVBoxLayout>
+#include <QScrollArea>
+#include <QPushButton>
 using namespace KABMergeContacts;
 
 MergeContactSelectInformationScrollArea::MergeContactSelectInformationScrollArea(QWidget *parent)
-    : QScrollArea(parent)
+    : QWidget(parent)
 {
+    QVBoxLayout *vbox = new QVBoxLayout;
+    setLayout(vbox);
+    QScrollArea *area = new QScrollArea;
+    area->setObjectName(QLatin1String("scrollarea"));
+    vbox->addWidget(area);
     mSelectInformationWidget = new MergeContactSelectInformationWidget;
     mSelectInformationWidget->setObjectName(QLatin1String("selectinformationwidget"));
-    setWidget(mSelectInformationWidget);
+    area->setWidget(mSelectInformationWidget);
+    QPushButton *mergeButton = new QPushButton(QLatin1String("Merge"));
+    mergeButton->setObjectName(QLatin1String("merge"));
+    vbox->addWidget(mergeButton);
+    connect(mergeButton, SIGNAL(clicked()), this, SLOT(slotMergeContacts()));
 }
 
 MergeContactSelectInformationScrollArea::~MergeContactSelectInformationScrollArea()
@@ -33,12 +45,23 @@ MergeContactSelectInformationScrollArea::~MergeContactSelectInformationScrollAre
 
 }
 
+void MergeContactSelectInformationScrollArea::setCollection(const Akonadi::Collection &col)
+{
+    mCollection = col;
+}
+
 void MergeContactSelectInformationScrollArea::setContacts(MergeContacts::ConflictInformations conflictTypes, const Akonadi::Item::List &listItem)
 {
+    mListItem = listItem;
     mSelectInformationWidget->setContacts(conflictTypes, listItem);
 }
 
-KABC::Addressee MergeContactSelectInformationScrollArea::createContact()
+void MergeContactSelectInformationScrollArea::slotMergeContacts()
 {
-    return mSelectInformationWidget->createContact();
+    MergeContacts contact(mListItem);
+    KABC::Addressee addr = contact.mergedContact(true);
+    mSelectInformationWidget->createContact(addr);
+
+    //KABMergeContacts::MergeContacts *job = new KABMergeContacts::MergeContacts()
+    //TODO merge now.
 }

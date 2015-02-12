@@ -65,7 +65,7 @@ void MergeContactSelectInformationWidget::addInformationWidget(MergeContacts::Co
     mListMergeSelectInformation.append(widget);
 }
 
-KABC::Addressee MergeContactSelectInformationWidget::createContact()
+void MergeContactSelectInformationWidget::createContact(KABC::Addressee &addr)
 {
     Q_FOREACH(MergeContactSelectListWidget *listWidget, mListMergeSelectInformation) {
         const int selectedContact = listWidget->selectedContact();
@@ -74,7 +74,4 @@ KABC::Addressee MergeContactSelectInformationWidget::createContact()
             //TODO
         }
     }
-
-    //TODO
-    return KABC::Addressee();
 }

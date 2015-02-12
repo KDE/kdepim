@@ -29,7 +29,7 @@ MergeContacts::~MergeContacts()
 
 }
 
-KABC::Addressee MergeContacts::mergedContact()
+KABC::Addressee MergeContacts::mergedContact(bool excludeConflictPart)
 {
     KABC::Addressee newContact;
     if (mListItem.count() == 1)
@@ -42,14 +42,14 @@ KABC::Addressee MergeContacts::mergedContact()
                 firstAddress = false;
                 newContact = address;
             } else {
-                mergeToContact(newContact, address);
+                mergeToContact(newContact, address, excludeConflictPart);
             }
         }
     }
     return newContact;
 }
 
-void MergeContacts::mergeToContact(KABC::Addressee &newContact, const KABC::Addressee &fromContact)
+void MergeContacts::mergeToContact(KABC::Addressee &newContact, const KABC::Addressee &fromContact, bool excludeConflictPart)
 {
     // Duplicate notes.
     const QString fromContactNote = fromContact.note();

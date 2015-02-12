@@ -18,21 +18,25 @@
 #ifndef MERGECONTACTSELECTINFORMATIONSCROLLAREA_H
 #define MERGECONTACTSELECTINFORMATIONSCROLLAREA_H
 
-#include <QScrollArea>
+#include <QWidget>
 #include "kaddressbook_export.h"
 #include "merge/job/mergecontacts.h"
 
 namespace KABMergeContacts {
 class MergeContactSelectInformationWidget;
-class KADDRESSBOOK_EXPORT MergeContactSelectInformationScrollArea : public QScrollArea
+class KADDRESSBOOK_EXPORT MergeContactSelectInformationScrollArea : public QWidget
 {
     Q_OBJECT
 public:
     explicit MergeContactSelectInformationScrollArea(QWidget *parent=0);
     ~MergeContactSelectInformationScrollArea();
     void setContacts(MergeContacts::ConflictInformations conflictTypes, const Akonadi::Item::List &listItem);
-    KABC::Addressee createContact();
+    void setCollection(const Akonadi::Collection &col);
+private slots:
+    void slotMergeContacts();
 private:
+    Akonadi::Collection mCollection;
+    Akonadi::Item::List mListItem;
     MergeContactSelectInformationWidget *mSelectInformationWidget;
 };
 }

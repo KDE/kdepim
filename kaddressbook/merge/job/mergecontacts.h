@@ -40,12 +40,12 @@ public:
     Q_ENUMS(ConflictInformation)
     Q_DECLARE_FLAGS(ConflictInformations, ConflictInformation)
 
-    KABC::Addressee mergedContact();
+    KABC::Addressee mergedContact(bool excludeConflictPart = false);
 
     MergeContacts::ConflictInformations needManualSelectInformations();
 
 private:
-    void mergeToContact(KABC::Addressee &newAddress, const KABC::Addressee &fromContact);
+    void mergeToContact(KABC::Addressee &newAddress, const KABC::Addressee &fromContact, bool excludeConflictPart);
     Akonadi::Item::List mListItem;
 };
 }
