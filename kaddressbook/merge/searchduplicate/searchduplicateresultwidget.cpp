@@ -51,12 +51,12 @@ SearchDuplicateResultWidget::SearchDuplicateResultWidget(QWidget *parent)
     mContactViewer->setObjectName(QLatin1String("contact_viewer"));
     splitter->addWidget(mResult);
     splitter->addWidget(mContactViewer);
-    connect(mResult, SIGNAL(showContactPreview(Akonadi::Item)), mContactViewer, SLOT(setContact(Akonadi::Item)));
+    connect(mResult, &ResultDuplicateTreeWidget::showContactPreview, mContactViewer, &KAddressBookGrantlee::GrantleeContactViewer::setContact);
 
     mMergeContactWarning = new MergeContactLoseInformationWarning;
     mMergeContactWarning->setObjectName(QLatin1String("mergecontactwarning"));
-    connect(mMergeContactWarning, SIGNAL(continueMerging()), this, SLOT(slotAutomaticMerging()));
-    connect(mMergeContactWarning, SIGNAL(customizeMergingContacts()), this, SLOT(slotCustomizeMergingContacts()));
+    connect(mMergeContactWarning, &MergeContactLoseInformationWarning::continueMerging, this, &SearchDuplicateResultWidget::slotAutomaticMerging);
+    connect(mMergeContactWarning, &MergeContactLoseInformationWarning::customizeMergingContacts, this, &SearchDuplicateResultWidget::slotCustomizeMergingContacts);
     mainLayout->addWidget(mMergeContactWarning);
 
     QHBoxLayout *mergeLayout = new QHBoxLayout;
@@ -72,13 +72,13 @@ SearchDuplicateResultWidget::SearchDuplicateResultWidget(QWidget *parent)
     mCollectionCombobox->setMinimumWidth(250);
     mCollectionCombobox->setMimeTypeFilter(QStringList() << KContacts::Addressee::mimeType());
     mCollectionCombobox->setObjectName(QLatin1String("akonadicombobox"));
-    connect(mCollectionCombobox, SIGNAL(currentIndexChanged(int)), SLOT(slotUpdateMergeButton()));
-    connect(mCollectionCombobox, SIGNAL(activated(int)), SLOT(slotUpdateMergeButton()));
+    connect(mCollectionCombobox, static_cast<void (Akonadi::CollectionComboBox::*)(int)>(&Akonadi::CollectionComboBox::currentIndexChanged), this, &SearchDuplicateResultWidget::slotUpdateMergeButton);
+    connect(mCollectionCombobox, static_cast<void (Akonadi::CollectionComboBox::*)(int)>(&Akonadi::CollectionComboBox::activated), this, &SearchDuplicateResultWidget::slotUpdateMergeButton);
     mergeLayout->addWidget(mCollectionCombobox);
 
     mMergeContact = new QPushButton(i18n("Merge"));
     mMergeContact->setObjectName(QLatin1String("merge_contact_button"));
-    connect(mMergeContact, SIGNAL(clicked()), this, SLOT(slotMergeContact()));
+    connect(mMergeContact, &QPushButton::clicked, this, &SearchDuplicateResultWidget::slotMergeContact);
     mergeLayout->addWidget(mMergeContact);
     mMergeContact->setEnabled(false);
     //TODO make mMergeContact enable when selected item and collection valid
@@ -112,7 +112,7 @@ void SearchDuplicateResultWidget::mergeContact()
         KABMergeContacts::MergeContactsJob *job = new KABMergeContacts::MergeContactsJob(this);
         job->setListItem(mListContactToMerge.at(mIndexListContact));
         job->setDestination(mCollectionCombobox->currentCollection());
-        connect(job, SIGNAL(finished(Akonadi::Item)), this, SLOT(slotMergeDone(Akonadi::Item)));
+        connect(job, &KABMergeContacts::MergeContactsJob::finished, this, &SearchDuplicateResultWidget::slotMergeDone);
         job->start();
     } else {
         Q_EMIT mergeDone();

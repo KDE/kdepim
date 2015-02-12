@@ -31,13 +31,13 @@ MergeContactLoseInformationWarning::MergeContactLoseInformationWarning(QWidget *
     //KF5 add i18n
     QAction *action = new QAction( QLatin1String( "Customize" ), this );
     action->setObjectName(QLatin1String("customize"));
-    connect( action, SIGNAL(triggered(bool)), SLOT(slotCustomizeMerge()) );
+    connect(action, &QAction::triggered, this, &MergeContactLoseInformationWarning::slotCustomizeMerge);
     addAction( action );
 
     //KF5 add i18n
     action = new QAction( QLatin1String( "Automatic Merging" ), this );
     action->setObjectName(QLatin1String("automatic"));
-    connect( action, SIGNAL(triggered(bool)), SLOT(slotAutomaticMerging()) );
+    connect(action, &QAction::triggered, this, &MergeContactLoseInformationWarning::slotAutomaticMerging);
     addAction( action );
 }
 
