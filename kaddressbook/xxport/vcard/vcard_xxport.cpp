@@ -324,6 +324,7 @@ KABC::Addressee::List VCardXXPort::filterContacts( const KABC::Addressee::List &
         addr.setKind( (*it).kind() );
         addr.setMembers( (*it).members() );
         addr.setRelationShips( (*it).relationShips() );
+        addr.setSourcesUrlList( (*it).sourcesUrlList() );
 
         if ( exportFieldType & VCardExportSelectionWidget::Private ) {
             addr.setBirthday( (*it).birthday() );
