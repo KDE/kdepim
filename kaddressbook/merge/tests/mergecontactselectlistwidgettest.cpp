@@ -16,6 +16,7 @@
 */
 
 #include "mergecontactselectlistwidgettest.h"
+#include "merge/job/mergecontacts.h"
 #include "merge/widgets/mergecontactselectlistwidget.h"
 #include <QListWidget>
 #include <qlabel.h>
@@ -40,6 +41,8 @@ void MergeContactSelectListWidgetTest::shouldHaveDefaultValue()
     QVERIFY(title);
     QListWidget *listWidget = qFindChild<QListWidget *>(&selectListWidget, QLatin1String("listwidget"));
     QVERIFY(listWidget);
+    QCOMPARE(selectListWidget.selectedContact(), -1);
+    QCOMPARE(selectListWidget.conflictType(), KABMergeContacts::MergeContacts::None);
 }
 
 QTEST_KDEMAIN(MergeContactSelectListWidgetTest, GUI)

@@ -18,6 +18,7 @@
 
 #include "searchandmergecontactduplicatecontactdialog.h"
 
+#include "merge/widgets/mergecontactselectinformationscrollarea.h"
 #include "merge/searchduplicate/searchduplicateresultwidget.h"
 #include "merge/widgets/mergecontactshowresulttabwidget.h"
 #include "merge/job/searchpotentialduplicatecontactjob.h"
@@ -71,6 +72,9 @@ SearchAndMergeContactDuplicateContactDialog::SearchAndMergeContactDuplicateConta
     mStackedWidget->addWidget(mNoEnoughContactSelected);
     mStackedWidget->setCurrentWidget(mNoContactSelected);
 
+    mSelectInformation = new KABMergeContacts::MergeContactSelectInformationScrollArea(this);
+    mSelectInformation->setObjectName(QLatin1String("selectioninformation"));
+    mStackedWidget->addWidget(mSelectInformation);
 
     setMainWidget(mStackedWidget);
     readConfig();

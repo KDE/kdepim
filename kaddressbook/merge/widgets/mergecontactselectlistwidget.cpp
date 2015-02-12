@@ -24,7 +24,8 @@ using namespace KABMergeContacts;
 using namespace KABC;
 
 MergeContactSelectListWidget::MergeContactSelectListWidget(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      mConflictType(MergeContacts::None)
 {
     QVBoxLayout *vbox = new QVBoxLayout;
     setLayout(vbox);
@@ -86,19 +87,12 @@ void MergeContactSelectListWidget::fillList(const KABC::Addressee::List &lst)
     }
 }
 
-void MergeContactSelectListWidget::createContact(KABC::Addressee &addr)
+int MergeContactSelectListWidget::selectedContact() const
 {
-    //TODO
-    switch(mConflictType) {
-    case MergeContacts::None:
-        break;
-    case MergeContacts::Birthday:
-        break;
-    case MergeContacts::Geo:
-        break;
-    case MergeContacts::Photo:
-        break;
-    case MergeContacts::Logo:
-        break;
-    }
+    return mSelectListWidget->currentRow();
+}
+
+MergeContacts::ConflictInformation MergeContactSelectListWidget::conflictType() const
+{
+    return mConflictType;
 }
