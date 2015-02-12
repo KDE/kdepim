@@ -16,13 +16,16 @@
 */
 
 #include "mergecontactselectinformationscrollarea.h"
+#include "mergecontactselectinformationwidget.h"
 
 using namespace KABMergeContacts;
 
 MergeContactSelectInformationScrollArea::MergeContactSelectInformationScrollArea(QWidget *parent)
     : QScrollArea(parent)
 {
-
+    mSelectInformationWidget = new MergeContactSelectInformationWidget;
+    mSelectInformationWidget->setObjectName(QLatin1String("selectinformationwidget"));
+    setWidget(mSelectInformationWidget);
 }
 
 MergeContactSelectInformationScrollArea::~MergeContactSelectInformationScrollArea()
@@ -30,3 +33,12 @@ MergeContactSelectInformationScrollArea::~MergeContactSelectInformationScrollAre
 
 }
 
+void MergeContactSelectInformationScrollArea::setContacts(MergeContacts::ConflictInformations conflictTypes, const Akonadi::Item::List &listItem)
+{
+    mSelectInformationWidget->setContacts(conflictTypes, listItem);
+}
+
+KABC::Addressee MergeContactSelectInformationScrollArea::createContact()
+{
+    return mSelectInformationWidget->createContact();
+}

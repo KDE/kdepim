@@ -26,6 +26,8 @@ class MergeContactSelectInformationScrollAreaTest : public QObject
 public:
     explicit MergeContactSelectInformationScrollAreaTest(QObject *parent = 0);
     ~MergeContactSelectInformationScrollAreaTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
 #endif // MERGECONTACTSELECTINFORMATIONSCROLLAREATEST_H
