@@ -17,7 +17,7 @@
 
 #include "mergecontactshowresulttabwidget.h"
 #include <KContacts/Addressee>
-#include "../mergecontactinfowidget.h"
+#include "merge/manualmerge/mergecontactinfowidget.h"
 
 #include <QTabBar>
 #include "kaddressbook_debug.h"

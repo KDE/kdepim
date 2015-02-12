@@ -218,12 +218,14 @@ void ComposerLineEdit::contextMenuEvent(QContextMenuEvent *e)
 
 void ComposerLineEdit::editRecentAddresses()
 {
-    MessageViewer::AutoQPointer<KPIM::RecentAddressDialog> dlg(new KPIM::RecentAddressDialog(this));
-    dlg->setAddresses(KPIM::RecentAddresses::self(m_recentAddressConfig)->addresses());
-    if (dlg->exec() && dlg) {
-        KPIM::RecentAddresses::self(m_recentAddressConfig)->clear();
-        dlg->addAddresses(m_recentAddressConfig);
-        loadContacts();
+    MessageViewer::AutoQPointer<KPIM::RecentAddressDialog> dlg( new KPIM::RecentAddressDialog( this ) );
+    dlg->setAddresses( KPIM::RecentAddresses::self( m_recentAddressConfig )->addresses() );
+    if ( dlg->exec() && dlg ) {
+        if (dlg->wasChanged()) {
+            KPIM::RecentAddresses::self( m_recentAddressConfig )->clear();
+            dlg->addAddresses(m_recentAddressConfig);
+            loadContacts();
+        }
     }
 }
 

@@ -46,6 +46,8 @@ BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget
     searchLayout->addWidget(lab);
 
     mSearchLineEdit = new KLineEdit;
+    // KF5 add i18n
+    mSearchLineEdit->setClickMessage(QLatin1String("Research is done from 3 characters"));
     mSearchLineEdit->setFocus();
     mSearchLineEdit->setClearButtonShown(true);
     mSearchLineEdit->setTrapReturnKey(true);

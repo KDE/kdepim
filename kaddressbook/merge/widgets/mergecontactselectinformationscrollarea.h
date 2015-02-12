@@ -20,13 +20,20 @@
 
 #include <QScrollArea>
 #include "kaddressbook_export.h"
+#include "merge/job/mergecontacts.h"
+
 namespace KABMergeContacts {
+class MergeContactSelectInformationWidget;
 class KADDRESSBOOK_EXPORT MergeContactSelectInformationScrollArea : public QScrollArea
 {
     Q_OBJECT
 public:
     explicit MergeContactSelectInformationScrollArea(QWidget *parent=0);
     ~MergeContactSelectInformationScrollArea();
+    void setContacts(MergeContacts::ConflictInformations conflictTypes, const Akonadi::Item::List &listItem);
+    KContacts::Addressee createContact();
+private:
+    MergeContactSelectInformationWidget *mSelectInformationWidget;
 };
 }
 

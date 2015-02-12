@@ -28,6 +28,8 @@ namespace KABMergeContacts
 {
 class SearchDuplicateResultWidget;
 class MergeContactShowResultTabWidget;
+class MergeContactSelectInformationScrollArea;
+
 class KADDRESSBOOK_EXPORT SearchAndMergeContactDuplicateContactDialog : public QDialog
 {
     Q_OBJECT
@@ -49,6 +51,7 @@ private:
     QLabel *mNoContactSelected;
     QLabel *mNoDuplicateContactFound;
     QLabel *mNoEnoughContactSelected;
+    KABMergeContacts::MergeContactSelectInformationScrollArea *mSelectInformation;
     QStackedWidget *mStackedWidget;
 };
 }

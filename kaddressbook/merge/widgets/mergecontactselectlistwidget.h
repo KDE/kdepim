@@ -24,7 +24,7 @@
 #include <QWidget>
 class QLabel;
 class QListWidget;
-namespace KABC {
+namespace KContacts {
 class Addressee;
 }
 namespace KABMergeContacts {
@@ -35,11 +35,11 @@ public:
     explicit MergeContactSelectListWidget(QWidget *parent=Q_NULLPTR);
     ~MergeContactSelectListWidget();
 
-    void setContacts(MergeContacts::ConflictInformation conflictType, const Akonadi::Item::List &lst);
-    void createContact(KABC::Addressee &addr);
-
+    void setContacts(MergeContacts::ConflictInformation conflictType, const KContacts::Addressee::List &lst);
+    int selectedContact() const;
+    MergeContacts::ConflictInformation conflictType() const;
 private:
-    void fillList(const Akonadi::Item::List &lst);
+    void fillList(const KContacts::Addressee::List &lst);
     void updateTitle();
     QLabel *mTitle;
     QListWidget *mSelectListWidget;

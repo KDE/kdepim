@@ -30,7 +30,14 @@
 #include <QPointer>
 #include <QApplication>
 
-bool NoteShared::NoteUtils::sendToMail(QWidget *parent, const QString &title, const QString &message)
+using namespace NoteShared;
+
+NoteUtils::NoteUtils()
+{
+
+}
+
+bool NoteUtils::sendToMail(QWidget *parent, const QString &title, const QString &message)
 {
     // get the mail action command
     const QStringList cmd_list = NoteShared::NoteSharedGlobalConfig::mailAction().split(QLatin1Char(' '), QString::SkipEmptyParts);
@@ -56,7 +63,7 @@ bool NoteShared::NoteUtils::sendToMail(QWidget *parent, const QString &title, co
     return true;
 }
 
-void NoteShared::NoteUtils::sendToNetwork(QWidget *parent, const QString &title, const QString &message)
+void NoteUtils::sendToNetwork(QWidget *parent, const QString &title, const QString &message)
 {
     // pop up dialog to get the IP
     QPointer<NoteShared::NoteHostDialog> hostDlg = new NoteShared::NoteHostDialog(i18n("Send \"%1\"", title), parent);
@@ -83,7 +90,7 @@ void NoteShared::NoteUtils::sendToNetwork(QWidget *parent, const QString &title,
     delete hostDlg;
 }
 
-QString NoteShared::NoteUtils::createToolTip(const Akonadi::Item &item)
+QString NoteUtils::createToolTip(const Akonadi::Item &item)
 {
     const KMime::Message::Ptr noteMessage = item.payload<KMime::Message::Ptr>();
     if (!noteMessage) {

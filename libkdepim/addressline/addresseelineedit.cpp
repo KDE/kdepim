@@ -557,12 +557,13 @@ const QStringList KPIM::AddresseeLineEdit::Private::adjustedCompletionItems(bool
         qSort( sourcesAndWeights.begin(), sourcesAndWeights.end() );
         // Add the sections and their items to the final sortedItems result list
         const int numberOfSources(sourcesAndWeights.size());
-        for (int i = 0; i < numberOfSources; ++i) {
-            const QStringList sectionItems = sections[sourcesAndWeights[i].index];
-            if (!sectionItems.isEmpty()) {
-                sortedItems.append(sourcesAndWeights[i].sourceName);
-                foreach (const QString &itemInSection, sectionItems) {
-                    sortedItems.append(itemInSection);
+        for ( int i = 0; i < numberOfSources; ++i ) {
+            const SourceWithWeight source = sourcesAndWeights.at(i);
+            const QStringList sectionItems = sections[source.index];
+            if ( !sectionItems.isEmpty() ) {
+                sortedItems.append( source.sourceName );
+                foreach ( const QString &itemInSection, sectionItems ) {
+                    sortedItems.append( itemInSection );
                 }
             }
         }

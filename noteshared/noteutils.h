@@ -24,12 +24,14 @@
 class QWidget;
 namespace NoteShared
 {
-namespace NoteUtils
+class NOTESHARED_EXPORT NoteUtils
 {
-NOTESHARED_EXPORT bool sendToMail(QWidget *parent, const QString &title, const QString &message);
-NOTESHARED_EXPORT void sendToNetwork(QWidget *parent, const QString &title, const QString &message);
-NOTESHARED_EXPORT QString createToolTip(const Akonadi::Item &item);
-}
+public:
+    NoteUtils();
+    bool sendToMail(QWidget *parent, const QString &title, const QString &message);
+    void sendToNetwork(QWidget *parent, const QString &title, const QString &message);
+    QString createToolTip(const Akonadi::Item &item);
+};
 }
 
 #endif // NOTEUTILS_H
