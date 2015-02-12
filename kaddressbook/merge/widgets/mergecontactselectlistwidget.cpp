@@ -18,32 +18,88 @@
 #include "mergecontactselectlistwidget.h"
 #include <KContacts/Addressee>
 
+#include <QLabel>
+#include <QListWidget>
+#include <QVBoxLayout>
 using namespace KABMergeContacts;
 using namespace KContacts;
 
 MergeContactSelectListWidget::MergeContactSelectListWidget(QWidget *parent)
-    : QTreeWidget(parent)
+    : QWidget(parent)
 {
-
+    QVBoxLayout *vbox = new QVBoxLayout;
+    setLayout(vbox);
+    mTitle = new QLabel;
+    mTitle->setObjectName(QLatin1String("title"));
+    vbox->addWidget(mTitle);
+    mSelectListWidget = new QListWidget;
+    mSelectListWidget->setObjectName(QLatin1String("listwidget"));
+    vbox->addWidget(mSelectListWidget);
 }
-
-
 
 MergeContactSelectListWidget::~MergeContactSelectListWidget()
 {
 
 }
 
-void MergeContactSelectListWidget::setContacts(const Akonadi::Item::List &lst)
+void MergeContactSelectListWidget::setContacts(MergeContacts::ConflictInformation conflictType, const Akonadi::Item::List &lst)
 {
-    //TODO fillContact ?
-    clear();
-    if (lst.isEmpty()) {
+    mConflictType = conflictType;
+    if (lst.isEmpty() || ( conflictType == MergeContacts::None) ) {
         return;
+    }
+    updateTitle();
+    fillList(lst);
+}
+
+void MergeContactSelectListWidget::updateTitle()
+{
+    QString title;
+    //TODO
+    switch(mConflictType) {
+    case MergeContacts::None:
+        break;
+    case MergeContacts::Birthday:
+        break;
+    case MergeContacts::Geo:
+        break;
+    case MergeContacts::Photo:
+        break;
+    case MergeContacts::Logo:
+        break;
+    }
+    mTitle->setText(title);
+}
+
+void MergeContactSelectListWidget::fillList(const Akonadi::Item::List &lst)
+{
+    switch(mConflictType) {
+    case MergeContacts::None:
+        break;
+    case MergeContacts::Birthday:
+        break;
+    case MergeContacts::Geo:
+        break;
+    case MergeContacts::Photo:
+        break;
+    case MergeContacts::Logo:
+        break;
     }
 }
 
-void MergeContactSelectListWidget::fillList()
+void MergeContactSelectListWidget::createContact(KABC::Addressee &addr)
 {
-
+    //TODO
+    switch(mConflictType) {
+    case MergeContacts::None:
+        break;
+    case MergeContacts::Birthday:
+        break;
+    case MergeContacts::Geo:
+        break;
+    case MergeContacts::Photo:
+        break;
+    case MergeContacts::Logo:
+        break;
+    }
 }

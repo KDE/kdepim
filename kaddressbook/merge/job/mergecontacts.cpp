@@ -100,12 +100,11 @@ void MergeContacts::mergeToContact(KContacts::Addressee &newContact, const KCont
 #endif
 }
 
-bool MergeContacts::needManualSelectInformations()
+MergeContacts::ConflictInformations MergeContacts::needManualSelectInformations()
 {
-    bool result = false;
-    if (mListItem.count() < 2) {
+    MergeContacts::ConflictInformations result = None;
+    if (mListItem.count() < 2)
         return result;
-    }
     KContacts::Addressee newContact;
     Q_FOREACH (const Akonadi::Item &item, mListItem) {
         if (item.hasPayload<KContacts::Addressee>()) {
@@ -114,25 +113,46 @@ bool MergeContacts::needManualSelectInformations()
             if (address.birthday().isValid()) {
                 if (newContact.birthday().isValid()) {
                     if (newContact.birthday() != address.birthday()) {
-                        return true;
+                        result |= Birthday;
                     }
                 } else {
                     newContact.setBirthday(address.birthday());
                 }
             }
             //Test Geo
-            const Geo geo = address.geo();
+            const KContacts::Geo geo = address.geo();
             if (geo.isValid()) {
                 if (newContact.geo().isValid()) {
                     if (newContact.geo() != geo) {
-                        return true;
+                        result |= Geo;
                     }
                 } else {
                     newContact.setGeo(address.geo());
                 }
             }
+            // Test Photo
+            const KContacts::Picture photo = address.photo();
+            if (!photo.isEmpty()) {
+                if (!newContact.photo().isEmpty()) {
+                    if (newContact.photo() != photo) {
+                        result |= Photo;
+                    }
+                } else {
+                    newContact.setPhoto(address.photo());
+                }
+            }
+            //Test Logo
+            const KContacts::Picture logo = address.logo();
+            if (!logo.isEmpty()) {
+                if (!newContact.logo().isEmpty()) {
+                    if (newContact.logo() != logo) {
+                        result |= Logo;
+                    }
+                } else {
+                    newContact.setLogo(address.logo());
+                }
+            }
         }
     }
-
     return result;
 }

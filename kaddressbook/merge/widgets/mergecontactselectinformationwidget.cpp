@@ -28,9 +28,6 @@ MergeContactSelectInformationWidget::MergeContactSelectInformationWidget(QWidget
 {
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
-    mMergeSelectListInformation = new MergeContactSelectListWidget;
-    mMergeSelectListInformation->setObjectName(QLatin1String("list_information"));
-    mainLayout->addWidget(mMergeSelectListInformation);
 }
 
 MergeContactSelectInformationWidget::~MergeContactSelectInformationWidget()
@@ -38,7 +35,32 @@ MergeContactSelectInformationWidget::~MergeContactSelectInformationWidget()
 
 }
 
-void MergeContactSelectInformationWidget::setContacts(const Akonadi::Item::List &listItem)
+void MergeContactSelectInformationWidget::setContacts(MergeContacts::ConflictInformations conflictTypes, const Akonadi::Item::List &listItem)
 {
-    mMergeSelectListInformation->setContacts(listItem);
+    if (conflictTypes & MergeContacts::Birthday) {
+        addInformationWidget(MergeContacts::Birthday, listItem);
+    }
+    if (conflictTypes & MergeContacts::Geo) {
+        addInformationWidget(MergeContacts::Geo, listItem);
+    }
+    if (conflictTypes & MergeContacts::Photo) {
+        addInformationWidget(MergeContacts::Photo, listItem);
+    }
+    if (conflictTypes & MergeContacts::Logo) {
+        addInformationWidget(MergeContacts::Logo, listItem);
+    }
+}
+
+void MergeContactSelectInformationWidget::addInformationWidget(MergeContacts::ConflictInformation conflictType, const Akonadi::Item::List &listItem)
+{
+    MergeContactSelectListWidget *widget = new MergeContactSelectListWidget;
+    widget->setContacts(conflictType, listItem);
+    layout()->addWidget(widget);
+    mListMergeSelectInformation.append(widget);
+}
+
+KContacts::Addressee MergeContactSelectInformationWidget::createContact()
+{
+    //TODO
+    return KContacts::Addressee();
 }

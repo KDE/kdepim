@@ -32,12 +32,17 @@ public:
     ~MergeContacts();
 
     KContacts::Addressee mergedContact();
-    enum ManualInformation {
+    enum ConflictInformation {
         None = 0,
-        Birthday = 1
+        Birthday = 1,
+        Geo = 2,
+        Photo = 4,
+        Logo = 8
     };
+    Q_ENUMS(ConflictInformation)
+    Q_DECLARE_FLAGS(ConflictInformations, ConflictInformation)
 
-    bool needManualSelectInformations();
+    MergeContacts::ConflictInformations needManualSelectInformations();
 
 private:
     void mergeToContact(KContacts::Addressee &newAddress, const KContacts::Addressee &fromContact);
