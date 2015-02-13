@@ -30,7 +30,7 @@ public:
     explicit ExportNotesJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ExportNotesJob();
 
-    void start();
+    void start() Q_DECL_OVERRIDE;
 
 private:
     void backupConfig();

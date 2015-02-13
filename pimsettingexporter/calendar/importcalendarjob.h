@@ -30,10 +30,10 @@ public:
     explicit ImportCalendarJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ImportCalendarJob();
 
-    void start();
+    void start() Q_DECL_OVERRIDE;
 
 protected:
-    void nextStep();
+    void nextStep() Q_DECL_OVERRIDE;
 
 private:
     void searchAllFiles(const KArchiveDirectory *dir, const QString &prefix);
@@ -41,7 +41,7 @@ private:
     void importkorganizerConfig(const KArchiveFile *file, const QString &config, const QString &filename, const QString &prefix);
     void restoreResources();
     void restoreConfig();
-    void addSpecificResourceSettings(KSharedConfig::Ptr resourceConfig, const QString &resourceName, QMap<QString, QVariant> &settings);
+    void addSpecificResourceSettings(KSharedConfig::Ptr resourceConfig, const QString &resourceName, QMap<QString, QVariant> &settings) Q_DECL_OVERRIDE;
 };
 
 #endif // IMPORTCALENDARJOB_H

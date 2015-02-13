@@ -30,7 +30,7 @@ public:
     explicit ImportNotesJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ImportNotesJob();
 
-    void start();
+    void start() Q_DECL_OVERRIDE;
 
 private:
     void importKNoteGlobalSettings(const KArchiveFile *kmailsnippet, const QString &kmail2rc, const QString &filename, const QString &prefix);

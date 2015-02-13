@@ -280,7 +280,7 @@ KZip *Utils::openZip(const QString &filename, QString &errorMsg)
     if (!result) {
         errorMsg = i18n("Archive cannot be opened in read mode.");
         delete zip;
-        return 0;
+        return Q_NULLPTR;
     }
     return zip;
 }

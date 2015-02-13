@@ -30,7 +30,7 @@ public:
     explicit ImportAkregatorJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ImportAkregatorJob();
 
-    void start();
+    void start() Q_DECL_OVERRIDE;
 
 private:
     void restoreConfig();

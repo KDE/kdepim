@@ -30,7 +30,7 @@ public:
     explicit ExportBlogiloJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ExportBlogiloJob();
 
-    void start();
+    void start() Q_DECL_OVERRIDE;
 
 private:
     void backupConfig();

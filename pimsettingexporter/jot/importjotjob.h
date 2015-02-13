@@ -30,10 +30,10 @@ public:
     explicit ImportJotJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ImportJotJob();
 
-    void start();
+    void start() Q_DECL_OVERRIDE;
 
 protected:
-    void nextStep();
+    void nextStep() Q_DECL_OVERRIDE;
 
 private:
     void storeJotArchiveResource(const KArchiveDirectory *dir, const QString &prefix);
@@ -41,7 +41,7 @@ private:
     void importjotConfig(const KArchiveFile *kalarmFile, const QString &kalarmrc, const QString &filename, const QString &prefix);
     void restoreResources();
     void restoreConfig();
-    void addSpecificResourceSettings(KSharedConfig::Ptr resourceConfig, const QString &resourceName, QMap<QString, QVariant> &settings);
+    void addSpecificResourceSettings(KSharedConfig::Ptr resourceConfig, const QString &resourceName, QMap<QString, QVariant> &settings) Q_DECL_OVERRIDE;
 };
 
 #endif // IMPORTJOTJOB_H

@@ -84,7 +84,7 @@ void PimSettingExporterKernel::syncConfig()
 MailCommon::JobScheduler *PimSettingExporterKernel::jobScheduler() const
 {
     Q_ASSERT(false);
-    return 0;
+    return Q_NULLPTR;
 }
 
 Akonadi::ChangeRecorder *PimSettingExporterKernel::folderCollectionMonitor() const

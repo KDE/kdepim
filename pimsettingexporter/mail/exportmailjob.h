@@ -31,7 +31,7 @@ public:
     explicit ExportMailJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ExportMailJob();
 
-    void start();
+    void start() Q_DECL_OVERRIDE;
 
 private:
     QUrl subdirPath(const QUrl &url) const;

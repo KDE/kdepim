@@ -73,7 +73,7 @@ bool PimSettingsBackupRestore::openArchive(const QString &filename, bool readWri
     mArchiveStorage = new ArchiveStorage(filename, this);
     if (!mArchiveStorage->openArchive(readWrite)) {
         delete mArchiveStorage;
-        mArchiveStorage = 0;
+        mArchiveStorage = Q_NULLPTR;
         return false;
     }
     return true;
@@ -164,9 +164,9 @@ void PimSettingsBackupRestore::backupFinished()
     //At the end
     mArchiveStorage->closeArchive();
     delete mArchiveStorage;
-    mArchiveStorage = 0;
+    mArchiveStorage = Q_NULLPTR;
     delete mImportExportData;
-    mImportExportData = 0;
+    mImportExportData = Q_NULLPTR;
     Q_EMIT backupDone();
     //KMessageBox::information(this, i18n("For restoring data, you must use \"pimsettingexporter\". Be careful it can overwrite existing settings, data."), i18n("Backup infos."), QLatin1String("ShowInfoBackupInfos"));
     Q_EMIT updateActions(false);
@@ -266,9 +266,9 @@ void PimSettingsBackupRestore::restoreFinished()
     //At the end
     mArchiveStorage->closeArchive();
     delete mArchiveStorage;
-    mArchiveStorage = 0;
+    mArchiveStorage = Q_NULLPTR;
     delete mImportExportData;
-    mImportExportData = 0;
+    mImportExportData = Q_NULLPTR;
     Q_EMIT updateActions(false);
     deleteLater();
 }
@@ -288,7 +288,7 @@ void PimSettingsBackupRestore::slotJobFinished()
     ++mStoreIterator;
     Q_EMIT addEndLine();
     delete mImportExportData;
-    mImportExportData = 0;
+    mImportExportData = Q_NULLPTR;
     switch (mAction) {
     case Backup:
         backupNextStep();

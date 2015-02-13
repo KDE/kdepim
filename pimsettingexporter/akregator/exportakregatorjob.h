@@ -30,7 +30,7 @@ public:
     explicit ExportAkregatorJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ExportAkregatorJob();
 
-    void start();
+    void start() Q_DECL_OVERRIDE;
 
 private:
     void backupConfig();

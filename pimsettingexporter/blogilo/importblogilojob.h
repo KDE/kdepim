@@ -30,7 +30,7 @@ public:
     explicit ImportBlogiloJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ImportBlogiloJob();
 
-    void start();
+    void start() Q_DECL_OVERRIDE;
 
 private:
     void restoreConfig();

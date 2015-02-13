@@ -30,7 +30,7 @@ public:
     explicit ExportCalendarJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ExportCalendarJob();
 
-    void start();
+    void start() Q_DECL_OVERRIDE;
 
 private:
     void backupResources();

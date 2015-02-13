@@ -34,10 +34,10 @@ public:
     explicit ImportMailJob(QWidget *widget, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ImportMailJob();
 
-    void start();
+    void start() Q_DECL_OVERRIDE;
 
 protected:
-    void nextStep();
+    void nextStep() Q_DECL_OVERRIDE;
 
 private:
     void restoreTransports();

@@ -30,7 +30,7 @@ public:
     explicit ExportAlarmJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ExportAlarmJob();
 
-    void start();
+    void start() Q_DECL_OVERRIDE;
 
 private:
     void backupResources();

@@ -30,7 +30,7 @@ public:
     explicit ExportAddressbookJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ExportAddressbookJob();
 
-    void start();
+    void start() Q_DECL_OVERRIDE;
 
 private:
     void backupResources();
