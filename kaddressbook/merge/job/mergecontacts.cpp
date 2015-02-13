@@ -29,6 +29,11 @@ MergeContacts::~MergeContacts()
 
 }
 
+void MergeContacts::setItems(const Akonadi::Item::List &items)
+{
+    mListItem = items;
+}
+
 KABC::Addressee MergeContacts::mergedContact(bool excludeConflictPart)
 {
     KABC::Addressee newContact;
