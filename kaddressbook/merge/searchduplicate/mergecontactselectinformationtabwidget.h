@@ -33,7 +33,11 @@ public:
     void updateTabWidget();
 
     bool tabBarVisible() const;
-    void addNeedSelectInformationWidget(const Akonadi::Item::List &list);
+    void addNeedSelectInformationWidget(const Akonadi::Item::List &list, bool needUpdateTabWidget = true);
+
+    void setNeedSelectInformationWidgets(const QList<Akonadi::Item::List> &list);
+private:
+    void addNewWidget(const Akonadi::Item::List &list);
 };
 }
 #endif // MERGECONTACTSELECTINFORMATIONTABWIDGET_H

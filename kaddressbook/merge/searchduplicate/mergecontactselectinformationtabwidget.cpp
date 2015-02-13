@@ -42,12 +42,28 @@ bool MergeContactSelectInformationTabWidget::tabBarVisible() const
     return tabBar()->isVisible();
 }
 
-void MergeContactSelectInformationTabWidget::addNeedSelectInformationWidget(const Akonadi::Item::List &list)
+void MergeContactSelectInformationTabWidget::addNeedSelectInformationWidget(const Akonadi::Item::List &list, bool needUpdateTabWidget)
 {
     if (!list.isEmpty()) {
-        KABMergeContacts::MergeContactSelectInformationScrollArea *area = new KABMergeContacts::MergeContactSelectInformationScrollArea;
-        //FIXME add text
-        addTab(area, QString());
-        updateTabWidget();
+        addNewWidget(list);
+        if (needUpdateTabWidget)
+            updateTabWidget();
     }
+}
+
+void MergeContactSelectInformationTabWidget::addNewWidget(const Akonadi::Item::List &list)
+{
+    KABMergeContacts::MergeContactSelectInformationScrollArea *area = new KABMergeContacts::MergeContactSelectInformationScrollArea;
+    //TODO fixme
+    //area->setContacts();
+    //FIXME add text
+    addTab(area, QString());
+}
+
+void MergeContactSelectInformationTabWidget::setNeedSelectInformationWidgets(const QList<Akonadi::Item::List> &list)
+{
+    Q_FOREACH(const Akonadi::Item::List &lst, list) {
+        addNewWidget(lst);
+    }
+    updateTabWidget();
 }

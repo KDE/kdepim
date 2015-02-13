@@ -34,9 +34,13 @@ MergeContactSelectInformationScrollArea::MergeContactSelectInformationScrollArea
     mSelectInformationWidget = new MergeContactSelectInformationWidget;
     mSelectInformationWidget->setObjectName(QLatin1String("selectinformationwidget"));
     area->setWidget(mSelectInformationWidget);
+
+    QHBoxLayout *hbox = new QHBoxLayout;
+    hbox->addStretch();
     QPushButton *mergeButton = new QPushButton(QLatin1String("Merge"));
     mergeButton->setObjectName(QLatin1String("merge"));
-    vbox->addWidget(mergeButton);
+    hbox->addWidget(mergeButton);
+    vbox->addLayout(hbox);
     connect(mergeButton, SIGNAL(clicked()), this, SLOT(slotMergeContacts()));
 }
 
