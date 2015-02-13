@@ -46,7 +46,7 @@ MergeContactSelectListWidget::~MergeContactSelectListWidget()
 void MergeContactSelectListWidget::setContacts(MergeContacts::ConflictInformation conflictType, const KContacts::Addressee::List &lst)
 {
     mConflictType = conflictType;
-    if (lst.isEmpty() || ( conflictType == MergeContacts::None) ) {
+    if (lst.isEmpty() || (conflictType == MergeContacts::None)) {
         return;
     }
     updateTitle();
@@ -57,7 +57,7 @@ void MergeContactSelectListWidget::updateTitle()
 {
     QString title;
     //TODO
-    switch(mConflictType) {
+    switch (mConflictType) {
     case MergeContacts::None:
         break;
     case MergeContacts::Birthday:
@@ -74,7 +74,7 @@ void MergeContactSelectListWidget::updateTitle()
 
 void MergeContactSelectListWidget::fillList(const KContacts::Addressee::List &lst)
 {
-    switch(mConflictType) {
+    switch (mConflictType) {
     case MergeContacts::None:
         break;
     case MergeContacts::Birthday:

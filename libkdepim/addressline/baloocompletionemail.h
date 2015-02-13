@@ -22,7 +22,8 @@
 #define BALOOCOMPLETIONEMAIL_H
 #include <QStringList>
 
-namespace KPIM {
+namespace KPIM
+{
 class BalooCompletionEmail
 {
 public:

@@ -80,33 +80,32 @@ void MergeContactsTest::shouldMergeNotes_data()
 
 void MergeContactsTest::shouldMergeNotes()
 {
-    QFETCH( QString, noteItemA );
-    QFETCH( QString, noteItemB );
-    QFETCH( QString, noteItemC );
-    QFETCH( QString, note );
+    QFETCH(QString, noteItemA);
+    QFETCH(QString, noteItemB);
+    QFETCH(QString, noteItemC);
+    QFETCH(QString, note);
 
     Akonadi::Item::List lst;
     Addressee addressA;
     Akonadi::Item itemA;
     addressA.setName(QLatin1String("foo1"));
     addressA.setNote(noteItemA);
-    itemA.setPayload<Addressee>( addressA );
-    lst<<itemA;
+    itemA.setPayload<Addressee>(addressA);
+    lst << itemA;
 
     Addressee addressB;
     Akonadi::Item itemB;
     addressB.setName(QLatin1String("foo1"));
     addressB.setNote(noteItemB);
-    itemB.setPayload<Addressee>( addressB );
-    lst<<itemB;
+    itemB.setPayload<Addressee>(addressB);
+    lst << itemB;
 
     Addressee addressC;
     Akonadi::Item itemC;
     addressC.setName(QLatin1String("foo1"));
     addressC.setNote(noteItemC);
-    itemC.setPayload<Addressee>( addressC );
-    lst<<itemC;
-
+    itemC.setPayload<Addressee>(addressC);
+    lst << itemC;
 
     MergeContacts contacts(lst);
 
@@ -143,39 +142,37 @@ void MergeContactsTest::shouldMergeEmails_data()
 
 void MergeContactsTest::shouldMergeEmails()
 {
-    QFETCH( QStringList, emailsItemA );
-    QFETCH( QStringList, emailsItemB );
-    QFETCH( QStringList, emailsItemC );
-    QFETCH( QStringList, emails );
+    QFETCH(QStringList, emailsItemA);
+    QFETCH(QStringList, emailsItemB);
+    QFETCH(QStringList, emailsItemC);
+    QFETCH(QStringList, emails);
 
     Akonadi::Item::List lst;
     Addressee addressA;
     Akonadi::Item itemA;
     addressA.setName(QLatin1String("foo1"));
     addressA.setEmails(emailsItemA);
-    itemA.setPayload<Addressee>( addressA );
-    lst<<itemA;
+    itemA.setPayload<Addressee>(addressA);
+    lst << itemA;
 
     Addressee addressB;
     Akonadi::Item itemB;
     addressB.setName(QLatin1String("foo1"));
     addressB.setEmails(emailsItemB);
-    itemB.setPayload<Addressee>( addressB );
-    lst<<itemB;
+    itemB.setPayload<Addressee>(addressB);
+    lst << itemB;
 
     Addressee addressC;
     Akonadi::Item itemC;
     addressC.setName(QLatin1String("foo1"));
     addressC.setEmails(emailsItemC);
-    itemC.setPayload<Addressee>( addressC );
-    lst<<itemC;
-
+    itemC.setPayload<Addressee>(addressC);
+    lst << itemC;
 
     MergeContacts contacts(lst);
 
     const Addressee result = contacts.mergedContact();
     QCOMPARE(result.emails(), emails);
 }
-
 
 QTEST_MAIN(MergeContactsTest)

@@ -24,15 +24,17 @@
 #include <QWidget>
 class QLabel;
 class QListWidget;
-namespace KContacts {
+namespace KContacts
+{
 class Addressee;
 }
-namespace KABMergeContacts {
+namespace KABMergeContacts
+{
 class KADDRESSBOOK_EXPORT MergeContactSelectListWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MergeContactSelectListWidget(QWidget *parent=Q_NULLPTR);
+    explicit MergeContactSelectListWidget(QWidget *parent = Q_NULLPTR);
     ~MergeContactSelectListWidget();
 
     void setContacts(MergeContacts::ConflictInformation conflictType, const KContacts::Addressee::List &lst);

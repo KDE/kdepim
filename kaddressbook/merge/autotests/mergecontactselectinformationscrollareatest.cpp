@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "mergecontactselectinformationscrollareatest.h"
 #include <qtest.h>
 #include "../widgets/mergecontactselectinformationwidget.h"
@@ -37,13 +36,13 @@ MergeContactSelectInformationScrollAreaTest::~MergeContactSelectInformationScrol
 void MergeContactSelectInformationScrollAreaTest::shouldHaveDefaultValue()
 {
     KABMergeContacts::MergeContactSelectInformationScrollArea w;
-    QScrollArea *area = qFindChild<QScrollArea *>(&w,QLatin1String("scrollarea"));
+    QScrollArea *area = qFindChild<QScrollArea *>(&w, QLatin1String("scrollarea"));
     QVERIFY(area);
     QPushButton *mergeButton = qFindChild<QPushButton *>(&w, QLatin1String("merge"));
     QVERIFY(mergeButton);
 
     KABMergeContacts::MergeContactSelectInformationWidget *widget =
-            qFindChild<KABMergeContacts::MergeContactSelectInformationWidget *>(&w, QLatin1String("selectinformationwidget"));
+        qFindChild<KABMergeContacts::MergeContactSelectInformationWidget *>(&w, QLatin1String("selectinformationwidget"));
     QVERIFY(widget);
 }
 

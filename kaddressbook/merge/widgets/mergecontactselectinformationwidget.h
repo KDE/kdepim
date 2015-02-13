@@ -22,13 +22,14 @@
 #include "kaddressbook_export.h"
 #include "merge/job/mergecontacts.h"
 #include <AkonadiCore/Item>
-namespace KABMergeContacts {
+namespace KABMergeContacts
+{
 class MergeContactSelectListWidget;
 class KADDRESSBOOK_EXPORT MergeContactSelectInformationWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MergeContactSelectInformationWidget(QWidget *parent=Q_NULLPTR);
+    explicit MergeContactSelectInformationWidget(QWidget *parent = Q_NULLPTR);
     ~MergeContactSelectInformationWidget();
 
     void setContacts(KABMergeContacts::MergeContacts::ConflictInformations conflictTypes, const Akonadi::Item::List &listItem);

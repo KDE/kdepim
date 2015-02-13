@@ -20,12 +20,13 @@
 
 #include <KMessageWidget>
 #include "kaddressbook_export.h"
-namespace KABMergeContacts {
+namespace KABMergeContacts
+{
 class KADDRESSBOOK_EXPORT MergeContactLoseInformationWarning : public KMessageWidget
 {
     Q_OBJECT
 public:
-    explicit MergeContactLoseInformationWarning(QWidget *parent=Q_NULLPTR);
+    explicit MergeContactLoseInformationWarning(QWidget *parent = Q_NULLPTR);
     ~MergeContactLoseInformationWarning();
 
 Q_SIGNALS:

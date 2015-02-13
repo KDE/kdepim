@@ -76,7 +76,6 @@
 #include "addresseelineedit_p.cpp"
 using namespace KPIM;
 
-
 AddresseeLineEdit::AddresseeLineEdit(QWidget *parent, bool enableCompletion)
     : KLineEdit(parent), d(new Private(this, enableCompletion))
 {

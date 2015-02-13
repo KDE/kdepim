@@ -76,7 +76,7 @@ void MergeContactsJob::generateMergedContact()
     }
 }
 
-void MergeContactsJob::setNewContact(const KContacts::Addressee & addr)
+void MergeContactsJob::setNewContact(const KContacts::Addressee &addr)
 {
     mNewContact = addr;
 }

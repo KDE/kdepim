@@ -22,13 +22,14 @@
 #include "kaddressbook_export.h"
 #include "merge/job/mergecontacts.h"
 
-namespace KABMergeContacts {
+namespace KABMergeContacts
+{
 class MergeContactSelectInformationWidget;
 class KADDRESSBOOK_EXPORT MergeContactSelectInformationScrollArea : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MergeContactSelectInformationScrollArea(QWidget *parent=0);
+    explicit MergeContactSelectInformationScrollArea(QWidget *parent = 0);
     ~MergeContactSelectInformationScrollArea();
     void setContacts(MergeContacts::ConflictInformations conflictTypes, const Akonadi::Item::List &listItem);
     void setCollection(const Akonadi::Collection &col);

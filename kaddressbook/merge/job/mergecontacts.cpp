@@ -66,7 +66,7 @@ void MergeContacts::mergeToContact(KContacts::Addressee &newContact, const KCont
     const QStringList emails = fromContact.emails();
     if (!emails.isEmpty()) {
         QStringList newContactsEmail = newContact.emails();
-        Q_FOREACH(const QString &email, emails) {
+        Q_FOREACH (const QString &email, emails) {
             if (!newContactsEmail.contains(email)) {
                 newContactsEmail.append(email);
             }
@@ -77,7 +77,7 @@ void MergeContacts::mergeToContact(KContacts::Addressee &newContact, const KCont
     const QStringList categories = fromContact.categories();
     if (!categories.isEmpty()) {
         QStringList newContactsCategories = newContact.categories();
-        Q_FOREACH(const QString &category, categories) {
+        Q_FOREACH (const QString &category, categories) {
             if (!newContactsCategories.contains(category)) {
                 newContactsCategories.append(category);
             }
@@ -103,8 +103,9 @@ void MergeContacts::mergeToContact(KContacts::Addressee &newContact, const KCont
 MergeContacts::ConflictInformations MergeContacts::needManualSelectInformations()
 {
     MergeContacts::ConflictInformations result = None;
-    if (mListItem.count() < 2)
+    if (mListItem.count() < 2) {
         return result;
+    }
     KContacts::Addressee newContact;
     Q_FOREACH (const Akonadi::Item &item, mListItem) {
         if (item.hasPayload<KContacts::Addressee>()) {

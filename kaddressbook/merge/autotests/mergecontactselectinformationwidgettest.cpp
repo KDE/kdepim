@@ -45,5 +45,4 @@ void MergeContactSelectInformationWidgetTest::shouldHaveEmptyListIfContactListIs
     //w.setContacts(Akonadi::Item::List());
 }
 
-
 QTEST_KDEMAIN(MergeContactSelectInformationWidgetTest, GUI)

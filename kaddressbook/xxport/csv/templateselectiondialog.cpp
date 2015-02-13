@@ -177,9 +177,9 @@ public:
     }
 
     bool editorEvent(QEvent *event, QAbstractItemModel *model,
-                     const QStyleOptionViewItem &option, const QModelIndex &index) Q_DECL_OVERRIDE
-    {
-        if (event->type() == QEvent::MouseButtonRelease && index.data(Qt::UserRole).toBool()) {
+                     const QStyleOptionViewItem &option, const QModelIndex &index) Q_DECL_OVERRIDE {
+        if (event->type() == QEvent::MouseButtonRelease && index.data(Qt::UserRole).toBool())
+        {
             const QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
             QRect buttonRect = option.rect;
             buttonRect.setLeft(buttonRect.right() - 16);
@@ -187,9 +187,9 @@ public:
             if (buttonRect.contains(mouseEvent->pos())) {
                 const QString templateName = index.data(Qt::DisplayRole).toString();
                 if (KMessageBox::questionYesNo(
-                            Q_NULLPTR,
-                            i18nc("@label", "Do you really want to delete template '%1'?",
-                                  templateName)) == KMessageBox::Yes) {
+                    Q_NULLPTR,
+                    i18nc("@label", "Do you really want to delete template '%1'?",
+                templateName)) == KMessageBox::Yes) {
                     model->removeRows(index.row(), 1);
                     return true;
                 }

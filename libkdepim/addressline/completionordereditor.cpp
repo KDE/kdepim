@@ -89,18 +89,16 @@ public:
         return mWeight;
     }
 
-    void save(CompletionOrderEditor *) Q_DECL_OVERRIDE
-    {
+    void save(CompletionOrderEditor *) Q_DECL_OVERRIDE {
         KConfig *config = KLDAP::LdapClientSearchConfig::config();
         KConfigGroup group(config, "LDAP");
         group.writeEntry(QStringLiteral("SelectedCompletionWeight%1").arg(mLdapClient->clientNumber()),
-                         mWeight);
+        mWeight);
         group.sync();
     }
 
 protected:
-    void setCompletionWeight(int weight) Q_DECL_OVERRIDE
-    {
+    void setCompletionWeight(int weight) Q_DECL_OVERRIDE {
         mWeight = weight;
     }
 
@@ -139,15 +137,13 @@ public:
         return mWeight;
     }
 
-    void save(CompletionOrderEditor *editor) Q_DECL_OVERRIDE
-    {
+    void save(CompletionOrderEditor *editor) Q_DECL_OVERRIDE {
         KConfigGroup group(editor->configFile(), "CompletionWeights");
         group.writeEntry(mIdentifier, mWeight);
     }
 
 protected:
-    void setCompletionWeight(int weight) Q_DECL_OVERRIDE
-    {
+    void setCompletionWeight(int weight) Q_DECL_OVERRIDE {
         mWeight = weight;
     }
 
@@ -282,12 +278,12 @@ void CompletionOrderEditor::writeConfig()
 void CompletionOrderEditor::addRecentAddressItem()
 {
     //Be default it's the first.
-    SimpleCompletionItem *item = new SimpleCompletionItem( this, i18n( "Recent Addresses" ), QLatin1String("Recent Addresses"), 10 );
-    item->setIcon( QIcon::fromTheme(QLatin1String("kmail")) );
-    new CompletionViewItem( mListView, item, 0 );
+    SimpleCompletionItem *item = new SimpleCompletionItem(this, i18n("Recent Addresses"), QLatin1String("Recent Addresses"), 10);
+    item->setIcon(QIcon::fromTheme(QLatin1String("kmail")));
+    new CompletionViewItem(mListView, item, 0);
 }
 
-void CompletionOrderEditor::addCompletionItemForIndex( const QModelIndex &index )
+void CompletionOrderEditor::addCompletionItemForIndex(const QModelIndex &index)
 {
     const Akonadi::Collection collection = index.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
     if (!collection.isValid()) {
@@ -336,7 +332,7 @@ void CompletionOrderEditor::loadCompletionItems()
 
     addRecentAddressItem();
 
-    mListView->sortItems( 0, Qt::AscendingOrder );
+    mListView->sortItems(0, Qt::AscendingOrder);
 }
 
 void CompletionOrderEditor::rowsInserted(const QModelIndex &parent, int start, int end)
@@ -406,10 +402,10 @@ void CompletionOrderEditor::slotOk()
     if (mDirty) {
         int w = 100;
         //Clean up order
-        KConfigGroup group( configFile(), "CompletionWeights" );
+        KConfigGroup group(configFile(), "CompletionWeights");
         group.deleteGroup();
 
-        for ( int itemIndex = 0; itemIndex < mListView->topLevelItemCount(); ++itemIndex ) {
+        for (int itemIndex = 0; itemIndex < mListView->topLevelItemCount(); ++itemIndex) {
             CompletionViewItem *item =
                 static_cast<CompletionViewItem *>(mListView->topLevelItem(itemIndex));
             item->item()->setCompletionWeight(w);

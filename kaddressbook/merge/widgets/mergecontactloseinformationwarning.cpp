@@ -31,16 +31,16 @@ MergeContactLoseInformationWarning::MergeContactLoseInformationWarning(QWidget *
     setText(QLatin1String("Some merge can lose information. Do you want to continue or customize what merged ?"));
 
     //KF5 add i18n
-    QAction *action = new QAction( QLatin1String( "Customize" ), this );
+    QAction *action = new QAction(QLatin1String("Customize"), this);
     action->setObjectName(QLatin1String("customize"));
     connect(action, &QAction::triggered, this, &MergeContactLoseInformationWarning::slotCustomizeMerge);
-    addAction( action );
+    addAction(action);
 
     //KF5 add i18n
-    action = new QAction( QLatin1String( "Automatic Merging" ), this );
+    action = new QAction(QLatin1String("Automatic Merging"), this);
     action->setObjectName(QLatin1String("automatic"));
     connect(action, &QAction::triggered, this, &MergeContactLoseInformationWarning::slotAutomaticMerging);
-    addAction( action );
+    addAction(action);
 }
 
 MergeContactLoseInformationWarning::~MergeContactLoseInformationWarning()

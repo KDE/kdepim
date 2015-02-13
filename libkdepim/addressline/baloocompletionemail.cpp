@@ -46,8 +46,9 @@ void BalooCompletionEmail::setBlackList(const QStringList &lst)
 
 QStringList BalooCompletionEmail::cleanupEmailList()
 {
-    if (mListEmail.isEmpty())
+    if (mListEmail.isEmpty()) {
         return mListEmail;
+    }
     QMap<QString, QString> hashEmail;
     Q_FOREACH (QString email, mListEmail) {
         if (!mBlackList.contains(email)) {
@@ -57,7 +58,7 @@ QStringList BalooCompletionEmail::cleanupEmailList()
                 address = email;
             }
             bool excludeMail = false;
-            Q_FOREACH(const QString &excludeDomain, mExcludeDomain) {
+            Q_FOREACH (const QString &excludeDomain, mExcludeDomain) {
                 if (!excludeDomain.isEmpty()) {
                     if (address.endsWith(excludeDomain)) {
                         excludeMail = true;
@@ -73,7 +74,6 @@ QStringList BalooCompletionEmail::cleanupEmailList()
     return hashEmail.values();
 }
 
-
 /* stips the name of an email address email
  *
  * 'a' <a@example.com> -> a <a@example.com>
@@ -86,15 +86,15 @@ QStringList BalooCompletionEmail::cleanupEmailList()
 QString BalooCompletionEmail::stripEmail(const QString &email, QString &address)
 {
     QString displayName, addrSpec, comment;
-    if ( KEmailAddress::AddressOk == KEmailAddress::splitAddress( email, displayName, addrSpec, comment )) {
+    if (KEmailAddress::AddressOk == KEmailAddress::splitAddress(email, displayName, addrSpec, comment)) {
         address = addrSpec;
         while ((displayName.startsWith(QLatin1Char('\'')) && displayName.endsWith(QLatin1Char('\''))) ||
-                    (displayName.startsWith(QLatin1Char('"')) && displayName.endsWith(QLatin1Char('"'))) ||
-                    (displayName.startsWith(QLatin1String("\\\"")) && displayName.endsWith(QLatin1String("\\\""))) ) {
+                (displayName.startsWith(QLatin1Char('"')) && displayName.endsWith(QLatin1Char('"'))) ||
+                (displayName.startsWith(QLatin1String("\\\"")) && displayName.endsWith(QLatin1String("\\\"")))) {
             if (displayName.startsWith(QLatin1String("\\\""))) {
-                displayName = displayName.mid(2, displayName.length()-4).trimmed();
+                displayName = displayName.mid(2, displayName.length() - 4).trimmed();
             } else {
-                displayName = displayName.mid(1, displayName.length()-2).trimmed();
+                displayName = displayName.mid(1, displayName.length() - 2).trimmed();
             }
         }
         return KEmailAddress::normalizedAddress(displayName, addrSpec, comment);

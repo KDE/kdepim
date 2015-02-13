@@ -86,7 +86,7 @@ void BalooCompletionEmailTest::shouldReturnUniqueEmail()
     emailList << QLatin1String("foo1");
     emailList << QLatin1String("foo2");
     completion.setEmailList(emailList);
-    QCOMPARE(completion.cleanupEmailList(), (QStringList() << QLatin1String("foo") << QLatin1String("foo1") << QLatin1String("foo2") ) );
+    QCOMPARE(completion.cleanupEmailList(), (QStringList() << QLatin1String("foo") << QLatin1String("foo1") << QLatin1String("foo2")));
 }
 
 void BalooCompletionEmailTest::shouldReturnEmptyListWhenAllBlackListed()
@@ -121,9 +121,9 @@ void BalooCompletionEmailTest::shouldExcludeDomain()
     const QString newAddress = QLatin1String("foo6@linux.org");
     emailList << newAddress;
     completion.setEmailList(emailList);
-    QCOMPARE(completion.cleanupEmailList(), (QStringList() << newAddress) );
+    QCOMPARE(completion.cleanupEmailList(), (QStringList() << newAddress));
 
-    completion.setExcludeDomain(QStringList() << QLatin1String("kde.org") << QLatin1String("linux.org") );
+    completion.setExcludeDomain(QStringList() << QLatin1String("kde.org") << QLatin1String("linux.org"));
     QVERIFY(completion.cleanupEmailList().isEmpty());
 }
 
@@ -158,7 +158,7 @@ void BalooCompletionEmailTest::shouldDontDuplicateEmailWhenUseCase()
     caseEmailList << QLatin1String("Foo");
     caseEmailList << QLatin1String("fOo2");
     caseEmailList << QLatin1String("FOo3");
-    completion.setEmailList((QStringList() << emailList<<caseEmailList));
+    completion.setEmailList((QStringList() << emailList << caseEmailList));
     QCOMPARE(completion.cleanupEmailList(), emailList);
 }
 

@@ -125,20 +125,19 @@ void AddHostDialog::slotHostEditChanged(const QString &text)
 
 void AddHostDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "AddHostDialog" );
-    const QSize size = group.readEntry( "Size", QSize(600, 400) );
-    if ( size.isValid() ) {
-        resize( size );
+    KConfigGroup group(KSharedConfig::openConfig(), "AddHostDialog");
+    const QSize size = group.readEntry("Size", QSize(600, 400));
+    if (size.isValid()) {
+        resize(size);
     }
 }
 
 void AddHostDialog::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "AddHostDialog" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KSharedConfig::openConfig(), "AddHostDialog");
+    group.writeEntry("Size", size());
     group.sync();
 }
-
 
 void AddHostDialog::slotOk()
 {
