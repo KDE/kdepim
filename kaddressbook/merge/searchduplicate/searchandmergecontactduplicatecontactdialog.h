@@ -20,7 +20,7 @@
 
 #include <KDialog>
 #include <Akonadi/Item>
-
+#include "searchduplicateresultwidget.h"
 #include "kaddressbook_export.h"
 class QStackedWidget;
 class QLabel;
@@ -41,7 +41,7 @@ private slots:
     void slotDuplicateFound(const QList<Akonadi::Item::List> &duplicate);
     void slotMergeDone();
     void slotContactMerged(const Akonadi::Item &item);
-    void slotCustomizeMergeContacts();
+    void slotCustomizeMergeContacts(const QList<KABMergeContacts::MergeConflictResult> &lst);
 private:
     void readConfig();
     void writeConfig();

@@ -39,6 +39,7 @@ MergeContactSelectInformationScrollArea::MergeContactSelectInformationScrollArea
     QVBoxLayout *layout = new QVBoxLayout;
     selectMergeWidget->setLayout(layout);
     QScrollArea *area = new QScrollArea;
+    area->setWidgetResizable(true);
     area->setObjectName(QLatin1String("scrollarea"));
     layout->addWidget(area);
     mSelectInformationWidget = new MergeContactSelectInformationWidget;
@@ -75,6 +76,7 @@ void MergeContactSelectInformationScrollArea::setContacts(MergeContacts::Conflic
 {
     mListItem = listItem;
     mSelectInformationWidget->setContacts(conflictTypes, listItem);
+
 }
 
 void MergeContactSelectInformationScrollArea::slotMergeContacts()

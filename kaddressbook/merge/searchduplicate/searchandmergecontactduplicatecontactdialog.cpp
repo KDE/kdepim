@@ -46,7 +46,7 @@ SearchAndMergeContactDuplicateContactDialog::SearchAndMergeContactDuplicateConta
     mStackedWidget->addWidget(mSearchResult);
     connect(mSearchResult, SIGNAL(contactMerged(Akonadi::Item)), this, SLOT(slotContactMerged(Akonadi::Item)));
     connect(mSearchResult, SIGNAL(mergeDone()), this, SLOT(slotMergeDone()));
-    connect(mSearchResult, SIGNAL(customizeMergeContact()), this, SLOT(slotCustomizeMergeContacts()));
+    connect(mSearchResult, SIGNAL(customizeMergeContact(QList<KABMergeContacts::MergeConflictResult>)), this, SLOT(slotCustomizeMergeContacts(QList<KABMergeContacts::MergeConflictResult>)));
 
     mNoContactSelected = new QLabel(i18n("No contacts selected."));
     mNoContactSelected->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
@@ -135,9 +135,9 @@ void SearchAndMergeContactDuplicateContactDialog::slotMergeDone()
     mStackedWidget->setCurrentWidget(mMergeContactResult);
 }
 
-void SearchAndMergeContactDuplicateContactDialog::slotCustomizeMergeContacts()
+void SearchAndMergeContactDuplicateContactDialog::slotCustomizeMergeContacts(const QList<MergeConflictResult> &lst)
 {
     //TODO add infos
-    //mSelectInformation->setNeedSelectInformationWidgets(...);
+    mSelectInformation->setNeedSelectInformationWidgets(lst);
     mStackedWidget->setCurrentWidget(mSelectInformation);
 }

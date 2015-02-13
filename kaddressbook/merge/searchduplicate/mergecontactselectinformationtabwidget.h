@@ -21,6 +21,7 @@
 #include <QTabWidget>
 #include <Akonadi/Item>
 #include "kaddressbook_export.h"
+#include "searchduplicateresultwidget.h"
 
 namespace KABMergeContacts {
 class KADDRESSBOOK_EXPORT MergeContactSelectInformationTabWidget : public QTabWidget
@@ -35,9 +36,9 @@ public:
     bool tabBarVisible() const;
     void addNeedSelectInformationWidget(const Akonadi::Item::List &list, bool needUpdateTabWidget = true);
 
-    void setNeedSelectInformationWidgets(const QList<Akonadi::Item::List> &list);
+    void setNeedSelectInformationWidgets(const QList<KABMergeContacts::MergeConflictResult> &list);
 private:
-    void addNewWidget(const Akonadi::Item::List &list);
+    void addNewWidget(const MergeConflictResult &list);
 };
 }
 #endif // MERGECONTACTSELECTINFORMATIONTABWIDGET_H

@@ -44,25 +44,26 @@ bool MergeContactSelectInformationTabWidget::tabBarVisible() const
 
 void MergeContactSelectInformationTabWidget::addNeedSelectInformationWidget(const Akonadi::Item::List &list, bool needUpdateTabWidget)
 {
+#if 0 //FIXME
     if (!list.isEmpty()) {
         addNewWidget(list);
         if (needUpdateTabWidget)
             updateTabWidget();
     }
+#endif
 }
 
-void MergeContactSelectInformationTabWidget::addNewWidget(const Akonadi::Item::List &list)
+void MergeContactSelectInformationTabWidget::addNewWidget(const KABMergeContacts::MergeConflictResult &list)
 {
     KABMergeContacts::MergeContactSelectInformationScrollArea *area = new KABMergeContacts::MergeContactSelectInformationScrollArea;
-    //TODO fixme
-    //area->setContacts();
-    //FIXME add text
-    addTab(area, QString());
+    area->setContacts(list.conflictInformation, list.list);
+    //KF5 add i18n
+    addTab(area, QString::fromLatin1("Duplicate contact %1").arg(count()+1));
 }
 
-void MergeContactSelectInformationTabWidget::setNeedSelectInformationWidgets(const QList<Akonadi::Item::List> &list)
+void MergeContactSelectInformationTabWidget::setNeedSelectInformationWidgets(const QList<KABMergeContacts::MergeConflictResult> &list)
 {
-    Q_FOREACH(const Akonadi::Item::List &lst, list) {
+    Q_FOREACH(const KABMergeContacts::MergeConflictResult &lst, list) {
         addNewWidget(lst);
     }
     updateTabWidget();

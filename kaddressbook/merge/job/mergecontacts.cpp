@@ -158,5 +158,6 @@ MergeContacts::ConflictInformations MergeContacts::needManualSelectInformations(
             }
         }
     }
+    qDebug()<<" result "<<result;
     return result;
 }

@@ -60,14 +60,17 @@ void MergeContactSelectListWidget::updateTitle()
     case MergeContacts::None:
         break;
     case MergeContacts::Birthday:
+
         break;
     case MergeContacts::Geo:
+        title = QLatin1String("Geo:");
         break;
     case MergeContacts::Photo:
         break;
     case MergeContacts::Logo:
         break;
     }
+
     mTitle->setText(title);
 }
 

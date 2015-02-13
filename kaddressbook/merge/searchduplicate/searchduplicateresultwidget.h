@@ -50,7 +50,7 @@ public:
 Q_SIGNALS:
     void contactMerged(const Akonadi::Item &item);
     void mergeDone();
-    void customizeMergeContact();
+    void customizeMergeContact(const QList<KABMergeContacts::MergeConflictResult> &);
 
 
 private slots:
