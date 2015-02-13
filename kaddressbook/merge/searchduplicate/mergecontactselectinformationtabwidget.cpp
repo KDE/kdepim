@@ -16,6 +16,7 @@
 */
 
 #include "mergecontactselectinformationtabwidget.h"
+#include "merge/widgets/mergecontactselectinformationscrollarea.h"
 #include <QTabBar>
 
 using namespace KABMergeContacts;
@@ -41,3 +42,12 @@ bool MergeContactSelectInformationTabWidget::tabBarVisible() const
     return tabBar()->isVisible();
 }
 
+void MergeContactSelectInformationTabWidget::addNeedSelectInformationWidget(const Akonadi::Item::List &list)
+{
+    if (!list.isEmpty()) {
+        KABMergeContacts::MergeContactSelectInformationScrollArea *area = new KABMergeContacts::MergeContactSelectInformationScrollArea;
+        //FIXME add text
+        addTab(area, QString());
+        updateTabWidget();
+    }
+}

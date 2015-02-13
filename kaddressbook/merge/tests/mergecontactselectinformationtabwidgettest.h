@@ -28,6 +28,7 @@ public:
     ~MergeContactSelectInformationTabWidgetTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldAddTab();
 };
 
 #endif // MERGECONTACTSELECTINFORMATIONTABWIDGETTEST_H

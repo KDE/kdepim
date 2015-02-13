@@ -36,4 +36,18 @@ void MergeContactSelectInformationTabWidgetTest::shouldHaveDefaultValue()
     QVERIFY(!w.tabBarVisible());
 }
 
+void MergeContactSelectInformationTabWidgetTest::shouldAddTab()
+{
+    KABMergeContacts::MergeContactSelectInformationTabWidget w;
+    w.show();
+    Akonadi::Item::List lst;
+    lst << Akonadi::Item(42);
+    lst << Akonadi::Item(43);
+    w.addNeedSelectInformationWidget(lst);
+    QVERIFY(!w.tabBarVisible());
+    w.addNeedSelectInformationWidget(lst);
+    QVERIFY(w.tabBarVisible());
+}
+
+
 QTEST_KDEMAIN(MergeContactSelectInformationTabWidgetTest, GUI)

@@ -19,6 +19,7 @@
 #define MERGECONTACTSELECTINFORMATIONTABWIDGET_H
 
 #include <QTabWidget>
+#include <Akonadi/Item>
 #include "kaddressbook_export.h"
 
 namespace KABMergeContacts {
@@ -32,6 +33,7 @@ public:
     void updateTabWidget();
 
     bool tabBarVisible() const;
+    void addNeedSelectInformationWidget(const Akonadi::Item::List &list);
 };
 }
 #endif // MERGECONTACTSELECTINFORMATIONTABWIDGET_H
