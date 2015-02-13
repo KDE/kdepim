@@ -19,7 +19,6 @@ set(kaddressbook_grantlee_LIB_SRCS
   formatter/grantleecontactformatter.cpp
   formatter/grantleecontactgroupformatter.cpp
   formatter/grantleecontactutils.cpp
-  grantleeutil.cpp
 )
 
 set(kaddressbook_grantlee_printing_LIB_SRCS

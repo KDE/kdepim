@@ -32,7 +32,7 @@ public:
     ~MergeContactSelectInformationWidget();
 
     void setContacts(KABMergeContacts::MergeContacts::ConflictInformations conflictTypes, const Akonadi::Item::List &listItem);
-    KContacts::Addressee createContact();
+    void createContact(KContacts::Addressee &addr);
 
 private:
     void addInformationWidget(MergeContacts::ConflictInformation conflictType);

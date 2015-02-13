@@ -31,7 +31,6 @@ public:
     MergeContacts(const Akonadi::Item::List &items = Akonadi::Item::List());
     ~MergeContacts();
 
-    KContacts::Addressee mergedContact();
     enum ConflictInformation {
         None = 0,
         Birthday = 1,
@@ -42,10 +41,12 @@ public:
     Q_ENUMS(ConflictInformation)
     Q_DECLARE_FLAGS(ConflictInformations, ConflictInformation)
 
+    KContacts::Addressee mergedContact(bool excludeConflictPart = false);
+
     MergeContacts::ConflictInformations needManualSelectInformations();
 
 private:
-    void mergeToContact(KContacts::Addressee &newAddress, const KContacts::Addressee &fromContact);
+    void mergeToContact(KContacts::Addressee &newAddress, const KContacts::Addressee &fromContact, bool excludeConflictPart);
     Akonadi::Item::List mListItem;
 };
 }

@@ -20,6 +20,9 @@
 #include <qtest.h>
 #include "../widgets/mergecontactselectinformationwidget.h"
 #include "../widgets/mergecontactselectinformationscrollarea.h"
+#include <QScrollArea>
+#include <QPushButton>
+
 MergeContactSelectInformationScrollAreaTest::MergeContactSelectInformationScrollAreaTest(QObject *parent)
     : QObject(parent)
 {
@@ -34,6 +37,11 @@ MergeContactSelectInformationScrollAreaTest::~MergeContactSelectInformationScrol
 void MergeContactSelectInformationScrollAreaTest::shouldHaveDefaultValue()
 {
     KABMergeContacts::MergeContactSelectInformationScrollArea w;
+    QScrollArea *area = qFindChild<QScrollArea *>(&w,QLatin1String("scrollarea"));
+    QVERIFY(area);
+    QPushButton *mergeButton = qFindChild<QPushButton *>(&w, QLatin1String("merge"));
+    QVERIFY(mergeButton);
+
     KABMergeContacts::MergeContactSelectInformationWidget *widget =
             qFindChild<KABMergeContacts::MergeContactSelectInformationWidget *>(&w, QLatin1String("selectinformationwidget"));
     QVERIFY(widget);

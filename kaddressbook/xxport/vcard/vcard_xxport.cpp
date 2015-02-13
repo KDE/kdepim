@@ -303,28 +303,29 @@ KContacts::Addressee::List VCardXXPort::filterContacts(const KContacts::Addresse
             addr.setSuffix((*it).suffix());
         }
 
-        addr.setNickName((*it).nickName());
-        addr.setMailer((*it).mailer());
-        addr.setTimeZone((*it).timeZone());
-        addr.setGeo((*it).geo());
-        addr.setProductId((*it).productId());
-        addr.setSortString((*it).sortString());
-        addr.setUrl((*it).url());
-        addr.setExtraUrlList((*it).extraUrlList());
-        addr.setSecrecy((*it).secrecy());
-        addr.setSound((*it).sound());
-        addr.setEmailList((*it).emailList());
-        addr.setCategories((*it).categories());
-        addr.setExtraSoundList((*it).extraSoundList());
-        addr.setGender((*it).gender());
-        addr.setLangs((*it).langs());
-        addr.setKind((*it).kind());
-        addr.setMembers((*it).members());
-        addr.setRelationShips((*it).relationShips());
+        addr.setNickName( (*it).nickName() );
+        addr.setMailer( (*it).mailer() );
+        addr.setTimeZone( (*it).timeZone() );
+        addr.setGeo( (*it).geo() );
+        addr.setProductId( (*it).productId() );
+        addr.setSortString( (*it).sortString() );
+        addr.setUrl( (*it).url() );
+        addr.setExtraUrlList( (*it).extraUrlList() );
+        addr.setSecrecy( (*it).secrecy() );
+        addr.setSound( (*it).sound() );
+        addr.setEmailList( (*it).emailList() );
+        addr.setCategories( (*it).categories() );
+        addr.setExtraSoundList( (*it).extraSoundList() );
+        addr.setGender( (*it).gender() );
+        addr.setLangs( (*it).langs() );
+        addr.setKind( (*it).kind() );
+        addr.setMembers( (*it).members() );
+        addr.setRelationShips( (*it).relationShips() );
+        addr.setSourcesUrlList( (*it).sourcesUrlList() );
 
-        if (exportFieldType & VCardExportSelectionWidget::Private) {
-            addr.setBirthday((*it).birthday());
-            addr.setNote((*it).note());
+        if ( exportFieldType & VCardExportSelectionWidget::Private ) {
+            addr.setBirthday( (*it).birthday() );
+            addr.setNote( (*it).note() );
         }
 
         if (exportFieldType & VCardExportSelectionWidget::Picture) {

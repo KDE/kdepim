@@ -133,7 +133,7 @@ void SearchDuplicateResultWidget::slotUpdateMergeButton()
 
 void SearchDuplicateResultWidget::slotAutomaticMerging()
 {
-    //TODO
+    mergeContact();
 }
 
 void SearchDuplicateResultWidget::slotCustomizeMergingContacts()

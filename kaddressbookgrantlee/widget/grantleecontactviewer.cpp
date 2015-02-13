@@ -16,8 +16,10 @@
 */
 
 #include "grantleecontactviewer.h"
-#include "grantleeutil.h"
 #include "formatter/grantleecontactformatter.h"
+#include <grantleetheme/globalsettings_base.h>
+#include <KSharedConfig>
+#include <grantleetheme/grantleethememanager.h>
 
 using namespace KAddressBookGrantlee;
 
@@ -26,11 +28,21 @@ GrantleeContactViewer::GrantleeContactViewer(QWidget *parent)
 {
     mFormatter = new KAddressBookGrantlee::GrantleeContactFormatter;
     setContactFormatter(mFormatter);
-    mFormatter->setAbsoluteThemePath(KAddressBookGrantlee::GrantleeUtil::kaddressBookAbsoluteThemePath());
+    mFormatter->setAbsoluteThemePath(kaddressBookAbsoluteThemePath());
 }
 
 GrantleeContactViewer::~GrantleeContactViewer()
 {
+}
+
+QString GrantleeContactViewer::kaddressBookAbsoluteThemePath()
+{
+    QString themeName = GrantleeTheme::GrantleeSettings::self()->grantleeAddressBookThemeName();
+    if (themeName.isEmpty()) {
+        themeName = QLatin1String("default");
+    }
+    const QString absolutePath = GrantleeTheme::GrantleeThemeManager::pathFromThemes(QLatin1String("kaddressbook/viewertemplates/"), themeName, QLatin1String( "theme.desktop" ));
+    return absolutePath;
 }
 
 void GrantleeContactViewer::setForceDisableQRCode(bool b)

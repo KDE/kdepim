@@ -28,6 +28,8 @@ MergeContactLoseInformationWarning::MergeContactLoseInformationWarning(QWidget *
     setMessageType(Information);
     setWordWrap(true);
 
+    setText(QLatin1String("Some merge can lose information. Do you want to continue or customize what merged ?"));
+
     //KF5 add i18n
     QAction *action = new QAction( QLatin1String( "Customize" ), this );
     action->setObjectName(QLatin1String("customize"));

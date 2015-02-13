@@ -29,7 +29,7 @@ MergeContacts::~MergeContacts()
 
 }
 
-KContacts::Addressee MergeContacts::mergedContact()
+KContacts::Addressee MergeContacts::mergedContact(bool excludeConflictPart)
 {
     KContacts::Addressee newContact;
     if (mListItem.count() == 1) {
@@ -43,14 +43,14 @@ KContacts::Addressee MergeContacts::mergedContact()
                 firstAddress = false;
                 newContact = address;
             } else {
-                mergeToContact(newContact, address);
+                mergeToContact(newContact, address, excludeConflictPart);
             }
         }
     }
     return newContact;
 }
 
-void MergeContacts::mergeToContact(KContacts::Addressee &newContact, const KContacts::Addressee &fromContact)
+void MergeContacts::mergeToContact(KContacts::Addressee &newContact, const KContacts::Addressee &fromContact, bool excludeConflictPart)
 {
     // Duplicate notes.
     const QString fromContactNote = fromContact.note();
