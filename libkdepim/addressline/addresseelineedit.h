@@ -82,6 +82,7 @@ public:
 
     void setEnableBalooSearch(bool enable);
 
+    bool isCompletionEnabled() const;
 Q_SIGNALS:
     void textCompleted();
 
