@@ -43,6 +43,7 @@ public:
 Q_SIGNALS:
     void contactMerged(const Akonadi::Item &item);
     void mergeDone();
+    void customizeMergeContact();
 
 
 private slots:

@@ -139,5 +139,7 @@ void SearchDuplicateResultWidget::slotAutomaticMerging()
 
 void SearchDuplicateResultWidget::slotCustomizeMergingContacts()
 {
+    //TODO send info too
+    Q_EMIT customizeMergeContact();
     //TODO
 }

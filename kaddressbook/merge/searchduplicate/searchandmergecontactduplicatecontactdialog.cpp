@@ -18,7 +18,7 @@
 
 #include "searchandmergecontactduplicatecontactdialog.h"
 
-#include "merge/widgets/mergecontactselectinformationscrollarea.h"
+#include "mergecontactselectinformationtabwidget.h"
 #include "merge/searchduplicate/searchduplicateresultwidget.h"
 #include "merge/widgets/mergecontactshowresulttabwidget.h"
 #include "merge/job/searchpotentialduplicatecontactjob.h"
@@ -46,6 +46,7 @@ SearchAndMergeContactDuplicateContactDialog::SearchAndMergeContactDuplicateConta
     mStackedWidget->addWidget(mSearchResult);
     connect(mSearchResult, SIGNAL(contactMerged(Akonadi::Item)), this, SLOT(slotContactMerged(Akonadi::Item)));
     connect(mSearchResult, SIGNAL(mergeDone()), this, SLOT(slotMergeDone()));
+    connect(mSearchResult, SIGNAL(customizeMergeContact()), this, SLOT(slotCustomizeMergeContacts()));
 
     mNoContactSelected = new QLabel(i18n("No contacts selected."));
     mNoContactSelected->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
@@ -72,7 +73,7 @@ SearchAndMergeContactDuplicateContactDialog::SearchAndMergeContactDuplicateConta
     mStackedWidget->addWidget(mNoEnoughContactSelected);
     mStackedWidget->setCurrentWidget(mNoContactSelected);
 
-    mSelectInformation = new KABMergeContacts::MergeContactSelectInformationScrollArea(this);
+    mSelectInformation = new KABMergeContacts::MergeContactSelectInformationTabWidget(this);
     mSelectInformation->setObjectName(QLatin1String("selectioninformation"));
     mStackedWidget->addWidget(mSelectInformation);
 
@@ -132,4 +133,11 @@ void SearchAndMergeContactDuplicateContactDialog::slotContactMerged(const Akonad
 void SearchAndMergeContactDuplicateContactDialog::slotMergeDone()
 {
     mStackedWidget->setCurrentWidget(mMergeContactResult);
+}
+
+void SearchAndMergeContactDuplicateContactDialog::slotCustomizeMergeContacts()
+{
+    //TODO add infos
+    //mSelectInformation->setNeedSelectInformationWidgets(...);
+    mStackedWidget->setCurrentWidget(mSelectInformation);
 }

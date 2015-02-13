@@ -18,6 +18,7 @@
 #include "mergecontactselectinformationscrollarea.h"
 #include "mergecontactselectinformationwidget.h"
 #include "merge/job/mergecontactsjob.h"
+#include "merge/widgets/mergecontactinfowidget.h"
 #include <QVBoxLayout>
 #include <QScrollArea>
 #include <QStackedWidget>
@@ -54,6 +55,10 @@ MergeContactSelectInformationScrollArea::MergeContactSelectInformationScrollArea
 
     mStackWidget->addWidget(selectMergeWidget);
 
+    mMergedContactWidget = new MergeContactInfoWidget;
+    mMergedContactWidget->setObjectName(QLatin1String("mergedcontactwidget"));
+    mStackWidget->addWidget(mMergedContactWidget);
+    mStackWidget->setCurrentWidget(selectMergeWidget);
 }
 
 MergeContactSelectInformationScrollArea::~MergeContactSelectInformationScrollArea()
@@ -80,4 +85,11 @@ void MergeContactSelectInformationScrollArea::slotMergeContacts()
 
     //KABMergeContacts::MergeContacts *job = new KABMergeContacts::MergeContacts()
     //TODO merge now.
+}
+
+void MergeContactSelectInformationScrollArea::slotMergeDone()
+{
+
+    mStackWidget->setCurrentWidget(mSelectInformationWidget);
+    //TODO
 }
