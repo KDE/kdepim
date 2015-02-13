@@ -30,8 +30,8 @@ class CollectionAclPage : public Akonadi::CollectionPropertiesPage
 public:
     explicit CollectionAclPage(QWidget *parent = Q_NULLPTR);
 
-    void load(const Akonadi::Collection &col);
-    void save(Akonadi::Collection &col);
+    void load(const Akonadi::Collection &col) Q_DECL_OVERRIDE;
+    void save(Akonadi::Collection &col) Q_DECL_OVERRIDE;
 
 private:
     Ui::CollectionAclPage ui;

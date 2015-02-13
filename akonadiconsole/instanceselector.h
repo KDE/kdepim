@@ -39,7 +39,7 @@ class InstanceSelector : public QDialog
 {
     Q_OBJECT
 public:
-    explicit InstanceSelector(const QString &remoteHost, QWidget *parent = Q_NULLPTR, Qt::WindowFlags flags = 0);
+    explicit InstanceSelector(const QString &remoteHost, QWidget *parent = Q_NULLPTR, Qt::WindowFlags flags = Q_NULLPTR);
     virtual ~InstanceSelector();
 
 private Q_SLOTS:

@@ -44,7 +44,7 @@ public:
 
     bool isEnabled() const
     {
-        return m_source != 0;
+        return m_source != Q_NULLPTR;
     }
 
 public Q_SLOTS:

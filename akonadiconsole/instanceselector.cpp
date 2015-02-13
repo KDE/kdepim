@@ -40,7 +40,7 @@ InstanceSelector::InstanceSelector(const QString &remoteHost, QWidget *parent, Q
     : QDialog(parent, flags),
       ui(new Ui::InstanceSelector),
       m_remoteHost(remoteHost),
-      mWindow(0)
+      mWindow(Q_NULLPTR)
 {
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;

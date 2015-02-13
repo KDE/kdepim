@@ -24,7 +24,7 @@
 #include <KLocalizedString>
 #include <QDebug>
 
-AgentConfigModel::AgentConfigModel(QObject *parent): QAbstractTableModel(parent), m_interface(0)
+AgentConfigModel::AgentConfigModel(QObject *parent): QAbstractTableModel(parent), m_interface(Q_NULLPTR)
 {
 }
 

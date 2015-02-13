@@ -33,8 +33,8 @@ class CollectionAttributePage : public Akonadi::CollectionPropertiesPage
 public:
     explicit CollectionAttributePage(QWidget *parent = Q_NULLPTR);
 
-    void load(const Akonadi::Collection &col);
-    void save(Akonadi::Collection &col);
+    void load(const Akonadi::Collection &col) Q_DECL_OVERRIDE;
+    void save(Akonadi::Collection &col) Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void addAttribute();

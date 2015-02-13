@@ -25,7 +25,7 @@
 #include <QtDBus/QDBusConnection>
 
 MonitorsModel::MonitorsModel(QObject *parent):
-    QAbstractItemModel(parent), mManager(0)
+    QAbstractItemModel(parent), mManager(Q_NULLPTR)
 {
     QTimer::singleShot(0, this, SLOT(init()));
 }

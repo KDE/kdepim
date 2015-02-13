@@ -85,7 +85,7 @@ public:
         NUM_COLUMNS
     };
 
-    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE
     {
         if (orientation == Qt::Vertical || section < 0 || section >= NUM_COLUMNS || role != Qt::DisplayRole) {
             return QVariant();
@@ -140,7 +140,7 @@ public:
         return QVariant();
     }
 
-    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE
     {
         if (!parent.isValid()) {
             return mQueries.size() + NUM_SPECIAL_ROWS;
@@ -149,7 +149,7 @@ public:
         }
     }
 
-    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const
+    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE
     {
         if (!parent.isValid()) {
             return NUM_COLUMNS;

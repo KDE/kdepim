@@ -44,12 +44,12 @@ public:
     void setItemDisplayMode(ItemDisplayMode itemDisplayMode);
     ItemDisplayMode itemDisplayMode() const;
 
-    virtual QVariant entityHeaderData(int section, Qt::Orientation orientation, int role, HeaderGroup headerGroup) const;
+    QVariant entityHeaderData(int section, Qt::Orientation orientation, int role, HeaderGroup headerGroup) const Q_DECL_OVERRIDE;
 
-    virtual QVariant entityData(const Item &item, int column, int role) const;
-    virtual QVariant entityData(const Collection &collection, int column, int role) const;
+    QVariant entityData(const Item &item, int column, int role) const Q_DECL_OVERRIDE;
+    QVariant entityData(const Collection &collection, int column, int role) const Q_DECL_OVERRIDE;
 
-    virtual int entityColumnCount(HeaderGroup headerGroup) const;
+    int entityColumnCount(HeaderGroup headerGroup) const Q_DECL_OVERRIDE;
 
     class State;
 

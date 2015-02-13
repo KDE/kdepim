@@ -55,7 +55,7 @@ public:
     {
     }
 
-    QVariant entityData(const Item &item, int column, int role) const
+    QVariant entityData(const Item &item, int column, int role) const Q_DECL_OVERRIDE
     {
         if (Qt::DisplayRole != role) {
             return QVariant();
@@ -84,7 +84,7 @@ public:
     }
     virtual ~MailState() {}
 
-    QVariant entityData(const Item &item, int column, int role) const
+    QVariant entityData(const Item &item, int column, int role) const Q_DECL_OVERRIDE
     {
         if (Qt::DisplayRole != role) {
             return QVariant();
@@ -119,7 +119,7 @@ public:
     }
     virtual ~ContactsState() {}
 
-    QVariant entityData(const Item &item, int column, int role) const
+    QVariant entityData(const Item &item, int column, int role) const Q_DECL_OVERRIDE
     {
         if (Qt::DisplayRole != role) {
             return QVariant();
@@ -165,7 +165,7 @@ public:
     }
     virtual ~CalendarState() {}
 
-    QVariant entityData(const Item &item, int column, int role) const
+    QVariant entityData(const Item &item, int column, int role) const Q_DECL_OVERRIDE
     {
         if (Qt::DisplayRole != role) {
             return QVariant();
@@ -284,7 +284,7 @@ void AkonadiBrowserModel::setItemDisplayMode(AkonadiBrowserModel::ItemDisplayMod
 {
     const int oldColumnCount = columnCount();
     m_itemDisplayMode = itemDisplayMode;
-    AkonadiBrowserModel::State *newState = 0;
+    AkonadiBrowserModel::State *newState = Q_NULLPTR;
     switch (itemDisplayMode) {
     case MailMode:
         newState = m_mailState;

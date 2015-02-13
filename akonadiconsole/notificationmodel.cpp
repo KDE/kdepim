@@ -136,7 +136,7 @@ NotificationModel::NotificationEntity::NotificationEntity(const NotificationMess
 
 NotificationModel::NotificationModel(QObject *parent) :
     QAbstractItemModel(parent),
-    m_source(0)
+    m_source(Q_NULLPTR)
 {
     NotificationMessageV2::registerDBusTypes();
 
@@ -375,7 +375,7 @@ void NotificationModel::setEnabled(bool enable)
         disconnect(m_source, SIGNAL(notifyV3(Akonadi::NotificationMessageV3::List)));
         m_source->unsubscribe();
         m_source->deleteLater();
-        m_source = 0;
+        m_source = Q_NULLPTR;
     }
 }
 

@@ -253,7 +253,7 @@ void BrowserWidget::clear()
     contentUi.modificationtime->clear();
     contentUi.flags->clear();
     contentUi.tags->clear();
-    contentUi.attrView->setModel(0);
+    contentUi.attrView->setModel(Q_NULLPTR);
 }
 
 void BrowserWidget::itemActivated(const QModelIndex &index)
