@@ -20,6 +20,7 @@
 #include "merge/job/mergecontactsjob.h"
 #include <QVBoxLayout>
 #include <QScrollArea>
+#include <QStackedWidget>
 #include <QPushButton>
 using namespace KABMergeContacts;
 
@@ -28,9 +29,17 @@ MergeContactSelectInformationScrollArea::MergeContactSelectInformationScrollArea
 {
     QVBoxLayout *vbox = new QVBoxLayout;
     setLayout(vbox);
+    mStackWidget = new QStackedWidget;
+    mStackWidget->setObjectName(QLatin1String("stackwidget"));
+    vbox->addWidget(mStackWidget);
+
+    QWidget *selectMergeWidget = new QWidget;
+    selectMergeWidget->setObjectName(QLatin1String("selectwidget"));
+    QVBoxLayout *layout = new QVBoxLayout;
+    selectMergeWidget->setLayout(layout);
     QScrollArea *area = new QScrollArea;
     area->setObjectName(QLatin1String("scrollarea"));
-    vbox->addWidget(area);
+    layout->addWidget(area);
     mSelectInformationWidget = new MergeContactSelectInformationWidget;
     mSelectInformationWidget->setObjectName(QLatin1String("selectinformationwidget"));
     area->setWidget(mSelectInformationWidget);
@@ -40,8 +49,11 @@ MergeContactSelectInformationScrollArea::MergeContactSelectInformationScrollArea
     QPushButton *mergeButton = new QPushButton(QLatin1String("Merge"));
     mergeButton->setObjectName(QLatin1String("merge"));
     hbox->addWidget(mergeButton);
-    vbox->addLayout(hbox);
+    layout->addLayout(hbox);
     connect(mergeButton, SIGNAL(clicked()), this, SLOT(slotMergeContacts()));
+
+    mStackWidget->addWidget(selectMergeWidget);
+
 }
 
 MergeContactSelectInformationScrollArea::~MergeContactSelectInformationScrollArea()

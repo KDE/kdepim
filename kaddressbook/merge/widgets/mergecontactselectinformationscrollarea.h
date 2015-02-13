@@ -21,7 +21,7 @@
 #include <QWidget>
 #include "kaddressbook_export.h"
 #include "merge/job/mergecontacts.h"
-
+class QStackedWidget;
 namespace KABMergeContacts {
 class MergeContactSelectInformationWidget;
 class KADDRESSBOOK_EXPORT MergeContactSelectInformationScrollArea : public QWidget
@@ -38,6 +38,7 @@ private:
     Akonadi::Collection mCollection;
     Akonadi::Item::List mListItem;
     MergeContactSelectInformationWidget *mSelectInformationWidget;
+    QStackedWidget *mStackWidget;
 };
 }
 
