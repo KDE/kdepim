@@ -27,10 +27,9 @@ add_akonadi_isolated_test_advanced( searchpotentialduplicatecontactjobtest.cpp "
 add_akonadi_isolated_test_advanced( mergecontactselectinformationwidgettest.cpp "" "kaddressbookprivate;kabc")
 add_akonadi_isolated_test_advanced( mergecontactselectlistwidgettest.cpp "" "kaddressbookprivate;kabc")
 
-
 add_akonadi_isolated_test_advanced( mergecontactselectinformationscrollareatest.cpp "" "kaddressbookprivate;kabc")
 
-
+add_akonadi_isolated_test_advanced( mergecontactselectinformationtabwidgettest.cpp "" "kaddressbookprivate;kabc")
 
 
 set( kaddressbook_merge_mergecontactloseinformationwarning_source mergecontactloseinformationwarningtest.cpp ../widgets/mergecontactloseinformationwarning.cpp )

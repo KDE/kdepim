@@ -29,7 +29,7 @@ MergeContactSelectInformationDialog::MergeContactSelectInformationDialog(const A
     setButtons(Ok|Cancel);
     mTabWidget = new MergeContactShowResultTabWidget(this);
     mTabWidget->setObjectName(QLatin1String("tabwidget"));
-    mTabWidget->setContacts(lst);
+    mTabWidget->showMergedContacts(lst);
     setMainWidget(mTabWidget);
     updateTabWidget();
 }

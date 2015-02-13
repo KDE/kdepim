@@ -45,16 +45,16 @@ bool MergeContactShowResultTabWidget::tabBarVisible() const
     return tabBar()->isVisible();
 }
 
-void MergeContactShowResultTabWidget::setContacts(const Akonadi::Item::List &lstItem)
+void MergeContactShowResultTabWidget::showMergedContacts(const Akonadi::Item::List &lstItem)
 {
     clear();
     Q_FOREACH(const Akonadi::Item &item, lstItem) {
-        addContact(item, false);
+        addMergedContact(item, false);
     }
     updateTabWidget();
 }
 
-void MergeContactShowResultTabWidget::addContact(const Akonadi::Item &item, bool updateTab)
+void MergeContactShowResultTabWidget::addMergedContact(const Akonadi::Item &item, bool updateTab)
 {
     if (item.hasPayload<KABC::Addressee>()) {
         const KABC::Addressee address = item.payload<KABC::Addressee>();

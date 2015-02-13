@@ -52,7 +52,7 @@ void MergeContactShowResultDialog::updateTabWidget()
 
 void MergeContactShowResultDialog::setContacts(const Akonadi::Item::List &lstItem)
 {
-    mTabWidget->setContacts(lstItem);
+    mTabWidget->showMergedContacts(lstItem);
 }
 
 void MergeContactShowResultDialog::readConfig()

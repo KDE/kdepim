@@ -126,7 +126,7 @@ void SearchAndMergeContactDuplicateContactDialog::slotDuplicateFound(const QList
 
 void SearchAndMergeContactDuplicateContactDialog::slotContactMerged(const Akonadi::Item &item)
 {
-    mMergeContactResult->addContact(item, true);
+    mMergeContactResult->addMergedContact(item, true);
 }
 
 void SearchAndMergeContactDuplicateContactDialog::slotMergeDone()
