@@ -451,8 +451,6 @@ bool ViewerPrivate::deleteAttachment(KMime::Content *node, bool showWarning)
         mimetype = node->contentType()->mimeType();
     }
 
-    parent->removeContent(node, true);
-
     // text/plain part:
     KMime::Content *deletePart = new KMime::Content(parent);
     deletePart->contentType()->setMimeType("text/x-moz-deleted");
@@ -467,7 +465,7 @@ bool ViewerPrivate::deleteAttachment(KMime::Content *node, bool showWarning)
     bodyMessage += ("\nname=\"") + name.toUtf8() + "\"";
     bodyMessage += ("\nfilename=\"") + filename.toUtf8() + "\"";
     deletePart->setBody(bodyMessage);
-    parent->addContent(deletePart);
+    parent->replaceContent(node, deletePart);
 
     parent->assemble();
 
