@@ -18,7 +18,7 @@
 #include "mergecontactinfowidgettest.h"
 
 #include <qtest.h>
-#include "merge/manualmerge/mergecontactinfowidget.h"
+#include "merge/widgets/mergecontactinfowidget.h"
 #include <QStackedWidget>
 using namespace KABMergeContacts;
 

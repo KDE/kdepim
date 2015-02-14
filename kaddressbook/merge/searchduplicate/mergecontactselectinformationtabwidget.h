@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2014-2015 Montel Laurent <montel@kde.org>
+  Copyright (c) 2015 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,29 +15,30 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MERGECONTACTSHOWRESULTTABWIDGET_H
-#define MERGECONTACTSHOWRESULTTABWIDGET_H
+#ifndef MERGECONTACTSELECTINFORMATIONTABWIDGET_H
+#define MERGECONTACTSELECTINFORMATIONTABWIDGET_H
 
 #include <QTabWidget>
+#include <AkonadiCore/Item>
 #include "kaddressbook_export.h"
-#include <AkonadiCore/item.h>
+#include "searchduplicateresultwidget.h"
 
-namespace KABMergeContacts
-{
-
-class KADDRESSBOOK_EXPORT MergeContactShowResultTabWidget : public QTabWidget
+namespace KABMergeContacts {
+class KADDRESSBOOK_EXPORT MergeContactSelectInformationTabWidget : public QTabWidget
 {
     Q_OBJECT
 public:
-    explicit MergeContactShowResultTabWidget(QWidget *parent = Q_NULLPTR);
-    ~MergeContactShowResultTabWidget();
+    explicit MergeContactSelectInformationTabWidget(QWidget *parent=0);
+    ~MergeContactSelectInformationTabWidget();
 
     void updateTabWidget();
 
     bool tabBarVisible() const;
+    void addNeedSelectInformationWidget(const Akonadi::Item::List &list, bool needUpdateTabWidget = true);
 
-    void showMergedContacts(const Akonadi::Item::List &lstItem);
-    void addMergedContact(const Akonadi::Item &item, bool updateTab = false);
+    void setNeedSelectInformationWidgets(const QList<KABMergeContacts::MergeConflictResult> &list);
+private:
+    void addNewWidget(const MergeConflictResult &list);
 };
 }
-#endif // MERGECONTACTSHOWRESULTTABWIDGET_H
+#endif // MERGECONTACTSELECTINFORMATIONTABWIDGET_H

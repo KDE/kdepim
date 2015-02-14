@@ -29,6 +29,11 @@ MergeContacts::~MergeContacts()
 
 }
 
+void MergeContacts::setItems(const Akonadi::Item::List &items)
+{
+    mListItem = items;
+}
+
 KContacts::Addressee MergeContacts::mergedContact(bool excludeConflictPart)
 {
     KContacts::Addressee newContact;
@@ -155,5 +160,6 @@ MergeContacts::ConflictInformations MergeContacts::needManualSelectInformations(
             }
         }
     }
+    qDebug()<<" result "<<result;
     return result;
 }

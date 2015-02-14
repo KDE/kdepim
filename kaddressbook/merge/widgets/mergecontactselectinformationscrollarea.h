@@ -21,10 +21,10 @@
 #include <QWidget>
 #include "kaddressbook_export.h"
 #include "merge/job/mergecontacts.h"
-
-namespace KABMergeContacts
-{
+class QStackedWidget;
+namespace KABMergeContacts {
 class MergeContactSelectInformationWidget;
+class MergeContactInfoWidget;
 class KADDRESSBOOK_EXPORT MergeContactSelectInformationScrollArea : public QWidget
 {
     Q_OBJECT
@@ -35,10 +35,13 @@ public:
     void setCollection(const Akonadi::Collection &col);
 private slots:
     void slotMergeContacts();
+    void slotMergeDone();
 private:
     Akonadi::Collection mCollection;
     Akonadi::Item::List mListItem;
     MergeContactSelectInformationWidget *mSelectInformationWidget;
+    QStackedWidget *mStackWidget;
+    MergeContactInfoWidget *mMergedContactWidget;
 };
 }
 

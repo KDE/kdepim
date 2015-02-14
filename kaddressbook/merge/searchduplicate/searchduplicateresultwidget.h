@@ -20,6 +20,7 @@
 
 #include <QWidget>
 #include <AkonadiCore/Item>
+#include "merge/job/mergecontacts.h"
 #include "kaddressbook_export.h"
 class QTreeWidget;
 class QPushButton;
@@ -35,6 +36,12 @@ namespace KABMergeContacts
 {
 class ResultDuplicateTreeWidget;
 class MergeContactLoseInformationWarning;
+
+struct MergeConflictResult {
+    Akonadi::Item::List list;
+    MergeContacts::ConflictInformations conflictInformation;
+};
+
 class KADDRESSBOOK_EXPORT SearchDuplicateResultWidget : public QWidget
 {
     Q_OBJECT
@@ -46,6 +53,7 @@ public:
 Q_SIGNALS:
     void contactMerged(const Akonadi::Item &item);
     void mergeDone();
+    void customizeMergeContact(const QList<KABMergeContacts::MergeConflictResult> &);
 
 private Q_SLOTS:
     void slotMergeContact();
@@ -56,6 +64,7 @@ private Q_SLOTS:
     void slotCustomizeMergingContacts();
 private:
     void mergeContact();
+    QList<MergeConflictResult> mResultConflictList;
     QList<Akonadi::Item::List> mListContactToMerge;
     ResultDuplicateTreeWidget *mResult;
     KAddressBookGrantlee::GrantleeContactViewer *mContactViewer;

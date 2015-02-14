@@ -21,6 +21,7 @@
 #include <QDialog>
 #include <AkonadiCore/Item>
 
+#include "searchduplicateresultwidget.h"
 #include "kaddressbook_export.h"
 class QStackedWidget;
 class QLabel;
@@ -28,8 +29,7 @@ namespace KABMergeContacts
 {
 class SearchDuplicateResultWidget;
 class MergeContactShowResultTabWidget;
-class MergeContactSelectInformationScrollArea;
-
+class MergeContactSelectInformationTabWidget;
 class KADDRESSBOOK_EXPORT SearchAndMergeContactDuplicateContactDialog : public QDialog
 {
     Q_OBJECT
@@ -43,6 +43,7 @@ private Q_SLOTS:
     void slotDuplicateFound(const QList<Akonadi::Item::List> &duplicate);
     void slotMergeDone();
     void slotContactMerged(const Akonadi::Item &item);
+    void slotCustomizeMergeContacts(const QList<KABMergeContacts::MergeConflictResult> &lst);
 private:
     void readConfig();
     void writeConfig();
@@ -51,7 +52,7 @@ private:
     QLabel *mNoContactSelected;
     QLabel *mNoDuplicateContactFound;
     QLabel *mNoEnoughContactSelected;
-    KABMergeContacts::MergeContactSelectInformationScrollArea *mSelectInformation;
+    KABMergeContacts::MergeContactSelectInformationTabWidget *mSelectInformation;
     QStackedWidget *mStackedWidget;
 };
 }

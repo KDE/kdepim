@@ -17,7 +17,7 @@
 
 #include "mergecontactshowresultdialog.h"
 #include "widgets/mergecontactshowresulttabwidget.h"
-#include "manualmerge/mergecontactinfowidget.h"
+#include "merge/widgets/mergecontactinfowidget.h"
 
 #include <KContacts/Addressee>
 
@@ -60,7 +60,7 @@ void MergeContactShowResultDialog::updateTabWidget()
 
 void MergeContactShowResultDialog::setContacts(const Akonadi::Item::List &lstItem)
 {
-    mTabWidget->setContacts(lstItem);
+    mTabWidget->showMergedContacts(lstItem);
 }
 
 void MergeContactShowResultDialog::readConfig()

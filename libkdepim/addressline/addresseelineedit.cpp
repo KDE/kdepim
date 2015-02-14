@@ -340,7 +340,12 @@ void AddresseeLineEdit::enableCompletion(bool enable)
     d->m_useCompletion = enable;
 }
 
-void AddresseeLineEdit::addItem(const Akonadi::Item &item, int weight, int source)
+bool AddresseeLineEdit::isCompletionEnabled() const
+{
+    return d->m_useCompletion;
+}
+
+void AddresseeLineEdit::addItem( const Akonadi::Item &item, int weight, int source )
 {
     //Let Akonadi results always have a higher weight than baloo results
     if (item.hasPayload<KContacts::Addressee>()) {
@@ -439,11 +444,11 @@ QMenu *AddresseeLineEdit::createStandardContextMenu()
         showOU->setChecked(d->m_showOU);
         connect(showOU, SIGNAL(triggered(bool)), this, SLOT(slotShowOUChanged(bool)));
         menu->addAction(showOU);
+        //Add i18n in kf5
+        QAction *configureBalooBlackList = new QAction(QLatin1String( "Configure Email Blacklist" ),menu);
+        connect(configureBalooBlackList, SIGNAL(triggered(bool)), this, SLOT(slotConfigureBalooBlackList()));
+        menu->addAction(configureBalooBlackList);
     }
-
-    QAction *configureBalooBlackList = new QAction(i18n("Configure Email Blacklist"), menu);
-    connect(configureBalooBlackList, SIGNAL(triggered(bool)), this, SLOT(slotConfigureBalooBlackList()));
-    menu->addAction(configureBalooBlackList);
 
     return menu;
 }

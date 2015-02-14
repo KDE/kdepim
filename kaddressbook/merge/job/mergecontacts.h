@@ -45,6 +45,7 @@ public:
 
     MergeContacts::ConflictInformations needManualSelectInformations();
 
+    void setItems(const Akonadi::Item::List &items);
 private:
     void mergeToContact(KContacts::Addressee &newAddress, const KContacts::Addressee &fromContact, bool excludeConflictPart);
     Akonadi::Item::List mListItem;

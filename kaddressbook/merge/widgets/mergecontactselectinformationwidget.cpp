@@ -59,6 +59,7 @@ void MergeContactSelectInformationWidget::setContacts(MergeContacts::ConflictInf
 
 void MergeContactSelectInformationWidget::addInformationWidget(MergeContacts::ConflictInformation conflictType)
 {
+    qDebug()<<" void MergeContactSelectInformationWidget::addInformationWidget(MergeContacts::ConflictInformation conflictType)";
     MergeContactSelectListWidget *widget = new MergeContactSelectListWidget;
     widget->setContacts(conflictType, mAddressList);
     layout()->addWidget(widget);

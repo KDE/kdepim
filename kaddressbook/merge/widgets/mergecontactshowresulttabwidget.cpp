@@ -17,7 +17,7 @@
 
 #include "mergecontactshowresulttabwidget.h"
 #include <KContacts/Addressee>
-#include "merge/manualmerge/mergecontactinfowidget.h"
+#include "merge/widgets/mergecontactinfowidget.h"
 
 #include <QTabBar>
 #include "kaddressbook_debug.h"
@@ -44,16 +44,16 @@ bool MergeContactShowResultTabWidget::tabBarVisible() const
     return tabBar()->isVisible();
 }
 
-void MergeContactShowResultTabWidget::setContacts(const Akonadi::Item::List &lstItem)
+void MergeContactShowResultTabWidget::showMergedContacts(const Akonadi::Item::List &lstItem)
 {
     clear();
-    Q_FOREACH (const Akonadi::Item &item, lstItem) {
-        addContact(item, false);
+    Q_FOREACH(const Akonadi::Item &item, lstItem) {
+        addMergedContact(item, false);
     }
     updateTabWidget();
 }
 
-void MergeContactShowResultTabWidget::addContact(const Akonadi::Item &item, bool updateTab)
+void MergeContactShowResultTabWidget::addMergedContact(const Akonadi::Item &item, bool updateTab)
 {
     if (item.hasPayload<KContacts::Addressee>()) {
         const KContacts::Addressee address = item.payload<KContacts::Addressee>();

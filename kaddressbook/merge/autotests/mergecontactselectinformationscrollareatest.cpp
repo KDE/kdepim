@@ -19,8 +19,10 @@
 #include <qtest.h>
 #include "../widgets/mergecontactselectinformationwidget.h"
 #include "../widgets/mergecontactselectinformationscrollarea.h"
+#include "../widgets/mergecontactinfowidget.h"
 #include <QScrollArea>
 #include <QPushButton>
+#include <QStackedWidget>
 
 MergeContactSelectInformationScrollAreaTest::MergeContactSelectInformationScrollAreaTest(QObject *parent)
     : QObject(parent)
@@ -41,9 +43,20 @@ void MergeContactSelectInformationScrollAreaTest::shouldHaveDefaultValue()
     QPushButton *mergeButton = qFindChild<QPushButton *>(&w, QLatin1String("merge"));
     QVERIFY(mergeButton);
 
+    QStackedWidget *stackedwidget = qFindChild<QStackedWidget *>(&w, QLatin1String("stackwidget"));
+    QVERIFY(stackedwidget);
+
     KABMergeContacts::MergeContactSelectInformationWidget *widget =
         qFindChild<KABMergeContacts::MergeContactSelectInformationWidget *>(&w, QLatin1String("selectinformationwidget"));
     QVERIFY(widget);
+
+    KABMergeContacts::MergeContactInfoWidget *mergecontactinfowidget = qFindChild<KABMergeContacts::MergeContactInfoWidget *>(&w, QLatin1String("mergedcontactwidget"));
+    QVERIFY(mergecontactinfowidget);
+
+    QWidget *selectWidget = qFindChild<QWidget *>(&w, QLatin1String("selectwidget"));
+    QVERIFY(selectWidget);
+
+    QCOMPARE(stackedwidget->currentWidget(), selectWidget);
 }
 
 QTEST_MAIN(MergeContactSelectInformationScrollAreaTest)

@@ -18,6 +18,7 @@
 #include "searchduplicateresultwidget.h"
 #include "merge/widgets/mergecontactloseinformationwarning.h"
 #include "merge/job/mergecontactsjob.h"
+#include "merge/job/mergecontacts.h"
 #include "resultduplicatetreewidget.h"
 #include <KLocalizedString>
 #include <QHBoxLayout>
@@ -99,9 +100,28 @@ void SearchDuplicateResultWidget::slotMergeContact()
     mIndexListContact = 0;
     mListContactToMerge = mResult->selectedContactsToMerge();
     if (!mListContactToMerge.isEmpty()) {
+        KABMergeContacts::MergeContacts mergeContacts;
+        bool conflictFound = false;
+        mResultConflictList.clear();
+        Q_FOREACH(const Akonadi::Item::List & lst, mListContactToMerge) {
+            mergeContacts.setItems(lst);
+            const MergeContacts::ConflictInformations conflicts = mergeContacts.needManualSelectInformations();
+            if (conflicts != MergeContacts::None) {
+                conflictFound = true;
+            }
+            MergeConflictResult result;
+            result.list = lst;
+            result.conflictInformation = conflicts;
+            mResultConflictList.append(result);
+        }
+
         mMergeContact->setEnabled(false);
-        //Detect if conflict.
-        mergeContact();
+        if (!conflictFound) {
+            //Detect if conflict.
+            mergeContact();
+        } else {
+            mMergeContactWarning->animatedShow();
+        }
     }
 }
 
@@ -138,5 +158,7 @@ void SearchDuplicateResultWidget::slotAutomaticMerging()
 
 void SearchDuplicateResultWidget::slotCustomizeMergingContacts()
 {
+    //TODO send info too
+    Q_EMIT customizeMergeContact(mResultConflictList);
     //TODO
 }
