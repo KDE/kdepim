@@ -52,6 +52,10 @@ protected:
     QMimeData *mimeData( const QList<QListWidgetItem *> items ) const;
 
     void dropEvent ( QDropEvent * event );
+    enum TemplateData {
+        Text = Qt::UserRole + 1,
+        DefaultTemplate = Qt::UserRole + 2
+    };
 
 Q_SIGNALS:
     void insertTemplate(const QString &);
@@ -70,10 +74,6 @@ private:
     Q_PRIVATE_SLOT( d, void slotImportTemplates() )
     Q_PRIVATE_SLOT( d, void slotDuplicate() )
     Q_PRIVATE_SLOT( d, void slotDownloadTemplates() )
-    enum TemplateData {
-        Text = Qt::UserRole + 1,
-        DefaultTemplate = Qt::UserRole + 2
-    };
 };
 }
 

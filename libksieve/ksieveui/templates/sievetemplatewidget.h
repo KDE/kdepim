@@ -35,7 +35,8 @@ public:
     QList<PimCommon::defaultTemplate> defaultTemplates();
     bool addNewTemplate(QString &templateName, QString &templateScript);
     bool modifyTemplate(QString &templateName, QString &templateScript, bool defaultTemplate);
-
+protected:
+    QMimeData *mimeData( const QList<QListWidgetItem *> items ) const;
 private:
     PimCommon::TemplateManager *mTemplateManager;
 };

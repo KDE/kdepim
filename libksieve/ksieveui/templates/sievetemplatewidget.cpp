@@ -19,12 +19,14 @@
 #include "sievetemplateeditdialog.h"
 #include "sievedefaulttemplate.h"
 #include "pimcommon/templatewidgets/templatemanager.h"
+#include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
 
 #include <KLocalizedString>
 
 #include <QPointer>
 #include <QLabel>
 #include <QVBoxLayout>
+#include <QMimeData>
 
 namespace KSieveUi {
 
@@ -35,6 +37,21 @@ SieveTemplateListWidget::SieveTemplateListWidget(const QString &configName, QWid
     setKNewStuffConfigFile(QLatin1String("ksieve_script.knsrc"));
     loadTemplates();
     mTemplateManager = new PimCommon::TemplateManager(QLatin1String("sieve/scripts"), this);
+}
+
+QMimeData *SieveTemplateListWidget::mimeData ( const QList<QListWidgetItem *> items ) const
+{
+    if ( items.isEmpty() ) {
+        return 0;
+    }
+    QMimeData *mimeData = new QMimeData();
+    QListWidgetItem *item = items.first();
+    QString templateStr = item->data(TemplateListWidget::Text).toString();
+    if (!SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("imap4flags")) && templateStr.contains(QLatin1String("imap4flags"))) {
+        templateStr.replace(QLatin1String("imap4flags"), QLatin1String("imapflags"));
+    }
+    mimeData->setText( templateStr );
+    return mimeData;
 }
 
 SieveTemplateListWidget::~SieveTemplateListWidget()
