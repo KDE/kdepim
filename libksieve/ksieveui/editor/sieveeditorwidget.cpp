@@ -53,7 +53,9 @@ SieveEditorWidget::SieveEditorWidget(QWidget *parent)
       mModified(false)
 {
     QVBoxLayout *lay = new QVBoxLayout;
-
+#if !defined(NDEBUG)
+    mGenerateXml = 0;
+#endif
     QToolBar *bar = new QToolBar;
     bar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     mCheckSyntax = new QAction(i18n("Check Syntax"), this);
@@ -69,10 +71,12 @@ SieveEditorWidget::SieveEditorWidget(QWidget *parent)
     bar->addAction(mSwitchMode);
     connect(mSwitchMode, SIGNAL(triggered(bool)), SLOT(slotSwitchMode()));
 #if !defined(NDEBUG)
-    //Not necessary to translate it.
-    mGenerateXml = new QAction(QLatin1String("Generate xml"), this);
-    connect(mGenerateXml, SIGNAL(triggered(bool)), SLOT(slotGenerateXml()));
-    bar->addAction(mGenerateXml);
+    if (!qgetenv("KDEPIM_SIEVEEDITOR_DEBUG").isEmpty()) {
+        //Not necessary to translate it.
+        mGenerateXml = new QAction(QLatin1String("Generate xml"), this);
+        connect(mGenerateXml, SIGNAL(triggered(bool)), SLOT(slotGenerateXml()));
+        bar->addAction(mGenerateXml);
+    }
 #endif
 
     QStringList overlays;
@@ -185,7 +189,8 @@ void SieveEditorWidget::changeMode(EditorMode mode)
         mStackedWidget->setCurrentIndex(static_cast<int>(mode));
         mAutoGenerateScript->setEnabled((mMode == TextMode));
 #if !defined(NDEBUG)
-        mGenerateXml->setEnabled((mMode == TextMode));
+        if (mGenerateXml)
+            mGenerateXml->setEnabled((mMode == TextMode));
 #endif
         if (mMode == GraphicMode)
             mCheckSyntax->setEnabled(false);
