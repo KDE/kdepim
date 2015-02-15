@@ -87,6 +87,7 @@ void MergeContactSelectInformationScrollArea::slotMergeContacts()
         KABMergeContacts::MergeContactsJob *job = new KABMergeContacts::MergeContactsJob(this);
         job->setNewContact(addr);
         job->setDestination(mCollection);
+        job->setListItem(mListItem);
         connect(job, SIGNAL(finished(Akonadi::Item)), this, SLOT(slotMergeDone(Akonadi::Item)));
         job->start();
     }
