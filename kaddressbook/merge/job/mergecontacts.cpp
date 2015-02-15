@@ -96,6 +96,9 @@ void MergeContacts::mergeToContact(KABC::Addressee &newContact, const KABC::Addr
     // Merge HomePage
 
     // Merge geo
+    if (!excludeConflictPart) {
+
+    }
 #if 0
     //TODO
     newContact.setName(fromContact.name());
