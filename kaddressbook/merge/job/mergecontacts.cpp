@@ -189,6 +189,28 @@ MergeContacts::ConflictInformations MergeContacts::needManualSelectInformations(
                     newContact.setOrganization(address.organization());
                 }
             }
+            // Test Title
+            const QString title = address.title();
+            if (!title.isEmpty()) {
+                if (!newContact.title().isEmpty()) {
+                    if (newContact.title() != title) {
+                        result |= Title;
+                    }
+                } else {
+                    newContact.setTitle(address.title());
+                }
+            }
+            // Test Departement
+            const QString departement = address.department();
+            if (!departement.isEmpty()) {
+                if (!newContact.department().isEmpty()) {
+                    if (newContact.department() != departement) {
+                        result |= Departement;
+                    }
+                } else {
+                    newContact.setDepartment(address.department());
+                }
+            }
         }
     }
     qDebug()<<" result "<<result;
