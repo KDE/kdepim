@@ -89,7 +89,7 @@ void MergeContactSelectInformationScrollArea::slotMergeContacts()
         job->setNewContact(addr);
         job->setDestination(mCollection);
         job->setListItem(mListItem);
-        connect(job, SIGNAL(finished(Akonadi::Item)), this, SLOT(slotMergeDone(Akonadi::Item)));
+        connect(job, &MergeContactsJob::finished, this, &MergeContactSelectInformationScrollArea::slotMergeDone);
         job->start();
     }
 }
