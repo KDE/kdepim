@@ -156,6 +156,39 @@ MergeContacts::ConflictInformations MergeContacts::needManualSelectInformations(
                     newContact.setLogo(address.logo());
                 }
             }
+            // Test Name
+            const QString name = address.name();
+            if (!name.isEmpty()) {
+                if (!newContact.name().isEmpty()) {
+                    if (newContact.name() != name) {
+                        result |= Name;
+                    }
+                } else {
+                    newContact.setName(address.name());
+                }
+            }
+            // Test NickName
+            const QString nickName = address.nickName();
+            if (!nickName.isEmpty()) {
+                if (!newContact.nickName().isEmpty()) {
+                    if (newContact.nickName() != nickName) {
+                        result |= NickName;
+                    }
+                } else {
+                    newContact.setNickName(address.nickName());
+                }
+            }
+            // Test Organization
+            const QString organization = address.organization();
+            if (!organization.isEmpty()) {
+                if (!newContact.organization().isEmpty()) {
+                    if (newContact.organization() != organization) {
+                        result |= Organization;
+                    }
+                } else {
+                    newContact.setOrganization(address.organization());
+                }
+            }
         }
     }
     qDebug()<<" result "<<result;
