@@ -114,6 +114,10 @@ void MergeContactSelectListWidget::updateTitle()
     case MergeContacts::FamilyName:
         title = Addressee::familyNameLabel();
         break;
+    case MergeContacts::PartnerName:
+        //TODO
+        title = QLatin1String("Partner name");
+        break;
     }
 
     mTitle->setText(title);
@@ -169,6 +173,8 @@ void MergeContactSelectListWidget::fillList(const KABC::Addressee::List &lst)
             break;
         case MergeContacts::FamilyName:
             mSelectListWidget->addItem(addr.familyName());
+            break;
+        case MergeContacts::PartnerName:
             break;
         }
     }

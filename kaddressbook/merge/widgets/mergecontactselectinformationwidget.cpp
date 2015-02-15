@@ -97,6 +97,9 @@ void MergeContactSelectInformationWidget::setContacts(MergeContacts::ConflictInf
     if (conflictTypes & MergeContacts::FamilyName) {
         addInformationWidget(MergeContacts::FamilyName);
     }
+    if (conflictTypes & MergeContacts::PartnerName) {
+        addInformationWidget(MergeContacts::PartnerName);
+    }
 }
 
 void MergeContactSelectInformationWidget::addInformationWidget(MergeContacts::ConflictInformation conflictType)
@@ -162,6 +165,8 @@ void MergeContactSelectInformationWidget::createContact(KABC::Addressee &addr)
                 break;
             case MergeContacts::FamilyName:
                 addr.setFamilyName(mAddressList.at(selectedContactIndex).familyName());
+                break;
+            case MergeContacts::PartnerName:
                 break;
             }
             //TODO
