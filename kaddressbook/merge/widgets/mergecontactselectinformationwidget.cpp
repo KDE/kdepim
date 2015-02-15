@@ -132,7 +132,7 @@ void MergeContactSelectInformationWidget::createContact(KABC::Addressee &addr)
                 addr.setLogo(mAddressList.at(selectedContactIndex).logo());
                 break;
             case MergeContacts::Anniversary:
-                //TODO
+                addr.setBirthday(mAddressList.at(selectedContactIndex).birthday());
                 break;
             case MergeContacts::Name:
                 addr.setName(mAddressList.at(selectedContactIndex).name());
