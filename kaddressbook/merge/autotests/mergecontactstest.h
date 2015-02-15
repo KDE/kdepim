@@ -31,6 +31,28 @@ private Q_SLOTS:
     void shouldReturnDefaultAddressWhenOneItem();
     void noNeedManualSelectionCheckWhenEmptyList();
     void noNeedManualSelectionCheckWhenOneItem();
+
+    void checkNeedManualSelectionWithName_data();
+    void checkNeedManualSelectionWithName();
+
+    void checkNeedManualSelectionWithNickName_data();
+    void checkNeedManualSelectionWithNickName();
+
+    void checkNeedManualSelectionWithOrganization_data();
+    void checkNeedManualSelectionWithOrganization();
+
+    void checkNeedManualSelectionWithTitle_data();
+    void checkNeedManualSelectionWithTitle();
+
+    void checkNeedManualSelectionWithDepartement_data();
+    void checkNeedManualSelectionWithDepartement();
+
+    void checkNeedManualSelectionWithHomePage_data();
+    void checkNeedManualSelectionWithHomePage();
+
+    void checkNeedManualSelectionWithFamilyName_data();
+    void checkNeedManualSelectionWithFamilyName();
+
     void shouldMergeNotes_data();
     void shouldMergeNotes();
     void shouldMergeEmails_data();

@@ -35,7 +35,7 @@ public:
     void setCollection(const Akonadi::Collection &col);
 private slots:
     void slotMergeContacts();
-    void slotMergeDone();
+    void slotMergeDone(const Akonadi::Item &item);
 private:
     Akonadi::Collection mCollection;
     Akonadi::Item::List mListItem;

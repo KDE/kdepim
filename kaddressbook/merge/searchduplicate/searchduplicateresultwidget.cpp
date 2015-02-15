@@ -159,6 +159,6 @@ void SearchDuplicateResultWidget::slotAutomaticMerging()
 void SearchDuplicateResultWidget::slotCustomizeMergingContacts()
 {
     //TODO send info too
-    Q_EMIT customizeMergeContact(mResultConflictList);
+    Q_EMIT customizeMergeContact(mResultConflictList, mCollectionCombobox->currentCollection());
     //TODO
 }

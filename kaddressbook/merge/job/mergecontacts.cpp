@@ -158,6 +158,83 @@ MergeContacts::ConflictInformations MergeContacts::needManualSelectInformations(
                     newContact.setLogo(address.logo());
                 }
             }
+            // Test Name
+            const QString name = address.name();
+            if (!name.isEmpty()) {
+                if (!newContact.name().isEmpty()) {
+                    if (newContact.name() != name) {
+                        result |= Name;
+                    }
+                } else {
+                    newContact.setName(address.name());
+                }
+            }
+            // Test NickName
+            const QString nickName = address.nickName();
+            if (!nickName.isEmpty()) {
+                if (!newContact.nickName().isEmpty()) {
+                    if (newContact.nickName() != nickName) {
+                        result |= NickName;
+                    }
+                } else {
+                    newContact.setNickName(address.nickName());
+                }
+            }
+            // Test Organization
+            const QString organization = address.organization();
+            if (!organization.isEmpty()) {
+                if (!newContact.organization().isEmpty()) {
+                    if (newContact.organization() != organization) {
+                        result |= Organization;
+                    }
+                } else {
+                    newContact.setOrganization(address.organization());
+                }
+            }
+            // Test Title
+            const QString title = address.title();
+            if (!title.isEmpty()) {
+                if (!newContact.title().isEmpty()) {
+                    if (newContact.title() != title) {
+                        result |= Title;
+                    }
+                } else {
+                    newContact.setTitle(address.title());
+                }
+            }
+            // Test Departement
+            const QString departement = address.department();
+            if (!departement.isEmpty()) {
+                if (!newContact.department().isEmpty()) {
+                    if (newContact.department() != departement) {
+                        result |= Departement;
+                    }
+                } else {
+                    newContact.setDepartment(address.department());
+                }
+            }
+            // Test HomePage
+            const QUrl url = address.url();
+            if (url.isValid() && !url.isEmpty()) {
+                if (newContact.url().isValid() && !newContact.url().isEmpty()) {
+                    if (newContact.url() != url) {
+                        result |= HomePage;
+                    }
+                } else {
+                    newContact.setUrl(address.url());
+                }
+            }
+            // Test FamilyName
+            const QString familyName = address.familyName();
+            if (!familyName.isEmpty()) {
+                if (!newContact.familyName().isEmpty()) {
+                    if (newContact.familyName() != familyName) {
+                        result |= FamilyName;
+                    }
+                } else {
+                    newContact.setFamilyName(address.familyName());
+                }
+            }
         }
     }
     qDebug()<<" result "<<result;

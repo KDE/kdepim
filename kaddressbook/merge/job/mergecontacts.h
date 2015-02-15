@@ -49,7 +49,8 @@ public:
         Office = 8192,
         ManagerName = 16384,
         Assistant = 32768,
-        FreeBusy = 65536
+        FreeBusy = 65536,
+        FamilyName = 131072
         //TODO partner name
         //TODO Key
     };

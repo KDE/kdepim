@@ -42,9 +42,11 @@ bool MergeContactsJob::canStart()
         qCDebug(KADDRESSBOOK_LOG) << " mCollection is not valid !";
         return false;
     }
+    if (mNewContact.isEmpty()) {
     if (mListItem.isEmpty()) {
         qCDebug(KADDRESSBOOK_LOG) << " list item is empty !";
         return false;
+    }
     }
     return true;
 
@@ -112,8 +114,12 @@ void MergeContactsJob::slotCreateMergedContactFinished(KJob *job)
     Akonadi::ItemCreateJob *createdJob = qobject_cast<Akonadi::ItemCreateJob *>(job);
     mCreatedContact = createdJob->item();
 
-    Akonadi::ItemDeleteJob *deleteJob = new Akonadi::ItemDeleteJob(mListItem, this);
-    connect(deleteJob, &Akonadi::ItemDeleteJob::result, this, &MergeContactsJob::slotDeleteContactsFinished);
+    if (!mListItem.isEmpty()) {
+        Akonadi::ItemDeleteJob *deleteJob = new Akonadi::ItemDeleteJob(mListItem, this);
+        connect(deleteJob, &Akonadi::ItemDeleteJob::result, this, &MergeContactsJob::slotDeleteContactsFinished);
+    } else {
+        qDebug()<<" mListITem is empty. We can't delete it";
+    }
 }
 
 void MergeContactsJob::slotDeleteContactsFinished(KJob *job)
