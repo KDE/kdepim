@@ -121,45 +121,56 @@ void MergeContactSelectListWidget::updateTitle()
 
 void MergeContactSelectListWidget::fillList(const KABC::Addressee::List &lst)
 {
-    switch(mConflictType) {
-    case MergeContacts::None:
-        break;
-    case MergeContacts::Birthday:
-        break;
-    case MergeContacts::Geo:
-        break;
-    case MergeContacts::Photo:
-        break;
-    case MergeContacts::Logo:
-        break;
-    case MergeContacts::Anniversary:
-        break;
-    case MergeContacts::Name:
-        break;
-    case MergeContacts::NickName:
-        break;
-    case MergeContacts::Blog:
-        break;
-    case MergeContacts::HomePage:
-        break;
-    case MergeContacts::Organization:
-        break;
-    case MergeContacts::Profession:
-        break;
-    case MergeContacts::Title:
-        break;
-    case MergeContacts::Departement:
-        break;
-    case MergeContacts::Office:
-        break;
-    case MergeContacts::ManagerName:
-        break;
-    case MergeContacts::Assistant:
-        break;
-    case MergeContacts::FreeBusy:
-        break;
-    case MergeContacts::FamilyName:
-        break;
+    qDebug()<<"mConflictType"<<mConflictType;
+    Q_FOREACH(const KABC::Addressee &addr, lst ) {
+        switch(mConflictType) {
+        case MergeContacts::None:
+            break;
+        case MergeContacts::Birthday:
+            break;
+        case MergeContacts::Geo: {
+            mSelectListWidget->addItem(addr.geo().toString());
+            break;
+        }
+        case MergeContacts::Photo:
+            break;
+        case MergeContacts::Logo:
+            break;
+        case MergeContacts::Anniversary:
+            break;
+        case MergeContacts::Name:
+            mSelectListWidget->addItem(addr.name());
+            break;
+        case MergeContacts::NickName:
+            mSelectListWidget->addItem(addr.nickName());
+            break;
+        case MergeContacts::Blog:
+            break;
+        case MergeContacts::HomePage:
+            break;
+        case MergeContacts::Organization:
+            mSelectListWidget->addItem(addr.organization());
+            break;
+        case MergeContacts::Profession:
+            break;
+        case MergeContacts::Title:
+            mSelectListWidget->addItem(addr.title());
+            break;
+        case MergeContacts::Departement:
+            mSelectListWidget->addItem(addr.department());
+            break;
+        case MergeContacts::Office:
+            break;
+        case MergeContacts::ManagerName:
+            break;
+        case MergeContacts::Assistant:
+            break;
+        case MergeContacts::FreeBusy:
+            break;
+        case MergeContacts::FamilyName:
+            mSelectListWidget->addItem(addr.familyName());
+            break;
+        }
     }
 }
 

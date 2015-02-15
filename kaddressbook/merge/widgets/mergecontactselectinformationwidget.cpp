@@ -55,6 +55,48 @@ void MergeContactSelectInformationWidget::setContacts(MergeContacts::ConflictInf
     if (conflictTypes & MergeContacts::Logo) {
         addInformationWidget(MergeContacts::Logo);
     }
+    if (conflictTypes & MergeContacts::Anniversary) {
+        addInformationWidget(MergeContacts::Anniversary);
+    }
+    if (conflictTypes & MergeContacts::Name) {
+        addInformationWidget(MergeContacts::Name);
+    }
+    if (conflictTypes & MergeContacts::NickName) {
+        addInformationWidget(MergeContacts::NickName);
+    }
+    if (conflictTypes & MergeContacts::Blog) {
+        addInformationWidget(MergeContacts::Blog);
+    }
+    if (conflictTypes & MergeContacts::HomePage) {
+        addInformationWidget(MergeContacts::HomePage);
+    }
+    if (conflictTypes & MergeContacts::Organization) {
+        addInformationWidget(MergeContacts::Organization);
+    }
+    if (conflictTypes & MergeContacts::Profession) {
+        addInformationWidget(MergeContacts::Profession);
+    }
+    if (conflictTypes & MergeContacts::Title) {
+        addInformationWidget(MergeContacts::Title);
+    }
+    if (conflictTypes & MergeContacts::Departement) {
+        addInformationWidget(MergeContacts::Departement);
+    }
+    if (conflictTypes & MergeContacts::Office) {
+        addInformationWidget(MergeContacts::Office);
+    }
+    if (conflictTypes & MergeContacts::ManagerName) {
+        addInformationWidget(MergeContacts::ManagerName);
+    }
+    if (conflictTypes & MergeContacts::Assistant) {
+        addInformationWidget(MergeContacts::Assistant);
+    }
+    if (conflictTypes & MergeContacts::FreeBusy) {
+        addInformationWidget(MergeContacts::FreeBusy);
+    }
+    if (conflictTypes & MergeContacts::FamilyName) {
+        addInformationWidget(MergeContacts::FamilyName);
+    }
 }
 
 void MergeContactSelectInformationWidget::addInformationWidget(MergeContacts::ConflictInformation conflictType)
