@@ -101,7 +101,6 @@ void MergeContactSelectInformationWidget::setContacts(MergeContacts::ConflictInf
 
 void MergeContactSelectInformationWidget::addInformationWidget(MergeContacts::ConflictInformation conflictType)
 {
-    qDebug()<<" void MergeContactSelectInformationWidget::addInformationWidget(MergeContacts::ConflictInformation conflictType)";
     MergeContactSelectListWidget *widget = new MergeContactSelectListWidget;
     widget->setContacts(conflictType, mAddressList);
     layout()->addWidget(widget);
@@ -111,9 +110,60 @@ void MergeContactSelectInformationWidget::addInformationWidget(MergeContacts::Co
 void MergeContactSelectInformationWidget::createContact(KABC::Addressee &addr)
 {
     Q_FOREACH(MergeContactSelectListWidget *listWidget, mListMergeSelectInformation) {
-        const int selectedContact = listWidget->selectedContact();
+        const int selectedContactIndex = listWidget->selectedContact();
         const MergeContacts::ConflictInformation conflictType = listWidget->conflictType();
-        if (selectedContact != -1) {
+        if (selectedContactIndex != -1) {
+            switch(conflictType) {
+            case MergeContacts::None:
+                break;
+            case MergeContacts::Birthday:
+                addr.setBirthday(mAddressList.at(selectedContactIndex).birthday());
+                break;
+            case MergeContacts::Geo:
+                addr.setGeo(mAddressList.at(selectedContactIndex).geo());
+                break;
+            case MergeContacts::Photo:
+                addr.setPhoto(mAddressList.at(selectedContactIndex).photo());
+                break;
+            case MergeContacts::Logo:
+                addr.setLogo(mAddressList.at(selectedContactIndex).logo());
+                break;
+            case MergeContacts::Anniversary:
+                //TODO
+                break;
+            case MergeContacts::Name:
+                addr.setName(mAddressList.at(selectedContactIndex).name());
+                break;
+            case MergeContacts::NickName:
+                addr.setNickName(mAddressList.at(selectedContactIndex).nickName());
+                break;
+            case MergeContacts::Blog:
+                break;
+            case MergeContacts::HomePage:
+                break;
+            case MergeContacts::Organization:
+                addr.setOrganization(mAddressList.at(selectedContactIndex).organization());
+                break;
+            case MergeContacts::Profession:
+                break;
+            case MergeContacts::Title:
+                addr.setTitle(mAddressList.at(selectedContactIndex).title());
+                break;
+            case MergeContacts::Departement:
+                addr.setDepartment(mAddressList.at(selectedContactIndex).department());
+                break;
+            case MergeContacts::Office:
+                break;
+            case MergeContacts::ManagerName:
+                break;
+            case MergeContacts::Assistant:
+                break;
+            case MergeContacts::FreeBusy:
+                break;
+            case MergeContacts::FamilyName:
+                addr.setFamilyName(mAddressList.at(selectedContactIndex).familyName());
+                break;
+            }
             //TODO
         }
     }

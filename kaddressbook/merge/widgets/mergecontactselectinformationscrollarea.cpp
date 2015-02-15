@@ -76,7 +76,6 @@ void MergeContactSelectInformationScrollArea::setContacts(MergeContacts::Conflic
 {
     mListItem = listItem;
     mSelectInformationWidget->setContacts(conflictTypes, listItem);
-
 }
 
 void MergeContactSelectInformationScrollArea::slotMergeContacts()
@@ -84,14 +83,17 @@ void MergeContactSelectInformationScrollArea::slotMergeContacts()
     MergeContacts contact(mListItem);
     KABC::Addressee addr = contact.mergedContact(true);
     mSelectInformationWidget->createContact(addr);
-
-    //KABMergeContacts::MergeContacts *job = new KABMergeContacts::MergeContacts()
-    //TODO merge now.
+    if (!addr.isEmpty()) {
+        KABMergeContacts::MergeContactsJob *job = new KABMergeContacts::MergeContactsJob(this);
+        job->setNewContact(addr);
+        job->setDestination(mCollection);
+        connect(job, SIGNAL(finished(Akonadi::Item)), this, SLOT(slotMergeDone(Akonadi::Item)));
+        job->start();
+    }
 }
 
-void MergeContactSelectInformationScrollArea::slotMergeDone()
+void MergeContactSelectInformationScrollArea::slotMergeDone(const Akonadi::Item &item)
 {
-
-    mStackWidget->setCurrentWidget(mSelectInformationWidget);
-    //TODO
+    mMergedContactWidget->setContact(item);
+    mStackWidget->setCurrentWidget(mMergedContactWidget);
 }

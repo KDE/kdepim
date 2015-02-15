@@ -53,18 +53,19 @@ void MergeContactSelectInformationTabWidget::addNeedSelectInformationWidget(cons
 #endif
 }
 
-void MergeContactSelectInformationTabWidget::addNewWidget(const KABMergeContacts::MergeConflictResult &list)
+void MergeContactSelectInformationTabWidget::addNewWidget(const KABMergeContacts::MergeConflictResult &list, const Akonadi::Collection &col)
 {
     KABMergeContacts::MergeContactSelectInformationScrollArea *area = new KABMergeContacts::MergeContactSelectInformationScrollArea;
     area->setContacts(list.conflictInformation, list.list);
+    area->setCollection(col);
     //KF5 add i18n
     addTab(area, QString::fromLatin1("Duplicate contact %1").arg(count()+1));
 }
 
-void MergeContactSelectInformationTabWidget::setNeedSelectInformationWidgets(const QList<KABMergeContacts::MergeConflictResult> &list)
+void MergeContactSelectInformationTabWidget::setNeedSelectInformationWidgets(const QList<KABMergeContacts::MergeConflictResult> &list, const Akonadi::Collection &col)
 {
     Q_FOREACH(const KABMergeContacts::MergeConflictResult &lst, list) {
-        addNewWidget(lst);
+        addNewWidget(lst, col);
     }
     updateTabWidget();
 }
