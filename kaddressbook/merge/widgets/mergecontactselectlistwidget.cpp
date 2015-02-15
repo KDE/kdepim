@@ -111,6 +111,9 @@ void MergeContactSelectListWidget::updateTitle()
     case MergeContacts::FreeBusy:
         title = QLatin1String("FreeBusy");
         break;
+    case MergeContacts::FamilyName:
+        title = Addressee::familyNameLabel();
+        break;
     }
 
     mTitle->setText(title);
@@ -154,6 +157,8 @@ void MergeContactSelectListWidget::fillList(const KABC::Addressee::List &lst)
     case MergeContacts::Assistant:
         break;
     case MergeContacts::FreeBusy:
+        break;
+    case MergeContacts::FamilyName:
         break;
     }
 }

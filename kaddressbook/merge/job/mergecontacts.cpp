@@ -222,6 +222,17 @@ MergeContacts::ConflictInformations MergeContacts::needManualSelectInformations(
                     newContact.setUrl(address.url());
                 }
             }
+            // Test FamilyName
+            const QString familyName = address.familyName();
+            if (!familyName.isEmpty()) {
+                if (!newContact.familyName().isEmpty()) {
+                    if (newContact.familyName() != familyName) {
+                        result |= FamilyName;
+                    }
+                } else {
+                    newContact.setFamilyName(address.familyName());
+                }
+            }
         }
     }
     qDebug()<<" result "<<result;

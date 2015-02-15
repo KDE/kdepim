@@ -51,6 +51,9 @@ private Q_SLOTS:
     void checkNeedManualSelectionWithHomePage_data();
     void checkNeedManualSelectionWithHomePage();
 
+    void checkNeedManualSelectionWithFamilyName_data();
+    void checkNeedManualSelectionWithFamilyName();
+
     void shouldMergeNotes_data();
     void shouldMergeNotes();
     void shouldMergeEmails_data();
