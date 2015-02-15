@@ -19,6 +19,7 @@
 #include "mergecontactselectinformationwidget.h"
 #include "merge/job/mergecontactsjob.h"
 #include "merge/widgets/mergecontactinfowidget.h"
+#include <KLocalizedString>
 #include <QVBoxLayout>
 #include <QScrollArea>
 #include <QStackedWidget>
@@ -48,7 +49,7 @@ MergeContactSelectInformationScrollArea::MergeContactSelectInformationScrollArea
 
     QHBoxLayout *hbox = new QHBoxLayout;
     hbox->addStretch();
-    QPushButton *mergeButton = new QPushButton(QLatin1String("Merge"));
+    QPushButton *mergeButton = new QPushButton(i18n("Merge"));
     mergeButton->setObjectName(QLatin1String("merge"));
     hbox->addWidget(mergeButton);
     layout->addLayout(hbox);

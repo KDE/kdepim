@@ -50,7 +50,6 @@ void ResultDuplicateTreeWidget::setContacts(const QList<Akonadi::Item::List> &ls
     Q_FOREACH (const Akonadi::Item::List &lst, lstItem) {
         ResultDuplicateTreeWidgetItem *topLevelItem = new ResultDuplicateTreeWidgetItem(this, false);
         topLevelItem->setText(0, i18n("Duplicate contact %1", i));
-        topLevelItem->setText(0, QString::fromLatin1("Duplicate contact %1").arg(i));
         Q_FOREACH (const Akonadi::Item &item, lst) {
             ResultDuplicateTreeWidgetItem *childItem = new ResultDuplicateTreeWidgetItem;
             topLevelItem->addChild(childItem);
