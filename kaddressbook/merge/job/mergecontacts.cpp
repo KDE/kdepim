@@ -211,6 +211,17 @@ MergeContacts::ConflictInformations MergeContacts::needManualSelectInformations(
                     newContact.setDepartment(address.department());
                 }
             }
+            // Test HomePage
+            const KUrl url = address.url();
+            if (url.isValid() && !url.isEmpty()) {
+                if (newContact.url().isValid() && !newContact.url().isEmpty()) {
+                    if (newContact.url() != url) {
+                        result |= HomePage;
+                    }
+                } else {
+                    newContact.setUrl(address.url());
+                }
+            }
         }
     }
     qDebug()<<" result "<<result;

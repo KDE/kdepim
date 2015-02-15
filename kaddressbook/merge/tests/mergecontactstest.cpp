@@ -307,6 +307,54 @@ void MergeContactsTest::checkNeedManualSelectionWithDepartement()
     QCOMPARE(bResult, needManualCheck);
 }
 
+void MergeContactsTest::checkNeedManualSelectionWithHomePage_data()
+{
+    QTest::addColumn<KUrl>("nameItemA");
+    QTest::addColumn<KUrl>("nameItemB");
+    QTest::addColumn<KUrl>("nameItemC");
+    QTest::addColumn<bool>("needManualCheck");
+    QTest::newRow("noConflict") <<  KUrl() << KUrl() << KUrl() << false;
+    QTest::newRow("noWithOneNameConflict") <<  KUrl() << KUrl() << KUrl(QLatin1String("http://www.kde.org")) << false;
+    QTest::newRow("noWithOneNameConflict1") <<  KUrl() << KUrl(QLatin1String("http://www.kde.org")) << KUrl()  << false;
+    QTest::newRow("noWithOneNameConflict2") <<  KUrl(QLatin1String("http://www.kde.org")) << KUrl() << KUrl() << false;
+    QTest::newRow("noConflictWithSameName") <<  KUrl(QLatin1String("http://www.kde.org")) << KUrl(QLatin1String("http://www.kde.org")) << KUrl() << false;
+    QTest::newRow("noConflictWithSameName2") <<  KUrl(QLatin1String("http://www.kde.org")) << KUrl(QLatin1String("http://www.kde.org")) << KUrl(QLatin1String("http://www.kde.org")) << false;
+    QTest::newRow("conflictUrl") <<  KUrl(QLatin1String("http://www.kde.org")) << KUrl(QLatin1String("http://www.kde.org1")) << KUrl(QLatin1String("http://www.kde.org")) << true;
+    QTest::newRow("conflict1") <<  KUrl() << KUrl(QLatin1String("http://www.kde.org1")) << KUrl(QLatin1String("http://www.kde.org")) << true;
+}
+
+void MergeContactsTest::checkNeedManualSelectionWithHomePage()
+{
+    QFETCH( KUrl, nameItemA );
+    QFETCH( KUrl, nameItemB );
+    QFETCH( KUrl, nameItemC );
+    QFETCH( bool, needManualCheck );
+
+    Akonadi::Item::List lst;
+    Addressee addressA;
+    Akonadi::Item itemA;
+    addressA.setUrl(nameItemA);
+    itemA.setPayload<KABC::Addressee>( addressA );
+    lst<<itemA;
+
+    Addressee addressB;
+    Akonadi::Item itemB;
+    addressB.setUrl(nameItemB);
+    itemB.setPayload<KABC::Addressee>( addressB );
+    lst<<itemB;
+
+    Addressee addressC;
+    Akonadi::Item itemC;
+    addressC.setUrl(nameItemC);
+    itemC.setPayload<KABC::Addressee>( addressC );
+    lst<<itemC;
+
+    MergeContacts contacts(lst);
+    const MergeContacts::ConflictInformations result = contacts.needManualSelectInformations();
+    const bool bResult = (result == MergeContacts::HomePage);
+    QCOMPARE(bResult, needManualCheck);
+}
+
 void MergeContactsTest::shouldMergeNotes_data()
 {
     QTest::addColumn<QString>("noteItemA");
