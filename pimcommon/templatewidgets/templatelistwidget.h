@@ -53,6 +53,10 @@ protected:
     QMimeData *mimeData(const QList<QListWidgetItem *> items) const Q_DECL_OVERRIDE;
 
     void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
+    enum TemplateData {
+        Text = Qt::UserRole + 1,
+        DefaultTemplate = Qt::UserRole + 2
+    };
 
 Q_SIGNALS:
     void insertTemplate(const QString &);
@@ -60,21 +64,17 @@ Q_SIGNALS:
 
 private:
     friend class TemplateListWidgetPrivate;
-    TemplateListWidgetPrivate *const d;
-    Q_PRIVATE_SLOT(d, void slotAdd())
-    Q_PRIVATE_SLOT(d, void slotRemove())
-    Q_PRIVATE_SLOT(d, void slotModify())
-    Q_PRIVATE_SLOT(d, void slotInsertTemplate())
-    Q_PRIVATE_SLOT(d, void slotContextMenu(const QPoint &pos))
-    Q_PRIVATE_SLOT(d, void slotInsertNewTemplate(const QString &))
-    Q_PRIVATE_SLOT(d, void slotExportTemplates())
-    Q_PRIVATE_SLOT(d, void slotImportTemplates())
-    Q_PRIVATE_SLOT(d, void slotDuplicate())
-    Q_PRIVATE_SLOT(d, void slotDownloadTemplates())
-    enum TemplateData {
-        Text = Qt::UserRole + 1,
-        DefaultTemplate = Qt::UserRole + 2
-    };
+    TemplateListWidgetPrivate * const d;
+    Q_PRIVATE_SLOT( d, void slotAdd() )
+    Q_PRIVATE_SLOT( d, void slotRemove() )
+    Q_PRIVATE_SLOT( d, void slotModify() )
+    Q_PRIVATE_SLOT( d, void slotInsertTemplate() )
+    Q_PRIVATE_SLOT( d, void slotContextMenu(const QPoint &pos) )
+    Q_PRIVATE_SLOT( d, void slotInsertNewTemplate(const QString&) )
+    Q_PRIVATE_SLOT( d, void slotExportTemplates() )
+    Q_PRIVATE_SLOT( d, void slotImportTemplates() )
+    Q_PRIVATE_SLOT( d, void slotDuplicate() )
+    Q_PRIVATE_SLOT( d, void slotDownloadTemplates() )
 };
 }
 

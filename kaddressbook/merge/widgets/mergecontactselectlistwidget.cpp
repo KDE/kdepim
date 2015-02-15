@@ -61,14 +61,56 @@ void MergeContactSelectListWidget::updateTitle()
     case MergeContacts::None:
         break;
     case MergeContacts::Birthday:
-
+        title = Addressee::birthdayLabel();
         break;
     case MergeContacts::Geo:
-        title = QLatin1String("Geo:");
+        title = Addressee::geoLabel();
         break;
     case MergeContacts::Photo:
+        title = Addressee::photoLabel();
         break;
     case MergeContacts::Logo:
+        title = Addressee::logoLabel();
+        break;
+    case MergeContacts::Anniversary:
+        //TODO
+        title = QLatin1String("Weeding anniversary:");
+        break;
+    case MergeContacts::Name:
+        title = Addressee::nameLabel();
+        break;
+    case MergeContacts::NickName:
+        title = Addressee::nickNameLabel();
+        break;
+    case MergeContacts::Blog:
+        title = QLatin1String("Blog");
+        break;
+    case MergeContacts::HomePage:
+        title = QLatin1String("HomePage");
+        break;
+    case MergeContacts::Organization:
+        title = Addressee::organizationLabel();
+        break;
+    case MergeContacts::Profession:
+        title = QLatin1String("Profession");
+        break;
+    case MergeContacts::Title:
+        title = Addressee::titleLabel();
+        break;
+    case MergeContacts::Departement:
+        title = Addressee::departmentLabel();
+        break;
+    case MergeContacts::Office:
+        title = QLatin1String("office");
+        break;
+    case MergeContacts::ManagerName:
+        title = QLatin1String("Manager");
+        break;
+    case MergeContacts::Assistant:
+        title = QLatin1String("Assistant");
+        break;
+    case MergeContacts::FreeBusy:
+        title = QLatin1String("FreeBusy");
         break;
     }
 
@@ -87,6 +129,32 @@ void MergeContactSelectListWidget::fillList(const KContacts::Addressee::List &ls
     case MergeContacts::Photo:
         break;
     case MergeContacts::Logo:
+        break;
+    case MergeContacts::Anniversary:
+        break;
+    case MergeContacts::Name:
+        break;
+    case MergeContacts::NickName:
+        break;
+    case MergeContacts::Blog:
+        break;
+    case MergeContacts::HomePage:
+        break;
+    case MergeContacts::Organization:
+        break;
+    case MergeContacts::Profession:
+        break;
+    case MergeContacts::Title:
+        break;
+    case MergeContacts::Departement:
+        break;
+    case MergeContacts::Office:
+        break;
+    case MergeContacts::ManagerName:
+        break;
+    case MergeContacts::Assistant:
+        break;
+    case MergeContacts::FreeBusy:
         break;
     }
 }

@@ -47,17 +47,17 @@ QList<PimCommon::defaultTemplate> KSieveUi::SieveDefaultTemplate::defaultTemplat
     lst << tmp;
 
     tmp.name = i18n("Flag messages");
-    tmp.text = QStringLiteral("require [\"imap4flags\"];\n"
-                              "if address \"From\" \"someone@example.org\" { \n"
-                              "    setflag \"\\\\Seen\";\n"
-                              "}\n");
+    tmp.text = QString::fromLatin1("require \"imap4flags\";\n"
+                                   "if address \"From\" \"someone@example.org\" { \n"
+                                   "    setflag \"\\\\Seen\";\n"
+                                   "}\n");
     lst << tmp;
 
     tmp.name = i18n("Forward Message");
-    tmp.text = QStringLiteral("require [\"copy\"];\n"
-                              "if header :contains \"Subject\" \"foo\" { \n"
-                              "    redirect :copy \"other@example.net\";\n"
-                              "}\n");
+    tmp.text = QString::fromLatin1("require \"copy\";\n"
+                                   "if header :contains \"Subject\" \"foo\" { \n"
+                                   "    redirect :copy \"other@example.net\";\n"
+                                   "}\n");
     lst << tmp;
 
     tmp.name = i18n("Forward Message and add copy");
