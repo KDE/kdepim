@@ -23,12 +23,13 @@
 #include "kaddressbook_export.h"
 #include "searchduplicateresultwidget.h"
 
-namespace KABMergeContacts {
+namespace KABMergeContacts
+{
 class KADDRESSBOOK_EXPORT MergeContactSelectInformationTabWidget : public QTabWidget
 {
     Q_OBJECT
 public:
-    explicit MergeContactSelectInformationTabWidget(QWidget *parent=0);
+    explicit MergeContactSelectInformationTabWidget(QWidget *parent = 0);
     ~MergeContactSelectInformationTabWidget();
 
     void updateTabWidget();

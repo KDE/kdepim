@@ -19,8 +19,7 @@
 #include "merge/manualmerge/mergecontactsdialog.h"
 
 #include <QStackedWidget>
-#include <qtest_kde.h>
-
+#include <qtest.h>
 
 MergeContactsDialogTest::MergeContactsDialogTest(QObject *parent)
     : QObject(parent)
@@ -41,7 +40,7 @@ void MergeContactsDialogTest::shouldHaveDefaultValue()
     QVERIFY(stackedWidget);
     QCOMPARE(stackedWidget->currentWidget()->objectName(), QLatin1String("nocontactselected"));
 
-    for(int i = 0; i < stackedWidget->count(); ++i) {
+    for (int i = 0; i < stackedWidget->count(); ++i) {
         QWidget *w = stackedWidget->widget(i);
         const QString objName = w->objectName();
         const bool hasGoodNamePage = (objName == QLatin1String("notenoughcontactselected") ||
@@ -54,4 +53,4 @@ void MergeContactsDialogTest::shouldHaveDefaultValue()
 
 }
 
-QTEST_KDEMAIN(MergeContactsDialogTest, GUI)
+QTEST_MAIN(MergeContactsDialogTest)

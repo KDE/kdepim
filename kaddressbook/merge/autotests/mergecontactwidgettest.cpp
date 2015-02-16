@@ -99,7 +99,7 @@ void MergeContactWidgetTest::shouldHaveDefaultValueOnCreation()
     QSplitter *splitter = qFindChild<QSplitter *>(&mergeWidget, QLatin1String("splitter"));
     QVERIFY(splitter);
     QVERIFY(!splitter->childrenCollapsible());
-    for(int i =0; i < splitter->count(); ++i) {
+    for (int i = 0; i < splitter->count(); ++i) {
         const QString objName = splitter->widget(i)->objectName();
 
         const bool hasName = (objName == QLatin1String("selectcontactwidget")) || (objName == QLatin1String("mergecontactinfowidget"));

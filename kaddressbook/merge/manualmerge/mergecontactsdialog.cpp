@@ -68,20 +68,18 @@ MergeContactsDialog::MergeContactsDialog(QWidget *parent)
     mManualMergeResultWidget = new KABMergeContacts::MergeContactWidget(this);
     mManualMergeResultWidget->setObjectName(QLatin1String("manualmergeresultwidget"));
     mStackedWidget->addWidget(mManualMergeResultWidget);
-    connect(mManualMergeResultWidget, SIGNAL(customizeMergeContact(Akonadi::Item::List,MergeContacts::ConflictInformations,Akonadi::Collection)),
-            this, SLOT(slotCustomizeMergeContact(Akonadi::Item::List,MergeContacts::ConflictInformations,Akonadi::Collection)));
-    connect(mManualMergeResultWidget, SIGNAL(contactMerged(Akonadi::Item)),
-            this, SLOT(slotContactMerged(Akonadi::Item)));
+    connect(mManualMergeResultWidget, &MergeContactWidget::customizeMergeContact,
+            this, &MergeContactsDialog::slotCustomizeMergeContact);
+    connect(mManualMergeResultWidget, &MergeContactWidget::contactMerged,
+            this, &MergeContactsDialog::slotContactMerged);
 
     mSelectInformation = new KABMergeContacts::MergeContactSelectInformationScrollArea(this);
     mSelectInformation->setObjectName(QLatin1String("selectioninformation"));
     mStackedWidget->addWidget(mSelectInformation);
 
-
     mMergeContactInfo = new KABMergeContacts::MergeContactInfoWidget;
     mMergeContactInfo->setObjectName(QLatin1String("mergecontactinfowidget"));
     mStackedWidget->addWidget(mMergeContactInfo);
-
 
     mStackedWidget->setCurrentWidget(mNoContactSelected);
 
@@ -96,7 +94,7 @@ void MergeContactsDialog::setContacts(const Akonadi::Item::List &list)
 {
     if (list.isEmpty()) {
         mStackedWidget->setCurrentWidget(mNoContactSelected);
-    } else if (list.count() < 2){
+    } else if (list.count() < 2) {
         mStackedWidget->setCurrentWidget(mNoEnoughContactSelected);
     } else {
         mManualMergeResultWidget->setContacts(list);
@@ -127,7 +125,6 @@ void MergeContactsDialog::writeConfig()
     grp.writeEntry("Size", size());
     grp.sync();
 }
-
 
 void MergeContactsDialog::slotContactMerged(const Akonadi::Item &item)
 {

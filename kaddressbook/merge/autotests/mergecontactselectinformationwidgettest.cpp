@@ -18,7 +18,7 @@
 #include "mergecontactselectinformationwidgettest.h"
 #include "merge/widgets/mergecontactselectinformationwidget.h"
 #include "merge/widgets/mergecontactselectlistwidget.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 MergeContactSelectInformationWidgetTest::MergeContactSelectInformationWidgetTest(QObject *parent)
     : QObject(parent)
 {
@@ -45,4 +45,4 @@ void MergeContactSelectInformationWidgetTest::shouldHaveEmptyListIfContactListIs
     //w.setContacts(Akonadi::Item::List());
 }
 
-QTEST_KDEMAIN(MergeContactSelectInformationWidgetTest, GUI)
+QTEST_MAIN(MergeContactSelectInformationWidgetTest)

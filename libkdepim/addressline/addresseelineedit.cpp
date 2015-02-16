@@ -345,7 +345,7 @@ bool AddresseeLineEdit::isCompletionEnabled() const
     return d->m_useCompletion;
 }
 
-void AddresseeLineEdit::addItem( const Akonadi::Item &item, int weight, int source )
+void AddresseeLineEdit::addItem(const Akonadi::Item &item, int weight, int source)
 {
     //Let Akonadi results always have a higher weight than baloo results
     if (item.hasPayload<KContacts::Addressee>()) {
@@ -445,7 +445,7 @@ QMenu *AddresseeLineEdit::createStandardContextMenu()
         connect(showOU, SIGNAL(triggered(bool)), this, SLOT(slotShowOUChanged(bool)));
         menu->addAction(showOU);
         //Add i18n in kf5
-        QAction *configureBalooBlackList = new QAction(QLatin1String( "Configure Email Blacklist" ),menu);
+        QAction *configureBalooBlackList = new QAction(QLatin1String("Configure Email Blacklist"), menu);
         connect(configureBalooBlackList, SIGNAL(triggered(bool)), this, SLOT(slotConfigureBalooBlackList()));
         menu->addAction(configureBalooBlackList);
     }

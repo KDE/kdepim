@@ -83,80 +83,61 @@ private:
 #undef FOREACH
 #endif
 #define FOREACH for ( std::vector<KSieve::ScriptBuilder*>::const_iterator it = mBuilders.begin(), end = mBuilders.end() ; it != end ; ++it ) (*it)->
-    void commandStart(const QString &identifier) Q_DECL_OVERRIDE
-    {
+    void commandStart(const QString &identifier) Q_DECL_OVERRIDE {
         FOREACH commandStart(identifier);
     }
-    void commandEnd() Q_DECL_OVERRIDE
-    {
+    void commandEnd() Q_DECL_OVERRIDE {
         FOREACH commandEnd();
     }
-    void testStart(const QString &identifier) Q_DECL_OVERRIDE
-    {
+    void testStart(const QString &identifier) Q_DECL_OVERRIDE {
         FOREACH testStart(identifier);
     }
-    void testEnd() Q_DECL_OVERRIDE
-    {
+    void testEnd() Q_DECL_OVERRIDE {
         FOREACH testEnd();
     }
-    void testListStart() Q_DECL_OVERRIDE
-    {
+    void testListStart() Q_DECL_OVERRIDE {
         FOREACH testListStart();
     }
-    void testListEnd() Q_DECL_OVERRIDE
-    {
+    void testListEnd() Q_DECL_OVERRIDE {
         FOREACH testListEnd();
     }
-    void blockStart() Q_DECL_OVERRIDE
-    {
+    void blockStart() Q_DECL_OVERRIDE {
         FOREACH blockStart();
     }
-    void blockEnd() Q_DECL_OVERRIDE
-    {
+    void blockEnd() Q_DECL_OVERRIDE {
         FOREACH blockEnd();
     }
-    void hashComment(const QString &comment) Q_DECL_OVERRIDE
-    {
+    void hashComment(const QString &comment) Q_DECL_OVERRIDE {
         FOREACH hashComment(comment);
     }
-    void bracketComment(const QString &comment) Q_DECL_OVERRIDE
-    {
+    void bracketComment(const QString &comment) Q_DECL_OVERRIDE {
         FOREACH bracketComment(comment);
     }
-    void lineFeed() Q_DECL_OVERRIDE
-    {
+    void lineFeed() Q_DECL_OVERRIDE {
         FOREACH lineFeed();
     }
-    void error(const KSieve::Error &e) Q_DECL_OVERRIDE
-    {
+    void error(const KSieve::Error &e) Q_DECL_OVERRIDE {
         FOREACH error(e);
     }
-    void finished() Q_DECL_OVERRIDE
-    {
+    void finished() Q_DECL_OVERRIDE {
         FOREACH finished();
     }
-    void taggedArgument(const QString &tag) Q_DECL_OVERRIDE
-    {
+    void taggedArgument(const QString &tag) Q_DECL_OVERRIDE {
         FOREACH taggedArgument(tag);
     }
-    void stringArgument(const QString &string, bool multiline, const QString &fixme) Q_DECL_OVERRIDE
-    {
+    void stringArgument(const QString &string, bool multiline, const QString &fixme) Q_DECL_OVERRIDE {
         FOREACH stringArgument(string, multiline, fixme);
     }
-    void numberArgument(unsigned long number, char quantifier) Q_DECL_OVERRIDE
-    {
+    void numberArgument(unsigned long number, char quantifier) Q_DECL_OVERRIDE {
         FOREACH numberArgument(number, quantifier);
     }
-    void stringListArgumentStart() Q_DECL_OVERRIDE
-    {
+    void stringListArgumentStart() Q_DECL_OVERRIDE {
         FOREACH stringListArgumentStart();
     }
-    void stringListEntry(const QString &string, bool multiline, const QString &fixme) Q_DECL_OVERRIDE
-    {
+    void stringListEntry(const QString &string, bool multiline, const QString &fixme) Q_DECL_OVERRIDE {
         FOREACH stringListEntry(string, multiline, fixme);
     }
-    void stringListArgumentEnd() Q_DECL_OVERRIDE
-    {
+    void stringListArgumentEnd() Q_DECL_OVERRIDE {
         FOREACH stringListArgumentEnd();
     }
 #undef FOREACH
@@ -248,97 +229,78 @@ private:
             doProcess(method, string);
         }
     }
-    void commandStart(const QString &identifier) Q_DECL_OVERRIDE
-    {
+    void commandStart(const QString &identifier) Q_DECL_OVERRIDE {
         qCDebug(LIBKSIEVE_LOG) ;
         process(CommandStart, identifier);
     }
-    void commandEnd() Q_DECL_OVERRIDE
-    {
+    void commandEnd() Q_DECL_OVERRIDE {
         qCDebug(LIBKSIEVE_LOG) ;
         process(CommandEnd);
     }
-    void testStart(const QString &identifier) Q_DECL_OVERRIDE
-    {
+    void testStart(const QString &identifier) Q_DECL_OVERRIDE {
         qCDebug(LIBKSIEVE_LOG) ;
         process(TestStart, identifier);
     }
-    void testEnd() Q_DECL_OVERRIDE
-    {
+    void testEnd() Q_DECL_OVERRIDE {
         qCDebug(LIBKSIEVE_LOG) ;
         process(TestEnd);
     }
-    void testListStart() Q_DECL_OVERRIDE
-    {
+    void testListStart() Q_DECL_OVERRIDE {
         qCDebug(LIBKSIEVE_LOG) ;
         process(TestListStart);
     }
-    void testListEnd() Q_DECL_OVERRIDE
-    {
+    void testListEnd() Q_DECL_OVERRIDE {
         qCDebug(LIBKSIEVE_LOG) ;
         process(TestListEnd);
     }
-    void blockStart() Q_DECL_OVERRIDE
-    {
+    void blockStart() Q_DECL_OVERRIDE {
         qCDebug(LIBKSIEVE_LOG) ;
         process(BlockStart);
         ++mNestingDepth;
     }
-    void blockEnd() Q_DECL_OVERRIDE
-    {
+    void blockEnd() Q_DECL_OVERRIDE {
         qCDebug(LIBKSIEVE_LOG) ;
         --mNestingDepth;
         process(BlockEnd);
     }
-    void hashComment(const QString &) Q_DECL_OVERRIDE
-    {
+    void hashComment(const QString &) Q_DECL_OVERRIDE {
         qCDebug(LIBKSIEVE_LOG) ;
     }
-    void bracketComment(const QString &) Q_DECL_OVERRIDE
-    {
+    void bracketComment(const QString &) Q_DECL_OVERRIDE {
         qCDebug(LIBKSIEVE_LOG) ;
     }
-    void lineFeed() Q_DECL_OVERRIDE
-    {
+    void lineFeed() Q_DECL_OVERRIDE {
         qCDebug(LIBKSIEVE_LOG) ;
     }
-    void error(const KSieve::Error &) Q_DECL_OVERRIDE
-    {
+    void error(const KSieve::Error &) Q_DECL_OVERRIDE {
         qCDebug(LIBKSIEVE_LOG) ;
         mState = 0;
     }
-    void finished() Q_DECL_OVERRIDE
-    {
+    void finished() Q_DECL_OVERRIDE {
         qCDebug(LIBKSIEVE_LOG) ;
     }
 
-    void taggedArgument(const QString &tag) Q_DECL_OVERRIDE
-    {
+    void taggedArgument(const QString &tag) Q_DECL_OVERRIDE {
         qCDebug(LIBKSIEVE_LOG) ;
         process(TaggedArgument, tag);
     }
-    void stringArgument(const QString &string, bool, const QString &) Q_DECL_OVERRIDE
-    {
+    void stringArgument(const QString &string, bool, const QString &) Q_DECL_OVERRIDE {
         qCDebug(LIBKSIEVE_LOG) ;
         process(StringArgument, string);
     }
-    void numberArgument(unsigned long number, char) Q_DECL_OVERRIDE
-    {
+    void numberArgument(unsigned long number, char) Q_DECL_OVERRIDE {
         qCDebug(LIBKSIEVE_LOG);
         process(NumberArgument, QString::number(number));
     }
-    void stringListArgumentStart() Q_DECL_OVERRIDE
-    {
+    void stringListArgumentStart() Q_DECL_OVERRIDE {
         qCDebug(LIBKSIEVE_LOG) ;
         process(StringListArgumentStart);
     }
-    void stringListEntry(const QString &string, bool, const QString &) Q_DECL_OVERRIDE
-    {
+    void stringListEntry(const QString &string, bool, const QString &) Q_DECL_OVERRIDE {
         qCDebug(LIBKSIEVE_LOG) ;
         process(StringListEntry, string);
     }
-    void stringListArgumentEnd() Q_DECL_OVERRIDE
-    {
+    void stringListArgumentEnd() Q_DECL_OVERRIDE {
         qCDebug(LIBKSIEVE_LOG) ;
         process(StringListArgumentEnd);
     }

@@ -84,29 +84,29 @@ void MergeContactsTest::checkNeedManualSelectionWithName_data()
 
 void MergeContactsTest::checkNeedManualSelectionWithName()
 {
-    QFETCH( QString, nameItemA );
-    QFETCH( QString, nameItemB );
-    QFETCH( QString, nameItemC );
-    QFETCH( bool, needManualCheck );
+    QFETCH(QString, nameItemA);
+    QFETCH(QString, nameItemB);
+    QFETCH(QString, nameItemC);
+    QFETCH(bool, needManualCheck);
 
     Akonadi::Item::List lst;
     Addressee addressA;
     Akonadi::Item itemA;
     addressA.setName(nameItemA);
-    itemA.setPayload<Addressee>( addressA );
-    lst<<itemA;
+    itemA.setPayload<Addressee>(addressA);
+    lst << itemA;
 
     Addressee addressB;
     Akonadi::Item itemB;
     addressB.setName(nameItemB);
-    itemB.setPayload<Addressee>( addressB );
-    lst<<itemB;
+    itemB.setPayload<Addressee>(addressB);
+    lst << itemB;
 
     Addressee addressC;
     Akonadi::Item itemC;
     addressC.setName(nameItemC);
-    itemC.setPayload<Addressee>( addressC );
-    lst<<itemC;
+    itemC.setPayload<Addressee>(addressC);
+    lst << itemC;
 
     MergeContacts contacts(lst);
     const MergeContacts::ConflictInformations result = contacts.needManualSelectInformations();
@@ -132,29 +132,29 @@ void MergeContactsTest::checkNeedManualSelectionWithNickName_data()
 
 void MergeContactsTest::checkNeedManualSelectionWithNickName()
 {
-    QFETCH( QString, nameItemA );
-    QFETCH( QString, nameItemB );
-    QFETCH( QString, nameItemC );
-    QFETCH( bool, needManualCheck );
+    QFETCH(QString, nameItemA);
+    QFETCH(QString, nameItemB);
+    QFETCH(QString, nameItemC);
+    QFETCH(bool, needManualCheck);
 
     Akonadi::Item::List lst;
     Addressee addressA;
     Akonadi::Item itemA;
     addressA.setNickName(nameItemA);
-    itemA.setPayload<Addressee>( addressA );
-    lst<<itemA;
+    itemA.setPayload<Addressee>(addressA);
+    lst << itemA;
 
     Addressee addressB;
     Akonadi::Item itemB;
     addressB.setNickName(nameItemB);
-    itemB.setPayload<Addressee>( addressB );
-    lst<<itemB;
+    itemB.setPayload<Addressee>(addressB);
+    lst << itemB;
 
     Addressee addressC;
     Akonadi::Item itemC;
     addressC.setNickName(nameItemC);
-    itemC.setPayload<Addressee>( addressC );
-    lst<<itemC;
+    itemC.setPayload<Addressee>(addressC);
+    lst << itemC;
 
     MergeContacts contacts(lst);
     const MergeContacts::ConflictInformations result = contacts.needManualSelectInformations();
@@ -180,29 +180,29 @@ void MergeContactsTest::checkNeedManualSelectionWithOrganization_data()
 
 void MergeContactsTest::checkNeedManualSelectionWithOrganization()
 {
-    QFETCH( QString, nameItemA );
-    QFETCH( QString, nameItemB );
-    QFETCH( QString, nameItemC );
-    QFETCH( bool, needManualCheck );
+    QFETCH(QString, nameItemA);
+    QFETCH(QString, nameItemB);
+    QFETCH(QString, nameItemC);
+    QFETCH(bool, needManualCheck);
 
     Akonadi::Item::List lst;
     Addressee addressA;
     Akonadi::Item itemA;
     addressA.setOrganization(nameItemA);
-    itemA.setPayload<Addressee>( addressA );
-    lst<<itemA;
+    itemA.setPayload<Addressee>(addressA);
+    lst << itemA;
 
     Addressee addressB;
     Akonadi::Item itemB;
     addressB.setOrganization(nameItemB);
-    itemB.setPayload<Addressee>( addressB );
-    lst<<itemB;
+    itemB.setPayload<Addressee>(addressB);
+    lst << itemB;
 
     Addressee addressC;
     Akonadi::Item itemC;
     addressC.setOrganization(nameItemC);
-    itemC.setPayload<Addressee>( addressC );
-    lst<<itemC;
+    itemC.setPayload<Addressee>(addressC);
+    lst << itemC;
 
     MergeContacts contacts(lst);
     const MergeContacts::ConflictInformations result = contacts.needManualSelectInformations();
@@ -228,29 +228,29 @@ void MergeContactsTest::checkNeedManualSelectionWithTitle_data()
 
 void MergeContactsTest::checkNeedManualSelectionWithTitle()
 {
-    QFETCH( QString, nameItemA );
-    QFETCH( QString, nameItemB );
-    QFETCH( QString, nameItemC );
-    QFETCH( bool, needManualCheck );
+    QFETCH(QString, nameItemA);
+    QFETCH(QString, nameItemB);
+    QFETCH(QString, nameItemC);
+    QFETCH(bool, needManualCheck);
 
     Akonadi::Item::List lst;
     Addressee addressA;
     Akonadi::Item itemA;
     addressA.setTitle(nameItemA);
-    itemA.setPayload<Addressee>( addressA );
-    lst<<itemA;
+    itemA.setPayload<Addressee>(addressA);
+    lst << itemA;
 
     Addressee addressB;
     Akonadi::Item itemB;
     addressB.setTitle(nameItemB);
-    itemB.setPayload<Addressee>( addressB );
-    lst<<itemB;
+    itemB.setPayload<Addressee>(addressB);
+    lst << itemB;
 
     Addressee addressC;
     Akonadi::Item itemC;
     addressC.setTitle(nameItemC);
-    itemC.setPayload<Addressee>( addressC );
-    lst<<itemC;
+    itemC.setPayload<Addressee>(addressC);
+    lst << itemC;
 
     MergeContacts contacts(lst);
     const MergeContacts::ConflictInformations result = contacts.needManualSelectInformations();
@@ -276,36 +276,35 @@ void MergeContactsTest::checkNeedManualSelectionWithFamilyName_data()
 
 void MergeContactsTest::checkNeedManualSelectionWithFamilyName()
 {
-    QFETCH( QString, nameItemA );
-    QFETCH( QString, nameItemB );
-    QFETCH( QString, nameItemC );
-    QFETCH( bool, needManualCheck );
+    QFETCH(QString, nameItemA);
+    QFETCH(QString, nameItemB);
+    QFETCH(QString, nameItemC);
+    QFETCH(bool, needManualCheck);
 
     Akonadi::Item::List lst;
     Addressee addressA;
     Akonadi::Item itemA;
     addressA.setFamilyName(nameItemA);
-    itemA.setPayload<Addressee>( addressA );
-    lst<<itemA;
+    itemA.setPayload<Addressee>(addressA);
+    lst << itemA;
 
     Addressee addressB;
     Akonadi::Item itemB;
     addressB.setFamilyName(nameItemB);
-    itemB.setPayload<Addressee>( addressB );
-    lst<<itemB;
+    itemB.setPayload<Addressee>(addressB);
+    lst << itemB;
 
     Addressee addressC;
     Akonadi::Item itemC;
     addressC.setFamilyName(nameItemC);
-    itemC.setPayload<Addressee>( addressC );
-    lst<<itemC;
+    itemC.setPayload<Addressee>(addressC);
+    lst << itemC;
 
     MergeContacts contacts(lst);
     const MergeContacts::ConflictInformations result = contacts.needManualSelectInformations();
     const bool bResult = (result == MergeContacts::FamilyName);
     QCOMPARE(bResult, needManualCheck);
 }
-
 
 void MergeContactsTest::checkNeedManualSelectionWithDepartement_data()
 {
@@ -325,29 +324,29 @@ void MergeContactsTest::checkNeedManualSelectionWithDepartement_data()
 
 void MergeContactsTest::checkNeedManualSelectionWithDepartement()
 {
-    QFETCH( QString, nameItemA );
-    QFETCH( QString, nameItemB );
-    QFETCH( QString, nameItemC );
-    QFETCH( bool, needManualCheck );
+    QFETCH(QString, nameItemA);
+    QFETCH(QString, nameItemB);
+    QFETCH(QString, nameItemC);
+    QFETCH(bool, needManualCheck);
 
     Akonadi::Item::List lst;
     Addressee addressA;
     Akonadi::Item itemA;
     addressA.setDepartment(nameItemA);
-    itemA.setPayload<Addressee>( addressA );
-    lst<<itemA;
+    itemA.setPayload<Addressee>(addressA);
+    lst << itemA;
 
     Addressee addressB;
     Akonadi::Item itemB;
     addressB.setDepartment(nameItemB);
-    itemB.setPayload<Addressee>( addressB );
-    lst<<itemB;
+    itemB.setPayload<Addressee>(addressB);
+    lst << itemB;
 
     Addressee addressC;
     Akonadi::Item itemC;
     addressC.setDepartment(nameItemC);
-    itemC.setPayload<Addressee>( addressC );
-    lst<<itemC;
+    itemC.setPayload<Addressee>(addressC);
+    lst << itemC;
 
     MergeContacts contacts(lst);
     const MergeContacts::ConflictInformations result = contacts.needManualSelectInformations();
@@ -373,29 +372,29 @@ void MergeContactsTest::checkNeedManualSelectionWithHomePage_data()
 
 void MergeContactsTest::checkNeedManualSelectionWithHomePage()
 {
-    QFETCH( QUrl, nameItemA );
-    QFETCH( QUrl, nameItemB );
-    QFETCH( QUrl, nameItemC );
-    QFETCH( bool, needManualCheck );
+    QFETCH(QUrl, nameItemA);
+    QFETCH(QUrl, nameItemB);
+    QFETCH(QUrl, nameItemC);
+    QFETCH(bool, needManualCheck);
 
     Akonadi::Item::List lst;
     Addressee addressA;
     Akonadi::Item itemA;
     addressA.setUrl(nameItemA);
-    itemA.setPayload<Addressee>( addressA );
-    lst<<itemA;
+    itemA.setPayload<Addressee>(addressA);
+    lst << itemA;
 
     Addressee addressB;
     Akonadi::Item itemB;
     addressB.setUrl(nameItemB);
-    itemB.setPayload<Addressee>( addressB );
-    lst<<itemB;
+    itemB.setPayload<Addressee>(addressB);
+    lst << itemB;
 
     Addressee addressC;
     Akonadi::Item itemC;
     addressC.setUrl(nameItemC);
-    itemC.setPayload<Addressee>( addressC );
-    lst<<itemC;
+    itemC.setPayload<Addressee>(addressC);
+    lst << itemC;
 
     MergeContacts contacts(lst);
     const MergeContacts::ConflictInformations result = contacts.needManualSelectInformations();

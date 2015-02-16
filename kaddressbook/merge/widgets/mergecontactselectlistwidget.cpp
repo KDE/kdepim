@@ -126,8 +126,8 @@ void MergeContactSelectListWidget::updateTitle()
 
 void MergeContactSelectListWidget::fillList(const KContacts::Addressee::List &lst)
 {
-    Q_FOREACH(const Addressee &addr, lst ) {
-        switch(mConflictType) {
+    Q_FOREACH (const Addressee &addr, lst) {
+        switch (mConflictType) {
         case MergeContacts::None:
             break;
         case MergeContacts::Birthday:

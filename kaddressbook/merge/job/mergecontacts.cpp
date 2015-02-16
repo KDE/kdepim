@@ -240,6 +240,6 @@ MergeContacts::ConflictInformations MergeContacts::needManualSelectInformations(
             }
         }
     }
-    qDebug()<<" result "<<result;
+    qDebug() << " result " << result;
     return result;
 }

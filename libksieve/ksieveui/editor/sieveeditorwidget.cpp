@@ -67,8 +67,7 @@ SieveEditorWidget::SieveEditorWidget(QWidget *parent)
     mAutoGenerateScript = new QAction(i18n("Autogenerate Script..."), this);
     connect(mAutoGenerateScript, &QAction::triggered, this, &SieveEditorWidget::slotAutoGenerateScripts);
     bar->addAction(mAutoGenerateScript);
-    //KF5 add i18n
-    mSwitchMode = new QAction(QLatin1String("Simple Mode"), this);
+    mSwitchMode = new QAction(i18n("Simple Mode"), this);
     bar->addAction(mSwitchMode);
     connect(mSwitchMode, &QAction::triggered, this, &SieveEditorWidget::slotSwitchMode);
 #if !defined(NDEBUG)
@@ -81,7 +80,7 @@ SieveEditorWidget::SieveEditorWidget(QWidget *parent)
 #endif
 
     QStringList overlays;
-    overlays <<QLatin1String("list-add");
+    overlays << QLatin1String("list-add");
     mUpload = new QAction(QIcon(new KIconEngine(QLatin1String("get-hot-new-stuff"), Q_NULLPTR, overlays)), i18n("Share..."), this);
     connect(mUpload, &QAction::triggered, this, &SieveEditorWidget::slotUploadScripts);
     connect(mUpload, SIGNAL(triggered(bool)), SLOT(slotUploadScripts()));
@@ -204,8 +203,9 @@ void SieveEditorWidget::changeMode(EditorMode mode)
         const bool isTextMode = (mMode == TextMode);
         mAutoGenerateScript->setEnabled(isTextMode);
 #if !defined(NDEBUG)
-        if (mGenerateXml)
+        if (mGenerateXml) {
             mGenerateXml->setEnabled((mMode == TextMode));
+        }
 #endif
         if (mMode == GraphicMode) {
             mCheckSyntax->setEnabled(false);
@@ -213,8 +213,7 @@ void SieveEditorWidget::changeMode(EditorMode mode)
             mCheckSyntax->setEnabled(!mTextModeWidget->currentscript().isEmpty());
         }
         Q_EMIT modeEditorChanged(mode);
-        //KF5 add i18n
-        mSwitchMode->setText(isTextMode ?  QLatin1String("Simple Mode") : QLatin1String("Advanced Mode"));
+        mSwitchMode->setText(isTextMode ?  i18n("Simple Mode") : i18n("Advanced Mode"));
     }
 }
 

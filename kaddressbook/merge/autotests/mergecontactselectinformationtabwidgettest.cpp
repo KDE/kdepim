@@ -17,7 +17,7 @@
 
 #include "mergecontactselectinformationtabwidgettest.h"
 #include "../searchduplicate/mergecontactselectinformationtabwidget.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 MergeContactSelectInformationTabWidgetTest::MergeContactSelectInformationTabWidgetTest(QObject *parent)
     : QObject(parent)
@@ -51,5 +51,4 @@ void MergeContactSelectInformationTabWidgetTest::shouldAddTab()
 #endif
 }
 
-
-QTEST_KDEMAIN(MergeContactSelectInformationTabWidgetTest, GUI)
+QTEST_MAIN(MergeContactSelectInformationTabWidgetTest)

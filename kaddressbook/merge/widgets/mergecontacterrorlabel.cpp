@@ -24,7 +24,7 @@ MergeContactErrorLabel::MergeContactErrorLabel(ErrorType type, QWidget *parent)
 {
     QFont font;
     font.setBold(true);
-    switch(type) {
+    switch (type) {
     case NotEnoughContactsSelected:
         setText(i18n("You must select at least two elements."));
         break;
@@ -36,7 +36,7 @@ MergeContactErrorLabel::MergeContactErrorLabel(ErrorType type, QWidget *parent)
         break;
     }
 
-    setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+    setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     setFont(font);
 }
 

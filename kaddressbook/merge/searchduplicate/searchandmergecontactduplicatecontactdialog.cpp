@@ -17,7 +17,6 @@
 
 #include "searchandmergecontactduplicatecontactdialog.h"
 
-
 #include "mergecontactselectinformationtabwidget.h"
 #include "merge/searchduplicate/searchduplicateresultwidget.h"
 #include "merge/widgets/mergecontactshowresulttabwidget.h"

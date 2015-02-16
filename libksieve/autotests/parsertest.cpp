@@ -452,96 +452,77 @@ public:
     }
     virtual ~PrintingScriptBuilder() {}
 
-    void taggedArgument(const QString &tag) Q_DECL_OVERRIDE
-    {
+    void taggedArgument(const QString &tag) Q_DECL_OVERRIDE {
         write("tag", tag);
     }
-    void stringArgument(const QString &string, bool multiLine, const QString & /*fixme*/) Q_DECL_OVERRIDE
-    {
+    void stringArgument(const QString &string, bool multiLine, const QString & /*fixme*/) Q_DECL_OVERRIDE {
         write(multiLine ? "string type=\"multiline\"" : "string type=\"quoted\"", string);
     }
-    void numberArgument(unsigned long number, char quantifier) Q_DECL_OVERRIDE
-    {
+    void numberArgument(unsigned long number, char quantifier) Q_DECL_OVERRIDE {
         const QString txt = "number" + (quantifier ? QString(" quantifier=\"%1\"").arg(quantifier) : QString()) ;
         write(txt.toLatin1(), QString::number(number));
     }
-    void commandStart(const QString &identifier) Q_DECL_OVERRIDE
-    {
+    void commandStart(const QString &identifier) Q_DECL_OVERRIDE {
         write("<command>");
         ++indent;
         write("identifier", identifier);
     }
-    void commandEnd() Q_DECL_OVERRIDE
-    {
+    void commandEnd() Q_DECL_OVERRIDE {
         --indent;
         write("</command>");
     }
-    void testStart(const QString &identifier) Q_DECL_OVERRIDE
-    {
+    void testStart(const QString &identifier) Q_DECL_OVERRIDE {
         write("<test>");
         ++indent;
         write("identifier", identifier);
     }
-    void testEnd() Q_DECL_OVERRIDE
-    {
+    void testEnd() Q_DECL_OVERRIDE {
         --indent;
         write("</test>");
     }
-    void testListStart() Q_DECL_OVERRIDE
-    {
+    void testListStart() Q_DECL_OVERRIDE {
         write("<testlist>");
         ++indent;
     }
-    void testListEnd() Q_DECL_OVERRIDE
-    {
+    void testListEnd() Q_DECL_OVERRIDE {
         --indent;
         write("</testlist>");
     }
-    void blockStart() Q_DECL_OVERRIDE
-    {
+    void blockStart() Q_DECL_OVERRIDE {
         write("<block>");
         ++indent;
     }
-    void blockEnd() Q_DECL_OVERRIDE
-    {
+    void blockEnd() Q_DECL_OVERRIDE {
         --indent;
         write("</block>");
     }
-    void stringListArgumentStart() Q_DECL_OVERRIDE
-    {
+    void stringListArgumentStart() Q_DECL_OVERRIDE {
         write("<stringlist>");
         ++indent;
     }
-    void stringListArgumentEnd() Q_DECL_OVERRIDE
-    {
+    void stringListArgumentEnd() Q_DECL_OVERRIDE {
         --indent;
         write("</stringlist>");
     }
-    void stringListEntry(const QString &string, bool multiline, const QString &hashComment) Q_DECL_OVERRIDE
-    {
+    void stringListEntry(const QString &string, bool multiline, const QString &hashComment) Q_DECL_OVERRIDE {
         stringArgument(string, multiline, hashComment);
     }
-    void hashComment(const QString &comment) Q_DECL_OVERRIDE
-    {
+    void hashComment(const QString &comment) Q_DECL_OVERRIDE {
         write("comment type=\"hash\"", comment);
     }
-    void bracketComment(const QString &comment) Q_DECL_OVERRIDE
-    {
+    void bracketComment(const QString &comment) Q_DECL_OVERRIDE {
         write("comment type=\"bracket\"", comment);
     }
 
-    void lineFeed() Q_DECL_OVERRIDE
-    {
+    void lineFeed() Q_DECL_OVERRIDE {
         write("<crlf/>");
     }
 
-    void error(const KSieve::Error &error) Q_DECL_OVERRIDE
-    {
+    void error(const KSieve::Error &error) Q_DECL_OVERRIDE {
         indent = 0;
         write(("Error: " + error.asString()).toLatin1());
     }
-    void finished() Q_DECL_OVERRIDE
-    {
+    void finished() Q_DECL_OVERRIDE {
         --indent;
         write("</script>");
     }
@@ -586,108 +567,89 @@ public:
         return mOk;
     }
 
-    void taggedArgument(const QString &tag) Q_DECL_OVERRIDE
-    {
+    void taggedArgument(const QString &tag) Q_DECL_OVERRIDE {
         checkIs(TaggedArgument);
         checkEquals(tag);
         ++mNextResponse;
     }
-    void stringArgument(const QString &string, bool multiline, const QString & /*fixme*/) Q_DECL_OVERRIDE
-    {
+    void stringArgument(const QString &string, bool multiline, const QString & /*fixme*/) Q_DECL_OVERRIDE {
         checkIs(StringArgument);
         checkEquals(string);
         checkEquals(multiline);
         ++mNextResponse;
     }
-    void numberArgument(unsigned long number, char quantifier) Q_DECL_OVERRIDE
-    {
+    void numberArgument(unsigned long number, char quantifier) Q_DECL_OVERRIDE {
         checkIs(NumberArgument);
         checkEquals(QString::number(number) + (quantifier ? quantifier : ' '));
         ++mNextResponse;
     }
-    void commandStart(const QString &identifier) Q_DECL_OVERRIDE
-    {
+    void commandStart(const QString &identifier) Q_DECL_OVERRIDE {
         checkIs(CommandStart);
         checkEquals(identifier);
         ++mNextResponse;
     }
-    void commandEnd() Q_DECL_OVERRIDE
-    {
+    void commandEnd() Q_DECL_OVERRIDE {
         checkIs(CommandEnd);
         ++mNextResponse;
     }
-    void testStart(const QString &identifier) Q_DECL_OVERRIDE
-    {
+    void testStart(const QString &identifier) Q_DECL_OVERRIDE {
         checkIs(TestStart);
         checkEquals(identifier);
         ++mNextResponse;
     }
-    void testEnd() Q_DECL_OVERRIDE
-    {
+    void testEnd() Q_DECL_OVERRIDE {
         checkIs(TestEnd);
         ++mNextResponse;
     }
-    void testListStart() Q_DECL_OVERRIDE
-    {
+    void testListStart() Q_DECL_OVERRIDE {
         checkIs(TestListStart);
         ++mNextResponse;
     }
-    void testListEnd() Q_DECL_OVERRIDE
-    {
+    void testListEnd() Q_DECL_OVERRIDE {
         checkIs(TestListEnd);
         ++mNextResponse;
     }
-    void blockStart() Q_DECL_OVERRIDE
-    {
+    void blockStart() Q_DECL_OVERRIDE {
         checkIs(BlockStart);
         ++mNextResponse;
     }
-    void blockEnd() Q_DECL_OVERRIDE
-    {
+    void blockEnd() Q_DECL_OVERRIDE {
         checkIs(BlockEnd);
         ++mNextResponse;
     }
-    void stringListArgumentStart() Q_DECL_OVERRIDE
-    {
+    void stringListArgumentStart() Q_DECL_OVERRIDE {
         checkIs(StringListArgumentStart);
         ++mNextResponse;
     }
-    void stringListEntry(const QString &string, bool multiLine, const QString & /*fixme*/) Q_DECL_OVERRIDE
-    {
+    void stringListEntry(const QString &string, bool multiLine, const QString & /*fixme*/) Q_DECL_OVERRIDE {
         checkIs(StringListEntry);
         checkEquals(string);
         checkEquals(multiLine);
         ++mNextResponse;
     }
-    void stringListArgumentEnd() Q_DECL_OVERRIDE
-    {
+    void stringListArgumentEnd() Q_DECL_OVERRIDE {
         checkIs(StringListArgumentEnd);
         ++mNextResponse;
     }
-    void hashComment(const QString &comment) Q_DECL_OVERRIDE
-    {
+    void hashComment(const QString &comment) Q_DECL_OVERRIDE {
         checkIs(HashComment);
         checkEquals(comment);
         ++mNextResponse;
     }
-    void bracketComment(const QString &comment) Q_DECL_OVERRIDE
-    {
+    void bracketComment(const QString &comment) Q_DECL_OVERRIDE {
         checkIs(BracketComment);
         checkEquals(comment);
         ++mNextResponse;
     }
-    void lineFeed() Q_DECL_OVERRIDE
-    {
+    void lineFeed() Q_DECL_OVERRIDE {
         // FIXME
     }
-    void error(const KSieve::Error &error) Q_DECL_OVERRIDE
-    {
+    void error(const KSieve::Error &error) Q_DECL_OVERRIDE {
         checkIs(Error);
         checkEquals(QString(KSieve::Error::typeToString(error.type())));
         ++mNextResponse;
     }
-    void finished() Q_DECL_OVERRIDE
-    {
+    void finished() Q_DECL_OVERRIDE {
         checkIs(Finished);
         //++mNextResponse (no!)
     }

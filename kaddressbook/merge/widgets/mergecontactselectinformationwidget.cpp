@@ -112,11 +112,11 @@ void MergeContactSelectInformationWidget::addInformationWidget(MergeContacts::Co
 
 void MergeContactSelectInformationWidget::createContact(KContacts::Addressee &addr)
 {
-    Q_FOREACH(MergeContactSelectListWidget *listWidget, mListMergeSelectInformation) {
+    Q_FOREACH (MergeContactSelectListWidget *listWidget, mListMergeSelectInformation) {
         const int selectedContactIndex = listWidget->selectedContact();
         const MergeContacts::ConflictInformation conflictType = listWidget->conflictType();
         if (selectedContactIndex != -1) {
-            switch(conflictType) {
+            switch (conflictType) {
             case MergeContacts::None:
                 break;
             case MergeContacts::Birthday:

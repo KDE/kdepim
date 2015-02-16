@@ -21,7 +21,8 @@
 #include <QLabel>
 
 #include "kaddressbook_export.h"
-namespace KABMergeContacts {
+namespace KABMergeContacts
+{
 class MergeContactErrorLabel : public QLabel
 {
     Q_OBJECT
@@ -31,7 +32,7 @@ public:
         NoContactDuplicatesFound,
         NoContactSelected
     };
-    explicit MergeContactErrorLabel(MergeContactErrorLabel::ErrorType type, QWidget *parent = 0);
+    explicit MergeContactErrorLabel(MergeContactErrorLabel::ErrorType type, QWidget *parent = Q_NULLPTR);
     ~MergeContactErrorLabel();
 };
 }

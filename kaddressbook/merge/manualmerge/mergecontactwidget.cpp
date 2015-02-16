@@ -50,7 +50,6 @@ MergeContactWidget::MergeContactWidget(QWidget *parent)
     splitter->setChildrenCollapsible(false);
     lay->addWidget(splitter);
 
-
     QWidget *selectContactWidget = new QWidget;
     selectContactWidget->setObjectName(QLatin1String("selectcontactwidget"));
     QVBoxLayout *vbox = new QVBoxLayout;
@@ -71,10 +70,9 @@ MergeContactWidget::MergeContactWidget(QWidget *parent)
 
     mMergeContactWarning = new MergeContactLoseInformationWarning;
     mMergeContactWarning->setObjectName(QLatin1String("mergecontactwarning"));
-    connect(mMergeContactWarning, SIGNAL(continueMerging()), this, SLOT(slotAutomaticMerging()));
-    connect(mMergeContactWarning, SIGNAL(customizeMergingContacts()), this, SLOT(slotCustomizeMergingContacts()));
+    connect(mMergeContactWarning, &MergeContactLoseInformationWarning::continueMerging, this, &MergeContactWidget::slotAutomaticMerging);
+    connect(mMergeContactWarning, &MergeContactLoseInformationWarning::customizeMergingContacts, this, &MergeContactWidget::slotCustomizeMergingContacts);
     lay->addWidget(mMergeContactWarning);
-
 
     QHBoxLayout *hbox = new QHBoxLayout;
     hbox->addStretch();
@@ -143,7 +141,7 @@ void MergeContactWidget::slotUpdateMergeButton()
     const Akonadi::Item::List listCheckedItems = listSelectedContacts();
     Akonadi::Item item = currentItem();
     mMergeContactInfoWidget->setContact(item);
-    mMergeButton->setEnabled((listCheckedItems.count()>=2) && mCollectionCombobox->currentCollection().isValid());
+    mMergeButton->setEnabled((listCheckedItems.count() >= 2) && mCollectionCombobox->currentCollection().isValid());
 }
 
 void MergeContactWidget::slotMergeContacts()
@@ -166,7 +164,7 @@ void MergeContactWidget::slotAutomaticMerging()
     KABMergeContacts::MergeContactsJob *job = new KABMergeContacts::MergeContactsJob(this);
     job->setListItem(mSelectedItems);
     job->setDestination(mCollectionCombobox->currentCollection());
-    connect(job, SIGNAL(finished(Akonadi::Item)), this, SLOT(slotMergeDone(Akonadi::Item)));
+    connect(job, &MergeContactsJob::finished, this, &MergeContactWidget::slotMergeDone);
     job->start();
 }
 

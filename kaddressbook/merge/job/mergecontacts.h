@@ -52,7 +52,7 @@ public:
         FreeBusy = 65536,
         FamilyName = 131072,
         PartnerName = 262144
-        //TODO Key
+                      //TODO Key
     };
     Q_ENUMS(ConflictInformation)
     Q_DECLARE_FLAGS(ConflictInformations, ConflictInformation)

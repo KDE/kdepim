@@ -172,7 +172,7 @@ bool SieveJob::Private::handleResponse(const Response &response, const QByteArra
         if (mInteractive) {
             if (session->errorMessage().isEmpty())
                 KMessageBox::error(Q_NULLPTR, i18n("Sieve operation failed.\n"
-                                           "The server responded:\n%1", QString::fromUtf8(response.key())), i18n("Sieve Error"));
+                                                   "The server responded:\n%1", QString::fromUtf8(response.key())), i18n("Sieve Error"));
             else {
                 KMessageBox::error(Q_NULLPTR, session->errorMessage(), i18n("Sieve Error"));
             }

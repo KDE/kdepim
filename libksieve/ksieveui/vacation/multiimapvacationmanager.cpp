@@ -72,7 +72,7 @@ void MultiImapVacationManager::slotScriptActive(bool active, const QString &serv
         if (!mQuestionAsked) {
             mQuestionAsked = true;
             if (KMessageBox::questionYesNo(Q_NULLPTR, i18n("There is still an active out-of-office reply configured.\n"
-                                                   "Do you want to edit it?"), i18n("Out-of-office reply still active"),
+                                           "Do you want to edit it?"), i18n("Out-of-office reply still active"),
                                            KGuiItem(i18n("Edit"), QStringLiteral("document-properties")),
                                            KGuiItem(i18n("Ignore"), QStringLiteral("dialog-cancel")))
                     == KMessageBox::Yes) {

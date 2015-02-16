@@ -39,7 +39,7 @@ public:
     bool modifyTemplate(QString &templateName, QString &templateScript, bool defaultTemplate) Q_DECL_OVERRIDE;
 
 protected:
-    QMimeData *mimeData( const QList<QListWidgetItem *> items ) const;
+    QMimeData *mimeData(const QList<QListWidgetItem *> items) const;
 private:
     PimCommon::TemplateManager *mTemplateManager;
 };
