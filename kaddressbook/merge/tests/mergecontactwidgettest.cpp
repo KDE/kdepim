@@ -26,6 +26,8 @@
 #include <QListWidget>
 #include <QPushButton>
 #include <QStandardItemModel>
+
+#include <kaddressbook/merge/widgets/mergecontactloseinformationwarning.h>
 using namespace KABMergeContacts;
 
 namespace KABMergeContacts {
@@ -78,6 +80,9 @@ void MergeContactWidgetTest::shouldHaveDefaultValueOnCreation()
     QPushButton *button = qFindChild<QPushButton *>(&mergeWidget, QLatin1String("mergebutton"));
     QVERIFY(button);
     QCOMPARE(button->isEnabled(), false);
+    MergeContactLoseInformationWarning *warningWidget = qFindChild<MergeContactLoseInformationWarning *>(&mergeWidget, QLatin1String("mergecontactwarning"));
+    QVERIFY(warningWidget);
+    QVERIFY(warningWidget->isHidden());
 }
 
 void MergeContactWidgetTest::shouldFillList()

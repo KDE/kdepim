@@ -28,6 +28,8 @@
 #include <QPushButton>
 #include <QDebug>
 #include <QLabel>
+#include <kaddressbook/merge/widgets/mergecontactloseinformationwarning.h>
+#include <kaddressbook/merge/job/mergecontacts.h>
 
 namespace KABMergeContacts {
 KADDRESSBOOK_EXPORT QAbstractItemModel *_k_mergeStubModel = 0;
@@ -48,6 +50,13 @@ MergeContactWidget::MergeContactWidget(QWidget *parent)
     lay->addWidget(mListWidget);
     connect(mListWidget, SIGNAL(itemSelectionChanged()), SLOT(slotUpdateMergeButton()));
     connect(mListWidget, SIGNAL(itemChanged(QListWidgetItem*)), SLOT(slotUpdateMergeButton()));
+
+    mMergeContactWarning = new MergeContactLoseInformationWarning;
+    mMergeContactWarning->setObjectName(QLatin1String("mergecontactwarning"));
+    connect(mMergeContactWarning, SIGNAL(continueMerging()), this, SLOT(slotAutomaticMerging()));
+    connect(mMergeContactWarning, SIGNAL(customizeMergingContacts()), this, SLOT(slotCustomizeMergingContacts()));
+    lay->addWidget(mMergeContactWarning);
+
 
     QHBoxLayout *hbox = new QHBoxLayout;
     hbox->addStretch();
@@ -122,6 +131,34 @@ void MergeContactWidget::slotUpdateMergeButton()
 
 void MergeContactWidget::slotMergeContacts()
 {
+    const Akonadi::Item::List lstItems = listSelectedContacts();
+    const Akonadi::Collection col = mCollectionCombobox->currentCollection();
+
+    KABMergeContacts::MergeContacts mergeContacts;
+    bool conflictFound = false;
+    mergeContacts.setItems(lstItems);
+    const MergeContacts::ConflictInformations conflicts = mergeContacts.needManualSelectInformations();
+    if (conflicts != MergeContacts::None) {
+        conflictFound = true;
+    }
+    /*
+    MergeConflictResult result;
+    result.list = lst;
+    result.conflictInformation = conflicts;
+    mResultConflictList.append(result);
+
+    mMergeContact->setEnabled(false);
+    if (!conflictFound) {
+        //Detect if conflict.
+        mergeContact();
+    } else {
+        mMergeContactWarning->animatedShow();
+    }
+}
+    */
+#if 0
+
+
     mMergeButton->setEnabled(false);
     mCollectionCombobox->setEnabled(false);
 
@@ -132,5 +169,15 @@ void MergeContactWidget::slotMergeContacts()
             Q_EMIT mergeContact(lstItems, col);
         }
     }
+#endif
 }
 
+void MergeContactWidget::slotAutomaticMerging()
+{
+    //TODO
+}
+
+void MergeContactWidget::slotCustomizeMergingContacts()
+{
+    //TODO
+}
