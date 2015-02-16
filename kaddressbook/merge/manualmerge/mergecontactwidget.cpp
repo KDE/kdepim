@@ -113,11 +113,6 @@ MergeContactWidget::~MergeContactWidget()
 
 }
 
-void MergeContactWidget::clear()
-{
-    mListWidget->clear();
-}
-
 void MergeContactWidget::setContacts(const Akonadi::Item::List &items)
 {
     mItems = items;
@@ -154,7 +149,7 @@ void MergeContactWidget::slotMergeContacts()
 
     KABMergeContacts::MergeContacts mergeContacts;
     mergeContacts.setItems(mSelectedItems);
-    mConflictTypes = mergeContacts.needManualSelectInformations();
+    mConflictTypes = mergeContacts.requiresManualSelectionOfInformation();
     if (mConflictTypes != MergeContacts::None) {
         mMergeContactWarning->animatedShow();
     } else {

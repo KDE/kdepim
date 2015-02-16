@@ -54,4 +54,29 @@ void MergeContactsDialogTest::shouldHaveDefaultValue()
 
 }
 
+void MergeContactsDialogTest::shouldSwithStackedWidget()
+{
+    KABMergeContacts::MergeContactsDialog dlg;
+    dlg.show();
+    QStackedWidget *stackedWidget = qFindChild<QStackedWidget *>(&dlg, QLatin1String("stackedwidget"));
+    Akonadi::Item::List lst;
+    //Empty
+    dlg.setContacts(lst);
+    QCOMPARE(stackedWidget->currentWidget()->objectName(), QLatin1String("nocontactselected"));
+    lst << Akonadi::Item(42);
+    //1 element
+    dlg.setContacts(lst);
+    QCOMPARE(stackedWidget->currentWidget()->objectName(), QLatin1String("notenoughcontactselected"));
+    lst.clear();
+    //1 element
+    lst << Akonadi::Item(42);
+    dlg.setContacts(lst);
+    QCOMPARE(stackedWidget->currentWidget()->objectName(), QLatin1String("notenoughcontactselected"));
+    // 2 elements
+    lst.clear();
+    lst << Akonadi::Item(42) << Akonadi::Item(42);
+    dlg.setContacts(lst);
+    QCOMPARE(stackedWidget->currentWidget()->objectName(), QLatin1String("manualmergeresultwidget"));
+}
+
 QTEST_KDEMAIN(MergeContactsDialogTest, GUI)

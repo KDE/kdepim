@@ -23,7 +23,6 @@
 #include <Akonadi/Item>
 #include "merge/job/mergecontacts.h"
 #include "kaddressbook_export.h"
-class QItemSelectionModel;
 class QStackedWidget;
 namespace KABMergeContacts {
 class MergeContactWidget;

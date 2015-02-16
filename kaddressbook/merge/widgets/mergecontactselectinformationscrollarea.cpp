@@ -48,6 +48,7 @@ MergeContactSelectInformationScrollArea::MergeContactSelectInformationScrollArea
 
     QHBoxLayout *hbox = new QHBoxLayout;
     hbox->addStretch();
+    //KF5 add i18n
     QPushButton *mergeButton = new QPushButton(QLatin1String("Merge"));
     mergeButton->setObjectName(QLatin1String("merge"));
     hbox->addWidget(mergeButton);
@@ -80,6 +81,14 @@ void MergeContactSelectInformationScrollArea::setContacts(MergeContacts::Conflic
 
 void MergeContactSelectInformationScrollArea::slotMergeContacts()
 {
+    if (mCollection.isValid()) {
+        qDebug()<<" Invalid colletion";
+        return;
+    }
+    if (mListItem.isEmpty()) {
+        qDebug()<<" item list is empty";
+        return;
+    }
     MergeContacts contact(mListItem);
     KABC::Addressee addr = contact.mergedContact(true);
     mSelectInformationWidget->createContact(addr);
@@ -90,6 +99,8 @@ void MergeContactSelectInformationScrollArea::slotMergeContacts()
         job->setListItem(mListItem);
         connect(job, SIGNAL(finished(Akonadi::Item)), this, SLOT(slotMergeDone(Akonadi::Item)));
         job->start();
+    } else {
+        qDebug()<<" Address is empty";
     }
 }
 

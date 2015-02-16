@@ -37,7 +37,7 @@ void MergeContacts::setItems(const Akonadi::Item::List &items)
 KABC::Addressee MergeContacts::mergedContact(bool excludeConflictPart)
 {
     KABC::Addressee newContact;
-    if (mListItem.count() == 1)
+    if (mListItem.count() <= 1)
         return newContact;
     bool firstAddress = true;
     Q_FOREACH (const Akonadi::Item &item, mListItem) {
@@ -89,6 +89,8 @@ void MergeContacts::mergeToContact(KABC::Addressee &newContact, const KABC::Addr
         newContact.setCategories(newContactsCategories);
     }
 
+    // Merge Address
+
     // Merge Phone
 
     // Merge blog
@@ -107,7 +109,7 @@ void MergeContacts::mergeToContact(KABC::Addressee &newContact, const KABC::Addr
 #endif
 }
 
-MergeContacts::ConflictInformations MergeContacts::needManualSelectInformations()
+MergeContacts::ConflictInformations MergeContacts::requiresManualSelectionOfInformation()
 {
     MergeContacts::ConflictInformations result = None;
     if (mListItem.count() < 2)

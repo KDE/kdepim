@@ -90,7 +90,6 @@ set(kaddressbook_merge_SRCS
    merge/job/mergecontacts.cpp
    merge/manualmerge/mergecontactsdialog.cpp
    merge/manualmerge/mergecontactwidget.cpp
-   merge/util/mergecontactutil.cpp
    merge/widgets/mergecontactinfowidget.cpp
    merge/manualmerge/mergecontactwidgetlist.cpp
    merge/mergecontactshowresultdialog.cpp

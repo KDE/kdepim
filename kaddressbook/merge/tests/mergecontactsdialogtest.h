@@ -28,6 +28,7 @@ public:
     ~MergeContactsDialogTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldSwithStackedWidget();
 };
 
 #endif // MERGECONTACTSDIALOGTEST_H
