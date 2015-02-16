@@ -29,6 +29,7 @@ ManualMergeResultWidget::ManualMergeResultWidget(QWidget *parent)
     : QWidget(parent)
 {
     QVBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout->setMargin(0);
     setLayout(mainLayout);
     mSplitter = new QSplitter;
     mSplitter->setObjectName(QLatin1String("splitter"));
