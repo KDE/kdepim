@@ -49,6 +49,10 @@ public:
 
     void find();
     void replace();
+    void redo();
+    void undo();
+    bool isUndoAvailable() const;
+    bool isRedoAvailable() const;
 Q_SIGNALS:
     void refreshList();
     void scriptModified(bool, SieveEditorPageWidget *);

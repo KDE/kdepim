@@ -61,6 +61,11 @@ private:
     KAction *mRefreshList;
     KAction *mSaveScript;
     KAction *mGoToLine;
+    KAction *mFindAction;
+    KAction *mReplaceAction;
+    KAction *mUndoAction;
+    KAction *mRedoAction;
+
     QLabel *mStatusBarInfo;
     bool mNetworkIsDown;
 };

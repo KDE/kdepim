@@ -235,6 +235,26 @@ void SieveEditorTextModeWidget::replace()
     slotReplace();
 }
 
+void SieveEditorTextModeWidget::undo()
+{
+    mTextEdit->undo();
+}
+
+void SieveEditorTextModeWidget::redo()
+{
+    mTextEdit->redo();
+}
+
+bool SieveEditorTextModeWidget::isUndoAvailable() const
+{
+    return mTextEdit->document()->isUndoAvailable();
+}
+
+bool SieveEditorTextModeWidget::isRedoAvailable() const
+{
+    return mTextEdit->document()->isRedoAvailable();
+}
+
 void SieveEditorTextModeWidget::slotFind()
 {
     if ( mTextEdit->textCursor().hasSelection() )

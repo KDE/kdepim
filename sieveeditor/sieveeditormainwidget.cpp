@@ -165,6 +165,52 @@ KTabWidget *SieveEditorMainWidget::tabWidget() const
     return mTabWidget;
 }
 
+bool SieveEditorMainWidget::isUndoAvailable() const
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            return page->isUndoAvailable();
+        }
+    }
+    return false;
+}
+
+bool SieveEditorMainWidget::isRedoAvailable() const
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            return page->isRedoAvailable();
+        }
+    }
+    return false;
+}
+
+void SieveEditorMainWidget::slotUndo()
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            page->undo();
+        }
+    }
+}
+
+void SieveEditorMainWidget::slotRedo()
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            page->redo();
+        }
+    }
+}
+
 void SieveEditorMainWidget::slotGoToLine()
 {
     QWidget *w = mTabWidget->currentWidget();

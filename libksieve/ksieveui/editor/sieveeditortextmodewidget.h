@@ -67,6 +67,12 @@ public:
     void goToLine();
     void replace();
     void find();
+    void undo();
+    void redo();
+
+    bool isUndoAvailable() const;
+    bool isRedoAvailable() const;
+
 Q_SIGNALS:
     void enableButtonOk( bool );
     void switchToGraphicalMode();
