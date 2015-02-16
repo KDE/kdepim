@@ -55,7 +55,12 @@ MergeContactsDialog::MergeContactsDialog(const Akonadi::Item::List &lst, QWidget
     } else {
         MergeContactUtil mergeContactUtil;
         if (!mergeContactUtil.hasSameNames(lst)) {
-            mainLayout->addWidget(new QLabel(i18n("You selected %1 and some item has not the same name", lst.count())));
+            QLabel *lab = new QLabel(i18n("You selected %1 and some item has not the same name", lst.count()));
+            QFont font;
+            font.setBold(true);
+            lab->setFont(font);
+            lab->setAlignment(Qt::AlignVCenter|Qt::AlignHCenter);
+            mainLayout->addWidget(lab);
         } else {
             QSplitter *mainWidget = new QSplitter;
             mainWidget->setChildrenCollapsible(false);

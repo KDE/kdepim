@@ -97,6 +97,8 @@ set(kaddressbook_merge_SRCS
    merge/widgets/mergecontactloseinformationwarning.cpp
    merge/widgets/mergecontactselectinformationscrollarea.cpp
    merge/searchduplicate/mergecontactselectinformationtabwidget.cpp
+   merge/manualmerge/manualmergeresultwidget.cpp
+   merge/widgets/noenoughcontactselectedwidget.cpp
 )
 
 set(kaddressbook_LIB_SRCS

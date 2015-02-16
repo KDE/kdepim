@@ -50,8 +50,8 @@ public:
         ManagerName = 16384,
         Assistant = 32768,
         FreeBusy = 65536,
-        FamilyName = 131072
-        //TODO partner name
+        FamilyName = 131072,
+        PartnerName = 262144
         //TODO Key
     };
     Q_ENUMS(ConflictInformation)

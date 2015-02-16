@@ -97,6 +97,9 @@ void MergeContacts::mergeToContact(KContacts::Addressee &newContact, const KCont
     // Merge HomePage
 
     // Merge geo
+    if (!excludeConflictPart) {
+
+    }
 #if 0
     //TODO
     newContact.setName(fromContact.name());

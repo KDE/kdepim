@@ -97,6 +97,9 @@ void MergeContactSelectInformationWidget::setContacts(MergeContacts::ConflictInf
     if (conflictTypes & MergeContacts::FamilyName) {
         addInformationWidget(MergeContacts::FamilyName);
     }
+    if (conflictTypes & MergeContacts::PartnerName) {
+        addInformationWidget(MergeContacts::PartnerName);
+    }
 }
 
 void MergeContactSelectInformationWidget::addInformationWidget(MergeContacts::ConflictInformation conflictType)
@@ -129,7 +132,7 @@ void MergeContactSelectInformationWidget::createContact(KContacts::Addressee &ad
                 addr.setLogo(mAddressList.at(selectedContactIndex).logo());
                 break;
             case MergeContacts::Anniversary:
-                //TODO
+                addr.setBirthday(mAddressList.at(selectedContactIndex).birthday());
                 break;
             case MergeContacts::Name:
                 addr.setName(mAddressList.at(selectedContactIndex).name());
@@ -162,6 +165,8 @@ void MergeContactSelectInformationWidget::createContact(KContacts::Addressee &ad
                 break;
             case MergeContacts::FamilyName:
                 addr.setFamilyName(mAddressList.at(selectedContactIndex).familyName());
+                break;
+            case MergeContacts::PartnerName:
                 break;
             }
             //TODO
