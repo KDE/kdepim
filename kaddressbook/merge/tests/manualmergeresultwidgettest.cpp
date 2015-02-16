@@ -16,7 +16,9 @@
 */
 
 #include "manualmergeresultwidgettest.h"
+#include "../manualmerge/manualmergeresultwidget.h"
 #include <qtest_kde.h>
+#include <QSplitter>
 ManualMergeResultWidgetTest::ManualMergeResultWidgetTest(QObject *parent)
     : QObject(parent)
 {
@@ -26,6 +28,20 @@ ManualMergeResultWidgetTest::ManualMergeResultWidgetTest(QObject *parent)
 ManualMergeResultWidgetTest::~ManualMergeResultWidgetTest()
 {
 
+}
+
+void ManualMergeResultWidgetTest::shouldHaveDefaultValue()
+{
+    KABMergeContacts::ManualMergeResultWidget w;
+    QSplitter *splitter = qFindChild<QSplitter *>(&w, QLatin1String("splitter"));
+    QVERIFY(splitter);
+    QVERIFY(!splitter->childrenCollapsible());
+    for(int i =0; i < splitter->count(); ++i) {
+        const QString objName = splitter->widget(i)->objectName();
+
+        const bool hasName = (objName == QLatin1String("mergecontactwidget")) || (objName == QLatin1String("mergecontactinfowidget"));
+        QVERIFY(hasName);
+    }
 }
 
 QTEST_KDEMAIN(ManualMergeResultWidgetTest, GUI)

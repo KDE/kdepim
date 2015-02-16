@@ -58,6 +58,7 @@ MergeContactsDialog::MergeContactsDialog(const Akonadi::Item::List &lst, QWidget
             lab->setAlignment(Qt::AlignVCenter|Qt::AlignHCenter);
             setMainWidget(lab);
         } else {
+#if  0
             QSplitter *mainWidget = new QSplitter;
             mainWidget->setChildrenCollapsible(false);
             mContactWidget = new MergeContactWidget(lst);
@@ -67,6 +68,7 @@ MergeContactsDialog::MergeContactsDialog(const Akonadi::Item::List &lst, QWidget
             connect(mContactWidget, SIGNAL(contactSelected(Akonadi::Item)), contactInfo, SLOT(setContact(Akonadi::Item)));
             connect(mContactWidget, SIGNAL(mergeContact(Akonadi::Item::List,Akonadi::Collection)), this, SLOT(slotMergeContact(Akonadi::Item::List,Akonadi::Collection)));
             setMainWidget(mainWidget);
+#endif
         }
     }
 }

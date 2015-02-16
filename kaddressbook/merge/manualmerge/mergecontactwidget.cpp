@@ -35,9 +35,8 @@ KADDRESSBOOK_EXPORT QAbstractItemModel *_k_mergeStubModel = 0;
 
 
 using namespace KABMergeContacts;
-MergeContactWidget::MergeContactWidget(const Akonadi::Item::List &items, QWidget *parent)
-    : QWidget(parent),
-      mItems(items)
+MergeContactWidget::MergeContactWidget(QWidget *parent)
+    : QWidget(parent)
 {
     QVBoxLayout *lay = new QVBoxLayout;
 
@@ -90,6 +89,12 @@ MergeContactWidget::~MergeContactWidget()
 void MergeContactWidget::clear()
 {
     mListWidget->clear();
+}
+
+void MergeContactWidget::setContacts(const Akonadi::Item::List &items)
+{
+    mItems = items;
+    fillListContact();
 }
 
 void MergeContactWidget::fillListContact()

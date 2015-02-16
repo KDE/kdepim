@@ -20,13 +20,25 @@
 
 #include <QWidget>
 #include "kaddressbook_export.h"
+#include <Akonadi/Item>
+class QSplitter;
 namespace KABMergeContacts {
+class MergeContactWidget;
+class MergeContactInfoWidget;
 class KADDRESSBOOK_EXPORT ManualMergeResultWidget : public QWidget
 {
     Q_OBJECT
 public:
     explicit ManualMergeResultWidget(QWidget *parent=0);
     ~ManualMergeResultWidget();
+    void setContacts(const Akonadi::Item::List &list);
+private slots:
+    void slotMergeContact(const Akonadi::Item::List &lst, const Akonadi::Collection &col);
+    void slotMergeContactFinished(const Akonadi::Item &item);
+private:
+    KABMergeContacts::MergeContactWidget *mContactWidget;
+    QSplitter *mSplitter;
+    KABMergeContacts::MergeContactInfoWidget *mMergeContactInfoWidget;
 };
 }
 #endif // MANUALMERGERESULTWIDGET_H

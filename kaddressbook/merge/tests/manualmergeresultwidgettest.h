@@ -26,7 +26,8 @@ class ManualMergeResultWidgetTest : public QObject
 public:
     explicit ManualMergeResultWidgetTest(QObject *parent = 0);
     ~ManualMergeResultWidgetTest();
-
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
 #endif // MANUALMERGERESULTWIDGETTEST_H
