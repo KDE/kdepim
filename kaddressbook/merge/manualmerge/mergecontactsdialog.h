@@ -21,6 +21,7 @@
 
 #include <KDialog>
 #include <Akonadi/Item>
+#include "merge/job/mergecontacts.h"
 #include "kaddressbook_export.h"
 class QItemSelectionModel;
 class QStackedWidget;
@@ -28,6 +29,7 @@ namespace KABMergeContacts {
 class MergeContactWidget;
 class MergeContactErrorLabel;
 class MergeContactSelectInformationScrollArea;
+class MergeContactInfoWidget;
 class KADDRESSBOOK_EXPORT MergeContactsDialog : public KDialog
 {
     Q_OBJECT
@@ -36,6 +38,9 @@ public:
     ~MergeContactsDialog();
 
     void setContacts(const Akonadi::Item::List &list);
+private slots:
+    void slotCustomizeMergeContact(const Akonadi::Item::List &lst, MergeContacts::ConflictInformations conflictType, const Akonadi::Collection &col);
+    void slotContactMerged(const Akonadi::Item &item);
 private:
     void readConfig();
     void writeConfig();
@@ -44,7 +49,7 @@ private:
     KABMergeContacts::MergeContactErrorLabel *mNoContactSelected;
     KABMergeContacts::MergeContactWidget *mManualMergeResultWidget;
     KABMergeContacts::MergeContactSelectInformationScrollArea *mSelectInformation;
-
+    KABMergeContacts::MergeContactInfoWidget *mMergeContactInfo;
 };
 }
 #endif // MERGECONTACTSDIALOG_H
