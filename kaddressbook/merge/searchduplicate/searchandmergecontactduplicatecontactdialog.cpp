@@ -18,9 +18,11 @@
 
 #include "searchandmergecontactduplicatecontactdialog.h"
 
+
 #include "mergecontactselectinformationtabwidget.h"
 #include "merge/searchduplicate/searchduplicateresultwidget.h"
 #include "merge/widgets/mergecontactshowresulttabwidget.h"
+#include "merge/widgets/mergecontacterrorlabel.h"
 #include "merge/job/searchpotentialduplicatecontactjob.h"
 
 #include <KLocalizedString>
@@ -48,28 +50,20 @@ SearchAndMergeContactDuplicateContactDialog::SearchAndMergeContactDuplicateConta
     connect(mSearchResult, SIGNAL(mergeDone()), this, SLOT(slotMergeDone()));
     connect(mSearchResult, SIGNAL(customizeMergeContact(QList<KABMergeContacts::MergeConflictResult>,Akonadi::Collection)), this, SLOT(slotCustomizeMergeContacts(QList<KABMergeContacts::MergeConflictResult>,Akonadi::Collection)));
 
-    mNoContactSelected = new QLabel(i18n("No contacts selected."));
-    mNoContactSelected->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+    mNoContactSelected = new KABMergeContacts::MergeContactErrorLabel(MergeContactErrorLabel::NoContactSelected, this);
     mNoContactSelected->setObjectName(QLatin1String("nocontactselected"));
-    QFont font;
-    font.setBold(true);
-    mNoContactSelected->setFont(font);
     mStackedWidget->addWidget(mNoContactSelected);
 
-    mNoDuplicateContactFound = new QLabel(i18n("No contact duplicated found."));
-    mNoDuplicateContactFound->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
-    mNoDuplicateContactFound->setObjectName(QLatin1String("noduplicatecontactfound"));
-    mNoDuplicateContactFound->setFont(font);
+    mNoDuplicateContactFound = new KABMergeContacts::MergeContactErrorLabel(MergeContactErrorLabel::NoContactDuplicatesFound, this);
+    mNoDuplicateContactFound->setObjectName(QLatin1String("nocontactduplicatesfound"));
     mStackedWidget->addWidget(mNoDuplicateContactFound);
 
     mMergeContactResult = new MergeContactShowResultTabWidget(this);
     mMergeContactResult->setObjectName(QLatin1String("mergecontactresult"));
     mStackedWidget->addWidget(mMergeContactResult);
 
-    mNoEnoughContactSelected = new QLabel(i18n("You must select at least two elements."));
+    mNoEnoughContactSelected = new KABMergeContacts::MergeContactErrorLabel(MergeContactErrorLabel::NotEnoughContactsSelected, this);
     mNoEnoughContactSelected->setObjectName(QLatin1String("noenoughcontactselected"));
-    mNoEnoughContactSelected->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
-    mNoEnoughContactSelected->setFont(font);
     mStackedWidget->addWidget(mNoEnoughContactSelected);
     mStackedWidget->setCurrentWidget(mNoContactSelected);
 

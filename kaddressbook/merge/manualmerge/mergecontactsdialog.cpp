@@ -22,6 +22,7 @@
 #include "merge/widgets/mergecontactinfowidget.h"
 #include "merge/job/mergecontactsjob.h"
 #include "merge/mergecontactshowresultdialog.h"
+#include "merge/widgets/mergecontacterrorlabel.h"
 
 #include <Akonadi/Item>
 
@@ -46,7 +47,7 @@ MergeContactsDialog::MergeContactsDialog(const Akonadi::Item::List &lst, QWidget
     readConfig();
 
     if (lst.count() < 2) {
-        setMainWidget(new QLabel(i18n("You must select at least two elements.")));
+        setMainWidget(new KABMergeContacts::MergeContactErrorLabel(KABMergeContacts::MergeContactErrorLabel::NotEnoughContactsSelected));
     } else {
         MergeContactUtil mergeContactUtil;
         if (!mergeContactUtil.hasSameNames(lst)) {
