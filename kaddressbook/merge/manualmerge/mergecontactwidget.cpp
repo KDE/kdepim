@@ -49,6 +49,7 @@ MergeContactWidget::MergeContactWidget(QWidget *parent)
     splitter->setChildrenCollapsible(false);
     lay->addWidget(splitter);
 
+
     QWidget *selectContactWidget = new QWidget;
     selectContactWidget->setObjectName(QLatin1String("selectcontactwidget"));
     QVBoxLayout *vbox = new QVBoxLayout;
@@ -150,12 +151,14 @@ void MergeContactWidget::slotMergeContacts()
     const Akonadi::Collection col = mCollectionCombobox->currentCollection();
 
     KABMergeContacts::MergeContacts mergeContacts;
-    bool conflictFound = false;
     mergeContacts.setItems(lstItems);
     const MergeContacts::ConflictInformations conflicts = mergeContacts.needManualSelectInformations();
     if (conflicts != MergeContacts::None) {
-        conflictFound = true;
+        mMergeContactWarning->animatedShow();
+    } else {
+        //Merge
     }
+
     /*
     MergeConflictResult result;
     result.list = lst;

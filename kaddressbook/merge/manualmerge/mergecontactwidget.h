@@ -42,6 +42,7 @@ public:
     void clear();
 
     void setContacts(const Akonadi::Item::List &items);
+
 Q_SIGNALS:
     void mergeContact(const Akonadi::Item::List &lst, const Akonadi::Collection &col);
 

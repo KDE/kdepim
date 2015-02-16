@@ -23,6 +23,8 @@
 #include "merge/job/mergecontactsjob.h"
 #include "merge/mergecontactshowresultdialog.h"
 #include "merge/widgets/mergecontacterrorlabel.h"
+#include "merge/widgets/mergecontactselectinformationscrollarea.h"
+#include <kaddressbook/merge/widgets/mergecontactselectinformationscrollarea.h>
 
 #include <Akonadi/Item>
 
@@ -62,6 +64,11 @@ MergeContactsDialog::MergeContactsDialog(QWidget *parent)
     mManualMergeResultWidget->setObjectName(QLatin1String("manualmergeresultwidget"));
     mStackedWidget->addWidget(mManualMergeResultWidget);
 
+    mSelectInformation = new KABMergeContacts::MergeContactSelectInformationScrollArea(this);
+    mSelectInformation->setObjectName(QLatin1String("selectioninformation"));
+    mStackedWidget->addWidget(mSelectInformation);
+
+
     mStackedWidget->setCurrentWidget(mNoContactSelected);
 }
 
@@ -98,4 +105,3 @@ void MergeContactsDialog::writeConfig()
     grp.sync();
 }
 
-#include "moc_mergecontactsdialog.cpp"
