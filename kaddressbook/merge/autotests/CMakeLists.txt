@@ -32,8 +32,7 @@ add_akonadi_isolated_test_advanced( mergecontactselectinformationscrollareatest.
 
 add_akonadi_isolated_test_advanced( mergecontactselectinformationtabwidgettest.cpp "" "kaddressbookprivate;KF5::Contacts")
 
-add_akonadi_isolated_test_advanced(manualmergeresultwidgettest.cpp "" "kaddressbookprivate;KF5::Contacts")
-
+add_akonadi_isolated_test_advanced(mergecontactsdialogtest.cpp "" "kaddressbookprivate;KF5::Contacts")
 
 set( kaddressbook_merge_mergecontactloseinformationwarning_source mergecontactloseinformationwarningtest.cpp ../widgets/mergecontactloseinformationwarning.cpp )
 add_executable( mergecontactloseinformationwarningtest ${kaddressbook_merge_mergecontactloseinformationwarning_source})

@@ -974,7 +974,8 @@ void MainWidget::slotGrantleeThemesUpdated()
 void MainWidget::mergeContacts()
 {
     const Akonadi::Item::List lst = Utils::collectSelectedContactsItem(mItemView->selectionModel());
-    QPointer<KABMergeContacts::MergeContactsDialog> dlg = new KABMergeContacts::MergeContactsDialog(lst, this);
+    QPointer<KABMergeContacts::MergeContactsDialog> dlg = new KABMergeContacts::MergeContactsDialog(this);
+    dlg->setContacts(lst);
     dlg->exec();
     delete dlg;
 }

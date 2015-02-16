@@ -30,23 +30,27 @@ class CollectionComboBox;
 namespace KABMergeContacts
 {
 class MergeContactWidgetList;
-
+class MergeContactLoseInformationWarning;
+class MergeContactInfoWidget;
 class KADDRESSBOOK_EXPORT MergeContactWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MergeContactWidget(const Akonadi::Item::List &items, QWidget *parent = Q_NULLPTR);
+    explicit MergeContactWidget(QWidget *parent = Q_NULLPTR);
     ~MergeContactWidget();
 
     void clear();
 
+    void setContacts(const Akonadi::Item::List &items);
+
 Q_SIGNALS:
     void mergeContact(const Akonadi::Item::List &lst, const Akonadi::Collection &col);
-    void contactSelected(const Akonadi::Item &item);
 
 private Q_SLOTS:
     void slotUpdateMergeButton();
     void slotMergeContacts();
+    void slotAutomaticMerging();
+    void slotCustomizeMergingContacts();
 private:
     Akonadi::Item::List listSelectedContacts() const;
     Akonadi::Item currentItem() const;
@@ -55,6 +59,8 @@ private:
     MergeContactWidgetList *mListWidget;
     QPushButton *mMergeButton;
     Akonadi::CollectionComboBox *mCollectionCombobox;
+    MergeContactLoseInformationWarning *mMergeContactWarning;
+    MergeContactInfoWidget *mMergeContactInfoWidget;
 };
 }
 

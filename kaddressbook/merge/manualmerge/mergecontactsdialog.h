@@ -21,27 +21,34 @@
 #include <QDialog>
 #include <AkonadiCore/Item>
 #include <KConfigGroup>
+#include "kaddressbook_export.h"
 class QDialogButtonBox;
+class QStackedWidget;
+
 namespace KABMergeContacts
 {
 class MergeContactWidget;
-class MergeContactsDialog : public QDialog
+class MergeContactErrorLabel;
+class MergeContactSelectInformationScrollArea;
+
+class KADDRESSBOOK_EXPORT MergeContactsDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit MergeContactsDialog(const Akonadi::Item::List &lst, QWidget *parent = Q_NULLPTR);
+    explicit MergeContactsDialog(QWidget *parent = Q_NULLPTR);
     ~MergeContactsDialog();
 
-private Q_SLOTS:
-    void slotMergeContact(const Akonadi::Item::List &lst, const Akonadi::Collection &col);
-
-    void slotMergeContactFinished(const Akonadi::Item &item);
+    void setContacts(const Akonadi::Item::List &list);
 
 private:
     void readConfig();
     void writeConfig();
-    MergeContactWidget *mContactWidget;
     QDialogButtonBox *mButtonBox;
+    QStackedWidget *mStackedWidget;
+    KABMergeContacts::MergeContactErrorLabel *mNoEnoughContactSelected;
+    KABMergeContacts::MergeContactErrorLabel *mNoContactSelected;
+    KABMergeContacts::MergeContactWidget *mManualMergeResultWidget;
+    KABMergeContacts::MergeContactSelectInformationScrollArea *mSelectInformation;
 };
 }
 #endif // MERGECONTACTSDIALOG_H

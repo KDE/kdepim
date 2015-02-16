@@ -22,6 +22,9 @@
 #include "merge/widgets/mergecontactinfowidget.h"
 #include "merge/job/mergecontactsjob.h"
 #include "merge/mergecontactshowresultdialog.h"
+#include "merge/widgets/mergecontacterrorlabel.h"
+#include "merge/widgets/mergecontactselectinformationscrollarea.h"
+#include <kaddressbook/merge/widgets/mergecontactselectinformationscrollarea.h>
 
 #include <AkonadiCore/Item>
 
@@ -36,11 +39,11 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <QStackedWidget>
 
 using namespace KABMergeContacts;
-MergeContactsDialog::MergeContactsDialog(const Akonadi::Item::List &lst, QWidget *parent)
-    : QDialog(parent),
-      mContactWidget(Q_NULLPTR)
+MergeContactsDialog::MergeContactsDialog(QWidget *parent)
+    : QDialog(parent)
 {
     setWindowTitle(i18n("Select Contacts to merge"));
     mButtonBox = new QDialogButtonBox(QDialogButtonBox::Close);
@@ -50,30 +53,28 @@ MergeContactsDialog::MergeContactsDialog(const Akonadi::Item::List &lst, QWidget
     connect(mButtonBox, &QDialogButtonBox::rejected, this, &MergeContactsDialog::reject);
     readConfig();
 
-    if (lst.count() < 2) {
-        mainLayout->addWidget(new QLabel(i18n("You must select at least two elements.")));
-    } else {
-        MergeContactUtil mergeContactUtil;
-        if (!mergeContactUtil.hasSameNames(lst)) {
-            QLabel *lab = new QLabel(i18n("You selected %1 and some item has not the same name", lst.count()));
-            QFont font;
-            font.setBold(true);
-            lab->setFont(font);
-            lab->setAlignment(Qt::AlignVCenter|Qt::AlignHCenter);
-            mainLayout->addWidget(lab);
-        } else {
-            QSplitter *mainWidget = new QSplitter;
-            mainWidget->setChildrenCollapsible(false);
-            mContactWidget = new MergeContactWidget(lst);
-            mainWidget->addWidget(mContactWidget);
-            MergeContactInfoWidget *contactInfo = new MergeContactInfoWidget;
-            mainWidget->addWidget(contactInfo);
-            connect(mContactWidget, &MergeContactWidget::contactSelected, contactInfo, &MergeContactInfoWidget::setContact);
-            connect(mContactWidget, &MergeContactWidget::mergeContact, this, &MergeContactsDialog::slotMergeContact);
-            mainLayout->addWidget(mainWidget);
-        }
-    }
-    mainLayout->addWidget(mButtonBox);
+    mStackedWidget = new QStackedWidget(this);
+    mStackedWidget->setObjectName(QLatin1String("stackedwidget"));
+    mainLayout->addWidget(mStackedWidget);
+
+    mNoEnoughContactSelected = new KABMergeContacts::MergeContactErrorLabel(KABMergeContacts::MergeContactErrorLabel::NotEnoughContactsSelected);
+    mNoEnoughContactSelected->setObjectName(QLatin1String("notenoughcontactselected"));
+    mStackedWidget->addWidget(mNoEnoughContactSelected);
+
+    mNoContactSelected = new KABMergeContacts::MergeContactErrorLabel(MergeContactErrorLabel::NoContactSelected, this);
+    mNoContactSelected->setObjectName(QLatin1String("nocontactselected"));
+    mStackedWidget->addWidget(mNoContactSelected);
+
+    mManualMergeResultWidget = new KABMergeContacts::MergeContactWidget(this);
+    mManualMergeResultWidget->setObjectName(QLatin1String("manualmergeresultwidget"));
+    mStackedWidget->addWidget(mManualMergeResultWidget);
+
+    mSelectInformation = new KABMergeContacts::MergeContactSelectInformationScrollArea(this);
+    mSelectInformation->setObjectName(QLatin1String("selectioninformation"));
+    mStackedWidget->addWidget(mSelectInformation);
+
+
+    mStackedWidget->setCurrentWidget(mNoContactSelected);
 
 }
 
@@ -82,31 +83,15 @@ MergeContactsDialog::~MergeContactsDialog()
     writeConfig();
 }
 
-void MergeContactsDialog::slotMergeContact(const Akonadi::Item::List &lst, const Akonadi::Collection &col)
+void MergeContactsDialog::setContacts(const Akonadi::Item::List &list)
 {
-    if (lst.isEmpty()) {
-        return;
-    }
-    mButtonBox->button(QDialogButtonBox::Close)->setEnabled(false);
-    MergeContactsJob *job = new MergeContactsJob(this);
-    connect(job, &MergeContactsJob::finished, this, &MergeContactsDialog::slotMergeContactFinished);
-    job->setDestination(col);
-    job->setListItem(lst);
-    job->start();
-}
-
-void MergeContactsDialog::slotMergeContactFinished(const Akonadi::Item &item)
-{
-    if (!item.isValid()) {
-        KMessageBox::error(this, i18n("Error while merging contacts."), i18n("Merge contact"));
+    if (list.isEmpty()) {
+        mStackedWidget->setCurrentWidget(mNoContactSelected);
+    } else if (list.count() < 2){
+        mStackedWidget->setCurrentWidget(mNoEnoughContactSelected);
     } else {
-        mContactWidget->clear();
-        QPointer<MergeContactShowResultDialog> dlg = new MergeContactShowResultDialog(this);
-        Akonadi::Item::List lst;
-        lst << item;
-        dlg->setContacts(lst);
-        dlg->exec();
-        delete dlg;
+        mManualMergeResultWidget->setContacts(list);
+        mStackedWidget->setCurrentWidget(mManualMergeResultWidget);
     }
     mButtonBox->button(QDialogButtonBox::Close)->setEnabled(true);
 }

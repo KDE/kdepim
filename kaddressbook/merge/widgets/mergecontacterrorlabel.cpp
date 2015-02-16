@@ -15,22 +15,32 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "noenoughcontactselectedwidget.h"
+#include "mergecontacterrorlabel.h"
 #include <KLocalizedString>
 
 using namespace KABMergeContacts;
-NoEnoughContactSelectedWidget::NoEnoughContactSelectedWidget(QWidget *parent)
+MergeContactErrorLabel::MergeContactErrorLabel(ErrorType type, QWidget *parent)
     : QLabel(parent)
 {
     QFont font;
     font.setBold(true);
-    setText(i18n("You must select at least two elements."));
-    setObjectName(QLatin1String("noenoughcontactselected"));
+    switch(type) {
+    case NotEnoughContactsSelected:
+        setText(i18n("You must select at least two elements."));
+        break;
+    case NoContactDuplicatesFound:
+        setText(i18n("No contact duplicated found."));
+        break;
+    case NoContactSelected:
+        setText(i18n("No contacts selected."));
+        break;
+    }
+
     setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
     setFont(font);
 }
 
-NoEnoughContactSelectedWidget::~NoEnoughContactSelectedWidget()
+MergeContactErrorLabel::~MergeContactErrorLabel()
 {
 
 }

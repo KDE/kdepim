@@ -15,20 +15,25 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef NOENOUGHCONTACTSELECTEDWIDGET_H
-#define NOENOUGHCONTACTSELECTEDWIDGET_H
+#ifndef MERGECONTACTERRORLABEL_H
+#define MERGECONTACTERRORLABEL_H
 
 #include <QLabel>
 
 #include "kaddressbook_export.h"
 namespace KABMergeContacts {
-class NoEnoughContactSelectedWidget : public QLabel
+class MergeContactErrorLabel : public QLabel
 {
     Q_OBJECT
 public:
-    explicit NoEnoughContactSelectedWidget(QWidget *parent = 0);
-    ~NoEnoughContactSelectedWidget();
+    enum ErrorType {
+        NotEnoughContactsSelected = 0,
+        NoContactDuplicatesFound,
+        NoContactSelected
+    };
+    explicit MergeContactErrorLabel(MergeContactErrorLabel::ErrorType type, QWidget *parent = 0);
+    ~MergeContactErrorLabel();
 };
 }
 
-#endif // NOENOUGHCONTACTSELECTEDWIDGET_H
+#endif // MERGECONTACTERRORLABEL_H

@@ -15,17 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "manualmergeresultwidget.h"
-using namespace KABMergeContacts;
-ManualMergeResultWidget::ManualMergeResultWidget(QWidget *parent)
-    : QWidget(parent)
+#ifndef MERGECONTACTSDIALOGTEST_H
+#define MERGECONTACTSDIALOGTEST_H
+
+#include <QObject>
+
+class MergeContactsDialogTest : public QObject
 {
+    Q_OBJECT
+public:
+    explicit MergeContactsDialogTest(QObject *parent = 0);
+    ~MergeContactsDialogTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
+};
 
-}
-
-ManualMergeResultWidget::~ManualMergeResultWidget()
-{
-
-}
-
-
+#endif // MERGECONTACTSDIALOGTEST_H
