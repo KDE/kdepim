@@ -35,7 +35,7 @@ SieveEditor::SieveEditor( QWidget * parent )
     setCaption( i18n( "Edit Sieve Script" ) );
     setButtons( Ok|Cancel );
 
-    setModal( true );
+    setModal( false );
     mSieveEditorWidget = new SieveEditorWidget;
     connect(mSieveEditorWidget, SIGNAL(valueChanged(bool)), this, SIGNAL(valueChanged(bool)));
     setMainWidget(mSieveEditorWidget);
