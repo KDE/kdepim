@@ -140,6 +140,20 @@ void SieveEditorWidget::goToLine()
     }
 }
 
+void SieveEditorWidget::find()
+{
+    if (mMode == TextMode) {
+        mTextModeWidget->find();
+    }
+}
+
+void SieveEditorWidget::replace()
+{
+    if (mMode == TextMode) {
+        mTextModeWidget->replace();
+    }
+}
+
 SieveEditorWidget::EditorMode SieveEditorWidget::mode() const
 {
     return mMode;

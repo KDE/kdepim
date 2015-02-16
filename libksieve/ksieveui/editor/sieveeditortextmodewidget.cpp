@@ -225,6 +225,16 @@ void SieveEditorTextModeWidget::autoGenerateScripts()
     delete dlg;
 }
 
+void SieveEditorTextModeWidget::find()
+{
+    slotFind();
+}
+
+void SieveEditorTextModeWidget::replace()
+{
+    slotReplace();
+}
+
 void SieveEditorTextModeWidget::slotFind()
 {
     if ( mTextEdit->textCursor().hasSelection() )

@@ -47,6 +47,8 @@ public:
     void goToLine();
     KSieveUi::SieveEditorWidget::EditorMode pageMode() const;
 
+    void find();
+    void replace();
 Q_SIGNALS:
     void refreshList();
     void scriptModified(bool, SieveEditorPageWidget *);

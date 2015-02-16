@@ -26,6 +26,7 @@
 #include "sieveeditorcentralwidget.h"
 #include "sieveeditorglobalconfig.h"
 
+#include <KStandardGuiItem>
 #include <KSharedConfig>
 #include <KGlobal>
 #include <KLocalizedString>
@@ -149,6 +150,9 @@ void SieveEditorMainWindow::setupActions()
     mGoToLine->setIcon(KIcon(QLatin1String("go-jump")));
     mGoToLine->setShortcut(QKeySequence( Qt::CTRL + Qt::Key_G ));
     mGoToLine->setEnabled(false);
+
+    KStandardAction::find(mMainWidget->sieveEditorMainWidget(), SLOT(slotFind()), ac);
+    KStandardAction::replace(mMainWidget->sieveEditorMainWidget(), SLOT(slotReplace()), ac);
 }
 
 void SieveEditorMainWindow::slotRefreshList()
