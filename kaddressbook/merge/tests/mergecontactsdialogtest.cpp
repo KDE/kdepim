@@ -21,7 +21,6 @@
 #include <QStackedWidget>
 #include <qtest_kde.h>
 
-#include <manualmerge/manualmergeresultwidget.h>
 
 MergeContactsDialogTest::MergeContactsDialogTest(QObject *parent)
     : QObject(parent)

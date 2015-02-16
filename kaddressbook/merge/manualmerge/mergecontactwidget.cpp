@@ -19,6 +19,7 @@
 #include "mergecontactwidgetlist.h"
 
 #include <KLocalizedString>
+#include <QSplitter>
 
 #include <KABC/Addressee>
 
@@ -28,6 +29,7 @@
 #include <QPushButton>
 #include <QDebug>
 #include <QLabel>
+#include <kaddressbook/merge/widgets/mergecontactinfowidget.h>
 #include <kaddressbook/merge/widgets/mergecontactloseinformationwarning.h>
 #include <kaddressbook/merge/job/mergecontacts.h>
 
@@ -42,14 +44,28 @@ MergeContactWidget::MergeContactWidget(QWidget *parent)
 {
     QVBoxLayout *lay = new QVBoxLayout;
 
+    QSplitter *splitter = new QSplitter;
+    splitter->setObjectName(QLatin1String("splitter"));
+    splitter->setChildrenCollapsible(false);
+    lay->addWidget(splitter);
+
+    QWidget *selectContactWidget = new QWidget;
+    selectContactWidget->setObjectName(QLatin1String("selectcontactwidget"));
+    QVBoxLayout *vbox = new QVBoxLayout;
+    selectContactWidget->setLayout(vbox);
     QLabel *lab = new QLabel(i18n("Select contacts that you want really to merge:"));
-    lay->addWidget(lab);
+    vbox->addWidget(lab);
     mListWidget = new MergeContactWidgetList;
     mListWidget->setObjectName(QLatin1String("listcontact"));
     mListWidget->setSelectionMode(QAbstractItemView::SingleSelection);
-    lay->addWidget(mListWidget);
+    vbox->addWidget(mListWidget);
     connect(mListWidget, SIGNAL(itemSelectionChanged()), SLOT(slotUpdateMergeButton()));
     connect(mListWidget, SIGNAL(itemChanged(QListWidgetItem*)), SLOT(slotUpdateMergeButton()));
+    splitter->addWidget(selectContactWidget);
+
+    mMergeContactInfoWidget = new MergeContactInfoWidget;
+    mMergeContactInfoWidget->setObjectName(QLatin1String("mergecontactinfowidget"));
+    splitter->addWidget(mMergeContactInfoWidget);
 
     mMergeContactWarning = new MergeContactLoseInformationWarning;
     mMergeContactWarning->setObjectName(QLatin1String("mergecontactwarning"));
@@ -87,7 +103,6 @@ MergeContactWidget::MergeContactWidget(QWidget *parent)
     connect(mMergeButton, SIGNAL(clicked()), this, SLOT(slotMergeContacts()));
 
     setLayout(lay);
-    fillListContact();
 }
 
 MergeContactWidget::~MergeContactWidget()
@@ -125,7 +140,7 @@ void MergeContactWidget::slotUpdateMergeButton()
 {
     const Akonadi::Item::List listCheckedItems = listSelectedContacts();
     Akonadi::Item item = currentItem();
-    Q_EMIT contactSelected(item);
+    mMergeContactInfoWidget->setContact(item);
     mMergeButton->setEnabled((listCheckedItems.count()>=2) && mCollectionCombobox->currentCollection().isValid());
 }
 

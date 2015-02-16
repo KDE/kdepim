@@ -27,7 +27,6 @@ class QStackedWidget;
 namespace KABMergeContacts {
 class MergeContactWidget;
 class MergeContactErrorLabel;
-class ManualMergeResultWidget;
 class KADDRESSBOOK_EXPORT MergeContactsDialog : public KDialog
 {
     Q_OBJECT
@@ -40,10 +39,9 @@ private:
     void readConfig();
     void writeConfig();
     QStackedWidget *mStackedWidget;
-    MergeContactWidget *mContactWidget;
     KABMergeContacts::MergeContactErrorLabel *mNoEnoughContactSelected;
     KABMergeContacts::MergeContactErrorLabel *mNoContactSelected;
-    KABMergeContacts::ManualMergeResultWidget *mManualMergeResultWidget;
+    KABMergeContacts::MergeContactWidget *mManualMergeResultWidget;
 };
 }
 #endif // MERGECONTACTSDIALOG_H

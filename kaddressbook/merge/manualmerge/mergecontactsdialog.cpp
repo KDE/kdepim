@@ -23,7 +23,6 @@
 #include "merge/job/mergecontactsjob.h"
 #include "merge/mergecontactshowresultdialog.h"
 #include "merge/widgets/mergecontacterrorlabel.h"
-#include "merge/manualmerge/manualmergeresultwidget.h"
 
 #include <Akonadi/Item>
 
@@ -41,8 +40,7 @@
 
 using namespace KABMergeContacts;
 MergeContactsDialog::MergeContactsDialog(QWidget *parent)
-    : KDialog(parent),
-      mContactWidget(0)
+    : KDialog(parent)
 {
     setCaption( i18n( "Select Contacts to merge" ) );
     setButtons( Close );
@@ -60,7 +58,7 @@ MergeContactsDialog::MergeContactsDialog(QWidget *parent)
     mNoContactSelected->setObjectName(QLatin1String("nocontactselected"));
     mStackedWidget->addWidget(mNoContactSelected);
 
-    mManualMergeResultWidget = new KABMergeContacts::ManualMergeResultWidget(this);
+    mManualMergeResultWidget = new KABMergeContacts::MergeContactWidget(this);
     mManualMergeResultWidget->setObjectName(QLatin1String("manualmergeresultwidget"));
     mStackedWidget->addWidget(mManualMergeResultWidget);
 
@@ -100,5 +98,4 @@ void MergeContactsDialog::writeConfig()
     grp.sync();
 }
 
-#include "manualmergeresultwidget.h"
 #include "moc_mergecontactsdialog.cpp"
