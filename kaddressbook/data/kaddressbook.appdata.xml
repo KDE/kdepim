@@ -30,6 +30,7 @@
   <name xml:lang="sr-ijekavian">К‑адресар</name>
   <name xml:lang="sr-ijekavianlatin">K‑adresar</name>
   <name xml:lang="sv">Adressbok</name>
+  <name xml:lang="tr">KAddressBook</name>
   <name xml:lang="uk">KAddressBook</name>
   <name xml:lang="x-test">xxKAddressBookxx</name>
   <name xml:lang="zh-CN">KAddressBook</name>
@@ -59,6 +60,7 @@
     <p xml:lang="sr-ijekavian">К‑адресар складишти приватне детаље о вашој породици, пријатељима и другим контактима.</p>
     <p xml:lang="sr-ijekavianlatin">K‑adresar skladišti privatne detalje o vašoj porodici, prijateljima i drugim kontaktima.</p>
     <p xml:lang="sv">Adressboken lagrar all personlig information för din familj, dina vänner och andra kontakter.</p>
+    <p xml:lang="tr">KAddressBook ailenizin, arkadaşlarınızın ve diğer bağlantılarınızın tüm kişisel detaylarını saklar.</p>
     <p xml:lang="uk">Програма KAddressBook здатна зберігати особисті дані для спілкування з вашою родиною, друзями та дані щодо контактів.</p>
     <p xml:lang="x-test">xxKAddressBook stores all the personal details of your family, friends and other contacts.xx</p>
     <p xml:lang="zh-TW">KDE 通訊錄會儲存所有您的家庭、朋友與其他聯絡人的個人資料詳情。</p>
@@ -88,6 +90,7 @@
     <p xml:lang="sr-ijekavian">Могућности:</p>
     <p xml:lang="sr-ijekavianlatin">Mogućnosti:</p>
     <p xml:lang="sv">Funktioner:</p>
+    <p xml:lang="tr">Özellikler:</p>
     <p xml:lang="uk">Можливості:</p>
     <p xml:lang="x-test">xxFeatures:xx</p>
     <p xml:lang="zh-CN">功能：</p>
@@ -116,6 +119,7 @@
       <li xml:lang="sr-ijekavian">Увоз и извоз за скоро сваки адресарски стандард.</li>
       <li xml:lang="sr-ijekavianlatin">Uvoz i izvoz za skoro svaki adresarski standard.</li>
       <li xml:lang="sv">Importerar och exporterar till nästan alla adressboksstandarder</li>
+      <li xml:lang="tr">Nerdeyse tüm adres defteri standartlarında içe ve dışa aktarma yapar</li>
       <li xml:lang="uk">імпортування та експортування даних у майже довільних стандартах зберігання даних адресних книг;</li>
       <li xml:lang="x-test">xxImports and exports to nearly every address book standardxx</li>
       <li xml:lang="zh-TW">可以匯入與匯出幾乎所有的通訊錄標準格式</li>
@@ -142,6 +146,7 @@
       <li xml:lang="sr-ijekavian">Читање в‑кард фајлова, увоз и извоз за формате в‑кард и ЦСВ.</li>
       <li xml:lang="sr-ijekavianlatin">Čitanje vCard fajlova, uvoz i izvoz za formate vCard i CSV.</li>
       <li xml:lang="sv">Läser filer med .vcf-format, och kan importera och exportera filer med vCard- och csv-format</li>
+      <li xml:lang="tr">.vcf biçim dosyalarını okur, ve vCard ve csv biçim dosyalarını içe ve dışa aktarabilir</li>
       <li xml:lang="uk">читання файлів у форматі .vcf, імпортування та експортування даних у форматах vCard та CSV;</li>
       <li xml:lang="x-test">xxReads .vcf format files, and can import and export vCards and csv format filesxx</li>
       <li xml:lang="zh-TW">讀取 .vcf 格式檔案，並可匯入與匯出 vCards 與 csv 格式檔案。</li>
@@ -161,6 +166,7 @@
       <li xml:lang="sr-ijekavian">Коришћење вишеструких ЛДАП сервера.</li>
       <li xml:lang="sr-ijekavianlatin">Korišćenje višestrukih LDAP servera.</li>
       <li xml:lang="sv">Kan använda flera LDAP-servrar</li>
+      <li xml:lang="tr">Birden çok LDAP sunucusu kullanabilir</li>
       <li xml:lang="uk">можливість використання декількох серверів LDAP;</li>
       <li xml:lang="x-test">xxCan use multiple LDAP serversxx</li>
       <li>Configurable filters and powerful search capabilities</li>
@@ -186,6 +192,7 @@
       <li xml:lang="sr-ijekavian">Подесиви филтери и моћне способности претраге.</li>
       <li xml:lang="sr-ijekavianlatin">Podesivi filteri i moćne sposobnosti pretrage.</li>
       <li xml:lang="sv">Inställningsbara filter och kraftfulla sökmöjligheter</li>
+      <li xml:lang="tr">Ayarlanabilir filtreler ve güçlü arama yetenekleri</li>
       <li xml:lang="uk">зручні фільтри та потужні можливості з пошуку;</li>
       <li xml:lang="x-test">xxConfigurable filters and powerful search capabilitiesxx</li>
       <li xml:lang="zh-TW">可設定的過濾器與強大的搜尋機制</li>
@@ -212,6 +219,7 @@
       <li xml:lang="sr-ijekavian">Уклапање у остале компоненте Контакта, нпр. извоз подсетника на рођендане у К‑организатор.</li>
       <li xml:lang="sr-ijekavianlatin">Uklapanje u ostale komponente Kontacta, npr. izvoz podsetnika na rođendane u K‑organizator.</li>
       <li xml:lang="sv">Integrerar med andra komponenter i Kontact, t.ex. med export av påminnelser om födelsedagar till Korganizer</li>
+      <li xml:lang="tr">Diğer Kontact bileşenleriyle tümleşir, örn. Doğum günü hatırlatmalarını KOrganizer'a aktarır</li>
       <li xml:lang="uk">інтеграція з іншими компонентами Kontact, зокрема експортування нагадувань щодо днів народження до KOrganizer;</li>
       <li xml:lang="x-test">xxIntegrates with other Kontact components, e.g. exporting Birthday reminders to KOrganizerxx</li>
       <li xml:lang="zh-TW">可與其它的 Kontact 組件整合，如匯出生日提醒到 KOrganizer</li>
@@ -237,6 +245,7 @@
       <li xml:lang="sr-ijekavian">Могуће уклапање са групвером.</li>
       <li xml:lang="sr-ijekavianlatin">Moguće uklapanje sa grupverom.</li>
       <li xml:lang="sv">Klarar av integrering med grupprogram</li>
+      <li xml:lang="tr">Groupware tümleştirmesini destekler</li>
       <li xml:lang="uk">можливість інтегрування з програмним забезпеченням для групової роботи;</li>
       <li xml:lang="x-test">xxCapable of groupware integrationxx</li>
       <li xml:lang="zh-TW">可做群組整合</li>
@@ -262,6 +271,7 @@
       <li xml:lang="sr-ijekavian">Изграђено над Аконадијем.</li>
       <li xml:lang="sr-ijekavianlatin">Izgrađeno nad Akonadijem.</li>
       <li xml:lang="sv">Drivs av Akonadi</li>
+      <li xml:lang="tr">Akonadi tarafından güçlendirilmiştir</li>
       <li xml:lang="uk">усі додаткові можливості, роботу яких забезпечує Akonadi.</li>
       <li xml:lang="x-test">xxPowered by Akonadixx</li>
       <li xml:lang="zh-TW">使用 Akonadi </li>

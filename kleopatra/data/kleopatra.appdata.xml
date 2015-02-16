@@ -24,6 +24,7 @@
   <name xml:lang="sk">Kleopatra</name>
   <name xml:lang="sl">Kleopatra</name>
   <name xml:lang="sv">Kleopatra</name>
+  <name xml:lang="tr">Kleopatra</name>
   <name xml:lang="uk">Kleopatra</name>
   <name xml:lang="x-test">xxKleopatraxx</name>
   <name xml:lang="zh-CN">Kleopatra</name>
@@ -46,6 +47,7 @@
   <summary xml:lang="sk">Správca certifikátov a unifikované šifrovacie grafické rozhranie</summary>
   <summary xml:lang="sl">Upravljalnik potrdil in enoten šifrirni vmesnik</summary>
   <summary xml:lang="sv">Certifikathanterare och enhetligt grafiskt användargränssnitt för krypto</summary>
+  <summary xml:lang="tr">Sertifika Yöneticisi ve Birleşik Şifreleme Arayüzü</summary>
   <summary xml:lang="uk">Графічний інтерфейс до засобів керування сертифікатами та універсальних можливостей з шифрування.</summary>
   <summary xml:lang="x-test">xxCertificate Manager and Unified Crypto GUIxx</summary>
   <summary xml:lang="zh-CN">证书管理器和统一的密钥操作界面</summary>
@@ -70,6 +72,7 @@
     <p xml:lang="sk">Kleopatra je správca certifikátov a univerzálne šifrovacie GUI. Podporuje správu X.509 a OpenPGP certifikátov v keyboxe GpgSM a získavanie certifikátov z LDAP serverov.</p>
     <p xml:lang="sl">Kleopatra je upravljalnik potrdil in enoten šifrirni vmesnik. Podpira rokovanje s potrdili X.509 in OpenPGP v zbirki ključev GpgSM in omogoča pridobivanje potrdil iz strežnikov LDAP.</p>
     <p xml:lang="sv">Kleopatra är en certifikathanterare och ett universellt grafiskt användargränssnitt för krypto. Den stöder hantering av X.509- och OpenPGP-certifikat i GpgSM-nyckellådan och att hämta certifikat från LDAP-servrar.</p>
+    <p xml:lang="tr">Kleopatra bir sertifika yöneticisi ve birleşik şifreleme arayüzüdür. X.509 ve OpenPGP sertifikalarını GpgSM anahtar kutusunda yönetmeyi ve LDAP sunucularından sertifika getirmeyi destekler.</p>
     <p xml:lang="uk">Kleopatra — графічний інтерфейс засобів керування сертифікатами та шифрування. У програмі передбачено можливості з керування сертифікатами X.509 та OpenPGP у сховищі ключів GpgSM та отримання сертифікатів з серверів LDAP.</p>
     <p xml:lang="x-test">xxKleopatra is a certificate manager and a universal crypto GUI. It supports managing X.509 and OpenPGP certificates in the GpgSM keybox and retrieving certificates from LDAP servers.xx</p>
   </description>
