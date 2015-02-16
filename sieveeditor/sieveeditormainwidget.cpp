@@ -178,7 +178,29 @@ void SieveEditorMainWidget::slotGoToLine()
     }
 }
 
-void SieveEditorMainWidget::slotScriptModified(bool modified, SieveEditorPageWidget *page)
+void SieveEditorMainWidget::slotFind()
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            page->find();
+        }
+    }
+}
+
+void SieveEditorMainWidget::slotReplace()
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            page->replace();
+        }
+    }
+}
+
+void SieveEditorMainWidget::slotScriptModified(bool modified,SieveEditorPageWidget *page)
 {
     const int index = mTabWidget->indexOf(page);
     if (index >= 0) {

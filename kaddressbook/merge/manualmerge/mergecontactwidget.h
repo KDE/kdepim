@@ -20,6 +20,8 @@
 
 #include <QWidget>
 #include <AkonadiCore/Item>
+#include <QListWidgetItem>
+#include "merge/job/mergecontacts.h"
 #include "kaddressbook_export.h"
 
 class QPushButton;
@@ -44,17 +46,21 @@ public:
     void setContacts(const Akonadi::Item::List &items);
 
 Q_SIGNALS:
-    void mergeContact(const Akonadi::Item::List &lst, const Akonadi::Collection &col);
+    void customizeMergeContact(const Akonadi::Item::List &lst, MergeContacts::ConflictInformations conflictType, const Akonadi::Collection &col);
+    void contactMerged(const Akonadi::Item &item);
 
 private Q_SLOTS:
     void slotUpdateMergeButton();
     void slotMergeContacts();
     void slotAutomaticMerging();
     void slotCustomizeMergingContacts();
+    void slotMergeDone(const Akonadi::Item &item);
 private:
     Akonadi::Item::List listSelectedContacts() const;
     Akonadi::Item currentItem() const;
     void fillListContact();
+    MergeContacts::ConflictInformations mConflictTypes;
+    Akonadi::Item::List mSelectedItems;
     Akonadi::Item::List mItems;
     MergeContactWidgetList *mListWidget;
     QPushButton *mMergeButton;

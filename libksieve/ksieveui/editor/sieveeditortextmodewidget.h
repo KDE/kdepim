@@ -66,6 +66,8 @@ public:
 
     void setParsingEditorWarningError(const QString &script, const QString &error);
     void goToLine();
+    void replace();
+    void find();
 Q_SIGNALS:
     void enableButtonOk(bool);
     void switchToGraphicalMode();

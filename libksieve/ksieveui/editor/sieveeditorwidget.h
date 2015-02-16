@@ -61,6 +61,8 @@ public:
     void goToLine();
     EditorMode mode() const;
 
+    void find();
+    void replace();
 private Q_SLOTS:
     void slotEnableButtonOk(bool b);
     void slotAutoGenerateScripts();

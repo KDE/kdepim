@@ -50,6 +50,8 @@ public:
 public Q_SLOTS:
     void slotGoToLine();
 
+    void slotReplace();
+    void slotFind();
 Q_SIGNALS:
     void updateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);
     void updateScriptList();

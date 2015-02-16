@@ -168,6 +168,16 @@ void SieveEditorPageWidget::goToLine()
     mSieveEditorWidget->goToLine();
 }
 
+void SieveEditorPageWidget::find()
+{
+    mSieveEditorWidget->find();
+}
+
+void SieveEditorPageWidget::replace()
+{
+    mSieveEditorWidget->replace();
+}
+
 KSieveUi::SieveEditorWidget::EditorMode SieveEditorPageWidget::pageMode() const
 {
     return mSieveEditorWidget->mode();

@@ -68,10 +68,19 @@ MergeContactsDialog::MergeContactsDialog(QWidget *parent)
     mManualMergeResultWidget = new KABMergeContacts::MergeContactWidget(this);
     mManualMergeResultWidget->setObjectName(QLatin1String("manualmergeresultwidget"));
     mStackedWidget->addWidget(mManualMergeResultWidget);
+    connect(mManualMergeResultWidget, SIGNAL(customizeMergeContact(Akonadi::Item::List,MergeContacts::ConflictInformations,Akonadi::Collection)),
+            this, SLOT(slotCustomizeMergeContact(Akonadi::Item::List,MergeContacts::ConflictInformations,Akonadi::Collection)));
+    connect(mManualMergeResultWidget, SIGNAL(contactMerged(Akonadi::Item)),
+            this, SLOT(slotContactMerged(Akonadi::Item)));
 
     mSelectInformation = new KABMergeContacts::MergeContactSelectInformationScrollArea(this);
     mSelectInformation->setObjectName(QLatin1String("selectioninformation"));
     mStackedWidget->addWidget(mSelectInformation);
+
+
+    mMergeContactInfo = new KABMergeContacts::MergeContactInfoWidget;
+    mMergeContactInfo->setObjectName(QLatin1String("mergecontactinfowidget"));
+    mStackedWidget->addWidget(mMergeContactInfo);
 
 
     mStackedWidget->setCurrentWidget(mNoContactSelected);
@@ -96,6 +105,13 @@ void MergeContactsDialog::setContacts(const Akonadi::Item::List &list)
     mButtonBox->button(QDialogButtonBox::Close)->setEnabled(true);
 }
 
+void MergeContactsDialog::slotCustomizeMergeContact(const Akonadi::Item::List &lst, MergeContacts::ConflictInformations conflictType, const Akonadi::Collection &col)
+{
+    mSelectInformation->setContacts(conflictType, lst);
+    mSelectInformation->setCollection(col);
+    mStackedWidget->setCurrentWidget(mSelectInformation);
+}
+
 void MergeContactsDialog::readConfig()
 {
     KConfigGroup grp(KSharedConfig::openConfig(), "MergeContactsDialog");
@@ -112,3 +128,9 @@ void MergeContactsDialog::writeConfig()
     grp.sync();
 }
 
+
+void MergeContactsDialog::slotContactMerged(const Akonadi::Item &item)
+{
+    mMergeContactInfo->setContact(item);
+    mStackedWidget->setCurrentWidget(mMergeContactInfo);
+}
