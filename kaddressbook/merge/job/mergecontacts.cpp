@@ -238,6 +238,19 @@ MergeContacts::ConflictInformations MergeContacts::requiresManualSelectionOfInfo
                     newContact.setFamilyName(address.familyName());
                 }
             }
+            // Test Blog
+            const QString blog = address.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "BlogFeed" ));
+            if (!blog.isEmpty()) {
+                const QString blogFromNewContact = newContact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "BlogFeed" ));
+                if (!blogFromNewContact.isEmpty()) {
+                    if (blogFromNewContact != blog) {
+                        result |= Blog;
+                    }
+                } else {
+                    newContact.insertCustom(QLatin1String( "KADDRESSBOOK" ), QLatin1String( "BlogFeed" ), blog);
+                }
+            }
+
         }
     }
     qDebug()<<" result "<<result;

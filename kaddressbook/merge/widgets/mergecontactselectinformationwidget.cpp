@@ -140,9 +140,13 @@ void MergeContactSelectInformationWidget::createContact(KABC::Addressee &addr)
             case MergeContacts::NickName:
                 addr.setNickName(mAddressList.at(selectedContactIndex).nickName());
                 break;
-            case MergeContacts::Blog:
+            case MergeContacts::Blog: {
+                const QString newBlog = mAddressList.at(selectedContactIndex).custom(QLatin1String( "KADDRESSBOOK" ), QLatin1String( "BlogFeed" ));
+                addr.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "BlogFeed" ), newBlog );
                 break;
+            }
             case MergeContacts::HomePage:
+                addr.setUrl(mAddressList.at(selectedContactIndex).url());
                 break;
             case MergeContacts::Organization:
                 addr.setOrganization(mAddressList.at(selectedContactIndex).organization());

@@ -148,9 +148,13 @@ void MergeContactSelectListWidget::fillList(const KABC::Addressee::List &lst)
         case MergeContacts::NickName:
             mSelectListWidget->addItem(addr.nickName());
             break;
-        case MergeContacts::Blog:
+        case MergeContacts::Blog: {
+            const QString newBlog = addr.custom(QLatin1String( "KADDRESSBOOK" ), QLatin1String( "BlogFeed" ));
+            mSelectListWidget->addItem(newBlog);
             break;
+        }
         case MergeContacts::HomePage:
+            mSelectListWidget->addItem(addr.url().prettyUrl());
             break;
         case MergeContacts::Organization:
             mSelectListWidget->addItem(addr.organization());
