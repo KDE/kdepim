@@ -20,6 +20,7 @@ Name[sv]=Tine 2.0 grupprogramserver
 Name[tr]=Tine 2.0 Groupware Sunucusu
 Name[uk]=Сервер групової роботи Tine 2.0
 Name[x-test]=xxTine 2.0 Groupware Serverxx
+Name[zh_TW]=Tine 2.0 群組伺服器
 Icon=applications-internet
 Comment=Tine 2.0 Groupware Server
 Comment[ca]=Servidor de treball en grup Tine 2.0
@@ -42,6 +43,7 @@ Comment[sv]=Tine 2.0 grupprogramserver
 Comment[tr]=Tine 2.0 Groupware Sunucusu
 Comment[uk]=Сервер групової роботи Tine 2.0
 Comment[x-test]=xxTine 2.0 Groupware Serverxx
+Comment[zh_TW]=Tine 2.0 群組伺服器
 
 [Wizard]
 Type=message/rfc822,text/directory,text/calendar
