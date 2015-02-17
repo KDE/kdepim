@@ -70,6 +70,7 @@ public:
     void copy();
     void cut();
     bool hasSelection() const;
+    void selectAll();
 private Q_SLOTS:
     void slotEnableButtonOk(bool b);
     void slotAutoGenerateScripts();

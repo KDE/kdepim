@@ -226,3 +226,7 @@ void SieveEditorPageWidget::copy()
     mSieveEditorWidget->copy();
 }
 
+void SieveEditorPageWidget::selectAll()
+{
+    mSieveEditorWidget->selectAll();
+}

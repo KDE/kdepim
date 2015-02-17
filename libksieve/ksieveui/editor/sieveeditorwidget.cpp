@@ -182,6 +182,13 @@ void SieveEditorWidget::copy()
     }
 }
 
+void SieveEditorWidget::selectAll()
+{
+    if (mMode == TextMode) {
+        mTextModeWidget->selectAll();
+    }
+}
+
 void SieveEditorWidget::find()
 {
     if (mMode == TextMode) {

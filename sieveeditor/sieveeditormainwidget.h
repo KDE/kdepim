@@ -78,6 +78,7 @@ private slots:
     void slotTabRemoveAllExclude(int index);
     void slotUndo();
     void slotRedo();
+    void slotSelectAll();
 private:
 
     QWidget *hasExistingPage(const KUrl &url);
