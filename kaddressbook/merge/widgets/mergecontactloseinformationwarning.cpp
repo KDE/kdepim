@@ -28,7 +28,7 @@ MergeContactLoseInformationWarning::MergeContactLoseInformationWarning(QWidget *
     setMessageType(Information);
     setWordWrap(true);
 
-    setText(i18n("Some information can be lost. Do you want to continue or customize what do you want to merge ?"));
+    setText(i18n("Some information can be lost. Do you want to continue, or customize what you want to merge?"));
 
     QAction *action = new QAction(i18n("Customize"), this);
     action->setObjectName(QLatin1String("customize"));
