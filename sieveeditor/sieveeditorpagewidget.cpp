@@ -42,9 +42,9 @@ SieveEditorPageWidget::SieveEditorPageWidget(QWidget *parent)
     connect(mSieveEditorWidget, &KSieveUi::SieveEditorWidget::checkSyntax, this, &SieveEditorPageWidget::slotCheckSyntaxClicked);
     connect(mSieveEditorWidget, &KSieveUi::SieveEditorWidget::modeEditorChanged, this, &SieveEditorPageWidget::modeEditorChanged);
     //qCDebug(SIEVEEDITOR_LOG)<<"SieveEditorPageWidget::SieveEditorPageWidget "<<this;
-    connect(mSieveEditorWidget, SIGNAL(undoAvailable(bool)), SIGNAL(undoAvailable(bool)));
-    connect(mSieveEditorWidget, SIGNAL(redoAvailable(bool)), SIGNAL(redoAvailable(bool)));
-    connect(mSieveEditorWidget, SIGNAL(copyAvailable(bool)), SIGNAL(copyAvailable(bool)));
+    connect(mSieveEditorWidget, &KSieveUi::SieveEditorWidget::undoAvailable, this, &SieveEditorPageWidget::undoAvailable);
+    connect(mSieveEditorWidget, &KSieveUi::SieveEditorWidget::redoAvailable, this, &SieveEditorPageWidget::redoAvailable);
+    connect(mSieveEditorWidget, &KSieveUi::SieveEditorWidget::copyAvailable, this, &SieveEditorPageWidget::copyAvailable);
 }
 
 SieveEditorPageWidget::~SieveEditorPageWidget()

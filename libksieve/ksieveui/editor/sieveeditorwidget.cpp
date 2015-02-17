@@ -83,7 +83,7 @@ SieveEditorWidget::SieveEditorWidget(QWidget *parent)
     overlays << QLatin1String("list-add");
     mUpload = new QAction(QIcon(new KIconEngine(QLatin1String("get-hot-new-stuff"), Q_NULLPTR, overlays)), i18n("Share..."), this);
     connect(mUpload, &QAction::triggered, this, &SieveEditorWidget::slotUploadScripts);
-    connect(mUpload, SIGNAL(triggered(bool)), SLOT(slotUploadScripts()));
+    connect(mUpload, &QAction::triggered, this, &SieveEditorWidget::slotUploadScripts);
     bar->addAction(mUpload);
 
     lay->addWidget(bar);
@@ -112,9 +112,9 @@ SieveEditorWidget::SieveEditorWidget(QWidget *parent)
     connect(mGraphicalModeWidget, &SieveEditorGraphicalModeWidget::enableButtonOk, this, &SieveEditorWidget::slotEnableButtonOk);
     connect(mGraphicalModeWidget, &SieveEditorGraphicalModeWidget::switchTextMode, this, &SieveEditorWidget::slotSwitchTextMode);
     connect(mTextModeWidget, &SieveEditorTextModeWidget::switchToGraphicalMode, this, &SieveEditorWidget::slotSwitchToGraphicalMode);
-    connect(mTextModeWidget, SIGNAL(undoAvailable(bool)), this, SIGNAL(undoAvailable(bool)));
-    connect(mTextModeWidget, SIGNAL(redoAvailable(bool)), this, SIGNAL(redoAvailable(bool)));
-    connect(mTextModeWidget, SIGNAL(copyAvailable(bool)), this, SIGNAL(copyAvailable(bool)));
+    connect(mTextModeWidget, &SieveEditorTextModeWidget::undoAvailable, this, &SieveEditorWidget::undoAvailable);
+    connect(mTextModeWidget, &SieveEditorTextModeWidget::redoAvailable, this, &SieveEditorWidget::redoAvailable);
+    connect(mTextModeWidget, &SieveEditorTextModeWidget::copyAvailable, this, &SieveEditorWidget::copyAvailable);
     if (KSieveUi::EditorSettings::useGraphicEditorByDefault()) {
         changeMode(GraphicMode);
     } else {

@@ -96,9 +96,9 @@ void SieveEditorMainWidget::slotCreateScriptPage(const QUrl &url, const QStringL
         connect(editor, &SieveEditorPageWidget::refreshList, this, &SieveEditorMainWidget::updateScriptList);
         connect(editor, &SieveEditorPageWidget::scriptModified, this, &SieveEditorMainWidget::slotScriptModified);
         connect(editor, &SieveEditorPageWidget::modeEditorChanged, this, &SieveEditorMainWidget::modeEditorChanged);
-        connect(editor, SIGNAL(undoAvailable(bool)), SIGNAL(undoAvailable(bool)));
-        connect(editor, SIGNAL(redoAvailable(bool)), SIGNAL(redoAvailable(bool)));
-        connect(editor, SIGNAL(copyAvailable(bool)), SIGNAL(copyAvailable(bool)));
+        connect(editor, &SieveEditorPageWidget::undoAvailable, this, &SieveEditorMainWidget::undoAvailable);
+        connect(editor, &SieveEditorPageWidget::redoAvailable, this, &SieveEditorMainWidget::redoAvailable);
+        connect(editor, &SieveEditorPageWidget::copyAvailable, this, &SieveEditorMainWidget::copyAvailable);
         editor->setIsNewScript(isNewScript);
         editor->loadScript(url, capabilities);
         mTabWidget->addTab(editor, url.fileName());
