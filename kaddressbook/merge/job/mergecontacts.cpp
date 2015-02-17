@@ -242,7 +242,10 @@ MergeContacts::ConflictInformations MergeContacts::requiresManualSelectionOfInfo
             checkCustomValue(address, QLatin1String( "BlogFeed" ), newContact, result, Blog);
             // Test profession
             checkCustomValue(address, QLatin1String( "X-Profession" ), newContact, result, Profession);
-
+            // Test profession
+            checkCustomValue(address, QLatin1String( "X-Office" ), newContact, result, Office);
+            // Test ManagersName
+            checkCustomValue(address, QLatin1String( "X-ManagersName" ), newContact, result, ManagerName);
         }
     }
     qDebug()<<" result "<<result;

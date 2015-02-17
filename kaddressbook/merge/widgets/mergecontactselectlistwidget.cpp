@@ -159,18 +159,27 @@ void MergeContactSelectListWidget::fillList(const KABC::Addressee::List &lst)
         case MergeContacts::Organization:
             mSelectListWidget->addItem(addr.organization());
             break;
-        case MergeContacts::Profession:
+        case MergeContacts::Profession: {
+            const QString newBlog = addr.custom(QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-Profession" ));
+            mSelectListWidget->addItem(newBlog);
             break;
+        }
         case MergeContacts::Title:
             mSelectListWidget->addItem(addr.title());
             break;
         case MergeContacts::Departement:
             mSelectListWidget->addItem(addr.department());
             break;
-        case MergeContacts::Office:
+        case MergeContacts::Office: {
+            const QString newBlog = addr.custom(QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-Office" ));
+            mSelectListWidget->addItem(newBlog);
             break;
-        case MergeContacts::ManagerName:
+        }
+        case MergeContacts::ManagerName: {
+            const QString newBlog = addr.custom(QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-ManagersName" ));
+            mSelectListWidget->addItem(newBlog);
             break;
+        }
         case MergeContacts::Assistant:
             break;
         case MergeContacts::FreeBusy:
