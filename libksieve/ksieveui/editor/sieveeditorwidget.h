@@ -69,6 +69,7 @@ public:
     void paste();
     void copy();
     void cut();
+    bool hasSelection() const;
 private Q_SLOTS:
     void slotEnableButtonOk(bool b);
     void slotAutoGenerateScripts();

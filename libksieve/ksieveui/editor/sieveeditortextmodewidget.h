@@ -77,6 +77,7 @@ public:
 
     bool isUndoAvailable() const;
     bool isRedoAvailable() const;
+    bool hasSelection() const;
 
 Q_SIGNALS:
     void enableButtonOk( bool );

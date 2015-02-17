@@ -236,9 +236,9 @@ void SieveEditorMainWindow::slotUpdateActions()
     mUndoAction->setEnabled(editActionEnabled && mMainWidget->sieveEditorMainWidget()->isUndoAvailable());
     mRedoAction->setEnabled(editActionEnabled && mMainWidget->sieveEditorMainWidget()->isRedoAvailable());
 
-    mCopyAction->setEnabled(editActionEnabled);
-    mPasteAction->setEnabled(editActionEnabled); //FIXME
-    mCutAction->setEnabled(editActionEnabled);
+    mCopyAction->setEnabled(editActionEnabled && mMainWidget->sieveEditorMainWidget()->hasSelection() );
+    mPasteAction->setEnabled(editActionEnabled);
+    mCutAction->setEnabled(editActionEnabled && mMainWidget->sieveEditorMainWidget()->hasSelection());
 
     mSaveScript->setEnabled(hasPage && !mNetworkIsDown);
     mRefreshList->setEnabled(!mNetworkIsDown);

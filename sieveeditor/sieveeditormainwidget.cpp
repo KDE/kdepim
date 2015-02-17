@@ -192,6 +192,18 @@ bool SieveEditorMainWidget::isRedoAvailable() const
     return false;
 }
 
+bool SieveEditorMainWidget::hasSelection() const
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            return page->hasSelection();
+        }
+    }
+    return false;
+}
+
 void SieveEditorMainWidget::slotCopy()
 {
     QWidget *w = mTabWidget->currentWidget();

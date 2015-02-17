@@ -50,6 +50,7 @@ public:
     bool isUndoAvailable() const;
     bool isRedoAvailable() const;
 
+    bool hasSelection() const;
 public Q_SLOTS:
     void slotGoToLine();
 

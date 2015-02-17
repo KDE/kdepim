@@ -56,6 +56,7 @@ public:
     void paste();
     void cut();
     void copy();
+    bool hasSelection() const;
 
 Q_SIGNALS:
     void refreshList();

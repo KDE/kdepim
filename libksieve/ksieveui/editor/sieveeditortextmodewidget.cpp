@@ -273,6 +273,11 @@ bool SieveEditorTextModeWidget::isRedoAvailable() const
     return mTextEdit->document()->isRedoAvailable();
 }
 
+bool SieveEditorTextModeWidget::hasSelection() const
+{
+    return mTextEdit->textCursor().hasSelection();
+}
+
 void SieveEditorTextModeWidget::slotFind()
 {
     if ( mTextEdit->textCursor().hasSelection() )
