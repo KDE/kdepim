@@ -500,6 +500,102 @@ void MergeContactsTest::checkNeedManualSelectionWithManagerName()
     QCOMPARE(bResult, needManualCheck);
 }
 
+void MergeContactsTest::checkNeedManualSelectionWithAssistantName_data()
+{
+    QTest::addColumn<QString>("nameItemA");
+    QTest::addColumn<QString>("nameItemB");
+    QTest::addColumn<QString>("nameItemC");
+    QTest::addColumn<bool>("needManualCheck");
+    QTest::newRow("noConflict") <<  QString() << QString() << QString() << false;
+    QTest::newRow("noWithOneNameConflict") <<  QString() << QString() << QString(QLatin1String("foo")) << false;
+    QTest::newRow("noWithOneNameConflict1") <<  QString() << QString(QLatin1String("foo")) << QString()  << false;
+    QTest::newRow("noWithOneNameConflict2") <<  QString(QLatin1String("foo")) << QString() << QString() << false;
+    QTest::newRow("noConflictWithSameName") <<  QString(QLatin1String("foo")) << QString(QLatin1String("foo")) << QString() << false;
+    QTest::newRow("noConflictWithSameName2") <<  QString(QLatin1String("foo")) << QString(QLatin1String("foo")) << QString(QLatin1String("foo")) << false;
+    QTest::newRow("conflict") <<  QString(QLatin1String("foo")) << QString(QLatin1String("foo1")) << QString(QLatin1String("foo")) << true;
+    QTest::newRow("conflict1") <<  QString() << QString(QLatin1String("foo1")) << QString(QLatin1String("foo")) << true;
+}
+
+void MergeContactsTest::checkNeedManualSelectionWithAssistantName()
+{
+    QFETCH( QString, nameItemA );
+    QFETCH( QString, nameItemB );
+    QFETCH( QString, nameItemC );
+    QFETCH( bool, needManualCheck );
+
+    Akonadi::Item::List lst;
+    Addressee addressA;
+    Akonadi::Item itemA;
+    addressA.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String( "X-AssistantsName" ), nameItemA);
+    itemA.setPayload<KABC::Addressee>( addressA );
+    lst<<itemA;
+
+    Addressee addressB;
+    Akonadi::Item itemB;
+    addressB.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String( "X-AssistantsName" ), nameItemB);
+    itemB.setPayload<KABC::Addressee>( addressB );
+    lst<<itemB;
+
+    Addressee addressC;
+    Akonadi::Item itemC;
+    addressC.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String( "X-AssistantsName" ), nameItemC);
+    itemC.setPayload<KABC::Addressee>( addressC );
+    lst<<itemC;
+
+    MergeContacts contacts(lst);
+    const MergeContacts::ConflictInformations result = contacts.requiresManualSelectionOfInformation();
+    const bool bResult = (result == MergeContacts::Assistant);
+    QCOMPARE(bResult, needManualCheck);
+}
+
+void MergeContactsTest::checkNeedManualSelectionWithPartnersName_data()
+{
+    QTest::addColumn<QString>("nameItemA");
+    QTest::addColumn<QString>("nameItemB");
+    QTest::addColumn<QString>("nameItemC");
+    QTest::addColumn<bool>("needManualCheck");
+    QTest::newRow("noConflict") <<  QString() << QString() << QString() << false;
+    QTest::newRow("noWithOneNameConflict") <<  QString() << QString() << QString(QLatin1String("foo")) << false;
+    QTest::newRow("noWithOneNameConflict1") <<  QString() << QString(QLatin1String("foo")) << QString()  << false;
+    QTest::newRow("noWithOneNameConflict2") <<  QString(QLatin1String("foo")) << QString() << QString() << false;
+    QTest::newRow("noConflictWithSameName") <<  QString(QLatin1String("foo")) << QString(QLatin1String("foo")) << QString() << false;
+    QTest::newRow("noConflictWithSameName2") <<  QString(QLatin1String("foo")) << QString(QLatin1String("foo")) << QString(QLatin1String("foo")) << false;
+    QTest::newRow("conflict") <<  QString(QLatin1String("foo")) << QString(QLatin1String("foo1")) << QString(QLatin1String("foo")) << true;
+    QTest::newRow("conflict1") <<  QString() << QString(QLatin1String("foo1")) << QString(QLatin1String("foo")) << true;
+}
+
+void MergeContactsTest::checkNeedManualSelectionWithPartnersName()
+{
+    QFETCH( QString, nameItemA );
+    QFETCH( QString, nameItemB );
+    QFETCH( QString, nameItemC );
+    QFETCH( bool, needManualCheck );
+
+    Akonadi::Item::List lst;
+    Addressee addressA;
+    Akonadi::Item itemA;
+    addressA.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String( "X-SpousesName" ), nameItemA);
+    itemA.setPayload<KABC::Addressee>( addressA );
+    lst<<itemA;
+
+    Addressee addressB;
+    Akonadi::Item itemB;
+    addressB.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String( "X-SpousesName" ), nameItemB);
+    itemB.setPayload<KABC::Addressee>( addressB );
+    lst<<itemB;
+
+    Addressee addressC;
+    Akonadi::Item itemC;
+    addressC.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String( "X-SpousesName" ), nameItemC);
+    itemC.setPayload<KABC::Addressee>( addressC );
+    lst<<itemC;
+
+    MergeContacts contacts(lst);
+    const MergeContacts::ConflictInformations result = contacts.requiresManualSelectionOfInformation();
+    const bool bResult = (result == MergeContacts::PartnerName);
+    QCOMPARE(bResult, needManualCheck);
+}
+
 
 void MergeContactsTest::checkNeedManualSelectionWithBlog_data()
 {

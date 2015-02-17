@@ -20,7 +20,6 @@
 #include "merge/manualmerge/mergecontactwidget.h"
 #include "merge/widgets/mergecontactinfowidget.h"
 #include "merge/job/mergecontactsjob.h"
-#include "merge/mergecontactshowresultdialog.h"
 #include "merge/widgets/mergecontacterrorlabel.h"
 #include "merge/widgets/mergecontactselectinformationscrollarea.h"
 #include <kaddressbook/merge/widgets/mergecontactselectinformationscrollarea.h>
