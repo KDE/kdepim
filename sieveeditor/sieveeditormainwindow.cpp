@@ -263,4 +263,5 @@ void SieveEditorMainWindow::slotCopyAvailable(bool b)
     const bool hasPage = (mMainWidget->sieveEditorMainWidget()->tabWidget()->count()>0);
     const bool editActionEnabled = (hasPage && mMainWidget->sieveEditorMainWidget()->pageMode() == KSieveUi::SieveEditorWidget::TextMode);
     mCopyAction->setEnabled(editActionEnabled && b);
+    mCutAction->setEnabled(editActionEnabled && b);
 }
