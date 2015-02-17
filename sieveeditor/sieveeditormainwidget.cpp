@@ -96,6 +96,8 @@ void SieveEditorMainWidget::slotCreateScriptPage(const KUrl &url, const QStringL
         connect(editor, SIGNAL(refreshList()), this, SIGNAL(updateScriptList()));
         connect(editor, SIGNAL(scriptModified(bool,SieveEditorPageWidget*)), this, SLOT(slotScriptModified(bool,SieveEditorPageWidget*)));
         connect(editor, SIGNAL(modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode)), SIGNAL(modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode)));
+        connect(editor, SIGNAL(undoAvailable(bool)), SIGNAL(undoAvailable(bool)));
+        connect(editor, SIGNAL(redoAvailable(bool)), SIGNAL(redoAvailable(bool)));
         editor->setIsNewScript(isNewScript);
         editor->loadScript(url, capabilities);
         mTabWidget->addTab(editor, url.fileName());

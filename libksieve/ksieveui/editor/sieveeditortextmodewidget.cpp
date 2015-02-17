@@ -141,7 +141,8 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     mMainSplitter->addWidget( mDebugTextEdit );
     mMainSplitter->setChildrenCollapsible(false);
     connect( mTextEdit, SIGNAL(textChanged()), SLOT(slotTextChanged()) );
-
+    connect( mTextEdit, SIGNAL(undoAvailable(bool)), SIGNAL(undoAvailable(bool)));
+    connect( mTextEdit, SIGNAL(redoAvailable(bool)), SIGNAL(redoAvailable(bool)));
     readConfig();
 
     mTextEdit->setFocus();

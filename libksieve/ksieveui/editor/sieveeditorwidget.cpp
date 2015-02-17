@@ -112,6 +112,8 @@ SieveEditorWidget::SieveEditorWidget(QWidget *parent)
 
     lay->addWidget(mStackedWidget);
     connect(mTextModeWidget, SIGNAL(enableButtonOk(bool)), this, SLOT(slotEnableButtonOk(bool)));
+    connect(mTextModeWidget, SIGNAL(undoAvailable(bool)), this, SIGNAL(undoAvailable(bool)));
+    connect(mTextModeWidget, SIGNAL(redoAvailable(bool)), this, SIGNAL(redoAvailable(bool)));
     connect(mGraphicalModeWidget, SIGNAL(enableButtonOk(bool)), this, SLOT(slotEnableButtonOk(bool)));
     connect(mGraphicalModeWidget, SIGNAL(switchTextMode(QString)), this, SLOT(slotSwitchTextMode(QString)));
     connect(mTextModeWidget, SIGNAL(switchToGraphicalMode()), SLOT(slotSwitchToGraphicalMode()));

@@ -60,6 +60,9 @@ Q_SIGNALS:
     void updateScriptList();
     void modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode);
     void serverSieveFound(bool);
+    void undoAvailable(bool);
+    void redoAvailable(bool);
+
 
 private slots:
     void slotCreateScriptPage(const KUrl &url, const QStringList &capabilities, bool isNewScript);

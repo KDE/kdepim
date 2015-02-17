@@ -83,6 +83,8 @@ Q_SIGNALS:
     void enableButtonOk(bool b);
     void valueChanged(bool b);
     void modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode);
+    void undoAvailable(bool);
+    void redoAvailable(bool);
 
 private:
     void changeMode(EditorMode mode);

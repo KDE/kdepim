@@ -58,6 +58,8 @@ SieveEditorMainWindow::SieveEditorMainWindow()
               this, SLOT(slotSystemNetworkStatusChanged(Solid::Networking::Status)) );
     connect(mMainWidget->sieveEditorMainWidget()->tabWidget(), SIGNAL(currentChanged(int)), SLOT(slotUpdateActions()));
     connect(mMainWidget->sieveEditorMainWidget(), SIGNAL(modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode)), SLOT(slotUpdateActions()));
+    connect(mMainWidget->sieveEditorMainWidget(), SIGNAL(undoAvailable(bool)), SLOT(slotUndoAvailable(bool)));
+    connect(mMainWidget->sieveEditorMainWidget(), SIGNAL(redoAvailable(bool)), SLOT(slotRedoAvailable(bool)));
     const Solid::Networking::Status status = Solid::Networking::status();
     slotSystemNetworkStatusChanged(status);
     slotRefreshList();
@@ -227,10 +229,24 @@ void SieveEditorMainWindow::slotUpdateActions()
     mGoToLine->setEnabled(editActionEnabled);
     mFindAction->setEnabled(editActionEnabled);
     mReplaceAction->setEnabled(editActionEnabled);
-    mUndoAction->setEnabled(editActionEnabled /*&& mMainWidget->sieveEditorMainWidget()->isUndoAvailable()*/);
-    mRedoAction->setEnabled(editActionEnabled /*&& mMainWidget->sieveEditorMainWidget()->isRedoAvailable()*/);
+    mUndoAction->setEnabled(editActionEnabled && mMainWidget->sieveEditorMainWidget()->isUndoAvailable());
+    mRedoAction->setEnabled(editActionEnabled && mMainWidget->sieveEditorMainWidget()->isRedoAvailable());
 
     mSaveScript->setEnabled(hasPage && !mNetworkIsDown);
     mRefreshList->setEnabled(!mNetworkIsDown);
+}
+
+void SieveEditorMainWindow::slotUndoAvailable(bool b)
+{
+    const bool hasPage = (mMainWidget->sieveEditorMainWidget()->tabWidget()->count()>0);
+    const bool editActionEnabled = (hasPage && mMainWidget->sieveEditorMainWidget()->pageMode() == KSieveUi::SieveEditorWidget::TextMode);
+    mUndoAction->setEnabled(editActionEnabled && b);
+}
+
+void SieveEditorMainWindow::slotRedoAvailable(bool b)
+{
+    const bool hasPage = (mMainWidget->sieveEditorMainWidget()->tabWidget()->count()>0);
+    const bool editActionEnabled = (hasPage && mMainWidget->sieveEditorMainWidget()->pageMode() == KSieveUi::SieveEditorWidget::TextMode);
+    mRedoAction->setEnabled(editActionEnabled && b);
 }
 

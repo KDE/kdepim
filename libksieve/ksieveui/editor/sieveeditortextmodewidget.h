@@ -77,6 +77,8 @@ Q_SIGNALS:
     void enableButtonOk( bool );
     void switchToGraphicalMode();
     void valueChanged();
+    void undoAvailable(bool);
+    void redoAvailable(bool);
 
 private slots:
     void slotTextChanged();

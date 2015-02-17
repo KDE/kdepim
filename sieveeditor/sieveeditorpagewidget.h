@@ -57,6 +57,8 @@ Q_SIGNALS:
     void refreshList();
     void scriptModified(bool, SieveEditorPageWidget *);
     void modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode);
+    void undoAvailable(bool);
+    void redoAvailable(bool);
 
 private slots:
     void slotGetResult(KManageSieve::SieveJob *, bool success, const QString &script, bool isActive);
