@@ -239,20 +239,27 @@ MergeContacts::ConflictInformations MergeContacts::requiresManualSelectionOfInfo
                 }
             }
             // Test Blog
-            const QString blog = address.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "BlogFeed" ));
-            if (!blog.isEmpty()) {
-                const QString blogFromNewContact = newContact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "BlogFeed" ));
-                if (!blogFromNewContact.isEmpty()) {
-                    if (blogFromNewContact != blog) {
-                        result |= Blog;
-                    }
-                } else {
-                    newContact.insertCustom(QLatin1String( "KADDRESSBOOK" ), QLatin1String( "BlogFeed" ), blog);
-                }
-            }
+            checkCustomValue(address, QLatin1String( "BlogFeed" ), newContact, result, Blog);
+            // Test profession
+            checkCustomValue(address, QLatin1String( "X-Profession" ), newContact, result, Profession);
 
         }
     }
     qDebug()<<" result "<<result;
     return result;
+}
+
+void MergeContacts::checkCustomValue(const KABC::Addressee &address, const QString &variable, KABC::Addressee &newContact, MergeContacts::ConflictInformations &result, MergeContacts::ConflictInformation conflict)
+{
+    const QString value = address.custom( QLatin1String( "KADDRESSBOOK" ), variable);
+    if (!value.isEmpty()) {
+        const QString newValue = newContact.custom( QLatin1String( "KADDRESSBOOK" ), variable);
+        if (!newValue.isEmpty()) {
+            if (newValue != value) {
+                result |= conflict;
+            }
+        } else {
+            newContact.insertCustom(QLatin1String( "KADDRESSBOOK" ), variable, value);
+        }
+    }
 }

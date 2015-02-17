@@ -57,6 +57,9 @@ private Q_SLOTS:
     void checkNeedManualSelectionWithBlog_data();
     void checkNeedManualSelectionWithBlog();
 
+    void checkNeedManualSelectionWithProfession_data();
+    void checkNeedManualSelectionWithProfession();
+
     void shouldMergeNotes_data();
     void shouldMergeNotes();
     void shouldMergeEmails_data();
