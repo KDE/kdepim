@@ -69,14 +69,14 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     mTemplateSplitter = new QSplitter;
     mTemplateSplitter->setOrientation( Qt::Horizontal );
     //
-    SieveTemplateWidget *sieveTemplateWidget = new SieveTemplateWidget(i18n("Sieve Template:"));
+    mSieveTemplateWidget = new SieveTemplateWidget(i18n("Sieve Template:"));
 
     mSieveInfo = new SieveInfoWidget;
 
     mExtraSplitter = new QSplitter;
     mExtraSplitter->setOrientation( Qt::Vertical );
 
-    mExtraSplitter->addWidget(sieveTemplateWidget);
+    mExtraSplitter->addWidget(mSieveTemplateWidget);
     mExtraSplitter->addWidget(mSieveInfo);
     mExtraSplitter->setChildrenCollapsible(false);
 
@@ -121,7 +121,7 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     mTemplateSplitter->setCollapsible(0, false);
     new PimCommon::SplitterCollapser(mExtraSplitter, mTemplateSplitter);
 
-    connect(sieveTemplateWidget, SIGNAL(insertTemplate(QString)), mTextEdit, SLOT(insertPlainText(QString)));
+    connect(mSieveTemplateWidget, SIGNAL(insertTemplate(QString)), mTextEdit, SLOT(insertPlainText(QString)));
 
     //
     QShortcut *shortcut = new QShortcut( this );
@@ -326,6 +326,7 @@ void SieveEditorTextModeWidget::setSieveCapabilities( const QStringList &capabil
 {
     mSieveCapabilities = capabilities;
     mTextEdit->setSieveCapabilities(mSieveCapabilities);
+    mSieveTemplateWidget->setSieveCapabilities(mSieveCapabilities);
     mSieveInfo->setServerInfo(capabilities);
 }
 

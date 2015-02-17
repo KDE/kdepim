@@ -42,6 +42,7 @@ public:
 
     void setScript(const QString &);
     QString script() const;
+    void setSieveCapabilities(const QStringList &capabilities);
 
 private Q_SLOTS:
     void slotTemplateChanged();

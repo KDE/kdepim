@@ -37,6 +37,7 @@ class SieveTextEdit;
 class SieveEditorWarning;
 class SieveEditorParsingMissingFeatureWarning;
 class SieveEditorTabWidget;
+class SieveTemplateWidget;
 class SieveEditorTextModeWidget : public SieveEditorAbstractWidget
 {
     Q_OBJECT
@@ -109,6 +110,7 @@ private:
     SieveEditorTabWidget *mTabWidget;
     PimCommon::TextGoToLineWidget *mGoToLine;
     PimCommon::SlideContainer *mSliderContainer;
+    SieveTemplateWidget *mSieveTemplateWidget;
 };
 
 }
