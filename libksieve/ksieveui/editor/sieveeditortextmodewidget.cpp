@@ -66,14 +66,14 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     mTemplateSplitter = new QSplitter;
     mTemplateSplitter->setOrientation(Qt::Horizontal);
     //
-    SieveTemplateWidget *sieveTemplateWidget = new SieveTemplateWidget(i18n("Sieve Template:"));
+    mSieveTemplateWidget = new SieveTemplateWidget(i18n("Sieve Template:"));
 
     mSieveInfo = new SieveInfoWidget;
 
     mExtraSplitter = new QSplitter;
     mExtraSplitter->setOrientation(Qt::Vertical);
 
-    mExtraSplitter->addWidget(sieveTemplateWidget);
+    mExtraSplitter->addWidget(mSieveTemplateWidget);
     mExtraSplitter->addWidget(mSieveInfo);
     mExtraSplitter->setChildrenCollapsible(false);
 
@@ -117,7 +117,7 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     mTemplateSplitter->setCollapsible(0, false);
     new KSplitterCollapserButton(mExtraSplitter, mTemplateSplitter);
 
-    connect(sieveTemplateWidget, &SieveTemplateWidget::insertTemplate, mTextEdit, &SieveTextEdit::insertPlainText);
+    connect(mSieveTemplateWidget, &SieveTemplateWidget::insertTemplate, mTextEdit, &SieveTextEdit::insertPlainText);
 
     //
     QShortcut *shortcut = new QShortcut(this);
@@ -269,6 +269,11 @@ bool SieveEditorTextModeWidget::isRedoAvailable() const
     return mTextEdit->document()->isRedoAvailable();
 }
 
+bool SieveEditorTextModeWidget::hasSelection() const
+{
+    return mTextEdit->textCursor().hasSelection();
+}
+
 void SieveEditorTextModeWidget::slotFind()
 {
     if (mTextEdit->textCursor().hasSelection()) {
@@ -323,6 +328,7 @@ void SieveEditorTextModeWidget::setSieveCapabilities(const QStringList &capabili
 {
     mSieveCapabilities = capabilities;
     mTextEdit->setSieveCapabilities(mSieveCapabilities);
+    mSieveTemplateWidget->setSieveCapabilities(mSieveCapabilities);
     mSieveInfo->setServerInfo(capabilities);
 }
 

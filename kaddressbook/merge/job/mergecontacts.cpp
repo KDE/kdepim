@@ -248,6 +248,10 @@ MergeContacts::ConflictInformations MergeContacts::requiresManualSelectionOfInfo
             checkCustomValue(address, QLatin1String( "X-Office" ), newContact, result, Office);
             // Test ManagersName
             checkCustomValue(address, QLatin1String( "X-ManagersName" ), newContact, result, ManagerName);
+            // Test AssistantsName
+            checkCustomValue(address, QLatin1String( "X-AssistantsName" ), newContact, result, Assistant);
+            // Test SpousesName
+            checkCustomValue(address, QLatin1String( "X-SpousesName" ), newContact, result, PartnerName);
         }
     }
     qDebug() << " result " << result;

@@ -40,7 +40,12 @@ SieveTemplateListWidget::SieveTemplateListWidget(const QString &configName, QWid
     mTemplateManager = new PimCommon::TemplateManager(QLatin1String("sieve/scripts"), this);
 }
 
-QMimeData *SieveTemplateListWidget::mimeData(const QList<QListWidgetItem *> items) const
+void SieveTemplateListWidget::setSieveCapabilities(const QStringList &capabilities)
+{
+    mCapabilities = capabilities;
+}
+
+QMimeData *SieveTemplateListWidget::mimeData ( const QList<QListWidgetItem *> items ) const
 {
     if (items.isEmpty()) {
         return 0;
@@ -67,6 +72,7 @@ QList<PimCommon::defaultTemplate> SieveTemplateListWidget::defaultTemplates()
 bool SieveTemplateListWidget::addNewTemplate(QString &templateName, QString &templateScript)
 {
     QPointer<SieveTemplateEditDialog> dlg = new SieveTemplateEditDialog(this);
+    dlg->setSieveCapabilities(mCapabilities);
     bool result = false;
     if (dlg->exec()) {
         templateName = dlg->templateName();
@@ -82,6 +88,7 @@ bool SieveTemplateListWidget::modifyTemplate(QString &templateName, QString &tem
     QPointer<SieveTemplateEditDialog> dlg = new SieveTemplateEditDialog(this, defaultTemplate);
     dlg->setTemplateName(templateName);
     dlg->setScript(templateScript);
+    dlg->setSieveCapabilities(mCapabilities);
     bool result = false;
     if (dlg->exec()) {
         if (!defaultTemplate) {
@@ -109,6 +116,11 @@ SieveTemplateWidget::SieveTemplateWidget(const QString &title, QWidget *parent)
 
 SieveTemplateWidget::~SieveTemplateWidget()
 {
+}
+
+void SieveTemplateWidget::setSieveCapabilities(const QStringList &capabilities)
+{
+    mListTemplate->setSieveCapabilities(capabilities);
 }
 
 }

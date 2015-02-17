@@ -209,6 +209,14 @@ bool SieveEditorWidget::isRedoAvailable() const
     return false;
 }
 
+bool SieveEditorWidget::hasSelection() const
+{
+    if (mMode == TextMode) {
+        return mTextModeWidget->hasSelection();
+    }
+    return false;
+}
+
 SieveEditorWidget::EditorMode SieveEditorWidget::mode() const
 {
     return mMode;

@@ -65,10 +65,16 @@ private Q_SLOTS:
     void checkNeedManualSelectionWithManagerName();
     void checkNeedManualSelectionWithManagerName_data();
 
+    void checkNeedManualSelectionWithAssistantName_data();
+    void checkNeedManualSelectionWithAssistantName();
+
     void shouldMergeNotes_data();
     void shouldMergeNotes();
     void shouldMergeEmails_data();
     void shouldMergeEmails();
+
+    void checkNeedManualSelectionWithPartnersName();
+    void checkNeedManualSelectionWithPartnersName_data();
 };
 
 #endif // MERGECONTACTTEST_H

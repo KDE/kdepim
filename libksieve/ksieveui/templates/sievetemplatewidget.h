@@ -37,10 +37,11 @@ public:
     QList<PimCommon::defaultTemplate> defaultTemplates() Q_DECL_OVERRIDE;
     bool addNewTemplate(QString &templateName, QString &templateScript) Q_DECL_OVERRIDE;
     bool modifyTemplate(QString &templateName, QString &templateScript, bool defaultTemplate) Q_DECL_OVERRIDE;
-
+    void setSieveCapabilities(const QStringList &capabilities);
 protected:
     QMimeData *mimeData(const QList<QListWidgetItem *> items) const;
 private:
+    QStringList mCapabilities;
     PimCommon::TemplateManager *mTemplateManager;
 };
 
@@ -51,6 +52,7 @@ public:
     explicit SieveTemplateWidget(const QString &title, QWidget *parent = Q_NULLPTR);
     ~SieveTemplateWidget();
 
+    void setSieveCapabilities(const QStringList &capabilities);
 Q_SIGNALS:
     void insertTemplate(const QString &);
 

@@ -201,14 +201,6 @@ public Q_SLOTS:
     void slotChangeInsertMode();
     void insertPlainTextImplementation();
 Q_SIGNALS:
-
-    /**
-     * Emitted whenever the foucs is lost or gained
-     *
-     * @param focusGained true if the focus was gained, false when it was lost
-     */
-    void focusChanged(bool focusGained);
-
     /**
      * Emitted when the user uses the up arrow in the first line. The application
      * should then put the focus on the widget above the text edit.

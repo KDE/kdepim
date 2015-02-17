@@ -39,6 +39,7 @@ class SieveTextEdit;
 class SieveEditorWarning;
 class SieveEditorParsingMissingFeatureWarning;
 class SieveEditorTabWidget;
+class SieveTemplateWidget;
 class SieveEditorTextModeWidget : public SieveEditorAbstractWidget
 {
     Q_OBJECT
@@ -77,6 +78,7 @@ public:
 
     bool isUndoAvailable() const;
     bool isRedoAvailable() const;
+    bool hasSelection() const;
 
 Q_SIGNALS:
     void enableButtonOk(bool);
@@ -110,6 +112,7 @@ private:
     SieveEditorTabWidget *mTabWidget;
     PimCommon::TextGoToLineWidget *mGoToLine;
     PimCommon::SlideContainer *mSliderContainer;
+    SieveTemplateWidget *mSieveTemplateWidget;
 };
 
 }

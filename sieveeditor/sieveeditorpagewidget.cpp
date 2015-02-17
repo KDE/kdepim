@@ -186,6 +186,11 @@ bool SieveEditorPageWidget::isRedoAvailable() const
     return mSieveEditorWidget->isRedoAvailable();
 }
 
+bool SieveEditorPageWidget::hasSelection() const
+{
+    return mSieveEditorWidget->hasSelection();
+}
+
 void SieveEditorPageWidget::redo()
 {
     mSieveEditorWidget->redo();

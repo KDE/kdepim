@@ -150,6 +150,11 @@ QString SieveTemplateEditDialog::script() const
     return mTextEdit->toPlainText();
 }
 
+void SieveTemplateEditDialog::setSieveCapabilities(const QStringList &capabilities)
+{
+    mTextEdit->setSieveCapabilities(capabilities);
+}
+
 void SieveTemplateEditDialog::setTemplateName(const QString &name)
 {
     mTemplateNameEdit->setText(name);
