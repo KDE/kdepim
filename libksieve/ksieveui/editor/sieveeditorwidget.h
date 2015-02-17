@@ -90,6 +90,7 @@ Q_SIGNALS:
     void redoAvailable(bool);
     void copyAvailable(bool);
 private:
+    void changeSwitchButtonText();
     void changeMode(EditorMode mode);
     void addMessageEntry(const QString &errorMsg, const QColor &color);
     QString mOriginalScript;

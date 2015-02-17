@@ -68,7 +68,7 @@ SieveEditorWidget::SieveEditorWidget(QWidget *parent)
     connect(mAutoGenerateScript, SIGNAL(triggered(bool)), SLOT(slotAutoGenerateScripts()));
     bar->addAction(mAutoGenerateScript);
     //KF5 add i18n
-    mSwitchMode = new QAction(QLatin1String("Simple Mode"), this);
+    mSwitchMode = new QAction(this);
     bar->addAction(mSwitchMode);
     connect(mSwitchMode, SIGNAL(triggered(bool)), SLOT(slotSwitchMode()));
 #if !defined(NDEBUG)
@@ -120,6 +120,8 @@ SieveEditorWidget::SieveEditorWidget(QWidget *parent)
     connect(mTextModeWidget, SIGNAL(switchToGraphicalMode()), SLOT(slotSwitchToGraphicalMode()));
     if (KSieveUi::EditorSettings::useGraphicEditorByDefault()) {
         changeMode(GraphicMode);
+    } else {
+        changeSwitchButtonText();
     }
 }
 
@@ -268,9 +270,14 @@ void SieveEditorWidget::changeMode(EditorMode mode)
         else
             mCheckSyntax->setEnabled(!mTextModeWidget->currentscript().isEmpty());
         Q_EMIT modeEditorChanged(mode);
-        //KF5 add i18n
-        mSwitchMode->setText(isTextMode ?  QLatin1String("Simple Mode") : QLatin1String("Advanced Mode"));
+        changeSwitchButtonText();
     }
+}
+
+void SieveEditorWidget::changeSwitchButtonText()
+{
+    //KF5 add i18n
+    mSwitchMode->setText((mMode == TextMode) ?  QLatin1String("Simple Mode") : QLatin1String("Advanced Mode"));
 }
 
 void SieveEditorWidget::slotEnableButtonOk(bool b)
