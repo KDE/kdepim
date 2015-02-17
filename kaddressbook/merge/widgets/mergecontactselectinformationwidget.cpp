@@ -167,20 +167,27 @@ void MergeContactSelectInformationWidget::createContact(KABC::Addressee &addr)
                 addr.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-Office" ), newValue );
                 break;
             }
-            case MergeContacts::ManagerName:{
+            case MergeContacts::ManagerName: {
                 const QString newValue = mAddressList.at(selectedContactIndex).custom(QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-ManagersName" ));
                 addr.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-ManagersName" ), newValue );
                 break;
             }
-            case MergeContacts::Assistant:
+            case MergeContacts::Assistant: {
+                const QString newValue = mAddressList.at(selectedContactIndex).custom(QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-AssistantsName" ));
+                addr.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-AssistantsName" ), newValue );
+                break;
+            }
                 break;
             case MergeContacts::FreeBusy:
                 break;
             case MergeContacts::FamilyName:
                 addr.setFamilyName(mAddressList.at(selectedContactIndex).familyName());
                 break;
-            case MergeContacts::PartnerName:
+            case MergeContacts::PartnerName: {
+                const QString newValue = mAddressList.at(selectedContactIndex).custom(QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-SpousesName" ));
+                addr.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-SpousesName" ), newValue );
                 break;
+            }
             }
             //TODO
         }

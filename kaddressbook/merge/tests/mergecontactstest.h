@@ -76,6 +76,9 @@ private Q_SLOTS:
 
     void checkNeedManualSelectionWithPartnersName();
     void checkNeedManualSelectionWithPartnersName_data();
+
+    void checkNeedManualSelectionWithAnniversary_data();
+    void checkNeedManualSelectionWithAnniversary();
 };
 
 #endif // MERGECONTACTSTEST_H
