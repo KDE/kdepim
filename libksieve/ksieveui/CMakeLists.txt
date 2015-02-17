@@ -21,6 +21,7 @@ include_directories(${CMAKE_SOURCE_DIR}/libksieve
 add_subdirectory(tests)
 add_subdirectory(editor/tests)
 add_subdirectory(managescriptsjob/tests)
+add_subdirectory(editor/autotests)
 set(ksieveui_vacation_LIB_SRCS
   vacation/vacation.cpp
   vacation/vacationdialog.cpp
@@ -52,6 +53,7 @@ set(ksieveui_editor_LIB_SRCS
   editor/sieveeditorutil.cpp
   editor/sieveeditorloadprogressindicator.cpp
   editor/sieveeditorwebview.cpp
+  editor/sieveeditormenubar.cpp
 )
 
 set(ksieveui_autocreatescripts_LIB_SRCS
