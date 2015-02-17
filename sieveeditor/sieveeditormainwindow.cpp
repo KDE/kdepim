@@ -245,21 +245,21 @@ void SieveEditorMainWindow::slotUpdateActions()
 
 void SieveEditorMainWindow::slotUndoAvailable(bool b)
 {
-    const bool hasPage = (mMainWidget->sieveEditorMainWidget()->tabWidget()->count()>0);
+    const bool hasPage = (mMainWidget->sieveEditorMainWidget()->tabWidget()->count() > 0);
     const bool editActionEnabled = (hasPage && mMainWidget->sieveEditorMainWidget()->pageMode() == KSieveUi::SieveEditorWidget::TextMode);
     mUndoAction->setEnabled(editActionEnabled && b);
 }
 
 void SieveEditorMainWindow::slotRedoAvailable(bool b)
 {
-    const bool hasPage = (mMainWidget->sieveEditorMainWidget()->tabWidget()->count()>0);
+    const bool hasPage = (mMainWidget->sieveEditorMainWidget()->tabWidget()->count() > 0);
     const bool editActionEnabled = (hasPage && mMainWidget->sieveEditorMainWidget()->pageMode() == KSieveUi::SieveEditorWidget::TextMode);
     mRedoAction->setEnabled(editActionEnabled && b);
 }
 
 void SieveEditorMainWindow::slotCopyAvailable(bool b)
 {
-    const bool hasPage = (mMainWidget->sieveEditorMainWidget()->tabWidget()->count()>0);
+    const bool hasPage = (mMainWidget->sieveEditorMainWidget()->tabWidget()->count() > 0);
     const bool editActionEnabled = (hasPage && mMainWidget->sieveEditorMainWidget()->pageMode() == KSieveUi::SieveEditorWidget::TextMode);
     mCopyAction->setEnabled(editActionEnabled && b);
 }

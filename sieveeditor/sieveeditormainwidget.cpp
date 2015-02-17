@@ -282,7 +282,7 @@ void SieveEditorMainWidget::slotReplace()
     }
 }
 
-void SieveEditorMainWidget::slotScriptModified(bool modified,SieveEditorPageWidget *page)
+void SieveEditorMainWidget::slotScriptModified(bool modified, SieveEditorPageWidget *page)
 {
     const int index = mTabWidget->indexOf(page);
     if (index >= 0) {

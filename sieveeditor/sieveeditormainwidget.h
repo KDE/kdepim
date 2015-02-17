@@ -67,7 +67,6 @@ Q_SIGNALS:
     void redoAvailable(bool);
     void copyAvailable(bool);
 
-
 private Q_SLOTS:
     void slotCreateScriptPage(const QUrl &url, const QStringList &capabilities, bool isNewScript);
     void slotScriptDeleted(const QUrl &url);
