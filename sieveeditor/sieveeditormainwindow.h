@@ -51,6 +51,7 @@ private slots:
     void slotUpdateActions();
     void slotUndoAvailable(bool);
     void slotRedoAvailable(bool);
+    void slotCopyAvailable(bool b);
 
 private:
     void initStatusBar();
@@ -68,6 +69,9 @@ private:
     KAction *mReplaceAction;
     KAction *mUndoAction;
     KAction *mRedoAction;
+    KAction *mCopyAction;
+    KAction *mPasteAction;
+    KAction *mCutAction;
 
     QLabel *mStatusBarInfo;
     bool mNetworkIsDown;

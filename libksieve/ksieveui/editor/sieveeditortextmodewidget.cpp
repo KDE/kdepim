@@ -143,6 +143,7 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     connect( mTextEdit, SIGNAL(textChanged()), SLOT(slotTextChanged()) );
     connect( mTextEdit, SIGNAL(undoAvailable(bool)), SIGNAL(undoAvailable(bool)));
     connect( mTextEdit, SIGNAL(redoAvailable(bool)), SIGNAL(redoAvailable(bool)));
+    connect( mTextEdit, SIGNAL(copyAvailable(bool)), SIGNAL(copyAvailable(bool)));
     readConfig();
 
     mTextEdit->setFocus();
@@ -245,6 +246,22 @@ void SieveEditorTextModeWidget::redo()
 {
     mTextEdit->redo();
 }
+
+void SieveEditorTextModeWidget::paste()
+{
+    mTextEdit->paste();
+}
+
+void SieveEditorTextModeWidget::cut()
+{
+    mTextEdit->cut();
+}
+
+void SieveEditorTextModeWidget::copy()
+{
+    mTextEdit->copy();
+}
+
 
 bool SieveEditorTextModeWidget::isUndoAvailable() const
 {

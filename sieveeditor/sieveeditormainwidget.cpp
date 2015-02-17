@@ -98,6 +98,7 @@ void SieveEditorMainWidget::slotCreateScriptPage(const KUrl &url, const QStringL
         connect(editor, SIGNAL(modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode)), SIGNAL(modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode)));
         connect(editor, SIGNAL(undoAvailable(bool)), SIGNAL(undoAvailable(bool)));
         connect(editor, SIGNAL(redoAvailable(bool)), SIGNAL(redoAvailable(bool)));
+        connect(editor, SIGNAL(copyAvailable(bool)), SIGNAL(copyAvailable(bool)));
         editor->setIsNewScript(isNewScript);
         editor->loadScript(url, capabilities);
         mTabWidget->addTab(editor, url.fileName());
@@ -189,6 +190,39 @@ bool SieveEditorMainWidget::isRedoAvailable() const
         }
     }
     return false;
+}
+
+void SieveEditorMainWidget::slotCopy()
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            page->copy();
+        }
+    }
+}
+
+void SieveEditorMainWidget::slotPaste()
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            page->paste();
+        }
+    }
+}
+
+void SieveEditorMainWidget::slotCut()
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            page->cut();
+        }
+    }
 }
 
 void SieveEditorMainWidget::slotUndo()
