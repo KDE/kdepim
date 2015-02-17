@@ -149,8 +149,10 @@ void SieveEditorMainWindow::setupActions()
     ac->setDefaultShortcut(mGoToLine, QKeySequence(Qt::CTRL + Qt::Key_G));
     mGoToLine->setEnabled(false);
 
-    KStandardAction::find(mMainWidget->sieveEditorMainWidget(), SLOT(slotFind()), ac);
-    KStandardAction::replace(mMainWidget->sieveEditorMainWidget(), SLOT(slotReplace()), ac);
+    mFindAction = KStandardAction::find(mMainWidget->sieveEditorMainWidget(), SLOT(slotFind()), ac);
+    mReplaceAction = KStandardAction::replace(mMainWidget->sieveEditorMainWidget(), SLOT(slotReplace()), ac);
+    mUndoAction = KStandardAction::undo(mMainWidget->sieveEditorMainWidget(), SLOT(slotUndo()), ac);
+    mRedoAction = KStandardAction::redo(mMainWidget->sieveEditorMainWidget(), SLOT(slotRedo()), ac);
 }
 
 void SieveEditorMainWindow::slotRefreshList()
@@ -220,8 +222,14 @@ void SieveEditorMainWindow::slotUpdateActions()
 {
     const bool hasPage = (mMainWidget->sieveEditorMainWidget()->tabWidget()->count() > 0);
     mSaveScript->setEnabled(hasPage);
-    mGoToLine->setEnabled(hasPage && mMainWidget->sieveEditorMainWidget()->pageMode() == KSieveUi::SieveEditorWidget::TextMode);
-    mSaveScript->setEnabled(hasPage && mNetworkConfigurationManager->isOnline());
-    mRefreshList->setEnabled(mNetworkConfigurationManager->isOnline());
+    const bool editActionEnabled = (hasPage && mMainWidget->sieveEditorMainWidget()->pageMode() == KSieveUi::SieveEditorWidget::TextMode);
+    mGoToLine->setEnabled(editActionEnabled);
+    mFindAction->setEnabled(editActionEnabled);
+    mReplaceAction->setEnabled(editActionEnabled);
+    mUndoAction->setEnabled(editActionEnabled /*&& mMainWidget->sieveEditorMainWidget()->isUndoAvailable()*/);
+    mRedoAction->setEnabled(editActionEnabled /*&& mMainWidget->sieveEditorMainWidget()->isRedoAvailable()*/);
+
+    mSaveScript->setEnabled(hasPage && !mNetworkIsDown);
+    mRefreshList->setEnabled(!mNetworkIsDown);
 }
 

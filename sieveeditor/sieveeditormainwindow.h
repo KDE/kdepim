@@ -63,8 +63,13 @@ private:
     QAction *mRefreshList;
     QAction *mSaveScript;
     QAction *mGoToLine;
+    QAction *mFindAction;
+    QAction *mReplaceAction;
+    QAction *mUndoAction;
+    QAction *mRedoAction;
     QLabel *mStatusBarInfo;
     QNetworkConfigurationManager *mNetworkConfigurationManager;
+    bool mNetworkIsDown;
 };
 
 #endif // SIEVEEDITORMAINWINDOW_H

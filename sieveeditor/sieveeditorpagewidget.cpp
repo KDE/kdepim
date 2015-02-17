@@ -168,6 +168,26 @@ void SieveEditorPageWidget::goToLine()
     mSieveEditorWidget->goToLine();
 }
 
+void SieveEditorPageWidget::undo()
+{
+    mSieveEditorWidget->undo();
+}
+
+bool SieveEditorPageWidget::isUndoAvailable() const
+{
+    return mSieveEditorWidget->isUndoAvailable();
+}
+
+bool SieveEditorPageWidget::isRedoAvailable() const
+{
+    return mSieveEditorWidget->isRedoAvailable();
+}
+
+void SieveEditorPageWidget::redo()
+{
+    mSieveEditorWidget->redo();
+}
+
 void SieveEditorPageWidget::find()
 {
     mSieveEditorWidget->find();

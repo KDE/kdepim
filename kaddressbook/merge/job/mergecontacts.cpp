@@ -37,7 +37,7 @@ void MergeContacts::setItems(const Akonadi::Item::List &items)
 KContacts::Addressee MergeContacts::mergedContact(bool excludeConflictPart)
 {
     KContacts::Addressee newContact;
-    if (mListItem.count() == 1) {
+    if (mListItem.count() <= 1) {
         return newContact;
     }
     bool firstAddress = true;
@@ -90,6 +90,8 @@ void MergeContacts::mergeToContact(KContacts::Addressee &newContact, const KCont
         newContact.setCategories(newContactsCategories);
     }
 
+    // Merge Address
+
     // Merge Phone
 
     // Merge blog
@@ -108,7 +110,7 @@ void MergeContacts::mergeToContact(KContacts::Addressee &newContact, const KCont
 #endif
 }
 
-MergeContacts::ConflictInformations MergeContacts::needManualSelectInformations()
+MergeContacts::ConflictInformations MergeContacts::requiresManualSelectionOfInformation()
 {
     MergeContacts::ConflictInformations result = None;
     if (mListItem.count() < 2) {

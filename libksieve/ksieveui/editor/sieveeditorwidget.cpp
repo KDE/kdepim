@@ -132,6 +132,20 @@ bool SieveEditorWidget::isModified() const
     return mModified;
 }
 
+void SieveEditorWidget::undo()
+{
+    if (mMode == TextMode) {
+        mTextModeWidget->undo();
+    }
+}
+
+void SieveEditorWidget::redo()
+{
+    if (mMode == TextMode) {
+        mTextModeWidget->redo();
+    }
+}
+
 void SieveEditorWidget::goToLine()
 {
     if (mMode == TextMode) {
@@ -151,6 +165,22 @@ void SieveEditorWidget::replace()
     if (mMode == TextMode) {
         mTextModeWidget->replace();
     }
+}
+
+bool SieveEditorWidget::isUndoAvailable() const
+{
+    if (mMode == TextMode) {
+        return mTextModeWidget->isUndoAvailable();
+    }
+    return false;
+}
+
+bool SieveEditorWidget::isRedoAvailable() const
+{
+    if (mMode == TextMode) {
+        return mTextModeWidget->isRedoAvailable();
+    }
+    return false;
 }
 
 SieveEditorWidget::EditorMode SieveEditorWidget::mode() const

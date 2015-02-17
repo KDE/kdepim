@@ -59,7 +59,7 @@ public:
 
     KContacts::Addressee mergedContact(bool excludeConflictPart = false);
 
-    MergeContacts::ConflictInformations needManualSelectInformations();
+    MergeContacts::ConflictInformations requiresManualSelectionOfInformation();
 
     void setItems(const Akonadi::Item::List &items);
 private:

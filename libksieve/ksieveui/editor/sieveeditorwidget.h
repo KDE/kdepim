@@ -63,6 +63,10 @@ public:
 
     void find();
     void replace();
+    void undo();
+    void redo();
+    bool isRedoAvailable() const;
+    bool isUndoAvailable() const;
 private Q_SLOTS:
     void slotEnableButtonOk(bool b);
     void slotAutoGenerateScripts();

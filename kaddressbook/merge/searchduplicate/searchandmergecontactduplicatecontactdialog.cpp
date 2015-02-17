@@ -137,7 +137,6 @@ void SearchAndMergeContactDuplicateContactDialog::slotMergeDone()
 
 void SearchAndMergeContactDuplicateContactDialog::slotCustomizeMergeContacts(const QList<MergeConflictResult> &lst, const Akonadi::Collection &col)
 {
-    //TODO add infos
-    mSelectInformation->setNeedSelectInformationWidgets(lst, col);
+    mSelectInformation->setRequiresSelectInformationWidgets(lst, col);
     mStackedWidget->setCurrentWidget(mSelectInformation);
 }

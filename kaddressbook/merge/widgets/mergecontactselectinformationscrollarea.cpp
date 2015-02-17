@@ -81,6 +81,14 @@ void MergeContactSelectInformationScrollArea::setContacts(MergeContacts::Conflic
 
 void MergeContactSelectInformationScrollArea::slotMergeContacts()
 {
+    if (mCollection.isValid()) {
+        qDebug()<<" Invalid colletion";
+        return;
+    }
+    if (mListItem.isEmpty()) {
+        qDebug()<<" item list is empty";
+        return;
+    }
     MergeContacts contact(mListItem);
     KContacts::Addressee addr = contact.mergedContact(true);
     mSelectInformationWidget->createContact(addr);
@@ -91,6 +99,8 @@ void MergeContactSelectInformationScrollArea::slotMergeContacts()
         job->setListItem(mListItem);
         connect(job, &MergeContactsJob::finished, this, &MergeContactSelectInformationScrollArea::slotMergeDone);
         job->start();
+    } else {
+        qDebug()<<" Address is empty";
     }
 }
 

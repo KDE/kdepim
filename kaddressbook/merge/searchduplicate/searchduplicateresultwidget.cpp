@@ -105,7 +105,7 @@ void SearchDuplicateResultWidget::slotMergeContact()
         mResultConflictList.clear();
         Q_FOREACH (const Akonadi::Item::List &lst, mListContactToMerge) {
             mergeContacts.setItems(lst);
-            const MergeContacts::ConflictInformations conflicts = mergeContacts.needManualSelectInformations();
+            const MergeContacts::ConflictInformations conflicts = mergeContacts.requiresManualSelectionOfInformation();
             if (conflicts != MergeContacts::None) {
                 conflictFound = true;
             }

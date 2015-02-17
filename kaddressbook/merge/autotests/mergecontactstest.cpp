@@ -49,7 +49,7 @@ void MergeContactsTest::shouldReturnDefaultAddressWhenOneItem()
 void MergeContactsTest::noNeedManualSelectionCheckWhenEmptyList()
 {
     MergeContacts contacts;
-    const MergeContacts::ConflictInformations result = contacts.needManualSelectInformations();
+    const MergeContacts::ConflictInformations result = contacts.requiresManualSelectionOfInformation();
     QCOMPARE(result, MergeContacts::None);
 }
 
@@ -62,7 +62,7 @@ void MergeContactsTest::noNeedManualSelectionCheckWhenOneItem()
     item.setPayload<KContacts::Addressee>(address);
     lst << item;
     MergeContacts contacts(lst);
-    const MergeContacts::ConflictInformations result = contacts.needManualSelectInformations();
+    const MergeContacts::ConflictInformations result = contacts.requiresManualSelectionOfInformation();
     QCOMPARE(result, MergeContacts::None);
 }
 
@@ -109,7 +109,7 @@ void MergeContactsTest::checkNeedManualSelectionWithName()
     lst << itemC;
 
     MergeContacts contacts(lst);
-    const MergeContacts::ConflictInformations result = contacts.needManualSelectInformations();
+    const MergeContacts::ConflictInformations result = contacts.requiresManualSelectionOfInformation();
     const bool bResult = (result == MergeContacts::Name);
     QCOMPARE(bResult, needManualCheck);
 }
@@ -157,7 +157,7 @@ void MergeContactsTest::checkNeedManualSelectionWithNickName()
     lst << itemC;
 
     MergeContacts contacts(lst);
-    const MergeContacts::ConflictInformations result = contacts.needManualSelectInformations();
+    const MergeContacts::ConflictInformations result = contacts.requiresManualSelectionOfInformation();
     const bool bResult = (result == MergeContacts::NickName);
     QCOMPARE(bResult, needManualCheck);
 }
@@ -205,7 +205,7 @@ void MergeContactsTest::checkNeedManualSelectionWithOrganization()
     lst << itemC;
 
     MergeContacts contacts(lst);
-    const MergeContacts::ConflictInformations result = contacts.needManualSelectInformations();
+    const MergeContacts::ConflictInformations result = contacts.requiresManualSelectionOfInformation();
     const bool bResult = (result == MergeContacts::Organization);
     QCOMPARE(bResult, needManualCheck);
 }
@@ -253,7 +253,7 @@ void MergeContactsTest::checkNeedManualSelectionWithTitle()
     lst << itemC;
 
     MergeContacts contacts(lst);
-    const MergeContacts::ConflictInformations result = contacts.needManualSelectInformations();
+    const MergeContacts::ConflictInformations result = contacts.requiresManualSelectionOfInformation();
     const bool bResult = (result == MergeContacts::Title);
     QCOMPARE(bResult, needManualCheck);
 }
@@ -301,7 +301,7 @@ void MergeContactsTest::checkNeedManualSelectionWithFamilyName()
     lst << itemC;
 
     MergeContacts contacts(lst);
-    const MergeContacts::ConflictInformations result = contacts.needManualSelectInformations();
+    const MergeContacts::ConflictInformations result = contacts.requiresManualSelectionOfInformation();
     const bool bResult = (result == MergeContacts::FamilyName);
     QCOMPARE(bResult, needManualCheck);
 }
@@ -349,7 +349,7 @@ void MergeContactsTest::checkNeedManualSelectionWithDepartement()
     lst << itemC;
 
     MergeContacts contacts(lst);
-    const MergeContacts::ConflictInformations result = contacts.needManualSelectInformations();
+    const MergeContacts::ConflictInformations result = contacts.requiresManualSelectionOfInformation();
     const bool bResult = (result == MergeContacts::Departement);
     QCOMPARE(bResult, needManualCheck);
 }
@@ -397,7 +397,7 @@ void MergeContactsTest::checkNeedManualSelectionWithHomePage()
     lst << itemC;
 
     MergeContacts contacts(lst);
-    const MergeContacts::ConflictInformations result = contacts.needManualSelectInformations();
+    const MergeContacts::ConflictInformations result = contacts.requiresManualSelectionOfInformation();
     const bool bResult = (result == MergeContacts::HomePage);
     QCOMPARE(bResult, needManualCheck);
 }

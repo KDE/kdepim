@@ -47,6 +47,9 @@ public:
     QTabWidget *tabWidget() const;
 
     KSieveUi::SieveEditorWidget::EditorMode pageMode() const;
+    bool isUndoAvailable() const;
+    bool isRedoAvailable() const;
+
 public Q_SLOTS:
     void slotGoToLine();
 
@@ -65,6 +68,8 @@ private Q_SLOTS:
     void slotGeneralPaletteChanged();
     void slotTabCloseRequested(int index);
     void slotTabRemoveAllExclude(int index);
+    void slotUndo();
+    void slotRedo();
 private:
     QWidget *hasExistingPage(const QUrl &url);
     QColor mModifiedScriptColor;
