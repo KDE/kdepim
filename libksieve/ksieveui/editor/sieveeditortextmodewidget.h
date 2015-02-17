@@ -69,7 +69,11 @@ public:
     void replace();
     void find();
     void undo();
-    void redo();
+    void redo();    
+    void paste();
+    void cut();
+    void copy();
+
 
     bool isUndoAvailable() const;
     bool isRedoAvailable() const;
@@ -78,6 +82,9 @@ Q_SIGNALS:
     void enableButtonOk(bool);
     void switchToGraphicalMode();
     void valueChanged();
+    void undoAvailable(bool);
+    void redoAvailable(bool);
+    void copyAvailable(bool);
 
 private Q_SLOTS:
     void slotTextChanged();

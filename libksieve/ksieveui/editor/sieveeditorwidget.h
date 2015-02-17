@@ -67,6 +67,9 @@ public:
     void redo();
     bool isRedoAvailable() const;
     bool isUndoAvailable() const;
+    void paste();
+    void copy();
+    void cut();
 private Q_SLOTS:
     void slotEnableButtonOk(bool b);
     void slotAutoGenerateScripts();
@@ -84,8 +87,11 @@ Q_SIGNALS:
     void enableButtonOk(bool b);
     void valueChanged(bool b);
     void modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode);
-
+    void undoAvailable(bool);
+    void redoAvailable(bool);
+    void copyAvailable(bool);
 private:
+    void changeSwitchButtonText();
     void changeMode(EditorMode mode);
     void addMessageEntry(const QString &errorMsg, const QColor &color);
     QString mOriginalScript;

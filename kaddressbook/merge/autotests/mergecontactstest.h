@@ -53,6 +53,18 @@ private Q_SLOTS:
     void checkNeedManualSelectionWithFamilyName_data();
     void checkNeedManualSelectionWithFamilyName();
 
+    void checkNeedManualSelectionWithBlog_data();
+    void checkNeedManualSelectionWithBlog();
+
+    void checkNeedManualSelectionWithProfession_data();
+    void checkNeedManualSelectionWithProfession();
+
+    void checkNeedManualSelectionWithOffice_data();
+    void checkNeedManualSelectionWithOffice();
+
+    void checkNeedManualSelectionWithManagerName();
+    void checkNeedManualSelectionWithManagerName_data();
+
     void shouldMergeNotes_data();
     void shouldMergeNotes();
     void shouldMergeEmails_data();

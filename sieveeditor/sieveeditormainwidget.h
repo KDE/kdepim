@@ -55,11 +55,18 @@ public Q_SLOTS:
 
     void slotReplace();
     void slotFind();
+    void slotCopy();
+    void slotPaste();
+    void slotCut();
 Q_SIGNALS:
     void updateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);
     void updateScriptList();
     void modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode);
     void serverSieveFound(bool);
+    void undoAvailable(bool);
+    void redoAvailable(bool);
+    void copyAvailable(bool);
+
 
 private Q_SLOTS:
     void slotCreateScriptPage(const QUrl &url, const QStringList &capabilities, bool isNewScript);

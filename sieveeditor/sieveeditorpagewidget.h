@@ -55,10 +55,17 @@ public:
     void undo();
     bool isUndoAvailable() const;
     bool isRedoAvailable() const;
+    void paste();
+    void cut();
+    void copy();
+
 Q_SIGNALS:
     void refreshList();
     void scriptModified(bool, SieveEditorPageWidget *);
     void modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode);
+    void undoAvailable(bool);
+    void redoAvailable(bool);
+    void copyAvailable(bool);
 
 private Q_SLOTS:
     void slotGetResult(KManageSieve::SieveJob *, bool success, const QString &script, bool isActive);

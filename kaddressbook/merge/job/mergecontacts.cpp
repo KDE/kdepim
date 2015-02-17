@@ -240,8 +240,31 @@ MergeContacts::ConflictInformations MergeContacts::requiresManualSelectionOfInfo
                     newContact.setFamilyName(address.familyName());
                 }
             }
+            // Test Blog
+            checkCustomValue(address, QLatin1String( "BlogFeed" ), newContact, result, Blog);
+            // Test profession
+            checkCustomValue(address, QLatin1String( "X-Profession" ), newContact, result, Profession);
+            // Test profession
+            checkCustomValue(address, QLatin1String( "X-Office" ), newContact, result, Office);
+            // Test ManagersName
+            checkCustomValue(address, QLatin1String( "X-ManagersName" ), newContact, result, ManagerName);
         }
     }
     qDebug() << " result " << result;
     return result;
+}
+
+void MergeContacts::checkCustomValue(const KContacts::Addressee &address, const QString &variable, KContacts::Addressee &newContact, MergeContacts::ConflictInformations &result, MergeContacts::ConflictInformation conflict)
+{
+    const QString value = address.custom( QLatin1String( "KADDRESSBOOK" ), variable);
+    if (!value.isEmpty()) {
+        const QString newValue = newContact.custom( QLatin1String( "KADDRESSBOOK" ), variable);
+        if (!newValue.isEmpty()) {
+            if (newValue != value) {
+                result |= conflict;
+            }
+        } else {
+            newContact.insertCustom(QLatin1String( "KADDRESSBOOK" ), variable, value);
+        }
+    }
 }

@@ -50,6 +50,9 @@ private Q_SLOTS:
     void slotSaveScript();
     void slotUpdateActions();
     void slotSystemNetworkOnlineStateChanged(bool state);
+    void slotUndoAvailable(bool);
+    void slotRedoAvailable(bool);
+    void slotCopyAvailable(bool b);
 
 private:
     void initStatusBar();
@@ -67,6 +70,10 @@ private:
     QAction *mReplaceAction;
     QAction *mUndoAction;
     QAction *mRedoAction;
+    QAction *mCopyAction;
+    QAction *mPasteAction;
+    QAction *mCutAction;
+
     QLabel *mStatusBarInfo;
     QNetworkConfigurationManager *mNetworkConfigurationManager;
     bool mNetworkIsDown;

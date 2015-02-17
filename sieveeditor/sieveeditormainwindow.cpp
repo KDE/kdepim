@@ -59,6 +59,9 @@ SieveEditorMainWindow::SieveEditorMainWindow()
     connect(mMainWidget->sieveEditorMainWidget()->tabWidget(), &QTabWidget::currentChanged, this, &SieveEditorMainWindow::slotUpdateActions);
     connect(mMainWidget->sieveEditorMainWidget(), &SieveEditorMainWidget::modeEditorChanged, this, &SieveEditorMainWindow::slotUpdateActions);
     slotSystemNetworkOnlineStateChanged(mNetworkConfigurationManager->isOnline());
+    connect(mMainWidget->sieveEditorMainWidget(), SIGNAL(undoAvailable(bool)), SLOT(slotUndoAvailable(bool)));
+    connect(mMainWidget->sieveEditorMainWidget(), SIGNAL(redoAvailable(bool)), SLOT(slotRedoAvailable(bool)));
+    connect(mMainWidget->sieveEditorMainWidget(), SIGNAL(copyAvailable(bool)), SLOT(slotCopyAvailable(bool)));
     slotRefreshList();
 }
 
@@ -153,6 +156,9 @@ void SieveEditorMainWindow::setupActions()
     mReplaceAction = KStandardAction::replace(mMainWidget->sieveEditorMainWidget(), SLOT(slotReplace()), ac);
     mUndoAction = KStandardAction::undo(mMainWidget->sieveEditorMainWidget(), SLOT(slotUndo()), ac);
     mRedoAction = KStandardAction::redo(mMainWidget->sieveEditorMainWidget(), SLOT(slotRedo()), ac);
+    mCopyAction = KStandardAction::copy(mMainWidget->sieveEditorMainWidget(), SLOT(slotCopy()), ac);
+    mPasteAction = KStandardAction::paste(mMainWidget->sieveEditorMainWidget(), SLOT(slotPaste()), ac);
+    mCutAction = KStandardAction::cut(mMainWidget->sieveEditorMainWidget(), SLOT(slotCut()), ac);
 }
 
 void SieveEditorMainWindow::slotRefreshList()
@@ -226,10 +232,34 @@ void SieveEditorMainWindow::slotUpdateActions()
     mGoToLine->setEnabled(editActionEnabled);
     mFindAction->setEnabled(editActionEnabled);
     mReplaceAction->setEnabled(editActionEnabled);
-    mUndoAction->setEnabled(editActionEnabled /*&& mMainWidget->sieveEditorMainWidget()->isUndoAvailable()*/);
-    mRedoAction->setEnabled(editActionEnabled /*&& mMainWidget->sieveEditorMainWidget()->isRedoAvailable()*/);
+    mUndoAction->setEnabled(editActionEnabled && mMainWidget->sieveEditorMainWidget()->isUndoAvailable());
+    mRedoAction->setEnabled(editActionEnabled && mMainWidget->sieveEditorMainWidget()->isRedoAvailable());
+
+    mCopyAction->setEnabled(editActionEnabled);
+    mPasteAction->setEnabled(editActionEnabled); //FIXME
+    mCutAction->setEnabled(editActionEnabled);
 
     mSaveScript->setEnabled(hasPage && !mNetworkIsDown);
     mRefreshList->setEnabled(!mNetworkIsDown);
 }
 
+void SieveEditorMainWindow::slotUndoAvailable(bool b)
+{
+    const bool hasPage = (mMainWidget->sieveEditorMainWidget()->tabWidget()->count()>0);
+    const bool editActionEnabled = (hasPage && mMainWidget->sieveEditorMainWidget()->pageMode() == KSieveUi::SieveEditorWidget::TextMode);
+    mUndoAction->setEnabled(editActionEnabled && b);
+}
+
+void SieveEditorMainWindow::slotRedoAvailable(bool b)
+{
+    const bool hasPage = (mMainWidget->sieveEditorMainWidget()->tabWidget()->count()>0);
+    const bool editActionEnabled = (hasPage && mMainWidget->sieveEditorMainWidget()->pageMode() == KSieveUi::SieveEditorWidget::TextMode);
+    mRedoAction->setEnabled(editActionEnabled && b);
+}
+
+void SieveEditorMainWindow::slotCopyAvailable(bool b)
+{
+    const bool hasPage = (mMainWidget->sieveEditorMainWidget()->tabWidget()->count()>0);
+    const bool editActionEnabled = (hasPage && mMainWidget->sieveEditorMainWidget()->pageMode() == KSieveUi::SieveEditorWidget::TextMode);
+    mCopyAction->setEnabled(editActionEnabled && b);
+}

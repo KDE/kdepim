@@ -67,7 +67,7 @@ SieveEditorWidget::SieveEditorWidget(QWidget *parent)
     mAutoGenerateScript = new QAction(i18n("Autogenerate Script..."), this);
     connect(mAutoGenerateScript, &QAction::triggered, this, &SieveEditorWidget::slotAutoGenerateScripts);
     bar->addAction(mAutoGenerateScript);
-    mSwitchMode = new QAction(i18n("Simple Mode"), this);
+    mSwitchMode = new QAction(this);
     bar->addAction(mSwitchMode);
     connect(mSwitchMode, &QAction::triggered, this, &SieveEditorWidget::slotSwitchMode);
 #if !defined(NDEBUG)
@@ -112,8 +112,13 @@ SieveEditorWidget::SieveEditorWidget(QWidget *parent)
     connect(mGraphicalModeWidget, &SieveEditorGraphicalModeWidget::enableButtonOk, this, &SieveEditorWidget::slotEnableButtonOk);
     connect(mGraphicalModeWidget, &SieveEditorGraphicalModeWidget::switchTextMode, this, &SieveEditorWidget::slotSwitchTextMode);
     connect(mTextModeWidget, &SieveEditorTextModeWidget::switchToGraphicalMode, this, &SieveEditorWidget::slotSwitchToGraphicalMode);
+    connect(mTextModeWidget, SIGNAL(undoAvailable(bool)), this, SIGNAL(undoAvailable(bool)));
+    connect(mTextModeWidget, SIGNAL(redoAvailable(bool)), this, SIGNAL(redoAvailable(bool)));
+    connect(mTextModeWidget, SIGNAL(copyAvailable(bool)), this, SIGNAL(copyAvailable(bool)));
     if (KSieveUi::EditorSettings::useGraphicEditorByDefault()) {
         changeMode(GraphicMode);
+    } else {
+        changeSwitchButtonText();
     }
 }
 
@@ -150,6 +155,27 @@ void SieveEditorWidget::goToLine()
 {
     if (mMode == TextMode) {
         mTextModeWidget->goToLine();
+    }
+}
+
+void SieveEditorWidget::cut()
+{
+    if (mMode == TextMode) {
+        mTextModeWidget->cut();
+    }
+}
+
+void SieveEditorWidget::paste()
+{
+    if (mMode == TextMode) {
+        mTextModeWidget->paste();
+    }
+}
+
+void SieveEditorWidget::copy()
+{
+    if (mMode == TextMode) {
+        mTextModeWidget->copy();
     }
 }
 
@@ -243,8 +269,13 @@ void SieveEditorWidget::changeMode(EditorMode mode)
             mCheckSyntax->setEnabled(!mTextModeWidget->currentscript().isEmpty());
         }
         Q_EMIT modeEditorChanged(mode);
-        mSwitchMode->setText(isTextMode ?  i18n("Simple Mode") : i18n("Advanced Mode"));
+        changeSwitchButtonText();
     }
+}
+
+void SieveEditorWidget::changeSwitchButtonText()
+{
+    mSwitchMode->setText((mMode == TextMode) ?  i18n("Simple Mode") : i18n("Advanced Mode"));
 }
 
 void SieveEditorWidget::slotEnableButtonOk(bool b)

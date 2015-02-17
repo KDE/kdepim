@@ -137,7 +137,9 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     mMainSplitter->addWidget(mDebugTextEdit);
     mMainSplitter->setChildrenCollapsible(false);
     connect(mTextEdit, &SieveTextEdit::textChanged, this, &SieveEditorTextModeWidget::slotTextChanged);
-
+    connect( mTextEdit, SIGNAL(undoAvailable(bool)), SIGNAL(undoAvailable(bool)));
+    connect( mTextEdit, SIGNAL(redoAvailable(bool)), SIGNAL(redoAvailable(bool)));
+    connect( mTextEdit, SIGNAL(copyAvailable(bool)), SIGNAL(copyAvailable(bool)));
     readConfig();
 
     mTextEdit->setFocus();
@@ -240,6 +242,22 @@ void SieveEditorTextModeWidget::redo()
 {
     mTextEdit->redo();
 }
+
+void SieveEditorTextModeWidget::paste()
+{
+    mTextEdit->paste();
+}
+
+void SieveEditorTextModeWidget::cut()
+{
+    mTextEdit->cut();
+}
+
+void SieveEditorTextModeWidget::copy()
+{
+    mTextEdit->copy();
+}
+
 
 bool SieveEditorTextModeWidget::isUndoAvailable() const
 {
