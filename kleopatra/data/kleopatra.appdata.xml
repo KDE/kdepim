@@ -28,6 +28,7 @@
   <name xml:lang="uk">Kleopatra</name>
   <name xml:lang="x-test">xxKleopatraxx</name>
   <name xml:lang="zh-CN">Kleopatra</name>
+  <name xml:lang="zh-TW">Kleopatra</name>
   <summary>Certificate Manager and Unified Crypto GUI</summary>
   <summary xml:lang="ca">Gestor de certificats i interfície gràfica d'usuari de criptografia unificada</summary>
   <summary xml:lang="cs">Správce certifikátů a rozhraní pro šifrování</summary>
@@ -51,6 +52,7 @@
   <summary xml:lang="uk">Графічний інтерфейс до засобів керування сертифікатами та універсальних можливостей з шифрування.</summary>
   <summary xml:lang="x-test">xxCertificate Manager and Unified Crypto GUIxx</summary>
   <summary xml:lang="zh-CN">证书管理器和统一的密钥操作界面</summary>
+  <summary xml:lang="zh-TW">憑證管理與統一加密介面</summary>
   <description>
     <p>
       Kleopatra is a certificate manager and a universal crypto GUI.
@@ -75,6 +77,7 @@
     <p xml:lang="tr">Kleopatra bir sertifika yöneticisi ve birleşik şifreleme arayüzüdür. X.509 ve OpenPGP sertifikalarını GpgSM anahtar kutusunda yönetmeyi ve LDAP sunucularından sertifika getirmeyi destekler.</p>
     <p xml:lang="uk">Kleopatra — графічний інтерфейс засобів керування сертифікатами та шифрування. У програмі передбачено можливості з керування сертифікатами X.509 та OpenPGP у сховищі ключів GpgSM та отримання сертифікатів з серверів LDAP.</p>
     <p xml:lang="x-test">xxKleopatra is a certificate manager and a universal crypto GUI. It supports managing X.509 and OpenPGP certificates in the GpgSM keybox and retrieving certificates from LDAP servers.xx</p>
+    <p xml:lang="zh-TW">Kleopatra 是一套憑證管理與通用加密介面。它可以管理 GpgSM keybox 裡的 X.509 與 OpenPGP 憑證，並從 LDAP 伺服器取得憑證。</p>
   </description>
   <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?format=guided&amp;product=kleopatra</url>
   <url type="help">http://docs.kde.org/stable/en/kdepim/kleopatra/index.html</url>
