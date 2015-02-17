@@ -18,7 +18,6 @@ set(KDEPIMLIBS_RUN_ISOLATED_TESTS TRUE)
 set(KDEPIMLIBS_RUN_SQLITE_ISOLATED_TESTS TRUE)
 
 add_akonadi_isolated_test_advanced( mergecontactinfowidgettest.cpp "" "kaddressbookprivate")
-add_akonadi_isolated_test_advanced( mergecontactshowresultdialogtest.cpp "" "kaddressbookprivate;kabc")
 add_akonadi_isolated_test_advanced( mergecontactselectinformationdialogtest.cpp "" "kaddressbookprivate")
 add_akonadi_isolated_test_advanced( searchandmergecontactduplicatecontactdialogtest.cpp "" "kaddressbookprivate")
 add_akonadi_isolated_test_advanced( searchduplicateresultwidgettest.cpp "" "kaddressbookprivate;kaddressbookgrantlee;kabc")
