@@ -121,7 +121,18 @@ public:
     // does not hold when clients are added later on
     QMap<int, int> ldapClientToCompletionSourceMap;
     // holds the cached mapping from akonadi collection id to the completion source index
-    QMap<Akonadi::Collection::Id, int> akonadiCollectionToCompletionSourceMap;
+    struct collectionInfo {
+        collectionInfo()
+            : index(-1),
+              enabled(true)
+        {
+
+        }
+        int index;
+        bool enabled;
+    };
+
+    QMap<Akonadi::Collection::Id, collectionInfo> akonadiCollectionToCompletionSourceMap;
     // a list of akonadi items (contacts) that have not had their collection fetched yet
     Akonadi::Item::List akonadiPendingItems;
     Akonadi::Session *akonadiSession;
@@ -592,7 +603,7 @@ void AddresseeLineEdit::Private::startSearches()
 
 void AddresseeLineEdit::Private::akonadiPerformSearch()
 {
-    kDebug() << "searching akonadi with:" << m_searchString;
+    qDebug() << "searching akonadi with:" << m_searchString;
 
     // first, kill all job still in flight, they are no longer current
     Q_FOREACH (QWeakPointer<Akonadi::Job> job, s_static->akonadiJobsInFlight) {
@@ -628,16 +639,18 @@ void AddresseeLineEdit::Private::akonadiPerformSearch()
 
 void AddresseeLineEdit::Private::akonadiHandlePending()
 {
-    kDebug() << "Pending items: " << s_static->akonadiPendingItems.size();
+    qDebug() << "Pending items: " << s_static->akonadiPendingItems.size();
     Akonadi::Item::List::iterator it = s_static->akonadiPendingItems.begin();
     while (it != s_static->akonadiPendingItems.end()) {
         const Akonadi::Item item = *it;
 
-        const int sourceIndex =
-            s_static->akonadiCollectionToCompletionSourceMap.value(item.parentCollection().id(), -1);
-        if (sourceIndex >= 0) {
-            kDebug() << "identified collection: " << s_static->completionSources[sourceIndex];
-            q->addItem(item, 1, sourceIndex);
+        const AddresseeLineEditStatic::collectionInfo sourceIndex =
+                s_static->akonadiCollectionToCompletionSourceMap.value( item.parentCollection().id(), AddresseeLineEditStatic::collectionInfo() );
+        if ( sourceIndex.index >= 0 ) {
+            qDebug() << "identified collection: " << s_static->completionSources[sourceIndex.index];
+            if (sourceIndex.enabled) {
+                q->addItem( item, 1, sourceIndex.index );
+            }
 
             // remove from the pending
             it = s_static->akonadiPendingItems.erase(it);
@@ -882,10 +895,10 @@ void AddresseeLineEdit::Private::slotAkonadiHandleItems(const Akonadi::Item::Lis
     foreach (const Akonadi::Item &item, items) {
 
         // check the local cache of collections
-        const int sourceIndex =
-            s_static->akonadiCollectionToCompletionSourceMap.value(item.parentCollection().id(), -1);
-        if (sourceIndex == -1) {
-            kDebug() << "Fetching New collection: " << item.parentCollection().id();
+        const AddresseeLineEditStatic::collectionInfo sourceIndex =
+                s_static->akonadiCollectionToCompletionSourceMap.value( item.parentCollection().id(), AddresseeLineEditStatic::collectionInfo() );
+        if ( sourceIndex.index == -1 ) {
+            qDebug() << "Fetching New collection: " << item.parentCollection().id();
             // the collection isn't there, start the fetch job.
             Akonadi::CollectionFetchJob *collectionJob =
                 new Akonadi::CollectionFetchJob(item.parentCollection(),
@@ -894,15 +907,18 @@ void AddresseeLineEdit::Private::slotAkonadiHandleItems(const Akonadi::Item::Lis
             connect(collectionJob, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
                     q, SLOT(slotAkonadiCollectionsReceived(Akonadi::Collection::List)));
             /* we don't want to start multiple fetch jobs for the same collection,
-            so insert the collection with an index value of -2 */
-            s_static->akonadiCollectionToCompletionSourceMap.insert(item.parentCollection().id(), -2);
-            s_static->akonadiPendingItems.append(item);
-        } else if (sourceIndex == -2) {
+           so insert the collection with an index value of -2 */
+            AddresseeLineEditStatic::collectionInfo info;
+            info.index = -2;
+            s_static->akonadiCollectionToCompletionSourceMap.insert( item.parentCollection().id(), info );
+            s_static->akonadiPendingItems.append( item );
+        } else if ( sourceIndex.index == -2 ) {
             /* fetch job already started, don't need to start another one,
             so just append the item as pending */
             s_static->akonadiPendingItems.append(item);
         } else {
-            q->addItem(item, 1, sourceIndex);
+            if (sourceIndex.enabled)
+                q->addItem( item, 1, sourceIndex.index );
         }
     }
 
@@ -917,10 +933,10 @@ void AddresseeLineEdit::Private::slotAkonadiHandleItems(const Akonadi::Item::Lis
 void AddresseeLineEdit::Private::slotAkonadiSearchResult(KJob *job)
 {
     if (job->error()) {
-        kWarning() << "Akonadi search job failed: " << job->errorString();
+        qWarning() << "Akonadi search job failed: " << job->errorString();
     } else {
         Akonadi::ItemSearchJob *searchJob = static_cast<Akonadi::ItemSearchJob *>(job);
-        kDebug() << "Found" << searchJob->items().size() << "items";
+        qDebug() << "Found" << searchJob->items().size() << "items";
     }
     const int index = s_static->akonadiJobsInFlight.indexOf(qobject_cast<Akonadi::Job *>(job));
     if (index != -1) {
@@ -936,10 +952,12 @@ void AddresseeLineEdit::Private::slotAkonadiCollectionsReceived(
     foreach (const Akonadi::Collection &collection, collections) {
         if (collection.isValid()) {
             const QString sourceString = collection.displayName();
-            const int weight = group.readEntry(QString::number(collection.id()), 1);
-            const int index = q->addCompletionSource(sourceString, weight);
-            kDebug() << "\treceived: " << sourceString << "index: " << index;
-            s_static->akonadiCollectionToCompletionSourceMap.insert(collection.id(), index);
+            const int weight = group.readEntry( QString::number(collection.id()), 1 );
+            const int index = q->addCompletionSource( sourceString, weight );
+            AddresseeLineEditStatic::collectionInfo info;
+            info.index = index;
+            qDebug() << "\treceived: " << sourceString << "index: " << index;
+            s_static->akonadiCollectionToCompletionSourceMap.insert( collection.id(), info );
         }
     }
 

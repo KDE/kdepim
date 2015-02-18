@@ -78,6 +78,12 @@ private Q_SLOTS:
 
     void checkNeedManualSelectionWithAnniversary_data();
     void checkNeedManualSelectionWithAnniversary();
+
+    void shouldMergeTitle_data();
+    void shouldMergeTitle();
+
+    void shouldMergeDepartement_data();
+    void shouldMergeDepartement();
 };
 
 #endif // MERGECONTACTTEST_H
