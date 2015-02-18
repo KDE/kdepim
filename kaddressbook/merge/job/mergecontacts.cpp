@@ -112,6 +112,27 @@ void MergeContacts::mergeToContact(KABC::Addressee &newContact, const KABC::Addr
     }
 
     if (!excludeConflictPart) {
+        // Merge Name
+        if (newContact.name().isEmpty() && !fromContact.name().isEmpty()) {
+            newContact.setName(fromContact.name());
+        }
+        // Merge organization
+        if (newContact.organization().isEmpty() && !fromContact.organization().isEmpty()) {
+            newContact.setOrganization(fromContact.organization());
+        }
+        // Merge NickName
+        if (newContact.nickName().isEmpty() && !fromContact.nickName().isEmpty()) {
+            newContact.setNickName(fromContact.nickName());
+        }
+        // Merge Title
+        if (newContact.title().isEmpty() && !fromContact.title().isEmpty()) {
+            newContact.setTitle(fromContact.title());
+        }
+        // Merge Departement
+        if (newContact.department().isEmpty() && !fromContact.department().isEmpty()) {
+            newContact.setDepartment(fromContact.department());
+        }
+
         // Merge blog
 
         // Merge HomePage
@@ -273,7 +294,7 @@ MergeContacts::ConflictInformations MergeContacts::requiresManualSelectionOfInfo
             checkCustomValue(address, QLatin1String( "X-Anniversary" ), newContact, result, Anniversary);
         }
     }
-    qDebug()<<" result "<<result;
+    //qDebug()<<" result "<<result;
     return result;
 }
 
