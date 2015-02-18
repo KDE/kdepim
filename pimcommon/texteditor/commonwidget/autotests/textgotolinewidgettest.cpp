@@ -48,7 +48,7 @@ void TextGoToLineWidgetTest::shouldEmitGoToLineSignalWhenPressOnButton()
 {
     PimCommon::TextGoToLineWidget edit;
     QPushButton *gotolinebutton = edit.findChild<QPushButton *>(QStringLiteral("gotoline"));
-    QSignalSpy spy(&edit, SIGNAL(goToLine(int)));
+    QSignalSpy spy(&edit, SIGNAL(moveToLine(int)));
     QTest::mouseClick(gotolinebutton, Qt::LeftButton);
     QCOMPARE(spy.count(), 1);
 }
