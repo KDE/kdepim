@@ -36,7 +36,7 @@ SieveEditorPageWidget::SieveEditorPageWidget(QWidget *parent)
 {
     QVBoxLayout *vbox = new QVBoxLayout;
     setLayout(vbox);
-    mSieveEditorWidget = new KSieveUi::SieveEditorWidget;
+    mSieveEditorWidget = new KSieveUi::SieveEditorWidget(false);
     connect(mSieveEditorWidget, &KSieveUi::SieveEditorWidget::valueChanged, this, &SieveEditorPageWidget::slotValueChanged);
     vbox->addWidget(mSieveEditorWidget);
     connect(mSieveEditorWidget, &KSieveUi::SieveEditorWidget::checkSyntax, this, &SieveEditorPageWidget::slotCheckSyntaxClicked);

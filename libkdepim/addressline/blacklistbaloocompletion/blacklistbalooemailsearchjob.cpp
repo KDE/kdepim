@@ -25,7 +25,8 @@
 using namespace KPIM;
 
 BlackListBalooEmailSearchJob::BlackListBalooEmailSearchJob(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      mLimit(500)
 {
 
 }
@@ -43,7 +44,7 @@ bool BlackListBalooEmailSearchJob::start()
         return false;
     }
 
-    Baloo::PIM::ContactCompleter com(trimmedString, 500);
+    Baloo::PIM::ContactCompleter com(trimmedString, mLimit);
     Q_EMIT emailsFound(com.complete());
     deleteLater();
     return true;
@@ -53,4 +54,13 @@ void BlackListBalooEmailSearchJob::setSearchEmail(const QString &searchEmail)
 {
     mSearchEmail = searchEmail;
 }
+
+void BlackListBalooEmailSearchJob::setLimit(int limit)
+{
+    if (limit < 10) {
+        limit = 10;
+    }
+    mLimit = limit;
+}
+
 

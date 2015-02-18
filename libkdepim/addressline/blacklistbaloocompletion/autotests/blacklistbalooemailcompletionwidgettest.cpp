@@ -42,7 +42,6 @@ void BlackListBalooEmailCompletionWidgetTest::shouldHaveDefaultValue()
     KPIM::BlackListBalooEmailCompletionWidget widget;
     widget.show();
     QTest::qWaitForWindowExposed(&widget);
-
     QLabel *searchLabel = qFindChild<QLabel *>(&widget, QLatin1String("search_label"));
     QVERIFY(searchLabel);
 
@@ -53,6 +52,11 @@ void BlackListBalooEmailCompletionWidgetTest::shouldHaveDefaultValue()
     QVERIFY(searchLineEdit->text().isEmpty());
 
     QPushButton *seachButton = qFindChild<QPushButton *>(&widget, QLatin1String("search_button"));
+
+    QLabel *moreResult = qFindChild<QLabel *>(&widget, QLatin1String("moreresultlabel"));
+    QVERIFY(moreResult);
+    QVERIFY(!moreResult->isVisible());
+
     QVERIFY(seachButton);
     QVERIFY(!seachButton->isEnabled());
 

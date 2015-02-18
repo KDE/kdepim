@@ -25,6 +25,7 @@
 #include "scriptsparsing/parsingutil.h"
 #include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
 #include "autocreatescripts/sievescriptparsingerrordialog.h"
+#include "sieveeditormenubar.h"
 
 #include <kns3/uploaddialog.h>
 #include <KLocalizedString>
@@ -47,7 +48,7 @@
 
 using namespace KSieveUi;
 
-SieveEditorWidget::SieveEditorWidget(QWidget *parent)
+SieveEditorWidget::SieveEditorWidget(bool useMenuBar, QWidget *parent)
     : QWidget(parent),
       mMode(TextMode),
       mModified(false)
@@ -56,26 +57,29 @@ SieveEditorWidget::SieveEditorWidget(QWidget *parent)
 #if !defined(NDEBUG)
     mGenerateXml = 0;
 #endif
-    QToolBar *bar = new QToolBar;
-    bar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+
+    QToolBar *toolbar = new QToolBar;
+    toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+
+
     mCheckSyntax = new QAction(i18n("Check Syntax"), this);
     connect(mCheckSyntax, &QAction::triggered, this, &SieveEditorWidget::slotCheckSyntax);
-    bar->addAction(mCheckSyntax);
-    mSaveAs = bar->addAction(KStandardGuiItem::saveAs().text(), this, SLOT(slotSaveAs()));
-    bar->addAction(i18n("Import..."), this, SLOT(slotImport()));
+    toolbar->addAction(mCheckSyntax);
+    mSaveAs = toolbar->addAction(KStandardGuiItem::saveAs().text(), this, SLOT(slotSaveAs()));
+    toolbar->addAction(i18n("Import..."), this, SLOT(slotImport()));
 
     mAutoGenerateScript = new QAction(i18n("Autogenerate Script..."), this);
     connect(mAutoGenerateScript, &QAction::triggered, this, &SieveEditorWidget::slotAutoGenerateScripts);
-    bar->addAction(mAutoGenerateScript);
+    toolbar->addAction(mAutoGenerateScript);
     mSwitchMode = new QAction(this);
-    bar->addAction(mSwitchMode);
+    toolbar->addAction(mSwitchMode);
     connect(mSwitchMode, &QAction::triggered, this, &SieveEditorWidget::slotSwitchMode);
 #if !defined(NDEBUG)
     if (!qgetenv("KDEPIM_SIEVEEDITOR_DEBUG").isEmpty()) {
         //Not necessary to translate it.
         mGenerateXml = new QAction(QLatin1String("Generate xml"), this);
         connect(mGenerateXml, &QAction::triggered, this, &SieveEditorWidget::slotGenerateXml);
-        bar->addAction(mGenerateXml);
+        toolbar->addAction(mGenerateXml);
     }
 #endif
 
@@ -84,9 +88,34 @@ SieveEditorWidget::SieveEditorWidget(QWidget *parent)
     mUpload = new QAction(QIcon(new KIconEngine(QLatin1String("get-hot-new-stuff"), Q_NULLPTR, overlays)), i18n("Share..."), this);
     connect(mUpload, &QAction::triggered, this, &SieveEditorWidget::slotUploadScripts);
     connect(mUpload, &QAction::triggered, this, &SieveEditorWidget::slotUploadScripts);
-    bar->addAction(mUpload);
+    //Add action to toolBar
 
-    lay->addWidget(bar);
+    toolbar->addAction(mUpload);
+
+
+    SieveEditorMenuBar *menuBar = 0;
+    if (useMenuBar) {
+        menuBar = new SieveEditorMenuBar;
+        connect(menuBar, SIGNAL(copy()), SLOT(copy()));
+        connect(menuBar, SIGNAL(find()), SLOT(find()));
+        connect(menuBar, SIGNAL(replace()), SLOT(replace()));
+        connect(menuBar, SIGNAL(undo()), SLOT(undo()));
+        connect(menuBar, SIGNAL(redo()), SLOT(redo()));
+        connect(menuBar, SIGNAL(paste()), SLOT(paste()));
+        connect(menuBar, SIGNAL(cut()), SLOT(cut()));
+        connect(menuBar, SIGNAL(selectAll()), SLOT(selectAll()));
+        connect(menuBar, SIGNAL(gotoLine()), SLOT(goToLine()));
+        connect(this, SIGNAL(copyAvailable(bool)), menuBar, SLOT(slotCopyAvailable(bool)));
+        connect(this, SIGNAL(redoAvailable(bool)), menuBar, SLOT(slotRedoAvailable(bool)));
+        connect(this, SIGNAL(undoAvailable(bool)), menuBar, SLOT(slotUndoAvailable(bool)));
+        menuBar->fileMenu()->addAction(mSaveAs);
+        menuBar->fileMenu()->addSeparator();
+        menuBar->fileMenu()->addAction(mUpload);
+        menuBar->toolsMenu()->addAction(mAutoGenerateScript);
+        lay->addWidget(menuBar);
+    }
+
+    lay->addWidget(toolbar);
 
     QHBoxLayout *nameLayout = new QHBoxLayout;
     QLabel *label = new QLabel(i18n("Script name:"));

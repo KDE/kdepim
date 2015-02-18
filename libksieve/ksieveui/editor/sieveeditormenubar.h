@@ -20,6 +20,7 @@
 
 #include <QMenuBar>
 class QAction;
+class QMenu;
 namespace KSieveUi {
 class SieveEditorMenuBar : public QMenuBar
 {
@@ -28,7 +29,7 @@ public:
     explicit SieveEditorMenuBar(QWidget *parent = 0);
     ~SieveEditorMenuBar();
 
-    QAction *goToLine() const;
+    QAction *goToLineAction() const;
     QAction *findAction() const;
     QAction *replaceAction() const;
     QAction *undoAction() const;
@@ -38,6 +39,16 @@ public:
     QAction *cutAction() const;
     QAction *selectAllAction() const;
 
+    QMenu *editorMenu() const;
+
+    QMenu *toolsMenu() const;
+
+    QMenu *fileMenu() const;
+
+public slots:
+    void slotUndoAvailable(bool b);
+    void slotRedoAvailable(bool b);
+    void slotCopyAvailable(bool b);
 Q_SIGNALS:
     void gotoLine();
     void find();
@@ -51,6 +62,7 @@ Q_SIGNALS:
 
 private:
     void initActions();
+    void initMenus();
     QAction *mGoToLine;
     QAction *mFindAction;
     QAction *mReplaceAction;
@@ -60,6 +72,9 @@ private:
     QAction *mPasteAction;
     QAction *mCutAction;
     QAction *mSelectAllAction;
+    QMenu *mEditorMenu;
+    QMenu *mToolsMenu;
+    QMenu *mFileMenu;
 };
 }
 

@@ -35,7 +35,7 @@ class KSIEVEUI_EXPORT SieveEditorWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SieveEditorWidget(QWidget *parent = Q_NULLPTR);
+    explicit SieveEditorWidget(bool useMenuBar, QWidget *parent=Q_NULLPTR);
     ~SieveEditorWidget();
     enum EditorMode {
         Unknown = -1,
@@ -58,20 +58,24 @@ public:
 
     void setModified(bool b);
     bool isModified() const;
-    void goToLine();
+
     EditorMode mode() const;
 
+    bool isRedoAvailable() const;
+    bool isUndoAvailable() const;
+    bool hasSelection() const;
+
+public Q_SLOTS:
     void find();
     void replace();
     void undo();
     void redo();
-    bool isRedoAvailable() const;
-    bool isUndoAvailable() const;
     void paste();
     void copy();
     void cut();
-    bool hasSelection() const;
     void selectAll();
+    void goToLine();
+
 private Q_SLOTS:
     void slotEnableButtonOk(bool b);
     void slotAutoGenerateScripts();

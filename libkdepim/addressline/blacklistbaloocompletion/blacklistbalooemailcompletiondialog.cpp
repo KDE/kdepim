@@ -34,7 +34,7 @@ using namespace KPIM;
 BlackListBalooEmailCompletionDialog::BlackListBalooEmailCompletionDialog(QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle(i18n("Blacklist Baloo Completion"));
+    setWindowTitle(i18n("Blacklist Email Completion"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
