@@ -89,16 +89,34 @@ void MergeContacts::mergeToContact(KABC::Addressee &newContact, const KABC::Addr
         newContact.setCategories(newContactsCategories);
     }
 
-    // Merge Address
-
     // Merge Phone
+    const PhoneNumber::List listPhone = fromContact.phoneNumbers();
+    if (!listPhone.isEmpty()) {
+        PhoneNumber::List newContactsPhone = newContact.phoneNumbers();
+        Q_FOREACH(const PhoneNumber &phone, listPhone) {
+            if (!newContactsPhone.contains(phone)) {
+                newContact.insertPhoneNumber(phone);
+            }
+        }
+    }
 
-    // Merge blog
+    // Merge Address
+    const Address::List listAddress = fromContact.addresses();
+    if (!listAddress.isEmpty()) {
+        Address::List newContactsAddress = newContact.addresses();
+        Q_FOREACH(const Address &addr, listAddress) {
+            if (!newContactsAddress.contains(addr)) {
+                newContact.insertAddress(addr);
+            }
+        }
+    }
 
-    // Merge HomePage
-
-    // Merge geo
     if (!excludeConflictPart) {
+        // Merge blog
+
+        // Merge HomePage
+
+        // Merge geo
 
     }
 #if 0

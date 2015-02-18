@@ -177,8 +177,8 @@ void MergeContactSelectInformationWidget::createContact(KABC::Addressee &addr)
                 addr.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-AssistantsName" ), newValue );
                 break;
             }
-                break;
             case MergeContacts::FreeBusy:
+                //TODO
                 break;
             case MergeContacts::FamilyName:
                 addr.setFamilyName(mAddressList.at(selectedContactIndex).familyName());
@@ -189,7 +189,6 @@ void MergeContactSelectInformationWidget::createContact(KABC::Addressee &addr)
                 break;
             }
             }
-            //TODO
         }
     }
 }
