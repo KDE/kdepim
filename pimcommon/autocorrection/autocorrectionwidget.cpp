@@ -27,7 +27,6 @@ using namespace PimCommon::ConfigureImmutableWidgetUtils;
 #include "settings/pimcommonsettings.h"
 #include <kpimtextedit/selectspecialchardialog.h>
 
-#include <KFileDialog>
 #include <KMessageBox>
 #include <KLocalizedString>
 #include <QUrl>
@@ -620,10 +619,10 @@ void AutoCorrectionWidget::loadGlobalAutoCorrectionAndException()
 
 void AutoCorrectionWidget::slotExportAutoCorrection()
 {
-    const QUrl saveUrl = KFileDialog::getSaveUrl(QDir::homePath(), QString(), this, i18n("Export Autocorrection File"));
+    const QString saveUrl = QFileDialog::getSaveFileName(this, i18n("Export Autocorrection File"), QDir::homePath());
     if (saveUrl.isEmpty()) {
         return;
     }
-    mAutoCorrection->writeAutoCorrectionXmlFile(saveUrl.toLocalFile());
+    mAutoCorrection->writeAutoCorrectionXmlFile(saveUrl);
 }
 

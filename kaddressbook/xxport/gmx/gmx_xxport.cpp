@@ -81,7 +81,7 @@
 #include "pimcommon/widgets/renamefiledialog.h"
 
 #include "kaddressbook_debug.h"
-#include <KFileDialog>
+#include <QFileDialog>
 #include <KIO/NetAccess>
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -126,7 +126,7 @@ KContacts::Addressee::List GMXXXPort::importContacts() const
     KContacts::Addressee::List addresseeList;
 
     QString fileName =
-        KFileDialog::getOpenFileName(QDir::homePath(), GMX_FILESELECTION_STRING, Q_NULLPTR);
+        QFileDialog::getOpenFileName(Q_NULLPTR, QString(), QDir::homePath(), GMX_FILESELECTION_STRING );
 
     if (fileName.isEmpty()) {
         return addresseeList;
@@ -343,7 +343,7 @@ KContacts::Addressee::List GMXXXPort::importContacts() const
 
 bool GMXXXPort::exportContacts(const KContacts::AddresseeList &list, VCardExportSelectionWidget::ExportFields) const
 {
-    QUrl url = KFileDialog::getSaveUrl(QUrl::fromLocalFile(QDir::homePath() + QLatin1String("/addressbook.gmx")), GMX_FILESELECTION_STRING);
+    QUrl url = QFileDialog::getSaveFileUrl(parentWidget(), QString(), QUrl::fromLocalFile(QDir::homePath() + QLatin1String("/addressbook.gmx")), GMX_FILESELECTION_STRING);
     if (url.isEmpty()) {
         return true;
     }
