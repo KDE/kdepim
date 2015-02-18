@@ -20,6 +20,7 @@
 
 #include <QMenuBar>
 class KAction;
+class QMenu;
 namespace KSieveUi {
 class SieveEditorMenuBar : public QMenuBar
 {
@@ -28,7 +29,7 @@ public:
     explicit SieveEditorMenuBar(QWidget *parent = 0);
     ~SieveEditorMenuBar();
 
-    KAction *goToLine() const;
+    KAction *goToLineAction() const;
     KAction *findAction() const;
     KAction *replaceAction() const;
     KAction *undoAction() const;
@@ -37,6 +38,10 @@ public:
     KAction *pasteAction() const;
     KAction *cutAction() const;
     KAction *selectAllAction() const;
+
+    QMenu *editorMenu() const;
+
+    QMenu *toolsMenu() const;
 
 Q_SIGNALS:
     void gotoLine();
@@ -51,6 +56,7 @@ Q_SIGNALS:
 
 private:
     void initActions();
+    void initMenus();
     KAction *mGoToLine;
     KAction *mFindAction;
     KAction *mReplaceAction;
@@ -60,6 +66,8 @@ private:
     KAction *mPasteAction;
     KAction *mCutAction;
     KAction *mSelectAllAction;
+    QMenu *mEditorMenu;
+    QMenu *mToolsMenu;
 };
 }
 

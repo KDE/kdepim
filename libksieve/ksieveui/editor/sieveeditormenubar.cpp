@@ -20,12 +20,14 @@
 #include "sieveeditortextmodewidget.h"
 #include <KStandardAction>
 #include <KLocalizedString>
+#include <KAction>
 using namespace KSieveUi;
 
 SieveEditorMenuBar::SieveEditorMenuBar(QWidget *parent)
     : QMenuBar(parent)
 {
-
+    initActions();
+    initMenus();
 }
 
 SieveEditorMenuBar::~SieveEditorMenuBar()
@@ -35,13 +37,11 @@ SieveEditorMenuBar::~SieveEditorMenuBar()
 
 void SieveEditorMenuBar::initActions()
 {
-#if 0
-    mGoToLine = ac->addAction(QLatin1String("gotoline"), mMainWidget->sieveEditorMainWidget(), SLOT(slotGoToLine()));
-    mGoToLine->setText(i18n("Go to Line"));
+    //KF5 add i18n
+    mGoToLine = new KAction(/*i18n*/QLatin1String("Go to Line"),this);
     mGoToLine->setIcon(KIcon(QLatin1String("go-jump")));
-    mGoToLine->setShortcut(QKeySequence( Qt::CTRL + Qt::Key_G ));
-    mGoToLine->setEnabled(false);
-
+    //mGoToLine->setShortcut(QKeySequence( Qt::CTRL + Qt::Key_G ));
+    connect(mGoToLine, SIGNAL(triggered(bool)), SIGNAL(gotoLine()));
     mFindAction = KStandardAction::find(this, SIGNAL(find()), this);
     mReplaceAction = KStandardAction::replace(this, SIGNAL(replace()), this);
     mUndoAction = KStandardAction::undo(this, SIGNAL(undo()), this);
@@ -50,8 +50,37 @@ void SieveEditorMenuBar::initActions()
     mPasteAction = KStandardAction::paste(this, SIGNAL(paste()), this);
     mCutAction = KStandardAction::cut(this, SIGNAL(cut()), this);
     mSelectAllAction = KStandardAction::selectAll(this, SIGNAL(selectAll()), this);
-#endif
 }
+QMenu *SieveEditorMenuBar::editorMenu() const
+{
+    return mEditorMenu;
+}
+
+
+void SieveEditorMenuBar::initMenus()
+{
+    mEditorMenu = addMenu(QLatin1String("Edit"));
+    mToolsMenu = addMenu(QLatin1String("Tools"));
+    mEditorMenu->addAction(mUndoAction);
+    mEditorMenu->addAction(mRedoAction);
+    mEditorMenu->addSeparator();
+    mEditorMenu->addAction(mCutAction);
+    mEditorMenu->addAction(mCopyAction);
+    mEditorMenu->addAction(mPasteAction);
+    mEditorMenu->addSeparator();
+    mEditorMenu->addAction(mSelectAllAction);
+    mEditorMenu->addSeparator();
+    mEditorMenu->addAction(mFindAction);
+    mEditorMenu->addSeparator();
+    mEditorMenu->addAction(mGoToLine);
+}
+
+QMenu *SieveEditorMenuBar::toolsMenu() const
+{
+    return mToolsMenu;
+}
+
+
 KAction *SieveEditorMenuBar::selectAllAction() const
 {
     return mSelectAllAction;
@@ -92,7 +121,7 @@ KAction *SieveEditorMenuBar::findAction() const
     return mFindAction;
 }
 
-KAction *SieveEditorMenuBar::goToLine() const
+KAction *SieveEditorMenuBar::goToLineAction() const
 {
     return mGoToLine;
 }

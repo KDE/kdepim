@@ -16,6 +16,7 @@
 */
 
 #include "sieveeditormenubartest.h"
+#include "../sieveeditormenubar.h"
 #include <qtest_kde.h>
 
 SieveEditorMenuBarTest::SieveEditorMenuBarTest(QObject *parent)
@@ -31,7 +32,18 @@ SieveEditorMenuBarTest::~SieveEditorMenuBarTest()
 
 void SieveEditorMenuBarTest::shouldHaveDefaultValue()
 {
-
+    KSieveUi::SieveEditorMenuBar bar;
+    QVERIFY(bar.goToLineAction());
+    QVERIFY(bar.findAction());
+    QVERIFY(bar.replaceAction());
+    QVERIFY(bar.undoAction());
+    QVERIFY(bar.redoAction());
+    QVERIFY(bar.copyAction());
+    QVERIFY(bar.pasteAction());
+    QVERIFY(bar.cutAction());
+    QVERIFY(bar.selectAllAction());
+    QVERIFY(bar.editorMenu());
+    QVERIFY(bar.toolsMenu());
 }
 
 
