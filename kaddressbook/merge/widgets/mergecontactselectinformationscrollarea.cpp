@@ -19,6 +19,7 @@
 #include "mergecontactselectinformationwidget.h"
 #include "merge/job/mergecontactsjob.h"
 #include "merge/widgets/mergecontactinfowidget.h"
+#include "kaddressbook_debug.h"
 #include <KLocalizedString>
 #include <QVBoxLayout>
 #include <QScrollArea>
@@ -82,11 +83,11 @@ void MergeContactSelectInformationScrollArea::setContacts(MergeContacts::Conflic
 void MergeContactSelectInformationScrollArea::slotMergeContacts()
 {
     if (mCollection.isValid()) {
-        qDebug()<<" Invalid colletion";
+        qCDebug(KADDRESSBOOK_LOG)<<" Invalid colletion";
         return;
     }
     if (mListItem.isEmpty()) {
-        qDebug()<<" item list is empty";
+        qCDebug(KADDRESSBOOK_LOG)<<" item list is empty";
         return;
     }
     MergeContacts contact(mListItem);
@@ -100,7 +101,7 @@ void MergeContactSelectInformationScrollArea::slotMergeContacts()
         connect(job, &MergeContactsJob::finished, this, &MergeContactSelectInformationScrollArea::slotMergeDone);
         job->start();
     } else {
-        qDebug()<<" Address is empty";
+        qCDebug(KADDRESSBOOK_LOG)<<" Address is empty";
     }
 }
 

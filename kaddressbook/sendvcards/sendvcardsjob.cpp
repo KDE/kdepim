@@ -29,6 +29,7 @@
 #include <util/vcardutil.h>
 #include <Akonadi/Contact/ContactGroupExpandJob>
 #include "pimcommon/temporaryfile/attachmenttemporaryfilesdirs.h"
+#include "kaddressbook_debug.h"
 #include <QTemporaryDir>
 #include <KToolInvocation>
 #include <QFile>
@@ -56,7 +57,7 @@ SendVcardsJob::~SendVcardsJob()
 bool SendVcardsJob::start()
 {
     if (mListItem.isEmpty()) {
-        qDebug() << " No Item found";
+        qCDebug(KADDRESSBOOK_LOG) << " No Item found";
         deleteLater();
         return false;
     }
@@ -130,7 +131,7 @@ void SendVcardsJob::createTemporaryFile(const QByteArray &data, const QString &f
 {
     QFile file(mTempDir->path() + QLatin1Char('/') + filename);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        qDebug() << "Can not write vcard filename :" << filename;
+        qCDebug(KADDRESSBOOK_LOG) << "Can not write vcard filename :" << filename;
         return;
     }
 

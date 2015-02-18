@@ -118,7 +118,7 @@ void MergeContactsJob::slotCreateMergedContactFinished(KJob *job)
         Akonadi::ItemDeleteJob *deleteJob = new Akonadi::ItemDeleteJob(mListItem, this);
         connect(deleteJob, &Akonadi::ItemDeleteJob::result, this, &MergeContactsJob::slotDeleteContactsFinished);
     } else {
-        qDebug() << " mListITem is empty. We can't delete it";
+        qCDebug(KADDRESSBOOK_LOG) << " mListITem is empty. We can't delete it";
     }
 }
 
