@@ -43,6 +43,10 @@ public:
 
     QMenu *toolsMenu() const;
 
+public slots:
+    void slotUndoAvailable(bool b);
+    void slotRedoAvailable(bool b);
+    void slotCopyAvailable(bool b);
 Q_SIGNALS:
     void gotoLine();
     void find();

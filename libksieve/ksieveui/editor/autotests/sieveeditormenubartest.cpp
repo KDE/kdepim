@@ -44,6 +44,8 @@ void SieveEditorMenuBarTest::shouldHaveDefaultValue()
     QVERIFY(bar.selectAllAction());
     QVERIFY(bar.editorMenu());
     QVERIFY(bar.toolsMenu());
+    QCOMPARE(bar.actions().count(), 2);
+    QCOMPARE(bar.editorMenu()->actions().count(), 12);
 }
 
 

@@ -56,7 +56,6 @@ QMenu *SieveEditorMenuBar::editorMenu() const
     return mEditorMenu;
 }
 
-
 void SieveEditorMenuBar::initMenus()
 {
     mEditorMenu = addMenu(QLatin1String("Edit"));
@@ -79,7 +78,6 @@ QMenu *SieveEditorMenuBar::toolsMenu() const
 {
     return mToolsMenu;
 }
-
 
 KAction *SieveEditorMenuBar::selectAllAction() const
 {
@@ -124,5 +122,21 @@ KAction *SieveEditorMenuBar::findAction() const
 KAction *SieveEditorMenuBar::goToLineAction() const
 {
     return mGoToLine;
+}
+
+void SieveEditorMenuBar::slotUndoAvailable(bool b)
+{
+    mUndoAction->setEnabled(b);
+}
+
+void SieveEditorMenuBar::slotRedoAvailable(bool b)
+{
+    mRedoAction->setEnabled(b);
+}
+
+void SieveEditorMenuBar::slotCopyAvailable(bool b)
+{
+    mCutAction->setEnabled(b);
+    mCopyAction->setEnabled(b);
 }
 
