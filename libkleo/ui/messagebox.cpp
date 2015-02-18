@@ -42,11 +42,7 @@
 
 #include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
 
-#ifndef KDEPIM_ONLY_KLEO
-# include <kfiledialog.h>
-#else
-# include <QFileDialog>
-#endif
+#include <QFileDialog>
 
 #include <QPushButton>
 #include <qdialog.h>
@@ -144,12 +140,7 @@ void AuditLogViewer::setAuditLog(const QString &log)
 #ifndef QT_NO_FILEDIALOG
 void AuditLogViewer::slotUser1()
 {
-#ifndef KDEPIM_ONLY_KLEO
-    const QString fileName = KFileDialog::getSaveFileName(QString(), QString(),
-                             this, i18n("Choose File to Save GnuPG Audit Log to"));
-#else
     const QString fileName = QFileDialog::getSaveFileName(this, i18n("Choose File to Save GnuPG Audit Log to"));
-#endif
     if (fileName.isEmpty()) {
         return;
     }

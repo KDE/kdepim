@@ -32,7 +32,7 @@
 #include "calendarsupport/utils.h"
 
 #include <ItemFetchJob>
-#include <KFileDialog>
+#include <QFileDialog>
 #include <KLocalizedString>
 #include <KMessageBox>
 
@@ -222,8 +222,7 @@ bool AttachmentHandler::view(const QString &attachmentName,
 bool AttachmentHandler::saveAs(const Attachment::Ptr &attachment)
 {
     // get the saveas file name
-    QString saveAsFile = KFileDialog::getSaveFileName(attachment->label(), QString(), d->mParent,
-                         i18n("Save Attachment"));
+    QString saveAsFile = QFileDialog::getSaveFileName(d->mParent, i18n("Save Attachment"), attachment->label());
     if (saveAsFile.isEmpty() ||
             (QFile(saveAsFile).exists() &&
              (KMessageBox::warningYesNo(

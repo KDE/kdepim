@@ -16,7 +16,7 @@
 */
 
 #include <KLocalizedString>
-#include <kfiledialog.h>
+#include <qfiledialog.h>
 #include <QTemporaryFile>
 #include "mailimporter_debug.h"
 #include <KFilterDev>
@@ -41,7 +41,7 @@ FilterMailmanGzip::~FilterMailmanGzip()
 
 void FilterMailmanGzip::import()
 {
-    const QStringList filenames = KFileDialog::getOpenFileNames(QDir::homePath(), "*.txt.gz|" + i18n("gzip Files (*.txt.gz)"), filterInfo()->parent());
+    const QStringList filenames = QFileDialog::getOpenFileNames(filterInfo()->parent(), QString(), QDir::homePath(), "*.txt.gz|" + i18n("gzip Files (*.txt.gz)"));
     if (filenames.isEmpty()) {
         filterInfo()->alert(i18n("No files selected."));
         return;

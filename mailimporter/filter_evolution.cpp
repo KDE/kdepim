@@ -20,7 +20,7 @@
 #include "filter_evolution.h"
 
 #include <KLocalizedString>
-#include <kfiledialog.h>
+#include <qfiledialog.h>
 #include <QTemporaryFile>
 
 using namespace MailImporter;
@@ -55,7 +55,7 @@ void FilterEvolution::import()
     if (!d.exists()) {
         evolDir = QDir::homePath();
     }
-    importMails(KFileDialog::getExistingDirectory(evolDir, filterInfo()->parent()));
+    importMails(QFileDialog::getExistingDirectory(filterInfo()->parent(), QString(), evolDir ));
 }
 
 void FilterEvolution::importMails(const QString &maildir)

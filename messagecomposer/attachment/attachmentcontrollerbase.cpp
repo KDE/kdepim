@@ -46,7 +46,6 @@
 #include <KActionCollection>
 #include "messagecomposer_debug.h"
 #include <KEncodingFileDialog>
-#include <KFileDialog>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KMimeTypeTrader>
@@ -786,9 +785,7 @@ void AttachmentControllerBase::saveAttachmentAs(AttachmentPart::Ptr part)
         pname = i18n("unnamed");
     }
 
-    QUrl url = KFileDialog::getSaveUrl(pname,
-                                       QString(/*filter*/), d->wParent,
-                                       i18n("Save Attachment As"));
+    QUrl url = QFileDialog::getSaveFileUrl(d->wParent,pname, i18n("Save Attachment As"));
 
     if (url.isEmpty()) {
         qCDebug(MESSAGECOMPOSER_LOG) << "Save Attachment As dialog canceled.";

@@ -54,7 +54,6 @@
 #include <KActionMenu>
 #include <kascii.h>
 #include <KCharsets>
-#include <KFileDialog>
 #include <KGuiItem>
 #include <QWebView>
 #include <QWebPage>
