@@ -22,6 +22,7 @@ add_subdirectory(tests)
 add_subdirectory(editor/tests)
 if (BUILD_TESTING)
    add_subdirectory(managescriptsjob/autotests)
+   add_subdirectory(editor/autotests)
 endif()
 set(ksieveui_vacation_LIB_SRCS
   vacation/vacation.cpp
@@ -54,6 +55,7 @@ set(ksieveui_editor_LIB_SRCS
   editor/sieveeditorutil.cpp
   editor/sieveeditorloadprogressindicator.cpp
   editor/sieveeditorwebview.cpp
+  editor/sieveeditormenubar.cpp
 )
 
 set(ksieveui_autocreatescripts_LIB_SRCS

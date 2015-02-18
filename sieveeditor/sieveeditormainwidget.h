@@ -77,6 +77,7 @@ private Q_SLOTS:
     void slotTabRemoveAllExclude(int index);
     void slotUndo();
     void slotRedo();
+    void slotSelectAll();
 private:
     QWidget *hasExistingPage(const QUrl &url);
     QColor mModifiedScriptColor;

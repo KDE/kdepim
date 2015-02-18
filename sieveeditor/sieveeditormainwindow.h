@@ -73,6 +73,7 @@ private:
     QAction *mCopyAction;
     QAction *mPasteAction;
     QAction *mCutAction;
+    QAction *mSelectAllAction;
 
     QLabel *mStatusBarInfo;
     QNetworkConfigurationManager *mNetworkConfigurationManager;

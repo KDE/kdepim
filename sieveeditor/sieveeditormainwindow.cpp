@@ -159,6 +159,7 @@ void SieveEditorMainWindow::setupActions()
     mCopyAction = KStandardAction::copy(mMainWidget->sieveEditorMainWidget(), SLOT(slotCopy()), ac);
     mPasteAction = KStandardAction::paste(mMainWidget->sieveEditorMainWidget(), SLOT(slotPaste()), ac);
     mCutAction = KStandardAction::cut(mMainWidget->sieveEditorMainWidget(), SLOT(slotCut()), ac);
+    mSelectAllAction = KStandardAction::selectAll(mMainWidget->sieveEditorMainWidget(), SLOT(slotSelectAll()), ac);
 }
 
 void SieveEditorMainWindow::slotRefreshList()
@@ -238,6 +239,8 @@ void SieveEditorMainWindow::slotUpdateActions()
     mCopyAction->setEnabled(editActionEnabled && mMainWidget->sieveEditorMainWidget()->hasSelection() );
     mPasteAction->setEnabled(editActionEnabled);
     mCutAction->setEnabled(editActionEnabled && mMainWidget->sieveEditorMainWidget()->hasSelection());
+
+    mSelectAllAction->setEnabled(editActionEnabled);
 
     mSaveScript->setEnabled(hasPage && !mNetworkIsDown);
     mRefreshList->setEnabled(!mNetworkIsDown);

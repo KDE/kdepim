@@ -258,6 +258,10 @@ void SieveEditorTextModeWidget::copy()
     mTextEdit->copy();
 }
 
+void SieveEditorTextModeWidget::selectAll()
+{
+    mTextEdit->selectAll();
+}
 
 bool SieveEditorTextModeWidget::isUndoAvailable() const
 {

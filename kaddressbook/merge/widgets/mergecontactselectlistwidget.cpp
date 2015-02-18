@@ -131,17 +131,23 @@ void MergeContactSelectListWidget::fillList(const KContacts::Addressee::List &ls
         case MergeContacts::None:
             break;
         case MergeContacts::Birthday:
+            //FIXME
             break;
         case MergeContacts::Geo: {
             mSelectListWidget->addItem(addr.geo().toString());
             break;
         }
         case MergeContacts::Photo:
+            //FIXME
             break;
         case MergeContacts::Logo:
+            //FIXME
             break;
-        case MergeContacts::Anniversary:
+        case MergeContacts::Anniversary: {
+            const QString newBlog = addr.custom(QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-Anniversary" ));
+            mSelectListWidget->addItem(newBlog);
             break;
+        }
         case MergeContacts::Name:
             mSelectListWidget->addItem(addr.name());
             break;
@@ -180,15 +186,22 @@ void MergeContactSelectListWidget::fillList(const KContacts::Addressee::List &ls
             mSelectListWidget->addItem(newBlog);
             break;
         }
-        case MergeContacts::Assistant:
+        case MergeContacts::Assistant: {
+            const QString newBlog = addr.custom(QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-AssistantsName" ));
+            mSelectListWidget->addItem(newBlog);
             break;
+        }
         case MergeContacts::FreeBusy:
+            //FIXME
             break;
         case MergeContacts::FamilyName:
             mSelectListWidget->addItem(addr.familyName());
             break;
-        case MergeContacts::PartnerName:
+        case MergeContacts::PartnerName: {
+            const QString newBlog = addr.custom(QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-SpousesName" ));
+            mSelectListWidget->addItem(newBlog);
             break;
+        }
         }
     }
 }

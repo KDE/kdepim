@@ -119,8 +119,8 @@ MergeContacts::ConflictInformations MergeContacts::requiresManualSelectionOfInfo
     KContacts::Addressee newContact;
     Q_FOREACH (const Akonadi::Item &item, mListItem) {
         if (item.hasPayload<KContacts::Addressee>()) {
-            //Test anniversary
             const KContacts::Addressee address = item.payload<KContacts::Addressee>();
+            //Test Birthday
             if (address.birthday().isValid()) {
                 if (newContact.birthday().isValid()) {
                     if (newContact.birthday() != address.birthday()) {
@@ -130,6 +130,7 @@ MergeContacts::ConflictInformations MergeContacts::requiresManualSelectionOfInfo
                     newContact.setBirthday(address.birthday());
                 }
             }
+
             //Test Geo
             const KContacts::Geo geo = address.geo();
             if (geo.isValid()) {
@@ -251,7 +252,9 @@ MergeContacts::ConflictInformations MergeContacts::requiresManualSelectionOfInfo
             // Test AssistantsName
             checkCustomValue(address, QLatin1String( "X-AssistantsName" ), newContact, result, Assistant);
             // Test SpousesName
-            checkCustomValue(address, QLatin1String( "X-SpousesName" ), newContact, result, PartnerName);
+            checkCustomValue(address, QLatin1String( "X-SpousesName" ), newContact, result, PartnerName);            
+            //Test Anniversary
+            checkCustomValue(address, QLatin1String( "X-Anniversary" ), newContact, result, Anniversary);
         }
     }
     qDebug() << " result " << result;

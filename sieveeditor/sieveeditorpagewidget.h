@@ -60,6 +60,7 @@ public:
     void copy();
     bool hasSelection() const;
 
+    void selectAll();
 Q_SIGNALS:
     void refreshList();
     void scriptModified(bool, SieveEditorPageWidget *);

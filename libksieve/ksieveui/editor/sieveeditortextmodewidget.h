@@ -80,6 +80,7 @@ public:
     bool isRedoAvailable() const;
     bool hasSelection() const;
 
+    void selectAll();
 Q_SIGNALS:
     void enableButtonOk(bool);
     void switchToGraphicalMode();

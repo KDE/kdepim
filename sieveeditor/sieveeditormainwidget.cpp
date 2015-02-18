@@ -206,6 +206,18 @@ bool SieveEditorMainWidget::hasSelection() const
     return false;
 }
 
+void SieveEditorMainWidget::slotSelectAll()
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            page->selectAll();
+        }
+    }
+}
+
+
 void SieveEditorMainWidget::slotCopy()
 {
     QWidget *w = mTabWidget->currentWidget();
