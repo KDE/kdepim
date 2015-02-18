@@ -43,6 +43,8 @@ public:
 
     QMenu *toolsMenu() const;
 
+    QMenu *fileMenu() const;
+
 public slots:
     void slotUndoAvailable(bool b);
     void slotRedoAvailable(bool b);
@@ -72,6 +74,7 @@ private:
     KAction *mSelectAllAction;
     QMenu *mEditorMenu;
     QMenu *mToolsMenu;
+    QMenu *mFileMenu;
 };
 }
 

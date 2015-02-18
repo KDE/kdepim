@@ -50,7 +50,12 @@ void SieveEditorMenuBar::initActions()
     mPasteAction = KStandardAction::paste(this, SIGNAL(paste()), this);
     mCutAction = KStandardAction::cut(this, SIGNAL(cut()), this);
     mSelectAllAction = KStandardAction::selectAll(this, SIGNAL(selectAll()), this);
+    mUndoAction->setEnabled(false);
+    mRedoAction->setEnabled(false);
+    mCopyAction->setEnabled(false);
+    mCutAction->setEnabled(false);
 }
+
 QMenu *SieveEditorMenuBar::editorMenu() const
 {
     return mEditorMenu;
@@ -58,6 +63,8 @@ QMenu *SieveEditorMenuBar::editorMenu() const
 
 void SieveEditorMenuBar::initMenus()
 {
+    //Add i18n
+    mFileMenu = addMenu(QLatin1String("File"));
     mEditorMenu = addMenu(QLatin1String("Edit"));
     mToolsMenu = addMenu(QLatin1String("Tools"));
     mEditorMenu->addAction(mUndoAction);
@@ -70,9 +77,15 @@ void SieveEditorMenuBar::initMenus()
     mEditorMenu->addAction(mSelectAllAction);
     mEditorMenu->addSeparator();
     mEditorMenu->addAction(mFindAction);
+    mEditorMenu->addAction(mReplaceAction);
     mEditorMenu->addSeparator();
     mEditorMenu->addAction(mGoToLine);
 }
+QMenu *SieveEditorMenuBar::fileMenu() const
+{
+    return mFileMenu;
+}
+
 
 QMenu *SieveEditorMenuBar::toolsMenu() const
 {

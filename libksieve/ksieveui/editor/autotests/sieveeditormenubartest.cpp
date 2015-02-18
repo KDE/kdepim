@@ -18,6 +18,7 @@
 #include "sieveeditormenubartest.h"
 #include "../sieveeditormenubar.h"
 #include <qtest_kde.h>
+#include <KAction>
 
 SieveEditorMenuBarTest::SieveEditorMenuBarTest(QObject *parent)
     : QObject(parent)
@@ -44,8 +45,20 @@ void SieveEditorMenuBarTest::shouldHaveDefaultValue()
     QVERIFY(bar.selectAllAction());
     QVERIFY(bar.editorMenu());
     QVERIFY(bar.toolsMenu());
-    QCOMPARE(bar.actions().count(), 2);
-    QCOMPARE(bar.editorMenu()->actions().count(), 12);
+    QVERIFY(bar.fileMenu());
+    QCOMPARE(bar.actions().count(), 3);
+    QCOMPARE(bar.editorMenu()->actions().count(), 13);
+    QCOMPARE(bar.fileMenu()->actions().count(), 0);
+    QCOMPARE(bar.toolsMenu()->actions().count(), 0);
+
+    QVERIFY(bar.findAction()->isEnabled());
+    QVERIFY(bar.replaceAction()->isEnabled());
+    QVERIFY(!bar.undoAction()->isEnabled());
+    QVERIFY(!bar.redoAction()->isEnabled());
+    QVERIFY(!bar.copyAction()->isEnabled());
+    QVERIFY(bar.pasteAction()->isEnabled());
+    QVERIFY(!bar.cutAction()->isEnabled());
+    QVERIFY(bar.selectAllAction()->isEnabled());
 }
 
 
