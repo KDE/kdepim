@@ -110,7 +110,7 @@ Akonadi::Item::List JournalView::selectedIncidences() const
 
 void JournalView::clearEntries()
 {
-    //kDebug(5850) << "JournalView::clearEntries()";
+    //qDebug() << "JournalView::clearEntries()";
     QMap<QDate, JournalDateView *>::Iterator it;
     for (it = mEntries.begin(); it != mEntries.end(); ++it) {
         delete it.value();

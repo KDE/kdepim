@@ -26,7 +26,7 @@ class SieveEditorMenuBar : public QMenuBar
 {
     Q_OBJECT
 public:
-    explicit SieveEditorMenuBar(QWidget *parent = 0);
+    explicit SieveEditorMenuBar(QWidget *parent = Q_NULLPTR);
     ~SieveEditorMenuBar();
 
     QAction *goToLineAction() const;

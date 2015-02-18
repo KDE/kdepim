@@ -63,4 +63,3 @@ void BlackListBalooEmailSearchJob::setLimit(int limit)
     mLimit = limit;
 }
 
-

@@ -217,7 +217,6 @@ void SieveEditorMainWidget::slotSelectAll()
     }
 }
 
-
 void SieveEditorMainWidget::slotCopy()
 {
     QWidget *w = mTabWidget->currentWidget();

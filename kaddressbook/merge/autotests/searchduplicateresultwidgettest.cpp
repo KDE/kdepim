@@ -101,7 +101,7 @@ void SearchDuplicateResultWidgetTest::shouldHaveMergeButtonEnabled()
     tree->setContacts(itemLst);
     QVERIFY(tree->topLevelItemCount() > 0);
 
-    KPushButton *pushButton = qFindChild<KPushButton *>(&w, QLatin1String("merge_contact_button"));
+    QPushButton *pushButton = qFindChild<QPushButton *>(&w, QLatin1String("merge_contact_button"));
     QVERIFY(pushButton);
     QVERIFY(!pushButton->isEnabled());
 

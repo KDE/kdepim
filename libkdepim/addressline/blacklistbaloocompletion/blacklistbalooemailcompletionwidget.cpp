@@ -78,14 +78,13 @@ BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget
     connect(mUnselectButton, &QAbstractButton::clicked, this, &BlackListBalooEmailCompletionWidget::slotUnselectEmails);
     selectElementLayout->addWidget(mUnselectButton);
 
-
     //Add i18n in kf5
-    mMoreResult = new QLabel(QLatin1String( "<qt><a href=\"more_result\">More result...</a></qt>"), this );
+    mMoreResult = new QLabel(QLatin1String("<qt><a href=\"more_result\">More result...</a></qt>"), this);
     mMoreResult->setObjectName(QLatin1String("moreresultlabel"));
     selectElementLayout->addWidget(mMoreResult);
 
     mMoreResult->setContextMenuPolicy(Qt::NoContextMenu);
-    connect( mMoreResult, SIGNAL(linkActivated(QString)), SLOT(slotLinkClicked(QString)) );
+    connect(mMoreResult, SIGNAL(linkActivated(QString)), SLOT(slotLinkClicked(QString)));
     mMoreResult->setVisible(false);
     selectElementLayout->addStretch(1);
 
@@ -197,7 +196,7 @@ void BlackListBalooEmailCompletionWidget::save()
 
 void BlackListBalooEmailCompletionWidget::slotLinkClicked(const QString &link)
 {
-    if ( link == QLatin1String( "more_result" ) ) {
+    if (link == QLatin1String("more_result")) {
         mLimit += 200;
         slotSearch();
     }

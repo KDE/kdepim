@@ -29,7 +29,7 @@ class KADDRESSBOOK_EXPORT MergeContactSelectInformationTabWidget : public QTabWi
 {
     Q_OBJECT
 public:
-    explicit MergeContactSelectInformationTabWidget(QWidget *parent = 0);
+    explicit MergeContactSelectInformationTabWidget(QWidget *parent = Q_NULLPTR);
     ~MergeContactSelectInformationTabWidget();
 
     void updateTabWidget();

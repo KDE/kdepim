@@ -372,29 +372,29 @@ void MergeContactsTest::checkNeedManualSelectionWithProfession_data()
 
 void MergeContactsTest::checkNeedManualSelectionWithProfession()
 {
-    QFETCH( QString, nameItemA );
-    QFETCH( QString, nameItemB );
-    QFETCH( QString, nameItemC );
-    QFETCH( bool, needManualCheck );
+    QFETCH(QString, nameItemA);
+    QFETCH(QString, nameItemB);
+    QFETCH(QString, nameItemC);
+    QFETCH(bool, needManualCheck);
 
     Akonadi::Item::List lst;
     Addressee addressA;
     Akonadi::Item itemA;
-    addressA.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String( "X-Profession" ), nameItemA);
-    itemA.setPayload<KContacts::Addressee>( addressA );
-    lst<<itemA;
+    addressA.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("X-Profession"), nameItemA);
+    itemA.setPayload<KContacts::Addressee>(addressA);
+    lst << itemA;
 
     Addressee addressB;
     Akonadi::Item itemB;
-    addressB.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String( "X-Profession" ), nameItemB);
-    itemB.setPayload<KContacts::Addressee>( addressB );
-    lst<<itemB;
+    addressB.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("X-Profession"), nameItemB);
+    itemB.setPayload<KContacts::Addressee>(addressB);
+    lst << itemB;
 
     Addressee addressC;
     Akonadi::Item itemC;
-    addressC.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String( "X-Profession" ), nameItemC);
-    itemC.setPayload<KContacts::Addressee>( addressC );
-    lst<<itemC;
+    addressC.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("X-Profession"), nameItemC);
+    itemC.setPayload<KContacts::Addressee>(addressC);
+    lst << itemC;
 
     MergeContacts contacts(lst);
     const MergeContacts::ConflictInformations result = contacts.requiresManualSelectionOfInformation();
@@ -420,29 +420,29 @@ void MergeContactsTest::checkNeedManualSelectionWithOffice_data()
 
 void MergeContactsTest::checkNeedManualSelectionWithOffice()
 {
-    QFETCH( QString, nameItemA );
-    QFETCH( QString, nameItemB );
-    QFETCH( QString, nameItemC );
-    QFETCH( bool, needManualCheck );
+    QFETCH(QString, nameItemA);
+    QFETCH(QString, nameItemB);
+    QFETCH(QString, nameItemC);
+    QFETCH(bool, needManualCheck);
 
     Akonadi::Item::List lst;
     Addressee addressA;
     Akonadi::Item itemA;
-    addressA.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String( "X-Office" ), nameItemA);
-    itemA.setPayload<KContacts::Addressee>( addressA );
-    lst<<itemA;
+    addressA.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("X-Office"), nameItemA);
+    itemA.setPayload<KContacts::Addressee>(addressA);
+    lst << itemA;
 
     Addressee addressB;
     Akonadi::Item itemB;
-    addressB.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String( "X-Office" ), nameItemB);
-    itemB.setPayload<KContacts::Addressee>( addressB );
-    lst<<itemB;
+    addressB.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("X-Office"), nameItemB);
+    itemB.setPayload<KContacts::Addressee>(addressB);
+    lst << itemB;
 
     Addressee addressC;
     Akonadi::Item itemC;
-    addressC.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String( "X-Office" ), nameItemC);
-    itemC.setPayload<KContacts::Addressee>( addressC );
-    lst<<itemC;
+    addressC.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("X-Office"), nameItemC);
+    itemC.setPayload<KContacts::Addressee>(addressC);
+    lst << itemC;
 
     MergeContacts contacts(lst);
     const MergeContacts::ConflictInformations result = contacts.requiresManualSelectionOfInformation();
@@ -468,29 +468,29 @@ void MergeContactsTest::checkNeedManualSelectionWithManagerName_data()
 
 void MergeContactsTest::checkNeedManualSelectionWithManagerName()
 {
-    QFETCH( QString, nameItemA );
-    QFETCH( QString, nameItemB );
-    QFETCH( QString, nameItemC );
-    QFETCH( bool, needManualCheck );
+    QFETCH(QString, nameItemA);
+    QFETCH(QString, nameItemB);
+    QFETCH(QString, nameItemC);
+    QFETCH(bool, needManualCheck);
 
     Akonadi::Item::List lst;
     Addressee addressA;
     Akonadi::Item itemA;
-    addressA.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String( "X-ManagersName" ), nameItemA);
-    itemA.setPayload<KContacts::Addressee>( addressA );
-    lst<<itemA;
+    addressA.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("X-ManagersName"), nameItemA);
+    itemA.setPayload<KContacts::Addressee>(addressA);
+    lst << itemA;
 
     Addressee addressB;
     Akonadi::Item itemB;
-    addressB.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String( "X-ManagersName" ), nameItemB);
-    itemB.setPayload<KContacts::Addressee>( addressB );
-    lst<<itemB;
+    addressB.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("X-ManagersName"), nameItemB);
+    itemB.setPayload<KContacts::Addressee>(addressB);
+    lst << itemB;
 
     Addressee addressC;
     Akonadi::Item itemC;
-    addressC.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String( "X-ManagersName" ), nameItemC);
-    itemC.setPayload<KContacts::Addressee>( addressC );
-    lst<<itemC;
+    addressC.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("X-ManagersName"), nameItemC);
+    itemC.setPayload<KContacts::Addressee>(addressC);
+    lst << itemC;
 
     MergeContacts contacts(lst);
     const MergeContacts::ConflictInformations result = contacts.requiresManualSelectionOfInformation();
@@ -516,29 +516,29 @@ void MergeContactsTest::checkNeedManualSelectionWithAssistantName_data()
 
 void MergeContactsTest::checkNeedManualSelectionWithAssistantName()
 {
-    QFETCH( QString, nameItemA );
-    QFETCH( QString, nameItemB );
-    QFETCH( QString, nameItemC );
-    QFETCH( bool, needManualCheck );
+    QFETCH(QString, nameItemA);
+    QFETCH(QString, nameItemB);
+    QFETCH(QString, nameItemC);
+    QFETCH(bool, needManualCheck);
 
     Akonadi::Item::List lst;
     Addressee addressA;
     Akonadi::Item itemA;
-    addressA.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String( "X-AssistantsName" ), nameItemA);
-    itemA.setPayload<KContacts::Addressee>( addressA );
-    lst<<itemA;
+    addressA.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("X-AssistantsName"), nameItemA);
+    itemA.setPayload<KContacts::Addressee>(addressA);
+    lst << itemA;
 
     Addressee addressB;
     Akonadi::Item itemB;
-    addressB.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String( "X-AssistantsName" ), nameItemB);
-    itemB.setPayload<KContacts::Addressee>( addressB );
-    lst<<itemB;
+    addressB.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("X-AssistantsName"), nameItemB);
+    itemB.setPayload<KContacts::Addressee>(addressB);
+    lst << itemB;
 
     Addressee addressC;
     Akonadi::Item itemC;
-    addressC.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String( "X-AssistantsName" ), nameItemC);
-    itemC.setPayload<KContacts::Addressee>( addressC );
-    lst<<itemC;
+    addressC.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("X-AssistantsName"), nameItemC);
+    itemC.setPayload<KContacts::Addressee>(addressC);
+    lst << itemC;
 
     MergeContacts contacts(lst);
     const MergeContacts::ConflictInformations result = contacts.requiresManualSelectionOfInformation();
@@ -564,29 +564,29 @@ void MergeContactsTest::checkNeedManualSelectionWithAnniversary_data()
 
 void MergeContactsTest::checkNeedManualSelectionWithAnniversary()
 {
-    QFETCH( QString, nameItemA );
-    QFETCH( QString, nameItemB );
-    QFETCH( QString, nameItemC );
-    QFETCH( bool, needManualCheck );
+    QFETCH(QString, nameItemA);
+    QFETCH(QString, nameItemB);
+    QFETCH(QString, nameItemC);
+    QFETCH(bool, needManualCheck);
 
     Akonadi::Item::List lst;
     Addressee addressA;
     Akonadi::Item itemA;
-    addressA.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String( "X-Anniversary" ), nameItemA);
-    itemA.setPayload<KContacts::Addressee>( addressA );
-    lst<<itemA;
+    addressA.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("X-Anniversary"), nameItemA);
+    itemA.setPayload<KContacts::Addressee>(addressA);
+    lst << itemA;
 
     Addressee addressB;
     Akonadi::Item itemB;
-    addressB.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String( "X-Anniversary" ), nameItemB);
-    itemB.setPayload<KContacts::Addressee>( addressB );
-    lst<<itemB;
+    addressB.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("X-Anniversary"), nameItemB);
+    itemB.setPayload<KContacts::Addressee>(addressB);
+    lst << itemB;
 
     Addressee addressC;
     Akonadi::Item itemC;
-    addressC.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String( "X-Anniversary" ), nameItemC);
-    itemC.setPayload<KContacts::Addressee>( addressC );
-    lst<<itemC;
+    addressC.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("X-Anniversary"), nameItemC);
+    itemC.setPayload<KContacts::Addressee>(addressC);
+    lst << itemC;
 
     MergeContacts contacts(lst);
     const MergeContacts::ConflictInformations result = contacts.requiresManualSelectionOfInformation();
@@ -612,36 +612,35 @@ void MergeContactsTest::checkNeedManualSelectionWithPartnersName_data()
 
 void MergeContactsTest::checkNeedManualSelectionWithPartnersName()
 {
-    QFETCH( QString, nameItemA );
-    QFETCH( QString, nameItemB );
-    QFETCH( QString, nameItemC );
-    QFETCH( bool, needManualCheck );
+    QFETCH(QString, nameItemA);
+    QFETCH(QString, nameItemB);
+    QFETCH(QString, nameItemC);
+    QFETCH(bool, needManualCheck);
 
     Akonadi::Item::List lst;
     Addressee addressA;
     Akonadi::Item itemA;
-    addressA.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String( "X-SpousesName" ), nameItemA);
-    itemA.setPayload<KContacts::Addressee>( addressA );
-    lst<<itemA;
+    addressA.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("X-SpousesName"), nameItemA);
+    itemA.setPayload<KContacts::Addressee>(addressA);
+    lst << itemA;
 
     Addressee addressB;
     Akonadi::Item itemB;
-    addressB.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String( "X-SpousesName" ), nameItemB);
-    itemB.setPayload<KContacts::Addressee>( addressB );
-    lst<<itemB;
+    addressB.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("X-SpousesName"), nameItemB);
+    itemB.setPayload<KContacts::Addressee>(addressB);
+    lst << itemB;
 
     Addressee addressC;
     Akonadi::Item itemC;
-    addressC.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String( "X-SpousesName" ), nameItemC);
-    itemC.setPayload<KContacts::Addressee>( addressC );
-    lst<<itemC;
+    addressC.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("X-SpousesName"), nameItemC);
+    itemC.setPayload<KContacts::Addressee>(addressC);
+    lst << itemC;
 
     MergeContacts contacts(lst);
     const MergeContacts::ConflictInformations result = contacts.requiresManualSelectionOfInformation();
     const bool bResult = (result == MergeContacts::PartnerName);
     QCOMPARE(bResult, needManualCheck);
 }
-
 
 void MergeContactsTest::checkNeedManualSelectionWithBlog_data()
 {
@@ -661,29 +660,29 @@ void MergeContactsTest::checkNeedManualSelectionWithBlog_data()
 
 void MergeContactsTest::checkNeedManualSelectionWithBlog()
 {
-    QFETCH( QString, nameItemA );
-    QFETCH( QString, nameItemB );
-    QFETCH( QString, nameItemC );
-    QFETCH( bool, needManualCheck );
+    QFETCH(QString, nameItemA);
+    QFETCH(QString, nameItemB);
+    QFETCH(QString, nameItemC);
+    QFETCH(bool, needManualCheck);
 
     Akonadi::Item::List lst;
     Addressee addressA;
     Akonadi::Item itemA;
-    addressA.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String( "BlogFeed" ), nameItemA);
-    itemA.setPayload<KContacts::Addressee>( addressA );
-    lst<<itemA;
+    addressA.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("BlogFeed"), nameItemA);
+    itemA.setPayload<KContacts::Addressee>(addressA);
+    lst << itemA;
 
     Addressee addressB;
     Akonadi::Item itemB;
-    addressB.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String( "BlogFeed" ), nameItemB);
-    itemB.setPayload<KContacts::Addressee>( addressB );
-    lst<<itemB;
+    addressB.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("BlogFeed"), nameItemB);
+    itemB.setPayload<KContacts::Addressee>(addressB);
+    lst << itemB;
 
     Addressee addressC;
     Akonadi::Item itemC;
-    addressC.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String( "BlogFeed" ), nameItemC);
-    itemC.setPayload<KContacts::Addressee>( addressC );
-    lst<<itemC;
+    addressC.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("BlogFeed"), nameItemC);
+    itemC.setPayload<KContacts::Addressee>(addressC);
+    lst << itemC;
 
     MergeContacts contacts(lst);
     const MergeContacts::ConflictInformations result = contacts.requiresManualSelectionOfInformation();
