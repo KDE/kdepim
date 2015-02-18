@@ -24,6 +24,7 @@
 #include <QWidget>
 class KPushButton;
 class KLineEdit;
+class QLabel;
 namespace KPIM {
 class BlackListBalooEmailList;
 class BlackListBalooEmailCompletionWidget : public QWidget
@@ -41,7 +42,10 @@ private slots:
     void slotSelectEmails();
     void slotSearchLineEditChanged(const QString &text);
     void slotSearch();
+    void slotLinkClicked(const QString &link);
+    void slotEmailFound(const QStringList &list);
 private:
+    void hideMoreResultAndChangeLimit();
     void load();
     KLineEdit *mSearchLineEdit;
     KLineEdit *mExcludeDomainLineEdit;
@@ -49,6 +53,8 @@ private:
     KPushButton *mSearchButton;
     KPushButton *mSelectButton;
     KPushButton *mUnselectButton;
+    QLabel *mMoreResult;
+    int mLimit;
 };
 }
 

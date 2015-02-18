@@ -36,11 +36,14 @@ public:
 
     void setSearchEmail(const QString &searchEmail);
 
+    void setLimit(int limit);
+
 Q_SIGNALS:
     void emailsFound(const QStringList &list);
 
 private:
     QString mSearchEmail;
+    int mLimit;
 };
 }
 

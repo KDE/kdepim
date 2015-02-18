@@ -31,7 +31,8 @@
 #include <KConfigGroup>
 using namespace KPIM;
 BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      mLimit(500)
 {
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
@@ -81,6 +82,16 @@ BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget
     mUnselectButton->setEnabled(false);
     connect(mUnselectButton, SIGNAL(clicked(bool)), this, SLOT(slotUnselectEmails()));
     selectElementLayout->addWidget(mUnselectButton);
+
+
+    //Add i18n in kf5
+    mMoreResult = new QLabel(QLatin1String( "<qt><a href=\"more_result\">More result...</a></qt>"), this );
+    mMoreResult->setObjectName(QLatin1String("moreresultlabel"));
+    selectElementLayout->addWidget(mMoreResult);
+
+    mMoreResult->setContextMenuPolicy(Qt::NoContextMenu);
+    connect( mMoreResult, SIGNAL(linkActivated(QString)), SLOT(slotLinkClicked(QString)) );
+    mMoreResult->setVisible(false);
     selectElementLayout->addStretch(1);
 
 
@@ -142,6 +153,13 @@ void BlackListBalooEmailCompletionWidget::slotSelectEmails()
 void BlackListBalooEmailCompletionWidget::slotSearchLineEditChanged(const QString &text)
 {
     mSearchButton->setEnabled(text.trimmed().count() > 2);
+    hideMoreResultAndChangeLimit();
+}
+
+void BlackListBalooEmailCompletionWidget::hideMoreResultAndChangeLimit()
+{
+    mMoreResult->setVisible(false);
+    mLimit = 500;
 }
 
 void BlackListBalooEmailCompletionWidget::slotSearch()
@@ -150,9 +168,16 @@ void BlackListBalooEmailCompletionWidget::slotSearch()
     if (searchEmail.length() > 2 ) {
         KPIM::BlackListBalooEmailSearchJob *job = new KPIM::BlackListBalooEmailSearchJob(this);
         job->setSearchEmail(searchEmail);
-        connect(job, SIGNAL(emailsFound(QStringList)), mEmailList, SLOT(slotEmailFound(QStringList)));
+        job->setLimit(mLimit);
+        connect(job, SIGNAL(emailsFound(QStringList)), this, SLOT(slotEmailFound(QStringList)));
         job->start();
     }
+}
+
+void BlackListBalooEmailCompletionWidget::slotEmailFound(const QStringList &list)
+{
+    mEmailList->slotEmailFound(list);
+    mMoreResult->setVisible(list.count() == mLimit);
 }
 
 void BlackListBalooEmailCompletionWidget::setEmailBlackList(const QStringList &list)
@@ -175,4 +200,12 @@ void BlackListBalooEmailCompletionWidget::save()
     }
     group.writeEntry("ExcludeDomain", mExcludeDomainLineEdit->text().split(QLatin1String(",")));
     group.sync();
+}
+
+void BlackListBalooEmailCompletionWidget::slotLinkClicked(const QString &link)
+{
+    if ( link == QLatin1String( "more_result" ) ) {
+        mLimit += 200;
+        slotSearch();
+    }
 }

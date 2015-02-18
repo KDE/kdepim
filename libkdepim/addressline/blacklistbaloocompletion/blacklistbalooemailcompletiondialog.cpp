@@ -36,7 +36,7 @@ BlackListBalooEmailCompletionDialog::BlackListBalooEmailCompletionDialog(QWidget
     : KDialog(parent)
 {
     //Add i18n in kf5
-    setCaption( QLatin1String( "Blacklist Baloo Completion" ) );
+    setCaption( QLatin1String( "Blacklist Email Completion" ) );
     setButtons( Ok|Cancel );
     setDefaultButton( Ok );
     setModal( true );
