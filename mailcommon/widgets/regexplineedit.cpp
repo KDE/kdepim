@@ -30,7 +30,7 @@
 
 #include "regexplineedit.h"
 
-#include <KDialog>
+#include <QDialog>
 #include <QLineEdit>
 #include <KLocalizedString>
 #include <KRegExpEditorInterface>
@@ -119,7 +119,7 @@ void RegExpLineEdit::slotEditRegExp()
 {
     if (!mRegExpEditDialog) {
         mRegExpEditDialog =
-            KServiceTypeTrader::createInstanceFromQuery<KDialog>(
+            KServiceTypeTrader::createInstanceFromQuery<QDialog>(
                 QLatin1String("KRegExpEditor/KRegExpEditor"), QString(), this);
     }
 
@@ -127,7 +127,7 @@ void RegExpLineEdit::slotEditRegExp()
 
     if (iface) {
         iface->setRegExp(mLineEdit->text());
-        if (mRegExpEditDialog->exec() == KDialog::Accepted) {
+        if (mRegExpEditDialog->exec() == QDialog::Accepted) {
             mLineEdit->setText(iface->regExp());
         }
     }

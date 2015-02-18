@@ -35,7 +35,7 @@
 
 #include <QWidget>
 
-class KDialog;
+class QDialog;
 class QLineEdit;
 
 class QPushButton;
@@ -71,7 +71,7 @@ private:
 
     QLineEdit *mLineEdit;
     QPushButton *mRegExpEditButton;
-    KDialog *mRegExpEditDialog;
+    QDialog *mRegExpEditDialog;
 };
 
 }

@@ -882,7 +882,7 @@ void AttachmentControllerBase::showAddAttachmentCompressedDirectoryDialog()
 
     dialog->okButton()->setGuiItem(KGuiItem(i18n("&Attach"), QLatin1String("document-open")));
     dialog->setMode(KFile::Directory);
-    if (dialog->exec() == KDialog::Accepted && dialog) {
+    if (dialog->exec() == QDialog::Accepted && dialog) {
         const QString encoding = MessageViewer::NodeHelper::fixEncoding(dialog->selectedEncoding());
         attachFileDirectory(dialog->selectedUrls(), encoding);
     }
@@ -932,7 +932,7 @@ void AttachmentControllerBase::showAddAttachmentFileDialog()
 
     dialog->okButton()->setGuiItem(KGuiItem(i18n("&Attach"), QLatin1String("document-open")));
     dialog->setMode(KFile::Files);
-    if (dialog->exec() == KDialog::Accepted && dialog) {
+    if (dialog->exec() == QDialog::Accepted && dialog) {
         const QString encoding = MessageViewer::NodeHelper::fixEncoding(dialog->selectedEncoding());
         attachFileDirectory(dialog->selectedUrls(), encoding);
     }
