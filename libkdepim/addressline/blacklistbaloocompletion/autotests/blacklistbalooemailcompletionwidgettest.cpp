@@ -40,6 +40,9 @@ BlackListBalooEmailCompletionWidgetTest::~BlackListBalooEmailCompletionWidgetTes
 void BlackListBalooEmailCompletionWidgetTest::shouldHaveDefaultValue()
 {
     KPIM::BlackListBalooEmailCompletionWidget widget;
+    widget.show();
+    QTest::qWaitForWindowExposed(&widget);
+
     QLabel *searchLabel = qFindChild<QLabel *>(&widget, QLatin1String("search_label"));
     QVERIFY(searchLabel);
 

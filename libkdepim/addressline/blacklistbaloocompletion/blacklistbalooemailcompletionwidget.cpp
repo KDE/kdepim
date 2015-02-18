@@ -30,6 +30,7 @@
 #include <QLabel>
 #include <KConfigGroup>
 #include <KSharedConfig>
+#include <QDebug>
 
 using namespace KPIM;
 BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget *parent)
@@ -95,6 +96,7 @@ BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget
     mExcludeDomainLineEdit->setClickMessage(i18n("Separate domain with \',\'"));
     connect(mEmailList, &QListWidget::itemSelectionChanged, this, &BlackListBalooEmailCompletionWidget::slotSelectionChanged);
     load();
+    slotSelectionChanged();
 }
 
 BlackListBalooEmailCompletionWidget::~BlackListBalooEmailCompletionWidget()
