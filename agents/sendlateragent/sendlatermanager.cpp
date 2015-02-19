@@ -61,10 +61,8 @@ void SendLaterManager::load(bool forcereload)
 {
     stopAll();
     if (forcereload) {
-        qDebug()<<" reparse config !!!!!!!!!!";
         mConfig->reparseConfiguration();
     }
-    qDebug()<<"void SendLaterManager::load(bool forcereload) "<<forcereload;
 
     const QStringList itemList = mConfig->groupList().filter( QRegExp( QLatin1String("SendLaterItem \\d+") ) );
     const int numberOfItems = itemList.count();
@@ -210,9 +208,7 @@ void SendLaterManager::recreateSendList()
 void SendLaterManager::sendDone(SendLater::SendLaterInfo *info)
 {
     if (info) {
-        qDebug()<<" void SendLaterManager::sendDone(SendLater::SendLaterInfo *info)"<<info;
         if (info->isRecurrence()) {
-            qDebug()<<" recurent "<<info;
             SendLater::SendLaterUtil::changeRecurrentDate(info);
         } else {
             removeLaterInfo(info);
