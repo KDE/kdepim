@@ -148,14 +148,16 @@ void MergeContacts::mergeToContact(KABC::Addressee &newContact, const KABC::Addr
         if (newContact.geo().isValid() && !fromContact.geo().isValid()) {
             newContact.setGeo(fromContact.geo());
         }
+        // Merge Photo
+        if (newContact.photo().isEmpty() && !fromContact.photo().isEmpty()) {
+            newContact.setPhoto(fromContact.photo());
+        }
 
+        // Merge Logo
+        if (newContact.logo().isEmpty() && !fromContact.logo().isEmpty()) {
+            newContact.setLogo(fromContact.logo());
+        }
     }
-#if 0
-    //TODO
-    newContact.setName(fromContact.name());
-    newContact.setFamilyName(fromContact.familyName());
-    newContact.setFormattedName(fromContact.formattedName());
-#endif
 }
 
 MergeContacts::ConflictInformations MergeContacts::requiresManualSelectionOfInformation()
