@@ -18,7 +18,7 @@
 #include "filterbalsa.h"
 
 #include <KLocalizedString>
-#include <kfiledialog.h>
+#include <qfiledialog.h>
 
 #include <QPointer>
 
@@ -59,14 +59,11 @@ void FilterBalsa::import()
     if (!d.exists()) {
         balsaDir = QDir::homePath();
     }
-
-    QPointer<KFileDialog> kfd = new KFileDialog(balsaDir, "", 0);
-    kfd->setMode(KFile::Directory | KFile::LocalOnly);
-    if (kfd->exec()) {
-        const QString dir = kfd->selectedFile();
-        importMails(dir);
+    // Select directory from where I have to import files
+    const QString maildir = QFileDialog::getExistingDirectory(0, QString(), balsaDir);
+    if (!maildir.isEmpty()) {
+        importMails(maildir);
     }
-    delete kfd;
 }
 
 void FilterBalsa::processDirectory(const QString &path)

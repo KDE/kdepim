@@ -16,7 +16,7 @@
  ***************************************************************************/
 
 #include <KLocalizedString>
-#include <kfiledialog.h>
+#include <qfiledialog.h>
 #include <QTemporaryFile>
 #include "mailimporter_debug.h"
 #include <QFileInfo>
@@ -52,8 +52,7 @@ FilterLNotes::~FilterLNotes()
 void FilterLNotes::import()
 {
 
-    const QStringList filenames = KFileDialog::getOpenFileNames(QDir::homePath(), "*|" + i18n("All Files (*)"),
-                                  filterInfo()->parent());
+    const QStringList filenames = QFileDialog::getOpenFileNames(filterInfo()->parent(), QString(), QDir::homePath(), "*|" + i18n("All Files (*)"));
     if (filenames.isEmpty()) {
         filterInfo()->alert(i18n("No files selected."));
         return;

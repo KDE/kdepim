@@ -63,7 +63,6 @@ using namespace KCalCore;
 #include <KDBusServiceStarter>
 #include <QUrl>
 #include <QDebug>
-#include <KFileDialog>
 #include <QInputDialog>
 #include <QMenu>
 #include <KMessageBox>

@@ -16,7 +16,7 @@
  ***************************************************************************/
 
 #include <KLocalizedString>
-#include <kfiledialog.h>
+#include <qfiledialog.h>
 #include <QTemporaryFile>
 #include "mailimporter_debug.h"
 #include <QPointer>
@@ -166,13 +166,10 @@ void FilterOpera::import()
         startdir = QDir::homePath();
     }
 
-    QPointer<KFileDialog> kfd = new KFileDialog(startdir, "", 0);
-    kfd->setMode(KFile::Directory | KFile::LocalOnly);
-    if (kfd->exec()) {
-        const QString operaDir = kfd->selectedFile();
-        importMails(operaDir);
+    const QString maildir = QFileDialog::getExistingDirectory(0, QString(), startdir);
+    if (!maildir.isEmpty()) {
+        importMails(maildir);
     }
-    delete kfd;
 }
 
 void FilterOpera::importMails(const QString &maildir)

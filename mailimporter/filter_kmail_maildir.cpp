@@ -19,7 +19,7 @@
 #include "filter_kmail_maildir.h"
 
 #include <KLocalizedString>
-#include <kfiledialog.h>
+#include <qfiledialog.h>
 #include <QPointer>
 
 using namespace MailImporter;
@@ -51,14 +51,10 @@ void FilterKMail_maildir::import()
 {
     setCountDuplicates(0);
     const QString homeDir = QDir::homePath();
-
-    QPointer<KFileDialog> kfd = new KFileDialog(homeDir, "", 0);
-    kfd->setMode(KFile::Directory | KFile::LocalOnly);
-    if (kfd->exec()) {
-        const QString maildir = kfd->selectedFile();
+    const QString maildir = QFileDialog::getExistingDirectory(0, QString(), homeDir);
+    if (!maildir.isEmpty()) {
         importMails(maildir);
     }
-    delete kfd;
 }
 
 void FilterKMail_maildir::processDirectory(const QString &path)

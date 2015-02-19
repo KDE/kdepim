@@ -16,7 +16,7 @@
  ***************************************************************************/
 
 #include <KLocalizedString>
-#include <kfiledialog.h>
+#include <qfiledialog.h>
 #include <QRegExp>
 #include <QPointer>
 #include <QTemporaryFile>
@@ -42,14 +42,10 @@ FilterPMail::~FilterPMail()
 void FilterPMail::import()
 {
     // Select directory from where I have to import files
-    QPointer<KFileDialog> kfd = new KFileDialog(QDir::homePath(), QString(), 0);
-    kfd->setMode(KFile::Directory | KFile::LocalOnly);
-    if (kfd->exec()) {
-        const QString maildir = kfd->selectedFile();
-
+    const QString maildir = QFileDialog::getExistingDirectory(0, QString(), QDir::homePath());
+    if (!maildir.isEmpty()) {
         importMails(maildir);
     }
-    delete kfd;
 }
 
 void FilterPMail::importMails(const QString  &chosenDir)

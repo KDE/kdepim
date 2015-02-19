@@ -19,7 +19,7 @@
 #include "filter_sylpheed.h"
 
 #include <KLocalizedString>
-#include <kfiledialog.h>
+#include <qfiledialog.h>
 #include "mailimporter_debug.h"
 #include <QDomDocument>
 #include <QDomElement>
@@ -89,14 +89,11 @@ void FilterSylpheed::import()
     if (homeDir.isEmpty()) {
         homeDir = QDir::homePath();
     }
-
-    QPointer<KFileDialog> kfd = new KFileDialog(homeDir, "", 0);
-    kfd->setMode(KFile::Directory | KFile::LocalOnly);
-    if (kfd->exec()) {
-        const QString maildir = kfd->selectedFile();
+    // Select directory from where I have to import files
+    const QString maildir = QFileDialog::getExistingDirectory(0, QString(), homeDir);
+    if (!maildir.isEmpty()) {
         importMails(maildir);
     }
-    delete kfd;
 }
 
 void FilterSylpheed::processDirectory(const QString &path)

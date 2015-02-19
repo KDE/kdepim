@@ -18,7 +18,7 @@
 #include "filter_evolution_v2.h"
 
 #include <KLocalizedString>
-#include <kfiledialog.h>
+#include <qfiledialog.h>
 #include <QTemporaryFile>
 #include <QPointer>
 
@@ -61,13 +61,11 @@ void FilterEvolution_v2::import()
         evolDir = QDir::homePath();
     }
 
-    QPointer<KFileDialog> kfd = new KFileDialog(evolDir, "", 0);
-    kfd->setMode(KFile::Directory | KFile::LocalOnly);
-    if (kfd->exec()) {
-        const QString dir = kfd->selectedFile();
-        importMails(dir);
+    // Select directory from where I have to import files
+    const QString maildir = QFileDialog::getExistingDirectory(0, QString(), evolDir);
+    if (!maildir.isEmpty()) {
+        importMails(maildir);
     }
-    delete kfd;
 }
 
 bool FilterEvolution_v2::excludeFiles(const QString &file)

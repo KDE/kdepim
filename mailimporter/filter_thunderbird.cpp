@@ -18,7 +18,7 @@
 #include "filter_thunderbird.h"
 #include "selectthunderbirdprofilewidget.h"
 #include <KLocalizedString>
-#include <kfiledialog.h>
+#include <qfiledialog.h>
 #include <KConfigGroup>
 #include <QTemporaryFile>
 #include <KConfig>
@@ -123,14 +123,11 @@ void FilterThunderbird::import()
     if (!d.exists()) {
         thunderDir = QDir::homePath();
     }
-
-    QPointer<KFileDialog> kfd = new KFileDialog(thunderDir, "", 0);
-    kfd->setMode(KFile::Directory | KFile::LocalOnly);
-    if (kfd->exec()) {
-        const QString maildir = kfd->selectedFile();
+    // Select directory from where I have to import files
+    const QString maildir = QFileDialog::getExistingDirectory(0, QString(), thunderDir);
+    if (!maildir.isEmpty()) {
         importMails(maildir);
     }
-    delete kfd;
 }
 
 bool FilterThunderbird::excludeFiles(const QString  &file)
