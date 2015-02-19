@@ -68,15 +68,17 @@ MergeContactSelectInformationScrollArea::~MergeContactSelectInformationScrollAre
 
 }
 
-void MergeContactSelectInformationScrollArea::setCollection(const Akonadi::Collection &col)
+void MergeContactSelectInformationScrollArea::setContacts(MergeContacts::ConflictInformations conflictTypes, const Akonadi::Item::List &listItem, const Akonadi::Collection &col)
 {
     mCollection = col;
-}
-
-void MergeContactSelectInformationScrollArea::setContacts(MergeContacts::ConflictInformations conflictTypes, const Akonadi::Item::List &listItem)
-{
     mListItem = listItem;
-    mSelectInformationWidget->setContacts(conflictTypes, listItem);
+    if (conflictTypes == MergeContacts::None)  {
+        MergeContacts contact(mListItem);
+        KABC::Addressee addr = contact.mergedContact();
+        mergeContact(addr);
+    } else {
+        mSelectInformationWidget->setContacts(conflictTypes, listItem);
+    }
 }
 
 void MergeContactSelectInformationScrollArea::slotMergeContacts()
@@ -92,6 +94,11 @@ void MergeContactSelectInformationScrollArea::slotMergeContacts()
     MergeContacts contact(mListItem);
     KABC::Addressee addr = contact.mergedContact(true);
     mSelectInformationWidget->createContact(addr);
+    mergeContact(addr);
+}
+
+void MergeContactSelectInformationScrollArea::mergeContact(const KABC::Addressee &addr)
+{
     if (!addr.isEmpty()) {
         KABMergeContacts::MergeContactsJob *job = new KABMergeContacts::MergeContactsJob(this);
         job->setNewContact(addr);

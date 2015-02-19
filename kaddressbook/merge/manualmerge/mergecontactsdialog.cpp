@@ -98,8 +98,7 @@ void MergeContactsDialog::setContacts(const Akonadi::Item::List &list)
 
 void MergeContactsDialog::slotCustomizeMergeContact(const Akonadi::Item::List &lst, MergeContacts::ConflictInformations conflictType, const Akonadi::Collection &col)
 {
-    mSelectInformation->setContacts(conflictType, lst);
-    mSelectInformation->setCollection(col);
+    mSelectInformation->setContacts(conflictType, lst, col);
     mStackedWidget->setCurrentWidget(mSelectInformation);
 }
 

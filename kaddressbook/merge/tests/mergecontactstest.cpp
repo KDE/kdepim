@@ -1019,6 +1019,59 @@ void MergeContactsTest::shouldMergeHomePage_data()
     QTest::newRow("conflict1") <<  KUrl() << KUrl(QLatin1String("http://www.kde.org1")) << KUrl(QLatin1String("http://www.kde.org")) << false << KUrl(QLatin1String("http://www.kde.org1"));
 }
 
+void MergeContactsTest::shouldMergeBlogFeed_data()
+{
+    QTest::addColumn<QString>("nameItemA");
+    QTest::addColumn<QString>("nameItemB");
+    QTest::addColumn<QString>("nameItemC");
+    QTest::addColumn<bool>("isEmpty");
+    QTest::addColumn<QString>("result");
+    QTest::newRow("empty") <<  QString() << QString() << QString() << true << QString();
+    QTest::newRow("noWithOneNameConflict") <<  QString() << QString() << QString(QLatin1String("foo")) << false << QString(QLatin1String("foo"));
+    QTest::newRow("noWithOneNameConflict1") <<  QString() << QString(QLatin1String("foo")) << QString()  << false << QString(QLatin1String("foo"));
+    QTest::newRow("noWithOneNameConflict2") <<  QString(QLatin1String("foo")) << QString() << QString() << false << QString(QLatin1String("foo"));
+    QTest::newRow("noConflictWithSameName") <<  QString(QLatin1String("foo")) << QString(QLatin1String("foo")) << QString() << false << QString(QLatin1String("foo"));
+    QTest::newRow("noConflictWithSameName2") <<  QString(QLatin1String("foo")) << QString(QLatin1String("foo")) << QString(QLatin1String("foo")) << false << QString(QLatin1String("foo"));
+    QTest::newRow("conflict") <<  QString(QLatin1String("foo")) << QString(QLatin1String("foo1")) << QString(QLatin1String("foo")) << false << QString(QLatin1String("foo"));
+    QTest::newRow("conflict1") <<  QString() << QString(QLatin1String("foo1")) << QString(QLatin1String("foo")) << false << QString(QLatin1String("foo1"));
+}
+
+void MergeContactsTest::shouldMergeBlogFeed()
+{
+    QFETCH( QString, nameItemA );
+    QFETCH( QString, nameItemB );
+    QFETCH( QString, nameItemC );
+    QFETCH( bool, isEmpty );
+    QFETCH( QString, result );
+
+    const QString valueCustomStr = QLatin1String( "BlogFeed" );
+    Akonadi::Item::List lst;
+    Addressee addressA;
+    addressA.insertCustom(QLatin1String( "KADDRESSBOOK" ),valueCustomStr , nameItemA);
+    Akonadi::Item itemA;
+    itemA.setPayload<Addressee>( addressA );
+    lst<<itemA;
+
+    Addressee addressB;
+    Akonadi::Item itemB;
+    addressB.insertCustom(QLatin1String( "KADDRESSBOOK" ), valueCustomStr, nameItemB);
+    itemB.setPayload<Addressee>( addressB );
+    lst<<itemB;
+
+    Addressee addressC;
+    Akonadi::Item itemC;
+    addressC.insertCustom(QLatin1String( "KADDRESSBOOK" ), valueCustomStr, nameItemC);
+    itemC.setPayload<Addressee>( addressC );
+    lst<<itemC;
+
+    MergeContacts contacts(lst);
+    Addressee resultAddr = contacts.mergedContact();
+    QCOMPARE(resultAddr.isEmpty(), isEmpty);
+    const QString resultStr = resultAddr.custom(QLatin1String( "KADDRESSBOOK" ), valueCustomStr);
+    QCOMPARE(resultStr, result);
+}
+
+
 void MergeContactsTest::shouldMergeHomePage()
 {
     QFETCH( KUrl, nameItemA );

@@ -17,6 +17,7 @@
 
 #include "mergecontactselectlistwidget.h"
 #include <KABC/Addressee>
+#include <KLocalizedString>
 #include <QLabel>
 #include <QListWidget>
 #include <QVBoxLayout>
@@ -72,8 +73,7 @@ void MergeContactSelectListWidget::updateTitle()
         title = Addressee::logoLabel();
         break;
     case MergeContacts::Anniversary:
-        //TODO
-        title = QLatin1String("Weeding anniversary:");
+        title = i18nc( "The wedding anniversary of a contact", "Anniversary" );
         break;
     case MergeContacts::Name:
         title = Addressee::nameLabel();
@@ -82,7 +82,7 @@ void MergeContactSelectListWidget::updateTitle()
         title = Addressee::nickNameLabel();
         break;
     case MergeContacts::Blog:
-        title = QLatin1String("Blog");
+        title = i18n( "Blog Feed" );
         break;
     case MergeContacts::HomePage:
         title = QLatin1String("HomePage");
@@ -91,7 +91,7 @@ void MergeContactSelectListWidget::updateTitle()
         title = Addressee::organizationLabel();
         break;
     case MergeContacts::Profession:
-        title = QLatin1String("Profession");
+        title = i18n( "Profession" );
         break;
     case MergeContacts::Title:
         title = Addressee::titleLabel();
@@ -100,13 +100,13 @@ void MergeContactSelectListWidget::updateTitle()
         title = Addressee::departmentLabel();
         break;
     case MergeContacts::Office:
-        title = QLatin1String("office");
+        title = i18n( "Office" );
         break;
     case MergeContacts::ManagerName:
-        title = QLatin1String("Manager");
+        title = i18n( "Manager" );
         break;
     case MergeContacts::Assistant:
-        title = QLatin1String("Assistant");
+        title = i18n( "Assistant" );
         break;
     case MergeContacts::FreeBusy:
         title = QLatin1String("FreeBusy");
@@ -115,8 +115,7 @@ void MergeContactSelectListWidget::updateTitle()
         title = Addressee::familyNameLabel();
         break;
     case MergeContacts::PartnerName:
-        //TODO
-        title = QLatin1String("Partner name");
+        title = i18n( "Spouse" );
         break;
     }
 

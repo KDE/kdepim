@@ -62,6 +62,7 @@ public:
 
     void setItems(const Akonadi::Item::List &items);
 private:
+    void mergeCustomValue(const KABC::Addressee &fromContact, const QString &variable, KABC::Addressee &newContact);
     void checkCustomValue(const KABC::Addressee &address, const QString &variable, KABC::Addressee &newContact, MergeContacts::ConflictInformations &result, MergeContacts::ConflictInformation conflict);
     void mergeToContact(KABC::Addressee &newAddress, const KABC::Addressee &fromContact, bool excludeConflictPart);
     Akonadi::Item::List mListItem;

@@ -45,8 +45,7 @@ bool MergeContactSelectInformationTabWidget::tabBarVisible() const
 void MergeContactSelectInformationTabWidget::addNewWidget(const KABMergeContacts::MergeConflictResult &list, const Akonadi::Collection &col)
 {
     KABMergeContacts::MergeContactSelectInformationScrollArea *area = new KABMergeContacts::MergeContactSelectInformationScrollArea;
-    area->setContacts(list.conflictInformation, list.list);
-    area->setCollection(col);
+    area->setContacts(list.conflictInformation, list.list, col);
     //KF5 add i18n
     addTab(area, QString::fromLatin1("Duplicate contact %1").arg(count()+1));
 }
