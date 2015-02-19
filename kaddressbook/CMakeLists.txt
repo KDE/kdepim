@@ -88,19 +88,22 @@ set(kaddressbook_merge_SRCS
    merge/job/searchpotentialduplicatecontactjob.cpp
    merge/job/mergecontactsjob.cpp
    merge/job/mergecontacts.cpp
+
    merge/manualmerge/mergecontactsdialog.cpp
    merge/manualmerge/mergecontactwidget.cpp
-   merge/widgets/mergecontactinfowidget.cpp
    merge/manualmerge/mergecontactwidgetlist.cpp
-   merge/widgets/mergecontactshowresulttabwidget.cpp
+
    merge/searchduplicate/searchandmergecontactduplicatecontactdialog.cpp
    merge/searchduplicate/searchduplicateresultwidget.cpp
    merge/searchduplicate/resultduplicatetreewidget.cpp
+   merge/searchduplicate/mergecontactselectinformationtabwidget.cpp
+
+   merge/widgets/mergecontactinfowidget.cpp
+   merge/widgets/mergecontactshowresulttabwidget.cpp
    merge/widgets/mergecontactselectinformationwidget.cpp
    merge/widgets/mergecontactselectlistwidget.cpp
    merge/widgets/mergecontactloseinformationwarning.cpp
    merge/widgets/mergecontactselectinformationscrollarea.cpp
-   merge/searchduplicate/mergecontactselectinformationtabwidget.cpp
    merge/widgets/mergecontacterrorlabel.cpp
 )
 
