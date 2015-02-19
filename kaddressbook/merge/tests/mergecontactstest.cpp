@@ -952,5 +952,103 @@ void MergeContactsTest::shouldMergeEmails()
     QCOMPARE(result.emails(), emails);
 }
 
+void MergeContactsTest::shouldMergeFamilyname_data()
+{
+    QTest::addColumn<QString>("nameItemA");
+    QTest::addColumn<QString>("nameItemB");
+    QTest::addColumn<QString>("nameItemC");
+    QTest::addColumn<bool>("isEmpty");
+    QTest::addColumn<QString>("result");
+    QTest::newRow("empty") <<  QString() << QString() << QString() << true << QString();
+    QTest::newRow("noWithOneNameConflict") <<  QString() << QString() << QString(QLatin1String("foo")) << false << QString(QLatin1String("foo"));
+    QTest::newRow("noWithOneNameConflict1") <<  QString() << QString(QLatin1String("foo")) << QString()  << false << QString(QLatin1String("foo"));
+    QTest::newRow("noWithOneNameConflict2") <<  QString(QLatin1String("foo")) << QString() << QString() << false << QString(QLatin1String("foo"));
+    QTest::newRow("noConflictWithSameName") <<  QString(QLatin1String("foo")) << QString(QLatin1String("foo")) << QString() << false << QString(QLatin1String("foo"));
+    QTest::newRow("noConflictWithSameName2") <<  QString(QLatin1String("foo")) << QString(QLatin1String("foo")) << QString(QLatin1String("foo")) << false << QString(QLatin1String("foo"));
+    QTest::newRow("conflict") <<  QString(QLatin1String("foo")) << QString(QLatin1String("foo1")) << QString(QLatin1String("foo")) << false << QString(QLatin1String("foo"));
+    QTest::newRow("conflict1") <<  QString() << QString(QLatin1String("foo1")) << QString(QLatin1String("foo")) << false << QString(QLatin1String("foo1"));
+}
+
+void MergeContactsTest::shouldMergeFamilyname()
+{
+    QFETCH( QString, nameItemA );
+    QFETCH( QString, nameItemB );
+    QFETCH( QString, nameItemC );
+    QFETCH( bool, isEmpty );
+    QFETCH( QString, result );
+
+    Akonadi::Item::List lst;
+    Addressee addressA;
+    addressA.setFamilyName(nameItemA);
+    Akonadi::Item itemA;
+    itemA.setPayload<Addressee>( addressA );
+    lst<<itemA;
+
+    Addressee addressB;
+    Akonadi::Item itemB;
+    addressB.setFamilyName(nameItemB);
+    itemB.setPayload<Addressee>( addressB );
+    lst<<itemB;
+
+    Addressee addressC;
+    Akonadi::Item itemC;
+    addressC.setFamilyName(nameItemC);
+    itemC.setPayload<Addressee>( addressC );
+    lst<<itemC;
+
+    MergeContacts contacts(lst);
+    Addressee resultAddr = contacts.mergedContact();
+    QCOMPARE(resultAddr.isEmpty(), isEmpty);
+    QCOMPARE(resultAddr.familyName(), result);
+}
+
+void MergeContactsTest::shouldMergeHomePage_data()
+{
+    QTest::addColumn<KUrl>("nameItemA");
+    QTest::addColumn<KUrl>("nameItemB");
+    QTest::addColumn<KUrl>("nameItemC");
+    QTest::addColumn<bool>("isEmpty");
+    QTest::addColumn<KUrl>("result");
+    QTest::newRow("noConflict") <<  KUrl() << KUrl() << KUrl() << true << KUrl();
+    QTest::newRow("noWithOneNameConflict") <<  KUrl() << KUrl() << KUrl(QLatin1String("http://www.kde.org")) << false << KUrl(QLatin1String("http://www.kde.org"));
+    QTest::newRow("noWithOneNameConflict1") <<  KUrl() << KUrl(QLatin1String("http://www.kde.org")) << KUrl() << false<< KUrl(QLatin1String("http://www.kde.org"));
+    QTest::newRow("noWithOneNameConflict2") <<  KUrl(QLatin1String("http://www.kde.org")) << KUrl() << KUrl() << false << KUrl(QLatin1String("http://www.kde.org"));
+    QTest::newRow("noConflictWithSameName") <<  KUrl(QLatin1String("http://www.kde.org")) << KUrl(QLatin1String("http://www.kde.org")) << KUrl() << false << KUrl(QLatin1String("http://www.kde.org"));
+    QTest::newRow("noConflictWithSameName2") <<  KUrl(QLatin1String("http://www.kde.org")) << KUrl(QLatin1String("http://www.kde.org")) << KUrl(QLatin1String("http://www.kde.org")) << false << KUrl(QLatin1String("http://www.kde.org"));
+    QTest::newRow("conflictUrl") <<  KUrl(QLatin1String("http://www.kde.org")) << KUrl(QLatin1String("http://www.kde.org1")) << KUrl(QLatin1String("http://www.kde.org")) << false << KUrl(QLatin1String("http://www.kde.org"));
+    QTest::newRow("conflict1") <<  KUrl() << KUrl(QLatin1String("http://www.kde.org1")) << KUrl(QLatin1String("http://www.kde.org")) << false << KUrl(QLatin1String("http://www.kde.org1"));
+}
+
+void MergeContactsTest::shouldMergeHomePage()
+{
+    QFETCH( KUrl, nameItemA );
+    QFETCH( KUrl, nameItemB );
+    QFETCH( KUrl, nameItemC );
+    QFETCH( bool, isEmpty );
+    QFETCH( KUrl, result );
+    Akonadi::Item::List lst;
+    Addressee addressA;
+    Akonadi::Item itemA;
+    addressA.setUrl(nameItemA);
+    itemA.setPayload<KABC::Addressee>( addressA );
+    lst<<itemA;
+
+    Addressee addressB;
+    Akonadi::Item itemB;
+    addressB.setUrl(nameItemB);
+    itemB.setPayload<KABC::Addressee>( addressB );
+    lst<<itemB;
+
+    Addressee addressC;
+    Akonadi::Item itemC;
+    addressC.setUrl(nameItemC);
+    itemC.setPayload<KABC::Addressee>( addressC );
+    lst<<itemC;
+
+    MergeContacts contacts(lst);
+    Addressee resultAddr = contacts.mergedContact();
+    QCOMPARE(resultAddr.isEmpty(), isEmpty);
+    QCOMPARE(resultAddr.url(), result);
+}
 
 QTEST_KDEMAIN(MergeContactsTest, NoGUI)

@@ -85,6 +85,10 @@ private Q_SLOTS:
 
     void shouldMergeDepartement_data();
     void shouldMergeDepartement();
+    void shouldMergeFamilyname();
+    void shouldMergeFamilyname_data();
+    void shouldMergeHomePage_data();
+    void shouldMergeHomePage();
 };
 
 #endif // MERGECONTACTSTEST_H

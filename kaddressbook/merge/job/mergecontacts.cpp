@@ -132,12 +132,22 @@ void MergeContacts::mergeToContact(KABC::Addressee &newContact, const KABC::Addr
         if (newContact.department().isEmpty() && !fromContact.department().isEmpty()) {
             newContact.setDepartment(fromContact.department());
         }
+        // Merge FamilyName
+        if (newContact.familyName().isEmpty() && !fromContact.familyName().isEmpty()) {
+            newContact.setFamilyName(fromContact.familyName());
+        }
 
         // Merge blog
 
         // Merge HomePage
+        if (newContact.url().isEmpty() && !fromContact.url().isEmpty()) {
+            newContact.setUrl(fromContact.url());
+        }
 
         // Merge geo
+        if (newContact.geo().isValid() && !fromContact.geo().isValid()) {
+            newContact.setGeo(fromContact.geo());
+        }
 
     }
 #if 0
