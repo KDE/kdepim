@@ -29,7 +29,7 @@ namespace KABMergeContacts {
 class KADDRESSBOOK_EXPORT ResultDuplicateTreeWidgetItem : public QTreeWidgetItem
 {
 public:
-    explicit ResultDuplicateTreeWidgetItem(QTreeWidget *parent = 0, bool hasCheckableItem = true);
+    explicit ResultDuplicateTreeWidgetItem(QTreeWidget *parent = 0);
     ~ResultDuplicateTreeWidgetItem();
 
     Akonadi::Item item() const;
@@ -55,6 +55,9 @@ Q_SIGNALS:
     void showContactPreview(const Akonadi::Item &item);
 private slots:
     void slotItemActivated(QTreeWidgetItem *item, int column);
+    void slotItemChanged(QTreeWidgetItem *item, int column);
+private:
+    void changeState(QTreeWidgetItem *item, bool b);
 };
 }
 
