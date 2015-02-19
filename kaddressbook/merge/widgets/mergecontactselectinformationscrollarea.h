@@ -32,12 +32,12 @@ class KADDRESSBOOK_EXPORT MergeContactSelectInformationScrollArea : public QWidg
 public:
     explicit MergeContactSelectInformationScrollArea(QWidget *parent = Q_NULLPTR);
     ~MergeContactSelectInformationScrollArea();
-    void setContacts(MergeContacts::ConflictInformations conflictTypes, const Akonadi::Item::List &listItem);
-    void setCollection(const Akonadi::Collection &col);
+    void setContacts(MergeContacts::ConflictInformations conflictTypes, const Akonadi::Item::List &listItem, const Akonadi::Collection &col);
 private slots:
     void slotMergeContacts();
     void slotMergeDone(const Akonadi::Item &item);
 private:
+    void mergeContact(const KContacts::Addressee &addr);
     Akonadi::Collection mCollection;
     Akonadi::Item::List mListItem;
     MergeContactSelectInformationWidget *mSelectInformationWidget;

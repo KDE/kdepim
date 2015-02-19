@@ -65,6 +65,7 @@ public:
 private:
     void mergeToContact(KContacts::Addressee &newAddress, const KContacts::Addressee &fromContact, bool excludeConflictPart);
     void checkCustomValue(const KContacts::Addressee &address, const QString &variable, KContacts::Addressee &newContact, MergeContacts::ConflictInformations &result, MergeContacts::ConflictInformation conflict);
+    void mergeCustomValue(const KContacts::Addressee &fromContact, const QString &variable, KContacts::Addressee &newContact);
     Akonadi::Item::List mListItem;
 };
 }

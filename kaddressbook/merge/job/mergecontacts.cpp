@@ -133,21 +133,57 @@ void MergeContacts::mergeToContact(KContacts::Addressee &newContact, const KCont
         if (newContact.department().isEmpty() && !fromContact.department().isEmpty()) {
             newContact.setDepartment(fromContact.department());
         }
+        // Merge FamilyName
+        if (newContact.familyName().isEmpty() && !fromContact.familyName().isEmpty()) {
+            newContact.setFamilyName(fromContact.familyName());
+        }
 
         // Merge blog
 
         // Merge HomePage
+        if (newContact.url().isEmpty() && !fromContact.url().isEmpty()) {
+            newContact.setUrl(fromContact.url());
+        }
 
         // Merge geo
+        if (newContact.geo().isValid() && !fromContact.geo().isValid()) {
+            newContact.setGeo(fromContact.geo());
+        }
+        // Merge Photo
+        if (newContact.photo().isEmpty() && !fromContact.photo().isEmpty()) {
+            newContact.setPhoto(fromContact.photo());
+        }
 
+        // Merge Logo
+        if (newContact.logo().isEmpty() && !fromContact.logo().isEmpty()) {
+            newContact.setLogo(fromContact.logo());
+        }        
+        // Test Blog
+        mergeCustomValue(fromContact, QLatin1String( "BlogFeed" ), newContact);
+        // Test profession
+        mergeCustomValue(fromContact, QLatin1String( "X-Profession" ), newContact);
+        // Test Office
+        mergeCustomValue(fromContact, QLatin1String( "X-Office" ), newContact);
+        // Test ManagersName
+        mergeCustomValue(fromContact, QLatin1String( "X-ManagersName" ), newContact);
+        // Test AssistantsName
+        mergeCustomValue(fromContact, QLatin1String( "X-AssistantsName" ), newContact);
+        // Test SpousesName
+        mergeCustomValue(fromContact, QLatin1String( "X-SpousesName" ), newContact);
+        //Test Anniversary
+        mergeCustomValue(fromContact, QLatin1String( "X-Anniversary" ), newContact);
     }
-#if 0
-    //TODO
-    newContact.setName(fromContact.name());
-    newContact.setFamilyName(fromContact.familyName());
-    newContact.setFormattedName(fromContact.formattedName());
-#endif
 }
+
+void MergeContacts::mergeCustomValue(const KContacts::Addressee &fromContact, const QString &variable, KContacts::Addressee &newContact)
+{
+    const QString newValue = newContact.custom( QLatin1String( "KADDRESSBOOK" ), variable);
+    const QString value = fromContact.custom( QLatin1String( "KADDRESSBOOK" ), variable);
+    if (newValue.isEmpty() && !value.isEmpty()) {
+        newContact.insertCustom(QLatin1String( "KADDRESSBOOK" ), variable, value);
+    }
+}
+
 
 MergeContacts::ConflictInformations MergeContacts::requiresManualSelectionOfInformation()
 {
