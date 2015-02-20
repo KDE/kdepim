@@ -61,7 +61,6 @@ SieveEditorWidget::SieveEditorWidget(bool useMenuBar, QWidget *parent)
     QToolBar *toolbar = new QToolBar;
     toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
-
     mCheckSyntax = new QAction(i18n("Check Syntax"), this);
     connect(mCheckSyntax, &QAction::triggered, this, &SieveEditorWidget::slotCheckSyntax);
     toolbar->addAction(mCheckSyntax);
@@ -91,7 +90,6 @@ SieveEditorWidget::SieveEditorWidget(bool useMenuBar, QWidget *parent)
     //Add action to toolBar
 
     toolbar->addAction(mUpload);
-
 
     SieveEditorMenuBar *menuBar = 0;
     if (useMenuBar) {

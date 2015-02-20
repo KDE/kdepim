@@ -157,31 +157,30 @@ void MergeContacts::mergeToContact(KContacts::Addressee &newContact, const KCont
         // Merge Birthday TODO
 
         // Merge Blog
-        mergeCustomValue(fromContact, QLatin1String( "BlogFeed" ), newContact);
+        mergeCustomValue(fromContact, QLatin1String("BlogFeed"), newContact);
         // Merge profession
-        mergeCustomValue(fromContact, QLatin1String( "X-Profession" ), newContact);
+        mergeCustomValue(fromContact, QLatin1String("X-Profession"), newContact);
         // Merge Office
-        mergeCustomValue(fromContact, QLatin1String( "X-Office" ), newContact);
+        mergeCustomValue(fromContact, QLatin1String("X-Office"), newContact);
         // Merge ManagersName
-        mergeCustomValue(fromContact, QLatin1String( "X-ManagersName" ), newContact);
+        mergeCustomValue(fromContact, QLatin1String("X-ManagersName"), newContact);
         // Merge AssistantsName
-        mergeCustomValue(fromContact, QLatin1String( "X-AssistantsName" ), newContact);
+        mergeCustomValue(fromContact, QLatin1String("X-AssistantsName"), newContact);
         // Merge SpousesName
-        mergeCustomValue(fromContact, QLatin1String( "X-SpousesName" ), newContact);
+        mergeCustomValue(fromContact, QLatin1String("X-SpousesName"), newContact);
         // Merge Anniversary
-        mergeCustomValue(fromContact, QLatin1String( "X-Anniversary" ), newContact);
+        mergeCustomValue(fromContact, QLatin1String("X-Anniversary"), newContact);
     }
 }
 
 void MergeContacts::mergeCustomValue(const KContacts::Addressee &fromContact, const QString &variable, KContacts::Addressee &newContact)
 {
-    const QString newValue = newContact.custom( QLatin1String( "KADDRESSBOOK" ), variable);
-    const QString value = fromContact.custom( QLatin1String( "KADDRESSBOOK" ), variable);
+    const QString newValue = newContact.custom(QLatin1String("KADDRESSBOOK"), variable);
+    const QString value = fromContact.custom(QLatin1String("KADDRESSBOOK"), variable);
     if (newValue.isEmpty() && !value.isEmpty()) {
-        newContact.insertCustom(QLatin1String( "KADDRESSBOOK" ), variable, value);
+        newContact.insertCustom(QLatin1String("KADDRESSBOOK"), variable, value);
     }
 }
-
 
 MergeContacts::ConflictInformations MergeContacts::requiresManualSelectionOfInformation()
 {

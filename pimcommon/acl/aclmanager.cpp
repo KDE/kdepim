@@ -80,14 +80,15 @@ public:
 
     }
 
-    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE
-    {
-        if (index.row() < 0 || index.row() >= mRights.count()) {
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE {
+        if (index.row() < 0 || index.row() >= mRights.count())
+        {
             return false;
         }
 
         QPair<QByteArray, KIMAP::Acl::Rights> &right = mRights[ index.row() ];
-        switch (role) {
+        switch (role)
+        {
         case UserIdRole:
             right.first = value.toByteArray();
             emit dataChanged(index, index);
@@ -141,10 +142,10 @@ public:
     }
 
 protected:
-    bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE
-    {
+    bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE {
         beginInsertRows(parent, row, row + count - 1);
-        for (int i = 0; i < count; ++i) {
+        for (int i = 0; i < count; ++i)
+        {
             mRights.insert(row, qMakePair(QByteArray(), KIMAP::Acl::Rights()));
         }
         endInsertRows();
@@ -152,10 +153,10 @@ protected:
         return true;
     }
 
-    bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE
-    {
+    bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE {
         beginRemoveRows(parent, row, row + count - 1);
-        for (int i = 0; i < count; ++i) {
+        for (int i = 0; i < count; ++i)
+        {
             mRights.remove(row, count);
         }
         endRemoveRows();

@@ -217,7 +217,7 @@ void ThemeEditorMainWindow::slotOpenTheme()
         return;
     }
 
-    const QString directory = QFileDialog::getExistingDirectory(this, i18n("Select theme directory"), QStringLiteral("kfiledialog:///OpenTheme") );
+    const QString directory = QFileDialog::getExistingDirectory(this, i18n("Select theme directory"), QStringLiteral("kfiledialog:///OpenTheme"));
     if (directory.isEmpty()) {
         return;
     }

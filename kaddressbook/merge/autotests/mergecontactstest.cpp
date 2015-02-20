@@ -613,30 +613,30 @@ void MergeContactsTest::shouldMergeTitle_data()
 
 void MergeContactsTest::shouldMergeTitle()
 {
-    QFETCH( QString, nameItemA );
-    QFETCH( QString, nameItemB );
-    QFETCH( QString, nameItemC );
-    QFETCH( bool, isEmpty );
-    QFETCH( QString, result );
+    QFETCH(QString, nameItemA);
+    QFETCH(QString, nameItemB);
+    QFETCH(QString, nameItemC);
+    QFETCH(bool, isEmpty);
+    QFETCH(QString, result);
 
     Akonadi::Item::List lst;
     Addressee addressA;
     addressA.setTitle(nameItemA);
     Akonadi::Item itemA;
-    itemA.setPayload<Addressee>( addressA );
-    lst<<itemA;
+    itemA.setPayload<Addressee>(addressA);
+    lst << itemA;
 
     Addressee addressB;
     Akonadi::Item itemB;
     addressB.setTitle(nameItemB);
-    itemB.setPayload<Addressee>( addressB );
-    lst<<itemB;
+    itemB.setPayload<Addressee>(addressB);
+    lst << itemB;
 
     Addressee addressC;
     Akonadi::Item itemC;
     addressC.setTitle(nameItemC);
-    itemC.setPayload<Addressee>( addressC );
-    lst<<itemC;
+    itemC.setPayload<Addressee>(addressC);
+    lst << itemC;
 
     MergeContacts contacts(lst);
     KContacts::Addressee resultAddr = contacts.mergedContact();
@@ -663,30 +663,30 @@ void MergeContactsTest::shouldMergeDepartement_data()
 
 void MergeContactsTest::shouldMergeDepartement()
 {
-    QFETCH( QString, nameItemA );
-    QFETCH( QString, nameItemB );
-    QFETCH( QString, nameItemC );
-    QFETCH( bool, isEmpty );
-    QFETCH( QString, result );
+    QFETCH(QString, nameItemA);
+    QFETCH(QString, nameItemB);
+    QFETCH(QString, nameItemC);
+    QFETCH(bool, isEmpty);
+    QFETCH(QString, result);
 
     Akonadi::Item::List lst;
     Addressee addressA;
     addressA.setDepartment(nameItemA);
     Akonadi::Item itemA;
-    itemA.setPayload<Addressee>( addressA );
-    lst<<itemA;
+    itemA.setPayload<Addressee>(addressA);
+    lst << itemA;
 
     Addressee addressB;
     Akonadi::Item itemB;
     addressB.setDepartment(nameItemB);
-    itemB.setPayload<Addressee>( addressB );
-    lst<<itemB;
+    itemB.setPayload<Addressee>(addressB);
+    lst << itemB;
 
     Addressee addressC;
     Akonadi::Item itemC;
     addressC.setDepartment(nameItemC);
-    itemC.setPayload<Addressee>( addressC );
-    lst<<itemC;
+    itemC.setPayload<Addressee>(addressC);
+    lst << itemC;
 
     MergeContacts contacts(lst);
     KContacts::Addressee resultAddr = contacts.mergedContact();
@@ -966,30 +966,30 @@ void MergeContactsTest::shouldMergeFamilyname_data()
 
 void MergeContactsTest::shouldMergeFamilyname()
 {
-    QFETCH( QString, nameItemA );
-    QFETCH( QString, nameItemB );
-    QFETCH( QString, nameItemC );
-    QFETCH( bool, isEmpty );
-    QFETCH( QString, result );
+    QFETCH(QString, nameItemA);
+    QFETCH(QString, nameItemB);
+    QFETCH(QString, nameItemC);
+    QFETCH(bool, isEmpty);
+    QFETCH(QString, result);
 
     Akonadi::Item::List lst;
     Addressee addressA;
     addressA.setFamilyName(nameItemA);
     Akonadi::Item itemA;
-    itemA.setPayload<Addressee>( addressA );
-    lst<<itemA;
+    itemA.setPayload<Addressee>(addressA);
+    lst << itemA;
 
     Addressee addressB;
     Akonadi::Item itemB;
     addressB.setFamilyName(nameItemB);
-    itemB.setPayload<Addressee>( addressB );
-    lst<<itemB;
+    itemB.setPayload<Addressee>(addressB);
+    lst << itemB;
 
     Addressee addressC;
     Akonadi::Item itemC;
     addressC.setFamilyName(nameItemC);
-    itemC.setPayload<Addressee>( addressC );
-    lst<<itemC;
+    itemC.setPayload<Addressee>(addressC);
+    lst << itemC;
 
     MergeContacts contacts(lst);
     Addressee resultAddr = contacts.mergedContact();
@@ -1006,7 +1006,7 @@ void MergeContactsTest::shouldMergeHomePage_data()
     QTest::addColumn<QUrl>("result");
     QTest::newRow("noConflict") <<  QUrl() << QUrl() << QUrl() << true << QUrl();
     QTest::newRow("noWithOneNameConflict") <<  QUrl() << QUrl() << QUrl(QLatin1String("http://www.kde.org")) << false << QUrl(QLatin1String("http://www.kde.org"));
-    QTest::newRow("noWithOneNameConflict1") <<  QUrl() << QUrl(QLatin1String("http://www.kde.org")) << QUrl() << false<< QUrl(QLatin1String("http://www.kde.org"));
+    QTest::newRow("noWithOneNameConflict1") <<  QUrl() << QUrl(QLatin1String("http://www.kde.org")) << QUrl() << false << QUrl(QLatin1String("http://www.kde.org"));
     QTest::newRow("noWithOneNameConflict2") <<  QUrl(QLatin1String("http://www.kde.org")) << QUrl() << QUrl() << false << QUrl(QLatin1String("http://www.kde.org"));
     QTest::newRow("noConflictWithSameName") <<  QUrl(QLatin1String("http://www.kde.org")) << QUrl(QLatin1String("http://www.kde.org")) << QUrl() << false << QUrl(QLatin1String("http://www.kde.org"));
     QTest::newRow("noConflictWithSameName2") <<  QUrl(QLatin1String("http://www.kde.org")) << QUrl(QLatin1String("http://www.kde.org")) << QUrl(QLatin1String("http://www.kde.org")) << false << QUrl(QLatin1String("http://www.kde.org"));
@@ -1033,65 +1033,64 @@ void MergeContactsTest::shouldMergeBlogFeed_data()
 
 void MergeContactsTest::shouldMergeBlogFeed()
 {
-    QFETCH( QString, nameItemA );
-    QFETCH( QString, nameItemB );
-    QFETCH( QString, nameItemC );
-    QFETCH( bool, isEmpty );
-    QFETCH( QString, result );
+    QFETCH(QString, nameItemA);
+    QFETCH(QString, nameItemB);
+    QFETCH(QString, nameItemC);
+    QFETCH(bool, isEmpty);
+    QFETCH(QString, result);
 
-    const QString valueCustomStr = QLatin1String( "BlogFeed" );
+    const QString valueCustomStr = QLatin1String("BlogFeed");
     Akonadi::Item::List lst;
     Addressee addressA;
-    addressA.insertCustom(QLatin1String( "KADDRESSBOOK" ),valueCustomStr , nameItemA);
+    addressA.insertCustom(QLatin1String("KADDRESSBOOK"), valueCustomStr , nameItemA);
     Akonadi::Item itemA;
-    itemA.setPayload<Addressee>( addressA );
-    lst<<itemA;
+    itemA.setPayload<Addressee>(addressA);
+    lst << itemA;
 
     Addressee addressB;
     Akonadi::Item itemB;
-    addressB.insertCustom(QLatin1String( "KADDRESSBOOK" ), valueCustomStr, nameItemB);
-    itemB.setPayload<Addressee>( addressB );
-    lst<<itemB;
+    addressB.insertCustom(QLatin1String("KADDRESSBOOK"), valueCustomStr, nameItemB);
+    itemB.setPayload<Addressee>(addressB);
+    lst << itemB;
 
     Addressee addressC;
     Akonadi::Item itemC;
-    addressC.insertCustom(QLatin1String( "KADDRESSBOOK" ), valueCustomStr, nameItemC);
-    itemC.setPayload<Addressee>( addressC );
-    lst<<itemC;
+    addressC.insertCustom(QLatin1String("KADDRESSBOOK"), valueCustomStr, nameItemC);
+    itemC.setPayload<Addressee>(addressC);
+    lst << itemC;
 
     MergeContacts contacts(lst);
     Addressee resultAddr = contacts.mergedContact();
     QCOMPARE(resultAddr.isEmpty(), isEmpty);
-    const QString resultStr = resultAddr.custom(QLatin1String( "KADDRESSBOOK" ), valueCustomStr);
+    const QString resultStr = resultAddr.custom(QLatin1String("KADDRESSBOOK"), valueCustomStr);
     QCOMPARE(resultStr, result);
 }
 
-
 void MergeContactsTest::shouldMergeHomePage()
 {
-    QFETCH( QUrl, nameItemA );
-    QFETCH( QUrl, nameItemB );
-    QFETCH( QUrl, nameItemC );
-    QFETCH( bool, isEmpty );
-    QFETCH( QUrl, result );
+    QFETCH(QUrl, nameItemA);
+    QFETCH(QUrl, nameItemB);
+    QFETCH(QUrl, nameItemC);
+    QFETCH(bool, isEmpty);
+    QFETCH(QUrl, result);
     Akonadi::Item::List lst;
     Addressee addressA;
     Akonadi::Item itemA;
     addressA.setUrl(nameItemA);
-    itemA.setPayload<KContacts::Addressee>( addressA );
-    lst<<itemA;
+    itemA.setPayload<KContacts::Addressee>(addressA);
+    lst << itemA;
 
     Addressee addressB;
     Akonadi::Item itemB;
     addressB.setUrl(nameItemB);
-    itemB.setPayload<KContacts::Addressee>( addressB );
-    lst<<itemB;
+    itemB.setPayload<KContacts::Addressee>(addressB);
+    lst << itemB;
 
     Addressee addressC;
     Akonadi::Item itemC;
     addressC.setUrl(nameItemC);
-    itemC.setPayload<KContacts::Addressee>( addressC );
-    lst<<itemC;
+    itemC.setPayload<KContacts::Addressee>(addressC);
+    lst << itemC;
 
     MergeContacts contacts(lst);
     Addressee resultAddr = contacts.mergedContact();

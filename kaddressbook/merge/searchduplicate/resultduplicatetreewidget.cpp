@@ -37,17 +37,18 @@ ResultDuplicateTreeWidget::~ResultDuplicateTreeWidget()
 
 void ResultDuplicateTreeWidget::slotItemChanged(QTreeWidgetItem *item, int column)
 {
-    if (column!=0)
+    if (column != 0) {
         return;
+    }
     //Parent
-    if (item->childCount()!=0) {
+    if (item->childCount() != 0) {
         changeState(item, item->checkState(0) == Qt::Checked);
     } else { //child
         QTreeWidgetItem *parent = item->parent();
         if (parent) {
             blockSignals(true);
             Qt::CheckState state = Qt::PartiallyChecked;
-            for (int i=0; i < parent->childCount(); ++i) {
+            for (int i = 0; i < parent->childCount(); ++i) {
                 if (i == 0) {
                     state = parent->child(i)->checkState(0);
                 } else {
@@ -67,13 +68,13 @@ void ResultDuplicateTreeWidget::changeState(QTreeWidgetItem *item, bool b)
 {
     blockSignals(true);
     item->setCheckState(0, b ? Qt::Checked : Qt::Unchecked);
-    for (int i=0; i < item->childCount(); ++i) {
+    for (int i = 0; i < item->childCount(); ++i) {
         item->child(i)->setCheckState(0, b ? Qt::Checked : Qt::Unchecked);
     }
     blockSignals(false);
 }
 
-void ResultDuplicateTreeWidget::slotItemActivated(QTreeWidgetItem* item, int column)
+void ResultDuplicateTreeWidget::slotItemActivated(QTreeWidgetItem *item, int column)
 {
     Q_UNUSED(column);
     ResultDuplicateTreeWidgetItem *resultItem = dynamic_cast<ResultDuplicateTreeWidgetItem *>(item);
@@ -124,7 +125,7 @@ QList<Akonadi::Item::List> ResultDuplicateTreeWidget::selectedContactsToMerge() 
 ResultDuplicateTreeWidgetItem::ResultDuplicateTreeWidgetItem(QTreeWidget *parent)
     : QTreeWidgetItem(parent)
 {
-    setFlags( Qt::ItemIsSelectable | Qt::ItemIsUserCheckable | Qt::ItemIsEnabled );
+    setFlags(Qt::ItemIsSelectable | Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
     setCheckState(0, Qt::Unchecked);
 }
 

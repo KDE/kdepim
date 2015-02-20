@@ -70,11 +70,10 @@ public:
     void replace();
     void find();
     void undo();
-    void redo();    
+    void redo();
     void paste();
     void cut();
     void copy();
-
 
     bool isUndoAvailable() const;
     bool isRedoAvailable() const;

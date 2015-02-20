@@ -73,7 +73,7 @@ void MergeContactSelectListWidget::updateTitle()
         title = Addressee::logoLabel();
         break;
     case MergeContacts::Anniversary:
-        title = i18nc( "The wedding anniversary of a contact", "Anniversary" );
+        title = i18nc("The wedding anniversary of a contact", "Anniversary");
         break;
     case MergeContacts::Name:
         title = Addressee::nameLabel();
@@ -82,7 +82,7 @@ void MergeContactSelectListWidget::updateTitle()
         title = Addressee::nickNameLabel();
         break;
     case MergeContacts::Blog:
-        title = i18n( "Blog Feed" );
+        title = i18n("Blog Feed");
         break;
     case MergeContacts::HomePage:
         title = QLatin1String("HomePage");
@@ -91,7 +91,7 @@ void MergeContactSelectListWidget::updateTitle()
         title = Addressee::organizationLabel();
         break;
     case MergeContacts::Profession:
-        title = i18n( "Profession" );
+        title = i18n("Profession");
         break;
     case MergeContacts::Title:
         title = Addressee::titleLabel();
@@ -100,13 +100,13 @@ void MergeContactSelectListWidget::updateTitle()
         title = Addressee::departmentLabel();
         break;
     case MergeContacts::Office:
-        title = i18n( "Office" );
+        title = i18n("Office");
         break;
     case MergeContacts::ManagerName:
-        title = i18n( "Manager" );
+        title = i18n("Manager");
         break;
     case MergeContacts::Assistant:
-        title = i18n( "Assistant" );
+        title = i18n("Assistant");
         break;
     case MergeContacts::FreeBusy:
         title = QLatin1String("FreeBusy");
@@ -115,7 +115,7 @@ void MergeContactSelectListWidget::updateTitle()
         title = Addressee::familyNameLabel();
         break;
     case MergeContacts::PartnerName:
-        title = i18n( "Spouse" );
+        title = i18n("Spouse");
         break;
     }
 

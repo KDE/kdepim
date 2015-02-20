@@ -61,5 +61,4 @@ void SieveEditorMenuBarTest::shouldHaveDefaultValue()
     QVERIFY(bar.selectAllAction()->isEnabled());
 }
 
-
 QTEST_MAIN(SieveEditorMenuBarTest)

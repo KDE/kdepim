@@ -21,7 +21,8 @@
 #include <QMenuBar>
 class QAction;
 class QMenu;
-namespace KSieveUi {
+namespace KSieveUi
+{
 class SieveEditorMenuBar : public QMenuBar
 {
     Q_OBJECT

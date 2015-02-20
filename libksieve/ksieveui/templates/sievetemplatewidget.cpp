@@ -45,7 +45,7 @@ void SieveTemplateListWidget::setSieveCapabilities(const QStringList &capabiliti
     mCapabilities = capabilities;
 }
 
-QMimeData *SieveTemplateListWidget::mimeData ( const QList<QListWidgetItem *> items ) const
+QMimeData *SieveTemplateListWidget::mimeData(const QList<QListWidgetItem *> items) const
 {
     if (items.isEmpty()) {
         return 0;

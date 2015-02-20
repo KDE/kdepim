@@ -54,10 +54,10 @@ public:
     }
 
 protected:
-    void actionEvent(QActionEvent *event) Q_DECL_OVERRIDE
-    {
+    void actionEvent(QActionEvent *event) Q_DECL_OVERRIDE {
         QAction *action = event->action();
-        switch (event->type()) {
+        switch (event->type())
+        {
         case QEvent::ActionChanged:
             if (action == mDefaultAction) {
                 setDefaultAction(mDefaultAction);
