@@ -38,9 +38,9 @@
 #include <KLocalizedString>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
-#include <khbox.h>
+#include <QHBoxLayout>
 #include <kpushbutton.h>
-#include <kvbox.h>
+#include <QVBoxLayout>
 #include <QToolButton>
 #include <QDBusConnection>
 #include <QHBoxLayout>
@@ -195,9 +195,12 @@ CompletionOrderWidget::CompletionOrderWidget( KLDAP::LdapClientSearch* ldapSearc
     QHBoxLayout *hbox = new QHBoxLayout;
     setLayout(hbox);
 
-    KHBox* page = new KHBox( this );
+    QWidget* page = new QWidget( this );
+    QHBoxLayout *pageHBoxLayout = new QHBoxLayout(page);
+    pageHBoxLayout->setMargin(0);
     hbox->addWidget(page);
     mListView = new QTreeWidget( page );
+    pageHBoxLayout->addWidget(mListView);
     mListView->setColumnCount( 1 );
     mListView->setAlternatingRowColors( true );
     mListView->setIndentation( 0 );
@@ -205,8 +208,12 @@ CompletionOrderWidget::CompletionOrderWidget( KLDAP::LdapClientSearch* ldapSearc
     mListView->setHeaderHidden ( true );
     mListView->setSortingEnabled( true );
 
-    KVBox* upDownBox = new KVBox( page );
+    QWidget* upDownBox = new QWidget( page );
+    QVBoxLayout *upDownBoxVBoxLayout = new QVBoxLayout(upDownBox);
+    upDownBoxVBoxLayout->setMargin(0);
+    pageHBoxLayout->addWidget(upDownBox);
     mUpButton = new KPushButton( upDownBox );
+    upDownBoxVBoxLayout->addWidget(mUpButton);
     mUpButton->setAutoRepeat(true);
     mUpButton->setObjectName( QLatin1String("mUpButton") );
     mUpButton->setIcon( QIcon::fromTheme(QLatin1String("go-up")) );
@@ -214,6 +221,7 @@ CompletionOrderWidget::CompletionOrderWidget( KLDAP::LdapClientSearch* ldapSearc
     mUpButton->setFocusPolicy( Qt::StrongFocus );
 
     mDownButton = new KPushButton( upDownBox );
+    upDownBoxVBoxLayout->addWidget(mDownButton);
     mDownButton->setAutoRepeat(true);
     mDownButton->setObjectName( QLatin1String("mDownButton") );
     mDownButton->setIcon( QIcon::fromTheme(QLatin1String("go-down")) );
@@ -221,7 +229,8 @@ CompletionOrderWidget::CompletionOrderWidget( KLDAP::LdapClientSearch* ldapSearc
     mDownButton->setFocusPolicy( Qt::StrongFocus );
 
     QWidget* spacer = new QWidget( upDownBox );
-    upDownBox->setStretchFactor( spacer, 100 );
+    upDownBoxVBoxLayout->addWidget(spacer);
+    upDownBoxVBoxLayout->setStretchFactor( spacer, 100 );
 
     connect( mListView, SIGNAL(itemSelectionChanged()),
              SLOT(slotSelectionChanged()) );

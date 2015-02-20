@@ -19,7 +19,7 @@
 #include "collectionaclwidget.h"
 
 #include <KLocalizedString>
-#include <KVBox>
+#include <QVBoxLayout>
 #include <QAction>
 #include <QActionEvent>
 #include <QHBoxLayout>
@@ -89,22 +89,28 @@ CollectionAclWidget::CollectionAclWidget(QWidget *parent)
     view->setModel(mAclManager->model());
     view->setSelectionModel(mAclManager->selectionModel());
 
-    KVBox *buttonBox = new KVBox;
+    QWidget *buttonBox = new QWidget;
+    QVBoxLayout *buttonBoxVBoxLayout = new QVBoxLayout(buttonBox);
+    buttonBoxVBoxLayout->setMargin(0);
     layout->addWidget(buttonBox);
 
     ActionButton *button = new ActionButton(buttonBox);
+    buttonBoxVBoxLayout->addWidget(button);
     button->setObjectName(QLatin1String("add"));
     button->setDefaultAction(mAclManager->addAction());
 
     button = new ActionButton(buttonBox);
+    buttonBoxVBoxLayout->addWidget(button);
     button->setObjectName(QLatin1String("edit"));
     button->setDefaultAction(mAclManager->editAction());
 
     button = new ActionButton(buttonBox);
+    buttonBoxVBoxLayout->addWidget(button);
     button->setDefaultAction(mAclManager->deleteAction());
     button->setObjectName(QLatin1String("delete"));
 
     QWidget *spacer = new QWidget(buttonBox);
+    buttonBoxVBoxLayout->addWidget(spacer);
     spacer->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
     connect(view, SIGNAL(doubleClicked(QModelIndex)), mAclManager->editAction(), SIGNAL(triggered()));
 }
