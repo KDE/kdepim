@@ -137,14 +137,10 @@ void MergeContacts::mergeToContact(KContacts::Addressee &newContact, const KCont
         if (newContact.familyName().isEmpty() && !fromContact.familyName().isEmpty()) {
             newContact.setFamilyName(fromContact.familyName());
         }
-
-        // Merge blog
-
         // Merge HomePage
         if (newContact.url().isEmpty() && !fromContact.url().isEmpty()) {
             newContact.setUrl(fromContact.url());
         }
-
         // Merge geo
         if (newContact.geo().isValid() && !fromContact.geo().isValid()) {
             newContact.setGeo(fromContact.geo());
@@ -157,20 +153,22 @@ void MergeContacts::mergeToContact(KContacts::Addressee &newContact, const KCont
         // Merge Logo
         if (newContact.logo().isEmpty() && !fromContact.logo().isEmpty()) {
             newContact.setLogo(fromContact.logo());
-        }        
-        // Test Blog
+        }
+        // Merge Birthday TODO
+
+        // Merge Blog
         mergeCustomValue(fromContact, QLatin1String( "BlogFeed" ), newContact);
-        // Test profession
+        // Merge profession
         mergeCustomValue(fromContact, QLatin1String( "X-Profession" ), newContact);
-        // Test Office
+        // Merge Office
         mergeCustomValue(fromContact, QLatin1String( "X-Office" ), newContact);
-        // Test ManagersName
+        // Merge ManagersName
         mergeCustomValue(fromContact, QLatin1String( "X-ManagersName" ), newContact);
-        // Test AssistantsName
+        // Merge AssistantsName
         mergeCustomValue(fromContact, QLatin1String( "X-AssistantsName" ), newContact);
-        // Test SpousesName
+        // Merge SpousesName
         mergeCustomValue(fromContact, QLatin1String( "X-SpousesName" ), newContact);
-        //Test Anniversary
+        // Merge Anniversary
         mergeCustomValue(fromContact, QLatin1String( "X-Anniversary" ), newContact);
     }
 }
