@@ -100,6 +100,9 @@ void MergeContactSelectInformationWidget::setContacts(MergeContacts::ConflictInf
     if (conflictTypes & MergeContacts::PartnerName) {
         addInformationWidget(MergeContacts::PartnerName);
     }
+    if (conflictTypes & MergeContacts::Keys) {
+        addInformationWidget(MergeContacts::Keys);
+    }
 }
 
 void MergeContactSelectInformationWidget::addInformationWidget(MergeContacts::ConflictInformation conflictType)
@@ -188,6 +191,9 @@ void MergeContactSelectInformationWidget::createContact(KContacts::Addressee &ad
                 addr.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("X-SpousesName"), newValue);
                 break;
             }
+            case MergeContacts::Keys:
+                addr.setKeys(mAddressList.at(selectedContactIndex).keys());
+                break;
             }
         }
     }

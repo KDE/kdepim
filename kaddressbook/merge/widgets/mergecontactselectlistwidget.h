@@ -43,6 +43,7 @@ public:
 private:
     void fillList(const KContacts::Addressee::List &lst);
     void updateTitle();
+    void addItem(const QString &str);
     QLabel *mTitle;
     QListWidget *mSelectListWidget;
     MergeContacts::ConflictInformation mConflictType;

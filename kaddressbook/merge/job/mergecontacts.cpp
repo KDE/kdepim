@@ -169,7 +169,8 @@ void MergeContacts::mergeToContact(KContacts::Addressee &newContact, const KCont
         // Merge SpousesName
         mergeCustomValue(fromContact, QLatin1String("X-SpousesName"), newContact);
         // Merge Anniversary
-        mergeCustomValue(fromContact, QLatin1String("X-Anniversary"), newContact);
+        mergeCustomValue(fromContact, QLatin1String( "X-Anniversary" ), newContact);
+        // Merge Key
     }
 }
 
