@@ -264,7 +264,7 @@ void CompletionOrderWidget::addRecentAddressItem()
     new CompletionViewItem( mListView, item, 0 );
 }
 
-void CompletionOrderWidget::addCompletionItemForIndex( const QModelIndex &index )
+void CompletionOrderWidget::addCompletionItemForCollection( const QModelIndex &index )
 {
     const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
     if ( !collection.isValid() )
@@ -308,7 +308,7 @@ void CompletionOrderWidget::loadCompletionItems()
              this, SLOT(rowsInserted(QModelIndex,int,int)) );
 
     for ( int row = 0; row < mCollectionModel->rowCount(); ++row )
-        addCompletionItemForIndex( mCollectionModel->index( row, 0 ) );
+        addCompletionItemForCollection( mCollectionModel->index( row, 0 ) );
 
     addRecentAddressItem();
 
@@ -318,7 +318,7 @@ void CompletionOrderWidget::loadCompletionItems()
 void CompletionOrderWidget::rowsInserted( const QModelIndex &parent, int start, int end )
 {
     for ( int row = start; row <= end; ++row )
-        addCompletionItemForIndex( mCollectionModel->index( row, 0, parent ) );
+        addCompletionItemForCollection( mCollectionModel->index( row, 0, parent ) );
 
     mListView->sortItems( 0, Qt::AscendingOrder );
 }
