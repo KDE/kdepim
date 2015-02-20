@@ -117,7 +117,7 @@ void MergeContactSelectListWidget::updateTitle()
     case MergeContacts::PartnerName:
         title = i18n( "Spouse" );
         break;
-    case MergeContacts::Key:
+    case MergeContacts::Keys:
         title = QLatin1String("Keys");
         break;
     }
@@ -204,6 +204,9 @@ void MergeContactSelectListWidget::fillList(const KABC::Addressee::List &lst)
             mSelectListWidget->addItem(newBlog);
             break;
         }
+        case MergeContacts::Keys:
+            //TODO
+            break;
         }
     }
 }
