@@ -24,7 +24,7 @@
 
 #include <KContacts/Addressee>
 
-#include <KDialog>
+#include <QDialog>
 
 #include <QtCore/QList>
 
@@ -37,7 +37,7 @@ class QCheckBox;
 class QCsvModel;
 class QTableView;
 
-class CSVImportDialog : public KDialog
+class CSVImportDialog : public QDialog
 {
     Q_OBJECT
 
@@ -46,9 +46,6 @@ public:
     ~CSVImportDialog();
 
     KContacts::AddresseeList contacts() const;
-
-protected Q_SLOTS:
-    void slotButtonClicked(int) Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void setFile(const QString &);
@@ -65,6 +62,9 @@ private Q_SLOTS:
     void modelFinishedLoading();
     void finalizeApplyTemplate();
 
+    void slotSaveTemplate();
+    void slotApplyTemplate();
+    void slotOk();
 private:
     void applyTemplate();
     void saveTemplate();
@@ -90,6 +90,10 @@ private:
     QMap<QString, uint> mTypeMap;
     QIODevice *mDevice;
     ContactFields::Fields mFieldSelection;
+    QPushButton *mUser1Button;
+    QPushButton *mUser2Button;
+    QPushButton *mOkButton;
+
 };
 
 #endif

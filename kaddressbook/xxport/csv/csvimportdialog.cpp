@@ -49,6 +49,9 @@
 #include <QTableView>
 #include <QHeaderView>
 #include <QStandardPaths>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QVBoxLayout>
 
 enum {
     Local = 0,
@@ -173,13 +176,10 @@ public:
 };
 
 CSVImportDialog::CSVImportDialog(QWidget *parent)
-    : KDialog(parent), mDevice(Q_NULLPTR)
+    : QDialog(parent), mDevice(Q_NULLPTR)
 {
-    setCaption(i18nc("@title:window", "CSV Import Dialog"));
-    setButtons(Ok | Cancel | User1 | User2);
-    setDefaultButton(Ok);
+    setWindowTitle(i18nc("@title:window", "CSV Import Dialog"));
     setModal(true);
-    showButtonSeparator(true);
 
     mModel = new QCsvModel(this);
 
@@ -214,7 +214,7 @@ KContacts::AddresseeList CSVImportDialog::contacts() const
     KContacts::AddresseeList contacts;
     DateParser dateParser(mDatePatternEdit->text());
 
-    QProgressDialog progressDialog(const_cast<CSVImportDialog *>(this)->mainWidget());
+    QProgressDialog progressDialog(const_cast<CSVImportDialog *>(this));
     progressDialog.setAutoClose(true);
     progressDialog.setMaximum(mModel->rowCount());
     progressDialog.setLabelText(i18nc("@label", "Importing contacts"));
@@ -264,20 +264,43 @@ KContacts::AddresseeList CSVImportDialog::contacts() const
 
 void CSVImportDialog::initGUI()
 {
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
     QWidget *page = new QWidget(this);
-    setMainWidget(page);
+
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(page);
+
+    QPushButton *mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+    mOkButton->setDefault(true);
+    mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    mUser1Button = new QPushButton;
+    buttonBox->addButton(mUser1Button, QDialogButtonBox::ActionRole);
+    connect(mUser1Button, SIGNAL(clicked()), this, SLOT(slotApplyTemplate()));
+    QPushButton *mUser2Button = new QPushButton;
+    connect(mUser2Button, SIGNAL(clicked()), this, SLOT(slotSaveTemplate()));
+    buttonBox->addButton(mUser2Button, QDialogButtonBox::ActionRole);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotOk()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    mainLayout->addWidget(buttonBox);
+    mOkButton->setDefault(true);
+
+
+    mainLayout->addWidget(page);
 
     QGridLayout *layout = new QGridLayout(page);
-    layout->setSpacing(spacingHint());
+    mainLayout->addLayout(layout);
     layout->setMargin(0);
 
     QHBoxLayout *hbox = new QHBoxLayout();
-    hbox->setSpacing(spacingHint());
 
     QLabel *label = new QLabel(i18nc("@label", "File to import:"), page);
+    mainLayout->addWidget(label);
     hbox->addWidget(label);
 
     mUrlRequester = new KUrlRequester(page);
+    mainLayout->addWidget(mUrlRequester);
     mUrlRequester->setFilter(QLatin1String("*.csv"));
     mUrlRequester->lineEdit()->setTrapReturnKey(true);
     mUrlRequester->setToolTip(
@@ -292,9 +315,8 @@ void CSVImportDialog::initGUI()
 
     // Delimiter: comma, semicolon, tab, space, other
     QGroupBox *group = new QGroupBox(i18nc("@title:group", "Delimiter"), page);
+    mainLayout->addWidget(group);
     QGridLayout *delimiterLayout = new QGridLayout;
-    delimiterLayout->setMargin(marginHint());
-    delimiterLayout->setSpacing(spacingHint());
     group->setLayout(delimiterLayout);
     delimiterLayout->setAlignment(Qt::AlignTop);
     layout->addWidget(group, 1, 0, 4, 1);
@@ -362,9 +384,11 @@ void CSVImportDialog::initGUI()
 
     // text quote
     label = new QLabel(i18nc("@label:listbox", "Text quote:"), page);
+    mainLayout->addWidget(label);
     layout->addWidget(label, 1, 2);
 
     mComboQuote = new KComboBox(page);
+    mainLayout->addWidget(mComboQuote);
     mComboQuote->setToolTip(
         i18nc("@info:tooltip", "Select the quote character"));
     mComboQuote->setWhatsThis(
@@ -381,9 +405,11 @@ void CSVImportDialog::initGUI()
 
     // date format
     label = new QLabel(i18nc("@label:listbox", "Date format:"), page);
+    mainLayout->addWidget(label);
     layout->addWidget(label, 2, 2);
 
     mDatePatternEdit = new QLineEdit(page);
+    mainLayout->addWidget(mDatePatternEdit);
     mDatePatternEdit->setText(QLatin1String("Y-M-D"));   // ISO 8601 date format as default
     mDatePatternEdit->setToolTip(
         xi18nc("@info:tooltip",
@@ -416,9 +442,11 @@ void CSVImportDialog::initGUI()
 
     // text codec
     label = new QLabel(i18nc("@label:listbox", "Text codec:"), page);
+    mainLayout->addWidget(label);
     layout->addWidget(label, 3, 2);
 
     mCodecCombo = new KComboBox(page);
+    mainLayout->addWidget(mCodecCombo);
     mCodecCombo->setToolTip(
         i18nc("@info:tooltip", "Select the text codec"));
     mCodecCombo->setWhatsThis(
@@ -428,6 +456,7 @@ void CSVImportDialog::initGUI()
 
     // skip first line
     mSkipFirstRow = new QCheckBox(i18nc("@option:check", "Skip first row of file"), page);
+    mainLayout->addWidget(mSkipFirstRow);
     mSkipFirstRow->setToolTip(
         i18nc("@info:tooltip", "Skip first row of csv file when importing"));
     mSkipFirstRow->setWhatsThis(
@@ -439,6 +468,7 @@ void CSVImportDialog::initGUI()
 
     // csv view
     mTable = new QTableView(page);
+    mainLayout->addWidget(mTable);
     mTable->setModel(mModel);
     mTable->setItemDelegateForRow(0, new ContactFieldDelegate(this));
     mTable->horizontalHeader()->hide();
@@ -447,12 +477,12 @@ void CSVImportDialog::initGUI()
     mTable->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
     layout->addWidget(mTable, 5, 0, 1, 5);
 
-    setButtonText(User1, i18nc("@action:button", "Apply Template..."));
-    setButtonText(User2, i18nc("@action:button", "Save Template..."));
+    mUser1Button->setText(i18nc("@action:button", "Apply Template..."));
+    mUser2Button->setText(i18nc("@action:button", "Save Template..."));
 
-    enableButton(Ok, false);
-    enableButton(User1, false);
-    enableButton(User2, false);
+    mOkButton->setEnabled(false);
+    mUser1Button->setEnabled(false);
+    mUser2Button->setEnabled(false);
 
     resize(500, 400);
 }
@@ -551,32 +581,34 @@ void CSVImportDialog::skipFirstRowChanged(bool checked, bool reload)
     }
 }
 
-void CSVImportDialog::slotButtonClicked(int button)
+void CSVImportDialog::slotApplyTemplate()
 {
-    if (button == KDialog::Ok) {
-        bool assigned = false;
+    applyTemplate();
+}
 
-        for (int column = 0; column < mModel->columnCount(); ++column) {
-            if (mModel->data(mModel->index(0, column),
-                             Qt::DisplayRole).toUInt() != ContactFields::Undefined) {
-                assigned = true;
-                break;
-            }
-        }
+void CSVImportDialog::slotSaveTemplate()
+{
+    saveTemplate();
+}
 
-        if (!assigned) {
-            KMessageBox::sorry(
-                this,
-                i18nc("@info:status", "You must assign at least one column."));
-        } else {
-            accept();
+void CSVImportDialog::slotOk()
+{
+    bool assigned = false;
+
+    for (int column = 0; column < mModel->columnCount(); ++column) {
+        if (mModel->data(mModel->index(0, column),
+                         Qt::DisplayRole).toUInt() != ContactFields::Undefined) {
+            assigned = true;
+            break;
         }
-    } else if (button == User1) {
-        applyTemplate();
-    } else if (button == User2) {
-        saveTemplate();
-    } else if (button == KDialog::Cancel) {
-        reject();
+    }
+
+    if (!assigned) {
+        KMessageBox::sorry(
+                    this,
+                    i18nc("@info:status", "You must assign at least one column."));
+    } else {
+        accept();
     }
 }
 
@@ -719,9 +751,9 @@ void CSVImportDialog::urlChanged(const QString &file)
 {
     bool state = !file.isEmpty();
 
-    enableButton(Ok, state);
-    enableButton(User1, state);
-    enableButton(User2, state);
+    mOkButton->setEnabled(state);
+    mUser1Button->setEnabled(state);
+    mUser2Button->setEnabled(state);
 }
 
 void CSVImportDialog::codecChanged(bool reload)
