@@ -20,7 +20,7 @@
 #include "viewer/editorwatcher.h"
 #include <KMessageBox>
 #include <KLocalizedString>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <QUrl>
 #include <AkonadiCore/ItemModifyJob>
 #include <KMime/Content>
@@ -50,7 +50,7 @@ bool AttachmentEditJob::addAttachment(KMime::Content *node, bool showWarning)
         return false;
     }
 
-    KTemporaryFile file;
+    QTemporaryFile file;
     file.setAutoRemove(false);
     if (!file.open()) {
         qCWarning(MESSAGEVIEWER_LOG) << "Edit Attachment: Unable to open temp file.";
