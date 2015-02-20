@@ -65,15 +65,10 @@ void OpenComposerJob::start()
             const bool ok = QProcess::startDetached(QLatin1String("kontact"));
             if (!ok) {
                 setError(KJob::UserDefinedError);
-                setErrorText(i18nc("errormessage: can't get connection via dbus", "Don't get kmail started"));
+                setErrorText(i18nc("errormessage: can't create a kontact process", "Can't create composer: Failed to start kontact."));
                 emitResult();
                 return;
             }
-        } else {
-            setError(KJob::UserDefinedError);
-            setErrorText(i18nc("errormessage: can't get connection via dbus", "Don't get kmail started"));
-            emitResult();
-            return;
         }
     }
 
@@ -84,7 +79,7 @@ void OpenComposerJob::timeout()
 {
     if (!mSuccess) {
         setError(KJob::UserDefinedError);
-        setErrorText(i18nc("errormessage: can't get connection via dbus", "Don't get kmail started"));
+        setErrorText(i18nc("errormessage: No connection via dbus nor starting kontact process worked.", "Can't create composer: Neither dbus nor kontact responded in time."));
         emitResult();
     }
 }
