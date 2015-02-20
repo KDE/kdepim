@@ -26,7 +26,7 @@
 #include <QDBusAbstractAdaptor>
 #include <KConfig>
 
-class KPushButton;
+class QPushButton;
 class QAbstractItemModel;
 class QModelIndex;
 class QTreeWidget;
@@ -91,8 +91,8 @@ private:
 
     KConfig mConfig;
     QTreeWidget* mListView;
-    KPushButton* mUpButton;
-    KPushButton* mDownButton;
+    QPushButton* mUpButton;
+    QPushButton* mDownButton;
     QAbstractItemModel *mCollectionModel;
     KLDAP::LdapClientSearch *mLdapSearch;
 

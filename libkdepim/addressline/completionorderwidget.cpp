@@ -39,7 +39,7 @@
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
 #include <QHBoxLayout>
-#include <kpushbutton.h>
+#include <QPushButton>
 #include <QVBoxLayout>
 #include <QToolButton>
 #include <QDBusConnection>
@@ -212,7 +212,7 @@ CompletionOrderWidget::CompletionOrderWidget( KLDAP::LdapClientSearch* ldapSearc
     QVBoxLayout *upDownBoxVBoxLayout = new QVBoxLayout(upDownBox);
     upDownBoxVBoxLayout->setMargin(0);
     pageHBoxLayout->addWidget(upDownBox);
-    mUpButton = new KPushButton( upDownBox );
+    mUpButton = new QPushButton( upDownBox );
     upDownBoxVBoxLayout->addWidget(mUpButton);
     mUpButton->setAutoRepeat(true);
     mUpButton->setObjectName( QLatin1String("mUpButton") );
@@ -220,7 +220,7 @@ CompletionOrderWidget::CompletionOrderWidget( KLDAP::LdapClientSearch* ldapSearc
     mUpButton->setEnabled( false ); // b/c no item is selected yet
     mUpButton->setFocusPolicy( Qt::StrongFocus );
 
-    mDownButton = new KPushButton( upDownBox );
+    mDownButton = new QPushButton( upDownBox );
     upDownBoxVBoxLayout->addWidget(mDownButton);
     mDownButton->setAutoRepeat(true);
     mDownButton->setObjectName( QLatin1String("mDownButton") );
