@@ -169,6 +169,7 @@ void MergeContacts::mergeToContact(KABC::Addressee &newContact, const KABC::Addr
         mergeCustomValue(fromContact, QLatin1String( "X-SpousesName" ), newContact);
         // Merge Anniversary
         mergeCustomValue(fromContact, QLatin1String( "X-Anniversary" ), newContact);
+        // Merge Key
     }
 }
 

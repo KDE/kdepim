@@ -41,6 +41,7 @@ public:
 private:
     void fillList(const KABC::Addressee::List &lst);
     void updateTitle();
+    void addItem(const QString &str);
     QLabel *mTitle;
     QListWidget *mSelectListWidget;
     MergeContacts::ConflictInformation mConflictType;

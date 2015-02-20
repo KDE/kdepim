@@ -22,14 +22,13 @@
 #include <KDialog>
 #include <Akonadi/Item>
 #include "merge/job/mergecontacts.h"
-#include "kaddressbook_export.h"
 class QStackedWidget;
 namespace KABMergeContacts {
 class MergeContactWidget;
 class MergeContactErrorLabel;
 class MergeContactSelectInformationScrollArea;
 class MergeContactInfoWidget;
-class KADDRESSBOOK_EXPORT MergeContactsDialog : public KDialog
+class MergeContactsDialog : public KDialog
 {
     Q_OBJECT
 public:
