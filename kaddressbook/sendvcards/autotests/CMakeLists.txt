@@ -6,4 +6,4 @@ include(AkonadiMacros)
 set(KDEPIMLIBS_RUN_ISOLATED_TESTS TRUE)
 set(KDEPIMLIBS_RUN_SQLITE_ISOLATED_TESTS TRUE)
 
-add_akonadi_isolated_test_advanced( sendvcardsjobtest.cpp "" "kaddressbookprivate;kabc")
+add_akonadi_isolated_test_advanced( sendvcardsjobtest.cpp "../sendvcardsjob.cpp" "kaddressbookprivate;kabc;akonadi-contact;pimcommon")

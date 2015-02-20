@@ -141,6 +141,9 @@ void MailSenderJob::finishJob()
 {
     if (!mEmailAddresses.isEmpty()) {
         emit sendMails(mEmailAddresses);
+    } else {
+        //TODO add messageBox
+        qDebug() << "No emails found in contacts.";
     }
     deleteLater();
 }

@@ -22,7 +22,6 @@
 #ifndef MAILSENDERJOB_H
 #define MAILSENDERJOB_H
 
-#include "kaddressbook_export.h"
 #include <Akonadi/Item>
 #include <QObject>
 #include <QStringList>
@@ -30,7 +29,7 @@
 class QItemSelectionModel;
 class KJob;
 namespace KABMailSender {
-class KADDRESSBOOK_EXPORT MailSenderJob : public QObject
+class MailSenderJob : public QObject
 {
     Q_OBJECT
 
