@@ -21,7 +21,7 @@
 #include <KMessageBox>
 #include <KLocalizedString>
 #include <KTemporaryFile>
-#include <KUrl>
+#include <QUrl>
 #include <AkonadiCore/ItemModifyJob>
 #include <KMime/Content>
 
