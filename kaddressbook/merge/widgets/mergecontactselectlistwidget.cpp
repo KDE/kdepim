@@ -117,6 +117,9 @@ void MergeContactSelectListWidget::updateTitle()
     case MergeContacts::PartnerName:
         title = i18n( "Spouse" );
         break;
+    case MergeContacts::Key:
+        title = QLatin1String("Keys");
+        break;
     }
 
     mTitle->setText(title);
