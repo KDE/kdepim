@@ -60,11 +60,11 @@ bool AttachmentEditJob::addAttachment(KMime::Content *node, bool showWarning)
     file.flush();
 
     EditorWatcher *watcher =
-        new EditorWatcher(KUrl(file.fileName()), QLatin1String(node->contentType()->mimeType()),
+        new EditorWatcher(QUrl::fromLocalFile(file.fileName()), QLatin1String(node->contentType()->mimeType()),
                           MessageViewer::EditorWatcher::NoOpenWithDialog, this, mMainWindow);
     mEditorWatchers[ watcher ] = node;
 
-    connect(watcher, SIGNAL(editDone(MessageViewer::EditorWatcher*)), SLOT(slotAttachmentEditDone(MessageViewer::EditorWatcher*)));
+    connect(watcher, &EditorWatcher::editDone, this, &AttachmentEditJob::slotAttachmentEditDone);
     if (!watcher->start()) {
         removeEditorWatcher(watcher, file.fileName());
     }

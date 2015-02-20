@@ -67,7 +67,7 @@ class KDEPIM_EXPORT CompletionOrderWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit CompletionOrderWidget(KLDAP::LdapClientSearch *ldapSearch, QWidget *parent = 0);
+    explicit CompletionOrderWidget(KLDAP::LdapClientSearch *ldapSearch, QWidget *parent = Q_NULLPTR);
     ~CompletionOrderWidget();
     void save();
 

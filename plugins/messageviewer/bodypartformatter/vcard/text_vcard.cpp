@@ -50,7 +50,7 @@ using MessageViewer::Interface::BodyPart;
 #include <KContacts/Addressee>
 
 #include <KLocalizedString>
-#include <KFileDialog>
+#include <QFileDialog>
 #include <QIcon>
 #include <KLocalizedString>
 #include <QMenu>
@@ -289,9 +289,7 @@ public:
         }
         // get the saveas file name
         QUrl saveAsUrl =
-            KFileDialog::getSaveUrl(fileName,
-                                    QString(), 0,
-                                    i18n("Save Business Card"));
+            QFileDialog::getSaveFileUrl(0, i18n("Save Business Card"), QUrl::fromUserInput(fileName));
         if (saveAsUrl.isEmpty() ||
                 (QFileInfo(saveAsUrl.path()).exists() &&
                  (KMessageBox::warningYesNo(

@@ -35,7 +35,7 @@
 
 #include <QAction>
 #include <KActionCollection>
-#include <KFileDialog>
+#include <QFileDialog>
 #include <QMenu>
 #include <KMessageBox>
 #include <KProtocolManager>
@@ -252,10 +252,8 @@ void IncidenceAttachment::saveAttachment(QListWidgetItem *item)
     KCalCore::Attachment::Ptr att = attitem->attachment();
 
     // get the saveas file name
-    QString saveAsFile = KFileDialog::getSaveFileName(
-                             att->label(),
-                             QString(), 0,
-                             i18nc("@title", "Save Attachment"));
+    QString saveAsFile = QFileDialog::getSaveFileName(0, i18nc("@title", "Save Attachment"),
+                             att->label());
 
     if (saveAsFile.isEmpty() ||
             (QFile(saveAsFile).exists() &&
