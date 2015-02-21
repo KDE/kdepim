@@ -265,7 +265,7 @@ KContacts::AddresseeList CSVImportDialog::contacts() const
 void CSVImportDialog::initGUI()
 {
 
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QWidget *page = new QWidget(this);
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -285,7 +285,6 @@ void CSVImportDialog::initGUI()
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     mainLayout->addWidget(buttonBox);
     mOkButton->setDefault(true);
-
 
     mainLayout->addWidget(page);
 
@@ -605,8 +604,8 @@ void CSVImportDialog::slotOk()
 
     if (!assigned) {
         KMessageBox::sorry(
-                    this,
-                    i18nc("@info:status", "You must assign at least one column."));
+            this,
+            i18nc("@info:status", "You must assign at least one column."));
     } else {
         accept();
     }

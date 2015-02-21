@@ -21,8 +21,8 @@
 #include <AkonadiCore/Item>
 #include <KContacts/Addressee>
 
-
-namespace KABMergeContacts {
+namespace KABMergeContacts
+{
 class MergeContacts
 {
 public:
