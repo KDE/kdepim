@@ -20,7 +20,6 @@
 
 #include <QLabel>
 
-#include "kaddressbook_export.h"
 namespace KABMergeContacts
 {
 class MergeContactErrorLabel : public QLabel

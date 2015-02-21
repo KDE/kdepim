@@ -22,15 +22,13 @@
 #ifndef MAILSENDERJOB_H
 #define MAILSENDERJOB_H
 
-#include "kaddressbook_export.h"
 #include <AkonadiCore/Item>
 #include <QObject>
 #include <QStringList>
 
 class KJob;
-namespace KABMailSender
-{
-class KADDRESSBOOK_EXPORT MailSenderJob : public QObject
+namespace KABMailSender {
+class MailSenderJob : public QObject
 {
     Q_OBJECT
 

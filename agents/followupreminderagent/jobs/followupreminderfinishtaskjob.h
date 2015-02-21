@@ -21,10 +21,6 @@
 #include <QObject>
 #include <AkonadiCore/Item>
 class KJob;
-namespace FollowUpReminder
-{
-class FollowUpReminderInfo;
-}
 class FollowUpReminderFinishTaskJob : public QObject
 {
     Q_OBJECT

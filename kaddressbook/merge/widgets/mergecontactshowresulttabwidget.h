@@ -19,13 +19,12 @@
 #define MERGECONTACTSHOWRESULTTABWIDGET_H
 
 #include <QTabWidget>
-#include "kaddressbook_export.h"
 #include <AkonadiCore/item.h>
 
 namespace KABMergeContacts
 {
 
-class KADDRESSBOOK_EXPORT MergeContactShowResultTabWidget : public QTabWidget
+class MergeContactShowResultTabWidget : public QTabWidget
 {
     Q_OBJECT
 public:

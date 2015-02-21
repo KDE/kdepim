@@ -20,7 +20,6 @@
 
 #ifndef SENDVCARDSJOB_H
 #define SENDVCARDSJOB_H
-#include "kaddressbook_export.h"
 #include <QObject>
 #include <AkonadiCore/Item>
 #include <QStringList>
@@ -31,7 +30,7 @@ class AttachmentTemporaryFilesDirs;
 }
 namespace KABSendVCards
 {
-class KADDRESSBOOK_EXPORT SendVcardsJob : public QObject
+class SendVcardsJob : public QObject
 {
     Q_OBJECT
 public:

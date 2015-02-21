@@ -21,11 +21,9 @@
 #include <AkonadiCore/Item>
 #include <KContacts/Addressee>
 
-#include "kaddressbook_export.h"
 
-namespace KABMergeContacts
-{
-class KADDRESSBOOK_EXPORT MergeContacts
+namespace KABMergeContacts {
+class MergeContacts
 {
 public:
     MergeContacts(const Akonadi::Item::List &items = Akonadi::Item::List());
