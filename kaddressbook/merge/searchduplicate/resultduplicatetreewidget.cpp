@@ -27,7 +27,7 @@ ResultDuplicateTreeWidget::ResultDuplicateTreeWidget(QWidget *parent)
 {
     setHeaderLabel(i18n("Contacts"));
     connect(this, &QTreeWidget::itemActivated, this, &ResultDuplicateTreeWidget::slotItemActivated);
-    connect(this, SIGNAL(itemChanged(QTreeWidgetItem*,int)), SLOT(slotItemChanged(QTreeWidgetItem*,int)));
+    connect(this, &ResultDuplicateTreeWidget::itemChanged, this, &ResultDuplicateTreeWidget::slotItemChanged);
 }
 
 ResultDuplicateTreeWidget::~ResultDuplicateTreeWidget()

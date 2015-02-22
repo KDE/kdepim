@@ -60,8 +60,8 @@ MergeContactWidget::MergeContactWidget(QWidget *parent)
     mListWidget->setObjectName(QStringLiteral("listcontact"));
     mListWidget->setSelectionMode(QAbstractItemView::SingleSelection);
     vbox->addWidget(mListWidget);
-    connect(mListWidget, SIGNAL(itemSelectionChanged()), SLOT(slotUpdateMergeButton()));
-    connect(mListWidget, SIGNAL(itemChanged(QListWidgetItem*)), SLOT(slotUpdateMergeButton()));
+    connect(mListWidget, &MergeContactWidgetList::itemSelectionChanged, this, &MergeContactWidget::slotUpdateMergeButton);
+    connect(mListWidget, &MergeContactWidgetList::itemChanged, this, &MergeContactWidget::slotUpdateMergeButton);
     splitter->addWidget(selectContactWidget);
 
     mMergeContactInfoWidget = new MergeContactInfoWidget;

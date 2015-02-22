@@ -54,7 +54,7 @@ MergeContactSelectInformationScrollArea::MergeContactSelectInformationScrollArea
     mergeButton->setObjectName(QLatin1String("merge"));
     hbox->addWidget(mergeButton);
     layout->addLayout(hbox);
-    connect(mergeButton, SIGNAL(clicked()), this, SLOT(slotMergeContacts()));
+    connect(mergeButton, &QPushButton::clicked, this, &MergeContactSelectInformationScrollArea::slotMergeContacts);
 
     mStackWidget->addWidget(selectMergeWidget);
 

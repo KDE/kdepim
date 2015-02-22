@@ -66,10 +66,8 @@ MergeContactsDialog::MergeContactsDialog(QWidget *parent)
     mManualMergeResultWidget = new KABMergeContacts::MergeContactWidget(this);
     mManualMergeResultWidget->setObjectName(QLatin1String("manualmergeresultwidget"));
     mStackedWidget->addWidget(mManualMergeResultWidget);
-    connect(mManualMergeResultWidget, &MergeContactWidget::customizeMergeContact,
-            this, &MergeContactsDialog::slotCustomizeMergeContact);
-    connect(mManualMergeResultWidget, &MergeContactWidget::contactMerged,
-            this, &MergeContactsDialog::slotContactMerged);
+    connect(mManualMergeResultWidget, &MergeContactWidget::customizeMergeContact, this, &MergeContactsDialog::slotCustomizeMergeContact);
+    connect(mManualMergeResultWidget, &MergeContactWidget::contactMerged, this, &MergeContactsDialog::slotContactMerged);
 
     mSelectInformation = new KABMergeContacts::MergeContactSelectInformationScrollArea(this);
     mSelectInformation->setObjectName(QLatin1String("selectioninformation"));
