@@ -26,7 +26,7 @@
 #include <KIO/Job>
 #include <KMessageBox>
 #include <KLocalizedString>
-#include <KFileDialog>
+#include <QFileDialog>
 #include <KJobWidgets>
 
 #include <kleo/cryptobackendfactory.h>
@@ -198,7 +198,7 @@ void AttachmentEncryptWithChiasmusJob::slotAtmDecryptWithChiasmusResult(const Gp
         return;
     }
 
-    const QUrl url = KFileDialog::getSaveUrl(chomp(mCurrentFileName, QLatin1String(".xia"), false), QString(), mMainWindow);
+    const QUrl url = QFileDialog::getSaveFileUrl(mMainWindow, QString(), QUrl::fromLocalFile(chomp(mCurrentFileName, QLatin1String(".xia"), false)));
     if (url.isEmpty()) {
         deleteLater();
         return;

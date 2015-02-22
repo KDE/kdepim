@@ -23,7 +23,7 @@
 #include "qcsvmodel.h"
 #include "templateselectiondialog.h"
 
-#include <KApplication>
+#include <KConfig>
 #include <KComboBox>
 #include <QInputDialog>
 #include <QLineEdit>
@@ -33,6 +33,7 @@
 #include <KUrlRequester>
 #include <KLineEdit>
 
+#include <QApplication>
 #include <QtCore/QPointer>
 #include <QtCore/QTextCodec>
 #include <QtCore/QThread>
@@ -220,7 +221,7 @@ KContacts::AddresseeList CSVImportDialog::contacts() const
     progressDialog.setLabelText(i18nc("@label", "Importing contacts"));
     progressDialog.show();
 
-    kapp->processEvents();
+    qApp->processEvents();
 
     for (int row = 1; row < mModel->rowCount(); ++row) {
         KContacts::Addressee contact;
@@ -246,7 +247,7 @@ KContacts::AddresseeList CSVImportDialog::contacts() const
             }
         }
 
-        kapp->processEvents();
+        qApp->processEvents();
 
         if (progressDialog.wasCanceled()) {
             return KContacts::AddresseeList();

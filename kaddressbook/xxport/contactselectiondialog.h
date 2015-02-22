@@ -21,7 +21,7 @@
 #define CONTACTSELECTIONDIALOG_H
 
 #include <KContacts/Addressee>
-#include <KDialog>
+#include <QDialog>
 #include <xxport/vcard/vcardexportselectionwidget.h>
 
 class QItemSelectionModel;
