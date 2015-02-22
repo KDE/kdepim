@@ -94,7 +94,7 @@ void ModifyMessageDisplayFormatJob::modifyDisplayFormat()
 void ModifyMessageDisplayFormatJob::slotModifyItemDone(KJob *job)
 {
     if (job && job->error()) {
-        qWarning() << " Error trying to change attribute:" << job->errorText();
+        qCWarning(MESSAGEVIEWER_LOG) << " Error trying to change attribute:" << job->errorText();
     }
     deleteLater();
 }

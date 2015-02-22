@@ -801,7 +801,7 @@ void ViewerPrivate::displaySplashPage(const QString &info)
 #endif
     QFile f(location);
     if (!f.open(QIODevice::ReadOnly)) {
-        qWarning() << "Failed to read splash page: " << f.errorString();
+        qCWarning(MESSAGEVIEWER_LOG) << "Failed to read splash page: " << f.errorString();
         return;
     }
     const QString content = QString::fromLocal8Bit(f.readAll()).arg(stylesheet, rtlStylesheet);
@@ -1275,7 +1275,7 @@ void ViewerPrivate::setOverrideEncoding(const QString &encoding)
             }
             if (i == encodings.size()) {
                 // the value of encoding is unknown => use Auto
-                qWarning() << "Unknown override character encoding" << encoding
+                qCWarning(MESSAGEVIEWER_LOG) << "Unknown override character encoding" << encoding
                            << ". Using Auto instead.";
                 mSelectEncodingAction->setCurrentItem(0);
                 mOverrideEncoding.clear();
@@ -1363,7 +1363,7 @@ void ViewerPrivate::setMessageItem(const Akonadi::Item &item, Viewer::UpdateMode
 
     if (!mMessageItem.hasPayload<KMime::Message::Ptr>()) {
         if (mMessageItem.isValid()) {
-            qWarning() << "Payload is not a MessagePtr!";
+            qCWarning(MESSAGEVIEWER_LOG) << "Payload is not a MessagePtr!";
         }
         return;
     }
@@ -2326,7 +2326,7 @@ void ViewerPrivate::updateReaderWin()
         //
         // While the exec() eventloop is running, it is possible that a timer calls updateReaderWin(),
         // and not aborting here would confuse the state terribly.
-        qWarning() << "Danger, recursion while displaying a message!";
+        qCWarning(MESSAGEVIEWER_LOG) << "Danger, recursion while displaying a message!";
         return;
     }
     mRecursionCountForDisplayMessage++;
@@ -2849,7 +2849,7 @@ void ViewerPrivate::slotSaveMessage()
 {
     if (!mMessageItem.hasPayload<KMime::Message::Ptr>()) {
         if (mMessageItem.isValid()) {
-            qWarning() << "Payload is not a MessagePtr!";
+            qCWarning(MESSAGEVIEWER_LOG) << "Payload is not a MessagePtr!";
         }
         return;
     }
@@ -3235,7 +3235,7 @@ void ViewerPrivate::slotMessageIsNotAScam()
 void ViewerPrivate::slotModifyItemDone(KJob *job)
 {
     if (job && job->error()) {
-        qWarning() << " Error trying to change attribute:" << job->errorText();
+        qCWarning(MESSAGEVIEWER_LOG) << " Error trying to change attribute:" << job->errorText();
     }
 }
 

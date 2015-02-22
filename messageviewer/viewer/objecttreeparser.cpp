@@ -393,7 +393,7 @@ void ObjectTreeParser::defaultHandling(KMime::Content *node, ProcessResult &resu
     // ### (mmutz) default handling should go into the respective
     // ### bodypartformatters.
     if (!htmlWriter()) {
-        qWarning() << "no htmlWriter()";
+        qCWarning(MESSAGEVIEWER_LOG) << "no htmlWriter()";
         return;
     }
 
@@ -1650,7 +1650,7 @@ bool ObjectTreeParser::processMultiPartSignedSubtype(KMime::Content *node, Proce
     QString protocolContentType = node->contentType()->parameter(QLatin1String("protocol")).toLower();
     const QString signatureContentType = QLatin1String(signature->contentType()->mimeType().toLower());
     if (protocolContentType.isEmpty()) {
-        qWarning() << "Message doesn't set the protocol for the multipart/signed content-type, "
+        qCWarning(MESSAGEVIEWER_LOG) << "Message doesn't set the protocol for the multipart/signed content-type, "
                    "using content-type of the signature:" << signatureContentType;
         protocolContentType = signatureContentType;
     }
@@ -1838,7 +1838,7 @@ bool ObjectTreeParser::processMessageRfc822Subtype(KMime::Content *node, Process
 
     KMime::Message::Ptr message = node->bodyAsMessage();
     if (!message) {
-        qWarning() << "Node is of type message/rfc822 but doesn't have a message!";
+        qCWarning(MESSAGEVIEWER_LOG) << "Node is of type message/rfc822 but doesn't have a message!";
     }
 
     if (htmlWriter() && message) {

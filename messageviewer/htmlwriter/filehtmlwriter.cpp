@@ -31,7 +31,7 @@
 
 #include "filehtmlwriter.h"
 
-#include <qdebug.h>
+#include "messageviewer_debug.h"
 
 #include <QTextStream>
 
@@ -48,7 +48,7 @@ FileHtmlWriter::FileHtmlWriter(const QString &filename)
 FileHtmlWriter::~FileHtmlWriter()
 {
     if (mFile.isOpen()) {
-        qWarning() << "FileHtmlWriter: file still open!";
+        qCWarning(MESSAGEVIEWER_LOG) << "FileHtmlWriter: file still open!";
         mStream.setDevice(0);
         mFile.close();
     }
@@ -97,12 +97,12 @@ void FileHtmlWriter::flush()
 void FileHtmlWriter::openOrWarn()
 {
     if (mFile.isOpen()) {
-        qWarning() << "FileHtmlWriter: file still open!";
+        qCWarning(MESSAGEVIEWER_LOG) << "FileHtmlWriter: file still open!";
         mStream.setDevice(0);
         mFile.close();
     }
     if (!mFile.open(QIODevice::WriteOnly)) {
-        qWarning() << "FileHtmlWriter: Cannot open file" << mFile.fileName();
+        qCWarning(MESSAGEVIEWER_LOG) << "FileHtmlWriter: Cannot open file" << mFile.fileName();
     } else {
         mStream.setDevice(&mFile);
     }

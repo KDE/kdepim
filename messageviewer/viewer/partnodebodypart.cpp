@@ -33,7 +33,7 @@
 
 #include "partnodebodypart.h"
 #include "viewer/nodehelper.h"
-
+#include "messageviewer_debug.h"
 #include <kmime/kmime_content.h>
 
 #include <QTextCodec>
@@ -86,7 +86,7 @@ QString PartNodeBodyPart::contentDispositionParameter(const char *param) const
 
 bool PartNodeBodyPart::hasCompleteBody() const
 {
-    qWarning() << "Sorry, not yet implemented.";
+    qCWarning(MESSAGEVIEWER_LOG) << "Sorry, not yet implemented.";
     return true;
 }
 

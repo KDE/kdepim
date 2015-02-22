@@ -61,7 +61,7 @@ void WebKitPartHtmlWriter::begin(const QString &css)
     // The stylesheet is now included CSSHelper::htmlHead()
     Q_UNUSED(css);
     if (mState != Ended) {
-        qWarning() << "begin() called on non-ended session!";
+        qCWarning(MESSAGEVIEWER_LOG) << "begin() called on non-ended session!";
         reset();
     }
 
@@ -80,7 +80,7 @@ void WebKitPartHtmlWriter::begin(const QString &css)
 void WebKitPartHtmlWriter::end()
 {
     if (mState != Begun) {
-        qWarning() << "Called on non-begun or queued session!";
+        qCWarning(MESSAGEVIEWER_LOG) << "Called on non-begun or queued session!";
     }
     if (!mExtraHead.isEmpty()) {
         insertExtraHead();
@@ -113,7 +113,7 @@ void WebKitPartHtmlWriter::reset()
 void WebKitPartHtmlWriter::write(const QString &str)
 {
     if (mState != Begun) {
-        qWarning() << "Called in Ended or Queued state!";
+        qCWarning(MESSAGEVIEWER_LOG) << "Called in Ended or Queued state!";
     }
     mHtml.append(str);
 }

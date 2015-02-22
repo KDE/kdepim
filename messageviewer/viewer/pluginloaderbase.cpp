@@ -20,7 +20,7 @@
 */
 
 #include "pluginloaderbase.h"
-
+#include "messageviewer_debug.h"
 #include <KConfigGroup>
 
 #include <KGlobal>
@@ -65,13 +65,13 @@ void PluginLoaderBase::doScan(const char *path)
 
             const QString type = group.readEntry("Type").toLower();
             if (type.isEmpty()) {
-                qWarning() << "missing or empty [Plugin]Type value in \"" << *it << "\" - skipping";
+                qCWarning(MESSAGEVIEWER_LOG) << "missing or empty [Plugin]Type value in \"" << *it << "\" - skipping";
                 continue;
             }
 
             const QString library = group.readEntry("X-KDE-Library");
             if (library.isEmpty()) {
-                qWarning() << "missing or empty [Plugin]X-KDE-Library value in \"" << *it << "\" - skipping";
+                qCWarning(MESSAGEVIEWER_LOG) << "missing or empty [Plugin]X-KDE-Library value in \"" << *it << "\" - skipping";
                 continue;
             }
 
@@ -79,19 +79,19 @@ void PluginLoaderBase::doScan(const char *path)
 
             QString name = group2.readEntry("Name");
             if (name.isEmpty()) {
-                qWarning() << "missing or empty [Misc]Name value in \"" << *it << "\" - inserting default name";
+                qCWarning(MESSAGEVIEWER_LOG) << "missing or empty [Misc]Name value in \"" << *it << "\" - inserting default name";
                 name = i18n("Unnamed plugin");
             }
 
             QString comment = group2.readEntry("Comment");
             if (comment.isEmpty()) {
-                qWarning() << "missing or empty [Misc]Comment value in \"" << *it << "\" - inserting default name";
+                qCWarning(MESSAGEVIEWER_LOG) << "missing or empty [Misc]Comment value in \"" << *it << "\" - inserting default name";
                 comment = i18n("No description available");
             }
 
             mPluginMap.insert(type, PluginMetaData(library, name, comment));
         } else {
-            qWarning() << "Desktop file \"" << *it << "\" doesn't seem to describe a plugin " << "(misses Misc and/or Plugin group)";
+            qCWarning(MESSAGEVIEWER_LOG) << "Desktop file \"" << *it << "\" doesn't seem to describe a plugin " << "(misses Misc and/or Plugin group)";
         }
     }
 }
@@ -119,7 +119,7 @@ KLibrary::void_function_ptr PluginLoaderBase::mainFunc(const QString &type, cons
     const QString factory_name = libName + QLatin1Char('_') + QString::fromLatin1(mf_name);
     KLibrary::void_function_ptr sym = const_cast<KLibrary *>(lib)->resolveFunction(factory_name.toLatin1());
     if (!sym) {
-        qWarning() << "No symbol named \"" << factory_name.toLatin1() << "\" (" << factory_name << ") was found in library \"" << libName << "\"";
+        qCWarning(MESSAGEVIEWER_LOG) << "No symbol named \"" << factory_name.toLatin1() << "\" (" << factory_name << ") was found in library \"" << libName << "\"";
         return 0;
     }
 
@@ -130,7 +130,7 @@ const KLibrary *PluginLoaderBase::openLibrary(const QString &libName) const
 {
     KLibrary *library = new KLibrary(libName);
     if (library->fileName().isEmpty() || !library->load()) {
-        qWarning() << "Could not load plugin library" << libName << "error:" << library->errorString() << library->fileName();
+        qCWarning(MESSAGEVIEWER_LOG) << "Could not load plugin library" << libName << "error:" << library->errorString() << library->fileName();
         delete library;
         return 0;
     }

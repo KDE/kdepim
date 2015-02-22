@@ -40,7 +40,7 @@
 
 #include "utils/iconnamecache.h"
 #include "viewer/nodehelper.h"
-
+#include "messageviewer_debug.h"
 #include "messagecore/settings/globalsettings.h"
 #include "messagecore/helpers/nodehelper.h"
 #include "messagecore/utils/stringutil.h"
@@ -113,7 +113,7 @@ QString Util::fileNameForMimetype(const QString &mimeType, int iconSize,
     } else {
         fileName = QLatin1String("unknown");
         if (!tMimeType.isEmpty()) {
-            qWarning() << "unknown mimetype" << tMimeType;
+            qCWarning(MESSAGEVIEWER_LOG) << "unknown mimetype" << tMimeType;
         }
     }
     //WorkAround for #199083
@@ -367,7 +367,7 @@ bool Util::saveContent(QWidget *parent, KMime::Content *content, const QUrl &url
     }
 #else
     const QByteArray data = content->decodedContent();
-    qWarning() << "Port the encryption/signature handling when saving a KMime::Content.";
+    qCWarning(MESSAGEVIEWER_LOG) << "Port the encryption/signature handling when saving a KMime::Content.";
 #endif
     QDataStream ds;
     QFile file;

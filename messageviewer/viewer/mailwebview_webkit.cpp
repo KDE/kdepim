@@ -187,7 +187,7 @@ void MailWebView::scrollPageDown(int percent)
     // do arithmetic in higher precision, and check for overflow:
     const qint64 newPosition = current + height * percent / 100;
     if (newPosition > std::numeric_limits<int>::max()) {
-        qWarning() << "new position" << newPosition << "exceeds range of 'int'!";
+        qCWarning(MESSAGEVIEWER_LOG) << "new position" << newPosition << "exceeds range of 'int'!";
     }
     page()->mainFrame()->setScrollBarValue(Qt::Vertical, newPosition);
 }

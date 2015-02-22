@@ -112,7 +112,7 @@ static void loadPlugins()
 {
     const BodyPartFormatterPluginLoader *pl = BodyPartFormatterPluginLoader::instance();
     if (!pl) {
-        qWarning() << "BodyPartFormatterFactory: cannot instantiate plugin loader!";
+        qCWarning(MESSAGEVIEWER_LOG) << "BodyPartFormatterFactory: cannot instantiate plugin loader!";
         return;
     }
     const QStringList types = pl->types();
@@ -120,21 +120,21 @@ static void loadPlugins()
     for (QStringList::const_iterator it = types.begin() ; it != types.end() ; ++it) {
         const Interface::BodyPartFormatterPlugin *plugin = pl->createForName(*it);
         if (!plugin) {
-            qWarning() << "BodyPartFormatterFactory: plugin" << *it << "is not valid!";
+            qCWarning(MESSAGEVIEWER_LOG) << "BodyPartFormatterFactory: plugin" << *it << "is not valid!";
             continue;
         }
         const Interface::BodyPartFormatter *bfp;
         for (int i = 0 ; (bfp = plugin->bodyPartFormatter(i)) ; ++i) {
             const char *type = plugin->type(i);
             if (!type || !*type) {
-                qWarning() << "BodyPartFormatterFactory: plugin" << *it
+                qCWarning(MESSAGEVIEWER_LOG) << "BodyPartFormatterFactory: plugin" << *it
                            << "returned empty type specification for index"
                            << i;
                 break;
             }
             const char *subtype = plugin->subtype(i);
             if (!subtype || !*subtype) {
-                qWarning() << "BodyPartFormatterFactory: plugin" << *it
+                qCWarning(MESSAGEVIEWER_LOG) << "BodyPartFormatterFactory: plugin" << *it
                            << "returned empty subtype specification for index"
                            << i;
                 break;
@@ -195,7 +195,7 @@ const Interface::BodyPartFormatter *BodyPartFormatterFactory::createFor(const ch
     }
 
     if (!(*subtype_it).second) {
-        qWarning() << "BodyPartFormatterFactory: a null bodypart formatter sneaked in for \""
+        qCWarning(MESSAGEVIEWER_LOG) << "BodyPartFormatterFactory: a null bodypart formatter sneaked in for \""
                    << type << "/" << subtype << "\"!";
     }
 

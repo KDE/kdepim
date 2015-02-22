@@ -19,7 +19,7 @@
 
 #include "configurewidget.h"
 #include "customheadersettingdialog.h"
-
+#include "messageviewer_debug.h"
 #include "ui_settings.h"
 #include "utils/util.h"
 #include "settings/globalsettings.h"
@@ -136,7 +136,7 @@ void ConfigureWidget::readCurrentOverrideCodec()
     }
     if (i == encodings.size()) {
         // the current value of overrideCharacterEncoding is an unknown encoding => reset to Auto
-        qWarning() << "Unknown override character encoding" << currentOverrideEncoding
+        qCWarning(MESSAGEVIEWER_LOG) << "Unknown override character encoding" << currentOverrideEncoding
                    << ". Resetting to Auto.";
         mSettingsUi->overrideCharacterEncoding->setCurrentIndex(0);
         MessageCore::GlobalSettings::self()->setOverrideCharacterEncoding(QString());

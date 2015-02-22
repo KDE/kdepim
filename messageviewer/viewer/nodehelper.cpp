@@ -254,7 +254,7 @@ QString NodeHelper::writeNodeToTempFile(KMime::Content *node)
     }
     QFile f(fname);
     if (!f.open(QIODevice::ReadWrite)) {
-        qWarning() << "Failed to write note to file:" << f.errorString();
+        qCWarning(MESSAGEVIEWER_LOG) << "Failed to write note to file:" << f.errorString();
         return QString();
     }
     f.write(data);
@@ -532,7 +532,7 @@ QString NodeHelper::replacePrefixes(const QString &str,
                         .arg(prefixRegExps.join(QLatin1String(")|(?:")));
     QRegExp rx(bigRegExp, Qt::CaseInsensitive);
     if (!rx.isValid()) {
-        qWarning() << "bigRegExp = \""
+        qCWarning(MESSAGEVIEWER_LOG) << "bigRegExp = \""
                    << bigRegExp << "\"\n"
                    << "prefix regexp is invalid!";
         // try good ole Re/Fwd:
@@ -872,7 +872,7 @@ void NodeHelper::mergeExtraNodes(KMime::Content *node)
     QList<KMime::Content * > extraNodes = extraContents(node);
     Q_FOREACH (KMime::Content *extra, extraNodes) {
         if (node->bodyIsMessage()) {
-            qWarning() << "Asked to attach extra content to a kmime::message, this does not make sense. Attaching to:" << node <<
+            qCWarning(MESSAGEVIEWER_LOG) << "Asked to attach extra content to a kmime::message, this does not make sense. Attaching to:" << node <<
                        node->encodedContent() << "\n====== with =======\n" <<  extra << extra->encodedContent();
             continue;
         }
@@ -966,7 +966,7 @@ KMime::Content *NodeHelper::decryptedNodeForContent(KMime::Content *content) con
         if (xc.size() == 1) {
             return xc.front();
         } else {
-            qWarning() << "WTF, encrypted node has multiple extra contents?";
+            qCWarning(MESSAGEVIEWER_LOG) << "WTF, encrypted node has multiple extra contents?";
         }
     }
     return 0;

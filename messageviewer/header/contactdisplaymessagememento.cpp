@@ -46,7 +46,7 @@ void ContactDisplayMessageMemento::slotSearchJobFinished(KJob *job)
     mFinished = true;
     Akonadi::ContactSearchJob *searchJob = static_cast<Akonadi::ContactSearchJob *>(job);
     if (searchJob->error()) {
-        qWarning() << "Unable to fetch contact:" << searchJob->errorText();
+        qCWarning(MESSAGEVIEWER_LOG) << "Unable to fetch contact:" << searchJob->errorText();
         emit update(Viewer::Delayed);
         return;
     }

@@ -19,6 +19,7 @@
 #include <config-messageviewer.h>
 #include "editorwatcher.h"
 #include "utils/autoqpointer.h"
+#include "messageviewer_debug.h"
 
 #include <qdebug.h>
 #include <KLocalizedString>
@@ -101,7 +102,7 @@ bool EditorWatcher::start()
             mFileModified = false;
         }
     } else {
-        qWarning() << "Failed to activate INOTIFY!";
+        qCWarning(MESSAGEVIEWER_LOG) << "Failed to activate INOTIFY!";
     }
 #endif
 
