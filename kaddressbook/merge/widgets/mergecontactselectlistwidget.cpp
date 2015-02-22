@@ -56,7 +56,6 @@ void MergeContactSelectListWidget::setContacts(MergeContacts::ConflictInformatio
 void MergeContactSelectListWidget::updateTitle()
 {
     QString title;
-    //TODO
     switch(mConflictType) {
     case MergeContacts::None:
         break;
@@ -145,12 +144,16 @@ void MergeContactSelectListWidget::fillList(const KABC::Addressee::List &lst)
         switch(mConflictType) {
         case MergeContacts::None:
             break;
-        case MergeContacts::Birthday:
+        case MergeContacts::Birthday: {
             //FIXME
+            const QDateTime birdth = addr.birthday();
+            addItem(birdth.toString());
             break;
+        }
         case MergeContacts::Geo: {
-            //FIXME
-            addItem(addr.geo().toString());
+            const Geo geo = addr.geo();
+            const QString str = QString::fromLatin1("%1-%2").arg(geo.latitude(), geo.longitude());
+            addItem(str);
             break;
         }
         case MergeContacts::Photo:
