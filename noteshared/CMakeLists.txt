@@ -12,6 +12,7 @@ set(libnoteshared_akonadi_SRCS
 )
 
 set(libnoteshared_SRCS
+    noteshared_debug.cpp
     attributes/notealarmattribute.cpp
     attributes/notedisplayattribute.cpp
     attributes/notelockattribute.cpp

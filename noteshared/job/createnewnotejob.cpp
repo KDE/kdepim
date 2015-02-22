@@ -20,7 +20,7 @@
 #include "noteshared/attributes/showfoldernotesattribute.h"
 #include "noteshared/settings/globalsettings.h"
 #include "dialog/selectednotefolderdialog.h"
-
+#include "noteshared_debug.h"
 #include "akonadi_next/note.h"
 
 #include <AkonadiCore/Collection>
@@ -106,7 +106,7 @@ void CreateNewNoteJob::createFetchCollectionJob(bool useSettings)
 void CreateNewNoteJob::slotFetchCollection(KJob *job)
 {
     if (job->error()) {
-        qDebug() << " Error during fetch: " << job->errorString();
+        qCDebug(NOTESHARED_LOG) << " Error during fetch: " << job->errorString();
         if (KMessageBox::Yes == KMessageBox::warningYesNo(0, i18n("An error occurred during fetching. Do you want select a new default collection?"))) {
             Q_EMIT selectNewCollection();
         } else {
@@ -116,7 +116,7 @@ void CreateNewNoteJob::slotFetchCollection(KJob *job)
     }
     Akonadi::CollectionFetchJob *fetchCollection = qobject_cast<Akonadi::CollectionFetchJob *>(job);
     if (fetchCollection->collections().isEmpty()) {
-        qDebug() << "No collection fetched";
+        qCDebug(NOTESHARED_LOG) << "No collection fetched";
         if (KMessageBox::Yes == KMessageBox::warningYesNo(0, i18n("An error occurred during fetching. Do you want select a new default collection?"))) {
             Q_EMIT selectNewCollection();
         } else {
@@ -178,7 +178,7 @@ void CreateNewNoteJob::slotFetchCollection(KJob *job)
 void CreateNewNoteJob::slotNoteCreationFinished(KJob *job)
 {
     if (job->error()) {
-        qWarning() << job->errorString();
+        qCWarning(NOTESHARED_LOG) << job->errorString();
         NoteShared::NoteSharedGlobalConfig::self()->setDefaultFolder(-1);
         NoteShared::GlobalSettings::self()->requestSync();
         KMessageBox::error(mWidget, i18n("Note was not created."), i18n("Create new note"));
@@ -189,6 +189,6 @@ void CreateNewNoteJob::slotNoteCreationFinished(KJob *job)
 void CreateNewNoteJob::slotCollectionModifyFinished(KJob *job)
 {
     if (job->error()) {
-        qWarning() << job->errorString();
+        qCWarning(NOTESHARED_LOG) << job->errorString();
     }
 }

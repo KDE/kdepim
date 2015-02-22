@@ -27,7 +27,7 @@
 
 #include "akonadi_next/note.h"
 
-#include <QDebug>
+#include "noteshared_debug.h"
 #include <KLocalizedString>
 #include <AkonadiCore/resourcesynchronizationjob.h>
 
@@ -74,7 +74,7 @@ void LocalResourceCreator::createInstance()
 void LocalResourceCreator::slotInstanceCreated(KJob *job)
 {
     if (job->error()) {
-        qWarning() << job->errorString();
+        qCWarning(NOTESHARED_LOG) << job->errorString();
         deleteLater();
         return;
     }
@@ -90,7 +90,7 @@ void LocalResourceCreator::slotInstanceCreated(KJob *job)
 
     // TODO: Make errors user-visible.
     if (!iface->isValid()) {
-        qWarning() << "Failed to obtain D-Bus interface for remote configuration.";
+        qCWarning(NOTESHARED_LOG) << "Failed to obtain D-Bus interface for remote configuration.";
         delete iface;
         deleteLater();
         return;
@@ -107,12 +107,12 @@ void LocalResourceCreator::slotInstanceCreated(KJob *job)
 void LocalResourceCreator::slotSyncDone(KJob *job)
 {
     if (job->error()) {
-        qWarning() << "Synchronizing the resource failed:" << job->errorString();
+        qCWarning(NOTESHARED_LOG) << "Synchronizing the resource failed:" << job->errorString();
         deleteLater();
         return;
     }
 
-    qWarning() << "Instance synchronized";
+    qCWarning(NOTESHARED_LOG) << "Instance synchronized";
 
 }
 

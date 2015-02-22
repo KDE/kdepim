@@ -35,7 +35,7 @@
 #include "noteshared/settings/globalsettings.h"
 
 #include <kconfig.h>
-#include <qdebug.h>
+#include "noteshared_debug.h"
 #include <khistorycombobox.h>
 #include <KLocalizedString>
 

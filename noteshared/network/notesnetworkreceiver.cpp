@@ -39,10 +39,10 @@
 #include <QTcpSocket>
 #include <QTimer>
 #include <QTextCodec>
-#include <qdebug.h>
+#include "noteshared_debug.h"
 #include <kglobal.h>
 #include <KLocalizedString>
-#include <QDebug>
+#include "noteshared_debug.h"
 #include <KLocalizedString>
 
 // Maximum note size in chars we are going to accept,
@@ -146,6 +146,6 @@ void NotesNetworkReceiver::slotConnectionClosed()
 
 void NotesNetworkReceiver::slotError(QAbstractSocket::SocketError error)
 {
-    qWarning() << "error type :" << (int) error << " error string : " << m_sock->errorString();
+    qCWarning(NOTESHARED_LOG) << "error type :" << (int) error << " error string : " << m_sock->errorString();
 }
 
