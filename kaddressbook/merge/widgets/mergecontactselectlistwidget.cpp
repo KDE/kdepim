@@ -58,6 +58,7 @@ void MergeContactSelectListWidget::updateTitle()
     QString title;
     switch(mConflictType) {
     case MergeContacts::None:
+        // it's not possible.
         break;
     case MergeContacts::Birthday:
         title = Addressee::birthdayLabel();
@@ -157,10 +158,10 @@ void MergeContactSelectListWidget::fillList(const KABC::Addressee::List &lst)
             break;
         }
         case MergeContacts::Photo:
-            //FIXME
+            //FIXME add icon ?
             break;
         case MergeContacts::Logo:
-            //FIXME
+            //FIXME add icon ?
             break;
         case MergeContacts::Anniversary: {
             const QString newBlog = addr.custom(QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-Anniversary" ));
