@@ -47,7 +47,7 @@
 #include <ktnef/ktnefmessage.h>
 #include <ktnef/ktnefattach.h>
 
-#include <QDebug>
+#include "ms_tnef_debug.h"
 #include <KIconLoader>
 #include <KLocalizedString>
 #include <KSystemTimeZones>
@@ -77,7 +77,7 @@ public:
         const QString fileName = bodyPart->nodeHelper()->writeNodeToTempFile(bodyPart->content());
         KTnef::KTNEFParser parser;
         if (!parser.openFile(fileName) || !parser.message()) {
-            qDebug() << "Could not parse" << fileName;
+            qCDebug(MS_TNEF_LOG) << "Could not parse" << fileName;
             return Failed;
         }
 
@@ -86,7 +86,7 @@ public:
         QFile f(fileName);
         QByteArray buf;
         if (!f.open(QIODevice::ReadOnly)) {
-            qWarning() << "Failed to read attachment part: " << f.errorString();
+            qCWarning(MS_TNEF_LOG) << "Failed to read attachment part: " << f.errorString();
         } else {
             buf = f.readAll();
             f.close();
@@ -107,7 +107,7 @@ public:
 
         QList<KTnef::KTNEFAttach *> tnefatts = parser.message()->attachmentList();
         if (tnefatts.isEmpty() && inviteStr.isEmpty()) {
-            qDebug() << "No attachments or invitation found in" << fileName;
+            qCDebug(MS_TNEF_LOG) << "No attachments or invitation found in" << fileName;
 
             QString label = MessageViewer::NodeHelper::fileName(bodyPart->content());
             label = MessageCore::StringUtil::quoteHtmlChars(label, true);

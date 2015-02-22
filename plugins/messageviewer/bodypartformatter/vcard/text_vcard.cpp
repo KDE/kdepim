@@ -57,7 +57,7 @@ using MessageViewer::Interface::BodyPart;
 #include <KMessageBox>
 #include <QTemporaryFile>
 #include <KIO/NetAccess>
-#include <QDebug>
+#include "vcard_debug.h"
 
 namespace
 {

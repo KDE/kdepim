@@ -10,7 +10,7 @@ include_directories(
 
 add_definitions(-DTRANSLATION_DOMAIN=\"messageviewer_application_mstnef_plugin\")
 
-add_library(messageviewer_bodypartformatter_application_mstnef MODULE application_ms-tnef.cpp)
+add_library(messageviewer_bodypartformatter_application_mstnef MODULE application_ms-tnef.cpp ms_tnef_debug.cpp)
 target_link_libraries(messageviewer_bodypartformatter_application_mstnef
   Qt5::Core
   KF5::CalendarCore

@@ -31,7 +31,7 @@
 
 #include "syncitiphandler.h"
 #include <calendarsupport/calendarsingleton.h>
-#include <QDebug>
+#include "text_calendar_debug.h"
 
 using namespace Akonadi;
 
@@ -47,10 +47,10 @@ SyncItipHandler::SyncItipHandler(const QString &receiver, const QString &iCal,
 
     Akonadi::ETMCalendar::Ptr etmCalendar = CalendarSupport::calendarSingleton(/*createIfNull=*/false);
     if (etmCalendar && etmCalendar->isLoaded()) {
-        qDebug() << "Reusing exising ETM";
+        qCDebug(TEXT_CALENDAR_LOG) << "Reusing exising ETM";
         handler->setCalendar(etmCalendar);
     } else {
-        qDebug() << "Not reusing any ETM";
+        qCDebug(TEXT_CALENDAR_LOG) << "Not reusing any ETM";
     }
 
     handler->processiTIPMessage(receiver, iCal, type);

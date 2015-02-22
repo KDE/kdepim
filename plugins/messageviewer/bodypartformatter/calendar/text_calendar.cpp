@@ -62,7 +62,7 @@ using namespace KCalCore;
 
 #include <KDBusServiceStarter>
 #include <QUrl>
-#include <QDebug>
+#include "text_calendar_debug.h"
 #include <QInputDialog>
 #include <QMenu>
 #include <KMessageBox>
@@ -124,7 +124,7 @@ static bool hasMyWritableEventsFolders(const QString &family)
     return false;
 #endif
 #else
-    qDebug() << "Disabled code, port to Akonadi";
+    qCDebug(TEXT_CALENDAR_LOG) << "Disabled code, port to Akonadi";
     return true;
 #endif
 }
@@ -197,7 +197,7 @@ public:
         if (memento) {
             KMime::Message *const message = dynamic_cast<KMime::Message *>(bodyPart->topLevelContent());
             if (!message) {
-                qWarning() << "The top-level content is not a message. Cannot handle the invitation then.";
+                qCWarning(TEXT_CALENDAR_LOG) << "The top-level content is not a message. Cannot handle the invitation then.";
                 return Failed;
             }
 
@@ -267,7 +267,7 @@ static Incidence::Ptr stringToIncidence(const QString &iCal)
     ScheduleMessage::Ptr message = format.parseScheduleMessage(calendar, iCal);
     if (!message) {
         //TODO: Error message?
-        qWarning() << "Can't parse this ical string: "  << iCal;
+        qCWarning(TEXT_CALENDAR_LOG) << "Can't parse this ical string: "  << iCal;
         return Incidence::Ptr();
     }
 
@@ -279,7 +279,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
 public:
     UrlHandler()
     {
-        //qDebug() << "UrlHandler() (iCalendar)";
+        //qCDebug(TEXT_CALENDAR_LOG) << "UrlHandler() (iCalendar)";
     }
 
     Attendee::Ptr findMyself(const Incidence::Ptr &incidence, const QString &receiver) const
@@ -502,7 +502,7 @@ public:
                   const QString &subject, const QString &status,
                   bool delMessage, Viewer *viewerInstance) const
     {
-        qDebug() << "Mailing message:" << iCal;
+        qCDebug(TEXT_CALENDAR_LOG) << "Mailing message:" << iCal;
 
         KMime::Message::Ptr msg(new KMime::Message);
         if (GlobalSettings::self()->exchangeCompatibleInvitations()) {
@@ -639,7 +639,7 @@ public:
         job->setMessage(msg);
 
         if (! job->exec()) {
-            qWarning() << "Error queuing message in outbox:" << job->errorText();
+            qCWarning(TEXT_CALENDAR_LOG) << "Error queuing message in outbox:" << job->errorText();
             return false;
         }
         // We are not notified when mail was sent, so assume it was sent when queued.
@@ -707,7 +707,7 @@ public:
 
         // If result is ResultCancelled, then we don't show the message box and return false so kmail
         // doesn't delete the e-mail.
-        qDebug() << "ITIPHandler result was " << itipHandler->result();
+        qCDebug(TEXT_CALENDAR_LOG) << "ITIPHandler result was " << itipHandler->result();
         if (itipHandler->result() == Akonadi::ITIPHandler::ResultError) {
             const QString errorMessage = itipHandler->errorMessage();
             if (!errorMessage.isEmpty()) {
@@ -853,7 +853,7 @@ public:
     {
         bool ok = true;
         const QString receiver = findReceiver(part->content());
-        qDebug() << receiver;
+        qCDebug(TEXT_CALENDAR_LOG) << receiver;
 
         if (receiver.isEmpty()) {
             // Must be some error. Still return true though, since we did handle it
@@ -861,7 +861,7 @@ public:
         }
 
         Incidence::Ptr incidence = stringToIncidence(iCal);
-        qDebug() << "Handling invitation: uid is : " << incidence->uid()
+        qCDebug(TEXT_CALENDAR_LOG) << "Handling invitation: uid is : " << incidence->uid()
                  << "; schedulingId is:" << incidence->schedulingID()
                  << "; Attendee::PartStat = " << status;
 
@@ -1100,7 +1100,7 @@ public:
                 new OrgKdeKorganizerCalendarInterface(QLatin1String("org.kde.korganizer"), QLatin1String("/Calendar"),
                         QDBusConnection::sessionBus(), 0);
             if (!iface->isValid()) {
-                qDebug() << "Calendar interface is not valid! " << iface->lastError().message();
+                qCDebug(TEXT_CALENDAR_LOG) << "Calendar interface is not valid! " << iface->lastError().message();
                 delete iface;
                 return;
             }
@@ -1300,7 +1300,7 @@ public:
             }
         }
 #else
-        qDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
+        qCDebug(TEXT_CALENDAR_LOG) << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
 #endif
         return result;
     }
