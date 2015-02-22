@@ -56,9 +56,9 @@ void MergeContactSelectListWidget::setContacts(MergeContacts::ConflictInformatio
 void MergeContactSelectListWidget::updateTitle()
 {
     QString title;
-    //TODO
     switch (mConflictType) {
     case MergeContacts::None:
+        // it's not possible.
         break;
     case MergeContacts::Birthday:
         title = Addressee::birthdayLabel();
@@ -143,19 +143,23 @@ void MergeContactSelectListWidget::fillList(const KContacts::Addressee::List &ls
         switch (mConflictType) {
         case MergeContacts::None:
             break;
-        case MergeContacts::Birthday:
+        case MergeContacts::Birthday: {
             //FIXME
+            const QDateTime birdth = addr.birthday();
+            addItem(birdth.toString());
             break;
+        }
         case MergeContacts::Geo: {
-            //FIXME
-            addItem(addr.geo().toString());
+            const Geo geo = addr.geo();
+            const QString str = QString::fromLatin1("%1-%2").arg(geo.latitude(), geo.longitude());
+            addItem(str);
             break;
         }
         case MergeContacts::Photo:
-            //FIXME
+            //FIXME add icon ?
             break;
         case MergeContacts::Logo:
-            //FIXME
+            //FIXME add icon ?
             break;
         case MergeContacts::Anniversary: {
             const QString newBlog = addr.custom(QLatin1String("KADDRESSBOOK"), QLatin1String("X-Anniversary"));

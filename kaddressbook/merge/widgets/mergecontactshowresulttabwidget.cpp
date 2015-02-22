@@ -60,11 +60,10 @@ void MergeContactShowResultTabWidget::addMergedContact(const Akonadi::Item &item
         MergeContactInfoWidget *infoWidget = new MergeContactInfoWidget;
         infoWidget->setContact(item);
         addTab(infoWidget, address.name());
+        if (updateTab)
+            updateTabWidget();
     } else {
         qCDebug(KADDRESSBOOK_LOG) << " don't have address";
-    }
-    if (updateTab) {
-        updateTabWidget();
     }
 }
 
