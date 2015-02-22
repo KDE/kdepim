@@ -40,7 +40,7 @@
 
 #include "imapresourcesettings.h"
 
-#include <KFileDialog>
+#include <QFileDialog>
 #include <KMessageBox>
 #include <KLocalizedString>
 
@@ -59,15 +59,13 @@ OrgKdeAkonadiImapSettingsInterface *PimCommon::Util::createImapSettingsInterface
 
 void PimCommon::Util::saveTextAs(const QString &text, const QString &filter, QWidget *parent, const QUrl &url, const QString &caption)
 {
-    QPointer<KFileDialog> fdlg(new KFileDialog(url, filter, parent));
+    QPointer<QFileDialog> fdlg(new QFileDialog(parent, QString(), url.path(), filter ));
     if (!caption.isEmpty()) {
         fdlg->setWindowTitle(caption);
     }
-    fdlg->setMode(KFile::File);
-    fdlg->setOperationMode(KFileDialog::Saving);
-    fdlg->setConfirmOverwrite(true);
+    fdlg->setAcceptDrops(QFileDialog::AcceptSave);
     if (fdlg->exec() == QDialog::Accepted && fdlg) {
-        const QString fileName = fdlg->selectedFile();
+        const QString fileName = fdlg->selectedFiles().at(0);
         if (!saveToFile(fileName, text)) {
             KMessageBox::error(parent,
                                i18n("Could not write the file %1:\n"
@@ -95,15 +93,14 @@ bool PimCommon::Util::saveToFile(const QString &filename, const QString &text)
 
 QString PimCommon::Util::loadToFile(const QString &filter, QWidget *parent, const QUrl &url, const QString &caption)
 {
-    QPointer<KFileDialog> fdlg(new KFileDialog(url, filter, parent));
+    QPointer<QFileDialog> fdlg(new QFileDialog(parent, QString(), url.path(), filter));
     if (!caption.isEmpty()) {
         fdlg->setWindowTitle(caption);
     }
-    fdlg->setMode(KFile::File);
-    fdlg->setOperationMode(KFileDialog::Opening);
+    fdlg->setAcceptDrops(QFileDialog::AcceptOpen);
     QString result;
     if (fdlg->exec() == QDialog::Accepted && fdlg) {
-        const QString fileName = fdlg->selectedFile();
+        const QString fileName = fdlg->selectedFiles().at(0);
         QFile file(fileName);
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
             KMessageBox::error(parent,
