@@ -22,7 +22,7 @@
 #include <KConfig>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KStandardDirs>
+#include <QStandardPaths>
 #include <QVBoxLayout>
 #include <QIcon>
 #include <KGlobal>
