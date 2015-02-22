@@ -37,8 +37,7 @@ SieveEditorMenuBar::~SieveEditorMenuBar()
 
 void SieveEditorMenuBar::initActions()
 {
-    //KF5 add i18n
-    mGoToLine = new QAction(/*i18n*/QLatin1String("Go to Line"), this);
+    mGoToLine = new QAction(i18n("Go to Line"), this);
     mGoToLine->setIcon(QIcon::fromTheme(QLatin1String("go-jump")));
     //mGoToLine->setShortcut(QKeySequence( Qt::CTRL + Qt::Key_G ));
     connect(mGoToLine, SIGNAL(triggered(bool)), SIGNAL(gotoLine()));
@@ -63,10 +62,9 @@ QMenu *SieveEditorMenuBar::editorMenu() const
 
 void SieveEditorMenuBar::initMenus()
 {
-    //Add i18n
-    mFileMenu = addMenu(QLatin1String("File"));
-    mEditorMenu = addMenu(QLatin1String("Edit"));
-    mToolsMenu = addMenu(QLatin1String("Tools"));
+    mFileMenu = addMenu(i18n("File"));
+    mEditorMenu = addMenu(i18n("Edit"));
+    mToolsMenu = addMenu(i18n("Tools"));
     mEditorMenu->addAction(mUndoAction);
     mEditorMenu->addAction(mRedoAction);
     mEditorMenu->addSeparator();
