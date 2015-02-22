@@ -130,8 +130,7 @@ void MergeContactSelectListWidget::addItem(const QString &str)
     if (str.isEmpty()) {
         QListWidgetItem *item = new QListWidgetItem(mSelectListWidget);
         item->setFlags(Qt::NoItemFlags);
-        //KF5 add i18n
-        item->setText(QLatin1String("(Undefined)"));
+        item->setText(i18n("(Undefined)"));
         mSelectListWidget->addItem(item);
     } else {
         mSelectListWidget->addItem(str);
