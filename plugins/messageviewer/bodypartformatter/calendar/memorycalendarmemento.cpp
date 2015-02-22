@@ -21,7 +21,6 @@
 #include <calendarsupport/calendarsingleton.h>
 #include <Akonadi/Calendar/FetchJobCalendar>
 #include <Akonadi/Calendar/ETMCalendar>
-#include <KSystemTimeZones>
 #include "text_calendar_debug.h"
 
 using namespace MessageViewer;
