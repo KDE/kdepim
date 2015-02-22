@@ -26,6 +26,7 @@
 #include <QVBoxLayout>
 #include <QIcon>
 #include <KGlobal>
+#include <QDir>
 
 #include <QPushButton>
 #include <QtCore/QAbstractTableModel>
@@ -115,25 +116,28 @@ public:
     {
         beginResetModel();
         mTemplates.clear();
-        const QStringList files =
-            KGlobal::dirs()->findAllResources("data", QLatin1String("kaddressbook/csv-templates/*.desktop"),
-                                              KStandardDirs::Recursive | KStandardDirs::NoDuplicates);
-        for (int i = 0; i < files.count(); ++i) {
-            KConfig config(files.at(i), KConfig::SimpleConfig);
+        const QStringList dirs = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, QStringLiteral("kaddressbook/csv-templates/"), QStandardPaths::LocateDirectory);
+        Q_FOREACH (const QString& dir, dirs) {
+            const QStringList fileNames = QDir(dir).entryList(QStringList() <<  QStringLiteral("*.desktop"));
+            Q_FOREACH (const QString & file, fileNames) {
+                const QString fileName = dir + QLatin1Char('/') + file;
 
-            if (!config.hasGroup("csv column map")) {
-                continue;
+                KConfig config(fileName, KConfig::SimpleConfig);
+
+                if (!config.hasGroup("csv column map")) {
+                    continue;
+                }
+
+                KConfigGroup group(&config, "Misc");
+                TemplateInfo info;
+                info.displayName = group.readEntry("Name");
+                info.fileName = fileName;
+
+                const QFileInfo fileInfo(info.fileName);
+                info.isDeletable = QFileInfo(fileInfo.absolutePath()).isWritable();
+
+                mTemplates.append(info);
             }
-
-            KConfigGroup group(&config, "Misc");
-            TemplateInfo info;
-            info.displayName = group.readEntry("Name");
-            info.fileName = files.at(i);
-
-            const QFileInfo fileInfo(info.fileName);
-            info.isDeletable = QFileInfo(fileInfo.absolutePath()).isWritable();
-
-            mTemplates.append(info);
         }
         endResetModel();
     }
