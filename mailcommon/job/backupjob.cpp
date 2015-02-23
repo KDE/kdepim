@@ -115,7 +115,7 @@ bool BackupJob::queueFolders(const Akonadi::Collection &root)
         job->fetchScope().setAncestorRetrieval(Akonadi::CollectionFetchScope::All);
         job->exec();
         if (job->error()) {
-            qWarning() << job->errorString();
+            qCWarning(MAILCOMMON_LOG) << job->errorString();
             abort(i18n("Unable to retrieve folder list."));
             return false;
         }
@@ -285,7 +285,7 @@ void BackupJob::itemFetchJobResult(KJob *job)
 
     if (job->error()) {
         Q_ASSERT(mCurrentFolder.isValid());
-        qWarning() << job->errorString();
+        qCWarning(MAILCOMMON_LOG) << job->errorString();
         abort(i18n("Downloading a message in folder '%1' failed.", mCurrentFolder.name()));
     } else {
         Akonadi::ItemFetchJob *fetchJob = dynamic_cast<Akonadi::ItemFetchJob *>(job);
@@ -389,7 +389,7 @@ void BackupJob::archiveNextFolder()
 void BackupJob::onArchiveNextFolderDone(KJob *job)
 {
     if (job->error()) {
-        qWarning() << job->errorString();
+        qCWarning(MAILCOMMON_LOG) << job->errorString();
         abort(i18n("Unable to get message list for folder %1.",
                    job->property("folderName").toString()));
         return;

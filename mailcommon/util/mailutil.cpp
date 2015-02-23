@@ -182,7 +182,7 @@ bool MailCommon::Util::ensureKorganizerRunning(bool switchTo)
             loop.exec();
             qCDebug(MAILCOMMON_LOG) << "Korganizer finished starting";
         } else {
-            qWarning() << "Failed to start korganizer with QProcess";
+            qCWarning(MAILCOMMON_LOG) << "Failed to start korganizer with QProcess";
         }
 
         delete watcher;
@@ -213,17 +213,17 @@ bool MailCommon::Util::ensureKorganizerRunning(bool switchTo)
                                     "org.kde.KUniqueApplication");
             QDBusReply<bool> r = pimIface.call("load");
             if (!r.isValid() || !r.value()) {
-                qWarning() << "Loading korganizer failed: " << pimIface.lastError().message();
+                qCWarning(MAILCOMMON_LOG) << "Loading korganizer failed: " << pimIface.lastError().message();
             }
 #endif
         } else {
-            qWarning() << "Couldn't obtain korganizer D-Bus interface" << iface.lastError().message();
+            qCWarning(MAILCOMMON_LOG) << "Couldn't obtain korganizer D-Bus interface" << iface.lastError().message();
         }
 
         // We don't do anything with it, we just need it to be running so that it handles
         // the incoming directory.
     } else {
-        qWarning() << "Couldn't start DBUS/Organizer:" << dbusService << error;
+        qCWarning(MAILCOMMON_LOG) << "Couldn't start DBUS/Organizer:" << dbusService << error;
     }
     return result;
 }

@@ -17,7 +17,7 @@
 
 #include "addtagdialog.h"
 #include "mailcommon/tag/tagwidget.h"
-
+#include "mailcommon_debug.h"
 #include <AkonadiCore/tagcreatejob.h>
 
 #include <KLocalizedString>
@@ -95,7 +95,7 @@ void AddTagDialog::slotSave()
 void AddTagDialog::onTagCreated(KJob *job)
 {
     if (job->error()) {
-        qWarning() << "Failed to create tag: " << job->errorString();
+        qCWarning(MAILCOMMON_LOG) << "Failed to create tag: " << job->errorString();
         reject();
         return;
     }

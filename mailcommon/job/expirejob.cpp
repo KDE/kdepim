@@ -122,7 +122,7 @@ void ExpireJob::slotDoWork()
 void ExpireJob::itemFetchResult(KJob *job)
 {
     if (job->error()) {
-        qWarning() << job->errorString();
+        qCWarning(MAILCOMMON_LOG) << job->errorString();
         deleteLater();
         return;
     }
@@ -188,7 +188,7 @@ void ExpireJob::done()
                 str = i18n("Cannot expire messages from folder %1: destination "
                            "folder %2 not found",
                            mSrcFolder.name(), expirationAttribute->expireToFolderId());
-                qWarning() << str;
+                qCWarning(MAILCOMMON_LOG) << str;
             } else {
                 qCDebug(MAILCOMMON_LOG) << "ExpireJob: finished expiring in folder"
                                         << mSrcFolder.name()

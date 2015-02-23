@@ -107,7 +107,7 @@ QString FilterActionWithCommand::substituteCommandLineArgsFor(const KMime::Messa
 
             QFile file(tempFileName);
             if (!file.open(QIODevice::WriteOnly)) {
-                qWarning() << "Faild to write message to file: " << file.errorString();
+                qCWarning(MAILCOMMON_LOG) << "Faild to write message to file: " << file.errorString();
                 tempFile->close();
                 continue;
             }
@@ -220,7 +220,7 @@ FilterAction::ReturnCode FilterActionWithCommand::genericProcess(ItemContext &co
     QString tempFileName = inFile->fileName();
     QFile tempFile(tempFileName);
     if (!tempFile.open(QIODevice::ReadWrite)) {
-        qWarning() << "Failed to write message to file: " << tempFile.errorString();
+        qCWarning(MAILCOMMON_LOG) << "Failed to write message to file: " << tempFile.errorString();
         qDeleteAll(atmList);
         atmList.clear();
         return CriticalError;

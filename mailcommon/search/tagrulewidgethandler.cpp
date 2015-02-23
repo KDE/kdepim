@@ -75,7 +75,7 @@ void FillTagComboJob::start()
 void FillTagComboJob::onTagsFetched(KJob *job)
 {
     if (job->error()) {
-        qWarning() << job->errorString();
+        qCWarning(MAILCOMMON_LOG) << job->errorString();
         setError(KJob::UserDefinedError);
         emitResult();
     }

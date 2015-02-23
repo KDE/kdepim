@@ -18,6 +18,7 @@
  */
 
 #include "filteractionforward.h"
+#include "mailcommon_debug.h"
 
 #include "kernel/mailkernel.h"
 #include "util/mailutil.h"
@@ -59,7 +60,7 @@ FilterAction::ReturnCode FilterActionForward::process(ItemContext &context , boo
     // which applies to sent messages
     if (MessageCore::StringUtil::addressIsInAddressList(mParameter,
             QStringList(msg->to()->asUnicodeString()))) {
-        qWarning() << "Attempt to forward to receipient of original message, ignoring.";
+        qCWarning(MAILCOMMON_LOG) << "Attempt to forward to receipient of original message, ignoring.";
         return ErrorButGoOn;
     }
 
@@ -71,7 +72,7 @@ FilterAction::ReturnCode FilterActionForward::process(ItemContext &context , boo
     KMime::Message::Ptr fwdMsg = factory.createForward();
     fwdMsg->to()->fromUnicodeString(fwdMsg->to()->asUnicodeString() + QLatin1Char(',') + mParameter, "utf-8");
     if (!KernelIf->msgSender()->send(fwdMsg, MessageComposer::MessageSender::SendDefault)) {
-        qWarning() << "FilterAction: could not forward message (sending failed)";
+        qCWarning(MAILCOMMON_LOG) << "FilterAction: could not forward message (sending failed)";
         return ErrorButGoOn; // error: couldn't send
     } else {
         sendMDN(context.item(), KMime::MDN::Dispatched);

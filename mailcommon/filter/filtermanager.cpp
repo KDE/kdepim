@@ -18,6 +18,7 @@
 */
 
 #include "filtermanager.h"
+#include "mailcommon_debug.h"
 
 #include "filteractions/filteraction.h"
 #include "filteractions/filteractiondict.h"
@@ -164,7 +165,7 @@ void FilterManager::slotReadConfig()
 void FilterManager::slotFinishedTagListing(KJob *job)
 {
     if (job->error()) {
-        qWarning() << "failed to retrieve tags " << job->errorString();
+        qCWarning(MAILCOMMON_LOG) << "failed to retrieve tags " << job->errorString();
     }
     Akonadi::TagFetchJob *fetchJob = static_cast<Akonadi::TagFetchJob *>(job);
     Q_FOREACH (const Akonadi::Tag &tag, fetchJob->tags()) {

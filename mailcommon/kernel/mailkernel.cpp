@@ -19,6 +19,7 @@
 #include "mailkernel.h"
 #include "util/mailutil.h"
 #include "imapresourcesettings.h"
+#include "mailcommon_debug.h"
 #include "pop3settings.h"
 #include "mailcommon_debug.h"
 #include "pimcommon/util/pimutil.h"
@@ -221,7 +222,7 @@ void Kernel::emergencyExit(const QString &reason)
                     "The error was:\n%1", reason);
     }
 
-    qWarning() << mesg;
+    qCWarning(MAILCOMMON_LOG) << mesg;
 
     // Show error box for the first error that caused emergencyExit.
     static bool s_showingErrorBox = false;
