@@ -59,6 +59,7 @@ public:
     bool hasSelection() const;
 
     void selectAll();
+    void saveAs();
 Q_SIGNALS:
     void refreshList();
     void scriptModified(bool, SieveEditorPageWidget *);

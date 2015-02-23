@@ -206,6 +206,11 @@ void SieveEditorPageWidget::replace()
     mSieveEditorWidget->replace();
 }
 
+void SieveEditorPageWidget::saveAs()
+{
+    mSieveEditorWidget->slotSaveAs();
+}
+
 KSieveUi::SieveEditorWidget::EditorMode SieveEditorPageWidget::pageMode() const
 {
     return mSieveEditorWidget->mode();

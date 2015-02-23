@@ -304,6 +304,17 @@ void SieveEditorMainWidget::slotReplace()
     }
 }
 
+void SieveEditorMainWidget::slotSaveAs()
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            page->saveAs();
+        }
+    }
+}
+
 void SieveEditorMainWidget::slotScriptModified(bool modified,SieveEditorPageWidget *page)
 {
     const int index = mTabWidget->indexOf(page);

@@ -74,13 +74,13 @@ public Q_SLOTS:
     void cut();
     void selectAll();
     void goToLine();
+    void slotSaveAs();
 
 private Q_SLOTS:
     void slotEnableButtonOk(bool b);
     void slotAutoGenerateScripts();
     void slotCheckSyntax();
     void slotGenerateXml();
-    void slotSaveAs();
     void slotImport();
     void slotSwitchMode();
     void slotSwitchTextMode(const QString &script);

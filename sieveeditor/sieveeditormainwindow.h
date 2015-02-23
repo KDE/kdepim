@@ -73,6 +73,7 @@ private:
     KAction *mPasteAction;
     KAction *mCutAction;
     KAction *mSelectAllAction;
+    KAction *mSaveAsAction;
 
     QLabel *mStatusBarInfo;
     bool mNetworkIsDown;
