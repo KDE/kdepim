@@ -117,7 +117,9 @@ void SieveEditorMainWindow::setupActions()
 
     KStandardAction::quit(this, SLOT(close()), ac );
     KStandardAction::preferences( this, SLOT(slotConfigure()), ac );
+
     mUploadScript = KStandardAction::save( this, SLOT(slotUploadScript()), ac );
+    mUploadScript->setText(i18n("Upload"));
     mUploadScript->setEnabled(false);
 
     QAction *act = ac->addAction(QLatin1String("add_server_sieve"), this, SLOT(slotAddServerSieve()));
