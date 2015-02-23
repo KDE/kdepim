@@ -105,7 +105,7 @@ void SieveEditorPageWidget::slotGetResult( KManageSieve::SieveJob *, bool succes
     mSieveEditorWidget->setModified(false);
 }
 
-void SieveEditorPageWidget::saveScript(bool showInformation, bool forceSave)
+void SieveEditorPageWidget::uploadScript(bool showInformation, bool forceSave)
 {
     if (mSieveEditorWidget->isModified() || forceSave) {
         KManageSieve::SieveJob * job = KManageSieve::SieveJob::put( mCurrentURL, mSieveEditorWidget->script(), mWasActive, mWasActive );
@@ -137,7 +137,7 @@ bool SieveEditorPageWidget::needToSaveScript()
     if (mIsNewScript) {
         const int resultQuestion = KMessageBox::warningYesNoCancel(this, i18n("Script '%1' is new. Do you want to save it?", mCurrentURL.fileName()));
         if (resultQuestion == KMessageBox::Yes) {
-            saveScript();
+            uploadScript();
             result = true;
         } else if (resultQuestion == KMessageBox::Cancel) {
             result = true;
@@ -146,7 +146,7 @@ bool SieveEditorPageWidget::needToSaveScript()
         if (mSieveEditorWidget->isModified()) {
             const int resultQuestion =KMessageBox::warningYesNoCancel(this, i18n("Script '%1' was changed. Do you want to save it ?", mCurrentURL.fileName()));
             if (resultQuestion == KMessageBox::Yes) {
-                saveScript();
+                uploadScript();
                 result = true;
             } else if (resultQuestion == KMessageBox::Cancel) {
                 result = true;

@@ -119,8 +119,8 @@ void SieveEditorMainWindow::setupActions()
 
     KStandardAction::quit(this, SLOT(close()), ac );
     KStandardAction::preferences( this, SLOT(slotConfigure()), ac );
-    mSaveScript = KStandardAction::save( this, SLOT(slotSaveScript()), ac );
-    mSaveScript->setEnabled(false);
+    mUploadScript = KStandardAction::save( this, SLOT(slotUploadScript()), ac );
+    mUploadScript->setEnabled(false);
 
     KAction *act = ac->addAction(QLatin1String("add_server_sieve"), this, SLOT(slotAddServerSieve()));
     act->setText(i18n("Add Server Sieve..."));
@@ -171,9 +171,9 @@ void SieveEditorMainWindow::slotRefreshList()
         mMainWidget->sieveEditorMainWidget()->refreshList();
 }
 
-void SieveEditorMainWindow::slotSaveScript()
+void SieveEditorMainWindow::slotUploadScript()
 {
-    mMainWidget->sieveEditorMainWidget()->saveScript();
+    mMainWidget->sieveEditorMainWidget()->uploadScript();
 }
 
 void SieveEditorMainWindow::slotDesactivateScript()
@@ -230,7 +230,7 @@ void SieveEditorMainWindow::slotAddServerSieve()
 void SieveEditorMainWindow::slotUpdateActions()
 {
     const bool hasPage = (mMainWidget->sieveEditorMainWidget()->tabWidget()->count()>0);
-    mSaveScript->setEnabled(hasPage);
+    mUploadScript->setEnabled(hasPage);
     const bool editActionEnabled = (hasPage && mMainWidget->sieveEditorMainWidget()->pageMode() == KSieveUi::SieveEditorWidget::TextMode);
     mGoToLine->setEnabled(editActionEnabled);
     mFindAction->setEnabled(editActionEnabled);
@@ -244,7 +244,7 @@ void SieveEditorMainWindow::slotUpdateActions()
 
     mSelectAllAction->setEnabled(editActionEnabled);
 
-    mSaveScript->setEnabled(hasPage && !mNetworkIsDown);
+    mUploadScript->setEnabled(hasPage && !mNetworkIsDown);
     mRefreshList->setEnabled(!mNetworkIsDown);
     mSaveAsAction->setEnabled(hasPage);
 }

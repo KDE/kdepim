@@ -41,7 +41,7 @@ public:
     void editScript();
     void desactivateScript();
     void refreshList();
-    void saveScript();
+    void uploadScript();
     bool needToSaveScript();
 
     KTabWidget *tabWidget() const;

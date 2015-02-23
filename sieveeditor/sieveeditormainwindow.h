@@ -46,7 +46,7 @@ private slots:
     void slotEditScript();
     void slotDesactivateScript();
     void slotRefreshList();
-    void slotSaveScript();
+    void slotUploadScript();
     void slotSystemNetworkStatusChanged(Solid::Networking::Status status);
     void slotUpdateActions();
     void slotUndoAvailable(bool);
@@ -63,7 +63,7 @@ private:
     KAction *mEditScript;
     KAction *mDesactivateScript;
     KAction *mRefreshList;
-    KAction *mSaveScript;
+    KAction *mUploadScript;
     KAction *mGoToLine;
     KAction *mFindAction;
     KAction *mReplaceAction;
