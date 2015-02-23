@@ -42,7 +42,7 @@ public:
     void loadScript(const QUrl &url, const QStringList &capabilities);
     QUrl currentUrl() const;
     void setIsNewScript(bool isNewScript);
-    void saveScript(bool showInformation = true, bool forceSave = false);
+    void uploadScript(bool showInformation = true, bool forceSave = false);
     bool needToSaveScript();
 
     bool isModified() const;
@@ -61,6 +61,7 @@ public:
     bool hasSelection() const;
 
     void selectAll();
+    void saveAs();
 Q_SIGNALS:
     void refreshList();
     void scriptModified(bool, SieveEditorPageWidget *);

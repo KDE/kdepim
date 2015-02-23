@@ -47,7 +47,7 @@ private Q_SLOTS:
     void slotEditScript();
     void slotDesactivateScript();
     void slotRefreshList();
-    void slotSaveScript();
+    void slotUploadScript();
     void slotUpdateActions();
     void slotSystemNetworkOnlineStateChanged(bool state);
     void slotUndoAvailable(bool);
@@ -64,7 +64,7 @@ private:
     QAction *mEditScript;
     QAction *mDesactivateScript;
     QAction *mRefreshList;
-    QAction *mSaveScript;
+    QAction *mUploadScript;
     QAction *mGoToLine;
     QAction *mFindAction;
     QAction *mReplaceAction;
@@ -74,6 +74,7 @@ private:
     QAction *mPasteAction;
     QAction *mCutAction;
     QAction *mSelectAllAction;
+    QAction *mSaveAsAction;
 
     QLabel *mStatusBarInfo;
     QNetworkConfigurationManager *mNetworkConfigurationManager;

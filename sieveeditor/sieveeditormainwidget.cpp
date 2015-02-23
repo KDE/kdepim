@@ -103,9 +103,8 @@ void SieveEditorMainWidget::slotCreateScriptPage(const QUrl &url, const QStringL
         editor->loadScript(url, capabilities);
         mTabWidget->addTab(editor, url.fileName());
         mTabWidget->setCurrentWidget(editor);
-        if (isNewScript) {
-            editor->saveScript(false, true);
-        }
+        if (isNewScript)
+            editor->uploadScript(false, true);
     }
 }
 
@@ -139,13 +138,13 @@ void SieveEditorMainWidget::refreshList()
     mScriptManagerWidget->refreshList();
 }
 
-void SieveEditorMainWidget::saveScript()
+void SieveEditorMainWidget::uploadScript()
 {
     QWidget *w = mTabWidget->currentWidget();
     if (w) {
         SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
         if (page) {
-            page->saveScript();
+            page->uploadScript();
         }
     }
 }
@@ -305,7 +304,18 @@ void SieveEditorMainWidget::slotReplace()
     }
 }
 
-void SieveEditorMainWidget::slotScriptModified(bool modified, SieveEditorPageWidget *page)
+void SieveEditorMainWidget::slotSaveAs()
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            page->saveAs();
+        }
+    }
+}
+
+void SieveEditorMainWidget::slotScriptModified(bool modified,SieveEditorPageWidget *page)
 {
     const int index = mTabWidget->indexOf(page);
     if (index >= 0) {
@@ -333,7 +343,7 @@ void SieveEditorMainWidget::slotTabCloseRequested(int index)
         if (page->isModified()) {
             const int result = KMessageBox::questionYesNoCancel(this, i18n("Script was modified. Do you want to save before closing?"), i18n("Close script"));
             if (result == KMessageBox::Yes) {
-                page->saveScript();
+                page->uploadScript();
             } else if (result == KMessageBox::Cancel) {
                 return;
             }

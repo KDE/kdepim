@@ -41,7 +41,7 @@ public:
     void editScript();
     void desactivateScript();
     void refreshList();
-    void saveScript();
+    void uploadScript();
     bool needToSaveScript();
 
     QTabWidget *tabWidget() const;
@@ -59,6 +59,7 @@ public Q_SLOTS:
     void slotCopy();
     void slotPaste();
     void slotCut();
+    void slotSaveAs();
 Q_SIGNALS:
     void updateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);
     void updateScriptList();
