@@ -38,11 +38,11 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
     setCaption( i18nc("@title:window", "Send Later") );
     setWindowIcon( KIcon( QLatin1String("kmail") ) );
 
-    QWidget *sendLaterWidget = new QWidget;
+    QWidget *sendLaterWidget = new QWidget(this);
     mSendLaterWidget = new Ui::SendLaterWidget;
     mSendLaterWidget->setupUi( sendLaterWidget );
 
-    QWidget *w = new QWidget;
+    QWidget *w = new QWidget(this);
     QVBoxLayout *lay = new QVBoxLayout;
     w->setLayout(lay);
 
