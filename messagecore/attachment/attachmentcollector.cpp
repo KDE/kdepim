@@ -33,7 +33,7 @@
 
 #include "helpers/nodehelper.h"
 
-#include <qdebug.h>
+#include "messagecore_debug.h"
 #include <kmime/kmime_content.h>
 
 static bool isInSkipMimeContentList(KMime::Content *)

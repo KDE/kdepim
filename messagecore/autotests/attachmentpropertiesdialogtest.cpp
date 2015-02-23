@@ -24,7 +24,7 @@
 
 #include <QCheckBox>
 
-#include <QDebug>
+#include "messagecore_debug.h"
 #include <KComboBox>
 #include <QLineEdit>
 #include <qtest.h>

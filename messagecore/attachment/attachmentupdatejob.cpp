@@ -21,7 +21,7 @@
 #include <QUrl>
 #include "attachmentfromurlutils.h"
 #include <KMimeType>
-#include <QDebug>
+#include "messagecore_debug.h"
 #include <QTimer>
 using namespace MessageCore;
 
@@ -47,7 +47,7 @@ void AttachmentUpdateJob::Private::doStart()
 {
     Q_ASSERT(mOriginalPart);
     if (mOriginalPart->url().isEmpty()) {
-        qDebug() << " url is empty. We can't update file";
+        qCDebug(MESSAGECORE_LOG) << " url is empty. We can't update file";
         q->setError(KJob::UserDefinedError);
         q->setErrorText(QLatin1String("Url is empty."));
         q->emitResult();

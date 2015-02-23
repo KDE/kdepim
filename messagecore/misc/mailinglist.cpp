@@ -4,7 +4,7 @@
 #include <kconfig.h>
 #include <kconfiggroup.h>
 #include <QUrl>
-#include <qdebug.h>
+#include "messagecore_debug.h"
 
 #include <QtCore/QSharedData>
 #include <QtCore/QStringList>
@@ -241,7 +241,7 @@ static QStringList headerToAddress(const QString &header)
 
     while ((start = header.indexOf(QLatin1Char('<'), start)) != -1) {
         if ((end = header.indexOf(QLatin1Char('>'), ++start)) == -1) {
-            qWarning() << "Serious mailing list header parsing error!";
+            qCWarning(MESSAGECORE_LOG) << "Serious mailing list header parsing error!";
             return addresses;
         }
 

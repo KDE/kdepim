@@ -22,7 +22,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include <QDebug>
+#include "messagecore_debug.h"
 #include <qtest.h>
 
 #include <kmime/kmime_content.h>
@@ -55,8 +55,8 @@ void AttachmentFromMimeContentJobTest::testAttachment()
     content->contentDescription()->fromUnicodeString(description, charset);
     content->setBody(data);
     content->assemble();
-    //qDebug() << "Encoded content:" << content->encodedContent();
-    //qDebug() << "Decoded content:" << content->decodedContent();
+    //qCDebug(MESSAGECORE_LOG) << "Encoded content:" << content->encodedContent();
+    //qCDebug(MESSAGECORE_LOG) << "Decoded content:" << content->decodedContent();
 
     AttachmentFromMimeContentJob *job = new AttachmentFromMimeContentJob(content, this);
     QVERIFY(job->uiDelegate() == 0);   // No GUI thankyouverymuch.

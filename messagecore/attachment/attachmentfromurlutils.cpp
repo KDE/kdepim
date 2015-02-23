@@ -20,7 +20,7 @@
 #include "attachmentfromurlutils.h"
 #include "messagecore/settings/globalsettings.h"
 #include <KMimeType>
-#include <QDebug>
+#include "messagecore_debug.h"
 
 namespace MessageCore
 {
@@ -28,11 +28,11 @@ MessageCore::AttachmentFromUrlBaseJob *AttachmentFromUrlUtils::createAttachmentJ
 {
     MessageCore::AttachmentFromUrlBaseJob *ajob = 0;
     if (KMimeType::findByUrl(url)->name() == QLatin1String("inode/directory")) {
-        qDebug() << "Creating attachment from folder";
+        qCDebug(MESSAGECORE_LOG) << "Creating attachment from folder";
         ajob = new MessageCore::AttachmentFromFolderJob(url, parent);
     } else {
         ajob = new MessageCore::AttachmentFromUrlJob(url, parent);
-        qDebug() << "Creating attachment from file";
+        qCDebug(MESSAGECORE_LOG) << "Creating attachment from file";
     }
     if (MessageCore::GlobalSettings::maximumAttachmentSize() > 0) {
         ajob->setMaximumAllowedSize(MessageCore::GlobalSettings::maximumAttachmentSize());

@@ -21,7 +21,7 @@
 
 #include "attachmentfromurljob.h"
 
-#include <QDebug>
+#include "messagecore_debug.h"
 #include <KIO/Scheduler>
 #include <KIO/TransferJob>
 #include <KLocalizedString>
@@ -76,7 +76,7 @@ void AttachmentFromUrlJob::Private::transferJobResult(KJob *job)
 
     // Determine the MIME type and filename of the attachment.
     const QString mimeType = transferJob->mimetype();
-    qDebug() << "Mimetype is" << mimeType;
+    qCDebug(MESSAGECORE_LOG) << "Mimetype is" << mimeType;
 
     QString fileName = q->url().fileName();
     if (fileName.isEmpty()) {

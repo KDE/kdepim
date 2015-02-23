@@ -19,7 +19,7 @@
 #include "messagecore/misc/mailinglist.h"
 #include <qtest.h>
 #include <KConfigGroup>
-#include <QDebug>
+#include "messagecore_debug.h"
 #include <KSharedConfig>
 
 //TODO add test for static MailingList detect(  const KMime::Message::Ptr &message ); and static QString name( ... );

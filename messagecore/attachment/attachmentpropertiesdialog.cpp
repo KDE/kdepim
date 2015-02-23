@@ -27,7 +27,7 @@
 
 #include <k4aboutdata.h>
 #include <KComponentData>
-#include <QDebug>
+#include "messagecore_debug.h"
 #include <KIconLoader>
 
 #include <kmime/kmime_content.h>
@@ -304,7 +304,7 @@ void AttachmentPropertiesDialog::Private::saveToPart()
     if (ui->mimeType->currentText().startsWith(QLatin1String("message")) &&
             ui->encoding->itemData(ui->encoding->currentIndex()) != KMime::Headers::CE7Bit &&
             ui->encoding->itemData(ui->encoding->currentIndex()) != KMime::Headers::CE8Bit) {
-        qWarning() << "Encoding on message/rfc822 must be \"7bit\" or \"8bit\".";
+        qCWarning(MESSAGECORE_LOG) << "Encoding on message/rfc822 must be \"7bit\" or \"8bit\".";
     }
 
     mPart->setEncoding(KMime::Headers::contentEncoding(

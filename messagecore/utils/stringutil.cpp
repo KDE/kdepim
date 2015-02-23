@@ -30,10 +30,10 @@
 
 #include <kascii.h>
 #include <KConfigGroup>
-#include <QDebug>
+#include "messagecore_debug.h"
 #include <KUser>
 #include <KUrl>
-#include <QDebug>
+#include "messagecore_debug.h"
 
 #include <QHostInfo>
 #include <QRegExp>
@@ -263,7 +263,7 @@ AddressList splitAddressField(const QByteArray &text)
     const char *const end = text.begin() + text.length();
 
     if (!parseAddressList(begin, end, result)) {
-        qDebug() << "Error in address splitting: parseAddressList returned false!";
+        qCDebug(MESSAGECORE_LOG) << "Error in address splitting: parseAddressList returned false!";
     }
 
     return result;
@@ -497,14 +497,14 @@ QByteArray stripEmailAddr(const QByteArray &aStr)
         result += angleAddress;
     }
 
-    //qDebug() << "Returns \"" << result << "\"";
+    //qCDebug(MESSAGECORE_LOG) << "Returns \"" << result << "\"";
     return result;
 }
 
 #ifndef MESSAGECORE_NO_DEPRECATED
 QString stripEmailAddr(const QString &aStr)
 {
-    //qDebug() << "(" << aStr << ")";
+    //qCDebug(MESSAGECORE_LOG) << "(" << aStr << ")";
 
     if (aStr.isEmpty()) {
         return QString();
@@ -645,7 +645,7 @@ QString stripEmailAddr(const QString &aStr)
         result += angleAddress;
     }
 
-    //qDebug() << "Returns \"" << result << "\"";
+    //qCDebug(MESSAGECORE_LOG) << "Returns \"" << result << "\"";
     return result;
 }
 #endif
@@ -1089,7 +1089,7 @@ QString stripOffPrefixes(const QString &subject)
             return tmp.remove(0, regExp.matchedLength());
         }
     } else {
-        qWarning() << "bigRegExp = \""
+        qCWarning(MESSAGECORE_LOG) << "bigRegExp = \""
                    << bigRegExp << "\"\n"
                    << "prefix regexp is invalid!";
     }
@@ -1128,7 +1128,7 @@ KMime::Types::Mailbox mailboxFromUnicodeString(const QString &address)
     }
 
     if (mailboxes.size() > 1) {
-        qDebug() << " mailboxes size > 1 ";
+        qCDebug(MESSAGECORE_LOG) << " mailboxes size > 1 ";
     }
     return mailboxes.first();
 }
@@ -1150,7 +1150,7 @@ KMime::Types::Mailbox mailboxFrom7BitString(const QByteArray &address)
         return KMime::Types::Mailbox();
     }
     if (mailboxes.size() > 1) {
-        qDebug() << " mailboxes size > 1 ";
+        qCDebug(MESSAGECORE_LOG) << " mailboxes size > 1 ";
     }
     return mailboxes.first();
 }

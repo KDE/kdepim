@@ -34,7 +34,7 @@
 
 #include "helpers/nodehelper.h"
 
-#include <qdebug.h>
+#include "messagecore_debug.h"
 #include <kmime/kmime_content.h>
 
 static bool isInSkipList(KMime::Content *)
@@ -99,7 +99,7 @@ void MessageCore::ImageCollector::collectImagesFrom(KMime::Content *node)
 
         if (parent && parent->contentType()->isMultipart() &&
                 parent->contentType()->subType() == "related") {
-            qWarning() << "Adding image" << node->contentID();
+            qCWarning(MESSAGECORE_LOG) << "Adding image" << node->contentID();
             d->mImages.push_back(node);
             node = MessageCore::NodeHelper::next(node);    // skip embedded images
             continue;
