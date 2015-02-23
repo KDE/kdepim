@@ -21,7 +21,7 @@
 #include "baloocompletionemailtest.h"
 #include "../baloocompletionemail.h"
 #include <qtest.h>
-#include <QDebug>
+#include "libkdepim_debug.h"
 
 BalooCompletionEmailTest::BalooCompletionEmailTest(QObject *parent)
     : QObject(parent)

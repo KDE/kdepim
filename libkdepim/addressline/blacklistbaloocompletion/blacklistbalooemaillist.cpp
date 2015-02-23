@@ -19,7 +19,7 @@
 */
 
 #include "blacklistbalooemaillist.h"
-#include <QDebug>
+#include "libkdepim_debug.h"
 #include <QPainter>
 #include <KGlobalSettings>
 #include <KLocalizedString>

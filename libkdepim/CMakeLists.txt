@@ -88,6 +88,7 @@ set(kdepim_LIB_SRCS
    ${kdepim_ldap_LIB_SRCS}
    ${kdepim_misc_LIB_SRCS}
    ${kdepim_addressline_LIB_SRCS}
+   libkdepim_debug.cpp
    prefs/kprefsdialog.cpp
    multiplyingline/multiplyingline.cpp
    multiplyingline/multiplyinglineeditor.cpp

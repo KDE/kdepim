@@ -23,7 +23,7 @@
 
 #include "progressmanager.h"
 
-#include <QDebug>
+#include "libkdepim_debug.h"
 #include <KLocalizedString>
 
 namespace KPIM
@@ -57,7 +57,7 @@ ProgressItem::~ProgressItem()
 
 void ProgressItem::setComplete()
 {
-    //   qDebug() << label();
+    //   qCDebug(LIBKDEPIM_LOG) << label();
     if (mChildren.isEmpty()) {
         if (mCompletedCalled) {
             return;
@@ -121,7 +121,7 @@ void ProgressItem::cancel()
         return;
     }
 
-    qDebug() << label();
+    qCDebug(LIBKDEPIM_LOG) << label();
     mCanceled = true;
     // Cancel all children.
     QList<ProgressItem * > kids = mChildren.keys();
@@ -145,7 +145,7 @@ void ProgressItem::updateProgress()
 void ProgressItem::setProgress(unsigned int v)
 {
     mProgress = v;
-    // qDebug() << label() << " :" << v;
+    // qCDebug(LIBKDEPIM_LOG) << label() << " :" << v;
     emit progressItemProgress(this, mProgress);
 }
 

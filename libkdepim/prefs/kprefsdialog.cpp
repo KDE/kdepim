@@ -28,7 +28,7 @@
 #include <KComboBox>
 #include <KConfigSkeleton>
 #include <KDateComboBox>
-#include <QDebug>
+#include "libkdepim_debug.h"
 #include <QFontDialog>
 #include <KLineEdit>
 #include <KLocalizedString>

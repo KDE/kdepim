@@ -21,7 +21,7 @@
 #include <QApplication>
 #include <QAbstractTextDocumentLayout>
 
-#include <QDebug>
+#include "libkdepim_debug.h"
 using namespace KPIM;
 
 LogItemDelegate::LogItemDelegate(QObject *parent)
@@ -178,7 +178,7 @@ QString CustomLogWidget::toHtml() const
             logText = QLatin1String("<br/>");
             break;
         default:
-            qDebug() << "LogType undefined" << type;
+            qCDebug(LIBKDEPIM_LOG) << "LogType undefined" << type;
             logText += itemWidget->text();
             break;
         }

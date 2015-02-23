@@ -32,7 +32,7 @@
 #include <kldap/ldif.h>
 
 #include <KConfig>
-#include <QDebug>
+#include "libkdepim_debug.h"
 #include <KDirWatch>
 #include <kio/job.h>
 

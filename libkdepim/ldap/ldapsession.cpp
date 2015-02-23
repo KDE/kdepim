@@ -25,7 +25,7 @@
 #include <kldap/ldapcontrol.h>
 #include <kldap/ldapdefs.h>
 
-#include <QDebug>
+#include "libkdepim_debug.h"
 #include "ldapqueryjob.h"
 
 using namespace KLDAP;
@@ -35,13 +35,13 @@ LdapSession::LdapSession(QObject *parent) :
     m_state(Disconnected),
     m_currentJob(0)
 {
-    qDebug();
+    qCDebug(LIBKDEPIM_LOG);
 }
 
 // runs in other thread
 void LdapSession::connectToServer(const KLDAP::LdapServer &server)
 {
-    qDebug();
+    qCDebug(LIBKDEPIM_LOG);
     if (m_state != Disconnected) {
         return;
     }
@@ -52,10 +52,10 @@ void LdapSession::connectToServer(const KLDAP::LdapServer &server)
 // runs in this thread
 void LdapSession::connectToServerInternal()
 {
-    qDebug();
+    qCDebug(LIBKDEPIM_LOG);
     m_conn.setServer(m_server);
     if (m_conn.connect() != 0) {
-        qWarning() << "failed to connect: " << m_conn.connectionError();
+        qCWarning(LIBKDEPIM_LOG) << "failed to connect: " << m_conn.connectionError();
         return;
     }
     m_state = Connected;
@@ -65,7 +65,7 @@ void LdapSession::connectToServerInternal()
 // runs in other threads
 void LdapSession::disconnectAndDelete()
 {
-    qDebug();
+    qCDebug(LIBKDEPIM_LOG);
     QMetaObject::invokeMethod(this, "quit", Qt::QueuedConnection);
     QMetaObject::invokeMethod(this, "deleteLater", Qt::QueuedConnection);
 }
@@ -73,19 +73,19 @@ void LdapSession::disconnectAndDelete()
 // runs in this thread
 void LdapSession::disconnectFromServerInternal()
 {
-    qDebug();
+    qCDebug(LIBKDEPIM_LOG);
     m_conn.close();
     m_state = Disconnected;
 }
 
 void LdapSession::authenticate()
 {
-    qDebug();
+    qCDebug(LIBKDEPIM_LOG);
     LdapOperation op(m_conn);
     while (true) {
         int retval = op.bind_s();
         if (retval == 0) {
-            qDebug() << "connected!";
+            qCDebug(LIBKDEPIM_LOG) << "connected!";
             m_state = Authenticated;
             return;
         }
@@ -101,7 +101,7 @@ void LdapSession::authenticate()
         } else {
 //       LDAPErr( retval );
             disconnectFromServerInternal();
-            qDebug() << "error" << retval;
+            qCDebug(LIBKDEPIM_LOG) << "error" << retval;
             return;
         }
     }
@@ -110,7 +110,7 @@ void LdapSession::authenticate()
 // called from other thread
 LdapQueryJob *LdapSession::get(const KLDAP::LdapUrl &url)
 {
-    qDebug() << url;
+    qCDebug(LIBKDEPIM_LOG) << url;
     LdapQueryJob *job = new LdapQueryJob(url, this);
     job->moveToThread(this);   // make sure the job is in the thread so that the result connections are queued
     connect(job, &LdapQueryJob::result, this, &LdapSession::jobDone);

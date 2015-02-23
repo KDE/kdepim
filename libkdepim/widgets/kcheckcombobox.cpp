@@ -26,7 +26,7 @@
 #include "kcheckcombobox.h"
 
 #include <KLineEdit>
-#include <QDebug>
+#include "libkdepim_debug.h"
 
 #include <QAbstractItemView>
 #include <QKeyEvent>
@@ -80,7 +80,7 @@ void KCheckComboBox::Private::makeInsertedItemsCheckable(const QModelIndex &pare
             item->setCheckable(true);
         }
     } else {
-        qWarning() << "KCheckComboBox: model is not a QStandardItemModel but a" << q->model() << ". Cannot proceed.";
+        qCWarning(LIBKDEPIM_LOG) << "KCheckComboBox: model is not a QStandardItemModel but a" << q->model() << ". Cannot proceed.";
     }
 }
 

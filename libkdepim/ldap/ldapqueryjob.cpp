@@ -26,7 +26,7 @@
 #include <kldap/ldapconnection.h>
 #include <kldap/ldapdn.h>
 
-#include <QDebug>
+#include "libkdepim_debug.h"
 
 using namespace KLDAP;
 
@@ -45,14 +45,14 @@ void LdapQueryJob::triggerStart()
 
 void LdapQueryJob::start()
 {
-    qDebug();
+    qCDebug(LIBKDEPIM_LOG);
     m_op.setConnection(m_session->connection());
 
     LdapControls serverctrls, clientctrls;
     if (m_session->server().pageSize()) {
         LdapControls ctrls = serverctrls;
         ctrls.append(LdapControl::createPageControl(m_session->server().pageSize()));
-        qDebug() << "page size: " << m_session->server().pageSize();
+        qCDebug(LIBKDEPIM_LOG) << "page size: " << m_session->server().pageSize();
         m_op.setServerControls(ctrls);
     } else {
         m_op.setServerControls(serverctrls);
@@ -72,24 +72,24 @@ void LdapQueryJob::start()
 //       LDAPErr();
             return;
         }
-        qDebug() << " ldap_result: " << ret;
+        qCDebug(LIBKDEPIM_LOG) << " ldap_result: " << ret;
         if (ret == LdapOperation::RES_SEARCH_RESULT) {
 
             if (m_session->server().pageSize()) {
                 QByteArray cookie;
                 int estsize = -1;
                 for (int i = 0; i < m_op.controls().count(); ++i) {
-                    qDebug() << " control oid: " << m_op.controls()[i].oid();
+                    qCDebug(LIBKDEPIM_LOG) << " control oid: " << m_op.controls()[i].oid();
                     estsize = m_op.controls()[i].parsePageControl(cookie);
                     if (estsize != -1) {
                         break;
                     }
                 }
-                qDebug() << " estimated size: " << estsize;
+                qCDebug(LIBKDEPIM_LOG) << " estimated size: " << estsize;
                 if (estsize != -1 && !cookie.isEmpty()) {
                     LdapControls ctrls;
                     ctrls = serverctrls;
-                    qDebug() << "page size: " << m_session->server().pageSize() << " estimated size: " << estsize;
+                    qCDebug(LIBKDEPIM_LOG) << "page size: " << m_session->server().pageSize() << " estimated size: " << estsize;
                     ctrls.append(LdapControl::createPageControl(m_session->server().pageSize(), cookie));
                     m_op.setServerControls(ctrls);
                     if ((id = m_op.search(m_url.dn(), m_url.scope(), m_url.filter(), m_url.attributes())) == -1) {

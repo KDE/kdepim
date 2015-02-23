@@ -32,7 +32,7 @@
 #include <KEmailAddress>
 #include <KConfig>
 #include <KConfigGroup>
-#include <QDebug>
+#include "libkdepim_debug.h"
 #include <KLocalizedString>
 #include <KLineEdit>
 #include <QPushButton>

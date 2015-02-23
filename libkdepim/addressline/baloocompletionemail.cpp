@@ -21,7 +21,7 @@
 #include "baloocompletionemail.h"
 #include <QMap>
 #include <KEmailAddress>
-#include <QDebug>
+#include "libkdepim_debug.h"
 using namespace KPIM;
 
 BalooCompletionEmail::BalooCompletionEmail()

@@ -23,7 +23,7 @@
 
 #include <KLocalizedString>
 #include <KCalendarSystem>
-#include <QDebug>
+#include "libkdepim_debug.h"
 #include <QLocale>
 
 using namespace KPIM;
@@ -77,7 +77,7 @@ int KWeekdayCheckCombo::weekdayIndex(const QDate &date) const
     const KCalendarSystem *calSys = KLocale::global()->calendar();
     const int dayOfWeek = calSys->dayOfWeek(date) - 1;   // Values 1 - 7, we need 0 - 6
 
-    // qDebug() << "dayOfWeek = " << dayOfWeek << " weekStart = " << weekStart
+    // qCDebug(LIBKDEPIM_LOG) << "dayOfWeek = " << dayOfWeek << " weekStart = " << weekStart
     // << "; result " << ( ( dayOfWeek + weekStart ) % 7 ) << "; date = " << date;
     return (1 + dayOfWeek + (7 - weekStart)) % 7;
 }
@@ -92,8 +92,8 @@ void KWeekdayCheckCombo::setDays(const QBitArray &days,  const QBitArray &disabl
         // i is the nr of the combobox, not the day of week!
         const int index = (1 + i + (7 - weekStart)) % 7;
 
-        // qDebug() << "Checking for i = " << i << "; index = " << index << days.testBit( i );
-        // qDebug() << "Disabling? for i = " << i << "; index = " << index << !disableDays.testBit( i );
+        // qCDebug(LIBKDEPIM_LOG) << "Checking for i = " << i << "; index = " << index << days.testBit( i );
+        // qCDebug(LIBKDEPIM_LOG) << "Disabling? for i = " << i << "; index = " << index << !disableDays.testBit( i );
 
         if (days.testBit(i)) {
             checkedDays << itemText(index);

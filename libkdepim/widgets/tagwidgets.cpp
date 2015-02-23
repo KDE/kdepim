@@ -27,7 +27,7 @@
 #include <TagModel>
 #include <Monitor>
 #include <KCheckableProxyModel>
-#include <QDebug>
+#include "libkdepim_debug.h"
 #include <QHBoxLayout>
 
 using namespace KPIM;
@@ -67,7 +67,7 @@ void TagWidget::setSelection(const QStringList &tagNames)
 void TagWidget::onTagCreated(KJob *job)
 {
     if (job->error()) {
-        qWarning() << "Failed to create tag " << job->errorString();
+        qCWarning(LIBKDEPIM_LOG) << "Failed to create tag " << job->errorString();
         return;
     }
     Akonadi::TagCreateJob *createJob = static_cast<Akonadi::TagCreateJob *>(job);
@@ -100,7 +100,7 @@ void TagSelectionDialog::setSelection(const QStringList &tagNames)
 void TagSelectionDialog::onTagCreated(KJob *job)
 {
     if (job->error()) {
-        qWarning() << "Failed to create tag " << job->errorString();
+        qCWarning(LIBKDEPIM_LOG) << "Failed to create tag " << job->errorString();
         return;
     }
     Akonadi::TagCreateJob *createJob = static_cast<Akonadi::TagCreateJob *>(job);

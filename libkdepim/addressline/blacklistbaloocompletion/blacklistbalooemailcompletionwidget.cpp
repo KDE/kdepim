@@ -30,7 +30,7 @@
 #include <QLabel>
 #include <KConfigGroup>
 #include <KSharedConfig>
-#include <QDebug>
+#include "libkdepim_debug.h"
 
 using namespace KPIM;
 BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget *parent)

@@ -17,7 +17,7 @@
 
 #include "completionordereditor.h"
 #include "kmailcompletion.h"
-#include <KDebug>
+#include "libkdepim_debug.h"
 #include <QMap>
 
 namespace KPIM
@@ -603,7 +603,7 @@ void AddresseeLineEdit::Private::startSearches()
 
 void AddresseeLineEdit::Private::akonadiPerformSearch()
 {
-    qDebug() << "searching akonadi with:" << m_searchString;
+    qCDebug(LIBKDEPIM_LOG) << "searching akonadi with:" << m_searchString;
 
     // first, kill all job still in flight, they are no longer current
     Q_FOREACH (QWeakPointer<Akonadi::Job> job, s_static->akonadiJobsInFlight) {
@@ -639,7 +639,7 @@ void AddresseeLineEdit::Private::akonadiPerformSearch()
 
 void AddresseeLineEdit::Private::akonadiHandlePending()
 {
-    qDebug() << "Pending items: " << s_static->akonadiPendingItems.size();
+    qCDebug(LIBKDEPIM_LOG) << "Pending items: " << s_static->akonadiPendingItems.size();
     Akonadi::Item::List::iterator it = s_static->akonadiPendingItems.begin();
     while (it != s_static->akonadiPendingItems.end()) {
         const Akonadi::Item item = *it;
@@ -647,7 +647,7 @@ void AddresseeLineEdit::Private::akonadiHandlePending()
         const AddresseeLineEditStatic::collectionInfo sourceIndex =
                 s_static->akonadiCollectionToCompletionSourceMap.value( item.parentCollection().id(), AddresseeLineEditStatic::collectionInfo() );
         if ( sourceIndex.index >= 0 ) {
-            qDebug() << "identified collection: " << s_static->completionSources[sourceIndex.index];
+            qCDebug(LIBKDEPIM_LOG) << "identified collection: " << s_static->completionSources[sourceIndex.index];
             if (sourceIndex.enabled) {
                 q->addItem( item, 1, sourceIndex.index );
             }
@@ -898,7 +898,7 @@ void AddresseeLineEdit::Private::slotAkonadiHandleItems(const Akonadi::Item::Lis
         const AddresseeLineEditStatic::collectionInfo sourceIndex =
                 s_static->akonadiCollectionToCompletionSourceMap.value( item.parentCollection().id(), AddresseeLineEditStatic::collectionInfo() );
         if ( sourceIndex.index == -1 ) {
-            qDebug() << "Fetching New collection: " << item.parentCollection().id();
+            qCDebug(LIBKDEPIM_LOG) << "Fetching New collection: " << item.parentCollection().id();
             // the collection isn't there, start the fetch job.
             Akonadi::CollectionFetchJob *collectionJob =
                 new Akonadi::CollectionFetchJob(item.parentCollection(),
@@ -933,10 +933,10 @@ void AddresseeLineEdit::Private::slotAkonadiHandleItems(const Akonadi::Item::Lis
 void AddresseeLineEdit::Private::slotAkonadiSearchResult(KJob *job)
 {
     if (job->error()) {
-        qWarning() << "Akonadi search job failed: " << job->errorString();
+        qCWarning(LIBKDEPIM_LOG) << "Akonadi search job failed: " << job->errorString();
     } else {
         Akonadi::ItemSearchJob *searchJob = static_cast<Akonadi::ItemSearchJob *>(job);
-        qDebug() << "Found" << searchJob->items().size() << "items";
+        qCDebug(LIBKDEPIM_LOG) << "Found" << searchJob->items().size() << "items";
     }
     const int index = s_static->akonadiJobsInFlight.indexOf(qobject_cast<Akonadi::Job *>(job));
     if (index != -1) {
@@ -956,7 +956,7 @@ void AddresseeLineEdit::Private::slotAkonadiCollectionsReceived(
             const int index = q->addCompletionSource( sourceString, weight );
             AddresseeLineEditStatic::collectionInfo info;
             info.index = index;
-            qDebug() << "\treceived: " << sourceString << "index: " << index;
+            qCDebug(LIBKDEPIM_LOG) << "\treceived: " << sourceString << "index: " << index;
             s_static->akonadiCollectionToCompletionSourceMap.insert( collection.id(), info );
         }
     }

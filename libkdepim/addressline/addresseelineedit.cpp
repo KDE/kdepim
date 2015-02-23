@@ -52,7 +52,7 @@
 
 #include <KConfigGroup>
 #include <KCompletionBox>
-#include <QDebug>
+#include "libkdepim_debug.h"
 #include <KLocalizedString>
 #include <KStandardShortcut>
 #include <QUrl>
@@ -524,7 +524,7 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *object, QEvent *event)
             return true;
         }
         if (keyEvent->key() == Qt::Key_Up) {
-            //qDebug() <<"EVENTFILTER: Qt::Key_Up currentIndex=" << currentIndex;
+            //qCDebug(LIBKDEPIM_LOG) <<"EVENTFILTER: Qt::Key_Up currentIndex=" << currentIndex;
             // figure out if the item we would be moving to is one we want
             // to ignore. If so, go one further
             const QListWidgetItem *itemAbove = completionBox()->item(currentIndex);
@@ -532,7 +532,7 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *object, QEvent *event)
                 // there is a header above is, check if there is even further up
                 // and if so go one up, so it'll be selected
                 if (currentIndex > 0 && completionBox()->item(currentIndex - 1)) {
-                    //qDebug() <<"EVENTFILTER: Qt::Key_Up -> skipping" << currentIndex - 1;
+                    //qCDebug(LIBKDEPIM_LOG) <<"EVENTFILTER: Qt::Key_Up -> skipping" << currentIndex - 1;
                     completionBox()->setCurrentRow(currentIndex - 1);
                     completionBox()->item(currentIndex - 1)->setSelected(true);
                 } else if (currentIndex == 0) {
@@ -554,11 +554,11 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *object, QEvent *event)
             }
         } else if (keyEvent->key() == Qt::Key_Down) {
             // same strategy for downwards
-            //qDebug() <<"EVENTFILTER: Qt::Key_Down. currentIndex=" << currentIndex;
+            //qCDebug(LIBKDEPIM_LOG) <<"EVENTFILTER: Qt::Key_Down. currentIndex=" << currentIndex;
             const QListWidgetItem *itemBelow = completionBox()->item(currentIndex);
             if (itemBelow && itemIsHeader(itemBelow)) {
                 if (completionBox()->item(currentIndex + 1)) {
-                    //qDebug() <<"EVENTFILTER: Qt::Key_Down -> skipping" << currentIndex+1;
+                    //qCDebug(LIBKDEPIM_LOG) <<"EVENTFILTER: Qt::Key_Down -> skipping" << currentIndex+1;
                     completionBox()->setCurrentRow(currentIndex + 1);
                     completionBox()->item(currentIndex + 1)->setSelected(true);
                 } else {

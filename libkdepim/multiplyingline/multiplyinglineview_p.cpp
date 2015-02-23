@@ -23,7 +23,7 @@
 */
 #include "multiplyinglineview_p.h"
 
-#include <QDebug>
+#include "libkdepim_debug.h"
 #include <KMessageBox>
 #include <KLocalizedString>
 
@@ -353,10 +353,10 @@ void MultiplyingLineView::setFocusTop()
         if (line) {
             line->activate();
         } else {
-            qWarning() << "No first";
+            qCWarning(LIBKDEPIM_LOG) << "No first";
         }
     } else {
-        qWarning() << "No first";
+        qCWarning(LIBKDEPIM_LOG) << "No first";
     }
 }
 
@@ -367,7 +367,7 @@ void MultiplyingLineView::setFocusBottom()
         ensureWidgetVisible(line);
         line->activate();
     } else {
-        qWarning() << "No last";
+        qCWarning(LIBKDEPIM_LOG) << "No last";
     }
 }
 
