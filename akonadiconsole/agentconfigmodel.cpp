@@ -22,7 +22,7 @@
 #include <QDBusInterface>
 #include <QMetaMethod>
 #include <KLocalizedString>
-#include <QDebug>
+#include "akonadiconsole_debug.h"
 
 AgentConfigModel::AgentConfigModel(QObject *parent): QAbstractTableModel(parent), m_interface(Q_NULLPTR)
 {
@@ -72,7 +72,7 @@ void AgentConfigModel::reload()
         const QString methodName = QString::fromLatin1(signature.left(signature.indexOf('(')));
         const QDBusMessage reply = m_interface->call(methodName);
         if (!reply.arguments().count() == 1) {
-            kError() << "call to method" << signature << "failed: " << reply.arguments() << reply.errorMessage();
+            qCCritical(AKONADICONSOLE_LOG) << "call to method" << signature << "failed: " << reply.arguments() << reply.errorMessage();
             continue;
         }
         const QString settingName = methodName.at(0).toUpper() + methodName.mid(1);

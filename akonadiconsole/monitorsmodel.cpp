@@ -19,7 +19,7 @@
 
 #include "monitorsmodel.h"
 #include "monitoritem.h"
-
+#include "akonadiconsole_debug.h"
 #include <AkonadiCore/servermanager.h>
 
 #include <QtDBus/QDBusConnection>
@@ -49,7 +49,7 @@ void MonitorsModel::init()
     mManager = new org::freedesktop::Akonadi::NotificationManager(service,
             QStringLiteral("/notifications"), QDBusConnection::sessionBus(), this);
     if (!mManager) {
-        qWarning() << "Failed to connect to org.freedesktop.Akonadi.NotificationManager";
+        qCWarning(AKONADICONSOLE_LOG) << "Failed to connect to org.freedesktop.Akonadi.NotificationManager";
         return;
     }
 

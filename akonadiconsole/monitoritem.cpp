@@ -20,7 +20,7 @@
 #include "monitoritem.h"
 #include "monitorsmodel.h"
 #include "notificationsourceinterface.h"
-
+#include "akonadiconsole_debug.h"
 #include <AkonadiCore/servermanager.h>
 
 #include <QtCore/QStringList>
@@ -42,12 +42,12 @@ MonitorItem::MonitorItem(const QString &identifier_, MonitorsModel *model):
         service, QLatin1String("/subscriber/") + identifier,
         QDBusConnection::sessionBus(), this);
     if (!mInterface) {
-        qWarning() << "Failed to connect to org.freedesktop.Akonadi.NotificationSource of subscriber" << identifier_;
+        qCWarning(AKONADICONSOLE_LOG) << "Failed to connect to org.freedesktop.Akonadi.NotificationSource of subscriber" << identifier_;
         return;
     }
 
     if (mInterface->lastError().isValid()) {
-        qWarning() << mInterface->lastError().message();
+        qCWarning(AKONADICONSOLE_LOG) << mInterface->lastError().message();
         return;
     }
 

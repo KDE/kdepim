@@ -21,7 +21,7 @@
 
 #include "agentwidget.h"
 #include "agentconfigdialog.h"
-
+#include "akonadiconsole_debug.h"
 #include <AkonadiWidgets/agenttypedialog.h>
 #include <AkonadiWidgets/agentinstancewidget.h>
 #include <AkonadiCore/agentmanager.h>
@@ -324,7 +324,7 @@ void AgentWidget::cloneAgent()
         connect(job, SIGNAL(result(KJob*)), SLOT(cloneAgent(KJob*)));
         job->start();
     } else {
-        qWarning() << "WTF?";
+        qCWarning(AKONADICONSOLE_LOG) << "WTF?";
     }
 }
 

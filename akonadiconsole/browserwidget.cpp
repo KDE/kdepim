@@ -54,7 +54,7 @@
 #include <kcontacts/contactgroup.h>
 #include <KCalCore/Incidence>
 
-#include <qdebug.h>
+#include "akonadiconsole_debug.h"
 #include <kconfig.h>
 #include <kconfiggroup.h>
 #include <kmessagebox.h>
@@ -275,9 +275,9 @@ void BrowserWidget::itemFetchDone(KJob *job)
 {
     ItemFetchJob *fetch = static_cast<ItemFetchJob *>(job);
     if (job->error()) {
-        qWarning() << "Item fetch failed: " << job->errorString();
+        qCWarning(AKONADICONSOLE_LOG) << "Item fetch failed: " << job->errorString();
     } else if (fetch->items().isEmpty()) {
-        qWarning() << "No item found!";
+        qCWarning(AKONADICONSOLE_LOG) << "No item found!";
     } else {
         const Item item = fetch->items().first();
         setItem(item);
@@ -488,11 +488,11 @@ void BrowserWidget::clearCache()
         return;
     }
     QString str = QString("DELETE FROM PimItemTable WHERE collectionId=%1").arg(coll.id());
-    qDebug() << str;
+    qCDebug(AKONADICONSOLE_LOG) << str;
     QSqlQuery query(str, DbAccess::database());
     if (query.exec()) {
         if (query.lastError().isValid()) {
-            qDebug() << query.lastError();
+            qCDebug(AKONADICONSOLE_LOG) << query.lastError();
             KMessageBox::error(this, query.lastError().text());
         }
     }

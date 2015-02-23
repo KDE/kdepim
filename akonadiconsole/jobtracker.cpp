@@ -22,7 +22,7 @@
 
 #include "jobtracker.h"
 #include "jobtrackeradaptor.h"
-
+#include "akonadiconsole_debug.h"
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 #include <QtCore/QDebug>
@@ -136,7 +136,7 @@ void JobTracker::jobCreated(const QString &session, const QString &job, const QS
     }
 
     if (!parent.isEmpty() && !d->jobs.contains(parent)) {
-        qWarning() << "JobTracker: Job arrived before its parent! Fix the library!";
+        qCWarning(AKONADICONSOLE_LOG) << "JobTracker: Job arrived before its parent! Fix the library!";
         jobCreated(session, parent, QString(), "dummy job type", QString());
     }
     // check if it's a new session, if so, add it
@@ -149,7 +149,7 @@ void JobTracker::jobCreated(const QString &session, const QString &job, const QS
     // deal with the job
     if (d->jobs.contains(job)) {
         if (d->infoList.value(job).state == JobInfo::Running) {
-            qDebug() << "Job was already known and still running:" << job << "from" << d->infoList.value(job).timestamp.secsTo(QDateTime::currentDateTime()) << "s ago";
+            qCDebug(AKONADICONSOLE_LOG) << "Job was already known and still running:" << job << "from" << d->infoList.value(job).timestamp.secsTo(QDateTime::currentDateTime()) << "s ago";
         }
         // otherwise it just means the pointer got reused... replace old job
     }
