@@ -37,6 +37,7 @@ Comment[zh_TW]=回覆提醒代理程式
 
 [Event/mailreceived]
 Name=Mail Follow Up Received
+Name[bs]=Primljeno praćenje poruke
 Name[ca]=S'ha rebut correu de seguiment
 Name[da]=Opfølgning på mail modtaget
 Name[de]=Folgenachricht erhalten

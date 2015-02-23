@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013-2015 Montel Laurent <montel@kde.org>
+  Copyright (c) 2015 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,38 +15,20 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SENDLATERTIMEDATEWIDGET_H
-#define SENDLATERTIMEDATEWIDGET_H
 
-#include <QWidget>
-#include <QDateTime>
+#ifndef SENDLATERDIALOGTEST_H
+#define SENDLATERDIALOGTEST_H
 
-class KTimeComboBox;
-class KDateComboBox;
+#include <QObject>
 
-namespace SendLater
-{
-class SendLaterTimeDateWidget : public QWidget
+class SendLaterDialogTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit SendLaterTimeDateWidget(QWidget *parent = Q_NULLPTR);
-    ~SendLaterTimeDateWidget();
-
-    void setDateTime(const QDateTime &);
-    QDateTime dateTime() const;
-
-Q_SIGNALS:
-    void dateTimeChanged(const QDateTime &);
-    void dateChanged(const QString &);
-
+    explicit SendLaterDialogTest(QObject *parent = 0);
+    ~SendLaterDialogTest();
 private Q_SLOTS:
-    void slotDateTimeChanged();
-
-private:
-    KTimeComboBox *mTimeComboBox;
-    KDateComboBox *mDateComboBox;
+    void shouldHaveDefaultValue();
 };
-}
 
-#endif // SENDLATERTIMEDATEWIDGET_H
+#endif // SENDLATERDIALOGTEST_H

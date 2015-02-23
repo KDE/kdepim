@@ -40,11 +40,11 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
     setWindowTitle(i18nc("@title:window", "Send Later"));
     setWindowIcon(QIcon::fromTheme(QStringLiteral("kmail")));
 
-    QWidget *sendLaterWidget = new QWidget;
+    QWidget *sendLaterWidget = new QWidget(this);
     mSendLaterWidget = new Ui::SendLaterWidget;
     mSendLaterWidget->setupUi(sendLaterWidget);
 
-    QWidget *w = new QWidget;
+    QWidget *w = new QWidget(this);
     QVBoxLayout *lay = new QVBoxLayout;
     w->setLayout(lay);
 
@@ -53,14 +53,14 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     mainLayout->addWidget(mainWidget);
-    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
-    okButton->setDefault(true);
-    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &SendLaterDialog::accept);
+    mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+    mOkButton->setObjectName(QLatin1String("okbutton"));
+    mOkButton->setDefault(true);
+    mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &SendLaterDialog::reject);
 
     if (!info) {
-        okButton->setText(i18n("Send Later"));
+        mOkButton->setText(i18n("Send Later"));
         mDelay = new QCheckBox(i18n("Delay"));
         mDelay->setChecked(false);
         slotDelay(false);
@@ -68,7 +68,7 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
         lay->addWidget(mDelay);
     }
 
-    connect(okButton, &QPushButton::clicked, this, &SendLaterDialog::slotOkClicked);
+    connect(mOkButton, &QPushButton::clicked, this, &SendLaterDialog::slotOkClicked);
 
     lay->addWidget(sendLaterWidget);
 
@@ -83,6 +83,7 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
     unitsList << i18n("Months");
     unitsList << i18n("Years");
     mSendLaterWidget->mRecurrenceComboBox->addItems(unitsList);
+    connect(mSendLaterWidget->mDateTime, SIGNAL(dateChanged(QString)), this, SLOT(slotDateChanged(QString)));
 
     lay->addWidget(new KSeparator);
 
@@ -98,6 +99,11 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
 SendLaterDialog::~SendLaterDialog()
 {
     delete mSendLaterWidget;
+}
+
+void SendLaterDialog::slotDateChanged(const QString &date)
+{
+    mOkButton->setEnabled(!date.isEmpty());
 }
 
 void SendLaterDialog::slotRecurrenceClicked(bool clicked)

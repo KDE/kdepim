@@ -22,7 +22,7 @@
 #include "sendlater_export.h"
 #include <QDateTime>
 class QCheckBox;
-
+class QPushButton;
 namespace Ui
 {
 class SendLaterWidget;
@@ -54,6 +54,7 @@ private Q_SLOTS:
     void slotOkClicked();
     void slotDelay(bool delayEnabled);
 
+    void slotDateChanged(const QString &date);
 private:
     void load(SendLater::SendLaterInfo *info);
 
@@ -63,6 +64,7 @@ private:
     QCheckBox *mDelay;
     Ui::SendLaterWidget *mSendLaterWidget;
     SendLater::SendLaterInfo *mInfo;
+    QPushButton *mOkButton;
 };
 }
 #endif // SENDLATERDIALOG_H
