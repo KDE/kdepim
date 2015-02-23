@@ -39,22 +39,22 @@ FindBarBaseTest::~FindBarBaseTest()
 void FindBarBaseTest::shouldHaveDefaultValue()
 {
     MessageViewer::FindBarBase bar;
-    QLabel *status = bar.findChild<QLabel *>(QLatin1String("status"));
+    QLabel *status = bar.findChild<QLabel *>(QStringLiteral("status"));
     QVERIFY(status);
     QVERIFY(status->text().isEmpty());
 
-    QPushButton *previous = bar.findChild<QPushButton *>(QLatin1String("findprevious"));
+    QPushButton *previous = bar.findChild<QPushButton *>(QStringLiteral("findprevious"));
     QVERIFY(previous);
     QVERIFY(!previous->isEnabled());
 
-    QPushButton *next = bar.findChild<QPushButton *>(QLatin1String("findnext"));
+    QPushButton *next = bar.findChild<QPushButton *>(QStringLiteral("findnext"));
     QVERIFY(next);
     QVERIFY(!next->isEnabled());
 
-    QToolButton *close = bar.findChild<QToolButton *>(QLatin1String("close"));
+    QToolButton *close = bar.findChild<QToolButton *>(QStringLiteral("close"));
     QVERIFY(close);
 
-    KLineEdit *lineedit = bar.findChild<KLineEdit *>(QLatin1String("searchline"));
+    KLineEdit *lineedit = bar.findChild<KLineEdit *>(QStringLiteral("searchline"));
     QVERIFY(lineedit);
     QVERIFY(lineedit->text().isEmpty());
 }
@@ -67,8 +67,8 @@ void FindBarBaseTest::shouldClearLineWhenClose()
     QTest::qWaitForWindowExposed(&bar);
     QVERIFY(bar.isVisible());
     bar.focusAndSetCursor();
-    KLineEdit *lineedit = bar.findChild<KLineEdit *>(QLatin1String("searchline"));
-    lineedit->setText(QLatin1String("FOO"));
+    KLineEdit *lineedit = bar.findChild<KLineEdit *>(QStringLiteral("searchline"));
+    lineedit->setText(QStringLiteral("FOO"));
     QVERIFY(!lineedit->text().isEmpty());
     QVERIFY(lineedit->hasFocus());
     bar.closeBar();
@@ -82,11 +82,11 @@ void FindBarBaseTest::shouldEnableDisableNextPreviousButton()
     MessageViewer::FindBarBase bar;
     bar.show();
     QTest::qWaitForWindowExposed(&bar);
-    QPushButton *previous = bar.findChild<QPushButton *>(QLatin1String("findprevious"));
+    QPushButton *previous = bar.findChild<QPushButton *>(QStringLiteral("findprevious"));
 
-    QPushButton *next = bar.findChild<QPushButton *>(QLatin1String("findnext"));
+    QPushButton *next = bar.findChild<QPushButton *>(QStringLiteral("findnext"));
 
-    bar.autoSearch(QLatin1String("FOO"));
+    bar.autoSearch(QStringLiteral("FOO"));
     QVERIFY(next->isEnabled());
     QVERIFY(previous->isEnabled());
 
@@ -101,13 +101,13 @@ void FindBarBaseTest::shouldClearAllWhenShowBar()
     MessageViewer::FindBarBase bar;
     bar.show();
     QTest::qWaitForWindowExposed(&bar);
-    QLabel *status = bar.findChild<QLabel *>(QLatin1String("status"));
-    status->setText(QLatin1String("FOO"));
+    QLabel *status = bar.findChild<QLabel *>(QStringLiteral("status"));
+    status->setText(QStringLiteral("FOO"));
     bar.closeBar();
 
     bar.show();
     bar.focusAndSetCursor();
-    KLineEdit *lineedit = bar.findChild<KLineEdit *>(QLatin1String("searchline"));
+    KLineEdit *lineedit = bar.findChild<KLineEdit *>(QStringLiteral("searchline"));
     QVERIFY(lineedit->hasFocus());
     QVERIFY(status->text().isEmpty());
 }

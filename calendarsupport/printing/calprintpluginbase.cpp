@@ -473,7 +473,7 @@ void CalPrintPluginBase::drawSubHeaderBox(QPainter &p, const QString &str, const
 {
     drawShadedBox(p, BOX_BORDER_WIDTH, QColor(232, 232, 232), box);
     QFont oldfont(p.font());
-    p.setFont(QFont(QLatin1String("sans-serif"), 10, QFont::Bold));
+    p.setFont(QFont(QStringLiteral("sans-serif"), 10, QFont::Bold));
     p.drawText(box, Qt::AlignCenter | Qt::AlignVCenter, str);
     p.setFont(oldfont);
 }
@@ -591,7 +591,7 @@ int CalPrintPluginBase::drawHeader(QPainter &p, const QString &title,
     QRect textRect(allbox);
 
     QFont oldFont(p.font());
-    QFont newFont(QLatin1String("sans-serif"), (textRect.height() < 60) ? 16 : 18, QFont::Bold);
+    QFont newFont(QStringLiteral("sans-serif"), (textRect.height() < 60) ? 16 : 18, QFont::Bold);
     if (expand) {
         p.setFont(newFont);
         QRect boundingR =
@@ -655,7 +655,7 @@ int CalPrintPluginBase::drawHeader(QPainter &p, const QString &title,
 int CalPrintPluginBase::drawFooter(QPainter &p, const QRect &footbox)
 {
     QFont oldfont(p.font());
-    p.setFont(QFont(QLatin1String("sans-serif"), 6));
+    p.setFont(QFont(QStringLiteral("sans-serif"), 6));
     QFontMetrics fm(p.font());
     QString dateStr =
         KLocale::global()->formatDateTime(QDateTime::currentDateTime(), KLocale::LongDate);
@@ -679,7 +679,7 @@ void CalPrintPluginBase::drawSmallMonth(QPainter &p, const QDate &qd, const QRec
     // 3 Pixel after month name, 2 after day names, 1 after the calendar
     double cellHeight = (box.height() - 5) / rownr;
     QFont oldFont(p.font());
-    p.setFont(QFont(QLatin1String("sans-serif"), int(cellHeight - 2), QFont::Normal));
+    p.setFont(QFont(QStringLiteral("sans-serif"), int(cellHeight - 2), QFont::Normal));
 
     // draw the title
     if (mCalSys) {
@@ -785,23 +785,23 @@ void CalPrintPluginBase::drawTimeLine(QPainter &p, const QTime &fromTime,
                 p.drawLine(xcenter, (int)newY, box.right(), (int)newY);
                 numStr.setNum(curTime.hour());
                 if (cellHeight > 30) {
-                    p.setFont(QFont(QLatin1String("sans-serif"), 14, QFont::Bold));
+                    p.setFont(QFont(QStringLiteral("sans-serif"), 14, QFont::Bold));
                 } else {
-                    p.setFont(QFont(QLatin1String("sans-serif"), 12, QFont::Bold));
+                    p.setFont(QFont(QStringLiteral("sans-serif"), 12, QFont::Bold));
                 }
                 p.drawText(box.left() + 4, (int)currY + 2, box.width() / 2 - 2, (int)cellHeight,
                            Qt::AlignTop | Qt::AlignRight, numStr);
-                p.setFont(QFont(QLatin1String("helvetica"), 10, QFont::Normal));
+                p.setFont(QFont(QStringLiteral("helvetica"), 10, QFont::Normal));
                 p.drawText(xcenter + 4, (int)currY + 2, box.width() / 2 + 2, (int)(cellHeight / 2) - 3,
-                           Qt::AlignTop | Qt::AlignLeft, QLatin1String("00"));
+                           Qt::AlignTop | Qt::AlignLeft, QStringLiteral("00"));
             } else {
                 p.drawLine(box.left(), (int)newY, box.right(), (int)newY);
                 QTime time(curTime.hour(), 0);
                 numStr = KLocale::global()->formatTime(time);
                 if (box.width() < 60) {
-                    p.setFont(QFont(QLatin1String("sans-serif"), 7, QFont::Bold));     // for weekprint
+                    p.setFont(QFont(QStringLiteral("sans-serif"), 7, QFont::Bold));     // for weekprint
                 } else {
-                    p.setFont(QFont(QLatin1String("sans-serif"), 12, QFont::Bold));     // for dayprint
+                    p.setFont(QFont(QStringLiteral("sans-serif"), 12, QFont::Bold));     // for dayprint
                 }
                 p.drawText(box.left() + 2, (int)currY + 2, box.width() - 4, (int)cellHeight / 2 - 3,
                            Qt::AlignTop | Qt::AlignLeft, numStr);
@@ -855,7 +855,7 @@ int CalPrintPluginBase::drawAllDayBox(QPainter &p, const KCalCore::Event::List &
                 offset += box.height();
             } else {
                 if (!multiDayStr.isEmpty()) {
-                    multiDayStr += QLatin1String(", ");
+                    multiDayStr += QStringLiteral(", ");
                 }
                 multiDayStr += currEvent->summary();
             }
@@ -1063,15 +1063,15 @@ void CalPrintPluginBase::drawAgendaItem(PrintCellItem *item, QPainter &p,
         if (eventBox.height() < 24) {
             if (eventBox.height() < 12) {
                 if (eventBox.height() < 8) {
-                    p.setFont(QFont(QLatin1String("sans-serif"), 4));
+                    p.setFont(QFont(QStringLiteral("sans-serif"), 4));
                 } else {
-                    p.setFont(QFont(QLatin1String("sans-serif"), 5));
+                    p.setFont(QFont(QStringLiteral("sans-serif"), 5));
                 }
             } else {
-                p.setFont(QFont(QLatin1String("sans-serif"), 6));
+                p.setFont(QFont(QStringLiteral("sans-serif"), 6));
             }
         } else {
-            p.setFont(QFont(QLatin1String("sans-serif"), 8));
+            p.setFont(QFont(QStringLiteral("sans-serif"), 8));
         }
         showEventBox(p, EVENT_BORDER_WIDTH, eventBox, event, str);
         p.setFont(oldFont);
@@ -1124,10 +1124,10 @@ void CalPrintPluginBase::drawDayBox(QPainter &p, const QDate &qd,
     headerTextBox.setLeft(subHeaderBox.left() + 5);
     headerTextBox.setRight(subHeaderBox.right() - 5);
     if (!hstring.isEmpty()) {
-        p.setFont(QFont(QLatin1String("sans-serif"), 8, QFont::Bold, true));
+        p.setFont(QFont(QStringLiteral("sans-serif"), 8, QFont::Bold, true));
         p.drawText(headerTextBox, Qt::AlignLeft | Qt::AlignVCenter, hstring);
     }
-    p.setFont(QFont(QLatin1String("sans-serif"), 10, QFont::Bold));
+    p.setFont(QFont(QStringLiteral("sans-serif"), 10, QFont::Bold));
     p.drawText(headerTextBox, Qt::AlignRight | Qt::AlignVCenter, dayNumStr);
 
     const KCalCore::Event::List eventList =
@@ -1136,7 +1136,7 @@ void CalPrintPluginBase::drawDayBox(QPainter &p, const QDate &qd,
                           KCalCore::SortDirectionAscending);
 
     QString timeText;
-    p.setFont(QFont(QLatin1String("sans-serif"), 7));
+    p.setFont(QFont(QStringLiteral("sans-serif"), 7));
 
     int textY = mSubHeaderHeight; // gives the relative y-coord of the next printed entry
     unsigned int visibleEventsCounter = 0;
@@ -1287,7 +1287,7 @@ void CalPrintPluginBase::drawIncidence(QPainter &p, const QRect &dayBox,
 
     if (singleLineLimit) {
         if (includeDescription && !descText.isEmpty()) {
-            summaryText += QLatin1String(", ") + descText;
+            summaryText += QStringLiteral(", ") + descText;
         }
         int totalHeight = fm.lineSpacing() + borderWidth;
         int textBoxHeight = (totalHeight > (dayBox.height() - textY)) ?
@@ -1308,13 +1308,13 @@ void CalPrintPluginBase::drawIncidence(QPainter &p, const QRect &dayBox,
             QTextCursor textCursor(&textDoc);
             textCursor.insertText(summaryText);
             if (includeDescription && !description.isEmpty()) {
-                textCursor.insertText(QLatin1String("\n"));
+                textCursor.insertText(QStringLiteral("\n"));
                 textCursor.insertHtml(description);
             }
         } else {
             textCursor.insertText(summaryText);
             if (includeDescription && !descText.isEmpty()) {
-                textCursor.insertText(QLatin1String("\n"));
+                textCursor.insertText(QStringLiteral("\n"));
                 textCursor.insertText(descText);
             }
         }
@@ -1578,7 +1578,7 @@ void CalPrintPluginBase::drawMonth(QPainter &p, const QDate &dt,
 
     QColor holidayColor(240, 240, 240);
     QColor workdayColor(255, 255, 255);
-    int dayNrWidth = p.fontMetrics().width(QLatin1String("99"));
+    int dayNrWidth = p.fontMetrics().width(QStringLiteral("99"));
 
     // Fill the remaining space (if a month has less days than others) with a crossed-out pattern
     if (daysinmonth < maxdays) {
@@ -1738,7 +1738,7 @@ void CalPrintPluginBase::drawMonth(QPainter &p, const QDate &dt,
     int newxstartcont = xstartcont;
 
     QFont oldfont(p.font());
-    p.setFont(QFont(QLatin1String("sans-serif"), 7));
+    p.setFont(QFont(QStringLiteral("sans-serif"), 7));
     while (it1.hasNext()) {
         PrintCellItem *placeItem = static_cast<PrintCellItem *>(it1.next());
         int minsToStart = starttime.secsTo(placeItem->start()) / 60;
@@ -1760,7 +1760,7 @@ void CalPrintPluginBase::drawMonth(QPainter &p, const QDate &dt,
     // space of the day's cell
     for (int d = 0; d < daysinmonth; ++d) {
         QStringList dayEvents(textEvents[d + 1]);
-        QString txt = dayEvents.join(QLatin1String(", "));
+        QString txt = dayEvents.join(QStringLiteral(", "));
         QRect dayBox(xstartcont, daysBox.top() + qRound(dayheight * d), 0, 0);
         dayBox.setRight(box.right());
         dayBox.setBottom(daysBox.top() + qRound(dayheight * (d + 1)));
@@ -2138,7 +2138,7 @@ void CalPrintPluginBase::drawJournal(const KCalCore::Journal::Ptr &journal, QPai
                                      int x, int &y, int width, int pageHeight)
 {
     QFont oldFont(p.font());
-    p.setFont(QFont(QLatin1String("sans-serif"), 15));
+    p.setFont(QFont(QStringLiteral("sans-serif"), 15));
     QString headerText;
     QString dateText(KLocale::global()->formatDate(journal->dtStart().toLocalZone().date(),
                      KLocale::LongDate));
@@ -2203,9 +2203,9 @@ void CalPrintPluginBase::drawSplitHeaderRight(QPainter &p, const QDate &fd,
     }
 
     if (height < 60) {
-        p.setFont(QFont(QLatin1String("Times"), 22));
+        p.setFont(QFont(QStringLiteral("Times"), 22));
     } else {
-        p.setFont(QFont(QLatin1String("Times"), 28));
+        p.setFont(QFont(QStringLiteral("Times"), 28));
     }
 
     int lineSpacing = p.fontMetrics().lineSpacing();
@@ -2219,9 +2219,9 @@ void CalPrintPluginBase::drawSplitHeaderRight(QPainter &p, const QDate &fd,
     p.setPen(oldPen);
 
     if (height < 60) {
-        p.setFont(QFont(QLatin1String("Times"), 14, QFont::Bold, true));
+        p.setFont(QFont(QStringLiteral("Times"), 14, QFont::Bold, true));
     } else {
-        p.setFont(QFont(QLatin1String("Times"), 18, QFont::Bold, true));
+        p.setFont(QFont(QStringLiteral("Times"), 18, QFont::Bold, true));
     }
 
     title += QString::number(fd.year());

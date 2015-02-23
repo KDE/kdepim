@@ -42,8 +42,8 @@ FindBarBase::FindBarBase(QWidget *parent)
     lay->setMargin(2);
 
     QToolButton *closeBtn = new QToolButton(this);
-    closeBtn->setIcon(QIcon::fromTheme(QLatin1String("dialog-close")));
-    closeBtn->setObjectName(QLatin1String("close"));
+    closeBtn->setIcon(QIcon::fromTheme(QStringLiteral("dialog-close")));
+    closeBtn->setObjectName(QStringLiteral("close"));
     closeBtn->setIconSize(QSize(16, 16));
     closeBtn->setToolTip(i18n("Close"));
 
@@ -58,21 +58,21 @@ FindBarBase::FindBarBase(QWidget *parent)
     lay->addWidget(label);
 
     mSearch = new KLineEdit(this);
-    mSearch->setObjectName(QLatin1String("searchline"));
+    mSearch->setObjectName(QStringLiteral("searchline"));
     mSearch->setToolTip(i18n("Text to search for"));
     mSearch->setClearButtonShown(true);
     label->setBuddy(mSearch);
     lay->addWidget(mSearch);
 
-    mFindNextBtn = new QPushButton(QIcon::fromTheme(QLatin1String("go-down-search")), i18nc("Find and go to the next search match", "Next"), this);
+    mFindNextBtn = new QPushButton(QIcon::fromTheme(QStringLiteral("go-down-search")), i18nc("Find and go to the next search match", "Next"), this);
     mFindNextBtn->setToolTip(i18n("Jump to next match"));
-    mFindNextBtn->setObjectName(QLatin1String("findnext"));
+    mFindNextBtn->setObjectName(QStringLiteral("findnext"));
     lay->addWidget(mFindNextBtn);
     mFindNextBtn->setEnabled(false);
 
-    mFindPrevBtn = new QPushButton(QIcon::fromTheme(QLatin1String("go-up-search")), i18nc("Find and go to the previous search match", "Previous"), this);
+    mFindPrevBtn = new QPushButton(QIcon::fromTheme(QStringLiteral("go-up-search")), i18nc("Find and go to the previous search match", "Previous"), this);
     mFindPrevBtn->setToolTip(i18n("Jump to previous match"));
-    mFindPrevBtn->setObjectName(QLatin1String("findprevious"));
+    mFindPrevBtn->setObjectName(QStringLiteral("findprevious"));
     lay->addWidget(mFindPrevBtn);
     mFindPrevBtn->setEnabled(false);
 
@@ -94,7 +94,7 @@ FindBarBase::FindBarBase(QWidget *parent)
     connect(mSearch, &KLineEdit::clearButtonClicked, this, &FindBarBase::slotClearSearch);
 
     mStatus = new QLabel;
-    mStatus->setObjectName(QLatin1String("status"));
+    mStatus->setObjectName(QStringLiteral("status"));
     QFontMetrics fm(mStatus->font());
     mNotFoundString = i18n("Phrase not found");
     mStatus->setFixedWidth(fm.width(mNotFoundString));

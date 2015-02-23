@@ -47,7 +47,7 @@ public:
 
     static QString serviceType()
     {
-        return QLatin1String("Calendar/Plugin");
+        return QStringLiteral("Calendar/Plugin");
     }
 
     Plugin() {}

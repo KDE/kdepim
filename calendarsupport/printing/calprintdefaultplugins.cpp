@@ -233,8 +233,8 @@ int CalPrintIncidence::printCaptionAndText(QPainter &p, const QRect &box,
 void CalPrintIncidence::print(QPainter &p, int width, int height)
 {
     QFont oldFont(p.font());
-    QFont textFont(QLatin1String("sans-serif"), 11, QFont::Normal);
-    QFont captionFont(QLatin1String("sans-serif"), 11, QFont::Bold);
+    QFont textFont(QStringLiteral("sans-serif"), 11, QFont::Normal);
+    QFont captionFont(QStringLiteral("sans-serif"), 11, QFont::Bold);
     p.setFont(textFont);
     int lineHeight = p.fontMetrics().lineSpacing();
     QString cap, txt;
@@ -320,7 +320,7 @@ void CalPrintIncidence::print(QPainter &p, int width, int height)
             if (!recurs->exDates().isEmpty()) {
                 exceptString = i18nc("except for listed dates", " except");
                 for (int i = 0; i < recurs->exDates().size(); ++i) {
-                    exceptString.append(QLatin1String(" "));
+                    exceptString.append(QStringLiteral(" "));
                     exceptString.append(KLocale::global()->formatDate(recurs->exDates()[i],
                                         KLocale::ShortDate));
                 }
@@ -872,7 +872,7 @@ void CalPrintDay::print(QPainter &p, int width, int height)
             }
 
             int fontSize = 11;
-            QFont textFont(QLatin1String("sans-serif"), fontSize, QFont::Normal);
+            QFont textFont(QStringLiteral("sans-serif"), fontSize, QFont::Normal);
             p.setFont(textFont);
             int lineSpacing = p.fontMetrics().lineSpacing();
 
@@ -884,7 +884,7 @@ void CalPrintDay::print(QPainter &p, int width, int height)
             if (alldayEvents.count() > 0) {
                 // draw the side bar for all-day events
                 QFont oldFont(p.font());
-                p.setFont(QFont(QLatin1String("sans-serif"), 9, QFont::Normal));
+                p.setFont(QFont(QStringLiteral("sans-serif"), 9, QFont::Normal));
                 drawVerticalBox(p,
                                 BOX_BORDER_WIDTH,
                                 QRect(0, headerBox.bottom() + padding(), TIMELINE_WIDTH, allDayHeight),
@@ -1537,7 +1537,7 @@ void CalPrintTodos::print(QPainter &p, int width, int height)
     QString outStr;
     QFont oldFont(p.font());
 
-    p.setFont(QFont(QLatin1String("sans-serif"), 9, QFont::Bold));
+    p.setFont(QFont(QStringLiteral("sans-serif"), 9, QFont::Bold));
     lineSpacing = p.fontMetrics().lineSpacing();
     mCurrentLinePos += lineSpacing;
     if (mIncludePriority) {
@@ -1570,7 +1570,7 @@ void CalPrintTodos::print(QPainter &p, int width, int height)
         posdue = -1;
     }
 
-    p.setFont(QFont(QLatin1String("sans-serif"), 10));
+    p.setFont(QFont(QStringLiteral("sans-serif"), 10));
     //fontHeight = p.fontMetrics().height();
 
     KCalCore::Todo::List todoList;
