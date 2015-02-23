@@ -148,15 +148,15 @@ void CollectionGeneralPage::load(const Akonadi::Collection &collection)
         const QStringList mimeTypes = collection.contentMimeTypes();
         if (collection.contentMimeTypes().count() > 1 ||
                 collection.contentMimeTypes().contains(KCalCore::Event::eventMimeType())) {
-            mIconButton->setIcon(QLatin1String("view-pim-calendar"));
+            mIconButton->setIcon(QIcon::fromTheme(QLatin1String("view-pim-calendar")));
         } else if (collection.contentMimeTypes().contains(KCalCore::Todo::todoMimeType())) {
-            mIconButton->setIcon(QLatin1String("view-pim-tasks"));
+            mIconButton->setIcon(QIcon::fromTheme(QLatin1String("view-pim-tasks")));
         } else if (collection.contentMimeTypes().contains(KCalCore::Journal::journalMimeType())) {
-            mIconButton->setIcon(QLatin1String("view-pim-journal"));
+            mIconButton->setIcon(QIcon::fromTheme(QLatin1String("view-pim-journal")));
         } else if (mimeTypes.isEmpty()) {
-            mIconButton->setIcon(QLatin1String("folder-grey"));
+            mIconButton->setIcon(QIcon::fromTheme(QLatin1String("folder-grey")));
         } else {
-            mIconButton->setIcon(QLatin1String("folder"));
+            mIconButton->setIcon(QIcon::fromTheme(QLatin1String("folder")));
         }
     } else {
         mIconButton->setIcon(iconName);

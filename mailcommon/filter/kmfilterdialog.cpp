@@ -297,7 +297,7 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection *> &actionCollectio
         mFilterActionLabel->setBuddy(mFilterActionIconButton);
         mFilterActionIconButton->setIconType(KIconLoader::NoGroup, KIconLoader::Action, false);
         mFilterActionIconButton->setIconSize(16);
-        mFilterActionIconButton->setIcon(QLatin1String("system-run"));
+        mFilterActionIconButton->setIcon(QIcon::fromTheme(QLatin1String("system-run")));
         mFilterActionIconButton->setEnabled(false);
 
         gl->addWidget(hbox, 10, 0, 1, 4);
