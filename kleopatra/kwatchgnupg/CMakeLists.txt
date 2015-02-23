@@ -7,6 +7,7 @@ set(kwatchgnupg_SRCS
   aboutdata.cpp
   tray.cpp
   main.cpp
+  kwatchgnupg_debug.cpp
 )
 
 if(WIN32)
