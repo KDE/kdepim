@@ -67,7 +67,7 @@ bool MailClient::mailAttendees(const KCalCore::IncidenceBase::Ptr &incidence,
 {
     KCalCore::Attendee::List attendees = incidence->attendees();
     if (attendees.isEmpty()) {
-        qWarning() << "There are no attendees to e-mail";
+        qCDebug(KOALARMCLIENT_LOG) << "There are no attendees to e-mail";
         return false;
     }
 
@@ -110,7 +110,7 @@ bool MailClient::mailAttendees(const KCalCore::IncidenceBase::Ptr &incidence,
     }
     if (toList.isEmpty() && ccList.isEmpty()) {
         // Not really to be called a groupware meeting, eh
-        qWarning() << "There are really no attendees to e-mail";
+        qCDebug(KOALARMCLIENT_LOG) << "There are really no attendees to e-mail";
         return false;
     }
     QString to;
@@ -366,7 +366,7 @@ bool MailClient::send(const KIdentityManagement::Identity &identity,
     }
     qjob->setMessage(message);
     if (!qjob->exec()) {
-        qWarning() << "Error queuing message in outbox:" << qjob->errorText();
+        qCDebug(KOALARMCLIENT_LOG) << "Error queuing message in outbox:" << qjob->errorText();
         return false;
     }
 
