@@ -31,7 +31,7 @@
 
 #include "note.h"
 #include <EntityTreeModel>
-#include <QDebug>
+#include "akonadinext_debug.h"
 
 using namespace Akonadi;
 
@@ -115,7 +115,7 @@ void NoteCreatorAndSelector::doCreateNote()
 void NoteCreatorAndSelector::noteCreationFinished(KJob *job)
 {
     if (job->error()) {
-        qWarning() << job->errorString();
+        qCWarning(AKONADINEXT_LOG) << job->errorString();
         return;
     }
     Akonadi::ItemCreateJob *createJob = qobject_cast<Akonadi::ItemCreateJob *>(job);

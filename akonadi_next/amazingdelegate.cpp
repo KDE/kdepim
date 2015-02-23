@@ -21,7 +21,7 @@
 
 #include <QPainter>
 
-#include <qdebug.h>
+#include "akonadinext_debug.h"
 #include <entitytreemodel.h>
 #include <kcontacts/addressee.h>
 #include <klocalizedstring.h>
@@ -44,7 +44,7 @@ void AmazingContactItemDelegate::paint(QPainter *painter, const QStyleOptionView
     }
 
     if (!item.hasPayload<KContacts::Addressee>()) {
-        qWarning() << "Not a KContacts::Addressee" << item.id() << item.remoteId();
+        qCWarning(AKONADINEXT_LOG) << "Not a KContacts::Addressee" << item.id() << item.remoteId();
         return;
     }
 

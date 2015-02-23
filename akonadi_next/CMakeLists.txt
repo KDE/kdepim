@@ -7,6 +7,7 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 add_definitions(-DTRANSLATION_DOMAIN=\"akonadi_next\")
 
 set(akonadi_next_SRCS
+  akonadinext_debug.cpp
   note.cpp
   notecreatorandselector.cpp
   quotacolorproxymodel.cpp

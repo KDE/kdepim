@@ -22,7 +22,7 @@
 #include <kselectionproxymodel.h>
 #include <qlistview.h>
 
-#include <qdebug.h>
+#include "akonadinext_debug.h"
 
 using namespace Akonadi;
 
@@ -99,7 +99,7 @@ void AmazingCompleter::setCompletionPrefix(const QVariant &matchData)
 
     QModelIndexList matchingIndexes = d->m_model->match(idx, d->m_matchingRole, matchData, -1); // StartsWith
 
-    qDebug() << matchingIndexes.size();
+    qCDebug(AKONADINEXT_LOG) << matchingIndexes.size();
 
     if (matchingIndexes.size() > 0) {
         d->m_view->show();

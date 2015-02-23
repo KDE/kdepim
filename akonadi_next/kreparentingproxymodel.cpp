@@ -18,7 +18,7 @@
 */
 
 #include "kreparentingproxymodel.h"
-#include <qdebug.h>
+#include "akonadinext_debug.h"
 #include <QStack>
 
 #include <functional>
@@ -292,9 +292,9 @@ QHash<QModelIndex, QModelIndexList> KReparentingProxyModelPrivate::recreateMappi
             ancestors.append(nextIndex);
             continue;
         }
-        qDebug() << "######\nNextIndex" << nextIndex.data();
+        qCDebug(AKONADINEXT_LOG) << "######\nNextIndex" << nextIndex.data();
         foreach (const QModelIndex &idx, ancestors) {
-            qDebug() << "#" << idx << idx.data();
+            qCDebug(AKONADINEXT_LOG) << "#" << idx << idx.data();
         }
         QVector<QModelIndex>::iterator ancestorIt = qLowerBound(ancestors.begin(), ancestors.end(), nextIndex, LessThan(q));
 
@@ -302,7 +302,7 @@ QHash<QModelIndex, QModelIndexList> KReparentingProxyModelPrivate::recreateMappi
         if (ancestorIt != ancestors.begin()) {
             parent = *(ancestorIt - 1);
         }
-        //qDebug() << parent << *ancestorIt; // this crashes if ancestorIt == ancestors.end()
+        //qCDebug(AKONADINEXT_LOG) << parent << *ancestorIt; // this crashes if ancestorIt == ancestors.end()
         ancestorIt = ancestors.insert(ancestorIt, nextIndex);
 
         if (ancestorIt != ancestors.end()) {
@@ -372,7 +372,7 @@ void KReparentingProxyModelPrivate::verifyStructure(const QModelIndex &sourcePar
     QHashIterator<QModelIndex, QModelIndexList> it(mappings);
     while (it.hasNext()) {
         it.next();
-        qDebug() << it.key() << it.key().data() << it.value();
+        qCDebug(AKONADINEXT_LOG) << it.key() << it.key().data() << it.value();
         if (it.value().at(0) == sourceFirstIndex) {
             destinationParent = it.key();
             movedIndexes = it.value();
@@ -447,7 +447,7 @@ KReparentingProxyModel::~KReparentingProxyModel()
 
 bool KReparentingProxyModelPrivate::isDescendantInModel(const QModelIndex &ancestor, const QModelIndex &descendant) const
 {
-    qDebug() << ancestor.data() << descendant.data();
+    qCDebug(AKONADINEXT_LOG) << ancestor.data() << descendant.data();
 
 //   if (!ancestor.isValid())
 //     return true;
@@ -505,7 +505,7 @@ QModelIndex KReparentingProxyModel::mapToSource(const QModelIndex &proxyIndex) c
 {
     Q_D(const KReparentingProxyModel);
 
-//   qDebug() << "MMMMMM" << proxyIndex;
+//   qCDebug(AKONADINEXT_LOG) << "MMMMMM" << proxyIndex;
 
     if (!proxyIndex.isValid()) {
         return QModelIndex();
@@ -514,36 +514,36 @@ QModelIndex KReparentingProxyModel::mapToSource(const QModelIndex &proxyIndex) c
     qint64 id = reinterpret_cast<qint64>(proxyIndex.internalPointer());
 
 //   if (!d->m_parents.contains(id))
-//     qDebug() << d->m_parents << id;
+//     qCDebug(AKONADINEXT_LOG) << d->m_parents << id;
 
     QModelIndex sourceParent;
     if (d->m_pendingRemovalParents.contains(id)) {
-//     qDebug() << "pending";
+//     qCDebug(AKONADINEXT_LOG) << "pending";
         sourceParent = d->m_pendingRemovalParents.value(id);
     } else {
         Q_ASSERT(d->m_parents.contains(id));
         sourceParent = d->m_parents.value(id);
     }
 
-// qDebug() <<  sourceParent << sourceParent.data();
+// qCDebug(AKONADINEXT_LOG) <<  sourceParent << sourceParent.data();
 
     QModelIndex sourceIndexFirstColumn;
     if (d->m_pendingRemovalChildIndexes.contains(sourceParent)) {
-//     qDebug() << "#############";
+//     qCDebug(AKONADINEXT_LOG) << "#############";
 
         foreach (const KReparentingProxyModelPrivate::PendingRemoval &pendingRemoval, d->m_pendingRemovals) {
-//       qDebug() << "In" << pendingRemoval.index << pendingRemoval.sourceIndex << sourceParent;
+//       qCDebug(AKONADINEXT_LOG) << "In" << pendingRemoval.index << pendingRemoval.sourceIndex << sourceParent;
             if (pendingRemoval.sourceIndex == sourceParent) {
-//         qDebug() << "Out" << pendingRemoval.sourceIndex << sourceParent;
+//         qCDebug(AKONADINEXT_LOG) << "Out" << pendingRemoval.sourceIndex << sourceParent;
                 int proxyRow = proxyIndex.row();
                 int row = proxyRow - pendingRemoval.start;
 
-//         qDebug() << d->m_pendingRemovalChildIndexes.value(sourceParent) << proxyRow << row << pendingRemoval.end;
+//         qCDebug(AKONADINEXT_LOG) << d->m_pendingRemovalChildIndexes.value(sourceParent) << proxyRow << row << pendingRemoval.end;
 
                 if (proxyRow > pendingRemoval.end) {
                     Q_ASSERT(d->m_childIndexes.contains(sourceParent));
                     row = proxyRow - (pendingRemoval.end - pendingRemoval.start + 1);
-//           qDebug() << "new row" << row;
+//           qCDebug(AKONADINEXT_LOG) << "new row" << row;
                     sourceIndexFirstColumn = d->m_childIndexes.value(sourceParent).at(row);
                 } else {
                     sourceIndexFirstColumn = d->m_pendingRemovalChildIndexes.value(sourceParent).at(row);
@@ -594,13 +594,13 @@ QModelIndex KReparentingProxyModel::index(int row, int column, const QModelIndex
     QModelIndex sourceParent = mapToSource(parent);
 
 //   if (!d->m_pendingRemovals.isEmpty())
-//     qDebug() << sourceParent << sourceParent.data();
+//     qCDebug(AKONADINEXT_LOG) << sourceParent << sourceParent.data();
 
     // ### This is where we need to have the children of removed indexes stored.
 
 //   if (!d->m_parents.values().contains(sourceParent))
 //   {
-//     qDebug() << d->m_pendingRemovalParents.values() << sourceParent << d->m_pendingRemovalParents.values().contains(sourceParent);
+//     qCDebug(AKONADINEXT_LOG) << d->m_pendingRemovalParents.values() << sourceParent << d->m_pendingRemovalParents.values().contains(sourceParent);
 //   }
 
     qint64 id;
@@ -655,7 +655,7 @@ int KReparentingProxyModelPrivate::pendingRemovalRowCount(const QModelIndex &sou
 {
 
     foreach (const PendingRemoval &pendingRemoval, m_pendingRemovals) {
-//     qDebug() << pendingRemoval.sourceIndex;
+//     qCDebug(AKONADINEXT_LOG) << pendingRemoval.sourceIndex;
         if (pendingRemoval.sourceIndex == sourceIndex) {
             return pendingRemoval.end - pendingRemoval.start + 1;
         }
@@ -675,11 +675,11 @@ int KReparentingProxyModel::rowCount(const QModelIndex &parent) const
 
     int size = d->m_childIndexes.value(sourceIndex).size() + d->m_pendingRemovalChildIndexes.value(sourceIndex).size();
 
-//   qDebug() << d->m_pendingRemovalChildIndexes.value(sourceIndex).size();
+//   qCDebug(AKONADINEXT_LOG) << d->m_pendingRemovalChildIndexes.value(sourceIndex).size();
 
 //   if (!d->m_pendingRemovals.isEmpty())
 //   {
-//     qDebug() << "SIZE" << sourceIndex << sourceIndex.data() << size << d->m_pendingRemovals.size() << d->pendingRemovalRowCount(sourceIndex);
+//     qCDebug(AKONADINEXT_LOG) << "SIZE" << sourceIndex << sourceIndex.data() << size << d->m_pendingRemovals.size() << d->pendingRemovalRowCount(sourceIndex);
 //   }
 
     return size;
@@ -763,7 +763,7 @@ void KReparentingProxyModelPrivate::sourceRowsAboutToBeInserted(const QModelInde
 QHash<QModelIndex, QModelIndexList> KReparentingProxyModelPrivate::mergeDescendants(QHash<QModelIndex, QModelIndexList> mappings, const QModelIndex &parent, int start)
 {
     QModelIndexList childIndexes = mappings.take(parent);
-    qDebug() << childIndexes;
+    qCDebug(AKONADINEXT_LOG) << childIndexes;
     if (!childIndexes.isEmpty()) {
         if (!m_parents.values().contains(parent)) {
             m_parents.insert(newId(), QPersistentModelIndex(parent));
@@ -789,12 +789,12 @@ void KReparentingProxyModelPrivate::handleInsertion(const PendingInsertion &pend
     int start = pendingInsertion.start;
     int end = pendingInsertion.end;
 
-    qDebug() << parent << parent.data() << start << end;
+    qCDebug(AKONADINEXT_LOG) << parent << parent.data() << start << end;
 
 //   for (int i = start; i < end; ++i)
 //   {
 //     QModelIndex idx = q->sourceModel()->index(i, 0, parent);
-//     qDebug() << idx << idx.data();
+//     qCDebug(AKONADINEXT_LOG) << idx << idx.data();
 //   }
 
     QHash<QModelIndex, QModelIndexList> newItemMappings = recreateMappings(parent, start, end, KReparentingProxyModelPrivate::MapDescendants);
@@ -804,15 +804,15 @@ void KReparentingProxyModelPrivate::handleInsertion(const PendingInsertion &pend
     // If one of the parents is invalid it is necessarily the last one to be processed (if there are more to process, they'll be children of it)
     // That case should work too.
 
-    qDebug() << "new item mappings" << newItemMappings;
+    qCDebug(AKONADINEXT_LOG) << "new item mappings" << newItemMappings;
 
     const int column = 0;
 
-    qDebug() << m_childIndexes.contains(parent);
+    qCDebug(AKONADINEXT_LOG) << m_childIndexes.contains(parent);
 
     if (newItemMappings.contains(parent)) {
         QModelIndexList newItemList = newItemMappings.value(parent);
-        qDebug() << "newItemList" << newItemList;
+        qCDebug(AKONADINEXT_LOG) << "newItemList" << newItemList;
         int proxyStart = 0;
 
         // A single insertion in the source model might be multiple insertions in the proxy model.
@@ -886,10 +886,10 @@ void KReparentingProxyModelPrivate::removeTree(const QPersistentModelIndex &idxT
         return;
     }
 
-//   qDebug() << "idxToRemove" << idxToRemove << start << end;
+//   qCDebug(AKONADINEXT_LOG) << "idxToRemove" << idxToRemove << start << end;
 
     QList<QPersistentModelIndex> &toRemove = m_childIndexes[ idxToRemove ];
-//   qDebug() << toRemove << toRemove.size();
+//   qCDebug(AKONADINEXT_LOG) << toRemove << toRemove.size();
 
 //   QList<int> intList;
 //   intList << 1 << 2 << 3 << 4 << 5;
@@ -903,14 +903,14 @@ void KReparentingProxyModelPrivate::removeTree(const QPersistentModelIndex &idxT
 //   if (end > 0)
 //   {
 //     intendIt = intit + (end - start + 1) + 1;
-//     qDebug() << "intend" << *intendIt;
+//     qCDebug(AKONADINEXT_LOG) << "intend" << *intendIt;
 //   }
 //   intit += start;
 //
 //   while (intit != intendIt)
 //   {
 //     int i = *intit;
-//     qDebug() << i;
+//     qCDebug(AKONADINEXT_LOG) << i;
 //     intit = intList.erase(intit);
 //   }
 
@@ -929,23 +929,23 @@ void KReparentingProxyModelPrivate::removeTree(const QPersistentModelIndex &idxT
     int i = start;
     while (it != endIt) {
         QPersistentModelIndex idx = *it;
-//     qDebug() << "removing" << idx << idx.data();
+//     qCDebug(AKONADINEXT_LOG) << "removing" << idx << idx.data();
 
         if (m_parents.values().contains(idx)) {
             qint64 key = m_parents.key(idx);
             QPersistentModelIndex value = m_parents.take(key);
             m_pendingRemovalParents.insert(key, value);
-//       qDebug() << "take from parent" << value;
+//       qCDebug(AKONADINEXT_LOG) << "take from parent" << value;
         }
         removeTree(idx);
 
         ++i;
 
         m_pendingRemovalChildIndexes[idxToRemove].append(idx);
-//     qDebug() << idxToRemove << idxToRemove.data() << idx << idx.data();
+//     qCDebug(AKONADINEXT_LOG) << idxToRemove << idxToRemove.data() << idx << idx.data();
 
         it = toRemove.erase(it);
-//     qDebug() << (it == endIt);
+//     qCDebug(AKONADINEXT_LOG) << (it == endIt);
 //     if (i > end)
 //       break;
 
@@ -954,20 +954,20 @@ void KReparentingProxyModelPrivate::removeTree(const QPersistentModelIndex &idxT
 
     }
 
-//   qDebug() << "toRemove" << toRemove;
+//   qCDebug(AKONADINEXT_LOG) << "toRemove" << toRemove;
 
 //   for(int i = start; (i <= end || (end == -1 && toRemove.size() > i)); )
 //   {
-//     qDebug() << i;
+//     qCDebug(AKONADINEXT_LOG) << i;
 //     QPersistentModelIndex idx = toRemove.takeAt(i);
 //     --end;
 //
-//     qDebug() << "removing" << idx.data();
+//     qCDebug(AKONADINEXT_LOG) << "removing" << idx.data();
 //
 //     if (m_parents.values().contains(idx))
 //     {
 //       QPersistentModelIndex bah = m_parents.take(m_parents.key(idx));
-// //       qDebug() << "take from parent" << bah;
+// //       qCDebug(AKONADINEXT_LOG) << "take from parent" << bah;
 //     }
 //     removeTree(idx);
 //   }
@@ -976,7 +976,7 @@ void KReparentingProxyModelPrivate::removeTree(const QPersistentModelIndex &idxT
 void KReparentingProxyModelPrivate::sourceRowsAboutToBeRemoved(const QModelIndex &parent, int start, int end)
 {
     Q_Q(KReparentingProxyModel);
-    qDebug() << parent << start << end;
+    qCDebug(AKONADINEXT_LOG) << parent << start << end;
 
     // This is really tricky.
     //
@@ -994,8 +994,8 @@ void KReparentingProxyModelPrivate::sourceRowsAboutToBeRemoved(const QModelIndex
 //   while (it.hasNext())
 //   {
 //     it.next();
-//     qDebug() << it.key() << it.key().data();
-//     qDebug() << it.value();
+//     qCDebug(AKONADINEXT_LOG) << it.key() << it.key().data();
+//     qCDebug(AKONADINEXT_LOG) << it.value();
 //   }
 
     const int column = 0;
@@ -1003,8 +1003,8 @@ void KReparentingProxyModelPrivate::sourceRowsAboutToBeRemoved(const QModelIndex
     QModelIndex firstAffectedIndex = q->mapFromSource(q->sourceModel()->index(start, column, parent));
     QModelIndex lastAffectedIndex = q->mapFromSource(q->sourceModel()->index(end, column, parent));
 
-    qDebug() << "firstAffectedIndex" << firstAffectedIndex.data();
-    qDebug() << "lastAffectedIndex" << lastAffectedIndex.data();
+    qCDebug(AKONADINEXT_LOG) << "firstAffectedIndex" << firstAffectedIndex.data();
+    qCDebug(AKONADINEXT_LOG) << "lastAffectedIndex" << lastAffectedIndex.data();
 
     QModelIndex proxyParent = firstAffectedIndex.parent();
 
@@ -1017,7 +1017,7 @@ void KReparentingProxyModelPrivate::sourceRowsAboutToBeRemoved(const QModelIndex
 
             QModelIndex _parent = lastAffectedIndex.parent();
             QModelIndex lastAffectedAncestor = lastAffectedIndex;
-            qDebug() << "last affected ancestor" << lastAffectedAncestor.data();
+            qCDebug(AKONADINEXT_LOG) << "last affected ancestor" << lastAffectedAncestor.data();
             while (_parent != proxyParent) {
                 lastAffectedAncestor = _parent;
                 _parent = _parent.parent();
@@ -1035,7 +1035,7 @@ void KReparentingProxyModelPrivate::sourceRowsAboutToBeRemoved(const QModelIndex
 
                 int destRow = lastAffectedAncestor.row() + 1;
 
-                qDebug() << "Move from" << lastAffectedAncestor.data() << startRow << lastRow << " To " << proxyParent.data() << destRow;
+                qCDebug(AKONADINEXT_LOG) << "Move from" << lastAffectedAncestor.data() << startRow << lastRow << " To " << proxyParent.data() << destRow;
                 bool allowMove = q->beginMoveRows(lastAffectedAncestor, startRow, lastRow, proxyParent, destRow);
                 Q_ASSERT(allowMove);
 
@@ -1059,7 +1059,7 @@ void KReparentingProxyModelPrivate::sourceRowsAboutToBeRemoved(const QModelIndex
 
             removeTree(q->mapToSource(proxyParent), removal.start, removal.end);
 
-            qDebug() << "beg rem 1";
+            qCDebug(AKONADINEXT_LOG) << "beg rem 1";
             q->beginRemoveRows(proxyParent, removal.start, removal.end);
 
             return;
@@ -1092,14 +1092,14 @@ void KReparentingProxyModelPrivate::sourceRowsAboutToBeRemoved(const QModelIndex
 
             removeTree(q->mapToSource(proxyParent), removal.start, removal.end);
 
-            qDebug() << "beg rem 1";
+            qCDebug(AKONADINEXT_LOG) << "beg rem 1";
             q->beginRemoveRows(proxyParent, removal.start, removal.end);
 
             proxyParent = next.parent();
         }
     }
 
-// //   qDebug() << proxyParent.data() << lastAffectedIndex.parent().data() << proxyParent << lastAffectedIndex.parent();
+// //   qCDebug(AKONADINEXT_LOG) << proxyParent.data() << lastAffectedIndex.parent().data() << proxyParent << lastAffectedIndex.parent();
 //   if (proxyParent == lastAffectedIndex.parent())
 //   {
 //     PendingRemoval removal;
@@ -1114,7 +1114,7 @@ void KReparentingProxyModelPrivate::sourceRowsAboutToBeRemoved(const QModelIndex
 //
 //     removeTree(q->mapToSource(proxyParent), removal.start, removal.end);
 //
-// //     qDebug() << "beg rem 1";
+// //     qCDebug(AKONADINEXT_LOG) << "beg rem 1";
 //     q->beginRemoveRows(proxyParent, removal.start, removal.end);
 //     return;
 //   }
@@ -1132,7 +1132,7 @@ void KReparentingProxyModelPrivate::sourceRowsAboutToBeRemoved(const QModelIndex
 //       removal.sourceIndex = q->mapToSource(proxyParent);
 //       m_pendingRemovals.append(removal);
 //
-// //       qDebug() << "beg rem 2";
+// //       qCDebug(AKONADINEXT_LOG) << "beg rem 2";
 //       q->beginRemoveRows(proxyParent, removal.start, removal.end);
 //       return;
 //     }
@@ -1149,7 +1149,7 @@ void KReparentingProxyModelPrivate::sourceRowsAboutToBeRemoved(const QModelIndex
 //   while (processedUntil <= end)
 //   {
 //     QModelIndex lastInParent = findLastInParent(proxyParent, proxyStart, proxyEnd);
-//     qDebug() << "lastInParent" << lastInParent;
+//     qCDebug(AKONADINEXT_LOG) << "lastInParent" << lastInParent;
 //
 //     QModelIndex sourceLast = q->mapToSource(lastInParent);
 //     processedUntil = sourceLast.row();
@@ -1162,7 +1162,7 @@ void KReparentingProxyModelPrivate::sourceRowsAboutToBeRemoved(const QModelIndex
 //     removal.sourceIndex = q->mapToSource(proxyParent);
 //     m_pendingRemovals.append(removal);
 //
-//     qDebug() << "beg rem 3";
+//     qCDebug(AKONADINEXT_LOG) << "beg rem 3";
 //     q->beginRemoveRows(proxyParent, removal.start, removal.end);
 //
 //     QModelIndex proxyIndexBelow = getIndexBelow(lastInParent, q);
@@ -1197,7 +1197,7 @@ QModelIndex KReparentingProxyModelPrivate::findLastInParent(QModelIndex parent, 
     }
 }
 
-//   qDebug() << affectedIndex << affectedIndex.data() << proxyParent;
+//   qCDebug(AKONADINEXT_LOG) << affectedIndex << affectedIndex.data() << proxyParent;
 //
 //   QHash<QModelIndex, PendingRemoval> pendingRemovals;
 //
@@ -1264,7 +1264,7 @@ void KReparentingProxyModelPrivate::handleRemoval(const PendingRemoval &pendingR
 
 void KReparentingProxyModelPrivate::sourceRowsRemoved(const QModelIndex &parent, int start, int end)
 {
-    qDebug() << parent << start << end;
+    qCDebug(AKONADINEXT_LOG) << parent << start << end;
 
     Q_Q(KReparentingProxyModel);
 
@@ -1284,9 +1284,9 @@ void KReparentingProxyModelPrivate::sourceRowsRemoved(const QModelIndex &parent,
 
         emit q->endRemoveRows();
     }
-    qDebug() << "Remove done ##########";
+    qCDebug(AKONADINEXT_LOG) << "Remove done ##########";
 
-    qDebug() << lastAffectedIndex << lastAffectedIndex.data() << lastAffectedRow;
+    qCDebug(AKONADINEXT_LOG) << lastAffectedIndex << lastAffectedIndex.data() << lastAffectedRow;
 
     verifyStructure(lastAffectedIndex, lastAffectedRow - 1);
 }
