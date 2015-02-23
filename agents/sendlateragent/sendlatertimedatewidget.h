@@ -37,6 +37,7 @@ public:
 
 Q_SIGNALS:
     void dateTimeChanged(const QDateTime &);
+    void dateChanged(const QString &);
 
 private Q_SLOTS:
     void slotDateTimeChanged();

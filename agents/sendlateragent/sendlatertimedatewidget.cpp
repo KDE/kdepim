@@ -19,6 +19,7 @@
 
 #include <KTimeComboBox>
 #include <KDateComboBox>
+#include <QLineEdit>
 
 #include <QHBoxLayout>
 
@@ -36,6 +37,7 @@ SendLaterTimeDateWidget::SendLaterTimeDateWidget(QWidget *parent)
     connect(mTimeComboBox, SIGNAL(timeChanged(QTime)), this, SLOT(slotDateTimeChanged()));
 
     mDateComboBox = new KDateComboBox;
+    connect(mDateComboBox->lineEdit(),SIGNAL(textChanged(QString)), SIGNAL(dateChanged(QString)));
     mDateComboBox->setOptions(KDateComboBox::EditDate|KDateComboBox::SelectDate|KDateComboBox::DatePicker|KDateComboBox::DateKeywords|KDateComboBox::WarnOnInvalid);
     mDateComboBox->setMinimumDate(t.date(), i18n("You cannot select a date prior to the current date."));
     connect(mDateComboBox, SIGNAL(dateChanged(QDate)), this, SLOT(slotDateTimeChanged()));

@@ -72,6 +72,7 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
     unitsList<<i18n("Months");
     unitsList<<i18n("Years");
     mSendLaterWidget->mRecurrenceComboBox->addItems(unitsList);
+    connect(mSendLaterWidget->mDateTime, SIGNAL(dateChanged(QString)), this, SLOT(slotDateChanged(QString)));
 
     lay->addWidget(new KSeparator);
 
@@ -85,6 +86,11 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
 SendLaterDialog::~SendLaterDialog()
 {
     delete mSendLaterWidget;
+}
+
+void SendLaterDialog::slotDateChanged(const QString &date)
+{
+    enableButtonOk(!date.isEmpty());
 }
 
 void SendLaterDialog::slotRecurrenceClicked(bool clicked)

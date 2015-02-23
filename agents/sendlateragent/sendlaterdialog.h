@@ -52,6 +52,7 @@ private Q_SLOTS:
     void slotOkClicked();
     void slotDelay(bool delayEnabled);
 
+    void slotDateChanged(const QString &date);
 private:
     void load(SendLater::SendLaterInfo *info);
 
