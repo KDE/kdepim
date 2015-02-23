@@ -55,24 +55,24 @@ SearchAndMergeContactDuplicateContactDialog::SearchAndMergeContactDuplicateConta
     connect(mSearchResult, &SearchDuplicateResultWidget::customizeMergeContact, this, &SearchAndMergeContactDuplicateContactDialog::slotCustomizeMergeContacts);
 
     mNoContactSelected = new KABMergeContacts::MergeContactErrorLabel(MergeContactErrorLabel::NoContactSelected, this);
-    mNoContactSelected->setObjectName(QLatin1String("nocontactselected"));
+    mNoContactSelected->setObjectName(QStringLiteral("nocontactselected"));
     mStackedWidget->addWidget(mNoContactSelected);
 
     mNoDuplicateContactFound = new KABMergeContacts::MergeContactErrorLabel(MergeContactErrorLabel::NoContactDuplicatesFound, this);
-    mNoDuplicateContactFound->setObjectName(QLatin1String("nocontactduplicatesfound"));
+    mNoDuplicateContactFound->setObjectName(QStringLiteral("nocontactduplicatesfound"));
     mStackedWidget->addWidget(mNoDuplicateContactFound);
 
     mMergeContactResult = new MergeContactShowResultTabWidget(this);
-    mMergeContactResult->setObjectName(QLatin1String("mergecontactresult"));
+    mMergeContactResult->setObjectName(QStringLiteral("mergecontactresult"));
     mStackedWidget->addWidget(mMergeContactResult);
 
     mNoEnoughContactSelected = new KABMergeContacts::MergeContactErrorLabel(MergeContactErrorLabel::NotEnoughContactsSelected, this);
-    mNoEnoughContactSelected->setObjectName(QLatin1String("noenoughcontactselected"));
+    mNoEnoughContactSelected->setObjectName(QStringLiteral("noenoughcontactselected"));
     mStackedWidget->addWidget(mNoEnoughContactSelected);
     mStackedWidget->setCurrentWidget(mNoContactSelected);
 
     mSelectInformation = new KABMergeContacts::MergeContactSelectInformationTabWidget(this);
-    mSelectInformation->setObjectName(QLatin1String("selectioninformation"));
+    mSelectInformation->setObjectName(QStringLiteral("selectioninformation"));
     mStackedWidget->addWidget(mSelectInformation);
 
     mainLayout->addWidget(mStackedWidget);

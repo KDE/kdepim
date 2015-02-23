@@ -78,7 +78,7 @@ void SearchPotentialDuplicateContactJobTest::shouldReturnListWhenThreeItemsAreDu
     Akonadi::Item::List lst;
     Akonadi::Item itemA;
     KContacts::Addressee address;
-    address.setName(QLatin1String("foo1"));
+    address.setName(QStringLiteral("foo1"));
     itemA.setPayload<KContacts::Addressee>(address);
     itemA.setMimeType(KContacts::Addressee::mimeType());
 
@@ -97,14 +97,14 @@ void SearchPotentialDuplicateContactJobTest::shouldReturnTwoList()
     Akonadi::Item::List lst;
     Akonadi::Item item;
     KContacts::Addressee addressA;
-    addressA.setName(QLatin1String("foo1"));
+    addressA.setName(QStringLiteral("foo1"));
     item.setPayload<KContacts::Addressee>(addressA);
     item.setMimeType(KContacts::Addressee::mimeType());
 
     lst << item << item << item;
 
     KContacts::Addressee addressB;
-    addressB.setName(QLatin1String("foo2"));
+    addressB.setName(QStringLiteral("foo2"));
     item.setPayload<KContacts::Addressee>(addressB);
     item.setMimeType(KContacts::Addressee::mimeType());
 
@@ -125,14 +125,14 @@ void SearchPotentialDuplicateContactJobTest::shouldReturnList_data()
     QTest::newRow("noList") <<  Akonadi::Item::List() << 0;
     Akonadi::Item itemA;
     KContacts::Addressee addressA;
-    addressA.setName(QLatin1String("foo1"));
+    addressA.setName(QStringLiteral("foo1"));
     itemA.setPayload<KContacts::Addressee>(addressA);
     itemA.setMimeType(KContacts::Addressee::mimeType());
 
     Akonadi::Item itemB;
 
     KContacts::Addressee addressB;
-    addressB.setName(QLatin1String("foo2"));
+    addressB.setName(QStringLiteral("foo2"));
     itemB.setPayload<KContacts::Addressee>(addressB);
     itemB.setMimeType(KContacts::Addressee::mimeType());
 
@@ -159,7 +159,7 @@ void SearchPotentialDuplicateContactJobTest::shouldReturnList_data()
     Akonadi::Item itemC;
 
     KContacts::Addressee addressC;
-    addressC.setName(QLatin1String("foo3"));
+    addressC.setName(QStringLiteral("foo3"));
     itemC.setPayload<KContacts::Addressee>(addressC);
     itemC.setMimeType(KContacts::Addressee::mimeType());
 

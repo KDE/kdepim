@@ -151,7 +151,7 @@ void MergeContactSelectListWidget::fillList(const KContacts::Addressee::List &ls
         }
         case MergeContacts::Geo: {
             const Geo geo = addr.geo();
-            const QString str = QString::fromLatin1("%1-%2").arg(geo.latitude(), geo.longitude());
+            const QString str = QStringLiteral("%1-%2").arg(geo.latitude(), geo.longitude());
             addItem(str);
             break;
         }

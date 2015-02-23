@@ -33,25 +33,25 @@ MergeContactSelectInformationScrollArea::MergeContactSelectInformationScrollArea
     QVBoxLayout *vbox = new QVBoxLayout;
     setLayout(vbox);
     mStackWidget = new QStackedWidget;
-    mStackWidget->setObjectName(QLatin1String("stackwidget"));
+    mStackWidget->setObjectName(QStringLiteral("stackwidget"));
     vbox->addWidget(mStackWidget);
 
     QWidget *selectMergeWidget = new QWidget;
-    selectMergeWidget->setObjectName(QLatin1String("selectwidget"));
+    selectMergeWidget->setObjectName(QStringLiteral("selectwidget"));
     QVBoxLayout *layout = new QVBoxLayout;
     selectMergeWidget->setLayout(layout);
     QScrollArea *area = new QScrollArea;
     area->setWidgetResizable(true);
-    area->setObjectName(QLatin1String("scrollarea"));
+    area->setObjectName(QStringLiteral("scrollarea"));
     layout->addWidget(area);
     mSelectInformationWidget = new MergeContactSelectInformationWidget;
-    mSelectInformationWidget->setObjectName(QLatin1String("selectinformationwidget"));
+    mSelectInformationWidget->setObjectName(QStringLiteral("selectinformationwidget"));
     area->setWidget(mSelectInformationWidget);
 
     QHBoxLayout *hbox = new QHBoxLayout;
     hbox->addStretch();
     QPushButton *mergeButton = new QPushButton(i18n("Merge"));
-    mergeButton->setObjectName(QLatin1String("merge"));
+    mergeButton->setObjectName(QStringLiteral("merge"));
     hbox->addWidget(mergeButton);
     layout->addLayout(hbox);
     connect(mergeButton, &QPushButton::clicked, this, &MergeContactSelectInformationScrollArea::slotMergeContacts);
@@ -59,7 +59,7 @@ MergeContactSelectInformationScrollArea::MergeContactSelectInformationScrollArea
     mStackWidget->addWidget(selectMergeWidget);
 
     mMergedContactWidget = new MergeContactInfoWidget;
-    mMergedContactWidget->setObjectName(QLatin1String("mergedcontactwidget"));
+    mMergedContactWidget->setObjectName(QStringLiteral("mergedcontactwidget"));
     mStackWidget->addWidget(mMergedContactWidget);
     mStackWidget->setCurrentWidget(selectMergeWidget);
 }

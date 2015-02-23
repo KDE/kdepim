@@ -110,14 +110,14 @@ void CategorySelectWidgetPrivate::init()
 
     QToolButton *but = new QToolButton(q);
     but ->setAutoRaise(true);
-    but->setIcon(QIcon::fromTheme(QLatin1String("edit-undo")));
+    but->setIcon(QIcon::fromTheme(QStringLiteral("edit-undo")));
     but->setToolTip(i18nc("@action:button", "Reset category filter"));
     connect(but, &QToolButton::clicked, this, &CategorySelectWidgetPrivate::slotSelectAll);
     hbox->addWidget(but);
 
     but = new QToolButton(q);
     but->setAutoRaise(true);
-    but->setIcon(QIcon::fromTheme(QLatin1String("edit-clear")));
+    but->setIcon(QIcon::fromTheme(QStringLiteral("edit-clear")));
     but->setToolTip(i18nc("@action:button", "Clear category filter"));
     connect(but, &QToolButton::clicked, this, &CategorySelectWidgetPrivate::slotSelectNone);
     hbox->addWidget(but);
