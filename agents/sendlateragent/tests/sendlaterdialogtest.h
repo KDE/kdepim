@@ -27,6 +27,8 @@ class SendLaterDialogTest : public QObject
 public:
     explicit SendLaterDialogTest(QObject *parent = 0);
     ~SendLaterDialogTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
 #endif // SENDLATERDIALOGTEST_H

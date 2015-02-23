@@ -17,6 +17,9 @@
 
 
 #include "sendlaterdialogtest.h"
+#include "../sendlaterdialog.h"
+#include <KTimeComboBox>
+#include <KDateComboBox>
 #include <qtest_kde.h>
 SendLaterDialogTest::SendLaterDialogTest(QObject *parent)
     : QObject(parent)
@@ -27,6 +30,17 @@ SendLaterDialogTest::SendLaterDialogTest(QObject *parent)
 SendLaterDialogTest::~SendLaterDialogTest()
 {
 
+}
+
+void SendLaterDialogTest::shouldHaveDefaultValue()
+{
+    SendLater::SendLaterDialog dlg(0);
+#if 0 //VERIFY
+    KTimeComboBox *timeCombo = qFindChild<KTimeComboBox *>(&dlg, QLatin1String("time_sendlater"));
+    QVERIFY(timeCombo);
+    KDateComboBox *dateCombo = qFindChild<KDateComboBox *>(&dlg, QLatin1String("date_sendlater"));
+    QVERIFY(dateCombo);
+#endif
 }
 
 QTEST_KDEMAIN(SendLaterDialogTest, GUI)
