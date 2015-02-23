@@ -38,22 +38,22 @@ MergeContactSelectInformationScrollAreaTest::~MergeContactSelectInformationScrol
 void MergeContactSelectInformationScrollAreaTest::shouldHaveDefaultValue()
 {
     KABMergeContacts::MergeContactSelectInformationScrollArea w;
-    QScrollArea *area = qFindChild<QScrollArea *>(&w, QStringLiteral("scrollarea"));
+    QScrollArea *area = w.findChild<QScrollArea *>(QStringLiteral("scrollarea"));
     QVERIFY(area);
-    QPushButton *mergeButton = qFindChild<QPushButton *>(&w, QStringLiteral("merge"));
+    QPushButton *mergeButton = w.findChild<QPushButton *>(QStringLiteral("merge"));
     QVERIFY(mergeButton);
 
-    QStackedWidget *stackedwidget = qFindChild<QStackedWidget *>(&w, QStringLiteral("stackwidget"));
+    QStackedWidget *stackedwidget = w.findChild<QStackedWidget *>(QStringLiteral("stackwidget"));
     QVERIFY(stackedwidget);
 
     KABMergeContacts::MergeContactSelectInformationWidget *widget =
         qFindChild<KABMergeContacts::MergeContactSelectInformationWidget *>(&w, QStringLiteral("selectinformationwidget"));
     QVERIFY(widget);
 
-    KABMergeContacts::MergeContactInfoWidget *mergecontactinfowidget = qFindChild<KABMergeContacts::MergeContactInfoWidget *>(&w, QStringLiteral("mergedcontactwidget"));
+    KABMergeContacts::MergeContactInfoWidget *mergecontactinfowidget = w.findChild<KABMergeContacts::MergeContactInfoWidget *>(QStringLiteral("mergedcontactwidget"));
     QVERIFY(mergecontactinfowidget);
 
-    QWidget *selectWidget = qFindChild<QWidget *>(&w, QStringLiteral("selectwidget"));
+    QWidget *selectWidget = w.findChild<QWidget *>(QStringLiteral("selectwidget"));
     QVERIFY(selectWidget);
 
     QCOMPARE(stackedwidget->currentWidget(), selectWidget);

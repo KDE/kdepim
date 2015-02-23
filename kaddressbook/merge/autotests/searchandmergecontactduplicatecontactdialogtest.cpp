@@ -68,7 +68,7 @@ void SearchAndMergeContactDuplicateContactDialogTest::shouldShowNoContactWhenLis
     Akonadi::Item::List lst;
     dlg.searchPotentialDuplicateContacts(lst);
     dlg.show();
-    QStackedWidget *stackedWidget = qFindChild<QStackedWidget *>(&dlg, QLatin1String("stackedwidget"));
+    QStackedWidget *stackedWidget = dlg.findChild<QStackedWidget *>(QLatin1String("stackedwidget"));
     QVERIFY(stackedWidget);
     QCOMPARE(stackedWidget->currentWidget()->objectName(), QLatin1String("nocontactselected"));
 }

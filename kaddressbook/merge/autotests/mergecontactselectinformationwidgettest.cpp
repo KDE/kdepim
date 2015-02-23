@@ -33,14 +33,14 @@ MergeContactSelectInformationWidgetTest::~MergeContactSelectInformationWidgetTes
 void MergeContactSelectInformationWidgetTest::shouldHaveDefaultValue()
 {
     KABMergeContacts::MergeContactSelectInformationWidget w;
-    //KABMergeContacts::MergeContactSelectListWidget *listWidget = qFindChild<KABMergeContacts::MergeContactSelectListWidget *>(&w, QStringLiteral("list_information"));
+    //KABMergeContacts::MergeContactSelectListWidget *listWidget = w.findChild<KABMergeContacts::MergeContactSelectListWidget *>(QStringLiteral("list_information"));
     //QVERIFY(listWidget);
 }
 
 void MergeContactSelectInformationWidgetTest::shouldHaveEmptyListIfContactListIsEmpty()
 {
     KABMergeContacts::MergeContactSelectInformationWidget w;
-    //KABMergeContacts::MergeContactSelectListWidget *listWidget = qFindChild<KABMergeContacts::MergeContactSelectListWidget *>(&w, QStringLiteral("list_information"));
+    //KABMergeContacts::MergeContactSelectListWidget *listWidget = w.findChild<KABMergeContacts::MergeContactSelectListWidget *>(QStringLiteral("list_information"));
     //FIXME
     //w.setContacts(Akonadi::Item::List());
 }

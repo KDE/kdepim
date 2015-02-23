@@ -42,25 +42,25 @@ void BlackListBalooEmailCompletionDialogTest::shouldHaveDefaultValue()
 {
     KPIM::BlackListBalooEmailCompletionDialog dlg;
 
-    QLabel *searchLabel = qFindChild<QLabel *>(&dlg, QLatin1String("search_label"));
+    QLabel *searchLabel = dlg.findChild<QLabel *>(QLatin1String("search_label"));
     QVERIFY(searchLabel);
 
-    KLineEdit *searchLineEdit = qFindChild<KLineEdit *>(&dlg, QLatin1String("search_lineedit"));
+    KLineEdit *searchLineEdit = dlg.findChild<KLineEdit *>(QLatin1String("search_lineedit"));
     QVERIFY(searchLineEdit);
     QVERIFY(searchLineEdit->isClearButtonShown());
     QVERIFY(searchLineEdit->trapReturnKey());
     QVERIFY(searchLineEdit->text().isEmpty());
 
-    QPushButton *seachButton = qFindChild<QPushButton *>(&dlg, QLatin1String("search_button"));
+    QPushButton *seachButton = dlg.findChild<QPushButton *>(QLatin1String("search_button"));
     QVERIFY(seachButton);
     QVERIFY(!seachButton->isEnabled());
 
-    KPIM::BlackListBalooEmailList *emailList = qFindChild<KPIM::BlackListBalooEmailList *>(&dlg, QLatin1String("email_list"));
+    KPIM::BlackListBalooEmailList *emailList = dlg.findChild<KPIM::BlackListBalooEmailList *>(QLatin1String("email_list"));
     QVERIFY(emailList);
 
-    QPushButton *selectButton = qFindChild<QPushButton *>(&dlg, QLatin1String("select_email"));
+    QPushButton *selectButton = dlg.findChild<QPushButton *>(QLatin1String("select_email"));
     QVERIFY(selectButton);
-    QPushButton *unselectButton = qFindChild<QPushButton *>(&dlg, QLatin1String("unselect_email"));
+    QPushButton *unselectButton = dlg.findChild<QPushButton *>(QLatin1String("unselect_email"));
     QVERIFY(unselectButton);
 
 }
@@ -68,8 +68,8 @@ void BlackListBalooEmailCompletionDialogTest::shouldHaveDefaultValue()
 void BlackListBalooEmailCompletionDialogTest::shouldEnablePushButtonWhenTestSizeSupperiorToTwo()
 {
     KPIM::BlackListBalooEmailCompletionDialog dlg;
-    KLineEdit *searchLineEdit = qFindChild<KLineEdit *>(&dlg, QLatin1String("search_lineedit"));
-    QPushButton *seachButton = qFindChild<QPushButton *>(&dlg, QLatin1String("search_button"));
+    KLineEdit *searchLineEdit = dlg.findChild<KLineEdit *>(QLatin1String("search_lineedit"));
+    QPushButton *seachButton = dlg.findChild<QPushButton *>(QLatin1String("search_button"));
     QVERIFY(!seachButton->isEnabled());
     searchLineEdit->setText(QLatin1String("fo"));
     QVERIFY(!seachButton->isEnabled());

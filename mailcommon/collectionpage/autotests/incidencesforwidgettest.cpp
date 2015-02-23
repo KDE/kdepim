@@ -39,9 +39,9 @@ IncidencesForWidgetTest::~IncidencesForWidgetTest()
 void IncidencesForWidgetTest::shouldHaveDefaultValue()
 {
     MailCommon::IncidencesForWidget contentType;
-    QLabel *label = qFindChild<QLabel *>(&contentType, QLatin1String("contentstypelabel"));
+    QLabel *label = contentType.findChild<QLabel *>(QLatin1String("contentstypelabel"));
     QVERIFY(label);
-    KComboBox *combo = qFindChild<KComboBox *>(&contentType, QLatin1String("contentstypecombobox"));
+    KComboBox *combo = contentType.findChild<KComboBox *>(QLatin1String("contentstypecombobox"));
     QVERIFY(combo);
     QVERIFY(combo->count() > 0);
     QCOMPARE(contentType.currentIndex(), 0);
@@ -50,7 +50,7 @@ void IncidencesForWidgetTest::shouldHaveDefaultValue()
 void IncidencesForWidgetTest::shouldChangeComboBoxIndex()
 {
     MailCommon::IncidencesForWidget contentType;
-    KComboBox *combo = qFindChild<KComboBox *>(&contentType, QLatin1String("contentstypecombobox"));
+    KComboBox *combo = contentType.findChild<KComboBox *>(QLatin1String("contentstypecombobox"));
     for (int i = 0 ; i < combo->count() ; ++i) {
         contentType.setCurrentIndex(i);
         QCOMPARE(contentType.currentIndex(), i);
