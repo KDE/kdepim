@@ -40,7 +40,7 @@ KAddressBookPart::KAddressBookPart(QWidget *parentWidget, QObject *parent,
 {
     //QT5 setComponentData( KAddressBookFactory::componentData() );
 
-    KIconLoader::global()->addAppDir(QLatin1String("kaddressbook"));
+    KIconLoader::global()->addAppDir(QStringLiteral("kaddressbook"));
     // create a canvas to insert our widget
     QWidget *canvas = new QWidget(parentWidget);
     canvas->setFocusPolicy(Qt::ClickFocus);
@@ -52,7 +52,7 @@ KAddressBookPart::KAddressBookPart(QWidget *parentWidget, QObject *parent,
 
     topLayout->addWidget(mMainWidget);
     topLayout->setMargin(0);
-    setXMLFile(QLatin1String("kaddressbookui.rc"));
+    setXMLFile(QStringLiteral("kaddressbookui.rc"));
 }
 
 void KAddressBookPart::updateQuickSearchText()
@@ -62,8 +62,8 @@ void KAddressBookPart::updateQuickSearchText()
 
 void KAddressBookPart::initAction()
 {
-    QAction *action = new QAction(QIcon::fromTheme(QLatin1String("configure")), i18n("&Configure KAddressBook..."), this);
-    actionCollection()->addAction(QLatin1String("kaddressbook_configure"), action);
+    QAction *action = new QAction(QIcon::fromTheme(QStringLiteral("configure")), i18n("&Configure KAddressBook..."), this);
+    actionCollection()->addAction(QStringLiteral("kaddressbook_configure"), action);
     connect(action, &QAction::triggered, mMainWidget, &MainWidget::configure);
 }
 
