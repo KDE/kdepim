@@ -10,12 +10,14 @@ macro( kaddressbook_merge _source _additional _additionallib)
   target_link_libraries( ${_name} kaddressbookprivate ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_KABC_LIBS} ${_additionallib})
 endmacro()
 
-kaddressbook_merge(mergecontactwidgettest.cpp "../widgets/mergecontactinfowidget.cpp" "kaddressbookgrantlee;akonadi-contact")
 kaddressbook_merge(mergecontactstest.cpp "../job/mergecontacts.cpp" "")
 
 include(AkonadiMacros)
 set(KDEPIMLIBS_RUN_ISOLATED_TESTS TRUE)
 set(KDEPIMLIBS_RUN_SQLITE_ISOLATED_TESTS TRUE)
+
+add_akonadi_isolated_test_advanced(mergecontactwidgettest.cpp "../widgets/mergecontactinfowidget.cpp" "kaddressbookprivate;kaddressbookgrantlee;akonadi-contact;kabc")
+
 
 add_akonadi_isolated_test_advanced( mergecontactinfowidgettest.cpp "../widgets/mergecontactinfowidget.cpp" "akonadi-contact;kaddressbookgrantlee")
 add_akonadi_isolated_test_advanced( searchandmergecontactduplicatecontactdialogtest.cpp "" "kaddressbookprivate")
