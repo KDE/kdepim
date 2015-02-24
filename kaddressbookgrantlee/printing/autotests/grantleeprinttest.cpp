@@ -51,7 +51,7 @@ void GrantleePrintTest::shouldReturnEmptyStringWhenNotContentAndNoContacts()
 void GrantleePrintTest::shouldReturnEmptyStringWhenAddContentWithoutContacts()
 {
     KAddressBookGrantlee::GrantleePrint *grantleePrint = new KAddressBookGrantlee::GrantleePrint;
-    grantleePrint->setContent(QLatin1String("foo"));
+    grantleePrint->setContent(QStringLiteral("foo"));
     KContacts::Addressee::List lst;
 
     QVERIFY(grantleePrint->contactsToHtml(lst).isEmpty());
@@ -62,14 +62,14 @@ void GrantleePrintTest::shouldReturnEmptyStringWhenAddContentWithoutContacts()
 void GrantleePrintTest::shouldReturnStringWhenAddContentAndContacts()
 {
     KAddressBookGrantlee::GrantleePrint *grantleePrint = new KAddressBookGrantlee::GrantleePrint;
-    grantleePrint->setContent(QLatin1String("foo"));
+    grantleePrint->setContent(QStringLiteral("foo"));
     KContacts::Addressee::List lst;
     KContacts::Addressee address;
-    address.setName(QLatin1String("foo1"));
-    address.insertEmail(QLatin1String("foo@kde.org"), true);
+    address.setName(QStringLiteral("foo1"));
+    address.insertEmail(QStringLiteral("foo@kde.org"), true);
     lst << address;
 
-    QCOMPARE(grantleePrint->contactsToHtml(lst), QLatin1String("foo"));
+    QCOMPARE(grantleePrint->contactsToHtml(lst), QStringLiteral("foo"));
     grantleePrint->deleteLater();
     grantleePrint = Q_NULLPTR;
 }
@@ -79,12 +79,12 @@ void GrantleePrintTest::shouldReturnEmails()
     KAddressBookGrantlee::GrantleePrint *grantleePrint = new KAddressBookGrantlee::GrantleePrint;
     KContacts::Addressee::List lst;
     KContacts::Addressee address;
-    address.setName(QLatin1String("foo1"));
-    address.insertEmail(QLatin1String("foo@kde.org"), true);
+    address.setName(QStringLiteral("foo1"));
+    address.insertEmail(QStringLiteral("foo@kde.org"), true);
     lst << address;
-    grantleePrint->setContent(QLatin1String("{% if contacts %}{% for contact in contacts %}{% if contact.name %}{{ contact.name }}{% endif %}{% endfor %}{% endif %}"));
+    grantleePrint->setContent(QStringLiteral("{% if contacts %}{% for contact in contacts %}{% if contact.name %}{{ contact.name }}{% endif %}{% endfor %}{% endif %}"));
 
-    QCOMPARE(grantleePrint->contactsToHtml(lst), QLatin1String("foo1"));
+    QCOMPARE(grantleePrint->contactsToHtml(lst), QStringLiteral("foo1"));
     grantleePrint->deleteLater();
     grantleePrint = Q_NULLPTR;
 }
@@ -93,24 +93,24 @@ void GrantleePrintTest::shouldDisplayContactInfo_data()
 {
     QTest::addColumn<QString>("variable");
     QTest::addColumn<QString>("result");
-    QTest::newRow("name") << QString(QLatin1String("name")) << QString(QLatin1String("foo1"));
-    QTest::newRow("organization") << QString(QLatin1String("organization")) << QString(QLatin1String("kde"));
-    QTest::newRow("languages") << QString(QLatin1String("languages")) << QString(QLatin1String("fr"));
-    QTest::newRow("note") << QString(QLatin1String("note")) << QString(QLatin1String("foo-note"));
-    QTest::newRow("title") << QString(QLatin1String("title")) << QString(QLatin1String("foo-title"));
-    QTest::newRow("nickName") << QString(QLatin1String("nickName")) << QString(QLatin1String("foo-nickname"));
-    QTest::newRow("familyName") << QString(QLatin1String("familyName")) << QString(QLatin1String("foo-familyname"));
-    QTest::newRow("role") << QString(QLatin1String("role")) << QString(QLatin1String("foo-role"));
-    QTest::newRow("suffix") << QString(QLatin1String("suffix")) << QString(QLatin1String("foo-suffix"));
-    QTest::newRow("prefix") << QString(QLatin1String("prefix")) << QString(QLatin1String("foo-prefix"));
-    QTest::newRow("department") << QString(QLatin1String("department")) << QString(QLatin1String("foo-department"));
-    QTest::newRow("office") << QString(QLatin1String("office")) << QString(QLatin1String("foo-office"));
-    QTest::newRow("profesion") << QString(QLatin1String("profession")) << QString(QLatin1String("foo-profession"));
-    QTest::newRow("manager") << QString(QLatin1String("manager")) << QString(QLatin1String("foo-managersname"));
-    QTest::newRow("assistant") << QString(QLatin1String("assistant")) << QString(QLatin1String("foo-assistantsname"));
-    QTest::newRow("spouse") << QString(QLatin1String("spouse")) << QString(QLatin1String("foo-spousesname"));
-    QTest::newRow("givenname") << QString(QLatin1String("givenName")) << QString(QLatin1String("foo-givenname"));
-    QTest::newRow("additionalname") << QString(QLatin1String("additionalName")) << QString(QLatin1String("foo-additionalname"));
+    QTest::newRow("name") << QString(QStringLiteral("name")) << QString(QStringLiteral("foo1"));
+    QTest::newRow("organization") << QString(QStringLiteral("organization")) << QString(QStringLiteral("kde"));
+    QTest::newRow("languages") << QString(QStringLiteral("languages")) << QString(QStringLiteral("fr"));
+    QTest::newRow("note") << QString(QStringLiteral("note")) << QString(QStringLiteral("foo-note"));
+    QTest::newRow("title") << QString(QStringLiteral("title")) << QString(QStringLiteral("foo-title"));
+    QTest::newRow("nickName") << QString(QStringLiteral("nickName")) << QString(QStringLiteral("foo-nickname"));
+    QTest::newRow("familyName") << QString(QStringLiteral("familyName")) << QString(QStringLiteral("foo-familyname"));
+    QTest::newRow("role") << QString(QStringLiteral("role")) << QString(QStringLiteral("foo-role"));
+    QTest::newRow("suffix") << QString(QStringLiteral("suffix")) << QString(QStringLiteral("foo-suffix"));
+    QTest::newRow("prefix") << QString(QStringLiteral("prefix")) << QString(QStringLiteral("foo-prefix"));
+    QTest::newRow("department") << QString(QStringLiteral("department")) << QString(QStringLiteral("foo-department"));
+    QTest::newRow("office") << QString(QStringLiteral("office")) << QString(QStringLiteral("foo-office"));
+    QTest::newRow("profesion") << QString(QStringLiteral("profession")) << QString(QStringLiteral("foo-profession"));
+    QTest::newRow("manager") << QString(QStringLiteral("manager")) << QString(QStringLiteral("foo-managersname"));
+    QTest::newRow("assistant") << QString(QStringLiteral("assistant")) << QString(QStringLiteral("foo-assistantsname"));
+    QTest::newRow("spouse") << QString(QStringLiteral("spouse")) << QString(QStringLiteral("foo-spousesname"));
+    QTest::newRow("givenname") << QString(QStringLiteral("givenName")) << QString(QStringLiteral("foo-givenname"));
+    QTest::newRow("additionalname") << QString(QStringLiteral("additionalName")) << QString(QStringLiteral("foo-additionalname"));
 #if 0
     QString realName() const;
     QString formattedName() const;
@@ -137,26 +137,26 @@ void GrantleePrintTest::shouldDisplayContactInfo()
     KAddressBookGrantlee::GrantleePrint *grantleePrint = new KAddressBookGrantlee::GrantleePrint;
     KContacts::Addressee::List lst;
     KContacts::Addressee address;
-    address.setGivenName(QLatin1String("foo-givenname"));
-    address.setAdditionalName(QLatin1String("foo-additionalname"));
-    address.setName(QLatin1String("foo1"));
-    address.insertEmail(QLatin1String("foo@kde.org"), true);
-    address.setOrganization(QLatin1String("kde"));
-    address.insertLang(KContacts::Lang(QLatin1String("fr")));
-    address.setNote(QLatin1String("foo-note"));
-    address.setTitle(QLatin1String("foo-title"));
-    address.setNickName(QLatin1String("foo-nickname"));
-    address.setFamilyName(QLatin1String("foo-familyname"));
-    address.setRole(QLatin1String("foo-role"));
-    address.setSuffix(QLatin1String("foo-suffix"));
-    address.setPrefix(QLatin1String("foo-prefix"));
-    address.setDepartment(QLatin1String("foo-department"));
-    address.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-Office" ), QString(QLatin1String("foo-office")));
-    address.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-Profession" ) , QString(QLatin1String("foo-profession")));
-    address.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-Office" ) , QString(QLatin1String("foo-office")));
-    address.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-ManagersName" ) , QString(QLatin1String("foo-managersname")));
-    address.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-AssistantsName" ) , QString(QLatin1String("foo-assistantsname")));
-    address.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-SpousesName" ) , QString(QLatin1String("foo-spousesname")));
+    address.setGivenName(QStringLiteral("foo-givenname"));
+    address.setAdditionalName(QStringLiteral("foo-additionalname"));
+    address.setName(QStringLiteral("foo1"));
+    address.insertEmail(QStringLiteral("foo@kde.org"), true);
+    address.setOrganization(QStringLiteral("kde"));
+    address.insertLang(KContacts::Lang(QStringLiteral("fr")));
+    address.setNote(QStringLiteral("foo-note"));
+    address.setTitle(QStringLiteral("foo-title"));
+    address.setNickName(QStringLiteral("foo-nickname"));
+    address.setFamilyName(QStringLiteral("foo-familyname"));
+    address.setRole(QStringLiteral("foo-role"));
+    address.setSuffix(QStringLiteral("foo-suffix"));
+    address.setPrefix(QStringLiteral("foo-prefix"));
+    address.setDepartment(QStringLiteral("foo-department"));
+    address.insertCustom( QStringLiteral( "KADDRESSBOOK" ), QStringLiteral( "X-Office" ), QString(QStringLiteral("foo-office")));
+    address.insertCustom( QStringLiteral( "KADDRESSBOOK" ), QStringLiteral( "X-Profession" ) , QString(QStringLiteral("foo-profession")));
+    address.insertCustom( QStringLiteral( "KADDRESSBOOK" ), QStringLiteral( "X-Office" ) , QString(QStringLiteral("foo-office")));
+    address.insertCustom( QStringLiteral( "KADDRESSBOOK" ), QStringLiteral( "X-ManagersName" ) , QString(QStringLiteral("foo-managersname")));
+    address.insertCustom( QStringLiteral( "KADDRESSBOOK" ), QStringLiteral( "X-AssistantsName" ) , QString(QStringLiteral("foo-assistantsname")));
+    address.insertCustom( QStringLiteral( "KADDRESSBOOK" ), QStringLiteral( "X-SpousesName" ) , QString(QStringLiteral("foo-spousesname")));
 
     lst << address;
     grantleePrint->setContent(QString::fromLatin1("{% if contacts %}{% for contact in contacts %}{% if contact.%1 %}{{ contact.%1 }}{% endif %}{% endfor %}{% endif %}").arg(variable));

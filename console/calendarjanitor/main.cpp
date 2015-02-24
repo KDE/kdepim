@@ -56,8 +56,8 @@ static void print(const QString &message)
 
 static void printCollectionsUsage()
 {
-    print(i18n("Error while parsing %1", QLatin1String("--collections")));
-    print(i18n("Example usage %1", QLatin1String(": --collections 90,23,40")));
+    print(i18n("Error while parsing %1", QStringLiteral("--collections")));
+    print(i18n("Example usage %1", QStringLiteral(": --collections 90,23,40")));
 }
 
 static void silenceStderr()
@@ -115,7 +115,7 @@ int main(int argv, char *argc[])
 
     if (args->isSet("collections")) {
         QString option = args->getOption("collections");
-        QStringList collections = option.split(QLatin1String(","));
+        QStringList collections = option.split(QStringLiteral(","));
         QList<Akonadi::Collection::Id> ids;
         foreach (const QString &collection, collections) {
             bool ok = false;

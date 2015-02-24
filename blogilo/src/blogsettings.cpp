@@ -42,9 +42,9 @@ BlogSettings::BlogSettings(QWidget *parent)
     connect(blogsTable, &QTreeWidget::doubleClicked, this, &BlogSettings::editBlog);
 
     blogsTable->setHeaderLabels(QStringList() << i18n("Title") << i18n("URL"));
-    btnAdd->setIcon(QIcon::fromTheme(QLatin1String("list-add")));
-    btnEdit->setIcon(QIcon::fromTheme(QLatin1String("edit-rename")));
-    btnRemove->setIcon(QIcon::fromTheme(QLatin1String("list-remove")));
+    btnAdd->setIcon(QIcon::fromTheme(QStringLiteral("list-add")));
+    btnEdit->setIcon(QIcon::fromTheme(QStringLiteral("edit-rename")));
+    btnRemove->setIcon(QIcon::fromTheme(QStringLiteral("list-remove")));
     loadBlogsList();
 }
 

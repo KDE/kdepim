@@ -68,7 +68,7 @@ ConfigureStorageServiceWidget::ConfigureStorageServiceWidget(PimCommon::StorageS
     hbox->addWidget(mManageStorageService);
     hbox->addStretch();
     lay->addLayout(hbox);
-    if (QStandardPaths::findExecutable(QLatin1String("storageservicemanager")).isEmpty()) {
+    if (QStandardPaths::findExecutable(QStringLiteral("storageservicemanager")).isEmpty()) {
         mManageStorageService->setEnabled(false);
     } else {
         connect(mManageStorageService, &QPushButton::clicked, this, &ConfigureStorageServiceWidget::slotManageStorageService);
@@ -91,7 +91,7 @@ ConfigureStorageServiceWidget::~ConfigureStorageServiceWidget()
 
 void ConfigureStorageServiceWidget::slotManageStorageService()
 {
-    if (!QProcess::startDetached(QLatin1String("storageservicemanager")))
+    if (!QProcess::startDetached(QStringLiteral("storageservicemanager")))
         KMessageBox::error(this, i18n("Could not start storage service manager; "
                                       "please check your installation."),
                            i18n("KMail Error"));
