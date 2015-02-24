@@ -37,10 +37,10 @@ SendLaterConfigureDialogTest::~SendLaterConfigureDialogTest()
 void SendLaterConfigureDialogTest::shouldHaveDefaultValue()
 {
     SendLaterConfigureDialog dlg;
-    SendLaterWidget *infowidget = dlg.findChild<SendLaterWidget *>(QLatin1String("sendlaterwidget"));
+    SendLaterWidget *infowidget = dlg.findChild<SendLaterWidget *>(QStringLiteral("sendlaterwidget"));
     QVERIFY(infowidget);
 
-    QTreeWidget *treeWidget = infowidget->findChild<QTreeWidget *>(QLatin1String("treewidget"));
+    QTreeWidget *treeWidget = infowidget->findChild<QTreeWidget *>(QStringLiteral("treewidget"));
     QVERIFY(treeWidget);
 
     QCOMPARE(treeWidget->topLevelItemCount(), 0);

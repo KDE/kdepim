@@ -170,7 +170,7 @@ void PersonalDataPage::configureSmtpAccount()
         server s = mIspdb->smtpServers().first(); // should be ok.
         qCDebug(ACCOUNTWIZARD_LOG) << "Configuring transport for" << s.hostname;
 
-        QObject *object = mSetupManager->createTransport(QLatin1String("smtp"));
+        QObject *object = mSetupManager->createTransport(QStringLiteral("smtp"));
         Transport *t = qobject_cast<Transport *>(object);
         t->setName(accountName(mIspdb, s.username));
         t->setHost(s.hostname);
@@ -178,18 +178,18 @@ void PersonalDataPage::configureSmtpAccount()
         t->setUsername(s.username);
         t->setPassword(ui.passwordEdit->text());
         switch (s.authentication) {
-        case Ispdb::Plain: t->setAuthenticationType(QLatin1String("plain")); break;
-        case Ispdb::CramMD5: t->setAuthenticationType(QLatin1String("cram-md5")); break;
-        case Ispdb::NTLM: t->setAuthenticationType(QLatin1String("ntlm")); break;
-        case Ispdb::GSSAPI: t->setAuthenticationType(QLatin1String("gssapi")); break;
+        case Ispdb::Plain: t->setAuthenticationType(QStringLiteral("plain")); break;
+        case Ispdb::CramMD5: t->setAuthenticationType(QStringLiteral("cram-md5")); break;
+        case Ispdb::NTLM: t->setAuthenticationType(QStringLiteral("ntlm")); break;
+        case Ispdb::GSSAPI: t->setAuthenticationType(QStringLiteral("gssapi")); break;
         case Ispdb::ClientIP: break;
         case Ispdb::NoAuth: break;
         default: break;
         }
         switch (s.socketType) {
-        case Ispdb::Plain: t->setEncryption(QLatin1String("none")); break;
-        case Ispdb::SSL: t->setEncryption(QLatin1String("ssl")); break;
-        case Ispdb::StartTLS: t->setEncryption(QLatin1String("tls")); break;
+        case Ispdb::Plain: t->setEncryption(QStringLiteral("none")); break;
+        case Ispdb::SSL: t->setEncryption(QStringLiteral("ssl")); break;
+        case Ispdb::StartTLS: t->setEncryption(QStringLiteral("tls")); break;
         default: break;
         }
     } else {
@@ -203,26 +203,26 @@ void PersonalDataPage::configureImapAccount()
         server s = mIspdb->imapServers().first(); // should be ok.
         qCDebug(ACCOUNTWIZARD_LOG) << "Configuring imap for" << s.hostname;
 
-        QObject *object = mSetupManager->createResource(QLatin1String("akonadi_imap_resource"));
+        QObject *object = mSetupManager->createResource(QStringLiteral("akonadi_imap_resource"));
         Resource *t = qobject_cast<Resource *>(object);
         t->setName(accountName(mIspdb, s.username));
-        t->setOption(QLatin1String("ImapServer"), s.hostname);
-        t->setOption(QLatin1String("ImapPort"), s.port);
-        t->setOption(QLatin1String("UserName"), s.username);
-        t->setOption(QLatin1String("Password"), ui.passwordEdit->text());
+        t->setOption(QStringLiteral("ImapServer"), s.hostname);
+        t->setOption(QStringLiteral("ImapPort"), s.port);
+        t->setOption(QStringLiteral("UserName"), s.username);
+        t->setOption(QStringLiteral("Password"), ui.passwordEdit->text());
         switch (s.authentication) {
-        case Ispdb::Plain: t->setOption(QLatin1String("Authentication"), MailTransport::Transport::EnumAuthenticationType::CLEAR); break;
-        case Ispdb::CramMD5: t->setOption(QLatin1String("Authentication"), MailTransport::Transport::EnumAuthenticationType::CRAM_MD5); break;
-        case Ispdb::NTLM: t->setOption(QLatin1String("Authentication"), MailTransport::Transport::EnumAuthenticationType::NTLM); break;
-        case Ispdb::GSSAPI: t->setOption(QLatin1String("Authentication"), MailTransport::Transport::EnumAuthenticationType::GSSAPI); break;
+        case Ispdb::Plain: t->setOption(QStringLiteral("Authentication"), MailTransport::Transport::EnumAuthenticationType::CLEAR); break;
+        case Ispdb::CramMD5: t->setOption(QStringLiteral("Authentication"), MailTransport::Transport::EnumAuthenticationType::CRAM_MD5); break;
+        case Ispdb::NTLM: t->setOption(QStringLiteral("Authentication"), MailTransport::Transport::EnumAuthenticationType::NTLM); break;
+        case Ispdb::GSSAPI: t->setOption(QStringLiteral("Authentication"), MailTransport::Transport::EnumAuthenticationType::GSSAPI); break;
         case Ispdb::ClientIP: break;
         case Ispdb::NoAuth: break;
         default: break;
         }
         switch (s.socketType) {
-        case Ispdb::None: t->setOption(QLatin1String("Safety"), QLatin1String("None")); break;
-        case Ispdb::SSL: t->setOption(QLatin1String("Safety"), QLatin1String("SSL")); break;
-        case Ispdb::StartTLS: t->setOption(QLatin1String("Safety"), QLatin1String("STARTTLS")); break;
+        case Ispdb::None: t->setOption(QStringLiteral("Safety"), QStringLiteral("None")); break;
+        case Ispdb::SSL: t->setOption(QStringLiteral("Safety"), QStringLiteral("SSL")); break;
+        case Ispdb::StartTLS: t->setOption(QStringLiteral("Safety"), QStringLiteral("STARTTLS")); break;
         default: break;
         }
     }
@@ -234,27 +234,27 @@ void PersonalDataPage::configurePop3Account()
         server s = mIspdb->pop3Servers().first(); // should be ok.
         qCDebug(ACCOUNTWIZARD_LOG) << "No Imap to be created, configuring pop3 for" << s.hostname;
 
-        QObject *object = mSetupManager->createResource(QLatin1String("akonadi_pop3_resource"));
+        QObject *object = mSetupManager->createResource(QStringLiteral("akonadi_pop3_resource"));
         Resource *t = qobject_cast<Resource *>(object);
         t->setName(accountName(mIspdb, s.username));
-        t->setOption(QLatin1String("Host"), s.hostname);
-        t->setOption(QLatin1String("Port"), s.port);
-        t->setOption(QLatin1String("Login"), s.username);
-        t->setOption(QLatin1String("Password"), ui.passwordEdit->text());
+        t->setOption(QStringLiteral("Host"), s.hostname);
+        t->setOption(QStringLiteral("Port"), s.port);
+        t->setOption(QStringLiteral("Login"), s.username);
+        t->setOption(QStringLiteral("Password"), ui.passwordEdit->text());
         switch (s.authentication) {
-        case Ispdb::Plain: t->setOption(QLatin1String("AuthenticationMethod"), MailTransport::Transport::EnumAuthenticationType::PLAIN); break;
-        case Ispdb::CramMD5: t->setOption(QLatin1String("AuthenticationMethod"), MailTransport::Transport::EnumAuthenticationType::CRAM_MD5); break;
-        case Ispdb::NTLM: t->setOption(QLatin1String("AuthenticationMethod"), MailTransport::Transport::EnumAuthenticationType::NTLM); break;
-        case Ispdb::GSSAPI: t->setOption(QLatin1String("AuthenticationMethod"), MailTransport::Transport::EnumAuthenticationType::GSSAPI); break;
+        case Ispdb::Plain: t->setOption(QStringLiteral("AuthenticationMethod"), MailTransport::Transport::EnumAuthenticationType::PLAIN); break;
+        case Ispdb::CramMD5: t->setOption(QStringLiteral("AuthenticationMethod"), MailTransport::Transport::EnumAuthenticationType::CRAM_MD5); break;
+        case Ispdb::NTLM: t->setOption(QStringLiteral("AuthenticationMethod"), MailTransport::Transport::EnumAuthenticationType::NTLM); break;
+        case Ispdb::GSSAPI: t->setOption(QStringLiteral("AuthenticationMethod"), MailTransport::Transport::EnumAuthenticationType::GSSAPI); break;
         case Ispdb::ClientIP:
         case Ispdb::NoAuth:
-        default: t->setOption(QLatin1String("AuthenticationMethod"), MailTransport::Transport::EnumAuthenticationType::CLEAR); break;
+        default: t->setOption(QStringLiteral("AuthenticationMethod"), MailTransport::Transport::EnumAuthenticationType::CLEAR); break;
         }
         switch (s.socketType) {
-        case Ispdb::SSL: t->setOption(QLatin1String("UseSSL"), 1); break;
-        case Ispdb::StartTLS: t->setOption(QLatin1String("UseTLS"), 1); break;
+        case Ispdb::SSL: t->setOption(QStringLiteral("UseSSL"), 1); break;
+        case Ispdb::StartTLS: t->setOption(QStringLiteral("UseTLS"), 1); break;
         case Ispdb::None:
-        default: t->setOption(QLatin1String("UseTLS"), 1); break;
+        default: t->setOption(QStringLiteral("UseTLS"), 1); break;
         }
     }
 }

@@ -119,7 +119,7 @@ bool SendLater::SendLaterUtil::sentLaterAgentEnabled()
 void SendLater::SendLaterUtil::reload()
 {
     qDebug() << " void SendLater::SendLaterUtil::reload()";
-    QDBusInterface interface(QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_sendlater_agent"), QLatin1String("/SendLaterAgent"));
+    QDBusInterface interface(QStringLiteral("org.freedesktop.Akonadi.Agent.akonadi_sendlater_agent"), QStringLiteral("/SendLaterAgent"));
     if (interface.isValid()) {
         interface.call(QStringLiteral("reload"));
     } else {

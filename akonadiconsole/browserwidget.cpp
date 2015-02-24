@@ -513,11 +513,11 @@ void BrowserWidget::tagViewContextMenuRequested(const QPoint &pos)
     const QModelIndex index = mTagView->indexAt(pos);
     QMenu *menu = new QMenu(this);
     connect(menu, &QMenu::aboutToHide, menu, &QMenu::deleteLater);
-    menu->addAction(QIcon::fromTheme(QLatin1String("list-add")), i18n("&Add tag..."), this, SLOT(addTagRequested()));
+    menu->addAction(QIcon::fromTheme(QStringLiteral("list-add")), i18n("&Add tag..."), this, SLOT(addTagRequested()));
     if (index.isValid()) {
         menu->addAction(i18n("Add &subtag..."), this, SLOT(addSubTagRequested()));
-        menu->addAction(QIcon::fromTheme(QLatin1String("document-edit")), i18n("&Edit tag..."), this, SLOT(editTagRequested()), QKeySequence(Qt::Key_Return));
-        menu->addAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("&Delete tag..."), this, SLOT(removeTagRequested()), QKeySequence::Delete);
+        menu->addAction(QIcon::fromTheme(QStringLiteral("document-edit")), i18n("&Edit tag..."), this, SLOT(editTagRequested()), QKeySequence(Qt::Key_Return));
+        menu->addAction(QIcon::fromTheme(QStringLiteral("edit-delete")), i18n("&Delete tag..."), this, SLOT(removeTagRequested()), QKeySequence::Delete);
         menu->setProperty("Tag", index.data(TagModel::TagRole));
     }
 

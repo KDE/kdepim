@@ -47,7 +47,7 @@ void Ldap::create()
     // If the user gave a full email address, the domain name
     // of that overrides the server name for the ldap dn
     const QString user = m_user;
-    int pos = user.indexOf(QLatin1String("@"));
+    int pos = user.indexOf(QStringLiteral("@"));
     if (pos > 0) {
         const QString h = user.mid(pos + 1);
         if (!h.isEmpty())
@@ -58,16 +58,16 @@ void Ldap::create()
     }
     {
         // while we're here, write default domain
-        KConfig c(QLatin1String("kmail2rc"));
+        KConfig c(QStringLiteral("kmail2rc"));
         KConfigGroup group = c.group("General");
         group.writeEntry("Default domain", basedn);
     }
 
-    basedn.replace(QLatin1Char('.'), QLatin1String(",dc="));
-    basedn.prepend(QLatin1String("dc="));
+    basedn.replace(QLatin1Char('.'), QStringLiteral(",dc="));
+    basedn.prepend(QStringLiteral("dc="));
 
     // Set the changes
-    KConfig c(QLatin1String("kabldaprc"));
+    KConfig c(QStringLiteral("kabldaprc"));
     KConfigGroup group = c.group("LDAP");
     bool hasMyServer = false;
     uint selHosts = group.readEntry("NumSelectedHosts", 0);

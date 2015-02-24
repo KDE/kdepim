@@ -36,11 +36,11 @@ SendLaterTimeDateWidget::SendLaterTimeDateWidget(QWidget *parent)
     t = t.addSecs(60 * 60);
     mTimeComboBox = new KTimeComboBox;
     connect(mTimeComboBox, &KTimeComboBox::timeChanged, this, &SendLaterTimeDateWidget::slotDateTimeChanged);
-    mTimeComboBox->setObjectName(QLatin1String("time_sendlater"));
+    mTimeComboBox->setObjectName(QStringLiteral("time_sendlater"));
 
     mDateComboBox = new KDateComboBox;
     mDateComboBox->setOptions(KDateComboBox::EditDate | KDateComboBox::SelectDate | KDateComboBox::DatePicker | KDateComboBox::DateKeywords | KDateComboBox::WarnOnInvalid);
-    mDateComboBox->setObjectName(QLatin1String("date_sendlater"));
+    mDateComboBox->setObjectName(QStringLiteral("date_sendlater"));
     connect(mDateComboBox->lineEdit(),SIGNAL(textChanged(QString)), SIGNAL(dateChanged(QString)));
     mDateComboBox->setMinimumDate(t.date(), i18n("You cannot select a date prior to the current date."));
     connect(mDateComboBox, &KDateComboBox::dateChanged, this, &SendLaterTimeDateWidget::slotDateTimeChanged);

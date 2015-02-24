@@ -26,7 +26,7 @@
 
 int main(int argc, char **argv)
 {
-    KAboutData aboutData(QLatin1String("sendlaterdialog_gui"), i18n("SendLaterDialog_Gui"), QLatin1String("1.0"));
+    KAboutData aboutData(QStringLiteral("sendlaterdialog_gui"), i18n("SendLaterDialog_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for autocreate sendlater dialog"));
     QApplication app(argc, argv);
     QCommandLineParser parser;

@@ -56,9 +56,9 @@ void CreateColorGui_test::createListWidgetItem()
 
 int main(int argc, char **argv)
 {
-    KAboutData aboutData(QLatin1String("CreateColorGui_test"), i18n("CreateColorGui_test"), QLatin1String("1.0"));
-    aboutData.setShortDescription(i18n("Test creating color"));
     QApplication app(argc, argv);
+    KAboutData aboutData(QStringLiteral("CreateColorGui_test"), i18n("CreateColorGui_test"), QStringLiteral("1.0"));
+    aboutData.setShortDescription(i18n("Test creating color"));
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
     parser.addVersionOption();

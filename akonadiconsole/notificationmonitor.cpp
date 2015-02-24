@@ -57,7 +57,7 @@ NotificationMonitor::NotificationMonitor(QWidget *parent) :
     layout->addWidget(tv);
 
     QHBoxLayout *layout2 = new QHBoxLayout(this);
-    QPushButton *button = new QPushButton(QLatin1String("Save to file..."), this);
+    QPushButton *button = new QPushButton(QStringLiteral("Save to file..."), this);
     connect(button, &QPushButton::clicked, this, &NotificationMonitor::slotSaveToFile);
     layout2->addWidget(button);
     layout2->addStretch(1);
