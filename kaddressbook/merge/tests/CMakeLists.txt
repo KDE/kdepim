@@ -21,7 +21,7 @@ add_akonadi_isolated_test_advanced( mergecontactinfowidgettest.cpp "../widgets/m
 add_akonadi_isolated_test_advanced( searchandmergecontactduplicatecontactdialogtest.cpp "" "kaddressbookprivate")
 add_akonadi_isolated_test_advanced( searchduplicateresultwidgettest.cpp "" "kaddressbookprivate;kaddressbookgrantlee;kabc")
 add_akonadi_isolated_test_advanced( resultduplicatetreewidgettest.cpp "" "kaddressbookprivate;kabc")
-add_akonadi_isolated_test_advanced( searchpotentialduplicatecontactjobtest.cpp "" "kaddressbookprivate;kabc")
+add_akonadi_isolated_test_advanced( searchpotentialduplicatecontactjobtest.cpp "../job/searchpotentialduplicatecontactjob.cpp" "kabc")
 add_akonadi_isolated_test_advanced( mergecontactselectinformationwidgettest.cpp "" "kaddressbookprivate;kabc")
 add_akonadi_isolated_test_advanced( mergecontactselectlistwidgettest.cpp "" "kaddressbookprivate;kabc")
 

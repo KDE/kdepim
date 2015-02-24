@@ -20,8 +20,6 @@
 
 #include <QWidget>
 
-#include "kaddressbook_export.h"
-
 #include <Akonadi/Item>
 class QLabel;
 namespace KAddressBookGrantlee {

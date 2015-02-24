@@ -22,10 +22,9 @@
 #include <QObject>
 #include <Akonadi/Item>
 
-#include "kaddressbook_export.h"
 
 namespace KABMergeContacts {
-class KADDRESSBOOK_EXPORT SearchPotentialDuplicateContactJob : public QObject
+class SearchPotentialDuplicateContactJob : public QObject
 {
     Q_OBJECT
 public:
