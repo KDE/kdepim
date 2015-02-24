@@ -12,13 +12,13 @@ macro( kaddressbook_merge _source _additional _additionallib)
   target_link_libraries( ${_name} kaddressbookprivate Qt5::Test  KF5::AkonadiCore KF5::Contacts ${_additionallib})
 endmacro()
 
-kaddressbook_merge(mergecontactwidgettest.cpp "../widgets/mergecontactinfowidget.cpp" "kaddressbookgrantlee;KF5::AkonadiContact")
 kaddressbook_merge(mergecontactstest.cpp "../job/mergecontacts.cpp" "")
 
 set(KDEPIMLIBS_RUN_ISOLATED_TESTS TRUE)
 set(KDEPIMLIBS_RUN_SQLITE_ISOLATED_TESTS TRUE)
 
 add_akonadi_isolated_test_advanced( mergecontactinfowidgettest.cpp "../widgets/mergecontactinfowidget.cpp" "KF5::AkonadiContact;kaddressbookgrantlee")
+add_akonadi_isolated_test_advanced( mergecontactwidgettest.cpp "../widgets/mergecontactinfowidget.cpp" "kaddressbookprivate;kaddressbookgrantlee;KF5::Contacts;KF5::AkonadiContact")
 add_akonadi_isolated_test_advanced( searchandmergecontactduplicatecontactdialogtest.cpp "" "kaddressbookprivate")
 add_akonadi_isolated_test_advanced( searchduplicateresultwidgettest.cpp "" "kaddressbookprivate;kaddressbookgrantlee;KF5::Contacts")
 add_akonadi_isolated_test_advanced( resultduplicatetreewidgettest.cpp "" "kaddressbookprivate;KF5::Contacts")

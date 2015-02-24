@@ -87,15 +87,6 @@ void MergeContactWidgetTest::shouldHaveDefaultValueOnCreation()
     QVERIFY(warningWidget);
     QVERIFY(warningWidget->isHidden());
 
-    QWidget *selectContactWidget = mergeWidget.findChild<QWidget *>(QStringLiteral("selectcontactwidget"));
-    QVERIFY(selectContactWidget);
-
-    MergeContactInfoWidget *contactInfoWidget = mergeWidget.findChild<MergeContactInfoWidget *>(QStringLiteral("mergecontactinfowidget"));
-    QVERIFY(contactInfoWidget);
-
-    MergeContactLoseInformationWarning *warning = mergeWidget.findChild<MergeContactLoseInformationWarning *>(QStringLiteral("mergecontactwarning"));
-    QVERIFY(warning);
-
     QSplitter *splitter = mergeWidget.findChild<QSplitter *>(QStringLiteral("splitter"));
     QVERIFY(splitter);
     QVERIFY(!splitter->childrenCollapsible());

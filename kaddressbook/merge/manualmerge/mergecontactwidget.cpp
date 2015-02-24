@@ -50,7 +50,7 @@ MergeContactWidget::MergeContactWidget(QWidget *parent)
     splitter->setChildrenCollapsible(false);
     lay->addWidget(splitter);
 
-    QWidget *selectContactWidget = new QWidget;
+    QWidget *selectContactWidget = new QWidget(this);
     selectContactWidget->setObjectName(QLatin1String("selectcontactwidget"));
     QVBoxLayout *vbox = new QVBoxLayout;
     selectContactWidget->setLayout(vbox);
