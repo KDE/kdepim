@@ -132,7 +132,6 @@ Action=Popup
 
 [Event/mailfilterjoberror]
 Name=An error occurred during filtering
-Name[bs]=Desila se greška prilikom filtriranja
 Name[ca]=S'ha detectat un error durant el filtratge
 Name[de]=Es ist ein Fehler beim Filtern aufgetreten
 Name[en_GB]=An error occurred during filtering

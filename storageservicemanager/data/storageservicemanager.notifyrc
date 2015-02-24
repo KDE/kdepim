@@ -1,7 +1,6 @@
 [Global]
 IconName=kmail
 Comment=StorageServiceManager
-Comment[bs]=StorageServiceManager
 Comment[ca]=Gestor del servei d'emmagatzematge
 Comment[ca@valencia]=Gestor del servei d'emmagatzematge
 Comment[cs]=Správce služeb úložiště
@@ -36,7 +35,6 @@ Comment[zh_TW]=儲存服務管理員
 
 [Event/action-failed]
 Name=Action Failed
-Name[bs]=Radnja nije uspjela
 Name[ca]=L'acció ha fallat
 Name[ca@valencia]=L'acció ha fallat
 Name[cs]=Činnost selhala
@@ -69,7 +67,6 @@ Name[uk]=Помилка під час дії
 Name[x-test]=xxAction Failedxx
 Name[zh_TW]=動作失敗
 Comment=An error was returned
-Comment[bs]=Vraćena je greška
 Comment[ca]=S'ha retornat un error
 Comment[ca@valencia]=S'ha retornat un error
 Comment[da]=En fejl blev returneret
