@@ -51,13 +51,13 @@ void MergeContactSelectInformationScrollAreaTest::shouldHaveDefaultValue()
             qFindChild<KABMergeContacts::MergeContactSelectInformationWidget *>(&w, QLatin1String("selectinformationwidget"));
     QVERIFY(widget);
 
-    KABMergeContacts::MergeContactInfoWidget *mergecontactinfowidget = qFindChild<KABMergeContacts::MergeContactInfoWidget *>(&w, QLatin1String("mergedcontactwidget"));
-    QVERIFY(mergecontactinfowidget);
-
-    QWidget *selectWidget = qFindChild<QWidget *>(&w, QLatin1String("selectwidget"));
-    QVERIFY(selectWidget);
-
-    QCOMPARE(stackedwidget->currentWidget(), selectWidget);
+    for(int i = 0; i < stackedwidget->count(); ++i) {
+        QWidget *w = stackedwidget->widget(i);
+        const QString objName = w->objectName();
+        bool hasCorrectName = (objName == QLatin1String("mergedcontactwidget")) || (objName ==  QLatin1String("selectwidget"));
+        QVERIFY(hasCorrectName);
+    }
+    QCOMPARE(stackedwidget->currentWidget()->objectName(), QLatin1String("selectwidget"));
 }
 
 QTEST_KDEMAIN(MergeContactSelectInformationScrollAreaTest, GUI)
