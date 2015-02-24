@@ -155,7 +155,7 @@ class TemplateSelectionDelegate : public QStyledItemDelegate
 {
 public:
     explicit TemplateSelectionDelegate(QObject *parent = Q_NULLPTR)
-        : QStyledItemDelegate(parent), mIcon(QLatin1String("list-remove"))
+        : QStyledItemDelegate(parent), mIcon(QIcon::fromTheme(QLatin1String("list-remove")))
     {
     }
 
