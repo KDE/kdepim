@@ -30,7 +30,7 @@ class GrantleeContactViewer;
 
 class QStackedWidget;
 namespace KABMergeContacts {
-class KADDRESSBOOK_EXPORT MergeContactInfoWidget : public QWidget
+class MergeContactInfoWidget : public QWidget
 {
     Q_OBJECT
 public:
