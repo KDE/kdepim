@@ -22,7 +22,7 @@
 
 using namespace KSieveUi;
 SieveActionReturn::SieveActionReturn(QObject *parent)
-    : SieveAction(QLatin1String("return"), i18n("Return"), parent)
+    : SieveAction(QStringLiteral("return"), i18n("Return"), parent)
 {
 }
 
@@ -33,7 +33,7 @@ SieveAction *SieveActionReturn::newAction()
 
 QString SieveActionReturn::code(QWidget *) const
 {
-    return QLatin1String("return;");
+    return QStringLiteral("return;");
 }
 
 QString SieveActionReturn::href() const
@@ -48,7 +48,7 @@ QString SieveActionReturn::help() const
 
 QStringList SieveActionReturn::needRequires(QWidget */*parent*/) const
 {
-    return QStringList() << QLatin1String("include");
+    return QStringList() << QStringLiteral("include");
 }
 
 bool SieveActionReturn::needCheckIfServerHasCapability() const
@@ -58,6 +58,6 @@ bool SieveActionReturn::needCheckIfServerHasCapability() const
 
 QString SieveActionReturn::serverNeedsCapability() const
 {
-    return QLatin1String("include");
+    return QStringLiteral("include");
 }
 

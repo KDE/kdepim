@@ -23,7 +23,7 @@
 using namespace KSieveUi;
 
 SieveActionStop::SieveActionStop(QObject *parent)
-    : SieveAction(QLatin1String("stop"), i18n("Stop"), parent)
+    : SieveAction(QStringLiteral("stop"), i18n("Stop"), parent)
 {
 }
 
@@ -34,7 +34,7 @@ SieveAction *SieveActionStop::newAction()
 
 QString SieveActionStop::code(QWidget *) const
 {
-    return QLatin1String("stop;");
+    return QStringLiteral("stop;");
 }
 
 QString SieveActionStop::help() const

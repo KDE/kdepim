@@ -76,7 +76,7 @@ extern "C"
     {
         CryptoOperationsConfigurationPage *page =
             new CryptoOperationsConfigurationPage(parent, args);
-        page->setObjectName(QLatin1String("kleopatra_config_cryptooperations"));
+        page->setObjectName(QStringLiteral("kleopatra_config_cryptooperations"));
         return page;
     }
 }

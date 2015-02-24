@@ -49,7 +49,7 @@ bool MailAppImportData::foundMailer() const
 
 QString MailAppImportData::name() const
 {
-    return QLatin1String("Mail App");
+    return QStringLiteral("Mail App");
 }
 
 bool MailAppImportData::importMails()

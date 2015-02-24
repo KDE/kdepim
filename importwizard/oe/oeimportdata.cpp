@@ -49,7 +49,7 @@ bool OeImportData::foundMailer() const
 
 QString OeImportData::name() const
 {
-    return QLatin1String("Outlook Express");
+    return QStringLiteral("Outlook Express");
 }
 
 bool OeImportData::importMails()

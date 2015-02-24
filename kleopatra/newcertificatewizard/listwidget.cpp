@@ -197,10 +197,10 @@ private:
         {
             setupUi(q);
 
-            addTB->setIcon(QIcon::fromTheme(QLatin1String("list-add")));
-            removeTB->setIcon(QIcon::fromTheme(QLatin1String("list-remove")));
-            upTB->setIcon(QIcon::fromTheme(QLatin1String("go-up")));
-            downTB->setIcon(QIcon::fromTheme(QLatin1String("go-down")));
+            addTB->setIcon(QIcon::fromTheme(QStringLiteral("list-add")));
+            removeTB->setIcon(QIcon::fromTheme(QStringLiteral("list-remove")));
+            upTB->setIcon(QIcon::fromTheme(QStringLiteral("go-up")));
+            downTB->setIcon(QIcon::fromTheme(QStringLiteral("go-down")));
         }
     } ui;
 

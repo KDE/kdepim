@@ -76,7 +76,7 @@ ComposerView::~ComposerView()
 
 QString ComposerView::initialHtml()
 {
-    return QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("composereditor/composereditorinitialhtml"));
+    return QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("composereditor/composereditorinitialhtml"));
 }
 
 void ComposerView::createActions(const QList<ComposerViewAction> &lstActions)
@@ -100,121 +100,121 @@ void ComposerView::addCreatedActionsToActionCollection(KActionCollection *action
 {
     if (actionCollection) {
         if (d->action_text_bold) {
-            actionCollection->addAction(QLatin1String("htmleditor_format_text_bold"), d->action_text_bold);
+            actionCollection->addAction(QStringLiteral("htmleditor_format_text_bold"), d->action_text_bold);
         }
         if (d->action_text_italic) {
-            actionCollection->addAction(QLatin1String("htmleditor_format_text_italic"), d->action_text_italic);
+            actionCollection->addAction(QStringLiteral("htmleditor_format_text_italic"), d->action_text_italic);
         }
         if (d->action_text_underline) {
-            actionCollection->addAction(QLatin1String("htmleditor_format_text_underline"), d->action_text_underline);
+            actionCollection->addAction(QStringLiteral("htmleditor_format_text_underline"), d->action_text_underline);
         }
         if (d->action_text_strikeout) {
-            actionCollection->addAction(QLatin1String("htmleditor_format_text_strikeout"), d->action_text_strikeout);
+            actionCollection->addAction(QStringLiteral("htmleditor_format_text_strikeout"), d->action_text_strikeout);
         }
         if (d->action_align_left) {
-            actionCollection->addAction(QLatin1String("htmleditor_format_align_left"), d->action_align_left);
+            actionCollection->addAction(QStringLiteral("htmleditor_format_align_left"), d->action_align_left);
         }
         if (d->action_align_center) {
-            actionCollection->addAction(QLatin1String("htmleditor_format_align_center"), d->action_align_center);
+            actionCollection->addAction(QStringLiteral("htmleditor_format_align_center"), d->action_align_center);
         }
         if (d->action_align_right) {
-            actionCollection->addAction(QLatin1String("htmleditor_format_align_right"), d->action_align_right);
+            actionCollection->addAction(QStringLiteral("htmleditor_format_align_right"), d->action_align_right);
         }
         if (d->action_align_justify) {
-            actionCollection->addAction(QLatin1String("htmleditor_format_align_justify"), d->action_align_justify);
+            actionCollection->addAction(QStringLiteral("htmleditor_format_align_justify"), d->action_align_justify);
         }
         if (d->action_direction_ltr) {
-            actionCollection->addAction(QLatin1String("htmleditor_direction_ltr"), d->action_direction_ltr);
+            actionCollection->addAction(QStringLiteral("htmleditor_direction_ltr"), d->action_direction_ltr);
         }
         if (d->action_direction_rtl) {
-            actionCollection->addAction(QLatin1String("htmleditor_direction_rtl"), d->action_direction_rtl);
+            actionCollection->addAction(QStringLiteral("htmleditor_direction_rtl"), d->action_direction_rtl);
         }
         if (d->action_text_subscript) {
-            actionCollection->addAction(QLatin1String("htmleditor_format_text_subscript"), d->action_text_subscript);
+            actionCollection->addAction(QStringLiteral("htmleditor_format_text_subscript"), d->action_text_subscript);
         }
         if (d->action_text_superscript) {
-            actionCollection->addAction(QLatin1String("htmleditor_format_text_superscript"), d->action_text_superscript);
+            actionCollection->addAction(QStringLiteral("htmleditor_format_text_superscript"), d->action_text_superscript);
         }
         if (d->action_page_color) {
-            actionCollection->addAction(QLatin1String("htmleditor_page_color_and_background"), d->action_page_color);
+            actionCollection->addAction(QStringLiteral("htmleditor_page_color_and_background"), d->action_page_color);
         }
         if (d->action_insert_table) {
-            actionCollection->addAction(QLatin1String("htmleditor_insert_new_table"), d->action_insert_table);
+            actionCollection->addAction(QStringLiteral("htmleditor_insert_new_table"), d->action_insert_table);
         }
         if (d->action_insert_link) {
-            actionCollection->addAction(QLatin1String("htmleditor_insert_link"), d->action_insert_link);
+            actionCollection->addAction(QStringLiteral("htmleditor_insert_link"), d->action_insert_link);
         }
         if (d->action_insert_horizontal_rule) {
-            actionCollection->addAction(QLatin1String("htmleditor_insert_horizontal_rule"), d->action_insert_horizontal_rule);
+            actionCollection->addAction(QStringLiteral("htmleditor_insert_horizontal_rule"), d->action_insert_horizontal_rule);
         }
         if (d->action_text_foreground_color) {
-            actionCollection->addAction(QLatin1String("htmleditor_format_text_foreground_color"), d->action_text_foreground_color);
+            actionCollection->addAction(QStringLiteral("htmleditor_format_text_foreground_color"), d->action_text_foreground_color);
         }
         if (d->action_text_background_color) {
-            actionCollection->addAction(QLatin1String("htmleditor_format_text_background_color"), d->action_text_background_color);
+            actionCollection->addAction(QStringLiteral("htmleditor_format_text_background_color"), d->action_text_background_color);
         }
         if (d->action_add_emoticon) {
-            actionCollection->addAction(QLatin1String("htmleditor_add_emoticon"), d->action_add_emoticon);
+            actionCollection->addAction(QStringLiteral("htmleditor_add_emoticon"), d->action_add_emoticon);
         }
         if (d->action_insert_html) {
-            actionCollection->addAction(QLatin1String("htmleditor_insert_html"), d->action_insert_html);
+            actionCollection->addAction(QStringLiteral("htmleditor_insert_html"), d->action_insert_html);
         }
         if (d->action_insert_image) {
-            actionCollection->addAction(QLatin1String("htmleditor_add_image"), d->action_insert_image);
+            actionCollection->addAction(QStringLiteral("htmleditor_add_image"), d->action_insert_image);
         }
         if (d->action_spell_check) {
-            actionCollection->addAction(QLatin1String("htmleditor_spell_check"), d->action_spell_check);
+            actionCollection->addAction(QStringLiteral("htmleditor_spell_check"), d->action_spell_check);
         }
         if (d->action_format_reset) {
-            actionCollection->addAction(QLatin1String("htmleditor_format_reset"), d->action_format_reset);
+            actionCollection->addAction(QStringLiteral("htmleditor_format_reset"), d->action_format_reset);
         }
         if (d->action_font_family) {
-            actionCollection->addAction(QLatin1String("htmleditor_format_font_family"), d->action_font_family);
+            actionCollection->addAction(QStringLiteral("htmleditor_format_font_family"), d->action_font_family);
         }
         if (d->action_font_size) {
-            actionCollection->addAction(QLatin1String("htmleditor_format_font_size"), d->action_font_size);
+            actionCollection->addAction(QStringLiteral("htmleditor_format_font_size"), d->action_font_size);
         }
         if (d->action_format_type) {
-            actionCollection->addAction(QLatin1String("htmleditor_format_type"), d->action_format_type);
+            actionCollection->addAction(QStringLiteral("htmleditor_format_type"), d->action_format_type);
         }
         if (d->action_block_quote) {
-            actionCollection->addAction(QLatin1String("htmleditor_block_quote"), d->action_block_quote);
+            actionCollection->addAction(QStringLiteral("htmleditor_block_quote"), d->action_block_quote);
         }
         if (d->action_ordered_list) {
-            actionCollection->addAction(QLatin1String("htmleditor_format_list_ordered"), d->action_ordered_list);
+            actionCollection->addAction(QStringLiteral("htmleditor_format_list_ordered"), d->action_ordered_list);
         }
         if (d->action_unordered_list) {
-            actionCollection->addAction(QLatin1String("htmleditor_format_list_unordered"), d->action_unordered_list);
+            actionCollection->addAction(QStringLiteral("htmleditor_format_list_unordered"), d->action_unordered_list);
         }
         if (d->action_list_indent) {
-            actionCollection->addAction(QLatin1String("htmleditor_format_list_indent_more"), d->action_list_indent);
+            actionCollection->addAction(QStringLiteral("htmleditor_format_list_indent_more"), d->action_list_indent);
         }
         if (d->action_list_dedent) {
-            actionCollection->addAction(QLatin1String("htmleditor_format_list_indent_less"), d->action_list_dedent);
+            actionCollection->addAction(QStringLiteral("htmleditor_format_list_indent_less"), d->action_list_dedent);
         }
         if (d->action_find) {
-            actionCollection->addAction(QLatin1String("htmleditor_find"), d->action_find);
+            actionCollection->addAction(QStringLiteral("htmleditor_find"), d->action_find);
         }
         if (d->action_replace) {
-            actionCollection->addAction(QLatin1String("htmleditor_replace"), d->action_replace);
+            actionCollection->addAction(QStringLiteral("htmleditor_replace"), d->action_replace);
         }
         if (d->action_save_as) {
-            actionCollection->addAction(QLatin1String("htmleditor_save_as"), d->action_save_as);
+            actionCollection->addAction(QStringLiteral("htmleditor_save_as"), d->action_save_as);
         }
         if (d->action_print) {
-            actionCollection->addAction(QLatin1String("htmleditor_print"), d->action_print);
+            actionCollection->addAction(QStringLiteral("htmleditor_print"), d->action_print);
         }
         if (d->action_print_preview) {
-            actionCollection->addAction(QLatin1String("htmleditor_print_preview"), d->action_print_preview);
+            actionCollection->addAction(QStringLiteral("htmleditor_print_preview"), d->action_print_preview);
         }
         if (d->action_paste_withoutformatting) {
-            actionCollection->addAction(QLatin1String("htmleditor_paste_without_formatting"), d->action_paste_withoutformatting);
+            actionCollection->addAction(QStringLiteral("htmleditor_paste_without_formatting"), d->action_paste_withoutformatting);
         }
         if (d->action_insert_specialchar) {
-            actionCollection->addAction(QLatin1String("htmleditor_insert_specialchar"), d->action_insert_specialchar);
+            actionCollection->addAction(QStringLiteral("htmleditor_insert_specialchar"), d->action_insert_specialchar);
         }
         if (d->action_insert_anchor) {
-            actionCollection->addAction(QLatin1String("htmleditor_insert_anchor"), d->action_insert_anchor);
+            actionCollection->addAction(QStringLiteral("htmleditor_insert_anchor"), d->action_insert_anchor);
         }
     }
 }
@@ -228,15 +228,15 @@ void ComposerView::contextMenuEvent(QContextMenuEvent *event)
     const bool imageSelected = !d->contextMenuResult.imageUrl().isEmpty();
 
     const QWebElement elm = d->contextMenuResult.element();
-    const bool tableCellSelected = (elm.tagName().toLower() == QLatin1String("td"));
-    const bool tableSelected = (elm.tagName().toLower() == QLatin1String("table") ||
+    const bool tableCellSelected = (elm.tagName().toLower() == QStringLiteral("td"));
+    const bool tableSelected = (elm.tagName().toLower() == QStringLiteral("table") ||
                                 tableCellSelected);
 
-    const bool listSelected = (elm.tagName().toLower() == QLatin1String("ol") ||
-                               elm.tagName().toLower() == QLatin1String("ul") ||
-                               elm.tagName().toLower() == QLatin1String("li"));
+    const bool listSelected = (elm.tagName().toLower() == QStringLiteral("ol") ||
+                               elm.tagName().toLower() == QStringLiteral("ul") ||
+                               elm.tagName().toLower() == QStringLiteral("li"));
 
-    const bool anchorSelected = (elm.tagName().toLower() == QLatin1String("a"));
+    const bool anchorSelected = (elm.tagName().toLower() == QStringLiteral("a"));
 
     qCDebug(COMPOSEREDITORNG_LOG) << " elm.tagName().toLower() " << elm.tagName().toLower();
 
@@ -290,7 +290,7 @@ void ComposerView::contextMenuEvent(QContextMenuEvent *event)
     autoSpellCheckingAction->setChecked(d->checkSpellingEnabled());
     connect(autoSpellCheckingAction, SIGNAL(triggered(bool)), this, SLOT(_k_changeAutoSpellChecking(bool)));
     QAction *speakAction = menu->addAction(i18n("Speak Text"));
-    speakAction->setIcon(QIcon::fromTheme(QLatin1String("preferences-desktop-text-to-speech")));
+    speakAction->setIcon(QIcon::fromTheme(QStringLiteral("preferences-desktop-text-to-speech")));
     speakAction->setEnabled(!emptyDocument);
     connect(speakAction, SIGNAL(triggered(bool)), this, SLOT(_k_slotSpeakText()));
     addExtraAction(menu);

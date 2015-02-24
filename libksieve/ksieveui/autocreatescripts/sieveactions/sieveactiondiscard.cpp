@@ -21,7 +21,7 @@
 
 using namespace KSieveUi;
 SieveActionDiscard::SieveActionDiscard(QObject *parent)
-    : SieveAction(QLatin1String("discard"), i18n("Discard"), parent)
+    : SieveAction(QStringLiteral("discard"), i18n("Discard"), parent)
 {
 }
 
@@ -32,7 +32,7 @@ SieveAction *SieveActionDiscard::newAction()
 
 QString SieveActionDiscard::code(QWidget *) const
 {
-    return QLatin1String("discard;");
+    return QStringLiteral("discard;");
 }
 
 QString SieveActionDiscard::help() const

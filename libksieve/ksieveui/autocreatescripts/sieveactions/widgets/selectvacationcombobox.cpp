@@ -34,8 +34,8 @@ SelectVacationComboBox::~SelectVacationComboBox()
 
 void SelectVacationComboBox::initialize()
 {
-    addItem(i18n("days"), QLatin1String(":days"));
-    addItem(i18n("seconds"), QLatin1String(":seconds"));
+    addItem(i18n("days"), QStringLiteral(":days"));
+    addItem(i18n("seconds"), QStringLiteral(":seconds"));
 }
 
 QString SelectVacationComboBox::code() const

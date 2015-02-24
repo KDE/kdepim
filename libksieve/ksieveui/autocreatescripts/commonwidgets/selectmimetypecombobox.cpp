@@ -36,10 +36,10 @@ SelectMimeTypeComboBox::~SelectMimeTypeComboBox()
 void SelectMimeTypeComboBox::initialize()
 {
     //TODO verify
-    addItem(i18n("JPEG"), QLatin1String("image/jpeg"));
-    addItem(i18n("TIFF"), QLatin1String("image/tiff"));
-    addItem(i18n("PNG"), QLatin1String("image/png"));
-    addItem(i18n("BMP"), QLatin1String("image/bmp"));
+    addItem(i18n("JPEG"), QStringLiteral("image/jpeg"));
+    addItem(i18n("TIFF"), QStringLiteral("image/tiff"));
+    addItem(i18n("PNG"), QStringLiteral("image/png"));
+    addItem(i18n("BMP"), QStringLiteral("image/bmp"));
 }
 
 QString SelectMimeTypeComboBox::code() const

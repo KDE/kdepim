@@ -165,7 +165,7 @@ shared_ptr<SelfTest> Kleo::makeGpgConfEngineCheckSelfTest()
 
 static bool is_version(const char *actual, int major, int minor, int patch)
 {
-    QRegExp rx(QLatin1String("(\\d+)\\.(\\d+)\\.(\\d+)(?:-svn\\d+)?.*"));
+    QRegExp rx(QStringLiteral("(\\d+)\\.(\\d+)\\.(\\d+)(?:-svn\\d+)?.*"));
     if (!rx.exactMatch(QString::fromUtf8(actual))) {
         qDebug() << "Can't parse version " << actual;
         return false;
