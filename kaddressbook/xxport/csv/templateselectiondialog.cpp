@@ -117,9 +117,9 @@ public:
         beginResetModel();
         mTemplates.clear();
         const QStringList dirs = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, QStringLiteral("kaddressbook/csv-templates/"), QStandardPaths::LocateDirectory);
-        Q_FOREACH (const QString& dir, dirs) {
+        Q_FOREACH (const QString &dir, dirs) {
             const QStringList fileNames = QDir(dir).entryList(QStringList() <<  QStringLiteral("*.desktop"));
-            Q_FOREACH (const QString & file, fileNames) {
+            Q_FOREACH (const QString &file, fileNames) {
                 const QString fileName = dir + QLatin1Char('/') + file;
 
                 KConfig config(fileName, KConfig::SimpleConfig);

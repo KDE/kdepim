@@ -50,7 +50,7 @@ void MergeContactSelectInformationScrollAreaTest::shouldHaveDefaultValue()
         qFindChild<KABMergeContacts::MergeContactSelectInformationWidget *>(&w, QStringLiteral("selectinformationwidget"));
     QVERIFY(widget);
 
-    for(int i = 0; i < stackedwidget->count(); ++i) {
+    for (int i = 0; i < stackedwidget->count(); ++i) {
         QWidget *w = stackedwidget->widget(i);
         const QString objName = w->objectName();
         bool hasCorrectName = (objName == QLatin1String("mergedcontactwidget")) || (objName ==  QLatin1String("selectwidget"));

@@ -21,8 +21,8 @@
 #include <QObject>
 #include <AkonadiCore/Item>
 
-
-namespace KABMergeContacts {
+namespace KABMergeContacts
+{
 class SearchPotentialDuplicateContactJob : public QObject
 {
     Q_OBJECT

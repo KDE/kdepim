@@ -59,7 +59,7 @@ OrgKdeAkonadiImapSettingsInterface *PimCommon::Util::createImapSettingsInterface
 
 void PimCommon::Util::saveTextAs(const QString &text, const QString &filter, QWidget *parent, const QUrl &url, const QString &caption)
 {
-    QPointer<QFileDialog> fdlg(new QFileDialog(parent, QString(), url.path(), filter ));
+    QPointer<QFileDialog> fdlg(new QFileDialog(parent, QString(), url.path(), filter));
     if (!caption.isEmpty()) {
         fdlg->setWindowTitle(caption);
     }

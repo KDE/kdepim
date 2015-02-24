@@ -115,10 +115,10 @@ void SieveEditorMainWindow::setupActions()
 {
     KActionCollection *ac = actionCollection();
 
-    KStandardAction::quit(this, SLOT(close()), ac );
-    KStandardAction::preferences( this, SLOT(slotConfigure()), ac );
+    KStandardAction::quit(this, SLOT(close()), ac);
+    KStandardAction::preferences(this, SLOT(slotConfigure()), ac);
 
-    mUploadScript = KStandardAction::save( this, SLOT(slotUploadScript()), ac );
+    mUploadScript = KStandardAction::save(this, SLOT(slotUploadScript()), ac);
     mUploadScript->setText(i18n("Upload"));
     mUploadScript->setEnabled(false);
 
@@ -230,7 +230,7 @@ void SieveEditorMainWindow::slotAddServerSieve()
 
 void SieveEditorMainWindow::slotUpdateActions()
 {
-    const bool hasPage = (mMainWidget->sieveEditorMainWidget()->tabWidget()->count()>0);
+    const bool hasPage = (mMainWidget->sieveEditorMainWidget()->tabWidget()->count() > 0);
     mUploadScript->setEnabled(hasPage);
     const bool editActionEnabled = (hasPage && mMainWidget->sieveEditorMainWidget()->pageMode() == KSieveUi::SieveEditorWidget::TextMode);
     mGoToLine->setEnabled(editActionEnabled);

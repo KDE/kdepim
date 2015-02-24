@@ -103,8 +103,9 @@ void SieveEditorMainWidget::slotCreateScriptPage(const QUrl &url, const QStringL
         editor->loadScript(url, capabilities);
         mTabWidget->addTab(editor, url.fileName());
         mTabWidget->setCurrentWidget(editor);
-        if (isNewScript)
+        if (isNewScript) {
             editor->uploadScript(false, true);
+        }
     }
 }
 
@@ -315,7 +316,7 @@ void SieveEditorMainWidget::slotSaveAs()
     }
 }
 
-void SieveEditorMainWidget::slotScriptModified(bool modified,SieveEditorPageWidget *page)
+void SieveEditorMainWidget::slotScriptModified(bool modified, SieveEditorPageWidget *page)
 {
     const int index = mTabWidget->indexOf(page);
     if (index >= 0) {
