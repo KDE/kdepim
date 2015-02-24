@@ -20,8 +20,6 @@
 
 #include <QWidget>
 
-#include "kaddressbook_export.h"
-
 #include <AkonadiCore/Item>
 class QLabel;
 namespace KAddressBookGrantlee
@@ -30,9 +28,8 @@ class GrantleeContactViewer;
 }
 
 class QStackedWidget;
-namespace KABMergeContacts
-{
-class KADDRESSBOOK_EXPORT MergeContactInfoWidget : public QWidget
+namespace KABMergeContacts {
+class MergeContactInfoWidget : public QWidget
 {
     Q_OBJECT
 public:
