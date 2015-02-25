@@ -60,6 +60,10 @@ public Q_SLOTS:
     void slotPaste();
     void slotCut();
     void slotSaveAs();
+    void slotCheckSpelling();
+    void slotShare();
+    void slotImport();
+
 Q_SIGNALS:
     void updateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);
     void updateScriptList();

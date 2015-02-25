@@ -74,6 +74,7 @@ public:
     void paste();
     void cut();
     void copy();
+    void checkSpelling();
 
     bool isUndoAvailable() const;
     bool isRedoAvailable() const;

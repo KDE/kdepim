@@ -206,6 +206,21 @@ void SieveEditorPageWidget::replace()
     mSieveEditorWidget->replace();
 }
 
+void SieveEditorPageWidget::share()
+{
+    mSieveEditorWidget->slotUploadScripts();
+}
+
+void SieveEditorPageWidget::import()
+{
+    mSieveEditorWidget->slotImport();
+}
+
+void SieveEditorPageWidget::checkSpelling()
+{
+    mSieveEditorWidget->checkSpelling();
+}
+
 void SieveEditorPageWidget::saveAs()
 {
     mSieveEditorWidget->slotSaveAs();

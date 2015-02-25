@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "completionordereditor.h"
+#include "completionorder/completionordereditor.h"
 #include "kmailcompletion.h"
 #include "libkdepim_debug.h"
 #include <QMap>
