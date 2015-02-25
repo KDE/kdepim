@@ -188,7 +188,7 @@ void TableHelper::removeCellContentsFromCurrentRow(const QWebElement &element)
         QWebElement cellElement = e.firstChild();
         while (!cellElement.isNull()) {
             if (cellElement.tagName().toLower() == tdStr() ) {
-                cellElement.setInnerXml(QString::fromLatin1("<BR>"));
+                cellElement.setInnerXml(QStringLiteral("<BR>"));
             }
             cellElement = cellElement.nextSibling();
         }

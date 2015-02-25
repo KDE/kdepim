@@ -364,7 +364,7 @@ void ExportMailJob::backupConfig()
                 if (found) {
                     const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection(collectionId));
                     if (!realPath.isEmpty()) {
-                        storageGroup.writeEntry(QString::fromLatin1("%1%2").arg(storageModelSelectedPattern).arg(realPath), oldValue);
+                        storageGroup.writeEntry(QStringLiteral("%1%2").arg(storageModelSelectedPattern).arg(realPath), oldValue);
                         storageGroup.deleteEntry(str);
                     }
                 }
@@ -534,7 +534,7 @@ void ExportMailJob::backupAkonadiDb()
     QStringList params;
     QString dbDumpAppName;
     if (dbDriver == QLatin1String("QMYSQL")) {
-        dbDumpAppName = QString::fromLatin1("mysqldump");
+        dbDumpAppName = QStringLiteral("mysqldump");
 
         params << QLatin1String("--single-transaction")
                << QLatin1String("--flush-logs")
@@ -543,7 +543,7 @@ void ExportMailJob::backupAkonadiDb()
                << akonadiDataBase.options()
                << akonadiDataBase.name();
     } else if (dbDriver == QLatin1String("QPSQL")) {
-        dbDumpAppName = QString::fromLatin1("pg_dump");
+        dbDumpAppName = QStringLiteral("pg_dump");
         params << QLatin1String("--format=custom")
                << QLatin1String("--blobs")
                << QLatin1String("--file=") + tmp.fileName()
@@ -568,7 +568,7 @@ void ExportMailJob::backupAkonadiDb()
     }
     const bool fileAdded  = archive()->addLocalFile(tmp.fileName(), Utils::akonadiPath() + QLatin1String("akonadidatabase.sql"));
     if (!fileAdded) {
-        Q_EMIT error(i18n("Akonadi Database \"%1\" cannot be added to backup file.", QString::fromLatin1("akonadidatabase.sql")));
+        Q_EMIT error(i18n("Akonadi Database \"%1\" cannot be added to backup file.", QStringLiteral("akonadidatabase.sql")));
     } else {
         Q_EMIT info(i18n("Akonadi Database backup done."));
     }

@@ -650,7 +650,7 @@ QString ConfigEntry::toString(ConfigEntry::EscapeMode mode) const
     }
     if (!isList()) { // non-list non-string
         if (m_argType == None) {
-            return m_value.toBool() ? QString::fromLatin1("1") : QString();
+            return m_value.toBool() ? QStringLiteral("1") : QString();
         } else { // some int
             assert(m_argType == Int || m_argType == UInt);
             return m_value.toString(); // int to string conversion

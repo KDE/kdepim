@@ -98,32 +98,32 @@ StorageServiceTestWidget::StorageServiceTestWidget(QWidget *parent)
 
 void StorageServiceTestWidget::slotActionFailed(const QString &serviceName, const QString &error)
 {
-    mEdit->insertPlainText(QString::fromLatin1("action failed service name: %1 , error :%2\n").arg(serviceName).arg(error));
+    mEdit->insertPlainText(QStringLiteral("action failed service name: %1 , error :%2\n").arg(serviceName).arg(error));
 }
 
 void StorageServiceTestWidget::slotAuthenticationFailed(const QString &serviceName, const QString &error)
 {
-    mEdit->insertPlainText(QString::fromLatin1("authentication failed service name: %1 , error :%2\n").arg(serviceName).arg(error));
+    mEdit->insertPlainText(QStringLiteral("authentication failed service name: %1 , error :%2\n").arg(serviceName).arg(error));
 }
 
 void StorageServiceTestWidget::slotAuthenticationDone(const QString &serviceName)
 {
-    mEdit->insertPlainText(QString::fromLatin1("authentication done service name: %1\n").arg(serviceName));
+    mEdit->insertPlainText(QStringLiteral("authentication done service name: %1\n").arg(serviceName));
 }
 
 void StorageServiceTestWidget::slotShareLinkDone(const QString &serviceName, const QString &link)
 {
-    mEdit->insertPlainText(QString::fromLatin1("service name: %1, link %2\n").arg(serviceName).arg(link));
+    mEdit->insertPlainText(QStringLiteral("service name: %1, link %2\n").arg(serviceName).arg(link));
 }
 
 void StorageServiceTestWidget::slotuploadDownloadFileProgress(const QString &serviceName, qint64 done, qint64 total)
 {
-    mEdit->insertPlainText(QString::fromLatin1("service name: %1, upload done: %2 on %3\n").arg(serviceName).arg(done).arg(total));
+    mEdit->insertPlainText(QStringLiteral("service name: %1, upload done: %2 on %3\n").arg(serviceName).arg(done).arg(total));
 }
 
 void StorageServiceTestWidget::slotUploadFileDone(const QString &serviceName, const QString &fileName)
 {
-    mEdit->insertPlainText(QString::fromLatin1("download done on %1. Filename: %2\n").arg(serviceName).arg(fileName));
+    mEdit->insertPlainText(QStringLiteral("download done on %1. Filename: %2\n").arg(serviceName).arg(fileName));
 }
 
 void StorageServiceTestWidget::slotServiceMenu()

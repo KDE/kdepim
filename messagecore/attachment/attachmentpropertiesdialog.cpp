@@ -242,14 +242,14 @@ void AttachmentPropertiesDialog::Private::populateEncodings()
 void AttachmentPropertiesDialog::Private::populateMimeTypes()
 {
     QStringList list;
-    list << QString::fromLatin1("text/html")
-         << QString::fromLatin1("text/plain")
-         << QString::fromLatin1("image/gif")
-         << QString::fromLatin1("image/jpeg")
-         << QString::fromLatin1("image/png")
-         << QString::fromLatin1("application/octet-stream")
-         << QString::fromLatin1("application/x-gunzip")
-         << QString::fromLatin1("application/zip");
+    list << QStringLiteral("text/html")
+         << QStringLiteral("text/plain")
+         << QStringLiteral("image/gif")
+         << QStringLiteral("image/jpeg")
+         << QStringLiteral("image/png")
+         << QStringLiteral("application/octet-stream")
+         << QStringLiteral("application/x-gunzip")
+         << QStringLiteral("application/zip");
 
     ui->mimeType->addItems(list);
 }

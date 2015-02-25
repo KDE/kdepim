@@ -127,7 +127,7 @@ void SieveEditorUtil::writeServerSieveConfig(const QList<SieveEditorUtil::SieveS
 
 void SieveEditorUtil::writeSieveSettings(KWallet::Wallet *wallet, KSharedConfigPtr cfg, const SieveEditorUtil::SieveServerConfig &conf, int index)
 {
-    KConfigGroup group = cfg->group(QString::fromLatin1("ServerSieve %1").arg(index));
+    KConfigGroup group = cfg->group(QStringLiteral("ServerSieve %1").arg(index));
     group.writeEntry(QLatin1String("Port"), conf.port);
     group.writeEntry(QLatin1String("ServerName"), conf.serverName);
     group.writeEntry(QLatin1String("UserName"), conf.userName);
