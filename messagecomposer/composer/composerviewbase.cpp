@@ -36,7 +36,7 @@
 #include "agents/sendlateragent/sendlaterinfo.h"
 #include "agents/sendlateragent/sendlaterutil.h"
 
-#include <addressline/recentaddresses.h>
+#include <addressline/recentaddress/recentaddresses.h>
 #include "helper/messagehelper.h"
 
 #include <messagecomposer/recipient/recipientseditor.h>

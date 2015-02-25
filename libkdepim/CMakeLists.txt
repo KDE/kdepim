@@ -67,11 +67,11 @@ set(kdepim_addressline_LIB_SRCS
    addressline/completionorder/completionordereditor.cpp
    addressline/completionorder/completionorderwidget.cpp
    addressline/addresseelineedit.cpp
-   addressline/recentaddresses.cpp
    addressline/kmailcompletion.cpp
    addressline/baloocompletionemail.cpp
-   addressline/recentaddressdialog.cpp
-   addressline/recentaddresswidget.cpp
+   addressline/recentaddress/recentaddressdialog.cpp
+   addressline/recentaddress/recentaddresswidget.cpp
+   addressline/recentaddress/recentaddresses.cpp
 )
 
 set(kdepim_addressline_blacklist_baloo_LIB_SRCS

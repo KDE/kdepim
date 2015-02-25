@@ -11,7 +11,7 @@ ecm_mark_as_test(libkdepim_baloocompletionemailtest)
 target_link_libraries( libkdepim_baloocompletionemailtest Qt5::Test KF5::Codecs)
 
 
-set( libkdepim_recentaddresswidgettest_SRCS recentaddresswidgettest.cpp ../recentaddresswidget.cpp ../recentaddresses.cpp)
+set( libkdepim_recentaddresswidgettest_SRCS recentaddresswidgettest.cpp ../recentaddress/recentaddresswidget.cpp ../recentaddress/recentaddresses.cpp)
 add_executable( libkdepim_recentaddresswidgettest ${libkdepim_recentaddresswidgettest_SRCS})
 add_test(libkdepim_recentaddresswidgettest libkdepim_recentaddresswidgettest)
 ecm_mark_as_test(libkdepim_recentaddresswidgettest)
