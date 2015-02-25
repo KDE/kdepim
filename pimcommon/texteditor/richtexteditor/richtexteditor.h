@@ -56,11 +56,11 @@ public:
 
 public Q_SLOTS:
     void slotDisplayMessageIndicator(const QString &message);
+    void slotSpeakText();
+    void slotCheckSpelling();
 
 private Q_SLOTS:
-    void slotSpeakText();
     void slotUndoableClear();
-    void slotCheckSpelling();
     void slotSpellCheckerMisspelling( const QString &text, int pos );
     void slotSpellCheckerCorrected( const QString &, int,const QString &);
     void slotSpellCheckerAutoCorrect(const QString&,const QString&);

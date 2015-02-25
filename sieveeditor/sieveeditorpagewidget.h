@@ -60,6 +60,7 @@ public:
 
     void selectAll();
     void saveAs();
+    void checkSpelling();
 Q_SIGNALS:
     void refreshList();
     void scriptModified(bool, SieveEditorPageWidget *);

@@ -444,6 +444,18 @@ void SieveEditorWidget::slotGenerateXml()
 #endif
 }
 
+void SieveEditorWidget::checkSpelling()
+{
+    switch (mMode) {
+    case TextMode:
+        mTextModeWidget->checkSpelling();
+        break;
+    case GraphicMode:
+    case Unknown:
+        break;
+    }
+}
+
 void SieveEditorWidget::slotSaveAs()
 {
     switch (mMode) {

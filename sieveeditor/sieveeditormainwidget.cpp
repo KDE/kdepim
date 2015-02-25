@@ -304,6 +304,17 @@ void SieveEditorMainWidget::slotReplace()
     }
 }
 
+void SieveEditorMainWidget::slotCheckSpelling()
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            page->checkSpelling();
+        }
+    }
+}
+
 void SieveEditorMainWidget::slotSaveAs()
 {
     QWidget *w = mTabWidget->currentWidget();

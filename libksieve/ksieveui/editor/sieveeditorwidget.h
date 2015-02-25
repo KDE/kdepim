@@ -64,6 +64,7 @@ public:
     bool isUndoAvailable() const;
     bool hasSelection() const;
 
+    void checkSpelling();
 public Q_SLOTS:
     void find();
     void replace();

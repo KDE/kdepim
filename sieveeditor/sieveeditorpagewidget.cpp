@@ -206,6 +206,11 @@ void SieveEditorPageWidget::replace()
     mSieveEditorWidget->replace();
 }
 
+void SieveEditorPageWidget::checkSpelling()
+{
+    mSieveEditorWidget->checkSpelling();
+}
+
 void SieveEditorPageWidget::saveAs()
 {
     mSieveEditorWidget->slotSaveAs();
