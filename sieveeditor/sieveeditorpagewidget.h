@@ -61,6 +61,8 @@ public:
     void selectAll();
     void saveAs();
     void checkSpelling();
+    void share();
+    void import();
 Q_SIGNALS:
     void refreshList();
     void scriptModified(bool, SieveEditorPageWidget *);

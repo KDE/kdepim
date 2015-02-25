@@ -65,6 +65,8 @@ public:
     bool hasSelection() const;
 
     void checkSpelling();
+    void share();
+    void import();
 public Q_SLOTS:
     void find();
     void replace();
@@ -76,17 +78,17 @@ public Q_SLOTS:
     void selectAll();
     void goToLine();
     void slotSaveAs();
+    void slotImport();
+    void slotUploadScripts();
 
 private Q_SLOTS:
     void slotEnableButtonOk(bool b);
     void slotAutoGenerateScripts();
     void slotCheckSyntax();
     void slotGenerateXml();
-    void slotImport();
     void slotSwitchMode();
     void slotSwitchTextMode(const QString &script);
     void slotSwitchToGraphicalMode();
-    void slotUploadScripts();
     void slotModified();
 Q_SIGNALS:
     void checkSyntax();

@@ -304,6 +304,28 @@ void SieveEditorMainWidget::slotReplace()
     }
 }
 
+void SieveEditorMainWidget::slotShare()
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            page->share();
+        }
+    }
+}
+
+void SieveEditorMainWidget::slotImport()
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            page->import();
+        }
+    }
+}
+
 void SieveEditorMainWidget::slotCheckSpelling()
 {
     QWidget *w = mTabWidget->currentWidget();
