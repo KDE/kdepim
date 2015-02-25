@@ -67,12 +67,12 @@ set(kdepim_misc_LIB_SRCS
 )
 
 set(kdepim_addressline_LIB_SRCS
-   addressline/completionordereditor.cpp
+   addressline/completionorder/completionordereditor.cpp
+   addressline/completionorder/completionorderwidget.cpp
    addressline/addresseelineedit.cpp
    addressline/recentaddresses.cpp
    addressline/kmailcompletion.cpp
    addressline/baloocompletionemail.cpp
-   addressline/completionorderwidget.cpp
    addressline/recentaddressdialog.cpp
    addressline/recentaddresswidget.cpp
 )

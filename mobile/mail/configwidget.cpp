@@ -29,7 +29,7 @@
 
 #include <kconfigdialogmanager.h>
 #include <klocale.h>
-#include <libkdepim/addressline/completionordereditor.h>
+#include <libkdepim/addressline/completionorder/completionordereditor.h>
 #include <libkdepim/ldap/ldapclientsearch.h>
 #include <libkdepim/addressline/recentaddresses.h>
 #include <libkdepim/addressline/recentaddressdialog.h>
