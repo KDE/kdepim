@@ -64,8 +64,8 @@ public:
     void removeValidator(QValidator *validator);
     void removeValidators(const QList<QValidator *> &validators);
 
-    /* reimp */ void fixup(QString &str) const Q_DECL_OVERRIDE;
-    /* reimp */ State validate(QString &str, int &pos) const Q_DECL_OVERRIDE;
+    void fixup(QString &str) const Q_DECL_OVERRIDE;
+    State validate(QString &str, int &pos) const Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void _kdmv_slotDestroyed(QObject *);

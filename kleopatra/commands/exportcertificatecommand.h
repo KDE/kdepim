@@ -58,8 +58,8 @@ public:
     QString x509FileName() const;
 
 private:
-    /* reimp */ void doStart() Q_DECL_OVERRIDE;
-    /* reimp */ void doCancel() Q_DECL_OVERRIDE;
+    void doStart() Q_DECL_OVERRIDE;
+    void doCancel() Q_DECL_OVERRIDE;
 
 private:
     class Private;

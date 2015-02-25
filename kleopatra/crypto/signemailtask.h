@@ -75,14 +75,14 @@ public:
 
     GpgME::Protocol protocol() const;
 
-    /* reimp */ void cancel() Q_DECL_OVERRIDE;
-    /* reimp */ QString label() const Q_DECL_OVERRIDE;
+    void cancel() Q_DECL_OVERRIDE;
+    QString label() const Q_DECL_OVERRIDE;
 
     QString micAlg() const;
 
 private:
-    /* reimp */ void doStart() Q_DECL_OVERRIDE;
-    /* reimp */ unsigned long long inputSize() const Q_DECL_OVERRIDE;
+    void doStart() Q_DECL_OVERRIDE;
+    unsigned long long inputSize() const Q_DECL_OVERRIDE;
 
 private:
     class Private;

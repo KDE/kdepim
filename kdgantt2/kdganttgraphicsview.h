@@ -125,7 +125,7 @@ Q_SIGNALS:
     void headerContextMenuRequested(const QPoint &pt);
 
 protected:
-    /*reimp*/void resizeEvent(QResizeEvent *) Q_DECL_OVERRIDE;
+    void resizeEvent(QResizeEvent *) Q_DECL_OVERRIDE;
 private:
     friend class View;
 

@@ -163,7 +163,7 @@ private:
     }
 
 private:
-    /* reimp */ void run() Q_DECL_OVERRIDE;
+    void run() Q_DECL_OVERRIDE;
 
 private:
     QPointer<VerifyChecksumsDialog> dialog;

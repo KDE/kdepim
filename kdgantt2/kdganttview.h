@@ -100,7 +100,7 @@ public Q_SLOTS:
     void setGrid(AbstractGrid *);
 
 protected:
-    /*reimp*/ void resizeEvent(QResizeEvent *) Q_DECL_OVERRIDE;
+    void resizeEvent(QResizeEvent *) Q_DECL_OVERRIDE;
 };
 }
 

@@ -81,8 +81,8 @@ protected:
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
     void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
 
-    /* reimp */void doRestoreConfig(const KConfigGroup &configGroup) Q_DECL_OVERRIDE;
-    /* reimp */void doSaveConfig(KConfigGroup &configGroup) Q_DECL_OVERRIDE;
+    void doRestoreConfig(const KConfigGroup &configGroup) Q_DECL_OVERRIDE;
+    void doSaveConfig(KConfigGroup &configGroup) Q_DECL_OVERRIDE;
 
 protected Q_SLOTS:
     /**

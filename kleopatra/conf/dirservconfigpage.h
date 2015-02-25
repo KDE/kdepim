@@ -59,9 +59,9 @@ class DirectoryServicesConfigurationPage : public KCModule
 public:
     explicit DirectoryServicesConfigurationPage(QWidget *parent = Q_NULLPTR, const QVariantList &args = QVariantList());
 
-    /* reimp */ void load() Q_DECL_OVERRIDE;
-    /* reimp */ void save() Q_DECL_OVERRIDE;
-    /* reimp */ void defaults() Q_DECL_OVERRIDE;
+    void load() Q_DECL_OVERRIDE;
+    void save() Q_DECL_OVERRIDE;
+    void defaults() Q_DECL_OVERRIDE;
 
 private:
     Kleo::CryptoConfigEntry *configEntry(const char *componentName,

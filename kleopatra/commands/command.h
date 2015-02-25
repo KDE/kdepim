@@ -126,7 +126,7 @@ private:
     virtual void doCancel() = 0;
 
 private:
-    /* reimp */ void applyWindowID(QWidget *wid) const Q_DECL_OVERRIDE;
+    void applyWindowID(QWidget *wid) const Q_DECL_OVERRIDE;
 
 protected:
     void addTemporaryView(const QString &title, AbstractKeyListSortFilterProxyModel *proxy = Q_NULLPTR, const QString &tabToolTip = QString());

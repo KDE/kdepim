@@ -117,7 +117,7 @@ protected:
             return Formatting::importMetaData(*it, kdtools::copy<QStringList>(m_idsByFingerprint[it->fingerprint()]));
         }
     }
-    /* reimp */ bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE
     {
         //
         // 0. Keep parents of matching children:

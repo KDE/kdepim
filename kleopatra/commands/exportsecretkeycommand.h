@@ -76,16 +76,16 @@ public:
     }
 
 private:
-    /* reimp */ bool preStartHook(QWidget *) const Q_DECL_OVERRIDE;
+    bool preStartHook(QWidget *) const Q_DECL_OVERRIDE;
 
-    /* reimp */ QStringList arguments() const Q_DECL_OVERRIDE;
+    QStringList arguments() const Q_DECL_OVERRIDE;
 
-    /* reimp */ QString errorCaption() const Q_DECL_OVERRIDE;
-    /* reimp */ QString successCaption() const Q_DECL_OVERRIDE;
+    QString errorCaption() const Q_DECL_OVERRIDE;
+    QString successCaption() const Q_DECL_OVERRIDE;
 
-    /* reimp */ QString crashExitMessage(const QStringList &) const Q_DECL_OVERRIDE;
-    /* reimp */ QString errorExitMessage(const QStringList &) const Q_DECL_OVERRIDE;
-    /* reimp */ QString successMessage(const QStringList &) const Q_DECL_OVERRIDE;
+    QString crashExitMessage(const QStringList &) const Q_DECL_OVERRIDE;
+    QString errorExitMessage(const QStringList &) const Q_DECL_OVERRIDE;
+    QString successMessage(const QStringList &) const Q_DECL_OVERRIDE;
 
 private:
     mutable QString m_filename;

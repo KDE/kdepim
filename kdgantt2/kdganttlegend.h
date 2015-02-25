@@ -45,8 +45,8 @@ public:
 
     /*reimp*/ void scrollTo(const QModelIndex &, ScrollHint = EnsureVisible) {}
 
-    /*reimp*/ QSize sizeHint() const Q_DECL_OVERRIDE;
-    /*reimp*/ QSize minimumSizeHint() const Q_DECL_OVERRIDE;
+    QSize sizeHint() const Q_DECL_OVERRIDE;
+    QSize minimumSizeHint() const Q_DECL_OVERRIDE;
 
     /*reimp*/ void setModel(QAbstractItemModel *model);
 
@@ -55,7 +55,7 @@ protected:
     virtual QSize measureItem(const QModelIndex &index, bool recursive = true) const;
     virtual StyleOptionGanttItem getStyleOption(const QModelIndex &index) const;
 
-    /*reimp*/ void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
+    void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
     /*reimp*/ int horizontalOffset() const
     {

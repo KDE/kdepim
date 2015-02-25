@@ -75,7 +75,7 @@ private:
     virtual void doActivated() = 0;
 
 private:
-    /* reimp */ bool eventFilter(QObject *, QEvent *) Q_DECL_OVERRIDE;
+    bool eventFilter(QObject *, QEvent *) Q_DECL_OVERRIDE;
 
 private:
     class Private;

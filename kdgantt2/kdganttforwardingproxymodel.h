@@ -39,18 +39,18 @@ public:
     explicit ForwardingProxyModel(QObject *parent = Q_NULLPTR);
     virtual ~ForwardingProxyModel();
 
-    /*reimp*/ QModelIndex mapFromSource(const QModelIndex &sourceIndex) const Q_DECL_OVERRIDE;
-    /*reimp*/ QModelIndex mapToSource(const QModelIndex &proxyIndex) const Q_DECL_OVERRIDE;
+    QModelIndex mapFromSource(const QModelIndex &sourceIndex) const Q_DECL_OVERRIDE;
+    QModelIndex mapToSource(const QModelIndex &proxyIndex) const Q_DECL_OVERRIDE;
 
-    /*reimp*/ void setSourceModel(QAbstractItemModel *model) Q_DECL_OVERRIDE;
+    void setSourceModel(QAbstractItemModel *model) Q_DECL_OVERRIDE;
 
-    /*reimp*/ QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    /*reimp*/ QModelIndex parent(const QModelIndex &idx) const Q_DECL_OVERRIDE;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QModelIndex parent(const QModelIndex &idx) const Q_DECL_OVERRIDE;
 
-    /*reimp*/ int rowCount(const QModelIndex &idx = QModelIndex()) const Q_DECL_OVERRIDE;
-    /*reimp*/ int columnCount(const QModelIndex &idx = QModelIndex()) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &idx = QModelIndex()) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &idx = QModelIndex()) const Q_DECL_OVERRIDE;
 
-    /*reimp*/ bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
 
 protected Q_SLOTS:
     virtual void sourceModelAboutToBeReset();

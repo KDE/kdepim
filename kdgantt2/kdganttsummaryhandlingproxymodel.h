@@ -37,10 +37,10 @@ public:
     explicit SummaryHandlingProxyModel(QObject *parent = Q_NULLPTR);
     virtual ~SummaryHandlingProxyModel();
 
-    /*reimp*/ void setSourceModel(QAbstractItemModel *model) Q_DECL_OVERRIDE;
+    void setSourceModel(QAbstractItemModel *model) Q_DECL_OVERRIDE;
 
-    /*reimp*/ QVariant data(const QModelIndex &proxyIndex, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-    /*reimp*/ bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &proxyIndex, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
 
     /*reimp*/ Qt::ItemFlags flags(const QModelIndex &idx) const;
 

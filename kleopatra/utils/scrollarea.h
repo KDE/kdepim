@@ -46,8 +46,8 @@ public:
     explicit ScrollArea(QWidget *widget = Q_NULLPTR);
     ~ScrollArea();
 
-    /* reimp */ QSize minimumSizeHint() const Q_DECL_OVERRIDE;
-    /* reimp */ QSize sizeHint() const Q_DECL_OVERRIDE;
+    QSize minimumSizeHint() const Q_DECL_OVERRIDE;
+    QSize sizeHint() const Q_DECL_OVERRIDE;
 };
 
 }
