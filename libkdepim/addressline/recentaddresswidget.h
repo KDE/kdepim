@@ -33,7 +33,7 @@ class RecentAddressWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit RecentAddressWidget(QWidget *parent = 0);
+    explicit RecentAddressWidget(QWidget *parent = Q_NULLPTR);
     ~RecentAddressWidget();
 
     void setAddresses( const QStringList &addrs );
