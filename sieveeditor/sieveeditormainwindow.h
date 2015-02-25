@@ -75,6 +75,9 @@ private:
     QAction *mCutAction;
     QAction *mSelectAllAction;
     QAction *mSaveAsAction;
+    QAction *mImportAction;
+    QAction *mShareAction;
+    QAction *mSpellCheckAction;
 
     QLabel *mStatusBarInfo;
     QNetworkConfigurationManager *mNetworkConfigurationManager;

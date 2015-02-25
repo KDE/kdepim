@@ -163,6 +163,20 @@ void SieveEditorMainWindow::setupActions()
     mCutAction = KStandardAction::cut(mMainWidget->sieveEditorMainWidget(), SLOT(slotCut()), ac);
     mSelectAllAction = KStandardAction::selectAll(mMainWidget->sieveEditorMainWidget(), SLOT(slotSelectAll()), ac);
     mSaveAsAction = KStandardAction::saveAs(mMainWidget->sieveEditorMainWidget(), SLOT(slotSaveAs()), ac);
+
+    mImportAction = ac->addAction(QLatin1String("import_script"), mMainWidget->sieveEditorMainWidget(), SLOT(slotImport()));
+    mImportAction->setText(i18n("Import..."));
+    mImportAction->setEnabled(false);
+
+    mShareAction = ac->addAction(QLatin1String("share_script"), mMainWidget->sieveEditorMainWidget(), SLOT(slotShare()));
+    mShareAction->setText(i18n("Share..."));
+    mShareAction->setEnabled(false);
+
+    mSpellCheckAction = ac->addAction(QLatin1String("check_spelling"), mMainWidget->sieveEditorMainWidget(), SLOT(slotCheckSpelling()));
+    mSpellCheckAction->setIcon(QIcon::fromTheme(QStringLiteral("tools-check-spelling")));
+    mSpellCheckAction->setText(i18n("Check Spelling..."));
+    mSpellCheckAction->setEnabled(false);
+
 }
 
 void SieveEditorMainWindow::slotRefreshList()
@@ -248,6 +262,9 @@ void SieveEditorMainWindow::slotUpdateActions()
     mUploadScript->setEnabled(hasPage && !mNetworkIsDown);
     mRefreshList->setEnabled(!mNetworkIsDown);
     mSaveAsAction->setEnabled(hasPage);
+    mImportAction->setEnabled(hasPage);
+    mShareAction->setEnabled(hasPage && !mNetworkIsDown);
+    mSpellCheckAction->setEnabled(hasPage);
 }
 
 void SieveEditorMainWindow::slotUndoAvailable(bool b)
