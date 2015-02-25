@@ -32,7 +32,6 @@
 
 #include "notehostdialog.h"
 #include "notesharedglobalconfig.h"
-#include "noteshared/settings/globalsettings.h"
 
 #include <kconfig.h>
 #include <kdebug.h>
@@ -100,7 +99,8 @@ NoteHostDialog::~NoteHostDialog()
     // Write known hosts to configfile
     NoteShared::NoteSharedGlobalConfig::setKnownHosts( m_hostCombo->historyItems() );
     NoteShared::NoteSharedGlobalConfig::setNoteHostDialogSize(size());
-    NoteShared::GlobalSettings::self()->requestSync();
+    NoteShared::NoteSharedGlobalConfig::setNoteHostDialogSize(size());
+    NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
 }
 
 void NoteHostDialog::readConfig()
