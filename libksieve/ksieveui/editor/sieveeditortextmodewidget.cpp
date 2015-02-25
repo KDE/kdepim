@@ -367,5 +367,5 @@ void SieveEditorTextModeWidget::goToLine()
 
 void SieveEditorTextModeWidget::checkSpelling()
 {
-    mTextEdit->slotSpeakText();
+    mTextEdit->slotCheckSpelling();
 }
