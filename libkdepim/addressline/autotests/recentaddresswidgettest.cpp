@@ -19,7 +19,7 @@
 */
 
 #include "recentaddresswidgettest.h"
-#include "../recentaddresswidget.h"
+#include "../recentaddress/recentaddresswidget.h"
 #include <KLineEdit>
 #include <KPushButton>
 #include <qlistwidget.h>

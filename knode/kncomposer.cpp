@@ -21,8 +21,8 @@
 #include <QLabel>
 #include <QtDBus/QtDBus>
 #include <qgroupbox.h>
-#include "libkdepim/addressline/recentaddresses.h"
-#include "libkdepim/addressline/recentaddressdialog.h"
+#include "libkdepim/addressline/recentaddress/recentaddresses.h"
+#include "libkdepim/addressline/recentaddress/recentaddressdialog.h"
 using KPIM::RecentAddresses;
 #include <akonadi/contact/emailaddressselectiondialog.h>
 #include <kcharsets.h>

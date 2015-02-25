@@ -31,8 +31,8 @@
 #include <klocale.h>
 #include <libkdepim/addressline/completionorder/completionordereditor.h>
 #include <libkdepim/ldap/ldapclientsearch.h>
-#include <libkdepim/addressline/recentaddresses.h>
-#include <libkdepim/addressline/recentaddressdialog.h>
+#include <libkdepim/addressline/recentaddress/recentaddresses.h>
+#include <libkdepim/addressline/recentaddress/recentaddressdialog.h>
 
 #include <QLineEdit>
 
