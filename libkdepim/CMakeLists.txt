@@ -74,6 +74,7 @@ set(kdepim_addressline_LIB_SRCS
    addressline/baloocompletionemail.cpp
    addressline/completionorderwidget.cpp
    addressline/recentaddressdialog.cpp
+   addressline/recentaddresswidget.cpp
 )
 
 set(kdepim_addressline_blacklist_baloo_LIB_SRCS
