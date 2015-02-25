@@ -5,6 +5,7 @@
   <project_license>GPL-2.0+</project_license>
   <name>KAddressBook</name>
   <name xml:lang="ar">دفتر عناوينك</name>
+  <name xml:lang="bs">KAddressBook</name>
   <name xml:lang="ca">KAddressBook</name>
   <name xml:lang="cs">KAddressBook</name>
   <name xml:lang="da">KAddressBook</name>
@@ -66,6 +67,7 @@
     <p xml:lang="zh-TW">KDE 通訊錄會儲存所有您的家庭、朋友與其他聯絡人的個人資料詳情。</p>
     <p>Features:</p>
     <p xml:lang="ar">الميزات:</p>
+    <p xml:lang="bs">Svojstva:</p>
     <p xml:lang="ca">Característiques:</p>
     <p xml:lang="cs">Vlastnosti:</p>
     <p xml:lang="de">Funktionen:</p>
