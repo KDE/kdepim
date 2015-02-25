@@ -32,45 +32,10 @@
 
 #include "kdepim_export.h"
 #include <kabc/addressee.h>
-#include <KDialog>
 #include <QStringList>
 class KConfig;
-class KPushButton;
-class QListWidget;
-class KLineEdit;
 
 namespace KPIM {
-
-class KDEPIM_EXPORT RecentAddressDialog : public KDialog
-{
-    Q_OBJECT
-public:
-    explicit RecentAddressDialog( QWidget *parent );
-    ~RecentAddressDialog();
-
-    void setAddresses( const QStringList &addrs );
-    QStringList addresses() const;
-    void addAddresses(KConfig *config);
-    bool wasChanged() const;
-private slots:
-    void slotAddItem();
-    void slotRemoveItem();
-    void slotSelectionChanged();
-    void slotTypedSomething(const QString&);
-
-protected:
-    void updateButtonState();
-    bool eventFilter( QObject* o, QEvent* e );
-
-private:
-    void readConfig();
-    void writeConfig();
-    KPushButton* mNewButton, *mRemoveButton;
-    QListWidget *mListView;
-    KLineEdit *mLineEdit;
-    bool mDirty;
-};
-
 /**
  * Handles a list of "recent email-addresses". Simply set a max-count and
  * call @ref add() to add entries.

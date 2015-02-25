@@ -32,6 +32,7 @@
 #include <libkdepim/addressline/completionordereditor.h>
 #include <libkdepim/ldap/ldapclientsearch.h>
 #include <libkdepim/addressline/recentaddresses.h>
+#include <libkdepim/addressline/recentaddressdialog.h>
 
 #include <QLineEdit>
 
