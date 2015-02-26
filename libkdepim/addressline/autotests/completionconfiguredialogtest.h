@@ -18,21 +18,19 @@
 
 */
 
-#ifndef RECENTADDRESSWIDGETTEST_H
-#define RECENTADDRESSWIDGETTEST_H
+#ifndef COMPLETIONCONFIGUREDIALOGTEST_H
+#define COMPLETIONCONFIGUREDIALOGTEST_H
 
 #include <QObject>
 
-class RecentAddressWidgetTest : public QObject
+class CompletionConfigureDialogTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit RecentAddressWidgetTest(QObject *parent = 0);
-    ~RecentAddressWidgetTest();
+    explicit CompletionConfigureDialogTest(QObject *parent = 0);
+    ~CompletionConfigureDialogTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
-    void shouldAddAddresses();
-    void shouldInformThatItWasChanged();
 };
 
-#endif // RECENTADDRESSWIDGETTEST_H
+#endif // COMPLETIONCONFIGUREDIALOGTEST_H

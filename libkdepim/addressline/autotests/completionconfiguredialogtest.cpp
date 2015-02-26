@@ -18,21 +18,28 @@
 
 */
 
-#ifndef RECENTADDRESSWIDGETTEST_H
-#define RECENTADDRESSWIDGETTEST_H
+#include "completionconfiguredialogtest.h"
+#include "../completionconfiguredialog.h"
+#include <qdialogbuttonbox.h>
+#include <qtest.h>
 
-#include <QObject>
-
-class RecentAddressWidgetTest : public QObject
+CompletionConfigureDialogTest::CompletionConfigureDialogTest(QObject *parent)
+    : QObject(parent)
 {
-    Q_OBJECT
-public:
-    explicit RecentAddressWidgetTest(QObject *parent = 0);
-    ~RecentAddressWidgetTest();
-private Q_SLOTS:
-    void shouldHaveDefaultValue();
-    void shouldAddAddresses();
-    void shouldInformThatItWasChanged();
-};
 
-#endif // RECENTADDRESSWIDGETTEST_H
+}
+
+CompletionConfigureDialogTest::~CompletionConfigureDialogTest()
+{
+
+}
+
+void CompletionConfigureDialogTest::shouldHaveDefaultValue()
+{
+    KPIM::CompletionConfigureDialog dlg;
+
+    QDialogButtonBox *buttonBox = qFindChild<QDialogButtonBox *>(&dlg,QLatin1String("buttonbox"));
+    QVERIFY(buttonBox);
+}
+
+QTEST_MAIN(CompletionConfigureDialogTest)

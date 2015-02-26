@@ -18,21 +18,28 @@
 
 */
 
-#ifndef RECENTADDRESSWIDGETTEST_H
-#define RECENTADDRESSWIDGETTEST_H
 
-#include <QObject>
+#include "completionconfiguredialog.h"
+#include <KLocalizedString>
+#include <QVBoxLayout>
+#include <QDialogButtonBox>
 
-class RecentAddressWidgetTest : public QObject
+using namespace KPIM;
+CompletionConfigureDialog::CompletionConfigureDialog(QWidget *parent)
+    : QDialog(parent)
 {
-    Q_OBJECT
-public:
-    explicit RecentAddressWidgetTest(QObject *parent = 0);
-    ~RecentAddressWidgetTest();
-private Q_SLOTS:
-    void shouldHaveDefaultValue();
-    void shouldAddAddresses();
-    void shouldInformThatItWasChanged();
-};
+    //KF5 add i18n
+    setWindowTitle(QLatin1String("Configure completion"));
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    buttonBox->setObjectName(QLatin1String("buttonbox"));
+    mainLayout->addWidget(buttonBox);
+}
 
-#endif // RECENTADDRESSWIDGETTEST_H
+
+
+CompletionConfigureDialog::~CompletionConfigureDialog()
+{
+
+}

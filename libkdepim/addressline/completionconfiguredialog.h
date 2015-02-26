@@ -18,21 +18,20 @@
 
 */
 
-#ifndef RECENTADDRESSWIDGETTEST_H
-#define RECENTADDRESSWIDGETTEST_H
+#ifndef COMPLETIONCONFIGUREDIALOG_H
+#define COMPLETIONCONFIGUREDIALOG_H
 
-#include <QObject>
+#include "kdepim_export.h"
 
-class RecentAddressWidgetTest : public QObject
+#include <QDialog>
+namespace KPIM {
+class KDEPIM_EXPORT CompletionConfigureDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit RecentAddressWidgetTest(QObject *parent = 0);
-    ~RecentAddressWidgetTest();
-private Q_SLOTS:
-    void shouldHaveDefaultValue();
-    void shouldAddAddresses();
-    void shouldInformThatItWasChanged();
+    explicit CompletionConfigureDialog(QWidget *parent=0);
+    ~CompletionConfigureDialog();
 };
+}
 
-#endif // RECENTADDRESSWIDGETTEST_H
+#endif // COMPLETIONCONFIGUREDIALOG_H
