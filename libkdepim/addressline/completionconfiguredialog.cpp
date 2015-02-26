@@ -20,11 +20,21 @@
 
 
 #include "completionconfiguredialog.h"
+#include <KLocalizedString>
+#include <QVBoxLayout>
+#include <QDialogButtonBox>
+
 using namespace KPIM;
 CompletionConfigureDialog::CompletionConfigureDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-
+    //KF5 add i18n
+    setWindowTitle(QLatin1String("Configure completion"));
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    buttonBox->setObjectName(QLatin1String("buttonbox"));
+    mainLayout->addWidget(buttonBox);
 }
 
 

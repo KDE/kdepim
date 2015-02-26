@@ -72,6 +72,7 @@ set(kdepim_addressline_LIB_SRCS
    addressline/addresseelineedit.cpp
    addressline/kmailcompletion.cpp
    addressline/baloocompletionemail.cpp
+   addressline/completionconfiguredialog.cpp
    addressline/recentaddress/recentaddressdialog.cpp
    addressline/recentaddress/recentaddresswidget.cpp
    addressline/recentaddress/recentaddresses.cpp
@@ -82,7 +83,7 @@ set(kdepim_addressline_blacklist_baloo_LIB_SRCS
    addressline/blacklistbaloocompletion/blacklistbalooemaillist.cpp
    addressline/blacklistbaloocompletion/blacklistbalooemailsearchjob.cpp
    addressline/blacklistbaloocompletion/blacklistbalooemailutil.cpp
-   addressline/blacklistbaloocompletion/blacklistbalooemailcompletionwidget.cpp 
+   addressline/blacklistbaloocompletion/blacklistbalooemailcompletionwidget.cpp
 ) 
 
 set(kdepim_LIB_SRCS

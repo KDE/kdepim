@@ -19,6 +19,8 @@
 */
 
 #include "completionconfiguredialogtest.h"
+#include "../completionconfiguredialog.h"
+#include <qdialogbuttonbox.h>
 #include <qtest_kde.h>
 
 CompletionConfigureDialogTest::CompletionConfigureDialogTest(QObject *parent)
@@ -30,6 +32,14 @@ CompletionConfigureDialogTest::CompletionConfigureDialogTest(QObject *parent)
 CompletionConfigureDialogTest::~CompletionConfigureDialogTest()
 {
 
+}
+
+void CompletionConfigureDialogTest::shouldHaveDefaultValue()
+{
+    KPIM::CompletionConfigureDialog dlg;
+
+    QDialogButtonBox *buttonBox = qFindChild<QDialogButtonBox *>(&dlg,QLatin1String("buttonbox"));
+    QVERIFY(buttonBox);
 }
 
 QTEST_KDEMAIN(CompletionConfigureDialogTest, GUI)

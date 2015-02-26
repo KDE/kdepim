@@ -21,9 +21,11 @@
 #ifndef COMPLETIONCONFIGUREDIALOG_H
 #define COMPLETIONCONFIGUREDIALOG_H
 
-#include <KDialog>
+#include "kdepim_export.h"
+
+#include <QDialog>
 namespace KPIM {
-class CompletionConfigureDialog : public KDialog
+class KDEPIM_EXPORT CompletionConfigureDialog : public QDialog
 {
     Q_OBJECT
 public:

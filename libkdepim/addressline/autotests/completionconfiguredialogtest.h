@@ -29,6 +29,8 @@ class CompletionConfigureDialogTest : public QObject
 public:
     explicit CompletionConfigureDialogTest(QObject *parent = 0);
     ~CompletionConfigureDialogTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
 #endif // COMPLETIONCONFIGUREDIALOGTEST_H
