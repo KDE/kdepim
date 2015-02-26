@@ -16,7 +16,6 @@
 */
 
 #include "notenetworkconfig.h"
-#include "settings/globalsettings.h"
 
 #include "notesharedglobalconfig.h"
 
@@ -89,7 +88,7 @@ void NoteNetworkConfigWidget::save()
     NoteShared::NoteSharedGlobalConfig::self()->setReceiveNotes(mTmpChkB->isChecked());
     NoteShared::NoteSharedGlobalConfig::self()->setSenderID(kcfg_SenderID->text());
     NoteShared::NoteSharedGlobalConfig::self()->setPort(kcfg_Port->value());
-    NoteShared::GlobalSettings::self()->requestSync();
+    NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
 }
 
 void NoteNetworkConfigWidget::load()

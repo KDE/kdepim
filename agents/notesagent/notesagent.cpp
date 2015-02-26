@@ -21,7 +21,6 @@
 #include "notesharedglobalconfig.h"
 #include "notesagentsettings.h"
 #include "notesagentsettingsdialog.h"
-#include "settings/globalsettings.h"
 
 #include <AgentInstance>
 #include <AgentManager>
@@ -137,7 +136,7 @@ void NotesAgent::setReceiveNotes(bool b)
 {
     if (NoteShared::NoteSharedGlobalConfig::receiveNotes() != b) {
         NoteShared::NoteSharedGlobalConfig::setReceiveNotes(b);
-        NoteShared::GlobalSettings::self()->requestSync();
+        NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
         mNotesManager->updateNetworkListener();
     }
 }
@@ -155,7 +154,7 @@ void NotesAgent::setPort(int value)
 
     if (NoteShared::NoteSharedGlobalConfig::port() != static_cast<uint>(value)) {
         NoteShared::NoteSharedGlobalConfig::setPort(value);
-        NoteShared::GlobalSettings::self()->requestSync();
+        NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
         if (NotesAgentSettings::enabled()) {
             mNotesManager->updateNetworkListener();
         }
@@ -170,7 +169,7 @@ void NotesAgent::setAlarmCheckInterval(int value)
 
     if (NoteShared::NoteSharedGlobalConfig::checkInterval() != static_cast<uint>(value)) {
         NoteShared::NoteSharedGlobalConfig::setCheckInterval(value);
-        NoteShared::GlobalSettings::self()->requestSync();
+        NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
         reload();
     }
 }
