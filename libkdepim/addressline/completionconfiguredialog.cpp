@@ -27,6 +27,7 @@
 #include <KConfigGroup>
 #include <KGlobal>
 #include <KSharedConfig>
+#include <addressline/completionorder/completionorderwidget.h>
 
 using namespace KPIM;
 CompletionConfigureDialog::CompletionConfigureDialog(QWidget *parent)
@@ -41,8 +42,14 @@ CompletionConfigureDialog::CompletionConfigureDialog(QWidget *parent)
     mTabWidget->setObjectName(QLatin1String("tabwidget"));
     mainLayout->addWidget(mTabWidget);
 
+    //TODO mCompletionOrderWidget = new KPIM::CompletionOrderWidget();
+
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
     buttonBox->setObjectName(QLatin1String("buttonbox"));
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotSave()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    mainLayout->addWidget(buttonBox);
+
     mainLayout->addWidget(buttonBox);
     readConfig();
 }
@@ -69,7 +76,7 @@ void CompletionConfigureDialog::writeConfig()
     group.sync();
 }
 
-void CompletionConfigureDialog::save()
+void CompletionConfigureDialog::slotSave()
 {
     //TODO
 }
