@@ -66,6 +66,9 @@ VacationPageWidget::VacationPageWidget(QWidget *parent)
                                   "without it, KMail cannot install out-of-"
                                   "office replies for you."
                                   "Please contact your system administrator." ) );
+    QFont font = lab->font();
+    font.setBold(true);
+    lab->setFont(font);
     vbox->addWidget(lab);
     vbox->setAlignment(lab, Qt::AlignVCenter);
 
