@@ -153,7 +153,7 @@ bool SendLaterInfo::operator ==(const SendLaterInfo &other) const
 
 void SendLaterInfo::readConfig(const KConfigGroup &config)
 {
-    if (config.hasKey(QLatin1String("lastDateTimeSend"))) {
+    if (config.hasKey(QStringLiteral("lastDateTimeSend"))) {
         mLastDateTimeSend = QDateTime::fromString(config.readEntry("lastDateTimeSend"), Qt::ISODate);
     }
     mDateTime = config.readEntry("date", QDateTime::currentDateTime());
