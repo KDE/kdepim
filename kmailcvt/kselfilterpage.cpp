@@ -49,7 +49,6 @@
 #include <QCheckBox>
 
 // Akonadi includes
-#include <akonadi/collectionrequester.h>
 #include <akonadi/control.h>
 
 using namespace MailImporter;
