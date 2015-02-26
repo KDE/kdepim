@@ -76,6 +76,11 @@ void CompletionConfigureDialog::writeConfig()
     group.sync();
 }
 
+void CompletionConfigureDialog::load()
+{
+    //TODO
+}
+
 void CompletionConfigureDialog::slotSave()
 {
     //TODO

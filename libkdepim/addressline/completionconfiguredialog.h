@@ -34,6 +34,7 @@ public:
     explicit CompletionConfigureDialog(QWidget *parent=0);
     ~CompletionConfigureDialog();
 
+    void load();
 private slots:
     void slotSave();
 
