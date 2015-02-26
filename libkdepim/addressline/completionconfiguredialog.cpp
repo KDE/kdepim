@@ -23,6 +23,10 @@
 #include <KLocalizedString>
 #include <QVBoxLayout>
 #include <QDialogButtonBox>
+#include <QTabWidget>
+#include <KConfigGroup>
+#include <KGlobal>
+#include <KSharedConfig>
 
 using namespace KPIM;
 CompletionConfigureDialog::CompletionConfigureDialog(QWidget *parent)
@@ -32,14 +36,40 @@ CompletionConfigureDialog::CompletionConfigureDialog(QWidget *parent)
     setWindowTitle(QLatin1String("Configure completion"));
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
+
+    mTabWidget = new QTabWidget;
+    mTabWidget->setObjectName(QLatin1String("tabwidget"));
+    mainLayout->addWidget(mTabWidget);
+
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
     buttonBox->setObjectName(QLatin1String("buttonbox"));
     mainLayout->addWidget(buttonBox);
+    readConfig();
 }
-
 
 
 CompletionConfigureDialog::~CompletionConfigureDialog()
 {
+    writeConfig();
+}
 
+void CompletionConfigureDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "CompletionConfigureDialog" );
+    const QSize size = group.readEntry( "Size", QSize(600, 400) );
+    if ( size.isValid() ) {
+        resize( size );
+    }
+}
+
+void CompletionConfigureDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "CompletionConfigureDialog" );
+    group.writeEntry( "Size", size() );
+    group.sync();
+}
+
+void CompletionConfigureDialog::save()
+{
+    //TODO
 }

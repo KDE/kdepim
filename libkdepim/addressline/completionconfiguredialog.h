@@ -24,6 +24,7 @@
 #include "kdepim_export.h"
 
 #include <QDialog>
+class QTabWidget;
 namespace KPIM {
 class KDEPIM_EXPORT CompletionConfigureDialog : public QDialog
 {
@@ -31,6 +32,12 @@ class KDEPIM_EXPORT CompletionConfigureDialog : public QDialog
 public:
     explicit CompletionConfigureDialog(QWidget *parent=0);
     ~CompletionConfigureDialog();
+private slots:
+    void save();
+private:
+    void readConfig();
+    void writeConfig();
+    QTabWidget *mTabWidget;
 };
 }
 
