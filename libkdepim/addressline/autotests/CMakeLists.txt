@@ -13,3 +13,8 @@ set( libkdepim_recentaddresswidgettest_SRCS recentaddresswidgettest.cpp ../recen
 kde4_add_unit_test( libkdepim_recentaddresswidgettest ${libkdepim_recentaddresswidgettest_SRCS})
 target_link_libraries( libkdepim_recentaddresswidgettest ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_KABC_LIBS} ${KDEPIMLIBS_KPIMUTILS_LIBS})
 
+
+
+set( libkdepim_completionconfiguredialogtest_SRCS completionconfiguredialogtest.cpp )
+kde4_add_unit_test( libkdepim_completionconfiguredialogtest ${libkdepim_completionconfiguredialogtest_SRCS})
+target_link_libraries( libkdepim_completionconfiguredialogtest ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS} kdepim)
