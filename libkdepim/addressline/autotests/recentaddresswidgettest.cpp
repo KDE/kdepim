@@ -24,6 +24,7 @@
 #include <KPushButton>
 #include <qlistwidget.h>
 #include <qtest_kde.h>
+#include <qtestmouse.h>
 
 RecentAddressWidgetTest::RecentAddressWidgetTest(QObject *parent)
     : QObject(parent)
@@ -51,6 +52,34 @@ void RecentAddressWidgetTest::shouldHaveDefaultValue()
     QListWidget *listview = qFindChild<QListWidget *>(&w, QLatin1String("list_view"));
     QVERIFY(listview);
     QCOMPARE(listview->count(), 0);
+}
+
+void RecentAddressWidgetTest::shouldAddAddresses()
+{
+    KPIM::RecentAddressWidget w;
+    QListWidget *listview = qFindChild<QListWidget *>(&w, QLatin1String("list_view"));
+    QCOMPARE(listview->count(), 0);
+    QStringList lst;
+    lst << QLatin1String("foo");
+    lst << QLatin1String("foo1");
+    lst << QLatin1String("foo2");
+    w.setAddresses(lst);
+    QCOMPARE(listview->count(), lst.count());
+    //Clear list before to add
+    w.setAddresses(lst);
+    QCOMPARE(listview->count(), lst.count());
+}
+
+void RecentAddressWidgetTest::shouldInformThatItWasChanged()
+{
+    KPIM::RecentAddressWidget w;
+    QVERIFY(!w.wasChanged());
+    KPushButton *newButton = qFindChild<KPushButton *>(&w, QLatin1String("new_button"));
+    QVERIFY(newButton);
+    QTest::mouseClick(newButton, Qt::LeftButton);
+    QVERIFY(w.wasChanged());
+    QListWidget *listview = qFindChild<QListWidget *>(&w, QLatin1String("list_view"));
+    QCOMPARE(listview->count(), 1);
 }
 
 QTEST_KDEMAIN(RecentAddressWidgetTest, GUI)

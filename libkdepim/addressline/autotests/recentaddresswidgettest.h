@@ -31,6 +31,8 @@ public:
     ~RecentAddressWidgetTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldAddAddresses();
+    void shouldInformThatItWasChanged();
 };
 
 #endif // RECENTADDRESSWIDGETTEST_H
