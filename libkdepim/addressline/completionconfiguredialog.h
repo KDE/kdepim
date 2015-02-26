@@ -24,13 +24,24 @@
 #include "kdepim_export.h"
 
 #include <QDialog>
+class QTabWidget;
 namespace KPIM {
+class CompletionOrderWidget;
 class KDEPIM_EXPORT CompletionConfigureDialog : public QDialog
 {
     Q_OBJECT
 public:
     explicit CompletionConfigureDialog(QWidget *parent=0);
     ~CompletionConfigureDialog();
+
+private slots:
+    void slotSave();
+
+private:
+    void readConfig();
+    void writeConfig();
+    QTabWidget *mTabWidget;
+    KPIM::CompletionOrderWidget *mCompletionOrderWidget;
 };
 }
 

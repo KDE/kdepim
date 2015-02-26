@@ -49,7 +49,6 @@
 #include <QCheckBox>
 
 // Akonadi includes
-#include <AkonadiWidgets/collectionrequester.h>
 #include <AkonadiCore/control.h>
 #include <QStandardPaths>
 

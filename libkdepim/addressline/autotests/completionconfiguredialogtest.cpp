@@ -20,6 +20,7 @@
 
 #include "completionconfiguredialogtest.h"
 #include "../completionconfiguredialog.h"
+#include <QTabWidget>
 #include <qdialogbuttonbox.h>
 #include <qtest.h>
 
@@ -40,6 +41,9 @@ void CompletionConfigureDialogTest::shouldHaveDefaultValue()
 
     QDialogButtonBox *buttonBox = qFindChild<QDialogButtonBox *>(&dlg,QLatin1String("buttonbox"));
     QVERIFY(buttonBox);
+
+    QTabWidget *tabWidget = qFindChild<QTabWidget *>(&dlg,QLatin1String("tabwidget"));
+    QVERIFY(tabWidget);
 }
 
 QTEST_MAIN(CompletionConfigureDialogTest)
