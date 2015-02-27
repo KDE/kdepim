@@ -58,7 +58,7 @@ void MergeContactSelectListWidget::updateTitle()
     QString title;
     switch (mConflictType) {
     case MergeContacts::None:
-        qWarning()<<" MergeContacts::None used in updateTitle. It's a bug";
+        qWarning() << " MergeContacts::None used in updateTitle. It's a bug";
         // it's not possible.
         break;
     case MergeContacts::Birthday:
