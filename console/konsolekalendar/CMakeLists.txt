@@ -31,7 +31,8 @@ include_directories(
 )
    
 
-kde4_add_app_icon(konsolekalendar_SRCS "${KDE4_ICON_DIR}/oxygen/*/apps/office-calendar.png")
+#file(GLOB ICONS_SRCS "${KDE4_ICON_DIR}/oxygen/*/apps/office-calendar.png")
+#ecm_add_app_icon(konsolekalendar_SRCS ICONS ${ICONS_SRCS})
 
 add_executable(konsolekalendar ${konsolekalendar_SRCS})
 

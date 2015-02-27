@@ -3,7 +3,7 @@ project(kdepim)
 cmake_minimum_required(VERSION 2.8.12)
 
 # we need some parts of the ECM CMake helpers
-find_package(ECM 1.6.0 REQUIRED NO_MODULE)
+find_package(ECM 1.7.0 REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${kdepim_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
 include(ECMOptionalAddSubdirectory)
 include(ECMInstallIcons)
@@ -18,6 +18,7 @@ include(CheckFunctionExists)
 include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(KDECompilerSettings)
+include(ECMAddAppIcon)
 
 # KDEPIM_VERSION
 # Version scheme: "x.y.z build".

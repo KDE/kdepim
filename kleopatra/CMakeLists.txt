@@ -343,7 +343,8 @@ endif()
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5151)
 
-kde4_add_app_icon(_kleopatra_mainwindow_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/hi*-app-kleopatra.png")
+file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/hi*-apps-kleopatra.png")
+ecm_add_app_icon(_kleopatra_mainwindow_SRCS ICONS ${ICONS_SRCS})
 
 add_executable(kleopatra_bin ${_kleopatra_SRCS} ${_kleopatra_mainwindow_SRCS} ${_kleopatra_uiserver_SRCS} ${_kleopatra_libkdepim_SRCS})
 set_target_properties(kleopatra_bin PROPERTIES OUTPUT_NAME kleopatra)

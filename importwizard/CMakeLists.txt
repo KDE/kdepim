@@ -77,7 +77,8 @@ ki18n_wrap_ui(importwizard_SRCS
 		  ui/importfinishpage.ui 
 		  ui/importcalendarpage.ui)
 
-kde4_add_app_icon(importwizard_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/hi*-app-kontact-import-wizard.png")
+file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/hi*-apps-kontact-import-wizard.png")
+ecm_add_app_icon(importwizard_SRCS ICONS ${ICONS_SRCS})
 
 add_executable(importwizard ${importwizard_SRCS})
 

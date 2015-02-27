@@ -8,7 +8,8 @@ set(kabcviewer_bin_SRCS
 
 
 # todo: more appropriate icon?
-kde4_add_app_icon(kabcviewer_bin_SRCS "${KDE4_ICON_DIR}/oxygen/*/apps/office-address-book.png")
+file(GLOB ICONS_SRCS "${KDE4_ICON_DIR}/oxygen/*/apps/office-address-book.png")
+ecm_add_app_icon(kabcviewer_bin_SRCS ICONS ${ICONS_SRCS})
 
 add_executable(kabcviewer_bin ${kabcviewer_bin_SRCS})
 set_target_properties(kabcviewer_bin PROPERTIES OUTPUT_NAME kabcviewer)
@@ -24,7 +25,8 @@ set(kabceditor_bin_SRCS
 )
 
 # todo: more appropriate icon?
-kde4_add_app_icon(kabceditor_bin_SRCS "${KDE4_ICON_DIR}/oxygen/*/apps/office-address-book.png")
+file(GLOB ICONS_SRCS "${KDE4_ICON_DIR}/oxygen/*/apps/office-address-book.png")
+ecm_add_app_icon(kabceditor_bin_SRCS ICONS ${ICONS_SRCS})
 
 add_executable(kabceditor_bin ${kabceditor_bin_SRCS})
 set_target_properties(kabceditor_bin PROPERTIES OUTPUT_NAME kabceditor)

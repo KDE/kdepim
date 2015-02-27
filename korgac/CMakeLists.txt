@@ -44,7 +44,8 @@ if(RUNTIME_PLUGINS_STATIC)
   add_definitions(-DSERIALIZER_PLUGIN_STATIC)
 endif()
 
-kde4_add_app_icon(korgac_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/pixmap/hi*-apps-korganizer.png")
+#file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/pixmap/hi*-apps-korgac.png")
+#ecm_add_app_icon(korgac_SRCS ICONS ${ICONS_SRCS})
 
 add_executable(korgac ${korgac_SRCS})
 if( APPLE )

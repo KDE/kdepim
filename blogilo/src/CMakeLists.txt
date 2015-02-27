@@ -59,7 +59,8 @@ ki18n_wrap_ui(
 )
 
 kconfig_add_kcfg_files( blogilo_SRCS settings.kcfgc)
-kde4_add_app_icon(blogilo_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/../icons/hi*-app-blogilo.png")
+file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/../icons/hi*-apps-blogilo.png")
+ecm_add_app_icon(blogilo_SRCS ICONS ${ICONS_SRCS})
 add_executable( blogilo ${blogilo_SRCS})
 
 target_link_libraries( blogilo kdepim  KF5::TextEditor  KF5::WebKit KF5::Blog composereditorng  pimcommon KF5::Wallet Qt5::Sql KF5::GAPICore KF5::XmlRpcClient KF5::GAPIBlogger KF5::DBusAddons)

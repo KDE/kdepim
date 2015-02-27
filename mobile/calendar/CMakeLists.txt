@@ -39,7 +39,8 @@ if (RUNTIME_PLUGINS_STATIC)
   add_definitions(-DMAIL_SERIALIZER_PLUGIN_STATIC)
 endif ()
 
-kde4_add_app_icon(korganizer_mobile_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/hi*-apps-korganizer-mobile.png")
+file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/hi*-apps-korganizer-mobile.png")
+ecm_add_app_icon(korganizer_mobile_SRCS ICONS ${ICONS_SRCS})
 
 add_executable(korganizer-mobile ${korganizer_mobile_SRCS} )
 

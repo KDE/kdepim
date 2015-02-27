@@ -94,7 +94,8 @@ ki18n_wrap_ui(akonadiconsole_bin_SRCS
   tagpropertiesdialog.ui
 )
 
-kde4_add_app_icon(akonadiconsole_bin_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/hi*-app-akonadiconsole.png")
+file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/hi*-apps-akonadiconsole.png")
+ecm_add_app_icon(akonadiconsole_bin_SRCS ICONS ${ICONS_SRCS})
 
 add_executable(akonadiconsole_bin ${akonadiconsole_bin_SRCS})
 set_target_properties(akonadiconsole_bin PROPERTIES OUTPUT_NAME akonadiconsole)

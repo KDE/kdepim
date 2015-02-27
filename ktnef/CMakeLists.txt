@@ -18,7 +18,8 @@ set(ktnef_SRCS
   qwmf.cpp
 )
 
-kde4_add_app_icon(ktnef_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/pics/hi*-app-ktnef.png")
+file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/pics/hi*-apps-ktnef.png")
+ecm_add_app_icon(ktnef_SRCS ICONS ${ICONS_SRCS})
 
 ki18n_wrap_ui(ktnef_SRCS ui/attachpropertywidgetbase.ui)
 

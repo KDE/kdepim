@@ -17,7 +17,8 @@ set(_kgpgconf_SRCS
 ki18n_wrap_ui(_kgpgconf_SRCS mainwidget.ui)
 
 # todo: more appropriate icon?
-kde4_add_app_icon(_kgpgconf_SRCS "${KDE4_ICON_DIR}/oxygen/*/apps/preferences-desktop-cryptography.png")
+#file(GLOB ICONS_SRCS "${KDE4_ICON_DIR}/oxygen/*/apps/preferences-desktop-cryptography.png")
+#ecm_add_app_icon(_kgpgconf_SRCS ICONS ${ICONS_SRCS})
 
 add_executable(kgpgconf ${_kgpgconf_SRCS})
 
