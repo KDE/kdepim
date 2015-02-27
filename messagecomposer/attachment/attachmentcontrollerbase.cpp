@@ -685,6 +685,7 @@ void AttachmentControllerBase::openWith(KService::Ptr offer)
                             i18n( "Unable to open attachment" ) );
         return;
     }
+    tempFile->setPermissions( QFile::ReadUser );
     KUrl::List lst;
     KUrl url = KUrl::fromPath(tempFile->fileName());
     lst.append( url );
@@ -713,7 +714,7 @@ void AttachmentControllerBase::openAttachment( AttachmentPart::Ptr part )
                             i18n( "Unable to open attachment" ) );
         return;
     }
-
+    tempFile->setPermissions( QFile::ReadUser );
     bool success = KRun::runUrl( KUrl::fromPath( tempFile->fileName() ),
                                  QString::fromLatin1( part->mimeType() ),
                                  d->wParent,
