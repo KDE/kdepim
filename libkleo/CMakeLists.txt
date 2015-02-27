@@ -108,7 +108,7 @@ if ( NOT KDEPIM_ONLY_KLEO )
    set( kleo_LIB_LIBS ${kleo_LIB_LIBS}  KF5::KIOCore KF5::Gpgmepp KF5::QGpgme KF5::I18n KF5::WidgetsAddons KF5::IconThemes KF5::Completion KF5::KDELibs4Support)
 endif ()
 
-add_library(kleo ${LIBRARY_TYPE} ${kleo_LIB_SRCS})
+add_library(kleo ${kleo_LIB_SRCS})
 generate_export_header(kleo BASE_NAME kleo)
 if(WIN32)
 target_link_libraries(kleo ${kleo_LIB_LIBS}  ${GPGME_VANILLA_LIBRARIES} )

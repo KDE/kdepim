@@ -32,7 +32,7 @@ set (coisceim_part_SRCS
   coisceimpart.cpp
 )
 
-add_library(coisceim_widget ${LIBRARY_TYPE} ${coisceim_widget_SRCS})
+add_library(coisceim_widget ${coisceim_widget_SRCS})
 generate_export_header(coisceim_widget BASE_NAME coisceim_widget)
 
 qt5_generate_dbus_interface(coisceimwidget.h

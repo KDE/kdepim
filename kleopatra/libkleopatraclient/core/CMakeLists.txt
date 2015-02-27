@@ -18,7 +18,7 @@ endif()
 set_source_files_properties(command.cpp PROPERTIES SKIP_AUTOMOC TRUE)
 qt5_generate_moc(command_p.h "${CMAKE_CURRENT_BINARY_DIR}/moc_command_p.cpp")
 qt5_generate_moc(command.h "${CMAKE_CURRENT_BINARY_DIR}/moc_command.cpp")
-add_library(kleopatraclientcore ${LIBRARY_TYPE}
+add_library(kleopatraclientcore
   ${_kleopatraclientcore_extra_SRCS}
   initialization.cpp
   command.cpp

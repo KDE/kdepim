@@ -93,7 +93,7 @@ ki18n_wrap_ui(incidenceeditors_ng_desktop_LIB_SRCS
   schedulingdialog.ui
 )
 
-add_library(incidenceeditorsng ${LIBRARY_TYPE} ${incidenceeditors_ng_desktop_LIB_SRCS})
+add_library(incidenceeditorsng ${incidenceeditors_ng_desktop_LIB_SRCS})
 generate_export_header(incidenceeditorsng BASE_NAME incidenceeditors_ng)
 
 target_link_libraries(incidenceeditorsng
@@ -137,7 +137,7 @@ install(TARGETS incidenceeditorsng ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
     mobileschedulingdialog.ui
   )
 
-  add_library(incidenceeditorsngmobile ${LIBRARY_TYPE} ${incidenceeditors_ng_mobile_LIB_SRCS})
+  add_library(incidenceeditorsngmobile ${incidenceeditors_ng_mobile_LIB_SRCS})
 
   target_link_libraries(incidenceeditorsngmobile
     KF5::AkonadiCalendar

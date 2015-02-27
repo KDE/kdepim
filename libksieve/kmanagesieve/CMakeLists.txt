@@ -9,7 +9,7 @@ set(kmanagesieve_LIB_SRCS
   sievejob.cpp
 )
 
-add_library(kmanagesieve ${LIBRARY_TYPE} ${kmanagesieve_LIB_SRCS})
+add_library(kmanagesieve ${kmanagesieve_LIB_SRCS})
 generate_export_header(kmanagesieve BASE_NAME kmanagesieve)
 
 target_link_libraries(kmanagesieve

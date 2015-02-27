@@ -57,7 +57,7 @@ kconfig_add_kcfg_files(calendarsupport_LIB_SRCS kcalprefs_base.kcfgc)
 
 # qt5_add_dbus_interface(calendarsupport_LIB_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/org.freedesktop.Akonadi.CalendarSearchAgent.xml calendarsearchinterface)
 
-add_library(calendarsupport ${LIBRARY_TYPE} ${calendarsupport_LIB_SRCS})
+add_library(calendarsupport ${calendarsupport_LIB_SRCS})
 generate_export_header(calendarsupport BASE_NAME calendarsupport)
 
 target_link_libraries(
@@ -89,7 +89,7 @@ set(calendarsupportcollectionpage_LIB_SRCS
     collectiongeneralpage.cpp
 )
 
-add_library(calendarsupportcollectionpage ${LIBRARY_TYPE} ${calendarsupportcollectionpage_LIB_SRCS})
+add_library(calendarsupportcollectionpage ${calendarsupportcollectionpage_LIB_SRCS})
 generate_export_header(calendarsupportcollectionpage BASE_NAME calendarsupportcollectionpage)
 target_link_libraries(
   calendarsupportcollectionpage

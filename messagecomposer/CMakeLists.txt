@@ -126,7 +126,7 @@ kconfig_add_kcfg_files(messagecomposer_src
   settings/messagecomposersettings_base.kcfgc 
 )
 
-add_library( messagecomposer ${LIBRARY_TYPE} ${messagecomposer_src} )
+add_library( messagecomposer ${messagecomposer_src} )
 generate_export_header(messagecomposer BASE_NAME messagecomposer)
 target_link_libraries(messagecomposer
   KF5::KIOCore

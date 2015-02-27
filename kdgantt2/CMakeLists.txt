@@ -50,7 +50,7 @@ endforeach(it)
 
 qt5_generate_moc(kdganttgraphicsview_p.h ${CMAKE_BINARY_DIR}/kdgantt2/moc_kdganttgraphicsview_p.cpp)
 macro_add_file_dependencies(kdganttgraphicsview.cpp ${CMAKE_BINARY_DIR}/kdgantt2/moc_kdganttgraphicsview_p.cpp)
-add_library(kdgantt2 ${LIBRARY_TYPE} ${libkdgantt2_SRCS})
+add_library(kdgantt2 ${libkdgantt2_SRCS})
 generate_export_header(kdgantt2 BASE_NAME kdgantt)
 target_link_libraries(kdgantt2  Qt5::Widgets Qt5::PrintSupport )
 

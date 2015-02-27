@@ -94,7 +94,7 @@ ki18n_wrap_ui(eventviews_LIB_SRCS
   agenda/timescaleedit_base.ui
 )
 
-add_library(eventviews ${LIBRARY_TYPE} ${eventviews_LIB_SRCS})
+add_library(eventviews ${eventviews_LIB_SRCS})
 generate_export_header(eventviews BASE_NAME eventviews)
 
 target_link_libraries(eventviews

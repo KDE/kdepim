@@ -211,7 +211,7 @@ qt5_add_dbus_interfaces(libmailcommon_SRCS
   ${CMAKE_SOURCE_DIR}/korganizer/org.kde.Korganizer.Calendar.xml
 )
 
-add_library(mailcommon ${LIBRARY_TYPE} ${libmailcommon_SRCS})
+add_library(mailcommon ${libmailcommon_SRCS})
 generate_export_header(mailcommon BASE_NAME mailcommon)
 
 target_link_libraries(mailcommon messageviewer messagecore messagecomposer mailimporter

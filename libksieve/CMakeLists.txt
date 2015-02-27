@@ -24,7 +24,7 @@ set(ksieve_LIB_SRCS
   ${libksieve_parser_SRCS}
 )
 
-add_library(ksieve ${LIBRARY_TYPE} ${ksieve_LIB_SRCS})
+add_library(ksieve ${ksieve_LIB_SRCS})
 generate_export_header(ksieve BASE_NAME ksieve)
 
 target_link_libraries(ksieve Qt5::Core KF5::I18n)

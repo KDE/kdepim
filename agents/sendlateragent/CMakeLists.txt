@@ -30,7 +30,7 @@ kconfig_add_kcfg_files(sendlaterlib_SRCS
 ki18n_wrap_ui(sendlaterlib_SRCS ui/sendlaterwidget.ui)
 
 
-add_library( sendlater ${LIBRARY_TYPE} ${sendlaterlib_SRCS} )
+add_library( sendlater ${sendlaterlib_SRCS} )
 generate_export_header(sendlater BASE_NAME sendlater)
 target_link_libraries( sendlater KF5::AkonadiCore )
 

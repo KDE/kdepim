@@ -246,7 +246,7 @@ kconfig_add_kcfg_files(libpimcommon_SRCS
   settings/pimcommonsetting_base.kcfgc
 )
 
-add_library(pimcommon ${LIBRARY_TYPE} ${libpimcommon_SRCS})
+add_library(pimcommon ${libpimcommon_SRCS})
 generate_export_header(pimcommon BASE_NAME pimcommon)
 
 if( KF5GAPI_FOUND )

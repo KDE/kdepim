@@ -24,7 +24,7 @@ set(kpgp_LIB_SRCS
    kpgpbase6.cpp )
 
 
-add_library(kpgp ${LIBRARY_TYPE} ${kpgp_LIB_SRCS})
+add_library(kpgp ${kpgp_LIB_SRCS})
 generate_export_header(kpgp BASE_NAME libkpgp)
 
 target_link_libraries(kpgp  KF5::I18n Qt5::Widgets KF5::WidgetsAddons KF5::ConfigCore KF5::Codecs KF5::IconThemes KF5::WindowSystem KF5::Completion KF5::CoreAddons) 

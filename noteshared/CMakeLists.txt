@@ -59,7 +59,7 @@ set( libnoteshared_kcfg_lib_SRCS settings/notesharedglobalconfig.kcfgc )
 kconfig_add_kcfg_files(libnoteshared_kcfg_lib_SRCS ${libnoteshared_kcfg_lib_SRCS})
 
 
-add_library(noteshared ${LIBRARY_TYPE} ${libnoteshared_SRCS} ${libnoteshared_kcfg_lib_SRCS} )
+add_library(noteshared ${libnoteshared_SRCS} ${libnoteshared_kcfg_lib_SRCS} )
 generate_export_header(noteshared BASE_NAME noteshared)
 
 target_link_libraries(noteshared

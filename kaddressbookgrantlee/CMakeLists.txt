@@ -32,7 +32,7 @@ set(kaddressbook_grantlee_printing_LIB_SRCS
 )
 
 
-add_library(kaddressbookgrantlee ${LIBRARY_TYPE} ${kaddressbook_grantlee_LIB_SRCS} ${kaddressbook_grantlee_printing_LIB_SRCS})
+add_library(kaddressbookgrantlee ${kaddressbook_grantlee_LIB_SRCS} ${kaddressbook_grantlee_printing_LIB_SRCS})
 generate_export_header(kaddressbookgrantlee BASE_NAME kaddressbook_grantlee)
 target_link_libraries(kaddressbookgrantlee
   Grantlee5::Templates

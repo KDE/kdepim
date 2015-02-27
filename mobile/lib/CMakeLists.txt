@@ -47,7 +47,7 @@ endif ()
 
 
 
-add_library(kdepimmobileui ${LIBRARY_TYPE} ${mobileui_SRCS})
+add_library(kdepimmobileui ${mobileui_SRCS})
 generate_export_header(kdepimmobileui BASE_NAME mobileui)
 set_target_properties(kdepimmobileui PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 
