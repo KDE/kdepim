@@ -72,7 +72,7 @@ set(kdepim_addressline_LIB_SRCS
    addressline/addresseelineedit.cpp
    addressline/kmailcompletion.cpp
    addressline/baloocompletionemail.cpp
-   addressline/completionconfiguredialog.cpp
+   addressline/completionconfiguredialog/completionconfiguredialog.cpp
    addressline/recentaddress/recentaddressdialog.cpp
    addressline/recentaddress/recentaddresswidget.cpp
    addressline/recentaddress/recentaddresses.cpp
