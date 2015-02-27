@@ -80,11 +80,11 @@ public Q_SLOTS:
     void slotSaveAs();
     void slotImport();
     void slotUploadScripts();
+    void slotAutoGenerateScripts();
+    void slotCheckSyntax();
 
 private Q_SLOTS:
     void slotEnableButtonOk(bool b);
-    void slotAutoGenerateScripts();
-    void slotCheckSyntax();
     void slotGenerateXml();
     void slotSwitchMode();
     void slotSwitchTextMode(const QString &script);

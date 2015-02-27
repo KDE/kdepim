@@ -63,6 +63,8 @@ public Q_SLOTS:
     void slotCheckSpelling();
     void slotShare();
     void slotImport();
+    void slotAutoGenerateScript();
+    void slotCheckSyntax();
 
 Q_SIGNALS:
     void updateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);

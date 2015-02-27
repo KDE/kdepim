@@ -63,6 +63,8 @@ public:
     void checkSpelling();
     void share();
     void import();
+    void autoGenerateScript();
+    void checkSyntax();
 Q_SIGNALS:
     void refreshList();
     void scriptModified(bool, SieveEditorPageWidget *);
