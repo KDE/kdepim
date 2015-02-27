@@ -24,7 +24,7 @@ class MergeContactSelectInformationTabWidgetTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit MergeContactSelectInformationTabWidgetTest(QObject *parent = 0);
+    explicit MergeContactSelectInformationTabWidgetTest(QObject *parent = Q_NULLPTR);
     ~MergeContactSelectInformationTabWidgetTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();

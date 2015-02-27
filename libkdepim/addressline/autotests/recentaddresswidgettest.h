@@ -27,7 +27,7 @@ class RecentAddressWidgetTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit RecentAddressWidgetTest(QObject *parent = 0);
+    explicit RecentAddressWidgetTest(QObject *parent = Q_NULLPTR);
     ~RecentAddressWidgetTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
