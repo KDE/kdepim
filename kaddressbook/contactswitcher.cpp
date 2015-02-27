@@ -126,7 +126,11 @@ void ContactSwitcher::updateStatus()
     mPreviousButton->setEnabled(row != 0);
     mNextButton->setEnabled(row != (mView->model()->rowCount() - 1));
 
-    mStatusLabel->setText(i18nc("@info:status",
-                                "%1 out of %2", row + 1, mView->model()->rowCount()));
+    if ( mView->model()->rowCount() > 0) {
+        mStatusLabel->setText( i18nc( "@info:status",
+                                  "%1 out of %2", row + 1, mView->model()->rowCount() ) );
+    } else {
+        mStatusLabel->clear();
+    }
 }
 
