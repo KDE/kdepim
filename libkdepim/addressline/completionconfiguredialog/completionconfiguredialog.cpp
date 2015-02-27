@@ -28,6 +28,8 @@
 #include <KGlobal>
 #include <KSharedConfig>
 #include <addressline/completionorder/completionorderwidget.h>
+#include <addressline/blacklistbaloocompletion/blacklistbalooemailcompletionwidget.h>
+#include <addressline/recentaddress/recentaddresswidget.h>
 
 using namespace KPIM;
 CompletionConfigureDialog::CompletionConfigureDialog(QWidget *parent)
@@ -43,6 +45,12 @@ CompletionConfigureDialog::CompletionConfigureDialog(QWidget *parent)
     mainLayout->addWidget(mTabWidget);
 
     //TODO mCompletionOrderWidget = new KPIM::CompletionOrderWidget();
+
+    mRecentaddressWidget = new KPIM::RecentAddressWidget;
+    mRecentaddressWidget->setObjectName(QLatin1String("recentaddress_widget"));
+
+    mBlackListBalooWidget = new KPIM::BlackListBalooEmailCompletionWidget;
+    mBlackListBalooWidget->setObjectName(QLatin1String("blacklistbaloo_widget"));
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
     buttonBox->setObjectName(QLatin1String("buttonbox"));
@@ -78,10 +86,20 @@ void CompletionConfigureDialog::writeConfig()
 
 void CompletionConfigureDialog::load()
 {
+    //mRecentaddressWidget->setAddresses( const QStringList &addrs );
     //TODO
 }
 
 void CompletionConfigureDialog::slotSave()
 {
+    mBlackListBalooWidget->save();
+    if (mRecentaddressWidget->wasChanged()) {
+        //TODO
+    }
     //TODO
+}
+
+void CompletionConfigureDialog::setEmailBlackList(const QStringList &lst)
+{
+    mBlackListBalooWidget->setEmailBlackList(lst);
 }
