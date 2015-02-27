@@ -70,6 +70,8 @@ set(kdepim_addressline_LIB_SRCS
    addressline/completionorder/completionordereditor.cpp
    addressline/completionorder/completionorderwidget.cpp
    addressline/addresseelineedit.cpp
+   addressline/addresseelineedit_p.cpp
+   addressline/addresseelineeditstatic.cpp
    addressline/kmailcompletion.cpp
    addressline/baloocompletionemail.cpp
    addressline/completionconfiguredialog/completionconfiguredialog.cpp

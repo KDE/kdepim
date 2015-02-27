@@ -25,6 +25,7 @@
 */
 
 #include "addresseelineedit.h"
+#include "addresseelineedit_p.h"
 #include "ldap/ldapclientsearch.h"
 #include "completionorder/completionordereditor.h"
 #include "addressline/blacklistbaloocompletion/blacklistbalooemailcompletiondialog.h"
@@ -71,13 +72,28 @@
 #include <QMenu>
 #include <QTimer>
 #include <QtDBus/QDBusConnection>
-#include "addresseelineedit_p.cpp"
 
 using namespace KPIM;
 
+inline bool itemIsHeader( const QListWidgetItem *item )
+{
+    return item && !item->text().startsWith( QLatin1String("     ") );
+}
+
+// needs to be unique, but the actual name doesn't matter much
+static QString newLineEditObjectName()
+{
+    static int s_count = 0;
+    QString name( QLatin1String("KPIM::AddresseeLineEdit") );
+    if ( s_count++ ) {
+        name += QLatin1Char('-');
+        name += QString::number( s_count );
+    }
+    return name;
+}
 
 AddresseeLineEdit::AddresseeLineEdit( QWidget *parent, bool enableCompletion )
-    : KLineEdit( parent ), d( new Private( this, enableCompletion ) )
+    : KLineEdit( parent ), d( new AddresseeLineEditPrivate( this, enableCompletion ) )
 {
     setObjectName( newLineEditObjectName() );
     setClickMessage( QString() );
@@ -87,9 +103,6 @@ AddresseeLineEdit::AddresseeLineEdit( QWidget *parent, bool enableCompletion )
 
 AddresseeLineEdit::~AddresseeLineEdit()
 {
-    if ( s_static->ldapSearch && s_static->ldapLineEdit == this ) {
-        d->stopLDAPLookup();
-    }
     delete d;
 }
 
@@ -97,19 +110,19 @@ void AddresseeLineEdit::setFont( const QFont &font )
 {
     KLineEdit::setFont( font );
 
-    if ( d->m_useCompletion ) {
+    if ( d->useCompletion() ) {
         completionBox()->setFont( font );
     }
 }
 
 void AddresseeLineEdit::setEnableBalooSearch(bool enable)
 {
-    d->m_enableBalooSearch = enable;
+    d->setEnableBalooSearch(enable);
 }
 
 void AddresseeLineEdit::allowSemicolonAsSeparator( bool useSemicolonAsSeparator )
 {
-    d->m_useSemicolonAsSeparator = useSemicolonAsSeparator;
+    d->setUseSemicolonAsSeparator(useSemicolonAsSeparator);
 }
 
 void AddresseeLineEdit::keyPressEvent( QKeyEvent *event )
@@ -149,28 +162,19 @@ void AddresseeLineEdit::keyPressEvent( QKeyEvent *event )
     if ( event->isAccepted() ) {
         d->updateSearchString();
 
-        QString searchString( d->m_searchString );
+        QString searchString( d->searchString() );
         //LDAP does not know about our string manipulation, remove it
-        if ( d->m_searchExtended ) {
-            searchString = d->m_searchString.mid( 1 );
+        if ( d->searchExtended() ) {
+            searchString = d->searchString().mid( 1 );
         }
 
-        if ( d->m_useCompletion && s_static->ldapTimer ) {
-            if ( s_static->ldapText != searchString || s_static->ldapLineEdit != this ) {
-                d->stopLDAPLookup();
-            }
-
-            s_static->ldapText = searchString;
-            s_static->ldapLineEdit = this;
-            s_static->ldapTimer->setSingleShot( true );
-            s_static->ldapTimer->start( 500 );
-        }
+        d->restartTime(searchString);
     }
 }
 
 void AddresseeLineEdit::insert( const QString &t )
 {
-    if ( !d->m_smartPaste ) {
+    if ( !d->smartPaste() ) {
         KLineEdit::insert( t );
         return;
     }
@@ -241,28 +245,28 @@ void AddresseeLineEdit::setText( const QString & text )
 
 void AddresseeLineEdit::paste()
 {
-    if ( d->m_useCompletion ) {
-        d->m_smartPaste = true;
+    if ( d->useCompletion() ) {
+        d->setSmartPaste(true);
     }
 
     KLineEdit::paste();
-    d->m_smartPaste = false;
+    d->setSmartPaste(false);
 }
 
 void AddresseeLineEdit::mouseReleaseEvent( QMouseEvent *event )
 {
     // reimplemented from QLineEdit::mouseReleaseEvent()
 #ifndef QT_NO_CLIPBOARD
-    if ( d->m_useCompletion &&
+    if ( d->useCompletion() &&
          QApplication::clipboard()->supportsSelection() &&
          !isReadOnly() &&
          event->button() == Qt::MidButton ) {
-        d->m_smartPaste = true;
+        d->setSmartPaste(true);
     }
 #endif
 
     KLineEdit::mouseReleaseEvent( event );
-    d->m_smartPaste = false;
+    d->setSmartPaste(false);
 }
 
 #ifndef QT_NO_DRAGANDDROP
@@ -314,12 +318,12 @@ void AddresseeLineEdit::dropEvent( QDropEvent *event )
         }
     }
 
-    if ( d->m_useCompletion ) {
-        d->m_smartPaste = true;
+    if ( d->useCompletion() ) {
+        d->setSmartPaste(true);
     }
 
     QLineEdit::dropEvent( event );
-    d->m_smartPaste = false;
+    d->setSmartPaste(false);
 }
 #endif // QT_NO_DRAGANDDROP
 
@@ -330,12 +334,12 @@ void AddresseeLineEdit::cursorAtEnd()
 
 void AddresseeLineEdit::enableCompletion( bool enable )
 {
-    d->m_useCompletion = enable;
+    d->setUseCompletion(enable);
 }
 
 bool AddresseeLineEdit::isCompletionEnabled() const
 {
-    return d->m_useCompletion;
+    return d->useCompletion();
 }
 
 void AddresseeLineEdit::addItem( const Akonadi::Item &item, int weight, int source )
@@ -426,19 +430,19 @@ QMenu *AddresseeLineEdit::createStandardContextMenu()
         return 0;
     }
 
-    if ( d->m_useCompletion ) {
+    if ( d->useCompletion() ) {
         menu->addAction( i18n( "Configure Completion Order..." ),
-                         this, SLOT(slotEditCompletionOrder()) );
+                         d, SLOT(slotEditCompletionOrder()) );
 
         QAction *showOU = new QAction(i18n( "Show Organization Unit for LDAP results" ),menu);
         showOU->setCheckable(true);
 
-        showOU->setChecked( d->m_showOU );
-        connect(showOU, SIGNAL(triggered(bool)), this, SLOT(slotShowOUChanged(bool)));
+        showOU->setChecked( d->showOU() );
+        connect(showOU, SIGNAL(triggered(bool)), d, SLOT(slotShowOUChanged(bool)));
         menu->addAction(showOU);
         //Add i18n in kf5
         QAction *configureBalooBlackList = new QAction(QLatin1String( "Configure Email Blacklist" ),menu);
-        connect(configureBalooBlackList, SIGNAL(triggered(bool)), this, SLOT(slotConfigureBalooBlackList()));
+        connect(configureBalooBlackList, SIGNAL(triggered(bool)), d, SLOT(slotConfigureBalooBlackList()));
         menu->addAction(configureBalooBlackList);
     }
 
@@ -448,17 +452,17 @@ QMenu *AddresseeLineEdit::createStandardContextMenu()
 
 void KPIM::AddresseeLineEdit::removeCompletionSource(const QString &source)
 {
-    s_static->removeCompletionSource(source);
+    d->removeCompletionSource(source);
 }
 
 int KPIM::AddresseeLineEdit::addCompletionSource( const QString &source, int weight )
 {
-    return s_static->addCompletionSource(source,weight);
+    return d->addCompletionSource(source,weight);
 }
 
 bool KPIM::AddresseeLineEdit::eventFilter( QObject *object, QEvent *event )
 {
-    if ( d->m_completionInitialized &&
+    if ( d->completionInitialized() &&
          ( object == completionBox() ||
            completionBox()->findChild<QWidget*>( object->objectName() ) == object ) ) {
         if ( event->type() == QEvent::MouseButtonPress ||
@@ -634,7 +638,22 @@ void AddresseeLineEdit::emitTextCompleted()
     emit textCompleted();
 }
 
+void AddresseeLineEdit::callUserCancelled(const QString &str)
+{
+    userCancelled(str);
+}
 
+void AddresseeLineEdit::callSetCompletedText(const QString &text, bool marked)
+{
+    setCompletedText(text, marked);
+}
 
+void AddresseeLineEdit::callSetCompletedText( const QString& text)
+{
+    setCompletedText(text);
+}
 
-#include "moc_addresseelineedit.cpp"
+void AddresseeLineEdit::callSetUserSelection(bool b)
+{
+    setUserSelection(b);
+}

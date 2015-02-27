@@ -51,7 +51,7 @@ class ContactGroup;
 
 namespace KPIM {
 
-
+class AddresseeLineEditPrivate;
 class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
 {
     Q_OBJECT
@@ -103,7 +103,7 @@ public Q_SLOTS:
      */
     virtual void setText( const QString &text );
 
-protected:
+public:
     /**
      * Adds a new @p contact to the completion with a given
      * @p weight
@@ -129,7 +129,13 @@ protected:
     int addCompletionSource( const QString &name, int weight );
 
     void removeCompletionSource(const QString &source);
+    void emitTextCompleted();
 
+    void callUserCancelled( const QString &str );
+    void callSetCompletedText(const QString& /*text*/, bool /*marked*/);
+    void callSetCompletedText(const QString& text);
+    void callSetUserSelection(bool);
+protected:
     /**
      * Reimplemented for smart insertion of email addresses.
      * Features:
@@ -179,26 +185,8 @@ protected:
     QStringList cleanupEmailList(const QStringList &inputList);
 private:
     virtual bool eventFilter( QObject *, QEvent * );
-    void emitTextCompleted();
 
-    //@cond PRIVATE
-    class Private;
-    Private *const d;
-
-    Q_PRIVATE_SLOT( d, void slotCompletion() )
-    Q_PRIVATE_SLOT( d, void slotPopupCompletion( const QString & ) )
-    Q_PRIVATE_SLOT( d, void slotReturnPressed( const QString & ) )
-    Q_PRIVATE_SLOT( d, void slotStartLDAPLookup() )
-    Q_PRIVATE_SLOT( d, void slotLDAPSearchData( const KLDAP::LdapResult::List & ) )
-    Q_PRIVATE_SLOT( d, void slotEditCompletionOrder() )
-    Q_PRIVATE_SLOT( d, void slotShowOUChanged( bool ) )
-    Q_PRIVATE_SLOT( d, void slotUserCancelled( const QString & ) )
-    Q_PRIVATE_SLOT( d, void slotAkonadiHandleItems( const Akonadi::Item::List & ) )
-    Q_PRIVATE_SLOT( d, void slotAkonadiSearchResult( KJob * ) )
-    Q_PRIVATE_SLOT( d, void slotAkonadiCollectionsReceived( const Akonadi::Collection::List & ) )
-    Q_PRIVATE_SLOT( d, void slotTriggerDelayedQueries() )
-    Q_PRIVATE_SLOT( d, void slotConfigureBalooBlackList() )
-    //@endcond
+    AddresseeLineEditPrivate* const d;
 };
 
 }
