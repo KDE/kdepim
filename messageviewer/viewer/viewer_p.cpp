@@ -599,23 +599,32 @@ void ViewerPrivate::showAttachmentPopup(KMime::Content *node, const QString &nam
     if (node->contentType(false)) {
         deletedAttachment = (node->contentType()->mimeType() == "text/x-moz-deleted");
     }
-    QSignalMapper *attachmentMapper = new QSignalMapper(menu);
-    connect(attachmentMapper, SIGNAL(mapped(int)),
-            this, SLOT(slotHandleAttachment(int)));
+    const QString contentTypeStr = QLatin1String(node->contentType()->mimeType());
+
+    QSignalMapper *attachmentMapper = new QSignalMapper( menu );
+    connect( attachmentMapper, SIGNAL(mapped(int)),
+             this, SLOT(slotHandleAttachment(int)) );
 
     action = menu->addAction(SmallIcon(QLatin1String("document-open")), i18nc("to open", "Open"));
     action->setEnabled(!deletedAttachment);
     connect(action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()));
     attachmentMapper->setMapping(action, Viewer::Open);
+    if(!deletedAttachment)
+        createOpenWithMenu( menu, contentTypeStr,true );
 
-    if (!deletedAttachment) {
-        createOpenWithMenu(menu, QLatin1String(node->contentType()->mimeType()), true);
+    const QStringList parentMimeType = KMimeType::mimeType( contentTypeStr )->allParentMimeTypes();
+    if ((contentTypeStr == QLatin1String("text/plain")) ||
+            (contentTypeStr == QLatin1String("image/png")) ||
+            (contentTypeStr == QLatin1String("image/jpeg")) ||
+            parentMimeType.contains(QLatin1String("text/plain")) ||
+            parentMimeType.contains(QLatin1String("image/png")) ||
+            parentMimeType.contains(QLatin1String("image/jpeg"))
+            ) {
+        action = menu->addAction(i18nc("to view something", "View") );
+        action->setEnabled(!deletedAttachment);
+        connect( action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()) );
+        attachmentMapper->setMapping( action, Viewer::View );
     }
-
-    action = menu->addAction(i18nc("to view something", "View"));
-    action->setEnabled(!deletedAttachment);
-    connect(action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()));
-    attachmentMapper->setMapping(action, Viewer::View);
 
     const bool attachmentInHeader = mViewer->isAttachmentInjectionPoint(globalPos);
     const bool hasScrollbar = mViewer->hasVerticalScrollBar();

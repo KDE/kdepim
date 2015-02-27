@@ -606,13 +606,22 @@ void AttachmentControllerBase::showContextMenu()
     const bool enableEditAction = (numberOfParts == 1) &&
                                   (!d->selectedParts.first()->isMessageOrMessageCollection());
 
-    if (numberOfParts > 0) {
+    if(numberOfParts>0) {
         if (numberOfParts == 1) {
+            const QString mimetype = QString::fromLatin1(d->selectedParts.first()->mimeType());
+            const QStringList parentMimeType = KMimeType::mimeType( mimetype )->allParentMimeTypes();
+            if ((mimetype == QLatin1String("text/plain")) ||
+                    (mimetype == QLatin1String("image/png")) ||
+                    (mimetype == QLatin1String("image/jpeg")) ||
+                    parentMimeType.contains(QLatin1String("text/plain")) ||
+                    parentMimeType.contains(QLatin1String("image/png")) ||
+                    parentMimeType.contains(QLatin1String("image/jpeg"))
+                    ) {
+                menu->addAction(d->viewContextAction);
+            }
             d->createOpenWithMenu(menu, d->selectedParts.first());
-        } else {
-            menu->addAction(d->openContextAction);
         }
-        menu->addAction(d->viewContextAction);
+        menu->addAction(d->openContextAction);
     }
     if (enableEditAction) {
         menu->addAction(d->editWithContextAction);
