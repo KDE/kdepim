@@ -644,9 +644,8 @@ void AttachmentControllerBase::showContextMenu()
         if (!d->selectedParts.first()->url().isEmpty()) {
             menu->addAction(d->reloadAttachmentAction);
         }
-    }
-    if(numberOfParts == 1) {
         menu->addAction(d->saveAsContextAction);
+        menu->addSeparator();
         menu->addAction(d->propertiesContextAction);
     }
 
