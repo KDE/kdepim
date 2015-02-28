@@ -316,6 +316,29 @@ void SieveEditorMainWidget::slotShare()
     }
 }
 
+void SieveEditorMainWidget::slotAutoGenerateScript()
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            page->autoGenerateScript();
+        }
+    }
+}
+
+void SieveEditorMainWidget::slotCheckSyntax()
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            page->checkSyntax();
+        }
+    }
+}
+
+
 void SieveEditorMainWidget::slotImport()
 {
     QWidget *w = mTabWidget->currentWidget();

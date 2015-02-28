@@ -27,6 +27,8 @@
 class QTabWidget;
 namespace KPIM {
 class CompletionOrderWidget;
+class BlackListBalooEmailCompletionWidget;
+class RecentAddressWidget;
 class KDEPIM_EXPORT CompletionConfigureDialog : public QDialog
 {
     Q_OBJECT
@@ -35,6 +37,7 @@ public:
     ~CompletionConfigureDialog();
 
     void load();
+    void setEmailBlackList(const QStringList &lst);
 private slots:
     void slotSave();
 
@@ -43,6 +46,8 @@ private:
     void writeConfig();
     QTabWidget *mTabWidget;
     KPIM::CompletionOrderWidget *mCompletionOrderWidget;
+    KPIM::BlackListBalooEmailCompletionWidget *mBlackListBalooWidget;
+    KPIM::RecentAddressWidget *mRecentaddressWidget;
 };
 }
 

@@ -221,6 +221,16 @@ void SieveEditorPageWidget::checkSpelling()
     mSieveEditorWidget->checkSpelling();
 }
 
+void SieveEditorPageWidget::autoGenerateScript()
+{
+    mSieveEditorWidget->slotAutoGenerateScripts();
+}
+
+void SieveEditorPageWidget::checkSyntax()
+{
+    mSieveEditorWidget->slotCheckSyntax();
+}
+
 void SieveEditorPageWidget::saveAs()
 {
     mSieveEditorWidget->slotSaveAs();

@@ -634,9 +634,8 @@ void AttachmentControllerBase::showContextMenu()
         if (!d->selectedParts.first()->url().isEmpty()) {
             menu->addAction(d->reloadAttachmentAction);
         }
-    }
-    if (numberOfParts == 1) {
         menu->addAction(d->saveAsContextAction);
+        menu->addSeparator();
         menu->addAction(d->propertiesContextAction);
     }
 
@@ -679,6 +678,7 @@ void AttachmentControllerBase::openWith(KService::Ptr offer)
     QList<QUrl> lst;
     QUrl url = QUrl::fromLocalFile(tempFile->fileName());
     lst.append(url);
+    tempFile->setPermissions( QFile::ReadUser );
     bool result = false;
     if (offer) {
         result = KRun::run(*offer, lst, d->wParent, false);
@@ -704,7 +704,7 @@ void AttachmentControllerBase::openAttachment(AttachmentPart::Ptr part)
                            i18n("Unable to open attachment"));
         return;
     }
-
+    tempFile->setPermissions( QFile::ReadUser );
     bool success = KRun::runUrl(QUrl::fromLocalFile(tempFile->fileName()),
                                 QString::fromLatin1(part->mimeType()),
                                 d->wParent,
