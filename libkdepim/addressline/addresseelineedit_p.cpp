@@ -29,9 +29,7 @@
 #include <Akonadi/Contact/ContactSearchJob>
 #include <Akonadi/Contact/ContactGroupSearchJob>
 #include <AkonadiCore/CollectionFetchJob>
-#include <AkonadiCore/EntityDisplayAttribute>
 #include <AkonadiCore/ItemFetchScope>
-#include <AkonadiCore/RecursiveItemFetchJob>
 #include <AkonadiCore/Job>
 #include <QApplication>
 #include <KConfigGroup>

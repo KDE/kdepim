@@ -27,39 +27,24 @@
 #include "addresseelineedit.h"
 #include "addresseelineedit_p.h"
 #include "ldap/ldapclientsearch.h"
-#include "completionorder/completionordereditor.h"
-#include "addressline/blacklistbaloocompletion/blacklistbalooemailcompletiondialog.h"
-#include "kmailcompletion.h"
-#include "baloocompletionemail.h"
 
-#include <Akonadi/Contact/ContactSearchJob>
-#include <Akonadi/Contact/ContactGroupSearchJob>
-#include <CollectionFetchJob>
-#include <EntityDisplayAttribute>
-#include <ItemFetchScope>
-#include <RecursiveItemFetchJob>
-#include <Session>
 #include <Job>
 #include <QUrl>
-#include <baloo/pim/contactcompleter.h>
 
 #include <KEmailAddress>
 #include <KColorScheme>
 #include <kdelibs4configmigrator.h>
-
+#include <KContacts/Addressee>
+#include <KContacts/ContactGroup>
 #include <kldap/LdapServer>
 
 #include <KMime/Util>
 
-#include <KConfigGroup>
 #include <KCompletionBox>
 #include "libkdepim_debug.h"
 #include <KLocalizedString>
 #include <KStandardShortcut>
-#include <QUrl>
 #include <QMimeData>
-
-#include <solid/networking.h>
 
 #include <QApplication>
 #include <QObject>
@@ -70,8 +55,6 @@
 #include <QDropEvent>
 #include <QMouseEvent>
 #include <QMenu>
-#include <QTimer>
-#include <QtDBus/QDBusConnection>
 #include <KSharedConfig>
 
 using namespace KPIM;
