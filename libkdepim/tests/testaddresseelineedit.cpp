@@ -25,12 +25,12 @@
 
 #include <qdebug.h>
 #include <KLocalizedString>
+#include "../addressline/addresslineedit/addresseelineedit.h"
 
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 
-#include "../addressline/addresseelineedit.h"
 
 int main(int argc, char *argv[])
 {

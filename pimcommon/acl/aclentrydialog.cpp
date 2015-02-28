@@ -20,7 +20,7 @@
 #include "aclentrydialog_p.h"
 #include "aclutils_p.h"
 
-#include "addressline/addresseelineedit.h"
+#include "addressline/addresslineedit/addresseelineedit.h"
 
 #include <Akonadi/Contact/EmailAddressSelectionDialog>
 

@@ -19,7 +19,7 @@
 
 #include "mobilelineedit.h"
 
-#include <libkdepim/addressline/addresseelineedit.h>
+#include <libkdepim/addressline/addresslineedit/addresseelineedit.h>
 
 #include <qicon.h>
 

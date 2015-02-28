@@ -60,7 +60,7 @@
   <customwidget>
    <class>KPIM::AddresseeLineEdit</class>
    <extends>KLineEdit</extends>
-   <header>libkdepim/addressline/addresseelineedit.h</header>
+   <header>libkdepim/addressline/addresslineedit/addresseelineedit.h</header>
   </customwidget>
   <customwidget>
    <class>KLineEdit</class>
@@ -69,7 +69,7 @@
   </customwidget>
  </customwidgets>
  <includes>
-  <include location="local">libkdepim/addressline/addresseelineedit.h</include>
+  <include location="local">libkdepim/addressline/addresslineedit/addresseelineedit.h</include>
  </includes>
  <resources/>
  <connections/>

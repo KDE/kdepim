@@ -23,7 +23,7 @@
 
 #include "incidenceeditors_ng_export.h"
 
-#include <libkdepim/addressline/addresseelineedit.h>
+#include <libkdepim/addressline/addresslineedit/addresseelineedit.h>
 #include <libkdepim/multiplyingline/multiplyingline.h>
 
 #include <KCalCore/Attendee>

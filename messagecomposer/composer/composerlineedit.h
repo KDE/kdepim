@@ -23,10 +23,9 @@
 #define MESSAGECOMPOSER_COMPOSERLINEEDIT_H
 
 #include "messagecomposer_export.h"
-#include <libkdepim/addressline/addresseelineedit.h>
+#include <libkdepim/addressline/addresslineedit/addresseelineedit.h>
 class KConfig;
-namespace MessageComposer
-{
+namespace MessageComposer {
 
 class MESSAGECOMPOSER_EXPORT ComposerLineEdit : public KPIM::AddresseeLineEdit
 {

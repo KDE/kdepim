@@ -4,7 +4,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/libkdepim
 )
 
-set( libkdepim_baloocompletionemailtest_SRCS baloocompletionemailtest.cpp ../baloocompletionemail.cpp)
+set( libkdepim_baloocompletionemailtest_SRCS baloocompletionemailtest.cpp ../addresslineedit/baloocompletionemail.cpp)
 add_executable( libkdepim_baloocompletionemailtest ${libkdepim_baloocompletionemailtest_SRCS})
 add_test(libkdepim_baloocompletionemailtest libkdepim_baloocompletionemailtest)
 ecm_mark_as_test(libkdepim_baloocompletionemailtest)

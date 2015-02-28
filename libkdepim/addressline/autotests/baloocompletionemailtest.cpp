@@ -19,10 +19,9 @@
 */
 
 #include "baloocompletionemailtest.h"
-#include "../baloocompletionemail.h"
 #include <qtest.h>
 #include "libkdepim_debug.h"
-
+#include "../addresslineedit/baloocompletionemail.h"
 BalooCompletionEmailTest::BalooCompletionEmailTest(QObject *parent)
     : QObject(parent)
 {
