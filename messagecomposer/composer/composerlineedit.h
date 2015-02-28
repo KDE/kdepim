@@ -23,7 +23,7 @@
 #define MESSAGECOMPOSER_COMPOSERLINEEDIT_H
 
 #include "messagecomposer_export.h"
-#include <libkdepim/addressline/addresseelineedit.h>
+#include <libkdepim/addressline/addresslineedit/addresseelineedit.h>
 
 namespace MessageComposer {
 

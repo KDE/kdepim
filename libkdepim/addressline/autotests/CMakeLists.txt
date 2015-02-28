@@ -4,7 +4,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/libkdepim
 )
 
-set( libkdepim_baloocompletionemailtest_SRCS baloocompletionemailtest.cpp ../baloocompletionemail.cpp)
+set( libkdepim_baloocompletionemailtest_SRCS baloocompletionemailtest.cpp ../addresslineedit/baloocompletionemail.cpp)
 kde4_add_unit_test( libkdepim_baloocompletionemailtest ${libkdepim_baloocompletionemailtest_SRCS})
 target_link_libraries( libkdepim_baloocompletionemailtest ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_KPIMUTILS_LIBS})
 

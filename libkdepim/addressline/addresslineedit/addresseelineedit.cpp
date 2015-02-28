@@ -27,7 +27,7 @@
 #include "addresseelineedit.h"
 #include "addresseelineedit_p.h"
 #include "ldap/ldapclientsearch.h"
-#include "completionorder/completionordereditor.h"
+#include "addressline/completionorder/completionordereditor.h"
 #include "addressline/blacklistbaloocompletion/blacklistbalooemailcompletiondialog.h"
 #include "kmailcompletion.h"
 #include "baloocompletionemail.h"

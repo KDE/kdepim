@@ -69,11 +69,11 @@ set(kdepim_misc_LIB_SRCS
 set(kdepim_addressline_LIB_SRCS
    addressline/completionorder/completionordereditor.cpp
    addressline/completionorder/completionorderwidget.cpp
-   addressline/addresseelineedit.cpp
-   addressline/addresseelineedit_p.cpp
-   addressline/addresseelineeditstatic.cpp
-   addressline/kmailcompletion.cpp
-   addressline/baloocompletionemail.cpp
+   addressline/addresslineedit/addresseelineedit.cpp
+   addressline/addresslineedit/addresseelineedit_p.cpp
+   addressline/addresslineedit/addresseelineeditstatic.cpp
+   addressline/addresslineedit/kmailcompletion.cpp
+   addressline/addresslineedit/baloocompletionemail.cpp
    addressline/completionconfiguredialog/completionconfiguredialog.cpp
    addressline/recentaddress/recentaddressdialog.cpp
    addressline/recentaddress/recentaddresswidget.cpp

@@ -19,7 +19,7 @@
 */
 
 #include "baloocompletionemailtest.h"
-#include "../baloocompletionemail.h"
+#include "../addresslineedit/baloocompletionemail.h"
 #include <qtest_kde.h>
 #include <QDebug>
 

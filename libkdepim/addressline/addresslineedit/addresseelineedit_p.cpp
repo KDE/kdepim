@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "completionorder/completionordereditor.h"
+#include "addressline/completionorder/completionordereditor.h"
 #include "addresseelineeditstatic.h"
 #include "addresseelineedit_p.h"
 #include "addresseelineedit.h"
