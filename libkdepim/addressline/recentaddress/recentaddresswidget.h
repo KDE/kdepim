@@ -28,7 +28,8 @@ class QPushButton;
 class QListWidget;
 class KLineEdit;
 
-namespace KPIM {
+namespace KPIM
+{
 class RecentAddressWidget : public QWidget
 {
     Q_OBJECT
@@ -36,7 +37,7 @@ public:
     explicit RecentAddressWidget(QWidget *parent = Q_NULLPTR);
     ~RecentAddressWidget();
 
-    void setAddresses( const QStringList &addrs );
+    void setAddresses(const QStringList &addrs);
     QStringList addresses() const;
     void addAddresses(KConfig *config);
     bool wasChanged() const;
@@ -45,14 +46,14 @@ private slots:
     void slotAddItem();
     void slotRemoveItem();
     void slotSelectionChanged();
-    void slotTypedSomething(const QString&);
+    void slotTypedSomething(const QString &);
 
 protected:
     void updateButtonState();
-    bool eventFilter( QObject* o, QEvent* e );
+    bool eventFilter(QObject *o, QEvent *e);
 
 private:
-    QPushButton* mNewButton, *mRemoveButton;
+    QPushButton *mNewButton, *mRemoveButton;
     QListWidget *mListView;
     KLineEdit *mLineEdit;
     bool mDirty;

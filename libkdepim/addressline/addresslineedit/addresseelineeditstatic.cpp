@@ -24,15 +24,16 @@
 #include <addressline/completionorder/completionordereditor.h>
 #include <KLDAP/LdapServer>
 #include <AkonadiCore/Session>
-namespace KPIM {
+namespace KPIM
+{
 
 AddresseeLineEditStatic::AddresseeLineEditStatic()
-    : completion( new KMailCompletion ),
-      ldapTimer( 0 ),
-      ldapSearch( 0 ),
-      ldapLineEdit( 0 ),
-      akonadiSession( new Akonadi::Session("contactsCompletionSession") ),
-      balooCompletionSource( 0 )
+    : completion(new KMailCompletion),
+      ldapTimer(0),
+      ldapSearch(0),
+      ldapLineEdit(0),
+      akonadiSession(new Akonadi::Session("contactsCompletionSession")),
+      balooCompletionSource(0)
 {
 }
 
@@ -45,8 +46,8 @@ AddresseeLineEditStatic::~AddresseeLineEditStatic()
 
 void AddresseeLineEditStatic::slotEditCompletionOrder()
 {
-    CompletionOrderEditor editor( ldapSearch, 0 );
-    if( editor.exec() ) {
+    CompletionOrderEditor editor(ldapSearch, 0);
+    if (editor.exec()) {
         updateLDAPWeights();
         updateCollectionWeights();
     }
@@ -63,12 +64,12 @@ void AddresseeLineEditStatic::updateLDAPWeights()
        * that they map to the LdapClient::clientNumber() */
     ldapSearch->updateCompletionWeights();
     int clientIndex = 0;
-    foreach ( const KLDAP::LdapClient *client, ldapSearch->clients() ) {
+    foreach (const KLDAP::LdapClient *client, ldapSearch->clients()) {
         const int sourceIndex =
-                addCompletionSource( i18n( "LDAP server: %1" ,client->server().host()),
-                                     client->completionWeight() );
+            addCompletionSource(i18n("LDAP server: %1" , client->server().host()),
+                                client->completionWeight());
 
-        ldapClientToCompletionSourceMap.insert( clientIndex, sourceIndex );
+        ldapClientToCompletionSourceMap.insert(clientIndex, sourceIndex);
 
         ++clientIndex;
     }
@@ -76,16 +77,16 @@ void AddresseeLineEditStatic::updateLDAPWeights()
 
 int AddresseeLineEditStatic::addCompletionSource(const QString &source, int weight)
 {
-    QMap<QString,int>::iterator it = completionSourceWeights.find( source );
-    if ( it == completionSourceWeights.end() ) {
-        completionSourceWeights.insert( source, weight );
+    QMap<QString, int>::iterator it = completionSourceWeights.find(source);
+    if (it == completionSourceWeights.end()) {
+        completionSourceWeights.insert(source, weight);
     } else {
         completionSourceWeights[source] = weight;
     }
 
-    const int sourceIndex = completionSources.indexOf( source );
-    if ( sourceIndex == -1 ) {
-        completionSources.append( source );
+    const int sourceIndex = completionSources.indexOf(source);
+    if (sourceIndex == -1) {
+        completionSources.append(source);
         return completionSources.size() - 1;
     } else {
         return sourceIndex;
@@ -94,12 +95,11 @@ int AddresseeLineEditStatic::addCompletionSource(const QString &source, int weig
 
 void AddresseeLineEditStatic::removeCompletionSource(const QString &source)
 {
-    QMap<QString,int>::iterator it = completionSourceWeights.find( source );
-    if ( it != completionSourceWeights.end() ) {
+    QMap<QString, int>::iterator it = completionSourceWeights.find(source);
+    if (it != completionSourceWeights.end()) {
         completionSourceWeights.remove(source);
         completion->clear();
     }
 }
-
 
 }

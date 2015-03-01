@@ -28,13 +28,14 @@
 #include <ldap/ldapclientsearch.h>
 #include <qstringlist.h>
 class QTimer;
-namespace KPIM {
+namespace KPIM
+{
 class KMailCompletion;
 class AddresseeLineEdit;
 class AddresseeLineEditStatic
 {
 public:
-    typedef QMap< QString, QPair<int,int> > CompletionItemsMap;
+    typedef QMap< QString, QPair<int, int> > CompletionItemsMap;
 
     AddresseeLineEditStatic();
 
@@ -46,9 +47,9 @@ public:
 
     void updateLDAPWeights();
 
-    int addCompletionSource( const QString &source, int weight );
+    int addCompletionSource(const QString &source, int weight);
 
-    void removeCompletionSource( const QString &source );
+    void removeCompletionSource(const QString &source);
 
     KMailCompletion *completion;
     CompletionItemsMap completionItemMap;

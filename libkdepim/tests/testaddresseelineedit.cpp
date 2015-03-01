@@ -31,7 +31,6 @@
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 
-
 int main(int argc, char *argv[])
 {
     KAboutData aboutData(QStringLiteral("testaddresseelineedit"), i18n("Test AddresseeLineEdit"), QStringLiteral("0.1"));

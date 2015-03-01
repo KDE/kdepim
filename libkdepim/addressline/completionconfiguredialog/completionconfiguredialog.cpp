@@ -18,7 +18,6 @@
 
 */
 
-
 #include "completionconfiguredialog.h"
 #include <KLocalizedString>
 #include <QVBoxLayout>
@@ -52,7 +51,7 @@ CompletionConfigureDialog::CompletionConfigureDialog(QWidget *parent)
     mBlackListBalooWidget = new KPIM::BlackListBalooEmailCompletionWidget;
     mBlackListBalooWidget->setObjectName(QLatin1String("blacklistbaloo_widget"));
 
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     buttonBox->setObjectName(QLatin1String("buttonbox"));
     connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotSave()));
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
@@ -62,7 +61,6 @@ CompletionConfigureDialog::CompletionConfigureDialog(QWidget *parent)
     readConfig();
 }
 
-
 CompletionConfigureDialog::~CompletionConfigureDialog()
 {
     writeConfig();
@@ -70,17 +68,17 @@ CompletionConfigureDialog::~CompletionConfigureDialog()
 
 void CompletionConfigureDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "CompletionConfigureDialog" );
-    const QSize size = group.readEntry( "Size", QSize(600, 400) );
-    if ( size.isValid() ) {
-        resize( size );
+    KConfigGroup group(KGlobal::config(), "CompletionConfigureDialog");
+    const QSize size = group.readEntry("Size", QSize(600, 400));
+    if (size.isValid()) {
+        resize(size);
     }
 }
 
 void CompletionConfigureDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "CompletionConfigureDialog" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KGlobal::config(), "CompletionConfigureDialog");
+    group.writeEntry("Size", size());
     group.sync();
 }
 

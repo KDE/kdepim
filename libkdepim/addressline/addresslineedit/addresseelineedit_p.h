@@ -28,13 +28,14 @@
 #include <AkonadiCore/Collection>
 #include <KLDAP/LdapServer>
 
-namespace KPIM {
+namespace KPIM
+{
 class AddresseeLineEdit;
 class AddresseeLineEditPrivate : public QObject
 {
     Q_OBJECT
 public:
-    AddresseeLineEditPrivate( AddresseeLineEdit *qq, bool enableCompletion );
+    AddresseeLineEditPrivate(AddresseeLineEdit *qq, bool enableCompletion);
     ~AddresseeLineEditPrivate();
     QStringList cleanupEmailList(const QStringList &inputList);
     void loadBalooBlackList();
@@ -42,15 +43,15 @@ public:
     void init();
     void startLoadingLDAPEntries();
     void stopLDAPLookup();
-    void setCompletedItems( const QStringList &items, bool autoSuggest );
-    void addCompletionItem( const QString &string, int weight, int source,
-                            const QStringList *keyWords = 0 );
-    const QStringList adjustedCompletionItems( bool fullSearch );
+    void setCompletedItems(const QStringList &items, bool autoSuggest);
+    void addCompletionItem(const QString &string, int weight, int source,
+                           const QStringList *keyWords = 0);
+    const QStringList adjustedCompletionItems(bool fullSearch);
     void updateSearchString();
     void startSearches();
     void akonadiPerformSearch();
     void akonadiHandlePending();
-    void doCompletion( bool ctrlT );
+    void doCompletion(bool ctrlT);
 
     bool showOU() const;
     void setShowOU(bool showOU);
@@ -81,18 +82,18 @@ public:
     void restartTime(const QString &searchString);
 private Q_SLOTS:
     void slotCompletion();
-    void slotPopupCompletion( const QString & );
-    void slotReturnPressed( const QString & );
+    void slotPopupCompletion(const QString &);
+    void slotReturnPressed(const QString &);
     void slotStartLDAPLookup();
-    void slotLDAPSearchData( const KLDAP::LdapResult::List & );
+    void slotLDAPSearchData(const KLDAP::LdapResult::List &);
     void slotEditCompletionOrder();
-    void slotUserCancelled( const QString & );
-    void slotAkonadiHandleItems( const Akonadi::Item::List &items );
-    void slotAkonadiSearchResult( KJob * );
-    void slotAkonadiCollectionsReceived( const Akonadi::Collection::List & );
+    void slotUserCancelled(const QString &);
+    void slotAkonadiHandleItems(const Akonadi::Item::List &items);
+    void slotAkonadiSearchResult(KJob *);
+    void slotAkonadiCollectionsReceived(const Akonadi::Collection::List &);
     void searchInBaloo();
     void slotTriggerDelayedQueries();
-    void slotShowOUChanged( bool );
+    void slotShowOUChanged(bool);
     void slotConfigureBalooBlackList();
 
 private:

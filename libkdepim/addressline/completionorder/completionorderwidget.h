@@ -31,22 +31,23 @@ class QAbstractItemModel;
 class QModelIndex;
 class QTreeWidget;
 
-namespace KLDAP {
+namespace KLDAP
+{
 class LdapClientSearch;
 }
 
-namespace KPIM {
+namespace KPIM
+{
 
 class CompletionOrderEditorAdaptor : public QDBusAbstractAdaptor
 {
-   Q_OBJECT
-   Q_CLASSINFO("D-Bus Interface", "org.kde.pim.CompletionOrder" )
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.pim.CompletionOrder")
 public:
-   explicit CompletionOrderEditorAdaptor( QObject *parent );
+    explicit CompletionOrderEditorAdaptor(QObject *parent);
 Q_SIGNALS:
-   void completionOrderChanged();
+    void completionOrderChanged();
 };
-
 
 class CompletionOrderWidget;
 
@@ -58,10 +59,9 @@ public:
     virtual QString label() const = 0;
     virtual QIcon icon() const = 0;
     virtual int completionWeight() const = 0;
-    virtual void setCompletionWeight( int weight ) = 0;
-    virtual void save( CompletionOrderWidget* ) = 0;
+    virtual void setCompletionWeight(int weight) = 0;
+    virtual void save(CompletionOrderWidget *) = 0;
 };
-
 
 class KDEPIM_EXPORT CompletionOrderWidget : public QWidget
 {
@@ -71,13 +71,16 @@ public:
     ~CompletionOrderWidget();
     void save();
 
-    KConfig* configFile() { return &mConfig; }
+    KConfig *configFile()
+    {
+        return &mConfig;
+    }
 
 Q_SIGNALS:
     void completionOrderChanged();
 
 private Q_SLOTS:
-    void rowsInserted( const QModelIndex &parent, int start, int end );
+    void rowsInserted(const QModelIndex &parent, int start, int end);
     void slotSelectionChanged();
     void slotMoveUp();
     void slotMoveDown();
@@ -87,12 +90,12 @@ private:
     void writeConfig();
     void loadCompletionItems();
     void addRecentAddressItem();
-    void addCompletionItemForCollection( const QModelIndex& );
+    void addCompletionItemForCollection(const QModelIndex &);
 
     KConfig mConfig;
-    QTreeWidget* mListView;
-    QPushButton* mUpButton;
-    QPushButton* mDownButton;
+    QTreeWidget *mListView;
+    QPushButton *mUpButton;
+    QPushButton *mDownButton;
     QAbstractItemModel *mCollectionModel;
     KLDAP::LdapClientSearch *mLdapSearch;
 

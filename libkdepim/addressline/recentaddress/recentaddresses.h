@@ -35,7 +35,8 @@
 #include <QStringList>
 class KConfig;
 
-namespace KPIM {
+namespace KPIM
+{
 /**
  * Handles a list of "recent email-addresses". Simply set a max-count and
  * call @ref add() to add entries.

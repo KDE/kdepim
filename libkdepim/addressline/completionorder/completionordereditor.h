@@ -34,11 +34,13 @@
 #include "kdepim_export.h"
 #include <QDialog>
 
-namespace KLDAP {
+namespace KLDAP
+{
 class LdapClientSearch;
 }
 
-namespace KPIM {
+namespace KPIM
+{
 class CompletionOrderWidget;
 class KDEPIM_EXPORT CompletionOrderEditor : public QDialog
 {

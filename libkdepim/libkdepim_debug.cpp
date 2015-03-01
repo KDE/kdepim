@@ -20,4 +20,3 @@
 #include "libkdepim_debug.h"
 Q_LOGGING_CATEGORY(LIBKDEPIM_LOG, "log_libkdepim")
 
-

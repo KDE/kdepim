@@ -25,7 +25,8 @@
 
 #include <QDialog>
 class QTabWidget;
-namespace KPIM {
+namespace KPIM
+{
 class CompletionOrderWidget;
 class BlackListBalooEmailCompletionWidget;
 class RecentAddressWidget;
@@ -33,7 +34,7 @@ class KDEPIM_EXPORT CompletionConfigureDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit CompletionConfigureDialog(QWidget *parent=0);
+    explicit CompletionConfigureDialog(QWidget *parent = 0);
     ~CompletionConfigureDialog();
 
     void load();

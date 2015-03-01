@@ -32,8 +32,8 @@
 #include <KLocalizedString>
 using namespace KPIM;
 
-RecentAddressDialog::RecentAddressDialog( QWidget *parent )
-    : QDialog( parent )
+RecentAddressDialog::RecentAddressDialog(QWidget *parent)
+    : QDialog(parent)
 {
     setWindowTitle(i18n("Edit Recent Addresses"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
@@ -57,7 +57,7 @@ RecentAddressDialog::~RecentAddressDialog()
     writeConfig();
 }
 
-void RecentAddressDialog::setAddresses( const QStringList &addrs )
+void RecentAddressDialog::setAddresses(const QStringList &addrs)
 {
     mRecentAddressWidget->setAddresses(addrs);
 }
@@ -79,16 +79,16 @@ bool RecentAddressDialog::wasChanged() const
 
 void RecentAddressDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "RecentAddressDialog" );
-    const QSize size = group.readEntry( "Size", QSize(600, 400) );
-    if ( size.isValid() ) {
-        resize( size );
+    KConfigGroup group(KSharedConfig::openConfig(), "RecentAddressDialog");
+    const QSize size = group.readEntry("Size", QSize(600, 400));
+    if (size.isValid()) {
+        resize(size);
     }
 }
 
 void RecentAddressDialog::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "RecentAddressDialog" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KSharedConfig::openConfig(), "RecentAddressDialog");
+    group.writeEntry("Size", size());
     group.sync();
 }

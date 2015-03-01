@@ -26,17 +26,17 @@
 #include <QStringList>
 class KConfig;
 
-
-namespace KPIM {
+namespace KPIM
+{
 class RecentAddressWidget;
 class KDEPIM_EXPORT RecentAddressDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit RecentAddressDialog( QWidget *parent );
+    explicit RecentAddressDialog(QWidget *parent);
     ~RecentAddressDialog();
 
-    void setAddresses( const QStringList &addrs );
+    void setAddresses(const QStringList &addrs);
     QStringList addresses() const;
     void addAddresses(KConfig *config);
     bool wasChanged() const;

@@ -51,7 +51,8 @@ class Addressee;
 class ContactGroup;
 }
 
-namespace KPIM {
+namespace KPIM
+{
 
 class AddresseeLineEditPrivate;
 class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
@@ -133,9 +134,9 @@ public:
     void removeCompletionSource(const QString &source);
     void emitTextCompleted();
 
-    void callUserCancelled( const QString &str );
-    void callSetCompletedText(const QString& /*text*/, bool /*marked*/);
-    void callSetCompletedText(const QString& text);
+    void callUserCancelled(const QString &str);
+    void callSetCompletedText(const QString & /*text*/, bool /*marked*/);
+    void callSetCompletedText(const QString &text);
     void callSetUserSelection(bool);
 protected:
     /**
@@ -188,7 +189,7 @@ protected:
 private:
     bool eventFilter(QObject *, QEvent *) Q_DECL_OVERRIDE;
 
-    AddresseeLineEditPrivate* const d;
+    AddresseeLineEditPrivate *const d;
 };
 
 }

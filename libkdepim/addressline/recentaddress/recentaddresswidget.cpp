@@ -35,14 +35,13 @@
 #include <QListWidget>
 #include <QKeyEvent>
 
-
 using namespace KPIM;
 RecentAddressWidget::RecentAddressWidget(QWidget *parent)
     : QWidget(parent)
 {
-    QVBoxLayout *layout = new QVBoxLayout( this );
-    layout->setSpacing( 0 );
-    layout->setMargin( 0 );
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    layout->setSpacing(0);
+    layout->setMargin(0);
 
     mLineEdit = new KLineEdit(this);
     layout->addWidget(mLineEdit);
@@ -82,7 +81,7 @@ RecentAddressWidget::~RecentAddressWidget()
 
 }
 
-void RecentAddressWidget::slotTypedSomething(const QString& text)
+void RecentAddressWidget::slotTypedSomething(const QString &text)
 {
     if (mListView->currentItem()) {
         if (mListView->currentItem()->text() != mLineEdit->text() && !mLineEdit->text().isEmpty()) {
@@ -90,13 +89,13 @@ void RecentAddressWidget::slotTypedSomething(const QString& text)
             // of currentItem() ... like changing it or emitting signals ...
             // but TT disagree with me on this one (it's been that way since ages ... grrr)
             bool block = mListView->signalsBlocked();
-            mListView->blockSignals( true );
+            mListView->blockSignals(true);
             QListWidgetItem *currentIndex = mListView->currentItem();
-            if ( currentIndex ) {
+            if (currentIndex) {
                 currentIndex->setText(text);
                 mDirty = true;
             }
-            mListView->blockSignals( block );
+            mListView->blockSignals(block);
         }
     }
 }
@@ -115,10 +114,11 @@ void RecentAddressWidget::slotAddItem()
 void RecentAddressWidget::slotRemoveItem()
 {
     QList<QListWidgetItem *> selectedItems = mListView->selectedItems();
-    if (selectedItems.isEmpty())
+    if (selectedItems.isEmpty()) {
         return;
+    }
     if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18np("Do you want to remove this email?", "Do you want to remove %1 emails?", selectedItems.count()), i18n("Remove"))) {
-        Q_FOREACH(QListWidgetItem *item, selectedItems) {
+        Q_FOREACH (QListWidgetItem *item, selectedItems) {
             delete mListView->takeItem(mListView->row(item));
         }
         mDirty = true;
@@ -136,8 +136,9 @@ void RecentAddressWidget::updateButtonState()
 
     if (numberOfElementSelected == 1) {
         const QString text = mListView->currentItem()->text();
-        if (text != mLineEdit->text())
+        if (text != mLineEdit->text()) {
             mLineEdit->setText(text);
+        }
     } else {
         mLineEdit->clear();
     }
@@ -148,29 +149,29 @@ void RecentAddressWidget::slotSelectionChanged()
     updateButtonState();
 }
 
-void RecentAddressWidget::setAddresses( const QStringList &addrs )
+void RecentAddressWidget::setAddresses(const QStringList &addrs)
 {
     mListView->clear();
-    mListView->addItems( addrs );
+    mListView->addItems(addrs);
 }
 
 QStringList RecentAddressWidget::addresses() const
 {
     QStringList lst;
     const int numberOfItem(mListView->count());
-    for(int i = 0; i < numberOfItem; ++i) {
-        lst<<mListView->item(i)->text();
+    for (int i = 0; i < numberOfItem; ++i) {
+        lst << mListView->item(i)->text();
     }
     return lst;
 }
 
-bool RecentAddressWidget::eventFilter( QObject* o, QEvent* e )
+bool RecentAddressWidget::eventFilter(QObject *o, QEvent *e)
 {
-    if (o == mLineEdit && e->type() == QEvent::KeyPress ) {
-        QKeyEvent* keyEvent = (QKeyEvent*)e;
+    if (o == mLineEdit && e->type() == QEvent::KeyPress) {
+        QKeyEvent *keyEvent = (QKeyEvent *)e;
         if (keyEvent->key() == Qt::Key_Down ||
                 keyEvent->key() == Qt::Key_Up) {
-            return ((QObject*)mListView)->event(e);
+            return ((QObject *)mListView)->event(e);
         }
     }
 
@@ -181,7 +182,7 @@ void RecentAddressWidget::addAddresses(KConfig *config)
 {
     const int numberOfItem(mListView->count());
     for (int i = 0; i < numberOfItem; ++i) {
-        KPIM::RecentAddresses::self( config )->add( mListView->item(i)->text() );
+        KPIM::RecentAddresses::self(config)->add(mListView->item(i)->text());
     }
 }
 

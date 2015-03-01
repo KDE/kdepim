@@ -59,25 +59,25 @@
 
 using namespace KPIM;
 
-inline bool itemIsHeader( const QListWidgetItem *item )
+inline bool itemIsHeader(const QListWidgetItem *item)
 {
-    return item && !item->text().startsWith( QLatin1String("     ") );
+    return item && !item->text().startsWith(QLatin1String("     "));
 }
 
 // needs to be unique, but the actual name doesn't matter much
 static QString newLineEditObjectName()
 {
     static int s_count = 0;
-    QString name( QLatin1String("KPIM::AddresseeLineEdit") );
-    if ( s_count++ ) {
+    QString name(QLatin1String("KPIM::AddresseeLineEdit"));
+    if (s_count++) {
         name += QLatin1Char('-');
-        name += QString::number( s_count );
+        name += QString::number(s_count);
     }
     return name;
 }
 
-AddresseeLineEdit::AddresseeLineEdit( QWidget *parent, bool enableCompletion )
-    : KLineEdit( parent ), d( new AddresseeLineEditPrivate( this, enableCompletion ) )
+AddresseeLineEdit::AddresseeLineEdit(QWidget *parent, bool enableCompletion)
+    : KLineEdit(parent), d(new AddresseeLineEditPrivate(this, enableCompletion))
 {
     Kdelibs4ConfigMigrator migrate(QStringLiteral("addressline"));
     migrate.setConfigFiles(QStringList() << QStringLiteral("kpimbalooblacklist") << QStringLiteral("kpimcompletionorder"));
@@ -98,8 +98,8 @@ void AddresseeLineEdit::setFont(const QFont &font)
 {
     KLineEdit::setFont(font);
 
-    if ( d->useCompletion() ) {
-        completionBox()->setFont( font );
+    if (d->useCompletion()) {
+        completionBox()->setFont(font);
     }
 }
 
@@ -150,10 +150,10 @@ void AddresseeLineEdit::keyPressEvent(QKeyEvent *event)
     if (event->isAccepted()) {
         d->updateSearchString();
 
-        QString searchString( d->searchString() );
+        QString searchString(d->searchString());
         //LDAP does not know about our string manipulation, remove it
-        if ( d->searchExtended() ) {
-            searchString = d->searchString().mid( 1 );
+        if (d->searchExtended()) {
+            searchString = d->searchString().mid(1);
         }
 
         d->restartTime(searchString);
@@ -162,8 +162,8 @@ void AddresseeLineEdit::keyPressEvent(QKeyEvent *event)
 
 void AddresseeLineEdit::insert(const QString &t)
 {
-    if ( !d->smartPaste() ) {
-        KLineEdit::insert( t );
+    if (!d->smartPaste()) {
+        KLineEdit::insert(t);
         return;
     }
 
@@ -233,7 +233,7 @@ void AddresseeLineEdit::setText(const QString &text)
 
 void AddresseeLineEdit::paste()
 {
-    if ( d->useCompletion() ) {
+    if (d->useCompletion()) {
         d->setSmartPaste(true);
     }
 
@@ -245,15 +245,15 @@ void AddresseeLineEdit::mouseReleaseEvent(QMouseEvent *event)
 {
     // reimplemented from QLineEdit::mouseReleaseEvent()
 #ifndef QT_NO_CLIPBOARD
-    if ( d->useCompletion() &&
-         QApplication::clipboard()->supportsSelection() &&
-         !isReadOnly() &&
-         event->button() == Qt::MidButton ) {
+    if (d->useCompletion() &&
+            QApplication::clipboard()->supportsSelection() &&
+            !isReadOnly() &&
+            event->button() == Qt::MidButton) {
         d->setSmartPaste(true);
     }
 #endif
 
-    KLineEdit::mouseReleaseEvent( event );
+    KLineEdit::mouseReleaseEvent(event);
     d->setSmartPaste(false);
 }
 
@@ -309,11 +309,11 @@ void AddresseeLineEdit::dropEvent(QDropEvent *event)
         }
     }
 
-    if ( d->useCompletion() ) {
+    if (d->useCompletion()) {
         d->setSmartPaste(true);
     }
 
-    QLineEdit::dropEvent( event );
+    QLineEdit::dropEvent(event);
     d->setSmartPaste(false);
 }
 #endif // QT_NO_DRAGANDDROP
@@ -422,18 +422,18 @@ QMenu *AddresseeLineEdit::createStandardContextMenu()
         return Q_NULLPTR;
     }
 
-    if ( d->useCompletion() ) {
-        menu->addAction( i18n( "Configure Completion Order..." ),
-                         d, SLOT(slotEditCompletionOrder()) );
+    if (d->useCompletion()) {
+        menu->addAction(i18n("Configure Completion Order..."),
+                        d, SLOT(slotEditCompletionOrder()));
 
         QAction *showOU = new QAction(i18n("Show Organization Unit for LDAP results"), menu);
         showOU->setCheckable(true);
 
-        showOU->setChecked( d->showOU() );
+        showOU->setChecked(d->showOU());
         connect(showOU, SIGNAL(triggered(bool)), d, SLOT(slotShowOUChanged(bool)));
         menu->addAction(showOU);
         //Add i18n in kf5
-        QAction *configureBalooBlackList = new QAction(QLatin1String( "Configure Email Blacklist" ),menu);
+        QAction *configureBalooBlackList = new QAction(QLatin1String("Configure Email Blacklist"), menu);
         connect(configureBalooBlackList, SIGNAL(triggered(bool)), d, SLOT(slotConfigureBalooBlackList()));
         menu->addAction(configureBalooBlackList);
     }
@@ -449,20 +449,20 @@ void KPIM::AddresseeLineEdit::removeCompletionSource(const QString &source)
 
 int KPIM::AddresseeLineEdit::addCompletionSource(const QString &source, int weight)
 {
-    return d->addCompletionSource(source,weight);
+    return d->addCompletionSource(source, weight);
 }
 
 bool KPIM::AddresseeLineEdit::eventFilter(QObject *object, QEvent *event)
 {
-    if ( d->completionInitialized() &&
-         ( object == completionBox() ||
-           completionBox()->findChild<QWidget*>( object->objectName() ) == object ) ) {
-        if ( event->type() == QEvent::MouseButtonPress ||
-             event->type() == QEvent::MouseMove ||
-             event->type() == QEvent::MouseButtonRelease ||
-             event->type() == QEvent::MouseButtonDblClick ) {
+    if (d->completionInitialized() &&
+            (object == completionBox() ||
+             completionBox()->findChild<QWidget *>(object->objectName()) == object)) {
+        if (event->type() == QEvent::MouseButtonPress ||
+                event->type() == QEvent::MouseMove ||
+                event->type() == QEvent::MouseButtonRelease ||
+                event->type() == QEvent::MouseButtonDblClick) {
 
-            const QMouseEvent* mouseEvent = static_cast<QMouseEvent*>( event );
+            const QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
             // find list box item at the event position
             QListWidgetItem *item = completionBox()->itemAt(mouseEvent->pos());
             if (!item) {
@@ -640,7 +640,7 @@ void AddresseeLineEdit::callSetCompletedText(const QString &text, bool marked)
     setCompletedText(text, marked);
 }
 
-void AddresseeLineEdit::callSetCompletedText( const QString& text)
+void AddresseeLineEdit::callSetCompletedText(const QString &text)
 {
     setCompletedText(text);
 }
