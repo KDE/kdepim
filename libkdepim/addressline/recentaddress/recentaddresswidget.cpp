@@ -23,7 +23,6 @@
 
 #include <KConfig>
 #include <KConfigGroup>
-#include <KDebug>
 #include <KLineEdit>
 #include <QPushButton>
 #include <KMessageBox>

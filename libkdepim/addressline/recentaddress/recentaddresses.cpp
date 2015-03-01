@@ -34,10 +34,7 @@
 #include <KConfigGroup>
 #include "libkdepim_debug.h"
 #include <KLocalizedString>
-#include <KDebug>
-#include <KGlobal>
-#include <KLocale>
-
+#include <KSharedConfig>
 #include <QCoreApplication>
 
 using namespace KPIM;
