@@ -468,7 +468,7 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *object, QEvent *event)
             if (!item) {
                 // In the case of a mouse move outside of the box we don't want
                 // the parent to fuzzy select a header by mistake.
-                bool eat = event->type() == QEvent::MouseMove;
+                const bool eat = event->type() == QEvent::MouseMove;
                 return eat;
             }
             // avoid selection of headers on button press, or move or release while

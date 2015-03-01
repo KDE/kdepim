@@ -847,6 +847,7 @@ void AddresseeLineEditPrivate::slotConfigureBalooBlackList()
     }
     delete dlg;
 }
+
 bool AddresseeLineEditPrivate::useSemicolonAsSeparator() const
 {
     return m_useSemicolonAsSeparator;
