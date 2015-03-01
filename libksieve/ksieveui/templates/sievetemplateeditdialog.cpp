@@ -22,7 +22,7 @@
 #include "pimcommon/widgets/slidecontainer.h"
 
 #include <KLocalizedString>
-#include <QLineEdit>
+#include <KLineEdit>
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -63,10 +63,9 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTe
     QLabel *label = new QLabel(i18n("Name:"));
     hbox->addWidget(label);
 
-    mTemplateNameEdit = new QLineEdit;
+    mTemplateNameEdit = new KLineEdit;
     mTemplateNameEdit->setEnabled(!defaultTemplate);
-#pragma message("port QT5")
-    //QT5 mTemplateNameEdit->setTrapReturnKey(true);
+    mTemplateNameEdit->setTrapReturnKey(true);
     mTemplateNameEdit->setClearButtonEnabled(true);
     hbox->addWidget(mTemplateNameEdit);
 

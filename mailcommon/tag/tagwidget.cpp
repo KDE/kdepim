@@ -27,7 +27,7 @@
 #include <KIconButton>
 #include <KKeySequenceWidget>
 #include <KActionCollection>
-#include <QLineEdit>
+#include <KLineEdit>
 #include <KLocalizedString>
 #include <QIcon>
 #include <KConfigGroup>
@@ -44,10 +44,9 @@ TagWidget::TagWidget(const QList<KActionCollection *> &actionCollections, QWidge
     settings->addLayout(spacer, 0, 0, 1, 2);
 
     //First row for renaming
-    mTagNameLineEdit = new QLineEdit(this);
+    mTagNameLineEdit = new KLineEdit(this);
     mTagNameLineEdit->setClearButtonEnabled(true);
-#pragma message("port QT5")
-    //QT5 mTagNameLineEdit->setTrapReturnKey( true );
+    mTagNameLineEdit->setTrapReturnKey( true );
     settings->addWidget(mTagNameLineEdit, 1, 1);
 
     QLabel *namelabel = new QLabel(i18nc("@label:listbox Name of the tag", "Name:")
@@ -55,7 +54,7 @@ TagWidget::TagWidget(const QList<KActionCollection *> &actionCollections, QWidge
     namelabel->setBuddy(mTagNameLineEdit);
     settings->addWidget(namelabel, 1, 0);
 
-    connect(mTagNameLineEdit, &QLineEdit::textChanged, this, &TagWidget::slotEmitChangeCheck);
+    connect(mTagNameLineEdit, &KLineEdit::textChanged, this, &TagWidget::slotEmitChangeCheck);
 
     //Second row for text color
     mTextColorCheck = new QCheckBox(i18n("Change te&xt color:"),

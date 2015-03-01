@@ -20,7 +20,7 @@
 
 #include <QDialog>
 
-class QLineEdit;
+class KLineEdit;
 class QPushButton;
 
 namespace PimCommon
@@ -55,7 +55,7 @@ private:
     void writeConfig();
     SieveTextEdit *mTextEdit;
     PimCommon::PlainTextEditFindBar *mFindBar;
-    QLineEdit *mTemplateNameEdit;
+    KLineEdit *mTemplateNameEdit;
     QPushButton *mOkButton;
     PimCommon::SlideContainer *mSliderContainer;
 };

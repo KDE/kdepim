@@ -19,7 +19,7 @@
 #include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include <KLocalizedString>
-#include <QLineEdit>
+#include <KLineEdit>
 #include <QPushButton>
 #include <QIcon>
 
@@ -60,11 +60,10 @@ SelectHeadersDialog::SelectHeadersDialog(QWidget *parent)
 
     QHBoxLayout *hbox = new QHBoxLayout;
 
-    mNewHeader = new QLineEdit;
+    mNewHeader = new KLineEdit;
     mNewHeader->setClearButtonEnabled(true);
-#pragma message("port QT5")
-    //QT5 mNewHeader->setTrapReturnKey(true);
-    connect(mNewHeader, &QLineEdit::returnPressed, this, &SelectHeadersDialog::slotAddNewHeader);
+    mNewHeader->setTrapReturnKey(true);
+    connect(mNewHeader, &KLineEdit::returnPressed, this, &SelectHeadersDialog::slotAddNewHeader);
     mNewHeader->setClearButtonEnabled(true);
 
     mAddNewHeader = new QPushButton;
@@ -72,7 +71,7 @@ SelectHeadersDialog::SelectHeadersDialog(QWidget *parent)
     mAddNewHeader->setIcon(QIcon::fromTheme(QLatin1String("list-add")));
     mAddNewHeader->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     connect(mAddNewHeader, &QPushButton::clicked, this, &SelectHeadersDialog::slotAddNewHeader);
-    connect(mNewHeader, &QLineEdit::textChanged, this, &SelectHeadersDialog::slotNewHeaderTextChanged);
+    connect(mNewHeader, &KLineEdit::textChanged, this, &SelectHeadersDialog::slotNewHeaderTextChanged);
     hbox->addWidget(mAddNewHeader);
 
     lay->addLayout(hbox);

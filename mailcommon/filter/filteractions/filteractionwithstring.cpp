@@ -19,7 +19,7 @@
 
 #include "filteractionwithstring.h"
 
-#include <QLineEdit>
+#include <KLineEdit>
 
 #include <QTextDocument>
 
@@ -37,30 +37,29 @@ bool FilterActionWithString::isEmpty() const
 
 QWidget *FilterActionWithString::createParamWidget(QWidget *parent) const
 {
-    QLineEdit *lineEdit = new QLineEdit(parent);
+    KLineEdit *lineEdit = new KLineEdit(parent);
     lineEdit->setClearButtonEnabled(true);
-#pragma message("port QT5")
-    //QT5 lineEdit->setTrapReturnKey(true);
+    lineEdit->setTrapReturnKey(true);
     lineEdit->setText(mParameter);
 
-    connect(lineEdit, &QLineEdit::textChanged, this, &FilterActionWithString::filterActionModified);
+    connect(lineEdit, &KLineEdit::textChanged, this, &FilterActionWithString::filterActionModified);
 
     return lineEdit;
 }
 
 void FilterActionWithString::applyParamWidgetValue(QWidget *paramWidget)
 {
-    mParameter = static_cast<QLineEdit *>(paramWidget)->text();
+    mParameter = static_cast<KLineEdit *>(paramWidget)->text();
 }
 
 void FilterActionWithString::setParamWidgetValue(QWidget *paramWidget) const
 {
-    static_cast<QLineEdit *>(paramWidget)->setText(mParameter);
+    static_cast<KLineEdit *>(paramWidget)->setText(mParameter);
 }
 
 void FilterActionWithString::clearParamWidget(QWidget *paramWidget) const
 {
-    static_cast<QLineEdit *>(paramWidget)->clear();
+    static_cast<KLineEdit *>(paramWidget)->clear();
 }
 
 void FilterActionWithString::argsFromString(const QString &argsStr)

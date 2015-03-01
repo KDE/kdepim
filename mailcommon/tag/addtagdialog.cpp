@@ -21,7 +21,7 @@
 #include <AkonadiCore/tagcreatejob.h>
 
 #include <KLocalizedString>
-#include <QLineEdit>
+#include <KLineEdit>
 #include <KMessageBox>
 #include <KJob>
 
@@ -49,7 +49,7 @@ AddTagDialog::AddTagDialog(const QList<KActionCollection *> &actions, QWidget *p
 
     mTagWidget = new MailCommon::TagWidget(actions, this);
 
-    connect(mTagWidget->tagNameLineEdit(), &QLineEdit::textChanged, this, &AddTagDialog::slotTagNameChanged);
+    connect(mTagWidget->tagNameLineEdit(), &KLineEdit::textChanged, this, &AddTagDialog::slotTagNameChanged);
     mOkButton->setEnabled(false);
     mainLayout->addWidget(mTagWidget);
     mainLayout->addWidget(buttonBox);

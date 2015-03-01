@@ -31,7 +31,7 @@
 #include "regexplineedit.h"
 
 #include <QDialog>
-#include <QLineEdit>
+#include <KLineEdit>
 #include <KLocalizedString>
 #include <KRegExpEditorInterface>
 #include <KServiceTypeTrader>
@@ -66,15 +66,14 @@ void RegExpLineEdit::initWidget(const QString &str)
     QHBoxLayout *hlay = new QHBoxLayout(this);
     hlay->setMargin(0);
 
-    mLineEdit = new QLineEdit(str, this);
+    mLineEdit = new KLineEdit(str, this);
     mLineEdit->setClearButtonEnabled(true);
-#pragma message("port QT5")
-    //QT5 mLineEdit->setTrapReturnKey(true);
+    mLineEdit->setTrapReturnKey(true);
     setFocusProxy(mLineEdit);
     hlay->addWidget(mLineEdit);
 
-    connect(mLineEdit, &QLineEdit::textChanged, this, &RegExpLineEdit::textChanged);
-    connect(mLineEdit, &QLineEdit::returnPressed, this, &RegExpLineEdit::returnPressed);
+    connect(mLineEdit, &KLineEdit::textChanged, this, &RegExpLineEdit::textChanged);
+    connect(mLineEdit, &KLineEdit::returnPressed, this, &RegExpLineEdit::returnPressed);
 
     if (!KServiceTypeTrader::self()->query(QLatin1String("KRegExpEditor/KRegExpEditor")).isEmpty()) {
         mRegExpEditButton = new QPushButton(i18n("Edit..."), this);

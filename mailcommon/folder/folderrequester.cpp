@@ -38,7 +38,7 @@
 
 #include <QDialog>
 #include <KIconLoader>
-#include <QLineEdit>
+#include <KLineEdit>
 #include <KLocalizedString>
 #include <QIcon>
 
@@ -57,10 +57,9 @@ FolderRequester::FolderRequester(QWidget *parent)
     QHBoxLayout *hlay = new QHBoxLayout(this);
     hlay->setContentsMargins(0, 0, 0, 0);
 
-    mEdit = new QLineEdit(this);
+    mEdit = new KLineEdit(this);
     mEdit->setPlaceholderText(i18n("Select Folder"));
-#pragma message("port QT5")
-    //QT5 mEdit->setTrapReturnKey(true);
+    mEdit->setTrapReturnKey(true);
     mEdit->setReadOnly(true);
     hlay->addWidget(mEdit);
 

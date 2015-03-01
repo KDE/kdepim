@@ -21,7 +21,7 @@
 
 #include <pimcommon/widgets/minimumcombobox.h>
 
-#include <QLineEdit>
+#include <KLineEdit>
 #include <KLocalizedString>
 
 #include <QComboBox>
@@ -90,10 +90,9 @@ QWidget *FilterActionAddHeader::createParamWidget(QWidget *parent) const
     label->setFixedWidth(label->sizeHint().width());
     layout->addWidget(label, 0);
 
-    QLineEdit *lineEdit = new QLineEdit(widget);
+    KLineEdit *lineEdit = new KLineEdit(widget);
     lineEdit->setObjectName(QLatin1String("ledit"));
-#pragma message("port QT5")
-    //QT5 lineEdit->setTrapReturnKey(true);
+    lineEdit->setTrapReturnKey(true);
     lineEdit->setClearButtonEnabled(true);
     layout->addWidget(lineEdit, 1);
 

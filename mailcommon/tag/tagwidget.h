@@ -24,7 +24,7 @@
 
 #include <QWidget>
 
-class QLineEdit;
+class KLineEdit;
 class KColorCombo;
 class KFontRequester;
 class KIconButton;
@@ -45,7 +45,7 @@ public:
     MailCommon::Tag::SaveFlags saveFlags() const;
     void recordTagSettings(MailCommon::Tag::Ptr tag);
 
-    QLineEdit *tagNameLineEdit()
+    KLineEdit *tagNameLineEdit()
     {
         return mTagNameLineEdit;
     }
@@ -102,7 +102,7 @@ private Q_SLOTS:
     void slotEmitChangeCheck();
 
 private:
-    QLineEdit *mTagNameLineEdit;
+    KLineEdit *mTagNameLineEdit;
 
     QCheckBox *mTextColorCheck, *mBackgroundColorCheck,
               *mTextFontCheck, *mInToolbarCheck;
