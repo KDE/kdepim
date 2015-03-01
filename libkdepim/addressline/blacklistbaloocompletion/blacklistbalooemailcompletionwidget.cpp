@@ -48,7 +48,7 @@ BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget
     searchLayout->addWidget(lab);
 
     mSearchLineEdit = new KLineEdit;
-    mSearchLineEdit->setClickMessage(i18n("Research is done from 3 characters"));
+    mSearchLineEdit->setPlaceholderText(i18n("Research is done from 3 characters"));
     mSearchLineEdit->setFocus();
     mSearchLineEdit->setClearButtonShown(true);
     mSearchLineEdit->setTrapReturnKey(true);
@@ -103,7 +103,7 @@ BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget
     mExcludeDomainLineEdit->setObjectName(QLatin1String("domain_lineedit"));
     mExcludeDomainLineEdit->setClearButtonShown(true);
     mExcludeDomainLineEdit->setTrapReturnKey(true);
-    mExcludeDomainLineEdit->setClickMessage(i18n("Separate domain with \',\'"));
+    mExcludeDomainLineEdit->setPlaceholderText(i18n("Separate domain with \',\'"));
     connect(mEmailList, &QListWidget::itemSelectionChanged, this, &BlackListBalooEmailCompletionWidget::slotSelectionChanged);
     load();
     slotSelectionChanged();
