@@ -338,7 +338,6 @@ void SieveEditorMainWidget::slotCheckSyntax()
     }
 }
 
-
 void SieveEditorMainWidget::slotImport()
 {
     QWidget *w = mTabWidget->currentWidget();
