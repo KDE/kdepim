@@ -46,7 +46,7 @@ void MainTextJobTest::testPlainText()
     charsets << "us-ascii" << "utf-8";
     composer->globalPart()->setCharsets(charsets);
     TextPart *textPart = new TextPart;
-    QString data = QString::fromLatin1("they said their nevers they slept their dream");
+    QString data = QStringLiteral("they said their nevers they slept their dream");
     textPart->setWrappedPlainText(data);
     MainTextJob *mjob = new MainTextJob(textPart, composer);
     QVERIFY(mjob->exec());
@@ -66,7 +66,7 @@ void MainTextJobTest::testWrappingErrors()
         composer->globalPart()->setGuiEnabled(false);
         composer->globalPart()->setFallbackCharsetEnabled(true);
         TextPart *textPart = new TextPart;
-        QString data = QString::fromLatin1("they said their nevers they slept their dream");
+        QString data = QStringLiteral("they said their nevers they slept their dream");
         textPart->setWordWrappingEnabled(false);
         textPart->setWrappedPlainText(data);
         MainTextJob *mjob = new MainTextJob(textPart, composer);
@@ -79,7 +79,7 @@ void MainTextJobTest::testWrappingErrors()
         composer->globalPart()->setFallbackCharsetEnabled(true);
         TextPart *textPart = new TextPart;
         textPart->setWordWrappingEnabled(true);
-        QString data = QString::fromLatin1("they said their nevers they slept their dream");
+        QString data = QStringLiteral("they said their nevers they slept their dream");
         textPart->setCleanPlainText(data);
         MainTextJob *mjob = new MainTextJob(textPart, composer);
         QVERIFY(!mjob->exec());   // error: UseWrapping but given only clean text
@@ -116,7 +116,7 @@ void MainTextJobTest::testNoCharset()
     QVERIFY(!composer->globalPart()->isFallbackCharsetEnabled());
     composer->globalPart()->setGuiEnabled(false);
     TextPart *textPart = new TextPart;
-    QString data = QString::fromLatin1("do you still play the accordion?");
+    QString data = QStringLiteral("do you still play the accordion?");
     textPart->setWrappedPlainText(data);
     MainTextJob *mjob = new MainTextJob(textPart, composer);
     QSKIP("This tests has been failing for a long time, please someone fix it", SkipSingle);
@@ -147,7 +147,7 @@ void MainTextJobTest::testFallbackCharset()
     composer->globalPart()->setGuiEnabled(false);
     composer->globalPart()->setFallbackCharsetEnabled(true);
     TextPart *textPart = new TextPart;
-    QString data = QString::fromLatin1("and when he falleth...");
+    QString data = QStringLiteral("and when he falleth...");
     textPart->setWrappedPlainText(data);
     MainTextJob *mjob = new MainTextJob(textPart, composer);
     QVERIFY(mjob->exec());
@@ -208,7 +208,7 @@ void MainTextJobTest::testHtmlWithImages()
     KPIMTextEdit::TextEdit editor;
     QString image1 = KIconLoader::global()->iconPath(QLatin1String("folder-new"), KIconLoader::Small, false);
     QString image2 = KIconLoader::global()->iconPath(QLatin1String("message"), KIconLoader::Small, false);
-    QString data = QString::fromLatin1("dust in the wind");
+    QString data = QStringLiteral("dust in the wind");
     editor.setTextOrHtml(data);
     editor.addImage(image1);
     editor.addImage(image2);
@@ -255,8 +255,8 @@ void MainTextJobTest::testHtmlWithImages()
                 Content *html = alternative->contents().at(1);
                 QCOMPARE(html->contentType()->mimeType(), QByteArray("text/html"));
                 QString data = QString::fromLatin1(html->body());
-                int idx1 = data.indexOf(QString::fromLatin1("cid:%1").arg(cid1));
-                int idx2 = data.indexOf(QString::fromLatin1("cid:%1").arg(cid2));
+                int idx1 = data.indexOf(QStringLiteral("cid:%1").arg(cid1));
+                int idx2 = data.indexOf(QStringLiteral("cid:%1").arg(cid2));
                 QVERIFY(idx1 > 0);
                 QVERIFY(idx2 > 0);
                 QVERIFY(idx1 < idx2);

@@ -36,7 +36,7 @@ void SkeletonMessageJobTest::testSubject_data()
 {
     QTest::addColumn<QString>("subject");
 
-    QTest::newRow("simple subject") << QString::fromLatin1("Antaa virrata sateen...");
+    QTest::newRow("simple subject") << QStringLiteral("Antaa virrata sateen...");
     QTest::newRow("non-ascii subject") << QString::fromUtf8("Muzicologă în bej, vând whisky și tequila, preț fix.");
     // NOTE: This works fine, but shows ??s in the debug output.  Why?
 }
@@ -69,46 +69,46 @@ void SkeletonMessageJobTest::testAddresses_data()
     QTest::addColumn<QStringList>("bcc");
 
     {
-        QString from = QString::fromLatin1("one@example.com");
+        QString from = QStringLiteral("one@example.com");
         QStringList to;
-        to << QString::fromLatin1("two@example.com");
+        to << QStringLiteral("two@example.com");
         QStringList cc;
-        cc << QString::fromLatin1("three@example.com");
+        cc << QStringLiteral("three@example.com");
         QStringList bcc;
-        bcc << QString::fromLatin1("four@example.com");
-        QString replyto = QString::fromLatin1("five@example.com");
+        bcc << QStringLiteral("four@example.com");
+        QString replyto = QStringLiteral("five@example.com");
 
         QTest::newRow("simple single address") << from << replyto << to << cc << bcc;
     }
 
     {
-        QString from = QString::fromLatin1("one@example.com");
+        QString from = QStringLiteral("one@example.com");
         QStringList to;
-        to << QString::fromLatin1("two@example.com");
-        to << QString::fromLatin1("two.two@example.com");
+        to << QStringLiteral("two@example.com");
+        to << QStringLiteral("two.two@example.com");
         QStringList cc;
-        cc << QString::fromLatin1("three@example.com");
-        cc << QString::fromLatin1("three.three@example.com");
+        cc << QStringLiteral("three@example.com");
+        cc << QStringLiteral("three.three@example.com");
         QStringList bcc;
-        bcc << QString::fromLatin1("four@example.com");
-        bcc << QString::fromLatin1("four.four@example.com");
-        QString replyto = QString::fromLatin1("five@example.com");
+        bcc << QStringLiteral("four@example.com");
+        bcc << QStringLiteral("four.four@example.com");
+        QString replyto = QStringLiteral("five@example.com");
 
         QTest::newRow("simple multi address") << from << replyto << to << cc << bcc;
     }
 
     {
-        QString from = QString::fromLatin1("Me <one@example.com>");
+        QString from = QStringLiteral("Me <one@example.com>");
         QStringList to;
-        to << QString::fromLatin1("You <two@example.com>");
-        to << QString::fromLatin1("two.two@example.com");
+        to << QStringLiteral("You <two@example.com>");
+        to << QStringLiteral("two.two@example.com");
         QStringList cc;
-        cc << QString::fromLatin1("And you <three@example.com>");
-        cc << QString::fromLatin1("three.three@example.com");
+        cc << QStringLiteral("And you <three@example.com>");
+        cc << QStringLiteral("three.three@example.com");
         QStringList bcc;
-        bcc << QString::fromLatin1("And you too <four@example.com>");
-        bcc << QString::fromLatin1("four.four@example.com");
-        QString replyto = QString::fromLatin1("You over there <five@example.com>");
+        bcc << QStringLiteral("And you too <four@example.com>");
+        bcc << QStringLiteral("four.four@example.com");
+        QString replyto = QStringLiteral("You over there <five@example.com>");
 
         QTest::newRow("named multi address") << from << replyto << to << cc << bcc;
     }
@@ -117,14 +117,14 @@ void SkeletonMessageJobTest::testAddresses_data()
         QString from = QString::fromUtf8("Şîşkin <one@example.com>");
         QStringList to;
         to << QString::fromUtf8("Ivan Turbincă <two@example.com>");
-        to << QString::fromLatin1("two.two@example.com");
+        to << QStringLiteral("two.two@example.com");
         QStringList cc;
         cc << QString::fromUtf8("Luceafărul <three@example.com>");
-        cc << QString::fromLatin1("three.three@example.com");
+        cc << QStringLiteral("three.three@example.com");
         QStringList bcc;
         bcc << QString::fromUtf8("Zburătorul <four@example.com>");
-        bcc << QString::fromLatin1("four.four@example.com");
-        QString replyto = QString::fromLatin1("Şîşzbură <five@example.com>");
+        bcc << QStringLiteral("four.four@example.com");
+        QString replyto = QStringLiteral("Şîşzbură <five@example.com>");
 
         QTest::newRow("non-ascii named multi address") << from << replyto << to << cc << bcc;
     }

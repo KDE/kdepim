@@ -363,12 +363,12 @@ void StringUtilTest::test_parseMailtoUrl_data()
     QTest::addColumn<bool>("toIsNotEmpty");
     QTest::addColumn<int>("numberOfTo");
 
-    QTest::newRow("1 mailto") << QString::fromLatin1("mailto:foo@kde.org") << true << 1;
+    QTest::newRow("1 mailto") << QStringLiteral("mailto:foo@kde.org") << true << 1;
     //I can't test it because it asserts in kpimutils
-    //QTest::newRow("invalid (not mailto)") << QString::fromLatin1("http://www.kde.org") << false << 0;
-    QTest::newRow("invalid (no email address") << QString::fromLatin1("mailto:") << false << 0;
-    //QTest::newRow("2 address") << QString::fromLatin1("mailto:foo@kde.org?foo2@kde.org") << true << 2;
-    //QTest::newRow("invalid") << QString::fromLatin1("fookde.org") << false << 0;
+    //QTest::newRow("invalid (not mailto)") << QStringLiteral("http://www.kde.org") << false << 0;
+    QTest::newRow("invalid (no email address") << QStringLiteral("mailto:") << false << 0;
+    //QTest::newRow("2 address") << QStringLiteral("mailto:foo@kde.org?foo2@kde.org") << true << 2;
+    //QTest::newRow("invalid") << QStringLiteral("fookde.org") << false << 0;
 }
 
 void StringUtilTest::test_parseMailtoUrl()
@@ -387,14 +387,14 @@ void StringUtilTest::test_stripOffMessagePrefix_data()
 {
     QTest::addColumn<QString>("subject");
     QTest::addColumn<QString>("result");
-    QTest::newRow("no strip needed") << QString::fromLatin1("Hello World Subject") << QString::fromLatin1("Hello World Subject");
-    QTest::newRow("No default reply forward") << QString::fromLatin1("AA: Hello World Subject") << QString::fromLatin1("AA: Hello World Subject");
-    QTest::newRow("Default Reply Re:") << QString::fromLatin1("Re: Hello World Subject") << QString::fromLatin1("Hello World Subject");
-    QTest::newRow("Default Forward FW:") << QString::fromLatin1("FW: Hello World Subject") << QString::fromLatin1("Hello World Subject");
-    QTest::newRow("Default Forward Fwd:") << QString::fromLatin1("Fwd: Hello World Subject") << QString::fromLatin1("Hello World Subject");
-    QTest::newRow("Default Reply Re  :") << QString::fromLatin1("Re  : Hello World Subject") << QString::fromLatin1("Hello World Subject");
-    QTest::newRow("Default Reply Re1:") << QString::fromLatin1("Re1: Hello World Subject") << QString::fromLatin1("Hello World Subject");
-    QTest::newRow("Default Reply Re[2]:") << QString::fromLatin1("Re[2]: Hello World Subject") << QString::fromLatin1("Hello World Subject");
+    QTest::newRow("no strip needed") << QStringLiteral("Hello World Subject") << QStringLiteral("Hello World Subject");
+    QTest::newRow("No default reply forward") << QStringLiteral("AA: Hello World Subject") << QStringLiteral("AA: Hello World Subject");
+    QTest::newRow("Default Reply Re:") << QStringLiteral("Re: Hello World Subject") << QStringLiteral("Hello World Subject");
+    QTest::newRow("Default Forward FW:") << QStringLiteral("FW: Hello World Subject") << QStringLiteral("Hello World Subject");
+    QTest::newRow("Default Forward Fwd:") << QStringLiteral("Fwd: Hello World Subject") << QStringLiteral("Hello World Subject");
+    QTest::newRow("Default Reply Re  :") << QStringLiteral("Re  : Hello World Subject") << QStringLiteral("Hello World Subject");
+    QTest::newRow("Default Reply Re1:") << QStringLiteral("Re1: Hello World Subject") << QStringLiteral("Hello World Subject");
+    QTest::newRow("Default Reply Re[2]:") << QStringLiteral("Re[2]: Hello World Subject") << QStringLiteral("Hello World Subject");
 }
 
 void StringUtilTest::test_stripOffMessagePrefix()

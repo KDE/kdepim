@@ -134,9 +134,9 @@ public:
             formatter.setDisplayQRCode(false);
             QString htmlStr = formatter.toHtml(Akonadi::StandardContactFormatter::EmbeddableForm);
             const KContacts::Picture photo = a.photo();
-            htmlStr.replace(QLatin1String("<img src=\"map_icon\""), QString::fromLatin1("<img src=\"%1\"").arg(defaultMapIconPath));
+            htmlStr.replace(QLatin1String("<img src=\"map_icon\""), QStringLiteral("<img src=\"%1\"").arg(defaultMapIconPath));
             if (photo.isEmpty()) {
-                htmlStr.replace(QLatin1String("img src=\"contact_photo\""), QString::fromLatin1("img src=\"%1\"").arg(defaultPixmapPath));
+                htmlStr.replace(QLatin1String("img src=\"contact_photo\""), QStringLiteral("img src=\"%1\"").arg(defaultPixmapPath));
             } else {
                 QImage img = a.photo().data();
                 const QString dir = bodyPart->nodeHelper()->createTempDir(QLatin1String("vcard-") + a.uid());
@@ -144,7 +144,7 @@ public:
                 img.save(filename, "PNG");
                 bodyPart->nodeHelper()->addTempFile(filename);
                 const QString href = QLatin1String("file:") + QLatin1String(QUrl::toPercentEncoding(filename));
-                htmlStr.replace(QLatin1String("img src=\"contact_photo\""), QString::fromLatin1("img src=\"%1\"").arg(href));
+                htmlStr.replace(QLatin1String("img src=\"contact_photo\""), QStringLiteral("img src=\"%1\"").arg(href));
             }
             writer->queue(htmlStr);
 
@@ -152,7 +152,7 @@ public:
                     (memento && !memento->finished()) ||
                     (memento && memento->finished() && !memento->vcardExist(count))) {
                 const QString addToLinkText = i18n("[Add this contact to the address book]");
-                QString op = QString::fromLatin1("addToAddressBook:%1").arg(count);
+                QString op = QStringLiteral("addToAddressBook:%1").arg(count);
                 writer->queue(QLatin1String("<div align=\"center\"><a href=\"") +
                               bodyPart->makeLink(op) +
                               QLatin1String("\">") +
