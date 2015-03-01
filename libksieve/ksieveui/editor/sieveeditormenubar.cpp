@@ -62,9 +62,9 @@ QMenu *SieveEditorMenuBar::editorMenu() const
 
 void SieveEditorMenuBar::initMenus()
 {
-    mFileMenu = addMenu(i18n("File"));
-    mEditorMenu = addMenu(i18n("Edit"));
-    mToolsMenu = addMenu(i18n("Tools"));
+    mFileMenu = addMenu(i18nc("@title:menu", "File"));
+    mEditorMenu = addMenu(i18nc("@title:menu", "Edit"));
+    mToolsMenu = addMenu(i18nc("@title:menu", "Tools"));
     mEditorMenu->addAction(mUndoAction);
     mEditorMenu->addAction(mRedoAction);
     mEditorMenu->addSeparator();
