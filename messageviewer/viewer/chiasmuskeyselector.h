@@ -6,7 +6,7 @@
 #include "messageviewer_export.h"
 
 class QListWidget;
-class KLineEdit;
+class QLineEdit;
 class QLabel;
 class QPushButton;
 
@@ -31,7 +31,7 @@ private Q_SLOTS:
 private:
     QLabel *mLabel;
     QListWidget *mListBox;
-    KLineEdit *mOptions;
+    QLineEdit *mOptions;
     QPushButton *mOkButton;
 };
 

@@ -1,7 +1,7 @@
 
 #include "chiasmuskeyselector.h"
 
-#include <KLineEdit>
+#include <QLineEdit>
 #include <QListWidget>
 #include <KLocalizedString>
 
@@ -51,7 +51,7 @@ ChiasmusKeySelector::ChiasmusKeySelector(QWidget *parent, const QString &caption
     mainLayout->addWidget(optionLabel);
     layout->addWidget(optionLabel);
 
-    mOptions = new KLineEdit(lastOptions, page);
+    mOptions = new QLineEdit(lastOptions, page);
     mainLayout->addWidget(mOptions);
     optionLabel->setBuddy(mOptions);
     layout->addWidget(mOptions);
