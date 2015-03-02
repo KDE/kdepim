@@ -34,25 +34,24 @@ using namespace KPIM;
 CompletionConfigureDialog::CompletionConfigureDialog(QWidget *parent)
     : QDialog(parent)
 {
-    //KF5 add i18n
-    setWindowTitle(QLatin1String("Configure completion"));
+    setWindowTitle(i18n("Configure completion"));
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
 
     mTabWidget = new QTabWidget;
-    mTabWidget->setObjectName(QLatin1String("tabwidget"));
+    mTabWidget->setObjectName(QStringLiteral("tabwidget"));
     mainLayout->addWidget(mTabWidget);
 
     //TODO mCompletionOrderWidget = new KPIM::CompletionOrderWidget();
 
     mRecentaddressWidget = new KPIM::RecentAddressWidget;
-    mRecentaddressWidget->setObjectName(QLatin1String("recentaddress_widget"));
+    mRecentaddressWidget->setObjectName(QStringLiteral("recentaddress_widget"));
 
     mBlackListBalooWidget = new KPIM::BlackListBalooEmailCompletionWidget;
-    mBlackListBalooWidget->setObjectName(QLatin1String("blacklistbaloo_widget"));
+    mBlackListBalooWidget->setObjectName(QStringLiteral("blacklistbaloo_widget"));
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-    buttonBox->setObjectName(QLatin1String("buttonbox"));
+    buttonBox->setObjectName(QStringLiteral("buttonbox"));
     connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotSave()));
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     mainLayout->addWidget(buttonBox);
