@@ -21,9 +21,8 @@
 
 #include "mailsenderjob.h"
 #include "utils.h"
-
 #include <KEmailAddress>
-
+#include <KLocalizedString>
 #include <KJob>
 
 #include <AkonadiCore/ItemFetchJob>
@@ -141,8 +140,7 @@ void MailSenderJob::finishJob()
     if (!mEmailAddresses.isEmpty()) {
         emit sendMails(mEmailAddresses);
     } else {
-        //TODO add messageBox
-        qDebug() << "No emails found in contacts.";
+        emit sendMailsError(i18n("No emails found in selected contacts."));
     }
     deleteLater();
 }

@@ -1038,10 +1038,16 @@ void MainWidget::slotSendMail()
     if (!lst.isEmpty()) {
         KABMailSender::MailSenderJob *mailSender = new KABMailSender::MailSenderJob(lst, this);
         connect(mailSender, &KABMailSender::MailSenderJob::sendMails, this, &MainWidget::slotSendMails);
+        connect(mailSender, &KABMailSender::MailSenderJob::sendMailsError, this, &MainWidget::slotSendMailsError);
         mailSender->start();
     } else {
         KMessageBox::sorry(this, i18n("You have not selected any contacts."));
     }
+}
+
+void MainWidget::slotSendMailsError(const QString &error)
+{
+    KMessageBox::error(this, error);
 }
 
 void MainWidget::slotSendMails(const QStringList &emails)

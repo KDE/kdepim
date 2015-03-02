@@ -104,6 +104,7 @@ private Q_SLOTS:
     void slotCheckNewCalendar(const QModelIndex &parent, int begin, int end);
 
     void slotSendMail();
+    void slotSendMailsError(const QString &error);
 
     void slotSendMails(const QStringList &emails);
 
