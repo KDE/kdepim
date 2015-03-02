@@ -19,7 +19,7 @@
 #include "libkleo/kleo/enum.h"
 
 using namespace KABPrinting;
-static QString loadCustom( const KABC::Addressee &contact, const QString &key )
+inline QString loadCustom( const KABC::Addressee &contact, const QString &key )
 {
     return contact.custom( QLatin1String( "KADDRESSBOOK" ), key );
 }
