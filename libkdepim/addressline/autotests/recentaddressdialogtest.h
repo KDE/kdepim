@@ -18,34 +18,21 @@
 
 */
 
-#ifndef RECENTADDRESSDIALOG_H
-#define RECENTADDRESSDIALOG_H
 
-#include "kdepim_export.h"
-#include <QDialog>
-#include <QStringList>
-class KConfig;
+#ifndef RECENTADDRESSDIALOGTEST_H
+#define RECENTADDRESSDIALOGTEST_H
 
-namespace KPIM
-{
-class RecentAddressWidget;
-class KDEPIM_EXPORT RecentAddressDialog : public QDialog
+#include <QObject>
+
+class RecentAddressDialogTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit RecentAddressDialog(QWidget *parent = Q_NULLPTR);
-    ~RecentAddressDialog();
+    explicit RecentAddressDialogTest(QObject *parent = Q_NULLPTR);
+    ~RecentAddressDialogTest();
 
-    void setAddresses(const QStringList &addrs);
-    QStringList addresses() const;
-    void addAddresses(KConfig *config);
-    bool wasChanged() const;
-
-private:
-    void readConfig();
-    void writeConfig();
-    RecentAddressWidget *mRecentAddressWidget;
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
-}
 
-#endif // RECENTADDRESSDIALOG_H
+#endif // RECENTADDRESSDIALOGTEST_H

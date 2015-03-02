@@ -18,34 +18,31 @@
 
 */
 
-#ifndef RECENTADDRESSDIALOG_H
-#define RECENTADDRESSDIALOG_H
 
-#include "kdepim_export.h"
-#include <QDialog>
-#include <QStringList>
-class KConfig;
+#include "recentaddressdialogtest.h"
+#include "../recentaddress/recentaddressdialog.h"
+#include "../recentaddress/recentaddresswidget.h"
+#include <QDialogButtonBox>
+#include <qtest.h>
 
-namespace KPIM
+RecentAddressDialogTest::RecentAddressDialogTest(QObject *parent)
+    : QObject(parent)
 {
-class RecentAddressWidget;
-class KDEPIM_EXPORT RecentAddressDialog : public QDialog
-{
-    Q_OBJECT
-public:
-    explicit RecentAddressDialog(QWidget *parent = Q_NULLPTR);
-    ~RecentAddressDialog();
 
-    void setAddresses(const QStringList &addrs);
-    QStringList addresses() const;
-    void addAddresses(KConfig *config);
-    bool wasChanged() const;
-
-private:
-    void readConfig();
-    void writeConfig();
-    RecentAddressWidget *mRecentAddressWidget;
-};
 }
 
-#endif // RECENTADDRESSDIALOG_H
+RecentAddressDialogTest::~RecentAddressDialogTest()
+{
+
+}
+
+void RecentAddressDialogTest::shouldHaveDefaultValue()
+{
+    KPIM::RecentAddressDialog dlg;
+    QDialogButtonBox *buttonBox = dlg.findChild<QDialogButtonBox *>(QStringLiteral("buttonbox"));
+    QVERIFY(buttonBox);
+    KPIM::RecentAddressWidget *recentWidget = dlg.findChild<KPIM::RecentAddressWidget *>(QStringLiteral("recentaddresswidget"));
+    QVERIFY(recentWidget);
+}
+
+QTEST_MAIN(RecentAddressDialogTest)

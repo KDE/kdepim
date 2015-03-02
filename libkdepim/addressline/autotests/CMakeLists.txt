@@ -18,9 +18,16 @@ ecm_mark_as_test(libkdepim_recentaddresswidgettest)
 target_link_libraries( libkdepim_recentaddresswidgettest Qt5::Test  KF5::Contacts Qt5::Widgets kdepim)
 
 
+set( libkdepim_recentaddressdialogtest_SRCS recentaddressdialogtest.cpp ../recentaddress/recentaddressdialog.cpp ../recentaddress/recentaddresswidget.cpp ../recentaddress/recentaddresses.cpp)
+add_executable( libkdepim_recentaddressdialogtest ${libkdepim_recentaddressdialogtest_SRCS})
+add_test(libkdepim_recentaddressdialogtest libkdepim_recentaddressdialogtest)
+ecm_mark_as_test(libkdepim_recentaddressdialogtest)
+target_link_libraries( libkdepim_recentaddressdialogtest Qt5::Test  KF5::Contacts Qt5::Widgets kdepim)
+
 
 set( libkdepim_completionconfiguredialogtest_SRCS completionconfiguredialogtest.cpp )
 add_executable( libkdepim_completionconfiguredialogtest ${libkdepim_completionconfiguredialogtest_SRCS})
 add_test(libkdepim_completionconfiguredialogtest libkdepim_completionconfiguredialogtest)
 ecm_mark_as_test(libkdepim_completionconfiguredialogtest)
 target_link_libraries( libkdepim_completionconfiguredialogtest Qt5::Test  kdepim)
+
