@@ -134,7 +134,12 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
     act = new QAction( i18n( "Icedove Mail filters" ), this );
     act->setData( QVariant::fromValue(MailCommon::FilterImporterExporter::IcedoveFilter) );
     menu->addAction( act );
-
+#if 0
+    //KF5 add i18n
+    act = new QAction( QLatin1String( "GMail filters" ), this );
+    act->setData( QVariant::fromValue(MailCommon::FilterImporterExporter::GmailFilter) );
+    menu->addAction( act );
+#endif
     connect( menu, SIGNAL(triggered(QAction*)), SLOT(slotImportFilter(QAction*)) );
 
     button( KDialog::User1 )->setMenu( menu );
