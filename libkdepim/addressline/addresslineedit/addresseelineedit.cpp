@@ -27,24 +27,12 @@
 #include "addresseelineedit.h"
 #include "addresseelineedit_p.h"
 #include "ldap/ldapclientsearch.h"
-#include "addressline/completionorder/completionordereditor.h"
-#include "addressline/blacklistbaloocompletion/blacklistbalooemailcompletiondialog.h"
 #include "kmailcompletion.h"
 #include "baloocompletionemail.h"
 
-#include <Akonadi/Contact/ContactSearchJob>
-#include <Akonadi/Contact/ContactGroupSearchJob>
-#include <Akonadi/CollectionFetchJob>
-#include <Akonadi/EntityDisplayAttribute>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/RecursiveItemFetchJob>
-#include <Akonadi/Session>
-#include <Akonadi/Job>
-
-#include <baloo/pim/contactcompleter.h>
-
+#include <KABC/Addressee>
+#include <KABC/ContactGroup>
 #include <KPIMUtils/Email>
-#include <KColorScheme>
 
 #include <KLDAP/LdapServer>
 

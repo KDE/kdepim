@@ -45,8 +45,6 @@
 
 #include <Akonadi/Job>
 
-#include <akonadi/contact/contactsearchjob.h>
-
 #include <addressline/blacklistbaloocompletion/blacklistbalooemailcompletiondialog.h>
 
 
