@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012, 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2015 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,35 +15,22 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERPROCMAIL_P_H
-#define MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERPROCMAIL_P_H
+#ifndef FILTERIMPORTERGMAIL_H
+#define FILTERIMPORTERGMAIL_H
 
-#include "filterimporter/filterimporterabstract_p.h"
-
-#include <QTextStream>
-
+#include "filterimporter/filterimporterabstract.h"
 class QFile;
-
-namespace MailCommon
-{
+namespace MailCommon {
 
 class MailFilter;
 
-class FilterImporterProcmail : public FilterImporterAbstract
+class MAILCOMMON_EXPORT FilterImporterGmail : public FilterImporterAbstract
 {
 public:
-    explicit FilterImporterProcmail(QFile *file);
-    ~FilterImporterProcmail();
+    FilterImporterGmail(QFile *file);
+    ~FilterImporterGmail();
     static QString defaultFiltersSettingsPath();
-
-private:
-    MailCommon::MailFilter *parseLine(QTextStream &stream, QString line, MailCommon::MailFilter *filter);
-    QString createUniqFilterName();
-    int mFilterCount;
-
 };
-
 }
 
-#endif /*MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERPROCMAIL_P_H*/
-
+#endif // FILTERIMPORTERGMAIL_H

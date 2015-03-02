@@ -20,7 +20,7 @@
 #include "balsa/balsaaddressbook.h"
 #include "mailimporter/filterbalsa.h"
 #include "mailimporter/filterinfo.h"
-#include "mailcommon/filter/filterimporter/filterimporterbalsa_p.h"
+#include "mailcommon/filter/filterimporter/filterimporterbalsa.h"
 #include "importfilterinfogui.h"
 #include "importwizard.h"
 

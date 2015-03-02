@@ -20,7 +20,7 @@
 
 #include <QDialog>
 
-class QLineEdit;
+class KLineEdit;
 namespace PimCommon
 {
 class RichTextEditorWidget;
@@ -44,7 +44,7 @@ private:
     void readConfig();
     void writeConfig();
     PimCommon::RichTextEditorWidget *mTextEdit;
-    QLineEdit *mTemplateNameEdit;
+    KLineEdit *mTemplateNameEdit;
     QPushButton *mOkButton;
 };
 }

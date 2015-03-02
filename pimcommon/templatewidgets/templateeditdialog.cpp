@@ -20,7 +20,7 @@
 #include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
 
 #include <KLocalizedString>
-#include <QLineEdit>
+#include <KLineEdit>
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -62,7 +62,9 @@ TemplateEditDialog::TemplateEditDialog(QWidget *parent, bool defaultTemplate)
     QLabel *label = new QLabel(i18n("Name:"));
     hbox->addWidget(label);
 
-    mTemplateNameEdit = new QLineEdit;
+    mTemplateNameEdit = new KLineEdit;
+    mTemplateNameEdit->setTrapReturnKey(true);
+    mTemplateNameEdit->setClearButtonShown(!defaultTemplate);
     mTemplateNameEdit->setEnabled(!defaultTemplate);
     hbox->addWidget(mTemplateNameEdit);
 

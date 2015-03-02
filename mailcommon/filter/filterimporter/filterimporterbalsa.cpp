@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "filterimporterbalsa_p.h"
+#include "filterimporterbalsa.h"
 #include "filtermanager.h"
 #include "mailfilter.h"
 #include "mailcommon_debug.h"

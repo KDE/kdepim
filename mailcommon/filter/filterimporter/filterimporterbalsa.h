@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012, 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,37 +15,31 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MAILCOMMON_FILTERIMPORTER_FILTERIMPORTEREVOLUTION_P_H
-#define MAILCOMMON_FILTERIMPORTER_FILTERIMPORTEREVOLUTION_P_H
+#ifndef MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERBALSA_P_H
+#define MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERBALSA_P_H
 
-#include "filterimporter/filterimporterabstract_p.h"
-
-#include <QDomElement>
+#include "filter/filterimporter/filterimporterabstract.h"
 
 class QFile;
+class KConfigGroup;
 
 namespace MailCommon
 {
 
 class MailFilter;
 
-class FilterImporterEvolution : public FilterImporterAbstract
+class FilterImporterBalsa : public FilterImporterAbstract
 {
 public:
-    explicit FilterImporterEvolution(QFile *file);
-    ~FilterImporterEvolution();
+    explicit FilterImporterBalsa(QFile *file);
+    ~FilterImporterBalsa();
     static QString defaultFiltersSettingsPath();
 private:
-    enum parseType {
-        PartType = 0,
-        ActionType = 1
-    };
-    void parseFilters(const QDomElement &e);
-    void parsePartAction(const QDomElement &ruleFilter,
-                         MailCommon::MailFilter *filter,
-                         MailCommon::FilterImporterEvolution::parseType type);
+    void addFilter(const KConfigGroup &grp);
+    void parseCondition(const QString &condition, MailCommon::MailFilter *filter);
+    void parseAction(int actionType, const QString &action, MailCommon::MailFilter *filter);
 };
 
 }
 
-#endif // FILTERIMPORTEREVOLUTION_H
+#endif // FILTERIMPORTERBALSA_H

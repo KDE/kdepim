@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2014-2015 Montel Laurent <montel@kde.org>
+  Copyright (c) 2015 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,18 +15,37 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MAILMERGEDIALOG_H
-#define MAILMERGEDIALOG_H
-#include <QDialog>
-namespace MailMerge
+
+#include "filterimportergmail.h"
+#include <KDebug>
+#include <QFile>
+#include <QDir>
+
+using namespace MailCommon;
+
+FilterImporterGmail::FilterImporterGmail( QFile *file )
+    :FilterImporterAbstract()
 {
-class MailMergeDialog : public QDialog
-{
-    Q_OBJECT
-public:
-    explicit MailMergeDialog(QWidget *parent = Q_NULLPTR);
-    ~MailMergeDialog();
-};
+    QDomDocument doc;
+    if ( !loadDomElement( doc, file ) ) {
+        return;
+    }
+
+    QDomElement filters = doc.documentElement();
+
+    if ( filters.isNull() ) {
+        kDebug() << "No filters defined";
+        return;
+    }
+
 }
 
-#endif // MAILMERGEDIALOG_H
+FilterImporterGmail::~FilterImporterGmail()
+{
+
+}
+
+QString FilterImporterGmail::defaultFiltersSettingsPath()
+{
+    return QDir::homePath();
+}

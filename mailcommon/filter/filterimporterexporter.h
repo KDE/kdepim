@@ -61,7 +61,8 @@ public:
         ProcmailFilter = 4,
         BalsaFilter = 5,
         ClawsMailFilter = 6,
-        IcedoveFilter = 7
+        IcedoveFilter = 7,
+        GmailFilter = 8
     };
 
     /**

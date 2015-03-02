@@ -31,3 +31,9 @@ add_test(libkdepim_completionconfiguredialogtest libkdepim_completionconfiguredi
 ecm_mark_as_test(libkdepim_completionconfiguredialogtest)
 target_link_libraries( libkdepim_completionconfiguredialogtest Qt5::Test  kdepim)
 
+
+set( libkdepim_completionorderwidgettest_SRCS completionorderwidgettest.cpp )
+add_executable( libkdepim_completionorderwidgettest ${libkdepim_completionorderwidgettest_SRCS})
+add_test(libkdepim_completionorderwidgettest libkdepim_completionorderwidgettest)
+ecm_mark_as_test(libkdepim_completionorderwidgettest)
+target_link_libraries( libkdepim_completionorderwidgettest Qt5::Test  kdepim)

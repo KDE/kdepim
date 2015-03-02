@@ -44,6 +44,14 @@ void CompletionConfigureDialogTest::shouldHaveDefaultValue()
 
     QTabWidget *tabWidget = qFindChild<QTabWidget *>(&dlg, QLatin1String("tabwidget"));
     QVERIFY(tabWidget);
+    QVERIFY(tabWidget->count() > 0);
+    for(int i = 0; i< tabWidget->count(); ++i) {
+        const QString objName = tabWidget->widget(i)->objectName();
+        const bool hasName = ( objName == QLatin1String("completionorder_widget")) ||
+                ( objName == QLatin1String("recentaddress_widget") )  ||
+                ( objName == QLatin1String("blacklistbaloo_widget") );
+        QVERIFY(hasName);
+    }
 }
 
 QTEST_MAIN(CompletionConfigureDialogTest)

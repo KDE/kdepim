@@ -32,12 +32,12 @@
 #include "filtermanager.h"
 #include "mailfilter.h"
 #include "mailcommon_debug.h"
-#include "filterimporter/filterimporterthunderbird_p.h"
-#include "filterimporter/filterimporterevolution_p.h"
-#include "filterimporter/filterimportersylpheed_p.h"
-#include "filterimporter/filterimporterprocmail_p.h"
-#include "filterimporter/filterimporterbalsa_p.h"
-#include "filterimporter/filterimporterclawsmail_p.h"
+#include "filterimporter/filterimporterthunderbird.h"
+#include "filterimporter/filterimporterevolution.h"
+#include "filterimporter/filterimportersylpheed.h"
+#include "filterimporter/filterimporterprocmail.h"
+#include "filterimporter/filterimporterbalsa.h"
+#include "filterimporter/filterimporterclawsmail.h"
 
 #include "dialog/selectthunderbirdfilterfilesdialog.h"
 
@@ -203,6 +203,12 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
                 title = i18n("Import Icedove Filters");
                 defaultPath = MailCommon::FilterImporterThunderbird::defaultIcedoveFiltersSettingsPath();
                 break;
+            case GmailFilter:
+                //KF5 add i18n
+                title = QLatin1String( "Import Gmail Filters" );
+                defaultPath = QDir::homePath();
+                //TODO
+                break;
             }
 
             fileName = QFileDialog::getOpenFileName(d->mParent, title,  defaultPath, QString());
@@ -323,6 +329,12 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
         delete filter;
         break;
     }
+    case GmailFilter:
+    {
+        //TODO
+        break;
+    }
+
     }
     d->warningInfoAboutInvalidFilter(emptyFilter);
     file.close();

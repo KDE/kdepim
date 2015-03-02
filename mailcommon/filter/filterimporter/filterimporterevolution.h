@@ -15,10 +15,10 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERSYLPHEED_P_H
-#define MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERSYLPHEED_P_H
+#ifndef MAILCOMMON_FILTERIMPORTER_FILTERIMPORTEREVOLUTION_P_H
+#define MAILCOMMON_FILTERIMPORTER_FILTERIMPORTEREVOLUTION_P_H
 
-#include "filterimporter/filterimporterabstract_p.h"
+#include "filterimporter/filterimporterabstract.h"
 
 #include <QDomElement>
 
@@ -29,20 +29,23 @@ namespace MailCommon
 
 class MailFilter;
 
-class FilterImporterSylpheed : public FilterImporterAbstract
+class FilterImporterEvolution : public FilterImporterAbstract
 {
 public:
-    explicit FilterImporterSylpheed(QFile *file);
-    ~FilterImporterSylpheed();
+    explicit FilterImporterEvolution(QFile *file);
+    ~FilterImporterEvolution();
     static QString defaultFiltersSettingsPath();
 private:
+    enum parseType {
+        PartType = 0,
+        ActionType = 1
+    };
     void parseFilters(const QDomElement &e);
-    void parseConditions(const QDomElement &ruleFilter, MailCommon::MailFilter *filter);
-    void parseActions(const QDomElement &e, MailCommon::MailFilter *filter);
-
+    void parsePartAction(const QDomElement &ruleFilter,
+                         MailCommon::MailFilter *filter,
+                         MailCommon::FilterImporterEvolution::parseType type);
 };
 
 }
 
-#endif /* FILTERIMPORTERSYLPHEED_P_H */
-
+#endif // FILTERIMPORTEREVOLUTION_H

@@ -198,6 +198,8 @@ CompletionOrderWidget::CompletionOrderWidget(QWidget *parent)
     pageHBoxLayout->setMargin(0);
     hbox->addWidget(page);
     mListView = new QTreeWidget(page);
+    mListView->setObjectName(QLatin1String("listview"));
+
     pageHBoxLayout->addWidget(mListView);
     mListView->setColumnCount(1);
     mListView->setAlternatingRowColors(true);
