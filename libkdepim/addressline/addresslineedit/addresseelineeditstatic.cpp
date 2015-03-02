@@ -25,7 +25,7 @@
 #include <addressline/completionorder/completionordereditor.h>
 #include <KLDAP/LdapServer>
 #include <Akonadi/Session>
-namespace KPIM {
+using namespace KPIM;
 
 AddresseeLineEditStatic::AddresseeLineEditStatic()
     : completion( new KMailCompletion ),
@@ -100,7 +100,4 @@ void AddresseeLineEditStatic::removeCompletionSource(const QString &source)
         completionSourceWeights.remove(source);
         completion->clear();
     }
-}
-
-
 }
