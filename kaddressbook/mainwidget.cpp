@@ -1028,8 +1028,14 @@ void MainWidget::slotSendVcards()
     const Akonadi::Item::List lst = Utils::collectSelectedAllContactsItem(mItemView->selectionModel());
     if (!lst.isEmpty()) {
         KABSendVCards::SendVcardsJob *sendVcards = new KABSendVCards::SendVcardsJob(lst, this);
+        connect(sendVcards, SIGNAL(sendVCardsError(QString)), this, SLOT(slotSendVcardsError(QString)));
         sendVcards->start();
     }
+}
+
+void MainWidget::slotSendVcardsError(const QString &error)
+{
+    KMessageBox::error( this, error );
 }
 
 void MainWidget::slotSendMail()

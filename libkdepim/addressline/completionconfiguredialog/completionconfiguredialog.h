@@ -25,8 +25,10 @@
 
 #include <QDialog>
 class QTabWidget;
-namespace KPIM
-{
+namespace KLDAP {
+class LdapClientSearch;
+}
+namespace KPIM {
 class CompletionOrderWidget;
 class BlackListBalooEmailCompletionWidget;
 class RecentAddressWidget;
@@ -39,6 +41,8 @@ public:
 
     void load();
     void setEmailBlackList(const QStringList &lst);
+    void setLdapClientSearch(KLDAP::LdapClientSearch *ldapSearch);
+    void setRecentAddresses(const QStringList &lst);
 private slots:
     void slotSave();
 

@@ -79,11 +79,14 @@ CompletionOrderEditor::CompletionOrderEditor(KLDAP::LdapClientSearch *ldapSearch
     QHBoxLayout *pageHBoxLayout = new QHBoxLayout(page);
     pageHBoxLayout->setMargin(0);
 
-    mCompletionOrderWidget = new CompletionOrderWidget(ldapSearch, this);
+    mCompletionOrderWidget = new CompletionOrderWidget(this);
 
     mainLayout->addWidget(mCompletionOrderWidget);
     mainLayout->addWidget(buttonBox);
 
+    mCompletionOrderWidget->setLdapClientSearch(ldapSearch);
+
+    mCompletionOrderWidget->loadCompletionItems();
     readConfig();
 }
 

@@ -33,7 +33,7 @@
 #include <QTemporaryDir>
 #include <KToolInvocation>
 #include <QFile>
-
+#include <KLocalizedString>
 using namespace KABSendVCards;
 
 SendVcardsJob::SendVcardsJob(const Akonadi::Item::List &listItem, QObject *parent)
@@ -58,6 +58,8 @@ bool SendVcardsJob::start()
 {
     if (mListItem.isEmpty()) {
         qCDebug(KADDRESSBOOK_LOG) << " No Item found";
+        mAttachmentTemporary->deleteLater();
+        mAttachmentTemporary = 0;
         deleteLater();
         return false;
     }
@@ -105,6 +107,8 @@ void SendVcardsJob::jobFinished()
     const QStringList lstAttachment = mAttachmentTemporary->temporaryFiles();
     if (!lstAttachment.isEmpty()) {
         KToolInvocation::invokeMailer(QString(), QString(), QString(), QString(), QString(), QString(), lstAttachment);
+    } else {
+        sendVCardsError(i18n("No VCard created."));
     }
     mAttachmentTemporary->removeTempFiles();
     deleteLater();
@@ -132,6 +136,8 @@ void SendVcardsJob::createTemporaryFile(const QByteArray &data, const QString &f
     QFile file(mTempDir->path() + QLatin1Char('/') + filename);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         qCDebug(KADDRESSBOOK_LOG) << "Can not write vcard filename :" << filename;
+        //KF5 add i18n
+        sendVCardsError(i18n("Temporary file \'%1\' can not created",filename));
         return;
     }
 

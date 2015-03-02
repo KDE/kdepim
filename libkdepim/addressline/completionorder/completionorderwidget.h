@@ -67,7 +67,7 @@ class KDEPIM_EXPORT CompletionOrderWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit CompletionOrderWidget(KLDAP::LdapClientSearch *ldapSearch, QWidget *parent = Q_NULLPTR);
+    explicit CompletionOrderWidget(QWidget *parent = Q_NULLPTR);
     ~CompletionOrderWidget();
     void save();
 
@@ -75,6 +75,8 @@ public:
     {
         return &mConfig;
     }
+    void loadCompletionItems();
+    void setLdapClientSearch(KLDAP::LdapClientSearch *ldapSearch);
 
 Q_SIGNALS:
     void completionOrderChanged();
@@ -88,7 +90,6 @@ private Q_SLOTS:
 private:
     void readConfig();
     void writeConfig();
-    void loadCompletionItems();
     void addRecentAddressItem();
     void addCompletionItemForCollection(const QModelIndex &);
 

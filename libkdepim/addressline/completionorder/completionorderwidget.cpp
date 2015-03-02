@@ -181,11 +181,11 @@ private:
     CompletionItem *mItem;
 };
 
-CompletionOrderWidget::CompletionOrderWidget(KLDAP::LdapClientSearch *ldapSearch, QWidget *parent)
+CompletionOrderWidget::CompletionOrderWidget(QWidget *parent)
     : QWidget(parent),
-      mConfig(QLatin1String("kpimcompletionorder")),
-      mLdapSearch(ldapSearch),
-      mDirty(false)
+      mConfig( QLatin1String("kpimcompletionorder") ),
+      mLdapSearch( 0 ),
+      mDirty( false )
 {
     new CompletionOrderEditorAdaptor(this);
     QDBusConnection::sessionBus().registerObject(QLatin1String("/"), this, QDBusConnection::ExportAdaptors);
@@ -237,7 +237,6 @@ CompletionOrderWidget::CompletionOrderWidget(KLDAP::LdapClientSearch *ldapSearch
     connect(mUpButton, SIGNAL(clicked()), this, SLOT(slotMoveUp()));
     connect(mDownButton, SIGNAL(clicked()), this, SLOT(slotMoveDown()));
 
-    loadCompletionItems();
 }
 
 CompletionOrderWidget::~CompletionOrderWidget()
@@ -286,9 +285,11 @@ void CompletionOrderWidget::addCompletionItemForCollection(const QModelIndex &in
 
 void CompletionOrderWidget::loadCompletionItems()
 {
-    // The first step is to gather all the data, creating CompletionItem objects
-    foreach (KLDAP::LdapClient *client, mLdapSearch->clients()) {
-        new CompletionViewItem(mListView, new LDAPCompletionItem(client), 0);
+    if (mLdapSearch) {
+        // The first step is to gather all the data, creating CompletionItem objects
+        foreach ( KLDAP::LdapClient *client, mLdapSearch->clients() ) {
+            new CompletionViewItem( mListView, new LDAPCompletionItem( client ), 0 );
+        }
     }
 
     Akonadi::ChangeRecorder *monitor = new Akonadi::ChangeRecorder(this);
@@ -324,7 +325,12 @@ void CompletionOrderWidget::loadCompletionItems()
     mListView->sortItems(0, Qt::AscendingOrder);
 }
 
-void CompletionOrderWidget::rowsInserted(const QModelIndex &parent, int start, int end)
+void CompletionOrderWidget::setLdapClientSearch(KLDAP::LdapClientSearch *ldapSearch)
+{
+    mLdapSearch = ldapSearch;
+}
+
+void CompletionOrderWidget::rowsInserted( const QModelIndex &parent, int start, int end )
 {
     for (int row = start; row <= end; ++row) {
         addCompletionItemForCollection(mCollectionModel->index(row, 0, parent));
