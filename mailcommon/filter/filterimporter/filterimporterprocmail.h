@@ -15,12 +15,12 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MAILCOMMON_FILTERIMPORTER_FILTERIMPORTEREVOLUTION_P_H
-#define MAILCOMMON_FILTERIMPORTER_FILTERIMPORTEREVOLUTION_P_H
+#ifndef MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERPROCMAIL_P_H
+#define MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERPROCMAIL_P_H
 
-#include "filterimporter/filterimporterabstract_p.h"
+#include "filterimporter/filterimporterabstract.h"
 
-#include <QDomElement>
+#include <QTextStream>
 
 class QFile;
 
@@ -28,23 +28,22 @@ namespace MailCommon {
 
 class MailFilter;
 
-class FilterImporterEvolution : public FilterImporterAbstract
+class FilterImporterProcmail : public FilterImporterAbstract
 {
 public:
-    explicit FilterImporterEvolution( QFile *file );
-    ~FilterImporterEvolution();
+    explicit FilterImporterProcmail( QFile *file );
+    ~FilterImporterProcmail();
     static QString defaultFiltersSettingsPath();
+
 private:
-    enum parseType {
-        PartType = 0,
-        ActionType = 1
-    };
-    void parseFilters( const QDomElement &e );
-    void parsePartAction( const QDomElement &ruleFilter,
-                          MailCommon::MailFilter *filter,
-                          MailCommon::FilterImporterEvolution::parseType type );
+    MailCommon::MailFilter *parseLine( QTextStream &stream, QString line, MailCommon::MailFilter *filter );
+    QString createUniqFilterName();
+    int mFilterCount;
+
 };
 
 }
 
-#endif // FILTERIMPORTEREVOLUTION_H
+
+#endif /*MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERPROCMAIL_P_H*/
+

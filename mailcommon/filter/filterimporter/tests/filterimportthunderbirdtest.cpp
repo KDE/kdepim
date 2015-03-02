@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 #include "filterimportthunderbirdtest.h"
-#include "../filterimporterthunderbird_p.h"
+#include "../filterimporterthunderbird.h"
 #include "filtertestkernel.h"
 #include "mailfilter.h"
 #include <akonadi/qtest_akonadi.h>

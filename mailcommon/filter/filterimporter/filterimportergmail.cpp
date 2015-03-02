@@ -17,13 +17,25 @@
 
 
 #include "filterimportergmail.h"
-
+#include <KDebug>
+#include <QFile>
 
 using namespace MailCommon;
 
-FilterImporterGmail::FilterImporterGmail()
+FilterImporterGmail::FilterImporterGmail( QFile *file )
     :FilterImporterAbstract()
 {
+    QDomDocument doc;
+    if ( !loadDomElement( doc, file ) ) {
+        return;
+    }
+
+    QDomElement filters = doc.documentElement();
+
+    if ( filters.isNull() ) {
+        kDebug() << "No filters defined";
+        return;
+    }
 
 }
 

@@ -19,7 +19,7 @@
 #include "claws-mail/clawsmailsettings.h"
 #include "claws-mail/clawsmailaddressbook.h"
 #include "mailimporter/filter_clawsmail.h"
-#include "mailcommon/filter/filterimporter/filterimporterclawsmail_p.h"
+#include "mailcommon/filter/filterimporter/filterimporterclawsmail.h"
 #include "mailimporter/filterinfo.h"
 #include "importfilterinfogui.h"
 #include "importwizard.h"

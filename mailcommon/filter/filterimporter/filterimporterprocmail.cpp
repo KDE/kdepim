@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "filterimporterprocmail_p.h"
+#include "filterimporterprocmail.h"
 
 #include "filtermanager.h"
 #include "mailfilter.h"
