@@ -52,7 +52,7 @@
 #include <qdialogbuttonbox.h>
 #include <kldap/ldapobject.h>
 #include <kldap/ldapserver.h>
-#include <klineedit.h>
+#include <qlineedit.h>
 #include <kmessagebox.h>
 #include <QPushButton>
 

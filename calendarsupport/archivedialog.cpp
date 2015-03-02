@@ -31,8 +31,8 @@
 
 #include <KComboBox>
 #include <KDateComboBox>
-#include <KFileDialog>
 #include <KLineEdit>
+#include <KFileDialog>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <QUrl>

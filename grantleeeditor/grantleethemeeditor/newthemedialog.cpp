@@ -18,10 +18,9 @@
 #include "newthemedialog.h"
 #include "globalsettings_base.h"
 
-#include <QLineEdit>
+#include <KLineEdit>
 #include <KLocalizedString>
 #include <KUrlRequester>
-#include <KLineEdit>
 
 #include <QVBoxLayout>
 #include <QLabel>
@@ -41,8 +40,9 @@ NewThemeDialog::NewThemeDialog(QWidget *parent)
     QLabel *lab = new QLabel(i18n("Theme name:"));
     lay->addWidget(lab);
 
-    mThemeName = new QLineEdit;
-    connect(mThemeName, &QLineEdit::textChanged, this, &NewThemeDialog::slotUpdateOkButton);
+    mThemeName = new KLineEdit;
+    mThemeName->setTrapReturnKey(true);
+    connect(mThemeName, &KLineEdit::textChanged, this, &NewThemeDialog::slotUpdateOkButton);
     lay->addWidget(mThemeName);
 
     lab = new QLabel(i18n("Theme directory:"));
@@ -50,7 +50,7 @@ NewThemeDialog::NewThemeDialog(QWidget *parent)
 
     mUrlRequester = new KUrlRequester;
     mUrlRequester->setMode(KFile::Directory | KFile::LocalOnly);
-    connect(mUrlRequester->lineEdit(), &QLineEdit::textChanged, this, &NewThemeDialog::slotUpdateOkButton);
+    connect(mUrlRequester->lineEdit(), &KLineEdit::textChanged, this, &NewThemeDialog::slotUpdateOkButton);
     lay->addWidget(mUrlRequester);
 
     w->setLayout(lay);

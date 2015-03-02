@@ -59,7 +59,7 @@
 #include <qpushbutton.h>
 #include <kconfiggroup.h>
 #include <qmenu.h>
-#include <klineedit.h>
+#include <QLineEdit>
 #include <kurl.h>
 
 // Qt
@@ -441,8 +441,8 @@ void Kleo::KeySelectionDialog::init(bool rememberChoice, bool extendedSelection,
     QHBoxLayout *hlay = new QHBoxLayout();
     mTopLayout->addLayout(hlay);
 
-    KLineEdit *le = new KLineEdit(page);
-    le->setClearButtonShown(true);
+    QLineEdit *le = new QLineEdit(page);
+    le->setClearButtonEnabled(true);
     le->setText(initialQuery);
 
     QLabel *lbSearchFor =  new QLabel(i18n("&Search for:"), page) ;
