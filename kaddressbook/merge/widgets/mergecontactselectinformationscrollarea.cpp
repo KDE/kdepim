@@ -83,7 +83,7 @@ void MergeContactSelectInformationScrollArea::setContacts(MergeContacts::Conflic
 
 void MergeContactSelectInformationScrollArea::slotMergeContacts()
 {
-    if (mCollection.isValid()) {
+    if (!mCollection.isValid()) {
         qDebug()<<" Invalid colletion";
         return;
     }
