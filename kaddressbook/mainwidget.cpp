@@ -1035,7 +1035,7 @@ void MainWidget::slotSendVcards()
 
 void MainWidget::slotSendVcardsError(const QString &error)
 {
-    KMessageBox::error( this, error );
+    KMessageBox::error(this, error);
 }
 
 void MainWidget::slotSendMail()

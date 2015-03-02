@@ -85,7 +85,7 @@ void CompletionConfigureDialog::writeConfig()
 
 void CompletionConfigureDialog::setRecentAddresses(const QStringList &lst)
 {
-    mRecentaddressWidget->setAddresses( lst );
+    mRecentaddressWidget->setAddresses(lst);
 }
 
 void CompletionConfigureDialog::setLdapClientSearch(KLDAP::LdapClientSearch *ldapSearch)

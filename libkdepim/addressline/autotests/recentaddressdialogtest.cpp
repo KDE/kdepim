@@ -18,7 +18,6 @@
 
 */
 
-
 #include "recentaddressdialogtest.h"
 #include "../recentaddress/recentaddressdialog.h"
 #include "../recentaddress/recentaddresswidget.h"

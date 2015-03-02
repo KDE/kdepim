@@ -183,9 +183,9 @@ private:
 
 CompletionOrderWidget::CompletionOrderWidget(QWidget *parent)
     : QWidget(parent),
-      mConfig( QLatin1String("kpimcompletionorder") ),
-      mLdapSearch( 0 ),
-      mDirty( false )
+      mConfig(QLatin1String("kpimcompletionorder")),
+      mLdapSearch(0),
+      mDirty(false)
 {
     new CompletionOrderEditorAdaptor(this);
     QDBusConnection::sessionBus().registerObject(QLatin1String("/"), this, QDBusConnection::ExportAdaptors);
@@ -287,8 +287,8 @@ void CompletionOrderWidget::loadCompletionItems()
 {
     if (mLdapSearch) {
         // The first step is to gather all the data, creating CompletionItem objects
-        foreach ( KLDAP::LdapClient *client, mLdapSearch->clients() ) {
-            new CompletionViewItem( mListView, new LDAPCompletionItem( client ), 0 );
+        foreach (KLDAP::LdapClient *client, mLdapSearch->clients()) {
+            new CompletionViewItem(mListView, new LDAPCompletionItem(client), 0);
         }
     }
 
@@ -330,7 +330,7 @@ void CompletionOrderWidget::setLdapClientSearch(KLDAP::LdapClientSearch *ldapSea
     mLdapSearch = ldapSearch;
 }
 
-void CompletionOrderWidget::rowsInserted( const QModelIndex &parent, int start, int end )
+void CompletionOrderWidget::rowsInserted(const QModelIndex &parent, int start, int end)
 {
     for (int row = start; row <= end; ++row) {
         addCompletionItemForCollection(mCollectionModel->index(row, 0, parent));

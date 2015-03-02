@@ -25,10 +25,12 @@
 
 #include <QDialog>
 class QTabWidget;
-namespace KLDAP {
+namespace KLDAP
+{
 class LdapClientSearch;
 }
-namespace KPIM {
+namespace KPIM
+{
 class CompletionOrderWidget;
 class BlackListBalooEmailCompletionWidget;
 class RecentAddressWidget;
