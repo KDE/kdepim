@@ -18,7 +18,7 @@
 #ifndef FILTERIMPORTERGMAIL_H
 #define FILTERIMPORTERGMAIL_H
 
-#include "filterimporter/filterimporterabstract_p.h"
+#include "filterimporter/filterimporterabstract.h"
 class QFile;
 namespace MailCommon {
 
@@ -29,6 +29,7 @@ class MAILCOMMON_EXPORT FilterImporterGmail : public FilterImporterAbstract
 public:
     FilterImporterGmail(QFile *file);
     ~FilterImporterGmail();
+    static QString defaultFiltersSettingsPath();
 };
 }
 

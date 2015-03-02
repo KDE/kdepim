@@ -19,6 +19,7 @@
 #include "filterimportergmail.h"
 #include <KDebug>
 #include <QFile>
+#include <QDir>
 
 using namespace MailCommon;
 
@@ -44,3 +45,7 @@ FilterImporterGmail::~FilterImporterGmail()
 
 }
 
+QString FilterImporterGmail::defaultFiltersSettingsPath()
+{
+    return QDir::homePath();
+}

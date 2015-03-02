@@ -74,6 +74,7 @@ set(libmailcommon_filter_SRCS
   filter/filterimporter/filterimporterprocmail.cpp
   filter/filterimporter/filterimporterbalsa.cpp
   filter/filterimporter/filterimporterclawsmail.cpp
+  filter/filterimporter/filterimportergmail.cpp
   filter/filterlog.cpp
   filter/filtermanager.cpp
   filter/filtermodel.cpp
