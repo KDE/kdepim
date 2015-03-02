@@ -52,7 +52,7 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTe
     mTemplateNameEdit = new KLineEdit;
     mTemplateNameEdit->setEnabled(!defaultTemplate);
     mTemplateNameEdit->setTrapReturnKey(true);
-    mTemplateNameEdit->setClearButtonShown(true);
+    mTemplateNameEdit->setClearButtonShown(!defaultTemplate);
     hbox->addWidget(mTemplateNameEdit);
 
     vbox->addLayout(hbox);

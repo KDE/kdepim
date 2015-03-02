@@ -47,6 +47,8 @@ TemplateEditDialog::TemplateEditDialog(QWidget *parent, bool defaultTemplate)
     hbox->addWidget(label);
 
     mTemplateNameEdit = new KLineEdit;
+    mTemplateNameEdit->setTrapReturnKey(true);
+    mTemplateNameEdit->setClearButtonShown(!defaultTemplate);
     mTemplateNameEdit->setEnabled(!defaultTemplate);
     hbox->addWidget(mTemplateNameEdit);
 
