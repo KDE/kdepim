@@ -177,6 +177,13 @@ void SieveEditorMainWindow::setupActions()
     mSpellCheckAction->setText(i18n("Check Spelling..."));
     mSpellCheckAction->setEnabled(false);
 
+    mCheckSyntaxAction = ac->addAction(QLatin1String("check_syntax"), mMainWidget->sieveEditorMainWidget(), SLOT(slotCheckSyntax()));
+    mCheckSyntaxAction->setText(i18n("Check Syntax"));
+    mCheckSyntaxAction->setEnabled(false);
+
+    mAutoGenerateScriptAction = ac->addAction(QLatin1String("autogenerate_script"), mMainWidget->sieveEditorMainWidget(), SLOT(slotAutoGenerateScript()));
+    mAutoGenerateScriptAction->setText(i18n("Autogenerate Script..."));
+    mAutoGenerateScriptAction->setEnabled(false);
 }
 
 void SieveEditorMainWindow::slotRefreshList()
@@ -265,6 +272,9 @@ void SieveEditorMainWindow::slotUpdateActions()
     mImportAction->setEnabled(hasPage);
     mShareAction->setEnabled(hasPage && !mNetworkIsDown);
     mSpellCheckAction->setEnabled(hasPage);
+    mCheckSyntaxAction->setEnabled(hasPage && !mNetworkIsDown);
+    mAutoGenerateScriptAction->setEnabled(hasPage);
+
 }
 
 void SieveEditorMainWindow::slotUndoAvailable(bool b)

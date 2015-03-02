@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="sieveeditor" version="5">
+<kpartgui name="sieveeditor" version="6">
  <MenuBar>
   <Menu name="file" >
    <Action name="add_server_sieve" />
@@ -22,6 +22,12 @@
    <Action name="check_spelling" />
    <Separator/>
    <Action name="gotoline" />
+  </Menu>
+  <Menu name="Tools" >
+   <text>Tools</text>
+   <Action name="check_syntax" />
+   <Separator/>
+   <Action name="autogenerate_script" />
   </Menu>
  </MenuBar>
 </kpartgui>

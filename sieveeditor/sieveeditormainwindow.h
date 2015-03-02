@@ -78,6 +78,8 @@ private:
     QAction *mImportAction;
     QAction *mShareAction;
     QAction *mSpellCheckAction;
+    QAction *mCheckSyntaxAction;
+    QAction *mAutoGenerateScriptAction;
 
     QLabel *mStatusBarInfo;
     QNetworkConfigurationManager *mNetworkConfigurationManager;
