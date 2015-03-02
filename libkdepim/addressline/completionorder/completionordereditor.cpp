@@ -69,6 +69,7 @@ CompletionOrderEditor::CompletionOrderEditor( KLDAP::LdapClientSearch* ldapSearc
     showButtonSeparator( true );
 
     mCompletionOrderWidget = new CompletionOrderWidget(this);
+    mCompletionOrderWidget->setObjectName(QLatin1String("completionorderwidget"));
     setMainWidget( mCompletionOrderWidget );
 
     mCompletionOrderWidget->setLdapClientSearch(ldapSearch);

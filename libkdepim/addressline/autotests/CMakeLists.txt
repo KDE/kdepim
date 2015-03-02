@@ -18,3 +18,7 @@ target_link_libraries( libkdepim_recentaddresswidgettest ${QT_QTTEST_LIBRARY} ${
 set( libkdepim_completionconfiguredialogtest_SRCS completionconfiguredialogtest.cpp )
 kde4_add_unit_test( libkdepim_completionconfiguredialogtest ${libkdepim_completionconfiguredialogtest_SRCS})
 target_link_libraries( libkdepim_completionconfiguredialogtest ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS} kdepim)
+
+set( libkdepim_completionorderwidgettest_SRCS completionorderwidgettest.cpp )
+kde4_add_unit_test( libkdepim_completionorderwidgettest ${libkdepim_completionorderwidgettest_SRCS})
+target_link_libraries( libkdepim_completionorderwidgettest ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS} kdepim)
