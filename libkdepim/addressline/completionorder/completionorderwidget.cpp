@@ -183,10 +183,10 @@ private:
 };
 
 
-CompletionOrderWidget::CompletionOrderWidget( KLDAP::LdapClientSearch* ldapSearch, QWidget *parent)
+CompletionOrderWidget::CompletionOrderWidget(QWidget *parent)
     : QWidget(parent),
       mConfig( QLatin1String("kpimcompletionorder") ),
-      mLdapSearch( ldapSearch ),
+      mLdapSearch( 0 ),
       mDirty( false )
 {
     new CompletionOrderEditorAdaptor( this );
@@ -229,8 +229,6 @@ CompletionOrderWidget::CompletionOrderWidget( KLDAP::LdapClientSearch* ldapSearc
              SLOT(slotSelectionChanged()) );
     connect( mUpButton, SIGNAL(clicked()), this, SLOT(slotMoveUp()) );
     connect( mDownButton, SIGNAL(clicked()), this, SLOT(slotMoveDown()) );
-
-    loadCompletionItems();
 }
 
 CompletionOrderWidget::~CompletionOrderWidget()
@@ -278,9 +276,11 @@ void CompletionOrderWidget::addCompletionItemForCollection( const QModelIndex &i
 
 void CompletionOrderWidget::loadCompletionItems()
 {
-    // The first step is to gather all the data, creating CompletionItem objects
-    foreach ( KLDAP::LdapClient *client, mLdapSearch->clients() ) {
-        new CompletionViewItem( mListView, new LDAPCompletionItem( client ), 0 );
+    if (mLdapSearch) {
+        // The first step is to gather all the data, creating CompletionItem objects
+        foreach ( KLDAP::LdapClient *client, mLdapSearch->clients() ) {
+            new CompletionViewItem( mListView, new LDAPCompletionItem( client ), 0 );
+        }
     }
 
     Akonadi::ChangeRecorder *monitor = new Akonadi::ChangeRecorder( this );
@@ -313,6 +313,11 @@ void CompletionOrderWidget::loadCompletionItems()
     addRecentAddressItem();
 
     mListView->sortItems( 0, Qt::AscendingOrder );
+}
+
+void CompletionOrderWidget::setLdapClientSearch(KLDAP::LdapClientSearch *ldapSearch)
+{
+    mLdapSearch = ldapSearch;
 }
 
 void CompletionOrderWidget::rowsInserted( const QModelIndex &parent, int start, int end )

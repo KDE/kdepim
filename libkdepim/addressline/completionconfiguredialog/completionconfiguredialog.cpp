@@ -27,6 +27,7 @@
 #include <KConfigGroup>
 #include <KGlobal>
 #include <KSharedConfig>
+#include <ldap/ldapclientsearch.h>
 #include <addressline/completionorder/completionorderwidget.h>
 #include <addressline/blacklistbaloocompletion/blacklistbalooemailcompletionwidget.h>
 #include <addressline/recentaddress/recentaddresswidget.h>
@@ -44,7 +45,8 @@ CompletionConfigureDialog::CompletionConfigureDialog(QWidget *parent)
     mTabWidget->setObjectName(QLatin1String("tabwidget"));
     mainLayout->addWidget(mTabWidget);
 
-    //TODO mCompletionOrderWidget = new KPIM::CompletionOrderWidget();
+    mCompletionOrderWidget = new KPIM::CompletionOrderWidget();
+    mCompletionOrderWidget->setObjectName(QLatin1String("completionorder_widget"));
 
     mRecentaddressWidget = new KPIM::RecentAddressWidget;
     mRecentaddressWidget->setObjectName(QLatin1String("recentaddress_widget"));
@@ -61,7 +63,6 @@ CompletionConfigureDialog::CompletionConfigureDialog(QWidget *parent)
     mainLayout->addWidget(buttonBox);
     readConfig();
 }
-
 
 CompletionConfigureDialog::~CompletionConfigureDialog()
 {
@@ -84,10 +85,19 @@ void CompletionConfigureDialog::writeConfig()
     group.sync();
 }
 
+void CompletionConfigureDialog::setRecentAddresses(const QStringList &lst)
+{
+    mRecentaddressWidget->setAddresses( lst );
+}
+
+void CompletionConfigureDialog::setLdapClientSearch(KLDAP::LdapClientSearch *ldapSearch)
+{
+    mCompletionOrderWidget->setLdapClientSearch(ldapSearch);
+}
+
 void CompletionConfigureDialog::load()
 {
-    //mRecentaddressWidget->setAddresses( const QStringList &addrs );
-    //TODO
+    mCompletionOrderWidget->loadCompletionItems();
 }
 
 void CompletionConfigureDialog::slotSave()

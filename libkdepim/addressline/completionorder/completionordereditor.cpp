@@ -68,11 +68,13 @@ CompletionOrderEditor::CompletionOrderEditor( KLDAP::LdapClientSearch* ldapSearc
     setModal( true );
     showButtonSeparator( true );
 
-    mCompletionOrderWidget = new CompletionOrderWidget(ldapSearch, this);
+    mCompletionOrderWidget = new CompletionOrderWidget(this);
     setMainWidget( mCompletionOrderWidget );
 
+    mCompletionOrderWidget->setLdapClientSearch(ldapSearch);
     connect( this, SIGNAL(okClicked()), this, SLOT(slotOk()));
 
+    mCompletionOrderWidget->loadCompletionItems();
     readConfig();
 }
 
