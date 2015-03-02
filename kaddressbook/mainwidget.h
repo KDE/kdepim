@@ -106,6 +106,7 @@ private Q_SLOTS:
 
     void slotDebugBaloo();
     void slotSendVcards();
+    void slotSendVcardsError(const QString &error);
 private:
     void initGrantleeThemeName();
     void setupGui();

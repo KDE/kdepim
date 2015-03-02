@@ -38,7 +38,7 @@ public:
     bool start();
 
 Q_SIGNALS:
-    void jobDone();
+    void sendVCardsError(const QString &error);
 
 private Q_SLOTS:
     void slotExpandGroupResult(KJob *job);

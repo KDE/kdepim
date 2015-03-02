@@ -58,6 +58,8 @@ bool SendVcardsJob::start()
 {
     if (mListItem.isEmpty()) {
         qDebug()<<" No Item found";
+        mAttachmentTemporary->deleteLater();
+        mAttachmentTemporary = 0;
         deleteLater();
         return false;
     }
@@ -105,6 +107,9 @@ void SendVcardsJob::jobFinished()
     const QStringList lstAttachment = mAttachmentTemporary->temporaryFiles();
     if (!lstAttachment.isEmpty()) {
         KToolInvocation::invokeMailer( QString(), QString(), QString(), QString(), QString(), QString(), lstAttachment );
+    } else {
+        //KF5 add i18n
+        sendVCardsError(QLatin1String("No VCard created."));
     }
     mAttachmentTemporary->removeTempFiles();
     deleteLater();
@@ -132,6 +137,8 @@ void SendVcardsJob::createTemporaryFile(const QByteArray &data, const QString &f
     QFile file(mTempDir->name() + QLatin1Char('/') + filename);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         qDebug()<<"Can not write vcard filename :"<<filename;
+        //KF5 add i18n
+        sendVCardsError(QString::fromLatin1("Temporary file \'%1\' can not created").arg(filename));
         return;
     }
 
