@@ -28,7 +28,7 @@ using namespace MailCommon;
 class MailCommon::SnippetItem
 {
 public:
-    SnippetItem(bool isGroup = false, SnippetItem *parent = 0);
+    SnippetItem(bool isGroup = false, SnippetItem *parent = Q_NULLPTR);
     ~SnippetItem();
 
     bool isGroup() const;

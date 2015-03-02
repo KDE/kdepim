@@ -362,7 +362,7 @@ void IncidenceAttendee::slotSelectAddresses()
 #ifndef KDEPIM_MOBILE_UI
     QWidget *dialogParent = mAttendeeEditor;
 #else
-    QWidget *dialogParent = 0;
+    QWidget *dialogParent = Q_NULLPTR;
 #endif
     QWeakPointer<Akonadi::EmailAddressSelectionDialog> dialog(
         new Akonadi::EmailAddressSelectionDialog(dialogParent));

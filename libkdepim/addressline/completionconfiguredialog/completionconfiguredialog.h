@@ -38,7 +38,7 @@ class KDEPIM_EXPORT CompletionConfigureDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit CompletionConfigureDialog(QWidget *parent = 0);
+    explicit CompletionConfigureDialog(QWidget *parent = Q_NULLPTR);
     ~CompletionConfigureDialog();
 
     void load();
