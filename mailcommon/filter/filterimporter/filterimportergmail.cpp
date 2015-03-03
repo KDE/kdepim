@@ -62,7 +62,40 @@ QString FilterImporterGmail::defaultFiltersSettingsPath()
 void FilterImporterGmail::parseFilters( const QDomElement &e )
 {
     MailCommon::MailFilter *filter = new MailCommon::MailFilter();
+    filter->setAutoNaming(true);
     filter->setEnabled( true );
     //TODO
+    for ( QDomElement ruleFilter = e.firstChildElement();
+          !ruleFilter.isNull();
+          ruleFilter = ruleFilter.nextSiblingElement() )
+    {
+        const QString tagName = ruleFilter.tagName();
+        if (tagName == QLatin1String("category")) {
+            if (ruleFilter.hasAttribute(QLatin1String("term"))) {
+                if (ruleFilter.attribute(QLatin1String("term")) != QLatin1String("filter")) {
+                    continue;
+                }
+            }
+        } else if (tagName == QLatin1String("apps:property")) {
+            if (ruleFilter.hasAttribute(QLatin1String("name"))) {
+                const QString criteriaProperty = ruleFilter.attribute(QLatin1String("name"));
+                qDebug()<<" ruleFilter.attribute"<<criteriaProperty;
+                if (criteriaProperty == QLatin1String("from")) {
+
+                } else if (criteriaProperty == QLatin1String("to")) {
+
+                } else if (criteriaProperty == QLatin1String("subject")) {
+
+                } else if (criteriaProperty == QLatin1String("hasTheWord")) {
+
+                } else if (criteriaProperty == QLatin1String("doesNotHaveTheWord")) {
+
+                } else if (criteriaProperty == QLatin1String("hasAttachment")) {
+
+                }
+            }
+        }
+        qDebug()<<" rulerF"<<ruleFilter.tagName();
+    }
     appendFilter(filter);
 }
