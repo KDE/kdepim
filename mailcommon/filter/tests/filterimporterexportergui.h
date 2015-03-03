@@ -15,24 +15,23 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FILTERIMPORTERGMAIL_H
-#define FILTERIMPORTERGMAIL_H
+#ifndef FILTERIMPORTEREXPORTERGUI_H
+#define FILTERIMPORTEREXPORTERGUI_H
 
-#include "filterimporter/filterimporterabstract.h"
-class QFile;
-namespace MailCommon {
-
-class MailFilter;
-
-class MAILCOMMON_EXPORT FilterImporterGmail : public FilterImporterAbstract
+#include <QWidget>
+#include "mailcommon/filter/filterimporterexporter.h"
+class QTextEdit;
+class FilterImporterExporterGui : public QWidget
 {
+    Q_OBJECT
 public:
-    FilterImporterGmail(QFile *file);
-    ~FilterImporterGmail();
-    static QString defaultFiltersSettingsPath();
+    explicit FilterImporterExporterGui(QWidget *parent = 0);
+    ~FilterImporterExporterGui();
+private slots:
+    void slotImportFilter(QAction *act);
 private:
-    void parseFilters(const QDomElement &e);
+    void importFilters(MailCommon::FilterImporterExporter::FilterType type);
+    QTextEdit *mTextEdit;
 };
-}
 
-#endif // FILTERIMPORTERGMAIL_H
+#endif // FILTERIMPORTEREXPORTERGUI_H

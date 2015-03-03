@@ -592,7 +592,6 @@ QString MailFilter::toolbarName() const
     }
 }
 
-#ifndef NDEBUG
 const QString MailFilter::asString() const
 {
     QString result;
@@ -649,7 +648,6 @@ const QString MailFilter::asString() const
 
     return result;
 }
-#endif
 
 QDataStream &MailCommon::operator<<(QDataStream &stream, const MailCommon::MailFilter &filter)
 {
