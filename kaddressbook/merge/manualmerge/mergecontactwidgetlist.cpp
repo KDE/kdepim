@@ -43,6 +43,7 @@ QString MergeContactWidgetList::itemName(const KABC::Addressee &address) const
 
 void MergeContactWidgetList::fillListContact(const Akonadi::Item::List &items)
 {
+    clear();
     Q_FOREACH(const Akonadi::Item &item, items) {
         if (item.hasPayload<KABC::Addressee>()) {
             MergeContactWidgetListItem *widgetItem = new MergeContactWidgetListItem(item, this);
