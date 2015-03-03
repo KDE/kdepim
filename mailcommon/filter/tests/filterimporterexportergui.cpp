@@ -32,45 +32,43 @@ FilterImporterExporterGui::FilterImporterExporterGui(QWidget *parent)
     setLayout(mainLayout);
     QMenuBar *menuBar = new QMenuBar(this);
     mainLayout->addWidget(menuBar);
-    QMenu *menu = new QMenu(this);
     QMenu *menuFilter = menuBar->addMenu(QLatin1String("filter"));
-    menuFilter->addMenu(menu);
     QAction *act = new QAction( QLatin1String( "KMail filters" ), this );
     act->setData( QVariant::fromValue(MailCommon::FilterImporterExporter::KMailFilter) );
-    menu->addAction( act );
+    menuFilter->addAction( act );
 
     act = new QAction( QLatin1String( "Thunderbird filters" ), this );
 
     act->setData( QVariant::fromValue(MailCommon::FilterImporterExporter::ThunderBirdFilter) );
-    menu->addAction( act );
+    menuFilter->addAction( act );
 
     act = new QAction( QLatin1String( "Evolution filters" ), this );
     act->setData( QVariant::fromValue(MailCommon::FilterImporterExporter::EvolutionFilter) );
-    menu->addAction( act );
+    menuFilter->addAction( act );
 
     act = new QAction( QLatin1String( "Sylpheed filters" ), this );
     act->setData( QVariant::fromValue(MailCommon::FilterImporterExporter::SylpheedFilter) );
-    menu->addAction( act );
+    menuFilter->addAction( act );
 
     act = new QAction( QLatin1String( "Procmail filters" ), this );
     act->setData( QVariant::fromValue(MailCommon::FilterImporterExporter::ProcmailFilter) );
-    menu->addAction( act );
+    menuFilter->addAction( act );
 
     act = new QAction( QLatin1String( "Balsa filters" ), this );
     act->setData( QVariant::fromValue(MailCommon::FilterImporterExporter::BalsaFilter) );
-    menu->addAction( act );
+    menuFilter->addAction( act );
 
     act = new QAction( QLatin1String( "Claws Mail filters" ), this );
     act->setData( QVariant::fromValue(MailCommon::FilterImporterExporter::ClawsMailFilter) );
-    menu->addAction( act );
+    menuFilter->addAction( act );
 
     act = new QAction( QLatin1String( "Icedove Mail filters" ), this );
     act->setData( QVariant::fromValue(MailCommon::FilterImporterExporter::IcedoveFilter) );
-    menu->addAction( act );
+    menuFilter->addAction( act );
     act = new QAction( QLatin1String( "GMail filters" ), this );
     act->setData( QVariant::fromValue(MailCommon::FilterImporterExporter::GmailFilter) );
-    menu->addAction( act );
-    connect( menu, SIGNAL(triggered(QAction*)), SLOT(slotImportFilter(QAction*)) );
+    menuFilter->addAction( act );
+    connect( menuFilter, SIGNAL(triggered(QAction*)), SLOT(slotImportFilter(QAction*)) );
 
     mTextEdit = new QTextEdit;
     mTextEdit->setReadOnly(true);
