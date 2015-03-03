@@ -17,7 +17,7 @@
 
 
 #include "filterimportergmail.h"
-#include <KDebug>
+#include "mailcommon_debug.h"
 #include <QFile>
 #include <QDir>
 #include "mailfilter.h"
@@ -34,13 +34,13 @@ FilterImporterGmail::FilterImporterGmail( QFile *file )
     QDomElement filters = doc.documentElement();
 
     if ( filters.isNull() ) {
-        kDebug() << "No filters defined";
+        qCDebug(MAILCOMMON_LOG) << "No filters defined";
         return;
     }
     for ( QDomElement e = filters.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
         const QString tag = e.tagName();
         if ( tag == QLatin1String( "entry" ) ) {
-            qDebug()<<" filter found !";
+            qCDebug(MAILCOMMON_LOG) << " filter found !";
             parseFilters(e);
         }
     }
