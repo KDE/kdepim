@@ -61,7 +61,6 @@ void FilterImporterGmail::parseFilters( const QDomElement &e )
     MailCommon::MailFilter *filter = new MailCommon::MailFilter();
     filter->setAutoNaming(true);
     filter->setEnabled( true );
-    //TODO
     for ( QDomElement ruleFilter = e.firstChildElement();
           !ruleFilter.isNull();
           ruleFilter = ruleFilter.nextSiblingElement() )
@@ -77,6 +76,7 @@ void FilterImporterGmail::parseFilters( const QDomElement &e )
             if (ruleFilter.hasAttribute(QLatin1String("name"))) {
                 const QString criteriaProperty = ruleFilter.attribute(QLatin1String("name"));
                 qDebug()<<" ruleFilter.attribute"<<criteriaProperty;
+                // Criterial
                 if (criteriaProperty == QLatin1String("from")) {
 
                 } else if (criteriaProperty == QLatin1String("to")) {
@@ -90,9 +90,24 @@ void FilterImporterGmail::parseFilters( const QDomElement &e )
                 } else if (criteriaProperty == QLatin1String("hasAttachment")) {
 
                 }
+                //Action
+                else if (criteriaProperty == QLatin1String("shouldArchive")) {
+
+                } else if (criteriaProperty == QLatin1String("shouldMarkAsRead")) {
+
+                } else if (criteriaProperty == QLatin1String("shouldStar")) {
+
+                } else if (criteriaProperty == QLatin1String("label")) {
+
+                } else if (criteriaProperty == QLatin1String("forwardTo")) {
+
+                } else if (criteriaProperty == QLatin1String("shouldTrash")) {
+
+                } else if (criteriaProperty == QLatin1String("neverSpam")) {
+
+                }
             }
         }
-        qDebug()<<" rulerF"<<ruleFilter.tagName();
     }
     appendFilter(filter);
 }
