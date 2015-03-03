@@ -19,7 +19,7 @@
 #include "mailfilter.h"
 #include "filtermanager.h"
 #include "filteractions/filteractiondict.h"
-#include <KInputDialog>
+#include <QInputDialog>
 #include <KLocalizedString>
 #include <klistwidgetsearchline.h>
 #include <qpushbutton.h>
@@ -716,17 +716,14 @@ void KMFilterListBox::slotRename()
     Q_ASSERT(filter);
 
     // allow empty names - those will turn auto-naming on again
-    QValidator *validator = new QRegExpValidator(QRegExp(QLatin1String(".*")), 0);
     QString newName =
-        KInputDialog::getText(
+        QInputDialog::getText(window(),
             i18n("Rename Filter"),
             i18n("Rename filter \"%1\" to:\n(leave the field empty for automatic naming)",
                  filter->pattern()->name()),  /*label*/
+            QLineEdit::Normal,
             filter->pattern()->name(), /* initial value */
-            &okPressed,
-            window(),
-            validator);
-    delete validator;
+            &okPressed);
 
     if (!okPressed) {
         return;
