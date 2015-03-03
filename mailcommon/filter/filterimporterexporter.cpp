@@ -38,7 +38,7 @@
 #include "filterimporter/filterimporterprocmail.h"
 #include "filterimporter/filterimporterbalsa.h"
 #include "filterimporter/filterimporterclawsmail.h"
-
+#include "filterimporter/filterimportergmail.h"
 #include "dialog/selectthunderbirdfilterfilesdialog.h"
 
 #include <messageviewer/utils/autoqpointer.h>
@@ -205,8 +205,7 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
             case GmailFilter:
                 //KF5 add i18n
                 title = QLatin1String( "Import Gmail Filters" );
-                defaultPath = QDir::homePath();
-                //TODO
+                defaultPath = MailCommon::FilterImporterGmail::defaultFiltersSettingsPath();
                 break;
             }
 
