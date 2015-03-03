@@ -19,13 +19,17 @@
 #define FILTERIMPORTEREXPORTERGUI_H
 
 #include <QWidget>
-
+#include "mailcommon/filter/filterimporterexporter.h"
 class FilterImporterExporterGui : public QWidget
 {
     Q_OBJECT
 public:
     explicit FilterImporterExporterGui(QWidget *parent = 0);
     ~FilterImporterExporterGui();
+private slots:
+    void slotImportFilter(QAction *act);
+private:
+    void importFilters(MailCommon::FilterImporterExporter::FilterType type);
 };
 
 #endif // FILTERIMPORTEREXPORTERGUI_H
