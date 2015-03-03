@@ -23,6 +23,7 @@
 #include <QMenu>
 #include <mailfilter.h>
 #include <qmenubar.h>
+#include <QTextEdit>
 Q_DECLARE_METATYPE(MailCommon::FilterImporterExporter::FilterType)
 FilterImporterExporterGui::FilterImporterExporterGui(QWidget *parent)
     : QWidget(parent)
@@ -71,6 +72,10 @@ FilterImporterExporterGui::FilterImporterExporterGui(QWidget *parent)
     menu->addAction( act );
     connect( menu, SIGNAL(triggered(QAction*)), SLOT(slotImportFilter(QAction*)) );
 
+    mTextEdit = new QTextEdit;
+    mTextEdit->setReadOnly(true);
+    mainLayout->addWidget(mTextEdit);
+
 }
 
 FilterImporterExporterGui::~FilterImporterExporterGui()
@@ -91,9 +96,17 @@ void FilterImporterExporterGui::importFilters( MailCommon::FilterImporterExporte
     bool canceled = false;
     QList<MailCommon::MailFilter *> filters = importer.importFilters( canceled, type );
     if ( canceled ) {
+        mTextEdit->setText(QLatin1String("Canceled"));
         return;
     }
-    //TODO
+    QString result;
+    Q_FOREACH(MailCommon::MailFilter *filter, filters) {
+        if (!result.isEmpty()) {
+            result += QLatin1Char('\n');
+        }
+        result += filter->asString();
+    }
+    mTextEdit->setText(result);
 }
 
 
@@ -102,7 +115,7 @@ int main (int argc, char **argv)
     QApplication app(argc, argv);
 
     FilterImporterExporterGui *w = new FilterImporterExporterGui();
-    w->resize(800, 200);
+    w->resize(800, 600);
     w->show();
     app.exec();
     delete w;

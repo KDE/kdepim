@@ -20,6 +20,7 @@
 
 #include <QWidget>
 #include "mailcommon/filter/filterimporterexporter.h"
+class QTextEdit;
 class FilterImporterExporterGui : public QWidget
 {
     Q_OBJECT
@@ -30,6 +31,7 @@ private slots:
     void slotImportFilter(QAction *act);
 private:
     void importFilters(MailCommon::FilterImporterExporter::FilterType type);
+    QTextEdit *mTextEdit;
 };
 
 #endif // FILTERIMPORTEREXPORTERGUI_H
