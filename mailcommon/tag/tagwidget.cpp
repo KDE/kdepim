@@ -46,7 +46,7 @@ TagWidget::TagWidget(const QList<KActionCollection *> &actionCollections, QWidge
     //First row for renaming
     mTagNameLineEdit = new KLineEdit(this);
     mTagNameLineEdit->setClearButtonEnabled(true);
-    mTagNameLineEdit->setTrapReturnKey( true );
+    mTagNameLineEdit->setTrapReturnKey(true);
     settings->addWidget(mTagNameLineEdit, 1, 1);
 
     QLabel *namelabel = new QLabel(i18nc("@label:listbox Name of the tag", "Name:")

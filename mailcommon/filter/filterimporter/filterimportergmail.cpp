@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "filterimportergmail.h"
 #include "mailcommon_debug.h"
 #include <QFile>
@@ -23,23 +22,23 @@
 #include "mailfilter.h"
 using namespace MailCommon;
 
-FilterImporterGmail::FilterImporterGmail( QFile *file )
-    :FilterImporterAbstract()
+FilterImporterGmail::FilterImporterGmail(QFile *file)
+    : FilterImporterAbstract()
 {
     QDomDocument doc;
-    if ( !loadDomElement( doc, file ) ) {
+    if (!loadDomElement(doc, file)) {
         return;
     }
 
     QDomElement filters = doc.documentElement();
 
-    if ( filters.isNull() ) {
+    if (filters.isNull()) {
         qCDebug(MAILCOMMON_LOG) << "No filters defined";
         return;
     }
-    for ( QDomElement e = filters.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
+    for (QDomElement e = filters.firstChildElement(); !e.isNull(); e = e.nextSiblingElement()) {
         const QString tag = e.tagName();
-        if ( tag == QLatin1String( "entry" ) ) {
+        if (tag == QLatin1String("entry")) {
             qCDebug(MAILCOMMON_LOG) << " filter found !";
             parseFilters(e);
         }
@@ -56,15 +55,14 @@ QString FilterImporterGmail::defaultFiltersSettingsPath()
     return QDir::homePath();
 }
 
-void FilterImporterGmail::parseFilters( const QDomElement &e )
+void FilterImporterGmail::parseFilters(const QDomElement &e)
 {
     MailCommon::MailFilter *filter = new MailCommon::MailFilter();
     filter->setAutoNaming(true);
-    filter->setEnabled( true );
-    for ( QDomElement ruleFilter = e.firstChildElement();
-          !ruleFilter.isNull();
-          ruleFilter = ruleFilter.nextSiblingElement() )
-    {
+    filter->setEnabled(true);
+    for (QDomElement ruleFilter = e.firstChildElement();
+            !ruleFilter.isNull();
+            ruleFilter = ruleFilter.nextSiblingElement()) {
         const QString tagName = ruleFilter.tagName();
         if (tagName == QLatin1String("category")) {
             if (ruleFilter.hasAttribute(QLatin1String("term"))) {
@@ -75,7 +73,7 @@ void FilterImporterGmail::parseFilters( const QDomElement &e )
         } else if (tagName == QLatin1String("apps:property")) {
             if (ruleFilter.hasAttribute(QLatin1String("name"))) {
                 const QString criteriaProperty = ruleFilter.attribute(QLatin1String("name"));
-                qDebug()<<" ruleFilter.attribute"<<criteriaProperty;
+                qDebug() << " ruleFilter.attribute" << criteriaProperty;
                 // Criterial
                 if (criteriaProperty == QLatin1String("from")) {
 

@@ -718,12 +718,12 @@ void KMFilterListBox::slotRename()
     // allow empty names - those will turn auto-naming on again
     QString newName =
         QInputDialog::getText(window(),
-            i18n("Rename Filter"),
-            i18n("Rename filter \"%1\" to:\n(leave the field empty for automatic naming)",
-                 filter->pattern()->name()),  /*label*/
-            QLineEdit::Normal,
-            filter->pattern()->name(), /* initial value */
-            &okPressed);
+                              i18n("Rename Filter"),
+                              i18n("Rename filter \"%1\" to:\n(leave the field empty for automatic naming)",
+                                   filter->pattern()->name()),  /*label*/
+                              QLineEdit::Normal,
+                              filter->pattern()->name(), /* initial value */
+                              &okPressed);
 
     if (!okPressed) {
         return;

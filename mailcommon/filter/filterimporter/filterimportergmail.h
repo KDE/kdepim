@@ -20,7 +20,8 @@
 
 #include "filterimporter/filterimporterabstract.h"
 class QFile;
-namespace MailCommon {
+namespace MailCommon
+{
 
 class MailFilter;
 

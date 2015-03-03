@@ -205,7 +205,7 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
                 break;
             case GmailFilter:
                 //KF5 add i18n
-                title = QLatin1String( "Import Gmail Filters" );
+                title = QLatin1String("Import Gmail Filters");
                 defaultPath = MailCommon::FilterImporterGmail::defaultFiltersSettingsPath();
                 break;
             }
@@ -328,10 +328,9 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
         delete filter;
         break;
     }
-    case GmailFilter:
-    {
+    case GmailFilter: {
         MailCommon::FilterImporterGmail *filter =
-                new MailCommon::FilterImporterGmail( &file );
+            new MailCommon::FilterImporterGmail(&file);
 
         imported = filter->importFilter();
         emptyFilter = filter->emptyFilter();
