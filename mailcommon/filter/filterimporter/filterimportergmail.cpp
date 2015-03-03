@@ -20,7 +20,7 @@
 #include <KDebug>
 #include <QFile>
 #include <QDir>
-
+#include "mailfilter.h"
 using namespace MailCommon;
 
 FilterImporterGmail::FilterImporterGmail( QFile *file )
@@ -37,6 +37,15 @@ FilterImporterGmail::FilterImporterGmail( QFile *file )
         kDebug() << "No filters defined";
         return;
     }
+    for ( QDomElement e = filters.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
+        const QString tag = e.tagName();
+        if ( tag == QLatin1String( "entry" ) ) {
+            qDebug()<<" filter found !";
+            parseFilters(e);
+        } else {
+            //kDebug() << " unknown tag " << tag;
+        }
+    }
 
 }
 
@@ -48,4 +57,12 @@ FilterImporterGmail::~FilterImporterGmail()
 QString FilterImporterGmail::defaultFiltersSettingsPath()
 {
     return QDir::homePath();
+}
+
+void FilterImporterGmail::parseFilters( const QDomElement &e )
+{
+    MailCommon::MailFilter *filter = new MailCommon::MailFilter();
+    filter->setEnabled( true );
+    //TODO
+    appendFilter(filter);
 }

@@ -337,7 +337,12 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
     }
     case GmailFilter:
     {
-        //TODO
+        MailCommon::FilterImporterGmail *filter =
+                new MailCommon::FilterImporterGmail( &file );
+
+        imported = filter->importFilter();
+        emptyFilter = filter->emptyFilter();
+        delete filter;
         break;
     }
 

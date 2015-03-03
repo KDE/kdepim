@@ -220,6 +220,7 @@ add_subdirectory(filter/filterimporter/tests)
 add_subdirectory(collectionpage/autotests)
 add_subdirectory(filter/autotests)
 add_subdirectory(snippets/autotests)
+add_subdirectory(filter/tests)
 #install(FILES viewer/viewer.h viewer/attachmentstrategy.h header/headerstrategy.h messageviewer_export.h DESTINATION ${INCLUDE_INSTALL_DIR}/messageviewer COMPONENT devel)
 
 if (QT_QTDESIGNER_FOUND)
