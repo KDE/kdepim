@@ -24,7 +24,8 @@
 using namespace MailCommon;
 
 FilterImporterGmail::FilterImporterGmail( QFile *file )
-    :FilterImporterAbstract()
+    : FilterImporterAbstract(),
+      mFilterCount(0)
 {
     QDomDocument doc;
     if ( !loadDomElement( doc, file ) ) {
@@ -56,11 +57,21 @@ QString FilterImporterGmail::defaultFiltersSettingsPath()
     return QDir::homePath();
 }
 
+QString FilterImporterGmail::createUniqFilterName()
+{
+    //TODO add i18n ?
+    return QString::fromLatin1( "Gmail filter %1" ).arg( mFilterCount++ );
+}
+
 void FilterImporterGmail::parseFilters( const QDomElement &e )
 {
     MailCommon::MailFilter *filter = new MailCommon::MailFilter();
     filter->setAutoNaming(true);
+    const QString uniqName = createUniqFilterName();
+    filter->pattern()->setName( uniqName );
+    filter->setToolbarName( uniqName );
     filter->setEnabled( true );
+    QByteArray fieldName;
     for ( QDomElement ruleFilter = e.firstChildElement();
           !ruleFilter.isNull();
           ruleFilter = ruleFilter.nextSiblingElement() )
@@ -78,11 +89,11 @@ void FilterImporterGmail::parseFilters( const QDomElement &e )
                 qDebug()<<" ruleFilter.attribute"<<criteriaProperty;
                 // Criterial
                 if (criteriaProperty == QLatin1String("from")) {
-
+                    fieldName = "from";
                 } else if (criteriaProperty == QLatin1String("to")) {
-
+                    fieldName = "to";
                 } else if (criteriaProperty == QLatin1String("subject")) {
-
+                    fieldName = "subject";
                 } else if (criteriaProperty == QLatin1String("hasTheWord")) {
 
                 } else if (criteriaProperty == QLatin1String("doesNotHaveTheWord")) {

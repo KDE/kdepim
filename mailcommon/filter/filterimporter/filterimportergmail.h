@@ -31,7 +31,9 @@ public:
     ~FilterImporterGmail();
     static QString defaultFiltersSettingsPath();
 private:
+    QString createUniqFilterName();
     void parseFilters(const QDomElement &e);
+    int mFilterCount;
 };
 }
 
