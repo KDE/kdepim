@@ -133,7 +133,8 @@ void KMeditorPrivate::slotAddAutoCorrect(const QString&currentWord, const QStrin
 
 void KMeditorPrivate::startExternalEditor()
 {
-    if ( extEditorPath.isEmpty() ) {
+    const QString commandLine = extEditorPath.trimmed();
+    if ( commandLine.isEmpty() ) {
         q->setUseExternalEditor( false );
         //TODO: show messagebox
         return;
@@ -152,7 +153,6 @@ void KMeditorPrivate::startExternalEditor()
 
     mExtEditorProcess = new KProcess();
     // construct command line...
-    const QString commandLine = extEditorPath.trimmed();
     QHash<QChar,QString> map;
     map.insert(QLatin1Char('l'), QString::number(q->textCursor().blockNumber() + 1));
     map.insert(QLatin1Char('w'), QString::number((qulonglong)q->winId()));
