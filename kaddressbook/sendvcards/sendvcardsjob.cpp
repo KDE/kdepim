@@ -135,9 +135,9 @@ void SendVcardsJob::createTemporaryFile(const QByteArray &data, const QString &f
 {
     QFile file(mTempDir->path() + QLatin1Char('/') + filename);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        qCDebug(KADDRESSBOOK_LOG) << "Can not write vcard filename :" << filename;
+        qCDebug(KADDRESSBOOK_LOG) << "Cannot write vcard filename :" << filename;
         //KF5 add i18n
-        sendVCardsError(i18n("Temporary file \'%1\' can not created", filename));
+        sendVCardsError(i18n("Temporary file \'%1\' cannot be created", filename));
         return;
     }
 
