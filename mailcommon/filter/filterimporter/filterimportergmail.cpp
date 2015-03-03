@@ -42,11 +42,8 @@ FilterImporterGmail::FilterImporterGmail( QFile *file )
         if ( tag == QLatin1String( "entry" ) ) {
             qDebug()<<" filter found !";
             parseFilters(e);
-        } else {
-            //kDebug() << " unknown tag " << tag;
         }
     }
-
 }
 
 FilterImporterGmail::~FilterImporterGmail()
