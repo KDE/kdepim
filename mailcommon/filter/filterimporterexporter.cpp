@@ -204,8 +204,7 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
                 defaultPath = MailCommon::FilterImporterThunderbird::defaultIcedoveFiltersSettingsPath();
                 break;
             case GmailFilter:
-                //KF5 add i18n
-                title = QLatin1String("Import Gmail Filters");
+                title = i18n("Import Gmail Filters");
                 defaultPath = MailCommon::FilterImporterGmail::defaultFiltersSettingsPath();
                 break;
             }
