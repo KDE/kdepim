@@ -30,6 +30,9 @@ class StorageServiceConfigureStorageWidgetTest : public QObject
 public:
     explicit StorageServiceConfigureStorageWidgetTest(QObject *parent = 0);
     ~StorageServiceConfigureStorageWidgetTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
+    void shouldEmitSignalWhenClickOnButton();
 };
 
 #endif // STORAGESERVICECONFIGURESTORAGEWIDGETTEST_H

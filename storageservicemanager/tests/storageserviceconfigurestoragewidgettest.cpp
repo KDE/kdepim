@@ -19,8 +19,11 @@
 */
 
 #include "storageserviceconfigurestoragewidgettest.h"
+#include "../storageserviceconfigurestoragewidget.h"
+#include <QPushButton>
 #include <qtest_kde.h>
-
+#include <qtestmouse.h>
+#include <QSignalSpy>
 StorageServiceConfigureStorageWidgetTest::StorageServiceConfigureStorageWidgetTest(QObject *parent)
     : QObject(parent)
 {
@@ -30,6 +33,22 @@ StorageServiceConfigureStorageWidgetTest::StorageServiceConfigureStorageWidgetTe
 StorageServiceConfigureStorageWidgetTest::~StorageServiceConfigureStorageWidgetTest()
 {
 
+}
+
+void StorageServiceConfigureStorageWidgetTest::shouldHaveDefaultValue()
+{
+    StorageServiceConfigureStorageWidget w;
+    QPushButton *button = qFindChild<QPushButton*>(&w, QLatin1String("configure_button"));
+    QVERIFY(button);
+}
+
+void StorageServiceConfigureStorageWidgetTest::shouldEmitSignalWhenClickOnButton()
+{
+    StorageServiceConfigureStorageWidget w;
+    QPushButton *button = qFindChild<QPushButton*>(&w, QLatin1String("configure_button"));
+    QSignalSpy spy(&w, SIGNAL(configureClicked()));
+    QTest::mouseClick(button, Qt::LeftButton);
+    QCOMPARE(spy.count(), 1);
 }
 
 QTEST_KDEMAIN(StorageServiceConfigureStorageWidgetTest, GUI)
