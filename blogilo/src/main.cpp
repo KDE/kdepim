@@ -34,13 +34,13 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
 
     Kdelibs4ConfigMigrator migrate(QLatin1String("blogilo"));
     migrate.setConfigFiles(QStringList() << QLatin1String("blogilorc"));
     migrate.setUiFiles(QStringList() << QLatin1String("blogiloui.rc"));
     migrate.migrate();
     //QT5 TODO migrate database!
+    QApplication app(argc, argv);
 
     KLocalizedString::setApplicationDomain("blogilo");
     KAboutData about(QLatin1String("blogilo"), i18n(APPNAME), QLatin1String(VERSION), i18n("A KDE Blogging Client"),

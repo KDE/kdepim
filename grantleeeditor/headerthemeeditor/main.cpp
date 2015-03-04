@@ -36,8 +36,8 @@ int main(int argc, char **argv)
     migrate.setConfigFiles(QStringList() << QStringLiteral("headerthemeeditorrc"));
     migrate.setUiFiles(QStringList() << QStringLiteral("headerthemeeditorui.rc"));
     migrate.migrate();
-    KLocalizedString::setApplicationDomain("headerthemeeditor");
     QApplication app(argc, argv);
+    KLocalizedString::setApplicationDomain("headerthemeeditor");
     KAboutData aboutData(QStringLiteral("headerthemeeditor"),
                          i18n("Header Theme Editor"),
                          QStringLiteral(KDEPIM_VERSION),

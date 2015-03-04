@@ -29,19 +29,19 @@
 
 int main(int argc, char *argv[])
 {
-    KLocalizedString::setApplicationDomain("pimsettingexporter");
 
     Kdelibs4ConfigMigrator migrate(QLatin1String("pimsettingexporter"));
     migrate.setConfigFiles(QStringList() << QLatin1String("pimsettingexporterrc"));
     migrate.setUiFiles(QStringList() << QLatin1String("pimsettingexporter.rc"));
     migrate.migrate();
+    QApplication app(argc, argv);
+    KLocalizedString::setApplicationDomain("pimsettingexporter");
 
     KAboutData aboutData(QLatin1String("pimsettingexporter"), i18n("PIM Setting Exporter"),
                          QLatin1String(KDEPIM_VERSION), i18n("PIM Setting Exporter"), KAboutLicense::GPL_V2,
                          i18n("Copyright © 2012-2015 pimsettingexporter authors"));
     aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QStringLiteral("montel@kde.org"));
     QApplication::setWindowIcon(QIcon::fromTheme(QLatin1String("kontact")));
-    QApplication app(argc, argv);
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
     parser.addVersionOption();

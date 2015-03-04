@@ -73,6 +73,8 @@ int main(int argc, char **argv)
     migrate.setConfigFiles(QStringList() << QLatin1String("korgacrc"));
     migrate.migrate();
 
+    QApplication app(argc, argv);
+
     KAboutData aboutData(QLatin1String("korgac"), i18n("KOrganizer Reminder Daemon"),
                          QLatin1String(korgacVersion), i18n("KOrganizer Reminder Daemon"),
                          KAboutLicense::GPL,
@@ -85,7 +87,6 @@ int main(int argc, char **argv)
     aboutData.addAuthor(i18n("Allen Winter"), i18n("Janitorial Staff"),
                         QLatin1String("winter@kde.org"));
 
-    QApplication app(argc, argv);
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
     parser.addVersionOption();
