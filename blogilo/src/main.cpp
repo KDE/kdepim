@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     migrate.migrate();
     //QT5 TODO migrate database!
     QApplication app(argc, argv);
-
+    QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("blogilo")));
     KLocalizedString::setApplicationDomain("blogilo");
     KAboutData about(QLatin1String("blogilo"), i18n(APPNAME), QLatin1String(VERSION), i18n("A KDE Blogging Client"),
                      KAboutLicense::GPL_V2, i18n("Copyright © 2008–2014 Blogilo authors"),

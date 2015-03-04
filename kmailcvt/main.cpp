@@ -23,6 +23,7 @@
 #include "kmailcvt.h"
 #include "kdepim-version.h"
 #include <KDBusService>
+#include <QIcon>
 
 int main(int argc, char *argv[])
 {
@@ -31,6 +32,7 @@ int main(int argc, char *argv[])
     migrate.migrate();
 
     QApplication app(argc, argv);
+    QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("kmailcvt")));
     KLocalizedString::setApplicationDomain("kmailcvt");
 
     KAboutData aboutData(QStringLiteral("kmailcvt"), i18n("KMailCVT"),
