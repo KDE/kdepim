@@ -113,7 +113,7 @@ void CompletionConfigureDialog::slotSave()
     if (mRecentaddressWidget->wasChanged()) {
         //TODO
     }
-    //TODO
+    mCompletionOrderWidget->save();
 }
 
 void CompletionConfigureDialog::setEmailBlackList(const QStringList &lst)
