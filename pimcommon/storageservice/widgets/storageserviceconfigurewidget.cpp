@@ -23,6 +23,7 @@
 
 #include <KLocalizedString>
 #include <KUrlRequester>
+#include <KLineEdit>
 
 #include <QHBoxLayout>
 #include <QLabel>
@@ -46,6 +47,7 @@ StorageServiceConfigureWidget::StorageServiceConfigureWidget(QWidget *parent)
     mDownloadFolder = new KUrlRequester;
     connect(mDownloadFolder, &KUrlRequester::textChanged, this, &StorageServiceConfigureWidget::changed);
     mDownloadFolder->setMode(KFile::Directory | KFile::LocalOnly);
+    mDownloadFolder->lineEdit()->setTrapReturnKey(true);
     lay->addWidget(mDownloadFolder);
 }
 
