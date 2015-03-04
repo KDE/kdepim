@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2015 Montel Laurent <montel@kde.org>
+  Copyright (c) 2014-2015 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,27 +15,21 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FILTERIMPORTERGMAIL_H
-#define FILTERIMPORTERGMAIL_H
+#ifndef MERGECONTACTWIDGETLISTTEST_H
+#define MERGECONTACTWIDGETLISTTEST_H
 
-#include "filterimporter/filterimporterabstract.h"
-class QFile;
-namespace MailCommon
+#include <QObject>
+
+class MergeContactWidgetListTest : public QObject
 {
-
-class MailFilter;
-
-class MAILCOMMON_EXPORT FilterImporterGmail : public FilterImporterAbstract
-{
+    Q_OBJECT
 public:
-    FilterImporterGmail(QFile *file);
-    ~FilterImporterGmail();
-    static QString defaultFiltersSettingsPath();
-private:
-    QString createUniqFilterName();
-    void parseFilters(const QDomElement &e);
-    int mFilterCount;
-};
-}
+    explicit MergeContactWidgetListTest(QObject *parent = 0);
+    ~MergeContactWidgetListTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
+    void shouldCleanListWhenSetItems();
 
-#endif // FILTERIMPORTERGMAIL_H
+};
+
+#endif // MERGECONTACTWIDGETLISTTEST_H

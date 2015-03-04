@@ -23,7 +23,8 @@
 using namespace MailCommon;
 
 FilterImporterGmail::FilterImporterGmail(QFile *file)
-    : FilterImporterAbstract()
+    : FilterImporterAbstract(),
+      mFilterCount(0)
 {
     QDomDocument doc;
     if (!loadDomElement(doc, file)) {
@@ -55,14 +56,24 @@ QString FilterImporterGmail::defaultFiltersSettingsPath()
     return QDir::homePath();
 }
 
-void FilterImporterGmail::parseFilters(const QDomElement &e)
+QString FilterImporterGmail::createUniqFilterName()
+{
+    return i18n( "Gmail filter %1", mFilterCount++ );
+}
+
+void FilterImporterGmail::parseFilters( const QDomElement &e )
 {
     MailCommon::MailFilter *filter = new MailCommon::MailFilter();
     filter->setAutoNaming(true);
-    filter->setEnabled(true);
-    for (QDomElement ruleFilter = e.firstChildElement();
-            !ruleFilter.isNull();
-            ruleFilter = ruleFilter.nextSiblingElement()) {
+    const QString uniqName = createUniqFilterName();
+    filter->pattern()->setName( uniqName );
+    filter->setToolbarName( uniqName );
+    filter->setEnabled( true );
+    QByteArray fieldName;
+    for ( QDomElement ruleFilter = e.firstChildElement();
+          !ruleFilter.isNull();
+          ruleFilter = ruleFilter.nextSiblingElement() )
+    {
         const QString tagName = ruleFilter.tagName();
         if (tagName == QLatin1String("category")) {
             if (ruleFilter.hasAttribute(QLatin1String("term"))) {
@@ -76,11 +87,11 @@ void FilterImporterGmail::parseFilters(const QDomElement &e)
                 qDebug() << " ruleFilter.attribute" << criteriaProperty;
                 // Criterial
                 if (criteriaProperty == QLatin1String("from")) {
-
+                    fieldName = "from";
                 } else if (criteriaProperty == QLatin1String("to")) {
-
+                    fieldName = "to";
                 } else if (criteriaProperty == QLatin1String("subject")) {
-
+                    fieldName = "subject";
                 } else if (criteriaProperty == QLatin1String("hasTheWord")) {
 
                 } else if (criteriaProperty == QLatin1String("doesNotHaveTheWord")) {

@@ -17,7 +17,7 @@
 
 #include "mailcommon_debug.h"
 #include "filterimporterprocmail.h"
-
+#include <KLocalizedString>
 #include "filtermanager.h"
 #include "mailfilter.h"
 
@@ -51,7 +51,7 @@ QString FilterImporterProcmail::defaultFiltersSettingsPath()
 
 QString FilterImporterProcmail::createUniqFilterName()
 {
-    return QStringLiteral("Procmail filter %1").arg(mFilterCount++);
+    return i18n("Procmail filter %1", mFilterCount++);
 }
 
 MailCommon::MailFilter *FilterImporterProcmail::parseLine(QTextStream &stream,

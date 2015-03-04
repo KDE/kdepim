@@ -140,12 +140,13 @@ void MergeContactSelectListWidget::addItem(const QString &str)
 
 void MergeContactSelectListWidget::fillList(const KContacts::Addressee::List &lst)
 {
+    mSelectListWidget->clear();
     Q_FOREACH (const Addressee &addr, lst) {
         switch (mConflictType) {
         case MergeContacts::None:
             break;
         case MergeContacts::Birthday: {
-            //FIXME
+            //FIXME birthday
             const QDateTime birdth = addr.birthday();
             addItem(birdth.toString());
             break;

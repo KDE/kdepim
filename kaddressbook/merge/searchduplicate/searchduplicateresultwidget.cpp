@@ -127,7 +127,6 @@ void SearchDuplicateResultWidget::slotMergeContact()
 
 void SearchDuplicateResultWidget::mergeContact()
 {
-    //TODO add progress indicator.
     if (mIndexListContact < mListContactToMerge.count()) {
         KABMergeContacts::MergeContactsJob *job = new KABMergeContacts::MergeContactsJob(this);
         job->setListItem(mListContactToMerge.at(mIndexListContact));
@@ -158,7 +157,5 @@ void SearchDuplicateResultWidget::slotAutomaticMerging()
 
 void SearchDuplicateResultWidget::slotCustomizeMergingContacts()
 {
-    //TODO send info too
     Q_EMIT customizeMergeContact(mResultConflictList, mCollectionCombobox->currentCollection());
-    //TODO
 }
