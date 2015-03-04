@@ -39,6 +39,7 @@ public:
 
     virtual void writeSettings();
 
+    void addExtraWidget(QWidget *w);
 Q_SIGNALS:
     void serviceRemoved(const QString &);
 

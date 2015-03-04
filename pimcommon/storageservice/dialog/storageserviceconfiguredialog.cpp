@@ -49,6 +49,11 @@ StorageServiceConfigureDialog::~StorageServiceConfigureDialog()
     writeConfig();
 }
 
+void StorageServiceConfigureDialog::addExtraWidget(QWidget *w)
+{
+    mainWidget()->layout()->addWidget(w);
+}
+
 void StorageServiceConfigureDialog::writeSettings()
 {
     //Reimplement it
