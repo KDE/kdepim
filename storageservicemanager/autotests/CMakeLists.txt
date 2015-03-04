@@ -1,10 +1,8 @@
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
-include_directories(
-)
 # convenience macro to add qtest unit tests
-macro(add_storageservice_unittest _source)
-  set(_test ${_source} ../storageservicenavigationbuttons.cpp ../storageservicemanagerutil.cpp ../storageservicemanager_debug.cpp)
+macro(add_storageservice_unittest _source _additionalSource)
+  set(_test ${_source} ${_additionalSource})
   get_filename_component(_name ${_source} NAME_WE)
   add_executable( ${_name} ${_test} )
   add_test( ${_name} ${_name} )
@@ -18,4 +16,5 @@ macro(add_storageservice_unittest _source)
   )
 endmacro ()
 
-add_storageservice_unittest( storageservicenavigationbuttontest.cpp )
+add_storageservice_unittest( storageservicenavigationbuttontest.cpp "../storageservicenavigationbuttons.cpp;../storageservicemanagerutil.cpp")
+add_storageservice_unittest( storageserviceconfigurestoragewidgettest.cpp "../storageserviceconfigurestoragewidget.cpp")

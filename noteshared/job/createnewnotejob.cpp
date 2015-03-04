@@ -20,7 +20,7 @@
 #include "noteshared/attributes/showfoldernotesattribute.h"
 #include "dialog/selectednotefolderdialog.h"
 #include "noteshared_debug.h"
-#include "akonadi_next/note.h"
+#include <Akonadi/Notes/NoteUtils>
 
 #include <AkonadiCore/Collection>
 #include <AkonadiCore/ItemCreateJob>
@@ -133,7 +133,7 @@ void CreateNewNoteJob::slotFetchCollection(KJob *job)
             }
         }
         Akonadi::Item newItem;
-        newItem.setMimeType(Akonotes::Note::mimeType());
+        newItem.setMimeType( Akonadi::NoteUtils::noteMimeType() );
 
         KMime::Message::Ptr newPage = KMime::Message::Ptr(new KMime::Message());
 

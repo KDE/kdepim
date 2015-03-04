@@ -25,7 +25,7 @@
 
 //QT5 #include "maildirsettings.h"
 
-#include "akonadi_next/note.h"
+#include <Akonadi/Notes/NoteUtils>
 
 #include "noteshared_debug.h"
 #include <KLocalizedString>

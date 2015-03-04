@@ -32,10 +32,10 @@
 #include <AkonadiCore/entitytreemodel.h>
 #include <AkonadiCore/itemfetchscope.h>
 #include <AkonadiWidgets/standardactionmanager.h>
-#include <akonadi_next/note.h>
 #include <akonadi_next/notecreatorandselector.h>
 
 #include <QAction>
+#include <Akonadi/Notes/NoteUtils>
 #include <KActionCollection>
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -282,7 +282,7 @@ Collection MainView::suitableContainerCollection(const QModelIndex &parent) cons
         const Collection collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
         Q_ASSERT(collection.isValid());
 
-        if (collection.contentMimeTypes().contains(Akonotes::Note::mimeType())) {
+        if (collection.contentMimeTypes().contains(Akonadi::NoteUtils::noteMimeType())) {
             return collection;
         }
 
@@ -354,7 +354,7 @@ void MainView::setupStandardActionManager(QItemSelectionModel *collectionSelecti
 
     manager->action(StandardActionManager::CollectionProperties)->setText(i18n("Notebook Properties"));
     manager->action(StandardActionManager::CreateCollection)->setText(i18n("New Sub Notebook"));
-    manager->action(StandardActionManager::CreateCollection)->setProperty("ContentMimeTypes", QStringList() << Akonadi::Collection::mimeType() << Akonotes::Note::mimeType());
+    manager->action(StandardActionManager::CreateCollection)->setProperty("ContentMimeTypes", QStringList() << Akonadi::Collection::mimeType() << Akonadi::NoteUtils::noteMimeType());
     manager->setActionText(StandardActionManager::SynchronizeCollections, ki18np("Synchronize This Notebook", "Synchronize These Notebooks"));
     manager->setActionText(StandardActionManager::DeleteCollections, ki18np("Delete Notebook", "Delete Notebooks"));
     manager->action(StandardActionManager::MoveCollectionToDialog)->setText(i18n("Move Notebook To"));

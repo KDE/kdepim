@@ -23,6 +23,7 @@
 
 #include <QDialog>
 #include "pimcommon_export.h"
+class QVBoxLayout;
 namespace PimCommon
 {
 class StorageServiceAbstract;
@@ -39,6 +40,7 @@ public:
 
     virtual void writeSettings();
 
+    void addExtraWidget(QWidget *w);
 Q_SIGNALS:
     void serviceRemoved(const QString &);
 
@@ -49,6 +51,7 @@ protected:
 private:
     void readConfig();
     void writeConfig();
+    QVBoxLayout *mMainLayout;
 };
 }
 

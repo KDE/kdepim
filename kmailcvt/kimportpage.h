@@ -27,7 +27,7 @@ public:
     explicit KImportPage(QWidget *parent = Q_NULLPTR);
     ~KImportPage();
 
-    Ui::KImportPageDlg *widget();
+    Ui::KImportPageDlg *widget() const;
 private:
     Ui::KImportPageDlg *mWidget;
 };

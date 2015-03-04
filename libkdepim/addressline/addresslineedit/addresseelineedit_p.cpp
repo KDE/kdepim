@@ -242,6 +242,7 @@ void AddresseeLineEditPrivate::setCompletedItems(const QStringList &items, bool 
                 if (!m_alternateColor.isValid()) {
                     alternateColor();
                 }
+                item->setFlags(item->flags() &~ Qt::ItemIsSelectable);
                 item->setBackgroundColor(m_alternateColor);
             }
             completionBox->addItem(item);

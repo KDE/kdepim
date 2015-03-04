@@ -29,9 +29,9 @@
 #include <entitydisplayattribute.h>
 #include <itemcreatejob.h>
 
-#include "note.h"
 #include <EntityTreeModel>
 #include "akonadinext_debug.h"
+#include <Akonadi/Notes/NoteUtils>
 
 using namespace Akonadi;
 
@@ -82,8 +82,8 @@ void NoteCreatorAndSelector::trySelectCollection()
 
 void NoteCreatorAndSelector::doCreateNote()
 {
-    Item newItem;
-    newItem.setMimeType(Note::mimeType());
+  Item newItem;
+  newItem.setMimeType( Akonadi::NoteUtils::noteMimeType()  );
 
     KMime::Message::Ptr newPage = KMime::Message::Ptr(new KMime::Message());
 

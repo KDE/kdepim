@@ -20,7 +20,7 @@
 #include <AkonadiCore/ChangeRecorder>
 #include <AkonadiCore/CollectionFetchScope>
 #include <AkonadiCore/ItemFetchScope>
-#include "akonadi_next/note.h"
+#include <Akonadi/Notes/NoteUtils>
 
 #include "noteshared/attributes/notealarmattribute.h"
 #include "noteshared/attributes/notelockattribute.h"
@@ -43,7 +43,7 @@ NotesChangeRecorder::NotesChangeRecorder(QObject *parent)
     mChangeRecorder->fetchCollectionStatistics(true);
     mChangeRecorder->setCollectionMonitored(Akonadi::Collection::root());
     mChangeRecorder->collectionFetchScope().setIncludeStatistics(true);
-    mChangeRecorder->setMimeTypeMonitored(Akonotes::Note::mimeType());
+    mChangeRecorder->setMimeTypeMonitored( Akonadi::NoteUtils::noteMimeType() );
 }
 
 Akonadi::ChangeRecorder *NotesChangeRecorder::changeRecorder() const

@@ -32,7 +32,7 @@ KImportPage::~KImportPage()
     delete mWidget;
 }
 
-Ui::KImportPageDlg *KImportPage::widget()
+Ui::KImportPageDlg *KImportPage::widget() const
 {
     return mWidget;
 }

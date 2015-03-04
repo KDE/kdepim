@@ -8,12 +8,9 @@ add_definitions(-DTRANSLATION_DOMAIN=\"akonadi_next\")
 
 set(akonadi_next_SRCS
   akonadinext_debug.cpp
-  note.cpp
   notecreatorandselector.cpp
   quotacolorproxymodel.cpp
   kcolumnfilterproxymodel.cpp
-  amazingcompleter.cpp
-  amazingdelegate.cpp
 )
 
 add_library(akonadi_next ${akonadi_next_SRCS})
@@ -25,6 +22,7 @@ target_link_libraries(akonadi_next
   KF5::KIOCore
   KF5::Mime
   KF5::Contacts
+  KF5::AkonadiNotes
 )
 
 set_target_properties(akonadi_next PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
