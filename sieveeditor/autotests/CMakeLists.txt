@@ -22,11 +22,14 @@ endif()
 macro(add_sieveserver_unittest _source _additionalSource)
   set(_test ${_source} ${_additionalSource})
   get_filename_component(_name ${_source} NAME_WE)
-  kde4_add_unit_test(${_name} TESTNAME sieveserver-${_name} ${_test} )
+  add_executable( ${_name} ${_test} )
+  add_test( ${_name} ${_name} )
+  ecm_mark_as_test(sieveserver-${_name})
   target_link_libraries( ${_name}
     Qt5::Test
     Qt5::Core
-    
+    Qt5::Widgets 
+    KF5::I18n  
   )
 endmacro ()
 
