@@ -4,9 +4,7 @@
 
 include_directories(
   ${Boost_INCLUDE_DIR}
-   ${CMAKE_BINARY_DIR}/calendarviews
-  ${CMAKE_SOURCE_DIR}/mailcommon
-  ${CMAKE_SOURCE_DIR}/pimcommon
+  ${CMAKE_BINARY_DIR}/calendarviews
 )
 add_definitions(-DQT_NO_CAST_FROM_ASCII)
 add_definitions(-DQT_NO_CAST_TO_ASCII)

@@ -1,7 +1,3 @@
-include_directories(${CMAKE_SOURCE_DIR}/pimcommon/
-)
-
-
 set(customtextedit_gui_SRCS customtextedit_gui.cpp)
 add_executable(customtextedit_gui ${customtextedit_gui_SRCS})
 target_link_libraries(customtextedit_gui

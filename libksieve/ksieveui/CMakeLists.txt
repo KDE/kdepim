@@ -10,12 +10,9 @@ endif()
 configure_file(settings/sieve-editor.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/sieve-editor.kcfg)
 
 include_directories(${CMAKE_SOURCE_DIR}/libksieve
-	${CMAKE_SOURCE_DIR}/pimcommon
         ${CMAKE_SOURCE_DIR}/pimcommon/sievehighlighter/
-	${CMAKE_BINARY_DIR}/pimcommon
         ${CMAKE_SOURCE_DIR}/pimcommon/util/
         ${CMAKE_SOURCE_DIR}/libksieve/ksieveui
-	${CMAKE_SOURCE_DIR}/libkdepim/
 	)
 
 add_subdirectory(tests)

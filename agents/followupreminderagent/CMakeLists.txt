@@ -4,10 +4,6 @@ project(followupreminderagent)
 
 add_definitions(-DTRANSLATION_DOMAIN=\"akonadi_followupreminder_agent\")
 
-include_directories(
-   ${CMAKE_SOURCE_DIR}/messagecomposer/
-)
-
 set(followupreminderlib_SRCS 
     followupreminderinfo.cpp
     followupreminderutil.cpp

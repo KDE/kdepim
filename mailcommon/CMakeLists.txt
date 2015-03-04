@@ -1,13 +1,5 @@
 include_directories(
-  ${CMAKE_SOURCE_DIR}/libkdepim
   ${CMAKE_SOURCE_DIR}/mailcommon/search/
-  ${CMAKE_SOURCE_DIR}/messageviewer
-  ${CMAKE_SOURCE_DIR}/messagecore/
-  ${CMAKE_SOURCE_DIR}/messagecomposer/
-  ${CMAKE_SOURCE_DIR}/templateparser
-  ${CMAKE_BINARY_DIR}/templateparser
-  ${CMAKE_BINARY_DIR}/pimcommon
-  ${CMAKE_SOURCE_DIR}/pimcommon
   ${CMAKE_SOURCE_DIR}/pimcommon/util/
   ${CMAKE_CURRENT_SOURCE_DIR}/filter
   ${CMAKE_CURRENT_SOURCE_DIR}/tag/

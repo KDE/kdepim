@@ -58,13 +58,8 @@ trojita/trojitaaddressbook.cpp
 icedove/icedoveimportdata.cpp
 )
 
-include_directories(${CMAKE_SOURCE_DIR}/mailimporter 
-                    ${CMAKE_SOURCE_DIR}/mailcommon 
-		    ${CMAKE_SOURCE_DIR}/pimcommon
-                    ${CMAKE_SOURCE_DIR}/messagecomposer/
+include_directories(
 		    ${CMAKE_SOURCE_DIR}/mailcommon/filter/
-                    ${CMAKE_SOURCE_DIR}/messageviewer/
-		    ${CMAKE_SOURCE_DIR}/libkdepim/
 )
 
 ki18n_wrap_ui(importwizard_SRCS 

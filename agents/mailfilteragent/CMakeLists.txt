@@ -6,9 +6,6 @@ add_definitions(-DTRANSLATION_DOMAIN=\"akonadi_mailfilter_agent\")
 
 include_directories(
   ${Boost_INCLUDE_DIR}
-  ${CMAKE_SOURCE_DIR}/mailcommon
-  ${CMAKE_SOURCE_DIR}/messagecomposer
-  ${CMAKE_SOURCE_DIR}/pimcommon
 )
 
 

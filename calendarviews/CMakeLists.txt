@@ -25,11 +25,6 @@ endif()
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
   ${Boost_INCLUDE_DIR}
-  ${CMAKE_SOURCE_DIR}/akonadi_next
-  ${CMAKE_SOURCE_DIR}/calendarsupport
-  ${CMAKE_BINARY_DIR}/calendarsupport
-  ${CMAKE_SOURCE_DIR}/calendarviews
-  ${CMAKE_SOURCE_DIR}/libkdepim/
   ${ZLIB_INCLUDE_DIRS}
 )
 

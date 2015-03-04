@@ -1,12 +1,5 @@
 project(notesagent)
 
-
-include_directories(
-   ${CMAKE_SOURCE_DIR}/noteshared
-   ${CMAKE_BINARY_DIR}/noteshared
-   ${CMAKE_SOURCE_DIR}/pimcommon
-)
-
 add_definitions(-DTRANSLATION_DOMAIN=\"akonadi_notes_agent\")
 
 set(notesagent_SRCS

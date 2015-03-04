@@ -11,13 +11,7 @@ set(calendarjanitor_SRCS
 
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
-  ${CMAKE_SOURCE_DIR}/calendarsupport
-  ${CMAKE_BINARY_DIR}/calendarsupport
-
-
-  ${AKONADI_INCLUDE_DIR}
   ${Boost_INCLUDE_DIRS}
-  
   ${ZLIB_INCLUDE_DIRS}
 )
    

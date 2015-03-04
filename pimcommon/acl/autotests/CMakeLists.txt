@@ -1,6 +1,3 @@
-include_directories(
-  ${CMAKE_SOURCE_DIR}/pimcommon
-)
 
 set( pimcommon_imapaclattributetest_source imapaclattributetest.cpp ../imapaclattribute.cpp )
 add_executable( imapaclattributetest ${pimcommon_imapaclattributetest_source})

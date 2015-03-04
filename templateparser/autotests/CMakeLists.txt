@@ -6,8 +6,6 @@ add_definitions(-DMAIL_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data")
 include_directories(
   ${Boost_INCLUDE_DIRS}
   ${CMAKE_SOURCE_DIR}/libkleo
-  ${CMAKE_SOURCE_DIR}/templateparser/
-  ${CMAKE_BINARY_DIR}/templateparser/
 )
 #include ( ${CMAKE_SOURCE_DIR}/cmake/modules/kde4_handle_crypto_rpath_for_executable.cmake )
 

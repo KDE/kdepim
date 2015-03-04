@@ -1,6 +1,3 @@
-include_directories(${CMAKE_SOURCE_DIR}/libksieve
-        )
-
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
 macro( add_managesievejob_test _source )

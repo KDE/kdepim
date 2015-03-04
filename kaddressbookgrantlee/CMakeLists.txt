@@ -3,7 +3,6 @@ project(kaddressbookgrantlee)
 
 include_directories(
   ${Grantlee_INCLUDE_DIRS}
-  ${CMAKE_SOURCE_DIR}/grantleetheme 
 )
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )

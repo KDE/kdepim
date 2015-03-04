@@ -1,14 +1,5 @@
 project(sendlateragent)
 
-
-include_directories(
-   ${CMAKE_SOURCE_DIR}/pimcommon/
-   ${CMAKE_SOURCE_DIR}/messagecomposer/
-   ${CMAKE_SOURCE_DIR}/messagecore/
-   ${CMAKE_SOURCE_DIR}/libkleo
-)
-
-
 add_definitions(-DTRANSLATION_DOMAIN=\"akonadi_sendlater_agent\")
 
 add_subdirectory(tests)

@@ -6,11 +6,6 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/printing/
   ${Boost_INCLUDE_DIR}
   ${Grantlee_INCLUDE_DIRS}
-  ${CMAKE_SOURCE_DIR}/pimcommon/
-  ${CMAKE_SOURCE_DIR}/libkdepim/
-  ${CMAKE_SOURCE_DIR}/grantleetheme/
-  ${CMAKE_SOURCE_DIR}/kaddressbookgrantlee/
-  ${CMAKE_SOURCE_DIR}/libkleo
 )
 
 
