@@ -97,6 +97,8 @@ private Q_SLOTS:
 
 private:
     AddresseeLineEdit *q;
+    QTimer m_delayedQueryTimer;
+    QColor m_alternateColor;
     QStringList m_balooBlackList;
     QStringList m_domainExcludeList;
     QString m_previousAddresses;
@@ -110,8 +112,6 @@ private:
     bool m_useSemicolonAsSeparator;
     bool m_showOU;
     bool m_enableBalooSearch;
-    QTimer m_delayedQueryTimer;
-    QColor m_alternateColor;
 };
 }
 
