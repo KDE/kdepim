@@ -91,13 +91,13 @@ void CreateNewNoteJob::createFetchCollectionJob(bool useSettings)
         }
         if (dlg->useFolderByDefault()) {
             NoteShared::NoteSharedGlobalConfig::self()->setDefaultFolder(col.id());
-            NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
+            NoteShared::NoteSharedGlobalConfig::self()->save();
         }
         delete dlg;
     } else {
         col = Akonadi::Collection(id);
     }
-    NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
+    NoteShared::NoteSharedGlobalConfig::self()->save();
     Akonadi::CollectionFetchJob *fetchCollection = new Akonadi::CollectionFetchJob(col, Akonadi::CollectionFetchJob::Base);
     connect(fetchCollection, &Akonadi::CollectionFetchJob::result, this, &CreateNewNoteJob::slotFetchCollection);
 }
@@ -179,7 +179,7 @@ void CreateNewNoteJob::slotNoteCreationFinished(KJob *job)
     if (job->error()) {
         qCWarning(NOTESHARED_LOG) << job->errorString();
         NoteShared::NoteSharedGlobalConfig::self()->setDefaultFolder(-1);
-        NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
+        NoteShared::NoteSharedGlobalConfig::self()->save();
         KMessageBox::error(mWidget, i18n("Note was not created."), i18n("Create new note"));
     }
     deleteLater();

@@ -108,7 +108,7 @@ NoteHostDialog::~NoteHostDialog()
     NoteShared::NoteSharedGlobalConfig::setKnownHosts(m_hostCombo->historyItems());
     NoteShared::NoteSharedGlobalConfig::setNoteHostDialogSize(size());
     NoteShared::NoteSharedGlobalConfig::setNoteHostDialogSize(size());
-    NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
+    NoteShared::NoteSharedGlobalConfig::self()->save();
 }
 
 void NoteHostDialog::readConfig()
