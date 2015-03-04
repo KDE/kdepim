@@ -28,7 +28,7 @@
 #include <akonadi/changerecorder.h>
 #include <akonadi/entitydisplayattribute.h>
 
-#include "akonadi_next/note.h"
+#include <Akonadi/Notes/NoteUtils>
 
 #include <kdebug.h>
 #include <KMime/KMimeMessage>
@@ -106,7 +106,7 @@ bool KJotsEntity::isBook() const
 
   if (col.isValid())
   {
-    return col.contentMimeTypes().contains( Akonotes::Note::mimeType() );
+    return col.contentMimeTypes().contains( Akonadi::NoteUtils::noteMimeType() );
   }
   return false;
 }

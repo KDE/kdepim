@@ -17,7 +17,7 @@
 
 #include "selectednotefolderdialog.h"
 
-#include "akonadi_next/note.h"
+#include <Akonadi/Notes/NoteUtils>
 
 #include <KLocalizedString>
 #include <KGlobal>
@@ -29,7 +29,7 @@ using namespace NoteShared;
 SelectedNotefolderDialog::SelectedNotefolderDialog(QWidget *parent)
     : Akonadi::CollectionDialog (parent)
 {
-    const QStringList mimeTypes( Akonotes::Note::mimeType() );
+    const QStringList mimeTypes( Akonadi::NoteUtils::noteMimeType() );
     setMimeTypeFilter( mimeTypes );
     //setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
     setCaption( i18nc( "@title:window", "Select Note Folder" ) );

@@ -21,7 +21,7 @@
 
 #include "localresourcecreator.h"
 
-#include "akonadi_next/note.h"
+#include <Akonadi/Notes/NoteUtils>
 
 #include <KDebug>
 #include <KLocalizedString>
@@ -113,7 +113,7 @@ void LocalResourceCreator::topLevelFetchFinished(KJob* job)
   collection.setParentCollection( Akonadi::Collection(id) );
   QString title = i18nc( "The default name for new books.", "New Book" );
   collection.setName( KRandom::randomString( 10 ) );
-  collection.setContentMimeTypes( QStringList() << Akonadi::Collection::mimeType() << Akonotes::Note::mimeType() );
+  collection.setContentMimeTypes( QStringList() << Akonadi::Collection::mimeType() << Akonadi::NoteUtils::noteMimeType() );
 
   Akonadi::EntityDisplayAttribute *eda = new Akonadi::EntityDisplayAttribute();
   eda->setIconName( QLatin1String("x-office-address-book") );
@@ -142,7 +142,7 @@ void LocalResourceCreator::createFinished(KJob* job)
 
   Akonadi::Item item;
   item.setParentCollection(collectionCreateJob->collection());
-  item.setMimeType( Akonotes::Note::mimeType() );
+  item.setMimeType( Akonadi::NoteUtils::noteMimeType() );
 
   KMime::Message::Ptr note( new KMime::Message() );
 

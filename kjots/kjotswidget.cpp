@@ -56,7 +56,7 @@
 #include <akonadi/itemfetchscope.h>
 
 #include "akonadi/entityorderproxymodel.h"
-#include "akonadi_next/note.h"
+#include <Akonadi/Notes/NoteUtils>
 #include "akonadi_next/notecreatorandselector.h"
 
 // Grantlee
@@ -153,7 +153,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   monitor->fetchCollection( true );
   monitor->setItemFetchScope( scope );
   monitor->setCollectionMonitored( Collection::root() );
-  monitor->setMimeTypeMonitored( Akonotes::Note::mimeType() );
+  monitor->setMimeTypeMonitored( Akonadi::NoteUtils::noteMimeType() );
 
   m_kjotsModel = new KJotsModel( monitor, this );
 
@@ -811,7 +811,7 @@ void KJotsWidget::newBook()
 
   QString title = i18nc( "The default name for new books.", "New Book" );
   newCollection.setName( KRandom::randomString( 10 ) );
-  newCollection.setContentMimeTypes( QStringList() << Akonadi::Collection::mimeType() << Akonotes::Note::mimeType() );
+  newCollection.setContentMimeTypes( QStringList() << Akonadi::Collection::mimeType() << Akonadi::NoteUtils::noteMimeType() );
 
   Akonadi::EntityDisplayAttribute *eda = new Akonadi::EntityDisplayAttribute();
   eda->setIconName( QLatin1String("x-office-address-book") );

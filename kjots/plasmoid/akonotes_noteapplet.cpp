@@ -53,7 +53,7 @@
 #include <akonadi/monitor.h>
 #include <akonadi/resourcesynchronizationjob.h>
 
-#include "akonadi_next/note.h"
+#include <Akonadi/Notes/NoteUtils>
 
 using namespace Akonadi;
 
@@ -238,7 +238,7 @@ void AkonotesNoteApplet::collectionFetchDone( KJob *job )
   generalGroup.writeEntry( "unsortedCollection", targetCollection.id() );
 
   Item item;
-  item.setMimeType( Akonotes::Note::mimeType() );
+  item.setMimeType( Akonadi::NoteUtils::noteMimeType() );
 
   KMime::Message::Ptr msg = KMime::Message::Ptr( new KMime::Message() );
 

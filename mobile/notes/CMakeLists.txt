@@ -35,6 +35,7 @@ target_link_libraries(notes-mobile
   ${KDEPIMLIBS_KMBOX_LIBS}
   kdepimmobileui
   kdepim
+  ${KDEPIMLIBS_AKONADI_NOTES_LIBS}
   akonadi_next
 )
 

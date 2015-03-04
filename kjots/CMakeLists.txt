@@ -82,6 +82,7 @@ target_link_libraries(kjots
   ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
   ${KDEPIMLIBS_KONTACTINTERFACE_LIBS}
    ${KDE4_KPRINTUTILS_LIBS}
+  ${KDEPIMLIBS_AKONADI_NOTES_LIBS}
   akonadi_next
   noteshared
 )
@@ -122,6 +123,7 @@ install(DIRECTORY themes DESTINATION ${DATA_INSTALL_DIR}/kjots PATTERN *.svn EXC
     ${Grantlee_GUI_LIBRARIES}
     ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
     ${KDE4_KPRINTUTILS_LIBS}
+    ${KDEPIMLIBS_AKONADI_NOTES_LIBS}
     akonadi_next
     noteshared
   )

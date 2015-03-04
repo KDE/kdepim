@@ -23,7 +23,7 @@
 #include <akonadi/agentinstancecreatejob.h>
 #include "maildirsettings.h"
 
-#include "akonadi_next/note.h"
+#include <Akonadi/Notes/NoteUtils>
 
 #include <KDebug>
 #include <KGlobal>
