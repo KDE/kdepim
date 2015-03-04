@@ -23,12 +23,9 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
 set(akonadi_next_SRCS
-  note.cpp
   notecreatorandselector.cpp
   quotacolorproxymodel.cpp
   kcolumnfilterproxymodel.cpp
-  amazingcompleter.cpp
-  amazingdelegate.cpp
 )
 
 kde4_add_library(akonadi_next ${LIBRARY_TYPE} ${akonadi_next_SRCS})
@@ -41,6 +38,7 @@ target_link_libraries(akonadi_next
   ${KDE4_KIO_LIBS}
   ${KDEPIMLIBS_KABC_LIBS}
   ${KDEPIMLIBS_KMIME_LIBS}
+  ${KDEPIMLIBS_AKONADI_NOTES_LIBS} 
 )
 
 set_target_properties(akonadi_next PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
