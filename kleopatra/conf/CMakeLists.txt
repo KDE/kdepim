@@ -49,7 +49,6 @@ set(kcm_kleopatra_PART_SRCS
   ${_kcm_kleopatra_libkleopatraclient_extra_SRCS}
 )
 
-add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5152)
 
 ki18n_wrap_ui(kcm_kleopatra_PART_SRCS
   appearanceconfigwidget.ui

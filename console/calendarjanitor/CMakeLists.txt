@@ -1,7 +1,5 @@
 project(calendarjanitor)
 
-add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5860)
-
 ########### next target ###############
 
 set(calendarjanitor_SRCS

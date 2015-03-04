@@ -18,7 +18,6 @@ include_directories(..)
 
 add_executable(kwatchgnupg ${kwatchgnupg_SRCS})
 
-add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5153)
 
 target_link_libraries(kwatchgnupg
   KF5::DBusAddons  

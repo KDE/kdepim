@@ -2,8 +2,6 @@ project(konsolekalendar)
 
 add_subdirectory(pics) 
 
-add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5860)
-
 ########### next target ###############
 
 set(konsolekalendar_SRCS 

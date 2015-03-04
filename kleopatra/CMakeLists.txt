@@ -341,8 +341,6 @@ else()
   set(_kleopatra_mainwindow_SRCS mainwindow_desktop.cpp)
 endif()
 
-add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5151)
-
 file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/hi*-apps-kleopatra.png")
 ecm_add_app_icon(_kleopatra_mainwindow_SRCS ICONS ${ICONS_SRCS})
 

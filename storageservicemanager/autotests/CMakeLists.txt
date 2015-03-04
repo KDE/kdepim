@@ -16,5 +16,5 @@ macro(add_storageservice_unittest _source _additionalSource)
   )
 endmacro ()
 
-add_storageservice_unittest( storageservicenavigationbuttontest.cpp "../storageservicenavigationbuttons.cpp;../storageservicemanagerutil.cpp")
-add_storageservice_unittest( storageserviceconfigurestoragewidgettest.cpp "../storageserviceconfigurestoragewidget.cpp")
+add_storageservice_unittest( storageservicenavigationbuttontest.cpp "../storageservicenavigationbuttons.cpp;../storageservicemanagerutil.cpp;../storageservicemanager_debug.cpp")
+add_storageservice_unittest( storageserviceconfigurestoragewidgettest.cpp "../storageserviceconfigurestoragewidget.cpp;../storageservicemanager_debug.cpp")
