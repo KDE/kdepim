@@ -49,8 +49,12 @@
 #include <QDir>
 
 using namespace Akonadi;
-
-static const QString storeMails = QLatin1String("backupmail/");
+namespace {
+inline const QString storeMails()
+{
+    return QLatin1String("backupmail/");
+}
+}
 
 ImportMailJob::ImportMailJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent,archiveStorage,typeSelected,numberOfStep)
@@ -462,7 +466,7 @@ void ImportMailJob::restoreMails()
             //qDebug()<<" filename "<<filename<<" resourceName"<<resourceName;
             KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
-            const KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeMails);
+            const KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeMails());
 
             const QString agentConfigFile = value.akonadiAgentConfigFile;
             if (!agentConfigFile.isEmpty()) {

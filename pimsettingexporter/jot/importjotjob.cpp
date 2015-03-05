@@ -29,9 +29,12 @@
 
 #include <QFile>
 #include <QDir>
-
-static const QString storeJot = QLatin1String("backupjot/");
-
+namespace {
+inline const QString storeJot()
+{
+    return QLatin1String("backupjot/");
+}
+}
 ImportJotJob::ImportJotJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
 {
@@ -91,7 +94,7 @@ void ImportJotJob::restoreResources()
 
                     KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
-                    const KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeJot);
+                    const KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeJot());
 
                     const QString dataFile = value.akonadiResources;
                     const KArchiveEntry* dataResouceEntry = mArchiveDirectory->entry(dataFile);
