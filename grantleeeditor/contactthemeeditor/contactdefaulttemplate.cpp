@@ -19,9 +19,9 @@
 #include "contactdefaulttemplate.h"
 
 
-QList<PimCommon::defaultTemplate> ContactDefaultTemplate::contactTemplates()
+QVector<PimCommon::defaultTemplate> ContactDefaultTemplate::contactTemplates()
 {
-    QList<PimCommon::defaultTemplate> lst;
+    QVector<PimCommon::defaultTemplate> lst;
     /*
     PimCommon::defaultTemplate tmp;
     //TODO

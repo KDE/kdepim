@@ -45,7 +45,7 @@ bool SieveEditorManageSieveWidget::refreshList()
     bool noImapFound = true;
     SieveTreeWidgetItem *last = 0;
 
-    const QList<SieveEditorUtil::SieveServerConfig> listConfig = SieveEditorUtil::readServerSieveConfig();
+    const QVector<SieveEditorUtil::SieveServerConfig> listConfig = SieveEditorUtil::readServerSieveConfig();
     Q_FOREACH ( const SieveEditorUtil::SieveServerConfig &conf, listConfig) {
         last = new SieveTreeWidgetItem( treeView(), last );
         last->setText( 0, conf.serverName + QString::fromLatin1(" (%1)").arg(conf.userName) );

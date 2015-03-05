@@ -33,7 +33,7 @@ ContactTemplateListWidget::~ContactTemplateListWidget()
 {
 }
 
-QList<PimCommon::defaultTemplate> ContactTemplateListWidget::defaultTemplates()
+QVector<PimCommon::defaultTemplate> ContactTemplateListWidget::defaultTemplates()
 {
     return ContactDefaultTemplate::contactTemplates();
 }

@@ -63,7 +63,7 @@ SieveTemplateListWidget::~SieveTemplateListWidget()
 {
 }
 
-QList<PimCommon::defaultTemplate> SieveTemplateListWidget::defaultTemplates()
+QVector<PimCommon::defaultTemplate> SieveTemplateListWidget::defaultTemplates()
 {
     return KSieveUi::SieveDefaultTemplate::defaultTemplates();
 }

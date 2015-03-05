@@ -39,7 +39,7 @@ public:
     //Need to load template in specific class to allow to use correct defaultTemplates function
     void loadTemplates();
 
-    virtual QList<PimCommon::defaultTemplate> defaultTemplates();
+    virtual QVector<PimCommon::defaultTemplate> defaultTemplates();
     virtual bool addNewTemplate(QString &templateName, QString &templateScript);
     virtual bool modifyTemplate(QString &templateName, QString &templateScript, bool defaultTemplate);
 
@@ -76,5 +76,5 @@ private:
     Q_PRIVATE_SLOT( d, void slotDownloadTemplates() )
 };
 }
-
+Q_DECLARE_TYPEINFO(PimCommon::defaultTemplate, Q_MOVABLE_TYPE);
 #endif // TEMPLATELISTWIDGET_H

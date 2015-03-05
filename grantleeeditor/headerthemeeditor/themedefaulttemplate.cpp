@@ -20,9 +20,9 @@
 
 #include <KLocale>
 
-QList<PimCommon::defaultTemplate> ThemeDefaultTemplate::defaultTemplates()
+QVector<PimCommon::defaultTemplate> ThemeDefaultTemplate::defaultTemplates()
 {
-    QList<PimCommon::defaultTemplate> lst;
+    QVector<PimCommon::defaultTemplate> lst;
     PimCommon::defaultTemplate tmp;
     tmp.name = i18n("Subject");
     tmp.text = QString::fromLatin1("{% if header.subject %}\n"

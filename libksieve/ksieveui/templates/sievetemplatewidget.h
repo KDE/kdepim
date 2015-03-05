@@ -32,7 +32,7 @@ public:
     explicit SieveTemplateListWidget(const QString &configName, QWidget *parent = 0);
     ~SieveTemplateListWidget();
 
-    QList<PimCommon::defaultTemplate> defaultTemplates();
+    QVector<PimCommon::defaultTemplate> defaultTemplates();
     bool addNewTemplate(QString &templateName, QString &templateScript);
     bool modifyTemplate(QString &templateName, QString &templateScript, bool defaultTemplate);
     void setSieveCapabilities(const QStringList &capabilities);
