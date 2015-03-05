@@ -146,6 +146,7 @@ set(libmailcommon_tag_SRCS
 
 set(libmailcommon_widget_SRCS
   widgets/redirectdialog.cpp
+  widgets/redirectwidget.cpp
   widgets/regexplineedit.cpp
   widgets/favoritecollectionwidget.cpp
 )

@@ -30,11 +30,7 @@
 #include "redirectdialog.h"
 #include "kernel/mailkernel.h"
 
-#include <messagecomposer/composer/composerlineedit.h>
-
-#include <messageviewer/utils/autoqpointer.h>
-
-#include <Akonadi/Contact/EmailAddressSelectionDialog>
+#include "redirectwidget.h"
 
 #include <KPIMUtils/Email>
 #include <KDE/KPIMIdentities/Identity>
@@ -60,74 +56,6 @@
 
 using namespace MailCommon;
 
-RedirectWidget::RedirectWidget(QWidget *parent)
-    : QWidget(parent)
-{
-    QHBoxLayout *hbox = new QHBoxLayout;
-    hbox->setSpacing( 0 );
-    hbox->setMargin( 0 );
-    hbox->setAlignment(Qt::AlignRight);
-    setLayout(hbox);
-
-    mEdit = new MessageComposer::ComposerLineEdit( true );
-    mEdit->setRecentAddressConfig( KernelIf->config().data() );
-    mEdit->setMinimumWidth( 300 );
-    mEdit->setClearButtonShown( true );
-    hbox->addWidget(mEdit);
-
-    QPushButton *BtnTo = new QPushButton( QString() );
-    BtnTo->setIcon( KIcon( QLatin1String("help-contents") ) );
-    BtnTo->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
-    BtnTo->setMinimumSize( BtnTo->sizeHint() * 1.2 );
-    BtnTo->setToolTip( i18n( "Use the Address-Selection Dialog" ) );
-    BtnTo->setWhatsThis( i18n( "This button opens a separate dialog "
-                               "where you can select recipients out "
-                               "of all available addresses." ) );
-    hbox->addWidget(BtnTo);
-    connect( BtnTo, SIGNAL(clicked()), SLOT(slotAddressSelection()) );
-
-    connect( mEdit, SIGNAL(textChanged(QString)), SIGNAL(addressChanged(QString)) );
-}
-
-RedirectWidget::~RedirectWidget()
-{
-
-}
-
-QString RedirectWidget::resend()
-{
-    mResendStr = mEdit->text();
-    return mResendStr;
-}
-
-void RedirectWidget::setFocus()
-{
-    mEdit->setFocus();
-}
-
-void RedirectWidget::slotAddressSelection()
-{
-    MessageViewer::AutoQPointer<Akonadi::EmailAddressSelectionDialog> dlg(
-                new Akonadi::EmailAddressSelectionDialog( this ) );
-
-    dlg->view()->view()->setSelectionMode( QAbstractItemView::MultiSelection );
-
-    mResendStr = mEdit->text();
-
-    if ( dlg->exec() != KDialog::Rejected && dlg ) {
-        QStringList addresses;
-        foreach ( const Akonadi::EmailAddressSelection &selection, dlg->selectedAddresses() ) {
-            addresses << selection.quotedEmail();
-        }
-
-        if ( !mResendStr.isEmpty() ) {
-            addresses.prepend( mResendStr );
-        }
-
-        mEdit->setText( addresses.join( QLatin1String(", ") ) );
-        mEdit->setModified( true );
-    }
-}
 
 
 class RedirectDialog::Private
