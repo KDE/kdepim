@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "mergecontactwidgetlisttest.h"
 #include "../manualmerge/mergecontactwidgetlist.h"
 #include <qtest.h>
@@ -52,7 +51,7 @@ void MergeContactWidgetListTest::shouldCleanListWhenSetItems()
     Addressee address;
     Akonadi::Item item;
     address.setName(QLatin1String("foo1"));
-    item.setPayload<Addressee>( address );
+    item.setPayload<Addressee>(address);
     lst << item;
     w.fillListContact(lst);
     QCOMPARE(w.count(), 1);

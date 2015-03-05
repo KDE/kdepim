@@ -128,15 +128,15 @@ static void loadPlugins()
             const char *type = plugin->type(i);
             if (!type || !*type) {
                 qCWarning(MESSAGEVIEWER_LOG) << "BodyPartFormatterFactory: plugin" << *it
-                           << "returned empty type specification for index"
-                           << i;
+                                             << "returned empty type specification for index"
+                                             << i;
                 break;
             }
             const char *subtype = plugin->subtype(i);
             if (!subtype || !*subtype) {
                 qCWarning(MESSAGEVIEWER_LOG) << "BodyPartFormatterFactory: plugin" << *it
-                           << "returned empty subtype specification for index"
-                           << i;
+                                             << "returned empty subtype specification for index"
+                                             << i;
                 break;
             }
             insertBodyPartFormatter(type, subtype, bfp);
@@ -196,7 +196,7 @@ const Interface::BodyPartFormatter *BodyPartFormatterFactory::createFor(const ch
 
     if (!(*subtype_it).second) {
         qCWarning(MESSAGEVIEWER_LOG) << "BodyPartFormatterFactory: a null bodypart formatter sneaked in for \""
-                   << type << "/" << subtype << "\"!";
+                                     << type << "/" << subtype << "\"!";
     }
 
     return (*subtype_it).second;

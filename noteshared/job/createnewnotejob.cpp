@@ -133,7 +133,7 @@ void CreateNewNoteJob::slotFetchCollection(KJob *job)
             }
         }
         Akonadi::Item newItem;
-        newItem.setMimeType( Akonadi::NoteUtils::noteMimeType() );
+        newItem.setMimeType(Akonadi::NoteUtils::noteMimeType());
 
         KMime::Message::Ptr newPage = KMime::Message::Ptr(new KMime::Message());
 

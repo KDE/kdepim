@@ -19,7 +19,7 @@
 #include "libkleo/kleo/enum.h"
 
 using namespace KAddressBookGrantlee;
-inline QString loadCustom( const KContacts::Addressee &contact, const QString &key )
+inline QString loadCustom(const KContacts::Addressee &contact, const QString &key)
 {
     return contact.custom(QStringLiteral("KADDRESSBOOK"), key);
 }

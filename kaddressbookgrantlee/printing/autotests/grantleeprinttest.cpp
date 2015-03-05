@@ -151,12 +151,12 @@ void GrantleePrintTest::shouldDisplayContactInfo()
     address.setSuffix(QStringLiteral("foo-suffix"));
     address.setPrefix(QStringLiteral("foo-prefix"));
     address.setDepartment(QStringLiteral("foo-department"));
-    address.insertCustom( QStringLiteral( "KADDRESSBOOK" ), QStringLiteral( "X-Office" ), QString(QStringLiteral("foo-office")));
-    address.insertCustom( QStringLiteral( "KADDRESSBOOK" ), QStringLiteral( "X-Profession" ) , QString(QStringLiteral("foo-profession")));
-    address.insertCustom( QStringLiteral( "KADDRESSBOOK" ), QStringLiteral( "X-Office" ) , QString(QStringLiteral("foo-office")));
-    address.insertCustom( QStringLiteral( "KADDRESSBOOK" ), QStringLiteral( "X-ManagersName" ) , QString(QStringLiteral("foo-managersname")));
-    address.insertCustom( QStringLiteral( "KADDRESSBOOK" ), QStringLiteral( "X-AssistantsName" ) , QString(QStringLiteral("foo-assistantsname")));
-    address.insertCustom( QStringLiteral( "KADDRESSBOOK" ), QStringLiteral( "X-SpousesName" ) , QString(QStringLiteral("foo-spousesname")));
+    address.insertCustom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("X-Office"), QString(QStringLiteral("foo-office")));
+    address.insertCustom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("X-Profession") , QString(QStringLiteral("foo-profession")));
+    address.insertCustom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("X-Office") , QString(QStringLiteral("foo-office")));
+    address.insertCustom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("X-ManagersName") , QString(QStringLiteral("foo-managersname")));
+    address.insertCustom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("X-AssistantsName") , QString(QStringLiteral("foo-assistantsname")));
+    address.insertCustom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("X-SpousesName") , QString(QStringLiteral("foo-spousesname")));
 
     lst << address;
     grantleePrint->setContent(QString::fromLatin1("{% if contacts %}{% for contact in contacts %}{% if contact.%1 %}{{ contact.%1 }}{% endif %}{% endfor %}{% endif %}").arg(variable));

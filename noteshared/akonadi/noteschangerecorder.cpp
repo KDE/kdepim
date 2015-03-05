@@ -43,7 +43,7 @@ NotesChangeRecorder::NotesChangeRecorder(QObject *parent)
     mChangeRecorder->fetchCollectionStatistics(true);
     mChangeRecorder->setCollectionMonitored(Akonadi::Collection::root());
     mChangeRecorder->collectionFetchScope().setIncludeStatistics(true);
-    mChangeRecorder->setMimeTypeMonitored( Akonadi::NoteUtils::noteMimeType() );
+    mChangeRecorder->setMimeTypeMonitored(Akonadi::NoteUtils::noteMimeType());
 }
 
 Akonadi::ChangeRecorder *NotesChangeRecorder::changeRecorder() const

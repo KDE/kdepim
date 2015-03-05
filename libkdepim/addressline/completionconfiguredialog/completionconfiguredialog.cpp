@@ -55,7 +55,6 @@ CompletionConfigureDialog::CompletionConfigureDialog(QWidget *parent)
     mBlackListBalooWidget->setObjectName(QLatin1String("blacklistbaloo_widget"));
     mTabWidget->addTab(mBlackListBalooWidget, i18n("Blacklist address email"));
 
-
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     buttonBox->setObjectName(QStringLiteral("buttonbox"));
     connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotSave()));

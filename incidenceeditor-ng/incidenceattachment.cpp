@@ -253,7 +253,7 @@ void IncidenceAttachment::saveAttachment(QListWidgetItem *item)
 
     // get the saveas file name
     QString saveAsFile = QFileDialog::getSaveFileName(0, i18nc("@title", "Save Attachment"),
-                             att->label());
+                         att->label());
 
     if (saveAsFile.isEmpty() ||
             (QFile(saveAsFile).exists() &&

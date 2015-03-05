@@ -20,4 +20,3 @@
 #include "noteshared_debug.h"
 Q_LOGGING_CATEGORY(NOTESHARED_LOG, "log_noteshared")
 
-

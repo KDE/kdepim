@@ -207,13 +207,13 @@ void ComposerLineEdit::groupDropExpandResult(KJob *job)
 void ComposerLineEdit::contextMenuEvent(QContextMenuEvent *e)
 {
     QPointer<QMenu> popup = createStandardContextMenu();
-    if ( popup ) { // can be 0 on platforms with only a touch interface
+    if (popup) {   // can be 0 on platforms with only a touch interface
         if (isCompletionEnabled()) {
             popup->addSeparator();
-            QAction* act = popup->addAction( i18n( "Edit Recent Addresses..." ));
+            QAction *act = popup->addAction(i18n("Edit Recent Addresses..."));
             connect(act, &QAction::triggered, this, &ComposerLineEdit::editRecentAddresses);
         }
-        popup->exec( e->globalPos() );
+        popup->exec(e->globalPos());
         delete popup;
     }
 }
@@ -221,11 +221,11 @@ void ComposerLineEdit::contextMenuEvent(QContextMenuEvent *e)
 
 void ComposerLineEdit::editRecentAddresses()
 {
-    MessageViewer::AutoQPointer<KPIM::RecentAddressDialog> dlg( new KPIM::RecentAddressDialog( this ) );
-    dlg->setAddresses( KPIM::RecentAddresses::self( m_recentAddressConfig )->addresses() );
-    if ( dlg->exec() && dlg ) {
+    MessageViewer::AutoQPointer<KPIM::RecentAddressDialog> dlg(new KPIM::RecentAddressDialog(this));
+    dlg->setAddresses(KPIM::RecentAddresses::self(m_recentAddressConfig)->addresses());
+    if (dlg->exec() && dlg) {
         if (dlg->wasChanged()) {
-            KPIM::RecentAddresses::self( m_recentAddressConfig )->clear();
+            KPIM::RecentAddresses::self(m_recentAddressConfig)->clear();
             dlg->addAddresses(m_recentAddressConfig);
             loadContacts();
         }
@@ -238,7 +238,7 @@ void ComposerLineEdit::loadContacts()
     const QString recentAddressGroupName = i18n("Recent Addresses");
     if (MessageComposerSettings::self()->showRecentAddressesInComposer()) {
         const QStringList recent =
-                cleanupEmailList(KPIM::RecentAddresses::self( m_recentAddressConfig )->addresses());
+            cleanupEmailList(KPIM::RecentAddresses::self(m_recentAddressConfig)->addresses());
         QStringList::ConstIterator it = recent.constBegin();
         QString name, email;
 

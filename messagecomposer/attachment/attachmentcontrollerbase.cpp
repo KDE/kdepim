@@ -606,17 +606,17 @@ void AttachmentControllerBase::showContextMenu()
     const bool enableEditAction = (numberOfParts == 1) &&
                                   (!d->selectedParts.first()->isMessageOrMessageCollection());
 
-    if(numberOfParts>0) {
+    if (numberOfParts > 0) {
         if (numberOfParts == 1) {
             const QString mimetype = QString::fromLatin1(d->selectedParts.first()->mimeType());
-            const QStringList parentMimeType = KMimeType::mimeType( mimetype )->allParentMimeTypes();
+            const QStringList parentMimeType = KMimeType::mimeType(mimetype)->allParentMimeTypes();
             if ((mimetype == QLatin1String("text/plain")) ||
                     (mimetype == QLatin1String("image/png")) ||
                     (mimetype == QLatin1String("image/jpeg")) ||
                     parentMimeType.contains(QLatin1String("text/plain")) ||
                     parentMimeType.contains(QLatin1String("image/png")) ||
                     parentMimeType.contains(QLatin1String("image/jpeg"))
-                    ) {
+               ) {
                 menu->addAction(d->viewContextAction);
             }
             d->createOpenWithMenu(menu, d->selectedParts.first());
@@ -678,7 +678,7 @@ void AttachmentControllerBase::openWith(KService::Ptr offer)
     QList<QUrl> lst;
     QUrl url = QUrl::fromLocalFile(tempFile->fileName());
     lst.append(url);
-    tempFile->setPermissions( QFile::ReadUser );
+    tempFile->setPermissions(QFile::ReadUser);
     bool result = false;
     if (offer) {
         result = KRun::run(*offer, lst, d->wParent, false);
@@ -704,7 +704,7 @@ void AttachmentControllerBase::openAttachment(AttachmentPart::Ptr part)
                            i18n("Unable to open attachment"));
         return;
     }
-    tempFile->setPermissions( QFile::ReadUser );
+    tempFile->setPermissions(QFile::ReadUser);
     bool success = KRun::runUrl(QUrl::fromLocalFile(tempFile->fileName()),
                                 QString::fromLatin1(part->mimeType()),
                                 d->wParent,
@@ -794,7 +794,7 @@ void AttachmentControllerBase::saveAttachmentAs(AttachmentPart::Ptr part)
         pname = i18n("unnamed");
     }
 
-    QUrl url = QFileDialog::getSaveFileUrl(d->wParent,pname, i18n("Save Attachment As"));
+    QUrl url = QFileDialog::getSaveFileUrl(d->wParent, pname, i18n("Save Attachment As"));
 
     if (url.isEmpty()) {
         qCDebug(MESSAGECOMPOSER_LOG) << "Save Attachment As dialog canceled.";

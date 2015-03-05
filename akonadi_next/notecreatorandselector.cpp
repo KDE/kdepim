@@ -82,8 +82,8 @@ void NoteCreatorAndSelector::trySelectCollection()
 
 void NoteCreatorAndSelector::doCreateNote()
 {
-  Item newItem;
-  newItem.setMimeType( Akonadi::NoteUtils::noteMimeType()  );
+    Item newItem;
+    newItem.setMimeType(Akonadi::NoteUtils::noteMimeType());
 
     KMime::Message::Ptr newPage = KMime::Message::Ptr(new KMime::Message());
 

@@ -20,4 +20,3 @@
 #include "kwatchgnupg_debug.h"
 Q_LOGGING_CATEGORY(KWATCHGNUPG_LOG, "log_kwatchgnupg")
 
-

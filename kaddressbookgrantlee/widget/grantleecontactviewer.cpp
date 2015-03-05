@@ -41,7 +41,7 @@ QString GrantleeContactViewer::kaddressBookAbsoluteThemePath()
     if (themeName.isEmpty()) {
         themeName = QLatin1String("default");
     }
-    const QString absolutePath = GrantleeTheme::GrantleeThemeManager::pathFromThemes(QLatin1String("kaddressbook/viewertemplates/"), themeName, QLatin1String( "theme.desktop" ));
+    const QString absolutePath = GrantleeTheme::GrantleeThemeManager::pathFromThemes(QLatin1String("kaddressbook/viewertemplates/"), themeName, QLatin1String("theme.desktop"));
     return absolutePath;
 }
 

@@ -20,4 +20,3 @@
 #include "messagecore_debug.h"
 Q_LOGGING_CATEGORY(MESSAGECORE_LOG, "log_messacore")
 
-

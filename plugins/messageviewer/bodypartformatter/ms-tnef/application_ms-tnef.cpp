@@ -162,14 +162,13 @@ public:
             const QString dir = bodyPart->nodeHelper()->createTempDir(QLatin1String("ktnef-") + QString::number(i));
             parser.extractFileTo(att->name(), dir);
 
-
-        // falling back to internal TNEF attachement name if no filename is given for the attached file
-        // this follows the logic of KTNEFParser::extractFileTo(...)
-        QString attFileName = att->fileName();
-        if ( attFileName.isEmpty() ) {
-          attFileName = att->name();
-        }
-        bodyPart->nodeHelper()->addTempFile( dir + QDir::separator() + attFileName );
+            // falling back to internal TNEF attachement name if no filename is given for the attached file
+            // this follows the logic of KTNEFParser::extractFileTo(...)
+            QString attFileName = att->fileName();
+            if (attFileName.isEmpty()) {
+                attFileName = att->name();
+            }
+            bodyPart->nodeHelper()->addTempFile(dir + QDir::separator() + attFileName);
             const QString href = QLatin1String("file:") + QString::fromLatin1(QUrl::toPercentEncoding(dir + QDir::separator() + att->name()));
 
             const QString iconName = MessageViewer::Util::fileNameForMimetype(att->mimeTag(),

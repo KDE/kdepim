@@ -20,4 +20,3 @@
 #include "vcard_debug.h"
 Q_LOGGING_CATEGORY(VCARD_LOG, "log_vcard")
 
-

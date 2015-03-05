@@ -1651,7 +1651,7 @@ bool ObjectTreeParser::processMultiPartSignedSubtype(KMime::Content *node, Proce
     const QString signatureContentType = QLatin1String(signature->contentType()->mimeType().toLower());
     if (protocolContentType.isEmpty()) {
         qCWarning(MESSAGEVIEWER_LOG) << "Message doesn't set the protocol for the multipart/signed content-type, "
-                   "using content-type of the signature:" << signatureContentType;
+                                     "using content-type of the signature:" << signatureContentType;
         protocolContentType = signatureContentType;
     }
 

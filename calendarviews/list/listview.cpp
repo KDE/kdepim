@@ -164,8 +164,7 @@ public:
     bool visit(Event::Ptr) Q_DECL_OVERRIDE;
     bool visit(Todo::Ptr) Q_DECL_OVERRIDE;
     bool visit(Journal::Ptr) Q_DECL_OVERRIDE;
-    bool visit(FreeBusy::Ptr) Q_DECL_OVERRIDE
-    {
+    bool visit(FreeBusy::Ptr) Q_DECL_OVERRIDE {
         // to inhibit hidden virtual compile warning
         return true;
     };

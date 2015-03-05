@@ -20,4 +20,3 @@
 #include "akonadinext_debug.h"
 Q_LOGGING_CATEGORY(AKONADINEXT_LOG, "log_akonadinext")
 
-

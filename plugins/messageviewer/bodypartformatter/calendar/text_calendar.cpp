@@ -155,8 +155,7 @@ public:
     KMInvitationFormatterHelper(Interface::BodyPart *bodyPart,
                                 const KCalCore::MemoryCalendar::Ptr &calendar)
         : mBodyPart(bodyPart), mCalendar(calendar) {}
-    QString generateLinkURL(const QString &id) Q_DECL_OVERRIDE
-    {
+    QString generateLinkURL(const QString &id) Q_DECL_OVERRIDE {
         return mBodyPart->makeLink(id);
     }
 
@@ -862,8 +861,8 @@ public:
 
         Incidence::Ptr incidence = stringToIncidence(iCal);
         qCDebug(TEXT_CALENDAR_LOG) << "Handling invitation: uid is : " << incidence->uid()
-                 << "; schedulingId is:" << incidence->schedulingID()
-                 << "; Attendee::PartStat = " << status;
+                                   << "; schedulingId is:" << incidence->schedulingID()
+                                   << "; Attendee::PartStat = " << status;
 
         // get comment for tentative acceptance
         if (askForComment(status)) {

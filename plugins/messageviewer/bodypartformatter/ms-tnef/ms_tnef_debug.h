@@ -23,5 +23,5 @@
 #include <QLoggingCategory>
 Q_DECLARE_LOGGING_CATEGORY(MS_TNEF_LOG)
 
-#endif 
+#endif
 

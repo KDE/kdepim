@@ -20,4 +20,3 @@
 #include "ms_tnef_debug.h"
 Q_LOGGING_CATEGORY(MS_TNEF_LOG, "log_ms_tnef")
 
-

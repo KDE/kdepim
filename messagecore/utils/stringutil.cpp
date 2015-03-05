@@ -1090,8 +1090,8 @@ QString stripOffPrefixes(const QString &subject)
         }
     } else {
         qCWarning(MESSAGECORE_LOG) << "bigRegExp = \""
-                   << bigRegExp << "\"\n"
-                   << "prefix regexp is invalid!";
+                                   << bigRegExp << "\"\n"
+                                   << "prefix regexp is invalid!";
     }
 
     return subject;

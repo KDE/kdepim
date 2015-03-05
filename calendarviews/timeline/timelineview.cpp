@@ -155,15 +155,15 @@ class GanttItemDelegate : public KDGantt::ItemDelegate
 {
     void paintGanttItem(QPainter *painter,
                         const KDGantt::StyleOptionGanttItem &opt,
-                        const QModelIndex &idx) Q_DECL_OVERRIDE
-    {
+                        const QModelIndex &idx) Q_DECL_OVERRIDE {
         painter->setRenderHints(QPainter::Antialiasing);
-        if (!idx.isValid()) {
+        if (!idx.isValid())
+        {
             return;
         }
 
         KDGantt::ItemType type = static_cast<KDGantt::ItemType>(
-                                     idx.model()->data(idx, KDGantt::ItemTypeRole).toInt());
+            idx.model()->data(idx, KDGantt::ItemTypeRole).toInt());
 
         QString txt = idx.model()->data(idx, Qt::DisplayRole).toString();
         QRectF itemRect = opt.itemRect;
@@ -172,9 +172,10 @@ class GanttItemDelegate : public KDGantt::ItemDelegate
         boundingRect.setHeight(itemRect.height());
 
         QBrush brush = defaultBrush(type);
-        if (opt.state & QStyle::State_Selected) {
+        if (opt.state & QStyle::State_Selected)
+        {
             QLinearGradient selectedGrad(0., 0., 0.,
-                                         QApplication::fontMetrics().height());
+            QApplication::fontMetrics().height());
             selectedGrad.setColorAt(0., Qt::red);
             selectedGrad.setColorAt(1., Qt::darkRed);
 
@@ -187,7 +188,8 @@ class GanttItemDelegate : public KDGantt::ItemDelegate
         painter->setPen(defaultPen(type));
         painter->setBrushOrigin(itemRect.topLeft());
 
-        switch (type) {
+        switch (type)
+        {
         case KDGantt::TypeTask:
             if (itemRect.isValid()) {
                 QRectF r = itemRect;

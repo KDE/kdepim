@@ -48,7 +48,7 @@ QWebElement TableHelper::tableBodyWebElement(const QWebElement &element)
     if (tagName == tableStr()) {
         QWebElement tableElement = element.firstChild();
         while (!tableElement.isNull()) {
-            if ( tableElement.tagName().toLower() == tbodyStr() ) {
+            if (tableElement.tagName().toLower() == tbodyStr()) {
                 return tableElement;
             }
             tableElement = tableElement.nextSibling();
@@ -60,7 +60,7 @@ QWebElement TableHelper::tableBodyWebElement(const QWebElement &element)
         QWebElement e = element;
         do {
             e = e.parent();
-        } while( (e.tagName().toLower() != tbodyStr()) && !e.isNull() );
+        } while ((e.tagName().toLower() != tbodyStr()) && !e.isNull());
         return e;
     }
 }
@@ -76,7 +76,7 @@ QWebElement TableHelper::rowWebElement(const QWebElement &element)
         QWebElement e = element;
         do {
             e = e.parent();
-        } while( (e.tagName().toLower() != trStr()) && !e.isNull() );
+        } while ((e.tagName().toLower() != trStr()) && !e.isNull());
         return e;
     }
 }
@@ -89,7 +89,7 @@ QWebElement TableHelper::tableWebElement(const QWebElement &element)
         QWebElement e = element;
         do {
             e = e.parent();
-        } while(e.tagName().toLower() != tableStr());
+        } while (e.tagName().toLower() != tableStr());
         return e;
     }
 }
@@ -172,7 +172,7 @@ int TableHelper::currentColumn(const QWebElement &element)
     QWebElement e = element;
     do {
         e = e.parent();
-    } while( (e.tagName().toLower() != trStr()) && !e.isNull() );
+    } while ((e.tagName().toLower() != trStr()) && !e.isNull());
 
     //TODO
     return 0;
@@ -183,11 +183,11 @@ void TableHelper::removeCellContentsFromCurrentRow(const QWebElement &element)
     QWebElement e = element;
     do {
         e = e.parent();
-    } while( (e.tagName().toLower() != trStr()) && !e.isNull() );
+    } while ((e.tagName().toLower() != trStr()) && !e.isNull());
     if (!e.isNull()) {
         QWebElement cellElement = e.firstChild();
         while (!cellElement.isNull()) {
-            if (cellElement.tagName().toLower() == tdStr() ) {
+            if (cellElement.tagName().toLower() == tdStr()) {
                 cellElement.setInnerXml(QStringLiteral("<BR>"));
             }
             cellElement = cellElement.nextSibling();

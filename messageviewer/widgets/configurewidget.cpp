@@ -137,7 +137,7 @@ void ConfigureWidget::readCurrentOverrideCodec()
     if (i == encodings.size()) {
         // the current value of overrideCharacterEncoding is an unknown encoding => reset to Auto
         qCWarning(MESSAGEVIEWER_LOG) << "Unknown override character encoding" << currentOverrideEncoding
-                   << ". Resetting to Auto.";
+                                     << ". Resetting to Auto.";
         mSettingsUi->overrideCharacterEncoding->setCurrentIndex(0);
         MessageCore::GlobalSettings::self()->setOverrideCharacterEncoding(QString());
     }

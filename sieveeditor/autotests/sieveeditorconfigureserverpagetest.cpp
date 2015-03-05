@@ -35,14 +35,14 @@ SieveEditorConfigureServerPageTest::~SieveEditorConfigureServerPageTest()
 void SieveEditorConfigureServerPageTest::shouldHaveDefaultValue()
 {
     SieveEditorConfigureServerPage w;
-    QPushButton *button = qFindChild<QPushButton*>(&w, QLatin1String("configure_button"));
+    QPushButton *button = qFindChild<QPushButton *>(&w, QLatin1String("configure_button"));
     QVERIFY(button);
 }
 
 void SieveEditorConfigureServerPageTest::shouldEmitSignalWhenClickOnButton()
 {
     SieveEditorConfigureServerPage w;
-    QPushButton *button = qFindChild<QPushButton*>(&w, QLatin1String("configure_button"));
+    QPushButton *button = qFindChild<QPushButton *>(&w, QLatin1String("configure_button"));
     QSignalSpy spy(&w, SIGNAL(configureClicked()));
     QTest::mouseClick(button, Qt::LeftButton);
     QCOMPARE(spy.count(), 1);

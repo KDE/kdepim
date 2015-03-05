@@ -601,29 +601,30 @@ void ViewerPrivate::showAttachmentPopup(KMime::Content *node, const QString &nam
     }
     const QString contentTypeStr = QLatin1String(node->contentType()->mimeType());
 
-    QSignalMapper *attachmentMapper = new QSignalMapper( menu );
-    connect( attachmentMapper, SIGNAL(mapped(int)),
-             this, SLOT(slotHandleAttachment(int)) );
+    QSignalMapper *attachmentMapper = new QSignalMapper(menu);
+    connect(attachmentMapper, SIGNAL(mapped(int)),
+            this, SLOT(slotHandleAttachment(int)));
 
     action = menu->addAction(SmallIcon(QLatin1String("document-open")), i18nc("to open", "Open"));
     action->setEnabled(!deletedAttachment);
     connect(action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()));
     attachmentMapper->setMapping(action, Viewer::Open);
-    if(!deletedAttachment)
-        createOpenWithMenu( menu, contentTypeStr,true );
+    if (!deletedAttachment) {
+        createOpenWithMenu(menu, contentTypeStr, true);
+    }
 
-    const QStringList parentMimeType = KMimeType::mimeType( contentTypeStr )->allParentMimeTypes();
+    const QStringList parentMimeType = KMimeType::mimeType(contentTypeStr)->allParentMimeTypes();
     if ((contentTypeStr == QLatin1String("text/plain")) ||
             (contentTypeStr == QLatin1String("image/png")) ||
             (contentTypeStr == QLatin1String("image/jpeg")) ||
             parentMimeType.contains(QLatin1String("text/plain")) ||
             parentMimeType.contains(QLatin1String("image/png")) ||
             parentMimeType.contains(QLatin1String("image/jpeg"))
-            ) {
-        action = menu->addAction(i18nc("to view something", "View") );
+       ) {
+        action = menu->addAction(i18nc("to view something", "View"));
         action->setEnabled(!deletedAttachment);
-        connect( action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()) );
-        attachmentMapper->setMapping( action, Viewer::View );
+        connect(action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()));
+        attachmentMapper->setMapping(action, Viewer::View);
     }
 
     const bool attachmentInHeader = mViewer->isAttachmentInjectionPoint(globalPos);
@@ -1285,7 +1286,7 @@ void ViewerPrivate::setOverrideEncoding(const QString &encoding)
             if (i == encodings.size()) {
                 // the value of encoding is unknown => use Auto
                 qCWarning(MESSAGEVIEWER_LOG) << "Unknown override character encoding" << encoding
-                           << ". Using Auto instead.";
+                                             << ". Using Auto instead.";
                 mSelectEncodingAction->setCurrentItem(0);
                 mOverrideEncoding.clear();
             }

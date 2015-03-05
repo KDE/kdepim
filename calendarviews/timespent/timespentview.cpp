@@ -47,8 +47,7 @@ public:
         : QWidget(parent), mTimeSpentView(parent) {}
     ~TimeSpentWidget() {}
 
-    void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE
-    {
+    void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE {
         QPainter p(this);
         p.fillRect(e->rect(), Qt::white);
         int margin = 10;
@@ -67,12 +66,13 @@ public:
         p.setFont(oldFont);
 
         QString dateText;
-        if (mTimeSpentView->mStartDate.daysTo(mTimeSpentView->mEndDate) < 1) {
+        if (mTimeSpentView->mStartDate.daysTo(mTimeSpentView->mEndDate) < 1)
+        {
             dateText = KLocale::global()->formatDate(mTimeSpentView->mStartDate);
         } else {
             dateText = i18nc("Date from - to", "%1 - %2",
-                             KLocale::global()->formatDate(mTimeSpentView->mStartDate),
-                             KLocale::global()->formatDate(mTimeSpentView->mEndDate));
+            KLocale::global()->formatDate(mTimeSpentView->mStartDate),
+            KLocale::global()->formatDate(mTimeSpentView->mEndDate));
         }
         font.setPixelSize(20);
         font.setBold(true);
@@ -85,15 +85,16 @@ public:
 
         int total = 0;
 
-        foreach (const KCalCore::Event::Ptr &e, mEventList) {
+        foreach (const KCalCore::Event::Ptr &e, mEventList)
+        {
             Q_ASSERT(e);
             KDateTime selectedStart(mTimeSpentView->mStartDate,
-                                    QTime(0, 0),
-                                    e->dtStart().timeSpec());
+            QTime(0, 0),
+            e->dtStart().timeSpec());
 
             KDateTime selectedEnd(mTimeSpentView->mEndDate.addDays(1),
-                                  QTime(0, 0),
-                                  e->dtEnd().timeSpec());
+            QTime(0, 0),
+            e->dtEnd().timeSpec());
 
             KDateTime start;
             KDateTime end;
@@ -107,16 +108,16 @@ public:
                 // timesInInterval only return events that have their start inside the interval
                 // so we resize the interval by -eventDuration
                 KCalCore::DateTimeList times = e->recurrence()->timesInInterval(
-                                                   selectedStart.addSecs(-eventDuration), selectedEnd);
+                    selectedStart.addSecs(-eventDuration), selectedEnd);
 
                 foreach (const KDateTime &kdt, times) {
                     // either the event's start or the event's end must be in the view's interval
                     if (kdt >= selectedStart ||
-                            kdt.addSecs(eventDuration) >= selectedStart) {
+                    kdt.addSecs(eventDuration) >= selectedStart) {
 
                         start = kdt > selectedStart ? kdt : selectedStart;
                         end   = kdt.addSecs(eventDuration) < selectedEnd ?
-                                kdt.addSecs(eventDuration) : selectedEnd;
+                        kdt.addSecs(eventDuration) : selectedEnd;
                         totalDuration += start.secsTo(end);
                     }
                 }
@@ -149,7 +150,8 @@ public:
         int lineHeight = fm.boundingRect(QLatin1String("No category")).height();
         int totalLineHeight = lineHeight + 2; // vertical margin included
 
-        while (i.hasNext()) {
+        while (i.hasNext())
+        {
             i.next();
 
             // bar

@@ -20,4 +20,3 @@
 #include "text_calendar_debug.h"
 Q_LOGGING_CATEGORY(TEXT_CALENDAR_LOG, "log_text_calendar")
 
-

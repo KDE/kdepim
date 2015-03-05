@@ -533,8 +533,8 @@ QString NodeHelper::replacePrefixes(const QString &str,
     QRegExp rx(bigRegExp, Qt::CaseInsensitive);
     if (!rx.isValid()) {
         qCWarning(MESSAGEVIEWER_LOG) << "bigRegExp = \""
-                   << bigRegExp << "\"\n"
-                   << "prefix regexp is invalid!";
+                                     << bigRegExp << "\"\n"
+                                     << "prefix regexp is invalid!";
         // try good ole Re/Fwd:
         recognized = str.startsWith(newPrefix);
     } else { // valid rx
@@ -873,7 +873,7 @@ void NodeHelper::mergeExtraNodes(KMime::Content *node)
     Q_FOREACH (KMime::Content *extra, extraNodes) {
         if (node->bodyIsMessage()) {
             qCWarning(MESSAGEVIEWER_LOG) << "Asked to attach extra content to a kmime::message, this does not make sense. Attaching to:" << node <<
-                       node->encodedContent() << "\n====== with =======\n" <<  extra << extra->encodedContent();
+                                         node->encodedContent() << "\n====== with =======\n" <<  extra << extra->encodedContent();
             continue;
         }
         KMime::Content *c = new KMime::Content(node);

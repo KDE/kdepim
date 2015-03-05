@@ -58,22 +58,21 @@ QString FilterImporterGmail::defaultFiltersSettingsPath()
 
 QString FilterImporterGmail::createUniqFilterName()
 {
-    return i18n( "Gmail filter %1", mFilterCount++ );
+    return i18n("Gmail filter %1", mFilterCount++);
 }
 
-void FilterImporterGmail::parseFilters( const QDomElement &e )
+void FilterImporterGmail::parseFilters(const QDomElement &e)
 {
     MailCommon::MailFilter *filter = new MailCommon::MailFilter();
     filter->setAutoNaming(true);
     const QString uniqName = createUniqFilterName();
-    filter->pattern()->setName( uniqName );
-    filter->setToolbarName( uniqName );
-    filter->setEnabled( true );
+    filter->pattern()->setName(uniqName);
+    filter->setToolbarName(uniqName);
+    filter->setEnabled(true);
     QByteArray fieldName;
-    for ( QDomElement ruleFilter = e.firstChildElement();
-          !ruleFilter.isNull();
-          ruleFilter = ruleFilter.nextSiblingElement() )
-    {
+    for (QDomElement ruleFilter = e.firstChildElement();
+            !ruleFilter.isNull();
+            ruleFilter = ruleFilter.nextSiblingElement()) {
         const QString tagName = ruleFilter.tagName();
         if (tagName == QLatin1String("category")) {
             if (ruleFilter.hasAttribute(QLatin1String("term"))) {
