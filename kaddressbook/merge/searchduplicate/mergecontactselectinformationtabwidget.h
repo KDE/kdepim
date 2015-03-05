@@ -35,7 +35,7 @@ public:
 
     bool tabBarVisible() const;
 
-    void setRequiresSelectInformationWidgets(const QList<KABMergeContacts::MergeConflictResult> &list, const Akonadi::Collection &col);
+    void setRequiresSelectInformationWidgets(const QVector<KABMergeContacts::MergeConflictResult> &list, const Akonadi::Collection &col);
 private:
     void addNewWidget(const MergeConflictResult &list, const Akonadi::Collection &col);
 };

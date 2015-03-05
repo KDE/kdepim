@@ -50,7 +50,7 @@ public:
 Q_SIGNALS:
     void contactMerged(const Akonadi::Item &item);
     void mergeDone();
-    void customizeMergeContact(const QList<KABMergeContacts::MergeConflictResult> &, const Akonadi::Collection &col);
+    void customizeMergeContact(const QVector<KABMergeContacts::MergeConflictResult> &, const Akonadi::Collection &col);
 
 
 private slots:
@@ -62,7 +62,7 @@ private slots:
     void slotCustomizeMergingContacts();
 private:
     void mergeContact();
-    QList<MergeConflictResult> mResultConflictList;
+    QVector<MergeConflictResult> mResultConflictList;
     QList<Akonadi::Item::List> mListContactToMerge;
     ResultDuplicateTreeWidget *mResult;
     KAddressBookGrantlee::GrantleeContactViewer *mContactViewer;
@@ -72,5 +72,7 @@ private:
     int mIndexListContact;
 };
 }
+Q_DECLARE_TYPEINFO(KABMergeContacts::MergeConflictResult, Q_MOVABLE_TYPE);
+
 
 #endif // SEARCHDUPLICATERESULTWIDGET_H
