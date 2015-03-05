@@ -99,7 +99,8 @@ void FilterImporterGmail::parseFilters( const QDomElement &e )
                 } else if (criteriaProperty == QLatin1String("doesNotHaveTheWord")) {
 
                 } else if (criteriaProperty == QLatin1String("hasAttachment")) {
-
+                } else if (criteriaProperty == QLatin1String("hasAttachment")) {
+                    fieldName = "<size>";
                 }
                 //Action
                 else if (criteriaProperty == QLatin1String("shouldArchive")) {
@@ -115,7 +116,8 @@ void FilterImporterGmail::parseFilters( const QDomElement &e )
                 } else if (criteriaProperty == QLatin1String("shouldTrash")) {
 
                 } else if (criteriaProperty == QLatin1String("neverSpam")) {
-
+                } else {
+                    qDebug() <<" unknown item "<<criteriaProperty;
                 }
             }
         }
