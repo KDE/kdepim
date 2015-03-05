@@ -35,9 +35,9 @@ SieveTemplateListWidget::SieveTemplateListWidget(const QString &configName, QWid
     : PimCommon::TemplateListWidget(configName, parent),
       mTemplateManager(Q_NULLPTR)
 {
-    setKNewStuffConfigFile(QLatin1String("ksieve_script.knsrc"));
+    setKNewStuffConfigFile(QStringLiteral("ksieve_script.knsrc"));
     loadTemplates();
-    mTemplateManager = new PimCommon::TemplateManager(QLatin1String("sieve/scripts"), this);
+    mTemplateManager = new PimCommon::TemplateManager(QStringLiteral("sieve/scripts"), this);
 }
 
 void SieveTemplateListWidget::setSieveCapabilities(const QStringList &capabilities)
@@ -53,8 +53,8 @@ QMimeData *SieveTemplateListWidget::mimeData(const QList<QListWidgetItem *> item
     QMimeData *mimeData = new QMimeData();
     QListWidgetItem *item = items.first();
     QString templateStr = item->data(TemplateListWidget::Text).toString();
-    if (!SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("imap4flags")) && templateStr.contains(QLatin1String("imap4flags"))) {
-        templateStr.replace(QLatin1String("imap4flags"), QLatin1String("imapflags"));
+    if (!SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QStringLiteral("imap4flags")) && templateStr.contains(QStringLiteral("imap4flags"))) {
+        templateStr.replace(QStringLiteral("imap4flags"), QStringLiteral("imapflags"));
     }
     mimeData->setText(templateStr);
     return mimeData;
@@ -107,7 +107,7 @@ SieveTemplateWidget::SieveTemplateWidget(const QString &title, QWidget *parent)
     QVBoxLayout *lay = new QVBoxLayout;
     QLabel *lab = new QLabel(title);
     lay->addWidget(lab);
-    mListTemplate = new SieveTemplateListWidget(QLatin1String("sievetemplaterc"));
+    mListTemplate = new SieveTemplateListWidget(QStringLiteral("sievetemplaterc"));
     mListTemplate->setWhatsThis(i18n("You can drag and drop element on editor to import template"));
     connect(mListTemplate, &SieveTemplateListWidget::insertTemplate, this, &SieveTemplateWidget::insertTemplate);
     lay->addWidget(mListTemplate);

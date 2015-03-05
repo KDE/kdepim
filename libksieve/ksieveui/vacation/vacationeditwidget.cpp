@@ -62,17 +62,17 @@ VacationEditWidget::VacationEditWidget(QWidget *parent)
     ++row;
     glay->setRowStretch(row, 1);
     mTextEdit = new PimCommon::RichTextEditorWidget(this);
-    mTextEdit->setObjectName(QLatin1String("mTextEdit"));
+    mTextEdit->setObjectName(QStringLiteral("mTextEdit"));
     mTextEdit->setAcceptRichText(false);
     glay->addWidget(mTextEdit, row, 0, 1, 2);
 
     // Start date
     ++row;
     mStartDate = new KDateComboBox(this);
-    mStartDate->setObjectName(QLatin1String("mStartDate"));
+    mStartDate->setObjectName(QStringLiteral("mStartDate"));
     mStartDate->setOptions(KDateComboBox::EditDate | KDateComboBox::SelectDate | KDateComboBox::DatePicker | KDateComboBox::DateKeywords);
     mStartDateLabel = new QLabel(i18n("&Start date:"), this);
-    mStartDateLabel->setObjectName(QLatin1String("mStartDateLabel"));
+    mStartDateLabel->setObjectName(QStringLiteral("mStartDateLabel"));
     mStartDateLabel->setBuddy(mStartDate);
     glay->addWidget(mStartDateLabel, row, 0);
     glay->addWidget(mStartDate, row, 1);
@@ -80,10 +80,10 @@ VacationEditWidget::VacationEditWidget(QWidget *parent)
     // End date
     ++row;
     mEndDate = new KDateComboBox(this);
-    mEndDate->setObjectName(QLatin1String("mEndDate"));
+    mEndDate->setObjectName(QStringLiteral("mEndDate"));
     mEndDate->setOptions(KDateComboBox::EditDate | KDateComboBox::SelectDate | KDateComboBox::DatePicker | KDateComboBox::DateKeywords);
     mEndDateLabel = new QLabel(i18n("&End date:"), this);
-    mEndDateLabel->setObjectName(QLatin1String("mStartDateLabel"));
+    mEndDateLabel->setObjectName(QStringLiteral("mStartDateLabel"));
     mEndDateLabel->setBuddy(mEndDate);
     glay->addWidget(mEndDateLabel, row, 0);
     glay->addWidget(mEndDate, row, 1);
@@ -100,7 +100,7 @@ VacationEditWidget::VacationEditWidget(QWidget *parent)
     mIntervalSpin->setMinimum(1);
     mIntervalSpin->setSingleStep(1);
     mIntervalSpin->setValue(defDayInterval);
-    mIntervalSpin->setObjectName(QLatin1String("mIntervalSpin"));
+    mIntervalSpin->setObjectName(QStringLiteral("mIntervalSpin"));
     mIntervalSpin->setSuffix(i18np(" day", " days", defDayInterval));
     connect(mIntervalSpin, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &VacationEditWidget::slotIntervalSpinChanged);
     QLabel *label = new QLabel(i18n("&Resend notification only after:"), this);
@@ -111,7 +111,7 @@ VacationEditWidget::VacationEditWidget(QWidget *parent)
     // "Send responses for these addresses" lineedit and label:
     ++row;
     mMailAliasesEdit = new QLineEdit(this);
-    mMailAliasesEdit->setObjectName(QLatin1String("mMailAliasesEdit"));
+    mMailAliasesEdit->setObjectName(QStringLiteral("mMailAliasesEdit"));
     mMailAliasesEdit->setClearButtonEnabled(true);
     QLabel *tmpLabel = new QLabel(i18n("&Send responses for these addresses:"), this);
     tmpLabel->setBuddy(mMailAliasesEdit);
@@ -121,20 +121,20 @@ VacationEditWidget::VacationEditWidget(QWidget *parent)
     // "Send responses also to SPAM mail" checkbox:
     ++row;
     mSpamCheck = new QCheckBox(i18n("Do not send vacation replies to spam messages"), this);
-    mSpamCheck->setObjectName(QLatin1String("mSpamCheck"));
+    mSpamCheck->setObjectName(QStringLiteral("mSpamCheck"));
     mSpamCheck->setChecked(true);
     glay->addWidget(mSpamCheck, row, 0, 1, 2);
 
     //  domain checkbox and linedit:
     ++row;
     mDomainCheck = new QCheckBox(i18n("Only react to mail coming from domain"), this);
-    mDomainCheck->setObjectName(QLatin1String("mDomainCheck"));
+    mDomainCheck->setObjectName(QStringLiteral("mDomainCheck"));
     mDomainCheck->setChecked(false);
     mDomainEdit = new QLineEdit(this);
-    mDomainEdit->setObjectName(QLatin1String("mDomainEdit"));
+    mDomainEdit->setObjectName(QStringLiteral("mDomainEdit"));
     mDomainEdit->setClearButtonEnabled(true);
     mDomainEdit->setEnabled(false);
-    mDomainEdit->setValidator(new QRegExpValidator(QRegExp(QLatin1String("[a-zA-Z0-9+-]+(?:\\.[a-zA-Z0-9+-]+)*")), mDomainEdit));
+    mDomainEdit->setValidator(new QRegExpValidator(QRegExp(QStringLiteral("[a-zA-Z0-9+-]+(?:\\.[a-zA-Z0-9+-]+)*")), mDomainEdit));
     glay->addWidget(mDomainCheck, row, 0);
     glay->addWidget(mDomainEdit, row, 1);
     connect(mDomainCheck, &QCheckBox::toggled, mDomainEdit, &QLineEdit::setEnabled);
@@ -202,7 +202,7 @@ void VacationEditWidget::setMailAliases(const AddrSpecList &aliases)
     for (AddrSpecList::const_iterator it = aliases.constBegin() ; it != end; ++it) {
         sl.push_back((*it).asString());
     }
-    mMailAliasesEdit->setText(sl.join(QLatin1String(", ")));
+    mMailAliasesEdit->setText(sl.join(QStringLiteral(", ")));
 }
 
 void VacationEditWidget::setMailAliases(const QString &aliases)
@@ -296,7 +296,7 @@ void VacationEditWidget::setDefault()
     setActivateVacation(true);
     setMessageText(VacationUtils::defaultMessageText());
     setNotificationInterval(VacationUtils::defaultNotificationInterval());
-    setMailAliases(VacationUtils::defaultMailAliases().join(QLatin1String(", ")));
+    setMailAliases(VacationUtils::defaultMailAliases().join(QStringLiteral(", ")));
     setSendForSpam(VacationUtils::defaultSendForSpam());
     setDomainName(VacationUtils::defaultDomainName());
     setDomainCheck(false);

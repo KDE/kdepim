@@ -147,8 +147,8 @@ void Vacation::slotGetResult(KManageSieve::SieveJob *job, bool success,
     if (mCheckOnly && mWasActive) {
         if (KMessageBox::questionYesNo(Q_NULLPTR, i18n("There is still an active out-of-office reply configured.\n"
                                        "Do you want to edit it?"), i18n("Out-of-office reply still active"),
-                                       KGuiItem(i18n("Edit"), QLatin1String("document-properties")),
-                                       KGuiItem(i18n("Ignore"), QLatin1String("dialog-cancel")))
+                                       KGuiItem(i18n("Edit"), QStringLiteral("document-properties")),
+                                       KGuiItem(i18n("Ignore"), QStringLiteral("dialog-cancel")))
                 == KMessageBox::Yes) {
             emit requestEditVacation();
         }
