@@ -20,9 +20,9 @@
 
 #include "snippetsmanager.h"
 
-#include "snippetdialog_p.h"
-#include "snippetsmodel_p.h"
-#include "snippetvariabledialog_p.h"
+#include "snippetdialog.h"
+#include "snippetsmodel.h"
+#include "snippetvariabledialog.h"
 
 #include <KAction>
 #include <KActionCollection>
