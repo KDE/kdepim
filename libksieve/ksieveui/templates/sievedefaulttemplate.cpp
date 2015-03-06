@@ -47,14 +47,14 @@ QVector<PimCommon::defaultTemplate> KSieveUi::SieveDefaultTemplate::defaultTempl
     lst << tmp;
 
     tmp.name = i18n("Flag messages");
-    tmp.text = QString::fromLatin1("require \"imap4flags\";\n"
+    tmp.text = QStringLiteral("require \"imap4flags\";\n"
                                    "if address \"From\" \"someone@example.org\" { \n"
                                    "    setflag \"\\\\Seen\";\n"
                                    "}\n");
     lst << tmp;
 
     tmp.name = i18n("Forward Message");
-    tmp.text = QString::fromLatin1("require \"copy\";\n"
+    tmp.text = QStringLiteral("require \"copy\";\n"
                                    "if header :contains \"Subject\" \"foo\" { \n"
                                    "    redirect :copy \"other@example.net\";\n"
                                    "}\n");

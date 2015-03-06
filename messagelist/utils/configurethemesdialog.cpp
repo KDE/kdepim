@@ -425,7 +425,7 @@ void ConfigureThemesDialog::Private::deleteThemeButtonClicked()
 
 void ConfigureThemesDialog::Private::importThemeButtonClicked()
 {
-    const QString filename = QFileDialog::getOpenFileName(q, i18n("Import Theme"), QString(), QString::fromLatin1("*"));
+    const QString filename = QFileDialog::getOpenFileName(q, i18n("Import Theme"), QString(), QStringLiteral("*"));
     if (!filename.isEmpty()) {
         KConfig config(filename);
 
@@ -434,7 +434,7 @@ void ConfigureThemesDialog::Private::importThemeButtonClicked()
             const int cnt = grp.readEntry("Count", 0);
             int idx = 0;
             while (idx < cnt) {
-                const QString data = grp.readEntry(QString::fromLatin1("Set%1").arg(idx), QString());
+                const QString data = grp.readEntry(QStringLiteral("Set%1").arg(idx), QString());
                 if (!data.isEmpty()) {
                     Theme *set = new Theme();
                     if (set->loadFromString(data)) {
@@ -459,7 +459,7 @@ void ConfigureThemesDialog::Private::exportThemeButtonClicked()
     if (list.isEmpty()) {
         return;
     }
-    const QString filename = QFileDialog::getSaveFileName(q, i18n("Export Theme"), QString(), QString::fromLatin1("*"));
+    const QString filename = QFileDialog::getSaveFileName(q, i18n("Export Theme"), QString(), QStringLiteral("*"));
     if (!filename.isEmpty()) {
         KConfig config(filename);
 

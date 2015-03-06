@@ -36,7 +36,7 @@ class SnippetVariableDialog : public QDialog
 public:
     SnippetVariableDialog(const QString &variableName,
                           QMap<QString, QString> *variables,
-                          QWidget *parent = 0);
+                          QWidget *parent = Q_NULLPTR);
 
     QString variableValue() const;
     bool saveVariableIsChecked() const;

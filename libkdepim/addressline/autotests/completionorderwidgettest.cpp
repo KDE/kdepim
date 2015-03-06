@@ -22,7 +22,7 @@
 #include "../completionorder/completionorderwidget.h"
 #include <KPushButton>
 #include <QTreeWidget>
-#include <qtest_kde.h>
+#include <qtest.h>
 
 CompletionOrderWidgetTest::CompletionOrderWidgetTest(QObject *parent)
     : QObject(parent)
@@ -53,4 +53,4 @@ void CompletionOrderWidgetTest::shouldHaveDefaultValue()
     QVERIFY(down->autoRepeat());
 }
 
-QTEST_KDEMAIN(CompletionOrderWidgetTest, GUI)
+QTEST_MAIN(CompletionOrderWidgetTest)

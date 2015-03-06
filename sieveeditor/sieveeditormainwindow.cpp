@@ -59,9 +59,9 @@ SieveEditorMainWindow::SieveEditorMainWindow()
     connect(mMainWidget->sieveEditorMainWidget()->tabWidget(), &QTabWidget::currentChanged, this, &SieveEditorMainWindow::slotUpdateActions);
     connect(mMainWidget->sieveEditorMainWidget(), &SieveEditorMainWidget::modeEditorChanged, this, &SieveEditorMainWindow::slotUpdateActions);
     slotSystemNetworkOnlineStateChanged(mNetworkConfigurationManager->isOnline());
-    connect(mMainWidget->sieveEditorMainWidget(), SIGNAL(undoAvailable(bool)), SLOT(slotUndoAvailable(bool)));
-    connect(mMainWidget->sieveEditorMainWidget(), SIGNAL(redoAvailable(bool)), SLOT(slotRedoAvailable(bool)));
-    connect(mMainWidget->sieveEditorMainWidget(), SIGNAL(copyAvailable(bool)), SLOT(slotCopyAvailable(bool)));
+    connect(mMainWidget->sieveEditorMainWidget(), &SieveEditorMainWidget::undoAvailable, this, &SieveEditorMainWindow::slotUndoAvailable);
+    connect(mMainWidget->sieveEditorMainWidget(), &SieveEditorMainWidget::redoAvailable, this, &SieveEditorMainWindow::slotRedoAvailable);
+    connect(mMainWidget->sieveEditorMainWidget(), &SieveEditorMainWidget::copyAvailable, this, &SieveEditorMainWindow::slotCopyAvailable);
     slotRefreshList();
 }
 

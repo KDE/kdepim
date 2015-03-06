@@ -222,28 +222,28 @@ QString CollectionTypeUtil::iconNameFromContentsType(CollectionTypeUtil::FolderC
     QString iconName;
     switch (type) {
     case CollectionTypeUtil::ContentsTypeCalendar:
-        iconName = QString::fromLatin1("view-calendar");
+        iconName = QStringLiteral("view-calendar");
         break;
     case CollectionTypeUtil::ContentsTypeContact:
-        iconName = QString::fromLatin1("view-pim-contacts");
+        iconName = QStringLiteral("view-pim-contacts");
         break;
     case CollectionTypeUtil::ContentsTypeNote:
-        iconName = QString::fromLatin1("view-pim-notes");
+        iconName = QStringLiteral("view-pim-notes");
         break;
     case CollectionTypeUtil::ContentsTypeTask:
-        iconName = QString::fromLatin1("view-pim-tasks");
+        iconName = QStringLiteral("view-pim-tasks");
         break;
     case CollectionTypeUtil::ContentsTypeJournal:
-        iconName = QString::fromLatin1("view-pim-journal");
+        iconName = QStringLiteral("view-pim-journal");
         break;
     case CollectionTypeUtil::ContentsTypeConfiguration:
-        iconName = QString::fromLatin1("configure");
+        iconName = QStringLiteral("configure");
         break;
     case CollectionTypeUtil::ContentsTypeFreebusy:
-        iconName = QString::fromLatin1("view-calendar-agenda");
+        iconName = QStringLiteral("view-calendar-agenda");
         break;
     case CollectionTypeUtil::ContentsTypeFile:
-        iconName = QString::fromLatin1("document-open");
+        iconName = QStringLiteral("document-open");
         break;
     case CollectionTypeUtil::ContentsTypeMail:
     default:

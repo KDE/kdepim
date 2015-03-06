@@ -25,7 +25,7 @@ class FilterImporterExporterGui : public QWidget
 {
     Q_OBJECT
 public:
-    explicit FilterImporterExporterGui(QWidget *parent = 0);
+    explicit FilterImporterExporterGui(QWidget *parent = Q_NULLPTR);
     ~FilterImporterExporterGui();
 private slots:
     void slotImportFilter(QAction *act);

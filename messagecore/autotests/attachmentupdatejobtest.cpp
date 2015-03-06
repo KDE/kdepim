@@ -199,8 +199,8 @@ void AttachmentUpdateJobTest::shouldHaveSameInlineStatus()
 
     // Some data.
     QByteArray data("This is short enough that compressing it is not efficient.");
-    const QString name = QString::fromLatin1("name.txt");
-    const QString description = QString::fromLatin1("description");
+    const QString name = QStringLiteral("name.txt");
+    const QString description = QStringLiteral("description");
 
     // Create the original part.
     MessageCore::AttachmentPart::Ptr origPart = MessageCore::AttachmentPart::Ptr(new MessageCore::AttachmentPart);

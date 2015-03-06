@@ -39,7 +39,7 @@ public:
         KeySequenceRole                 ///< The key sequence to activate a snippet
     };
 
-    explicit SnippetsModel(QObject *parent = 0);
+    explicit SnippetsModel(QObject *parent = Q_NULLPTR);
     ~SnippetsModel();
 
     virtual bool setData(const QModelIndex &index, const QVariant &value,

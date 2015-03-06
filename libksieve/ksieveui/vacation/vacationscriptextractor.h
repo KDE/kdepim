@@ -468,12 +468,12 @@ public:
 
     QDate endDate() const
     {
-        return date(QLatin1String("endDate"));
+        return date(QStringLiteral("endDate"));
     }
 
     QDate startDate() const
     {
-        return date(QLatin1String("startDate"));
+        return date(QStringLiteral("startDate"));
     }
 
 private:

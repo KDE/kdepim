@@ -2551,7 +2551,7 @@ QString ViewerPrivate::attachmentInjectionHtml() const
     if (headerStyle() == HeaderStyle::fancy()) {
         link += QLatin1String("<div style=\"text-align: left;\"><a href=\"") + urlHandle + QLatin1String("\"><img src=\"file:///") + imgpath + imgSrc + QLatin1String("\"/></a></div>");
         html.prepend(link);
-        html.prepend(QString::fromLatin1("<div style=\"float:left;\">%1&nbsp;</div>").arg(i18n("Attachments:")));
+        html.prepend(QStringLiteral("<div style=\"float:left;\">%1&nbsp;</div>").arg(i18n("Attachments:")));
     } else {
         link += QLatin1String("<div style=\"text-align: right;\"><a href=\"") + urlHandle + QLatin1String("\"><img src=\"file:///") + imgpath + imgSrc + QLatin1String("\"/></a></div>");
         html.prepend(link);
