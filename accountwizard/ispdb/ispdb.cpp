@@ -138,19 +138,19 @@ void Ispdb::slotResult(KJob *job)
                 mDisplayShortName = e.text();
             } else if (tagName == QLatin1String("incomingServer")
                        && e.attribute(QLatin1String("type")) == QLatin1String("imap")) {
-                server s = createServer(e);
+                Server s = createServer(e);
                 if (s.isValid()) {
                     mImapServers.append(s);
                 }
             } else if (tagName == QLatin1String("incomingServer")
                        && e.attribute(QLatin1String("type")) == QLatin1String("pop3")) {
-                server s = createServer(e);
+                Server s = createServer(e);
                 if (s.isValid()) {
                     mPop3Servers.append(s);
                 }
             } else if (tagName == QLatin1String("outgoingServer")
                        && e.attribute(QLatin1String("type")) == QLatin1String("smtp")) {
-                server s = createServer(e);
+                Server s = createServer(e);
                 if (s.isValid()) {
                     mSmtpServers.append(s);
                 }
@@ -164,15 +164,15 @@ void Ispdb::slotResult(KJob *job)
     qCDebug(ACCOUNTWIZARD_LOG) << "Domains" << mDomains;
     qCDebug(ACCOUNTWIZARD_LOG) << "Name" << mDisplayName << "(" << mDisplayShortName << ")";
     qCDebug(ACCOUNTWIZARD_LOG) << "Imap servers:";
-    foreach (const server &s, mImapServers) {
+    foreach (const Server &s, mImapServers) {
         qCDebug(ACCOUNTWIZARD_LOG) << s.hostname << s.port << s.socketType << s.username << s.authentication;
     }
     qCDebug(ACCOUNTWIZARD_LOG) << "pop3 servers:";
-    foreach (const server &s, mPop3Servers) {
+    foreach (const Server &s, mPop3Servers) {
         qCDebug(ACCOUNTWIZARD_LOG) << s.hostname << s.port << s.socketType << s.username << s.authentication;
     }
     qCDebug(ACCOUNTWIZARD_LOG) << "smtp servers:";
-    foreach (const server &s, mSmtpServers) {
+    foreach (const Server &s, mSmtpServers) {
         qCDebug(ACCOUNTWIZARD_LOG) << s.hostname << s.port << s.socketType << s.username << s.authentication;
     }
     // end section.
@@ -180,10 +180,10 @@ void Ispdb::slotResult(KJob *job)
     emit finished(true);
 }
 
-server Ispdb::createServer(const QDomElement &n)
+Server Ispdb::createServer(const QDomElement &n)
 {
     QDomNode o = n.firstChild();
-    server s;
+    Server s;
     while (!o.isNull()) {
         QDomElement f = o.toElement();
         if (!f.isNull()) {
@@ -260,17 +260,17 @@ QString Ispdb::name(length l) const
     }
 }
 
-QList< server > Ispdb::imapServers() const
+QList< Server > Ispdb::imapServers() const
 {
     return mImapServers;
 }
 
-QList< server > Ispdb::pop3Servers() const
+QList< Server > Ispdb::pop3Servers() const
 {
     return mPop3Servers;
 }
 
-QList< server > Ispdb::smtpServers() const
+QList< Server > Ispdb::smtpServers() const
 {
     return mSmtpServers;
 }

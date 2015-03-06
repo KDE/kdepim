@@ -28,7 +28,7 @@
 
 class QDomElement;
 
-struct server;
+struct Server;
 
 /**
   This class will search in Mozilla's database for an xml file
@@ -71,15 +71,15 @@ public:
 
     /** After finished() has been emitted you can
         get a list of imap servers available for this provider */
-    QList< server > imapServers() const;
+    QList< Server > imapServers() const;
 
     /** After finished() has been emitted you can
         get a list of pop3 servers available for this provider */
-    QList< server > pop3Servers() const;
+    QList< Server > pop3Servers() const;
 
     /** After finished() has been emitted you can
         get a list of smtp servers available for this provider */
-    QList< server > smtpServers() const;
+    QList< Server > smtpServers() const;
 
 public Q_SLOTS:
     /** Sets the emailaddress you want to servers for */
@@ -100,7 +100,7 @@ Q_SIGNALS:
 private:
     enum searchServerType { IspAutoConfig = 0, IspWellKnow, DataBase };
 
-    server createServer(const QDomElement &n);
+    Server createServer(const QDomElement &n);
     void lookupInDb();
     QString replacePlaceholders(const QString &);
     void startJob(const QUrl &url);
@@ -111,12 +111,12 @@ private:
     // storage of the results
     QStringList mDomains;
     QString mDisplayName, mDisplayShortName;
-    QList< server > mImapServers, mPop3Servers, mSmtpServers;
+    QList< Server > mImapServers, mPop3Servers, mSmtpServers;
     Ispdb::searchServerType mServerType;
 };
 
-struct server {
-    server()
+struct Server {
+    Server()
     {
         port = -1;
         authentication = Ispdb::Plain;

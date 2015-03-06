@@ -75,16 +75,16 @@ void PersonalDataPage::slotRadioButtonClicked(QAbstractButton *button)
 {
     QString smptHostname;
     if (!mIspdb->smtpServers().isEmpty()) {
-        server s = mIspdb->smtpServers().first();
+        Server s = mIspdb->smtpServers().first();
         smptHostname = s.hostname;
     }
     ui.outgoingLabel->setText(i18n("SMTP, %1", smptHostname));
     if (button ==  ui.imapAccount) {
-        server simap = mIspdb->imapServers().first(); // should be ok.
+        Server simap = mIspdb->imapServers().first(); // should be ok.
         ui.incommingLabel->setText(i18n("IMAP, %1", simap.hostname));
         ui.usernameLabel->setText(simap.username);
     } else if (button == ui.pop3Account) {
-        server spop3 = mIspdb->pop3Servers().first(); // should be ok.
+        Server spop3 = mIspdb->pop3Servers().first(); // should be ok.
         ui.incommingLabel->setText(i18n("POP3, %1", spop3.hostname));
         ui.usernameLabel->setText(spop3.username);
     }
@@ -167,7 +167,7 @@ void PersonalDataPage::slotSearchType(const QString &type)
 void PersonalDataPage::configureSmtpAccount()
 {
     if (!mIspdb->smtpServers().isEmpty()) {
-        server s = mIspdb->smtpServers().first(); // should be ok.
+        Server s = mIspdb->smtpServers().first(); // should be ok.
         qCDebug(ACCOUNTWIZARD_LOG) << "Configuring transport for" << s.hostname;
 
         QObject *object = mSetupManager->createTransport(QStringLiteral("smtp"));
@@ -200,7 +200,7 @@ void PersonalDataPage::configureSmtpAccount()
 void PersonalDataPage::configureImapAccount()
 {
     if (!mIspdb->imapServers().isEmpty()) {
-        server s = mIspdb->imapServers().first(); // should be ok.
+        Server s = mIspdb->imapServers().first(); // should be ok.
         qCDebug(ACCOUNTWIZARD_LOG) << "Configuring imap for" << s.hostname;
 
         QObject *object = mSetupManager->createResource(QStringLiteral("akonadi_imap_resource"));
@@ -231,7 +231,7 @@ void PersonalDataPage::configureImapAccount()
 void PersonalDataPage::configurePop3Account()
 {
     if (!mIspdb->pop3Servers().isEmpty()) {
-        server s = mIspdb->pop3Servers().first(); // should be ok.
+        Server s = mIspdb->pop3Servers().first(); // should be ok.
         qCDebug(ACCOUNTWIZARD_LOG) << "No Imap to be created, configuring pop3 for" << s.hostname;
 
         QObject *object = mSetupManager->createResource(QStringLiteral("akonadi_pop3_resource"));
