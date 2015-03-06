@@ -23,7 +23,7 @@
 namespace ThemeDefaultTemplate
 {
 
-QList<PimCommon::defaultTemplate> defaultTemplates();
+QVector<PimCommon::defaultTemplate> defaultTemplates();
 
 }
 

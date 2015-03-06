@@ -68,9 +68,9 @@ QUrl SieveEditorUtil::SieveServerConfig::url() const
     return u;
 }
 
-QList<SieveEditorUtil::SieveServerConfig> SieveEditorUtil::readServerSieveConfig()
+QVector<SieveEditorUtil::SieveServerConfig> SieveEditorUtil::readServerSieveConfig()
 {
-    QList<SieveServerConfig> lstConfig;
+    QVector<SieveServerConfig> lstConfig;
     KSharedConfigPtr cfg = KSharedConfig::openConfig();
     QRegExp re(QLatin1String("^ServerSieve (.+)$"));
     const QStringList groups = cfg->groupList().filter(re);
@@ -97,7 +97,7 @@ QList<SieveEditorUtil::SieveServerConfig> SieveEditorUtil::readServerSieveConfig
     return lstConfig;
 }
 
-void SieveEditorUtil::writeServerSieveConfig(const QList<SieveEditorUtil::SieveServerConfig> &lstConfig)
+void SieveEditorUtil::writeServerSieveConfig(const QVector<SieveServerConfig> &lstConfig)
 {
     KSharedConfigPtr cfg = KSharedConfig::openConfig();
     const QRegExp re(QLatin1String("^ServerSieve (.+)$"));

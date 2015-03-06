@@ -135,7 +135,7 @@ void SearchAndMergeContactDuplicateContactDialog::slotMergeDone()
     mStackedWidget->setCurrentWidget(mMergeContactResult);
 }
 
-void SearchAndMergeContactDuplicateContactDialog::slotCustomizeMergeContacts(const QList<MergeConflictResult> &lst, const Akonadi::Collection &col)
+void SearchAndMergeContactDuplicateContactDialog::slotCustomizeMergeContacts(const QVector<MergeConflictResult> &lst, const Akonadi::Collection &col)
 {
     mSelectInformation->setRequiresSelectInformationWidgets(lst, col);
     mStackedWidget->setCurrentWidget(mSelectInformation);

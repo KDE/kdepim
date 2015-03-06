@@ -19,9 +19,9 @@
 
 #include <KLocalizedString>
 
-QList<PimCommon::defaultTemplate> ThemeDefaultTemplate::defaultTemplates()
+QVector<PimCommon::defaultTemplate> ThemeDefaultTemplate::defaultTemplates()
 {
-    QList<PimCommon::defaultTemplate> lst;
+    QVector<PimCommon::defaultTemplate> lst;
     PimCommon::defaultTemplate tmp;
     //TODO
 

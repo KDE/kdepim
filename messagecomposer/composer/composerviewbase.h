@@ -223,6 +223,14 @@ public:
     SendLater::SendLaterInfo *sendLaterInfo() const;
     void saveMailSettings();
 
+    QDate followUpDate() const;
+    void setFollowUpDate(const QDate &followUpDate);
+
+    void clearFollowUp();
+
+    Akonadi::Collection followUpCollection() const;
+    void setFollowUpCollection(const Akonadi::Collection &followUpCollection);
+
 public Q_SLOTS:
     void identityChanged(const KIdentityManagement::Identity &ident, const KIdentityManagement::Identity &oldIdent, bool msgCleared = false);
 
@@ -347,6 +355,9 @@ private:
 
     MessageComposer::MessageSender::SendMethod mSendMethod;
     MessageComposer::MessageSender::SaveIn mSaveIn;
+
+    QDate mFollowUpDate;
+    Akonadi::Collection mFollowUpCollection;
 
     SendLater::SendLaterInfo *mSendLaterInfo;
 };

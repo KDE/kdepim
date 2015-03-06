@@ -28,7 +28,7 @@ public:
     explicit ThemeTemplateListWidget(const QString &configName, QWidget *parent = Q_NULLPTR);
     ~ThemeTemplateListWidget();
 
-    QList<PimCommon::defaultTemplate> defaultTemplates();
+    QVector<PimCommon::defaultTemplate> defaultTemplates();
 };
 
 class ThemeTemplateWidget : public QWidget

@@ -96,6 +96,7 @@ void ComposerLineEdit::insertEmails(const QStringList &emails)
     }
     //multiple emails, let the user choose one
     QMenu menu(this);
+    //kf5 add title !
     menu.setObjectName(QLatin1String("Addresschooser"));
     for (QStringList::const_iterator it = emails.constBegin(), end = emails.constEnd() ; it != end; ++it) {
         menu.addAction(*it);

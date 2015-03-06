@@ -33,7 +33,7 @@ ThemeTemplateListWidget::~ThemeTemplateListWidget()
 {
 }
 
-QList<PimCommon::defaultTemplate> ThemeTemplateListWidget::defaultTemplates()
+QVector<PimCommon::defaultTemplate> ThemeTemplateListWidget::defaultTemplates()
 {
     return ThemeDefaultTemplate::defaultTemplates();
 }

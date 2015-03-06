@@ -18,7 +18,7 @@
   02110-1301, USA.
 */
 
-#include "snippetvariabledialog_p.h"
+#include "snippetvariabledialog.h"
 
 #include <KLocalizedString>
 #include <KTextEdit>
@@ -103,4 +103,3 @@ void SnippetVariableDialog::slotAccepted()
     accept();
 }
 
-#include "moc_snippetvariabledialog_p.cpp"

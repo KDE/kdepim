@@ -11,7 +11,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "snippetdialog_p.h"
+#include "snippetdialog.h"
 
 #include "ui_snippetdialog.h"
 
@@ -124,5 +124,3 @@ bool SnippetDialog::snippetIsValid() const
         return (!mUi->nameEdit->text().trimmed().isEmpty());
     }
 }
-
-#include "moc_snippetdialog_p.cpp"

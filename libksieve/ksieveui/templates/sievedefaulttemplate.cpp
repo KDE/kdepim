@@ -20,9 +20,9 @@
 
 #include <KLocalizedString>
 
-QList<PimCommon::defaultTemplate> KSieveUi::SieveDefaultTemplate::defaultTemplates()
+QVector<PimCommon::defaultTemplate> KSieveUi::SieveDefaultTemplate::defaultTemplates()
 {
-    QList<PimCommon::defaultTemplate> lst;
+    QVector<PimCommon::defaultTemplate> lst;
     PimCommon::defaultTemplate tmp;
     tmp.name = i18n("Filter on Mailing List-ID");
     tmp.text = QStringLiteral("require \"fileinto\";\n"

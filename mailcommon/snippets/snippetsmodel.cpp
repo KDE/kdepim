@@ -18,7 +18,7 @@
   02110-1301, USA.
 */
 
-#include "snippetsmodel_p.h"
+#include "snippetsmodel.h"
 
 #include <QMimeData>
 #include <QStringList>

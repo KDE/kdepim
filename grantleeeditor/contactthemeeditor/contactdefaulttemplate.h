@@ -23,7 +23,7 @@
 namespace ContactDefaultTemplate
 {
 
-QList<PimCommon::defaultTemplate> contactTemplates();
+QVector<PimCommon::defaultTemplate> contactTemplates();
 
 }
 

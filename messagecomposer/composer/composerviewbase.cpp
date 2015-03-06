@@ -265,7 +265,13 @@ void MessageComposer::ComposerViewBase::saveMailSettings()
 
 }
 
-void MessageComposer::ComposerViewBase::send(MessageComposer::MessageSender::SendMethod method, MessageComposer::MessageSender::SaveIn saveIn, bool checkMailDispatcher)
+void MessageComposer::ComposerViewBase::clearFollowUp()
+{
+    mFollowUpDate = QDate();
+    mFollowUpCollection = Akonadi::Collection();
+}
+
+void MessageComposer::ComposerViewBase::send ( MessageComposer::MessageSender::SendMethod method, MessageComposer::MessageSender::SaveIn saveIn, bool checkMailDispatcher )
 {
     mSendMethod = method;
     mSaveIn = saveIn;
@@ -987,6 +993,26 @@ void MessageComposer::ComposerViewBase::initAutoSave()
 
     updateAutoSave();
 }
+Akonadi::Collection MessageComposer::ComposerViewBase::followUpCollection() const
+{
+    return mFollowUpCollection;
+}
+
+void MessageComposer::ComposerViewBase::setFollowUpCollection(const Akonadi::Collection &followUpCollection)
+{
+    mFollowUpCollection = followUpCollection;
+}
+
+QDate MessageComposer::ComposerViewBase::followUpDate() const
+{
+    return mFollowUpDate;
+}
+
+void MessageComposer::ComposerViewBase::setFollowUpDate(const QDate &followUpDate)
+{
+    mFollowUpDate = followUpDate;
+}
+
 
 Sonnet::DictionaryComboBox *MessageComposer::ComposerViewBase::dictionary() const
 {

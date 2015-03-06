@@ -34,36 +34,9 @@
 
 #include <QDialog>
 #include <KConfigGroup>
-class QFormLayout;
-
-namespace MessageComposer
-{
-class ComposerLineEdit;
-}
 
 namespace MailCommon
 {
-
-class RedirectWidget : public QWidget
-{
-    Q_OBJECT
-public:
-    explicit RedirectWidget(QWidget *parent = Q_NULLPTR);
-    ~RedirectWidget();
-
-    void setFocus();
-    QString resend();
-
-Q_SIGNALS:
-    void addressChanged(const QString &);
-
-private Q_SLOTS:
-    void slotAddressSelection();
-
-private:
-    MessageComposer::ComposerLineEdit *mEdit;
-    QString mResendStr;
-};
 
 /**
  * @short A dialog to request information about message redirection from the user.

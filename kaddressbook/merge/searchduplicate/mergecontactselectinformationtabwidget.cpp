@@ -50,7 +50,7 @@ void MergeContactSelectInformationTabWidget::addNewWidget(const KABMergeContacts
     addTab(area, i18n("Duplicate contact %1", count() + 1));
 }
 
-void MergeContactSelectInformationTabWidget::setRequiresSelectInformationWidgets(const QList<KABMergeContacts::MergeConflictResult> &list, const Akonadi::Collection &col)
+void MergeContactSelectInformationTabWidget::setRequiresSelectInformationWidgets(const QVector<KABMergeContacts::MergeConflictResult> &list, const Akonadi::Collection &col)
 {
     Q_FOREACH (const KABMergeContacts::MergeConflictResult &lst, list) {
         addNewWidget(lst, col);

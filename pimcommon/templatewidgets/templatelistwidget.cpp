@@ -197,7 +197,7 @@ public:
     void load()
     {
         q->clear();
-        const QList<PimCommon::defaultTemplate> templatesLst = q->defaultTemplates();
+        const QVector<PimCommon::defaultTemplate> templatesLst = q->defaultTemplates();
         Q_FOREACH (const PimCommon::defaultTemplate &tmp, templatesLst) {
             createListWidgetItem(tmp.name, tmp.text, true);
         }
@@ -286,9 +286,9 @@ void TemplateListWidget::loadTemplates()
     d->load();
 }
 
-QList<PimCommon::defaultTemplate> TemplateListWidget::defaultTemplates()
+QVector<defaultTemplate> TemplateListWidget::defaultTemplates()
 {
-    return QList<PimCommon::defaultTemplate>();
+    return QVector<PimCommon::defaultTemplate>();
 }
 
 QStringList TemplateListWidget::mimeTypes() const
