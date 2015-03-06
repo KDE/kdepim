@@ -436,7 +436,7 @@ void ConfigureAggregationsDialog::Private::exportAggregationButtonClicked()
     if(list.isEmpty()) {
         return;
     }
-    const QString filename = KFileDialog::getSaveFileName(QString(),QString::fromLatin1("*"),q,i18n("Export Aggregation"));
+    const QString filename = KFileDialog::getSaveFileName(QString(),QString::fromLatin1("*"),q,i18n("Export Aggregation"), KFileDialog::ConfirmOverwrite);
     if(!filename.isEmpty()) {
         KConfig config(filename);
 

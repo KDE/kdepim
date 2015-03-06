@@ -1097,7 +1097,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
 
       // get the saveas file name
       const QString saveAsFile =
-        KFileDialog::getSaveFileName( name, QString(), 0, i18n( "Save Invitation Attachment" ) );
+        KFileDialog::getSaveFileName( name, QString(), 0, i18n( "Save Invitation Attachment" ), KFileDialog::ConfirmOverwrite );
 
       if ( saveAsFile.isEmpty() ||
            ( QFile( saveAsFile ).exists() &&

@@ -452,7 +452,7 @@ void ConfigureThemesDialog::Private::exportThemeButtonClicked()
     if(list.isEmpty()) {
         return;
     }
-    const QString filename = KFileDialog::getSaveFileName(QString(),QString::fromLatin1("*"),q,i18n("Export Theme"));
+    const QString filename = KFileDialog::getSaveFileName(QString(),QString::fromLatin1("*"),q,i18n("Export Theme"), KFileDialog::ConfirmOverwrite);
     if(!filename.isEmpty()) {
         KConfig config(filename);
 

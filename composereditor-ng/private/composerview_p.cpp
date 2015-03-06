@@ -795,7 +795,7 @@ void ComposerViewPrivate::_k_slotReplace()
 
 void ComposerViewPrivate::_k_slotSaveAs()
 {
-    QString fn = KFileDialog::getSaveFileName(QString(), i18n("HTML-Files (*.htm *.html);;All Files (*)") , q, i18n("Save as..."));
+    QString fn = KFileDialog::getSaveFileName(QString(), i18n("HTML-Files (*.htm *.html);;All Files (*)") , q, i18n("Save as..."), KFileDialog::ConfirmOverwrite);
     if (fn.isEmpty()) {
         KMessageBox::error(q, i18n("Not file selected."), i18n("Save as"));
         return;

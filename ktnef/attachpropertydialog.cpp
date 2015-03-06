@@ -176,7 +176,7 @@ bool AttachPropertyDialog::saveProperty( QTreeWidget *lv, KTNEFPropertySet *pSet
     QVariant prop = ( tag.startsWith( QLatin1String( "attr_" ) ) ?
                         pSet->attribute( key ) :
                         pSet->property( key ) );
-    QString filename = KFileDialog::getSaveFileName( tag, QString(), parent );
+    QString filename = KFileDialog::getSaveFileName( tag, QString(), parent, QString(), KFileDialog::ConfirmOverwrite );
     if ( !filename.isEmpty() ) {
       QFile f( filename );
       if ( f.open( QIODevice::WriteOnly ) ) {

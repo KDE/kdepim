@@ -218,7 +218,7 @@ bool AttachmentHandler::saveAs( const Attachment::Ptr &attachment )
 {
   // get the saveas file name
   QString saveAsFile = KFileDialog::getSaveFileName( attachment->label(), QString(), d->mParent,
-                                                     i18n( "Save Attachment" ) );
+                                                     i18n( "Save Attachment" ), KFileDialog::ConfirmOverwrite );
   if ( saveAsFile.isEmpty() ||
        ( QFile( saveAsFile ).exists() &&
          ( KMessageBox::warningYesNo(

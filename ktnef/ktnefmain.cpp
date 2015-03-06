@@ -544,7 +544,7 @@ void KTNEFMain::slotSaveMessageText()
   }
 
   QString rtf = mParser->message()->rtfString();
-  QString filename = KFileDialog::getSaveFileName( QString(), QString(), this );
+  QString filename = KFileDialog::getSaveFileName( QString(), QString(), this, QString(), KFileDialog::ConfirmOverwrite );
   if ( !filename.isEmpty() ) {
     QFile f( filename );
     if ( f.open( QIODevice::WriteOnly ) ) {

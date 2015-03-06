@@ -135,7 +135,7 @@ void AuditLogViewer::setAuditLog( const QString & log ) {
 void AuditLogViewer::slotUser1() {
 #ifndef KDEPIM_ONLY_KLEO
     const QString fileName = KFileDialog::getSaveFileName( QString(), QString(),
-                                                           this, i18n("Choose File to Save GnuPG Audit Log to") );
+                                                           this, i18n("Choose File to Save GnuPG Audit Log to"), KFileDialog::ConfirmOverwrite );
 #else
     const QString fileName = QFileDialog::getSaveFileName( this, i18n("Choose File to Save GnuPG Audit Log to") );
 #endif
