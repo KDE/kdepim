@@ -24,8 +24,10 @@
 #include <AkonadiCore/Collection>
 #include "agents/followupreminderagent/followupreminderinfo.h"
 #include <KJob>
+#include "messagecomposer_export.h"
+namespace MessageComposer {
 
-class FollowupReminderCreateJob : public KJob
+class MESSAGECOMPOSER_EXPORT FollowupReminderCreateJob : public KJob
 {
     Q_OBJECT
 public:
@@ -52,8 +54,8 @@ private:
     void writeFollowupReminderInfo();
     Akonadi::Collection mCollection;
     FollowUpReminder::FollowUpReminderInfo *mInfo;
-
 };
+}
 
 #endif // FOLLOWUPREMINDERCREATEJOB_H
 

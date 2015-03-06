@@ -93,6 +93,12 @@ set( messagecomposer_sender_src
      sender/akonadisender.cpp
 )
 
+set(messagecomposer_followupreminder_SRCS
+     followupreminder/followupreminderselectdatedialog.cpp
+     followupreminder/followupremindercreatejob.cpp
+)
+
+
 set( messagecomposer_src
      ${messagecomposer_part_src}
      ${messagecomposer_imagescaling_src}
@@ -102,6 +108,7 @@ set( messagecomposer_src
      ${messagecomposer_attachment_src}
      ${messagecomposer_helper_src}
      ${messagecomposer_sender_src}
+     ${messagecomposer_followupreminder_SRCS}
      utils/util.cpp
      messagecomposer_debug.cpp
      settings/messagecomposersettings.cpp
@@ -143,6 +150,7 @@ target_link_libraries(messagecomposer
   kdepim
   Grantlee5::TextDocument
   sendlater
+  followupreminder
   pimcommon
   KF5::AkonadiWidgets
 )

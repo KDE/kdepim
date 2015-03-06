@@ -21,12 +21,15 @@
 #include <QDialog>
 #include <QPushButton>
 #include <AkonadiCore/Collection>
+#include "messagecomposer_export.h"
 namespace Akonadi
 {
 class CollectionComboBox;
 }
 class KDateComboBox;
-class FollowUpReminderSelectDateDialog : public QDialog
+
+namespace MessageComposer {
+class MESSAGECOMPOSER_EXPORT FollowUpReminderSelectDateDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -45,5 +48,6 @@ private:
     Akonadi::CollectionComboBox *mCollectionCombobox;
     QPushButton *mOkButton;
 };
+}
 
 #endif // FOLLOWUPREMINDERSELECTDATEDIALOG_H

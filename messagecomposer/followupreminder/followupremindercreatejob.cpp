@@ -16,13 +16,13 @@
 */
 
 #include "followupremindercreatejob.h"
-#include "kmail_debug.h"
+#include "messagecomposer_debug.h"
 #include "agents/followupreminderagent/followupreminderutil.h"
 #include <KCalCore/Todo>
 #include <KLocalizedString>
 #include <AkonadiCore/ItemCreateJob>
 
-//KF5 move to messagecomposer
+using namespace MessageComposer;
 
 FollowupReminderCreateJob::FollowupReminderCreateJob(QObject *parent)
     : KJob(parent),
@@ -82,7 +82,7 @@ void FollowupReminderCreateJob::start()
             writeFollowupReminderInfo();
         }
     } else {
-        qCDebug(KMAIL_LOG) << "FollowupReminderCreateJob info not valid ";
+        qCDebug(MESSAGECOMPOSER_LOG) << "FollowupReminderCreateJob info not valid ";
         Q_EMIT emitResult();
         return;
     }
@@ -91,7 +91,7 @@ void FollowupReminderCreateJob::start()
 void FollowupReminderCreateJob::slotCreateNewTodo(KJob *job)
 {
     if (job->error()) {
-        qCDebug(KMAIL_LOG) << "Error during create new Todo " << job->errorString();
+        qCDebug(MESSAGECOMPOSER_LOG) << "Error during create new Todo " << job->errorString();
     } else {
         Akonadi::ItemCreateJob *createJob = qobject_cast<Akonadi::ItemCreateJob *>(job);
         mInfo->setTodoId(createJob->item().id());

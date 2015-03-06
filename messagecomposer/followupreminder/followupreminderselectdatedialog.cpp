@@ -21,6 +21,7 @@
 #include <KSharedConfig>
 #include <KDatePicker>
 #include <KMessageBox>
+#include <KDateComboBox>
 
 #include <AkonadiWidgets/CollectionComboBox>
 
@@ -34,7 +35,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <kdatecombobox.h>
-
+using namespace MessageComposer;
 FollowUpReminderSelectDateDialog::FollowUpReminderSelectDateDialog(QWidget *parent)
     : QDialog(parent)
 {
