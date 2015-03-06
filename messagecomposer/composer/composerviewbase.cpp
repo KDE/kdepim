@@ -81,6 +81,7 @@
 #include <QUuid>
 #include <QtCore/QTextCodec>
 #include <QStandardPaths>
+#include <followupreminder/followupremindercreatejob.h>
 
 static QStringList encodeIdn(const QStringList &emails)
 {
@@ -948,7 +949,8 @@ void MessageComposer::ComposerViewBase::slotQueueResult(KJob *job)
     }
 
     if (m_pendingQueueJobs == 0) {
-        emit sentSuccessfully(qjob->message()->messageID(false)->asUnicodeString());
+        addFollowupReminder(qjob->message()->messageID(false)->asUnicodeString());
+        emit sentSuccessfully();
     }
 }
 
@@ -2007,5 +2009,20 @@ void MessageComposer::ComposerViewBase::setSendLaterInfo(SendLater::SendLaterInf
 SendLater::SendLaterInfo *MessageComposer::ComposerViewBase::sendLaterInfo() const
 {
     return mSendLaterInfo;
+}
+
+void MessageComposer::ComposerViewBase::addFollowupReminder(const QString &messageId)
+{
+    if (!messageId.isEmpty()) {
+        if (mFollowUpDate.isValid()) {
+            MessageComposer::FollowupReminderCreateJob *job = new MessageComposer::FollowupReminderCreateJob;
+            job->setSubject(m_subject);
+            job->setMessageId(messageId);
+            job->setTo(m_replyTo);
+            job->setFollowUpReminderDate(mFollowUpDate);
+            job->setCollectionToDo(mFollowUpCollection);
+            job->start();
+        }
+    }
 }
 

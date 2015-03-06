@@ -243,7 +243,7 @@ Q_SIGNALS:
     /**
     * Message sending completed successfully.
     */
-    void sentSuccessfully(const QString &messageId = QString());
+    void sentSuccessfully();
     /**
     * Message sending failed with given error message.
     */
@@ -319,6 +319,7 @@ private:
     * Initialize autosaving (timer and filename).
     */
     void initAutoSave();
+    void addFollowupReminder(const QString &messageId);
 
     KMime::Message::Ptr m_msg;
     MessageComposer::AttachmentControllerBase *m_attachmentController;
