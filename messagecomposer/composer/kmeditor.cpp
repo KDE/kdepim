@@ -139,8 +139,7 @@ void KMeditorPrivate::startExternalEditor()
     const QString commandLine = extEditorPath.trimmed();
     if (extEditorPath.isEmpty()) {
         q->setUseExternalEditor(false);
-        //KF5 add MessageBox
-        //TODO: show messagebox
+        KMessageBox::error(q, i18n("Command line is empty. Please verify settings."), i18n("Empty command line"));
         return;
     }
 
