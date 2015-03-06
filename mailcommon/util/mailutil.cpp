@@ -37,7 +37,6 @@
 *******************************************************************************/
 
 #include "mailutil.h"
-#include "mailutil_p.h"
 #include "mailcommon/collectionpage/newmailnotifierattribute.h"
 
 #include "calendarinterface.h"
