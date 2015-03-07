@@ -141,7 +141,7 @@ public:
     {
         const QString templateFile = QFileDialog::getOpenFileName();
         if (!templateFile.isEmpty()) {
-            KConfig conf(templateFile);
+            KConfig conf(templateFile, KConfig::SimpleConfig);
             loadTemplates(&conf);
         }
     }
@@ -150,7 +150,7 @@ public:
     {
         const QString templateFile = QFileDialog::getSaveFileName();
         if (!templateFile.isEmpty()) {
-            KConfig conf(templateFile);
+            KConfig conf(templateFile, KConfig::SimpleConfig);
             saveTemplates(&conf);
         }
     }
@@ -201,7 +201,7 @@ public:
         Q_FOREACH (const PimCommon::defaultTemplate &tmp, templatesLst) {
             createListWidgetItem(tmp.name, tmp.text, true);
         }
-        loadTemplates(&(*config));
+        loadTemplates(config.data());
         dirty = false;
     }
 
@@ -217,6 +217,9 @@ public:
 
                 createListWidgetItem(name, text, false);
             }
+        } else {
+            //KF5 add messagebox
+            qDebug() << "This file is not a template file";
         }
     }
 
@@ -226,7 +229,6 @@ public:
         foreach (const QString &group, configFile->groupList()) {
             configFile->deleteGroup(group);
         }
-
         int numberOfTemplate = 0;
         for (int i = 0; i < q->count(); ++i) {
             QListWidgetItem *templateItem = q->item(i);
@@ -255,7 +257,7 @@ public:
             return;
         }
 
-        saveTemplates(&(*config));
+        saveTemplates(config.data());
         dirty = false;
     }
     QString knewstuffConfigName;

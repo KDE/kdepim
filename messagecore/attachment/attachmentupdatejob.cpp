@@ -23,6 +23,8 @@
 #include <KMimeType>
 #include "messagecore_debug.h"
 #include <QTimer>
+#include <KLocalizedString>
+
 using namespace MessageCore;
 
 class MessageCore::AttachmentUpdateJob::Private
@@ -49,7 +51,7 @@ void AttachmentUpdateJob::Private::doStart()
     if (mOriginalPart->url().isEmpty()) {
         qCDebug(MESSAGECORE_LOG) << " url is empty. We can't update file";
         q->setError(KJob::UserDefinedError);
-        q->setErrorText(QLatin1String("Url is empty."));
+        q->setErrorText(i18n("Url is empty."));
         q->emitResult();
         return;
     }
