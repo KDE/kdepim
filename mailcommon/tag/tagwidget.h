@@ -45,20 +45,20 @@ public:
     void recordTagSettings( MailCommon::Tag::Ptr tag);
 
 
-    KLineEdit *tagNameLineEdit() { return mTagNameLineEdit; }
-    QCheckBox *textColorCheck() { return mTextColorCheck; }
-    QCheckBox *textFontCheck() { return mTextFontCheck; }
-    QCheckBox *backgroundColorCheck() { return mBackgroundColorCheck; }
-    QCheckBox *inToolBarCheck() { return mInToolbarCheck; }
+    KLineEdit *tagNameLineEdit() const;
+    QCheckBox *textColorCheck() const;
+    QCheckBox *textFontCheck() const;
+    QCheckBox *backgroundColorCheck() const;
+    QCheckBox *inToolBarCheck() const;
 
-    KColorCombo *textColorCombo() { return mTextColorCombo; }
-    KColorCombo *backgroundColorCombo() { return mBackgroundColorCombo; }
+    KColorCombo *textColorCombo() const;
+    KColorCombo *backgroundColorCombo() const;
 
-    KFontRequester *fontRequester() { return mFontRequester; }
+    KFontRequester *fontRequester() const;
 
-    KIconButton *iconButton() { return mIconButton; }
+    KIconButton *iconButton() const;
 
-    KKeySequenceWidget *keySequenceWidget() { return mKeySequenceWidget; }
+    KKeySequenceWidget *keySequenceWidget() const;
 
     void setTagTextColor(const QColor& color);
     void setTagBackgroundColor(const QColor& color);
