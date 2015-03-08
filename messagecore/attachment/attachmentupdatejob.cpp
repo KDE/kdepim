@@ -50,7 +50,7 @@ void AttachmentUpdateJob::Private::doStart()
         qDebug()<< " url is empty. We can't update file";
         q->setError( KJob::UserDefinedError );
         //KF5 add i18n
-        q->setErrorText( QLatin1String("Url is empty.") );
+        q->setErrorText( QLatin1String("URL is empty.") );
         q->emitResult();
         return;
     }
