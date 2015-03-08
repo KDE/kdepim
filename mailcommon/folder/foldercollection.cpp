@@ -21,7 +21,7 @@
 #include "util/mailutil.h"
 #include "imapresourcesettings.h"
 #include "pimcommon/util/pimutil.h"
-#include "mailcommon/collectionpage/newmailnotifierattribute.h"
+#include "mailcommon/collectionpage/attributes/newmailnotifierattribute.h"
 
 #include <Akonadi/ItemFetchJob>
 #include <Akonadi/ItemFetchScope>

@@ -17,7 +17,7 @@
 
 
 #include "newmailnotifierattributetest.h"
-#include "../newmailnotifierattribute.h"
+#include "../attributes/newmailnotifierattribute.h"
 #include <qtest_kde.h>
 
 NewMailNotifierAttributeTest::NewMailNotifierAttributeTest(QObject *parent)

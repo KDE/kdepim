@@ -16,7 +16,7 @@
 */
 
 #include "collectionannotationsattributetest.h"
-#include "../collectionannotationsattribute.h"
+#include "../attributes/collectionannotationsattribute.h"
 #include <qtest_kde.h>
 CollectionAnnotationsAttributeTest::CollectionAnnotationsAttributeTest(QObject *parent)
     : QObject(parent)

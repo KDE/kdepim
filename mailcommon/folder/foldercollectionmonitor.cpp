@@ -18,7 +18,7 @@
 #include "foldercollectionmonitor.h"
 #include "util/mailutil.h"
 #include "foldercollection.h"
-#include "collectionpage/expirecollectionattribute.h"
+#include "collectionpage/attributes/expirecollectionattribute.h"
 
 #include <Akonadi/ChangeRecorder>
 #include <Akonadi/Collection>

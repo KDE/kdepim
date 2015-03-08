@@ -37,7 +37,7 @@
 *******************************************************************************/
 
 #include "mailutil.h"
-#include "mailcommon/collectionpage/newmailnotifierattribute.h"
+#include "mailcommon/collectionpage/attributes/newmailnotifierattribute.h"
 
 #include "calendarinterface.h"
 #include "job/expirejob.h"
@@ -83,7 +83,7 @@
 #include <KMessageBox>
 #include <KTemporaryFile>
 #include <KIO/JobUiDelegate>
-#include <collectionpage/expirecollectionattribute.h>
+#include <collectionpage/attributes/expirecollectionattribute.h>
 
 
 OrgKdeAkonadiPOP3SettingsInterface *MailCommon::Util::createPop3SettingsInterface(

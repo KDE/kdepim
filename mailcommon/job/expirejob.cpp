@@ -26,7 +26,7 @@
  *  your version.
  */
 #include "expirejob.h"
-#include "collectionpage/expirecollectionattribute.h"
+#include "collectionpage/attributes/expirecollectionattribute.h"
 #include "kernel/mailkernel.h"
 #include "util/mailutil.h"
 

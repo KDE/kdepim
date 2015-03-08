@@ -20,8 +20,8 @@
 
 #include "incidencesforwidget.h"
 #include "contenttypewidget.h"
-#include "collectionannotationsattribute.h"
-#include "newmailnotifierattribute.h"
+#include "attributes/collectionannotationsattribute.h"
+#include "attributes/newmailnotifierattribute.h"
 #include "foldercollection.h"
 #include "kernel/mailkernel.h"
 #include "util/mailutil.h"
