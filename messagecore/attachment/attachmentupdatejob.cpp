@@ -51,7 +51,7 @@ void AttachmentUpdateJob::Private::doStart()
     if (mOriginalPart->url().isEmpty()) {
         qCDebug(MESSAGECORE_LOG) << " url is empty. We can't update file";
         q->setError(KJob::UserDefinedError);
-        q->setErrorText(i18n("Url is empty."));
+        q->setErrorText(i18n("URL is empty."));
         q->emitResult();
         return;
     }
