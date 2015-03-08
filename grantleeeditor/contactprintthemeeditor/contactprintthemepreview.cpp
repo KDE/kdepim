@@ -23,7 +23,7 @@
 #include <QWebView>
 #include <KContacts/VCardConverter>
 #include <printing/grantleeprint.h>
-#include <QDebug>
+#include "contactprintthemeeditor_debug.h"
 
 ContactPrintThemePreview::ContactPrintThemePreview(const QString &projectDirectory, QWidget *parent)
     : GrantleeThemeEditor::PreviewWidget(parent)

@@ -13,6 +13,7 @@ include_directories(
 
 set(contactprintthemeeditor_SRCS
   main.cpp
+  contactprintthemeeditor_debug.cpp
   defaultcompletion.cpp
   editorpage.cpp
   contactprintthemeconfiguredialog.cpp

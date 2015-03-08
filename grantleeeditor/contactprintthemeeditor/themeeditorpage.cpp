@@ -29,14 +29,14 @@
 #include <QInputDialog>
 #include <KZip>
 #include <QTemporaryDir>
-#include <QDebug>
+#include "contactprintthemeeditor_debug.h"
 #include <KMessageBox>
 #include <QUrl>
 
 #include <QHBoxLayout>
 #include <QDir>
 #include <QPointer>
-#include <QDebug>
+#include "contactprintthemeeditor_debug.h"
 #include <QFileDialog>
 
 ThemeEditorPage::ThemeEditorPage(const QString &projectDir, const QString &themeName, QWidget *parent)
@@ -168,7 +168,7 @@ void ThemeEditorPage::uploadTheme()
     KZip *zip = new KZip(zipFileName);
     if (zip->open(QIODevice::WriteOnly)) {
         const QString previewFileName = tmp.path() + QDir::separator() + themename + QLatin1String("_preview.png");
-        //qDebug()<<" previewFileName"<<previewFileName;
+        //qCDebug(CONTACTPRINTTHEMEEDITOR_LOG)<<" previewFileName"<<previewFileName;
         QStringList lst;
         lst << previewFileName;
         mEditorPage->preview()->createScreenShot(lst);
@@ -182,7 +182,7 @@ void ThemeEditorPage::uploadTheme()
 
         createZip(themename, zip);
         zip->close();
-        //qDebug()<< "zipFilename"<<zipFileName;
+        //qCDebug(CONTACTPRINTTHEMEEDITOR_LOG)<< "zipFilename"<<zipFileName;
 
         QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(QLatin1String("messageviewer_header_themes.knsrc"), this);
         dialog->setUploadFile(QUrl::fromLocalFile(zipFileName));
@@ -193,7 +193,7 @@ void ThemeEditorPage::uploadTheme()
         dialog->exec();
         delete dialog;
     } else {
-        qDebug() << " We can't open in zip write mode";
+        qCDebug(CONTACTPRINTTHEMEEDITOR_LOG) << " We can't open in zip write mode";
     }
     delete zip;
 }
