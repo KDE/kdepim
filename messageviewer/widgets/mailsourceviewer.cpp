@@ -46,11 +46,9 @@
 #include <QAction>
 #include <QIcon>
 #include <KIconTheme>
-#include <KLocalizedString>
 
 #include <QtCore/QRegExp>
 #include <QApplication>
-#include <QIcon>
 #include <QShortcut>
 #include <QVBoxLayout>
 #include <QContextMenuEvent>

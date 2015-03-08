@@ -99,7 +99,6 @@
 #include <QSignalMapper>
 #include <QSplitter>
 #include <QTreeView>
-#include <QVBoxLayout>
 #include <QPrinter>
 #include <QPrintDialog>
 #include <QHeaderView>

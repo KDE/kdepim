@@ -24,7 +24,6 @@
 
 #include <KMessageWidget>
 #include <QPushButton>
-#include <QPushButton>
 #include <QHBoxLayout>
 #include <QEvent>
 #include <QKeyEvent>

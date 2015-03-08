@@ -20,7 +20,6 @@
 #include <KDateComboBox>
 #include <KTimeComboBox>
 #include <qtest.h>
-#include <widgets/eventdatetimewidget.h>
 #include <QSignalSpy>
 
 EventDateTimeWidgetTest::EventDateTimeWidgetTest(QObject *parent)

@@ -49,7 +49,6 @@
 #include <sstream>
 #include <algorithm>
 #include <KCharsets>
-#include <KLocalizedString>
 #include <QMimeDatabase>
 #include <QMimeType>
 #include <QFileDevice>

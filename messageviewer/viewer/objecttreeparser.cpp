@@ -125,7 +125,6 @@
 #include <memory>
 #include <messagecore/helpers/nodehelper.h>
 #include <qtextdocument.h>
-#include <KLocalizedString>
 
 using namespace MessageViewer;
 using namespace MessageCore;

@@ -28,7 +28,6 @@
 #include <QIcon>
 #include <KLocalizedString>
 #include <KMimeType>
-#include <KLocalizedString>
 #include <KFormat>
 Q_DECLARE_METATYPE(KMime::Content *)
 Q_DECLARE_METATYPE(KMime::ContentIndex)
