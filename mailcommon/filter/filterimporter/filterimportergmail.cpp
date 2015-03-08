@@ -114,7 +114,7 @@ void FilterImporterGmail::parseFilters(const QDomElement &e)
 
                 } else if (criteriaProperty == QLatin1String("neverSpam")) {
                 } else {
-                    qDebug() <<" unknown item "<<criteriaProperty;
+                    qDebug() << " unknown item " << criteriaProperty;
                 }
             }
         }

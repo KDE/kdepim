@@ -18,23 +18,24 @@
 
 */
 
-
 #ifndef REDIRECTWIDGET_H
 #define REDIRECTWIDGET_H
 
 #include <QWidget>
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 class ComposerLineEdit;
 }
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class RedirectWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit RedirectWidget(QWidget *parent=0);
+    explicit RedirectWidget(QWidget *parent = 0);
     ~RedirectWidget();
 
     void setFocus();
