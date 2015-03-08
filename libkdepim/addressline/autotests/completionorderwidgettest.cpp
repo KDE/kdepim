@@ -20,7 +20,7 @@
 
 #include "completionorderwidgettest.h"
 #include "../completionorder/completionorderwidget.h"
-#include <KPushButton>
+#include <QPushButton>
 #include <QTreeWidget>
 #include <qtest.h>
 
@@ -44,11 +44,11 @@ void CompletionOrderWidgetTest::shouldHaveDefaultValue()
     QVERIFY(treewidget->isSortingEnabled());
     QCOMPARE(treewidget->topLevelItemCount(), 0);
 
-    KPushButton *up = qFindChild<KPushButton *>(&w, QLatin1String("mUpButton"));
+    QPushButton *up = qFindChild<QPushButton *>(&w, QLatin1String("mUpButton"));
     QVERIFY(up);
     QVERIFY(up->autoRepeat());
 
-    KPushButton *down = qFindChild<KPushButton *>(&w, QLatin1String("mDownButton"));
+    QPushButton *down = qFindChild<QPushButton *>(&w, QLatin1String("mDownButton"));
     QVERIFY(down);
     QVERIFY(down->autoRepeat());
 }
