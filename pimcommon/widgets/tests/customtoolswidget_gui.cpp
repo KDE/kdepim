@@ -18,8 +18,6 @@
 #include "customtoolswidget_gui.h"
 #include "pimcommon/widgets/customtoolswidget.h"
 
-#include <qdebug.h>
-
 #include <KLocalizedString>
 
 #include <QVBoxLayout>

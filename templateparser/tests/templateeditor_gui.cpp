@@ -18,8 +18,6 @@
 #include "templateeditor_gui.h"
 #include "templateparser/templatestextedit.h"
 
-#include <qdebug.h>
-
 #include <KLocalizedString>
 
 #include <QHBoxLayout>

@@ -25,7 +25,6 @@
 #include <QVBoxLayout>
 #include <QCommandLineParser>
 #include <QMainWindow>
-#include <QDebug>
 
 TextToSpeechConfigGui::TextToSpeechConfigGui(QWidget *parent)
     : QWidget(parent)

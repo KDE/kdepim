@@ -22,7 +22,6 @@
 
 #include <grantlee/plaintextmarkupbuilder.h>
 #include <QTextDocument>
-#include <QDebug>
 using namespace MessageViewer;
 ConvertHtmlToPlainText::ConvertHtmlToPlainText()
 {

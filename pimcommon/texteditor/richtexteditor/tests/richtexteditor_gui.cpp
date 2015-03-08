@@ -17,7 +17,6 @@
 
 #include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
 
-#include <qdebug.h>
 
 #include <KLocalizedString>
 #include <QApplication>
