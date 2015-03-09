@@ -12,6 +12,7 @@ include_directories(
 
 set(headerthemeeditor_SRCS
   main.cpp
+  headerthemeeditor_debug.cpp
   themeeditormainwindow.cpp 
   themeeditorpage.cpp
   previewwidget.cpp

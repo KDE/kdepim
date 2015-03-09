@@ -10,6 +10,7 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 add_subdirectory(pics)
 
 set(ktnef_SRCS
+  ktnef_debug.cpp
   attachpropertydialog.cpp
   ktnefmain.cpp
   ktnefview.cpp

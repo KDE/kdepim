@@ -17,7 +17,7 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include "sendlateragent_debug.h"
-Q_LOGGING_CATEGORY(SENDLATERAGENT_LOG, "log_sendlateragent")
+#include "contactthemeeditor_debug.h"
+Q_LOGGING_CATEGORY(CONTACTTHEMEEDITOR_LOG, "log_contactthemeeditor")
 
 

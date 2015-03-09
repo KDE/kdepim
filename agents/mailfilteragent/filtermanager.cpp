@@ -31,7 +31,7 @@
 #include <Akonadi/KMime/MessageParts>
 #include <kconfig.h>
 #include <kconfiggroup.h>
-#include <qdebug.h>
+#include "mailfilteragent_debug.h"
 #include <KLocalizedString>
 #include <KNotification>
 #include <QIcon>
@@ -479,7 +479,7 @@ bool FilterManager::processContextItem(ItemContext context)
 bool FilterManager::process(const QList< MailFilter * > &mailFilters, const Akonadi::Item &item, bool needsFullPayload, FilterManager::FilterSet set, bool account, const QString &accountId)
 {
     if (set == NoSet) {
-        qDebug() << "FilterManager: process() called with not filter set selected";
+        qCDebug(MAILFILTERAGENT_LOG) << "FilterManager: process() called with not filter set selected";
         return false;
     }
 
@@ -570,7 +570,7 @@ MailCommon::SearchRule::RequiredPart FilterManager::requiredPart(const QString &
 void FilterManager::dump() const
 {
     foreach (const MailCommon::MailFilter *filter, d->mFilters) {
-        qDebug() << filter->asString();
+        qCDebug(MAILFILTERAGENT_LOG) << filter->asString();
     }
 }
 #endif

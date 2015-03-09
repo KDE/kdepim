@@ -33,7 +33,7 @@
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 
-#include <qdebug.h>
+#include "mailfilteragent_debug.h"
 #include <QFileDialog>
 #include <KLocalizedString>
 #include <kmessagebox.h>

@@ -17,7 +17,11 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include "sendlateragent_debug.h"
-Q_LOGGING_CATEGORY(SENDLATERAGENT_LOG, "log_sendlateragent")
+#ifndef KTNEF_DEBUG_H
+#define KTNEF_DEBUG_H
 
+#include <QLoggingCategory>
+Q_DECLARE_LOGGING_CATEGORY(KTNEFAPPS_LOG)
+
+#endif 
 

@@ -16,7 +16,7 @@
 */
 
 #include "notesagentnotedialog.h"
-
+#include "notesagent_debug.h"
 #include <ItemFetchJob>
 #include <ItemFetchScope>
 #include "noteshared/attributes/notedisplayattribute.h"
@@ -78,7 +78,7 @@ void NotesAgentNoteDialog::setNoteId(Akonadi::Item::Id id)
 void NotesAgentNoteDialog::slotFetchItem(KJob *job)
 {
     if (job->error()) {
-        qDebug() << "fetch item failed " << job->errorString();
+        qCDebug(NOTESAGENT_LOG) << "fetch item failed " << job->errorString();
         return;
     }
     Akonadi::ItemFetchJob *itemFetchJob = static_cast<Akonadi::ItemFetchJob *>(job);

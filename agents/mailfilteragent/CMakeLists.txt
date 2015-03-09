@@ -15,6 +15,7 @@ set(akonadi_mailfilter_agent_SRCS
   filterlogdialog.cpp
   filtermanager.cpp
   mailfilteragent.cpp
+  mailfilteragent_debug.cpp
 )
 
 qt5_add_dbus_adaptor(akonadi_mailfilter_agent_SRCS org.freedesktop.Akonadi.MailFilterAgent.xml mailfilteragent.h MailFilterAgent)

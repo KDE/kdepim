@@ -17,7 +17,7 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include "sendlateragent_debug.h"
-Q_LOGGING_CATEGORY(SENDLATERAGENT_LOG, "log_sendlateragent")
+#include "knotes_kontact_plugin_debug.h"
+Q_LOGGING_CATEGORY(KNOTES_KONTACT_PLUGIN_LOG, "log_knoteskontactplugin")
 
 

@@ -28,7 +28,7 @@
 #include <kservice.h>
 #include <QAction>
 #include <KActionCollection>
-#include <QDebug>
+#include "ktnef_debug.h"
 #include <KEditToolBar>
 #include <KLocalizedString>
 #include <QMenu>
@@ -247,12 +247,12 @@ void KTNEFMain::viewFile()
         QString mimename(attach->mimeTag());
 
         if (mimename.isEmpty() || mimename == QLatin1String("application/octet-stream")) {
-            qDebug() << "No mime type found in attachment object, trying to guess...";
+            qCDebug(KTNEFAPPS_LOG) << "No mime type found in attachment object, trying to guess...";
             QMimeDatabase db;
             db.mimeTypeForFile(url.path(), QMimeDatabase::MatchExtension).name();
-            qDebug() << "Detected mime type: " << mimename;
+            qCDebug(KTNEFAPPS_LOG) << "Detected mime type: " << mimename;
         } else {
-            qDebug() << "Mime type from attachment object: " << mimename;
+            qCDebug(KTNEFAPPS_LOG) << "Mime type from attachment object: " << mimename;
         }
 
         KRun::runUrl(url, mimename, this, true);

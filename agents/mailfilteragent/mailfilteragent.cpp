@@ -37,7 +37,7 @@
 #include <mailcommon/kernel/mailkernel.h>
 #include <KLocalizedString>
 #include <QIcon>
-#include <QDebug>
+#include "mailfilteragent_debug.h"
 #include <KIconLoader>
 #include <KMime/Message>
 #include <KNotification>
@@ -142,7 +142,7 @@ void MailFilterAgent::initializeCollections()
 void MailFilterAgent::initialCollectionFetchingDone(KJob *job)
 {
     if (job->error()) {
-        qWarning() << job->errorString();
+        qCWarning(MAILFILTERAGENT_LOG) << job->errorString();
         return; //TODO: proper error handling
     }
 
@@ -169,7 +169,7 @@ void MailFilterAgent::itemAdded(const Akonadi::Item &item, const Akonadi::Collec
     * for the mimetype of the item here.
     */
     if (item.mimeType() != KMime::Message::mimeType()) {
-        qDebug() << "MailFilterAgent::itemAdded called for a non-message item!";
+        qCDebug(MAILFILTERAGENT_LOG) << "MailFilterAgent::itemAdded called for a non-message item!";
         return;
     }
 
@@ -195,7 +195,7 @@ void MailFilterAgent::itemAdded(const Akonadi::Item &item, const Akonadi::Collec
 void MailFilterAgent::itemsReceiviedForFiltering(const Akonadi::Item::List &items)
 {
     if (items.isEmpty()) {
-        qDebug() << "MailFilterAgent::itemsReceiviedForFiltering items is empty!";
+        qCDebug(MAILFILTERAGENT_LOG) << "MailFilterAgent::itemsReceiviedForFiltering items is empty!";
         return;
     }
 
@@ -204,7 +204,7 @@ void MailFilterAgent::itemsReceiviedForFiltering(const Akonadi::Item::List &item
     * happens when item no longer exists etc, and queue compression didn't happen yet
     */
     if (!item.hasPayload()) {
-        qDebug() << "MailFilterAgent::itemsReceiviedForFiltering item has no payload!";
+        qCDebug(MAILFILTERAGENT_LOG) << "MailFilterAgent::itemsReceiviedForFiltering item has no payload!";
         return;
     }
 

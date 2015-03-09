@@ -23,7 +23,7 @@
 #include "sendlateragentadaptor.h"
 #include "sendlateragentsettings.h"
 #include "sendlaterremovemessagejob.h"
-
+#include "sendlateragent_debug.h"
 #include <Akonadi/KMime/SpecialMailCollections>
 #include <AgentInstance>
 #include <AgentManager>
@@ -97,7 +97,7 @@ void SendLaterAgent::doSetOnline(bool online)
 
 void SendLaterAgent::reload()
 {
-    qDebug() << " void SendLaterAgent::reload()";
+    qCDebug(SENDLATERAGENT_LOG) << " void SendLaterAgent::reload()";
     if (SendLaterAgentSettings::enabled()) {
         mManager->load(true);
     }

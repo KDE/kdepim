@@ -29,14 +29,14 @@
 #include <QInputDialog>
 #include <KZip>
 #include <QTemporaryDir>
-#include <QDebug>
+#include "contactthemeeditor_debug.h"
 #include <KMessageBox>
 #include <QUrl>
 
 #include <QHBoxLayout>
 #include <QDir>
 #include <QPointer>
-#include <QDebug>
+#include "contactthemeeditor_debug.h"
 #include <QFileDialog>
 
 ContactEditorPage::ContactEditorPage(const QString &projectDir, const QString &themeName, QWidget *parent)
@@ -189,7 +189,7 @@ void ContactEditorPage::uploadTheme()
         }
         createZip(themename, zip);
         zip->close();
-        //qDebug()<< "zipFilename"<<zipFileName;
+        //qCDebug(CONTACTTHEMEEDITOR_LOG)<< "zipFilename"<<zipFileName;
 
         QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(QLatin1String("kaddressbook_themes.knsrc"), this);
         dialog->setUploadFile(QUrl::fromLocalFile(zipFileName));
@@ -200,7 +200,7 @@ void ContactEditorPage::uploadTheme()
         dialog->exec();
         delete dialog;
     } else {
-        qDebug() << " We can't open in zip write mode";
+        qCDebug(CONTACTTHEMEEDITOR_LOG) << " We can't open in zip write mode";
     }
     delete zip;
 }

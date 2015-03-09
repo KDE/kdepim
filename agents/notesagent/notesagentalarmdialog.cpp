@@ -20,7 +20,7 @@
 #include "noteshared/widget/notelistwidget.h"
 #include "noteshared/attributes/notealarmattribute.h"
 #include "noteshared/alarms/notealarmdialog.h"
-
+#include "notesagent_debug.h"
 #include <KMime/KMimeMessage>
 
 #include <ItemFetchJob>
@@ -171,7 +171,7 @@ void NotesAgentAlarmDialog::slotRemoveAlarm()
 void NotesAgentAlarmDialog::slotFetchItem(KJob *job)
 {
     if (job->error()) {
-        qDebug() << "fetch item failed " << job->errorString();
+        qCDebug(NOTESAGENT_LOG) << "fetch item failed " << job->errorString();
         return;
     }
     Akonadi::ItemFetchJob *itemFetchJob = static_cast<Akonadi::ItemFetchJob *>(job);
@@ -187,7 +187,7 @@ void NotesAgentAlarmDialog::slotFetchItem(KJob *job)
 void NotesAgentAlarmDialog::slotModifyItem(KJob *job)
 {
     if (job->error()) {
-        qDebug() << "modify item failed " << job->errorString();
+        qCDebug(NOTESAGENT_LOG) << "modify item failed " << job->errorString();
         return;
     }
 }
@@ -207,7 +207,7 @@ void NotesAgentAlarmDialog::slotModifyAlarm()
 void NotesAgentAlarmDialog::slotFetchAlarmItem(KJob *job)
 {
     if (job->error()) {
-        qDebug() << "fetch item failed " << job->errorString();
+        qCDebug(NOTESAGENT_LOG) << "fetch item failed " << job->errorString();
         return;
     }
     Akonadi::ItemFetchJob *itemFetchJob = static_cast<Akonadi::ItemFetchJob *>(job);
@@ -218,7 +218,7 @@ void NotesAgentAlarmDialog::slotFetchAlarmItem(KJob *job)
         if (attr) {
             KMime::Message::Ptr noteMessage = item.payload<KMime::Message::Ptr>();
             if (!noteMessage) {
-                qDebug() << "Error this note doesn't have payload ";
+                qCDebug(NOTESAGENT_LOG) << "Error this note doesn't have payload ";
                 KMessageBox::error(this, i18n("Error during fetch alarm info."), i18n("Alarm"));
                 return;
             }

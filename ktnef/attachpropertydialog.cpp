@@ -22,7 +22,7 @@
 #include <KTNEF/KTNEFPropertySet>
 #include <KTNEF/KTNEFDefs>
 
-#include <QDebug>
+#include "ktnef_debug.h"
 #include <KLocalizedString>
 #include <KMessageBox>
 
@@ -129,7 +129,7 @@ void AttachPropertyDialog::formatProperties(const QMap<int, KTNEFProperty *> &pr
         } else if (item) {
             newItem = new QTreeWidgetItem(item, QStringList((*it)->keyString()));
         } else {
-            qWarning() << "formatProperties() called with no listview and no item";
+            qCWarning(KTNEFAPPS_LOG) << "formatProperties() called with no listview and no item";
             return;
         }
 

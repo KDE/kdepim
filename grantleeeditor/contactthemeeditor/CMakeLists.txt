@@ -11,6 +11,7 @@ include_directories(
 
 set(contactthemeeditor_SRCS
   main.cpp
+  contactthemeeditor_debug.cpp
   defaultcompletion.cpp
   contactdefaulttemplate.cpp
   contacteditorwidget.cpp
