@@ -319,7 +319,16 @@ void SieveTextEdit::slotHelp()
 
 void SieveTextEdit::comment()
 {
-    if (textCursor().hasSelection()) {
+    QTextCursor textcursor = textCursor();
+    if (textcursor.hasSelection()) {
+        //Move start block
+        textcursor.movePosition( QTextCursor::StartOfBlock, QTextCursor::KeepAnchor );
+        QString text = textCursor().selectedText();
+        text = QLatin1Char('#') + text;
+        text.replace( QChar::ParagraphSeparator,QLatin1String("\n#") );
+        textcursor.insertText(text);
+        setTextCursor(textcursor);
+    } else {
 
     }
 }
@@ -327,6 +336,7 @@ void SieveTextEdit::comment()
 void SieveTextEdit::uncomment()
 {
     if (textCursor().hasSelection()) {
-
+        QString text = textCursor().selectedText();
+        //TODO
     }
 }

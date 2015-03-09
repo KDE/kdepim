@@ -372,10 +372,10 @@ void SieveEditorTextModeWidget::checkSpelling()
 
 void SieveEditorTextModeWidget::comment()
 {
-    //TODO
+    mTextEdit->comment();
 }
 
 void SieveEditorTextModeWidget::uncomment()
 {
-    //TODO
+    mTextEdit->uncomment();
 }
