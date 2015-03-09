@@ -76,7 +76,7 @@
 #include <KDBusServiceStarter>
 #include <KJob>
 #include <KIO/JobUiDelegate>
-#include <collectionpage/expirecollectionattribute.h>
+#include <collectionpage/attributes/expirecollectionattribute.h>
 
 OrgKdeAkonadiPOP3SettingsInterface *MailCommon::Util::createPop3SettingsInterface(
     const QString &ident)

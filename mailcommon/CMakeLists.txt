@@ -87,10 +87,10 @@ set(libmailcommon_filter_for_mobile_SRCS
 set(libmailcommon_collection_SRCS
   collectionpage/collectiontypeutil.cpp
   collectionpage/attributeregistrar.cpp
-  collectionpage/collectionannotationsattribute.cpp
+  collectionpage/attributes/collectionannotationsattribute.cpp
   collectionpage/collectiongeneralpage.cpp
   collectionpage/collectionexpirypage.cpp
-  collectionpage/expirecollectionattribute.cpp
+  collectionpage/attributes/expirecollectionattribute.cpp
   collectionpage/incidencesforwidget.cpp
   collectionpage/contenttypewidget.cpp
 )

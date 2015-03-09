@@ -221,3 +221,53 @@ void TagWidget::recordTagSettings(MailCommon::Tag::Ptr tag)
     tag->inToolbar = mInToolbarCheck->isChecked();
 }
 
+KLineEdit *TagWidget::tagNameLineEdit() const
+{
+    return mTagNameLineEdit;
+}
+
+QCheckBox *TagWidget::textColorCheck() const
+{
+    return mTextColorCheck;
+}
+
+QCheckBox *TagWidget::textFontCheck() const
+{
+    return mTextFontCheck;
+}
+
+QCheckBox *TagWidget::backgroundColorCheck() const
+{
+    return mBackgroundColorCheck;
+}
+
+QCheckBox *TagWidget::inToolBarCheck() const
+{
+    return mInToolbarCheck;
+}
+
+KColorCombo *TagWidget::textColorCombo() const
+{
+    return mTextColorCombo;
+}
+
+KColorCombo *TagWidget::backgroundColorCombo() const
+{
+    return mBackgroundColorCombo;
+}
+
+KFontRequester *TagWidget::fontRequester() const
+{
+    return mFontRequester;
+}
+
+KIconButton *TagWidget::iconButton() const
+{
+    return mIconButton;
+}
+
+KKeySequenceWidget *TagWidget::keySequenceWidget() const
+{
+    return mKeySequenceWidget;
+}
+

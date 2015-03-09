@@ -35,7 +35,7 @@ Name[x-test]=xxKAddressbook import filexx
 Name[zh_TW]=KAddressBook 匯入檔
 Type=Application
 Exec=kaddressbook --import %u
-Icon=kmail
+Icon=kaddressbook
 MimeType=text/vcard;text/x-ldif;
 
 X-KDE-StartupNotify=true

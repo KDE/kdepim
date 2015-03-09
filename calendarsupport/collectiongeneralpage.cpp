@@ -39,7 +39,7 @@
 #include <QVBoxLayout>
 #include <KConfigGroup>
 
-#include <mailcommon/collectionpage/collectionannotationsattribute.h>
+#include <mailcommon/collectionpage/attributes/collectionannotationsattribute.h>
 #include <mailcommon/collectionpage/collectiontypeutil.h>
 #include <mailcommon/collectionpage/incidencesforwidget.h>
 

@@ -18,7 +18,6 @@
 #include "foldercollectionmonitor.h"
 #include "util/mailutil.h"
 #include "foldercollection.h"
-#include "collectionpage/expirecollectionattribute.h"
 #include "mailcommon_debug.h"
 #include <ChangeRecorder>
 #include <Collection>
@@ -29,6 +28,7 @@
 #include <ItemDeleteJob>
 #include <ItemFetchJob>
 #include <ItemFetchScope>
+#include "collectionpage/attributes/expirecollectionattribute.h"
 #include <Akonadi/KMime/MessageParts>
 #include <AkonadiCore/entityannotationsattribute.h>
 

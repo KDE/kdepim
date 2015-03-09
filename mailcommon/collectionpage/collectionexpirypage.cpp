@@ -18,7 +18,7 @@
 
 #include "collectionexpirypage.h"
 
-#include "expirecollectionattribute.h"
+#include "attributes/expirecollectionattribute.h"
 #include "folderrequester.h"
 #include "foldercollection.h"
 #include "util/mailutil.h"
