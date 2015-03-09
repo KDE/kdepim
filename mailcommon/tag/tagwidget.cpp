@@ -80,8 +80,8 @@ TagWidget::TagWidget(const QList<KActionCollection *> &actionCollections, QWidge
     settings->addWidget(mBackgroundColorCombo, 3, 1);
     mBackgroundColorCombo->setEnabled(false);
 
-    connect(mBackgroundColorCheck, SIGNAL(toggled(bool)),
-            mBackgroundColorCombo, SLOT(setEnabled(bool)));
+    connect(mBackgroundColorCheck, &QAbstractButton::toggled,
+            mBackgroundColorCombo, &QWidget::setEnabled);
     connect(mBackgroundColorCheck, SIGNAL(stateChanged(int)),
             this, SLOT(slotEmitChangeCheck()));
     connect(mBackgroundColorCombo, SIGNAL(activated(int)),

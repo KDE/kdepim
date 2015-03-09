@@ -86,10 +86,10 @@ View::View(Widget *pParent)
     : QTreeView(pParent), d(new Private(this, pParent))
 {
     d->mSaveThemeColumnStateTimer = new QTimer();
-    connect(d->mSaveThemeColumnStateTimer, SIGNAL(timeout()), this, SLOT(saveThemeColumnState()));
+    connect(d->mSaveThemeColumnStateTimer, &QTimer::timeout, this, &View::saveThemeColumnState);
 
     d->mApplyThemeColumnsTimer = new QTimer();
-    connect(d->mApplyThemeColumnsTimer, SIGNAL(timeout()), this, SLOT(applyThemeColumns()));
+    connect(d->mApplyThemeColumnsTimer, &QTimer::timeout, this, &View::applyThemeColumns);
 
     setItemDelegate(d->mDelegate);
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
@@ -100,10 +100,10 @@ View::View(Widget *pParent)
     viewport()->setAcceptDrops(true);
 
     header()->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(header(), SIGNAL(customContextMenuRequested(QPoint)),
-            SLOT(slotHeaderContextMenuRequested(QPoint)));
-    connect(header(), SIGNAL(sectionResized(int,int,int)),
-            SLOT(slotHeaderSectionResized(int,int,int)));
+    connect(header(), &QWidget::customContextMenuRequested,
+            this, &View::slotHeaderContextMenuRequested);
+    connect(header(), &QHeaderView::sectionResized,
+            this, &View::slotHeaderSectionResized);
 
     header()->setClickable(true);
     header()->setResizeMode(QHeaderView::Interactive);
@@ -113,13 +113,13 @@ View::View(Widget *pParent)
     d->mModel = new Model(this);
     setModel(d->mModel);
 
-    connect(d->mModel, SIGNAL(statusMessage(QString)),
-            pParent, SIGNAL(statusMessage(QString)));
+    connect(d->mModel, &Model::statusMessage,
+            pParent, &Widget::statusMessage);
 
     //connect( selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
     //         this, SLOT(slotCurrentIndexChanged(QModelIndex,QModelIndex)) );
-    connect(selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            this, SLOT(slotSelectionChanged(QItemSelection,QItemSelection)),
+    connect(selectionModel(), &QItemSelectionModel::selectionChanged,
+            this, &View::slotSelectionChanged,
             Qt::UniqueConnection);
 
     // as in KDE3, when a root-item of a message thread is expanded, expand all children

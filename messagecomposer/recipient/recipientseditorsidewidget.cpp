@@ -55,8 +55,8 @@ RecipientsEditorSideWidget::RecipientsEditorSideWidget(RecipientsEditor *view, Q
         i18nc("@action:button", "Save List..."), this);
     topLayout->addWidget(mDistributionListButton);
     mDistributionListButton->hide();
-    connect(mDistributionListButton, SIGNAL(clicked()),
-            SIGNAL(saveDistributionList()));
+    connect(mDistributionListButton, &QAbstractButton::clicked,
+            this, &RecipientsEditorSideWidget::saveDistributionList);
     mDistributionListButton->setToolTip(
         i18nc("@info:tooltip", "Save recipients as distribution list"));
 
@@ -78,8 +78,8 @@ RecipientsPicker *RecipientsEditorSideWidget::picker() const
         // hacks to allow picker() to be const in the presence of lazy loading
         RecipientsEditorSideWidget *non_const_this = const_cast<RecipientsEditorSideWidget *>(this);
         mRecipientPicker = new RecipientsPicker(non_const_this);
-        connect(mRecipientPicker, SIGNAL(pickedRecipient(Recipient,bool&)),
-                non_const_this, SIGNAL(pickedRecipient(Recipient,bool&)));
+        connect(mRecipientPicker, &RecipientsPicker::pickedRecipient,
+                non_const_this, &RecipientsEditorSideWidget::pickedRecipient);
         mPickerPositioner = new KWindowPositioner(mSelectButton, mRecipientPicker);
     }
     return mRecipientPicker;

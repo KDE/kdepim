@@ -134,8 +134,8 @@ MailWebView::MailWebView(KActionCollection *actionCollection, QWidget *parent)
     connect(page(), SIGNAL(linkHovered(QString,QString,QString)),
             this,   SIGNAL(linkHovered(QString,QString,QString)));
     connect(this, SIGNAL(loadStarted()), this, SLOT(hideAccessKeys()));
-    connect(mScamDetection, SIGNAL(messageMayBeAScam()), this, SIGNAL(messageMayBeAScam()));
-    connect(page(), SIGNAL(scrollRequested(int,int,QRect)), this, SLOT(hideAccessKeys()));
+    connect(mScamDetection, &ScamDetection::messageMayBeAScam, this, &MailWebView::messageMayBeAScam);
+    connect(page(), &QWebPage::scrollRequested, this, &MailWebView::hideAccessKeys);
 }
 
 MailWebView::~MailWebView()

@@ -474,7 +474,7 @@ void AttachmentControllerBase::createActions()
     connect(d->attachMyPublicKeyAction, &QAction::triggered, this, &AttachmentControllerBase::attachMyPublicKey);
 
     d->attachmentMenu = new KActionMenu(QIcon::fromTheme(QLatin1String("mail-attachment")), i18n("Attach"), this);
-    connect(d->attachmentMenu, SIGNAL(triggered(bool)), this, SLOT(showAddAttachmentFileDialog()));
+    connect(d->attachmentMenu, &QAction::triggered, this, &AttachmentControllerBase::showAddAttachmentFileDialog);
 
     d->attachmentMenu->setDelayed(true);
 
@@ -482,12 +482,12 @@ void AttachmentControllerBase::createActions()
     d->addAttachmentFileAction->setIconText(i18n("Attach"));
     d->addContextAction = new QAction(QIcon::fromTheme(QLatin1String("mail-attachment")),
                                       i18n("Add Attachment..."), this);
-    connect(d->addAttachmentFileAction, SIGNAL(triggered(bool)), this, SLOT(showAddAttachmentFileDialog()));
-    connect(d->addContextAction, SIGNAL(triggered(bool)), this, SLOT(showAddAttachmentFileDialog()));
+    connect(d->addAttachmentFileAction, &QAction::triggered, this, &AttachmentControllerBase::showAddAttachmentFileDialog);
+    connect(d->addContextAction, &QAction::triggered, this, &AttachmentControllerBase::showAddAttachmentFileDialog);
 
     d->addAttachmentDirectoryAction = new QAction(QIcon::fromTheme(QLatin1String("mail-attachment")), i18n("&Attach Directory..."), this);
     d->addAttachmentDirectoryAction->setIconText(i18n("Attach"));
-    connect(d->addAttachmentDirectoryAction, SIGNAL(triggered(bool)), this, SLOT(showAddAttachmentCompressedDirectoryDialog()));
+    connect(d->addAttachmentDirectoryAction, &QAction::triggered, this, &AttachmentControllerBase::showAddAttachmentCompressedDirectoryDialog);
 
     d->addOwnVcardAction = new QAction(i18n("Attach Own vCard"), this);
     d->addOwnVcardAction->setIconText(i18n("Own vCard"));

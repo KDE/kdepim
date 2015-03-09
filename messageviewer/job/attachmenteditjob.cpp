@@ -89,7 +89,7 @@ void AttachmentEditJob::slotAttachmentEditDone(MessageViewer::EditorWatcher *edi
 
             mMessageItem.setPayloadFromData(mMessage->encodedContent());
             Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mMessageItem);
-            connect(job, SIGNAL(result(KJob*)), SLOT(slotItemModifiedResult(KJob*)));
+            connect(job, &KJob::result, this, &AttachmentEditJob::slotItemModifiedResult);
             removeEditorWatcher(editorWatcher, name);
         }
     } else {

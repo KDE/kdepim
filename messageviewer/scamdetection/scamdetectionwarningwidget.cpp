@@ -38,7 +38,7 @@ ScamDetectionWarningWidget::ScamDetectionWarningWidget(QWidget *parent)
 
     QMenu *menu = new QMenu();
     QAction *action = new QAction(i18n("Move to Trash"), this);
-    connect(action, SIGNAL(triggered(bool)), SIGNAL(moveMessageToTrash()));
+    connect(action, &QAction::triggered, this, &ScamDetectionWarningWidget::moveMessageToTrash);
     action->setMenu(menu);
     addAction(action);
 
