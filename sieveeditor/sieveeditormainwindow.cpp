@@ -184,6 +184,12 @@ void SieveEditorMainWindow::setupActions()
     mAutoGenerateScriptAction = ac->addAction(QLatin1String("autogenerate_script"), mMainWidget->sieveEditorMainWidget(), SLOT(slotAutoGenerateScript()));
     mAutoGenerateScriptAction->setText(i18n("Autogenerate Script..."));
     mAutoGenerateScriptAction->setEnabled(false);
+
+    mCommentAction = ac->addAction(QLatin1String("comment_code"), mMainWidget->sieveEditorMainWidget(), SLOT(slotComment()));
+    mCommentAction->setText(i18n("Comment"));
+
+    mUncommentAction = ac->addAction(QLatin1String("uncomment_code"), mMainWidget->sieveEditorMainWidget(), SLOT(slotUncomment()));
+    mUncommentAction->setText(i18n("Uncomment"));
 }
 
 void SieveEditorMainWindow::slotRefreshList()
@@ -274,7 +280,8 @@ void SieveEditorMainWindow::slotUpdateActions()
     mSpellCheckAction->setEnabled(hasPage);
     mCheckSyntaxAction->setEnabled(hasPage && !mNetworkIsDown);
     mAutoGenerateScriptAction->setEnabled(hasPage);
-
+    mCommentAction->setEnabled(hasPage);
+    mUncommentAction->setEnabled(hasPage);
 }
 
 void SieveEditorMainWindow::slotUndoAvailable(bool b)

@@ -80,6 +80,8 @@ private:
     QAction *mSpellCheckAction;
     QAction *mCheckSyntaxAction;
     QAction *mAutoGenerateScriptAction;
+    QAction *mCommentAction;
+    QAction *mUncommentAction;
 
     QLabel *mStatusBarInfo;
     QNetworkConfigurationManager *mNetworkConfigurationManager;
