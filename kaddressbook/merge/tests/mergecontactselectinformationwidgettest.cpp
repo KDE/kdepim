@@ -19,6 +19,7 @@
 #include "merge/widgets/mergecontactselectinformationwidget.h"
 #include "merge/widgets/mergecontactselectlistwidget.h"
 #include <qtest_kde.h>
+#include <QLayout>
 MergeContactSelectInformationWidgetTest::MergeContactSelectInformationWidgetTest(QObject *parent)
     : QObject(parent)
 {
@@ -33,17 +34,7 @@ MergeContactSelectInformationWidgetTest::~MergeContactSelectInformationWidgetTes
 void MergeContactSelectInformationWidgetTest::shouldHaveDefaultValue()
 {
     KABMergeContacts::MergeContactSelectInformationWidget w;
-    //KABMergeContacts::MergeContactSelectListWidget *listWidget = qFindChild<KABMergeContacts::MergeContactSelectListWidget *>(&w, QLatin1String("list_information"));
-    //QVERIFY(listWidget);
+    QCOMPARE(w.layout()->count(),0);
 }
-
-void MergeContactSelectInformationWidgetTest::shouldHaveEmptyListIfContactListIsEmpty()
-{
-    KABMergeContacts::MergeContactSelectInformationWidget w;
-    //KABMergeContacts::MergeContactSelectListWidget *listWidget = qFindChild<KABMergeContacts::MergeContactSelectListWidget *>(&w, QLatin1String("list_information"));
-    //FIXME
-    //w.setContacts(Akonadi::Item::List());
-}
-
 
 QTEST_KDEMAIN(MergeContactSelectInformationWidgetTest, GUI)
