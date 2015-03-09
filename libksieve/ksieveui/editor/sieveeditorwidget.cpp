@@ -116,6 +116,7 @@ SieveEditorWidget::SieveEditorWidget(bool useMenuBar, QWidget *parent)
         menuBar->fileMenu()->addAction(mSaveAs);
         menuBar->fileMenu()->addSeparator();
         menuBar->fileMenu()->addAction(mUpload);
+        menuBar->toolsMenu()->addSeparator();
         menuBar->toolsMenu()->addAction(mAutoGenerateScript);
         menuBar->toolsMenu()->addAction(mCheckSyntax);
         lay->addWidget(menuBar);
