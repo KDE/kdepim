@@ -42,11 +42,10 @@ void SieveEditorMenuBar::initActions()
     //mGoToLine->setShortcut(QKeySequence( Qt::CTRL + Qt::Key_G ));
     connect(mGoToLine, SIGNAL(triggered(bool)), SIGNAL(gotoLine()));
 
-    //KF5 add i18n
-    mCommentCodeAction = new QAction(QLatin1String("Comment"), this);
+    mCommentCodeAction = new QAction(i18n("Comment"), this);
     connect(mCommentCodeAction, SIGNAL(triggered(bool)), SIGNAL(comment()));
 
-    mUncommentCodeAction = new QAction(QLatin1String("Uncomment"), this);
+    mUncommentCodeAction = new QAction(i18n("Uncomment"), this);
     connect(mUncommentCodeAction, SIGNAL(triggered(bool)), SIGNAL(uncomment()));
 
     mFindAction = KStandardAction::find(this, SIGNAL(find()), this);
