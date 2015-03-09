@@ -216,6 +216,16 @@ void SieveEditorPageWidget::import()
     mSieveEditorWidget->slotImport();
 }
 
+void SieveEditorPageWidget::comment()
+{
+    mSieveEditorWidget->comment();
+}
+
+void SieveEditorPageWidget::uncomment()
+{
+    mSieveEditorWidget->uncomment();
+}
+
 void SieveEditorPageWidget::checkSpelling()
 {
     mSieveEditorWidget->checkSpelling();

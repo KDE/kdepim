@@ -337,6 +337,28 @@ void SieveEditorMainWidget::slotCheckSyntax()
     }
 }
 
+void SieveEditorMainWidget::slotComment()
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            page->comment();
+        }
+    }
+}
+
+void SieveEditorMainWidget::slotUncomment()
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            page->uncomment();
+        }
+    }
+}
+
 
 void SieveEditorMainWidget::slotImport()
 {
