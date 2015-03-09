@@ -65,6 +65,8 @@ public Q_SLOTS:
     void slotImport();
     void slotAutoGenerateScript();
     void slotCheckSyntax();
+    void slotComment();
+    void slotUncomment();
 
 Q_SIGNALS:
     void updateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);

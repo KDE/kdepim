@@ -46,6 +46,10 @@ public:
 
     QMenu *fileMenu() const;
 
+    QAction *commentCodeAction() const;
+
+    QAction *uncommentCodeAction() const;
+
 public slots:
     void slotUndoAvailable(bool b);
     void slotRedoAvailable(bool b);
@@ -60,6 +64,8 @@ Q_SIGNALS:
     void paste();
     void cut();
     void selectAll();
+    void comment();
+    void uncomment();
 
 private:
     void initActions();
@@ -73,6 +79,8 @@ private:
     QAction *mPasteAction;
     QAction *mCutAction;
     QAction *mSelectAllAction;
+    QAction *mCommentCodeAction;
+    QAction *mUncommentCodeAction;
     QMenu *mEditorMenu;
     QMenu *mToolsMenu;
     QMenu *mFileMenu;

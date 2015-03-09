@@ -83,6 +83,8 @@ public Q_SLOTS:
     void slotUploadScripts();
     void slotAutoGenerateScripts();
     void slotCheckSyntax();
+    void comment();
+    void uncomment();
 
 private Q_SLOTS:
     void slotEnableButtonOk(bool b);

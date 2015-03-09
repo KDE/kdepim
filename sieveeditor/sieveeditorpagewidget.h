@@ -67,6 +67,8 @@ public:
     void import();
     void autoGenerateScript();
     void checkSyntax();
+    void comment();
+    void uncomment();
 Q_SIGNALS:
     void refreshList();
     void scriptModified(bool, SieveEditorPageWidget *);

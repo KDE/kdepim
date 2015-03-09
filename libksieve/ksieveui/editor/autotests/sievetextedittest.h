@@ -15,20 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SIEVEEDITORMENUBARTEST_H
-#define SIEVEEDITORMENUBARTEST_H
+#ifndef SIEVETEXTEDITTEST_H
+#define SIEVETEXTEDITTEST_H
 
 #include <QObject>
 
-class SieveEditorMenuBarTest : public QObject
+class SieveTextEditTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit SieveEditorMenuBarTest(QObject *parent = Q_NULLPTR);
-    ~SieveEditorMenuBarTest();
+    explicit SieveTextEditTest(QObject *parent = 0);
+    ~SieveTextEditTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
-    void shouldEmitSignals();
+    void comment_data();
+    void comment();
+
+    void uncomment_data();
+    void uncomment();
 };
 
-#endif // SIEVEEDITORMENUBARTEST_H
+#endif // SIEVETEXTEDITTEST_H

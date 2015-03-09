@@ -323,3 +323,59 @@ void SieveTextEdit::slotHelp()
         }
     }
 }
+
+void SieveTextEdit::comment()
+{
+    QTextCursor textcursor = textCursor();
+    if (textcursor.hasSelection()) {
+        //Move start block
+        textcursor.movePosition( QTextCursor::StartOfBlock, QTextCursor::KeepAnchor );
+        QString text = textcursor.selectedText();
+        text = QLatin1Char('#') + text;
+        text.replace( QChar::ParagraphSeparator,QLatin1String("\n#") );
+        textcursor.insertText(text);
+        setTextCursor(textcursor);
+    } else {
+        textcursor.movePosition( QTextCursor::StartOfBlock );
+        textcursor.movePosition( QTextCursor::EndOfBlock, QTextCursor::KeepAnchor );
+        const QString s = textcursor.selectedText();
+        const QString str = QLatin1Char('#') + s;
+        textcursor.insertText( str );
+        setTextCursor( textcursor );
+    }
+}
+
+void SieveTextEdit::uncomment()
+{
+    QTextCursor textcursor = textCursor();
+    if (textcursor.hasSelection()) {
+        textcursor.movePosition( QTextCursor::StartOfBlock, QTextCursor::KeepAnchor );
+        QString text = textcursor.selectedText();
+        if (text.startsWith(QLatin1Char('#'))) {
+            text.remove(0, 1);
+        }
+        QString newText = text;
+        for (int i = 0; i <newText.length(); ++i) {
+            if (newText.at(i) == QChar::ParagraphSeparator || newText.at(i) == QChar::LineSeparator) {
+                ++i;
+                if (i <text.length()) {
+                    if (newText.at(i) == QLatin1Char('#')) {
+                        newText.remove(i, 1);
+                    }
+                }
+            }
+        }
+
+        textcursor.insertText(newText);
+        setTextCursor(textcursor);
+    } else {
+        textcursor.movePosition( QTextCursor::StartOfBlock );
+        textcursor.movePosition( QTextCursor::EndOfBlock, QTextCursor::KeepAnchor );
+        QString text = textcursor.selectedText();
+        if (text.startsWith(QLatin1Char('#'))) {
+            text.remove(0, 1);
+        }
+        textcursor.insertText( text );
+        setTextCursor( textcursor );
+    }
+}

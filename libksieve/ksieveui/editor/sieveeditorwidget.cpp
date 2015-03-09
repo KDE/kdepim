@@ -103,12 +103,16 @@ SieveEditorWidget::SieveEditorWidget(bool useMenuBar, QWidget *parent)
         connect(menuBar, SIGNAL(cut()), SLOT(cut()));
         connect(menuBar, SIGNAL(selectAll()), SLOT(selectAll()));
         connect(menuBar, SIGNAL(gotoLine()), SLOT(goToLine()));
+        connect(menuBar, SIGNAL(comment()), SLOT(comment()));
+        connect(menuBar, SIGNAL(uncomment()), SLOT(uncomment()));
+
         connect(this, SIGNAL(copyAvailable(bool)), menuBar, SLOT(slotCopyAvailable(bool)));
         connect(this, SIGNAL(redoAvailable(bool)), menuBar, SLOT(slotRedoAvailable(bool)));
         connect(this, SIGNAL(undoAvailable(bool)), menuBar, SLOT(slotUndoAvailable(bool)));
         menuBar->fileMenu()->addAction(mSaveAs);
         menuBar->fileMenu()->addSeparator();
         menuBar->fileMenu()->addAction(mUpload);
+        menuBar->toolsMenu()->addSeparator();
         menuBar->toolsMenu()->addAction(mAutoGenerateScript);
         menuBar->toolsMenu()->addAction(mCheckSyntax);
         lay->addWidget(menuBar);
@@ -250,6 +254,20 @@ bool SieveEditorWidget::hasSelection() const
         return mTextModeWidget->hasSelection();
     }
     return false;
+}
+
+void SieveEditorWidget::comment()
+{
+    if (mMode == TextMode) {
+        mTextModeWidget->comment();
+    }
+}
+
+void SieveEditorWidget::uncomment()
+{
+    if (mMode == TextMode) {
+        mTextModeWidget->uncomment();
+    }
 }
 
 SieveEditorWidget::EditorMode SieveEditorWidget::mode() const
