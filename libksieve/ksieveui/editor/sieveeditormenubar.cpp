@@ -42,6 +42,14 @@ void SieveEditorMenuBar::initActions()
     mGoToLine->setIcon(KIcon(QLatin1String("go-jump")));
     //mGoToLine->setShortcut(QKeySequence( Qt::CTRL + Qt::Key_G ));
     connect(mGoToLine, SIGNAL(triggered(bool)), SIGNAL(gotoLine()));
+
+    //KF5 add i18n
+    mCommentCodeAction = new KAction(QLatin1String("Comment"), this);
+    connect(mCommentCodeAction, SIGNAL(triggered(bool)), SIGNAL(comment()));
+
+    mUncommentCodeAction = new KAction(QLatin1String("Uncomment"), this);
+    connect(mUncommentCodeAction, SIGNAL(triggered(bool)), SIGNAL(uncomment()));
+
     mFindAction = KStandardAction::find(this, SIGNAL(find()), this);
     mReplaceAction = KStandardAction::replace(this, SIGNAL(replace()), this);
     mUndoAction = KStandardAction::undo(this, SIGNAL(undo()), this);
@@ -80,7 +88,20 @@ void SieveEditorMenuBar::initMenus()
     mEditorMenu->addAction(mReplaceAction);
     mEditorMenu->addSeparator();
     mEditorMenu->addAction(mGoToLine);
+
+    mToolsMenu->addAction(mCommentCodeAction);
+    mToolsMenu->addAction(mUncommentCodeAction);
 }
+KAction *SieveEditorMenuBar::uncommentCodeAction() const
+{
+    return mUncommentCodeAction;
+}
+
+KAction *SieveEditorMenuBar::commentCodeAction() const
+{
+    return mCommentCodeAction;
+}
+
 QMenu *SieveEditorMenuBar::fileMenu() const
 {
     return mFileMenu;

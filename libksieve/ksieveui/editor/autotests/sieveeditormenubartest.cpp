@@ -18,7 +18,9 @@
 #include "sieveeditormenubartest.h"
 #include "../sieveeditormenubar.h"
 #include <qtest_kde.h>
+#include <qtestmouse.h>
 #include <KAction>
+#include <QSignalSpy>
 
 SieveEditorMenuBarTest::SieveEditorMenuBarTest(QObject *parent)
     : QObject(parent)
@@ -46,10 +48,12 @@ void SieveEditorMenuBarTest::shouldHaveDefaultValue()
     QVERIFY(bar.editorMenu());
     QVERIFY(bar.toolsMenu());
     QVERIFY(bar.fileMenu());
+    QVERIFY(bar.commentCodeAction());
+    QVERIFY(bar.uncommentCodeAction());
     QCOMPARE(bar.actions().count(), 3);
     QCOMPARE(bar.editorMenu()->actions().count(), 13);
     QCOMPARE(bar.fileMenu()->actions().count(), 0);
-    QCOMPARE(bar.toolsMenu()->actions().count(), 0);
+    QCOMPARE(bar.toolsMenu()->actions().count(), 2);
 
     QVERIFY(bar.findAction()->isEnabled());
     QVERIFY(bar.replaceAction()->isEnabled());
@@ -59,6 +63,56 @@ void SieveEditorMenuBarTest::shouldHaveDefaultValue()
     QVERIFY(bar.pasteAction()->isEnabled());
     QVERIFY(!bar.cutAction()->isEnabled());
     QVERIFY(bar.selectAllAction()->isEnabled());
+}
+
+void SieveEditorMenuBarTest::shouldEmitSignals()
+{
+    KSieveUi::SieveEditorMenuBar bar;
+    QSignalSpy spyComment(&bar, SIGNAL(comment()));
+    bar.commentCodeAction()->trigger();
+
+    QSignalSpy spyUnComment(&bar, SIGNAL(uncomment()));
+    bar.uncommentCodeAction()->trigger();
+
+    QSignalSpy spyCut(&bar, SIGNAL(cut()));
+    bar.cutAction()->trigger();
+
+    QSignalSpy spyGotoLine(&bar, SIGNAL(gotoLine()));
+    bar.goToLineAction()->trigger();
+
+    QSignalSpy spyCopy(&bar, SIGNAL(copy()));
+    bar.copyAction()->trigger();
+
+    QSignalSpy spyPaste(&bar, SIGNAL(paste()));
+    bar.pasteAction()->trigger();
+
+    QSignalSpy spyUndo(&bar, SIGNAL(undo()));
+    bar.undoAction()->trigger();
+
+    QSignalSpy spyRedo(&bar, SIGNAL(redo()));
+    bar.redoAction()->trigger();
+
+    QSignalSpy spySelectAll(&bar, SIGNAL(selectAll()));
+    bar.selectAllAction()->trigger();
+
+    QSignalSpy spyFind(&bar, SIGNAL(find()));
+    bar.findAction()->trigger();
+
+    QSignalSpy spyReplace(&bar, SIGNAL(replace()));
+    bar.replaceAction()->trigger();
+
+
+    QCOMPARE(spyUnComment.count(), 1);
+    QCOMPARE(spyComment.count(), 1);
+    QCOMPARE(spyGotoLine.count(), 1);
+    QCOMPARE(spyCut.count(), 1);
+    QCOMPARE(spyCopy.count(), 1);
+    QCOMPARE(spyPaste.count(), 1);
+    QCOMPARE(spyRedo.count(), 1);
+    QCOMPARE(spyUndo.count(), 1);
+    QCOMPARE(spySelectAll.count(), 1);
+    QCOMPARE(spyFind.count(), 1);
+    QCOMPARE(spyReplace.count(), 1);
 }
 
 

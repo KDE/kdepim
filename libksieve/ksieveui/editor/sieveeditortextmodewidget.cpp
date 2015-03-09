@@ -369,3 +369,13 @@ void SieveEditorTextModeWidget::checkSpelling()
 {
     mTextEdit->slotCheckSpelling();
 }
+
+void SieveEditorTextModeWidget::comment()
+{
+    //TODO
+}
+
+void SieveEditorTextModeWidget::uncomment()
+{
+    //TODO
+}

@@ -29,6 +29,7 @@ public:
     ~SieveEditorMenuBarTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldEmitSignals();
 };
 
 #endif // SIEVEEDITORMENUBARTEST_H

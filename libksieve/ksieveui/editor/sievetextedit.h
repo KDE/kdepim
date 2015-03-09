@@ -49,6 +49,8 @@ public:
 
     void setShowHelpMenu(bool b);
 
+    void uncomment();
+    void comment();
 private Q_SLOTS:
     void slotInsertCompletion( const QString& );
     void slotUpdateLineNumberAreaWidth(int newBlockCount);

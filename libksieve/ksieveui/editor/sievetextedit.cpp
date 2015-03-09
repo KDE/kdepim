@@ -316,3 +316,17 @@ void SieveTextEdit::slotHelp()
             Q_EMIT openHelp(word, url);
     }
 }
+
+void SieveTextEdit::comment()
+{
+    if (textCursor().hasSelection()) {
+
+    }
+}
+
+void SieveTextEdit::uncomment()
+{
+    if (textCursor().hasSelection()) {
+
+    }
+}
