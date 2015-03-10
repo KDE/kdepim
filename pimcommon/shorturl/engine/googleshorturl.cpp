@@ -58,21 +58,21 @@ void GoogleShortUrl::slotSslErrors(QNetworkReply *reply, const QList<QSslError> 
 
 void GoogleShortUrl::slotShortUrlFinished(QNetworkReply *reply)
 {
+    if (!mErrorFound) {
+
+        const QString jsonData = QString::fromUtf8(reply->readAll());
+
+        QJson::Parser parser;
+        bool ok;
+        const QMap<QString, QVariant> map = parser.parse(jsonData.toUtf8(), &ok).toMap();
+        if (ok) {
+            if (map.contains(QLatin1String("id")) && map.contains(QLatin1String("kind"))) {
+                Q_EMIT shortUrlDone(map.value(QLatin1String("id")).toString());
+            }
+        } else {
+            qDebug()<<" Error during parsing";
+        }
+    }
     reply->deleteLater();
-    if (mErrorFound)
-        return;
-
-    const QString jsonData = QString::fromUtf8(reply->readAll());
-
-    QJson::Parser parser;
-    bool ok;
-    const QMap<QString, QVariant> map = parser.parse(jsonData.toUtf8(), &ok).toMap();
-    if (!ok) {
-        qDebug()<<" Error during parsing";
-        return;
-    }
-    if (map.contains(QLatin1String("id")) && map.contains(QLatin1String("kind"))) {
-        Q_EMIT shortUrlDone(map.value(QLatin1String("id")).toString());
-    }
 }
 

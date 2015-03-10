@@ -46,14 +46,13 @@ void MigremeShortUrl::start()
 
 void MigremeShortUrl::slotShortUrlFinished(QNetworkReply *reply)
 {
-    reply->deleteLater();
-    if (mErrorFound)
-        return;
-
-    const QString data = QString::fromUtf8(reply->readAll());
-    if (!data.isEmpty()) {
-        Q_EMIT shortUrlDone(data);
+    if (!mErrorFound) {
+        const QString data = QString::fromUtf8(reply->readAll());
+        if (!data.isEmpty()) {
+            Q_EMIT shortUrlDone(data);
+        }
     }
+    reply->deleteLater();
 }
 
 
