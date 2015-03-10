@@ -17,7 +17,7 @@
 
 #include "sievetextedittest.h"
 #include "../sievetextedit.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 SieveTextEditTest::SieveTextEditTest(QObject *parent)
     : QObject(parent)
@@ -103,4 +103,4 @@ void SieveTextEditTest::uncomment()
     QCOMPARE(edit.toPlainText(), result);
 }
 
-QTEST_KDEMAIN(SieveTextEditTest, GUI)
+QTEST_MAIN(SieveTextEditTest)
