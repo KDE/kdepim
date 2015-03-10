@@ -15,26 +15,26 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "mergecontactselectinformationwidgettest.h"
-#include "merge/widgets/mergecontactselectinformationwidget.h"
-#include "merge/widgets/mergecontactselectlistwidget.h"
-#include <qtest.h>
-#include <QLayout>
-MergeContactSelectInformationWidgetTest::MergeContactSelectInformationWidgetTest(QObject *parent)
-    : QObject(parent)
-{
+#ifndef SELECTATTACHMENTDIALOG_H
+#define SELECTATTACHMENTDIALOG_H
 
+#include <QDialog>
+class KUrlRequester;
+
+namespace MailMerge {
+class SelectAttachmentDialog : public QDialog
+{
+    Q_OBJECT
+public:
+    explicit SelectAttachmentDialog(QWidget *parent = Q_NULLPTR);
+    ~SelectAttachmentDialog();
+
+    void setAttachmentPath(const QString &path);
+    QString attachmentPath() const;
+
+private:
+    KUrlRequester *mUrlRequester;
+};
 }
 
-MergeContactSelectInformationWidgetTest::~MergeContactSelectInformationWidgetTest()
-{
-
-}
-
-void MergeContactSelectInformationWidgetTest::shouldHaveDefaultValue()
-{
-    KABMergeContacts::MergeContactSelectInformationWidget w;
-    QCOMPARE(w.layout()->count(),0);
-}
-
-QTEST_MAIN(MergeContactSelectInformationWidgetTest)
+#endif // SELECTATTACHMENTDIALOG_H

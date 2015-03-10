@@ -52,7 +52,8 @@ void MergeContactSelectInformationTabWidget::addNewWidget(const KABMergeContacts
 
 void MergeContactSelectInformationTabWidget::setRequiresSelectInformationWidgets(const QVector<KABMergeContacts::MergeConflictResult> &list, const Akonadi::Collection &col)
 {
-    Q_FOREACH (const KABMergeContacts::MergeConflictResult &lst, list) {
+    clear();
+    Q_FOREACH(const KABMergeContacts::MergeConflictResult &lst, list) {
         addNewWidget(lst, col);
     }
     updateTabWidget();
