@@ -58,19 +58,19 @@ void GoogleShortUrl::slotSslErrors(QNetworkReply *reply, const QList<QSslError> 
 void GoogleShortUrl::slotShortUrlFinished(QNetworkReply *reply)
 {
     if (!mErrorFound) {
-    const QByteArray data = reply->readAll();
-    qCDebug(PIMCOMMON_LOG) << "void GoogleShortUrl::slotShortUrlFinished(QNetworkReply *reply) " <<  data;
-    QJsonParseError error;
-    const QJsonDocument json = QJsonDocument::fromJson(data, &error);
-    if (error.error != QJsonParseError::NoError || json.isNull()) {
-        qCDebug(PIMCOMMON_LOG) << " Error during parsing" << error.errorString();
-        return;
-    }
-    const QMap<QString, QVariant> map = json.toVariant().toMap();
+        const QByteArray data = reply->readAll();
+        qCDebug(PIMCOMMON_LOG) << "void GoogleShortUrl::slotShortUrlFinished(QNetworkReply *reply) " <<  data;
+        QJsonParseError error;
+        const QJsonDocument json = QJsonDocument::fromJson(data, &error);
+        if (error.error != QJsonParseError::NoError || json.isNull()) {
+            qCDebug(PIMCOMMON_LOG) << " Error during parsing" << error.errorString();
+            return;
+        }
+        const QMap<QString, QVariant> map = json.toVariant().toMap();
 
-    if (map.contains(QLatin1String("id")) && map.contains(QLatin1String("kind"))) {
-        Q_EMIT shortUrlDone(map.value(QLatin1String("id")).toString());
-    }
+        if (map.contains(QLatin1String("id")) && map.contains(QLatin1String("kind"))) {
+            Q_EMIT shortUrlDone(map.value(QLatin1String("id")).toString());
+        }
     }
     reply->deleteLater();
 }
