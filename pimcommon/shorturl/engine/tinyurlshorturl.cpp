@@ -44,14 +44,12 @@ void TinyurlShortUrl::start()
 
 void TinyurlShortUrl::slotShortUrlFinished(QNetworkReply *reply)
 {
+    if (!mErrorFound) {
+        const QString data = QString::fromUtf8(reply->readAll());
+        if (!data.isEmpty()) {
+            Q_EMIT shortUrlDone(data);
+        }
+    }
     reply->deleteLater();
-    if (mErrorFound) {
-        return;
-    }
-
-    const QString data = QString::fromUtf8(reply->readAll());
-    if (!data.isEmpty()) {
-        Q_EMIT shortUrlDone(data);
-    }
 }
 

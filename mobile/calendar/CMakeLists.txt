@@ -33,7 +33,7 @@ set(korganizer_mobile_SRCS
 ki18n_wrap_ui(korganizer_mobile_SRCS configwidget.ui searchwidget.ui)
 kconfig_add_kcfg_files(korganizer_mobile_SRCS settings.kcfgc)
 
-qt5_add_dbus_adaptor(korganizer_mobile_SRCS ${CMAKE_SOURCE_DIR}/korganizer/org.kde.Korganizer.Calendar.xml calendarinterface.h CalendarInterface )
+qt5_add_dbus_adaptor(korganizer_mobile_SRCS ${CMAKE_SOURCE_DIR}/korganizer/data/org.kde.Korganizer.Calendar.xml calendarinterface.h CalendarInterface )
 
 if (RUNTIME_PLUGINS_STATIC)
   add_definitions(-DMAIL_SERIALIZER_PLUGIN_STATIC)

@@ -57,11 +57,7 @@ void GoogleShortUrl::slotSslErrors(QNetworkReply *reply, const QList<QSslError> 
 
 void GoogleShortUrl::slotShortUrlFinished(QNetworkReply *reply)
 {
-    reply->deleteLater();
-    if (mErrorFound) {
-        return;
-    }
-
+    if (!mErrorFound) {
     const QByteArray data = reply->readAll();
     qCDebug(PIMCOMMON_LOG) << "void GoogleShortUrl::slotShortUrlFinished(QNetworkReply *reply) " <<  data;
     QJsonParseError error;
@@ -75,5 +71,7 @@ void GoogleShortUrl::slotShortUrlFinished(QNetworkReply *reply)
     if (map.contains(QLatin1String("id")) && map.contains(QLatin1String("kind"))) {
         Q_EMIT shortUrlDone(map.value(QLatin1String("id")).toString());
     }
+    }
+    reply->deleteLater();
 }
 
