@@ -193,7 +193,7 @@ endmacro()
 add_resource_iface(settings.kcfg org.kde.Akonadi.POP3.Settings Pop3Settings)
 
 qt4_add_dbus_interfaces(libmailcommon_SRCS
-  ${CMAKE_SOURCE_DIR}/korganizer/org.kde.Korganizer.Calendar.xml
+  ${CMAKE_SOURCE_DIR}/korganizer/data/org.kde.Korganizer.Calendar.xml
 )
 
 kde4_add_library(mailcommon ${LIBRARY_TYPE} ${libmailcommon_SRCS})

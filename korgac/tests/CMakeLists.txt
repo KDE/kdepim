@@ -5,7 +5,7 @@ include_directories(
   ${CMAKE_BINARY_DIR}/korganizer
 )
 
-set(korganizer_xml ${CMAKE_SOURCE_DIR}/korganizer/org.kde.korganizer.Korganizer.xml)
+set(korganizer_xml ${CMAKE_SOURCE_DIR}/korganizer/data/org.kde.korganizer.Korganizer.xml)
 
 ########### next target ###############
 
