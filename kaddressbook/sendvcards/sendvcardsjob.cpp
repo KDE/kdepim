@@ -108,7 +108,7 @@ void SendVcardsJob::jobFinished()
     if (!lstAttachment.isEmpty()) {
         KToolInvocation::invokeMailer(QString(), QString(), QString(), QString(), QString(), QString(), lstAttachment);
     } else {
-        sendVCardsError(i18n("No VCard created."));
+        sendVCardsError(i18n("No vCard created."));
     }
     mAttachmentTemporary->removeTempFiles();
     deleteLater();
