@@ -289,7 +289,10 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
                   << Akonadi::StandardActionManager::SynchronizeResources
                   << Akonadi::StandardActionManager::SynchronizeCollectionsRecursive
                   << Akonadi::StandardActionManager::MoveItemToMenu
-                  << Akonadi::StandardActionManager::CopyItemToMenu;
+                  << Akonadi::StandardActionManager::CopyItemToMenu
+                  << Akonadi::StandardActionManager::CopyCollectionToMenu
+                  << Akonadi::StandardActionManager::MoveCollectionToMenu;
+
 
   Q_FOREACH( Akonadi::StandardActionManager::Type standardAction, standardActions ) {
     mActionManager->createAction( standardAction );
