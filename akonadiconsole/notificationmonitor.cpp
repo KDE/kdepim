@@ -66,11 +66,11 @@ NotificationMonitor::NotificationMonitor(QWidget* parent) :
   Akonadi::Control::widgetNeedsAkonadi( this );
 }
 
-void NotificationMonitor::contextMenu(const QPoint& pos)
+void NotificationMonitor::contextMenu(const QPoint& /*pos*/)
 {
   QMenu menu;
   menu.addAction( i18n( "Clear View" ), m_model, SLOT(clear()) );
-  menu.exec( mapToGlobal( pos ) );
+  menu.exec( QCursor::pos() );
 }
 
 void NotificationMonitor::slotSaveToFile()
