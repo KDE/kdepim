@@ -321,7 +321,7 @@ static bool requirementsAreMet(const QVector<Line> &list, QString &error)
                                "Local Admin rule: <icode>%2</icode>", line.label, line.regex);
             return false;
         }
-        qDebug() << "ok" << endl;
+        qDebug() << "ok";
     }
     return true;
 }

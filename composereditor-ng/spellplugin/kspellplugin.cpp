@@ -90,7 +90,7 @@ void KWebSpellChecker::checkSpellingOfString(const QString &word, int *misspelli
     *misspellingLocation = -1;
     *misspellingLength = 0;
 
-    qCDebug(COMPOSEREDITORNG_LOG) << word << endl;
+    qCDebug(COMPOSEREDITORNG_LOG) << word;
 
     QTextBoundaryFinder finder =  QTextBoundaryFinder(QTextBoundaryFinder::Word, word);
 

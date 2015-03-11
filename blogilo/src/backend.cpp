@@ -274,7 +274,7 @@ void Backend::mediaUploaded(KBlog::BlogMedia *media)
     quint16 newChecksum = qChecksum(media->data().data(), media->data().count());
     if (newChecksum != m->checksum()) {
         qCritical() << "Check sum error: checksum of sent file: " << m->checksum() <<
-                    " Checksum of received file: " << newChecksum << "Error: " << media->error() << endl;
+                    " Checksum of received file: " << newChecksum << "Error: " << media->error();
         const QString tmp(i18n("Uploading media failed: Checksum error. Returned error: %1",
                                media->error()));
         qCDebug(BLOGILO_LOG) << "Emitting sigMediaError ...";

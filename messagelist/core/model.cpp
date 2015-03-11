@@ -1533,29 +1533,29 @@ MessageItem *ModelPrivate::findMessageParent(MessageItem *mi)
 // Debug helpers
 void dump_iterator_and_list(QList< MessageItem * >::Iterator &iter, QList< MessageItem * > *list)
 {
-    qCDebug(MESSAGELIST_LOG) << "Threading cache part dump" << endl;
+    qCDebug(MESSAGELIST_LOG) << "Threading cache part dump";
     if (iter == list->end()) {
-        qCDebug(MESSAGELIST_LOG) << "Iterator pointing to end of the list" << endl;
+        qCDebug(MESSAGELIST_LOG) << "Iterator pointing to end of the list";
     } else {
-        qCDebug(MESSAGELIST_LOG) << "Iterator pointing to " << *iter << " subject [" << (*iter)->subject() << "] date [" << (*iter)->date() << "]" << endl;
+        qCDebug(MESSAGELIST_LOG) << "Iterator pointing to " << *iter << " subject [" << (*iter)->subject() << "] date [" << (*iter)->date() << "]";
     }
 
     for (QList< MessageItem * >::Iterator it = list->begin(); it != list->end(); ++it) {
-        qCDebug(MESSAGELIST_LOG) << "List element " << *it << " subject [" << (*it)->subject() << "] date [" << (*it)->date() << "]" << endl;
+        qCDebug(MESSAGELIST_LOG) << "List element " << *it << " subject [" << (*it)->subject() << "] date [" << (*it)->date() << "]";
     }
 
-    qCDebug(MESSAGELIST_LOG) << "End of threading cache part dump" << endl;
+    qCDebug(MESSAGELIST_LOG) << "End of threading cache part dump";
 }
 
 void dump_list(QList< MessageItem * > *list)
 {
-    qCDebug(MESSAGELIST_LOG) << "Threading cache part dump" << endl;
+    qCDebug(MESSAGELIST_LOG) << "Threading cache part dump";
 
     for (QList< MessageItem * >::Iterator it = list->begin(); it != list->end(); ++it) {
-        qCDebug(MESSAGELIST_LOG) << "List element " << *it << " subject [" << (*it)->subject() << "] date [" << (*it)->date() << "]" << endl;
+        qCDebug(MESSAGELIST_LOG) << "List element " << *it << " subject [" << (*it)->subject() << "] date [" << (*it)->date() << "]";
     }
 
-    qCDebug(MESSAGELIST_LOG) << "End of threading cache part dump" << endl;
+    qCDebug(MESSAGELIST_LOG) << "End of threading cache part dump";
 }
 #endif // debug helpers
 
@@ -4303,7 +4303,7 @@ void ModelPrivate::slotStorageModelRowsRemoved(const QModelIndex &parent, int fr
             ViewItemJob *job = mViewItemJobs.at(jobCount - 1);
             if (job->currentPass() == ViewItemJob::Pass1Cleanup) {
                 if ((job->currentIndex() <= job->endIndex()) && job->invariantIndexList()) {
-                    //qCDebug(MESSAGELIST_LOG) << "Appending " << invalidatedIndexes->count() << " invalidated indexes to existing cleanup job" << endl;
+                    //qCDebug(MESSAGELIST_LOG) << "Appending " << invalidatedIndexes->count() << " invalidated indexes to existing cleanup job";
                     // We can still attach this :)
                     *(job->invariantIndexList()) += *invalidatedIndexes;
                     job->setEndIndex(job->endIndex() + invalidatedIndexes->count());
@@ -4316,7 +4316,7 @@ void ModelPrivate::slotStorageModelRowsRemoved(const QModelIndex &parent, int fr
         if (invalidatedIndexes) {
             // Didn't append to any existing cleanup job.. create a new one
 
-            //qCDebug(MESSAGELIST_LOG) << "Creating new cleanup job for " << invalidatedIndexes->count() << " invalidated indexes" << endl;
+            //qCDebug(MESSAGELIST_LOG) << "Creating new cleanup job for " << invalidatedIndexes->count() << " invalidated indexes";
             // FIXME: Should take timing options from aggregation here ?
             ViewItemJob *job = new ViewItemJob(ViewItemJob::Pass1Cleanup, invalidatedIndexes, 100, 50, 10);
             mViewItemJobs.append(job);

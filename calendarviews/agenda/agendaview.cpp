@@ -1392,8 +1392,7 @@ void AgendaView::updateEventDates(AgendaItem *item, bool addIncidence,
                               << "; item->cellYTop(): " << item->cellYTop()
                               << "; item->lastMultiItem(): " << item->lastMultiItem()
                               << "; item->itemPos(): " << item->itemPos()
-                              << "; item->itemCount(): " << item->itemCount()
-                              << endl;
+                              << "; item->itemCount(): " << item->itemCount();
 
     KDateTime startDt, endDt;
 

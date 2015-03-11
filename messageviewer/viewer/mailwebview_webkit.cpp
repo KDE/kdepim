@@ -110,7 +110,7 @@ static void handleDuplicateLinkElements(const QWebElement &element, QHash<QStrin
         const QString linkKey(linkElementKey(element));
         // qCDebug(MESSAGEVIEWER_LOG) << "LINK KEY:" << linkKey;
         if (dupLinkList->contains(linkKey)) {
-            // qCDebug(MESSAGEVIEWER_LOG) << "***** Found duplicate link element:" << linkKey << endl;
+            // qCDebug(MESSAGEVIEWER_LOG) << "***** Found duplicate link element:" << linkKey;
             *accessKey = dupLinkList->value(linkKey);
         } else if (!linkKey.isEmpty()) {
             dupLinkList->insert(linkKey, *accessKey);

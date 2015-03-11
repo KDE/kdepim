@@ -642,7 +642,7 @@ void ModelInvariantRowMapperPrivate::slotPerformLazyUpdate()
                 int elapsed = startTime.msecsTo(QTime::currentTime());
                 if ((elapsed > mLazyUpdateChunkInterval) || (elapsed < 0)) {
                     // interrupt
-                    //qCDebug(MESSAGELIST_LOG) << "Lazy update fixed " << curIndex << " invariants " << endl;
+                    //qCDebug(MESSAGELIST_LOG) << "Lazy update fixed " << curIndex << " invariants ";
                     mUpdateTimer->start(mLazyUpdateIdleInterval);
                     return;
                 }
@@ -655,7 +655,7 @@ void ModelInvariantRowMapperPrivate::slotPerformLazyUpdate()
         killFirstRowShift();
     }
 
-    //qCDebug(MESSAGELIST_LOG) << "Lazy update fixed " << curIndex << " invariants " << endl;
+    //qCDebug(MESSAGELIST_LOG) << "Lazy update fixed " << curIndex << " invariants ";
 
     // if we're here then no more work needs to be done.
 }

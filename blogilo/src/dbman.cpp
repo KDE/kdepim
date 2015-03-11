@@ -77,7 +77,7 @@ DBMan::DBMan()
         if (!this->createDB()) {
             KMessageBox::detailedError(Q_NULLPTR, i18n("Cannot create database"),
                                        i18n(d->db.lastError().text().toUtf8().data()));
-            qCDebug(BLOGILO_LOG) << "Cannot create database, SQL error: " << d->db.lastError().text() << endl;
+            qCDebug(BLOGILO_LOG) << "Cannot create database, SQL error: " << d->db.lastError().text();
             exit(1);
         }
     } else if (!connectDB()) {
