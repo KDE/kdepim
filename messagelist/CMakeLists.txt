@@ -111,13 +111,3 @@ set_target_properties(messagelist PROPERTIES
 
 install(TARGETS messagelist ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
-#install( FILES ${libmessagelist_HEADERS}
-#         DESTINATION ${KDE_INSTALL_INCLUDEDIR}/messagelist
-#         COMPONENT devel)
-#install( FILES ${libmessagelist_core_HEADERS}
-#         DESTINATION ${KDE_INSTALL_INCLUDEDIR}/messagelist/core
-#         COMPONENT devel)
-#install( FILES ${libmessagelist_utils_HEADERS}
-#         DESTINATION ${KDE_INSTALL_INCLUDEDIR}/messagelist/utils
-#         COMPONENT devel)
-

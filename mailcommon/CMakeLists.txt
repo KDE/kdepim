@@ -234,7 +234,6 @@ if (BUILD_TESTING)
    add_subdirectory(snippets/autotests)
    add_subdirectory(filter/tests)
 endif()
-#install(FILES viewer/viewer.h viewer/attachmentstrategy.h header/headerstrategy.h messageviewer_export.h DESTINATION ${KDE_INSTALL_INCLUDEDIR}/messageviewer COMPONENT devel)
 
 
 if (Qt5Designer_FOUND)
