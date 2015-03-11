@@ -49,6 +49,7 @@
 #include <Akonadi/TagFetchJob>
 #include <Akonadi/Tag>
 
+#include <KPrintPreview>
 #include <KCalCore/CalFormat>
 #include <KIcon>
 #include <KIconLoader>
@@ -352,10 +353,12 @@ TodoView::TodoView( const EventViews::PrefsPtr &prefs,
     i18nc( "@action:inmenu print the to-do", "&Print..." ),
     this, SIGNAL(printTodo()) );
 
-  mItemPopupMenuItemOnlyEntries << mItemPopupMenu->addAction(
-    cachedSmallIcon( QLatin1String("document-print-preview") ),
-    i18nc( "@action:inmenu print preview the to-do", "Print Previe&w..." ),
-    this, SIGNAL(printPreviewTodo()) );
+  if(KPrintPreview::isAvailable()) {
+      mItemPopupMenuItemOnlyEntries << mItemPopupMenu->addAction(
+                                           cachedSmallIcon( QLatin1String("document-print-preview") ),
+                                           i18nc( "@action:inmenu print preview the to-do", "Print Previe&w..." ),
+                                           this, SIGNAL(printPreviewTodo ()) );
+  }
 
   mItemPopupMenu->addSeparator();
   a = mItemPopupMenu->addAction(

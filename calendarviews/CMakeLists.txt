@@ -107,6 +107,7 @@ target_link_libraries(eventviews
   ${KDE4_KIO_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_KHOLIDAYS_LIBS}
+  ${KDE4_KPRINTUTILS_LIBS}
   kdepim
   kdgantt2
   calendarsupport
