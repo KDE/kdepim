@@ -40,16 +40,16 @@ RecentAddressWidgetTest::~RecentAddressWidgetTest()
 void RecentAddressWidgetTest::shouldHaveDefaultValue()
 {
     KPIM::RecentAddressWidget w;
-    KLineEdit *lineedit = qFindChild<KLineEdit *>(&w, QLatin1String("line_edit"));
+    KLineEdit *lineedit = w.findChild<KLineEdit *>(QLatin1String("line_edit"));
     QVERIFY(lineedit);
 
-    QPushButton *newButton = qFindChild<QPushButton *>(&w, QLatin1String("new_button"));
+    QPushButton *newButton = w.findChild<QPushButton *>(QLatin1String("new_button"));
     QVERIFY(newButton);
 
-    QPushButton *removeButton = qFindChild<QPushButton *>(&w, QLatin1String("remove_button"));
+    QPushButton *removeButton = w.findChild<QPushButton *>(QLatin1String("remove_button"));
     QVERIFY(removeButton);
 
-    QListWidget *listview = qFindChild<QListWidget *>(&w, QLatin1String("list_view"));
+    QListWidget *listview = w.findChild<QListWidget *>(QLatin1String("list_view"));
     QVERIFY(listview);
     QCOMPARE(listview->count(), 0);
 }
@@ -57,7 +57,7 @@ void RecentAddressWidgetTest::shouldHaveDefaultValue()
 void RecentAddressWidgetTest::shouldAddAddresses()
 {
     KPIM::RecentAddressWidget w;
-    QListWidget *listview = qFindChild<QListWidget *>(&w, QLatin1String("list_view"));
+    QListWidget *listview = w.findChild<QListWidget *>(QLatin1String("list_view"));
     QCOMPARE(listview->count(), 0);
     QStringList lst;
     lst << QLatin1String("foo");
@@ -74,11 +74,11 @@ void RecentAddressWidgetTest::shouldInformThatItWasChanged()
 {
     KPIM::RecentAddressWidget w;
     QVERIFY(!w.wasChanged());
-    QPushButton *newButton = qFindChild<QPushButton *>(&w, QLatin1String("new_button"));
+    QPushButton *newButton = w.findChild<QPushButton *>(QLatin1String("new_button"));
     QVERIFY(newButton);
     QTest::mouseClick(newButton, Qt::LeftButton);
     QVERIFY(w.wasChanged());
-    QListWidget *listview = qFindChild<QListWidget *>(&w, QLatin1String("list_view"));
+    QListWidget *listview = w.findChild<QListWidget *>(QLatin1String("list_view"));
     QCOMPARE(listview->count(), 1);
 }
 

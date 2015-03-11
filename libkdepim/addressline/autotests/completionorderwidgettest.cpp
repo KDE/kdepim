@@ -38,17 +38,17 @@ CompletionOrderWidgetTest::~CompletionOrderWidgetTest()
 void CompletionOrderWidgetTest::shouldHaveDefaultValue()
 {
     KPIM::CompletionOrderWidget w;
-    QTreeWidget *treewidget = qFindChild<QTreeWidget *>(&w, QLatin1String("listview"));
+    QTreeWidget *treewidget = w.findChild<QTreeWidget *>(QLatin1String("listview"));
     QVERIFY(treewidget);
     QVERIFY(treewidget->isHeaderHidden());
     QVERIFY(treewidget->isSortingEnabled());
     QCOMPARE(treewidget->topLevelItemCount(), 0);
 
-    QPushButton *up = qFindChild<QPushButton *>(&w, QLatin1String("mUpButton"));
+    QPushButton *up = w.findChild<QPushButton *>(QLatin1String("mUpButton"));
     QVERIFY(up);
     QVERIFY(up->autoRepeat());
 
-    QPushButton *down = qFindChild<QPushButton *>(&w, QLatin1String("mDownButton"));
+    QPushButton *down = w.findChild<QPushButton *>(QLatin1String("mDownButton"));
     QVERIFY(down);
     QVERIFY(down->autoRepeat());
 }
