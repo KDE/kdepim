@@ -213,6 +213,7 @@ VisualFreeBusyWidget::VisualFreeBusyWidget( FreeBusyItemModel *model, int spacin
            "available in their Free/Busy lists." ) );
   connect( button, SIGNAL(clicked()), SLOT(slotPickDate()) );
   controlLayout->addWidget( button );
+  button->setEnabled(false);
 
   controlLayout->addStretch( 1 );
 
