@@ -22,6 +22,7 @@
 #include "kaddressbook_export.h"
 #include "merge/job/mergecontacts.h"
 #include <QWidget>
+#include <QIcon>
 class QLabel;
 class QListWidget;
 namespace KABC {
@@ -41,7 +42,7 @@ public:
 private:
     void fillList(const KABC::Addressee::List &lst);
     void updateTitle();
-    void addItem(const QString &str);
+    void addItem(const QString &str, const QIcon &icon = QIcon());
     QLabel *mTitle;
     QListWidget *mSelectListWidget;
     MergeContacts::ConflictInformation mConflictType;
