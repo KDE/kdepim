@@ -28,7 +28,6 @@
 #include <KConfigGroup>
 #include <KSharedConfig>
 #include <QTabWidget>
-#include <KGlobalSettings>
 #include <KColorScheme>
 #include <KMessageBox>
 
@@ -54,7 +53,6 @@ SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
     splitterSizes << 80 << 20;
     KConfigGroup myGroup(KSharedConfig::openConfig(), "SieveEditorMainWidget");
     setSizes(myGroup.readEntry("mainSplitter", splitterSizes));
-    connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayPaletteChanged, this, &SieveEditorMainWidget::slotGeneralPaletteChanged);
 }
 
 SieveEditorMainWidget::~SieveEditorMainWidget()
