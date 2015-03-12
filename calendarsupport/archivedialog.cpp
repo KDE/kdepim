@@ -281,7 +281,7 @@ ArchiveDialog::~ArchiveDialog()
 
 void ArchiveDialog::slotEnableUser1()
 {
-    const bool state = (mDeleteCb->isChecked() || !mArchiveFile->lineEdit()->text().isEmpty());
+    const bool state = (mDeleteCb->isChecked() || !mArchiveFile->lineEdit()->text().trimmed().isEmpty());
     mUser1Button->setEnabled(state);
 }
 
