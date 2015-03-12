@@ -45,7 +45,6 @@
 
 #include <QLineEdit>
 #include <KLocalizedString>
-#include <KGlobalSettings>
 #include <QKeyEvent>
 #include <QLabel>
 #include <QFontDatabase>
@@ -150,8 +149,6 @@ FolderTreeWidget::FolderTreeWidget(
         d->filterFolderLineEdit->hide();
     }
 
-    connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayFontChanged, this, &FolderTreeWidget::slotGeneralFontChanged);
-    connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayPaletteChanged, this, &FolderTreeWidget::slotGeneralPaletteChanged);
 }
 
 FolderTreeWidget::~FolderTreeWidget()

@@ -22,7 +22,6 @@
 
 #include <messagecore/settings/globalsettings.h>
 
-#include <KGlobalSettings>
 #include <KLocalizedString>
 #include <KXMLGUIClient>
 #include <KActionMenu>
@@ -52,8 +51,6 @@ FavoriteCollectionWidget::FavoriteCollectionWidget(KXMLGUIClient *xmlGuiClient, 
 {
     setFocusPolicy(Qt::NoFocus);
 
-    connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayFontChanged, this, &FavoriteCollectionWidget::slotGeneralFontChanged);
-    connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayPaletteChanged, this, &FavoriteCollectionWidget::slotGeneralPaletteChanged);
 
     Akonadi::CollectionStatisticsDelegate *delegate = new Akonadi::CollectionStatisticsDelegate(this);
     delegate->setProgressAnimationEnabled(true);
