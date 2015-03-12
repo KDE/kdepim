@@ -23,6 +23,7 @@
 
 #include "pimcommon/storageservice/widgets/storageservicetreewidget.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
+class QEvent;
 class StorageServiceTreeWidget : public PimCommon::StorageServiceTreeWidget
 {
     Q_OBJECT
@@ -55,13 +56,11 @@ public Q_SLOTS:
 protected:
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
     void createMenuActions(QMenu *menu) Q_DECL_OVERRIDE;
-
+    void changeEvent(QEvent *event) Q_DECL_OVERRIDE;
 private Q_SLOTS:
 
     void slotRenameFile();
     void slotRenameFolder();
-    void slotGeneralPaletteChanged();
-    void slotGeneralFontChanged();
     void slotCutFile();
     void slotCutFolder();
     void slotCopyFile();
@@ -72,6 +71,8 @@ private Q_SLOTS:
     void slotPasteFile();
     void slotFileDoubleClicked();
 private:
+    void generalPaletteChanged();
+    void generalFontChanged();
     bool checkName(const QString &name);
     void readConfig();
     void writeConfig();

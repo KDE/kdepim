@@ -21,7 +21,7 @@
 #include "blacklistbalooemaillist.h"
 #include "libkdepim_debug.h"
 #include <QPainter>
-#include <KGlobalSettings>
+#include <QEvent>
 #include <KLocalizedString>
 using namespace KPIM;
 
@@ -30,15 +30,21 @@ BlackListBalooEmailList::BlackListBalooEmailList(QWidget *parent)
       mFirstResult(false)
 {
     setSelectionMode(QAbstractItemView::ExtendedSelection);
-    connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayPaletteChanged,
-            this, &BlackListBalooEmailList::slotGeneralPaletteChanged);
-
 }
 
 BlackListBalooEmailList::~BlackListBalooEmailList()
 {
 
 }
+
+void BlackListBalooEmailList::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::PaletteChange) {
+        generalPaletteChanged();
+    }
+    QListWidget::changeEvent(event);
+}
+
 
 void BlackListBalooEmailList::setEmailBlackList(const QStringList &list)
 {
@@ -79,7 +85,7 @@ void BlackListBalooEmailList::slotEmailFound(const QStringList &list)
     }
 }
 
-void BlackListBalooEmailList::slotGeneralPaletteChanged()
+void BlackListBalooEmailList::generalPaletteChanged()
 {
     const QPalette palette = viewport()->palette();
     QColor color = palette.text().color();
@@ -97,7 +103,7 @@ void BlackListBalooEmailList::paintEvent(QPaintEvent *event)
         p.setFont(font);
 
         if (!mTextColor.isValid()) {
-            slotGeneralPaletteChanged();
+            generalPaletteChanged();
         }
         p.setPen(mTextColor);
 

@@ -21,6 +21,7 @@
 #include <QTreeWidget>
 #include "pimcommon_export.h"
 class QPaintEvent;
+class QEvent;
 namespace PimCommon
 {
 class PIMCOMMON_EXPORT CustomTreeView : public QTreeWidget
@@ -35,12 +36,13 @@ public:
     bool showDefaultText() const;
     void setShowDefaultText(bool b);
 
-private Q_SLOTS:
-    void slotGeneralPaletteChanged();
-    void slotGeneralFontChanged();
+private:
+    void generalPaletteChanged();
+    void generalFontChanged();
 
 protected:
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
+    void changeEvent(QEvent *event) Q_DECL_OVERRIDE;
 
 protected:
     bool mShowDefaultText;

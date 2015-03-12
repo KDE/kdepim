@@ -17,10 +17,9 @@
 
 #include "customtreeview.h"
 
-#include <KGlobalSettings>
-
 #include <QPainter>
 #include <QFontDatabase>
+#include <QEvent>
 
 using namespace PimCommon;
 
@@ -28,12 +27,20 @@ CustomTreeView::CustomTreeView(QWidget *parent)
     : QTreeWidget(parent),
       mShowDefaultText(true)
 {
-    connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayFontChanged, this, &CustomTreeView::slotGeneralFontChanged);
-    connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayPaletteChanged, this, &CustomTreeView::slotGeneralPaletteChanged);
 }
 
 CustomTreeView::~CustomTreeView()
 {
+}
+
+void CustomTreeView::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::PaletteChange) {
+        generalPaletteChanged();
+    } else if (event->type() == QEvent::FontChange) {
+        generalFontChanged();
+    }
+    QTreeWidget::changeEvent(event);
 }
 
 void CustomTreeView::setShowDefaultText(bool b)
@@ -57,7 +64,7 @@ void CustomTreeView::setDefaultText(const QString &text)
     }
 }
 
-void CustomTreeView::slotGeneralPaletteChanged()
+void CustomTreeView::generalPaletteChanged()
 {
     const QPalette palette = viewport()->palette();
     QColor color = palette.text().color();
@@ -65,7 +72,7 @@ void CustomTreeView::slotGeneralPaletteChanged()
     mTextColor = color;
 }
 
-void CustomTreeView::slotGeneralFontChanged()
+void CustomTreeView::generalFontChanged()
 {
     setFont(QFontDatabase::systemFont(QFontDatabase::GeneralFont));
 }
@@ -80,7 +87,7 @@ void CustomTreeView::paintEvent(QPaintEvent *event)
         p.setFont(font);
 
         if (!mTextColor.isValid()) {
-            slotGeneralPaletteChanged();
+            generalPaletteChanged();
         }
         p.setPen(mTextColor);
 

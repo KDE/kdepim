@@ -28,10 +28,10 @@
 #include <QMenu>
 #include <QInputDialog>
 #include <KLocalizedString>
-#include <KGlobalSettings>
 #include <KMessageBox>
 #include <KLocalizedString>
 
+#include <QEvent>
 #include <QPainter>
 #include <QHeaderView>
 #include <QPointer>
@@ -48,8 +48,6 @@ StorageServiceTreeWidget::StorageServiceTreeWidget(PimCommon::StorageServiceAbst
     //Single selection for the moment
     setSelectionMode(QAbstractItemView::SingleSelection);
     connect(this, &StorageServiceTreeWidget::fileDoubleClicked, this, &StorageServiceTreeWidget::slotFileDoubleClicked);
-    connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayFontChanged, this, &StorageServiceTreeWidget::slotGeneralFontChanged);
-    connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayPaletteChanged, this, &StorageServiceTreeWidget::slotGeneralPaletteChanged);
     readConfig();
 }
 
@@ -59,6 +57,15 @@ StorageServiceTreeWidget::~StorageServiceTreeWidget()
     writeConfig();
 }
 
+void StorageServiceTreeWidget::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::PaletteChange) {
+        generalPaletteChanged();
+    } else if (event->type() == QEvent::FontChange) {
+        generalFontChanged();
+    }
+    QTreeWidget::changeEvent(event);
+}
 void StorageServiceTreeWidget::writeConfig()
 {
     KConfigGroup grp(KSharedConfig::openConfig(), "StorageServiceTreeWidget");
@@ -71,7 +78,7 @@ void StorageServiceTreeWidget::readConfig()
     header()->restoreState(grp.readEntry(mStorageService->storageServiceName(), QByteArray()));
 }
 
-void StorageServiceTreeWidget::slotGeneralPaletteChanged()
+void StorageServiceTreeWidget::generalPaletteChanged()
 {
     const QPalette palette = viewport()->palette();
     QColor color = palette.text().color();
@@ -79,7 +86,7 @@ void StorageServiceTreeWidget::slotGeneralPaletteChanged()
     mTextColor = color;
 }
 
-void StorageServiceTreeWidget::slotGeneralFontChanged()
+void StorageServiceTreeWidget::generalFontChanged()
 {
     setFont(QFontDatabase::systemFont(QFontDatabase::GeneralFont));
 }
@@ -435,7 +442,7 @@ void StorageServiceTreeWidget::paintEvent(QPaintEvent *event)
         p.setFont(font);
 
         if (!mTextColor.isValid()) {
-            slotGeneralPaletteChanged();
+            generalPaletteChanged();
         }
         p.setPen(mTextColor);
         p.drawText(QRect(0, 0, width(), height()), Qt::AlignCenter, i18n("Storage service not initialized."));

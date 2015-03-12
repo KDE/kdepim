@@ -56,12 +56,12 @@ public:
 protected:
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
+    void changeEvent(QEvent *event) Q_DECL_OVERRIDE;
 public Q_SLOTS:
     void slotEmailFound(const QStringList &);
 
-private Q_SLOTS:
-    void slotGeneralPaletteChanged();
 private:
+    void generalPaletteChanged();
     QStringList mEmailBlackList;
     QColor mTextColor;
     bool mFirstResult;

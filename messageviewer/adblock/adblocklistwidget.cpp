@@ -18,7 +18,6 @@
 #include "adblocklistwidget.h"
 
 #include <KLocalizedString>
-#include <KGlobalSettings>
 
 #include <QPainter>
 #include <QPaintEvent>
@@ -27,7 +26,6 @@ using namespace MessageViewer;
 AdBlockListWidget::AdBlockListWidget(QWidget *parent)
     : QListWidget(parent)
 {
-    connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayPaletteChanged, this, &AdBlockListWidget::slotGeneralPaletteChanged);
 }
 
 AdBlockListWidget::~AdBlockListWidget()
@@ -35,7 +33,15 @@ AdBlockListWidget::~AdBlockListWidget()
 
 }
 
-void AdBlockListWidget::slotGeneralPaletteChanged()
+void AdBlockListWidget::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::PaletteChange) {
+        generalPaletteChanged();
+    }
+    QListWidget::changeEvent(event);
+}
+
+void AdBlockListWidget::generalPaletteChanged()
 {
     const QPalette palette = viewport()->palette();
     QColor color = palette.text().color();
@@ -53,7 +59,7 @@ void AdBlockListWidget::paintEvent(QPaintEvent *event)
         p.setFont(font);
 
         if (!mTextColor.isValid()) {
-            slotGeneralPaletteChanged();
+            generalPaletteChanged();
         }
         p.setPen(mTextColor);
 
