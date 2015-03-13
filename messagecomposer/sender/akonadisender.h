@@ -56,8 +56,8 @@ protected:
     /**
     Send queued messages, using the specified transport or the
     default, if none is given.
-    */
-    bool doSendQueued(const QString &transport = QString()) Q_DECL_OVERRIDE;
+   */
+    bool doSendQueued( int transportId = -1 ) Q_DECL_OVERRIDE;
 
 private:
     /**
@@ -69,8 +69,8 @@ private Q_SLOTS:
     void queueJobResult(KJob *job);
 
 private:
-    QString mCustomTransport;
     QSet<KJob *> mPendingJobs;
+    int mCustomTransportId;
 
 };
 }

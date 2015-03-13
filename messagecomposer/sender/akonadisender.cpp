@@ -91,20 +91,20 @@ bool AkonadiSender::doSend(const KMime::Message::Ptr &aMsg, short sendNow)
     return true;
 }
 
-bool AkonadiSender::doSendQueued(const QString &customTransport)
+bool AkonadiSender::doSendQueued( int customTransportId )
 {
-    qCDebug(MESSAGECOMPOSER_LOG) << "Sending queued message with custom transport:" << customTransport;
-    if (!MessageComposer::Util::sendMailDispatcherIsOnline()) {
+    qCDebug(MESSAGECOMPOSER_LOG) << "Sending queued message with custom transport:" << customTransportId;
+    if ( !MessageComposer::Util::sendMailDispatcherIsOnline() ) {
         return false;
     }
 
-    mCustomTransport = customTransport;
+    mCustomTransportId = customTransportId;
 
     DispatcherInterface *dispatcher = new DispatcherInterface();
-    if (mCustomTransport.isEmpty()) {
+    if( mCustomTransportId == -1  ) {
         dispatcher->dispatchManually();
     } else {
-        dispatcher->dispatchManualTransport(TransportManager::self()->transportByName(mCustomTransport)->id());
+        dispatcher->dispatchManualTransport( mCustomTransportId );
     }
     delete dispatcher;
     return true;
@@ -132,8 +132,8 @@ void AkonadiSender::sendOrQueueMessage(const KMime::Message::Ptr &message, Messa
 
     // Get transport.
     int transportId = -1;
-    if (!mCustomTransport.isEmpty()) {
-        transportId = TransportManager::self()->transportByName(mCustomTransport, true)->id();
+    if ( mCustomTransportId != -1 ) {
+        transportId = mCustomTransportId;
     } else {
         transportId = message->headerByType("X-KMail-Transport") ? message->headerByType("X-KMail-Transport")->asUnicodeString().toInt() : -1;
     }
