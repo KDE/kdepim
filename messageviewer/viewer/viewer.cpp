@@ -46,7 +46,6 @@
 #include <QWebView>
 #include <QWebPage>
 #include <QWebFrame>
-#include <KGlobalSettings>
 
 namespace MessageViewer
 {
@@ -83,9 +82,16 @@ void Viewer::initialize()
     connect(d_ptr, &ViewerPrivate::changeDisplayMail, this, &Viewer::slotChangeDisplayMail);
     connect(d_ptr, &ViewerPrivate::moveMessageToTrash, this, &Viewer::moveMessageToTrash);
 
-    connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayFontChanged, d_ptr, &ViewerPrivate::slotGeneralFontChanged);
-
     setMessage(KMime::Message::Ptr(), Delayed);
+}
+
+void Viewer::changeEvent(QEvent *event)
+{
+    Q_D(Viewer);
+    if (event->type() == QEvent::FontChange) {
+        d->slotGeneralFontChanged();
+    }
+    QWidget::changeEvent(event);
 }
 
 void Viewer::setMessage(KMime::Message::Ptr message, UpdateMode updateMode)

@@ -418,6 +418,7 @@ protected:
     void resizeEvent(QResizeEvent *) Q_DECL_OVERRIDE;
     /** Watch for palette changes */
     bool event(QEvent *e) Q_DECL_OVERRIDE;
+    void changeEvent(QEvent *event) Q_DECL_OVERRIDE;
 
 #ifdef KDEPIM_MOBILE_UI
     friend class MessageViewItem;
