@@ -46,13 +46,7 @@ void initHeader(const KMime::Message::Ptr &message, const KIdentityManagement::I
     message->subject()->clear();
     message->date()->setDateTime(QDateTime::currentDateTime());
 
-    // user agent, e.g. KMail/1.9.50 (Windows/5.0; KDE/3.97.1; i686; svn-762186; 2008-01-15)
-    QStringList extraInfo;
-#if defined KDEPIM_GIT_REVISION_STRING && defined KDEPIM_GIT_LAST_CHANGE
-    extraInfo << QString::fromLocal8Bit(KDEPIM_GIT_REVISION_STRING) << QString::fromLocal8Bit(KDEPIM_GIT_LAST_CHANGE);
-#else
-#error forgot to include kdepim-version.h
-#endif
+    const QStringList extraInfo = QStringList() << QString::fromLocal8Bit(KDEPIM_GIT_REVISION_STRING) << QString::fromLocal8Bit(KDEPIM_GIT_LAST_CHANGE);
 
     message->userAgent()->fromUnicodeString(KProtocolManager::userAgentForApplication(QString::fromLocal8Bit("KMail"), QString::fromLocal8Bit(KDEPIM_GIT_REVISION_STRING), extraInfo), QLatin1String("utf-8").latin1());
     // This will allow to change Content-Type:

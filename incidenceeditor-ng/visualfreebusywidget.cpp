@@ -212,6 +212,7 @@ VisualFreeBusyWidget::VisualFreeBusyWidget(FreeBusyItemModel *model, int spacing
               "Click this button to move the event to a date "
               "and time when all the attendees have time "
               "available in their Free/Busy lists."));
+    button->setEnabled(false);
     connect(button, &QPushButton::clicked, this, &VisualFreeBusyWidget::slotPickDate);
     controlLayout->addWidget(button);
 

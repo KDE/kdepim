@@ -126,7 +126,7 @@ void MergeContactSelectListWidget::updateTitle()
     mTitle->setText(title);
 }
 
-void MergeContactSelectListWidget::addItem(const QString &str)
+void MergeContactSelectListWidget::addItem(const QString &str, const QIcon &icon)
 {
     if (str.isEmpty()) {
         QListWidgetItem *item = new QListWidgetItem(mSelectListWidget);
@@ -134,7 +134,14 @@ void MergeContactSelectListWidget::addItem(const QString &str)
         item->setText(i18n("(Undefined)"));
         mSelectListWidget->addItem(item);
     } else {
-        mSelectListWidget->addItem(str);
+        if (!icon.isNull()) {
+            QListWidgetItem * item = new QListWidgetItem(mSelectListWidget);
+            item->setText(str);
+            item->setIcon(icon);
+            mSelectListWidget->addItem(item);
+        } else {
+            mSelectListWidget->addItem(str);
+        }
     }
 }
 
