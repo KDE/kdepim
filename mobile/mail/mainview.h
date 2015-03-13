@@ -154,7 +154,7 @@ class MainView : public KDeclarativeMainView
     void sendAgain();
     void sendQueued();
     void sendQueuedVia();
-    void sendQueuedVia( const QString &transport );
+    void sendQueuedVia(int transportId );
     void saveMessage();
     void findInMessage();
     void preferHTML( bool useHtml );

@@ -56,7 +56,7 @@ protected:
     Send queued messages, using the specified transport or the
     default, if none is given.
    */
-    virtual bool doSendQueued( const QString &transport = QString() );
+    virtual bool doSendQueued( int transportId = -1 );
 
 private:
     /**
@@ -68,7 +68,7 @@ private slots:
     void queueJobResult( KJob *job );
 
 private:
-    QString mCustomTransport;
+    int mCustomTransportId;
     QSet<KJob*> mPendingJobs;
 
 };

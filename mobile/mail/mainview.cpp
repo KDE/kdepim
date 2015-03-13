@@ -791,7 +791,7 @@ void MainView::sendQueuedVia()
   if ( !askToGoOnline() )
     return;
 
-  const QStringList availTransports= MailTransport::TransportManager::self()->transportNames();
+  QList<MailTransport::Transport *> transports = MailTransport::TransportManager::self()->transports();
 
   delete mTransportDialog;
   mTransportDialog = new QWidget( this, Qt::Dialog ); //not a real dialog though, should be done in QML
@@ -806,14 +806,13 @@ void MainView::sendQueuedVia()
   layout->addWidget( label );
   QSignalMapper *mapper = new QSignalMapper( mTransportDialog );
 
-  Q_FOREACH( const QString &transport, availTransports ) {
-    QPushButton *button = new QPushButton( transport );
-    layout->addWidget( button );
-    mapper->setMapping( button, transport );
-    connect( button, SIGNAL(clicked()), mapper, SLOT(map()) );
+  Q_FOREACH( MailTransport::Transport *transport, transports) {
+      QPushButton *button = new QPushButton( transport->name() );
+      layout->addWidget( button );
+      mapper->setMapping( button, transport->id() );
+      connect( button, SIGNAL(clicked()), mapper, SLOT(map()) );
   }
-
-  connect( mapper, SIGNAL(mapped(QString)), this, SLOT(sendQueuedVia(QString)));
+  connect( mapper, SIGNAL(mapped(int)), this, SLOT(sendQueuedVia(int)));
 
   QPushButton *button = new QPushButton( i18n( "Discard" ) );
   layout->addWidget( button );
@@ -822,9 +821,9 @@ void MainView::sendQueuedVia()
   mTransportDialog->show();
 }
 
-void MainView::sendQueuedVia( const QString &transport )
+void MainView::sendQueuedVia( int transportId )
 {
-  KernelIf->msgSender()->sendQueued( transport );
+  KernelIf->msgSender()->sendQueued( transportId );
   delete mTransportDialog;
   mTransportDialog = 0;
 }

@@ -77,11 +77,11 @@ public:
 
      @return true on success.
   */
-  bool sendQueued( const QString & transport=QString() ) { return doSendQueued( transport ); }
+  bool sendQueued( int transportId = -1) { return doSendQueued( transportId ); }
 
 protected:
   virtual bool doSend( const KMime::Message::Ptr &msg, short sendNow ) = 0;
-  virtual bool doSendQueued( const QString& transport ) = 0;
+  virtual bool doSendQueued( int transportId ) = 0;
 };
 
 inline MessageSender::~MessageSender() {}
