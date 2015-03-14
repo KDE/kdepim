@@ -74,7 +74,8 @@ static void extractSenderToCCAndBcc(const KMime::Message::Ptr &aMsg, QString &se
 }
 
 AkonadiSender::AkonadiSender(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      mCustomTransportId(-1)
 {
 }
 

@@ -226,9 +226,7 @@ bool MailClient::send(const KIdentityManagement::Identity &identity,
         MailTransport::TransportManager::self()->transportByName(mailTransport);
 
     if (!transport) {
-        transport =
-            MailTransport::TransportManager::self()->transportByName(
-                MailTransport::TransportManager::self()->defaultTransportName());
+        transport = MailTransport::TransportManager::self()->transportById(MailTransport::TransportManager::self()->defaultTransportId(), false);
     }
 
     if (!transport) {
