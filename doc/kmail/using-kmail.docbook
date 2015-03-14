@@ -603,7 +603,8 @@ Please see <link linkend="filters">Filters</link> for details.</para>
 
 <para>In the case that you receive emails from a trusted source, &eg; a Blog you signed up for, that is formatted in &HTML; and you would like to enable &HTML; view for just those emails. You can achieve this
 by doing the following: Create a new folder, set up a <link linkend="filters">filter</link> to place those emails in the new folder,
-select the folder and select <menuchoice><guimenu>Folder</guimenu><guimenuitem>Prefer &HTML; to Plain Text</guimenuitem></menuchoice>.</para>
+select the folder and select <menuchoice><guimenu>Folder</guimenu><guimenuitem>Message Default Format</guimenuitem>
+<guimenuitem>Prefer &HTML; to Plain Text</guimenuitem></menuchoice>.</para>
 
 <para>Some common folder actions are:</para>
 <variablelist>
