@@ -1018,22 +1018,22 @@ bool ObjectTreeParser::okDecryptMIME( KMime::Content& data,
         QByteArray ciphertext = data.decodedContent();
 #ifdef MARCS_DEBUG
         QString cipherStr = QString::fromLatin1( ciphertext );
-        bool cipherIsBinary = ( !cipherStr.contains("BEGIN ENCRYPTED MESSAGE", Qt::CaseInsensitive ) ) &&
-                ( !cipherStr.contains("BEGIN PGP ENCRYPTED MESSAGE", Qt::CaseInsensitive ) ) &&
-                ( !cipherStr.contains("BEGIN PGP MESSAGE", Qt::CaseInsensitive ) );
+        bool cipherIsBinary = ( !cipherStr.contains(QLatin1String("BEGIN ENCRYPTED MESSAGE"), Qt::CaseInsensitive ) ) &&
+                ( !cipherStr.contains(QLatin1String("BEGIN PGP ENCRYPTED MESSAGE"), Qt::CaseInsensitive ) ) &&
+                ( !cipherStr.contains(QLatin1String("BEGIN PGP MESSAGE"), Qt::CaseInsensitive ) );
 
         dumpToFile( "dat_04_reader.encrypted", ciphertext.data(), ciphertext.size() );
 
         QString deb;
-        deb =  "\n\nE N C R Y P T E D    D A T A = ";
+        deb =  QLatin1String("\n\nE N C R Y P T E D    D A T A = ");
         if ( cipherIsBinary )
-            deb += "[binary data]";
+            deb += QLatin1String("[binary data]");
         else {
-            deb += "\"";
+            deb += QLatin1String("\"");
             deb += cipherStr;
-            deb += "\"";
+            deb += QLatin1String("\"");
         }
-        deb += "\n\n";
+        deb += QLatin1String("\n\n");
         kDebug() << deb;
 #endif
 
@@ -3438,7 +3438,7 @@ void ObjectTreeParser::dumpToFile( const char * filename, const char * start,
                                    size_t len ) {
     assert( filename );
 
-    QFile f( filename );
+    QFile f( QString::fromAscii(filename) );
     if ( f.open( QIODevice::WriteOnly ) ) {
         if ( start ) {
             QDataStream ds( &f );
