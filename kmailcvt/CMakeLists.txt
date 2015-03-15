@@ -21,7 +21,7 @@ include_directories(${Boost_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/mailimporter ${CMAK
 
 ki18n_wrap_ui(kmailcvt_SRCS ui/kselfilterpagedlg.ui ui/kimportpagedlg.ui)
 
-file(GLOB ICONS_SRCS "icons/hi*-apps-kmailcvt.png")
+file(GLOB ICONS_SRCS "icons/*-apps-kmailcvt.png")
 ecm_add_app_icon(kmailcvt_SRCS ICONS ${ICONS_SRCS})
 add_executable(kmailcvt ${kmailcvt_SRCS})
 

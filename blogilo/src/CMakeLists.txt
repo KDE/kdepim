@@ -59,7 +59,7 @@ ki18n_wrap_ui(
 )
 
 kconfig_add_kcfg_files( blogilo_SRCS settings.kcfgc)
-file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/../icons/hi*-apps-blogilo.png")
+file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/../icons/*-apps-blogilo.png")
 ecm_add_app_icon(blogilo_SRCS ICONS ${ICONS_SRCS})
 add_executable( blogilo ${blogilo_SRCS})
 
