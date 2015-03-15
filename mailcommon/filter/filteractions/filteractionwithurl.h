@@ -21,6 +21,7 @@
 #define MAILCOMMON_FILTERACTIONWITHURL_H
 
 #include "filteraction.h"
+#include <QToolButton>
 
 namespace MailCommon {
 
@@ -44,6 +45,14 @@ namespace MailCommon {
  * @author Marc Mutz <mutz@kde.org>, based upon work by Stefan Taferner <taferner@kde.org>
  * @see FilterActionWithString FilterAction Filter KProcess
  */
+class FilterActionWithUrlHelpButton : public QToolButton
+{
+    Q_OBJECT
+public:
+    explicit FilterActionWithUrlHelpButton(QWidget *parent = 0);
+    ~FilterActionWithUrlHelpButton();
+};
+
 class FilterActionWithUrl : public FilterAction
 {
     Q_OBJECT
@@ -100,6 +109,10 @@ public:
 
 protected:
     QString mParameter;
+private:
+    mutable FilterActionWithUrlHelpButton *mHelpButton;
+private slots:
+    void slotHelp();
 };
 
 }

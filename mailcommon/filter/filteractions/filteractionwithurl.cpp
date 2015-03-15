@@ -21,9 +21,24 @@
 
 #include <KDE/KUrlRequester>
 
+#include <QHBoxLayout>
+#include <QWhatsThis>
 #include <QTextDocument>
 
 using namespace MailCommon;
+
+FilterActionWithUrlHelpButton::FilterActionWithUrlHelpButton(QWidget *parent)
+    : QToolButton(parent)
+{
+    //KF5 add i18n
+    setToolTip(QLatin1String("Help"));
+    setIcon( KIcon( QLatin1String("help-hint") ) );
+}
+
+FilterActionWithUrlHelpButton::~FilterActionWithUrlHelpButton()
+{
+
+}
 
 FilterActionWithUrl::FilterActionWithUrl( const QString &name, const QString &label, QObject *parent )
     : FilterAction( name, label, parent )
@@ -41,14 +56,27 @@ bool FilterActionWithUrl::isEmpty() const
 
 QWidget* FilterActionWithUrl::createParamWidget( QWidget *parent ) const
 {
+    QWidget *widget = new QWidget(parent);
+    QHBoxLayout *layout = new QHBoxLayout;
+    widget->setLayout(layout);
     KUrlRequester *requester = new KUrlRequester( parent );
     requester->setUrl( KUrl( mParameter ) );
+    layout->addWidget(requester);
+    mHelpButton = new FilterActionWithUrlHelpButton(parent);
+    connect(mHelpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
+    layout->addWidget(mHelpButton);
 
     connect( requester, SIGNAL(textChanged(QString)), this, SIGNAL(filterActionModified()) );
 
-    return requester;
+    return widget;
 }
 
+void FilterActionWithUrl::slotHelp()
+{
+    //KF5 add i18n / Improve it
+    QString fullWhatsThis = QLatin1String("You can get specific header when when you use %{headername}.");
+    QWhatsThis::showText( QCursor::pos(), fullWhatsThis, mHelpButton );
+}
 
 void FilterActionWithUrl::applyParamWidgetValue( QWidget *paramWidget )
 {
