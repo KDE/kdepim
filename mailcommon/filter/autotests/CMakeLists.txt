@@ -22,3 +22,18 @@ target_link_libraries( filteractionpipethroughtest
    ${KDEPIMLIBS_AKONADI_LIBS}
    ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
 )
+
+set(mailcommon_filteractionheadertest_SRCS filteractionaddheadertest.cpp
+                                           ../filteractions/filteractionaddheader.cpp
+                                           ../filteractions/filteractionwithstringlist.cpp
+                                           ../filteractions/filteractionwithstring.cpp)
+kde4_add_unit_test( filteractionaddheadertest ${mailcommon_filteractionheadertest_SRCS} )
+target_link_libraries( filteractionaddheadertest
+   kdepim
+   mailcommon
+   pimcommon
+   ${QT_QTTEST_LIBRARY}
+   ${QT_QTCORE_LIBRARY}
+   ${KDEPIMLIBS_AKONADI_LIBS}
+   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+)
