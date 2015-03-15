@@ -48,11 +48,30 @@ void FilterActionAddHeaderTest::shouldCreateWidget()
     QVERIFY(lineEdit->text().isEmpty());
 }
 
+void FilterActionAddHeaderTest::shouldAddValue_data()
+{
+    QTest::addColumn<QString>("argsinput");
+    QTest::addColumn<QString>("resultheader");
+    QTest::addColumn<QString>("resultvalue");
+    QTest::newRow("empty") <<  QString() << QString() << QString();
+    QString val = QLatin1String("bla") + QLatin1Char('\t') + QLatin1String("blo");
+    QTest::newRow("real value") <<  val << QString(QLatin1String("bla")) << QString(QLatin1String("blo"));
+}
+
 void FilterActionAddHeaderTest::shouldAddValue()
 {
+    QFETCH( QString, argsinput );
+    QFETCH( QString, resultheader );
+    QFETCH( QString, resultvalue );
+
     MailCommon::FilterActionAddHeader filter;
     QWidget* widget = filter.createParamWidget(0);
-    filter.argsFromString(QString());
+    filter.argsFromString(argsinput);
+    filter.setParamWidgetValue(widget);
+    PimCommon::MinimumComboBox *comboBox = widget->findChild<PimCommon::MinimumComboBox *>(QLatin1String("combo"));
+    KLineEdit *lineEdit = widget->findChild<KLineEdit *>(QLatin1String("ledit"));
+    QCOMPARE(comboBox->lineEdit()->text(), resultheader);
+    QCOMPARE(lineEdit->text(), resultvalue);
 }
 
 QTEST_KDEMAIN(FilterActionAddHeaderTest, GUI)

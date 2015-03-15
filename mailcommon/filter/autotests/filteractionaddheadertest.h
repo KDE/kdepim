@@ -30,6 +30,7 @@ public:
 private Q_SLOTS:
     void shouldCreateWidget();
     void shouldAddValue();
+    void shouldAddValue_data();
 };
 
 #endif // FILTERACTIONADDHEADERTEST_H
