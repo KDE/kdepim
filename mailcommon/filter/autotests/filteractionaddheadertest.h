@@ -29,6 +29,7 @@ public:
     ~FilterActionAddHeaderTest();
 private Q_SLOTS:
     void shouldCreateWidget();
+    void shouldAddValue();
 };
 
 #endif // FILTERACTIONADDHEADERTEST_H

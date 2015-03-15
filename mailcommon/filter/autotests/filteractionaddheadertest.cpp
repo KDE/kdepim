@@ -48,4 +48,11 @@ void FilterActionAddHeaderTest::shouldCreateWidget()
     QVERIFY(lineEdit->text().isEmpty());
 }
 
+void FilterActionAddHeaderTest::shouldAddValue()
+{
+    MailCommon::FilterActionAddHeader filter;
+    QWidget* widget = filter.createParamWidget(0);
+    filter.argsFromString(QString());
+}
+
 QTEST_KDEMAIN(FilterActionAddHeaderTest, GUI)
