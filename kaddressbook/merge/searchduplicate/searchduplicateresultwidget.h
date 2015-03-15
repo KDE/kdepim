@@ -22,7 +22,6 @@
 #include <Akonadi/Item>
 #include "merge/job/mergecontacts.h"
 #include "kaddressbook_export.h"
-class QTreeWidget;
 class KPushButton;
 namespace KAddressBookGrantlee {
 class GrantleeContactViewer;

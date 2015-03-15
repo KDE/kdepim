@@ -23,7 +23,6 @@
 #include "searchduplicateresultwidget.h"
 #include "kaddressbook_export.h"
 class QStackedWidget;
-class QLabel;
 namespace KABMergeContacts {
 class SearchDuplicateResultWidget;
 class MergeContactShowResultTabWidget;

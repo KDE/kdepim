@@ -19,7 +19,6 @@
 #define THEMECONFIGUREDIALOG_H
 
 #include <KDialog>
-class KTextEdit;
 
 namespace PimCommon {
 class RichTextEditorWidget;
