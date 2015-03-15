@@ -39,7 +39,7 @@ public:
     ~MergeContactsDialog();
 
     void setContacts(const Akonadi::Item::List &list);
-private slots:
+private Q_SLOTS:
     void slotCustomizeMergeContact(const Akonadi::Item::List &lst, MergeContacts::ConflictInformations conflictType, const Akonadi::Collection &col);
     void slotContactMerged(const Akonadi::Item &item);
 private:

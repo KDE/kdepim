@@ -41,7 +41,7 @@ public:
     void accept() Q_DECL_OVERRIDE;
 
     Akonadi::Collection collection() const;
-private slots:
+private Q_SLOTS:
     void slotDateChanged(const QString &date);
 private:
     KDateComboBox *mDateComboBox;

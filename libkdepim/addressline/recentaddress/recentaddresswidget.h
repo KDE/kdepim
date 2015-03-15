@@ -42,7 +42,7 @@ public:
     void addAddresses(KConfig *config);
     bool wasChanged() const;
 
-private slots:
+private Q_SLOTS:
     void slotAddItem();
     void slotRemoveItem();
     void slotSelectionChanged();

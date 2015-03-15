@@ -45,7 +45,7 @@ public:
     void setEmailBlackList(const QStringList &lst);
     void setLdapClientSearch(KLDAP::LdapClientSearch *ldapSearch);
     void setRecentAddresses(const QStringList &lst);
-private slots:
+private Q_SLOTS:
     void slotSave();
 
 private:

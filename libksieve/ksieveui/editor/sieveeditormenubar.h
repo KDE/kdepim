@@ -50,7 +50,7 @@ public:
 
     QAction *uncommentCodeAction() const;
 
-public slots:
+public Q_SLOTS:
     void slotUndoAvailable(bool b);
     void slotRedoAvailable(bool b);
     void slotCopyAvailable(bool b);

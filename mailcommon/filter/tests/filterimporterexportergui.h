@@ -27,7 +27,7 @@ class FilterImporterExporterGui : public QWidget
 public:
     explicit FilterImporterExporterGui(QWidget *parent = Q_NULLPTR);
     ~FilterImporterExporterGui();
-private slots:
+private Q_SLOTS:
     void slotImportFilter(QAction *act);
 private:
     void importFilters(MailCommon::FilterImporterExporter::FilterType type);
