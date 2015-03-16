@@ -65,6 +65,7 @@
     <p xml:lang="tr">KAddressBook ailenizin, arkadaşlarınızın ve diğer bağlantılarınızın tüm kişisel detaylarını saklar.</p>
     <p xml:lang="uk">Програма KAddressBook здатна зберігати особисті дані для спілкування з вашою родиною, друзями та дані щодо контактів.</p>
     <p xml:lang="x-test">xxKAddressBook stores all the personal details of your family, friends and other contacts.xx</p>
+    <p xml:lang="zh-CN">KAddressBook 存错所有您家庭，朋友和其他联系的个人信息。</p>
     <p xml:lang="zh-TW">KDE 通訊錄會儲存所有您的家庭、朋友與其他聯絡人的個人資料詳情。</p>
     <p>Features:</p>
     <p xml:lang="ar">الميزات:</p>
@@ -125,6 +126,7 @@
       <li xml:lang="tr">Nerdeyse tüm adres defteri standartlarında içe ve dışa aktarma yapar</li>
       <li xml:lang="uk">імпортування та експортування даних у майже довільних стандартах зберігання даних адресних книг;</li>
       <li xml:lang="x-test">xxImports and exports to nearly every address book standardxx</li>
+      <li xml:lang="zh-CN">导入和导出几乎所有地址簿标准格式</li>
       <li xml:lang="zh-TW">可以匯入與匯出幾乎所有的通訊錄標準格式</li>
       <li>Reads .vcf format files, and can import and export vCards and csv format files</li>
       <li xml:lang="ar">قراءة ملفّات النّسق ‎.vcf، وإمكانيّة استيراد بطاقات vCard وملفّات النّسق csv وتصديرها</li>
@@ -152,6 +154,7 @@
       <li xml:lang="tr">.vcf biçim dosyalarını okur, ve vCard ve csv biçim dosyalarını içe ve dışa aktarabilir</li>
       <li xml:lang="uk">читання файлів у форматі .vcf, імпортування та експортування даних у форматах vCard та CSV;</li>
       <li xml:lang="x-test">xxReads .vcf format files, and can import and export vCards and csv format filesxx</li>
+      <li xml:lang="zh-CN">读取 .vcf 格式文件，可以导入和导出 vCard 和 csv 格式文件</li>
       <li xml:lang="zh-TW">讀取 .vcf 格式檔案，並可匯入與匯出 vCards 與 csv 格式檔案。</li>
       <li>Can use multiple LDAP servers</li>
       <li xml:lang="ca">Pot usar múltiples servidors LDAP</li>
@@ -173,6 +176,7 @@
       <li xml:lang="tr">Birden çok LDAP sunucusu kullanabilir</li>
       <li xml:lang="uk">можливість використання декількох серверів LDAP;</li>
       <li xml:lang="x-test">xxCan use multiple LDAP serversxx</li>
+      <li xml:lang="zh-CN">能够使用多个 LDAP 服务器</li>
       <li xml:lang="zh-TW">可以使用多個 LDAP 伺服器</li>
       <li>Configurable filters and powerful search capabilities</li>
       <li xml:lang="ar">مرشّحات يمكن ضبطها وإمكانيّات بحث قويّة</li>
@@ -200,6 +204,7 @@
       <li xml:lang="tr">Ayarlanabilir filtreler ve güçlü arama yetenekleri</li>
       <li xml:lang="uk">зручні фільтри та потужні можливості з пошуку;</li>
       <li xml:lang="x-test">xxConfigurable filters and powerful search capabilitiesxx</li>
+      <li xml:lang="zh-CN">可配置的过滤器和强大的搜索能力</li>
       <li xml:lang="zh-TW">可設定的過濾器與強大的搜尋機制</li>
       <li>Integrates with other Kontact components, e.g. exporting Birthday reminders to KOrganizer</li>
       <li xml:lang="ar">التّكامل مع مكوّنات متراسلك الأخرى، كتصدير تذكير تواريخ الميلاد إلى منظّمك</li>
@@ -227,6 +232,7 @@
       <li xml:lang="tr">Diğer Kontact bileşenleriyle tümleşir, örn. Doğum günü hatırlatmalarını KOrganizer'a aktarır</li>
       <li xml:lang="uk">інтеграція з іншими компонентами Kontact, зокрема експортування нагадувань щодо днів народження до KOrganizer;</li>
       <li xml:lang="x-test">xxIntegrates with other Kontact components, e.g. exporting Birthday reminders to KOrganizerxx</li>
+      <li xml:lang="zh-CN">和其他 Kontact 组件集成，例如导出生日提醒到 KOrganizer</li>
       <li xml:lang="zh-TW">可與其它的 Kontact 組件整合，如匯出生日提醒到 KOrganizer</li>
       <li>Capable of groupware integration</li>
       <li xml:lang="ca">Capaç d'integrar-se amb el treball en grup</li>
@@ -253,6 +259,7 @@
       <li xml:lang="tr">Groupware tümleştirmesini destekler</li>
       <li xml:lang="uk">можливість інтегрування з програмним забезпеченням для групової роботи;</li>
       <li xml:lang="x-test">xxCapable of groupware integrationxx</li>
+      <li xml:lang="zh-CN">支持群件集成</li>
       <li xml:lang="zh-TW">可做群組整合</li>
       <li>Powered by Akonadi</li>
       <li xml:lang="ar">يدعمه أكونادي</li>
@@ -279,6 +286,7 @@
       <li xml:lang="tr">Akonadi tarafından güçlendirilmiştir</li>
       <li xml:lang="uk">усі додаткові можливості, роботу яких забезпечує Akonadi.</li>
       <li xml:lang="x-test">xxPowered by Akonadixx</li>
+      <li xml:lang="zh-CN">由 Akonadi 支持</li>
       <li xml:lang="zh-TW">使用 Akonadi </li>
     </ul>
   </description>
