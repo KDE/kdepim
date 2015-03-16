@@ -19,8 +19,7 @@
 
 #include "actionpipethrough.h"
 #include "filteractions/filteractionpipethrough.h"
-#include <qtest_kde.h>
-#include <kdebug.h>
+#include <qtest.h>
 
 using namespace MailCommon;
 
@@ -340,4 +339,4 @@ void FilterActionPipeThroughTest::testXUidChange()
     QCOMPARE(msgPtr->encodedContent(), output);
 }
 
-QTEST_KDEMAIN( FilterActionPipeThroughTest, NoGUI )
+QTEST_MAIN( FilterActionPipeThroughTest )

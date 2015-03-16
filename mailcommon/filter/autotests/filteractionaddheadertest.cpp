@@ -19,7 +19,7 @@
 #include "../filteractions/filteractionaddheader.h"
 #include <KLineEdit>
 #include <QLabel>
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <widgets/minimumcombobox.h>
 
 FilterActionAddHeaderTest::FilterActionAddHeaderTest(QObject *parent)
@@ -74,4 +74,4 @@ void FilterActionAddHeaderTest::shouldAddValue()
     QCOMPARE(lineEdit->text(), resultvalue);
 }
 
-QTEST_KDEMAIN(FilterActionAddHeaderTest, GUI)
+QTEST_MAIN(FilterActionAddHeaderTest)
