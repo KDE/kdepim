@@ -164,6 +164,12 @@ SieveEditorWidget::~SieveEditorWidget()
 {
 }
 
+void SieveEditorWidget::setReadOnly(bool b)
+{
+    mTextModeWidget->setReadOnly(b);
+    mGraphicalModeWidget->setDisabled(b);
+}
+
 void SieveEditorWidget::slotModified()
 {
     mModified = true;
