@@ -38,7 +38,8 @@ void KActionMenuChangeCaseTest::shouldHaveDefaultValue()
     QVERIFY(menu.upperCaseAction());
     QVERIFY(menu.sentenceCaseAction());
     QVERIFY(menu.lowerCaseAction());
-    QCOMPARE(menu.menu()->actions().count(), 3);
+    QVERIFY(menu.reverseCaseAction());
+    QCOMPARE(menu.menu()->actions().count(), 4);
 }
 
 void KActionMenuChangeCaseTest::shouldEmitSignals()
@@ -47,12 +48,15 @@ void KActionMenuChangeCaseTest::shouldEmitSignals()
     QSignalSpy spyUpper(&menu, SIGNAL(upperCase()));
     QSignalSpy spyLower(&menu, SIGNAL(lowerCase()));
     QSignalSpy spySentence(&menu, SIGNAL(sentenceCase()));
+    QSignalSpy spyReverse(&menu, SIGNAL(reverseCase()));
     menu.upperCaseAction()->trigger();
     menu.lowerCaseAction()->trigger();
     menu.sentenceCaseAction()->trigger();
+    menu.reverseCaseAction()->trigger();
     QCOMPARE(spyUpper.count(), 1);
     QCOMPARE(spyLower.count(), 1);
     QCOMPARE(spySentence.count(), 1);
+    QCOMPARE(spyReverse.count(), 1);
 }
 
 QTEST_MAIN(KActionMenuChangeCaseTest)

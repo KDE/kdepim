@@ -25,16 +25,22 @@ KActionMenuChangeCase::KActionMenuChangeCase(QObject *parent)
 {
     setText(i18n("Change Case"));
     mUpperCase = new QAction( i18n("Uppercase"), this );
-    connect( mUpperCase, SIGNAL(triggered(bool)), this, SIGNAL(upperCase()) );
+    connect( mUpperCase, &QAction::triggered, this, &KActionMenuChangeCase::upperCase );
 
     mSentenceCase = new QAction( i18n("Sentence case"), this );
-    connect( mSentenceCase, SIGNAL(triggered(bool)), this, SIGNAL(sentenceCase()) );
+    connect( mSentenceCase, &QAction::triggered, this, &KActionMenuChangeCase::sentenceCase );
 
     mLowerCase = new QAction( i18n("Lowercase"), this );
-    connect( mLowerCase, SIGNAL(triggered(bool)), this, SIGNAL(lowerCase()) );
+    connect( mLowerCase, &QAction::triggered, this, &KActionMenuChangeCase::lowerCase );
+
+    mReverseCase = new QAction( i18n("Reverse Case"), this );
+    connect( mReverseCase, &QAction::triggered, this, &KActionMenuChangeCase::reverseCase );
+
+
     addAction(mUpperCase);
     addAction(mLowerCase);
     addAction(mSentenceCase);
+    addAction(mReverseCase);
 }
 
 KActionMenuChangeCase::~KActionMenuChangeCase()
@@ -57,11 +63,17 @@ QAction *KActionMenuChangeCase::lowerCaseAction() const
     return mLowerCase;
 }
 
+QAction *KActionMenuChangeCase::reverseCaseAction() const
+{
+    return mReverseCase;
+}
+
 void KActionMenuChangeCase::appendInActionCollection(KActionCollection *ac)
 {
     if (ac) {
         ac->addAction( QLatin1String("change_to_uppercase"), mUpperCase );
         ac->addAction( QLatin1String("change_to_sentencecase"), mSentenceCase );
         ac->addAction( QLatin1String("change_to_lowercase"), mLowerCase );
+        ac->addAction( QLatin1String("change_to_reversecase"), mReverseCase );
     }
 }

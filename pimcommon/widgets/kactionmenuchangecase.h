@@ -36,17 +36,21 @@ public:
 
     QAction *lowerCaseAction() const;
 
+    QAction *reverseCaseAction() const;
+
     void appendInActionCollection(KActionCollection *ac);
 
 Q_SIGNALS:
     void upperCase();
     void sentenceCase();
     void lowerCase();
+    void reverseCase();
 
 private:
     QAction *mUpperCase;
     QAction *mSentenceCase;
     QAction *mLowerCase;
+    QAction *mReverseCase;
 };
 }
 
