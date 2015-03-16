@@ -86,9 +86,10 @@ QWidget *FilterActionAddHeader::createParamWidget(QWidget *parent) const
 
     layout->addWidget(comboBox, 0 /* stretch */);
 
-    QLabel *label = new QLabel(i18n("With value:"), widget);
-    label->setFixedWidth(label->sizeHint().width());
-    layout->addWidget(label, 0);
+    QLabel *label = new QLabel( i18n( "With value:" ), widget );
+    label->setObjectName(QLatin1String("label_value"));
+    label->setFixedWidth( label->sizeHint().width() );
+    layout->addWidget( label, 0 );
 
     KLineEdit *lineEdit = new KLineEdit(widget);
     lineEdit->setObjectName(QLatin1String("ledit"));
