@@ -23,7 +23,6 @@
 
 class KPushButton;
 class QGridLayout;
-class QToolButton;
 class QDomElement;
 
 namespace PimCommon {
