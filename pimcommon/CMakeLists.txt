@@ -169,6 +169,7 @@ set(libpimcommon_widgets_SRCS
   widgets/emailaddressrequester.cpp
   widgets/annotationdialog.cpp
   widgets/manageaccountwidget.cpp
+  widgets/kactionmenuchangecase.cpp
 )
 
 set(libtexttospeech_SRCS

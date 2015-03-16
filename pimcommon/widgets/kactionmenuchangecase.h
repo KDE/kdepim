@@ -19,9 +19,11 @@
 #define KACTIONMENUCHANGECASE_H
 
 #include <KActionMenu>
+#include "pimcommon_export.h"
 class QAction;
 class KActionCollection;
-class KActionMenuChangeCase : public KActionMenu
+namespace PimCommon {
+class PIMCOMMON_EXPORT KActionMenuChangeCase : public KActionMenu
 {
     Q_OBJECT
 public:
@@ -46,5 +48,6 @@ private:
     QAction *mSentenceCase;
     QAction *mLowerCase;
 };
+}
 
 #endif // KACTIONMENUCHANGECASE_H

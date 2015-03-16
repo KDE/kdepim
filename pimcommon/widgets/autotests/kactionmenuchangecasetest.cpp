@@ -20,7 +20,7 @@
 #include <qtest.h>
 #include <QSignalSpy>
 #include <QMenu>
-
+using namespace PimCommon;
 KActionMenuChangeCaseTest::KActionMenuChangeCaseTest(QObject *parent)
     : QObject(parent)
 {

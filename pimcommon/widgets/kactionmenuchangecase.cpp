@@ -19,7 +19,7 @@
 #include <KLocalizedString>
 #include <KActionCollection>
 #include <QAction>
-
+using namespace PimCommon;
 KActionMenuChangeCase::KActionMenuChangeCase(QObject *parent)
     : KActionMenu(parent)
 {
