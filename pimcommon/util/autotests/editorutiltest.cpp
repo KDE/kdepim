@@ -100,6 +100,7 @@ void EditorUtilTest::testSentenceCase_data()
     QTest::addColumn<int>("endcursorposition");
     QTest::newRow("onelinewithoutselection") <<  QString(QLatin1String("foo")) << QString(QLatin1String("foo")) << -1 << -1;
     QTest::newRow("onelinewithselection") <<  QString(QLatin1String("foo")) << QString(QLatin1String("Foo")) << 0 << 3;
+    QTest::newRow("bigline") <<  QString(QLatin1String("foo bla foo.\nddd")) << QString(QLatin1String("Foo bla foo.\nDdd")) << 0 << 16;
 }
 
 void EditorUtilTest::testSentenceCase()
@@ -129,6 +130,8 @@ void EditorUtilTest::testReverseCase_data()
     QTest::addColumn<int>("endcursorposition");
     QTest::newRow("onelinewithoutselection") <<  QString(QLatin1String("foo")) << QString(QLatin1String("foo")) << -1 << -1;
     QTest::newRow("onelinewithselection") <<  QString(QLatin1String("foo")) << QString(QLatin1String("FOO")) << 0 << 3;
+    QTest::newRow("reverseCase") <<  QString(QLatin1String("fOo bla\tfOO")) << QString(QLatin1String("FoO BLA\tFoo")) << 0 << 12;
+    QTest::newRow("notallineselected") <<  QString(QLatin1String("fOo bla\tfOO")) << QString(QLatin1String("FoO bla\tfOO")) << 0 << 3;
 }
 
 void EditorUtilTest::testReverseCase()
