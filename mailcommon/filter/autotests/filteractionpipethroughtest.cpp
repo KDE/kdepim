@@ -17,7 +17,7 @@
  *    02110-1301, USA.
  */
 
-#include "actionpipethrough.h"
+#include "filteractionpipethroughtest.h"
 #include "filteractions/filteractionpipethrough.h"
 #include <qtest.h>
 

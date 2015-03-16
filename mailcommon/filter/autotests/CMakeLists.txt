@@ -5,8 +5,8 @@ ecm_mark_as_test(itemcontexttest)
 target_link_libraries( itemcontexttest Qt5::Test Qt5::Gui KF5::AkonadiCore mailcommon)
 
 set( mailcommon_filteractionpipethroughtest_source
-   actionpipethrough.cpp
    ../../mailcommon_debug.cpp
+   filteractionpipethroughtest.cpp
    ../filteractions/filteractionpipethrough.cpp
    ../filteractions/filteractionwithcommand.cpp
    ../filteractions/filteractionwithurl.cpp
@@ -38,4 +38,18 @@ target_link_libraries( filteractionaddheadertest
    Qt5::Core
    KF5::AkonadiCore
    KF5::AkonadiMime
+)
+
+set(mailcommon_filteractiondeletetest_SRCS filteractiondeletetest.cpp
+                                           ../filteractions/filteractiondelete.cpp
+                                           ../filteractions/filteractionwithnone.cpp)
+kde4_add_unit_test( filteractiondeletetest ${mailcommon_filteractiondeletetest_SRCS} )
+target_link_libraries( filteractiondeletetest
+   kdepim
+   mailcommon
+   pimcommon
+   ${QT_QTTEST_LIBRARY}
+   ${QT_QTCORE_LIBRARY}
+   ${KDEPIMLIBS_AKONADI_LIBS}
+   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
 )

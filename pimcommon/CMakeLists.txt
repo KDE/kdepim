@@ -309,6 +309,8 @@ add_subdirectory(storageservice/box/tests)
 add_subdirectory(storageservice/dropbox/icons/)
 add_subdirectory(texttospeech/tests)
 
+add_subdirectory(util/autotests)
+
 if( LibKGAPI2_FOUND )
   add_subdirectory(storageservice/gdrive/tests/)
   add_subdirectory(storageservice/gdrive/icons/)

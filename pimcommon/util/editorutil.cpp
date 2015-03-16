@@ -58,3 +58,24 @@ void EditorUtil::sentenceCase(QTextCursor &cursor)
         cursor.insertText(newText);
     }
 }
+
+void EditorUtil::reverseCase( QTextCursor &cursor )
+{
+    if (cursor.hasSelection()) {
+        QString newText = cursor.selectedText();
+        QString reverseCaseText;
+        const int nbChar(newText.count());
+        for (int i = 0; i <nbChar; ++i) {
+            QChar charVal = newText.at(i);
+            if (charVal.isLetter()) {
+                if (charVal.isLower()) {
+                    charVal = charVal.toUpper();
+                } else {
+                    charVal = charVal.toLower();
+                }
+            }
+            reverseCaseText += charVal;
+        }
+        cursor.insertText(reverseCaseText);
+    }
+}

@@ -15,22 +15,21 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FILTERACTIONADDHEADERTEST_H
-#define FILTERACTIONADDHEADERTEST_H
+#ifndef FILTERACTIONDELETETEST_H
+#define FILTERACTIONDELETETEST_H
 
 #include <QObject>
 
-class FilterActionAddHeaderTest : public QObject
+class FilterActionDeleteTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FilterActionAddHeaderTest(QObject *parent = 0);
-    ~FilterActionAddHeaderTest();
+    explicit FilterActionDeleteTest(QObject *parent = 0);
+    ~FilterActionDeleteTest();
+
 private Q_SLOTS:
-    void shouldCreateWidget();
-    void shouldAddValue();
-    void shouldAddValue_data();
-    void shouldClearWidget();
+    void shouldHaveDefaultValue();
+    void shouldReturnSieveValue();
 };
 
-#endif // FILTERACTIONADDHEADERTEST_H
+#endif // FILTERACTIONDELETETEST_H
