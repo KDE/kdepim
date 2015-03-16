@@ -64,7 +64,9 @@ FilterAction* FilterAction::newAction()
 
 QWidget* FilterAction::createParamWidget( QWidget *parent ) const
 {
-    return new QWidget( parent );
+    QWidget *w = new QWidget( parent );
+    w->setObjectName(QLatin1String("empty_widget"));
+    return w;
 }
 
 void FilterAction::applyParamWidgetValue( QWidget * )
