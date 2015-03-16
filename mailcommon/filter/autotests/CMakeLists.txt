@@ -51,3 +51,18 @@ target_link_libraries( filteractiondeletetest
    ${KDEPIMLIBS_AKONADI_LIBS}
    ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
 )
+
+set(mailcommon_filteractionrewriteheadertest_SRCS filteractionrewriteheadertest.cpp
+                                           ../filteractions/filteractionrewriteheader.cpp
+                                           ../filteractions/filteractionwithstringlist.cpp
+                                           ../filteractions/filteractionwithstring.cpp)
+kde4_add_unit_test( filteractionrewriteheadertest ${mailcommon_filteractionrewriteheadertest_SRCS} )
+target_link_libraries( filteractionrewriteheadertest
+   kdepim
+   mailcommon
+   pimcommon
+   ${QT_QTTEST_LIBRARY}
+   ${QT_QTCORE_LIBRARY}
+   ${KDEPIMLIBS_AKONADI_LIBS}
+   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+)
