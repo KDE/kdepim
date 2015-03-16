@@ -36,7 +36,7 @@ FilterActionAddHeaderTest::~FilterActionAddHeaderTest()
 void FilterActionAddHeaderTest::shouldCreateWidget()
 {
     MailCommon::FilterActionAddHeader filter;
-    QWidget* widget = filter.createParamWidget(0);
+    QWidget *widget = filter.createParamWidget(0);
     QVERIFY(widget);
     PimCommon::MinimumComboBox *comboBox = widget->findChild<PimCommon::MinimumComboBox *>(QLatin1String("combo"));
     QVERIFY(comboBox);
@@ -60,12 +60,12 @@ void FilterActionAddHeaderTest::shouldAddValue_data()
 
 void FilterActionAddHeaderTest::shouldAddValue()
 {
-    QFETCH( QString, argsinput );
-    QFETCH( QString, resultheader );
-    QFETCH( QString, resultvalue );
+    QFETCH(QString, argsinput);
+    QFETCH(QString, resultheader);
+    QFETCH(QString, resultvalue);
 
     MailCommon::FilterActionAddHeader filter;
-    QWidget* widget = filter.createParamWidget(0);
+    QWidget *widget = filter.createParamWidget(0);
     filter.argsFromString(argsinput);
     filter.setParamWidgetValue(widget);
     PimCommon::MinimumComboBox *comboBox = widget->findChild<PimCommon::MinimumComboBox *>(QLatin1String("combo"));

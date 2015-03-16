@@ -51,7 +51,6 @@ FavoriteCollectionWidget::FavoriteCollectionWidget(KXMLGUIClient *xmlGuiClient, 
 {
     setFocusPolicy(Qt::NoFocus);
 
-
     Akonadi::CollectionStatisticsDelegate *delegate = new Akonadi::CollectionStatisticsDelegate(this);
     delegate->setProgressAnimationEnabled(true);
 

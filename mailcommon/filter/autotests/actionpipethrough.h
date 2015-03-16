@@ -22,8 +22,9 @@
 
 #include <QtCore/QObject>
 
-namespace MailCommon {
-    class FilterAction;
+namespace MailCommon
+{
+class FilterAction;
 }
 
 class FilterActionPipeThroughTest  : public QObject
@@ -42,6 +43,5 @@ private Q_SLOTS:
 private:
     void setOutput(MailCommon::FilterAction *filter, const QByteArray &output);
 };
-
 
 #endif

@@ -244,22 +244,22 @@ FilterAction::ReturnCode FilterActionWithCommand::genericProcess(ItemContext &co
         // read altered message:
         const QByteArray msgText = shProc.readAllStandardOutput();
 
-        if ( !msgText.trimmed().isEmpty() ) {
+        if (!msgText.trimmed().isEmpty()) {
             /* If the pipe through alters the message, it could very well
-       happen that it no longer has a X-UID header afterwards. That is
-       unfortunate, as we need to removed the original from the folder
-       using that, and look it up in the message. When the (new) message
-       is uploaded, the header is stripped anyhow. */
-            const QString uid = aMsg->headerByType( "X-UID" ) ? aMsg->headerByType( "X-UID" )->asUnicodeString() : QString();
-            aMsg->setContent( KMime::CRLFtoLF( msgText ) );
+            happen that it no longer has a X-UID header afterwards. That is
+            unfortunate, as we need to removed the original from the folder
+            using that, and look it up in the message. When the (new) message
+            is uploaded, the header is stripped anyhow. */
+            const QString uid = aMsg->headerByType("X-UID") ? aMsg->headerByType("X-UID")->asUnicodeString() : QString();
+            aMsg->setContent(KMime::CRLFtoLF(msgText));
             aMsg->setFrozen(true);
             aMsg->parse();
 
-            const QString newUid = aMsg->headerByType( "X-UID" ) ? aMsg->headerByType( "X-UID" )->asUnicodeString() : QString();
+            const QString newUid = aMsg->headerByType("X-UID") ? aMsg->headerByType("X-UID")->asUnicodeString() : QString();
             if (uid != newUid) {
                 aMsg->setFrozen(false);
-                KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-UID", aMsg.get(), uid, "utf-8" );
-                aMsg->setHeader( header );
+                KMime::Headers::Generic *header = new KMime::Headers::Generic("X-UID", aMsg.get(), uid, "utf-8");
+                aMsg->setHeader(header);
                 aMsg->assemble();
             }
 

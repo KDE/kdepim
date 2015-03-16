@@ -43,8 +43,7 @@ public:
     ~TagWidget();
 
     MailCommon::Tag::SaveFlags saveFlags() const;
-    void recordTagSettings( MailCommon::Tag::Ptr tag);
-
+    void recordTagSettings(MailCommon::Tag::Ptr tag);
 
     KLineEdit *tagNameLineEdit() const;
     QCheckBox *textColorCheck() const;
@@ -61,9 +60,9 @@ public:
 
     KKeySequenceWidget *keySequenceWidget() const;
 
-    void setTagTextColor(const QColor& color);
-    void setTagBackgroundColor(const QColor& color);
-    void setTagTextFont(const QFont& font);
+    void setTagTextColor(const QColor &color);
+    void setTagBackgroundColor(const QColor &color);
+    void setTagTextFont(const QFont &font);
 
 Q_SIGNALS:
     void changed();

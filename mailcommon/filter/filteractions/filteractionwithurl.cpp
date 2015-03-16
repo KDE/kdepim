@@ -33,7 +33,7 @@ FilterActionWithUrlHelpButton::FilterActionWithUrlHelpButton(QWidget *parent)
     : QToolButton(parent)
 {
     setToolTip(i18n("Help"));
-    setIcon( QIcon::fromTheme( QLatin1String("help-hint") ) );
+    setIcon(QIcon::fromTheme(QLatin1String("help-hint")));
 }
 
 FilterActionWithUrlHelpButton::~FilterActionWithUrlHelpButton()
@@ -41,8 +41,8 @@ FilterActionWithUrlHelpButton::~FilterActionWithUrlHelpButton()
 
 }
 
-FilterActionWithUrl::FilterActionWithUrl( const QString &name, const QString &label, QObject *parent )
-    : FilterAction( name, label, parent )
+FilterActionWithUrl::FilterActionWithUrl(const QString &name, const QString &label, QObject *parent)
+    : FilterAction(name, label, parent)
 {
 }
 
@@ -60,8 +60,8 @@ QWidget *FilterActionWithUrl::createParamWidget(QWidget *parent) const
     QWidget *widget = new QWidget(parent);
     QHBoxLayout *layout = new QHBoxLayout;
     widget->setLayout(layout);
-    KUrlRequester *requester = new KUrlRequester( parent );
-    requester->setUrl( QUrl::fromLocalFile( mParameter ) );
+    KUrlRequester *requester = new KUrlRequester(parent);
+    requester->setUrl(QUrl::fromLocalFile(mParameter));
     layout->addWidget(requester);
     mHelpButton = new FilterActionWithUrlHelpButton(parent);
     connect(mHelpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
@@ -75,10 +75,10 @@ QWidget *FilterActionWithUrl::createParamWidget(QWidget *parent) const
 void FilterActionWithUrl::slotHelp()
 {
     QString fullWhatsThis = i18n("You can get specific header when when you use %{headername}.");
-    QWhatsThis::showText( QCursor::pos(), fullWhatsThis, mHelpButton );
+    QWhatsThis::showText(QCursor::pos(), fullWhatsThis, mHelpButton);
 }
 
-void FilterActionWithUrl::applyParamWidgetValue( QWidget *paramWidget )
+void FilterActionWithUrl::applyParamWidgetValue(QWidget *paramWidget)
 {
     const QUrl url = static_cast<KUrlRequester *>(paramWidget)->url();
 
