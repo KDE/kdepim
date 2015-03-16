@@ -29,6 +29,7 @@ public:
     void upperCase( QTextCursor &cursor );
     void lowerCase( QTextCursor &cursor );
     void sentenceCase( QTextCursor &cursor );
+    void reverseCase( QTextCursor &cursor );
 };
 }
 

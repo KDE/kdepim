@@ -32,6 +32,8 @@ private Q_SLOTS:
     void testLowerCase_data();
     void testSentenceCase();
     void testSentenceCase_data();
+    void testReverseCase();
+    void testReverseCase_data();
 };
 
 #endif // EDITORUTILTEST_H

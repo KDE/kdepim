@@ -121,4 +121,36 @@ void EditorUtilTest::testSentenceCase()
     delete document;
 }
 
+void EditorUtilTest::testReverseCase_data()
+{
+    QTest::addColumn<QString>("input");
+    QTest::addColumn<QString>("result");
+    QTest::addColumn<int>("startcursorposition");
+    QTest::addColumn<int>("endcursorposition");
+    QTest::newRow("onelinewithoutselection") <<  QString(QLatin1String("foo")) << QString(QLatin1String("foo")) << -1 << -1;
+    QTest::newRow("onelinewithselection") <<  QString(QLatin1String("foo")) << QString(QLatin1String("FOO")) << 0 << 3;
+}
+
+void EditorUtilTest::testReverseCase()
+{
+    QFETCH( QString, input );
+    QFETCH( QString, result );
+    QFETCH( int, startcursorposition);
+    QFETCH( int, endcursorposition);
+
+    QTextDocument * document = new QTextDocument(this);
+    document->setPlainText(input);
+    QTextCursor textCursor(document);
+    if (startcursorposition != -1 && endcursorposition != -1) {
+        textCursor.setPosition(startcursorposition);
+        textCursor.movePosition(QTextCursor::NextCharacter,QTextCursor::KeepAnchor, endcursorposition - startcursorposition );
+    }
+    PimCommon::EditorUtil editorUtil;
+    editorUtil.reverseCase(textCursor);
+    QCOMPARE(textCursor.document()->toPlainText(), result);
+    delete document;
+}
+
+
+
 QTEST_KDEMAIN(EditorUtilTest, NoGUI)
