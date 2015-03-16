@@ -74,7 +74,7 @@ QWidget *FilterActionWithUrl::createParamWidget(QWidget *parent) const
 
 void FilterActionWithUrl::slotHelp()
 {
-    QString fullWhatsThis = i18n("You can get specific header when when you use %{headername}.");
+    QString fullWhatsThis = i18n("You can get specific header when you use %{headername}.");
     QWhatsThis::showText(QCursor::pos(), fullWhatsThis, mHelpButton);
 }
 
