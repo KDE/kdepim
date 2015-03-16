@@ -58,6 +58,19 @@ void FilterActionAddHeaderTest::shouldAddValue_data()
     QTest::newRow("real value") <<  val << QString(QLatin1String("bla")) << QString(QLatin1String("blo"));
 }
 
+void FilterActionAddHeaderTest::shouldClearWidget()
+{
+    MailCommon::FilterActionAddHeader filter;
+    QWidget* widget = filter.createParamWidget(0);
+    PimCommon::MinimumComboBox *comboBox = widget->findChild<PimCommon::MinimumComboBox *>(QLatin1String("combo"));
+    KLineEdit *lineEdit = widget->findChild<KLineEdit *>(QLatin1String("ledit"));
+    comboBox->lineEdit()->setText(QLatin1String("test"));
+    lineEdit->setText(QLatin1String("blo"));
+    filter.clearParamWidget(widget);
+    QVERIFY(comboBox->lineEdit()->text().isEmpty());
+    QVERIFY(lineEdit->text().isEmpty());
+}
+
 void FilterActionAddHeaderTest::shouldAddValue()
 {
     QFETCH( QString, argsinput );
