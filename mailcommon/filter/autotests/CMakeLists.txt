@@ -8,7 +8,7 @@ kde4_add_unit_test( itemcontexttest ${mailcommon_itemcontexttest_source})
 target_link_libraries( itemcontexttest ${QT_QTTEST_LIBRARY} ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY} ${KDEPIMLIBS_AKONADI_LIBS})
 
 set( mailcommon_filteractionpipethroughtest_source
-   actionpipethrough.cpp
+   filteractionpipethroughtest.cpp
    ../filteractions/filteractionpipethrough.cpp
    ../filteractions/filteractionwithcommand.cpp
    ../filteractions/filteractionwithurl.cpp
