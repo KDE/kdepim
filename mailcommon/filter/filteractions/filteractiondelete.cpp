@@ -46,6 +46,7 @@ SearchRule::RequiredPart FilterActionDelete::requiredPart() const
 QWidget* FilterActionDelete::createParamWidget( QWidget *parent ) const
 {
     QLabel *lab = new QLabel(parent);
+    lab->setObjectName(QLatin1String("label_delete"));
     QPalette pal = lab->palette();
     KColorScheme scheme(QPalette::Active, KColorScheme::View);
     pal.setColor(QPalette::WindowText, scheme.foreground(KColorScheme::NegativeText).color());

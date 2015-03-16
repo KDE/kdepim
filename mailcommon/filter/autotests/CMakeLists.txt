@@ -37,3 +37,17 @@ target_link_libraries( filteractionaddheadertest
    ${KDEPIMLIBS_AKONADI_LIBS}
    ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
 )
+
+set(mailcommon_filteractiondeletetest_SRCS filteractiondeletetest.cpp
+                                           ../filteractions/filteractiondelete.cpp
+                                           ../filteractions/filteractionwithnone.cpp)
+kde4_add_unit_test( filteractiondeletetest ${mailcommon_filteractiondeletetest_SRCS} )
+target_link_libraries( filteractiondeletetest
+   kdepim
+   mailcommon
+   pimcommon
+   ${QT_QTTEST_LIBRARY}
+   ${QT_QTCORE_LIBRARY}
+   ${KDEPIMLIBS_AKONADI_LIBS}
+   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+)

@@ -1,0 +1,50 @@
+/*
+  Copyright (c) 2015 Montel Laurent <montel@kde.org>
+
+  This program is free software; you can redistribute it and/or modify it
+  under the terms of the GNU General Public License, version 2, as
+  published by the Free Software Foundation.
+
+  This program is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  General Public License for more details.
+
+  You should have received a copy of the GNU General Public License along
+  with this program; if not, write to the Free Software Foundation, Inc.,
+  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+#include "filteractiondeletetest.h"
+#include "../filteractions/filteractiondelete.h"
+#include <qtest_kde.h>
+#include <QLabel>
+FilterActionDeleteTest::FilterActionDeleteTest(QObject *parent)
+    : QObject(parent)
+{
+
+}
+
+FilterActionDeleteTest::~FilterActionDeleteTest()
+{
+
+}
+
+void FilterActionDeleteTest::shouldHaveDefaultValue()
+{
+    MailCommon::FilterActionDelete filter(0);
+    QWidget *w = filter.createParamWidget(0);
+    QVERIFY(w);
+
+    QLabel *lab = dynamic_cast<QLabel *>(w);
+    QVERIFY(lab);
+    QCOMPARE(lab->objectName(), QLatin1String("label_delete"));
+}
+
+void FilterActionDeleteTest::shouldReturnSieveValue()
+{
+    MailCommon::FilterActionDelete filter(0);
+    QCOMPARE(filter.sieveCode(), QLatin1String("discard;"));
+}
+
+QTEST_KDEMAIN(FilterActionDeleteTest, GUI)
