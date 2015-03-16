@@ -21,7 +21,6 @@
 
 #include <KDialog>
 #include <Akonadi/Item>
-class QTextEdit;
 class QLineEdit;
 class KJob;
 namespace PimCommon {
