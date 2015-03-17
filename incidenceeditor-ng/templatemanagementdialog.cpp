@@ -189,7 +189,6 @@ void TemplateManagementDialog::slotApplyTemplate()
         if (!cur.isEmpty() && cur != m_newTemplate) {
             emit loadTemplate(cur);
             slotOk();
-            accept();
         }
     }
 }
@@ -203,5 +202,6 @@ void TemplateManagementDialog::slotOk()
     if (m_changed) {
         emit templatesChanged(m_templates);
     }
+    accept();
 }
 
