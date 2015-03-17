@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013-2015 Montel Laurent <montel@kde.org>
+  Copyright (c) 2015 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,14 +15,17 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef FILTERACTIONSETSTATUSTEST_H
+#define FILTERACTIONSETSTATUSTEST_H
 
-#include <AkonadiCore/Item>
-class QItemSelectionModel;
-namespace Utils
+#include <QObject>
+
+class FilterActionSetStatusTest : public QObject
 {
-Akonadi::Item::List collectSelectedContactsItem(QItemSelectionModel *model);
-}
+    Q_OBJECT
+public:
+    explicit FilterActionSetStatusTest(QObject *parent = 0);
+    ~FilterActionSetStatusTest();
+};
 
-#endif // UTILS_H
+#endif // FILTERACTIONSETSTATUSTEST_H
