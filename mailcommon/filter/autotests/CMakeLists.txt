@@ -68,3 +68,14 @@ target_link_libraries( filteractionrewriteheadertest
    ${KDEPIMLIBS_AKONADI_LIBS}
    ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
 )
+
+set(mailcommon_filteractionbeeptest_SRCS filteractionbeeptest.cpp
+                                           ../filteractions/filteractionbeep.cpp
+                                           ../filteractions/filteractionwithnone.cpp)
+kde4_add_unit_test( filteractionbeeptest ${mailcommon_filteractionbeeptest_SRCS} )
+target_link_libraries( filteractionbeeptest
+   kdepim
+   mailcommon
+   ${QT_QTTEST_LIBRARY}
+   ${QT_QTCORE_LIBRARY}
+)

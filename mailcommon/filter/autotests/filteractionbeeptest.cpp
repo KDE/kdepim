@@ -15,23 +15,32 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FILTERACTIONADDHEADERTEST_H
-#define FILTERACTIONADDHEADERTEST_H
-
-#include <QObject>
-
-class FilterActionAddHeaderTest : public QObject
+#include "filteractionbeeptest.h"
+#include "../filteractions/filteractionbeep.h"
+#include <qtest_kde.h>
+#include <QWidget>
+FilterActionBeepTest::FilterActionBeepTest(QObject *parent)
+    : QObject(parent)
 {
-    Q_OBJECT
-public:
-    explicit FilterActionAddHeaderTest(QObject *parent = 0);
-    ~FilterActionAddHeaderTest();
-private Q_SLOTS:
-    void shouldCreateWidget();
-    void shouldAddValue();
-    void shouldAddValue_data();
-    void shouldClearWidget();
-    void shouldReturnSieveCode();
-};
 
-#endif // FILTERACTIONADDHEADERTEST_H
+}
+
+FilterActionBeepTest::~FilterActionBeepTest()
+{
+
+}
+
+void FilterActionBeepTest::shouldHaveDefaultValue()
+{
+    MailCommon::FilterActionBeep w;
+    QWidget *widget = w.createParamWidget(0);
+    QCOMPARE(widget->objectName(), QLatin1String("empty_widget"));
+}
+
+void FilterActionBeepTest::shouldSieveCode()
+{
+    MailCommon::FilterActionBeep w;
+    QVERIFY(w.sieveRequires().isEmpty());
+}
+
+QTEST_KDEMAIN(FilterActionBeepTest, GUI)

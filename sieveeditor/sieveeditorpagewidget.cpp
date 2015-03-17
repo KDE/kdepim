@@ -85,6 +85,7 @@ void SieveEditorPageWidget::loadScript(const QUrl &url, const QStringList &capab
 {
     mCurrentURL = url;
     mSieveEditorWidget->setSieveCapabilities(capabilities);
+    mSieveEditorWidget->setReadOnly(true);
     KManageSieve::SieveJob *job = KManageSieve::SieveJob::get(url);
     connect(job, &KManageSieve::SieveJob::result, this, &SieveEditorPageWidget::slotGetResult);
 }
@@ -96,7 +97,8 @@ QUrl SieveEditorPageWidget::currentUrl() const
 
 void SieveEditorPageWidget::slotGetResult(KManageSieve::SieveJob *, bool success, const QString &script, bool isActive)
 {
-    if (!success) {
+    mSieveEditorWidget->setReadOnly(false);
+    if ( !success ) {
         return;
     }
     mSieveEditorWidget->setScriptName(mCurrentURL.fileName());

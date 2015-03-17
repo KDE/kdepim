@@ -48,6 +48,7 @@ public:
     ~SieveEditorTextModeWidget();
 
     void setSieveCapabilities(const QStringList &capabilities);
+    void setReadOnly(bool b);
 
     QString script() const;
     void setScript(const QString &script);

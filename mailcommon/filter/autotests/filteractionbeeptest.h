@@ -14,24 +14,20 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-
-#ifndef FILTERACTIONADDHEADERTEST_H
-#define FILTERACTIONADDHEADERTEST_H
+#ifndef FILTERACTIONBEEPTEST_H
+#define FILTERACTIONBEEPTEST_H
 
 #include <QObject>
 
-class FilterActionAddHeaderTest : public QObject
+class FilterActionBeepTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FilterActionAddHeaderTest(QObject *parent = 0);
-    ~FilterActionAddHeaderTest();
+    explicit FilterActionBeepTest(QObject *parent = 0);
+    ~FilterActionBeepTest();
 private Q_SLOTS:
-    void shouldCreateWidget();
-    void shouldAddValue();
-    void shouldAddValue_data();
-    void shouldClearWidget();
-    void shouldReturnSieveCode();
+    void shouldHaveDefaultValue();
+    void shouldSieveCode();
 };
 
-#endif // FILTERACTIONADDHEADERTEST_H
+#endif // FILTERACTIONBEEPTEST_H

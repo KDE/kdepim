@@ -71,6 +71,12 @@ void FilterActionAddHeaderTest::shouldClearWidget()
     QVERIFY(lineEdit->text().isEmpty());
 }
 
+void FilterActionAddHeaderTest::shouldReturnSieveCode()
+{
+    MailCommon::FilterActionAddHeader filter;
+    QCOMPARE(filter.sieveRequires().join(QLatin1String(",")), QLatin1String("editheader"));
+}
+
 void FilterActionAddHeaderTest::shouldAddValue()
 {
     QFETCH(QString, argsinput);

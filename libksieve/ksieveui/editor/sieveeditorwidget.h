@@ -43,6 +43,7 @@ public:
         GraphicMode = 1
     };
 
+    void setReadOnly(bool b);
     QString script() const;
     QString originalScript() const;
     void setScript(const QString &script);

@@ -376,3 +376,9 @@ void SieveEditorTextModeWidget::uncomment()
 {
     mTextEdit->uncomment();
 }
+
+
+void KSieveUi::SieveEditorTextModeWidget::setReadOnly(bool b)
+{
+    mTextEdit->setReadOnly(b);
+}
