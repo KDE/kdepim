@@ -43,7 +43,6 @@ class KKeySequenceWidget;
 class QCheckBox;
 class QLabel;
 class QListWidget;
-class QModelIndex;
 class QPushButton;
 class QRadioButton;
 class QPushButton;

@@ -22,7 +22,6 @@
 
 #include <CollectionPropertiesPage>
 
-class KComboBox;
 class QLineEdit;
 
 class QCheckBox;

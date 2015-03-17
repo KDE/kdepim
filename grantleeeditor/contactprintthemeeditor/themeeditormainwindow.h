@@ -22,7 +22,6 @@
 
 class ThemeEditorPage;
 class QAction;
-class KToggleAction;
 class KRecentFilesAction;
 class QUrl;
 

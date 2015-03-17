@@ -20,7 +20,6 @@
 
 #include <QDialog>
 #include <AkonadiCore/Item>
-class KAboutData;
 class SendLaterWidget;
 class SendLaterConfigureDialog : public QDialog
 {

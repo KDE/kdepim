@@ -27,7 +27,6 @@ class ContactPrintThemePreview;
 namespace GrantleeThemeEditor
 {
 class EditorWidget;
-class PreviewWidget;
 }
 
 class EditorPage : public GrantleeThemeEditor::EditorPage
