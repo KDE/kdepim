@@ -218,8 +218,7 @@ public:
                 createListWidgetItem(name, text, false);
             }
         } else {
-            //KF5 add messagebox
-            qDebug() << "This file is not a template file";
+            KMessageBox::error(q, i18n("\'%1\' is not a template file", configFile->name()), i18n("Load Template"));
         }
     }
 
