@@ -41,7 +41,7 @@ void ReminderClient::startDaemon()
         return;
     }
 
-    const QString desktopFile = QStandardPaths::locate(QStandardPaths::ConfigLocation, QLatin1String("autostart/") + QLatin1String("korgac.desktop"));
+    const QString desktopFile = QStandardPaths::locate(QStandardPaths::ConfigLocation, QLatin1String("autostart/") + QLatin1String("org.kde.korgac.desktop"));
     if (desktopFile.isEmpty()) {
         qWarning() << "Couldn't find autostart/korgac.desktop!";
     } else {
