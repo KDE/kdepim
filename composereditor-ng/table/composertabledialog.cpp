@@ -75,10 +75,8 @@ void ComposerTableDialogPrivate::initialize()
 {
     q->setWindowTitle(i18n("Insert Table"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-    QWidget *mainWidget = new QWidget(q);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     q->setLayout(mainLayout);
-    mainLayout->addWidget(mainWidget);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);

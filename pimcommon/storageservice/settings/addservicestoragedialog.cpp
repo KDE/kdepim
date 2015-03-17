@@ -50,7 +50,6 @@ AddServiceStorageDialog::AddServiceStorageDialog(const QList<StorageServiceAbstr
     if (mService->count() > 0) {
         mStackedWidget->setCurrentWidget(mComboboxWidget);
         QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-        QWidget *mainWidget = new QWidget(this);
         QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
         okButton->setDefault(true);
         okButton->setShortcut(Qt::CTRL | Qt::Key_Return);

@@ -37,10 +37,8 @@ BackupFileStructureInfoDialog::BackupFileStructureInfoDialog(QWidget *parent)
 {
     setWindowTitle(i18n("Archive File Structure"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
-    QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
-    mainLayout->addWidget(mainWidget);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &BackupFileStructureInfoDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &BackupFileStructureInfoDialog::reject);
     buttonBox->button(QDialogButtonBox::Close)->setDefault(true);

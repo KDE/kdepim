@@ -91,10 +91,8 @@ void ComposerTableFormatDialogPrivate::initialize(const QWebElement &element)
     webElement = element;
     q->setWindowTitle(i18n("Table Format"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::Apply);
-    QWidget *mainWidget = new QWidget(q);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     q->setLayout(mainLayout);
-    mainLayout->addWidget(mainWidget);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);

@@ -50,10 +50,8 @@ NotesAgentAlarmDialog::NotesAgentAlarmDialog(QWidget *parent)
     setWindowTitle(i18n("Alarm"));
     setWindowIcon(QIcon::fromTheme(QStringLiteral("knotes")));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
-    QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
-    mainLayout->addWidget(mainWidget);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &NotesAgentAlarmDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &NotesAgentAlarmDialog::reject);
     setAttribute(Qt::WA_DeleteOnClose);
