@@ -24,7 +24,7 @@ class FilterActionAddHeaderTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FilterActionAddHeaderTest(QObject *parent = 0);
+    explicit FilterActionAddHeaderTest(QObject *parent = Q_NULLPTR);
     ~FilterActionAddHeaderTest();
 private Q_SLOTS:
     void shouldCreateWidget();

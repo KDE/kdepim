@@ -24,7 +24,7 @@ class FilterActionDeleteTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FilterActionDeleteTest(QObject *parent = 0);
+    explicit FilterActionDeleteTest(QObject *parent = Q_NULLPTR);
     ~FilterActionDeleteTest();
 
 private Q_SLOTS:

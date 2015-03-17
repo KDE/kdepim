@@ -23,7 +23,7 @@ class FilterActionBeepTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FilterActionBeepTest(QObject *parent = 0);
+    explicit FilterActionBeepTest(QObject *parent = Q_NULLPTR);
     ~FilterActionBeepTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();

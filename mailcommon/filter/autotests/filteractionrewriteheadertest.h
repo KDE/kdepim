@@ -24,7 +24,7 @@ class FilterActionRewriteHeaderTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FilterActionRewriteHeaderTest(QObject *parent = 0);
+    explicit FilterActionRewriteHeaderTest(QObject *parent = Q_NULLPTR);
     ~FilterActionRewriteHeaderTest();
 };
 

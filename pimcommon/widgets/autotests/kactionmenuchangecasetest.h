@@ -25,7 +25,7 @@ class KActionMenuChangeCaseTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit KActionMenuChangeCaseTest(QObject *parent = 0);
+    explicit KActionMenuChangeCaseTest(QObject *parent = Q_NULLPTR);
     ~KActionMenuChangeCaseTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();

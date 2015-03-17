@@ -27,7 +27,7 @@ class PIMCOMMON_EXPORT KActionMenuChangeCase : public KActionMenu
 {
     Q_OBJECT
 public:
-    explicit KActionMenuChangeCase(QObject *parent = 0);
+    explicit KActionMenuChangeCase(QObject *parent = Q_NULLPTR);
     ~KActionMenuChangeCase();
 
     QAction *upperCaseAction() const;
