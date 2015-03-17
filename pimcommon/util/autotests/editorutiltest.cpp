@@ -18,7 +18,7 @@
 #include "editorutiltest.h"
 #include "../editorutil.h"
 #include <QTextDocument>
-#include <qtest_kde.h>
+#include <qtest.h>
 
 EditorUtilTest::EditorUtilTest(QObject *parent)
     : QObject(parent)
@@ -156,4 +156,4 @@ void EditorUtilTest::testReverseCase()
 
 
 
-QTEST_KDEMAIN(EditorUtilTest, NoGUI)
+QTEST_MAIN(EditorUtilTest)

@@ -17,7 +17,7 @@
 
 #include "filteractiondeletetest.h"
 #include "../filteractions/filteractiondelete.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <QLabel>
 FilterActionDeleteTest::FilterActionDeleteTest(QObject *parent)
     : QObject(parent)
@@ -47,4 +47,4 @@ void FilterActionDeleteTest::shouldReturnSieveValue()
     QCOMPARE(filter.sieveCode(), QLatin1String("discard;"));
 }
 
-QTEST_KDEMAIN(FilterActionDeleteTest, GUI)
+QTEST_MAIN(FilterActionDeleteTest)

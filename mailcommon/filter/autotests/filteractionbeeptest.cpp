@@ -17,7 +17,7 @@
 
 #include "filteractionbeeptest.h"
 #include "../filteractions/filteractionbeep.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <QWidget>
 FilterActionBeepTest::FilterActionBeepTest(QObject *parent)
     : QObject(parent)
@@ -43,4 +43,4 @@ void FilterActionBeepTest::shouldSieveCode()
     QVERIFY(w.sieveRequires().isEmpty());
 }
 
-QTEST_KDEMAIN(FilterActionBeepTest, GUI)
+QTEST_MAIN(FilterActionBeepTest)

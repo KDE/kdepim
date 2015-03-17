@@ -16,7 +16,7 @@
 */
 
 #include "filteractionrewriteheadertest.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 FilterActionRewriteHeaderTest::FilterActionRewriteHeaderTest(QObject *parent)
     : QObject(parent)
 {
@@ -28,4 +28,4 @@ FilterActionRewriteHeaderTest::~FilterActionRewriteHeaderTest()
 
 }
 
-QTEST_KDEMAIN(FilterActionRewriteHeaderTest, GUI)
+QTEST_MAIN(FilterActionRewriteHeaderTest)
