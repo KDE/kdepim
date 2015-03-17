@@ -129,10 +129,21 @@ AgentWidget::AgentWidget(QWidget *parent)
     connect(ui.restartButton, &QPushButton::clicked, this, &AgentWidget::restartAgent);
 
     ui.mFilterAccount->setProxy(ui.instanceWidget->agentFilterProxyModel());
-    //QT5 ui.mFilterAccount->lineEdit()->setTrapReturnKey( true );
-
     Control::widgetNeedsAkonadi(this);
 }
+
+bool AgentWidget::eventFilter(QObject *obj, QEvent *event)
+{
+    if (event->type() == QEvent::KeyPress && obj == ui.mFilterAccount->lineEdit()) {
+        QKeyEvent *key = static_cast<QKeyEvent *>(event);
+        if ((key->key() == Qt::Key_Enter) || (key->key() == Qt::Key_Return)) {
+            event->accept();
+            return true;
+        }
+    }
+    return QWidget::eventFilter(obj, event);
+}
+
 
 void AgentWidget::addAgent()
 {
