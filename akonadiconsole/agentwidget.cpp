@@ -129,12 +129,13 @@ AgentWidget::AgentWidget(QWidget *parent)
     connect(ui.restartButton, &QPushButton::clicked, this, &AgentWidget::restartAgent);
 
     ui.mFilterAccount->setProxy(ui.instanceWidget->agentFilterProxyModel());
+    ui.mFilterAccount->installEventFilter(this);
     Control::widgetNeedsAkonadi(this);
 }
 
 bool AgentWidget::eventFilter(QObject *obj, QEvent *event)
 {
-    if (event->type() == QEvent::KeyPress && obj == ui.mFilterAccount->lineEdit()) {
+    if (event->type() == QEvent::KeyPress && obj == ui.mFilterAccount) {
         QKeyEvent *key = static_cast<QKeyEvent *>(event);
         if ((key->key() == Qt::Key_Enter) || (key->key() == Qt::Key_Return)) {
             event->accept();

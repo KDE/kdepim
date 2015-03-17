@@ -53,6 +53,8 @@ public:
     void setItemDelegate(QAbstractItemDelegate *delegate);
 
     QAbstractItemView *view() const;
+protected:
+    bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
 private Q_SLOTS:
     void slotAccountSelected(const Akonadi::AgentInstance &current);
     void slotRemoveSelectedAccount();

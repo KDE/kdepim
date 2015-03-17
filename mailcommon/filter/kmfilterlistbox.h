@@ -25,7 +25,7 @@
 class QListWidget;
 class QPushButton;
 class QModelIndex;
-
+class KListWidgetSearchLine;
 /**
  * This is a complex widget that is used to manipulate a mail program's filter
  * list. It consists of an internal list of filters, which is a deep
@@ -244,7 +244,8 @@ protected:
     QPushButton *mBtnRename;
     QPushButton *mBtnTop;
     QPushButton *mBtnBottom;
-
+    KListWidgetSearchLine *mSearchListWidget;
+    bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
 private:
     void applyFilterChanged(bool closeAfterSaving);
     void enableControls();

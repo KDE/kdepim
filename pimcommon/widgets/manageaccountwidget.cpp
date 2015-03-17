@@ -29,7 +29,7 @@
 #include <KLocalizedString>
 #include <KWindowSystem>
 #include <KLineEdit>
-
+#include <QKeyEvent>
 #include <QAbstractItemDelegate>
 
 using namespace PimCommon;
@@ -52,8 +52,7 @@ ManageAccountWidget::ManageAccountWidget(QWidget *parent)
     mWidget->mAccountList->view()->setSelectionMode(QAbstractItemView::SingleSelection);
 
     mWidget->mFilterAccount->setProxy(mWidget->mAccountList->agentFilterProxyModel());
-#pragma message("port QT5")
-    //QT5 mWidget->mFilterAccount->lineEdit()->setTrapReturnKey( true );
+    mWidget->mFilterAccount->installEventFilter(this);
     slotAccountSelected(mWidget->mAccountList->currentAgentInstance());
 }
 
@@ -61,6 +60,19 @@ ManageAccountWidget::~ManageAccountWidget()
 {
     delete mWidget;
 }
+
+bool ManageAccountWidget::eventFilter(QObject *obj, QEvent *event)
+{
+    if (event->type() == QEvent::KeyPress && obj == mWidget->mFilterAccount) {
+        QKeyEvent *key = static_cast<QKeyEvent *>(event);
+        if ((key->key() == Qt::Key_Enter) || (key->key() == Qt::Key_Return)) {
+            event->accept();
+            return true;
+        }
+    }
+    return QWidget::eventFilter(obj, event);
+}
+
 
 QAbstractItemView *ManageAccountWidget::view() const
 {

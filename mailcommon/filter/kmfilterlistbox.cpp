@@ -29,6 +29,7 @@
 #include <KMessageBox>
 #include <KIconLoader>
 #include "mailcommon_debug.h"
+#include <QKeyEvent>
 
 // What's this help texts
 const char *_wt_filterlist =
@@ -127,13 +128,11 @@ KMFilterListBox::KMFilterListBox(const QString &title, QWidget *parent)
     connect(mListWidget->model(), SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
             SLOT(slotRowsMoved(QModelIndex,int,int,QModelIndex,int)));
 
-    KListWidgetSearchLine *mSearchListWidget = new KListWidgetSearchLine(this, mListWidget);
-#pragma message("port QT5")
-    //QT5 mSearchListWidget->setTrapReturnKey( true );
+    mSearchListWidget = new KListWidgetSearchLine(this, mListWidget);
     mSearchListWidget->setPlaceholderText(
         i18nc("@info Displayed grayed-out inside the textbox, verb to search",
               "Search"));
-
+    mSearchListWidget->installEventFilter(this);
     layout->addWidget(mSearchListWidget);
     layout->addWidget(mListWidget);
 
@@ -240,6 +239,18 @@ KMFilterListBox::KMFilterListBox(const QString &title, QWidget *parent)
 
 KMFilterListBox::~KMFilterListBox()
 {
+}
+
+bool KMFilterListBox::eventFilter(QObject *obj, QEvent *event)
+{
+    if (event->type() == QEvent::KeyPress && obj == mSearchListWidget) {
+        QKeyEvent *key = static_cast<QKeyEvent *>(event);
+        if ((key->key() == Qt::Key_Enter) || (key->key() == Qt::Key_Return)) {
+            event->accept();
+            return true;
+        }
+    }
+    return QGroupBox::eventFilter(obj, event);
 }
 
 bool KMFilterListBox::itemIsValid(QListWidgetItem *item) const
