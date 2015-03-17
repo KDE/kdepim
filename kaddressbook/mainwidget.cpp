@@ -1023,7 +1023,7 @@ void MainWidget::slotCheckNewCalendar( const QModelIndex &parent, int begin, int
 
 void MainWidget::slotSendVcards()
 {
-    const Akonadi::Item::List lst = Utils::collectSelectedAllContactsItem(mItemView->selectionModel());
+    const Akonadi::Item::List lst = collectSelectedAllContactsItem(mItemView->selectionModel());
     if (!lst.isEmpty()) {
         KABSendVCards::SendVcardsJob *sendVcards = new KABSendVCards::SendVcardsJob(lst, this);
         connect(sendVcards, SIGNAL(sendVCardsError(QString)), this, SLOT(slotSendVcardsError(QString)));
@@ -1038,7 +1038,7 @@ void MainWidget::slotSendVcardsError(const QString &error)
 
 void MainWidget::slotSendMail()
 {
-    const Akonadi::Item::List lst = Utils::collectSelectedAllContactsItem(mItemView->selectionModel());
+    const Akonadi::Item::List lst = collectSelectedAllContactsItem(mItemView->selectionModel());
     if (!lst.isEmpty()) {
         KABMailSender::MailSenderJob *mailSender = new KABMailSender::MailSenderJob(lst, this);
         connect(mailSender, SIGNAL(sendMails(QStringList)), this, SLOT(slotSendMails(QStringList)));
@@ -1060,7 +1060,7 @@ void MainWidget::slotSendMails(const QStringList &emails)
 
 void MainWidget::slotDebugBaloo()
 {
-    const Akonadi::Item::List lst = Utils::collectSelectedAllContactsItem(mItemView->selectionModel());
+    const Akonadi::Item::List lst = collectSelectedAllContactsItem(mItemView->selectionModel());
     if (lst.isEmpty()) {
         return;
     }
@@ -1070,4 +1070,24 @@ void MainWidget::slotDebugBaloo()
     dlg->setSearchType(PimCommon::BalooDebugSearchPathComboBox::Contacts);
     dlg->doSearch();
     dlg->show();
+}
+
+const Akonadi::Item::List MainWidget::collectSelectedAllContactsItem(QItemSelectionModel *model)
+{
+    Akonadi::Item::List lst;
+
+    const QModelIndexList indexes = model->selectedRows( 0 );
+    for ( int i = 0; i < indexes.count(); ++i ) {
+        const QModelIndex index = indexes.at( i );
+        if ( index.isValid() ) {
+            const Akonadi::Item item =
+                    index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+            if ( item.isValid() ) {
+                if ( item.hasPayload<KABC::Addressee>()  || item.hasPayload<KABC::ContactGroup>() ) {
+                    lst.append( item );
+                }
+            }
+        }
+    }
+    return lst;
 }

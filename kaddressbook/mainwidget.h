@@ -22,7 +22,7 @@
 #define MAINWIDGET_H
 
 #include "kaddressbook_export.h"
-
+#include <Akonadi/Item>
 #include <QWidget>
 
 namespace GrantleeTheme {
@@ -108,6 +108,7 @@ private Q_SLOTS:
     void slotSendVcards();
     void slotSendVcardsError(const QString &error);
 private:
+    const Akonadi::Item::List collectSelectedAllContactsItem(QItemSelectionModel *model);
     void initGrantleeThemeName();
     void setupGui();
     void setupActions( KActionCollection * );
