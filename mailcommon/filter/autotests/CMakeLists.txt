@@ -77,3 +77,19 @@ target_link_libraries( filteractionbeeptest
    ${QT_QTTEST_LIBRARY}
    ${QT_QTCORE_LIBRARY}
 )
+
+set(mailcommon_filteractionsetstatustest_SRCS filteractionsetstatustest.cpp
+                                           ../filteractions/filteractionsetstatus.cpp
+                                            ../filteractions/filteractionstatus.cpp
+                                           ../filteractions/filteractionwithstringlist.cpp
+                                           ../filteractions/filteractionwithstring.cpp)
+kde4_add_unit_test( filteractionsetstatustest ${mailcommon_filteractionsetstatustest_SRCS} )
+target_link_libraries( filteractionsetstatustest
+   kdepim
+   pimcommon
+   mailcommon
+   ${QT_QTTEST_LIBRARY}
+   ${QT_QTCORE_LIBRARY}
+   ${KDEPIMLIBS_AKONADI_LIBS}
+   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+)
