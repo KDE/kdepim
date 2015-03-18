@@ -193,9 +193,9 @@ MergeContacts::ConflictInformations MergeContacts::requiresManualSelectionOfInfo
         if (item.hasPayload<KABC::Addressee>()) {
             //Test Birthday
             const KABC::Addressee address = item.payload<KABC::Addressee>();
-            if (address.birthday().isValid()) {
-                if (newContact.birthday().isValid()) {
-                    if (newContact.birthday() != address.birthday()) {
+            if (address.birthday().date().isValid()) {
+                if (newContact.birthday().date().isValid()) {
+                    if (newContact.birthday().date() != address.birthday().date()) {
                         result |= Birthday;
                     }
                 } else {

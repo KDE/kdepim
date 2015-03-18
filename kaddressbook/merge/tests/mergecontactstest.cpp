@@ -1019,6 +1019,61 @@ void MergeContactsTest::shouldMergeHomePage_data()
     QTest::newRow("conflict1") <<  KUrl() << KUrl(QLatin1String("http://www.kde.org1")) << KUrl(QLatin1String("http://www.kde.org")) << false << KUrl(QLatin1String("http://www.kde.org1"));
 }
 
+void MergeContactsTest::checkNeedManualSelectionWithBirthday_data()
+{
+    QTest::addColumn<QString>("nameItemA");
+    QTest::addColumn<QString>("nameItemB");
+    QTest::addColumn<QString>("nameItemC");
+    QTest::addColumn<bool>("needManualCheck");
+    QTest::newRow("noConflict") <<  QString() << QString() << QString() << false;
+    QTest::newRow("noWithOneNameConflict") <<  QString() << QString() << QString(QLatin1String("20150606")) << false;
+    QTest::newRow("noWithOneNameConflict1") <<  QString() << QString(QLatin1String("20150606")) << QString()  << false;
+    QTest::newRow("noWithOneNameConflict2") <<  QString(QLatin1String("20150606")) << QString() << QString() << false;
+    QTest::newRow("noConflictWithSameName") <<  QString(QLatin1String("20150606")) << QString(QLatin1String("20150606")) << QString() << false;
+    QTest::newRow("noConflictWithSameName2") <<  QString(QLatin1String("20150606")) << QString(QLatin1String("20150606")) << QString(QLatin1String("20150606")) << false;
+    QTest::newRow("conflict") <<  QString(QLatin1String("20150606")) << QString(QLatin1String("20150608")) << QString(QLatin1String("20150606")) << true;
+    QTest::newRow("conflict1") <<  QString() << QString(QLatin1String("20150606")) << QString(QLatin1String("20150608")) << true;
+}
+
+void MergeContactsTest::checkNeedManualSelectionWithBirthday()
+{
+    QFETCH( QString, nameItemA );
+    QFETCH( QString, nameItemB );
+    QFETCH( QString, nameItemC );
+    QFETCH( bool, needManualCheck );
+
+    Akonadi::Item::List lst;
+    Addressee addressA;
+    Akonadi::Item itemA;
+    QDate date = QDate::fromString(nameItemA, QLatin1String("yyyyMMdd"));
+    QDateTime dt(date);
+    addressA.setBirthday(dt);
+    itemA.setPayload<KABC::Addressee>( addressA );
+    lst<<itemA;
+
+    Addressee addressB;
+    Akonadi::Item itemB;
+    date = QDate::fromString(nameItemB, QLatin1String("yyyyMMdd"));
+    dt = QDateTime(date);
+    addressB.setBirthday(dt);
+    itemB.setPayload<KABC::Addressee>( addressB );
+    lst<<itemB;
+
+    Addressee addressC;
+    Akonadi::Item itemC;
+    date = QDate::fromString(nameItemC, QLatin1String("yyyyMMdd"));
+    dt = QDateTime(date);
+    addressC.setBirthday(dt);
+    itemC.setPayload<KABC::Addressee>( addressC );
+    lst<<itemC;
+
+    MergeContacts contacts(lst);
+    const MergeContacts::ConflictInformations result = contacts.requiresManualSelectionOfInformation();
+    const bool bResult = (result == MergeContacts::Birthday);
+    QCOMPARE(bResult, needManualCheck);
+}
+
+
 void MergeContactsTest::shouldMergeBlogFeed_data()
 {
     QTest::addColumn<QString>("nameItemA");
@@ -1035,6 +1090,7 @@ void MergeContactsTest::shouldMergeBlogFeed_data()
     QTest::newRow("conflict") <<  QString(QLatin1String("foo")) << QString(QLatin1String("foo1")) << QString(QLatin1String("foo")) << false << QString(QLatin1String("foo"));
     QTest::newRow("conflict1") <<  QString() << QString(QLatin1String("foo1")) << QString(QLatin1String("foo")) << false << QString(QLatin1String("foo1"));
 }
+
 
 void MergeContactsTest::shouldMergeBlogFeed()
 {

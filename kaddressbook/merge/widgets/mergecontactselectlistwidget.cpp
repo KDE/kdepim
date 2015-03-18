@@ -155,8 +155,7 @@ void MergeContactSelectListWidget::fillList(const KABC::Addressee::List &lst)
         case MergeContacts::None:
             break;
         case MergeContacts::Birthday: {
-            //FIXME birthday
-            const QDateTime birdth = addr.birthday();
+            const QDate birdth = addr.birthday().date();
             addItem(birdth.toString());
             break;
         }
@@ -176,8 +175,8 @@ void MergeContactSelectListWidget::fillList(const KABC::Addressee::List &lst)
             //FIXME add icon ?
             break;
         case MergeContacts::Anniversary: {
-            const QString newBlog = addr.custom(QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-Anniversary" ));
-            addItem(newBlog);
+            const QString anniversary = addr.custom(QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-Anniversary" ));
+            addItem(anniversary);
             break;
         }
         case MergeContacts::Name:
