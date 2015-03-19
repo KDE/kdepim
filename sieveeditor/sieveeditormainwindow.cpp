@@ -25,6 +25,7 @@
 #include "sieveserversettings.h"
 #include "sieveeditorcentralwidget.h"
 #include "sieveeditorglobalconfig.h"
+#include "pimcommon/widgets/kactionmenuchangecase.h"
 
 #include <KStandardGuiItem>
 #include <KSharedConfig>
@@ -190,6 +191,14 @@ void SieveEditorMainWindow::setupActions()
 
     mUncommentAction = ac->addAction(QLatin1String("uncomment_code"), mMainWidget->sieveEditorMainWidget(), SLOT(slotUncomment()));
     mUncommentAction->setText(i18n("Uncomment"));
+
+    mMenuChangeCaseAction = new PimCommon::KActionMenuChangeCase(this);
+    ac->addAction(QStringLiteral("change_case_menu"), mMenuChangeCaseAction);
+    mMenuChangeCaseAction->appendInActionCollection(ac);
+    connect(mMenuChangeCaseAction, &PimCommon::KActionMenuChangeCase::upperCase, mMainWidget->sieveEditorMainWidget(), &SieveEditorMainWidget::slotUpperCase);
+    connect(mMenuChangeCaseAction, &PimCommon::KActionMenuChangeCase::lowerCase, mMainWidget->sieveEditorMainWidget(), &SieveEditorMainWidget::slotLowerCase);
+    connect(mMenuChangeCaseAction, &PimCommon::KActionMenuChangeCase::sentenceCase, mMainWidget->sieveEditorMainWidget(), &SieveEditorMainWidget::slotSentenceCase);
+    connect(mMenuChangeCaseAction, &PimCommon::KActionMenuChangeCase::reverseCase, mMainWidget->sieveEditorMainWidget(), &SieveEditorMainWidget::slotReverseCase);
 }
 
 void SieveEditorMainWindow::slotRefreshList()
@@ -282,6 +291,7 @@ void SieveEditorMainWindow::slotUpdateActions()
     mAutoGenerateScriptAction->setEnabled(hasPage);
     mCommentAction->setEnabled(hasPage);
     mUncommentAction->setEnabled(hasPage);
+    mMenuChangeCaseAction->setEnabled(hasPage);
 }
 
 void SieveEditorMainWindow::slotUndoAvailable(bool b)

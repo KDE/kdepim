@@ -27,6 +27,9 @@ class QAction;
 class SieveEditorCentralWidget;
 class QLabel;
 class QNetworkConfigurationManager;
+namespace PimCommon {
+class KActionMenuChangeCase;
+}
 
 class SieveEditorMainWindow : public KXmlGuiWindow
 {
@@ -82,6 +85,7 @@ private:
     QAction *mAutoGenerateScriptAction;
     QAction *mCommentAction;
     QAction *mUncommentAction;
+    PimCommon::KActionMenuChangeCase *mMenuChangeCaseAction;
 
     QLabel *mStatusBarInfo;
     QNetworkConfigurationManager *mNetworkConfigurationManager;

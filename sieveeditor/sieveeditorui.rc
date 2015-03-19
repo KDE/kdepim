@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="sieveeditor" version="7">
+<kpartgui name="sieveeditor" version="8">
  <MenuBar>
   <Menu name="file" >
    <Action name="add_server_sieve" />
@@ -25,6 +25,8 @@
    <Separator/>
    <Action name="comment_code" />
    <Action name="uncomment_code" />
+   <Separator/>
+   <Action name="change_case_menu" />
   </Menu>
   <Menu name="Tools" >
    <text>Tools</text>
