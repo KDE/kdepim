@@ -201,7 +201,9 @@ public:
         Q_FOREACH (const PimCommon::defaultTemplate &tmp, templatesLst) {
             createListWidgetItem(tmp.name, tmp.text, true);
         }
-        loadTemplates(config.data());
+        if (!config.data()->groupList().isEmpty()) {
+            loadTemplates(config.data());
+        }
         dirty = false;
     }
 
