@@ -18,6 +18,8 @@
 #include "mergecontactselectlistwidget.h"
 #include <KABC/Addressee>
 #include <KLocalizedString>
+#include <KGlobal>
+#include <KLocale>
 #include <QLabel>
 #include <QListWidget>
 #include <QVBoxLayout>
@@ -155,8 +157,12 @@ void MergeContactSelectListWidget::fillList(const KABC::Addressee::List &lst)
         case MergeContacts::None:
             break;
         case MergeContacts::Birthday: {
-            const QDate birdth = addr.birthday().date();
-            addItem(birdth.toString());
+            const QDate birdthDt = addr.birthday().date();
+            QString birdth;
+            if ( birdthDt.isValid() ) {
+                birdth = KGlobal::locale()->formatDate( birdthDt );
+            }
+            addItem(birdth);
             break;
         }
         case MergeContacts::Geo: {
@@ -175,7 +181,11 @@ void MergeContactSelectListWidget::fillList(const KABC::Addressee::List &lst)
             //FIXME add icon ?
             break;
         case MergeContacts::Anniversary: {
-            const QString anniversary = addr.custom(QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-Anniversary" ));
+            QString anniversary;
+            const QDate anniversaryDt = QDate::fromString( addr.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-Anniversary" ) ), Qt::ISODate );
+            if ( anniversaryDt.isValid() ) {
+                anniversary = KGlobal::locale()->formatDate( anniversaryDt );
+            }
             addItem(anniversary);
             break;
         }
