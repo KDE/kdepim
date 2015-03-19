@@ -131,6 +131,7 @@ void StorageServiceManagerMainWindow::slotUpdateActions()
         mShowLog->setDisabled(true);
         mRenameItem->setDisabled(true);
         mRefreshAll->setDisabled(true);
+        mShutdownAllServices->setDisabled(true);
     } else {
         const PimCommon::StorageServiceAbstract::Capabilities capabilities = mStorageServiceMainWidget->storageServiceTabWidget()->capabilities();
         const bool listFolderWasLoaded = mStorageServiceMainWidget->storageServiceTabWidget()->listFolderWasLoaded();
@@ -146,8 +147,10 @@ void StorageServiceManagerMainWindow::slotUpdateActions()
         mRenameItem->setEnabled(listFolderWasLoaded && (capabilities & PimCommon::StorageServiceAbstract::RenameFileCapabilitity || capabilities & PimCommon::StorageServiceAbstract::RenameFolderCapability) &&
                                 (type == PimCommon::StorageServiceTreeWidget::File || type == PimCommon::StorageServiceTreeWidget::Folder));
 
-        mShowLog->setDisabled((mStorageServiceMainWidget->storageServiceTabWidget()->count() == 0));
-        mRefreshAll->setDisabled((mStorageServiceMainWidget->storageServiceTabWidget()->count() == 0));
+        const bool disabled = (mStorageServiceMainWidget->storageServiceTabWidget()->count() == 0);
+        mShowLog->setDisabled(disabled);
+        mRefreshAll->setDisabled(disabled);
+        mShutdownAllServices->setDisabled(disabled);
         mLogout->setEnabled(listFolderWasLoaded);
     }
 }

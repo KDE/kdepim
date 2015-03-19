@@ -91,6 +91,10 @@ private Q_SLOTS:
 
     void shouldMergeBlogFeed();
     void shouldMergeBlogFeed_data();
+
+    void checkNeedManualSelectionWithBirthday_data();
+    void checkNeedManualSelectionWithBirthday();
+
 };
 
 #endif // MERGECONTACTTEST_H

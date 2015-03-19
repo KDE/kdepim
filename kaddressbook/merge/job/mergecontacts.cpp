@@ -194,9 +194,9 @@ MergeContacts::ConflictInformations MergeContacts::requiresManualSelectionOfInfo
         if (item.hasPayload<KContacts::Addressee>()) {
             const KContacts::Addressee address = item.payload<KContacts::Addressee>();
             //Test Birthday
-            if (address.birthday().isValid()) {
-                if (newContact.birthday().isValid()) {
-                    if (newContact.birthday() != address.birthday()) {
+            if (address.birthday().date().isValid()) {
+                if (newContact.birthday().date().isValid()) {
+                    if (newContact.birthday().date() != address.birthday().date()) {
                         result |= Birthday;
                     }
                 } else {
