@@ -91,10 +91,13 @@ void MergeContactSelectInformationScrollArea::slotMergeContacts()
         qDebug()<<" item list is empty";
         return;
     }
-    MergeContacts contact(mListItem);
-    KABC::Addressee addr = contact.mergedContact(true);
-    mSelectInformationWidget->createContact(addr);
-    mergeContact(addr);
+    const bool result = mSelectInformationWidget->verifySelectedInfo();
+    if (result) {
+        MergeContacts contact(mListItem);
+        KABC::Addressee addr = contact.mergedContact(true);
+        mSelectInformationWidget->createContact(addr);
+        mergeContact(addr);
+    }
 }
 
 void MergeContactSelectInformationScrollArea::mergeContact(const KABC::Addressee &addr)

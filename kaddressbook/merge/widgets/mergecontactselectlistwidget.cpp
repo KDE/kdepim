@@ -259,3 +259,8 @@ MergeContacts::ConflictInformation MergeContactSelectListWidget::conflictType() 
 {
     return mConflictType;
 }
+
+bool MergeContactSelectListWidget::verifySelectedInfo() const
+{
+    return (selectedContact() != -1);
+}

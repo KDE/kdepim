@@ -39,6 +39,7 @@ public:
     void setContacts(MergeContacts::ConflictInformation conflictType, const KABC::Addressee::List &lst);
     int selectedContact() const;
     MergeContacts::ConflictInformation conflictType() const;
+    bool verifySelectedInfo() const;
 private:
     void fillList(const KABC::Addressee::List &lst);
     void updateTitle();
