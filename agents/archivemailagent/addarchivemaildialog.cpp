@@ -168,7 +168,7 @@ ArchiveMailInfo* AddArchiveMailDialog::info()
 
 void AddArchiveMailDialog::slotUpdateOkButton()
 {
-    const bool valid = (!mPath->url().isEmpty() && mFolderRequester->collection().isValid());
+    const bool valid = (!mPath->lineEdit()->text().trimmed().isEmpty() && !mPath->url().isEmpty() && mFolderRequester->collection().isValid());
     enableButtonOk(valid);
 }
 
