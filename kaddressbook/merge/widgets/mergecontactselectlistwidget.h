@@ -41,6 +41,7 @@ public:
     void setContacts(MergeContacts::ConflictInformation conflictType, const KContacts::Addressee::List &lst);
     int selectedContact() const;
     MergeContacts::ConflictInformation conflictType() const;
+    bool verifySelectedInfo() const;
 private:
     void fillList(const KContacts::Addressee::List &lst);
     void updateTitle();

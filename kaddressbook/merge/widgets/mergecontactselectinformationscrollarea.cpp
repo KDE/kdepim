@@ -25,6 +25,7 @@
 #include <QScrollArea>
 #include <QStackedWidget>
 #include <QPushButton>
+#include <KMessageBox>
 using namespace KABMergeContacts;
 
 MergeContactSelectInformationScrollArea::MergeContactSelectInformationScrollArea(QWidget *parent)
@@ -91,6 +92,12 @@ void MergeContactSelectInformationScrollArea::slotMergeContacts()
     if (mListItem.isEmpty()) {
         qCDebug(KADDRESSBOOK_LOG) << " item list is empty";
         return;
+    }
+    const bool result = mSelectInformationWidget->verifySelectedInfo();
+    if (!result) {
+        //KF5 add i18n
+        if (KMessageBox::No == KMessageBox::warningYesNo(this, QLatin1String("Some information was not selected. You can lose theses information. Do you want to continue merging?"), QLatin1String("Missing Selected Information")))
+            return;
     }
     MergeContacts contact(mListItem);
     KContacts::Addressee addr = contact.mergedContact(true);

@@ -114,6 +114,18 @@ void MergeContactSelectInformationWidget::addInformationWidget(MergeContacts::Co
     mListMergeSelectInformation.append(widget);
 }
 
+bool MergeContactSelectInformationWidget::verifySelectedInfo() const
+{
+    bool result = true;
+    Q_FOREACH(MergeContactSelectListWidget *listWidget, mListMergeSelectInformation) {
+        result = listWidget->verifySelectedInfo();
+        if (!result) {
+            break;
+        }
+    }
+    return result;
+}
+
 void MergeContactSelectInformationWidget::createContact(KContacts::Addressee &addr)
 {
     Q_FOREACH (MergeContactSelectListWidget *listWidget, mListMergeSelectInformation) {

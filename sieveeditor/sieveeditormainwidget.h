@@ -67,7 +67,10 @@ public Q_SLOTS:
     void slotCheckSyntax();
     void slotComment();
     void slotUncomment();
-
+    void slotUpperCase();
+    void slotSentenceCase();
+    void slotLowerCase();
+    void slotReverseCase();
 Q_SIGNALS:
     void updateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);
     void updateScriptList();

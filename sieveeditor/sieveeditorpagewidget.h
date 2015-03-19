@@ -69,6 +69,10 @@ public:
     void checkSyntax();
     void comment();
     void uncomment();
+    void lowerCase();
+    void upperCase();
+    void sentenceCase();
+    void reverseCase();
 Q_SIGNALS:
     void refreshList();
     void scriptModified(bool, SieveEditorPageWidget *);

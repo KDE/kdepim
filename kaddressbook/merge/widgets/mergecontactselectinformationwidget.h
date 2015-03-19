@@ -35,6 +35,7 @@ public:
     void setContacts(KABMergeContacts::MergeContacts::ConflictInformations conflictTypes, const Akonadi::Item::List &listItem);
     void createContact(KContacts::Addressee &addr);
 
+    bool verifySelectedInfo() const;
 private:
     void addInformationWidget(MergeContacts::ConflictInformation conflictType);
     KContacts::Addressee::List mAddressList;

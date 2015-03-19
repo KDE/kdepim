@@ -552,3 +552,30 @@ void SieveEditorWidget::slotSwitchTextMode(const QString &script)
     mTextModeWidget->setScript(script);
 }
 
+void SieveEditorWidget::reverseCase()
+{
+    if (mMode == TextMode) {
+        mTextModeWidget->reverseCase();
+    }
+}
+
+void SieveEditorWidget::lowerCase()
+{
+    if (mMode == TextMode) {
+        mTextModeWidget->lowerCase();
+    }
+}
+
+void SieveEditorWidget::upperCase()
+{
+    if (mMode == TextMode) {
+        mTextModeWidget->upperCase();
+    }
+}
+
+void SieveEditorWidget::sentenceCase()
+{
+    if (mMode == TextMode) {
+        mTextModeWidget->sentenceCase();
+    }
+}

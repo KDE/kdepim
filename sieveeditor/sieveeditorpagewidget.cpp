@@ -248,6 +248,26 @@ void SieveEditorPageWidget::saveAs()
     mSieveEditorWidget->slotSaveAs();
 }
 
+void SieveEditorPageWidget::reverseCase()
+{
+    mSieveEditorWidget->reverseCase();
+}
+
+void SieveEditorPageWidget::lowerCase()
+{
+    mSieveEditorWidget->lowerCase();
+}
+
+void SieveEditorPageWidget::upperCase()
+{
+    mSieveEditorWidget->upperCase();
+}
+
+void SieveEditorPageWidget::sentenceCase()
+{
+    mSieveEditorWidget->sentenceCase();
+}
+
 KSieveUi::SieveEditorWidget::EditorMode SieveEditorPageWidget::pageMode() const
 {
     return mSieveEditorWidget->mode();

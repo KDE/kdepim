@@ -98,7 +98,7 @@ NotesAgentSettingsDialog::~NotesAgentSettingsDialog()
     writeConfig();
 }
 
-static const char *myConfigGroupName = "NotesAgentSettingsDialog";
+static const char myConfigGroupName[] = "NotesAgentSettingsDialog";
 void NotesAgentSettingsDialog::writeConfig()
 {
     KConfigGroup group(KSharedConfig::openConfig(), myConfigGroupName);

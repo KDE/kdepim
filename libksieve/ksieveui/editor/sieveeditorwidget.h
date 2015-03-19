@@ -69,6 +69,10 @@ public:
     void checkSpelling();
     void share();
     void import();
+    void lowerCase();
+    void upperCase();
+    void sentenceCase();
+    void reverseCase();
 public Q_SLOTS:
     void find();
     void replace();

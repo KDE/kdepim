@@ -84,6 +84,10 @@ public:
     bool hasSelection() const;
 
     void selectAll();
+    void upperCase();
+    void lowerCase();
+    void sentenceCase();
+    void reverseCase();
 Q_SIGNALS:
     void enableButtonOk(bool);
     void switchToGraphicalMode();
