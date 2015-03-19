@@ -30,16 +30,10 @@
 #include <kldap/ldapurl.h>
 #include <kldap/ldif.h>
 
-#include <KConfig>
-#include <KConfigGroup>
 #include <KDebug>
-#include <KDirWatch>
-#include <KProtocolInfo>
-#include <KStandardDirs>
 #include <kio/job.h>
 
 #include <QtCore/QPointer>
-#include <QtCore/QTimer>
 
 using namespace KLDAP;
 

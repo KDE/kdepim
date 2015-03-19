@@ -21,7 +21,6 @@
 #include <kldap/ldapserver.h>
 
 
-#include <KStandardDirs>
 #include <KConfig>
 #include <KConfigGroup>
 #include <KMessageBox>
