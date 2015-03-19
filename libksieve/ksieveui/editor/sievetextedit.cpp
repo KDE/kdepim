@@ -20,6 +20,7 @@
 #include "editor/sievelinenumberarea.h"
 #include "editor/sieveeditorutil.h"
 #include "sievesyntaxhighlighter.h"
+#include "util/editorutil.h"
 
 
 #include <KGlobalSettings>
@@ -336,6 +337,34 @@ void SieveTextEdit::comment()
         textcursor.insertText( str );
         setTextCursor( textcursor );
     }
+}
+
+void SieveTextEdit::upperCase()
+{
+    PimCommon::EditorUtil editorUtil;
+    QTextCursor cursorText = textCursor();
+    editorUtil.upperCase(cursorText);
+}
+
+void SieveTextEdit::lowerCase()
+{
+    PimCommon::EditorUtil editorUtil;
+    QTextCursor cursorText = textCursor();
+    editorUtil.lowerCase(cursorText);
+}
+
+void SieveTextEdit::sentenceCase()
+{
+    PimCommon::EditorUtil editorUtil;
+    QTextCursor cursorText = textCursor();
+    editorUtil.sentenceCase(cursorText);
+}
+
+void SieveTextEdit::reverseCase()
+{
+    PimCommon::EditorUtil editorUtil;
+    QTextCursor cursorText = textCursor();
+    editorUtil.reverseCase(cursorText);
 }
 
 void SieveTextEdit::uncomment()

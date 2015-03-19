@@ -381,7 +381,27 @@ void SieveEditorTextModeWidget::uncomment()
 }
 
 
-void KSieveUi::SieveEditorTextModeWidget::setReadOnly(bool b)
+void SieveEditorTextModeWidget::setReadOnly(bool b)
 {
     mTextEdit->setReadOnly(b);
+}
+
+void SieveEditorTextModeWidget::upperCase()
+{
+    mTextEdit->upperCase();
+}
+
+void SieveEditorTextModeWidget::lowerCase()
+{
+    mTextEdit->lowerCase();
+}
+
+void SieveEditorTextModeWidget::sentenceCase()
+{
+    mTextEdit->sentenceCase();
+}
+
+void SieveEditorTextModeWidget::reverseCase()
+{
+    mTextEdit->reverseCase();
 }

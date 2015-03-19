@@ -51,6 +51,10 @@ public:
 
     void uncomment();
     void comment();
+    void upperCase();
+    void lowerCase();
+    void sentenceCase();
+    void reverseCase();
 private Q_SLOTS:
     void slotInsertCompletion( const QString& );
     void slotUpdateLineNumberAreaWidth(int newBlockCount);

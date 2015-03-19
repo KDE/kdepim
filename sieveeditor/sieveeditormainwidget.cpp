@@ -393,6 +393,51 @@ void SieveEditorMainWidget::slotSaveAs()
     }
 }
 
+void SieveEditorMainWidget::slotReverseCase()
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            page->reverseCase();
+        }
+    }
+}
+
+void SieveEditorMainWidget::slotUpperCase()
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            page->upperCase();
+        }
+    }
+}
+
+void SieveEditorMainWidget::slotSentenceCase()
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            page->sentenceCase();
+        }
+    }
+}
+
+void SieveEditorMainWidget::slotLowerCase()
+{
+    QWidget *w = mTabWidget->currentWidget();
+     if (w) {
+         SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+         if (page) {
+             page->lowerCase();
+         }
+     }
+}
+
+
 void SieveEditorMainWidget::slotScriptModified(bool modified,SieveEditorPageWidget *page)
 {
     const int index = mTabWidget->indexOf(page);
