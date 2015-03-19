@@ -57,6 +57,7 @@ AddHostDialog::AddHostDialog( KLDAP::LdapServer *server, QWidget *parent )
                 KLDAP::LdapConfigWidget::W_SIZELIMIT |
                 KLDAP::LdapConfigWidget::W_PAGESIZE |
                 KLDAP::LdapConfigWidget::W_DN |
+                KLDAP::LdapConfigWidget::W_FILTER |
                 KLDAP::LdapConfigWidget::W_SECBOX |
                 KLDAP::LdapConfigWidget::W_AUTHBOX,
                 page );
@@ -72,6 +73,7 @@ AddHostDialog::AddHostDialog( KLDAP::LdapServer *server, QWidget *parent )
     mCfg->setSizeLimit( mServer->sizeLimit() );
     mCfg->setPageSize( mServer->pageSize() );
     mCfg->setVersion( mServer->version() );
+    mCfg->setFilter( mServer->filter() );
 
     switch ( mServer->security() ) {
     case KLDAP::LdapServer::TLS:
@@ -142,6 +144,7 @@ void AddHostDialog::slotOk()
     mServer->setSizeLimit( mCfg->sizeLimit() );
     mServer->setPageSize( mCfg->pageSize() );
     mServer->setVersion( mCfg->version() );
+    mServer->setFilter( mCfg->filter() );
     switch ( mCfg->security() ) {
     case KLDAP::LdapConfigWidget::TLS:
         mServer->setSecurity( KLDAP::LdapServer::TLS );

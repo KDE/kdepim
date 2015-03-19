@@ -141,7 +141,13 @@ void LdapClient::startQuery( const QString &filter )
 
     url.setAttributes( d->mAttrs );
     url.setScope( d->mScope == QLatin1String("one") ? KLDAP::LdapUrl::One : KLDAP::LdapUrl::Sub );
-    url.setFilter( QLatin1Char('(') + filter + QLatin1Char(')') );
+    const QString userFilter = url.filter();
+    QString finalFilter = filter;
+    // combine the filter set by the user in the config dialog (url.filter()) and the filter from this query
+    if (!userFilter.isEmpty()) {
+        finalFilter = QLatin1String("&(") + finalFilter + QLatin1String(")(") + userFilter + QLatin1Char(')');
+    }
+    url.setFilter( QLatin1Char('(') + finalFilter + QLatin1Char(')') );
 
     kDebug(5300) <<"LdapClient: Doing query:" << url.prettyUrl();
 
