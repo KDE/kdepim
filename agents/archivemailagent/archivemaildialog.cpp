@@ -91,7 +91,7 @@ void ArchiveMailDialog::slotNeedReloadConfig()
     mWidget->needReloadConfig();
 }
 
-static const char *myConfigGroupName = "ArchiveMailDialog";
+static const char myConfigGroupName[] = "ArchiveMailDialog";
 
 void ArchiveMailDialog::readConfig()
 {

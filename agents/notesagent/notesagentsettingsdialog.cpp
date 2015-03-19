@@ -89,7 +89,7 @@ NotesAgentSettingsDialog::~NotesAgentSettingsDialog()
     delete mAboutData;
 }
 
-static const char *myConfigGroupName = "NotesAgentSettingsDialog";
+static const char myConfigGroupName[] = "NotesAgentSettingsDialog";
 void NotesAgentSettingsDialog::writeConfig()
 {
     KConfigGroup group( KGlobal::config(), myConfigGroupName );
