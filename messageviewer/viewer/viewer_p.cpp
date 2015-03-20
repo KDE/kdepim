@@ -612,18 +612,21 @@ void ViewerPrivate::showAttachmentPopup(KMime::Content *node, const QString &nam
         createOpenWithMenu(menu, contentTypeStr, true);
     }
 
-    const QStringList parentMimeType = KMimeType::mimeType(contentTypeStr)->allParentMimeTypes();
-    if ((contentTypeStr == QLatin1String("text/plain")) ||
+    KMimeType::Ptr mimetype = KMimeType::mimeType( contentTypeStr, KMimeType::ResolveAliases );
+    if (!mimetype.isNull()) {
+       const QStringList parentMimeType = mimetype->allParentMimeTypes();
+       if ((contentTypeStr == QLatin1String("text/plain")) ||
             (contentTypeStr == QLatin1String("image/png")) ||
             (contentTypeStr == QLatin1String("image/jpeg")) ||
             parentMimeType.contains(QLatin1String("text/plain")) ||
             parentMimeType.contains(QLatin1String("image/png")) ||
             parentMimeType.contains(QLatin1String("image/jpeg"))
-       ) {
-        action = menu->addAction(i18nc("to view something", "View"));
-        action->setEnabled(!deletedAttachment);
-        connect(action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()));
-        attachmentMapper->setMapping(action, Viewer::View);
+            ) {
+           action = menu->addAction(i18nc("to view something", "View") );
+           action->setEnabled(!deletedAttachment);
+           connect( action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()) );
+           attachmentMapper->setMapping( action, Viewer::View );
+       }
     }
 
     const bool attachmentInHeader = mViewer->isAttachmentInjectionPoint(globalPos);
