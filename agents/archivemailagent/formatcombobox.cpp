@@ -19,7 +19,7 @@
 #include <KLocalizedString>
 
 FormatComboBox::FormatComboBox(QWidget *parent)
-    : KComboBox(parent)
+    : QComboBox(parent)
 {
     addItem( i18n( "Compressed Zip Archive (.zip)" ), (int)MailCommon::BackupJob::Zip );
     addItem( i18n( "Uncompressed Archive (.tar)" ), (int)MailCommon::BackupJob::Tar );

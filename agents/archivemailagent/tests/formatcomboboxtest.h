@@ -28,6 +28,8 @@ public:
     ~FormatComboBoxTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void changeCurrentItem_data();
+    void changeCurrentItem();
 };
 
 #endif // FORMATCOMBOBOXTEST_H

@@ -21,7 +21,7 @@
 
 #include <KComboBox>
 
-class FormatComboBox : public KComboBox
+class FormatComboBox : public QComboBox
 {
     Q_OBJECT
 public:
