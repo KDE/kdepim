@@ -21,6 +21,7 @@
 FormatComboBox::FormatComboBox(QWidget *parent)
     : QComboBox(parent)
 {
+    // These combobox values have to stay in sync with the ArchiveType enum from BackupJob!
     addItem( i18n( "Compressed Zip Archive (.zip)" ), (int)MailCommon::BackupJob::Zip );
     addItem( i18n( "Uncompressed Archive (.tar)" ), (int)MailCommon::BackupJob::Tar );
     addItem( i18n( "BZ2-Compressed Tar Archive (.tar.bz2)" ), (int)MailCommon::BackupJob::TarBz2 );

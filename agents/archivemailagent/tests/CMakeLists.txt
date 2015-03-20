@@ -11,6 +11,6 @@ macro( archivemail_agent _source _additionalsource)
   target_link_libraries( ${_name} ${QT_QTTEST_LIBRARY} ${QT_QTCORE_LIBRARY} ${KDE4_KDEUI_LIBS} mailcommon ${KDEPIMLIBS_AKONADI_LIBS} ${KDE4_KIO_LIBS})
 endmacro()
 
-archivemail_agent(archivemailinfotest.cpp "")
-archivemail_agent(archivemaildialogtest.cpp "")
+archivemail_agent(archivemailinfotest.cpp "../formatcombobox.cpp")
+archivemail_agent(archivemaildialogtest.cpp "../formatcombobox.cpp")
 archivemail_agent(formatcomboboxtest.cpp "../formatcombobox.cpp")
