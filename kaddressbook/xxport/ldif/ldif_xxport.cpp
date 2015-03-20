@@ -56,7 +56,7 @@ void doExport( QFile *file, const KABC::Addressee::List &list )
 
     QTextStream stream( file );
     stream.setCodec( "UTF-8" );
-    stream << data;
+    stream << data;    
 }
 
 LDIFXXPort::LDIFXXPort( QWidget *parentWidget )
@@ -130,7 +130,6 @@ bool LDIFXXPort::exportContacts( const KABC::Addressee::List &list, VCardExportS
             }
         }
 
-        //TODO fix export in network as other export function
         QFile file( fileName );
 
         if ( !file.open( QIODevice::WriteOnly ) ) {
