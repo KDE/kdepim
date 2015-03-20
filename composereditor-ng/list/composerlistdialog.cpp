@@ -168,18 +168,18 @@ void ComposerListDialogPrivate::fillStyle()
     listStyle->clear();
     if (type == ExtendAttributesDialog::ListUL) {
         listStyle->addItem(i18n("Automatic"), QString());
-        listStyle->addItem(i18n("Solid circle"), QLatin1String("disc"));
-        listStyle->addItem(i18n("Open circle"), QLatin1String("circle"));
-        listStyle->addItem(i18n("Solid square"), QLatin1String("square"));
+        listStyle->addItem(i18n("Solid circle"), QStringLiteral("disc"));
+        listStyle->addItem(i18n("Open circle"), QStringLiteral("circle"));
+        listStyle->addItem(i18n("Solid square"), QStringLiteral("square"));
         listStyle->setEnabled(true);
         start->setEnabled(false);
     } else if (type == ExtendAttributesDialog::ListOL) {
         listStyle->addItem(i18n("Automatic"), QString());
-        listStyle->addItem(i18n("1,2,3..."), QLatin1String("1"));
-        listStyle->addItem(i18n("A,B,C..."), QLatin1String("A"));
-        listStyle->addItem(i18n("a,b,c..."), QLatin1String("a"));
-        listStyle->addItem(i18n("I,II,III..."), QLatin1String("I"));
-        listStyle->addItem(i18n("i,ii,iii..."), QLatin1String("i"));
+        listStyle->addItem(i18n("1,2,3..."), QStringLiteral("1"));
+        listStyle->addItem(i18n("A,B,C..."), QStringLiteral("A"));
+        listStyle->addItem(i18n("a,b,c..."), QStringLiteral("a"));
+        listStyle->addItem(i18n("I,II,III..."), QStringLiteral("I"));
+        listStyle->addItem(i18n("i,ii,iii..."), QStringLiteral("i"));
         listStyle->setEnabled(true);
         start->setEnabled(true);
     } else {
@@ -191,15 +191,15 @@ void ComposerListDialogPrivate::fillStyle()
 void ComposerListDialogPrivate::updateSettings()
 {
     if (!webElement.isNull()) {
-        if (webElement.hasAttribute(QLatin1String("type"))) {
-            const QString newType = webElement.attribute(QLatin1String("type"));
+        if (webElement.hasAttribute(QStringLiteral("type"))) {
+            const QString newType = webElement.attribute(QStringLiteral("type"));
             const int itemIndex = listStyle->findData(newType);
             if (itemIndex != -1) {
                 listStyle->setCurrentIndex(itemIndex);
             }
         }
-        if (webElement.hasAttribute(QLatin1String("start"))) {
-            const int startValue = webElement.attribute(QLatin1String("start"), QLatin1String("1")).toInt();
+        if (webElement.hasAttribute(QStringLiteral("start"))) {
+            const int startValue = webElement.attribute(QStringLiteral("start"), QStringLiteral("1")).toInt();
             start->setValue(startValue);
         }
     }
@@ -210,17 +210,17 @@ void ComposerListDialogPrivate::updateListHtml()
     if ((type == ExtendAttributesDialog::ListUL) || (type == ExtendAttributesDialog::ListOL)) {
         const QString newType = listStyle->itemData(listStyle->currentIndex()).toString();
         if (newType.isEmpty()) {
-            if (webElement.hasAttribute(QLatin1String("type"))) {
-                webElement.removeAttribute(QLatin1String("type"));
+            if (webElement.hasAttribute(QStringLiteral("type"))) {
+                webElement.removeAttribute(QStringLiteral("type"));
             }
         } else {
-            webElement.setAttribute(QLatin1String("type"), newType);
+            webElement.setAttribute(QStringLiteral("type"), newType);
         }
         if (start->isEnabled()) {
             const int startValue = start->value();
-            webElement.setAttribute(QLatin1String("start"), QString::number(startValue));
+            webElement.setAttribute(QStringLiteral("start"), QString::number(startValue));
         } else {
-            webElement.removeAttribute(QLatin1String("start"));
+            webElement.removeAttribute(QStringLiteral("start"));
         }
     } else {
         //TODO ?

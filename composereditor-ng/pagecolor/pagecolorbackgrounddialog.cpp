@@ -91,22 +91,22 @@ void PageColorBackgroundDialogPrivate::_k_slotWebElementChanged()
 void PageColorBackgroundDialogPrivate::updateSettings()
 {
     if (!webElement.isNull()) {
-        if (webElement.hasAttribute(QLatin1String("bgcolor")) ||
-                webElement.hasAttribute(QLatin1String("text")) ||
-                webElement.hasAttribute(QLatin1String("link")) ||
-                webElement.hasAttribute(QLatin1String("vlink")) ||
-                webElement.hasAttribute(QLatin1String("alink"))) {
+        if (webElement.hasAttribute(QStringLiteral("bgcolor")) ||
+                webElement.hasAttribute(QStringLiteral("text")) ||
+                webElement.hasAttribute(QStringLiteral("link")) ||
+                webElement.hasAttribute(QStringLiteral("vlink")) ||
+                webElement.hasAttribute(QStringLiteral("alink"))) {
             pageColorWidget->setUseDefaultColor(false);
-            pageColorWidget->setPageBackgroundColor(QColor(webElement.attribute(QLatin1String("bgcolor"))));
-            pageColorWidget->setTextColor(QColor(webElement.attribute(QLatin1String("text"))));
-            pageColorWidget->setLinkColor(QColor(webElement.attribute(QLatin1String("link"))));
-            pageColorWidget->setActiveLinkColor(QColor(webElement.attribute(QLatin1String("alink"))));
-            pageColorWidget->setVisitedLinkColor(QColor(webElement.attribute(QLatin1String("vlink"))));
+            pageColorWidget->setPageBackgroundColor(QColor(webElement.attribute(QStringLiteral("bgcolor"))));
+            pageColorWidget->setTextColor(QColor(webElement.attribute(QStringLiteral("text"))));
+            pageColorWidget->setLinkColor(QColor(webElement.attribute(QStringLiteral("link"))));
+            pageColorWidget->setActiveLinkColor(QColor(webElement.attribute(QStringLiteral("alink"))));
+            pageColorWidget->setVisitedLinkColor(QColor(webElement.attribute(QStringLiteral("vlink"))));
         } else {
             pageColorWidget->setUseDefaultColor(true);
         }
-        if (webElement.hasAttribute(QLatin1String("background"))) {
-            pageColorWidget->setBackgroundImageUrl(QUrl(webElement.attribute(QLatin1String("background"))));
+        if (webElement.hasAttribute(QStringLiteral("background"))) {
+            pageColorWidget->setBackgroundImageUrl(QUrl(webElement.attribute(QStringLiteral("background"))));
         }
     }
 }
@@ -126,37 +126,37 @@ void PageColorBackgroundDialogPrivate::applyChanges()
 {
     if (!webElement.isNull()) {
         if (pageColorWidget->useDefaultColor()) {
-            webElement.removeAttribute(QLatin1String("bgcolor"));
-            webElement.removeAttribute(QLatin1String("text"));
-            webElement.removeAttribute(QLatin1String("link"));
-            webElement.removeAttribute(QLatin1String("alink"));
-            webElement.removeAttribute(QLatin1String("vlink"));
+            webElement.removeAttribute(QStringLiteral("bgcolor"));
+            webElement.removeAttribute(QStringLiteral("text"));
+            webElement.removeAttribute(QStringLiteral("link"));
+            webElement.removeAttribute(QStringLiteral("alink"));
+            webElement.removeAttribute(QStringLiteral("vlink"));
         } else {
             QColor col = pageColorWidget->pageBackgroundColor();
             if (col.isValid()) {
-                webElement.setAttribute(QLatin1String("bgcolor"), col.name());
+                webElement.setAttribute(QStringLiteral("bgcolor"), col.name());
             }
             col = pageColorWidget->textColor();
             if (col.isValid()) {
-                webElement.setAttribute(QLatin1String("text"), col.name());
+                webElement.setAttribute(QStringLiteral("text"), col.name());
             }
             col = pageColorWidget->linkColor();
             if (col.isValid()) {
-                webElement.setAttribute(QLatin1String("link"), col.name());
+                webElement.setAttribute(QStringLiteral("link"), col.name());
             }
             col = pageColorWidget->activeLinkColor();
             if (col.isValid()) {
-                webElement.setAttribute(QLatin1String("alink"), col.name());
+                webElement.setAttribute(QStringLiteral("alink"), col.name());
             }
             col = pageColorWidget->visitedLinkColor();
             if (col.isValid()) {
-                webElement.setAttribute(QLatin1String("vlink"), col.name());
+                webElement.setAttribute(QStringLiteral("vlink"), col.name());
             }
         }
         if (pageColorWidget->backgroundImageUrl().isEmpty()) {
-            webElement.removeAttribute(QLatin1String("background"));
+            webElement.removeAttribute(QStringLiteral("background"));
         } else {
-            webElement.setAttribute(QLatin1String("background"), pageColorWidget->backgroundImageUrl().url());
+            webElement.setAttribute(QStringLiteral("background"), pageColorWidget->backgroundImageUrl().url());
         }
     }
 }

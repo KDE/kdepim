@@ -37,7 +37,7 @@ AbstractSettings::AbstractSettings(ImportWizard *parent)
     : mImportWizard(parent)
 {
     mManager = new KIdentityManagement::IdentityManager(false, this, "mIdentityManager");
-    mKmailConfig = KSharedConfig::openConfig(QLatin1String("kmail2rc"));
+    mKmailConfig = KSharedConfig::openConfig(QStringLiteral("kmail2rc"));
 }
 
 AbstractSettings::~AbstractSettings()
@@ -106,7 +106,7 @@ void AbstractSettings::addCheckMailOnStartup(const QString &agentIdentifyName, b
         return;
     }
     const QString groupName = QStringLiteral("Resource %1").arg(agentIdentifyName);
-    addKmailConfig(groupName, QLatin1String("CheckOnStartup"), loginAtStartup);
+    addKmailConfig(groupName, QStringLiteral("CheckOnStartup"), loginAtStartup);
 }
 
 void AbstractSettings::addToManualCheck(const QString &agentIdentifyName, bool manualCheck)
@@ -115,14 +115,14 @@ void AbstractSettings::addToManualCheck(const QString &agentIdentifyName, bool m
         return;
     }
     const QString groupName = QStringLiteral("Resource %1").arg(agentIdentifyName);
-    addKmailConfig(groupName, QLatin1String("IncludeInManualChecks"), manualCheck);
+    addKmailConfig(groupName, QStringLiteral("IncludeInManualChecks"), manualCheck);
 }
 
 void AbstractSettings::addComposerHeaderGroup(const QString &groupName, const QString &name, const QString &value)
 {
     KConfigGroup group = mKmailConfig->group(groupName);
-    group.writeEntry(QLatin1String("name"), name);
-    group.writeEntry(QLatin1String("value"), value);
+    group.writeEntry(QStringLiteral("name"), name);
+    group.writeEntry(QStringLiteral("value"), value);
 }
 
 void AbstractSettings::addKmailConfig(const QString &groupName, const QString &key, const QString &value)

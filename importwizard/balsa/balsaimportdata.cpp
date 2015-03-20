@@ -49,7 +49,7 @@ bool BalsaImportData::foundMailer() const
 
 QString BalsaImportData::name() const
 {
-    return QLatin1String("Balsa");
+    return QStringLiteral("Balsa");
 }
 
 bool BalsaImportData::importMails()
@@ -73,21 +73,21 @@ bool BalsaImportData::importMails()
 
 bool BalsaImportData::importAddressBook()
 {
-    const QString addressbookFile(mPath + QLatin1String("config"));
+    const QString addressbookFile(mPath + QStringLiteral("config"));
     BalsaAddressBook addressbook(addressbookFile, mImportWizard);
     return true;
 }
 
 bool BalsaImportData::importSettings()
 {
-    const QString settingFile(mPath + QLatin1String("config"));
+    const QString settingFile(mPath + QStringLiteral("config"));
     BalsaSettings settings(settingFile, mImportWizard);
     return true;
 }
 
 bool BalsaImportData::importFilters()
 {
-    const QString filterPath = mPath + QLatin1String("config");
+    const QString filterPath = mPath + QStringLiteral("config");
     return addFilters(filterPath, MailCommon::FilterImporterExporter::BalsaFilter);
 }
 

@@ -29,8 +29,8 @@
 
 int main(int argc, char *argv[])
 {
-    Kdelibs4ConfigMigrator migrate(QLatin1String("importwizard"));
-    migrate.setConfigFiles(QStringList() << QLatin1String("importwizardrc"));
+    Kdelibs4ConfigMigrator migrate(QStringLiteral("importwizard"));
+    migrate.setConfigFiles(QStringList() << QStringLiteral("importwizardrc"));
     migrate.migrate();
     QApplication app(argc, argv);
 
@@ -38,13 +38,13 @@ int main(int argc, char *argv[])
     //FIXME: "wizards" are "assistents" in new KDE slang
     KAboutData aboutData(QStringLiteral("importwizard"),
                          i18n("PIM Import Tool"),
-                         QLatin1String(KDEPIM_VERSION),
+                         QStringLiteral(KDEPIM_VERSION),
                          i18n("PIM Import Tool"),
                          KAboutLicense::GPL_V2,
                          i18n("Copyright © 2012-2015 importwizard authors"));
 
     aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QStringLiteral("montel@kde.org"));
-    QApplication::setWindowIcon(QIcon::fromTheme(QLatin1String("kontact-import-wizard")));
+    QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("kontact-import-wizard")));
     aboutData.setOrganizationDomain(QByteArray("kde.org"));
     aboutData.setProductName(QByteArray("importwizard"));
 
