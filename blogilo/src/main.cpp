@@ -34,23 +34,22 @@
 
 int main(int argc, char *argv[])
 {
-
-    Kdelibs4ConfigMigrator migrate(QLatin1String("blogilo"));
-    migrate.setConfigFiles(QStringList() << QLatin1String("blogilorc"));
-    migrate.setUiFiles(QStringList() << QLatin1String("blogiloui.rc"));
+    Kdelibs4ConfigMigrator migrate(QStringLiteral("blogilo"));
+    migrate.setConfigFiles(QStringList() << QStringLiteral("blogilorc"));
+    migrate.setUiFiles(QStringList() << QStringLiteral("blogiloui.rc"));
     migrate.migrate();
     //QT5 TODO migrate database!
     QApplication app(argc, argv);
     QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("blogilo")));
     KLocalizedString::setApplicationDomain("blogilo");
-    KAboutData about(QLatin1String("blogilo"), i18n(APPNAME), QLatin1String(VERSION), i18n("A KDE Blogging Client"),
+    KAboutData about(QStringLiteral("blogilo"), i18n("Blogilo"), VERSION, i18n("A KDE Blogging Client"),
                      KAboutLicense::GPL_V2, i18n("Copyright © 2008–2014 Blogilo authors"),
-                     QLatin1String("http://blogilo.gnufolks.org"));
-    about.addAuthor(i18n("Mehrdad Momeny"), i18n("Core Developer"), QLatin1String("mehrdad.momeny@gmail.com"));
-    about.addAuthor(i18n("Golnaz Nilieh"), i18n("Core Developer"), QLatin1String("g382nilieh@gmail.com"));
-    about.addAuthor(i18n("Laurent Montel"), i18n("Core Developer"), QLatin1String("montel@kde.org"));
-    about.addCredit(i18n("Roozbeh Shafiee"), i18n("Icon designer"), QLatin1String("roozbeh@roozbehonline.com"));
-    about.addCredit(i18n("Sajjad Baroodkoo"), i18n("Icon designer"), QLatin1String("sajjad@graphit.ir"));
+                     QStringLiteral("http://blogilo.gnufolks.org"));
+    about.addAuthor(i18n("Mehrdad Momeny"), i18n("Core Developer"), QStringLiteral("mehrdad.momeny@gmail.com"));
+    about.addAuthor(i18n("Golnaz Nilieh"), i18n("Core Developer"), QStringLiteral("g382nilieh@gmail.com"));
+    about.addAuthor(i18n("Laurent Montel"), i18n("Core Developer"), QStringLiteral("montel@kde.org"));
+    about.addCredit(i18n("Roozbeh Shafiee"), i18n("Icon designer"), QStringLiteral("roozbeh@roozbehonline.com"));
+    about.addCredit(i18n("Sajjad Baroodkoo"), i18n("Icon designer"), QStringLiteral("sajjad@graphit.ir"));
 
     about.setTranslator(i18nc("NAME OF TRANSLATORS", "Your names"),
                         i18nc("EMAIL OF TRANSLATORS", "Your emails"));

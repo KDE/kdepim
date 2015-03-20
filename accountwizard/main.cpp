@@ -37,16 +37,16 @@ int main(int argc, char **argv)
     QApplication app(argc, argv);
 
     KLocalizedString::setApplicationDomain("accountwizard");
-    KAboutData aboutData(QLatin1String("accountwizard"),
+    KAboutData aboutData(QStringLiteral("accountwizard"),
                          i18n("Account Assistant"),
-                         QLatin1String("0.1"),
+                         QStringLiteral("0.1"),
                          i18n("Helps setting up PIM accounts"),
                          KAboutLicense::LGPL,
                          i18n("(c) 2009 the Akonadi developers"),
-                         QLatin1String("http://pim.kde.org/akonadi/"));
-    aboutData.setProgramIconName(QLatin1String("akonadi"));
-    aboutData.addAuthor(i18n("Volker Krause"),  i18n("Author"), QLatin1String("vkrause@kde.org"));
-    aboutData.addAuthor(i18n("Laurent Montel"), QString() , QLatin1String("montel@kde.org"));
+                         QStringLiteral("http://pim.kde.org/akonadi/"));
+    aboutData.setProgramIconName(QStringLiteral("akonadi"));
+    aboutData.addAuthor(i18n("Volker Krause"),  i18n("Author"), QStringLiteral("vkrause@kde.org"));
+    aboutData.addAuthor(i18n("Laurent Montel"), QString() , QStringLiteral("montel@kde.org"));
 
     app.setOrganizationDomain(QStringLiteral("kde.org"));
 
@@ -54,9 +54,9 @@ int main(int argc, char **argv)
     KAboutData::setApplicationData(aboutData);
     parser.addVersionOption();
     parser.addHelpOption();
-    parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("type"), i18n("Only offer accounts that support the given type."), QLatin1String("type")));
-    parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("assistant"), i18n("Run the specified assistant."), QLatin1String("assistant")));
-    parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("package"), i18n("unpack fullpath on startup and launch that assistant"), QLatin1String("fullpath")));
+    parser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("type"), i18n("Only offer accounts that support the given type."), QStringLiteral("type")));
+    parser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("assistant"), i18n("Run the specified assistant."), QStringLiteral("assistant")));
+    parser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("package"), i18n("unpack fullpath on startup and launch that assistant"), QStringLiteral("fullpath")));
 
     aboutData.setupCommandLine(&parser);
     parser.process(app);
@@ -65,14 +65,14 @@ int main(int argc, char **argv)
 
     Akonadi::Control::start(0);
 
-    if (!parser.value(QLatin1String("package")).isEmpty()) {
-        Global::setAssistant(Global::unpackAssistant(QUrl::fromLocalFile(parser.value(QLatin1String("package")))));
+    if (!parser.value(QStringLiteral("package")).isEmpty()) {
+        Global::setAssistant(Global::unpackAssistant(QUrl::fromLocalFile(parser.value(QStringLiteral("package")))));
     } else {
-        Global::setAssistant(parser.value(QLatin1String("assistant")));
+        Global::setAssistant(parser.value(QStringLiteral("assistant")));
     }
 
-    if (!parser.value(QLatin1String("type")).isEmpty()) {
-        Global::setTypeFilter(parser.value(QLatin1String("type")).split(QLatin1Char(',')));
+    if (!parser.value(QStringLiteral("type")).isEmpty()) {
+        Global::setTypeFilter(parser.value(QStringLiteral("type")).split(QLatin1Char(',')));
     }
 
     Dialog dlg(0/*, Qt::WindowStaysOnTopHint*/);

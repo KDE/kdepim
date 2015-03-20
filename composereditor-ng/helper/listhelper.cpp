@@ -22,9 +22,9 @@
 
 namespace ComposerEditorNG
 {
-static QString OL = QLatin1String("ol");
-static QString UL = QLatin1String("ul");
-static QString DL = QLatin1String("dl");
+static QString OL = QStringLiteral("ol");
+static QString UL = QStringLiteral("ul");
+static QString DL = QStringLiteral("dl");
 
 ExtendAttributesDialog::ExtendType ListHelper::listType(const QWebElement &element)
 {

@@ -52,7 +52,7 @@ CalPrinter::CalPrinter(QWidget *parent, const Akonadi::ETMCalendar::Ptr &calenda
     : QObject(parent), mUniqItem(uniqItem)
 {
     mParent = parent;
-    mConfig = new KConfig(QLatin1String("calendar_printing.rc"), KConfig::SimpleConfig);
+    mConfig = new KConfig(QStringLiteral("calendar_printing.rc"), KConfig::SimpleConfig);
 
     init(calendar);
 }

@@ -101,7 +101,7 @@ KBlog::Blog *BilboBlog::blogBackend()
             qobject_cast<KBlog::Blogger *>(d->kblog)->setSecretKey(QLatin1String("JFPDXYmGIuM601vhgVGv0Dlx"));
             break;
         }
-        d->kblog->setUserAgent(QLatin1String(APPNAME), QLatin1String(VERSION));
+        d->kblog->setUserAgent(QLatin1String(APPNAME), VERSION);
         d->kblog->setUsername(username());
         d->kblog->setPassword(password());
         d->kblog->setBlogId(blogid());

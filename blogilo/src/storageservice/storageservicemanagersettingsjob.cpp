@@ -34,68 +34,68 @@ StorageServiceManagerSettingsJob::~StorageServiceManagerSettingsJob()
 QString StorageServiceManagerSettingsJob::youSendItApiKey() const
 {
     //TODO customize it
-    return QLatin1String("fnab8fkgwrka7v6zs2ycd34a");
+    return QStringLiteral("fnab8fkgwrka7v6zs2ycd34a");
 }
 
 QString StorageServiceManagerSettingsJob::dropboxOauthConsumerKey() const
 {
     //TODO customize it
-    return QLatin1String("e40dvomckrm48ci");
+    return QStringLiteral("e40dvomckrm48ci");
 }
 
 QString StorageServiceManagerSettingsJob::dropboxOauthSignature() const
 {
     //TODO customize it
-    return QLatin1String("0icikya464lny9g&");
+    return QStringLiteral("0icikya464lny9g&");
 }
 
 QString StorageServiceManagerSettingsJob::boxClientId() const
 {
     //Blogilo id
-    return QLatin1String("y7out38qqnbdmfsa099h00fmnzuhudgo");
+    return QStringLiteral("y7out38qqnbdmfsa099h00fmnzuhudgo");
 }
 
 QString StorageServiceManagerSettingsJob::boxClientSecret() const
 {
     //Blogilo secret
-    return QLatin1String("wEN5qWmwkEE6nZHm3jUUKmRcy8blApDH");
+    return QStringLiteral("wEN5qWmwkEE6nZHm3jUUKmRcy8blApDH");
 }
 
 QString StorageServiceManagerSettingsJob::hubicClientId() const
 {
-    return QLatin1String("api_hubic_zBKQ6UDUj2vDT7ciDsgjmXA78OVDnzJi");
+    return QStringLiteral("api_hubic_zBKQ6UDUj2vDT7ciDsgjmXA78OVDnzJi");
 }
 
 QString StorageServiceManagerSettingsJob::hubicClientSecret() const
 {
-    return QLatin1String("pkChgk2sRrrCEoVHmYYCglEI9E2Y2833Te5Vn8n2J6qPdxLU6K8NPUvzo1mEhyzf");
+    return QStringLiteral("pkChgk2sRrrCEoVHmYYCglEI9E2Y2833Te5Vn8n2J6qPdxLU6K8NPUvzo1mEhyzf");
 }
 
 QString StorageServiceManagerSettingsJob::dropboxRootPath() const
 {
-    return QLatin1String("dropbox");
+    return QStringLiteral("dropbox");
 }
 
 QString StorageServiceManagerSettingsJob::oauth2RedirectUrl() const
 {
-    return QLatin1String("https://bugs.kde.org/");
+    return QStringLiteral("https://bugs.kde.org/");
 }
 
 QString StorageServiceManagerSettingsJob::hubicScope() const
 {
-    return QLatin1String("usage.r,account.r,credentials.r,links.wd");
+    return QStringLiteral("usage.r,account.r,credentials.r,links.wd");
 }
 
 QString StorageServiceManagerSettingsJob::gdriveClientId() const
 {
-    return QLatin1String("735222197981-mrcgtaqf05914buqjkts7mk79blsquas.apps.googleusercontent.com");
-    //return QLatin1String("76182239499-2krm3lvlrqrj446loaqrrep594n3u2o8.apps.googleusercontent.com");
+    return QStringLiteral("735222197981-mrcgtaqf05914buqjkts7mk79blsquas.apps.googleusercontent.com");
+    //return QStringLiteral("76182239499-2krm3lvlrqrj446loaqrrep594n3u2o8.apps.googleusercontent.com");
 }
 
 QString StorageServiceManagerSettingsJob::gdriveClientSecret() const
 {
-    return QLatin1String("4MJOS0u1-_AUEKJ0ObA-j22U");
-    //return QLatin1String("7SinUSCxfbrJYN7az3VvxTJ9");
+    return QStringLiteral("4MJOS0u1-_AUEKJ0ObA-j22U");
+    //return QStringLiteral("7SinUSCxfbrJYN7az3VvxTJ9");
 }
 
 QString StorageServiceManagerSettingsJob::defaultUploadFolder() const
