@@ -158,6 +158,7 @@
       <li xml:lang="zh-TW">讀取 .vcf 格式檔案，並可匯入與匯出 vCards 與 csv 格式檔案。</li>
       <li>Can use multiple LDAP servers</li>
       <li xml:lang="ca">Pot usar múltiples servidors LDAP</li>
+      <li xml:lang="de">Kann mehrere LDAP-Server verwenden</li>
       <li xml:lang="en-GB">Can use multiple LDAP servers</li>
       <li xml:lang="es">Usted puede usar varios servidores LDAP</li>
       <li xml:lang="fi">Osaa käyttää useampia LDAP-palvelimia</li>
