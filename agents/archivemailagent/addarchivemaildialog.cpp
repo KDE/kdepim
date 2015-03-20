@@ -69,13 +69,14 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info,QWidget *parent
 
 
     // These combobox values have to stay in sync with the ArchiveType enum from BackupJob!
-    mFormatComboBox->addItem( i18n( "Compressed Zip Archive (.zip)" ) );
-    mFormatComboBox->addItem( i18n( "Uncompressed Archive (.tar)" ) );
-    mFormatComboBox->addItem( i18n( "BZ2-Compressed Tar Archive (.tar.bz2)" ) );
-    mFormatComboBox->addItem( i18n( "GZ-Compressed Tar Archive (.tar.gz)" ) );
+    mFormatComboBox->addItem( i18n( "Compressed Zip Archive (.zip)" ), (int)MailCommon::BackupJob::Zip );
+    mFormatComboBox->addItem( i18n( "Uncompressed Archive (.tar)" ), (int)MailCommon::BackupJob::Tar );
+    mFormatComboBox->addItem( i18n( "BZ2-Compressed Tar Archive (.tar.bz2)" ), (int)MailCommon::BackupJob::TarBz2 );
+    mFormatComboBox->addItem( i18n( "GZ-Compressed Tar Archive (.tar.gz)" ), (int)MailCommon::BackupJob::TarGz );
     mFormatComboBox->setCurrentIndex( 2 );
     mainLayout->addWidget( mFormatComboBox, row, 1 );
     ++row;
+
 
     mRecursiveCheckBox = new QCheckBox( i18n( "Archive all subfolders" ), mainWidget );
     mainLayout->addWidget( mRecursiveCheckBox, row, 0, 1, 2, Qt::AlignLeft );

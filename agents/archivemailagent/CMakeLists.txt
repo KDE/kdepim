@@ -15,6 +15,7 @@ set(archivemailagent_SRCS
    addarchivemaildialog.cpp
    archivejob.cpp
    archivemailagentutil.cpp
+   formatcombobox.cpp
 )
 
 kde4_add_kcfg_files(archivemailagent_SRCS

@@ -13,3 +13,4 @@ endmacro()
 
 archivemail_agent(archivemailinfotest.cpp)
 archivemail_agent(archivemaildialogtest.cpp)
+archivemail_agent(formatcomboboxtest.cpp)
