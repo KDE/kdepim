@@ -3,8 +3,8 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/.. ${CMAKE_CURRENT_SOURCE_DIR}/
 remove_definitions( -DQT_NO_CAST_FROM_BYTEARRAY )
 
 # Convenience macro to add unit tests.
-macro( archivemail_agent _source )
-  set( _test ${_source} ../archivemailinfo.cpp ../archivemaildialog.cpp ../archivemailagentutil.cpp ../addarchivemaildialog.cpp ../archivemailagent_debug.cpp)
+macro( archivemail_agent _source _additionalsource)
+  set( _test ${_source} ../archivemailinfo.cpp ../archivemaildialog.cpp ../archivemailagentutil.cpp ../addarchivemaildialog.cpp ../archivemailagent_debug.cpp ${_additionalsource})
   ki18n_wrap_ui(_test ../ui/archivemailwidget.ui )
   get_filename_component( _name ${_source} NAME_WE )
   add_executable( ${_name} ${_test} )
@@ -13,5 +13,6 @@ macro( archivemail_agent _source )
   target_link_libraries( ${_name} Qt5::Test Qt5::Core mailcommon KF5::AkonadiCore )
 endmacro()
 
-archivemail_agent(archivemailinfotest.cpp)
-archivemail_agent(archivemaildialogtest.cpp)
+archivemail_agent(archivemailinfotest.cpp "../formatcombobox.cpp")
+archivemail_agent(archivemaildialogtest.cpp "../formatcombobox.cpp")
+archivemail_agent(formatcomboboxtest.cpp "../formatcombobox.cpp")

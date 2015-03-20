@@ -15,6 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 #include "addarchivemaildialog.h"
+#include "formatcombobox.h"
 #include "mailcommon/folder/folderrequester.h"
 
 #include <Collection>
@@ -76,15 +77,10 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info, QWidget *paren
 
     QLabel *formatLabel = new QLabel(i18n("F&ormat:"), mainWidget);
     mainLayout->addWidget(formatLabel, row, 0);
-    mFormatComboBox = new KComboBox(mainWidget);
+    mFormatComboBox = new FormatComboBox(mainWidget);
     formatLabel->setBuddy(mFormatComboBox);
 
-    // These combobox values have to stay in sync with the ArchiveType enum from BackupJob!
-    mFormatComboBox->addItem(i18n("Compressed Zip Archive (.zip)"));
-    mFormatComboBox->addItem(i18n("Uncompressed Archive (.tar)"));
-    mFormatComboBox->addItem(i18n("BZ2-Compressed Tar Archive (.tar.bz2)"));
-    mFormatComboBox->addItem(i18n("GZ-Compressed Tar Archive (.tar.gz)"));
-    mFormatComboBox->setCurrentIndex(2);
+    mFormatComboBox = new FormatComboBox( mainWidget );
     mainLayout->addWidget(mFormatComboBox, row, 1);
     ++row;
 
@@ -155,7 +151,7 @@ void AddArchiveMailDialog::load(ArchiveMailInfo *info)
     mPath->setUrl(info->url());
     mRecursiveCheckBox->setChecked(info->saveSubCollection());
     mFolderRequester->setCollection(Akonadi::Collection(info->saveCollectionId()));
-    mFormatComboBox->setCurrentIndex(static_cast<int>(info->archiveType()));
+    mFormatComboBox->setFormat(info->archiveType());
     mDays->setValue(info->archiveAge());
     mUnits->setCurrentIndex(static_cast<int>(info->archiveUnit()));
     mMaximumArchive->setValue(info->maximumArchiveCount());
@@ -168,7 +164,7 @@ ArchiveMailInfo *AddArchiveMailDialog::info()
         mInfo = new ArchiveMailInfo();
     }
     mInfo->setSaveSubCollection(mRecursiveCheckBox->isChecked());
-    mInfo->setArchiveType(static_cast<MailCommon::BackupJob::ArchiveType>(mFormatComboBox->currentIndex()));
+    mInfo->setArchiveType(mFormatComboBox->format());
     mInfo->setSaveCollectionId(mFolderRequester->collection().id());
     mInfo->setUrl(mPath->url());
     mInfo->setArchiveAge(mDays->value());
@@ -191,12 +187,12 @@ void AddArchiveMailDialog::slotFolderChanged(const Akonadi::Collection &collecti
 
 void AddArchiveMailDialog::setArchiveType(MailCommon::BackupJob::ArchiveType type)
 {
-    mFormatComboBox->setCurrentIndex((int)type);
+    mFormatComboBox->setFormat(type);
 }
 
 MailCommon::BackupJob::ArchiveType AddArchiveMailDialog::archiveType() const
 {
-    return static_cast<MailCommon::BackupJob::ArchiveType>(mFormatComboBox->currentIndex());
+    return mFormatComboBox->format();
 }
 
 void AddArchiveMailDialog::setRecursive(bool b)

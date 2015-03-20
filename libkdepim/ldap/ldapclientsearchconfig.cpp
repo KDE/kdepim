@@ -221,7 +221,7 @@ void LdapClientSearchConfig::writeConfig(const KLDAP::LdapServer &server, KConfi
     }
     config.writeEntry(prefix + QString::fromLatin1("Auth%1").arg(j), tmp);
     config.writeEntry(prefix + QString::fromLatin1("Mech%1").arg(j), server.mech());
-    config.writeEntry( prefix + QString::fromLatin1( "UserFilter%1" ).arg( j ), server.filter() );
+    config.writeEntry( prefix + QString::fromLatin1( "UserFilter%1" ).arg( j ), server.filter().trimmed() );
 }
 
 void LdapClientSearchConfig::slotWalletClosed()

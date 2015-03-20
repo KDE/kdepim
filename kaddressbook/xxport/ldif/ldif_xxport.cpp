@@ -129,7 +129,6 @@ bool LDIFXXPort::exportContacts(const KContacts::Addressee::List &list, VCardExp
             }
         }
 
-        //TODO fix export in network as other export function
         QFile file(fileName);
 
         if (!file.open(QIODevice::WriteOnly)) {
