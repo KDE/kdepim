@@ -1,1 +1,1 @@
-ecm_install_icons( ICONS hi16-apps-kdepim-dropbox.png  hi22-apps-kdepim-dropbox.png  hi32-apps-kdepim-dropbox.png  hi48-apps-kdepim-dropbox.png DESTINATION ${KDE_INSTALL_ICONDIR} )
+ecm_install_icons( ICONS 16-apps-kdepim-dropbox.png  22-apps-kdepim-dropbox.png  32-apps-kdepim-dropbox.png  48-apps-kdepim-dropbox.png DESTINATION ${KDE_INSTALL_ICONDIR} THEME hicolor )
