@@ -24,7 +24,7 @@ class FilterActionSetStatusTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FilterActionSetStatusTest(QObject *parent = 0);
+    explicit FilterActionSetStatusTest(QObject *parent = Q_NULLPTR);
     ~FilterActionSetStatusTest();
 };
 
