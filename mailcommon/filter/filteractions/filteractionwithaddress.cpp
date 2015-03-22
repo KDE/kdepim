@@ -31,6 +31,7 @@ FilterActionWithAddress::FilterActionWithAddress( const QString &name, const QSt
 QWidget* FilterActionWithAddress::createParamWidget( QWidget *parent ) const
 {
     MessageCore::EmailAddressRequester *requester = new MessageCore::EmailAddressRequester( parent );
+    requester->setObjectName(QLatin1String("emailaddressrequester"));
     requester->setText( mParameter );
 
     connect( requester, SIGNAL(textChanged()), this, SIGNAL(filterActionModified()) );

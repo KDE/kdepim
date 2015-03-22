@@ -93,3 +93,19 @@ target_link_libraries( filteractionsetstatustest
    ${KDEPIMLIBS_AKONADI_LIBS}
    ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
 )
+
+set(mailcommon_filteractionreplytotest_SRCS filteractionreplytotest.cpp
+                                           ../filteractions/filteractionreplyto.cpp
+                                           ../filteractions/filteractionwithaddress.cpp
+                                           ../filteractions/filteractionwithstring.cpp)
+kde4_add_unit_test( filteractionreplytotest ${mailcommon_filteractionreplytotest_SRCS} )
+target_link_libraries( filteractionreplytotest
+   kdepim
+   pimcommon
+   mailcommon
+   messagecore
+   ${QT_QTTEST_LIBRARY}
+   ${QT_QTCORE_LIBRARY}
+   ${KDEPIMLIBS_AKONADI_LIBS}
+   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+)
