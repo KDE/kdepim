@@ -17,7 +17,7 @@
 
 #include "filteractionreplytotest.h"
 #include "../filteractions/filteractionreplyto.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <QWidget>
 FilterActionReplyToTest::FilterActionReplyToTest(QObject *parent)
     : QObject(parent)
@@ -37,4 +37,4 @@ void FilterActionReplyToTest::shouldHaveDefaultValue()
     QCOMPARE(w->objectName(), QLatin1String("emailaddressrequester"));
 }
 
-QTEST_KDEMAIN(FilterActionReplyToTest, GUI)
+QTEST_MAIN(FilterActionReplyToTest)

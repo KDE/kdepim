@@ -17,7 +17,7 @@
 
 #include "filteractionsetstatustest.h"
 #include "../filteractions/filteractionsetstatus.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 FilterActionSetStatusTest::FilterActionSetStatusTest(QObject *parent)
     : QObject(parent)
@@ -30,4 +30,4 @@ FilterActionSetStatusTest::~FilterActionSetStatusTest()
 
 }
 
-QTEST_KDEMAIN(FilterActionSetStatusTest, GUI)
+QTEST_MAIN(FilterActionSetStatusTest)
