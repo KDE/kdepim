@@ -28,6 +28,7 @@
 #include <KLocale>
 #include <kmenu.h>
 #include <KLocalizedString>
+#include <KMessageBox>
 
 // #define DEBUG_MESSAGE_ID
 static QString followUpItemPattern = QLatin1String("FollowupReminderItem \\d+");
@@ -216,12 +217,15 @@ void FollowUpReminderInfoWidget::removeItem(const QList<QTreeWidgetItem *> &mail
     if (mailItemLst.isEmpty()) {
         qDebug() << "Not item selected";
     } else {
-        Q_FOREACH (QTreeWidgetItem *item, mailItemLst) {
-            FollowUpReminderInfoItem *mailItem = static_cast<FollowUpReminderInfoItem *>(item);
-            mListRemoveId << mailItem->info()->uniqueIdentifier();
-            delete mailItem;
+        //KF5 add i18n
+        if (KMessageBox::Yes == KMessageBox::warningYesNo(this, QLatin1String("Do you want to remove selected item?"))) {
+            Q_FOREACH (QTreeWidgetItem *item, mailItemLst) {
+                FollowUpReminderInfoItem *mailItem = static_cast<FollowUpReminderInfoItem *>(item);
+                mListRemoveId << mailItem->info()->uniqueIdentifier();
+                delete mailItem;
+            }
+            mChanged = true;
         }
-        mChanged = true;
     }
 }
 
