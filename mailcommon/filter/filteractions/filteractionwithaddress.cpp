@@ -32,6 +32,8 @@ QWidget *FilterActionWithAddress::createParamWidget(QWidget *parent) const
 {
     PimCommon::EmailAddressRequester *requester = new PimCommon::EmailAddressRequester(parent);
     requester->setText(mParameter);
+    requester->setObjectName(QLatin1String("emailaddressrequester"));
+    requester->setText( mParameter );
 
     connect(requester, &PimCommon::EmailAddressRequester::textChanged, this, &FilterActionWithAddress::filterActionModified);
 

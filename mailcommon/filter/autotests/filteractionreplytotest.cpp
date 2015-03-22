@@ -15,19 +15,26 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FILTERACTIONREWRITEHEADERTEST_H
-#define FILTERACTIONREWRITEHEADERTEST_H
-
-#include <QObject>
-
-class FilterActionRewriteHeaderTest : public QObject
+#include "filteractionreplytotest.h"
+#include "../filteractions/filteractionreplyto.h"
+#include <qtest_kde.h>
+#include <QWidget>
+FilterActionReplyToTest::FilterActionReplyToTest(QObject *parent)
+    : QObject(parent)
 {
-    Q_OBJECT
-public:
-    explicit FilterActionRewriteHeaderTest(QObject *parent = Q_NULLPTR);
-    ~FilterActionRewriteHeaderTest();
-private Q_SLOTS:
-    void shouldHaveDefaultValue();
-};
 
-#endif // FILTERACTIONREWRITEHEADERTEST_H
+}
+
+FilterActionReplyToTest::~FilterActionReplyToTest()
+{
+
+}
+
+void FilterActionReplyToTest::shouldHaveDefaultValue()
+{
+    MailCommon::FilterActionReplyTo filter;
+    QWidget *w = filter.createParamWidget(0);
+    QCOMPARE(w->objectName(), QLatin1String("emailaddressrequester"));
+}
+
+QTEST_KDEMAIN(FilterActionReplyToTest, GUI)

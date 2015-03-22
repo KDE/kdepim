@@ -86,18 +86,38 @@ target_link_libraries( filteractionbeeptest
    Qt5::Core
 )
 
-set(mailcommon_filteractionsetstatustest_SRCS filteractionsetstatustest.cpp
+set(mailcommon_filteractionsetstatustest_SRCS filteractionsetstatustest.cpp ../../mailcommon_debug.cpp
                                            ../filteractions/filteractionsetstatus.cpp
                                             ../filteractions/filteractionstatus.cpp
                                            ../filteractions/filteractionwithstringlist.cpp
                                            ../filteractions/filteractionwithstring.cpp)
-kde4_add_unit_test( filteractionsetstatustest ${mailcommon_filteractionsetstatustest_SRCS} )
+add_executable( filteractionsetstatustest ${mailcommon_filteractionsetstatustest_SRCS} )
+add_test(filteractionsetstatustest filteractionsetstatustest)
+ecm_mark_as_test(filteractionsetstatustest)
 target_link_libraries( filteractionsetstatustest
    kdepim
    pimcommon
    mailcommon
-   ${QT_QTTEST_LIBRARY}
-   ${QT_QTCORE_LIBRARY}
-   ${KDEPIMLIBS_AKONADI_LIBS}
-   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+   Qt5::Test
+   Qt5::Core
+   KF5::AkonadiCore
+   KF5::AkonadiMime
+)
+
+set(mailcommon_filteractionreplytotest_SRCS filteractionreplytotest.cpp
+                                           ../filteractions/filteractionreplyto.cpp
+                                           ../filteractions/filteractionwithaddress.cpp
+                                           ../filteractions/filteractionwithstring.cpp)
+add_executable( filteractionreplytotest ${mailcommon_filteractionreplytotest_SRCS} )
+add_test(filteractionreplytotest filteractionreplytotest)
+ecm_mark_as_test(filteractionreplytotest)
+target_link_libraries( filteractionreplytotest
+   kdepim
+   pimcommon
+   mailcommon
+   messagecore
+   Qt5::Test
+   Qt5::Core
+   KF5::AkonadiCore
+   KF5::AkonadiMime
 )

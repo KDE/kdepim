@@ -17,6 +17,12 @@
 
 #include "filteractionrewriteheadertest.h"
 #include <qtest.h>
+#include "../filteractions/filteractionrewriteheader.h"
+#include <KLineEdit>
+#include <QLabel>
+#include <QWidget>
+#include <widgets/minimumcombobox.h>
+#include <widgets/regexplineedit.h>
 FilterActionRewriteHeaderTest::FilterActionRewriteHeaderTest(QObject *parent)
     : QObject(parent)
 {
@@ -26,6 +32,28 @@ FilterActionRewriteHeaderTest::FilterActionRewriteHeaderTest(QObject *parent)
 FilterActionRewriteHeaderTest::~FilterActionRewriteHeaderTest()
 {
 
+}
+
+void FilterActionRewriteHeaderTest::shouldHaveDefaultValue()
+{
+    MailCommon::FilterActionRewriteHeader filter;
+    QWidget *w = filter.createParamWidget(0);
+    PimCommon::MinimumComboBox *combo = w->findChild<PimCommon::MinimumComboBox *>(QLatin1String("combo"));
+    QVERIFY(combo);
+
+    QLabel *label = w->findChild<QLabel *>(QLatin1String("label_replace"));
+    QVERIFY(label);
+
+    MailCommon::RegExpLineEdit *regExpLineEdit = w->findChild<MailCommon::RegExpLineEdit *>(QLatin1String("search") );
+    QVERIFY(regExpLineEdit);
+    QVERIFY(regExpLineEdit->text().isEmpty());
+
+    label = w->findChild<QLabel *>(QLatin1String("label_with"));
+    QVERIFY(label);
+
+    KLineEdit *lineEdit = w->findChild<KLineEdit *>(QLatin1String("replace") );
+    QVERIFY(lineEdit);
+    QVERIFY(lineEdit->text().isEmpty());
 }
 
 QTEST_MAIN(FilterActionRewriteHeaderTest)

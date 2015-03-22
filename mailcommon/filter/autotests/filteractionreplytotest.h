@@ -15,19 +15,21 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FILTERACTIONREWRITEHEADERTEST_H
-#define FILTERACTIONREWRITEHEADERTEST_H
+#ifndef FILTERACTIONREPLYTOTEST_H
+#define FILTERACTIONREPLYTOTEST_H
 
 #include <QObject>
 
-class FilterActionRewriteHeaderTest : public QObject
+class FilterActionReplyToTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FilterActionRewriteHeaderTest(QObject *parent = Q_NULLPTR);
-    ~FilterActionRewriteHeaderTest();
+    explicit FilterActionReplyToTest(QObject *parent = 0);
+    ~FilterActionReplyToTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+
+
 };
 
-#endif // FILTERACTIONREWRITEHEADERTEST_H
+#endif // FILTERACTIONREPLYTOTEST_H
