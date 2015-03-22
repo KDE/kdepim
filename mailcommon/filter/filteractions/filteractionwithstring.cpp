@@ -38,6 +38,7 @@ bool FilterActionWithString::isEmpty() const
 QWidget* FilterActionWithString::createParamWidget( QWidget *parent ) const
 {
     KLineEdit *lineEdit = new KLineEdit( parent );
+    lineEdit->setObjectName(QLatin1String("lineedit"));
     lineEdit->setClearButtonShown( true );
     lineEdit->setTrapReturnKey(true);
     lineEdit->setText( mParameter );

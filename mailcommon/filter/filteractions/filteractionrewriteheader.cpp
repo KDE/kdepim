@@ -108,6 +108,7 @@ QWidget* FilterActionRewriteHeader::createParamWidget( QWidget *parent ) const
     comp->setCompletionMode(KGlobalSettings::CompletionPopupAuto);
 
     QLabel *label = new QLabel( i18n( "Replace:" ), widget );
+    label->setObjectName(QLatin1String("label_replace"));
     label->setFixedWidth( label->sizeHint().width() );
     layout->addWidget( label, 0 );
 
@@ -117,6 +118,7 @@ QWidget* FilterActionRewriteHeader::createParamWidget( QWidget *parent ) const
 
     label = new QLabel( i18n( "With:" ), widget );
     label->setFixedWidth( label->sizeHint().width() );
+    label->setObjectName(QLatin1String("label_with"));
     layout->addWidget( label, 0 );
 
     KLineEdit *lineEdit = new KLineEdit( widget );

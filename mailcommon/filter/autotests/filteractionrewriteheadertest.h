@@ -26,6 +26,8 @@ class FilterActionRewriteHeaderTest : public QObject
 public:
     explicit FilterActionRewriteHeaderTest(QObject *parent = 0);
     ~FilterActionRewriteHeaderTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
 #endif // FILTERACTIONREWRITEHEADERTEST_H
