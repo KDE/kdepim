@@ -16,6 +16,7 @@
 */
 #include "addarchivemaildialog.h"
 #include "formatcombobox.h"
+#include "unitcombobox.h"
 #include "mailcommon/folder/folderrequester.h"
 
 #include <Collection>
@@ -65,6 +66,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info, QWidget *paren
     QLabel *folderLabel = new QLabel(i18n("&Folder:"), mainWidget);
     mainLayout->addWidget(folderLabel, row, 0);
     mFolderRequester = new MailCommon::FolderRequester(mainWidget);
+    mFolderRequester->setObjectName(QLatin1String("folder_requester"));
     mFolderRequester->setMustBeReadWrite(false);
     mFolderRequester->setNotAllowToCreateNewFolder(true);
     connect(mFolderRequester, &MailCommon::FolderRequester::folderChanged, this, &AddArchiveMailDialog::slotFolderChanged);
@@ -76,6 +78,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info, QWidget *paren
     ++row;
 
     QLabel *formatLabel = new QLabel(i18n("F&ormat:"), mainWidget);
+    formatLabel->setObjectName(QLatin1String("label_format"));
     mainLayout->addWidget(formatLabel, row, 0);
     mFormatComboBox = new FormatComboBox(mainWidget);
     formatLabel->setBuddy(mFormatComboBox);
@@ -85,20 +88,23 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info, QWidget *paren
     ++row;
 
     mRecursiveCheckBox = new QCheckBox(i18n("Archive all subfolders"), mainWidget);
+    mRecursiveCheckBox->setObjectName(QLatin1String("recursive_checkbox"));
     mainLayout->addWidget(mRecursiveCheckBox, row, 0, 1, 2, Qt::AlignLeft);
     mRecursiveCheckBox->setChecked(true);
     ++row;
 
     QLabel *pathLabel = new QLabel(i18n("Path:"), mainWidget);
     mainLayout->addWidget(pathLabel, row, 0);
+    pathLabel->setObjectName(QLatin1String("path_label"));
     mPath = new KUrlRequester(mainWidget);
     connect(mPath, &KUrlRequester::textChanged, this, &AddArchiveMailDialog::slotUpdateOkButton);
     mPath->setMode(KFile::Directory);
     mainLayout->addWidget(mPath);
     ++row;
 
-    QLabel *dateLabel = new QLabel(i18n("Backup each:"), mainWidget);
-    mainLayout->addWidget(dateLabel, row, 0);
+    QLabel *dateLabel = new QLabel( i18n( "Backup each:" ), mainWidget );
+    dateLabel->setObjectName(QLatin1String("date_label"));
+    mainLayout->addWidget( dateLabel, row, 0 );
 
     QHBoxLayout *hlayout = new QHBoxLayout;
     mDays = new QSpinBox(mainWidget);
@@ -106,13 +112,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info, QWidget *paren
     mDays->setMaximum(3600);
     hlayout->addWidget(mDays);
 
-    mUnits = new KComboBox(mainWidget);
-    QStringList unitsList;
-    unitsList << i18n("Days");
-    unitsList << i18n("Weeks");
-    unitsList << i18n("Months");
-    unitsList << i18n("Years");
-    mUnits->addItems(unitsList);
+    mUnits = new UnitComboBox(mainWidget);
     hlayout->addWidget(mUnits);
 
     mainLayout->addLayout(hlayout, row, 1);
@@ -153,7 +153,7 @@ void AddArchiveMailDialog::load(ArchiveMailInfo *info)
     mFolderRequester->setCollection(Akonadi::Collection(info->saveCollectionId()));
     mFormatComboBox->setFormat(info->archiveType());
     mDays->setValue(info->archiveAge());
-    mUnits->setCurrentIndex(static_cast<int>(info->archiveUnit()));
+    mUnits->setUnit(info->archiveUnit());
     mMaximumArchive->setValue(info->maximumArchiveCount());
     slotUpdateOkButton();
 }
@@ -168,7 +168,7 @@ ArchiveMailInfo *AddArchiveMailDialog::info()
     mInfo->setSaveCollectionId(mFolderRequester->collection().id());
     mInfo->setUrl(mPath->url());
     mInfo->setArchiveAge(mDays->value());
-    mInfo->setArchiveUnit(static_cast<ArchiveMailInfo::ArchiveUnit>(mUnits->currentIndex()));
+    mInfo->setArchiveUnit(mUnits->unit());
     mInfo->setMaximumArchiveCount(mMaximumArchive->value());
     return mInfo;
 }

@@ -31,6 +31,7 @@ FilterActionWithStringList::FilterActionWithStringList(const QString &name, cons
 QWidget *FilterActionWithStringList::createParamWidget(QWidget *parent) const
 {
     PimCommon::MinimumComboBox *comboBox = new PimCommon::MinimumComboBox(parent);
+    comboBox->setObjectName(QLatin1String("combobox"));
     comboBox->setEditable(false);
     comboBox->addItems(mParameterList);
     setParamWidgetValue(comboBox);

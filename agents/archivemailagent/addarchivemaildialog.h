@@ -30,6 +30,7 @@ class QSpinBox;
 class QPushButton;
 
 class FormatComboBox;
+class UnitComboBox;
 namespace MailCommon {
 class FolderRequester;
 }
@@ -67,7 +68,7 @@ private:
     void load(ArchiveMailInfo *info);
     MailCommon::FolderRequester *mFolderRequester;
     FormatComboBox *mFormatComboBox;
-    KComboBox *mUnits;
+    UnitComboBox *mUnits;
     QCheckBox *mRecursiveCheckBox;
     KUrlRequester *mPath;
     QSpinBox *mDays;

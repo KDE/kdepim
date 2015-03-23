@@ -18,6 +18,7 @@
 #include "filteractionsetstatustest.h"
 #include "../filteractions/filteractionsetstatus.h"
 #include <qtest.h>
+#include <QWidget>
 
 FilterActionSetStatusTest::FilterActionSetStatusTest(QObject *parent)
     : QObject(parent)
@@ -28,6 +29,19 @@ FilterActionSetStatusTest::FilterActionSetStatusTest(QObject *parent)
 FilterActionSetStatusTest::~FilterActionSetStatusTest()
 {
 
+}
+
+void FilterActionSetStatusTest::shouldHaveDefaultValue()
+{
+    MailCommon::FilterActionSetStatus filter;
+    QWidget *w = filter.createParamWidget(0);
+    QCOMPARE(w->objectName(), QLatin1String("combobox"));
+}
+
+void FilterActionSetStatusTest::shouldHaveSieveRequires()
+{
+    MailCommon::FilterActionSetStatus filter;
+    QCOMPARE(filter.sieveRequires(), QStringList() << QLatin1String("imap4flags"));
 }
 
 QTEST_MAIN(FilterActionSetStatusTest)
