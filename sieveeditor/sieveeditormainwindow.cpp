@@ -286,12 +286,12 @@ void SieveEditorMainWindow::slotUpdateActions()
     mSaveAsAction->setEnabled(hasPage);
     mImportAction->setEnabled(hasPage);
     mShareAction->setEnabled(hasPage && !mNetworkIsDown);
-    mSpellCheckAction->setEnabled(hasPage);
+    mSpellCheckAction->setEnabled(editActionEnabled);
     mCheckSyntaxAction->setEnabled(hasPage && !mNetworkIsDown);
     mAutoGenerateScriptAction->setEnabled(hasPage);
-    mCommentAction->setEnabled(hasPage);
-    mUncommentAction->setEnabled(hasPage);
-    mMenuChangeCaseAction->setEnabled(hasPage);
+    mCommentAction->setEnabled(editActionEnabled);
+    mUncommentAction->setEnabled(editActionEnabled);
+    mMenuChangeCaseAction->setEnabled(editActionEnabled);
 }
 
 void SieveEditorMainWindow::slotUndoAvailable(bool b)
