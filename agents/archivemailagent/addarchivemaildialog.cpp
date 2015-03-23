@@ -54,6 +54,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info,QWidget *parent
     QLabel *folderLabel = new QLabel( i18n( "&Folder:" ), mainWidget );
     mainLayout->addWidget( folderLabel, row, 0 );
     mFolderRequester = new MailCommon::FolderRequester( mainWidget );
+    mFolderRequester->setObjectName(QLatin1String("folder_requester"));
     mFolderRequester->setMustBeReadWrite( false );
     mFolderRequester->setNotAllowToCreateNewFolder( true );
     connect( mFolderRequester, SIGNAL(folderChanged(Akonadi::Collection)), SLOT(slotFolderChanged(Akonadi::Collection)) );
@@ -64,8 +65,10 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info,QWidget *parent
     ++row;
 
     QLabel *formatLabel = new QLabel( i18n( "F&ormat:" ), mainWidget );
+    formatLabel->setObjectName(QLatin1String("label_format"));
     mainLayout->addWidget( formatLabel, row, 0 );
     mFormatComboBox = new FormatComboBox( mainWidget );
+    mFormatComboBox->setObjectName(QLatin1String("format_combobox"));
     formatLabel->setBuddy( mFormatComboBox );
 
 
@@ -74,11 +77,13 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info,QWidget *parent
 
 
     mRecursiveCheckBox = new QCheckBox( i18n( "Archive all subfolders" ), mainWidget );
+    mRecursiveCheckBox->setObjectName(QLatin1String("recursive_checkbox"));
     mainLayout->addWidget( mRecursiveCheckBox, row, 0, 1, 2, Qt::AlignLeft );
     mRecursiveCheckBox->setChecked( true );
     ++row;
 
     QLabel *pathLabel = new QLabel( i18n( "Path:" ), mainWidget );
+    pathLabel->setObjectName(QLatin1String("path_label"));
     mainLayout->addWidget( pathLabel, row, 0 );
     mPath = new KUrlRequester(mainWidget);
     connect(mPath, SIGNAL(textChanged(QString)), this, SLOT(slotUpdateOkButton()));
@@ -87,6 +92,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info,QWidget *parent
     ++row;
 
     QLabel *dateLabel = new QLabel( i18n( "Backup each:" ), mainWidget );
+    dateLabel->setObjectName(QLatin1String("date_label"));
     mainLayout->addWidget( dateLabel, row, 0 );
 
     QHBoxLayout * hlayout = new QHBoxLayout;
