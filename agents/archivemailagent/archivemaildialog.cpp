@@ -33,8 +33,9 @@
 
 #include <QHBoxLayout>
 
-
-static QString archiveMailCollectionPattern = QLatin1String( "ArchiveMailCollection \\d+" );
+namespace {
+inline QString archiveMailCollectionPattern() { return  QLatin1String( "ArchiveMailCollection \\d+" ); }
+}
 
 ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
     : KDialog(parent)
@@ -225,7 +226,7 @@ void ArchiveMailWidget::needReloadConfig()
 void ArchiveMailWidget::load()
 {
     KSharedConfig::Ptr config = KGlobal::config();
-    const QStringList collectionList = config->groupList().filter( QRegExp( archiveMailCollectionPattern ) );
+    const QStringList collectionList = config->groupList().filter( QRegExp( archiveMailCollectionPattern() ) );
     const int numberOfCollection = collectionList.count();
     for (int i = 0 ; i < numberOfCollection; ++i) {
         KConfigGroup group = config->group(collectionList.at(i));
@@ -277,7 +278,7 @@ void ArchiveMailWidget::save()
     KSharedConfig::Ptr config = KGlobal::config();
 
     // first, delete all filter groups:
-    const QStringList filterGroups =config->groupList().filter( QRegExp( archiveMailCollectionPattern ) );
+    const QStringList filterGroups =config->groupList().filter( QRegExp( archiveMailCollectionPattern() ) );
 
     foreach ( const QString &group, filterGroups ) {
         config->deleteGroup( group );
