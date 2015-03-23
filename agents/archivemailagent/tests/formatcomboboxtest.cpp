@@ -17,7 +17,7 @@
 
 
 #include "formatcomboboxtest.h"
-#include "../formatcombobox.h"
+#include "../widgets/formatcombobox.h"
 #include <qtest_kde.h>
 
 FormatComboBoxTest::FormatComboBoxTest(QObject *parent)
