@@ -83,7 +83,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info, QWidget *paren
     mFormatComboBox = new FormatComboBox(mainWidget);
     formatLabel->setBuddy(mFormatComboBox);
 
-    mFormatComboBox = new FormatComboBox( mainWidget );
+    mFormatComboBox = new FormatComboBox(mainWidget);
     mainLayout->addWidget(mFormatComboBox, row, 1);
     ++row;
 
@@ -102,9 +102,9 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info, QWidget *paren
     mainLayout->addWidget(mPath);
     ++row;
 
-    QLabel *dateLabel = new QLabel( i18n( "Backup each:" ), mainWidget );
+    QLabel *dateLabel = new QLabel(i18n("Backup each:"), mainWidget);
     dateLabel->setObjectName(QLatin1String("date_label"));
-    mainLayout->addWidget( dateLabel, row, 0 );
+    mainLayout->addWidget(dateLabel, row, 0);
 
     QHBoxLayout *hlayout = new QHBoxLayout;
     mDays = new QSpinBox(mainWidget);

@@ -27,7 +27,8 @@ class QAction;
 class SieveEditorCentralWidget;
 class QLabel;
 class QNetworkConfigurationManager;
-namespace PimCommon {
+namespace PimCommon
+{
 class KActionMenuChangeCase;
 }
 

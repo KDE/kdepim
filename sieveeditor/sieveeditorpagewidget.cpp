@@ -98,7 +98,7 @@ QUrl SieveEditorPageWidget::currentUrl() const
 void SieveEditorPageWidget::slotGetResult(KManageSieve::SieveJob *, bool success, const QString &script, bool isActive)
 {
     mSieveEditorWidget->setReadOnly(false);
-    if ( !success ) {
+    if (!success) {
         return;
     }
     mSieveEditorWidget->setScriptName(mCurrentURL.fileName());

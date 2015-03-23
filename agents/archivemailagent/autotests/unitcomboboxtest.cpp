@@ -49,12 +49,11 @@ void UnitComboBoxTest::changeCurrentItem_data()
 
 void UnitComboBoxTest::changeCurrentItem()
 {
-    QFETCH( int, input );
-    QFETCH( int, output );
+    QFETCH(int, input);
+    QFETCH(int, output);
     UnitComboBox combo;
     combo.setUnit(static_cast<ArchiveMailInfo::ArchiveUnit>(input));
     QCOMPARE(combo.unit(), static_cast<ArchiveMailInfo::ArchiveUnit>(output));
 }
-
 
 QTEST_KDEMAIN(UnitComboBoxTest, GUI)

@@ -20,4 +20,3 @@
 #include "mailfilteragent_debug.h"
 Q_LOGGING_CATEGORY(MAILFILTERAGENT_LOG, "log_mailfilteragent")
 
-

@@ -32,10 +32,10 @@ UnitComboBox::~UnitComboBox()
 
 }
 
-void UnitComboBox::setUnit( ArchiveMailInfo::ArchiveUnit unit )
+void UnitComboBox::setUnit(ArchiveMailInfo::ArchiveUnit unit)
 {
     const int index = findData((int)unit);
-    if(index != -1) {
+    if (index != -1) {
         setCurrentIndex(index);
     } else {
         setCurrentIndex(0);

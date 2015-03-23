@@ -20,4 +20,3 @@
 #include "notesagent_debug.h"
 Q_LOGGING_CATEGORY(NOTESAGENT_LOG, "log_notesagentagent")
 
-

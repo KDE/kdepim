@@ -31,7 +31,8 @@ class QPushButton;
 
 class FormatComboBox;
 class UnitComboBox;
-namespace MailCommon {
+namespace MailCommon
+{
 class FolderRequester;
 }
 

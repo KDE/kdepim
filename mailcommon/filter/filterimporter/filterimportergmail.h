@@ -23,7 +23,6 @@ class QFile;
 namespace MailCommon
 {
 
-
 class MAILCOMMON_EXPORT FilterImporterGmail : public FilterImporterAbstract
 {
 public:

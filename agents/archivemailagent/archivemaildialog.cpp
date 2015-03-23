@@ -37,8 +37,12 @@
 #include <QPushButton>
 #include <QLocale>
 
-namespace {
-inline QString archiveMailCollectionPattern() { return  QStringLiteral( "ArchiveMailCollection \\d+" ); }
+namespace
+{
+inline QString archiveMailCollectionPattern()
+{
+    return  QStringLiteral("ArchiveMailCollection \\d+");
+}
 }
 
 ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
@@ -234,7 +238,7 @@ void ArchiveMailWidget::needReloadConfig()
 void ArchiveMailWidget::load()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
-    const QStringList collectionList = config->groupList().filter( QRegExp( archiveMailCollectionPattern() ) );
+    const QStringList collectionList = config->groupList().filter(QRegExp(archiveMailCollectionPattern()));
     const int numberOfCollection = collectionList.count();
     for (int i = 0 ; i < numberOfCollection; ++i) {
         KConfigGroup group = config->group(collectionList.at(i));
@@ -288,7 +292,7 @@ void ArchiveMailWidget::save()
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
     // first, delete all filter groups:
-    const QStringList filterGroups =config->groupList().filter( QRegExp( archiveMailCollectionPattern() ) );
+    const QStringList filterGroups = config->groupList().filter(QRegExp(archiveMailCollectionPattern()));
 
     foreach (const QString &group, filterGroups) {
         config->deleteGroup(group);

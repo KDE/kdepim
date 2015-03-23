@@ -107,19 +107,19 @@ QWidget *FilterActionRewriteHeader::createParamWidget(QWidget *parent) const
     comp->insertItems(mParameterList);
     comp->setCompletionMode(KCompletion::CompletionPopupAuto);
 
-    QLabel *label = new QLabel( i18n( "Replace:" ), widget );
+    QLabel *label = new QLabel(i18n("Replace:"), widget);
     label->setObjectName(QLatin1String("label_replace"));
-    label->setFixedWidth( label->sizeHint().width() );
-    layout->addWidget( label, 0 );
+    label->setFixedWidth(label->sizeHint().width());
+    layout->addWidget(label, 0);
 
     RegExpLineEdit *regExpLineEdit = new RegExpLineEdit(widget);
     regExpLineEdit->setObjectName(QLatin1String("search"));
     layout->addWidget(regExpLineEdit, 1);
 
-    label = new QLabel( i18n( "With:" ), widget );
-    label->setFixedWidth( label->sizeHint().width() );
+    label = new QLabel(i18n("With:"), widget);
+    label->setFixedWidth(label->sizeHint().width());
     label->setObjectName(QLatin1String("label_with"));
-    layout->addWidget( label, 0 );
+    layout->addWidget(label, 0);
 
     KLineEdit *lineEdit = new KLineEdit(widget);
     lineEdit->setObjectName(QLatin1String("replace"));

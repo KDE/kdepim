@@ -427,16 +427,15 @@ void SieveEditorMainWidget::slotSentenceCase()
 void SieveEditorMainWidget::slotLowerCase()
 {
     QWidget *w = mTabWidget->currentWidget();
-     if (w) {
-         SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
-         if (page) {
-             page->lowerCase();
-         }
-     }
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            page->lowerCase();
+        }
+    }
 }
 
-
-void SieveEditorMainWidget::slotScriptModified(bool modified,SieveEditorPageWidget *page)
+void SieveEditorMainWidget::slotScriptModified(bool modified, SieveEditorPageWidget *page)
 {
     const int index = mTabWidget->indexOf(page);
     if (index >= 0) {

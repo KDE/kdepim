@@ -61,7 +61,7 @@ void FilterActionAddHeaderTest::shouldAddValue_data()
 void FilterActionAddHeaderTest::shouldClearWidget()
 {
     MailCommon::FilterActionAddHeader filter;
-    QWidget* widget = filter.createParamWidget(0);
+    QWidget *widget = filter.createParamWidget(0);
     PimCommon::MinimumComboBox *comboBox = widget->findChild<PimCommon::MinimumComboBox *>(QLatin1String("combo"));
     KLineEdit *lineEdit = widget->findChild<KLineEdit *>(QLatin1String("ledit"));
     comboBox->lineEdit()->setText(QLatin1String("test"));

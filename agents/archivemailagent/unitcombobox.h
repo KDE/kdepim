@@ -25,7 +25,7 @@ class UnitComboBox : public QComboBox
 {
     Q_OBJECT
 public:
-    explicit UnitComboBox(QWidget *parent=0);
+    explicit UnitComboBox(QWidget *parent = 0);
     ~UnitComboBox();
     ArchiveMailInfo::ArchiveUnit unit() const;
     void setUnit(ArchiveMailInfo::ArchiveUnit unit);

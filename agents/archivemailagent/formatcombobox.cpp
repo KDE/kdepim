@@ -22,11 +22,11 @@ FormatComboBox::FormatComboBox(QWidget *parent)
     : QComboBox(parent)
 {
     // These combobox values have to stay in sync with the ArchiveType enum from BackupJob!
-    addItem( i18n( "Compressed Zip Archive (.zip)" ), (int)MailCommon::BackupJob::Zip );
-    addItem( i18n( "Uncompressed Archive (.tar)" ), (int)MailCommon::BackupJob::Tar );
-    addItem( i18n( "BZ2-Compressed Tar Archive (.tar.bz2)" ), (int)MailCommon::BackupJob::TarBz2 );
-    addItem( i18n( "GZ-Compressed Tar Archive (.tar.gz)" ), (int)MailCommon::BackupJob::TarGz );
-    setCurrentIndex( findData((int)MailCommon::BackupJob::TarBz2) );
+    addItem(i18n("Compressed Zip Archive (.zip)"), (int)MailCommon::BackupJob::Zip);
+    addItem(i18n("Uncompressed Archive (.tar)"), (int)MailCommon::BackupJob::Tar);
+    addItem(i18n("BZ2-Compressed Tar Archive (.tar.bz2)"), (int)MailCommon::BackupJob::TarBz2);
+    addItem(i18n("GZ-Compressed Tar Archive (.tar.gz)"), (int)MailCommon::BackupJob::TarGz);
+    setCurrentIndex(findData((int)MailCommon::BackupJob::TarBz2));
 }
 
 FormatComboBox::~FormatComboBox()
@@ -37,7 +37,7 @@ FormatComboBox::~FormatComboBox()
 void FormatComboBox::setFormat(MailCommon::BackupJob::ArchiveType type)
 {
     const int index = findData((int)type);
-    if(index != -1) {
+    if (index != -1) {
         setCurrentIndex(index);
     } else {
         setCurrentIndex(0);

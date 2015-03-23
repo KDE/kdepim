@@ -44,14 +44,14 @@ void FilterActionRewriteHeaderTest::shouldHaveDefaultValue()
     QLabel *label = w->findChild<QLabel *>(QLatin1String("label_replace"));
     QVERIFY(label);
 
-    MailCommon::RegExpLineEdit *regExpLineEdit = w->findChild<MailCommon::RegExpLineEdit *>(QLatin1String("search") );
+    MailCommon::RegExpLineEdit *regExpLineEdit = w->findChild<MailCommon::RegExpLineEdit *>(QLatin1String("search"));
     QVERIFY(regExpLineEdit);
     QVERIFY(regExpLineEdit->text().isEmpty());
 
     label = w->findChild<QLabel *>(QLatin1String("label_with"));
     QVERIFY(label);
 
-    KLineEdit *lineEdit = w->findChild<KLineEdit *>(QLatin1String("replace") );
+    KLineEdit *lineEdit = w->findChild<KLineEdit *>(QLatin1String("replace"));
     QVERIFY(lineEdit);
     QVERIFY(lineEdit->text().isEmpty());
 }

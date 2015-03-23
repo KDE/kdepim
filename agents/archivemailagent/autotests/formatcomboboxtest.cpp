@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "formatcomboboxtest.h"
 #include "../formatcombobox.h"
 #include <qtest.h>
@@ -37,7 +36,6 @@ void FormatComboBoxTest::shouldHaveDefaultValue()
     QCOMPARE(combo.count(), 4);
 }
 
-
 void FormatComboBoxTest::changeCurrentItem_data()
 {
     QTest::addColumn<int>("input");
@@ -51,12 +49,11 @@ void FormatComboBoxTest::changeCurrentItem_data()
 
 void FormatComboBoxTest::changeCurrentItem()
 {
-    QFETCH( int, input );
-    QFETCH( int, output );
+    QFETCH(int, input);
+    QFETCH(int, output);
     FormatComboBox combo;
     combo.setFormat(static_cast<MailCommon::BackupJob::ArchiveType>(input));
     QCOMPARE(combo.format(), static_cast<MailCommon::BackupJob::ArchiveType>(output));
 }
-
 
 QTEST_MAIN(FormatComboBoxTest)
