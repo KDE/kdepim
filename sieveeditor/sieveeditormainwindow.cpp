@@ -287,8 +287,8 @@ void SieveEditorMainWindow::slotUpdateActions()
     mImportAction->setEnabled(hasPage);
     mShareAction->setEnabled(hasPage && !mNetworkIsDown);
     mSpellCheckAction->setEnabled(editActionEnabled);
-    mCheckSyntaxAction->setEnabled(hasPage && !mNetworkIsDown);
-    mAutoGenerateScriptAction->setEnabled(hasPage);
+    mCheckSyntaxAction->setEnabled(editActionEnabled && !mNetworkIsDown);
+    mAutoGenerateScriptAction->setEnabled(editActionEnabled);
     mCommentAction->setEnabled(editActionEnabled);
     mUncommentAction->setEnabled(editActionEnabled);
     mMenuChangeCaseAction->setEnabled(editActionEnabled);
