@@ -29,7 +29,7 @@ if (RUNTIME_PLUGINS_STATIC)
   add_definitions(-DKCALCORE_SERIALIZER_PLUGIN_STATIC)
 endif ()
 
-file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/hi*-apps-tasks-mobile.png")
+file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/*-apps-tasks-mobile.png")
 ecm_add_app_icon(mobile_tasks_SRCS ICONS ${ICONS_SRCS})
 
 add_executable(tasks-mobile ${mobile_tasks_SRCS} )
@@ -59,4 +59,4 @@ install(FILES
   TaskListView.qml
   DESTINATION ${KDE_INSTALL_DATADIR}/tasks-mobile
 )
-ecm_install_icons(ICONS hi48-apps-tasks-mobile.png  hi64-apps-tasks-mobile.png  hi80-apps-tasks-mobile-harmattan.png DESTINATION ${KDE_INSTALL_ICONDIR} )
+ecm_install_icons(ICONS 48-apps-tasks-mobile.png  64-apps-tasks-mobile.png  80-apps-tasks-mobile-harmattan.png DESTINATION ${KDE_INSTALL_ICONDIR} THEME hicolor )

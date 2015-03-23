@@ -63,7 +63,7 @@ if (RUNTIME_PLUGINS_STATIC)
   add_definitions(-DMAIL_SERIALIZER_PLUGIN_STATIC)
 endif ()
 
-file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/hi*-apps-kaddressbook-mobile.png")
+file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/*-apps-kaddressbook-mobile.png")
 ecm_add_app_icon(kab_mobile_srcs ICONS ${ICONS_SRCS})
 
 add_executable(kaddressbook-mobile ${kab_mobile_srcs} )
@@ -98,4 +98,4 @@ install(FILES
   ContactListView.qml
   DESTINATION ${KDE_INSTALL_DATADIR}/kaddressbook-mobile
 )
-ecm_install_icons(ICONS  hi48-apps-kaddressbook-mobile.png  hi64-apps-kaddressbook-mobile.png  hi80-apps-kaddressbook-mobile-harmattan.png DESTINATION  ${KDE_INSTALL_ICONDIR} )
+ecm_install_icons(ICONS  48-apps-kaddressbook-mobile.png  64-apps-kaddressbook-mobile.png  80-apps-kaddressbook-mobile-harmattan.png DESTINATION  ${KDE_INSTALL_ICONDIR} THEME hicolor )

@@ -39,7 +39,7 @@ if (RUNTIME_PLUGINS_STATIC)
   add_definitions(-DMAIL_SERIALIZER_PLUGIN_STATIC)
 endif ()
 
-file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/hi*-apps-korganizer-mobile.png")
+file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/*-apps-korganizer-mobile.png")
 ecm_add_app_icon(korganizer_mobile_SRCS ICONS ${ICONS_SRCS})
 
 add_executable(korganizer-mobile ${korganizer_mobile_SRCS} )
@@ -78,5 +78,5 @@ install(FILES
   TimelineView.qml
   DESTINATION ${KDE_INSTALL_DATADIR}/korganizer-mobile
 )
-ecm_install_icons( ICONS hi48-apps-korganizer-mobile.png  hi64-apps-korganizer-mobile.png  hi80-apps-korganizer-mobile-harmattan.png DESTINATION ${KDE_INSTALL_ICONDIR} )
+ecm_install_icons( ICONS 48-apps-korganizer-mobile.png  64-apps-korganizer-mobile.png  80-apps-korganizer-mobile-harmattan.png DESTINATION ${KDE_INSTALL_ICONDIR} THEME hicolor )
 

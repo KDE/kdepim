@@ -70,7 +70,7 @@ if(RUNTIME_PLUGINS_STATIC)
   add_definitions(-DMAIL_SERIALIZER_PLUGIN_STATIC)
 endif()
 
-file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/hi*-apps-kmail-mobile.png")
+file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/*-apps-kmail-mobile.png")
 ecm_add_app_icon(kmail_mobile_srcs ICONS ${ICONS_SRCS})
 
 add_executable(kmail-mobile ${kmail_mobile_srcs})
@@ -138,5 +138,5 @@ install(FILES
 
 install(FILES kmail-mobile.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFY5RCDIR} )
 
-ecm_install_icons(ICONS hi48-apps-kmail-mobile.png  hi64-apps-kmail-mobile.png  hi80-apps-kmail-mobile-harmattan.png DESTINATION ${KDE_INSTALL_ICONDIR})
+ecm_install_icons(ICONS 48-apps-kmail-mobile.png  64-apps-kmail-mobile.png  80-apps-kmail-mobile-harmattan.png DESTINATION ${KDE_INSTALL_ICONDIR} THEME hicolor)
 
