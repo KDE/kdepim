@@ -15,21 +15,20 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FORMATCOMBOBOX_H
-#define FORMATCOMBOBOX_H
-#include "mailcommon/job/backupjob.h"
+#ifndef UNITCOMBOBOX_H
+#define UNITCOMBOBOX_H
 
-#include <KComboBox>
+#include <QComboBox>
+#include "archivemailinfo.h"
 
-class FormatComboBox : public QComboBox
+class UnitComboBox : public QComboBox
 {
     Q_OBJECT
 public:
-    explicit FormatComboBox(QWidget *parent = 0);
-    ~FormatComboBox();
-
-    MailCommon::BackupJob::ArchiveType format() const;
-    void setFormat(MailCommon::BackupJob::ArchiveType type);
+    explicit UnitComboBox(QWidget *parent=0);
+    ~UnitComboBox();
+    ArchiveMailInfo::ArchiveUnit unit() const;
+    void setUnit(ArchiveMailInfo::ArchiveUnit unit);
 };
 
-#endif // FORMATCOMBOBOX_H
+#endif // UNITCOMBOBOX_H

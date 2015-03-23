@@ -15,21 +15,25 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FORMATCOMBOBOX_H
-#define FORMATCOMBOBOX_H
-#include "mailcommon/job/backupjob.h"
+#include "unitcomboboxtest.h"
+#include "../unitcombobox.h"
+#include <qtest_kde.h>
 
-#include <KComboBox>
-
-class FormatComboBox : public QComboBox
+UnitComboBoxTest::UnitComboBoxTest(QObject *parent)
+    : QObject(parent)
 {
-    Q_OBJECT
-public:
-    explicit FormatComboBox(QWidget *parent = 0);
-    ~FormatComboBox();
 
-    MailCommon::BackupJob::ArchiveType format() const;
-    void setFormat(MailCommon::BackupJob::ArchiveType type);
-};
+}
 
-#endif // FORMATCOMBOBOX_H
+UnitComboBoxTest::~UnitComboBoxTest()
+{
+
+}
+
+void UnitComboBoxTest::shouldHaveDefaultValue()
+{
+    UnitComboBox combo;
+    QCOMPARE(combo.count(), 4);
+}
+
+QTEST_KDEMAIN(UnitComboBoxTest, GUI)
