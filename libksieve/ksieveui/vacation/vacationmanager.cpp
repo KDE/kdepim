@@ -30,38 +30,52 @@ using namespace KSieveUi;
 VacationManager::VacationManager(QWidget *parent)
     : QObject(parent),
       mWidget(parent)
+    , mMultiImapVacationDialog(0)
+    , mQuestionAsked(false)
 {
+    mCheckVacation = new KSieveUi::MultiImapVacationManager( this );
+    connect( mCheckVacation, SIGNAL(scriptActive(bool,QString)), SIGNAL(updateVacationScriptStatus(bool,QString)) );
+    connect( mCheckVacation, SIGNAL(scriptActive(bool,QString)), SLOT(slotUpdateVacationScriptStatus(bool,QString)) );
 }
 
 VacationManager::~VacationManager()
 {
+    delete mCheckVacation;
 }
 
 void VacationManager::checkVacation()
 {
-    delete mCheckVacation;
-
-    mCheckVacation = new KSieveUi::MultiImapVacationManager( this );
-    connect( mCheckVacation, SIGNAL(scriptActive(bool,QString)), SIGNAL(updateVacationScriptStatus(bool,QString)) );
-    connect( mCheckVacation, SIGNAL(requestEditVacation()), SIGNAL(editVacation()) );
     mCheckVacation->checkVacation();
 }
+
+void VacationManager::slotUpdateVacationScriptStatus(bool active, const QString &serverName)
+{
+    if (active) {
+        if (!mQuestionAsked) {
+            mQuestionAsked = true;
+            if ( KMessageBox::questionYesNo( 0, i18n( "There is still an active out-of-office reply configured.\n"
+                                                      "Do you want to edit it?"), i18n("Out-of-office reply still active"),
+                                             KGuiItem( i18n( "Edit"), QLatin1String("document-properties") ),
+                                             KGuiItem( i18n("Ignore"), QLatin1String("dialog-cancel") ) )
+                 == KMessageBox::Yes ) {
+                slotEditVacation(serverName);
+            }
+        }
+    }
+}
+
 
 void VacationManager::slotEditVacation(const QString &serverName)
 {
     if ( mMultiImapVacationDialog ) {
-        mMultiImapVacationDialog->show();
         mMultiImapVacationDialog->raise();
         mMultiImapVacationDialog->activateWindow();
-        if (!serverName.isEmpty()) {
-            mMultiImapVacationDialog->switchToServerNamePage(serverName);
-        }
-        return;
+    } else {
+        mMultiImapVacationDialog = new KSieveUi::MultiImapVacationDialog(mCheckVacation, mWidget);
+        connect( mMultiImapVacationDialog, SIGNAL(okClicked()), SLOT(slotDialogOk()) );
+        connect( mMultiImapVacationDialog, SIGNAL(cancelClicked()), SLOT(slotDialogCanceled()) );
     }
 
-    mMultiImapVacationDialog = new KSieveUi::MultiImapVacationDialog(mWidget);
-    connect( mMultiImapVacationDialog, SIGNAL(okClicked()), SLOT(slotDialogOk()) );
-    connect( mMultiImapVacationDialog, SIGNAL(cancelClicked()), SLOT(slotDialogCanceled()) );
     mMultiImapVacationDialog->show();
     if (!serverName.isEmpty()) {
         mMultiImapVacationDialog->switchToServerNamePage(serverName);

@@ -49,7 +49,7 @@ void GenerateGlobalScriptJob::start()
         Q_EMIT error(i18n("Path is not specified."));
         return;
     }
-    writeMasterScript();
+    writeUserScript();
 }
 
 void GenerateGlobalScriptJob::writeMasterScript()
@@ -107,7 +107,7 @@ void GenerateGlobalScriptJob::writeUserScript()
                                        "require [\"include\"];\n");
 
     Q_FOREACH (const QString &activeScript, mListUserActiveScripts) {
-        userScript += QString::fromLatin1("\ninclude :personal \"%1\"").arg(activeScript);
+        userScript += QString::fromLatin1("\ninclude :personal \"%1\";").arg(activeScript);
     }
 
     KUrl url(mCurrentUrl);

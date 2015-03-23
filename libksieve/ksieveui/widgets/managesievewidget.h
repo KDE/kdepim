@@ -35,6 +35,7 @@ class SieveJob;
 
 namespace KSieveUi {
 class ManageSieveTreeView;
+class ParseUserScriptJob;
 class KSIEVEUI_EXPORT ManageSieveWidget : public QWidget
 {
     Q_OBJECT
@@ -65,6 +66,7 @@ private Q_SLOTS:
     void slotDoubleClicked(QTreeWidgetItem *item);    
     void slotSystemNetworkStatusChanged(Solid::Networking::Status status);
     void slotCheckNetworkStatus();
+    void setActiveScripts(ParseUserScriptJob *job);
 
 public Q_SLOTS:
     void slotGotList(KManageSieve::SieveJob *job, bool success, const QStringList &listScript, const QString &activeScript);
@@ -91,8 +93,6 @@ private:
     bool isFileNameItem(QTreeWidgetItem *item) const;
     bool itemIsActived(QTreeWidgetItem *item) const;
     void changeActiveScript(QTreeWidgetItem *item, bool activate);
-    bool isProtectedName(const QString &name);
-
 
     // Maps top-level items to their child which has the radio button selection
     QMap<QTreeWidgetItem*,QTreeWidgetItem*> mSelectedItems;

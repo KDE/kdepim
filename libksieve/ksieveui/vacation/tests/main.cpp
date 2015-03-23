@@ -20,6 +20,7 @@
 #include <KCmdLineArgs>
 
 #include "vacation/multiimapvacationdialog.h"
+#include <vacation/multiimapvacationmanager.h>
 
 #include <QDebug>
 
@@ -30,7 +31,8 @@ int main( int argc, char** argv )
     KApplication app;
     app.setQuitOnLastWindowClosed( false );
 
-    KSieveUi::MultiImapVacationDialog dlg;
+    KSieveUi::MultiImapVacationManager manager;
+    KSieveUi::MultiImapVacationDialog dlg(&manager);
 
     dlg.show();
     app.exec();

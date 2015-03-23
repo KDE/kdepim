@@ -18,6 +18,7 @@
 
 #include "multiimapvacationdialog.h"
 #include "vacationpagewidget.h"
+#include "multiimapvacationmanager.h"
 #include "ksieveui/util/util.h"
 
 #include <Akonadi/AgentInstance>
@@ -34,8 +35,9 @@
 
 
 using namespace KSieveUi;
-MultiImapVacationDialog::MultiImapVacationDialog(QWidget *parent)
+MultiImapVacationDialog::MultiImapVacationDialog(MultiImapVacationManager *manager, QWidget *parent)
     : KDialog(parent)
+    , mVacationManager(manager)
 {
     setCaption( i18n("Configure \"Out of Office\" Replies") );
 
@@ -87,17 +89,12 @@ QList<VacationCreateScriptJob *> MultiImapVacationDialog::listCreateJob() const
 void MultiImapVacationDialog::init()
 {
     bool foundOneImap = false;
-    const Akonadi::AgentInstance::List instances = KSieveUi::Util::imapAgentInstances();
-    foreach ( const Akonadi::AgentInstance &instance, instances ) {
-        if ( instance.status() == Akonadi::AgentInstance::Broken )
-            continue;
 
-        const KUrl url = KSieveUi::Util::findSieveUrlForAccount( instance.identifier() );
-        if ( !url.isEmpty() ) {
-            const QString serverName = instance.name();
-            createPage(serverName, url);
-            foundOneImap = true;
-        }
+    QMap <QString, KUrl> list = mVacationManager->serverList();
+    foreach (const QString &serverName, list.keys()) {
+        const KUrl url = list.value(serverName);
+        createPage(serverName, url);
+        foundOneImap = true;
     }
     if (foundOneImap) {
         setButtons( Ok | Cancel | Default );
@@ -115,6 +112,7 @@ void MultiImapVacationDialog::createPage(const QString &serverName, const KUrl &
     VacationPageWidget *page = new VacationPageWidget;
     page->setServerUrl(url);
     page->setServerName(serverName);
+    page->setVacationManager(mVacationManager);
     mTabWidget->addTab(page,serverName);
 }
 

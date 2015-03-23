@@ -166,3 +166,45 @@ bool KSieveUi::Util::allowOutOfOfficeSettings()
 {
     return VacationSettings::self()->allowOutOfOfficeSettings();
 }
+
+bool Util::hasKep14Support(const QStringList &sieveCapabilities, const QStringList &availableScripts, const QString &activeScript)
+{
+    const bool hasIncludeCapability = sieveCapabilities.contains(QLatin1String("include"));
+    if (!hasIncludeCapability) {
+        return false;
+    }
+
+    bool masterIsActive = !activeScript.isEmpty();
+    if (masterIsActive) {
+        const QString scriptName = activeScript.split(QLatin1Char('.')).first().toLower();
+        masterIsActive = (scriptName == QLatin1String("master") || scriptName == QLatin1String("user"));
+    }
+    if (!masterIsActive) {
+        return false;
+    }
+
+    bool hasUserScript = false;
+    foreach(const QString &script, availableScripts) {
+        if (script.isEmpty()) {
+            continue;
+        }
+        const QString name = script.split(QLatin1Char('.')).first().toLower();
+        if (name == QLatin1String("user")) {
+            hasUserScript = true;
+            break;
+        }
+    }
+
+    return hasIncludeCapability && masterIsActive && hasUserScript;
+}
+
+bool Util::isKep14ProtectedName(const QString &name)
+{
+    QString n = name.split(QLatin1Char('.')).first().toLower();
+    if (n == QLatin1String("master") ||
+            n == QLatin1String("user") ||
+            n == QLatin1String("management")) {
+        return true;
+    }
+    return false;
+}

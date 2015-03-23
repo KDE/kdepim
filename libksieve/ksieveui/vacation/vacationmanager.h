@@ -41,17 +41,19 @@ public Q_SLOTS:
     void slotEditVacation(const QString &serverName);
 
 Q_SIGNALS:
-    void updateVacationScriptStatus(bool, const QString&);
+    void updateVacationScriptStatus(bool active, const QString &serverName);
     void editVacation();
 
 private slots:
     void slotDialogCanceled();
     void slotDialogOk();
+    void slotUpdateVacationScriptStatus(bool active, const QString &serverName);
 
 private:
     QPointer<KSieveUi::MultiImapVacationDialog> mMultiImapVacationDialog;
     QPointer<KSieveUi::MultiImapVacationManager> mCheckVacation;
     QWidget *mWidget;
+    bool mQuestionAsked;
 };
 }
 

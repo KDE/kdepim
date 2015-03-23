@@ -21,6 +21,9 @@
 
 
 #include <kmanagesieve/sievejob.h>
+#include <managescriptsjob/parseuserscriptjob.h>
+#include <managescriptsjob/generateglobalscriptjob.h>
+#include <util/util.h>
 
 #include <KInputDialog>
 #include <KStandardGuiItem>
@@ -31,8 +34,11 @@
 #include <QMenu>
 #include <QTimer>
 #include <QDebug>
+#include <qmetatype.h>
 
 using namespace KSieveUi;
+Q_DECLARE_METATYPE(QTreeWidgetItem*)
+
 ManageSieveWidget::ManageSieveWidget(QWidget *parent)
     : QWidget(parent),
       mClearAll( false ),
@@ -174,7 +180,7 @@ void ManageSieveWidget::slotNewScript()
     if ( !ok || name.isEmpty() )
         return;
 
-    if (isProtectedName(name.toLower())) {
+    if (Util::isKep14ProtectedName(name)) {
         KMessageBox::error(this, i18n("You cannot use protected name."), i18n("New Script"));
         return;
     }
@@ -245,11 +251,27 @@ void ManageSieveWidget::changeActiveScript( QTreeWidgetItem *item, bool activate
     KUrl u = mUrls[item];
     if ( u.isEmpty() )
         return;
+
+    if (item->data(0, SIEVE_SERVER_MODE).toInt() == Kep14EditorMode) {
+        QStringList activeScripts;
+        for(int i=0; i < item->childCount(); i++) {
+            QTreeWidgetItem *j = item->child(i);
+            if (itemIsActived(j)) {
+                activeScripts << j->text(0);
+            }
+        }
+        GenerateGlobalScriptJob *job = new GenerateGlobalScriptJob(u);
+        job->addUserActiveScripts(activeScripts);
+        connect( job, SIGNAL(success()), SLOT(slotRefresh()));
+        connect( job, SIGNAL(error(QString)), SLOT(slotRefresh()));
+        job->start();
+        return;
+    }
+
     QTreeWidgetItem* selected = mSelectedItems[item];
     if ( !selected )
         return;
     u.setFileName( selected->text(0) );
-
     KManageSieve::SieveJob * job;
     if ( activate )
         job = KManageSieve::SieveJob::activate( u );
@@ -311,16 +333,6 @@ void ManageSieveWidget::slotDeleteScript()
     Q_EMIT scriptDeleted(u);
 }
 
-bool ManageSieveWidget::isProtectedName(const QString &name)
-{
-    if (name == QLatin1String("master") ||
-            name == QLatin1String("user") ||
-            name == QLatin1String("management")) {
-        return true;
-    }
-    return false;
-}
-
 void ManageSieveWidget::slotRefresh()
 {
     mBlockSignal = true;
@@ -342,9 +354,7 @@ void ManageSieveWidget::slotGotList(KManageSieve::SieveJob *job, bool success, c
     qDebug()<<"void ManageSieveWidget::slotGotList(KManageSieve::SieveJob *job, bool success, const QStringList &listScript, const QString &activeScript) success: "<<success<<" listScript"<<listScript;
     if (mClearAll)
         return;
-    qDebug()<<" After mClear All";
     QTreeWidgetItem * parent = mJobs[job];
-    qDebug()<<" parent "<<parent;
     if ( !parent )
         return;
     (static_cast<SieveTreeWidgetItem*>(parent))->stopAnimation();
@@ -364,8 +374,7 @@ void ManageSieveWidget::slotGotList(KManageSieve::SieveJob *job, bool success, c
     mBlockSignal = true; // don't trigger slotItemChanged
     Q_FOREACH (const QString &script, listScript) {
         //Hide protected name.
-        const QString lowerScript(script.toLower());
-        if (isProtectedName(lowerScript))
+        if (Util::isKep14ProtectedName(script))
             continue;
         QTreeWidgetItem* item = new QTreeWidgetItem( parent );
         item->setFlags(item->flags() & (Qt::ItemIsUserCheckable|Qt::ItemIsEnabled|Qt::ItemIsSelectable));
@@ -379,19 +388,59 @@ void ManageSieveWidget::slotGotList(KManageSieve::SieveJob *job, bool success, c
     }
     mBlockSignal = false;
 
-    qDebug()<<" LOAD";
-    const bool hasIncludeCapability = job->sieveCapabilities().contains(QLatin1String("include"));
-    const bool hasUserActiveScript = (activeScript.toLower() == QLatin1String("USER"));
-    QStringList mUserActiveScriptList;
-    if (hasUserActiveScript && hasIncludeCapability) {
-        //TODO parse file.
+    const bool hasKep14EditorMode = Util::hasKep14Support(job->sieveCapabilities(), listScript, activeScript);
+    if (hasKep14EditorMode) {
+        KUrl u = mUrls[parent];
+        u.setFileName(QLatin1String("USER"));
+        ParseUserScriptJob *parseJob = new ParseUserScriptJob(u);
+        parseJob->setProperty(QLatin1String("parentItem").latin1(), QVariant::fromValue<QTreeWidgetItem*>(parent));
+        connect(parseJob, SIGNAL(finished(ParseUserScriptJob*)), SLOT(setActiveScripts(ParseUserScriptJob*)));
+        parseJob->start();
+        (static_cast<SieveTreeWidgetItem*>(parent))->startAnimation();
     }
 
     parent->setData( 0, SIEVE_SERVER_CAPABILITIES, job->sieveCapabilities() );
     parent->setData( 0, SIEVE_SERVER_ERROR, false );
-    parent->setData( 0, SIEVE_SERVER_MODE, hasIncludeCapability ? Kep14EditorMode : NormalEditorMode);
+    parent->setData( 0, SIEVE_SERVER_MODE, hasKep14EditorMode ? Kep14EditorMode : NormalEditorMode);
     mTreeView->expandItem( parent );
 }
+
+void ManageSieveWidget::setActiveScripts(ParseUserScriptJob *job)
+{
+    QTreeWidgetItem * parent = job->property(QLatin1String("parentItem").latin1()).value<QTreeWidgetItem*>();
+    if ( !parent ) {
+        return;
+    }
+    (static_cast<SieveTreeWidgetItem*>(parent))->stopAnimation();
+
+    if (!job->error().isEmpty()) {
+        qWarning() << job->error();
+        return;
+    }
+
+    mBlockSignal = true; // don't trigger slotItemChanged
+    const QStringList activeScriptList = job->activeScriptList();
+    QStringList scriptOrder = activeScriptList;
+    QMap<QString, QTreeWidgetItem*> scriptMap;
+
+    const int children = parent->childCount();
+    for(int i=0; i < children; i++) {
+        QTreeWidgetItem *item = parent->takeChild(0);
+        scriptMap.insert(item->text(0), item);
+        const bool isActive = activeScriptList.contains(item->text(0));
+        item->setCheckState(0, isActive ? Qt::Checked : Qt::Unchecked);
+        if (!isActive) {
+            scriptOrder <<  item->text(0);
+        }
+    }
+
+    foreach(const QString &scriptName, scriptOrder) {
+        parent->addChild(scriptMap[scriptName]);
+    }
+
+    mBlockSignal = false;
+}
+
 
 void ManageSieveWidget::slotDoubleClicked( QTreeWidgetItem * item )
 {

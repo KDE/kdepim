@@ -16,19 +16,24 @@
 */
 
 #include "vacationcheckjob.h"
+#include "vacationutils.h"
+#include <managescriptsjob/parseuserscriptjob.h>
+#include <util/util.h>
 
 #include <kmanagesieve/sievejob.h>
+
+#include <KDebug>
 
 using namespace KSieveUi;
 VacationCheckJob::VacationCheckJob(const KUrl &url, const QString &serverName, QObject *parent)
     : QObject(parent),
       mServerName(serverName),
       mUrl(url)
+    , mKep14Support(false)
+    , mSieveJob(0)
+    , mParseJob(0)
+    , mNoScriptFound(0)
 {
-    mSieveJob = KManageSieve::SieveJob::get( mUrl );
-    mSieveJob->setInteractive( false );
-    connect( mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob*,bool,QString,bool)),
-             SLOT(slotGetResult(KManageSieve::SieveJob*,bool,QString,bool)) );
 }
 
 VacationCheckJob::~VacationCheckJob()
@@ -38,10 +43,154 @@ VacationCheckJob::~VacationCheckJob()
     mSieveJob = 0;
 }
 
-void VacationCheckJob::slotGetResult(KManageSieve::SieveJob */*job*/, bool success, const QString &/*script*/, bool active)
+void VacationCheckJob::setKep14Support(bool kep14Support)
+{
+  mKep14Support = kep14Support;
+}
+
+void VacationCheckJob::start()
+{
+    if (mKep14Support) {
+        KUrl url = mUrl;
+        url.setFileName(QLatin1String("USER"));
+        mParseJob = new ParseUserScriptJob(url);
+        connect(mParseJob, SIGNAL(finished(ParseUserScriptJob*)), SLOT(slotGotActiveScripts(ParseUserScriptJob*)));
+        mParseJob->start();
+        mSieveJob = KManageSieve::SieveJob::list(url);
+        connect(mSieveJob, SIGNAL(gotList(KManageSieve::SieveJob*,bool,QStringList,QString)),
+         this, SLOT(slotGotList(KManageSieve::SieveJob*,bool,QStringList,QString)));
+    } else {
+        mSieveJob = KManageSieve::SieveJob::get(mUrl);
+        mSieveJob->setInteractive(false);
+        connect(mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob*,bool,QString,bool)),
+                 SLOT(slotGetResult(KManageSieve::SieveJob*,bool,QString,bool)));
+    }
+}
+
+void VacationCheckJob::slotGetResult(KManageSieve::SieveJob */*job*/, bool success, const QString &script, bool active)
+{
+    mScript = script;
+    mSieveCapabilities = mSieveJob->sieveCapabilities();
+    mSieveJob = 0;
+
+    if (mKep14Support) {
+        if (isVacationScipt(script)) {
+            const QString &scriptName = mAvailableScripts[mScriptPos-1];
+            emit scriptActive(this, scriptName, mActiveScripts.contains(scriptName));
+            kDebug() << "vacation script found :)";
+        } else if (isLastScript()) {
+            mNoScriptFound = true;
+            emit scriptActive(this, QString(), false);
+            kDebug() << "no vacation script found :(";
+        } else {
+            getNextScript();
+        }
+    } else {
+        if ( !success )
+            active = false; // default to inactive
+            mNoScriptFound = true;
+        emit scriptActive(this, mUrl.fileName(), active);
+    }
+}
+
+void VacationCheckJob::slotGotActiveScripts(ParseUserScriptJob *job)
+{
+    mParseJob = 0;
+    if (!job->error().isEmpty()) {
+        emitError(QLatin1String("ParseUserScriptJob failed:")+job->error());
+        return;
+    }
+    mActiveScripts = job->activeScriptList();
+
+    if (!mSieveJob) {
+        searchVacationScript();
+    }
+}
+
+void VacationCheckJob::slotGotList(KManageSieve::SieveJob *job, bool success, const QStringList &availableScripts, const QString &activeScript)
 {
     mSieveJob = 0;
-    if ( !success )
-        active = false; // default to inactive
-    emit scriptActive( active, mServerName );
+    if (!success) {
+        emitError(QLatin1String("SieveJob list failed."));
+        return;
+    }
+
+    mAvailableScripts = availableScripts;
+
+    if (!mParseJob) {
+        searchVacationScript();
+    }
 }
+
+void VacationCheckJob::emitError(const QString &errorMessage)
+{
+    qWarning() << errorMessage;
+    //TODO: emit error
+}
+
+void VacationCheckJob::searchVacationScript()
+{
+    QStringList scriptList = mActiveScripts;
+
+    // Reorder script list
+    foreach(const QString &script, mAvailableScripts) {
+        if (!scriptList.contains(script)) {
+            scriptList.append(script);
+        }
+    }
+
+    mAvailableScripts = scriptList;
+    mScriptPos = 0;
+    getNextScript();
+}
+
+void VacationCheckJob::getNextScript()
+{
+    if (isLastScript()) {
+        //TODO: no script found
+        mNoScriptFound = true;
+        emit scriptActive(this, QString(), false);
+        kDebug() << "no vacation script found :(";
+    }
+    KUrl url = mUrl;
+    url.setFileName(mAvailableScripts[mScriptPos]);
+    mScriptPos += 1;
+    if (Util::isKep14ProtectedName(url.fileName())) {
+        getNextScript();
+    }
+    mSieveJob = KManageSieve::SieveJob::get(url);
+    mSieveJob->setInteractive(false);
+    connect(mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob*,bool,QString,bool)),
+             SLOT(slotGetResult(KManageSieve::SieveJob*,bool,QString,bool)));
+}
+
+bool VacationCheckJob::isLastScript() const
+{
+    return mScriptPos >= mAvailableScripts.count();
+}
+
+bool VacationCheckJob::isVacationScipt(const QString &script) const
+{
+    return KSieveUi::VacationUtils::foundVacationScript(script);
+}
+
+bool VacationCheckJob::noScriptFound()
+{
+    return mNoScriptFound;
+}
+
+QString VacationCheckJob::serverName()
+{
+    return mServerName;
+}
+
+QString VacationCheckJob::script()
+{
+    return mScript;
+}
+
+QStringList VacationCheckJob::sieveCapabilities()
+{
+    return mSieveCapabilities;
+}
+

@@ -153,6 +153,7 @@ set(ksieveui_LIB_SRCS
   widgets/managesievewidget.cpp
   debug/sievedebugdialog.cpp
   util/util.cpp
+  managescriptsjob/checkkep14supportjob.cpp
   managescriptsjob/generateglobalscriptjob.cpp
   managescriptsjob/parseuserscriptjob.cpp
   templates/sievetemplatewidget.cpp

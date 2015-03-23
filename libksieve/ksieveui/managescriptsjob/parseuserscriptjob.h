@@ -19,6 +19,7 @@
 #define PARSEUSERSCRIPTJOB_H
 
 #include <QObject>
+#include <QStringList>
 #include <KUrl>
 #include "ksieveui_export.h"
 class QDomDocument;
@@ -32,27 +33,32 @@ class KSIEVEUI_EXPORT ParseUserScriptJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit ParseUserScriptJob(QObject *parent=0);
+    explicit ParseUserScriptJob(const KUrl &url,QObject *parent=0);
     ~ParseUserScriptJob();
 
     void start();
 
-    void scriptUrl(const KUrl &url);
-    static QStringList parsescript(const QString &script, bool &result);
+    KUrl scriptUrl() const;
 
+    QStringList activeScriptList() const;
+    QString error() const;
 
 private Q_SLOTS:
     void slotGetResult( KManageSieve::SieveJob *, bool, const QString &, bool );
 
 Q_SIGNALS:
-    void success(const QStringList &activeScriptList);
-    void error(const QString &msgError);
+    void finished(ParseUserScriptJob* job);
 
 private:
+    void emitSuccess(const QStringList &activeScriptList);
+    void emitError(const QString &msgError);
     static QString loadInclude(const QDomElement &element);
     static QStringList extractActiveScript(const QDomDocument &doc);
+    static QStringList parsescript(const QString &script, bool &result);
     KUrl mCurrentUrl;
     KManageSieve::SieveJob *mSieveJob;
+    QStringList mActiveScripts;
+    QString mError;
 };
 }
 

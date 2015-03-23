@@ -130,7 +130,7 @@ bool Parser::Impl::isArgumentToken() const {
     return isStringToken() ||
             token() == Lexer::Number ||
             token() == Lexer::Tag ||
-            ( token() == Lexer::Special && mTokenValue == "[" );
+            ( token() == Lexer::Special && mTokenValue == QLatin1String("[")) ;
 }
 
 bool Parser::Impl::obtainToken() {
@@ -251,7 +251,7 @@ bool Parser::Impl::parseCommand() {
         return false;
     }
 
-    if ( token() == Lexer::Special && tokenValue() == "(" ) { // test-list
+    if ( token() == Lexer::Special && tokenValue() == QLatin1String ("("))  { // test-list
         if ( !parseTestList() ) {
             assert( error() );
             return false;
@@ -280,9 +280,9 @@ bool Parser::Impl::parseCommand() {
         return false;
     }
 
-    if ( tokenValue() == ";" )
+    if ( tokenValue() == QLatin1String (";"))
         consumeToken();
-    else if ( tokenValue() == "{" ) { // block
+    else if ( tokenValue() == QLatin1String ("{"))  { // block
         if ( !parseBlock() )
             return false; // it's an error since we saw '{'
     } else {
@@ -334,7 +334,7 @@ bool Parser::Impl::parseArgument() {
             scriptBuilder()->stringArgument( tokenValue(), token() == Lexer::MultiLineString, QString() );
         consumeToken();
         return true;
-    } else if ( token() == Lexer::Special && tokenValue() == "[" ) {
+    } else if ( token() == Lexer::Special && tokenValue() == QLatin1String("["))  {
         if ( !parseStringList() ) {
             assert( error() );
             return false;
@@ -352,7 +352,7 @@ bool Parser::Impl::parseTestList() {
     if ( !obtainToken() || atEnd() )
         return false;
     
-    if ( token() != Lexer::Special || tokenValue() != "(" )
+    if ( token() != Lexer::Special || tokenValue() != QLatin1String("("))
         return false;
     if ( scriptBuilder() )
         scriptBuilder()->testListStart();
@@ -462,7 +462,7 @@ bool Parser::Impl::parseTest() {
     if ( atEnd() ) // a test w/o nested tests
         goto TestEnd;
 
-    if ( token() == Lexer::Special && tokenValue() == "(" ) { // test-list
+    if ( token() == Lexer::Special && tokenValue() == QLatin1String("("))  { // test-list
         if ( !parseTestList() ) {
             assert( error() );
             return false;
@@ -488,7 +488,7 @@ bool Parser::Impl::parseBlock() {
     if ( !obtainToken() || atEnd() )
         return false;
 
-    if ( token() != Lexer::Special || tokenValue() != "{" )
+    if ( token() != Lexer::Special || tokenValue() != QLatin1String("{"))
         return false;
     if ( scriptBuilder() )
         scriptBuilder()->blockStart();
@@ -517,7 +517,7 @@ bool Parser::Impl::parseBlock() {
         return false;
     }
 
-    if ( token() != Lexer::Special || tokenValue() != "}" ) {
+    if ( token() != Lexer::Special || tokenValue() != QLatin1String("}"))  {
         makeError( Error::NonCommandInCommandList );
         return false;
     }
@@ -538,7 +538,7 @@ bool Parser::Impl::parseStringList() {
     if ( !obtainToken() || atEnd() )
         return false;
 
-    if ( token() != Lexer::Special || tokenValue() != "[" )
+    if ( token() != Lexer::Special || tokenValue() != QLatin1String("[") )
         return false;
 
     if ( scriptBuilder() )
@@ -619,7 +619,7 @@ bool Parser::Impl::parseNumber() {
     int i = 0;
     const QByteArray s = tokenValue().toLatin1();
     for ( const int len = s.length() ; i < len && isdigit( s[i] ) ; ++i ) {
-        const unsigned long digitValue = s[i] - '0' ;
+        const unsigned long digitValue = s[i] - QLatin1Char('0').toLatin1() ;
         if ( willOverflowULong( result, digitValue ) ) {
             makeError( Error::NumberOutOfRange );
             return false;

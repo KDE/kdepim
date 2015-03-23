@@ -161,7 +161,7 @@ static inline bool is8Bit( signed char ch ) {
 #endif
 static QString removeCRLF( const QString & s ) {
     const bool CRLF = s.endsWith( QLatin1String("\r\n") );
-    const bool LF = !CRLF && s.endsWith( '\n' );
+    const bool LF = !CRLF && s.endsWith( QLatin1Char('\n') );
 
     const int e = CRLF ? 2 : LF ? 1 : 0 ;  // what to chop off at the end
 
@@ -255,7 +255,7 @@ Lexer::Token Lexer::Impl::nextToken( QString & result ) {
     case ')':
     case ';':
     case ',': // Special
-        result = *mState.cursor++;
+        result = QLatin1Char(*mState.cursor++);
         return Special;
     case '0':
     case '1':
@@ -401,7 +401,7 @@ bool Lexer::Impl::parseBracketComment( QString & result, bool reallySave ) {
         }
         if ( reallySave ) {
             QString tmp = QString::fromUtf8( commentStart, commentLength );
-            result += tmp.remove( '\r' ); // get rid of CR in CRLF pairs
+            result += tmp.remove( QLatin1Char('\r') ); // get rid of CR in CRLF pairs
         }
     }
 
@@ -505,7 +505,7 @@ bool Lexer::Impl::parseNumber( QString & result ) {
     assert( isdigit( *mState.cursor ) );
 
     while ( !atEnd() && isdigit( *mState.cursor ) )
-        result += *mState.cursor++;
+        result += QLatin1Char(*mState.cursor++);
 
     if ( atEnd() || isDelim( *mState.cursor ) )
         return true;
@@ -517,7 +517,7 @@ bool Lexer::Impl::parseNumber( QString & result ) {
     case 'm':
     case 'K':
     case 'k':
-        result += *mState.cursor++;
+        result += QLatin1Char(*mState.cursor++);
         break;
     default:
         makeIllegalCharError();
@@ -589,21 +589,21 @@ MultiLineStart:
             }
             const QString line = removeCRLF( QString::fromUtf8( oldBeginOfLine, lineLength ) );
             lines.push_back( removeDotStuff( line ) );
-            if ( line == "." )
+            if ( line == QLatin1String(".") )
                 break;
         } else {
             lines.push_back( QString() );
         }
     }
 
-    if ( lines.back() != "." ) {
+    if ( lines.back() != QLatin1String(".") ) {
         makeError( Error::PrematureEndOfMultiLine, mlBeginLine, mlBeginCol );
         return false;
     }
 
     assert( !lines.empty() );
     lines.erase( --lines.end() ); // don't include the lone dot.
-    result = lines.join("\n");
+    result = lines.join(QLatin1String("\n"));
     return true;
 }
 
@@ -630,7 +630,7 @@ bool Lexer::Impl::parseQuotedString( QString & result ) {
         case '\n':
             if ( !eatCRLF() )
                 return false;
-            result += '\n';
+            result += QLatin1Char('\n');
             break;
         case '\\':
             ++mState.cursor;
@@ -639,7 +639,7 @@ bool Lexer::Impl::parseQuotedString( QString & result ) {
             // else fall through:
         default:
             if ( !is8Bit( *mState.cursor ) )
-                result += *mState.cursor++;
+                result += QLatin1Char(*mState.cursor++);
             else { // probably UTF-8
                 const char * const eightBitBegin = mState.cursor;
                 skipTo8BitEnd();

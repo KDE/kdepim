@@ -51,6 +51,8 @@ bool parseScript( const QString & script, QString & messageText,
                   bool & sendForSpam, QString & domainName,
                   QDate & startDate, QDate & endDate );
 
+bool foundVacationScript(const QString & script);
+
 }
 }
 

@@ -20,6 +20,8 @@
 #include "vacationwarningwidget.h"
 #include "vacationcreatescriptjob.h"
 #include "vacationutils.h"
+#include "multiimapvacationmanager.h"
+#include <managescriptsjob/parseuserscriptjob.h>
 #include "sieve-vacation.h"
 
 #include <kmime/kmime_header_parsing.h>
@@ -37,7 +39,6 @@ using namespace KSieveUi;
 VacationPageWidget::VacationPageWidget(QWidget *parent)
     : QWidget(parent),
       mPageScript(Script),
-      mSieveJob(0),
       mWasActive(false)
 {
     QVBoxLayout *lay = new QVBoxLayout;
@@ -79,18 +80,20 @@ VacationPageWidget::VacationPageWidget(QWidget *parent)
 
 VacationPageWidget::~VacationPageWidget()
 {
-    if ( mSieveJob )
-        mSieveJob->kill();
-    mSieveJob = 0;
 }
 
 void VacationPageWidget::setServerUrl(const KUrl &url)
 {
     mUrl = url;
     mVacationEditWidget->setEnabled(false);
-    mSieveJob = KManageSieve::SieveJob::get( url );
-    connect( mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob*,bool,QString,bool)),
-             SLOT(slotGetResult(KManageSieve::SieveJob*,bool,QString,bool)) );
+}
+
+void VacationPageWidget::setVacationManager(MultiImapVacationManager *vacationManager)
+{
+    mVacationManager = vacationManager;
+    connect(mVacationManager, SIGNAL(scriptAvailable(QString,QStringList,QString,QString,bool)),
+            SLOT(slotGetResult(QString,QStringList,QString,QString,bool)));
+    mVacationManager->checkVacation(mServerName, mUrl);
 }
 
 void VacationPageWidget::setServerName(const QString &serverName)
@@ -98,24 +101,26 @@ void VacationPageWidget::setServerName(const QString &serverName)
     mServerName = serverName;
 }
 
-void VacationPageWidget::slotGetResult( KManageSieve::SieveJob * job, bool success, const QString & script, bool active )
+void VacationPageWidget::slotGetResult(const QString &serverName, const QStringList &sieveCapabilities, const QString &scriptName, const QString &script, bool active)
 {
-    kDebug() << success
-             << ", ?," << active << ")" << endl
+    if (serverName != mServerName) {
+        return;
+    }
+
+    kDebug() << serverName << sieveCapabilities << endl
+             << scriptName << "(" << active << ")" << endl
              << "script:" << endl
              << script;
-    mSieveJob = 0; // job deletes itself after returning from this slot!
 
     if ( mUrl.protocol() == QLatin1String("sieve") &&
-         !job->sieveCapabilities().contains(QLatin1String("vacation")) ) {
+         !sieveCapabilities.contains(QLatin1String("vacation")) ) {
         mStackWidget->setCurrentIndex(ScriptNotSupported);
         return;
     }
 
     // Whether the server supports the "date" extension
-    const bool supportsSieveDate = mUrl.protocol() == QLatin1String("sieve") && job->sieveCapabilities().contains(QLatin1String("date"));
+    const bool supportsSieveDate = mUrl.protocol() == QLatin1String("sieve") && sieveCapabilities.contains(QLatin1String("date"));
 
-    mVacationEditWidget->setEnabled(true);
     QString messageText = VacationUtils::defaultMessageText();
     QString subject = VacationUtils::defaultSubject();
     int notificationInterval = VacationUtils::defaultNotificationInterval();
@@ -124,13 +129,15 @@ void VacationPageWidget::slotGetResult( KManageSieve::SieveJob * job, bool succe
     QString domainName = VacationUtils::defaultDomainName();
     QDate startDate = VacationUtils::defaultStartDate();
     QDate endDate = VacationUtils::defaultEndDate();
-    if ( !success )
-        active = false; // default to inactive
 
-    if ( ( !success || !KSieveUi::VacationUtils::parseScript( script, messageText, subject, notificationInterval, aliases, sendForSpam, domainName, startDate, endDate ) ) )
+    const bool bParse = KSieveUi::VacationUtils::parseScript(script, messageText, subject, notificationInterval, aliases, sendForSpam, domainName, startDate, endDate);
+
+    if (!bParse) {
         mVacationWarningWidget->setVisible(true);
+    }
 
     mWasActive = active;
+    mVacationEditWidget->setEnabled(true);
     mVacationEditWidget->setActivateVacation( active );
     mVacationEditWidget->setMessageText( messageText );
     mVacationEditWidget->setSubject( subject );
@@ -148,6 +155,8 @@ void VacationPageWidget::slotGetResult( KManageSieve::SieveJob * job, bool succe
 
     //emit scriptActive( mWasActive, mServerName );
 }
+
+
 
 KSieveUi::VacationCreateScriptJob *VacationPageWidget::writeScript()
 {

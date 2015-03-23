@@ -45,6 +45,7 @@
 
 class KUrl;
 class QString;
+class QStringList;
 
 namespace KSieveUi
 {
@@ -75,6 +76,17 @@ namespace Util {
      * be available at all.
      */
     KSIEVEUI_EXPORT bool allowOutOfOfficeSettings();
+
+    /**
+     * Checks if a server has KEP:14 support
+     */
+    bool hasKep14Support(const QStringList &sieveCapabilities, const QStringList &availableScripts, const QString &activeScript);
+
+    /**
+     * Is the given scriptName a protected KEP:14 name, that a normal user should not touch directly.
+     * it tests against MASTER, USER and MANAGEMENT script
+     */
+    bool isKep14ProtectedName(const QString &scriptName);
 }
 
 }

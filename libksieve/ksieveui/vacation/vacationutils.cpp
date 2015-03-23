@@ -144,6 +144,26 @@ bool KSieveUi::VacationUtils::parseScript( const QString &script, QString &messa
     return true;
 }
 
+bool KSieveUi::VacationUtils::foundVacationScript(const QString &script)
+{
+    const QByteArray scriptUTF8 = script.trimmed().toUtf8();
+    kDebug() << "scriptUtf8 = \"" + scriptUTF8 +"\"";
+
+    if (scriptUTF8.isEmpty()) {
+      return false;
+    }
+
+    KSieve::Parser parser( scriptUTF8.begin(),
+                           scriptUTF8.begin() + scriptUTF8.length() );
+    VacationDataExtractor vdx;
+    SpamDataExtractor sdx;
+    DomainRestrictionDataExtractor drdx;
+    DateExtractor dx;
+    KSieveExt::MultiScriptBuilder tsb( &vdx, &sdx, &drdx, &dx );
+    parser.setScriptBuilder( &tsb );
+    return parser.parse();
+}
+
 QString KSieveUi::VacationUtils::composeScript( const QString & messageText,
                                  const QString &subject,
                                  int notificationInterval,

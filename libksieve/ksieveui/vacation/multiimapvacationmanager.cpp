@@ -18,6 +18,9 @@
 #include "multiimapvacationmanager.h"
 #include "vacationcheckjob.h"
 #include "util/util.h"
+#include <managescriptsjob/checkkep14supportjob.h>
+#include <managescriptsjob/parseuserscriptjob.h>
+#include <kmanagesieve/sievejob.h>
 
 #include <Akonadi/AgentInstance>
 
@@ -28,7 +31,6 @@ using namespace KSieveUi;
 MultiImapVacationManager::MultiImapVacationManager(QObject *parent)
     : QObject(parent),
       mNumberOfJobs(0),
-      mQuestionAsked(false),
       mCheckInProgress(false)
 {
 }
@@ -38,14 +40,9 @@ MultiImapVacationManager::~MultiImapVacationManager()
 
 }
 
-void MultiImapVacationManager::checkVacation()
+QMap <QString, KUrl> MultiImapVacationManager::serverList()
 {
-    if (mCheckInProgress)
-        return;
-    mNumberOfJobs = 0;
-    mCheckInProgress = true;
-    mQuestionAsked = false;
-
+    QMap <QString, KUrl> list;
     const Akonadi::AgentInstance::List instances = KSieveUi::Util::imapAgentInstances();
     foreach ( const Akonadi::AgentInstance &instance, instances ) {
         if ( instance.status() == Akonadi::AgentInstance::Broken )
@@ -53,32 +50,74 @@ void MultiImapVacationManager::checkVacation()
 
         const KUrl url = KSieveUi::Util::findSieveUrlForAccount( instance.identifier() );
         if ( !url.isEmpty() ) {
-            const QString serverName = instance.name();
-            ++mNumberOfJobs;
-            VacationCheckJob *job = new VacationCheckJob(url, serverName, this);
-            connect(job, SIGNAL(scriptActive(bool,QString)), this, SLOT(slotScriptActive(bool,QString)));
+            list.insert(instance.name(), url);
         }
+    }
+    return list;
+}
+
+void MultiImapVacationManager::checkVacation(const QString &serverName, const KUrl &url)
+{
+    ++mNumberOfJobs;
+    if (!mKep14Support.contains(serverName)) {
+        CheckKep14SupportJob *checkKep14Job = new CheckKep14SupportJob(this);
+        checkKep14Job->setProperty(QLatin1String("triggerScript").latin1(), true);
+        checkKep14Job->setServerName(serverName);
+        checkKep14Job->setServerUrl(url);
+        connect(checkKep14Job, SIGNAL(result(CheckKep14SupportJob*,bool)), SLOT(slotCheckKep14Ended(CheckKep14SupportJob*,bool)));
+        checkKep14Job->start();
+    }
+
+    VacationCheckJob *job = new VacationCheckJob(url, serverName, this);
+    job->setKep14Support(mKep14Support[serverName]);
+    connect(job, SIGNAL(scriptActive(VacationCheckJob*,QString,bool)), this, SLOT(slotScriptActive(VacationCheckJob*,QString,bool)));
+    job->start();
+}
+
+void MultiImapVacationManager::checkVacation()
+{
+    if (mCheckInProgress)
+        return;
+    mNumberOfJobs = 0;
+    mCheckInProgress = true;
+
+    QMap <QString, KUrl> list = serverList();
+    foreach ( const QString &serverName, list.keys() ) {
+        const KUrl url = list.value(serverName);
+        checkVacation(serverName, url);
     }
 }
 
-void MultiImapVacationManager::slotScriptActive(bool active, const QString &serverName)
+void MultiImapVacationManager::slotScriptActive(VacationCheckJob* job, QString scriptName, bool active)
 {
     --mNumberOfJobs;
-    Q_EMIT scriptActive(active, serverName);
-
-    if (active) {
-        if (!mQuestionAsked) {
-            mQuestionAsked = true;
-            if ( KMessageBox::questionYesNo( 0, i18n( "There is still an active out-of-office reply configured.\n"
-                                                      "Do you want to edit it?"), i18n("Out-of-office reply still active"),
-                                             KGuiItem( i18n( "Edit"), QLatin1String("document-properties") ),
-                                             KGuiItem( i18n("Ignore"), QLatin1String("dialog-cancel") ) )
-                 == KMessageBox::Yes ) {
-                Q_EMIT requestEditVacation();
-            }
-        }
+    if (mNumberOfJobs == 0) {
+        mCheckInProgress = false;
     }
 
-    if (mNumberOfJobs == 0)
-        mCheckInProgress = false;
+    job->deleteLater();
+
+    if (job->noScriptFound()) {
+        emit scriptActive(false, job->serverName());
+        return;
+    }
+    emit scriptActive(active, job->serverName());
+    emit scriptAvailable(job->serverName(), job->sieveCapabilities(), scriptName, job->script(), active);
+}
+
+void MultiImapVacationManager::slotCheckKep14Ended(CheckKep14SupportJob *job, bool success)
+{
+    job->deleteLater();
+    if (!success) {
+        --mNumberOfJobs;
+        return;
+    }
+
+    mKep14Support.insert(job->serverName(), job->hasKep14Support());
+
+    VacationCheckJob *checkJob = new VacationCheckJob(job->serverUrl(), job->serverName(), this);
+    checkJob->setKep14Support(job->hasKep14Support());
+    connect(checkJob, SIGNAL(scriptActive(VacationCheckJob*,QString,bool)),
+            SLOT(slotScriptActive(VacationCheckJob*,QString,bool)));
+    checkJob->start();
 }
