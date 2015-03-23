@@ -125,3 +125,19 @@ target_link_libraries( filteractionwithurltest
    ${KDEPIMLIBS_AKONADI_LIBS}
    ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
 )
+
+set(mailcommon_filteractionremoveheadertest_SRCS filteractionremoveheadertest.cpp
+                                           ../filteractions/filteractionremoveheader.cpp
+                                            ../filteractions/filteractionwithstringlist.cpp
+                                           ../filteractions/filteractionwithstring.cpp)
+kde4_add_unit_test( filteractionremoveheadertest ${mailcommon_filteractionremoveheadertest_SRCS} )
+target_link_libraries( filteractionremoveheadertest
+   kdepim
+   pimcommon
+   mailcommon
+   messagecore
+   ${QT_QTTEST_LIBRARY}
+   ${QT_QTCORE_LIBRARY}
+   ${KDEPIMLIBS_AKONADI_LIBS}
+   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+)
