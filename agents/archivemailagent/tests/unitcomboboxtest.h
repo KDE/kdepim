@@ -28,6 +28,8 @@ public:
     ~UnitComboBoxTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void changeCurrentItem();
+    void changeCurrentItem_data();
 };
 
 #endif // UNITCOMBOBOXTEST_H
