@@ -13,7 +13,7 @@ set(archivemailagent_SRCS
    archivemaildialog.cpp
    archivemailinfo.cpp
    addarchivemaildialog.cpp
-   archivejob.cpp
+   job/archivejob.cpp
    archivemailagentutil.cpp
    widgets/formatcombobox.cpp
    widgets/unitcombobox.cpp
