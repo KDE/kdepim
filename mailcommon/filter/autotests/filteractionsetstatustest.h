@@ -26,6 +26,9 @@ class FilterActionSetStatusTest : public QObject
 public:
     explicit FilterActionSetStatusTest(QObject *parent = 0);
     ~FilterActionSetStatusTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
+    void shouldHaveSieveRequires();
 };
 
 #endif // FILTERACTIONSETSTATUSTEST_H
