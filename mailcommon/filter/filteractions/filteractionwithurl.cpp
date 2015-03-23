@@ -62,8 +62,10 @@ QWidget *FilterActionWithUrl::createParamWidget(QWidget *parent) const
     widget->setLayout(layout);
     KUrlRequester *requester = new KUrlRequester(parent);
     requester->setUrl(QUrl::fromLocalFile(mParameter));
+    requester->setObjectName(QLatin1String("requester"));
     layout->addWidget(requester);
     mHelpButton = new FilterActionWithUrlHelpButton(parent);
+    mHelpButton->setObjectName(QLatin1String("helpbutton"));
     connect(mHelpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
     layout->addWidget(mHelpButton);
 
@@ -80,19 +82,27 @@ void FilterActionWithUrl::slotHelp()
 
 void FilterActionWithUrl::applyParamWidgetValue(QWidget *paramWidget)
 {
-    const QUrl url = static_cast<KUrlRequester *>(paramWidget)->url();
+    KUrlRequester *requester = paramWidget->findChild<KUrlRequester*>( QLatin1String("requester") );
+    Q_ASSERT( requester );
+
+    const QUrl url = requester->url();
 
     mParameter = (url.isLocalFile() ? url.toLocalFile() : url.path());
 }
 
 void FilterActionWithUrl::setParamWidgetValue(QWidget *paramWidget) const
 {
-    static_cast<KUrlRequester *>(paramWidget)->setUrl(QUrl::fromLocalFile(mParameter));
+    KUrlRequester *requester = paramWidget->findChild<KUrlRequester*>( QLatin1String("requester") );
+    Q_ASSERT( requester );
+
+    requester->setUrl( QUrl::fromLocalFile( mParameter ) );
 }
 
 void FilterActionWithUrl::clearParamWidget(QWidget *paramWidget) const
 {
-    static_cast<KUrlRequester *>(paramWidget)->clear();
+    KUrlRequester *requester = paramWidget->findChild<KUrlRequester*>( QLatin1String("requester") );
+    Q_ASSERT( requester );
+    requester->clear();
 }
 
 void FilterActionWithUrl::argsFromString(const QString &argsStr)

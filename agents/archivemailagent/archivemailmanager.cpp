@@ -17,7 +17,7 @@
 
 #include "archivemailmanager.h"
 #include "archivemailinfo.h"
-#include "archivejob.h"
+#include "job/archivejob.h"
 #include "archivemailkernel.h"
 #include "archivemailagentutil.h"
 

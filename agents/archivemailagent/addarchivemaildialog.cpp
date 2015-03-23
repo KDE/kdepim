@@ -15,8 +15,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 #include "addarchivemaildialog.h"
-#include "formatcombobox.h"
-#include "unitcombobox.h"
+#include "widgets/formatcombobox.h"
+#include "widgets/unitcombobox.h"
 #include "mailcommon/folder/folderrequester.h"
 
 #include <Collection>

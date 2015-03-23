@@ -16,7 +16,7 @@
 */
 
 #include "unitcomboboxtest.h"
-#include "../unitcombobox.h"
+#include "../widgets/unitcombobox.h"
 #include <qtest_kde.h>
 
 UnitComboBoxTest::UnitComboBoxTest(QObject *parent)

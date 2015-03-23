@@ -16,10 +16,10 @@ set(archivemailagent_SRCS
    archivemaildialog.cpp
    archivemailinfo.cpp
    addarchivemaildialog.cpp
-   archivejob.cpp
+   job/archivejob.cpp
    archivemailagentutil.cpp
-   formatcombobox.cpp
-   unitcombobox.cpp
+   widgets/formatcombobox.cpp
+   widgets/unitcombobox.cpp
 )
 
 kconfig_add_kcfg_files(archivemailagent_SRCS
