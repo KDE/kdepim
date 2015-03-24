@@ -123,7 +123,6 @@ static bool checkDateTime( const QString &dateStr, QDateTime &dt )
 
 ContactList GMXXXPort::importContacts() const
 {
-    KABC::Addressee::List addresseeList;
     ContactList contactList;
     QString fileName =
             KFileDialog::getOpenFileName( QDir::homePath(), GMX_FILESELECTION_STRING, 0 );
@@ -313,6 +312,7 @@ ContactList GMXXXPort::importContacts() const
             line = gmxStream.readLine();
         };
     }
+    KABC::Addressee::List addresseeList;
 
     // now add the addresses to addresseeList
     for ( AddresseeMap::Iterator addresseeIt = addresseeMap.begin();
