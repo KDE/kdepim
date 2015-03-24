@@ -66,7 +66,6 @@ LDIFXXPort::LDIFXXPort( QWidget *parentWidget )
 
 ContactList LDIFXXPort::importContacts() const
 {
-    KABC::Addressee::List contacts;
     ContactList contactList;
     const QString fileName = KFileDialog::getOpenFileName( QDir::homePath(), QLatin1String("text/x-ldif"), 0 );
     if ( fileName.isEmpty() ) {
@@ -86,9 +85,11 @@ ContactList LDIFXXPort::importContacts() const
     const QString wholeFile = stream.readAll();
     const QDateTime dtDefault = QFileInfo( file ).lastModified();
     file.close();
-
-    KABC::LDIFConverter::LDIFToAddressee( wholeFile, contacts, dtDefault );
+    KABC::Addressee::List contacts;
+    KABC::ContactGroup::List contactGroups;
+    KABC::LDIFConverter::LDIFToAddressee( wholeFile, contacts, contactGroups, dtDefault );
     contactList.addressList = contacts;
+    contactList.contactGroupList = contactGroups;
     return contactList;
 }
 
