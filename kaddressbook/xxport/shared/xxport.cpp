@@ -28,16 +28,6 @@ XXPort::~XXPort()
 {
 }
 
-KABC::Addressee::List XXPort::importContacts() const
-{
-    return KABC::Addressee::List();
-}
-
-bool XXPort::exportContacts(const KABC::Addressee::List & , VCardExportSelectionWidget::ExportFields) const
-{
-    return false;
-}
-
 void XXPort::setOption( const QString &key, const QString &value )
 {
     mOptions.insert( key, value );
