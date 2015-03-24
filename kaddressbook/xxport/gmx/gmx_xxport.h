@@ -35,7 +35,7 @@ class GMXXXPort : public XXPort
 public:
     explicit GMXXXPort( QWidget *parent = 0 );
 
-    bool exportContacts(const KABC::AddresseeList &list , VCardExportSelectionWidget::ExportFields) const;
+    bool exportContacts(const ContactList &list , VCardExportSelectionWidget::ExportFields) const;
     ContactList importContacts() const;
 
 private:

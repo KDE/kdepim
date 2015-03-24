@@ -56,12 +56,12 @@ VCardXXPort::VCardXXPort( QWidget *parent )
 {
 }
 
-bool VCardXXPort::exportContacts( const KABC::Addressee::List &contacts, VCardExportSelectionWidget::ExportFields exportFields) const
+bool VCardXXPort::exportContacts( const ContactList &contacts, VCardExportSelectionWidget::ExportFields exportFields) const
 {
     KABC::VCardConverter converter;
     KUrl url;
 
-    const KABC::Addressee::List list = filterContacts( contacts, exportFields );
+    const KABC::Addressee::List list = filterContacts( contacts.addressList, exportFields );
     if ( list.isEmpty() ) { // no contact selected
         return true;
     }

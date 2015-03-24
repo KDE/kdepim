@@ -41,15 +41,14 @@ ContactList LDAPXXPort::importContacts() const
     QPointer<KLDAP::LdapSearchDialog> dlg = new KLDAP::LdapSearchDialog( parentWidget() );
 
     if ( dlg->exec() && dlg ) {
-        contacts = dlg->selectedContacts();
+        contactList.addressList = dlg->selectedContacts();
     }
 
     delete dlg;
-    contactList.addressList = contacts;
     return contactList;
 }
 
-bool LDAPXXPort::exportContacts( const KABC::Addressee::List &, VCardExportSelectionWidget::ExportFields ) const
+bool LDAPXXPort::exportContacts( const ContactList &, VCardExportSelectionWidget::ExportFields ) const
 {
     return false;
 }

@@ -60,7 +60,7 @@ public:
     /**
      * Exports the list of @p contacts.
      */
-    virtual bool exportContacts( const KABC::Addressee::List &contacts, VCardExportSelectionWidget::ExportFields ) const = 0;
+    virtual bool exportContacts( const ContactList &contacts, VCardExportSelectionWidget::ExportFields ) const = 0;
 
     /**
      * Sets module specific options.

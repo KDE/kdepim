@@ -205,8 +205,9 @@ void XXPortManager::slotExport( const QString &identifier )
     if ( !xxport ) {
         return;
     }
-
-    xxport->exportContacts( contacts, exportFields );
+    ContactList contactLists;
+    contactLists.addressList = contacts;
+    xxport->exportContacts( contactLists, exportFields );
 
     delete xxport;
 }

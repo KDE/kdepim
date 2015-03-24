@@ -85,15 +85,11 @@ ContactList LDIFXXPort::importContacts() const
     const QString wholeFile = stream.readAll();
     const QDateTime dtDefault = QFileInfo( file ).lastModified();
     file.close();
-    KABC::Addressee::List contacts;
-    KABC::ContactGroup::List contactGroups;
-    KABC::LDIFConverter::LDIFToAddressee( wholeFile, contacts, contactGroups, dtDefault );
-    contactList.addressList = contacts;
-    contactList.contactGroupList = contactGroups;
+    KABC::LDIFConverter::LDIFToAddressee( wholeFile, contactList.addressList, contactList.contactGroupList, dtDefault );
     return contactList;
 }
 
-bool LDIFXXPort::exportContacts( const KABC::Addressee::List &list, VCardExportSelectionWidget::ExportFields ) const
+bool LDIFXXPort::exportContacts( const ContactList &list, VCardExportSelectionWidget::ExportFields ) const
 {
     const KUrl url =
             KFileDialog::getSaveUrl( KUrl( QDir::homePath() + QLatin1String("/addressbook.ldif") ), QLatin1String("text/x-ldif") );
@@ -109,7 +105,7 @@ bool LDIFXXPort::exportContacts( const KABC::Addressee::List &list, VCardExportS
             return false;
         }
 
-        doExport( &tmpFile, list );
+        doExport( &tmpFile, list.addressList );
         tmpFile.flush();
 
         return KIO::NetAccess::upload( tmpFile.fileName(), url, parentWidget() );
@@ -139,7 +135,7 @@ bool LDIFXXPort::exportContacts( const KABC::Addressee::List &list, VCardExportS
             return false;
         }
 
-        doExport( &file, list );
+        doExport( &file, list.addressList );
         file.close();
 
         return true;

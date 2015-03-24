@@ -27,7 +27,7 @@ class VCardXXPort : public XXPort
 public:
     explicit VCardXXPort( QWidget *parent = 0 );
 
-    bool exportContacts( const KABC::Addressee::List &contacts, VCardExportSelectionWidget::ExportFields exportFieldType ) const;
+    bool exportContacts( const ContactList &contacts, VCardExportSelectionWidget::ExportFields exportFieldType ) const;
     ContactList importContacts() const;
 
 private:

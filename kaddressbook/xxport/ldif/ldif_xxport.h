@@ -32,7 +32,7 @@ class LDIFXXPort : public XXPort
 public:
     explicit LDIFXXPort( QWidget *parent = 0 );
 
-    bool exportContacts(const KABC::Addressee::List &contacts , VCardExportSelectionWidget::ExportFields) const;
+    bool exportContacts(const ContactList &contacts , VCardExportSelectionWidget::ExportFields) const;
     ContactList importContacts() const;
 };
 

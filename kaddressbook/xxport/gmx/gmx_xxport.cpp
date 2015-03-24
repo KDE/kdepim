@@ -342,7 +342,7 @@ ContactList GMXXXPort::importContacts() const
 
 /* export */
 
-bool GMXXXPort::exportContacts( const KABC::AddresseeList &list, VCardExportSelectionWidget::ExportFields ) const
+bool GMXXXPort::exportContacts( const ContactList &list, VCardExportSelectionWidget::ExportFields ) const
 {
     KUrl url = KFileDialog::getSaveUrl(
                 KUrl( QDir::homePath() + QLatin1String("/addressbook.gmx") ), GMX_FILESELECTION_STRING );
@@ -374,7 +374,7 @@ bool GMXXXPort::exportContacts( const KABC::AddresseeList &list, VCardExportSele
             return false;
         }
 
-        doExport( &tmpFile, list );
+        doExport( &tmpFile, list.addressList );
         tmpFile.flush();
 
         return KIO::NetAccess::upload( tmpFile.fileName(), url, parentWidget() );
@@ -388,7 +388,7 @@ bool GMXXXPort::exportContacts( const KABC::AddresseeList &list, VCardExportSele
             return false;
         }
 
-        doExport( &file, list );
+        doExport( &file, list.addressList );
         file.close();
 
         return true;
