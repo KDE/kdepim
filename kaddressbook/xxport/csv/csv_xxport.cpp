@@ -148,8 +148,9 @@ void CsvXXPort::exportToFile( QFile *file, const KABC::Addressee::List &contacts
     }
 }
 
-KABC::Addressee::List CsvXXPort::importContacts() const
+ContactList CsvXXPort::importContacts() const
 {
+    ContactList contactList;
     KABC::Addressee::List contacts;
 
     QPointer<CSVImportDialog> dlg = new CSVImportDialog( parentWidget() );
@@ -158,6 +159,6 @@ KABC::Addressee::List CsvXXPort::importContacts() const
     }
 
     delete dlg;
-
-    return contacts;
+    contactList.addressList = contacts;
+    return contactList;
 }

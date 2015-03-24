@@ -21,6 +21,7 @@
 #define XXPORT_H
 
 #include <KABC/Addressee>
+#include <KABC/ContactGroup>
 #include "xxport/vcard/vcardexportselectionwidget.h"
 
 #include <QtCore/QHash>
@@ -30,6 +31,11 @@
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
+struct ContactList {
+    KABC::Addressee::List addressList;
+    KABC::ContactGroup::List contactGroupList;
+};
+
 class XXPort
 {
 public:
@@ -49,7 +55,7 @@ public:
     /**
      * Imports a list of contacts.
      */
-    virtual KABC::Addressee::List importContacts() const = 0;
+    virtual ContactList importContacts() const = 0;
 
     /**
      * Exports the list of @p contacts.

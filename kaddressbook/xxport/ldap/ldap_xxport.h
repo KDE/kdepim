@@ -32,7 +32,7 @@ class LDAPXXPort : public XXPort
 {
 public:
     explicit LDAPXXPort( QWidget *parent = 0 );
-    KABC::Addressee::List importContacts() const;
+    ContactList importContacts() const;
     bool exportContacts(const KABC::Addressee::List &contacts , VCardExportSelectionWidget::ExportFields) const;
 };
 

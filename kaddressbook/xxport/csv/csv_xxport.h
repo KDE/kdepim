@@ -30,7 +30,7 @@ public:
     explicit CsvXXPort( QWidget *parent = 0 );
 
     bool exportContacts( const KABC::Addressee::List &contacts, VCardExportSelectionWidget::ExportFields ) const;
-    KABC::Addressee::List importContacts() const;
+    ContactList importContacts() const;
 
 private:
     void exportToFile( QFile *, const KABC::Addressee::List & ) const;

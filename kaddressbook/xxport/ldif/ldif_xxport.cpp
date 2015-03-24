@@ -64,20 +64,20 @@ LDIFXXPort::LDIFXXPort( QWidget *parentWidget )
 {
 }
 
-KABC::Addressee::List LDIFXXPort::importContacts() const
+ContactList LDIFXXPort::importContacts() const
 {
     KABC::Addressee::List contacts;
-
+    ContactList contactList;
     const QString fileName = KFileDialog::getOpenFileName( QDir::homePath(), QLatin1String("text/x-ldif"), 0 );
     if ( fileName.isEmpty() ) {
-        return contacts;
+        return contactList;
     }
 
     QFile file( fileName );
     if ( !file.open( QIODevice::ReadOnly | QIODevice::Text ) ) {
         const QString msg = i18n( "<qt>Unable to open <b>%1</b> for reading.</qt>", fileName );
         KMessageBox::error( parentWidget(), msg );
-        return contacts;
+        return contactList;
     }
 
     QTextStream stream( &file );
@@ -88,8 +88,8 @@ KABC::Addressee::List LDIFXXPort::importContacts() const
     file.close();
 
     KABC::LDIFConverter::LDIFToAddressee( wholeFile, contacts, dtDefault );
-
-    return contacts;
+    contactList.addressList = contacts;
+    return contactList;
 }
 
 bool LDIFXXPort::exportContacts( const KABC::Addressee::List &list, VCardExportSelectionWidget::ExportFields ) const

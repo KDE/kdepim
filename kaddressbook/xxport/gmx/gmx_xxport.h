@@ -36,7 +36,7 @@ public:
     explicit GMXXXPort( QWidget *parent = 0 );
 
     bool exportContacts(const KABC::AddresseeList &list , VCardExportSelectionWidget::ExportFields) const;
-    KABC::Addressee::List importContacts() const;
+    ContactList importContacts() const;
 
 private:
     void doExport( QFile *fp, const KABC::AddresseeList &list ) const;

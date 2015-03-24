@@ -121,22 +121,22 @@ static bool checkDateTime( const QString &dateStr, QDateTime &dt )
 
 /* import */
 
-KABC::Addressee::List GMXXXPort::importContacts() const
+ContactList GMXXXPort::importContacts() const
 {
     KABC::Addressee::List addresseeList;
-
+    ContactList contactList;
     QString fileName =
             KFileDialog::getOpenFileName( QDir::homePath(), GMX_FILESELECTION_STRING, 0 );
 
     if ( fileName.isEmpty() ) {
-        return addresseeList;
+        return contactList;
     }
 
     QFile file( fileName );
     if ( !file.open( QIODevice::ReadOnly ) ) {
         QString msg = i18n( "<qt>Unable to open <b>%1</b> for reading.</qt>", fileName );
         KMessageBox::error( parentWidget(), msg );
-        return addresseeList;
+        return contactList;
     }
 
     QDateTime dt;
@@ -150,7 +150,7 @@ KABC::Addressee::List GMXXXPort::importContacts() const
         KMessageBox::error(
                     parentWidget(),
                     i18n( "%1 is not a GMX address book file.", fileName ) );
-        return addresseeList;
+        return contactList;
     }
 
     QStringList itemList;
@@ -198,7 +198,7 @@ KABC::Addressee::List GMXXXPort::importContacts() const
     line  = gmxStream.readLine();
     if ( !line.startsWith( QLatin1String( "AB_ADDRESS_RECORDS:" ) ) ) {
         kWarning() << "Could not find address records!";
-        return addresseeList;
+        return contactList;
     }
     // Address_id,Record_id,Street,Country,Zipcode,City,Phone,Fax,Mobile,
     // Mobile_type,Email,Homepage,Position,Comments,Record_type_id,Record_type,
@@ -336,7 +336,8 @@ KABC::Addressee::List GMXXXPort::importContacts() const
     }
 
     file.close();
-    return addresseeList;
+    contactList.addressList = addresseeList;
+    return contactList;
 }
 
 /* export */

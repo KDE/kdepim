@@ -147,9 +147,10 @@ bool VCardXXPort::exportContacts( const KABC::Addressee::List &contacts, VCardEx
     return ok;
 }
 
-KABC::Addressee::List VCardXXPort::importContacts() const
+ContactList VCardXXPort::importContacts() const
 {
     QString fileName;
+    ContactList contactList;
     KABC::Addressee::List addrList;
     KUrl::List urls;
 
@@ -169,7 +170,7 @@ KABC::Addressee::List VCardXXPort::importContacts() const
         }
 
         if ( urls.isEmpty() ) {
-            return addrList;
+            return contactList;
         }
 
         const QString caption( i18nc( "@title:window", "vCard Import Failed" ) );
@@ -234,7 +235,8 @@ KABC::Addressee::List VCardXXPort::importContacts() const
             }
         }
     }
-    return addrList;
+    contactList.addressList = addrList;
+    return contactList;
 }
 
 KABC::Addressee::List VCardXXPort::parseVCard( const QByteArray &data ) const

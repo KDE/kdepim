@@ -28,7 +28,7 @@ public:
     explicit VCardXXPort( QWidget *parent = 0 );
 
     bool exportContacts( const KABC::Addressee::List &contacts, VCardExportSelectionWidget::ExportFields exportFieldType ) const;
-    KABC::Addressee::List importContacts() const;
+    ContactList importContacts() const;
 
 private:
     KABC::Addressee::List parseVCard( const QByteArray &data ) const;

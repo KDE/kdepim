@@ -93,7 +93,8 @@ void XXPortManager::importFile( const KUrl &url)
         return;
     }
     xxport->setOption(QLatin1String("importUrl"), url.path());
-    const KABC::Addressee::List contacts = xxport->importContacts();
+    ContactList contactList = xxport->importContacts();
+    const KABC::Addressee::List contacts = contactList.addressList;
 
     delete xxport;
     import(contacts);
@@ -105,8 +106,8 @@ void XXPortManager::slotImport( const QString &identifier )
     if( !xxport ) {
         return;
     }
-
-    const KABC::Addressee::List contacts = xxport->importContacts();
+    ContactList contactList = xxport->importContacts();
+    const KABC::Addressee::List contacts = contactList.addressList;
 
     delete xxport;
     import(contacts);
