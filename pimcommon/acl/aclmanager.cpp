@@ -24,7 +24,7 @@
 #include "imapaclattribute.h"
 #include "imapresourcesettings.h"
 #include "pimutil.h"
-
+#include "pimcommon_debug.h"
 #include <Collection>
 #include <CollectionFetchJob>
 #include <CollectionModifyJob>
@@ -434,12 +434,12 @@ void AclManager::save()
     Akonadi::CollectionFetchJob *job =
         new Akonadi::CollectionFetchJob(d->mCollection, Akonadi::CollectionFetchJob::Base);
     if (!job->exec()) {
-        qDebug() << " collection Fetch error" << job->errorString();
+        qCDebug(PIMCOMMON_LOG) << " collection Fetch error" << job->errorString();
         return;
     }
 
     if (job->collections().isEmpty()) {
-        qDebug() << " collection list Fetched is Empty ";
+        qCDebug(PIMCOMMON_LOG) << " collection list Fetched is Empty ";
         return;
     }
 

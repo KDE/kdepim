@@ -22,8 +22,7 @@
 #include <QDBusInterface>
 #include <qdbuspendingcall.h>
 #include <qdbuspendingreply.h>
-#include <QDebug>
-
+#include "pimcommon_debug.h"
 using namespace PimCommon;
 ImapResourceCapabilitiesManager::ImapResourceCapabilitiesManager(QObject *parent)
     : QObject(parent)
@@ -61,7 +60,7 @@ void ImapResourceCapabilitiesManager::searchCapabilities(const QString &identifi
         watcher->setProperty("identifier", identifier);
         connect(watcher, &QDBusPendingCallWatcher::finished, this, &ImapResourceCapabilitiesManager::slotCapabilities);
     } else {
-        qDebug() << "interface not valid";
+        qCDebug(PIMCOMMON_LOG) << "interface not valid";
     }
 }
 

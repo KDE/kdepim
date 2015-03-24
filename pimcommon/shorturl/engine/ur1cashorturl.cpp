@@ -16,7 +16,7 @@
 */
 
 #include "ur1cashorturl.h"
-
+#include "pimcommon_debug.h"
 #include <QNetworkRequest>
 #include <QUrl>
 #include <qregexp.h>
@@ -68,7 +68,7 @@ void Ur1CaShortUrl::slotShortUrlFinished(QNetworkReply *reply)
     rx.setPattern(QString::fromLatin1("href=[\'\"](.*)[\'\"]"));
     rx.indexIn(output);
     output = rx.cap(1);
-    qDebug() << "Short url is: " << output;
+    qCDebug(PIMCOMMON_LOG) << "Short url is: " << output;
     if (!output.isEmpty()) {
         Q_EMIT shortUrlDone(output);
     }
