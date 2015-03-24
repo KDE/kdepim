@@ -75,6 +75,7 @@ void BalsaAddressBook::readAddressBook(const KConfigGroup &grp)
         const QString path = grp.readEntry(QLatin1String("Path"));
         if (!path.isEmpty()) {
             KContacts::Addressee::List contacts;
+            KContacts::ContactGroup::List contactsGroup;
             QFile file(path);
             if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
                 QTextStream stream(&file);
@@ -84,7 +85,7 @@ void BalsaAddressBook::readAddressBook(const KConfigGroup &grp)
                 const QDateTime dtDefault = QFileInfo(file).lastModified();
                 file.close();
 
-                KContacts::LDIFConverter::LDIFToAddressee(wholeFile, contacts, dtDefault);
+                KContacts::LDIFConverter::LDIFToAddressee(wholeFile, contacts, contactsGroup, dtDefault);
                 Q_FOREACH (KContacts::Addressee contact, contacts) {
                     addImportNote(contact, QLatin1String("Balsa"));
                     createContact(contact);

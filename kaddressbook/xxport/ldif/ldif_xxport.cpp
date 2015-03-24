@@ -85,8 +85,8 @@ KContacts::Addressee::List LDIFXXPort::importContacts() const
     const QString wholeFile = stream.readAll();
     const QDateTime dtDefault = QFileInfo(file).lastModified();
     file.close();
-
-    KContacts::LDIFConverter::LDIFToAddressee(wholeFile, contacts, dtDefault);
+    KContacts::ContactGroup::List contactGroup;
+    KContacts::LDIFConverter::LDIFToAddressee(wholeFile, contacts, contactGroup, dtDefault);
 
     return contacts;
 }
