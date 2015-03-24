@@ -32,6 +32,12 @@
  * @author Tobias Koenig <tokoe@kde.org>
  */
 struct ContactList {
+    bool isEmpty() const {
+        return (addressList.isEmpty() && contactGroupList.isEmpty());
+    }
+    int count() const {
+        return (addressList.count() + contactGroupList.count());
+    }
     KABC::Addressee::List addressList;
     KABC::ContactGroup::List contactGroupList;
 };

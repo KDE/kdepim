@@ -94,7 +94,7 @@ private Q_SLOTS:
     void slotImportJobDone( KJob * );
 
 private:
-    void import(const KABC::Addressee::List &contacts);
+    void import(const ContactList &contacts);
     QItemSelectionModel *mSelectionModel;
     QWidget *mParentWidget;
     XXPortFactory mFactory;

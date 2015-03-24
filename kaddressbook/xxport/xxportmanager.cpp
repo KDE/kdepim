@@ -94,10 +94,9 @@ void XXPortManager::importFile( const KUrl &url)
     }
     xxport->setOption(QLatin1String("importUrl"), url.path());
     ContactList contactList = xxport->importContacts();
-    const KABC::Addressee::List contacts = contactList.addressList;
 
     delete xxport;
-    import(contacts);
+    import(contactList);
 }
 
 void XXPortManager::slotImport( const QString &identifier )
@@ -107,13 +106,12 @@ void XXPortManager::slotImport( const QString &identifier )
         return;
     }
     ContactList contactList = xxport->importContacts();
-    const KABC::Addressee::List contacts = contactList.addressList;
 
     delete xxport;
-    import(contacts);
+    import(contactList);
 }
 
-void XXPortManager::import(const KABC::Addressee::List &contacts)
+void XXPortManager::import(const ContactList &contacts)
 {
     if ( contacts.isEmpty() ) { // nothing to import
         return;
@@ -149,14 +147,22 @@ void XXPortManager::import(const KABC::Addressee::List &contacts)
 
     mImportProgressDialog->show();
 
-    for ( int i = 0; i < contacts.count(); ++i ) {
+    for ( int i = 0; i < contacts.addressList.count(); ++i ) {
         Akonadi::Item item;
-        item.setPayload<KABC::Addressee>( contacts.at( i ) );
+        item.setPayload<KABC::Addressee>( contacts.addressList.at( i ) );
         item.setMimeType( KABC::Addressee::mimeType() );
 
         Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, collection );
         connect( job, SIGNAL(result(KJob*)), SLOT(slotImportJobDone(KJob*)) );
     }
+    for (int i = 0; i < contacts.contactGroupList.count(); ++i ) {
+        Akonadi::Item groupItem( KABC::ContactGroup::mimeType() );
+        groupItem.setPayload<KABC::ContactGroup>( contacts.contactGroupList.at(i) );
+
+        Akonadi::Job *createJob = new Akonadi::ItemCreateJob( groupItem, collection );
+        connect( createJob, SIGNAL(result(KJob*)), this, SLOT(slotImportJobDone(KJob*)) );
+    }
+
 }
 
 void XXPortManager::slotImportJobDone( KJob * )
