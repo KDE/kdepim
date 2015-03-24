@@ -118,6 +118,8 @@ void VacationPageWidget::slotGetResult(const QString &serverName, const QStringL
         return;
     }
 
+    mUrl.setFileName(scriptName);
+
     // Whether the server supports the "date" extension
     const bool supportsSieveDate = mUrl.protocol() == QLatin1String("sieve") && sieveCapabilities.contains(QLatin1String("date"));
 
@@ -129,8 +131,9 @@ void VacationPageWidget::slotGetResult(const QString &serverName, const QStringL
     QString domainName = VacationUtils::defaultDomainName();
     QDate startDate = VacationUtils::defaultStartDate();
     QDate endDate = VacationUtils::defaultEndDate();
+    bool scriptActive = true;
 
-    const bool bParse = KSieveUi::VacationUtils::parseScript(script, messageText, subject, notificationInterval, aliases, sendForSpam, domainName, startDate, endDate);
+    const bool bParse = KSieveUi::VacationUtils::parseScript(script, scriptActive, messageText, subject, notificationInterval, aliases, sendForSpam, domainName, startDate, endDate);
 
     if (!bParse) {
         mVacationWarningWidget->setVisible(true);
@@ -138,7 +141,7 @@ void VacationPageWidget::slotGetResult(const QString &serverName, const QStringL
 
     mWasActive = active;
     mVacationEditWidget->setEnabled(true);
-    mVacationEditWidget->setActivateVacation( active );
+    mVacationEditWidget->setActivateVacation( active && scriptActive );
     mVacationEditWidget->setMessageText( messageText );
     mVacationEditWidget->setSubject( subject );
     mVacationEditWidget->setNotificationInterval( notificationInterval );
@@ -164,7 +167,8 @@ KSieveUi::VacationCreateScriptJob *VacationPageWidget::writeScript()
         KSieveUi::VacationCreateScriptJob *createJob = new KSieveUi::VacationCreateScriptJob;
         createJob->setServerUrl(mUrl);
         createJob->setServerName(mServerName);
-        const QString script = VacationUtils::composeScript( mVacationEditWidget->messageText(),
+        const bool active = mVacationEditWidget->activateVacation();
+        const QString script = VacationUtils::composeScript( mVacationEditWidget->messageText(), active,
                                                              mVacationEditWidget->subject(),
                                                              mVacationEditWidget->notificationInterval(),
                                                              mVacationEditWidget->mailAliases(),
@@ -172,7 +176,6 @@ KSieveUi::VacationCreateScriptJob *VacationPageWidget::writeScript()
                                                              mVacationEditWidget->domainName(),
                                                              mVacationEditWidget->startDate(),
                                                              mVacationEditWidget->endDate() );
-        const bool active = mVacationEditWidget->activateVacation();
         createJob->setStatus(active, mWasActive);
         //Q_EMIT scriptActive( active, mServerName);
         createJob->setScript(script);

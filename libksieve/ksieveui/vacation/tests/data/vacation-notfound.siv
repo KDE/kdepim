@@ -1,0 +1,15 @@
+#blabla
+
+testcommand;
+
+if true {
+  testcmd2;
+}
+
+if false {
+  testcmd3;
+}
+
+if true {
+  testcmd4;
+}

@@ -40,18 +40,22 @@ QString defaultDomainName();
 QDate defaultStartDate();
 QDate defaultEndDate();
 
-QString composeScript( const QString & messageText, const QString &subject,
+QString composeScript( const QString & messageText, bool active, const QString &subject,
                        int notificationInterval,
                        const KMime::Types::AddrSpecList & aliases,
                        bool sendForSpam, const QString & excludeDomain,
                        const QDate & startDate, const QDate & endDate );
-bool parseScript( const QString & script, QString & messageText,
+bool parseScript( const QString & script, bool &active, QString & messageText,
                   QString &subject,
                   int & notificationInterval, QStringList & aliases,
                   bool & sendForSpam, QString & domainName,
                   QDate & startDate, QDate & endDate );
 
 bool foundVacationScript(const QString & script);
+
+QString mergeRequireLine(const QString &script1, const QString script2);
+
+QString updateVacationBlock(const QString &oldScript, const QString &newScript);
 
 }
 }

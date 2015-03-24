@@ -39,6 +39,8 @@ public:
     QMap<QString, KUrl> serverList();
     void checkVacation(const QString &serverName, const KUrl &url);
 
+    bool kep14Support(QString serverName);
+
 Q_SIGNALS:
     void scriptActive(bool active, const QString &serverName);
     void scriptAvailable(const QString &serverName, const QStringList &sieveCapabilities, const QString &scriptName, const QString &script, bool active);

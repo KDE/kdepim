@@ -33,14 +33,14 @@ public:
     void taggedArgument( const QString &tag );
     void stringArgument( const QString &string, bool multiLine, const QString & /*fixme*/ );
     void numberArgument( unsigned long number, char quantifier );
-    void commandStart( const QString &identifier );
-    void commandEnd();
+    void commandStart( const QString &identifier, int lineNumber);
+    void commandEnd(int lineNumber);
     void testStart( const QString &identifier );
     void testEnd();
     void testListStart();
     void testListEnd();
-    void blockStart();
-    void blockEnd();
+    void blockStart(int lineNumber);
+    void blockEnd(int lineNumber);
     void stringListArgumentStart();
     void stringListArgumentEnd();
     void stringListEntry( const QString &string, bool multiline, const QString &hashComment );

@@ -22,6 +22,11 @@ VacationDataExtractor::VacationDataExtractor()
     : KSieve::ScriptBuilder(),
       mContext( None ),
       mNotificationInterval( 0 )
+    , mActive(true)
+    , mInIfBlock(false)
+    , mBlockLevel(0)
+    , mLineStart(0)
+    , mLineEnd(0)
 {
     kDebug();
 }
@@ -31,17 +36,29 @@ VacationDataExtractor::~VacationDataExtractor()
 
 }
 
-void VacationDataExtractor::commandStart( const QString & identifier ) {
+void VacationDataExtractor::commandStart( const QString & identifier, int lineNumber ) {
     kDebug() << "( \"" << identifier <<"\" )";
+    if (identifier == QLatin1String("if") && mContext == None) {
+        mContext = IfBlock;
+        mLineStart = lineNumber;
+        mInIfBlock = true;
+    }
     if ( identifier != QLatin1String("vacation") )
         return;
+
+    if (mContext != IfBlock) {
+        mLineStart = lineNumber;
+    }
+
     reset();
     mContext = VacationCommand;
 }
 
-void VacationDataExtractor::commandEnd() {
-    kDebug();
-    mContext = None;
+void VacationDataExtractor::commandEnd(int lineNumber) {
+    if ( mContext != None && mContext != IfBlock  && mContext != VacationEnd) {
+        mContext = VacationEnd;
+        mLineEnd = lineNumber;
+    }
 }
 
 void VacationDataExtractor::error( const KSieve::Error & e )
@@ -52,6 +69,42 @@ void VacationDataExtractor::error( const KSieve::Error & e )
 void VacationDataExtractor::finished()
 {
 
+}
+
+void VacationDataExtractor::testStart(const QString &test)
+{
+    if (mContext == IfBlock) {
+        if (test ==  QLatin1String("true") || test ==  QLatin1String("false")) {
+            mActive = (test == QLatin1String("true"));
+            mIfComment = QString();
+            kDebug() << "set active level to" << mActive;
+        }
+    }
+}
+
+void VacationDataExtractor::hashComment(const QString &comment)
+{
+    if (mContext == IfBlock) {
+        mIfComment += comment;
+    }
+}
+
+
+void VacationDataExtractor::blockStart(int lineNumber)
+{
+    mBlockLevel++;
+}
+
+void VacationDataExtractor::blockEnd(int lineNumber)
+{
+    mBlockLevel--;
+    if(mBlockLevel == 0 && !commandFound()) {       //We are in main level again, and didn't found vacation in block
+        mActive = true;
+        mIfComment = QString();
+    } else if (mInIfBlock && mBlockLevel == 0 && commandFound()) {
+        mLineEnd = lineNumber;
+        mInIfBlock = false;
+    }
 }
 
 void VacationDataExtractor::taggedArgument( const QString & tag )
@@ -122,4 +175,54 @@ void VacationDataExtractor::reset()
     mNotificationInterval = 0;
     mAliases.clear();
     mMessageText.clear();
+}
+
+RequireExtractor::RequireExtractor()
+    : KSieve::ScriptBuilder()
+    , mContext( None )
+    , mLineStart(0)
+    , mLineEnd(0)
+{
+
+}
+
+RequireExtractor::~RequireExtractor()
+{
+
+}
+
+void RequireExtractor::commandStart(const QString &identifier, int lineNumber)
+{
+    if (identifier == QLatin1String("require") && mContext == None) {
+        mContext = RequireCommand;
+        mLineStart = lineNumber;
+    }
+}
+
+void RequireExtractor::commandEnd(int lineNumber)
+{
+    if (mContext == RequireCommand) {
+        mContext = EndState;
+        mLineEnd = lineNumber;
+    }
+}
+
+void RequireExtractor::error(const KSieve::Error &e)
+{
+     kDebug() << e.asString() << "@" << e.line() << "," << e.column();
+}
+
+void RequireExtractor::finished()
+{
+
+}
+
+void RequireExtractor::stringArgument(const QString &string, bool, const QString &)
+{
+    mRequirements << string;
+}
+
+void RequireExtractor::stringListEntry(const QString &string, bool, const QString &)
+{
+    mRequirements << string;
 }

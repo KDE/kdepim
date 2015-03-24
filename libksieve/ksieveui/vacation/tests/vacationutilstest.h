@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
+  Copyright (c) 2015 Sandro Knauß <knauss@kolabsys.com>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,21 +15,27 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef PARSEUSERJOBTEST_H
-#define PARSEUSERJOBTEST_H
+#ifndef VACATIONUTILSTEST_H
+#define VACATIONUTILSTEST_H
 
 #include <QObject>
 
 namespace KSieveUi {
-class ParseUserJobTest : public QObject
+class VacationUtilsTest : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
-    void testParseEmptyUserJob();
-    void testParseUserTwoActiveScriptJob();
-    void testParseUserNoActiveScriptJob();
-    void testParseUserDuplicateActiveScriptJob();
-    void testParseUserErrorScriptJob();
+    void testParseEmptyScript();
+    void testParseOnlyComment();
+    void testParseActivate_data();
+    void testParseActivate();
+    void testParseScript_data();
+    void testParseScript();
+    void testParseScriptComplex();
+    void testWriteScript();
+    void testWriteSimpleScript();
+    void testUpdateVacationBlock();
+    void testMergeRequireLine();
 };
 }
-#endif // PARSEUSERJOBTEST_H
+#endif // VACATIONUTILSTEST_H

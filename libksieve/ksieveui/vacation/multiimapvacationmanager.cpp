@@ -27,6 +27,8 @@
 #include <KMessageBox>
 #include <KLocalizedString>
 
+#include <KDebug>
+
 using namespace KSieveUi;
 MultiImapVacationManager::MultiImapVacationManager(QObject *parent)
     : QObject(parent),
@@ -120,4 +122,14 @@ void MultiImapVacationManager::slotCheckKep14Ended(CheckKep14SupportJob *job, bo
     connect(checkJob, SIGNAL(scriptActive(VacationCheckJob*,QString,bool)),
             SLOT(slotScriptActive(VacationCheckJob*,QString,bool)));
     checkJob->start();
+}
+
+bool MultiImapVacationManager::kep14Support(QString serverName)
+{
+  if (mKep14Support.contains(serverName)) {
+      return mKep14Support[serverName];
+  } else {
+      kWarning() << "We don't know the KEP:14 support for this server." << serverName;
+  }
+  return  false;
 }

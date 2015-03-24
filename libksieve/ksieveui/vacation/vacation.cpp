@@ -115,18 +115,20 @@ void Vacation::slotGetResult( KManageSieve::SieveJob * job, bool success,
     QString domainName = VacationUtils::defaultDomainName();
     QDate startDate = VacationUtils::defaultStartDate();
     QDate endDate = VacationUtils::defaultEndDate();
+    bool sActive = true;
+
     if ( !success ) active = false; // default to inactive
 
-    if ( !mCheckOnly && ( !success || !KSieveUi::VacationUtils::parseScript( script, messageText, subject, notificationInterval, aliases, sendForSpam, domainName, startDate, endDate ) ) )
+    if ( !mCheckOnly && ( !success || !KSieveUi::VacationUtils::parseScript( script, sActive, messageText, subject, notificationInterval, aliases, sendForSpam, domainName, startDate, endDate ) ) )
         KMessageBox::information( 0, i18n("Someone (probably you) changed the "
                                           "vacation script on the server.\n"
                                           "KMail is no longer able to determine "
                                           "the parameters for the autoreplies.\n"
                                           "Default values will be used." ) );
 
-    mWasActive = active;
+    mWasActive = active && sActive;
     if ( mDialog ) {
-        mDialog->setActivateVacation( active );
+        mDialog->setActivateVacation( active && sActive );
         mDialog->setSubject(subject);
         mDialog->setMessageText( messageText );
         mDialog->setNotificationInterval( notificationInterval );
@@ -161,7 +163,8 @@ void Vacation::slotGetResult( KManageSieve::SieveJob * job, bool success,
 void Vacation::slotDialogOk() {
     kDebug();
     // compose a new script:
-    const QString script = VacationUtils::composeScript( mDialog->messageText(),
+    const bool active = mDialog->activateVacation();
+    const QString script = VacationUtils::composeScript( mDialog->messageText(), active,
                                           mDialog->subject(),
                                           mDialog->notificationInterval(),
                                           mDialog->mailAliases(),
@@ -169,7 +172,6 @@ void Vacation::slotDialogOk() {
                                           mDialog->domainName(),
                                           mDialog->startDate(),
                                           mDialog->endDate() );
-    const bool active = mDialog->activateVacation();
     emit scriptActive( active, mServerName);
 
     kDebug() << "script:" << endl << script;

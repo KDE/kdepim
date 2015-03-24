@@ -33,9 +33,7 @@ ParseUserScriptJob::ParseUserScriptJob(const KUrl &url, QObject *parent)
 
 ParseUserScriptJob::~ParseUserScriptJob()
 {
-    if ( mSieveJob )
-        mSieveJob->kill();
-    mSieveJob = 0;
+    kill();
 }
 
 KUrl ParseUserScriptJob::scriptUrl() const
@@ -85,7 +83,6 @@ void ParseUserScriptJob::emitSuccess(const QStringList &activeScriptList)
     emit finished(this);
 }
 
-
 QStringList ParseUserScriptJob::parsescript(const QString &script, bool &result)
 {
     QStringList lst;
@@ -105,6 +102,14 @@ QString ParseUserScriptJob::error() const
 {
     return mError;
 }
+
+void ParseUserScriptJob::kill()
+{
+  if ( mSieveJob )
+      mSieveJob->kill();
+  mSieveJob = 0;
+}
+
 
 QStringList ParseUserScriptJob::extractActiveScript(const QDomDocument &doc)
 {

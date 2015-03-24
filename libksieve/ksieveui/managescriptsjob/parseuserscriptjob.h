@@ -32,6 +32,8 @@ namespace KSieveUi {
 class KSIEVEUI_EXPORT ParseUserScriptJob : public QObject
 {
     Q_OBJECT
+
+    friend class ParseUserJobTest;
 public:
     explicit ParseUserScriptJob(const KUrl &url,QObject *parent=0);
     ~ParseUserScriptJob();
@@ -42,6 +44,7 @@ public:
 
     QStringList activeScriptList() const;
     QString error() const;
+    void kill();
 
 private Q_SLOTS:
     void slotGetResult( KManageSieve::SieveJob *, bool, const QString &, bool );

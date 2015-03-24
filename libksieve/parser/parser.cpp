@@ -42,6 +42,8 @@
 #include <limits.h> // ULONG_MAX
 #include <ctype.h> // isdigit
 
+#include <KDebug>
+
 namespace KSieve {
 
 //
@@ -218,8 +220,9 @@ bool Parser::Impl::parseCommand() {
     if ( !obtainToken() || token() != Lexer::Identifier )
         return false;
 
-    if ( scriptBuilder() )
-        scriptBuilder()->commandStart( tokenValue() );
+    if ( scriptBuilder() ) {
+        scriptBuilder()->commandStart( tokenValue(), lexer.line() );
+    }
     consumeToken();
 
     //
@@ -290,8 +293,9 @@ bool Parser::Impl::parseCommand() {
         return false;
     }
 
-    if ( scriptBuilder() )
-        scriptBuilder()->commandEnd();
+    if ( scriptBuilder() ) {
+        scriptBuilder()->commandEnd(lexer.line());
+    }
     return true;
 }
 
@@ -491,7 +495,7 @@ bool Parser::Impl::parseBlock() {
     if ( token() != Lexer::Special || tokenValue() != QLatin1String("{"))
         return false;
     if ( scriptBuilder() )
-        scriptBuilder()->blockStart();
+        scriptBuilder()->blockStart(lexer.line());
     consumeToken();
 
     if ( !obtainToken() )
@@ -522,7 +526,7 @@ bool Parser::Impl::parseBlock() {
         return false;
     }
     if ( scriptBuilder() )
-        scriptBuilder()->blockEnd();
+        scriptBuilder()->blockEnd(lexer.line());
     consumeToken();
     return true;
 }

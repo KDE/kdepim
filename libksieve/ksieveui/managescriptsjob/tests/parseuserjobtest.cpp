@@ -18,19 +18,20 @@
 #include "ksieveui/managescriptsjob/parseuserscriptjob.h"
 #include <qtest_kde.h>
 
+using namespace KSieveUi;
 
-QTEST_KDEMAIN( ParseUserTest, NoGUI )
+QTEST_KDEMAIN( ParseUserJobTest, NoGUI )
 
-void ParseUserTest::testParseEmptyUserJob()
+void ParseUserJobTest::testParseEmptyUserJob()
 {
     const QString script;
     bool result;
-    const QStringList lst = KSieveUi::ParseUserScriptJob::parsescript(script, result);
+    const QStringList lst = ParseUserScriptJob::parsescript(script, result);
     QCOMPARE(lst.count(), 0);
     QCOMPARE(result, true);
 }
 
-void ParseUserTest::testParseUserTwoActiveScriptJob()
+void ParseUserJobTest::testParseUserTwoActiveScriptJob()
 {
     const QString script = QLatin1String("# USER Management Script\n"
                                          "#\n"
@@ -44,12 +45,12 @@ void ParseUserTest::testParseUserTwoActiveScriptJob()
                                          "include :personal \"file1\";\n"
                                          "include :personal \"file2\";\n");
     bool result;
-    const QStringList lst = KSieveUi::ParseUserScriptJob::parsescript(script, result);
+    const QStringList lst = ParseUserScriptJob::parsescript(script, result);
     QCOMPARE(lst.count(), 2);
     QCOMPARE(result, true);
 }
 
-void ParseUserTest::testParseUserNoActiveScriptJob()
+void ParseUserJobTest::testParseUserNoActiveScriptJob()
 {
     const QString script = QLatin1String("# USER Management Script\n"
                                          "#\n"
@@ -61,12 +62,12 @@ void ParseUserTest::testParseUserNoActiveScriptJob()
                                          "\n"
                                          "require [\"include\"];\n");
     bool result;
-    const QStringList lst = KSieveUi::ParseUserScriptJob::parsescript(script, result);
+    const QStringList lst = ParseUserScriptJob::parsescript(script, result);
     QCOMPARE(lst.count(), 0);
     QCOMPARE(result, true);
 }
 
-void ParseUserTest::testParseUserDuplicateActiveScriptJob()
+void ParseUserJobTest::testParseUserDuplicateActiveScriptJob()
 {
     const QString script = QLatin1String("# USER Management Script\n"
                                          "#\n"
@@ -80,12 +81,12 @@ void ParseUserTest::testParseUserDuplicateActiveScriptJob()
                                          "include :personal \"file1\";\n"
                                          "include :personal \"file1\";\n");
     bool result;
-    const QStringList lst = KSieveUi::ParseUserScriptJob::parsescript(script, result);
+    const QStringList lst = ParseUserScriptJob::parsescript(script, result);
     QCOMPARE(lst.count(), 1);
     QCOMPARE(result, true);
 }
 
-void ParseUserTest::testParseUserErrorScriptJob()
+void ParseUserJobTest::testParseUserErrorScriptJob()
 {
     const QString script = QLatin1String("# USER Management Script\n"
                                          "#\n"
@@ -97,7 +98,7 @@ void ParseUserTest::testParseUserErrorScriptJob()
                                          "\n"
                                          "errorscript\n");
     bool result;
-    const QStringList lst = KSieveUi::ParseUserScriptJob::parsescript(script, result);
+    const QStringList lst = ParseUserScriptJob::parsescript(script, result);
     QCOMPARE(lst.count(), 0);
     QCOMPARE(result, false);
 }

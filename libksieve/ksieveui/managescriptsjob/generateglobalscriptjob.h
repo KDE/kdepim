@@ -33,6 +33,7 @@ public:
     ~GenerateGlobalScriptJob();
 
     void start();
+    void kill();
 
     void addUserActiveScripts(const QStringList &lstScript);
 
@@ -50,7 +51,7 @@ private:
     void writeUserScript();
     QStringList mListUserActiveScripts;
     KUrl mCurrentUrl;
-    KManageSieve::SieveJob *mMasterjob;
+    KManageSieve::SieveJob *mMasterJob;
     KManageSieve::SieveJob *mUserJob;
 };
 }

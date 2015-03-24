@@ -400,12 +400,12 @@ public:
     const QString txt = "number" + ( quantifier ? QString(" quantifier=\"%1\"").arg( quantifier ) : QString() ) ;
     write( txt.toLatin1(), QString::number( number ) );
   }
-  void commandStart( const QString & identifier ) {
+  void commandStart( const QString & identifier, int lineNumber) {
     write( "<command>" );
     ++indent;
     write( "identifier", identifier );
   }
-  void commandEnd() {
+  void commandEnd(int lineNumber) {
     --indent;
     write( "</command>" );
   }
@@ -426,11 +426,11 @@ public:
     --indent;
     write( "</testlist>" );
   }
-  void blockStart() {
+  void blockStart(int lineNumber) {
     write( "<block>" );
     ++indent;
   }
-  void blockEnd() {
+  void blockEnd(int lineNumber) {
     --indent;
     write( "</block>" );
   }
@@ -515,12 +515,12 @@ public:
     checkEquals( QString::number( number ) + ( quantifier ? quantifier : ' ' ) );
     ++mNextResponse;
   }
-  void commandStart( const QString & identifier ) {
+  void commandStart( const QString & identifier, int lineNumber ) {
     checkIs( CommandStart );
     checkEquals( identifier );
     ++mNextResponse;
   }
-  void commandEnd() {
+  void commandEnd(int lineNumber) {
     checkIs( CommandEnd );
     ++mNextResponse;
   }
@@ -541,11 +541,11 @@ public:
     checkIs( TestListEnd );
     ++mNextResponse;
   }
-  void blockStart() {
+  void blockStart(int lineNumber) {
     checkIs( BlockStart );
     ++mNextResponse;
   }
-  void blockEnd() {
+  void blockEnd(int lineNumber) {
     checkIs( BlockEnd );
     ++mNextResponse;
   }

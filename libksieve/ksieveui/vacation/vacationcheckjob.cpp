@@ -38,10 +38,21 @@ VacationCheckJob::VacationCheckJob(const KUrl &url, const QString &serverName, Q
 
 VacationCheckJob::~VacationCheckJob()
 {
+    kill();
+}
+
+void VacationCheckJob::kill()
+{
     if ( mSieveJob )
         mSieveJob->kill();
     mSieveJob = 0;
+
+    if (mParseJob) {
+        mParseJob->kill();
+    }
+    mParseJob = 0;
 }
+
 
 void VacationCheckJob::setKep14Support(bool kep14Support)
 {
@@ -86,9 +97,13 @@ void VacationCheckJob::slotGetResult(KManageSieve::SieveJob */*job*/, bool succe
             getNextScript();
         }
     } else {
-        if ( !success )
+        if ( !success ) {
             active = false; // default to inactive
             mNoScriptFound = true;
+        }
+        if (active) {
+            mActiveScripts << mUrl.fileName();
+        }
         emit scriptActive(this, mUrl.fileName(), active);
     }
 }

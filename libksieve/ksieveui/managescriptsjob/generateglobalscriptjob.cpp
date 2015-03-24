@@ -25,18 +25,29 @@ using namespace KSieveUi;
 GenerateGlobalScriptJob::GenerateGlobalScriptJob(const KUrl &url, QObject *parent)
     : QObject(parent),
       mCurrentUrl(url),
-      mMasterjob(0),
+      mMasterJob(0),
       mUserJob(0)
 {
 }
 
 GenerateGlobalScriptJob::~GenerateGlobalScriptJob()
 {
-    if (mMasterjob)
-        mMasterjob->kill();
-    if (mUserJob)
-        mUserJob->kill();
+    kill();
 }
+
+void GenerateGlobalScriptJob::kill()
+{
+    if (mMasterJob) {
+        mMasterJob->kill();
+    }
+    mMasterJob = 0;
+
+    if (mUserJob) {
+        mUserJob->kill();
+    }
+    mUserJob = 0;
+}
+
 
 void GenerateGlobalScriptJob::addUserActiveScripts(const QStringList &lstScript)
 {
@@ -79,8 +90,8 @@ void GenerateGlobalScriptJob::writeMasterScript()
 
     KUrl url(mCurrentUrl);
     url.setFileName(QLatin1String("MASTER"));
-    mMasterjob = KManageSieve::SieveJob::put(url, masterScript, true, true );
-    connect( mMasterjob, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
+    mMasterJob = KManageSieve::SieveJob::put(url, masterScript, true, true );
+    connect( mMasterJob, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
              this, SLOT(slotPutMasterResult(KManageSieve::SieveJob*,bool)) );
 }
 
@@ -90,7 +101,7 @@ void GenerateGlobalScriptJob::slotPutMasterResult( KManageSieve::SieveJob *, boo
         Q_EMIT error(i18n("Error when we wrote \"MASTER\" script on server."));
         return;
     }
-    mMasterjob = 0;
+    mMasterJob = 0;
     writeUserScript();
 }
 

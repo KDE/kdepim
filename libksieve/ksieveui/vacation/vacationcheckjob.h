@@ -36,6 +36,7 @@ public:
     ~VacationCheckJob();
     void setKep14Support(bool kep14Support);
     void start();
+    void kill();
     bool noScriptFound();
     QString script();
     QStringList sieveCapabilities();

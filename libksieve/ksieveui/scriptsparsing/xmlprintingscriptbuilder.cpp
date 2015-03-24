@@ -50,7 +50,7 @@ void XMLPrintingScriptBuilder::numberArgument( unsigned long number, char quanti
     write( QLatin1String("num"), ( quantifier ? QString::fromLatin1("quantifier=\"%1\"").arg( quantifier ) : QString()) , QString::number( number ) );
 }
 
-void XMLPrintingScriptBuilder::commandStart( const QString &identifier )
+void XMLPrintingScriptBuilder::commandStart( const QString &identifier, int lineNumber )
 {
     if ( identifier == QLatin1String("else") ||
          identifier == QLatin1String("break") ||
@@ -66,7 +66,7 @@ void XMLPrintingScriptBuilder::commandStart( const QString &identifier )
     }
 }
 
-void XMLPrintingScriptBuilder::commandEnd()
+void XMLPrintingScriptBuilder::commandEnd(int lineNumber)
 {
     if (mIsAction) {
         write( QLatin1String("</action>") );
@@ -96,12 +96,12 @@ void XMLPrintingScriptBuilder::testListEnd()
     write( QLatin1String("</testlist>") );
 }
 
-void XMLPrintingScriptBuilder::blockStart()
+void XMLPrintingScriptBuilder::blockStart(int lineNumber)
 {
     write( QLatin1String("<block>") );
 }
 
-void XMLPrintingScriptBuilder::blockEnd()
+void XMLPrintingScriptBuilder::blockEnd(int lineNumber)
 {
     write( QLatin1String("</block>") );
 }
