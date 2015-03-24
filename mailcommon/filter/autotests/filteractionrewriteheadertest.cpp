@@ -40,6 +40,7 @@ void FilterActionRewriteHeaderTest::shouldHaveDefaultValue()
     QWidget *w = filter.createParamWidget(0);
     PimCommon::MinimumComboBox *combo = w->findChild<PimCommon::MinimumComboBox *>(QLatin1String("combo"));
     QVERIFY(combo);
+    QVERIFY(combo->count() > 0);
 
     QLabel *label = w->findChild<QLabel *>(QLatin1String("label_replace"));
     QVERIFY(label);
