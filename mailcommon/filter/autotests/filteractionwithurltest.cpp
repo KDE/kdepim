@@ -19,7 +19,7 @@
 #include "../filteractions/filteractionwithurl.h"
 #include <KUrlRequester>
 #include <KLineEdit>
-#include <qtest_kde.h>
+#include <qtest.h>
 
 class TestFilterActionWithUrl : public MailCommon::FilterActionWithUrl
 {
@@ -82,4 +82,4 @@ void FilterActionWithUrlTest::shouldAddValue()
     QCOMPARE(requester->lineEdit()->text(), QLatin1String("/foo"));
 }
 
-QTEST_KDEMAIN(FilterActionWithUrlTest, GUI)
+QTEST_MAIN(FilterActionWithUrlTest)

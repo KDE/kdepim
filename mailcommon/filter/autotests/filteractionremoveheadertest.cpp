@@ -17,7 +17,7 @@
 
 #include "filteractionremoveheadertest.h"
 #include "../filteractions/filteractionremoveheader.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <widgets/minimumcombobox.h>
 
 FilterActionRemoveHeaderTest::FilterActionRemoveHeaderTest(QObject *parent)
@@ -45,4 +45,4 @@ void FilterActionRemoveHeaderTest::shouldHaveSieveRequires()
     QCOMPARE(filter.sieveRequires(), QStringList() << QLatin1String("editheader"));
 }
 
-QTEST_KDEMAIN(FilterActionRemoveHeaderTest, GUI)
+QTEST_MAIN(FilterActionRemoveHeaderTest)

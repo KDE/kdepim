@@ -17,7 +17,7 @@
 
 #include "unitcomboboxtest.h"
 #include "../widgets/unitcombobox.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 UnitComboBoxTest::UnitComboBoxTest(QObject *parent)
     : QObject(parent)
@@ -56,4 +56,4 @@ void UnitComboBoxTest::changeCurrentItem()
     QCOMPARE(combo.unit(), static_cast<ArchiveMailInfo::ArchiveUnit>(output));
 }
 
-QTEST_KDEMAIN(UnitComboBoxTest, GUI)
+QTEST_MAIN(UnitComboBoxTest)

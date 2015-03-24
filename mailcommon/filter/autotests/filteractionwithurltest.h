@@ -24,7 +24,7 @@ class FilterActionWithUrlTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FilterActionWithUrlTest(QObject *parent = 0);
+    explicit FilterActionWithUrlTest(QObject *parent = Q_NULLPTR);
     ~FilterActionWithUrlTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();

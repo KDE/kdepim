@@ -24,7 +24,7 @@ class FilterActionRemoveHeaderTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FilterActionRemoveHeaderTest(QObject *parent = 0);
+    explicit FilterActionRemoveHeaderTest(QObject *parent = Q_NULLPTR);
     ~FilterActionRemoveHeaderTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
