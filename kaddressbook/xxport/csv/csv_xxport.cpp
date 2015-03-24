@@ -151,8 +151,6 @@ void CsvXXPort::exportToFile( QFile *file, const KABC::Addressee::List &contacts
 ContactList CsvXXPort::importContacts() const
 {
     ContactList contactList;
-    KABC::Addressee::List contacts;
-
     QPointer<CSVImportDialog> dlg = new CSVImportDialog( parentWidget() );
     if ( dlg->exec() && dlg ) {
         contactList.addressList = dlg->contacts();

@@ -36,7 +36,6 @@ LDAPXXPort::LDAPXXPort( QWidget *parentWidget )
 
 ContactList LDAPXXPort::importContacts() const
 {
-    KABC::Addressee::List contacts;
     ContactList contactList;
     QPointer<KLDAP::LdapSearchDialog> dlg = new KLDAP::LdapSearchDialog( parentWidget() );
 
