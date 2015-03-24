@@ -63,20 +63,19 @@ LDIFXXPort::LDIFXXPort(QWidget *parentWidget)
 {
 }
 
-KContacts::Addressee::List LDIFXXPort::importContacts() const
+ContactList LDIFXXPort::importContacts() const
 {
-    KContacts::Addressee::List contacts;
-
+    ContactList contactList;
     const QString fileName = QFileDialog::getOpenFileName(Q_NULLPTR , QString(),  QDir::homePath(), QLatin1String("text/x-ldif"));
-    if (fileName.isEmpty()) {
-        return contacts;
+    if ( fileName.isEmpty() ) {
+        return contactList;
     }
 
-    QFile file(fileName);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        const QString msg = i18n("<qt>Unable to open <b>%1</b> for reading.</qt>", fileName);
-        KMessageBox::error(parentWidget(), msg);
-        return contacts;
+    QFile file( fileName );
+    if ( !file.open( QIODevice::ReadOnly | QIODevice::Text ) ) {
+        const QString msg = i18n( "<qt>Unable to open <b>%1</b> for reading.</qt>", fileName );
+        KMessageBox::error( parentWidget(), msg );
+        return contactList;
     }
 
     QTextStream stream(&file);
@@ -85,13 +84,11 @@ KContacts::Addressee::List LDIFXXPort::importContacts() const
     const QString wholeFile = stream.readAll();
     const QDateTime dtDefault = QFileInfo(file).lastModified();
     file.close();
-    KContacts::ContactGroup::List contactGroup;
-    KContacts::LDIFConverter::LDIFToAddressee(wholeFile, contacts, contactGroup, dtDefault);
-
-    return contacts;
+    KContacts::LDIFConverter::LDIFToAddressee( wholeFile, contactList.addressList, contactList.contactGroupList, dtDefault );
+    return contactList;
 }
 
-bool LDIFXXPort::exportContacts(const KContacts::Addressee::List &list, VCardExportSelectionWidget::ExportFields) const
+bool LDIFXXPort::exportContacts( const ContactList &list, VCardExportSelectionWidget::ExportFields ) const
 {
     const QUrl url =
         QFileDialog::getSaveFileUrl(parentWidget(), QString(), QUrl::fromLocalFile(QDir::homePath() + QLatin1String("/addressbook.ldif")), QLatin1String("text/x-ldif"));
@@ -107,7 +104,7 @@ bool LDIFXXPort::exportContacts(const KContacts::Addressee::List &list, VCardExp
             return false;
         }
 
-        doExport(&tmpFile, list);
+        doExport( &tmpFile, list.addressList );
         tmpFile.flush();
 
         return KIO::NetAccess::upload(tmpFile.fileName(), url, parentWidget());
@@ -137,7 +134,7 @@ bool LDIFXXPort::exportContacts(const KContacts::Addressee::List &list, VCardExp
             return false;
         }
 
-        doExport(&file, list);
+        doExport( &file, list.addressList );
         file.close();
 
         return true;

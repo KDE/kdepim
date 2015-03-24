@@ -39,7 +39,7 @@ CsvXXPort::CsvXXPort(QWidget *parent)
 {
 }
 
-bool CsvXXPort::exportContacts(const KContacts::Addressee::List &contacts , VCardExportSelectionWidget::ExportFields) const
+bool CsvXXPort::exportContacts(const ContactList &contacts , VCardExportSelectionWidget::ExportFields ) const
 {
     QUrl url = QFileDialog::getSaveFileUrl(parentWidget(), QString(), QUrl::fromUserInput(QLatin1String("addressbook.csv")));
     if (url.isEmpty()) {
@@ -69,7 +69,7 @@ bool CsvXXPort::exportContacts(const KContacts::Addressee::List &contacts , VCar
             return false;
         }
 
-        exportToFile(&tmpFile, contacts);
+        exportToFile( &tmpFile, contacts.addressList );
         tmpFile.flush();
 
         return KIO::NetAccess::upload(tmpFile.fileName(), url, parentWidget());
@@ -82,7 +82,7 @@ bool CsvXXPort::exportContacts(const KContacts::Addressee::List &contacts , VCar
             return false;
         }
 
-        exportToFile(&file, contacts);
+        exportToFile( &file, contacts.addressList );
         file.close();
 
         return true;
@@ -148,16 +148,16 @@ void CsvXXPort::exportToFile(QFile *file, const KContacts::Addressee::List &cont
     }
 }
 
-KContacts::Addressee::List CsvXXPort::importContacts() const
+ContactList CsvXXPort::importContacts() const
 {
+    ContactList contactList;
     KContacts::Addressee::List contacts;
 
-    QPointer<CSVImportDialog> dlg = new CSVImportDialog(parentWidget());
-    if (dlg->exec() && dlg) {
-        contacts = dlg->contacts();
+    QPointer<CSVImportDialog> dlg = new CSVImportDialog( parentWidget() );
+    if ( dlg->exec() && dlg ) {
+        contactList.addressList = dlg->contacts();
     }
 
     delete dlg;
-
-    return contacts;
+    return contactList;
 }

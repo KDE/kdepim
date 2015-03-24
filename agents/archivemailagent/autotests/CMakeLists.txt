@@ -4,7 +4,7 @@ remove_definitions( -DQT_NO_CAST_FROM_BYTEARRAY )
 
 # Convenience macro to add unit tests.
 macro( archivemail_agent _source)
-  set( _test ${_source} ../archivemailinfo.cpp ../archivemaildialog.cpp ../archivemailagentutil.cpp ../addarchivemaildialog.cpp ../archivemailagent_debug.cpp ../widgets/formatcombobox.cpp ../widgets/unitcombobox.cpp)
+  set( _test ${_source} ../archivemailinfo.cpp ../archivemaildialog.cpp ../archivemailagentutil.cpp ../addarchivemaildialog.cpp ../archivemailagent_debug.cpp ../widgets/formatcombobox.cpp ../widgets/unitcombobox.cpp ../archivemailwidget.cpp)
   ki18n_wrap_ui(_test ../ui/archivemailwidget.ui )
   get_filename_component( _name ${_source} NAME_WE )
   add_executable( ${_name} ${_test} )

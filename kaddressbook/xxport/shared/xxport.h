@@ -21,6 +21,7 @@
 #define XXPORT_H
 
 #include <KContacts/Addressee>
+#include <KContacts/ContactGroup>
 #include "xxport/vcard/vcardexportselectionwidget.h"
 
 #include <QtCore/QHash>
@@ -30,6 +31,17 @@
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
+struct ContactList {
+    bool isEmpty() const {
+        return (addressList.isEmpty() && contactGroupList.isEmpty());
+    }
+    int count() const {
+        return (addressList.count() + contactGroupList.count());
+    }
+    KContacts::Addressee::List addressList;
+    KContacts::ContactGroup::List contactGroupList;
+};
+
 class XXPort
 {
 public:
@@ -49,12 +61,12 @@ public:
     /**
      * Imports a list of contacts.
      */
-    virtual KContacts::Addressee::List importContacts() const = 0;
+    virtual ContactList importContacts() const = 0;
 
     /**
      * Exports the list of @p contacts.
      */
-    virtual bool exportContacts(const KContacts::Addressee::List &contacts, VCardExportSelectionWidget::ExportFields) const = 0;
+    virtual bool exportContacts( const ContactList &contacts, VCardExportSelectionWidget::ExportFields ) const = 0;
 
     /**
      * Sets module specific options.

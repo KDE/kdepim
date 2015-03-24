@@ -33,7 +33,10 @@
 #include <KMessageBox>
 
 // #define DEBUG_MESSAGE_ID
-static QString followUpItemPattern = QStringLiteral("FollowupReminderItem \\d+");
+namespace {
+inline QString followUpItemPattern() { return QStringLiteral("FollowupReminderItem \\d+"); }
+}
+
 
 FollowUpReminderInfoItem::FollowUpReminderInfoItem(QTreeWidget *parent)
     : QTreeWidgetItem(parent),
@@ -104,7 +107,7 @@ void FollowUpReminderInfoWidget::setInfo(const QList<FollowUpReminder::FollowUpR
 void FollowUpReminderInfoWidget::load()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
-    const QStringList filterGroups = config->groupList().filter(QRegExp(followUpItemPattern));
+    const QStringList filterGroups = config->groupList().filter(QRegExp(followUpItemPattern()));
     const int numberOfItem = filterGroups.count();
     for (int i = 0 ; i < numberOfItem; ++i) {
         KConfigGroup group = config->group(filterGroups.at(i));
@@ -157,7 +160,7 @@ bool FollowUpReminderInfoWidget::save()
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
     // first, delete all filter groups:
-    const QStringList filterGroups = config->groupList().filter(QRegExp(followUpItemPattern));
+    const QStringList filterGroups = config->groupList().filter(QRegExp(followUpItemPattern()));
 
     foreach (const QString &group, filterGroups) {
         config->deleteGroup(group);

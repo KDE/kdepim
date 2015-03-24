@@ -18,6 +18,8 @@
 #include "archivemaildialogtest.h"
 #include "../archivemaildialog.h"
 #include <qtest.h>
+#include <QTreeWidget>
+#include "../archivemailwidget.h"
 
 ArchiveMailDialogTest::ArchiveMailDialogTest(QObject *parent)
     : QObject(parent)

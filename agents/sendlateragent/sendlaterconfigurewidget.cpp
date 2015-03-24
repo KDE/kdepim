@@ -28,7 +28,9 @@
 #include <QIcon>
 #include <QPointer>
 
-static QString sendLaterItemPattern = QStringLiteral("SendLaterItem \\d+");
+namespace {
+inline QString sendLaterItemPattern() { return QStringLiteral( "SendLaterItem \\d+" ); }
+}
 
 //#define DEBUG_MESSAGE_ID
 
@@ -144,7 +146,7 @@ void SendLaterWidget::updateButtons()
 void SendLaterWidget::load()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
-    const QStringList filterGroups = config->groupList().filter(QRegExp(sendLaterItemPattern));
+    const QStringList filterGroups = config->groupList().filter(QRegExp(sendLaterItemPattern()));
     const int numberOfItem = filterGroups.count();
     for (int i = 0 ; i < numberOfItem; ++i) {
         KConfigGroup group = config->group(filterGroups.at(i));
@@ -182,7 +184,7 @@ void SendLaterWidget::save()
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
     // first, delete all filter groups:
-    const QStringList filterGroups = config->groupList().filter(QRegExp(sendLaterItemPattern));
+    const QStringList filterGroups = config->groupList().filter(QRegExp(sendLaterItemPattern()));
 
     foreach (const QString &group, filterGroups) {
         config->deleteGroup(group);

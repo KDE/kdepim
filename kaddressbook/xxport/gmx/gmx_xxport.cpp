@@ -121,22 +121,21 @@ static bool checkDateTime(const QString &dateStr, QDateTime &dt)
 
 /* import */
 
-KContacts::Addressee::List GMXXXPort::importContacts() const
+ContactList GMXXXPort::importContacts() const
 {
-    KContacts::Addressee::List addresseeList;
-
+    ContactList contactList;
     QString fileName =
         QFileDialog::getOpenFileName(Q_NULLPTR, QString(), QDir::homePath(), GMX_FILESELECTION_STRING);
 
-    if (fileName.isEmpty()) {
-        return addresseeList;
+    if ( fileName.isEmpty() ) {
+        return contactList;
     }
 
-    QFile file(fileName);
-    if (!file.open(QIODevice::ReadOnly)) {
-        QString msg = i18n("<qt>Unable to open <b>%1</b> for reading.</qt>", fileName);
-        KMessageBox::error(parentWidget(), msg);
-        return addresseeList;
+    QFile file( fileName );
+    if ( !file.open( QIODevice::ReadOnly ) ) {
+        QString msg = i18n( "<qt>Unable to open <b>%1</b> for reading.</qt>", fileName );
+        KMessageBox::error( parentWidget(), msg );
+        return contactList;
     }
 
     QDateTime dt;
@@ -148,9 +147,9 @@ KContacts::Addressee::List GMXXXPort::importContacts() const
     if (!line.startsWith(QLatin1String("AB_ADDRESSES:")) ||
             !line2.startsWith(QLatin1String("Address_id"))) {
         KMessageBox::error(
-            parentWidget(),
-            i18n("%1 is not a GMX address book file.", fileName));
-        return addresseeList;
+                    parentWidget(),
+                    i18n( "%1 is not a GMX address book file.", fileName ) );
+        return contactList;
     }
 
     QStringList itemList;
@@ -198,7 +197,7 @@ KContacts::Addressee::List GMXXXPort::importContacts() const
     line  = gmxStream.readLine();
     if (!line.startsWith(QLatin1String("AB_ADDRESS_RECORDS:"))) {
         qCWarning(KADDRESSBOOK_LOG) << "Could not find address records!";
-        return addresseeList;
+        return contactList;
     }
     // Address_id,Record_id,Street,Country,Zipcode,City,Phone,Fax,Mobile,
     // Mobile_type,Email,Homepage,Position,Comments,Record_type_id,Record_type,
@@ -313,6 +312,7 @@ KContacts::Addressee::List GMXXXPort::importContacts() const
             line = gmxStream.readLine();
         };
     }
+    KContacts::Addressee::List addresseeList;
 
     // now add the addresses to addresseeList
     for (AddresseeMap::Iterator addresseeIt = addresseeMap.begin();
@@ -336,12 +336,13 @@ KContacts::Addressee::List GMXXXPort::importContacts() const
     }
 
     file.close();
-    return addresseeList;
+    contactList.addressList = addresseeList;
+    return contactList;
 }
 
 /* export */
 
-bool GMXXXPort::exportContacts(const KContacts::AddresseeList &list, VCardExportSelectionWidget::ExportFields) const
+bool GMXXXPort::exportContacts( const ContactList &list, VCardExportSelectionWidget::ExportFields ) const
 {
     QUrl url = QFileDialog::getSaveFileUrl(parentWidget(), QString(), QUrl::fromLocalFile(QDir::homePath() + QLatin1String("/addressbook.gmx")), GMX_FILESELECTION_STRING);
     if (url.isEmpty()) {
@@ -372,7 +373,7 @@ bool GMXXXPort::exportContacts(const KContacts::AddresseeList &list, VCardExport
             return false;
         }
 
-        doExport(&tmpFile, list);
+        doExport( &tmpFile, list.addressList );
         tmpFile.flush();
 
         return KIO::NetAccess::upload(tmpFile.fileName(), url, parentWidget());
@@ -386,7 +387,7 @@ bool GMXXXPort::exportContacts(const KContacts::AddresseeList &list, VCardExport
             return false;
         }
 
-        doExport(&file, list);
+        doExport( &file, list.addressList );
         file.close();
 
         return true;

@@ -34,22 +34,20 @@ LDAPXXPort::LDAPXXPort(QWidget *parentWidget)
 {
 }
 
-KContacts::Addressee::List LDAPXXPort::importContacts() const
+ContactList LDAPXXPort::importContacts() const
 {
-    KContacts::Addressee::List contacts;
+    ContactList contactList;
+    QPointer<KLDAP::LdapSearchDialog> dlg = new KLDAP::LdapSearchDialog( parentWidget() );
 
-    QPointer<KLDAP::LdapSearchDialog> dlg = new KLDAP::LdapSearchDialog(parentWidget());
-
-    if (dlg->exec() && dlg) {
-        contacts = dlg->selectedContacts();
+    if ( dlg->exec() && dlg ) {
+        contactList.addressList = dlg->selectedContacts();
     }
 
     delete dlg;
-
-    return contacts;
+    return contactList;
 }
 
-bool LDAPXXPort::exportContacts(const KContacts::Addressee::List &, VCardExportSelectionWidget::ExportFields) const
+bool LDAPXXPort::exportContacts( const ContactList &, VCardExportSelectionWidget::ExportFields ) const
 {
     return false;
 }

@@ -55,13 +55,13 @@ VCardXXPort::VCardXXPort(QWidget *parent)
 {
 }
 
-bool VCardXXPort::exportContacts(const KContacts::Addressee::List &contacts, VCardExportSelectionWidget::ExportFields exportFields) const
+bool VCardXXPort::exportContacts( const ContactList &contacts, VCardExportSelectionWidget::ExportFields exportFields) const
 {
     KContacts::VCardConverter converter;
     QUrl url;
 
-    const KContacts::Addressee::List list = filterContacts(contacts, exportFields);
-    if (list.isEmpty()) {   // no contact selected
+    const KContacts::Addressee::List list = filterContacts(contacts.addressList, exportFields);
+    if ( list.isEmpty() ) { // no contact selected
         return true;
     }
 
@@ -144,9 +144,10 @@ bool VCardXXPort::exportContacts(const KContacts::Addressee::List &contacts, VCa
     return ok;
 }
 
-KContacts::Addressee::List VCardXXPort::importContacts() const
+ContactList VCardXXPort::importContacts() const
 {
     QString fileName;
+    ContactList contactList;
     KContacts::Addressee::List addrList;
     QList<QUrl> urls;
 
@@ -165,8 +166,8 @@ KContacts::Addressee::List VCardXXPort::importContacts() const
                     i18nc("@title:window", "Select vCard to Import"));
         }
 
-        if (urls.isEmpty()) {
-            return addrList;
+        if ( urls.isEmpty() ) {
+            return contactList;
         }
 
         const QString caption(i18nc("@title:window", "vCard Import Failed"));
@@ -231,7 +232,8 @@ KContacts::Addressee::List VCardXXPort::importContacts() const
             }
         }
     }
-    return addrList;
+    contactList.addressList = addrList;
+    return contactList;
 }
 
 KContacts::Addressee::List VCardXXPort::parseVCard(const QByteArray &data) const

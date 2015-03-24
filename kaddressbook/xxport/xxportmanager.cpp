@@ -92,10 +92,10 @@ void XXPortManager::importFile(const QUrl &url)
         return;
     }
     xxport->setOption(QLatin1String("importUrl"), url.path());
-    const KContacts::Addressee::List contacts = xxport->importContacts();
+    ContactList contactList = xxport->importContacts();
 
     delete xxport;
-    import(contacts);
+    import(contactList);
 }
 
 void XXPortManager::slotImport(const QString &identifier)
@@ -104,14 +104,13 @@ void XXPortManager::slotImport(const QString &identifier)
     if (!xxport) {
         return;
     }
-
-    const KContacts::Addressee::List contacts = xxport->importContacts();
+    ContactList contactList = xxport->importContacts();
 
     delete xxport;
-    import(contacts);
+    import(contactList);
 }
 
-void XXPortManager::import(const KContacts::Addressee::List &contacts)
+void XXPortManager::import(const ContactList &contacts)
 {
     if (contacts.isEmpty()) {   // nothing to import
         return;
@@ -148,14 +147,22 @@ void XXPortManager::import(const KContacts::Addressee::List &contacts)
 
     mImportProgressDialog->show();
 
-    for (int i = 0; i < contacts.count(); ++i) {
+    for ( int i = 0; i < contacts.addressList.count(); ++i ) {
         Akonadi::Item item;
-        item.setPayload<KContacts::Addressee>(contacts.at(i));
-        item.setMimeType(KContacts::Addressee::mimeType());
+        item.setPayload<KContacts::Addressee>( contacts.addressList.at( i ) );
+        item.setMimeType( KContacts::Addressee::mimeType() );
 
         Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob(item, collection);
         connect(job, &Akonadi::ItemCreateJob::result, this, &XXPortManager::slotImportJobDone);
     }
+    for (int i = 0; i < contacts.contactGroupList.count(); ++i ) {
+        Akonadi::Item groupItem( KContacts::ContactGroup::mimeType() );
+        groupItem.setPayload<KContacts::ContactGroup>( contacts.contactGroupList.at(i) );
+
+        Akonadi::Job *createJob = new Akonadi::ItemCreateJob( groupItem, collection );
+        connect( createJob, SIGNAL(result(KJob*)), this, SLOT(slotImportJobDone(KJob*)) );
+    }
+
 }
 
 void XXPortManager::slotImportJobDone(KJob *)
@@ -202,8 +209,9 @@ void XXPortManager::slotExport(const QString &identifier)
     if (!xxport) {
         return;
     }
-
-    xxport->exportContacts(contacts, exportFields);
+    ContactList contactLists;
+    contactLists.addressList = contacts;
+    xxport->exportContacts( contactLists, exportFields );
 
     delete xxport;
 }
