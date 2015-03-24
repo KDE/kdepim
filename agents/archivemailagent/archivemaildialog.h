@@ -18,68 +18,11 @@
 #ifndef ARCHIVEMAILDIALOG_H
 #define ARCHIVEMAILDIALOG_H
 
-#include "ui_archivemailwidget.h"
 #include "archivemailinfo.h"
-#include <QTreeWidgetItem>
-
+#include <KDialog>
 class QTreeWidget;
 class KAboutData;
-class ArchiveMailItem : public QTreeWidgetItem
-{
-public:
-    explicit ArchiveMailItem(QTreeWidget *parent = 0);
-    ~ArchiveMailItem();
-
-    void setInfo(ArchiveMailInfo *info);
-    ArchiveMailInfo *info() const;
-
-private:
-    ArchiveMailInfo *mInfo;
-};
-
-class ArchiveMailWidget : public QWidget
-{
-    Q_OBJECT
-public:
-    explicit ArchiveMailWidget( QWidget *parent = 0 );
-    ~ArchiveMailWidget();
-
-    enum ArchiveMailColumn {
-        Name = 0,
-        LastArchiveDate,
-        NextArchive,
-        StorageDirectory
-    };
-
-    void save();
-    void saveTreeWidgetHeader(KConfigGroup &group);
-    void restoreTreeWidgetHeader(const QByteArray &group);
-    void needReloadConfig();
-
-Q_SIGNALS:
-    void archiveNow(ArchiveMailInfo *info);
-
-private:
-    void load();
-    void createOrUpdateItem(ArchiveMailInfo *info, ArchiveMailItem *item = 0);
-    bool verifyExistingArchive(ArchiveMailInfo *info) const;
-    void updateDiffDate(ArchiveMailItem *item, ArchiveMailInfo *info);
-
-private Q_SLOTS:
-    void slotRemoveItem();
-    void slotModifyItem();
-    void slotAddItem();
-    void updateButtons();
-    void slotOpenFolder();
-    void customContextMenuRequested(const QPoint &);
-    void slotArchiveNow();
-    void slotItemChanged(QTreeWidgetItem *item, int);
-
-private:
-    bool mChanged;
-    Ui::ArchiveMailWidget *mWidget;
-};
-
+class ArchiveMailWidget;
 class ArchiveMailDialog : public KDialog
 {
     Q_OBJECT

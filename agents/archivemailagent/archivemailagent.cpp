@@ -28,7 +28,7 @@
 #include <Akonadi/CollectionFetchScope>
 #include <KMime/Message>
 #include <KWindowSystem>
-
+#include <KLocale>
 #include <QTimer>
 #include <QPointer>
 
