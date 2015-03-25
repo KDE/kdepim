@@ -49,10 +49,10 @@
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 
-void doExport( QFile *file, const KABC::Addressee::List &list )
+void doExport( QFile *file, const ContactList &list )
 {
     QString data;
-    KABC::LDIFConverter::addresseeToLDIF( list, data );
+    KABC::LDIFConverter::addresseeAndContactGroupToLDIF( list.addressList, list.contactGroupList, data );
 
     QTextStream stream( file );
     stream.setCodec( "UTF-8" );
@@ -105,7 +105,7 @@ bool LDIFXXPort::exportContacts( const ContactList &list, VCardExportSelectionWi
             return false;
         }
 
-        doExport( &tmpFile, list.addressList );
+        doExport( &tmpFile, list );
         tmpFile.flush();
 
         return KIO::NetAccess::upload( tmpFile.fileName(), url, parentWidget() );
@@ -135,7 +135,7 @@ bool LDIFXXPort::exportContacts( const ContactList &list, VCardExportSelectionWi
             return false;
         }
 
-        doExport( &file, list.addressList );
+        doExport( &file, list );
         file.close();
 
         return true;
