@@ -118,6 +118,7 @@ void Filter::setSearchString( const QString &search, QuickSearchLine::SearchOpti
     if ((mSearchString == trimStr) && (mOptions == options)) {
         return;
     }
+    mOptions = options;
     mSearchString = trimStr;
     mMatchingItemIds.clear();
 
