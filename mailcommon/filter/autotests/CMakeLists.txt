@@ -126,45 +126,51 @@ set(mailcommon_filteractionwithurltest_SRCS filteractionwithurltest.cpp
                                            ../filteractions/filteractionwithurl.cpp
                                            ../filteractions/filteractionwithaddress.cpp
                                            ../filteractions/filteractionwithstring.cpp)
-kde4_add_unit_test( filteractionwithurltest ${mailcommon_filteractionwithurltest_SRCS} )
+add_executable( filteractionwithurltest ${mailcommon_filteractionwithurltest_SRCS} )
+add_test(filteractionwithurltest filteractionwithurltest)
+ecm_mark_as_test(filteractionwithurltest)
 target_link_libraries( filteractionwithurltest
    kdepim
    pimcommon
    mailcommon
    messagecore
-   ${QT_QTTEST_LIBRARY}
-   ${QT_QTCORE_LIBRARY}
-   ${KDEPIMLIBS_AKONADI_LIBS}
-   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+   Qt5::Test
+   Qt5::Core
+   KF5::AkonadiCore
+   KF5::AkonadiMime
 )
 
 set(mailcommon_filteractionremoveheadertest_SRCS filteractionremoveheadertest.cpp
                                            ../filteractions/filteractionremoveheader.cpp
                                             ../filteractions/filteractionwithstringlist.cpp
                                            ../filteractions/filteractionwithstring.cpp)
-kde4_add_unit_test( filteractionremoveheadertest ${mailcommon_filteractionremoveheadertest_SRCS} )
+add_executable( filteractionremoveheadertest ${mailcommon_filteractionremoveheadertest_SRCS} )
+add_test(filteractionremoveheadertest filteractionremoveheadertest)
+ecm_mark_as_test(filteractionremoveheadertest)
 target_link_libraries( filteractionremoveheadertest
    kdepim
    pimcommon
    mailcommon
    messagecore
-   ${QT_QTTEST_LIBRARY}
-   ${QT_QTCORE_LIBRARY}
-   ${KDEPIMLIBS_AKONADI_LIBS}
-   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+   Qt5::Test
+   Qt5::Core
+   KF5::AkonadiCore
+   KF5::AkonadiMime
 )
 
 set(mailcommon_filteractionwithaddresstest_SRCS filteractionwithaddresstest.cpp
                                            ../filteractions/filteractionwithaddress.cpp
                                            ../filteractions/filteractionwithstring.cpp)
-kde4_add_unit_test( filteractionwithaddresstest ${mailcommon_filteractionwithaddresstest_SRCS} )
+add_executable( filteractionwithaddresstest ${mailcommon_filteractionwithaddresstest_SRCS} )
+add_test(filteractionwithaddresstest filteractionwithaddresstest)
+ecm_mark_as_test(filteractionwithaddresstest)
 target_link_libraries( filteractionwithaddresstest
    kdepim
    pimcommon
    mailcommon
    messagecore
-   ${QT_QTTEST_LIBRARY}
-   ${QT_QTCORE_LIBRARY}
-   ${KDEPIMLIBS_AKONADI_LIBS}
-   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+   Qt5::Test
+   Qt5::Core
+   KF5::AkonadiCore
+   KF5::AkonadiMime
 )

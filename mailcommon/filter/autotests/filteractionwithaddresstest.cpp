@@ -16,7 +16,7 @@
 */
 #include "filteractionwithaddresstest.h"
 #include "../filteractions/filteractionwithaddress.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <QWidget>
 #include <widgets/emailaddressrequester.h>
 
@@ -57,7 +57,7 @@ void FilterActionWithAddressTest::shouldHaveDefaultValue()
     TestFilterActionWithAddress filter;
     QWidget *w = filter.createParamWidget(0);
     QCOMPARE(w->objectName(), QLatin1String("emailaddressrequester"));
-    MessageCore::EmailAddressRequester *requester = dynamic_cast<MessageCore::EmailAddressRequester *>(w);
+    PimCommon::EmailAddressRequester *requester = dynamic_cast<PimCommon::EmailAddressRequester *>(w);
     QVERIFY(requester);
     QVERIFY(filter.isEmpty());
 }
@@ -66,11 +66,11 @@ void FilterActionWithAddressTest::shouldAssignValue()
 {
     TestFilterActionWithAddress filter;
     QWidget *w = filter.createParamWidget(0);
-    MessageCore::EmailAddressRequester *requester = dynamic_cast<MessageCore::EmailAddressRequester *>(w);
+    PimCommon::EmailAddressRequester *requester = dynamic_cast<PimCommon::EmailAddressRequester *>(w);
     filter.argsFromString(QLatin1String("foo"));
     filter.setParamWidgetValue(w);
     QVERIFY(!filter.isEmpty());
     QVERIFY(!requester->text().isEmpty());
 }
 
-QTEST_KDEMAIN(FilterActionWithAddressTest, GUI)
+QTEST_MAIN(FilterActionWithAddressTest)

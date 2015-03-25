@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 #include "filteractionexectest.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 FilterActionExecTest::FilterActionExecTest(QObject *parent)
     : QObject(parent)
@@ -28,4 +28,4 @@ FilterActionExecTest::~FilterActionExecTest()
 
 }
 
-QTEST_KDEMAIN(FilterActionExecTest, GUI)
+QTEST_MAIN(FilterActionExecTest)
