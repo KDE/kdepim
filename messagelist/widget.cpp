@@ -635,6 +635,10 @@ QList<Akonadi::Item> Widget::currentThreadAsMessageList() const
     return lstMiPtr;
 }
 
+MessageList::Core::QuickSearchLine::SearchOptions Widget::currentOptions() const
+{
+    return view()->currentOptions();
+}
 
 QList<Akonadi::MessageStatus> Widget::currentFilterStatus() const
 {

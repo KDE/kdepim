@@ -107,6 +107,11 @@ void Filter::setCurrentFolder( const Akonadi::Collection &folder )
     mCurrentFolder = folder;
 }
 
+QuickSearchLine::SearchOptions Filter::currentOptions() const
+{
+    return mOptions;
+}
+
 void Filter::setSearchString( const QString &search, QuickSearchLine::SearchOptions options )
 {
     const QString trimStr = search.trimmed();

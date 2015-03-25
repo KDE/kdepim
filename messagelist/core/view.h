@@ -27,6 +27,7 @@
 
 #include <messagelist/core/enums.h>
 #include <messagelist/messagelist_export.h>
+#include <messagelist/core/quicksearchline.h>
 
 class KMenu;
 
@@ -377,6 +378,7 @@ public:
 
     void setQuickSearchClickMessage(const QString &msg);
 
+    MessageList::Core::QuickSearchLine::SearchOptions currentOptions() const;
 protected:
     /**
    * Reimplemented in order to catch QHelpEvent

@@ -38,6 +38,7 @@
 #include <akonadi/etmviewstatesaver.h>
 
 #include "storagemodel.h"
+#include "core/quicksearchline.h"
 #include "widget.h"
 #include "core/settings.h"
 #include "core/manager.h"
@@ -912,6 +913,15 @@ QList<Akonadi::MessageStatus> Pane::currentFilterStatus() const
         return QList<Akonadi::MessageStatus>();
     }
     return w->currentFilterStatus();
+}
+
+Core::QuickSearchLine::SearchOptions Pane::currentOptions() const
+{
+    Widget *w = static_cast<Widget*>( currentWidget() );
+    if ( w == 0 ) {
+        return Core::QuickSearchLine::SearchEveryWhere;
+    }
+    return w->currentOptions();
 }
 
 QString Pane::currentFilterSearchString() const

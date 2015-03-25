@@ -21,6 +21,7 @@
 
 #include <messagelist/core/widgetbase.h>
 #include <messagelist/core/view.h>
+#include <messagelist/core/quicksearchline.h>
 #include <akonadi/item.h>
 
 #include <kmime/kmime_message.h>
@@ -323,6 +324,7 @@ public:
     Akonadi::Collection currentCollection() const;
 
     void setQuickSearchClickMessage(const QString &msg);
+    MessageList::Core::QuickSearchLine::SearchOptions currentOptions() const;
 protected:
 
     /**

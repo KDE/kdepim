@@ -228,6 +228,13 @@ MessageItem *Widget::currentMessageItem() const
     return view()->currentMessageItem();
 }
 
+MessageList::Core::QuickSearchLine::SearchOptions Widget::currentOptions() const
+{
+    if ( d->mFilter )
+        return d->mFilter->currentOptions();
+    return Core::QuickSearchLine::SearchEveryWhere;
+}
+
 QList<Akonadi::MessageStatus> Widget::currentFilterStatus() const
 {
     if ( d->mFilter )
