@@ -116,6 +116,7 @@ public:
     */
     bool isEmpty() const;
 
+    QuickSearchLine::SearchOptions currentOptions() const;
 Q_SIGNALS:
     void finished();
 

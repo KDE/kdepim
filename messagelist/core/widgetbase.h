@@ -27,6 +27,7 @@
 
 #include <messagelist/core/enums.h>
 #include <messagelist/core/sortorder.h>
+#include <messagelist/core/quicksearchline.h>
 
 #include <messagelist/messagelist_export.h>
 
@@ -139,7 +140,8 @@ public:
     void themeMenuAboutToShow(QMenu *menu);
     void aggregationMenuAboutToShow(QMenu *menu);
 
-public Q_SLOTS:
+    MessageList::Core::QuickSearchLine::SearchOptions currentOptions() const;
+public slots:
 
     /**
     * This is called to setup the status filter's KComboBox.
