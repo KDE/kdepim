@@ -104,6 +104,7 @@ QWidget* FilterActionAddToAddressBook::createParamWidget( QWidget *parent ) cons
     layout->addWidget( headerCombo, 0, 0, 2, 1, Qt::AlignVCenter );
 
     QLabel *label = new QLabel( i18n( "with category" ), widget );
+    label->setObjectName(QLatin1String("label_with_category"));
     layout->addWidget( label, 0, 1 );
 
     KLineEdit *categoryEdit = new KLineEdit( widget );
@@ -112,6 +113,7 @@ QWidget* FilterActionAddToAddressBook::createParamWidget( QWidget *parent ) cons
     layout->addWidget( categoryEdit, 0, 2 );
 
     label = new QLabel( i18n( "in address book" ), widget );
+    label->setObjectName(QLatin1String("label_in_addressbook"));
     layout->addWidget( label, 1, 1 );
 
     Akonadi::CollectionComboBox *collectionComboBox = new Akonadi::CollectionComboBox( widget );

@@ -18,6 +18,11 @@
 #include "filteractionaddtoaddressbooktest.h"
 #include "../filteractions/filteractionaddtoaddressbook.h"
 #include <qtest_kde.h>
+#include <QWidget>
+#include <QLabel>
+#include <klineedit.h>
+#include <widgets/minimumcombobox.h>
+#include <akonadi/collectioncombobox.h>
 
 FilterActionAddToAddressBookTest::FilterActionAddToAddressBookTest(QObject *parent)
     : QObject(parent)
@@ -28,6 +33,27 @@ FilterActionAddToAddressBookTest::FilterActionAddToAddressBookTest(QObject *pare
 FilterActionAddToAddressBookTest::~FilterActionAddToAddressBookTest()
 {
 
+}
+
+void FilterActionAddToAddressBookTest::shouldHaveDefaultValue()
+{
+    MailCommon::FilterActionAddToAddressBook filter;
+    QWidget *w = filter.createParamWidget(0);
+
+    PimCommon::MinimumComboBox *headerCombo = w->findChild<PimCommon::MinimumComboBox *>(QLatin1String("HeaderComboBox"));
+    QVERIFY(headerCombo);
+
+    QLabel *label = w->findChild<QLabel *>(QLatin1String("label_with_category"));
+    QVERIFY(label);
+
+    KLineEdit *categoryEdit = w->findChild<KLineEdit *>( QLatin1String("CategoryEdit") );
+    QVERIFY(categoryEdit);
+
+    label = w->findChild<QLabel *>(QLatin1String("label_in_addressbook"));
+    QVERIFY(label);
+
+    Akonadi::CollectionComboBox *collectionComboBox = w->findChild<Akonadi::CollectionComboBox *>(QLatin1String("AddressBookComboBox") );
+    QVERIFY(collectionComboBox);
 }
 
 QTEST_KDEMAIN(FilterActionAddToAddressBookTest, GUI)
