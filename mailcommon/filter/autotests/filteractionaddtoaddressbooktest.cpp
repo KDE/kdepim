@@ -22,6 +22,7 @@
 #include <QLabel>
 #include <klineedit.h>
 #include <widgets/minimumcombobox.h>
+#include <widgets/tagwidgets.h>
 #include <akonadi/collectioncombobox.h>
 
 FilterActionAddToAddressBookTest::FilterActionAddToAddressBookTest(QObject *parent)
@@ -46,7 +47,7 @@ void FilterActionAddToAddressBookTest::shouldHaveDefaultValue()
     QLabel *label = w->findChild<QLabel *>(QLatin1String("label_with_category"));
     QVERIFY(label);
 
-    KLineEdit *categoryEdit = w->findChild<KLineEdit *>( QLatin1String("CategoryEdit") );
+    KPIM::TagWidget *categoryEdit = w->findChild<KPIM::TagWidget *>( QLatin1String("CategoryEdit") );
     QVERIFY(categoryEdit);
 
     label = w->findChild<QLabel *>(QLatin1String("label_in_addressbook"));
