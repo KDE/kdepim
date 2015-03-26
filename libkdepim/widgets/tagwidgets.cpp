@@ -35,6 +35,8 @@ TagWidget::TagWidget(QWidget* parent)
     mTagWidget = new Akonadi::TagWidget(this);
     connect(mTagWidget, SIGNAL(selectionChanged(Akonadi::Tag::List)), this, SLOT(onSelectionChanged(Akonadi::Tag::List)));
     QHBoxLayout *l = new QHBoxLayout;
+    l->setMargin(0);
+    l->setSpacing(0);
     l->addWidget(mTagWidget);
     setLayout(l);
 }
