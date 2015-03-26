@@ -12,3 +12,4 @@ endmacro()
 
 add_messagelist_test(itemsizetest.cpp)
 add_messagelist_test(quicksearchlinetest.cpp)
+add_messagelist_test(quicksearchwarningtest.cpp)
