@@ -221,8 +221,7 @@ void FollowUpReminderInfoWidget::removeItem(const QList<QTreeWidgetItem *> &mail
     if (mailItemLst.isEmpty()) {
         qCDebug(FOLLOWUPREMINDERAGENT_LOG) << "Not item selected";
     } else {
-        //KF5 add i18n
-        if (KMessageBox::Yes == KMessageBox::warningYesNo(this, QLatin1String("Do you want to remove selected item?"))) {
+        if (KMessageBox::Yes == KMessageBox::warningYesNo(this, i18n("Do you want to remove selected item?"))) {
             Q_FOREACH (QTreeWidgetItem *item, mailItemLst) {
                 FollowUpReminderInfoItem *mailItem = static_cast<FollowUpReminderInfoItem *>(item);
                 mListRemoveId << mailItem->info()->uniqueIdentifier();

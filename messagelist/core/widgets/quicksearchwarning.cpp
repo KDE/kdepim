@@ -16,6 +16,7 @@
 */
 
 #include "quicksearchwarning.h"
+#include <KLocalizedString>
 using namespace MessageList::Core;
 
 QuickSearchWarning::QuickSearchWarning(QWidget *parent)
@@ -25,8 +26,7 @@ QuickSearchWarning::QuickSearchWarning(QWidget *parent)
     setCloseButtonVisible(true);
     setMessageType(Warning);
     setWordWrap(true);
-    //KF5 add i18n
-    setText(QLatin1String("The words less than 3 letters are ignored."));
+    setText(i18n("The words less than 3 letters are ignored."));
 }
 
 QuickSearchWarning::~QuickSearchWarning()
