@@ -17,7 +17,7 @@
 
 #include "quicksearchwarningtest.h"
 #include "../core/widgets/quicksearchwarning.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 QuickSearchWarningTest::QuickSearchWarningTest(QObject *parent)
     : QObject(parent)
 {
@@ -62,4 +62,4 @@ void QuickSearchWarningTest::shouldSetSearchText_data()
     QTest::newRow("aspace") <<  QString(QLatin1String(" ")) << false;
 }
 
-QTEST_KDEMAIN(QuickSearchWarningTest, GUI)
+QTEST_MAIN(QuickSearchWarningTest)
