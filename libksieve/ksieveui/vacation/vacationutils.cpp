@@ -175,6 +175,22 @@ bool KSieveUi::VacationUtils::foundVacationScript(const QString &script)
     return parser.parse() && vdx.commandFound();
 }
 
+bool KSieveUi::VacationUtils::vacationScriptActive(const QString &script)
+{
+    const QByteArray scriptUTF8 = script.trimmed().toUtf8();
+    kDebug() << "scriptUtf8 = \"" + scriptUTF8 +"\"";
+
+    if (scriptUTF8.isEmpty()) {
+      return false;
+    }
+
+    KSieve::Parser parser( scriptUTF8.begin(),
+                           scriptUTF8.begin() + scriptUTF8.length() );
+    VacationDataExtractor vdx;
+    parser.setScriptBuilder(&vdx);
+    return parser.parse() && vdx.commandFound() && vdx.active();
+}
+
 QString composeOldScript( const QString & messageText,
                                  const QString &subject,
                                  int notificationInterval,

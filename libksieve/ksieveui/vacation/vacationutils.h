@@ -51,7 +51,11 @@ bool parseScript( const QString & script, bool &active, QString & messageText,
                   bool & sendForSpam, QString & domainName,
                   QDate & startDate, QDate & endDate );
 
-bool foundVacationScript(const QString & script);
+//returns if a vacation script is found in the sieve script
+bool foundVacationScript(const QString &script);
+
+// returns if the vacation script is active
+bool vacationScriptActive(const QString &script);
 
 QString mergeRequireLine(const QString &script1, const QString script2);
 
