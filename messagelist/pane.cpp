@@ -38,7 +38,7 @@
 #include <akonadi/etmviewstatesaver.h>
 
 #include "storagemodel.h"
-#include "core/quicksearchline.h"
+#include "core/widgets/quicksearchline.h"
 #include "widget.h"
 #include "core/settings.h"
 #include "core/manager.h"

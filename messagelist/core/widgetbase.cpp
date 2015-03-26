@@ -30,7 +30,6 @@
 #include "core/messageitem.h"
 #include "core/storagemodelbase.h"
 #include "core/settings.h"
-#include "core/quicksearchline.h"
 
 #include "utils/configureaggregationsdialog.h"
 #include "utils/configurethemesdialog.h"

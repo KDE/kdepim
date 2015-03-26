@@ -21,7 +21,7 @@
 
 #include <messagelist/core/widgetbase.h>
 #include <messagelist/core/view.h>
-#include <messagelist/core/quicksearchline.h>
+#include <messagelist/core/widgets/quicksearchline.h>
 #include <akonadi/item.h>
 
 #include <kmime/kmime_message.h>

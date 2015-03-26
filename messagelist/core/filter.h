@@ -27,7 +27,7 @@
 
 #include <Akonadi/KMime/MessageStatus>
 #include <Akonadi/Collection>
-#include "quicksearchline.h"
+#include "widgets/quicksearchline.h"
 
 namespace MessageList
 {
