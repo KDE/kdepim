@@ -137,6 +137,7 @@ Widget::Widget( QWidget *pParent )
     g->setSpacing( 0 );
 
     d->quickSearchLine = new QuickSearchLine;
+    d->quickSearchLine->setObjectName(QLatin1String("quicksearchline"));
     connect(d->quickSearchLine, SIGNAL(clearButtonClicked()), SLOT(searchEditClearButtonClicked()) );
 
     connect(d->quickSearchLine, SIGNAL(searchEditTextEdited(QString)), SLOT(searchEditTextEdited()) );
