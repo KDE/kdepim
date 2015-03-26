@@ -22,7 +22,7 @@
 #include <messagelist/core/widgetbase.h>
 #include <messagelist/core/view.h>
 #include <item.h>
-#include <messagelist/core/quicksearchline.h>
+#include <messagelist/core/widgets/quicksearchline.h>
 
 #include <kmime/kmime_message.h>
 #include <KJob>

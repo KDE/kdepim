@@ -26,7 +26,8 @@
 
 using namespace MessageList::Core;
 
-Filter::Filter()
+Filter::Filter(QObject *parent)
+    : QObject(parent)
 {
 }
 
@@ -138,34 +139,45 @@ void Filter::setSearchString( const QString &search, QuickSearchLine::SearchOpti
         newStr = newStr.remove(newStr.length() - 1, 1);
         mSearchList = QStringList() << newStr;
     } else {
-        mSearchList = mSearchString.split(QLatin1Char(' '), QString::SkipEmptyParts);
+        const QStringList searchListTmp = mSearchString.split(QLatin1Char(' '), QString::SkipEmptyParts);
+        mSearchList.clear();
+        newStr.clear();
+        Q_FOREACH(const QString &text, searchListTmp) {
+            if (text.size() >= 3) {
+                mSearchList << text;
+                if (!newStr.isEmpty())
+                    newStr += QLatin1Char(' ');
+                newStr += text;
+            }
+        }
         needToSplitString = true;
     }
+    if (!newStr.trimmed().isEmpty()) {
+        Baloo::PIM::EmailQuery query;
+        if (options & QuickSearchLine::SearchEveryWhere) {
+            query.matches(newStr);
+            query.setSplitSearchMatchString(needToSplitString);
+        } else if (options & QuickSearchLine::SearchAgainstSubject) {
+            query.subjectMatches(newStr);
+        } else if (options & QuickSearchLine::SearchAgainstBody) {
+            query.bodyMatches(newStr);
+        } else if (options & QuickSearchLine::SearchAgainstFrom) {
+            query.setFrom(newStr);
+        } else if (options & QuickSearchLine::SearchAgainstBcc) {
+            query.setBcc(QStringList() << newStr);
+        } else if (options & QuickSearchLine::SearchAgainstTo) {
+            query.setTo(QStringList() << newStr);
+        }
 
-    Baloo::PIM::EmailQuery query;
-    if (options & QuickSearchLine::SearchEveryWhere) {
-        query.matches(newStr);
-        query.setSplitSearchMatchString(needToSplitString);
-    } else if (options & QuickSearchLine::SearchAgainstSubject) {
-        query.subjectMatches(newStr);
-    } else if (options & QuickSearchLine::SearchAgainstBody) {
-        query.bodyMatches(newStr);
-    } else if (options & QuickSearchLine::SearchAgainstFrom) {
-        query.setFrom(newStr);
-    } else if (options & QuickSearchLine::SearchAgainstBcc) {
-        query.setBcc(QStringList() << newStr);
-    } else if (options & QuickSearchLine::SearchAgainstTo) {
-        query.setTo(QStringList() << newStr);
-    }
+        //If the collection is virtual we're probably trying to filter the search collection, so we just search globally
+        if (mCurrentFolder.isValid() && !mCurrentFolder.isVirtual()) {
+            query.addCollection(mCurrentFolder.id());
+        }
 
-    //If the collection is virtual we're probably trying to filter the search collection, so we just search globally
-    if (mCurrentFolder.isValid() && !mCurrentFolder.isVirtual()) {
-        query.addCollection(mCurrentFolder.id());
-    }
-
-    Baloo::PIM::ResultIterator it = query.exec();
-    while (it.next()) {
-        mMatchingItemIds << it.id();
+        Baloo::PIM::ResultIterator it = query.exec();
+        while (it.next()) {
+            mMatchingItemIds << it.id();
+        }
     }
     emit finished();
 }

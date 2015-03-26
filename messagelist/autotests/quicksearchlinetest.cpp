@@ -19,8 +19,8 @@
 */
 
 #include "quicksearchlinetest.h"
-#include "messagelist/core/quicksearchline.h"
 #include <qtest.h>
+#include "messagelist/core/widgets/quicksearchline.h"
 #include <qtestkeyboard.h>
 #include <qtestmouse.h>
 #include <KLineEdit>

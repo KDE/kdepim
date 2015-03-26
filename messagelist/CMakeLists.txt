@@ -40,7 +40,8 @@ set(libmessagelist_SRCS
   core/sortorder.cpp
   core/view.cpp
   core/widgetbase.cpp
-  core/quicksearchline.cpp
+  core/widgets/quicksearchline.cpp
+  core/widgets/quicksearchwarning.cpp
 
   utils/aggregationcombobox.cpp
   utils/aggregationconfigbutton.cpp

@@ -27,7 +27,7 @@
 
 #include <messagelist/core/enums.h>
 #include <messagelist/core/sortorder.h>
-#include <messagelist/core/quicksearchline.h>
+#include <messagelist/core/widgets/quicksearchline.h>
 
 #include <messagelist/messagelist_export.h>
 

@@ -19,7 +19,7 @@
  *******************************************************************************/
 
 #include "core/widgetbase.h"
-
+#include "core/widgets/quicksearchwarning.h"
 #include "core/aggregation.h"
 #include "core/theme.h"
 #include "core/filter.h"
@@ -30,7 +30,6 @@
 #include "core/messageitem.h"
 #include "core/storagemodelbase.h"
 #include "core/settings.h"
-#include "core/quicksearchline.h"
 
 #include "utils/configureaggregationsdialog.h"
 #include "utils/configurethemesdialog.h"
@@ -97,6 +96,7 @@ public:
 
     Widget *const q;
 
+    QuickSearchWarning *quickSearchWarning;
     QuickSearchLine *quickSearchLine;
     View *mView;
     QString mLastAggregationId;
@@ -134,12 +134,16 @@ Widget::Widget(QWidget *pParent)
     g->setSpacing(0);
 
     d->quickSearchLine = new QuickSearchLine;
+    d->quickSearchLine->setObjectName(QLatin1String("quicksearchline"));
+
     connect(d->quickSearchLine, &QuickSearchLine::clearButtonClicked, this, &Widget::searchEditClearButtonClicked);
 
     connect(d->quickSearchLine, &QuickSearchLine::searchEditTextEdited, this, &Widget::searchEditTextEdited);
     connect(d->quickSearchLine, &QuickSearchLine::searchOptionChanged, this, &Widget::searchEditTextEdited);
     connect(d->quickSearchLine, &QuickSearchLine::statusButtonsClicked, this, &Widget::slotStatusButtonsClicked);
     g->addWidget(d->quickSearchLine, 0);
+    d->quickSearchWarning = new QuickSearchWarning(this);
+    g->addWidget( d->quickSearchWarning, 0 );
 
     d->mView = new View(this);
     d->mView->setFrameStyle(QFrame::NoFrame);
@@ -848,6 +852,7 @@ void Widget::resetFilter()
     d->mFilter = Q_NULLPTR;
     d->mView->model()->setFilter(Q_NULLPTR);
     d->quickSearchLine->resetFilter();
+    d->quickSearchWarning->animatedHide();
 }
 
 void Widget::slotViewHeaderSectionClicked(int logicalIndex)
@@ -1014,9 +1019,10 @@ void Widget::searchTimerFired()
         comp->addItem(text);
     }
 
-    d->mFilter->setCurrentFolder(d->mCurrentFolder);
-    d->mFilter->setSearchString(text, d->quickSearchLine->searchOptions());
-    if (d->mFilter->isEmpty()) {
+    d->mFilter->setCurrentFolder( d->mCurrentFolder );
+    d->mFilter->setSearchString( text, d->quickSearchLine->searchOptions() );
+    d->quickSearchWarning->setSearchText(text);
+    if ( d->mFilter->isEmpty() ) {
         resetFilter();
         return;
     }

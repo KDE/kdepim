@@ -27,7 +27,7 @@
 
 #include <Akonadi/KMime/MessageStatus>
 #include <Collection>
-#include "quicksearchline.h"
+#include "widgets/quicksearchline.h"
 
 namespace MessageList
 {
@@ -46,7 +46,7 @@ class Filter : public QObject
     Q_OBJECT
 
 public:
-    Filter();
+    explicit Filter(QObject *parent = 0);
 
 public:
     /**
