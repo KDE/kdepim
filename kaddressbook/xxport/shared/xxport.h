@@ -32,10 +32,12 @@
  * @author Tobias Koenig <tokoe@kde.org>
  */
 struct ContactList {
-    bool isEmpty() const {
+    bool isEmpty() const
+    {
         return (addressList.isEmpty() && contactGroupList.isEmpty());
     }
-    int count() const {
+    int count() const
+    {
         return (addressList.count() + contactGroupList.count());
     }
     KContacts::Addressee::List addressList;
@@ -66,7 +68,7 @@ public:
     /**
      * Exports the list of @p contacts.
      */
-    virtual bool exportContacts( const ContactList &contacts, VCardExportSelectionWidget::ExportFields ) const = 0;
+    virtual bool exportContacts(const ContactList &contacts, VCardExportSelectionWidget::ExportFields) const = 0;
 
     /**
      * Sets module specific options.

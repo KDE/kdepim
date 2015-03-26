@@ -28,7 +28,7 @@ XXPort::~XXPort()
 {
 }
 
-void XXPort::setOption( const QString &key, const QString &value )
+void XXPort::setOption(const QString &key, const QString &value)
 {
     mOptions.insert(key, value);
 }

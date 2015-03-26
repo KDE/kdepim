@@ -117,7 +117,7 @@ void MergeContactSelectInformationWidget::addInformationWidget(MergeContacts::Co
 bool MergeContactSelectInformationWidget::verifySelectedInfo() const
 {
     bool result = true;
-    Q_FOREACH(MergeContactSelectListWidget *listWidget, mListMergeSelectInformation) {
+    Q_FOREACH (MergeContactSelectListWidget *listWidget, mListMergeSelectInformation) {
         result = listWidget->verifySelectedInfo();
         if (!result) {
             break;

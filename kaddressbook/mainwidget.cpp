@@ -1082,15 +1082,15 @@ const Akonadi::Item::List MainWidget::collectSelectedAllContactsItem(QItemSelect
 {
     Akonadi::Item::List lst;
 
-    const QModelIndexList indexes = model->selectedRows( 0 );
-    for ( int i = 0; i < indexes.count(); ++i ) {
-        const QModelIndex index = indexes.at( i );
-        if ( index.isValid() ) {
+    const QModelIndexList indexes = model->selectedRows(0);
+    for (int i = 0; i < indexes.count(); ++i) {
+        const QModelIndex index = indexes.at(i);
+        if (index.isValid()) {
             const Akonadi::Item item =
-                    index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-            if ( item.isValid() ) {
-                if ( item.hasPayload<KContacts::Addressee>()  || item.hasPayload<KContacts::ContactGroup>() ) {
-                    lst.append( item );
+                index.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
+            if (item.isValid()) {
+                if (item.hasPayload<KContacts::Addressee>()  || item.hasPayload<KContacts::ContactGroup>()) {
+                    lst.append(item);
                 }
             }
         }

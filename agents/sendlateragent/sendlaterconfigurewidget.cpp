@@ -28,8 +28,12 @@
 #include <QIcon>
 #include <QPointer>
 
-namespace {
-inline QString sendLaterItemPattern() { return QStringLiteral( "SendLaterItem \\d+" ); }
+namespace
+{
+inline QString sendLaterItemPattern()
+{
+    return QStringLiteral("SendLaterItem \\d+");
+}
 }
 
 //#define DEBUG_MESSAGE_ID

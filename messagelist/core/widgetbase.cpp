@@ -143,7 +143,7 @@ Widget::Widget(QWidget *pParent)
     connect(d->quickSearchLine, &QuickSearchLine::statusButtonsClicked, this, &Widget::slotStatusButtonsClicked);
     g->addWidget(d->quickSearchLine, 0);
     d->quickSearchWarning = new QuickSearchWarning(this);
-    g->addWidget( d->quickSearchWarning, 0 );
+    g->addWidget(d->quickSearchWarning, 0);
 
     d->mView = new View(this);
     d->mView->setFrameStyle(QFrame::NoFrame);
@@ -1019,10 +1019,10 @@ void Widget::searchTimerFired()
         comp->addItem(text);
     }
 
-    d->mFilter->setCurrentFolder( d->mCurrentFolder );
-    d->mFilter->setSearchString( text, d->quickSearchLine->searchOptions() );
+    d->mFilter->setCurrentFolder(d->mCurrentFolder);
+    d->mFilter->setSearchString(text, d->quickSearchLine->searchOptions());
     d->quickSearchWarning->setSearchText(text);
-    if ( d->mFilter->isEmpty() ) {
+    if (d->mFilter->isEmpty()) {
         resetFilter();
         return;
     }

@@ -1116,10 +1116,10 @@ void MergeContactsTest::checkNeedManualSelectionWithBirthday_data()
 
 void MergeContactsTest::checkNeedManualSelectionWithBirthday()
 {
-    QFETCH( QString, nameItemA );
-    QFETCH( QString, nameItemB );
-    QFETCH( QString, nameItemC );
-    QFETCH( bool, needManualCheck );
+    QFETCH(QString, nameItemA);
+    QFETCH(QString, nameItemB);
+    QFETCH(QString, nameItemC);
+    QFETCH(bool, needManualCheck);
 
     Akonadi::Item::List lst;
     Addressee addressA;
@@ -1127,24 +1127,24 @@ void MergeContactsTest::checkNeedManualSelectionWithBirthday()
     QDate date = QDate::fromString(nameItemA, QLatin1String("yyyyMMdd"));
     QDateTime dt(date);
     addressA.setBirthday(dt);
-    itemA.setPayload<Addressee>( addressA );
-    lst<<itemA;
+    itemA.setPayload<Addressee>(addressA);
+    lst << itemA;
 
     Addressee addressB;
     Akonadi::Item itemB;
     date = QDate::fromString(nameItemB, QLatin1String("yyyyMMdd"));
     dt = QDateTime(date);
     addressB.setBirthday(dt);
-    itemB.setPayload<Addressee>( addressB );
-    lst<<itemB;
+    itemB.setPayload<Addressee>(addressB);
+    lst << itemB;
 
     Addressee addressC;
     Akonadi::Item itemC;
     date = QDate::fromString(nameItemC, QLatin1String("yyyyMMdd"));
     dt = QDateTime(date);
     addressC.setBirthday(dt);
-    itemC.setPayload<Addressee>( addressC );
-    lst<<itemC;
+    itemC.setPayload<Addressee>(addressC);
+    lst << itemC;
 
     MergeContacts contacts(lst);
     const MergeContacts::ConflictInformations result = contacts.requiresManualSelectionOfInformation();

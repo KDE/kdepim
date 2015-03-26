@@ -127,14 +127,14 @@ ContactList GMXXXPort::importContacts() const
     QString fileName =
         QFileDialog::getOpenFileName(Q_NULLPTR, QString(), QDir::homePath(), GMX_FILESELECTION_STRING);
 
-    if ( fileName.isEmpty() ) {
+    if (fileName.isEmpty()) {
         return contactList;
     }
 
-    QFile file( fileName );
-    if ( !file.open( QIODevice::ReadOnly ) ) {
-        QString msg = i18n( "<qt>Unable to open <b>%1</b> for reading.</qt>", fileName );
-        KMessageBox::error( parentWidget(), msg );
+    QFile file(fileName);
+    if (!file.open(QIODevice::ReadOnly)) {
+        QString msg = i18n("<qt>Unable to open <b>%1</b> for reading.</qt>", fileName);
+        KMessageBox::error(parentWidget(), msg);
         return contactList;
     }
 
@@ -147,8 +147,8 @@ ContactList GMXXXPort::importContacts() const
     if (!line.startsWith(QLatin1String("AB_ADDRESSES:")) ||
             !line2.startsWith(QLatin1String("Address_id"))) {
         KMessageBox::error(
-                    parentWidget(),
-                    i18n( "%1 is not a GMX address book file.", fileName ) );
+            parentWidget(),
+            i18n("%1 is not a GMX address book file.", fileName));
         return contactList;
     }
 
@@ -342,7 +342,7 @@ ContactList GMXXXPort::importContacts() const
 
 /* export */
 
-bool GMXXXPort::exportContacts( const ContactList &list, VCardExportSelectionWidget::ExportFields ) const
+bool GMXXXPort::exportContacts(const ContactList &list, VCardExportSelectionWidget::ExportFields) const
 {
     QUrl url = QFileDialog::getSaveFileUrl(parentWidget(), QString(), QUrl::fromLocalFile(QDir::homePath() + QLatin1String("/addressbook.gmx")), GMX_FILESELECTION_STRING);
     if (url.isEmpty()) {
@@ -373,7 +373,7 @@ bool GMXXXPort::exportContacts( const ContactList &list, VCardExportSelectionWid
             return false;
         }
 
-        doExport( &tmpFile, list.addressList );
+        doExport(&tmpFile, list.addressList);
         tmpFile.flush();
 
         return KIO::NetAccess::upload(tmpFile.fileName(), url, parentWidget());
@@ -387,7 +387,7 @@ bool GMXXXPort::exportContacts( const ContactList &list, VCardExportSelectionWid
             return false;
         }
 
-        doExport( &file, list.addressList );
+        doExport(&file, list.addressList);
         file.close();
 
         return true;

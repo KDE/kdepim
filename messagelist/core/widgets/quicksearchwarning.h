@@ -20,8 +20,10 @@
 
 #include <KMessageWidget>
 #include "messagelist_export.h"
-namespace MessageList {
-namespace Core {
+namespace MessageList
+{
+namespace Core
+{
 class MESSAGELIST_EXPORT QuickSearchWarning : public KMessageWidget
 {
     Q_OBJECT

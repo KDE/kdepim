@@ -119,7 +119,7 @@ QuickSearchLine::SearchOptions Filter::currentOptions() const
     return mOptions;
 }
 
-void Filter::setSearchString( const QString &search, QuickSearchLine::SearchOptions options )
+void Filter::setSearchString(const QString &search, QuickSearchLine::SearchOptions options)
 {
     const QString trimStr = search.trimmed();
     if ((mSearchString == trimStr) && (mOptions == options)) {
@@ -142,11 +142,12 @@ void Filter::setSearchString( const QString &search, QuickSearchLine::SearchOpti
         const QStringList searchListTmp = mSearchString.split(QLatin1Char(' '), QString::SkipEmptyParts);
         mSearchList.clear();
         newStr.clear();
-        Q_FOREACH(const QString &text, searchListTmp) {
+        Q_FOREACH (const QString &text, searchListTmp) {
             if (text.size() >= 3) {
                 mSearchList << text;
-                if (!newStr.isEmpty())
+                if (!newStr.isEmpty()) {
                     newStr += QLatin1Char(' ');
+                }
                 newStr += text;
             }
         }

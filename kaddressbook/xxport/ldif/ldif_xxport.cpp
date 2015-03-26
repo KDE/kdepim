@@ -48,10 +48,10 @@
 #include <QtCore/QTextStream>
 #include <QFileDialog>
 
-void doExport( QFile *file, const ContactList &list )
+void doExport(QFile *file, const ContactList &list)
 {
     QString data;
-    KContacts::LDIFConverter::addresseeAndContactGroupToLDIF( list.addressList, list.contactGroupList, data );
+    KContacts::LDIFConverter::addresseeAndContactGroupToLDIF(list.addressList, list.contactGroupList, data);
 
     QTextStream stream(file);
     stream.setCodec("UTF-8");
@@ -67,14 +67,14 @@ ContactList LDIFXXPort::importContacts() const
 {
     ContactList contactList;
     const QString fileName = QFileDialog::getOpenFileName(Q_NULLPTR , QString(),  QDir::homePath(), QLatin1String("text/x-ldif"));
-    if ( fileName.isEmpty() ) {
+    if (fileName.isEmpty()) {
         return contactList;
     }
 
-    QFile file( fileName );
-    if ( !file.open( QIODevice::ReadOnly | QIODevice::Text ) ) {
-        const QString msg = i18n( "<qt>Unable to open <b>%1</b> for reading.</qt>", fileName );
-        KMessageBox::error( parentWidget(), msg );
+    QFile file(fileName);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        const QString msg = i18n("<qt>Unable to open <b>%1</b> for reading.</qt>", fileName);
+        KMessageBox::error(parentWidget(), msg);
         return contactList;
     }
 
@@ -84,11 +84,11 @@ ContactList LDIFXXPort::importContacts() const
     const QString wholeFile = stream.readAll();
     const QDateTime dtDefault = QFileInfo(file).lastModified();
     file.close();
-    KContacts::LDIFConverter::LDIFToAddressee( wholeFile, contactList.addressList, contactList.contactGroupList, dtDefault );
+    KContacts::LDIFConverter::LDIFToAddressee(wholeFile, contactList.addressList, contactList.contactGroupList, dtDefault);
     return contactList;
 }
 
-bool LDIFXXPort::exportContacts( const ContactList &list, VCardExportSelectionWidget::ExportFields ) const
+bool LDIFXXPort::exportContacts(const ContactList &list, VCardExportSelectionWidget::ExportFields) const
 {
     const QUrl url =
         QFileDialog::getSaveFileUrl(parentWidget(), QString(), QUrl::fromLocalFile(QDir::homePath() + QLatin1String("/addressbook.ldif")), QLatin1String("text/x-ldif"));
@@ -104,7 +104,7 @@ bool LDIFXXPort::exportContacts( const ContactList &list, VCardExportSelectionWi
             return false;
         }
 
-        doExport( &tmpFile, list );
+        doExport(&tmpFile, list);
         tmpFile.flush();
 
         return KIO::NetAccess::upload(tmpFile.fileName(), url, parentWidget());
@@ -134,7 +134,7 @@ bool LDIFXXPort::exportContacts( const ContactList &list, VCardExportSelectionWi
             return false;
         }
 
-        doExport( &file, list );
+        doExport(&file, list);
         file.close();
 
         return true;

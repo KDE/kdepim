@@ -147,20 +147,20 @@ void XXPortManager::import(const ContactList &contacts)
 
     mImportProgressDialog->show();
 
-    for ( int i = 0; i < contacts.addressList.count(); ++i ) {
+    for (int i = 0; i < contacts.addressList.count(); ++i) {
         Akonadi::Item item;
-        item.setPayload<KContacts::Addressee>( contacts.addressList.at( i ) );
-        item.setMimeType( KContacts::Addressee::mimeType() );
+        item.setPayload<KContacts::Addressee>(contacts.addressList.at(i));
+        item.setMimeType(KContacts::Addressee::mimeType());
 
         Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob(item, collection);
         connect(job, &Akonadi::ItemCreateJob::result, this, &XXPortManager::slotImportJobDone);
     }
-    for (int i = 0; i < contacts.contactGroupList.count(); ++i ) {
-        Akonadi::Item groupItem( KContacts::ContactGroup::mimeType() );
-        groupItem.setPayload<KContacts::ContactGroup>( contacts.contactGroupList.at(i) );
+    for (int i = 0; i < contacts.contactGroupList.count(); ++i) {
+        Akonadi::Item groupItem(KContacts::ContactGroup::mimeType());
+        groupItem.setPayload<KContacts::ContactGroup>(contacts.contactGroupList.at(i));
 
-        Akonadi::Job *createJob = new Akonadi::ItemCreateJob( groupItem, collection );
-        connect( createJob, SIGNAL(result(KJob*)), this, SLOT(slotImportJobDone(KJob*)) );
+        Akonadi::Job *createJob = new Akonadi::ItemCreateJob(groupItem, collection);
+        connect(createJob, SIGNAL(result(KJob*)), this, SLOT(slotImportJobDone(KJob*)));
     }
 
 }
@@ -211,7 +211,7 @@ void XXPortManager::slotExport(const QString &identifier)
     }
     ContactList contactLists;
     contactLists.addressList = contacts;
-    xxport->exportContacts( contactLists, exportFields );
+    xxport->exportContacts(contactLists, exportFields);
 
     delete xxport;
 }

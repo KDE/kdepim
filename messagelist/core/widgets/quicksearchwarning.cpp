@@ -37,7 +37,7 @@ QuickSearchWarning::~QuickSearchWarning()
 void QuickSearchWarning::setSearchText(const QString &text)
 {
     const QStringList lstText = text.split(QLatin1Char(' '), QString::SkipEmptyParts);
-    Q_FOREACH(const QString &text, lstText) {
+    Q_FOREACH (const QString &text, lstText) {
         if (text.trimmed().size() < 3) {
             animatedShow();
             break;

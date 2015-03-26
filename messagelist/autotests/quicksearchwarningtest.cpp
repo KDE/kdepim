@@ -44,8 +44,8 @@ void QuickSearchWarningTest::shouldSetVisible()
 
 void QuickSearchWarningTest::shouldSetSearchText()
 {
-    QFETCH( QString, input );
-    QFETCH( bool, visible );
+    QFETCH(QString, input);
+    QFETCH(bool, visible);
     MessageList::Core::QuickSearchWarning w;
     w.setSearchText(input);
     QCOMPARE(w.isVisible(), visible);

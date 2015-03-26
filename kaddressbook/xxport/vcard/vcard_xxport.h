@@ -27,7 +27,7 @@ class VCardXXPort : public XXPort
 public:
     explicit VCardXXPort(QWidget *parent = Q_NULLPTR);
 
-    bool exportContacts( const ContactList &contacts, VCardExportSelectionWidget::ExportFields exportFieldType ) const Q_DECL_OVERRIDE;
+    bool exportContacts(const ContactList &contacts, VCardExportSelectionWidget::ExportFields exportFieldType) const Q_DECL_OVERRIDE;
     ContactList importContacts() const Q_DECL_OVERRIDE;
 
 private:

@@ -137,7 +137,7 @@ void MergeContactSelectListWidget::addItem(const QString &str, const QIcon &icon
         mSelectListWidget->addItem(item);
     } else {
         if (!icon.isNull()) {
-            QListWidgetItem * item = new QListWidgetItem(mSelectListWidget);
+            QListWidgetItem *item = new QListWidgetItem(mSelectListWidget);
             item->setText(str);
             item->setIcon(icon);
             mSelectListWidget->addItem(item);
@@ -157,8 +157,8 @@ void MergeContactSelectListWidget::fillList(const KContacts::Addressee::List &ls
         case MergeContacts::Birthday: {
             const QDate birdthDt = addr.birthday().date();
             QString birdth;
-            if ( birdthDt.isValid() ) {
-                birdth = KGlobal::locale()->formatDate( birdthDt );
+            if (birdthDt.isValid()) {
+                birdth = KGlobal::locale()->formatDate(birdthDt);
             }
             addItem(birdth);
             break;
@@ -180,9 +180,9 @@ void MergeContactSelectListWidget::fillList(const KContacts::Addressee::List &ls
             break;
         case MergeContacts::Anniversary: {
             QString anniversary;
-            const QDate anniversaryDt = QDate::fromString( addr.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-Anniversary" ) ), Qt::ISODate );
-            if ( anniversaryDt.isValid() ) {
-                anniversary = KGlobal::locale()->formatDate( anniversaryDt );
+            const QDate anniversaryDt = QDate::fromString(addr.custom(QLatin1String("KADDRESSBOOK"), QLatin1String("X-Anniversary")), Qt::ISODate);
+            if (anniversaryDt.isValid()) {
+                anniversary = KGlobal::locale()->formatDate(anniversaryDt);
             }
             addItem(anniversary);
             break;

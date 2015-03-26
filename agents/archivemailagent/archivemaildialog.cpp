@@ -131,4 +131,3 @@ void ArchiveMailDialog::slotSave()
     mWidget->save();
 }
 
-

@@ -33,10 +33,13 @@
 #include <KMessageBox>
 
 // #define DEBUG_MESSAGE_ID
-namespace {
-inline QString followUpItemPattern() { return QStringLiteral("FollowupReminderItem \\d+"); }
+namespace
+{
+inline QString followUpItemPattern()
+{
+    return QStringLiteral("FollowupReminderItem \\d+");
 }
-
+}
 
 FollowUpReminderInfoItem::FollowUpReminderInfoItem(QTreeWidget *parent)
     : QTreeWidgetItem(parent),

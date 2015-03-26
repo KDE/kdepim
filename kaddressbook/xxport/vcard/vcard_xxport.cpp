@@ -55,13 +55,13 @@ VCardXXPort::VCardXXPort(QWidget *parent)
 {
 }
 
-bool VCardXXPort::exportContacts( const ContactList &contacts, VCardExportSelectionWidget::ExportFields exportFields) const
+bool VCardXXPort::exportContacts(const ContactList &contacts, VCardExportSelectionWidget::ExportFields exportFields) const
 {
     KContacts::VCardConverter converter;
     QUrl url;
 
     const KContacts::Addressee::List list = filterContacts(contacts.addressList, exportFields);
-    if ( list.isEmpty() ) { // no contact selected
+    if (list.isEmpty()) {   // no contact selected
         return true;
     }
 
@@ -166,7 +166,7 @@ ContactList VCardXXPort::importContacts() const
                     i18nc("@title:window", "Select vCard to Import"));
         }
 
-        if ( urls.isEmpty() ) {
+        if (urls.isEmpty()) {
             return contactList;
         }
 

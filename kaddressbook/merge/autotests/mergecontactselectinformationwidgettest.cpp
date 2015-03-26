@@ -34,7 +34,7 @@ MergeContactSelectInformationWidgetTest::~MergeContactSelectInformationWidgetTes
 void MergeContactSelectInformationWidgetTest::shouldHaveDefaultValue()
 {
     KABMergeContacts::MergeContactSelectInformationWidget w;
-    QCOMPARE(w.layout()->count(),0);
+    QCOMPARE(w.layout()->count(), 0);
 }
 
 QTEST_MAIN(MergeContactSelectInformationWidgetTest)

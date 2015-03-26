@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef ARCHIVEMAILWIDGET_H
 #define ARCHIVEMAILWIDGET_H
 
@@ -40,7 +39,7 @@ class ArchiveMailWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ArchiveMailWidget( QWidget *parent = Q_NULLPTR );
+    explicit ArchiveMailWidget(QWidget *parent = Q_NULLPTR);
     ~ArchiveMailWidget();
 
     enum ArchiveMailColumn {
@@ -78,6 +77,5 @@ private:
     bool mChanged;
     Ui::ArchiveMailWidget *mWidget;
 };
-
 
 #endif // ARCHIVEMAILWIDGET_H
