@@ -124,7 +124,7 @@ void ContactSwitcher::updateStatus()
     }
 
     mPreviousButton->setEnabled( row != 0 );
-    mNextButton->setEnabled( row != ( mView->model()->rowCount() - 1 ) );
+    mNextButton->setEnabled( (mView->model()->rowCount() != 0 ) && (row != ( mView->model()->rowCount() - 1 )) );
 
     if ( mView->model()->rowCount() > 0) {
         mStatusLabel->setText( i18nc( "@info:status",
