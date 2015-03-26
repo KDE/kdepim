@@ -32,7 +32,7 @@
 #include <calendarsupport/categoryconfig.h>
 
 #include <libkdepim/widgets/kcheckcombobox.h>
-#include <libkdepim/widgets/tagwidgets.h>
+#include <libkdepim/widgets/tagselectioncombo.h>
 
 #include <calendarsupport/categoryhierarchyreader.h>
 

@@ -50,6 +50,7 @@ set(kdepim_widgets_LIB_SRCS
    widgets/pimmessagebox.cpp
    widgets/overlaywidget.cpp
    widgets/tagwidgets.cpp
+   widgets/tagselectioncombo.cpp
 )
 
 set(kdepim_ldap_LIB_SRCS
