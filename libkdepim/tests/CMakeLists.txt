@@ -32,3 +32,10 @@ kde4_add_executable(testspellchecklineedit TEST ${testspellchecklineedit_SRCS})
 
 target_link_libraries(testspellchecklineedit  kdepim ${KDE4_KDEUI_LIBS})
 
+
+########### next target ###############
+set(testcompletionconfiguredialog_SRCS completionconfiguredialog_gui.cpp)
+
+kde4_add_executable(completionconfiguredialog_gui TEST ${testcompletionconfiguredialog_SRCS})
+
+target_link_libraries(completionconfiguredialog_gui kdepim ${KDE4_KDEUI_LIBS})
