@@ -19,37 +19,39 @@
 #define VACATIONUTILS_H
 #include <QStringList>
 #include <QString>
-
-namespace KMime {
-namespace Types {
-struct AddrSpec;
-typedef QList<AddrSpec> AddrSpecList;
-}
-}
-
-class QDate;
+#include <QDate>
+#include <kmime/kmime_header_parsing.h>
 
 namespace KSieveUi {
 namespace VacationUtils {
 QString defaultMessageText();
 QString defaultSubject();
 int defaultNotificationInterval();
-QStringList defaultMailAliases();
+KMime::Types::AddrSpecList defaultMailAliases();
 bool defaultSendForSpam();
 QString defaultDomainName();
 QDate defaultStartDate();
 QDate defaultEndDate();
 
-QString composeScript( const QString & messageText, bool active, const QString &subject,
-                       int notificationInterval,
-                       const KMime::Types::AddrSpecList & aliases,
-                       bool sendForSpam, const QString & excludeDomain,
-                       const QDate & startDate, const QDate & endDate );
-bool parseScript( const QString & script, bool &active, QString & messageText,
-                  QString &subject,
-                  int & notificationInterval, QStringList & aliases,
-                  bool & sendForSpam, QString & domainName,
-                  QDate & startDate, QDate & endDate );
+struct Vacation {
+    Vacation():valid(false), active(false), notificationInterval(1), sendForSpam(true) {}
+    bool isValid() const {return valid;}
+
+    bool valid;
+    QString messageText;
+    QString subject;
+    bool active;
+    int notificationInterval;
+    KMime::Types::AddrSpecList aliases;
+    bool sendForSpam;
+    QString excludeDomain;
+    QDate startDate;
+    QDate endDate;
+};
+
+QString composeScript(const Vacation &vacation);
+
+KSieveUi::VacationUtils::Vacation parseScript(const QString &script);
 
 //returns if a vacation script is found in the sieve script
 bool foundVacationScript(const QString &script);

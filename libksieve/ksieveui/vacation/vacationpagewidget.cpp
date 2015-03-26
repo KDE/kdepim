@@ -123,37 +123,27 @@ void VacationPageWidget::slotGetResult(const QString &serverName, const QStringL
     // Whether the server supports the "date" extension
     const bool supportsSieveDate = mUrl.protocol() == QLatin1String("sieve") && sieveCapabilities.contains(QLatin1String("date"));
 
-    QString messageText = VacationUtils::defaultMessageText();
-    QString subject = VacationUtils::defaultSubject();
-    int notificationInterval = VacationUtils::defaultNotificationInterval();
-    QStringList aliases = VacationUtils::defaultMailAliases();
-    bool sendForSpam = VacationUtils::defaultSendForSpam();
-    QString domainName = VacationUtils::defaultDomainName();
-    QDate startDate = VacationUtils::defaultStartDate();
-    QDate endDate = VacationUtils::defaultEndDate();
-    bool scriptActive = true;
+     KSieveUi::VacationUtils::Vacation vacation = KSieveUi::VacationUtils::parseScript(script);
 
-    const bool bParse = KSieveUi::VacationUtils::parseScript(script, scriptActive, messageText, subject, notificationInterval, aliases, sendForSpam, domainName, startDate, endDate);
-
-    if (!bParse) {
+    if (!vacation.isValid() && !script.timmed().isEmpty() ) {
         mVacationWarningWidget->setVisible(true);
     }
 
     mWasActive = active;
     mVacationEditWidget->setEnabled(true);
-    mVacationEditWidget->setActivateVacation( active && scriptActive );
-    mVacationEditWidget->setMessageText( messageText );
-    mVacationEditWidget->setSubject( subject );
-    mVacationEditWidget->setNotificationInterval( notificationInterval );
-    mVacationEditWidget->setMailAliases( aliases.join(QLatin1String(", ")) );
-    mVacationEditWidget->setSendForSpam( sendForSpam );
-    mVacationEditWidget->setDomainName( domainName );
+    mVacationEditWidget->setActivateVacation( active && vacation.active );
+    mVacationEditWidget->setMessageText( vacation.messageText );
+    mVacationEditWidget->setSubject( vacation.subject );
+    mVacationEditWidget->setNotificationInterval( vacation.notificationInterval );
+    mVacationEditWidget->setMailAliases( vacation.aliases );
+    mVacationEditWidget->setSendForSpam( vacation.sendForSpam );
+    mVacationEditWidget->setDomainName( vacation.excludeDomain );
     mVacationEditWidget->enableDomainAndSendForSpam( !VacationSettings::allowOutOfOfficeUploadButNoSettings() );
 
     mVacationEditWidget->enableDates( supportsSieveDate );
     if ( supportsSieveDate ) {
-        mVacationEditWidget->setStartDate( startDate );
-        mVacationEditWidget->setEndDate( endDate );
+        mVacationEditWidget->setStartDate( vacation.startDate );
+        mVacationEditWidget->setEndDate( vacation.endDate );
     }
 
     //emit scriptActive( mWasActive, mServerName );
@@ -168,14 +158,18 @@ KSieveUi::VacationCreateScriptJob *VacationPageWidget::writeScript()
         createJob->setServerUrl(mUrl);
         createJob->setServerName(mServerName);
         const bool active = mVacationEditWidget->activateVacation();
-        const QString script = VacationUtils::composeScript( mVacationEditWidget->messageText(), active,
-                                                             mVacationEditWidget->subject(),
-                                                             mVacationEditWidget->notificationInterval(),
-                                                             mVacationEditWidget->mailAliases(),
-                                                             mVacationEditWidget->sendForSpam(),
-                                                             mVacationEditWidget->domainName(),
-                                                             mVacationEditWidget->startDate(),
-                                                             mVacationEditWidget->endDate() );
+        VacationUtils::Vacation vacation;
+        vacation.valid = true;
+        vacation.active = active;
+        vacation.messageText = mVacationEditWidget->messageText();
+        vacation.subject = mVacationEditWidget->subject();
+        vacation.notificationInterval = mVacationEditWidget->notificationInterval();
+        vacation.aliases = mVacationEditWidget->mailAliases();
+        vacation.sendForSpam = mVacationEditWidget->sendForSpam();
+        vacation.excludeDomain =  mVacationEditWidget->domainName();
+        vacation.startDate = mVacationEditWidget->startDate();
+        vacation.endDate = mVacationEditWidget->endDate();
+        const QString script = VacationUtils::composeScript(vacation);
         createJob->setStatus(active, mWasActive);
         //Q_EMIT scriptActive( active, mServerName);
         createJob->setScript(script);

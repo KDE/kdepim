@@ -27,6 +27,23 @@ using namespace KSieveUi;
 
 QTEST_KDEMAIN( VacationUtilsTest, NoGUI )
 
+void testAliases(KMime::Types::AddrSpecList l1, KMime::Types::AddrSpecList l2)
+{
+    QCOMPARE(l1.count(),l2.count());
+    for (int i=0; i < l1.count(); i++) {
+        QCOMPARE(l1.at(i).asString(),l2.at(i).asString());
+    }
+}
+
+void testAliases(KMime::Types::AddrSpecList l1, QStringList l2)
+{
+    QCOMPARE(l1.count(),l2.count());
+    for (int i=0;i < l1.count(); i++) {
+        QCOMPARE(l1.at(i).asString(),l2.at(i));
+    }
+}
+
+
 void VacationUtilsTest::testParseEmptyScript()
 {
     const QString script;
@@ -67,19 +84,9 @@ void VacationUtilsTest::testParseActivate()
     QString script = QString::fromUtf8(file.readAll());
     QCOMPARE(VacationUtils::foundVacationScript(script), found);
 
-    QString messageText;
-    QString subject;
-    int notificationInterval;
-    QStringList aliases;
-    bool sendForSpam;
-    QString domainName;
-    QDate startDate;
-    QDate endDate;
-    bool scriptActive = !active;
-
-    bool ret = VacationUtils::parseScript(script, scriptActive, messageText, subject, notificationInterval, aliases, sendForSpam, domainName, startDate, endDate);
-    QCOMPARE(ret, found);
-    QCOMPARE(scriptActive, active);
+    VacationUtils::Vacation vacation = VacationUtils::parseScript(script);
+    QCOMPARE(vacation.isValid(), found);
+    QCOMPARE(vacation.active, active);
 }
 
 void VacationUtilsTest::testParseScript_data()
@@ -103,27 +110,18 @@ void VacationUtilsTest::testParseScript()
     QVERIFY(fileD.open(QIODevice::ReadOnly));
     QString scriptD = QString::fromUtf8(fileD.readAll());
 
-    QString messageTextA, messageTextD;
-    QString subjectA, subjectD;
-    int notificationIntervalA, notificationIntervalD;
-    QStringList aliasesA, aliasesD;
-    bool sendForSpamA, sendForSpamD;
-    QString domainNameA, domainNameD;
-    QDate startDateA, startDateD;
-    QDate endDateA, endDateD;
-    bool scriptActiveA, scriptActiveD;
-    VacationUtils::parseScript(scriptA, scriptActiveA, messageTextA, subjectA, notificationIntervalA, aliasesA, sendForSpamA, domainNameA, startDateA, endDateA);
-    VacationUtils::parseScript(scriptD, scriptActiveD, messageTextD, subjectD, notificationIntervalD, aliasesD, sendForSpamD, domainNameD, startDateD, endDateD);
-    QCOMPARE(scriptActiveA, true);
-    QCOMPARE(scriptActiveD, false);
-    QCOMPARE(messageTextD, messageTextA);
-    QCOMPARE(subjectD, subjectA);
-    QCOMPARE(notificationIntervalD, notificationIntervalA);
-    QCOMPARE(aliasesD, aliasesA);
-    QCOMPARE(sendForSpamD, sendForSpamA);
-    QCOMPARE(domainNameD, domainNameA);
-    QCOMPARE(startDateD, startDateA);
-    QCOMPARE(endDateD, endDateA);
+    VacationUtils::Vacation vacationA = VacationUtils::parseScript(scriptA);
+    VacationUtils::Vacation vacationD = VacationUtils::parseScript(scriptD);
+    QCOMPARE(vacationA.active, true);
+    QCOMPARE(vacationD.active, false);
+    QCOMPARE(vacationD.messageText, vacationA.messageText);
+    QCOMPARE(vacationD.subject, vacationA.subject);
+    QCOMPARE(vacationD.notificationInterval, vacationA.notificationInterval);
+    testAliases(vacationD.aliases, vacationA.aliases);
+    QCOMPARE(vacationD.sendForSpam, vacationA.sendForSpam);
+    QCOMPARE(vacationD.excludeDomain, vacationA.excludeDomain);
+    QCOMPARE(vacationD.startDate, vacationA.startDate);
+    QCOMPARE(vacationD.endDate, vacationA.endDate);
 }
 
 void VacationUtilsTest::testParseScriptComplex()
@@ -132,118 +130,96 @@ void VacationUtilsTest::testParseScriptComplex()
     QVERIFY(file.open(QIODevice::ReadOnly));
     QString script = QString::fromUtf8(file.readAll());
 
-    QString messageText;
-    QString subject;
-    int notificationInterval;
-    QStringList aliases;
-    bool sendForSpam;
-    QString domainName;
-    QDate startDate;
-    QDate endDate;
-    bool scriptActive;
-    VacationUtils::parseScript(script, scriptActive, messageText, subject, notificationInterval, aliases, sendForSpam, domainName, startDate, endDate);
-    QCOMPARE(scriptActive, true);
-    QCOMPARE(messageText, QLatin1String("dsfgsdfgsdfg"));
-    QCOMPARE(subject, QLatin1String("XXX"));
-    QCOMPARE(notificationInterval, 7);
-    QCOMPARE(aliases, QStringList() << QLatin1String("test@test.de"));
-    QCOMPARE(sendForSpam, false);
-    QCOMPARE(domainName, QString());
-    QCOMPARE(startDate, QDate(2015, 01, 02));
-    QCOMPARE(endDate, QDate(2015, 03, 04));
+    VacationUtils::Vacation vacation = VacationUtils::parseScript(script);
+    QCOMPARE(vacation.active, true);
+    QCOMPARE(vacation.messageText, QLatin1String("dsfgsdfgsdfg"));
+    QCOMPARE(vacation.subject, QLatin1String("XXX"));
+    QCOMPARE(vacation.notificationInterval, 7);
+    testAliases(vacation.aliases, QStringList() << QLatin1String("test@test.de"));
+    QCOMPARE(vacation.sendForSpam, false);
+    QCOMPARE(vacation.excludeDomain, QString());
+    QCOMPARE(vacation.startDate, QDate(2015, 01, 02));
+    QCOMPARE(vacation.endDate, QDate(2015, 03, 04));
 }
 
 void VacationUtilsTest::testWriteScript()
 {
-    QString messageText(QLatin1String("dsfgsdfgsdfg"));
-    QString subject(QLatin1String("XXX"));
-    int notificationInterval(7);
+    VacationUtils::Vacation vacation, vacationA;
     QStringList aliases = QStringList() << QLatin1String("test@test.de");
-    QList<KMime::Types::AddrSpec> addesses;
-    bool sendForSpam(false);
-    QString domainName(QLatin1String("example.org"));
-    QDate startDate(2015, 01, 02);
-    QDate endDate(2015, 03, 04);
-    bool scriptActive(true);
+    vacation.valid = true;
 
-    QString messageTextA;
-    QString subjectA;
-    int notificationIntervalA;
-    QStringList aliasesA;
-    bool sendForSpamA;
-    QString domainNameA;
-    QDate startDateA;
-    QDate endDateA;
-    bool scriptActiveA;
+    vacation.messageText = QLatin1String("dsfgsdfgsdfg");
+    vacation.subject = QLatin1String("XXX");
+    vacation.notificationInterval = 7;
+    vacation.sendForSpam = false;
+    vacation.excludeDomain = QLatin1String("example.org");
+    vacation.startDate = QDate(2015, 01, 02);
+    vacation.endDate = QDate(2015, 03, 04);
+    vacation.active = true;
 
     foreach(const QString &alias, aliases) {
         KMime::Types::Mailbox a;
         a.fromUnicodeString(alias);
-        addesses.append(a.addrSpec());
+        vacation.aliases.append(a.addrSpec());
     }
 
-    QString script = VacationUtils::composeScript(messageText, scriptActive, subject, notificationInterval, addesses, sendForSpam, domainName, startDate, endDate);
-    bool ret = VacationUtils::parseScript(script, scriptActiveA, messageTextA, subjectA, notificationIntervalA, aliasesA, sendForSpamA, domainNameA, startDateA, endDateA);
-    QCOMPARE(ret, true);
-    QCOMPARE(scriptActiveA, scriptActive);
-    QCOMPARE(messageTextA, messageText);
-    QCOMPARE(subjectA, subject);
-    QCOMPARE(notificationIntervalA, notificationInterval);
-    QCOMPARE(aliasesA, aliases);
-    QCOMPARE(sendForSpamA, sendForSpam);
-    QCOMPARE(domainNameA, domainName);
-    QCOMPARE(startDateA, startDate);
-    QCOMPARE(endDateA, endDate);
+    QString script = VacationUtils::composeScript(vacation);
+    vacationA = VacationUtils::parseScript(script);
+    QCOMPARE(vacationA.isValid(), true);
+    QCOMPARE(vacationA.active, vacation.active);
+    QCOMPARE(vacationA.messageText, vacation.messageText);
+    QCOMPARE(vacationA.subject, vacation.subject);
+    QCOMPARE(vacationA.notificationInterval, vacation.notificationInterval);
+    kDebug() << "huih";
+    testAliases(vacationA.aliases, vacation.aliases);
+    QCOMPARE(vacationA.sendForSpam, vacation.sendForSpam);
+    QCOMPARE(vacationA.excludeDomain, vacation.excludeDomain);
+    QCOMPARE(vacationA.startDate, vacation.startDate);
+    QCOMPARE(vacationA.endDate, vacation.endDate);
 
-    scriptActive = false;
-    script = VacationUtils::composeScript(messageText, scriptActive, subject, notificationInterval, addesses, sendForSpam, domainName, startDate, endDate);
-    ret = VacationUtils::parseScript(script, scriptActiveA, messageTextA, subjectA, notificationIntervalA, aliasesA, sendForSpamA, domainNameA, startDateA, endDateA);
-    QCOMPARE(ret, true);
-    QCOMPARE(scriptActiveA, scriptActive);
-    QCOMPARE(messageTextA, messageText);
-    QCOMPARE(subjectA, subject);
-    QCOMPARE(notificationIntervalA, notificationInterval);
-    QCOMPARE(aliasesA, aliases);
-    QCOMPARE(sendForSpamA, sendForSpam);
-    QCOMPARE(domainNameA, domainName);
-    QCOMPARE(startDateA, startDate);
-    QCOMPARE(endDateA, endDate);
+    vacation.active = false;
+    script = VacationUtils::composeScript(vacation);
+    vacationA = VacationUtils::parseScript(script);
+    QCOMPARE(vacationA.isValid(), true);
+    QCOMPARE(vacationA.active, vacation.active);
+    QCOMPARE(vacationA.messageText, vacation.messageText);
+    QCOMPARE(vacationA.subject, vacation.subject);
+    QCOMPARE(vacationA.notificationInterval, vacation.notificationInterval);
+    testAliases(vacationA.aliases, vacation.aliases);
+    QCOMPARE(vacationA.sendForSpam, vacation.sendForSpam);
+    QCOMPARE(vacationA.excludeDomain, vacation.excludeDomain);
+    QCOMPARE(vacationA.startDate, vacation.startDate);
+    QCOMPARE(vacationA.endDate, vacation.endDate);
 }
 
 
 void VacationUtilsTest::testWriteSimpleScript()
 {
-    QString messageText(QLatin1String("dsfgsdfgsdfg"));
-    QString subject(QLatin1String("XXX"));
-    int notificationInterval(7);
-    bool scriptActive(true);
+    VacationUtils::Vacation vacation;
+    vacation.valid = true;
+    vacation.messageText = QLatin1String("dsfgsdfgsdfg");
+    vacation.subject = QLatin1String("XXX");
+    vacation.notificationInterval = 7;
+    vacation.active = true;
+    vacation.sendForSpam = true;
 
-    QString messageTextA;
-    QString subjectA;
-    int notificationIntervalA;
-    QStringList aliasesA;
-    bool sendForSpamA;
-    QString domainNameA;
-    QDate startDateA;
-    QDate endDateA;
-    bool scriptActiveA;
+    QString script = VacationUtils::composeScript(vacation);
+    VacationUtils::Vacation vacationA = VacationUtils::parseScript(script);
+    QCOMPARE(vacation.isValid(), true);
+    QCOMPARE(vacationA.active, vacation.active);
+    QCOMPARE(vacationA.messageText, vacation.messageText);
+    QCOMPARE(vacationA.subject, vacation.subject);
+    QCOMPARE(vacationA.notificationInterval, vacation.notificationInterval);
 
-    QString script = VacationUtils::composeScript(messageText, scriptActive, subject, notificationInterval, QList<KMime::Types::AddrSpec>(), true, QString(), QDate(), QDate());
-    bool ret = VacationUtils::parseScript(script, scriptActiveA, messageTextA, subjectA, notificationIntervalA, aliasesA, sendForSpamA, domainNameA, startDateA, endDateA);
-    QCOMPARE(ret, true);
-    QCOMPARE(scriptActiveA, scriptActive);
-    QCOMPARE(messageTextA, messageText);
-    QCOMPARE(subjectA, subject);
-    QCOMPARE(notificationIntervalA, notificationInterval);
+    vacation.active = false;
+    script = VacationUtils::composeScript(vacation);
+    vacationA = VacationUtils::parseScript(script);
+    QCOMPARE(vacation.isValid(), true);
+    QCOMPARE(vacationA.active, vacation.active);
+    QCOMPARE(vacationA.messageText, vacation.messageText);
+    QCOMPARE(vacationA.subject, vacation.subject);
+    QCOMPARE(vacationA.notificationInterval, vacation.notificationInterval);
 
-    scriptActive = false;
-    script = VacationUtils::composeScript(messageText, scriptActive, subject, notificationInterval, QList<KMime::Types::AddrSpec>(), true, QString(), QDate(), QDate());
-    ret = VacationUtils::parseScript(script, scriptActiveA, messageTextA, subjectA, notificationIntervalA, aliasesA, sendForSpamA, domainNameA, startDateA, endDateA);
-    QCOMPARE(ret, true);
-    QCOMPARE(scriptActiveA, scriptActive);
-    QCOMPARE(messageTextA, messageText);
-    QCOMPARE(subjectA, subject);
-    QCOMPARE(notificationIntervalA, notificationInterval);
 }
 
 void VacationUtilsTest::testUpdateVacationBlock()

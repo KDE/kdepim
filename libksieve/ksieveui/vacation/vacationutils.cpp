@@ -64,17 +64,24 @@ int KSieveUi::VacationUtils::defaultNotificationInterval() {
     return 7; // days
 }
 
-QStringList KSieveUi::VacationUtils::defaultMailAliases()
+KMime::Types::AddrSpecList KSieveUi::VacationUtils::defaultMailAliases()
 {
-    QStringList sl;
+    KMime::Types::AddrSpecList sl;
     KPIMIdentities::IdentityManager manager( true );
     KPIMIdentities::IdentityManager::ConstIterator end(manager.end());
     for ( KPIMIdentities::IdentityManager::ConstIterator it = manager.begin(); it != end ; ++it ) {
         if ( !(*it).primaryEmailAddress().isEmpty() ) {
-            sl.push_back( (*it).primaryEmailAddress() );
+            KMime::Types::Mailbox a;
+            a.fromUnicodeString((*it).primaryEmailAddress());
+            sl.push_back(a.addrSpec());
         }
-        sl += (*it).emailAliases();
+        foreach(const QString &email, (*it).emailAliases()) {
+            KMime::Types::Mailbox a;
+            a.fromUnicodeString(email);
+            sl.push_back(a.addrSpec());
+        }
     }
+
     return sl;
 }
 
@@ -98,21 +105,19 @@ QDate KSieveUi::VacationUtils::defaultEndDate()
 }
 
 
-bool KSieveUi::VacationUtils::parseScript( const QString &script, bool &active, QString &messageText,
-                            QString &subject,
-                            int & notificationInterval, QStringList &aliases,
-                            bool & sendForSpam, QString &domainName,
-                            QDate & startDate, QDate & endDate )
+KSieveUi::VacationUtils::Vacation KSieveUi::VacationUtils::parseScript(const QString &script)
 {
+    KSieveUi::VacationUtils::Vacation vacation;
     if ( script.trimmed().isEmpty() ) {
-        active = false;
-        messageText = VacationUtils::defaultMessageText();
-        subject = VacationUtils::defaultSubject();
-        notificationInterval = VacationUtils::defaultNotificationInterval();
-        aliases = VacationUtils::defaultMailAliases();
-        sendForSpam = VacationUtils::defaultSendForSpam();
-        domainName = VacationUtils::defaultDomainName();
-        return true;
+        vacation.valid = false;
+        vacation.active = false;
+        vacation.messageText = VacationUtils::defaultMessageText();
+        vacation.subject = VacationUtils::defaultSubject();
+        vacation.notificationInterval = VacationUtils::defaultNotificationInterval();
+        vacation.aliases = VacationUtils::defaultMailAliases();
+        vacation.sendForSpam = VacationUtils::defaultSendForSpam();
+        vacation.excludeDomain = VacationUtils::defaultDomainName();
+        return vacation;
     }
 
     // The trimmed() call below prevents parsing errors. The
@@ -130,65 +135,52 @@ bool KSieveUi::VacationUtils::parseScript( const QString &script, bool &active, 
     parser.setScriptBuilder( &tsb );
     parser.parse();
     if ( !parser.parse() || !vdx.commandFound() ) {
-        active = false;
-        return false;
+        vacation.active = false;
+        vacation.valid = false;
+        return vacation;
     }
-    active = vdx.active();
-    messageText = vdx.messageText().trimmed();
+    vacation.valid = true;
+    vacation.active = vdx.active();
+    vacation.messageText = vdx.messageText().trimmed();
     if (!vdx.subject().isEmpty()) {
-        subject = vdx.subject().trimmed();
+        vacation.subject = vdx.subject().trimmed();
     }
-    notificationInterval = vdx.notificationInterval();
-    aliases = vdx.aliases();
+    vacation.notificationInterval = vdx.notificationInterval();
+    vacation.aliases = KMime::Types::AddrSpecList();
+    foreach(const QString &alias, vdx.aliases()) {
+        KMime::Types::Mailbox a;
+        a.fromUnicodeString(alias);
+        vacation.aliases.append(a.addrSpec());
+    }
 
-    if (!active && !vdx.ifComment().isEmpty()) {
+    if (!vacation.active && !vdx.ifComment().isEmpty()) {
         const QByteArray newScript = QString::fromAscii("if ").toUtf8() + vdx.ifComment().toUtf8() + QString::fromLatin1("{vacation;}").toUtf8();
         tsb = KSieveExt::MultiScriptBuilder( &sdx, &drdx, &dx );
         KSieve::Parser parser( newScript.begin(),
                            newScript.begin() + newScript.length() );
         parser.setScriptBuilder( &tsb );
         if ( !parser.parse() ) {
-            return false;
+            vacation.valid = false;
+            return vacation;
         }
     }
 
-    sendForSpam = !sdx.found();
-    domainName = drdx.domainName();
-    startDate = dx.startDate();
-    endDate = dx.endDate();
-    return true;
+    vacation.sendForSpam = !sdx.found();
+    vacation.excludeDomain = drdx.domainName();
+    vacation.startDate = dx.startDate();
+    vacation.endDate = dx.endDate();
+    return vacation;
 }
 
 bool KSieveUi::VacationUtils::foundVacationScript(const QString &script)
 {
-    const QByteArray scriptUTF8 = script.trimmed().toUtf8();
-    kDebug() << "scriptUtf8 = \"" + scriptUTF8 +"\"";
-
-    if (scriptUTF8.isEmpty()) {
-      return false;
-    }
-
-    KSieve::Parser parser( scriptUTF8.begin(),
-                           scriptUTF8.begin() + scriptUTF8.length() );
-    VacationDataExtractor vdx;
-    parser.setScriptBuilder(&vdx);
-    return parser.parse() && vdx.commandFound();
+    return parseScript(script).isValid();
 }
 
 bool KSieveUi::VacationUtils::vacationScriptActive(const QString &script)
 {
-    const QByteArray scriptUTF8 = script.trimmed().toUtf8();
-    kDebug() << "scriptUtf8 = \"" + scriptUTF8 +"\"";
-
-    if (scriptUTF8.isEmpty()) {
-      return false;
-    }
-
-    KSieve::Parser parser( scriptUTF8.begin(),
-                           scriptUTF8.begin() + scriptUTF8.length() );
-    VacationDataExtractor vdx;
-    parser.setScriptBuilder(&vdx);
-    return parser.parse() && vdx.commandFound() && vdx.active();
+    const KSieveUi::VacationUtils::Vacation vacation = parseScript(script);
+    return vacation.isValid() && vacation.active;
 }
 
 QString composeOldScript( const QString & messageText,
@@ -246,82 +238,77 @@ QString composeOldScript( const QString & messageText,
     return script;
 }
 
-QString KSieveUi::VacationUtils::composeScript( const QString & messageText, bool active,
-                                 const QString &subject,
-                                 int notificationInterval,
-                                 const AddrSpecList & addrSpecs,
-                                 bool sendForSpam, const QString & domain,
-                                 const QDate & startDate, const QDate & endDate )
+QString KSieveUi::VacationUtils::composeScript(const Vacation &vacation)
 {
     QStringList condition;
 
-    if (startDate.isValid()) {
+    if (vacation.startDate.isValid()) {
         condition.append(QString::fromLatin1("currentdate :value \"ge\" \"date\" \"%1\"")
-            .arg(startDate.toString(Qt::ISODate)));
+            .arg(vacation.startDate.toString(Qt::ISODate)));
     }
 
-    if (endDate.isValid()) {
+    if (vacation.endDate.isValid()) {
         condition.append(QString::fromLatin1("currentdate :value \"le\" \"date\" \"%1\"")
-            .arg(endDate.toString(Qt::ISODate)));
+            .arg(vacation.endDate.toString(Qt::ISODate)));
     }
 
-    if (!sendForSpam) {
+    if (!vacation.sendForSpam) {
         condition.append(QString::fromLatin1("not header :contains \"X-Spam-Flag\" \"YES\""));
     }
 
-    if (!domain.isEmpty()) {
-        condition.append(QString::fromLatin1("address :domain :contains \"from\" \"%1\"").arg( domain ));
+    if (!vacation.excludeDomain.isEmpty()) {
+        condition.append(QString::fromLatin1("address :domain :contains \"from\" \"%1\"").arg( vacation.excludeDomain ));
     }
 
     QString addressesArgument;
     QStringList aliases;
-    if ( !addrSpecs.empty() ) {
+    if ( !vacation.aliases.empty() ) {
         addressesArgument += QLatin1String(":addresses [ ");
         QStringList sl;
-        AddrSpecList::const_iterator end = addrSpecs.constEnd();
-        for ( AddrSpecList::const_iterator it = addrSpecs.begin() ; it != end; ++it ) {
+        AddrSpecList::const_iterator end = vacation.aliases.constEnd();
+        for ( AddrSpecList::const_iterator it = vacation.aliases.begin() ; it != end; ++it ) {
             sl.push_back( QLatin1Char('"') + (*it).asString().replace( QLatin1Char('\\'), QLatin1String("\\\\") ).replace( QLatin1Char('"'), QLatin1String("\\\"") ) + QLatin1Char('"') );
             aliases.push_back( (*it).asString() );
         }
         addressesArgument += sl.join( QLatin1String(", ") ) + QLatin1String(" ] ");
     }
 
-    QString vacation(QLatin1String("vacation "));
-    vacation += addressesArgument;
-    if ( notificationInterval > 0 )
-        vacation += QString::fromLatin1(":days %1 ").arg(notificationInterval);
+    QString sVacation(QLatin1String("vacation "));
+    sVacation += addressesArgument;
+    if ( vacation.notificationInterval > 0 )
+        sVacation += QString::fromLatin1(":days %1 ").arg(vacation.notificationInterval);
 
-    if (!subject.trimmed().isEmpty()) {
-        vacation += QString::fromLatin1(":subject \"%1\" ").arg(stringReplace(subject).trimmed());
+    if (!vacation.subject.trimmed().isEmpty()) {
+        sVacation += QString::fromLatin1(":subject \"%1\" ").arg(stringReplace(vacation.subject).trimmed());
     }
 
-    vacation += QString::fromLatin1("text:\n");
-    vacation += dotstuff( messageText.isEmpty() ? VacationUtils::defaultMessageText() : messageText );
-    vacation += QString::fromLatin1( "\n.\n;" );
+    sVacation += QString::fromLatin1("text:\n");
+    sVacation += dotstuff( vacation.messageText.isEmpty() ? VacationUtils::defaultMessageText() : vacation.messageText );
+    sVacation += QString::fromLatin1( "\n.\n;" );
 
     QString script;
 
-    if ( startDate.isValid() || endDate.isValid() ) {
+    if ( vacation.startDate.isValid() || vacation.endDate.isValid() ) {
         script = QString::fromLatin1("require [\"vacation\", \"relational\", \"date\"];\n\n" );
     } else {
         script = QString::fromLatin1("require \"vacation\";\n\n" );
     }
 
     if (condition.count() == 0) {
-        if (active) {
-            script += vacation;
+        if (vacation.active) {
+            script += sVacation;
         } else {
             script += QString::fromLatin1("if false\n{\n\t");
-            script += vacation;
+            script += sVacation;
             script += QLatin1String("\n}");
         }
     } else {
-        if (active) {
+        if (vacation.active) {
             script += QString::fromLatin1("if allof(%1)\n{\n\t").arg(condition.join(QLatin1String(", ")));
         } else {
             script += QString::fromLatin1("if false # allof(%1)\n{\n\t").arg(condition.join(QLatin1String(", ")));
         }
-        script += vacation;
+        script += sVacation;
         script += QLatin1String("\n}");
     }
 
@@ -404,9 +391,6 @@ QString KSieveUi::VacationUtils::updateVacationBlock(const QString &oldScript, c
     parserNew.setScriptBuilder(&vdxNew);
 
     int startOld(0);
-
-    int startNew(vdxNew.lineStart());
-    int endNew(vdxNew.lineEnd());
 
     QStringList lines = oldScript.split(QLatin1Char('\n'));
 
