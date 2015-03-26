@@ -46,7 +46,7 @@ class Filter : public QObject
     Q_OBJECT
 
 public:
-    Filter();
+    explicit Filter(QObject *parent = 0);
 
 public:
     /**

@@ -28,6 +28,9 @@ public:
     ~QuickSearchWarningTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldSetVisible();
+    void shouldSetSearchText();
+    void shouldSetSearchText_data();
 };
 
 #endif // QUICKSEARCHWARNINGTEST_H

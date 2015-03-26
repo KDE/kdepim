@@ -35,4 +35,31 @@ void QuickSearchWarningTest::shouldHaveDefaultValue()
     QVERIFY(!w.isVisible());
 }
 
+void QuickSearchWarningTest::shouldSetVisible()
+{
+    MessageList::Core::QuickSearchWarning w;
+    w.setSearchText(QLatin1String("1"));
+    QVERIFY(w.isVisible());
+}
+
+void QuickSearchWarningTest::shouldSetSearchText()
+{
+    QFETCH( QString, input );
+    QFETCH( bool, visible );
+    MessageList::Core::QuickSearchWarning w;
+    w.setSearchText(input);
+    QCOMPARE(w.isVisible(), visible);
+}
+
+void QuickSearchWarningTest::shouldSetSearchText_data()
+{
+    QTest::addColumn<QString>("input");
+    QTest::addColumn<bool>("visible");
+    QTest::newRow("bigword") <<  QString(QLatin1String("foofoofoo")) << false;
+    QTest::newRow("1character") <<  QString(QLatin1String("f")) << true;
+    QTest::newRow("multibigword") <<  QString(QLatin1String("foo foo foo")) << false;
+    QTest::newRow("multibigwordwithasmallone") <<  QString(QLatin1String("foo foo foo 1")) << true;
+    QTest::newRow("aspace") <<  QString(QLatin1String(" ")) << false;
+}
+
 QTEST_KDEMAIN(QuickSearchWarningTest, GUI)

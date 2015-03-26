@@ -19,7 +19,7 @@
  *******************************************************************************/
 
 #include "core/widgetbase.h"
-
+#include "core/widgets/quicksearchwarning.h"
 #include "core/aggregation.h"
 #include "core/theme.h"
 #include "core/filter.h"
@@ -100,6 +100,7 @@ public:
 
     Widget * const q;
 
+    QuickSearchWarning *quickSearchWarning;
     QuickSearchLine *quickSearchLine;
     View *mView;
     QString mLastAggregationId;
@@ -144,7 +145,8 @@ Widget::Widget( QWidget *pParent )
     connect(d->quickSearchLine, SIGNAL(searchOptionChanged()), SLOT(searchEditTextEdited()) );
     connect(d->quickSearchLine, SIGNAL(statusButtonsClicked()), SLOT(slotStatusButtonsClicked()));
     g->addWidget( d->quickSearchLine, 0 );
-
+    d->quickSearchWarning = new QuickSearchWarning(this);
+    g->addWidget( d->quickSearchWarning, 0 );
     d->mView = new View( this );
     d->mView->setFrameStyle( QFrame::NoFrame );
     d->mView->setSortOrder( &d->mSortOrder );
@@ -833,6 +835,7 @@ void Widget::resetFilter()
     d->mFilter = 0;
     d->mView->model()->setFilter( 0 );
     d->quickSearchLine->resetFilter();
+    d->quickSearchWarning->animatedHide();
 }
 
 void Widget::slotViewHeaderSectionClicked( int logicalIndex )
@@ -994,6 +997,7 @@ void Widget::searchTimerFired()
 
     d->mFilter->setCurrentFolder( d->mCurrentFolder );
     d->mFilter->setSearchString( text, d->quickSearchLine->searchOptions() );
+    d->quickSearchWarning->setSearchText(text);
     if ( d->mFilter->isEmpty() ) {
         resetFilter();
         return;

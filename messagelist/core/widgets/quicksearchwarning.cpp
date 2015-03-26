@@ -25,10 +25,23 @@ QuickSearchWarning::QuickSearchWarning(QWidget *parent)
     setCloseButtonVisible(true);
     setMessageType(Warning);
     setWordWrap(true);
+    //KF5 add i18n
+    setText(QLatin1String("The words less than 3 letters are ignored."));
 }
 
 QuickSearchWarning::~QuickSearchWarning()
 {
 
+}
+
+void QuickSearchWarning::setSearchText(const QString &text)
+{
+    const QStringList lstText = text.split(QLatin1Char(' '), QString::SkipEmptyParts);
+    Q_FOREACH(const QString &text, lstText) {
+        if (text.trimmed().size() < 3) {
+            animatedShow();
+            break;
+        }
+    }
 }
 
