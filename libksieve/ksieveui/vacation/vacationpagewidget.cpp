@@ -125,7 +125,7 @@ void VacationPageWidget::slotGetResult(const QString &serverName, const QStringL
 
      KSieveUi::VacationUtils::Vacation vacation = KSieveUi::VacationUtils::parseScript(script);
 
-    if (!vacation.isValid() && !script.timmed().isEmpty() ) {
+    if (!vacation.isValid() && !script.trimmed().isEmpty() ) {
         mVacationWarningWidget->setVisible(true);
     }
 

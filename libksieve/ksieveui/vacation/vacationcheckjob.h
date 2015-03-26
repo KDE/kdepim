@@ -52,7 +52,6 @@ private slots:
     void emitError(const QString &errorMessage);
     void searchVacationScript();
     void getNextScript();
-    bool isVacationScipt(const QString &script) const;
     bool isLastScript() const;
 
 private:

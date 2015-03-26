@@ -85,9 +85,10 @@ void VacationCheckJob::slotGetResult(KManageSieve::SieveJob */*job*/, bool succe
     mSieveJob = 0;
 
     if (mKep14Support) {
-        if (isVacationScipt(script)) {
+        VacationUtils::Vacation vacation = VacationUtils::parseScript(script);
+        if (vacation.isValid()) {
             const QString &scriptName = mAvailableScripts[mScriptPos-1];
-            emit scriptActive(this, scriptName, mActiveScripts.contains(scriptName) && VacationUtils::vacationScriptActive(script));
+            emit scriptActive(this, scriptName, mActiveScripts.contains(scriptName) && vacation.active);
             kDebug() << "vacation script found :)";
         } else if (isLastScript()) {
             mNoScriptFound = true;
@@ -182,11 +183,6 @@ void VacationCheckJob::getNextScript()
 bool VacationCheckJob::isLastScript() const
 {
     return mScriptPos >= mAvailableScripts.count();
-}
-
-bool VacationCheckJob::isVacationScipt(const QString &script) const
-{
-    return KSieveUi::VacationUtils::foundVacationScript(script);
 }
 
 bool VacationCheckJob::noScriptFound()

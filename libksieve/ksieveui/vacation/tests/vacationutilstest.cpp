@@ -47,15 +47,15 @@ void testAliases(KMime::Types::AddrSpecList l1, QStringList l2)
 void VacationUtilsTest::testParseEmptyScript()
 {
     const QString script;
-    QCOMPARE(VacationUtils::foundVacationScript(script), false);
+    QCOMPARE(VacationUtils::parseScript(script).isValid(), false);
 }
 
 void VacationUtilsTest::testParseOnlyComment()
 {
     QString script(QLatin1String("#comment"));
-    QCOMPARE(VacationUtils::foundVacationScript(script), false);
+    QCOMPARE(VacationUtils::parseScript(script).isValid(), false);
     script = QLatin1String("#comment\n\n#comment\n");
-    QCOMPARE(VacationUtils::foundVacationScript(script), false);
+    QCOMPARE(VacationUtils::parseScript(script).isValid(), false);
 }
 
 void VacationUtilsTest::testParseActivate_data()
@@ -82,7 +82,6 @@ void VacationUtilsTest::testParseActivate()
     QFile file(QLatin1String(VACATIONTESTDATADIR)+filename);
     QVERIFY(file.open(QIODevice::ReadOnly));
     QString script = QString::fromUtf8(file.readAll());
-    QCOMPARE(VacationUtils::foundVacationScript(script), found);
 
     VacationUtils::Vacation vacation = VacationUtils::parseScript(script);
     QCOMPARE(vacation.isValid(), found);

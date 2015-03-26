@@ -172,17 +172,6 @@ KSieveUi::VacationUtils::Vacation KSieveUi::VacationUtils::parseScript(const QSt
     return vacation;
 }
 
-bool KSieveUi::VacationUtils::foundVacationScript(const QString &script)
-{
-    return parseScript(script).isValid();
-}
-
-bool KSieveUi::VacationUtils::vacationScriptActive(const QString &script)
-{
-    const KSieveUi::VacationUtils::Vacation vacation = parseScript(script);
-    return vacation.isValid() && vacation.active;
-}
-
 QString composeOldScript( const QString & messageText,
                                  const QString &subject,
                                  int notificationInterval,

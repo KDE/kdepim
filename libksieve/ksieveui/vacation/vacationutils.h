@@ -53,12 +53,6 @@ QString composeScript(const Vacation &vacation);
 
 KSieveUi::VacationUtils::Vacation parseScript(const QString &script);
 
-//returns if a vacation script is found in the sieve script
-bool foundVacationScript(const QString &script);
-
-// returns if the vacation script is active
-bool vacationScriptActive(const QString &script);
-
 QString mergeRequireLine(const QString &script1, const QString script2);
 
 QString updateVacationBlock(const QString &oldScript, const QString &newScript);
