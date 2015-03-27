@@ -238,7 +238,7 @@ void SignJob::process()
     // exec'ed jobs don't delete themselves
     job->deleteLater();
 
-    if ( res.error() ) {
+    if ( res.error().code() ) {
         kDebug() << "signing failed:" << res.error().asString();
         //        job->showErrorDialog( globalPart()->parentWidgetForGui() );
         setError( res.error().code() );
