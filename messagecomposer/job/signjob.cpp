@@ -234,7 +234,7 @@ void SignJob::process()
     // exec'ed jobs don't delete themselves
     job->deleteLater();
 
-    if (res.error()) {
+    if (res.error().code()) {
         qCDebug(MESSAGECOMPOSER_LOG) << "signing failed:" << res.error().asString();
         //        job->showErrorDialog( globalPart()->parentWidgetForGui() );
         setError(res.error().code());
