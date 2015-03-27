@@ -28,7 +28,7 @@ class MESSAGELIST_EXPORT QuickSearchWarning : public KMessageWidget
 {
     Q_OBJECT
 public:
-    explicit QuickSearchWarning(QWidget *parent = 0);
+    explicit QuickSearchWarning(QWidget *parent = Q_NULLPTR);
     ~QuickSearchWarning();
     void setSearchText(const QString &text);
 };

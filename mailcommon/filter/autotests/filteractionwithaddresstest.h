@@ -24,7 +24,7 @@ class FilterActionWithAddressTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FilterActionWithAddressTest(QObject *parent = 0);
+    explicit FilterActionWithAddressTest(QObject *parent = Q_NULLPTR);
     ~FilterActionWithAddressTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
