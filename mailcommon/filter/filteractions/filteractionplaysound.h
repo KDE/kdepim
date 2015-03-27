@@ -43,6 +43,7 @@ public:
     static FilterAction* newAction();
     bool argsFromStringInteractive( const QString &argsStr, const QString &filterName );
 
+    bool isEmpty() const;
 private:
     mutable Phonon::MediaObject* mPlayer;
 };

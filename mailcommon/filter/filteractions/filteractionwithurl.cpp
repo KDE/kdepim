@@ -58,6 +58,8 @@ QWidget* FilterActionWithUrl::createParamWidget( QWidget *parent ) const
 {
     QWidget *widget = new QWidget(parent);
     QHBoxLayout *layout = new QHBoxLayout;
+    layout->setMargin(0);
+    layout->setSpacing(0);
     widget->setLayout(layout);
     KUrlRequester *requester = new KUrlRequester( parent );
     requester->setObjectName(QLatin1String("requester"));
