@@ -14,21 +14,20 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-#ifndef FILTERACTIONBEEPTEST_H
-#define FILTERACTIONBEEPTEST_H
 
-#include <QObject>
+#include "filteractionplaysoundtest.h"
+#include "../filteractions/filteractionplaysound.h"
+#include <qtest_kde.h>
 
-class FilterActionBeepTest : public QObject
+FilterActionPlaySoundTest::FilterActionPlaySoundTest(QObject *parent)
+    : QObject(parent)
 {
-    Q_OBJECT
-public:
-    explicit FilterActionBeepTest(QObject *parent = 0);
-    ~FilterActionBeepTest();
-private Q_SLOTS:
-    void shouldHaveDefaultValue();
-    void shouldSieveCode();
-    void shouldBeNotEmptyByDefault();
-};
 
-#endif // FILTERACTIONBEEPTEST_H
+}
+
+FilterActionPlaySoundTest::~FilterActionPlaySoundTest()
+{
+
+}
+
+QTEST_KDEMAIN(FilterActionPlaySoundTest, GUI)

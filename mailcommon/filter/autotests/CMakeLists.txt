@@ -173,3 +173,21 @@ target_link_libraries( filteractionaddtoaddressbooktest
    ${KDEPIMLIBS_AKONADI_LIBS}
    ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
 )
+
+
+#set(mailcommon_filteractionplaysoundtest_SRCS filteractionplaysoundtest.cpp
+#                                           ../filteractions/filteractionplaysound.cpp
+#                                           ../filteractions/filteractionwithtest.cpp
+#                                           ../filteractions/filteractionplaysound.h
+#                                           ../soundtestwidget.cpp
+#                                           ../dialog/filteractionmissingargumentdialog.h)
+#kde4_add_unit_test( filteractionplaysoundtest ${mailcommon_filteractionplaysoundtest_SRCS} )
+#target_link_libraries( filteractionplaysoundtest
+#   kdepim
+#   pimcommon
+#   mailcommon
+#   ${QT_QTTEST_LIBRARY}
+#   ${QT_QTCORE_LIBRARY}
+#   ${KDEPIMLIBS_AKONADI_LIBS}
+#   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+#)

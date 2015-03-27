@@ -43,4 +43,10 @@ void FilterActionBeepTest::shouldSieveCode()
     QVERIFY(w.sieveRequires().isEmpty());
 }
 
+void FilterActionBeepTest::shouldBeNotEmptyByDefault()
+{
+    MailCommon::FilterActionBeep w;
+    QVERIFY(!w.isEmpty());
+}
+
 QTEST_KDEMAIN(FilterActionBeepTest, GUI)

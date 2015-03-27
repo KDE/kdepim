@@ -14,21 +14,17 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-#ifndef FILTERACTIONBEEPTEST_H
-#define FILTERACTIONBEEPTEST_H
+#ifndef FILTERACTIONPLAYSOUNDTEST_H
+#define FILTERACTIONPLAYSOUNDTEST_H
 
 #include <QObject>
 
-class FilterActionBeepTest : public QObject
+class FilterActionPlaySoundTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FilterActionBeepTest(QObject *parent = 0);
-    ~FilterActionBeepTest();
-private Q_SLOTS:
-    void shouldHaveDefaultValue();
-    void shouldSieveCode();
-    void shouldBeNotEmptyByDefault();
+    explicit FilterActionPlaySoundTest(QObject *parent = 0);
+    ~FilterActionPlaySoundTest();
 };
 
-#endif // FILTERACTIONBEEPTEST_H
+#endif // FILTERACTIONPLAYSOUNDTEST_H
