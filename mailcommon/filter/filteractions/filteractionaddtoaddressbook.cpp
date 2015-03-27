@@ -22,6 +22,7 @@
 #include "pimcommon/widgets/minimumcombobox.h"
 
 #include "libkdepim/job/addcontactjob.h"
+#include "libkdepim/widgets/tagwidgets.h"
 
 #include <CollectionComboBox>
 #include <KContacts/Addressee>
@@ -77,9 +78,8 @@ FilterAction::ReturnCode FilterActionAddToAddressBook::process(ItemContext &cont
         KContacts::Addressee contact;
         contact.setNameFromString(name);
         contact.insertEmail(email, true);
-        if (!mCategory.isEmpty()) {
-            contact.insertCategory(mCategory);
-        }
+        if ( !mCategory.isEmpty() )
+            contact.setCategories( mCategory.split(QLatin1String(";")) );
 
         KPIM::AddContactJob *job = new KPIM::AddContactJob(contact, Akonadi::Collection(mCollectionId));
         job->showMessageBox(false);
@@ -104,14 +104,15 @@ QWidget *FilterActionAddToAddressBook::createParamWidget(QWidget *parent) const
     layout->addWidget(headerCombo, 0, 0, 2, 1, Qt::AlignVCenter);
 
     QLabel *label = new QLabel(i18n("with category"), widget);
+    label->setObjectName(QLatin1String("label_with_category"));
     layout->addWidget(label, 0, 1);
 
-    KLineEdit *categoryEdit = new KLineEdit(widget);
-    categoryEdit->setObjectName(QLatin1String("CategoryEdit"));
-    categoryEdit->setTrapReturnKey(true);
+    KPIM::TagWidget *categoryEdit = new KPIM::TagWidget( widget );
+    categoryEdit->setObjectName( QLatin1String("CategoryEdit") );
     layout->addWidget(categoryEdit, 0, 2);
 
     label = new QLabel(i18n("in address book"), widget);
+    label->setObjectName(QLatin1String("label_in_addressbook"));
     layout->addWidget(label, 1, 1);
 
     Akonadi::CollectionComboBox *collectionComboBox = new Akonadi::CollectionComboBox(widget);
@@ -123,9 +124,10 @@ QWidget *FilterActionAddToAddressBook::createParamWidget(QWidget *parent) const
                                         "If it is not accessible, the filter will fallback to the default address book.</p>"));
     layout->addWidget(collectionComboBox, 1, 2);
 
-    connect(categoryEdit, &KLineEdit::textChanged, this, &FilterActionAddToAddressBook::filterActionModified);
     connect(headerCombo, static_cast<void (PimCommon::MinimumComboBox::*)(int)>(&PimCommon::MinimumComboBox::currentIndexChanged), this, &FilterActionAddToAddressBook::filterActionModified);
     connect(collectionComboBox, static_cast<void (Akonadi::CollectionComboBox::*)(int)>(&Akonadi::CollectionComboBox::activated), this, &FilterActionAddToAddressBook::filterActionModified);
+    connect( categoryEdit, SIGNAL(selectionChanged(QStringList)),
+             this, SIGNAL(filterActionModified()) );
 
     setParamWidgetValue(widget);
 
@@ -144,9 +146,9 @@ void FilterActionAddToAddressBook::setParamWidgetValue(QWidget *paramWidget) con
 
     headerCombo->setCurrentIndex(headerCombo->findData(mHeaderType));
 
-    KLineEdit *categoryEdit = paramWidget->findChild<KLineEdit *>(QLatin1String("CategoryEdit"));
-    Q_ASSERT(categoryEdit);
-    categoryEdit->setText(mCategory);
+    KPIM::TagWidget *categoryEdit = paramWidget->findChild<KPIM::TagWidget*>( QLatin1String("CategoryEdit") );
+    Q_ASSERT( categoryEdit );
+    categoryEdit->setSelection( mCategory.split(QLatin1String(";")) );
 
     Akonadi::CollectionComboBox *collectionComboBox = paramWidget->findChild<Akonadi::CollectionComboBox *>(QLatin1String("AddressBookComboBox"));
     Q_ASSERT(collectionComboBox);
@@ -160,9 +162,9 @@ void FilterActionAddToAddressBook::applyParamWidgetValue(QWidget *paramWidget)
     Q_ASSERT(headerCombo);
     mHeaderType = static_cast<HeaderType>(headerCombo->itemData(headerCombo->currentIndex()).toInt());
 
-    const KLineEdit *categoryEdit = paramWidget->findChild<KLineEdit *>(QLatin1String("CategoryEdit"));
-    Q_ASSERT(categoryEdit);
-    mCategory = categoryEdit->text();
+    const KPIM::TagWidget *categoryEdit = paramWidget->findChild<KPIM::TagWidget*>( QLatin1String("CategoryEdit") );
+    Q_ASSERT( categoryEdit );
+    mCategory = categoryEdit->selection().join(QLatin1String(";"));
 
     const Akonadi::CollectionComboBox *collectionComboBox = paramWidget->findChild<Akonadi::CollectionComboBox *>(QLatin1String("AddressBookComboBox"));
     Q_ASSERT(collectionComboBox);
@@ -187,9 +189,9 @@ void FilterActionAddToAddressBook::clearParamWidget(QWidget *paramWidget) const
     Q_ASSERT(headerCombo);
     headerCombo->setCurrentIndex(0);
 
-    KLineEdit *categoryEdit = paramWidget->findChild<KLineEdit *>(QLatin1String("CategoryEdit"));
-    Q_ASSERT(categoryEdit);
-    categoryEdit->setText(mCategory);
+    KPIM::TagWidget *categoryEdit = paramWidget->findChild<KPIM::TagWidget*>( QLatin1String("CategoryEdit") );
+    Q_ASSERT( categoryEdit );
+    categoryEdit->setSelection( mCategory.split(QLatin1String(";")) );
 }
 
 QString FilterActionAddToAddressBook::argsAsString() const

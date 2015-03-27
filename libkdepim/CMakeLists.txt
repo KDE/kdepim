@@ -46,6 +46,7 @@ set(kdepim_widgets_LIB_SRCS
    widgets/tagwidgets.cpp
    widgets/progressindicatorlabel.cpp
    widgets/progressindicatorwidget.cpp
+   widgets/tagselectioncombo.cpp
 )
 
 set(kdepim_ldap_LIB_SRCS

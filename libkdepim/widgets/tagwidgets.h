@@ -22,8 +22,6 @@
 #include <Tag>
 #include <TagSelectionDialog>
 #include <QWidget>
-#include <KComboBox>
-#include "kcheckcombobox.h"
 
 class KJob;
 namespace Akonadi
@@ -67,20 +65,6 @@ private Q_SLOTS:
 
 private:
     Akonadi::Tag::List mTagList;
-};
-
-class KDEPIM_EXPORT TagSelectionCombo : public KPIM::KCheckComboBox
-{
-    Q_OBJECT
-public:
-    explicit TagSelectionCombo(QWidget *parent = Q_NULLPTR);
-};
-
-class KDEPIM_EXPORT TagCombo : public KComboBox
-{
-    Q_OBJECT
-public:
-    explicit TagCombo(QWidget *parent = Q_NULLPTR);
 };
 
 }

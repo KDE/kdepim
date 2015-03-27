@@ -17,18 +17,16 @@
 
 #include "tagwidgets.h"
 #include <KJob>
-#include <QItemSelectionModel>
+#include <QLayout>
 
-#include <Tag>
-#include <TagFetchJob>
-#include <TagFetchScope>
-#include <TagCreateJob>
-#include <TagWidget>
-#include <TagModel>
-#include <Monitor>
-#include <KCheckableProxyModel>
+#include <AkonadiCore/Tag>
+#include <AkonadiCore/TagFetchJob>
+#include <AkonadiCore/TagFetchScope>
+#include <AkonadiCore/TagCreateJob>
+#include <AkonadiWidgets/TagWidget>
+#include <AkonadiCore/TagModel>
+#include <AkonadiCore/Monitor>
 #include "libkdepim_debug.h"
-#include <QHBoxLayout>
 
 using namespace KPIM;
 
@@ -38,6 +36,8 @@ TagWidget::TagWidget(QWidget *parent)
     mTagWidget = new Akonadi::TagWidget(this);
     connect(mTagWidget, &Akonadi::TagWidget::selectionChanged, this, &TagWidget::onSelectionChanged);
     QHBoxLayout *l = new QHBoxLayout;
+    l->setMargin(0);
+    l->setSpacing(0);
     l->addWidget(mTagWidget);
     setLayout(l);
 }
@@ -115,47 +115,5 @@ QStringList TagSelectionDialog::selection() const
         list << tag.name();
     }
     return list;
-}
-
-class MatchingCheckableProxyModel : public KCheckableProxyModel
-{
-public:
-    MatchingCheckableProxyModel(QObject *parent = Q_NULLPTR): KCheckableProxyModel(parent) {}
-    QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1, Qt::MatchFlags flags = Qt::MatchExactly) const  Q_DECL_OVERRIDE
-    {
-        if (role == Qt::CheckStateRole) {
-            return selectionModel()->selectedRows();
-        }
-        return KCheckableProxyModel::match(start, role, value, hits, flags);
-    }
-};
-
-TagSelectionCombo::TagSelectionCombo(QWidget *parent)
-    :   KPIM::KCheckComboBox(parent)
-{
-    Akonadi::Monitor *monitor = new Akonadi::Monitor(this);
-    monitor->setTypeMonitored(Akonadi::Monitor::Tags);
-
-    Akonadi::TagModel *model = new Akonadi::TagModel(monitor, this);
-
-    QItemSelectionModel *selectionModel = new QItemSelectionModel(model, this);
-    KCheckableProxyModel *checkableProxy = new MatchingCheckableProxyModel(this);
-    checkableProxy->setSourceModel(model);
-    checkableProxy->setSelectionModel(selectionModel);
-
-    setModel(checkableProxy);
-
-    //We need to reconnect from the constructor of KCheckComboBox to the new model
-    connect(checkableProxy, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-            this, SLOT(updateCheckedItems(QModelIndex,QModelIndex)));
-}
-
-TagCombo::TagCombo(QWidget *parent)
-    :   KComboBox(parent)
-{
-    Akonadi::Monitor *monitor = new Akonadi::Monitor(this);
-    monitor->setTypeMonitored(Akonadi::Monitor::Tags);
-    Akonadi::TagModel *model = new Akonadi::TagModel(monitor, this);
-    setModel(model);
 }
 
