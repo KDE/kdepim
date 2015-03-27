@@ -28,6 +28,8 @@ public:
     ~FilterActionAddToAddressBookTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldReportErrorWhenArgumentIsEmpty();
+    void shouldReportErrorWhenCollectionIsInvalid();
 };
 
 #endif // FILTERACTIONADDTOADDRESSBOOKTEST_H

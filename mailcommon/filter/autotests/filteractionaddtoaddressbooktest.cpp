@@ -57,4 +57,33 @@ void FilterActionAddToAddressBookTest::shouldHaveDefaultValue()
     QVERIFY(collectionComboBox);
 }
 
+void FilterActionAddToAddressBookTest::shouldReportErrorWhenArgumentIsEmpty()
+{
+    MailCommon::FilterActionAddToAddressBook filter;
+    KMime::Message::Ptr msgPtr = KMime::Message::Ptr(new KMime::Message());
+    Akonadi::Item item;
+    item.setPayload<KMime::Message::Ptr>(msgPtr);
+    MailCommon::ItemContext context(item, true);
+
+    filter.argsFromString("");
+    QVERIFY(filter.isEmpty());
+    QCOMPARE(filter.process(context, false), MailCommon::FilterAction::ErrorButGoOn);
+    QCOMPARE(context.needsPayloadStore(), false);
+
+}
+
+void FilterActionAddToAddressBookTest::shouldReportErrorWhenCollectionIsInvalid()
+{
+    MailCommon::FilterActionAddToAddressBook filter;
+    KMime::Message::Ptr msgPtr = KMime::Message::Ptr(new KMime::Message());
+    Akonadi::Item item;
+    item.setPayload<KMime::Message::Ptr>(msgPtr);
+    MailCommon::ItemContext context(item, true);
+
+    filter.argsFromString("foo\t-1\tddd");
+    QVERIFY(filter.isEmpty());
+    QCOMPARE(filter.process(context, false), MailCommon::FilterAction::ErrorButGoOn);
+    QCOMPARE(context.needsPayloadStore(), false);
+}
+
 QTEST_KDEMAIN(FilterActionAddToAddressBookTest, GUI)
