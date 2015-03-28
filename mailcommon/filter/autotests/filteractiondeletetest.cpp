@@ -47,4 +47,10 @@ void FilterActionDeleteTest::shouldReturnSieveValue()
     QCOMPARE(filter.sieveCode(), QLatin1String("discard;"));
 }
 
+void FilterActionDeleteTest::shouldBeNotEmpty()
+{
+    MailCommon::FilterActionDelete filter;
+    QVERIFY(!filter.isEmpty());
+}
+
 QTEST_MAIN(FilterActionDeleteTest)

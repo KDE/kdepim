@@ -32,6 +32,7 @@ private Q_SLOTS:
     void shouldAddValue_data();
     void shouldClearWidget();
     void shouldReturnSieveCode();
+    void shouldBeEmpty();
 };
 
 #endif // FILTERACTIONADDHEADERTEST_H

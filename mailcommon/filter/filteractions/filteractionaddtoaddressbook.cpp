@@ -54,11 +54,14 @@ FilterActionAddToAddressBook::FilterActionAddToAddressBook(QObject *parent)
 
 bool FilterActionAddToAddressBook::isEmpty() const
 {
-    return false;
+    return (mCollectionId == -1);
 }
 
 FilterAction::ReturnCode FilterActionAddToAddressBook::process(ItemContext &context , bool) const
 {
+    if ( mCollectionId == -1 )
+        return ErrorButGoOn;
+
     const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
 
     QString headerLine;

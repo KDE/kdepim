@@ -45,6 +45,7 @@ public:
     static FilterAction *newAction();
     bool argsFromStringInteractive(const QString &argsStr, const QString &filterName) Q_DECL_OVERRIDE;
 
+    bool isEmpty() const;
 private:
     mutable Phonon::MediaObject *mPlayer;
 };

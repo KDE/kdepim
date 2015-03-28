@@ -50,6 +50,11 @@ FilterActionRewriteHeader::FilterActionRewriteHeader(QObject *parent)
     mParameter = mParameterList.at(0);
 }
 
+bool FilterActionRewriteHeader::isEmpty() const
+{
+    return (mParameter.isEmpty() || mRegExp.isEmpty());
+}
+
 FilterAction::ReturnCode FilterActionRewriteHeader::process(ItemContext &context , bool) const
 {
     if (mParameter.isEmpty() || !mRegExp.isValid()) {

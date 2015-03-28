@@ -50,6 +50,7 @@ public:
 
     static FilterAction *newAction();
 
+    bool isEmpty() const;
 private:
     QRegExp mRegExp;
     QString mReplacementString;

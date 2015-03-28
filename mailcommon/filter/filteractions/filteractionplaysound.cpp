@@ -46,7 +46,12 @@ FilterAction *FilterActionPlaySound::newAction()
     return new FilterActionPlaySound();
 }
 
-FilterAction::ReturnCode FilterActionPlaySound::process(ItemContext &, bool) const
+bool FilterActionPlaySound::isEmpty() const
+{
+    return (mParameter.isEmpty());
+}
+
+FilterAction::ReturnCode FilterActionPlaySound::process(ItemContext& , bool) const
 {
     if (mParameter.isEmpty()) {
         return ErrorButGoOn;
