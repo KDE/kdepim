@@ -51,6 +51,7 @@ public:
     QStringList sieveRequires() const;
     QString sieveCode() const;
 
+    bool isEmpty() const;
 private:
     QString mValue;
 };
