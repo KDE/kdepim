@@ -306,6 +306,10 @@ void FilterActionWidgetLister::setActionList( QList<FilterAction*> *list )
 
     if ( list->isEmpty() ) {
         slotClear();
+        FilterActionWidget *w = qobject_cast<FilterActionWidget*>( widgets().first() );
+        connect( w, SIGNAL(filterModified()),
+                 this, SIGNAL(filterModified()), Qt::UniqueConnection );
+        reconnectWidget( w );
         widgets().first()->blockSignals(false);
         return;
     }
