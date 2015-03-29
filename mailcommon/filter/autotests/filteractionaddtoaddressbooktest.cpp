@@ -17,13 +17,13 @@
 
 #include "filteractionaddtoaddressbooktest.h"
 #include "../filteractions/filteractionaddtoaddressbook.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <QWidget>
 #include <QLabel>
 #include <klineedit.h>
 #include <widgets/minimumcombobox.h>
 #include <widgets/tagwidgets.h>
-#include <akonadi/collectioncombobox.h>
+#include <AkonadiWidgets/CollectionComboBox>
 
 FilterActionAddToAddressBookTest::FilterActionAddToAddressBookTest(QObject *parent)
     : QObject(parent)
@@ -86,4 +86,4 @@ void FilterActionAddToAddressBookTest::shouldReportErrorWhenCollectionIsInvalid(
     QCOMPARE(context.needsPayloadStore(), false);
 }
 
-QTEST_KDEMAIN(FilterActionAddToAddressBookTest, GUI)
+QTEST_MAIN(FilterActionAddToAddressBookTest)
