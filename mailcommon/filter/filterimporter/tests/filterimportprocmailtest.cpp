@@ -21,8 +21,6 @@
 #include <mailcommon/kernel/mailkernel.h>
 
 
-QTEST_AKONADIMAIN( FilterImportProcmailtest, NoGUI )
-
 void FilterImportProcmailtest::initTestCase()
 {
     AkonadiTest::checkTestIsIsolated();
@@ -37,3 +35,4 @@ void FilterImportProcmailtest::testImportFilters()
 }
 
 
+QTEST_AKONADIMAIN( FilterImportProcmailtest, NoGUI )

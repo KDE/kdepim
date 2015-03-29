@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013-2015 Montel Laurent <montel@kde.org>
+  Copyright (c) 2015 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -14,14 +14,20 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-#include "filterimportbalsatest.h"
+#include "filterimportergmailtest.h"
 #include "mailfilter.h"
+#include <akonadi/qtest_akonadi.h>
 #include "filtertestkernel.h"
 #include <mailcommon/kernel/mailkernel.h>
-#include <akonadi/qtest_akonadi.h>
 
 
-void FilterImportBalsatest::initTestCase()
+FilterImporterGmailTest::FilterImporterGmailTest(QObject *parent)
+    : QObject(parent)
+{
+
+}
+
+void FilterImporterGmailTest::initTestCase()
 {
     AkonadiTest::checkTestIsIsolated();
 
@@ -30,9 +36,11 @@ void FilterImportBalsatest::initTestCase()
     CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
 }
 
-void FilterImportBalsatest::testImportFilters()
+void FilterImporterGmailTest::testImportFilters()
 {
 }
 
 
-QTEST_AKONADIMAIN( FilterImportBalsatest, NoGUI )
+QTEST_AKONADIMAIN( FilterImporterGmailTest, NoGUI )
+
+

@@ -22,7 +22,7 @@
 #include <mailcommon/kernel/mailkernel.h>
 
 
-QTEST_AKONADIMAIN( FilterImportThunderbirdtest, NoGUI )
+
 
 void FilterImportThunderbirdtest::initTestCase()
 {
@@ -207,3 +207,4 @@ void FilterImportThunderbirdtest::testImportTypeFilters()
 }
 
 
+QTEST_AKONADIMAIN( FilterImportThunderbirdtest, NoGUI )

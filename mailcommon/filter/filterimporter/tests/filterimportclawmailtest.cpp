@@ -21,7 +21,6 @@
 #include "filtertestkernel.h"
 #include <mailcommon/kernel/mailkernel.h>
 
-QTEST_AKONADIMAIN( FilterImportClawMailtest, NoGUI )
 
 void FilterImportClawMailtest::initTestCase()
 {
@@ -42,3 +41,4 @@ void FilterImportClawMailtest::testImportFilters()
 }
 
 
+QTEST_AKONADIMAIN( FilterImportClawMailtest, NoGUI )
