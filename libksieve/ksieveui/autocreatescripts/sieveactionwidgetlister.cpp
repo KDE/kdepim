@@ -93,7 +93,7 @@ void SieveActionWidget::generatedScript(QString &script, QStringList &requires, 
         }
         QString comment = widgetAction->comment();
         if (!comment.isEmpty()) {
-            script += QLatin1Char('#') + comment.replace(QLatin1Char('\n'), QLatin1String("\n#")) + QLatin1Char('\n');
+            script += (onlyActions ? QString() : indentation()) + QLatin1Char('#') + comment.replace(QLatin1Char('\n'), QLatin1String("\n#")) + QLatin1Char('\n');
         }
         script += (onlyActions ? QString() : indentation()) + widgetAction->code(currentWidget) + QLatin1Char('\n');
     }

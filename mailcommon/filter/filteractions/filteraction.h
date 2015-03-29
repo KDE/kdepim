@@ -120,6 +120,8 @@ public:
      */
     virtual bool isEmpty() const;
 
+    virtual QString informationAboutNotValidAction() const;
+
     /**
      * Creates a widget for setting the filter action parameter. Also
      * sets the value of the widget.

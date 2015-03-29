@@ -20,8 +20,6 @@
 #include <mailcommon/kernel/mailkernel.h>
 #include <AkonadiCore/qtest_akonadi.h>
 
-QTEST_AKONADIMAIN(FilterImportBalsatest)
-
 void FilterImportBalsatest::initTestCase()
 {
     AkonadiTest::checkTestIsIsolated();
@@ -35,3 +33,4 @@ void FilterImportBalsatest::testImportFilters()
 {
 }
 
+QTEST_AKONADIMAIN( FilterImportBalsatest )

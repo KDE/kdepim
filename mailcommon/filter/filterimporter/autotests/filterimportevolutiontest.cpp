@@ -20,8 +20,6 @@
 #include "filtertestkernel.h"
 #include <mailcommon/kernel/mailkernel.h>
 
-QTEST_AKONADIMAIN(FilterImportEvolutiontest)
-
 void FilterImportEvolutiontest::initTestCase()
 {
     AkonadiTest::checkTestIsIsolated();
@@ -35,3 +33,4 @@ void FilterImportEvolutiontest::testImportFilters()
 {
 }
 
+QTEST_AKONADIMAIN( FilterImportEvolutiontest )

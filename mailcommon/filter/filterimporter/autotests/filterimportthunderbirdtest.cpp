@@ -21,8 +21,6 @@
 #include <AkonadiCore/qtest_akonadi.h>
 #include <mailcommon/kernel/mailkernel.h>
 
-QTEST_AKONADIMAIN(FilterImportThunderbirdtest)
-
 void FilterImportThunderbirdtest::initTestCase()
 {
     AkonadiTest::checkTestIsIsolated();
@@ -205,3 +203,4 @@ void FilterImportThunderbirdtest::testImportTypeFilters()
     qDeleteAll(lst);
 }
 
+QTEST_AKONADIMAIN( FilterImportThunderbirdtest )

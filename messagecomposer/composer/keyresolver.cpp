@@ -131,7 +131,6 @@ static bool ValidOpenPGPEncryptionKey(const GpgME::Key &key)
     if (key.protocol() != GpgME::OpenPGP) {
         return false;
     }
-#if 1
     if (key.isRevoked()) {
         qCWarning(MESSAGECOMPOSER_LOG) << "is revoked";
     }
@@ -144,8 +143,7 @@ static bool ValidOpenPGPEncryptionKey(const GpgME::Key &key)
     if (!key.canEncrypt()) {
         qCWarning(MESSAGECOMPOSER_LOG) << "can't encrypt";
     }
-#endif
-    if (key.isRevoked() || key.isExpired() || key.isDisabled() || !key.canEncrypt()) {
+    if ( key.isRevoked() || key.isExpired() || key.isDisabled() || !key.canEncrypt() ) {
         return false;
     }
     return true;
@@ -162,13 +160,11 @@ static bool ValidTrustedOpenPGPEncryptionKey(const GpgME::Key &key)
         if (!it->isRevoked() && it->validity() >= GpgME::UserID::Marginal) {
             return true;
         }
-#if 1
         else if (it->isRevoked()) {
             qCWarning(MESSAGECOMPOSER_LOG) << "a userid is revoked";
         } else {
             qCWarning(MESSAGECOMPOSER_LOG) << "bad validity" << int(it->validity());
         }
-#endif
     }
     return false;
 }

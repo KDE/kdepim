@@ -9,4 +9,4 @@ add_akonadi_isolated_test_advanced(filterimportbalsatest.cpp filtertestkernel.cp
 add_akonadi_isolated_test_advanced(filterimportevolutiontest.cpp filtertestkernel.cpp "mailcommon;messagecomposer")
 add_akonadi_isolated_test_advanced(filterimportprocmailtest.cpp filtertestkernel.cpp "mailcommon;messagecomposer")
 add_akonadi_isolated_test_advanced(filterimportsylpheedtest.cpp filtertestkernel.cpp "mailcommon;messagecomposer")
-
+add_akonadi_isolated_test_advanced(filterimportergmailtest.cpp filtertestkernel.cpp "mailcommon;messagecomposer")

@@ -58,7 +58,7 @@ QString FilterImporterGmail::defaultFiltersSettingsPath()
 
 QString FilterImporterGmail::createUniqFilterName()
 {
-    return i18n("Gmail filter %1", mFilterCount++);
+    return i18n("Gmail filter %1", ++mFilterCount);
 }
 
 void FilterImporterGmail::parseFilters(const QDomElement &e)
@@ -95,7 +95,6 @@ void FilterImporterGmail::parseFilters(const QDomElement &e)
 
                 } else if (criteriaProperty == QLatin1String("doesNotHaveTheWord")) {
 
-                } else if (criteriaProperty == QLatin1String("hasAttachment")) {
                 } else if (criteriaProperty == QLatin1String("hasAttachment")) {
                     fieldName = "<size>";
                 }

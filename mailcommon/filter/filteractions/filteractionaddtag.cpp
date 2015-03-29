@@ -78,7 +78,7 @@ void FilterActionAddTag::clearParamWidget(QWidget *paramWidget) const
 
 bool FilterActionAddTag::isEmpty() const
 {
-    return false;
+    return (mParameter.isEmpty());
 }
 
 void FilterActionAddTag::slotTagListingFinished()
