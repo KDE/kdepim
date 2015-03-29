@@ -123,7 +123,6 @@ static bool ValidOpenPGPEncryptionKey( const GpgME::Key & key ) {
     if ( key.protocol() != GpgME::OpenPGP ) {
         return false;
     }
-#if 1
     if ( key.isRevoked() )
         kWarning() << "is revoked";
     if ( key.isExpired() )
@@ -132,7 +131,6 @@ static bool ValidOpenPGPEncryptionKey( const GpgME::Key & key ) {
         kWarning() << "is disabled";
     if ( !key.canEncrypt() )
         kWarning() << "can't encrypt";
-#endif
     if ( key.isRevoked() || key.isExpired() || key.isDisabled() || !key.canEncrypt() )
         return false;
     return true;
@@ -146,13 +144,11 @@ static bool ValidTrustedOpenPGPEncryptionKey( const GpgME::Key & key ) {
     for ( std::vector<GpgME::UserID>::const_iterator it = uids.begin() ; it != end ; ++it ) {
         if ( !it->isRevoked() && it->validity() >= GpgME::UserID::Marginal )
             return true;
-#if 1
         else
             if ( it->isRevoked() )
                 kWarning() <<"a userid is revoked";
             else
                 kWarning() <<"bad validity" << int( it->validity() );
-#endif
     }
     return false;
 }
