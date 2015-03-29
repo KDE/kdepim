@@ -170,6 +170,7 @@ private:
     class Private;
     Private *const d;
     //@endcond
+    void connectWidget(QWidget *widget, FilterAction *filterAction);
 };
 
 }

@@ -306,10 +306,7 @@ void FilterActionWidgetLister::setActionList( QList<FilterAction*> *list )
 
     if ( list->isEmpty() ) {
         slotClear();
-        FilterActionWidget *w = qobject_cast<FilterActionWidget*>( widgets().first() );
-        connect( w, SIGNAL(filterModified()),
-                 this, SIGNAL(filterModified()), Qt::UniqueConnection );
-        reconnectWidget( w );
+        connectWidget(widgets().first(), 0);
         widgets().first()->blockSignals(false);
         return;
     }
@@ -334,15 +331,21 @@ void FilterActionWidgetLister::setActionList( QList<FilterAction*> *list )
     QList<QWidget*>::ConstIterator wEnd = widgetList.constEnd();
     for ( QList<FilterAction*>::const_iterator aIt = d->mActionList->constBegin();
           ( aIt != aEnd && wIt != wEnd ); ++aIt, ++wIt ) {
-        FilterActionWidget *w = qobject_cast<FilterActionWidget*>( *wIt );
-        w->setAction( ( *aIt ) );
-        connect( w, SIGNAL(filterModified()),
-                 this, SIGNAL(filterModified()), Qt::UniqueConnection );
-        reconnectWidget( w );
+        connectWidget((*wIt), ( *aIt ));
     }
     widgets().first()->blockSignals(false);
     updateAddRemoveButton();
 
+}
+
+void FilterActionWidgetLister::connectWidget(QWidget *widget, FilterAction* filterAction)
+{
+    FilterActionWidget *w = qobject_cast<FilterActionWidget*>( widget );
+    if (filterAction)
+        w->setAction( filterAction );
+    connect( w, SIGNAL(filterModified()),
+             this, SIGNAL(filterModified()), Qt::UniqueConnection );
+    reconnectWidget( w );
 }
 
 void FilterActionWidgetLister::slotAddWidget( QWidget *w )
