@@ -57,6 +57,11 @@ bool FilterAction::isEmpty() const
     return false;
 }
 
+QString FilterAction::informationAboutNotValidAction() const
+{
+    return QString();
+}
+
 FilterAction* FilterAction::newAction()
 {
     return 0;
