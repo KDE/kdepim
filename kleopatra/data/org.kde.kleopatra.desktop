@@ -121,6 +121,6 @@ GenericName[x-test]=xxCertificate Manager and Unified Crypto GUIxx
 GenericName[zh_CN]=证书管理器和统一的密钥操作界面
 GenericName[zh_TW]=憑證管理與統一加密介面
 Terminal=false
-X-KDE-StartupNotify=true
+StartupNotify=true
 X-DocPath=kleopatra/index.html
 X-DBUS-ServiceName=org.kde.kleopatra
