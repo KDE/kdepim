@@ -84,6 +84,8 @@ set(libmailcommon_filter_SRCS
   filter/dialog/selectthunderbirdfilterfilesdialog.cpp
   filter/dialog/selectthunderbirdfilterfileswidget.cpp
   filter/mdnadvicedialog.cpp
+  filter/invalidfilterdialog.cpp
+  filter/invalidfilterwidget.cpp
 )
 
 set(libmailcommon_collection_SRCS
