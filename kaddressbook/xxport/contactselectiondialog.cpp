@@ -73,3 +73,8 @@ VCardExportSelectionWidget::ExportFields ContactSelectionDialog::exportType() co
     }
 }
 
+void ContactSelectionDialog::setAddGroupContact(bool addGroupContact)
+{
+    mSelectionWidget->setAddGroupContact(addGroupContact);
+}
+

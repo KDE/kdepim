@@ -39,7 +39,7 @@
 
 ContactSelectionWidget::ContactSelectionWidget( QItemSelectionModel *selectionModel,
                                                 QWidget *parent )
-    : QWidget( parent ), mSelectionModel( selectionModel )
+    : QWidget( parent ), mSelectionModel( selectionModel ), mAddContactGroup(false)
 {
     initGui();
 
@@ -94,6 +94,11 @@ Akonadi::Item::List ContactSelectionWidget::selectedContactsItem() const
     }
 
     return Akonadi::Item::List();
+}
+
+void ContactSelectionWidget::setAddGroupContact(bool addGroupContact)
+{
+    mAddContactGroup = addGroupContact;
 }
 
 

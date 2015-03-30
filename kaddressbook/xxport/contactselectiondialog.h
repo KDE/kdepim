@@ -65,6 +65,7 @@ public:
     KABC::Addressee::List selectedContacts() const;
 
     VCardExportSelectionWidget::ExportFields exportType() const;
+    void setAddGroupContact(bool addGroupContact);
 private:
     ContactSelectionWidget *mSelectionWidget;
     VCardExportSelectionWidget *mVCardExport;

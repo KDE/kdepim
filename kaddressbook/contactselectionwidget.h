@@ -68,6 +68,8 @@ public:
     KABC::Addressee::List selectedContacts() const;
 
     Akonadi::Item::List selectedContactsItem() const;
+
+    void setAddGroupContact(bool addGroupContact);
 private:
     void initGui();
 
@@ -86,6 +88,7 @@ private:
     QRadioButton *mAddressBookContactsButton;
     Akonadi::CollectionComboBox *mAddressBookSelection;
     QCheckBox *mAddressBookSelectionRecursive;
+    bool mAddContactGroup;
 };
 
 #endif
