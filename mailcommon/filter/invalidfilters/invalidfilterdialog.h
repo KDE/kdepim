@@ -15,28 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef INVALIDFILTERDIALOG_H
+#define INVALIDFILTERDIALOG_H
 
-#include "invalidfilterdialogtest.h"
-#include "../filter/invalidfilters/invalidfilterdialog.h"
-#include <qtest_kde.h>
-#include "../filter/invalidfilters/invalidfilterwidget.h"
+#include "mailcommon_export.h"
+#include <KDialog>
 
-InvalidFilterDialogTest::InvalidFilterDialogTest(QObject *parent)
-    : QObject(parent)
+namespace MailCommon {
+class InvalidFilterWidget;
+class MAILCOMMON_EXPORT InvalidFilterDialog : public KDialog
 {
-
+    Q_OBJECT
+public:
+    explicit InvalidFilterDialog(QWidget *parent=0);
+    ~InvalidFilterDialog();
+private:
+    void writeConfig();
+    void readConfig();
+    InvalidFilterWidget *mInvalidFilterWidget;
+};
 }
-
-InvalidFilterDialogTest::~InvalidFilterDialogTest()
-{
-
-}
-
-void InvalidFilterDialogTest::shouldHaveDefaultValue()
-{
-    MailCommon::InvalidFilterDialog dlg;
-    MailCommon::InvalidFilterWidget *widget = qFindChild<MailCommon::InvalidFilterWidget *>(&dlg, QLatin1String("invalid_filter_widget"));
-    QVERIFY(widget);
-}
-
-QTEST_KDEMAIN(InvalidFilterDialogTest, GUI)
+#endif // INVALIDFILTERDIALOG_H

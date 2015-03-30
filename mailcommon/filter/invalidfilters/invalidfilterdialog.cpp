@@ -16,15 +16,27 @@
 */
 
 #include "invalidfilterdialog.h"
+#include "invalidfilterwidget.h"
 #include <KConfigGroup>
 #include <KSharedConfig>
+#include <QVBoxLayout>
+#include <KLocalizedString>
 
 using namespace MailCommon;
 
 InvalidFilterDialog::InvalidFilterDialog(QWidget *parent)
     : KDialog(parent)
 {
+    //kf5 add i18n
+    setCaption(QLatin1String("Invalid Filters"));
+    setWindowIcon( KIcon( QLatin1String("kmail") ) );
+    setButtons( Ok );
+    setDefaultButton( Ok );
+    setModal( true );
 
+    mInvalidFilterWidget = new InvalidFilterWidget(this);
+    mInvalidFilterWidget->setObjectName(QLatin1String("invalid_filter_widget"));
+    setMainWidget(mInvalidFilterWidget);
     readConfig();
 }
 

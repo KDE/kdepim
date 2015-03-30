@@ -26,6 +26,8 @@ class InvalidFilterDialogTest : public QObject
 public:
     explicit InvalidFilterDialogTest(QObject *parent = 0);
     ~InvalidFilterDialogTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
 #endif // INVALIDFILTERDIALOGTEST_H

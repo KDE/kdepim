@@ -15,22 +15,25 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef INVALIDFILTERDIALOG_H
-#define INVALIDFILTERDIALOG_H
 
+#ifndef INVALIDFILTERWIDGET_H
+#define INVALIDFILTERWIDGET_H
+
+#include <QWidget>
 #include "mailcommon_export.h"
-#include <KDialog>
 
 namespace MailCommon {
-class MAILCOMMON_EXPORT InvalidFilterDialog : public KDialog
+class InvalidFilterListWidget;
+class MAILCOMMON_EXPORT InvalidFilterWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit InvalidFilterDialog(QWidget *parent=0);
-    ~InvalidFilterDialog();
+    explicit InvalidFilterWidget(QWidget *parent=0);
+    ~InvalidFilterWidget();
+
 private:
-    void writeConfig();
-    void readConfig();
+    InvalidFilterListWidget *mInvalidFilterListWidget;
 };
 }
-#endif // INVALIDFILTERDIALOG_H
+
+#endif // INVALIDFILTERWIDGET_H

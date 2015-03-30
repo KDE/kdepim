@@ -15,28 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "invalidfilterwidget.h"
+#include "invalidfilterlistwidget.h"
+#include <KLocalizedString>
+#include <QVBoxLayout>
+#include <QLabel>
 
-#include "invalidfilterdialogtest.h"
-#include "../filter/invalidfilters/invalidfilterdialog.h"
-#include <qtest_kde.h>
-#include "../filter/invalidfilters/invalidfilterwidget.h"
+using namespace MailCommon;
 
-InvalidFilterDialogTest::InvalidFilterDialogTest(QObject *parent)
-    : QObject(parent)
+InvalidFilterWidget::InvalidFilterWidget(QWidget *parent)
+    : QWidget(parent)
+{
+    QVBoxLayout *vbox = new QVBoxLayout(this);
+    mInvalidFilterListWidget = new InvalidFilterListWidget(this);
+    mInvalidFilterListWidget->setObjectName(QLatin1String("invalidfilterlist"));
+    vbox->addWidget(mInvalidFilterListWidget);
+}
+
+InvalidFilterWidget::~InvalidFilterWidget()
 {
 
 }
-
-InvalidFilterDialogTest::~InvalidFilterDialogTest()
-{
-
-}
-
-void InvalidFilterDialogTest::shouldHaveDefaultValue()
-{
-    MailCommon::InvalidFilterDialog dlg;
-    MailCommon::InvalidFilterWidget *widget = qFindChild<MailCommon::InvalidFilterWidget *>(&dlg, QLatin1String("invalid_filter_widget"));
-    QVERIFY(widget);
-}
-
-QTEST_KDEMAIN(InvalidFilterDialogTest, GUI)

@@ -15,22 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "invalidfilterwidget.h"
-#include <KLocalizedString>
-#include <QVBoxLayout>
-#include <QLabel>
+#ifndef INVALIDFILTERLISTWIDGET_H
+#define INVALIDFILTERLISTWIDGET_H
 
-using namespace MailCommon;
+#include <QListWidget>
+#include "mailcommon_export.h"
 
-InvalidFilterWidget::InvalidFilterWidget(QWidget *parent)
-    : QWidget(parent)
+namespace MailCommon {
+class MAILCOMMON_EXPORT InvalidFilterListWidget : public QListWidget
 {
-    QVBoxLayout *vbox = new QVBoxLayout(this);
-
+    Q_OBJECT
+public:
+    explicit InvalidFilterListWidget(QWidget *parent=0);
+    ~InvalidFilterListWidget();
+};
 }
-
-InvalidFilterWidget::~InvalidFilterWidget()
-{
-
-}
-
+#endif // INVALIDFILTERLISTWIDGET_H

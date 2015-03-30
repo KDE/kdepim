@@ -191,3 +191,11 @@ target_link_libraries( filteractionaddtoaddressbooktest
 #   ${KDEPIMLIBS_AKONADI_LIBS}
 #   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
 #)
+
+set( mailcommon_invalidfilterdialog_source invalidfilterdialogtest.cpp  )
+kde4_add_unit_test( invalidfilterdialogtest ${mailcommon_invalidfilterdialog_source})
+target_link_libraries( invalidfilterdialogtest ${QT_QTTEST_LIBRARY} ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY} ${KDEPIMLIBS_AKONADI_LIBS} mailcommon)
+
+set( mailcommon_invalidfilterwidget_source invalidfilterwidgettest.cpp  )
+kde4_add_unit_test( invalidfilterwidgettest ${mailcommon_invalidfilterwidget_source})
+target_link_libraries( invalidfilterwidgettest ${QT_QTTEST_LIBRARY} ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY} ${KDEPIMLIBS_AKONADI_LIBS} mailcommon)
