@@ -33,6 +33,7 @@ public:
     static FilterAction* newAction();
     QString sieveCode() const;
     QStringList sieveRequires() const;
+    bool isEmpty() const;
 };
 }
 

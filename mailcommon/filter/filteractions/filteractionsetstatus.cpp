@@ -33,7 +33,11 @@ FilterActionSetStatus::FilterActionSetStatus( QObject *parent )
 {
 }
 
-
+bool FilterActionSetStatus::isEmpty() const
+{
+    const int index = mParameterList.indexOf( mParameter );
+    return ( index < 1 );
+}
 
 FilterAction::ReturnCode FilterActionSetStatus::process(ItemContext &context , bool) const
 {

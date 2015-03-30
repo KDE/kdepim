@@ -31,6 +31,12 @@ FilterActionUnsetStatus::FilterActionUnsetStatus( QObject *parent )
 {
 }
 
+bool FilterActionUnsetStatus::isEmpty() const
+{
+    const int index = mParameterList.indexOf( mParameter );
+    return ( index < 1 );
+}
+
 FilterAction::ReturnCode FilterActionUnsetStatus::process(ItemContext &context , bool) const
 {
     const int index = mParameterList.indexOf( mParameter );
