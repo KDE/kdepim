@@ -16,6 +16,7 @@ endif ()
 
 ########### next target ###############
 
+
 set(kdepim_progresswidget_LIB_SRCS
    progresswidget/progressmanager.cpp
    progresswidget/progressmanager_akonadiagent.cpp
@@ -176,6 +177,7 @@ endif()
 
 ########### next target ###############
 
+
 set( kcm_ldap_SRCS
      ldap/addhostdialog.cpp
      ldap/kcmldap.cpp
@@ -183,9 +185,13 @@ set( kcm_ldap_SRCS
 
 add_library(kcm_ldap MODULE ${kcm_ldap_SRCS})
 
+
 target_link_libraries(kcm_ldap   kdepim)
 
+kcoreaddons_desktop_to_json(kcm_ldap ldap/kcmldap.desktop)
+
 install(TARGETS kcm_ldap DESTINATION ${KDE_INSTALL_PLUGINDIR})
+
 install(FILES ldap/kcmldap.desktop DESTINATION ${KDE_INSTALL_KSERVICES5DIR})
 
 ########### install files ###############
