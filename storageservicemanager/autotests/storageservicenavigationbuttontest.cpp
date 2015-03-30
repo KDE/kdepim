@@ -125,8 +125,8 @@ void StorageServiceNavigationButtonTest::shouldEnabledBackButtonWhenAndInfoAndIt
     QCOMPARE(buttons.forwardUrls().isEmpty(), true);
 
     InformationUrl urlValid;
-    urlValid.currentUrl = QLatin1String("Foo");
-    urlValid.parentUrl = QLatin1String("Foo1");
+    urlValid.currentUrl = QStringLiteral("Foo");
+    urlValid.parentUrl = QStringLiteral("Foo1");
     buttons.addBackUrl(urlValid);
     buttons.addForwadUrl(urlValid);
     QCOMPARE(buttons.backUrls().isEmpty(), false);
@@ -138,8 +138,8 @@ void StorageServiceNavigationButtonTest::shouldEnabledBackButtonWhenAddNewInfo()
     StorageServiceNavigationButtons buttons;
     QCOMPARE(buttons.backUrls().isEmpty(), true);
     InformationUrl urlValid;
-    urlValid.currentUrl = QLatin1String("Foo");
-    urlValid.parentUrl = QLatin1String("Foo1");
+    urlValid.currentUrl = QStringLiteral("Foo");
+    urlValid.parentUrl = QStringLiteral("Foo1");
     buttons.addNewUrl(urlValid);
     QCOMPARE(buttons.backUrls().isEmpty(), false);
 }
@@ -148,8 +148,8 @@ void StorageServiceNavigationButtonTest::shouldIncreaseNumberOfElement()
 {
     StorageServiceNavigationButtons buttons;
     InformationUrl urlValid;
-    urlValid.currentUrl = QLatin1String("Foo");
-    urlValid.parentUrl = QLatin1String("Foo1");
+    urlValid.currentUrl = QStringLiteral("Foo");
+    urlValid.parentUrl = QStringLiteral("Foo1");
     buttons.addNewUrl(urlValid);
     buttons.addNewUrl(urlValid);
     buttons.addNewUrl(urlValid);
@@ -163,8 +163,8 @@ void StorageServiceNavigationButtonTest::shouldMoveInfoInGoForwardWhenClickOnGoB
 {
     StorageServiceNavigationButtons buttons;
     InformationUrl urlValid;
-    urlValid.currentUrl = QLatin1String("Foo");
-    urlValid.parentUrl = QLatin1String("Foo1");
+    urlValid.currentUrl = QStringLiteral("Foo");
+    urlValid.parentUrl = QStringLiteral("Foo1");
     buttons.addNewUrl(urlValid);
     QCOMPARE(buttons.backUrls().count(), 1);
     buttons.goBack()->trigger();
@@ -180,8 +180,8 @@ void StorageServiceNavigationButtonTest::shouldMoveInfoInGoBackWhenClickOnGoForw
 {
     StorageServiceNavigationButtons buttons;
     InformationUrl urlValid;
-    urlValid.currentUrl = QLatin1String("Foo");
-    urlValid.parentUrl = QLatin1String("Foo1");
+    urlValid.currentUrl = QStringLiteral("Foo");
+    urlValid.parentUrl = QStringLiteral("Foo1");
     buttons.addNewUrl(urlValid);
     buttons.goBack()->trigger();
 
@@ -200,29 +200,29 @@ void StorageServiceNavigationButtonTest::shouldMoveInfoToTopWhenClickOnBack()
     StorageServiceNavigationButtons buttons;
     InformationUrl urlValid;
 
-    urlValid.currentUrl = QLatin1String("Foo1");
-    urlValid.parentUrl = QLatin1String("Foo1");
+    urlValid.currentUrl = QStringLiteral("Foo1");
+    urlValid.parentUrl = QStringLiteral("Foo1");
     buttons.addNewUrl(urlValid);
 
-    urlValid.currentUrl = QLatin1String("Foo2");
-    urlValid.parentUrl = QLatin1String("Foo2");
+    urlValid.currentUrl = QStringLiteral("Foo2");
+    urlValid.parentUrl = QStringLiteral("Foo2");
     buttons.addNewUrl(urlValid);
 
-    urlValid.currentUrl = QLatin1String("Foo3");
-    urlValid.parentUrl = QLatin1String("Foo3");
+    urlValid.currentUrl = QStringLiteral("Foo3");
+    urlValid.parentUrl = QStringLiteral("Foo3");
     buttons.addNewUrl(urlValid);
 
     buttons.goBack()->trigger();
     InformationUrl forwardUrl = buttons.forwardUrls().first();
-    QCOMPARE(forwardUrl.currentUrl, QLatin1String("Foo3"));
+    QCOMPARE(forwardUrl.currentUrl, QStringLiteral("Foo3"));
 
     buttons.goBack()->trigger();
     forwardUrl = buttons.forwardUrls().first();
-    QCOMPARE(forwardUrl.currentUrl, QLatin1String("Foo2"));
+    QCOMPARE(forwardUrl.currentUrl, QStringLiteral("Foo2"));
 
     buttons.goBack()->trigger();
     forwardUrl = buttons.forwardUrls().first();
-    QCOMPARE(forwardUrl.currentUrl, QLatin1String("Foo1"));
+    QCOMPARE(forwardUrl.currentUrl, QStringLiteral("Foo1"));
 
 }
 
@@ -231,25 +231,25 @@ void StorageServiceNavigationButtonTest::shouldMoveInfoToTopWhenClickOnBackAndAf
     StorageServiceNavigationButtons buttons;
     InformationUrl urlValid;
 
-    urlValid.currentUrl = QLatin1String("Foo1");
-    urlValid.parentUrl = QLatin1String("Foo1");
+    urlValid.currentUrl = QStringLiteral("Foo1");
+    urlValid.parentUrl = QStringLiteral("Foo1");
     buttons.addNewUrl(urlValid);
 
-    urlValid.currentUrl = QLatin1String("Foo2");
-    urlValid.parentUrl = QLatin1String("Foo2");
+    urlValid.currentUrl = QStringLiteral("Foo2");
+    urlValid.parentUrl = QStringLiteral("Foo2");
     buttons.addNewUrl(urlValid);
 
-    urlValid.currentUrl = QLatin1String("Foo3");
-    urlValid.parentUrl = QLatin1String("Foo3");
+    urlValid.currentUrl = QStringLiteral("Foo3");
+    urlValid.parentUrl = QStringLiteral("Foo3");
     buttons.addNewUrl(urlValid);
 
     buttons.goBack()->trigger();
     InformationUrl forwardUrl = buttons.forwardUrls().first();
-    QCOMPARE(forwardUrl.currentUrl, QLatin1String("Foo3"));
+    QCOMPARE(forwardUrl.currentUrl, QStringLiteral("Foo3"));
 
     buttons.goForward()->trigger();
     forwardUrl = buttons.backUrls().first();
-    QCOMPARE(forwardUrl.currentUrl, QLatin1String("Foo3"));
+    QCOMPARE(forwardUrl.currentUrl, QStringLiteral("Foo3"));
 }
 
 QTEST_MAIN(StorageServiceNavigationButtonTest)

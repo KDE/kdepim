@@ -43,9 +43,9 @@ void ServerSieveSettingsTest::shouldHaveDefaultValue()
 
 void ServerSieveSettingsTest::shouldSetValue()
 {
-    const QString password = QLatin1String("password");
-    const QString username = QLatin1String("username");
-    const QString servername = QLatin1String("servername");
+    const QString password = QStringLiteral("password");
+    const QString username = QStringLiteral("username");
+    const QString servername = QStringLiteral("servername");
     ServerSieveSettings widget;
     widget.setServerName(servername);
     widget.setUserName(username);
@@ -61,20 +61,20 @@ void ServerSieveSettingsTest::shouldEmitEnableOkButtonSignal()
     widget.show();
     QTest::qWaitForWindowShown(&widget);
     QSignalSpy spy(&widget, SIGNAL(enableOkButton(bool)));
-    widget.setPassword(QLatin1String("foo"));
+    widget.setPassword(QStringLiteral("foo"));
     QCOMPARE(spy.count(), 0);
 
     int numberEmitSignal = 1;
-    widget.setServerName(QLatin1String("foo"));
+    widget.setServerName(QStringLiteral("foo"));
     QCOMPARE(spy.count(), numberEmitSignal);
     ++numberEmitSignal;
-    widget.setUserName(QLatin1String("foo"));
+    widget.setUserName(QStringLiteral("foo"));
     QCOMPARE(spy.count(), numberEmitSignal);
     ++numberEmitSignal;
-    widget.setUserName(QLatin1String(""));
+    widget.setUserName(QStringLiteral(""));
     QCOMPARE(spy.count(), numberEmitSignal);
     ++numberEmitSignal;
-    widget.setServerName(QLatin1String(""));
+    widget.setServerName(QStringLiteral(""));
     QCOMPARE(spy.count(), numberEmitSignal);
 }
 
@@ -84,22 +84,22 @@ void ServerSieveSettingsTest::shouldEmitSignalWithValueTrue()
     widget.show();
     QTest::qWaitForWindowShown(&widget);
     QSignalSpy spy(&widget, SIGNAL(enableOkButton(bool)));
-    widget.setServerName(QLatin1String("foo"));
+    widget.setServerName(QStringLiteral("foo"));
     QCOMPARE(spy.count(), 1);
     //We need servername!=empty and username != empty
     QCOMPARE(spy.at(0).at(0).toBool(), false);
 
-    widget.setUserName(QLatin1String("foo"));
+    widget.setUserName(QStringLiteral("foo"));
     QCOMPARE(spy.count(), 2);
     QCOMPARE(spy.at(1).at(0).toBool(), true);
 
     //We don't want empty string
-    widget.setUserName(QLatin1String(" "));
+    widget.setUserName(QStringLiteral(" "));
     QCOMPARE(spy.count(), 3);
     QCOMPARE(spy.at(2).at(0).toBool(), false);
 
     //We don't want empty string
-    widget.setServerName(QLatin1String(" "));
+    widget.setServerName(QStringLiteral(" "));
     QCOMPARE(spy.count(), 4);
     QCOMPARE(spy.at(3).at(0).toBool(), false);
 

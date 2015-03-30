@@ -70,7 +70,7 @@ SieveEditorMainWindow::~SieveEditorMainWindow()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
-    KConfigGroup group = config->group(QLatin1String("SieveEditorMainWindow"));
+    KConfigGroup group = config->group(QStringLiteral("SieveEditorMainWindow"));
     group.writeEntry("Size", size());
     if (SieveEditorGlobalConfig::self()->closeWallet()) {
         SieveServerSettings::self()->closeWallet();
@@ -123,35 +123,35 @@ void SieveEditorMainWindow::setupActions()
     mUploadScript->setText(i18n("Upload"));
     mUploadScript->setEnabled(false);
 
-    QAction *act = ac->addAction(QLatin1String("add_server_sieve"), this, SLOT(slotAddServerSieve()));
+    QAction *act = ac->addAction(QStringLiteral("add_server_sieve"), this, SLOT(slotAddServerSieve()));
     act->setText(i18n("Add Server Sieve..."));
 
-    mDeleteScript = ac->addAction(QLatin1String("delete_script"), this, SLOT(slotDeleteScript()));
+    mDeleteScript = ac->addAction(QStringLiteral("delete_script"), this, SLOT(slotDeleteScript()));
     mDeleteScript->setText(i18n("Delete Script"));
     ac->setDefaultShortcut(mDeleteScript, QKeySequence(Qt::Key_Delete));
     mDeleteScript->setEnabled(false);
 
-    mNewScript = ac->addAction(QLatin1String("create_new_script"), this, SLOT(slotCreateNewScript()));
+    mNewScript = ac->addAction(QStringLiteral("create_new_script"), this, SLOT(slotCreateNewScript()));
     ac->setDefaultShortcut(mNewScript, QKeySequence(Qt::CTRL + Qt::Key_N));
     mNewScript->setText(i18n("Create New Script..."));
     mNewScript->setEnabled(false);
 
-    mEditScript = ac->addAction(QLatin1String("edit_script"), this, SLOT(slotEditScript()));
+    mEditScript = ac->addAction(QStringLiteral("edit_script"), this, SLOT(slotEditScript()));
     mEditScript->setText(i18n("Edit Script"));
     mEditScript->setEnabled(false);
 
-    mDesactivateScript = ac->addAction(QLatin1String("desactivate_script"), this, SLOT(slotDesactivateScript()));
+    mDesactivateScript = ac->addAction(QStringLiteral("desactivate_script"), this, SLOT(slotDesactivateScript()));
     mDesactivateScript->setText(i18n("Deactivate Script"));
     mDesactivateScript->setEnabled(false);
 
-    mRefreshList = ac->addAction(QLatin1String("refresh_list"), this, SLOT(slotRefreshList()));
+    mRefreshList = ac->addAction(QStringLiteral("refresh_list"), this, SLOT(slotRefreshList()));
     mRefreshList->setText(i18n("Refresh List"));
-    mRefreshList->setIcon(QIcon::fromTheme(QLatin1String("view-refresh")));
+    mRefreshList->setIcon(QIcon::fromTheme(QStringLiteral("view-refresh")));
     ac->setDefaultShortcut(mRefreshList, QKeySequence(Qt::Key_F5));
 
-    mGoToLine = ac->addAction(QLatin1String("gotoline"), mMainWidget->sieveEditorMainWidget(), SLOT(slotGoToLine()));
+    mGoToLine = ac->addAction(QStringLiteral("gotoline"), mMainWidget->sieveEditorMainWidget(), SLOT(slotGoToLine()));
     mGoToLine->setText(i18n("Go to Line"));
-    mGoToLine->setIcon(QIcon::fromTheme(QLatin1String("go-jump")));
+    mGoToLine->setIcon(QIcon::fromTheme(QStringLiteral("go-jump")));
     ac->setDefaultShortcut(mGoToLine, QKeySequence(Qt::CTRL + Qt::Key_G));
     mGoToLine->setEnabled(false);
 
@@ -165,31 +165,31 @@ void SieveEditorMainWindow::setupActions()
     mSelectAllAction = KStandardAction::selectAll(mMainWidget->sieveEditorMainWidget(), SLOT(slotSelectAll()), ac);
     mSaveAsAction = KStandardAction::saveAs(mMainWidget->sieveEditorMainWidget(), SLOT(slotSaveAs()), ac);
 
-    mImportAction = ac->addAction(QLatin1String("import_script"), mMainWidget->sieveEditorMainWidget(), SLOT(slotImport()));
+    mImportAction = ac->addAction(QStringLiteral("import_script"), mMainWidget->sieveEditorMainWidget(), SLOT(slotImport()));
     mImportAction->setText(i18n("Import..."));
     mImportAction->setEnabled(false);
 
-    mShareAction = ac->addAction(QLatin1String("share_script"), mMainWidget->sieveEditorMainWidget(), SLOT(slotShare()));
+    mShareAction = ac->addAction(QStringLiteral("share_script"), mMainWidget->sieveEditorMainWidget(), SLOT(slotShare()));
     mShareAction->setText(i18n("Share..."));
     mShareAction->setEnabled(false);
 
-    mSpellCheckAction = ac->addAction(QLatin1String("check_spelling"), mMainWidget->sieveEditorMainWidget(), SLOT(slotCheckSpelling()));
+    mSpellCheckAction = ac->addAction(QStringLiteral("check_spelling"), mMainWidget->sieveEditorMainWidget(), SLOT(slotCheckSpelling()));
     mSpellCheckAction->setIcon(QIcon::fromTheme(QStringLiteral("tools-check-spelling")));
     mSpellCheckAction->setText(i18n("Check Spelling..."));
     mSpellCheckAction->setEnabled(false);
 
-    mCheckSyntaxAction = ac->addAction(QLatin1String("check_syntax"), mMainWidget->sieveEditorMainWidget(), SLOT(slotCheckSyntax()));
+    mCheckSyntaxAction = ac->addAction(QStringLiteral("check_syntax"), mMainWidget->sieveEditorMainWidget(), SLOT(slotCheckSyntax()));
     mCheckSyntaxAction->setText(i18n("Check Syntax"));
     mCheckSyntaxAction->setEnabled(false);
 
-    mAutoGenerateScriptAction = ac->addAction(QLatin1String("autogenerate_script"), mMainWidget->sieveEditorMainWidget(), SLOT(slotAutoGenerateScript()));
+    mAutoGenerateScriptAction = ac->addAction(QStringLiteral("autogenerate_script"), mMainWidget->sieveEditorMainWidget(), SLOT(slotAutoGenerateScript()));
     mAutoGenerateScriptAction->setText(i18n("Autogenerate Script..."));
     mAutoGenerateScriptAction->setEnabled(false);
 
-    mCommentAction = ac->addAction(QLatin1String("comment_code"), mMainWidget->sieveEditorMainWidget(), SLOT(slotComment()));
+    mCommentAction = ac->addAction(QStringLiteral("comment_code"), mMainWidget->sieveEditorMainWidget(), SLOT(slotComment()));
     mCommentAction->setText(i18n("Comment"));
 
-    mUncommentAction = ac->addAction(QLatin1String("uncomment_code"), mMainWidget->sieveEditorMainWidget(), SLOT(slotUncomment()));
+    mUncommentAction = ac->addAction(QStringLiteral("uncomment_code"), mMainWidget->sieveEditorMainWidget(), SLOT(slotUncomment()));
     mUncommentAction->setText(i18n("Uncomment"));
 
     mMenuChangeCaseAction = new PimCommon::KActionMenuChangeCase(this);

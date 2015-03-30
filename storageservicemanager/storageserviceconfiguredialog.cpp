@@ -33,7 +33,7 @@ StorageServiceConfigureDialog::StorageServiceConfigureDialog(QWidget *parent)
     : PimCommon::StorageServiceConfigureDialog(parent)
 {
     mCloseWallet = new QCheckBox(i18n("Close wallet when close application"));
-    mCloseWallet->setObjectName(QLatin1String("closewallet"));
+    mCloseWallet->setObjectName(QStringLiteral("closewallet"));
     addExtraWidget(mCloseWallet);
     loadSettings();
 }

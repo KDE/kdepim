@@ -27,7 +27,7 @@ StorageServiceConfigureStorageWidget::StorageServiceConfigureStorageWidget(QWidg
 {
     QHBoxLayout *hbox = new QHBoxLayout;
     QPushButton *button = new QPushButton(i18n("Configure..."));
-    button->setObjectName(QLatin1String("configure_button"));
+    button->setObjectName(QStringLiteral("configure_button"));
     button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     connect(button, &QPushButton::clicked, this, &StorageServiceConfigureStorageWidget::configureClicked);
     hbox->addWidget(button);

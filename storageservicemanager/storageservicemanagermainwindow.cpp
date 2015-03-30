@@ -84,7 +84,7 @@ StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()
     delete mStorageServiceMainWidget;
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
-    KConfigGroup group = config->group(QLatin1String("StorageServiceManagerMainWindow"));
+    KConfigGroup group = config->group(QStringLiteral("StorageServiceManagerMainWindow"));
     group.writeEntry("Size", size());
     qCDebug(STORAGESERVICEMANAGER_LOG) << " StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()";
     if (StorageServiceManagerGlobalConfig::self()->closeWallet()) {
@@ -160,47 +160,47 @@ void StorageServiceManagerMainWindow::setupActions()
     KActionCollection *ac = actionCollection();
     KStandardAction::quit(this, SLOT(close()), ac);
 
-    mAuthenticate = ac->addAction(QLatin1String("authenticate"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotAuthenticate()));
+    mAuthenticate = ac->addAction(QStringLiteral("authenticate"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotAuthenticate()));
     mAuthenticate->setText(i18n("Authenticate..."));
 
-    mCreateFolder = ac->addAction(QLatin1String("create_folder"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotCreateFolder()));
+    mCreateFolder = ac->addAction(QStringLiteral("create_folder"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotCreateFolder()));
     mCreateFolder->setText(i18n("Create Folder..."));
-    mCreateFolder->setIcon(QIcon::fromTheme(QLatin1String("folder-new")));
+    mCreateFolder->setIcon(QIcon::fromTheme(QStringLiteral("folder-new")));
 
-    mRefreshList = ac->addAction(QLatin1String("refresh_list"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotRefreshList()));
+    mRefreshList = ac->addAction(QStringLiteral("refresh_list"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotRefreshList()));
     mRefreshList->setText(i18n("Refresh List"));
-    mRefreshList->setIcon(QIcon::fromTheme(QLatin1String("view-refresh")));
+    mRefreshList->setIcon(QIcon::fromTheme(QStringLiteral("view-refresh")));
     ac->setDefaultShortcut(mRefreshList, QKeySequence(Qt::Key_F5));
 
-    mAccountInfo = ac->addAction(QLatin1String("account_info"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotAccountInfo()));
+    mAccountInfo = ac->addAction(QStringLiteral("account_info"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotAccountInfo()));
     mAccountInfo->setText(i18n("Account Info..."));
 
-    mUploadFile = ac->addAction(QLatin1String("upload_file"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotUploadFile()));
+    mUploadFile = ac->addAction(QStringLiteral("upload_file"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotUploadFile()));
     mUploadFile->setText(i18n("Upload File..."));
 
-    mDelete = ac->addAction(QLatin1String("delete"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotDelete()));
+    mDelete = ac->addAction(QStringLiteral("delete"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotDelete()));
     ac->setDefaultShortcut(mDelete, QKeySequence(Qt::Key_Delete));
     mDelete->setText(i18n("Delete..."));
-    mDelete->setIcon(QIcon::fromTheme(QLatin1String("edit-delete")));
+    mDelete->setIcon(QIcon::fromTheme(QStringLiteral("edit-delete")));
 
-    mDownloadFile = ac->addAction(QLatin1String("download_file"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotDownloadFile()));
+    mDownloadFile = ac->addAction(QStringLiteral("download_file"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotDownloadFile()));
     mDownloadFile->setText(i18n("Download File..."));
-    mDownloadFile->setIcon(QIcon::fromTheme(QLatin1String("download")));
+    mDownloadFile->setIcon(QIcon::fromTheme(QStringLiteral("download")));
 
-    mShowLog = ac->addAction(QLatin1String("show_log"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotShowLog()));
+    mShowLog = ac->addAction(QStringLiteral("show_log"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotShowLog()));
     mShowLog->setText(i18n("Show Log..."));
 
-    mLogout = ac->addAction(QLatin1String("logout"), this, SLOT(slotLogout()));
+    mLogout = ac->addAction(QStringLiteral("logout"), this, SLOT(slotLogout()));
     mLogout->setText(i18n("Logout"));
 
-    mShutdownAllServices = ac->addAction(QLatin1String("shutdown_all_services"), this, SLOT(slotShutdownAllServices()));
+    mShutdownAllServices = ac->addAction(QStringLiteral("shutdown_all_services"), this, SLOT(slotShutdownAllServices()));
     mShutdownAllServices->setText(i18n("Shutdown All Services"));
 
-    mRefreshAll = ac->addAction(QLatin1String("refresh_all"), this, SLOT(slotRefreshAll()));
+    mRefreshAll = ac->addAction(QStringLiteral("refresh_all"), this, SLOT(slotRefreshAll()));
     mRefreshAll->setText(i18n("Refresh All"));
     ac->setDefaultShortcut(mRefreshAll, QKeySequence(Qt::CTRL + Qt::Key_F5));
 
-    mRenameItem = ac->addAction(QLatin1String("rename"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotRename()));
+    mRenameItem = ac->addAction(QStringLiteral("rename"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotRename()));
     mRenameItem->setText(i18n("Rename..."));
     ac->setDefaultShortcut(mRenameItem, QKeySequence(Qt::Key_F2));
 
