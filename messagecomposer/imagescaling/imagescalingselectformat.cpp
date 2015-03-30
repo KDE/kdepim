@@ -64,10 +64,10 @@ void ImageScalingSelectFormatDialog::addImageFormat(const QString &format, const
 
 void ImageScalingSelectFormatDialog::initialize()
 {
-    addImageFormat(QLatin1String("PNG"), QLatin1String("image/png"));
-    addImageFormat(QLatin1String("JPEG"), QLatin1String("image/jpeg"));
-    addImageFormat(QLatin1String("GIF"), QLatin1String("image/gif"));
-    addImageFormat(QLatin1String("BMP"), QLatin1String("image/bmp"));
+    addImageFormat(QStringLiteral("PNG"), QStringLiteral("image/png"));
+    addImageFormat(QStringLiteral("JPEG"), QStringLiteral("image/jpeg"));
+    addImageFormat(QStringLiteral("GIF"), QStringLiteral("image/gif"));
+    addImageFormat(QStringLiteral("BMP"), QStringLiteral("image/bmp"));
 }
 
 QString ImageScalingSelectFormatDialog::format() const

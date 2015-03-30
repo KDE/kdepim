@@ -39,33 +39,33 @@ void QuickSearchLineTest::shouldHaveDefaultValueOnCreation()
     QuickSearchLine searchLine;
     QVERIFY(searchLine.searchEdit()->text().isEmpty());
     QVERIFY(!searchLine.lockSearch()->isChecked());
-    QWidget *widget = searchLine.findChild<QWidget *>(QLatin1String("extraoptions"));
+    QWidget *widget = searchLine.findChild<QWidget *>(QStringLiteral("extraoptions"));
     QVERIFY(widget);
     QVERIFY(widget->isHidden());
-    QPushButton *moreButton = searchLine.findChild<QPushButton *>(QLatin1String("moreoptions"));
+    QPushButton *moreButton = searchLine.findChild<QPushButton *>(QStringLiteral("moreoptions"));
     QVERIFY(moreButton);
-    QCOMPARE(moreButton->icon().name(), QLatin1String("arrow-down-double"));
-    QWidget *quickSearchFilterWidget = searchLine.findChild<QWidget *>(QLatin1String("quicksearchfilterwidget"));
+    QCOMPARE(moreButton->icon().name(), QStringLiteral("arrow-down-double"));
+    QWidget *quickSearchFilterWidget = searchLine.findChild<QWidget *>(QStringLiteral("quicksearchfilterwidget"));
     QVERIFY(quickSearchFilterWidget);
     QVERIFY(quickSearchFilterWidget->isHidden());
     QCOMPARE(searchLine.containsOutboundMessages(), false);
-    QPushButton *fullMessageButton = searchLine.findChild<QPushButton *>(QLatin1String("full_message"));
+    QPushButton *fullMessageButton = searchLine.findChild<QPushButton *>(QStringLiteral("full_message"));
     QVERIFY(!fullMessageButton->isVisible());
     QCOMPARE(fullMessageButton->isChecked(), true);
 
-    QPushButton *bodyButton = searchLine.findChild<QPushButton *>(QLatin1String("body"));
+    QPushButton *bodyButton = searchLine.findChild<QPushButton *>(QStringLiteral("body"));
     QVERIFY(!bodyButton->isVisible());
     QCOMPARE(bodyButton->isChecked(), false);
 
-    QPushButton *subjectButton = searchLine.findChild<QPushButton *>(QLatin1String("subject"));
+    QPushButton *subjectButton = searchLine.findChild<QPushButton *>(QStringLiteral("subject"));
     QVERIFY(!subjectButton->isVisible());
     QCOMPARE(subjectButton->isChecked(), false);
 
-    QPushButton *fromOrToButton = searchLine.findChild<QPushButton *>(QLatin1String("fromorto"));
+    QPushButton *fromOrToButton = searchLine.findChild<QPushButton *>(QStringLiteral("fromorto"));
     QVERIFY(!fromOrToButton->isVisible());
     QCOMPARE(fromOrToButton->isChecked(), false);
 
-    QPushButton *bccButton = searchLine.findChild<QPushButton *>(QLatin1String("bcc"));
+    QPushButton *bccButton = searchLine.findChild<QPushButton *>(QStringLiteral("bcc"));
     QVERIFY(!bccButton->isVisible());
     QCOMPARE(bccButton->isChecked(), false);
 }
@@ -79,22 +79,22 @@ void QuickSearchLineTest::shouldEmitTextChanged()
 
     searchLine.searchEdit()->clear();
     QSignalSpy spy2(&searchLine, SIGNAL(searchEditTextEdited(QString)));
-    QTest::keyClicks(searchLine.searchEdit(), QLatin1String("FO"));
+    QTest::keyClicks(searchLine.searchEdit(), QStringLiteral("FO"));
     QCOMPARE(spy2.count(), 0);
 
     searchLine.searchEdit()->clear();
     QSignalSpy spy3(&searchLine, SIGNAL(searchEditTextEdited(QString)));
-    QTest::keyClicks(searchLine.searchEdit(), QLatin1String("FOO"));
+    QTest::keyClicks(searchLine.searchEdit(), QStringLiteral("FOO"));
     QCOMPARE(spy3.count(), 1);
 
     searchLine.searchEdit()->clear();
     QSignalSpy spy4(&searchLine, SIGNAL(searchEditTextEdited(QString)));
-    QTest::keyClicks(searchLine.searchEdit(), QLatin1String("FOOO"));
+    QTest::keyClicks(searchLine.searchEdit(), QStringLiteral("FOOO"));
     QCOMPARE(spy4.count(), 2);
 
     searchLine.searchEdit()->clear();
     QSignalSpy spy5(&searchLine, SIGNAL(searchEditTextEdited(QString)));
-    QTest::keyClicks(searchLine.searchEdit(), QLatin1String("FOOO0"));
+    QTest::keyClicks(searchLine.searchEdit(), QStringLiteral("FOOO0"));
     QCOMPARE(spy5.count(), 3);
 
 }
@@ -105,11 +105,11 @@ void QuickSearchLineTest::shouldShowExtraOptionWidget()
     searchLine.show();
     QTest::keyClick(searchLine.searchEdit(), 'F');
     QTest::qWaitForWindowExposed(&searchLine);
-    QWidget *widget = searchLine.findChild<QWidget *>(QLatin1String("extraoptions"));
+    QWidget *widget = searchLine.findChild<QWidget *>(QStringLiteral("extraoptions"));
     QVERIFY(!widget->isVisible());
 
     searchLine.searchEdit()->clear();
-    QTest::keyClicks(searchLine.searchEdit(), QLatin1String("F000"));
+    QTest::keyClicks(searchLine.searchEdit(), QStringLiteral("F000"));
     QTest::qWaitForWindowExposed(&searchLine);
     QVERIFY(widget->isVisible());
 
@@ -119,9 +119,9 @@ void QuickSearchLineTest::shouldHideExtraOptionWidgetWhenClearLineEdit()
 {
     QuickSearchLine searchLine;
     searchLine.show();
-    QTest::keyClicks(searchLine.searchEdit(), QLatin1String("FOOFOO"));
+    QTest::keyClicks(searchLine.searchEdit(), QStringLiteral("FOOFOO"));
     QTest::qWaitForWindowExposed(&searchLine);
-    QWidget *widget = searchLine.findChild<QWidget *>(QLatin1String("extraoptions"));
+    QWidget *widget = searchLine.findChild<QWidget *>(QStringLiteral("extraoptions"));
 
     searchLine.searchEdit()->clear();
     QVERIFY(!widget->isVisible());
@@ -131,9 +131,9 @@ void QuickSearchLineTest::shouldHideExtraOptionWidgetWhenResetFilter()
 {
     QuickSearchLine searchLine;
     searchLine.show();
-    QTest::keyClicks(searchLine.searchEdit(), QLatin1String("FOOFOO"));
+    QTest::keyClicks(searchLine.searchEdit(), QStringLiteral("FOOFOO"));
     QTest::qWaitForWindowExposed(&searchLine);
-    QWidget *widget = searchLine.findChild<QWidget *>(QLatin1String("extraoptions"));
+    QWidget *widget = searchLine.findChild<QWidget *>(QStringLiteral("extraoptions"));
 
     searchLine.resetFilter();
     QVERIFY(!widget->isVisible());
@@ -144,7 +144,7 @@ void QuickSearchLineTest::shouldEmitSearchOptionChanged()
     QuickSearchLine searchLine;
     searchLine.show();
     QSignalSpy spy(&searchLine, SIGNAL(searchOptionChanged()));
-    QPushButton *button = searchLine.findChild<QPushButton *>(QLatin1String("subject"));
+    QPushButton *button = searchLine.findChild<QPushButton *>(QStringLiteral("subject"));
     QTest::mouseClick(button, Qt::LeftButton);
     QCOMPARE(spy.count(), 1);
 }
@@ -154,11 +154,11 @@ void QuickSearchLineTest::shouldEmitSearchOptionChangedWhenUseTabPress()
     QuickSearchLine searchLine;
     searchLine.show();
     QTest::qWaitForWindowExposed(&searchLine);
-    QPushButton *button = searchLine.findChild<QPushButton *>(QLatin1String("full_message"));
+    QPushButton *button = searchLine.findChild<QPushButton *>(QStringLiteral("full_message"));
     QTest::mouseClick(button, Qt::LeftButton);
     QTest::keyClick(button, Qt::Key_Right);
     QSignalSpy spy(&searchLine, SIGNAL(searchOptionChanged()));
-    button = searchLine.findChild<QPushButton *>(QLatin1String("body"));
+    button = searchLine.findChild<QPushButton *>(QStringLiteral("body"));
     QTest::mouseClick(button, Qt::LeftButton);
     QCOMPARE(spy.count(), 1);
 }
@@ -182,7 +182,7 @@ void QuickSearchLineTest::shouldShowTagComboBox()
     searchLine.show();
     QTest::qWaitForWindowExposed(&searchLine);
     QCOMPARE(searchLine.tagFilterComboBox()->isVisible(), false);
-    searchLine.tagFilterComboBox()->addItems(QStringList() << QLatin1String("1") << QLatin1String("2"));
+    searchLine.tagFilterComboBox()->addItems(QStringList() << QStringLiteral("1") << QStringLiteral("2"));
     searchLine.updateComboboxVisibility();
     QCOMPARE(searchLine.tagFilterComboBox()->isVisible(), true);
 }
@@ -193,7 +193,7 @@ void QuickSearchLineTest::shouldResetComboboxWhenResetFilter()
     searchLine.show();
     QTest::qWaitForWindowExposed(&searchLine);
     QCOMPARE(searchLine.tagFilterComboBox()->isVisible(), false);
-    searchLine.tagFilterComboBox()->addItems(QStringList() << QLatin1String("1") << QLatin1String("2"));
+    searchLine.tagFilterComboBox()->addItems(QStringList() << QStringLiteral("1") << QStringLiteral("2"));
     searchLine.updateComboboxVisibility();
     QCOMPARE(searchLine.tagFilterComboBox()->isVisible(), true);
     searchLine.tagFilterComboBox()->setCurrentIndex(1);
@@ -206,11 +206,11 @@ void QuickSearchLineTest::shouldNotEmitTextChangedWhenTextTrimmedIsEmpty()
 {
     QuickSearchLine searchLine;
     QSignalSpy spy(&searchLine, SIGNAL(searchEditTextEdited(QString)));
-    QTest::keyClicks(searchLine.searchEdit(), QLatin1String("      "));
+    QTest::keyClicks(searchLine.searchEdit(), QStringLiteral("      "));
     QCOMPARE(spy.count(), 0);
 
     QSignalSpy spy2(&searchLine, SIGNAL(searchEditTextEdited(QString)));
-    QTest::keyClicks(searchLine.searchEdit(), QLatin1String(" FOO"));
+    QTest::keyClicks(searchLine.searchEdit(), QStringLiteral(" FOO"));
     QCOMPARE(spy2.count(), 3);
 }
 
@@ -220,7 +220,7 @@ void QuickSearchLineTest::shouldShowExtraOptionWidgetWhenTextTrimmedIsNotEmpty()
     searchLine.show();
     QTest::keyClick(searchLine.searchEdit(), ' ');
     QTest::qWaitForWindowExposed(&searchLine);
-    QWidget *widget = searchLine.findChild<QWidget *>(QLatin1String("extraoptions"));
+    QWidget *widget = searchLine.findChild<QWidget *>(QStringLiteral("extraoptions"));
     QVERIFY(!widget->isVisible());
     searchLine.searchEdit()->clear();
     QTest::keyClick(searchLine.searchEdit(), ' ');
@@ -231,11 +231,11 @@ void QuickSearchLineTest::shouldShowExtraOptionWidgetWhenTextTrimmedIsNotEmpty()
     QVERIFY(!widget->isVisible());
 
     searchLine.searchEdit()->clear();
-    QTest::keyClicks(searchLine.searchEdit(), QLatin1String(" F000 "));
+    QTest::keyClicks(searchLine.searchEdit(), QStringLiteral(" F000 "));
     QVERIFY(widget->isVisible());
 
     searchLine.searchEdit()->clear();
-    QTest::keyClicks(searchLine.searchEdit(), QLatin1String(" F000 "));
+    QTest::keyClicks(searchLine.searchEdit(), QStringLiteral(" F000 "));
     QVERIFY(widget->isVisible());
 
 }
@@ -245,21 +245,21 @@ void QuickSearchLineTest::shouldShowMoreOptionWhenClickOnMoreButton()
     QuickSearchLine searchLine;
     searchLine.show();
     QTest::qWaitForWindowExposed(&searchLine);
-    QPushButton *moreButton = searchLine.findChild<QPushButton *>(QLatin1String("moreoptions"));
+    QPushButton *moreButton = searchLine.findChild<QPushButton *>(QStringLiteral("moreoptions"));
     QTest::mouseClick(moreButton, Qt::LeftButton);
-    QWidget *quickSearchFilterWidget = searchLine.findChild<QWidget *>(QLatin1String("quicksearchfilterwidget"));
+    QWidget *quickSearchFilterWidget = searchLine.findChild<QWidget *>(QStringLiteral("quicksearchfilterwidget"));
     QVERIFY(quickSearchFilterWidget->isVisible());
-    QCOMPARE(moreButton->icon().name(), QLatin1String("arrow-up-double"));
+    QCOMPARE(moreButton->icon().name(), QStringLiteral("arrow-up-double"));
 
     QTest::mouseClick(moreButton, Qt::LeftButton);
     QVERIFY(!quickSearchFilterWidget->isVisible());
-    QCOMPARE(moreButton->icon().name(), QLatin1String("arrow-down-double"));
+    QCOMPARE(moreButton->icon().name(), QStringLiteral("arrow-down-double"));
 }
 
 void QuickSearchLineTest::shouldChangeFromButtonLabelWhenChangeOutboundMessagesValue()
 {
     QuickSearchLine searchLine;
-    QPushButton *button = searchLine.findChild<QPushButton *>(QLatin1String("fromorto"));
+    QPushButton *button = searchLine.findChild<QPushButton *>(QStringLiteral("fromorto"));
     const QString buttonName = button->text();
     searchLine.setContainsOutboundMessages(true);
     QVERIFY(button->text() != buttonName);
@@ -270,7 +270,7 @@ void QuickSearchLineTest::shouldChangeFromButtonLabelWhenChangeOutboundMessagesV
 void QuickSearchLineTest::shouldSearchToOrFrom()
 {
     QuickSearchLine searchLine;
-    QPushButton *button = searchLine.findChild<QPushButton *>(QLatin1String("fromorto"));
+    QPushButton *button = searchLine.findChild<QPushButton *>(QStringLiteral("fromorto"));
     QTest::mouseClick(button, Qt::LeftButton);
     searchLine.setContainsOutboundMessages(true);
     QuickSearchLine::SearchOptions options;
@@ -287,10 +287,10 @@ void QuickSearchLineTest::shouldHideShowWidgetWhenWeChangeVisibility()
     QuickSearchLine searchLine;
     searchLine.show();
 
-    QWidget *widget = searchLine.findChild<QWidget *>(QLatin1String("extraoptions"));
+    QWidget *widget = searchLine.findChild<QWidget *>(QStringLiteral("extraoptions"));
 
-    QPushButton *moreButton = searchLine.findChild<QPushButton *>(QLatin1String("moreoptions"));
-    QWidget *quickSearchFilterWidget = searchLine.findChild<QWidget *>(QLatin1String("quicksearchfilterwidget"));
+    QPushButton *moreButton = searchLine.findChild<QPushButton *>(QStringLiteral("moreoptions"));
+    QWidget *quickSearchFilterWidget = searchLine.findChild<QWidget *>(QStringLiteral("quicksearchfilterwidget"));
     searchLine.changeQuicksearchVisibility(false);
     QCOMPARE(quickSearchFilterWidget->isVisible(), false);
     QCOMPARE(moreButton->isVisible(), false);
@@ -306,7 +306,7 @@ void QuickSearchLineTest::shouldHideShowWidgetWhenWeChangeVisibility()
     QCOMPARE(searchLine.tagFilterComboBox()->isVisible(), false);
 
     //Fill Combobox
-    searchLine.tagFilterComboBox()->addItems(QStringList() << QLatin1String("1") << QLatin1String("2"));
+    searchLine.tagFilterComboBox()->addItems(QStringList() << QStringLiteral("1") << QStringLiteral("2"));
     searchLine.changeQuicksearchVisibility(false);
     QCOMPARE(searchLine.tagFilterComboBox()->isVisible(), false);
 
@@ -318,12 +318,12 @@ void QuickSearchLineTest::shouldNotShowComboboxWhenWeAddNewItemWhenWeHiddedQuick
 {
     QuickSearchLine searchLine;
     searchLine.show();
-    searchLine.tagFilterComboBox()->addItems(QStringList() << QLatin1String("1") << QLatin1String("2"));
+    searchLine.tagFilterComboBox()->addItems(QStringList() << QStringLiteral("1") << QStringLiteral("2"));
     searchLine.updateComboboxVisibility();
     QCOMPARE(searchLine.tagFilterComboBox()->isVisible(), true);
 
     searchLine.changeQuicksearchVisibility(false);
-    searchLine.tagFilterComboBox()->addItems(QStringList() << QLatin1String("1") << QLatin1String("2"));
+    searchLine.tagFilterComboBox()->addItems(QStringList() << QStringLiteral("1") << QStringLiteral("2"));
     searchLine.updateComboboxVisibility();
     QCOMPARE(searchLine.tagFilterComboBox()->isVisible(), false);
 
@@ -334,27 +334,27 @@ void QuickSearchLineTest::shouldRestoreDefaultSearchOptionWhenTextIsEmpied()
     QuickSearchLine searchLine;
     searchLine.show();
 
-    QPushButton *moreButton = searchLine.findChild<QPushButton *>(QLatin1String("moreoptions"));
+    QPushButton *moreButton = searchLine.findChild<QPushButton *>(QStringLiteral("moreoptions"));
     QCOMPARE(moreButton->isVisible(), true);
     QTest::mouseClick(moreButton, Qt::LeftButton);
 
-    QPushButton *fullMessageButton = searchLine.findChild<QPushButton *>(QLatin1String("full_message"));
+    QPushButton *fullMessageButton = searchLine.findChild<QPushButton *>(QStringLiteral("full_message"));
     QVERIFY(!fullMessageButton->isVisible());
     QCOMPARE(fullMessageButton->isChecked(), true);
 
-    QPushButton *bodyButton = searchLine.findChild<QPushButton *>(QLatin1String("body"));
+    QPushButton *bodyButton = searchLine.findChild<QPushButton *>(QStringLiteral("body"));
     QVERIFY(!bodyButton->isVisible());
     QCOMPARE(bodyButton->isChecked(), false);
 
-    QPushButton *subjectButton = searchLine.findChild<QPushButton *>(QLatin1String("subject"));
+    QPushButton *subjectButton = searchLine.findChild<QPushButton *>(QStringLiteral("subject"));
     QVERIFY(!subjectButton->isVisible());
     QCOMPARE(subjectButton->isChecked(), false);
 
-    QPushButton *fromOrToButton = searchLine.findChild<QPushButton *>(QLatin1String("fromorto"));
+    QPushButton *fromOrToButton = searchLine.findChild<QPushButton *>(QStringLiteral("fromorto"));
     QVERIFY(!fromOrToButton->isVisible());
     QCOMPARE(fromOrToButton->isChecked(), false);
 
-    QPushButton *bccButton = searchLine.findChild<QPushButton *>(QLatin1String("bcc"));
+    QPushButton *bccButton = searchLine.findChild<QPushButton *>(QStringLiteral("bcc"));
     QVERIFY(!bccButton->isVisible());
     QCOMPARE(bccButton->isChecked(), false);
 
@@ -379,9 +379,9 @@ void QuickSearchLineTest::shouldHideExtraOptionWidgetWhenResetFilterWhenSetEmpty
     QuickSearchLine searchLine;
     searchLine.show();
 
-    QTest::keyClicks(searchLine.searchEdit(), QLatin1String("FOOFOO"));
+    QTest::keyClicks(searchLine.searchEdit(), QStringLiteral("FOOFOO"));
     QTest::qWaitForWindowExposed(&searchLine);
-    QWidget *widget = searchLine.findChild<QWidget *>(QLatin1String("extraoptions"));
+    QWidget *widget = searchLine.findChild<QWidget *>(QStringLiteral("extraoptions"));
 
     QVERIFY(widget->isVisible());
 

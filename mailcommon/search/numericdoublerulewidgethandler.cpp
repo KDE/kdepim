@@ -50,7 +50,7 @@ QWidget *NumericDoubleRuleWidgetHandler::createFunctionWidget(
     }
 
     PimCommon::MinimumComboBox *funcCombo = new PimCommon::MinimumComboBox(functionStack);
-    funcCombo->setObjectName(QLatin1String("numericDoubleRuleFuncCombo"));
+    funcCombo->setObjectName(QStringLiteral("numericDoubleRuleFuncCombo"));
     for (int i = 0; i < NumericFunctionCount; ++i) {
         funcCombo->addItem(i18n(NumericFunctions[i].displayName));
     }
@@ -71,7 +71,7 @@ QWidget *NumericDoubleRuleWidgetHandler::createValueWidget(int number,
     }
 
     QDoubleSpinBox *numInput = new QDoubleSpinBox(valueStack);
-    numInput->setObjectName(QLatin1String("QDoubleSpinBox"));
+    numInput->setObjectName(QStringLiteral("QDoubleSpinBox"));
     QObject::connect(numInput, SIGNAL(valueChanged(double)),
                      receiver, SLOT(slotValueChanged()));
     return numInput;
@@ -83,7 +83,7 @@ SearchRule::Function NumericDoubleRuleWidgetHandler::currentFunction(
     const QStackedWidget *functionStack) const
 {
     const PimCommon::MinimumComboBox *funcCombo =
-        functionStack->findChild<PimCommon::MinimumComboBox *>(QLatin1String("numericDoubleRuleFuncCombo"));
+        functionStack->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("numericDoubleRuleFuncCombo"));
 
     if (funcCombo && funcCombo->currentIndex() >= 0) {
         return NumericFunctions[funcCombo->currentIndex()].id;
@@ -108,7 +108,7 @@ SearchRule::Function NumericDoubleRuleWidgetHandler::function(const QByteArray &
 
 QString NumericDoubleRuleWidgetHandler::currentValue(const QStackedWidget *valueStack) const
 {
-    const QDoubleSpinBox *numInput = valueStack->findChild<QDoubleSpinBox *>(QLatin1String("QDoubleSpinBox"));
+    const QDoubleSpinBox *numInput = valueStack->findChild<QDoubleSpinBox *>(QStringLiteral("QDoubleSpinBox"));
 
     if (numInput) {
         return QString::number(int(numInput->value() * 1024));
@@ -157,7 +157,7 @@ void NumericDoubleRuleWidgetHandler::reset(QStackedWidget *functionStack,
 {
     // reset the function combo box
     PimCommon::MinimumComboBox *funcCombo =
-        functionStack->findChild<PimCommon::MinimumComboBox *>(QLatin1String("numericDoubleRuleFuncCombo"));
+        functionStack->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("numericDoubleRuleFuncCombo"));
 
     if (funcCombo) {
         funcCombo->blockSignals(true);
@@ -166,7 +166,7 @@ void NumericDoubleRuleWidgetHandler::reset(QStackedWidget *functionStack,
     }
 
     // reset the value widget
-    QDoubleSpinBox *numInput = valueStack->findChild<QDoubleSpinBox *>(QLatin1String("QDoubleSpinBox"));
+    QDoubleSpinBox *numInput = valueStack->findChild<QDoubleSpinBox *>(QStringLiteral("QDoubleSpinBox"));
 
     if (numInput) {
         numInput->blockSignals(true);
@@ -207,7 +207,7 @@ bool NumericDoubleRuleWidgetHandler::setRule(QStackedWidget *functionStack,
     }
 
     PimCommon::MinimumComboBox *funcCombo =
-        functionStack->findChild<PimCommon::MinimumComboBox *>(QLatin1String("numericDoubleRuleFuncCombo"));
+        functionStack->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("numericDoubleRuleFuncCombo"));
 
     if (funcCombo) {
         funcCombo->blockSignals(true);
@@ -227,7 +227,7 @@ bool NumericDoubleRuleWidgetHandler::setRule(QStackedWidget *functionStack,
         value = 0;
     }
 
-    QDoubleSpinBox *numInput = valueStack->findChild<QDoubleSpinBox *>(QLatin1String("QDoubleSpinBox"));
+    QDoubleSpinBox *numInput = valueStack->findChild<QDoubleSpinBox *>(QStringLiteral("QDoubleSpinBox"));
 
     if (numInput) {
         initDoubleNumInput(numInput, rule->field());
@@ -250,10 +250,10 @@ bool NumericDoubleRuleWidgetHandler::update(const QByteArray &field,
     }
 
     // raise the correct function widget
-    functionStack->setCurrentWidget(functionStack->findChild<QWidget *>(QLatin1String("numericDoubleRuleFuncCombo")));
+    functionStack->setCurrentWidget(functionStack->findChild<QWidget *>(QStringLiteral("numericDoubleRuleFuncCombo")));
 
     // raise the correct value widget
-    QDoubleSpinBox *numInput = valueStack->findChild<QDoubleSpinBox *>(QLatin1String("QDoubleSpinBox"));
+    QDoubleSpinBox *numInput = valueStack->findChild<QDoubleSpinBox *>(QStringLiteral("QDoubleSpinBox"));
 
     if (numInput) {
         initDoubleNumInput(numInput, field);

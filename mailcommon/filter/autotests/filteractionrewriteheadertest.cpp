@@ -38,21 +38,21 @@ void FilterActionRewriteHeaderTest::shouldHaveDefaultValue()
 {
     MailCommon::FilterActionRewriteHeader filter;
     QWidget *w = filter.createParamWidget(0);
-    PimCommon::MinimumComboBox *combo = w->findChild<PimCommon::MinimumComboBox *>(QLatin1String("combo"));
+    PimCommon::MinimumComboBox *combo = w->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("combo"));
     QVERIFY(combo);
     QVERIFY(combo->count() > 0);
 
-    QLabel *label = w->findChild<QLabel *>(QLatin1String("label_replace"));
+    QLabel *label = w->findChild<QLabel *>(QStringLiteral("label_replace"));
     QVERIFY(label);
 
-    MailCommon::RegExpLineEdit *regExpLineEdit = w->findChild<MailCommon::RegExpLineEdit *>(QLatin1String("search"));
+    MailCommon::RegExpLineEdit *regExpLineEdit = w->findChild<MailCommon::RegExpLineEdit *>(QStringLiteral("search"));
     QVERIFY(regExpLineEdit);
     QVERIFY(regExpLineEdit->text().isEmpty());
 
-    label = w->findChild<QLabel *>(QLatin1String("label_with"));
+    label = w->findChild<QLabel *>(QStringLiteral("label_with"));
     QVERIFY(label);
 
-    KLineEdit *lineEdit = w->findChild<KLineEdit *>(QLatin1String("replace"));
+    KLineEdit *lineEdit = w->findChild<KLineEdit *>(QStringLiteral("replace"));
     QVERIFY(lineEdit);
     QVERIFY(lineEdit->text().isEmpty());
 }

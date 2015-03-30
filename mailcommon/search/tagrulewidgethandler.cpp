@@ -86,7 +86,7 @@ void FillTagComboJob::onTagsFetched(KJob *job)
     }
     Akonadi::TagFetchJob *fetchJob = static_cast<Akonadi::TagFetchJob *>(job);
     foreach (const Akonadi::Tag &tag, fetchJob->tags()) {
-        QString iconName = QLatin1String("mail-tagged");
+        QString iconName = QStringLiteral("mail-tagged");
         Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>();
         if (attr) {
             if (!attr->iconName().isEmpty()) {
@@ -122,7 +122,7 @@ QWidget *TagRuleWidgetHandler::createFunctionWidget(
     }
 
     PimCommon::MinimumComboBox *funcCombo = new PimCommon::MinimumComboBox(functionStack);
-    funcCombo->setObjectName(QLatin1String("tagRuleFuncCombo"));
+    funcCombo->setObjectName(QStringLiteral("tagRuleFuncCombo"));
     for (int i = 0; i < TagFunctionCount; ++i) {
         if (isBalooSearch) {
             if (TagFunctions[i].id == SearchRule::FuncContains || TagFunctions[i].id == SearchRule::FuncContainsNot) {
@@ -146,7 +146,7 @@ QWidget *TagRuleWidgetHandler::createValueWidget(int number,
 {
     if (number == 0) {
         RegExpLineEdit *lineEdit = new RegExpLineEdit(valueStack);
-        lineEdit->setObjectName(QLatin1String("tagRuleRegExpLineEdit"));
+        lineEdit->setObjectName(QStringLiteral("tagRuleRegExpLineEdit"));
         QObject::connect(lineEdit, SIGNAL(textChanged(QString)),
                          receiver, SLOT(slotValueChanged()));
         QObject::connect(lineEdit, SIGNAL(returnPressed()),
@@ -156,7 +156,7 @@ QWidget *TagRuleWidgetHandler::createValueWidget(int number,
 
     if (number == 1) {
         PimCommon::MinimumComboBox *valueCombo = new PimCommon::MinimumComboBox(valueStack);
-        valueCombo->setObjectName(QLatin1String("tagRuleValueCombo"));
+        valueCombo->setObjectName(QStringLiteral("tagRuleValueCombo"));
         valueCombo->setEditable(true);
         valueCombo->addItem(QString());   // empty entry for user input
 
@@ -182,7 +182,7 @@ SearchRule::Function TagRuleWidgetHandler::function(const QByteArray &field,
     }
 
     const PimCommon::MinimumComboBox *funcCombo =
-        functionStack->findChild<PimCommon::MinimumComboBox *>(QLatin1String("tagRuleFuncCombo"));
+        functionStack->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("tagRuleFuncCombo"));
 
     if (funcCombo && funcCombo->currentIndex() >= 0) {
         return TagFunctions[funcCombo->currentIndex()].id;
@@ -204,7 +204,7 @@ QString TagRuleWidgetHandler::value(const QByteArray &field,
     if (func == SearchRule::FuncRegExp || func == SearchRule::FuncNotRegExp) {
         // Use regexp line edit
         const RegExpLineEdit *lineEdit =
-            valueStack->findChild<RegExpLineEdit *>(QLatin1String("tagRuleRegExpLineEdit"));
+            valueStack->findChild<RegExpLineEdit *>(QStringLiteral("tagRuleRegExpLineEdit"));
 
         if (lineEdit) {
             return lineEdit->text();
@@ -215,7 +215,7 @@ QString TagRuleWidgetHandler::value(const QByteArray &field,
 
     // Use combo box
     const PimCommon::MinimumComboBox *tagCombo =
-        valueStack->findChild<PimCommon::MinimumComboBox *>(QLatin1String("tagRuleValueCombo"));
+        valueStack->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("tagRuleValueCombo"));
 
     if (tagCombo) {
         return tagCombo->itemData(tagCombo->currentIndex()).toString();
@@ -247,7 +247,7 @@ void TagRuleWidgetHandler::reset(QStackedWidget *functionStack,
 {
     // reset the function combo box
     PimCommon::MinimumComboBox *funcCombo =
-        functionStack->findChild<PimCommon::MinimumComboBox *>(QLatin1String("tagRuleFuncCombo"));
+        functionStack->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("tagRuleFuncCombo"));
 
     if (funcCombo) {
         funcCombo->blockSignals(true);
@@ -257,7 +257,7 @@ void TagRuleWidgetHandler::reset(QStackedWidget *functionStack,
 
     // reset the status value combo box and reg exp line edit
     RegExpLineEdit *lineEdit =
-        valueStack->findChild<RegExpLineEdit *>(QLatin1String("tagRuleRegExpLineEdit"));
+        valueStack->findChild<RegExpLineEdit *>(QStringLiteral("tagRuleRegExpLineEdit"));
 
     if (lineEdit) {
         lineEdit->blockSignals(true);
@@ -267,7 +267,7 @@ void TagRuleWidgetHandler::reset(QStackedWidget *functionStack,
         valueStack->setCurrentWidget(lineEdit);
     }
 
-    PimCommon::MinimumComboBox *tagCombo = valueStack->findChild<PimCommon::MinimumComboBox *>(QLatin1String("tagRuleValueCombo"));
+    PimCommon::MinimumComboBox *tagCombo = valueStack->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("tagRuleValueCombo"));
     if (tagCombo) {
         tagCombo->blockSignals(true);
         tagCombo->setCurrentIndex(0);
@@ -304,7 +304,7 @@ bool TagRuleWidgetHandler::setRule(QStackedWidget *functionStack,
     }
 
     PimCommon::MinimumComboBox *funcCombo =
-        functionStack->findChild<PimCommon::MinimumComboBox *>(QLatin1String("tagRuleFuncCombo"));
+        functionStack->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("tagRuleFuncCombo"));
 
     if (funcCombo) {
         funcCombo->blockSignals(true);
@@ -320,7 +320,7 @@ bool TagRuleWidgetHandler::setRule(QStackedWidget *functionStack,
     // set the value
     if (func == SearchRule::FuncRegExp || func == SearchRule::FuncNotRegExp) {
         // set reg exp value
-        RegExpLineEdit *lineEdit = valueStack->findChild<RegExpLineEdit *>(QLatin1String("tagRuleRegExpLineEdit"));
+        RegExpLineEdit *lineEdit = valueStack->findChild<RegExpLineEdit *>(QStringLiteral("tagRuleRegExpLineEdit"));
 
         if (lineEdit) {
             lineEdit->blockSignals(true);
@@ -332,7 +332,7 @@ bool TagRuleWidgetHandler::setRule(QStackedWidget *functionStack,
     } else {
         // set combo box value
         PimCommon::MinimumComboBox *tagCombo =
-            valueStack->findChild<PimCommon::MinimumComboBox *>(QLatin1String("tagRuleValueCombo"));
+            valueStack->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("tagRuleValueCombo"));
 
         if (tagCombo) {
             tagCombo->blockSignals(true);
@@ -371,14 +371,14 @@ bool TagRuleWidgetHandler::update(const QByteArray &field,
     }
 
     // raise the correct function widget
-    functionStack->setCurrentWidget(functionStack->findChild<QWidget *>(QLatin1String("tagRuleFuncCombo")));
+    functionStack->setCurrentWidget(functionStack->findChild<QWidget *>(QStringLiteral("tagRuleFuncCombo")));
 
     // raise the correct value widget
     SearchRule::Function func = function(field, functionStack);
     if (func == SearchRule::FuncRegExp || func == SearchRule::FuncNotRegExp) {
-        valueStack->setCurrentWidget(valueStack->findChild<QWidget *>(QLatin1String("tagRuleRegExpLineEdit")));
+        valueStack->setCurrentWidget(valueStack->findChild<QWidget *>(QStringLiteral("tagRuleRegExpLineEdit")));
     } else {
-        valueStack->setCurrentWidget(valueStack->findChild<QWidget *>(QLatin1String("tagRuleValueCombo")));
+        valueStack->setCurrentWidget(valueStack->findChild<QWidget *>(QStringLiteral("tagRuleValueCombo")));
     }
 
     return true;

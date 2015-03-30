@@ -39,7 +39,7 @@ void TriopabShortUrl::start()
 
 QString TriopabShortUrl::shortUrlName() const
 {
-    return QLatin1String("to.ly");
+    return QStringLiteral("to.ly");
 }
 
 void TriopabShortUrl::slotShortUrlFinished(QNetworkReply *reply)

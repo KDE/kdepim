@@ -62,7 +62,7 @@ QWidget *HeadersRuleWidgetHandler::createFunctionWidget(
     }
 
     PimCommon::MinimumComboBox *funcCombo = new PimCommon::MinimumComboBox(functionStack);
-    funcCombo->setObjectName(QLatin1String("headerRuleFuncCombo"));
+    funcCombo->setObjectName(QStringLiteral("headerRuleFuncCombo"));
     for (int i = 0; i < HeadersFunctionCount; ++i) {
         if (!(isBalooSearch &&
                 (HeaderFunctions[i].id == SearchRule::FuncIsInAddressbook || HeaderFunctions[i].id == SearchRule::FuncIsNotInAddressbook)))  {
@@ -83,7 +83,7 @@ QWidget *HeadersRuleWidgetHandler::createValueWidget(int number,
 {
     if (number == 0) {
         RegExpLineEdit *lineEdit = new RegExpLineEdit(valueStack);
-        lineEdit->setObjectName(QLatin1String("regExpLineEdit"));
+        lineEdit->setObjectName(QStringLiteral("regExpLineEdit"));
         QObject::connect(lineEdit, SIGNAL(textChanged(QString)),
                          receiver, SLOT(slotValueChanged()));
         QObject::connect(lineEdit, SIGNAL(returnPressed()),
@@ -94,7 +94,7 @@ QWidget *HeadersRuleWidgetHandler::createValueWidget(int number,
     // blank QLabel to hide value widget for in-address-book rule
     if (number == 1) {
         QLabel *label = new QLabel(valueStack);
-        label->setObjectName(QLatin1String("headerRuleValueHider"));
+        label->setObjectName(QStringLiteral("headerRuleValueHider"));
         label->setBuddy(valueStack);
         return label;
     }
@@ -107,7 +107,7 @@ SearchRule::Function HeadersRuleWidgetHandler::currentFunction(
     const QStackedWidget *functionStack) const
 {
     const PimCommon::MinimumComboBox *funcCombo =
-        functionStack->findChild<PimCommon::MinimumComboBox *>(QLatin1String("headerRuleFuncCombo"));
+        functionStack->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("headerRuleFuncCombo"));
 
     if (funcCombo && funcCombo->currentIndex() >= 0) {
         return HeaderFunctions[funcCombo->currentIndex()].id;
@@ -132,7 +132,7 @@ QString HeadersRuleWidgetHandler::currentValue(const QStackedWidget *valueStack,
         SearchRule::Function func) const
 {
     //in other cases of func it is a lineedit
-    const RegExpLineEdit *lineEdit = valueStack->findChild<RegExpLineEdit *>(QLatin1String("regExpLineEdit"));
+    const RegExpLineEdit *lineEdit = valueStack->findChild<RegExpLineEdit *>(QStringLiteral("regExpLineEdit"));
 
     if (lineEdit) {
         return lineEdit->text();
@@ -195,7 +195,7 @@ void HeadersRuleWidgetHandler::reset(QStackedWidget *functionStack,
                                      QStackedWidget *valueStack) const
 {
     // reset the function combo box
-    PimCommon::MinimumComboBox *funcCombo = functionStack->findChild<PimCommon::MinimumComboBox *>(QLatin1String("headerRuleFuncCombo"));
+    PimCommon::MinimumComboBox *funcCombo = functionStack->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("headerRuleFuncCombo"));
 
     if (funcCombo) {
         funcCombo->blockSignals(true);
@@ -204,7 +204,7 @@ void HeadersRuleWidgetHandler::reset(QStackedWidget *functionStack,
     }
 
     // reset the value widget
-    RegExpLineEdit *lineEdit = valueStack->findChild<RegExpLineEdit *>(QLatin1String("regExpLineEdit"));
+    RegExpLineEdit *lineEdit = valueStack->findChild<RegExpLineEdit *>(QStringLiteral("regExpLineEdit"));
     if (lineEdit) {
         lineEdit->blockSignals(true);
         lineEdit->clear();
@@ -240,7 +240,7 @@ bool HeadersRuleWidgetHandler::setRule(QStackedWidget *functionStack,
         }
     }
 
-    PimCommon::MinimumComboBox *funcCombo = functionStack->findChild<PimCommon::MinimumComboBox *>(QLatin1String("headerRuleFuncCombo"));
+    PimCommon::MinimumComboBox *funcCombo = functionStack->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("headerRuleFuncCombo"));
 
     if (funcCombo) {
         funcCombo->blockSignals(true);
@@ -255,11 +255,11 @@ bool HeadersRuleWidgetHandler::setRule(QStackedWidget *functionStack,
 
     if (func == SearchRule::FuncIsInAddressbook ||
             func == SearchRule::FuncIsNotInAddressbook) {
-        QWidget *w = valueStack->findChild<QWidget *>(QLatin1String("headerRuleValueHider"));
+        QWidget *w = valueStack->findChild<QWidget *>(QStringLiteral("headerRuleValueHider"));
         valueStack->setCurrentWidget(w);
     } else {
         RegExpLineEdit *lineEdit =
-            valueStack->findChild<RegExpLineEdit *>(QLatin1String("regExpLineEdit"));
+            valueStack->findChild<RegExpLineEdit *>(QStringLiteral("regExpLineEdit"));
 
         if (lineEdit) {
             lineEdit->blockSignals(true);
@@ -284,16 +284,16 @@ bool HeadersRuleWidgetHandler::update(const QByteArray &field,
     }
 
     // raise the correct function widget
-    functionStack->setCurrentWidget(functionStack->findChild<QWidget *>(QLatin1String("headerRuleFuncCombo")));
+    functionStack->setCurrentWidget(functionStack->findChild<QWidget *>(QStringLiteral("headerRuleFuncCombo")));
 
     // raise the correct value widget
     SearchRule::Function func = currentFunction(functionStack);
     if (func == SearchRule::FuncIsInAddressbook ||
             func == SearchRule::FuncIsNotInAddressbook) {
-        valueStack->setCurrentWidget(valueStack->findChild<QWidget *>(QLatin1String("headerRuleValueHider")));
+        valueStack->setCurrentWidget(valueStack->findChild<QWidget *>(QStringLiteral("headerRuleValueHider")));
     } else {
         RegExpLineEdit *lineEdit =
-            valueStack->findChild<RegExpLineEdit *>(QLatin1String("regExpLineEdit"));
+            valueStack->findChild<RegExpLineEdit *>(QStringLiteral("regExpLineEdit"));
 
         if (lineEdit) {
             lineEdit->showEditButton(func == SearchRule::FuncRegExp ||

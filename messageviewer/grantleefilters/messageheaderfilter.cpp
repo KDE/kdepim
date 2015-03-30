@@ -53,17 +53,17 @@ QVariant MessageHeaderEmailExpandable::doFilter(const QVariant &input, const QVa
     Q_UNUSED(argument);
     if (input.value<KMime::Headers::Cc *>()) {
         const QVariant val = MessageCore::StringUtil::emailAddrAsAnchor(input.value<KMime::Headers::Cc *>(), MessageCore::StringUtil::DisplayFullAddress, QString(), MessageCore::StringUtil::ShowLink,
-                             MessageCore::StringUtil::ExpandableAddresses, QLatin1String("FullToAddressList")
+                             MessageCore::StringUtil::ExpandableAddresses, QStringLiteral("FullToAddressList")
                              /*GlobalSettings::self()->numberOfAddressesToShow()*/);
         return val;
     } else if (input.value<KMime::Headers::To *>()) {
         const QVariant val = MessageCore::StringUtil::emailAddrAsAnchor(input.value<KMime::Headers::To *>(), MessageCore::StringUtil::DisplayFullAddress, QString(), MessageCore::StringUtil::ShowLink,
-                             MessageCore::StringUtil::ExpandableAddresses, QLatin1String("FullToAddressList")
+                             MessageCore::StringUtil::ExpandableAddresses, QStringLiteral("FullToAddressList")
                              /*GlobalSettings::self()->numberOfAddressesToShow()*/);
         return val;
     } else if (input.value<KMime::Headers::Bcc *>()) {
         const QVariant val = MessageCore::StringUtil::emailAddrAsAnchor(input.value<KMime::Headers::Bcc *>(), MessageCore::StringUtil::DisplayFullAddress, QString(), MessageCore::StringUtil::ShowLink,
-                             MessageCore::StringUtil::ExpandableAddresses, QLatin1String("FullToAddressList")
+                             MessageCore::StringUtil::ExpandableAddresses, QStringLiteral("FullToAddressList")
                              /*GlobalSettings::self()->numberOfAddressesToShow()*/);
         return val;
     } else {

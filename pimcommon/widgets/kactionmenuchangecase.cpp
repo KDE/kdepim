@@ -70,9 +70,9 @@ QAction *KActionMenuChangeCase::reverseCaseAction() const
 void KActionMenuChangeCase::appendInActionCollection(KActionCollection *ac)
 {
     if (ac) {
-        ac->addAction(QLatin1String("change_to_uppercase"), mUpperCase);
-        ac->addAction(QLatin1String("change_to_sentencecase"), mSentenceCase);
-        ac->addAction(QLatin1String("change_to_lowercase"), mLowerCase);
-        ac->addAction(QLatin1String("change_to_reversecase"), mReverseCase);
+        ac->addAction(QStringLiteral("change_to_uppercase"), mUpperCase);
+        ac->addAction(QStringLiteral("change_to_sentencecase"), mSentenceCase);
+        ac->addAction(QStringLiteral("change_to_lowercase"), mLowerCase);
+        ac->addAction(QStringLiteral("change_to_reversecase"), mReverseCase);
     }
 }

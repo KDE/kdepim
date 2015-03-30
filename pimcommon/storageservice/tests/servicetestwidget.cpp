@@ -45,15 +45,15 @@ ServiceTestWidget::ServiceTestWidget(QWidget *parent)
     QVBoxLayout *lay = new QVBoxLayout;
     QToolBar *bar = new QToolBar;
     lay->addWidget(bar);
-    mAuthenticationAction = bar->addAction(QLatin1String("Authentication..."), this, SLOT(slotAuthentication()));
-    mListFolderAction = bar->addAction(QLatin1String("List Folder..."), this, SLOT(slotListFolder()));
-    mCreateFolderAction = bar->addAction(QLatin1String("Create Folder..."), this, SLOT(slotCreateFolder()));
-    mAccountInfoAction = bar->addAction(QLatin1String("Account info..."), this, SLOT(slotAccountInfo()));
-    mUploadFileAction = bar->addAction(QLatin1String("Upload File..."), this, SLOT(slotUploadFile()));
-    mCreateServiceFolderAction = bar->addAction(QLatin1String("Create Service Folder..."), this, SLOT(slotCreateServiceFolder()));
-    mDeleteFileAction = bar->addAction(QLatin1String("Delete File..."), this, SLOT(slotDeleteFile()));
-    mDeleteFolderAction = bar->addAction(QLatin1String("Delete Folder..."), this, SLOT(slotDeleteFolder()));
-    mDownloadFileAction = bar->addAction(QLatin1String("Download File..."), this, SLOT(slotDownloadFile()));
+    mAuthenticationAction = bar->addAction(QStringLiteral("Authentication..."), this, SLOT(slotAuthentication()));
+    mListFolderAction = bar->addAction(QStringLiteral("List Folder..."), this, SLOT(slotListFolder()));
+    mCreateFolderAction = bar->addAction(QStringLiteral("Create Folder..."), this, SLOT(slotCreateFolder()));
+    mAccountInfoAction = bar->addAction(QStringLiteral("Account info..."), this, SLOT(slotAccountInfo()));
+    mUploadFileAction = bar->addAction(QStringLiteral("Upload File..."), this, SLOT(slotUploadFile()));
+    mCreateServiceFolderAction = bar->addAction(QStringLiteral("Create Service Folder..."), this, SLOT(slotCreateServiceFolder()));
+    mDeleteFileAction = bar->addAction(QStringLiteral("Delete File..."), this, SLOT(slotDeleteFile()));
+    mDeleteFolderAction = bar->addAction(QStringLiteral("Delete Folder..."), this, SLOT(slotDeleteFolder()));
+    mDownloadFileAction = bar->addAction(QStringLiteral("Download File..."), this, SLOT(slotDownloadFile()));
     lay->addWidget(mEdit);
     setLayout(lay);
 }
@@ -139,7 +139,7 @@ void ServiceTestWidget::slotAuthenticationFailed(const QString &serviceName, con
 
 void ServiceTestWidget::slotAuthenticationDone(const QString &serviceName)
 {
-    mEdit->insertPlainText(serviceName + QLatin1String(" Authentication done\n"));
+    mEdit->insertPlainText(serviceName + QStringLiteral(" Authentication done\n"));
 }
 
 void ServiceTestWidget::slotCreateFolderDone(const QString &serviceName, const QString &folderName)

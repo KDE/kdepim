@@ -30,7 +30,7 @@ int main(int argc, char **argv)
 {
     KAboutData aboutData(QStringLiteral("testkmeditor"),
                          i18n("KMeditorTest"),
-                         QLatin1String("1.0"));
+                         QStringLiteral("1.0"));
 
     KAboutData::setApplicationData(aboutData);
 

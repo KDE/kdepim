@@ -51,7 +51,7 @@ QWidget *NumericRuleWidgetHandler::createFunctionWidget(
     }
 
     PimCommon::MinimumComboBox *funcCombo = new PimCommon::MinimumComboBox(functionStack);
-    funcCombo->setObjectName(QLatin1String("numericRuleFuncCombo"));
+    funcCombo->setObjectName(QStringLiteral("numericRuleFuncCombo"));
     for (int i = 0; i < NumericFunctionCount; ++i) {
         funcCombo->addItem(i18n(NumericFunctions[i].displayName));
     }
@@ -72,7 +72,7 @@ QWidget *NumericRuleWidgetHandler::createValueWidget(int number,
     }
 
     KPluralHandlingSpinBox *numInput = new KPluralHandlingSpinBox(valueStack);
-    numInput->setObjectName(QLatin1String("KPluralHandlingSpinBox"));
+    numInput->setObjectName(QStringLiteral("KPluralHandlingSpinBox"));
     QObject::connect(numInput, SIGNAL(valueChanged(int)),
                      receiver, SLOT(slotValueChanged()));
     return numInput;
@@ -84,7 +84,7 @@ SearchRule::Function NumericRuleWidgetHandler::currentFunction(
     const QStackedWidget *functionStack) const
 {
     const PimCommon::MinimumComboBox *funcCombo =
-        functionStack->findChild<PimCommon::MinimumComboBox *>(QLatin1String("numericRuleFuncCombo"));
+        functionStack->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("numericRuleFuncCombo"));
 
     if (funcCombo && funcCombo->currentIndex() >= 0) {
         return NumericFunctions[funcCombo->currentIndex()].id;
@@ -109,7 +109,7 @@ SearchRule::Function NumericRuleWidgetHandler::function(const QByteArray &field,
 
 QString NumericRuleWidgetHandler::currentValue(const QStackedWidget *valueStack) const
 {
-    const KPluralHandlingSpinBox *numInput = valueStack->findChild<KPluralHandlingSpinBox *>(QLatin1String("KPluralHandlingSpinBox"));
+    const KPluralHandlingSpinBox *numInput = valueStack->findChild<KPluralHandlingSpinBox *>(QStringLiteral("KPluralHandlingSpinBox"));
 
     if (numInput) {
         return QString::number(numInput->value());
@@ -158,7 +158,7 @@ void NumericRuleWidgetHandler::reset(QStackedWidget *functionStack,
 {
     // reset the function combo box
     PimCommon::MinimumComboBox *funcCombo =
-        functionStack->findChild<PimCommon::MinimumComboBox *>(QLatin1String("numericRuleFuncCombo"));
+        functionStack->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("numericRuleFuncCombo"));
 
     if (funcCombo) {
         funcCombo->blockSignals(true);
@@ -167,7 +167,7 @@ void NumericRuleWidgetHandler::reset(QStackedWidget *functionStack,
     }
 
     // reset the value widget
-    KPluralHandlingSpinBox *numInput = valueStack->findChild<KPluralHandlingSpinBox *>(QLatin1String("KPluralHandlingSpinBox"));
+    KPluralHandlingSpinBox *numInput = valueStack->findChild<KPluralHandlingSpinBox *>(QStringLiteral("KPluralHandlingSpinBox"));
 
     if (numInput) {
         numInput->blockSignals(true);
@@ -207,7 +207,7 @@ bool NumericRuleWidgetHandler::setRule(QStackedWidget *functionStack,
     }
 
     PimCommon::MinimumComboBox *funcCombo =
-        functionStack->findChild<PimCommon::MinimumComboBox *>(QLatin1String("numericRuleFuncCombo"));
+        functionStack->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("numericRuleFuncCombo"));
 
     if (funcCombo) {
         funcCombo->blockSignals(true);
@@ -227,7 +227,7 @@ bool NumericRuleWidgetHandler::setRule(QStackedWidget *functionStack,
         value = 0;
     }
 
-    KPluralHandlingSpinBox *numInput = valueStack->findChild<KPluralHandlingSpinBox *>(QLatin1String("KPluralHandlingSpinBox"));
+    KPluralHandlingSpinBox *numInput = valueStack->findChild<KPluralHandlingSpinBox *>(QStringLiteral("KPluralHandlingSpinBox"));
 
     if (numInput) {
         initNumInput(numInput, rule->field());
@@ -250,10 +250,10 @@ bool NumericRuleWidgetHandler::update(const QByteArray &field,
     }
 
     // raise the correct function widget
-    functionStack->setCurrentWidget(functionStack->findChild<QWidget *>(QLatin1String("numericRuleFuncCombo")));
+    functionStack->setCurrentWidget(functionStack->findChild<QWidget *>(QStringLiteral("numericRuleFuncCombo")));
 
     // raise the correct value widget
-    KPluralHandlingSpinBox *numInput = valueStack->findChild<KPluralHandlingSpinBox *>(QLatin1String("KPluralHandlingSpinBox"));
+    KPluralHandlingSpinBox *numInput = valueStack->findChild<KPluralHandlingSpinBox *>(QStringLiteral("KPluralHandlingSpinBox"));
 
     if (numInput) {
         initNumInput(numInput, field);

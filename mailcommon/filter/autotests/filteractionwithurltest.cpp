@@ -25,7 +25,7 @@ class TestFilterActionWithUrl : public MailCommon::FilterActionWithUrl
 {
 public:
     TestFilterActionWithUrl()
-        : MailCommon::FilterActionWithUrl(QLatin1String("test"), QLatin1String("label"))
+        : MailCommon::FilterActionWithUrl(QStringLiteral("test"), QStringLiteral("label"))
     {
 
     }
@@ -55,9 +55,9 @@ void FilterActionWithUrlTest::shouldHaveDefaultValue()
 {
     TestFilterActionWithUrl filter;
     QWidget *w = filter.createParamWidget(0);
-    KUrlRequester *requester = w->findChild<KUrlRequester *>(QLatin1String("requester"));
+    KUrlRequester *requester = w->findChild<KUrlRequester *>(QStringLiteral("requester"));
     QVERIFY(requester);
-    QToolButton *toolButton = w->findChild<QToolButton *>(QLatin1String("helpbutton"));
+    QToolButton *toolButton = w->findChild<QToolButton *>(QStringLiteral("helpbutton"));
     QVERIFY(toolButton);
 }
 
@@ -65,7 +65,7 @@ void FilterActionWithUrlTest::shouldClearWidget()
 {
     TestFilterActionWithUrl filter;
     QWidget *w = filter.createParamWidget(0);
-    KUrlRequester *requester = w->findChild<KUrlRequester *>(QLatin1String("requester"));
+    KUrlRequester *requester = w->findChild<KUrlRequester *>(QStringLiteral("requester"));
     requester->setUrl(QUrl::fromLocalFile("/foo/bla"));
     QVERIFY(!requester->url().isEmpty());
     filter.clearParamWidget(w);
@@ -76,10 +76,10 @@ void FilterActionWithUrlTest::shouldAddValue()
 {
     TestFilterActionWithUrl filter;
     QWidget *w = filter.createParamWidget(0);
-    KUrlRequester *requester = w->findChild<KUrlRequester *>(QLatin1String("requester"));
-    filter.argsFromString(QLatin1String("/foo"));
+    KUrlRequester *requester = w->findChild<KUrlRequester *>(QStringLiteral("requester"));
+    filter.argsFromString(QStringLiteral("/foo"));
     filter.setParamWidgetValue(w);
-    QCOMPARE(requester->lineEdit()->text(), QLatin1String("/foo"));
+    QCOMPARE(requester->lineEdit()->text(), QStringLiteral("/foo"));
 }
 
 QTEST_MAIN(FilterActionWithUrlTest)

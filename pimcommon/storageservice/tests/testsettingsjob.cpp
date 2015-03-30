@@ -34,17 +34,17 @@ TestSettingsJob::~TestSettingsJob()
 QString TestSettingsJob::youSendItApiKey() const
 {
     //TODO customize it
-    return QLatin1String("fnab8fkgwrka7v6zs2ycd34a");
+    return QStringLiteral("fnab8fkgwrka7v6zs2ycd34a");
 }
 
 QString TestSettingsJob::dropboxOauthConsumerKey() const
 {
-    return QLatin1String("e40dvomckrm48ci");
+    return QStringLiteral("e40dvomckrm48ci");
 }
 
 QString TestSettingsJob::dropboxOauthSignature() const
 {
-    return QLatin1String("0icikya464lny9g&");
+    return QStringLiteral("0icikya464lny9g&");
 }
 
 QString TestSettingsJob::defaultUploadFolder() const
@@ -54,55 +54,55 @@ QString TestSettingsJob::defaultUploadFolder() const
 
 QString TestSettingsJob::boxClientId() const
 {
-    return QLatin1String("o4sn4e0dvz50pd3ps6ao3qxehvqv8dyo");
+    return QStringLiteral("o4sn4e0dvz50pd3ps6ao3qxehvqv8dyo");
 }
 
 QString TestSettingsJob::boxClientSecret() const
 {
-    return QLatin1String("wLdaOgrblYzi1Y6WN437wStvqighmSJt");
+    return QStringLiteral("wLdaOgrblYzi1Y6WN437wStvqighmSJt");
 }
 
 QString TestSettingsJob::hubicClientId() const
 {
-    return QLatin1String("api_hubic_zBKQ6UDUj2vDT7ciDsgjmXA78OVDnzJi");
+    return QStringLiteral("api_hubic_zBKQ6UDUj2vDT7ciDsgjmXA78OVDnzJi");
 }
 
 QString TestSettingsJob::hubicClientSecret() const
 {
-    return QLatin1String("pkChgk2sRrrCEoVHmYYCglEI9E2Y2833Te5Vn8n2J6qPdxLU6K8NPUvzo1mEhyzf");
+    return QStringLiteral("pkChgk2sRrrCEoVHmYYCglEI9E2Y2833Te5Vn8n2J6qPdxLU6K8NPUvzo1mEhyzf");
 }
 
 QString TestSettingsJob::dropboxRootPath() const
 {
-    return QLatin1String("dropbox");
+    return QStringLiteral("dropbox");
 }
 
 QString TestSettingsJob::oauth2RedirectUrl() const
 {
-    return QLatin1String("https://bugs.kde.org/");
+    return QStringLiteral("https://bugs.kde.org/");
 }
 
 QString TestSettingsJob::ubuntuOneAttachmentVolume() const
 {
-    return QLatin1String("/~/KMail Attachments");
+    return QStringLiteral("/~/KMail Attachments");
 }
 
 QString TestSettingsJob::hubicScope() const
 {
-    return QLatin1String("usage.r,account.r,credentials.r,links.wd");
+    return QStringLiteral("usage.r,account.r,credentials.r,links.wd");
 }
 
 QString TestSettingsJob::ubuntuOneTokenName() const
 {
-    return QLatin1String("foo");
+    return QStringLiteral("foo");
 }
 
 QString TestSettingsJob::gdriveClientId() const
 {
-    return QLatin1String("76182239499-2krm3lvlrqrj446loaqrrep594n3u2o8.apps.googleusercontent.com");
+    return QStringLiteral("76182239499-2krm3lvlrqrj446loaqrrep594n3u2o8.apps.googleusercontent.com");
 }
 
 QString TestSettingsJob::gdriveClientSecret() const
 {
-    return QLatin1String("7SinUSCxfbrJYN7az3VvxTJ9");
+    return QStringLiteral("7SinUSCxfbrJYN7az3VvxTJ9");
 }

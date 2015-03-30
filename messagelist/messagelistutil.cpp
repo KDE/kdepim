@@ -29,22 +29,22 @@ using namespace MessageList::Core;
 
 QString MessageList::Util::messageSortingConfigName()
 {
-    return QLatin1String("MessageSorting");
+    return QStringLiteral("MessageSorting");
 }
 
 QString MessageList::Util::messageSortDirectionConfigName()
 {
-    return QLatin1String("MessageSortDirection");
+    return QStringLiteral("MessageSortDirection");
 }
 
 QString MessageList::Util::groupSortingConfigName()
 {
-    return QLatin1String("GroupSorting");
+    return QStringLiteral("GroupSorting");
 }
 
 QString MessageList::Util::groupSortDirectionConfigName()
 {
-    return QLatin1String("GroupSortDirection");
+    return QStringLiteral("GroupSortDirection");
 }
 
 QString MessageList::Util::messageUniqueIdConfigName()
@@ -54,17 +54,17 @@ QString MessageList::Util::messageUniqueIdConfigName()
 
 QString MessageList::Util::storageModelSortOrderGroup()
 {
-    return QLatin1String("MessageListView::StorageModelSortOrder");
+    return QStringLiteral("MessageListView::StorageModelSortOrder");
 }
 
 QString MessageList::Util::storageModelThemesGroup()
 {
-    return QLatin1String("MessageListView::StorageModelThemes");
+    return QStringLiteral("MessageListView::StorageModelThemes");
 }
 
 QString MessageList::Util::storageModelAggregationsGroup()
 {
-    return QLatin1String("MessageListView::StorageModelAggregations");
+    return QStringLiteral("MessageListView::StorageModelAggregations");
 }
 
 QString MessageList::Util::setForStorageModelConfigName()
@@ -74,7 +74,7 @@ QString MessageList::Util::setForStorageModelConfigName()
 
 QString MessageList::Util::storageModelSelectedMessageGroup()
 {
-    return QLatin1String("MessageListView::StorageModelSelectedMessages");
+    return QStringLiteral("MessageListView::StorageModelSelectedMessages");
 }
 
 void MessageList::Util::deleteConfig(const QString &collectionId)
@@ -118,17 +118,17 @@ QColor MessageList::Util::todoDefaultMessageColor()
 void MessageList::Util::fillViewMenu(QMenu *menu, QObject *receiver)
 {
     QMenu *sortingMenu = new QMenu(i18n("Sorting"), menu);
-    sortingMenu->setIcon(QIcon::fromTheme(QLatin1String("view-sort-ascending")));
+    sortingMenu->setIcon(QIcon::fromTheme(QStringLiteral("view-sort-ascending")));
     menu->addMenu(sortingMenu);
     QObject::connect(sortingMenu, SIGNAL(aboutToShow()), receiver, SLOT(sortOrderMenuAboutToShow()));
 
     QMenu *aggregationMenu = new QMenu(i18n("Aggregation"), menu);
-    aggregationMenu->setIcon(QIcon::fromTheme(QLatin1String("view-process-tree")));
+    aggregationMenu->setIcon(QIcon::fromTheme(QStringLiteral("view-process-tree")));
     menu->addMenu(aggregationMenu);
     QObject::connect(aggregationMenu, SIGNAL(aboutToShow()), receiver, SLOT(aggregationMenuAboutToShow()));
 
     QMenu *themeMenu = new QMenu(i18n("Theme"), menu);
-    themeMenu->setIcon(QIcon::fromTheme(QLatin1String("preferences-desktop-theme")));
+    themeMenu->setIcon(QIcon::fromTheme(QStringLiteral("preferences-desktop-theme")));
     menu->addMenu(themeMenu);
     QObject::connect(themeMenu, SIGNAL(aboutToShow()),
                      receiver, SLOT(themeMenuAboutToShow()));

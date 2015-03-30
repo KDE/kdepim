@@ -70,7 +70,7 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     hbox->addWidget(mLockSearch);
 
     mQuickSearchFilterWidget = new QWidget;
-    mQuickSearchFilterWidget->setObjectName(QLatin1String("quicksearchfilterwidget"));
+    mQuickSearchFilterWidget->setObjectName(QStringLiteral("quicksearchfilterwidget"));
     QHBoxLayout *quickSearchButtonLayout = new QHBoxLayout;
     mQuickSearchFilterWidget->setLayout(quickSearchButtonLayout);
     quickSearchButtonLayout->addStretch(0);
@@ -81,7 +81,7 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
 
     mSearchEdit = new KLineEdit(this);
     mSearchEdit->setPlaceholderText(i18nc("Search for messages.", "Search"));
-    mSearchEdit->setObjectName(QLatin1String("quicksearch"));
+    mSearchEdit->setObjectName(QStringLiteral("quicksearch"));
     mSearchEdit->setClearButtonShown(true);
 
     connect(mSearchEdit, &KLineEdit::textChanged, this, &QuickSearchLine::slotSearchEditTextEdited);
@@ -89,8 +89,8 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
 
     hbox->addWidget(mSearchEdit);
 
-    mMoreOptions = new QPushButton(QIcon::fromTheme(QLatin1String("arrow-down-double")), i18n("More..."), this);
-    mMoreOptions->setObjectName(QLatin1String("moreoptions"));
+    mMoreOptions = new QPushButton(QIcon::fromTheme(QStringLiteral("arrow-down-double")), i18n("More..."), this);
+    mMoreOptions->setObjectName(QStringLiteral("moreoptions"));
     mMoreOptions->setFlat(true);
     mMoreOptions->setCheckable(true);
     connect(mMoreOptions, &QPushButton::toggled, this, &QuickSearchLine::slotMoreOptionClicked);
@@ -108,7 +108,7 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mTagFilterCombo->setEnabled(false);
 
     mExtraOption = new QWidget;
-    mExtraOption->setObjectName(QLatin1String("extraoptions"));
+    mExtraOption->setObjectName(QStringLiteral("extraoptions"));
     hbox = new QHBoxLayout;
     hbox->setMargin(0);
     vbox->addWidget(mExtraOption);
@@ -120,7 +120,7 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     hbox->addWidget(lab);
 
     mSearchEveryWhere = new QPushButton(i18n("Full Message"));
-    mSearchEveryWhere->setObjectName(QLatin1String("full_message"));
+    mSearchEveryWhere->setObjectName(QStringLiteral("full_message"));
     mSearchEveryWhere->setFlat(true);
     mSearchEveryWhere->setCheckable(true);
     mSearchEveryWhere->setChecked(true);
@@ -128,7 +128,7 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     hbox->addWidget(mSearchEveryWhere);
 
     mSearchAgainstBody = new QPushButton(i18n("Body"));
-    mSearchAgainstBody->setObjectName(QLatin1String("body"));
+    mSearchAgainstBody->setObjectName(QStringLiteral("body"));
     mSearchAgainstBody->setFlat(true);
     mSearchAgainstBody->setCheckable(true);
     connect(mSearchAgainstBody, &QPushButton::clicked, this, &QuickSearchLine::slotSearchBy);
@@ -137,20 +137,20 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mSearchAgainstSubject = new QPushButton(i18n("Subject"));
     mSearchAgainstSubject->setCheckable(true);
     mSearchAgainstSubject->setFlat(true);
-    mSearchAgainstSubject->setObjectName(QLatin1String("subject"));
+    mSearchAgainstSubject->setObjectName(QStringLiteral("subject"));
     connect(mSearchAgainstSubject, &QPushButton::clicked, this, &QuickSearchLine::slotSearchBy);
     hbox->addWidget(mSearchAgainstSubject);
 
     mSearchAgainstFromOrTo = new QPushButton;
     changeSearchAgainstFromOrToText();
-    mSearchAgainstFromOrTo->setObjectName(QLatin1String("fromorto"));
+    mSearchAgainstFromOrTo->setObjectName(QStringLiteral("fromorto"));
     mSearchAgainstFromOrTo->setCheckable(true);
     mSearchAgainstFromOrTo->setFlat(true);
     connect(mSearchAgainstFromOrTo, &QPushButton::clicked, this, &QuickSearchLine::slotSearchBy);
     hbox->addWidget(mSearchAgainstFromOrTo);
 
     mSearchAgainstBcc = new QPushButton(i18n("Bcc"));
-    mSearchAgainstBcc->setObjectName(QLatin1String("bcc"));
+    mSearchAgainstBcc->setObjectName(QStringLiteral("bcc"));
     mSearchAgainstBcc->setCheckable(true);
     mSearchAgainstBcc->setFlat(true);
     connect(mSearchAgainstBcc, &QPushButton::clicked, this, &QuickSearchLine::slotSearchBy);
@@ -203,9 +203,9 @@ void QuickSearchLine::slotMoreOptionClicked(bool b)
 {
     mQuickSearchFilterWidget->setVisible(b);
     if (b) {
-        mMoreOptions->setIcon(QIcon::fromTheme(QLatin1String("arrow-up-double")));
+        mMoreOptions->setIcon(QIcon::fromTheme(QStringLiteral("arrow-up-double")));
     } else {
-        mMoreOptions->setIcon(QIcon::fromTheme(QLatin1String("arrow-down-double")));
+        mMoreOptions->setIcon(QIcon::fromTheme(QStringLiteral("arrow-down-double")));
     }
 }
 
@@ -293,10 +293,10 @@ QToolButton *QuickSearchLine::lockSearch() const
 void QuickSearchLine::slotLockSearchClicked(bool locked)
 {
     if (locked) {
-        mLockSearch->setIcon(QIcon::fromTheme(QLatin1String("object-locked")));
+        mLockSearch->setIcon(QIcon::fromTheme(QStringLiteral("object-locked")));
         mLockSearch->setToolTip(i18nc("@info:tooltip", "Clear the quick search field when changing folders"));
     } else {
-        mLockSearch->setIcon(QIcon::fromTheme(QLatin1String("object-unlocked")));
+        mLockSearch->setIcon(QIcon::fromTheme(QStringLiteral("object-unlocked")));
         mLockSearch->setToolTip(i18nc("@info:tooltip",
                                       "Prevent the quick search field from being cleared when changing folders"));
     }
@@ -366,45 +366,45 @@ void QuickSearchLine::initializeStatusSearchButton(QLayout *quickSearchButtonLay
     mFilterStatusMapper = new QSignalMapper(this);
     connect(mFilterStatusMapper, static_cast<void (QSignalMapper::*)(int)>(&QSignalMapper::mapped), this, &QuickSearchLine::statusButtonsClicked);
 
-    createQuickSearchButton(SmallIcon(QLatin1String("mail-unread")), i18nc("@action:inmenu Status of a message", "Unread"), Akonadi::MessageStatus::statusUnread().toQInt32(), quickSearchButtonLayout);
+    createQuickSearchButton(SmallIcon(QStringLiteral("mail-unread")), i18nc("@action:inmenu Status of a message", "Unread"), Akonadi::MessageStatus::statusUnread().toQInt32(), quickSearchButtonLayout);
 
-    createQuickSearchButton(SmallIcon(QLatin1String("mail-replied")),
+    createQuickSearchButton(SmallIcon(QStringLiteral("mail-replied")),
                             i18nc("@action:inmenu Status of a message", "Replied"),
                             Akonadi::MessageStatus::statusReplied().toQInt32(), quickSearchButtonLayout);
 
-    createQuickSearchButton(SmallIcon(QLatin1String("mail-forwarded")),
+    createQuickSearchButton(SmallIcon(QStringLiteral("mail-forwarded")),
                             i18nc("@action:inmenu Status of a message", "Forwarded"),
                             Akonadi::MessageStatus::statusForwarded().toQInt32(), quickSearchButtonLayout);
 
-    createQuickSearchButton(SmallIcon(QLatin1String("emblem-important")),
+    createQuickSearchButton(SmallIcon(QStringLiteral("emblem-important")),
                             i18nc("@action:inmenu Status of a message", "Important"),
                             Akonadi::MessageStatus::statusImportant().toQInt32(), quickSearchButtonLayout);
 
-    createQuickSearchButton(SmallIcon(QLatin1String("mail-task")),
+    createQuickSearchButton(SmallIcon(QStringLiteral("mail-task")),
                             i18nc("@action:inmenu Status of a message", "Action Item"),
                             Akonadi::MessageStatus::statusToAct().toQInt32(), quickSearchButtonLayout);
 
-    createQuickSearchButton(QIcon(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("messagelist/pics/mail-thread-watch.png"))),
+    createQuickSearchButton(QIcon(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("messagelist/pics/mail-thread-watch.png"))),
                             i18nc("@action:inmenu Status of a message", "Watched"),
                             Akonadi::MessageStatus::statusWatched().toQInt32(), quickSearchButtonLayout);
 
-    createQuickSearchButton(QIcon(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("messagelist/pics/mail-thread-ignored.png"))),
+    createQuickSearchButton(QIcon(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("messagelist/pics/mail-thread-ignored.png"))),
                             i18nc("@action:inmenu Status of a message", "Ignored"),
                             Akonadi::MessageStatus::statusIgnored().toQInt32(), quickSearchButtonLayout);
 
-    createQuickSearchButton(SmallIcon(QLatin1String("mail-attachment")),
+    createQuickSearchButton(SmallIcon(QStringLiteral("mail-attachment")),
                             i18nc("@action:inmenu Status of a message", "Has Attachment"),
                             Akonadi::MessageStatus::statusHasAttachment().toQInt32(), quickSearchButtonLayout);
 
-    createQuickSearchButton(SmallIcon(QLatin1String("mail-invitation")),
+    createQuickSearchButton(SmallIcon(QStringLiteral("mail-invitation")),
                             i18nc("@action:inmenu Status of a message", "Has Invitation"),
                             Akonadi::MessageStatus::statusHasInvitation().toQInt32(), quickSearchButtonLayout);
 
-    createQuickSearchButton(SmallIcon(QLatin1String("mail-mark-junk")),
+    createQuickSearchButton(SmallIcon(QStringLiteral("mail-mark-junk")),
                             i18nc("@action:inmenu Status of a message", "Spam"),
                             Akonadi::MessageStatus::statusSpam().toQInt32(), quickSearchButtonLayout);
 
-    createQuickSearchButton(SmallIcon(QLatin1String("mail-mark-notjunk")),
+    createQuickSearchButton(SmallIcon(QStringLiteral("mail-mark-notjunk")),
                             i18nc("@action:inmenu Status of a message", "Ham"),
                             Akonadi::MessageStatus::statusHam().toQInt32(), quickSearchButtonLayout);
 }

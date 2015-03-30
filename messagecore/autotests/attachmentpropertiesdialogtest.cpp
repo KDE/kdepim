@@ -68,25 +68,25 @@ void AttachmentPropertiesDialogTest::testAttachmentPartReadWrite()
     // Show the dialog and verify that it is accurate.
     AttachmentPropertiesDialog *dialog = new AttachmentPropertiesDialog(part);
     dialog->show();
-    QLineEdit *nameEdit = dialog->findChild<QLineEdit *>(QLatin1String("name"));
+    QLineEdit *nameEdit = dialog->findChild<QLineEdit *>(QStringLiteral("name"));
     Q_ASSERT(nameEdit);
     QCOMPARE(nameEdit->text(), name);
-    QLineEdit *descriptionEdit = dialog->findChild<QLineEdit *>(QLatin1String("description"));
+    QLineEdit *descriptionEdit = dialog->findChild<QLineEdit *>(QStringLiteral("description"));
     Q_ASSERT(descriptionEdit);
     QCOMPARE(descriptionEdit->text(), description);
-    KComboBox *mimeTypeCombo = dialog->findChild<KComboBox *>(QLatin1String("mimeType"));
+    KComboBox *mimeTypeCombo = dialog->findChild<KComboBox *>(QStringLiteral("mimeType"));
     Q_ASSERT(mimeTypeCombo);
     QCOMPARE(mimeTypeCombo->currentText().toLatin1(), mimeType);
-    KComboBox *encodingCombo = dialog->findChild<KComboBox *>(QLatin1String("encoding"));
+    KComboBox *encodingCombo = dialog->findChild<KComboBox *>(QStringLiteral("encoding"));
     Q_ASSERT(encodingCombo);
     QCOMPARE(encodingCombo->currentIndex(), int(encoding));
-    QCheckBox *autoDisplayCheck = dialog->findChild<QCheckBox *>(QLatin1String("autoDisplay"));
+    QCheckBox *autoDisplayCheck = dialog->findChild<QCheckBox *>(QStringLiteral("autoDisplay"));
     Q_ASSERT(autoDisplayCheck);
     QCOMPARE(autoDisplayCheck->isChecked(), autoDisplay);
-    QCheckBox *encryptCheck = dialog->findChild<QCheckBox *>(QLatin1String("encrypt"));
+    QCheckBox *encryptCheck = dialog->findChild<QCheckBox *>(QStringLiteral("encrypt"));
     Q_ASSERT(encryptCheck);
     QCOMPARE(encryptCheck->isChecked(), encrypt);
-    QCheckBox *signCheck = dialog->findChild<QCheckBox *>(QLatin1String("sign"));
+    QCheckBox *signCheck = dialog->findChild<QCheckBox *>(QStringLiteral("sign"));
     Q_ASSERT(signCheck);
     QCOMPARE(signCheck->isChecked(), sign);
     //QTest::qWait( 5000 );
@@ -145,7 +145,7 @@ void AttachmentPropertiesDialogTest::testAttachmentPartCancel()
     // Show the (read-write) dialog and do some changes.
     AttachmentPropertiesDialog *dialog = new AttachmentPropertiesDialog(part);
     dialog->show();
-    QLineEdit *nameEdit = dialog->findChild<QLineEdit *>(QLatin1String("name"));
+    QLineEdit *nameEdit = dialog->findChild<QLineEdit *>(QStringLiteral("name"));
     Q_ASSERT(nameEdit);
     nameEdit->setText(newName);
 

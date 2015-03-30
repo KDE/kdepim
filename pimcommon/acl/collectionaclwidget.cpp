@@ -82,7 +82,7 @@ CollectionAclWidget::CollectionAclWidget(QWidget *parent)
     QHBoxLayout *layout = new QHBoxLayout(this);
 
     QListView *view = new QListView;
-    view->setObjectName(QLatin1String("list_view"));
+    view->setObjectName(QStringLiteral("list_view"));
     layout->addWidget(view);
 
     view->setAlternatingRowColors(true);
@@ -96,18 +96,18 @@ CollectionAclWidget::CollectionAclWidget(QWidget *parent)
 
     ActionButton *button = new ActionButton(buttonBox);
     buttonBoxVBoxLayout->addWidget(button);
-    button->setObjectName(QLatin1String("add"));
+    button->setObjectName(QStringLiteral("add"));
     button->setDefaultAction(mAclManager->addAction());
 
     button = new ActionButton(buttonBox);
     buttonBoxVBoxLayout->addWidget(button);
-    button->setObjectName(QLatin1String("edit"));
+    button->setObjectName(QStringLiteral("edit"));
     button->setDefaultAction(mAclManager->editAction());
 
     button = new ActionButton(buttonBox);
     buttonBoxVBoxLayout->addWidget(button);
     button->setDefaultAction(mAclManager->deleteAction());
-    button->setObjectName(QLatin1String("delete"));
+    button->setObjectName(QStringLiteral("delete"));
 
     QWidget *spacer = new QWidget(buttonBox);
     buttonBoxVBoxLayout->addWidget(spacer);

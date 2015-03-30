@@ -32,14 +32,14 @@ FilterAction *FilterActionRemoveHeader::newAction()
 }
 
 FilterActionRemoveHeader::FilterActionRemoveHeader(QObject *parent)
-    : FilterActionWithStringList(QLatin1String("remove header"), i18n("Remove Header"), parent)
+    : FilterActionWithStringList(QStringLiteral("remove header"), i18n("Remove Header"), parent)
 {
-    mParameterList << QLatin1String("")
-                   << QLatin1String("Reply-To")
-                   << QLatin1String("Delivered-To")
-                   << QLatin1String("X-KDE-PR-Message")
-                   << QLatin1String("X-KDE-PR-Package")
-                   << QLatin1String("X-KDE-PR-Keywords");
+    mParameterList << QStringLiteral("")
+                   << QStringLiteral("Reply-To")
+                   << QStringLiteral("Delivered-To")
+                   << QStringLiteral("X-KDE-PR-Message")
+                   << QStringLiteral("X-KDE-PR-Package")
+                   << QStringLiteral("X-KDE-PR-Keywords");
 
     mParameter = mParameterList.at(0);
 }
@@ -100,7 +100,7 @@ void FilterActionRemoveHeader::setParamWidgetValue(QWidget *paramWidget) const
 
 QStringList FilterActionRemoveHeader::sieveRequires() const
 {
-    return QStringList() << QLatin1String("editheader");
+    return QStringList() << QStringLiteral("editheader");
 }
 
 QString FilterActionRemoveHeader::sieveCode() const

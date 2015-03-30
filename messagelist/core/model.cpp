@@ -500,7 +500,7 @@ QVariant Model::data(const QModelIndex &index, int role) const
         break;
     case Qt::UserRole + 3: //EntityTreeModel::MimeTypeRole
         if (item->type() == MessageList::Core::Item::Message) {
-            return QLatin1String("message/rfc822");
+            return QStringLiteral("message/rfc822");
         } else {
             return QVariant();
         }

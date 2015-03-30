@@ -35,13 +35,13 @@ TranslatorTest::TranslatorTest()
 void TranslatorTest::shouldHaveDefaultValuesOnCreation()
 {
     PimCommon::TranslatorWidget edit;
-    QComboBox *from = edit.findChild<QComboBox *>(QLatin1String("from"));
-    QComboBox *to = edit.findChild<QComboBox *>(QLatin1String("to"));
-    PimCommon::TranslatorTextEdit *inputtext = edit.findChild<PimCommon::TranslatorTextEdit *>(QLatin1String("inputtext"));
-    PimCommon::PlainTextEditorWidget *translatedText = edit.findChild<PimCommon::PlainTextEditorWidget *>(QLatin1String("translatedtext"));
-    QPushButton *translate = edit.findChild<QPushButton *>(QLatin1String("translate-button"));
-    QPushButton *clear = edit.findChild<QPushButton *>(QLatin1String("clear-button"));
-    QPushButton *invert = edit.findChild<QPushButton *>(QLatin1String("invert-button"));
+    QComboBox *from = edit.findChild<QComboBox *>(QStringLiteral("from"));
+    QComboBox *to = edit.findChild<QComboBox *>(QStringLiteral("to"));
+    PimCommon::TranslatorTextEdit *inputtext = edit.findChild<PimCommon::TranslatorTextEdit *>(QStringLiteral("inputtext"));
+    PimCommon::PlainTextEditorWidget *translatedText = edit.findChild<PimCommon::PlainTextEditorWidget *>(QStringLiteral("translatedtext"));
+    QPushButton *translate = edit.findChild<QPushButton *>(QStringLiteral("translate-button"));
+    QPushButton *clear = edit.findChild<QPushButton *>(QStringLiteral("clear-button"));
+    QPushButton *invert = edit.findChild<QPushButton *>(QStringLiteral("invert-button"));
     QVERIFY(invert);
     QVERIFY(clear);
     QVERIFY(translate);
@@ -60,8 +60,8 @@ void TranslatorTest::shouldHaveDefaultValuesOnCreation()
 void TranslatorTest::shouldEnableTranslateButtonWhenTextToTranslateIsNotEmpty()
 {
     PimCommon::TranslatorWidget edit;
-    PimCommon::TranslatorTextEdit *inputtext = edit.findChild<PimCommon::TranslatorTextEdit *>(QLatin1String("inputtext"));
-    QPushButton *translate = edit.findChild<QPushButton *>(QLatin1String("translate-button"));
+    PimCommon::TranslatorTextEdit *inputtext = edit.findChild<PimCommon::TranslatorTextEdit *>(QStringLiteral("inputtext"));
+    QPushButton *translate = edit.findChild<QPushButton *>(QStringLiteral("translate-button"));
     inputtext->setPlainText(QStringLiteral("Foo"));
     QCOMPARE(translate->isEnabled(), true);
 }
@@ -69,11 +69,11 @@ void TranslatorTest::shouldEnableTranslateButtonWhenTextToTranslateIsNotEmpty()
 void TranslatorTest::shouldDisableTranslateButtonAndClearTextWhenClickOnClearButton()
 {
     PimCommon::TranslatorWidget edit;
-    PimCommon::TranslatorTextEdit *inputtext = edit.findChild<PimCommon::TranslatorTextEdit *>(QLatin1String("inputtext"));
-    QPushButton *translate = edit.findChild<QPushButton *>(QLatin1String("translate-button"));
-    PimCommon::PlainTextEditorWidget *translatedText = edit.findChild<PimCommon::PlainTextEditorWidget *>(QLatin1String("translatedtext"));
+    PimCommon::TranslatorTextEdit *inputtext = edit.findChild<PimCommon::TranslatorTextEdit *>(QStringLiteral("inputtext"));
+    QPushButton *translate = edit.findChild<QPushButton *>(QStringLiteral("translate-button"));
+    PimCommon::PlainTextEditorWidget *translatedText = edit.findChild<PimCommon::PlainTextEditorWidget *>(QStringLiteral("translatedtext"));
     inputtext->setPlainText(QStringLiteral("Foo"));
-    QPushButton *clear = edit.findChild<QPushButton *>(QLatin1String("clear-button"));
+    QPushButton *clear = edit.findChild<QPushButton *>(QStringLiteral("clear-button"));
     QTest::mouseClick(clear, Qt::LeftButton);
     QCOMPARE(inputtext->toPlainText(), QString());
     QCOMPARE(translatedText->toPlainText(), QString());
@@ -83,14 +83,14 @@ void TranslatorTest::shouldDisableTranslateButtonAndClearTextWhenClickOnClearBut
 void TranslatorTest::shouldInvertLanguageWhenClickOnInvertButton()
 {
     PimCommon::TranslatorWidget edit;
-    QComboBox *from = edit.findChild<QComboBox *>(QLatin1String("from"));
-    QComboBox *to = edit.findChild<QComboBox *>(QLatin1String("to"));
+    QComboBox *from = edit.findChild<QComboBox *>(QStringLiteral("from"));
+    QComboBox *to = edit.findChild<QComboBox *>(QStringLiteral("to"));
 
     const int fromIndex = 5;
     const int toIndex = 7;
     from->setCurrentIndex(fromIndex);
     to->setCurrentIndex(toIndex);
-    QPushButton *invert = edit.findChild<QPushButton *>(QLatin1String("invert-button"));
+    QPushButton *invert = edit.findChild<QPushButton *>(QStringLiteral("invert-button"));
     QCOMPARE(fromIndex != toIndex, true);
     QTest::mouseClick(invert, Qt::LeftButton);
     const int newFromIndex = from->currentIndex();

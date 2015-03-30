@@ -55,7 +55,7 @@ QWidget *MessageRuleWidgetHandler::createFunctionWidget(
     }
 
     PimCommon::MinimumComboBox *funcCombo = new PimCommon::MinimumComboBox(functionStack);
-    funcCombo->setObjectName(QLatin1String("messageRuleFuncCombo"));
+    funcCombo->setObjectName(QStringLiteral("messageRuleFuncCombo"));
     for (int i = 0; i < MessageFunctionCount; ++i) {
         if (!(isBalooSearch && (MessageFunctions[i].id == SearchRule::FuncHasAttachment || MessageFunctions[i].id == SearchRule::FuncHasNoAttachment))) {
             funcCombo->addItem(i18n(MessageFunctions[i].displayName));
@@ -75,7 +75,7 @@ QWidget *MessageRuleWidgetHandler::createValueWidget(int number,
     if (number == 0) {
         RegExpLineEdit *lineEdit =
             new RegExpLineEdit(valueStack);
-        lineEdit->setObjectName(QLatin1String("regExpLineEdit"));
+        lineEdit->setObjectName(QStringLiteral("regExpLineEdit"));
         QObject::connect(lineEdit, SIGNAL(textChanged(QString)), receiver, SLOT(slotValueChanged()));
         QObject::connect(lineEdit, SIGNAL(returnPressed()),  receiver, SLOT(slotReturnPressed()));
         return lineEdit;
@@ -84,7 +84,7 @@ QWidget *MessageRuleWidgetHandler::createValueWidget(int number,
     // blank QLabel to hide value widget for has-attachment rule
     if (number == 1) {
         QLabel *label = new QLabel(valueStack);
-        label->setObjectName(QLatin1String("textRuleValueHider"));
+        label->setObjectName(QStringLiteral("textRuleValueHider"));
         label->setBuddy(valueStack);
         return label;
     }
@@ -98,7 +98,7 @@ SearchRule::Function MessageRuleWidgetHandler::currentFunction(
     const QStackedWidget *functionStack) const
 {
     const PimCommon::MinimumComboBox *funcCombo =
-        functionStack->findChild<PimCommon::MinimumComboBox *>(QLatin1String("messageRuleFuncCombo"));
+        functionStack->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("messageRuleFuncCombo"));
 
     if (funcCombo && funcCombo->currentIndex() >= 0) {
         return MessageFunctions[funcCombo->currentIndex()].id;
@@ -124,7 +124,7 @@ SearchRule::Function MessageRuleWidgetHandler::function(const QByteArray &field,
 QString MessageRuleWidgetHandler::currentValue(const QStackedWidget *valueStack,
         SearchRule::Function) const
 {
-    const RegExpLineEdit *lineEdit = valueStack->findChild<RegExpLineEdit *>(QLatin1String("regExpLineEdit"));
+    const RegExpLineEdit *lineEdit = valueStack->findChild<RegExpLineEdit *>(QStringLiteral("regExpLineEdit"));
 
     if (lineEdit) {
         return lineEdit->text();
@@ -145,9 +145,9 @@ QString MessageRuleWidgetHandler::value(const QByteArray &field,
 
     SearchRule::Function func = currentFunction(functionStack);
     if (func == SearchRule::FuncHasAttachment) {
-        return QLatin1String("has an attachment"); // just a non-empty dummy value
+        return QStringLiteral("has an attachment"); // just a non-empty dummy value
     } else if (func == SearchRule::FuncHasNoAttachment) {
-        return QLatin1String("has no attachment"); // just a non-empty dummy value
+        return QStringLiteral("has no attachment"); // just a non-empty dummy value
     } else {
         return currentValue(valueStack, func);
     }
@@ -186,7 +186,7 @@ void MessageRuleWidgetHandler::reset(QStackedWidget *functionStack,
                                      QStackedWidget *valueStack) const
 {
     // reset the function combo box
-    PimCommon::MinimumComboBox *funcCombo = functionStack->findChild<PimCommon::MinimumComboBox *>(QLatin1String("messageRuleFuncCombo"));
+    PimCommon::MinimumComboBox *funcCombo = functionStack->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("messageRuleFuncCombo"));
 
     if (funcCombo) {
         funcCombo->blockSignals(true);
@@ -195,7 +195,7 @@ void MessageRuleWidgetHandler::reset(QStackedWidget *functionStack,
     }
 
     // reset the value widget
-    RegExpLineEdit *lineEdit = valueStack->findChild<RegExpLineEdit *>(QLatin1String("regExpLineEdit"));
+    RegExpLineEdit *lineEdit = valueStack->findChild<RegExpLineEdit *>(QStringLiteral("regExpLineEdit"));
 
     if (lineEdit) {
         lineEdit->blockSignals(true);
@@ -232,7 +232,7 @@ bool MessageRuleWidgetHandler::setRule(QStackedWidget *functionStack,
     }
 
     PimCommon::MinimumComboBox *funcCombo =
-        functionStack->findChild<PimCommon::MinimumComboBox *>(QLatin1String("messageRuleFuncCombo"));
+        functionStack->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("messageRuleFuncCombo"));
 
     if (funcCombo) {
         funcCombo->blockSignals(true);
@@ -247,10 +247,10 @@ bool MessageRuleWidgetHandler::setRule(QStackedWidget *functionStack,
 
     if (func == SearchRule::FuncHasAttachment  ||
             func == SearchRule::FuncHasNoAttachment) {
-        QWidget *w = valueStack->findChild<QWidget *>(QLatin1String("textRuleValueHider"));
+        QWidget *w = valueStack->findChild<QWidget *>(QStringLiteral("textRuleValueHider"));
         valueStack->setCurrentWidget(w);
     } else {
-        RegExpLineEdit *lineEdit = valueStack->findChild<RegExpLineEdit *>(QLatin1String("regExpLineEdit"));
+        RegExpLineEdit *lineEdit = valueStack->findChild<RegExpLineEdit *>(QStringLiteral("regExpLineEdit"));
 
         if (lineEdit) {
             lineEdit->blockSignals(true);
@@ -275,16 +275,16 @@ bool MessageRuleWidgetHandler::update(const QByteArray &field,
     }
 
     // raise the correct function widget
-    functionStack->setCurrentWidget(functionStack->findChild<QWidget *>(QLatin1String("messageRuleFuncCombo")));
+    functionStack->setCurrentWidget(functionStack->findChild<QWidget *>(QStringLiteral("messageRuleFuncCombo")));
 
     // raise the correct value widget
     SearchRule::Function func = currentFunction(functionStack);
     if (func == SearchRule::FuncHasAttachment  ||
             func == SearchRule::FuncHasNoAttachment) {
-        QWidget *w = valueStack->findChild<QWidget *>(QLatin1String("textRuleValueHider"));
+        QWidget *w = valueStack->findChild<QWidget *>(QStringLiteral("textRuleValueHider"));
         valueStack->setCurrentWidget(w);
     } else {
-        RegExpLineEdit *lineEdit = valueStack->findChild<RegExpLineEdit *>(QLatin1String("regExpLineEdit"));
+        RegExpLineEdit *lineEdit = valueStack->findChild<RegExpLineEdit *>(QStringLiteral("regExpLineEdit"));
 
         if (lineEdit) {
             lineEdit->showEditButton(func == SearchRule::FuncRegExp ||

@@ -38,39 +38,39 @@ void BalooSyntaxHighlighter::init()
     testFormat.setFontWeight(QFont::Bold);
     QStringList testType;
     //Collection
-    testType << QLatin1String("C\\d+");
+    testType << QStringLiteral("C\\d+");
 
     //Emails:
     //From
-    testType << QLatin1String("\\bF");
+    testType << QStringLiteral("\\bF");
     //To
-    testType << QLatin1String("\\bT");
+    testType << QStringLiteral("\\bT");
     //CC
-    testType << QLatin1String("\\bCC");
+    testType << QStringLiteral("\\bCC");
     //BC
-    testType << QLatin1String("\\bBC");
+    testType << QStringLiteral("\\bBC");
     //Organization
-    testType << QLatin1String("\\bO");
+    testType << QStringLiteral("\\bO");
     //Reply To
-    testType << QLatin1String("\\bRT");
+    testType << QStringLiteral("\\bRT");
     //Resent-from
-    testType << QLatin1String("\\bRF");
+    testType << QStringLiteral("\\bRF");
     //List Id
-    testType << QLatin1String("\\bLI");
+    testType << QStringLiteral("\\bLI");
     //X-Loop
-    testType << QLatin1String("\\bXL");
+    testType << QStringLiteral("\\bXL");
     //X-Mailing-List
-    testType << QLatin1String("\\bXML");
+    testType << QStringLiteral("\\bXML");
     //X-Spam-Flag
-    testType << QLatin1String("\\bXSF");
+    testType << QStringLiteral("\\bXSF");
     //BO body element
-    testType << QLatin1String("\\bBO");
+    testType << QStringLiteral("\\bBO");
 
     //Contacts:
     //Name
-    testType << QLatin1String("\\bNA");
+    testType << QStringLiteral("\\bNA");
     //NickName
-    testType << QLatin1String("\\bNI");
+    testType << QStringLiteral("\\bNI");
 
     Q_FOREACH (const QString &s, testType) {
         const QRegExp regex(s, Qt::CaseSensitive);

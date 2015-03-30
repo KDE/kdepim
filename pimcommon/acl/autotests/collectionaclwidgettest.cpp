@@ -36,13 +36,13 @@ void CollectionAclWidgetTest::shouldHaveDefaultValue()
 {
     PimCommon::CollectionAclWidget w;
     QVERIFY(w.aclManager());
-    QListView *listView = w.findChild<QListView *>(QLatin1String("list_view"));
+    QListView *listView = w.findChild<QListView *>(QStringLiteral("list_view"));
     QVERIFY(listView);
-    QPushButton *button = w.findChild<QPushButton *>(QLatin1String("add"));
+    QPushButton *button = w.findChild<QPushButton *>(QStringLiteral("add"));
     QVERIFY(button);
-    button = w.findChild<QPushButton *>(QLatin1String("edit"));
+    button = w.findChild<QPushButton *>(QStringLiteral("edit"));
     QVERIFY(button);
-    button = w.findChild<QPushButton *>(QLatin1String("delete"));
+    button = w.findChild<QPushButton *>(QStringLiteral("delete"));
     QVERIFY(button);
 }
 

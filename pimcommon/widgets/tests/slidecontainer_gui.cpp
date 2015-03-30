@@ -37,11 +37,11 @@ public:
         SlideContainer *container = new SlideContainer(this);
 
         QPushButton *inButton = new QPushButton(this);
-        inButton->setText(QLatin1String("Slide &In"));
+        inButton->setText(QStringLiteral("Slide &In"));
         connect(inButton, &QPushButton::clicked, container, &SlideContainer::slideIn);
 
         QPushButton *outButton = new QPushButton(this);
-        outButton->setText(QLatin1String("Slide &Out"));
+        outButton->setText(QStringLiteral("Slide &Out"));
         connect(outButton, &QPushButton::clicked, container, &SlideContainer::slideOut);
 
         QVBoxLayout *layout = new QVBoxLayout(this);
@@ -50,7 +50,7 @@ public:
         layout->addWidget(container);
 
         QLineEdit *content = new QLineEdit(container);
-        content->setText(QLatin1String("Some long text. Some long text. Some long text. Some long text."));
+        content->setText(QStringLiteral("Some long text. Some long text. Some long text. Some long text."));
         container->setContent(content);
     }
 };

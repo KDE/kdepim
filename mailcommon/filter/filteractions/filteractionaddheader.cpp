@@ -32,14 +32,14 @@
 using namespace MailCommon;
 
 FilterActionAddHeader::FilterActionAddHeader(QObject *parent)
-    : FilterActionWithStringList(QLatin1String("add header"), i18n("Add Header"), parent)
+    : FilterActionWithStringList(QStringLiteral("add header"), i18n("Add Header"), parent)
 {
-    mParameterList << QLatin1String("")
-                   << QLatin1String("Reply-To")
-                   << QLatin1String("Delivered-To")
-                   << QLatin1String("X-KDE-PR-Message")
-                   << QLatin1String("X-KDE-PR-Package")
-                   << QLatin1String("X-KDE-PR-Keywords");
+    mParameterList << QStringLiteral("")
+                   << QStringLiteral("Reply-To")
+                   << QStringLiteral("Delivered-To")
+                   << QStringLiteral("X-KDE-PR-Message")
+                   << QStringLiteral("X-KDE-PR-Package")
+                   << QStringLiteral("X-KDE-PR-Keywords");
 
     mParameter = mParameterList.at(0);
 }
@@ -80,7 +80,7 @@ QWidget *FilterActionAddHeader::createParamWidget(QWidget *parent) const
     layout->setMargin(0);
 
     PimCommon::MinimumComboBox *comboBox = new PimCommon::MinimumComboBox(widget);
-    comboBox->setObjectName(QLatin1String("combo"));
+    comboBox->setObjectName(QStringLiteral("combo"));
     comboBox->setEditable(true);
     comboBox->setInsertPolicy(QComboBox::InsertAtBottom);
 
@@ -92,12 +92,12 @@ QWidget *FilterActionAddHeader::createParamWidget(QWidget *parent) const
     layout->addWidget(comboBox, 0 /* stretch */);
 
     QLabel *label = new QLabel(i18n("With value:"), widget);
-    label->setObjectName(QLatin1String("label_value"));
+    label->setObjectName(QStringLiteral("label_value"));
     label->setFixedWidth(label->sizeHint().width());
     layout->addWidget(label, 0);
 
     KLineEdit *lineEdit = new KLineEdit(widget);
-    lineEdit->setObjectName(QLatin1String("ledit"));
+    lineEdit->setObjectName(QStringLiteral("ledit"));
     lineEdit->setTrapReturnKey(true);
     lineEdit->setClearButtonEnabled(true);
     layout->addWidget(lineEdit, 1);
@@ -116,7 +116,7 @@ void FilterActionAddHeader::setParamWidgetValue(QWidget *paramWidget) const
 {
     const int index = mParameterList.indexOf(mParameter);
 
-    PimCommon::MinimumComboBox *comboBox = paramWidget->findChild<PimCommon::MinimumComboBox *>(QLatin1String("combo"));
+    PimCommon::MinimumComboBox *comboBox = paramWidget->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("combo"));
     Q_ASSERT(comboBox);
     comboBox->clear();
     comboBox->addItems(mParameterList);
@@ -128,7 +128,7 @@ void FilterActionAddHeader::setParamWidgetValue(QWidget *paramWidget) const
         comboBox->setCurrentIndex(index);
     }
 
-    QLineEdit *lineEdit = paramWidget->findChild<QLineEdit *>(QLatin1String("ledit"));
+    QLineEdit *lineEdit = paramWidget->findChild<QLineEdit *>(QStringLiteral("ledit"));
     Q_ASSERT(lineEdit);
 
     lineEdit->setText(mValue);
@@ -136,22 +136,22 @@ void FilterActionAddHeader::setParamWidgetValue(QWidget *paramWidget) const
 
 void FilterActionAddHeader::applyParamWidgetValue(QWidget *paramWidget)
 {
-    const PimCommon::MinimumComboBox *comboBox = paramWidget->findChild<PimCommon::MinimumComboBox *>(QLatin1String("combo"));
+    const PimCommon::MinimumComboBox *comboBox = paramWidget->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("combo"));
     Q_ASSERT(comboBox);
     mParameter = comboBox->currentText();
 
-    const QLineEdit *lineEdit = paramWidget->findChild<QLineEdit *>(QLatin1String("ledit"));
+    const QLineEdit *lineEdit = paramWidget->findChild<QLineEdit *>(QStringLiteral("ledit"));
     Q_ASSERT(lineEdit);
     mValue = lineEdit->text();
 }
 
 void FilterActionAddHeader::clearParamWidget(QWidget *paramWidget) const
 {
-    PimCommon::MinimumComboBox *comboBox = paramWidget->findChild<PimCommon::MinimumComboBox *>(QLatin1String("combo"));
+    PimCommon::MinimumComboBox *comboBox = paramWidget->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("combo"));
     Q_ASSERT(comboBox);
     comboBox->setCurrentIndex(0);
 
-    QLineEdit *lineEdit = paramWidget->findChild<QLineEdit *>(QLatin1String("ledit"));
+    QLineEdit *lineEdit = paramWidget->findChild<QLineEdit *>(QStringLiteral("ledit"));
     Q_ASSERT(lineEdit);
     lineEdit->clear();
 }
@@ -172,7 +172,7 @@ QString FilterActionAddHeader::argsAsString() const
 
 QString FilterActionAddHeader::displayString() const
 {
-    return label() + QLatin1String(" \"") + argsAsString().toHtmlEscaped() + QLatin1String("\"");
+    return label() + QStringLiteral(" \"") + argsAsString().toHtmlEscaped() + QStringLiteral("\"");
 }
 
 void FilterActionAddHeader::argsFromString(const QString &argsStr)
@@ -203,7 +203,7 @@ FilterAction *FilterActionAddHeader::newAction()
 
 QStringList FilterActionAddHeader::sieveRequires() const
 {
-    return QStringList() << QLatin1String("editheader");
+    return QStringList() << QStringLiteral("editheader");
 }
 
 QString FilterActionAddHeader::sieveCode() const

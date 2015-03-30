@@ -32,40 +32,40 @@ FilterImporterExporterGui::FilterImporterExporterGui(QWidget *parent)
     setLayout(mainLayout);
     QMenuBar *menuBar = new QMenuBar(this);
     mainLayout->addWidget(menuBar);
-    QMenu *menuFilter = menuBar->addMenu(QLatin1String("filter"));
-    QAction *act = new QAction(QLatin1String("KMail filters"), this);
+    QMenu *menuFilter = menuBar->addMenu(QStringLiteral("filter"));
+    QAction *act = new QAction(QStringLiteral("KMail filters"), this);
     act->setData(QVariant::fromValue(MailCommon::FilterImporterExporter::KMailFilter));
     menuFilter->addAction(act);
 
-    act = new QAction(QLatin1String("Thunderbird filters"), this);
+    act = new QAction(QStringLiteral("Thunderbird filters"), this);
 
     act->setData(QVariant::fromValue(MailCommon::FilterImporterExporter::ThunderBirdFilter));
     menuFilter->addAction(act);
 
-    act = new QAction(QLatin1String("Evolution filters"), this);
+    act = new QAction(QStringLiteral("Evolution filters"), this);
     act->setData(QVariant::fromValue(MailCommon::FilterImporterExporter::EvolutionFilter));
     menuFilter->addAction(act);
 
-    act = new QAction(QLatin1String("Sylpheed filters"), this);
+    act = new QAction(QStringLiteral("Sylpheed filters"), this);
     act->setData(QVariant::fromValue(MailCommon::FilterImporterExporter::SylpheedFilter));
     menuFilter->addAction(act);
 
-    act = new QAction(QLatin1String("Procmail filters"), this);
+    act = new QAction(QStringLiteral("Procmail filters"), this);
     act->setData(QVariant::fromValue(MailCommon::FilterImporterExporter::ProcmailFilter));
     menuFilter->addAction(act);
 
-    act = new QAction(QLatin1String("Balsa filters"), this);
+    act = new QAction(QStringLiteral("Balsa filters"), this);
     act->setData(QVariant::fromValue(MailCommon::FilterImporterExporter::BalsaFilter));
     menuFilter->addAction(act);
 
-    act = new QAction(QLatin1String("Claws Mail filters"), this);
+    act = new QAction(QStringLiteral("Claws Mail filters"), this);
     act->setData(QVariant::fromValue(MailCommon::FilterImporterExporter::ClawsMailFilter));
     menuFilter->addAction(act);
 
-    act = new QAction(QLatin1String("Icedove Mail filters"), this);
+    act = new QAction(QStringLiteral("Icedove Mail filters"), this);
     act->setData(QVariant::fromValue(MailCommon::FilterImporterExporter::IcedoveFilter));
     menuFilter->addAction(act);
-    act = new QAction(QLatin1String("GMail filters"), this);
+    act = new QAction(QStringLiteral("GMail filters"), this);
     act->setData(QVariant::fromValue(MailCommon::FilterImporterExporter::GmailFilter));
     menuFilter->addAction(act);
     connect(menuFilter, SIGNAL(triggered(QAction*)), SLOT(slotImportFilter(QAction*)));
@@ -94,7 +94,7 @@ void FilterImporterExporterGui::importFilters(MailCommon::FilterImporterExporter
     bool canceled = false;
     QList<MailCommon::MailFilter *> filters = importer.importFilters(canceled, type);
     if (canceled) {
-        mTextEdit->setText(QLatin1String("Canceled"));
+        mTextEdit->setText(QStringLiteral("Canceled"));
         return;
     }
     QString result;

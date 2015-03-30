@@ -38,9 +38,9 @@ ContentTypeWidgetTest::~ContentTypeWidgetTest()
 void ContentTypeWidgetTest::shouldHaveDefaultValue()
 {
     MailCommon::ContentTypeWidget widget;
-    QLabel *label = widget.findChild<QLabel *>(QLatin1String("contenttypewidgetlabel"));
+    QLabel *label = widget.findChild<QLabel *>(QStringLiteral("contenttypewidgetlabel"));
     QVERIFY(label);
-    KComboBox *combo = widget.findChild<KComboBox *>(QLatin1String("contentcombobox"));
+    KComboBox *combo = widget.findChild<KComboBox *>(QStringLiteral("contentcombobox"));
     QVERIFY(combo);
     QVERIFY(combo->count() > 0);
     QCOMPARE(widget.currentIndex(), 0);
@@ -49,7 +49,7 @@ void ContentTypeWidgetTest::shouldHaveDefaultValue()
 void ContentTypeWidgetTest::shouldChangeComboBoxIndex()
 {
     MailCommon::ContentTypeWidget contentType;
-    KComboBox *combo = contentType.findChild<KComboBox *>(QLatin1String("contentcombobox"));
+    KComboBox *combo = contentType.findChild<KComboBox *>(QStringLiteral("contentcombobox"));
     for (int i = 0 ; i < combo->count() ; ++i) {
         contentType.setCurrentIndex(i);
         QCOMPARE(contentType.currentIndex(), i);
@@ -73,7 +73,7 @@ void ContentTypeWidgetTest::shouldChangeItem()
     MailCommon::ContentTypeWidget contentType;
     contentType.show();
     QTest::qWaitForWindowShown(&contentType);
-    KComboBox *combo = contentType.findChild<KComboBox *>(QLatin1String("contentcombobox"));
+    KComboBox *combo = contentType.findChild<KComboBox *>(QStringLiteral("contentcombobox"));
     for (int i = 0 ; i < combo->count() ; ++i) {
         contentType.setCurrentIndex(i);
         QCOMPARE(contentType.currentText(), combo->currentText());

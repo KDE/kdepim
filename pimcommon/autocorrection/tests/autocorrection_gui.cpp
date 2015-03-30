@@ -41,7 +41,7 @@
 ConfigureTestDialog::ConfigureTestDialog(PimCommon::AutoCorrection *autoCorrection, QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle(QLatin1String("Configure Autocorrection"));
+    setWindowTitle(QStringLiteral("Configure Autocorrection"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
@@ -104,7 +104,7 @@ void TextEditAutoCorrectionWidget::keyPressEvent(QKeyEvent *e)
 AutocorrectionTestWidget::AutocorrectionTestWidget(QWidget *parent)
     : QWidget(parent)
 {
-    mConfig = KSharedConfig::openConfig(QLatin1String("autocorrectionguirc"));
+    mConfig = KSharedConfig::openConfig(QStringLiteral("autocorrectionguirc"));
     PimCommon::PimCommonSettings::self()->setSharedConfig(mConfig);
     PimCommon::PimCommonSettings::self()->load();
 
@@ -112,13 +112,13 @@ AutocorrectionTestWidget::AutocorrectionTestWidget(QWidget *parent)
     QVBoxLayout *lay = new QVBoxLayout;
     QToolBar *bar = new QToolBar;
     lay->addWidget(bar);
-    bar->addAction(QLatin1String("Configure..."), this, SLOT(slotConfigure()));
-    QAction *richText = new QAction(QLatin1String("HTML mode"), this);
+    bar->addAction(QStringLiteral("Configure..."), this, SLOT(slotConfigure()));
+    QAction *richText = new QAction(QStringLiteral("HTML mode"), this);
     richText->setCheckable(true);
     connect(richText, &QAction::toggled, this, &AutocorrectionTestWidget::slotChangeMode);
     bar->addAction(richText);
 
-    mSubject = new PimCommon::LineEditWithAutoCorrection(this, QLatin1String("autocorrectionguirc"));
+    mSubject = new PimCommon::LineEditWithAutoCorrection(this, QStringLiteral("autocorrectionguirc"));
     mSubject->setAutocorrection(mAutoCorrection);
     lay->addWidget(mSubject);
 
@@ -150,7 +150,7 @@ void AutocorrectionTestWidget::slotConfigure()
 
 int main(int argc, char **argv)
 {
-    KAboutData aboutData(QLatin1String("autocorrectiontest_gui"), i18n("AutoCorrectionTest_Gui"), QLatin1String("1.0"));
+    KAboutData aboutData(QStringLiteral("autocorrectiontest_gui"), i18n("AutoCorrectionTest_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for autocorrection widget"));
     QApplication app(argc, argv);
     QCommandLineParser parser;

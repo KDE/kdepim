@@ -38,21 +38,21 @@ BalooDebugWidget::BalooDebugWidget(QWidget *parent)
 
     QHBoxLayout *hbox = new QHBoxLayout;
     mainLayout->addLayout(hbox);
-    QLabel *lab = new QLabel(QLatin1String("Item identifier:"));
+    QLabel *lab = new QLabel(QStringLiteral("Item identifier:"));
     hbox->addWidget(lab);
     mLineEdit = new KLineEdit;
     mLineEdit->setTrapReturnKey(true);
     mLineEdit->setClearButtonShown(true);
-    mLineEdit->setObjectName(QLatin1String("lineedit"));
+    mLineEdit->setObjectName(QStringLiteral("lineedit"));
     connect(mLineEdit, &KLineEdit::textChanged, this, &BalooDebugWidget::slotSearchLineTextChanged);
     hbox->addWidget(mLineEdit);
 
     mSearchPathComboBox = new PimCommon::BalooDebugSearchPathComboBox;
     hbox->addWidget(mSearchPathComboBox);
-    mSearchPathComboBox->setObjectName(QLatin1String("searchpathcombo"));
+    mSearchPathComboBox->setObjectName(QStringLiteral("searchpathcombo"));
 
-    mSearchButton = new QPushButton(QLatin1String("Search"));
-    mSearchButton->setObjectName(QLatin1String("searchbutton"));
+    mSearchButton = new QPushButton(QStringLiteral("Search"));
+    mSearchButton->setObjectName(QStringLiteral("searchbutton"));
     connect(mSearchButton, &QPushButton::clicked, this, &BalooDebugWidget::slotSearch);
     hbox->addWidget(mSearchButton);
     mSearchButton->setEnabled(false);
@@ -61,7 +61,7 @@ BalooDebugWidget::BalooDebugWidget(QWidget *parent)
     new PimCommon::BalooSyntaxHighlighter(mPlainTextEditor->editor()->document());
     mPlainTextEditor->setReadOnly(true);
     mainLayout->addWidget(mPlainTextEditor);
-    mPlainTextEditor->setObjectName(QLatin1String("plaintexteditor"));
+    mPlainTextEditor->setObjectName(QStringLiteral("plaintexteditor"));
 
     connect(mLineEdit, &KLineEdit::returnPressed, this, &BalooDebugWidget::slotSearch);
 
@@ -118,5 +118,5 @@ void BalooDebugWidget::slotResult(const QString &result)
 
 void BalooDebugWidget::slotError(const QString &errorStr)
 {
-    mPlainTextEditor->setPlainText(QLatin1String("Error found:\n") + errorStr);
+    mPlainTextEditor->setPlainText(QStringLiteral("Error found:\n") + errorStr);
 }

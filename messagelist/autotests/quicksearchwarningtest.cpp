@@ -38,7 +38,7 @@ void QuickSearchWarningTest::shouldHaveDefaultValue()
 void QuickSearchWarningTest::shouldSetVisible()
 {
     MessageList::Core::QuickSearchWarning w;
-    w.setSearchText(QLatin1String("1"));
+    w.setSearchText(QStringLiteral("1"));
     QVERIFY(w.isVisible());
 }
 
@@ -55,11 +55,11 @@ void QuickSearchWarningTest::shouldSetSearchText_data()
 {
     QTest::addColumn<QString>("input");
     QTest::addColumn<bool>("visible");
-    QTest::newRow("bigword") <<  QString(QLatin1String("foofoofoo")) << false;
-    QTest::newRow("1character") <<  QString(QLatin1String("f")) << true;
-    QTest::newRow("multibigword") <<  QString(QLatin1String("foo foo foo")) << false;
-    QTest::newRow("multibigwordwithasmallone") <<  QString(QLatin1String("foo foo foo 1")) << true;
-    QTest::newRow("aspace") <<  QString(QLatin1String(" ")) << false;
+    QTest::newRow("bigword") <<  QString(QStringLiteral("foofoofoo")) << false;
+    QTest::newRow("1character") <<  QString(QStringLiteral("f")) << true;
+    QTest::newRow("multibigword") <<  QString(QStringLiteral("foo foo foo")) << false;
+    QTest::newRow("multibigwordwithasmallone") <<  QString(QStringLiteral("foo foo foo 1")) << true;
+    QTest::newRow("aspace") <<  QString(QStringLiteral(" ")) << false;
 }
 
 QTEST_MAIN(QuickSearchWarningTest)

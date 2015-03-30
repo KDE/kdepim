@@ -38,14 +38,14 @@ void IsGdShortUrl::start()
 {
     const QString requestUrl = QStringLiteral("http://is.gd/create.php?url=%1").arg(mOriginalUrl);
     QNetworkRequest request(requestUrl);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/json"));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/json"));
     QNetworkReply *reply = mNetworkAccessManager->get(request);
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &IsGdShortUrl::slotErrorFound);
 }
 
 QString IsGdShortUrl::shortUrlName() const
 {
-    return QLatin1String("Is.gd");
+    return QStringLiteral("Is.gd");
 }
 
 void IsGdShortUrl::slotSslErrors(QNetworkReply *reply, const QList<QSslError> &error)

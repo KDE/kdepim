@@ -49,10 +49,10 @@ void SieveSyntaxHighlighter::init()
     // Comments
     QTextCharFormat commentFormat;
     commentFormat.setForeground(Qt::darkYellow);
-    QRegExp commentRegex(QLatin1String("#.*$"));
+    QRegExp commentRegex(QStringLiteral("#.*$"));
     m_rules.append(Rule(commentRegex, commentFormat));
 
-    commentRegex = QRegExp(QLatin1String("/*.*$*/"));
+    commentRegex = QRegExp(QStringLiteral("/*.*$*/"));
     m_rules.append(Rule(commentRegex, commentFormat));
 
     // Keywords
@@ -60,10 +60,10 @@ void SieveSyntaxHighlighter::init()
     keywordFormat.setForeground(Qt::darkMagenta);
     keywordFormat.setFontWeight(QFont::Bold);
     QStringList keywords;
-    keywords << QLatin1String("\\brequire\\b");
-    keywords << QLatin1String("\\binclude\\b");
-    keywords << QLatin1String("\\bglobal\\b");
-    keywords << QLatin1String("\\bforeverypart\\b");
+    keywords << QStringLiteral("\\brequire\\b");
+    keywords << QStringLiteral("\\binclude\\b");
+    keywords << QStringLiteral("\\bglobal\\b");
+    keywords << QStringLiteral("\\bforeverypart\\b");
     Q_FOREACH (const QString &s, keywords) {
         const QRegExp regex(s, Qt::CaseSensitive);
         m_rules.append(Rule(regex, keywordFormat));
@@ -73,7 +73,7 @@ void SieveSyntaxHighlighter::init()
     QTextCharFormat textKeywordFormat;
     textKeywordFormat.setForeground(Qt::green);
     QStringList textKeywords;
-    textKeywords << QLatin1String("\\btext:");
+    textKeywords << QStringLiteral("\\btext:");
     Q_FOREACH (const QString &s, textKeywords) {
         const QRegExp regex(s, Qt::CaseSensitive);
         m_rules.append(Rule(regex, textKeywordFormat));
@@ -83,54 +83,54 @@ void SieveSyntaxHighlighter::init()
     QTextCharFormat matchFormat;
     matchFormat.setForeground(Qt::red);
     QStringList matchType;
-    matchType << QLatin1String("\\s:quoteregex\\b")
-              << QLatin1String("\\s:content\\b")
-              << QLatin1String("\\s:raw\\b")
-              << QLatin1String("\\s:type\\b")
-              << QLatin1String("\\s:subtype\\b")
-              << QLatin1String("\\s:anychild\\b")
-              << QLatin1String("\\s:param\\b")
-              << QLatin1String("\\s:value\\b")
-              << QLatin1String("\\s:count\\b")
-              << QLatin1String("\\s:last\\b")
-              << QLatin1String("\\s:text\\b")
-              << QLatin1String("\\s:lower\\b")
-              << QLatin1String("\\s:upper\\b")
-              << QLatin1String("\\s:lowerfirst\\b")
-              << QLatin1String("\\s:upperfirst\\b")
-              << QLatin1String("\\s:quotewilcard\\b")
-              << QLatin1String("\\s:length\\b")
-              << QLatin1String("\\s:contains\\b")
-              << QLatin1String("\\s:matches\\b")
-              << QLatin1String("\\s:global\\b")
-              << QLatin1String("\\s:once\\b")
-              << QLatin1String("\\s:optional\\b")
-              << QLatin1String("\\s:personal\\b")
-              << QLatin1String("\\s:is\\b")
-              << QLatin1String("\\s:over\\b")
-              << QLatin1String("\\s:under\\b")
-              << QLatin1String("\\s:localpart\\b")
-              << QLatin1String("\\s:domain\\b")
-              << QLatin1String("\\s:user\\b")
-              << QLatin1String("\\s:detail\\b")
-              << QLatin1String("\\s:all\\b")
-              << QLatin1String("\\s:copy\\b")
-              << QLatin1String("\\s:message\\b")
-              << QLatin1String("\\s:importance\\b")
-              << QLatin1String("\\s:seconds\\b")
-              << QLatin1String("\\stext:\\b")
-              << QLatin1String("\\s:days\\b")
-              << QLatin1String("\\s:addresses\\b")
-              << QLatin1String("\\s:regex\\b")
-              << QLatin1String("\\s:flags\\b")
-              << QLatin1String("\\s:subject\\b")
-              << QLatin1String("\\s:create\\b")
-              << QLatin1String("\\s:name\\b")
-              << QLatin1String("\\s:headers\\b")
-              << QLatin1String("\\s:list\\b")
-              << QLatin1String("\\s:from\\b")
-              << QLatin1String("\\s:first\\b")
-              << QLatin1String("\\s:comparator\\b");
+    matchType << QStringLiteral("\\s:quoteregex\\b")
+              << QStringLiteral("\\s:content\\b")
+              << QStringLiteral("\\s:raw\\b")
+              << QStringLiteral("\\s:type\\b")
+              << QStringLiteral("\\s:subtype\\b")
+              << QStringLiteral("\\s:anychild\\b")
+              << QStringLiteral("\\s:param\\b")
+              << QStringLiteral("\\s:value\\b")
+              << QStringLiteral("\\s:count\\b")
+              << QStringLiteral("\\s:last\\b")
+              << QStringLiteral("\\s:text\\b")
+              << QStringLiteral("\\s:lower\\b")
+              << QStringLiteral("\\s:upper\\b")
+              << QStringLiteral("\\s:lowerfirst\\b")
+              << QStringLiteral("\\s:upperfirst\\b")
+              << QStringLiteral("\\s:quotewilcard\\b")
+              << QStringLiteral("\\s:length\\b")
+              << QStringLiteral("\\s:contains\\b")
+              << QStringLiteral("\\s:matches\\b")
+              << QStringLiteral("\\s:global\\b")
+              << QStringLiteral("\\s:once\\b")
+              << QStringLiteral("\\s:optional\\b")
+              << QStringLiteral("\\s:personal\\b")
+              << QStringLiteral("\\s:is\\b")
+              << QStringLiteral("\\s:over\\b")
+              << QStringLiteral("\\s:under\\b")
+              << QStringLiteral("\\s:localpart\\b")
+              << QStringLiteral("\\s:domain\\b")
+              << QStringLiteral("\\s:user\\b")
+              << QStringLiteral("\\s:detail\\b")
+              << QStringLiteral("\\s:all\\b")
+              << QStringLiteral("\\s:copy\\b")
+              << QStringLiteral("\\s:message\\b")
+              << QStringLiteral("\\s:importance\\b")
+              << QStringLiteral("\\s:seconds\\b")
+              << QStringLiteral("\\stext:\\b")
+              << QStringLiteral("\\s:days\\b")
+              << QStringLiteral("\\s:addresses\\b")
+              << QStringLiteral("\\s:regex\\b")
+              << QStringLiteral("\\s:flags\\b")
+              << QStringLiteral("\\s:subject\\b")
+              << QStringLiteral("\\s:create\\b")
+              << QStringLiteral("\\s:name\\b")
+              << QStringLiteral("\\s:headers\\b")
+              << QStringLiteral("\\s:list\\b")
+              << QStringLiteral("\\s:from\\b")
+              << QStringLiteral("\\s:first\\b")
+              << QStringLiteral("\\s:comparator\\b");
     Q_FOREACH (const QString &s, matchType) {
         const QRegExp regex(s, Qt::CaseSensitive);
         m_rules.append(Rule(regex, matchFormat));
@@ -141,7 +141,7 @@ void SieveSyntaxHighlighter::init()
     controlFormat.setForeground(Qt::green);
     controlFormat.setFontWeight(QFont::Bold);
     QStringList controlType;
-    controlType << QLatin1String("\\bif\\b") << QLatin1String("\\belsif\\b") << QLatin1String("\\belse\\b");
+    controlType << QStringLiteral("\\bif\\b") << QStringLiteral("\\belsif\\b") << QStringLiteral("\\belse\\b");
     Q_FOREACH (const QString &s, controlType) {
         const QRegExp regex(s, Qt::CaseSensitive);
         m_rules.append(Rule(regex, controlFormat));
@@ -152,25 +152,25 @@ void SieveSyntaxHighlighter::init()
     actionFormat.setForeground(Qt::blue);
     actionFormat.setFontWeight(QFont::Bold);
     QStringList actionType;
-    actionType << QLatin1String("\\bstop\\b")
-               << QLatin1String("\\bkeep\\b")
-               << QLatin1String("\\breject\\b")
-               << QLatin1String("\\bdiscard\\b")
-               << QLatin1String("\\bredirect\\b")
-               << QLatin1String("\\bfileinto\\b")
-               << QLatin1String("\\bsetflag\\b")
-               << QLatin1String("\\baddflag\\b")
-               << QLatin1String("\\bremoveflag\\b")
-               << QLatin1String("\\hasflag\\b")
-               << QLatin1String("\\bdeleteheader\\b")
-               << QLatin1String("\\baddheader\\b")
-               << QLatin1String("\\bnotify\\b")
-               << QLatin1String("\\bset\\b")
-               << QLatin1String("\\breturn\\b")
-               << QLatin1String("\\bvacation\\b")
-               << QLatin1String("\\benclose\\b")
-               << QLatin1String("\\breplace\\b")
-               << QLatin1String("\\bextracttext\\b");
+    actionType << QStringLiteral("\\bstop\\b")
+               << QStringLiteral("\\bkeep\\b")
+               << QStringLiteral("\\breject\\b")
+               << QStringLiteral("\\bdiscard\\b")
+               << QStringLiteral("\\bredirect\\b")
+               << QStringLiteral("\\bfileinto\\b")
+               << QStringLiteral("\\bsetflag\\b")
+               << QStringLiteral("\\baddflag\\b")
+               << QStringLiteral("\\bremoveflag\\b")
+               << QStringLiteral("\\hasflag\\b")
+               << QStringLiteral("\\bdeleteheader\\b")
+               << QStringLiteral("\\baddheader\\b")
+               << QStringLiteral("\\bnotify\\b")
+               << QStringLiteral("\\bset\\b")
+               << QStringLiteral("\\breturn\\b")
+               << QStringLiteral("\\bvacation\\b")
+               << QStringLiteral("\\benclose\\b")
+               << QStringLiteral("\\breplace\\b")
+               << QStringLiteral("\\bextracttext\\b");
     Q_FOREACH (const QString &s, actionType) {
         const QRegExp regex(s, Qt::CaseSensitive);
         m_rules.append(Rule(regex, actionFormat));
@@ -181,28 +181,28 @@ void SieveSyntaxHighlighter::init()
     testFormat.setForeground(Qt::gray);
     testFormat.setFontWeight(QFont::Bold);
     QStringList testType;
-    testType << QLatin1String("\\benvelope\\b")
-             << QLatin1String("\\baddress\\b")
-             << QLatin1String("\\ballof\\b")
-             << QLatin1String("\\banyof\\b")
-             << QLatin1String("\\bexists\\b")
-             << QLatin1String("\\bfalse\\b")
-             << QLatin1String("\\bheader\\b")
-             << QLatin1String("\\bnot\\b")
-             << QLatin1String("\\bsize\\b")
-             << QLatin1String("\\bdate\\b")
-             << QLatin1String("\\bbody\\b")
-             << QLatin1String("\\bcurrentdate\\b")
-             << QLatin1String("\\bmailboxexists\\b")
-             << QLatin1String("\\btrue\\b")
-             << QLatin1String("\\bmetadata\\b")
-             << QLatin1String("\\benvironment\\b")
-             << QLatin1String("\\bspamtest\\b")
-             << QLatin1String("\\bvirustest\\b")
-             << QLatin1String("\\bihave\\b")
-             << QLatin1String("\\bmetadataexists\\b")
-             << QLatin1String("\\bservermetadata\\b")
-             << QLatin1String("\\bservermetadataexists\\b");
+    testType << QStringLiteral("\\benvelope\\b")
+             << QStringLiteral("\\baddress\\b")
+             << QStringLiteral("\\ballof\\b")
+             << QStringLiteral("\\banyof\\b")
+             << QStringLiteral("\\bexists\\b")
+             << QStringLiteral("\\bfalse\\b")
+             << QStringLiteral("\\bheader\\b")
+             << QStringLiteral("\\bnot\\b")
+             << QStringLiteral("\\bsize\\b")
+             << QStringLiteral("\\bdate\\b")
+             << QStringLiteral("\\bbody\\b")
+             << QStringLiteral("\\bcurrentdate\\b")
+             << QStringLiteral("\\bmailboxexists\\b")
+             << QStringLiteral("\\btrue\\b")
+             << QStringLiteral("\\bmetadata\\b")
+             << QStringLiteral("\\benvironment\\b")
+             << QStringLiteral("\\bspamtest\\b")
+             << QStringLiteral("\\bvirustest\\b")
+             << QStringLiteral("\\bihave\\b")
+             << QStringLiteral("\\bmetadataexists\\b")
+             << QStringLiteral("\\bservermetadata\\b")
+             << QStringLiteral("\\bservermetadataexists\\b");
     Q_FOREACH (const QString &s, testType) {
         const QRegExp regex(s, Qt::CaseSensitive);
         m_rules.append(Rule(regex, testFormat));
@@ -211,7 +211,7 @@ void SieveSyntaxHighlighter::init()
     // Literals
     QTextCharFormat literalFormat;
     literalFormat.setForeground(Qt::darkRed);
-    QRegExp literalRegex(QLatin1String("(\"[^\"]*\")"));
+    QRegExp literalRegex(QStringLiteral("(\"[^\"]*\")"));
     m_rules.append(Rule(literalRegex, literalFormat));
 }
 

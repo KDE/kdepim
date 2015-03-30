@@ -33,7 +33,7 @@ TextMessageIndicator::TextMessageIndicator(QWidget *parent)
       mTimer(Q_NULLPTR),
       mLineSpacing(0)
 {
-    setObjectName(QLatin1String("TextMessageIndicator"));
+    setObjectName(QStringLiteral("TextMessageIndicator"));
     setFocusPolicy(Qt::NoFocus);
     QPalette pal = palette();
     pal.setColor(QPalette::Active, QPalette::Window, QApplication::palette().highlight().color());
@@ -61,13 +61,13 @@ void TextMessageIndicator::display(const QString &message, const QString &detail
     if (icon != None) {
         switch (icon) {
         case Error:
-            mSymbol = SmallIcon(QLatin1String("dialog-error"));
+            mSymbol = SmallIcon(QStringLiteral("dialog-error"));
             break;
         case Warning:
-            mSymbol = SmallIcon(QLatin1String("dialog-warning"));
+            mSymbol = SmallIcon(QStringLiteral("dialog-warning"));
             break;
         default:
-            mSymbol = SmallIcon(QLatin1String("dialog-information"));
+            mSymbol = SmallIcon(QStringLiteral("dialog-information"));
             break;
         }
     }

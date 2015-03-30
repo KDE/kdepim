@@ -36,7 +36,7 @@ Ur1CaShortUrl::~Ur1CaShortUrl()
 
 void Ur1CaShortUrl::start()
 {
-    QNetworkRequest request(QUrl(QLatin1String("http://ur1.ca/")));
+    QNetworkRequest request(QUrl(QStringLiteral("http://ur1.ca/")));
     const QString data = QStringLiteral("longurl=%1").arg(mOriginalUrl);
 
     QNetworkReply *reply = mNetworkAccessManager->post(request, data.toUtf8());
@@ -45,7 +45,7 @@ void Ur1CaShortUrl::start()
 
 QString Ur1CaShortUrl::shortUrlName() const
 {
-    return QLatin1String("Ur1Ca");
+    return QStringLiteral("Ur1Ca");
 }
 
 void Ur1CaShortUrl::slotSslErrors(QNetworkReply *reply, const QList<QSslError> &error)

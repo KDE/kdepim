@@ -53,7 +53,7 @@ QWidget *DateRuleWidgetHandler::createFunctionWidget(
     }
 
     PimCommon::MinimumComboBox *funcCombo = new PimCommon::MinimumComboBox(functionStack);
-    funcCombo->setObjectName(QLatin1String("dateRuleFuncCombo"));
+    funcCombo->setObjectName(QStringLiteral("dateRuleFuncCombo"));
     for (int i = 0; i < DateFunctionCount; ++i) {
         funcCombo->addItem(i18n(DateFunctions[i].displayName));
     }
@@ -74,7 +74,7 @@ QWidget *DateRuleWidgetHandler::createValueWidget(int number,
     }
 
     KDateComboBox *dateCombo = new KDateComboBox(valueStack);
-    dateCombo->setObjectName(QLatin1String("KDateComboBox"));
+    dateCombo->setObjectName(QStringLiteral("KDateComboBox"));
     dateCombo->setOptions(KDateComboBox::SelectDate | KDateComboBox::DatePicker | KDateComboBox::DateKeywords);
     QObject::connect(dateCombo, SIGNAL(dateChanged(QDate)),
                      receiver, SLOT(slotValueChanged()));
@@ -87,7 +87,7 @@ SearchRule::Function DateRuleWidgetHandler::currentFunction(
     const QStackedWidget *functionStack) const
 {
     const PimCommon::MinimumComboBox *funcCombo =
-        functionStack->findChild<PimCommon::MinimumComboBox *>(QLatin1String("dateRuleFuncCombo"));
+        functionStack->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("dateRuleFuncCombo"));
 
     if (funcCombo && funcCombo->currentIndex() >= 0) {
         return DateFunctions[funcCombo->currentIndex()].id;
@@ -112,7 +112,7 @@ SearchRule::Function DateRuleWidgetHandler::function(const QByteArray &field,
 
 QString DateRuleWidgetHandler::currentValue(const QStackedWidget *valueStack) const
 {
-    const KDateComboBox *dateInput = valueStack->findChild<KDateComboBox *>(QLatin1String("KDateComboBox"));
+    const KDateComboBox *dateInput = valueStack->findChild<KDateComboBox *>(QStringLiteral("KDateComboBox"));
 
     if (dateInput) {
         return dateInput->date().toString(Qt::ISODate);
@@ -161,7 +161,7 @@ void DateRuleWidgetHandler::reset(QStackedWidget *functionStack,
 {
     // reset the function combo box
     PimCommon::MinimumComboBox *funcCombo =
-        functionStack->findChild<PimCommon::MinimumComboBox *>(QLatin1String("dateRuleFuncCombo"));
+        functionStack->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("dateRuleFuncCombo"));
 
     if (funcCombo) {
         funcCombo->blockSignals(true);
@@ -170,7 +170,7 @@ void DateRuleWidgetHandler::reset(QStackedWidget *functionStack,
     }
 
     // reset the value widget
-    KDateComboBox *dateInput = valueStack->findChild<KDateComboBox *>(QLatin1String("KDateComboBox"));
+    KDateComboBox *dateInput = valueStack->findChild<KDateComboBox *>(QStringLiteral("KDateComboBox"));
 
     if (dateInput) {
         dateInput->blockSignals(true);
@@ -200,7 +200,7 @@ bool DateRuleWidgetHandler::setRule(QStackedWidget *functionStack,
     }
 
     PimCommon::MinimumComboBox *funcCombo =
-        functionStack->findChild<PimCommon::MinimumComboBox *>(QLatin1String("dateRuleFuncCombo"));
+        functionStack->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("dateRuleFuncCombo"));
 
     if (funcCombo) {
         funcCombo->blockSignals(true);
@@ -216,7 +216,7 @@ bool DateRuleWidgetHandler::setRule(QStackedWidget *functionStack,
     // set the value
     const QString value = rule->contents();
 
-    KDateComboBox *dateInput = valueStack->findChild<KDateComboBox *>(QLatin1String("KDateComboBox"));
+    KDateComboBox *dateInput = valueStack->findChild<KDateComboBox *>(QStringLiteral("KDateComboBox"));
 
     if (dateInput) {
         dateInput->blockSignals(true);
@@ -238,10 +238,10 @@ bool DateRuleWidgetHandler::update(const QByteArray &field,
     }
 
     // raise the correct function widget
-    functionStack->setCurrentWidget(functionStack->findChild<QWidget *>(QLatin1String("dateRuleFuncCombo")));
+    functionStack->setCurrentWidget(functionStack->findChild<QWidget *>(QStringLiteral("dateRuleFuncCombo")));
 
     // raise the correct value widget
-    KDateComboBox *dateInput = valueStack->findChild<KDateComboBox *>(QLatin1String("KDateComboBox"));
+    KDateComboBox *dateInput = valueStack->findChild<KDateComboBox *>(QStringLiteral("KDateComboBox"));
 
     if (dateInput) {
         valueStack->setCurrentWidget(dateInput);

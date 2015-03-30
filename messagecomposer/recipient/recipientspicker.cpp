@@ -46,7 +46,7 @@ RecipientsPicker::RecipientsPicker(QWidget *parent)
     : QDialog(parent),
       mLdapSearchDialog(Q_NULLPTR)
 {
-    setObjectName(QLatin1String("RecipientsPicker"));
+    setObjectName(QStringLiteral("RecipientsPicker"));
     setWindowTitle(i18n("Select Recipient"));
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -69,7 +69,7 @@ RecipientsPicker::RecipientsPicker(QWidget *parent)
     connect(searchLDAPButton, &QPushButton::clicked, this, &RecipientsPicker::slotSearchLDAP);
     mainLayout->addWidget(searchLDAPButton);
 
-    KConfig config(QLatin1String("kabldaprc"));
+    KConfig config(QStringLiteral("kabldaprc"));
     KConfigGroup group = config.group("LDAP");
     int numHosts = group.readEntry("NumSelectedHosts", 0);
     if (!numHosts) {

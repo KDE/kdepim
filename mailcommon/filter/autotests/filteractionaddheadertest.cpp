@@ -38,12 +38,12 @@ void FilterActionAddHeaderTest::shouldCreateWidget()
     MailCommon::FilterActionAddHeader filter;
     QWidget *widget = filter.createParamWidget(0);
     QVERIFY(widget);
-    PimCommon::MinimumComboBox *comboBox = widget->findChild<PimCommon::MinimumComboBox *>(QLatin1String("combo"));
+    PimCommon::MinimumComboBox *comboBox = widget->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("combo"));
     QVERIFY(comboBox);
     QVERIFY(comboBox->isEditable());
-    QLabel *label = widget->findChild<QLabel *>(QLatin1String("label_value"));
+    QLabel *label = widget->findChild<QLabel *>(QStringLiteral("label_value"));
     QVERIFY(label);
-    KLineEdit *lineEdit = widget->findChild<KLineEdit *>(QLatin1String("ledit"));
+    KLineEdit *lineEdit = widget->findChild<KLineEdit *>(QStringLiteral("ledit"));
     QVERIFY(lineEdit);
     QVERIFY(lineEdit->text().isEmpty());
 }
@@ -54,18 +54,18 @@ void FilterActionAddHeaderTest::shouldAddValue_data()
     QTest::addColumn<QString>("resultheader");
     QTest::addColumn<QString>("resultvalue");
     QTest::newRow("empty") <<  QString() << QString() << QString();
-    QString val = QLatin1String("bla") + QLatin1Char('\t') + QLatin1String("blo");
-    QTest::newRow("real value") <<  val << QString(QLatin1String("bla")) << QString(QLatin1String("blo"));
+    QString val = QStringLiteral("bla") + QLatin1Char('\t') + QStringLiteral("blo");
+    QTest::newRow("real value") <<  val << QString(QStringLiteral("bla")) << QString(QStringLiteral("blo"));
 }
 
 void FilterActionAddHeaderTest::shouldClearWidget()
 {
     MailCommon::FilterActionAddHeader filter;
     QWidget *widget = filter.createParamWidget(0);
-    PimCommon::MinimumComboBox *comboBox = widget->findChild<PimCommon::MinimumComboBox *>(QLatin1String("combo"));
-    KLineEdit *lineEdit = widget->findChild<KLineEdit *>(QLatin1String("ledit"));
-    comboBox->lineEdit()->setText(QLatin1String("test"));
-    lineEdit->setText(QLatin1String("blo"));
+    PimCommon::MinimumComboBox *comboBox = widget->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("combo"));
+    KLineEdit *lineEdit = widget->findChild<KLineEdit *>(QStringLiteral("ledit"));
+    comboBox->lineEdit()->setText(QStringLiteral("test"));
+    lineEdit->setText(QStringLiteral("blo"));
     filter.clearParamWidget(widget);
     QVERIFY(comboBox->lineEdit()->text().isEmpty());
     QVERIFY(lineEdit->text().isEmpty());
@@ -74,14 +74,14 @@ void FilterActionAddHeaderTest::shouldClearWidget()
 void FilterActionAddHeaderTest::shouldReturnSieveCode()
 {
     MailCommon::FilterActionAddHeader filter;
-    QCOMPARE(filter.sieveRequires().join(QLatin1String(",")), QLatin1String("editheader"));
+    QCOMPARE(filter.sieveRequires().join(QStringLiteral(",")), QStringLiteral("editheader"));
 }
 
 void FilterActionAddHeaderTest::shouldBeEmpty()
 {
     MailCommon::FilterActionAddHeader filter;
     QVERIFY(filter.isEmpty());
-    filter.argsFromString(QLatin1String("foo"));
+    filter.argsFromString(QStringLiteral("foo"));
     QVERIFY(!filter.isEmpty());
 }
 
@@ -95,8 +95,8 @@ void FilterActionAddHeaderTest::shouldAddValue()
     QWidget *widget = filter.createParamWidget(0);
     filter.argsFromString(argsinput);
     filter.setParamWidgetValue(widget);
-    PimCommon::MinimumComboBox *comboBox = widget->findChild<PimCommon::MinimumComboBox *>(QLatin1String("combo"));
-    KLineEdit *lineEdit = widget->findChild<KLineEdit *>(QLatin1String("ledit"));
+    PimCommon::MinimumComboBox *comboBox = widget->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("combo"));
+    KLineEdit *lineEdit = widget->findChild<KLineEdit *>(QStringLiteral("ledit"));
     QCOMPARE(comboBox->lineEdit()->text(), resultheader);
     QCOMPARE(lineEdit->text(), resultvalue);
 }

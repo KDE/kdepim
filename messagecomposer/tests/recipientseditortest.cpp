@@ -48,7 +48,7 @@ Composer::Composer(QWidget *parent)
     topLayout->setMargin(4);
     topLayout->setSpacing(4);
 
-    QLabel *label = new QLabel(QLatin1String("From:"), this);
+    QLabel *label = new QLabel(QStringLiteral("From:"), this);
     topLayout->addWidget(label, 0, 0);
     QLineEdit *edit = new QLineEdit(this);
     topLayout->addWidget(edit, 0, 1);
@@ -64,7 +64,7 @@ Composer::Composer(QWidget *parent)
     topLayout->addWidget(editor, 2, 0, 1, 2);
     topLayout->setRowStretch(2, 1);
 
-    QPushButton *button = new QPushButton(QLatin1String("&Close"), this);
+    QPushButton *button = new QPushButton(QStringLiteral("&Close"), this);
     topLayout->addWidget(button, 3, 0, 1, 2);
     connect(button, &QPushButton::clicked, this, &Composer::slotClose);
 }
@@ -92,8 +92,8 @@ void Composer::slotClose()
 
 int main(int argc, char **argv)
 {
-    KAboutData aboutData(QLatin1String("testrecipienteditor"),
-                         i18n("Test Recipient Editor"), QLatin1String("0.1"));
+    KAboutData aboutData(QStringLiteral("testrecipienteditor"),
+                         i18n("Test Recipient Editor"), QStringLiteral("0.1"));
     QApplication app(argc, argv);
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);

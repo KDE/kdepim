@@ -70,12 +70,12 @@ void StorageServiceTreeWidget::slotMoveUp()
 
 void StorageServiceTreeWidget::createUpAction(QMenu *menu)
 {
-    menu->addAction(QIcon::fromTheme(QLatin1String("go-up")),  i18n("Up"), this, SLOT(slotMoveUp()));
+    menu->addAction(QIcon::fromTheme(QStringLiteral("go-up")),  i18n("Up"), this, SLOT(slotMoveUp()));
 }
 
 void StorageServiceTreeWidget::createPropertiesAction(QMenu *menu)
 {
-    menu->addAction(QIcon::fromTheme(QLatin1String("document-properties")), i18n("Properties"), this, SLOT(slotProperties()));
+    menu->addAction(QIcon::fromTheme(QStringLiteral("document-properties")), i18n("Properties"), this, SLOT(slotProperties()));
 }
 
 void StorageServiceTreeWidget::createMenuActions(QMenu *menu)
@@ -99,9 +99,9 @@ void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
 void StorageServiceTreeWidget::createMoveUpItem()
 {
     StorageServiceTreeWidgetItem *item = new StorageServiceTreeWidgetItem(this);
-    item->setText(ColumnName, QLatin1String(".."));
+    item->setText(ColumnName, QStringLiteral(".."));
     item->setData(ColumnName, ElementType, MoveUpType);
-    item->setIcon(ColumnName, QIcon::fromTheme(QLatin1String("go-up")));
+    item->setIcon(ColumnName, QIcon::fromTheme(QStringLiteral("go-up")));
 }
 
 StorageServiceTreeWidgetItem *StorageServiceTreeWidget::addFolder(const QString &name, const QString &ident)
@@ -110,7 +110,7 @@ StorageServiceTreeWidgetItem *StorageServiceTreeWidget::addFolder(const QString 
     item->setText(ColumnName, name);
     item->setData(ColumnName, Ident, ident);
     item->setData(ColumnName, ElementType, Folder);
-    item->setIcon(ColumnName, QIcon::fromTheme(QLatin1String("folder")));
+    item->setIcon(ColumnName, QIcon::fromTheme(QStringLiteral("folder")));
     return item;
 }
 

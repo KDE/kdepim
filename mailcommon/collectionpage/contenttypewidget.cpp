@@ -33,10 +33,10 @@ ContentTypeWidget::ContentTypeWidget(QWidget *parent)
     hbox->setMargin(0);
 
     QLabel *label = new QLabel(i18n("&Folder contents:"), this);
-    label->setObjectName(QLatin1String("contenttypewidgetlabel"));
+    label->setObjectName(QStringLiteral("contenttypewidgetlabel"));
     hbox->addWidget(label);
     mContentsComboBox = new KComboBox(this);
-    mContentsComboBox->setObjectName(QLatin1String("contentcombobox"));
+    mContentsComboBox->setObjectName(QStringLiteral("contentcombobox"));
     label->setBuddy(mContentsComboBox);
     hbox->addWidget(mContentsComboBox);
     MailCommon::CollectionTypeUtil collectionUtil;
