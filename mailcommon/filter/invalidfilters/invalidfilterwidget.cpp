@@ -1,6 +1,5 @@
 /*
-
-  Copyright (c) 2012-2015 Montel Laurent <montel@kde.org>
+  Copyright (c) 2015 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -16,26 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FILTERACTIONUNSETSTATUS_H
-#define FILTERACTIONUNSETSTATUS_H
+#include "invalidfilterwidget.h"
+#include "invalidfilterlistwidget.h"
+#include <KLocalizedString>
+#include <QVBoxLayout>
+#include <QLabel>
 
-#include "filteractionstatus.h"
-namespace MailCommon
+using namespace MailCommon;
+
+InvalidFilterWidget::InvalidFilterWidget(QWidget *parent)
+    : QWidget(parent)
 {
-
-class FilterActionUnsetStatus: public FilterActionStatus
-{
-    Q_OBJECT
-public:
-    explicit FilterActionUnsetStatus(QObject *parent = Q_NULLPTR);
-    ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
-    SearchRule::RequiredPart requiredPart() const;
-
-    static FilterAction *newAction();
-    QString sieveCode() const;
-    QStringList sieveRequires() const;
-    bool isEmpty() const;
-};
+    QVBoxLayout *vbox = new QVBoxLayout(this);
+    mInvalidFilterListWidget = new InvalidFilterListWidget(this);
+    mInvalidFilterListWidget->setObjectName(QLatin1String("invalidfilterlist"));
+    vbox->addWidget(mInvalidFilterListWidget);
 }
 
-#endif // FILTERACTIONUNSETSTATUS_H
+InvalidFilterWidget::~InvalidFilterWidget()
+{
+
+}

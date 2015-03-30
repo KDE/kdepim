@@ -39,6 +39,7 @@ public:
     static FilterAction *newAction();
     QString sieveCode() const Q_DECL_OVERRIDE;
     QStringList sieveRequires() const Q_DECL_OVERRIDE;
+    bool isEmpty() const;
 };
 
 }

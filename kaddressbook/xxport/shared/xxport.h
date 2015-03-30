@@ -23,7 +23,7 @@
 #include <KContacts/Addressee>
 #include <KContacts/ContactGroup>
 #include "xxport/vcard/vcardexportselectionwidget.h"
-
+#include "contactlist.h"
 #include <QtCore/QHash>
 
 /**
@@ -31,18 +31,6 @@
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-struct ContactList {
-    bool isEmpty() const
-    {
-        return (addressList.isEmpty() && contactGroupList.isEmpty());
-    }
-    int count() const
-    {
-        return (addressList.count() + contactGroupList.count());
-    }
-    KContacts::Addressee::List addressList;
-    KContacts::ContactGroup::List contactGroupList;
-};
 
 class XXPort
 {

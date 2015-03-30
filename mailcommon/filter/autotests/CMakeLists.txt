@@ -202,8 +202,8 @@ target_link_libraries( filteractionaddtoaddressbooktest
 #                                           ../soundtestwidget.cpp
 #                                           ../dialog/filteractionmissingargumentdialog.h)
 #add_executable( filteractionplaysoundtest ${mailcommon_filteractionplaysoundtest_SRCS} )
-add_test(filteractionplaysoundtest filteractionplaysoundtest)
-ecm_mark_as_test(filteractionplaysoundtest)
+#add_test(filteractionplaysoundtest filteractionplaysoundtest)
+#ecm_mark_as_test(filteractionplaysoundtest)
 #target_link_libraries( filteractionplaysoundtest
 #   kdepim
 #   pimcommon
@@ -213,3 +213,15 @@ ecm_mark_as_test(filteractionplaysoundtest)
 #   KF5::AkonadiCore
 #   KF5::AkonadiMime
 #)
+
+set( mailcommon_invalidfilterdialog_source invalidfilterdialogtest.cpp  )
+add_executable( invalidfilterdialogtest ${mailcommon_invalidfilterdialog_source})
+add_test(invalidfilterdialogtest invalidfilterdialogtest)
+ecm_mark_as_test(invalidfilterdialogtest)
+target_link_libraries( invalidfilterdialogtest Qt5::Test KF5::KDELibs4Support Qt5::Gui KF5::AkonadiCore mailcommon)
+
+set( mailcommon_invalidfilterwidget_source invalidfilterwidgettest.cpp  )
+add_executable( invalidfilterwidgettest ${mailcommon_invalidfilterwidget_source})
+add_test(invalidfilterwidgettest invalidfilterwidgettest)
+ecm_mark_as_test(invalidfilterwidgettest)
+target_link_libraries( invalidfilterwidgettest Qt5::Test KF5::KDELibs4Support Qt5::Gui KF5::AkonadiCore mailcommon)

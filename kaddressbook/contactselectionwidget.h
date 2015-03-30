@@ -68,8 +68,6 @@ public:
      */
     KContacts::Addressee::List selectedContacts() const;
 
-    Akonadi::Item::List selectedContactsItem() const;
-
     void setAddGroupContact(bool addGroupContact);
 private:
     void initGui();
@@ -77,9 +75,6 @@ private:
     KContacts::Addressee::List collectAllContacts() const;
     KContacts::Addressee::List collectSelectedContacts() const;
     KContacts::Addressee::List collectAddressBookContacts() const;
-    Akonadi::Item::List collectAllContactsItem() const;
-    Akonadi::Item::List collectSelectedContactsItem() const;
-    Akonadi::Item::List collectAddressBookContactsItem() const;
 
     QItemSelectionModel *mSelectionModel;
 
