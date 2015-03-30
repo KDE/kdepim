@@ -30,7 +30,8 @@
 #include <QStandardPaths>
 #include <QDir>
 
-namespace {
+namespace
+{
 inline const QString backupnote()
 {
     return QLatin1String("backupnote/");

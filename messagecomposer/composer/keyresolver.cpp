@@ -143,7 +143,7 @@ static bool ValidOpenPGPEncryptionKey(const GpgME::Key &key)
     if (!key.canEncrypt()) {
         qCWarning(MESSAGECOMPOSER_LOG) << "can't encrypt";
     }
-    if ( key.isRevoked() || key.isExpired() || key.isDisabled() || !key.canEncrypt() ) {
+    if (key.isRevoked() || key.isExpired() || key.isDisabled() || !key.canEncrypt()) {
         return false;
     }
     return true;
@@ -159,8 +159,7 @@ static bool ValidTrustedOpenPGPEncryptionKey(const GpgME::Key &key)
     for (std::vector<GpgME::UserID>::const_iterator it = uids.begin() ; it != end ; ++it) {
         if (!it->isRevoked() && it->validity() >= GpgME::UserID::Marginal) {
             return true;
-        }
-        else if (it->isRevoked()) {
+        } else if (it->isRevoked()) {
             qCWarning(MESSAGECOMPOSER_LOG) << "a userid is revoked";
         } else {
             qCWarning(MESSAGECOMPOSER_LOG) << "bad validity" << int(it->validity());

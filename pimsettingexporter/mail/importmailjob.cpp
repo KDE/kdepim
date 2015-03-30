@@ -50,7 +50,8 @@
 #include <QStandardPaths>
 
 using namespace Akonadi;
-namespace {
+namespace
+{
 inline const QString storeMails()
 {
     return QLatin1String("backupmail/");
@@ -1227,7 +1228,7 @@ void ImportMailJob::mergeLdapConfig(const KArchiveFile *archivefile, const QStri
         grpExisting.writeEntry(QString::fromLatin1("SelectedTimeLimit%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("SelectedTimeLimit%1").arg(i), 0));
         grpExisting.writeEntry(QString::fromLatin1("SelectedUser%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("SelectedUser%1").arg(i), QString()));
         grpExisting.writeEntry(QString::fromLatin1("SelectedVersion%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("SelectedVersion%1").arg(i), 0));
-        grpExisting.writeEntry(QString::fromLatin1("SelectedUserFilter%1").arg(existingNumberSelectedHosts+i+1),grpImporting.readEntry(QString::fromLatin1("SelectedUserFilter%1").arg(i),0));
+        grpExisting.writeEntry(QString::fromLatin1("SelectedUserFilter%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("SelectedUserFilter%1").arg(i), 0));
     }
 
     for (int i = 0; i < importingNumberHosts; ++i) {
@@ -1244,7 +1245,7 @@ void ImportMailJob::mergeLdapConfig(const KArchiveFile *archivefile, const QStri
         grpExisting.writeEntry(QString::fromLatin1("TimeLimit%1").arg(existingNumberHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("TimeLimit%1").arg(i), 0));
         grpExisting.writeEntry(QString::fromLatin1("User%1").arg(existingNumberHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("User%1").arg(i), QString()));
         grpExisting.writeEntry(QString::fromLatin1("Version%1").arg(existingNumberHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("Version%1").arg(i), 0));
-        grpExisting.writeEntry(QString::fromLatin1("UserFilter%1").arg(existingNumberSelectedHosts+i+1),grpImporting.readEntry(QString::fromLatin1("UserFilter%1").arg(i),0));
+        grpExisting.writeEntry(QString::fromLatin1("UserFilter%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("UserFilter%1").arg(i), 0));
     }
 
     grpExisting.sync();

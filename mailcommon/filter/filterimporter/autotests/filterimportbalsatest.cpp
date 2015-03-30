@@ -33,4 +33,4 @@ void FilterImportBalsatest::testImportFilters()
 {
 }
 
-QTEST_AKONADIMAIN( FilterImportBalsatest )
+QTEST_AKONADIMAIN(FilterImportBalsatest)

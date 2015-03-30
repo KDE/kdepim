@@ -84,11 +84,11 @@ JobTrackerWidget::~JobTrackerWidget()
     delete d;
 }
 
-void JobTrackerWidget::contextMenu( const QPoint &/*pos*/ )
+void JobTrackerWidget::contextMenu(const QPoint &/*pos*/)
 {
-  QMenu menu;
-  menu.addAction( i18n( "Clear View" ), d->model, SLOT(resetTracker()) );
-  menu.exec( QCursor::pos() );
+    QMenu menu;
+    menu.addAction(i18n("Clear View"), d->model, SLOT(resetTracker()));
+    menu.exec(QCursor::pos());
 }
 
 void JobTrackerWidget::slotSaveToFile()

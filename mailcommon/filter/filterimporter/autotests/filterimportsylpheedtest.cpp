@@ -33,4 +33,4 @@ void FilterImportSylpheedtest::testImportFilters()
 {
 }
 
-QTEST_AKONADIMAIN( FilterImportSylpheedtest )
+QTEST_AKONADIMAIN(FilterImportSylpheedtest)

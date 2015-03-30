@@ -20,4 +20,3 @@
 #include "headerthemeeditor_debug.h"
 Q_LOGGING_CATEGORY(HEADERTHEMEEDITOR_LOG, "log_headerthemeeditor")
 
-

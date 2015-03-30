@@ -203,4 +203,4 @@ void FilterImportThunderbirdtest::testImportTypeFilters()
     qDeleteAll(lst);
 }
 
-QTEST_AKONADIMAIN( FilterImportThunderbirdtest )
+QTEST_AKONADIMAIN(FilterImportThunderbirdtest)

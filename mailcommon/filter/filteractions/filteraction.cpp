@@ -63,7 +63,7 @@ QString FilterAction::informationAboutNotValidAction() const
     return QString();
 }
 
-FilterAction* FilterAction::newAction()
+FilterAction *FilterAction::newAction()
 {
     return 0;
 }

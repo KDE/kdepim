@@ -1052,18 +1052,18 @@ bool ObjectTreeParser::okDecryptMIME(KMime::Content &data,
              && !kmkernel->contextMenuShown()*/) {
         QByteArray ciphertext = data.decodedContent();
 #ifdef MARCS_DEBUG
-        QString cipherStr = QString::fromLatin1( ciphertext );
-        bool cipherIsBinary = ( !cipherStr.contains(QLatin1String("BEGIN ENCRYPTED MESSAGE"), Qt::CaseInsensitive ) ) &&
-                ( !cipherStr.contains(QLatin1String("BEGIN PGP ENCRYPTED MESSAGE"), Qt::CaseInsensitive ) ) &&
-                ( !cipherStr.contains(QLatin1String("BEGIN PGP MESSAGE"), Qt::CaseInsensitive ) );
+        QString cipherStr = QString::fromLatin1(ciphertext);
+        bool cipherIsBinary = (!cipherStr.contains(QLatin1String("BEGIN ENCRYPTED MESSAGE"), Qt::CaseInsensitive)) &&
+                              (!cipherStr.contains(QLatin1String("BEGIN PGP ENCRYPTED MESSAGE"), Qt::CaseInsensitive)) &&
+                              (!cipherStr.contains(QLatin1String("BEGIN PGP MESSAGE"), Qt::CaseInsensitive));
 
         dumpToFile("dat_04_reader.encrypted", ciphertext.data(), ciphertext.size());
 
         QString deb;
         deb =  QLatin1String("\n\nE N C R Y P T E D    D A T A = ");
-        if ( cipherIsBinary )
+        if (cipherIsBinary) {
             deb += QLatin1String("[binary data]");
-        else {
+        } else {
             deb += QLatin1String("\"");
             deb += cipherStr;
             deb += QLatin1String("\"");
@@ -3535,11 +3535,11 @@ void ObjectTreeParser::dumpToFile(const char *filename, const char *start,
 {
     assert(filename);
 
-    QFile f( QString::fromAscii(filename) );
-    if ( f.open( QIODevice::WriteOnly ) ) {
-        if ( start ) {
-            QDataStream ds( &f );
-            ds.writeRawData( start, len );
+    QFile f(QString::fromAscii(filename));
+    if (f.open(QIODevice::WriteOnly)) {
+        if (start) {
+            QDataStream ds(&f);
+            ds.writeRawData(start, len);
         }
         f.close();  // If data is 0 we just create a zero length file.
     }

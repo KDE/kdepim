@@ -33,4 +33,4 @@ void FilterImportProcmailtest::testImportFilters()
 {
 }
 
-QTEST_AKONADIMAIN( FilterImportProcmailtest )
+QTEST_AKONADIMAIN(FilterImportProcmailtest)

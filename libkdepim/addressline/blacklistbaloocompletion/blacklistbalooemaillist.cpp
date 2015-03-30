@@ -45,7 +45,6 @@ void BlackListBalooEmailList::changeEvent(QEvent *event)
     QListWidget::changeEvent(event);
 }
 
-
 void BlackListBalooEmailList::setEmailBlackList(const QStringList &list)
 {
     mEmailBlackList = list;

@@ -38,7 +38,6 @@ public:
         return MailCommon::SearchRule::CompleteMessage;
     }
 
-
 };
 
 FilterActionWithAddressTest::FilterActionWithAddressTest(QObject *parent)

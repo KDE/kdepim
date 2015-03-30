@@ -84,8 +84,8 @@ void FilterActionWithUrl::slotHelp()
 
 void FilterActionWithUrl::applyParamWidgetValue(QWidget *paramWidget)
 {
-    KUrlRequester *requester = paramWidget->findChild<KUrlRequester*>( QLatin1String("requester") );
-    Q_ASSERT( requester );
+    KUrlRequester *requester = paramWidget->findChild<KUrlRequester *>(QLatin1String("requester"));
+    Q_ASSERT(requester);
 
     const QUrl url = requester->url();
 
@@ -94,16 +94,16 @@ void FilterActionWithUrl::applyParamWidgetValue(QWidget *paramWidget)
 
 void FilterActionWithUrl::setParamWidgetValue(QWidget *paramWidget) const
 {
-    KUrlRequester *requester = paramWidget->findChild<KUrlRequester*>( QLatin1String("requester") );
-    Q_ASSERT( requester );
+    KUrlRequester *requester = paramWidget->findChild<KUrlRequester *>(QLatin1String("requester"));
+    Q_ASSERT(requester);
 
-    requester->setUrl( QUrl::fromLocalFile( mParameter ) );
+    requester->setUrl(QUrl::fromLocalFile(mParameter));
 }
 
 void FilterActionWithUrl::clearParamWidget(QWidget *paramWidget) const
 {
-    KUrlRequester *requester = paramWidget->findChild<KUrlRequester*>( QLatin1String("requester") );
-    Q_ASSERT( requester );
+    KUrlRequester *requester = paramWidget->findChild<KUrlRequester *>(QLatin1String("requester"));
+    Q_ASSERT(requester);
     requester->clear();
 }
 

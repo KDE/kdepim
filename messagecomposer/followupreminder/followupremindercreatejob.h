@@ -25,7 +25,8 @@
 #include "agents/followupreminderagent/followupreminderinfo.h"
 #include <KJob>
 #include "messagecomposer_export.h"
-namespace MessageComposer {
+namespace MessageComposer
+{
 
 class MESSAGECOMPOSER_EXPORT FollowupReminderCreateJob : public KJob
 {

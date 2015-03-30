@@ -28,8 +28,8 @@ using namespace KPIM;
 class MatchingCheckableProxyModel : public KCheckableProxyModel
 {
 public:
-    MatchingCheckableProxyModel(QObject* parent = 0): KCheckableProxyModel(parent) {}
-    virtual QModelIndexList match(const QModelIndex& start, int role, const QVariant& value, int hits = 1, Qt::MatchFlags flags = Qt::MatchExactly) const
+    MatchingCheckableProxyModel(QObject *parent = 0): KCheckableProxyModel(parent) {}
+    virtual QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1, Qt::MatchFlags flags = Qt::MatchExactly) const
     {
         if (role == Qt::CheckStateRole) {
             return selectionModel()->selectedRows();
@@ -38,8 +38,8 @@ public:
     }
 };
 
-TagSelectionCombo::TagSelectionCombo(QWidget* parent)
-:   KPIM::KCheckComboBox(parent)
+TagSelectionCombo::TagSelectionCombo(QWidget *parent)
+    :   KPIM::KCheckComboBox(parent)
 {
     Akonadi::Monitor *monitor = new Akonadi::Monitor(this);
     monitor->setTypeMonitored(Akonadi::Monitor::Tags);
@@ -47,19 +47,19 @@ TagSelectionCombo::TagSelectionCombo(QWidget* parent)
     Akonadi::TagModel *model = new Akonadi::TagModel(monitor, this);
 
     QItemSelectionModel *selectionModel = new QItemSelectionModel(model, this);
-    KCheckableProxyModel *checkableProxy = new MatchingCheckableProxyModel( this );
-    checkableProxy->setSourceModel( model );
-    checkableProxy->setSelectionModel( selectionModel );
+    KCheckableProxyModel *checkableProxy = new MatchingCheckableProxyModel(this);
+    checkableProxy->setSourceModel(model);
+    checkableProxy->setSelectionModel(selectionModel);
 
     setModel(checkableProxy);
 
     //We need to reconnect from the constructor of KCheckComboBox to the new model
     connect(checkableProxy, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-            this, SLOT(updateCheckedItems(QModelIndex,QModelIndex)) );
+            this, SLOT(updateCheckedItems(QModelIndex,QModelIndex)));
 }
 
-TagCombo::TagCombo(QWidget* parent)
-:   KComboBox(parent)
+TagCombo::TagCombo(QWidget *parent)
+    :   KComboBox(parent)
 {
     Akonadi::Monitor *monitor = new Akonadi::Monitor(this);
     monitor->setTypeMonitored(Akonadi::Monitor::Tags);

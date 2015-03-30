@@ -389,12 +389,12 @@ void IncidenceDialogPrivate::storeTemplatesInConfig(const QStringList &templateN
     // I find this somewhat broken. templates() returns a reference, maybe it should
     // be changed by adding a setTemplates method.
     const QStringList origTemplates =
-      IncidenceEditorNG::EditorConfig::instance()->templates( mEditor->type() );
+        IncidenceEditorNG::EditorConfig::instance()->templates(mEditor->type());
     const QString defaultPath = KStandardDirs::locateLocal(
-                "data",
-                "korganizer/templates/" +
-                typeToString( mEditor->type() ) + '/');
-    Q_FOREACH(const QString &tmpl, origTemplates) {
+                                    "data",
+                                    "korganizer/templates/" +
+                                    typeToString(mEditor->type()) + '/');
+    Q_FOREACH (const QString &tmpl, origTemplates) {
         if (!templateNames.contains(tmpl)) {
             const QString fileName = defaultPath + tmpl;
             QFile file(fileName);

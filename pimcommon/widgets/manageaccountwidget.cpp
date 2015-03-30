@@ -73,7 +73,6 @@ bool ManageAccountWidget::eventFilter(QObject *obj, QEvent *event)
     return QWidget::eventFilter(obj, event);
 }
 
-
 QAbstractItemView *ManageAccountWidget::view() const
 {
     return mWidget->mAccountList->view();

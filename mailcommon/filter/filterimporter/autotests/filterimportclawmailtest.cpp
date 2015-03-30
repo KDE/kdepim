@@ -39,4 +39,4 @@ void FilterImportClawMailtest::testImportFilters()
     delete filter;
 }
 
-QTEST_AKONADIMAIN( FilterImportClawMailtest )
+QTEST_AKONADIMAIN(FilterImportClawMailtest)

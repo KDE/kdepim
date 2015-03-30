@@ -22,7 +22,8 @@
 #include "pimcommon_export.h"
 class QAction;
 class KActionCollection;
-namespace PimCommon {
+namespace PimCommon
+{
 class PIMCOMMON_EXPORT KActionMenuChangeCase : public KActionMenu
 {
     Q_OBJECT

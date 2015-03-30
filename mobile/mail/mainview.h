@@ -157,7 +157,7 @@ protected Q_SLOTS:
     void sendAgain();
     void sendQueued();
     void sendQueuedVia();
-    void sendQueuedVia(int transportId );
+    void sendQueuedVia(int transportId);
     void saveMessage();
     void findInMessage();
     void preferHTML(bool useHtml);

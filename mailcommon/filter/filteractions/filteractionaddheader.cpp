@@ -46,7 +46,7 @@ FilterActionAddHeader::FilterActionAddHeader(QObject *parent)
 
 bool FilterActionAddHeader::isEmpty() const
 {
-   return (mParameter.isEmpty() || mValue.isEmpty());
+    return (mParameter.isEmpty() || mValue.isEmpty());
 }
 
 FilterAction::ReturnCode FilterActionAddHeader::process(ItemContext &context , bool) const

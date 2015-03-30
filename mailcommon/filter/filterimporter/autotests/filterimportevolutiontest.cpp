@@ -33,4 +33,4 @@ void FilterImportEvolutiontest::testImportFilters()
 {
 }
 
-QTEST_AKONADIMAIN( FilterImportEvolutiontest )
+QTEST_AKONADIMAIN(FilterImportEvolutiontest)

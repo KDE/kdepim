@@ -28,7 +28,8 @@ class CollectionComboBox;
 }
 class KDateComboBox;
 
-namespace MessageComposer {
+namespace MessageComposer
+{
 class MESSAGECOMPOSER_EXPORT FollowUpReminderSelectDateDialog : public QDialog
 {
     Q_OBJECT

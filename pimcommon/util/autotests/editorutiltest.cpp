@@ -44,16 +44,16 @@ void EditorUtilTest::testUpperCase_data()
 
 void EditorUtilTest::testUpperCase()
 {
-    QFETCH( QString, input );
-    QFETCH( QString, result );
-    QFETCH( int, startcursorposition);
-    QFETCH( int, endcursorposition);
-    QTextDocument * document = new QTextDocument(this);
+    QFETCH(QString, input);
+    QFETCH(QString, result);
+    QFETCH(int, startcursorposition);
+    QFETCH(int, endcursorposition);
+    QTextDocument *document = new QTextDocument(this);
     document->setPlainText(input);
     QTextCursor textCursor(document);
     if (startcursorposition != -1 && endcursorposition != -1) {
         textCursor.setPosition(startcursorposition);
-        textCursor.movePosition(QTextCursor::NextCharacter,QTextCursor::KeepAnchor, endcursorposition - startcursorposition );
+        textCursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, endcursorposition - startcursorposition);
     }
     PimCommon::EditorUtil editorUtil;
     editorUtil.upperCase(textCursor);
@@ -72,19 +72,18 @@ void EditorUtilTest::testLowerCase_data()
     QTest::newRow("onelinewithselectionuppercase") <<  QString(QLatin1String("FOO")) << QString(QLatin1String("foo")) << 0 << 3;
 }
 
-
 void EditorUtilTest::testLowerCase()
 {
-    QFETCH( QString, input );
-    QFETCH( QString, result );
-    QFETCH( int, startcursorposition);
-    QFETCH( int, endcursorposition);
-    QTextDocument * document = new QTextDocument(this);
+    QFETCH(QString, input);
+    QFETCH(QString, result);
+    QFETCH(int, startcursorposition);
+    QFETCH(int, endcursorposition);
+    QTextDocument *document = new QTextDocument(this);
     document->setPlainText(input);
     QTextCursor textCursor(document);
     if (startcursorposition != -1 && endcursorposition != -1) {
         textCursor.setPosition(startcursorposition);
-        textCursor.movePosition(QTextCursor::NextCharacter,QTextCursor::KeepAnchor, endcursorposition - startcursorposition );
+        textCursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, endcursorposition - startcursorposition);
     }
     PimCommon::EditorUtil editorUtil;
     editorUtil.lowerCase(textCursor);
@@ -105,16 +104,16 @@ void EditorUtilTest::testSentenceCase_data()
 
 void EditorUtilTest::testSentenceCase()
 {
-    QFETCH( QString, input );
-    QFETCH( QString, result );
-    QFETCH( int, startcursorposition);
-    QFETCH( int, endcursorposition);
-    QTextDocument * document = new QTextDocument(this);
+    QFETCH(QString, input);
+    QFETCH(QString, result);
+    QFETCH(int, startcursorposition);
+    QFETCH(int, endcursorposition);
+    QTextDocument *document = new QTextDocument(this);
     document->setPlainText(input);
     QTextCursor textCursor(document);
     if (startcursorposition != -1 && endcursorposition != -1) {
         textCursor.setPosition(startcursorposition);
-        textCursor.movePosition(QTextCursor::NextCharacter,QTextCursor::KeepAnchor, endcursorposition - startcursorposition );
+        textCursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, endcursorposition - startcursorposition);
     }
     PimCommon::EditorUtil editorUtil;
     editorUtil.sentenceCase(textCursor);
@@ -136,24 +135,22 @@ void EditorUtilTest::testReverseCase_data()
 
 void EditorUtilTest::testReverseCase()
 {
-    QFETCH( QString, input );
-    QFETCH( QString, result );
-    QFETCH( int, startcursorposition);
-    QFETCH( int, endcursorposition);
+    QFETCH(QString, input);
+    QFETCH(QString, result);
+    QFETCH(int, startcursorposition);
+    QFETCH(int, endcursorposition);
 
-    QTextDocument * document = new QTextDocument(this);
+    QTextDocument *document = new QTextDocument(this);
     document->setPlainText(input);
     QTextCursor textCursor(document);
     if (startcursorposition != -1 && endcursorposition != -1) {
         textCursor.setPosition(startcursorposition);
-        textCursor.movePosition(QTextCursor::NextCharacter,QTextCursor::KeepAnchor, endcursorposition - startcursorposition );
+        textCursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, endcursorposition - startcursorposition);
     }
     PimCommon::EditorUtil editorUtil;
     editorUtil.reverseCase(textCursor);
     QCOMPARE(textCursor.document()->toPlainText(), result);
     delete document;
 }
-
-
 
 QTEST_MAIN(EditorUtilTest)

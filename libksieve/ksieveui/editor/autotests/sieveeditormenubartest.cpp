@@ -101,7 +101,6 @@ void SieveEditorMenuBarTest::shouldEmitSignals()
     QSignalSpy spyReplace(&bar, SIGNAL(replace()));
     bar.replaceAction()->trigger();
 
-
     QCOMPARE(spyUnComment.count(), 1);
     QCOMPARE(spyComment.count(), 1);
     QCOMPARE(spyGotoLine.count(), 1);
@@ -114,6 +113,5 @@ void SieveEditorMenuBarTest::shouldEmitSignals()
     QCOMPARE(spyFind.count(), 1);
     QCOMPARE(spyReplace.count(), 1);
 }
-
 
 QTEST_MAIN(SieveEditorMenuBarTest)

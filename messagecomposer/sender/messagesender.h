@@ -82,7 +82,10 @@ public:
 
        @return true on success.
     */
-    bool sendQueued( int transportId = -1) { return doSendQueued( transportId ); }
+    bool sendQueued(int transportId = -1)
+    {
+        return doSendQueued(transportId);
+    }
 
 protected:
     virtual bool doSend(const KMime::Message::Ptr &msg, short sendNow) = 0;

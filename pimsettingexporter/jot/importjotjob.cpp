@@ -30,7 +30,8 @@
 #include <QDir>
 #include <QStandardPaths>
 
-namespace {
+namespace
+{
 inline const QString storeJot()
 {
     return QLatin1String("backupjot/");

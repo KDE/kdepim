@@ -212,10 +212,10 @@ bool QWinMetaFile::load(QBuffer &buffer)
             qCDebug(KTNEFAPPS_LOG) << endl << "-------------------------------------------------";
             qCDebug(KTNEFAPPS_LOG) << "WMF Placeable Header (" << static_cast<int>(sizeof(pheader)) << "):";
             qCDebug(KTNEFAPPS_LOG) << "  bbox=(" << mBBox.left() << ";" << mBBox.top() << ";" << mBBox.width()
-                     << "; " << mBBox.height() << ")";
+                                   << "; " << mBBox.height() << ")";
             qCDebug(KTNEFAPPS_LOG) << "  inch=" << pheader.inch;
             qCDebug(KTNEFAPPS_LOG) << "  checksum=" << pheader.checksum << "("
-                     << (pheader.checksum == checksum ? "ok" : "wrong") << " )";
+                                   << (pheader.checksum == checksum ? "ok" : "wrong") << " )";
         }
     } else {
         buffer.reset();
@@ -255,9 +255,9 @@ bool QWinMetaFile::load(QBuffer &buffer)
             qCDebug(KTNEFAPPS_LOG) << "  iType=" << eheader.iType;
             qCDebug(KTNEFAPPS_LOG) << "  nSize=" << eheader.nSize;
             qCDebug(KTNEFAPPS_LOG) << "  rclBounds=(" << eheader.rclBounds.left << ";" << eheader.rclBounds.top << ";"
-                     << eheader.rclBounds.right << "; " << eheader.rclBounds.bottom << ")";
+                                   << eheader.rclBounds.right << "; " << eheader.rclBounds.bottom << ")";
             qCDebug(KTNEFAPPS_LOG) << "  rclFrame=(" << eheader.rclFrame.left << ";" << eheader.rclFrame.top << ";"
-                     << eheader.rclFrame.right << "; " << eheader.rclFrame.bottom << ")";
+                                   << eheader.rclFrame.right << "; " << eheader.rclFrame.bottom << ")";
             qCDebug(KTNEFAPPS_LOG) << "  nBytes=" << eheader.nBytes;
             qCDebug(KTNEFAPPS_LOG) << "\nNOT YET IMPLEMENTED, SORRY.";
         }
@@ -362,7 +362,7 @@ bool QWinMetaFile::paint(QPaintDevice *aTarget, bool absolute)
     mPainter.begin(aTarget);
     if (QWMF_DEBUG)  {
         qCDebug(KTNEFAPPS_LOG) << "Bounding box :" << mBBox.left()
-                 << " " << mBBox.top() << " " << mBBox.right() << " " << mBBox.bottom();
+                               << " " << mBBox.top() << " " << mBBox.right() << " " << mBBox.bottom();
     }
 
     if (mAbsoluteCoord) {

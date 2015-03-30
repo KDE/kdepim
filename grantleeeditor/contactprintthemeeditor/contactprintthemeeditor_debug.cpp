@@ -20,4 +20,3 @@
 #include "contactprintthemeeditor_debug.h"
 Q_LOGGING_CATEGORY(CONTACTPRINTTHEMEEDITOR_LOG, "log_contactprintthemeeditor")
 
-

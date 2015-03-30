@@ -377,7 +377,6 @@ void SieveEditorTextModeWidget::uncomment()
     mTextEdit->uncomment();
 }
 
-
 void SieveEditorTextModeWidget::setReadOnly(bool b)
 {
     mTextEdit->setReadOnly(b);

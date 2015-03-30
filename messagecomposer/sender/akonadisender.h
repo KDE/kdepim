@@ -56,8 +56,8 @@ protected:
     /**
     Send queued messages, using the specified transport or the
     default, if none is given.
-   */
-    bool doSendQueued( int transportId = -1 ) Q_DECL_OVERRIDE;
+    */
+    bool doSendQueued(int transportId = -1) Q_DECL_OVERRIDE;
 
 private:
     /**

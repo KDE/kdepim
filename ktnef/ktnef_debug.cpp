@@ -20,4 +20,3 @@
 #include "ktnef_debug.h"
 Q_LOGGING_CATEGORY(KTNEFAPPS_LOG, "log_ktnefapps")
 
-

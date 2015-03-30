@@ -163,7 +163,7 @@ void LdapClientSearchConfig::readConfig(KLDAP::LdapServer &server, KConfigGroup 
     }
 
     server.setMech(config.readEntry(prefix + QString::fromLatin1("Mech%1").arg(j), QString()));
-    server.setFilter( config.readEntry( prefix + QString::fromLatin1( "UserFilter%1" ).arg( j ), QString() ) );
+    server.setFilter(config.readEntry(prefix + QString::fromLatin1("UserFilter%1").arg(j), QString()));
 }
 
 void LdapClientSearchConfig::writeConfig(const KLDAP::LdapServer &server, KConfigGroup &config, int j, bool active)
@@ -221,7 +221,7 @@ void LdapClientSearchConfig::writeConfig(const KLDAP::LdapServer &server, KConfi
     }
     config.writeEntry(prefix + QString::fromLatin1("Auth%1").arg(j), tmp);
     config.writeEntry(prefix + QString::fromLatin1("Mech%1").arg(j), server.mech());
-    config.writeEntry( prefix + QString::fromLatin1( "UserFilter%1" ).arg( j ), server.filter().trimmed() );
+    config.writeEntry(prefix + QString::fromLatin1("UserFilter%1").arg(j), server.filter().trimmed());
 }
 
 void LdapClientSearchConfig::slotWalletClosed()

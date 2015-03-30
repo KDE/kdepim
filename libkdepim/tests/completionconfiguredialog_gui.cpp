@@ -26,18 +26,16 @@
 
 #include <addressline/completionconfiguredialog/completionconfiguredialog.h>
 
-
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
-  KAboutData aboutData("testcompletionconfiguredialog", 0, ki18n("Test CompletionConfigureDialog"), "0.1");
-  KCmdLineArgs::init(argc,argv,&aboutData);
+    KAboutData aboutData("testcompletionconfiguredialog", 0, ki18n("Test CompletionConfigureDialog"), "0.1");
+    KCmdLineArgs::init(argc, argv, &aboutData);
 
-  KApplication app;
-  KPIM::CompletionConfigureDialog dlg;
-  dlg.show();
+    KApplication app;
+    KPIM::CompletionConfigureDialog dlg;
+    dlg.show();
 
-  return app.exec();
+    return app.exec();
 
 }
-
 

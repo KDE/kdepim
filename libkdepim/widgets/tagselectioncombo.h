@@ -22,20 +22,21 @@
 #include <KComboBox>
 #include "kcheckcombobox.h"
 
-namespace KPIM {
+namespace KPIM
+{
 
 class KDEPIM_EXPORT TagSelectionCombo : public KPIM::KCheckComboBox
 {
     Q_OBJECT
 public:
-    explicit TagSelectionCombo(QWidget* parent = 0);
+    explicit TagSelectionCombo(QWidget *parent = 0);
 };
 
 class KDEPIM_EXPORT TagCombo : public KComboBox
 {
     Q_OBJECT
 public:
-    explicit TagCombo(QWidget* parent = 0);
+    explicit TagCombo(QWidget *parent = 0);
 };
 
 }

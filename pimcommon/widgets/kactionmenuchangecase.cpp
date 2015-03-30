@@ -24,18 +24,17 @@ KActionMenuChangeCase::KActionMenuChangeCase(QObject *parent)
     : KActionMenu(parent)
 {
     setText(i18n("Change Case"));
-    mUpperCase = new QAction( i18n("Uppercase"), this );
-    connect( mUpperCase, &QAction::triggered, this, &KActionMenuChangeCase::upperCase );
+    mUpperCase = new QAction(i18n("Uppercase"), this);
+    connect(mUpperCase, &QAction::triggered, this, &KActionMenuChangeCase::upperCase);
 
-    mSentenceCase = new QAction( i18n("Sentence case"), this );
-    connect( mSentenceCase, &QAction::triggered, this, &KActionMenuChangeCase::sentenceCase );
+    mSentenceCase = new QAction(i18n("Sentence case"), this);
+    connect(mSentenceCase, &QAction::triggered, this, &KActionMenuChangeCase::sentenceCase);
 
-    mLowerCase = new QAction( i18n("Lowercase"), this );
-    connect( mLowerCase, &QAction::triggered, this, &KActionMenuChangeCase::lowerCase );
+    mLowerCase = new QAction(i18n("Lowercase"), this);
+    connect(mLowerCase, &QAction::triggered, this, &KActionMenuChangeCase::lowerCase);
 
-    mReverseCase = new QAction( i18n("Reverse Case"), this );
-    connect( mReverseCase, &QAction::triggered, this, &KActionMenuChangeCase::reverseCase );
-
+    mReverseCase = new QAction(i18n("Reverse Case"), this);
+    connect(mReverseCase, &QAction::triggered, this, &KActionMenuChangeCase::reverseCase);
 
     addAction(mUpperCase);
     addAction(mLowerCase);
@@ -71,9 +70,9 @@ QAction *KActionMenuChangeCase::reverseCaseAction() const
 void KActionMenuChangeCase::appendInActionCollection(KActionCollection *ac)
 {
     if (ac) {
-        ac->addAction( QLatin1String("change_to_uppercase"), mUpperCase );
-        ac->addAction( QLatin1String("change_to_sentencecase"), mSentenceCase );
-        ac->addAction( QLatin1String("change_to_lowercase"), mLowerCase );
-        ac->addAction( QLatin1String("change_to_reversecase"), mReverseCase );
+        ac->addAction(QLatin1String("change_to_uppercase"), mUpperCase);
+        ac->addAction(QLatin1String("change_to_sentencecase"), mSentenceCase);
+        ac->addAction(QLatin1String("change_to_lowercase"), mLowerCase);
+        ac->addAction(QLatin1String("change_to_reversecase"), mReverseCase);
     }
 }

@@ -47,13 +47,13 @@ void FilterActionAddToAddressBookTest::shouldHaveDefaultValue()
     QLabel *label = w->findChild<QLabel *>(QLatin1String("label_with_category"));
     QVERIFY(label);
 
-    KPIM::TagWidget *categoryEdit = w->findChild<KPIM::TagWidget *>( QLatin1String("CategoryEdit") );
+    KPIM::TagWidget *categoryEdit = w->findChild<KPIM::TagWidget *>(QLatin1String("CategoryEdit"));
     QVERIFY(categoryEdit);
 
     label = w->findChild<QLabel *>(QLatin1String("label_in_addressbook"));
     QVERIFY(label);
 
-    Akonadi::CollectionComboBox *collectionComboBox = w->findChild<Akonadi::CollectionComboBox *>(QLatin1String("AddressBookComboBox") );
+    Akonadi::CollectionComboBox *collectionComboBox = w->findChild<Akonadi::CollectionComboBox *>(QLatin1String("AddressBookComboBox"));
     QVERIFY(collectionComboBox);
 }
 

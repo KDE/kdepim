@@ -23,5 +23,5 @@
 #include <QLoggingCategory>
 Q_DECLARE_LOGGING_CATEGORY(KTNEFAPPS_LOG)
 
-#endif 
+#endif
 

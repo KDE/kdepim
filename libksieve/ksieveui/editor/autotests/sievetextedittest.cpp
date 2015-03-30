@@ -52,22 +52,21 @@ void SieveTextEditTest::comment_data()
 
 void SieveTextEditTest::comment()
 {
-    QFETCH( QString, input );
-    QFETCH( QString, result );
-    QFETCH( int, startcursorposition);
-    QFETCH( int, endcursorposition);
+    QFETCH(QString, input);
+    QFETCH(QString, result);
+    QFETCH(int, startcursorposition);
+    QFETCH(int, endcursorposition);
     KSieveUi::SieveTextEdit edit;
     edit.setPlainText(input);
     if (startcursorposition != -1 && endcursorposition != -1) {
         QTextCursor cursor = edit.textCursor();
         cursor.setPosition(startcursorposition);
-        cursor.movePosition(QTextCursor::NextCharacter,QTextCursor::KeepAnchor, endcursorposition - startcursorposition );
+        cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, endcursorposition - startcursorposition);
         edit.setTextCursor(cursor);
     }
     edit.comment();
     QCOMPARE(edit.toPlainText(), result);
 }
-
 
 void SieveTextEditTest::uncomment_data()
 {
@@ -86,16 +85,16 @@ void SieveTextEditTest::uncomment_data()
 
 void SieveTextEditTest::uncomment()
 {
-    QFETCH( QString, input );
-    QFETCH( QString, result );
-    QFETCH( int, startcursorposition);
-    QFETCH( int, endcursorposition);
+    QFETCH(QString, input);
+    QFETCH(QString, result);
+    QFETCH(int, startcursorposition);
+    QFETCH(int, endcursorposition);
     KSieveUi::SieveTextEdit edit;
     edit.setPlainText(input);
     if (startcursorposition != -1 && endcursorposition != -1) {
         QTextCursor cursor = edit.textCursor();
         cursor.setPosition(endcursorposition);
-        cursor.movePosition(QTextCursor::PreviousCharacter,QTextCursor::KeepAnchor, endcursorposition - startcursorposition );
+        cursor.movePosition(QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor, endcursorposition - startcursorposition);
         edit.setTextCursor(cursor);
     }
 

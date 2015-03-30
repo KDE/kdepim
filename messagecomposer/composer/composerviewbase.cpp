@@ -272,7 +272,7 @@ void MessageComposer::ComposerViewBase::clearFollowUp()
     mFollowUpCollection = Akonadi::Collection();
 }
 
-void MessageComposer::ComposerViewBase::send ( MessageComposer::MessageSender::SendMethod method, MessageComposer::MessageSender::SaveIn saveIn, bool checkMailDispatcher )
+void MessageComposer::ComposerViewBase::send(MessageComposer::MessageSender::SendMethod method, MessageComposer::MessageSender::SaveIn saveIn, bool checkMailDispatcher)
 {
     mSendMethod = method;
     mSaveIn = saveIn;
@@ -1014,7 +1014,6 @@ void MessageComposer::ComposerViewBase::setFollowUpDate(const QDate &followUpDat
 {
     mFollowUpDate = followUpDate;
 }
-
 
 Sonnet::DictionaryComboBox *MessageComposer::ComposerViewBase::dictionary() const
 {
