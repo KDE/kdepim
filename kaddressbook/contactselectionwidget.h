@@ -67,8 +67,6 @@ public:
      */
     KABC::Addressee::List selectedContacts() const;
 
-    Akonadi::Item::List selectedContactsItem() const;
-
     void setAddGroupContact(bool addGroupContact);
 private:
     void initGui();
@@ -76,9 +74,6 @@ private:
     KABC::Addressee::List collectAllContacts() const;
     KABC::Addressee::List collectSelectedContacts() const;
     KABC::Addressee::List collectAddressBookContacts() const;
-    Akonadi::Item::List collectAllContactsItem() const;
-    Akonadi::Item::List collectSelectedContactsItem() const;
-    Akonadi::Item::List collectAddressBookContactsItem() const;
 
     QItemSelectionModel *mSelectionModel;
 
