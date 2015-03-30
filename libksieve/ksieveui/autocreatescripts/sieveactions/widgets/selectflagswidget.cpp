@@ -75,21 +75,21 @@ SelectFlagsListWidget::~SelectFlagsListWidget()
 void SelectFlagsListWidget::init()
 {
     QListWidgetItem *item = new QListWidgetItem(i18n("Deleted"), this);
-    item->setData(FlagsRealName, QLatin1String("\\\\Deleted"));
+    item->setData(FlagsRealName, QStringLiteral("\\\\Deleted"));
     item->setCheckState(Qt::Unchecked);
     item = new QListWidgetItem(i18n("Answered"), this);
-    item->setData(FlagsRealName, QLatin1String("\\\\Answered"));
+    item->setData(FlagsRealName, QStringLiteral("\\\\Answered"));
     item->setCheckState(Qt::Unchecked);
     item = new QListWidgetItem(i18n("Flagged"), this);
-    item->setData(FlagsRealName, QLatin1String("\\\\Flagged"));
+    item->setData(FlagsRealName, QStringLiteral("\\\\Flagged"));
     item->setCheckState(Qt::Unchecked);
     item = new QListWidgetItem(i18n("Seen"), this);
-    item->setData(FlagsRealName, QLatin1String("\\\\Seen"));
+    item->setData(FlagsRealName, QStringLiteral("\\\\Seen"));
     item->setCheckState(Qt::Unchecked);
-    //item = new QListWidgetItem(QLatin1String("\\\\Recent"), this);
+    //item = new QListWidgetItem(QStringLiteral("\\\\Recent"), this);
     //item->setCheckState(Qt::Unchecked);
     item = new QListWidgetItem(i18n("Draft"), this);
-    item->setData(FlagsRealName, QLatin1String("\\\\Draft"));
+    item->setData(FlagsRealName, QStringLiteral("\\\\Draft"));
     item->setCheckState(Qt::Unchecked);
 }
 

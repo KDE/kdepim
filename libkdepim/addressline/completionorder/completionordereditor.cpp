@@ -80,7 +80,7 @@ CompletionOrderEditor::CompletionOrderEditor(KLDAP::LdapClientSearch *ldapSearch
     pageHBoxLayout->setMargin(0);
 
     mCompletionOrderWidget = new CompletionOrderWidget(this);
-    mCompletionOrderWidget->setObjectName(QLatin1String("completionorderwidget"));
+    mCompletionOrderWidget->setObjectName(QStringLiteral("completionorderwidget"));
 
     mainLayout->addWidget(mCompletionOrderWidget);
     mainLayout->addWidget(buttonBox);

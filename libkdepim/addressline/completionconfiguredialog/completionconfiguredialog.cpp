@@ -44,15 +44,15 @@ CompletionConfigureDialog::CompletionConfigureDialog(QWidget *parent)
     mainLayout->addWidget(mTabWidget);
 
     mCompletionOrderWidget = new KPIM::CompletionOrderWidget();
-    mCompletionOrderWidget->setObjectName(QLatin1String("completionorder_widget"));
+    mCompletionOrderWidget->setObjectName(QStringLiteral("completionorder_widget"));
     mTabWidget->addTab(mCompletionOrderWidget, i18n("Completion order"));
 
     mRecentaddressWidget = new KPIM::RecentAddressWidget;
-    mRecentaddressWidget->setObjectName(QLatin1String("recentaddress_widget"));
+    mRecentaddressWidget->setObjectName(QStringLiteral("recentaddress_widget"));
     mTabWidget->addTab(mRecentaddressWidget, i18n("Recent Address"));
 
     mBlackListBalooWidget = new KPIM::BlackListBalooEmailCompletionWidget;
-    mBlackListBalooWidget->setObjectName(QLatin1String("blacklistbaloo_widget"));
+    mBlackListBalooWidget->setObjectName(QStringLiteral("blacklistbaloo_widget"));
     mTabWidget->addTab(mBlackListBalooWidget, i18n("Blacklist address email"));
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);

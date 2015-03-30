@@ -37,9 +37,9 @@ SelectImportanceCombobox::~SelectImportanceCombobox()
 void SelectImportanceCombobox::initialize()
 {
     addItem(QString(), QString());
-    addItem(i18n("high importance"), QLatin1String("1"));
-    addItem(i18n("normal importance"), QLatin1String("2"));
-    addItem(i18n("low importance"), QLatin1String("3"));
+    addItem(i18n("high importance"), QStringLiteral("1"));
+    addItem(i18n("normal importance"), QStringLiteral("2"));
+    addItem(i18n("low importance"), QStringLiteral("3"));
 }
 
 QString SelectImportanceCombobox::code() const

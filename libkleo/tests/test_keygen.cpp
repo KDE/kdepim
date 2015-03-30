@@ -170,7 +170,7 @@ int main(int argc, char **argv)
         protocol = argv[1];
         argc = 1; // hide from KDE
     }
-    KAboutData aboutData(QLatin1String("test_keygen"), i18n("KeyGenerationJob Test"), QLatin1String("0.1"));
+    KAboutData aboutData(QStringLiteral("test_keygen"), i18n("KeyGenerationJob Test"), QStringLiteral("0.1"));
     QApplication app(argc, argv);
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
@@ -181,7 +181,7 @@ int main(int argc, char **argv)
     aboutData.processCommandLine(&parser);
 
     KeyGenerator *keygen = new KeyGenerator(0);
-    keygen->setObjectName(QLatin1String("KeyGenerator top-level"));
+    keygen->setObjectName(QStringLiteral("KeyGenerator top-level"));
     keygen->show();
 
     return app.exec();

@@ -85,14 +85,14 @@ FileNameRequester::Private::Private(FileNameRequester *qq)
       existingOnly(true)
 {
 #ifndef QT_NO_DIRMODEL
-    dirmodel.setObjectName(QLatin1String("dirmodel"));
-    completer.setObjectName(QLatin1String("completer"));
+    dirmodel.setObjectName(QStringLiteral("dirmodel"));
+    completer.setObjectName(QStringLiteral("completer"));
 #endif
-    lineedit.setObjectName(QLatin1String("lineedit"));
-    button.setObjectName(QLatin1String("button"));
-    hlay.setObjectName(QLatin1String("hlay"));
+    lineedit.setObjectName(QStringLiteral("lineedit"));
+    button.setObjectName(QStringLiteral("button"));
+    hlay.setObjectName(QStringLiteral("hlay"));
 
-    button.setIcon(QIcon::fromTheme(QLatin1String("document-open")));
+    button.setIcon(QIcon::fromTheme(QStringLiteral("document-open")));
 #ifndef QT_NO_DIRMODEL
     lineedit.setCompleter(&completer);
 #endif

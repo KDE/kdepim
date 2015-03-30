@@ -43,8 +43,8 @@ int main(int argc, char *argv[])
     aboutData.processCommandLine(&parser);
 
     KPIM::KCheckComboBox *combo = new KPIM::KCheckComboBox(Q_NULLPTR);
-    combo->addItems(QStringList() << QLatin1String("KDE") << QLatin1String("Mac OSX") << QLatin1String("Windows") << QLatin1String("XFCE") << QLatin1String("FVWM") << QLatin1String("TWM"));
-    combo->setCheckedItems(QStringList() << QLatin1String("KDE") << QLatin1String("Mac OSX") << QLatin1String("Windows"));
+    combo->addItems(QStringList() << QStringLiteral("KDE") << QStringLiteral("Mac OSX") << QStringLiteral("Windows") << QStringLiteral("XFCE") << QStringLiteral("FVWM") << QStringLiteral("TWM"));
+    combo->setCheckedItems(QStringList() << QStringLiteral("KDE") << QStringLiteral("Mac OSX") << QStringLiteral("Windows"));
     combo->resize(400, 20);
     combo->setSqueezeText(true);
     combo->show();

@@ -41,7 +41,7 @@ void BlackListBalooEmailUtilTest::shouldReturnEmptyResult()
 void BlackListBalooEmailUtilTest::shouldDontChangeWhenNotChanged()
 {
     KPIM::BlackListBalooEmailUtil util;
-    const QStringList lst = QStringList() << QLatin1String("foo") << QLatin1String("foo1") << QLatin1String("foo2");
+    const QStringList lst = QStringList() << QStringLiteral("foo") << QStringLiteral("foo1") << QStringLiteral("foo2");
     util.initialBlackList(lst);
     QCOMPARE(util.createNewBlackList(), lst);
 }
@@ -49,28 +49,28 @@ void BlackListBalooEmailUtilTest::shouldDontChangeWhenNotChanged()
 void BlackListBalooEmailUtilTest::shouldCreateNewList()
 {
     KPIM::BlackListBalooEmailUtil util;
-    const QStringList lst = QStringList() << QLatin1String("foo") << QLatin1String("foo1") << QLatin1String("foo2");
+    const QStringList lst = QStringList() << QStringLiteral("foo") << QStringLiteral("foo1") << QStringLiteral("foo2");
     util.initialBlackList(lst);
     QHash<QString, bool> newList;
-    newList.insert(QLatin1String("foo"), false);
+    newList.insert(QStringLiteral("foo"), false);
     util.newBlackList(newList);
-    QCOMPARE(util.createNewBlackList(), QStringList() << QLatin1String("foo1") << QLatin1String("foo2"));
+    QCOMPARE(util.createNewBlackList(), QStringList() << QStringLiteral("foo1") << QStringLiteral("foo2"));
 }
 
 void BlackListBalooEmailUtilTest::shouldAddNewElements()
 {
     KPIM::BlackListBalooEmailUtil util;
     QHash<QString, bool> newList;
-    newList.insert(QLatin1String("foo"), false);
-    newList.insert(QLatin1String("foo1"), false);
-    newList.insert(QLatin1String("foo2"), false);
+    newList.insert(QStringLiteral("foo"), false);
+    newList.insert(QStringLiteral("foo1"), false);
+    newList.insert(QStringLiteral("foo2"), false);
     util.newBlackList(newList);
     QCOMPARE(util.createNewBlackList().count(), 0);
 
     newList.clear();
-    newList.insert(QLatin1String("foo"), true);
-    newList.insert(QLatin1String("foo1"), true);
-    newList.insert(QLatin1String("foo2"), true);
+    newList.insert(QStringLiteral("foo"), true);
+    newList.insert(QStringLiteral("foo1"), true);
+    newList.insert(QStringLiteral("foo2"), true);
     util.newBlackList(newList);
     QCOMPARE(util.createNewBlackList().count(), 3);
 }

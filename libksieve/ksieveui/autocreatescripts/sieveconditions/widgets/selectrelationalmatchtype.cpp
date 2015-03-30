@@ -67,18 +67,18 @@ void SelectRelationalMatchType::initialize()
     setLayout(lay);
 
     mType = new KComboBox;
-    mType->addItem(i18n("Value"), QLatin1String(":value"));
-    mType->addItem(i18n("Count"), QLatin1String(":count"));
+    mType->addItem(i18n("Value"), QStringLiteral(":value"));
+    mType->addItem(i18n("Count"), QStringLiteral(":count"));
     lay->addWidget(mType);
     connect(mType, static_cast<void (KComboBox::*)(int)>(&KComboBox::activated), this, &SelectRelationalMatchType::valueChanged);
 
     mMatch = new KComboBox;
-    mMatch->addItem(i18n("Greater than"), QLatin1String("gt"));
-    mMatch->addItem(i18n("Greater than or equal"), QLatin1String("ge"));
-    mMatch->addItem(i18n("Less than"), QLatin1String("lt"));
-    mMatch->addItem(i18n("Less than or equal"), QLatin1String("le"));
-    mMatch->addItem(i18n("Equal to"), QLatin1String("eq"));
-    mMatch->addItem(i18n("Not equal to"), QLatin1String("ne"));
+    mMatch->addItem(i18n("Greater than"), QStringLiteral("gt"));
+    mMatch->addItem(i18n("Greater than or equal"), QStringLiteral("ge"));
+    mMatch->addItem(i18n("Less than"), QStringLiteral("lt"));
+    mMatch->addItem(i18n("Less than or equal"), QStringLiteral("le"));
+    mMatch->addItem(i18n("Equal to"), QStringLiteral("eq"));
+    mMatch->addItem(i18n("Not equal to"), QStringLiteral("ne"));
     connect(mMatch, static_cast<void (KComboBox::*)(int)>(&KComboBox::activated), this, &SelectRelationalMatchType::valueChanged);
     lay->addWidget(mMatch);
 }

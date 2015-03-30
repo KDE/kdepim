@@ -42,7 +42,7 @@ void BlackListBalooEmailListTest::shouldHaveDefaultValue()
 void BlackListBalooEmailListTest::shouldFillListEmail()
 {
     KPIM::BlackListBalooEmailList blackList;
-    blackList.slotEmailFound(QStringList() << QLatin1String("foo") << QLatin1String("bla") << QLatin1String("bli"));
+    blackList.slotEmailFound(QStringList() << QStringLiteral("foo") << QStringLiteral("bla") << QStringLiteral("bli"));
     QCOMPARE(blackList.count(), 3);
     for (int i = 0; i < blackList.count(); ++i) {
         QListWidgetItem *item = blackList.item(i);
@@ -57,7 +57,7 @@ void BlackListBalooEmailListTest::shouldFillListEmail()
 void BlackListBalooEmailListTest::shouldFillListWithAlreadyBlackListedEmail()
 {
     KPIM::BlackListBalooEmailList blackList;
-    QStringList emails = QStringList() << QLatin1String("foo") << QLatin1String("bla") << QLatin1String("bli");
+    QStringList emails = QStringList() << QStringLiteral("foo") << QStringLiteral("bla") << QStringLiteral("bli");
     blackList.setEmailBlackList(emails);
     blackList.slotEmailFound(emails);
 
@@ -76,7 +76,7 @@ void BlackListBalooEmailListTest::shouldFillListWithAlreadyBlackListedEmail()
 void BlackListBalooEmailListTest::shouldReturnChangedItems()
 {
     KPIM::BlackListBalooEmailList blackList;
-    const QStringList emails = QStringList() << QLatin1String("foo") << QLatin1String("bla") << QLatin1String("bli");
+    const QStringList emails = QStringList() << QStringLiteral("foo") << QStringLiteral("bla") << QStringLiteral("bli");
     blackList.setEmailBlackList(emails);
     blackList.slotEmailFound(emails);
     QListWidgetItem *item = blackList.item(1);
@@ -88,7 +88,7 @@ void BlackListBalooEmailListTest::shouldReturnChangedItems()
 void BlackListBalooEmailListTest::shouldNotAddDuplicateEmails()
 {
     KPIM::BlackListBalooEmailList blackList;
-    QStringList emails = QStringList() << QLatin1String("foo") << QLatin1String("bli") << QLatin1String("bli");
+    QStringList emails = QStringList() << QStringLiteral("foo") << QStringLiteral("bli") << QStringLiteral("bli");
     blackList.setEmailBlackList(emails);
     blackList.slotEmailFound(emails);
 

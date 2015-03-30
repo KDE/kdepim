@@ -95,7 +95,7 @@ int main(int argc, char **argv)
         protocol = argv[1];
         argc = 1; // hide from KDE
     }
-    KAboutData aboutData(QLatin1String("test_jobs"), i18n("Signing Job Test"), QLatin1String("0.1"));
+    KAboutData aboutData(QStringLiteral("test_jobs"), i18n("Signing Job Test"), QStringLiteral("0.1"));
     QApplication app(argc, argv);
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);

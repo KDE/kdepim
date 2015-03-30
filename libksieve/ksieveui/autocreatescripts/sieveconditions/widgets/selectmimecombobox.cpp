@@ -35,10 +35,10 @@ SelectMimeComboBox::~SelectMimeComboBox()
 
 void SelectMimeComboBox::initialize()
 {
-    addItem(i18n("Type"), QLatin1String(":type"));
-    addItem(i18n("Subtype"), QLatin1String(":subtype"));
-    addItem(i18n("Anychild"), QLatin1String(":anychild"));
-    addItem(i18n("Parameters"), QLatin1String(":param"));
+    addItem(i18n("Type"), QStringLiteral(":type"));
+    addItem(i18n("Subtype"), QStringLiteral(":subtype"));
+    addItem(i18n("Anychild"), QStringLiteral(":anychild"));
+    addItem(i18n("Parameters"), QStringLiteral(":param"));
 }
 
 QString SelectMimeComboBox::code() const
@@ -48,7 +48,7 @@ QString SelectMimeComboBox::code() const
 
 QString SelectMimeComboBox::require() const
 {
-    return QLatin1String("mime");
+    return QStringLiteral("mime");
 }
 
 void SelectMimeComboBox::setCode(const QString &code, const QString &name, QString &error)

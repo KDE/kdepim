@@ -103,10 +103,10 @@ void TestLDAPClient::testIntevation()
 
     // Same list as in kaddressbook's ldapsearchdialog
     QStringList attrs;
-    attrs << QLatin1String("l") << QLatin1String("Company") << QLatin1String("co") << QLatin1String("department") << QLatin1String("description") << QLatin1String("mail")
-          << QLatin1String("facsimileTelephoneNumber") << QLatin1String("cn") << QLatin1String("homePhone") << QLatin1String("mobile") << QLatin1String("o")
-          << QLatin1String("pager") << QLatin1String("postalAddress") << QLatin1String("st") << QLatin1String("street")
-          << QLatin1String("title") << QLatin1String("uid") << QLatin1String("telephoneNumber") << QLatin1String("postalCode") << QLatin1String("objectClass");
+    attrs << QStringLiteral("l") << QStringLiteral("Company") << QStringLiteral("co") << QStringLiteral("department") << QStringLiteral("description") << QStringLiteral("mail")
+          << QStringLiteral("facsimileTelephoneNumber") << QStringLiteral("cn") << QStringLiteral("homePhone") << QStringLiteral("mobile") << QStringLiteral("o")
+          << QStringLiteral("pager") << QStringLiteral("postalAddress") << QStringLiteral("st") << QStringLiteral("street")
+          << QStringLiteral("title") << QStringLiteral("uid") << QStringLiteral("telephoneNumber") << QStringLiteral("postalCode") << QStringLiteral("objectClass");
     // the list from ldapclient.cpp
     //attrs << "cn" << "mail" << "givenname" << "sn" << "objectClass";
     mClient->setAttributes(attrs);
@@ -121,7 +121,7 @@ void TestLDAPClient::testIntevation()
 
     // For some reason a fromUtf8 broke the search for me (no results).
     // But this certainly looks fishy, it might break on non-utf8 systems.
-    QString filter = QLatin1String("&(|(objectclass=person)(objectclass=groupofnames)(mail=*))"
+    QString filter = QStringLiteral("&(|(objectclass=person)(objectclass=groupofnames)(mail=*))"
                                    "(|(cn=*Ägypten MDK*)(sn=*Ägypten MDK*))");
 
     connect(mClient, &KLDAP::LdapClient::result, this, &TestLDAPClient::slotLDAPResult);
@@ -172,10 +172,10 @@ static QString join(const KLDAP::LdapAttrValue &lst, const QString &sep)
 
 void TestLDAPClient::slotLDAPResult(const KLDAP::LdapClient &, const KLDAP::LdapObject &obj)
 {
-    QString cn = join(obj.attributes()[ QLatin1String("cn") ], QLatin1String(", "));
+    QString cn = join(obj.attributes()[ QStringLiteral("cn") ], QStringLiteral(", "));
     qDebug() << " cn:" << cn;
-    assert(!obj.attributes()[ QLatin1String("mail") ].isEmpty());
-    QString mail = join(obj.attributes()[ QLatin1String("mail") ], QLatin1String(", "));
+    assert(!obj.attributes()[ QStringLiteral("mail") ].isEmpty());
+    QString mail = join(obj.attributes()[ QStringLiteral("mail") ], QStringLiteral(", "));
     qDebug() << " mail:" << mail;
     assert(mail.contains(QLatin1Char('@')));
 }
