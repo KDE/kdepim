@@ -58,7 +58,6 @@ enum AppsType {
     KAddressBook,
     KAlarm,
     KOrganizer,
-    KJots,
     KNotes,
     Akregator,
     Blogilo

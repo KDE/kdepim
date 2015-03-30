@@ -61,7 +61,6 @@ private:
     QTreeWidgetItem *mKalarmItem;
     QTreeWidgetItem *mKaddressbookItem;
     QTreeWidgetItem *mKorganizerItem;
-    QTreeWidgetItem *mKjotsItem;
     QTreeWidgetItem *mKNotesItem;
     QTreeWidgetItem *mAkregatorItem;
     QTreeWidgetItem *mBlogiloItem;

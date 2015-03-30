@@ -93,8 +93,6 @@ QHash<Utils::AppsType, Utils::StoredTypes> TemplateSelection::loadTemplate(const
                 type = Utils::KAlarm;
             } else if (tagName == QLatin1String("korganizer")) {
                 type = Utils::KOrganizer;
-            } else if (tagName == QLatin1String("kjots")) {
-                type = Utils::KJots;
             } else if (tagName == QLatin1String("knotes")) {
                 type = Utils::KNotes;
             } else if (tagName == QLatin1String("akregator")) {
@@ -175,12 +173,6 @@ void TemplateSelection::createTemplate(const QHash<Utils::AppsType, Utils::impor
         }
         case Utils::KOrganizer: {
             QDomElement tag = mDocument.createElement(QLatin1String("korganizer"));
-            root.appendChild(tag);
-            saveParameters(i.value().types, tag);
-            break;
-        }
-        case Utils::KJots: {
-            QDomElement tag = mDocument.createElement(QLatin1String("kjots"));
             root.appendChild(tag);
             saveParameters(i.value().types, tag);
             break;

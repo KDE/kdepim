@@ -48,11 +48,6 @@ set(pimsettingexporter_xml_SRCS
   xml/templateselection.cpp
 )
 
-set(pimsettingexporter_jot_SRCS
-  jot/exportjotjob.cpp
-  jot/importjotjob.cpp
-)
-
 set(pimsettingexporter_akregator_SRCS
   akregator/exportakregatorjob.cpp
   akregator/importakregatorjob.cpp

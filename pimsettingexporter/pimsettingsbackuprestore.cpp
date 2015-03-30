@@ -30,9 +30,6 @@
 #include "alarm/exportalarmjob.h"
 #include "alarm/importalarmjob.h"
 
-#include "jot/exportjotjob.h"
-#include "jot/importjotjob.h"
-
 #include "notes/exportnotesjob.h"
 #include "notes/importnotesjob.h"
 
@@ -126,12 +123,6 @@ void PimSettingsBackupRestore::backupNextStep()
                 executeJob();
             }
             break;
-        case Utils::KJots:
-            if (mStoreIterator.value().numberSteps != 0) {
-                mImportExportData = new ExportJotJob(mParentWidget, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
-                executeJob();
-            }
-            break;
         case Utils::KNotes:
             if (mStoreIterator.value().numberSteps != 0) {
                 mImportExportData = new ExportNotesJob(mParentWidget, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
@@ -198,12 +189,6 @@ void PimSettingsBackupRestore::restoreNextStep()
         case Utils::KOrganizer:
             if (mStoreIterator.value().numberSteps != 0) {
                 mImportExportData = new ImportCalendarJob(mParentWidget, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
-                executeJob();
-            }
-            break;
-        case Utils::KJots:
-            if (mStoreIterator.value().numberSteps != 0) {
-                mImportExportData = new ImportJotJob(mParentWidget, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
                 executeJob();
             }
             break;
