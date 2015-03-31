@@ -26,6 +26,8 @@ class InvalidFilterWidgetTest : public QObject
 public:
     explicit InvalidFilterWidgetTest(QObject *parent = 0);
     ~InvalidFilterWidgetTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
 #endif // INVALIDFILTERWIDGETTEST_H

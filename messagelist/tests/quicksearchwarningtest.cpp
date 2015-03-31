@@ -60,6 +60,7 @@ void QuickSearchWarningTest::shouldSetSearchText_data()
     QTest::newRow("multibigword") <<  QString(QLatin1String("foo foo foo")) << false;
     QTest::newRow("multibigwordwithasmallone") <<  QString(QLatin1String("foo foo foo 1")) << true;
     QTest::newRow("aspace") <<  QString(QLatin1String(" ")) << false;
+    QTest::newRow("multispace") <<  QString(QLatin1String("            ")) << false;
 }
 
 QTEST_KDEMAIN(QuickSearchWarningTest, GUI)
