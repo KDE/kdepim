@@ -389,7 +389,7 @@ public:
     void populateStatusFilterCombo();
 
     Core::QuickSearchLine::SearchOptions currentOptions() const;
-public slots:
+public Q_SLOTS:
     /**
     * Selects all the items in the current folder.
     */

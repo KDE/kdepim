@@ -141,7 +141,7 @@ public:
     void aggregationMenuAboutToShow(QMenu *menu);
 
     MessageList::Core::QuickSearchLine::SearchOptions currentOptions() const;
-public slots:
+public Q_SLOTS:
 
     /**
     * This is called to setup the status filter's KComboBox.

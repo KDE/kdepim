@@ -29,14 +29,14 @@ class KDEPIM_EXPORT TagSelectionCombo : public KPIM::KCheckComboBox
 {
     Q_OBJECT
 public:
-    explicit TagSelectionCombo(QWidget *parent = 0);
+    explicit TagSelectionCombo(QWidget *parent = Q_NULLPTR);
 };
 
 class KDEPIM_EXPORT TagCombo : public KComboBox
 {
     Q_OBJECT
 public:
-    explicit TagCombo(QWidget *parent = 0);
+    explicit TagCombo(QWidget *parent = Q_NULLPTR);
 };
 
 }

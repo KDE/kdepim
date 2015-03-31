@@ -112,7 +112,7 @@ protected:
     QString mParameter;
 private:
     mutable FilterActionWithUrlHelpButton *mHelpButton;
-private slots:
+private Q_SLOTS:
     void slotHelp();
 };
 
