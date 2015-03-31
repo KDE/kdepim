@@ -34,19 +34,21 @@ FilterConvertToSieve::~FilterConvertToSieve()
 
 void FilterConvertToSieve::convert()
 {
-    QStringList requires;
-    QString code;
-    Q_FOREACH(MailFilter *filter, mListFilters) {
-        filter->generateSieveScript(requires, code);
-        code += QLatin1Char('\n');
+    QString result;
+    if (!mListFilters.isEmpty()) {
+        QStringList requires;
+        QString code;
+        Q_FOREACH(MailFilter *filter, mListFilters) {
+            filter->generateSieveScript(requires, code);
+            code += QLatin1Char('\n');
+        }
+        QString requireStr;
+        Q_FOREACH (const QString &require, requires) {
+            requireStr += QString::fromLatin1("require \"%1\";").arg(require);
+            requireStr += QLatin1Char('\n');
+        }
+        result = requireStr + code;
     }
-    QString requireStr;
-    Q_FOREACH (const QString &require, requires) {
-        requireStr += QString::fromLatin1("require \"%1\";").arg(require);
-        requireStr += QLatin1Char('\n');
-    }
-
-    const QString result = requireStr + code;
     QPointer<FilterConvertToSieveResultDialog> dlg = new FilterConvertToSieveResultDialog;
     dlg->setCode(result);
     dlg->exec();
