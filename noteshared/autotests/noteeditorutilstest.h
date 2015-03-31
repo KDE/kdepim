@@ -27,6 +27,9 @@ public:
     explicit NoteEditorUtilsTest(QObject *parent = 0);
     ~NoteEditorUtilsTest();
 
+private Q_SLOTS:
+    void testAddCheckmark();
+    void testAddCheckmark_data();
 };
 
 #endif // NOTEEDITORUTILSTEST_H
