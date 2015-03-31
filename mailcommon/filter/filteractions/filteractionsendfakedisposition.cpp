@@ -64,7 +64,8 @@ FilterAction* FilterActionSendFakeDisposition::newAction()
 
 bool FilterActionSendFakeDisposition::isEmpty() const
 {
-    return false;
+    const int index = mParameterList.indexOf( mParameter );
+    return (index < 1);
 }
 
 FilterAction::ReturnCode FilterActionSendFakeDisposition::process(ItemContext &context , bool) const
