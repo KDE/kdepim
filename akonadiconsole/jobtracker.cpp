@@ -25,7 +25,6 @@
 #include "akonadiconsole_debug.h"
 #include <QtCore/QString>
 #include <QtCore/QStringList>
-#include <QtCore/QDebug>
 #include <QtCore/QPair>
 #include <QtCore/QList>
 

@@ -28,7 +28,6 @@
 #include "qwebpage.h"
 #include "qwebframe.h"
 #include "qtest.h"
-#include "qdebug.h"
 #include <QDir>
 
 using namespace MessageViewer;

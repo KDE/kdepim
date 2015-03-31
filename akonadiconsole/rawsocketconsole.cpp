@@ -22,7 +22,6 @@
 #include <akonadi/private/xdgbasedirs_p.h>
 #include <AkonadiCore/servermanager.h>
 
-#include <QDebug>
 #include "akonadiconsole_debug.h"
 
 #include <QIcon>

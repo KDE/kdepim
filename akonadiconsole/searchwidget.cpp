@@ -37,8 +37,6 @@
 #include <QPushButton>
 #include <QStringListModel>
 
-#include <QtCore/QDebug>
-
 SearchWidget::SearchWidget(QWidget *parent)
     : QWidget(parent)
 {

@@ -21,7 +21,6 @@
 
 #include <KAboutData>
 
-#include <qdebug.h>
 #include <KLocalizedString>
 
 #include <QApplication>

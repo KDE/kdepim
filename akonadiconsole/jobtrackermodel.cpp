@@ -26,7 +26,6 @@
 #include <KLocale>
 #include <QtCore/QStringList>
 #include <QtCore/QModelIndex>
-#include <QtCore/QDebug>
 #include <QtCore/QDateTime>
 #include <QFont>
 #include <QPair>

@@ -25,7 +25,6 @@
 
 #include <KLocale>
 
-#include <QDebug>
 #include "akonadiconsole_debug.h"
 #include <AkonadiCore/ServerManager>
 

@@ -27,7 +27,6 @@
  */
 
 #include "jobscheduler.h"
-#include <qdebug.h>
 #include "mailcommon_debug.h"
 namespace MailCommon
 {
