@@ -31,6 +31,7 @@ public:
     explicit InvalidFilterWidget(QWidget *parent=0);
     ~InvalidFilterWidget();
 
+    void setInvalidFilter(const QStringList &lst);
 private:
     InvalidFilterListWidget *mInvalidFilterListWidget;
 };

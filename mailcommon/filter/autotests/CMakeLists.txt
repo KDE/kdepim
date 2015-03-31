@@ -199,3 +199,7 @@ target_link_libraries( invalidfilterdialogtest ${QT_QTTEST_LIBRARY} ${KDE4_KDECO
 set( mailcommon_invalidfilterwidget_source invalidfilterwidgettest.cpp  )
 kde4_add_unit_test( invalidfilterwidgettest ${mailcommon_invalidfilterwidget_source})
 target_link_libraries( invalidfilterwidgettest ${QT_QTTEST_LIBRARY} ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY} ${KDEPIMLIBS_AKONADI_LIBS} mailcommon)
+
+set( mailcommon_invalidfilterlistwidget_source invalidfilterlistwidgettest.cpp  )
+kde4_add_unit_test( invalidfilterlistwidgettest ${mailcommon_invalidfilterlistwidget_source})
+target_link_libraries( invalidfilterlistwidgettest ${QT_QTTEST_LIBRARY} ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY} ${KDEPIMLIBS_AKONADI_LIBS} mailcommon)

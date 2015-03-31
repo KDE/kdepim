@@ -28,6 +28,7 @@ class MAILCOMMON_EXPORT InvalidFilterListWidget : public QListWidget
 public:
     explicit InvalidFilterListWidget(QWidget *parent=0);
     ~InvalidFilterListWidget();
+    void setInvalidFilter(const QStringList &lst);
 };
 }
 #endif // INVALIDFILTERLISTWIDGET_H

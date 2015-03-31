@@ -27,6 +27,11 @@ InvalidFilterWidget::InvalidFilterWidget(QWidget *parent)
     : QWidget(parent)
 {
     QVBoxLayout *vbox = new QVBoxLayout(this);
+    //KF5 add i18n
+    QLabel *lab = new QLabel(QLatin1String("text"));
+    lab->setObjectName(QLatin1String("label"));
+    vbox->addWidget(lab);
+
     mInvalidFilterListWidget = new InvalidFilterListWidget(this);
     mInvalidFilterListWidget->setObjectName(QLatin1String("invalidfilterlist"));
     vbox->addWidget(mInvalidFilterListWidget);
@@ -35,4 +40,9 @@ InvalidFilterWidget::InvalidFilterWidget(QWidget *parent)
 InvalidFilterWidget::~InvalidFilterWidget()
 {
 
+}
+
+void InvalidFilterWidget::setInvalidFilter(const QStringList &lst)
+{
+    mInvalidFilterListWidget->setInvalidFilter(lst);
 }
