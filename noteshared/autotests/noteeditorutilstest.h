@@ -15,19 +15,21 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef INVALIDFILTERWIDGETTEST_H
-#define INVALIDFILTERWIDGETTEST_H
+#ifndef NOTEEDITORUTILSTEST_H
+#define NOTEEDITORUTILSTEST_H
 
 #include <QObject>
 
-class InvalidFilterWidgetTest : public QObject
+class NoteEditorUtilsTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit InvalidFilterWidgetTest(QObject *parent = 0);
-    ~InvalidFilterWidgetTest();
+    explicit NoteEditorUtilsTest(QObject *parent = 0);
+    ~NoteEditorUtilsTest();
+
 private Q_SLOTS:
-    void shouldHaveDefaultValue();
+    void testAddCheckmark();
+    void testAddCheckmark_data();
 };
 
-#endif // INVALIDFILTERWIDGETTEST_H
+#endif // NOTEEDITORUTILSTEST_H

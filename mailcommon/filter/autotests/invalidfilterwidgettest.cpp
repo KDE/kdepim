@@ -16,6 +16,8 @@
 */
 
 #include "invalidfilterwidgettest.h"
+#include "../filter/invalidfilters/invalidfilterwidget.h"
+#include "../filter/invalidfilters/invalidfilterlistwidget.h"
 #include <qtest_kde.h>
 InvalidFilterWidgetTest::InvalidFilterWidgetTest(QObject *parent)
     : QObject(parent)
@@ -26,6 +28,13 @@ InvalidFilterWidgetTest::InvalidFilterWidgetTest(QObject *parent)
 InvalidFilterWidgetTest::~InvalidFilterWidgetTest()
 {
 
+}
+
+void InvalidFilterWidgetTest::shouldHaveDefaultValue()
+{
+    MailCommon::InvalidFilterWidget w;
+    MailCommon::InvalidFilterListWidget *list = w.findChild<MailCommon::InvalidFilterListWidget *>(QLatin1String("invalidfilterlist"));
+    QVERIFY(list);
 }
 
 QTEST_KDEMAIN(InvalidFilterWidgetTest, GUI)

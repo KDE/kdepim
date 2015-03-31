@@ -24,14 +24,24 @@
 #include <QTextEdit>
 #include <QDateTime>
 
-void NoteShared::NoteEditorUtils::addCheckmark(QTextCursor &cursor)
+using namespace NoteShared;
+NoteEditorUtils::NoteEditorUtils()
+{
+
+}
+
+void NoteEditorUtils::addCheckmark( QTextCursor &cursor )
 {
     static const QChar unicode[] = {0x2713};
     const int size = sizeof(unicode) / sizeof(QChar);
-    cursor.insertText(QString::fromRawData(unicode, size));
+    const int position = cursor.position();
+    cursor.movePosition(QTextCursor::StartOfLine);
+    const QString checkMark = QString::fromRawData(unicode, size);
+    cursor.insertText( checkMark );
+    cursor.setPosition(position + checkMark.size());
 }
 
-void NoteShared::NoteEditorUtils::insertDate(QTextEdit *editor)
+void NoteEditorUtils::insertDate( QTextEdit *editor )
 {
     editor->insertPlainText(KLocale::global()->formatDateTime(QDateTime::currentDateTime(), KLocale::ShortDate) + QLatin1Char(' '));
 }

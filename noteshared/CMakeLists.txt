@@ -69,4 +69,5 @@ set_target_properties(noteshared PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERS
 install(TARGETS noteshared ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 if (BUILD_TESTING)
    add_subdirectory(attributes/autotests)
+   add_subdirectory(autotests)
 endif()
