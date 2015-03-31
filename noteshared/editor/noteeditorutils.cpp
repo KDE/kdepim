@@ -38,8 +38,9 @@ void NoteEditorUtils::addCheckmark( QTextCursor &cursor )
     const int size = sizeof(unicode) / sizeof(QChar);
     const int position = cursor.position();
     cursor.movePosition(QTextCursor::StartOfLine);
-    cursor.insertText( QString::fromRawData(unicode, size) );
-    cursor.setPosition(position + QString::fromRawData(unicode, size).size());
+    const QString checkMark = QString::fromRawData(unicode, size);
+    cursor.insertText( checkMark );
+    cursor.setPosition(position + checkMark.size());
 }
 
 void NoteEditorUtils::insertDate( QTextEdit *editor )

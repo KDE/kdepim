@@ -69,3 +69,4 @@ set_target_properties(noteshared PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVER
 install(TARGETS noteshared ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory(attributes/tests)
+add_subdirectory(autotests)
