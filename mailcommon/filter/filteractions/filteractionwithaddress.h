@@ -53,22 +53,22 @@ public:
     /**
      * @copydoc FilterAction::createParamWidget
      */
-    virtual QWidget *createParamWidget(QWidget *parent) const;
+    QWidget *createParamWidget(QWidget *parent) const Q_DECL_OVERRIDE;
 
     /**
      * @copydoc FilterAction::applyParamWidgetValue
      */
-    virtual void applyParamWidgetValue(QWidget *paramWidget);
+    void applyParamWidgetValue(QWidget *paramWidget) Q_DECL_OVERRIDE;
 
     /**
      * @copydoc FilterAction::setParamWidgetValue
      */
-    virtual void setParamWidgetValue(QWidget *paramWidget) const;
+    void setParamWidgetValue(QWidget *paramWidget) const Q_DECL_OVERRIDE;
 
     /**
      * @copydoc FilterAction::clearParamWidget
      */
-    virtual void clearParamWidget(QWidget *paramWidget) const;
+    void clearParamWidget(QWidget *paramWidget) const Q_DECL_OVERRIDE;
 };
 
 }

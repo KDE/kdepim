@@ -42,37 +42,37 @@ public:
     explicit SnippetsModel(QObject *parent = Q_NULLPTR);
     ~SnippetsModel();
 
-    virtual bool setData(const QModelIndex &index, const QVariant &value,
-                         int role = Qt::EditRole);
+    bool setData(const QModelIndex &index, const QVariant &value,
+                         int role = Qt::EditRole) Q_DECL_OVERRIDE;
 
-    virtual QVariant data(const QModelIndex &index, int role) const;
+    QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
 
-    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+    Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
-    virtual QModelIndex index(int row, int column,
-                              const QModelIndex &parent = QModelIndex()) const;
+    QModelIndex index(int row, int column,
+                              const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
-    virtual QModelIndex parent(const QModelIndex &index) const;
+    QModelIndex parent(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
-    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
-    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
-    virtual QStringList mimeTypes() const;
+    QStringList mimeTypes() const Q_DECL_OVERRIDE;
 
-    virtual QMimeData *mimeData(const QModelIndexList &indexes) const;
+    QMimeData *mimeData(const QModelIndexList &indexes) const Q_DECL_OVERRIDE;
 
-    virtual bool dropMimeData(const QMimeData *data, Qt::DropAction action,
-                              int row, int column, const QModelIndex &parent);
+    bool dropMimeData(const QMimeData *data, Qt::DropAction action,
+                              int row, int column, const QModelIndex &parent) Q_DECL_OVERRIDE;
 
-    virtual Qt::DropActions supportedDropActions() const;
+    Qt::DropActions supportedDropActions() const Q_DECL_OVERRIDE;
 
 protected:
-    virtual bool insertRows(int row, int count,
-                            const QModelIndex &parent = QModelIndex());
+    bool insertRows(int row, int count,
+                            const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE;
 
-    virtual bool removeRows(int row, int count,
-                            const QModelIndex &parent = QModelIndex());
+    bool removeRows(int row, int count,
+                            const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     void dndDone();
