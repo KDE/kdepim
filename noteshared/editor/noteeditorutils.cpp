@@ -31,7 +31,10 @@ void NoteShared::NoteEditorUtils::addCheckmark( QTextCursor &cursor )
 {
     static const QChar unicode[] = {0x2713};
     const int size = sizeof(unicode) / sizeof(QChar);
+    const int position = cursor.position();
+    cursor.movePosition(QTextCursor::StartOfLine);
     cursor.insertText( QString::fromRawData(unicode, size) );
+    cursor.setPosition(position + QString::fromRawData(unicode, size).size());
 }
 
 void NoteShared::NoteEditorUtils::insertDate( QTextEdit *editor )
