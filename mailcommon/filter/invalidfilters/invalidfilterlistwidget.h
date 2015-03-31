@@ -22,6 +22,16 @@
 #include "mailcommon_export.h"
 
 namespace MailCommon {
+class InvalidFilterListWidgetItem : public QListWidgetItem
+{
+public:
+    explicit InvalidFilterListWidgetItem(QListWidget *parent = 0);
+    ~InvalidFilterListWidgetItem();
+    void setInformation(const QString &information);
+private:
+    QString mInformation;
+};
+
 class MAILCOMMON_EXPORT InvalidFilterListWidget : public QListWidget
 {
     Q_OBJECT

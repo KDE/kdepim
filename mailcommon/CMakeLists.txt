@@ -84,6 +84,9 @@ set(libmailcommon_filter_SRCS
   filter/dialog/selectthunderbirdfilterfilesdialog.cpp
   filter/dialog/selectthunderbirdfilterfileswidget.cpp
   filter/mdnadvicedialog.cpp
+)
+
+set(libmailcommon_invalidfilters 
   filter/invalidfilters/invalidfilterdialog.cpp
   filter/invalidfilters/invalidfilterlistwidget.cpp
   filter/invalidfilters/invalidfilterwidget.cpp
@@ -158,6 +161,7 @@ set(libmailcommon_SRCS
   kernel/mailkernel.cpp
   util/mailutil.cpp
   mdn/sendmdnhandler.cpp
+  ${libmailcommon_invalidfilters}
   ${libmailcommon_widget_SRCS}
   ${libmailcommon_tag_SRCS}
   ${libmailcommon_snippets_SRCS}
@@ -225,7 +229,6 @@ add_subdirectory(collectionpage/autotests)
 add_subdirectory(filter/autotests)
 add_subdirectory(snippets/autotests)
 add_subdirectory(filter/tests)
-#install(FILES viewer/viewer.h viewer/attachmentstrategy.h header/headerstrategy.h messageviewer_export.h DESTINATION ${INCLUDE_INSTALL_DIR}/messageviewer COMPONENT devel)
 
 if (QT_QTDESIGNER_FOUND)
   set(mailcommonwidgets_PART_SRCS)

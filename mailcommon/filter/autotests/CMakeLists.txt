@@ -203,3 +203,38 @@ target_link_libraries( invalidfilterwidgettest ${QT_QTTEST_LIBRARY} ${KDE4_KDECO
 set( mailcommon_invalidfilterlistwidget_source invalidfilterlistwidgettest.cpp  )
 kde4_add_unit_test( invalidfilterlistwidgettest ${mailcommon_invalidfilterlistwidget_source})
 target_link_libraries( invalidfilterlistwidgettest ${QT_QTTEST_LIBRARY} ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY} ${KDEPIMLIBS_AKONADI_LIBS} mailcommon)
+
+
+set(mailcommon_filteractionunsetstatustest_SRCS filteractionunsetstatustest.cpp
+                                           ../filteractions/filteractionunsetstatus.cpp
+                                            ../filteractions/filteractionstatus.cpp
+                                           ../filteractions/filteractionwithstringlist.cpp
+                                           ../filteractions/filteractionwithstring.cpp)
+kde4_add_unit_test( filteractionunsetstatustest ${mailcommon_filteractionunsetstatustest_SRCS} )
+target_link_libraries( filteractionunsetstatustest
+   kdepim
+   pimcommon
+   mailcommon
+   ${QT_QTTEST_LIBRARY}
+   ${QT_QTCORE_LIBRARY}
+   ${KDEPIMLIBS_AKONADI_LIBS}
+   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+)
+
+set(mailcommon_filteractionredirecttest_SRCS filteractionredirecttest.cpp
+                                           ../filteractions/filteractionredirect.cpp
+                                           ../filteractions/filteractionwithaddress.cpp
+                                           ../filteractions/filteractionwithstring.cpp)
+kde4_add_unit_test( filteractionredirecttest ${mailcommon_filteractionredirecttest_SRCS} )
+target_link_libraries( filteractionredirecttest
+   kdepim
+   pimcommon
+   mailcommon
+   messagecore
+   messagecomposer
+   ${QT_QTTEST_LIBRARY}
+   ${QT_QTCORE_LIBRARY}
+   ${KDEPIMLIBS_AKONADI_LIBS}
+   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+)
+

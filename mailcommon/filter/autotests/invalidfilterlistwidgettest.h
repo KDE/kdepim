@@ -28,6 +28,7 @@ public:
     ~InvalidFilterListWidgetTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldAddInvalidFilters();
 };
 
 #endif // INVALIDFILTERLISTWIDGETTEST_H

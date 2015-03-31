@@ -18,6 +18,22 @@
 #include "invalidfilterlistwidget.h"
 using namespace MailCommon;
 
+InvalidFilterListWidgetItem::InvalidFilterListWidgetItem(QListWidget *parent)
+    : QListWidgetItem(parent)
+{
+
+}
+
+InvalidFilterListWidgetItem::~InvalidFilterListWidgetItem()
+{
+
+}
+
+void InvalidFilterListWidgetItem::setInformation(const QString &information)
+{
+    mInformation = information;
+}
+
 InvalidFilterListWidget::InvalidFilterListWidget(QWidget *parent)
     : QListWidget(parent)
 {
