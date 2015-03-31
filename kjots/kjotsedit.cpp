@@ -121,7 +121,8 @@ void KJotsEdit::delayedInitialization ( KActionCollection *collection )
 
 void KJotsEdit::insertDate()
 {
-    NoteShared::NoteEditorUtils::insertDate(this);
+    NoteShared::NoteEditorUtils noteEditorUtils;
+    noteEditorUtils.insertDate(this);
 }
 
 void KJotsEdit::selectionChanged( const QItemSelection& selected, const QItemSelection& deselected )
@@ -281,7 +282,8 @@ void KJotsEdit::onLinkify ( void )
 void KJotsEdit::addCheckmark( void )
 {
     QTextCursor cursor = textCursor();
-    NoteShared::NoteEditorUtils::addCheckmark(cursor);
+    NoteShared::NoteEditorUtils noteEditorUtils;
+    noteEditorUtils.addCheckmark(cursor);
 }
 
 bool KJotsEdit::canInsertFromMimeData ( const QMimeData *source ) const

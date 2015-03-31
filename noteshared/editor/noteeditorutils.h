@@ -23,10 +23,12 @@ class QTextCursor;
 class QTextEdit;
 namespace NoteShared
 {
-namespace NoteEditorUtils {
-NOTESHARED_EXPORT void addCheckmark( QTextCursor &cursor);
-NOTESHARED_EXPORT void insertDate( QTextEdit *editor );
+class NOTESHARED_EXPORT NoteEditorUtils
+{
+public:
+    NoteEditorUtils();
+    void addCheckmark( QTextCursor &cursor);
+    void insertDate( QTextEdit *editor );
+};
 }
-}
-
 #endif // NOTEEDITORUTILS_H

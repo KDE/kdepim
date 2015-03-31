@@ -26,8 +26,13 @@
 #include <QTextEdit>
 #include <QDateTime>
 
+using namespace NoteShared;
+NoteEditorUtils::NoteEditorUtils()
+{
 
-void NoteShared::NoteEditorUtils::addCheckmark( QTextCursor &cursor )
+}
+
+void NoteEditorUtils::addCheckmark( QTextCursor &cursor )
 {
     static const QChar unicode[] = {0x2713};
     const int size = sizeof(unicode) / sizeof(QChar);
@@ -37,7 +42,7 @@ void NoteShared::NoteEditorUtils::addCheckmark( QTextCursor &cursor )
     cursor.setPosition(position + QString::fromRawData(unicode, size).size());
 }
 
-void NoteShared::NoteEditorUtils::insertDate( QTextEdit *editor )
+void NoteEditorUtils::insertDate( QTextEdit *editor )
 {
     editor->insertPlainText(KGlobal::locale()->formatDateTime(QDateTime::currentDateTime(), KLocale::ShortDate) + QLatin1Char(' '));
 }
