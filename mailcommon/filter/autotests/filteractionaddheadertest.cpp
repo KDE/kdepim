@@ -81,7 +81,7 @@ void FilterActionAddHeaderTest::shouldBeEmpty()
 {
     MailCommon::FilterActionAddHeader filter;
     QVERIFY(filter.isEmpty());
-    filter.argsFromString(QLatin1String("foo"));
+    filter.argsFromString(QLatin1String("foo\tbla"));
     QVERIFY(!filter.isEmpty());
 }
 
