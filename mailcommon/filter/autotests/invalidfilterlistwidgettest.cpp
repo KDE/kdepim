@@ -15,30 +15,25 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "invalidfilterwidgettest.h"
-#include "../filter/invalidfilters/invalidfilterwidget.h"
+#include "invalidfilterlistwidgettest.h"
 #include "../filter/invalidfilters/invalidfilterlistwidget.h"
-#include <QLabel>
 #include <qtest_kde.h>
-InvalidFilterWidgetTest::InvalidFilterWidgetTest(QObject *parent)
+
+InvalidFilterListWidgetTest::InvalidFilterListWidgetTest(QObject *parent)
     : QObject(parent)
 {
 
 }
 
-InvalidFilterWidgetTest::~InvalidFilterWidgetTest()
+InvalidFilterListWidgetTest::~InvalidFilterListWidgetTest()
 {
 
 }
 
-void InvalidFilterWidgetTest::shouldHaveDefaultValue()
+void InvalidFilterListWidgetTest::shouldHaveDefaultValue()
 {
-    MailCommon::InvalidFilterWidget w;
-    QLabel *lab = w.findChild<QLabel *>(QLatin1String("label"));
-    QVERIFY(lab);
-
-    MailCommon::InvalidFilterListWidget *list = w.findChild<MailCommon::InvalidFilterListWidget *>(QLatin1String("invalidfilterlist"));
-    QVERIFY(list);
+    MailCommon::InvalidFilterListWidget w;
+    QCOMPARE(w.count(), 0);
 }
 
-QTEST_KDEMAIN(InvalidFilterWidgetTest, GUI)
+QTEST_KDEMAIN(InvalidFilterListWidgetTest, GUI)

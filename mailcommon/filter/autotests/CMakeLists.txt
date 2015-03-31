@@ -225,3 +225,9 @@ add_executable( invalidfilterwidgettest ${mailcommon_invalidfilterwidget_source}
 add_test(invalidfilterwidgettest invalidfilterwidgettest)
 ecm_mark_as_test(invalidfilterwidgettest)
 target_link_libraries( invalidfilterwidgettest Qt5::Test KF5::KDELibs4Support Qt5::Gui KF5::AkonadiCore mailcommon)
+
+set( mailcommon_invalidfilterlistwidget_source invalidfilterlistwidgettest.cpp  )
+add_executable( invalidfilterlistwidgettest ${mailcommon_invalidfilterlistwidget_source})
+add_test(invalidfilterlistwidgettest invalidfilterlistwidgettest)
+ecm_mark_as_test(invalidfilterlistwidgettest)
+target_link_libraries( invalidfilterlistwidgettest Qt5::Test KF5::KDELibs4Support Qt5::Gui KF5::AkonadiCore mailcommon)

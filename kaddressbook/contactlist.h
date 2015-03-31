@@ -33,6 +33,7 @@ public:
     int count() const;
     KContacts::Addressee::List addressList;
     KContacts::ContactGroup::List contactGroupList;
+    void clear();
 };
 
 #endif // CONTACTLIST_H

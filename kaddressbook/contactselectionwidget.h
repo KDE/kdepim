@@ -22,6 +22,8 @@
 
 #include <KContacts/Addressee>
 #include <AkonadiCore/Item>
+#include "contactlist.h"
+
 #include <QWidget>
 
 class QCheckBox;
@@ -66,15 +68,15 @@ public:
     /**
      * Returns the list of selected contacts.
      */
-    KContacts::Addressee::List selectedContacts() const;
+    ContactList selectedContacts() const;
 
     void setAddGroupContact(bool addGroupContact);
 private:
     void initGui();
 
-    KContacts::Addressee::List collectAllContacts() const;
-    KContacts::Addressee::List collectSelectedContacts() const;
-    KContacts::Addressee::List collectAddressBookContacts() const;
+    ContactList collectAllContacts() const;
+    ContactList collectSelectedContacts() const;
+    ContactList collectAddressBookContacts() const;
 
     QItemSelectionModel *mSelectionModel;
 

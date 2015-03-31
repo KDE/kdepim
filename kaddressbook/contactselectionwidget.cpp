@@ -19,7 +19,6 @@
 
 #include "contactselectionwidget.h"
 #include "utils.h"
-#include "contactlist.h"
 
 #include <AkonadiWidgets/CollectionComboBox>
 #include <AkonadiCore/EntityTreeModel>
@@ -69,7 +68,7 @@ void ContactSelectionWidget::setDefaultAddressBook(const Akonadi::Collection &ad
     mAddressBookSelection->setDefaultCollection(addressBook);
 }
 
-KContacts::Addressee::List ContactSelectionWidget::selectedContacts() const
+ContactList ContactSelectionWidget::selectedContacts() const
 {
     if (mAllContactsButton->isChecked()) {
         return collectAllContacts();
@@ -79,7 +78,7 @@ KContacts::Addressee::List ContactSelectionWidget::selectedContacts() const
         return collectAddressBookContacts();
     }
 
-    return KContacts::Addressee::List();
+    return ContactList();
 }
 
 void ContactSelectionWidget::setAddGroupContact(bool addGroupContact)
@@ -159,14 +158,14 @@ void ContactSelectionWidget::initGui()
     layout->addStretch(1);
 }
 
-KContacts::Addressee::List ContactSelectionWidget::collectAllContacts() const
+ContactList ContactSelectionWidget::collectAllContacts() const
 {
+    ContactList contacts;
     Akonadi::RecursiveItemFetchJob *job =
         new Akonadi::RecursiveItemFetchJob(Akonadi::Collection::root(),
                                            QStringList() << KContacts::Addressee::mimeType());
     job->fetchScope().fetchFullPayload();
 
-    KContacts::Addressee::List contacts;
     if (!job->exec()) {
         return contacts;
     }
@@ -174,7 +173,7 @@ KContacts::Addressee::List ContactSelectionWidget::collectAllContacts() const
     foreach ( const Akonadi::Item &item, job->items() ) {
         if ( item.isValid() ) {
             if (item.hasPayload<KContacts::Addressee>() ) {
-                contacts.append( item.payload<KContacts::Addressee>() );
+                contacts.addressList.append( item.payload<KContacts::Addressee>() );
             }
         }
     }
@@ -182,9 +181,9 @@ KContacts::Addressee::List ContactSelectionWidget::collectAllContacts() const
     return contacts;
 }
 
-KContacts::Addressee::List ContactSelectionWidget::collectSelectedContacts() const
+ContactList ContactSelectionWidget::collectSelectedContacts() const
 {
-    KContacts::Addressee::List contacts;
+    ContactList contacts;
 
     const QModelIndexList indexes = mSelectionModel->selectedRows(0);
     for (int i = 0; i < indexes.count(); ++i) {
@@ -194,7 +193,7 @@ KContacts::Addressee::List ContactSelectionWidget::collectSelectedContacts() con
                     index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
             if ( item.isValid() ) {
                 if (item.hasPayload<KContacts::Addressee>() ) {
-                    contacts.append( item.payload<KContacts::Addressee>() );
+                    contacts.addressList.append( item.payload<KContacts::Addressee>() );
                 }
             }
         }
@@ -203,9 +202,9 @@ KContacts::Addressee::List ContactSelectionWidget::collectSelectedContacts() con
     return contacts;
 }
 
-KContacts::Addressee::List ContactSelectionWidget::collectAddressBookContacts() const
+ContactList ContactSelectionWidget::collectAddressBookContacts() const
 {
-    KContacts::Addressee::List contacts;
+    ContactList contacts;
 
     const Akonadi::Collection collection = mAddressBookSelection->currentCollection();
     if (!collection.isValid()) {
@@ -224,7 +223,7 @@ KContacts::Addressee::List ContactSelectionWidget::collectAddressBookContacts() 
 
         foreach (const Akonadi::Item &item, job->items()) {
             if (item.hasPayload<KContacts::Addressee>()) {
-                contacts.append(item.payload<KContacts::Addressee>());
+                contacts.addressList.append(item.payload<KContacts::Addressee>());
             }
         }
     } else {
@@ -237,7 +236,7 @@ KContacts::Addressee::List ContactSelectionWidget::collectAddressBookContacts() 
 
         foreach (const Akonadi::Item &item, job->items()) {
             if (item.hasPayload<KContacts::Addressee>()) {
-                contacts.append(item.payload<KContacts::Addressee>());
+                contacts.addressList.append(item.payload<KContacts::Addressee>());
             }
         }
     }
