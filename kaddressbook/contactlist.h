@@ -31,6 +31,7 @@ public:
 
     bool isEmpty() const;
     int count() const;
+    void clear();
     KABC::Addressee::List addressList;
     KABC::ContactGroup::List contactGroupList;
 };

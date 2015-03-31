@@ -35,3 +35,9 @@ int ContactList::count() const
     return (addressList.count() + contactGroupList.count());
 }
 
+
+void ContactList::clear()
+{
+    addressList.clear();
+    contactGroupList.clear();
+}

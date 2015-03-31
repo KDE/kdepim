@@ -22,6 +22,7 @@
 
 #include <KABC/Addressee>
 #include <KDialog>
+#include <contactlist.h>
 #include <xxport/vcard/vcardexportselectionwidget.h>
 
 class QItemSelectionModel;
@@ -62,7 +63,7 @@ public:
     /**
      * Returns the list of selected contacts.
      */
-    KABC::Addressee::List selectedContacts() const;
+    ContactList selectedContacts() const;
 
     VCardExportSelectionWidget::ExportFields exportType() const;
     void setAddGroupContact(bool addGroupContact);

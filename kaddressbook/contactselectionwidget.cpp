@@ -19,7 +19,6 @@
 
 #include "contactselectionwidget.h"
 #include "utils.h"
-#include "contactlist.h"
 
 #include <Akonadi/CollectionComboBox>
 #include <Akonadi/EntityTreeModel>
@@ -71,7 +70,7 @@ void ContactSelectionWidget::setDefaultAddressBook( const Akonadi::Collection &a
     mAddressBookSelection->setDefaultCollection( addressBook );
 }
 
-KABC::Addressee::List ContactSelectionWidget::selectedContacts() const
+ContactList ContactSelectionWidget::selectedContacts() const
 {
     if ( mAllContactsButton->isChecked() ) {
         return collectAllContacts();
@@ -81,7 +80,7 @@ KABC::Addressee::List ContactSelectionWidget::selectedContacts() const
         return collectAddressBookContacts();
     }
 
-    return KABC::Addressee::List();
+    return ContactList();
 }
 
 
@@ -163,14 +162,14 @@ void ContactSelectionWidget::initGui()
     layout->addStretch( 1 );
 }
 
-KABC::Addressee::List ContactSelectionWidget::collectAllContacts() const
+ContactList ContactSelectionWidget::collectAllContacts() const
 {
+    ContactList contacts;
     Akonadi::RecursiveItemFetchJob *job =
             new Akonadi::RecursiveItemFetchJob( Akonadi::Collection::root(),
                                                 QStringList() << KABC::Addressee::mimeType() );
     job->fetchScope().fetchFullPayload();
 
-    KABC::Addressee::List contacts;
     if ( !job->exec() ) {
         return contacts;
     }
@@ -178,7 +177,7 @@ KABC::Addressee::List ContactSelectionWidget::collectAllContacts() const
     foreach ( const Akonadi::Item &item, job->items() ) {
         if ( item.isValid() ) {
             if (item.hasPayload<KABC::Addressee>() ) {
-                contacts.append( item.payload<KABC::Addressee>() );
+                contacts.addressList.append( item.payload<KABC::Addressee>() );
             }
         }
     }
@@ -187,9 +186,9 @@ KABC::Addressee::List ContactSelectionWidget::collectAllContacts() const
 }
 
 
-KABC::Addressee::List ContactSelectionWidget::collectSelectedContacts() const
+ContactList ContactSelectionWidget::collectSelectedContacts() const
 {
-    KABC::Addressee::List contacts;
+    ContactList contacts;
 
     const QModelIndexList indexes = mSelectionModel->selectedRows( 0 );
     for ( int i = 0; i < indexes.count(); ++i ) {
@@ -199,7 +198,7 @@ KABC::Addressee::List ContactSelectionWidget::collectSelectedContacts() const
                     index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
             if ( item.isValid() ) {
                 if (item.hasPayload<KABC::Addressee>() ) {
-                    contacts.append( item.payload<KABC::Addressee>() );
+                    contacts.addressList.append( item.payload<KABC::Addressee>() );
                 }
             }
         }
@@ -208,9 +207,9 @@ KABC::Addressee::List ContactSelectionWidget::collectSelectedContacts() const
     return contacts;
 }
 
-KABC::Addressee::List ContactSelectionWidget::collectAddressBookContacts() const
+ContactList ContactSelectionWidget::collectAddressBookContacts() const
 {
-    KABC::Addressee::List contacts;
+    ContactList contacts;
 
     const Akonadi::Collection collection = mAddressBookSelection->currentCollection();
     if ( !collection.isValid() ) {
@@ -229,7 +228,7 @@ KABC::Addressee::List ContactSelectionWidget::collectAddressBookContacts() const
 
         foreach ( const Akonadi::Item &item, job->items() ) {
             if ( item.hasPayload<KABC::Addressee>() ) {
-                contacts.append( item.payload<KABC::Addressee>() );
+                contacts.addressList.append( item.payload<KABC::Addressee>() );
             }
         }
     } else {
@@ -242,7 +241,7 @@ KABC::Addressee::List ContactSelectionWidget::collectAddressBookContacts() const
 
         foreach ( const Akonadi::Item &item, job->items() ) {
             if ( item.hasPayload<KABC::Addressee>() ) {
-                contacts.append( item.payload<KABC::Addressee>() );
+                contacts.addressList.append( item.payload<KABC::Addressee>() );
             }
         }
     }

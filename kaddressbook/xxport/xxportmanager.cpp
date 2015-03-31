@@ -198,7 +198,7 @@ void XXPortManager::slotExport( const QString &identifier )
         return;
     }
 
-    const KABC::AddresseeList contacts = dlg->selectedContacts();
+    const KABC::AddresseeList contacts = dlg->selectedContacts().addressList;
     const VCardExportSelectionWidget::ExportFields exportFields = dlg->exportType();
     delete dlg;
 

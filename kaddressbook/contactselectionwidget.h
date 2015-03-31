@@ -20,6 +20,8 @@
 #ifndef CONTACTSELECTIONWIDGET_H
 #define CONTACTSELECTIONWIDGET_H
 
+#include "contactlist.h"
+
 #include <KABC/Addressee>
 #include <Akonadi/Item>
 #include <QWidget>
@@ -65,15 +67,15 @@ public:
     /**
      * Returns the list of selected contacts.
      */
-    KABC::Addressee::List selectedContacts() const;
+    ContactList selectedContacts() const;
 
     void setAddGroupContact(bool addGroupContact);
 private:
     void initGui();
 
-    KABC::Addressee::List collectAllContacts() const;
-    KABC::Addressee::List collectSelectedContacts() const;
-    KABC::Addressee::List collectAddressBookContacts() const;
+    ContactList collectAllContacts() const;
+    ContactList collectSelectedContacts() const;
+    ContactList collectAddressBookContacts() const;
 
     QItemSelectionModel *mSelectionModel;
 
