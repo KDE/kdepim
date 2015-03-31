@@ -177,7 +177,7 @@ ContactList ContactSelectionWidget::collectAllContacts() const
     foreach ( const Akonadi::Item &item, job->items() ) {
         if ( item.isValid() ) {
             if (item.hasPayload<KABC::Addressee>() ) {
-                contacts.addressList.append( item.payload<KABC::Addressee>() );
+                contacts.append( item.payload<KABC::Addressee>() );
             }
         }
     }
@@ -198,7 +198,7 @@ ContactList ContactSelectionWidget::collectSelectedContacts() const
                     index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
             if ( item.isValid() ) {
                 if (item.hasPayload<KABC::Addressee>() ) {
-                    contacts.addressList.append( item.payload<KABC::Addressee>() );
+                    contacts.append( item.payload<KABC::Addressee>() );
                 }
             }
         }
@@ -228,7 +228,7 @@ ContactList ContactSelectionWidget::collectAddressBookContacts() const
 
         foreach ( const Akonadi::Item &item, job->items() ) {
             if ( item.hasPayload<KABC::Addressee>() ) {
-                contacts.addressList.append( item.payload<KABC::Addressee>() );
+                contacts.append( item.payload<KABC::Addressee>() );
             }
         }
     } else {
@@ -241,7 +241,7 @@ ContactList ContactSelectionWidget::collectAddressBookContacts() const
 
         foreach ( const Akonadi::Item &item, job->items() ) {
             if ( item.hasPayload<KABC::Addressee>() ) {
-                contacts.addressList.append( item.payload<KABC::Addressee>() );
+                contacts.append( item.payload<KABC::Addressee>() );
             }
         }
     }

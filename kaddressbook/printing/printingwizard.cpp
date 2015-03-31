@@ -224,7 +224,7 @@ void PrintingWizard::print()
     setCurrentPage( progressItem );
     kapp->processEvents();
 
-    KABC::Addressee::List contacts = mSelectionPage->selectedContacts().addressList;
+    KABC::Addressee::List contacts = mSelectionPage->selectedContacts().addressList();
 
     const ContactSorter sorter( mStylePage->sortField(), mStylePage->sortOrder() );
     sorter.sort( contacts );

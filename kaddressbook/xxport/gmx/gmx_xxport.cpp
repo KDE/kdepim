@@ -336,7 +336,7 @@ ContactList GMXXXPort::importContacts() const
     }
 
     file.close();
-    contactList.addressList = addresseeList;
+    contactList.setAddressList(addresseeList);
     return contactList;
 }
 
@@ -374,7 +374,7 @@ bool GMXXXPort::exportContacts( const ContactList &list, VCardExportSelectionWid
             return false;
         }
 
-        doExport( &tmpFile, list.addressList );
+        doExport( &tmpFile, list.addressList() );
         tmpFile.flush();
 
         return KIO::NetAccess::upload( tmpFile.fileName(), url, parentWidget() );
@@ -388,7 +388,7 @@ bool GMXXXPort::exportContacts( const ContactList &list, VCardExportSelectionWid
             return false;
         }
 
-        doExport( &file, list.addressList );
+        doExport( &file, list.addressList() );
         file.close();
 
         return true;

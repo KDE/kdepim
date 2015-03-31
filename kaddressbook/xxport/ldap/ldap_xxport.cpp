@@ -40,7 +40,7 @@ ContactList LDAPXXPort::importContacts() const
     QPointer<KLDAP::LdapSearchDialog> dlg = new KLDAP::LdapSearchDialog( parentWidget() );
 
     if ( dlg->exec() && dlg ) {
-        contactList.addressList = dlg->selectedContacts();
+        contactList.setAddressList(dlg->selectedContacts());
     }
 
     delete dlg;

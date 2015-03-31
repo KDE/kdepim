@@ -61,7 +61,7 @@ bool VCardXXPort::exportContacts( const ContactList &contacts, VCardExportSelect
     KABC::VCardConverter converter;
     KUrl url;
 
-    const KABC::Addressee::List list = filterContacts( contacts.addressList, exportFields );
+    const KABC::Addressee::List list = filterContacts( contacts.addressList(), exportFields );
     if ( list.isEmpty() ) { // no contact selected
         return true;
     }
@@ -235,7 +235,7 @@ ContactList VCardXXPort::importContacts() const
             }
         }
     }
-    contactList.addressList = addrList;
+    contactList.setAddressList(addrList);
     return contactList;
 }
 

@@ -69,7 +69,7 @@ bool CsvXXPort::exportContacts(const ContactList &contacts , VCardExportSelectio
             return false;
         }
 
-        exportToFile( &tmpFile, contacts.addressList );
+        exportToFile( &tmpFile, contacts.addressList() );
         tmpFile.flush();
 
         return KIO::NetAccess::upload( tmpFile.fileName(), url, parentWidget() );
@@ -82,7 +82,7 @@ bool CsvXXPort::exportContacts(const ContactList &contacts , VCardExportSelectio
             return false;
         }
 
-        exportToFile( &file, contacts.addressList );
+        exportToFile( &file, contacts.addressList() );
         file.close();
 
         return true;
@@ -153,7 +153,7 @@ ContactList CsvXXPort::importContacts() const
     ContactList contactList;
     QPointer<CSVImportDialog> dlg = new CSVImportDialog( parentWidget() );
     if ( dlg->exec() && dlg ) {
-        contactList.addressList = dlg->contacts();
+        contactList.setAddressList(dlg->contacts());
     }
 
     delete dlg;

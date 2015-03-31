@@ -147,17 +147,17 @@ void XXPortManager::import(const ContactList &contacts)
 
     mImportProgressDialog->show();
 
-    for ( int i = 0; i < contacts.addressList.count(); ++i ) {
+    for ( int i = 0; i < contacts.addressList().count(); ++i ) {
         Akonadi::Item item;
-        item.setPayload<KABC::Addressee>( contacts.addressList.at( i ) );
+        item.setPayload<KABC::Addressee>( contacts.addressList().at( i ) );
         item.setMimeType( KABC::Addressee::mimeType() );
 
         Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, collection );
         connect( job, SIGNAL(result(KJob*)), SLOT(slotImportJobDone(KJob*)) );
     }
-    for (int i = 0; i < contacts.contactGroupList.count(); ++i ) {
+    for (int i = 0; i < contacts.contactGroupList().count(); ++i ) {
         Akonadi::Item groupItem( KABC::ContactGroup::mimeType() );
-        groupItem.setPayload<KABC::ContactGroup>( contacts.contactGroupList.at(i) );
+        groupItem.setPayload<KABC::ContactGroup>( contacts.contactGroupList().at(i) );
 
         Akonadi::Job *createJob = new Akonadi::ItemCreateJob( groupItem, collection );
         connect( createJob, SIGNAL(result(KJob*)), this, SLOT(slotImportJobDone(KJob*)) );
@@ -198,7 +198,7 @@ void XXPortManager::slotExport( const QString &identifier )
         return;
     }
 
-    const KABC::AddresseeList contacts = dlg->selectedContacts().addressList;
+    const KABC::AddresseeList contacts = dlg->selectedContacts().addressList();
     const VCardExportSelectionWidget::ExportFields exportFields = dlg->exportType();
     delete dlg;
 
@@ -212,7 +212,7 @@ void XXPortManager::slotExport( const QString &identifier )
         return;
     }
     ContactList contactLists;
-    contactLists.addressList = contacts;
+    contactLists.setAddressList(contacts);
     xxport->exportContacts( contactLists, exportFields );
 
     delete xxport;

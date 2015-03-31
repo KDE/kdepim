@@ -32,8 +32,18 @@ public:
     bool isEmpty() const;
     int count() const;
     void clear();
-    KABC::Addressee::List addressList;
-    KABC::ContactGroup::List contactGroupList;
+
+    void append(const KABC::Addressee &addr);
+    void append(const KABC::ContactGroup &group);
+
+    KABC::Addressee::List addressList() const;
+    void setAddressList(const KABC::Addressee::List &value);
+    KABC::ContactGroup::List contactGroupList() const;
+    void setContactGroupList(const KABC::ContactGroup::List &value);
+
+private:
+    KABC::Addressee::List mAddressList;
+    KABC::ContactGroup::List mContactGroupList;
 };
 
 #endif // CONTACTLIST_H
