@@ -21,7 +21,6 @@
 #include "utils/autoqpointer.h"
 #include "messageviewer_debug.h"
 
-#include <qdebug.h>
 #include <KLocalizedString>
 #include <kmessagebox.h>
 #include <kopenwithdialog.h>

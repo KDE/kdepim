@@ -24,7 +24,6 @@
 #include <QVBoxLayout>
 #include <QCommandLineParser>
 #include <QMainWindow>
-#include <QDebug>
 
 int main(int argc, char **argv)
 {

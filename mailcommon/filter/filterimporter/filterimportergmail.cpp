@@ -20,6 +20,7 @@
 #include <QFile>
 #include <QDir>
 #include "mailfilter.h"
+
 using namespace MailCommon;
 
 FilterImporterGmail::FilterImporterGmail(QFile *file)
@@ -83,7 +84,7 @@ void FilterImporterGmail::parseFilters(const QDomElement &e)
         } else if (tagName == QLatin1String("apps:property")) {
             if (ruleFilter.hasAttribute(QLatin1String("name"))) {
                 const QString criteriaProperty = ruleFilter.attribute(QLatin1String("name"));
-                qDebug() << " ruleFilter.attribute" << criteriaProperty;
+                qCDebug(MAILCOMMON_LOG) << " ruleFilter.attribute" << criteriaProperty;
                 // Criterial
                 if (criteriaProperty == QLatin1String("from")) {
                     fieldName = "from";
@@ -113,7 +114,7 @@ void FilterImporterGmail::parseFilters(const QDomElement &e)
 
                 } else if (criteriaProperty == QLatin1String("neverSpam")) {
                 } else {
-                    qDebug() << " unknown item " << criteriaProperty;
+                    qCDebug(MAILCOMMON_LOG) << " unknown item " << criteriaProperty;
                 }
             }
         }
