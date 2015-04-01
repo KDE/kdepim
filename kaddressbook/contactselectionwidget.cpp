@@ -38,7 +38,7 @@
 #include <QVBoxLayout>
 
 ContactSelectionWidget::ContactSelectionWidget(QItemSelectionModel *selectionModel,
-                                                QWidget *parent)
+        QWidget *parent)
     : QWidget(parent), mSelectionModel(selectionModel), mAddContactGroup(false)
 {
     initGui();
@@ -170,10 +170,10 @@ ContactList ContactSelectionWidget::collectAllContacts() const
         return contacts;
     }
 
-    foreach ( const Akonadi::Item &item, job->items() ) {
-        if ( item.isValid() ) {
-            if (item.hasPayload<KContacts::Addressee>() ) {
-                contacts.append( item.payload<KContacts::Addressee>() );
+    foreach (const Akonadi::Item &item, job->items()) {
+        if (item.isValid()) {
+            if (item.hasPayload<KContacts::Addressee>()) {
+                contacts.append(item.payload<KContacts::Addressee>());
             }
         }
     }
@@ -190,10 +190,10 @@ ContactList ContactSelectionWidget::collectSelectedContacts() const
         const QModelIndex index = indexes.at(i);
         if (index.isValid()) {
             const Akonadi::Item item =
-                    index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-            if ( item.isValid() ) {
-                if (item.hasPayload<KContacts::Addressee>() ) {
-                    contacts.append( item.payload<KContacts::Addressee>() );
+                index.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
+            if (item.isValid()) {
+                if (item.hasPayload<KContacts::Addressee>()) {
+                    contacts.append(item.payload<KContacts::Addressee>());
                 }
             }
         }

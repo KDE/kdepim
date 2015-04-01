@@ -21,13 +21,14 @@
 #include "mailcommon_export.h"
 #include <KDialog>
 
-namespace MailCommon {
+namespace MailCommon
+{
 class InvalidFilterWidget;
 class MAILCOMMON_EXPORT InvalidFilterDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit InvalidFilterDialog(QWidget *parent=0);
+    explicit InvalidFilterDialog(QWidget *parent = 0);
     ~InvalidFilterDialog();
 private:
     void writeConfig();

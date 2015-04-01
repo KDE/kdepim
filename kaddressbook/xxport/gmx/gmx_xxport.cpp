@@ -373,7 +373,7 @@ bool GMXXXPort::exportContacts(const ContactList &list, VCardExportSelectionWidg
             return false;
         }
 
-        doExport( &tmpFile, list.addressList() );
+        doExport(&tmpFile, list.addressList());
         tmpFile.flush();
 
         return KIO::NetAccess::upload(tmpFile.fileName(), url, parentWidget());
@@ -387,7 +387,7 @@ bool GMXXXPort::exportContacts(const ContactList &list, VCardExportSelectionWidg
             return false;
         }
 
-        doExport( &file, list.addressList() );
+        doExport(&file, list.addressList());
         file.close();
 
         return true;

@@ -29,10 +29,10 @@ InvalidFilterDialog::InvalidFilterDialog(QWidget *parent)
 {
     //kf5 add i18n
     setCaption(QLatin1String("Invalid Filters"));
-    setWindowIcon( QIcon::fromTheme( QLatin1String("kmail") ) );
-    setButtons( Ok );
-    setDefaultButton( Ok );
-    setModal( true );
+    setWindowIcon(QIcon::fromTheme(QLatin1String("kmail")));
+    setButtons(Ok);
+    setDefaultButton(Ok);
+    setModal(true);
 
     mInvalidFilterWidget = new InvalidFilterWidget(this);
     mInvalidFilterWidget->setObjectName(QLatin1String("invalid_filter_widget"));
@@ -47,15 +47,15 @@ InvalidFilterDialog::~InvalidFilterDialog()
 
 void InvalidFilterDialog::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "InvalidFilterDialog" );
-    group.writeEntry( "Size", size() );
+    KConfigGroup group(KSharedConfig::openConfig(), "InvalidFilterDialog");
+    group.writeEntry("Size", size());
 }
 
 void InvalidFilterDialog::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "InvalidFilterDialog" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize(300, 350) );
-    if ( sizeDialog.isValid() ) {
-        resize( sizeDialog );
+    KConfigGroup group(KSharedConfig::openConfig(), "InvalidFilterDialog");
+    const QSize sizeDialog = group.readEntry("Size", QSize(300, 350));
+    if (sizeDialog.isValid()) {
+        resize(sizeDialog);
     }
 }

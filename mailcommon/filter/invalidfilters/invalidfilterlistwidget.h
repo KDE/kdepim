@@ -21,7 +21,8 @@
 #include <QListWidget>
 #include "mailcommon_export.h"
 
-namespace MailCommon {
+namespace MailCommon
+{
 class InvalidFilterListWidgetItem : public QListWidgetItem
 {
 public:
@@ -36,7 +37,7 @@ class MAILCOMMON_EXPORT InvalidFilterListWidget : public QListWidget
 {
     Q_OBJECT
 public:
-    explicit InvalidFilterListWidget(QWidget *parent=0);
+    explicit InvalidFilterListWidget(QWidget *parent = 0);
     ~InvalidFilterListWidget();
     void setInvalidFilter(const QStringList &lst);
 };

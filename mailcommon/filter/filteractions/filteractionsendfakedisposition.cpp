@@ -61,7 +61,7 @@ FilterAction *FilterActionSendFakeDisposition::newAction()
 
 bool FilterActionSendFakeDisposition::isEmpty() const
 {
-    const int index = mParameterList.indexOf( mParameter );
+    const int index = mParameterList.indexOf(mParameter);
     return (index < 1);
 }
 

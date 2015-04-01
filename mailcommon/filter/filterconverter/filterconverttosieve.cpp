@@ -38,7 +38,7 @@ void FilterConvertToSieve::convert()
     if (!mListFilters.isEmpty()) {
         QStringList requires;
         QString code;
-        Q_FOREACH(MailFilter *filter, mListFilters) {
+        Q_FOREACH (MailFilter *filter, mListFilters) {
             filter->generateSieveScript(requires, code);
             code += QLatin1Char('\n');
         }

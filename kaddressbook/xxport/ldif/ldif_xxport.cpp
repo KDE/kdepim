@@ -86,7 +86,7 @@ ContactList LDIFXXPort::importContacts() const
     file.close();
     KContacts::ContactGroup::List lstGroup;
     KContacts::Addressee::List lstAddresses;
-    KContacts::LDIFConverter::LDIFToAddressee( wholeFile, lstAddresses, lstGroup, dtDefault );
+    KContacts::LDIFConverter::LDIFToAddressee(wholeFile, lstAddresses, lstGroup, dtDefault);
     contactList.setAddressList(lstAddresses);
     contactList.setContactGroupList(lstGroup);
     return contactList;
