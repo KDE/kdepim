@@ -31,7 +31,6 @@ FilterAction *FilterActionReplyTo::newAction()
 FilterActionReplyTo::FilterActionReplyTo(QObject *parent)
     : FilterActionWithAddress(QStringLiteral("set Reply-To"), i18n("Set Reply-To To"), parent)
 {
-    mParameter.clear();
 }
 
 FilterAction::ReturnCode FilterActionReplyTo::process(ItemContext &context , bool) const

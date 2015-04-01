@@ -231,3 +231,42 @@ add_executable( invalidfilterlistwidgettest ${mailcommon_invalidfilterlistwidget
 add_test(invalidfilterlistwidgettest invalidfilterlistwidgettest)
 ecm_mark_as_test(invalidfilterlistwidgettest)
 target_link_libraries( invalidfilterlistwidgettest Qt5::Test KF5::KDELibs4Support Qt5::Gui KF5::AkonadiCore mailcommon)
+
+
+set(mailcommon_filteractionunsetstatustest_SRCS filteractionunsetstatustest.cpp ../../mailcommon_debug.cpp
+                                           ../filteractions/filteractionunsetstatus.cpp
+                                            ../filteractions/filteractionstatus.cpp
+                                           ../filteractions/filteractionwithstringlist.cpp
+                                           ../filteractions/filteractionwithstring.cpp)
+add_executable( filteractionunsetstatustest ${mailcommon_filteractionunsetstatustest_SRCS} )
+add_test(filteractionunsetstatustest filteractionunsetstatustest)
+ecm_mark_as_test(filteractionunsetstatustest)
+target_link_libraries( filteractionunsetstatustest
+   kdepim
+   pimcommon
+   mailcommon
+   Qt5::Test
+   Qt5::Core
+   KF5::AkonadiCore
+   KF5::AkonadiMime
+)
+
+set(mailcommon_filteractionredirecttest_SRCS filteractionredirecttest.cpp ../../mailcommon_debug.cpp
+                                           ../filteractions/filteractionredirect.cpp
+                                           ../filteractions/filteractionwithaddress.cpp
+                                           ../filteractions/filteractionwithstring.cpp)
+add_executable( filteractionredirecttest ${mailcommon_filteractionredirecttest_SRCS} )
+add_test(filteractionredirecttest filteractionredirecttest)
+ecm_mark_as_test(filteractionredirecttest)
+target_link_libraries( filteractionredirecttest
+   kdepim
+   pimcommon
+   mailcommon
+   messagecore
+   messagecomposer
+   Qt5::Test
+   Qt5::Core
+   KF5::AkonadiCore
+   KF5::AkonadiMime
+)
+

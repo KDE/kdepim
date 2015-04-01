@@ -76,6 +76,9 @@ set(libmailcommon_filter_SRCS
   filter/dialog/selectthunderbirdfilterfilesdialog.cpp
   filter/dialog/selectthunderbirdfilterfileswidget.cpp
   filter/mdnadvicedialog.cpp
+)
+
+set(libmailcommon_invalidfilters 
   filter/invalidfilters/invalidfilterdialog.cpp
   filter/invalidfilters/invalidfilterlistwidget.cpp
   filter/invalidfilters/invalidfilterwidget.cpp
@@ -164,6 +167,7 @@ set(libmailcommon_SRCS
   mailcommon_debug.cpp
   ${libmailcommon_util_SRCS}
   ${libmailcommon_mdn_SRCS}
+  ${libmailcommon_invalidfilters}
   ${libmailcommon_widget_SRCS}
   ${libmailcommon_tag_SRCS}
   ${libmailcommon_snippets_SRCS}

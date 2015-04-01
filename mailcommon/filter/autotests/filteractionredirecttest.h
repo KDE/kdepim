@@ -15,30 +15,18 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef INVALIDFILTERLISTWIDGET_H
-#define INVALIDFILTERLISTWIDGET_H
+#ifndef FILTERACTIONREDIRECTTEST_H
+#define FILTERACTIONREDIRECTTEST_H
 
-#include <QListWidget>
-#include "mailcommon_export.h"
+#include <QObject>
 
-namespace MailCommon {
-class InvalidFilterListWidgetItem : public QListWidgetItem
-{
-public:
-    explicit InvalidFilterListWidgetItem(QListWidget *parent = 0);
-    ~InvalidFilterListWidgetItem();
-    void setInformation(const QString &information);
-private:
-    QString mInformation;
-};
-
-class MAILCOMMON_EXPORT InvalidFilterListWidget : public QListWidget
+class FilterActionRedirectTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit InvalidFilterListWidget(QWidget *parent=0);
-    ~InvalidFilterListWidget();
-    void setInvalidFilter(const QStringList &lst);
+    explicit FilterActionRedirectTest(QObject *parent = 0);
+    ~FilterActionRedirectTest();
+
 };
-}
-#endif // INVALIDFILTERLISTWIDGET_H
+
+#endif // FILTERACTIONREDIRECTTEST_H

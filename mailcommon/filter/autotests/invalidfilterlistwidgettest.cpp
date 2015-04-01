@@ -36,4 +36,16 @@ void InvalidFilterListWidgetTest::shouldHaveDefaultValue()
     QCOMPARE(w.count(), 0);
 }
 
+void InvalidFilterListWidgetTest::shouldAddInvalidFilters()
+{
+    MailCommon::InvalidFilterListWidget w;
+    QCOMPARE(w.count(), 0);
+    QStringList lst;
+    lst << QLatin1String("foo");
+    lst << QLatin1String("foo1");
+    lst << QLatin1String("foo2");
+    w.setInvalidFilter(lst);
+    QCOMPARE(w.count(), 3);
+}
+
 QTEST_KDEMAIN(InvalidFilterListWidgetTest, GUI)

@@ -31,9 +31,19 @@ public:
 
     bool isEmpty() const;
     int count() const;
-    KContacts::Addressee::List addressList;
-    KContacts::ContactGroup::List contactGroupList;
     void clear();
+
+    void append(const KContacts::Addressee &addr);
+    void append(const KContacts::ContactGroup &group);
+
+    KContacts::Addressee::List addressList() const;
+    void setAddressList(const KContacts::Addressee::List &value);
+    KContacts::ContactGroup::List contactGroupList() const;
+    void setContactGroupList(const KContacts::ContactGroup::List &value);
+
+private:
+    KContacts::Addressee::List mAddressList;
+    KContacts::ContactGroup::List mContactGroupList;
 };
 
 #endif // CONTACTLIST_H

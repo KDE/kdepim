@@ -60,7 +60,7 @@ bool VCardXXPort::exportContacts(const ContactList &contacts, VCardExportSelecti
     KContacts::VCardConverter converter;
     QUrl url;
 
-    const KContacts::Addressee::List list = filterContacts(contacts.addressList, exportFields);
+    const KContacts::Addressee::List list = filterContacts(contacts.addressList(), exportFields);
     if (list.isEmpty()) {   // no contact selected
         return true;
     }
@@ -232,7 +232,7 @@ ContactList VCardXXPort::importContacts() const
             }
         }
     }
-    contactList.addressList = addrList;
+    contactList.setAddressList(addrList);
     return contactList;
 }
 

@@ -27,17 +27,47 @@ ContactList::ContactList()
 
 bool ContactList::isEmpty() const
 {
-    return (addressList.isEmpty() && contactGroupList.isEmpty());
+    return (mAddressList.isEmpty() && mContactGroupList.isEmpty());
 }
 
 int ContactList::count() const
 {
-    return (addressList.count() + contactGroupList.count());
+    return (mAddressList.count() + mContactGroupList.count());
 }
-
 
 void ContactList::clear()
 {
-    addressList.clear();
-    contactGroupList.clear();
+    mAddressList.clear();
+    mContactGroupList.clear();
 }
+
+void ContactList::append(const KContacts::Addressee &addr)
+{
+    mAddressList.append(addr);
+}
+
+void ContactList::append(const KContacts::ContactGroup &group)
+{
+    mContactGroupList.append(group);
+}
+
+KContacts::ContactGroup::List ContactList::contactGroupList() const
+{
+    return mContactGroupList;
+}
+
+void ContactList::setContactGroupList(const KContacts::ContactGroup::List &value)
+{
+    mContactGroupList = value;
+}
+
+KContacts::Addressee::List ContactList::addressList() const
+{
+    return mAddressList;
+}
+
+void ContactList::setAddressList(const KContacts::Addressee::List &value)
+{
+    mAddressList = value;
+}
+

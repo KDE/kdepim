@@ -51,7 +51,7 @@
 void doExport(QFile *file, const ContactList &list)
 {
     QString data;
-    KContacts::LDIFConverter::addresseeAndContactGroupToLDIF(list.addressList, list.contactGroupList, data);
+    KContacts::LDIFConverter::addresseeAndContactGroupToLDIF(list.addressList(), list.contactGroupList(), data);
 
     QTextStream stream(file);
     stream.setCodec("UTF-8");
@@ -84,7 +84,11 @@ ContactList LDIFXXPort::importContacts() const
     const QString wholeFile = stream.readAll();
     const QDateTime dtDefault = QFileInfo(file).lastModified();
     file.close();
-    KContacts::LDIFConverter::LDIFToAddressee(wholeFile, contactList.addressList, contactList.contactGroupList, dtDefault);
+    KContacts::ContactGroup::List lstGroup;
+    KContacts::Addressee::List lstAddresses;
+    KContacts::LDIFConverter::LDIFToAddressee( wholeFile, lstAddresses, lstGroup, dtDefault );
+    contactList.setAddressList(lstAddresses);
+    contactList.setContactGroupList(lstGroup);
     return contactList;
 }
 
