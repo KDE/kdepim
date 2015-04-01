@@ -238,3 +238,7 @@ target_link_libraries( filteractionredirecttest
    ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
 )
 
+
+set( mailcommon_invalidfilterinfotest_source invalidfilterinfotest.cpp  )
+kde4_add_unit_test( invalidfilterinfotest ${mailcommon_invalidfilterinfotest_source})
+target_link_libraries( invalidfilterinfotest ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS} mailcommon)

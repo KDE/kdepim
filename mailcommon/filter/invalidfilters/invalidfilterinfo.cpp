@@ -39,3 +39,15 @@ QString InvalidFilterInfo::name() const
 {
     return mName;
 }
+
+void InvalidFilterInfo::setName(const QString &name)
+{
+    mName = name;
+}
+
+void InvalidFilterInfo::setInformation(const QString &information)
+{
+    mInformation = information;
+}
+
+
