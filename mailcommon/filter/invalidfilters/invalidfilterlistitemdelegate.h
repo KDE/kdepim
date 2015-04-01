@@ -34,11 +34,13 @@ public:
     virtual void paint(QPainter* painter, const QStyleOptionViewItem& option,
                        const QModelIndex& index) const;
 
-    virtual QList<QWidget*> createItemWidgets(const QModelIndex&) const;
+    virtual QList<QWidget*> createItemWidgets() const;
 
     virtual void updateItemWidgets(const QList<QWidget*> widgets,
                                    const QStyleOptionViewItem& option,
                                    const QPersistentModelIndex& index) const;
+private Q_SLOTS:
+    void slotShowDetails();
 };
 }
 #endif // INVALIDFILTERLISTITEMDELEGATE_H

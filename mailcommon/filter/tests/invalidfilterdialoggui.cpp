@@ -15,27 +15,27 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "invalidfilterdialoggui.h"
+#include "invalidfilters/invalidfilterdialog.h"
+#include <QApplication>
 
-#ifndef INVALIDFILTERWIDGET_H
-#define INVALIDFILTERWIDGET_H
 
-#include <QWidget>
-#include "invalidfilterinfo.h"
-#include "mailcommon_export.h"
-
-namespace MailCommon {
-class InvalidFilterListView;
-class MAILCOMMON_EXPORT InvalidFilterWidget : public QWidget
+int main (int argc, char **argv)
 {
-    Q_OBJECT
-public:
-    explicit InvalidFilterWidget(QWidget *parent=0);
-    ~InvalidFilterWidget();
+    QApplication app(argc, argv);
 
-    void setInvalidFilters(const QVector<MailCommon::InvalidFilterInfo> &lst);
-private:
-    InvalidFilterListView *mInvalidFilterListWidget;
-};
+    MailCommon::InvalidFilterDialog *w = new MailCommon::InvalidFilterDialog();
+    QVector<MailCommon::InvalidFilterInfo> infoLst;
+    for (int i = 0; i < 10; ++i) {
+        MailCommon::InvalidFilterInfo info;
+        info.setInformation(QString::fromLatin1("information %1").arg(i));
+        info.setName(QString::fromLatin1("name %1").arg(i));
+        infoLst << info;
+    }
+    w->setInvalidFilters(infoLst);
+    w->resize(800, 600);
+    w->show();
+    app.exec();
+    delete w;
+    return 0;
 }
-
-#endif // INVALIDFILTERWIDGET_H

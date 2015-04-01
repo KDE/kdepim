@@ -15,10 +15,15 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 #include "invalidfilterlistitemdelegate.h"
+#include "invalidfilterlistmodel.h"
 
+#include <QWhatsThis>
 #include <KIcon>
+#include <QAbstractItemView>
 #include <QPainter>
 #include <QPushButton>
+#include <QToolButton>
+#include <qlabel.h>
 
 using namespace MailCommon;
 
@@ -58,29 +63,41 @@ void InvalidFilterListItemDelegate::paint(QPainter* painter, const QStyleOptionV
     painter->restore();
 }
 
-QList<QWidget*> InvalidFilterListItemDelegate::createItemWidgets(const QModelIndex&) const
+QList<QWidget*> InvalidFilterListItemDelegate::createItemWidgets() const
 {
-    QPushButton* configureButton = new QPushButton();
-    connect(configureButton, SIGNAL(clicked()), this, SLOT(slotConfigureButtonClicked()));
-    return QList<QWidget*>() << configureButton;
+    QLabel *label = new QLabel();
+    QToolButton* showInformationToolButton = new QToolButton();
+    connect(showInformationToolButton, SIGNAL(clicked()), this, SLOT(slotShowDetails()));
+    return QList<QWidget*>() << label << showInformationToolButton;
 }
 
 void InvalidFilterListItemDelegate::updateItemWidgets(const QList<QWidget*> widgets,
                                               const QStyleOptionViewItem& option,
                                               const QPersistentModelIndex& index) const
 {
-    QPushButton *configureButton = static_cast<QPushButton*>(widgets[0]);
+    QLabel *label = static_cast<QLabel*>(widgets[0]);
+    const QAbstractItemModel* model = index.model();
+    label->setText(model->data(index).toString());
 
-    configureButton->setEnabled(checkBox->isChecked());
-    configureButton->setIcon(KIcon("configure"));
-    configureButton->resize(configureButton->sizeHint());
-    configureButton->move(option.rect.right() - configureButton->width(),
-                          (itemHeight - configureButton->height()) / 2);
+    QToolButton *showInformationToolButton = static_cast<QToolButton*>(widgets[1]);
+    const int itemHeight = sizeHint(option, index).height();
+    showInformationToolButton->setIcon(KIcon(QLatin1String("help-hint")));
+    showInformationToolButton->resize(showInformationToolButton->sizeHint());
+    showInformationToolButton->move(option.rect.right() - showInformationToolButton->width(),
+                          (itemHeight - showInformationToolButton->height()) / 2);
+
+    int labelWidth = option.rect.width();
+    labelWidth -= showInformationToolButton->sizeHint().width();
+    label->resize(labelWidth, label->sizeHint().height());
+    label->move(0, (itemHeight - label->height()) / 2);
 }
 
-void InvalidFilterListItemDelegate::slotConfigureButtonClicked()
+void InvalidFilterListItemDelegate::slotShowDetails()
 {
-    emit requestServiceConfiguration(focusedIndex());
+    const QAbstractItemModel* model = focusedIndex().model();
+
+    const QString information = model->data(focusedIndex(), InvalidFilterListModel::InformationRole).toString();
+    QWhatsThis::showText( QCursor::pos(), information );
 }
 
 
