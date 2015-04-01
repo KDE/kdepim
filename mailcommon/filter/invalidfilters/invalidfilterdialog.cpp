@@ -30,7 +30,7 @@ InvalidFilterDialog::InvalidFilterDialog(QWidget *parent)
     //kf5 add i18n
     setCaption(QLatin1String("Invalid Filters"));
     setWindowIcon( KIcon( QLatin1String("kmail") ) );
-    setButtons( Ok );
+    setButtons( Cancel | Ok );
     setDefaultButton( Ok );
     setModal( true );
 
