@@ -24,7 +24,7 @@ class FilterActionUnsetStatusTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FilterActionUnsetStatusTest(QObject *parent = 0);
+    explicit FilterActionUnsetStatusTest(QObject *parent = Q_NULLPTR);
     ~FilterActionUnsetStatusTest();
 private Q_SLOTS:
     void shouldHaveSieveRequires();

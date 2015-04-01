@@ -24,7 +24,7 @@ class NoteEditorUtilsTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit NoteEditorUtilsTest(QObject *parent = 0);
+    explicit NoteEditorUtilsTest(QObject *parent = Q_NULLPTR);
     ~NoteEditorUtilsTest();
 
 private Q_SLOTS:

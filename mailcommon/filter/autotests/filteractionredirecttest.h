@@ -24,7 +24,7 @@ class FilterActionRedirectTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FilterActionRedirectTest(QObject *parent = 0);
+    explicit FilterActionRedirectTest(QObject *parent = Q_NULLPTR);
     ~FilterActionRedirectTest();
 
 };

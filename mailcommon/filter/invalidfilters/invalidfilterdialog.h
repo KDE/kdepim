@@ -28,7 +28,7 @@ class MAILCOMMON_EXPORT InvalidFilterDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit InvalidFilterDialog(QWidget *parent = 0);
+    explicit InvalidFilterDialog(QWidget *parent = Q_NULLPTR);
     ~InvalidFilterDialog();
 private:
     void writeConfig();

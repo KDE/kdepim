@@ -26,7 +26,7 @@ namespace MailCommon
 class InvalidFilterListWidgetItem : public QListWidgetItem
 {
 public:
-    explicit InvalidFilterListWidgetItem(QListWidget *parent = 0);
+    explicit InvalidFilterListWidgetItem(QListWidget *parent = Q_NULLPTR);
     ~InvalidFilterListWidgetItem();
     void setInformation(const QString &information);
 private:
@@ -37,7 +37,7 @@ class MAILCOMMON_EXPORT InvalidFilterListWidget : public QListWidget
 {
     Q_OBJECT
 public:
-    explicit InvalidFilterListWidget(QWidget *parent = 0);
+    explicit InvalidFilterListWidget(QWidget *parent = Q_NULLPTR);
     ~InvalidFilterListWidget();
     void setInvalidFilter(const QStringList &lst);
 };
