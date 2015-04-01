@@ -34,6 +34,11 @@ private Q_SLOTS:
     void shouldClearWidget();
     void shouldReturnSieveCode();
     void shouldBeEmpty();
+
+    void shouldNotExecuteActionWhenParameterIsEmpty();
+    void shouldNotExecuteActionWhenValueIsEmpty();
+    void shouldAddNewHeaderWhenNotExistingHeader();
+    void shouldReplaceHeaderWhenExistingHeader();
 };
 
 #endif // FILTERACTIONADDHEADERTEST_H
