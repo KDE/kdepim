@@ -19,6 +19,7 @@
 #define INVALIDFILTERWIDGET_H
 
 #include <QWidget>
+#include "invalidfilterinfo.h"
 #include "mailcommon_export.h"
 
 namespace MailCommon
@@ -31,7 +32,7 @@ public:
     explicit InvalidFilterWidget(QWidget *parent = Q_NULLPTR);
     ~InvalidFilterWidget();
 
-    void setInvalidFilter(const QStringList &lst);
+    void setInvalidFilters(const QVector<MailCommon::InvalidFilterInfo> &lst);
 private:
     InvalidFilterListWidget *mInvalidFilterListWidget;
 };

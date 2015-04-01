@@ -19,17 +19,21 @@
 #define INVALIDFILTERDIALOG_H
 
 #include "mailcommon_export.h"
+#include "invalidfilterinfo.h"
 #include <KDialog>
 
 namespace MailCommon
 {
 class InvalidFilterWidget;
+
 class MAILCOMMON_EXPORT InvalidFilterDialog : public KDialog
 {
     Q_OBJECT
 public:
     explicit InvalidFilterDialog(QWidget *parent = Q_NULLPTR);
     ~InvalidFilterDialog();
+
+    void setInvalidFilters(const QVector<InvalidFilterInfo> &lst);
 private:
     void writeConfig();
     void readConfig();

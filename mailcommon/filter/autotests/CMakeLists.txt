@@ -270,3 +270,9 @@ target_link_libraries( filteractionredirecttest
    KF5::AkonadiMime
 )
 
+
+set( mailcommon_invalidfilterinfotest_source invalidfilterinfotest.cpp  )
+add_executable( invalidfilterinfotest ${mailcommon_invalidfilterinfotest_source})
+add_test(invalidfilterinfotest invalidfilterinfotest)
+ecm_mark_as_test(invalidfilterinfotest)
+target_link_libraries( invalidfilterinfotest Qt5::Test  mailcommon)

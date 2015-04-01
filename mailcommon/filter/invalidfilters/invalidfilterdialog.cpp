@@ -29,7 +29,7 @@ InvalidFilterDialog::InvalidFilterDialog(QWidget *parent)
 {
     setCaption(i18n("Invalid Filters"));
     setWindowIcon(QIcon::fromTheme(QLatin1String("kmail")));
-    setButtons(Ok);
+    setButtons(Cancel | Ok);
     setDefaultButton(Ok);
     setModal(true);
 
@@ -42,6 +42,11 @@ InvalidFilterDialog::InvalidFilterDialog(QWidget *parent)
 InvalidFilterDialog::~InvalidFilterDialog()
 {
     writeConfig();
+}
+
+void InvalidFilterDialog::setInvalidFilters(const QVector<InvalidFilterInfo> &lst)
+{
+    mInvalidFilterWidget->setInvalidFilters(lst);
 }
 
 void InvalidFilterDialog::writeConfig()
@@ -58,3 +63,7 @@ void InvalidFilterDialog::readConfig()
         resize(sizeDialog);
     }
 }
+
+
+
+

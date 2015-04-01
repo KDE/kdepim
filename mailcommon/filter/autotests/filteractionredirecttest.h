@@ -26,7 +26,8 @@ class FilterActionRedirectTest : public QObject
 public:
     explicit FilterActionRedirectTest(QObject *parent = Q_NULLPTR);
     ~FilterActionRedirectTest();
-
+private Q_SLOTS:
+    void shouldBeEmpty();
 };
 
 #endif // FILTERACTIONREDIRECTTEST_H

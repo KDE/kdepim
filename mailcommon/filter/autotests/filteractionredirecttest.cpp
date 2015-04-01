@@ -30,4 +30,10 @@ FilterActionRedirectTest::~FilterActionRedirectTest()
 
 }
 
+void FilterActionRedirectTest::shouldBeEmpty()
+{
+    MailCommon::FilterActionRedirect filter;
+    QVERIFY(filter.isEmpty());
+}
+
 QTEST_MAIN(FilterActionRedirectTest)

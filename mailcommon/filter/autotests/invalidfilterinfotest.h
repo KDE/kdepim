@@ -15,29 +15,21 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FILTERACTIONADDHEADERTEST_H
-#define FILTERACTIONADDHEADERTEST_H
+#ifndef INVALIDFILTERINFOTEST_H
+#define INVALIDFILTERINFOTEST_H
 
 #include <QObject>
 
-class FilterActionAddHeaderTest : public QObject
+class InvalidFilterInfoTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FilterActionAddHeaderTest(QObject *parent = Q_NULLPTR);
-    ~FilterActionAddHeaderTest();
+    explicit InvalidFilterInfoTest(QObject *parent = 0);
+    ~InvalidFilterInfoTest();
 private Q_SLOTS:
-    void shouldCreateWidget();
-    void shouldAddValue();
-    void shouldAddValue_data();
-    void shouldClearWidget();
-    void shouldReturnSieveCode();
-    void shouldBeEmpty();
-
-    void shouldNotExecuteActionWhenParameterIsEmpty();
-    void shouldNotExecuteActionWhenValueIsEmpty();
-    void shouldAddNewHeaderWhenNotExistingHeader();
-    void shouldReplaceHeaderWhenExistingHeader();
+    void shouldAddEmptyValue();
+    void shouldAssignValueFromConstructor();
+    void shouldAssignValue();
 };
 
-#endif // FILTERACTIONADDHEADERTEST_H
+#endif // INVALIDFILTERINFOTEST_H
