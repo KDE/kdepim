@@ -17,7 +17,7 @@
 
 #include "filteractionredirecttest.h"
 #include "../filteractions/filteractionredirect.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 FilterActionRedirectTest::FilterActionRedirectTest(QObject *parent)
     : QObject(parent)
@@ -30,4 +30,4 @@ FilterActionRedirectTest::~FilterActionRedirectTest()
 
 }
 
-QTEST_KDEMAIN(FilterActionRedirectTest, GUI)
+QTEST_MAIN(FilterActionRedirectTest)

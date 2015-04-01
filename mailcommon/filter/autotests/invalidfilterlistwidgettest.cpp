@@ -17,7 +17,7 @@
 
 #include "invalidfilterlistwidgettest.h"
 #include "../filter/invalidfilters/invalidfilterlistwidget.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 InvalidFilterListWidgetTest::InvalidFilterListWidgetTest(QObject *parent)
     : QObject(parent)
@@ -48,4 +48,4 @@ void InvalidFilterListWidgetTest::shouldAddInvalidFilters()
     QCOMPARE(w.count(), 3);
 }
 
-QTEST_KDEMAIN(InvalidFilterListWidgetTest, GUI)
+QTEST_MAIN(InvalidFilterListWidgetTest)

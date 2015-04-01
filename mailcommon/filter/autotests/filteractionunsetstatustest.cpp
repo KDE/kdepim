@@ -17,7 +17,7 @@
 
 #include "filteractionunsetstatustest.h"
 #include "../filteractions/filteractionunsetstatus.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 FilterActionUnsetStatusTest::FilterActionUnsetStatusTest(QObject *parent)
     : QObject(parent)
@@ -36,4 +36,4 @@ void FilterActionUnsetStatusTest::shouldHaveSieveRequires()
     QCOMPARE(filter.sieveRequires(), QStringList() << QLatin1String("imap4flags"));
 }
 
-QTEST_KDEMAIN(FilterActionUnsetStatusTest, GUI)
+QTEST_MAIN(FilterActionUnsetStatusTest)

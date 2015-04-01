@@ -18,7 +18,7 @@
 
 #include "invalidfilterdialogtest.h"
 #include "../filter/invalidfilters/invalidfilterdialog.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 #include "../filter/invalidfilters/invalidfilterwidget.h"
 
 InvalidFilterDialogTest::InvalidFilterDialogTest(QObject *parent)
@@ -39,4 +39,4 @@ void InvalidFilterDialogTest::shouldHaveDefaultValue()
     QVERIFY(widget);
 }
 
-QTEST_KDEMAIN(InvalidFilterDialogTest, GUI)
+QTEST_MAIN(InvalidFilterDialogTest)

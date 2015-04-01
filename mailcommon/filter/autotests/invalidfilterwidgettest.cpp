@@ -19,7 +19,7 @@
 #include "../filter/invalidfilters/invalidfilterwidget.h"
 #include "../filter/invalidfilters/invalidfilterlistwidget.h"
 #include <QLabel>
-#include <qtest_kde.h>
+#include <qtest.h>
 InvalidFilterWidgetTest::InvalidFilterWidgetTest(QObject *parent)
     : QObject(parent)
 {
@@ -41,4 +41,4 @@ void InvalidFilterWidgetTest::shouldHaveDefaultValue()
     QVERIFY(list);
 }
 
-QTEST_KDEMAIN(InvalidFilterWidgetTest, GUI)
+QTEST_MAIN(InvalidFilterWidgetTest)
