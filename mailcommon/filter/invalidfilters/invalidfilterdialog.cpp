@@ -27,8 +27,7 @@ using namespace MailCommon;
 InvalidFilterDialog::InvalidFilterDialog(QWidget *parent)
     : KDialog(parent)
 {
-    //kf5 add i18n
-    setCaption(QLatin1String("Invalid Filters"));
+    setCaption(i18n("Invalid Filters"));
     setWindowIcon(QIcon::fromTheme(QLatin1String("kmail")));
     setButtons(Ok);
     setDefaultButton(Ok);
