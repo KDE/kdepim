@@ -19,6 +19,7 @@
 #define INVALIDFILTERLISTWIDGET_H
 
 #include <QListWidget>
+#include "invalidfilterinfo.h"
 #include "mailcommon_export.h"
 
 namespace MailCommon {
@@ -38,7 +39,7 @@ class MAILCOMMON_EXPORT InvalidFilterListWidget : public QListWidget
 public:
     explicit InvalidFilterListWidget(QWidget *parent=0);
     ~InvalidFilterListWidget();
-    void setInvalidFilter(const QStringList &lst);
+    void setInvalidFilters(const QVector<MailCommon::InvalidFilterInfo> &lst);
 };
 }
 #endif // INVALIDFILTERLISTWIDGET_H

@@ -45,8 +45,11 @@ InvalidFilterListWidget::~InvalidFilterListWidget()
 
 }
 
-void InvalidFilterListWidget::setInvalidFilter(const QStringList &lst)
+void InvalidFilterListWidget::setInvalidFilters(const QVector<MailCommon::InvalidFilterInfo> &lst)
 {
-    addItems(lst);
+    Q_FOREACH(const MailCommon::InvalidFilterInfo &info, lst) {
+        InvalidFilterListWidgetItem *item = new InvalidFilterListWidgetItem(this);
+        item->setText(info.name());
+        item->setInformation(info.information());
+    }
 }
-

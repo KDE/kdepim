@@ -45,6 +45,11 @@ InvalidFilterDialog::~InvalidFilterDialog()
     writeConfig();
 }
 
+void InvalidFilterDialog::setInvalidFilters(const QVector<InvalidFilterInfo> &lst)
+{
+    mInvalidFilterWidget->setInvalidFilters(lst);
+}
+
 void InvalidFilterDialog::writeConfig()
 {
     KConfigGroup group( KGlobal::config(), "InvalidFilterDialog" );
@@ -59,3 +64,7 @@ void InvalidFilterDialog::readConfig()
         resize( sizeDialog );
     }
 }
+
+
+
+

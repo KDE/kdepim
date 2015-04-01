@@ -42,7 +42,7 @@ InvalidFilterWidget::~InvalidFilterWidget()
 
 }
 
-void InvalidFilterWidget::setInvalidFilter(const QStringList &lst)
+void InvalidFilterWidget::setInvalidFilters(const QVector<InvalidFilterInfo> &lst)
 {
-    mInvalidFilterListWidget->setInvalidFilter(lst);
+    mInvalidFilterListWidget->setInvalidFilters(lst);
 }

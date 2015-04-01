@@ -15,27 +15,27 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
-#ifndef INVALIDFILTERWIDGET_H
-#define INVALIDFILTERWIDGET_H
-
-#include <QWidget>
 #include "invalidfilterinfo.h"
-#include "mailcommon_export.h"
+using namespace MailCommon;
 
-namespace MailCommon {
-class InvalidFilterListWidget;
-class MAILCOMMON_EXPORT InvalidFilterWidget : public QWidget
+InvalidFilterInfo::InvalidFilterInfo()
 {
-    Q_OBJECT
-public:
-    explicit InvalidFilterWidget(QWidget *parent=0);
-    ~InvalidFilterWidget();
 
-    void setInvalidFilters(const QVector<MailCommon::InvalidFilterInfo> &lst);
-private:
-    InvalidFilterListWidget *mInvalidFilterListWidget;
-};
 }
 
-#endif // INVALIDFILTERWIDGET_H
+InvalidFilterInfo::InvalidFilterInfo(const QString &name, const QString &information)
+    : mName(name),
+      mInformation(information)
+{
+
+}
+
+QString InvalidFilterInfo::information() const
+{
+    return mInformation;
+}
+
+QString InvalidFilterInfo::name() const
+{
+    return mName;
+}

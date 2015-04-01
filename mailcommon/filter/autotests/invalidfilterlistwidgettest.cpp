@@ -17,6 +17,7 @@
 
 #include "invalidfilterlistwidgettest.h"
 #include "../filter/invalidfilters/invalidfilterlistwidget.h"
+#include "../filter/invalidfilters/invalidfilterinfo.h"
 #include <qtest_kde.h>
 
 InvalidFilterListWidgetTest::InvalidFilterListWidgetTest(QObject *parent)
@@ -40,11 +41,11 @@ void InvalidFilterListWidgetTest::shouldAddInvalidFilters()
 {
     MailCommon::InvalidFilterListWidget w;
     QCOMPARE(w.count(), 0);
-    QStringList lst;
-    lst << QLatin1String("foo");
-    lst << QLatin1String("foo1");
-    lst << QLatin1String("foo2");
-    w.setInvalidFilter(lst);
+    QVector<MailCommon::InvalidFilterInfo> lst;
+    lst.append(MailCommon::InvalidFilterInfo(QLatin1String("foo"), QLatin1String("bla")));
+    lst.append(MailCommon::InvalidFilterInfo(QLatin1String("foo1"), QLatin1String("bla1")));
+    lst.append(MailCommon::InvalidFilterInfo(QLatin1String("foo2"), QLatin1String("bla2")));
+    w.setInvalidFilters(lst);
     QCOMPARE(w.count(), 3);
 }
 
