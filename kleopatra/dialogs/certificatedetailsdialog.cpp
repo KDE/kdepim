@@ -489,7 +489,7 @@ private:
         {
             setupUi(qq->mainWidget());
             qq->setButtons(KDialog::Help | KDialog::Close);
-            qq->setHelp(QString(), QLatin1String("kleopatra"));
+            qq->setHelp(QString(), QStringLiteral("kleopatra"));
             chainTW->header()->setResizeMode(0, QHeaderView::Stretch);
 
             dumpLTW->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));

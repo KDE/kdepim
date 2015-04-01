@@ -34,7 +34,7 @@ void FilterActionReplyToTest::shouldHaveDefaultValue()
 {
     MailCommon::FilterActionReplyTo filter;
     QWidget *w = filter.createParamWidget(0);
-    QCOMPARE(w->objectName(), QLatin1String("emailaddressrequester"));
+    QCOMPARE(w->objectName(), QStringLiteral("emailaddressrequester"));
 }
 
 QTEST_MAIN(FilterActionReplyToTest)

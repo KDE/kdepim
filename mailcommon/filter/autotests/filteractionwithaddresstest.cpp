@@ -24,7 +24,7 @@ class TestFilterActionWithAddress : public MailCommon::FilterActionWithAddress
 {
 public:
     TestFilterActionWithAddress()
-        : MailCommon::FilterActionWithAddress(QLatin1String("foo"), QLatin1String("bla"))
+        : MailCommon::FilterActionWithAddress(QStringLiteral("foo"), QStringLiteral("bla"))
     {
 
     }
@@ -55,7 +55,7 @@ void FilterActionWithAddressTest::shouldHaveDefaultValue()
 {
     TestFilterActionWithAddress filter;
     QWidget *w = filter.createParamWidget(0);
-    QCOMPARE(w->objectName(), QLatin1String("emailaddressrequester"));
+    QCOMPARE(w->objectName(), QStringLiteral("emailaddressrequester"));
     PimCommon::EmailAddressRequester *requester = dynamic_cast<PimCommon::EmailAddressRequester *>(w);
     QVERIFY(requester);
     QVERIFY(filter.isEmpty());
@@ -66,7 +66,7 @@ void FilterActionWithAddressTest::shouldAssignValue()
     TestFilterActionWithAddress filter;
     QWidget *w = filter.createParamWidget(0);
     PimCommon::EmailAddressRequester *requester = dynamic_cast<PimCommon::EmailAddressRequester *>(w);
-    filter.argsFromString(QLatin1String("foo"));
+    filter.argsFromString(QStringLiteral("foo"));
     filter.setParamWidgetValue(w);
     QVERIFY(!filter.isEmpty());
     QVERIFY(!requester->text().isEmpty());

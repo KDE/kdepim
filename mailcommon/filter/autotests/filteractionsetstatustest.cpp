@@ -35,13 +35,13 @@ void FilterActionSetStatusTest::shouldHaveDefaultValue()
 {
     MailCommon::FilterActionSetStatus filter;
     QWidget *w = filter.createParamWidget(0);
-    QCOMPARE(w->objectName(), QLatin1String("combobox"));
+    QCOMPARE(w->objectName(), QStringLiteral("combobox"));
 }
 
 void FilterActionSetStatusTest::shouldHaveSieveRequires()
 {
     MailCommon::FilterActionSetStatus filter;
-    QCOMPARE(filter.sieveRequires(), QStringList() << QLatin1String("imap4flags"));
+    QCOMPARE(filter.sieveRequires(), QStringList() << QStringLiteral("imap4flags"));
 }
 
 QTEST_MAIN(FilterActionSetStatusTest)

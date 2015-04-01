@@ -38,7 +38,7 @@ SieveEditorMenuBar::~SieveEditorMenuBar()
 void SieveEditorMenuBar::initActions()
 {
     mGoToLine = new QAction(i18n("Go to Line"), this);
-    mGoToLine->setIcon(QIcon::fromTheme(QLatin1String("go-jump")));
+    mGoToLine->setIcon(QIcon::fromTheme(QStringLiteral("go-jump")));
     //mGoToLine->setShortcut(QKeySequence( Qt::CTRL + Qt::Key_G ));
     connect(mGoToLine, SIGNAL(triggered(bool)), SIGNAL(gotoLine()));
 

@@ -45,7 +45,7 @@ bool Evolutionv1ImportData::foundMailer() const
 
 QString Evolutionv1ImportData::name() const
 {
-    return QLatin1String("Evolution 1.x");
+    return QStringLiteral("Evolution 1.x");
 }
 
 bool Evolutionv1ImportData::importMails()

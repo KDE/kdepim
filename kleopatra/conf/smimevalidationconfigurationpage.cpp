@@ -76,7 +76,7 @@ extern "C" Q_DECL_EXPORT KCModule *create_kleopatra_config_smimevalidation(QWidg
 {
     SMimeValidationConfigurationPage *page =
         new SMimeValidationConfigurationPage(parent, args);
-    page->setObjectName(QLatin1String("kleopatra_config_smimevalidation"));
+    page->setObjectName(QStringLiteral("kleopatra_config_smimevalidation"));
     return page;
 }
 

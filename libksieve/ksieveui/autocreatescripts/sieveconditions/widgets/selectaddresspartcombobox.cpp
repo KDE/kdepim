@@ -26,7 +26,7 @@ using namespace KSieveUi;
 SelectAddressPartComboBox::SelectAddressPartComboBox(QWidget *parent)
     : QComboBox(parent)
 {
-    mHasSubaddressCapability = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("subaddress"));
+    mHasSubaddressCapability = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QStringLiteral("subaddress"));
     initialize();
     connect(this, static_cast<void (SelectAddressPartComboBox::*)(int)>(&SelectAddressPartComboBox::activated), this, &SelectAddressPartComboBox::valueChanged);
 }
@@ -37,12 +37,12 @@ SelectAddressPartComboBox::~SelectAddressPartComboBox()
 
 void SelectAddressPartComboBox::initialize()
 {
-    addItem(i18n("all"), QLatin1String(":all"));
-    addItem(i18n("localpart"), QLatin1String(":localpart"));
-    addItem(i18n("domain"), QLatin1String(":domain"));
+    addItem(i18n("all"), QStringLiteral(":all"));
+    addItem(i18n("localpart"), QStringLiteral(":localpart"));
+    addItem(i18n("domain"), QStringLiteral(":domain"));
     if (mHasSubaddressCapability) {
-        addItem(i18n("user"), QLatin1String(":user"));
-        addItem(i18n("detail"), QLatin1String(":detail"));
+        addItem(i18n("user"), QStringLiteral(":user"));
+        addItem(i18n("detail"), QStringLiteral(":detail"));
     }
 }
 
@@ -54,7 +54,7 @@ QString SelectAddressPartComboBox::code() const
 QString SelectAddressPartComboBox::extraRequire() const
 {
     if (mHasSubaddressCapability) {
-        return QLatin1String("subaddress");
+        return QStringLiteral("subaddress");
     }
     return QString();
 }

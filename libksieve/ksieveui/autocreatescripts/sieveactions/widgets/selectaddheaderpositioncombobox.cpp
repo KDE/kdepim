@@ -36,7 +36,7 @@ SelectAddHeaderPositionCombobox::~SelectAddHeaderPositionCombobox()
 void SelectAddHeaderPositionCombobox::initialize()
 {
     addItem(i18n("Insert at the beginning"), QString());
-    addItem(i18n("Append at the end"), QLatin1String(":last"));
+    addItem(i18n("Append at the end"), QStringLiteral(":last"));
 }
 
 QString SelectAddHeaderPositionCombobox::code() const

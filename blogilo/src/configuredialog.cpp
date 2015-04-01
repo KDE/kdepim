@@ -57,11 +57,11 @@ ConfigureDialog::ConfigureDialog(PimCommon::StorageServiceManager *storageManage
     mConfigStorageService->setAttribute(Qt::WA_DeleteOnClose);
     connect(mConfigStorageService, &ConfigureStorageServiceWidget::changed, this, &ConfigureDialog::slotStorageServiceChanged);
 
-    addPage(generalSettingsDlg, i18nc("Configure Page", "General"), QLatin1String("configure"));
-    addPage(blogSettingsDlg, i18nc("Configure Page", "Blogs"), QLatin1String("document-properties"));
-    addPage(editorSettingsDlg, i18nc("Configure Page", "Editor"), QLatin1String("accessories-text-editor"));
-    addPage(advancedSettingsDlg, i18nc("Configure Page", "Advanced"), QLatin1String("applications-utilities"));
-    addPage(mConfigStorageService, i18nc("Configure Page", "Storage Service"), QLatin1String("applications-utilities"));
+    addPage(generalSettingsDlg, i18nc("Configure Page", "General"), QStringLiteral("configure"));
+    addPage(blogSettingsDlg, i18nc("Configure Page", "Blogs"), QStringLiteral("document-properties"));
+    addPage(editorSettingsDlg, i18nc("Configure Page", "Editor"), QStringLiteral("accessories-text-editor"));
+    addPage(advancedSettingsDlg, i18nc("Configure Page", "Advanced"), QStringLiteral("applications-utilities"));
+    addPage(mConfigStorageService, i18nc("Configure Page", "Storage Service"), QStringLiteral("applications-utilities"));
 
     connect(this, &ConfigureDialog::settingsChanged, this, &ConfigureDialog::settingsChanged);
     connect(this, &ConfigureDialog::destroyed, this, &ConfigureDialog::dialogDestroyed);

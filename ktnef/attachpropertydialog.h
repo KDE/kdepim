@@ -46,7 +46,7 @@ public:
 
     static QPixmap loadRenderingPixmap(KTNEFPropertySet *, const QColor &);
     static void formatProperties(const QMap<int, KTNEFProperty *> &, QTreeWidget *,
-                                 QTreeWidgetItem *, const QString & = QLatin1String("prop"));
+                                 QTreeWidgetItem *, const QString & = QStringLiteral("prop"));
     static void formatPropertySet(KTNEFPropertySet *, QTreeWidget *);
     static bool saveProperty(QTreeWidget *, KTNEFPropertySet *, QWidget *);
 

@@ -21,101 +21,101 @@ QString KSieveUi::SieveEditorUtil::helpUrl(KSieveUi::SieveEditorUtil::HelpVariab
 {
     switch (type) {
     case AddressCondition:
-        return QLatin1String("http://tools.ietf.org/html/rfc5228#page-16");
+        return QStringLiteral("http://tools.ietf.org/html/rfc5228#page-16");
     case BodyCondition:
-        return QLatin1String("http://tools.ietf.org/html/rfc5173");
+        return QStringLiteral("http://tools.ietf.org/html/rfc5173");
     case ConvertCondition:
         return QString(); //TODO
     case CurrentdateCondition:
-        return QLatin1String("http://tools.ietf.org/search/rfc5260#page-6");
+        return QStringLiteral("http://tools.ietf.org/search/rfc5260#page-6");
     case DateCondition:
-        return QLatin1String("http://tools.ietf.org/search/rfc5260#page-4");
+        return QStringLiteral("http://tools.ietf.org/search/rfc5260#page-4");
     case EnvelopeCondition:
-        return QLatin1String("http://tools.ietf.org/html/rfc3028#page-24");
+        return QStringLiteral("http://tools.ietf.org/html/rfc3028#page-24");
     case EnvironmentCondition:
-        return QLatin1String("http://tools.ietf.org/html/rfc5183");
+        return QStringLiteral("http://tools.ietf.org/html/rfc5183");
     case ExistsCondition:
-        return QLatin1String("http://tools.ietf.org/html/rfc3028#page-25");
+        return QStringLiteral("http://tools.ietf.org/html/rfc3028#page-25");
     case FalseCondition:
-        return QLatin1String("http://tools.ietf.org/html/rfc3028#page-25");
+        return QStringLiteral("http://tools.ietf.org/html/rfc3028#page-25");
     case HasflagCondition:
-        return QLatin1String("http://tools.ietf.org/html/rfc5232#page-5");
+        return QStringLiteral("http://tools.ietf.org/html/rfc5232#page-5");
     case HeaderCondition:
-        return QLatin1String("http://tools.ietf.org/html/rfc5228#page-9");
+        return QStringLiteral("http://tools.ietf.org/html/rfc5228#page-9");
     case IhaveCondition:
-        return QLatin1String("http://tools.ietf.org/html/rfc5463");
+        return QStringLiteral("http://tools.ietf.org/html/rfc5463");
     case MailboxexistsCondition:
-        return QLatin1String("http://tools.ietf.org/html/rfc5490#page-2");
+        return QStringLiteral("http://tools.ietf.org/html/rfc5490#page-2");
     case MetadataexistsCondition:
-        return QLatin1String("http://tools.ietf.org/html/rfc5490#page-6");
+        return QStringLiteral("http://tools.ietf.org/html/rfc5490#page-6");
     case MetadataCondition:
-        return QLatin1String("http://tools.ietf.org/html/rfc5490#page-5");
+        return QStringLiteral("http://tools.ietf.org/html/rfc5490#page-5");
     case ServermetadataexistsCondition:
-        return QLatin1String("http://tools.ietf.org/html/rfc5490#page-4");
+        return QStringLiteral("http://tools.ietf.org/html/rfc5490#page-4");
     case ServermetadataCondition:
-        return QLatin1String("http://tools.ietf.org/html/rfc5490#page-5");
+        return QStringLiteral("http://tools.ietf.org/html/rfc5490#page-5");
     case SizeCondition:
-        return QLatin1String("http://tools.ietf.org/html/rfc3028#page-26");
+        return QStringLiteral("http://tools.ietf.org/html/rfc3028#page-26");
     case SpamtestCondition:
-        return QLatin1String("http://tools.ietf.org/html/rfc3685#page-3");
+        return QStringLiteral("http://tools.ietf.org/html/rfc3685#page-3");
     case TrueCondition:
-        return QLatin1String("http://tools.ietf.org/html/rfc3028#page-26");
+        return QStringLiteral("http://tools.ietf.org/html/rfc3028#page-26");
     case VirustestCondition:
-        return QLatin1String("http://tools.ietf.org/html/rfc3685#page-4");
+        return QStringLiteral("http://tools.ietf.org/html/rfc3685#page-4");
     case AbstracteditheaderAction:
-        return QLatin1String("http://tools.ietf.org/html/rfc5228#page-9");
+        return QStringLiteral("http://tools.ietf.org/html/rfc5228#page-9");
     case AddflagsAction:
-        return QLatin1String("http://tools.ietf.org/html/rfc5232#page-5");
+        return QStringLiteral("http://tools.ietf.org/html/rfc5232#page-5");
     case AddheaderAction:
-        return QLatin1String("http://tools.ietf.org/html/rfc5293");
+        return QStringLiteral("http://tools.ietf.org/html/rfc5293");
     case BreakAction:
-        return QLatin1String("http://tools.ietf.org/html/rfc5703#page-3");
+        return QStringLiteral("http://tools.ietf.org/html/rfc5703#page-3");
     case ConvertAction:
         return QString(); //TODO
     case DeleteheaderAction:
-        return QLatin1String("http://tools.ietf.org/html/rfc5293");
+        return QStringLiteral("http://tools.ietf.org/html/rfc5293");
     case DiscardAction:
-        return QLatin1String("http://tools.ietf.org/html/rfc3028#page-22");
+        return QStringLiteral("http://tools.ietf.org/html/rfc3028#page-22");
     case EncloseAction:
-        return QLatin1String("http://tools.ietf.org/html/rfc5703#page-10");
+        return QStringLiteral("http://tools.ietf.org/html/rfc5703#page-10");
     case ExtracttextAction:
-        return QLatin1String("http://tools.ietf.org/html/rfc5703#page-11");
+        return QStringLiteral("http://tools.ietf.org/html/rfc5703#page-11");
     case FileintoAction:
-        return QLatin1String("http://tools.ietf.org/search/rfc3028#page-20");
+        return QStringLiteral("http://tools.ietf.org/search/rfc3028#page-20");
     case KeepAction:
-        return QLatin1String("http://tools.ietf.org/html/rfc3028#page-21");
+        return QStringLiteral("http://tools.ietf.org/html/rfc3028#page-21");
     case NotifyAction:
-        return QLatin1String("http://tools.ietf.org/search/rfc5435#page-3");
+        return QStringLiteral("http://tools.ietf.org/search/rfc5435#page-3");
     case RedirectAction:
-        return QLatin1String("http://tools.ietf.org/html/rfc3028#page-20");
+        return QStringLiteral("http://tools.ietf.org/html/rfc3028#page-20");
     case RejectAction:
-        return QLatin1String("http://tools.ietf.org/html/rfc3028#page-20");
+        return QStringLiteral("http://tools.ietf.org/html/rfc3028#page-20");
     case RemoveflagsAction:
-        return QLatin1String("http://tools.ietf.org/html/rfc5232#page-5");
+        return QStringLiteral("http://tools.ietf.org/html/rfc5232#page-5");
     case ReplaceAction:
-        return QLatin1String("http://tools.ietf.org/html/rfc5703#page-8");
+        return QStringLiteral("http://tools.ietf.org/html/rfc5703#page-8");
     case ReturnAction:
-        return QLatin1String("http://tools.ietf.org/html/rfc6609#page-7");
+        return QStringLiteral("http://tools.ietf.org/html/rfc6609#page-7");
     case SetflagsAction:
-        return QLatin1String("http://tools.ietf.org/html/rfc5232#page-4");
+        return QStringLiteral("http://tools.ietf.org/html/rfc5232#page-4");
     case SetvariableAction:
-        return QLatin1String("http://tools.ietf.org/search/rfc5229");
+        return QStringLiteral("http://tools.ietf.org/search/rfc5229");
     case StopAction:
-        return QLatin1String("http://tools.ietf.org/html/rfc3028#page-19");
+        return QStringLiteral("http://tools.ietf.org/html/rfc3028#page-19");
     case VacationAction:
-        return QLatin1String("http://tools.ietf.org/html/rfc5230#page-3");
+        return QStringLiteral("http://tools.ietf.org/html/rfc5230#page-3");
     case GlobalVariable:
-        return QLatin1String("http://tools.ietf.org/search/rfc5229");
+        return QStringLiteral("http://tools.ietf.org/search/rfc5229");
     case Includes:
-        return QLatin1String("http://tools.ietf.org/html/rfc6609#page-4");
+        return QStringLiteral("http://tools.ietf.org/html/rfc6609#page-4");
     case ForEveryPart:
-        return QLatin1String("http://tools.ietf.org/html/rfc5703#page-3");
+        return QStringLiteral("http://tools.ietf.org/html/rfc5703#page-3");
     case CopyExtension:
-        return QLatin1String("http://tools.ietf.org/html/rfc3894");
+        return QStringLiteral("http://tools.ietf.org/html/rfc3894");
     case MBoxMetaDataExtension:
-        return QLatin1String("http://tools.ietf.org/html/rfc5490#page-2");
+        return QStringLiteral("http://tools.ietf.org/html/rfc5490#page-2");
     case SubAddressExtension:
-        return QLatin1String("https://tools.ietf.org/html/rfc5233");
+        return QStringLiteral("https://tools.ietf.org/html/rfc5233");
     case UnknownHelp:
         break;
     }
@@ -124,87 +124,87 @@ QString KSieveUi::SieveEditorUtil::helpUrl(KSieveUi::SieveEditorUtil::HelpVariab
 
 KSieveUi::SieveEditorUtil::HelpVariableName KSieveUi::SieveEditorUtil::strToVariableName(const QString &str)
 {
-    if (str == QLatin1String("address")) {
+    if (str == QStringLiteral("address")) {
         return AddressCondition;
-    } else if (str == QLatin1String("body")) {
+    } else if (str == QStringLiteral("body")) {
         return BodyCondition;
-    } else if (str == QLatin1String("currentdate")) {
+    } else if (str == QStringLiteral("currentdate")) {
         return CurrentdateCondition;
-    } else if (str == QLatin1String("date")) {
+    } else if (str == QStringLiteral("date")) {
         return DateCondition;
-    } else if (str == QLatin1String("envelope")) {
+    } else if (str == QStringLiteral("envelope")) {
         return EnvelopeCondition;
-    } else if (str == QLatin1String("environment")) {
+    } else if (str == QStringLiteral("environment")) {
         return EnvironmentCondition;
-    } else if (str == QLatin1String("exists")) {
+    } else if (str == QStringLiteral("exists")) {
         return ExistsCondition;
-    } else if (str == QLatin1String("false")) {
+    } else if (str == QStringLiteral("false")) {
         return FalseCondition;
-    } else if (str == QLatin1String("hasflag")) {
+    } else if (str == QStringLiteral("hasflag")) {
         return HasflagCondition;
-    } else if (str == QLatin1String("header")) {
+    } else if (str == QStringLiteral("header")) {
         return HeaderCondition;
-    } else if (str == QLatin1String("ihave")) {
+    } else if (str == QStringLiteral("ihave")) {
         return IhaveCondition;
-    } else if (str == QLatin1String("mailboxexists")) {
+    } else if (str == QStringLiteral("mailboxexists")) {
         return MailboxexistsCondition;
-    } else if (str == QLatin1String("metadata")) {
+    } else if (str == QStringLiteral("metadata")) {
         return MetadataCondition;
-    } else if (str == QLatin1String("metadataexists")) {
+    } else if (str == QStringLiteral("metadataexists")) {
         return MetadataexistsCondition;
-    } else if (str == QLatin1String("servermetadata")) {
+    } else if (str == QStringLiteral("servermetadata")) {
         return ServermetadataCondition;
-    } else if (str == QLatin1String("servermetadataexists")) {
+    } else if (str == QStringLiteral("servermetadataexists")) {
         return ServermetadataexistsCondition;
-    } else if (str == QLatin1String("size")) {
+    } else if (str == QStringLiteral("size")) {
         return SizeCondition;
-    } else if (str == QLatin1String("spamtest")) {
+    } else if (str == QStringLiteral("spamtest")) {
         return SpamtestCondition;
-    } else if (str == QLatin1String("true")) {
+    } else if (str == QStringLiteral("true")) {
         return TrueCondition;
-    } else if (str == QLatin1String("virustest")) {
+    } else if (str == QStringLiteral("virustest")) {
         return VirustestCondition;
-    } else if (str == QLatin1String("break")) {
+    } else if (str == QStringLiteral("break")) {
         return BreakAction;
-    } else if (str == QLatin1String("convert")) {
+    } else if (str == QStringLiteral("convert")) {
         return ConvertAction; //TODO
-    } else if (str == QLatin1String("discard")) {
+    } else if (str == QStringLiteral("discard")) {
         return DiscardAction;
-    } else if (str == QLatin1String("enclose")) {
+    } else if (str == QStringLiteral("enclose")) {
         return EncloseAction;
-    } else if (str == QLatin1String("extracttext")) {
+    } else if (str == QStringLiteral("extracttext")) {
         return ExtracttextAction;
-    } else if (str == QLatin1String("fileinto")) {
+    } else if (str == QStringLiteral("fileinto")) {
         return FileintoAction;
-    } else if (str == QLatin1String("keep")) {
+    } else if (str == QStringLiteral("keep")) {
         return KeepAction;
-    } else if (str == QLatin1String("notify")) {
+    } else if (str == QStringLiteral("notify")) {
         return NotifyAction;
-    } else if (str == QLatin1String("redirect")) {
+    } else if (str == QStringLiteral("redirect")) {
         return RedirectAction;
-    } else if (str == QLatin1String("reject")) {
+    } else if (str == QStringLiteral("reject")) {
         return RejectAction;
-    } else if (str == QLatin1String("replace")) {
+    } else if (str == QStringLiteral("replace")) {
         return ReplaceAction;
-    } else if (str == QLatin1String("return")) {
+    } else if (str == QStringLiteral("return")) {
         return ReturnAction;
-    } else if (str == QLatin1String("set")) {
+    } else if (str == QStringLiteral("set")) {
         return SetvariableAction;
-    } else if (str == QLatin1String("stop")) {
+    } else if (str == QStringLiteral("stop")) {
         return StopAction;
-    } else if (str == QLatin1String("vacation")) {
+    } else if (str == QStringLiteral("vacation")) {
         return VacationAction;
-    } else if (str == QLatin1String("include")) {
+    } else if (str == QStringLiteral("include")) {
         return Includes;
-    } else if (str == QLatin1String("globalvariable")) {
+    } else if (str == QStringLiteral("globalvariable")) {
         return GlobalVariable;
-    } else if (str == QLatin1String("foreverypart")) {
+    } else if (str == QStringLiteral("foreverypart")) {
         return ForEveryPart;
-    } else if (str == QLatin1String("copy")) {
+    } else if (str == QStringLiteral("copy")) {
         return CopyExtension;
-    } else if (str == QLatin1String("mboxmetadata")) {
+    } else if (str == QStringLiteral("mboxmetadata")) {
         return MBoxMetaDataExtension;
-    } else if (str == QLatin1String("subaddress")) {
+    } else if (str == QStringLiteral("subaddress")) {
         return SubAddressExtension;
     }
 

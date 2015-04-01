@@ -95,7 +95,7 @@ VCardExportSelectionWidget::VCardExportSelectionWidget(QWidget *parent)
               "name shown correctly in GMail or Android."));
     layout->addWidget(mDisplayNameBox, 5, 0, 1, 2);
 
-    KConfig config(QLatin1String("kaddressbookrc"));
+    KConfig config(QStringLiteral("kaddressbookrc"));
     const KConfigGroup group(&config, "XXPortVCard");
 
     mPrivateBox->setChecked(group.readEntry("ExportPrivateFields", true));
@@ -109,7 +109,7 @@ VCardExportSelectionWidget::VCardExportSelectionWidget(QWidget *parent)
 
 VCardExportSelectionWidget::~VCardExportSelectionWidget()
 {
-    KConfig config(QLatin1String("kaddressbookrc"));
+    KConfig config(QStringLiteral("kaddressbookrc"));
     KConfigGroup group(&config, "XXPortVCard");
 
     group.writeEntry("ExportPrivateFields", mPrivateBox->isChecked());

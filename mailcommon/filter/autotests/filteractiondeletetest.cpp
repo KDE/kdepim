@@ -38,13 +38,13 @@ void FilterActionDeleteTest::shouldHaveDefaultValue()
 
     QLabel *lab = dynamic_cast<QLabel *>(w);
     QVERIFY(lab);
-    QCOMPARE(lab->objectName(), QLatin1String("label_delete"));
+    QCOMPARE(lab->objectName(), QStringLiteral("label_delete"));
 }
 
 void FilterActionDeleteTest::shouldReturnSieveValue()
 {
     MailCommon::FilterActionDelete filter(0);
-    QCOMPARE(filter.sieveCode(), QLatin1String("discard;"));
+    QCOMPARE(filter.sieveCode(), QStringLiteral("discard;"));
 }
 
 void FilterActionDeleteTest::shouldBeNotEmpty()

@@ -42,38 +42,38 @@ void BlackListBalooEmailCompletionWidgetTest::shouldHaveDefaultValue()
     KPIM::BlackListBalooEmailCompletionWidget widget;
     widget.show();
     QTest::qWaitForWindowExposed(&widget);
-    QLabel *searchLabel = widget.findChild<QLabel *>(QLatin1String("search_label"));
+    QLabel *searchLabel = widget.findChild<QLabel *>(QStringLiteral("search_label"));
     QVERIFY(searchLabel);
 
-    KLineEdit *searchLineEdit = widget.findChild<KLineEdit *>(QLatin1String("search_lineedit"));
+    KLineEdit *searchLineEdit = widget.findChild<KLineEdit *>(QStringLiteral("search_lineedit"));
     QVERIFY(searchLineEdit);
     QVERIFY(searchLineEdit->isClearButtonShown());
     QVERIFY(searchLineEdit->trapReturnKey());
     QVERIFY(searchLineEdit->text().isEmpty());
 
-    QPushButton *seachButton = widget.findChild<QPushButton *>(QLatin1String("search_button"));
+    QPushButton *seachButton = widget.findChild<QPushButton *>(QStringLiteral("search_button"));
 
-    QLabel *moreResult = widget.findChild<QLabel *>(QLatin1String("moreresultlabel"));
+    QLabel *moreResult = widget.findChild<QLabel *>(QStringLiteral("moreresultlabel"));
     QVERIFY(moreResult);
     QVERIFY(!moreResult->isVisible());
 
     QVERIFY(seachButton);
     QVERIFY(!seachButton->isEnabled());
 
-    KPIM::BlackListBalooEmailList *emailList = widget.findChild<KPIM::BlackListBalooEmailList *>(QLatin1String("email_list"));
+    KPIM::BlackListBalooEmailList *emailList = widget.findChild<KPIM::BlackListBalooEmailList *>(QStringLiteral("email_list"));
     QVERIFY(emailList);
 
-    QPushButton *selectButton = widget.findChild<QPushButton *>(QLatin1String("select_email"));
+    QPushButton *selectButton = widget.findChild<QPushButton *>(QStringLiteral("select_email"));
     QVERIFY(selectButton);
     QVERIFY(!selectButton->isEnabled());
-    QPushButton *unselectButton = widget.findChild<QPushButton *>(QLatin1String("unselect_email"));
+    QPushButton *unselectButton = widget.findChild<QPushButton *>(QStringLiteral("unselect_email"));
     QVERIFY(unselectButton);
     QVERIFY(!unselectButton->isEnabled());
 
-    QLabel *excludeDomainLabel = widget.findChild<QLabel *>(QLatin1String("domain_label"));
+    QLabel *excludeDomainLabel = widget.findChild<QLabel *>(QStringLiteral("domain_label"));
     QVERIFY(excludeDomainLabel);
 
-    KLineEdit *excludeDomainLineEdit = widget.findChild<KLineEdit *>(QLatin1String("domain_lineedit"));
+    KLineEdit *excludeDomainLineEdit = widget.findChild<KLineEdit *>(QStringLiteral("domain_lineedit"));
     QVERIFY(excludeDomainLineEdit);
     QVERIFY(excludeDomainLineEdit->trapReturnKey());
     QVERIFY(excludeDomainLineEdit->text().isEmpty());
@@ -84,17 +84,17 @@ void BlackListBalooEmailCompletionWidgetTest::shouldHaveDefaultValue()
 void BlackListBalooEmailCompletionWidgetTest::shouldEnablePushButtonWhenTestSizeSupperiorToTwo()
 {
     KPIM::BlackListBalooEmailCompletionWidget widget;
-    KLineEdit *searchLineEdit = widget.findChild<KLineEdit *>(QLatin1String("search_lineedit"));
-    QPushButton *seachButton = widget.findChild<QPushButton *>(QLatin1String("search_button"));
+    KLineEdit *searchLineEdit = widget.findChild<KLineEdit *>(QStringLiteral("search_lineedit"));
+    QPushButton *seachButton = widget.findChild<QPushButton *>(QStringLiteral("search_button"));
     QVERIFY(!seachButton->isEnabled());
-    searchLineEdit->setText(QLatin1String("fo"));
+    searchLineEdit->setText(QStringLiteral("fo"));
     QVERIFY(!seachButton->isEnabled());
-    searchLineEdit->setText(QLatin1String("foo"));
+    searchLineEdit->setText(QStringLiteral("foo"));
     QVERIFY(seachButton->isEnabled());
 
-    searchLineEdit->setText(QLatin1String("o  "));
+    searchLineEdit->setText(QStringLiteral("o  "));
     QVERIFY(!seachButton->isEnabled());
-    searchLineEdit->setText(QLatin1String(" o "));
+    searchLineEdit->setText(QStringLiteral(" o "));
     QVERIFY(!seachButton->isEnabled());
 }
 
@@ -102,14 +102,14 @@ void BlackListBalooEmailCompletionWidgetTest::shouldChangeEnableSelectUnSelectBu
 {
     KPIM::BlackListBalooEmailCompletionWidget widget;
 
-    QPushButton *selectButton = widget.findChild<QPushButton *>(QLatin1String("select_email"));
+    QPushButton *selectButton = widget.findChild<QPushButton *>(QStringLiteral("select_email"));
     QVERIFY(!selectButton->isEnabled());
 
-    QPushButton *unselectButton = widget.findChild<QPushButton *>(QLatin1String("unselect_email"));
+    QPushButton *unselectButton = widget.findChild<QPushButton *>(QStringLiteral("unselect_email"));
     QVERIFY(!unselectButton->isEnabled());
 
-    KPIM::BlackListBalooEmailList *emailList = widget.findChild<KPIM::BlackListBalooEmailList *>(QLatin1String("email_list"));
-    emailList->slotEmailFound(QStringList() << QLatin1String("foo") << QLatin1String("bla") << QLatin1String("bli"));
+    KPIM::BlackListBalooEmailList *emailList = widget.findChild<KPIM::BlackListBalooEmailList *>(QStringLiteral("email_list"));
+    emailList->slotEmailFound(QStringList() << QStringLiteral("foo") << QStringLiteral("bla") << QStringLiteral("bli"));
 
     emailList->selectAll();
     QVERIFY(unselectButton->isEnabled());

@@ -46,12 +46,12 @@ MergeContactWidget::MergeContactWidget(QWidget *parent)
     QVBoxLayout *lay = new QVBoxLayout;
 
     QSplitter *splitter = new QSplitter;
-    splitter->setObjectName(QLatin1String("splitter"));
+    splitter->setObjectName(QStringLiteral("splitter"));
     splitter->setChildrenCollapsible(false);
     lay->addWidget(splitter);
 
     QWidget *selectContactWidget = new QWidget(this);
-    selectContactWidget->setObjectName(QLatin1String("selectcontactwidget"));
+    selectContactWidget->setObjectName(QStringLiteral("selectcontactwidget"));
     QVBoxLayout *vbox = new QVBoxLayout;
     selectContactWidget->setLayout(vbox);
     QLabel *lab = new QLabel(i18n("Select contacts that you want really to merge:"));
@@ -65,11 +65,11 @@ MergeContactWidget::MergeContactWidget(QWidget *parent)
     splitter->addWidget(selectContactWidget);
 
     mMergeContactInfoWidget = new MergeContactInfoWidget;
-    mMergeContactInfoWidget->setObjectName(QLatin1String("mergecontactinfowidget"));
+    mMergeContactInfoWidget->setObjectName(QStringLiteral("mergecontactinfowidget"));
     splitter->addWidget(mMergeContactInfoWidget);
 
     mMergeContactWarning = new MergeContactLoseInformationWarning;
-    mMergeContactWarning->setObjectName(QLatin1String("mergecontactwarning"));
+    mMergeContactWarning->setObjectName(QStringLiteral("mergecontactwarning"));
     connect(mMergeContactWarning, &MergeContactLoseInformationWarning::continueMerging, this, &MergeContactWidget::slotAutomaticMerging);
     connect(mMergeContactWarning, &MergeContactLoseInformationWarning::customizeMergingContacts, this, &MergeContactWidget::slotCustomizeMergingContacts);
     lay->addWidget(mMergeContactWarning);

@@ -35,7 +35,7 @@ namespace
 {
 inline QString archiveMailCollectionPattern()
 {
-    return  QLatin1String("ArchiveMailCollection \\d+");
+    return  QStringLiteral("ArchiveMailCollection \\d+");
 }
 }
 
@@ -68,7 +68,7 @@ ArchiveMailWidget::ArchiveMailWidget(QWidget *parent)
     QStringList headers;
     headers << i18n("Name") << i18n("Last archive") << i18n("Next archive in") << i18n("Storage directory");
     mWidget->treeWidget->setHeaderLabels(headers);
-    mWidget->treeWidget->setObjectName(QLatin1String("treewidget"));
+    mWidget->treeWidget->setObjectName(QStringLiteral("treewidget"));
     mWidget->treeWidget->setSortingEnabled(true);
     mWidget->treeWidget->setRootIsDecorated(false);
     mWidget->treeWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -104,7 +104,7 @@ void ArchiveMailWidget::customContextMenuRequested(const QPoint &)
             menu.addAction(i18n("Archive now"), this, SLOT(slotArchiveNow()));
         }
         menu.addSeparator();
-        menu.addAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Delete"), this, SLOT(slotRemoveItem()));
+        menu.addAction(QIcon::fromTheme(QStringLiteral("edit-delete")), i18n("Delete"), this, SLOT(slotRemoveItem()));
     }
     menu.exec(QCursor::pos());
 }

@@ -33,7 +33,7 @@ IncidencesForWidget::IncidencesForWidget(QWidget *parent)
     hbox->setMargin(0);
 
     QLabel *label = new QLabel(i18n("Generate free/&busy and activate alarms for:"), this);
-    label->setObjectName(QLatin1String("contentstypelabel"));
+    label->setObjectName(QStringLiteral("contentstypelabel"));
     hbox->addWidget(label);
 
     mIncidencesForComboBox = new KComboBox(this);
@@ -58,7 +58,7 @@ IncidencesForWidget::IncidencesForWidget(QWidget *parent)
              "A company-wide folder with optional events in it would use \"Nobody\" "
              "since it is not known who will go to those events.");
 
-    mIncidencesForComboBox->setObjectName(QLatin1String("contentstypecombobox"));
+    mIncidencesForComboBox->setObjectName(QStringLiteral("contentstypecombobox"));
     mIncidencesForComboBox->setWhatsThis(whatsThisForMyOwnFolders);
     connect(mIncidencesForComboBox, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &IncidencesForWidget::currentIndexChanged);
 }

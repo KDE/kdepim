@@ -91,7 +91,7 @@ TemplateManagementDialog::TemplateManagementDialog(
 
 void TemplateManagementDialog::slotHelp()
 {
-    KHelpClient::invokeHelp(QLatin1String("entering-data-events-template-buttons"), QLatin1String("korganizer"));
+    KHelpClient::invokeHelp(QStringLiteral("entering-data-events-template-buttons"), QStringLiteral("korganizer"));
 }
 
 void TemplateManagementDialog::slotItemSelected()

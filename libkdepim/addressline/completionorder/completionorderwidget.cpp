@@ -69,7 +69,7 @@ public:
 
     virtual QIcon icon() const
     {
-        return QIcon::fromTheme(QLatin1String("view-ldap-resource"));
+        return QIcon::fromTheme(QStringLiteral("view-ldap-resource"));
     }
 
     virtual int completionWeight() const
@@ -183,12 +183,12 @@ private:
 
 CompletionOrderWidget::CompletionOrderWidget(QWidget *parent)
     : QWidget(parent),
-      mConfig(QLatin1String("kpimcompletionorder")),
+      mConfig(QStringLiteral("kpimcompletionorder")),
       mLdapSearch(0),
       mDirty(false)
 {
     new CompletionOrderEditorAdaptor(this);
-    QDBusConnection::sessionBus().registerObject(QLatin1String("/"), this, QDBusConnection::ExportAdaptors);
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/"), this, QDBusConnection::ExportAdaptors);
 
     QHBoxLayout *hbox = new QHBoxLayout;
     setLayout(hbox);
@@ -198,7 +198,7 @@ CompletionOrderWidget::CompletionOrderWidget(QWidget *parent)
     pageHBoxLayout->setMargin(0);
     hbox->addWidget(page);
     mListView = new QTreeWidget(page);
-    mListView->setObjectName(QLatin1String("listview"));
+    mListView->setObjectName(QStringLiteral("listview"));
 
     pageHBoxLayout->addWidget(mListView);
     mListView->setColumnCount(1);
@@ -215,16 +215,16 @@ CompletionOrderWidget::CompletionOrderWidget(QWidget *parent)
     mUpButton = new QPushButton(upDownBox);
     upDownBoxVBoxLayout->addWidget(mUpButton);
     mUpButton->setAutoRepeat(true);
-    mUpButton->setObjectName(QLatin1String("mUpButton"));
-    mUpButton->setIcon(QIcon::fromTheme(QLatin1String("go-up")));
+    mUpButton->setObjectName(QStringLiteral("mUpButton"));
+    mUpButton->setIcon(QIcon::fromTheme(QStringLiteral("go-up")));
     mUpButton->setEnabled(false);   // b/c no item is selected yet
     mUpButton->setFocusPolicy(Qt::StrongFocus);
 
     mDownButton = new QPushButton(upDownBox);
     upDownBoxVBoxLayout->addWidget(mDownButton);
     mDownButton->setAutoRepeat(true);
-    mDownButton->setObjectName(QLatin1String("mDownButton"));
-    mDownButton->setIcon(QIcon::fromTheme(QLatin1String("go-down")));
+    mDownButton->setObjectName(QStringLiteral("mDownButton"));
+    mDownButton->setIcon(QIcon::fromTheme(QStringLiteral("go-down")));
     mDownButton->setEnabled(false);   // b/c no item is selected yet
     mDownButton->setFocusPolicy(Qt::StrongFocus);
 
@@ -267,8 +267,8 @@ void CompletionOrderWidget::save()
 void CompletionOrderWidget::addRecentAddressItem()
 {
     //Be default it's the first.
-    SimpleCompletionItem *item = new SimpleCompletionItem(this, i18n("Recent Addresses"), QLatin1String("Recent Addresses"), 10);
-    item->setIcon(QIcon::fromTheme(QLatin1String("kmail")));
+    SimpleCompletionItem *item = new SimpleCompletionItem(this, i18n("Recent Addresses"), QStringLiteral("Recent Addresses"), 10);
+    item->setIcon(QIcon::fromTheme(QStringLiteral("kmail")));
     new CompletionViewItem(mListView, item, 0);
 }
 

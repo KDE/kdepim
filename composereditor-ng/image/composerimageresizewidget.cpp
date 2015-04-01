@@ -125,10 +125,10 @@ void ComposerImageResizeWidgetPrivate::resizeElement(const QPoint &pos)
 {
     const QSize size = resizeImage(pos);
     if (size.width() != -1) {
-        imageElement.setAttribute(QLatin1String("width"), QString::number(size.width()));
+        imageElement.setAttribute(QStringLiteral("width"), QString::number(size.width()));
     }
     if (size.height() != -1) {
-        imageElement.setAttribute(QLatin1String("height"), QString::number(size.height()));
+        imageElement.setAttribute(QStringLiteral("height"), QString::number(size.height()));
     }
     q->resize(size);
 }
@@ -141,32 +141,32 @@ QSize ComposerImageResizeWidgetPrivate::resizeImage(const QPoint &pos)
     case None:
         break;
     case Top:
-        height = imageElement.attribute(QLatin1String("height")).toInt() - pos.y() - firstPosition.y();
+        height = imageElement.attribute(QStringLiteral("height")).toInt() - pos.y() - firstPosition.y();
         break;
     case Bottom:
-        height = imageElement.attribute(QLatin1String("height")).toInt() + pos.y() - firstPosition.y();
+        height = imageElement.attribute(QStringLiteral("height")).toInt() + pos.y() - firstPosition.y();
         break;
     case Left:
-        width = imageElement.attribute(QLatin1String("width")).toInt() - pos.x() - firstPosition.x();
+        width = imageElement.attribute(QStringLiteral("width")).toInt() - pos.x() - firstPosition.x();
         break;
     case Right:
-        width = imageElement.attribute(QLatin1String("width")).toInt() + pos.x() - firstPosition.x();
+        width = imageElement.attribute(QStringLiteral("width")).toInt() + pos.x() - firstPosition.x();
         break;
     case TopLeft:
-        width = imageElement.attribute(QLatin1String("width")).toInt() - pos.x() - firstPosition.x();
-        height = imageElement.attribute(QLatin1String("height")).toInt() - pos.y() - firstPosition.y();
+        width = imageElement.attribute(QStringLiteral("width")).toInt() - pos.x() - firstPosition.x();
+        height = imageElement.attribute(QStringLiteral("height")).toInt() - pos.y() - firstPosition.y();
         break;
     case BottomRight:
-        width = imageElement.attribute(QLatin1String("width")).toInt() + pos.x() - firstPosition.x();
-        height = imageElement.attribute(QLatin1String("height")).toInt() + pos.y() - firstPosition.y();
+        width = imageElement.attribute(QStringLiteral("width")).toInt() + pos.x() - firstPosition.x();
+        height = imageElement.attribute(QStringLiteral("height")).toInt() + pos.y() - firstPosition.y();
         break;
     case TopRight:
-        height = imageElement.attribute(QLatin1String("height")).toInt() - pos.y() - firstPosition.y();
-        width = imageElement.attribute(QLatin1String("width")).toInt() + pos.x() - firstPosition.x();
+        height = imageElement.attribute(QStringLiteral("height")).toInt() - pos.y() - firstPosition.y();
+        width = imageElement.attribute(QStringLiteral("width")).toInt() + pos.x() - firstPosition.x();
         break;
     case BottomLeft:
-        height = imageElement.attribute(QLatin1String("height")).toInt() + pos.y() - firstPosition.y();
-        width = imageElement.attribute(QLatin1String("width")).toInt() - pos.x() - firstPosition.x();
+        height = imageElement.attribute(QStringLiteral("height")).toInt() + pos.y() - firstPosition.y();
+        width = imageElement.attribute(QStringLiteral("width")).toInt() - pos.x() - firstPosition.x();
         break;
     }
     return QSize(width, height);

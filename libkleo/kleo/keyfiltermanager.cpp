@@ -82,7 +82,7 @@ public:
     {
         mSpecificity = UINT_MAX; // overly high for ordering
         mName = i18n("All Certificates");
-        mId = QLatin1String("all-certificates");
+        mId = QStringLiteral("all-certificates");
         mMatchContexts = Filtering;
     }
 };
@@ -97,7 +97,7 @@ public:
         mSpecificity = UINT_MAX - 1; // overly high for ordering
 
         mName = i18n("My Certificates");
-        mId = QLatin1String("my-certificates");
+        mId = QStringLiteral("my-certificates");
         mMatchContexts = AnyMatchContext;
         mBold = true;
     }
@@ -115,7 +115,7 @@ public:
         mSpecificity = UINT_MAX - 2; // overly high for ordering
 
         mName = i18n("Trusted Certificates");
-        mId = QLatin1String("trusted-certificates");
+        mId = QStringLiteral("trusted-certificates");
         mMatchContexts = Filtering;
     }
 };
@@ -132,7 +132,7 @@ public:
         mSpecificity = UINT_MAX - 3; // overly high for ordering
 
         mName = i18n("Other Certificates");
-        mId = QLatin1String("other-certificates");
+        mId = QStringLiteral("other-certificates");
         mMatchContexts = Filtering;
     }
 };
@@ -232,7 +232,7 @@ void KeyFilterManager::reload()
     d->filters = defaultFilters();
 
     if (KConfig *config = CryptoBackendFactory::instance()->configObject()) {
-        const QStringList groups = config->groupList().filter(QRegExp(QLatin1String("^Key Filter #\\d+$")));
+        const QStringList groups = config->groupList().filter(QRegExp(QStringLiteral("^Key Filter #\\d+$")));
         for (QStringList::const_iterator it = groups.begin() ; it != groups.end() ; ++it) {
             const KConfigGroup cfg(config, *it);
             d->filters.push_back(shared_ptr<KeyFilter>(new KConfigBasedKeyFilter(cfg)));

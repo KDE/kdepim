@@ -46,12 +46,12 @@ void MergeContactSelectInformationTabWidgetTest::shouldAddTab()
     Akonadi::Item::List listItem;
     KContacts::Addressee address1;
     Akonadi::Item item1;
-    address1.setName(QLatin1String("foo1"));
+    address1.setName(QStringLiteral("foo1"));
     item1.setPayload<KContacts::Addressee>(address1);
 
     KContacts::Addressee address2;
     Akonadi::Item item2;
-    address2.setName(QLatin1String("foo2"));
+    address2.setName(QStringLiteral("foo2"));
     item2.setPayload<KContacts::Addressee>(address2);
 
     listItem << item1;

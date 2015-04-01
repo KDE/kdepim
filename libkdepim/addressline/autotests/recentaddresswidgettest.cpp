@@ -40,16 +40,16 @@ RecentAddressWidgetTest::~RecentAddressWidgetTest()
 void RecentAddressWidgetTest::shouldHaveDefaultValue()
 {
     KPIM::RecentAddressWidget w;
-    KLineEdit *lineedit = w.findChild<KLineEdit *>(QLatin1String("line_edit"));
+    KLineEdit *lineedit = w.findChild<KLineEdit *>(QStringLiteral("line_edit"));
     QVERIFY(lineedit);
 
-    QPushButton *newButton = w.findChild<QPushButton *>(QLatin1String("new_button"));
+    QPushButton *newButton = w.findChild<QPushButton *>(QStringLiteral("new_button"));
     QVERIFY(newButton);
 
-    QPushButton *removeButton = w.findChild<QPushButton *>(QLatin1String("remove_button"));
+    QPushButton *removeButton = w.findChild<QPushButton *>(QStringLiteral("remove_button"));
     QVERIFY(removeButton);
 
-    QListWidget *listview = w.findChild<QListWidget *>(QLatin1String("list_view"));
+    QListWidget *listview = w.findChild<QListWidget *>(QStringLiteral("list_view"));
     QVERIFY(listview);
     QCOMPARE(listview->count(), 0);
 }
@@ -57,12 +57,12 @@ void RecentAddressWidgetTest::shouldHaveDefaultValue()
 void RecentAddressWidgetTest::shouldAddAddresses()
 {
     KPIM::RecentAddressWidget w;
-    QListWidget *listview = w.findChild<QListWidget *>(QLatin1String("list_view"));
+    QListWidget *listview = w.findChild<QListWidget *>(QStringLiteral("list_view"));
     QCOMPARE(listview->count(), 0);
     QStringList lst;
-    lst << QLatin1String("foo");
-    lst << QLatin1String("foo1");
-    lst << QLatin1String("foo2");
+    lst << QStringLiteral("foo");
+    lst << QStringLiteral("foo1");
+    lst << QStringLiteral("foo2");
     w.setAddresses(lst);
     QCOMPARE(listview->count(), lst.count());
     //Clear list before to add
@@ -74,11 +74,11 @@ void RecentAddressWidgetTest::shouldInformThatItWasChanged()
 {
     KPIM::RecentAddressWidget w;
     QVERIFY(!w.wasChanged());
-    QPushButton *newButton = w.findChild<QPushButton *>(QLatin1String("new_button"));
+    QPushButton *newButton = w.findChild<QPushButton *>(QStringLiteral("new_button"));
     QVERIFY(newButton);
     QTest::mouseClick(newButton, Qt::LeftButton);
     QVERIFY(w.wasChanged());
-    QListWidget *listview = w.findChild<QListWidget *>(QLatin1String("list_view"));
+    QListWidget *listview = w.findChild<QListWidget *>(QStringLiteral("list_view"));
     QCOMPARE(listview->count(), 1);
 }
 

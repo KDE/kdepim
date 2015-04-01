@@ -41,19 +41,19 @@ void FilterActionAddToAddressBookTest::shouldHaveDefaultValue()
     MailCommon::FilterActionAddToAddressBook filter;
     QWidget *w = filter.createParamWidget(0);
 
-    PimCommon::MinimumComboBox *headerCombo = w->findChild<PimCommon::MinimumComboBox *>(QLatin1String("HeaderComboBox"));
+    PimCommon::MinimumComboBox *headerCombo = w->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("HeaderComboBox"));
     QVERIFY(headerCombo);
 
-    QLabel *label = w->findChild<QLabel *>(QLatin1String("label_with_category"));
+    QLabel *label = w->findChild<QLabel *>(QStringLiteral("label_with_category"));
     QVERIFY(label);
 
-    KPIM::TagWidget *categoryEdit = w->findChild<KPIM::TagWidget *>(QLatin1String("CategoryEdit"));
+    KPIM::TagWidget *categoryEdit = w->findChild<KPIM::TagWidget *>(QStringLiteral("CategoryEdit"));
     QVERIFY(categoryEdit);
 
-    label = w->findChild<QLabel *>(QLatin1String("label_in_addressbook"));
+    label = w->findChild<QLabel *>(QStringLiteral("label_in_addressbook"));
     QVERIFY(label);
 
-    Akonadi::CollectionComboBox *collectionComboBox = w->findChild<Akonadi::CollectionComboBox *>(QLatin1String("AddressBookComboBox"));
+    Akonadi::CollectionComboBox *collectionComboBox = w->findChild<Akonadi::CollectionComboBox *>(QStringLiteral("AddressBookComboBox"));
     QVERIFY(collectionComboBox);
 }
 

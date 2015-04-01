@@ -99,7 +99,7 @@ extern "C" Q_DECL_EXPORT KCModule *create_kleopatra_config_gnupgsystem(QWidget *
 {
     GnuPGSystemConfigurationPage *page =
         new GnuPGSystemConfigurationPage(parent, args);
-    page->setObjectName(QLatin1String("kleopatra_config_gnupgsystem"));
+    page->setObjectName(QStringLiteral("kleopatra_config_gnupgsystem"));
     return page;
 }
 

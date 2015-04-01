@@ -26,7 +26,7 @@ using namespace KSieveUi;
 SelectMatchTypeComboBox::SelectMatchTypeComboBox(QWidget *parent)
     : KComboBox(parent)
 {
-    mHasRegexCapability = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("regex"));
+    mHasRegexCapability = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QStringLiteral("regex"));
     initialize();
     connect(this, static_cast<void (SelectMatchTypeComboBox::*)(int)>(&SelectMatchTypeComboBox::activated), this, &SelectMatchTypeComboBox::valueChanged);
 }
@@ -37,24 +37,24 @@ SelectMatchTypeComboBox::~SelectMatchTypeComboBox()
 
 void SelectMatchTypeComboBox::initialize()
 {
-    addItem(i18n("is"), QLatin1String(":is"));
-    addItem(i18n("not is"), QLatin1String("[NOT]:is"));
-    addItem(i18n("contains"), QLatin1String(":contains"));
-    addItem(i18n("not contains"), QLatin1String("[NOT]:contains"));
-    addItem(i18n("matches"), QLatin1String(":matches"));
-    addItem(i18n("not matches"), QLatin1String("[NOT]:matches"));
+    addItem(i18n("is"), QStringLiteral(":is"));
+    addItem(i18n("not is"), QStringLiteral("[NOT]:is"));
+    addItem(i18n("contains"), QStringLiteral(":contains"));
+    addItem(i18n("not contains"), QStringLiteral("[NOT]:contains"));
+    addItem(i18n("matches"), QStringLiteral(":matches"));
+    addItem(i18n("not matches"), QStringLiteral("[NOT]:matches"));
     if (mHasRegexCapability) {
-        addItem(i18n("regex"), QLatin1String(":regex"));
-        addItem(i18n("not regex"), QLatin1String("[NOT]:regex"));
+        addItem(i18n("regex"), QStringLiteral(":regex"));
+        addItem(i18n("not regex"), QStringLiteral("[NOT]:regex"));
     }
 }
 
 QString SelectMatchTypeComboBox::code(bool &negative) const
 {
     QString value = itemData(currentIndex()).toString();
-    negative = value.startsWith(QLatin1String("[NOT]"));
+    negative = value.startsWith(QStringLiteral("[NOT]"));
     if (negative) {
-        value = value.remove(QLatin1String("[NOT]"));
+        value = value.remove(QStringLiteral("[NOT]"));
     }
     return value;
 }

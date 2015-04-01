@@ -42,7 +42,7 @@ void FilterActionRemoveHeaderTest::shouldHaveDefaultValue()
 void FilterActionRemoveHeaderTest::shouldHaveSieveRequires()
 {
     MailCommon::FilterActionRemoveHeader filter;
-    QCOMPARE(filter.sieveRequires(), QStringList() << QLatin1String("editheader"));
+    QCOMPARE(filter.sieveRequires(), QStringList() << QStringLiteral("editheader"));
 }
 
 QTEST_MAIN(FilterActionRemoveHeaderTest)

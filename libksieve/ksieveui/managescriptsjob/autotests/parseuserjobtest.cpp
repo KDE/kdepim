@@ -31,7 +31,7 @@ void ParseUserTest::testParseEmptyUserJob()
 
 void ParseUserTest::testParseUserTwoActiveScriptJob()
 {
-    const QString script = QLatin1String("# USER Management Script\n"
+    const QString script = QStringLiteral("# USER Management Script\n"
                                          "#\n"
                                          "# This script includes the various active sieve scripts\n"
                                          "# it is AUTOMATICALLY GENERATED. DO NOT EDIT MANUALLY!\n"
@@ -50,7 +50,7 @@ void ParseUserTest::testParseUserTwoActiveScriptJob()
 
 void ParseUserTest::testParseUserNoActiveScriptJob()
 {
-    const QString script = QLatin1String("# USER Management Script\n"
+    const QString script = QStringLiteral("# USER Management Script\n"
                                          "#\n"
                                          "# This script includes the various active sieve scripts\n"
                                          "# it is AUTOMATICALLY GENERATED. DO NOT EDIT MANUALLY!\n"
@@ -67,7 +67,7 @@ void ParseUserTest::testParseUserNoActiveScriptJob()
 
 void ParseUserTest::testParseUserDuplicateActiveScriptJob()
 {
-    const QString script = QLatin1String("# USER Management Script\n"
+    const QString script = QStringLiteral("# USER Management Script\n"
                                          "#\n"
                                          "# This script includes the various active sieve scripts\n"
                                          "# it is AUTOMATICALLY GENERATED. DO NOT EDIT MANUALLY!\n"
@@ -86,7 +86,7 @@ void ParseUserTest::testParseUserDuplicateActiveScriptJob()
 
 void ParseUserTest::testParseUserErrorScriptJob()
 {
-    const QString script = QLatin1String("# USER Management Script\n"
+    const QString script = QStringLiteral("# USER Management Script\n"
                                          "#\n"
                                          "# This script includes the various active sieve scripts\n"
                                          "# it is AUTOMATICALLY GENERATED. DO NOT EDIT MANUALLY!\n"

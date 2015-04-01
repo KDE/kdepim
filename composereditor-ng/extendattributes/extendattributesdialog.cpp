@@ -59,28 +59,28 @@ public:
         QString tagName;
         switch (extendType) {
         case ExtendAttributesDialog::Image:
-            tagName = QLatin1String("img");
+            tagName = QStringLiteral("img");
             break;
         case ExtendAttributesDialog::Table:
-            tagName = QLatin1String("table");
+            tagName = QStringLiteral("table");
             break;
         case ExtendAttributesDialog::Cell:
-            tagName = QLatin1String("cell");
+            tagName = QStringLiteral("cell");
             break;
         case ExtendAttributesDialog::Link:
-            tagName = QLatin1String("a");
+            tagName = QStringLiteral("a");
             break;
         case ExtendAttributesDialog::Body:
-            tagName = QLatin1String("body");
+            tagName = QStringLiteral("body");
             break;
         case ExtendAttributesDialog::ListUL:
-            tagName = QLatin1String("ul");
+            tagName = QStringLiteral("ul");
             break;
         case ExtendAttributesDialog::ListOL:
-            tagName = QLatin1String("ol");
+            tagName = QStringLiteral("ol");
             break;
         case ExtendAttributesDialog::ListDL:
-            tagName = QLatin1String("dl");
+            tagName = QStringLiteral("dl");
             break;
         default:
             qCDebug(COMPOSEREDITORNG_LOG) << " extendattribute not implemented" << extendType;

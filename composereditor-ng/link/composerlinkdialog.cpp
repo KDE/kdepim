@@ -123,10 +123,10 @@ void ComposerLinkDialogPrivate::initialize(const QWebElement &element)
 void ComposerLinkDialogPrivate::fillTarget()
 {
     target->addItem(i18nc("@item:inlistbox Target", "No Set"), QString());
-    target->addItem(i18nc("@item:inlistbox Target", "Current Window"), QLatin1String("_self"));
-    target->addItem(i18nc("@item:inlistbox Target", "New Window"), QLatin1String("_blank"));
-    target->addItem(i18nc("@item:inlistbox Target", "In parent frame"), QLatin1String("_parent"));
-    target->addItem(i18nc("@item:inlistbox Target", "In the full body of the window"), QLatin1String("_top"));
+    target->addItem(i18nc("@item:inlistbox Target", "Current Window"), QStringLiteral("_self"));
+    target->addItem(i18nc("@item:inlistbox Target", "New Window"), QStringLiteral("_blank"));
+    target->addItem(i18nc("@item:inlistbox Target", "In parent frame"), QStringLiteral("_parent"));
+    target->addItem(i18nc("@item:inlistbox Target", "In the full body of the window"), QStringLiteral("_top"));
 }
 
 void ComposerLinkDialogPrivate::_k_slotWebElementChanged()
@@ -160,25 +160,25 @@ QString ComposerLinkDialogPrivate::html() const
 void ComposerLinkDialogPrivate::updateLinkHtml()
 {
     if (linkLocation->text().isEmpty()) {
-        webElement.removeAttribute(QLatin1String("href"));
+        webElement.removeAttribute(QStringLiteral("href"));
     } else {
-        webElement.setAttribute(QLatin1String("href"), linkLocation->text());
+        webElement.setAttribute(QStringLiteral("href"), linkLocation->text());
     }
     const QString targetStr = target->itemData(target->currentIndex()).toString();
     if (targetStr.isEmpty()) {
-        webElement.removeAttribute(QLatin1String("target"));
+        webElement.removeAttribute(QStringLiteral("target"));
     } else {
-        webElement.setAttribute(QLatin1String("target"), targetStr);
+        webElement.setAttribute(QStringLiteral("target"), targetStr);
     }
 }
 
 void ComposerLinkDialogPrivate::updateSettings()
 {
     if (!webElement.isNull()) {
-        linkLocation->setText(webElement.attribute(QLatin1String("href")));
+        linkLocation->setText(webElement.attribute(QStringLiteral("href")));
         linkText->setText(webElement.toInnerXml());
-        if (webElement.hasAttribute(QLatin1String("target"))) {
-            const QString targetStr = webElement.attribute(QLatin1String("target"));
+        if (webElement.hasAttribute(QStringLiteral("target"))) {
+            const QString targetStr = webElement.attribute(QStringLiteral("target"));
             const int index = target->findData(targetStr);
             if (index > -1) {
                 target->setCurrentIndex(index);
