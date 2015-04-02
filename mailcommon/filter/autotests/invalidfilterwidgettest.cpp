@@ -17,7 +17,7 @@
 
 #include "invalidfilterwidgettest.h"
 #include "../filter/invalidfilters/invalidfilterwidget.h"
-#include "../filter/invalidfilters/invalidfilterlistwidget.h"
+#include "../filter/invalidfilters/invalidfilterlistview.h"
 #include <QLabel>
 #include <qtest.h>
 InvalidFilterWidgetTest::InvalidFilterWidgetTest(QObject *parent)
@@ -37,7 +37,7 @@ void InvalidFilterWidgetTest::shouldHaveDefaultValue()
     QLabel *lab = w.findChild<QLabel *>(QStringLiteral("label"));
     QVERIFY(lab);
 
-    MailCommon::InvalidFilterListWidget *list = w.findChild<MailCommon::InvalidFilterListWidget *>(QStringLiteral("invalidfilterlist"));
+    MailCommon::InvalidFilterListView *list = w.findChild<MailCommon::InvalidFilterListView *>(QLatin1String("invalidfilterlist"));
     QVERIFY(list);
 }
 

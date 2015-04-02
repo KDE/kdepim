@@ -16,7 +16,7 @@
 */
 
 #include "invalidfilterwidget.h"
-#include "invalidfilterlistwidget.h"
+#include "invalidfilterlistview.h"
 #include <KLocalizedString>
 #include <QVBoxLayout>
 #include <QLabel>
@@ -32,7 +32,7 @@ InvalidFilterWidget::InvalidFilterWidget(QWidget *parent)
     lab->setObjectName(QLatin1String("label"));
     vbox->addWidget(lab);
 
-    mInvalidFilterListWidget = new InvalidFilterListWidget(this);
+    mInvalidFilterListWidget = new InvalidFilterListView(this);
     mInvalidFilterListWidget->setObjectName(QLatin1String("invalidfilterlist"));
     vbox->addWidget(mInvalidFilterListWidget);
 }

@@ -15,32 +15,36 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef INVALIDFILTERLISTITEMDELEGATE_H
-#define INVALIDFILTERLISTITEMDELEGATE_H
+
+#ifndef CONFIGUREAGENTLISTDELEGATE_H
+#define CONFIGUREAGENTLISTDELEGATE_H
 
 #include <KWidgetItemDelegate>
+#include <QAbstractItemView>
 
-namespace MailCommon {
-class InvalidFilterListItemDelegate : public KWidgetItemDelegate
+class ConfigureAgentListDelegate : public KWidgetItemDelegate
 {
     Q_OBJECT
 public:
-    explicit InvalidFilterListItemDelegate(QAbstractItemView* itemView, QObject* parent = 0);
-    virtual ~InvalidFilterListItemDelegate();
+    explicit ConfigureAgentListDelegate(QAbstractItemView* itemView, QObject* parent = 0);
+    virtual ~ConfigureAgentListDelegate();
 
     virtual QSize sizeHint(const QStyleOptionViewItem &option,
-                           const QModelIndex &index) const Q_DECL_OVERRIDE;
+                           const QModelIndex &index) const;
 
     virtual void paint(QPainter* painter, const QStyleOptionViewItem& option,
-                       const QModelIndex& index) const Q_DECL_OVERRIDE;
+                       const QModelIndex& index) const;
 
-    virtual QList<QWidget*> createItemWidgets(const QModelIndex&) const Q_DECL_OVERRIDE;
+    virtual QList<QWidget*> createItemWidgets() const;
 
     virtual void updateItemWidgets(const QList<QWidget*> widgets,
                                    const QStyleOptionViewItem& option,
-                                   const QPersistentModelIndex& index) const Q_DECL_OVERRIDE;
+                                   const QPersistentModelIndex& index) const;
 private Q_SLOTS:
-    void slotShowDetails();
+    void slotCheckboxClicked(bool checked);
+
+Q_SIGNALS:
+    void requestConfiguration(const QModelIndex& index);
 };
-}
-#endif // INVALIDFILTERLISTITEMDELEGATE_H
+
+#endif // CONFIGUREAGENTLISTDELEGATE_H
