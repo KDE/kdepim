@@ -30,6 +30,7 @@ private Q_SLOTS:
     void shouldAddEmptyValue();
     void shouldAssignValueFromConstructor();
     void shouldAssignValue();
+    void shouldBeEqual();
 };
 
 #endif // INVALIDFILTERINFOTEST_H
