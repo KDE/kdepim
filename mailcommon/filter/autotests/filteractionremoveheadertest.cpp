@@ -37,12 +37,22 @@ void FilterActionRemoveHeaderTest::shouldHaveDefaultValue()
     QWidget *w = filter.createParamWidget(0);
     PimCommon::MinimumComboBox *comboBox = dynamic_cast<PimCommon::MinimumComboBox *>(w);
     QVERIFY(comboBox);
+    QVERIFY(comboBox->isEditable());
+    QVERIFY(comboBox->count()>0);
 }
 
 void FilterActionRemoveHeaderTest::shouldHaveSieveRequires()
 {
     MailCommon::FilterActionRemoveHeader filter;
     QCOMPARE(filter.sieveRequires(), QStringList() << QLatin1String("editheader"));
+}
+
+void FilterActionRemoveHeaderTest::shouldBeEmpty()
+{
+    MailCommon::FilterActionRemoveHeader filter;
+    QVERIFY(filter.isEmpty());
+    filter.argsFromString(QLatin1String("bla"));
+    QVERIFY(!filter.isEmpty());
 }
 
 QTEST_KDEMAIN(FilterActionRemoveHeaderTest, GUI)

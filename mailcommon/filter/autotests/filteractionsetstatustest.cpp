@@ -19,6 +19,7 @@
 #include "../filteractions/filteractionsetstatus.h"
 #include <QWidget>
 #include <qtest_kde.h>
+#include <widgets/minimumcombobox.h>
 
 FilterActionSetStatusTest::FilterActionSetStatusTest(QObject *parent)
     : QObject(parent)
@@ -36,12 +37,22 @@ void FilterActionSetStatusTest::shouldHaveDefaultValue()
     MailCommon::FilterActionSetStatus filter;
     QWidget *w = filter.createParamWidget(0);
     QCOMPARE(w->objectName(), QLatin1String("combobox"));
+    PimCommon::MinimumComboBox *comboBox = dynamic_cast<PimCommon::MinimumComboBox *>(w);
+    QVERIFY(comboBox);
+    QVERIFY(!comboBox->isEditable());
+    QVERIFY(comboBox->count()>0);
 }
 
 void FilterActionSetStatusTest::shouldHaveSieveRequires()
 {
     MailCommon::FilterActionSetStatus filter;
     QCOMPARE(filter.sieveRequires(), QStringList() << QLatin1String("imap4flags"));
+}
+
+void FilterActionSetStatusTest::shouldBeEmpty()
+{
+    MailCommon::FilterActionSetStatus filter;
+    QVERIFY(filter.isEmpty());
 }
 
 QTEST_KDEMAIN(FilterActionSetStatusTest, GUI)
