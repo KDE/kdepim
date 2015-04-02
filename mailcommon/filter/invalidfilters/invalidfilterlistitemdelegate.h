@@ -25,18 +25,18 @@ class InvalidFilterListItemDelegate : public KWidgetItemDelegate
 {
     Q_OBJECT
 public:
-    explicit InvalidFilterListItemDelegate(QAbstractItemView* itemView, QObject* parent = 0);
+    explicit InvalidFilterListItemDelegate(QAbstractItemView* itemView, QObject* parent = Q_NULLPTR);
     virtual ~InvalidFilterListItemDelegate();
 
-    virtual QSize sizeHint(const QStyleOptionViewItem &option,
+    QSize sizeHint(const QStyleOptionViewItem &option,
                            const QModelIndex &index) const Q_DECL_OVERRIDE;
 
-    virtual void paint(QPainter* painter, const QStyleOptionViewItem& option,
+    void paint(QPainter* painter, const QStyleOptionViewItem& option,
                        const QModelIndex& index) const Q_DECL_OVERRIDE;
 
-    virtual QList<QWidget*> createItemWidgets(const QModelIndex&) const Q_DECL_OVERRIDE;
+    QList<QWidget*> createItemWidgets(const QModelIndex&) const Q_DECL_OVERRIDE;
 
-    virtual void updateItemWidgets(const QList<QWidget*> widgets,
+    void updateItemWidgets(const QList<QWidget*> widgets,
                                    const QStyleOptionViewItem& option,
                                    const QPersistentModelIndex& index) const Q_DECL_OVERRIDE;
 private Q_SLOTS:
