@@ -58,4 +58,16 @@ void InvalidFilterInfoTest::shouldAssignValue()
     QCOMPARE(info.information(), information);
 }
 
+void InvalidFilterInfoTest::shouldBeEqual()
+{
+    MailCommon::InvalidFilterInfo info;
+    const QString name = QLatin1String("foo");
+    const QString information = QLatin1String("bla");
+    info.setName(name);
+    info.setInformation(information);
+    MailCommon::InvalidFilterInfo copyInfo;
+    copyInfo = info;
+    QVERIFY(copyInfo == info);
+}
+
 QTEST_MAIN(InvalidFilterInfoTest)

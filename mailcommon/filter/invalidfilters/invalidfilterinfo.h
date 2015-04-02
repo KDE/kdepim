@@ -21,7 +21,6 @@
 #include <QString>
 #include "mailcommon_export.h"
 namespace MailCommon {
-class InvalidFilterWidget;
 class MAILCOMMON_EXPORT InvalidFilterInfo
 {
 public:
@@ -36,6 +35,7 @@ public:
 
     void setInformation(const QString &information);
 
+    bool operator ==(const InvalidFilterInfo &other) const;
 private:
     QString mName;
     QString mInformation;
