@@ -69,22 +69,22 @@ FilterAction::ReturnCode FilterActionRewriteHeader::process(ItemContext &context
     }
 
     QString value = header->asUnicodeString();
-
+    const QString oldValue = value;
     const QString newValue = value.replace( mRegExp, mReplacementString );
+    if (newValue != oldValue) {
+        msg->removeHeader( param );
 
-    msg->removeHeader( param );
+        KMime::Headers::Base *newheader = KMime::Headers::createHeader(param);
+        if ( !newheader ) {
+            newheader = new KMime::Headers::Generic(param, msg.get(), newValue, "utf-8" );
+        } else {
+            newheader->fromUnicodeString( newValue, "utf-8" );
+        }
+        msg->setHeader( newheader );
+        msg->assemble();
 
-    KMime::Headers::Base *newheader = KMime::Headers::createHeader(param);
-    if ( !newheader ) {
-        newheader = new KMime::Headers::Generic(param, msg.get(), newValue, "utf-8" );
-    } else {
-        newheader->fromUnicodeString( newValue, "utf-8" );
+        context.setNeedsPayloadStore();
     }
-    msg->setHeader( newheader );
-    msg->assemble();
-
-    context.setNeedsPayloadStore();
-
     return GoOn;
 }
 
@@ -219,6 +219,8 @@ QString FilterActionRewriteHeader::displayString() const
 void FilterActionRewriteHeader::argsFromString( const QString &argsStr )
 {
     const QStringList list = argsStr.split( QLatin1Char( '\t' ) );
+    if (list.count() < 3)
+        return;
     QString result;
 
     result = list[ 0 ];
