@@ -242,3 +242,21 @@ target_link_libraries( filteractionredirecttest
 set( mailcommon_invalidfilterinfotest_source invalidfilterinfotest.cpp  )
 kde4_add_unit_test( invalidfilterinfotest ${mailcommon_invalidfilterinfotest_source})
 target_link_libraries( invalidfilterinfotest ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS} mailcommon)
+
+
+set(mailcommon_filteractionsendfakedispositiontest_SRCS filteractionsendfakedispositiontest.cpp
+                                           ../filteractions/filteractionsendfakedisposition.cpp
+                                           ../filteractions/filteractionwithstringlist.cpp
+                                           ../filteractions/filteractionwithstring.cpp)
+kde4_add_unit_test( filteractionsendfakedispositiontest ${mailcommon_filteractionsendfakedispositiontest_SRCS} )
+target_link_libraries( filteractionsendfakedispositiontest
+   kdepim
+   pimcommon
+   mailcommon
+   messagecore
+   messagecomposer
+   ${QT_QTTEST_LIBRARY}
+   ${QT_QTCORE_LIBRARY}
+   ${KDEPIMLIBS_AKONADI_LIBS}
+   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+)
