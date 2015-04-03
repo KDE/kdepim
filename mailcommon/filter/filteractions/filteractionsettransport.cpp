@@ -39,6 +39,7 @@ FilterAction* FilterActionSetTransport::newAction()
 QWidget* FilterActionSetTransport::createParamWidget( QWidget *parent ) const
 {
     MailTransport::TransportComboBox *transportCombobox = new MailTransport::TransportComboBox( parent );
+    transportCombobox->setObjectName(QLatin1String("transportcombobox"));
     setParamWidgetValue( transportCombobox );
 
     connect( transportCombobox, SIGNAL(currentIndexChanged(int)),
@@ -130,7 +131,9 @@ bool FilterActionSetTransport::isEmpty() const
 
 void FilterActionSetTransport::argsFromString( const QString &argsStr )
 {
-    mParameter = argsStr.trimmed().toInt();
+    bool ok;
+    const int val = argsStr.trimmed().toInt(&ok);
+    mParameter = ok ? val : -1;
 }
 
 QString FilterActionSetTransport::argsAsString() const
