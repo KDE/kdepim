@@ -55,4 +55,108 @@ void FilterActionRemoveHeaderTest::shouldBeEmpty()
     QVERIFY(!filter.isEmpty());
 }
 
+void FilterActionRemoveHeaderTest::shouldNotExecuteActionWhenParameterIsEmpty()
+{
+    MailCommon::FilterActionRemoveHeader filter(this);
+    KMime::Message::Ptr msgPtr = KMime::Message::Ptr(new KMime::Message());
+    Akonadi::Item item;
+    item.setPayload<KMime::Message::Ptr>(msgPtr);
+    MailCommon::ItemContext context(item, true);
+
+    filter.argsFromString("");
+    QCOMPARE(filter.process(context, false), MailCommon::FilterAction::ErrorButGoOn);
+    QCOMPARE(context.needsPayloadStore(), false);
+}
+
+void FilterActionRemoveHeaderTest::shouldRemoveHeader()
+{
+    const QByteArray data = "From: foo@kde.org\n"
+                            "To: foo@kde.org\n"
+                            "Subject: test\n"
+                            "testheader: foo\n"
+                            "Date: Wed, 01 Apr 2015 09:33:01 +0200\n"
+                            "MIME-Version: 1.0\n"
+                            "\n"
+                            "test";
+    const QByteArray output = "From: foo@kde.org\n"
+                              "To: foo@kde.org\n"
+                              "Subject: test\n"
+                              "Date: Wed, 01 Apr 2015 09:33:01 +0200\n"
+                              "MIME-Version: 1.0\n"
+                              "\n"
+                              "test";
+
+    MailCommon::FilterActionRemoveHeader filter(this);
+    KMime::Message::Ptr msgPtr = KMime::Message::Ptr(new KMime::Message());
+    msgPtr->setContent(data);
+    msgPtr->parse();
+    Akonadi::Item item;
+    item.setPayload<KMime::Message::Ptr>(msgPtr);
+    MailCommon::ItemContext context(item, true);
+
+    filter.argsFromString("testheader");
+    QCOMPARE(filter.process(context, false), MailCommon::FilterAction::GoOn);
+    QCOMPARE(context.needsPayloadStore(), true);
+    QCOMPARE(msgPtr->encodedContent(), output);
+}
+
+void FilterActionRemoveHeaderTest::shouldNotTryToRemoveHeaderWhenItDoesntExist()
+{
+    const QByteArray data = "From: foo@kde.org\n"
+                            "To: foo@kde.org\n"
+                            "Subject: test\n"
+                            "testheader2: foo\n"
+                            "Date: Wed, 01 Apr 2015 09:33:01 +0200\n"
+                            "MIME-Version: 1.0\n"
+                            "\n"
+                            "test";
+
+    MailCommon::FilterActionRemoveHeader filter(this);
+    KMime::Message::Ptr msgPtr = KMime::Message::Ptr(new KMime::Message());
+    msgPtr->setContent(data);
+    msgPtr->parse();
+    Akonadi::Item item;
+    item.setPayload<KMime::Message::Ptr>(msgPtr);
+    MailCommon::ItemContext context(item, true);
+
+    filter.argsFromString("testheader");
+    QCOMPARE(filter.process(context, false), MailCommon::FilterAction::GoOn);
+    QCOMPARE(context.needsPayloadStore(), false);
+    QCOMPARE(msgPtr->encodedContent(), data);
+}
+
+void FilterActionRemoveHeaderTest::shouldRemoveMultiHeader()
+{
+    const QByteArray data = "From: foo@kde.org\n"
+                            "To: foo@kde.org\n"
+                            "Subject: test\n"
+                            "testheader: foo\n"
+                            "testheader: foo\n"
+                            "testheader: bla\n"
+                            "Date: Wed, 01 Apr 2015 09:33:01 +0200\n"
+                            "MIME-Version: 1.0\n"
+                            "\n"
+                            "test";
+    const QByteArray output = "From: foo@kde.org\n"
+                              "To: foo@kde.org\n"
+                              "Subject: test\n"
+                              "Date: Wed, 01 Apr 2015 09:33:01 +0200\n"
+                              "MIME-Version: 1.0\n"
+                              "\n"
+                              "test";
+
+    MailCommon::FilterActionRemoveHeader filter(this);
+    KMime::Message::Ptr msgPtr = KMime::Message::Ptr(new KMime::Message());
+    msgPtr->setContent(data);
+    msgPtr->parse();
+    Akonadi::Item item;
+    item.setPayload<KMime::Message::Ptr>(msgPtr);
+    MailCommon::ItemContext context(item, true);
+
+    filter.argsFromString("testheader");
+    QCOMPARE(filter.process(context, false), MailCommon::FilterAction::GoOn);
+    QCOMPARE(context.needsPayloadStore(), true);
+    QCOMPARE(msgPtr->encodedContent(), output);
+}
+
 QTEST_MAIN(FilterActionRemoveHeaderTest)

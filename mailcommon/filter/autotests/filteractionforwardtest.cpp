@@ -15,25 +15,18 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FILTERACTIONREMOVEHEADERTEST_H
-#define FILTERACTIONREMOVEHEADERTEST_H
+#include "filteractionforwardtest.h"
+#include <qtest_kde.h>
 
-#include <QObject>
-
-class FilterActionRemoveHeaderTest : public QObject
+FilterActionForwardTest::FilterActionForwardTest(QObject *parent)
+    : QObject(parent)
 {
-    Q_OBJECT
-public:
-    explicit FilterActionRemoveHeaderTest(QObject *parent = Q_NULLPTR);
-    ~FilterActionRemoveHeaderTest();
-private Q_SLOTS:
-    void shouldHaveDefaultValue();
-    void shouldHaveSieveRequires();
-    void shouldBeEmpty();
-    void shouldNotExecuteActionWhenParameterIsEmpty();
-    void shouldRemoveHeader();
-    void shouldNotTryToRemoveHeaderWhenItDoesntExist();
-    void shouldRemoveMultiHeader();
-};
 
-#endif // FILTERACTIONREMOVEHEADERTEST_H
+}
+
+FilterActionForwardTest::~FilterActionForwardTest()
+{
+
+}
+
+QTEST_KDEMAIN(FilterActionForwardTest, GUI)

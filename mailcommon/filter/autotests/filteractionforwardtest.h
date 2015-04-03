@@ -15,25 +15,17 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FILTERACTIONREMOVEHEADERTEST_H
-#define FILTERACTIONREMOVEHEADERTEST_H
+#ifndef FILTERACTIONFORWARDTEST_H
+#define FILTERACTIONFORWARDTEST_H
 
 #include <QObject>
 
-class FilterActionRemoveHeaderTest : public QObject
+class FilterActionForwardTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FilterActionRemoveHeaderTest(QObject *parent = Q_NULLPTR);
-    ~FilterActionRemoveHeaderTest();
-private Q_SLOTS:
-    void shouldHaveDefaultValue();
-    void shouldHaveSieveRequires();
-    void shouldBeEmpty();
-    void shouldNotExecuteActionWhenParameterIsEmpty();
-    void shouldRemoveHeader();
-    void shouldNotTryToRemoveHeaderWhenItDoesntExist();
-    void shouldRemoveMultiHeader();
+    explicit FilterActionForwardTest(QObject *parent = 0);
+    ~FilterActionForwardTest();
 };
 
-#endif // FILTERACTIONREMOVEHEADERTEST_H
+#endif // FILTERACTIONFORWARDTEST_H

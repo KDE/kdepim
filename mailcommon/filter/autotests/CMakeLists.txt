@@ -195,24 +195,26 @@ target_link_libraries( filteractionaddtoaddressbooktest
 )
 
 
-#set(mailcommon_filteractionplaysoundtest_SRCS filteractionplaysoundtest.cpp
-#                                           ../filteractions/filteractionplaysound.cpp
-#                                           ../filteractions/filteractionwithtest.cpp
-#                                           ../filteractions/filteractionplaysound.h
-#                                           ../soundtestwidget.cpp
-#                                           ../dialog/filteractionmissingargumentdialog.h)
-#add_executable( filteractionplaysoundtest ${mailcommon_filteractionplaysoundtest_SRCS} )
-#add_test(filteractionplaysoundtest filteractionplaysoundtest)
-#ecm_mark_as_test(filteractionplaysoundtest)
-#target_link_libraries( filteractionplaysoundtest
-#   kdepim
-#   pimcommon
-#   mailcommon
-#   Qt5::Test
-#   Qt5::Core
-#   KF5::AkonadiCore
-#   KF5::AkonadiMime
-#)
+set(mailcommon_filteractionplaysoundtest_SRCS filteractionplaysoundtest.cpp
+                                           ../filteractions/filteractionplaysound.cpp
+                                           ../filteractions/filteractionwithtest.cpp
+                                           ../filteractions/filteractionplaysound.cpp
+                                           ../soundtestwidget.cpp
+                                           ../dialog/filteractionmissingargumentdialog.cpp
+                                           ../kmfilteraccountlist.cpp)
+add_executable( filteractionplaysoundtest ${mailcommon_filteractionplaysoundtest_SRCS} )
+add_test(filteractionplaysoundtest filteractionplaysoundtest)
+ecm_mark_as_test(filteractionplaysoundtest)
+target_link_libraries( filteractionplaysoundtest
+   kdepim
+   pimcommon
+   mailcommon
+   Qt5::Test
+   Qt5::Core
+   KF5::AkonadiCore
+   KF5::AkonadiMime
+   KF5::MailTransport
+)
 
 set( mailcommon_invalidfilterdialog_source invalidfilterdialogtest.cpp  )
 add_executable( invalidfilterdialogtest ${mailcommon_invalidfilterdialog_source})
@@ -276,3 +278,46 @@ add_executable( invalidfilterinfotest ${mailcommon_invalidfilterinfotest_source}
 add_test(invalidfilterinfotest invalidfilterinfotest)
 ecm_mark_as_test(invalidfilterinfotest)
 target_link_libraries( invalidfilterinfotest Qt5::Test  mailcommon)
+
+
+set(mailcommon_filteractionsendfakedispositiontest_SRCS filteractionsendfakedispositiontest.cpp
+                                           ../filteractions/filteractionsendfakedisposition.cpp
+                                           ../filteractions/filteractionwithstringlist.cpp
+                                           ../filteractions/filteractionwithstring.cpp)
+add_executable( filteractionsendfakedispositiontest ${mailcommon_filteractionsendfakedispositiontest_SRCS} )
+add_test(filteractionsendfakedispositiontest filteractionsendfakedispositiontest)
+ecm_mark_as_test(filteractionsendfakedispositiontest)
+target_link_libraries( filteractionsendfakedispositiontest
+   kdepim
+   pimcommon
+   mailcommon
+   messagecore
+   messagecomposer
+   Qt5::Test
+   Qt5::Core
+   KF5::AkonadiCore
+   KF5::AkonadiMime
+)
+
+set(mailcommon_filteractionforwardtest_SRCS filteractionforwardtest.cpp ../../mailcommon_debug.cpp
+                                           ../filteractions/filteractionforward.cpp
+                                           ../filteractions/filteractionwithaddress.cpp
+                                           ../filteractions/filteractionwithstring.cpp
+                                           ../dialog/filteractionmissingargumentdialog.cpp
+                                           ../kmfilteraccountlist.cpp)
+add_executable( filteractionforwardtest ${mailcommon_filteractionforwardtest_SRCS} )
+add_test(filteractionforwardtest filteractionforwardtest)
+ecm_mark_as_test(filteractionforwardtest)
+target_link_libraries( filteractionforwardtest
+   kdepim
+   pimcommon
+   mailcommon
+   messagecore
+   messagecomposer
+   templateparser
+   KF5::MailTransport
+   Qt5::Test
+   Qt5::Core
+   KF5::AkonadiCore
+   KF5::AkonadiMime
+)
