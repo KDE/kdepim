@@ -28,8 +28,9 @@ public:
     ~FilterActionReplyToTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
-
-
+    void shouldBeEmpty();
+    void shouldHadReplyToHeader();
+    void shouldReplaceReplyToHeader();
 };
 
 #endif // FILTERACTIONREPLYTOTEST_H

@@ -37,4 +37,82 @@ void FilterActionReplyToTest::shouldHaveDefaultValue()
     QCOMPARE(w->objectName(), QLatin1String("emailaddressrequester"));
 }
 
+void FilterActionReplyToTest::shouldBeEmpty()
+{
+    MailCommon::FilterActionReplyTo filter;
+    QVERIFY(filter.isEmpty());
+}
+
+void FilterActionReplyToTest::shouldHadReplyToHeader()
+{
+    const QString replyTo = QLatin1String("fooreply@kde.org");
+
+    const QByteArray data = "From: foo@kde.org\n"
+                            "To: foo@kde.org\n"
+                            "Subject: test\n"
+                            "Date: Wed, 01 Apr 2015 09:33:01 +0200\n"
+                            "MIME-Version: 1.0\n"
+                            "\n"
+                            "test";
+    const QByteArray output = "From: foo@kde.org\n"
+                              "To: foo@kde.org\n"
+                              "Subject: test\n"
+                              "Date: Wed, 01 Apr 2015 09:33:01 +0200\n"
+                              "MIME-Version: 1.0\n"
+                              "Reply-To: fooreply@kde.org\n"
+                              "\n"
+                              "test";
+
+    MailCommon::FilterActionReplyTo filter(this);
+    KMime::Message::Ptr msgPtr = KMime::Message::Ptr(new KMime::Message());
+    msgPtr->setContent(data);
+    msgPtr->parse();
+    Akonadi::Item item;
+    item.setPayload<KMime::Message::Ptr>(msgPtr);
+    MailCommon::ItemContext context(item, true);
+
+    filter.argsFromString(replyTo);
+    QCOMPARE(filter.process(context, false), MailCommon::FilterAction::GoOn);
+    QCOMPARE(context.needsPayloadStore(), true);
+    QCOMPARE(msgPtr->encodedContent(), output);
+
+}
+
+void FilterActionReplyToTest::shouldReplaceReplyToHeader()
+{
+    const QString replyTo = QLatin1String("fooreply@kde.org");
+
+    const QByteArray data = "From: foo@kde.org\n"
+                            "To: foo@kde.org\n"
+                            "Subject: test\n"
+                            "Date: Wed, 01 Apr 2015 09:33:01 +0200\n"
+                            "MIME-Version: 1.0\n"
+                            "Reply-To: oldfooreply@kde.org\n"
+                            "\n"
+                            "test";
+    const QByteArray output = "From: foo@kde.org\n"
+                              "To: foo@kde.org\n"
+                              "Subject: test\n"
+                              "Date: Wed, 01 Apr 2015 09:33:01 +0200\n"
+                              "MIME-Version: 1.0\n"
+                              "Reply-To: fooreply@kde.org\n"
+                              "\n"
+                              "test";
+
+    MailCommon::FilterActionReplyTo filter(this);
+    KMime::Message::Ptr msgPtr = KMime::Message::Ptr(new KMime::Message());
+    msgPtr->setContent(data);
+    msgPtr->parse();
+    Akonadi::Item item;
+    item.setPayload<KMime::Message::Ptr>(msgPtr);
+    MailCommon::ItemContext context(item, true);
+
+    filter.argsFromString(replyTo);
+    QCOMPARE(filter.process(context, false), MailCommon::FilterAction::GoOn);
+    QCOMPARE(context.needsPayloadStore(), true);
+    QCOMPARE(msgPtr->encodedContent(), output);
+
+
+}
+
 QTEST_KDEMAIN(FilterActionReplyToTest, GUI)
