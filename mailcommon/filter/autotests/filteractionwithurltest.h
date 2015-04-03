@@ -30,6 +30,9 @@ private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldClearWidget();
     void shouldAddValue();
+    void shouldApplyValue();
+    void shouldTestUrl_data();
+    void shouldTestUrl();
 };
 
 #endif // FILTERACTIONWITHURLTEST_H

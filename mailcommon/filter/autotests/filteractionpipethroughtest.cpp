@@ -52,6 +52,40 @@ void FilterActionPipeThroughTest::testWithNoCommand()
     QCOMPARE(context.needsPayloadStore(), false);
 }
 
+void FilterActionPipeThroughTest::testWithInvalidCommandPath()
+{
+    /* put a mail in the pipe and make sure we get the same output
+     */
+    QByteArray data =
+    "From: Konqui <konqui@kde.org>\n"
+    "To: Friends <friends@kde.org>\n"
+    "Date: Sun, 21 Mar 1993 23:56:48 -0800 (PST)\n"
+    "Subject: Sample message\n"
+    "MIME-Version: 1.0\n"
+    "Content-type: multipart/mixed; boundary=\"simple boundary\"\n"
+    "\n"
+    "\n"
+    "--simple boundary\n"
+    "Content-type: text/plain; charset=us-ascii\n"
+    "\n"
+    "This is explicitly typed plain US-ASCII text.\n"
+    "It DOES end with a linebreak.\n"
+    "\n"
+    "--simple boundary--\n";
+
+    FilterActionPipeThrough filter(this);
+    KMime::Message::Ptr msgPtr = KMime::Message::Ptr(new KMime::Message());
+    Akonadi::Item item;
+    msgPtr->setContent(data);
+    item.setPayload<KMime::Message::Ptr>(msgPtr);
+    ItemContext context(item, true);
+
+    filter.argsFromString(QLatin1String("/home/cat "));
+    QCOMPARE(filter.process(context, false), FilterAction::ErrorButGoOn);
+    QCOMPARE(context.needsPayloadStore(), false);
+    QCOMPARE(msgPtr->encodedContent(), data);
+}
+
 void FilterActionPipeThroughTest::testCommandWithoutOutput()
 {
     /* Valid command but no output -> error
