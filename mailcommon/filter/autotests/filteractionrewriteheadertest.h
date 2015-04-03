@@ -28,6 +28,12 @@ public:
     ~FilterActionRewriteHeaderTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldBeEmpty();
+    void shouldNotExecuteActionWhenParameterIsEmpty();
+    void shouldNotExecuteActionWhenValueIsEmpty();
+    void shouldRewriteHeader();
+    void shouldNotRewriteHeaderWhenHeaderNotFound();
+    void shouldNotRewriteHeaderWhenRegexpNotFound();
 };
 
 #endif // FILTERACTIONREWRITEHEADERTEST_H

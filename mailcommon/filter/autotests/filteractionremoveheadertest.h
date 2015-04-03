@@ -29,6 +29,7 @@ public:
 private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldHaveSieveRequires();
+    void shouldBeEmpty();
 };
 
 #endif // FILTERACTIONREMOVEHEADERTEST_H
