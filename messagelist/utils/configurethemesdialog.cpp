@@ -344,7 +344,7 @@ QString ConfigureThemesDialog::Private::uniqueNameForTheme(const QString &baseNa
     ThemeListWidgetItem *item = findThemeItemByName(ret, skipTheme);
     while (item) {
         idx++;
-        ret = QString::fromLatin1("%1 %2").arg(baseName).arg(idx);
+        ret = QStringLiteral("%1 %2").arg(baseName).arg(idx);
         item = findThemeItemByName(ret, skipTheme);
     }
     return ret;
@@ -469,7 +469,7 @@ void ConfigureThemesDialog::Private::exportThemeButtonClicked()
         int idx = 0;
         Q_FOREACH (QListWidgetItem *item, list) {
             ThemeListWidgetItem *themeItem = static_cast< ThemeListWidgetItem * >(item);
-            grp.writeEntry(QString::fromLatin1("Set%1").arg(idx), themeItem->theme()->saveToString());
+            grp.writeEntry(QStringLiteral("Set%1").arg(idx), themeItem->theme()->saveToString());
             ++idx;
         }
     }

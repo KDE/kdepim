@@ -349,7 +349,7 @@ void BoxJob::renameFolder(const QString &source, const QString &destination)
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer " + mToken.toLatin1());
-    const QString data = QString::fromLatin1("{\"name\":\"%1\"}").arg(destination);
+    const QString data = QStringLiteral("{\"name\":\"%1\"}").arg(destination);
 
     QNetworkReply *reply = mNetworkAccessManager->put(request, data.toLatin1());
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &BoxJob::slotError);

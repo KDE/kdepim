@@ -989,7 +989,7 @@ void Manager::loadConfiguration()
 
         int idx = 0;
         while (idx < cnt) {
-            const QString data = conf.readEntry(QString::fromLatin1("Set%1").arg(idx), QString());
+            const QString data = conf.readEntry(QStringLiteral("Set%1").arg(idx), QString());
             if (!data.isEmpty()) {
                 Theme *set = new Theme();
                 if (set->loadFromString(data)) {
@@ -1033,7 +1033,7 @@ void Manager::saveConfiguration()
         int idx = 0;
         QHash< QString, Aggregation * >::ConstIterator end(mAggregations.end());
         for (QHash< QString, Aggregation * >::ConstIterator it = mAggregations.constBegin(); it != end; ++it) {
-            conf.writeEntry(QString::fromLatin1("Set%1").arg(idx), (*it)->saveToString());
+            conf.writeEntry(QStringLiteral("Set%1").arg(idx), (*it)->saveToString());
             ++idx;
         }
     }
@@ -1049,7 +1049,7 @@ void Manager::saveConfiguration()
         int idx = 0;
         QHash< QString, Theme * >::ConstIterator end(mThemes.constEnd());
         for (QHash< QString, Theme * >::ConstIterator it = mThemes.constBegin(); it != end; ++it) {
-            conf.writeEntry(QString::fromLatin1("Set%1").arg(idx), (*it)->saveToString());
+            conf.writeEntry(QStringLiteral("Set%1").arg(idx), (*it)->saveToString());
             ++idx;
         }
     }

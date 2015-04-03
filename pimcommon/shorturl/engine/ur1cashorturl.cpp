@@ -62,10 +62,10 @@ void Ur1CaShortUrl::slotShortUrlFinished(QNetworkReply *reply)
 
     QString output = QString::fromLatin1(reply->readAll());
     qCDebug(PIMCOMMON_LOG) << "void Ur1CaShortUrl::slotShortUrlFinished(QNetworkReply *reply) " << output;
-    QRegExp rx(QString::fromLatin1("<p class=[\'\"]success[\'\"]>(.*)</p>"));
+    QRegExp rx(QStringLiteral("<p class=[\'\"]success[\'\"]>(.*)</p>"));
     rx.setMinimal(true);
     output = rx.cap(1);
-    rx.setPattern(QString::fromLatin1("href=[\'\"](.*)[\'\"]"));
+    rx.setPattern(QStringLiteral("href=[\'\"](.*)[\'\"]"));
     rx.indexIn(output);
     output = rx.cap(1);
     qCDebug(PIMCOMMON_LOG) << "Short url is: " << output;
