@@ -16,7 +16,7 @@
 */
 
 #include "filteractionforwardtest.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 FilterActionForwardTest::FilterActionForwardTest(QObject *parent)
     : QObject(parent)
@@ -29,4 +29,4 @@ FilterActionForwardTest::~FilterActionForwardTest()
 
 }
 
-QTEST_KDEMAIN(FilterActionForwardTest, GUI)
+QTEST_MAIN(FilterActionForwardTest)

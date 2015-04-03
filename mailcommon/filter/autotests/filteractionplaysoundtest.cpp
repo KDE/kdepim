@@ -17,7 +17,7 @@
 
 #include "filteractionplaysoundtest.h"
 #include "../filteractions/filteractionplaysound.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 FilterActionPlaySoundTest::FilterActionPlaySoundTest(QObject *parent)
     : QObject(parent)
@@ -30,4 +30,4 @@ FilterActionPlaySoundTest::~FilterActionPlaySoundTest()
 
 }
 
-QTEST_KDEMAIN(FilterActionPlaySoundTest, GUI)
+QTEST_MAIN(FilterActionPlaySoundTest)

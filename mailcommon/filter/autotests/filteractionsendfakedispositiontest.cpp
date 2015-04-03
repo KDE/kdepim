@@ -17,7 +17,7 @@
 
 #include "filteractionsendfakedispositiontest.h"
 #include "../filteractions/filteractionsendfakedisposition.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <widgets/minimumcombobox.h>
 
 FilterActionSendFakeDispositionTest::FilterActionSendFakeDispositionTest(QObject *parent)
@@ -49,4 +49,4 @@ void FilterActionSendFakeDispositionTest::shouldBeEmpty()
     QVERIFY(filter.isEmpty());
 }
 
-QTEST_KDEMAIN(FilterActionSendFakeDispositionTest, GUI)
+QTEST_MAIN(FilterActionSendFakeDispositionTest)
