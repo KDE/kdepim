@@ -35,6 +35,7 @@ public:
     void setInvalidFilters(const QVector<MailCommon::InvalidFilterInfo> &lst);
 Q_SIGNALS:
     void showDetails(const QString&);
+    void hideInformationWidget();
 private:
     InvalidFilterListView *mInvalidFilterListWidget;
 };
