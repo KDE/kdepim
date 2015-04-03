@@ -34,6 +34,7 @@ InvalidFilterWidget::InvalidFilterWidget(QWidget *parent)
 
     mInvalidFilterListWidget = new InvalidFilterListView(this);
     mInvalidFilterListWidget->setObjectName(QLatin1String("invalidfilterlist"));
+    connect(mInvalidFilterListWidget, SIGNAL(showDetails(QString)), this, SIGNAL(showDetails(QString)));
     vbox->addWidget(mInvalidFilterListWidget);
 }
 

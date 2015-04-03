@@ -17,7 +17,6 @@
 #include "invalidfilterlistitemdelegate.h"
 #include "invalidfilterlistmodel.h"
 
-#include <QWhatsThis>
 #include <KIcon>
 #include <QAbstractItemView>
 #include <QPainter>
@@ -97,7 +96,7 @@ void InvalidFilterListItemDelegate::slotShowDetails()
     const QAbstractItemModel* model = focusedIndex().model();
 
     const QString information = model->data(focusedIndex(), InvalidFilterListModel::InformationRole).toString();
-    QWhatsThis::showText( QCursor::pos(), information );
+    Q_EMIT showDetails(information);
 }
 
 

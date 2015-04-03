@@ -20,6 +20,7 @@
 #include "../filter/invalidfilters/invalidfilterdialog.h"
 #include <qtest_kde.h>
 #include "../filter/invalidfilters/invalidfilterwidget.h"
+#include "../filter/invalidfilters/invalidfilterinfowidget.h"
 
 InvalidFilterDialogTest::InvalidFilterDialogTest(QObject *parent)
     : QObject(parent)
@@ -37,6 +38,10 @@ void InvalidFilterDialogTest::shouldHaveDefaultValue()
     MailCommon::InvalidFilterDialog dlg;
     MailCommon::InvalidFilterWidget *widget = qFindChild<MailCommon::InvalidFilterWidget *>(&dlg, QLatin1String("invalid_filter_widget"));
     QVERIFY(widget);
+
+    MailCommon::InvalidFilterInfoWidget *infoWidget = qFindChild<MailCommon::InvalidFilterInfoWidget *>(&dlg, QLatin1String("invalid_filter_infowidget"));
+    QVERIFY(infoWidget);
+    QVERIFY(!infoWidget->isVisible());
 }
 
 QTEST_KDEMAIN(InvalidFilterDialogTest, GUI)

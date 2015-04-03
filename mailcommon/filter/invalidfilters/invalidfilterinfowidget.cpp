@@ -32,3 +32,9 @@ InvalidFilterInfoWidget::~InvalidFilterInfoWidget()
 
 }
 
+void InvalidFilterInfoWidget::slotShowDetails(const QString &details)
+{
+    setText(details);
+    animatedShow();
+}
+

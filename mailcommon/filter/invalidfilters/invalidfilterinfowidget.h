@@ -19,14 +19,16 @@
 #define INVALIDFILTERINFOWIDGET_H
 
 #include <KMessageWidget>
-
+#include "mailcommon_export.h"
 namespace MailCommon {
-class InvalidFilterInfoWidget : public KMessageWidget
+class MAILCOMMON_EXPORT InvalidFilterInfoWidget : public KMessageWidget
 {
     Q_OBJECT
 public:
     explicit InvalidFilterInfoWidget(QWidget *parent = 0);
     ~InvalidFilterInfoWidget();
+public Q_SLOTS:
+    void slotShowDetails(const QString &details);
 };
 }
 

@@ -24,7 +24,7 @@
 
 namespace MailCommon {
 class InvalidFilterWidget;
-
+class InvalidFilterInfoWidget;
 class MAILCOMMON_EXPORT InvalidFilterDialog : public KDialog
 {
     Q_OBJECT
@@ -37,6 +37,7 @@ private:
     void writeConfig();
     void readConfig();
     InvalidFilterWidget *mInvalidFilterWidget;
+    InvalidFilterInfoWidget *mInvalidFilterInfoWidget;
 };
 }
 #endif // INVALIDFILTERDIALOG_H

@@ -17,6 +17,7 @@
 
 #include "invalidfilterdialog.h"
 #include "invalidfilterwidget.h"
+#include "invalidfilterinfowidget.h"
 #include <KConfigGroup>
 #include <KSharedConfig>
 #include <QVBoxLayout>
@@ -40,6 +41,11 @@ InvalidFilterDialog::InvalidFilterDialog(QWidget *parent)
     mInvalidFilterWidget = new InvalidFilterWidget(this);
     mInvalidFilterWidget->setObjectName(QLatin1String("invalid_filter_widget"));
     vbox->addWidget(mInvalidFilterWidget);
+
+    mInvalidFilterInfoWidget= new InvalidFilterInfoWidget(this);
+    mInvalidFilterInfoWidget->setObjectName(QLatin1String("invalid_filter_infowidget"));
+    vbox->addWidget(mInvalidFilterInfoWidget);
+    connect(mInvalidFilterWidget, SIGNAL(showDetails(QString)), mInvalidFilterInfoWidget, SLOT(slotShowDetails(QString)));
     setMainWidget(w);
     readConfig();
 }
