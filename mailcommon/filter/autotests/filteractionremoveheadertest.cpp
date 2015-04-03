@@ -159,4 +159,10 @@ void FilterActionRemoveHeaderTest::shouldRemoveMultiHeader()
     QCOMPARE(msgPtr->encodedContent(), output);
 }
 
+void FilterActionRemoveHeaderTest::shouldHaveRequiredPart()
+{
+    MailCommon::FilterActionRemoveHeader filter;
+    QCOMPARE(filter.requiredPart(), MailCommon::SearchRule::CompleteMessage);
+}
+
 QTEST_KDEMAIN(FilterActionRemoveHeaderTest, GUI)

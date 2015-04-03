@@ -178,7 +178,13 @@ void FilterActionRewriteHeaderTest::shouldNotRewriteHeaderWhenRegexpNotFound()
     QCOMPARE(filter.process(context, false), MailCommon::FilterAction::GoOn);
     QCOMPARE(context.needsPayloadStore(), false);
     QCOMPARE(msgPtr->encodedContent(), data);
-
 }
+
+void FilterActionRewriteHeaderTest::shouldHaveRequiredPart()
+{
+    MailCommon::FilterActionRewriteHeader filter;
+    QCOMPARE(filter.requiredPart(), MailCommon::SearchRule::CompleteMessage);
+}
+
 
 QTEST_KDEMAIN(FilterActionRewriteHeaderTest, GUI)

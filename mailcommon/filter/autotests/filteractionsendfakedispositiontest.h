@@ -29,6 +29,7 @@ public:
 private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldBeEmpty();
+    void shouldHaveRequiredPart();
 };
 
 #endif // FILTERACTIONSENDFAKEDISPOSITIONTEST_H

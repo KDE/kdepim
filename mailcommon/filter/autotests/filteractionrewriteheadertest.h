@@ -34,6 +34,7 @@ private Q_SLOTS:
     void shouldRewriteHeader();
     void shouldNotRewriteHeaderWhenHeaderNotFound();
     void shouldNotRewriteHeaderWhenRegexpNotFound();
+    void shouldHaveRequiredPart();
 };
 
 #endif // FILTERACTIONREWRITEHEADERTEST_H
