@@ -82,9 +82,9 @@ public:
     virtual QString name() const = 0;
     virtual QString displayName() const = 0;
 
-    virtual bool checkForOpenPGP(QString *reason = 0) const = 0;
-    virtual bool checkForSMIME(QString *reason = 0) const = 0;
-    virtual bool checkForProtocol(const char *name,  QString *reason = 0) const = 0;
+    virtual bool checkForOpenPGP(QString *reason = Q_NULLPTR) const = 0;
+    virtual bool checkForSMIME(QString *reason = Q_NULLPTR) const = 0;
+    virtual bool checkForProtocol(const char *name,  QString *reason = Q_NULLPTR) const = 0;
 
     virtual bool supportsOpenPGP() const = 0;
     virtual bool supportsSMIME() const = 0;

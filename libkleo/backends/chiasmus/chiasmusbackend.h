@@ -70,10 +70,10 @@ public:
     }
     Kleo::CryptoBackend::Protocol *protocol(const char *name) const;
 
-    bool checkForOpenPGP(QString *reason = 0) const;
-    bool checkForSMIME(QString *reason = 0) const;
-    bool checkForChiasmus(QString *reason = 0) const;
-    bool checkForProtocol(const char *name, QString *reason = 0) const;
+    bool checkForOpenPGP(QString *reason = Q_NULLPTR) const;
+    bool checkForSMIME(QString *reason = Q_NULLPTR) const;
+    bool checkForChiasmus(QString *reason = Q_NULLPTR) const;
+    bool checkForProtocol(const char *name, QString *reason = Q_NULLPTR) const;
 
     bool supportsOpenPGP() const
     {

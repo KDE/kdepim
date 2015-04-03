@@ -56,7 +56,7 @@ public:
     int perform(const QVector<QByteArray> &args) const;
 private:
     typedef int (*main_func)(int, char **);
-    main_func chiasmus(QString *reason = 0) const;
+    main_func chiasmus(QString *reason = Q_NULLPTR) const;
 
 private:
     static ChiasmusLibrary *self;
