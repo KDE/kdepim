@@ -175,22 +175,24 @@ target_link_libraries( filteractionaddtoaddressbooktest
 )
 
 
-#set(mailcommon_filteractionplaysoundtest_SRCS filteractionplaysoundtest.cpp
-#                                           ../filteractions/filteractionplaysound.cpp
-#                                           ../filteractions/filteractionwithtest.cpp
-#                                           ../filteractions/filteractionplaysound.h
-#                                           ../soundtestwidget.cpp
-#                                           ../dialog/filteractionmissingargumentdialog.h)
-#kde4_add_unit_test( filteractionplaysoundtest ${mailcommon_filteractionplaysoundtest_SRCS} )
-#target_link_libraries( filteractionplaysoundtest
-#   kdepim
-#   pimcommon
-#   mailcommon
-#   ${QT_QTTEST_LIBRARY}
-#   ${QT_QTCORE_LIBRARY}
-#   ${KDEPIMLIBS_AKONADI_LIBS}
-#   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
-#)
+set(mailcommon_filteractionplaysoundtest_SRCS filteractionplaysoundtest.cpp
+                                           ../filteractions/filteractionplaysound.cpp
+                                           ../filteractions/filteractionwithtest.cpp
+                                           ../filteractions/filteractionplaysound.cpp
+                                           ../soundtestwidget.cpp
+                                           ../dialog/filteractionmissingargumentdialog.cpp
+                                           ../kmfilteraccountlist.cpp)
+kde4_add_unit_test( filteractionplaysoundtest ${mailcommon_filteractionplaysoundtest_SRCS} )
+target_link_libraries( filteractionplaysoundtest
+   kdepim
+   pimcommon
+   mailcommon
+   ${QT_QTTEST_LIBRARY}
+   ${QT_QTCORE_LIBRARY}
+   ${KDEPIMLIBS_AKONADI_LIBS}
+   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
+)
 
 set( mailcommon_invalidfilterdialog_source invalidfilterdialogtest.cpp  )
 kde4_add_unit_test( invalidfilterdialogtest ${mailcommon_invalidfilterdialog_source})
@@ -255,6 +257,27 @@ target_link_libraries( filteractionsendfakedispositiontest
    mailcommon
    messagecore
    messagecomposer
+   ${QT_QTTEST_LIBRARY}
+   ${QT_QTCORE_LIBRARY}
+   ${KDEPIMLIBS_AKONADI_LIBS}
+   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+)
+
+set(mailcommon_filteractionforwardtest_SRCS filteractionforwardtest.cpp
+                                           ../filteractions/filteractionforward.cpp
+                                           ../filteractions/filteractionwithaddress.cpp
+                                           ../filteractions/filteractionwithstring.cpp
+                                           ../dialog/filteractionmissingargumentdialog.cpp
+                                           ../kmfilteraccountlist.cpp)
+kde4_add_unit_test( filteractionforwardtest ${mailcommon_filteractionforwardtest_SRCS} )
+target_link_libraries( filteractionforwardtest
+   kdepim
+   pimcommon
+   mailcommon
+   messagecore
+   messagecomposer
+   templateparser
+   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
    ${QT_QTTEST_LIBRARY}
    ${QT_QTCORE_LIBRARY}
    ${KDEPIMLIBS_AKONADI_LIBS}
