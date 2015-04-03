@@ -38,7 +38,7 @@ void FilterActionRemoveHeaderTest::shouldHaveDefaultValue()
     PimCommon::MinimumComboBox *comboBox = dynamic_cast<PimCommon::MinimumComboBox *>(w);
     QVERIFY(comboBox);
     QVERIFY(comboBox->isEditable());
-    QVERIFY(comboBox->count()>0);
+    QVERIFY(comboBox->count() > 0);
 }
 
 void FilterActionRemoveHeaderTest::shouldHaveSieveRequires()

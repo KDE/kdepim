@@ -27,7 +27,7 @@
 
 using namespace MailCommon;
 
-InvalidFilterListItemDelegate::InvalidFilterListItemDelegate(QAbstractItemView* itemView, QObject* parent) :
+InvalidFilterListItemDelegate::InvalidFilterListItemDelegate(QAbstractItemView *itemView, QObject *parent) :
     KWidgetItemDelegate(itemView, parent)
 {
 }
@@ -37,7 +37,7 @@ InvalidFilterListItemDelegate::~InvalidFilterListItemDelegate()
 }
 
 QSize InvalidFilterListItemDelegate::sizeHint(const QStyleOptionViewItem &option,
-                                    const QModelIndex &index) const
+        const QModelIndex &index) const
 {
     Q_UNUSED(index);
 
@@ -48,8 +48,8 @@ QSize InvalidFilterListItemDelegate::sizeHint(const QStyleOptionViewItem &option
     return QSize(100, qMax(buttonHeight, fontHeight));
 }
 
-void InvalidFilterListItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option,
-                                  const QModelIndex& index) const
+void InvalidFilterListItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
+        const QModelIndex &index) const
 {
     Q_UNUSED(index);
     painter->save();
@@ -63,28 +63,28 @@ void InvalidFilterListItemDelegate::paint(QPainter* painter, const QStyleOptionV
     painter->restore();
 }
 
-QList<QWidget*> InvalidFilterListItemDelegate::createItemWidgets(const QModelIndex &) const
+QList<QWidget *> InvalidFilterListItemDelegate::createItemWidgets(const QModelIndex &) const
 {
     QLabel *label = new QLabel();
-    QToolButton* showInformationToolButton = new QToolButton();
+    QToolButton *showInformationToolButton = new QToolButton();
     connect(showInformationToolButton, SIGNAL(clicked()), this, SLOT(slotShowDetails()));
-    return QList<QWidget*>() << label << showInformationToolButton;
+    return QList<QWidget *>() << label << showInformationToolButton;
 }
 
-void InvalidFilterListItemDelegate::updateItemWidgets(const QList<QWidget*> widgets,
-                                              const QStyleOptionViewItem& option,
-                                              const QPersistentModelIndex& index) const
+void InvalidFilterListItemDelegate::updateItemWidgets(const QList<QWidget *> widgets,
+        const QStyleOptionViewItem &option,
+        const QPersistentModelIndex &index) const
 {
-    QLabel *label = static_cast<QLabel*>(widgets[0]);
-    const QAbstractItemModel* model = index.model();
+    QLabel *label = static_cast<QLabel *>(widgets[0]);
+    const QAbstractItemModel *model = index.model();
     label->setText(model->data(index).toString());
 
-    QToolButton *showInformationToolButton = static_cast<QToolButton*>(widgets[1]);
+    QToolButton *showInformationToolButton = static_cast<QToolButton *>(widgets[1]);
     const int itemHeight = sizeHint(option, index).height();
     showInformationToolButton->setIcon(KIcon(QLatin1String("help-hint")));
     showInformationToolButton->resize(showInformationToolButton->sizeHint());
     showInformationToolButton->move(option.rect.right() - showInformationToolButton->width(),
-                          (itemHeight - showInformationToolButton->height()) / 2);
+                                    (itemHeight - showInformationToolButton->height()) / 2);
 
     int labelWidth = option.rect.width();
     labelWidth -= showInformationToolButton->sizeHint().width();
@@ -94,10 +94,9 @@ void InvalidFilterListItemDelegate::updateItemWidgets(const QList<QWidget*> widg
 
 void InvalidFilterListItemDelegate::slotShowDetails()
 {
-    const QAbstractItemModel* model = focusedIndex().model();
+    const QAbstractItemModel *model = focusedIndex().model();
 
     const QString information = model->data(focusedIndex(), InvalidFilterListModel::InformationRole).toString();
-    QWhatsThis::showText( QCursor::pos(), information );
+    QWhatsThis::showText(QCursor::pos(), information);
 }
-
 

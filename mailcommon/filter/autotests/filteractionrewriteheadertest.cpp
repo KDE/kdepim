@@ -97,7 +97,6 @@ void FilterActionRewriteHeaderTest::shouldNotExecuteActionWhenValueIsEmpty()
     QCOMPARE(context.needsPayloadStore(), false);
 }
 
-
 void FilterActionRewriteHeaderTest::shouldRewriteHeader()
 {
     const QByteArray data = "From: foo@kde.org\n"

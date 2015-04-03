@@ -21,26 +21,26 @@
 #include <QAbstractListModel>
 #include <QList>
 #include "invalidfilterinfo.h"
-namespace MailCommon {
+namespace MailCommon
+{
 class InvalidFilterListModel : public QAbstractListModel
 {
     Q_OBJECT
 
 public:
-    enum Role
-    {
+    enum Role {
         InformationRole = Qt::UserRole + 1
     };
 
-    explicit InvalidFilterListModel(QObject* parent = 0);
+    explicit InvalidFilterListModel(QObject *parent = 0);
     virtual ~InvalidFilterListModel();
 
-    virtual bool insertRows(int row, int count, const QModelIndex & parent = QModelIndex());
-    virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
-    virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-    virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
+    virtual bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());
+    virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
- private:
+private:
     QList<MailCommon::InvalidFilterInfo> mInvalidFilterItems;
 };
 }

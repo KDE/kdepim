@@ -55,4 +55,3 @@ bool InvalidFilterInfo::operator ==(const InvalidFilterInfo &other) const
     return (mName == other.name()) && (mInformation == other.information());
 }
 
-

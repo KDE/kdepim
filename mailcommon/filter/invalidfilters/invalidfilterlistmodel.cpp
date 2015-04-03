@@ -19,7 +19,7 @@
 
 using namespace MailCommon;
 
-InvalidFilterListModel::InvalidFilterListModel(QObject* parent) :
+InvalidFilterListModel::InvalidFilterListModel(QObject *parent) :
     QAbstractListModel(parent),
     mInvalidFilterItems()
 {
@@ -29,7 +29,7 @@ InvalidFilterListModel::~InvalidFilterListModel()
 {
 }
 
-bool InvalidFilterListModel::insertRows(int row, int count, const QModelIndex& parent)
+bool InvalidFilterListModel::insertRows(int row, int count, const QModelIndex &parent)
 {
     if (row > rowCount()) {
         return false;
@@ -49,7 +49,7 @@ bool InvalidFilterListModel::insertRows(int row, int count, const QModelIndex& p
     return true;
 }
 
-bool InvalidFilterListModel::setData(const QModelIndex& index, const QVariant& value, int role)
+bool InvalidFilterListModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     const int row = index.row();
     if (row >= rowCount()) {
@@ -71,7 +71,7 @@ bool InvalidFilterListModel::setData(const QModelIndex& index, const QVariant& v
     return true;
 }
 
-QVariant InvalidFilterListModel::data(const QModelIndex& index, int role) const
+QVariant InvalidFilterListModel::data(const QModelIndex &index, int role) const
 {
     const int row = index.row();
     if (row < rowCount()) {
@@ -85,7 +85,7 @@ QVariant InvalidFilterListModel::data(const QModelIndex& index, int role) const
     return QVariant();
 }
 
-int InvalidFilterListModel::rowCount(const QModelIndex& parent) const
+int InvalidFilterListModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return mInvalidFilterItems.count();

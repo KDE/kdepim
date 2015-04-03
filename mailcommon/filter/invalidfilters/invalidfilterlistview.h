@@ -22,13 +22,14 @@
 #include "invalidfilterinfo.h"
 #include "mailcommon_export.h"
 
-namespace MailCommon {
+namespace MailCommon
+{
 
 class MAILCOMMON_EXPORT InvalidFilterListView : public QListView
 {
     Q_OBJECT
 public:
-    explicit InvalidFilterListView(QWidget *parent=Q_NULLPTR);
+    explicit InvalidFilterListView(QWidget *parent = Q_NULLPTR);
     ~InvalidFilterListView();
     void setInvalidFilters(const QVector<MailCommon::InvalidFilterInfo> &lst);
 };

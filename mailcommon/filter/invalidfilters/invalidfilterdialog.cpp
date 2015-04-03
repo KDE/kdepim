@@ -64,6 +64,3 @@ void InvalidFilterDialog::readConfig()
     }
 }
 
-
-
-
