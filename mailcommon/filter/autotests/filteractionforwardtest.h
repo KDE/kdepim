@@ -26,6 +26,8 @@ class FilterActionForwardTest : public QObject
 public:
     explicit FilterActionForwardTest(QObject *parent = 0);
     ~FilterActionForwardTest();
+private Q_SLOTS:
+    void shouldBeEmpty();
 };
 
 #endif // FILTERACTIONFORWARDTEST_H

@@ -16,6 +16,7 @@
 */
 
 #include "filteractionforwardtest.h"
+#include "../filteractions/filteractionforward.h"
 #include <qtest_kde.h>
 
 FilterActionForwardTest::FilterActionForwardTest(QObject *parent)
@@ -27,6 +28,14 @@ FilterActionForwardTest::FilterActionForwardTest(QObject *parent)
 FilterActionForwardTest::~FilterActionForwardTest()
 {
 
+}
+
+void FilterActionForwardTest::shouldBeEmpty()
+{
+    MailCommon::FilterActionForward filter;
+    QVERIFY(filter.isEmpty());
+    filter.argsFromString(QLatin1String("foo"));
+    QVERIFY(!filter.isEmpty());
 }
 
 QTEST_KDEMAIN(FilterActionForwardTest, GUI)
