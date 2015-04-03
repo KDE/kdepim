@@ -25,6 +25,9 @@ class FilterActionPlaySoundTest : public QObject
 public:
     explicit FilterActionPlaySoundTest(QObject *parent = 0);
     ~FilterActionPlaySoundTest();
+private Q_SLOTS:
+    void shouldBeValid();
+    void shouldHaveDefaultValue();
 };
 
 #endif // FILTERACTIONPLAYSOUNDTEST_H
