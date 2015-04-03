@@ -66,12 +66,16 @@ FilterAction::ReturnCode FilterActionRemoveHeader::process(ItemContext &context 
 
     KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
     const QByteArray param(mParameter.toLatin1());
-    while ( msg->headerByType( param ) )
+    bool headerRemove = false;
+    while ( msg->headerByType( param ) ) {
+        headerRemove = true;
         msg->removeHeader( param );
+    }
+    if (headerRemove) {
+        msg->assemble();
 
-    msg->assemble();
-
-    context.setNeedsPayloadStore();
+        context.setNeedsPayloadStore();
+    }
 
     return GoOn;
 }

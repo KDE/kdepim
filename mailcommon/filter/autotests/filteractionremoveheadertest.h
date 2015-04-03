@@ -30,6 +30,10 @@ private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldHaveSieveRequires();
     void shouldBeEmpty();
+    void shouldNotExecuteActionWhenParameterIsEmpty();
+    void shouldRemoveHeader();
+    void shouldNotTryToRemoveHeaderWhenItDoesntExist();
+    void shouldRemoveMultiHeader();
 };
 
 #endif // FILTERACTIONREMOVEHEADERTEST_H
