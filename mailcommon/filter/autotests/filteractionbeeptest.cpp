@@ -49,4 +49,10 @@ void FilterActionBeepTest::shouldBeNotEmptyByDefault()
     QVERIFY(!w.isEmpty());
 }
 
+void FilterActionBeepTest::shouldHaveRequiresPart()
+{
+    MailCommon::FilterActionBeep w;
+    QCOMPARE(w.requiredPart(), MailCommon::SearchRule::Envelope);
+}
+
 QTEST_KDEMAIN(FilterActionBeepTest, GUI)
