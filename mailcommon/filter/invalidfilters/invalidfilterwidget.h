@@ -33,6 +33,8 @@ public:
     ~InvalidFilterWidget();
 
     void setInvalidFilters(const QVector<MailCommon::InvalidFilterInfo> &lst);
+Q_SIGNALS:
+    void showDetails(const QString&);
 private:
     InvalidFilterListView *mInvalidFilterListWidget;
 };

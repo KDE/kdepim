@@ -29,6 +29,7 @@ private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldSieveCode();
     void shouldBeNotEmptyByDefault();
+    void shouldHaveRequiresPart();
 };
 
 #endif // FILTERACTIONBEEPTEST_H

@@ -321,3 +321,8 @@ target_link_libraries( filteractionforwardtest
    KF5::AkonadiCore
    KF5::AkonadiMime
 )
+
+
+set( mailcommon_invalidfilterinfowidgettest_source invalidfilterinfowidgettest.cpp ../invalidfilters/invalidfilterinfowidget.cpp )
+kde4_add_unit_test( invalidfilterinfowidgettest ${mailcommon_invalidfilterinfowidgettest_source})
+target_link_libraries( invalidfilterinfowidgettest ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY})

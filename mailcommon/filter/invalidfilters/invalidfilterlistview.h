@@ -32,6 +32,8 @@ public:
     explicit InvalidFilterListView(QWidget *parent = Q_NULLPTR);
     ~InvalidFilterListView();
     void setInvalidFilters(const QVector<MailCommon::InvalidFilterInfo> &lst);
+Q_SIGNALS:
+    void showDetails(const QString &);
 };
 }
 #endif // INVALIDFILTERLISTVIEW_H

@@ -15,24 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FILTERACTIONWITHURLTEST_H
-#define FILTERACTIONWITHURLTEST_H
+#ifndef INVALIDFILTERINFOWIDGETTEST_H
+#define INVALIDFILTERINFOWIDGETTEST_H
 
 #include <QObject>
 
-class FilterActionWithUrlTest : public QObject
+class InvalidFilterInfoWidgetTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FilterActionWithUrlTest(QObject *parent = Q_NULLPTR);
-    ~FilterActionWithUrlTest();
+    explicit InvalidFilterInfoWidgetTest(QObject *parent = 0);
+    ~InvalidFilterInfoWidgetTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
-    void shouldClearWidget();
-    void shouldAddValue();
-    void shouldApplyValue();
-    void shouldTestUrl_data();
-    void shouldTestUrl();
 };
 
-#endif // FILTERACTIONWITHURLTEST_H
+#endif // INVALIDFILTERINFOWIDGETTEST_H

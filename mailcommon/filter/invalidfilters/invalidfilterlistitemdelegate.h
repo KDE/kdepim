@@ -42,6 +42,8 @@ public:
                            const QPersistentModelIndex &index) const Q_DECL_OVERRIDE;
 private Q_SLOTS:
     void slotShowDetails();
+Q_SIGNALS:
+    void showDetails(const QString &details);
 };
 }
 #endif // INVALIDFILTERLISTITEMDELEGATE_H

@@ -14,25 +14,27 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
+#include "invalidfilterinfowidget.h"
 
-#ifndef FILTERACTIONWITHURLTEST_H
-#define FILTERACTIONWITHURLTEST_H
+using namespace MailCommon;
 
-#include <QObject>
-
-class FilterActionWithUrlTest : public QObject
+InvalidFilterInfoWidget::InvalidFilterInfoWidget(QWidget *parent)
+    : KMessageWidget(parent)
 {
-    Q_OBJECT
-public:
-    explicit FilterActionWithUrlTest(QObject *parent = Q_NULLPTR);
-    ~FilterActionWithUrlTest();
-private Q_SLOTS:
-    void shouldHaveDefaultValue();
-    void shouldClearWidget();
-    void shouldAddValue();
-    void shouldApplyValue();
-    void shouldTestUrl_data();
-    void shouldTestUrl();
-};
+    setVisible(false);
+    setCloseButtonVisible(false);
+    setMessageType(Information);
+    setWordWrap(true);
+}
 
-#endif // FILTERACTIONWITHURLTEST_H
+InvalidFilterInfoWidget::~InvalidFilterInfoWidget()
+{
+
+}
+
+void InvalidFilterInfoWidget::slotShowDetails(const QString &details)
+{
+    setText(details);
+    animatedShow();
+}
+

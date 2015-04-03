@@ -87,9 +87,12 @@ void FilterActionWithUrl::applyParamWidgetValue(QWidget *paramWidget)
     KUrlRequester *requester = paramWidget->findChild<KUrlRequester *>(QLatin1String("requester"));
     Q_ASSERT(requester);
 
-    const QUrl url = requester->url();
-
-    mParameter = (url.isLocalFile() ? url.toLocalFile() : url.path());
+    if (QUrl(requester->text()).isRelative()) {
+        mParameter = requester->text();
+    } else {
+        const QUrl url = requester->url();
+        mParameter = (url.isLocalFile() ? url.toLocalFile() : url.path());
+    }
 }
 
 void FilterActionWithUrl::setParamWidgetValue(QWidget *paramWidget) const

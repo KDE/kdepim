@@ -15,24 +15,26 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FILTERACTIONWITHURLTEST_H
-#define FILTERACTIONWITHURLTEST_H
+#include "invalidfilterinfowidgettest.h"
+#include "../invalidfilters/invalidfilterinfowidget.h"
+#include <qtest_kde.h>
 
-#include <QObject>
-
-class FilterActionWithUrlTest : public QObject
+InvalidFilterInfoWidgetTest::InvalidFilterInfoWidgetTest(QObject *parent)
+    : QObject(parent)
 {
-    Q_OBJECT
-public:
-    explicit FilterActionWithUrlTest(QObject *parent = Q_NULLPTR);
-    ~FilterActionWithUrlTest();
-private Q_SLOTS:
-    void shouldHaveDefaultValue();
-    void shouldClearWidget();
-    void shouldAddValue();
-    void shouldApplyValue();
-    void shouldTestUrl_data();
-    void shouldTestUrl();
-};
 
-#endif // FILTERACTIONWITHURLTEST_H
+}
+
+InvalidFilterInfoWidgetTest::~InvalidFilterInfoWidgetTest()
+{
+
+}
+
+void InvalidFilterInfoWidgetTest::shouldHaveDefaultValue()
+{
+    MailCommon::InvalidFilterInfoWidget w;
+    QVERIFY(!w.isVisible());
+    QVERIFY(!w.isCloseButtonVisible());
+}
+
+QTEST_KDEMAIN(InvalidFilterInfoWidgetTest, GUI)

@@ -17,8 +17,7 @@
 #include "invalidfilterlistitemdelegate.h"
 #include "invalidfilterlistmodel.h"
 
-#include <QWhatsThis>
-#include <KIcon>
+#include <QIcon>
 #include <QAbstractItemView>
 #include <QPainter>
 #include <QPushButton>
@@ -81,7 +80,7 @@ void InvalidFilterListItemDelegate::updateItemWidgets(const QList<QWidget *> wid
 
     QToolButton *showInformationToolButton = static_cast<QToolButton *>(widgets[1]);
     const int itemHeight = sizeHint(option, index).height();
-    showInformationToolButton->setIcon(KIcon(QLatin1String("help-hint")));
+    showInformationToolButton->setIcon(QIcon::fromTheme(QLatin1String("help-hint")));
     showInformationToolButton->resize(showInformationToolButton->sizeHint());
     showInformationToolButton->move(option.rect.right() - showInformationToolButton->width(),
                                     (itemHeight - showInformationToolButton->height()) / 2);
@@ -97,6 +96,6 @@ void InvalidFilterListItemDelegate::slotShowDetails()
     const QAbstractItemModel *model = focusedIndex().model();
 
     const QString information = model->data(focusedIndex(), InvalidFilterListModel::InformationRole).toString();
-    QWhatsThis::showText(QCursor::pos(), information);
+    Q_EMIT showDetails(information);
 }
 

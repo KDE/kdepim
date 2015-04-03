@@ -15,24 +15,21 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FILTERACTIONWITHURLTEST_H
-#define FILTERACTIONWITHURLTEST_H
+#ifndef INVALIDFILTERINFOWIDGET_H
+#define INVALIDFILTERINFOWIDGET_H
 
-#include <QObject>
-
-class FilterActionWithUrlTest : public QObject
+#include <KMessageWidget>
+#include "mailcommon_export.h"
+namespace MailCommon {
+class MAILCOMMON_EXPORT InvalidFilterInfoWidget : public KMessageWidget
 {
     Q_OBJECT
 public:
-    explicit FilterActionWithUrlTest(QObject *parent = Q_NULLPTR);
-    ~FilterActionWithUrlTest();
-private Q_SLOTS:
-    void shouldHaveDefaultValue();
-    void shouldClearWidget();
-    void shouldAddValue();
-    void shouldApplyValue();
-    void shouldTestUrl_data();
-    void shouldTestUrl();
+    explicit InvalidFilterInfoWidget(QWidget *parent = 0);
+    ~InvalidFilterInfoWidget();
+public Q_SLOTS:
+    void slotShowDetails(const QString &details);
 };
+}
 
-#endif // FILTERACTIONWITHURLTEST_H
+#endif // INVALIDFILTERINFOWIDGET_H

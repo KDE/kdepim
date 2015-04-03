@@ -34,6 +34,7 @@ public:
     FilterActionPipeThroughTest();
 private Q_SLOTS:
     void testWithNoCommand();
+    void testWithInvalidCommandPath();
     void testCommandWithoutOutput();
     void testWithMailOutput();
     void testCopyMail();
