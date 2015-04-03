@@ -32,7 +32,7 @@ public:
         InformationRole = Qt::UserRole + 1
     };
 
-    explicit InvalidFilterListModel(QObject *parent = 0);
+    explicit InvalidFilterListModel(QObject *parent = Q_NULLPTR);
     virtual ~InvalidFilterListModel();
 
     virtual bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());

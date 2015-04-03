@@ -23,7 +23,7 @@ class FilterActionPlaySoundTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FilterActionPlaySoundTest(QObject *parent = 0);
+    explicit FilterActionPlaySoundTest(QObject *parent = Q_NULLPTR);
     ~FilterActionPlaySoundTest();
 private Q_SLOTS:
     void shouldBeValid();
