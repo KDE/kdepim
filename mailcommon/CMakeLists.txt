@@ -93,6 +93,7 @@ set(libmailcommon_invalidfilters
   filter/invalidfilters/invalidfilterinfo.cpp
   filter/invalidfilters/invalidfilterlistitemdelegate.cpp
   filter/invalidfilters/invalidfilterlistmodel.cpp
+  filter/invalidfilters/invalidfilterinfowidget.cpp
 )
 
 set(libmailcommon_collection_SRCS

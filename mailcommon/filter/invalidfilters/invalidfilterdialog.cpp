@@ -34,9 +34,13 @@ InvalidFilterDialog::InvalidFilterDialog(QWidget *parent)
     setDefaultButton( Ok );
     setModal( true );
 
+    QWidget *w = new QWidget(this);
+    QVBoxLayout *vbox = new QVBoxLayout;
+    w->setLayout(vbox);
     mInvalidFilterWidget = new InvalidFilterWidget(this);
     mInvalidFilterWidget->setObjectName(QLatin1String("invalid_filter_widget"));
-    setMainWidget(mInvalidFilterWidget);
+    vbox->addWidget(mInvalidFilterWidget);
+    setMainWidget(w);
     readConfig();
 }
 
