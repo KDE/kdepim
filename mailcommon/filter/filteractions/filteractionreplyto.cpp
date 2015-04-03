@@ -35,6 +35,9 @@ FilterActionReplyTo::FilterActionReplyTo( QObject *parent )
 
 FilterAction::ReturnCode FilterActionReplyTo::process(ItemContext &context , bool) const
 {
+    if (mParameter.isEmpty()) {
+        return ErrorButGoOn;
+    }
     const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
     const QByteArray replyTo("Reply-To");
     KMime::Headers::Base *header = KMime::Headers::createHeader( replyTo );
