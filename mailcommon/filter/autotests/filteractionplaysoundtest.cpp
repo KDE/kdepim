@@ -18,6 +18,7 @@
 #include "filteractionplaysoundtest.h"
 #include "../filteractions/filteractionplaysound.h"
 #include <qtest_kde.h>
+#include <soundtestwidget.h>
 
 FilterActionPlaySoundTest::FilterActionPlaySoundTest(QObject *parent)
     : QObject(parent)
@@ -28,6 +29,25 @@ FilterActionPlaySoundTest::FilterActionPlaySoundTest(QObject *parent)
 FilterActionPlaySoundTest::~FilterActionPlaySoundTest()
 {
 
+}
+
+void FilterActionPlaySoundTest::shouldBeValid()
+{
+    MailCommon::FilterActionPlaySound filter;
+    QVERIFY(filter.isEmpty());
+    filter.argsFromString(QLatin1String("foo"));
+    QVERIFY(!filter.isEmpty());
+}
+
+void FilterActionPlaySoundTest::shouldHaveDefaultValue()
+{
+    MailCommon::FilterActionPlaySound filter;
+    QWidget *w = filter.createParamWidget(0);
+    QVERIFY(w);
+    QCOMPARE(w->objectName(), QLatin1String("soundwidget"));
+    MailCommon::SoundTestWidget *soundTest = dynamic_cast<MailCommon::SoundTestWidget *>(w);
+    QVERIFY(soundTest);
+    QVERIFY(soundTest->url().isEmpty());
 }
 
 QTEST_KDEMAIN(FilterActionPlaySoundTest, GUI)
