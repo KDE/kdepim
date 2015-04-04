@@ -41,7 +41,7 @@ InvalidFilterDialog::InvalidFilterDialog(QWidget *parent)
     mInvalidFilterWidget->setObjectName(QLatin1String("invalid_filter_widget"));
     vbox->addWidget(mInvalidFilterWidget);
 
-    mInvalidFilterInfoWidget= new InvalidFilterInfoWidget(this);
+    mInvalidFilterInfoWidget = new InvalidFilterInfoWidget(this);
     mInvalidFilterInfoWidget->setObjectName(QLatin1String("invalid_filter_infowidget"));
     vbox->addWidget(mInvalidFilterInfoWidget);
     connect(mInvalidFilterWidget, SIGNAL(showDetails(QString)), mInvalidFilterInfoWidget, SLOT(slotShowDetails(QString)));

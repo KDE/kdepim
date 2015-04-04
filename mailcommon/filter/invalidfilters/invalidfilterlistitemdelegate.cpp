@@ -77,8 +77,7 @@ void InvalidFilterListItemDelegate::updateItemWidgets(const QList<QWidget *> wid
     QLabel *label = static_cast<QLabel *>(widgets[0]);
     const QAbstractItemModel *model = index.model();
     label->setText(model->data(index).toString());
-    const QString details = model->data(index,InvalidFilterListModel::InformationRole).toString();
-
+    const QString details = model->data(index, InvalidFilterListModel::InformationRole).toString();
 
     QToolButton *showInformationToolButton = static_cast<QToolButton *>(widgets[1]);
     showInformationToolButton->setEnabled(!details.isEmpty());
