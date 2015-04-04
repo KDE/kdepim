@@ -28,6 +28,7 @@ public:
     ~FilterActionRedirectTest();
 private Q_SLOTS:
     void shouldBeEmpty();
+    void shouldHaveRequiredPart();
 };
 
 #endif // FILTERACTIONREDIRECTTEST_H

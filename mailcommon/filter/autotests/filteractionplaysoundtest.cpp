@@ -50,4 +50,10 @@ void FilterActionPlaySoundTest::shouldHaveDefaultValue()
     QVERIFY(soundTest->url().isEmpty());
 }
 
+void FilterActionPlaySoundTest::shouldHaveRequiredPart()
+{
+    MailCommon::FilterActionPlaySound filter;
+    QCOMPARE(filter.requiredPart(), MailCommon::SearchRule::Envelope);
+}
+
 QTEST_MAIN(FilterActionPlaySoundTest)

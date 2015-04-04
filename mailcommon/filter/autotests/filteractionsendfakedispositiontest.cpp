@@ -49,4 +49,10 @@ void FilterActionSendFakeDispositionTest::shouldBeEmpty()
     QVERIFY(filter.isEmpty());
 }
 
+void FilterActionSendFakeDispositionTest::shouldHaveRequiredPart()
+{
+    MailCommon::FilterActionSendFakeDisposition filter;
+    QCOMPARE(filter.requiredPart(), MailCommon::SearchRule::CompleteMessage);
+}
+
 QTEST_MAIN(FilterActionSendFakeDispositionTest)

@@ -8,6 +8,7 @@ set(mailreader_SRCS
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/libkdepim
+  ${CMAKE_SOURCE_DIR}/messagelist
   ${CMAKE_SOURCE_DIR}/messageviewer
   ${Boost_INCLUDE_DIRS}
 )

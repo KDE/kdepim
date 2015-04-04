@@ -34,6 +34,7 @@ private Q_SLOTS:
     void shouldRemoveHeader();
     void shouldNotTryToRemoveHeaderWhenItDoesntExist();
     void shouldRemoveMultiHeader();
+    void shouldHaveRequiredPart();
 };
 
 #endif // FILTERACTIONREMOVEHEADERTEST_H

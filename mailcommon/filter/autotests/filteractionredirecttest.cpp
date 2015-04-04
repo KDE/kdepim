@@ -36,4 +36,10 @@ void FilterActionRedirectTest::shouldBeEmpty()
     QVERIFY(filter.isEmpty());
 }
 
+void FilterActionRedirectTest::shouldHaveRequiredPart()
+{
+    MailCommon::FilterActionRedirect filter;
+    QCOMPARE(filter.requiredPart(), MailCommon::SearchRule::CompleteMessage);
+}
+
 QTEST_MAIN(FilterActionRedirectTest)

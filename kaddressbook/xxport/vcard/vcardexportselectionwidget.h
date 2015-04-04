@@ -41,6 +41,8 @@ public:
 
     ExportFields exportType() const;
 private:
+    void readSettings();
+    void writeSettings();
     QCheckBox *mPrivateBox;
     QCheckBox *mBusinessBox;
     QCheckBox *mOtherBox;

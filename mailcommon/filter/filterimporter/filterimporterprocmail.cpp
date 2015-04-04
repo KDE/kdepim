@@ -51,7 +51,7 @@ QString FilterImporterProcmail::defaultFiltersSettingsPath()
 
 QString FilterImporterProcmail::createUniqFilterName()
 {
-    return i18n("Procmail filter %1", mFilterCount++);
+    return i18n("Procmail filter %1", ++mFilterCount);
 }
 
 MailCommon::MailFilter *FilterImporterProcmail::parseLine(QTextStream &stream,

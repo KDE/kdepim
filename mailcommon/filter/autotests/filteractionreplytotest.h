@@ -31,6 +31,8 @@ private Q_SLOTS:
     void shouldBeEmpty();
     void shouldHadReplyToHeader();
     void shouldReplaceReplyToHeader();
+    void shouldHaveRequiredPart();
+    void shouldNotCreateReplyToWhenAddressIsEmpty();
 };
 
 #endif // FILTERACTIONREPLYTOTEST_H
