@@ -15,18 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "filteractionexectest.h"
-#include <qtest.h>
+#ifndef TAGSELECTDIALOGTEST_H
+#define TAGSELECTDIALOGTEST_H
 
-FilterActionExecTest::FilterActionExecTest(QObject *parent)
-    : QObject(parent)
+#include <QObject>
+
+class TagSelectDialogTest : public QObject
 {
+    Q_OBJECT
+public:
+    explicit TagSelectDialogTest(QObject *parent = 0);
+    ~TagSelectDialogTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
+};
 
-}
-
-FilterActionExecTest::~FilterActionExecTest()
-{
-
-}
-
-QTEST_MAIN(FilterActionExecTest)
+#endif // TAGSELECTDIALOGTEST_H

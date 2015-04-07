@@ -75,3 +75,8 @@ QStringList FilterActionCopy::sieveRequires() const
     return QStringList() << QStringLiteral("fileinto") << QStringLiteral("copy");
 }
 
+QString FilterActionCopy::informationAboutNotValidAction() const
+{
+    return i18n("Folder destination was not defined.");
+}
+

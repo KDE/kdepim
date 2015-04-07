@@ -36,4 +36,17 @@ void FilterActionCopyTest::shouldBeEmpty()
     QVERIFY(filter.isEmpty());
 }
 
+void FilterActionCopyTest::shouldHaveSieveRequires()
+{
+    MailCommon::FilterActionCopy filter;
+    QCOMPARE(filter.sieveRequires(), QStringList() << QLatin1String("fileinto") << QLatin1String("copy"));
+}
+
+void FilterActionCopyTest::shouldHaveRequiresPart()
+{
+    MailCommon::FilterActionCopy filter;
+    QCOMPARE(filter.requiredPart(), MailCommon::SearchRule::Envelope);
+}
+
+
 QTEST_MAIN(FilterActionCopyTest)
