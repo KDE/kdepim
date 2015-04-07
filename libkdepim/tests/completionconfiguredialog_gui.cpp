@@ -19,19 +19,24 @@
 */
 
 #include <kaboutdata.h>
-#include <kapplication.h>
-#include <kdebug.h>
-#include <kcmdlineargs.h>
+#include <QApplication>
+#include <QCommandLineParser>
 #include <KLocalizedString>
 
 #include <addressline/completionconfiguredialog/completionconfiguredialog.h>
 
 int main(int argc, char *argv[])
 {
-    KAboutData aboutData("testcompletionconfiguredialog", 0, ki18n("Test CompletionConfigureDialog"), "0.1");
-    KCmdLineArgs::init(argc, argv, &aboutData);
+    KAboutData aboutData(QStringLiteral("testcompletionconfiguredialog"), i18n("Test CompletionConfigureDialog"), QStringLiteral("0.1"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-    KApplication app;
     KPIM::CompletionConfigureDialog dlg;
     dlg.show();
 
