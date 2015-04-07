@@ -76,4 +76,10 @@ QStringList FilterActionCopy::sieveRequires() const
     return QStringList() << QLatin1String("fileinto") << QLatin1String("copy");
 }
 
+QString FilterActionCopy::informationAboutNotValidAction() const
+{
+    //KF5 add i18n
+    return QString::fromLatin1("Folder destination was not defined.");
+}
+
 

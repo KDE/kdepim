@@ -28,6 +28,8 @@ public:
     ~FilterActionCopyTest();
 private Q_SLOTS:
     void shouldBeEmpty();
+    void shouldHaveSieveRequires();
+    void shouldHaveRequiresPart();
 };
 
 #endif // FILTERACTIONCOPYTEST_H

@@ -40,6 +40,7 @@ public:
     static FilterAction* newAction();
     QString sieveCode() const;
     QStringList sieveRequires() const;
+    QString informationAboutNotValidAction() const;
 
 protected Q_SLOTS:
     void jobFinished(KJob* job);

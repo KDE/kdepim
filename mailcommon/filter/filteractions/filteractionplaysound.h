@@ -44,6 +44,7 @@ public:
     bool argsFromStringInteractive( const QString &argsStr, const QString &filterName );
 
     bool isEmpty() const;
+    QString informationAboutNotValidAction() const;
 private:
     mutable Phonon::MediaObject* mPlayer;
 };
