@@ -34,6 +34,7 @@ private Q_SLOTS:
     void shouldEmitGoToLineSignalWhenSpinboxHasFocusAndWePressEnter();
     void shouldHasFocusEachTimeThatItShown();
     void shouldSetFocusWhenWeRecallGotToLine();
+    void shouldChangeMaximumValue();
 };
 
 #endif // TEXTGOTOLINEWIDGETTEST_H

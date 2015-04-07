@@ -33,6 +33,7 @@ public:
 
     void goToLine();
 
+    void setMaximumLineCount(int max);
 Q_SIGNALS:
     void goToLine(int);
 

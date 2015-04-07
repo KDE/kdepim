@@ -69,6 +69,11 @@ TextGoToLineWidget::~TextGoToLineWidget()
 
 }
 
+void TextGoToLineWidget::setMaximumLineCount(int max)
+{
+    mSpinbox->setMaximum(max);
+}
+
 void TextGoToLineWidget::goToLine()
 {
     show();
