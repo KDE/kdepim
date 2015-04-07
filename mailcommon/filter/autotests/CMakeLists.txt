@@ -339,9 +339,26 @@ target_link_libraries( filteractioncopytest
    kdepim
    pimcommon
    mailcommon
-   messagecore
-   messagecomposer
-   KF5::MailTransport
+   Qt5::Test
+   Qt5::Core
+   KF5::AkonadiCore
+   KF5::AkonadiMime
+   Qt5::Test
+   Qt5::Core
+   KF5::AkonadiCore
+   KF5::AkonadiMime
+)
+
+set(mailcommon_filteractionmovetest_SRCS filteractionmovetest.cpp
+                                           ../filteractions/filteractionmove.cpp
+                                           ../filteractions/filteractionwithfolder.cpp)
+add_executable( filteractionmovetest ${mailcommon_filteractionmovetest_SRCS} )
+add_test(filteractionmovetest filteractionmovetest)
+ecm_mark_as_test(filteractionmovetest)
+target_link_libraries( filteractionmovetest
+   kdepim
+   pimcommon
+   mailcommon
    Qt5::Test
    Qt5::Core
    KF5::AkonadiCore
