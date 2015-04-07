@@ -17,7 +17,7 @@
 
 #include "filteractioncopytest.h"
 #include "../filteractions/filteractioncopy.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 FilterActionCopyTest::FilterActionCopyTest(QObject *parent)
     : QObject(parent)
@@ -36,4 +36,4 @@ void FilterActionCopyTest::shouldBeEmpty()
     QVERIFY(filter.isEmpty());
 }
 
-QTEST_KDEMAIN(FilterActionCopyTest, GUI)
+QTEST_MAIN(FilterActionCopyTest)
