@@ -99,7 +99,9 @@ void InvalidFilterListItemDelegate::slotShowDetails()
     const QAbstractItemModel* model = focusedIndex().model();
 
     const QString information = model->data(focusedIndex(), InvalidFilterListModel::InformationRole).toString();
-    Q_EMIT showDetails(information);
+    if (!information.isEmpty()) {
+        Q_EMIT showDetails(information);
+    }
 }
 
 
