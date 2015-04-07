@@ -211,7 +211,11 @@ QStringList FilterActionAddHeader::sieveRequires() const
 
 QString FilterActionAddHeader::sieveCode() const
 {
-    return QString::fromLatin1("addheader \"%1\" \"%2\";").arg(mParameter).arg(mValue);
+    if (isEmpty()) {
+        return QLatin1String("# invalid filter. Need to fix it by hand");
+    } else {
+        return QString::fromLatin1("addheader \"%1\" \"%2\";").arg(mParameter).arg(mValue);
+    }
 }
 
 
