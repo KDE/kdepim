@@ -76,4 +76,10 @@ QString FilterActionRedirect::sieveCode() const
     return result;
 }
 
+QString FilterActionRedirect::informationAboutNotValidAction() const
+{
+    //KF5 add i18n
+    return QLatin1String("Email address was missing.");
+}
+
 

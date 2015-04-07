@@ -36,6 +36,7 @@ public:
     ReturnCode process( ItemContext &context, bool applyOnOutbound ) const;
     SearchRule::RequiredPart requiredPart() const;
     static FilterAction* newAction();
+    QString informationAboutNotValidAction() const;
 };
 
 }

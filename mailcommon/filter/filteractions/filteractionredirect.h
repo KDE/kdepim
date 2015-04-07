@@ -37,6 +37,7 @@ public:
     SearchRule::RequiredPart requiredPart() const;
     static FilterAction* newAction();
     QString sieveCode() const;
+    QString informationAboutNotValidAction() const;
 };
 
 }

@@ -60,3 +60,8 @@ SearchRule::RequiredPart FilterActionReplyTo::requiredPart() const
 }
 
 
+QString FilterActionReplyTo::informationAboutNotValidAction() const
+{
+    //KF5 add i18n
+    return QString::fromLatin1("Email address was not defined.");
+}

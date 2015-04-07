@@ -52,6 +52,7 @@ public:
     QString sieveCode() const;
 
     bool isEmpty() const;
+    QString informationAboutNotValidAction() const;
 private:
     QString mValue;
 };
