@@ -286,7 +286,7 @@ public:
    * @return true if a change in some action occurred,
    * false if no action was affected.
    */
-    bool folderRemoved( const Akonadi::Collection& aFolder, const Akonadi::Collection& aNewFolder );
+    void folderRemoved( const Akonadi::Collection& aFolder, const Akonadi::Collection& aNewFolder );
 
     /** Returns the filter in a human-readable form. useful for
       debugging but not much else. Don't use, as it may well go away
