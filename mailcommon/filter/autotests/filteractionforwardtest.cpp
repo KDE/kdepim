@@ -44,5 +44,4 @@ void FilterActionForwardTest::shouldRequiresPart()
     QCOMPARE(filter.requiredPart(), MailCommon::SearchRule::CompleteMessage);
 }
 
-
 QTEST_MAIN(FilterActionForwardTest)

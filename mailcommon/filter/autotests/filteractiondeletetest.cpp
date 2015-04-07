@@ -59,5 +59,4 @@ void FilterActionDeleteTest::shouldRequiresPart()
     QCOMPARE(filter.requiredPart(), MailCommon::SearchRule::Envelope);
 }
 
-
 QTEST_MAIN(FilterActionDeleteTest)

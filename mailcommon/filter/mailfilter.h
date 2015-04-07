@@ -281,13 +281,13 @@ public:
     QString icon() const;
 
     /**
-   * Called from the filter manager when a folder is moved.
-   * Tests if the folder aFolder is used in any action. Changes it
-   * to aNewFolder folder in this case.
-   * @return true if a change in some action occurred,
-   * false if no action was affected.
-   */
-    void folderRemoved( const Akonadi::Collection& aFolder, const Akonadi::Collection& aNewFolder );
+    * Called from the filter manager when a folder is moved.
+    * Tests if the folder aFolder is used in any action. Changes it
+    * to aNewFolder folder in this case.
+    * @return true if a change in some action occurred,
+    * false if no action was affected.
+    */
+    void folderRemoved(const Akonadi::Collection &aFolder, const Akonadi::Collection &aNewFolder);
 
     /** Returns the filter in a human-readable form. useful for
       debugging but not much else. Don't use, as it may well go away

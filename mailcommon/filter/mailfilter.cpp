@@ -269,8 +269,9 @@ SearchRule::RequiredPart MailFilter::requiredPart(const QString &id) const
 void MailFilter::folderRemoved(const Akonadi::Collection &aFolder, const Akonadi::Collection &aNewFolder)
 {
     QListIterator<FilterAction *> it(mActions);
-    while (it.hasNext())
+    while (it.hasNext()) {
         it.next()->folderRemoved(aFolder, aNewFolder);
+    }
 }
 
 void MailFilter::setApplyOnAccount(const QString &id, bool aApply)

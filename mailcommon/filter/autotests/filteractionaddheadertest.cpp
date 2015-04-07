@@ -82,7 +82,7 @@ void FilterActionAddHeaderTest::shouldBeEmpty()
 {
     MailCommon::FilterActionAddHeader filter;
     QVERIFY(filter.isEmpty());
-    
+
     filter.argsFromString(QString());
     QVERIFY(filter.isEmpty());
 
@@ -202,6 +202,5 @@ void FilterActionAddHeaderTest::shouldRequiresSieve()
     MailCommon::FilterActionAddHeader filter;
     QCOMPARE(filter.sieveRequires(), QStringList() << QLatin1String("editheader"));
 }
-
 
 QTEST_MAIN(FilterActionAddHeaderTest)
