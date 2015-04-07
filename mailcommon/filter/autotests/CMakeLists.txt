@@ -288,3 +288,22 @@ target_link_libraries( filteractionforwardtest
 set( mailcommon_invalidfilterinfowidgettest_source invalidfilterinfowidgettest.cpp ../invalidfilters/invalidfilterinfowidget.cpp )
 kde4_add_unit_test( invalidfilterinfowidgettest ${mailcommon_invalidfilterinfowidgettest_source})
 target_link_libraries( invalidfilterinfowidgettest ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY})
+
+
+
+set(mailcommon_filteractioncopytest_SRCS filteractioncopytest.cpp
+                                           ../filteractions/filteractioncopy.cpp
+                                           ../filteractions/filteractionwithfolder.cpp)
+kde4_add_unit_test( filteractioncopytest ${mailcommon_filteractioncopytest_SRCS} )
+target_link_libraries( filteractioncopytest
+   kdepim
+   pimcommon
+   mailcommon
+   messagecore
+   messagecomposer
+   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
+   ${QT_QTTEST_LIBRARY}
+   ${QT_QTCORE_LIBRARY}
+   ${KDEPIMLIBS_AKONADI_LIBS}
+   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+)
