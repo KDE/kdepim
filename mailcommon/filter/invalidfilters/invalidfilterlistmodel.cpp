@@ -76,9 +76,12 @@ QVariant InvalidFilterListModel::data(const QModelIndex &index, int role) const
     const int row = index.row();
     if (row < rowCount()) {
         switch (role) {
-        case Qt::DisplayRole:      return mInvalidFilterItems[row].name();
-        case InformationRole: return mInvalidFilterItems[row].information();
-        default: break;
+        case Qt::DisplayRole:
+            return mInvalidFilterItems[row].name();
+        case InformationRole:
+            return mInvalidFilterItems[row].information();
+        default:
+            break;
         }
     }
 

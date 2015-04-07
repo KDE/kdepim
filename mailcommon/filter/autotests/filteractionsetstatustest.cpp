@@ -55,4 +55,10 @@ void FilterActionSetStatusTest::shouldBeEmpty()
     QVERIFY(filter.isEmpty());
 }
 
+void FilterActionSetStatusTest::shouldRequiresPart()
+{
+    MailCommon::FilterActionSetStatus filter;
+    QCOMPARE(filter.requiredPart(), MailCommon::SearchRule::Envelope);
+}
+
 QTEST_MAIN(FilterActionSetStatusTest)

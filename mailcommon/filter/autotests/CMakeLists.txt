@@ -328,3 +328,22 @@ add_executable( invalidfilterinfowidgettest ${mailcommon_invalidfilterinfowidget
 add_test(invalidfilterinfowidgettest invalidfilterinfowidgettest)
 ecm_mark_as_test(invalidfilterinfowidgettest)
 target_link_libraries( invalidfilterinfowidgettest Qt5::Test  Qt5::Gui KF5::WidgetsAddons mailcommon)
+
+set(mailcommon_filteractioncopytest_SRCS filteractioncopytest.cpp
+                                           ../filteractions/filteractioncopy.cpp
+                                           ../filteractions/filteractionwithfolder.cpp)
+add_executable( filteractioncopytest ${mailcommon_filteractioncopytest_SRCS} )
+add_test(filteractioncopytest filteractioncopytest)
+ecm_mark_as_test(filteractioncopytest)
+target_link_libraries( filteractioncopytest
+   kdepim
+   pimcommon
+   mailcommon
+   messagecore
+   messagecomposer
+   KF5::MailTransport
+   Qt5::Test
+   Qt5::Core
+   KF5::AkonadiCore
+   KF5::AkonadiMime
+)

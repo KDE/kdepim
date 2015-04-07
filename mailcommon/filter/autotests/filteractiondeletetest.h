@@ -31,6 +31,7 @@ private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldReturnSieveValue();
     void shouldBeNotEmpty();
+    void shouldRequiresPart();
 };
 
 #endif // FILTERACTIONDELETETEST_H

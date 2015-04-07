@@ -30,6 +30,7 @@ private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldHaveSieveRequires();
     void shouldBeEmpty();
+    void shouldRequiresPart();
 };
 
 #endif // FILTERACTIONSETSTATUSTEST_H

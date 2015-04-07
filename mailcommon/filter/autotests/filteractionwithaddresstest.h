@@ -29,6 +29,7 @@ public:
 private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldAssignValue();
+    void shouldRequiresPart();
 };
 
 #endif // FILTERACTIONWITHADDRESSTEST_H

@@ -15,20 +15,25 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FILTERACTIONFORWARDTEST_H
-#define FILTERACTIONFORWARDTEST_H
+#include "filteractioncopytest.h"
+#include "../filteractions/filteractioncopy.h"
+#include <qtest_kde.h>
 
-#include <QObject>
-
-class FilterActionForwardTest : public QObject
+FilterActionCopyTest::FilterActionCopyTest(QObject *parent)
+    : QObject(parent)
 {
-    Q_OBJECT
-public:
-    explicit FilterActionForwardTest(QObject *parent = Q_NULLPTR);
-    ~FilterActionForwardTest();
-private Q_SLOTS:
-    void shouldBeEmpty();
-    void shouldRequiresPart();
-};
 
-#endif // FILTERACTIONFORWARDTEST_H
+}
+
+FilterActionCopyTest::~FilterActionCopyTest()
+{
+
+}
+
+void FilterActionCopyTest::shouldBeEmpty()
+{
+    MailCommon::FilterActionCopy filter;
+    QVERIFY(filter.isEmpty());
+}
+
+QTEST_KDEMAIN(FilterActionCopyTest, GUI)

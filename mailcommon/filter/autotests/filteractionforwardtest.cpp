@@ -38,4 +38,11 @@ void FilterActionForwardTest::shouldBeEmpty()
     QVERIFY(!filter.isEmpty());
 }
 
+void FilterActionForwardTest::shouldRequiresPart()
+{
+    MailCommon::FilterActionForward filter;
+    QCOMPARE(filter.requiredPart(), MailCommon::SearchRule::CompleteMessage);
+}
+
+
 QTEST_MAIN(FilterActionForwardTest)

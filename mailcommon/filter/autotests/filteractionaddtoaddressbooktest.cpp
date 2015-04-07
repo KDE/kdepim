@@ -86,4 +86,10 @@ void FilterActionAddToAddressBookTest::shouldReportErrorWhenCollectionIsInvalid(
     QCOMPARE(context.needsPayloadStore(), false);
 }
 
+void FilterActionAddToAddressBookTest::shouldRequiresPart()
+{
+    MailCommon::FilterActionAddToAddressBook filter;
+    QCOMPARE(filter.requiredPart(), MailCommon::SearchRule::Envelope);
+}
+
 QTEST_MAIN(FilterActionAddToAddressBookTest)

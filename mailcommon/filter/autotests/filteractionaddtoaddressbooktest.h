@@ -30,6 +30,7 @@ private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldReportErrorWhenArgumentIsEmpty();
     void shouldReportErrorWhenCollectionIsInvalid();
+    void shouldRequiresPart();
 };
 
 #endif // FILTERACTIONADDTOADDRESSBOOKTEST_H

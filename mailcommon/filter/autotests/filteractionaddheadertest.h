@@ -38,6 +38,7 @@ private Q_SLOTS:
     void shouldNotExecuteActionWhenValueIsEmpty();
     void shouldAddNewHeaderWhenNotExistingHeader();
     void shouldReplaceHeaderWhenExistingHeader();
+    void shouldRequiresSieve();
 };
 
 #endif // FILTERACTIONADDHEADERTEST_H

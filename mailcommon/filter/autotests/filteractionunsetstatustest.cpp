@@ -36,4 +36,10 @@ void FilterActionUnsetStatusTest::shouldHaveSieveRequires()
     QCOMPARE(filter.sieveRequires(), QStringList() << QLatin1String("imap4flags"));
 }
 
+void FilterActionUnsetStatusTest::shouldRequiresPart()
+{
+    MailCommon::FilterActionUnsetStatus filter;
+    QCOMPARE(filter.requiredPart(), MailCommon::SearchRule::Envelope);
+}
+
 QTEST_MAIN(FilterActionUnsetStatusTest)

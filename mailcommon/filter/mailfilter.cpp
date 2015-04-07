@@ -266,17 +266,11 @@ SearchRule::RequiredPart MailFilter::requiredPart(const QString &id) const
     return static_cast<SearchRule::RequiredPart>(requiredPart);
 }
 
-bool MailFilter::folderRemoved(const Akonadi::Collection &aFolder, const Akonadi::Collection &aNewFolder)
+void MailFilter::folderRemoved(const Akonadi::Collection &aFolder, const Akonadi::Collection &aNewFolder)
 {
-    bool rem = false;
-
     QListIterator<FilterAction *> it(mActions);
     while (it.hasNext())
-        if (it.next()->folderRemoved(aFolder, aNewFolder)) {
-            rem = true;
-        }
-
-    return rem;
+        it.next()->folderRemoved(aFolder, aNewFolder);
 }
 
 void MailFilter::setApplyOnAccount(const QString &id, bool aApply)

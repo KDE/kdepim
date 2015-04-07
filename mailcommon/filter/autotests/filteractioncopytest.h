@@ -15,20 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FILTERACTIONFORWARDTEST_H
-#define FILTERACTIONFORWARDTEST_H
+#ifndef FILTERACTIONCOPYTEST_H
+#define FILTERACTIONCOPYTEST_H
 
 #include <QObject>
 
-class FilterActionForwardTest : public QObject
+class FilterActionCopyTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FilterActionForwardTest(QObject *parent = Q_NULLPTR);
-    ~FilterActionForwardTest();
+    explicit FilterActionCopyTest(QObject *parent = 0);
+    ~FilterActionCopyTest();
 private Q_SLOTS:
     void shouldBeEmpty();
-    void shouldRequiresPart();
 };
 
-#endif // FILTERACTIONFORWARDTEST_H
+#endif // FILTERACTIONCOPYTEST_H

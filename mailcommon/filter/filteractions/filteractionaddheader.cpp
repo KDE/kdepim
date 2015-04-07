@@ -208,6 +208,10 @@ QStringList FilterActionAddHeader::sieveRequires() const
 
 QString FilterActionAddHeader::sieveCode() const
 {
-    return QStringLiteral("addheader \"%1\" \"%2\";").arg(mParameter).arg(mValue);
+    if (isEmpty()) {
+        return QStringLiteral("# invalid filter. Need to fix it by hand");
+    } else {
+        return QStringLiteral("addheader \"%1\" \"%2\";").arg(mParameter).arg(mValue);
+    }
 }
 

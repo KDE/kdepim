@@ -53,4 +53,11 @@ void FilterActionDeleteTest::shouldBeNotEmpty()
     QVERIFY(!filter.isEmpty());
 }
 
+void FilterActionDeleteTest::shouldRequiresPart()
+{
+    MailCommon::FilterActionDelete filter;
+    QCOMPARE(filter.requiredPart(), MailCommon::SearchRule::Envelope);
+}
+
+
 QTEST_MAIN(FilterActionDeleteTest)
