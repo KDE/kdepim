@@ -299,9 +299,20 @@ target_link_libraries( filteractioncopytest
    kdepim
    pimcommon
    mailcommon
-   messagecore
-   messagecomposer
-   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
+   ${QT_QTTEST_LIBRARY}
+   ${QT_QTCORE_LIBRARY}
+   ${KDEPIMLIBS_AKONADI_LIBS}
+   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+)
+
+set(mailcommon_filteractionmovetest_SRCS filteractionmovetest.cpp
+                                           ../filteractions/filteractionmove.cpp
+                                           ../filteractions/filteractionwithfolder.cpp)
+kde4_add_unit_test( filteractionmovetest ${mailcommon_filteractionmovetest_SRCS} )
+target_link_libraries( filteractionmovetest
+   kdepim
+   pimcommon
+   mailcommon
    ${QT_QTTEST_LIBRARY}
    ${QT_QTCORE_LIBRARY}
    ${KDEPIMLIBS_AKONADI_LIBS}
