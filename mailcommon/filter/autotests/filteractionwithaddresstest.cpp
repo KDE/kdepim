@@ -73,4 +73,10 @@ void FilterActionWithAddressTest::shouldAssignValue()
     QVERIFY(!requester->text().isEmpty());
 }
 
+void FilterActionWithAddressTest::shouldRequiresPart()
+{
+    TestFilterActionWithAddress filter;
+    QCOMPARE(filter.requiredPart(), MailCommon::SearchRule::CompleteMessage);
+}
+
 QTEST_KDEMAIN(FilterActionWithAddressTest, GUI)

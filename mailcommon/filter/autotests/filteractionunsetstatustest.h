@@ -28,6 +28,7 @@ public:
     ~FilterActionUnsetStatusTest();
 private Q_SLOTS:
     void shouldHaveSieveRequires();
+    void shouldRequiresPart();
 };
 
 #endif // FILTERACTIONUNSETSTATUSTEST_H

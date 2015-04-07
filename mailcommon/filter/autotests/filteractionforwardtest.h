@@ -28,6 +28,7 @@ public:
     ~FilterActionForwardTest();
 private Q_SLOTS:
     void shouldBeEmpty();
+    void shouldRequiresPart();
 };
 
 #endif // FILTERACTIONFORWARDTEST_H

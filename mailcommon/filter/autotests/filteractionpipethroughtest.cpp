@@ -294,6 +294,12 @@ void FilterActionPipeThroughTest::testXUidRemoved()
     QCOMPARE(msgPtr->encodedContent(), output);
 }
 
+void FilterActionPipeThroughTest::shouldRequiresPart()
+{
+    FilterActionPipeThrough filter(this);
+    QCOMPARE(filter.requiredPart(), SearchRule::CompleteMessage);
+}
+
 void FilterActionPipeThroughTest::testXUidChange()
 {
     /* Make sure if the X-Uid is changed from pipe through, that we put is to the original value again.
