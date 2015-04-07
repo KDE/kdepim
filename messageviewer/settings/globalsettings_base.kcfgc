@@ -6,5 +6,5 @@ Mutators=true
 Singleton=true
 ItemAccessors=true
 SetUserTexts=true
-IncludeFiles=qapplication.h,messageviewer_export.h,viewer/objecttreeparser.h
-
+IncludeFiles=qapplication.h,messageviewer_export.h,viewer/objecttreeparser.h,messageviewer_debug.h
+CategoryLoggingName=MESSAGEVIEWER_LOG
