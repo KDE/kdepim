@@ -8,3 +8,5 @@ GlobalEnums=true
 ItemAccessors=true
 SetUserTexts=true
 NameSpace=EventViews
+CategoryLoggingName=CALENDARVIEW_LOG
+IncludeFiles=calendarview_debug.h
