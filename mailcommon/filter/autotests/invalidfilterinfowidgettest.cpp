@@ -17,7 +17,7 @@
 
 #include "invalidfilterinfowidgettest.h"
 #include "../invalidfilters/invalidfilterinfowidget.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 InvalidFilterInfoWidgetTest::InvalidFilterInfoWidgetTest(QObject *parent)
     : QObject(parent)
@@ -37,4 +37,4 @@ void InvalidFilterInfoWidgetTest::shouldHaveDefaultValue()
     QVERIFY(!w.isCloseButtonVisible());
 }
 
-QTEST_KDEMAIN(InvalidFilterInfoWidgetTest, GUI)
+QTEST_MAIN(InvalidFilterInfoWidgetTest)

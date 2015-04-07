@@ -324,5 +324,7 @@ target_link_libraries( filteractionforwardtest
 
 
 set( mailcommon_invalidfilterinfowidgettest_source invalidfilterinfowidgettest.cpp ../invalidfilters/invalidfilterinfowidget.cpp )
-kde4_add_unit_test( invalidfilterinfowidgettest ${mailcommon_invalidfilterinfowidgettest_source})
-target_link_libraries( invalidfilterinfowidgettest ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY})
+add_executable( invalidfilterinfowidgettest ${mailcommon_invalidfilterinfowidgettest_source})
+add_test(invalidfilterinfowidgettest invalidfilterinfowidgettest)
+ecm_mark_as_test(invalidfilterinfowidgettest)
+target_link_libraries( invalidfilterinfowidgettest Qt5::Test  Qt5::Gui KF5::WidgetsAddons mailcommon)
