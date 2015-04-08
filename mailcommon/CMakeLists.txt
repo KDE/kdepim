@@ -233,6 +233,7 @@ add_subdirectory(collectionpage/autotests)
 add_subdirectory(filter/autotests)
 add_subdirectory(snippets/autotests)
 add_subdirectory(filter/tests)
+add_subdirectory(search/autotests)
 
 if (QT_QTDESIGNER_FOUND)
   set(mailcommonwidgets_PART_SRCS)

@@ -667,30 +667,27 @@ bool SearchRuleString::isEmpty() const
 SearchRule::RequiredPart SearchRuleString::requiredPart() const
 {
     const QByteArray f = field();
-    SearchRule::RequiredPart part = Envelope;
+    SearchRule::RequiredPart part = Header;
     if ( kasciistricmp( f, "<recipients>" ) == 0 ||
          kasciistricmp( f, "<status>" ) == 0 ||
          kasciistricmp( f, "<tag>" ) == 0 ||
-         kasciistricmp( f, "Subject" ) == 0 ||
+         kasciistricmp( f, "subject" ) == 0 ||
          kasciistricmp( f, "from" ) == 0 ||
-         kasciistricmp( f, "<any header>" )== 0) {
+         kasciistricmp( f, "sender" ) == 0 ||
+         kasciistricmp( f, "reply-to" ) == 0 ||
+         kasciistricmp( f, "to" ) == 0  ||
+         kasciistricmp( f, "cc" ) == 0 ||
+         kasciistricmp( f, "bcc" ) == 0 ||
+         kasciistricmp( f, "in-reply-to" ) == 0 ||
+         kasciistricmp( f, "message-id" ) == 0 ||
+         kasciistricmp( f, "references" ) == 0) {
+        // these fields are directly provided by KMime::Message, no need to fetch the whole Header part
         part = Envelope;
     } else if ( kasciistricmp( f, "<message>" ) == 0 ||
-                kasciistricmp( f, "<body>" ) == 0 ) {
+                kasciistricmp( f, "<body>" ) == 0) {
         part = CompleteMessage;
-    } else if (kasciistricmp( f, "reply-to" ) == 0 ||
-               kasciistricmp( f, "cc" ) == 0 ||
-               kasciistricmp( f, "bcc" ) == 0 ||
-               kasciistricmp( f, "resent-from" ) == 0 ||
-               kasciistricmp( f, "list-id" ) == 0 ||
-               kasciistricmp( f, "x-loop" ) == 0 ||
-               kasciistricmp( f, "x-mailing-list" ) == 0 ||
-               kasciistricmp( f, "x-spam-flag" ) == 0 ||
-               kasciistricmp( f, "organization" ) == 0 ||
-               kasciistricmp( f, "to" ) == 0 ) {
-        part = Header;
     } else {
-        qDebug()<< "VERIFY IT: SearchRule::RequiredPart SearchRuleString::requiredPart() const use default \"Envelope\" for field :"<<f;
+        qDebug()<< "VERIFY IT: SearchRule::RequiredPart SearchRuleString::requiredPart() const use default \"Header\" for field :"<<f;
     }
 
 
