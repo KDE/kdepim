@@ -24,7 +24,7 @@ class FilterActionCopyTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FilterActionCopyTest(QObject *parent = 0);
+    explicit FilterActionCopyTest(QObject *parent = Q_NULLPTR);
     ~FilterActionCopyTest();
 private Q_SLOTS:
     void shouldBeEmpty();

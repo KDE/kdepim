@@ -24,7 +24,7 @@ class FilterActionMoveTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FilterActionMoveTest(QObject *parent = 0);
+    explicit FilterActionMoveTest(QObject *parent = Q_NULLPTR);
     ~FilterActionMoveTest();
 };
 
