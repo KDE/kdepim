@@ -87,6 +87,5 @@ bool FilterActionPlaySound::argsFromStringInteractive(const QString &argsStr, co
 
 QString FilterActionPlaySound::informationAboutNotValidAction() const
 {
-    //KF5 add i18n
-    return QString::fromLatin1("Sound file was not defined.");
+    return i18n("Sound file was not defined.");
 }

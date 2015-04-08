@@ -217,7 +217,6 @@ QString FilterActionAddHeader::sieveCode() const
 
 QString FilterActionAddHeader::informationAboutNotValidAction() const
 {
-    //KF5 add i18n
     QString result;
     if (mParameter.isEmpty()) {
         result = i18n("The header name was missing.");
