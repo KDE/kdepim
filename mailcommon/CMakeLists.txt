@@ -128,17 +128,17 @@ set(libmailcommon_job_SRCS
 )
 
 set(libmailcommon_search_SRCS
-  search/rulewidgethandlermanager.cpp
+  search/widgethandler/rulewidgethandlermanager.cpp
   search/searchpattern.cpp
   search/searchpatternedit.cpp
-  search/textrulerwidgethandler.cpp
-  search/statusrulewidgethandler.cpp
-  search/messagerulewidgethandler.cpp
-  search/tagrulewidgethandler.cpp
-  search/numericrulewidgethandler.cpp
-  search/daterulewidgethandler.cpp
-  search/numericdoublerulewidgethandler.cpp
-  search/headersrulerwidgethandler.cpp
+  search/widgethandler/textrulerwidgethandler.cpp
+  search/widgethandler/statusrulewidgethandler.cpp
+  search/widgethandler/messagerulewidgethandler.cpp
+  search/widgethandler/tagrulewidgethandler.cpp
+  search/widgethandler/numericrulewidgethandler.cpp
+  search/widgethandler/daterulewidgethandler.cpp
+  search/widgethandler/numericdoublerulewidgethandler.cpp
+  search/widgethandler/headersrulerwidgethandler.cpp
 )
 
 set(libmailcommon_snippets_SRCS
