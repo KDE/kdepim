@@ -44,9 +44,9 @@ FilterAction::ReturnCode FilterActionMove::process(ItemContext &context , bool) 
             return ErrorButGoOn;
 
         context.setMoveTargetCollection( targetFolder );
-        return GoOn;
+    } else {
+        context.setMoveTargetCollection( mFolder );
     }
-    context.setMoveTargetCollection( mFolder );
     return GoOn;
 }
 

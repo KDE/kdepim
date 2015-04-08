@@ -48,6 +48,7 @@ public:
     QString argsAsString() const;
     void argsFromString( const QString &argsStr );
 
+    QString informationAboutNotValidAction() const;
 private:
     enum HeaderType
     {

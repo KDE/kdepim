@@ -160,3 +160,9 @@ QString FilterActionAddTag::displayString() const
     return label() + QLatin1String( " \"" ) + Qt::escape( argsAsString() ) + QLatin1String( "\"" );
 }
 
+QString FilterActionAddTag::informationAboutNotValidAction() const
+{
+    //KF5 add i18n
+    return QLatin1String("No tag selected.");
+}
+

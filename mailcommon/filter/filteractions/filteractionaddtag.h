@@ -55,6 +55,7 @@ public:
     void clearParamWidget( QWidget *paramWidget ) const;
 
 
+    QString informationAboutNotValidAction() const;
 private Q_SLOTS:
     void slotTagListingFinished();
 
