@@ -671,28 +671,25 @@ bool SearchRuleString::isEmpty() const
 SearchRule::RequiredPart SearchRuleString::requiredPart() const
 {
     const QByteArray f = field();
-    SearchRule::RequiredPart part = Envelope;
-    if (qstricmp(f, "<recipients>") == 0 ||
-            qstricmp(f, "<status>") == 0 ||
-            qstricmp(f, "<tag>") == 0 ||
-            qstricmp(f, "Subject") == 0 ||
-            qstricmp(f, "from") == 0 ||
-            qstricmp(f, "<any header>") == 0) {
+    SearchRule::RequiredPart part = Header;
+    if ( qstricmp( f, "<recipients>" ) == 0 ||
+         qstricmp( f, "<status>" ) == 0 ||
+         qstricmp( f, "<tag>" ) == 0 ||
+         qstricmp( f, "subject" ) == 0 ||
+         qstricmp( f, "from" ) == 0 ||
+         qstricmp( f, "sender" ) == 0 ||
+         qstricmp( f, "reply-to" ) == 0 ||
+         qstricmp( f, "to" ) == 0  ||
+         qstricmp( f, "cc" ) == 0 ||
+         qstricmp( f, "bcc" ) == 0 ||
+         qstricmp( f, "in-reply-to" ) == 0 ||
+         qstricmp( f, "message-id" ) == 0 ||
+         qstricmp( f, "references" ) == 0) {
+        // these fields are directly provided by KMime::Message, no need to fetch the whole Header part
         part = Envelope;
-    } else if (qstricmp(f, "<message>") == 0 ||
-               qstricmp(f, "<body>") == 0) {
+    } else if ( qstricmp( f, "<message>" ) == 0 ||
+                qstricmp( f, "<body>" ) == 0) {
         part = CompleteMessage;
-    } else if (qstricmp(f, "reply-to") == 0 ||
-               qstricmp(f, "cc") == 0 ||
-               qstricmp(f, "bcc") == 0 ||
-               qstricmp(f, "resent-from") == 0 ||
-               qstricmp(f, "x-loop") == 0 ||
-               qstricmp(f, "x-mailing-list") == 0 ||
-               qstricmp(f, "x-spam-flag") == 0 ||
-               qstricmp(f, "list-id") == 0 ||
-               qstricmp(f, "organization") == 0 ||
-               qstricmp(f, "to") == 0) {
-        part = Header;
     } else {
         qCDebug(MAILCOMMON_LOG) << "VERIFY IT: SearchRule::RequiredPart SearchRuleString::requiredPart() const use default \"Envelope\" for field :" << f;
     }

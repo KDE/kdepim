@@ -243,7 +243,8 @@ if (BUILD_TESTING)
    add_subdirectory(collectionpage/autotests)
    add_subdirectory(filter/autotests)
    add_subdirectory(snippets/autotests)
-   add_subdirectory(filter/tests)
+   add_subdirectory(filter/tests) 
+   add_subdirectory(search/autotests)
 endif()
 
 
