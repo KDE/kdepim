@@ -101,6 +101,7 @@ void FilterActionAddHeaderTest::shouldNotExecuteActionWhenParameterIsEmpty()
     filter.argsFromString("");
     QCOMPARE(filter.process(context, false), MailCommon::FilterAction::ErrorButGoOn);
     QCOMPARE(context.needsPayloadStore(), false);
+    QCOMPARE(context.deleteItem(), false);
 }
 
 void FilterActionAddHeaderTest::shouldNotExecuteActionWhenValueIsEmpty()
@@ -114,6 +115,7 @@ void FilterActionAddHeaderTest::shouldNotExecuteActionWhenValueIsEmpty()
     filter.argsFromString("foo");
     QCOMPARE(filter.process(context, false), MailCommon::FilterAction::ErrorButGoOn);
     QCOMPARE(context.needsPayloadStore(), false);
+    QCOMPARE(context.deleteItem(), false);
 }
 
 void FilterActionAddHeaderTest::shouldAddNewHeaderWhenNotExistingHeader()
@@ -146,6 +148,7 @@ void FilterActionAddHeaderTest::shouldAddNewHeaderWhenNotExistingHeader()
     QCOMPARE(filter.process(context, false), MailCommon::FilterAction::GoOn);
     QCOMPARE(context.needsPayloadStore(), true);
     QCOMPARE(msgPtr->encodedContent(), output);
+    QCOMPARE(context.deleteItem(), false);
 }
 
 void FilterActionAddHeaderTest::shouldReplaceHeaderWhenExistingHeader()
@@ -179,6 +182,7 @@ void FilterActionAddHeaderTest::shouldReplaceHeaderWhenExistingHeader()
     QCOMPARE(filter.process(context, false), MailCommon::FilterAction::GoOn);
     QCOMPARE(context.needsPayloadStore(), true);
     QCOMPARE(msgPtr->encodedContent(), output);
+    QCOMPARE(context.deleteItem(), false);
 }
 
 void FilterActionAddHeaderTest::shouldAddValue()
