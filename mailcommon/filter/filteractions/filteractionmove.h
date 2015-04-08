@@ -34,7 +34,6 @@ class FilterActionMove: public FilterActionWithFolder
 public:
     explicit FilterActionMove( QObject *parent = 0 );
     ReturnCode process( ItemContext &context, bool applyOnOutbound ) const;
-    bool requiresBody() const;
     SearchRule::RequiredPart requiredPart() const;
     static FilterAction* newAction();
     QString sieveCode() const;
