@@ -29,6 +29,7 @@ public:
 private Q_SLOTS:
     void shouldHaveSieveRequires();
     void shouldHaveRequiresPart();
+    void shouldHaveDefaultValue();
 };
 
 #endif // FILTERACTIONMOVETEST_H

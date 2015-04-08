@@ -17,6 +17,7 @@
 
 #include "filteractionmovetest.h"
 #include "../filteractions/filteractionmove.h"
+#include <folderrequester.h>
 #include <qtest_kde.h>
 FilterActionMoveTest::FilterActionMoveTest(QObject *parent)
     : QObject(parent)
@@ -39,6 +40,16 @@ void FilterActionMoveTest::shouldHaveRequiresPart()
 {
     MailCommon::FilterActionMove filter;
     QCOMPARE(filter.requiredPart(), MailCommon::SearchRule::Envelope);
+}
+
+void FilterActionMoveTest::shouldHaveDefaultValue()
+{
+    MailCommon::FilterActionMove filter;
+    QWidget *w = filter.createParamWidget(0);
+    QVERIFY(w);
+    MailCommon::FolderRequester *requester = dynamic_cast<MailCommon::FolderRequester *>(w);
+    QVERIFY(requester);
+    QCOMPARE(requester->objectName(), QLatin1String("folderrequester"));
 }
 
 QTEST_KDEMAIN(FilterActionMoveTest, GUI)
