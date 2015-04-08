@@ -41,6 +41,7 @@ public:
     QString sieveCode() const;
 
     static FilterAction* newAction();
+    QString informationAboutNotValidAction() const;
 };
 
 }
