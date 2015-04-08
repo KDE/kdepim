@@ -36,12 +36,12 @@ class FilterActionCopy: public FilterActionWithFolder
     Q_OBJECT
 public:
     explicit FilterActionCopy(QObject *parent = Q_NULLPTR);
-    ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
-    SearchRule::RequiredPart requiredPart() const;
+    ReturnCode process(ItemContext &context, bool applyOnOutbound) const Q_DECL_OVERRIDE;
+    SearchRule::RequiredPart requiredPart() const Q_DECL_OVERRIDE;
     static FilterAction *newAction();
-    QString sieveCode() const;
-    QStringList sieveRequires() const;
-    QString informationAboutNotValidAction() const;
+    QString sieveCode() const Q_DECL_OVERRIDE;
+    QStringList sieveRequires() const Q_DECL_OVERRIDE;
+    QString informationAboutNotValidAction() const Q_DECL_OVERRIDE;
 
 protected Q_SLOTS:
     void jobFinished(KJob *job);

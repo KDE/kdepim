@@ -52,8 +52,8 @@ public:
     QStringList sieveRequires() const Q_DECL_OVERRIDE;
     QString sieveCode() const Q_DECL_OVERRIDE;
 
-    bool isEmpty() const;
-    QString informationAboutNotValidAction() const;
+    bool isEmpty() const Q_DECL_OVERRIDE;
+    QString informationAboutNotValidAction() const Q_DECL_OVERRIDE;
 private:
     QString mValue;
 };

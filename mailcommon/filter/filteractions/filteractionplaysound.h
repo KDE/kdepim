@@ -45,8 +45,8 @@ public:
     static FilterAction *newAction();
     bool argsFromStringInteractive(const QString &argsStr, const QString &filterName) Q_DECL_OVERRIDE;
 
-    bool isEmpty() const;
-    QString informationAboutNotValidAction() const;
+    bool isEmpty() const Q_DECL_OVERRIDE;
+    QString informationAboutNotValidAction() const Q_DECL_OVERRIDE;
 private:
     mutable Phonon::MediaObject *mPlayer;
 };
