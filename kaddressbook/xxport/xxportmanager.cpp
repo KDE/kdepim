@@ -160,7 +160,7 @@ void XXPortManager::import(const ContactList &contacts)
         groupItem.setPayload<KContacts::ContactGroup>(contacts.contactGroupList().at(i));
 
         Akonadi::Job *createJob = new Akonadi::ItemCreateJob(groupItem, collection);
-        connect(createJob, SIGNAL(result(KJob*)), this, SLOT(slotImportJobDone(KJob*)));
+        connect(createJob, &KJob::result, this, &XXPortManager::slotImportJobDone);
     }
 
 }

@@ -61,9 +61,9 @@ void FilterActionRewriteHeaderTest::shouldBeEmpty()
 {
     MailCommon::FilterActionRewriteHeader filter;
     QVERIFY(filter.isEmpty());
-    filter.argsFromString(QLatin1String("foo\tbla"));
+    filter.argsFromString(QStringLiteral("foo\tbla"));
     QVERIFY(filter.isEmpty());
-    filter.argsFromString(QLatin1String("foo\tbla\tkde"));
+    filter.argsFromString(QStringLiteral("foo\tbla\tkde"));
     QVERIFY(!filter.isEmpty());
 }
 

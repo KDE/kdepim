@@ -41,9 +41,9 @@ void InvalidFilterListWidgetTest::shouldAddInvalidFilters()
 {
     MailCommon::InvalidFilterListView w;
     QVector<MailCommon::InvalidFilterInfo> lst;
-    lst.append(MailCommon::InvalidFilterInfo(QLatin1String("foo"), QLatin1String("bla")));
-    lst.append(MailCommon::InvalidFilterInfo(QLatin1String("foo1"), QLatin1String("bla1")));
-    lst.append(MailCommon::InvalidFilterInfo(QLatin1String("foo2"), QLatin1String("bla2")));
+    lst.append(MailCommon::InvalidFilterInfo(QStringLiteral("foo"), QStringLiteral("bla")));
+    lst.append(MailCommon::InvalidFilterInfo(QStringLiteral("foo1"), QStringLiteral("bla1")));
+    lst.append(MailCommon::InvalidFilterInfo(QStringLiteral("foo2"), QStringLiteral("bla2")));
     w.setInvalidFilters(lst);
     QCOMPARE(w.model()->rowCount(), 3);
 }

@@ -144,26 +144,26 @@ KMFilterListBox::KMFilterListBox(const QString &title, QWidget *parent)
 
     mBtnTop = new QPushButton(QString(), hb);
     hbHBoxLayout->addWidget(mBtnTop);
-    mBtnTop->setIcon(QIcon::fromTheme(QLatin1String("go-top")));
+    mBtnTop->setIcon(QIcon::fromTheme(QStringLiteral("go-top")));
     mBtnTop->setIconSize(QSize(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
     mBtnTop->setMinimumSize(mBtnTop->sizeHint() * 1.2);
 
     mBtnUp = new QPushButton(QString(), hb);
     hbHBoxLayout->addWidget(mBtnUp);
     mBtnUp->setAutoRepeat(true);
-    mBtnUp->setIcon(QIcon::fromTheme(QLatin1String("go-up")));
+    mBtnUp->setIcon(QIcon::fromTheme(QStringLiteral("go-up")));
     mBtnUp->setIconSize(QSize(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
     mBtnUp->setMinimumSize(mBtnUp->sizeHint() * 1.2);
     mBtnDown = new QPushButton(QString(), hb);
     hbHBoxLayout->addWidget(mBtnDown);
     mBtnDown->setAutoRepeat(true);
-    mBtnDown->setIcon(QIcon::fromTheme(QLatin1String("go-down")));
+    mBtnDown->setIcon(QIcon::fromTheme(QStringLiteral("go-down")));
     mBtnDown->setIconSize(QSize(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
     mBtnDown->setMinimumSize(mBtnDown->sizeHint() * 1.2);
 
     mBtnBottom = new QPushButton(QString(), hb);
     hbHBoxLayout->addWidget(mBtnBottom);
-    mBtnBottom->setIcon(QIcon::fromTheme(QLatin1String("go-bottom")));
+    mBtnBottom->setIcon(QIcon::fromTheme(QStringLiteral("go-bottom")));
     mBtnBottom->setIconSize(QSize(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
     mBtnBottom->setMinimumSize(mBtnBottom->sizeHint() * 1.2);
 
@@ -185,17 +185,17 @@ KMFilterListBox::KMFilterListBox(const QString &title, QWidget *parent)
     hbHBoxLayout->setSpacing(4);
     mBtnNew = new QPushButton(QString(), hb);
     hbHBoxLayout->addWidget(mBtnNew);
-    mBtnNew->setIcon(QIcon::fromTheme(QLatin1String("document-new")));
+    mBtnNew->setIcon(QIcon::fromTheme(QStringLiteral("document-new")));
     mBtnNew->setIconSize(QSize(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
     mBtnNew->setMinimumSize(mBtnNew->sizeHint() * 1.2);
     mBtnCopy = new QPushButton(QString(), hb);
     hbHBoxLayout->addWidget(mBtnCopy);
-    mBtnCopy->setIcon(QIcon::fromTheme(QLatin1String("edit-copy")));
+    mBtnCopy->setIcon(QIcon::fromTheme(QStringLiteral("edit-copy")));
     mBtnCopy->setIconSize(QSize(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
     mBtnCopy->setMinimumSize(mBtnCopy->sizeHint() * 1.2);
     mBtnDelete = new QPushButton(QString(), hb);
     hbHBoxLayout->addWidget(mBtnDelete);
-    mBtnDelete->setIcon(QIcon::fromTheme(QLatin1String("edit-delete")));
+    mBtnDelete->setIcon(QIcon::fromTheme(QStringLiteral("edit-delete")));
     mBtnDelete->setIconSize(QSize(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
     mBtnDelete->setMinimumSize(mBtnDelete->sizeHint() * 1.2);
     mBtnRename = new QPushButton(i18n("Rename..."), hb);
@@ -299,7 +299,7 @@ void KMFilterListBox::createFilter(const QByteArray &field, const QString &value
                                   arg(QString::fromLatin1(field)).
                                   arg(value));
 
-    FilterActionDesc *desc = MailCommon::FilterManager::filterActionDict()->value(QLatin1String("transfer"));
+    FilterActionDesc *desc = MailCommon::FilterManager::filterActionDict()->value(QStringLiteral("transfer"));
     if (desc) {
         newFilter->actions()->append(desc->create());
     }
@@ -413,7 +413,7 @@ QList<MailFilter *> KMFilterListBox::filtersForSaving(bool closeAfterSaving) con
                     QString(),
                     KGuiItem(i18n("Discard")),
                     KStandardGuiItem::cancel(),
-                    QLatin1String("ShowInvalidFilterWarning"));
+                    QStringLiteral("ShowInvalidFilterWarning"));
             if (response == KMessageBox::Cancel) {
                 emit abortClosing();
             }
@@ -425,7 +425,7 @@ QList<MailFilter *> KMFilterListBox::filtersForSaving(bool closeAfterSaving) con
                      "(e.g. containing no actions or no search rules)."),
                 emptyFilters,
                 QString(),
-                QLatin1String("ShowInvalidFilterWarning"));
+                QStringLiteral("ShowInvalidFilterWarning"));
         }
     }
     return filters;
@@ -743,7 +743,7 @@ void KMFilterListBox::slotRename()
     if (newName.isEmpty()) {
         // bait for slotUpdateFilterName to
         // use automatic naming again.
-        filter->pattern()->setName(QLatin1String("<>"));
+        filter->pattern()->setName(QStringLiteral("<>"));
         filter->setAutoNaming(true);
     } else {
         filter->pattern()->setName(newName);

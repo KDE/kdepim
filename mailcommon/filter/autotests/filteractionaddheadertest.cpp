@@ -204,7 +204,7 @@ void FilterActionAddHeaderTest::shouldAddValue()
 void FilterActionAddHeaderTest::shouldRequiresSieve()
 {
     MailCommon::FilterActionAddHeader filter;
-    QCOMPARE(filter.sieveRequires(), QStringList() << QLatin1String("editheader"));
+    QCOMPARE(filter.sieveRequires(), QStringList() << QStringLiteral("editheader"));
 }
 
 QTEST_MAIN(FilterActionAddHeaderTest)

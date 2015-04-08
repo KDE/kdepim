@@ -40,8 +40,8 @@ void InvalidFilterInfoTest::shouldAddEmptyValue()
 
 void InvalidFilterInfoTest::shouldAssignValueFromConstructor()
 {
-    const QString name = QLatin1String("foo");
-    const QString information = QLatin1String("bla");
+    const QString name = QStringLiteral("foo");
+    const QString information = QStringLiteral("bla");
     MailCommon::InvalidFilterInfo info(name, information);
     QCOMPARE(info.name(), name);
     QCOMPARE(info.information(), information);
@@ -50,8 +50,8 @@ void InvalidFilterInfoTest::shouldAssignValueFromConstructor()
 void InvalidFilterInfoTest::shouldAssignValue()
 {
     MailCommon::InvalidFilterInfo info;
-    const QString name = QLatin1String("foo");
-    const QString information = QLatin1String("bla");
+    const QString name = QStringLiteral("foo");
+    const QString information = QStringLiteral("bla");
     info.setName(name);
     info.setInformation(information);
     QCOMPARE(info.name(), name);
@@ -61,8 +61,8 @@ void InvalidFilterInfoTest::shouldAssignValue()
 void InvalidFilterInfoTest::shouldBeEqual()
 {
     MailCommon::InvalidFilterInfo info;
-    const QString name = QLatin1String("foo");
-    const QString information = QLatin1String("bla");
+    const QString name = QStringLiteral("foo");
+    const QString information = QStringLiteral("bla");
     info.setName(name);
     info.setInformation(information);
     MailCommon::InvalidFilterInfo copyInfo;

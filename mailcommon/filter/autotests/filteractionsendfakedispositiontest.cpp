@@ -35,7 +35,7 @@ void FilterActionSendFakeDispositionTest::shouldHaveDefaultValue()
 {
     MailCommon::FilterActionSendFakeDisposition filter;
     QWidget *w = filter.createParamWidget(0);
-    QCOMPARE(w->objectName(), QLatin1String("combobox"));
+    QCOMPARE(w->objectName(), QStringLiteral("combobox"));
 
     PimCommon::MinimumComboBox *comboBox = dynamic_cast<PimCommon::MinimumComboBox *>(w);
     QVERIFY(comboBox);

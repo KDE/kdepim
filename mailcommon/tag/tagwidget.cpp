@@ -66,10 +66,10 @@ TagWidget::TagWidget(const QList<KActionCollection *> &actionCollections, QWidge
     mTextColorCombo->setEnabled(false);
 
     connect(mTextColorCheck, &QCheckBox::toggled, mTextColorCombo, &KColorCombo::setEnabled);
-    connect(mTextColorCheck, SIGNAL(stateChanged(int)),
-            this, SLOT(slotEmitChangeCheck()));
-    connect(mTextColorCombo, SIGNAL(activated(int)),
-            this, SLOT(slotEmitChangeCheck()));
+    connect(mTextColorCheck, &QCheckBox::stateChanged,
+            this, &TagWidget::slotEmitChangeCheck);
+    connect(mTextColorCombo, &KColorCombo::activated,
+            this, &TagWidget::slotEmitChangeCheck);
 
     //Third row for text background color
     mBackgroundColorCheck = new QCheckBox(i18n("Change &background color:"),
@@ -82,10 +82,10 @@ TagWidget::TagWidget(const QList<KActionCollection *> &actionCollections, QWidge
 
     connect(mBackgroundColorCheck, &QAbstractButton::toggled,
             mBackgroundColorCombo, &QWidget::setEnabled);
-    connect(mBackgroundColorCheck, SIGNAL(stateChanged(int)),
-            this, SLOT(slotEmitChangeCheck()));
-    connect(mBackgroundColorCombo, SIGNAL(activated(int)),
-            this, SLOT(slotEmitChangeCheck()));
+    connect(mBackgroundColorCheck, &QCheckBox::stateChanged,
+            this, &TagWidget::slotEmitChangeCheck);
+    connect(mBackgroundColorCombo, &KColorCombo::activated,
+            this, &TagWidget::slotEmitChangeCheck);
 
     //Fourth for font selection
     mTextFontCheck = new QCheckBox(i18n("Change fo&nt:"), this);
@@ -95,12 +95,12 @@ TagWidget::TagWidget(const QList<KActionCollection *> &actionCollections, QWidge
     settings->addWidget(mFontRequester, 4, 1);
     mFontRequester->setEnabled(false);
 
-    connect(mTextFontCheck, SIGNAL(toggled(bool)),
-            mFontRequester, SLOT(setEnabled(bool)));
-    connect(mTextFontCheck, SIGNAL(stateChanged(int)),
-            this, SLOT(slotEmitChangeCheck()));
-    connect(mFontRequester, SIGNAL(fontSelected(QFont)),
-            this, SLOT(slotEmitChangeCheck()));
+    connect(mTextFontCheck, &QAbstractButton::toggled,
+            mFontRequester, &QWidget::setEnabled);
+    connect(mTextFontCheck, &QCheckBox::stateChanged,
+            this, &TagWidget::slotEmitChangeCheck);
+    connect(mFontRequester, &KFontRequester::fontSelected,
+            this, &TagWidget::slotEmitChangeCheck);
 
     //Fifth for toolbar icon
     mIconButton = new KIconButton(this);
@@ -129,8 +129,8 @@ TagWidget::TagWidget(const QList<KActionCollection *> &actionCollections, QWidge
     settings->addWidget(sclabel, 6, 0);
     if (!actionCollections.isEmpty()) {
         mKeySequenceWidget->setCheckActionCollections(actionCollections);
-        connect(mKeySequenceWidget, SIGNAL(keySequenceChanged(QKeySequence)),
-                this, SLOT(slotEmitChangeCheck()));
+        connect(mKeySequenceWidget, &KKeySequenceWidget::keySequenceChanged,
+                this, &TagWidget::slotEmitChangeCheck);
     } else {
         mKeySequenceWidget->setEnabled(false);
     }

@@ -40,7 +40,7 @@ SoundTestWidget::SoundTestWidget(QWidget *parent)
     layout->setMargin(0);
 
     m_playButton = new QPushButton(this);
-    m_playButton->setIcon(QIcon::fromTheme(QLatin1String("arrow-right")));
+    m_playButton->setIcon(QIcon::fromTheme(QStringLiteral("arrow-right")));
     m_playButton->setIconSize(QSize(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
     m_playButton->setToolTip(i18n("Play"));
     layout->addWidget(m_playButton);
@@ -77,14 +77,14 @@ void SoundTestWidget::openSoundDialog(KUrlRequester *)
     fileDialog->setWindowTitle(i18n("Select Sound File"));
 
     QStringList filters;
-    filters << QLatin1String("audio/x-wav")
-            << QLatin1String("audio/mpeg")
-            << QLatin1String("application/ogg")
-            << QLatin1String("audio/x-adpcm");
+    filters << QStringLiteral("audio/x-wav")
+            << QStringLiteral("audio/mpeg")
+            << QStringLiteral("application/ogg")
+            << QStringLiteral("audio/x-adpcm");
 
     fileDialog->setMimeTypeFilters(filters);
 
-    const QStringList soundDirs = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, QLatin1String("sound/"), QStandardPaths::LocateDirectory);
+    const QStringList soundDirs = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, QStringLiteral("sound/"), QStandardPaths::LocateDirectory);
 
     if (!soundDirs.isEmpty()) {
         QUrl soundURL;
@@ -109,7 +109,7 @@ void SoundTestWidget::playSound()
         return ;
     }
 
-    const QString file = QLatin1String("file:");
+    const QString file = QStringLiteral("file:");
     const QString play = (parameter.startsWith(file) ?
                           parameter.mid(file.length()) :
                           parameter);

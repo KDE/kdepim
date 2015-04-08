@@ -34,7 +34,7 @@ void FilterActionBeepTest::shouldHaveDefaultValue()
 {
     MailCommon::FilterActionBeep w;
     QWidget *widget = w.createParamWidget(0);
-    QCOMPARE(widget->objectName(), QLatin1String("empty_widget"));
+    QCOMPARE(widget->objectName(), QStringLiteral("empty_widget"));
 }
 
 void FilterActionBeepTest::shouldSieveCode()

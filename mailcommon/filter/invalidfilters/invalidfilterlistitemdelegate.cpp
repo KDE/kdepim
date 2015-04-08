@@ -82,7 +82,7 @@ void InvalidFilterListItemDelegate::updateItemWidgets(const QList<QWidget *> wid
     QToolButton *showInformationToolButton = static_cast<QToolButton *>(widgets[1]);
     showInformationToolButton->setEnabled(!details.isEmpty());
     const int itemHeight = sizeHint(option, index).height();
-    showInformationToolButton->setIcon(QIcon::fromTheme(QLatin1String("help-hint")));
+    showInformationToolButton->setIcon(QIcon::fromTheme(QStringLiteral("help-hint")));
     showInformationToolButton->resize(showInformationToolButton->sizeHint());
     showInformationToolButton->move(option.rect.right() - showInformationToolButton->width(),
                                     (itemHeight - showInformationToolButton->height()) / 2);

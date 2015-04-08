@@ -39,7 +39,7 @@ void FilterActionCopyTest::shouldBeEmpty()
 void FilterActionCopyTest::shouldHaveSieveRequires()
 {
     MailCommon::FilterActionCopy filter;
-    QCOMPARE(filter.sieveRequires(), QStringList() << QLatin1String("fileinto") << QLatin1String("copy"));
+    QCOMPARE(filter.sieveRequires(), QStringList() << QStringLiteral("fileinto") << QStringLiteral("copy"));
 }
 
 void FilterActionCopyTest::shouldHaveRequiresPart()

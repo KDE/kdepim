@@ -34,7 +34,7 @@ void FilterActionForwardTest::shouldBeEmpty()
 {
     MailCommon::FilterActionForward filter;
     QVERIFY(filter.isEmpty());
-    filter.argsFromString(QLatin1String("foo"));
+    filter.argsFromString(QStringLiteral("foo"));
     QVERIFY(!filter.isEmpty());
 }
 

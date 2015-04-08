@@ -41,7 +41,7 @@ FilterAction *FilterActionAddToAddressBook::newAction()
 }
 
 FilterActionAddToAddressBook::FilterActionAddToAddressBook(QObject *parent)
-    : FilterActionWithStringList(QLatin1String("add to address book"), i18n("Add to Address Book"), parent),
+    : FilterActionWithStringList(QStringLiteral("add to address book"), i18n("Add to Address Book"), parent),
       mFromStr(i18nc("Email sender", "From")),
       mToStr(i18nc("Email recipient", "To")),
       mCCStr(i18n("CC")),
@@ -86,7 +86,7 @@ FilterAction::ReturnCode FilterActionAddToAddressBook::process(ItemContext &cont
         contact.setNameFromString(name);
         contact.insertEmail(email, true);
         if (!mCategory.isEmpty()) {
-            contact.setCategories(mCategory.split(QLatin1String(";")));
+            contact.setCategories(mCategory.split(QStringLiteral(";")));
         }
 
         KPIM::AddContactJob *job = new KPIM::AddContactJob(contact, Akonadi::Collection(mCollectionId));
@@ -108,26 +108,26 @@ QWidget *FilterActionAddToAddressBook::createParamWidget(QWidget *parent) const
     QGridLayout *layout = new QGridLayout(widget);
 
     PimCommon::MinimumComboBox *headerCombo = new PimCommon::MinimumComboBox(widget);
-    headerCombo->setObjectName(QLatin1String("HeaderComboBox"));
+    headerCombo->setObjectName(QStringLiteral("HeaderComboBox"));
     layout->addWidget(headerCombo, 0, 0, 2, 1, Qt::AlignVCenter);
 
     QLabel *label = new QLabel(i18n("with category"), widget);
-    label->setObjectName(QLatin1String("label_with_category"));
+    label->setObjectName(QStringLiteral("label_with_category"));
     layout->addWidget(label, 0, 1);
 
     KPIM::TagWidget *categoryEdit = new KPIM::TagWidget(widget);
-    categoryEdit->setObjectName(QLatin1String("CategoryEdit"));
+    categoryEdit->setObjectName(QStringLiteral("CategoryEdit"));
     layout->addWidget(categoryEdit, 0, 2);
 
     label = new QLabel(i18n("in address book"), widget);
-    label->setObjectName(QLatin1String("label_in_addressbook"));
+    label->setObjectName(QStringLiteral("label_in_addressbook"));
     layout->addWidget(label, 1, 1);
 
     Akonadi::CollectionComboBox *collectionComboBox = new Akonadi::CollectionComboBox(widget);
     collectionComboBox->setMimeTypeFilter(QStringList() << KContacts::Addressee::mimeType());
     collectionComboBox->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
 
-    collectionComboBox->setObjectName(QLatin1String("AddressBookComboBox"));
+    collectionComboBox->setObjectName(QStringLiteral("AddressBookComboBox"));
     collectionComboBox->setToolTip(i18n("<p>This defines the preferred address book.<br />"
                                         "If it is not accessible, the filter will fallback to the default address book.</p>"));
     layout->addWidget(collectionComboBox, 1, 2);
@@ -144,7 +144,7 @@ QWidget *FilterActionAddToAddressBook::createParamWidget(QWidget *parent) const
 
 void FilterActionAddToAddressBook::setParamWidgetValue(QWidget *paramWidget) const
 {
-    PimCommon::MinimumComboBox *headerCombo = paramWidget->findChild<PimCommon::MinimumComboBox *>(QLatin1String("HeaderComboBox"));
+    PimCommon::MinimumComboBox *headerCombo = paramWidget->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("HeaderComboBox"));
     Q_ASSERT(headerCombo);
     headerCombo->clear();
     headerCombo->addItem(mFromStr, FromHeader);
@@ -154,11 +154,11 @@ void FilterActionAddToAddressBook::setParamWidgetValue(QWidget *paramWidget) con
 
     headerCombo->setCurrentIndex(headerCombo->findData(mHeaderType));
 
-    KPIM::TagWidget *categoryEdit = paramWidget->findChild<KPIM::TagWidget *>(QLatin1String("CategoryEdit"));
+    KPIM::TagWidget *categoryEdit = paramWidget->findChild<KPIM::TagWidget *>(QStringLiteral("CategoryEdit"));
     Q_ASSERT(categoryEdit);
-    categoryEdit->setSelection(mCategory.split(QLatin1String(";")));
+    categoryEdit->setSelection(mCategory.split(QStringLiteral(";")));
 
-    Akonadi::CollectionComboBox *collectionComboBox = paramWidget->findChild<Akonadi::CollectionComboBox *>(QLatin1String("AddressBookComboBox"));
+    Akonadi::CollectionComboBox *collectionComboBox = paramWidget->findChild<Akonadi::CollectionComboBox *>(QStringLiteral("AddressBookComboBox"));
     Q_ASSERT(collectionComboBox);
     collectionComboBox->setDefaultCollection(Akonadi::Collection(mCollectionId));
     collectionComboBox->setProperty("collectionId", mCollectionId);
@@ -166,15 +166,15 @@ void FilterActionAddToAddressBook::setParamWidgetValue(QWidget *paramWidget) con
 
 void FilterActionAddToAddressBook::applyParamWidgetValue(QWidget *paramWidget)
 {
-    const PimCommon::MinimumComboBox *headerCombo = paramWidget->findChild<PimCommon::MinimumComboBox *>(QLatin1String("HeaderComboBox"));
+    const PimCommon::MinimumComboBox *headerCombo = paramWidget->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("HeaderComboBox"));
     Q_ASSERT(headerCombo);
     mHeaderType = static_cast<HeaderType>(headerCombo->itemData(headerCombo->currentIndex()).toInt());
 
-    const KPIM::TagWidget *categoryEdit = paramWidget->findChild<KPIM::TagWidget *>(QLatin1String("CategoryEdit"));
+    const KPIM::TagWidget *categoryEdit = paramWidget->findChild<KPIM::TagWidget *>(QStringLiteral("CategoryEdit"));
     Q_ASSERT(categoryEdit);
-    mCategory = categoryEdit->selection().join(QLatin1String(";"));
+    mCategory = categoryEdit->selection().join(QStringLiteral(";"));
 
-    const Akonadi::CollectionComboBox *collectionComboBox = paramWidget->findChild<Akonadi::CollectionComboBox *>(QLatin1String("AddressBookComboBox"));
+    const Akonadi::CollectionComboBox *collectionComboBox = paramWidget->findChild<Akonadi::CollectionComboBox *>(QStringLiteral("AddressBookComboBox"));
     Q_ASSERT(collectionComboBox);
     const Akonadi::Collection collection = collectionComboBox->currentCollection();
 
@@ -193,13 +193,13 @@ void FilterActionAddToAddressBook::applyParamWidgetValue(QWidget *paramWidget)
 
 void FilterActionAddToAddressBook::clearParamWidget(QWidget *paramWidget) const
 {
-    PimCommon::MinimumComboBox *headerCombo = paramWidget->findChild<PimCommon::MinimumComboBox *>(QLatin1String("HeaderComboBox"));
+    PimCommon::MinimumComboBox *headerCombo = paramWidget->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("HeaderComboBox"));
     Q_ASSERT(headerCombo);
     headerCombo->setCurrentIndex(0);
 
-    KPIM::TagWidget *categoryEdit = paramWidget->findChild<KPIM::TagWidget *>(QLatin1String("CategoryEdit"));
+    KPIM::TagWidget *categoryEdit = paramWidget->findChild<KPIM::TagWidget *>(QStringLiteral("CategoryEdit"));
     Q_ASSERT(categoryEdit);
-    categoryEdit->setSelection(mCategory.split(QLatin1String(";")));
+    categoryEdit->setSelection(mCategory.split(QStringLiteral(";")));
 }
 
 QString FilterActionAddToAddressBook::argsAsString() const
@@ -207,10 +207,10 @@ QString FilterActionAddToAddressBook::argsAsString() const
     QString result;
 
     switch (mHeaderType) {
-    case FromHeader: result = QLatin1String("From"); break;
-    case ToHeader: result = QLatin1String("To"); break;
-    case CcHeader: result = QLatin1String("CC"); break;
-    case BccHeader: result = QLatin1String("BCC"); break;
+    case FromHeader: result = QStringLiteral("From"); break;
+    case ToHeader: result = QStringLiteral("To"); break;
+    case CcHeader: result = QStringLiteral("CC"); break;
+    case BccHeader: result = QStringLiteral("BCC"); break;
     case UnknownHeader: break;
     }
 
@@ -226,13 +226,13 @@ void FilterActionAddToAddressBook::argsFromString(const QString &argsStr)
 {
     const QStringList parts = argsStr.split(QLatin1Char('\t'), QString::KeepEmptyParts);
     const QString firstElement = parts[ 0 ];
-    if (firstElement == QLatin1String("From")) {
+    if (firstElement == QStringLiteral("From")) {
         mHeaderType = FromHeader;
-    } else if (firstElement == QLatin1String("To")) {
+    } else if (firstElement == QStringLiteral("To")) {
         mHeaderType = ToHeader;
-    } else if (firstElement == QLatin1String("CC")) {
+    } else if (firstElement == QStringLiteral("CC")) {
         mHeaderType = CcHeader;
-    } else if (firstElement == QLatin1String("BCC")) {
+    } else if (firstElement == QStringLiteral("BCC")) {
         mHeaderType = BccHeader;
     } else {
         mHeaderType = UnknownHeader;

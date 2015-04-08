@@ -28,12 +28,12 @@ InvalidFilterWidget::InvalidFilterWidget(QWidget *parent)
 {
     QVBoxLayout *vbox = new QVBoxLayout(this);
     //KF5 add i18n
-    QLabel *lab = new QLabel(QLatin1String("text"));
-    lab->setObjectName(QLatin1String("label"));
+    QLabel *lab = new QLabel(QStringLiteral("text"));
+    lab->setObjectName(QStringLiteral("label"));
     vbox->addWidget(lab);
 
     mInvalidFilterListWidget = new InvalidFilterListView(this);
-    mInvalidFilterListWidget->setObjectName(QLatin1String("invalidfilterlist"));
+    mInvalidFilterListWidget->setObjectName(QStringLiteral("invalidfilterlist"));
     connect(mInvalidFilterListWidget, SIGNAL(showDetails(QString)), this, SIGNAL(showDetails(QString)));
     connect(mInvalidFilterListWidget, SIGNAL(hideInformationWidget()), this, SIGNAL(hideInformationWidget()));
     vbox->addWidget(mInvalidFilterListWidget);

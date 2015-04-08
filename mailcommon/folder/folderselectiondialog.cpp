@@ -120,15 +120,15 @@ FolderSelectionDialog::FolderSelectionDialog(QWidget *parent, SelectionFolderOpt
         d->mUser1Button->setEnabled(false);
         connect(d->mUser1Button, &QPushButton::clicked, this, &FolderSelectionDialog::slotAddChildFolder);
         d->folderTreeWidget->folderTreeView()->setContextMenuPolicy(Qt::CustomContextMenu);
-        connect(d->folderTreeWidget->folderTreeView(), SIGNAL(customContextMenuRequested(QPoint)),
-                SLOT(slotFolderTreeWidgetContextMenuRequested(QPoint)));
+        connect(d->folderTreeWidget->folderTreeView(), &QWidget::customContextMenuRequested,
+                this, &FolderSelectionDialog::slotFolderTreeWidgetContextMenuRequested);
 
     }
 
-    connect(d->folderTreeWidget->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            this, SLOT(slotSelectionChanged()));
-    connect(d->folderTreeWidget->folderTreeWidgetProxyModel(), SIGNAL(rowsInserted(QModelIndex,int,int)),
-            this, SLOT(rowsInserted(QModelIndex,int,int)));
+    connect(d->folderTreeWidget->selectionModel(), &QItemSelectionModel::selectionChanged,
+            this, &FolderSelectionDialog::slotSelectionChanged);
+    connect(d->folderTreeWidget->folderTreeWidgetProxyModel(), &QAbstractItemModel::rowsInserted,
+            this, &FolderSelectionDialog::rowsInserted);
 
     connect(d->folderTreeWidget->folderTreeView(), SIGNAL(doubleClicked(QModelIndex)),
             this, SLOT(slotDoubleClick(QModelIndex)));

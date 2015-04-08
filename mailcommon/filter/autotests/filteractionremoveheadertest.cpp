@@ -51,7 +51,7 @@ void FilterActionRemoveHeaderTest::shouldBeEmpty()
 {
     MailCommon::FilterActionRemoveHeader filter;
     QVERIFY(filter.isEmpty());
-    filter.argsFromString(QLatin1String("bla"));
+    filter.argsFromString(QStringLiteral("bla"));
     QVERIFY(!filter.isEmpty());
 }
 

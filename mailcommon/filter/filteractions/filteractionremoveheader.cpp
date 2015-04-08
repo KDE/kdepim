@@ -112,7 +112,6 @@ QString FilterActionRemoveHeader::sieveCode() const
 
 QString FilterActionRemoveHeader::informationAboutNotValidAction() const
 {
-    //KF5 add i18n
-    return QLatin1String("Header name undefined.");
+    return i18n("Header name undefined.");
 }
 

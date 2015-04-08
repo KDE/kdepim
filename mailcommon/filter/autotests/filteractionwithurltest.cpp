@@ -86,22 +86,22 @@ void FilterActionWithUrlTest::shouldApplyValue()
 {
     TestFilterActionWithUrl filter;
     QWidget *w = filter.createParamWidget(0);
-    filter.argsFromString(QLatin1String("foo"));
+    filter.argsFromString(QStringLiteral("foo"));
     filter.setParamWidgetValue(w);
     filter.applyParamWidgetValue(w);
-    QCOMPARE(filter.argsAsString(), QLatin1String("foo"));
+    QCOMPARE(filter.argsAsString(), QStringLiteral("foo"));
 }
 
 void FilterActionWithUrlTest::shouldTestUrl_data()
 {
     QTest::addColumn<QString>("urlstr");
     QTest::addColumn<QString>("output");
-    QTest::newRow("fullpath") <<  QString(QLatin1String("/usr/bin/ls")) << QString(QLatin1String("/usr/bin/ls"));
-    QTest::newRow("local") <<  QString(QLatin1String("ls")) << QString(QLatin1String("ls"));
-    QTest::newRow("localwithargument") <<  QString(QLatin1String("ls -l")) << QString(QLatin1String("ls -l"));
-    QTest::newRow("fullpathwithargument") <<  QString(QLatin1String("/usr/bin/ls -l")) << QString(QLatin1String("/usr/bin/ls -l"));
-    QTest::newRow("url") <<  QString(QLatin1String("file:///usr/bin/ls -l")) << QString(QLatin1String("/usr/bin/ls -l"));
-    QTest::newRow("url2") <<  QString(QLatin1String("/usr/bin/ls -l")) << QString(QLatin1String("/usr/bin/ls -l"));
+    QTest::newRow("fullpath") <<  QString(QStringLiteral("/usr/bin/ls")) << QString(QStringLiteral("/usr/bin/ls"));
+    QTest::newRow("local") <<  QString(QStringLiteral("ls")) << QString(QStringLiteral("ls"));
+    QTest::newRow("localwithargument") <<  QString(QStringLiteral("ls -l")) << QString(QStringLiteral("ls -l"));
+    QTest::newRow("fullpathwithargument") <<  QString(QStringLiteral("/usr/bin/ls -l")) << QString(QStringLiteral("/usr/bin/ls -l"));
+    QTest::newRow("url") <<  QString(QStringLiteral("file:///usr/bin/ls -l")) << QString(QStringLiteral("/usr/bin/ls -l"));
+    QTest::newRow("url2") <<  QString(QStringLiteral("/usr/bin/ls -l")) << QString(QStringLiteral("/usr/bin/ls -l"));
 }
 
 void FilterActionWithUrlTest::shouldTestUrl()

@@ -33,7 +33,7 @@ FilterActionMoveTest::~FilterActionMoveTest()
 void FilterActionMoveTest::shouldHaveSieveRequires()
 {
     MailCommon::FilterActionMove filter;
-    QCOMPARE(filter.sieveRequires(), QStringList() << QLatin1String("fileinto"));
+    QCOMPARE(filter.sieveRequires(), QStringList() << QStringLiteral("fileinto"));
 }
 
 void FilterActionMoveTest::shouldHaveRequiresPart()
@@ -49,7 +49,7 @@ void FilterActionMoveTest::shouldHaveDefaultValue()
     QVERIFY(w);
     MailCommon::FolderRequester *requester = dynamic_cast<MailCommon::FolderRequester *>(w);
     QVERIFY(requester);
-    QCOMPARE(requester->objectName(), QLatin1String("folderrequester"));
+    QCOMPARE(requester->objectName(), QStringLiteral("folderrequester"));
 }
 
 QTEST_MAIN(FilterActionMoveTest)

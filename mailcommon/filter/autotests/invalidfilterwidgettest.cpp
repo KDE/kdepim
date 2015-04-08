@@ -37,7 +37,7 @@ void InvalidFilterWidgetTest::shouldHaveDefaultValue()
     QLabel *lab = w.findChild<QLabel *>(QStringLiteral("label"));
     QVERIFY(lab);
 
-    MailCommon::InvalidFilterListView *list = w.findChild<MailCommon::InvalidFilterListView *>(QLatin1String("invalidfilterlist"));
+    MailCommon::InvalidFilterListView *list = w.findChild<MailCommon::InvalidFilterListView *>(QStringLiteral("invalidfilterlist"));
     QVERIFY(list);
 }
 

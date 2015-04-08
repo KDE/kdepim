@@ -45,7 +45,7 @@ void FilterActionReplyToTest::shouldBeEmpty()
 
 void FilterActionReplyToTest::shouldHadReplyToHeader()
 {
-    const QString replyTo = QLatin1String("fooreply@kde.org");
+    const QString replyTo = QStringLiteral("fooreply@kde.org");
 
     const QByteArray data = "From: foo@kde.org\n"
                             "To: foo@kde.org\n"
@@ -80,7 +80,7 @@ void FilterActionReplyToTest::shouldHadReplyToHeader()
 
 void FilterActionReplyToTest::shouldReplaceReplyToHeader()
 {
-    const QString replyTo = QLatin1String("fooreply@kde.org");
+    const QString replyTo = QStringLiteral("fooreply@kde.org");
 
     const QByteArray data = "From: foo@kde.org\n"
                             "To: foo@kde.org\n"
