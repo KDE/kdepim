@@ -35,12 +35,10 @@ class FilterActionMove: public FilterActionWithFolder
 public:
     explicit FilterActionMove(QObject *parent = Q_NULLPTR);
     ReturnCode process(ItemContext &context, bool applyOnOutbound) const Q_DECL_OVERRIDE;
-    bool requiresBody() const;
     SearchRule::RequiredPart requiredPart() const Q_DECL_OVERRIDE;
     static FilterAction *newAction();
     QString sieveCode() const Q_DECL_OVERRIDE;
     QStringList sieveRequires() const Q_DECL_OVERRIDE;
-
 };
 
 }

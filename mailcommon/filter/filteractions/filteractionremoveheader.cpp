@@ -110,3 +110,9 @@ QString FilterActionRemoveHeader::sieveCode() const
     return QStringLiteral("deleteheader \"%1\";").arg(mParameter);
 }
 
+QString FilterActionRemoveHeader::informationAboutNotValidAction() const
+{
+    //KF5 add i18n
+    return QLatin1String("Header name undefined.");
+}
+

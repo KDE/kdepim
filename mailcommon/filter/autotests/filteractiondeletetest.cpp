@@ -59,4 +59,19 @@ void FilterActionDeleteTest::shouldRequiresPart()
     QCOMPARE(filter.requiredPart(), MailCommon::SearchRule::Envelope);
 }
 
+void FilterActionDeleteTest::shouldDeleteItem()
+{
+    MailCommon::FilterActionDelete filter(this);
+    KMime::Message::Ptr msgPtr = KMime::Message::Ptr(new KMime::Message());
+    Akonadi::Item item;
+    item.setPayload<KMime::Message::Ptr>(msgPtr);
+    MailCommon::ItemContext context(item, true);
+
+    filter.argsFromString("");
+    QCOMPARE(filter.process(context, false), MailCommon::FilterAction::GoOn);
+    QCOMPARE(context.needsPayloadStore(), false);
+    QCOMPARE(context.deleteItem(), true);
+}
+
+
 QTEST_MAIN(FilterActionDeleteTest)

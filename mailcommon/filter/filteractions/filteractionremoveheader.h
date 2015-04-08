@@ -41,7 +41,8 @@ public:
     QStringList sieveRequires() const Q_DECL_OVERRIDE;
     QString sieveCode() const Q_DECL_OVERRIDE;
 
-    static FilterAction *newAction();
+    static FilterAction* newAction();
+    QString informationAboutNotValidAction() const;
 };
 
 }

@@ -17,6 +17,8 @@
 
 #include "filteractionmovetest.h"
 #include <qtest.h>
+#include "../filteractions/filteractionmove.h"
+#include <folderrequester.h>
 FilterActionMoveTest::FilterActionMoveTest(QObject *parent)
     : QObject(parent)
 {
@@ -26,6 +28,28 @@ FilterActionMoveTest::FilterActionMoveTest(QObject *parent)
 FilterActionMoveTest::~FilterActionMoveTest()
 {
 
+}
+
+void FilterActionMoveTest::shouldHaveSieveRequires()
+{
+    MailCommon::FilterActionMove filter;
+    QCOMPARE(filter.sieveRequires(), QStringList() << QLatin1String("fileinto"));
+}
+
+void FilterActionMoveTest::shouldHaveRequiresPart()
+{
+    MailCommon::FilterActionMove filter;
+    QCOMPARE(filter.requiredPart(), MailCommon::SearchRule::Envelope);
+}
+
+void FilterActionMoveTest::shouldHaveDefaultValue()
+{
+    MailCommon::FilterActionMove filter;
+    QWidget *w = filter.createParamWidget(0);
+    QVERIFY(w);
+    MailCommon::FolderRequester *requester = dynamic_cast<MailCommon::FolderRequester *>(w);
+    QVERIFY(requester);
+    QCOMPARE(requester->objectName(), QLatin1String("folderrequester"));
 }
 
 QTEST_MAIN(FilterActionMoveTest)

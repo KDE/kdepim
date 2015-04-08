@@ -44,6 +44,7 @@ QWidget *FilterActionWithFolder::createParamWidget(QWidget *parent) const
     FolderRequester *requester = new FolderRequester(parent);
     requester->setShowOutbox(false);
     setParamWidgetValue(requester);
+    requester->setObjectName(QLatin1String("folderrequester"));
 
     connect(requester, &FolderRequester::folderChanged, this, &FilterActionWithFolder::filterActionModified);
 

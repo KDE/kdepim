@@ -51,11 +51,6 @@ FilterAction::ReturnCode FilterActionMove::process(ItemContext &context , bool) 
     return GoOn;
 }
 
-bool FilterActionMove::requiresBody() const
-{
-    return false;
-}
-
 SearchRule::RequiredPart FilterActionMove::requiredPart() const
 {
     return SearchRule::Envelope;
