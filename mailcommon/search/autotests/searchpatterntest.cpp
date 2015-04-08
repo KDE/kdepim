@@ -76,7 +76,7 @@ void SearchPatternTest::shouldRuleRequirePart()
     QFETCH( QByteArray, field );
     QFETCH( MailCommon::SearchRule::RequiredPart, part );
 
-    MailCommon::SearchRule::Ptr rule = MailCommon::SearchRule::createInstance( field, MailCommon::SearchRule::FuncNone, QString() );
+    const MailCommon::SearchRule::Ptr rule = MailCommon::SearchRule::createInstance( field, MailCommon::SearchRule::FuncNone, QString() );
 
     QCOMPARE( rule->requiredPart(), part );
 }
