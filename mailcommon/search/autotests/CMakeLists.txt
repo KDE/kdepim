@@ -1,8 +1,10 @@
 set( mailcommon_searchpatterntest_source searchpatterntest.cpp )
-kde4_add_unit_test( searchpatterntest ${mailcommon_searchpatterntest_source})
+add_executable( searchpatterntest ${mailcommon_searchpatterntest_source})
+add_test(searchpatterntest searchpatterntest)
+ecm_mark_as_test(searchpatterntest)
 target_link_libraries( searchpatterntest
   mailcommon
-  ${KDE4_KDECORE_LIBS}
-  ${QT_QTTEST_LIBRARY}
-  ${QT_QTGUI_LIBRARY}
+  KF5::KDELibs4Support
+  Qt5::Test
+  Qt5::Gui
 )

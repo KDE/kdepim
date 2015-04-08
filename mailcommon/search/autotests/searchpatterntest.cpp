@@ -17,7 +17,7 @@
 
 #include "searchpatterntest.h"
 #include "../searchpattern.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 SearchPatternTest::SearchPatternTest(QObject *parent)
     : QObject(parent)
@@ -81,4 +81,4 @@ void SearchPatternTest::shouldRuleRequirePart()
     QCOMPARE( rule->requiredPart(), part );
 }
 
-QTEST_KDEMAIN(SearchPatternTest, NoGUI)
+QTEST_MAIN(SearchPatternTest)
