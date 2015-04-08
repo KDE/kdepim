@@ -16,6 +16,7 @@
 */
 
 #include "filteractionmovetest.h"
+#include "../filteractions/filteractionmove.h"
 #include <qtest_kde.h>
 FilterActionMoveTest::FilterActionMoveTest(QObject *parent)
     : QObject(parent)
@@ -26,6 +27,18 @@ FilterActionMoveTest::FilterActionMoveTest(QObject *parent)
 FilterActionMoveTest::~FilterActionMoveTest()
 {
 
+}
+
+void FilterActionMoveTest::shouldHaveSieveRequires()
+{
+    MailCommon::FilterActionMove filter;
+    QCOMPARE(filter.sieveRequires(), QStringList() << QLatin1String("fileinto"));
+}
+
+void FilterActionMoveTest::shouldHaveRequiresPart()
+{
+    MailCommon::FilterActionMove filter;
+    QCOMPARE(filter.requiredPart(), MailCommon::SearchRule::Envelope);
 }
 
 QTEST_KDEMAIN(FilterActionMoveTest, GUI)

@@ -26,6 +26,9 @@ class FilterActionMoveTest : public QObject
 public:
     explicit FilterActionMoveTest(QObject *parent = 0);
     ~FilterActionMoveTest();
+private Q_SLOTS:
+    void shouldHaveSieveRequires();
+    void shouldHaveRequiresPart();
 };
 
 #endif // FILTERACTIONMOVETEST_H
