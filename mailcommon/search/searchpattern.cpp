@@ -1137,8 +1137,8 @@ bool SearchRuleDate::matches( const Akonadi::Item &item ) const
     const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
 
 
-    QDate msgDate = msg->date()->dateTime().date();
-    QDate dateValue = QDate::fromString( contents(), Qt::ISODate );
+    const QDate msgDate = msg->date()->dateTime().date();
+    const QDate dateValue = QDate::fromString( contents(), Qt::ISODate );
     bool rc = matchesInternal( dateValue, msgDate );
     if ( FilterLog::instance()->isLogging() ) {
         QString msg = ( rc ? "<font color=#00FF00>1 = </font>"
