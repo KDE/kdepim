@@ -59,3 +59,7 @@ SearchRule::RequiredPart FilterActionReplyTo::requiredPart() const
     return SearchRule::CompleteMessage;
 }
 
+QString FilterActionReplyTo::informationAboutNotValidAction() const
+{
+    return i18n("Email address was not defined.");
+}

@@ -359,6 +359,7 @@ void SieveEditorTextModeWidget::setParsingEditorWarningError(const QString &scri
 
 void SieveEditorTextModeWidget::goToLine()
 {
+    mGoToLine->setMaximumLineCount(mTextEdit->document()->blockCount());
     mGoToLine->goToLine();
 }
 

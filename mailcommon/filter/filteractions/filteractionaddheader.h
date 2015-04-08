@@ -53,6 +53,7 @@ public:
     QString sieveCode() const Q_DECL_OVERRIDE;
 
     bool isEmpty() const;
+    QString informationAboutNotValidAction() const;
 private:
     QString mValue;
 };

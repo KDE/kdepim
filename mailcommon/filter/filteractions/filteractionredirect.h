@@ -38,6 +38,7 @@ public:
     SearchRule::RequiredPart requiredPart() const Q_DECL_OVERRIDE;
     static FilterAction *newAction();
     QString sieveCode() const Q_DECL_OVERRIDE;
+    QString informationAboutNotValidAction() const Q_DECL_OVERRIDE;
 };
 
 }

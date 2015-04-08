@@ -51,7 +51,7 @@ bool FilterActionAddHeader::isEmpty() const
 
 FilterAction::ReturnCode FilterActionAddHeader::process(ItemContext &context , bool) const
 {
-    if (mParameter.isEmpty() || mValue.isEmpty()) {
+    if ( isEmpty() ) {
         return ErrorButGoOn;
     }
 
@@ -213,5 +213,21 @@ QString FilterActionAddHeader::sieveCode() const
     } else {
         return QStringLiteral("addheader \"%1\" \"%2\";").arg(mParameter).arg(mValue);
     }
+}
+
+QString FilterActionAddHeader::informationAboutNotValidAction() const
+{
+    //KF5 add i18n
+    QString result;
+    if (mParameter.isEmpty()) {
+        result = i18n("The header name was missing.");
+    }
+    if (mValue.isEmpty()) {
+        if (result.isEmpty()) {
+            result += QLatin1Char('\n');
+        }
+        result += i18n("The header value was missing.");
+    }
+    return result;
 }
 

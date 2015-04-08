@@ -17,6 +17,9 @@
 
 #include "filteractionexectest.h"
 #include <qtest.h>
+#include "../filteractions/filteractionexec.h"
+#include <KUrlRequester>
+#include <filteractions/filteractionwithurl.h>
 
 FilterActionExecTest::FilterActionExecTest(QObject *parent)
     : QObject(parent)
@@ -27,6 +30,23 @@ FilterActionExecTest::FilterActionExecTest(QObject *parent)
 FilterActionExecTest::~FilterActionExecTest()
 {
 
+}
+
+void FilterActionExecTest::shouldHaveDefaultValue()
+{
+    MailCommon::FilterActionExec filter;
+    QWidget *w = filter.createParamWidget(0);
+    KUrlRequester *requester = w->findChild<KUrlRequester *>(QLatin1String("requester"));
+    QVERIFY(requester);
+
+    MailCommon::FilterActionWithUrlHelpButton *helpButton = w->findChild<MailCommon::FilterActionWithUrlHelpButton *>(QLatin1String("helpbutton"));
+    QVERIFY(helpButton);
+}
+
+void FilterActionExecTest::shouldHaveRequirePart()
+{
+    MailCommon::FilterActionExec filter;
+    QCOMPARE(filter.requiredPart(), MailCommon::SearchRule::CompleteMessage);
 }
 
 QTEST_MAIN(FilterActionExecTest)

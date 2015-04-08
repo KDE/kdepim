@@ -46,7 +46,7 @@ FilterActionAddToAddressBook::FilterActionAddToAddressBook(QObject *parent)
       mToStr(i18nc("Email recipient", "To")),
       mCCStr(i18n("CC")),
       mBCCStr(i18n("BCC")),
-      mHeaderType(FromHeader),
+      mHeaderType(UnknownHeader),
       mCollectionId(-1),
       mCategory(i18n("KMail Filter"))
 {
@@ -54,12 +54,12 @@ FilterActionAddToAddressBook::FilterActionAddToAddressBook(QObject *parent)
 
 bool FilterActionAddToAddressBook::isEmpty() const
 {
-    return (mCollectionId == -1);
+    return (mCollectionId == -1) || (mHeaderType == UnknownHeader);
 }
 
 FilterAction::ReturnCode FilterActionAddToAddressBook::process(ItemContext &context , bool) const
 {
-    if (mCollectionId == -1) {
+    if ( isEmpty() ) {
         return ErrorButGoOn;
     }
 
@@ -71,7 +71,10 @@ FilterAction::ReturnCode FilterActionAddToAddressBook::process(ItemContext &cont
     case ToHeader: headerLine = msg->to()->asUnicodeString(); break;
     case CcHeader: headerLine = msg->cc()->asUnicodeString(); break;
     case BccHeader: headerLine = msg->bcc()->asUnicodeString(); break;
+    case UnknownHeader: break;
     }
+    if (headerLine.isEmpty())
+        return ErrorButGoOn;
 
     const QStringList emails = KEmailAddress::splitAddressList(headerLine);
 
@@ -208,6 +211,7 @@ QString FilterActionAddToAddressBook::argsAsString() const
     case ToHeader: result = QLatin1String("To"); break;
     case CcHeader: result = QLatin1String("CC"); break;
     case BccHeader: result = QLatin1String("BCC"); break;
+    case UnknownHeader: break;
     }
 
     result += QLatin1Char('\t');
@@ -230,8 +234,9 @@ void FilterActionAddToAddressBook::argsFromString(const QString &argsStr)
         mHeaderType = CcHeader;
     } else if (firstElement == QLatin1String("BCC")) {
         mHeaderType = BccHeader;
+    } else {
+        mHeaderType = UnknownHeader;
     }
-
     if (parts.count() >= 2) {
         mCollectionId = parts[ 1 ].toLongLong();
     }

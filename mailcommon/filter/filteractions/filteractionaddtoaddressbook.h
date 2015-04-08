@@ -54,7 +54,8 @@ private:
         FromHeader,
         ToHeader,
         CcHeader,
-        BccHeader
+        BccHeader,
+        UnknownHeader
     };
 
     const QString mFromStr, mToStr, mCCStr, mBCCStr;

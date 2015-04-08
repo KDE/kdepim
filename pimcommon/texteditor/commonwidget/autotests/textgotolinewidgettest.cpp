@@ -129,4 +129,26 @@ void TextGoToLineWidgetTest::shouldSetFocusWhenWeRecallGotToLine()
     QVERIFY(line->hasFocus());
 }
 
-QTEST_MAIN(TextGoToLineWidgetTest)
+void TextGoToLineWidgetTest::shouldChangeMaximumValue()
+{
+    PimCommon::TextGoToLineWidget edit;
+    edit.show();
+    QTest::qWaitForWindowShown(&edit);
+    QSpinBox *line = qFindChild<QSpinBox *>(&edit, QLatin1String("line"));
+
+    QCOMPARE(line->value(), 1);
+    QCOMPARE(line->minimum(), 1);
+
+    edit.setMaximumLineCount(50);
+    QCOMPARE(line->value(), 1);
+    QCOMPARE(line->minimum(), 1);
+    QCOMPARE(line->maximum(), 50);
+
+    edit.setMaximumLineCount(10);
+    QCOMPARE(line->value(), 1);
+    QCOMPARE(line->minimum(), 1);
+    QCOMPARE(line->maximum(), 10);
+}
+
+
+QTEST_MAIN( TextGoToLineWidgetTest )

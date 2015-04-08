@@ -26,6 +26,9 @@ class FilterActionExecTest : public QObject
 public:
     explicit FilterActionExecTest(QObject *parent = 0);
     ~FilterActionExecTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
+    void shouldHaveRequirePart();
 };
 
 #endif // FILTERACTIONEXECTEST_H
