@@ -39,7 +39,7 @@ public:
 
     static FilterAction *newAction();
 
-    bool isEmpty() const;
+    bool isEmpty() const Q_DECL_OVERRIDE;
 
     void argsFromString(const QString &argsStr) Q_DECL_OVERRIDE;
     QString argsAsString() const Q_DECL_OVERRIDE;

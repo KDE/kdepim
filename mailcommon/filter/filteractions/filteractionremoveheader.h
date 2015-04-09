@@ -42,7 +42,7 @@ public:
     QString sieveCode() const Q_DECL_OVERRIDE;
 
     static FilterAction* newAction();
-    QString informationAboutNotValidAction() const;
+    QString informationAboutNotValidAction() const Q_DECL_OVERRIDE;
 };
 
 }

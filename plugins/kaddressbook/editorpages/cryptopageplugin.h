@@ -40,15 +40,14 @@ class CryptoPagePlugin : public Akonadi::ContactEditorPagePlugin
 {
     Q_OBJECT
     Q_INTERFACES(Akonadi::ContactEditorPagePlugin)
-    Q_PLUGIN_METADATA(IID "org.kde.kaddressbook.CryptoPagePlugin");
+    Q_PLUGIN_METADATA(IID "org.kde.kaddressbook.CryptoPagePlugin")
 public:
     CryptoPagePlugin();
     ~CryptoPagePlugin();
-
-    virtual QString title() const;
-    virtual void loadContact(const KContacts::Addressee &contact);
-    virtual void storeContact(KContacts::Addressee &contact) const;
-    virtual void setReadOnly(bool readOnly);
+    QString title() const Q_DECL_OVERRIDE;
+    void loadContact(const KContacts::Addressee &contact) Q_DECL_OVERRIDE;
+    void storeContact(KContacts::Addressee &contact) const Q_DECL_OVERRIDE;
+    void setReadOnly(bool readOnly) Q_DECL_OVERRIDE;
 
 private:
     enum { NumberOfProtocols = 4 };

@@ -35,16 +35,16 @@ class FilterActionForward: public FilterActionWithAddress
 public:
     explicit FilterActionForward(QObject *parent = Q_NULLPTR);
     static FilterAction *newAction();
-    ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
-    SearchRule::RequiredPart requiredPart() const;
-    QWidget *createParamWidget(QWidget *parent) const;
-    void applyParamWidgetValue(QWidget *paramWidget);
-    void setParamWidgetValue(QWidget *paramWidget) const;
-    void clearParamWidget(QWidget *paramWidget) const;
-    void argsFromString(const QString &argsStr);
-    QString argsAsString() const;
-    QString displayString() const;
-    bool argsFromStringInteractive(const QString &argsStr, const QString &filterName);
+    ReturnCode process(ItemContext &context, bool applyOnOutbound) const Q_DECL_OVERRIDE;
+    SearchRule::RequiredPart requiredPart() const Q_DECL_OVERRIDE;
+    QWidget *createParamWidget(QWidget *parent) const Q_DECL_OVERRIDE;
+    void applyParamWidgetValue(QWidget *paramWidget) Q_DECL_OVERRIDE;
+    void setParamWidgetValue(QWidget *paramWidget) const Q_DECL_OVERRIDE;
+    void clearParamWidget(QWidget *paramWidget) const Q_DECL_OVERRIDE;
+    void argsFromString(const QString &argsStr) Q_DECL_OVERRIDE;
+    QString argsAsString() const Q_DECL_OVERRIDE;
+    QString displayString() const Q_DECL_OVERRIDE;
+    bool argsFromStringInteractive(const QString &argsStr, const QString &filterName) Q_DECL_OVERRIDE;
 
 private:
     mutable QString mTemplate;

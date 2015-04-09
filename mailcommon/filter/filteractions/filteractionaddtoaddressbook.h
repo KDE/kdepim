@@ -49,7 +49,7 @@ public:
     QString argsAsString() const Q_DECL_OVERRIDE;
     void argsFromString(const QString &argsStr) Q_DECL_OVERRIDE;
 
-    QString informationAboutNotValidAction() const;
+    QString informationAboutNotValidAction() const Q_DECL_OVERRIDE;
 private:
     enum HeaderType {
         FromHeader,

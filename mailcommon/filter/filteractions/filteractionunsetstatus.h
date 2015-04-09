@@ -28,13 +28,13 @@ class FilterActionUnsetStatus: public FilterActionStatus
     Q_OBJECT
 public:
     explicit FilterActionUnsetStatus(QObject *parent = Q_NULLPTR);
-    ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
-    SearchRule::RequiredPart requiredPart() const;
+    ReturnCode process(ItemContext &context, bool applyOnOutbound) const Q_DECL_OVERRIDE;
+    SearchRule::RequiredPart requiredPart() const Q_DECL_OVERRIDE;
 
     static FilterAction *newAction();
-    QString sieveCode() const;
-    QStringList sieveRequires() const;
-    bool isEmpty() const;
+    QString sieveCode() const Q_DECL_OVERRIDE;
+    QStringList sieveRequires() const Q_DECL_OVERRIDE;
+    bool isEmpty() const Q_DECL_OVERRIDE;
 };
 }
 

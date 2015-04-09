@@ -56,7 +56,7 @@ public:
     void setParamWidgetValue(QWidget *paramWidget) const Q_DECL_OVERRIDE;
     void clearParamWidget(QWidget *paramWidget) const Q_DECL_OVERRIDE;
 
-    QString informationAboutNotValidAction() const;
+    QString informationAboutNotValidAction() const Q_DECL_OVERRIDE;
 private Q_SLOTS:
     void slotTagListingFinished();
 

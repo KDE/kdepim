@@ -276,7 +276,7 @@ public:
         }
     }
 
-    virtual bool requiresAttachmentListInHeader() const
+    bool requiresAttachmentListInHeader() const Q_DECL_OVERRIDE
     {
         return true;
     }

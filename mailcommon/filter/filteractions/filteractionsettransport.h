@@ -34,44 +34,44 @@ class FilterActionSetTransport: public FilterAction
     Q_OBJECT
 public:
     explicit FilterActionSetTransport(QObject *parent = Q_NULLPTR);
-    ReturnCode process(ItemContext &context, bool applyOnOutbound) const;
-    SearchRule::RequiredPart requiredPart() const;
+    ReturnCode process(ItemContext &context, bool applyOnOutbound) const Q_DECL_OVERRIDE;
+    SearchRule::RequiredPart requiredPart() const Q_DECL_OVERRIDE;
     static FilterAction *newAction();
-    QWidget *createParamWidget(QWidget *parent) const;
+    QWidget *createParamWidget(QWidget *parent) const Q_DECL_OVERRIDE;
     /**
      * @copydoc FilterAction::applyParamWidgetValue
      */
-    void applyParamWidgetValue(QWidget *paramWidget);
+    void applyParamWidgetValue(QWidget *paramWidget) Q_DECL_OVERRIDE;
 
     /**
      * @copydoc FilterAction::setParamWidgetValue
      */
-    void setParamWidgetValue(QWidget *paramWidget) const;
+    void setParamWidgetValue(QWidget *paramWidget) const Q_DECL_OVERRIDE;
 
     /**
      * @copydoc FilterAction::clearParamWidget
      */
-    void clearParamWidget(QWidget *paramWidget) const;
+    void clearParamWidget(QWidget *paramWidget) const Q_DECL_OVERRIDE;
 
-    bool argsFromStringInteractive(const QString &argsStr, const QString &filterName);
+    bool argsFromStringInteractive(const QString &argsStr, const QString &filterName) Q_DECL_OVERRIDE;
 
     /**
      * @copydoc FilterAction::argsFromString
      */
-    void argsFromString(const QString &argsStr);
+    void argsFromString(const QString &argsStr) Q_DECL_OVERRIDE;
     /**
      * @copydoc FilterAction::isEmpty
      */
-    bool isEmpty() const;
+    bool isEmpty() const Q_DECL_OVERRIDE;
     /**
      * @copydoc FilterAction::argsAsString
      */
-    QString argsAsString() const;
+    QString argsAsString() const Q_DECL_OVERRIDE;
 
     /**
      * @copydoc FilterAction::displayString
      */
-    QString displayString() const;
+    QString displayString() const Q_DECL_OVERRIDE;
 
 protected:
     int mParameter;
