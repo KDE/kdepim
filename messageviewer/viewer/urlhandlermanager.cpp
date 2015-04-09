@@ -781,7 +781,6 @@ bool AttachmentURLHandler::handleClick( const KUrl & url, ViewerPrivate * w ) co
     KMime::Content *node = nodeForUrl( url, w );
     if ( !node )
         return false;
-
     const bool inHeader = attachmentIsInHeader( url );
     const bool shouldShowDialog = !w->nodeHelper()->isNodeDisplayedEmbedded( node ) || !inHeader;
     if ( inHeader )
@@ -819,7 +818,12 @@ bool AttachmentURLHandler::handleDrag( const KUrl &url, ViewerPrivate *window ) 
     KMime::Content *node = nodeForUrl( url, window );
     if ( !node )
         return false;
-
+    if ( node->header<KMime::Headers::Subject>() ) {
+        if (!node->contents().isEmpty()) {
+            node = node->contents().first();
+            window->nodeHelper()->writeNodeToTempFile(node);
+        }
+    }
     const KUrl tUrl = window->nodeHelper()->tempFileUrlFromNode( node );
     const QString fileName = tUrl.path();
     if ( !fileName.isEmpty() ) {
