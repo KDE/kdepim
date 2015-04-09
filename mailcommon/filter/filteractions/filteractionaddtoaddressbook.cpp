@@ -248,3 +248,18 @@ void FilterActionAddToAddressBook::argsFromString(const QString &argsStr)
     }
 }
 
+QString FilterActionAddToAddressBook::informationAboutNotValidAction() const
+{
+    //KF5 add i18n
+    QString result;
+    if (mHeaderType == UnknownHeader) {
+        result = QLatin1String("Header type selected is unknown.");
+    }
+    if (mCollectionId == -1) {
+        if (!result.isEmpty()) {
+            result += QLatin1Char('\n');
+        }
+        result += QLatin1String("No addressbook selected.");
+    }
+    return result;
+}

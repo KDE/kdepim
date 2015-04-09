@@ -18,7 +18,7 @@
 */
 
 #include "searchpatternedit.h"
-#include "rulewidgethandlermanager.h"
+#include "widgethandler/rulewidgethandlermanager.h"
 using MailCommon::RuleWidgetHandlerManager;
 #include "mailcommon_debug.h"
 #include <pimcommon/widgets/minimumcombobox.h>
