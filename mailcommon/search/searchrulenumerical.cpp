@@ -61,11 +61,11 @@ bool SearchRuleNumerical::matches( const Akonadi::Item &item ) const
     qint64 numericalMsgContents = 0;
     qint64 numericalValue = 0;
 
-    if ( kasciistricmp( field(), "<size>" ) == 0 ) {
+    if ( qstricmp( field(), "<size>" ) == 0 ) {
         numericalMsgContents = item.size();
         numericalValue = contents().toLongLong();
         msgContents.setNum( numericalMsgContents );
-    } else if ( kasciistricmp( field(), "<age in days>" ) == 0 ) {
+    } else if ( qstricmp( field(), "<age in days>" ) == 0 ) {
         QDateTime msgDateTime = msg->date()->dateTime();
         numericalMsgContents = msgDateTime.daysTo( QDateTime::currentDateTime() );
         numericalValue = contents().toInt();
@@ -145,11 +145,11 @@ void SearchRuleNumerical::addQueryTerms( Akonadi::SearchTerm &groupTerm, bool &e
 {
     using namespace Akonadi;
     emptyIsNotAnError = false;
-    if ( kasciistricmp( field(), "<size>" ) == 0 ) {
+    if ( qstricmp( field(), "<size>" ) == 0 ) {
         EmailSearchTerm term(EmailSearchTerm::ByteSize, contents().toInt(), akonadiComparator());
         term.setIsNegated( isNegated() );
         groupTerm.addSubTerm(term);
-    } else if ( kasciistricmp( field(), "<age in days>" ) == 0 ) {
+    } else if ( qstricmp( field(), "<age in days>" ) == 0 ) {
         QDate date(QDate::currentDate());
         date = date.addDays( contents().toInt() );
         EmailSearchTerm term(EmailSearchTerm::HeaderOnlyDate, date, akonadiComparator());
