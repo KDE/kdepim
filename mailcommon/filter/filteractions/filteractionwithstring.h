@@ -51,42 +51,42 @@ public:
     /**
      * @copydoc FilterAction::isEmpty
      */
-    virtual bool isEmpty() const;
+    bool isEmpty() const Q_DECL_OVERRIDE;
 
     /**
      * @copydoc FilterAction::createParamWidget
      */
-    virtual QWidget *createParamWidget(QWidget *parent) const Q_DECL_OVERRIDE;
+    QWidget *createParamWidget(QWidget *parent) const Q_DECL_OVERRIDE;
 
     /**
      * @copydoc FilterAction::applyParamWidgetValue
      */
-    virtual void applyParamWidgetValue(QWidget *paramWidget) Q_DECL_OVERRIDE;
+    void applyParamWidgetValue(QWidget *paramWidget) Q_DECL_OVERRIDE;
 
     /**
      * @copydoc FilterAction::setParamWidgetValue
      */
-    virtual void setParamWidgetValue(QWidget *paramWidget) const Q_DECL_OVERRIDE;
+    void setParamWidgetValue(QWidget *paramWidget) const Q_DECL_OVERRIDE;
 
     /**
      * @copydoc FilterAction::clearParamWidget
      */
-    virtual void clearParamWidget(QWidget *paramWidget) const Q_DECL_OVERRIDE;
+    void clearParamWidget(QWidget *paramWidget) const Q_DECL_OVERRIDE;
 
     /**
      * @copydoc FilterAction::argsFromString
      */
-    virtual void argsFromString(const QString &argsStr) Q_DECL_OVERRIDE;
+    void argsFromString(const QString &argsStr) Q_DECL_OVERRIDE;
 
     /**
      * @copydoc FilterAction::argsAsString
      */
-    virtual QString argsAsString() const Q_DECL_OVERRIDE;
+    QString argsAsString() const Q_DECL_OVERRIDE;
 
     /**
      * @copydoc FilterAction::displayString
      */
-    virtual QString displayString() const Q_DECL_OVERRIDE;
+    QString displayString() const Q_DECL_OVERRIDE;
 
 protected:
     QString mParameter;

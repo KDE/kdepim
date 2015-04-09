@@ -39,17 +39,17 @@ public:
     /**
      * @copydoc SearchRule::isEmpty()
      */
-    virtual bool isEmpty() const ;
+    bool isEmpty() const Q_DECL_OVERRIDE;
 
     /**
      * @copydoc SearchRule::matches()
      */
-    virtual bool matches( const Akonadi::Item &item ) const;
+    bool matches( const Akonadi::Item &item ) const Q_DECL_OVERRIDE;
 
     /**
      * @copydoc SearchRule::requiredPart()
      */
-    virtual RequiredPart requiredPart() const;
+    RequiredPart requiredPart() const Q_DECL_OVERRIDE;
 
     // Optimized matching not implemented, will use the unoptimized matching
     // from SearchRule
@@ -64,7 +64,7 @@ public:
     /**
      * @copydoc SearchRule::addQueryTerms()
      */
-    virtual void addQueryTerms( Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError ) const;
+    void addQueryTerms( Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError ) const Q_DECL_OVERRIDE;
 
 };
 }
