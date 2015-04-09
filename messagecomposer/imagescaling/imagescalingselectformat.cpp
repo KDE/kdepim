@@ -94,6 +94,7 @@ ImageScalingSelectFormat::ImageScalingSelectFormat(QWidget *parent)
     : QWidget(parent)
 {
     QHBoxLayout *lay = new QHBoxLayout(this);
+    lay->setMargin(0);
     mFormat = new KLineEdit;
     connect(mFormat, SIGNAL(textChanged(QString)),SIGNAL(textChanged(QString)));
     mFormat->setReadOnly(true);
