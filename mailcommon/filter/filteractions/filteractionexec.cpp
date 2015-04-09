@@ -43,3 +43,8 @@ FilterAction* FilterActionExec::newAction()
     return new FilterActionExec();
 }
 
+QString FilterActionExec::informationAboutNotValidAction() const
+{
+    //KF5 add i18n
+    return QLatin1String("No action defined.");
+}

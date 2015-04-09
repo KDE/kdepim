@@ -45,6 +45,7 @@ public:
     QString displayString() const;
     bool argsFromStringInteractive( const QString &argsStr, const QString& filterName );
 
+    QString informationAboutNotValidAction() const;
 private:
     mutable QString mTemplate;
 };

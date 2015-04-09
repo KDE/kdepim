@@ -244,3 +244,8 @@ QString FilterActionForward::displayString() const
 }
 
 
+QString FilterActionForward::informationAboutNotValidAction() const
+{
+    //KF5 add i18n
+    return QLatin1String("Email address was not defined.");
+}

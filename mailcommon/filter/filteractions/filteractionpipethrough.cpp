@@ -44,3 +44,8 @@ SearchRule::RequiredPart FilterActionPipeThrough::requiredPart() const
 }
 
 
+QString FilterActionPipeThrough::informationAboutNotValidAction() const
+{
+    //KF5 add i18n
+    return QLatin1String("No action defined.");
+}
