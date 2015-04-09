@@ -848,13 +848,11 @@ bool AttachmentURLHandler::handleClick(const KUrl &url, ViewerPrivate *w) const
     if (!node) {
         return false;
     }
-
-    const bool inHeader = attachmentIsInHeader(url);
-    const bool shouldShowDialog = !w->nodeHelper()->isNodeDisplayedEmbedded(node) || !inHeader;
-    if (inHeader) {
-        w->scrollToAttachment(node);
-    }
-    if (shouldShowDialog)
+    const bool inHeader = attachmentIsInHeader( url );
+    const bool shouldShowDialog = !w->nodeHelper()->isNodeDisplayedEmbedded( node ) || !inHeader;
+    if ( inHeader )
+        w->scrollToAttachment( node );
+    if ( shouldShowDialog )
         // PENDING(romain_kdab) : replace with toLocalFile() ?
     {
         w->openAttachment(node, w->nodeHelper()->tempFileUrlFromNode(node).path());
@@ -892,8 +890,14 @@ bool AttachmentURLHandler::handleDrag(const KUrl &url, ViewerPrivate *window) co
     if (!node) {
         return false;
     }
+    if ( node->header<KMime::Headers::Subject>() ) {
+        if (!node->contents().isEmpty()) {
+            node = node->contents().first();
+            window->nodeHelper()->writeNodeToTempFile(node);
+        }
+    }
+    const QUrl tUrl = window->nodeHelper()->tempFileUrlFromNode( node );
 
-    const QUrl tUrl = window->nodeHelper()->tempFileUrlFromNode(node);
     const QString fileName = tUrl.path();
     if (!fileName.isEmpty()) {
         QFile f(fileName);

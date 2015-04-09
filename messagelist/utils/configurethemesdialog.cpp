@@ -31,6 +31,8 @@
 #include <QFrame>
 #include <QHash>
 
+
+#include <KMessageBox>
 #include <KLocalizedString>
 #include <KIconLoader>
 #include <KConfigGroup>
@@ -401,26 +403,27 @@ void ConfigureThemesDialog::Private::deleteThemeButtonClicked()
     if (list.isEmpty()) {
         return;
     }
+    //KF5 add i18n
+    if (KMessageBox::Yes == KMessageBox::questionYesNo(q, list.count() > 1 ? QLatin1String("Do you want to delete selected themes?")
+                                                       : QString::fromLatin1("Do you want to delete \"%1\"?").arg(list.first()->text()), QLatin1String("Delete Theme"))) {
+        mEditor->editTheme( Q_NULLPTR ); // forget it
+        Q_FOREACH(QListWidgetItem * it, list) {
+            ThemeListWidgetItem * item = dynamic_cast< ThemeListWidgetItem * >( it );
+            if ( !item )
+                return;
+            if(!item->theme()->readOnly()) {
+                delete item;// this will trigger themeListCurrentItemChanged()
+            }
+            if ( mThemeList->count() < 2 )
+                break; // no way: desperately try to keep at least one option set alive :)
+        }
 
-    mEditor->editTheme(Q_NULLPTR);   // forget it
-    Q_FOREACH (QListWidgetItem *it, list) {
-        ThemeListWidgetItem *item = dynamic_cast< ThemeListWidgetItem * >(it);
-        if (!item) {
-            return;
-        }
-        if (!item->theme()->readOnly()) {
-            delete item;// this will trigger themeListCurrentItemChanged()
-        }
-        if (mThemeList->count() < 2) {
-            break;    // no way: desperately try to keep at least one option set alive :)
-        }
+        ThemeListWidgetItem *newItem = dynamic_cast< ThemeListWidgetItem * >(mThemeList->currentItem());
+        mDeleteThemeButton->setEnabled( newItem && !newItem->theme()->readOnly() );
+        mExportThemeButton->setEnabled( newItem );
+        const int numberOfSelectedItem(mThemeList->selectedItems().count());
+        mCloneThemeButton->setEnabled(numberOfSelectedItem == 1);
     }
-
-    ThemeListWidgetItem *newItem = dynamic_cast< ThemeListWidgetItem * >(mThemeList->currentItem());
-    mDeleteThemeButton->setEnabled(newItem && !newItem->theme()->readOnly());
-    mExportThemeButton->setEnabled(newItem);
-    const int numberOfSelectedItem(mThemeList->selectedItems().count());
-    mCloneThemeButton->setEnabled(numberOfSelectedItem == 1);
 }
 
 void ConfigureThemesDialog::Private::importThemeButtonClicked()

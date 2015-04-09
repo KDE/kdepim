@@ -344,29 +344,8 @@
          <property name="title">
           <string>Resize filename</string>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_7">
-          <item>
-           <widget class="QCheckBox" name="renameResizedImage">
-            <property name="text">
-             <string>Rename resized images with following pattern:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="KLineEdit" name="renameResizedImagePattern">
-            <property name="showClearButton" stdset="0">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="help">
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item>
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="3" column="0">
            <spacer name="verticalSpacer_3">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -378,6 +357,27 @@
              </size>
             </property>
            </spacer>
+          </item>
+          <item row="1" column="0">
+           <widget class="KLineEdit" name="renameResizedImagePattern">
+            <property name="showClearButton" stdset="0">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="renameResizedImage">
+            <property name="text">
+             <string>Rename resized images with following pattern:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLabel" name="help">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
