@@ -33,6 +33,7 @@ InvalidFilterDialog::InvalidFilterDialog(QWidget *parent)
     setWindowIcon( KIcon( QLatin1String("kmail") ) );
     setButtons( Cancel | Ok );
     setDefaultButton( Ok );
+    setButtonText(Ok, i18n( "Discard" ));
     setModal( true );
 
     QWidget *w = new QWidget(this);

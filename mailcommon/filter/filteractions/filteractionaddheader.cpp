@@ -231,6 +231,9 @@ QString FilterActionAddHeader::informationAboutNotValidAction() const
         }
         result += QLatin1String("The header value was missing.");
     }
+    if (!result.isEmpty()) {
+        result = name() + QLatin1Char('\n') + result;
+    }
     return result;
 }
 

@@ -530,7 +530,7 @@ void MailFilter::writeConfig(KConfigGroup & config, bool exportFilter) const
         config.writeEntry( "accounts-set", mAccounts );
 }
 
-void MailFilter::purify()
+void MailFilter::purify(bool removeAction)
 {
     mPattern.purify();
 
@@ -538,8 +538,10 @@ void MailFilter::purify()
     it.toBack();
     while ( it.hasPrevious() ) {
         FilterAction *action = it.previous();
-        if ( action->isEmpty() )
-            mActions.removeAll ( action );
+        if ( action->isEmpty() ) {
+            if (removeAction)
+                mActions.removeAll ( action );
+        }
     }
 
     if ( !Akonadi::AgentManager::self()->instances().isEmpty() ) { // safety test to ensure that Akonadi system is ready
