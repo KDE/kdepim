@@ -131,11 +131,12 @@ int MonthCell::firstFreeSpace()
 // MONTHGRAPHICSITEM
 static const int ft = 2; // frame thickness
 
-//QT5
+
 MonthGraphicsItem::MonthGraphicsItem(MonthItem *manager)
-    : QGraphicsItem(Q_NULLPTR/*, manager->monthScene()*/),
+    : QGraphicsItem(Q_NULLPTR),
       mMonthItem(manager), mToolTipNeedsUpdate(false)
 {
+    manager->monthScene()->addItem(this);
     QTransform transform;
     transform = transform.translate(0.5, 0.5);
     setTransform(transform);

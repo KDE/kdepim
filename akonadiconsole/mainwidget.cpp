@@ -108,7 +108,7 @@ MainWidget::~MainWidget()
 
 void MainWidget::createSearch()
 {
-//QT5
+//QT5 TODO need to reimplement it
 #if 0
     SearchDialog dlg;
     if (!dlg.exec()) {

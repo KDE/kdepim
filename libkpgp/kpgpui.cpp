@@ -80,8 +80,6 @@ PassphraseDialog::PassphraseDialog(QWidget *parent,
     : KPasswordDialog(parent)
 {
     setWindowTitle(caption);
-    //QT5
-    //setButtons( Ok|Cancel );
 
     setPixmap(BarIcon(QLatin1String("dialog-password")));
 

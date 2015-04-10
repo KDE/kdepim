@@ -21,6 +21,7 @@
 #include "kpgpui.h"
 #include "kpgp_debug.h"
 
+#include "kde_file.h"
 #include <qdebug.h>
 #include <KLocalizedString>
 #include <kmessagebox.h>
@@ -1417,8 +1418,7 @@ Module::checkForPGP(void)
     havePgp = false;
 
     path = QString::fromLocal8Bit(getenv("PATH"));
-#pragma message("port QT5")
-    //QT5 pSearchPaths = path.split( QLatin1Char(KPATH_SEPARATOR), QString::SkipEmptyParts );
+    pSearchPaths = path.split( QLatin1Char(KPATH_SEPARATOR), QString::SkipEmptyParts );
 
     haveGpg = false;
     // lets try gpg
