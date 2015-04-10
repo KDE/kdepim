@@ -161,8 +161,7 @@ QString FilterActionAddTag::displayString() const
 
 QString FilterActionAddTag::informationAboutNotValidAction() const
 {
-    //KF5 add i18n
-    const QString info = name() + QLatin1Char('\n') + QLatin1String("No tag selected.");
+    const QString info = name() + QLatin1Char('\n') + i18n("No tag selected.");
     return info;
 }
 

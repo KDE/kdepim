@@ -19,7 +19,7 @@
 #define SEARCHRULESTATUS_H
 
 #include "searchpattern.h"
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 
 namespace MailCommon {
 

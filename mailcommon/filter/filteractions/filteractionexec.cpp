@@ -45,6 +45,5 @@ FilterAction *FilterActionExec::newAction()
 
 QString FilterActionExec::informationAboutNotValidAction() const
 {
-    //KF5 add i18n
-    return QLatin1String("No action defined.");
+    return i18n("No action defined.");
 }
