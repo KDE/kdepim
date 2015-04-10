@@ -70,9 +70,9 @@ QStringList RecentAddressDialog::addresses() const
     return mRecentAddressWidget->addresses();
 }
 
-void RecentAddressDialog::addAddresses(KConfig *config)
+void RecentAddressDialog::storeAddresses(KConfig *config)
 {
-    mRecentAddressWidget->addAddresses(config);
+    mRecentAddressWidget->storeAddresses(config);
 }
 
 bool RecentAddressDialog::wasChanged() const

@@ -60,7 +60,7 @@ QWidget *FilterActionRemoveHeader::createParamWidget(QWidget *parent) const
 
 FilterAction::ReturnCode FilterActionRemoveHeader::process(ItemContext &context , bool) const
 {
-    if (mParameter.isEmpty()) {
+    if ( isEmpty() ) {
         return ErrorButGoOn;
     }
 

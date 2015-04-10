@@ -35,7 +35,10 @@ bool FilterActionWithUOID::isEmpty() const
 
 void FilterActionWithUOID::argsFromString(const QString &argsStr)
 {
-    mParameter = argsStr.trimmed().toUInt();
+    bool valid;
+    const uint val = argsStr.trimmed().toUInt(&valid);
+
+    mParameter = valid ? val : 0;
 }
 
 QString FilterActionWithUOID::argsAsString() const

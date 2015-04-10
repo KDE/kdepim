@@ -133,12 +133,12 @@ public:
      * @return the line number where the cursor is. This takes word-wrapping
      *         into account. Line numbers start at 0.
      */
-    int linePosition();
+    int linePosition() const;
 
     /**
      * @return the column numbe where the cursor is.
      */
-    int columnNumber();
+    int columnNumber() const;
 
     /**
      * Reimplemented again to work around a bug (see comment in implementation).

@@ -104,10 +104,11 @@ void CompletionConfigureDialog::load()
 void CompletionConfigureDialog::slotSave()
 {
     mBlackListBalooWidget->save();
-    if (mRecentaddressWidget->wasChanged()) {
+    if (mRecentaddressWidget->wasChanged()) {        
         //TODO
     }
     mCompletionOrderWidget->save();
+    accept();
 }
 
 void CompletionConfigureDialog::setEmailBlackList(const QStringList &lst)

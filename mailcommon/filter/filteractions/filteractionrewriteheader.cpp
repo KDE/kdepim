@@ -57,7 +57,7 @@ bool FilterActionRewriteHeader::isEmpty() const
 
 FilterAction::ReturnCode FilterActionRewriteHeader::process(ItemContext &context , bool) const
 {
-    if (mParameter.isEmpty() || !mRegExp.isValid()) {
+    if ( isEmpty() ) {
         return ErrorButGoOn;
     }
 

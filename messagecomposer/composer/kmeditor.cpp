@@ -559,7 +559,7 @@ void KMeditor::setCursorPositionFromStart(unsigned int pos)
     }
 }
 
-int KMeditor::linePosition()
+int KMeditor::linePosition() const
 {
     const QTextCursor cursor = textCursor();
     const QTextDocument *doc = document();
@@ -610,9 +610,9 @@ int KMeditor::linePosition()
     return lineCount;
 }
 
-int KMeditor::columnNumber()
+int KMeditor::columnNumber() const
 {
-    QTextCursor cursor = textCursor();
+    const QTextCursor cursor = textCursor();
     return cursor.columnNumber();
 }
 
