@@ -134,6 +134,7 @@ void BlackListBalooEmailCompletionWidget::load()
     KConfigGroup group( config, "AddressLineEdit" );
     const QStringList lst = group.readEntry("ExcludeDomain", QStringList());
     mExcludeDomainLineEdit->setText(lst.join(QLatin1String(",")));
+    mOriginalExcludeDomain = lst;
 }
 
 void BlackListBalooEmailCompletionWidget::slotUnselectEmails()
@@ -188,10 +189,13 @@ void BlackListBalooEmailCompletionWidget::setEmailBlackList(const QStringList &l
 
 void BlackListBalooEmailCompletionWidget::save()
 {
+    const QStringList newExcludeDomain = mExcludeDomainLineEdit->text().trimmed().split(QLatin1String(","));
+    bool needToSave = ( mOriginalExcludeDomain != newExcludeDomain );
     KSharedConfig::Ptr config = KSharedConfig::openConfig( QLatin1String("kpimbalooblacklist") );
     KConfigGroup group( config, "AddressLineEdit" );
     const QHash<QString, bool> result = mEmailList->blackListItemChanged();
     if (!result.isEmpty()) {
+        needToSave = true;
         QStringList blackList = group.readEntry( "BalooBackList", QStringList() );
         KPIM::BlackListBalooEmailUtil util;
         util.initialBlackList(blackList);
@@ -199,8 +203,10 @@ void BlackListBalooEmailCompletionWidget::save()
         blackList = util.createNewBlackList();
         group.writeEntry( "BalooBackList", blackList );
     }
-    group.writeEntry("ExcludeDomain", mExcludeDomainLineEdit->text().trimmed().split(QLatin1String(",")));
-    group.sync();
+    if (needToSave) {
+        group.writeEntry("ExcludeDomain", newExcludeDomain);
+        group.sync();
+    }
 }
 
 void BlackListBalooEmailCompletionWidget::slotLinkClicked(const QString &link)
