@@ -117,25 +117,18 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
             const QString errorStr = error.value(QLatin1String("error")).toString();
             switch(mActionType) {
             case PimCommon::StorageServiceAbstract::NoneAction:
-                deleteLater();
-                break;
-            case PimCommon::StorageServiceAbstract::RequestTokenAction:
-                Q_EMIT authorizationFailed( i18n("Dropbox access is not authorized. Error message: %1", errorStr));
-                deleteLater();
                 break;
             case PimCommon::StorageServiceAbstract::AccessTokenAction:
-                Q_EMIT authorizationFailed(i18n("Dropbox access is not authorized. Error message: %1", errorStr));
-                deleteLater();
+            case PimCommon::StorageServiceAbstract::RequestTokenAction:
+                Q_EMIT authorizationFailed( i18n("Dropbox access is not authorized. Error message: %1", errorStr));
                 break;
             case PimCommon::StorageServiceAbstract::UploadFileAction:
                 Q_EMIT uploadFileFailed(errorStr);
                 errorMessage(mActionType, errorStr);
-                deleteLater();
                 break;
             case PimCommon::StorageServiceAbstract::DownLoadFileAction:
                 Q_EMIT downLoadFileFailed(errorStr);
                 errorMessage(mActionType, errorStr);
-                deleteLater();
                 break;
             case PimCommon::StorageServiceAbstract::CreateFolderAction:
             case PimCommon::StorageServiceAbstract::AccountInfoAction:
@@ -151,13 +144,12 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
             case PimCommon::StorageServiceAbstract::CopyFileAction:
             case PimCommon::StorageServiceAbstract::CopyFolderAction:
                 errorMessage(mActionType, errorStr);
-                deleteLater();
                 break;
             }
         } else {
             errorMessage(mActionType, i18n("Unknown Error \"%1\"", data));
-            deleteLater();
         }
+        deleteLater();
         return;
     }
     switch(mActionType) {
