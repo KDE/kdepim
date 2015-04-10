@@ -29,10 +29,10 @@
 
 int main(int argc, char *argv[])
 {
+    QApplication app(argc, argv);
     Kdelibs4ConfigMigrator migrate(QStringLiteral("importwizard"));
     migrate.setConfigFiles(QStringList() << QStringLiteral("importwizardrc"));
     migrate.migrate();
-    QApplication app(argc, argv);
 
     KLocalizedString::setApplicationDomain("importwizard");
     //FIXME: "wizards" are "assistents" in new KDE slang

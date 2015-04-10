@@ -34,12 +34,12 @@
 
 int main(int argc, char *argv[])
 {
+    QApplication app(argc, argv);
     Kdelibs4ConfigMigrator migrate(QStringLiteral("blogilo"));
     migrate.setConfigFiles(QStringList() << QStringLiteral("blogilorc"));
     migrate.setUiFiles(QStringList() << QStringLiteral("blogiloui.rc"));
     migrate.migrate();
     //QT5 TODO migrate database!
-    QApplication app(argc, argv);
     QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("blogilo")));
     KLocalizedString::setApplicationDomain("blogilo");
     KAboutData about(QStringLiteral("blogilo"), i18n("Blogilo"), VERSION, i18n("A KDE Blogging Client"),

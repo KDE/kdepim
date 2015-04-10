@@ -32,12 +32,12 @@
 
 int main(int argc, char **argv)
 {
+    QApplication app(argc, argv);
     Kdelibs4ConfigMigrator migrate(QStringLiteral("akonadiconsole"));
     migrate.setConfigFiles(QStringList() << QStringLiteral("akonadiconsolerc"));
     migrate.setUiFiles(QStringList() << QStringLiteral("akonadiconsoleui.rc"));
     migrate.migrate();
 
-    QApplication app(argc, argv);
     KAboutData aboutData(QStringLiteral("akonadiconsole"),
                          i18n("Akonadi Console"),
                          QStringLiteral("0.99"),

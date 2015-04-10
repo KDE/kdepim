@@ -26,12 +26,11 @@
 
 int main(int argc, char *argv[])
 {
-
+    QApplication app(argc, argv);
     Kdelibs4ConfigMigrator migrate(QLatin1String("ktnef"));
     migrate.setConfigFiles(QStringList() << QLatin1String("ktnefrc"));
     migrate.setUiFiles(QStringList() << QLatin1String("ktnefui.rc"));
     migrate.migrate();
-    QApplication app(argc, argv);
 
     KLocalizedString::setApplicationDomain("ktnef");
 

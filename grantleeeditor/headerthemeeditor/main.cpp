@@ -32,11 +32,11 @@
 
 int main(int argc, char **argv)
 {
+    QApplication app(argc, argv);
     Kdelibs4ConfigMigrator migrate(QStringLiteral("headerthemeeditor"));
     migrate.setConfigFiles(QStringList() << QStringLiteral("headerthemeeditorrc"));
     migrate.setUiFiles(QStringList() << QStringLiteral("headerthemeeditorui.rc"));
     migrate.migrate();
-    QApplication app(argc, argv);
     KLocalizedString::setApplicationDomain("headerthemeeditor");
     KAboutData aboutData(QStringLiteral("headerthemeeditor"),
                          i18n("Header Theme Editor"),

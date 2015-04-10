@@ -29,12 +29,12 @@
 
 int main(int argc, char *argv[])
 {
+    QApplication app(argc, argv);
 
     Kdelibs4ConfigMigrator migrate(QLatin1String("pimsettingexporter"));
     migrate.setConfigFiles(QStringList() << QLatin1String("pimsettingexporterrc"));
     migrate.setUiFiles(QStringList() << QLatin1String("pimsettingexporter.rc"));
     migrate.migrate();
-    QApplication app(argc, argv);
     KLocalizedString::setApplicationDomain("pimsettingexporter");
 
     KAboutData aboutData(QLatin1String("pimsettingexporter"), i18n("PIM Setting Exporter"),

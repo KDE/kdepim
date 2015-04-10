@@ -29,13 +29,13 @@
 
 int main(int argc, char **argv)
 {
+    QApplication app(argc, argv);
     Kdelibs4ConfigMigrator migrate(QStringLiteral("sieveeditor"));
     migrate.setConfigFiles(QStringList() << QStringLiteral("sieveeditorrc"));
     migrate.setUiFiles(QStringList() << QStringLiteral("sieveeditorui.rc"));
     migrate.migrate();
 
     KLocalizedString::setApplicationDomain("sieveeditor");
-    QApplication app(argc, argv);
 
     KAboutData aboutData(QStringLiteral("sieveeditor"),
                          i18n("KSieve Editor"),

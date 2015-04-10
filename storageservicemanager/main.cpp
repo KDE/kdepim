@@ -31,12 +31,12 @@
 
 int main(int argc, char **argv)
 {
+    QApplication app(argc, argv);
     Kdelibs4ConfigMigrator migrate(QStringLiteral("storageservice"));
     migrate.setConfigFiles(QStringList() << QStringLiteral("storageservicerc") << QStringLiteral("storageservicemanager.notifyrc"));
     migrate.setUiFiles(QStringList() << QStringLiteral("storageserviceui.rc"));
     migrate.migrate();
 
-    QApplication app(argc, argv);
 
     KAboutData aboutData(QStringLiteral("storageservicemanager"),
                          i18n("Storage Service Manager"),

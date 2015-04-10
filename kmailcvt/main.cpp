@@ -27,11 +27,11 @@
 
 int main(int argc, char *argv[])
 {
+    QApplication app(argc, argv);
     Kdelibs4ConfigMigrator migrate(QStringLiteral("kmailcvt"));
     migrate.setConfigFiles(QStringList() << QStringLiteral("kmailcvtrc"));
     migrate.migrate();
 
-    QApplication app(argc, argv);
     QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("kmailcvt")));
     KLocalizedString::setApplicationDomain("kmailcvt");
 
