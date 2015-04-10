@@ -137,7 +137,8 @@ set(libmailcommon_search_SRCS
   search/widgethandler/numericdoublerulewidgethandler.cpp
   search/widgethandler/headersrulerwidgethandler.cpp
   search/searchrulenumerical.cpp
-  search/searchruledate.cpp 
+  search/searchruledate.cpp
+  search/searchrulestring.cpp 
 )
 
 set(libmailcommon_snippets_SRCS
