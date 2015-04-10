@@ -107,12 +107,15 @@ void CompletionConfigureDialog::load()
     mCompletionOrderWidget->loadCompletionItems();
 }
 
+bool CompletionConfigureDialog::recentAddressWasChanged() const
+{
+    return mRecentaddressWidget->wasChanged();
+}
+
 void CompletionConfigureDialog::slotSave()
 {
     mBlackListBalooWidget->save();
-    if (mRecentaddressWidget->wasChanged()) {        
-        //TODO
-    }
+    //TODO save recent address
     mCompletionOrderWidget->save();
     accept();
 }
