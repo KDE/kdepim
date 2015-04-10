@@ -73,5 +73,4 @@ void FilterActionDeleteTest::shouldDeleteItem()
     QCOMPARE(context.deleteItem(), true);
 }
 
-
 QTEST_MAIN(FilterActionDeleteTest)

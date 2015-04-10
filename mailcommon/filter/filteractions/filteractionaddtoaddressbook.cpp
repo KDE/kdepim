@@ -59,7 +59,7 @@ bool FilterActionAddToAddressBook::isEmpty() const
 
 FilterAction::ReturnCode FilterActionAddToAddressBook::process(ItemContext &context , bool) const
 {
-    if ( isEmpty() ) {
+    if (isEmpty()) {
         return ErrorButGoOn;
     }
 
@@ -73,8 +73,9 @@ FilterAction::ReturnCode FilterActionAddToAddressBook::process(ItemContext &cont
     case BccHeader: headerLine = msg->bcc()->asUnicodeString(); break;
     case UnknownHeader: break;
     }
-    if (headerLine.isEmpty())
+    if (headerLine.isEmpty()) {
         return ErrorButGoOn;
+    }
 
     const QStringList emails = KEmailAddress::splitAddressList(headerLine);
 

@@ -27,57 +27,56 @@ using MailCommon::FilterLog;
 
 using namespace MailCommon;
 
-SearchRuleDate::SearchRuleDate( const QByteArray &field,
-                                Function func,
-                                const QString &contents )
-    : SearchRule( field, func, contents )
+SearchRuleDate::SearchRuleDate(const QByteArray &field,
+                               Function func,
+                               const QString &contents)
+    : SearchRule(field, func, contents)
 {
 }
 
 bool SearchRuleDate::isEmpty() const
 {
-    return !QDate::fromString( contents(), Qt::ISODate ).isValid();
+    return !QDate::fromString(contents(), Qt::ISODate).isValid();
 }
 
-bool SearchRuleDate::matches( const Akonadi::Item &item ) const
+bool SearchRuleDate::matches(const Akonadi::Item &item) const
 {
     const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
 
-
     const QDate msgDate = msg->date()->dateTime().date();
-    const QDate dateValue = QDate::fromString( contents(), Qt::ISODate );
-    bool rc = matchesInternal( dateValue, msgDate );
-    if ( FilterLog::instance()->isLogging() ) {
-        QString msg = ( rc ? "<font color=#00FF00>1 = </font>"
-                           : "<font color=#FF0000>0 = </font>" );
-        msg += FilterLog::recode( asString() );
+    const QDate dateValue = QDate::fromString(contents(), Qt::ISODate);
+    bool rc = matchesInternal(dateValue, msgDate);
+    if (FilterLog::instance()->isLogging()) {
+        QString msg = (rc ? "<font color=#00FF00>1 = </font>"
+                       : "<font color=#FF0000>0 = </font>");
+        msg += FilterLog::recode(asString());
         msg += " ( <i>" + contents() + "</i> )"; //TODO change with locale?
-        FilterLog::instance()->add( msg, FilterLog::RuleResult );
+        FilterLog::instance()->add(msg, FilterLog::RuleResult);
     }
     return rc;
 }
 
-bool SearchRuleDate::matchesInternal( const QDate& dateValue,
-                                      const QDate& msgDate ) const
+bool SearchRuleDate::matchesInternal(const QDate &dateValue,
+                                     const QDate &msgDate) const
 {
-    switch ( function() ) {
+    switch (function()) {
     case SearchRule::FuncEquals:
-        return ( dateValue == msgDate );
+        return (dateValue == msgDate);
 
     case SearchRule::FuncNotEqual:
-        return ( dateValue != msgDate );
+        return (dateValue != msgDate);
 
     case FuncIsGreater:
-        return ( msgDate > dateValue );
+        return (msgDate > dateValue);
 
     case FuncIsLessOrEqual:
-        return ( msgDate <= dateValue );
+        return (msgDate <= dateValue);
 
     case FuncIsLess:
-        return ( msgDate < dateValue );
+        return (msgDate < dateValue);
 
     case FuncIsGreaterOrEqual:
-        return ( msgDate >= dateValue );
+        return (msgDate >= dateValue);
 
     default:
         ;
@@ -90,17 +89,14 @@ SearchRule::RequiredPart SearchRuleDate::requiredPart() const
     return SearchRule::Envelope;
 }
 
-
-
-void SearchRuleDate::addQueryTerms( Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError ) const
+void SearchRuleDate::addQueryTerms(Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError) const
 {
     using namespace Akonadi;
     emptyIsNotAnError = false;
 
-    const QDate date = QDate::fromString( contents(), Qt::ISODate );
+    const QDate date = QDate::fromString(contents(), Qt::ISODate);
     EmailSearchTerm term(EmailSearchTerm::HeaderOnlyDate, date, akonadiComparator());
-    term.setIsNegated( isNegated() );
+    term.setIsNegated(isNegated());
     groupTerm.addSubTerm(term);
 }
-
 

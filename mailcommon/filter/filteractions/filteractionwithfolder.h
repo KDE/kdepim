@@ -97,7 +97,7 @@ public:
      * @copydoc FilterAction::folderRemoved
      */
     bool folderRemoved(const Akonadi::Collection &aFolder,
-                               const Akonadi::Collection &aNewFolder) Q_DECL_OVERRIDE;
+                       const Akonadi::Collection &aNewFolder) Q_DECL_OVERRIDE;
 
 protected:
     Akonadi::Collection mFolder;

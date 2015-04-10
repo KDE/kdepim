@@ -553,9 +553,10 @@ void MailFilter::purify(bool removeAction)
     it.toBack();
     while (it.hasPrevious()) {
         FilterAction *action = it.previous();
-        if ( action->isEmpty() ) {
-            if (removeAction)
-                mActions.removeAll ( action );
+        if (action->isEmpty()) {
+            if (removeAction) {
+                mActions.removeAll(action);
+            }
         }
     }
 

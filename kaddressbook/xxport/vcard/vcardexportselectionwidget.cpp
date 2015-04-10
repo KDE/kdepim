@@ -89,11 +89,11 @@ VCardExportSelectionWidget::VCardExportSelectionWidget(QWidget *parent)
     mDisplayNameBox->setToolTip(
         i18nc("@info:tooltip", "Export display name as full name"));
     mDisplayNameBox->setWhatsThis(
-                i18nc( "@info:whatsthis",
-                       "Check this box if you want to export the contact's display name "
-                       "in the vCard's full name field.  This may be required to get the "
-                       "name shown correctly in GMail or Android." ) );
-    layout->addWidget( mDisplayNameBox, 5, 0, 1, 2 );
+        i18nc("@info:whatsthis",
+              "Check this box if you want to export the contact's display name "
+              "in the vCard's full name field.  This may be required to get the "
+              "name shown correctly in GMail or Android."));
+    layout->addWidget(mDisplayNameBox, 5, 0, 1, 2);
 
     readSettings();
 }
@@ -105,15 +105,15 @@ VCardExportSelectionWidget::~VCardExportSelectionWidget()
 
 void VCardExportSelectionWidget::readSettings()
 {
-    KConfig config( QStringLiteral("kaddressbookrc") );
-    const KConfigGroup group( &config, "XXPortVCard" );
+    KConfig config(QStringLiteral("kaddressbookrc"));
+    const KConfigGroup group(&config, "XXPortVCard");
 
-    mPrivateBox->setChecked( group.readEntry( "ExportPrivateFields", true ) );
-    mBusinessBox->setChecked( group.readEntry( "ExportBusinessFields", true ) );
-    mOtherBox->setChecked( group.readEntry( "ExportOtherFields", true ) );
-    mEncryptionKeys->setChecked( group.readEntry( "ExportEncryptionKeys", true ) );
-    mPictureBox->setChecked( group.readEntry( "ExportPictureFields", true ) );
-    mDisplayNameBox->setChecked( group.readEntry( "ExportDisplayName", false ) );
+    mPrivateBox->setChecked(group.readEntry("ExportPrivateFields", true));
+    mBusinessBox->setChecked(group.readEntry("ExportBusinessFields", true));
+    mOtherBox->setChecked(group.readEntry("ExportOtherFields", true));
+    mEncryptionKeys->setChecked(group.readEntry("ExportEncryptionKeys", true));
+    mPictureBox->setChecked(group.readEntry("ExportPictureFields", true));
+    mDisplayNameBox->setChecked(group.readEntry("ExportDisplayName", false));
 }
 
 void VCardExportSelectionWidget::writeSettings()

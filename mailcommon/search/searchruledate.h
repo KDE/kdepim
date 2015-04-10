@@ -20,7 +20,8 @@
 
 #include "searchpattern.h"
 #include <AkonadiCore/Item>
-namespace MailCommon {
+namespace MailCommon
+{
 
 class SearchRuleDate : public SearchRule
 {
@@ -32,9 +33,9 @@ public:
      * @param function The function to use for searching.
      * @param contents The contents to search for.
      */
-    explicit SearchRuleDate( const QByteArray &field = 0,
-                             Function function = FuncContains,
-                             const QString &contents = QString() );
+    explicit SearchRuleDate(const QByteArray &field = 0,
+                            Function function = FuncContains,
+                            const QString &contents = QString());
 
     /**
      * @copydoc SearchRule::isEmpty()
@@ -44,7 +45,7 @@ public:
     /**
      * @copydoc SearchRule::matches()
      */
-    bool matches( const Akonadi::Item &item ) const Q_DECL_OVERRIDE;
+    bool matches(const Akonadi::Item &item) const Q_DECL_OVERRIDE;
 
     /**
      * @copydoc SearchRule::requiredPart()
@@ -59,12 +60,12 @@ public:
      * A helper method for the main matches() method.
      * Does the actual comparing.
      */
-    bool matchesInternal( const QDate& dateValue, const QDate& msgDate ) const;
+    bool matchesInternal(const QDate &dateValue, const QDate &msgDate) const;
 
     /**
      * @copydoc SearchRule::addQueryTerms()
      */
-    void addQueryTerms( Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError ) const Q_DECL_OVERRIDE;
+    void addQueryTerms(Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError) const Q_DECL_OVERRIDE;
 
 };
 }

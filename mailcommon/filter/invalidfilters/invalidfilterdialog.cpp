@@ -33,7 +33,7 @@ InvalidFilterDialog::InvalidFilterDialog(QWidget *parent)
     setButtons(Cancel | Ok);
     setDefaultButton(Ok);
     setModal(true);
-    setButtonText(Ok, i18n( "Discard" ));
+    setButtonText(Ok, i18n("Discard"));
 
     QWidget *w = new QWidget(this);
     QVBoxLayout *vbox = new QVBoxLayout;

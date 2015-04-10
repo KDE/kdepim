@@ -674,23 +674,23 @@ SearchRule::RequiredPart SearchRuleString::requiredPart() const
 {
     const QByteArray f = field();
     SearchRule::RequiredPart part = Header;
-    if ( qstricmp( f, "<recipients>" ) == 0 ||
-         qstricmp( f, "<status>" ) == 0 ||
-         qstricmp( f, "<tag>" ) == 0 ||
-         qstricmp( f, "subject" ) == 0 ||
-         qstricmp( f, "from" ) == 0 ||
-         qstricmp( f, "sender" ) == 0 ||
-         qstricmp( f, "reply-to" ) == 0 ||
-         qstricmp( f, "to" ) == 0  ||
-         qstricmp( f, "cc" ) == 0 ||
-         qstricmp( f, "bcc" ) == 0 ||
-         qstricmp( f, "in-reply-to" ) == 0 ||
-         qstricmp( f, "message-id" ) == 0 ||
-         qstricmp( f, "references" ) == 0) {
+    if (qstricmp(f, "<recipients>") == 0 ||
+            qstricmp(f, "<status>") == 0 ||
+            qstricmp(f, "<tag>") == 0 ||
+            qstricmp(f, "subject") == 0 ||
+            qstricmp(f, "from") == 0 ||
+            qstricmp(f, "sender") == 0 ||
+            qstricmp(f, "reply-to") == 0 ||
+            qstricmp(f, "to") == 0  ||
+            qstricmp(f, "cc") == 0 ||
+            qstricmp(f, "bcc") == 0 ||
+            qstricmp(f, "in-reply-to") == 0 ||
+            qstricmp(f, "message-id") == 0 ||
+            qstricmp(f, "references") == 0) {
         // these fields are directly provided by KMime::Message, no need to fetch the whole Header part
         part = Envelope;
-    } else if ( qstricmp( f, "<message>" ) == 0 ||
-                qstricmp( f, "<body>" ) == 0) {
+    } else if (qstricmp(f, "<message>") == 0 ||
+               qstricmp(f, "<body>") == 0) {
         part = CompleteMessage;
     } else {
         qCDebug(MAILCOMMON_LOG) << "VERIFY IT: SearchRule::RequiredPart SearchRuleString::requiredPart() const use default \"Envelope\" for field :" << f;

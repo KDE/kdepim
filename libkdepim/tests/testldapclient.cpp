@@ -122,7 +122,7 @@ void TestLDAPClient::testIntevation()
     // For some reason a fromUtf8 broke the search for me (no results).
     // But this certainly looks fishy, it might break on non-utf8 systems.
     QString filter = QStringLiteral("&(|(objectclass=person)(objectclass=groupofnames)(mail=*))"
-                                   "(|(cn=*Ägypten MDK*)(sn=*Ägypten MDK*))");
+                                    "(|(cn=*Ägypten MDK*)(sn=*Ägypten MDK*))");
 
     connect(mClient, &KLDAP::LdapClient::result, this, &TestLDAPClient::slotLDAPResult);
     connect(mClient, &KLDAP::LdapClient::done, this, &TestLDAPClient::slotLDAPDone);

@@ -48,5 +48,4 @@ void FilterActionCopyTest::shouldHaveRequiresPart()
     QCOMPARE(filter.requiredPart(), MailCommon::SearchRule::Envelope);
 }
 
-
 QTEST_MAIN(FilterActionCopyTest)

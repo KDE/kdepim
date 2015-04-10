@@ -51,7 +51,7 @@ bool FilterActionAddHeader::isEmpty() const
 
 FilterAction::ReturnCode FilterActionAddHeader::process(ItemContext &context , bool) const
 {
-    if ( isEmpty() ) {
+    if (isEmpty()) {
         return ErrorButGoOn;
     }
 
