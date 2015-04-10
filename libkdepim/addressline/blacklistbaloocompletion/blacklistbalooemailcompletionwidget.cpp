@@ -169,6 +169,7 @@ void BlackListBalooEmailCompletionWidget::slotEmailFound(const QStringList &list
 {
     mEmailList->slotEmailFound(list);
     mMoreResult->setVisible(list.count() == mLimit);
+    mEmailList->scrollToBottom();
 }
 
 void BlackListBalooEmailCompletionWidget::setEmailBlackList(const QStringList &list)
@@ -189,7 +190,7 @@ void BlackListBalooEmailCompletionWidget::save()
         blackList = util.createNewBlackList();
         group.writeEntry("BalooBackList", blackList);
     }
-    group.writeEntry("ExcludeDomain", mExcludeDomainLineEdit->text().split(QLatin1String(",")));
+    group.writeEntry("ExcludeDomain", mExcludeDomainLineEdit->text().trimmed().split(QLatin1String(",")));
     group.sync();
 }
 

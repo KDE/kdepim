@@ -43,3 +43,7 @@ SearchRule::RequiredPart FilterActionPipeThrough::requiredPart() const
     return SearchRule::CompleteMessage;
 }
 
+QString FilterActionPipeThrough::informationAboutNotValidAction() const
+{
+    return i18n("No action defined.");
+}

@@ -33,6 +33,7 @@ private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldAddAddresses();
     void shouldInformThatItWasChanged();
+    void shouldNotAddMultiEmptyLine();
 };
 
 #endif // RECENTADDRESSWIDGETTEST_H

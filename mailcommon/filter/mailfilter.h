@@ -117,7 +117,7 @@ public:
     bool readConfig(const KConfigGroup &config, bool interactive = false);
 
     /** Remove empty rules (and actions one day). */
-    void purify();
+    void purify(bool removeAction = true);
 
     /** Check for empty pattern and action list. */
     bool isEmpty() const;

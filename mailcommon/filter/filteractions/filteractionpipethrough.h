@@ -38,6 +38,7 @@ public:
     ReturnCode process(ItemContext &context, bool applyOnOutbound) const Q_DECL_OVERRIDE;
     SearchRule::RequiredPart requiredPart() const Q_DECL_OVERRIDE;
     static FilterAction *newAction();
+    QString informationAboutNotValidAction() const Q_DECL_OVERRIDE;
 };
 
 }

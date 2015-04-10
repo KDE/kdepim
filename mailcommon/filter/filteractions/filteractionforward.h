@@ -46,6 +46,7 @@ public:
     QString displayString() const Q_DECL_OVERRIDE;
     bool argsFromStringInteractive(const QString &argsStr, const QString &filterName) Q_DECL_OVERRIDE;
 
+    QString informationAboutNotValidAction() const;
 private:
     mutable QString mTemplate;
 };

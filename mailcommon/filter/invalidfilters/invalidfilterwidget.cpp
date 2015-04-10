@@ -27,9 +27,10 @@ InvalidFilterWidget::InvalidFilterWidget(QWidget *parent)
     : QWidget(parent)
 {
     QVBoxLayout *vbox = new QVBoxLayout(this);
-    //KF5 add i18n
-    QLabel *lab = new QLabel(QStringLiteral("text"));
-    lab->setObjectName(QStringLiteral("label"));
+    QLabel *lab = new QLabel(i18n( "The following filters are invalid (e.g. containing no actions "
+                                   "or no search rules). Discard or edit invalid filters?" ));
+    lab->setWordWrap(true);
+    lab->setObjectName(QLatin1String("label"));
     vbox->addWidget(lab);
 
     mInvalidFilterListWidget = new InvalidFilterListView(this);

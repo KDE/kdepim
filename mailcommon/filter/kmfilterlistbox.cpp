@@ -20,6 +20,7 @@
 #include "filtermanager.h"
 #include "filteractions/filteractiondict.h"
 #include <QInputDialog>
+#include "invalidfilters/invalidfilterinfo.h"
 #include <KLocalizedString>
 #include <klistwidgetsearchline.h>
 #include <qpushbutton.h>
@@ -383,6 +384,7 @@ QList<MailFilter *> KMFilterListBox::filtersForSaving(bool closeAfterSaving) con
     const_cast<KMFilterListBox *>(this)->applyWidgets();  // signals aren't const
     QList<MailFilter *> filters;
     QStringList emptyFilters;
+    QVector<MailCommon::InvalidFilterInfo> listInvalidFilters;
     const int numberOfFilter(mListWidget->count());
     for (int i = 0; i < numberOfFilter; ++i) {
         QListWidgetFilterItem *itemFilter =
@@ -396,6 +398,8 @@ QList<MailFilter *> KMFilterListBox::filtersForSaving(bool closeAfterSaving) con
         } else {
             // the filter is invalid:
             emptyFilters << f->name();
+            //TODO add it.
+            //listInvalidFilters.append(MailCommon::InvalidFilterInfo(f->name(), QString()));
             delete f;
         }
     }

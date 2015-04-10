@@ -245,3 +245,7 @@ QString FilterActionForward::displayString() const
     }
 }
 
+QString FilterActionForward::informationAboutNotValidAction() const
+{
+    return i18n("Email address was not defined.");
+}
