@@ -299,69 +299,6 @@ private:
 uint qHash( SearchRule::Ptr sr );
 #endif
 
-/**
- * @short This class represents a search pattern rule operating on a string.
- *
- * This class represents a search to be performed against a string.
- * The string can be either a message header, or a pseudo header, such
- * as \<body\>
- */
-class SearchRuleString : public SearchRule
-{
-public:
-    /**
-     * Creates new new string search rule.
-     *
-     * @param field The field to search in.
-     * @param function The function to use for searching.
-     * @param contents The contents to search for.
-     */
-    explicit SearchRuleString( const QByteArray &field = 0,
-                               Function function = FuncContains,
-                               const QString &contents = QString() );
-
-    /**
-     * Creates a new string search rule from an @p other rule.
-     */
-    SearchRuleString( const SearchRuleString &other );
-
-    /**
-     * Initializes this rule with an @p other rule.
-     */
-    const SearchRuleString &operator=( const SearchRuleString &other );
-
-    /**
-     * Destroys the string search rule.
-     */
-    virtual ~SearchRuleString();
-
-    /**
-     * @copydoc SearchRule::isEmpty()
-     */
-    virtual bool isEmpty() const ;
-
-    /**
-     * @copydoc SearchRule::requiredPart()
-     */
-    virtual RequiredPart requiredPart() const;
-
-    /**
-     * @copydoc SearchRule::matches()
-     */
-    virtual bool matches( const Akonadi::Item &item ) const;
-
-    /**
-     * A helper method for the main matches() method.
-     * Does the actual comparing.
-     */
-    bool matchesInternal( const QString &contents ) const;
-
-    /**
-     * @copydoc SearchRule::addQueryTerms()
-     */
-    virtual void addQueryTerms( Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError ) const;
-};
-
 
 //TODO: Check if the below one is needed or not!
 // The below are used in several places and here so they are accessible.
