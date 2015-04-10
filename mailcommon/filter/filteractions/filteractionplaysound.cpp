@@ -54,7 +54,7 @@ bool FilterActionPlaySound::isEmpty() const
 
 FilterAction::ReturnCode FilterActionPlaySound::process(ItemContext& , bool) const
 {
-    if ( mParameter.isEmpty() )
+    if ( isEmpty() )
         return ErrorButGoOn;
 
     if ( !mPlayer )

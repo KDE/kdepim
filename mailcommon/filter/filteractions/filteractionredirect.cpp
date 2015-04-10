@@ -42,7 +42,7 @@ FilterActionRedirect::FilterActionRedirect( QObject *parent )
 
 FilterAction::ReturnCode FilterActionRedirect::process(ItemContext &context , bool) const
 {
-    if ( mParameter.isEmpty() )
+    if ( isEmpty() )
         return ErrorButGoOn;
 
     KMime::Message::Ptr msg = MessageCore::Util::message( context.item() );
