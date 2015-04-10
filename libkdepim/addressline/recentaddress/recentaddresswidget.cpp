@@ -192,7 +192,7 @@ bool RecentAddressWidget::eventFilter( QObject* o, QEvent* e )
     return false;
 }
 
-void RecentAddressWidget::addAddresses(KConfig *config)
+void RecentAddressWidget::storeAddresses(KConfig *config)
 {
     const int numberOfItem(mListView->count());
     for (int i = 0; i < numberOfItem; ++i) {

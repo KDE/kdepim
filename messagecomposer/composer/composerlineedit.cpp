@@ -224,7 +224,7 @@ void ComposerLineEdit::editRecentAddresses()
     if ( dlg->exec() && dlg ) {
         if (dlg->wasChanged()) {
             KPIM::RecentAddresses::self( m_recentAddressConfig )->clear();
-            dlg->addAddresses(m_recentAddressConfig);
+            dlg->storeAddresses(m_recentAddressConfig);
             loadContacts();
         }
     }

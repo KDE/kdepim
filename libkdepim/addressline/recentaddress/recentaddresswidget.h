@@ -39,7 +39,7 @@ public:
 
     void setAddresses( const QStringList &addrs );
     QStringList addresses() const;
-    void addAddresses(KConfig *config);
+    void storeAddresses(KConfig *config);
     bool wasChanged() const;
 
 private slots:
