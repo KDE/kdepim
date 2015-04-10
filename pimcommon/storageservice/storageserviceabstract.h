@@ -210,7 +210,7 @@ protected:
     virtual void storageServiceCopyFile(const QString &source, const QString &destination) = 0;
     virtual void storageServiceCopyFolder(const QString &source, const QString &destination) = 0;
     void emitAuthentificationDone();
-    void emitAuthentificationFailder(const QString &errorMessage);
+    void emitAuthentificationFailed(const QString &errorMessage);
     NextAction *mNextAction;
     QPointer<QNetworkReply> mUploadReply;
     QPointer<QNetworkReply> mDownloadReply;
