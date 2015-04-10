@@ -19,12 +19,11 @@
 
 QVector<PimCommon::defaultTemplate> ContactDefaultTemplate::contactTemplates()
 {
-    QVector<PimCommon::defaultTemplate> lst;
+    return QVector<PimCommon::defaultTemplate>();
     /*
     PimCommon::defaultTemplate tmp;
     //TODO
     lst << tmp;
     */
-    return lst;
 }
 
