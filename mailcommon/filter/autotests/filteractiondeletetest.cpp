@@ -65,12 +65,14 @@ void FilterActionDeleteTest::shouldDeleteItem()
     KMime::Message::Ptr msgPtr = KMime::Message::Ptr(new KMime::Message());
     Akonadi::Item item;
     item.setPayload<KMime::Message::Ptr>(msgPtr);
-    MailCommon::ItemContext context(item, true);
+    MailCommon::ItemContext context(item, false);
 
     filter.argsFromString("");
     QCOMPARE(filter.process(context, false), MailCommon::FilterAction::GoOn);
     QCOMPARE(context.needsPayloadStore(), false);
     QCOMPARE(context.deleteItem(), true);
+    QCOMPARE(context.needsFlagStore(), false);
+    QCOMPARE(context.needsFullPayload(), false);
 }
 
 

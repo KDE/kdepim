@@ -31,16 +31,22 @@ FilterActionUnsetStatus::FilterActionUnsetStatus( QObject *parent )
 {
 }
 
+bool FilterActionUnsetStatus::checkIsValid(int &index) const
+{
+    index = mParameterList.indexOf( mParameter );
+    return ( index < 1 );
+}
+
 bool FilterActionUnsetStatus::isEmpty() const
 {
-    const int index = mParameterList.indexOf( mParameter );
-    return ( index < 1 );
+    int index = 0;
+    return checkIsValid(index);
 }
 
 FilterAction::ReturnCode FilterActionUnsetStatus::process(ItemContext &context , bool) const
 {
-    const int index = mParameterList.indexOf( mParameter );
-    if ( index < 1 )
+    int index = 0;
+    if ( checkIsValid(index) )
         return ErrorButGoOn;
 
     Akonadi::MessageStatus status;

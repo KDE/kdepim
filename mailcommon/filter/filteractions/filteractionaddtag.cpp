@@ -106,7 +106,7 @@ bool FilterActionAddTag::argsFromStringInteractive( const QString &argsStr, cons
     bool needUpdate = false;
     argsFromString( argsStr );
     if ( mList.isEmpty() )
-        return false;
+        return needUpdate;
     const bool index = mList.contains( mParameter );
     if ( !index ) {
         QPointer<FilterActionMissingTagDialog> dlg = new FilterActionMissingTagDialog( mList, filterName, argsStr );
