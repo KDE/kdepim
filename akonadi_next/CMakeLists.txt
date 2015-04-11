@@ -8,7 +8,6 @@ add_definitions(-DTRANSLATION_DOMAIN=\"akonadi_next\")
 
 set(akonadi_next_SRCS
   akonadinext_debug.cpp
-  notecreatorandselector.cpp
   quotacolorproxymodel.cpp
   kcolumnfilterproxymodel.cpp
 )
