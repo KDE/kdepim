@@ -93,6 +93,7 @@ public:
    *  keep track of it.
    */
     void setMessage( const KMime::Message::Ptr& newMsg );
+    void setMessage( const KMime::Message::Ptr& newMsg, bool allowDecryption );
 
     void updateTemplate ( const KMime::Message::Ptr& msg );
 
