@@ -131,7 +131,7 @@ void WebDavStorageService::slotAuthorizationFailed(const QString &errorMessage)
     mServiceLocation.clear();
     mUsername.clear();
     mPassword.clear();
-    emitAuthentificationFailder(errorMessage);
+    emitAuthentificationFailed(errorMessage);
 }
 
 void WebDavStorageService::connectDefaultSlot(WebDavJob *job)

@@ -116,7 +116,7 @@ void HubicStorageService::storageServiceauthentication()
 void HubicStorageService::slotAuthorizationFailed(const QString &errorMessage)
 {
     mRefreshToken.clear();
-    emitAuthentificationFailder(errorMessage);
+    emitAuthentificationFailed(errorMessage);
 }
 
 void HubicStorageService::slotAuthorizationDone(const QString &refreshToken, const QString &token, qint64 expireTime)

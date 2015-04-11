@@ -233,7 +233,7 @@ void DropBoxStorageService::slotAuthorizationFailed(const QString &errorMessage)
     mAccessToken.clear();
     mAccessTokenSecret.clear();
     mAccessOauthSignature.clear();
-    emitAuthentificationFailder(errorMessage);
+    emitAuthentificationFailed(errorMessage);
 }
 
 QString DropBoxStorageService::name()

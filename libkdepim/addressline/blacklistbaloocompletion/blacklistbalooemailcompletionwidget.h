@@ -48,6 +48,7 @@ private Q_SLOTS:
 private:
     void hideMoreResultAndChangeLimit();
     void load();
+    QStringList mOriginalExcludeDomain;
     KLineEdit *mSearchLineEdit;
     KLineEdit *mExcludeDomainLineEdit;
     BlackListBalooEmailList *mEmailList;

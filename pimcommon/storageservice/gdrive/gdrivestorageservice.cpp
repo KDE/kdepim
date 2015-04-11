@@ -146,7 +146,7 @@ void GDriveStorageService::slotAuthorizationFailed(const QString &errorMessage)
 {
     mAccount->setRefreshToken(QString());
     mAccount->setAccessToken(QString());
-    emitAuthentificationFailder(errorMessage);
+    emitAuthentificationFailed(errorMessage);
 }
 
 void GDriveStorageService::slotAuthorizationDone(const QString &refreshToken, const QString &token, const QDateTime &expireTime, const QString &accountName)
