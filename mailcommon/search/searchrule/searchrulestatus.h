@@ -18,9 +18,10 @@
 #ifndef SEARCHRULESTATUS_H
 #define SEARCHRULESTATUS_H
 
-#include "searchpattern.h"
 #include <AkonadiCore/Item>
 
+#include "search/searchpattern.h"
+#include <Akonadi/KMime/MessageStatus>
 namespace MailCommon {
 
 //TODO: Check if the below one is needed or not!

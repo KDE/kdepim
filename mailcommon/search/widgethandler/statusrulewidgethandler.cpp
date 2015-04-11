@@ -16,7 +16,7 @@
 */
 
 #include "statusrulewidgethandler.h"
-#include "search/searchrulestatus.h"
+#include "search/searchrule/searchrulestatus.h"
 #include <pimcommon/widgets/minimumcombobox.h>
 
 #include <KIconLoader>
