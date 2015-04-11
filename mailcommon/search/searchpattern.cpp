@@ -19,10 +19,10 @@
 */
 
 #include "searchpattern.h"
-#include "searchrulenumerical.h"
-#include "searchruledate.h"
-#include "searchrulestring.h"
-#include "searchrulestatus.h"
+#include "searchrule/searchrulenumerical.h"
+#include "searchrule/searchruledate.h"
+#include "searchrule/searchrulestring.h"
+#include "searchrule/searchrulestatus.h"
 #include "filterlog.h"
 using MailCommon::FilterLog;
 

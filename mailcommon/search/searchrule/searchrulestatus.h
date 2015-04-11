@@ -18,7 +18,7 @@
 #ifndef SEARCHRULESTATUS_H
 #define SEARCHRULESTATUS_H
 
-#include "searchpattern.h"
+#include "search/searchpattern.h"
 #include <Akonadi/Item>
 #include <Akonadi/KMime/MessageStatus>
 using Akonadi::MessageStatus;
