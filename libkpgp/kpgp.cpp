@@ -21,7 +21,7 @@
 #include "kpgpui.h"
 #include "kpgp_debug.h"
 
-#include "kde_file.h"
+#include <kde_file.h>
 #include <qdebug.h>
 #include <KLocalizedString>
 #include <kmessagebox.h>
