@@ -20,8 +20,6 @@
 #include <QLayout>
 
 #include <Akonadi/Tag>
-#include <Akonadi/TagFetchJob>
-#include <Akonadi/TagFetchScope>
 #include <Akonadi/TagCreateJob>
 #include <Akonadi/TagWidget>
 #include <Akonadi/TagModel>
