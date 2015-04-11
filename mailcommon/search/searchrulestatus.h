@@ -20,7 +20,8 @@
 
 #include "searchpattern.h"
 #include <Akonadi/Item>
-
+#include <Akonadi/KMime/MessageStatus>
+using Akonadi::MessageStatus;
 namespace MailCommon {
 
 //TODO: Check if the below one is needed or not!

@@ -22,8 +22,6 @@
 
 #include "mailcommon_export.h"
 
-#include <Akonadi/KMime/MessageStatus>
-
 #include <KLocale>
 #include <KUrl>
 
@@ -32,9 +30,6 @@
 
 #include <boost/shared_ptr.hpp>
 #include <akonadi/searchquery.h>
-
-using Akonadi::MessageStatus;
-
 
 namespace Akonadi {
 class Item;
