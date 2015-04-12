@@ -79,7 +79,6 @@ set(KF5_VERSION "5.9.0")
 option(KDEPIM_BUILD_EXAMPLES "Build the kdepim example applications." FALSE)
 option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled. Also, it disables many components not needed for Kontact such as the Kolab client." FALSE)
 option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" FALSE)
-option(KDEPIM_ONLY_KLEO "Only build Kleopatra. This option will build only libkleo and kleopatra" FALSE)
 option(KDEPIM_BUILD_DESKTOP "Build Desktop Applications. Can be deactivated for mobile" TRUE)
 option(KDEPIM_NO_WEBKIT "Do not use WebKit in the kdepim applications" FALSE)
 option(KDEPIM_NO_TEXTTOSPEECH "Do not use TextToSpeech in the kdepim applications" FALSE)
@@ -191,13 +190,6 @@ endif()
 
 if(KDEPIM_ENTERPRISE_BUILD)
   message(STATUS "Enterprise build is enabled.")
-endif()
-
-# if KDEPIM_ONLY_KLEO is defined, KDEPIM_BUILD_MOBILE and KDEPIM_MOBILE_UI are disabled.
-if(KDEPIM_ONLY_KLEO)
- set(KDEPIM_MOBILE_UI FALSE)
- set(KDEPIM_DEFINITIONS "-DHAVE_CONFIG_H=1")
- message(STATUS "Only libkleo and Kleopatra will be built.")
 endif()
 
 ############### Desktop vs. Mobile options ##############
