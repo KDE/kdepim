@@ -1,5 +1,10 @@
 project(importwizard)
 
+include_directories(
+		    ${CMAKE_SOURCE_DIR}/mailcommon/filter/
+		    ${CMAKE_SOURCE_DIR}/importwizard/autodetect/
+)
+
 
 add_subdirectory(icons)
 
@@ -23,44 +28,44 @@ abstractaddressbook.cpp
 abstractcalendar.cpp
 importcalendarpage.cpp
 importwizardutil.cpp
-thunderbird/thunderbirdimportdata.cpp
-thunderbird/thunderbirdsettings.cpp
-thunderbird/thunderbirdaddressbook.cpp
-thunderbird/addressbook/MorkParser.cpp
-sylpheed/sylpheedimportdata.cpp
-sylpheed/sylpheedsettings.cpp
-sylpheed/sylpheedaddressbook.cpp
-sylpheed/sylpheedsettingsutils.cpp
-evolutionv3/evolutionv3importdata.cpp
-evolutionv3/evolutionsettings.cpp
-evolutionv3/evolutioncalendar.cpp
-evolutionv3/evolutionaddressbook.cpp
-evolutionv3/evolutionutil.cpp
-evolutionv2/evolutionv2importdata.cpp
-evolutionv1/evolutionv1importdata.cpp
-opera/operaimportdata.cpp
-opera/operaaddressbook.cpp
-opera/operasettings.cpp
-oe/oeimportdata.cpp
-mailapp/mailappimportdata.cpp
-pmail/pmailimportdata.cpp
-pmail/pmailsettings.cpp
-thebat/thebatimportdata.cpp
-balsa/balsaimportdata.cpp
-balsa/balsasettings.cpp
-balsa/balsaaddressbook.cpp
-claws-mail/clawsmailimportdata.cpp
-claws-mail/clawsmailsettings.cpp
-claws-mail/clawsmailaddressbook.cpp
-trojita/trojitasettings.cpp
-trojita/trojitaimportdata.cpp
-trojita/trojitaaddressbook.cpp
-icedove/icedoveimportdata.cpp
 )
 
-include_directories(
-		    ${CMAKE_SOURCE_DIR}/mailcommon/filter/
+set(importwizard_autodetect_SRCS
+autodetect/thunderbird/thunderbirdimportdata.cpp
+autodetect/thunderbird/thunderbirdsettings.cpp
+autodetect/thunderbird/thunderbirdaddressbook.cpp
+autodetect/thunderbird/addressbook/MorkParser.cpp
+autodetect/sylpheed/sylpheedimportdata.cpp
+autodetect/sylpheed/sylpheedsettings.cpp
+autodetect/sylpheed/sylpheedaddressbook.cpp
+autodetect/sylpheed/sylpheedsettingsutils.cpp
+autodetect/evolutionv3/evolutionv3importdata.cpp
+autodetect/evolutionv3/evolutionsettings.cpp
+autodetect/evolutionv3/evolutioncalendar.cpp
+autodetect/evolutionv3/evolutionaddressbook.cpp
+autodetect/evolutionv3/evolutionutil.cpp
+autodetect/evolutionv2/evolutionv2importdata.cpp
+autodetect/evolutionv1/evolutionv1importdata.cpp
+autodetect/opera/operaimportdata.cpp
+autodetect/opera/operaaddressbook.cpp
+autodetect/opera/operasettings.cpp
+autodetect/oe/oeimportdata.cpp
+autodetect/mailapp/mailappimportdata.cpp
+autodetect/pmail/pmailimportdata.cpp
+autodetect/pmail/pmailsettings.cpp
+autodetect/thebat/thebatimportdata.cpp
+autodetect/balsa/balsaimportdata.cpp
+autodetect/balsa/balsasettings.cpp
+autodetect/balsa/balsaaddressbook.cpp
+autodetect/claws-mail/clawsmailimportdata.cpp
+autodetect/claws-mail/clawsmailsettings.cpp
+autodetect/claws-mail/clawsmailaddressbook.cpp
+autodetect/trojita/trojitasettings.cpp
+autodetect/trojita/trojitaimportdata.cpp
+autodetect/trojita/trojitaaddressbook.cpp
+autodetect/icedove/icedoveimportdata.cpp
 )
+
 
 ki18n_wrap_ui(importwizard_SRCS 
                   ui/selectprogrampage.ui
@@ -75,7 +80,7 @@ ki18n_wrap_ui(importwizard_SRCS
 file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/*-apps-kontact-import-wizard.png")
 ecm_add_app_icon(importwizard_SRCS ICONS ${ICONS_SRCS})
 
-add_executable(importwizard ${importwizard_SRCS})
+add_executable(importwizard ${importwizard_SRCS} ${importwizard_autodetect_SRCS})
 
 target_link_libraries(importwizard
   KF5::KIOCore
