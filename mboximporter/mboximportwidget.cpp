@@ -23,7 +23,7 @@ MBoxImportWidget::MBoxImportWidget(QWidget *parent) :
     ui(new Ui::MBoxImportWidget)
 {
     ui->setupUi(this);
-    connect(ui->importMails, SIGNAL(clicked()), SIGNAL(importMailsClicked()));
+    connect(ui->importMails, &QAbstractButton::clicked, this, &MBoxImportWidget::importMailsClicked);
     connect(ui->mCollectionRequestor, &MailCommon::FolderRequester::folderChanged, this, &MBoxImportWidget::collectionChanged);
 }
 
