@@ -204,13 +204,6 @@ endif()
 
 if(KDEPIM_MOBILE_UI)
   add_definitions( -DKDEPIM_MOBILE_UI )
-  if(NOT QT_QTDECLARATIVE_FOUND)
-    message(FATAL_ERROR "The QtDeclarative (QML) module is required for building the mobile UI")
-  endif()
-else()
-  if(NOT QT_QTDECLARATIVE_FOUND)
-    message(STATUS "The Qt Declarative (QML) module was not found. The mobile applications will not be built.")
-  endif()
 endif()
 add_definitions(-DQT_USE_QSTRINGBUILDER)
 
