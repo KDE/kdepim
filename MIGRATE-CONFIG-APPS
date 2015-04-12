@@ -23,6 +23,7 @@ Migrate configrc done:
 - akregator (akregatorrc, akregator.notifyrc, akregator_shell.rc, akregator_part.rc, pageviewer.rc, articleviewer.rc, akregator_sharemicroblog_plugin.rc, akregator_onlinesync_plugin.rc
 - korgac (korgacrc)
 - libkdepim (kpimbalooblacklist, kpimcompletionorder)
+- kontact (kontactrc, kontactui.rc)
 
 
 TODO:
