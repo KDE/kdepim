@@ -10,7 +10,6 @@ add_subdirectory(icons)
 
 set(importwizard_SRCS
 importwizard_debug.cpp
-abstractbase.cpp
 importwizardkernel.cpp
 selectprogrampage.cpp
 importaddressbookpage.cpp
@@ -20,17 +19,18 @@ importsettingpage.cpp
 importwizard.cpp
 importfinishpage.cpp
 main.cpp
-abstractimporter.cpp
 selectcomponentpage.cpp
 importfilterinfogui.cpp
-abstractsettings.cpp
-abstractaddressbook.cpp
-abstractcalendar.cpp
 importcalendarpage.cpp
 importwizardutil.cpp
 )
 
 set(importwizard_autodetect_SRCS
+autodetect/abstractimporter.cpp
+autodetect/abstractsettings.cpp
+autodetect/abstractaddressbook.cpp
+autodetect/abstractcalendar.cpp
+autodetect/abstractbase.cpp
 autodetect/thunderbird/thunderbirdimportdata.cpp
 autodetect/thunderbird/thunderbirdsettings.cpp
 autodetect/thunderbird/thunderbirdaddressbook.cpp
