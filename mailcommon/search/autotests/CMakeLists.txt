@@ -6,3 +6,12 @@ target_link_libraries( searchpatterntest
   ${QT_QTTEST_LIBRARY}
   ${QT_QTGUI_LIBRARY}
 )
+
+set( mailcommon_searchruletest_source searchruletest.cpp )
+kde4_add_unit_test( searchruletest ${mailcommon_searchruletest_source})
+target_link_libraries( searchruletest
+  mailcommon
+  ${KDE4_KDECORE_LIBS}
+  ${QT_QTTEST_LIBRARY}
+  ${QT_QTGUI_LIBRARY}
+)

@@ -21,10 +21,10 @@
 #include "mailcommon_export.h"
 #include <boost/shared_ptr.hpp>
 #include <akonadi/searchquery.h>
-#include <KConfigGroup>
-#include <QString>
+
 #include <Akonadi/Item>
 
+class KConfigGroup;
 namespace MailCommon {
 /**
  * @short This class represents one search pattern rule.
