@@ -335,3 +335,20 @@ target_link_libraries( filteractionexectest
    ${KDEPIMLIBS_AKONADI_LIBS}
    ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
 )
+
+
+set(mailcommon_filteractionsendreceipttest_SRCS filteractionsendreceipttest.cpp
+                                           ../filteractions/filteractionsendreceipt.cpp
+                                           ../filteractions/filteractionwithnone.cpp)
+
+kde4_add_unit_test( filteractionsendreceipttest ${mailcommon_filteractionsendreceipttest_SRCS} )
+target_link_libraries( filteractionsendreceipttest
+   kdepim
+   pimcommon
+   mailcommon
+   messagecomposer
+   ${QT_QTTEST_LIBRARY}
+   ${QT_QTCORE_LIBRARY}
+   ${KDEPIMLIBS_AKONADI_LIBS}
+   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+)
