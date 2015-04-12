@@ -32,8 +32,8 @@
 
 #include <ETMViewStateSaver>
 
-#include <akonadi_next/kcolumnfilterproxymodel.h>
-using namespace Future;
+#include "libkdepim/proxy/kcolumnfilterproxymodel.h"
+using namespace KPIM;
 
 #include <KCalCore/Event>
 

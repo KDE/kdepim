@@ -16,6 +16,10 @@ endif ()
 
 ########### next target ###############
 
+set(kdepim_proxy_LIB_SRCS
+   proxy/quotacolorproxymodel.cpp
+   proxy/kcolumnfilterproxymodel.cpp
+)
 
 set(kdepim_progresswidget_LIB_SRCS
    progresswidget/progressmanager.cpp
@@ -88,6 +92,7 @@ set(kdepim_addressline_blacklist_baloo_LIB_SRCS
 ) 
 
 set(kdepim_LIB_SRCS
+   ${kdepim_proxy_LIB_SRCS}
    ${kdepim_addressline_blacklist_baloo_LIB_SRCS}
    ${kdepim_progresswidget_LIB_SRCS}
    ${kdepim_job_LIB_SRCS}

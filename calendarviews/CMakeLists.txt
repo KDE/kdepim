@@ -103,7 +103,7 @@ target_link_libraries(eventviews
   kdepim
   kdgantt2
   calendarsupport
-  akonadi_next
+  
   KF5::CalendarCore
   KF5::CalendarUtils
   KF5::AkonadiCalendar

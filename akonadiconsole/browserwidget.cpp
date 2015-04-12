@@ -44,7 +44,7 @@
 #include <AkonadiWidgets/entitytreeview.h>
 #include <AkonadiWidgets/etmviewstatesaver.h>
 #include <AkonadiCore/favoritecollectionsmodel.h>
-#include <akonadi_next/quotacolorproxymodel.h>
+#include "libkdepim/proxy/quotacolorproxymodel.h"
 #include <AkonadiCore/tagmodel.h>
 #include <AkonadiCore/statisticsproxymodel.h>
 #include <AkonadiCore/tagdeletejob.h>
@@ -153,7 +153,7 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget *parent) :
     statisticsProxyModel->setToolTipEnabled(true);
     statisticsProxyModel->setSourceModel(collectionFilter);
 
-    QuotaColorProxyModel *quotaProxyModel = new QuotaColorProxyModel(this);
+    KPIM::QuotaColorProxyModel *quotaProxyModel = new KPIM::QuotaColorProxyModel(this);
     quotaProxyModel->setWarningThreshold(50.0);
     quotaProxyModel->setSourceModel(statisticsProxyModel);
 

@@ -101,7 +101,7 @@ set_target_properties(akonadiconsole_bin PROPERTIES OUTPUT_NAME akonadiconsole)
 target_link_libraries(akonadiconsole_bin
   KF5::AkonadiCore
   KF5::AkonadiContact
-  akonadi_next
+  
   KF5::AkonadiMime
   calendarsupport
   KF5::CalendarCore

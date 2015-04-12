@@ -24,7 +24,7 @@
 
 #include <QColor>
 
-using namespace Akonadi;
+using namespace KPIM;
 
 static const int qmlForegroundRole = 1984;
 
@@ -81,10 +81,10 @@ QVariant QuotaColorProxyModel::data(const QModelIndex &index, int role) const
     if (role == Qt::ForegroundRole || role == qmlForegroundRole) {
         const QModelIndex sourceIndex = mapToSource(index);
         const QModelIndex rowIndex = sourceIndex.sibling(sourceIndex.row(), 0);
-        const Collection collection = sourceModel()->data(rowIndex, EntityTreeModel::CollectionRole).value<Collection>();
+        const Akonadi::Collection collection = sourceModel()->data(rowIndex, Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
 
-        if (collection.isValid() && collection.hasAttribute<CollectionQuotaAttribute>()) {
-            const CollectionQuotaAttribute *quota = collection.attribute<CollectionQuotaAttribute>();
+        if (collection.isValid() && collection.hasAttribute<Akonadi::CollectionQuotaAttribute>()) {
+            const Akonadi::CollectionQuotaAttribute *quota = collection.attribute<Akonadi::CollectionQuotaAttribute>();
 
             if (quota->currentValue() > -1 && quota->maximumValue() > 0) {
                 const qreal percentage = (100.0 * quota->currentValue()) / quota->maximumValue();

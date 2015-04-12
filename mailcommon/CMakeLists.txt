@@ -226,7 +226,7 @@ generate_export_header(mailcommon BASE_NAME mailcommon)
 target_link_libraries(mailcommon messageviewer messagecore messagecomposer mailimporter
   templateparser
   kdepim
-  akonadi_next
+  
   pimcommon
   KF5::Mime
   KF5::AkonadiCore

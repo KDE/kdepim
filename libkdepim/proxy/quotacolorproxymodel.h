@@ -22,9 +22,9 @@
 
 #include <qidentityproxymodel.h>
 
-#include "akonadi_next_export.h"
+#include "kdepim_export.h"
 
-namespace Akonadi
+namespace KPIM
 {
 
 /**
@@ -46,7 +46,7 @@ namespace Akonadi
  * @author Kevin Ottens <ervin@kde.org>
  * @since 4.4
  */
-class AKONADI_NEXT_EXPORT QuotaColorProxyModel : public QIdentityProxyModel
+class KDEPIM_EXPORT QuotaColorProxyModel : public QIdentityProxyModel
 {
     Q_OBJECT
 

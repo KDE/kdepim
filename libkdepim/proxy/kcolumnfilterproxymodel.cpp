@@ -23,9 +23,9 @@
 
 #include <QtCore/QVector>
 
-using namespace Future;
+using namespace KPIM;
 
-namespace Future
+namespace KPIM
 {
 struct KColumnFilterProxyModelPrivate {
     QVector<int> m_visibleColumns;

@@ -33,8 +33,8 @@
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
-#include <akonadi_next/kcolumnfilterproxymodel.h>
-using namespace Future;
+#include "libkdepim/proxy/kcolumnfilterproxymodel.h"
+using namespace KPIM;
 
 #include <EntityDisplayAttribute>
 #include <ETMViewStateSaver>

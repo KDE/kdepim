@@ -22,13 +22,13 @@
 #ifndef KCOLUMNFILTERPROXYMODEL_H
 #define KCOLUMNFILTERPROXYMODEL_H
 
-#include "akonadi_next_export.h"
+#include "kdepim_export.h"
 
 #include <QSortFilterProxyModel>
 
 template <class T> class QVector;
 
-namespace Future
+namespace KPIM
 {
 
 class KColumnFilterProxyModelPrivate;
@@ -37,7 +37,7 @@ class KColumnFilterProxyModelPrivate;
   Filter model to make only certain columns of a model visible. By default all
   columns are visible.
  */
-class AKONADI_NEXT_EXPORT KColumnFilterProxyModel : public QSortFilterProxyModel
+class KDEPIM_EXPORT KColumnFilterProxyModel : public QSortFilterProxyModel
 {
 public:
     explicit KColumnFilterProxyModel(QObject *parent = Q_NULLPTR);
