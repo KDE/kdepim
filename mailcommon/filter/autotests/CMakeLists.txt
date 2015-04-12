@@ -192,6 +192,7 @@ target_link_libraries( filteractionplaysoundtest
    ${KDEPIMLIBS_AKONADI_LIBS}
    ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
    ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
+
 )
 
 set( mailcommon_invalidfilterdialog_source invalidfilterdialogtest.cpp  )
@@ -347,6 +348,24 @@ target_link_libraries( filteractionsendreceipttest
    pimcommon
    mailcommon
    messagecomposer
+   ${QT_QTTEST_LIBRARY}
+   ${QT_QTCORE_LIBRARY}
+   ${KDEPIMLIBS_AKONADI_LIBS}
+   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+)
+
+
+set(mailcommon_filteractionsettransporttest_SRCS filteractionsettransporttest.cpp ../filteractions/filteractionsettransport.cpp
+                                           ../dialog/filteractionmissingargumentdialog.cpp
+                                           ../kmfilteraccountlist.cpp)
+
+
+kde4_add_unit_test( filteractionsettransporttest ${mailcommon_filteractionsettransporttest_SRCS} )
+target_link_libraries( filteractionsettransporttest
+   kdepim
+   pimcommon
+   mailcommon
+   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
    ${QT_QTTEST_LIBRARY}
    ${QT_QTCORE_LIBRARY}
    ${KDEPIMLIBS_AKONADI_LIBS}
