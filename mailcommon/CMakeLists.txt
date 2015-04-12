@@ -143,6 +143,7 @@ set(libmailcommon_search_SRCS
   search/searchrule/searchruledate.cpp
   search/searchrule/searchrulestring.cpp 
   search/searchrule/searchrulestatus.cpp
+  search/searchrule/searchrule.cpp
 )
 
 set(libmailcommon_snippets_SRCS
