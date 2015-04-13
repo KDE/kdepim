@@ -383,3 +383,42 @@ target_link_libraries( filteractionexectest
    KF5::AkonadiCore
    KF5::AkonadiMime
 )
+
+
+set(mailcommon_filteractionsendreceipttest_SRCS filteractionsendreceipttest.cpp
+                                           ../filteractions/filteractionsendreceipt.cpp
+                                           ../filteractions/filteractionwithnone.cpp)
+
+add_executable( filteractionsendreceipttest ${mailcommon_filteractionsendreceipttest_SRCS} )
+add_test(filteractionsendreceipttest filteractionsendreceipttest)
+ecm_mark_as_test(filteractionsendreceipttest)
+target_link_libraries( filteractionsendreceipttest
+   kdepim
+   pimcommon
+   mailcommon
+   messagecomposer
+   Qt5::Test
+   Qt5::Core
+   KF5::AkonadiCore
+   KF5::AkonadiMime
+)
+
+
+set(mailcommon_filteractionsettransporttest_SRCS filteractionsettransporttest.cpp ../filteractions/filteractionsettransport.cpp
+                                           ../dialog/filteractionmissingargumentdialog.cpp
+                                           ../kmfilteraccountlist.cpp)
+
+
+add_executable( filteractionsettransporttest ${mailcommon_filteractionsettransporttest_SRCS} )
+add_test(filteractionsettransporttest filteractionsettransporttest)
+ecm_mark_as_test(filteractionsettransporttest)
+target_link_libraries( filteractionsettransporttest
+   kdepim
+   pimcommon
+   mailcommon
+   KF5::MailTransport
+   Qt5::Test
+   Qt5::Core
+   KF5::AkonadiCore
+   KF5::AkonadiMime
+)

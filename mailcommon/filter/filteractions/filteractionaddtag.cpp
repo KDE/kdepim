@@ -104,7 +104,7 @@ bool FilterActionAddTag::argsFromStringInteractive(const QString &argsStr, const
     bool needUpdate = false;
     argsFromString(argsStr);
     if (mList.isEmpty()) {
-        return false;
+        return needUpdate;
     }
     const bool index = mList.contains(mParameter);
     if (!index) {

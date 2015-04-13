@@ -55,5 +55,11 @@ void FilterActionBeepTest::shouldHaveRequiresPart()
     QCOMPARE(w.requiredPart(), MailCommon::SearchRule::Envelope);
 }
 
-QTEST_MAIN(FilterActionBeepTest)
+void FilterActionBeepTest::shouldSieveRequres()
+{
+    MailCommon::FilterActionBeep w;
+    QCOMPARE(w.sieveRequires(), QStringList());
 
+}
+
+QTEST_MAIN(FilterActionBeepTest)

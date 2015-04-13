@@ -14,23 +14,15 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-#ifndef FILTERACTIONBEEPTEST_H
-#define FILTERACTIONBEEPTEST_H
 
-#include <QObject>
 
-class FilterActionBeepTest : public QObject
+#include "searchruletest.h"
+#include <qtest_kde.h>
+
+SearchRuleTest::SearchRuleTest(QObject *parent)
+    : QObject(parent)
 {
-    Q_OBJECT
-public:
-    explicit FilterActionBeepTest(QObject *parent = Q_NULLPTR);
-    ~FilterActionBeepTest();
-private Q_SLOTS:
-    void shouldHaveDefaultValue();
-    void shouldSieveCode();
-    void shouldBeNotEmptyByDefault();
-    void shouldHaveRequiresPart();
-    void shouldSieveRequres();
-};
 
-#endif // FILTERACTIONBEEPTEST_H
+}
+
+QTEST_KDEMAIN(SearchRuleTest, NoGUI)

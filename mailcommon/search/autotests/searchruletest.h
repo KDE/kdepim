@@ -14,23 +14,18 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-#ifndef FILTERACTIONBEEPTEST_H
-#define FILTERACTIONBEEPTEST_H
+
+#ifndef SEARCHRULETEST_H
+#define SEARCHRULETEST_H
 
 #include <QObject>
 
-class FilterActionBeepTest : public QObject
+class SearchRuleTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FilterActionBeepTest(QObject *parent = Q_NULLPTR);
-    ~FilterActionBeepTest();
-private Q_SLOTS:
-    void shouldHaveDefaultValue();
-    void shouldSieveCode();
-    void shouldBeNotEmptyByDefault();
-    void shouldHaveRequiresPart();
-    void shouldSieveRequres();
+    explicit SearchRuleTest(QObject *parent = 0);
+
 };
 
-#endif // FILTERACTIONBEEPTEST_H
+#endif // SEARCHRULETEST_H

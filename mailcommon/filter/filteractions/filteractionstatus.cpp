@@ -63,7 +63,7 @@ SearchRule::RequiredPart FilterActionStatus::requiredPart() const
 
 bool FilterActionStatus::isEmpty() const
 {
-    return false;
+    return mParameter.isEmpty();
 }
 
 QString FilterActionStatus::realStatusString(const QString &statusStr)

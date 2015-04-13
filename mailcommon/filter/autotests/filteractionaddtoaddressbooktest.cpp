@@ -63,13 +63,14 @@ void FilterActionAddToAddressBookTest::shouldReportErrorWhenArgumentIsEmpty()
     KMime::Message::Ptr msgPtr = KMime::Message::Ptr(new KMime::Message());
     Akonadi::Item item;
     item.setPayload<KMime::Message::Ptr>(msgPtr);
-    MailCommon::ItemContext context(item, true);
+    MailCommon::ItemContext context(item, false);
 
     filter.argsFromString("");
     QVERIFY(filter.isEmpty());
     QCOMPARE(filter.process(context, false), MailCommon::FilterAction::ErrorButGoOn);
     QCOMPARE(context.needsPayloadStore(), false);
-
+    QCOMPARE(context.needsFlagStore(), false);
+    QCOMPARE(context.needsFullPayload(), false);
 }
 
 void FilterActionAddToAddressBookTest::shouldReportErrorWhenCollectionIsInvalid()
@@ -78,12 +79,14 @@ void FilterActionAddToAddressBookTest::shouldReportErrorWhenCollectionIsInvalid(
     KMime::Message::Ptr msgPtr = KMime::Message::Ptr(new KMime::Message());
     Akonadi::Item item;
     item.setPayload<KMime::Message::Ptr>(msgPtr);
-    MailCommon::ItemContext context(item, true);
+    MailCommon::ItemContext context(item, false);
 
     filter.argsFromString("foo\t-1\tddd");
     QVERIFY(filter.isEmpty());
     QCOMPARE(filter.process(context, false), MailCommon::FilterAction::ErrorButGoOn);
     QCOMPARE(context.needsPayloadStore(), false);
+    QCOMPARE(context.needsFlagStore(), false);
+    QCOMPARE(context.needsFullPayload(), false);
 }
 
 void FilterActionAddToAddressBookTest::shouldRequiresPart()

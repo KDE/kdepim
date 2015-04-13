@@ -35,6 +35,8 @@ public:
     QString sieveCode() const Q_DECL_OVERRIDE;
     QStringList sieveRequires() const Q_DECL_OVERRIDE;
     bool isEmpty() const Q_DECL_OVERRIDE;
+private:
+    bool checkIsValid(int &index) const;
 };
 }
 
