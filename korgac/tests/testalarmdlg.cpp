@@ -73,7 +73,7 @@ int main(int argc, char **argv)
 
     Event *e2 = new Event;
     e2->setSummary(QStringLiteral("This is another summary. "
-                                 "But it is a very long summary of total sillyness for no good reason"));
+                                  "But it is a very long summary of total sillyness for no good reason"));
     e2->setDtStart(now.addDays(1));
     e2->setDtEnd(now.addDays(2));
     e2->newAlarm();

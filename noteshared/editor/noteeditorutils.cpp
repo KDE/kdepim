@@ -30,18 +30,18 @@ NoteEditorUtils::NoteEditorUtils()
 
 }
 
-void NoteEditorUtils::addCheckmark( QTextCursor &cursor )
+void NoteEditorUtils::addCheckmark(QTextCursor &cursor)
 {
     static const QChar unicode[] = {0x2713};
     const int size = sizeof(unicode) / sizeof(QChar);
     const int position = cursor.position();
     cursor.movePosition(QTextCursor::StartOfLine);
     const QString checkMark = QString::fromRawData(unicode, size);
-    cursor.insertText( checkMark );
+    cursor.insertText(checkMark);
     cursor.setPosition(position + checkMark.size());
 }
 
-void NoteEditorUtils::insertDate( QTextEdit *editor )
+void NoteEditorUtils::insertDate(QTextEdit *editor)
 {
     editor->insertPlainText(KLocale::global()->formatDateTime(QDateTime::currentDateTime(), KLocale::ShortDate) + QLatin1Char(' '));
 }

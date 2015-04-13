@@ -122,7 +122,7 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
                 break;
             case PimCommon::StorageServiceAbstract::AccessTokenAction:
             case PimCommon::StorageServiceAbstract::RequestTokenAction:
-                Q_EMIT authorizationFailed( i18n("Dropbox access is not authorized. Error message: %1", errorStr));
+                Q_EMIT authorizationFailed(i18n("Dropbox access is not authorized. Error message: %1", errorStr));
                 break;
             case PimCommon::StorageServiceAbstract::UploadFileAction:
                 Q_EMIT uploadFileFailed(errorStr);

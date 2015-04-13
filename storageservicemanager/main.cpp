@@ -37,7 +37,6 @@ int main(int argc, char **argv)
     migrate.setUiFiles(QStringList() << QStringLiteral("storageserviceui.rc"));
     migrate.migrate();
 
-
     KAboutData aboutData(QStringLiteral("storageservicemanager"),
                          i18n("Storage Service Manager"),
                          QStringLiteral(KDEPIM_VERSION),

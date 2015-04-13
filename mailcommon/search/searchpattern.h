@@ -30,7 +30,6 @@
 #include <boost/shared_ptr.hpp>
 #include <AkonadiCore/searchquery.h>
 
-
 namespace Akonadi
 {
 class Item;

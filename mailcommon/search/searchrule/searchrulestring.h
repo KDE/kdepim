@@ -28,7 +28,8 @@
  * The string can be either a message header, or a pseudo header, such
  * as \<body\>
  */
-namespace MailCommon {
+namespace MailCommon
+{
 class SearchRuleString : public SearchRule
 {
 public:
@@ -39,19 +40,19 @@ public:
      * @param function The function to use for searching.
      * @param contents The contents to search for.
      */
-    explicit SearchRuleString( const QByteArray &field = 0,
-                               Function function = FuncContains,
-                               const QString &contents = QString() );
+    explicit SearchRuleString(const QByteArray &field = 0,
+                              Function function = FuncContains,
+                              const QString &contents = QString());
 
     /**
      * Creates a new string search rule from an @p other rule.
      */
-    SearchRuleString( const SearchRuleString &other );
+    SearchRuleString(const SearchRuleString &other);
 
     /**
      * Initializes this rule with an @p other rule.
      */
-    const SearchRuleString &operator=( const SearchRuleString &other );
+    const SearchRuleString &operator=(const SearchRuleString &other);
 
     /**
      * Destroys the string search rule.
@@ -71,18 +72,18 @@ public:
     /**
      * @copydoc SearchRule::matches()
      */
-    virtual bool matches( const Akonadi::Item &item ) const;
+    virtual bool matches(const Akonadi::Item &item) const;
 
     /**
      * A helper method for the main matches() method.
      * Does the actual comparing.
      */
-    bool matchesInternal( const QString &contents ) const;
+    bool matchesInternal(const QString &contents) const;
 
     /**
      * @copydoc SearchRule::addQueryTerms()
      */
-    virtual void addQueryTerms( Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError ) const;
+    virtual void addQueryTerms(Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError) const;
 };
 }
 #endif // SEARCHRULESTRING_H

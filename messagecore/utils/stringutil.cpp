@@ -183,9 +183,10 @@ QMap<QString, QString> parseMailtoUrl(const KUrl &url)
     QStringList to;
     to << KEmailAddress::decodeMailtoUrl(url);
 
-    const QString toStr = values.value( QLatin1String("to") );
-    if ( !toStr.isEmpty() )
+    const QString toStr = values.value(QLatin1String("to"));
+    if (!toStr.isEmpty()) {
         to << toStr;
+    }
 
     values.insert(QLatin1String("to"), to.join(QLatin1String(", ")));
     return values;

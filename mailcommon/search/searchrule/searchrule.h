@@ -17,7 +17,6 @@
 #ifndef SEARCHRULE_H
 #define SEARCHRULE_H
 
-
 #include "mailcommon_export.h"
 #include <boost/shared_ptr.hpp>
 #include <AkonadiCore/SearchQuery>
@@ -25,7 +24,8 @@
 #include <AkonadiCore/Item>
 
 class KConfigGroup;
-namespace MailCommon {
+namespace MailCommon
+{
 /**
  * @short This class represents one search pattern rule.
  * Incoming mail is sent through the list of mail filter
@@ -87,18 +87,18 @@ public:
      * @param function The function to use for searching.
      * @param contents The contents to search for.
      */
-    explicit SearchRule ( const QByteArray &field = 0, Function function = FuncContains,
-                          const QString &contents = QString() );
+    explicit SearchRule(const QByteArray &field = 0, Function function = FuncContains,
+                        const QString &contents = QString());
 
     /**
      * Creates a new search rule from an @p other rule.
      */
-    SearchRule( const SearchRule &other );
+    SearchRule(const SearchRule &other);
 
     /**
      * Initializes this rule with an @p other rule.
      */
-    const SearchRule &operator=( const SearchRule &other );
+    const SearchRule &operator=(const SearchRule &other);
 
     /**
      * Creates a new search rule of a certain type by instantiating the
@@ -108,9 +108,9 @@ public:
      * @param function The function to use for searching.
      * @param contents The contents to search for.
      */
-    static SearchRule::Ptr createInstance( const QByteArray &field = 0,
-                                           Function function = FuncContains,
-                                           const QString &contents = QString() );
+    static SearchRule::Ptr createInstance(const QByteArray &field = 0,
+                                          Function function = FuncContains,
+                                          const QString &contents = QString());
 
     /**
      * Creates a new search rule of a certain type by instantiating the
@@ -120,19 +120,19 @@ public:
      * @param function The name of the function to use for searching.
      * @param contents The contents to search for.
      */
-    static SearchRule::Ptr createInstance( const QByteArray &field,
-                                           const char *function,
-                                           const QString &contents );
+    static SearchRule::Ptr createInstance(const QByteArray &field,
+                                          const char *function,
+                                          const QString &contents);
 
     /**
      * Creates a new search rule by cloning an @p other rule.
      */
-    static SearchRule::Ptr createInstance( const SearchRule &other );
+    static SearchRule::Ptr createInstance(const SearchRule &other);
 
     /**
      * Creates a new search rule by deseralizing its structure from a data @p stream.
      */
-    static SearchRule::Ptr createInstance( QDataStream &stream );
+    static SearchRule::Ptr createInstance(QDataStream &stream);
 
     /**
      * Creates a new search rule from a given config @p group.
@@ -145,7 +145,7 @@ public:
      *       from the config file. You should call isEmpty yourself
      *       if you need valid rules.
      */
-    static SearchRule::Ptr createInstanceFromConfig( const KConfigGroup &group, int index );
+    static SearchRule::Ptr createInstanceFromConfig(const KConfigGroup &group, int index);
 
     /**
      * Destroys the search rule.
@@ -160,7 +160,7 @@ public:
      *
      * @note Must be implemented by subclasses.
      */
-    virtual bool matches( const Akonadi::Item &item ) const = 0;
+    virtual bool matches(const Akonadi::Item &item) const = 0;
 
     /**
      * Determines whether the rule is worth considering.
@@ -184,14 +184,14 @@ public:
      * @note This function will happily write itself even when it's
      *       not valid, assuming higher layers to Do The Right Thing(TM).
      */
-    void writeConfig( KConfigGroup &group, int index ) const;
+    void writeConfig(KConfigGroup &group, int index) const;
 
     void generateSieveScript(QStringList &requires, QString &code);
 
     /**
      * Sets the filter @p function of the rule.
      */
-    void setFunction( Function function );
+    void setFunction(Function function);
 
     /**
      * Returns the filter function of the rule.
@@ -203,7 +203,7 @@ public:
      *
      * @note Make sure the name contains no trailing ':'.
      */
-    void setField( const QByteArray &name );
+    void setField(const QByteArray &name);
 
     /**
      * Returns the message header field name (without the trailing ':').
@@ -226,7 +226,7 @@ public:
      * This can be either a substring to search for in
      * or a regexp pattern to match against the header.
      */
-    void setContents( const QString &contents );
+    void setContents(const QString &contents);
 
     /**
      * Returns the contents of the rule.
@@ -241,10 +241,9 @@ public:
     /**
      * Adds query terms to the given term group.
      */
-    virtual void addQueryTerms( Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError ) const {  }
+    virtual void addQueryTerms(Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError) const {  }
 
-
-    QDataStream &operator>>( QDataStream & ) const;
+    QDataStream &operator>>(QDataStream &) const;
 
 protected:
     /**
@@ -258,10 +257,10 @@ protected:
     Akonadi::SearchTerm::Condition akonadiComparator() const;
 
 protected:
-    QString quote( const QString &content ) const;
+    QString quote(const QString &content) const;
 private:
-    static Function configValueToFunc( const char * );
-    static QString functionToString( Function );
+    static Function configValueToFunc(const char *);
+    static QString functionToString(Function);
     QString conditionToString(Function function);
 
     QByteArray mField;

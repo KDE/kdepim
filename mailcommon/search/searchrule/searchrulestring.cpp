@@ -38,29 +38,28 @@ using MailCommon::FilterLog;
 #include <algorithm>
 #include <boost/bind.hpp>
 
-
 using namespace MailCommon;
-SearchRuleString::SearchRuleString( const QByteArray &field,
-                                    Function func,
-                                    const QString &contents )
-    : SearchRule( field, func, contents )
+SearchRuleString::SearchRuleString(const QByteArray &field,
+                                   Function func,
+                                   const QString &contents)
+    : SearchRule(field, func, contents)
 {
 }
 
-SearchRuleString::SearchRuleString( const SearchRuleString &other )
-    : SearchRule( other )
+SearchRuleString::SearchRuleString(const SearchRuleString &other)
+    : SearchRule(other)
 {
 }
 
-const SearchRuleString &SearchRuleString::operator=( const SearchRuleString &other )
+const SearchRuleString &SearchRuleString::operator=(const SearchRuleString &other)
 {
-    if ( this == &other ) {
+    if (this == &other) {
         return *this;
     }
 
-    setField( other.field() );
-    setFunction( other.function() );
-    setContents( other.contents() );
+    setField(other.field());
+    setFunction(other.function());
+    setContents(other.contents());
 
     return *this;
 }
@@ -78,43 +77,41 @@ SearchRule::RequiredPart SearchRuleString::requiredPart() const
 {
     const QByteArray f = field();
     SearchRule::RequiredPart part = Header;
-    if ( kasciistricmp( f, "<recipients>" ) == 0 ||
-         kasciistricmp( f, "<status>" ) == 0 ||
-         kasciistricmp( f, "<tag>" ) == 0 ||
-         kasciistricmp( f, "subject" ) == 0 ||
-         kasciistricmp( f, "from" ) == 0 ||
-         kasciistricmp( f, "sender" ) == 0 ||
-         kasciistricmp( f, "reply-to" ) == 0 ||
-         kasciistricmp( f, "to" ) == 0  ||
-         kasciistricmp( f, "cc" ) == 0 ||
-         kasciistricmp( f, "bcc" ) == 0 ||
-         kasciistricmp( f, "in-reply-to" ) == 0 ||
-         kasciistricmp( f, "message-id" ) == 0 ||
-         kasciistricmp( f, "references" ) == 0) {
+    if (kasciistricmp(f, "<recipients>") == 0 ||
+            kasciistricmp(f, "<status>") == 0 ||
+            kasciistricmp(f, "<tag>") == 0 ||
+            kasciistricmp(f, "subject") == 0 ||
+            kasciistricmp(f, "from") == 0 ||
+            kasciistricmp(f, "sender") == 0 ||
+            kasciistricmp(f, "reply-to") == 0 ||
+            kasciistricmp(f, "to") == 0  ||
+            kasciistricmp(f, "cc") == 0 ||
+            kasciistricmp(f, "bcc") == 0 ||
+            kasciistricmp(f, "in-reply-to") == 0 ||
+            kasciistricmp(f, "message-id") == 0 ||
+            kasciistricmp(f, "references") == 0) {
         // these fields are directly provided by KMime::Message, no need to fetch the whole Header part
         part = Envelope;
-    } else if ( kasciistricmp( f, "<message>" ) == 0 ||
-                kasciistricmp( f, "<body>" ) == 0) {
+    } else if (kasciistricmp(f, "<message>") == 0 ||
+               kasciistricmp(f, "<body>") == 0) {
         part = CompleteMessage;
     } else {
-        qDebug()<< "VERIFY IT: SearchRule::RequiredPart SearchRuleString::requiredPart() const use default \"Header\" for field :"<<f;
+        qDebug() << "VERIFY IT: SearchRule::RequiredPart SearchRuleString::requiredPart() const use default \"Header\" for field :" << f;
     }
-
 
     return part;
 }
 
-
-bool SearchRuleString::matches( const Akonadi::Item &item ) const
+bool SearchRuleString::matches(const Akonadi::Item &item) const
 {
     const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
-    Q_ASSERT( msg.get() );
+    Q_ASSERT(msg.get());
 
-    if ( isEmpty() ) {
+    if (isEmpty()) {
         return false;
     }
 
-    if ( !msg->hasHeader( "From" ) ) {
+    if (!msg->hasHeader("From")) {
         msg->parse(); // probably not parsed yet: make sure we can access all headers
     }
 
@@ -123,31 +120,31 @@ bool SearchRuleString::matches( const Akonadi::Item &item ) const
     // Overwrite the value for complete messages and all headers!
     bool logContents = true;
 
-    if ( kasciistricmp( field(), "<message>" ) == 0 ) {
+    if (kasciistricmp(field(), "<message>") == 0) {
         msgContents = msg->encodedContent();
         logContents = false;
-    } else if ( kasciistricmp( field(), "<body>" ) == 0 ) {
+    } else if (kasciistricmp(field(), "<body>") == 0) {
         msgContents = msg->body();
         logContents = false;
-    } else if ( kasciistricmp( field(), "<any header>" ) == 0 ) {
+    } else if (kasciistricmp(field(), "<any header>") == 0) {
         msgContents = msg->head();
         logContents = false;
-    } else if ( kasciistricmp( field(), "<recipients>" ) == 0 ) {
+    } else if (kasciistricmp(field(), "<recipients>") == 0) {
         // (mmutz 2001-11-05) hack to fix "<recipients> !contains foo" to
         // meet user's expectations. See FAQ entry in KDE 2.2.2's KMail
         // handbook
-        if ( function() == FuncEquals || function() == FuncNotEqual ) {
+        if (function() == FuncEquals || function() == FuncNotEqual) {
             // do we need to treat this case specially? Ie.: What shall
             // "equality" mean for recipients.
             return
-                    matchesInternal( msg->to()->asUnicodeString() ) ||
-                    matchesInternal( msg->cc()->asUnicodeString() ) ||
-                    matchesInternal( msg->bcc()->asUnicodeString() ) ;
+                matchesInternal(msg->to()->asUnicodeString()) ||
+                matchesInternal(msg->cc()->asUnicodeString()) ||
+                matchesInternal(msg->bcc()->asUnicodeString()) ;
         }
         msgContents = msg->to()->asUnicodeString();
         msgContents += ", " + msg->cc()->asUnicodeString();
         msgContents += ", " + msg->bcc()->asUnicodeString();
-    } else if ( kasciistricmp( field(), "<tag>" ) == 0 ) {
+    } else if (kasciistricmp(field(), "<tag>") == 0) {
         //port?
         //     const Nepomuk2::Resource res( item.url() );
         //     foreach ( const Nepomuk2::Tag &tag, res.tags() ) {
@@ -157,40 +154,40 @@ bool SearchRuleString::matches( const Akonadi::Item &item ) const
     } else {
         // make sure to treat messages with multiple header lines for
         // the same header correctly
-        msgContents = msg->headerByType( field() ) ?
-                    msg->headerByType( field() )->asUnicodeString() :
-                    "";
+        msgContents = msg->headerByType(field()) ?
+                      msg->headerByType(field())->asUnicodeString() :
+                      "";
     }
 
-    if ( function() == FuncIsInAddressbook ||
-         function() == FuncIsNotInAddressbook ) {
+    if (function() == FuncIsInAddressbook ||
+            function() == FuncIsNotInAddressbook) {
         // I think only the "from"-field makes sense.
-        msgContents = msg->headerByType( field() ) ?
-                    msg->headerByType( field() )->asUnicodeString() :
-                    "";
+        msgContents = msg->headerByType(field()) ?
+                      msg->headerByType(field())->asUnicodeString() :
+                      "";
 
-        if ( msgContents.isEmpty() ) {
-            return ( function() == FuncIsInAddressbook ) ? false : true;
+        if (msgContents.isEmpty()) {
+            return (function() == FuncIsInAddressbook) ? false : true;
         }
     }
 
     // these two functions need the kmmessage therefore they don't call matchesInternal
-    if ( function() == FuncHasAttachment ) {
-        return ( msg->attachments().size() > 0 );
+    if (function() == FuncHasAttachment) {
+        return (msg->attachments().size() > 0);
     }
-    if ( function() == FuncHasNoAttachment ) {
-        return ( msg->attachments().size() == 0 );
+    if (function() == FuncHasNoAttachment) {
+        return (msg->attachments().size() == 0);
     }
 
-    bool rc = matchesInternal( msgContents );
-    if ( FilterLog::instance()->isLogging() ) {
-        QString msg = ( rc ? "<font color=#00FF00>1 = </font>" : "<font color=#FF0000>0 = </font>" );
-        msg += FilterLog::recode( asString() );
+    bool rc = matchesInternal(msgContents);
+    if (FilterLog::instance()->isLogging()) {
+        QString msg = (rc ? "<font color=#00FF00>1 = </font>" : "<font color=#FF0000>0 = </font>");
+        msg += FilterLog::recode(asString());
         // only log headers bcause messages and bodies can be pretty large
-        if ( logContents ) {
-            msg += " (<i>" + FilterLog::recode( msgContents ) + "</i>)";
+        if (logContents) {
+            msg += " (<i>" + FilterLog::recode(msgContents) + "</i>)";
         }
-        FilterLog::instance()->add( msg, FilterLog::RuleResult );
+        FilterLog::instance()->add(msg, FilterLog::RuleResult);
     }
     return rc;
 }
@@ -200,168 +197,159 @@ void SearchRuleString::addQueryTerms(Akonadi::SearchTerm &groupTerm , bool &empt
     using namespace Akonadi;
     emptyIsNotAnError = false;
     SearchTerm termGroup(SearchTerm::RelOr);
-    if ( kasciistricmp( field(), "subject" ) == 0 ) {
-        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::Subject, contents(), akonadiComparator()) );
-    } else if ( kasciistricmp( field(), "reply-to" ) == 0 ) {
-        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderReplyTo, contents(), akonadiComparator()) );
-    } else if ( kasciistricmp( field(), "<message>" ) == 0 ) {
-        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::Message, contents(), akonadiComparator()) );
-    } else if ( field() == "<body>" ) {
-        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::Body, contents(), akonadiComparator()) );
-        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::Attachment, contents(), akonadiComparator()) );
-    } else if ( kasciistricmp( field(), "<recipients>" ) == 0 ) {
-        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderTo, contents(), akonadiComparator()) );
-        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderCC, contents(), akonadiComparator()) );
-        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderBCC, contents(), akonadiComparator()) );
-    } else if ( kasciistricmp( field(), "<any header>" ) == 0 ) {
-        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::Headers, contents(), akonadiComparator()) );
-        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::Subject, contents(), akonadiComparator()) );
-    } else if ( kasciistricmp( field(), "to" ) == 0 ) {
-        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderTo, contents(), akonadiComparator()) );
-    } else if ( kasciistricmp( field(), "cc" ) == 0 ) {
-        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderCC, contents(), akonadiComparator()) );
-    } else if ( kasciistricmp( field(), "bcc" ) == 0 ) {
-        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderBCC, contents(), akonadiComparator()) );
-    } else if ( kasciistricmp( field(), "from" ) == 0 ) {
-        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderFrom, contents(), akonadiComparator()) );
-    } else if ( kasciistricmp( field(), "list-id" ) == 0 ) {
-        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderListId, contents(), akonadiComparator()) );
-    } else if ( kasciistricmp( field(), "resent-from" ) == 0 ) {
-        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderResentFrom, contents(), akonadiComparator()) );
-    } else if ( kasciistricmp( field(), "x-loop" ) == 0 ) {
-        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderXLoop, contents(), akonadiComparator()) );
-    } else if ( kasciistricmp( field(), "x-mailing-list" ) == 0 ) {
-        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderXMailingList, contents(), akonadiComparator()) );
-    } else if ( kasciistricmp( field(), "x-spam-flag" ) == 0 ) {
-        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderXSpamFlag, contents(), akonadiComparator()) );
-    } else if ( kasciistricmp( field(), "organization" )  == 0 ) {
-        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderOrganization, contents(), akonadiComparator()) );
-    } else if ( kasciistricmp( field(), "<tag>" ) == 0 ) {
-        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::MessageTag, contents(), akonadiComparator()) );
+    if (kasciistricmp(field(), "subject") == 0) {
+        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::Subject, contents(), akonadiComparator()));
+    } else if (kasciistricmp(field(), "reply-to") == 0) {
+        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderReplyTo, contents(), akonadiComparator()));
+    } else if (kasciistricmp(field(), "<message>") == 0) {
+        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::Message, contents(), akonadiComparator()));
+    } else if (field() == "<body>") {
+        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::Body, contents(), akonadiComparator()));
+        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::Attachment, contents(), akonadiComparator()));
+    } else if (kasciistricmp(field(), "<recipients>") == 0) {
+        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderTo, contents(), akonadiComparator()));
+        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderCC, contents(), akonadiComparator()));
+        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderBCC, contents(), akonadiComparator()));
+    } else if (kasciistricmp(field(), "<any header>") == 0) {
+        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::Headers, contents(), akonadiComparator()));
+        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::Subject, contents(), akonadiComparator()));
+    } else if (kasciistricmp(field(), "to") == 0) {
+        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderTo, contents(), akonadiComparator()));
+    } else if (kasciistricmp(field(), "cc") == 0) {
+        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderCC, contents(), akonadiComparator()));
+    } else if (kasciistricmp(field(), "bcc") == 0) {
+        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderBCC, contents(), akonadiComparator()));
+    } else if (kasciistricmp(field(), "from") == 0) {
+        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderFrom, contents(), akonadiComparator()));
+    } else if (kasciistricmp(field(), "list-id") == 0) {
+        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderListId, contents(), akonadiComparator()));
+    } else if (kasciistricmp(field(), "resent-from") == 0) {
+        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderResentFrom, contents(), akonadiComparator()));
+    } else if (kasciistricmp(field(), "x-loop") == 0) {
+        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderXLoop, contents(), akonadiComparator()));
+    } else if (kasciistricmp(field(), "x-mailing-list") == 0) {
+        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderXMailingList, contents(), akonadiComparator()));
+    } else if (kasciistricmp(field(), "x-spam-flag") == 0) {
+        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderXSpamFlag, contents(), akonadiComparator()));
+    } else if (kasciistricmp(field(), "organization")  == 0) {
+        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderOrganization, contents(), akonadiComparator()));
+    } else if (kasciistricmp(field(), "<tag>") == 0) {
+        termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::MessageTag, contents(), akonadiComparator()));
     }
 
     // TODO complete for other headers, generic headers
 
-    if ( !termGroup.subTerms().isEmpty() ) {
-        termGroup.setIsNegated( isNegated() );
-        groupTerm.addSubTerm( termGroup );
+    if (!termGroup.subTerms().isEmpty()) {
+        termGroup.setIsNegated(isNegated());
+        groupTerm.addSubTerm(termGroup);
     }
 }
 
 // helper, does the actual comparing
-bool SearchRuleString::matchesInternal( const QString &msgContents ) const
+bool SearchRuleString::matchesInternal(const QString &msgContents) const
 {
-    if( msgContents.isEmpty()) {
+    if (msgContents.isEmpty()) {
         return false;
     }
 
-    switch ( function() ) {
+    switch (function()) {
     case SearchRule::FuncEquals:
-        return ( QString::compare( msgContents.toLower(), contents().toLower() ) == 0 );
+        return (QString::compare(msgContents.toLower(), contents().toLower()) == 0);
 
     case SearchRule::FuncNotEqual:
-        return ( QString::compare( msgContents.toLower(), contents().toLower() ) != 0 );
+        return (QString::compare(msgContents.toLower(), contents().toLower()) != 0);
 
     case SearchRule::FuncContains:
-        return ( msgContents.contains( contents(), Qt::CaseInsensitive ) );
+        return (msgContents.contains(contents(), Qt::CaseInsensitive));
 
     case SearchRule::FuncContainsNot:
-        return ( !msgContents.contains( contents(), Qt::CaseInsensitive ) );
+        return (!msgContents.contains(contents(), Qt::CaseInsensitive));
 
-    case SearchRule::FuncRegExp:
-    {
-        QRegExp regexp( contents(), Qt::CaseInsensitive );
-        return ( regexp.indexIn( msgContents ) >= 0 );
+    case SearchRule::FuncRegExp: {
+        QRegExp regexp(contents(), Qt::CaseInsensitive);
+        return (regexp.indexIn(msgContents) >= 0);
     }
 
-    case SearchRule::FuncNotRegExp:
-    {
-        QRegExp regexp( contents(), Qt::CaseInsensitive );
-        return ( regexp.indexIn( msgContents ) < 0 );
+    case SearchRule::FuncNotRegExp: {
+        QRegExp regexp(contents(), Qt::CaseInsensitive);
+        return (regexp.indexIn(msgContents) < 0);
     }
 
-    case SearchRule::FuncStartWith:
-    {
-        return msgContents.startsWith( contents() );
+    case SearchRule::FuncStartWith: {
+        return msgContents.startsWith(contents());
     }
 
-    case SearchRule::FuncNotStartWith:
-    {
-        return !msgContents.startsWith( contents() );
+    case SearchRule::FuncNotStartWith: {
+        return !msgContents.startsWith(contents());
     }
 
-    case SearchRule::FuncEndWith:
-    {
-        return msgContents.endsWith( contents() );
+    case SearchRule::FuncEndWith: {
+        return msgContents.endsWith(contents());
     }
 
-    case SearchRule::FuncNotEndWith:
-    {
-        return !msgContents.endsWith( contents() );
+    case SearchRule::FuncNotEndWith: {
+        return !msgContents.endsWith(contents());
     }
 
     case FuncIsGreater:
-        return ( QString::compare( msgContents.toLower(), contents().toLower() ) > 0 );
+        return (QString::compare(msgContents.toLower(), contents().toLower()) > 0);
 
     case FuncIsLessOrEqual:
-        return ( QString::compare( msgContents.toLower(), contents().toLower() ) <= 0 );
+        return (QString::compare(msgContents.toLower(), contents().toLower()) <= 0);
 
     case FuncIsLess:
-        return ( QString::compare( msgContents.toLower(), contents().toLower() ) < 0 );
+        return (QString::compare(msgContents.toLower(), contents().toLower()) < 0);
 
     case FuncIsGreaterOrEqual:
-        return ( QString::compare( msgContents.toLower(), contents().toLower() ) >= 0 );
+        return (QString::compare(msgContents.toLower(), contents().toLower()) >= 0);
 
-    case FuncIsInAddressbook:
-    {
-        const QStringList addressList = KEmailAddress::splitAddressList( msgContents.toLower() );
-        QStringList::ConstIterator end( addressList.constEnd() );
-        for ( QStringList::ConstIterator it = addressList.constBegin(); ( it != end ); ++it ) {
+    case FuncIsInAddressbook: {
+        const QStringList addressList = KEmailAddress::splitAddressList(msgContents.toLower());
+        QStringList::ConstIterator end(addressList.constEnd());
+        for (QStringList::ConstIterator it = addressList.constBegin(); (it != end); ++it) {
             Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
-            job->setLimit( 1 );
-            job->setQuery( Akonadi::ContactSearchJob::Email, KEmailAddress::extractEmailAddress( *it ).toLower() );
+            job->setLimit(1);
+            job->setQuery(Akonadi::ContactSearchJob::Email, KEmailAddress::extractEmailAddress(*it).toLower());
             job->exec();
 
-            if ( !job->contacts().isEmpty() ) {
+            if (!job->contacts().isEmpty()) {
                 return true;
             }
         }
         return false;
     }
 
-    case FuncIsNotInAddressbook:
-    {
-        const QStringList addressList = KEmailAddress::splitAddressList( msgContents.toLower() );
-        QStringList::ConstIterator end( addressList.constEnd() );
+    case FuncIsNotInAddressbook: {
+        const QStringList addressList = KEmailAddress::splitAddressList(msgContents.toLower());
+        QStringList::ConstIterator end(addressList.constEnd());
 
-        for ( QStringList::ConstIterator it = addressList.constBegin(); ( it != end ); ++it ) {
+        for (QStringList::ConstIterator it = addressList.constBegin(); (it != end); ++it) {
             Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
-            job->setLimit( 1 );
-            job->setQuery( Akonadi::ContactSearchJob::Email, KEmailAddress::extractEmailAddress( *it ).toLower() );
+            job->setLimit(1);
+            job->setQuery(Akonadi::ContactSearchJob::Email, KEmailAddress::extractEmailAddress(*it).toLower());
             job->exec();
 
-            if ( job->contacts().isEmpty() ) {
+            if (job->contacts().isEmpty()) {
                 return true;
             }
         }
         return false;
     }
 
-    case FuncIsInCategory:
-    {
+    case FuncIsInCategory: {
         QString category = contents();
-        const QStringList addressList =  KEmailAddress::splitAddressList( msgContents.toLower() );
+        const QStringList addressList =  KEmailAddress::splitAddressList(msgContents.toLower());
 
-        QStringList::ConstIterator end( addressList.constEnd() );
-        for ( QStringList::ConstIterator it = addressList.constBegin(); it != end; ++it ) {
+        QStringList::ConstIterator end(addressList.constEnd());
+        for (QStringList::ConstIterator it = addressList.constBegin(); it != end; ++it) {
             Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
-            job->setQuery( Akonadi::ContactSearchJob::Email, KEmailAddress::extractEmailAddress( *it ).toLower() );
+            job->setQuery(Akonadi::ContactSearchJob::Email, KEmailAddress::extractEmailAddress(*it).toLower());
             job->exec();
 
             const KContacts::Addressee::List contacts = job->contacts();
 
-            foreach ( const KContacts::Addressee &contact, contacts ) {
-                if ( contact.hasCategory( category ) ) {
+            foreach (const KContacts::Addressee &contact, contacts) {
+                if (contact.hasCategory(category)) {
                     return true;
                 }
             }
@@ -369,21 +357,20 @@ bool SearchRuleString::matchesInternal( const QString &msgContents ) const
         return false;
     }
 
-    case FuncIsNotInCategory:
-    {
+    case FuncIsNotInCategory: {
         QString category = contents();
-        const QStringList addressList =  KEmailAddress::splitAddressList( msgContents.toLower() );
+        const QStringList addressList =  KEmailAddress::splitAddressList(msgContents.toLower());
 
-        QStringList::ConstIterator end( addressList.constEnd() );
-        for ( QStringList::ConstIterator it = addressList.constBegin(); it != end; ++it ) {
+        QStringList::ConstIterator end(addressList.constEnd());
+        for (QStringList::ConstIterator it = addressList.constBegin(); it != end; ++it) {
             Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
-            job->setQuery( Akonadi::ContactSearchJob::Email, KEmailAddress::extractEmailAddress( *it ).toLower() );
+            job->setQuery(Akonadi::ContactSearchJob::Email, KEmailAddress::extractEmailAddress(*it).toLower());
             job->exec();
 
             const KContacts::Addressee::List contacts = job->contacts();
 
-            foreach ( const KContacts::Addressee &contact, contacts ) {
-                if ( contact.hasCategory( category ) ) {
+            foreach (const KContacts::Addressee &contact, contacts) {
+                if (contact.hasCategory(category)) {
                     return false;
                 }
             }

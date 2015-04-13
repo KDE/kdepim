@@ -1418,7 +1418,7 @@ Module::checkForPGP(void)
     havePgp = false;
 
     path = QString::fromLocal8Bit(getenv("PATH"));
-    pSearchPaths = path.split( QLatin1Char(KPATH_SEPARATOR), QString::SkipEmptyParts );
+    pSearchPaths = path.split(QLatin1Char(KPATH_SEPARATOR), QString::SkipEmptyParts);
 
     haveGpg = false;
     // lets try gpg

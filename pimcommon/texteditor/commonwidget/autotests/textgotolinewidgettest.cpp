@@ -150,5 +150,4 @@ void TextGoToLineWidgetTest::shouldChangeMaximumValue()
     QCOMPARE(line->maximum(), 10);
 }
 
-
-QTEST_MAIN( TextGoToLineWidgetTest )
+QTEST_MAIN(TextGoToLineWidgetTest)

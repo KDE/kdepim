@@ -27,8 +27,8 @@ class NOTESHARED_EXPORT NoteEditorUtils
 {
 public:
     NoteEditorUtils();
-    void addCheckmark( QTextCursor &cursor);
-    void insertDate( QTextEdit *editor );
+    void addCheckmark(QTextCursor &cursor);
+    void insertDate(QTextEdit *editor);
 };
 }
 #endif // NOTEEDITORUTILS_H

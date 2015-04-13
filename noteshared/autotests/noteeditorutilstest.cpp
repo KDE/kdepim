@@ -42,20 +42,20 @@ void NoteEditorUtilsTest::testAddCheckmark_data()
 
 void NoteEditorUtilsTest::testAddCheckmark()
 {
-    QFETCH( QString, input );
-    QFETCH( int, position );
-
+    QFETCH(QString, input);
+    QFETCH(int, position);
 
     static const QChar unicode[] = {0x2713};
     const int size = sizeof(unicode) / sizeof(QChar);
     const QString checkMark = QString::fromRawData(unicode, size);
 
     NoteShared::NoteEditorUtils noteUtils;
-    QTextDocument * document = new QTextDocument(this);
+    QTextDocument *document = new QTextDocument(this);
     document->setPlainText(input);
     QTextCursor textCursor(document);
-    if (position < 1)
+    if (position < 1) {
         position = 0;
+    }
     textCursor.setPosition(position);
 
     document->setPlainText(input);
@@ -65,6 +65,5 @@ void NoteEditorUtilsTest::testAddCheckmark()
     //QCOMPARE(textCursor.position(), position + checkMark.size());
     delete document;
 }
-
 
 QTEST_MAIN(NoteEditorUtilsTest)

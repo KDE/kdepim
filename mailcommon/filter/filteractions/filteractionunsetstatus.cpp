@@ -33,8 +33,8 @@ FilterActionUnsetStatus::FilterActionUnsetStatus(QObject *parent)
 
 bool FilterActionUnsetStatus::checkIsValid(int &index) const
 {
-    index = mParameterList.indexOf( mParameter );
-    return ( index < 1 );
+    index = mParameterList.indexOf(mParameter);
+    return (index < 1);
 }
 
 bool FilterActionUnsetStatus::isEmpty() const
@@ -46,7 +46,7 @@ bool FilterActionUnsetStatus::isEmpty() const
 FilterAction::ReturnCode FilterActionUnsetStatus::process(ItemContext &context , bool) const
 {
     int index = 0;
-    if ( checkIsValid(index) ) {
+    if (checkIsValid(index)) {
         return ErrorButGoOn;
     }
 

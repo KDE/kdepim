@@ -31,7 +31,6 @@
 #include <QFrame>
 #include <QHash>
 
-
 #include <KMessageBox>
 #include <KLocalizedString>
 #include <KIconLoader>
@@ -404,22 +403,24 @@ void ConfigureThemesDialog::Private::deleteThemeButtonClicked()
         return;
     }
     if (KMessageBox::Yes == KMessageBox::questionYesNo(q, list.count() > 1 ? i18n("Do you want to delete selected themes?")
-                                                       : i18n("Do you want to delete \"%1\"?",list.first()->text()), i18n("Delete Theme"))) {
-        mEditor->editTheme( Q_NULLPTR ); // forget it
-        Q_FOREACH(QListWidgetItem * it, list) {
-            ThemeListWidgetItem * item = dynamic_cast< ThemeListWidgetItem * >( it );
-            if ( !item )
+            : i18n("Do you want to delete \"%1\"?", list.first()->text()), i18n("Delete Theme"))) {
+        mEditor->editTheme(Q_NULLPTR);   // forget it
+        Q_FOREACH (QListWidgetItem *it, list) {
+            ThemeListWidgetItem *item = dynamic_cast< ThemeListWidgetItem * >(it);
+            if (!item) {
                 return;
-            if(!item->theme()->readOnly()) {
+            }
+            if (!item->theme()->readOnly()) {
                 delete item;// this will trigger themeListCurrentItemChanged()
             }
-            if ( mThemeList->count() < 2 )
-                break; // no way: desperately try to keep at least one option set alive :)
+            if (mThemeList->count() < 2) {
+                break;    // no way: desperately try to keep at least one option set alive :)
+            }
         }
 
         ThemeListWidgetItem *newItem = dynamic_cast< ThemeListWidgetItem * >(mThemeList->currentItem());
-        mDeleteThemeButton->setEnabled( newItem && !newItem->theme()->readOnly() );
-        mExportThemeButton->setEnabled( newItem );
+        mDeleteThemeButton->setEnabled(newItem && !newItem->theme()->readOnly());
+        mExportThemeButton->setEnabled(newItem);
         const int numberOfSelectedItem(mThemeList->selectedItems().count());
         mCloneThemeButton->setEnabled(numberOfSelectedItem == 1);
     }

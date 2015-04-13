@@ -53,8 +53,9 @@ bool FilterActionPlaySound::isEmpty() const
 
 FilterAction::ReturnCode FilterActionPlaySound::process(ItemContext &, bool) const
 {
-    if ( isEmpty() )
+    if (isEmpty()) {
         return ErrorButGoOn;
+    }
     if (!mPlayer) {
         mPlayer = Phonon::createPlayer(Phonon::NotificationCategory);
     }

@@ -20,7 +20,6 @@
 #include "searchrule/searchrulestring.h"
 #include "searchrule/searchrulestatus.h"
 
-
 #include <KMime/KMimeMessage>
 
 //note: lowercase include for compatibility
@@ -38,8 +37,7 @@
 
 using namespace MailCommon;
 
-static const char *funcConfigNames[] =
-{
+static const char *funcConfigNames[] = {
     "contains", "contains-not",
     "equals", "not-equal",
     "regexp", "not-regexp",
@@ -52,8 +50,7 @@ static const char *funcConfigNames[] =
 };
 
 static const int numFuncConfigNames =
-        sizeof funcConfigNames / sizeof *funcConfigNames;
-
+    sizeof funcConfigNames / sizeof * funcConfigNames;
 
 //==================================================
 //
@@ -61,23 +58,23 @@ static const int numFuncConfigNames =
 //
 //==================================================
 
-SearchRule::SearchRule( const QByteArray &field, Function func, const QString &contents )
-    : mField( field ),
-      mFunction( func ),
-      mContents( contents )
+SearchRule::SearchRule(const QByteArray &field, Function func, const QString &contents)
+    : mField(field),
+      mFunction(func),
+      mContents(contents)
 {
 }
 
-SearchRule::SearchRule( const SearchRule &other )
-    : mField( other.mField ),
-      mFunction( other.mFunction ),
-      mContents( other.mContents )
+SearchRule::SearchRule(const SearchRule &other)
+    : mField(other.mField),
+      mFunction(other.mFunction),
+      mContents(other.mContents)
 {
 }
 
-const SearchRule & SearchRule::operator=( const SearchRule &other )
+const SearchRule &SearchRule::operator=(const SearchRule &other)
 {
-    if ( this == &other ) {
+    if (this == &other) {
         return *this;
     }
 
@@ -88,79 +85,79 @@ const SearchRule & SearchRule::operator=( const SearchRule &other )
     return *this;
 }
 
-SearchRule::Ptr SearchRule::createInstance( const QByteArray &field,
-                                            Function func,
-                                            const QString &contents )
+SearchRule::Ptr SearchRule::createInstance(const QByteArray &field,
+        Function func,
+        const QString &contents)
 {
     SearchRule::Ptr ret;
-    if ( field == "<status>" ) {
-        ret = SearchRule::Ptr( new SearchRuleStatus( field, func, contents ) );
-    } else if ( field == "<age in days>" || field == "<size>" ) {
-        ret = SearchRule::Ptr( new SearchRuleNumerical( field, func, contents ) );
-    } else if ( field == "<date>" ) {
-        ret = SearchRule::Ptr( new SearchRuleDate( field, func, contents ) );
+    if (field == "<status>") {
+        ret = SearchRule::Ptr(new SearchRuleStatus(field, func, contents));
+    } else if (field == "<age in days>" || field == "<size>") {
+        ret = SearchRule::Ptr(new SearchRuleNumerical(field, func, contents));
+    } else if (field == "<date>") {
+        ret = SearchRule::Ptr(new SearchRuleDate(field, func, contents));
     } else {
-        ret = SearchRule::Ptr( new SearchRuleString( field, func, contents ) );
+        ret = SearchRule::Ptr(new SearchRuleString(field, func, contents));
     }
 
     return ret;
 }
 
-SearchRule::Ptr SearchRule::createInstance( const QByteArray &field,
-                                            const char *func,
-                                            const QString &contents )
+SearchRule::Ptr SearchRule::createInstance(const QByteArray &field,
+        const char *func,
+        const QString &contents)
 {
-    return ( createInstance( field, configValueToFunc( func ), contents ) );
+    return (createInstance(field, configValueToFunc(func), contents));
 }
 
-SearchRule::Ptr SearchRule::createInstance( const SearchRule &other )
+SearchRule::Ptr SearchRule::createInstance(const SearchRule &other)
 {
-    return ( createInstance( other.field(), other.function(), other.contents() ) );
+    return (createInstance(other.field(), other.function(), other.contents()));
 }
 
-SearchRule::Ptr SearchRule::createInstanceFromConfig( const KConfigGroup &config, int aIdx )
+SearchRule::Ptr SearchRule::createInstanceFromConfig(const KConfigGroup &config, int aIdx)
 {
-    const char cIdx = char( int( 'A' ) + aIdx );
+    const char cIdx = char(int('A') + aIdx);
 
-    static const QString & field = KGlobal::staticQString( "field" );
-    static const QString & func = KGlobal::staticQString( "func" );
-    static const QString & contents = KGlobal::staticQString( "contents" );
+    static const QString &field = KGlobal::staticQString("field");
+    static const QString &func = KGlobal::staticQString("func");
+    static const QString &contents = KGlobal::staticQString("contents");
 
-    const QByteArray &field2 = config.readEntry( field + cIdx, QString() ).toLatin1();
-    Function func2 = configValueToFunc( config.readEntry( func + cIdx, QString() ).toLatin1() );
-    const QString & contents2 = config.readEntry( contents + cIdx, QString() );
+    const QByteArray &field2 = config.readEntry(field + cIdx, QString()).toLatin1();
+    Function func2 = configValueToFunc(config.readEntry(func + cIdx, QString()).toLatin1());
+    const QString &contents2 = config.readEntry(contents + cIdx, QString());
 
-    if ( field2 == "<To or Cc>" ) { // backwards compat
-        return SearchRule::createInstance( "<recipients>", func2, contents2 );
+    if (field2 == "<To or Cc>") {   // backwards compat
+        return SearchRule::createInstance("<recipients>", func2, contents2);
     } else {
-        return SearchRule::createInstance( field2, func2, contents2 );
+        return SearchRule::createInstance(field2, func2, contents2);
     }
 }
 
-SearchRule::Ptr SearchRule::createInstance( QDataStream &s )
+SearchRule::Ptr SearchRule::createInstance(QDataStream &s)
 {
     QByteArray field;
     s >> field;
     QString function;
     s >> function;
-    Function func = configValueToFunc( function.toUtf8() );
+    Function func = configValueToFunc(function.toUtf8());
     QString contents;
     s >> contents;
-    return createInstance( field, func, contents );
+    return createInstance(field, func, contents);
 }
 
 SearchRule::~SearchRule()
 {
 }
 
-SearchRule::Function SearchRule::configValueToFunc( const char *str )
+SearchRule::Function SearchRule::configValueToFunc(const char *str)
 {
-    if ( !str ) {
+    if (!str) {
         return FuncNone;
     }
 
-    for ( int i = 0; i < numFuncConfigNames; ++i ) {
-        if ( qstricmp( funcConfigNames[i], str ) == 0 ) {
+    for (int i = 0; i < numFuncConfigNames; ++i) {
+        if (qstricmp(funcConfigNames[i], str) == 0) {
             return (Function)i;
         }
     }
@@ -168,31 +165,31 @@ SearchRule::Function SearchRule::configValueToFunc( const char *str )
     return FuncNone;
 }
 
-QString SearchRule::functionToString( Function function )
+QString SearchRule::functionToString(Function function)
 {
-    if ( function != FuncNone ) {
-        return funcConfigNames[int( function )];
+    if (function != FuncNone) {
+        return funcConfigNames[int(function)];
     } else {
         return "invalid";
     }
 }
 
-void SearchRule::writeConfig( KConfigGroup &config, int aIdx ) const
+void SearchRule::writeConfig(KConfigGroup &config, int aIdx) const
 {
-    const char cIdx = char( 'A' + aIdx );
-    static const QString & field = KGlobal::staticQString( "field" );
-    static const QString & func = KGlobal::staticQString( "func" );
-    static const QString & contents = KGlobal::staticQString( "contents" );
+    const char cIdx = char('A' + aIdx);
+    static const QString &field = KGlobal::staticQString("field");
+    static const QString &func = KGlobal::staticQString("func");
+    static const QString &contents = KGlobal::staticQString("contents");
 
-    config.writeEntry( field + cIdx, QString(mField) );
-    config.writeEntry( func + cIdx, functionToString( mFunction ) );
-    config.writeEntry( contents + cIdx, mContents );
+    config.writeEntry(field + cIdx, QString(mField));
+    config.writeEntry(func + cIdx, functionToString(mFunction));
+    config.writeEntry(contents + cIdx, mContents);
 }
 
 QString SearchRule::conditionToString(Function function)
 {
     QString str;
-    switch(function) {
+    switch (function) {
     case FuncEquals:
         str = i18n("equal");
         break;
@@ -266,7 +263,7 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
     if (mField == "<size>") {
         QString comparaison;
         int offset = 0;
-        switch(mFunction) {
+        switch (mFunction) {
         case FuncEquals:
             comparaison = QLatin1Char('"') + i18n("size equals not supported") + QLatin1Char('"');
             break;
@@ -330,11 +327,12 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
         //TODO ?
         code += i18n("<message> not implemented/supported");
     } else if (mField == "<body>") {
-        if (!requires.contains(QLatin1String("body")))
+        if (!requires.contains(QLatin1String("body"))) {
             requires << QLatin1String("body");
+        }
         QString comparaison;
         bool negative = false;
-        switch(mFunction) {
+        switch (mFunction) {
         case FuncNone:
             break;
         case FuncContains:
@@ -353,40 +351,46 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
             break;
         case FuncRegExp:
             comparaison = QLatin1String(":regex");
-            if (!requires.contains(QLatin1String("regex")))
+            if (!requires.contains(QLatin1String("regex"))) {
                 requires << QLatin1String("regex");
+            }
             break;
         case FuncNotRegExp:
-            if (!requires.contains(QLatin1String("regex")))
+            if (!requires.contains(QLatin1String("regex"))) {
                 requires << QLatin1String("regex");
+            }
             comparaison = QLatin1String(":regex");
             negative = true;
             break;
         case FuncStartWith:
             comparaison = QLatin1String(":regex");
-            if (!requires.contains(QLatin1String("regex")))
+            if (!requires.contains(QLatin1String("regex"))) {
                 requires << QLatin1String("regex");
+            }
             contentStr = QLatin1Char('^') + contentStr;
             break;
         case FuncNotStartWith:
             comparaison = QLatin1String(":regex");
-            if (!requires.contains(QLatin1String("regex")))
+            if (!requires.contains(QLatin1String("regex"))) {
                 requires << QLatin1String("regex");
+            }
             comparaison = QLatin1String(":regex");
             contentStr = QLatin1Char('^') + contentStr;
             negative = true;
             break;
         case FuncEndWith:
             comparaison = QLatin1String(":regex");
-            if (!requires.contains(QLatin1String("regex")))
+            if (!requires.contains(QLatin1String("regex"))) {
                 requires << QLatin1String("regex");
+            }
             comparaison = QLatin1String(":regex");
             contentStr = contentStr + QLatin1Char('$');
             break;
         case FuncNotEndWith:
             comparaison = QLatin1String(":regex");
-            if (!requires.contains(QLatin1String("regex")))
+            if (!requires.contains(QLatin1String("regex"))) {
                 requires << QLatin1String("regex");
+            }
             comparaison = QLatin1String(":regex");
             contentStr = contentStr + QLatin1Char('$');
             negative = true;
@@ -408,7 +412,7 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
     } else {
         QString comparaison;
         bool negative = false;
-        switch(mFunction) {
+        switch (mFunction) {
         case FuncNone:
             break;
         case FuncContains:
@@ -427,40 +431,46 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
             break;
         case FuncRegExp:
             comparaison = QLatin1String(":regex");
-            if (!requires.contains(QLatin1String("regex")))
+            if (!requires.contains(QLatin1String("regex"))) {
                 requires << QLatin1String("regex");
+            }
             break;
         case FuncNotRegExp:
-            if (!requires.contains(QLatin1String("regex")))
+            if (!requires.contains(QLatin1String("regex"))) {
                 requires << QLatin1String("regex");
+            }
             comparaison = QLatin1String(":regex");
             negative = true;
             break;
         case FuncStartWith:
             comparaison = QLatin1String(":regex");
-            if (!requires.contains(QLatin1String("regex")))
+            if (!requires.contains(QLatin1String("regex"))) {
                 requires << QLatin1String("regex");
+            }
             contentStr = QLatin1Char('^') + contentStr;
             break;
         case FuncNotStartWith:
             comparaison = QLatin1String(":regex");
-            if (!requires.contains(QLatin1String("regex")))
+            if (!requires.contains(QLatin1String("regex"))) {
                 requires << QLatin1String("regex");
+            }
             comparaison = QLatin1String(":regex");
             contentStr = QLatin1Char('^') + contentStr;
             negative = true;
             break;
         case FuncEndWith:
             comparaison = QLatin1String(":regex");
-            if (!requires.contains(QLatin1String("regex")))
+            if (!requires.contains(QLatin1String("regex"))) {
                 requires << QLatin1String("regex");
+            }
             comparaison = QLatin1String(":regex");
             contentStr = contentStr + QLatin1Char('$');
             break;
         case FuncNotEndWith:
             comparaison = QLatin1String(":regex");
-            if (!requires.contains(QLatin1String("regex")))
+            if (!requires.contains(QLatin1String("regex"))) {
                 requires << QLatin1String("regex");
+            }
             comparaison = QLatin1String(":regex");
             contentStr = contentStr + QLatin1Char('$');
             negative = true;
@@ -483,7 +493,7 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
     }
 }
 
-void SearchRule::setFunction( Function function )
+void SearchRule::setFunction(Function function)
 {
     mFunction = function;
 }
@@ -493,7 +503,7 @@ SearchRule::Function SearchRule::function() const
     return mFunction;
 }
 
-void SearchRule::setField( const QByteArray &field )
+void SearchRule::setField(const QByteArray &field)
 {
     mField = field;
 }
@@ -503,7 +513,7 @@ QByteArray SearchRule::field() const
     return mField;
 }
 
-void SearchRule::setContents( const QString &contents )
+void SearchRule::setContents(const QString &contents)
 {
     mContents = contents;
 }
@@ -516,16 +526,15 @@ QString SearchRule::contents() const
 const QString SearchRule::asString() const
 {
     QString result  = QLatin1String("\"") + mField + QLatin1String("\" <");
-    result += functionToString( mFunction );
+    result += functionToString(mFunction);
     result += "> \"" + mContents + "\"";
 
     return result;
 }
 
-
 Akonadi::SearchTerm::Condition SearchRule::akonadiComparator() const
 {
-    switch ( function() ) {
+    switch (function()) {
     case SearchRule::FuncContains:
     case SearchRule::FuncContainsNot:
         return Akonadi::SearchTerm::CondContains;
@@ -567,7 +576,7 @@ Akonadi::SearchTerm::Condition SearchRule::akonadiComparator() const
 bool SearchRule::isNegated() const
 {
     bool negate = false;
-    switch ( function() ) {
+    switch (function()) {
     case SearchRule::FuncContainsNot:
     case SearchRule::FuncNotEqual:
     case SearchRule::FuncNotRegExp:
@@ -583,9 +592,9 @@ bool SearchRule::isNegated() const
     return negate;
 }
 
-QDataStream &SearchRule::operator >>( QDataStream &s ) const
+QDataStream &SearchRule::operator >>(QDataStream &s) const
 {
-    s << mField << functionToString( mFunction ) << mContents;
+    s << mField << functionToString(mFunction) << mContents;
     return s;
 }
 
