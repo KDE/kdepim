@@ -1,6 +1,6 @@
 #include "filteractionsettransporttest.h"
 #include "../filteractions/filteractionsettransport.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <MailTransport/MailTransport/TransportComboBox>
 
 FilterActionSetTransportTest::FilterActionSetTransportTest(QObject *parent)
@@ -36,4 +36,4 @@ void FilterActionSetTransportTest::shouldHaveRequiredPart()
     QCOMPARE(filter.requiredPart(), MailCommon::SearchRule::CompleteMessage);
 }
 
-QTEST_KDEMAIN(FilterActionSetTransportTest, GUI)
+QTEST_MAIN(FilterActionSetTransportTest)

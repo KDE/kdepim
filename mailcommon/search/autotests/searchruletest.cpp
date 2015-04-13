@@ -16,7 +16,7 @@
 */
 
 #include "searchruletest.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 SearchRuleTest::SearchRuleTest(QObject *parent)
     : QObject(parent)
@@ -24,4 +24,4 @@ SearchRuleTest::SearchRuleTest(QObject *parent)
 
 }
 
-QTEST_KDEMAIN(SearchRuleTest, NoGUI)
+QTEST_MAIN(SearchRuleTest)

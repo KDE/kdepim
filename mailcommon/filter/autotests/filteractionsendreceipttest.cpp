@@ -16,7 +16,7 @@
 */
 #include "filteractionsendreceipttest.h"
 #include "../filteractions/filteractionsendreceipt.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 FilterActionSendReceiptTest::FilterActionSendReceiptTest(QObject *parent)
     : QObject(parent)
@@ -42,4 +42,4 @@ void FilterActionSendReceiptTest::shouldSieveRequires()
     QCOMPARE(filter.sieveRequires(), QStringList());
 }
 
-QTEST_KDEMAIN(FilterActionSendReceiptTest, GUI)
+QTEST_MAIN(FilterActionSendReceiptTest)
