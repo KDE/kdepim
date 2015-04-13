@@ -17,12 +17,41 @@
 
 
 #include "searchruletest.h"
+#include "../search/searchrule/searchrule.h"
 #include <qtest_kde.h>
+class TestSearchRule : public MailCommon::SearchRule
+{
+public:
+    TestSearchRule(const QByteArray &field = QByteArray(), Function function = FuncContains,
+                   const QString &contents = QString())
+        : MailCommon::SearchRule(field, function, contents)
+    {
+
+    }
+
+    bool matches(const Akonadi::Item &item) const {return false;}
+    bool isEmpty() const { return false; }
+    MailCommon::SearchRule::RequiredPart requiredPart() const { return MailCommon::SearchRule::CompleteMessage; }
+};
 
 SearchRuleTest::SearchRuleTest(QObject *parent)
     : QObject(parent)
 {
 
+}
+
+void SearchRuleTest::shouldHaveDefaultValue()
+{
+    TestSearchRule searchrule;
+    QCOMPARE(searchrule.field(), QByteArray());
+    QCOMPARE(searchrule.function(), MailCommon::SearchRule::FuncContains);
+    QVERIFY(searchrule.contents().isEmpty());
+}
+
+void SearchRuleTest::shouldAssignValue()
+{
+    TestSearchRule searchrule;
+    //TODO
 }
 
 QTEST_KDEMAIN(SearchRuleTest, NoGUI)
