@@ -13,6 +13,7 @@ public:
 private Q_SLOTS:
     void shouldBeEmpty();
     void shouldHaveDefaultValue();
+    void shouldHaveRequiredPart();
 };
 
 #endif // FILTERACTIONSETTRANSPORTTEST_H

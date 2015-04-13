@@ -33,8 +33,14 @@ void FilterActionSendReceiptTest::shouldBeNotEmpty()
 void FilterActionSendReceiptTest::shouldRequiresPart()
 {
     MailCommon::FilterActionSendReceipt filter;
-    QCOMPARE(filter.requiredPart(), MailCommon::SearchRule::CompleteMessage);
-
+    QCOMPARE(filter.requiredPart(), MailCommon::SearchRule::CompleteMessage);    
 }
+
+void FilterActionSendReceiptTest::shouldSieveRequires()
+{
+    MailCommon::FilterActionSendReceipt filter;
+    QCOMPARE(filter.sieveRequires(), QStringList());
+}
+
 
 QTEST_KDEMAIN(FilterActionSendReceiptTest, GUI)

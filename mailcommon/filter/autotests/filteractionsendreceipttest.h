@@ -11,7 +11,7 @@ public:
 private Q_SLOTS:
     void shouldBeNotEmpty();
     void shouldRequiresPart();
-
+    void shouldSieveRequires();
 };
 
 #endif // FILTERACTIONSENDRECEIPTTEST_H

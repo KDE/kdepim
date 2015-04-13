@@ -30,5 +30,10 @@ void FilterActionSetTransportTest::shouldHaveDefaultValue()
     QVERIFY(transportCombobox);
 }
 
+void FilterActionSetTransportTest::shouldHaveRequiredPart()
+{
+    MailCommon::FilterActionSetTransport filter;
+    QCOMPARE(filter.requiredPart(), MailCommon::SearchRule::CompleteMessage);
+}
 
 QTEST_KDEMAIN(FilterActionSetTransportTest, GUI)
