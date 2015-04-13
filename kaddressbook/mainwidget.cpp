@@ -148,7 +148,7 @@ MainWidget::MainWidget(KXMLGUIClient *guiClient, QWidget *parent)
 {
 
     (void) new KaddressbookAdaptor(this);
-    QDBusConnection::sessionBus().registerObject(QLatin1String("/KAddressBook"), this);
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/KAddressBook"), this);
 
     mXXPortManager = new XXPortManager(this);
     Akonadi::AttributeFactory::registerAttribute<PimCommon::ImapAclAttribute>();
@@ -309,9 +309,9 @@ MainWidget::MainWidget(KXMLGUIClient *guiClient, QWidget *parent)
     }
 
     const QStringList pages =
-        QStringList() << QLatin1String("Akonadi::CollectionGeneralPropertiesPage")
-        << QLatin1String("Akonadi::CachePolicyPage")
-        << QLatin1String("PimCommon::CollectionAclPage");
+        QStringList() << QStringLiteral("Akonadi::CollectionGeneralPropertiesPage")
+        << QStringLiteral("Akonadi::CachePolicyPage")
+        << QStringLiteral("PimCommon::CollectionAclPage");
 
     mActionManager->setCollectionPropertiesPageNames(pages);
 
@@ -341,8 +341,8 @@ MainWidget::MainWidget(KXMLGUIClient *guiClient, QWidget *parent)
 void MainWidget::configure()
 {
     KCMultiDialog dlg(this);
-    dlg.addModule(QLatin1String("akonadicontact_actions.desktop"));
-    dlg.addModule(QLatin1String("kcmldap.desktop"));
+    dlg.addModule(QStringLiteral("akonadicontact_actions.desktop"));
+    dlg.addModule(QStringLiteral("kcmldap.desktop"));
 
     dlg.exec();
 }
@@ -380,7 +380,7 @@ void MainWidget::delayedInit()
 #if defined(HAVE_PRISON)
     mXmlGuiClient->
     actionCollection()->
-    action(QLatin1String("options_show_qrcodes"))->setChecked(showQRCodes());
+    action(QStringLiteral("options_show_qrcodes"))->setChecked(showQRCodes());
 #endif
 
     connect(GlobalContactModel::instance()->model(), SIGNAL(modelAboutToBeReset()),
@@ -484,7 +484,7 @@ void MainWidget::setupGui()
     //   - details view stack on the top
     //   - contact switcher at the bottom
     mMainWidgetSplitter1 = new QSplitter(Qt::Horizontal);
-    mMainWidgetSplitter1->setObjectName(QLatin1String("MainWidgetSplitter1"));
+    mMainWidgetSplitter1->setObjectName(QStringLiteral("MainWidgetSplitter1"));
     layout->addWidget(mMainWidgetSplitter1);
 
     // Splitter 2 contains the remaining parts of the GUI:
@@ -493,7 +493,7 @@ void MainWidget::setupGui()
     // The orientation of this splitter is changed for either
     // a three or two column view;  in simple mode it is hidden.
     mMainWidgetSplitter2 = new QSplitter(Qt::Vertical);
-    mMainWidgetSplitter2->setObjectName(QLatin1String("MainWidgetSplitter2"));
+    mMainWidgetSplitter2->setObjectName(QStringLiteral("MainWidgetSplitter2"));
     mMainWidgetSplitter1->addWidget(mMainWidgetSplitter2);
 
     // the collection view
@@ -502,8 +502,8 @@ void MainWidget::setupGui()
 
     // the items view
     mItemView = new Akonadi::EntityTreeView();
-    mItemView->setObjectName(QLatin1String("ContactView"));
-    mItemView->setDefaultPopupMenu(QLatin1String("akonadi_itemview_contextmenu"));
+    mItemView->setObjectName(QStringLiteral("ContactView"));
+    mItemView->setDefaultPopupMenu(QStringLiteral("akonadi_itemview_contextmenu"));
     mItemView->setAlternatingRowColors(true);
     mMainWidgetSplitter2->addWidget(mItemView);
 
@@ -562,13 +562,13 @@ void MainWidget::setupGui()
 
 void MainWidget::setupActions(KActionCollection *collection)
 {
-    mGrantleeThemeManager = new GrantleeTheme::GrantleeThemeManager(GrantleeTheme::GrantleeThemeManager::Addressbook, QStringLiteral("theme.desktop"), collection, QLatin1String("kaddressbook/viewertemplates/"));
-    mGrantleeThemeManager->setDownloadNewStuffConfigFile(QLatin1String("kaddressbook_themes.knsrc"));
+    mGrantleeThemeManager = new GrantleeTheme::GrantleeThemeManager(GrantleeTheme::GrantleeThemeManager::Addressbook, QStringLiteral("theme.desktop"), collection, QStringLiteral("kaddressbook/viewertemplates/"));
+    mGrantleeThemeManager->setDownloadNewStuffConfigFile(QStringLiteral("kaddressbook_themes.knsrc"));
     connect(mGrantleeThemeManager, &GrantleeTheme::GrantleeThemeManager::grantleeThemeSelected, this, &MainWidget::slotGrantleeThemeSelected);
     connect(mGrantleeThemeManager, &GrantleeTheme::GrantleeThemeManager::updateThemes, this, &MainWidget::slotGrantleeThemesUpdated);
 
     KActionMenu *themeMenu  = new KActionMenu(i18n("&Themes"), this);
-    collection->addAction(QLatin1String("theme_menu"), themeMenu);
+    collection->addAction(QStringLiteral("theme_menu"), themeMenu);
 
     initGrantleeThemeName();
     QActionGroup *group = new QActionGroup(this);
@@ -587,14 +587,14 @@ void MainWidget::setupActions(KActionCollection *collection)
     QWidgetAction *quicksearch = new QWidgetAction(this);
     quicksearch->setText(i18n("Quick search"));
     quicksearch->setDefaultWidget(mQuickSearchWidget);
-    collection->addAction(QLatin1String("quick_search"), quicksearch);
+    collection->addAction(QStringLiteral("quick_search"), quicksearch);
 
     QWidgetAction *categoryFilter = new QWidgetAction(this);
     categoryFilter->setText(i18n("Category filter"));
     categoryFilter->setDefaultWidget(mCategorySelectWidget);
-    collection->addAction(QLatin1String("category_filter"), categoryFilter);
+    collection->addAction(QStringLiteral("category_filter"), categoryFilter);
 
-    action = collection->addAction(QLatin1String("select_all"));
+    action = collection->addAction(QStringLiteral("select_all"));
     action->setText(i18n("Select All"));
     collection->setDefaultShortcut(action, QKeySequence(Qt::CTRL + Qt::Key_A));
     action->setWhatsThis(i18n("Select all contacts in the current address book view."));
@@ -602,7 +602,7 @@ void MainWidget::setupActions(KActionCollection *collection)
 
 #if defined(HAVE_PRISON)
     KToggleAction *qrtoggleAction;
-    qrtoggleAction = collection->add<KToggleAction>(QLatin1String("options_show_qrcodes"));
+    qrtoggleAction = collection->add<KToggleAction>(QStringLiteral("options_show_qrcodes"));
     qrtoggleAction->setText(i18n("Show QR Codes"));
     qrtoggleAction->setWhatsThis(i18n("Show QR Codes in the contact."));
     connect(qrtoggleAction, &KToggleAction::toggled, this, &MainWidget::setQRCodeShow);
@@ -615,112 +615,112 @@ void MainWidget::setupActions(KActionCollection *collection)
     act->setData(1);
     collection->setDefaultShortcut(act, QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_1));
     act->setWhatsThis(i18n("Show a simple mode of the address book view."));
-    collection->addAction(QLatin1String("view_mode_simple"), act);
+    collection->addAction(QStringLiteral("view_mode_simple"), act);
 
     act = new QAction(i18nc("@action:inmenu", "Two Columns"), mViewModeGroup);
     act->setCheckable(true);
     act->setData(2);
-    collection->addAction(QLatin1String("view_mode_2columns"), act);
+    collection->addAction(QStringLiteral("view_mode_2columns"), act);
     collection->setDefaultShortcut(act,  QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_2));
 
     act = new QAction(i18nc("@action:inmenu", "Three Columns"), mViewModeGroup);
     act->setCheckable(true);
     act->setData(3);
     collection->setDefaultShortcut(act, QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_3));
-    collection->addAction(QLatin1String("view_mode_3columns"), act);
+    collection->addAction(QStringLiteral("view_mode_3columns"), act);
 
     connect(mViewModeGroup, SIGNAL(triggered(QAction*)), SLOT(setViewMode(QAction*)));
 
     // import actions
-    action = collection->addAction(QLatin1String("file_import_vcard"));
+    action = collection->addAction(QStringLiteral("file_import_vcard"));
     action->setText(i18n("Import vCard..."));
     action->setWhatsThis(i18n("Import contacts from a vCard file."));
-    mXXPortManager->addImportAction(action, QLatin1String("vcard30"));
+    mXXPortManager->addImportAction(action, QStringLiteral("vcard30"));
 
-    action = collection->addAction(QLatin1String("file_import_csv"));
+    action = collection->addAction(QStringLiteral("file_import_csv"));
     action->setText(i18n("Import CSV file..."));
     action->setWhatsThis(i18n("Import contacts from a file in comma separated value format."));
-    mXXPortManager->addImportAction(action, QLatin1String("csv"));
+    mXXPortManager->addImportAction(action, QStringLiteral("csv"));
 
-    action = collection->addAction(QLatin1String("file_import_ldif"));
+    action = collection->addAction(QStringLiteral("file_import_ldif"));
     action->setText(i18n("Import LDIF file..."));
     action->setWhatsThis(i18n("Import contacts from an LDIF file."));
-    mXXPortManager->addImportAction(action, QLatin1String("ldif"));
+    mXXPortManager->addImportAction(action, QStringLiteral("ldif"));
 
-    action = collection->addAction(QLatin1String("file_import_ldap"));
+    action = collection->addAction(QStringLiteral("file_import_ldap"));
     action->setText(i18n("Import From LDAP server..."));
     action->setWhatsThis(i18n("Import contacts from an LDAP server."));
-    mXXPortManager->addImportAction(action, QLatin1String("ldap"));
+    mXXPortManager->addImportAction(action, QStringLiteral("ldap"));
 
-    action = collection->addAction(QLatin1String("file_import_gmx"));
+    action = collection->addAction(QStringLiteral("file_import_gmx"));
     action->setText(i18n("Import GMX file..."));
     action->setWhatsThis(i18n("Import contacts from a GMX address book file."));
-    mXXPortManager->addImportAction(action, QLatin1String("gmx"));
+    mXXPortManager->addImportAction(action, QStringLiteral("gmx"));
 
     // export actions
-    action = collection->addAction(QLatin1String("file_export_vcard40"));
+    action = collection->addAction(QStringLiteral("file_export_vcard40"));
     action->setText(i18n("Export vCard 4.0..."));
     action->setWhatsThis(i18n("Export contacts to a vCard 4.0 file."));
-    mXXPortManager->addExportAction(action, QLatin1String("vcard40"));
+    mXXPortManager->addExportAction(action, QStringLiteral("vcard40"));
 
-    action = collection->addAction(QLatin1String("file_export_vcard30"));
+    action = collection->addAction(QStringLiteral("file_export_vcard30"));
     action->setText(i18n("Export vCard 3.0..."));
     action->setWhatsThis(i18n("Export contacts to a vCard 3.0 file."));
-    mXXPortManager->addExportAction(action, QLatin1String("vcard30"));
+    mXXPortManager->addExportAction(action, QStringLiteral("vcard30"));
 
-    action = collection->addAction(QLatin1String("file_export_vcard21"));
+    action = collection->addAction(QStringLiteral("file_export_vcard21"));
     action->setText(i18n("Export vCard 2.1..."));
     action->setWhatsThis(i18n("Export contacts to a vCard 2.1 file."));
-    mXXPortManager->addExportAction(action, QLatin1String("vcard21"));
+    mXXPortManager->addExportAction(action, QStringLiteral("vcard21"));
 
-    action = collection->addAction(QLatin1String("file_export_csv"));
+    action = collection->addAction(QStringLiteral("file_export_csv"));
     action->setText(i18n("Export CSV file..."));
     action->setWhatsThis(i18n("Export contacts to a file in comma separated value format."));
-    mXXPortManager->addExportAction(action, QLatin1String("csv"));
+    mXXPortManager->addExportAction(action, QStringLiteral("csv"));
 
-    action = collection->addAction(QLatin1String("file_export_ldif"));
+    action = collection->addAction(QStringLiteral("file_export_ldif"));
     action->setText(i18n("Export LDIF file..."));
     action->setWhatsThis(i18n("Export contacts to an LDIF file."));
-    mXXPortManager->addExportAction(action, QLatin1String("ldif"));
+    mXXPortManager->addExportAction(action, QStringLiteral("ldif"));
 
-    action = collection->addAction(QLatin1String("file_export_gmx"));
+    action = collection->addAction(QStringLiteral("file_export_gmx"));
     action->setText(i18n("Export GMX file..."));
     action->setWhatsThis(i18n("Export contacts to a GMX address book file."));
-    mXXPortManager->addExportAction(action, QLatin1String("gmx"));
+    mXXPortManager->addExportAction(action, QStringLiteral("gmx"));
 
     KToggleAction *actTheme = mGrantleeThemeManager->actionForTheme();
     if (actTheme) {
         actTheme->setChecked(true);
     }
 
-    action = collection->addAction(QLatin1String("merge_contacts"));
+    action = collection->addAction(QStringLiteral("merge_contacts"));
     action->setText(i18n("Merge Contacts..."));
     connect(action, &QAction::triggered, this, &MainWidget::mergeContacts);
 
-    action = collection->addAction(QLatin1String("search_duplicate_contacts"));
+    action = collection->addAction(QStringLiteral("search_duplicate_contacts"));
     action->setText(i18n("Search Duplicate Contacts..."));
     connect(action, &QAction::triggered, this, &MainWidget::slotSearchDuplicateContacts);
 
     mQuickSearchAction = new QAction(i18n("Set Focus to Quick Search"), this);
     //If change shortcut change in quicksearchwidget->lineedit->setPlaceholderText
-    collection->addAction(QLatin1String("focus_to_quickseach"), mQuickSearchAction);
+    collection->addAction(QStringLiteral("focus_to_quickseach"), mQuickSearchAction);
     connect(mQuickSearchAction, &QAction::triggered, mQuickSearchWidget, &QuickSearchWidget::slotFocusQuickSearch);
     collection->setDefaultShortcut(mQuickSearchAction, QKeySequence(Qt::ALT + Qt::Key_Q));
 
-    action = collection->addAction(QLatin1String("send_mail"));
+    action = collection->addAction(QStringLiteral("send_mail"));
     action->setText(i18n("Send an email..."));
-    action->setIcon(KIconLoader::global()->loadIcon(QLatin1String("mail-message-new"), KIconLoader::Small));
+    action->setIcon(KIconLoader::global()->loadIcon(QStringLiteral("mail-message-new"), KIconLoader::Small));
     connect(action, &QAction::triggered, this, &MainWidget::slotSendMail);
 
-    action = collection->addAction(QLatin1String("send_vcards"));
+    action = collection->addAction(QStringLiteral("send_vcards"));
     action->setText(i18n("Send vCards..."));
-    action->setIcon(KIconLoader::global()->loadIcon(QLatin1String("mail-message-new"), KIconLoader::Small));
+    action->setIcon(KIconLoader::global()->loadIcon(QStringLiteral("mail-message-new"), KIconLoader::Small));
     connect(action, &QAction::triggered, this, &MainWidget::slotSendVcards);
 
     if (!qgetenv("KDEPIM_BALOO_DEBUG").isEmpty()) {
-        action = collection->addAction(QLatin1String("debug_baloo"));
+        action = collection->addAction(QStringLiteral("debug_baloo"));
         //Don't translate it. It's just for debug
-        action->setText(QLatin1String("Debug baloo..."));
+        action->setText(QStringLiteral("Debug baloo..."));
         connect(action, SIGNAL(triggered(bool)), this, SLOT(slotDebugBaloo()));
     }
 }
@@ -821,8 +821,8 @@ void MainWidget::selectFirstItem()
 bool MainWidget::showQRCodes()
 {
 #if defined(HAVE_PRISON)
-    KConfig config(QLatin1String("akonadi_contactrc"));
-    KConfigGroup group(&config, QLatin1String("View"));
+    KConfig config(QStringLiteral("akonadi_contactrc"));
+    KConfigGroup group(&config, QStringLiteral("View"));
     return group.readEntry("QRCodes", true);
 #else
     return true;
@@ -833,8 +833,8 @@ void MainWidget::setQRCodeShow(bool on)
 {
 #if defined(HAVE_PRISON)
     // must write the configuration setting first before updating the view.
-    KConfig config(QLatin1String("akonadi_contactrc"));
-    KConfigGroup group(&config, QLatin1String("View"));
+    KConfig config(QStringLiteral("akonadi_contactrc"));
+    KConfigGroup group(&config, QStringLiteral("View"));
     group.writeEntry("QRCodes", on);
     if (mItemView->model()) {
         mItemView->setCurrentIndex(mItemView->model()->index(0, 0));
@@ -950,7 +950,7 @@ void MainWidget::initGrantleeThemeName()
 {
     QString themeName = GrantleeTheme::GrantleeSettings::self()->grantleeAddressBookThemeName();
     if (themeName.isEmpty()) {
-        themeName = QLatin1String("default");
+        themeName = QStringLiteral("default");
     }
     mFormatter->setGrantleeTheme(mGrantleeThemeManager->theme(themeName));
     mGroupFormatter->setGrantleeTheme(mGrantleeThemeManager->theme(themeName));
@@ -1058,8 +1058,8 @@ void MainWidget::slotSendMails(const QStringList &emails)
 {
     if (!emails.isEmpty()) {
         QUrl url;
-        url.setScheme(QLatin1String("mailto"));
-        url.setPath(emails.join(QLatin1String(";")));
+        url.setScheme(QStringLiteral("mailto"));
+        url.setPath(emails.join(QStringLiteral(";")));
         QDesktopServices::openUrl(url);
     }
 }

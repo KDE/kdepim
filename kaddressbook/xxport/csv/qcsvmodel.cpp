@@ -124,7 +124,7 @@ void QCsvModel::Private::columnCountChanged(int columns)
 {
     mColumnCount = columns;
     mFieldIdentifiers.resize(columns);
-    mFieldIdentifiers[ columns - 1 ] = QLatin1String("0");
+    mFieldIdentifiers[ columns - 1 ] = QStringLiteral("0");
     emit mParent->layoutChanged();
 }
 

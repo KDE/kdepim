@@ -23,8 +23,6 @@ using MailCommon::FilterLog;
 #include <QDateTime>
 #include <KMime/KMimeMessage>
 
-//note: lowercase include for compatibility
-#include <kascii.h>
 #include <KGlobal>
 
 #include <QDataStream>

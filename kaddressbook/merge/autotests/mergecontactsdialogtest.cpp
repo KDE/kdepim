@@ -36,18 +36,18 @@ void MergeContactsDialogTest::shouldHaveDefaultValue()
 {
     KABMergeContacts::MergeContactsDialog dlg;
     dlg.show();
-    QStackedWidget *stackedWidget = dlg.findChild<QStackedWidget *>(QLatin1String("stackedwidget"));
+    QStackedWidget *stackedWidget = dlg.findChild<QStackedWidget *>(QStringLiteral("stackedwidget"));
     QVERIFY(stackedWidget);
-    QCOMPARE(stackedWidget->currentWidget()->objectName(), QLatin1String("nocontactselected"));
+    QCOMPARE(stackedWidget->currentWidget()->objectName(), QStringLiteral("nocontactselected"));
 
     for (int i = 0; i < stackedWidget->count(); ++i) {
         QWidget *w = stackedWidget->widget(i);
         const QString objName = w->objectName();
-        const bool hasGoodNamePage = (objName == QLatin1String("notenoughcontactselected") ||
-                                      objName == QLatin1String("nocontactselected") ||
-                                      objName == QLatin1String("manualmergeresultwidget") ||
-                                      objName == QLatin1String("selectioninformation") ||
-                                      objName == QLatin1String("mergecontactinfowidget"));
+        const bool hasGoodNamePage = (objName == QStringLiteral("notenoughcontactselected") ||
+                                      objName == QStringLiteral("nocontactselected") ||
+                                      objName == QStringLiteral("manualmergeresultwidget") ||
+                                      objName == QStringLiteral("selectioninformation") ||
+                                      objName == QStringLiteral("mergecontactinfowidget"));
         QVERIFY(hasGoodNamePage);
     }
 
@@ -57,25 +57,25 @@ void MergeContactsDialogTest::shouldSwithStackedWidget()
 {
     KABMergeContacts::MergeContactsDialog dlg;
     dlg.show();
-    QStackedWidget *stackedWidget = dlg.findChild<QStackedWidget *>(QLatin1String("stackedwidget"));
+    QStackedWidget *stackedWidget = dlg.findChild<QStackedWidget *>(QStringLiteral("stackedwidget"));
     Akonadi::Item::List lst;
     //Empty
     dlg.setContacts(lst);
-    QCOMPARE(stackedWidget->currentWidget()->objectName(), QLatin1String("nocontactselected"));
+    QCOMPARE(stackedWidget->currentWidget()->objectName(), QStringLiteral("nocontactselected"));
     lst << Akonadi::Item(42);
     //1 element
     dlg.setContacts(lst);
-    QCOMPARE(stackedWidget->currentWidget()->objectName(), QLatin1String("notenoughcontactselected"));
+    QCOMPARE(stackedWidget->currentWidget()->objectName(), QStringLiteral("notenoughcontactselected"));
     lst.clear();
     //1 element
     lst << Akonadi::Item(42);
     dlg.setContacts(lst);
-    QCOMPARE(stackedWidget->currentWidget()->objectName(), QLatin1String("notenoughcontactselected"));
+    QCOMPARE(stackedWidget->currentWidget()->objectName(), QStringLiteral("notenoughcontactselected"));
     // 2 elements
     lst.clear();
     lst << Akonadi::Item(42) << Akonadi::Item(42);
     dlg.setContacts(lst);
-    QCOMPARE(stackedWidget->currentWidget()->objectName(), QLatin1String("manualmergeresultwidget"));
+    QCOMPARE(stackedWidget->currentWidget()->objectName(), QStringLiteral("manualmergeresultwidget"));
 }
 
 QTEST_MAIN(MergeContactsDialogTest)

@@ -33,10 +33,9 @@
 
 using namespace KABPrinting;
 
-PrintProgress::PrintProgress(QWidget *parent, const char *name)
+PrintProgress::PrintProgress(QWidget *parent)
     : QWidget(parent)
 {
-    setObjectName(QLatin1String(name));
     setWindowTitle(i18n("Printing: Progress"));
 
     QGridLayout *topLayout = new QGridLayout(this);

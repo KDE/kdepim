@@ -52,7 +52,6 @@
 #include <QAction>
 #include <KActionCollection>
 #include <KActionMenu>
-#include <kascii.h>
 #include <KCharsets>
 #include <KGuiItem>
 #include <QWebView>
@@ -2133,8 +2132,7 @@ const QTextCodec *ViewerPrivate::codecForName(const QByteArray &_str)
     if (_str.isEmpty()) {
         return 0;
     }
-    QByteArray codec = _str;
-    kAsciiToLower(codec.data());
+    QByteArray codec = _str.toLower();
     return KCharsets::charsets()->codecForName(QLatin1String(codec));
 }
 

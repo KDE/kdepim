@@ -37,7 +37,7 @@ GrantleePrintStyle::GrantleePrintStyle(const QString &themePath, PrintingWizard 
     : PrintStyle(parent)
 {
     mGrantleePrint = new KAddressBookGrantlee::GrantleePrint(themePath, this);
-    QFile previewFile(QString(themePath + QDir::separator() + QLatin1String("preview.png")));
+    QFile previewFile(QString(themePath + QDir::separator() + QStringLiteral("preview.png")));
     if (previewFile.exists()) {
         setPreview(previewFile.fileName());
     }

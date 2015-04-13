@@ -34,7 +34,6 @@
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_headers.h>
 
-#include <kascii.h>
 #include <QTemporaryFile>
 #include <KLocalizedString>
 #include <kcharsets.h>
@@ -502,7 +501,7 @@ QString NodeHelper::iconName(KMime::Content *node, int size)
         const QString mime = Util::mimetype(node->contentDisposition()->filename())->name();
         mimeType = mime.toLatin1();
     }
-    kAsciiToLower(mimeType.data());
+    mimeType = mimeType.toLower();
     return Util::fileNameForMimetype(QLatin1String(mimeType), size, node->contentDisposition()->filename(),
                                      node->contentType()->name());
 }
@@ -610,8 +609,7 @@ const QTextCodec *NodeHelper::codecForName(const QByteArray &_str)
     if (_str.isEmpty()) {
         return 0;
     }
-    QByteArray codec = _str;
-    kAsciiToLower(codec.data());
+    QByteArray codec = _str.toLower();
     return KCharsets::charsets()->codecForName(QLatin1String(codec));
 }
 
@@ -778,7 +776,7 @@ QByteArray NodeHelper::autoDetectCharset(const QByteArray &_encoding, const QStr
         QByteArray encoding = (*it).toLatin1();
         if (encoding == "locale") {
             encoding = QTextCodec::codecForName(KLocale::global()->encoding())->name();
-            kAsciiToLower(encoding.data());
+            encoding = encoding.toLower();
         }
         if (text.isEmpty()) {
             return encoding;

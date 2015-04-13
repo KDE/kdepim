@@ -180,7 +180,7 @@ void MergeContactSelectListWidget::fillList(const KContacts::Addressee::List &ls
             break;
         case MergeContacts::Anniversary: {
             QString anniversary;
-            const QDate anniversaryDt = QDate::fromString(addr.custom(QLatin1String("KADDRESSBOOK"), QLatin1String("X-Anniversary")), Qt::ISODate);
+            const QDate anniversaryDt = QDate::fromString(addr.custom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("X-Anniversary")), Qt::ISODate);
             if (anniversaryDt.isValid()) {
                 anniversary = KGlobal::locale()->formatDate(anniversaryDt);
             }

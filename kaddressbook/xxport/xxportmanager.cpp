@@ -77,12 +77,12 @@ void XXPortManager::setDefaultAddressBook(const Akonadi::Collection &addressBook
 void XXPortManager::importFile(const QUrl &url)
 {
     QString identifier;
-    if (url.path().endsWith(QLatin1String("vcf"))) {
-        identifier = QLatin1String("vcard30");
-    } else if (url.path().endsWith(QLatin1String("ldif"))) {
-        identifier = QLatin1String("ldif");
-    } else if (url.path().endsWith(QLatin1String("gmx"))) {
-        identifier = QLatin1String("gmx");
+    if (url.path().endsWith(QStringLiteral("vcf"))) {
+        identifier = QStringLiteral("vcard30");
+    } else if (url.path().endsWith(QStringLiteral("ldif"))) {
+        identifier = QStringLiteral("ldif");
+    } else if (url.path().endsWith(QStringLiteral("gmx"))) {
+        identifier = QStringLiteral("gmx");
     }
     if (identifier.isEmpty()) {
         return;
@@ -91,7 +91,7 @@ void XXPortManager::importFile(const QUrl &url)
     if (!xxport) {
         return;
     }
-    xxport->setOption(QLatin1String("importUrl"), url.path());
+    xxport->setOption(QStringLiteral("importUrl"), url.path());
     ContactList contactList = xxport->importContacts();
 
     delete xxport;
@@ -186,7 +186,7 @@ void XXPortManager::slotExport(const QString &identifier)
         return;
     }
 
-    const bool selectExportType = (identifier == QLatin1String("vcard21") || identifier == QLatin1String("vcard30") || identifier == QLatin1String("vcard40"));
+    const bool selectExportType = (identifier == QStringLiteral("vcard21") || identifier == QStringLiteral("vcard30") || identifier == QStringLiteral("vcard40"));
     QPointer<ContactSelectionDialog> dlg =
         new ContactSelectionDialog(mSelectionModel, selectExportType, mParentWidget);
     dlg->setMessageText(i18n("Which contact do you want to export?"));

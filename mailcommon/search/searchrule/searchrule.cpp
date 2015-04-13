@@ -22,8 +22,6 @@
 
 #include <KMime/KMimeMessage>
 
-//note: lowercase include for compatibility
-#include <kascii.h>
 #include <KDebug>
 #include <KConfigGroup>
 #include <KLocale>

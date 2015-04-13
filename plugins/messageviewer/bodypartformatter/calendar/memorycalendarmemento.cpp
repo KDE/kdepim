@@ -38,8 +38,8 @@ MemoryCalendarMemento::MemoryCalendarMemento()
     } else {
         FetchJobCalendar::Ptr calendar = FetchJobCalendar::Ptr(new FetchJobCalendar(this));
         mCalendar = calendar;
-        connect(calendar.data(), SIGNAL(loadFinished(bool,QString)),
-                SLOT(slotCalendarLoaded(bool,QString)));
+        connect(calendar.data(), &FetchJobCalendar::loadFinished,
+                this, &MemoryCalendarMemento::slotCalendarLoaded);
     }
 }
 

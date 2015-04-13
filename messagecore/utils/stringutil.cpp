@@ -28,7 +28,6 @@
 #include <kmime/kmime_message.h>
 #include <KEmailAddress>
 
-#include <kascii.h>
 #include <KConfigGroup>
 #include "messagecore_debug.h"
 #include <KUser>

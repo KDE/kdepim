@@ -117,7 +117,7 @@ void PrintingWizard::accept()
 
 void PrintingWizard::loadGrantleeStyle()
 {
-    const QString relativePath = QLatin1String("kaddressbook/printing/themes/");
+    const QString relativePath = QStringLiteral("kaddressbook/printing/themes/");
     QStringList themesDirectories = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, relativePath, QStandardPaths::LocateDirectory);
     if (themesDirectories.count() < 2) {
         //Make sure to add local directory
@@ -132,9 +132,9 @@ void PrintingWizard::loadGrantleeStyle()
         QStringList alreadyLoadedThemeName;
         while (dirIt.hasNext()) {
             dirIt.next();
-            const QString themeInfoFile = dirIt.filePath() + QDir::separator() + QLatin1String("theme.desktop");
+            const QString themeInfoFile = dirIt.filePath() + QDir::separator() + QStringLiteral("theme.desktop");
             KConfig config(themeInfoFile);
-            KConfigGroup group(&config, QLatin1String("Desktop Entry"));
+            KConfigGroup group(&config, QStringLiteral("Desktop Entry"));
             QString name = group.readEntry("Name", QString());
             if (name.isEmpty()) {
                 continue;
@@ -143,7 +143,7 @@ void PrintingWizard::loadGrantleeStyle()
                 int i = 2;
                 const QString originalName(name);
                 while (alreadyLoadedThemeName.contains(name)) {
-                    name = originalName + QString::fromLatin1(" (%1)").arg(i);
+                    name = originalName + QStringLiteral(" (%1)").arg(i);
                     ++i;
                 }
             }
