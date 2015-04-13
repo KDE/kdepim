@@ -46,7 +46,7 @@ public:
     const KABC::Addressee::List contacts = searchJob->contacts();
 
     if ( contacts.isEmpty() ) {
-      const QString text = i18n( "The VCard's primary email address is already in addressbook." );
+      const QString text = i18n( "The VCard's primary email address is not in addressbook." );
       KMessageBox::information( mParentWidget, text );
       q->setError( UserDefinedError );
       q->emitResult();
@@ -103,6 +103,14 @@ UpdateContactJob::~UpdateContactJob()
 
 void UpdateContactJob::start()
 {
+  if (d->mEmail.isEmpty()) {
+      //KF5 add i18n
+      const QString text = QLatin1String( "Email not specified" );
+      KMessageBox::information( d->mParentWidget, text );
+      setError( UserDefinedError );
+      emitResult();
+      return;
+  }
   // first check whether a contact with the same email exists already
   Akonadi::ContactSearchJob *searchJob = new Akonadi::ContactSearchJob( this );
   searchJob->setLimit( 1 );
