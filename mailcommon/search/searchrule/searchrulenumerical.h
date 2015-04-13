@@ -37,7 +37,7 @@ public:
      * @param function The function to use for searching.
      * @param contents The contents to search for.
      */
-    explicit SearchRuleNumerical( const QByteArray &field = 0,
+    explicit SearchRuleNumerical( const QByteArray &field = QByteArray(),
                                   Function function = FuncContains,
                                   const QString &contents = QString() );
 

@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2015 Tomas Trnka <tomastrnka@gmx.com>
+  Copyright (c) 2015 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -25,6 +25,8 @@ class SearchRuleStatusTest : public QObject
     Q_OBJECT
 public:
     explicit SearchRuleStatusTest(QObject *parent = 0);
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
 #endif // SEARCHRULESTATUSTEST_H

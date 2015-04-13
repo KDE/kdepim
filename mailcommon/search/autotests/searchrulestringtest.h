@@ -14,17 +14,16 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-
-#ifndef SEARCHRULENUMERICALTEST_H
-#define SEARCHRULENUMERICALTEST_H
+#ifndef SEARCHRULESTRINGTEST_H
+#define SEARCHRULESTRINGTEST_H
 
 #include <QObject>
 
-class SearchRuleNumericalTest : public QObject
+class SearchRuleStringTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit SearchRuleNumericalTest(QObject *parent = 0);
+    explicit SearchRuleStringTest(QObject *parent = 0);
 };
 
-#endif // SEARCHRULENUMERICALTEST_H
+#endif // SEARCHRULESTRINGTEST_H

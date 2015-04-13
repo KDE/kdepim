@@ -85,7 +85,7 @@ static const int StatusValueCountWithoutHidden = StatusValueCount - 1;
 class MAILCOMMON_EXPORT SearchRuleStatus : public SearchRule
 {
 public:
-    explicit SearchRuleStatus( const QByteArray &field = 0,
+    explicit SearchRuleStatus( const QByteArray &field = QByteArray(),
                                Function function = FuncContains,
                                const QString &contents = QString() );
 

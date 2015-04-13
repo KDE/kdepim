@@ -15,16 +15,13 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SEARCHRULENUMERICALTEST_H
-#define SEARCHRULENUMERICALTEST_H
+#include "searchrulestringtest.h"
+#include <qtest_kde.h>
 
-#include <QObject>
-
-class SearchRuleNumericalTest : public QObject
+SearchRuleStringTest::SearchRuleStringTest(QObject *parent)
+    : QObject(parent)
 {
-    Q_OBJECT
-public:
-    explicit SearchRuleNumericalTest(QObject *parent = 0);
-};
 
-#endif // SEARCHRULENUMERICALTEST_H
+}
+
+QTEST_KDEMAIN(SearchRuleStringTest, GUI)

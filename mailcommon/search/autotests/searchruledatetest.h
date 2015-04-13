@@ -15,16 +15,17 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SEARCHRULENUMERICALTEST_H
-#define SEARCHRULENUMERICALTEST_H
+#ifndef SEARCHRULEDATETEST_H
+#define SEARCHRULEDATETEST_H
 
 #include <QObject>
 
-class SearchRuleNumericalTest : public QObject
+class SearchRuleDateTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit SearchRuleNumericalTest(QObject *parent = 0);
+    explicit SearchRuleDateTest(QObject *parent = 0);
+
 };
 
-#endif // SEARCHRULENUMERICALTEST_H
+#endif // SEARCHRULEDATETEST_H

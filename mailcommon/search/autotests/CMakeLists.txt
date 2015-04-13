@@ -33,3 +33,21 @@ target_link_libraries( searchrulenumericaltest
   ${QT_QTTEST_LIBRARY}
   ${QT_QTGUI_LIBRARY}
 )
+
+set( mailcommon_searchruledatetest_source searchruledatetest.cpp )
+kde4_add_unit_test( searchruledatetest ${mailcommon_searchruledatetest_source})
+target_link_libraries( searchruledatetest
+  mailcommon
+  ${KDE4_KDECORE_LIBS}
+  ${QT_QTTEST_LIBRARY}
+  ${QT_QTGUI_LIBRARY}
+)
+
+set( mailcommon_searchrulestringtest_source searchrulestringtest.cpp )
+kde4_add_unit_test( searchrulestringtest ${mailcommon_searchrulestringtest_source})
+target_link_libraries( searchrulestringtest
+  mailcommon
+  ${KDE4_KDECORE_LIBS}
+  ${QT_QTTEST_LIBRARY}
+  ${QT_QTGUI_LIBRARY}
+)

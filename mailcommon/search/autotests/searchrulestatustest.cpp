@@ -17,12 +17,21 @@
 
 
 #include "searchrulestatustest.h"
+#include "../searchrule/searchrulestatus.h"
 #include <qtest_kde.h>
 
 SearchRuleStatusTest::SearchRuleStatusTest(QObject *parent)
     : QObject(parent)
 {
 
+}
+
+void SearchRuleStatusTest::shouldHaveDefaultValue()
+{
+    MailCommon::SearchRuleStatus ruleStatus;
+    QVERIFY(ruleStatus.contents().isEmpty());
+    QVERIFY(ruleStatus.field().isEmpty());
+    QCOMPARE(ruleStatus.function(), MailCommon::SearchRule::FuncContains);
 }
 
 QTEST_KDEMAIN(SearchRuleStatusTest, GUI)
