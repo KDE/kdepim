@@ -18,7 +18,6 @@
 #include "abstractshorturl.h"
 
 #include <KLocalizedString>
-
 using namespace PimCommon;
 AbstractShortUrl::AbstractShortUrl(QObject *parent)
     : QObject(parent),
@@ -36,7 +35,14 @@ AbstractShortUrl::~AbstractShortUrl()
 void AbstractShortUrl::shortUrl(const QString &url)
 {
     mErrorFound = false;
-    mOriginalUrl = url;
+    if (!url.trimmed().startsWith(QLatin1String("http://")) &&
+            !url.trimmed().startsWith(QLatin1String("https://")) &&
+            !url.trimmed().startsWith(QLatin1String("ftp://")) &&
+            !url.trimmed().startsWith(QLatin1String("ftps://"))) {
+        mOriginalUrl = QLatin1String("http://") + url;
+    } else {
+        mOriginalUrl = url;
+    }
 }
 
 void AbstractShortUrl::slotErrorFound(QNetworkReply::NetworkError error)
