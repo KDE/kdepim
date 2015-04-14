@@ -26,7 +26,7 @@
 #include <KGlobal>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KMenu>
+#include <QMenu>
 #include <KRun>
 
 #include <QHBoxLayout>
@@ -95,7 +95,7 @@ ArchiveMailWidget::~ArchiveMailWidget()
 void ArchiveMailWidget::customContextMenuRequested(const QPoint &)
 {
     const QList<QTreeWidgetItem *> listItems = mWidget->treeWidget->selectedItems();
-    KMenu menu;
+    QMenu menu;
     menu.addAction(i18n("Add..."), this, SLOT(slotAddItem()));
     if (!listItems.isEmpty()) {
         if (listItems.count() == 1) {
