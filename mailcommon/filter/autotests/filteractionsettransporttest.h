@@ -14,6 +14,7 @@ private Q_SLOTS:
     void shouldBeEmpty();
     void shouldHaveDefaultValue();
     void shouldHaveRequiredPart();
+    void shouldHaveSieveRequires();
 };
 
 #endif // FILTERACTIONSETTRANSPORTTEST_H

@@ -15,22 +15,13 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "searchrulestatustest.h"
-#include <qtest.h>
-#include "../searchrule/searchrulestatus.h"
+#include "searchruledatetest.h"
+#include <qtest_kde.h>
 
-SearchRuleStatusTest::SearchRuleStatusTest(QObject *parent)
+SearchRuleDateTest::SearchRuleDateTest(QObject *parent)
     : QObject(parent)
 {
 
 }
 
-void SearchRuleStatusTest::shouldHaveDefaultValue()
-{
-    MailCommon::SearchRuleStatus ruleStatus;
-    QVERIFY(ruleStatus.contents().isEmpty());
-    QVERIFY(ruleStatus.field().isEmpty());
-    QCOMPARE(ruleStatus.function(), MailCommon::SearchRule::FuncContains);
-}
-
-QTEST_MAIN(SearchRuleStatusTest)
+QTEST_KDEMAIN(SearchRuleDateTest, GUI)

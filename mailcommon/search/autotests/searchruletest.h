@@ -25,7 +25,9 @@ class SearchRuleTest : public QObject
     Q_OBJECT
 public:
     explicit SearchRuleTest(QObject *parent = 0);
-
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
+    void shouldAssignValue();
 };
 
 #endif // SEARCHRULETEST_H

@@ -14,23 +14,16 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
+#ifndef SEARCHRULESTRINGTEST_H
+#define SEARCHRULESTRINGTEST_H
 
-#include "searchrulestatustest.h"
-#include <qtest.h>
-#include "../searchrule/searchrulestatus.h"
+#include <QObject>
 
-SearchRuleStatusTest::SearchRuleStatusTest(QObject *parent)
-    : QObject(parent)
+class SearchRuleStringTest : public QObject
 {
+    Q_OBJECT
+public:
+    explicit SearchRuleStringTest(QObject *parent = 0);
+};
 
-}
-
-void SearchRuleStatusTest::shouldHaveDefaultValue()
-{
-    MailCommon::SearchRuleStatus ruleStatus;
-    QVERIFY(ruleStatus.contents().isEmpty());
-    QVERIFY(ruleStatus.field().isEmpty());
-    QCOMPARE(ruleStatus.function(), MailCommon::SearchRule::FuncContains);
-}
-
-QTEST_MAIN(SearchRuleStatusTest)
+#endif // SEARCHRULESTRINGTEST_H

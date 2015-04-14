@@ -36,4 +36,10 @@ void FilterActionSetTransportTest::shouldHaveRequiredPart()
     QCOMPARE(filter.requiredPart(), MailCommon::SearchRule::CompleteMessage);
 }
 
+void FilterActionSetTransportTest::shouldHaveSieveRequires()
+{
+    MailCommon::FilterActionSetTransport filter;
+    QCOMPARE(filter.sieveRequires(), QStringList());
+}
+
 QTEST_MAIN(FilterActionSetTransportTest)

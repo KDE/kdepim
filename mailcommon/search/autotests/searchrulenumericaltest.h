@@ -15,22 +15,16 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "searchrulestatustest.h"
-#include <qtest.h>
-#include "../searchrule/searchrulestatus.h"
+#ifndef SEARCHRULENUMERICALTEST_H
+#define SEARCHRULENUMERICALTEST_H
 
-SearchRuleStatusTest::SearchRuleStatusTest(QObject *parent)
-    : QObject(parent)
+#include <QObject>
+
+class SearchRuleNumericalTest : public QObject
 {
+    Q_OBJECT
+public:
+    explicit SearchRuleNumericalTest(QObject *parent = 0);
+};
 
-}
-
-void SearchRuleStatusTest::shouldHaveDefaultValue()
-{
-    MailCommon::SearchRuleStatus ruleStatus;
-    QVERIFY(ruleStatus.contents().isEmpty());
-    QVERIFY(ruleStatus.field().isEmpty());
-    QCOMPARE(ruleStatus.function(), MailCommon::SearchRule::FuncContains);
-}
-
-QTEST_MAIN(SearchRuleStatusTest)
+#endif // SEARCHRULENUMERICALTEST_H
