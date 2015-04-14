@@ -25,7 +25,6 @@
 #include <QStandardPaths>
 #include <QVBoxLayout>
 #include <QIcon>
-#include <KGlobal>
 #include <QDir>
 
 #include <QPushButton>

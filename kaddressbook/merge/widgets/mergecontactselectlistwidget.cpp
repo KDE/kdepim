@@ -158,7 +158,7 @@ void MergeContactSelectListWidget::fillList(const KContacts::Addressee::List &ls
             const QDate birdthDt = addr.birthday().date();
             QString birdth;
             if (birdthDt.isValid()) {
-                birdth = KGlobal::locale()->formatDate(birdthDt);
+                birdth = KLocale::global()->formatDate(birdthDt);
             }
             addItem(birdth);
             break;
@@ -182,7 +182,7 @@ void MergeContactSelectListWidget::fillList(const KContacts::Addressee::List &ls
             QString anniversary;
             const QDate anniversaryDt = QDate::fromString(addr.custom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("X-Anniversary")), Qt::ISODate);
             if (anniversaryDt.isValid()) {
-                anniversary = KGlobal::locale()->formatDate(anniversaryDt);
+                anniversary = KLocale::global()->formatDate(anniversaryDt);
             }
             addItem(anniversary);
             break;
