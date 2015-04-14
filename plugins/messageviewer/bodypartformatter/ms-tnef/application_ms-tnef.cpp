@@ -69,10 +69,10 @@ public:
             return Ok;
         }
 
-        const QString dir = QApplication::isRightToLeft() ? QLatin1String("rtl") : QLatin1String("ltr");
-        QString htmlStr = QLatin1String("<table cellspacing=\"1\" class=\"textAtm\">");
-        QString startRow = QLatin1String("<tr class=\"textAtmH\"><td dir=\"") + dir + QLatin1String("\">");
-        QString endRow = QLatin1String("</td></tr>");
+        const QString dir = QApplication::isRightToLeft() ? QStringLiteral("rtl") : QStringLiteral("ltr");
+        QString htmlStr = QStringLiteral("<table cellspacing=\"1\" class=\"textAtm\">");
+        QString startRow = QStringLiteral("<tr class=\"textAtmH\"><td dir=\"") + dir + QStringLiteral("\">");
+        QString endRow = QStringLiteral("</td></tr>");
 
         const QString fileName = bodyPart->nodeHelper()->writeNodeToTempFile(bodyPart->content());
         KTnef::KTNEFParser parser;
@@ -118,11 +118,11 @@ public:
             htmlStr += startRow;
             htmlStr += label;
             if (!comment.isEmpty()) {
-                htmlStr += QLatin1String("<br/>") + comment;
+                htmlStr += QStringLiteral("<br/>") + comment;
             }
-            htmlStr += QLatin1String("&nbsp;&lt;") + i18nc("TNEF attachment has no content", "empty") + QLatin1String("&gt;");
+            htmlStr += QStringLiteral("&nbsp;&lt;") + i18nc("TNEF attachment has no content", "empty") + QStringLiteral("&gt;");
             htmlStr += endRow;
-            htmlStr += QLatin1String("</table>");
+            htmlStr += QStringLiteral("</table>");
             writer->queue(htmlStr);
 
             return NeedContent;
@@ -137,7 +137,7 @@ public:
         htmlStr += startRow;
         htmlStr += label;
         if (!comment.isEmpty()) {
-            htmlStr += QLatin1String("<br/>") + comment;
+            htmlStr += QStringLiteral("<br/>") + comment;
         }
         htmlStr += endRow;
         if (!inviteStr.isEmpty()) {
@@ -159,7 +159,7 @@ public:
             }
             label = MessageCore::StringUtil::quoteHtmlChars(label, true);
 
-            const QString dir = bodyPart->nodeHelper()->createTempDir(QLatin1String("ktnef-") + QString::number(i));
+            const QString dir = bodyPart->nodeHelper()->createTempDir(QStringLiteral("ktnef-") + QString::number(i));
             parser.extractFileTo(att->name(), dir);
 
             // falling back to internal TNEF attachement name if no filename is given for the attached file
@@ -169,20 +169,20 @@ public:
                 attFileName = att->name();
             }
             bodyPart->nodeHelper()->addTempFile(dir + QDir::separator() + attFileName);
-            const QString href = QLatin1String("file:") + QString::fromLatin1(QUrl::toPercentEncoding(dir + QDir::separator() + att->name()));
+            const QString href = QStringLiteral("file:") + QString::fromLatin1(QUrl::toPercentEncoding(dir + QDir::separator() + att->name()));
 
             const QString iconName = MessageViewer::Util::fileNameForMimetype(att->mimeTag(),
                                      KIconLoader::Desktop, attFileName);
 
-            writer->queue(QLatin1String("<div><a href=\"") + href + QLatin1String("\"><img src=\"file:///") +
-                          iconName + QLatin1String("\" border=\"0\" style=\"max-width: 100%\"/>") + label +
-                          QLatin1String("</a></div><br/>"));
+            writer->queue(QStringLiteral("<div><a href=\"") + href + QStringLiteral("\"><img src=\"file:///") +
+                          iconName + QStringLiteral("\" border=\"0\" style=\"max-width: 100%\"/>") + label +
+                          QStringLiteral("</a></div><br/>"));
         }
 
         if (!tnefatts.isEmpty()) {
             writer->queue(endRow);
         }
-        writer->queue(QLatin1String("</table>"));
+        writer->queue(QStringLiteral("</table>"));
 
         return Ok;
     }
