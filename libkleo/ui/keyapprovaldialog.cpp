@@ -132,9 +132,7 @@ Kleo::KeyApprovalDialog::KeyApprovalDialog(const std::vector<Item> &recipients,
     vlay->addWidget(new QLabel(i18n("The following keys will be used for encryption:"), page));
 
     QScrollArea *sv = new QScrollArea(page);
-    //Laurent not sure
     sv->setWidgetResizable(true);
-    //sv->setResizePolicy( Q3ScrollView::AutoOneFit );
     vlay->addWidget(sv);
 
     QWidget *view = new QWidget(sv->viewport());

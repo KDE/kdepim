@@ -55,7 +55,6 @@ Kleo::CryptoConfigDialog::CryptoConfigDialog(Kleo::CryptoConfig *config, QWidget
     okButton->setDefault(true);
     setModal(true);
     KGuiItem::assign(user1Button, KGuiItem(i18n("&Reset")));
-//add style :  Qt::WStyle_Customize | Qt::WStyle_DialogBorder | Qt::WStyle_Maximize | Qt::WStyle_Title | Qt::WStyle_SysMenu
 
     mMainWidget = new CryptoConfigModule(config, this);
     mainLayout->addWidget(mMainWidget);

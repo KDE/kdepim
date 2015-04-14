@@ -115,10 +115,10 @@ AuditLogViewer::AuditLogViewer(const QString &log, QWidget *parent, Qt::WindowFl
     setAuditLog(log);
 
 #ifndef QT_NO_FILEDIALOG
-    connect(this, SIGNAL(user1Clicked()), SLOT(slotUser1()));
+    connect(this, &KDialog::user1Clicked, this, &AuditLogViewer::slotUser1);
 #endif
 #ifndef QT_NO_CLIPBOARD
-    connect(this, SIGNAL(user2Clicked()), SLOT(slotUser2()));
+    connect(this, &KDialog::user2Clicked, this, &AuditLogViewer::slotUser2);
 #endif
     readConfig();
 }
