@@ -13,7 +13,6 @@ importwizard_debug.cpp
 importwizardkernel.cpp
 importwizard.cpp
 main.cpp
-importwizardutil.cpp
 )
 
 set(importwizard_manual_SRCS
@@ -23,6 +22,7 @@ manual/kselfilterpage.cpp
 )
 
 set(importwizard_autodetect_SRCS
+autodetect/importwizardutil.cpp
 autodetect/selectprogrampage.cpp
 autodetect/importaddressbookpage.cpp
 autodetect/importfilterpage.cpp

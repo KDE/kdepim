@@ -148,22 +148,6 @@ void AbstractSettings::syncKmailConfig()
     mKmailConfig->sync();
 }
 
-void AbstractSettings::addKNodeConfig(const QString &groupName, const QString &key, bool value)
-{
-    Q_UNUSED(groupName);
-    Q_UNUSED(key);
-    Q_UNUSED(value);
-    //TODO
-}
-
-void AbstractSettings::addAkregatorConfig(const QString &groupName, const QString &key, bool value)
-{
-    Q_UNUSED(groupName);
-    Q_UNUSED(key);
-    Q_UNUSED(value);
-    //TODO
-}
-
 int AbstractSettings::readKmailSettings(const QString &groupName, const QString &key)
 {
     KConfigGroup group = mKmailConfig->group(groupName);

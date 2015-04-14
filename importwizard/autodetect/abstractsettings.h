@@ -65,8 +65,6 @@ protected:
 
     void addComposerHeaderGroup(const QString &groupName, const QString &name, const QString &value);
 
-    void addKNodeConfig(const QString &groupName, const QString &key, bool value);
-    void addAkregatorConfig(const QString &groupName, const QString &key, bool value);
 
     void addCheckMailOnStartup(const QString &agentIdentifyName, bool loginAtStartup);
     void addToManualCheck(const QString &agentIdentifyName, bool manualCheck);
