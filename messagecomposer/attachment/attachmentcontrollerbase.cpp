@@ -777,7 +777,8 @@ void AttachmentControllerBase::editAttachment( AttachmentPart::Ptr part, Message
     connect( watcher, SIGNAL(editDone(MessageViewer::EditorWatcher*)),
              this, SLOT(editDone(MessageViewer::EditorWatcher*)) );
 
-    if( watcher->start() ) {
+    switch (watcher->start()) {
+    case MessageViewer::EditorWatcher::NoError: {
         // The attachment is being edited.
         // We will clean things up in editDone().
         d->editorPart[ watcher ] = part;
@@ -785,10 +786,16 @@ void AttachmentControllerBase::editAttachment( AttachmentPart::Ptr part, Message
 
         // Delete the temp file if the composer is closed (and this object is destroyed).
         tempFile->setParent( this ); // Manages lifetime.
-    } else {
+        break;
+    }
+    case MessageViewer::EditorWatcher::CannotStart:
         kWarning() << "Could not start EditorWatcher.";
+    case MessageViewer::EditorWatcher::Unknown:
+    case MessageViewer::EditorWatcher::NoServiceFound: {
         delete watcher;
         delete tempFile;
+        break;
+    }
     }
 }
 

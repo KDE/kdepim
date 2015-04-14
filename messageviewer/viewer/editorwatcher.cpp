@@ -69,7 +69,7 @@ EditorWatcher::~EditorWatcher()
 #endif
 }
 
-bool EditorWatcher::start()
+EditorWatcher::ErrorEditorWatcher EditorWatcher::start()
 {
     // find an editor
     KUrl::List list;
@@ -82,8 +82,10 @@ bool EditorWatcher::start()
         if ( dlgrc && dlg ) {
             offer = dlg->service();
         }
-        if ( !dlgrc || !offer )
-            return false;
+        if ( !dlgrc )
+            return Canceled;
+        if ( !offer )
+            return NoServiceFound;
     }
 
 #ifdef HAVE_SYS_INOTIFY_H
@@ -111,11 +113,11 @@ bool EditorWatcher::start()
              SLOT(editorExited()) );
     mEditor->start();
     if ( !mEditor->waitForStarted() )
-        return false;
+        return CannotStart;
     mEditorRunning = true;
 
     mEditTime.start();
-    return true;
+    return NoError;
 }
 
 bool EditorWatcher::fileChanged() const

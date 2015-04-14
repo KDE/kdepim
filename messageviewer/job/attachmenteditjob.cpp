@@ -65,7 +65,8 @@ bool AttachmentEditJob::addAttachment(KMime::Content * node, bool showWarning)
     mEditorWatchers[ watcher ] = node;
 
     connect( watcher, SIGNAL(editDone(MessageViewer::EditorWatcher*)), SLOT(slotAttachmentEditDone(MessageViewer::EditorWatcher*)) );
-    if ( !watcher->start() ) {
+
+    if ( (watcher->start() != EditorWatcher::NoError) ) {
         removeEditorWatcher(watcher, file.fileName());
     }
     return true;
