@@ -16,7 +16,7 @@
 */
 
 #include "searchruledatetest.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 SearchRuleDateTest::SearchRuleDateTest(QObject *parent)
     : QObject(parent)
@@ -24,4 +24,4 @@ SearchRuleDateTest::SearchRuleDateTest(QObject *parent)
 
 }
 
-QTEST_KDEMAIN(SearchRuleDateTest, GUI)
+QTEST_MAIN(SearchRuleDateTest)

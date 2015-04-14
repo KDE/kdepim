@@ -10,46 +10,56 @@ target_link_libraries( searchpatterntest
 )
 
 set( mailcommon_searchruletest_source searchruletest.cpp )
-kde4_add_unit_test( searchruletest ${mailcommon_searchruletest_source})
+add_executable( searchruletest ${mailcommon_searchruletest_source})
+add_test(searchruletest searchruletest)
+ecm_mark_as_test(searchruletest)
 target_link_libraries( searchruletest
   mailcommon
-  ${KDE4_KDECORE_LIBS}
-  ${QT_QTTEST_LIBRARY}
-  ${QT_QTGUI_LIBRARY}
+  KF5::KDELibs4Support
+  Qt5::Test
+  Qt5::Gui
 )
 
 set( mailcommon_searchrulestatustest_source searchrulestatustest.cpp )
-kde4_add_unit_test( searchrulestatustest ${mailcommon_searchrulestatustest_source})
+add_executable( searchrulestatustest ${mailcommon_searchrulestatustest_source})
+add_test(searchrulestatustest searchrulestatustest)
+ecm_mark_as_test(searchrulestatustest)
 target_link_libraries( searchrulestatustest
   mailcommon
-  ${KDE4_KDECORE_LIBS}
-  ${QT_QTTEST_LIBRARY}
-  ${QT_QTGUI_LIBRARY}
+  KF5::KDELibs4Support
+  Qt5::Test
+  Qt5::Gui
 )
 
 set( mailcommon_searchrulenumericaltest_source searchrulenumericaltest.cpp )
-kde4_add_unit_test( searchrulenumericaltest ${mailcommon_searchrulenumericaltest_source})
+add_executable( searchrulenumericaltest ${mailcommon_searchrulenumericaltest_source})
+add_test(searchrulenumericaltest searchrulenumericaltest)
+ecm_mark_as_test(searchrulenumericaltest)
 target_link_libraries( searchrulenumericaltest
   mailcommon
-  ${KDE4_KDECORE_LIBS}
-  ${QT_QTTEST_LIBRARY}
-  ${QT_QTGUI_LIBRARY}
+  KF5::KDELibs4Support
+  Qt5::Test
+  Qt5::Gui
 )
 
 set( mailcommon_searchruledatetest_source searchruledatetest.cpp )
-kde4_add_unit_test( searchruledatetest ${mailcommon_searchruledatetest_source})
+add_executable( searchruledatetest ${mailcommon_searchruledatetest_source})
+add_test(searchruledatetest searchruledatetest)
+ecm_mark_as_test(searchruledatetest)
 target_link_libraries( searchruledatetest
   mailcommon
-  ${KDE4_KDECORE_LIBS}
-  ${QT_QTTEST_LIBRARY}
-  ${QT_QTGUI_LIBRARY}
+  KF5::KDELibs4Support
+  Qt5::Test
+  Qt5::Gui
 )
 
 set( mailcommon_searchrulestringtest_source searchrulestringtest.cpp )
-kde4_add_unit_test( searchrulestringtest ${mailcommon_searchrulestringtest_source})
+add_executable( searchrulestringtest ${mailcommon_searchrulestringtest_source})
+add_test(searchrulestringtest searchrulestringtest)
+ecm_mark_as_test(searchrulestringtest)
 target_link_libraries( searchrulestringtest
   mailcommon
-  ${KDE4_KDECORE_LIBS}
-  ${QT_QTTEST_LIBRARY}
-  ${QT_QTGUI_LIBRARY}
+  KF5::KDELibs4Support
+  Qt5::Test
+  Qt5::Gui
 )

@@ -16,11 +16,11 @@
 */
 
 #include "searchrulenumericaltest.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 SearchRuleNumericalTest::SearchRuleNumericalTest(QObject *parent)
     : QObject(parent)
 {
 
 }
 
-QTEST_KDEMAIN(SearchRuleNumericalTest, GUI)
+QTEST_MAIN(SearchRuleNumericalTest)
