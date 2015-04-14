@@ -24,7 +24,7 @@ KImportPage::KImportPage(QWidget *parent)
 {
     mWidget = new Ui::KImportPageDlg;
     mWidget->setupUi(this);
-    mWidget->mIntroSidebar->setPixmap(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kmailcvt/pics/step1.png")));
+    mWidget->mIntroSidebar->setPixmap(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("importwizard/pics/step1.png")));
 }
 
 KImportPage::~KImportPage()

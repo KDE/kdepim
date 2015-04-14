@@ -59,7 +59,7 @@ KSelFilterPage::KSelFilterPage(QWidget *parent)
 {
     mWidget = new Ui::KSelFilterPageDlg;
     mWidget->setupUi(this);
-    mWidget->mIntroSidebar->setPixmap(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kmailcvt/pics/step1.png")));
+    mWidget->mIntroSidebar->setPixmap(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("importwizard/pics/step1.png")));
     connect(mWidget->mFilterCombo, static_cast<void (KComboBox::*)(int)>(&KComboBox::activated), this, &KSelFilterPage::filterSelected);
 
     // Add new filters below. If this annoys you, please rewrite the stuff to use a factory.
