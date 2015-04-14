@@ -94,29 +94,7 @@ ImportWizard::ImportWizard(QWidget *parent)
     mPage8 = new KPageWidgetItem(mImportFinishPage, i18n("Finish"));
     addPage(mPage8);
 
-    //Import module
-    addImportModule(new ThunderbirdImportData(this));
-    addImportModule(new IcedoveImportData(this));
-    addImportModule(new SylpheedImportData(this));
-    addImportModule(new Evolutionv3ImportData(this));
-    addImportModule(new Evolutionv2ImportData(this));
-    addImportModule(new Evolutionv1ImportData(this));
-    addImportModule(new OperaImportData(this));
-#ifdef Q_OS_WIN
-    addImportModule(new OeImportData(this));
-#endif
-#ifdef Q_OS_MAC
-    addImportModule(new MailAppImportData(this));
-#endif
-
-#ifdef Q_OS_WIN
-    addImportModule(new PMailImportData(this));
-    addImportModule(new TheBatImportData(this));
-#endif
-
-    addImportModule(new BalsaImportData(this));
-    addImportModule(new ClawsMailImportData(this));
-    addImportModule(new TrojitaImportData(this));
+    initializeImportModule();
 
     // Disable the 'next button to begin with.
     setValid(currentPage(), false);
@@ -146,6 +124,33 @@ ImportWizard::ImportWizard(QWidget *parent)
 ImportWizard::~ImportWizard()
 {
     qDeleteAll(mlistImport);
+}
+
+void ImportWizard::initializeImportModule()
+{
+    //Import module
+    addImportModule(new ThunderbirdImportData(this));
+    addImportModule(new IcedoveImportData(this));
+    addImportModule(new SylpheedImportData(this));
+    addImportModule(new Evolutionv3ImportData(this));
+    addImportModule(new Evolutionv2ImportData(this));
+    addImportModule(new Evolutionv1ImportData(this));
+    addImportModule(new OperaImportData(this));
+#ifdef Q_OS_WIN
+    addImportModule(new OeImportData(this));
+#endif
+#ifdef Q_OS_MAC
+    addImportModule(new MailAppImportData(this));
+#endif
+
+#ifdef Q_OS_WIN
+    addImportModule(new PMailImportData(this));
+    addImportModule(new TheBatImportData(this));
+#endif
+
+    addImportModule(new BalsaImportData(this));
+    addImportModule(new ClawsMailImportData(this));
+    addImportModule(new TrojitaImportData(this));
 }
 
 void ImportWizard::slotProgramDoubleClicked()

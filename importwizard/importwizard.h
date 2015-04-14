@@ -91,6 +91,7 @@ private:
     ImportAddressbookPage *mImportAddressbookPage;
     ImportFinishPage *mImportFinishPage;
     ImportCalendarPage *mImportCalendarPage;
+    void initializeImportModule();
 };
 
 #endif /* IMPORTWIZARD_H */
