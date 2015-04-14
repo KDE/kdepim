@@ -34,4 +34,10 @@ void SearchRuleDateTest::shouldHaveDefaultValue()
     QVERIFY(searchrule.isEmpty());
 }
 
+void SearchRuleDateTest::shouldRequiresPart()
+{
+    MailCommon::SearchRuleDate searchrule;
+    QCOMPARE(searchrule.requiredPart(), MailCommon::SearchRule::Envelope);
+}
+
 QTEST_KDEMAIN(SearchRuleDateTest, GUI)

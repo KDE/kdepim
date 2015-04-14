@@ -28,6 +28,7 @@ public:
 
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldRequiresPart();
 };
 
 #endif // SEARCHRULEDATETEST_H

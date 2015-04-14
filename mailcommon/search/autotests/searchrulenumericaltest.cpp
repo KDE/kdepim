@@ -24,4 +24,19 @@ SearchRuleNumericalTest::SearchRuleNumericalTest(QObject *parent)
 
 }
 
+void SearchRuleNumericalTest::shouldHaveDefaultValue()
+{
+    MailCommon::SearchRuleNumerical ruleStatus;
+    QVERIFY(ruleStatus.contents().isEmpty());
+    QVERIFY(ruleStatus.field().isEmpty());
+    QCOMPARE(ruleStatus.function(), MailCommon::SearchRule::FuncContains);
+    QVERIFY(ruleStatus.isEmpty());
+}
+
+void SearchRuleNumericalTest::shouldHaveRequirePart()
+{
+    MailCommon::SearchRuleNumerical ruleStatus;
+    QCOMPARE(ruleStatus.requiredPart(), MailCommon::SearchRule::Envelope);
+}
+
 QTEST_KDEMAIN(SearchRuleNumericalTest, GUI)

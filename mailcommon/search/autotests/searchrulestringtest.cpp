@@ -34,5 +34,12 @@ void SearchRuleStringTest::shouldHaveDefaultValue()
     QVERIFY(searchrule.isEmpty());
 }
 
+void SearchRuleStringTest::shouldHaveRequirePart()
+{
+    MailCommon::SearchRuleString ruleStatus;
+    //Depend. Need to implement test correctly
+    //QCOMPARE(ruleStatus.requiredPart(), MailCommon::SearchRule::Envelope);
+}
+
 
 QTEST_KDEMAIN(SearchRuleStringTest, GUI)

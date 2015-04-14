@@ -25,6 +25,10 @@ class SearchRuleNumericalTest : public QObject
     Q_OBJECT
 public:
     explicit SearchRuleNumericalTest(QObject *parent = 0);
+
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
+    void shouldHaveRequirePart();
 };
 
 #endif // SEARCHRULENUMERICALTEST_H

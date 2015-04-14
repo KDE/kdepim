@@ -27,6 +27,7 @@ public:
     explicit SearchRuleStatusTest(QObject *parent = 0);
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldHaveRequirePart();
 };
 
 #endif // SEARCHRULESTATUSTEST_H
