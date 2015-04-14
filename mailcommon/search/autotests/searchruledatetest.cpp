@@ -31,6 +31,7 @@ void SearchRuleDateTest::shouldHaveDefaultValue()
     QCOMPARE(searchrule.field(), QByteArray());
     QCOMPARE(searchrule.function(), MailCommon::SearchRule::FuncContains);
     QVERIFY(searchrule.contents().isEmpty());
+    QVERIFY(searchrule.isEmpty());
 }
 
 QTEST_KDEMAIN(SearchRuleDateTest, GUI)

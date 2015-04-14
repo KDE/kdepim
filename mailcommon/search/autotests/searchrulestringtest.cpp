@@ -25,4 +25,14 @@ SearchRuleStringTest::SearchRuleStringTest(QObject *parent)
 
 }
 
+void SearchRuleStringTest::shouldHaveDefaultValue()
+{
+    MailCommon::SearchRuleString searchrule;
+    QVERIFY(searchrule.contents().isEmpty());
+    QVERIFY(searchrule.field().isEmpty());
+    QCOMPARE(searchrule.function(), MailCommon::SearchRule::FuncContains);
+    QVERIFY(searchrule.isEmpty());
+}
+
+
 QTEST_KDEMAIN(SearchRuleStringTest, GUI)
