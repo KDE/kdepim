@@ -16,6 +16,12 @@ main.cpp
 importwizardutil.cpp
 )
 
+set(importwizard_manual_SRCS
+manual/kimportpage.cpp
+manual/kmailcvtfilterinfogui.cpp
+manual/kselfilterpage.cpp
+)
+
 set(importwizard_autodetect_SRCS
 autodetect/selectprogrampage.cpp
 autodetect/importaddressbookpage.cpp
@@ -68,19 +74,21 @@ autodetect/icedove/icedoveimportdata.cpp
 
 
 ki18n_wrap_ui(importwizard_SRCS 
-                  ui/selectprogrampage.ui
-                  ui/importaddressbookpage.ui
-                  ui/importfilterpage.ui
-                  ui/importmailpage.ui
-                  ui/importsettingpage.ui
-                  ui/selectcomponentpage.ui 
-		  ui/importfinishpage.ui 
-		  ui/importcalendarpage.ui)
+                  ui/autodetect/selectprogrampage.ui
+                  ui/autodetect/importaddressbookpage.ui
+                  ui/autodetect/importfilterpage.ui
+                  ui/autodetect/importmailpage.ui
+                  ui/autodetect/importsettingpage.ui
+                  ui/autodetect/selectcomponentpage.ui 
+		  ui/autodetect/importfinishpage.ui 
+		  ui/autodetect/importcalendarpage.ui
+                  ui/manual/kimportpagedlg.ui  
+                  ui/manual/kselfilterpagedlg.ui)
 
 file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/*-apps-kontact-import-wizard.png")
 ecm_add_app_icon(importwizard_SRCS ICONS ${ICONS_SRCS})
 
-add_executable(importwizard ${importwizard_SRCS} ${importwizard_autodetect_SRCS})
+add_executable(importwizard ${importwizard_SRCS} ${importwizard_autodetect_SRCS} ${importwizard_manual_SRCS})
 
 target_link_libraries(importwizard
   KF5::KIOCore
