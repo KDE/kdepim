@@ -880,33 +880,19 @@ void AttachmentControllerBase::showAttachVcard()
 
 void AttachmentControllerBase::showAddAttachmentCompressedDirectoryDialog()
 {
-#if 0 //QT5
-#ifndef KDEPIM_MOBILE_UI
-    QPointer<KEncodingFileDialog> dialog = new KEncodingFileDialog(
-        QString(/*startDir*/), QString(/*encoding*/), QString(/*filter*/),
-        i18n("Attach Directory"), KFileDialog::Other, d->wParent);
-
-    dialog->okButton()->setGuiItem(KGuiItem(i18n("&Attach"), QLatin1String("document-open")));
-    dialog->setMode(KFile::Directory);
-    if (dialog->exec() == QDialog::Accepted && dialog) {
-        const QString encoding = MessageViewer::NodeHelper::fixEncoding(dialog->selectedEncoding());
-        attachFileDirectory(dialog->selectedUrls(), encoding);
+    KEncodingFileDialog::Result result = KEncodingFileDialog::getOpenUrlAndEncoding(QString(),
+             QUrl(),
+             QString(),
+             d->wParent,
+             i18n("Attach Directory"));
+    if (!result.URLs.isEmpty()) {
+        const QString encoding = MessageViewer::NodeHelper::fixEncoding(result.encoding);
+        attachFileDirectory(result.URLs, encoding);
     }
-    delete dialog;
-#else
-    // use native dialog, while being much simpler, it actually fits on the screen much better than our own monster dialog
-    const QString fileName = KFileDialog::getExistingDirectory(KUrl(), QString(), d->wParent, i18n("Attach Directory"));
-    if (!fileName.isEmpty()) {
-        addAttachment(KUrl::fromLocalFile(fileName));
-    }
-#endif
-#endif
 }
 
 void AttachmentControllerBase::showAddAttachmentFileDialog()
 {
-#if 0 //QT5
-#ifndef KDEPIM_MOBILE_UI
     KEncodingFileDialog::Result result = KEncodingFileDialog::getOpenUrlsAndEncoding(QString(),
                                          QUrl(),
                                          QString(),
@@ -928,30 +914,7 @@ void AttachmentControllerBase::showAddAttachmentFileDialog()
                 addAttachment(urlWithEncoding);
             }
         }
-
     }
-
-#if 0 //QT5
-    QPointer<KEncodingFileDialog> dialog = new KEncodingFileDialog(
-        QUrl(/*startDir*/), QString(/*encoding*/), QString(/*filter*/),
-        i18n("Attach File"), QFileDialog::Other, d->wParent);
-
-    dialog->okButton()->setGuiItem(KGuiItem(i18n("&Attach"), QLatin1String("document-open")));
-    dialog->setMode(KFile::Files);
-    if (dialog->exec() == QDialog::Accepted && dialog) {
-        const QString encoding = MessageViewer::NodeHelper::fixEncoding(dialog->selectedEncoding());
-        attachFileDirectory(dialog->selectedUrls(), encoding);
-    }
-    delete dialog;
-#endif
-#else
-    // use native dialog, while being much simpler, it actually fits on the screen much better than our own monster dialog
-    const QString fileName = QFileDialog::getOpenFileName(d->wParent, i18n("Attach File") ,  QUrl(), QString());
-    if (!fileName.isEmpty()) {
-        addAttachment(QUrl::fromLocalFile(fileName));
-    }
-#endif
-#endif
 }
 
 void AttachmentControllerBase::addAttachment(AttachmentPart::Ptr part)
