@@ -31,6 +31,7 @@ Comment[sv]=Hantering av lagringstjänst
 Comment[tr]=DepolamaServisYöneticisi
 Comment[uk]=Керування службами збереження
 Comment[x-test]=xxStorageServiceManagerxx
+Comment[zh_CN]=存储服务管理器
 Comment[zh_TW]=儲存服務管理員
 
 [Event/action-failed]
@@ -65,6 +66,7 @@ Name[sv]=Åtgärd misslyckades
 Name[tr]=Başarısız İşlem
 Name[uk]=Помилка під час дії
 Name[x-test]=xxAction Failedxx
+Name[zh_CN]=动作失败
 Name[zh_TW]=動作失敗
 Comment=An error was returned
 Comment[ca]=S'ha retornat un error
@@ -96,6 +98,7 @@ Comment[sv]=Ett fel returnerades
 Comment[tr]=Bir hata döndürüldü
 Comment[uk]=Повернуто повідомлення про помилку
 Comment[x-test]=xxAn error was returnedxx
+Comment[zh_CN]=返回了错误
 Comment[zh_TW]=傳回錯誤
 Action=None
 

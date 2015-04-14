@@ -32,6 +32,7 @@ Name[sv]=Importfil för adressbok
 Name[tr]=K Adres Defteri içe aktarma dosyası
 Name[uk]=Імпортування файлів KAddressBook
 Name[x-test]=xxKAddressbook import filexx
+Name[zh_CN]=KAddressBook 导入文件
 Name[zh_TW]=KAddressBook 匯入檔
 Type=Application
 Exec=kaddressbook --import %u

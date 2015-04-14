@@ -36,6 +36,7 @@ Name[tr]=KMail İçeriye Aktarma Sihirbazı
 Name[uk]=Майстер імпортування KMail
 Name[wa]=Macrea d' abagaedje di KMail
 Name[x-test]=xxKMail Import Wizardxx
+Name[zh_CN]=KMail 导入向导
 Name[zh_TW]=KMail 匯入精靈
 Exec=importwizard
 Type=Application

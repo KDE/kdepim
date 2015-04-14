@@ -22,6 +22,7 @@ Name[sv]=Kontoguide
 Name[tr]=Hesaplar
 Name[uk]=Майстер облікових записів
 Name[x-test]=xxAccount Wizardxx
+Name[zh_CN]=账户向导
 Name[zh_TW]=帳號精靈
 Exec=accountwizard --package %u
 Type=Application
