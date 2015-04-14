@@ -16,6 +16,7 @@
 */
 
 #include "searchrulestringtest.h"
+#include "../searchrule/searchrulestring.h"
 #include <qtest_kde.h>
 
 SearchRuleStringTest::SearchRuleStringTest(QObject *parent)
