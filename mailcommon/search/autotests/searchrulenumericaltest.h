@@ -24,7 +24,7 @@ class SearchRuleNumericalTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit SearchRuleNumericalTest(QObject *parent = 0);
+    explicit SearchRuleNumericalTest(QObject *parent = Q_NULLPTR);
 };
 
 #endif // SEARCHRULENUMERICALTEST_H

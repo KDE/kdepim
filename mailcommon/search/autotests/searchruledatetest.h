@@ -24,7 +24,7 @@ class SearchRuleDateTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit SearchRuleDateTest(QObject *parent = 0);
+    explicit SearchRuleDateTest(QObject *parent = Q_NULLPTR);
 
 };
 

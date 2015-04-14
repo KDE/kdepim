@@ -23,7 +23,7 @@ class SearchRuleStringTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit SearchRuleStringTest(QObject *parent = 0);
+    explicit SearchRuleStringTest(QObject *parent = Q_NULLPTR);
 };
 
 #endif // SEARCHRULESTRINGTEST_H
