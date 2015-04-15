@@ -26,6 +26,9 @@ class SearchRuleDateTest : public QObject
 public:
     explicit SearchRuleDateTest(QObject *parent = Q_NULLPTR);
 
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
+    void shouldRequiresPart();
 };
 
 #endif // SEARCHRULEDATETEST_H

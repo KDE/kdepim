@@ -70,7 +70,7 @@ EditorWatcher::~EditorWatcher()
 #endif
 }
 
-bool EditorWatcher::start()
+EditorWatcher::ErrorEditorWatcher EditorWatcher::start()
 {
     // find an editor
     QList<QUrl> list;
@@ -83,9 +83,10 @@ bool EditorWatcher::start()
         if (dlgrc && dlg) {
             offer = dlg->service();
         }
-        if (!dlgrc || !offer) {
-            return false;
-        }
+        if ( !dlgrc )
+            return Canceled;
+        if ( !offer )
+            return NoServiceFound;
     }
 
 #ifdef HAVE_SYS_INOTIFY_H
@@ -111,13 +112,12 @@ bool EditorWatcher::start()
     mEditor->setProgram(params);
     connect(mEditor, static_cast<void (KProcess::*)(int, QProcess::ExitStatus)>(&KProcess::finished), this, &EditorWatcher::editorExited);
     mEditor->start();
-    if (!mEditor->waitForStarted()) {
-        return false;
-    }
+    if ( !mEditor->waitForStarted() )
+        return CannotStart;
     mEditorRunning = true;
 
     mEditTime.start();
-    return true;
+    return NoError;
 }
 
 bool EditorWatcher::fileChanged() const

@@ -44,6 +44,14 @@ public:
         OpenWithDialog,
         NoOpenWithDialog
     };
+    enum ErrorEditorWatcher {
+        Unknown = 0,
+        Canceled,
+        NoServiceFound,
+        CannotStart,
+        NoError
+    };
+
     /**
      * Constructs an EditorWatcher.
      * @param parent the parent object of this EditorWatcher, which will take care of deleting
@@ -55,7 +63,7 @@ public:
                   QObject *parent, QWidget *parentWidget);
 
     ~EditorWatcher();
-    bool start();
+    ErrorEditorWatcher start();
     bool fileChanged() const;
     QUrl url() const;
 Q_SIGNALS:

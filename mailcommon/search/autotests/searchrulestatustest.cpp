@@ -31,6 +31,13 @@ void SearchRuleStatusTest::shouldHaveDefaultValue()
     QVERIFY(ruleStatus.contents().isEmpty());
     QVERIFY(ruleStatus.field().isEmpty());
     QCOMPARE(ruleStatus.function(), MailCommon::SearchRule::FuncContains);
+    QVERIFY(ruleStatus.isEmpty());
+}
+
+void SearchRuleStatusTest::shouldHaveRequirePart()
+{
+    MailCommon::SearchRuleStatus ruleStatus;
+    QCOMPARE(ruleStatus.requiredPart(), MailCommon::SearchRule::Envelope);
 }
 
 QTEST_MAIN(SearchRuleStatusTest)

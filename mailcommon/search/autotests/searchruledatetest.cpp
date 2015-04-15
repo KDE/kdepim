@@ -17,11 +17,27 @@
 
 #include "searchruledatetest.h"
 #include <qtest.h>
+#include "../searchrule/searchruledate.h"
 
 SearchRuleDateTest::SearchRuleDateTest(QObject *parent)
     : QObject(parent)
 {
 
+}
+
+void SearchRuleDateTest::shouldHaveDefaultValue()
+{
+    MailCommon::SearchRuleDate searchrule;
+    QCOMPARE(searchrule.field(), QByteArray());
+    QCOMPARE(searchrule.function(), MailCommon::SearchRule::FuncContains);
+    QVERIFY(searchrule.contents().isEmpty());
+    QVERIFY(searchrule.isEmpty());
+}
+
+void SearchRuleDateTest::shouldRequiresPart()
+{
+    MailCommon::SearchRuleDate searchrule;
+    QCOMPARE(searchrule.requiredPart(), MailCommon::SearchRule::Envelope);
 }
 
 QTEST_MAIN(SearchRuleDateTest)

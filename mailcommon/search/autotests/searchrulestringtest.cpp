@@ -17,11 +17,29 @@
 
 #include "searchrulestringtest.h"
 #include <qtest.h>
+#include "../searchrule/searchrulestring.h"
 
 SearchRuleStringTest::SearchRuleStringTest(QObject *parent)
     : QObject(parent)
 {
 
 }
+
+void SearchRuleStringTest::shouldHaveDefaultValue()
+{
+    MailCommon::SearchRuleString searchrule;
+    QVERIFY(searchrule.contents().isEmpty());
+    QVERIFY(searchrule.field().isEmpty());
+    QCOMPARE(searchrule.function(), MailCommon::SearchRule::FuncContains);
+    QVERIFY(searchrule.isEmpty());
+}
+
+void SearchRuleStringTest::shouldHaveRequirePart()
+{
+    MailCommon::SearchRuleString ruleStatus;
+    //Depend. Need to implement test correctly
+    //QCOMPARE(ruleStatus.requiredPart(), MailCommon::SearchRule::Envelope);
+}
+
 
 QTEST_MAIN(SearchRuleStringTest)

@@ -78,15 +78,24 @@ FollowUpReminderSelectDateDialog::FollowUpReminderSelectDateDialog(QWidget *pare
     formLayout->addRow(i18n("Store ToDo in:"), mCollectionCombobox);
 
     connect(mDateComboBox->lineEdit(), &QLineEdit::textChanged, this, &FollowUpReminderSelectDateDialog::slotDateChanged);
+    connect(mCollectionCombobox, SIGNAL(currentIndexChanged(int)), SLOT(updateOkButton()));
 }
 
 FollowUpReminderSelectDateDialog::~FollowUpReminderSelectDateDialog()
 {
 }
 
-void FollowUpReminderSelectDateDialog::slotDateChanged(const QString &date)
+void FollowUpReminderSelectDateDialog::updateOkButton()
 {
-    mOkButton->setEnabled(!date.isEmpty() && mDateComboBox->date().isValid());
+    mOkButton->setEnabled( !mDateComboBox->lineEdit()->text().isEmpty()
+                    && mDateComboBox->date().isValid()
+                    && (mCollectionCombobox->count() > 0)
+                    && mCollectionCombobox->currentCollection().isValid());
+}
+
+void FollowUpReminderSelectDateDialog::slotDateChanged()
+{
+    updateOkButton();
 }
 
 QDate FollowUpReminderSelectDateDialog::selectedDate() const
