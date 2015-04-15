@@ -185,8 +185,6 @@ Pane::Pane(bool restoreSession, QAbstractItemModel *model, QItemSelectionModel *
     connect(this, SIGNAL(tabBarDoubleClicked(int)),
             this, SLOT(createNewTab()));
 
-    connect(this, SIGNAL(mouseMiddleClick(QWidget*)),
-            this, SLOT(closeTab(QWidget*)));
     tabBar()->installEventFilter(this);
 }
 
