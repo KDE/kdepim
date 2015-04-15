@@ -155,10 +155,10 @@ public:
         sysTray.setAnyCardHasNullPin(readerStatus.anyCardHasNullPin());
         sysTray.setAnyCardCanLearnKeys(readerStatus.anyCardCanLearnKeys());
 
-        connect(&readerStatus, SIGNAL(anyCardHasNullPinChanged(bool)),
-                &sysTray, SLOT(setAnyCardHasNullPin(bool)));
-        connect(&readerStatus, SIGNAL(anyCardCanLearnKeysChanged(bool)),
-                &sysTray, SLOT(setAnyCardCanLearnKeys(bool)));
+        connect(&readerStatus, &SmartCard::ReaderStatus::anyCardHasNullPinChanged,
+                &sysTray, &SysTrayIcon::setAnyCardHasNullPin);
+        connect(&readerStatus, &SmartCard::ReaderStatus::anyCardCanLearnKeysChanged,
+                &sysTray, &SysTrayIcon::setAnyCardCanLearnKeys);
 #endif
     }
 

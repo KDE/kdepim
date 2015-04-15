@@ -46,12 +46,12 @@
 
 int main(int argc, char **argv)
 {
+    QApplication app(argc, argv);
     Kdelibs4ConfigMigrator migrate(QStringLiteral("kwatchgnupg"));
     migrate.setConfigFiles(QStringList() << QStringLiteral("kwatchgnupgrc"));
     migrate.setUiFiles(QStringList() << QStringLiteral("kwatchgnupgui.rc"));
     migrate.migrate();
 
-    QApplication app(argc, argv);
 
     KLocalizedString::setApplicationDomain("kwatchgnupg");
     AboutData aboutData;
