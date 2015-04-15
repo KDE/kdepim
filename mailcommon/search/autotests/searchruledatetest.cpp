@@ -18,7 +18,8 @@
 #include "searchruledatetest.h"
 #include "../searchrule/searchruledate.h"
 #include <qtest_kde.h>
-
+#include <KMime/Message>
+Q_DECLARE_METATYPE(MailCommon::SearchRule::Function)
 SearchRuleDateTest::SearchRuleDateTest(QObject *parent)
     : QObject(parent)
 {
@@ -39,5 +40,42 @@ void SearchRuleDateTest::shouldRequiresPart()
     MailCommon::SearchRuleDate searchrule;
     QCOMPARE(searchrule.requiredPart(), MailCommon::SearchRule::Envelope);
 }
+
+void SearchRuleDateTest::shouldBeEmpty()
+{
+    MailCommon::SearchRuleDate searchrule("<date>", MailCommon::SearchRule::FuncEquals, QString());
+    QVERIFY(searchrule.isEmpty());
+
+    MailCommon::SearchRuleDate searchrule2("<date>", MailCommon::SearchRule::FuncEquals, QDate(2015,5,5).toString(Qt::ISODate));
+    QVERIFY(!searchrule2.isEmpty());
+}
+
+void SearchRuleDateTest::shouldMatchDate_data()
+{
+    QTest::addColumn<MailCommon::SearchRule::Function>("function");
+    QTest::addColumn<QDate>("maildate");
+    QTest::addColumn<QDate>("matchdate");
+    QTest::addColumn<bool>("match");
+    QTest::newRow("equaldontmatch") << MailCommon::SearchRule::FuncEquals  << QDate(2015,5,5) << QDate(2015,5,6) << false;
+    QTest::newRow("equalmatch") << MailCommon::SearchRule::FuncEquals  << QDate(2015,5,5) << QDate(2015,5,5) << true;
+    QTest::newRow("notequalnotmatch") << MailCommon::SearchRule::FuncNotEqual  << QDate(2015,5,5) << QDate(2015,5,5) << false;
+    QTest::newRow("notequalmatch") << MailCommon::SearchRule::FuncNotEqual  << QDate(2015,5,5) << QDate(2015,5,6) << true;
+}
+
+void SearchRuleDateTest::shouldMatchDate()
+{
+    QFETCH(MailCommon::SearchRule::Function, function);
+    QFETCH(QDate, maildate);
+    QFETCH(QDate, matchdate);
+    QFETCH(bool, match);
+    MailCommon::SearchRuleDate searchrule("<date>", function, matchdate.toString(Qt::ISODate));
+
+    KMime::Message::Ptr msgPtr = KMime::Message::Ptr(new KMime::Message());
+    msgPtr->date(true)->setDateTime(KDateTime(maildate));
+    Akonadi::Item item;
+    item.setPayload<KMime::Message::Ptr>(msgPtr);
+    QCOMPARE(searchrule.matches(item), match);
+}
+
 
 QTEST_KDEMAIN(SearchRuleDateTest, GUI)

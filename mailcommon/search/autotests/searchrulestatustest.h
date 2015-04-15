@@ -28,6 +28,8 @@ public:
 private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldHaveRequirePart();
+    void shouldMatchStatus();
+    void shouldMatchStatus_data();
 };
 
 #endif // SEARCHRULESTATUSTEST_H

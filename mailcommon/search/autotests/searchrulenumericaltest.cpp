@@ -39,4 +39,14 @@ void SearchRuleNumericalTest::shouldHaveRequirePart()
     QCOMPARE(ruleStatus.requiredPart(), MailCommon::SearchRule::Envelope);
 }
 
+void SearchRuleNumericalTest::shouldMatchNumerical()
+{
+
+}
+
+void SearchRuleNumericalTest::shouldMatchNumerical_data()
+{
+
+}
+
 QTEST_KDEMAIN(SearchRuleNumericalTest, GUI)

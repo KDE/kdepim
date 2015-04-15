@@ -28,6 +28,8 @@ public:
 private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldHaveRequirePart();
+    void shouldMatchString();
+    void shouldMatchString_data();
 };
 
 #endif // SEARCHRULESTRINGTEST_H

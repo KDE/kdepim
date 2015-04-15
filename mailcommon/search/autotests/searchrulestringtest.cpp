@@ -41,5 +41,15 @@ void SearchRuleStringTest::shouldHaveRequirePart()
     //QCOMPARE(ruleStatus.requiredPart(), MailCommon::SearchRule::Envelope);
 }
 
+void SearchRuleStringTest::shouldMatchString()
+{
+
+}
+
+void SearchRuleStringTest::shouldMatchString_data()
+{
+
+}
+
 
 QTEST_KDEMAIN(SearchRuleStringTest, GUI)
