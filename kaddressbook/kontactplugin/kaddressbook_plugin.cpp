@@ -42,8 +42,7 @@ EXPORT_KONTACT_PLUGIN(KAddressBookPlugin, kaddressbook)
 KAddressBookPlugin::KAddressBookPlugin(KontactInterface::Core *core, const QVariantList &)
     : KontactInterface::Plugin(core, core, "kaddressbook")
 {
-#pragma message("port QT5")
-    //QT5 setComponentData( KontactPluginFactory::componentData() );
+    setComponentName(QLatin1String("kaddressbook"), QLatin1String("kaddressbook"));
 
     QAction *action =
         new QAction(QIcon::fromTheme(QStringLiteral("contact-new")),

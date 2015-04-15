@@ -38,7 +38,7 @@ KAddressBookPart::KAddressBookPart(QWidget *parentWidget, QObject *parent,
                                    const QVariantList &)
     : KParts::ReadOnlyPart(parent)
 {
-    //QT5 setComponentData( KAddressBookFactory::componentData() );
+    setComponentName(QLatin1String("kaddressbook"), QLatin1String("kaddressbook"));
 
     KIconLoader::global()->addAppDir(QStringLiteral("kaddressbook"));
     // create a canvas to insert our widget
