@@ -63,7 +63,7 @@ KAddressBookPlugin::KAddressBookPlugin(KontactInterface::Core *core, const QVari
                     i18nc("@action:inmenu", "New Contact Group..."), this);
     actionCollection()->addAction(QStringLiteral("new_contactgroup"), action);
     connect(action, &QAction::triggered, this, &KAddressBookPlugin::slotNewContactGroup);
-    action->setShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_G));
+    actionCollection()->setDefaultShortcut(action, QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_G));
     //action->setHelpText(
     //  i18nc( "@info:status", "Create a new contact group" ) );
     action->setWhatsThis(
