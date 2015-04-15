@@ -2527,7 +2527,7 @@ void ViewerPrivate::slotSetEncoding()
 
 QString ViewerPrivate::attachmentInjectionHtml() const
 {
-    QString imgpath(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("libmessageviewer/pics/")));
+    QString imgpath(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("libmessageviewer/pics/"), QStandardPaths::LocateDirectory));
     QString urlHandle;
     QString imgSrc;
     if (!mShowAttachmentQuicklist) {
