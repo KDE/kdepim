@@ -76,7 +76,7 @@ static QString formatMobileHeader(KMime::Message *message, bool extendedFormat, 
     const QString ccPart = StringUtil::emailAddrAsAnchor(message->cc(), StringUtil::DisplayFullAddress, linkColor);
 
     // Background image
-    const QString imagePath(QLatin1String("file:///") + QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("libmessageviewer/pics/")));
+    const QString imagePath(QLatin1String("file:///") + QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("libmessageviewer/pics/"), QStandardPaths::LocateDirectory));
     const QString mobileImagePath(imagePath + QLatin1String("mobile_"));
     //const QString mobileExtendedImagePath( imagePath + QLatin1String( "mobileextended_" ) );
 

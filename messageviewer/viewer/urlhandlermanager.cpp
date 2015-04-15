@@ -1008,7 +1008,7 @@ bool InternalImageURLHandler::willHandleDrag(const KUrl &url, ViewerPrivate *win
         return true;
     }
 
-    const QString imagePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("libmessageviewer/pics/"));
+    const QString imagePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("libmessageviewer/pics/"), QStandardPaths::LocateDirectory);
     return url.path().contains(imagePath);
 }
 }
