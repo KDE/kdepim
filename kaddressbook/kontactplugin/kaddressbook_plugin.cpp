@@ -50,7 +50,7 @@ KAddressBookPlugin::KAddressBookPlugin(KontactInterface::Core *core, const QVari
                     i18nc("@action:inmenu", "New Contact..."), this);
     actionCollection()->addAction(QStringLiteral("new_contact"), action);
     connect(action, &QAction::triggered, this, &KAddressBookPlugin::slotNewContact);
-    action->setShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_C));
+    actionCollection()->setDefaultShortcut(action, QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_C));
     //action->setHelpText(
     //  i18nc( "@info:status", "Create a new contact" ) );
     action->setWhatsThis(
