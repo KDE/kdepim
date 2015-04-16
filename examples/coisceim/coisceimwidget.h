@@ -32,7 +32,7 @@ class COISCEIM_WIDGET_EXPORT CoisceimWidget : public QWidget
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.coisceim.CoisceimWidget")
 public:
-    CoisceimWidget(QWidget *parent = 0);
+    CoisceimWidget(QWidget *parent = Q_NULLPTR);
 
     Q_INVOKABLE void createTrip();
 

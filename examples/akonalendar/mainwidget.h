@@ -40,7 +40,7 @@ class MainWidget : public QWidget
     Q_OBJECT
 
 public:
-    MainWidget(MainWindow *parent = 0);
+    MainWidget(MainWindow *parent = Q_NULLPTR);
 
 private Q_SLOTS:
     void collectionClicked(const Akonadi::Collection &collection);

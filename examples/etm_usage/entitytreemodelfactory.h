@@ -30,7 +30,7 @@ class EntityTreeModelFactory : public QObject
 {
     Q_OBJECT
 public:
-    EntityTreeModelFactory(QObject *parent = 0);
+    EntityTreeModelFactory(QObject *parent = Q_NULLPTR);
 
     void createFromRemoteId(const QString &remoteId);
 

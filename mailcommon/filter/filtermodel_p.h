@@ -30,7 +30,7 @@ class FilterModel : public QAbstractListModel
     Q_OBJECT
 
 public:
-    explicit FilterModel(QObject *parent = 0);
+    explicit FilterModel(QObject *parent = Q_NULLPTR);
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
 

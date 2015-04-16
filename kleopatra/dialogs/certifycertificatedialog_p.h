@@ -60,7 +60,7 @@ public:
     enum Role {
         UserIDIndex = Qt::UserRole
     };
-    explicit UserIDModel(QObject *parent = 0) : QStandardItemModel(parent) {}
+    explicit UserIDModel(QObject *parent = Q_NULLPTR) : QStandardItemModel(parent) {}
     GpgME::Key certificateToCertify() const
     {
         return m_key;
@@ -80,7 +80,7 @@ public:
     enum Role {
         IndexRole = Qt::UserRole
     };
-    explicit SecretKeysModel(QObject *parent = 0) : QStandardItemModel(parent) {}
+    explicit SecretKeysModel(QObject *parent = Q_NULLPTR) : QStandardItemModel(parent) {}
     void setSecretKeys(const std::vector<GpgME::Key> &keys);
     std::vector<GpgME::Key> secretKeys() const;
     GpgME::Key keyFromItem(const QStandardItem *item) const;

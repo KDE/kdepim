@@ -41,7 +41,7 @@ public:
         TodoType,
         NotesType
     };
-    explicit ItemSelection(QItemSelectionModel *selModel1, QItemSelectionModel *selModel2, QItemSelectionModel *selModel3, QObject *parent = 0);
+    explicit ItemSelection(QItemSelectionModel *selModel1, QItemSelectionModel *selModel2, QItemSelectionModel *selModel3, QObject *parent = Q_NULLPTR);
 
     QModelIndex index() const;
 

@@ -38,9 +38,7 @@ K_PLUGIN_FACTORY(CoisceimPartFactory, registerPlugin<CoisceimPart>();)
 CoisceimPart::CoisceimPart(QWidget *parentWidget, QObject *parent, const QVariantList & /*args*/)
     : KParts::ReadOnlyPart(parent)
 {
-    // we need an instance
-    //QT5 setComponentData( CoisceimPartFactory::componentData() );
-
+    setComponentName(QStringLiteral("coisce"), QStringLiteral("coisce"));
     component = new CoisceimWidget(parentWidget);
 
     setWidget(component);

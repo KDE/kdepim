@@ -47,8 +47,8 @@ public:
     };
     //Q_DECLARE_FLAGS(SelectionFlags, SelectionFlag)
 
-    explicit QMLListSelectionModel(QItemSelectionModel *selectionModel, QObject *parent = 0);
-    explicit QMLListSelectionModel(QAbstractItemModel *model, QObject *parent = 0);
+    explicit QMLListSelectionModel(QItemSelectionModel *selectionModel, QObject *parent = Q_NULLPTR);
+    explicit QMLListSelectionModel(QAbstractItemModel *model, QObject *parent = Q_NULLPTR);
 
     QItemSelectionModel *selectionModel() const;
 

@@ -32,7 +32,7 @@ class StackedWidgetView : public QStackedWidget
 {
     Q_OBJECT
 public:
-    explicit StackedWidgetView(int widgetRole, QWidget *parent = 0);
+    explicit StackedWidgetView(int widgetRole, QWidget *parent = Q_NULLPTR);
 
     void setModel(QAbstractItemModel *model);
     void setSelectionModel(QItemSelectionModel *selectionModel);

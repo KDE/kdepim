@@ -35,7 +35,7 @@ class UnreadMailsTree : public KRecursiveFilterProxyModel
 {
     Q_OBJECT
 public:
-    UnreadMailsTree(QObject *parent = 0);
+    UnreadMailsTree(QObject *parent = Q_NULLPTR);
 
 protected:
     /* reimp */ bool acceptRow(int sourceRow, const QModelIndex &sourceParent) const;

@@ -24,7 +24,7 @@
 class MessageViewerAccessibleWidgetFactory: public QAccessiblePlugin
 {
 public:
-    explicit MessageViewerAccessibleWidgetFactory(QObject *parent = 0);
+    explicit MessageViewerAccessibleWidgetFactory(QObject *parent = Q_NULLPTR);
     virtual QAccessibleInterface *create(const QString &key, QObject *object);
 };
 

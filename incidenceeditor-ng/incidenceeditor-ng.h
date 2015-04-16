@@ -112,7 +112,7 @@ public Q_SLOTS:
 
 protected:
     /** Only subclasses can instantiate IncidenceEditors */
-    IncidenceEditor(QObject *parent = 0);
+    IncidenceEditor(QObject *parent = Q_NULLPTR);
 
     template <typename IncidenceT>
     QSharedPointer<IncidenceT> incidence(KCalCore::Incidence::Ptr inc)

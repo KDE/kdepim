@@ -105,12 +105,6 @@
 # include <sys/types.h>
 # include <unistd.h>
 #endif
-#if 0 //QT5
-#if KDEPIM_HAVE_X11
-# include <qx11info_x11.h>
-# include <X11/Xlib.h>
-#endif
-#endif
 using namespace Kleo;
 using namespace boost;
 
