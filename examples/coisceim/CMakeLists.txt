@@ -75,5 +75,4 @@ install(FILES coisceimpart.desktop  DESTINATION ${KDE_INSTALL_KSERVICES5DIR} )
 install(TARGETS coisceimpart  DESTINATION ${KDE_INSTALL_PLUGINDIR} )
 
 # add_subdirectory(kontact-plugin)
-add_subdirectory(coisceim-mobile)
 
