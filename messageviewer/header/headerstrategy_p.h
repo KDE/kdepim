@@ -57,7 +57,7 @@ static const int numStandardHeaders = sizeof standardHeaders / sizeof *standardH
 static const char *const richHeaders[] = {
     "subject", "date", "from", "cc", "bcc", "to",
     "organization", "organisation", "reply-to",
-    "user-agent", "x-mailer", "x-bugzilla-url"
+    "user-agent", "x-mailer", "x-bugzilla-url", "disposition-notification-to"
 };
 static const int numRichHeaders = sizeof richHeaders / sizeof *richHeaders;
 

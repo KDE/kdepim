@@ -43,7 +43,7 @@ SearchRuleNumerical::SearchRuleNumerical(const QByteArray &field,
 bool SearchRuleNumerical::isEmpty() const
 {
     bool ok = false;
-    contents().toInt(&ok);
+    contents().toLongLong( &ok );
 
     return !ok;
 }
