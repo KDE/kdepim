@@ -28,7 +28,6 @@ check_include_files(sys/inotify.h SYS_INOTIFY_H_FOUND)
 macro_bool_to_01(SYS_INOTIFY_H_FOUND HAVE_SYS_INOTIFY_H)
 configure_file(config-messageviewer.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-messageviewer.h)
 
-add_subdirectory(about)
 if (BUILD_TESTING)
    add_subdirectory(autotests)
 endif()
@@ -121,7 +120,6 @@ set(libmessageviewer_header_SRCS
   header/grantleeheaderstyle.cpp
   header/customheaderstyle.cpp
   header/plainheaderstyle.cpp
-  header/mobileheaderstyle.cpp
   header/entrepriseheaderstyle.cpp
   header/headerstyle_util.cpp
   header/fancyheaderstyle.cpp

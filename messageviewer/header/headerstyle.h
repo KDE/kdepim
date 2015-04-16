@@ -73,8 +73,6 @@ public:
         Plain,
         Fancy,
         Enterprise,
-        Mobile,
-        MobileExtended,
         Custom,
         Grantlee
     };
@@ -86,8 +84,6 @@ public:
     static HeaderStyle *plain();
     static HeaderStyle *fancy();
     static HeaderStyle *enterprise();
-    static HeaderStyle *mobile();
-    static HeaderStyle *mobileExtended();
     static HeaderStyle *custom();
     static HeaderStyle *grantlee();
 

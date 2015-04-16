@@ -36,7 +36,6 @@
 #include "header/grantleeheaderstyle.h"
 #include "header/customheaderstyle.h"
 #include "header/plainheaderstyle.h"
-#include "header/mobileheaderstyle.h"
 #include "header/entrepriseheaderstyle.h"
 #include "header/fancyheaderstyle.h"
 
@@ -81,8 +80,6 @@ HeaderStyle *HeaderStyle::create(Type type)
     case Plain:  return plain();
     case Fancy:   return fancy();
     case Enterprise: return enterprise();
-    case Mobile: return mobile();
-    case MobileExtended: return mobileExtended();
     case Custom: return custom();
     case Grantlee: return grantlee();
     }
@@ -99,10 +96,6 @@ HeaderStyle *HeaderStyle::create(const QString &type)
         return plain();
     } else if (lowerType == QLatin1String("enterprise")) {
         return enterprise();
-    } else if (lowerType == QLatin1String("mobile")) {
-        return mobile();
-    } else if (lowerType == QLatin1String("mobileExtended")) {
-        return mobileExtended();
     } else if (lowerType == QLatin1String("custom")) {
         return custom();
     } else if (lowerType == QLatin1String("grantlee")) {
@@ -118,8 +111,6 @@ HeaderStyle *briefStyle = 0;
 HeaderStyle *plainStyle = 0;
 HeaderStyle *fancyStyle = 0;
 HeaderStyle *enterpriseStyle = 0;
-HeaderStyle *mobileStyle = 0;
-HeaderStyle *mobileExtendedStyle = 0;
 HeaderStyle *customStyle = 0;
 HeaderStyle *grantleeStyle = 0;
 
@@ -153,22 +144,6 @@ HeaderStyle *HeaderStyle::enterprise()
         enterpriseStyle = new MessageViewer::EnterpriseHeaderStyle();
     }
     return enterpriseStyle;
-}
-
-HeaderStyle *HeaderStyle::mobile()
-{
-    if (!mobileStyle) {
-        mobileStyle = new MessageViewer::MobileHeaderStyle();
-    }
-    return mobileStyle;
-}
-
-HeaderStyle *HeaderStyle::mobileExtended()
-{
-    if (!mobileExtendedStyle) {
-        mobileExtendedStyle = new MessageViewer::MobileExtendedHeaderStyle;
-    }
-    return mobileExtendedStyle;
 }
 
 HeaderStyle *HeaderStyle::custom()
