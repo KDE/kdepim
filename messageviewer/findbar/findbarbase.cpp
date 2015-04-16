@@ -184,15 +184,22 @@ void FindBarBase::searchText( bool backward, bool isAutoSearch )
     Q_UNUSED( isAutoSearch );
 }
 
+void FindBarBase::addToCompletion(const QString &text)
+{
+    KCompletion *comp = mSearch->completionObject();
+    comp->addItem(text);
+}
 
 void FindBarBase::findNext()
 {
     searchText( false, false );
+    addToCompletion(mLastSearchStr);
 }
 
 void FindBarBase::findPrev()
 {
     searchText( true, false );
+    addToCompletion(mLastSearchStr);
 }
 
 void FindBarBase::caseSensitivityChanged(bool b)

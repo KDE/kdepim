@@ -78,6 +78,7 @@ protected:
     QPushButton *mFindNextBtn;
     QMenu *mOptionsMenu;
     QLabel *mStatus;
+    void addToCompletion(const QString &text);
 };
 
 }
