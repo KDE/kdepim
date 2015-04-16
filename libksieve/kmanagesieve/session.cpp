@@ -24,7 +24,7 @@
 #include "response.h"
 #include "sievejob_p.h"
 
-#include <qdebug.h>
+#include "kmanagersieve_debug.h"
 #include <ktcpsocket.h>
 #include <kio/sslui.h>
 #include <kio/authinfo.h>
@@ -58,7 +58,7 @@ Session::Session(QObject *parent) :
     m_pendingQuantity(-1),
     m_supportsStartTls(false)
 {
-    qDebug();
+    qCDebug(KMANAGERSIEVE_LOG);
     connect(m_socket, SIGNAL(readyRead()), SLOT(dataReceived()));
     connect(m_socket, SIGNAL(error(KTcpSocket::Error)), SLOT(socketError()));
     connect(m_socket, SIGNAL(disconnected()), SLOT(socketError()));
@@ -72,7 +72,7 @@ Session::Session(QObject *parent) :
 
 Session::~Session()
 {
-    qDebug();
+    qCDebug(KMANAGERSIEVE_LOG);
     disconnectFromHost(false);
     delete m_socket;
     delete m_sslCheck;
@@ -80,7 +80,7 @@ Session::~Session()
 
 void Session::connectToHost(const QUrl &url)
 {
-    qDebug() << url;
+    qCDebug(KMANAGERSIEVE_LOG) << url;
     if (m_socket->state() == KTcpSocket::ConnectedState || m_socket->state() == KTcpSocket::ConnectingState) {
         return;
     }
@@ -112,7 +112,7 @@ void Session::dataReceived()
         m_data += buffer;
         m_pendingQuantity -= buffer.size();
         if (m_pendingQuantity <= 0) {
-            qDebug() << "S: " << m_data.trimmed();
+            qCDebug(KMANAGERSIEVE_LOG) << "S: " << m_data.trimmed();
             processResponse(m_lastResponse, m_data);
         }
     }
@@ -125,13 +125,13 @@ void Session::dataReceived()
         if (line.isEmpty()) {
             continue; // ignore CRLF after data blocks
         }
-        qDebug() << "S: " << line;
+        qCDebug(KMANAGERSIEVE_LOG) << "S: " << line;
         Response r;
         if (!r.parseResponse(line)) {
-            qDebug() << "protocol violation!";
+            qCDebug(KMANAGERSIEVE_LOG) << "protocol violation!";
             disconnectFromHost(false);
         }
-        qDebug() << r.type() << r.key() << r.value() << r.extra() << r.quantity();
+        qCDebug(KMANAGERSIEVE_LOG) << r.type() << r.key() << r.value() << r.extra() << r.quantity();
 
         m_lastResponse = r;
         if (r.type() == Response::Quantity) {
@@ -175,7 +175,7 @@ void Session::processResponse(const KManageSieve::Response &response, const QByt
     case PostTlsCapabilities:
         if (response.type() == Response::Action) {
             if (response.operationSuccessful()) {
-                qDebug() << "Sieve server ready & awaiting authentication.";
+                qCDebug(KMANAGERSIEVE_LOG) << "Sieve server ready & awaiting authentication.";
                 if (m_state == PreTlsCapabilities) {
                     if (!allowUnencrypted() && !QSslSocket::supportsSsl()) {
                         m_errorMsg = KIO::buildErrorString(KIO::ERR_SLAVE_DEFINED, i18n("Cannot use TLS since the underlying Qt library does not support it."));
@@ -205,23 +205,23 @@ void Session::processResponse(const KManageSieve::Response &response, const QByt
                     startAuthentication();
                 }
             } else {
-                qDebug() << "Unknown action " << response.action() << ".";
+                qCDebug(KMANAGERSIEVE_LOG) << "Unknown action " << response.action() << ".";
             }
         } else if (response.key() == "IMPLEMENTATION") {
             m_implementation = QString::fromLatin1(response.value());
-            qDebug() << "Connected to Sieve server: " << response.value();
+            qCDebug(KMANAGERSIEVE_LOG) << "Connected to Sieve server: " << response.value();
         } else if (response.key() == "SASL") {
             m_saslMethods = QString::fromLatin1(response.value()).split(' ', QString::SkipEmptyParts);
-            qDebug() << "Server SASL authentication methods: " << m_saslMethods;
+            qCDebug(KMANAGERSIEVE_LOG) << "Server SASL authentication methods: " << m_saslMethods;
         } else if (response.key() == "SIEVE") {
             // Save script capabilities
             m_sieveExtensions = QString::fromLatin1(response.value()).split(' ', QString::SkipEmptyParts);
-            qDebug() << "Server script capabilities: " << m_sieveExtensions;
+            qCDebug(KMANAGERSIEVE_LOG) << "Server script capabilities: " << m_sieveExtensions;
         } else if (response.key() == "STARTTLS") {
-            qDebug() << "Server supports TLS";
+            qCDebug(KMANAGERSIEVE_LOG) << "Server supports TLS";
             m_supportsStartTls = true;
         } else {
-            qDebug() << "Unrecognised key " << response.key();
+            qCDebug(KMANAGERSIEVE_LOG) << "Unrecognised key " << response.key();
         }
         break;
     case StartTls:
@@ -244,7 +244,7 @@ void Session::processResponse(const KManageSieve::Response &response, const QByt
             m_state = None;
             sasl_dispose(&m_sasl_conn);
             if (response.operationSuccessful()) {
-                qDebug() << "Authentication complete.";
+                qCDebug(KMANAGERSIEVE_LOG) << "Authentication complete.";
                 QMetaObject::invokeMethod(this, "executeNextJob", Qt::QueuedConnection);
             } else {
                 KIO::buildErrorString(KIO::ERR_COULD_NOT_AUTHENTICATE, i18n("Authentication failed.\nMost likely the password is wrong.\nThe server responded:\n%1", QString::fromLatin1(response.action())));
@@ -267,26 +267,26 @@ void Session::processResponse(const KManageSieve::Response &response, const QByt
                 return;
             }
         }
-        qDebug() << "Unhandled response!";
+        qCDebug(KMANAGERSIEVE_LOG) << "Unhandled response!";
     }
 }
 
 void Session::socketError()
 {
-    qDebug() << m_socket->errorString();
+    qCDebug(KMANAGERSIEVE_LOG) << m_socket->errorString();
     disconnectFromHost(false);
 }
 
 void Session::scheduleJob(SieveJob *job)
 {
-    qDebug() << job;
+    qCDebug(KMANAGERSIEVE_LOG) << job;
     m_jobs.enqueue(job);
     QMetaObject::invokeMethod(this, "executeNextJob", Qt::QueuedConnection);
 }
 
 void Session::killJob(SieveJob *job)
 {
-    qDebug() << job;
+    qCDebug(KMANAGERSIEVE_LOG) << job;
     if (m_currentJob == job) {
         m_currentJob->d->killed();
         m_currentJob = Q_NULLPTR;
@@ -322,7 +322,7 @@ bool Session::requestCapabilitiesAfterStartTls() const
         const int patch = regExp.cap(3).toInt();
         const QString vendor = regExp.cap(4);
         if (major < 2 || (major == 2 && (minor < 3 || (minor == 3 && patch < 11))) || (vendor == "-kolab-nocaps")) {
-            qDebug() << "Enabling compat mode for Cyrus < 2.3.11 or Cyrus marked as \"kolab-nocaps\"";
+            qCDebug(KMANAGERSIEVE_LOG) << "Enabling compat mode for Cyrus < 2.3.11 or Cyrus marked as \"kolab-nocaps\"";
             return true;
         }
     }
@@ -340,7 +340,7 @@ void Session::sslResult(bool encrypted)
     const KSslCipher cipher = m_socket->sessionCipher();
     if (!encrypted || m_socket->sslErrors().count() > 0 || m_socket->encryptionMode() != KTcpSocket::SslClientMode
             || cipher.isNull() || cipher.usedBits() == 0) {
-        qDebug() << "Initial SSL handshake failed. cipher.isNull() is" << cipher.isNull()
+        qCDebug(KMANAGERSIEVE_LOG) << "Initial SSL handshake failed. cipher.isNull() is" << cipher.isNull()
                  << ", cipher.usedBits() is" << cipher.usedBits()
                  << ", the socket says:" <<  m_socket->errorString()
                  << "and the list of SSL errors contains"
@@ -351,7 +351,7 @@ void Session::sslResult(bool encrypted)
             return;
         }
     }
-    qDebug() << "TLS negotiation done.";
+    qCDebug(KMANAGERSIEVE_LOG) << "TLS negotiation done.";
     if (requestCapabilitiesAfterStartTls()) {
         sendData("CAPABILITY");
     }
@@ -366,7 +366,7 @@ void Session::slotSslTimeout()
 
 void Session::startSsl()
 {
-    qDebug();
+    qCDebug(KMANAGERSIEVE_LOG);
     if (!m_sslCheck) {
         m_sslCheck = new QTimer;
         m_sslCheck->setInterval(60 * 1000);
@@ -381,7 +381,7 @@ void Session::startSsl()
 
 void Session::sendData(const QByteArray &data)
 {
-    qDebug() << "C: " << data;
+    qCDebug(KMANAGERSIEVE_LOG) << "C: " << data;
     m_socket->write(data);
     m_socket->write("\r\n");
 }
@@ -421,7 +421,7 @@ void Session::startAuthentication()
         return;
     }
 
-    qDebug() << "Preferred authentication method is " << mechusing << ".";
+    qCDebug(KMANAGERSIEVE_LOG) << "Preferred authentication method is " << mechusing << ".";
 
     QByteArray authCommand = "AUTHENTICATE \"" + QByteArray(mechusing) + QByteArray("\"");
     const QByteArray challenge = QByteArray::fromRawData(out, outlen).toBase64();
@@ -444,7 +444,7 @@ QStringList Session::requestedSaslMethod() const
 
 bool Session::saslInteract(void *in)
 {
-    qDebug();
+    qCDebug(KMANAGERSIEVE_LOG);
     sasl_interact_t *interact = (sasl_interact_t *) in;
 
     KIO::AuthInfo ai;
@@ -492,11 +492,11 @@ bool Session::saslInteract(void *in)
 
     interact = (sasl_interact_t *) in;
     while (interact->id != SASL_CB_LIST_END) {
-        qDebug() << "SASL_INTERACT id: " << interact->id;
+        qCDebug(KMANAGERSIEVE_LOG) << "SASL_INTERACT id: " << interact->id;
         switch (interact->id) {
         case SASL_CB_USER:
         case SASL_CB_AUTHNAME:
-            qDebug() << "SASL_CB_[AUTHNAME|USER]: '" << m_url.userName() << "'";
+            qCDebug(KMANAGERSIEVE_LOG) << "SASL_CB_[AUTHNAME|USER]: '" << m_url.userName() << "'";
             interact->result = strdup(m_url.userName().toUtf8());
             if (interact->result) {
                 interact->len = strlen((const char *) interact->result);
@@ -505,7 +505,7 @@ bool Session::saslInteract(void *in)
             }
             break;
         case SASL_CB_PASS:
-            qDebug() << "SASL_CB_PASS: [hidden] ";
+            qCDebug(KMANAGERSIEVE_LOG) << "SASL_CB_PASS: [hidden] ";
             interact->result = strdup(m_url.password().toUtf8());
             if (interact->result) {
                 interact->len = strlen((const char *) interact->result);
@@ -545,9 +545,9 @@ bool Session::saslClientStep(const QByteArray &challenge)
         }
     } while (result == SASL_INTERACT);
 
-    qDebug() << "sasl_client_step: " << result;
+    qCDebug(KMANAGERSIEVE_LOG) << "sasl_client_step: " << result;
     if (result != SASL_CONTINUE && result != SASL_OK) {
-        qDebug() << "sasl_client_step failed with: " << result << QString::fromUtf8(sasl_errdetail(m_sasl_conn));
+        qCDebug(KMANAGERSIEVE_LOG) << "sasl_client_step failed with: " << result << QString::fromUtf8(sasl_errdetail(m_sasl_conn));
         sasl_dispose(&m_sasl_conn);
         return false;
     }

@@ -4,6 +4,7 @@ set_package_properties(Sasl2 PROPERTIES DESCRIPTION "Cyrus SASL API" URL "http:/
 include_directories(${SASL2_INCLUDE_DIR})
 
 set(kmanagesieve_LIB_SRCS
+  kmanagersieve_debug.cpp
   response.cpp
   session.cpp
   sievejob.cpp
