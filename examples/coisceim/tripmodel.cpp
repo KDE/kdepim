@@ -115,7 +115,7 @@ QVariant TripModel::data(const QModelIndex &index, int role) const
 
     if (role == Qt::DecorationRole) {
         const int iconsSize = sizeof(icons) / sizeof(*icons);
-        return KIcon(QLatin1String(*(icons + (index.row() % iconsSize))));
+        return QIcon::fromTheme(QLatin1String(*(icons + (index.row() % iconsSize))));
     }
 
     return MixedTreeModel::data(index, role);
