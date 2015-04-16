@@ -64,7 +64,9 @@ bool SearchRuleNumerical::matches(const Akonadi::Item &item) const
         QDateTime msgDateTime = msg->date()->dateTime();
         numericalMsgContents = msgDateTime.daysTo(QDateTime::currentDateTime());
         numericalValue = contents().toInt();
-        msgContents.setNum(numericalMsgContents);
+        msgContents.setNum( numericalMsgContents );
+    } else {
+        return false;
     }
     bool rc = matchesInternal(numericalValue, numericalMsgContents, msgContents);
     if (FilterLog::instance()->isLogging()) {

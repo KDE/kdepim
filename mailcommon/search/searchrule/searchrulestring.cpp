@@ -94,7 +94,7 @@ SearchRule::RequiredPart SearchRuleString::requiredPart() const
                qstricmp(f, "<body>") == 0) {
         part = CompleteMessage;
     } else {
-        qDebug() << "VERIFY IT: SearchRule::RequiredPart SearchRuleString::requiredPart() const use default \"Header\" for field :" << f;
+        //qDebug()<< "VERIFY IT: SearchRule::RequiredPart SearchRuleString::requiredPart() const use default \"Header\" for field :"<<f;
     }
 
     return part;

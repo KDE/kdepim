@@ -40,4 +40,14 @@ void SearchRuleStatusTest::shouldHaveRequirePart()
     QCOMPARE(ruleStatus.requiredPart(), MailCommon::SearchRule::Envelope);
 }
 
+void SearchRuleStatusTest::shouldMatchStatus()
+{
+
+}
+
+void SearchRuleStatusTest::shouldMatchStatus_data()
+{
+
+}
+
 QTEST_MAIN(SearchRuleStatusTest)

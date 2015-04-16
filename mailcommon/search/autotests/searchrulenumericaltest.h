@@ -28,7 +28,10 @@ public:
 
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldBeEmpty();
     void shouldHaveRequirePart();
+    void shouldMatchNumerical();
+    void shouldMatchNumerical_data();
 };
 
 #endif // SEARCHRULENUMERICALTEST_H

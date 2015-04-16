@@ -29,6 +29,9 @@ public:
 private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldRequiresPart();
+    void shouldBeEmpty();
+    void shouldMatchDate();
+    void shouldMatchDate_data();
 };
 
 #endif // SEARCHRULEDATETEST_H

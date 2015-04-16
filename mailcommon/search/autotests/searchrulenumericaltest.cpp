@@ -33,10 +33,28 @@ void SearchRuleNumericalTest::shouldHaveDefaultValue()
     QVERIFY(ruleStatus.isEmpty());
 }
 
+void SearchRuleNumericalTest::shouldBeEmpty()
+{
+    MailCommon::SearchRuleNumerical ruleStatus(QByteArray(), MailCommon::SearchRule::FuncContains, QLatin1String("foo"));
+    QVERIFY(ruleStatus.isEmpty());
+    ruleStatus =MailCommon::SearchRuleNumerical(QByteArray(), MailCommon::SearchRule::FuncContains, QLatin1String("0"));
+    QVERIFY(!ruleStatus.isEmpty());
+}
+
 void SearchRuleNumericalTest::shouldHaveRequirePart()
 {
     MailCommon::SearchRuleNumerical ruleStatus;
     QCOMPARE(ruleStatus.requiredPart(), MailCommon::SearchRule::Envelope);
+}
+
+void SearchRuleNumericalTest::shouldMatchNumerical()
+{
+
+}
+
+void SearchRuleNumericalTest::shouldMatchNumerical_data()
+{
+
 }
 
 QTEST_MAIN(SearchRuleNumericalTest)
