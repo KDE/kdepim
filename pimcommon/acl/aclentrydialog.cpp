@@ -145,9 +145,6 @@ AclEntryDialog::AclEntryDialog(QWidget *parent)
 
     d->mUserIdLineEdit->setFocus();
 
-    // Ensure the lineedit is rather wide so that email addresses can be read in it
-#pragma message("port QT5")
-    //QT5 port incrementInitialSize( QSize( 200, 0 ) );
 }
 
 AclEntryDialog::~AclEntryDialog()
