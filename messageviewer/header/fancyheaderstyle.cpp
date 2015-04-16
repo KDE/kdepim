@@ -212,6 +212,16 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
                          .arg( MessageViewer::HeaderStyleUtil::strToHtml( status) ) );
     }
 
+    //KF5 add i18n
+    if ( strategy->showHeader( QLatin1String("disposition-notification-to") ) && message->headerByType("Disposition-Notification-To") ) {
+        const QString to = message->headerByType("Disposition-Notification-To") ? message->headerByType("Disposition-Notification-To")->asUnicodeString() : QString();
+        headerStr.append(QString::fromLatin1("<tr><th>%1</th>\n"
+                                             "<td>%2</tr>\n")
+                         .arg( QLatin1String("MDN To: "))
+                         .arg( to ));
+    }
+
+
     headerStr.append( QLatin1String( "<tr><td colspan=\"2\"><div id=\"attachmentInjectionPoint\"></div></td></tr>" ) );
     headerStr.append(
                 QString::fromLatin1( "</table></td><td align=\"center\">%1</td></tr></table>\n" ).arg(userHTML) );
