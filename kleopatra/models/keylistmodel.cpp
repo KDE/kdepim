@@ -368,17 +368,17 @@ public:
     ~TableModelMixin() {}
 
     using Base::index;
-    /* reimp */ QModelIndex index(int row, int column, const QModelIndex &pidx = QModelIndex()) const
+    /* reimp */ QModelIndex index(int row, int column, const QModelIndex &pidx = QModelIndex()) const Q_DECL_OVERRIDE
     {
         return QModelIndex();//QT5 this->hasIndex( row, column, pidx ) ? this->createIndex( row, column, 0 ) : QModelIndex() ;
     }
 
 private:
-    /* reimp */ QModelIndex parent(const QModelIndex &) const
+    /* reimp */ QModelIndex parent(const QModelIndex &) const Q_DECL_OVERRIDE
     {
         return QModelIndex();
     }
-    /* reimp */ bool hasChildren(const QModelIndex &pidx) const
+    /* reimp */ bool hasChildren(const QModelIndex &pidx) const Q_DECL_OVERRIDE
     {
         return (pidx.model() == this || !pidx.isValid()) && this->rowCount(pidx) > 0 && this->columnCount(pidx) > 0 ;
     }
