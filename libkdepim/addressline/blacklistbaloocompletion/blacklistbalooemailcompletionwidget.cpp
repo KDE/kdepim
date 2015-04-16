@@ -102,7 +102,7 @@ BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget
     mainLayout->addLayout(excludeDomainLayout);
 
     //kf5 add i18n
-    QLabel *excludeDomainLabel = new QLabel(QLatin1String("Exclude domain name:"));
+    QLabel *excludeDomainLabel = new QLabel(QLatin1String("Exclude domain names:"));
     excludeDomainLabel->setObjectName(QLatin1String("domain_label"));
     excludeDomainLayout->addWidget(excludeDomainLabel);
 
