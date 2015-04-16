@@ -58,12 +58,27 @@ QHash<QString, bool> BlackListBalooEmailList::blackListItemChanged() const
     return result;
 }
 
+void BlackListBalooEmailList::setExcludeDomain(const QStringList &domain)
+{
+    mExcludeDomain = domain;
+}
+
 void BlackListBalooEmailList::slotEmailFound(const QStringList &list)
 {
     mFirstResult = true;
     clear();
     QStringList emailsAdded;
     Q_FOREACH(const QString & mail, list) {
+        bool excludeDomain = false;
+        Q_FOREACH (const QString &domain, mExcludeDomain) {
+            if (mail.endsWith(domain)) {
+                excludeDomain = true;
+                break;
+            }
+        }
+        if (excludeDomain) {
+            continue;
+        }
         if (!emailsAdded.contains(mail)) {
             BlackListBalooEmailListItem *item = new BlackListBalooEmailListItem(this);
             if (mEmailBlackList.contains(mail)) {
