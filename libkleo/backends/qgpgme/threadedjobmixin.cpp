@@ -67,9 +67,13 @@ QString _detail::audit_log_as_html(Context *ctx, GpgME::Error &err)
 static QList<QByteArray> from_sl(const QStringList &sl)
 {
     QList<QByteArray> result;
-#if 0 //QT5
+    Q_FOREACH(const QString &str, sl) {
+        result.append(str.toUtf8());
+    }
+
+#if 0
     std::transform(sl.begin(), sl.end(), std::back_inserter(result),
-                   mem_fn(&QString::toUtf8));
+                   mem_fn( static_cast<QByteArray()const>(&QString::toUtf8)));
 #endif
     return result;
 }
