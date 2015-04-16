@@ -47,14 +47,31 @@ void SearchRuleNumericalTest::shouldHaveRequirePart()
     QCOMPARE(ruleStatus.requiredPart(), MailCommon::SearchRule::Envelope);
 }
 
-void SearchRuleNumericalTest::shouldMatchNumerical()
+void SearchRuleNumericalTest::shouldMatchNumericalsize_data()
 {
-
+#if 0
+    QTest::addColumn<MailCommon::SearchRule::Function>("function");
+    QTest::addColumn<long>("value");
+    QTest::addColumn<long>("matchvalue");
+    QTest::addColumn<bool>("match");
+#endif
 }
 
-void SearchRuleNumericalTest::shouldMatchNumerical_data()
+void SearchRuleNumericalTest::shouldMatchNumericalsize()
 {
-
+#if 0
+    QFETCH(MailCommon::SearchRule::Function, function);
+    QFETCH(long, value);
+    QFETCH(long, matchvalue);
+    QFETCH(bool, match);
+    MailCommon::SearchRuleNumerical searchrule("<size>", function, QString::number(value));
+    KMime::Message::Ptr msgPtr = KMime::Message::Ptr(new KMime::Message());
+    msgPtr->date(true)->setDateTime(KDateTime(maildate));
+    Akonadi::Item item;
+    item.setPayload<KMime::Message::Ptr>(msgPtr);
+    QCOMPARE(searchrule.matches(item), match);
+#endif
 }
+
 
 QTEST_KDEMAIN(SearchRuleNumericalTest, GUI)
