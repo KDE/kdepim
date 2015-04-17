@@ -66,10 +66,10 @@ void Viewer::initialize()
 {
     connect(d_ptr, SIGNAL(replaceMsgByUnencryptedVersion()),
             SIGNAL(replaceMsgByUnencryptedVersion()));
-    connect(d_ptr, SIGNAL(popupMenu(Akonadi::Item,KUrl,KUrl,QPoint)),
-            SIGNAL(popupMenu(Akonadi::Item,KUrl,KUrl,QPoint)));
-    connect(d_ptr, SIGNAL(urlClicked(Akonadi::Item,KUrl)),
-            SIGNAL(urlClicked(Akonadi::Item,KUrl)));
+    connect(d_ptr, SIGNAL(popupMenu(Akonadi::Item,QUrl,QUrl,QPoint)),
+            SIGNAL(popupMenu(Akonadi::Item,QUrl,QUrl,QPoint)));
+    connect(d_ptr, SIGNAL(urlClicked(Akonadi::Item,QUrl)),
+            SIGNAL(urlClicked(Akonadi::Item,QUrl)));
     connect(d_ptr, &ViewerPrivate::requestConfigSync, this, &Viewer::requestConfigSync);
     connect(d_ptr, &ViewerPrivate::makeResourceOnline, this, &Viewer::makeResourceOnline);
     connect(d_ptr, SIGNAL(showReader(KMime::Content*,bool,QString)),
@@ -496,13 +496,13 @@ void Viewer::writeConfig(bool force)
     d->writeConfig(force);
 }
 
-KUrl Viewer::urlClicked() const
+QUrl Viewer::urlClicked() const
 {
     Q_D(const Viewer);
     return d->mClickedUrl;
 }
 
-KUrl Viewer::imageUrlClicked() const
+QUrl Viewer::imageUrlClicked() const
 {
     Q_D(const Viewer);
     return d->mImageUrl;

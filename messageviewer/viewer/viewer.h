@@ -296,8 +296,8 @@ public:
                                    HeaderStrategy *strategy);
     void writeConfig(bool withSync = true);
 
-    KUrl urlClicked() const;
-    KUrl imageUrlClicked() const;
+    QUrl urlClicked() const;
+    QUrl imageUrlClicked() const;
 
     void readConfig();
 
@@ -363,13 +363,13 @@ Q_SIGNALS:
     void replaceMsgByUnencryptedVersion();
 
     /** The user presses the right mouse button. 'url' may be 0. */
-    void popupMenu(const Akonadi::Item &msg, const KUrl &url, const KUrl &imageUrl, const QPoint &mousePos);
+    void popupMenu(const Akonadi::Item &msg, const QUrl &url, const QUrl &imageUrl, const QPoint &mousePos);
 
     /**
     * The message viewer handles some types of urls itself, most notably http(s)
     * and ftp(s). When it can't handle the url it will emit this signal.
     */
-    void urlClicked(const Akonadi::Item &, const KUrl &);
+    void urlClicked(const Akonadi::Item &, const QUrl &);
 
     void requestConfigSync();
 
