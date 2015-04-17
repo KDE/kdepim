@@ -22,6 +22,7 @@
 #include <QDebug>
 #include <QPainter>
 #include <KGlobalSettings>
+#include <KPIMUtils/Email>
 using namespace KPIM;
 
 BlackListBalooEmailList::BlackListBalooEmailList(QWidget *parent)
@@ -70,8 +71,11 @@ void BlackListBalooEmailList::slotEmailFound(const QStringList &list)
     QStringList emailsAdded;
     Q_FOREACH(const QString & mail, list) {
         bool excludeDomain = false;
+        QString email, name;
+        KPIMUtils::extractEmailAddressAndName( mail, email, name );
+
         Q_FOREACH (const QString &domain, mExcludeDomain) {
-            if (mail.endsWith(domain)) {
+            if (email.endsWith(domain)) {
                 excludeDomain = true;
                 break;
             }
