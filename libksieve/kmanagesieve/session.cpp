@@ -54,8 +54,8 @@ Session::Session(QObject *parent) :
     m_sasl_client_interact(Q_NULLPTR),
     m_currentJob(Q_NULLPTR),
     m_sslCheck(Q_NULLPTR),
-    m_state(None),
     m_pendingQuantity(-1),
+    m_state(None),
     m_supportsStartTls(false)
 {
     qCDebug(KMANAGERSIEVE_LOG);

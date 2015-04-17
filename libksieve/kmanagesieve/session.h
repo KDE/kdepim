@@ -97,11 +97,11 @@ private:
         Authenticating
     };
     QTimer *m_sslCheck;
-    State m_state;
     Response m_lastResponse;
     QByteArray m_data;
     QString m_errorMsg;
     qint64 m_pendingQuantity;
+    State m_state;
     bool m_supportsStartTls;
 };
 

@@ -34,12 +34,10 @@
 
 using namespace KPIM;
 
-MultiplyingLineView::MultiplyingLineView(MultiplyingLineFactory *factory, MultiplyingLineEditor *parent)
-    : QScrollArea(parent), mCurDelLine(Q_NULLPTR),
-      mLineHeight(0), mFirstColumnWidth(0),
-      mModified(false),
-      mPage(new QWidget(this)), mTopLayout(new QVBoxLayout(this)),
-      mMultiplyingLineFactory(factory), mAutoResize(false), mDynamicSizeHint(true)
+MultiplyingLineView::MultiplyingLineView( MultiplyingLineFactory* factory, MultiplyingLineEditor *parent )
+    : QScrollArea( parent ), mCurDelLine( Q_NULLPTR ), mPage( new QWidget( this ) ), mTopLayout( new QVBoxLayout( this ) ), mMultiplyingLineFactory( factory ),
+      mLineHeight( 0 ), mFirstColumnWidth( 0 ),
+      mAutoResize( false ), mDynamicSizeHint( true ), mModified( false )
 {
     setWidgetResizable(true);
     setFrameStyle(QFrame::NoFrame);

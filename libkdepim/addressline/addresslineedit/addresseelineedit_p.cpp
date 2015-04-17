@@ -91,8 +91,8 @@ class SourceWithWeight
 {
 public:
     int weight;           // the weight of the source
-    QString sourceName;   // the name of the source, e.g. "LDAP Server"
     int index;            // index into s_static->completionSources
+    QString sourceName;   // the name of the source, e.g. "LDAP Server"
 
     bool operator< (const SourceWithWeight &other) const
     {

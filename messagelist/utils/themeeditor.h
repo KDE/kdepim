@@ -192,8 +192,8 @@ protected:
     void mouseMoveEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
 
 private:
-    Core::Theme::ContentItem::Type mType;
     QPoint mMousePressPoint;
+    Core::Theme::ContentItem::Type mType;
 };
 
 class ThemeEditor : public OptionSetEditor
