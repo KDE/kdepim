@@ -51,18 +51,18 @@ OpenComposerJob::~OpenComposerJob()
 void OpenComposerJob::start()
 {
     mSuccess = false;
-    if (QDBusConnection::sessionBus().interface()->isServiceRegistered(QLatin1String("org.kde.kmail"))) {
+    if (QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral("org.kde.kmail"))) {
         processMail();
     }
     //Check if Kontact is already running and if not ...
-    int result = KDBusServiceStarter::self()->findServiceFor(QLatin1String("DBUS/Mailer"), QString(),
+    int result = KDBusServiceStarter::self()->findServiceFor(QStringLiteral("DBUS/Mailer"), QString(),
                  &mError, &mDBusService);
     if (result != 0) {
         // ... start Kontact
-        result = KDBusServiceStarter::self()->startServiceFor(QLatin1String("DBUS/Mailer"), QString(),
+        result = KDBusServiceStarter::self()->startServiceFor(QStringLiteral("DBUS/Mailer"), QString(),
                  &mError, &mDBusService);
         if (result != 0) {
-            const bool ok = QProcess::startDetached(QLatin1String("kontact"));
+            const bool ok = QProcess::startDetached(QStringLiteral("kontact"));
             if (!ok) {
                 setError(KJob::UserDefinedError);
                 setErrorText(i18nc("errormessage: can't create a kontact process", "Can't create composer: Failed to start kontact."));
@@ -87,7 +87,7 @@ void OpenComposerJob::timeout()
 void OpenComposerJob::slotServiceOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner)
 {
     Q_UNUSED(oldOwner);
-    if (name == QLatin1String("org.kde.kmail") && !newOwner.isEmpty()) {
+    if (name == QStringLiteral("org.kde.kmail") && !newOwner.isEmpty()) {
         processMail();
     }
 }
@@ -124,7 +124,7 @@ void OpenComposerJob::processMail()
         QByteArray attachCharset = attachment->contentType()->charset();
 
         QByteArray attachParamAttr = "method";
-        QString attachParamValue = attachment->contentType()->parameter(QLatin1String("method"));
+        QString attachParamValue = attachment->contentType()->parameter(QStringLiteral("method"));
         QByteArray attachData = attachment->encodedBody();
 
         messages << mTo << mCc << mBcc << subject << body
@@ -132,9 +132,9 @@ void OpenComposerJob::processMail()
                  << attachParamAttr << attachParamValue << attachContDisp << attachCharset
                  << identity;
     }
-    QDBusInterface kmailObj(QLatin1String("org.kde.kmail"), QLatin1String("/KMail"), QLatin1String("org.kde.kmail.kmail"));
+    QDBusInterface kmailObj(QStringLiteral("org.kde.kmail"), QStringLiteral("/KMail"), QStringLiteral("org.kde.kmail.kmail"));
 
-    QDBusReply<int> composerDbusPath = kmailObj.callWithArgumentList(QDBus::AutoDetect, QLatin1String("openComposer"), messages);
+    QDBusReply<int> composerDbusPath = kmailObj.callWithArgumentList(QDBus::AutoDetect, QStringLiteral("openComposer"), messages);
 
     if (!composerDbusPath.isValid()) {
         setError(KJob::UserDefinedError);

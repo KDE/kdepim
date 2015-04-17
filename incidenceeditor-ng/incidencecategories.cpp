@@ -109,7 +109,7 @@ void IncidenceCategories::setCategories(const QStringList &categories)
 {
     mSelectedCategories = categories;
 #ifdef KDEPIM_MOBILE_UI
-    mUi->mCategoriesLabel->setText(mSelectedCategories.join(QLatin1String(",")));
+    mUi->mCategoriesLabel->setText(mSelectedCategories.join(QStringLiteral(",")));
 #else
     mUi->mTagWidget->setSelection(categories);
 #endif

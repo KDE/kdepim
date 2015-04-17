@@ -66,7 +66,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info, QWidget *paren
     QLabel *folderLabel = new QLabel(i18n("&Folder:"), mainWidget);
     mainLayout->addWidget(folderLabel, row, 0);
     mFolderRequester = new MailCommon::FolderRequester(mainWidget);
-    mFolderRequester->setObjectName(QLatin1String("folder_requester"));
+    mFolderRequester->setObjectName(QStringLiteral("folder_requester"));
     mFolderRequester->setMustBeReadWrite(false);
     mFolderRequester->setNotAllowToCreateNewFolder(true);
     connect(mFolderRequester, &MailCommon::FolderRequester::folderChanged, this, &AddArchiveMailDialog::slotFolderChanged);
@@ -78,7 +78,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info, QWidget *paren
     ++row;
 
     QLabel *formatLabel = new QLabel(i18n("F&ormat:"), mainWidget);
-    formatLabel->setObjectName(QLatin1String("label_format"));
+    formatLabel->setObjectName(QStringLiteral("label_format"));
     mainLayout->addWidget(formatLabel, row, 0);
     mFormatComboBox = new FormatComboBox(mainWidget);
     formatLabel->setBuddy(mFormatComboBox);
@@ -88,14 +88,14 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info, QWidget *paren
     ++row;
 
     mRecursiveCheckBox = new QCheckBox(i18n("Archive all subfolders"), mainWidget);
-    mRecursiveCheckBox->setObjectName(QLatin1String("recursive_checkbox"));
+    mRecursiveCheckBox->setObjectName(QStringLiteral("recursive_checkbox"));
     mainLayout->addWidget(mRecursiveCheckBox, row, 0, 1, 2, Qt::AlignLeft);
     mRecursiveCheckBox->setChecked(true);
     ++row;
 
     QLabel *pathLabel = new QLabel(i18n("Path:"), mainWidget);
     mainLayout->addWidget(pathLabel, row, 0);
-    pathLabel->setObjectName(QLatin1String("path_label"));
+    pathLabel->setObjectName(QStringLiteral("path_label"));
     mPath = new KUrlRequester(mainWidget);
     connect(mPath, &KUrlRequester::textChanged, this, &AddArchiveMailDialog::slotUpdateOkButton);
     mPath->setMode(KFile::Directory);
@@ -103,7 +103,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info, QWidget *paren
     ++row;
 
     QLabel *dateLabel = new QLabel(i18n("Backup each:"), mainWidget);
-    dateLabel->setObjectName(QLatin1String("date_label"));
+    dateLabel->setObjectName(QStringLiteral("date_label"));
     mainLayout->addWidget(dateLabel, row, 0);
 
     QHBoxLayout *hlayout = new QHBoxLayout;

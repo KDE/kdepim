@@ -50,7 +50,7 @@ DebugWidget::DebugWidget(QWidget *parent)
     }
     mDebugInterface = new DebugInterface(service, "/debug", QDBusConnection::sessionBus(), this);
     QCheckBox *cb = new QCheckBox(i18n("Enable debugger"), this);
-    cb->setChecked(mDebugInterface->isValid() && mDebugInterface->tracer().value() == QLatin1String("dbus"));
+    cb->setChecked(mDebugInterface->isValid() && mDebugInterface->tracer().value() == QStringLiteral("dbus"));
     connect(cb, &QCheckBox::toggled, this, &DebugWidget::enableDebugger);
     layout->addWidget(cb);
 
@@ -205,7 +205,7 @@ void DebugWidget::errorEmitted(const QString &componentName, const QString &msg)
 
 void DebugWidget::enableDebugger(bool enable)
 {
-    mDebugInterface->setTracer(enable ? QLatin1String("dbus") : QLatin1String("null"));
+    mDebugInterface->setTracer(enable ? QStringLiteral("dbus") : QStringLiteral("null"));
 }
 
 void DebugWidget::saveRichText()

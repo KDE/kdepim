@@ -128,7 +128,7 @@ void TransactionItemView::slotLayoutFirstItem()
      be the first item very shortly. That's the one we want to remove the
      hline for.
     */
-    TransactionItem *ti = mBigBox->findChild<KPIM::TransactionItem *>(QLatin1String("TransactionItem"));
+    TransactionItem *ti = mBigBox->findChild<KPIM::TransactionItem *>(QStringLiteral("TransactionItem"));
     if (ti) {
         ti->hideHLine();
     }
@@ -171,7 +171,7 @@ TransactionItem::TransactionItem(QWidget *parent,
     h->layout()->addWidget(mProgress);
 
     if (item->canBeCanceled()) {
-        mCancelButton = new QPushButton(SmallIcon(QLatin1String("dialog-cancel")), QString(), h);
+        mCancelButton = new QPushButton(SmallIcon(QStringLiteral("dialog-cancel")), QString(), h);
         hHBoxLayout->addWidget(mCancelButton);
         mCancelButton->setToolTip(i18n("Cancel this operation."));
         connect(mCancelButton, SIGNAL(clicked()),

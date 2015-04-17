@@ -997,7 +997,7 @@ void Agenda::performItemAction(const QPoint &pos)
                 KMessageBox::information(this,
                                          i18n("Unable to lock item for modification. "
                                               "You cannot make any changes."),
-                                         i18n("Locking Failed"), QLatin1String("AgendaLockingFailed"));
+                                         i18n("Locking Failed"), QStringLiteral("AgendaLockingFailed"));
                 d->mScrollUpTimer.stop();
                 d->mScrollDownTimer.stop();
                 d->mActionItem->resetMove();

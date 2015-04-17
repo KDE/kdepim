@@ -47,9 +47,9 @@ void GrantleeThemeTest::shouldHaveDefaultValue()
 
 void GrantleeThemeTest::shouldInvalidWhenPathIsNotValid()
 {
-    const QString themePath(QLatin1String("/foo"));
-    const QString dirName(QLatin1String("name"));
-    const QString defaultDesktopFileName(QLatin1String("bla"));
+    const QString themePath(QStringLiteral("/foo"));
+    const QString dirName(QStringLiteral("name"));
+    const QString defaultDesktopFileName(QStringLiteral("bla"));
     GrantleeTheme::Theme theme(themePath, dirName, defaultDesktopFileName);
     QVERIFY(theme.description().isEmpty());
     QVERIFY(theme.themeFilename().isEmpty());
@@ -69,11 +69,11 @@ void GrantleeThemeTest::shouldLoadTheme_data()
     QTest::addColumn<bool>("isvalid");
     QTest::addColumn<QStringList>("displayExtraVariables");
 
-    QTest::newRow("valid theme") <<  QString(QLatin1String("valid")) << QString(QLatin1String("filename.testdesktop")) << true << QStringList();
-    QTest::newRow("not existing theme") <<  QString(QLatin1String("notvalid")) << QString(QLatin1String("filename.testdesktop")) << false << QStringList();
+    QTest::newRow("valid theme") <<  QString(QStringLiteral("valid")) << QString(QStringLiteral("filename.testdesktop")) << true << QStringList();
+    QTest::newRow("not existing theme") <<  QString(QStringLiteral("notvalid")) << QString(QStringLiteral("filename.testdesktop")) << false << QStringList();
     QStringList extraVariables;
-    extraVariables << QLatin1String("foo") << QLatin1String("bla");
-    QTest::newRow("valid with extra variable") <<  QString(QLatin1String("valid-with-extravariables")) << QString(QLatin1String("filename.testdesktop")) << true << extraVariables;
+    extraVariables << QStringLiteral("foo") << QStringLiteral("bla");
+    QTest::newRow("valid with extra variable") <<  QString(QStringLiteral("valid-with-extravariables")) << QString(QStringLiteral("filename.testdesktop")) << true << extraVariables;
 }
 
 void GrantleeThemeTest::shouldLoadTheme()
@@ -83,7 +83,7 @@ void GrantleeThemeTest::shouldLoadTheme()
     QFETCH(bool, isvalid);
     QFETCH(QStringList, displayExtraVariables);
 
-    GrantleeTheme::Theme theme(QLatin1String(GRANTLEETHEME_DATA_DIR) + QDir::separator() + dirname, dirname, filename);
+    GrantleeTheme::Theme theme(QStringLiteral(GRANTLEETHEME_DATA_DIR) + QDir::separator() + dirname, dirname, filename);
     QCOMPARE(theme.isValid(), isvalid);
     QCOMPARE(theme.displayExtraVariables(), displayExtraVariables);
     QCOMPARE(theme.dirName(), dirname);

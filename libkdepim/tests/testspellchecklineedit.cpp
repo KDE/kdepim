@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
     QWidget *w = new QWidget;
     QVBoxLayout *vbox = new QVBoxLayout(w);
 
-    KPIM::SpellCheckLineEdit *spellCheckLineEdit = new KPIM::SpellCheckLineEdit(w, QLatin1String("testspecklineeditrc"));
+    KPIM::SpellCheckLineEdit *spellCheckLineEdit = new KPIM::SpellCheckLineEdit(w, QStringLiteral("testspecklineeditrc"));
     vbox->addWidget(spellCheckLineEdit);
     vbox->addStretch();
 

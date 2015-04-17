@@ -81,8 +81,8 @@ void IndividualMessageQueueJob::start()
 void IndividualMessageQueueJob::startQueueJob(const QStringList &to, const QStringList &cc)
 {
     KMime::Message::Ptr msg(message());
-    msg->to()->fromUnicodeString(to.join(QLatin1String(", ")), "utf-8");
-    msg->cc()->fromUnicodeString(cc.join(QLatin1String(", ")), "utf-8");
+    msg->to()->fromUnicodeString(to.join(QStringLiteral(", ")), "utf-8");
+    msg->cc()->fromUnicodeString(cc.join(QStringLiteral(", ")), "utf-8");
     msg->assemble();
 
     mQueueJob->setMessage(msg);
@@ -100,7 +100,7 @@ void IndividualMessageQueueJob::startQueueJob(const QStringList &to, const QStri
 
 void IndividualMessageQueueJob::startComposerJob(const QStringList &to, const QStringList &cc)
 {
-    mComposerJob = new OpenComposerJob(this, to.join(QLatin1String(", ")), cc.join(QLatin1String(", ")), QString(), message(), mIdentity);
+    mComposerJob = new OpenComposerJob(this, to.join(QStringLiteral(", ")), cc.join(QStringLiteral(", ")), QString(), message(), mIdentity);
     connect(mComposerJob, &OpenComposerJob::finished, this, &IndividualMessageQueueJob::handleJobFinished);
     mComposerJob->start();
 }
