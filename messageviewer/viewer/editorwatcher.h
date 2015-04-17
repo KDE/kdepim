@@ -79,12 +79,11 @@ private:
     QTimer mTimer;
     QTime mEditTime;
 
-    int mInotifyFd;
-    int mInotifyWatch;
-
     KProcess *mEditor;
     QWidget *mParentWidget;
 
+    int mInotifyFd;
+    int mInotifyWatch;
     OpenWithOption mOpenWithOption;
     bool mHaveInotify;
     bool mFileOpen;
