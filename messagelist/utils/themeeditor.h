@@ -194,8 +194,8 @@ protected:
     void mouseMoveEvent( QMouseEvent * e );
 
 private:
-    Core::Theme::ContentItem::Type mType;
     QPoint mMousePressPoint;
+    Core::Theme::ContentItem::Type mType;
 };
 
 

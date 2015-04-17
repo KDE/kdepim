@@ -57,12 +57,12 @@ class SieveJob::Private
     KUrl mUrl;
     QString mScript;
     QString mActiveScriptName;
-    Existence mFileExists;
     QStack<Command> mCommands;
 
     // List of Sieve scripts on the server, used by @ref list()
     QStringList mAvailableScripts;
 
+    Existence mFileExists;
     bool mInteractive;
 
     static QHash<KUrl, QPointer<Session> > m_sessionPool;

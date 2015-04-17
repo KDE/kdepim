@@ -54,8 +54,8 @@ Session::Session( QObject *parent ) :
     m_sasl_client_interact( 0 ),
     m_currentJob( 0 ),
     m_sslCheck(0),
-    m_state( None ),
     m_pendingQuantity( -1 ),
+    m_state( None ),
     m_supportsStartTls( false )
 {
     kDebug();

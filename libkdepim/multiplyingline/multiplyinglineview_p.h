@@ -126,15 +126,15 @@ protected slots:
 private:
     QList<MultiplyingLine*> mLines;
     QPointer<MultiplyingLine> mCurDelLine;
-    int mLineHeight;
-    int mFirstColumnWidth;
-    bool mModified;
-    KGlobalSettings::Completion mCompletionMode;
     QWidget *mPage;
     QLayout *mTopLayout;
     MultiplyingLineFactory *mMultiplyingLineFactory;
+    int mLineHeight;
+    int mFirstColumnWidth;
+    KGlobalSettings::Completion mCompletionMode;
     bool mAutoResize;
     bool mDynamicSizeHint;
+    bool mModified;
 };
 }
 

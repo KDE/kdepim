@@ -242,11 +242,11 @@ public:
   size_t mSize;                               ///< The size of the message in bytes
   QString mSender;                            ///< The sender of the message (or group sender)
   QString mReceiver;                          ///< The receiver of the message (or group receiver)
-  int mThisItemIndexGuess;                    ///< The guess for the index in the parent's child list
   QString mSubject;                           ///< The subject of the message (or group subject)
-  Akonadi::MessageStatus mStatus;             ///< The status of the message (may be extended to groups in the future)
   qint64 mItemId;                             ///< The Akonadi item id
   qint64 mParentCollectionId;                 ///< The Akonadi ID of collection that this particular item comes from (can be virtual collection)
+  Akonadi::MessageStatus mStatus;             ///< The status of the message (may be extended to groups in the future)
+  int mThisItemIndexGuess;                    ///< The guess for the index in the parent's child list
   Item::Type mType : 4;                       ///< The type of this item
   Item::InitialExpandStatus mInitialExpandStatus : 4; ///< The expand status we have to honor when we attach to the viewable root
   bool mIsViewable : 1;                       ///< Is this item attacched to the viewable root ?

@@ -35,11 +35,10 @@
 using namespace KPIM;
 
 MultiplyingLineView::MultiplyingLineView( MultiplyingLineFactory* factory, MultiplyingLineEditor *parent )
-    : QScrollArea( parent ), mCurDelLine( 0 ),
+    : QScrollArea( parent ), mCurDelLine( 0 ), mPage( new QWidget( this ) ), mTopLayout( new QVBoxLayout( this ) ), mMultiplyingLineFactory( factory ),
       mLineHeight( 0 ), mFirstColumnWidth( 0 ),
-      mModified( false ), mCompletionMode( KGlobalSettings::completionMode() ),
-      mPage( new QWidget( this ) ), mTopLayout( new QVBoxLayout( this ) ),
-      mMultiplyingLineFactory( factory ), mAutoResize( false ), mDynamicSizeHint( true )
+      mCompletionMode( KGlobalSettings::completionMode() ),
+      mAutoResize( false ), mDynamicSizeHint( true ), mModified( false )
 {
     setWidgetResizable( true );
     setFrameStyle( QFrame::NoFrame );
