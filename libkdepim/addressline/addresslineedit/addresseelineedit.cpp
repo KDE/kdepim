@@ -61,14 +61,14 @@ using namespace KPIM;
 
 inline bool itemIsHeader(const QListWidgetItem *item)
 {
-    return item && !item->text().startsWith(QLatin1String("     "));
+    return item && !item->text().startsWith(QStringLiteral("     "));
 }
 
 // needs to be unique, but the actual name doesn't matter much
 static QString newLineEditObjectName()
 {
     static int s_count = 0;
-    QString name(QLatin1String("KPIM::AddresseeLineEdit"));
+    QString name(QStringLiteral("KPIM::AddresseeLineEdit"));
     if (s_count++) {
         name += QLatin1Char('-');
         name += QString::number(s_count);
@@ -173,23 +173,23 @@ void AddresseeLineEdit::insert(const QString &t)
     }
 
     // remove newlines in the to-be-pasted string
-    QStringList lines = newText.split(QRegExp(QLatin1String("\r?\n")), QString::SkipEmptyParts);
+    QStringList lines = newText.split(QRegExp(QStringLiteral("\r?\n")), QString::SkipEmptyParts);
     QStringList::iterator end(lines.end());
     for (QStringList::iterator it = lines.begin(); it != end; ++it) {
         // remove trailing commas and whitespace
-        (*it).remove(QRegExp(QLatin1String(",?\\s*$")));
+        (*it).remove(QRegExp(QStringLiteral(",?\\s*$")));
     }
-    newText = lines.join(QLatin1String(", "));
+    newText = lines.join(QStringLiteral(", "));
 
-    if (newText.startsWith(QLatin1String("mailto:"))) {
+    if (newText.startsWith(QStringLiteral("mailto:"))) {
         const QUrl url(newText);
         newText = url.path();
-    } else if (newText.indexOf(QLatin1String(" at ")) != -1) {
+    } else if (newText.indexOf(QStringLiteral(" at ")) != -1) {
         // Anti-spam stuff
-        newText.replace(QLatin1String(" at "), QLatin1String("@"));
-        newText.replace(QLatin1String(" dot "), QLatin1String("."));
-    } else if (newText.indexOf(QLatin1String("(at)")) != -1) {
-        newText.replace(QRegExp(QLatin1String("\\s*\\(at\\)\\s*")), QLatin1String("@"));
+        newText.replace(QStringLiteral(" at "), QStringLiteral("@"));
+        newText.replace(QStringLiteral(" dot "), QStringLiteral("."));
+    } else if (newText.indexOf(QStringLiteral("(at)")) != -1) {
+        newText.replace(QRegExp(QStringLiteral("\\s*\\(at\\)\\s*")), QStringLiteral("@"));
     }
 
     QString contents = text();
@@ -214,7 +214,7 @@ void AddresseeLineEdit::insert(const QString &t)
             --eot;
         }
         contents.truncate(eot);
-        contents += QLatin1String(", ");
+        contents += QStringLiteral(", ");
         pos = eot + 2;
     }
 
@@ -278,13 +278,13 @@ void AddresseeLineEdit::dropEvent(QDropEvent *event)
             bool mailtoURL = false;
             // append the mailto URLs
             foreach (const QUrl &url, uriList) {
-                if (url.scheme() == QLatin1String("mailto")) {
+                if (url.scheme() == QStringLiteral("mailto")) {
                     mailtoURL = true;
                     QString address;
                     address = QUrl::fromPercentEncoding(url.path().toLatin1());
                     address = KMime::decodeRFC2047String(address.toLatin1());
                     if (!contents.isEmpty()) {
-                        contents.append(QLatin1String(", "));
+                        contents.append(QStringLiteral(", "));
                     }
                     contents.append(address);
                 }
@@ -365,9 +365,9 @@ void AddresseeLineEdit::addContact(const KContacts::Addressee &addr, int weight,
         QString appendix;
 
         if (!append.isEmpty()) {
-            appendix = QLatin1String(" (%1)");
-            append = append.replace(QLatin1String("("), QLatin1String("["));
-            append = append.replace(QLatin1String(")"), QLatin1String("]"));
+            appendix = QStringLiteral(" (%1)");
+            append = append.replace(QStringLiteral("("), QStringLiteral("["));
+            append = append.replace(QStringLiteral(")"), QStringLiteral("]"));
             appendix = appendix.arg(append);
         }
 

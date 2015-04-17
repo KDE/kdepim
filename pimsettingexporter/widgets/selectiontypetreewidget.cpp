@@ -271,7 +271,7 @@ void SelectionTypeTreeWidget::loadFileName(const QString &fileName)
 void SelectionTypeTreeWidget::loadTemplate(const QString &fileName)
 {
     if (fileName.isEmpty()) {
-        QPointer<QFileDialog> dlg = new QFileDialog(this, QString(), QString(), QLatin1String("*.xml"));
+        QPointer<QFileDialog> dlg = new QFileDialog(this, QString(), QString(), QStringLiteral("*.xml"));
         dlg->setFileMode(QFileDialog::ExistingFile);
         if (dlg->exec()) {
             const QStringList file = dlg->selectedFiles();
@@ -288,7 +288,7 @@ void SelectionTypeTreeWidget::saveAsTemplate()
     TemplateSelection templateSelection;
     templateSelection.createTemplate(storedType());
     const QString templateStr = templateSelection.document().toString(2);
-    const QString filter(QLatin1String("*.xml"));
+    const QString filter(QStringLiteral("*.xml"));
     PimCommon::Util::saveTextAs(templateStr, filter, this);
 }
 

@@ -88,7 +88,7 @@ public:
                 mParentWidget,
                 text,
                 QString(),
-                QLatin1String("alreadyInAddressBook"));
+                QStringLiteral("alreadyInAddressBook"));
             q->setError(UserDefinedError);
             q->emitResult();
             return;
@@ -141,7 +141,7 @@ public:
                 dlg.setWindowTitle(i18n("Add Address Book"));
                 dlg.agentFilterProxyModel()->addMimeTypeFilter(KContacts::Addressee::mimeType());
                 dlg.agentFilterProxyModel()->addMimeTypeFilter(KContacts::ContactGroup::mimeType());
-                dlg.agentFilterProxyModel()->addCapabilityFilter(QLatin1String("Resource"));
+                dlg.agentFilterProxyModel()->addCapabilityFilter(QStringLiteral("Resource"));
 
                 if (dlg.exec()) {
                     const Akonadi::AgentType agentType = dlg.agentType();
@@ -231,7 +231,7 @@ public:
                     QString(),
                     KStandardGuiItem::yes(),
                     KStandardGuiItem::no(),
-                    QLatin1String("addedtokabc")) == KMessageBox::Yes) {
+                    QStringLiteral("addedtokabc")) == KMessageBox::Yes) {
             QPointer<Akonadi::ContactEditorDialog> dlg =
                 new Akonadi::ContactEditorDialog(Akonadi::ContactEditorDialog::EditMode,
                                                  mParentWidget);

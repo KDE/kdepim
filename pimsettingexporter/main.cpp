@@ -31,25 +31,25 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    Kdelibs4ConfigMigrator migrate(QLatin1String("pimsettingexporter"));
-    migrate.setConfigFiles(QStringList() << QLatin1String("pimsettingexporterrc"));
-    migrate.setUiFiles(QStringList() << QLatin1String("pimsettingexporter.rc"));
+    Kdelibs4ConfigMigrator migrate(QStringLiteral("pimsettingexporter"));
+    migrate.setConfigFiles(QStringList() << QStringLiteral("pimsettingexporterrc"));
+    migrate.setUiFiles(QStringList() << QStringLiteral("pimsettingexporter.rc"));
     migrate.migrate();
     KLocalizedString::setApplicationDomain("pimsettingexporter");
 
-    KAboutData aboutData(QLatin1String("pimsettingexporter"), i18n("PIM Setting Exporter"),
-                         QLatin1String(KDEPIM_VERSION), i18n("PIM Setting Exporter"), KAboutLicense::GPL_V2,
+    KAboutData aboutData(QStringLiteral("pimsettingexporter"), i18n("PIM Setting Exporter"),
+                         QStringLiteral(KDEPIM_VERSION), i18n("PIM Setting Exporter"), KAboutLicense::GPL_V2,
                          i18n("Copyright © 2012-2015 pimsettingexporter authors"));
     aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QStringLiteral("montel@kde.org"));
-    QApplication::setWindowIcon(QIcon::fromTheme(QLatin1String("kontact")));
+    QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("kontact")));
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
     parser.addVersionOption();
     parser.addHelpOption();
-    parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("template"), i18n("Template file uses to define what data, settings to import or export"), QLatin1String("file")));
-    parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("import"), i18n("Import the given file")));
-    parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("export"), i18n("Export the given file")));
-    parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("+[url]"), i18n("File or url. The user will be asked whether to import or export.")));
+    parser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("template"), i18n("Template file uses to define what data, settings to import or export"), QStringLiteral("file")));
+    parser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("import"), i18n("Import the given file")));
+    parser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("export"), i18n("Export the given file")));
+    parser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("+[url]"), i18n("File or url. The user will be asked whether to import or export.")));
 
     aboutData.setupCommandLine(&parser);
     parser.process(app);

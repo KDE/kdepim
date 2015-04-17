@@ -90,8 +90,8 @@ QString BalooCompletionEmail::stripEmail(const QString &email, QString &address)
         address = addrSpec;
         while ((displayName.startsWith(QLatin1Char('\'')) && displayName.endsWith(QLatin1Char('\''))) ||
                 (displayName.startsWith(QLatin1Char('"')) && displayName.endsWith(QLatin1Char('"'))) ||
-                (displayName.startsWith(QLatin1String("\\\"")) && displayName.endsWith(QLatin1String("\\\"")))) {
-            if (displayName.startsWith(QLatin1String("\\\""))) {
+                (displayName.startsWith(QStringLiteral("\\\"")) && displayName.endsWith(QStringLiteral("\\\"")))) {
+            if (displayName.startsWith(QStringLiteral("\\\""))) {
                 displayName = displayName.mid(2, displayName.length() - 4).trimmed();
             } else {
                 displayName = displayName.mid(1, displayName.length() - 2).trimmed();

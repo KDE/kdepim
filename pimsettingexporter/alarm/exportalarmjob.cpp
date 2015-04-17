@@ -74,14 +74,14 @@ void ExportAlarmJob::backupResources()
     const Akonadi::AgentInstance::List list = manager->instances();
     Q_FOREACH (const Akonadi::AgentInstance &agent, list) {
         const QString identifier = agent.identifier();
-        if (identifier.contains(QLatin1String("akonadi_kalarm_resource_"))) {
+        if (identifier.contains(QStringLiteral("akonadi_kalarm_resource_"))) {
             backupResourceFile(agent, Utils::alarmPath());
-        } else if (identifier.contains(QLatin1String("akonadi_kalarm_dir_resource_"))) {
+        } else if (identifier.contains(QStringLiteral("akonadi_kalarm_dir_resource_"))) {
             const QString archivePath = Utils::alarmPath() + identifier + QDir::separator();
 
             QUrl url = Utils::resourcePath(agent);
             if (!url.isEmpty()) {
-                const bool fileAdded = backupFullDirectory(url, archivePath, QLatin1String("alarm.zip"));
+                const bool fileAdded = backupFullDirectory(url, archivePath, QStringLiteral("alarm.zip"));
                 if (fileAdded) {
                     const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
                     if (!errorStr.isEmpty()) {
@@ -109,7 +109,7 @@ void ExportAlarmJob::backupConfig()
 {
     showInfo(i18n("Backing up config..."));
     MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
-    const QString kalarmStr(QLatin1String("kalarmrc"));
+    const QString kalarmStr(QStringLiteral("kalarmrc"));
     const QString kalarmrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + kalarmStr;
     if (QFile(kalarmrc).exists()) {
         KSharedConfigPtr kalarm = KSharedConfig::openConfig(kalarmrc);
@@ -119,10 +119,10 @@ void ExportAlarmJob::backupConfig()
 
         KConfig *kalarmConfig = kalarm->copyTo(tmp.fileName());
 
-        const QString collectionsStr(QLatin1String("Collections"));
+        const QString collectionsStr(QStringLiteral("Collections"));
         if (kalarmConfig->hasGroup(collectionsStr)) {
             KConfigGroup group = kalarmConfig->group(collectionsStr);
-            const QString selectionKey(QLatin1String("FavoriteCollectionIds"));
+            const QString selectionKey(QStringLiteral("FavoriteCollectionIds"));
             Utils::convertCollectionIdsToRealPath(group, selectionKey);
         }
 

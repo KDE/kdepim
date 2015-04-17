@@ -52,17 +52,17 @@ Utils::StoredTypes TemplateSelection::loadStoredTypes(const QDomElement &element
         QDomElement e = n.toElement();
         if (!e.isNull())  {
             const QString tagName(e.tagName());
-            if (tagName == QLatin1String("mailtransport")) {
+            if (tagName == QStringLiteral("mailtransport")) {
                 types |= Utils::MailTransport;
-            } else if (tagName == QLatin1String("mail")) {
+            } else if (tagName == QStringLiteral("mail")) {
                 types |= Utils::Mails;
-            } else if (tagName == QLatin1String("resources")) {
+            } else if (tagName == QStringLiteral("resources")) {
                 types |= Utils::Resources;
-            } else if (tagName == QLatin1String("identity")) {
+            } else if (tagName == QStringLiteral("identity")) {
                 types |= Utils::Identity;
-            } else if (tagName == QLatin1String("config")) {
+            } else if (tagName == QStringLiteral("config")) {
                 types |= Utils::Config;
-            } else if (tagName == QLatin1String("akonadidb")) {
+            } else if (tagName == QStringLiteral("akonadidb")) {
                 types |= Utils::AkonadiDb;
             }
         }
@@ -85,19 +85,19 @@ QHash<Utils::AppsType, Utils::StoredTypes> TemplateSelection::loadTemplate(const
             const QString tagName(e.tagName());
             qCDebug(PIMSETTINGEXPORTER_LOG) << "tag :" << tagName;
             Utils::AppsType type = Utils::Unknown;
-            if (tagName == QLatin1String("kmail")) {
+            if (tagName == QStringLiteral("kmail")) {
                 type = Utils::KMail;
-            } else if (tagName == QLatin1String("kaddressbook")) {
+            } else if (tagName == QStringLiteral("kaddressbook")) {
                 type = Utils::KAddressBook;
-            } else if (tagName == QLatin1String("kalarm")) {
+            } else if (tagName == QStringLiteral("kalarm")) {
                 type = Utils::KAlarm;
-            } else if (tagName == QLatin1String("korganizer")) {
+            } else if (tagName == QStringLiteral("korganizer")) {
                 type = Utils::KOrganizer;
-            } else if (tagName == QLatin1String("knotes")) {
+            } else if (tagName == QStringLiteral("knotes")) {
                 type = Utils::KNotes;
-            } else if (tagName == QLatin1String("akregator")) {
+            } else if (tagName == QStringLiteral("akregator")) {
                 type = Utils::Akregator;
-            } else if (tagName == QLatin1String("blogilo")) {
+            } else if (tagName == QStringLiteral("blogilo")) {
                 type = Utils::Blogilo;
             }
             if (type != Utils::Unknown) {
@@ -115,27 +115,27 @@ QHash<Utils::AppsType, Utils::StoredTypes> TemplateSelection::loadTemplate(const
 void TemplateSelection::saveParameters(Utils::StoredTypes type, QDomElement &elem)
 {
     if (type & Utils::MailTransport) {
-        QDomElement tag = mDocument.createElement(QLatin1String("mailtransport"));
+        QDomElement tag = mDocument.createElement(QStringLiteral("mailtransport"));
         elem.appendChild(tag);
     }
     if (type & Utils::Mails) {
-        QDomElement tag = mDocument.createElement(QLatin1String("mail"));
+        QDomElement tag = mDocument.createElement(QStringLiteral("mail"));
         elem.appendChild(tag);
     }
     if (type & Utils::Resources) {
-        QDomElement tag = mDocument.createElement(QLatin1String("resources"));
+        QDomElement tag = mDocument.createElement(QStringLiteral("resources"));
         elem.appendChild(tag);
     }
     if (type & Utils::Identity) {
-        QDomElement tag = mDocument.createElement(QLatin1String("identity"));
+        QDomElement tag = mDocument.createElement(QStringLiteral("identity"));
         elem.appendChild(tag);
     }
     if (type & Utils::Config) {
-        QDomElement tag = mDocument.createElement(QLatin1String("config"));
+        QDomElement tag = mDocument.createElement(QStringLiteral("config"));
         elem.appendChild(tag);
     }
     if (type & Utils::AkonadiDb) {
-        QDomElement tag = mDocument.createElement(QLatin1String("akonadidb"));
+        QDomElement tag = mDocument.createElement(QStringLiteral("akonadidb"));
         elem.appendChild(tag);
     }
 
@@ -144,53 +144,53 @@ void TemplateSelection::saveParameters(Utils::StoredTypes type, QDomElement &ele
 void TemplateSelection::createTemplate(const QHash<Utils::AppsType, Utils::importExportParameters> &stored)
 {
     mDocument = QDomDocument();
-    QDomProcessingInstruction xmlDeclaration = mDocument.createProcessingInstruction(QLatin1String("xml"), QLatin1String("version=\"1.0\""));
+    QDomProcessingInstruction xmlDeclaration = mDocument.createProcessingInstruction(QStringLiteral("xml"), QStringLiteral("version=\"1.0\""));
     mDocument.appendChild(xmlDeclaration);
 
-    QDomElement root = mDocument.createElement(QLatin1String("pimsettingexporter"));
+    QDomElement root = mDocument.createElement(QStringLiteral("pimsettingexporter"));
     mDocument.appendChild(root);
 
     QHash<Utils::AppsType, Utils::importExportParameters>::const_iterator i = stored.constBegin();
     while (i != stored.constEnd())  {
         switch (i.key()) {
         case Utils::KMail: {
-            QDomElement tag = mDocument.createElement(QLatin1String("kmail"));
+            QDomElement tag = mDocument.createElement(QStringLiteral("kmail"));
             root.appendChild(tag);
             saveParameters(i.value().types, tag);
             break;
         }
         case Utils::KAddressBook: {
-            QDomElement tag = mDocument.createElement(QLatin1String("kaddressbook"));
+            QDomElement tag = mDocument.createElement(QStringLiteral("kaddressbook"));
             root.appendChild(tag);
             saveParameters(i.value().types, tag);
             break;
         }
         case Utils::KAlarm: {
-            QDomElement tag = mDocument.createElement(QLatin1String("kalarm"));
+            QDomElement tag = mDocument.createElement(QStringLiteral("kalarm"));
             root.appendChild(tag);
             saveParameters(i.value().types, tag);
             break;
         }
         case Utils::KOrganizer: {
-            QDomElement tag = mDocument.createElement(QLatin1String("korganizer"));
+            QDomElement tag = mDocument.createElement(QStringLiteral("korganizer"));
             root.appendChild(tag);
             saveParameters(i.value().types, tag);
             break;
         }
         case Utils::KNotes: {
-            QDomElement tag = mDocument.createElement(QLatin1String("knotes"));
+            QDomElement tag = mDocument.createElement(QStringLiteral("knotes"));
             root.appendChild(tag);
             saveParameters(i.value().types, tag);
             break;
         }
         case Utils::Akregator: {
-            QDomElement tag = mDocument.createElement(QLatin1String("akregator"));
+            QDomElement tag = mDocument.createElement(QStringLiteral("akregator"));
             root.appendChild(tag);
             saveParameters(i.value().types, tag);
             break;
         }
         case Utils::Blogilo: {
-            QDomElement tag = mDocument.createElement(QLatin1String("blogilo"));
+            QDomElement tag = mDocument.createElement(QStringLiteral("blogilo"));
             root.appendChild(tag);
             saveParameters(i.value().types, tag);
             break;

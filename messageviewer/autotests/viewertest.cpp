@@ -21,7 +21,7 @@
 #include <qtestmouse.h>
 #include <KActionCollection>
 #include <KToggleAction>
-#include <KUrl>
+#include <QUrl>
 
 ViewerTest::ViewerTest()
 {

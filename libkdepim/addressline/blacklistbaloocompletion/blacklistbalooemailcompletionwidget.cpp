@@ -44,7 +44,7 @@ BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget
     mainLayout->addLayout(searchLayout);
 
     QLabel *lab = new QLabel(i18n("Search email:"));
-    lab->setObjectName(QLatin1String("search_label"));
+    lab->setObjectName(QStringLiteral("search_label"));
     searchLayout->addWidget(lab);
 
     mSearchLineEdit = new KLineEdit;
@@ -52,34 +52,34 @@ BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget
     mSearchLineEdit->setFocus();
     mSearchLineEdit->setClearButtonShown(true);
     mSearchLineEdit->setTrapReturnKey(true);
-    mSearchLineEdit->setObjectName(QLatin1String("search_lineedit"));
+    mSearchLineEdit->setObjectName(QStringLiteral("search_lineedit"));
     connect(mSearchLineEdit, &KLineEdit::returnPressed, this, &BlackListBalooEmailCompletionWidget::slotSearch);
     searchLayout->addWidget(mSearchLineEdit);
 
     mSearchButton = new QPushButton(i18n("Search"));
-    mSearchButton->setObjectName(QLatin1String("search_button"));
+    mSearchButton->setObjectName(QStringLiteral("search_button"));
     connect(mSearchButton, &QAbstractButton::clicked, this, &BlackListBalooEmailCompletionWidget::slotSearch);
     mSearchButton->setEnabled(false);
     searchLayout->addWidget(mSearchButton);
 
     mEmailList = new BlackListBalooEmailList;
-    mEmailList->setObjectName(QLatin1String("email_list"));
+    mEmailList->setObjectName(QStringLiteral("email_list"));
     mainLayout->addWidget(mEmailList);
 
     QHBoxLayout *selectElementLayout = new QHBoxLayout;
     mainLayout->addLayout(selectElementLayout);
     mSelectButton = new QPushButton(i18n("&Select"), this);
-    mSelectButton->setObjectName(QLatin1String("select_email"));
+    mSelectButton->setObjectName(QStringLiteral("select_email"));
     connect(mSelectButton, &QAbstractButton::clicked, this, &BlackListBalooEmailCompletionWidget::slotSelectEmails);
     selectElementLayout->addWidget(mSelectButton);
 
     mUnselectButton = new QPushButton(i18n("&Unselect"), this);
-    mUnselectButton->setObjectName(QLatin1String("unselect_email"));
+    mUnselectButton->setObjectName(QStringLiteral("unselect_email"));
     connect(mUnselectButton, &QAbstractButton::clicked, this, &BlackListBalooEmailCompletionWidget::slotUnselectEmails);
     selectElementLayout->addWidget(mUnselectButton);
 
     mMoreResult = new QLabel(i18n("<qt><a href=\"more_result\">More result...</a></qt>"), this);
-    mMoreResult->setObjectName(QLatin1String("moreresultlabel"));
+    mMoreResult->setObjectName(QStringLiteral("moreresultlabel"));
     selectElementLayout->addWidget(mMoreResult);
 
     mMoreResult->setContextMenuPolicy(Qt::NoContextMenu);
@@ -94,12 +94,12 @@ BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget
     mainLayout->addLayout(excludeDomainLayout);
 
     QLabel *excludeDomainLabel = new QLabel(i18n("Exclude domain names:"));
-    excludeDomainLabel->setObjectName(QLatin1String("domain_label"));
+    excludeDomainLabel->setObjectName(QStringLiteral("domain_label"));
     excludeDomainLayout->addWidget(excludeDomainLabel);
 
     mExcludeDomainLineEdit = new KLineEdit;
     excludeDomainLayout->addWidget(mExcludeDomainLineEdit);
-    mExcludeDomainLineEdit->setObjectName(QLatin1String("domain_lineedit"));
+    mExcludeDomainLineEdit->setObjectName(QStringLiteral("domain_lineedit"));
     mExcludeDomainLineEdit->setClearButtonShown(true);
     mExcludeDomainLineEdit->setTrapReturnKey(true);
     mExcludeDomainLineEdit->setPlaceholderText(i18n("Separate domain with \',\'"));
@@ -121,11 +121,11 @@ void BlackListBalooEmailCompletionWidget::slotSelectionChanged()
 
 void BlackListBalooEmailCompletionWidget::load()
 {
-    KSharedConfig::Ptr config = KSharedConfig::openConfig(QLatin1String("kpimbalooblacklist"));
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(QStringLiteral("kpimbalooblacklist"));
     KConfigGroup group(config, "AddressLineEdit");
     const QStringList lst = group.readEntry("ExcludeDomain", QStringList());
     mEmailList->setExcludeDomain(lst);
-    mExcludeDomainLineEdit->setText(lst.join(QLatin1String(",")));
+    mExcludeDomainLineEdit->setText(lst.join(QStringLiteral(",")));
     mOriginalExcludeDomain = lst;
 }
 
@@ -182,9 +182,9 @@ void BlackListBalooEmailCompletionWidget::setEmailBlackList(const QStringList &l
 void BlackListBalooEmailCompletionWidget::save()
 {
     const QString domain = mExcludeDomainLineEdit->text().remove(QLatin1Char(' '));
-    const QStringList newExcludeDomain = domain.split(QLatin1String(","), QString::SkipEmptyParts);
+    const QStringList newExcludeDomain = domain.split(QStringLiteral(","), QString::SkipEmptyParts);
     bool needToSave = (mOriginalExcludeDomain != newExcludeDomain);
-    KSharedConfig::Ptr config = KSharedConfig::openConfig(QLatin1String("kpimbalooblacklist"));
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(QStringLiteral("kpimbalooblacklist"));
     KConfigGroup group(config, "AddressLineEdit");
     const QHash<QString, bool> result = mEmailList->blackListItemChanged();
     if (!result.isEmpty()) {
@@ -204,7 +204,7 @@ void BlackListBalooEmailCompletionWidget::save()
 
 void BlackListBalooEmailCompletionWidget::slotLinkClicked(const QString &link)
 {
-    if (link == QLatin1String("more_result")) {
+    if (link == QStringLiteral("more_result")) {
         mLimit += 200;
         slotSearch();
     }
