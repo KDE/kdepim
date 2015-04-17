@@ -124,6 +124,7 @@ void BlackListBalooEmailCompletionWidget::load()
     KSharedConfig::Ptr config = KSharedConfig::openConfig(QLatin1String("kpimbalooblacklist"));
     KConfigGroup group(config, "AddressLineEdit");
     const QStringList lst = group.readEntry("ExcludeDomain", QStringList());
+    mEmailList->setExcludeDomain(lst);
     mExcludeDomainLineEdit->setText(lst.join(QLatin1String(",")));
     mOriginalExcludeDomain = lst;
 }
