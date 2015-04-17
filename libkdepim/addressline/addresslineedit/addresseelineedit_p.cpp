@@ -848,6 +848,8 @@ void AddresseeLineEditPrivate::slotConfigureBalooBlackList()
     dlg->setEmailBlackList(m_balooBlackList);
     if (dlg->exec()) {
         loadBalooBlackList();
+        q->removeCompletionSource(i18nc( "@title:group", "Contacts found in your data"));
+        s_static->balooCompletionSource = q->addCompletionSource( i18nc( "@title:group", "Contacts found in your data"), -1 );
     }
     delete dlg;
 }
