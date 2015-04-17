@@ -639,8 +639,8 @@ public Q_SLOTS:
 Q_SIGNALS:
     void showStatusBarMessage(const QString &message);
     void replaceMsgByUnencryptedVersion();
-    void popupMenu(const Akonadi::Item &msg, const KUrl &url, const KUrl &imageUrl, const QPoint &mousePos);
-    void urlClicked(const Akonadi::Item &msg, const KUrl &url);
+    void popupMenu(const Akonadi::Item &msg, const QUrl &url, const QUrl &imageUrl, const QPoint &mousePos);
+    void urlClicked(const Akonadi::Item &msg, const QUrl &url);
     void requestConfigSync();
     void showReader(KMime::Content *aMsgPart, bool aHTML, const QString &encoding);
     void showMessage(KMime::Message::Ptr message, const QString &encoding);
@@ -711,9 +711,9 @@ public:
     QAction *mExpandUrlAction;
     QAction *mCreateTodoAction;
     QAction *mCreateEventAction;
-    KUrl mHoveredUrl;
-    KUrl mClickedUrl;
-    KUrl mImageUrl;
+    QUrl mHoveredUrl;
+    QUrl mClickedUrl;
+    QUrl mImageUrl;
     QPoint mLastClickPosition;
     bool mCanStartDrag;
     HtmlWriter *mHtmlWriter;

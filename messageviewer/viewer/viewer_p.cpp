@@ -2153,9 +2153,8 @@ void ViewerPrivate::update(MessageViewer::Viewer::UpdateMode updateMode)
 
 void ViewerPrivate::slotUrlOpen(const QUrl &url)
 {
-    KUrl aUrl(url);
     if (!url.isEmpty()) {
-        mClickedUrl = aUrl;
+        mClickedUrl = url;
     }
 
     // First, let's see if the URL handler manager can handle the URL. If not, try KRun for some
