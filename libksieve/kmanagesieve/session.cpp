@@ -341,10 +341,10 @@ void Session::sslResult(bool encrypted)
     if (!encrypted || m_socket->sslErrors().count() > 0 || m_socket->encryptionMode() != KTcpSocket::SslClientMode
             || cipher.isNull() || cipher.usedBits() == 0) {
         qCDebug(KMANAGERSIEVE_LOG) << "Initial SSL handshake failed. cipher.isNull() is" << cipher.isNull()
-                 << ", cipher.usedBits() is" << cipher.usedBits()
-                 << ", the socket says:" <<  m_socket->errorString()
-                 << "and the list of SSL errors contains"
-                 << m_socket->sslErrors().count() << "items.";
+                                   << ", cipher.usedBits() is" << cipher.usedBits()
+                                   << ", the socket says:" <<  m_socket->errorString()
+                                   << "and the list of SSL errors contains"
+                                   << m_socket->sslErrors().count() << "items.";
 
         if (!KIO::SslUi::askIgnoreSslErrors(m_socket)) {
             disconnectFromHost();

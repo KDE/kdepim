@@ -28,9 +28,18 @@ public:
 
     }
 
-    bool matches(const Akonadi::Item &item) const {return false;}
-    bool isEmpty() const { return false; }
-    MailCommon::SearchRule::RequiredPart requiredPart() const { return MailCommon::SearchRule::CompleteMessage; }
+    bool matches(const Akonadi::Item &item) const
+    {
+        return false;
+    }
+    bool isEmpty() const
+    {
+        return false;
+    }
+    MailCommon::SearchRule::RequiredPart requiredPart() const
+    {
+        return MailCommon::SearchRule::CompleteMessage;
+    }
 };
 
 SearchRuleTest::SearchRuleTest(QObject *parent)

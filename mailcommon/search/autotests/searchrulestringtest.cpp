@@ -51,5 +51,4 @@ void SearchRuleStringTest::shouldMatchString_data()
 
 }
 
-
 QTEST_MAIN(SearchRuleStringTest)

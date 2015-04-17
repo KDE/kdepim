@@ -40,9 +40,9 @@ public:
      * @param function The function to use for searching.
      * @param contents The contents to search for.
      */
-    explicit SearchRuleString( const QByteArray &field = QByteArray(),
-                               Function function = FuncContains,
-                               const QString &contents = QString() );
+    explicit SearchRuleString(const QByteArray &field = QByteArray(),
+                              Function function = FuncContains,
+                              const QString &contents = QString());
 
     /**
      * Creates a new string search rule from an @p other rule.

@@ -43,7 +43,7 @@ SearchRuleNumerical::SearchRuleNumerical(const QByteArray &field,
 bool SearchRuleNumerical::isEmpty() const
 {
     bool ok = false;
-    contents().toLongLong( &ok );
+    contents().toLongLong(&ok);
 
     return !ok;
 }
@@ -64,7 +64,7 @@ bool SearchRuleNumerical::matches(const Akonadi::Item &item) const
         QDateTime msgDateTime = msg->date()->dateTime();
         numericalMsgContents = msgDateTime.daysTo(QDateTime::currentDateTime());
         numericalValue = contents().toInt();
-        msgContents.setNum( numericalMsgContents );
+        msgContents.setNum(numericalMsgContents);
     } else {
         return false;
     }

@@ -33,9 +33,9 @@ public:
      * @param function The function to use for searching.
      * @param contents The contents to search for.
      */
-    explicit SearchRuleDate( const QByteArray &field = QByteArray(),
-                             Function function = FuncContains,
-                             const QString &contents = QString() );
+    explicit SearchRuleDate(const QByteArray &field = QByteArray(),
+                            Function function = FuncContains,
+                            const QString &contents = QString());
     /**
      * @copydoc SearchRule::isEmpty()
      */

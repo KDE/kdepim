@@ -20,4 +20,3 @@
 #include "kmanagersieve_debug.h"
 Q_LOGGING_CATEGORY(KMANAGERSIEVE_LOG, "kmanagersieve_log")
 
-
