@@ -22,6 +22,7 @@ manual/kselfilterpage.cpp
 )
 
 set(importwizard_autodetect_SRCS
+autodetect/widgets/selectprogramlistwidget.cpp
 autodetect/importwizardutil.cpp
 autodetect/selectprogrampage.cpp
 autodetect/importaddressbookpage.cpp

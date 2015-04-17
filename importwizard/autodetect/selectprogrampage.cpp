@@ -34,6 +34,7 @@ SelectProgramPage::~SelectProgramPage()
 
 void SelectProgramPage::setFoundProgram(const QStringList &list)
 {
+    ui->listProgramFound->setNoProgramFound(list.isEmpty());
     ui->listProgramFound->addItems(list);
 }
 
