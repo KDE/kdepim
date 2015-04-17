@@ -165,7 +165,6 @@ Pane::Pane(bool restoreSession, QAbstractItemModel *model, QItemSelectionModel *
             SLOT(onCloseTabClicked()));
 
     setTabsClosable(Core::Settings::self()->tabsHaveCloseButton());
-    connect(this, SIGNAL(closeRequest(QWidget*)), SLOT(closeTab(QWidget*)));
 
     readConfig(restoreSession);
     setMovable(true);
@@ -182,8 +181,8 @@ Pane::Pane(bool restoreSession, QAbstractItemModel *model, QItemSelectionModel *
     connect(Core::Settings::self(), SIGNAL(configChanged()),
             this, SLOT(updateTabControls()));
 
-    connect(this, SIGNAL(tabBarDoubleClicked(int)),
-            this, SLOT(createNewTab()));
+    connect(this, &QTabWidget::tabBarDoubleClicked,
+            this, &Pane::createNewTab);
 
     tabBar()->installEventFilter(this);
 }
