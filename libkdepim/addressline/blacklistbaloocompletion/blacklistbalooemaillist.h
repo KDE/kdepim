@@ -53,6 +53,7 @@ public:
 
     QHash<QString, bool> blackListItemChanged() const;
 
+    void setExcludeDomain(const QStringList &domain);
 protected:
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
@@ -63,6 +64,7 @@ public Q_SLOTS:
 private:
     void generalPaletteChanged();
     QStringList mEmailBlackList;
+    QStringList mExcludeDomain;
     QColor mTextColor;
     bool mFirstResult;
 };

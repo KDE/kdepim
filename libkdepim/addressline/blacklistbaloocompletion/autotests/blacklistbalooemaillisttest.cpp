@@ -95,4 +95,17 @@ void BlackListBalooEmailListTest::shouldNotAddDuplicateEmails()
     QCOMPARE(blackList.count(), 2);
 }
 
+void BlackListBalooEmailListTest::shouldExcludeDomain()
+{
+    KPIM::BlackListBalooEmailList blackList;
+    blackList.setExcludeDomain(QStringList() << QLatin1String("kde.org") << QLatin1String("toto.fr"));
+    QStringList emails = QStringList() << QLatin1String("foo@kde.org") << QLatin1String("bli@fr.fr") << QLatin1String("bli@toto.fr");
+    blackList.setEmailBlackList(emails);
+    blackList.slotEmailFound(emails);
+
+    QCOMPARE(blackList.count(), 1);
+}
+
+
+
 QTEST_MAIN(BlackListBalooEmailListTest)

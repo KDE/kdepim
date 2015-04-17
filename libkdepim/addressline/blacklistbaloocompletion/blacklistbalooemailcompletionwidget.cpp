@@ -93,7 +93,7 @@ BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget
     excludeDomainLayout->setMargin(0);
     mainLayout->addLayout(excludeDomainLayout);
 
-    QLabel *excludeDomainLabel = new QLabel(i18n("Exclude domain name:"));
+    QLabel *excludeDomainLabel = new QLabel(i18n("Exclude domain names:"));
     excludeDomainLabel->setObjectName(QLatin1String("domain_label"));
     excludeDomainLayout->addWidget(excludeDomainLabel);
 
@@ -180,7 +180,8 @@ void BlackListBalooEmailCompletionWidget::setEmailBlackList(const QStringList &l
 
 void BlackListBalooEmailCompletionWidget::save()
 {
-    const QStringList newExcludeDomain = mExcludeDomainLineEdit->text().trimmed().split(QLatin1String(","));
+    const QString domain = mExcludeDomainLineEdit->text().remove(QLatin1Char(' '));
+    const QStringList newExcludeDomain = domain.split(QLatin1String(","), QString::SkipEmptyParts);
     bool needToSave = (mOriginalExcludeDomain != newExcludeDomain);
     KSharedConfig::Ptr config = KSharedConfig::openConfig(QLatin1String("kpimbalooblacklist"));
     KConfigGroup group(config, "AddressLineEdit");

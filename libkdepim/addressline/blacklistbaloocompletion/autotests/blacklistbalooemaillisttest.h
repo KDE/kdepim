@@ -35,6 +35,7 @@ private Q_SLOTS:
     void shouldFillListWithAlreadyBlackListedEmail();
     void shouldReturnChangedItems();
     void shouldNotAddDuplicateEmails();
+    void shouldExcludeDomain();
 };
 
 #endif // BLACKLISTBALOOEMAILLISTTEST_H
