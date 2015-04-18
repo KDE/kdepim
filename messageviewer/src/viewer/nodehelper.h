@@ -174,7 +174,8 @@ public:
 
     // Get a href in the form attachment:<nodeId>?place=<place>, used by ObjectTreeParser and
     // UrlHandlerManager.
-    QString asHREF(const KMime::Content *node, const QString &place);
+    QString asHREF(const KMime::Content *node, const QString &place) const;
+    KMime::Content *fromHREF(const KMime::Message::Ptr &mMessage, const QUrl &href) const;
 
     /**
      * @return true if this node is a child or an encapsulated message
@@ -288,7 +289,18 @@ private:
     void mergeExtraNodes(KMime::Content *node);
     void cleanFromExtraNodes(KMime::Content *node);
 
+    /** Creates a persistent index string that bridges the gap between the
+        permanent nodes and the temporary ones.
+
+        Used internally for robust indexing.
+    **/
     QString persistentIndex(const KMime::Content *node) const;
+
+    /** Translates the persistentIndex into a node back
+
+        node: any node of the actually message to what the persistentIndex is interpreded
+    **/
+    KMime::Content *contentFromIndex(KMime::Content *node, const QString &persistentIndex) const;
 
 private:
     QList<KMime::Content *> mProcessedNodes;
@@ -303,6 +315,8 @@ private:
     QMap<KMime::Content *, PartMetaData> mPartMetaDatas;
     QMap<KMime::Message::Content *, QList<KMime::Content *> > mExtraContents;
     PimCommon::AttachmentTemporaryFilesDirs *mAttachmentFilesDir;
+
+    friend class NodeHelperTest;
 };
 
 }

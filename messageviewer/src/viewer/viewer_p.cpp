@@ -294,39 +294,9 @@ ViewerPrivate::~ViewerPrivate()
 }
 
 //-----------------------------------------------------------------------------
-KMime::Content *ViewerPrivate::nodeFromUrl(const QUrl &url)
+KMime::Content *ViewerPrivate::nodeFromUrl(const QUrl &url) const
 {
-    KMime::Content *node = 0;
-    if (url.isEmpty()) {
-        return mMessage.data();
-    }
-    if (!url.isLocalFile()) {
-        QString path = url.adjusted(QUrl::StripTrailingSlash).path();
-        if (path.contains(QLatin1Char(':'))) {
-            //if the content was not found, it might be in an extra node. Get the index of the extra node (the first part of the url),
-            //and use the remaining part as a ContentIndex to find the node inside the extra node
-            int i = path.left(path.indexOf(QLatin1Char(':'))).toInt();
-            path = path.mid(path.indexOf(QLatin1Char(':')) + 1);
-            KMime::ContentIndex idx(path);
-            QList<KMime::Content *> extras = mNodeHelper->extraContents(mMessage.data());
-            if (i >= 0 && i < extras.size()) {
-                KMime::Content *c = extras[i];
-                node = c->content(idx);
-            }
-        } else {
-            if (mMessage) {
-                node = mMessage->content(KMime::ContentIndex(path));
-            }
-        }
-    } else {
-        const QString path = url.toLocalFile();
-        const uint right = path.lastIndexOf(QLatin1Char('/'));
-        const uint left = path.lastIndexOf(QLatin1Char('.'), right);
-
-        KMime::ContentIndex index(path.mid(left + 1, right - left - 1));
-        node = mMessage->content(index);
-    }
-    return node;
+    return mNodeHelper->fromHREF(mMessage, url);
 }
 
 void ViewerPrivate::openAttachment(KMime::Content *node, const QString &name)
@@ -2108,6 +2078,10 @@ QString ViewerPrivate::renderAttachments(KMime::Content *node, const QColor &bgC
         }
     }
 
+    Q_FOREACH(KMime::Content* extraNode, mNodeHelper->extraContents(node)) {
+        html += renderAttachments(extraNode, bgColor);
+    }
+
     KMime::Content *next  = MessageCore::NodeHelper::nextSibling(node);
     if (next) {
         html += renderAttachments(next, nextColor(bgColor));
@@ -2548,9 +2522,6 @@ QString ViewerPrivate::attachmentInjectionHtml()
 
     QColor background = KColorScheme(QPalette::Active, KColorScheme::View).background().color();
     QString html = renderAttachments(mMessage.data(), background);
-    Q_FOREACH (KMime::Content *node, mNodeHelper->extraContents(mMessage.data())) {
-        html += renderAttachments(node, background);
-    }
     if (html.isEmpty()) {
         return QString();
     }

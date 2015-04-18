@@ -46,6 +46,7 @@ add_messageviewer_unittest( eventedittest.cpp )
 add_messageviewer_unittest( noteedittest.cpp )
 add_messageviewer_unittest( eventdatetimewidgettest.cpp )
 add_messageviewer_unittest( messagedisplayformatattributetest.cpp )
+add_messageviewer_unittest( nodehelpertest.cpp )
 
 # convenience macro to add qtest unit tests
 macro(add_messageviewer_mailsourceviewbrowserwidget_unittest _source)
