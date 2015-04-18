@@ -36,7 +36,6 @@
 #include <KProcess>
 #include "pimsettingexport_debug.h"
 
-#include "pimsettingexport_debug.h"
 #include <QFile>
 #include <QDir>
 #include <QStandardPaths>

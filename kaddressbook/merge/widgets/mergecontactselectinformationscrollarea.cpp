@@ -95,7 +95,7 @@ void MergeContactSelectInformationScrollArea::slotMergeContacts()
     }
     const bool result = mSelectInformationWidget->verifySelectedInfo();
     if (!result) {
-        if (KMessageBox::No == KMessageBox::warningYesNo(this, i18n("Some information was not selected. You can lose theses informations. Do you want to continue merging?"),
+        if (KMessageBox::No == KMessageBox::warningYesNo(this, i18n("Some information was not selected. You can lose this information. Do you want to continue merging?"),
                 i18n("Missing Selected Information"))) {
             return;
         }

@@ -51,7 +51,6 @@
 #include "core/delegate.h"
 #include "core/manager.h"
 #include "core/messageitemsetmanager.h"
-#include "core/messageitem.h"
 
 #include <item.h>
 #include <Akonadi/KMime/MessageStatus>
@@ -67,7 +66,6 @@
 
 #include <QIcon>
 #include "messagelist_debug.h"
-#include <KLocalizedString>
 #include <QLocale>
 
 namespace MessageList

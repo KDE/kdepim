@@ -37,7 +37,6 @@
 #include <KLocalizedString>
 #include <QHBoxLayout>
 
-#include <QHBoxLayout>
 using namespace PimCommon;
 
 CollectionAclPage::CollectionAclPage(QWidget *parent)

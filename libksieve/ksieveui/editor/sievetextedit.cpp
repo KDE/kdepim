@@ -32,7 +32,6 @@
 #include <QKeyEvent>
 #include <QPainter>
 #include <QScrollBar>
-#include <QAction>
 #include <QMenu>
 #include <QFontDatabase>
 

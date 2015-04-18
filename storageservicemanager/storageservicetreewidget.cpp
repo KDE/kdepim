@@ -29,7 +29,6 @@
 #include <QInputDialog>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KLocalizedString>
 
 #include <QEvent>
 #include <QPainter>

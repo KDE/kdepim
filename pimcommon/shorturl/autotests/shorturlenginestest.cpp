@@ -20,7 +20,6 @@
 #include "pimcommon/shorturl/abstractshorturl.h"
 #include <qtest.h>
 #include <QSignalSpy>
-#include <QSignalSpy>
 
 Q_DECLARE_METATYPE(PimCommon::ShortUrlUtils::EngineType)
 ShortUrlEnginesTest::ShortUrlEnginesTest(QObject *parent)

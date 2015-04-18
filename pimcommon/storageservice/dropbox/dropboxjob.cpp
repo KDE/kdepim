@@ -31,7 +31,6 @@
 #include <QStringList>
 #include "pimcommon_debug.h"
 #include <QPointer>
-#include <QFile>
 #include <QJsonDocument>
 
 using namespace PimCommon;

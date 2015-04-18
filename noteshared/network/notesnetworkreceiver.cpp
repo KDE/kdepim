@@ -42,8 +42,6 @@
 #include "noteshared_debug.h"
 #include <kglobal.h>
 #include <KLocalizedString>
-#include "noteshared_debug.h"
-#include <KLocalizedString>
 
 // Maximum note size in chars we are going to accept,
 // to prevent "note floods".

@@ -32,7 +32,6 @@
 
 #include <QToolButton>
 #include <QHBoxLayout>
-#include <QPushButton>
 #include <QButtonGroup>
 #include <QLabel>
 #include <QSignalMapper>

@@ -38,9 +38,7 @@
 #include <QNetworkReply>
 #include <QPointer>
 
-#include "pimcommon_debug.h"
 #include <QFile>
-#include <QPointer>
 
 using namespace PimCommon;
 

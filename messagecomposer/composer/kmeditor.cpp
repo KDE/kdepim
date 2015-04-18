@@ -844,7 +844,7 @@ void KMeditor::fixHtmlFontSize(QString &cleanHtml)
         }
         // advance the search offset to just beyond the last replace
         offset += styleRegex.matchedLength();
-        // find the next occurance
+        // find the next occurrence
         offset = styleRegex.indexIn(cleanHtml, offset);
     }
 }

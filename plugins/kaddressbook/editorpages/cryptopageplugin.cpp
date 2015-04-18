@@ -37,7 +37,6 @@
 #include <QHBoxLayout>
 #include <kiconloader.h>
 #include <KLocalizedString>
-#include <KLocalizedString>
 
 #include "gpgme++/data.h"
 #include "gpgme++/key.h"

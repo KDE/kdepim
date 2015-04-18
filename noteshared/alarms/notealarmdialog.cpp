@@ -37,11 +37,9 @@
 #include <QVBoxLayout>
 #include <QDateTime>
 
-#include <QDateTime>
 #include <QButtonGroup>
 #include <QGroupBox>
 #include <QRadioButton>
-#include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QDialogButtonBox>
 #include <QPushButton>

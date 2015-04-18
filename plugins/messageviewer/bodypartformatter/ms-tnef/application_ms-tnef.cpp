@@ -54,7 +54,6 @@
 
 #include <QApplication>
 #include <QDir>
-#include <KLocalizedString>
 
 namespace
 {

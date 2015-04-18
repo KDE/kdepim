@@ -20,7 +20,6 @@
 #include <QNetworkRequest>
 #include <QUrl>
 #include <qregexp.h>
-#include "pimcommon_debug.h"
 
 using namespace PimCommon;
 Ur1CaShortUrl::Ur1CaShortUrl(QObject *parent)

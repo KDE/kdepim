@@ -20,7 +20,6 @@
 #define MAILIMPORTER_FILTER_THEBAT_HXX
 
 #include "filters.h"
-#include "filters.h"
 #include "mailimporter_export.h"
 /**
  * Imports The Bat! mail folder recursively, recreating the folder structure.

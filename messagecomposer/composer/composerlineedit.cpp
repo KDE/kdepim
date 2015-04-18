@@ -47,8 +47,6 @@
 #include <kcontacts/contactgrouptool.h>
 #include <Akonadi/Contact/ContactGroupExpandJob>
 #include <QtCore/QBuffer>
-#include <KLocalizedString>
-#include <KLocalizedString>
 
 using namespace MessageComposer;
 

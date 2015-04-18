@@ -17,7 +17,6 @@
 
 #include "texttospeechconfigwidget.h"
 #include "settings/pimcommonsettings.h"
-#include "texttospeechconfigwidget.h"
 #include "abstracttexttospeechconfiginterface.h"
 #include "texttospeechconfiginterface.h"
 #include <KLocalizedString>

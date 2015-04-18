@@ -26,7 +26,6 @@
 
 #include "messagecomposer_debug.h"
 #include <KLocalizedString>
-#include <KLocalizedString>
 #include <QTemporaryDir>
 #include <QFileDevice>
 
