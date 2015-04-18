@@ -229,7 +229,6 @@ ObjectTreeParser::~ObjectTreeParser()
 
 void ObjectTreeParser::copyContentFrom(const ObjectTreeParser *other)
 {
-    mRawDecryptedBody += other->rawDecryptedBody();
     mPlainTextContent += other->plainTextContent();
     mHtmlContent += other->htmlContent();
     if (!other->plainTextContentCharset().isEmpty()) {
@@ -925,7 +924,6 @@ void ObjectTreeParser::writeDeferredDecryptionBlock()
     messagePart.isDecryptable = true;
     messagePart.isEncrypted = true;
     messagePart.isSigned = false;
-    mRawDecryptedBody += decryptedData.toUtf8();
 
     if (htmlWriter()) {   //TODO: check if this check should be here or at the beginning of the method
         htmlWriter()->queue(writeSigstatHeader(messagePart,
@@ -1236,7 +1234,6 @@ bool ObjectTreeParser::processTextHtmlSubtype(KMime::Content *curNode, ProcessRe
     const QString bodyHTML = codecFor(curNode)->toUnicode(partBody);
     mHtmlContent += bodyHTML;
     mHtmlContentCharset = NodeHelper::charset(curNode);
-    mRawDecryptedBody = partBody;
 
     if (!htmlWriter()) {
         return true;
@@ -1429,7 +1426,6 @@ bool ObjectTreeParser::processMailmanMessage(KMime::Content *curNode)
 
 void ObjectTreeParser::extractNodeInfos(KMime::Content *curNode, bool isFirstTextPart)
 {
-    mRawDecryptedBody = curNode->decodedContent();
     if (isFirstTextPart) {
         mPlainTextContent += curNode->decodedText();
         mPlainTextContentCharset += NodeHelper::charset(curNode);
@@ -1482,7 +1478,7 @@ bool ObjectTreeParser::processTextPlainSubtype(KMime::Content *curNode, ProcessR
     if (!isMailmanMessage(curNode) ||
             !processMailmanMessage(curNode)) {
         const QString oldPlainText = mPlainTextContent;
-        writeBodyString(mRawDecryptedBody, NodeHelper::fromAsString(curNode),
+        writeBodyString(curNode->body(), NodeHelper::fromAsString(curNode),
                         codecFor(curNode), result, !bDrawFrame);
 
         // Revert changes to mPlainTextContent made by writeBodyString if this is not the first
@@ -1664,7 +1660,6 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype(KMime::Content *node, Pr
             writeBodyString(cstr, NodeHelper::fromAsString(node),
                             codecFor(node), result, false);
         }
-        mRawDecryptedBody += cstr;
         return true;
     }
 
@@ -1780,7 +1775,6 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype(KMime::Content *node, Pr
                 createAndParseTempNode(node, decryptedData.constData(), "encrypted data");
             }
         } else {
-            mRawDecryptedBody += decryptedData;
             if (htmlWriter()) {
                 // print the error message that was returned in decryptedData
                 // (utf8-encoded)
@@ -1866,7 +1860,6 @@ bool ObjectTreeParser::processApplicationOctetStreamSubtype(KMime::Content *node
                 writeBodyString(cstr, NodeHelper::fromAsString(node),
                                 codecFor(node), result, false);
             }
-            mRawDecryptedBody += cstr;
         } else if (!mSource->decryptMessage()) {
             writeDeferredDecryptionBlock();
         } else {
@@ -1911,7 +1904,6 @@ bool ObjectTreeParser::processApplicationOctetStreamSubtype(KMime::Content *node
                 // fixing the missing attachments bug #1090-b
                 createAndParseTempNode(node, decryptedData.constData(), "encrypted data");
             } else {
-                mRawDecryptedBody += decryptedData;
                 if (htmlWriter()) {
                     // print the error message that was returned in decryptedData
                     // (utf8-encoded)
@@ -2177,7 +2169,6 @@ bool ObjectTreeParser::decryptChiasmus(const QByteArray &data, QByteArray &bodyD
 bool ObjectTreeParser::processApplicationChiasmusTextSubtype(KMime::Content *curNode, ProcessResult &result)
 {
     if (!htmlWriter()) {
-        mRawDecryptedBody = curNode->decodedContent();
 
         // ### Surely this is totally wrong? The decoded text of this node is just garbage, since it is
         //     encrypted. This whole if statement should be removed, and the decrypted body

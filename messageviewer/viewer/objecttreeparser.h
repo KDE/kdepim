@@ -338,27 +338,6 @@ public:
     }
 
     /**
-    * The origin and purpose of this function is unknown, the ancient wisdom about it got lost during
-    * the centuries.
-    *
-    * Historicans believe that the intent of the function is to return the raw body of the mail,
-    * i.e. no charset decoding has been done yet. Sometimes CTE decoding has been done, sometimes
-    * not. For encrypted parts, this returns the content of the decrypted part. For a mail with
-    * multiple MIME parts, the results are conecated together. Not all parts are included in this.
-    *
-    * Although conecating multiple undecoded body parts with potentially different CTEs together might
-    * not seem to make any sense in these modern times, it is assumed that initially this function
-    * performed quite well, but the ancient scrolls got damaged with the ravages of time
-    * and were re-written multiple times.
-    *
-    * Do not use. Use plainTextContent() and htmlContent() instead.
-    */
-    MESSAGEVIEWER_DEPRECATED_EXPORT QByteArray rawDecryptedBody() const
-    {
-        return mRawDecryptedBody;
-    }
-
-    /**
     * The text of the message, ie. what would appear in the
     * composer's text editor if this was edited or replied to.
     * This is usually the content of the first text/plain MIME part.
@@ -626,7 +605,6 @@ private:
 private:
     ObjectTreeSourceIf *mSource;
     NodeHelper *mNodeHelper;
-    QByteArray mRawDecryptedBody;
     QByteArray mPlainTextContentCharset;
     QByteArray mHtmlContentCharset;
     QString mPlainTextContent;
