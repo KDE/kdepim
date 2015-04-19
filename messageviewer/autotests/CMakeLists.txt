@@ -48,7 +48,7 @@ add_messageviewer_unittest( messagedisplayformatattributetest.cpp )
 macro(add_messageviewer_mailsourceviewbrowserwidget_unittest _source)
   set(_test ${_source} util.cpp)
   get_filename_component(_name ${_source} NAME_WE)
-  add_executable( ${_name} ${_test} ../widgets/mailsourceviewtextbrowserwidget.cpp ../findbar/findbarbase.cpp ../findbar/findbarsourceview.cpp )
+  add_executable( ${_name} ${_test} ../widgets/mailsourceviewtextbrowserwidget.cpp ../findbar/findbarbase.cpp ../findbar/findbarsourceview.cpp ../findbar/findbarlineedit.cpp)
   add_test( ${_name} ${_name} )
   ecm_mark_as_test(messageviewer-${_name})
   target_link_libraries( ${_name}

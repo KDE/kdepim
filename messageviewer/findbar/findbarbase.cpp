@@ -18,6 +18,7 @@
  */
 
 #include "findbarbase.h"
+#include "findbarlineedit.h"
 
 #include <qicon.h>
 #include <KLocalizedString>
@@ -57,7 +58,7 @@ FindBarBase::FindBarBase(QWidget *parent)
     QLabel *label = new QLabel(i18nc("Find text", "F&ind:"), this);
     lay->addWidget(label);
 
-    mSearch = new KLineEdit(this);
+    mSearch = new FindBarLineEdit(this);
     mSearch->setObjectName(QStringLiteral("searchline"));
     mSearch->setToolTip(i18n("Text to search for"));
     mSearch->setClearButtonShown(true);

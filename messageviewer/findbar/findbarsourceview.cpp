@@ -16,9 +16,9 @@
  * Boston, MA 02110-1301, USA.
  */
 #include "findbarsourceview.h"
+#include "findbarlineedit.h"
 
 #include <KLocalizedString>
-#include <KLineEdit>
 #include <QPlainTextEdit>
 #include <QAction>
 

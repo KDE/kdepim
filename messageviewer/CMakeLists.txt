@@ -141,6 +141,7 @@ set(libmessageviewer_findbar_SRCS
   findbar/findbarbase.cpp
   findbar/findbarmailwebview.cpp
   findbar/findbarsourceview.cpp
+  findbar/findbarlineedit.cpp
 )
 
 set(libmessageviewer_utils_SRCS

@@ -30,6 +30,7 @@ class QLabel;
 
 namespace MessageViewer
 {
+class FindBarLineEdit;
 class FindBarBase : public QWidget
 {
     Q_OBJECT
@@ -71,7 +72,7 @@ protected:
     QString mPositiveBackground;
     QString mNegativeBackground;
     QString mLastSearchStr;
-    KLineEdit *mSearch;
+    FindBarLineEdit *mSearch;
     QAction *mCaseSensitiveAct;
 
     QPushButton *mFindPrevBtn;
