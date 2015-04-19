@@ -64,7 +64,7 @@ void SendLaterManager::load(bool forcereload)
         mConfig->reparseConfiguration();
     }
 
-    const QStringList itemList = mConfig->groupList().filter(QRegExp(QLatin1String("SendLaterItem \\d+")));
+    const QStringList itemList = mConfig->groupList().filter(QRegExp(QStringLiteral("SendLaterItem \\d+")));
     const int numberOfItems = itemList.count();
     for (int i = 0 ; i < numberOfItems; ++i) {
         KConfigGroup group = mConfig->group(itemList.at(i));
@@ -228,7 +228,7 @@ QString SendLaterManager::printDebugInfo()
 {
     QString infoStr;
     if (mListSendLaterInfo.isEmpty()) {
-        infoStr = QLatin1String("No mail");
+        infoStr = QStringLiteral("No mail");
     } else {
         Q_FOREACH (SendLater::SendLaterInfo *info, mListSendLaterInfo) {
             if (!infoStr.isEmpty()) {

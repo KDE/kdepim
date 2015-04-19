@@ -161,7 +161,7 @@ QString ArchiveMailManager::printCurrentListInfo()
 {
     QString infoStr;
     if (mListArchiveInfo.isEmpty()) {
-        infoStr = QLatin1String("No archive in queue");
+        infoStr = QStringLiteral("No archive in queue");
     } else {
         Q_FOREACH (ArchiveMailInfo *info, mListArchiveInfo) {
             if (!infoStr.isEmpty()) {
@@ -187,7 +187,7 @@ QString ArchiveMailManager::infoToStr(ArchiveMailInfo *info) const
 QString ArchiveMailManager::printArchiveListInfo()
 {
     QString infoStr;
-    const QStringList collectionList = mConfig->groupList().filter(QRegExp(QLatin1String("ArchiveMailCollection \\d+")));
+    const QStringList collectionList = mConfig->groupList().filter(QRegExp(QStringLiteral("ArchiveMailCollection \\d+")));
     const int numberOfCollection = collectionList.count();
     for (int i = 0 ; i < numberOfCollection; ++i) {
         KConfigGroup group = mConfig->group(collectionList.at(i));
