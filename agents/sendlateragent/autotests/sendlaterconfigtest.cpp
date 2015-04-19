@@ -33,7 +33,7 @@ SendLaterConfigTest::~SendLaterConfigTest()
 
 void SendLaterConfigTest::init()
 {
-    mConfig = KSharedConfig::openConfig(QStringLiteral("test-sendlateragent.rc"));
+    mConfig = KSharedConfig::openConfig(QStringLiteral("test-sendlateragent.rc"), KConfig::SimpleConfig);
     mSendlaterRegExpFilter = QRegExp(QStringLiteral("SendLaterItem \\d+"));
     cleanup();
 }

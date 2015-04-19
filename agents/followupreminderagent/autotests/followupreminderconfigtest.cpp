@@ -34,7 +34,7 @@ FollowUpReminderConfigTest::~FollowUpReminderConfigTest()
 
 void FollowUpReminderConfigTest::init()
 {
-    mConfig = KSharedConfig::openConfig(QStringLiteral("test-followupreminder.rc"));
+    mConfig = KSharedConfig::openConfig(QStringLiteral("test-followupreminder.rc"), KConfig::SimpleConfig);
     mFollowupRegExpFilter = QRegExp(QStringLiteral("FollowupReminderItem \\d+"));
     cleanup();
 }

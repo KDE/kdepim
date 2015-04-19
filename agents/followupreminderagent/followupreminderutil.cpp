@@ -48,7 +48,7 @@ void FollowUpReminder::FollowUpReminderUtil::forceReparseConfiguration()
 
 KSharedConfig::Ptr FollowUpReminder::FollowUpReminderUtil::defaultConfig()
 {
-    return KSharedConfig::openConfig(QStringLiteral("akonadi_followupreminder_agentrc"));
+    return KSharedConfig::openConfig(QStringLiteral("akonadi_followupreminder_agentrc"), KConfig::SimpleConfig);
 }
 
 void FollowUpReminder::FollowUpReminderUtil::writeFollowupReminderInfo(KSharedConfig::Ptr config, FollowUpReminder::FollowUpReminderInfo *info, bool forceReload)

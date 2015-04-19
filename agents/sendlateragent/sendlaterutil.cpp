@@ -72,7 +72,7 @@ QDateTime SendLater::SendLaterUtil::updateRecurence(SendLater::SendLaterInfo *in
 
 KSharedConfig::Ptr SendLater::SendLaterUtil::defaultConfig()
 {
-    return KSharedConfig::openConfig(QStringLiteral("akonadi_sendlater_agentrc"));
+    return KSharedConfig::openConfig(QStringLiteral("akonadi_sendlater_agentrc"), KConfig::SimpleConfig);
 }
 
 void SendLater::SendLaterUtil::writeSendLaterInfo(KSharedConfig::Ptr config, SendLater::SendLaterInfo *info, bool forceReload)
