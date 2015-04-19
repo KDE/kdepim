@@ -72,8 +72,8 @@ class IncidenceViewer::Private
 {
   public:
     Private( IncidenceViewer *parent )
-      : mParent( parent ), mDelayedClear( false ), mParentCollectionFetchJob( 0 ),
-        mAttachmentModel( 0 )
+      : mParent( parent ), mParentCollectionFetchJob( 0 ),
+        mAttachmentModel( 0 ), mDelayedClear( false )
     {
       mAttachmentHandler = new AttachmentHandler( parent );
       mBrowser = new TextBrowser;
@@ -127,14 +127,14 @@ class IncidenceViewer::Private
     IncidenceViewer *mParent;
     TextBrowser *mBrowser;
     Akonadi::Item mCurrentItem;
-    QDate mDate;
     QString mHeaderText;
     QString mDefaultText;
-    bool mDelayedClear;
     Akonadi::Collection mParentCollection;
     Akonadi::CollectionFetchJob *mParentCollectionFetchJob;
     IncidenceAttachmentModel *mAttachmentModel;
     AttachmentHandler *mAttachmentHandler;
+    QDate mDate;
+    bool mDelayedClear;
 };
 
 IncidenceViewer::IncidenceViewer( Akonadi::ETMCalendar *calendar, QWidget *parent )
