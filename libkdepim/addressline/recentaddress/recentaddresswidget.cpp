@@ -43,6 +43,7 @@ RecentAddressWidget::RecentAddressWidget(QWidget *parent)
     layout->setMargin(0);
 
     mLineEdit = new KLineEdit(this);
+    mLineEdit->setObjectName(QStringLiteral("line_edit"));
     layout->addWidget(mLineEdit);
 
     mLineEdit->setTrapReturnKey(true);
@@ -55,16 +56,20 @@ RecentAddressWidget::RecentAddressWidget(QWidget *parent)
 
     QVBoxLayout *btnsLayout = new QVBoxLayout;
     btnsLayout->addStretch();
+
     mNewButton = new QPushButton(QIcon::fromTheme(QStringLiteral("list-add")), i18n("&Add"), this);
+    mNewButton->setObjectName(QStringLiteral("new_button"));
     connect(mNewButton, &QPushButton::clicked, this, &RecentAddressWidget::slotAddItem);
     btnsLayout->insertWidget(0 , mNewButton);
 
     mRemoveButton = new QPushButton(QIcon::fromTheme(QStringLiteral("list-remove")), i18n("&Remove"), this);
+    mRemoveButton->setObjectName(QStringLiteral("remove_button"));
     mRemoveButton->setEnabled(false);
     connect(mRemoveButton, &QPushButton::clicked, this, &RecentAddressWidget::slotRemoveItem);
     btnsLayout->insertWidget(1, mRemoveButton);
 
     mListView = new QListWidget(this);
+    mListView->setObjectName(QStringLiteral("list_view"));
     mListView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     mListView->setSortingEnabled(true);
     hboxLayout->addWidget(mListView);
