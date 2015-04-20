@@ -133,7 +133,7 @@ target_link_libraries(kdepim
   KF5::SonnetCore
   KF5::KCMUtils
   KF5::Wallet
-  KF5::BalooPim
+  KF5::AkonadiSearch
 )
 
 
