@@ -21,8 +21,8 @@
 #include "core/filter.h"
 #include "core/messageitem.h"
 
-#include <Akonadi/Search/emailquery.h>
-#include <Akonadi/Search/resultiterator.h>
+#include <AkonadiSearch/PIM/emailquery.h>
+#include <AkonadiSearch/PIM/resultiterator.h>
 
 using namespace MessageList::Core;
 
@@ -154,7 +154,7 @@ void Filter::setSearchString(const QString &search, QuickSearchLine::SearchOptio
         needToSplitString = true;
     }
     if (!newStr.trimmed().isEmpty()) {
-        Akonadi::Search::EmailQuery query;
+        Akonadi::Search::PIM::EmailQuery query;
         if (options & QuickSearchLine::SearchEveryWhere) {
             query.matches(newStr);
             query.setSplitSearchMatchString(needToSplitString);
@@ -175,7 +175,7 @@ void Filter::setSearchString(const QString &search, QuickSearchLine::SearchOptio
             query.addCollection(mCurrentFolder.id());
         }
 
-        Akonadi::Search::ResultIterator it = query.exec();
+        Akonadi::Search::PIM::ResultIterator it = query.exec();
         while (it.next()) {
             mMatchingItemIds << it.id();
         }

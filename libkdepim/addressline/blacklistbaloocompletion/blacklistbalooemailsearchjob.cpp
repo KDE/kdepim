@@ -20,7 +20,7 @@
 
 #include "blacklistbalooemailsearchjob.h"
 
-#include <Akonadi/Search/contactcompleter.h>
+#include <AkonadiSearch/PIM/contactcompleter.h>
 #include <QStringList>
 using namespace KPIM;
 
@@ -44,7 +44,7 @@ bool BlackListBalooEmailSearchJob::start()
         return false;
     }
 
-    Akonadi::Search::ContactCompleter com(trimmedString, mLimit);
+    Akonadi::Search::PIM::ContactCompleter com(trimmedString, mLimit);
     Q_EMIT emailsFound(com.complete());
     deleteLater();
     return true;

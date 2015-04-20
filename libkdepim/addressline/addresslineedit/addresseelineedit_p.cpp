@@ -34,7 +34,7 @@
 #include <QApplication>
 #include <KConfigGroup>
 #include <KLocalizedString>
-#include <Akonadi/Search/contactcompleter.h>
+#include <AkonadiSearch/PIM/contactcompleter.h>
 
 #include <ldap/ldapclientsearch.h>
 #include <solid/networking.h>
@@ -211,7 +211,7 @@ QStringList AddresseeLineEditPrivate::cleanupEmailList(const QStringList &inputL
 void AddresseeLineEditPrivate::searchInBaloo()
 {
     const QString trimmedString = m_searchString.trimmed();
-    Akonadi::Search::ContactCompleter com(trimmedString, 20);
+    Akonadi::Search::PIM::ContactCompleter com(trimmedString, 20);
     const QStringList listEmail = cleanupEmailList(com.complete());
     Q_FOREACH (const QString &email, listEmail) {
         addCompletionItem(email, 1, s_static->balooCompletionSource);
