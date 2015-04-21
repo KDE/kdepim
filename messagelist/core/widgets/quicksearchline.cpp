@@ -21,7 +21,7 @@
 #include "quicksearchline.h"
 #include "core/settings.h"
 #include <akonadi/kmime/messagestatus.h>
-
+#include "pimcommon/widgets/lineeditwithcompleter.h"
 #include <KLocalizedString>
 #include <KLineEdit>
 #include <KComboBox>
@@ -82,7 +82,7 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     initializeStatusSearchButton(quickSearchButtonLayout);
     vbox->addWidget(mQuickSearchFilterWidget);
 
-    mSearchEdit = new KLineEdit( this );
+    mSearchEdit = new PimCommon::LineEditWithCompleter( this );
     mSearchEdit->setClickMessage( i18nc( "Search for messages.", "Search" ) );
     mSearchEdit->setObjectName( QLatin1String( "quicksearch" ) );
     mSearchEdit->setClearButtonShown( true );

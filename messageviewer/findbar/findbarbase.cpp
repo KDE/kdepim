@@ -18,12 +18,11 @@
  */
 
 #include "findbarbase.h"
-#include "findbarlineedit.h"
+#include "pimcommon/widgets/lineeditwithcompleter.h"
 
 #include <kicon.h>
 #include <klocale.h>
 #include <kpushbutton.h>
-#include <klineedit.h>
 #include <kmessagebox.h>
 #include <KColorScheme>
 
@@ -59,7 +58,7 @@ FindBarBase::FindBarBase( QWidget * parent )
     QLabel * label = new QLabel( i18nc( "Find text", "F&ind:" ), this );
     lay->addWidget( label );
 
-    mSearch = new FindBarLineEdit( this );
+    mSearch = new PimCommon::LineEditWithCompleter( this );
     mSearch->setObjectName(QLatin1String("searchline"));
     mSearch->setToolTip( i18n( "Text to search for" ) );
     mSearch->setClearButtonShown( true );

@@ -167,6 +167,7 @@ set(libpimcommon_widgets_SRCS
   widgets/slidecontainer.cpp
   widgets/splittercollapser.cpp
   widgets/manageaccountwidget.cpp
+  widgets/lineeditwithcompleter.cpp
 )
 
 set(libpimcommon_baloodebug_SRCS

@@ -12,6 +12,7 @@ include_directories(
   ${BALOO_INCLUDE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
   ${CMAKE_SOURCE_DIR}/messagecore
+  ${CMAKE_SOURCE_DIR}/pimcommon
   )
 
 
@@ -98,6 +99,7 @@ target_link_libraries(messagelist
   ${KDEPIMLIBS_KMIME_LIBS}
   ${BALOO_LIBRARIES}
   messagecore
+  pimcommon
 )
 
 set_target_properties(messagelist PROPERTIES

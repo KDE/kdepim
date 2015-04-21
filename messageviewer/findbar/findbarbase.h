@@ -23,14 +23,14 @@
 #include <QWidget>
 
 class QAction;
-class KLineEdit;
 class QPushButton;
 class QMenu;
 class QLabel;
-
+namespace PimCommon {
+class LineEditWithCompleter;
+}
 namespace MessageViewer
 {
-class FindBarLineEdit;
 class FindBarBase : public QWidget
 {
     Q_OBJECT
@@ -72,7 +72,7 @@ protected:
     QString mPositiveBackground;
     QString mNegativeBackground;
     QString mLastSearchStr;
-    FindBarLineEdit *mSearch;
+    PimCommon::LineEditWithCompleter *mSearch;
     QAction *mCaseSensitiveAct;
 
     QPushButton *mFindPrevBtn;
