@@ -30,7 +30,7 @@
 
 using namespace KSieveUi;
 SieveActionEnclose::SieveActionEnclose(QObject *parent)
-    : SieveAction(QLatin1String("enclose"), i18n("Enclose"), parent)
+    : SieveAction(QStringLiteral("enclose"), i18n("Enclose"), parent)
 {
 }
 
@@ -50,7 +50,7 @@ QWidget *SieveActionEnclose::createParamWidget(QWidget *parent) const
     grid->addWidget(lab, 0, 0);
 
     QLineEdit *subject = new QLineEdit;
-    subject->setObjectName(QLatin1String("subject"));
+    subject->setObjectName(QStringLiteral("subject"));
     connect(subject, &QLineEdit::textChanged, this, &SieveActionEnclose::valueChanged);
     grid->addWidget(subject, 0, 1);
 
@@ -58,7 +58,7 @@ QWidget *SieveActionEnclose::createParamWidget(QWidget *parent) const
     grid->addWidget(lab, 1, 0);
 
     QLineEdit *headers = new QLineEdit;
-    headers->setObjectName(QLatin1String("headers"));
+    headers->setObjectName(QStringLiteral("headers"));
     connect(headers, &QLineEdit::textChanged, this, &SieveActionEnclose::valueChanged);
     grid->addWidget(headers, 1, 1);
 
@@ -66,7 +66,7 @@ QWidget *SieveActionEnclose::createParamWidget(QWidget *parent) const
     grid->addWidget(lab, 2, 0);
 
     MultiLineEdit *text = new MultiLineEdit;
-    text->setObjectName(QLatin1String("text"));
+    text->setObjectName(QStringLiteral("text"));
     connect(text, &MultiLineEdit::valueChanged, this, &SieveActionEnclose::valueChanged);
     grid->addWidget(text, 2, 1);
 
@@ -80,30 +80,30 @@ bool SieveActionEnclose::setParamWidgetValue(const QDomElement &element, QWidget
         QDomElement e = node.toElement();
         if (!e.isNull()) {
             const QString tagName = e.tagName();
-            if (tagName == QLatin1String("tag")) {
+            if (tagName == QStringLiteral("tag")) {
                 const QString tagValue = e.text();
-                if (tagValue == QLatin1String("headers")) {
+                if (tagValue == QStringLiteral("headers")) {
                     const QString strValue = AutoCreateScriptUtil::strValue(node);
                     if (!strValue.isEmpty()) {
-                        QLineEdit *subject = w->findChild<QLineEdit *>(QLatin1String("subject"));
+                        QLineEdit *subject = w->findChild<QLineEdit *>(QStringLiteral("subject"));
                         subject->setText(strValue);
                     }
-                } else if (tagValue == QLatin1String("subject")) {
+                } else if (tagValue == QStringLiteral("subject")) {
                     const QString strValue = AutoCreateScriptUtil::strValue(node);
                     if (!strValue.isEmpty()) {
-                        QLineEdit *headers = w->findChild<QLineEdit *>(QLatin1String("headers"));
+                        QLineEdit *headers = w->findChild<QLineEdit *>(QStringLiteral("headers"));
                         headers->setText(strValue);
                     }
                 } else {
                     unknowTagValue(tagValue, error);
                     qCDebug(LIBKSIEVE_LOG) << " SieveActionEnclose::setParamWidgetValue unknown tag value:" << tagValue;
                 }
-            } else if (tagName == QLatin1String("str")) {
-                MultiLineEdit *edit = w->findChild<MultiLineEdit *>(QLatin1String("text"));
+            } else if (tagName == QStringLiteral("str")) {
+                MultiLineEdit *edit = w->findChild<MultiLineEdit *>(QStringLiteral("text"));
                 edit->setText(e.text());
-            } else if (tagName == QLatin1String("crlf")) {
+            } else if (tagName == QStringLiteral("crlf")) {
                 //nothing
-            } else if (tagName == QLatin1String("comment")) {
+            } else if (tagName == QStringLiteral("comment")) {
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
@@ -117,20 +117,20 @@ bool SieveActionEnclose::setParamWidgetValue(const QDomElement &element, QWidget
 
 QString SieveActionEnclose::code(QWidget *w) const
 {
-    QString result = QLatin1String("enclose ");
-    const QLineEdit *subject = w->findChild<QLineEdit *>(QLatin1String("subject"));
+    QString result = QStringLiteral("enclose ");
+    const QLineEdit *subject = w->findChild<QLineEdit *>(QStringLiteral("subject"));
     const QString subjectStr = subject->text();
     if (!subjectStr.isEmpty()) {
         result += QString::fromLatin1(":subject \"%1\" ").arg(subjectStr);
     }
 
-    const QLineEdit *headers = w->findChild<QLineEdit *>(QLatin1String("headers"));
+    const QLineEdit *headers = w->findChild<QLineEdit *>(QStringLiteral("headers"));
     const QString headersStr = headers->text();
     if (!headersStr.isEmpty()) {
         result += QString::fromLatin1(":headers \"%1\" ").arg(headersStr);
     }
 
-    const MultiLineEdit *edit = w->findChild<MultiLineEdit *>(QLatin1String("text"));
+    const MultiLineEdit *edit = w->findChild<MultiLineEdit *>(QStringLiteral("text"));
     const QString text = edit->toPlainText();
     if (!text.isEmpty()) {
         result += QString::fromLatin1("text:%1").arg(AutoCreateScriptUtil::createMultiLine(text));
@@ -143,7 +143,7 @@ QString SieveActionEnclose::code(QWidget *w) const
 
 QStringList SieveActionEnclose::needRequires(QWidget */*parent*/) const
 {
-    return QStringList() << QLatin1String("enclose");
+    return QStringList() << QStringLiteral("enclose");
 }
 
 bool SieveActionEnclose::needCheckIfServerHasCapability() const
@@ -153,7 +153,7 @@ bool SieveActionEnclose::needCheckIfServerHasCapability() const
 
 QString SieveActionEnclose::serverNeedsCapability() const
 {
-    return QLatin1String("enclose");
+    return QStringLiteral("enclose");
 }
 
 QString SieveActionEnclose::help() const

@@ -92,8 +92,8 @@ void Vacation::slotGetResult(KManageSieve::SieveJob *job, bool success,
                            << script;
     mSieveJob = Q_NULLPTR; // job deletes itself after returning from this slot!
 
-    if (!mCheckOnly && mUrl.scheme() == QLatin1String("sieve") &&
-            !job->sieveCapabilities().contains(QLatin1String("vacation"))) {
+    if (!mCheckOnly && mUrl.scheme() == QStringLiteral("sieve") &&
+            !job->sieveCapabilities().contains(QStringLiteral("vacation"))) {
         KMessageBox::sorry(Q_NULLPTR, i18n("Your server did not list \"vacation\" in "
                                            "its list of supported Sieve extensions;\n"
                                            "without it, KMail cannot install out-of-"
@@ -130,11 +130,11 @@ void Vacation::slotGetResult(KManageSieve::SieveJob *job, bool success,
         mDialog->setActivateVacation(active);
         mDialog->setMessageText(messageText);
         mDialog->setNotificationInterval(notificationInterval);
-        mDialog->setMailAliases(aliases.join(QLatin1String(", ")));
+        mDialog->setMailAliases(aliases.join(QStringLiteral(", ")));
         mDialog->setSendForSpam(sendForSpam);
         mDialog->setDomainName(domainName);
         mDialog->enableDomainAndSendForSpam(!VacationSettings::allowOutOfOfficeUploadButNoSettings());
-        mDialog->enableDates(job->sieveCapabilities().contains(QLatin1String("date")));
+        mDialog->enableDates(job->sieveCapabilities().contains(QStringLiteral("date")));
         mDialog->setStartDate(startDate);
         mDialog->setEndDate(endDate);
 

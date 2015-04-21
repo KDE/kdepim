@@ -30,7 +30,7 @@
 using namespace KSieveUi;
 
 SieveConditionCurrentDate::SieveConditionCurrentDate(QObject *parent)
-    : SieveCondition(QLatin1String("currentdate"), i18n("Currentdate"), parent)
+    : SieveCondition(QStringLiteral("currentdate"), i18n("Currentdate"), parent)
 {
 }
 
@@ -47,13 +47,13 @@ QWidget *SieveConditionCurrentDate::createParamWidget(QWidget *parent) const
     w->setLayout(lay);
 
     SelectMatchTypeComboBox *matchTypeCombo = new SelectMatchTypeComboBox;
-    matchTypeCombo->setObjectName(QLatin1String("matchtype"));
+    matchTypeCombo->setObjectName(QStringLiteral("matchtype"));
     lay->addWidget(matchTypeCombo);
     connect(matchTypeCombo, &SelectMatchTypeComboBox::valueChanged, this, &SieveConditionCurrentDate::valueChanged);
 
     SelectDateWidget *dateWidget = new SelectDateWidget;
     connect(dateWidget, &SelectDateWidget::valueChanged, this, &SieveConditionCurrentDate::valueChanged);
-    dateWidget->setObjectName(QLatin1String("datewidget"));
+    dateWidget->setObjectName(QStringLiteral("datewidget"));
     lay->addWidget(dateWidget);
 
     return w;
@@ -61,11 +61,11 @@ QWidget *SieveConditionCurrentDate::createParamWidget(QWidget *parent) const
 
 QString SieveConditionCurrentDate::code(QWidget *w) const
 {
-    const SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox *>(QLatin1String("matchtype"));
+    const SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox *>(QStringLiteral("matchtype"));
     bool isNegative = false;
     const QString matchTypeStr = selectMatchCombobox->code(isNegative);
 
-    const SelectDateWidget *dateWidget = w->findChild<SelectDateWidget *>(QLatin1String("datewidget"));
+    const SelectDateWidget *dateWidget = w->findChild<SelectDateWidget *>(QStringLiteral("datewidget"));
     const QString dateWidgetStr = dateWidget->code();
 
     return AutoCreateScriptUtil::negativeString(isNegative) + QString::fromLatin1("currentdate %1 %2").arg(matchTypeStr).arg(dateWidgetStr);
@@ -78,12 +78,12 @@ bool SieveConditionCurrentDate::needCheckIfServerHasCapability() const
 
 QString SieveConditionCurrentDate::serverNeedsCapability() const
 {
-    return QLatin1String("date");
+    return QStringLiteral("date");
 }
 
 QStringList SieveConditionCurrentDate::needRequires(QWidget *) const
 {
-    return QStringList() << QLatin1String("date");
+    return QStringList() << QStringLiteral("date");
 }
 
 QString SieveConditionCurrentDate::help() const
@@ -101,7 +101,7 @@ bool SieveConditionCurrentDate::setParamWidgetValue(const QDomElement &element, 
         QDomElement e = node.toElement();
         if (!e.isNull()) {
             const QString tagName = e.tagName();
-            if (tagName == QLatin1String("str")) {
+            if (tagName == QStringLiteral("str")) {
                 if (index == 0) {
                     type = e.text();
                 } else if (index == 1) {
@@ -111,12 +111,12 @@ bool SieveConditionCurrentDate::setParamWidgetValue(const QDomElement &element, 
                     qCDebug(LIBKSIEVE_LOG) << " SieveConditionCurrentDate::setParamWidgetValue too many argument :" << index;
                 }
                 ++index;
-            } else if (tagName == QLatin1String("tag")) {
-                SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox *>(QLatin1String("matchtype"));
+            } else if (tagName == QStringLiteral("tag")) {
+                SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox *>(QStringLiteral("matchtype"));
                 selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition), name(), error);
-            } else if (tagName == QLatin1String("crlf")) {
+            } else if (tagName == QStringLiteral("crlf")) {
                 //nothing
-            } else if (tagName == QLatin1String("comment")) {
+            } else if (tagName == QStringLiteral("comment")) {
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
@@ -125,7 +125,7 @@ bool SieveConditionCurrentDate::setParamWidgetValue(const QDomElement &element, 
         }
         node = node.nextSibling();
     }
-    SelectDateWidget *dateWidget = w->findChild<SelectDateWidget *>(QLatin1String("datewidget"));
+    SelectDateWidget *dateWidget = w->findChild<SelectDateWidget *>(QStringLiteral("datewidget"));
     dateWidget->setCode(type, value);
     return true;
 }

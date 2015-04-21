@@ -435,7 +435,7 @@ void Session::startAuthentication()
 
 QStringList Session::requestedSaslMethod() const
 {
-    const QString m = QUrlQuery(m_url).queryItemValue(QLatin1String("x-mech"));
+    const QString m = QUrlQuery(m_url).queryItemValue(QStringLiteral("x-mech"));
     if (!m.isEmpty()) {
         return QStringList(m);
     }
@@ -568,6 +568,6 @@ void Session::setErrorMessage(const QString &msg)
 
 bool Session::allowUnencrypted() const
 {
-    return QUrlQuery(m_url).queryItemValue(QLatin1String("x-allow-unencrypted")) == QLatin1String("true");
+    return QUrlQuery(m_url).queryItemValue(QStringLiteral("x-allow-unencrypted")) == QStringLiteral("true");
 }
 

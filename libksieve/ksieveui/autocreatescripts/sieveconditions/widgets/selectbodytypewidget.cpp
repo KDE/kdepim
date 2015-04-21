@@ -44,9 +44,9 @@ void SelectBodyTypeWidget::initialize()
 
     mBodyCombobox = new KComboBox;
     lay->addWidget(mBodyCombobox);
-    mBodyCombobox->addItem(i18n("raw"), QLatin1String(":raw"));
-    mBodyCombobox->addItem(i18n("content"), QLatin1String(":content"));
-    mBodyCombobox->addItem(i18n("text"), QLatin1String(":text"));
+    mBodyCombobox->addItem(i18n("raw"), QStringLiteral(":raw"));
+    mBodyCombobox->addItem(i18n("content"), QStringLiteral(":content"));
+    mBodyCombobox->addItem(i18n("text"), QStringLiteral(":text"));
     connect(mBodyCombobox, static_cast<void (KComboBox::*)(int)>(&KComboBox::activated), this, &SelectBodyTypeWidget::slotBodyTypeChanged);
 
     mBodyLineEdit = new QLineEdit;
@@ -58,7 +58,7 @@ void SelectBodyTypeWidget::initialize()
 QString SelectBodyTypeWidget::code() const
 {
     QString value = mBodyCombobox->itemData(mBodyCombobox->currentIndex()).toString();
-    if (value == QLatin1String(":content")) {
+    if (value == QStringLiteral(":content")) {
         value += QString::fromLatin1(" \"%1\"").arg(mBodyLineEdit->text());
     }
     return value;
@@ -67,7 +67,7 @@ QString SelectBodyTypeWidget::code() const
 void SelectBodyTypeWidget::slotBodyTypeChanged(int index)
 {
     const QString value = mBodyCombobox->itemData(index).toString();
-    if (value == QLatin1String(":content")) {
+    if (value == QStringLiteral(":content")) {
         mBodyLineEdit->show();
     } else {
         mBodyLineEdit->hide();

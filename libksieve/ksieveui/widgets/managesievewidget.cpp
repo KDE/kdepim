@@ -349,9 +349,9 @@ void ManageSieveWidget::slotDeleteScript()
 
 bool ManageSieveWidget::isProtectedName(const QString &name)
 {
-    if (name == QLatin1String("master") ||
-            name == QLatin1String("user") ||
-            name == QLatin1String("management")) {
+    if (name == QStringLiteral("master") ||
+            name == QStringLiteral("user") ||
+            name == QStringLiteral("management")) {
         return true;
     }
     return false;
@@ -420,8 +420,8 @@ void ManageSieveWidget::slotGotList(KManageSieve::SieveJob *job, bool success, c
     mBlockSignal = false;
 
     qCDebug(LIBKSIEVE_LOG) << " LOAD";
-    const bool hasIncludeCapability = job->sieveCapabilities().contains(QLatin1String("include"));
-    const bool hasUserActiveScript = (activeScript.toLower() == QLatin1String("USER"));
+    const bool hasIncludeCapability = job->sieveCapabilities().contains(QStringLiteral("include"));
+    const bool hasUserActiveScript = (activeScript.toLower() == QStringLiteral("USER"));
     //QStringList mUserActiveScriptList;
     if (hasUserActiveScript && hasIncludeCapability) {
         //TODO parse file.

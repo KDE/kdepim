@@ -23,7 +23,7 @@
 
 using namespace KSieveUi;
 SieveActionSetFlags::SieveActionSetFlags(QObject *parent)
-    : SieveActionAbstractFlags(QLatin1String("setflag"), i18n("Set Flags"), parent)
+    : SieveActionAbstractFlags(QStringLiteral("setflag"), i18n("Set Flags"), parent)
 {
 }
 

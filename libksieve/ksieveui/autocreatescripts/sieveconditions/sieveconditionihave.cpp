@@ -29,7 +29,7 @@
 
 using namespace KSieveUi;
 SieveConditionIhave::SieveConditionIhave(QObject *parent)
-    : SieveCondition(QLatin1String("ihave"), i18n("IHave"), parent)
+    : SieveCondition(QStringLiteral("ihave"), i18n("IHave"), parent)
 {
 }
 
@@ -50,21 +50,21 @@ QWidget *SieveConditionIhave::createParamWidget(QWidget *parent) const
     edit->setPlaceholderText(i18n("Use \",\" to separate capabilities"));
     edit->setClearButtonEnabled(true);
     lay->addWidget(edit);
-    edit->setObjectName(QLatin1String("edit"));
+    edit->setObjectName(QStringLiteral("edit"));
 
     return w;
 }
 
 QString SieveConditionIhave::code(QWidget *w) const
 {
-    const QLineEdit *edit = w->findChild<QLineEdit *>(QLatin1String("edit"));
+    const QLineEdit *edit = w->findChild<QLineEdit *>(QStringLiteral("edit"));
     const QString editValue = edit->text();
     return QStringLiteral("ihave %1").arg(AutoCreateScriptUtil::createList(editValue, QLatin1Char(',')));
 }
 
 QStringList SieveConditionIhave::needRequires(QWidget *) const
 {
-    return QStringList() << QLatin1String("ihave");
+    return QStringList() << QStringLiteral("ihave");
 }
 
 bool SieveConditionIhave::needCheckIfServerHasCapability() const
@@ -74,7 +74,7 @@ bool SieveConditionIhave::needCheckIfServerHasCapability() const
 
 QString SieveConditionIhave::serverNeedsCapability() const
 {
-    return QLatin1String("ihave");
+    return QStringLiteral("ihave");
 }
 
 QString SieveConditionIhave::help() const
@@ -89,13 +89,13 @@ bool SieveConditionIhave::setParamWidgetValue(const QDomElement &element, QWidge
         QDomElement e = node.toElement();
         if (!e.isNull()) {
             const QString tagName = e.tagName();
-            if (tagName == QLatin1String("str")) {
+            if (tagName == QStringLiteral("str")) {
                 const QString tagValue = e.text();
-                QLineEdit *edit = w->findChild<QLineEdit *>(QLatin1String("edit"));
+                QLineEdit *edit = w->findChild<QLineEdit *>(QStringLiteral("edit"));
                 edit->setText(tagValue);
-            } else if (tagName == QLatin1String("crlf")) {
+            } else if (tagName == QStringLiteral("crlf")) {
                 //nothing
-            } else if (tagName == QLatin1String("comment")) {
+            } else if (tagName == QStringLiteral("comment")) {
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
