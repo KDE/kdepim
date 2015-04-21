@@ -40,7 +40,6 @@ void SearchRuleStringTest::shouldHaveRequirePart()
     QCOMPARE(ruleStatus.requiredPart(), requiredpart);
 }
 
-
 void SearchRuleStringTest::shouldHaveRequirePart_data()
 {
     QTest::addColumn<QByteArray>("field");
@@ -73,6 +72,19 @@ void SearchRuleStringTest::shouldMatchString()
 void SearchRuleStringTest::shouldMatchString_data()
 {
 
+}
+
+void SearchRuleStringTest::shouldBeEmpty()
+{
+    MailCommon::SearchRuleString searchrule;
+    QVERIFY(searchrule.isEmpty());
+    searchrule = MailCommon::SearchRuleString(QByteArray(), MailCommon::SearchRule::FuncContains, QLatin1String("foo"));
+    QVERIFY(searchrule.isEmpty());
+    searchrule = MailCommon::SearchRuleString(QByteArray("<tag>"), MailCommon::SearchRule::FuncContains, QString());
+    QVERIFY(searchrule.isEmpty());
+
+    searchrule = MailCommon::SearchRuleString(QByteArray("<tag>"), MailCommon::SearchRule::FuncContains, QLatin1String("foo"));
+    QVERIFY(!searchrule.isEmpty());
 }
 
 
