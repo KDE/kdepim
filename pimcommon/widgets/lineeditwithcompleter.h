@@ -27,7 +27,7 @@ class PIMCOMMON_EXPORT LineEditWithCompleter : public KLineEdit
 {
     Q_OBJECT
 public:
-    explicit LineEditWithCompleter(QWidget *parent = 0);
+    explicit LineEditWithCompleter(QWidget *parent = Q_NULLPTR);
     ~LineEditWithCompleter();
 
 protected:
