@@ -90,15 +90,15 @@ HeaderStyle *HeaderStyle::create(Type type)
 HeaderStyle *HeaderStyle::create(const QString &type)
 {
     const QString lowerType = type.toLower();
-    if (lowerType == QLatin1String("brief")) {
+    if (lowerType == QStringLiteral("brief")) {
         return brief();
-    } else if (lowerType == QLatin1String("plain")) {
+    } else if (lowerType == QStringLiteral("plain")) {
         return plain();
-    } else if (lowerType == QLatin1String("enterprise")) {
+    } else if (lowerType == QStringLiteral("enterprise")) {
         return enterprise();
-    } else if (lowerType == QLatin1String("custom")) {
+    } else if (lowerType == QStringLiteral("custom")) {
         return custom();
-    } else if (lowerType == QLatin1String("grantlee")) {
+    } else if (lowerType == QStringLiteral("grantlee")) {
         return grantlee();
     }
     //if ( lowerType == "fancy" ) return fancy(); // not needed, see below

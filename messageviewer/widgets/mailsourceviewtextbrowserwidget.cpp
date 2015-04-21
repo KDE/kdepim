@@ -69,13 +69,13 @@ MailSourceViewTextBrowserWidget::MailSourceViewTextBrowserWidget(QWidget *parent
     setLayout(lay);
     lay->setMargin(0);
     mTextToSpeechWidget = new PimCommon::TextToSpeechWidget;
-    mTextToSpeechWidget->setObjectName(QLatin1String("texttospeech"));
+    mTextToSpeechWidget->setObjectName(QStringLiteral("texttospeech"));
     lay->addWidget(mTextToSpeechWidget);
 
     PimCommon::TextToSpeechInterface *textToSpeechInterface = new PimCommon::TextToSpeechInterface(mTextToSpeechWidget, this);
 
     mTextBrowser = new MailSourceViewTextBrowser(textToSpeechInterface);
-    mTextBrowser->setObjectName(QLatin1String("textbrowser"));
+    mTextBrowser->setObjectName(QStringLiteral("textbrowser"));
     mTextBrowser->setLineWrapMode(QPlainTextEdit::NoWrap);
     mTextBrowser->setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
     connect(mTextBrowser, &MailSourceViewTextBrowser::findText, this, &MailSourceViewTextBrowserWidget::slotFind);
@@ -83,7 +83,7 @@ MailSourceViewTextBrowserWidget::MailSourceViewTextBrowserWidget(QWidget *parent
     mSliderContainer = new PimCommon::SlideContainer(this);
 
     mFindBar = new FindBarSourceView(mTextBrowser, this);
-    mFindBar->setObjectName(QLatin1String("findbar"));
+    mFindBar->setObjectName(QStringLiteral("findbar"));
     connect(mFindBar, &FindBarSourceView::hideFindBar, mSliderContainer, &PimCommon::SlideContainer::slideOut);
     mSliderContainer->setContent(mFindBar);
 
@@ -139,7 +139,7 @@ void MailSourceViewTextBrowser::contextMenuEvent(QContextMenuEvent *event)
                                              : KIconTheme::TextEditor,
                                              popup->actions());
         popup->addSeparator();
-        popup->addAction(QIcon::fromTheme(QLatin1String("preferences-desktop-text-to-speech")), i18n("Speak Text"), this, SLOT(slotSpeakText()));
+        popup->addAction(QIcon::fromTheme(QStringLiteral("preferences-desktop-text-to-speech")), i18n("Speak Text"), this, SLOT(slotSpeakText()));
 
         popup->addSeparator();
         popup->addAction(KStandardAction::saveAs(this, SLOT(slotSaveAs()), this));
@@ -168,7 +168,7 @@ void MailSourceViewTextBrowser::slotSpeakText()
 void MailSourceHighlighter::highlightBlock(const QString &text)
 {
     // all visible ascii except space and :
-    const QRegExp regexp(QLatin1String("^([\\x21-9;-\\x7E]+:\\s)"));
+    const QRegExp regexp(QStringLiteral("^([\\x21-9;-\\x7E]+:\\s)"));
 
     // keep the previous state
     setCurrentBlockState(previousBlockState());
@@ -177,7 +177,7 @@ void MailSourceHighlighter::highlightBlock(const QString &text)
         const int headersState = -1; // Also the initial State
         // Content- header starts a new mime part, and therefore new headers
         // If a Content-* header is found, change State to headers until a blank line is found.
-        if (text.startsWith(QLatin1String("Content-"))) {
+        if (text.startsWith(QStringLiteral("Content-"))) {
             setCurrentBlockState(headersState);
         }
         // highligth it if in headers state

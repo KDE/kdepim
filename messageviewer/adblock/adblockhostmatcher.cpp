@@ -31,7 +31,7 @@
 using namespace MessageViewer;
 bool AdBlockHostMatcher::tryAddFilter(const QString &filter)
 {
-    if (filter.startsWith(QLatin1String("||"))) {
+    if (filter.startsWith(QStringLiteral("||"))) {
         QString domain = filter.mid(2);
 
         if (!domain.endsWith(QLatin1Char('^'))) {
@@ -53,7 +53,7 @@ bool AdBlockHostMatcher::tryAddFilter(const QString &filter)
         return true;
     }
 
-    if (filter.startsWith(QLatin1String("@@"))) {
+    if (filter.startsWith(QStringLiteral("@@"))) {
         QString domain = filter.mid(2);
 
         if (domain.contains(QLatin1Char('^'))) {

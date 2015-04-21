@@ -64,7 +64,7 @@ bool AdBlockRuleTextMatchImpl::isTextMatchFilter(const QString &filter)
     }
 
     // We don't deal with element matching
-    if (filter.contains(QLatin1String("##"))) {
+    if (filter.contains(QStringLiteral("##"))) {
         return false;
     }
 
@@ -91,5 +91,5 @@ QString AdBlockRuleTextMatchImpl::ruleString() const
 
 QString AdBlockRuleTextMatchImpl::ruleType() const
 {
-    return QLatin1String("AdBlockRuleTextMatchImpl");
+    return QStringLiteral("AdBlockRuleTextMatchImpl");
 }

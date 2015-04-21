@@ -36,16 +36,16 @@ AdBlockElementHiding::AdBlockElementHiding()
 
 bool AdBlockElementHiding::addRule(const QString &rule)
 {
-    if (!rule.contains(QLatin1String("##"))) {
+    if (!rule.contains(QStringLiteral("##"))) {
         return false;
     }
 
-    if (rule.startsWith(QLatin1String("##"))) {
+    if (rule.startsWith(QStringLiteral("##"))) {
         m_GenericRules.push_back(rule.mid(2));
         return true;
     }
 
-    const QStringList lst = rule.split(QLatin1String("##"));
+    const QStringList lst = rule.split(QStringLiteral("##"));
     const QString domainSpecificRule = lst[1];
 
     QStringList domains = lst[0].split(QLatin1Char(','));
