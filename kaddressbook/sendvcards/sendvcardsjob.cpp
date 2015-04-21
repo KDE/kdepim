@@ -25,7 +25,6 @@
 #include <AkonadiCore/ItemFetchJob>
 #include <AkonadiCore/ItemFetchScope>
 #include <KContacts/VCardConverter>
-#include <QDebug>
 #include <util/vcardutil.h>
 #include <Akonadi/Contact/ContactGroupExpandJob>
 #include "pimcommon/temporaryfile/attachmenttemporaryfilesdirs.h"

@@ -17,8 +17,6 @@
 
 #include "../dialog/showarchivestructuredialog.h"
 
-#include <qdebug.h>
-
 #include <KLocalizedString>
 #include <QFileDialog>
 #include <QApplication>
