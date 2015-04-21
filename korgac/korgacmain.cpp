@@ -64,28 +64,26 @@ private:
     KOAlarmClient *mClient;
 };
 #endif
-static const char korgacVersion[] = KDEPIM_VERSION;
-
 int main(int argc, char **argv)
 {
-    Kdelibs4ConfigMigrator migrate(QLatin1String("korgac"));
+    Kdelibs4ConfigMigrator migrate(QStringLiteral("korgac"));
 
-    migrate.setConfigFiles(QStringList() << QLatin1String("korgacrc"));
+    migrate.setConfigFiles(QStringList() << QStringLiteral("korgacrc"));
     migrate.migrate();
 
     QApplication app(argc, argv);
 
-    KAboutData aboutData(QLatin1String("korgac"), i18n("KOrganizer Reminder Daemon"),
-                         QLatin1String(korgacVersion), i18n("KOrganizer Reminder Daemon"),
+    KAboutData aboutData(QStringLiteral("korgac"), i18n("KOrganizer Reminder Daemon"),
+                         QStringLiteral(KDEPIM_VERSION), i18n("KOrganizer Reminder Daemon"),
                          KAboutLicense::GPL,
                          i18n("(c) 2003 Cornelius Schumacher"),
-                         QString(), QLatin1String("http://pim.kde.org"));
+                         QString(), QStringLiteral("http://pim.kde.org"));
     aboutData.addAuthor(i18n("Cornelius Schumacher"), i18n("Former Maintainer"),
-                        QLatin1String("schumacher@kde.org"));
+                        QStringLiteral("schumacher@kde.org"));
     aboutData.addAuthor(i18n("Reinhold Kainhofer"), i18n("Former Maintainer"),
-                        QLatin1String("kainhofer@kde.org"));
+                        QStringLiteral("kainhofer@kde.org"));
     aboutData.addAuthor(i18n("Allen Winter"), i18n("Janitorial Staff"),
-                        QLatin1String("winter@kde.org"));
+                        QStringLiteral("winter@kde.org"));
 
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
