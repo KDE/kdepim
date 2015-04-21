@@ -15,25 +15,36 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FINDBARLINEEDIT_H
-#define FINDBARLINEEDIT_H
+#include "lineeditwithcompleter.h"
+#include <KLocalizedString>
+#include <QContextMenuEvent>
+#include <QMenu>
 
-#include <KLineEdit>
+using namespace PimCommon;
 
-namespace MessageViewer
+LineEditWithCompleter::LineEditWithCompleter(QWidget *parent)
+    : KLineEdit(parent)
 {
-class FindBarLineEdit : public KLineEdit
-{
-    Q_OBJECT
-public:
-    explicit FindBarLineEdit(QWidget *parent = 0);
-    ~FindBarLineEdit();
 
-protected:
-    void contextMenuEvent(QContextMenuEvent *e);
-
-private Q_SLOTS:
-    void slotClearHistory();
-};
 }
-#endif // FINDBARLINEEDIT_H
+
+LineEditWithCompleter::~LineEditWithCompleter()
+{
+
+}
+
+void LineEditWithCompleter::contextMenuEvent( QContextMenuEvent*e )
+{
+   QMenu *popup = KLineEdit::createStandardContextMenu();
+   popup->addSeparator();
+   //KF5 add i18n
+   popup->addAction( QLatin1String( "Clear History" ), this, SLOT(slotClearHistory()) );
+   popup->exec( e->globalPos() );
+   delete popup;
+}
+
+void LineEditWithCompleter::slotClearHistory()
+{
+    KCompletion *comp = completionObject();
+    comp->clear();
+}

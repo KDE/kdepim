@@ -170,6 +170,7 @@ set(libpimcommon_widgets_SRCS
   widgets/annotationdialog.cpp
   widgets/manageaccountwidget.cpp
   widgets/kactionmenuchangecase.cpp
+  widgets/lineeditwithcompleter.cpp
 )
 
 set(libtexttospeech_SRCS

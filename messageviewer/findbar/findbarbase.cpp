@@ -18,7 +18,7 @@
  */
 
 #include "findbarbase.h"
-#include "findbarlineedit.h"
+#include "pimcommon/widgets/lineeditwithcompleter.h"
 
 #include <qicon.h>
 #include <KLocalizedString>
@@ -58,7 +58,7 @@ FindBarBase::FindBarBase(QWidget *parent)
     QLabel *label = new QLabel(i18nc("Find text", "F&ind:"), this);
     lay->addWidget(label);
 
-    mSearch = new FindBarLineEdit(this);
+    mSearch = new PimCommon::LineEditWithCompleter(this);
     mSearch->setObjectName(QStringLiteral("searchline"));
     mSearch->setToolTip(i18n("Text to search for"));
     mSearch->setClearButtonShown(true);

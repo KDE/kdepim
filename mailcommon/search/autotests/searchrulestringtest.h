@@ -27,8 +27,9 @@ public:
 
 private Q_SLOTS:
     void shouldHaveDefaultValue();
-    void shouldHaveRequirePart();
     void shouldMatchString();
+    void shouldHaveRequirePart_data();
+    void shouldHaveRequirePart();
     void shouldMatchString_data();
 };
 

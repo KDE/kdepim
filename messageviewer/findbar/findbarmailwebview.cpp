@@ -17,11 +17,10 @@
  */
 
 #include "findbarmailwebview.h"
-#include "findbarlineedit.h"
+#include "pimcommon/widgets/lineeditwithcompleter.h"
 #include "viewer/mailwebview.h"
 
 #include <KLocalizedString>
-#include <KLineEdit>
 #include <QMenu>
 using namespace MessageViewer;
 
