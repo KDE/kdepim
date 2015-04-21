@@ -44,7 +44,7 @@ public:
         const KContacts::Addressee::List contacts = searchJob->contacts();
 
         if (contacts.isEmpty()) {
-            const QString text = i18n( "The VCard's primary email address is not in addressbook." );
+            const QString text = i18n( "The vCard's primary email address is not in addressbook." );
             KMessageBox::information(mParentWidget, text);
             q->setError(UserDefinedError);
             q->emitResult();
