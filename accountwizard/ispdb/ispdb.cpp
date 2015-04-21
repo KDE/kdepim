@@ -1,6 +1,5 @@
 /*
     Copyright (c) 2010 Omat Holding B.V. <info@omat.nl>
-    Copyright (c) 2014  Sandro Knauß <knauss@kolabsys.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -28,9 +27,7 @@
 #include <QDomDocument>
 
 Ispdb::Ispdb( QObject *parent )
-    : QObject( parent )
-    , mServerType( DataBase )
-    , mStart( true )
+  : QObject( parent ), mServerType( DataBase )
 {
 }
 
@@ -45,27 +42,15 @@ void Ispdb::setEmail( const QString& address )
     mAddr = box.addrSpec();
 }
 
-void Ispdb::setPassword( const QString &password )
-{
-    mPassword = password;
-}
-
-
 void Ispdb::start()
 {
+    kDebug() << mAddr.asString();
     // we should do different things in here. But lets focus in the db first.
-    lookupInDb(false, false);
-}
-
-void Ispdb::lookupInDb( bool auth, bool crypt )
-{
-    setServerType(mServerType);
-    startJob( lookupUrl(QLatin1String("mail"), QLatin1String("1.1"), auth, crypt) );
+    lookupInDb();
 }
 
 void Ispdb::startJob( const KUrl&url )
 {
-    mData.clear();
     QMap< QString, QVariant > map;
     map[QLatin1String("errorPage")] = false;
 
@@ -77,43 +62,32 @@ void Ispdb::startJob( const KUrl&url )
              this, SLOT(dataArrived(KIO::Job*,QByteArray)) );
 }
 
-KUrl Ispdb::lookupUrl( const QString &type, const QString &version, bool auth, bool crypt )
+void Ispdb::lookupInDb()
 {
     KUrl url;
-    const QString path = type + QLatin1String("/config-v") + version + QLatin1String(".xml");
-
     switch( mServerType )
     {
     case IspAutoConfig:
     {
-        url = KUrl( QLatin1String("http://autoconfig.") + mAddr.domain.toLower() + QLatin1Char('/') + path );
+        url = KUrl( QLatin1String("http://autoconfig.") + mAddr.domain.toLower() + QLatin1String("/mail/config-v1.1.xml?emailaddress=") + mAddr.asString().toLower() );
+        Q_EMIT searchType(i18n("Lookup configuration: Email provider"));
         break;
     }
     case IspWellKnow:
     {
-        url = KUrl( QLatin1String("http://") + mAddr.domain.toLower() + QLatin1String("/.well-known/autoconfig/") + path );
+        url = KUrl( QLatin1String("http://") + mAddr.domain.toLower() + QLatin1String("/.well-known/autoconfig/mail/config-v1.1.xml") );
+        Q_EMIT searchType(i18n("Lookup configuration: Trying common server name"));
         break;
     }
     case DataBase:
     {
         url = KUrl( QLatin1String("https://autoconfig.thunderbird.net/v1.1/") + mAddr.domain.toLower() );
+        Q_EMIT searchType(i18n("Lookup configuration: Mozilla database"));
         break;
     }
     }
-
-    if ( mServerType != DataBase ) {
-        if (crypt) {
-            url.setProtocol(QLatin1String("https"));
-        }
-
-        if(auth) {
-            url.setUser(mAddr.asString());
-            url.setPass(mPassword);
-        }
-    }
-    return url;
+    startJob( url );
 }
-
 
 void Ispdb::slotResult( KJob* job )
 {
@@ -141,7 +115,7 @@ void Ispdb::slotResult( KJob* job )
         emit finished( false );
         return;
       }
-      lookupInDb( false, false );
+      lookupInDb();
       return;
     }
 
@@ -154,24 +128,11 @@ void Ispdb::slotResult( KJob* job )
         return;
     }
 
-    parseResult( document );
-
-}
-
-void Ispdb::parseResult( const QDomDocument &document )
-{
     QDomElement docElem = document.documentElement();
-    QDomNodeList l = docElem.elementsByTagName(QLatin1String("emailProvider"));
+    QDomNode m = docElem.firstChild(); // emailprovider
+    QDomNode n = m.firstChild(); // emailprovider
 
-    if ( l.isEmpty() ) {
-        emit finished(false);
-        return;
-    }
-
-    //only handle the first emailProvider entry
-    QDomNode firstProvider = l.at(0);
-    QDomNode n = firstProvider.firstChild();
-    while( !n.isNull() ) {
+    while ( !n.isNull() ) {
         QDomElement e = n.toElement();
         if ( !e.isNull() ) {
             //kDebug()  << qPrintable( e.tagName() );
@@ -185,9 +146,9 @@ void Ispdb::parseResult( const QDomDocument &document )
             else if ( tagName == QLatin1String( "incomingServer" )
                       && e.attribute( QLatin1String("type") ) == QLatin1String( "imap" ) ) {
                 server s = createServer( e );
-                if (s.isValid())
+                if (s.isValid()) 
                    mImapServers.append( s );
-            } else if ( tagName == QLatin1String( "incomingServer" )
+            } else if ( tagName == QLatin1String( "incomingServer" ) 
                       && e.attribute( QLatin1String("type") ) == QLatin1String( "pop3" ) ) {
                 server s = createServer( e );
                 if (s.isValid())
@@ -197,14 +158,6 @@ void Ispdb::parseResult( const QDomDocument &document )
                 server s = createServer( e );
                 if (s.isValid())
                    mSmtpServers.append( s );
-            } else if ( tagName == QLatin1String( "identity" ) ) {
-                identity i = createIdentity( e );
-                if ( i.isValid() ) {
-                    mIdentities.append( i );
-                    if ( i.isDefault() ) {
-                        mDefaultIdentity = mIdentities.count()-1;
-                    }
-                }
             }
         }
         n = n.nextSibling();
@@ -212,7 +165,6 @@ void Ispdb::parseResult( const QDomDocument &document )
 
     emit finished( true );
 }
-
 
 server Ispdb::createServer( const QDomElement& n )
 {
@@ -257,45 +209,6 @@ server Ispdb::createServer( const QDomElement& n )
         o = o.nextSibling();
     }
     return s;
-}
-
-identity Ispdb::createIdentity( const QDomElement& n )
-{
-    QDomNode o = n.firstChild();
-    identity i;
-
-    //type="kolab" version="1.0" is the only identity that is defined
-    if ( n.attribute(QLatin1String("type")) != QLatin1String("kolab")
-            || n.attribute(QLatin1String("version")) != QLatin1String("1.0") ) {
-        kDebug() << "unknown type of identity element.";
-    }
-
-    while ( !o.isNull() ) {
-        QDomElement f = o.toElement();
-        if ( !f.isNull() ) {
-          const QString tagName( f.tagName() );
-          if ( tagName == QLatin1String( "default" ) ) {
-              i.mDefault = f.text().toLower() == QLatin1String( "true" );
-          } else if ( tagName == QLatin1String( "email" ) ) {
-              i.email = f.text();
-          } else if ( tagName == QLatin1String( "name" ) ) {
-              i.name = f.text();
-          } else if ( tagName == QLatin1String( "organization" ) ) {
-              i.organization = f.text();
-          } else if ( tagName == QLatin1String( "signature" ) ) {
-              QTextStream stream(&i.signature);
-              f.save(stream, 0);
-              i.signature = i.signature.trimmed();
-              if ( i.signature.startsWith(QLatin1String("<signature>")) ) {
-                  i.signature = i.signature.mid(11,i.signature.length()-23);
-                  i.signature = i.signature.trimmed();
-              }
-          }
-        }
-        o = o.nextSibling();
-    }
-
-    return i;
 }
 
 QString Ispdb::replacePlaceholders( const QString& in )
@@ -344,43 +257,3 @@ QList< server > Ispdb::smtpServers() const
     return mSmtpServers;
 }
 
-int Ispdb::defaultIdentity() const
-{
-    return mDefaultIdentity;
-}
-
-QList< identity > Ispdb::identities() const
-{
-    return mIdentities;
-}
-
-void Ispdb::setServerType( Ispdb::searchServerType type )
-{
-    if ( type != mServerType || mStart ) {
-        mServerType = type;
-        mStart  = false;
-        switch( mServerType )
-        {
-        case IspAutoConfig:
-        {
-            Q_EMIT searchType(i18n("Lookup configuration: Email provider"));
-            break;
-        }
-        case IspWellKnow:
-        {
-            Q_EMIT searchType(i18n("Lookup configuration: Trying common server name"));
-            break;
-        }
-        case DataBase:
-        {
-            Q_EMIT searchType(i18n("Lookup configuration: Mozilla database"));
-            break;
-        }
-        }
-    }
-}
-
-Ispdb::searchServerType Ispdb::serverType() const
-{
-    return mServerType;
-}

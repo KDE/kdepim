@@ -1,6 +1,5 @@
 /*
     Copyright (c) 2010 Omat Holding B.V. <info@omat.nl>
-    Copyright (c) 2014  Sandro Knauß <knauss@kolabsys.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -27,10 +26,8 @@
 #include <kmime/kmime_header_parsing.h>
 
 class QDomElement;
-class QDomDocument;
 
 struct server;
-struct identity;
 
 /**
   This class will search in Mozilla's database for an xml file
@@ -52,7 +49,7 @@ public:
      In particular, note that Ispdb's Plain represents both Cleartext and AUTH Plain
      We will always treat it as Cleartext
      */
-    enum authType { Plain = 0, CramMD5, NTLM, GSSAPI, ClientIP, NoAuth, Basic };
+    enum authType { Plain = 0, CramMD5, NTLM, GSSAPI, ClientIP, NoAuth };
     enum length { Long = 0, Short };
 
     /** Constructor */
@@ -83,94 +80,38 @@ public:
         get a list of smtp servers available for this provider */
     QList< server > smtpServers() const;
 
-    QList< identity > identities() const;
-
-    int defaultIdentity() const;
-
 public slots:
     /** Sets the emailaddress you want to servers for */
     void setEmail( const QString& );
-
-    /** Sets the password for login */
-    void setPassword( const QString& );
 
     /** Starts looking up the servers which belong to the e-mailaddress */
     void start();
 
 private slots:
     void slotResult( KJob* );
+    void dataArrived( KIO::Job*, const QByteArray& data );
 
 signals:
     /** emitted when done. **/
     void finished( bool );
     void searchType( const QString &type );
 
-protected:
-    /** search types, where to search for autoconfig
-        @see lookupUrl to geneerate a url base on this type
-     */
-    enum searchServerType {
-      IspAutoConfig = 0,                  /**< http://autoconfig.example.com/mail/config-v1.1.xml */
-      IspWellKnow,                        /**< http://example.com/.well-known/autoconfig/mail/config-v1.1.xml */
-      DataBase                            /**< https://autoconfig.thunderbird.net/v1.1/example.com */
-    };
-
-    /** let's request the autoconfig server */
-    virtual void startJob( const KUrl &url );
-
-    /** generate url and start job afterwards */
-    virtual void lookupInDb( bool auth, bool crypt );
-
-    /** an valid xml document is available, parse it and create all the objects
-        should run createServer, createIdentity, ...
-     */
-    virtual void parseResult( const QDomDocument &document );
-
-    /** create a server object out of an element */
-    virtual server createServer( const QDomElement& n );
-
-    /** create a identity object out of an element */
-    virtual identity createIdentity( const QDomElement& n );
-
-    /** get standard urls for autoconfig
-        @return the standard url for autoconfig depends on serverType
-        @param type of request ( ex. "mail" )
-        @param version of the file ( example for mail "1.1" )
-        @param auth use authentification with username & password to access autoconfig file
-                    ( username is the emailaddress )
-        @param crypt use https
-     */
-    KUrl lookupUrl( const QString& type, const QString& version, bool auth, bool crypt );
-
-    /** setter for serverType */
-    void setServerType( Ispdb::searchServerType type );
-
-    /** getter for serverType */
-    Ispdb::searchServerType serverType() const;
-
-    /** replaces %EMAILLOCALPART%, %EMAILADDRESS% and %EMAILDOMAIN% with the
-        parts of the emailaddress */
-    QString replacePlaceholders( const QString& );
-
-    QByteArray mData;             /** storage of incoming data from kio */
-protected slots:
-
-    /** slot for TransferJob to dump data */
-    void dataArrived( KIO::Job*, const QByteArray& data );
-
 private:
+    enum searchServerType { IspAutoConfig = 0, IspWellKnow, DataBase };
+
+    server createServer( const QDomElement& n );
+    void lookupInDb();
+    QString replacePlaceholders( const QString& );
+    void startJob( const KUrl&url );
+
     KMime::Types::AddrSpec mAddr; // emailaddress
-    QString mPassword;
+    QByteArray mData;             // storage of incoming data from kio
 
     // storage of the results
     QStringList mDomains;
     QString mDisplayName, mDisplayShortName;
     QList< server > mImapServers, mPop3Servers, mSmtpServers;
-    QList< identity > mIdentities;
-
-    int mDefaultIdentity;
     Ispdb::searchServerType mServerType;
-    bool mStart;
 };
 
 struct server {
@@ -188,27 +129,5 @@ struct server {
     QString username;
     Ispdb::authType authentication;
 };
-
-struct identity {
-    identity()
-         : mDefault(false)
-    {
-    }
-
-    bool isValid() const {
-        return !name.isEmpty();
-    }
-
-    bool isDefault() const {
-        return mDefault;
-    }
-
-    bool mDefault;
-    QString email;
-    QString name;
-    QString organization;
-    QString signature;
-};
-
 
 #endif

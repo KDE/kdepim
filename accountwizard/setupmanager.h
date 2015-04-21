@@ -56,7 +56,6 @@ class SetupManager : public QObject
     Q_SCRIPTABLE QObject* createLdap();
     Q_SCRIPTABLE QObject* createIdentity();
     Q_SCRIPTABLE void execute();
-    Q_SCRIPTABLE QObject* ispDB( const QString &type );
 
     void requestRollback();
 
