@@ -107,12 +107,11 @@ SearchRule::RequiredPart SearchRuleString::requiredPart() const
 
 bool SearchRuleString::matches( const Akonadi::Item &item ) const
 {
-    const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
-    Q_ASSERT( msg.get() );
-
     if ( isEmpty() ) {
         return false;
     }
+    const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
+    Q_ASSERT( msg.get() );
 
     if ( !msg->hasHeader( "From" ) ) {
         msg->parse(); // probably not parsed yet: make sure we can access all headers
@@ -178,7 +177,7 @@ bool SearchRuleString::matches( const Akonadi::Item &item ) const
     if ( function() == FuncHasAttachment ) {
         return ( !msg->attachments().isEmpty() );
     }
-    if ( function() == FuncHasNoAttachment ) {
+    else if ( function() == FuncHasNoAttachment ) {
         return ( msg->attachments().isEmpty() );
     }
 
