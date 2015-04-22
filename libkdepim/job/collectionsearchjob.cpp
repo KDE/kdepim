@@ -20,12 +20,13 @@ with any edition of Qt, and distribute the resulting executable,
 without including the source code for Qt in the source distribution.
 */
 #include "collectionsearchjob.h"
+#include "libkdepim_debug.h"
 
-#include <Akonadi/CollectionFetchJob>
-#include <Akonadi/CollectionFetchScope>
-#include <baloo/pim/collectionquery.h>
+#include <AkonadiCore/CollectionFetchJob>
+#include <AkonadiCore/CollectionFetchScope>
+#include <AkonadiSearch/PIM/collectionquery.h>
 
-CollectionSearchJob::CollectionSearchJob(const QString& searchString, const QStringList &mimetypeFilter, QObject* parent)
+CollectionSearchJob::CollectionSearchJob(const QString &searchString, const QStringList &mimetypeFilter, QObject *parent)
     : KJob(parent),
     mSearchString(searchString),
     mMimeTypeFilter(mimetypeFilter)
@@ -34,23 +35,23 @@ CollectionSearchJob::CollectionSearchJob(const QString& searchString, const QStr
 
 void CollectionSearchJob::start()
 {
-    Baloo::PIM::CollectionQuery query;
-    if (mSearchString == QLatin1String("*")) {
-        query.setNamespace(QStringList() << QLatin1String(""));
+    Akonadi::Search::PIM::CollectionQuery query;
+    if (mSearchString == QStringLiteral("*")) {
+        query.setNamespace(QStringList() << QStringLiteral(""));
     } else {
         //We exclude the other users namespace
-        query.setNamespace(QStringList() << QLatin1String("shared") << QLatin1String(""));
+        query.setNamespace(QStringList() << QStringLiteral("shared") << QStringLiteral(""));
         query.pathMatches(mSearchString);
     }
     query.setMimetype(mMimeTypeFilter);
     query.setLimit(200);
-    Baloo::PIM::ResultIterator it = query.exec();
+    Akonadi::Search::PIM::ResultIterator it = query.exec();
     Akonadi::Collection::List collections;
     while (it.next()) {
         collections << Akonadi::Collection(it.id());
     }
-    kDebug() << "Found collections " << collections.size();
-    
+    qCDebug(LIBKDEPIM_LOG) << "Found collections " << collections.size();
+
     if (collections.isEmpty()) {
         //We didn't find anything
         emitResult();
@@ -61,8 +62,8 @@ void CollectionSearchJob::start()
     fetchJob->fetchScope().setAncestorRetrieval(Akonadi::CollectionFetchScope::All);
     fetchJob->fetchScope().setListFilter(Akonadi::CollectionFetchScope::NoFilter);
     fetchJob->fetchScope().setIgnoreRetrievalErrors(true);
-    connect(fetchJob, SIGNAL(collectionsReceived(Akonadi::Collection::List)), this, SLOT(onCollectionsReceived(Akonadi::Collection::List)));
-    connect(fetchJob, SIGNAL(result(KJob*)), this, SLOT(onCollectionsFetched(KJob*)));
+    connect(fetchJob, &Akonadi::CollectionFetchJob::collectionsReceived, this, &CollectionSearchJob::onCollectionsReceived);
+    connect(fetchJob, &Akonadi::CollectionFetchJob::result, this, &CollectionSearchJob::onCollectionsFetched);
 }
 
 void CollectionSearchJob::onCollectionsReceived(const Akonadi::Collection::List &list)
@@ -82,12 +83,14 @@ void CollectionSearchJob::onCollectionsReceived(const Akonadi::Collection::List 
 void CollectionSearchJob::onCollectionsFetched(KJob *job)
 {
     if (job->error()) {
-        kWarning() << job->errorString();
+        qCWarning(LIBKDEPIM_LOG) << job->errorString();
+        emitResult();
+        return;
     }
     if (!mAncestors.isEmpty()) {
         Akonadi::CollectionFetchJob *fetchJob = new Akonadi::CollectionFetchJob(mAncestors, Akonadi::CollectionFetchJob::Base, this);
         fetchJob->fetchScope().setListFilter(Akonadi::CollectionFetchScope::NoFilter);
-        connect(fetchJob, SIGNAL(result(KJob*)), this, SLOT(onAncestorsFetched(KJob*)));
+        connect(fetchJob, &Akonadi::CollectionFetchJob::result, this, &CollectionSearchJob::onAncestorsFetched);
     } else {
         //We didn't find anything
         emitResult();
@@ -113,7 +116,9 @@ static Akonadi::Collection replaceParent(Akonadi::Collection col, const Akonadi:
 void CollectionSearchJob::onAncestorsFetched(KJob *job)
 {
     if (job->error()) {
-        kWarning() << job->errorString();
+        qCWarning(LIBKDEPIM_LOG) << job->errorString();
+        emitResult();
+        return;
     }
     Akonadi::CollectionFetchJob *fetchJob = static_cast<Akonadi::CollectionFetchJob*>(job);
     Akonadi::Collection::List matchingCollections;

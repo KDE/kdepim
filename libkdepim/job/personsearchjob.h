@@ -20,13 +20,13 @@
   without including the source code for Qt in the source distribution.
 */
 
-#ifndef KORG_PERSONSEARCHJOB_H
-#define KORG_PERSONSEARCHJOB_H
+#ifndef KDEPIM_PERSONSEARCHJOB_H
+#define KDEPIM_PERSONSEARCHJOB_H
 
 #include "kdepim_export.h"
 
 #include <KJob>
-#include <Akonadi/Collection>
+#include <AkonadiCore/Collection>
 #include <libkdepim/ldap/ldapclientsearch.h>
 #include "person.h"
 
@@ -34,10 +34,10 @@ class KDEPIM_EXPORT PersonSearchJob : public KJob
 {
     Q_OBJECT
 public:
-    explicit PersonSearchJob(const QString &searchString, QObject* parent = 0);
+    explicit PersonSearchJob(const QString &searchString, QObject *parent = Q_NULLPTR);
     virtual ~PersonSearchJob();
 
-    virtual void start();
+    void start() Q_DECL_OVERRIDE;
 
     QList<Person> matches() const;
 

@@ -20,13 +20,13 @@
   without including the source code for Qt in the source distribution.
 */
 
-#ifndef KORG_PERSON_H
-#define KORG_PERSON_H
+#ifndef KDEPIM_PERSON_H
+#define KDEPIM_PERSON_H
 
 #include "kdepim_export.h"
 
 #include <QStringList>
-#include <Akonadi/Collection>
+#include <AkonadiCore/Collection>
 
 struct KDEPIM_EXPORT Person
 {
@@ -35,12 +35,13 @@ struct KDEPIM_EXPORT Person
     QString uid;
     QString ou;
     QString mail;
-    Akonadi::Collection::Id rootCollection;
-    bool updateDisplayName;
-    
+
     //FIXME not sure we actually require those two
     QStringList folderPaths;
     QList<Akonadi::Collection::Id> collections;
+
+    Akonadi::Collection::Id rootCollection;
+    bool updateDisplayName;
 };
 
 Q_DECLARE_METATYPE(Person);

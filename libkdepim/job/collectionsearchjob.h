@@ -20,22 +20,22 @@
   without including the source code for Qt in the source distribution.
 */
 
-#ifndef KORG_COLLECTIONSEARCHJOB_H
-#define KORG_COLLECTIONSEARCHJOB_H
+#ifndef KDEPIM_COLLECTIONSEARCHJOB_H
+#define KDEPIM_COLLECTIONSEARCHJOB_H
 
 #include "kdepim_export.h"
 
 #include <KJob>
-#include <Akonadi/Collection>
+#include <AkonadiCore/Collection>
 #include <QStringList>
 
 class KDEPIM_EXPORT CollectionSearchJob : public KJob
 {
     Q_OBJECT
 public:
-    explicit CollectionSearchJob(const QString &searchString, const QStringList &mimetypeFilter, QObject* parent = 0);
+    explicit CollectionSearchJob(const QString &searchString, const QStringList &mimetypeFilter, QObject *parent = Q_NULLPTR);
 
-    virtual void start();
+    void start() Q_DECL_OVERRIDE;
 
     Akonadi::Collection::List matchingCollections() const;
 
@@ -52,4 +52,3 @@ private:
 };
 
 #endif
-
